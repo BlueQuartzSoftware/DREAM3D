@@ -20,7 +20,7 @@ IF(MXA_SIZEOF___INT64)
     MESSAGE(STATUS "Checking whether long and __int64 are the same type")
     TRY_COMPILE(MXA_TYPE_SAME_LONG_AND___INT64
       ${MXA_BINARY_DIR}/CMakeTmp
-      ${AIMBlades_CMAKE_DIR}/vtkTestCompareTypes.cxx
+      ${AIMRepresentation_CMAKE_DIR}/vtkTestCompareTypes.cxx
       COMPILE_DEFINITIONS
       -DMXA_TEST_COMPARE_TYPE_1=long
       -DMXA_TEST_COMPARE_TYPE_2=__int64
@@ -46,7 +46,7 @@ IF(MXA_SIZEOF___INT64)
       MESSAGE(STATUS "Checking whether long long and __int64 are the same type")
       TRY_COMPILE(MXA_TYPE_SAME_LONG_LONG_AND___INT64
         ${MXA_BINARY_DIR}/CMakeTmp
-        ${AIMBlades_CMAKE_DIR}/vtkTestCompareTypes.cxx
+        ${AIMRepresentation_CMAKE_DIR}/vtkTestCompareTypes.cxx
         COMPILE_DEFINITIONS
         -DMXA_TEST_COMPARE_TYPE_1=TYPE_LONG_LONG
         -DMXA_TEST_COMPARE_TYPE_2=__int64
@@ -76,7 +76,7 @@ IF(MXA_SIZEOF___INT64)
         MESSAGE(STATUS "Checking whether unsigned __int64 can convert to double")
         TRY_COMPILE(MXA_TYPE_CONVERT_UI64_TO_DOUBLE
           ${MXA_BINARY_DIR}/CMakeTmp
-          ${AIMBlades_CMAKE_DIR}/vtkTestConvertTypes.cxx
+          ${AIMRepresentation_CMAKE_DIR}/vtkTestConvertTypes.cxx
           COMPILE_DEFINITIONS
           -DMXA_TEST_CONVERT_TYPE_FROM=TYPE_UNSIGNED___INT64
           -DMXA_TEST_CONVERT_TYPE_TO=double
@@ -123,7 +123,7 @@ IF("MXA_COMPILER_HAS_BOOL" MATCHES "^MXA_COMPILER_HAS_BOOL$")
   MESSAGE(STATUS "Checking support for C++ type bool")
   TRY_COMPILE(MXA_COMPILER_HAS_BOOL
               ${PROJECT_BINARY_DIR}/CMakeTmp/Bool
-              ${AIMBlades_CMAKE_DIR}/vtkTestBoolType.cxx
+              ${AIMRepresentation_CMAKE_DIR}/vtkTestBoolType.cxx
               OUTPUT_VARIABLE OUTPUT)
   IF(MXA_COMPILER_HAS_BOOL)
     MESSAGE(STATUS "Checking support for C++ type bool -- yes")
@@ -146,7 +146,7 @@ IF("MXA_TYPE_CHAR_IS_SIGNED" MATCHES "^MXA_TYPE_CHAR_IS_SIGNED$")
   MESSAGE(STATUS "Checking signedness of char")
   TRY_RUN(MXA_TYPE_CHAR_IS_SIGNED MXA_TYPE_CHAR_IS_SIGNED_COMPILED
           ${PROJECT_BINARY_DIR}/CMakeTmp/Char
-          ${AIMBlades_CMAKE_DIR}/vtkTestCharSignedness.cxx)
+          ${AIMRepresentation_CMAKE_DIR}/vtkTestCharSignedness.cxx)
   IF(MXA_TYPE_CHAR_IS_SIGNED_COMPILED)
     IF(MXA_TYPE_CHAR_IS_SIGNED)
       MESSAGE(STATUS "Checking signedness of char -- signed")

@@ -84,7 +84,7 @@ endif()
 IF (NOT MSVC)
     TRY_COMPILE(HAVE_TIME_GETTIMEOFDAY
           ${CMAKE_BINARY_DIR}
-          ${AIMBlades_RESOURCES_DIR}/CMake/GetTimeOfDayTest.cpp
+          ${AIMRepresentation_RESOURCES_DIR}/CMake/GetTimeOfDayTest.cpp
           COMPILE_DEFINITIONS -DTRY_TIME_H
           OUTPUT_VARIABLE OUTPUT)
     IF (HAVE_TIME_GETTIMEOFDAY STREQUAL "TRUE")
@@ -95,7 +95,7 @@ IF (NOT MSVC)
     
     TRY_COMPILE(HAVE_SYS_TIME_GETTIMEOFDAY
           ${CMAKE_BINARY_DIR}
-          ${AIMBlades_RESOURCES_DIR}/CMake/GetTimeOfDayTest.cpp
+          ${AIMRepresentation_RESOURCES_DIR}/CMake/GetTimeOfDayTest.cpp
           COMPILE_DEFINITIONS -DTRY_SYS_TIME_H
           OUTPUT_VARIABLE OUTPUT)
     IF (HAVE_SYS_TIME_GETTIMEOFDAY STREQUAL "TRUE")
@@ -134,7 +134,7 @@ macro(GenerateVersionString PROJECT_NAME)
 #    message(STATUS "Generating Versions String for ${PROJECT_NAME}")
 #    message(STATUS "EmInit_CMAKE_DIR: ${EmInit_CMAKE_DIR}")
     try_run(RUN_RESULT_VAR COMPILE_RESULT_VAR 
-            ${CMAKE_CURRENT_BINARY_DIR} ${AIMBlades_RESOURCES_DIR}/CMake/GenerateVersionString.cpp
+            ${CMAKE_CURRENT_BINARY_DIR} ${AIMRepresentation_RESOURCES_DIR}/CMake/GenerateVersionString.cpp
             COMPILE_DEFINITIONS ${VERSION_COMPILE_FLAGS}
             COMPILE_OUTPUT_VARIABLE VERSION_COMPILE_OUTPUT
             RUN_OUTPUT_VARIABLE ${PROJECT_NAME}_VERSION)

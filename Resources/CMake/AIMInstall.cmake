@@ -122,7 +122,7 @@ INSTALL (FILES ${AIM_INSTALLED_RESOURCES}
         
 #-- Install the generated Doxygen documentation
 if(AIM_BUILD_API_DOCS)
-  INSTALL(DIRECTORY ${AIMBlades_BINARY_DIR}/Documentation/html
+  INSTALL(DIRECTORY ${AIMRepresentation_BINARY_DIR}/Documentation/html
             DESTINATION Documentation
             COMPONENT Documentation )
 endif()
@@ -157,27 +157,27 @@ endmacro()
 # This CMake code sets up for CPack to be used to generate native installers
 # ------------------------------------------------------------------------------
 #INCLUDE (InstallRequiredSystemLibraries)
-INCLUDE (${AIMBlades_RESOURCES_DIR}/CMake/InstallMSVCLibraries.cmake)
+INCLUDE (${AIMRepresentation_RESOURCES_DIR}/CMake/InstallMSVCLibraries.cmake)
 SET(CPACK_PACKAGE_DESCRIPTION_SUMMARY "AIM Software Tools")
 SET(CPACK_PACKAGE_VENDOR "BlueQuartz Software, Michael A. Jackson")
-SET(CPACK_PACKAGE_DESCRIPTION_FILE "${AIMBlades_SOURCE_DIR}/ReadMe.txt")
-SET(CPACK_RESOURCE_FILE_LICENSE "${AIMBlades_SOURCE_DIR}/License.txt")
-SET(CPACK_PACKAGE_VERSION_MAJOR ${AIMBlades_VER_MAJOR})
-SET(CPACK_PACKAGE_VERSION_MINOR ${AIMBlades_VER_MINOR})
-SET(CPACK_PACKAGE_VERSION_PATCH ${AIMBlades_VER_PATCH})
-SET(CPACK_PACKAGE_VERSION ${AIMBlades_VERSION})
+SET(CPACK_PACKAGE_DESCRIPTION_FILE "${AIMRepresentation_SOURCE_DIR}/ReadMe.txt")
+SET(CPACK_RESOURCE_FILE_LICENSE "${AIMRepresentation_SOURCE_DIR}/License.txt")
+SET(CPACK_PACKAGE_VERSION_MAJOR ${AIMRepresentation_VER_MAJOR})
+SET(CPACK_PACKAGE_VERSION_MINOR ${AIMRepresentation_VER_MINOR})
+SET(CPACK_PACKAGE_VERSION_PATCH ${AIMRepresentation_VER_PATCH})
+SET(CPACK_PACKAGE_VERSION ${AIMRepresentation_VERSION})
 SET(CPACK_COMPONENTS_ALL Applications Resources Unspecified SupportFiles Documentation)
 set(CPACK_COMPONENT_APPLICATIONS_DISPLAY_NAME "Applications")
-set(CPACK_COMPONENT_APPLICATIONS_DESCRIPTION  "The Gui Versions of the AIMBlades Software Tools Suite")
+set(CPACK_COMPONENT_APPLICATIONS_DESCRIPTION  "The Gui Versions of the AIMRepresentation Software Tools Suite")
 set(CPACK_COMPONENT_APPLICATIONS_REQUIRED 1)
 set(CPACK_COMPONENT_SUPPORTFILES_DISPLAY_NAME "Tools")
-set(CPACK_COMPONENT_SUPPORTFILES_DESCRIPTION  "The Command Line versions of the AIMBlades Software Tools Suite")
+set(CPACK_COMPONENT_SUPPORTFILES_DESCRIPTION  "The Command Line versions of the AIMRepresentation Software Tools Suite")
 set(CPACK_COMPONENT_SUPPORTFILES_REQUIRED 1)
 set(CPACK_COMPONENT_RESOURCES_DISPLAY_NAME "Resources")
 set(CPACK_COMPONENT_RESOURCES_DESCRIPTION  "Contains resource files to aid in converting Zeiss Mosaic Directories into HDF5 Files.")
 set(CPACK_COMPONENT_RESOURCES_REQUIRED 1)
 set(CPACK_COMPONENT_DOCUMENTATION_DISPLAY_NAME "Documentation")
-set(CPACK_COMPONENT_DOCUMENTATION_DESCRIPTION  "Contains the AIMBlades API Documentation and User manuals in HTML format.")
+set(CPACK_COMPONENT_DOCUMENTATION_DESCRIPTION  "Contains the AIMRepresentation API Documentation and User manuals in HTML format.")
 set(CPACK_PACKAGE_EXECUTABLES AIMFourFoldSymmetry AIMFourFoldSymmetry
                                 FourFoldSymmetry FourFoldSymmetry
                                 AIMMountMaker AIMMountMaker)
@@ -185,7 +185,7 @@ set(CPACK_PACKAGE_EXECUTABLES AIMFourFoldSymmetry AIMFourFoldSymmetry
 IF(WIN32 AND NOT UNIX)
   # There is a bug in NSI that does not handle full unix paths properly. Make
   # sure there is at least one set of four (4) backlasshes.
-# SET(CPACK_PACKAGE_ICON "${AIMBlades_SOURCE_DIR}/Resources/InstallerIcon.bmp")
+# SET(CPACK_PACKAGE_ICON "${AIMRepresentation_SOURCE_DIR}/Resources/InstallerIcon.bmp")
 # SET(CPACK_NSIS_INSTALLED_ICON_NAME "bin\\\\MyExecutable.exe")
   SET(CPACK_NSIS_DISPLAY_NAME "AIM Software Tools")
   SET(CPACK_NSIS_HELP_LINK "http:\\\\\\\\www.bluequartz.net")
@@ -221,7 +221,7 @@ SET(CPACK_BINARY_ZIP "OFF")
 ENDIF(WIN32 AND NOT UNIX)
 
 SET(CPACK_SOURCE_GENERATOR "ZIP")
-SET(CPACK_SOURCE_PACKAGE_FILE_NAME "AIMBlades-${AIMBlades_VERSION}-Source")
+SET(CPACK_SOURCE_PACKAGE_FILE_NAME "AIMRepresentation-${AIMRepresentation_VERSION}-Source")
 SET(CPACK_SOURCE_TOPLEVEL_TAG "Source")
 SET(CPACK_IGNORE_FILES "/VS2008/;/zRel/;/Build/;/\\\\.git/;\\\\.*project")
 SET(CPACK_SOURCE_IGNORE_FILES "/VS2008/;/zRel/;/Build/;/\\\\.git/;\\\\.*project")
