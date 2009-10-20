@@ -22,22 +22,22 @@
 #include <QtGui/QResizeEvent>
 
 //-- UIC generated Header
-#include <ui_AIMRepresentation.h>
+#include <ui_Representation.h>
 
 /**
-* @class AIMRepresentation AIMRepresentation AIM/Representation/GUI/AIMRepresentation.h
+* @class Representation Representation AIM/Representation/GUI/Representation.h
 * @brief
 * @author Michael A. Jackson for BlueQuartz Software
 * @date Oct 19, 2009
 * @version 1.0
 */
-class AIMRepresentation : public QMainWindow, private Ui::AIMRepresentation
+class Representation : public QMainWindow, private Ui::Representation
 {
   Q_OBJECT;
 
   public:
-    AIMRepresentation(QWidget *parent = 0);
-    virtual ~AIMRepresentation();
+    Representation(QWidget *parent = 0);
+    virtual ~Representation();
 
   protected slots:
 
@@ -119,8 +119,8 @@ class AIMRepresentation : public QMainWindow, private Ui::AIMRepresentation
     QString                     m_OpenDialogLastDirectory;
     QList<QWidget*>             m_WidgetList;
 
-    AIMRepresentation(const AIMRepresentation&);    // Copy Constructor Not Implemented
-    void operator=(const AIMRepresentation&);  // Operator '=' Not Implemented
+    Representation(const Representation&);    // Copy Constructor Not Implemented
+    void operator=(const Representation&);  // Operator '=' Not Implemented
 
 };
 

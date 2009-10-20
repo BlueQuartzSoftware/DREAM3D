@@ -1,7 +1,7 @@
 
 using namespace std;
 
-#include <Representation/Common/MicroGen3D.h>
+#include <AIM/Common/MicroGen3D.h>
 
 int main()
 {

@@ -1,24 +1,24 @@
 #ifndef MicroGen3D_H
 #define MicroGen3D_H
 
-#include <vector>
+#include <MXA/Common/MXATypes.h>
+
 #include <assert.h>
 #include <stdio.h>
-#include "stdafx.h"
+#include <time.h>
+#include <stdlib.h>
+
+#include <vector>
 #include <string>
 #include <iostream>
 #include <cmath>
 #include <fstream>
 #include <list>
-#include <time.h>
-#include <stdlib.h>
 #include <algorithm>
 #include <numeric>
 
 using namespace std;
-
-typedef   signed long int32;     
-typedef unsigned long uint32;     
+   
 
 class TRandomMotherOfAll
 {
@@ -173,8 +173,6 @@ public:
   virtual ~MicroGen3D();
 
 	TRandomMotherOfAll rg;
-  Voxel* voxels;
-
 	voxels voxel[1000];
 	grains tempgrain[1000];
 	grains grain[1000];
