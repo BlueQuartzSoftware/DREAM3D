@@ -1,0 +1,83 @@
+cmake_minimum_required(VERSION 2.6)
+
+#-- Need this for link line stuff?
+if(COMMAND cmake_policy)
+  cmake_policy(SET CMP0009 NEW)
+endif(COMMAND cmake_policy)
+
+
+if (${CMAKE_VERSION} VERSION_GREATER 2.6.2)
+if(COMMAND cmake_policy)
+  cmake_policy(SET CMP0011 NEW)
+endif(COMMAND cmake_policy)
+endif()
+
+# gp_item_default_embedded_path item default_embedded_path_var
+#
+# Return the path that others should refer to the item by when the item
+# is embedded inside a bundle.
+#
+# Override on a per-project basis by providing a project-specific
+# gp_item_default_embedded_path_override function.
+#
+function(gp_item_default_embedded_path_override item default_embedded_path_var)
+  #
+  # The assumption here is that all executables in the bundle will be
+  # in same-level-directories inside the bundle. The parent directory
+  # of an executable inside the bundle should be MacOS or a sibling of
+  # MacOS and all embedded paths returned from here will begin with
+  # "@executable_path/../" and will work from all executables in all
+  # such same-level-directories inside the bundle.
+  #
+
+  # By default, embed things right next to the main bundle executable:
+  #
+  set(path "@executable_path/../../Contents/MacOS")
+
+  set(overridden 0)
+  # Embed .dylibs right next to the main bundle executable:
+  #
+  if(item MATCHES "\\.dylib$")
+    set(path "@executable_path/../Libraries")
+    set(overridden 1)
+  endif(item MATCHES "\\.dylib$")
+
+  # Embed .so right next to the main bundle executable:
+  #
+  if(item MATCHES "\\.so$")
+    set(path "@executable_path/../Plugins")
+    set(overridden 1)
+  endif(item MATCHES "\\.so$")
+  
+  # Embed frameworks in the embedded "Frameworks" directory (sibling of MacOS):
+  #
+  if(NOT overridden)
+    if(item MATCHES "[^/]+\\.framework/")
+      set(path "@executable_path/../Frameworks")
+      set(overridden 1)
+    endif(item MATCHES "[^/]+\\.framework/")
+  endif(NOT overridden)
+
+  set(${default_embedded_path_var} "${path}" PARENT_SCOPE)
+endfunction(gp_item_default_embedded_path_override)
+
+
+#-- Be sure all the internal directories are created first before calling the 'fixup_bundle'
+file(MAKE_DIRECTORY "@CMAKE_INSTALL_PREFIX@/@target@.app/Contents/Libraries")
+file(MAKE_DIRECTORY "@CMAKE_INSTALL_PREFIX@/@target@.app/Contents/Plugins")
+file(MAKE_DIRECTORY "@CMAKE_INSTALL_PREFIX@/@target@.app/Contents/Frameworks")
+file(MAKE_DIRECTORY "@CMAKE_INSTALL_PREFIX@/@target@.app/Contents/Support")
+
+#-- Put an empty qt.conf file in the bundle so as to NOT load plugins from the installed Qt.
+file(WRITE "@CMAKE_INSTALL_PREFIX@/@target@.app/Contents/Resources/qt.conf" "")
+
+#-- Check for Qt4 stuff
+if ("@QT_MAC_USE_COCOA@" STREQUAL "1")
+  message(STATUS "Copying qt_menu.nib into @target@.app/Contents/Resources")
+  file(MAKE_DIRECTORY "@CMAKE_INSTALL_PREFIX@/@target@.app/Contents/Resources/qt_menu.nib")
+  execute_process(COMMAND ${CMAKE_COMMAND} -E copy_directory "@QT_LIBRARY_DIR@/QtGui.framework/Resources/qt_menu.nib" "@CMAKE_INSTALL_PREFIX@/@target@.app/Contents/Resources/qt_menu.nib")
+endif()
+
+# -- Run the BundleUtilities cmake code
+include(BundleUtilities)
+fixup_bundle("@CMAKE_INSTALL_PREFIX@/@target@.app" "${PluginList}" "Plugins")
