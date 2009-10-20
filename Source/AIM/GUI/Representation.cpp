@@ -1,11 +1,11 @@
 /*
- * AIMRepresentation.cpp
+ * Representation.cpp
  *
  *  Created on: Oct 19, 2009
  *      Author: mjackson
  */
 
-#include "AIMRepresentation.h"
+#include "Representation.h"
 
 #include <AIM/Common/Qt/AIMAboutBox.h>
 #include <AIM/Common/Qt/QRecentFileList.h>
@@ -58,7 +58,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AIMRepresentation::AIMRepresentation(QWidget *parent) :
+Representation::Representation(QWidget *parent) :
   QMainWindow(parent)
 {
   setupUi(this);
@@ -75,7 +75,7 @@ AIMRepresentation::AIMRepresentation(QWidget *parent) :
    this->setAcceptDrops(true);
 }
 
-AIMRepresentation::~AIMRepresentation()
+Representation::~Representation()
 {
 }
 
@@ -83,19 +83,19 @@ AIMRepresentation::~AIMRepresentation()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AIMRepresentation::resizeEvent ( QResizeEvent * event )
+void Representation::resizeEvent ( QResizeEvent * event )
 {
- // std::cout << "AIMRepresentation::resizeEvent" << std::endl;
+ // std::cout << "Representation::resizeEvent" << std::endl;
  // std::cout << "   oldSize: " << event->oldSize().width() << " x " << event->oldSize().height() << std::endl;
  // std::cout << "   newSize: " << event->size().width() << " x " << event->size().height() << std::endl;
   emit parentResized();
- // std::cout << "AIMRepresentation::resizeEvent --- Done" << std::endl;
+ // std::cout << "Representation::resizeEvent --- Done" << std::endl;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AIMRepresentation::on_actionExit_triggered()
+void Representation::on_actionExit_triggered()
 {
   this->close();
 }
@@ -103,7 +103,7 @@ void AIMRepresentation::on_actionExit_triggered()
 // -----------------------------------------------------------------------------
 //  Called when the main window is closed.
 // -----------------------------------------------------------------------------
-void AIMRepresentation::closeEvent(QCloseEvent *event)
+void Representation::closeEvent(QCloseEvent *event)
 {
   qint32 err = _checkDirtyDocument();
   if (err < 0)
@@ -120,7 +120,7 @@ void AIMRepresentation::closeEvent(QCloseEvent *event)
 // -----------------------------------------------------------------------------
 //  Read the prefs from the local storage file
 // -----------------------------------------------------------------------------
-void AIMRepresentation::readSettings()
+void Representation::readSettings()
 {
   // std::cout << "Read Settings" << std::endl;
   QSettings prefs;
@@ -134,7 +134,7 @@ void AIMRepresentation::readSettings()
 // -----------------------------------------------------------------------------
 //  Write our Prefs to file
 // -----------------------------------------------------------------------------
-void AIMRepresentation::writeSettings()
+void Representation::writeSettings()
 {
   // std::cout << "writeSettings" << std::endl;
   QSettings prefs;
@@ -145,7 +145,7 @@ void AIMRepresentation::writeSettings()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AIMRepresentation::setupGui()
+void Representation::setupGui()
 {
 
 }
@@ -153,7 +153,7 @@ void AIMRepresentation::setupGui()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AIMRepresentation::setWidgetListEnabled(bool b)
+void Representation::setWidgetListEnabled(bool b)
 {
   foreach (QWidget* w, m_WidgetList) {
     w->setEnabled(b);
@@ -163,7 +163,7 @@ void AIMRepresentation::setWidgetListEnabled(bool b)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AIMRepresentation::dragEnterEvent(QDragEnterEvent* e)
+void Representation::dragEnterEvent(QDragEnterEvent* e)
 {
   const QMimeData* dat = e->mimeData();
   QList<QUrl> urls = dat->urls();
@@ -185,7 +185,7 @@ void AIMRepresentation::dragEnterEvent(QDragEnterEvent* e)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AIMRepresentation::dropEvent(QDropEvent* e)
+void Representation::dropEvent(QDropEvent* e)
 {
   const QMimeData* dat = e->mimeData();
   QList<QUrl> urls = dat->urls();
@@ -204,7 +204,7 @@ void AIMRepresentation::dropEvent(QDropEvent* e)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-qint32 AIMRepresentation::_checkDirtyDocument()
+qint32 Representation::_checkDirtyDocument()
 {
   qint32 err = -1;
 
@@ -240,8 +240,8 @@ qint32 AIMRepresentation::_checkDirtyDocument()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AIMRepresentation::on_actionClose_triggered() {
- // std::cout << "AIMRepresentation::on_actionClose_triggered" << std::endl;
+void Representation::on_actionClose_triggered() {
+ // std::cout << "Representation::on_actionClose_triggered" << std::endl;
   qint32 err = -1;
   err = _checkDirtyDocument();
   if (err >= 0)
@@ -262,9 +262,9 @@ void AIMRepresentation::on_actionClose_triggered() {
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AIMRepresentation::updateRecentFileList(const QString &file)
+void Representation::updateRecentFileList(const QString &file)
 {
- // std::cout << "AIMRepresentation::updateRecentFileList" << std::endl;
+ // std::cout << "Representation::updateRecentFileList" << std::endl;
 
   // Clear the Recent Items Menu
   this->menu_RecentFiles->clear();
@@ -286,7 +286,7 @@ void AIMRepresentation::updateRecentFileList(const QString &file)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AIMRepresentation::openRecentFile()
+void Representation::openRecentFile()
 {
   //std::cout << "QRecentFileList::openRecentFile()" << std::endl;
 
@@ -303,7 +303,7 @@ void AIMRepresentation::openRecentFile()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AIMRepresentation::threadHasMessage(QString message)
+void Representation::threadHasMessage(QString message)
 {
   this->statusBar()->showMessage(message);
 }
@@ -311,7 +311,7 @@ void AIMRepresentation::threadHasMessage(QString message)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AIMRepresentation::threadFinished()
+void Representation::threadFinished()
 {
 
 }
@@ -319,7 +319,7 @@ void AIMRepresentation::threadFinished()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AIMRepresentation::threadProgressed(float percent)
+void Representation::threadProgressed(float percent)
 {
 
 }

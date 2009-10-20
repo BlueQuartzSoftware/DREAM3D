@@ -84,9 +84,12 @@ GenerateVersionString(${PROJECT_NAME})
 configure_file(${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/AIMVersion.h.in
                ${AIMRepresentation_BINARY_DIR}/AIM/Common/AIMVersion.h @ONLY)
                
+# -----------------------------------------------------------------------
+# -- Add in the Necessary MXA Sources into a static library
+add_subdirectory( ${AIMRepresentation_SOURCE_DIR}/Source/MXA ${AIMRepresentation_BINARY_DIR}/MXA)
+include_directories (${AIMRepresentation_BINARY_DIR})
 
-
-option(AIM_BUILD_QT_APPS "Compile the Qt based GUI applications" OFF)
+option(AIM_BUILD_QT_APPS "Compile the Qt based GUI applications" ON)
 #if we are going to build Qt based applications then we need to find Qt 4 first
 if (AIM_BUILD_QT_APPS)
    # ------------------------------------------------------------------------------
@@ -107,11 +110,16 @@ if (AIM_BUILD_QT_APPS)
    INCLUDE( ${QT_USE_FILE} )
 endif()
 
+include_directories(${AIMRepresentation_SOURCE_DIR}/Source)
 
-OPTION(AIM_BUILD_SYMMETRY_TOOL "Compile the 4 fold symmtery filter" OFF)
-IF ( AIM_BUILD_SYMMETRY_TOOL )
-ADD_SUBDIRECTORY( ${AIMRepresentation_SOURCE_DIR}/Source/AIM/SymmetryFilter ${AIMRepresentation_BINARY_DIR}/AIM/SymmetryFilter)
+OPTION(AIM_BUILD_RECONSTRUCTION_TOOL "Compile Reconstruction Tool" ON)
+IF ( AIM_BUILD_RECONSTRUCTION_TOOL )
+    ADD_SUBDIRECTORY( ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Reconstruction ${AIMRepresentation_BINARY_DIR}/AIM/Reconstruction)
 ENDIF ()
+
+if (AIM_BUILD_QT_APPS)
+    ADD_SUBDIRECTORY( ${AIMRepresentation_SOURCE_DIR}/Source/AIM/GUI)
+endif()
 
 include(${AIMRepresentation_RESOURCES_DIR}/CMake/AIMInstall.cmake)
 
