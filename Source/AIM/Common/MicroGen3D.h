@@ -2,6 +2,12 @@
 #define MicroGen3D_H
 
 #include <MXA/Common/MXATypes.h>
+#include <AIM/Common/Grain.h>
+#include <AIM/Common/Voxel.h>
+#include <AIM/Common/Bin.h>
+#include <AIM/Common/Orient.h>
+#include <AIM/Common/AIMRandomNG.h>
+
 
 #include <assert.h>
 #include <stdio.h>
@@ -18,151 +24,8 @@
 #include <numeric>
 
 using namespace std;
-   
 
-class TRandomMotherOfAll
-{
-public:
-  void RandomInit(uint32);
-  double Random();
-  double x[5];                         
-};
 
-class voxels
-{
-public:
-	int grainname;
-	double confidence;
-	int alreadychecked;
-	double xc;
-	double yc;
-	double zc;
-	double euler1;
-	double euler2;
-	double euler3;
-	int hasneighbor;
-	int neighbor;
-	double misorientation;
-	int surfacevoxel;
-	int neighbor1;
-	int neighbor2;
-	int neighbor3;
-	int neighbor4;
-	int neighbor5;
-	int neighbor6;
-	int available;
-	int available90;
-	int inside;
-	vector<int> voxneighlist;
-};
-
-class grains
-{
-public:
-	int numvoxels;
-	int numneighbors;
-	int newgrainname;
-	vector<int> neighborlist;
-	int gotsizemerged;
-	int gotcontainedmerged;
-	int gottwinmerged;
-	double avgeuler1;
-	double avgeuler2;
-	double avgeuler3;
-	double centroidx;
-	double centroidy;
-	double centroidz;
-	int surfacegrain;
-	double Ixx;
-	double Iyy;
-	double Izz;
-	double Ixy;
-	double Iyz;
-	double Ixz;
-	double axis1;
-	double axis2;
-	double axis3;
-	double axis1x;
-	double axis1y;
-	double axis1z;
-	double axis2x;
-	double axis2y;
-	double axis2z;
-	double axis3x;
-	double axis3y;
-	double axis3z;
-	vector<double> misorientationlist;
-	double averagemisorientation;
-	int twinnewnumberbeenset;
-	int twinnewnumber;
-	double red;
-	double green;
-	double blue;
-	double schmidfactor;
-	double convexity;
-	double euler1;
-	double euler2;
-	double euler3;
-	double oeuler1;
-	double oeuler2;
-	double oeuler3;
-	int grainname;
-	int neighnum;
-	double volume;
-	double Nvalue;
-	double nserror;
-	double x;
-	double y;
-	double z;
-	double xc;
-	double yc;
-	double zc;
-	int currentsize;
-	int initsize;
-	int temponsurf;
-	int tempneighnum;
-	double radius1;
-	double radius2;
-	double radius3;
-	double lowanglefraction;
-	double grainrank;
-	double grainmicrorank;
-	double picked;
-	double frozen;
-};
-
-class bins
-{
-public:
-	double euler1;
-	double euler2;
-	double euler3;
-	double dprobability;
-	double sprobability;
-	double Nprobability;
-	double Nvalue;
-	double bctotprobability;
-	double diameter;
-	double rad;
-	double bctotal;
-	double difference;
-	double height;
-	double binrank;
-};
-
-class orients
-{
-public:
-	double rad1x;
-	double rad1y;
-	double rad1z;
-	double rad2x;
-	double rad2y;
-	double rad2z;
-	double rad3x;
-	double rad3y;
-	double rad3z;
-};
 
 
 class MicroGen3D
@@ -172,32 +35,63 @@ public:
   MicroGen3D();
   virtual ~MicroGen3D();
 
-	TRandomMotherOfAll rg;
-	voxels voxel[1000];
-	grains tempgrain[1000];
-	grains grain[1000];
-	grains goodgrain[1000];
-	grains packedgrain[1000];
-	int gsizes[1000];
-	int gremovals[1000];
-	bins diambin[1000];
-	bins boverabin[1000];
-	bins coverabin[1000];
-	bins coverbbin[1000];
-	bins seNbin[1000];
+  void initialize(double sizex,
+                    double sizey,
+                    double sizez,
+                    double resx,
+                    double resy,
+                    double resz,
+                    bool mergetwinsoption,
+                    int32 minallowedgrainsize,
+                    double minseedconfidence,
+                    double misorientationtolerance,
+                    int32 crystruct,
+                    bool alreadyformed);
+
+
+
+  double sizex;
+   double sizey;
+   double sizez;
+
+  double resx;
+  double resy;
+  double resz;
+
+  double misorientationtolerance;
+  double minseedconfidence;
+  int minallowedgrainsize;
+  int mergetwinsoption;
+  int crystruct;
+  int alreadyformed;
+
+
+	AIMRandomNG rg;
+	Voxel* voxels;
+	Grain* tempgrain;
+	Grain* grains;
+	Grain* goodgrain;
+	Grain* packedgrain;
+	int* gsizes;
+	int* gremovals;
+	Bin* diambin;
+	Bin* boverabin;
+	Bin* coverabin;
+	Bin* coverbbin;
+	Bin* seNbin;
 	int eulercount[100][100][100];
-	bins eulerbin[1000];
-	orients orient[1000];
-	voxels gridfine[1000];
-	voxels gridcourse[1000];
-	bins actualmisobin[1000];
-	bins simmisobin[1000];
-	bins actualmicrobin[1000];
-	bins simmicrobin[1000];
+	Bin* eulerbin;
+	Orient* orient;
+	Voxel* gridfine;
+	Voxel* gridcourse;
+	Bin* actualmisobin;
+	Bin* simmisobin;
+	Bin* actualmicrobin;
+	Bin* simmicrobin;
 	double svn[1000][20];
 	double svs[20][20];
 	double nsdist[20][20];
-	vector<vector<int> > voxelvector;
+	vector<vector<int> > voxelsvector;
 	vector<vector<int> > neighborvector;
 
 	int numdiambins;
@@ -215,27 +109,18 @@ public:
 	int shapeclass;
 	double overlapallowed;
 	int overlapassignment;
-	long double sizex;
-	long double sizey;
-	long double sizez;
+
 	long xpoints;
 	long ypoints;
 	long zpoints;
-	long double resx;
-	long double resy;
-	long double resz;
-	long double resx1;
-	long double resy1;
-	long double resz1;
+
+	double resx1;
+	double resy1;
+	double resz1;
 	int numneighbins;
 	int nummicros;
-	int crystruct;
 
-	double misorientationtolerance;
-	double minseedconfidence;
-	int minallowedgrainsize;
-	int mergetwinsoption;
-	int alreadyformed;
+
 	int totalpoints;
 	double bcent[250000][5];
 	double eulerrank[180][180][180];
