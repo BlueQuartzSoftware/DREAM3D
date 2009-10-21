@@ -45,7 +45,7 @@ void AIMAboutBox::setApplicationName(QString applicationName)
 
   appName->setText(applicationName);
   QString version("Version ");
-  version.append(AIMBlades_VERSION);
+  version.append(AIMRepresentation_VERSION);
   appVersion->setText( version );
 }
 

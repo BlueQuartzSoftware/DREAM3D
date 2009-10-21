@@ -27,20 +27,20 @@
 #include <string>
 
 
-/* Definition of version number for AIMBlades */
-#cmakedefine AIMBlades_VERSION "@AIMBlades_VERSION@"
-#cmakedefine AIMBlades_VER_MAJOR "@AIMBlades_VER_MAJOR@"
-#cmakedefine AIMBlades_VER_MINOR "@AIMBlades_VER_MINOR@"
-#cmakedefine AIMBlades_VER_PATCH "@AIMBlades_VER_PATCH@"
+/* Definition of version number for AIMRepresentation */
+#cmakedefine AIMRepresentation_VERSION "@AIMRepresentation_VERSION@"
+#cmakedefine AIMRepresentation_VER_MAJOR "@AIMRepresentation_VER_MAJOR@"
+#cmakedefine AIMRepresentation_VER_MINOR "@AIMRepresentation_VER_MINOR@"
+#cmakedefine AIMRepresentation_VER_PATCH "@AIMRepresentation_VER_PATCH@"
 
-namespace AIMBlades
+namespace AIMRepresentation
 {
   namespace Version
   {
-    const std::string Complete("@AIMBlades_VERSION@");
-    const std::string Major("@AIMBlades_VER_MAJOR@");
-    const std::string Minor("@AIMBlades_VER_MINOR@");
-    const std::string Patch("@AIMBlades_VER_PATCH@");
+    const std::string Complete("@AIMRepresentation_VERSION@");
+    const std::string Major("@AIMRepresentation_VER_MAJOR@");
+    const std::string Minor("@AIMRepresentation_VER_MINOR@");
+    const std::string Patch("@AIMRepresentation_VER_PATCH@");
   }
 }
 

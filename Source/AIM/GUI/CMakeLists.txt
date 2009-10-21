@@ -65,13 +65,14 @@ set (AIM_Threads_HDRS
 IDE_SOURCE_PROPERTIES("Source/AIM/Threads" "${AIM_Threads_HDRS}" "${AIM_Threads_SRCS}")
 
 
-set (AIM_Reconstruction_SRCS 
-    
-)                       
-set (AIM_Reconstruction_HDRS
-   
+SET (COMMON_SRCS
+    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/MicroGen3D.h
 )
-IDE_SOURCE_PROPERTIES("Source/AIM/Reconstruction" "${AIM_Reconstruction_HDRS}" "${AIM_Reconstruction_SRCS}")
+
+SET (COMMON_HDRS
+    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/MicroGen3D.cpp
+)
+IDE_SOURCE_PROPERTIES( "Source/AIM/Common" "${COMMON_HDRS}" "${COMMON_SRCS}")
 
 
 SET( Representation_MOC_HDRS
@@ -110,8 +111,8 @@ SET (Representation_PROJECT_SRCS
     ${AIM_COMMON_QT_SRCS}
     ${AIM_Threads_SRCS}
     ${AIM_Threads_HDRS}
-    ${AIM_Reconstruction_SRCS}
-    ${AIM_Reconstruction_HDRS}
+    ${COMMON_SRCS}
+    ${COMMON_HDRS}
     ${Generated_RC_SRCS} 
     ${Generated_UI_HDRS} 
     ${Generated_MOC_SRCS}
@@ -143,7 +144,7 @@ IDE_SOURCE_PROPERTIES ("ConfiguredFiles" "${AIMRepresentation_BINARY_DIR}/AIM/Co
 # ---------- Build the Viewer Application  ----------------------
 ADD_EXECUTABLE( ${PROJECT_NAME} ${GUI_TYPE} ${Representation_PROJECT_SRCS} )
 TARGET_LINK_LIBRARIES( ${PROJECT_NAME}
-                        RepresentationLibrary 
+                        MXA 
                         ${QT_LIBRARIES}  )
 
 InstallationSupport(${PROJECT_NAME} ${EXE_DEBUG_EXTENSION} ${AIMRepresentation_BINARY_DIR})
