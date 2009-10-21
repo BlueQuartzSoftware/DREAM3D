@@ -5,17 +5,24 @@
  *      Author: mjackson
  */
 
-#ifndef GRAINS_H_
-#define GRAINS_H_
+#ifndef _GRAINS_H_
+#define _GRAINS_H_
 
 #include <vector>
 
 
+
+
 class Grain
 {
+
+
   public:
     Grain();
     virtual ~Grain();
+
+
+    int m_uid;
 
     int numvoxels;
     int numneighbors;

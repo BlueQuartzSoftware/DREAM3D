@@ -1,5 +1,5 @@
-#ifndef MicroGen3D_H
-#define MicroGen3D_H
+#ifndef _MicroGen3D_H
+#define _MicroGen3D_H
 
 #include <MXA/Common/MXATypes.h>
 #include <AIM/Common/Grain.h>
@@ -7,6 +7,7 @@
 #include <AIM/Common/Bin.h>
 #include <AIM/Common/Orient.h>
 #include <AIM/Common/AIMRandomNG.h>
+#include <AIM/ANG/AngFileHelper.h>
 
 
 #include <assert.h>
@@ -32,27 +33,29 @@ class MicroGen3D
 {
 
 public:
-  MicroGen3D();
+  static MicroGen3D* New()
+  {
+    return new MicroGen3D;
+  }
+
   virtual ~MicroGen3D();
 
-  void initialize(double sizex,
-                    double sizey,
-                    double sizez,
-                    double resx,
-                    double resy,
-                    double resz,
-                    bool mergetwinsoption,
-                    int32 minallowedgrainsize,
-                    double minseedconfidence,
-                    double misorientationtolerance,
-                    int32 crystruct,
-                    bool alreadyformed);
+  void initialize(double v_sizex, double v_sizey, double v_sizez,
+                  double v_resx, double v_resy, double v_resz,
+                  size_t xPoints, size_t yPoints, size_t zPoints,
+                  bool v_mergetwinsoption,
+                  int32 v_minallowedgrainsize,
+                  double v_minseedconfidence,
+                  double v_misorientationtolerance,
+                  int32 v_crystruct,
+                  bool v_alreadyformed);
 
 
+  AngFileHelper::Pointer _angFileHelper;
 
   double sizex;
-   double sizey;
-   double sizez;
+  double sizey;
+  double sizez;
 
   double resx;
   double resy;
@@ -110,9 +113,9 @@ public:
 	double overlapallowed;
 	int overlapassignment;
 
-	long xpoints;
-	long ypoints;
-	long zpoints;
+	int64 xpoints;
+	int64 ypoints;
+	int64 zpoints;
 
 	double resx1;
 	double resy1;
@@ -187,6 +190,14 @@ public:
 	void write_volume(string);
 	double getmisoquat(double ,double,double ,double ,double ,double ,double,double ,double &,double &,double &);
 	double gamma(double);
+
+	/**
+	 * We are protected this class because when instantiated on the stack it is too large and will
+	 * lead to a segfault via a stack overflow. By creating the class on the heap we should
+	 * be able to get around this problem. This is forced by the static New() method.
+	 */
+protected:
+  MicroGen3D();
 
 private:
 	MicroGen3D(const MicroGen3D&);    // Copy Constructor Not Implemented

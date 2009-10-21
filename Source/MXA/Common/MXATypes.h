@@ -219,18 +219,18 @@ namespace MXATypes {
   const float32 Float32Type = 0.0f;
   const float64 Float64Type = 0.0;
 
-  typedef std::vector<int8> Int8Vector;
-  typedef std::vector<uint8> Uint8Vector;
-  typedef std::vector<int16> Int16Vector;
-  typedef std::vector<uint16> Uint16Vector;
-  typedef std::vector<int32> Int32Vector;
-  typedef std::vector<uint32> Uint32Vector;
-  typedef std::vector<int64> Int64Vector;
-  typedef std::vector<uint64> Uint64Vector;
-  typedef std::vector<float32> Float32Vector;
-  typedef std::vector<float64> Float64Vector;
-
-  typedef std::vector<uint64> H5Dimensions;
+//  typedef std::vector<int8> Int8Vector;
+//  typedef std::vector<uint8> Uint8Vector;
+//  typedef std::vector<int16> Int16Vector;
+//  typedef std::vector<uint16> Uint16Vector;
+//  typedef std::vector<int32> Int32Vector;
+//  typedef std::vector<uint32> Uint32Vector;
+//  typedef std::vector<int64> Int64Vector;
+//  typedef std::vector<uint64> Uint64Vector;
+//  typedef std::vector<float32> Float32Vector;
+//  typedef std::vector<float64> Float64Vector;
+//
+//  typedef std::vector<uint64> H5Dimensions;
 
   typedef int32 MXAError;
 
