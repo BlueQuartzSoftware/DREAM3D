@@ -7,7 +7,9 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-using namespace std;
+//using namespace std;
+
+
 
 #include <MXA/Common/LogTime.h>
 #include <MXA/Utilities/MXALogger.h>
@@ -15,15 +17,15 @@ using namespace std;
 
 #include <AIM/Common/Constants.h>
 #include <AIM/Common/MicroGen3D.h>
-#include <AIM/Common/Voxel.h>
-#include <AIM/Common/Grain.h>
 #include <AIM/Common/AIMVersion.h>
+
+#include <string>
+#include <iostream>
 
 //-- Boost Program Options
 #include <boost/program_options.hpp>
 
-#include <string>
-#include <iostream>
+
 
 #define CHECK_ARG(var, mandatory)\
     if (vm.count(#var) > 1) { mxa_log << logTime() << "Multiple Occurances for Parameter " << #var << std::endl; }\
@@ -35,9 +37,6 @@ using namespace std;
   mxa_log << "--" << #var << " is ";\
   if (var == true) { mxa_log << "TRUE"; } else { mxa_log << "FALSE"; }\
   mxa_log << "" << std::endl;
-
-
-using namespace AIM::Reconstruction;
 
 
 // -----------------------------------------------------------------------------
@@ -66,7 +65,7 @@ int main(int argc, char **argv)
   bool alreadyformed = false;
 
   std::string logFile;
-  
+
   // Handle program options passed on command line.
   boost::program_options::options_description desc("Possible Parameters");
   desc.add_options()
@@ -89,9 +88,12 @@ int main(int argc, char **argv)
 
 try
 {
+
+
   boost::program_options::variables_map vm;
   boost::program_options::store(boost::program_options::parse_command_line(argc, argv, desc), vm);
   boost::program_options::notify(vm);
+
   // Print help message if requested by user and return.
   if (vm.count("help") || argc < 2)
   {
@@ -124,9 +126,18 @@ try
   CHECK_ARG( crystruct, true);
   CHECK_BOOL_ARG( alreadyformed);
 
+#if 0
+  MicroGen3D* m = NULL;
+  m = new MicroGen3D;
+  m->initialize(sizex, sizey, sizez, resx, resy, resz, mergetwinsoption, minallowedgrainsize, minseedconfidence,
+                misorientationtolerance, crystruct, alreadyformed);
+#endif
+
   MicroGen3D microgen;
+#if 0
   microgen.initialize(sizex, sizey, sizez, resx, resy, resz, mergetwinsoption, minallowedgrainsize, minseedconfidence,
                       misorientationtolerance, crystruct, alreadyformed);
+
 
   int32 numgrains = 0;
   if(alreadyformed == false)
@@ -172,15 +183,16 @@ try
   microgen.measure_misorientations();
   microgen.find_colors();
   microgen.find_convexities();
-  microgen.volume_stats(StatsFile, VolBinFile, BOverABinsFile,
-                        COverABinsFile, COverBBinsFile, SVNFile, SVSFile,
-                        MisorientationBinsFile, MicroBinsFile);
+  microgen.volume_stats(AIM::Reconstruction::StatsFile, AIM::Reconstruction::VolBinFile, AIM::Reconstruction::BOverABinsFile,
+                        AIM::Reconstruction::COverABinsFile, AIM::Reconstruction::COverBBinsFile, AIM::Reconstruction::SVNFile, AIM::Reconstruction::SVSFile,
+                        AIM::Reconstruction::MisorientationBinsFile, AIM::Reconstruction::MicroBinsFile);
   microgen.write_volume2(AIM::Reconstruction::ReconstructedDataFile);
-  microgen.create_visualization(ReconstructedVisualizationFile);
-  microgen.write_grains(GrainsFile);
-  microgen.write_axisorientations(AxisOrientationsFile);
-  microgen.write_eulerangles(EulerAnglesFile);
-  microgen.find_boundarycenters(BoundaryCentersFile);
+  microgen.create_visualization(AIM::Reconstruction::ReconstructedVisualizationFile);
+  microgen.write_grains(AIM::Reconstruction::GrainsFile);
+  microgen.write_axisorientations(AIM::Reconstruction::AxisOrientationsFile);
+  microgen.write_eulerangles(AIM::Reconstruction::EulerAnglesFile);
+  microgen.find_boundarycenters(AIM::Reconstruction::BoundaryCentersFile);
+  #endif
 }
 catch (...)
 {
