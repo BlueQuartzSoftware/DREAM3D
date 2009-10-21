@@ -78,12 +78,9 @@ MicroGen3D::~MicroGen3D()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void MicroGen3D::initialize(double v_sizex,
-                  double v_sizey,
-                  double v_sizez,
-                  double v_resx,
-                  double v_resy,
-                  double v_resz,
+void MicroGen3D::initialize(double v_sizex, double v_sizey, double v_sizez,
+                  double v_resx, double v_resy, double v_resz,
+                  size_t xPoints, size_t yPoints, size_t zPoints,
                   bool v_mergetwinsoption,
                   int32 v_minallowedgrainsize,
                   double v_minseedconfidence,
@@ -104,9 +101,9 @@ void MicroGen3D::initialize(double v_sizex,
   crystruct = v_crystruct;
   alreadyformed = (v_alreadyformed == true) ? 1 : 0;
 
-  xpoints = (sizex / resx) + 3;
-  ypoints = (sizey / resy) + 3;
-  zpoints = (sizez / resz) + 3;
+  xpoints = xPoints;
+  ypoints = yPoints;
+  zpoints = zPoints;
   totalpoints = xpoints * ypoints * zpoints;
 
   voxels = new Voxel[totalpoints];
@@ -147,6 +144,7 @@ void MicroGen3D::loadSlices()
   int zero = 0;
   int checked = 1;
   int badgrain = -1;
+  size_t index = 0;
   for(int k = 0; k < zpoints; k++)
     {
     if(k == 0 || k == zpoints-1)
@@ -155,12 +153,13 @@ void MicroGen3D::loadSlices()
       {
         for(int i = 0; i < xpoints; i++)
         {
-          voxels[((k*xpoints*ypoints)+(j*xpoints)+i)].euler1 = -1;
-          voxels[((k*xpoints*ypoints)+(j*xpoints)+i)].euler2 = -1;
-          voxels[((k*xpoints*ypoints)+(j*xpoints)+i)].euler3 = -1;
-          voxels[((k*xpoints*ypoints)+(j*xpoints)+i)].confidence = zero;
-          voxels[((k*xpoints*ypoints)+(j*xpoints)+i)].alreadychecked = checked;
-          voxels[((k*xpoints*ypoints)+(j*xpoints)+i)].grainname = badgrain;
+          index = ((k*xpoints*ypoints)+(j*xpoints)+i);
+           voxels[index].euler1 = -1;
+           voxels[index].euler2 = -1;
+           voxels[index].euler3 = -1;
+           voxels[index].confidence = zero;
+           voxels[index].alreadychecked = checked;
+           voxels[index].grainname = badgrain;
         }
       }
     }
@@ -189,25 +188,36 @@ void MicroGen3D::loadSlices()
         {
           for(int i = 0; i < xpoints; i++)
           {
-            voxels[((k*xpoints*ypoints)+(j*xpoints)+i)].euler1 = -1;
-            voxels[((k*xpoints*ypoints)+(j*xpoints)+i)].euler2 = -1;
-            voxels[((k*xpoints*ypoints)+(j*xpoints)+i)].euler3 = -1;
-            voxels[((k*xpoints*ypoints)+(j*xpoints)+i)].confidence = zero;
-            voxels[((k*xpoints*ypoints)+(j*xpoints)+i)].alreadychecked = checked;
-            voxels[((k*xpoints*ypoints)+(j*xpoints)+i)].grainname = badgrain;
+            index = ((k*xpoints*ypoints)+(j*xpoints)+i);
+            voxels[index].euler1 = -1;
+            voxels[index].euler2 = -1;
+            voxels[index].euler3 = -1;
+            voxels[index].confidence = zero;
+            voxels[index].alreadychecked = checked;
+            voxels[index].grainname = badgrain;
           }
         }
         if(j > 0 && j < ypoints-1)
         {
-          voxels[((k*xpoints*ypoints)+(j*xpoints)+0)].euler1 = -1;
-          voxels[((k*xpoints*ypoints)+(j*xpoints)+0)].euler2 = -1;
-          voxels[((k*xpoints*ypoints)+(j*xpoints)+0)].euler3 = -1;
-          voxels[((k*xpoints*ypoints)+(j*xpoints)+0)].confidence = zero;
-          voxels[((k*xpoints*ypoints)+(j*xpoints)+0)].alreadychecked = checked;
-          voxels[((k*xpoints*ypoints)+(j*xpoints)+0)].grainname = badgrain;
+          index = ((k*xpoints*ypoints)+(j*xpoints)+0);
+           voxels[index].euler1 = -1;
+           voxels[index].euler2 = -1;
+           voxels[index].euler3 = -1;
+           voxels[index].confidence = zero;
+           voxels[index].alreadychecked = checked;
+           voxels[index].grainname = badgrain;
           for(int i = 1; i < xpoints-1; i++)
           {
-            inputFile >> voxels[((k*xpoints*ypoints)+(j*xpoints)+i)].euler1 >> voxels[((k*xpoints*ypoints)+(j*xpoints)+i)].euler2 >> voxels[((k*xpoints*ypoints)+(j*xpoints)+i)].euler3 >> voxels[((k*xpoints*ypoints)+(j*xpoints)+i)].xc >> voxels[((k*xpoints*ypoints)+(j*xpoints)+i)].xc >> junk1 >> voxels[((k*xpoints*ypoints)+(j*xpoints)+i)].confidence >> junk2 >> junk3 >> junk4;
+            inputFile >> voxels[((k*xpoints*ypoints)+(j*xpoints)+i)].euler1
+            >> voxels[((k*xpoints*ypoints)+(j*xpoints)+i)].euler2
+            >> voxels[((k*xpoints*ypoints)+(j*xpoints)+i)].euler3
+            >> voxels[((k*xpoints*ypoints)+(j*xpoints)+i)].xc
+            >> voxels[((k*xpoints*ypoints)+(j*xpoints)+i)].xc
+            >> junk1
+            >> voxels[((k*xpoints*ypoints)+(j*xpoints)+i)].confidence
+            >> junk2
+            >> junk3
+            >> junk4;
             voxels[((k*xpoints*ypoints)+(j*xpoints)+i)].zc = (k-1)*resz;
             voxels[((k*xpoints*ypoints)+(j*xpoints)+i)].alreadychecked = zero;
             voxels[((k*xpoints*ypoints)+(j*xpoints)+i)].grainname = badgrain;

@@ -33,7 +33,7 @@
 #define MXA_NULL_SHARED_POINTER(thisClass)\
   static Pointer NullPointer(void)\
   { \
-    return Pointer(static_cast<thisClass*>(NULL));\
+    return Pointer(static_cast< thisClass* >(NULL));\
   }
 
 /**
@@ -46,6 +46,18 @@
   typedef boost::shared_ptr<const Self >  ConstPointer;\
   typedef boost::weak_ptr< thisClass > WeakPointer;\
   typedef boost::weak_ptr< thisClass > ConstWeakPointer;\
+  MXA_NULL_SHARED_POINTER(thisClass)
+
+/**
+ * @brief Creates some basic typedefs that can be used throughout the code to
+ * reference the class.
+ */
+#define MXA_SHARED_POINTERS_WITH_TYPENAME(thisClass)\
+  typedef typename thisClass                       Self;\
+  typedef typename boost::shared_ptr< Self >       Pointer;\
+  typedef typename boost::shared_ptr<const Self >  ConstPointer;\
+  typedef typename boost::weak_ptr< thisClass >    WeakPointer;\
+  typedef typename boost::weak_ptr< thisClass >    ConstWeakPointer;\
   MXA_NULL_SHARED_POINTER(thisClass)
 
 /**

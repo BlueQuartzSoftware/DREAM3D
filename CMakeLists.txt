@@ -118,8 +118,9 @@ IF ( AIM_BUILD_RECONSTRUCTION_TOOL )
 ENDIF ()
 
 if (AIM_BUILD_QT_APPS)
-    ADD_SUBDIRECTORY( ${AIMRepresentation_SOURCE_DIR}/Source/AIM/GUI)
+    ADD_SUBDIRECTORY( ${AIMRepresentation_SOURCE_DIR}/Source/AIM/GUI ${AIMRepresentation_BINARY_DIR}/AIM/GUI)
 endif()
 
+ADD_SUBDIRECTORY( ${AIMRepresentation_SOURCE_DIR}/Source/Test ${AIMRepresentation_BINARY_DIR}/Test)
 include(${AIMRepresentation_RESOURCES_DIR}/CMake/AIMInstall.cmake)
 
