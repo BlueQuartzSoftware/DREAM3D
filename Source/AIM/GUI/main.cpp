@@ -6,7 +6,7 @@
 //
 //
 ///////////////////////////////////////////////////////////////////////////////
-#include "AIMRepresentation.h"
+#include "Representation.h"
 
 #include <AIM/Common/Qt/QRecentFileList.h>
 
@@ -21,7 +21,7 @@ int main (int argc, char *argv[])
   QApplication app(argc, argv);
   QCoreApplication::setOrganizationName("BlueQuartz Software");
   QCoreApplication::setOrganizationDomain("bluequartz.net");
-  QCoreApplication::setApplicationName("AIMRepresentation");
+  QCoreApplication::setApplicationName("Representation");
 #if defined( Q_WS_MAC )
   //Needed for typical Mac program behavior.
   app.setQuitOnLastWindowClosed( true );
@@ -35,7 +35,7 @@ int main (int argc, char *argv[])
   QRecentFileList::instance()->readList(prefs);
 
 
-  AIMRepresentation *viewer = new AIMRepresentation;
+  Representation *viewer = new Representation;
   viewer->show();
   int app_return = app.exec();
 

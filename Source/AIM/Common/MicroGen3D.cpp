@@ -20,15 +20,16 @@
 #define M_PI 3.1415926535897;
 #endif
 
+#include <sstream>
 
 using namespace std;
 
-MicroGen3D::MicroGen3D() 
+MicroGen3D::MicroGen3D()
 {
 
 }
 
-MicroGen3D::~MicroGen3D() 
+MicroGen3D::~MicroGen3D()
 {
 
 }
@@ -36,9 +37,9 @@ MicroGen3D::~MicroGen3D()
 // class that holds seed coordinates loaded from data file
 
 void MicroGen3D::loadSlices()
-{ 
+{
 
-  int count = 0;    
+  int count = 0;
   double z;
   double junk1;
   double junk2;
@@ -66,6 +67,7 @@ void MicroGen3D::loadSlices()
     }
     if(k > 0 && k < zpoints-1)
     {
+#if 0
       char filename[15] = "TXT\\1";
       char extension[15] = ".txt";
       char cindex[5];
@@ -74,9 +76,14 @@ void MicroGen3D::loadSlices()
       _itoa_s(fileindex,cindex,10);
       strcat(filename,cindex);
       strcat(filename,extension);
+#endif
+      int fileindex = k+1001;
+      std::stringstream ss;
+      ss << "TXT/1" << fileindex << ".txt";
+      std::string filename = ss.str();
 
       ifstream inputFile;
-      inputFile.open(filename);
+      inputFile.open(filename.c_str() );
       for(int j = 0; j < ypoints; j++)
       {
         if(j==0 || j == ypoints-1)
@@ -122,7 +129,7 @@ void MicroGen3D::loadSlices()
       }
       inputFile.close();
     }
-    }    
+    }
 }
 
 int  MicroGen3D::form_grains()
@@ -275,7 +282,7 @@ int  MicroGen3D::renumber_grains1()
 }
 void  MicroGen3D::write_volume1(string writename10)
 {
-    ofstream outFile; 
+    ofstream outFile;
     outFile.open(writename10.c_str());
   for(int i = 0; i < (xpoints*ypoints*zpoints); i++)
   {
@@ -287,8 +294,8 @@ void  MicroGen3D::write_volume1(string writename10)
     double y = voxel[i].yc;
     double z = voxel[i].zc;
     double ci = voxel[i].confidence;
-    outFile << grainname << " " << ea1 << " " << ea2 << " " << ea3 << " " << x << " " << y << " " << z << " " << ci << endl; 
-  } 
+    outFile << grainname << " " << ea1 << " " << ea2 << " " << ea3 << " " << x << " " << y << " " << z << " " << ci << endl;
+  }
   outFile.close();
 }
 void  MicroGen3D::assign_badpoints()
@@ -611,7 +618,7 @@ void  MicroGen3D::homogenize_grains()
             o[0][0] = 0.0; o[0][1] = 0.0; o[0][2] = -1.0;
             o[1][0] = 0.0; o[1][1] = 1.0; o[1][2] =  0.0;
             o[2][0] = 1.0; o[2][1] = 0.0; o[2][2] =  0.0;
-          } 
+          }
           else if (k == 5)
           {
             o[0][0] =  0.0; o[0][1] = 0.0; o[0][2] = 1.0;
@@ -638,10 +645,10 @@ void  MicroGen3D::homogenize_grains()
           }
           else if (k == 9)
           {
-            o[0][0] = 0.0; o[0][1] = -1.0; o[0][2] = 0.0; 
+            o[0][0] = 0.0; o[0][1] = -1.0; o[0][2] = 0.0;
             o[1][0] = 1.0; o[1][1] =  0.0; o[1][2] = 0.0;
             o[2][0] = 0.0; o[2][1] =  0.0; o[2][2] = 1.0;
-          } 
+          }
           else if (k == 10)
           {
             o[0][0] =  0.0; o[0][1] = -1.0; o[0][2] = 0.0;
@@ -715,7 +722,7 @@ void  MicroGen3D::homogenize_grains()
             o[2][0] =  0.0; o[2][1] = -1.0; o[2][2] =  0.0;
           }
           else if (k == 22)
-          { 
+          {
             o[0][0] =  0.0; o[0][1] =  0.0; o[0][2] = -1.0;
             o[1][0] =  0.0; o[1][1] = -1.0; o[1][2] =  0.0;
             o[2][0] = -1.0; o[2][1] =  0.0; o[2][2] =  0.0;
@@ -728,22 +735,22 @@ void  MicroGen3D::homogenize_grains()
           }
           ga[0][0] = cos(g1ea1)*cos(g1ea3)-sin(g1ea1)*sin(g1ea3)*cos(g1ea2);
           ga[0][1] = sin(g1ea1)*cos(g1ea3)+cos(g1ea1)*sin(g1ea3)*cos(g1ea2);
-          ga[0][2] = sin(g1ea3)*sin(g1ea2);     
-          ga[1][0] = -cos(g1ea1)*sin(g1ea3)-sin(g1ea1)*cos(g1ea3)*cos(g1ea2); 
+          ga[0][2] = sin(g1ea3)*sin(g1ea2);
+          ga[1][0] = -cos(g1ea1)*sin(g1ea3)-sin(g1ea1)*cos(g1ea3)*cos(g1ea2);
           ga[1][1] = -sin(g1ea1)*sin(g1ea3)+cos(g1ea1)*cos(g1ea3)*cos(g1ea2);
-          ga[1][2] =  cos(g1ea3)*sin(g1ea2);    
+          ga[1][2] =  cos(g1ea3)*sin(g1ea2);
           ga[2][0] =  sin(g1ea1)*sin(g1ea2);
           ga[2][1] = -cos(g1ea1)*sin(g1ea2);
           ga[2][2] =  cos(g1ea2);
           m1[0][0] = o[0][0]*ga[0][0] + o[0][1]*ga[1][0] + o[0][2]*ga[2][0];
           m1[0][1] = o[0][0]*ga[0][1] + o[0][1]*ga[1][1] + o[0][2]*ga[2][1];
-          m1[0][2] = o[0][0]*ga[0][2] + o[0][1]*ga[1][2] + o[0][2]*ga[2][2];  
+          m1[0][2] = o[0][0]*ga[0][2] + o[0][1]*ga[1][2] + o[0][2]*ga[2][2];
           m1[1][0] = o[1][0]*ga[0][0] + o[1][1]*ga[1][0] + o[1][2]*ga[2][0];
           m1[1][1] = o[1][0]*ga[0][1] + o[1][1]*ga[1][1] + o[1][2]*ga[2][1];
           m1[1][2] = o[1][0]*ga[0][2] + o[1][1]*ga[1][2] + o[1][2]*ga[2][2];
           m1[2][0] = o[2][0]*ga[0][0] + o[2][1]*ga[1][0] + o[2][2]*ga[2][0];
           m1[2][1] = o[2][0]*ga[0][1] + o[2][1]*ga[1][1] + o[2][2]*ga[2][1];
-          m1[2][2] = o[2][0]*ga[0][2] + o[2][1]*ga[1][2] + o[2][2]*ga[2][2];        
+          m1[2][2] = o[2][0]*ga[0][2] + o[2][1]*ga[1][2] + o[2][2]*ga[2][2];
           double ea2 = acos(m1[2][2]);
           double cosine3 = (m1[1][2]/sin(ea2));
           double sine3 = (m1[0][2]/sin(ea2));
@@ -1293,7 +1300,7 @@ void  MicroGen3D::find_vectors ()
         uber[1][2] = Iyz;
         uber[2][0] = Ixz;
         uber[2][1] = Iyz;
-        uber[2][2] = Izz-e[j][0]; 
+        uber[2][2] = Izz-e[j][0];
         double **uberelim;
         double **uberbelim;
         uberelim = new double *[3];
@@ -1475,10 +1482,10 @@ void  MicroGen3D::find_colors()
     double sd[3][1];
     go[0][0] = cos(g1ea1)*cos(g1ea3)-sin(g1ea1)*sin(g1ea3)*cos(g1ea2);
     go[0][1] = sin(g1ea1)*cos(g1ea3)+cos(g1ea1)*sin(g1ea3)*cos(g1ea2);
-    go[0][2] = sin(g1ea3)*sin(g1ea2);   
-    go[1][0] = -cos(g1ea1)*sin(g1ea3)-sin(g1ea1)*cos(g1ea3)*cos(g1ea2); 
+    go[0][2] = sin(g1ea3)*sin(g1ea2);
+    go[1][0] = -cos(g1ea1)*sin(g1ea3)-sin(g1ea1)*cos(g1ea3)*cos(g1ea2);
     go[1][1] = -sin(g1ea1)*sin(g1ea3)+cos(g1ea1)*cos(g1ea3)*cos(g1ea2);
-    go[1][2] =  cos(g1ea3)*sin(g1ea2);  
+    go[1][2] =  cos(g1ea3)*sin(g1ea2);
     go[2][0] =  sin(g1ea1)*sin(g1ea2);
     go[2][1] = -cos(g1ea1)*sin(g1ea2);
     go[2][2] =  cos(g1ea2);
@@ -1635,7 +1642,7 @@ void  MicroGen3D::find_convexities()
         {
           double x = voxel[j].xc;
           double y = voxel[j].yc;
-          double z = voxel[j].zc; 
+          double z = voxel[j].zc;
           double axis[3][3];
           double diff[3][1];
           double axiselim[3][3];
@@ -1855,7 +1862,7 @@ void  MicroGen3D::volume_stats(string writename1, string writename2, string writ
         }
         else if (k == 9)
         {
-          o[0][0] = 0.0; o[0][1] = -1.0; o[0][2] = 0.0; 
+          o[0][0] = 0.0; o[0][1] = -1.0; o[0][2] = 0.0;
           o[1][0] = 1.0; o[1][1] =  0.0; o[1][2] = 0.0;
           o[2][0] = 0.0; o[2][1] =  0.0; o[2][2] = 1.0;
         }
@@ -1932,7 +1939,7 @@ void  MicroGen3D::volume_stats(string writename1, string writename2, string writ
           o[2][0] =  0.0; o[2][1] = -1.0; o[2][2] =  0.0;
         }
         else if (k == 22)
-        { 
+        {
           o[0][0] =  0.0; o[0][1] =  0.0; o[0][2] = -1.0;
           o[1][0] =  0.0; o[1][1] = -1.0; o[1][2] =  0.0;
           o[2][0] = -1.0; o[2][1] =  0.0; o[2][2] =  0.0;
@@ -1945,22 +1952,22 @@ void  MicroGen3D::volume_stats(string writename1, string writename2, string writ
         }
         ga[0][0] = cos(g1ea1)*cos(g1ea3)-sin(g1ea1)*sin(g1ea3)*cos(g1ea2);
         ga[0][1] = sin(g1ea1)*cos(g1ea3)+cos(g1ea1)*sin(g1ea3)*cos(g1ea2);
-        ga[0][2] = sin(g1ea3)*sin(g1ea2);     
-        ga[1][0] = -cos(g1ea1)*sin(g1ea3)-sin(g1ea1)*cos(g1ea3)*cos(g1ea2); 
+        ga[0][2] = sin(g1ea3)*sin(g1ea2);
+        ga[1][0] = -cos(g1ea1)*sin(g1ea3)-sin(g1ea1)*cos(g1ea3)*cos(g1ea2);
         ga[1][1] = -sin(g1ea1)*sin(g1ea3)+cos(g1ea1)*cos(g1ea3)*cos(g1ea2);
-        ga[1][2] =  cos(g1ea3)*sin(g1ea2);    
+        ga[1][2] =  cos(g1ea3)*sin(g1ea2);
         ga[2][0] =  sin(g1ea1)*sin(g1ea2);
         ga[2][1] = -cos(g1ea1)*sin(g1ea2);
         ga[2][2] =  cos(g1ea2);
         m1[0][0] = o[0][0]*ga[0][0] + o[0][1]*ga[1][0] + o[0][2]*ga[2][0];
         m1[0][1] = o[0][0]*ga[0][1] + o[0][1]*ga[1][1] + o[0][2]*ga[2][1];
-        m1[0][2] = o[0][0]*ga[0][2] + o[0][1]*ga[1][2] + o[0][2]*ga[2][2];  
+        m1[0][2] = o[0][0]*ga[0][2] + o[0][1]*ga[1][2] + o[0][2]*ga[2][2];
         m1[1][0] = o[1][0]*ga[0][0] + o[1][1]*ga[1][0] + o[1][2]*ga[2][0];
         m1[1][1] = o[1][0]*ga[0][1] + o[1][1]*ga[1][1] + o[1][2]*ga[2][1];
         m1[1][2] = o[1][0]*ga[0][2] + o[1][1]*ga[1][2] + o[1][2]*ga[2][2];
         m1[2][0] = o[2][0]*ga[0][0] + o[2][1]*ga[1][0] + o[2][2]*ga[2][0];
         m1[2][1] = o[2][0]*ga[0][1] + o[2][1]*ga[1][1] + o[2][2]*ga[2][1];
-        m1[2][2] = o[2][0]*ga[0][2] + o[2][1]*ga[1][2] + o[2][2]*ga[2][2];  
+        m1[2][2] = o[2][0]*ga[0][2] + o[2][1]*ga[1][2] + o[2][2]*ga[2][2];
         double ea2 = acos(m1[2][2]);
         double cosine3 = (m1[1][2]/sin(ea2));
         double sine3 = (m1[0][2]/sin(ea2));
@@ -2179,22 +2186,22 @@ void  MicroGen3D::volume_stats(string writename1, string writename2, string writ
       double schmid = goodgrain[j].schmidfactor;
       double em = goodgrain[j].convexity;
       vector<int> nlist = goodgrain[j].neighborlist;
-      sdvol = sdvol + ((voxvol-avgvol)*(voxvol-avgvol));    
-      sdlnvol = sdlnvol + ((logvol-avglnvol)*(logvol-avglnvol));    
-      sdneigh = sdneigh + ((nnum-avgneigh)*(nnum-avgneigh));    
-      sdlnneigh = sdlnneigh + ((lognnum-avglnneigh)*(lognnum-avglnneigh));    
-      sdbovera = sdbovera + ((bovera-avgbovera)*(bovera-avgbovera));    
-      sdcovera = sdcovera + ((covera-avgcovera)*(covera-avgcovera));    
-      sdcoverb = sdcoverb + ((coverb-avgcoverb)*(coverb-avgcoverb));    
+      sdvol = sdvol + ((voxvol-avgvol)*(voxvol-avgvol));
+      sdlnvol = sdlnvol + ((logvol-avglnvol)*(logvol-avglnvol));
+      sdneigh = sdneigh + ((nnum-avgneigh)*(nnum-avgneigh));
+      sdlnneigh = sdlnneigh + ((lognnum-avglnneigh)*(lognnum-avglnneigh));
+      sdbovera = sdbovera + ((bovera-avgbovera)*(bovera-avgbovera));
+      sdcovera = sdcovera + ((covera-avgcovera)*(covera-avgcovera));
+      sdcoverb = sdcoverb + ((coverb-avgcoverb)*(coverb-avgcoverb));
       sddiam = sddiam + ((diam-avgdiam)*(diam-avgdiam));
       sdlogdiam = sdlogdiam + ((logdiam-avglogdiam)*(logdiam-avglogdiam));
       sdschmid = sdschmid + ((schmid-avgschmid)*(schmid-avgschmid));
       sdem = sdem + ((em-avgem)*(em-avgem));
-      svn[diamint][2] = svn[diamint][2] + ((nnum-svn[diamint][1])*(nnum-svn[diamint][1]));    
-      svn[diamint][4] = svn[diamint][4] + ((lognnum-svn[diamint][3])*(lognnum-svn[diamint][3]));    
-      svbovera[diamint][2] = svbovera[diamint][2] + ((bovera-svbovera[diamint][1])*(bovera-svbovera[diamint][1]));    
-      svcovera[diamint][2] = svcovera[diamint][2] + ((covera-svcovera[diamint][1])*(covera-svcovera[diamint][1]));    
-      svcoverb[diamint][2] = svcoverb[diamint][2] + ((coverb-svcoverb[diamint][1])*(coverb-svcoverb[diamint][1]));    
+      svn[diamint][2] = svn[diamint][2] + ((nnum-svn[diamint][1])*(nnum-svn[diamint][1]));
+      svn[diamint][4] = svn[diamint][4] + ((lognnum-svn[diamint][3])*(lognnum-svn[diamint][3]));
+      svbovera[diamint][2] = svbovera[diamint][2] + ((bovera-svbovera[diamint][1])*(bovera-svbovera[diamint][1]));
+      svcovera[diamint][2] = svcovera[diamint][2] + ((covera-svcovera[diamint][1])*(covera-svcovera[diamint][1]));
+      svcoverb[diamint][2] = svcoverb[diamint][2] + ((coverb-svcoverb[diamint][1])*(coverb-svcoverb[diamint][1]));
       svschmid[diamint][2] = svschmid[diamint][2] + ((schmid-svschmid[diamint][1])*(schmid-svschmid[diamint][1]));
       svem[diamint][2] = svem[diamint][2] + ((em-svem[diamint][1])*(em-svem[diamint][1]));
       int size = int(nlist.size());
@@ -2391,8 +2398,8 @@ void  MicroGen3D::volume_stats(string writename1, string writename2, string writ
     texstrength = pow(texindex,0.5);
     orand[temp50][0] = texindex;
     orand[temp50][1] = texstrength;
-  } 
-    ofstream outFile; 
+  }
+    ofstream outFile;
     outFile.open(writename1.c_str());
   outFile << "INDIVIDUAL DISTRIBUTIONS" << endl;
   outFile << endl;
@@ -2411,7 +2418,7 @@ void  MicroGen3D::volume_stats(string writename1, string writename2, string writ
   outFile << "Volume Bin" << "  " << "Count" << " " << "Neighbor Bin" << "  " << "Count" << " " << "b/a Bin" << " " << "Count" << " " << "c/a Bin" << " " << "Count" << " " << "c/b Bin" << " " << "Count" << " " << "Schmid Factor Bin" << " " << "Count" << " " << "Ellipsoidal Misfit Bin" << "  " << "Count" << endl;
   for(int temp6 = 0; temp6 < 25; temp6++)
   {
-    outFile << (vbw*temp6) << " " << vbin[temp6]/actualgrains << "  " << (nbw*temp6) << " " << nbin[temp6]/actualgrains << "  " << (sbw1*temp6) << "  " << sbin1[temp6]/actualgrains << " " << (sbw2*temp6) << "  " << sbin2[temp6]/actualgrains << " " << (sbw3*temp6) << "  " << sbin3[temp6]/actualgrains << " " << (schw*temp6) << "  " << schbin[temp6]/actualgrains << "  " << (emw*temp6) << " " << embin[temp6]/actualgrains << endl; 
+    outFile << (vbw*temp6) << " " << vbin[temp6]/actualgrains << "  " << (nbw*temp6) << " " << nbin[temp6]/actualgrains << "  " << (sbw1*temp6) << "  " << sbin1[temp6]/actualgrains << " " << (sbw2*temp6) << "  " << sbin2[temp6]/actualgrains << " " << (sbw3*temp6) << "  " << sbin3[temp6]/actualgrains << " " << (schw*temp6) << "  " << schbin[temp6]/actualgrains << "  " << (emw*temp6) << " " << embin[temp6]/actualgrains << endl;
   }
   outFile << endl;
   outFile << "CORRELATIONS" << endl;
@@ -2424,10 +2431,10 @@ void  MicroGen3D::volume_stats(string writename1, string writename2, string writ
   outFile << "Size V Schmid Factor" << "  " << svschmidcr << endl;
   outFile << "Size V Ellipsoidal Misfit" << " " << svemcr << endl;
   outFile << endl;
-  outFile << "Diameter" << "  " << "Count" << " " << "Avg. Neighbors" << "  " << "Std. Dev. Neighbors" << " " << "Avg. Ln Neighbors" << " " << "Std. Dev.  Ln Neighbors" << " " << "Avg. Neighbor Diameter" << "  " << "Std. Dev. Neighbor Diameter" << " " <<"Avg. b/a" << " " << "Std. Dev. b/a" << " " << "Avg. c/a" << "  " << "Std. Dev. c/a" << " " << "Avg. c/b" << "  " << "Std. Dev. c/b" << " " <<"P b/a" << "  " << "Q Dev. b/a" << "  " << "P c/a" << " " << "Q Dev. c/a" << "  " << "P c/b" << " " << "Q Dev. c/b" << "  " << "Avg. Schmid Factor" << "  " << "Std. Dev. Schmid Factor" << " " << "Avg. Ellipsoidal misfot" << " " << "Std. Dev. Ellipsoidal misfot" << endl; 
+  outFile << "Diameter" << "  " << "Count" << " " << "Avg. Neighbors" << "  " << "Std. Dev. Neighbors" << " " << "Avg. Ln Neighbors" << " " << "Std. Dev.  Ln Neighbors" << " " << "Avg. Neighbor Diameter" << "  " << "Std. Dev. Neighbor Diameter" << " " <<"Avg. b/a" << " " << "Std. Dev. b/a" << " " << "Avg. c/a" << "  " << "Std. Dev. c/a" << " " << "Avg. c/b" << "  " << "Std. Dev. c/b" << " " <<"P b/a" << "  " << "Q Dev. b/a" << "  " << "P c/a" << " " << "Q Dev. c/a" << "  " << "P c/b" << " " << "Q Dev. c/b" << "  " << "Avg. Schmid Factor" << "  " << "Std. Dev. Schmid Factor" << " " << "Avg. Ellipsoidal misfot" << " " << "Std. Dev. Ellipsoidal misfot" << endl;
   for(int temp7 = 0; temp7 < (maxdiamint+1); temp7++)
   {
-    outFile << temp7 << " " << svn[temp7][0] << " " << svn[temp7][1] << " " << svn[temp7][2] << " " << svn[temp7][3] << " " << svn[temp7][4] << " " << svs[temp7][1] << " " << svs[temp7][2] << " " << svbovera[temp7][1] << "  " << svbovera[temp7][2] << "  " << svcovera[temp7][1] << "  " << svcovera[temp7][2] << "  " << svcoverb[temp7][1] << "  " << svcoverb[temp7][2] << "  " << svbovera[temp7][3] << "  " << svbovera[temp7][4] << "  " << svcovera[temp7][3] << "  " << svcovera[temp7][4] << "  " << svcoverb[temp7][3] << "  " << svcoverb[temp7][4] << "  " << svschmid[temp7][1] << "  " << svschmid[temp7][2] << "  " << svem[temp7][1] << "  " << svem[temp7][2] << endl; 
+    outFile << temp7 << " " << svn[temp7][0] << " " << svn[temp7][1] << " " << svn[temp7][2] << " " << svn[temp7][3] << " " << svn[temp7][4] << " " << svs[temp7][1] << " " << svs[temp7][2] << " " << svbovera[temp7][1] << "  " << svbovera[temp7][2] << "  " << svcovera[temp7][1] << "  " << svcovera[temp7][2] << "  " << svcoverb[temp7][1] << "  " << svcoverb[temp7][2] << "  " << svbovera[temp7][3] << "  " << svbovera[temp7][4] << "  " << svcovera[temp7][3] << "  " << svcovera[temp7][4] << "  " << svcoverb[temp7][3] << "  " << svcoverb[temp7][4] << "  " << svschmid[temp7][1] << "  " << svschmid[temp7][2] << "  " << svem[temp7][1] << "  " << svem[temp7][2] << endl;
   }
   outFile << endl;
   for(int temp8 = 0; temp8 < 25; temp8++)
@@ -2508,7 +2515,7 @@ void  MicroGen3D::volume_stats(string writename1, string writename2, string writ
     outFile << orand[temp26][0] << "  " << orand[temp26][1] << endl;
   }
   outFile.close();
-    ofstream outFile1; 
+    ofstream outFile1;
     outFile1.open(writename2.c_str());
   double probability = 0;
   double binwidth = (maxdiam*1.5)/double(numdiambins);
@@ -2522,7 +2529,7 @@ void  MicroGen3D::volume_stats(string writename1, string writename2, string writ
     outFile1 << cummprobability << "  " << diameter << endl;
   }
   outFile1.close();
-    ofstream outFile2; 
+    ofstream outFile2;
     outFile2.open(writename3.c_str());
   probability = 0;
   cummprobability = 0;
@@ -2551,7 +2558,7 @@ void  MicroGen3D::volume_stats(string writename1, string writename2, string writ
     }
   }
   outFile2.close();
-    ofstream outFile3; 
+    ofstream outFile3;
     outFile3.open(writename4.c_str());
   probability = 0;
   for(int i = 0; i < numsizebins; i++)
@@ -2579,7 +2586,7 @@ void  MicroGen3D::volume_stats(string writename1, string writename2, string writ
     }
   }
   outFile3.close();
-    ofstream outFile4; 
+    ofstream outFile4;
     outFile4.open(writename5.c_str());
   probability = 0;
   for(int i = 0; i < numsizebins; i++)
@@ -2606,7 +2613,7 @@ void  MicroGen3D::volume_stats(string writename1, string writename2, string writ
     }
   }
   outFile4.close();
-    ofstream outFile5; 
+    ofstream outFile5;
     outFile5.open(writename6.c_str());
   probability = 0;
   cummprobability = 0;
@@ -2622,11 +2629,11 @@ void  MicroGen3D::volume_stats(string writename1, string writename2, string writ
     }
   }
   outFile5.close();
-    ofstream outFile6; 
+    ofstream outFile6;
     outFile6.open(writename7.c_str());
   probability = 0;
   for(int i = 0; i < numsizebins; i++)
-  { 
+  {
     outFile6 << i;
     for(int j = 0; j < numsizebins; j++)
     {
@@ -2635,7 +2642,7 @@ void  MicroGen3D::volume_stats(string writename1, string writename2, string writ
     outFile6 << endl;
   }
   outFile6.close();
-    ofstream outFile7; 
+    ofstream outFile7;
     outFile7.open(writename8.c_str());
   probability = 0;
   for(int i = 0; i < nummisobins; i++)
@@ -2643,7 +2650,7 @@ void  MicroGen3D::volume_stats(string writename1, string writename2, string writ
     outFile7 << (misobin[i]/misocount) << endl;
   }
   outFile7.close();
-    ofstream outFile8; 
+    ofstream outFile8;
     outFile8.open(writename9.c_str());
   probability = 0;
   for(int i = 0; i < nummicrobins; i++)
@@ -2654,7 +2661,7 @@ void  MicroGen3D::volume_stats(string writename1, string writename2, string writ
 }
 void  MicroGen3D::write_volume2(string writename10)
 {
-    ofstream outFile; 
+    ofstream outFile;
     outFile.open(writename10.c_str());
   for(int i = 0; i < (xpoints*ypoints*zpoints); i++)
   {
@@ -2666,29 +2673,29 @@ void  MicroGen3D::write_volume2(string writename10)
     double y = voxel[i].yc;
     double z = voxel[i].zc;
     double ci = voxel[i].confidence;
-    outFile << grainname << " " << ea1 << " " << ea2 << " " << ea3 << " " << x << " " << y << " " << z << " " << ci << endl; 
-  } 
+    outFile << grainname << " " << ea1 << " " << ea2 << " " << ea3 << " " << x << " " << y << " " << z << " " << ci << endl;
+  }
   outFile.close();
 }
 void  MicroGen3D::create_visualization(string writename11)
 {
-    ofstream outFile; 
+    ofstream outFile;
     outFile.open(writename11.c_str());
   double x = 0;
   double y = 0;
   double z = 0;
-  outFile << "# vtk DataFile Version 2.0" << endl; 
-  outFile << "data set from FFT2dx_GB" << endl; 
-  outFile << "ASCII" << endl; 
-  outFile << "DATASET STRUCTURED_POINTS" << endl; 
+  outFile << "# vtk DataFile Version 2.0" << endl;
+  outFile << "data set from FFT2dx_GB" << endl;
+  outFile << "ASCII" << endl;
+  outFile << "DATASET STRUCTURED_POINTS" << endl;
   outFile << "DIMENSIONS " << xpoints << " " << ypoints << " " << zpoints << endl;
-  outFile << "ORIGIN 0.0 0.0 0.0" << endl; 
-  outFile << "SPACING " << resx << " " << -resy << " " << -resz << endl; 
+  outFile << "ORIGIN 0.0 0.0 0.0" << endl;
+  outFile << "SPACING " << resx << " " << -resy << " " << -resz << endl;
   outFile << "POINT_DATA " << xpoints*ypoints*zpoints << endl;
   outFile << endl;
   outFile << endl;
-  outFile << "SCALARS GrainID int  1" << endl; 
-  outFile << "LOOKUP_TABLE default" << endl;  
+  outFile << "SCALARS GrainID int  1" << endl;
+  outFile << "LOOKUP_TABLE default" << endl;
   for (int i = 0; i < (xpoints*ypoints*zpoints); i++)
   {
     if(i%20 == 0 && i > 0) outFile << endl;
@@ -2703,8 +2710,8 @@ void  MicroGen3D::create_visualization(string writename11)
   outFile << endl;
   if(mergetwinsoption == 1)
   {
-    outFile << "SCALARS WasTwin int  1" << endl; 
-    outFile << "LOOKUP_TABLE default" << endl;  
+    outFile << "SCALARS WasTwin int  1" << endl;
+    outFile << "LOOKUP_TABLE default" << endl;
     for (int i = 0; i < (xpoints*ypoints*zpoints); i++)
     {
       if(i%20 == 0 && i > 0) outFile << endl;
@@ -2720,7 +2727,7 @@ void  MicroGen3D::create_visualization(string writename11)
 
 void  MicroGen3D::write_grains(string writename12)
 {
-    ofstream outFile; 
+    ofstream outFile;
     outFile.open(writename12.c_str());
   outFile << numgrains<< endl;
   for(int i=0;i<numgrains;i++)
@@ -2746,7 +2753,7 @@ void  MicroGen3D::write_grains(string writename12)
 
 void  MicroGen3D::write_axisorientations(string writename14)
 {
-    ofstream outFile; 
+    ofstream outFile;
     outFile.open(writename14.c_str());
   outFile << numgrains << endl;
   for(int i = 0; i < numgrains; i++)
@@ -2766,7 +2773,7 @@ void  MicroGen3D::write_axisorientations(string writename14)
 }
 void  MicroGen3D::write_eulerangles(string writename15)
 {
-    ofstream outFile; 
+    ofstream outFile;
     outFile.open(writename15.c_str());
   outFile << numgrains <<endl;
   for(int i = 0; i < numgrains; i++)
@@ -2855,7 +2862,7 @@ void  MicroGen3D::find_boundarycenters(string writename13)
       count++;
     }
   }
-  ofstream outFile; 
+  ofstream outFile;
   outFile.open(writename13.c_str());
   outFile << count << endl;
   for(int l = 0; l < count; l++)
@@ -2875,10 +2882,10 @@ void  MicroGen3D::find_boundarycenters(string writename13)
 
 
 void  MicroGen3D::loadVolData(string inname1, int numvolbins)
-{ 
+{
     ifstream inputFile;
     inputFile.open(inname1.c_str());
-  int count = 0;    
+  int count = 0;
   double dprob;
   double diam;
   for (long k = 0; k < numvolbins; k++)
@@ -2887,16 +2894,16 @@ void  MicroGen3D::loadVolData(string inname1, int numvolbins)
     diambin[k].dprobability = dprob;
     diambin[k].diameter = diam;
         count++;
-    }    
+    }
     inputFile.close();
 }
 
 
 void  MicroGen3D::loadboveraData(string inname2, int numshapebins)
-{ 
+{
     ifstream inputFile;
     inputFile.open(inname2.c_str());
-  int count = 0;    
+  int count = 0;
   double sprob;
   double r;
   int bnum=0;
@@ -2915,10 +2922,10 @@ void  MicroGen3D::loadboveraData(string inname2, int numshapebins)
 }
 
 void  MicroGen3D::loadcoveraData(string inname3, int numshapebins)
-{ 
+{
     ifstream inputFile;
     inputFile.open(inname3.c_str());
-  int count = 0;    
+  int count = 0;
   double sprob;
   double r;
   int bnum=0;
@@ -2937,10 +2944,10 @@ void  MicroGen3D::loadcoveraData(string inname3, int numshapebins)
 }
 
 void  MicroGen3D::loadcoverbData(string inname4, int numshapebins)
-{ 
+{
     ifstream inputFile;
     inputFile.open(inname4.c_str());
-  int count = 0;    
+  int count = 0;
   double sprob;
   double r;
   int bnum=0;
@@ -2959,10 +2966,10 @@ void  MicroGen3D::loadcoverbData(string inname4, int numshapebins)
 }
 
 void  MicroGen3D::loadNData(string inname5, int numshapebins)
-{ 
+{
     ifstream inputFile;
     inputFile.open(inname5.c_str());
-  int count = 0;    
+  int count = 0;
   double Nprob;
   double N;
   double junk;
@@ -2982,10 +2989,10 @@ void  MicroGen3D::loadNData(string inname5, int numshapebins)
 }
 
 void  MicroGen3D::loadorientData(string inname6, int numorients)
-{ 
+{
     ifstream inputFile;
     inputFile.open(inname6.c_str());
-  int count = 0;    
+  int count = 0;
   double r1x;
   double r1y;
   double r1z;
@@ -3021,15 +3028,15 @@ void  MicroGen3D::loadorientData(string inname6, int numorients)
     orient[k].rad3y = r3y;
     orient[k].rad3z = r3z;
         count++;
-    }    
+    }
     inputFile.close();
 }
 
 void  MicroGen3D::loadeulerData(string inname7, int numeulers)
-{ 
+{
     ifstream inputFile;
     inputFile.open(inname7.c_str());
-  int count = 0;    
+  int count = 0;
   double g1ea1;
   double g1ea2;
   double g1ea3;
@@ -3104,7 +3111,7 @@ void  MicroGen3D::loadeulerData(string inname7, int numeulers)
       }
       else if (k == 9)
       {
-        o[0][0] = 0.0; o[0][1] = -1.0; o[0][2] = 0.0; 
+        o[0][0] = 0.0; o[0][1] = -1.0; o[0][2] = 0.0;
         o[1][0] = 1.0; o[1][1] =  0.0; o[1][2] = 0.0;
         o[2][0] = 0.0; o[2][1] =  0.0; o[2][2] = 1.0;
       }
@@ -3181,7 +3188,7 @@ void  MicroGen3D::loadeulerData(string inname7, int numeulers)
         o[2][0] =  0.0; o[2][1] = -1.0; o[2][2] =  0.0;
       }
       else if (k == 22)
-      { 
+      {
         o[0][0] =  0.0; o[0][1] =  0.0; o[0][2] = -1.0;
         o[1][0] =  0.0; o[1][1] = -1.0; o[1][2] =  0.0;
         o[2][0] = -1.0; o[2][1] =  0.0; o[2][2] =  0.0;
@@ -3221,17 +3228,17 @@ void  MicroGen3D::loadeulerData(string inname7, int numeulers)
         }
         ga[0][0] = cos(g1ea1)*cos(g1ea3)-sin(g1ea1)*sin(g1ea3)*cos(g1ea2);
         ga[0][1] = sin(g1ea1)*cos(g1ea3)+cos(g1ea1)*sin(g1ea3)*cos(g1ea2);
-        ga[0][2] = sin(g1ea3)*sin(g1ea2);     
-        ga[1][0] = -cos(g1ea1)*sin(g1ea3)-sin(g1ea1)*cos(g1ea3)*cos(g1ea2); 
+        ga[0][2] = sin(g1ea3)*sin(g1ea2);
+        ga[1][0] = -cos(g1ea1)*sin(g1ea3)-sin(g1ea1)*cos(g1ea3)*cos(g1ea2);
         ga[1][1] = -sin(g1ea1)*sin(g1ea3)+cos(g1ea1)*cos(g1ea3)*cos(g1ea2);
-        ga[1][2] =  cos(g1ea3)*sin(g1ea2);    
+        ga[1][2] =  cos(g1ea3)*sin(g1ea2);
         ga[2][0] =  sin(g1ea1)*sin(g1ea2);
         ga[2][1] = -cos(g1ea1)*sin(g1ea2);
         ga[2][2] =  cos(g1ea2);
-        
+
         mo[0][0] = o[0][0]*ga[0][0] + o[0][1]*ga[1][0] + o[0][2]*ga[2][0];
         mo[0][1] = o[0][0]*ga[0][1] + o[0][1]*ga[1][1] + o[0][2]*ga[2][1];
-        mo[0][2] = o[0][0]*ga[0][2] + o[0][1]*ga[1][2] + o[0][2]*ga[2][2];  
+        mo[0][2] = o[0][0]*ga[0][2] + o[0][1]*ga[1][2] + o[0][2]*ga[2][2];
         mo[1][0] = o[1][0]*ga[0][0] + o[1][1]*ga[1][0] + o[1][2]*ga[2][0];
         mo[1][1] = o[1][0]*ga[0][1] + o[1][1]*ga[1][1] + o[1][2]*ga[2][1];
         mo[1][2] = o[1][0]*ga[0][2] + o[1][1]*ga[1][2] + o[1][2]*ga[2][2];
@@ -3241,7 +3248,7 @@ void  MicroGen3D::loadeulerData(string inname7, int numeulers)
 
         m1[0][0] = mo[0][0]*o2[0][0] + mo[0][1]*o2[1][0] + mo[0][2]*o2[2][0];
         m1[0][1] = mo[0][0]*o2[0][1] + mo[0][1]*o2[1][1] + mo[0][2]*o2[2][1];
-        m1[0][2] = mo[0][0]*o2[0][2] + mo[0][1]*o2[1][2] + mo[0][2]*o2[2][2]; 
+        m1[0][2] = mo[0][0]*o2[0][2] + mo[0][1]*o2[1][2] + mo[0][2]*o2[2][2];
         m1[1][0] = mo[1][0]*o2[0][0] + mo[1][1]*o2[1][0] + mo[1][2]*o2[2][0];
         m1[1][1] = mo[1][0]*o2[0][1] + mo[1][1]*o2[1][1] + mo[1][2]*o2[2][1];
         m1[1][2] = mo[1][0]*o2[0][2] + mo[1][1]*o2[1][2] + mo[1][2]*o2[2][2];
@@ -3274,7 +3281,7 @@ void  MicroGen3D::loadeulerData(string inname7, int numeulers)
       }
     }
     }
-    inputFile.close();  
+    inputFile.close();
 }
 
 void  MicroGen3D::generate_grains(int numgrains)
@@ -3512,7 +3519,7 @@ void  MicroGen3D::assign_eulers(int numgrains)
 }
 
 void  MicroGen3D::loadSVNData(string inname8)
-{ 
+{
     ifstream inputFile;
     inputFile.open(inname8.c_str());
   double prob;
@@ -3524,12 +3531,12 @@ void  MicroGen3D::loadSVNData(string inname8)
       inputFile >> nnum >> prob;
       svn[k][l] = prob;
     }
-    }    
+    }
     inputFile.close();
 }
 
 void  MicroGen3D::loadSVSData(string inname9)
-{ 
+{
     ifstream inputFile;
     inputFile.open(inname9.c_str());
     int bin;
@@ -3543,7 +3550,7 @@ void  MicroGen3D::loadSVSData(string inname9)
       inputFile >> prob;
       svs[k][l] = prob;
     }
-    }    
+    }
     inputFile.close();
 }
 
@@ -3691,13 +3698,13 @@ void  MicroGen3D::make_points(int numgrains)
         planecourse = (j/(xpointscourse*ypointscourse));
         xc = (columncourse*resx1)+(resx1/2);
         yc = (rowcourse*resy1)+(resy1/2);
-        zc = (planecourse*resz1)+(resz1/2); 
+        zc = (planecourse*resz1)+(resz1/2);
         column = int((xc-(resx1/2))/resx);
         row = int((yc-(resy1/2))/resy);
         plane = int((zc-(resz1/2))/resz);
         xc = (column*resx)+(resx/2);
         yc = (row*resy)+(resy/2);
-        zc = (plane*resz)+(resz/2); 
+        zc = (plane*resz)+(resz/2);
         insidecount = 0;
         badcount = 0;
         xmin = 0;
@@ -3728,7 +3735,7 @@ void  MicroGen3D::make_points(int numgrains)
         }
         if(plane+((radcur1/resz)+1) < (sizez/resz)-1)
         {
-          zmax = int(plane+((radcur1/resz)+1));     
+          zmax = int(plane+((radcur1/resz)+1));
         }
         for(int iter1 = xmin; iter1 < xmax+1; iter1++)
         {
@@ -3742,7 +3749,7 @@ void  MicroGen3D::make_points(int numgrains)
               plane = iter3;
               x = (column*resx)+(resx/2);
               y = (row*resy)+(resy/2);
-              z = (plane*resz)+(resz/2);  
+              z = (plane*resz)+(resz/2);
               double axis[3][3];
               double diff[3][1];
               double axiselim[3][3];
@@ -4294,7 +4301,7 @@ void  MicroGen3D::fill_gaps(int numgrains)
 
 
 void  MicroGen3D::loadMisoData(string inname10)
-{ 
+{
     ifstream inputFile;
     inputFile.open(inname10.c_str());
   int count = 0;
@@ -4304,12 +4311,12 @@ void  MicroGen3D::loadMisoData(string inname10)
     inputFile >> height;
     actualmisobin[count].height = height;
         count++;
-    }    
+    }
     inputFile.close();
 }
 
 void  MicroGen3D::loadMicroData(string inname11)
-{ 
+{
     ifstream inputFile;
     inputFile.open(inname11.c_str());
   int count = 0;
@@ -4319,7 +4326,7 @@ void  MicroGen3D::loadMicroData(string inname11)
     inputFile >> height;
     actualmicrobin[count].height = height;
         count++;
-    }    
+    }
     inputFile.close();
 }
 
@@ -4725,7 +4732,7 @@ void  MicroGen3D::freeze_grains(int numgrains)
   {
     froze = 0;
     double fraction = packedgrain[i].lowanglefraction;
-    if(fraction > 0.85) 
+    if(fraction > 0.85)
     {
       froze = 1;
     }
@@ -4736,7 +4743,7 @@ void  MicroGen3D::freeze_grains(int numgrains)
       int neighfirst = neighborvector[i][j];
       double neighmiso = misolist[j];
       double neighfrac = packedgrain[neighfirst].lowanglefraction;
-      if(neighfrac > 0.85 && neighmiso < 15) 
+      if(neighfrac > 0.85 && neighmiso < 15)
       {
         froze = 1;
       }
@@ -4748,23 +4755,23 @@ void  MicroGen3D::freeze_grains(int numgrains)
 
 void  MicroGen3D::writeCube(string outname1, int numgrains)
 {
-    ofstream outFile; 
+    ofstream outFile;
     outFile.open(outname1.c_str());
   int xpoints = int(sizex/resx);
   int ypoints = int(sizey/resy);
-  int zpoints = int(sizez/resz);  
-  outFile << "# vtk DataFile Version 2.0" << endl; 
-  outFile << "data set from FFT2dx_GB" << endl; 
-  outFile << "ASCII" << endl; 
-  outFile << "DATASET STRUCTURED_POINTS" << endl; 
+  int zpoints = int(sizez/resz);
+  outFile << "# vtk DataFile Version 2.0" << endl;
+  outFile << "data set from FFT2dx_GB" << endl;
+  outFile << "ASCII" << endl;
+  outFile << "DATASET STRUCTURED_POINTS" << endl;
   outFile << "DIMENSIONS " << xpoints << " " << ypoints << " " << zpoints << endl;
-  outFile << "ORIGIN 0.0 0.0 0.0" << endl; 
-  outFile << "SPACING " << resx << " " << resy << " " << resz << endl; 
+  outFile << "ORIGIN 0.0 0.0 0.0" << endl;
+  outFile << "SPACING " << resx << " " << resy << " " << resz << endl;
   outFile << "POINT_DATA " << xpoints*ypoints*zpoints << endl;
   outFile << endl;
   outFile << endl;
-  outFile << "SCALARS GrainID int  1" << endl; 
-  outFile << "LOOKUP_TABLE default" << endl;  
+  outFile << "SCALARS GrainID int  1" << endl;
+  outFile << "LOOKUP_TABLE default" << endl;
   for (int i = 0; i < (xpoints*ypoints*zpoints); i++)
   {
     if(i%20 == 0 && i > 0) outFile << endl;
@@ -4774,7 +4781,7 @@ void  MicroGen3D::writeCube(string outname1, int numgrains)
     int plane = (i/(xpoints*ypoints));
     double xc = (column*resx)+(resx/2);
     double yc = (row*resy)+(resy/2);
-    double zc = (plane*resz)+(resz/2);  
+    double zc = (plane*resz)+(resz/2);
     int gnum = gridfine[i].grainname;
     double r = packedgrain[gnum].red;
     double g = packedgrain[gnum].green;
@@ -4792,7 +4799,7 @@ void  MicroGen3D::writeCube(string outname1, int numgrains)
 
 void  MicroGen3D::write_grains(string outname4, int numgrains)
 {
-    ofstream outFile; 
+    ofstream outFile;
     outFile.open(outname4.c_str());
   outFile << numgrains << endl;
   for(int i=0;i<numgrains;i++)
@@ -4817,11 +4824,11 @@ void  MicroGen3D::write_grains(string outname4, int numgrains)
 }
 void  MicroGen3D::write_volume(string writename5)
 {
-    ofstream outFile; 
+    ofstream outFile;
     outFile.open(writename5.c_str());
   int xpoints = int(sizex/resx);
   int ypoints = int(sizey/resy);
-  int zpoints = int(sizez/resz);  
+  int zpoints = int(sizez/resz);
   for(int i = 0; i < (xpoints*ypoints*zpoints); i++)
   {
     int grainname = gridfine[i].grainname;
@@ -4833,10 +4840,10 @@ void  MicroGen3D::write_volume(string writename5)
     int plane = (i/(xpoints*ypoints));
     double xc = (column*resx)+(resx/2);
     double yc = (row*resy)+(resy/2);
-    double zc = (plane*resz)+(resz/2);  
+    double zc = (plane*resz)+(resz/2);
     double ci = 1;
-    outFile << grainname << " " << ea1 << " " << ea2 << " " << ea3 << " " << xc << "  " << yc << "  " << zc << "  " << ci << endl; 
-  } 
+    outFile << grainname << " " << ea1 << " " << ea2 << " " << ea3 << " " << xc << "  " << yc << "  " << zc << "  " << ci << endl;
+  }
   outFile.close();
 }
 
