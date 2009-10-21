@@ -49,7 +49,15 @@ SET (COMMON_HDRS
 )
 IDE_SOURCE_PROPERTIES( "Source/AIM/Common" "${COMMON_HDRS}" "${COMMON_SRCS}")
 
+set (PROJECT_SRCS
+    ${Reconstruction_SRCS}
+    ${Reconstruction_HDRS}
+    ${COMMON_SRCS}
+    ${COMMON_HDRS}
+    )
 
-ADD_EXECUTABLE ( Reconstruction  ${Reconstruction_SRCS} ${Reconstruction_HDRS} ${COMMON_SRCS} ${COMMON_HDRS})
-target_link_libraries(Reconstruction MXA ${Boost_PROGRAM_OPTIONS_LIBRARY} )
+ADD_EXECUTABLE ( Reconstruction  ${PROJECT_SRCS} )
+target_link_libraries(Reconstruction 
+                        MXA 
+                        ${Boost_PROGRAM_OPTIONS_LIBRARY} )
 ToolInstallationSupport(Reconstruction "${EXE_DEBUG_EXTENSION}" ${AIMRepresentation_BINARY_DIR} )

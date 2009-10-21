@@ -188,6 +188,9 @@ public:
 	double getmisoquat(double ,double,double ,double ,double ,double ,double,double ,double &,double &,double &);
 	double gamma(double);
 
+private:
+	MicroGen3D(const MicroGen3D&);    // Copy Constructor Not Implemented
+    void operator=(const MicroGen3D&);  // Operator '=' Not Implemented
 };
 
 
