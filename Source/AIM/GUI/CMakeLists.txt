@@ -66,11 +66,21 @@ IDE_SOURCE_PROPERTIES("Source/AIM/Threads" "${AIM_Threads_HDRS}" "${AIM_Threads_
 
 
 SET (COMMON_SRCS
-    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/MicroGen3D.h
-)
+    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/MicroGen3D.cpp
+    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Grain.cpp
+    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Voxel.cpp
+    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Bin.cpp
+    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Orient.cpp   
+    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/AIMRandomNG.cpp
+    )
 
 SET (COMMON_HDRS
-    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/MicroGen3D.cpp
+    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/MicroGen3D.h
+    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Grain.h
+    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Voxel.h
+    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Bin.h
+    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Orient.h
+    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/AIMRandomNG.h
 )
 IDE_SOURCE_PROPERTIES( "Source/AIM/Common" "${COMMON_HDRS}" "${COMMON_SRCS}")
 
