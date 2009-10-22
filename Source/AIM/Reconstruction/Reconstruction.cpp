@@ -109,9 +109,10 @@ int32 Reconstruction::compute()
     numgrains = microgen->form_grains();
     microgen->remove_smallgrains();
     numgrains = microgen->renumber_grains1();
-    microgen->write_volume1(AIM::Reconstruction::ReconstructedDataFile);
+    std::string outFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Reconstruction::ReconstructedDataFile;
+    microgen->write_volume1(outFile);
   }
-#if 0
+
     if(alreadyformed == true)
     {
       microgen->load_data(AIM::Reconstruction::InputFile);
@@ -157,7 +158,7 @@ int32 Reconstruction::compute()
     microgen->write_eulerangles(AIM::Reconstruction::EulerAnglesFile);
     microgen->find_boundarycenters(AIM::Reconstruction::BoundaryCentersFile);
     delete microgen;
-#endif
+
 
     return err;
 }
