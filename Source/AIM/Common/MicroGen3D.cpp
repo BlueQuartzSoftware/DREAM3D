@@ -1,24 +1,15 @@
 #include "MicroGen3D.h"
 
 #if 0
-#include <string>
-#include <iostream>
-#include <cmath>
-#include <fstream>
-#include <list>
-#include <time.h>
-#include <stdlib.h>
-
-#include <vector>
-#include <algorithm>
-#include <numeric>
-#include <assert.h>
-#include <stdio.h>
+-i C:\Data\ANG_Series --outputDir C:\Data\Output -f Slice_ --angMaxSlice 400 -s 1 -e 10 -z 0.25 -t -g 10 -c 0.1 -o 1.0 -x 1 
 #endif
 
 #ifndef M_PI
 #define M_PI 3.1415926535897;
 #endif
+
+const static double m_pi = 3.1415926535897;
+const static double m_OnePointThree = 1.33333333333;
 
 #include <sstream>
 
@@ -80,7 +71,7 @@ MicroGen3D::~MicroGen3D()
 // -----------------------------------------------------------------------------
 void MicroGen3D::initialize(double v_sizex, double v_sizey, double v_sizez,
                   double v_resx, double v_resy, double v_resz,
-                  size_t xPoints, size_t yPoints, size_t zPoints,
+                  int32 xPoints, int32 yPoints, int32 zPoints,
                   bool v_mergetwinsoption,
                   int32 v_minallowedgrainsize,
                   double v_minseedconfidence,
@@ -1647,10 +1638,11 @@ void  MicroGen3D::find_convexities()
       double c = A/(a*a*a*b);
       double bovera = b/a;
       double covera = c/a;
-      double rad1 = voxvol/(1.333333*3.1415926535897*bovera*covera);
-      rad1 = pow(rad1,0.3333333);
-      double rad2 = rad1*bovera;
-      double rad3 = rad1*covera;
+      double rad_1 = voxvol/(m_OnePointThree * m_pi * bovera * covera );
+      //double rad_1 = voxvol/(m_OnePointThree*3.1415926535897*bovera*covera);
+      rad_1 = pow(rad_1,0.3333333);
+      double rad_2 = rad_1*bovera;
+      double rad_3 = rad_1*covera;
       for(int j = 0; j < (xpoints*ypoints*zpoints); j++)
       {
         int gnum = voxels[j].grainname;
@@ -1724,7 +1716,7 @@ void  MicroGen3D::find_convexities()
             q = diffelim[p][0];
             constmat[p][0] = q;
           }
-          double inside = 1-(((constmat[0][0])/rad3)*((constmat[0][0])/rad3))-(((constmat[1][0])/rad2)*((constmat[1][0])/rad2))-(((constmat[2][0])/rad1)*((constmat[2][0])/rad1));
+          double inside = 1-(((constmat[0][0])/rad_3)*((constmat[0][0])/rad_3))-(((constmat[1][0])/rad_2)*((constmat[1][0])/rad_2))-(((constmat[2][0])/rad_1)*((constmat[2][0])/rad_1));
           if(inside >= 0)
           {
             insidecount++;
@@ -1821,8 +1813,8 @@ void MicroGen3D::volume_stats(string writename1,
       int vol = goodgrain[i].numvoxels;
       double voxvol = vol*resx*resy*resz;
       double logvol = log(voxvol);
-      double rad3 = 0.75*(1/3.1415926535897)*voxvol;
-      double diam = 2*pow(rad3,0.333333333);
+      double rad_3 = 0.75*(1/3.1415926535897)*voxvol;
+      double diam = 2*pow(rad_3,0.333333333);
       int diamint = int(diam);
       double logdiam = log(diam);
       for(int k = 0; k < 24; k++)
@@ -2184,8 +2176,8 @@ void MicroGen3D::volume_stats(string writename1,
       int vol = goodgrain[j].numvoxels;
       double voxvol = vol*resx*resy*resz;
       double logvol = log(voxvol);
-      double rad3 = 0.75*(1/3.1415926535897)*voxvol;
-      double diam = 2*pow(rad3,0.333333333);
+      double rad_3 = 0.75*(1/3.1415926535897)*voxvol;
+      double diam = 2*pow(rad_3,0.333333333);
       int diamint = int(diam);
       double logdiam = log(diam);
       double I1 = goodgrain[j].axis1;
@@ -4935,7 +4927,7 @@ double MicroGen3D::gamma(double x)
         if (fabs(x) > 1.0) {
             ga *= r;
             if (x < 0.0) {
-                ga = -M_PI/(x*ga*sin(M_PI*x));
+                ga = -1 * m_pi/(x*ga*sin(m_pi*x));
             }
         }
     }
