@@ -1,36 +1,38 @@
-/*
- * AngFileHelper.cpp
- *
- *  Created on: Oct 21, 2009
- *      Author: mjackson
- */
-
+///////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2009, Michael A. Jackson. BlueQuartz Software
+//  All rights reserved.
+//  BSD License: http://www.opensource.org/licenses/bsd-license.html
+//
+//
+///////////////////////////////////////////////////////////////////////////////
 #include "AngFileHelper.h"
 #include <AIM/ANG/AngFileReader.h>
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 AngFileHelper::AngFileHelper()
 {
-  // TODO Auto-generated constructor stub
-
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 AngFileHelper::~AngFileHelper()
 {
-  // TODO Auto-generated destructor stub
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void AngFileHelper::loadData(Voxel voxels[],
                              size_t xpoints, size_t ypoints, size_t zpoints,
                              double resz)
 {
-
-  double junk1;
-  double junk2;
-  double junk3;
-  double junk4;
-  int zero = 0;
-  int checked = 1;
-  int badgrain = -1;
+  const int zero = 0;
+  const int checked = 1;
+  const int badgrain = -1;
   size_t index = 0;
   for (size_t k = 0; k < zpoints; k++)
   {
@@ -54,8 +56,17 @@ void AngFileHelper::loadData(Voxel voxels[],
     {
       AngFileReader::Pointer reader = AngFileReader::New();
       int slice = m_ZIndexStart + k - 1;
-      std::string angFName = m_DirectoryPattern->generateFullPathAngFileName(slice, 3);
+      std::string angFName = m_DirectoryPattern->generateFullPathAngFileName(slice);
+      std::cout << "Reading ANG File '" << angFName << "'" << std::endl;
+
       reader->readFile(angFName);
+      size_t readerIndex = 0;
+      float* euler1Ptr = reader->getPhi1Data()->getPointer(0);
+      float* euler2Ptr = reader->getPhiData()->getPointer(0);
+      float* euler3Ptr = reader->getPhi2Data()->getPointer(0);
+      float* xcPtr = reader->getXData()->getPointer(0);
+      float* ycPtr = reader->getYData()->getPointer(0);
+      float* confPtr = reader->getConfidenceIndexData()->getPointer(0);
 
 
       for (size_t j = 0; j < ypoints; j++)
@@ -84,34 +95,37 @@ void AngFileHelper::loadData(Voxel voxels[],
           voxels[index].grainname = badgrain;
           for (size_t i = 1; i < xpoints - 1; i++)
           {
-            inputFile
-            >> voxels[((k * xpoints * ypoints) + (j * xpoints) + i)].euler1 // Phi1
-            >> voxels[((k * xpoints * ypoints) + (j * xpoints) + i)].euler2 // Phi
-                >> voxels[((k * xpoints * ypoints) + (j * xpoints) + i)].euler3 // Phi2
-                >> voxels[((k * xpoints * ypoints) + (j * xpoints) + i)].xc  // X
-                >> voxels[((k * xpoints * ypoints) + (j * xpoints) + i)].xc  // Y
-                >> junk1   // Image Quality
-                >> voxels[((k * xpoints * ypoints) + (j * xpoints) + i)].confidence // Confidence
-                >> junk2  // Phase Data
-                >> junk3
-                >> junk4;
-            voxels[((k * xpoints * ypoints) + (j * xpoints) + i)].zc = (k - 1) * resz;
-            voxels[((k * xpoints * ypoints) + (j * xpoints) + i)].alreadychecked = zero;
-            voxels[((k * xpoints * ypoints) + (j * xpoints) + i)].grainname = badgrain;
-            if (voxels[((k * xpoints * ypoints) + (j * xpoints) + i)].euler1 == 12.566 && voxels[((k * xpoints * ypoints) + (j * xpoints) + i)].euler2
-                == 12.566 && voxels[((k * xpoints * ypoints) + (j * xpoints) + i)].euler3 == 12.566)
+            index = ((k * xpoints * ypoints) + (j * xpoints) + i);
+            voxels[index].euler1 = euler1Ptr[readerIndex]; // Phi1
+            voxels[index].euler2 = euler2Ptr[readerIndex]; // Phi
+            voxels[index].euler3 = euler3Ptr[readerIndex];  // Phi2
+            voxels[index].xc = xcPtr[readerIndex];  // X
+            voxels[index].yc = ycPtr[readerIndex];  // Y
+           // >> junk1   // Image Quality
+            voxels[index].confidence = confPtr[readerIndex];// Confidence
+           // >> junk2  // Phase Data
+           // >> junk3
+           // >> junk4;
+            voxels[index].zc = (k - 1) * resz;
+            voxels[index].alreadychecked = zero;
+            voxels[index].grainname = badgrain;
+            if (voxels[index].euler1 == 12.566
+                && voxels[index].euler2 == 12.566
+                && voxels[index].euler3 == 12.566)
             {
-              voxels[((k * xpoints * ypoints) + (j * xpoints) + i)].confidence = zero;
-              voxels[((k * xpoints * ypoints) + (j * xpoints) + i)].alreadychecked = zero;
-              voxels[((k * xpoints * ypoints) + (j * xpoints) + i)].grainname = badgrain;
+              voxels[index].confidence = zero;
+              voxels[index].alreadychecked = zero;
+              voxels[index].grainname = badgrain;
             }
+            ++readerIndex;
           }
-          voxels[((k * xpoints * ypoints) + (j * xpoints) + xpoints - 1)].euler1 = -1;
-          voxels[((k * xpoints * ypoints) + (j * xpoints) + xpoints - 1)].euler2 = -1;
-          voxels[((k * xpoints * ypoints) + (j * xpoints) + xpoints - 1)].euler3 = -1;
-          voxels[((k * xpoints * ypoints) + (j * xpoints) + xpoints - 1)].confidence = zero;
-          voxels[((k * xpoints * ypoints) + (j * xpoints) + xpoints - 1)].alreadychecked = checked;
-          voxels[((k * xpoints * ypoints) + (j * xpoints) + xpoints - 1)].grainname = badgrain;
+          index = ((k * xpoints * ypoints) + (j * xpoints) + xpoints - 1);
+          voxels[index].euler1 = -1;
+          voxels[index].euler2 = -1;
+          voxels[index].euler3 = -1;
+          voxels[index].confidence = zero;
+          voxels[index].alreadychecked = checked;
+          voxels[index].grainname = badgrain;
         }
       }
 

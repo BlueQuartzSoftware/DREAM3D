@@ -1,12 +1,14 @@
-/*
- * Voxel.h
- *
- *  Created on: Oct 21, 2009
- *      Author: mjackson
- */
+///////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2009, Michael A. Jackson. BlueQuartz Software
+//  All rights reserved.
+//  BSD License: http://www.opensource.org/licenses/bsd-license.html
+//
+//
+///////////////////////////////////////////////////////////////////////////////
 
-#ifndef VOXEL_H_
-#define VOXEL_H_
+#ifndef _VOXEL_H_
+#define _VOXEL_H_
 
 #include <vector>
 /*

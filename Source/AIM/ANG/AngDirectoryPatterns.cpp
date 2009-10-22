@@ -6,11 +6,27 @@
  */
 
 #include "AngDirectoryPatterns.h"
-#include <sstream>
-#include <iomanip>
 
 #include <MXA/Utilities/MXAFileSystemPath.h>
 #include <MXA/Utilities/StringUtils.h>
+
+#include <sstream>
+#include <iomanip>
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AngDirectoryPatterns::Pointer AngDirectoryPatterns::New(const std::string &parentDirectory,
+    const std::string &fileprefix,
+    int32 width)
+{
+  Pointer sharedPtr (new AngDirectoryPatterns);
+  sharedPtr->setParentDirectory(parentDirectory);
+  sharedPtr->setPrefix(fileprefix);
+  sharedPtr->setExtension("ang");
+  sharedPtr->setMaxSlice(width);
+  return sharedPtr;
+}
 
 // -----------------------------------------------------------------------------
 //
@@ -27,55 +43,35 @@ AngDirectoryPatterns::~AngDirectoryPatterns()
 {
 }
 
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+std::string AngDirectoryPatterns::generateFullPathAngFileName(int slice)
+{
+  std::stringstream ss;
+  ss.setf(std::ios::fixed);
+  ss.fill('0');
+
+  ss << m_ParentDirectory << MXAFileSystemPath::Separator << m_Prefix << std::setw(m_MaxSlice) << slice << m_Suffix << Ang::DirectoryPatterns::Dot << m_Extension;
+  return ss.str();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+std::string AngDirectoryPatterns::generateAngFileName(int slice)
+{
+  std::stringstream ss;
+  ss.setf(std::ios::fixed);
+  ss.fill('0');
+
+  ss << m_Prefix << std::setw(m_MaxSlice) << slice << m_Suffix << Ang::DirectoryPatterns::Dot << m_Extension;
+  return ss.str();
+}
+
 #if 0
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-std::string AngDirectoryPatterns::generateAngDirectory(int slice)
-{
-  std::stringstream ss;
-  ss << m_Prefix << slice << m_Suffix << Ang::DirectoryPatterns::Dot << m_Extension << Ang::DirectoryPatterns::_Files;
-  return ss.str();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-std::string AngDirectoryPatterns::generateAngDirectory(const std::string &slice)
-{
-  std::stringstream ss;
-  ss << m_Prefix << slice << m_Suffix << Ang::DirectoryPatterns::Dot << m_Extension << Ang::DirectoryPatterns::_Files;
-  return ss.str();
-}
-#endif
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-std::string AngDirectoryPatterns::generateFullPathAngFileName(int slice, int numberWidth)
-{
-  std::stringstream ss;
-  ss.setf(std::ios::fixed);
-  ss.fill('0');
-  int32 width = numberWidth;
-  ss << m_ParentDirectory << MXAFileSystemPath::Separator << m_Prefix << std::setw(width) << slice << m_Suffix << Ang::DirectoryPatterns::Dot << m_Extension;
-  return ss.str();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-std::string AngDirectoryPatterns::generateAngFileName(int slice, int numberWidth)
-{
-  std::stringstream ss;
-  ss.setf(std::ios::fixed);
-  ss.fill('0');
-  int32 width = numberWidth;
-  ss << m_Prefix << std::setw(width) << slice << m_Suffix << Ang::DirectoryPatterns::Dot << m_Extension;
-  return ss.str();
-}
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -138,6 +134,7 @@ int AngDirectoryPatterns::parseDocumentName(const std::string &prefix,
   }
   return 1;
 }
+#endif
 
 // -----------------------------------------------------------------------------
 //
@@ -147,5 +144,6 @@ void AngDirectoryPatterns::print(std::ostream &ostream)
   ostream << "Prefix: " << getPrefix() << std::endl;
   ostream << "Suffix: " << getSuffix() << std::endl;
   ostream << "Extension: " << getExtension() << std::endl;
+  ostream << "Width: " << getMaxSlice() << std::endl;
 }
 

@@ -55,7 +55,9 @@ int main(int argc, char **argv)
   MXALOGGER_METHOD_VARIABLE_INSTANCE
 
   std::string inputDir;
+  std::string outputDir;
   std::string angFilePrefix;
+  int angMaxSlice = 300;
 
   int zIndexStart = 0;
   int zIndexEnd = 0;
@@ -63,11 +65,11 @@ int main(int argc, char **argv)
   double resz = 0.0;
 
   bool mergetwinsoption = false;
-  int32 minallowedgrainsize = 0.0;
+  int minallowedgrainsize = 0.0;
   double minseedconfidence = 0.0;
   double misorientationtolerance = 0.0;
 
-  int32 crystruct = 1;
+  int crystruct = AIM::Reconstruction::UnknownCrystalStructure;
   bool alreadyformed = false;
 
   std::string logFile;
@@ -76,16 +78,18 @@ int main(int argc, char **argv)
   boost::program_options::options_description desc("Possible Parameters");
   desc.add_options()
   ("help", "Produce help message")
-  ("inputDir,i", boost::program_options::value<std::string>(&inputDir), "REQUIRED: Input File")
+  ("inputDir,i", boost::program_options::value<std::string>(&inputDir), "REQUIRED: Input Directory")
+  ("outputDir", boost::program_options::value<std::string>(&outputDir), "REQUIRED: Output Directory")
   ("angFilePrefix,f", boost::program_options::value<std::string>(&angFilePrefix), "REQUIRED: The prefix that is common to every ANG file")
-  ("zIndexStart,s", boost::program_options::value<int32>(&zIndexStart), "x dimension of your volume")
-  ("zIndexEnd,e", boost::program_options::value<int32>(&zIndexEnd), "y dimension of your volume")
+  ("angMaxSlice", boost::program_options::value<int>(&angMaxSlice), "The max slice value of the series. Needed to be able to generate ang file names")
+  ("zIndexStart,s", boost::program_options::value<int>(&zIndexStart), "Starting Slice")
+  ("zIndexEnd,e", boost::program_options::value<int>(&zIndexEnd), "Ending Slice")
   ("resz,z", boost::program_options::value<double>(&resz), "z resolution of your volume")
   ("merge-twins,t", boost::program_options::bool_switch(&mergetwinsoption), "Do you want to merge twins")
-  ("minallowedgrainsize,g", boost::program_options::value<int32>(&minallowedgrainsize), "What is the minimum allowed grain size")
+  ("minallowedgrainsize,g", boost::program_options::value<int>(&minallowedgrainsize), "What is the minimum allowed grain size")
   ("minseedconfidence,c", boost::program_options::value<double>(&minseedconfidence), "What is the minimum allowed confidence")
   ("misorientationtolerance,o", boost::program_options::value<double>(&misorientationtolerance), "What is the misorientation tolerance (degrees)")
-  ("crystruct,x", boost::program_options::value<int32>(&crystruct), "Do you have a HCP (1) or FCC (2) material")
+  ("crystruct,x", boost::program_options::value<int>(&crystruct), "Do you have a HCP (1) or FCC (2) material")
   ("alreadyformed,a", boost::program_options::bool_switch(&alreadyformed), "Have you already formed grains (1) Yes (0) No")
   ("logfile,l", boost::program_options::value<std::string>(&logFile), "Name of the Log file to store any output into")
   ;
@@ -116,8 +120,11 @@ try
   mxa_log << logTime() << "Reconstruction Version " << AIMRepresentation::Version::Complete << " Starting " << std::endl;
 
   mxa_log << "Parameters being used are: " << std::endl;
+
   CHECK_ARG( inputDir, true);
+  CHECK_ARG( outputDir, true);
   CHECK_ARG( angFilePrefix, true);
+  CHECK_ARG( angMaxSlice, true);
   CHECK_ARG( zIndexStart, true);
   CHECK_ARG( zIndexEnd, true);
   CHECK_ARG( resz, true);
@@ -132,7 +139,9 @@ try
 
   Reconstruction::Pointer r = Reconstruction::New();
   r->setInputDirectory(inputDir);
+  r->setOutputDirectory(outputDir);
   r->setAngFilePrefix(angFilePrefix);
+  r->setAngSeriesMaxSlice(angMaxSlice);
   r->setZIndexStart(zIndexStart);
   r->setZIndexEnd(zIndexEnd);
   r->setZResolution(resz);
@@ -140,22 +149,22 @@ try
   r->setMinAllowedGrainSize(minallowedgrainsize);
   r->setMinSeedConfidence(minseedconfidence);
   r->setMisorientationTolerance(misorientationtolerance);
-  r->setCrystalStructure(crystruct);
+  r->setCrystalStructure(static_cast<AIM::Reconstruction::CrystalStructure>(crystruct) );
   r->setAlreadyFormed(alreadyformed);
 
 
   err = r->compute();
-}
-catch (...)
-{
- std::cout << "Error on Input: Displaying help listing instead. **" << std::endl;
- std::cout << desc << std::endl;
- for (int i = 0; i < argc; ++i)
- {
-   std::cout << argv[i] << std::endl;
- }
- return EXIT_FAILURE;
-}
+
+  } catch (...)
+  {
+    std::cout << "Error on Input: Displaying help listing instead. **" << std::endl;
+    std::cout << desc << std::endl;
+    for (int i = 0; i < argc; ++i)
+    {
+      std::cout << argv[i] << std::endl;
+    }
+    return EXIT_FAILURE;
+  }
 
   return err;
 }

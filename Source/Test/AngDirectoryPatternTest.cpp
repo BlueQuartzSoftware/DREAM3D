@@ -76,21 +76,10 @@ int main(int argc, char **argv)
   GrainTest();
 
 
-  AngDirectoryPatterns::Pointer p = AngDirectoryPatterns::New();
-  std::string zDName = "Slice_001.ang";
-  std::string guessPrefix = "Slice_";
-  p->parseDocumentName(guessPrefix, zDName);
+  AngDirectoryPatterns::Pointer p = AngDirectoryPatterns::New("/Users/Shared/Data/AIMBlades/ANG_Series", "Slice_", 0);
 
   std::string dirName = "/Users/Shared/Data/AIMBlades/ANG_Series";
-  int32 sliceCount = 1;
-  int32 width = 0;
-  int32 totalSlices = 150;
-  while (sliceCount < totalSlices)
-  {
-    ++width;
-    sliceCount *= 10;
-  }
-  std::cout << p->generateAngFileName(9, width) << std::endl;
+  std::cout << p->generateAngFileName(9) << std::endl;
 
 
 
