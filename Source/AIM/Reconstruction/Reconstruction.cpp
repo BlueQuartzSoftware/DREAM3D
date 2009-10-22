@@ -97,7 +97,7 @@ int32 Reconstruction::compute()
   MicroGen3D* microgen = MicroGen3D::New();
   microgen->initialize(xSize, ySize, zSize,
                        reader->getXStep(), reader->getYStep(), m_ZResolution,
-                       reader->getNumEvenCols() + 3, reader->getNumRows() + 3, zPoints + 3,
+                       reader->getNumEvenCols() + 2, reader->getNumRows() + 2, zPoints + 2,
                        m_MergeTwins, m_MinAllowedGrainSize, m_MinSeedConfidence,
                        m_MisorientationTolerance, m_CrystalStructure, m_AlreadyFormed);
   microgen->m_angFileHelper = angFileHelper;
@@ -115,7 +115,10 @@ int32 Reconstruction::compute()
 
     if(m_AlreadyFormed == true)
     {
-      microgen->load_data(AIM::Reconstruction::InputFile);
+	sanity check that this has the same name as the above outfile exits
+std::string infile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Reconstruction::ReconstructedDataFile;
+
+      microgen->load_data(infile );
     }
     for(int iter1=0;iter1<180;iter1++)
     {

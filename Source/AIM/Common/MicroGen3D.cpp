@@ -233,6 +233,7 @@ int  MicroGen3D::form_grains()
               {
                 std::cout << "Resizing voxelslist to " << size << std::endl;
                 voxelslist.resize( size + initialVoxelsListSize);
+// Look at push_back() and if vector will auto resize if needed.
               }
             }
           }
@@ -433,6 +434,7 @@ void  MicroGen3D::find_neighbors()
   double x = 0;
   double y = 0;
   double z = 0;
+int totalNeighbors  = 0;
   vector<int> nlist;
   for(int i = 0; i < numgrains; i++)
   {
@@ -503,12 +505,18 @@ void  MicroGen3D::find_neighbors()
       newend = unique(nlist.begin(),nlist.end());
       nlist.erase(newend,nlist.end());
       int numneighs = int(nlist.size());
+      totalNeighbors += numneighs;
       grains[i].numneighbors = numneighs;
       grains[i].neighborlist = nlist;
       nlist.clear();
     }
   }
+ totalNeighbors / 2 = bcentSize
+<<<<<<<<<<<<<<<<<
+initialize bcent Here
 }
+
+
 void  MicroGen3D::merge_containedgrains()
 {
   int containedmerged = 1;
