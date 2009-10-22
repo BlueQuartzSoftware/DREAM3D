@@ -79,6 +79,8 @@ public:
   AIMArray<float>::Pointer getImageQualityData() { return _iq;}
   AIMArray<float>::Pointer getConfidenceIndexData() { return _ci;}
   AIMArray<float>::Pointer getPhaseData() { return _phaseData;}
+  AIMArray<float>::Pointer getXData() { return m_X; }
+  AIMArray<float>::Pointer getYData() { return m_Y; }
 
 protected:
   AngFileReader();
@@ -121,6 +123,8 @@ private:
   AIMArray<float>::Pointer _iq;
   AIMArray<float>::Pointer _ci;
   AIMArray<float>::Pointer _phaseData;
+  AIMArray<float>::Pointer m_X;
+  AIMArray<float>::Pointer m_Y;
 
 
   AngFileReader(const AngFileReader&);

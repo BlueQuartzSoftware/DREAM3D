@@ -134,113 +134,13 @@ void MicroGen3D::initialize(double v_sizex, double v_sizey, double v_sizez,
 // -----------------------------------------------------------------------------
 void MicroGen3D::loadSlices()
 {
+  m_angFileHelper->loadData(voxels, xpoints, ypoints, zpoints, resz);
 
-  int count = 0;
-  double z;
-  double junk1;
-  double junk2;
-  double junk3;
-  double junk4;
-  int zero = 0;
-  int checked = 1;
-  int badgrain = -1;
-  size_t index = 0;
-  for(int k = 0; k < zpoints; k++)
-    {
-    if(k == 0 || k == zpoints-1)
-    {
-      for(int j = 0; j < ypoints; j++)
-      {
-        for(int i = 0; i < xpoints; i++)
-        {
-          index = ((k*xpoints*ypoints)+(j*xpoints)+i);
-           voxels[index].euler1 = -1;
-           voxels[index].euler2 = -1;
-           voxels[index].euler3 = -1;
-           voxels[index].confidence = zero;
-           voxels[index].alreadychecked = checked;
-           voxels[index].grainname = badgrain;
-        }
-      }
-    }
-    if(k > 0 && k < zpoints-1)
-    {
-#if 0
-      char filename[15] = "TXT\\1";
-      char extension[15] = ".txt";
-      char cindex[5];
-      int fileindex = k+1001;
-      cout << "Loading Slice - " << k << endl;
-      _itoa_s(fileindex,cindex,10);
-      strcat(filename,cindex);
-      strcat(filename,extension);
-#endif
-      int fileindex = k+1001;
-      std::stringstream ss;
-      ss << "TXT/1" << fileindex << ".txt";
-      std::string filename = ss.str();
-
-      ifstream inputFile;
-      inputFile.open(filename.c_str() );
-      for(int j = 0; j < ypoints; j++)
-      {
-        if(j==0 || j == ypoints-1)
-        {
-          for(int i = 0; i < xpoints; i++)
-          {
-            index = ((k*xpoints*ypoints)+(j*xpoints)+i);
-            voxels[index].euler1 = -1;
-            voxels[index].euler2 = -1;
-            voxels[index].euler3 = -1;
-            voxels[index].confidence = zero;
-            voxels[index].alreadychecked = checked;
-            voxels[index].grainname = badgrain;
-          }
-        }
-        if(j > 0 && j < ypoints-1)
-        {
-          index = ((k*xpoints*ypoints)+(j*xpoints)+0);
-           voxels[index].euler1 = -1;
-           voxels[index].euler2 = -1;
-           voxels[index].euler3 = -1;
-           voxels[index].confidence = zero;
-           voxels[index].alreadychecked = checked;
-           voxels[index].grainname = badgrain;
-          for(int i = 1; i < xpoints-1; i++)
-          {
-            inputFile >> voxels[((k*xpoints*ypoints)+(j*xpoints)+i)].euler1
-            >> voxels[((k*xpoints*ypoints)+(j*xpoints)+i)].euler2
-            >> voxels[((k*xpoints*ypoints)+(j*xpoints)+i)].euler3
-            >> voxels[((k*xpoints*ypoints)+(j*xpoints)+i)].xc
-            >> voxels[((k*xpoints*ypoints)+(j*xpoints)+i)].xc
-            >> junk1
-            >> voxels[((k*xpoints*ypoints)+(j*xpoints)+i)].confidence
-            >> junk2
-            >> junk3
-            >> junk4;
-            voxels[((k*xpoints*ypoints)+(j*xpoints)+i)].zc = (k-1)*resz;
-            voxels[((k*xpoints*ypoints)+(j*xpoints)+i)].alreadychecked = zero;
-            voxels[((k*xpoints*ypoints)+(j*xpoints)+i)].grainname = badgrain;
-            if(voxels[((k*xpoints*ypoints)+(j*xpoints)+i)].euler1 == 12.566 && voxels[((k*xpoints*ypoints)+(j*xpoints)+i)].euler2 == 12.566 && voxels[((k*xpoints*ypoints)+(j*xpoints)+i)].euler3 == 12.566)
-            {
-              voxels[((k*xpoints*ypoints)+(j*xpoints)+i)].confidence = zero;
-              voxels[((k*xpoints*ypoints)+(j*xpoints)+i)].alreadychecked = zero;
-              voxels[((k*xpoints*ypoints)+(j*xpoints)+i)].grainname = badgrain;
-            }
-          }
-          voxels[((k*xpoints*ypoints)+(j*xpoints)+xpoints-1)].euler1 = -1;
-          voxels[((k*xpoints*ypoints)+(j*xpoints)+xpoints-1)].euler2 = -1;
-          voxels[((k*xpoints*ypoints)+(j*xpoints)+xpoints-1)].euler3 = -1;
-          voxels[((k*xpoints*ypoints)+(j*xpoints)+xpoints-1)].confidence = zero;
-          voxels[((k*xpoints*ypoints)+(j*xpoints)+xpoints-1)].alreadychecked = checked;
-          voxels[((k*xpoints*ypoints)+(j*xpoints)+xpoints-1)].grainname = badgrain;
-        }
-      }
-      inputFile.close();
-    }
-    }
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 int  MicroGen3D::form_grains()
 {
   int totalsize = 0;
@@ -251,7 +151,8 @@ int  MicroGen3D::form_grains()
   double n2;
   double n3;
   int size = 0;
-  int voxelslist[100000];
+//  int voxelslist[100000];
+  std::vector<int> voxelslist(1000, 0);
   int neighborhood[6];
   neighborhood[0] = -1;
   neighborhood[1] = 1;
@@ -262,7 +163,7 @@ int  MicroGen3D::form_grains()
   while(noseeds == 0)
   {
     int seed = -1;
-    double maxconfidence = 0;
+   // double maxconfidence = 0;
     for(int k = 1; k < zpoints-1; k++)
     {
       for(int j = 1; j < ypoints-1; j++)
@@ -279,21 +180,22 @@ int  MicroGen3D::form_grains()
         }
       }
     }
-    if(seed == -1) noseeds = 1;
+    if(seed == -1) { noseeds = 1; }
     if(seed >= 0)
     {
       size = 0;
       voxels[seed].alreadychecked = checked;
       voxels[seed].grainname = graincount;
       cout << "Making Grain - " << graincount << endl;
+
       voxelslist[size] = seed;
       size++;
       for(int j = 0; j < size; j ++)
       {
         int currentpoint = voxelslist[j];
-        double currentx = voxels[currentpoint].xc;
-        double currenty = voxels[currentpoint].yc;
-        double currentz = voxels[currentpoint].zc;
+//        double currentx = voxels[currentpoint].xc;
+//        double currenty = voxels[currentpoint].yc;
+//        double currentz = voxels[currentpoint].zc;
         double v1ea1 = voxels[currentpoint].euler1;
         double v1ea2 = voxels[currentpoint].euler2;
         double v1ea3 = voxels[currentpoint].euler3;
@@ -317,7 +219,8 @@ int  MicroGen3D::form_grains()
           if(i == 14 && currenty > 0 && currentz > 0) neighbor = currentpoint-xpoints-(xpoints*ypoints);
           if(i == 15 && currenty > 0 && currentz < sizez) neighbor = currentpoint-xpoints+(xpoints*ypoints);
           if(i == 16 && currenty < sizey && currentz > 0) neighbor = currentpoint+xpoints-(xpoints*ypoints);
-          if(i == 17 && currenty < sizey && currentz < sizez) neighbor = currentpoint+xpoints+(xpoints*ypoints);*/
+          if(i == 17 && currenty < sizey && currentz < sizez) neighbor = currentpoint+xpoints+(xpoints*ypoints);
+*/
           if(voxels[neighbor].alreadychecked == 0)
           {
             double v2ea1 = voxels[neighbor].euler1;

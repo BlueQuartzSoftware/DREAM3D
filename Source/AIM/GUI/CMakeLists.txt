@@ -81,8 +81,23 @@ SET (COMMON_HDRS
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Bin.h
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Orient.h
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/AIMRandomNG.h
+    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/FeiConstants.h
 )
 IDE_SOURCE_PROPERTIES( "Source/AIM/Common" "${COMMON_HDRS}" "${COMMON_SRCS}")
+
+
+set (ANG_SRCS
+    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/ANG/AngDirectoryPatterns.cpp
+    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/ANG/AngFileReader.cpp
+    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/ANG/AngFileHelper.cpp
+ )
+ 
+set (ANG_HDRS
+    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/ANG/AngDirectoryPatterns.h
+    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/ANG/AngFileReader.h
+    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/ANG/AngFileHelper.h
+)
+IDE_SOURCE_PROPERTIES( "Source/AIM/ANG" "${ANG_HDRS}" "${ANG_SRCS}")
 
 
 SET( Representation_MOC_HDRS
@@ -123,6 +138,8 @@ SET (Representation_PROJECT_SRCS
     ${AIM_Threads_HDRS}
     ${COMMON_SRCS}
     ${COMMON_HDRS}
+    ${ANG_SRCS}
+    ${ANG_HDRS}
     ${Generated_RC_SRCS} 
     ${Generated_UI_HDRS} 
     ${Generated_MOC_SRCS}

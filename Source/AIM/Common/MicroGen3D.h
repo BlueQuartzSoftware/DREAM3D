@@ -51,7 +51,7 @@ public:
                   bool v_alreadyformed);
 
 
-  AngFileHelper::Pointer _angFileHelper;
+  AngFileHelper::Pointer m_angFileHelper;
 
   double sizex;
   double sizey;
@@ -113,9 +113,9 @@ public:
 	double overlapallowed;
 	int overlapassignment;
 
-	int64 xpoints;
-	int64 ypoints;
-	int64 zpoints;
+	size_t xpoints;
+	size_t ypoints;
+	size_t zpoints;
 
 	double resx1;
 	double resy1;

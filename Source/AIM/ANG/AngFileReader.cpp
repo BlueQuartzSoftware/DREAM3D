@@ -127,6 +127,8 @@ int32 AngFileReader::readFile(std::string angFilename)  {
  _iq = AIMArray<float>::New();
  _ci = AIMArray<float>::New();
  _phaseData = AIMArray<float>::New();
+ m_X = AIMArray<float>::New();
+ m_Y = AIMArray<float>::New();
 
  _phi1->allocateArray(dataSize);
  _phi->allocateArray(dataSize);
@@ -134,6 +136,8 @@ int32 AngFileReader::readFile(std::string angFilename)  {
  _iq->allocateArray(dataSize);
  _ci->allocateArray(dataSize);
  _phaseData->allocateArray(dataSize);
+ m_X->allocateArray(dataSize);
+ m_Y->allocateArray(dataSize);
 
   this->_readData(buf, 0); // Read what is in the buffer...
   uint32 i;
@@ -220,12 +224,13 @@ void AngFileReader::_readData( const std::string &line, uint32 index )
 {
   std::istringstream in ( line );
   float f;
-  float x, y, d1, d2;
+  float d1, d2;
   in >> f; _phi1->setValue(f, index);
   in >> f; _phi->setValue(f, index);
   in >> f; _phi2->setValue(f, index);
-  in >> x >> y;
- // _phi1[index] = x;
+  in >> f; m_X->setValue(f, index);
+  in >> f; m_Y->setValue(f, index);
+  // _phi1[index] = x;
   in >> f; _iq->setValue(f, index);
   in >> f; _ci->setValue(f, index);
   in >> f; _phaseData->setValue(f, index);

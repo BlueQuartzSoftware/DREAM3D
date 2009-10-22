@@ -53,18 +53,18 @@ SET (COMMON_HDRS
 IDE_SOURCE_PROPERTIES( "Source/AIM/Common" "${COMMON_HDRS}" "${COMMON_SRCS}")
 
 
- set (ANG_SRCS
-  ${AIMRepresentation_SOURCE_DIR}/Source/AIM/ANG/AngDirectoryPatterns.cpp
- ${AIMRepresentation_SOURCE_DIR}/Source/AIM/ANG/AngFileReader.cpp
- ${AIMRepresentation_SOURCE_DIR}/Source/AIM/ANG/AngFileHelper.cpp
+set (ANG_SRCS
+    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/ANG/AngDirectoryPatterns.cpp
+    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/ANG/AngFileReader.cpp
+    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/ANG/AngFileHelper.cpp
  )
  
- set (ANG_HDRS
- ${AIMRepresentation_SOURCE_DIR}/Source/AIM/ANG/AngDirectoryPatterns.h
- ${AIMRepresentation_SOURCE_DIR}/Source/AIM/ANG/AngFileReader.h
- ${AIMRepresentation_SOURCE_DIR}/Source/AIM/ANG/AngFileHelper.h
-  )
- IDE_SOURCE_PROPERTIES( "Source/AIM/ANG" "${COMMON_HDRS}" "${COMMON_SRCS}")
+set (ANG_HDRS
+    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/ANG/AngDirectoryPatterns.h
+    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/ANG/AngFileReader.h
+    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/ANG/AngFileHelper.h
+)
+IDE_SOURCE_PROPERTIES( "Source/AIM/ANG" "${ANG_HDRS}" "${ANG_SRCS}")
  
 set (PROJECT_SRCS
     ${Reconstruction_SRCS}

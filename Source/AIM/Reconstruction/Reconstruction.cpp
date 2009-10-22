@@ -10,16 +10,27 @@
 #include <AIM/ANG/AngDirectoryPatterns.h>
 #include <AIM/ANG/AngFileReader.h>
 #include <AIM/ANG/AngFileHelper.h>
-#include <AIM/Common/Constants.h>
 #include <MXA/Utilities/MXAFileSystemPath.h>
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-Reconstruction::Reconstruction()
+Reconstruction::Reconstruction() :
+m_InputDirectory("."),
+m_OutputDirectory("."),
+m_AngFilePrefix("Slice_"),
+m_AngSeriesMaxSlice(3),
+m_ZIndexStart(0),
+m_ZIndexEnd(0),
+m_ZResolution(0.25),
+m_MergeTwins(false),
+m_MinAllowedGrainSize(0.0),
+m_MinSeedConfidence(0.0),
+m_MisorientationTolerance(0.0),
+m_CrystalStructure(AIM::Reconstruction::HCP),
+m_AlreadyFormed(false)
 {
-  // TODO Auto-generated constructor stub
 
 }
 
@@ -46,15 +57,19 @@ void Reconstruction::parseAngFile()
 // -----------------------------------------------------------------------------
 int32 Reconstruction::compute()
 {
-  AngDirectoryPatterns::Pointer p = AngDirectoryPatterns::New();
-  p->setParentDirectory(m_InputDirectory);
-  p->parseDocumentName(m_AngFilePrefix, "Slice_050.ang");
+  int32 sliceCount = 1;
+  int32 width = 0;
+  int32 totalSlices = m_AngSeriesMaxSlice;
+  while (sliceCount < totalSlices)
+  {
+    ++width;
+    sliceCount *= 10;
+  }
 
-  std::stringstream ss;
-  ss << m_InputDirectory << MXAFileSystemPath::Separator << p->generateAngFileName(m_ZIndexStart, 3);
+  AngDirectoryPatterns::Pointer p = AngDirectoryPatterns::New(m_InputDirectory, m_AngFilePrefix, width);
 
   AngFileReader::Pointer reader = AngFileReader::New();
-  reader->readFile(ss.str());
+  reader->readFile(p->generateFullPathAngFileName(m_ZIndexStart));
 
   double xSize = reader->getXStep() * reader->getNumEvenCols();
   std::cout << "X Size: " << xSize << std::endl;
@@ -84,7 +99,7 @@ int32 Reconstruction::compute()
                        reader->getNumEvenCols() + 3, reader->getNumRows() + 3, zPoints + 3,
                        m_MergeTwins, m_MinAllowedGrainSize, m_MinSeedConfidence,
                        m_MisorientationTolerance, m_CrystalStructure, m_AlreadyFormed);
-  microgen->_angFileHelper = angFileHelper;
+  microgen->m_angFileHelper = angFileHelper;
 
   int32 numgrains = 0;
   if(m_AlreadyFormed == false)

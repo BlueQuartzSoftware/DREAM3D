@@ -1,10 +1,11 @@
-/*
- * AngFileHelper.h
- *
- *  Created on: Oct 21, 2009
- *      Author: mjackson
- */
-
+///////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2009, Michael A. Jackson. BlueQuartz Software
+//  All rights reserved.
+//  BSD License: http://www.opensource.org/licenses/bsd-license.html
+//
+//
+///////////////////////////////////////////////////////////////////////////////
 #ifndef ANGFILEHELPER_H_
 #define ANGFILEHELPER_H_
 
@@ -12,9 +13,7 @@
 #include <AIM/Common/Voxel.h>
 #include <AIM/ANG/AngDirectoryPatterns.h>
 
-/*
- *
- */
+
 class AngFileHelper
 {
   public:

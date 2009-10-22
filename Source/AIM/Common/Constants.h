@@ -33,6 +33,12 @@ namespace AIM
     const std::string BoundaryCentersFile("boundarycenters.txt");//13
     const std::string AxisOrientationsFile("axisorientations.txt");//14
     const std::string EulerAnglesFile("eulerangles.txt");//15
+
+    enum CrystalStructure {
+        UnknownCrystalStructure = 0,
+        HCP = 1,
+        FCC = 2
+    };
   }
 }
 
