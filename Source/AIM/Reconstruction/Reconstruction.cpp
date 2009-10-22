@@ -57,6 +57,7 @@ void Reconstruction::parseAngFile()
 // -----------------------------------------------------------------------------
 int32 Reconstruction::compute()
 {
+  int32 err = 0;
   int32 sliceCount = 1;
   int32 width = 0;
   int32 totalSlices = m_AngSeriesMaxSlice;
@@ -157,4 +158,6 @@ int32 Reconstruction::compute()
     microgen->find_boundarycenters(AIM::Reconstruction::BoundaryCentersFile);
     delete microgen;
 #endif
+
+    return err;
 }

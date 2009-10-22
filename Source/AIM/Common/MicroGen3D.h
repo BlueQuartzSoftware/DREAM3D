@@ -1,5 +1,25 @@
 #ifndef _MicroGen3D_H
-#define _MicroGen3D_H
+#define _MicroGen3D_
+
+#if defined (_MSC_VER)
+#define WIN32_LEAN_AND_MEAN		// Exclude rarely-used stuff from Windows headers
+#endif
+
+#include <assert.h>
+#include <stdio.h>
+#include <time.h>
+#include <stdlib.h>
+
+#include <cstddef>
+#include <vector>
+#include <string>
+#include <iostream>
+#include <cmath>
+#include <fstream>
+#include <list>
+#include <algorithm>
+#include <numeric>
+
 
 #include <MXA/Common/MXATypes.h>
 #include <AIM/Common/Grain.h>
@@ -9,20 +29,6 @@
 #include <AIM/Common/AIMRandomNG.h>
 #include <AIM/ANG/AngFileHelper.h>
 
-
-#include <assert.h>
-#include <stdio.h>
-#include <time.h>
-#include <stdlib.h>
-
-#include <vector>
-#include <string>
-#include <iostream>
-#include <cmath>
-#include <fstream>
-#include <list>
-#include <algorithm>
-#include <numeric>
 
 using namespace std;
 
@@ -42,7 +48,7 @@ public:
 
   void initialize(double v_sizex, double v_sizey, double v_sizez,
                   double v_resx, double v_resy, double v_resz,
-                  size_t xPoints, size_t yPoints, size_t zPoints,
+                  int32 xPoints, int32 yPoints, int32 zPoints,
                   bool v_mergetwinsoption,
                   int32 v_minallowedgrainsize,
                   double v_minseedconfidence,
@@ -113,9 +119,10 @@ public:
 	double overlapallowed;
 	int overlapassignment;
 
-	size_t xpoints;
-	size_t ypoints;
-	size_t zpoints;
+  
+	int32 xpoints;
+	int32 ypoints;
+	int32 zpoints;
 
 	double resx1;
 	double resy1;
