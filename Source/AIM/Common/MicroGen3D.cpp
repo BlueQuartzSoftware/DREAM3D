@@ -134,6 +134,7 @@ void MicroGen3D::loadSlices()
 // -----------------------------------------------------------------------------
 int  MicroGen3D::form_grains()
 {
+
   int totalsize = 0;
   int noseeds = 0;
   int checked = 1;
@@ -142,8 +143,10 @@ int  MicroGen3D::form_grains()
   double n2;
   double n3;
   int size = 0;
-//  int voxelslist[100000];
-  std::vector<int> voxelslist(1000, 0);
+
+  //  int voxelslist[100000];
+  size_t initialVoxelsListSize = 1000;
+  std::vector<int> voxelslist(initialVoxelsListSize, 0);
   int neighborhood[6];
   neighborhood[0] = -1;
   neighborhood[1] = 1;
@@ -151,6 +154,7 @@ int  MicroGen3D::form_grains()
   neighborhood[3] = xpoints;
   neighborhood[4] = -(xpoints*ypoints);
   neighborhood[5] = (xpoints*ypoints);
+ 
   while(noseeds == 0)
   {
     int seed = -1;
@@ -163,7 +167,7 @@ int  MicroGen3D::form_grains()
         {
           int point = (k*xpoints*ypoints)+(j*xpoints)+i;
           double confidence = voxels[point].confidence;
-          if(confidence > MicroGen3D().minseedconfidence && voxels[point].alreadychecked == 0)
+          if(confidence > minseedconfidence && voxels[point].alreadychecked == 0)
           {
             seed = point;
           }
@@ -177,7 +181,7 @@ int  MicroGen3D::form_grains()
       size = 0;
       voxels[seed].alreadychecked = checked;
       voxels[seed].grainname = graincount;
-      cout << "Making Grain - " << graincount << endl;
+     // cout << "Making Grain - " << graincount << endl;
 
       voxelslist[size] = seed;
       size++;
@@ -225,6 +229,11 @@ int  MicroGen3D::form_grains()
               voxels[neighbor].grainname = graincount;
               voxelslist[size] = neighbor;
               size++;
+              if (size >= voxelslist.size() )
+              {
+                std::cout << "Resizing voxelslist to " << size << std::endl;
+                voxelslist.resize( size + initialVoxelsListSize);
+              }
             }
           }
         }
@@ -234,7 +243,7 @@ int  MicroGen3D::form_grains()
       graincount++;
     }
   }
-return graincount;
+  return graincount;
 }
 
 
