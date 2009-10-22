@@ -113,7 +113,7 @@ int32 Reconstruction::compute()
     microgen->write_volume1(outFile);
   }
 
-    if(alreadyformed == true)
+    if(m_AlreadyFormed == true)
     {
       microgen->load_data(AIM::Reconstruction::InputFile);
     }
@@ -133,7 +133,7 @@ int32 Reconstruction::compute()
     microgen->merge_containedgrains();
     numgrains = microgen->renumber_grains2();
     microgen->write_volume1(AIM::Reconstruction::ReconstructedDataFile);
-    if(mergetwinsoption == 1)
+    if(m_MergeTwins == 1)
     {
       microgen->merge_twins();
       microgen->characterize_twins();
