@@ -12,24 +12,13 @@
 #include <AIM/ANG/AngFileHelper.h>
 #include <MXA/Utilities/MXAFileSystemPath.h>
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 Reconstruction::Reconstruction() :
-m_InputDirectory("."),
-m_OutputDirectory("."),
-m_AngFilePrefix("Slice_"),
-m_AngSeriesMaxSlice(3),
-m_ZIndexStart(0),
-m_ZIndexEnd(0),
-m_ZResolution(0.25),
-m_MergeTwins(false),
-m_MinAllowedGrainSize(0.0),
-m_MinSeedConfidence(0.0),
-m_MisorientationTolerance(0.0),
-m_CrystalStructure(AIM::Reconstruction::HCP),
-m_AlreadyFormed(false)
+  m_InputDirectory("."), m_OutputDirectory("."), m_AngFilePrefix("Slice_"), m_AngSeriesMaxSlice(3), m_ZIndexStart(0), m_ZIndexEnd(0), m_ZResolution(0.25),
+      m_MergeTwins(false), m_MinAllowedGrainSize(0.0), m_MinSeedConfidence(0.0), m_MisorientationTolerance(0.0), m_CrystalStructure(AIM::Reconstruction::HCP),
+      m_AlreadyFormed(false)
 {
 
 }
@@ -48,9 +37,7 @@ Reconstruction::~Reconstruction()
 void Reconstruction::parseAngFile()
 {
 
-
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -94,7 +81,7 @@ int32 Reconstruction::compute()
   angFileHelper->setZIndexEnd(m_ZIndexEnd);
   angFileHelper->setDirectoryPattern(p);
 
-  MicroGen3D* microgen = MicroGen3D::New();
+  MicroGen3D::Pointer microgen = MicroGen3D::New();
   microgen->initialize(xSize, ySize, zSize,
                        reader->getXStep(), reader->getYStep(), m_ZResolution,
                        reader->getNumEvenCols() + 2, reader->getNumRows() + 2, zPoints + 2,
@@ -103,65 +90,102 @@ int32 Reconstruction::compute()
   microgen->m_angFileHelper = angFileHelper;
 
   int32 numgrains = 0;
-  if(m_AlreadyFormed == false)
+
+  std::string reconFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Reconstruction::ReconstructedDataFile;
+  if (m_AlreadyFormed == false)
   {
     microgen->loadSlices();
     numgrains = microgen->form_grains();
     microgen->remove_smallgrains();
     numgrains = microgen->renumber_grains1();
-    std::string outFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Reconstruction::ReconstructedDataFile;
-    microgen->write_volume1(outFile);
+    microgen->write_volume1(reconFile);
   }
 
-    if(m_AlreadyFormed == true)
+  if (m_AlreadyFormed == true)
+  {
+    // Sanity Check the the Reconstruction File does exist in the output directory
+    if (MXAFileSystemPath::exists(reconFile) == true)
     {
-	sanity check that this has the same name as the above outfile exits
-std::string infile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Reconstruction::ReconstructedDataFile;
-
-      microgen->load_data(infile );
+      microgen->load_data(reconFile);
     }
-    for(int iter1=0;iter1<180;iter1++)
+    else
     {
-      for(int iter2=0;iter2<180;iter2++)
+      std::cout << "******************************************************************************************" << std::endl;
+      std::cout << "* Input file needed by using the --alreadyFormed option was not found. The following file " << std::endl;
+      std::cout << "* should exist and be readable." << std::endl;
+      std::cout << "* " << reconFile << std::endl;
+      std::cout << "******************************************************************************************" << std::endl;
+      return -1;
+    }
+  }
+
+  for (int iter1 = 0; iter1 < 180; iter1++)
+  {
+    for (int iter2 = 0; iter2 < 180; iter2++)
+    {
+      for (int iter3 = 0; iter3 < 180; iter3++)
       {
-        for(int iter3=0;iter3<180;iter3++)
-        {
-          microgen->eulerrank[iter1][iter2][iter3] = 0;
-        }
+        microgen->eulerrank[iter1][iter2][iter3] = 0;
       }
     }
-    microgen->homogenize_grains();
-    microgen->assign_badpoints();
-    microgen->find_neighbors();
-    microgen->merge_containedgrains();
-    numgrains = microgen->renumber_grains2();
-    microgen->write_volume1(AIM::Reconstruction::ReconstructedDataFile);
-    if(m_MergeTwins == 1)
-    {
-      microgen->merge_twins();
-      microgen->characterize_twins();
-    }
-    numgrains = microgen->renumber_grains3();
-    microgen->write_volume2(AIM::Reconstruction::ReconstructedDataFile);
-    microgen->find_goodneighbors();
-    microgen->find_centroids();
-    microgen->find_moments();
-    microgen->find_axes();
-    microgen->find_vectors();
-    microgen->measure_misorientations();
-    microgen->find_colors();
-    microgen->find_convexities();
-    microgen->volume_stats(AIM::Reconstruction::StatsFile, AIM::Reconstruction::VolBinFile, AIM::Reconstruction::BOverABinsFile,
-                          AIM::Reconstruction::COverABinsFile, AIM::Reconstruction::COverBBinsFile, AIM::Reconstruction::SVNFile, AIM::Reconstruction::SVSFile,
-                          AIM::Reconstruction::MisorientationBinsFile, AIM::Reconstruction::MicroBinsFile);
-    microgen->write_volume2(AIM::Reconstruction::ReconstructedDataFile);
-    microgen->create_visualization(AIM::Reconstruction::ReconstructedVisualizationFile);
-    microgen->write_grains(AIM::Reconstruction::GrainsFile);
-    microgen->write_axisorientations(AIM::Reconstruction::AxisOrientationsFile);
-    microgen->write_eulerangles(AIM::Reconstruction::EulerAnglesFile);
-    microgen->find_boundarycenters(AIM::Reconstruction::BoundaryCentersFile);
-    delete microgen;
+  }
+  microgen->homogenize_grains();
+  microgen->assign_badpoints();
+  microgen->find_neighbors();
+  microgen->merge_containedgrains();
+  numgrains = microgen->renumber_grains2();
+  microgen->write_volume1(reconFile);
+  if (m_MergeTwins == 1)
+  {
+    microgen->merge_twins();
+    microgen->characterize_twins();
+  }
+  numgrains = microgen->renumber_grains3();
+  microgen->write_volume2(reconFile);
+  microgen->find_goodneighbors();
+  microgen->find_centroids();
+  microgen->find_moments();
+  microgen->find_axes();
+  microgen->find_vectors();
+  microgen->measure_misorientations();
+  microgen->find_colors();
+  microgen->find_convexities();
+
+  std::string  statsFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Reconstruction::StatsFile;
+  std::string  volBinFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Reconstruction::VolBinFile;
+  std::string  bOverABinsFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Reconstruction::BOverABinsFile;
+  std::string  cOverABinsFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Reconstruction::COverABinsFile;
+  std::string  cOverBBinsFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Reconstruction::COverBBinsFile;
+  std::string  svnFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Reconstruction::SVNFile;
+  std::string  svsFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Reconstruction::SVSFile;
+  std::string  misorientationFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Reconstruction::MisorientationBinsFile;
+  std::string  microBinsFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Reconstruction::MicroBinsFile;
 
 
-    return err;
+  microgen->volume_stats(statsFile,
+                         volBinFile,
+                         bOverABinsFile,
+                         cOverABinsFile,
+                         cOverBBinsFile,
+                         svnFile,
+                         svsFile,
+                         misorientationFile,
+                         microBinsFile);
+  microgen->write_volume2(reconFile);
+
+  std::string reconVisFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Reconstruction::ReconstructedVisualizationFile;
+  std::string grainsFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Reconstruction::GrainsFile;
+
+  std::string axisFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Reconstruction::AxisOrientationsFile;
+  std::string eulerFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Reconstruction::EulerAnglesFile;
+  std::string boundaryFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Reconstruction::BoundaryCentersFile;
+
+
+  microgen->create_visualization(reconVisFile);
+  microgen->write_grains(grainsFile);
+  microgen->write_axisorientations(axisFile);
+  microgen->write_eulerangles(eulerFile);
+  microgen->find_boundarycenters(boundaryFile);
+
+  return err;
 }
