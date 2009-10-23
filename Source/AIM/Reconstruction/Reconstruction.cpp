@@ -14,6 +14,32 @@
 #include <AIM/ANG/AngFileHelper.h>
 #include <MXA/Utilities/MXAFileSystemPath.h>
 
+#if AIM_USE_QT
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+Reconstruction::Pointer Reconstruction::New( QObject* parent)
+{
+  Pointer sharedPtr(new Reconstruction(parent));
+  return sharedPtr;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+Reconstruction::Reconstruction( QObject* parent) :
+QObject(parent),
+m_Cancel(false),
+  m_InputDirectory("."), m_OutputDirectory("."), m_AngFilePrefix("Slice_"), m_AngSeriesMaxSlice(3), m_ZIndexStart(0), m_ZIndexEnd(0), m_ZResolution(0.25),
+  m_MergeTwins(false), m_MinAllowedGrainSize(0.0), m_MinSeedConfidence(0.0), m_MisorientationTolerance(0.0), m_CrystalStructure(AIM::Reconstruction::HCP),
+  m_AlreadyFormed(false), m_ErrorCondition(0)
+{
+
+}
+
+
+
+#else
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -24,6 +50,8 @@ Reconstruction::Reconstruction() :
 {
 
 }
+
+#endif
 
 // -----------------------------------------------------------------------------
 //
@@ -44,7 +72,7 @@ void Reconstruction::parseAngFile()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int32 Reconstruction::compute()
+void Reconstruction::compute()
 {
   int32 err = 0;
   int32 sliceCount = 1;
@@ -117,7 +145,8 @@ int32 Reconstruction::compute()
       std::cout << "* should exist and be readable." << std::endl;
       std::cout << "* " << reconFile << std::endl;
       std::cout << "******************************************************************************************" << std::endl;
-      return -1;
+      m_ErrorCondition = -1;
+      return;
     }
   }
 
@@ -188,6 +217,9 @@ int32 Reconstruction::compute()
   microgen->write_axisorientations(axisFile);
   microgen->write_eulerangles(eulerFile);
   microgen->find_boundarycenters(boundaryFile);
-
-  return err;
+#ifdef AIM_USE_QT
+  QString msg = QString("Reconstruction Ending");
+  emit workerHasMessage(msg);
+  emit workerComplete();
+#endif
 }

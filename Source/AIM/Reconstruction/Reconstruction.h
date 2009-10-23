@@ -14,15 +14,31 @@
 #include <MXA/Common/MXATypes.h>
 #include <AIM/Common/Constants.h>
 
+#ifdef AIM_USE_QT
+#include <QtCore/QObject>
+#include <QtCore/QThread>
+#endif
 /*
  *
  */
 class Reconstruction
+#ifdef AIM_USE_QT
+ : public QObject
+#endif
 {
+#ifdef AIM_USE_QT
+Q_OBJECT
+#endif
+
   public:
     MXA_SHARED_POINTERS(Reconstruction);
-    MXA_STATIC_NEW_MACRO(Reconstruction);
+    MXA_TYPE_MACRO(Reconstruction);
 
+#ifdef AIM_USE_QT
+    static Pointer New (QObject* parent = 0);
+#else
+    MXA_STATIC_NEW_MACRO(Reconstruction);
+#endif
     virtual ~Reconstruction();
 
 
@@ -39,15 +55,49 @@ class Reconstruction
     MXA_INSTANCE_PROPERTY_m(double, MisorientationTolerance)
     MXA_INSTANCE_PROPERTY_m(AIM::Reconstruction::CrystalStructure, CrystalStructure)
     MXA_INSTANCE_PROPERTY_m(bool, AlreadyFormed)
-
+    MXA_INSTANCE_PROPERTY_m(int, ErrorCondition);
 
     void parseAngFile();
 
 
-    int32 compute();
+#ifdef AIM_USE_QT
+
+    /**
+     * @brief Cancel the operation
+     */
+    MXA_INSTANCE_PROPERTY_m(bool, Cancel);
+
+    /**
+     * Qt Signals for connections
+     */
+    signals:
+      void workerComplete();
+      void workerHasMessage(QString message);
+
+
+    public slots:
+    /**
+     * @brief Slot to receive a signal to cancel the operation
+     */
+      void on_CancelWorker()
+      {
+        std::cout << "Reconstruction::cancelWorker()" << std::endl;
+        this->m_Cancel = true;
+      }
+#endif
+      /**
+       * @brief Main method to run the operation
+       */
+
+      void compute();
+
 
   protected:
+#ifdef AIM_USE_QT
+      Reconstruction(QObject* parent = 0);
+#else
     Reconstruction();
+#endif
 
   private:
     Reconstruction(const Reconstruction&);    // Copy Constructor Not Implemented

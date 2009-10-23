@@ -45,8 +45,8 @@ class RepresentationUI : public QMainWindow, private Ui::RepresentationUI
     void on_actionExit_triggered();
     void on_angDirBtn_clicked();
     void on_outputDirBtn_clicked();
-    void on_reconstruct_clicked();
     void on_alreadyFormed_stateChanged(int);
+    void on_reconstructBtn_clicked();
 
 
   /**

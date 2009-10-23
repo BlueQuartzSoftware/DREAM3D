@@ -100,11 +100,24 @@ set (ANG_HDRS
 )
 IDE_SOURCE_PROPERTIES( "Source/AIM/ANG" "${ANG_HDRS}" "${ANG_SRCS}")
 
+SET (Reconstruction_SRCS
+    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Reconstruction/Reconstruction.cpp
+)
+SET (Reconstruction_HDRS
+   ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Reconstruction/Reconstruction.h
+    )
+IDE_SOURCE_PROPERTIES( "Source/AIM/Reconstruction" "${Reconstruction_HDRS}" "${Reconstruction_SRCS}")
+
+    set_source_files_properties(${AIMRepresentation_SOURCE_DIR}/Source/AIM/Reconstruction/Reconstruction.h
+                                ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Reconstruction/Reconstruction.cpp
+                        PROPERTIES  DEFINITIONS "-DAIM_USE_QT" )
+
 
 SET( Representation_MOC_HDRS
     ${Representation_SOURCE_DIR}/RepresentationUI.h
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Qt/AIMAboutBox.h
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Qt/QRecentFilelist.h
+    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Reconstruction/Reconstruction.h
     ${AIM_Threads_HDRS}
 )
 
@@ -141,6 +154,8 @@ SET (Representation_PROJECT_SRCS
     ${COMMON_HDRS}
     ${ANG_SRCS}
     ${ANG_HDRS}
+    ${Reconstruction_SRCS}
+    ${Reconstruction_HDRS}
     ${Generated_RC_SRCS} 
     ${Generated_UI_HDRS} 
     ${Generated_MOC_SRCS}
