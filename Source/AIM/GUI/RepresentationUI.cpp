@@ -10,6 +10,8 @@
 #include <AIM/Common/Qt/AIMAboutBox.h>
 #include <AIM/Common/Qt/QRecentFileList.h>
 #include <AIM/Common/Constants.h>
+#include <AIM/Threads/AIMThread.h>
+#include <AIM/Reconstruction/Reconstruction.h>
 
 //-- Qt Includes
 #include <QtCore/QFileInfo>
@@ -458,7 +460,7 @@ void RepresentationUI::threadHasMessage(QString message)
 // -----------------------------------------------------------------------------
 void RepresentationUI::threadFinished()
 {
-
+  std::cout << "thread Finished." << std::endl;
 }
 
 // -----------------------------------------------------------------------------
@@ -466,7 +468,7 @@ void RepresentationUI::threadFinished()
 // -----------------------------------------------------------------------------
 void RepresentationUI::threadProgressed(float percent)
 {
-
+  std::cout << "Thread Progressed" << std::endl;
 }
 
 // -----------------------------------------------------------------------------
@@ -600,12 +602,41 @@ void RepresentationUI::on_outputDirBtn_clicked()
   }
 }
 
-
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RepresentationUI::on_reconstruct_clicked()
+void RepresentationUI::on_reconstructBtn_clicked()
 {
-  std::cout << "on_reconstruct_clicked" << std::endl;
+
+
+  Reconstruction::Pointer worker = Reconstruction::New();
+  //TODO: Set all the values into the worker
+  <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+  QString tName("Reconstruction Worker-");
+  tName += QString::number(0);
+
+  AIMThread::Pointer t = AIMThread::New(-1, tName, NULL );
+
+  worker->moveToThread(t.get());
+  // Have the worker start when the thread is started
+  worker->connect(t.get(), SIGNAL(started()),
+                           SLOT(compute()));
+
+  // Have the worker quit the thread when it is done doing work
+  t->connect(worker.get(), SIGNAL(workerComplete()),
+                           SLOT(quit() ) , Qt::DirectConnection);
+
+  this->connect(t.get(), SIGNAL(threadFinished()),
+                         SLOT(threadFinished() ), Qt::DirectConnection );
+
+  //Send messages from the worker object up to the GUI
+  this->connect(worker.get(), SIGNAL(workerHasMessage(QString)),
+                              SLOT(on_threadHasMessage(QString)) );
+
+  // Send Cancel Messages from GUI to Worker
+  worker->connect(this, SIGNAL(sig_CancelWorker()),
+                        SLOT(on_CancelWorker() ) );
+
 }
+

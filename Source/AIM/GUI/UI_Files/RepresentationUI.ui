@@ -638,7 +638,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QPushButton" name="reconstruct">
+           <widget class="QPushButton" name="reconstructBtn">
             <property name="text">
              <string>Go</string>
             </property>
@@ -719,6 +719,7 @@
   </action>
  </widget>
  <resources>
+  <include location="../../../../Resources/icons/images/Icons.qrc"/>
   <include location="../../../../Resources/icons/images/Icons.qrc"/>
   <include location="../../../../Resources/icons/images/Icons.qrc"/>
  </resources>

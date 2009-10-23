@@ -146,8 +146,8 @@ int main(int argc, char **argv)
     r->setCrystalStructure(static_cast<AIM::Reconstruction::CrystalStructure> (crystruct));
     r->setAlreadyFormed(alreadyformed);
 
-    err = r->compute();
-
+    r->compute();
+    err = r->getErrorCondition();
   } catch (...)
   {
     std::cout << "Error on Input: Displaying help listing instead. **" << std::endl;
