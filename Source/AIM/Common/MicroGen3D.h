@@ -22,6 +22,8 @@
 
 
 #include <MXA/Common/MXATypes.h>
+#include <MXA/Common/MXASetGetMacros.h>
+
 #include <AIM/Common/Grain.h>
 #include <AIM/Common/Voxel.h>
 #include <AIM/Common/Bin.h>
@@ -39,10 +41,10 @@ class MicroGen3D
 {
 
 public:
-  static MicroGen3D* New()
-  {
-    return new MicroGen3D;
-  }
+
+    MXA_SHARED_POINTERS(MicroGen3D)
+    MXA_STATIC_NEW_MACRO(MicroGen3D)
+
 
   virtual ~MicroGen3D();
 
@@ -88,7 +90,7 @@ public:
 	Bin* coverabin;
 	Bin* coverbbin;
 	Bin* seNbin;
-	int eulercount[100][100][100];
+	
 	Bin* eulerbin;
 	Orient* orient;
 	Voxel* gridfine;
@@ -100,6 +102,7 @@ public:
 	double svn[1000][20];
 	double svs[20][20];
 	double nsdist[20][20];
+
 	vector<vector<int> > voxelsvector;
 	vector<vector<int> > neighborvector;
 
@@ -123,7 +126,7 @@ public:
 	int32 xpoints;
 	int32 ypoints;
 	int32 zpoints;
-  int totalpoints;
+      int totalpoints;
 
 	double resx1;
 	double resy1;
@@ -131,9 +134,16 @@ public:
 	int numneighbins;
 	int nummicros;
 
-	double bcent[250000][5];
+
+	/** @brief The number of boundary center objects needed */
+	size_t bcentSize;
+
+
+// sizes are needed. Dont't change
 	double eulerrank[180][180][180];
 
+// sizes are needed. Dont't change
+  int eulercount[100][100][100];
 
 	void loadSlices();
 	int form_grains();
@@ -197,11 +207,6 @@ public:
 	double getmisoquat(double ,double,double ,double ,double ,double ,double,double ,double &,double &,double &);
 	double gamma(double);
 
-	/**
-	 * We are protecting this class because when instantiated on the stack it is too large and will
-	 * lead to a segfault via a stack overflow. By creating the class on the heap we should
-	 * be able to get around this problem. This is forced by the static New() method.
-	 */
 protected:
   MicroGen3D();
 

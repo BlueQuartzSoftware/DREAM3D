@@ -5,6 +5,7 @@
     <file>zoomIn.png</file>
     <file>zoomOut.png</file>
     <file>fitToWindow.png</file>
-    
+   <file>Check-16x16.png</file>
+   <file>Delete-16x16.png</file>
  </qresource>
  </RCC>

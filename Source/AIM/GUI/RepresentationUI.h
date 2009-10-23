@@ -22,27 +22,32 @@
 #include <QtGui/QResizeEvent>
 
 //-- UIC generated Header
-#include <ui_Representation.h>
+#include <ui_RepresentationUI.h>
 
 /**
-* @class Representation Representation AIM/Representation/GUI/Representation.h
+* @class RepresentationUI RepresentationUI AIM/RepresentationUI/GUI/RepresentationUI.h
 * @brief
 * @author Michael A. Jackson for BlueQuartz Software
 * @date Oct 19, 2009
 * @version 1.0
 */
-class Representation : public QMainWindow, private Ui::Representation
+class RepresentationUI : public QMainWindow, private Ui::RepresentationUI
 {
   Q_OBJECT;
 
   public:
-    Representation(QWidget *parent = 0);
-    virtual ~Representation();
+    RepresentationUI(QWidget *parent = 0);
+    virtual ~RepresentationUI();
 
   protected slots:
 
-  void on_actionClose_triggered();
-  void on_actionExit_triggered();
+    void on_actionClose_triggered();
+    void on_actionExit_triggered();
+    void on_angDirBtn_clicked();
+    void on_outputDirBtn_clicked();
+    void on_reconstruct_clicked();
+    void on_alreadyFormed_stateChanged(int);
+
 
   /**
    * @brief Updates the QMenu 'Recent Files' with the latest list of files. This
@@ -58,10 +63,10 @@ class Representation : public QMainWindow, private Ui::Representation
 
 
   private slots:
-  // slots for our worker thread to communicate
-  void threadFinished();
-  void threadProgressed(float percent);
-  void threadHasMessage(QString message);
+    // slots for our worker thread to communicate
+    void threadFinished();
+    void threadProgressed(float percent);
+    void threadHasMessage(QString message);
 
   signals:
     void parentResized();
@@ -92,6 +97,20 @@ class Representation : public QMainWindow, private Ui::Representation
     void setWidgetListEnabled(bool b);
 
     /**
+     * @brief Verifies that a path exists on the file system.
+     * @param outFilePath The file path to check
+     * @param lineEdit The QLineEdit object to modify visuals of (Usually by placing a red line around the QLineEdit widget)
+     */
+    bool _verifyPathExists(QString outFilePath, QLineEdit* lineEdit);
+
+    /**
+     * @brief Verifies that a parent path exists on the file system.
+     * @param outFilePath The parent file path to check
+     * @param lineEdit The QLineEdit object to modify visuals of (Usually by placing a red line around the QLineEdit widget)
+     */
+    bool _verifyOutputPathParentExists(QString outFilePath, QLineEdit* lineEdit);
+
+    /**
      * @brief Reads the Preferences from the users pref file
      */
     void readSettings();
@@ -115,12 +134,15 @@ class Representation : public QMainWindow, private Ui::Representation
 
     void resizeEvent ( QResizeEvent * event );
 
+    void findAngMaxSliceAndPrefix();
+    void findReconstructionOutputFiles();
+
   private:
     QString                     m_OpenDialogLastDirectory;
     QList<QWidget*>             m_WidgetList;
 
-    Representation(const Representation&);    // Copy Constructor Not Implemented
-    void operator=(const Representation&);  // Operator '=' Not Implemented
+    RepresentationUI(const RepresentationUI&);    // Copy Constructor Not Implemented
+    void operator=(const RepresentationUI&);  // Operator '=' Not Implemented
 
 };
 
