@@ -14,7 +14,7 @@
 #include <AIM/ANG/AngFileHelper.h>
 #include <MXA/Utilities/MXAFileSystemPath.h>
 
-<<<<<<< HEAD
+
 #if AIM_USE_QT
 // -----------------------------------------------------------------------------
 //
@@ -37,12 +37,7 @@ m_Cancel(false),
 {
 
 }
-
-
-
 #else
-=======
->>>>>>> ae99239c9ea55471903c58abb87e3118f2d7daf1
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -53,7 +48,6 @@ Reconstruction::Reconstruction() :
 {
 
 }
-
 #endif
 
 // -----------------------------------------------------------------------------
@@ -148,12 +142,9 @@ void Reconstruction::compute()
       std::cout << "* should exist and be readable." << std::endl;
       std::cout << "* " << reconFile << std::endl;
       std::cout << "******************************************************************************************" << std::endl;
-<<<<<<< HEAD
       m_ErrorCondition = -1;
       return;
-=======
-      return -1;
->>>>>>> ae99239c9ea55471903c58abb87e3118f2d7daf1
+
     }
   }
 
@@ -224,14 +215,10 @@ void Reconstruction::compute()
   microgen->write_axisorientations(axisFile);
   microgen->write_eulerangles(eulerFile);
   microgen->find_boundarycenters(boundaryFile);
-<<<<<<< HEAD
+
 #ifdef AIM_USE_QT
   QString msg = QString("Reconstruction Ending");
   emit workerHasMessage(msg);
   emit workerComplete();
 #endif
-=======
-
-  return err;
->>>>>>> ae99239c9ea55471903c58abb87e3118f2d7daf1
 }
