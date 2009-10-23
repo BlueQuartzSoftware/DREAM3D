@@ -22,6 +22,8 @@
 
 
 #include <MXA/Common/MXATypes.h>
+#include <MXA/Common/MXASetGetMacros.h>
+
 #include <AIM/Common/Grain.h>
 #include <AIM/Common/Voxel.h>
 #include <AIM/Common/Bin.h>
@@ -39,10 +41,10 @@ class MicroGen3D
 {
 
 public:
-  static MicroGen3D* New()
-  {
-    return new MicroGen3D;
-  }
+
+    MXA_SHARED_POINTERS(MicroGen3D)
+    MXA_STATIC_NEW_MACRO(MicroGen3D)
+
 
   virtual ~MicroGen3D();
 
@@ -133,15 +135,15 @@ public:
 	int nummicros;
 
 
-//TODO: Calculate this in find_neighbors()
-<<<<<<<<<<<<<<<<<<
-	double bcent[250000][5];
+	/** @brief The number of boundary center objects needed */
+	size_t bcentSize;
+
 
 // sizes are needed. Dont't change
 	double eulerrank[180][180][180];
 
 // sizes are needed. Dont't change
-      int eulercount[100][100][100];
+  int eulercount[100][100][100];
 
 	void loadSlices();
 	int form_grains();
