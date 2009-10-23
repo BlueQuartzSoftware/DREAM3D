@@ -7,9 +7,6 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-//using namespace std;
-
-
 
 #include <MXA/Common/LogTime.h>
 #include <MXA/Utilities/MXALogger.h>
@@ -95,65 +92,61 @@ int main(int argc, char **argv)
   ;
 
   int err = 0;
-try
-{
-
-
-  boost::program_options::variables_map vm;
-  boost::program_options::store(boost::program_options::parse_command_line(argc, argv, desc), vm);
-  boost::program_options::notify(vm);
-
-  // Print help message if requested by user and return.
-  if (vm.count("help") || argc < 2)
+  try
   {
-    std::cout << desc << std::endl;
-    return EXIT_SUCCESS;
-  }
-  if (vm.count("logfile") != 0)
-  {
-    logFile = MXAFileSystemPath::toNativeSeparators(logFile);
-  }
-  if (false == logFile.empty())
-  {
-    mxa_log.open(logFile);
-  }
-  mxa_log << logTime() << "Reconstruction Version " << AIMRepresentation::Version::Complete << " Starting " << std::endl;
 
-  mxa_log << "Parameters being used are: " << std::endl;
+    boost::program_options::variables_map vm;
+    boost::program_options::store(boost::program_options::parse_command_line(argc, argv, desc), vm);
+    boost::program_options::notify(vm);
 
-  CHECK_ARG( inputDir, true);
-  CHECK_ARG( outputDir, true);
-  CHECK_ARG( angFilePrefix, true);
-  CHECK_ARG( angMaxSlice, true);
-  CHECK_ARG( zIndexStart, true);
-  CHECK_ARG( zIndexEnd, true);
-  CHECK_ARG( resz, true);
-  CHECK_BOOL_ARG( mergetwinsoption);
-  CHECK_ARG( minallowedgrainsize, true);
-  CHECK_ARG( minseedconfidence, true);
-  CHECK_ARG( misorientationtolerance, true);
-  CHECK_ARG( crystruct, true);
-  CHECK_BOOL_ARG( alreadyformed);
+    // Print help message if requested by user and return.
+    if (vm.count("help") || argc < 2)
+    {
+      std::cout << desc << std::endl;
+      return EXIT_SUCCESS;
+    }
+    if (vm.count("logfile") != 0)
+    {
+      logFile = MXAFileSystemPath::toNativeSeparators(logFile);
+    }
+    if (false == logFile.empty())
+    {
+      mxa_log.open(logFile);
+    }
+    mxa_log << logTime() << "Reconstruction Version " << AIMRepresentation::Version::Complete << " Starting " << std::endl;
 
+    mxa_log << "Parameters being used are: " << std::endl;
 
+    CHECK_ARG( inputDir, true);
+    CHECK_ARG( outputDir, true);
+    CHECK_ARG( angFilePrefix, true);
+    CHECK_ARG( angMaxSlice, true);
+    CHECK_ARG( zIndexStart, true);
+    CHECK_ARG( zIndexEnd, true);
+    CHECK_ARG( resz, true);
+    CHECK_BOOL_ARG( mergetwinsoption);
+    CHECK_ARG( minallowedgrainsize, true);
+    CHECK_ARG( minseedconfidence, true);
+    CHECK_ARG( misorientationtolerance, true);
+    CHECK_ARG( crystruct, true);
+    CHECK_BOOL_ARG( alreadyformed);
 
-  Reconstruction::Pointer r = Reconstruction::New();
-  r->setInputDirectory(inputDir);
-  r->setOutputDirectory(outputDir);
-  r->setAngFilePrefix(angFilePrefix);
-  r->setAngSeriesMaxSlice(angMaxSlice);
-  r->setZIndexStart(zIndexStart);
-  r->setZIndexEnd(zIndexEnd);
-  r->setZResolution(resz);
-  r->setMergeTwins(mergetwinsoption);
-  r->setMinAllowedGrainSize(minallowedgrainsize);
-  r->setMinSeedConfidence(minseedconfidence);
-  r->setMisorientationTolerance(misorientationtolerance);
-  r->setCrystalStructure(static_cast<AIM::Reconstruction::CrystalStructure>(crystruct) );
-  r->setAlreadyFormed(alreadyformed);
+    Reconstruction::Pointer r = Reconstruction::New();
+    r->setInputDirectory(inputDir);
+    r->setOutputDirectory(outputDir);
+    r->setAngFilePrefix(angFilePrefix);
+    r->setAngSeriesMaxSlice(angMaxSlice);
+    r->setZIndexStart(zIndexStart);
+    r->setZIndexEnd(zIndexEnd);
+    r->setZResolution(resz);
+    r->setMergeTwins(mergetwinsoption);
+    r->setMinAllowedGrainSize(minallowedgrainsize);
+    r->setMinSeedConfidence(minseedconfidence);
+    r->setMisorientationTolerance(misorientationtolerance);
+    r->setCrystalStructure(static_cast<AIM::Reconstruction::CrystalStructure> (crystruct));
+    r->setAlreadyFormed(alreadyformed);
 
-
-  err = r->compute();
+    err = r->compute();
 
   } catch (...)
   {

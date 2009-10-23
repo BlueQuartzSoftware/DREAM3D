@@ -17,7 +17,7 @@ namespace AIM
 
   namespace Reconstruction
   {
-    const std::string InputFile("formed_grains.txt");
+ //   const std::string InputFile("formed_grains.txt");
     const std::string StatsFile("stats.txt");//1
     const std::string VolBinFile("volbins.txt"); //2
     const std::string BOverABinsFile("boverabins.txt");//3
