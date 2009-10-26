@@ -38,26 +38,9 @@ void AngFileHelper::loadData(Voxel voxels[],
   for (size_t k = 0; k < zpoints; k++)
   {
     if (m_Cancel == true) { break; }
-    if (k == 0 || k == zpoints - 1)
-    {
-      for (size_t j = 0; j < ypoints; j++)
-      {
-        for (size_t i = 0; i < xpoints; i++)
-        {
-          index = ((k * xpoints * ypoints) + (j * xpoints) + i);
-          voxels[index].euler1 = -1;
-          voxels[index].euler2 = -1;
-          voxels[index].euler3 = -1;
-          voxels[index].confidence = zero;
-          voxels[index].alreadychecked = checked;
-          voxels[index].grainname = badgrain;
-        }
-      }
-    }
-    if (k > 0 && k < zpoints - 1)
     {
       AngFileReader::Pointer reader = AngFileReader::New();
-      int slice = m_ZIndexStart + k - 1;
+      int slice = m_ZIndexStart + k;
       std::string angFName = m_DirectoryPattern->generateFullPathAngFileName(slice);
       std::cout << "Reading ANG File '" << angFName << "'" << std::endl;
 
@@ -69,33 +52,11 @@ void AngFileHelper::loadData(Voxel voxels[],
       float* xcPtr = reader->getXData()->getPointer(0);
       float* ycPtr = reader->getYData()->getPointer(0);
       float* confPtr = reader->getConfidenceIndexData()->getPointer(0);
-
-
       for (size_t j = 0; j < ypoints; j++)
       {
-        if (j == 0 || j == ypoints - 1)
+      //  if (j > 0 && j < ypoints - 1)
         {
           for (size_t i = 0; i < xpoints; i++)
-          {
-            index = ((k * xpoints * ypoints) + (j * xpoints) + i);
-            voxels[index].euler1 = -1;
-            voxels[index].euler2 = -1;
-            voxels[index].euler3 = -1;
-            voxels[index].confidence = zero;
-            voxels[index].alreadychecked = checked;
-            voxels[index].grainname = badgrain;
-          }
-        }
-        if (j > 0 && j < ypoints - 1)
-        {
-          index = ((k * xpoints * ypoints) + (j * xpoints) + 0);
-          voxels[index].euler1 = -1;
-          voxels[index].euler2 = -1;
-          voxels[index].euler3 = -1;
-          voxels[index].confidence = zero;
-          voxels[index].alreadychecked = checked;
-          voxels[index].grainname = badgrain;
-          for (size_t i = 1; i < xpoints - 1; i++)
           {
             index = ((k * xpoints * ypoints) + (j * xpoints) + i);
             voxels[index].euler1 = euler1Ptr[readerIndex]; // Phi1
@@ -121,16 +82,8 @@ void AngFileHelper::loadData(Voxel voxels[],
             }
             ++readerIndex;
           }
-          index = ((k * xpoints * ypoints) + (j * xpoints) + xpoints - 1);
-          voxels[index].euler1 = -1;
-          voxels[index].euler2 = -1;
-          voxels[index].euler3 = -1;
-          voxels[index].confidence = zero;
-          voxels[index].alreadychecked = checked;
-          voxels[index].grainname = badgrain;
         }
       }
-
     }
   }
 }

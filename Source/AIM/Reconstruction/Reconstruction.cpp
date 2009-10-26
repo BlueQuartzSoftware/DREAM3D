@@ -120,22 +120,22 @@ void Reconstruction::compute()
   AngFileReader::Pointer reader = AngFileReader::New();
   reader->readFile(p->generateFullPathAngFileName(m_ZStartIndex));
 
-  double xSize = reader->getXStep() * reader->getNumEvenCols();
-  double ySize = reader->getYStep() * reader->getNumRows();
+  double xSize = reader->getXStep() * (reader->getNumEvenCols() - 1);
+  double ySize = reader->getYStep() * (reader->getNumRows() - 1);
 
   size_t zPoints = m_ZEndIndex - m_ZStartIndex;
-  double zSize = zPoints * m_ZResolution;
+  double zSize =  m_ZResolution * (zPoints - 1);
 
-#if DEBUG
+#if 1
   std::cout << "X Size: " << xSize << std::endl;
   std::cout << "Y Size: " << ySize << std::endl;
   std::cout << "Z Size: " << zSize << std::endl;
   std::cout << "X Res: " << reader->getXStep() << std::endl;
   std::cout << "Y Res: " << reader->getYStep() << std::endl;
   std::cout << "Z Res: " << m_ZResolution << std::endl;
-  std::cout << "X Points: " << reader->getNumEvenCols() + 3 << std::endl;
-  std::cout << "Y Points: " << reader->getNumRows() + 3 << std::endl;
-  std::cout << "Z Points: " << zPoints + 3 << std::endl;
+  std::cout << "X Points: " << reader->getNumEvenCols() << std::endl;
+  std::cout << "Y Points: " << reader->getNumRows() << std::endl;
+  std::cout << "Z Points: " << zPoints << std::endl;
 #endif
 
   AngFileHelper::Pointer angFileHelper = AngFileHelper::New();
@@ -146,7 +146,7 @@ void Reconstruction::compute()
   m_microgen = MicroGen3D::New();
   m_microgen->initialize(xSize, ySize, zSize,
                        reader->getXStep(), reader->getYStep(), m_ZResolution,
-                       reader->getNumEvenCols() + 2, reader->getNumRows() + 2, zPoints + 2,
+                       reader->getNumEvenCols(), reader->getNumRows(), zPoints,
                        m_MergeTwins, m_MinAllowedGrainSize, m_MinSeedConfidence,
                        m_MisorientationTolerance, m_CrystalStructure, m_AlreadyFormed);
   m_microgen->m_angFileHelper = angFileHelper;
@@ -155,6 +155,7 @@ void Reconstruction::compute()
   int32 numgrains = 0;
 
   std::string reconFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Reconstruction::ReconstructedDataFile;
+  reconFile = MXAFileSystemPath::toNativeSeparators(reconFile);
   if (m_AlreadyFormed == false)
   {
     CHECK_FOR_CANCELED(MicroGen3D)
@@ -164,6 +165,7 @@ void Reconstruction::compute()
     CHECK_FOR_CANCELED(MicroGen3D)
     progressMessage(AIM_STRING("Forming Grains"), 6 );
     numgrains = m_microgen->form_grains();
+    m_microgen->numgrains = numgrains;
 
     CHECK_FOR_CANCELED(MicroGen3D)
     progressMessage(AIM_STRING("Removing Small Grains"), 9 );
@@ -343,8 +345,8 @@ void Reconstruction::compute()
 void Reconstruction::progressMessage(AIM_STRING message, int progress)
 {
 #ifdef AIM_USE_QT
-      emit updateMessage(QString(message));
-      emit updateProgress(progress);
+   //   emit updateMessage(QString(message));
+   //   emit updateProgress(progress);
       std::cout << message.toStdString() << std::endl;
 #else
 

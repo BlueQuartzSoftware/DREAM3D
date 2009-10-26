@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>571</width>
-    <height>663</height>
+    <height>578</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -574,6 +574,9 @@
             <property name="singleStep">
              <double>0.100000000000000</double>
             </property>
+            <property name="value">
+             <double>0.200000000000000</double>
+            </property>
            </widget>
           </item>
           <item>
@@ -758,6 +761,8 @@
   </action>
  </widget>
  <resources>
+  <include location="../../../../Resources/icons/images/Icons.qrc"/>
+  <include location="../../../../Resources/icons/images/Icons.qrc"/>
   <include location="../../../../Resources/icons/images/Icons.qrc"/>
   <include location="../../../../Resources/icons/images/Icons.qrc"/>
   <include location="../../../../Resources/icons/images/Icons.qrc"/>
