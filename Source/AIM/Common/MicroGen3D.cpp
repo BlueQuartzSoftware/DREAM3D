@@ -165,7 +165,7 @@ int  MicroGen3D::form_grains()
   size_t size = 0;
 
   //  int voxelslist[100000];
-  size_t initialVoxelsListSize = 10000;
+  size_t initialVoxelsListSize = 1000;
   std::vector<int> voxelslist(initialVoxelsListSize, 0);
   int neighborhood[6];
   neighborhood[0] = -1;
@@ -261,6 +261,8 @@ int  MicroGen3D::form_grains()
       grains[graincount].numvoxels = size;
       totalsize = totalsize+size;
       graincount++;
+      voxelslist.clear();
+      voxelslist.resize(initialVoxelsListSize);
     }
   }
   numgrains = graincount;

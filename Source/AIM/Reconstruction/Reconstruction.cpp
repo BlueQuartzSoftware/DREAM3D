@@ -15,6 +15,23 @@
 #include <MXA/Utilities/MXAFileSystemPath.h>
 
 
+#ifdef AIM_USE_QT
+
+
+#define CHECK_FOR_CANCELED(AClass)\
+    if (this->m_Cancel) { \
+      QString msg = #AClass; \
+              msg += " was Canceled"; \
+      return;}
+
+#else
+
+#define CHECK_FOR_CANCELED(AClass)\
+    ;
+
+#endif
+
+
 #if AIM_USE_QT
 
 // -----------------------------------------------------------------------------
@@ -75,21 +92,6 @@ void Reconstruction::parseAngFile()
 
 }
 
-#ifdef AIM_USE_QT
-
-
-#define CHECK_FOR_CANCELED(AClass)\
-    if (this->m_Cancel) { \
-      QString msg = #AClass; \
-              msg += " was Canceled"; \
-      return;}
-
-#else
-
-#define CHECK_FOR_CANCELED(AClass)\
-    ;
-
-#endif
 
 #if AIM_USE_QT
 void Reconstruction::run()
