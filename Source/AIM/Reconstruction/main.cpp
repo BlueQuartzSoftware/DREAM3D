@@ -56,8 +56,8 @@ int main(int argc, char **argv)
   std::string angFilePrefix;
   int angMaxSlice = 300;
 
-  int zIndexStart = 0;
-  int zIndexEnd = 0;
+  int zStartIndex = 0;
+  int zEndIndex = 0;
 
   double resz = 0.0;
 
@@ -79,8 +79,8 @@ int main(int argc, char **argv)
   ("outputDir", boost::program_options::value<std::string>(&outputDir), "REQUIRED: Output Directory")
   ("angFilePrefix,f", boost::program_options::value<std::string>(&angFilePrefix), "REQUIRED: The prefix that is common to every ANG file")
   ("angMaxSlice", boost::program_options::value<int>(&angMaxSlice), "The max slice value of the series. Needed to be able to generate ang file names")
-  ("zIndexStart,s", boost::program_options::value<int>(&zIndexStart), "Starting Slice")
-  ("zIndexEnd,e", boost::program_options::value<int>(&zIndexEnd), "Ending Slice")
+  ("zStartIndex,s", boost::program_options::value<int>(&zStartIndex), "Starting Slice")
+  ("zEndIndex,e", boost::program_options::value<int>(&zEndIndex), "Ending Slice")
   ("resz,z", boost::program_options::value<double>(&resz), "z resolution of your volume")
   ("merge-twins,t", boost::program_options::bool_switch(&mergetwinsoption), "Do you want to merge twins")
   ("minallowedgrainsize,g", boost::program_options::value<int>(&minallowedgrainsize), "What is the minimum allowed grain size")
@@ -121,8 +121,8 @@ int main(int argc, char **argv)
     CHECK_ARG( outputDir, true);
     CHECK_ARG( angFilePrefix, true);
     CHECK_ARG( angMaxSlice, true);
-    CHECK_ARG( zIndexStart, true);
-    CHECK_ARG( zIndexEnd, true);
+    CHECK_ARG( zStartIndex, true);
+    CHECK_ARG( zEndIndex, true);
     CHECK_ARG( resz, true);
     CHECK_BOOL_ARG( mergetwinsoption);
     CHECK_ARG( minallowedgrainsize, true);
@@ -136,8 +136,8 @@ int main(int argc, char **argv)
     r->setOutputDirectory(outputDir);
     r->setAngFilePrefix(angFilePrefix);
     r->setAngSeriesMaxSlice(angMaxSlice);
-    r->setZIndexStart(zIndexStart);
-    r->setZIndexEnd(zIndexEnd);
+    r->setZStartIndex(zStartIndex);
+    r->setZEndIndex(zEndIndex);
     r->setZResolution(resz);
     r->setMergeTwins(mergetwinsoption);
     r->setMinAllowedGrainSize(minallowedgrainsize);
@@ -158,7 +158,7 @@ int main(int argc, char **argv)
     }
     return EXIT_FAILURE;
   }
-
+  std::cout << "++++++++++++ Reconstruction Complete ++++++++++++" << std::endl;
   return err;
 }
 

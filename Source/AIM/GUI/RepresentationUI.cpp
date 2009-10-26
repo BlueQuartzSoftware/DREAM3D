@@ -11,7 +11,7 @@
 #include <AIM/Common/Qt/QRecentFileList.h>
 #include <AIM/Common/Constants.h>
 #include <AIM/Threads/AIMThread.h>
-#include <AIM/Reconstruction/Reconstruction.h>
+
 
 //-- Qt Includes
 #include <QtCore/QFileInfo>
@@ -164,17 +164,17 @@ void RepresentationUI::readSettings()
   /* ******** This Section is for the Reconstruction Tab ************ */
   READ_FILEPATH_SETTING(prefs, angDir, "");
   READ_FILEPATH_SETTING(prefs, outputDir, "");
+  READ_SETTING(prefs, angMaxSlice, ok, i, 300 , Int);
   READ_STRING_SETTING(prefs, angFilePrefix, "");
-  READ_STRING_SETTING(prefs, angMaxSlice, "");
-  READ_STRING_SETTING(prefs, zStartIndex, "");
-  READ_STRING_SETTING(prefs, zEndIndex, "");
+  READ_SETTING(prefs, zStartIndex, ok, i, 0 , Int);
+  READ_SETTING(prefs, zEndIndex, ok, i, 10 , Int);
   READ_STRING_SETTING(prefs, zSpacing, "");
 
   READ_BOOL_SETTING(prefs, mergeTwins, true);
   alreadyFormed->blockSignals(true);
   READ_BOOL_SETTING(prefs, alreadyFormed, false);
   alreadyFormed->blockSignals(false);
- 
+
   READ_SETTING(prefs, minAllowedGrainSize, ok, i, 8 , Int);
   READ_SETTING(prefs, minConfidence, ok, d, 0.0 , Double);
   READ_SETTING(prefs, misOrientationTolerance, ok, d, 5.0 , Double);
@@ -236,6 +236,7 @@ void RepresentationUI::setupGui()
   SET_TEXT_ICON(AxisOrientationsFile, Delete)
   SET_TEXT_ICON(EulerAnglesFile, Delete)
 #endif
+
   QString msg ("All files will be over written that appear in the output directory.");
 
   if (true == this->_verifyPathExists(angDir->text(), this->angDir) )
@@ -251,13 +252,20 @@ void RepresentationUI::setupGui()
   if (alreadyFormed->isChecked() == true && fi.exists() == false)
   {
     alreadyFormed->setChecked(false);
-  } 
+  }
 
   if (alreadyFormed->isChecked())
   {
     msg += QString("\nThe 'reconstructed_data.txt' file will be used as an import and NOT over written with new data");
   }
   messageLabel->setText(msg);
+
+
+  m_WidgetList << angDir << angDirBtn << outputDir << outputDirBtn;
+  m_WidgetList << angFilePrefix << angMaxSlice << zStartIndex << zEndIndex << zSpacing;
+  m_WidgetList << mergeTwins << alreadyFormed << minAllowedGrainSize << minConfidence << misOrientationTolerance;
+  m_WidgetList << crystalStructure;
+
 }
 
 // -----------------------------------------------------------------------------
@@ -447,29 +455,6 @@ void RepresentationUI::openRecentFile()
 
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void RepresentationUI::threadHasMessage(QString message)
-{
-  this->statusBar()->showMessage(message);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void RepresentationUI::threadFinished()
-{
-  std::cout << "thread Finished." << std::endl;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void RepresentationUI::threadProgressed(float percent)
-{
-  std::cout << "Thread Progressed" << std::endl;
-}
 
 // -----------------------------------------------------------------------------
 //
@@ -576,7 +561,7 @@ void RepresentationUI::findAngMaxSliceAndPrefix()
       }
     }
   }
-  this->angMaxSlice->setText(QString::number(maxSlice, 10));
+  this->angMaxSlice->setValue(maxSlice);
   this->angFilePrefix->setText(fPrefix);
 }
 
@@ -607,36 +592,115 @@ void RepresentationUI::on_outputDirBtn_clicked()
 // -----------------------------------------------------------------------------
 void RepresentationUI::on_reconstructBtn_clicked()
 {
+  bool ok = false;
+  if (reconstructBtn->text().compare("Cancel") == 0)
+  {
+    if(m_Reconstruction.get() != NULL)
+    {
+      //std::cout << "canceling from GUI...." << std::endl;
+      emit sig_CancelWorker();
+    }
+    return;
+  }
 
 
-  Reconstruction::Pointer worker = Reconstruction::New();
-  //TODO: Set all the values into the worker
-  <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+  m_Reconstruction = Reconstruction::New();
+  m_Reconstruction->setInputDirectory(angDir->text().toStdString() );
+  m_Reconstruction->setOutputDirectory(outputDir->text().toStdString());
+  m_Reconstruction->setAngFilePrefix(angFilePrefix->text().toStdString());
+  m_Reconstruction->setAngSeriesMaxSlice(angMaxSlice->value());
+  m_Reconstruction->setZStartIndex(zStartIndex->value());
+  m_Reconstruction->setZEndIndex(zEndIndex->value());
+  m_Reconstruction->setZResolution(zSpacing->text().toDouble(&ok));
+  m_Reconstruction->setMergeTwins(mergeTwins->isChecked() );
+  m_Reconstruction->setMinAllowedGrainSize(minAllowedGrainSize->value());
+  m_Reconstruction->setMinSeedConfidence(minConfidence->value());
+  m_Reconstruction->setMisorientationTolerance(misOrientationTolerance->value());
 
-  QString tName("Reconstruction Worker-");
-  tName += QString::number(0);
+  AIM::Reconstruction::CrystalStructure crystruct = static_cast<AIM::Reconstruction::CrystalStructure>(crystalStructure->currentIndex());
+  if (crystruct == 0) { crystruct = AIM::Reconstruction::Cubic; }
+  else if (crystruct == 1) { crystruct = AIM::Reconstruction::Hexagonal; }
 
-  AIMThread::Pointer t = AIMThread::New(-1, tName, NULL );
+  m_Reconstruction->setCrystalStructure(crystruct);
+  m_Reconstruction->setAlreadyFormed(alreadyFormed->isChecked());
 
-  worker->moveToThread(t.get());
-  // Have the worker start when the thread is started
-  worker->connect(t.get(), SIGNAL(started()),
-                           SLOT(compute()));
+  connect(m_Reconstruction.get(), SIGNAL(finished()),
+          this, SLOT( reconstruction_Finished() ) );
+  connect(m_Reconstruction.get(), SIGNAL (updateProgress(int)),
+          this, SLOT(threadProgressed(int) ) );
+  connect(m_Reconstruction.get(), SIGNAL (updateMessage(QString)),
+          this, SLOT(threadHasMessage(QString) ) );
 
-  // Have the worker quit the thread when it is done doing work
-  t->connect(worker.get(), SIGNAL(workerComplete()),
-                           SLOT(quit() ) , Qt::DirectConnection);
+//  m_ThreadGroup = AIMThreadGroup::New(QThread::idealThreadCount());
+//  QString tName("Reconstruction Worker-");
+//  tName += QString::number(0);
+//
+//  m_CurrentThread = AIMThread::New(-1, tName, NULL );
+//
+//  m_Reconstruction->moveToThread(m_CurrentThread.get());
+//  // Have the worker start when the thread is started
+//  m_Reconstruction->connect(m_CurrentThread.get(), SIGNAL(started()),
+//                           SLOT(compute()));
+//
+//  // Have the worker quit the thread when it is done doing work
+//  m_CurrentThread->connect(m_Reconstruction.get(), SIGNAL(workerComplete()),
+//                                                         SLOT( quit() ), Qt::DirectConnection);
+//
+//  m_ThreadGroup->connect(m_CurrentThread.get(), SIGNAL(threadFinished(int)),
+//                       SLOT(markThreadComplete(int) ), Qt::DirectConnection );
 
-  this->connect(t.get(), SIGNAL(threadFinished()),
-                         SLOT(threadFinished() ), Qt::DirectConnection );
-
-  //Send messages from the worker object up to the GUI
-  this->connect(worker.get(), SIGNAL(workerHasMessage(QString)),
-                              SLOT(on_threadHasMessage(QString)) );
+//  //Send messages from the m_Reconstruction object up to the GUI
+//  this->connect(m_Reconstruction.get(), SIGNAL(workerHasMessage(QString)),
+//                              SLOT(threadHasMessage(QString)), Qt::DirectConnection );
+//  this->connect(m_Reconstruction.get(), SIGNAL(workerProgressed(float)),
+//                              SLOT(threadProgressed(float) ), Qt::DirectConnection  );
 
   // Send Cancel Messages from GUI to Worker
-  worker->connect(this, SIGNAL(sig_CancelWorker()),
-                        SLOT(on_CancelWorker() ) );
+//  m_Reconstruction->connect(this, SIGNAL(sig_CancelWorker()),
+//                        SLOT(on_CancelWorker() ), Qt::DirectConnection );
+
+
+  setWidgetListEnabled(false);
+  m_Reconstruction->start();
+  reconstructBtn->setText("Cancel");
 
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void RepresentationUI::threadHasMessage(QString message)
+{
+  std::cout << "RepresentationUI::threadHasMessage()" << message.toStdString() << std::endl;
+//  this->statusBar()->showMessage(message);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void RepresentationUI::threadFinished()
+{
+  std::cout << "thread Finished." << std::endl;
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void RepresentationUI::reconstruction_Finished()
+{
+  std::cout << "RepresentationUI::reconstruction_Finished()" << std::endl;
+  reconstructBtn->setText("Go");
+  setWidgetListEnabled(true);
+  this->progressBar->setValue(0);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void RepresentationUI::threadProgressed(int val)
+{
+  this->progressBar->setValue( val );
+}
+
 

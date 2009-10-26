@@ -13,17 +13,21 @@
 #include <MXA/Common/MXASetGetMacros.h>
 #include <MXA/Common/MXATypes.h>
 #include <AIM/Common/Constants.h>
+#include <AIM/Common/MicroGen3D.h>
 
 #ifdef AIM_USE_QT
 #include <QtCore/QObject>
 #include <QtCore/QThread>
+#define AIM_STRING QString
+#else
+#define AIM_STRING std::string
 #endif
 /*
  *
  */
 class Reconstruction
 #ifdef AIM_USE_QT
- : public QObject
+ : public QThread
 #endif
 {
 #ifdef AIM_USE_QT
@@ -46,8 +50,8 @@ Q_OBJECT
     MXA_INSTANCE_STRING_PROPERTY(OutputDirectory, m_OutputDirectory)
     MXA_INSTANCE_STRING_PROPERTY(AngFilePrefix, m_AngFilePrefix)
     MXA_INSTANCE_PROPERTY_m(int, AngSeriesMaxSlice)
-    MXA_INSTANCE_PROPERTY_m(int, ZIndexStart)
-    MXA_INSTANCE_PROPERTY_m(int, ZIndexEnd)
+    MXA_INSTANCE_PROPERTY_m(int, ZStartIndex)
+    MXA_INSTANCE_PROPERTY_m(int, ZEndIndex)
     MXA_INSTANCE_PROPERTY_m(double, ZResolution)
     MXA_INSTANCE_PROPERTY_m(bool, MergeTwins)
     MXA_INSTANCE_PROPERTY_m(int32, MinAllowedGrainSize)
@@ -59,6 +63,12 @@ Q_OBJECT
 
     void parseAngFile();
 
+    /**
+     * @brief Either prints a message or sends the message to the User Interface
+     * @param message The message to print
+     * @param progress The progress of the Reconstruction normalized to a value between 0 and 100
+     */
+    void progressMessage(AIM_STRING message, int progress);
 
 #ifdef AIM_USE_QT
 
@@ -71,19 +81,17 @@ Q_OBJECT
      * Qt Signals for connections
      */
     signals:
-      void workerComplete();
-      void workerHasMessage(QString message);
-
+    //  void workerComplete();
+      void updateMessage(QString message);
+      void updateProgress(int value);
 
     public slots:
     /**
      * @brief Slot to receive a signal to cancel the operation
      */
-      void on_CancelWorker()
-      {
-        std::cout << "Reconstruction::cancelWorker()" << std::endl;
-        this->m_Cancel = true;
-      }
+      void on_CancelWorker();
+
+
 #endif
       /**
        * @brief Main method to run the operation
@@ -94,12 +102,18 @@ Q_OBJECT
 
   protected:
 #ifdef AIM_USE_QT
-      Reconstruction(QObject* parent = 0);
+    Reconstruction(QObject* parent = 0);
+    virtual void run();
+
 #else
     Reconstruction();
 #endif
 
   private:
+    MicroGen3D::Pointer m_microgen;
+
+
+
     Reconstruction(const Reconstruction&);    // Copy Constructor Not Implemented
     void operator=(const Reconstruction&);  // Operator '=' Not Implemented
 };
