@@ -2,27 +2,28 @@
 PROJECT( Reconstruction )
 cmake_minimum_required(VERSION 2.6)
 
+
 # ---------- Setup output Directories -------------------------
 SET (CMAKE_LIBRARY_OUTPUT_DIRECTORY
-  /Bin
+  ${PROJECT_BINARY_DIR}/Bin
   CACHE PATH
   "Single Directory for all Libraries"
   )
 
 # --------- Setup the Executable output Directory -------------
 SET (CMAKE_RUNTIME_OUTPUT_DIRECTORY
-  /Bin
+  ${PROJECT_BINARY_DIR}/Bin
   CACHE PATH
   "Single Directory for all Executables."
   )
 
 # --------- Setup the Executable output Directory -------------
 SET (CMAKE_ARCHIVE_OUTPUT_DIRECTORY
-  /Bin
+  ${PROJECT_BINARY_DIR}/Bin
   CACHE PATH
   "Single Directory for all static libraries."
   )
-
+  
 SET (Reconstruction_SRCS
     ${Reconstruction_SOURCE_DIR}/main.cpp
     ${Reconstruction_SOURCE_DIR}/Reconstruction.cpp

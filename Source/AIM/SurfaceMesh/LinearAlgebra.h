@@ -8,7 +8,9 @@ Hi Tony,
 
 1)You can find the code for mean width, along with some compilation notes on mrsec:/lisachan/MeanWidth.
 
-2) Attached are two files for mesh smoothing code, let me know if the face nodes are acting weird. You'd need two input files,  nodes.txt and triangles.txt from Sukbin's meshing analysis. And the output file has steve's up&down .inp file convention.
+2) Attached are two files for mesh smoothing code, let me know if the face nodes are acting weird.
+You'd need two input files,  nodes.txt and triangles.txt from Sukbin's meshing analysis. 
+And the output file has steve's up&down .inp file convention.
 
 -Fatma
 
