@@ -117,6 +117,11 @@ IF ( AIM_BUILD_RECONSTRUCTION_TOOL )
     ADD_SUBDIRECTORY( ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Reconstruction ${AIMRepresentation_BINARY_DIR}/AIM/Reconstruction)
 ENDIF ()
 
+OPTION (AIM_BUILD_SURFACE_MESHING_TOOLS "Compile the surface Meshing tools" ON)
+if (AIM_BUILD_SURFACE_MESHING_TOOLS)
+    add_subdirectory(${AIMRepresentation_SOURCE_DIR}/Source/AIM/SurfaceMesh ${AIMRepresentation_BINARY_DIR}/AIM/SurfaceMesh)
+endif()
+
 if (AIM_BUILD_QT_APPS)
     ADD_SUBDIRECTORY( ${AIMRepresentation_SOURCE_DIR}/Source/AIM/GUI ${AIMRepresentation_BINARY_DIR}/AIM/GUI)
 endif()
