@@ -11,6 +11,7 @@
 #define AIMREPRESENTATION_H_
 
 #include <MXA/Common/MXASetGetMacros.h>
+#include <AIM/Reconstruction/Reconstruction.h>
 
 
 //-- Qt Includes
@@ -65,7 +66,8 @@ class RepresentationUI : public QMainWindow, private Ui::RepresentationUI
   private slots:
     // slots for our worker thread to communicate
     void threadFinished();
-    void threadProgressed(float percent);
+    void reconstruction_Finished();
+    void threadProgressed(int value);
     void threadHasMessage(QString message);
 
   signals:
@@ -140,6 +142,8 @@ class RepresentationUI : public QMainWindow, private Ui::RepresentationUI
   private:
     QString                     m_OpenDialogLastDirectory;
     QList<QWidget*>             m_WidgetList;
+
+    Reconstruction::Pointer     m_Reconstruction;
 
     RepresentationUI(const RepresentationUI&);    // Copy Constructor Not Implemented
     void operator=(const RepresentationUI&);  // Operator '=' Not Implemented

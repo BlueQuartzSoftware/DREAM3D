@@ -24,6 +24,7 @@ class AngFileHelper
     MXA_INSTANCE_PROPERTY_m(AngDirectoryPatterns::Pointer, DirectoryPattern);
     MXA_INSTANCE_PROPERTY_m(int, ZIndexStart)
     MXA_INSTANCE_PROPERTY_m(int, ZIndexEnd)
+    MXA_INSTANCE_PROPERTY_m(bool, Cancel);
 
     void loadData(Voxel voxels[],
                   size_t xpoints, size_t ypoints, size_t zpoints,

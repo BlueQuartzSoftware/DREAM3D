@@ -145,7 +145,7 @@ int  MicroGen3D::form_grains()
   size_t size = 0;
 
   //  int voxelslist[100000];
-  size_t initialVoxelsListSize = 1000;
+  size_t initialVoxelsListSize = 10000;
   std::vector<int> voxelslist(initialVoxelsListSize, 0);
   int neighborhood[6];
   neighborhood[0] = -1;
@@ -154,7 +154,7 @@ int  MicroGen3D::form_grains()
   neighborhood[3] = xpoints;
   neighborhood[4] = -(xpoints*ypoints);
   neighborhood[5] = (xpoints*ypoints);
- 
+
   while(noseeds == 0)
   {
     int seed = -1;
@@ -231,9 +231,8 @@ int  MicroGen3D::form_grains()
               size++;
               if (size >= voxelslist.size() )
               {
-                std::cout << "Resizing voxelslist to " << size << std::endl;
+               // std::cout << "Resizing voxelslist to " << size << std::endl;
                 voxelslist.resize( size + initialVoxelsListSize);
-// Look at push_back() and if vector will auto resize if needed.
               }
             }
           }
@@ -297,11 +296,16 @@ int  MicroGen3D::renumber_grains1()
   }
   return graincount;
 }
-void  MicroGen3D::write_volume1(string writename10)
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void MicroGen3D::write_volume1(string writename10)
 {
-    ofstream outFile;
-    outFile.open(writename10.c_str());
-  for(int i = 0; i < (xpoints*ypoints*zpoints); i++)
+  std::cout << "MicroGen3D::write_volume1: '" << writename10 << "'" << std::endl;
+  ofstream outFile;
+  outFile.open(writename10.c_str());
+  for (int i = 0; i < (xpoints * ypoints * zpoints); i++)
   {
     int grainname = voxels[i].grainname;
     double ea1 = voxels[i].euler1;
@@ -315,6 +319,10 @@ void  MicroGen3D::write_volume1(string writename10)
   }
   outFile.close();
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void  MicroGen3D::assign_badpoints()
 {
   vector<int> neighs;
@@ -324,8 +332,9 @@ void  MicroGen3D::assign_badpoints()
   double x = 0;
   double y = 0;
   double z = 0;
-  int *n;
-  n = new int[numgrains];
+//  int *n;
+//  n = new int[numgrains];
+  std::vector<int> n(numgrains);
   while(count != 0)
   {
     count = 0;

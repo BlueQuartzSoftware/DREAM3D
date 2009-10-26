@@ -36,8 +36,8 @@ namespace AIM
 
     enum CrystalStructure {
         UnknownCrystalStructure = 0,
-        HCP = 1,
-        FCC = 2
+        Hexagonal = 1,
+        Cubic = 2
     };
   }
 }

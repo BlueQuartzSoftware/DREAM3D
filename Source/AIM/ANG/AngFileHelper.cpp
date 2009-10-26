@@ -12,7 +12,8 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AngFileHelper::AngFileHelper()
+AngFileHelper::AngFileHelper() :
+m_Cancel(false)
 {
 }
 
@@ -36,6 +37,7 @@ void AngFileHelper::loadData(Voxel voxels[],
   size_t index = 0;
   for (size_t k = 0; k < zpoints; k++)
   {
+    if (m_Cancel == true) { break; }
     if (k == 0 || k == zpoints - 1)
     {
       for (size_t j = 0; j < ypoints; j++)
