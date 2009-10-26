@@ -1,12 +1,12 @@
-/*
- * Grains.h
- *
- *  Created on: Oct 21, 2009
- *      Author: mjackson
- */
+
 
 #ifndef _GRAINS_H_
 #define _GRAINS_H_
+
+#if defined (_MSC_VER)
+#define WIN32_LEAN_AND_MEAN		// Exclude rarely-used stuff from Windows headers
+#endif
+
 
 #include <vector>
 
@@ -20,9 +20,6 @@ class Grain
   public:
     Grain();
     virtual ~Grain();
-
-
-    int m_uid;
 
     int numvoxels;
     int numneighbors;

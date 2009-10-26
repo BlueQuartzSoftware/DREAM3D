@@ -61,6 +61,11 @@ set (PROJECT_SRCS
     ${COMMON_HDRS}
 )
     
-    
+
+ADD_EXECUTABLE ( GrainGenerator  ${PROJECT_SRCS} )
+target_link_libraries(GrainGenerator 
+                        MXA 
+                        ${Boost_PROGRAM_OPTIONS_LIBRARY} )
+ToolInstallationSupport(GrainGenerator "${EXE_DEBUG_EXTENSION}" ${AIMRepresentation_BINARY_DIR} )
     
     

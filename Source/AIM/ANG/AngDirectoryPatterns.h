@@ -14,8 +14,13 @@
  * *****************************************************************************
  * </distribution-statement> */
 
-#ifndef ZEISSDIRECTORYPATTERNS_H_
-#define ZEISSDIRECTORYPATTERNS_H_
+#ifndef _ANG_FILE_DIRECTORY_PATTERN_H_
+#define _ANG_FILE_DIRECTORY_PATTERN_H_
+
+#if defined (_MSC_VER)
+#define WIN32_LEAN_AND_MEAN		// Exclude rarely-used stuff from Windows headers
+#endif
+
 
 #include <MXA/Common/MXASetGetMacros.h>
 #include <MXA/Common/MXATypes.h>
@@ -64,4 +69,4 @@ protected:
     void operator=(const AngDirectoryPatterns&);  // Operator '=' Not Implemented
 };
 
-#endif /* ZEISSDIRECTORYPATTERNS_H_ */
+#endif /* _ANG_FILE_DIRECTORY_PATTERN_H_ */
