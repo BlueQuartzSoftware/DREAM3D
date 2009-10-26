@@ -179,11 +179,11 @@ int  MicroGen3D::form_grains()
   {
     int seed = -1;
    // double maxconfidence = 0;
-    for(int k = 1; k < zpoints-1; ++k)
+    for(int k = 0; k < zpoints; ++k)
     {
-      for(int j = 1; j < ypoints-1; ++j)
+      for(int j = 0; j < ypoints; ++j)
       {
-        for(int i = 1; i < xpoints-1; ++i)
+        for(int i = 0; i < xpoints; ++i)
         {
           int point = (k*xpoints*ypoints)+(j*xpoints)+i;
           double confidence = voxels[point].confidence;
@@ -208,34 +208,12 @@ int  MicroGen3D::form_grains()
       for(size_t j = 0; j < size; ++j)
       {
         int currentpoint = voxelslist[j];
-//        double currentx = voxels[currentpoint].xc;
-//        double currenty = voxels[currentpoint].yc;
-//        double currentz = voxels[currentpoint].zc;
         double v1ea1 = voxels[currentpoint].euler1;
         double v1ea2 = voxels[currentpoint].euler2;
         double v1ea3 = voxels[currentpoint].euler3;
         for(int i = 0; i < 6; i++)
         {
           int neighbor = currentpoint+neighborhood[i];
-/*          if(i == 0 && currentx > 0) neighbor = currentpoint-1;
-          if(i == 1 && currentx < sizex) neighbor = currentpoint+1;
-          if(i == 2 && currenty > 0) neighbor = currentpoint-xpoints;
-          if(i == 3 && currenty < sizey) neighbor = currentpoint+xpoints;
-          if(i == 4 && currentz > 0) neighbor = currentpoint-(xpoints*ypoints);
-          if(i == 5 && currentz < sizez) neighbor = currentpoint+(xpoints*ypoints);
-          if(i == 6 && currentx > 0 && currenty > 0) neighbor = currentpoint-1-xpoints;
-          if(i == 7 && currentx > 0 && currenty < sizey) neighbor = currentpoint-1+xpoints;
-          if(i == 8 && currentx > 0 && currentz > 0) neighbor = currentpoint-1-(xpoints*ypoints);
-          if(i == 9 && currentx > 0 && currentz < sizez) neighbor = currentpoint-1+(xpoints*ypoints);
-          if(i == 10 && currentx < sizex && currenty > 0) neighbor = currentpoint+1-xpoints;
-          if(i == 11 && currentx < sizex && currenty < sizey) neighbor = currentpoint+1+xpoints;
-          if(i == 12 && currentx < sizex && currentz > 0) neighbor = currentpoint+1-(xpoints*ypoints);
-          if(i == 13 && currentx < sizex && currentz < sizez) neighbor = currentpoint+1+(xpoints*ypoints);
-          if(i == 14 && currenty > 0 && currentz > 0) neighbor = currentpoint-xpoints-(xpoints*ypoints);
-          if(i == 15 && currenty > 0 && currentz < sizez) neighbor = currentpoint-xpoints+(xpoints*ypoints);
-          if(i == 16 && currenty < sizey && currentz > 0) neighbor = currentpoint+xpoints-(xpoints*ypoints);
-          if(i == 17 && currenty < sizey && currentz < sizez) neighbor = currentpoint+xpoints+(xpoints*ypoints);
-*/
           if(neighbor >= 0 && neighbor < totalpoints && voxels[neighbor].alreadychecked == 0)
           {
             double v2ea1 = voxels[neighbor].euler1;
@@ -261,6 +239,8 @@ int  MicroGen3D::form_grains()
       grains[graincount].numvoxels = size;
       totalsize = totalsize+size;
       graincount++;
+	  voxelslist.clear();
+	  voxelslist.resize(initialVoxelsListSize);
     }
   }
   numgrains = graincount;
@@ -367,9 +347,9 @@ void  MicroGen3D::assign_badpoints()
         {
           n[c] = 0;
         }
-        x = voxels[i].xc;
-        y = voxels[i].yc;
-        z = voxels[i].zc;
+	    x = i%xpoints;
+		y = (i/xpoints)%ypoints;
+	    z = i/(xpoints*ypoints);
         count++;
         if(x > 0)
         {
@@ -379,7 +359,7 @@ void  MicroGen3D::assign_badpoints()
             neighs.push_back(grain1);
           }
         }
-        if(x < sizex)
+        if(x < xpoints-1)
         {
           int grain2 = voxels[i+1].grainname;
           if(grain2 > -1)
@@ -395,7 +375,7 @@ void  MicroGen3D::assign_badpoints()
             neighs.push_back(grain3);
           }
         }
-        if(y < sizey)
+        if(y < ypoints-1)
         {
           int grain4 = voxels[i+(xpoints)].grainname;
           if(grain4 > -1)
@@ -411,7 +391,7 @@ void  MicroGen3D::assign_badpoints()
             neighs.push_back(grain5);
           }
         }
-        if(z < sizez)
+        if(z < zpoints-1)
         {
           int grain6 = voxels[i+(xpoints*ypoints)].grainname;
           if(grain6 > -1)
@@ -475,9 +455,9 @@ int totalNeighbors  = 0;
         int gnum = voxels[j].grainname;
         if(gnum == i)
         {
-          x = voxels[j].xc;
-          y = voxels[j].yc;
-          z = voxels[j].zc;
+		    x = i%xpoints;
+		    y = (i/xpoints)%ypoints;
+		    z = i/(xpoints*ypoints);
 //          int first = voxels[j].grainname;
           if(x > 0)
           {
@@ -487,7 +467,7 @@ int totalNeighbors  = 0;
               nlist.push_back(grain1);
             }
           }
-          if(x < sizex)
+          if(x < xpoints-1)
           {
             int grain2 = voxels[j+1].grainname;
             if(grain2 != i)
@@ -503,7 +483,7 @@ int totalNeighbors  = 0;
               nlist.push_back(grain3);
             }
           }
-          if(y < sizey)
+          if(y < ypoints-1)
           {
             int grain4 = voxels[j+(xpoints)].grainname;
             if(grain4 != i)
@@ -519,7 +499,7 @@ int totalNeighbors  = 0;
               nlist.push_back(grain5);
             }
           }
-          if(z < sizez)
+          if(z < zpoints-1)
           {
             int grain6 = voxels[j+(xpoints*ypoints)].grainname;
             if(grain6 != i)
@@ -1069,9 +1049,9 @@ void  MicroGen3D::find_goodneighbors()
       int gnum = voxels[j].grainname;
       if(gnum == i)
       {
-        x = voxels[j].xc;
-        y = voxels[j].yc;
-        z = voxels[j].zc;
+	    x = i%xpoints;
+	    y = (i/xpoints)%ypoints;
+	    z = i/(xpoints*ypoints);
 //        int first = voxels[j].grainname;
         if(x > 0)
         {
@@ -1082,7 +1062,7 @@ void  MicroGen3D::find_goodneighbors()
             nlist.push_back(grain1);
           }
         }
-        if(x < sizex)
+        if(x < xpoints-1)
         {
           int grain2 = voxels[j+1].grainname;
           if(grain2 != i)
@@ -1100,7 +1080,7 @@ void  MicroGen3D::find_goodneighbors()
             nlist.push_back(grain3);
           }
         }
-        if(y < sizey)
+        if(y < ypoints-1)
         {
           int grain4 = voxels[j+(xpoints)].grainname;
           if(grain4 != i)
@@ -1118,7 +1098,7 @@ void  MicroGen3D::find_goodneighbors()
             nlist.push_back(grain5);
           }
         }
-        if(z < sizez)
+        if(z < zpoints-1)
         {
           int grain6 = voxels[j+(xpoints*ypoints)].grainname;
           if(grain6 != i)
