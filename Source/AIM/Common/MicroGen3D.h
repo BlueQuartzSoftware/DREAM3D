@@ -48,15 +48,14 @@ public:
 
   virtual ~MicroGen3D();
 
-  void initialize(double v_sizex, double v_sizey, double v_sizez,
-                  double v_resx, double v_resy, double v_resz,
-                  int32 xPoints, int32 yPoints, int32 zPoints,
-                  bool v_mergetwinsoption,
-                  int32 v_minallowedgrainsize,
-                  double v_minseedconfidence,
-                  double v_misorientationtolerance,
-                  int32 v_crystruct,
-                  bool v_alreadyformed);
+    void initialize(double stepX, double stepY, double stepZ,
+      int32 angNumCols, int32 angNumRows, int32 angSlices,
+      bool v_mergetwinsoption,
+      int32 v_minallowedgrainsize,
+      double v_minseedconfidence,
+      double v_misorientationtolerance,
+      int32 v_crystruct,
+      bool v_alreadyformed);
 
 
   AngFileHelper::Pointer m_angFileHelper;
