@@ -8,6 +8,11 @@
 #ifndef AIM_CONSTANTS_H_
 #define AIM_CONSTANTS_H_
 
+#if defined (_MSC_VER)
+#define WIN32_LEAN_AND_MEAN		// Exclude rarely-used stuff from Windows headers
+#endif
+
+
 
 // -----------------------------------------------------------------------------
 //
@@ -33,12 +38,17 @@ namespace AIM
     const std::string BoundaryCentersFile("boundarycenters.txt");//13
     const std::string AxisOrientationsFile("axisorientations.txt");//14
     const std::string EulerAnglesFile("eulerangles.txt");//15
+    const std::string SetNBins("seNBins.txt");
 
     enum CrystalStructure {
         UnknownCrystalStructure = 0,
         Hexagonal = 1,
         Cubic = 2
     };
+
+    const std::string CubeFile("cube.vtk");
+    const std::string AnalysisFile("analysis.txt");
+    const std::string VolumeFile("volume.txt");
   }
 }
 

@@ -47,6 +47,18 @@ Q_OBJECT
     virtual ~GrainGenerator();
 
 
+    MXA_INSTANCE_STRING_PROPERTY(InputDirectory, m_InputDirectory)
+    MXA_INSTANCE_STRING_PROPERTY(OutputDirectory, m_OutputDirectory)
+    MXA_INSTANCE_PROPERTY_m(int, NumGrains)
+    MXA_INSTANCE_PROPERTY_m(int, ShapeClass)
+    MXA_INSTANCE_PROPERTY_m(double, XResolution)
+    MXA_INSTANCE_PROPERTY_m(double, YResolution)
+    MXA_INSTANCE_PROPERTY_m(double, ZResolution)
+    MXA_INSTANCE_PROPERTY_m(double, OverlapAllowed)
+    MXA_INSTANCE_PROPERTY_m(int, OverlapAssignment)
+    MXA_INSTANCE_PROPERTY_m(int, CrystalStructure)
+
+
     /**
      * @brief Either prints a message or sends the message to the User Interface
      * @param message The message to print
@@ -94,7 +106,7 @@ Q_OBJECT
 #endif
 
   private:
-    MicroGen3D::Pointer m_microgen;
+    MicroGen3D::Pointer m;
 
     GrainGenerator(const GrainGenerator&);    // Copy Constructor Not Implemented
     void operator=(const GrainGenerator&);  // Operator '=' Not Implemented

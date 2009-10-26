@@ -18,22 +18,12 @@
 #define FILENAME "/Users/Shared/Data/RoboMet.3D/MNML-5/MNML-5_500x_0_821.mxa"
 
 
-void GPass(Grain test[])
-{
-  std::cout << "Grain ID: " << test[7].m_uid << std::endl;
-}
-
-
 void GrainTest()
 {
   Grain* grains = new Grain[10];
 
   grains[1].euler1 = 0.0;
   std::cout << grains[5].Ixx << std::endl;
-
-  GPass(grains);
-
-
   std::cout << "Done" << std::endl;
 }
 
