@@ -627,9 +627,9 @@ void RepresentationUI::on_reconstructBtn_clicked()
   connect(m_Reconstruction.get(), SIGNAL(finished()),
           this, SLOT( reconstruction_Finished() ) );
   connect(m_Reconstruction.get(), SIGNAL (updateProgress(int)),
-          this, SLOT(threadProgressed(int) ) );
-  connect(m_Reconstruction.get(), SIGNAL (updateMessage(QString)),
-          this, SLOT(threadHasMessage(QString) ) );
+    this, SLOT(threadProgressed(int) ) , Qt::DirectConnection);
+ // connect(m_Reconstruction.get(), SIGNAL (updateMessage(QString)),
+//          this, SLOT(threadHasMessage(QString) ) );
 
 //  m_ThreadGroup = AIMThreadGroup::New(QThread::idealThreadCount());
 //  QString tName("Reconstruction Worker-");
@@ -672,7 +672,7 @@ void RepresentationUI::on_reconstructBtn_clicked()
 void RepresentationUI::threadHasMessage(QString message)
 {
   std::cout << "RepresentationUI::threadHasMessage()" << message.toStdString() << std::endl;
-//  this->statusBar()->showMessage(message);
+  this->statusBar()->showMessage(message);
 }
 
 // -----------------------------------------------------------------------------

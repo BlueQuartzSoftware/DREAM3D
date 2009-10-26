@@ -144,7 +144,6 @@ int  MicroGen3D::form_grains()
   double n3;
   size_t size = 0;
 
-  //  int voxelslist[100000];
   size_t initialVoxelsListSize = 10000;
   std::vector<int> voxelslist(initialVoxelsListSize, 0);
   int neighborhood[6];
@@ -197,32 +196,14 @@ int  MicroGen3D::form_grains()
         for(int i = 0; i < 6; i++)
         {
           int neighbor = currentpoint+neighborhood[i];
-/*          if(i == 0 && currentx > 0) neighbor = currentpoint-1;
-          if(i == 1 && currentx < sizex) neighbor = currentpoint+1;
-          if(i == 2 && currenty > 0) neighbor = currentpoint-xpoints;
-          if(i == 3 && currenty < sizey) neighbor = currentpoint+xpoints;
-          if(i == 4 && currentz > 0) neighbor = currentpoint-(xpoints*ypoints);
-          if(i == 5 && currentz < sizez) neighbor = currentpoint+(xpoints*ypoints);
-          if(i == 6 && currentx > 0 && currenty > 0) neighbor = currentpoint-1-xpoints;
-          if(i == 7 && currentx > 0 && currenty < sizey) neighbor = currentpoint-1+xpoints;
-          if(i == 8 && currentx > 0 && currentz > 0) neighbor = currentpoint-1-(xpoints*ypoints);
-          if(i == 9 && currentx > 0 && currentz < sizez) neighbor = currentpoint-1+(xpoints*ypoints);
-          if(i == 10 && currentx < sizex && currenty > 0) neighbor = currentpoint+1-xpoints;
-          if(i == 11 && currentx < sizex && currenty < sizey) neighbor = currentpoint+1+xpoints;
-          if(i == 12 && currentx < sizex && currentz > 0) neighbor = currentpoint+1-(xpoints*ypoints);
-          if(i == 13 && currentx < sizex && currentz < sizez) neighbor = currentpoint+1+(xpoints*ypoints);
-          if(i == 14 && currenty > 0 && currentz > 0) neighbor = currentpoint-xpoints-(xpoints*ypoints);
-          if(i == 15 && currenty > 0 && currentz < sizez) neighbor = currentpoint-xpoints+(xpoints*ypoints);
-          if(i == 16 && currenty < sizey && currentz > 0) neighbor = currentpoint+xpoints-(xpoints*ypoints);
-          if(i == 17 && currenty < sizey && currentz < sizez) neighbor = currentpoint+xpoints+(xpoints*ypoints);
-*/
+
           if(voxels[neighbor].alreadychecked == 0)
           {
             double v2ea1 = voxels[neighbor].euler1;
             double v2ea2 = voxels[neighbor].euler2;
             double v2ea3 = voxels[neighbor].euler3;
             double w = getmisoquat(crystruct,misorientationtolerance,v1ea1,v1ea2,v1ea3,v2ea1,v2ea2,v2ea3,n1,n2,n3);
-//            double w2 = GetMisorientationOnly(crystruct,misorientationtolerance,v1ea1,v1ea2,v1ea3,v2ea1,v2ea2,v2ea3,n1,n2,n3);
+//          double w2 = GetMisorientationOnly(crystruct,misorientationtolerance,v1ea1,v1ea2,v1ea3,v2ea1,v2ea2,v2ea3,n1,n2,n3);
             if(w < misorientationtolerance)
             {
               voxels[neighbor].alreadychecked = checked;
@@ -243,6 +224,7 @@ int  MicroGen3D::form_grains()
       graincount++;
     }
   }
+  numgrains = graincount;
   return graincount;
 }
 
@@ -332,8 +314,7 @@ void  MicroGen3D::assign_badpoints()
   double x = 0;
   double y = 0;
   double z = 0;
-//  int *n;
-//  n = new int[numgrains];
+
   std::vector<int> n(numgrains);
   while(count != 0)
   {
@@ -593,6 +574,7 @@ void  MicroGen3D::homogenize_grains()
 {
   for(int i = 0; i < numgrains; i++)
   {
+    std::cout << "homogenize_grains: " << i << std::endl;
     double ea1good = 0;
     double ea2good = 0;
     double ea3good = 0;
