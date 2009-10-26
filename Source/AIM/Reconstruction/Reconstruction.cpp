@@ -120,33 +120,14 @@ void Reconstruction::compute()
   AngFileReader::Pointer reader = AngFileReader::New();
   reader->readFile(p->generateFullPathAngFileName(m_ZStartIndex));
 
-  double xSize = reader->getXStep() * (reader->getNumEvenCols() - 1);
-  double ySize = reader->getYStep() * (reader->getNumRows() - 1);
-
-  size_t zPoints = m_ZEndIndex - m_ZStartIndex;
-  double zSize =  m_ZResolution * (zPoints - 1);
-
-#if 1
-  std::cout << "X Size: " << xSize << std::endl;
-  std::cout << "Y Size: " << ySize << std::endl;
-  std::cout << "Z Size: " << zSize << std::endl;
-  std::cout << "X Res: " << reader->getXStep() << std::endl;
-  std::cout << "Y Res: " << reader->getYStep() << std::endl;
-  std::cout << "Z Res: " << m_ZResolution << std::endl;
-  std::cout << "X Points: " << reader->getNumEvenCols() << std::endl;
-  std::cout << "Y Points: " << reader->getNumRows() << std::endl;
-  std::cout << "Z Points: " << zPoints << std::endl;
-#endif
-
   AngFileHelper::Pointer angFileHelper = AngFileHelper::New();
   angFileHelper->setZIndexStart(m_ZStartIndex);
   angFileHelper->setZIndexEnd(m_ZEndIndex);
   angFileHelper->setDirectoryPattern(p);
 
   m_microgen = MicroGen3D::New();
-  m_microgen->initialize(xSize, ySize, zSize,
-                       reader->getXStep(), reader->getYStep(), m_ZResolution,
-                       reader->getNumEvenCols(), reader->getNumRows(), zPoints,
+  m_microgen->initialize(  reader->getXStep(), reader->getYStep(), m_ZResolution,
+                       reader->getNumEvenCols(), reader->getNumRows(), (m_ZEndIndex - m_ZStartIndex),
                        m_MergeTwins, m_MinAllowedGrainSize, m_MinSeedConfidence,
                        m_MisorientationTolerance, m_CrystalStructure, m_AlreadyFormed);
   m_microgen->m_angFileHelper = angFileHelper;
