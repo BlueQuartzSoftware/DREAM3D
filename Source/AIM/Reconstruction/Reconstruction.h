@@ -62,7 +62,7 @@ Q_OBJECT
     MXA_INSTANCE_PROPERTY_m(int32, MinAllowedGrainSize)
     MXA_INSTANCE_PROPERTY_m(double, MinSeedConfidence)
     MXA_INSTANCE_PROPERTY_m(double, MisorientationTolerance)
-    MXA_INSTANCE_PROPERTY_m(AIM::Reconstruction::CrystalStructure, CrystalStructure)
+    MXA_INSTANCE_PROPERTY_m(AIM::Representation::CrystalStructure, CrystalStructure)
     MXA_INSTANCE_PROPERTY_m(bool, AlreadyFormed)
     MXA_INSTANCE_PROPERTY_m(int, ErrorCondition);
 

@@ -57,7 +57,7 @@ Q_OBJECT
     MXA_INSTANCE_PROPERTY_m(double, OverlapAllowed)
     MXA_INSTANCE_PROPERTY_m(int, OverlapAssignment)
     MXA_INSTANCE_PROPERTY_m(int, CrystalStructure)
-
+    MXA_INSTANCE_PROPERTY_m(int, ErrorCondition);
 
     /**
      * @brief Either prints a message or sends the message to the User Interface
@@ -92,16 +92,14 @@ Q_OBJECT
       /**
        * @brief Main method to run the operation
        */
-
       void compute();
-
 
   protected:
 #ifdef AIM_USE_QT
     GrainGenerator(QObject* parent = 0);
     virtual void run();
-
 #else
+
     GrainGenerator();
 #endif
 
