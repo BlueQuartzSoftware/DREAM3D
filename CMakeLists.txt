@@ -112,6 +112,7 @@ endif()
 
 include_directories(${AIMRepresentation_SOURCE_DIR}/Source)
 
+# add the Reconstruction Command line Tool
 OPTION(AIM_BUILD_RECONSTRUCTION_TOOL "Compile Reconstruction Tool" OFF)
 IF ( AIM_BUILD_RECONSTRUCTION_TOOL )
     ADD_SUBDIRECTORY( ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Reconstruction ${AIMRepresentation_BINARY_DIR}/AIM/Reconstruction)
