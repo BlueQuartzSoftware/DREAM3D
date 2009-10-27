@@ -15,6 +15,23 @@
 #include <MXA/Utilities/MXAFileSystemPath.h>
 
 
+#ifdef AIM_USE_QT
+
+
+#define CHECK_FOR_CANCELED(AClass)\
+    if (this->m_Cancel) { \
+      QString msg = #AClass; \
+              msg += " was Canceled"; \
+      return;}
+
+#else
+
+#define CHECK_FOR_CANCELED(AClass)\
+    ;
+
+#endif
+
+
 #if AIM_USE_QT
 
 // -----------------------------------------------------------------------------
@@ -36,7 +53,7 @@ QThread(parent),
   m_ZStartIndex(0), m_ZEndIndex(0), m_ZResolution(0.25),
   m_MergeTwins(false), m_MinAllowedGrainSize(0.0),
   m_MinSeedConfidence(0.0), m_MisorientationTolerance(0.0),
-  m_CrystalStructure(AIM::Reconstruction::Hexagonal),
+  m_CrystalStructure(AIM::Representation::Hexagonal),
   m_AlreadyFormed(false), m_ErrorCondition(0),m_Cancel(false)
 {
 
@@ -52,7 +69,7 @@ Reconstruction::Reconstruction() :
   m_ZResolution(0.25),
       m_MergeTwins(false), m_MinAllowedGrainSize(0.0),
       m_MinSeedConfidence(0.0), m_MisorientationTolerance(0.0),
-      m_CrystalStructure(AIM::Reconstruction::Hexagonal),
+      m_CrystalStructure(AIM::Representation::Hexagonal),
       m_AlreadyFormed(false)
 {
 
@@ -75,21 +92,6 @@ void Reconstruction::parseAngFile()
 
 }
 
-#ifdef AIM_USE_QT
-
-
-#define CHECK_FOR_CANCELED(AClass)\
-    if (this->m_Cancel) { \
-      QString msg = #AClass; \
-              msg += " was Canceled"; \
-      return;}
-
-#else
-
-#define CHECK_FOR_CANCELED(AClass)\
-    ;
-
-#endif
 
 #if AIM_USE_QT
 void Reconstruction::run()
@@ -135,7 +137,7 @@ void Reconstruction::compute()
 
   int32 numgrains = 0;
 
-  std::string reconFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Reconstruction::ReconstructedDataFile;
+  std::string reconFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::ReconstructedDataFile;
   reconFile = MXAFileSystemPath::toNativeSeparators(reconFile);
   if (m_AlreadyFormed == false)
   {
@@ -262,16 +264,17 @@ void Reconstruction::compute()
   progressMessage(AIM_STRING("find_convexities"), 66 );
   m_microgen->find_convexities();
 
-  std::string  statsFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Reconstruction::StatsFile;
-  std::string  volBinFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Reconstruction::VolBinFile;
-  std::string  bOverABinsFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Reconstruction::BOverABinsFile;
-  std::string  cOverABinsFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Reconstruction::COverABinsFile;
-  std::string  cOverBBinsFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Reconstruction::COverBBinsFile;
-  std::string  svnFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Reconstruction::SVNFile;
-  std::string  svsFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Reconstruction::SVSFile;
-  std::string  misorientationFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Reconstruction::MisorientationBinsFile;
-  std::string  microBinsFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Reconstruction::MicroBinsFile;
+  std::string  statsFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::StatsFile;
+  std::string  volBinFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::VolBinFile;
+  std::string  bOverABinsFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::BOverABinsFile;
+  std::string  cOverABinsFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::COverABinsFile;
+  std::string  cOverBBinsFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::COverBBinsFile;
+  std::string  svnFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::SVNFile;
+  std::string  svsFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::SVSFile;
+  std::string  misorientationFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::MisorientationBinsFile;
+  std::string  microBinsFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::MicroBinsFile;
 
+#if 0
   CHECK_FOR_CANCELED(MicroGen3D)
   progressMessage(AIM_STRING("volume_stats"), 69 );
   m_microgen->volume_stats(statsFile,
@@ -283,17 +286,17 @@ void Reconstruction::compute()
                          svsFile,
                          misorientationFile,
                          microBinsFile);
-
+#endif
   CHECK_FOR_CANCELED(MicroGen3D)
   progressMessage(AIM_STRING("write_volume2"), 72 );
   m_microgen->write_volume2(reconFile);
 
-  std::string reconVisFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Reconstruction::ReconstructedVisualizationFile;
-  std::string grainsFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Reconstruction::GrainsFile;
+  std::string reconVisFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::ReconstructedVisualizationFile;
+  std::string grainsFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::GrainsFile;
 
-  std::string axisFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Reconstruction::AxisOrientationsFile;
-  std::string eulerFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Reconstruction::EulerAnglesFile;
-  std::string boundaryFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Reconstruction::BoundaryCentersFile;
+  std::string axisFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::AxisOrientationsFile;
+  std::string eulerFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::EulerAnglesFile;
+  std::string boundaryFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::BoundaryCentersFile;
 
   CHECK_FOR_CANCELED(MicroGen3D)
   progressMessage(AIM_STRING("create_visualization"), 75 );
@@ -326,8 +329,8 @@ void Reconstruction::compute()
 void Reconstruction::progressMessage(AIM_STRING message, int progress)
 {
 #ifdef AIM_USE_QT
-   //   emit updateMessage(QString(message));
-   //   emit updateProgress(progress);
+      emit updateMessage(QString(message));
+      emit updateProgress(progress);
       std::cout << message.toStdString() << std::endl;
 #else
 

@@ -12,6 +12,7 @@
 
 #include <MXA/Common/MXASetGetMacros.h>
 #include <AIM/Reconstruction/Reconstruction.h>
+#include <AIM/GrainGenerator/GrainGenerator.h>
 
 
 //-- Qt Includes
@@ -49,6 +50,11 @@ class RepresentationUI : public QMainWindow, private Ui::RepresentationUI
     void on_alreadyFormed_stateChanged(int);
     void on_reconstructBtn_clicked();
 
+    /* Grain Generator Slots*/
+    void on_gg_InputDirBtn_clicked();
+    void on_gg_OutputDirBtn_clicked();
+    void on_gg_GoBtn_clicked();
+
 
   /**
    * @brief Updates the QMenu 'Recent Files' with the latest list of files. This
@@ -67,8 +73,12 @@ class RepresentationUI : public QMainWindow, private Ui::RepresentationUI
     // slots for our worker thread to communicate
     void threadFinished();
     void reconstruction_Finished();
+
     void threadProgressed(int value);
     void threadHasMessage(QString message);
+
+    void gg_ThreadFinished();
+    void gg_ThreadProgressed(int value);
 
   signals:
     void parentResized();
@@ -126,6 +136,7 @@ class RepresentationUI : public QMainWindow, private Ui::RepresentationUI
      * @brief Initializes some of the GUI elements with selections or other GUI related items
      */
     void setupGui();
+    void setupGui_GrainGenerator();
 
     /**
      * @brief Checks the currently open file for changes that need to be saved
@@ -144,6 +155,7 @@ class RepresentationUI : public QMainWindow, private Ui::RepresentationUI
     QList<QWidget*>             m_WidgetList;
 
     Reconstruction::Pointer     m_Reconstruction;
+    GrainGenerator::Pointer     m_GrainGenerator;
 
     RepresentationUI(const RepresentationUI&);    // Copy Constructor Not Implemented
     void operator=(const RepresentationUI&);  // Operator '=' Not Implemented

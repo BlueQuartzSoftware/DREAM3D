@@ -11,6 +11,11 @@
 #ifndef _AngFileReader_H
 #define _AngFileReader_H
 
+#if defined (_MSC_VER)
+#define WIN32_LEAN_AND_MEAN		// Exclude rarely-used stuff from Windows headers
+#endif
+
+
 //-- MXA Includes
 #include <MXA/Common/MXATypes.h>
 #include <MXA/Common/MXASetGetMacros.h>

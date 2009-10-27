@@ -1,5 +1,5 @@
 #ifndef _MicroGen3D_H
-#define _MicroGen3D_
+#define _MicroGen3D_H
 
 #if defined (_MSC_VER)
 #define WIN32_LEAN_AND_MEAN		// Exclude rarely-used stuff from Windows headers
@@ -89,7 +89,7 @@ public:
 	Bin* coverabin;
 	Bin* coverbbin;
 	Bin* seNbin;
-	
+
 	Bin* eulerbin;
 	Orient* orient;
 	Voxel* gridfine;
@@ -121,11 +121,11 @@ public:
 	double overlapallowed;
 	int overlapassignment;
 
-  
+
 	int32 xpoints;
 	int32 ypoints;
 	int32 zpoints;
-      int totalpoints;
+  int totalpoints;
 
 	double resx1;
 	double resy1;
@@ -133,10 +133,8 @@ public:
 	int numneighbins;
 	int nummicros;
 
-
 	/** @brief The number of boundary center objects needed */
 	size_t bcentSize;
-
 
 // sizes are needed. Dont't change
 	double eulerrank[180][180][180];

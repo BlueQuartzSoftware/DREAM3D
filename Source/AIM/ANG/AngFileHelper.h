@@ -9,6 +9,11 @@
 #ifndef ANGFILEHELPER_H_
 #define ANGFILEHELPER_H_
 
+#if defined (_MSC_VER)
+#define WIN32_LEAN_AND_MEAN		// Exclude rarely-used stuff from Windows headers
+#endif
+
+
 #include <MXA/Common/MXASetGetMacros.h>
 #include <AIM/Common/Voxel.h>
 #include <AIM/ANG/AngDirectoryPatterns.h>

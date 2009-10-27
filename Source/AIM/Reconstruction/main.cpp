@@ -66,7 +66,7 @@ int main(int argc, char **argv)
   double minseedconfidence = 0.0;
   double misorientationtolerance = 0.0;
 
-  int crystruct = AIM::Reconstruction::UnknownCrystalStructure;
+  int crystruct = AIM::Representation::UnknownCrystalStructure;
   bool alreadyformed = false;
 
   std::string logFile;
@@ -143,7 +143,7 @@ int main(int argc, char **argv)
     r->setMinAllowedGrainSize(minallowedgrainsize);
     r->setMinSeedConfidence(minseedconfidence);
     r->setMisorientationTolerance(misorientationtolerance);
-    r->setCrystalStructure(static_cast<AIM::Reconstruction::CrystalStructure> (crystruct));
+    r->setCrystalStructure(static_cast<AIM::Representation::CrystalStructure> (crystruct));
     r->setAlreadyFormed(alreadyformed);
 
     r->compute();
