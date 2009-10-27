@@ -1,7 +1,7 @@
 #include "MicroGen3D.h"
 
 #if 0
-// -i C:\Data\ANG_Series --outputDir C:\Data\Output -f Slice_ --angMaxSlice 400 -s 1 -e 10 -z 0.25 -t -g 10 -c 0.1 -o 1.0 -x 1
+// -i C:\Users\GroebeMA\Desktop\NewFolder --outputDir C:\Users\GroebeMA\Desktop\NewFolder -f Slice_ --angMaxSlice 400 -s 1 -e 30 -z 0.25 -t -g 10 -c 0.1 -o 1.0 -x 1
 #endif
 
 #ifndef M_PI
@@ -118,25 +118,27 @@ void MicroGen3D::initialize(double stepX, double stepY, double stepZ,
 
 
   voxels = new Voxel[totalpoints];
-  tempgrain = new Grain[totalpoints];
-  grains = new Grain[totalpoints];
-  goodgrain = new Grain[totalpoints];
-  packedgrain = new Grain[totalpoints];
-  gsizes = new int[totalpoints];
-  gremovals = new int[totalpoints];
-  diambin = new Bin[totalpoints];
-  boverabin = new Bin[totalpoints];
-  coverabin = new Bin[totalpoints];
-  coverbbin = new Bin[totalpoints];
-  seNbin = new Bin[totalpoints];
-  eulerbin = new Bin[totalpoints];
-  orient = new Orient[totalpoints];
+  tempgrain = new Grain[1];
+  grains = new Grain[totalpoints/20];
+  goodgrain = new Grain[totalpoints/20];
+  packedgrain = new Grain[1];
+  gsizes = new int[totalpoints/20];
+  gremovals = new int[totalpoints/20];
+  diambin = new Bin[50];
+  boverabin = new Bin[50];
+  coverabin = new Bin[50];
+  coverbbin = new Bin[50];
+  seNbin = new Bin[1000];
+  eulerbin = new Bin[1000];
+  orient = new Orient[5000];
+#if 0
   gridfine = new Voxel[totalpoints];
   gridcourse = new Voxel[totalpoints];
   actualmisobin = new Bin[totalpoints];
   simmisobin = new Bin[totalpoints];
   actualmicrobin = new Bin[totalpoints];
   simmicrobin = new Bin[totalpoints];
+#endif
   bcentSize = 0;
 }
 
@@ -158,7 +160,7 @@ int  MicroGen3D::form_grains()
   int totalsize = 0;
   int noseeds = 0;
   int checked = 1;
-  int graincount = 0;
+  int graincount = 1;
   double n1;
   double n2;
   double n3;
@@ -179,11 +181,11 @@ int  MicroGen3D::form_grains()
   {
     int seed = -1;
    // double maxconfidence = 0;
-    for(int k = 1; k < zpoints-1; ++k)
+    for(int k = 0; k < zpoints; ++k)
     {
-      for(int j = 1; j < ypoints-1; ++j)
+      for(int j = 0; j < ypoints; ++j)
       {
-        for(int i = 1; i < xpoints-1; ++i)
+        for(int i = 0; i < xpoints; ++i)
         {
           int point = (k*xpoints*ypoints)+(j*xpoints)+i;
           double confidence = voxels[point].confidence;
@@ -208,34 +210,12 @@ int  MicroGen3D::form_grains()
       for(size_t j = 0; j < size; ++j)
       {
         int currentpoint = voxelslist[j];
-//        double currentx = voxels[currentpoint].xc;
-//        double currenty = voxels[currentpoint].yc;
-//        double currentz = voxels[currentpoint].zc;
         double v1ea1 = voxels[currentpoint].euler1;
         double v1ea2 = voxels[currentpoint].euler2;
         double v1ea3 = voxels[currentpoint].euler3;
         for(int i = 0; i < 6; i++)
         {
           int neighbor = currentpoint+neighborhood[i];
-/*          if(i == 0 && currentx > 0) neighbor = currentpoint-1;
-          if(i == 1 && currentx < sizex) neighbor = currentpoint+1;
-          if(i == 2 && currenty > 0) neighbor = currentpoint-xpoints;
-          if(i == 3 && currenty < sizey) neighbor = currentpoint+xpoints;
-          if(i == 4 && currentz > 0) neighbor = currentpoint-(xpoints*ypoints);
-          if(i == 5 && currentz < sizez) neighbor = currentpoint+(xpoints*ypoints);
-          if(i == 6 && currentx > 0 && currenty > 0) neighbor = currentpoint-1-xpoints;
-          if(i == 7 && currentx > 0 && currenty < sizey) neighbor = currentpoint-1+xpoints;
-          if(i == 8 && currentx > 0 && currentz > 0) neighbor = currentpoint-1-(xpoints*ypoints);
-          if(i == 9 && currentx > 0 && currentz < sizez) neighbor = currentpoint-1+(xpoints*ypoints);
-          if(i == 10 && currentx < sizex && currenty > 0) neighbor = currentpoint+1-xpoints;
-          if(i == 11 && currentx < sizex && currenty < sizey) neighbor = currentpoint+1+xpoints;
-          if(i == 12 && currentx < sizex && currentz > 0) neighbor = currentpoint+1-(xpoints*ypoints);
-          if(i == 13 && currentx < sizex && currentz < sizez) neighbor = currentpoint+1+(xpoints*ypoints);
-          if(i == 14 && currenty > 0 && currentz > 0) neighbor = currentpoint-xpoints-(xpoints*ypoints);
-          if(i == 15 && currenty > 0 && currentz < sizez) neighbor = currentpoint-xpoints+(xpoints*ypoints);
-          if(i == 16 && currenty < sizey && currentz > 0) neighbor = currentpoint+xpoints-(xpoints*ypoints);
-          if(i == 17 && currenty < sizey && currentz < sizez) neighbor = currentpoint+xpoints+(xpoints*ypoints);
-*/
           if(neighbor >= 0 && neighbor < totalpoints && voxels[neighbor].alreadychecked == 0)
           {
             double v2ea1 = voxels[neighbor].euler1;
@@ -261,6 +241,8 @@ int  MicroGen3D::form_grains()
       grains[graincount].numvoxels = size;
       totalsize = totalsize+size;
       graincount++;
+	  voxelslist.clear();
+	  voxelslist.resize(initialVoxelsListSize);
     }
   }
   numgrains = graincount;
@@ -276,7 +258,7 @@ void  MicroGen3D::remove_smallgrains()
   for(int i = 0; i < (xpoints*ypoints*zpoints); i++)
   {
     int grainname = voxels[i].grainname;
-    if(grainname != -1)
+    if(grainname >= 1)
     {
       int size = grains[grainname].numvoxels;
       if(size < minallowedgrainsize)
@@ -294,8 +276,8 @@ void  MicroGen3D::remove_smallgrains()
 // -----------------------------------------------------------------------------
 int  MicroGen3D::renumber_grains1()
 {
-  int graincount = 0;
-  for(int i=0;i<numgrains;i++)
+  int graincount = 1;
+  for(int i=1;i<numgrains;i++)
   {
     int gotsizemerged = grains[i].gotsizemerged;
     if(gotsizemerged != 1)
@@ -309,7 +291,7 @@ int  MicroGen3D::renumber_grains1()
   for(int j=0;j<(xpoints*ypoints*zpoints);j++)
   {
     int grainname = voxels[j].grainname;
-    if(grainname != -1)
+    if(grainname >= 1)
     {
       int newgrainname = grains[grainname].newgrainname;
       voxels[j].grainname = newgrainname;
@@ -363,13 +345,13 @@ void  MicroGen3D::assign_badpoints()
       int grainname = voxels[i].grainname;
       if(grainname == -1)
       {
-        for(int c = 0; c < numgrains; c++)
+        for(int c = 1; c < numgrains; c++)
         {
           n[c] = 0;
         }
-        x = voxels[i].xc;
-        y = voxels[i].yc;
-        z = voxels[i].zc;
+	    x = i%xpoints;
+		y = (i/xpoints)%ypoints;
+	    z = i/(xpoints*ypoints);
         count++;
         if(x > 0)
         {
@@ -379,7 +361,7 @@ void  MicroGen3D::assign_badpoints()
             neighs.push_back(grain1);
           }
         }
-        if(x < sizex)
+        if(x < xpoints-1)
         {
           int grain2 = voxels[i+1].grainname;
           if(grain2 > -1)
@@ -395,7 +377,7 @@ void  MicroGen3D::assign_badpoints()
             neighs.push_back(grain3);
           }
         }
-        if(y < sizey)
+        if(y < ypoints-1)
         {
           int grain4 = voxels[i+(xpoints)].grainname;
           if(grain4 > -1)
@@ -411,7 +393,7 @@ void  MicroGen3D::assign_badpoints()
             neighs.push_back(grain5);
           }
         }
-        if(z < sizez)
+        if(z < zpoints-1)
         {
           int grain6 = voxels[i+(xpoints*ypoints)].grainname;
           if(grain6 > -1)
@@ -458,8 +440,6 @@ void  MicroGen3D::assign_badpoints()
 }
 void  MicroGen3D::find_neighbors()
 {
-//  int count = 0;
-//  int dup = 0;
   double x = 0;
   double y = 0;
   double z = 0;
@@ -475,9 +455,9 @@ int totalNeighbors  = 0;
         int gnum = voxels[j].grainname;
         if(gnum == i)
         {
-          x = voxels[j].xc;
-          y = voxels[j].yc;
-          z = voxels[j].zc;
+		    x = j%xpoints;
+		    y = (j/xpoints)%ypoints;
+		    z = j/(xpoints*ypoints);
 //          int first = voxels[j].grainname;
           if(x > 0)
           {
@@ -487,7 +467,7 @@ int totalNeighbors  = 0;
               nlist.push_back(grain1);
             }
           }
-          if(x < sizex)
+          if(x < xpoints-1)
           {
             int grain2 = voxels[j+1].grainname;
             if(grain2 != i)
@@ -503,7 +483,7 @@ int totalNeighbors  = 0;
               nlist.push_back(grain3);
             }
           }
-          if(y < sizey)
+          if(y < ypoints-1)
           {
             int grain4 = voxels[j+(xpoints)].grainname;
             if(grain4 != i)
@@ -519,7 +499,7 @@ int totalNeighbors  = 0;
               nlist.push_back(grain5);
             }
           }
-          if(z < sizez)
+          if(z < zpoints-1)
           {
             int grain6 = voxels[j+(xpoints*ypoints)].grainname;
             if(grain6 != i)
@@ -582,8 +562,8 @@ void  MicroGen3D::merge_containedgrains()
 }
 int  MicroGen3D::renumber_grains2()
 {
-  int graincount = 0;
-  for(int i=0;i<numgrains;i++)
+  int graincount = 1;
+  for(int i=1;i<numgrains;i++)
   {
     int gotcontainedmerged = grains[i].gotcontainedmerged;
     if(gotcontainedmerged != 1)
@@ -601,7 +581,7 @@ int  MicroGen3D::renumber_grains2()
   for(int j=0;j<(xpoints*ypoints*zpoints);j++)
   {
     int grainname = voxels[j].grainname;
-    if(grainname != -1)
+    if(grainname >= 1)
     {
       int newgrainname = grains[grainname].newgrainname;
       voxels[j].grainname = newgrainname;
@@ -611,7 +591,11 @@ int  MicroGen3D::renumber_grains2()
 }
 void  MicroGen3D::homogenize_grains()
 {
-  for(int i = 0; i < numgrains; i++)
+    grains[0].avgeuler1 = 12.566;
+    grains[0].avgeuler2 = 12.566;
+    grains[0].avgeuler3 = 12.566;
+    grains[0].averagemisorientation = 0.0;
+  for(int i = 1; i < numgrains; i++)
   {
     std::cout << "homogenize_grains: " << i << std::endl;
     double ea1good = 0;
@@ -924,7 +908,7 @@ void  MicroGen3D::merge_twins ()
   double angcur = 180;
   vector<int> twinlist;
   double n1,n2,n3;
-  for(int i = 0; i < numgrains; i++)
+  for(int i = 1; i < numgrains; i++)
   {
     if(grains[i].gotsizemerged != 1 && grains[i].gotcontainedmerged != 1 && grains[i].twinnewnumberbeenset != 1)
     {
@@ -1022,8 +1006,8 @@ void  MicroGen3D::characterize_twins()
 
 int  MicroGen3D::renumber_grains3()
 {
-  int graincount = 0;
-  for(int i = 0; i < numgrains; i++)
+  int graincount = 1;
+  for(int i = 1; i < numgrains; i++)
   {
     int gottwinmerged = grains[i].gottwinmerged;
     if(gottwinmerged != 1)
@@ -1047,8 +1031,11 @@ int  MicroGen3D::renumber_grains3()
   for(int j = 0; j < (xpoints*ypoints*zpoints); j++)
   {
     int grainname = voxels[j].grainname;
-    int newgrainname = grains[grainname].newgrainname;
-    voxels[j].grainname = newgrainname;
+    if(grainname >= 1)
+	{
+		int newgrainname = grains[grainname].newgrainname;
+		voxels[j].grainname = newgrainname;
+	}
   }
   return graincount;
 }
@@ -1069,9 +1056,9 @@ void  MicroGen3D::find_goodneighbors()
       int gnum = voxels[j].grainname;
       if(gnum == i)
       {
-        x = voxels[j].xc;
-        y = voxels[j].yc;
-        z = voxels[j].zc;
+	    x = j%xpoints;
+	    y = (j/xpoints)%ypoints;
+	    z = j/(xpoints*ypoints);
 //        int first = voxels[j].grainname;
         if(x > 0)
         {
@@ -1082,7 +1069,7 @@ void  MicroGen3D::find_goodneighbors()
             nlist.push_back(grain1);
           }
         }
-        if(x < sizex)
+        if(x < xpoints-1)
         {
           int grain2 = voxels[j+1].grainname;
           if(grain2 != i)
@@ -1100,7 +1087,7 @@ void  MicroGen3D::find_goodneighbors()
             nlist.push_back(grain3);
           }
         }
-        if(y < sizey)
+        if(y < ypoints-1)
         {
           int grain4 = voxels[j+(xpoints)].grainname;
           if(grain4 != i)
@@ -1118,7 +1105,7 @@ void  MicroGen3D::find_goodneighbors()
             nlist.push_back(grain5);
           }
         }
-        if(z < sizez)
+        if(z < zpoints-1)
         {
           int grain6 = voxels[j+(xpoints*ypoints)].grainname;
           if(grain6 != i)
@@ -1167,12 +1154,15 @@ void  MicroGen3D::find_centroids()
         double x = voxels[j].xc;
         double y = voxels[j].yc;
         double z = voxels[j].zc;
-        if(x <= 0) onedge = 1;
-        if(x >= sizex) onedge = 1;
-        if(y <= 0) onedge = 1;
-        if(y >= sizey) onedge = 1;
-        if(z <= 0) onedge = 1;
-        if(z >= sizez) onedge = 1;
+	    int col = j%xpoints;
+	    int row = (j/xpoints)%ypoints;
+	    int plane = j/(xpoints*ypoints);
+        if(col <= 0) onedge = 1;
+        if(col >= xpoints-1) onedge = 1;
+        if(row <= 0) onedge = 1;
+        if(row >= ypoints-1) onedge = 1;
+        if(plane <= 0) onedge = 1;
+        if(plane >= zpoints-1) onedge = 1;
         sumx = sumx + x;
         sumy = sumy + y;
         sumz = sumz + z;
@@ -2742,9 +2732,6 @@ void  MicroGen3D::create_visualization(string writename11)
 {
     ofstream outFile;
     outFile.open(writename11.c_str());
-//  double x = 0;
-//  double y = 0;
-//  double z = 0;
   outFile << "# vtk DataFile Version 2.0" << endl;
   outFile << "data set from FFT2dx_GB" << endl;
   outFile << "ASCII" << endl;
