@@ -148,7 +148,7 @@ void MicroGen3D::initialize(double stepX, double stepY, double stepZ,
 void MicroGen3D::loadSlices()
 {
   m_angFileHelper->loadData(voxels, xpoints, ypoints, zpoints, resz);
-
+  //TODO: we should return an error code here.
 }
 
 // -----------------------------------------------------------------------------
@@ -167,7 +167,7 @@ int  MicroGen3D::form_grains()
   size_t size = 0;
 
   //  int voxelslist[100000];
-  size_t initialVoxelsListSize = 10000;
+  size_t initialVoxelsListSize = 1000;
   std::vector<int> voxelslist(initialVoxelsListSize, 0);
   int neighborhood[6];
   neighborhood[0] = -1;

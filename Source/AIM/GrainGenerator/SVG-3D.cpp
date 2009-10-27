@@ -267,6 +267,7 @@ int main()
   readname9 = "svs.txt";
   readname10 = "misobins.txt";
   readname11 = "microbins.txt";
+
   writename1 = "cube.vtk";
   writename2 = "analysis.txt";
   writename3 = "boundarycenters.txt";
@@ -375,8 +376,8 @@ int main()
   gridcourse = (struct gridpoints *)malloc(((sizex/resx1))*((sizey/resy1))*((sizez/resz1))*sizeof(struct gridpoints));
   cout << "coarse points made" << endl;
   packedgrain = (struct packedgrains *)malloc((numgrains)*sizeof(struct packedgrains));
-  voxelvector.resize(numgrains); 
-  neighborvector.resize(numgrains); 
+  voxelvector.resize(numgrains);
+  neighborvector.resize(numgrains);
   int bigerror = 10;
   for(int temp5 = 0; temp5 < numgrains; temp5++)
   {
@@ -422,7 +423,7 @@ int main()
 	rank_misobins(numgrains);
 	count_misorientations(numgrains);
 	freeze_grains(numgrains);
-	rank_grains1(numgrains);	
+	rank_grains1(numgrains);
 	identify_grains1(numgrains,nummisomoves);
 	move_grains1(numgrains);
   }
@@ -451,10 +452,10 @@ int main()
 }
 
 void loadVolData(string inname1, int numvolbins)
-{ 
+{
     ifstream inputFile;
     inputFile.open(inname1.c_str());
-	int count = 0;    
+	int count = 0;
 	double dprob;
 	double diam;
 	for (long k = 0; k < numvolbins; k++)
@@ -463,15 +464,15 @@ void loadVolData(string inname1, int numvolbins)
 		diambin[k].dprobability = dprob;
 		diambin[k].diameter = diam;
         count++;
-    }    
+    }
     inputFile.close();
 }
 
 void loadboveraData(string inname2, int numshapebins)
-{ 
+{
     ifstream inputFile;
     inputFile.open(inname2.c_str());
-	int count = 0;    
+	int count = 0;
 	double sprob;
 	double r;
 	int bnum=0;
@@ -490,10 +491,10 @@ void loadboveraData(string inname2, int numshapebins)
 }
 
 void loadcoveraData(string inname3, int numshapebins)
-{ 
+{
     ifstream inputFile;
     inputFile.open(inname3.c_str());
-	int count = 0;    
+	int count = 0;
 	double sprob;
 	double r;
 	int bnum=0;
@@ -512,10 +513,10 @@ void loadcoveraData(string inname3, int numshapebins)
 }
 
 void loadcoverbData(string inname4, int numshapebins)
-{ 
+{
     ifstream inputFile;
     inputFile.open(inname4.c_str());
-	int count = 0;    
+	int count = 0;
 	double sprob;
 	double r;
 	int bnum=0;
@@ -534,10 +535,10 @@ void loadcoverbData(string inname4, int numshapebins)
 }
 
 void loadNData(string inname5, int numshapebins)
-{ 
+{
     ifstream inputFile;
     inputFile.open(inname5.c_str());
-	int count = 0;    
+	int count = 0;
 	double Nprob;
 	double N;
 	double junk;
@@ -557,10 +558,10 @@ void loadNData(string inname5, int numshapebins)
 }
 
 void loadorientData(string inname6, int numorients)
-{ 
+{
     ifstream inputFile;
     inputFile.open(inname6.c_str());
-	int count = 0;    
+	int count = 0;
 	double r1x;
 	double r1y;
 	double r1z;
@@ -596,15 +597,15 @@ void loadorientData(string inname6, int numorients)
 		orient[k].rad3y = r3y;
 		orient[k].rad3z = r3z;
         count++;
-    }    
+    }
     inputFile.close();
 }
 
 void loadeulerData(string inname7, int numeulers)
-{ 
+{
     ifstream inputFile;
     inputFile.open(inname7.c_str());
-	int count = 0;    
+	int count = 0;
 	double g1ea1;
 	double g1ea2;
 	double g1ea3;
@@ -679,7 +680,7 @@ void loadeulerData(string inname7, int numeulers)
 			}
 			else if (k == 9)
 			{
-				o[0][0] = 0.0; o[0][1] = -1.0; o[0][2] = 0.0;	
+				o[0][0] = 0.0; o[0][1] = -1.0; o[0][2] = 0.0;
 				o[1][0] = 1.0; o[1][1] =  0.0; o[1][2] = 0.0;
 				o[2][0] = 0.0; o[2][1] =  0.0; o[2][2] = 1.0;
 			}
@@ -756,7 +757,7 @@ void loadeulerData(string inname7, int numeulers)
 				o[2][0] =  0.0; o[2][1] = -1.0; o[2][2] =  0.0;
 			}
 			else if (k == 22)
-			{	
+			{
 				o[0][0] =  0.0; o[0][1] =  0.0; o[0][2] = -1.0;
 				o[1][0] =  0.0; o[1][1] = -1.0; o[1][2] =  0.0;
 				o[2][0] = -1.0; o[2][1] =  0.0; o[2][2] =  0.0;
@@ -796,17 +797,17 @@ void loadeulerData(string inname7, int numeulers)
 				}
 				ga[0][0] = cos(g1ea1)*cos(g1ea3)-sin(g1ea1)*sin(g1ea3)*cos(g1ea2);
 				ga[0][1] = sin(g1ea1)*cos(g1ea3)+cos(g1ea1)*sin(g1ea3)*cos(g1ea2);
-				ga[0][2] = sin(g1ea3)*sin(g1ea2);			
-				ga[1][0] = -cos(g1ea1)*sin(g1ea3)-sin(g1ea1)*cos(g1ea3)*cos(g1ea2);	
+				ga[0][2] = sin(g1ea3)*sin(g1ea2);
+				ga[1][0] = -cos(g1ea1)*sin(g1ea3)-sin(g1ea1)*cos(g1ea3)*cos(g1ea2);
 				ga[1][1] = -sin(g1ea1)*sin(g1ea3)+cos(g1ea1)*cos(g1ea3)*cos(g1ea2);
-				ga[1][2] =  cos(g1ea3)*sin(g1ea2);		
+				ga[1][2] =  cos(g1ea3)*sin(g1ea2);
 				ga[2][0] =  sin(g1ea1)*sin(g1ea2);
 				ga[2][1] = -cos(g1ea1)*sin(g1ea2);
 				ga[2][2] =  cos(g1ea2);
-				
+
 				mo[0][0] = o[0][0]*ga[0][0] + o[0][1]*ga[1][0] + o[0][2]*ga[2][0];
 				mo[0][1] = o[0][0]*ga[0][1] + o[0][1]*ga[1][1] + o[0][2]*ga[2][1];
-				mo[0][2] = o[0][0]*ga[0][2] + o[0][1]*ga[1][2] + o[0][2]*ga[2][2];	
+				mo[0][2] = o[0][0]*ga[0][2] + o[0][1]*ga[1][2] + o[0][2]*ga[2][2];
 				mo[1][0] = o[1][0]*ga[0][0] + o[1][1]*ga[1][0] + o[1][2]*ga[2][0];
 				mo[1][1] = o[1][0]*ga[0][1] + o[1][1]*ga[1][1] + o[1][2]*ga[2][1];
 				mo[1][2] = o[1][0]*ga[0][2] + o[1][1]*ga[1][2] + o[1][2]*ga[2][2];
@@ -816,7 +817,7 @@ void loadeulerData(string inname7, int numeulers)
 
 				m1[0][0] = mo[0][0]*o2[0][0] + mo[0][1]*o2[1][0] + mo[0][2]*o2[2][0];
 				m1[0][1] = mo[0][0]*o2[0][1] + mo[0][1]*o2[1][1] + mo[0][2]*o2[2][1];
-				m1[0][2] = mo[0][0]*o2[0][2] + mo[0][1]*o2[1][2] + mo[0][2]*o2[2][2];	
+				m1[0][2] = mo[0][0]*o2[0][2] + mo[0][1]*o2[1][2] + mo[0][2]*o2[2][2];
 				m1[1][0] = mo[1][0]*o2[0][0] + mo[1][1]*o2[1][0] + mo[1][2]*o2[2][0];
 				m1[1][1] = mo[1][0]*o2[0][1] + mo[1][1]*o2[1][1] + mo[1][2]*o2[2][1];
 				m1[1][2] = mo[1][0]*o2[0][2] + mo[1][1]*o2[1][2] + mo[1][2]*o2[2][2];
@@ -849,7 +850,7 @@ void loadeulerData(string inname7, int numeulers)
 			}
 		}
     }
-    inputFile.close();	
+    inputFile.close();
 }
 
 void generate_grains(int numgrains)
@@ -1086,7 +1087,7 @@ void assign_eulers(int numgrains)
 }
 
 void loadSVNData(string inname8)
-{ 
+{
     ifstream inputFile;
     inputFile.open(inname8.c_str());
 	double prob;
@@ -1098,12 +1099,12 @@ void loadSVNData(string inname8)
 			inputFile >> nnum >> prob;
 			svn[k][l] = prob;
 		}
-    }    
+    }
     inputFile.close();
 }
 
 void loadSVSData(string inname9)
-{ 
+{
     ifstream inputFile;
     inputFile.open(inname9.c_str());
     int bin;
@@ -1117,7 +1118,7 @@ void loadSVSData(string inname9)
 			inputFile >> prob;
 			svs[k][l] = prob;
 		}
-    }    
+    }
     inputFile.close();
 }
 
@@ -1265,13 +1266,13 @@ void make_points(int numgrains)
 				planecourse = (j/(xpointscourse*ypointscourse));
 				xc = (columncourse*resx1)+(resx1/2);
 				yc = (rowcourse*resy1)+(resy1/2);
-				zc = (planecourse*resz1)+(resz1/2);	
+				zc = (planecourse*resz1)+(resz1/2);
 				column = (xc-(resx1/2))/resx;
 				row = (yc-(resy1/2))/resy;
 				plane = (zc-(resz1/2))/resz;
 				xc = (column*resx)+(resx/2);
 				yc = (row*resy)+(resy/2);
-				zc = (plane*resz)+(resz/2);	
+				zc = (plane*resz)+(resz/2);
 				insidecount = 0;
 				badcount = 0;
 				xmin = 0;
@@ -1302,7 +1303,7 @@ void make_points(int numgrains)
 				}
 				if(plane+((radcur1/resz)+1) < (sizez/resz)-1)
 				{
-					zmax = plane+((radcur1/resz)+1);			
+					zmax = plane+((radcur1/resz)+1);
 				}
 				for(int iter1 = xmin; iter1 < xmax+1; iter1++)
 				{
@@ -1316,7 +1317,7 @@ void make_points(int numgrains)
 							plane = iter3;
 							x = (column*resx)+(resx/2);
 							y = (row*resy)+(resy/2);
-							z = (plane*resz)+(resz/2);	
+							z = (plane*resz)+(resz/2);
 							double axis[3][3];
 							double diff[3][1];
 							double axiselim[3][3];
@@ -1886,7 +1887,7 @@ void find_neighbors(int numgrains)
 	int neighcount = 0;
 	int xpoints = (sizex/resx);
 	int ypoints = (sizey/resy);
-	int zpoints = (sizez/resz);	
+	int zpoints = (sizez/resz);
 	for(int i = 0; i < numgrains; i++)
 	{
 		int size = voxelvector[i].size();
@@ -1987,7 +1988,7 @@ void find_centroids(int numgrains)
 	double centerz = 0;
 	int xpoints = (sizex/resx);
 	int ypoints = (sizey/resy);
-	int zpoints = (sizez/resz);	
+	int zpoints = (sizez/resz);
 	for(int i = 0; i < numgrains; i++)
 	{
 		count = 0;
@@ -2033,7 +2034,7 @@ void find_moments(int numgrains)
 	double sumyz = 0;
 	int xpoints = (sizex/resx);
 	int ypoints = (sizey/resy);
-	int zpoints = (sizez/resz);	
+	int zpoints = (sizez/resz);
 	for(int i = 0; i < numgrains; i++)
 	{
 		sumxx = 0;
@@ -2166,10 +2167,10 @@ void find_colors(int numgrains)
 		double sd[3][1];
 		go[0][0] = cos(g1ea1)*cos(g1ea3)-sin(g1ea1)*sin(g1ea3)*cos(g1ea2);
 		go[0][1] = sin(g1ea1)*cos(g1ea3)+cos(g1ea1)*sin(g1ea3)*cos(g1ea2);
-		go[0][2] = sin(g1ea3)*sin(g1ea2);		
-		go[1][0] = -cos(g1ea1)*sin(g1ea3)-sin(g1ea1)*cos(g1ea3)*cos(g1ea2);	
+		go[0][2] = sin(g1ea3)*sin(g1ea2);
+		go[1][0] = -cos(g1ea1)*sin(g1ea3)-sin(g1ea1)*cos(g1ea3)*cos(g1ea2);
 		go[1][1] = -sin(g1ea1)*sin(g1ea3)+cos(g1ea1)*cos(g1ea3)*cos(g1ea2);
-		go[1][2] =  cos(g1ea3)*sin(g1ea2);	
+		go[1][2] =  cos(g1ea3)*sin(g1ea2);
 		go[2][0] =  sin(g1ea1)*sin(g1ea2);
 		go[2][1] = -cos(g1ea1)*sin(g1ea2);
 		go[2][2] =  cos(g1ea2);
@@ -2211,7 +2212,7 @@ void find_colors(int numgrains)
 }
 
 void loadMisoData(string inname10)
-{ 
+{
     ifstream inputFile;
     inputFile.open(inname10.c_str());
 	int count = 0;
@@ -2221,12 +2222,12 @@ void loadMisoData(string inname10)
 		inputFile >> height;
 		actualmisobin[count].height = height;
         count++;
-    }    
+    }
     inputFile.close();
 }
 
 void loadMicroData(string inname11)
-{ 
+{
     ifstream inputFile;
     inputFile.open(inname11.c_str());
 	int count = 0;
@@ -2236,7 +2237,7 @@ void loadMicroData(string inname11)
 		inputFile >> height;
 		actualmicrobin[count].height = height;
         count++;
-    }    
+    }
     inputFile.close();
 }
 
@@ -2702,7 +2703,7 @@ void freeze_grains(int numgrains)
 	{
 		froze = 0;
 		float fraction = packedgrain[i].lowanglefraction;
-		if(fraction > 0.85) 
+		if(fraction > 0.85)
 		{
 			froze = 1;
 		}
@@ -2713,7 +2714,7 @@ void freeze_grains(int numgrains)
 			int neighfirst = neighborvector[i][j];
 			float neighmiso = misolist.front();
 			float neighfrac = packedgrain[neighfirst].lowanglefraction;
-			if(neighfrac > 0.85 && neighmiso < 15) 
+			if(neighfrac > 0.85 && neighmiso < 15)
 			{
 				froze = 1;
 			}
@@ -3003,24 +3004,24 @@ void volume_stats(int numgrains, string outname2)
 //			double surfarea2 = (double)surfarea/(double)vol;
 //			double schmid = packedgrain[j].schmidfactor;
 //			double em = packedgrain[j].convexity;
-			sdvol = sdvol + ((voxvol-avgvol)*(voxvol-avgvol));		
-			sdlnvol = sdlnvol + ((logvol-avglnvol)*(logvol-avglnvol));		
-			sdneigh = sdneigh + ((nnum-avgneigh)*(nnum-avgneigh));		
-			sdlnneigh = sdlnneigh + ((lognnum-avglnneigh)*(lognnum-avglnneigh));		
-			sdbovera = sdbovera + ((bovera-avgbovera)*(bovera-avgbovera));		
-			sdcovera = sdcovera + ((covera-avgcovera)*(covera-avgcovera));		
-			sdcoverb = sdcoverb + ((coverb-avgcoverb)*(coverb-avgcoverb));		
+			sdvol = sdvol + ((voxvol-avgvol)*(voxvol-avgvol));
+			sdlnvol = sdlnvol + ((logvol-avglnvol)*(logvol-avglnvol));
+			sdneigh = sdneigh + ((nnum-avgneigh)*(nnum-avgneigh));
+			sdlnneigh = sdlnneigh + ((lognnum-avglnneigh)*(lognnum-avglnneigh));
+			sdbovera = sdbovera + ((bovera-avgbovera)*(bovera-avgbovera));
+			sdcovera = sdcovera + ((covera-avgcovera)*(covera-avgcovera));
+			sdcoverb = sdcoverb + ((coverb-avgcoverb)*(coverb-avgcoverb));
 //			sdsurfarea = sdsurfarea + ((surfarea2-avgsurfarea)*(surfarea2-avgsurfarea));
 			sddiam = sddiam + ((diam-avgdiam)*(diam-avgdiam));
 			sdlogdiam = sdlogdiam + ((logdiam-avglogdiam)*(logdiam-avglogdiam));
 //			sdschmid = sdschmid + ((schmid-avgschmid)*(schmid-avgschmid));
 //			sdem = sdem + ((em-avgem)*(em-avgem));
-			svn[diamint][2] = svn[diamint][2] + ((nnum-svn[diamint][1])*(nnum-svn[diamint][1]));		
-			svn[diamint][4] = svn[diamint][4] + ((lognnum-svn[diamint][3])*(lognnum-svn[diamint][3]));		
-			svbovera[diamint][2] = svbovera[diamint][2] + ((bovera-svbovera[diamint][1])*(bovera-svbovera[diamint][1]));		
-			svcovera[diamint][2] = svcovera[diamint][2] + ((covera-svcovera[diamint][1])*(covera-svcovera[diamint][1]));		
-			svcoverb[diamint][2] = svcoverb[diamint][2] + ((coverb-svcoverb[diamint][1])*(coverb-svcoverb[diamint][1]));		
-//			svsa[diamint][2] = svsa[diamint][2] + ((surfarea2-svsa[diamint][1])*(surfarea2-svsa[diamint][1]));		
+			svn[diamint][2] = svn[diamint][2] + ((nnum-svn[diamint][1])*(nnum-svn[diamint][1]));
+			svn[diamint][4] = svn[diamint][4] + ((lognnum-svn[diamint][3])*(lognnum-svn[diamint][3]));
+			svbovera[diamint][2] = svbovera[diamint][2] + ((bovera-svbovera[diamint][1])*(bovera-svbovera[diamint][1]));
+			svcovera[diamint][2] = svcovera[diamint][2] + ((covera-svcovera[diamint][1])*(covera-svcovera[diamint][1]));
+			svcoverb[diamint][2] = svcoverb[diamint][2] + ((coverb-svcoverb[diamint][1])*(coverb-svcoverb[diamint][1]));
+//			svsa[diamint][2] = svsa[diamint][2] + ((surfarea2-svsa[diamint][1])*(surfarea2-svsa[diamint][1]));
 //			svschmid[diamint][2] = svschmid[diamint][2] + ((schmid-svschmid[diamint][1])*(schmid-svschmid[diamint][1]));
 //			svem[diamint][2] = svem[diamint][2] + ((em-svem[diamint][1])*(em-svem[diamint][1]));
 			int size = neighborvector[j].size();
@@ -3196,7 +3197,7 @@ void volume_stats(int numgrains, string outname2)
 //			microbin[microcur]++;
 //		}
 //	}
-    ofstream outFile; 
+    ofstream outFile;
     outFile.open(outname2.c_str());
 	outFile << "INDIVIDUAL DISTRIBUTIONS" << endl;
 	outFile << endl;
@@ -3216,12 +3217,12 @@ void volume_stats(int numgrains, string outname2)
 //	outFile << "Volume Bin" << "	" << "Count" << "	" << "Neighbor Bin" << "	" << "Count" << "	" << "b/a Bin" << "	" << "Count" << "	" << "c/a Bin" << "	" << "Count" << "	" << "c/b Bin" << "	" << "Count" << "	" << "Surface Area Bin" << "	" << "Count"  << "	" << "Schmid Factor Bin" << "	" << "Count" << "	" << "Ellipsoidal Misfit Bin" << "	" << "Count" << endl;
 //	for(int temp6 = 0; temp6 < 25; temp6++)
 //	{
-//		outFile << (vbw*temp6) << "	" << vbin[temp6]/actualgrains << "	" << (nbw*temp6) << "	" << nbin[temp6]/actualgrains << "	" << (sbw1*temp6) << "	" << sbin1[temp6]/actualgrains << "	" << (sbw2*temp6) << "	" << sbin2[temp6]/actualgrains << "	" << (sbw3*temp6) << "	" << sbin3[temp6]/actualgrains << "	" << (sabw*temp6) << "	" << sabin[temp6]/actualgrains << "	" << (schw*temp6) << "	" << schbin[temp6]/actualgrains << "	" << (emw*temp6) << "	" << embin[temp6]/actualgrains << endl; 
+//		outFile << (vbw*temp6) << "	" << vbin[temp6]/actualgrains << "	" << (nbw*temp6) << "	" << nbin[temp6]/actualgrains << "	" << (sbw1*temp6) << "	" << sbin1[temp6]/actualgrains << "	" << (sbw2*temp6) << "	" << sbin2[temp6]/actualgrains << "	" << (sbw3*temp6) << "	" << sbin3[temp6]/actualgrains << "	" << (sabw*temp6) << "	" << sabin[temp6]/actualgrains << "	" << (schw*temp6) << "	" << schbin[temp6]/actualgrains << "	" << (emw*temp6) << "	" << embin[temp6]/actualgrains << endl;
 //	}
 	outFile << "Volume Bin" << "	" << "Count" << "	" << "Neighbor Bin" << "	" << "Count" << "	" << "b/a Bin" << "	" << "Count" << "	" << "c/a Bin" << "	" << "Count" << "	" << "c/b Bin" << "	" << "Count" << endl;
 	for(int temp6 = 0; temp6 < 25; temp6++)
 	{
-		outFile << (vbw*temp6) << "	" << vbin[temp6]/actualgrains << "	" << (nbw*temp6) << "	" << nbin[temp6]/actualgrains << "	" << (sbw1*temp6) << "	" << sbin1[temp6]/actualgrains << "	" << (sbw2*temp6) << "	" << sbin2[temp6]/actualgrains << "	" << (sbw3*temp6) << "	" << sbin3[temp6]/actualgrains << endl; 
+		outFile << (vbw*temp6) << "	" << vbin[temp6]/actualgrains << "	" << (nbw*temp6) << "	" << nbin[temp6]/actualgrains << "	" << (sbw1*temp6) << "	" << sbin1[temp6]/actualgrains << "	" << (sbw2*temp6) << "	" << sbin2[temp6]/actualgrains << "	" << (sbw3*temp6) << "	" << sbin3[temp6]/actualgrains << endl;
 	}
 	outFile << endl;
 	outFile << "CORRELATIONS" << endl;
@@ -3235,15 +3236,15 @@ void volume_stats(int numgrains, string outname2)
 //	outFile << "Size V Schmid Factor" << "	" << svschmidcr << endl;
 //	outFile << "Size V Ellipsoidal Misfit" << "	" << svemcr << endl;
 	outFile << endl;
-//	outFile << "Diameter" << "	" << "Count" << "	" << "Avg. Neighbors" << "	" << "Std. Dev. Neighbors" << "	" << "Avg. Ln Neighbors" << "	" << "Std. Dev.  Ln Neighbors" << "	" << "Avg. Neighbor Diameter" << "	" << "Std. Dev. Neighbor Diameter" << "	" <<"Avg. b/a" << "	" << "Std. Dev. b/a" << "	" << "Avg. c/a" << "	" << "Std. Dev. c/a" << "	" << "Avg. c/b" << "	" << "Std. Dev. c/b" << "	" <<"P b/a" << "	" << "Q Dev. b/a" << "	" << "P c/a" << "	" << "Q Dev. c/a" << "	" << "P c/b" << "	" << "Q Dev. c/b" << "	" << "Avg. Surface Area" << "	" << "Std. Dev. Surface Area" << "	" << "Avg. Schmid Factor" << "	" << "Std. Dev. Schmid Factor" << "	" << "Avg. Ellipsoidal misfot" << "	" << "Std. Dev. Ellipsoidal misfot" << endl; 
+//	outFile << "Diameter" << "	" << "Count" << "	" << "Avg. Neighbors" << "	" << "Std. Dev. Neighbors" << "	" << "Avg. Ln Neighbors" << "	" << "Std. Dev.  Ln Neighbors" << "	" << "Avg. Neighbor Diameter" << "	" << "Std. Dev. Neighbor Diameter" << "	" <<"Avg. b/a" << "	" << "Std. Dev. b/a" << "	" << "Avg. c/a" << "	" << "Std. Dev. c/a" << "	" << "Avg. c/b" << "	" << "Std. Dev. c/b" << "	" <<"P b/a" << "	" << "Q Dev. b/a" << "	" << "P c/a" << "	" << "Q Dev. c/a" << "	" << "P c/b" << "	" << "Q Dev. c/b" << "	" << "Avg. Surface Area" << "	" << "Std. Dev. Surface Area" << "	" << "Avg. Schmid Factor" << "	" << "Std. Dev. Schmid Factor" << "	" << "Avg. Ellipsoidal misfot" << "	" << "Std. Dev. Ellipsoidal misfot" << endl;
 //	for(int temp7 = 0; temp7 < (maxdiamint+1); temp7++)
 //	{
-//		outFile << temp7 << "	" << svn[temp7][0] << "	" << svn[temp7][1] << "	" << svn[temp7][2] << "	" << svn[temp7][3] << "	" << svn[temp7][4] << "	" << svs[temp7][1] << "	" << svs[temp7][2] << "	" << svbovera[temp7][1] << "	" << svbovera[temp7][2] << "	" << svcovera[temp7][1] << "	" << svcovera[temp7][2] << "	" << svcoverb[temp7][1] << "	" << svcoverb[temp7][2] << "	" << svbovera[temp7][3] << "	" << svbovera[temp7][4] << "	" << svcovera[temp7][3] << "	" << svcovera[temp7][4] << "	" << svcoverb[temp7][3] << "	" << svcoverb[temp7][4] << "	" << svsa[temp7][1] << "	" << svsa[temp7][2] << "	" << svschmid[temp7][1] << "	" << svschmid[temp7][2] << "	" << svem[temp7][1] << "	" << svem[temp7][2] << endl; 
+//		outFile << temp7 << "	" << svn[temp7][0] << "	" << svn[temp7][1] << "	" << svn[temp7][2] << "	" << svn[temp7][3] << "	" << svn[temp7][4] << "	" << svs[temp7][1] << "	" << svs[temp7][2] << "	" << svbovera[temp7][1] << "	" << svbovera[temp7][2] << "	" << svcovera[temp7][1] << "	" << svcovera[temp7][2] << "	" << svcoverb[temp7][1] << "	" << svcoverb[temp7][2] << "	" << svbovera[temp7][3] << "	" << svbovera[temp7][4] << "	" << svcovera[temp7][3] << "	" << svcovera[temp7][4] << "	" << svcoverb[temp7][3] << "	" << svcoverb[temp7][4] << "	" << svsa[temp7][1] << "	" << svsa[temp7][2] << "	" << svschmid[temp7][1] << "	" << svschmid[temp7][2] << "	" << svem[temp7][1] << "	" << svem[temp7][2] << endl;
 //	}
-	outFile << "Diameter" << "	" << "Count" << "	" << "Avg. Neighbors" << "	" << "Std. Dev. Neighbors" << "	" << "Avg. Ln Neighbors" << "	" << "Std. Dev.  Ln Neighbors" << "	" << "Avg. Neighbor Diameter" << "	" << "Std. Dev. Neighbor Diameter" << "	" <<"Avg. b/a" << "	" << "Std. Dev. b/a" << "	" << "Avg. c/a" << "	" << "Std. Dev. c/a" << "	" << "Avg. c/b" << "	" << "Std. Dev. c/b" << "	" <<"P b/a" << "	" << "Q Dev. b/a" << "	" << "P c/a" << "	" << "Q Dev. c/a" << "	" << "P c/b" << "	" << "Q Dev. c/b" << endl; 
+	outFile << "Diameter" << "	" << "Count" << "	" << "Avg. Neighbors" << "	" << "Std. Dev. Neighbors" << "	" << "Avg. Ln Neighbors" << "	" << "Std. Dev.  Ln Neighbors" << "	" << "Avg. Neighbor Diameter" << "	" << "Std. Dev. Neighbor Diameter" << "	" <<"Avg. b/a" << "	" << "Std. Dev. b/a" << "	" << "Avg. c/a" << "	" << "Std. Dev. c/a" << "	" << "Avg. c/b" << "	" << "Std. Dev. c/b" << "	" <<"P b/a" << "	" << "Q Dev. b/a" << "	" << "P c/a" << "	" << "Q Dev. c/a" << "	" << "P c/b" << "	" << "Q Dev. c/b" << endl;
 	for(int temp7 = 0; temp7 < (maxdiamint+1); temp7++)
 	{
-		outFile << temp7 << "	" << svn[temp7][0] << "	" << svn[temp7][1] << "	" << svn[temp7][2] << "	" << svn[temp7][3] << "	" << svn[temp7][4] << "	" << svs[temp7][1] << "	" << svs[temp7][2] << "	" << svbovera[temp7][1] << "	" << svbovera[temp7][2] << "	" << svcovera[temp7][1] << "	" << svcovera[temp7][2] << "	" << svcoverb[temp7][1] << "	" << svcoverb[temp7][2] << "	" << svbovera[temp7][3] << "	" << svbovera[temp7][4] << "	" << svcovera[temp7][3] << "	" << svcovera[temp7][4] << "	" << svcoverb[temp7][3] << "	" << svcoverb[temp7][4] << endl; 
+		outFile << temp7 << "	" << svn[temp7][0] << "	" << svn[temp7][1] << "	" << svn[temp7][2] << "	" << svn[temp7][3] << "	" << svn[temp7][4] << "	" << svs[temp7][1] << "	" << svs[temp7][2] << "	" << svbovera[temp7][1] << "	" << svbovera[temp7][2] << "	" << svcovera[temp7][1] << "	" << svcovera[temp7][2] << "	" << svcoverb[temp7][1] << "	" << svcoverb[temp7][2] << "	" << svbovera[temp7][3] << "	" << svbovera[temp7][4] << "	" << svcovera[temp7][3] << "	" << svcovera[temp7][4] << "	" << svcoverb[temp7][3] << "	" << svcoverb[temp7][4] << endl;
 	}
 	outFile << endl;
 	for(int temp8 = 0; temp8 < 25; temp8++)
@@ -3333,23 +3334,23 @@ void volume_stats(int numgrains, string outname2)
 
 void writeCube(string outname1, int numgrains)
 {
-    ofstream outFile; 
+    ofstream outFile;
     outFile.open(outname1.c_str());
 	int xpoints = (sizex/resx);
 	int ypoints = (sizey/resy);
-	int zpoints = (sizez/resz);	
-	outFile << "# vtk DataFile Version 2.0" << endl; 
-	outFile << "data set from FFT2dx_GB" << endl; 
-	outFile << "ASCII" << endl; 
-	outFile << "DATASET STRUCTURED_POINTS" << endl; 
+	int zpoints = (sizez/resz);
+	outFile << "# vtk DataFile Version 2.0" << endl;
+	outFile << "data set from FFT2dx_GB" << endl;
+	outFile << "ASCII" << endl;
+	outFile << "DATASET STRUCTURED_POINTS" << endl;
 	outFile << "DIMENSIONS " << xpoints << " " << ypoints << " " << zpoints << endl;
-	outFile << "ORIGIN 0.0 0.0 0.0" << endl; 
-	outFile << "SPACING " << resx << " " << resy << " " << resz << endl; 
+	outFile << "ORIGIN 0.0 0.0 0.0" << endl;
+	outFile << "SPACING " << resx << " " << resy << " " << resz << endl;
 	outFile << "POINT_DATA " << xpoints*ypoints*zpoints << endl;
 	outFile << endl;
 	outFile << endl;
-	outFile << "SCALARS GrainID int  1" << endl; 
-	outFile << "LOOKUP_TABLE default" << endl;  
+	outFile << "SCALARS GrainID int  1" << endl;
+	outFile << "LOOKUP_TABLE default" << endl;
 	for (int i = 0; i < (xpoints*ypoints*zpoints); i++)
 	{
 		if(i%20 == 0 && i > 0) outFile << endl;
@@ -3359,7 +3360,7 @@ void writeCube(string outname1, int numgrains)
 		int plane = (i/(xpoints*ypoints));
 		double xc = (column*resx)+(resx/2);
 		double yc = (row*resy)+(resy/2);
-		double zc = (plane*resz)+(resz/2);	
+		double zc = (plane*resz)+(resz/2);
 		int gnum = gridfine[i].grainname;
 		double r = packedgrain[gnum].red;
 		double g = packedgrain[gnum].green;
@@ -3377,7 +3378,7 @@ void writeCube(string outname1, int numgrains)
 
 void write_grains(string outname4, int numgrains)
 {
-    ofstream outFile; 
+    ofstream outFile;
     outFile.open(outname4.c_str());
 	outFile << numgrains << endl;
 	for(int i=0;i<numgrains;i++)
@@ -3407,7 +3408,7 @@ void find_boundarycenters(string outname3, int numgrains)
 	double tempcount = 0;
 	int xpoints = (sizex/resx);
 	int ypoints = (sizey/resy);
-	int zpoints = (sizez/resz);	
+	int zpoints = (sizez/resz);
 	for(int a = 0; a < 100000; a++)
 	{
 		for(int b = 0; b < 5; b++)
@@ -3493,7 +3494,7 @@ void find_boundarycenters(string outname3, int numgrains)
 			count++;
 		}
 	}
-	ofstream outFile; 
+	ofstream outFile;
 	outFile.open(outname3.c_str());
 	outFile << count << endl;
 	for(int l = 0; l < count; l++)
@@ -3516,11 +3517,11 @@ void find_boundarycenters(string outname3, int numgrains)
 
 void write_volume(string writename5)
 {
-    ofstream outFile; 
+    ofstream outFile;
     outFile.open(writename5.c_str());
 	int xpoints = (sizex/resx);
 	int ypoints = (sizey/resy);
-	int zpoints = (sizez/resz);	
+	int zpoints = (sizez/resz);
 	for(int i = 0; i < (xpoints*ypoints*zpoints); i++)
 	{
 		int grainname = gridfine[i].grainname;
@@ -3532,9 +3533,9 @@ void write_volume(string writename5)
 		int plane = (i/(xpoints*ypoints));
 		double xc = (column*resx)+(resx/2);
 		double yc = (row*resy)+(resy/2);
-		double zc = (plane*resz)+(resz/2);	
+		double zc = (plane*resz)+(resz/2);
 		double ci = 1;
-		outFile << grainname << "	" << ea1 << "	" << ea2 << "	" << ea3 << "	" << xc << "	" << yc << "	" << zc << "	" << ci << endl; 
-	}	
+		outFile << grainname << "	" << ea1 << "	" << ea2 << "	" << ea3 << "	" << xc << "	" << yc << "	" << zc << "	" << ci << endl;
+	}
 	outFile.close();
 }
