@@ -125,7 +125,7 @@ public:
 	int32 xpoints;
 	int32 ypoints;
 	int32 zpoints;
-      int totalpoints;
+  int totalpoints;
 
 	double resx1;
 	double resy1;
@@ -133,11 +133,9 @@ public:
 	int numneighbins;
 	int nummicros;
 
-
 	/** @brief The number of boundary center objects needed */
 	size_t bcentSize;
-
-
+	
 // sizes are needed. Dont't change
 	double eulerrank[180][180][180];
 
