@@ -38,8 +38,3 @@ class Orient
 };
 
 #endif /* ORIENT_H_ */
-class Orients
-{
-public:
-
-};

@@ -32,24 +32,19 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-Reconstruction::Pointer Reconstruction::New( QObject* parent)
+GrainGenerator::Pointer GrainGenerator::New( QObject* parent)
 {
-  Pointer sharedPtr(new Reconstruction(parent));
+  Pointer sharedPtr(new GrainGenerator(parent));
   return sharedPtr;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-Reconstruction::Reconstruction( QObject* parent) :
+GrainGenerator::GrainGenerator( QObject* parent) :
 QThread(parent),
   m_InputDirectory("."), m_OutputDirectory("."),
-  m_AngFilePrefix("Slice_"), m_AngSeriesMaxSlice(3),
-  m_ZStartIndex(0), m_ZEndIndex(0), m_ZResolution(0.25),
-  m_MergeTwins(false), m_MinAllowedGrainSize(0.0),
-  m_MinSeedConfidence(0.0), m_MisorientationTolerance(0.0),
-  m_CrystalStructure(AIM::Reconstruction::Hexagonal),
-  m_AlreadyFormed(false), m_ErrorCondition(0),m_Cancel(false)
+   m_ErrorCondition(0),m_Cancel(false)
 {
 
 }
@@ -62,8 +57,8 @@ GrainGenerator::GrainGenerator()
   // TODO Auto-generated constructor stub
 
 }
-
 #endif
+
 
 // -----------------------------------------------------------------------------
 //
@@ -75,10 +70,10 @@ GrainGenerator::~GrainGenerator()
 
 #if AIM_USE_QT
 
-void Reconstruction::run()
+void GrainGenerator::run()
 {
   compute();
-  m_microgen = MicroGen3D::NullPointer();  // Clean up the memory
+  m = MicroGen3D::NullPointer();  // Clean up the memory
 }
 #endif
 
@@ -96,17 +91,17 @@ void Reconstruction::run()
 void GrainGenerator::compute()
 {
 
-  CREATE_INPUT_FILENAME(readname1, AIM::Reconstruction::VolBinFile)
-  CREATE_INPUT_FILENAME(readname2, AIM::Reconstruction::BOverABinsFile)
-  CREATE_INPUT_FILENAME(readname3, AIM::Reconstruction::COverABinsFile)
-  CREATE_INPUT_FILENAME(readname4, AIM::Reconstruction::COverBBinsFile)
-  CREATE_INPUT_FILENAME(readname5, AIM::Reconstruction::SetNBins)
-  CREATE_INPUT_FILENAME(readname6, AIM::Reconstruction::AxisOrientationsFile)
-  CREATE_INPUT_FILENAME(readname7, AIM::Reconstruction::EulerAnglesFile)
-  CREATE_INPUT_FILENAME(readname8, AIM::Reconstruction::SVNFile)
-  CREATE_INPUT_FILENAME(readname9, AIM::Reconstruction::SVSFile)
-  CREATE_INPUT_FILENAME(readname10, AIM::Reconstruction::MisorientationBinsFile)
-  CREATE_INPUT_FILENAME(readname11, AIM::Reconstruction::MicroBinsFile)
+  CREATE_INPUT_FILENAME(readname1, AIM::Representation::VolBinFile)
+  CREATE_INPUT_FILENAME(readname2, AIM::Representation::BOverABinsFile)
+  CREATE_INPUT_FILENAME(readname3, AIM::Representation::COverABinsFile)
+  CREATE_INPUT_FILENAME(readname4, AIM::Representation::COverBBinsFile)
+  CREATE_INPUT_FILENAME(readname5, AIM::Representation::SeNBinsFile)
+  CREATE_INPUT_FILENAME(readname6, AIM::Representation::AxisOrientationsFile)
+  CREATE_INPUT_FILENAME(readname7, AIM::Representation::EulerAnglesFile)
+  CREATE_INPUT_FILENAME(readname8, AIM::Representation::SVNFile)
+  CREATE_INPUT_FILENAME(readname9, AIM::Representation::SVSFile)
+  CREATE_INPUT_FILENAME(readname10, AIM::Representation::MisorientationBinsFile)
+  CREATE_INPUT_FILENAME(readname11, AIM::Representation::MicroBinsFile)
 
 #if 0
   readname1 = "volbins.txt";
@@ -122,11 +117,11 @@ void GrainGenerator::compute()
   readname11 = "microbins.txt";
 #endif
 
-  CREATE_OUTPUT_FILENAME(writename1, AIM::Reconstruction::CubeFile)
-  CREATE_OUTPUT_FILENAME(writename2, AIM::Reconstruction::AnalysisFile)
-  CREATE_OUTPUT_FILENAME(writename3, AIM::Reconstruction::BoundaryCentersFile)
-  CREATE_OUTPUT_FILENAME(writename4, AIM::Reconstruction::GrainsFile)
-  CREATE_OUTPUT_FILENAME(writename5, AIM::Reconstruction::VolumeFile)
+  CREATE_OUTPUT_FILENAME(writename1, AIM::Representation::CubeFile)
+  CREATE_OUTPUT_FILENAME(writename2, AIM::Representation::AnalysisFile)
+  CREATE_OUTPUT_FILENAME(writename3, AIM::Representation::BoundaryCentersFile)
+  CREATE_OUTPUT_FILENAME(writename4, AIM::Representation::GrainsFile)
+  CREATE_OUTPUT_FILENAME(writename5, AIM::Representation::VolumeFile)
 
 #if 0
   writename1 = "cube.vtk";
@@ -169,7 +164,7 @@ void GrainGenerator::compute()
    inputFile2.close();
    m->gsizes = new int[m->numgrains];
    m->gremovals = new int[m->numgrains];
-
+#if 0
    m->grains = new Grain[m->numgrains];
    m->tempgrain =  new Grain[m->numgrains];
    m->diambin =  new Bin[m->numdiambins];
@@ -178,7 +173,7 @@ void GrainGenerator::compute()
    m->coverabin = new Bin[m->numsizebins*m->numshapebins];
    m->coverbbin = new Bin[m->numsizebins*m->numshapebins];
    m->seNbin = new Bin[m->numsizebins*m->numseNbins];
-   m->eulercount = new int **[18];
+   //m->eulercount = new int **[18];
    m->eulerbin = new Bin[18*18*18*100];
    for(int i = 0; i < 18; i++)
    {
@@ -202,10 +197,10 @@ void GrainGenerator::compute()
    int* takencheck = new int[m->numgrains];
    m->generate_grains(m->numgrains);
    m->assign_eulers(m->numgrains);
-   m->svn = new double *[m->numsizebins];
-   m->svs = new double *[m->numsizebins];
-   double** nsdist = new double *[m->numgrains];
-   double** bcent = new double *[100000];
+//   m->svn = new double *[m->numsizebins];
+//   m->svs = new double *[m->numsizebins];
+//   double** nsdist = new double *[m->numgrains];
+//   double** bcent = new double *[100000];
    for(int temp = 0; temp < m->numsizebins; temp++)
    {
      m->svn[temp] = new double [m->numneighbins];
@@ -243,11 +238,11 @@ void GrainGenerator::compute()
    m->loadSVSData(readname9);
    m->make_points(m->numgrains);
    m->fill_gaps(m->numgrains);
-   m->find_neighbors(m->numgrains);
-   m->find_centroids(m->numgrains);
-   m->find_moments(m->numgrains);
-   m->find_axis(m->numgrains);
-   m->find_colors(m->numgrains);
+   m->find_neighbors();
+   m->find_centroids();
+   m->find_moments();
+   m->find_axis();
+   m->find_colors();
    m->actualmisobin = new Bin[m->nummisobins];
    m->simmisobin = new Bin[m->nummisobins];
    m->actualmicrobin = new Bin[m->nummicrobins];
@@ -304,6 +299,8 @@ void GrainGenerator::compute()
   delete [] simmisobin;
   delete [] actualmicrobin;
   delete [] simmicrobin;
+
+#endif
 }
 
 // -----------------------------------------------------------------------------
@@ -331,11 +328,11 @@ void GrainGenerator::on_CancelWorker()
 {
      std::cout << "GrainGenerator::cancelWorker()" << std::endl;
      this->m_Cancel = true;
-     if (m_microgen.get() != NULL)
+     if (m.get() != NULL)
      {
-       if (m_microgen->m_angFileHelper.get() != NULL)
+       if (m->m_angFileHelper.get() != NULL)
        {
-         m_microgen->m_angFileHelper->setCancel(true);
+         m->m_angFileHelper->setCancel(true);
        }
      }
 
