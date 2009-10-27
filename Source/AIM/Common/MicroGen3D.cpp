@@ -1,7 +1,7 @@
 #include "MicroGen3D.h"
 
 #if 0
-// -i C:\Data\ANG_Series --outputDir C:\Data\Output -f Slice_ --angMaxSlice 400 -s 1 -e 10 -z 0.25 -t -g 10 -c 0.1 -o 1.0 -x 1
+// -i C:\Data\ANG_Series --outputDir C:\Data\Output -f Slice_ --angMaxSlice 400 -s 1 -e 5 -z 0.25 -t -g 10 -c 0.1 -o 1.0 -x 1
 #endif
 
 #ifndef M_PI
@@ -146,7 +146,7 @@ void MicroGen3D::initialize(double stepX, double stepY, double stepZ,
 void MicroGen3D::loadSlices()
 {
   m_angFileHelper->loadData(voxels, xpoints, ypoints, zpoints, resz);
-
+  //TODO: we should return an error code here.
 }
 
 // -----------------------------------------------------------------------------
