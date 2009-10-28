@@ -45,7 +45,7 @@ SET (AIMCommon_HDRS
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/FeiConstants.h
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Constants.h
 )
-IDE_SOURCE_PROPERTIES( "Source/AIM/Common" "${COMMON_HDRS}" "${COMMON_SRCS}")
+IDE_SOURCE_PROPERTIES( "Source/AIM/Common" "${AIMCommon_HDRS}" "${AIMCommon_SRCS}")
 
 
 set (ANG_SRCS

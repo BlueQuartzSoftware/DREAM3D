@@ -730,7 +730,7 @@ void RepresentationUI::on_reconstructBtn_clicked()
   connect(m_Reconstruction.get(), SIGNAL(finished()),
           this, SLOT( reconstruction_ThreadFinished() ) );
   connect(m_Reconstruction.get(), SIGNAL (updateProgress(int)),
-    this, SLOT(reconstruction_ThreadProgressed(int) ) , Qt::DirectConnection);
+    this, SLOT(reconstruction_ThreadProgressed(int) ) );
   connect(m_Reconstruction.get(), SIGNAL (updateMessage(QString)),
           this, SLOT(threadHasMessage(QString) ) );
 
@@ -758,7 +758,7 @@ void RepresentationUI::threadHasMessage(QString message)
 // -----------------------------------------------------------------------------
 void RepresentationUI::reconstruction_ThreadFinished()
 {
- // std::cout << "RepresentationUI::reconstruction_Finished()" << std::endl;
+  std::cout << "RepresentationUI::reconstruction_Finished()" << std::endl;
   reconstructBtn->setText("Go");
   setWidgetListEnabled(true);
   this->progressBar->setValue(0);
