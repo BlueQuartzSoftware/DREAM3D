@@ -71,14 +71,19 @@ class RepresentationUI : public QMainWindow, private Ui::RepresentationUI
 
   private slots:
     // slots for our worker thread to communicate
-    void threadFinished();
-    void reconstruction_Finished();
-
-    void threadProgressed(int value);
     void threadHasMessage(QString message);
+
+    void reconstruction_ThreadFinished();
+    void reconstruction_ThreadProgressed(int value);
 
     void gg_ThreadFinished();
     void gg_ThreadProgressed(int value);
+
+    void surfaceMesh_ThreadFinished();
+    void surfaceMesh_ThreadProgressed(int value);
+
+    void volumeMesh_ThreadFinished();
+    void volumeMesh_ThreadProgressed(int value);
 
   signals:
     void parentResized();
@@ -136,6 +141,7 @@ class RepresentationUI : public QMainWindow, private Ui::RepresentationUI
      * @brief Initializes some of the GUI elements with selections or other GUI related items
      */
     void setupGui();
+    void setupGui_Reconstruction();
     void setupGui_GrainGenerator();
 
     /**

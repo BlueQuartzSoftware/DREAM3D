@@ -443,12 +443,17 @@ void  MicroGen3D::find_neighbors()
   double x = 0;
   double y = 0;
   double z = 0;
-int totalNeighbors  = 0;
-  vector<int> nlist;
+  int totalNeighbors  = 0;
+  size_t nListSize = 1000;
+  vector<int> nlist(nListSize, -1);
+
+
   for(int i = 0; i < numgrains; i++)
   {
+    std::cout << "find_neighbors: " << i << " of " << numgrains << " grains." << std::endl;
     if(grains[i].gotsizemerged != 1)
     {
+      size_t nListIndex = 0;
       for(int j = 0; j < (xpoints*ypoints*zpoints); j++)
       {
 //        int onsurf = 0;
@@ -464,7 +469,12 @@ int totalNeighbors  = 0;
               int grain1 = voxels[j-1].grainname;
               if(grain1 != i)
             {
-              nlist.push_back(grain1);
+              nlist[nListIndex] = (grain1);
+              ++nListIndex;
+              if (nListIndex == nlist.size())
+              {
+                nlist.resize(nListIndex + nListSize);
+              }
             }
           }
           if(x < xpoints-1)
@@ -472,7 +482,12 @@ int totalNeighbors  = 0;
             int grain2 = voxels[j+1].grainname;
             if(grain2 != i)
             {
-              nlist.push_back(grain2);
+              nlist[nListIndex] = (grain2);
+              ++nListIndex;
+              if (nListIndex == nlist.size())
+              {
+                nlist.resize(nListIndex + nListSize);
+              }
             }
           }
           if(y > 0)
@@ -480,7 +495,12 @@ int totalNeighbors  = 0;
             int grain3 = voxels[j-(xpoints)].grainname;
             if(grain3 != i)
             {
-              nlist.push_back(grain3);
+              nlist[nListIndex] = (grain3);
+              ++nListIndex;
+              if (nListIndex == nlist.size())
+              {
+                nlist.resize(nListIndex + nListSize);
+              }
             }
           }
           if(y < ypoints-1)
@@ -488,7 +508,12 @@ int totalNeighbors  = 0;
             int grain4 = voxels[j+(xpoints)].grainname;
             if(grain4 != i)
             {
-              nlist.push_back(grain4);
+              nlist[nListIndex] = (grain4);
+              ++nListIndex;
+              if (nListIndex == nlist.size())
+              {
+                nlist.resize(nListIndex + nListSize);
+              }
             }
           }
           if(z > 0)
@@ -496,7 +521,12 @@ int totalNeighbors  = 0;
             int grain5 = voxels[j-(xpoints*ypoints)].grainname;
             if(grain5 != i)
             {
-              nlist.push_back(grain5);
+              nlist[nListIndex] = (grain5);
+              ++nListIndex;
+              if (nListIndex == nlist.size())
+              {
+                nlist.resize(nListIndex + nListSize);
+              }
             }
           }
           if(z < zpoints-1)
@@ -504,20 +534,31 @@ int totalNeighbors  = 0;
             int grain6 = voxels[j+(xpoints*ypoints)].grainname;
             if(grain6 != i)
             {
-              nlist.push_back(grain6);
+              nlist[nListIndex] = (grain6);
+              ++nListIndex;
+              if (nListIndex == nlist.size())
+              {
+                nlist.resize(nListIndex + nListSize);
+              }
             }
           }
         }
       }
-      vector<int>::iterator newend;
-      sort(nlist.begin(),nlist.end());
-      newend = unique(nlist.begin(),nlist.end());
-      nlist.erase(newend,nlist.end());
-      int numneighs = int(nlist.size());
-      totalNeighbors += numneighs;
-      grains[i].numneighbors = numneighs;
-      grains[i].neighborlist = nlist;
+      if (nListIndex > 0)
+      {
+        vector<int>::iterator newend;
+        sort(nlist.begin(),nlist.end());
+        newend = unique(nlist.begin(),nlist.end());
+        nlist.erase(newend,nlist.end());
+        int numneighs = int(nlist.size());
+        totalNeighbors += numneighs;
+        grains[i].numneighbors = numneighs;
+        grains[i].neighborlist = new std::vector<int>(numneighs);
+        grains[i].neighborlist->swap(nlist);
+//        grains[i].neighborlist = nlist;
+      }
       nlist.clear();
+      nlist.resize(nListSize);
     }
   }
   bcentSize = totalNeighbors / 2;
@@ -534,8 +575,8 @@ void  MicroGen3D::merge_containedgrains()
     int numneighbors = grains[grainname].numneighbors;
     if(numneighbors == 1)
     {
-      vector<int> neighborlist = grains[grainname].neighborlist;
-      int neighbor = neighborlist[0];
+      vector<int>* neighborlist = grains[grainname].neighborlist;
+      int neighbor = neighborlist->at(0);
       voxels[i].grainname = neighbor;
       grains[grainname].gotcontainedmerged = containedmerged;
     }
@@ -544,18 +585,20 @@ void  MicroGen3D::merge_containedgrains()
   {
     if(grains[j].gotsizemerged != 1 && grains[j].gotcontainedmerged != 1)
     {
-      vector<int> neighborlist = grains[j].neighborlist;
-      int size = int(neighborlist.size());
+      vector<int>* neighborlist = grains[j].neighborlist;
+      int size = 0;
+      if (NULL != neighborlist ) { size = neighborlist->size(); }
       for(int k=0;k<size;k++)
       {
-        int firstneighbor = neighborlist[k];
+        int firstneighbor = neighborlist->at(k);
         int gotcontainedmerged = grains[firstneighbor].gotcontainedmerged;
         int gotsizemerged = grains[firstneighbor].gotsizemerged;
         if(gotcontainedmerged != 1 && gotsizemerged != 1) nlistgood.push_back(firstneighbor);
       }
       int neighcount = int(nlistgood.size());
       grains[j].numneighbors = neighcount;
-      grains[j].neighborlist = nlistgood;
+      if (grains[j].neighborlist == NULL) { grains[j].neighborlist = new std::vector<int>(nlistgood.size() ); }
+      grains[j].neighborlist->swap(nlistgood);
       nlistgood.clear();
     }
   }
@@ -571,10 +614,10 @@ int  MicroGen3D::renumber_grains2()
       grains[i].newgrainname = graincount;
       int size = grains[i].numvoxels;
       int numneighbors = grains[i].numneighbors;
-      vector<int> nlist = grains[i].neighborlist;
+      vector<int>* nlist = grains[i].neighborlist;
       grains[graincount].numvoxels = size;
       grains[graincount].numneighbors = numneighbors;
-      grains[graincount].neighborlist = nlist;
+      grains[graincount].neighborlist->swap(*nlist);
       graincount++;
     }
   }
@@ -597,7 +640,7 @@ void  MicroGen3D::homogenize_grains()
     grains[0].averagemisorientation = 0.0;
   for(int i = 1; i < numgrains; i++)
   {
-    std::cout << "homogenize_grains: " << i << std::endl;
+    //std::cout << "homogenize_grains: " << i << std::endl;
     double ea1good = 0;
     double ea2good = 0;
     double ea3good = 0;
@@ -918,13 +961,13 @@ void  MicroGen3D::merge_twins ()
       {
         tsize = int(twinlist.size());
         int firstgrain = twinlist[m];
-        vector<int> nlist = grains[firstgrain].neighborlist;
-        int size = int(nlist.size());
+        vector<int>* nlist = grains[firstgrain].neighborlist;
+        int size = int(nlist->size());
         for(int l=0;l<size;l++)
         {
           angcur = 180;
           int twin = 0;
-          int neigh = nlist[l];
+          int neigh = nlist->at(l);
           if(neigh != i && grains[neigh].twinnewnumberbeenset != 1)
           {
             double g1ea1 = grains[firstgrain].avgeuler1;
@@ -1018,10 +1061,10 @@ int  MicroGen3D::renumber_grains3()
       double ea3good = grains[i].avgeuler3;
       int size = grains[i].numvoxels;
       int numneighbors = grains[i].numneighbors;
-      vector<int> nlist = grains[i].neighborlist;
+      vector<int>* nlist = grains[i].neighborlist;
       goodgrain[graincount].numvoxels = size;
       goodgrain[graincount].numneighbors = numneighbors;
-      goodgrain[graincount].neighborlist = nlist;
+      goodgrain[graincount].neighborlist->swap(*nlist);
       goodgrain[graincount].avgeuler1 = ea1good;
       goodgrain[graincount].avgeuler2 = ea2good;
       goodgrain[graincount].avgeuler3 = ea3good;
@@ -1123,7 +1166,7 @@ void  MicroGen3D::find_goodneighbors()
     nlist.erase(newend,nlist.end());
     neighcount = int(nlist.size());
     goodgrain[i].numneighbors = neighcount;
-    goodgrain[i].neighborlist = nlist;
+    goodgrain[i].neighborlist->swap(nlist);
     nlist.clear();
   }
 }
@@ -1447,14 +1490,14 @@ void  MicroGen3D::measure_misorientations ()
   double n3;
   for (int i = 0; i < numgrains; i++)
   {
-    vector<int> nlist = goodgrain[i].neighborlist;
+    vector<int>* nlist = goodgrain[i].neighborlist;
     double g1ea1 = goodgrain[i].avgeuler1;
     double g1ea2 = goodgrain[i].avgeuler2;
     double g1ea3 = goodgrain[i].avgeuler3;
-    int size = int(nlist.size());
+    int size = int(nlist->size());
     for(int j=0;j<size;j++)
     {
-      int nname = nlist[j];
+      int nname = nlist->at(j);
       double g2ea1 = goodgrain[nname].avgeuler1;
       double g2ea2 = goodgrain[nname].avgeuler2;
       double g2ea3 = goodgrain[nname].avgeuler3;
@@ -2058,7 +2101,7 @@ void MicroGen3D::volume_stats(string writename1,
       double lognnum = log(double(nnum));
       double schmid = goodgrain[i].schmidfactor;
       double em = goodgrain[i].convexity;
-      vector<int> nlist = goodgrain[i].neighborlist;
+      vector<int>* nlist = goodgrain[i].neighborlist;
       avgvol = avgvol+voxvol;
       avglnvol = avglnvol+logvol;
       avgneigh = avgneigh+nnum;
@@ -2083,10 +2126,10 @@ void MicroGen3D::volume_stats(string writename1,
       svcoverb[diamint][1] = svcoverb[diamint][1] + coverb;
       svschmid[diamint][1] = svschmid[diamint][1] + schmid;
       svem[diamint][1] = svem[diamint][1] + em;
-      int size = int(nlist.size());
+      int size = int(nlist->size());
       for(int k=0;k<size;k++)
       {
-        int neigh = nlist[k];
+        int neigh = nlist->at(k);
         int neighvol = goodgrain[neigh].numvoxels;
         double neighvoxvol = neighvol*resx*resy*resz;
     //    double neighlogvol = log(neighvoxvol);
@@ -2236,7 +2279,7 @@ void MicroGen3D::volume_stats(string writename1,
       double lognnum = log(double(nnum));
       double schmid = goodgrain[j].schmidfactor;
       double em = goodgrain[j].convexity;
-      vector<int> nlist = goodgrain[j].neighborlist;
+      vector<int>* nlist = goodgrain[j].neighborlist;
       sdvol = sdvol + ((voxvol-avgvol)*(voxvol-avgvol));
       sdlnvol = sdlnvol + ((logvol-avglnvol)*(logvol-avglnvol));
       sdneigh = sdneigh + ((nnum-avgneigh)*(nnum-avgneigh));
@@ -2255,10 +2298,10 @@ void MicroGen3D::volume_stats(string writename1,
       svcoverb[diamint][2] = svcoverb[diamint][2] + ((coverb-svcoverb[diamint][1])*(coverb-svcoverb[diamint][1]));
       svschmid[diamint][2] = svschmid[diamint][2] + ((schmid-svschmid[diamint][1])*(schmid-svschmid[diamint][1]));
       svem[diamint][2] = svem[diamint][2] + ((em-svem[diamint][1])*(em-svem[diamint][1]));
-      int size = int(nlist.size());
+      int size = int(nlist->size());
       for(int k=0;k<size;k++)
       {
-        int neigh = nlist[k];
+        int neigh = (*nlist)[k];
         int neighvol = goodgrain[neigh].numvoxels;
         double neighvoxvol = neighvol*resx*resy*resz;
 //        double neighlogvol = log(neighvoxvol);
@@ -2787,12 +2830,12 @@ void  MicroGen3D::write_grains(string writename12)
     double ea2 = goodgrain[i].avgeuler2;
     double ea3 = goodgrain[i].avgeuler3;
     int nnum = goodgrain[i].numneighbors;
-    vector<int> nlist = goodgrain[i].neighborlist;
+    vector<int>* nlist = goodgrain[i].neighborlist;
     outFile << i << " " << xc << "  " << yc << "  " << zc << "  " << ea1 << " " << ea2 << " " << ea3 << " " << nnum;
-    int size = int(nlist.size());
+    int size = int(nlist->size());
     for(int k=0;k<size;k++)
     {
-      int neigh = nlist[k];
+      int neigh = (*nlist)[k];
       outFile << "  " << neigh;
     }
     outFile << endl;
@@ -2864,12 +2907,12 @@ void  MicroGen3D::find_boundarycenters(string writename13)
   }
   for(int i = 0; i < numgrains; i++)
   {
-    vector<int> nlist = goodgrain[i].neighborlist;
-    int size = int(nlist.size());
+    vector<int>* nlist = goodgrain[i].neighborlist;
+    int size = int(nlist->size());
     for(int k=0;k<size;k++)
     {
       tempcount = 0;
-      int firstneigh = nlist[k];
+      int firstneigh = (*nlist)[k];
       for(int j = 0; j < (xpoints*ypoints*zpoints); j++)
       {
         int gnum = voxels[j].grainname;

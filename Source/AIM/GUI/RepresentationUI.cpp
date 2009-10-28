@@ -86,6 +86,41 @@
     combobox->setCurrentIndex(i); }\
 
 
+#define GG_CHECK_OUTPUT_FILE_EXISTS(name) \
+  { \
+  QString absPath = gg_OutputDir->text() + QDir::separator() + AIM::Representation::name.c_str();\
+  absPath = QDir::toNativeSeparators(absPath);\
+  QFileInfo fi ( absPath );\
+  if ( fi.exists() )  {\
+    QString iconFile = QString(":/") + QString("Check") + QString("-16x16.png");\
+      name##_3->setText(AIM::Representation::name.c_str());\
+      name##Icon##_3->setPixmap(QPixmap(iconFile));\
+  } else {\
+    QString iconFile = QString(":/") + QString("Delete") + QString("-16x16.png");\
+    name##_3->setText(AIM::Representation::name.c_str());\
+    name##Icon##_3->setPixmap(QPixmap(iconFile));\
+  }\
+  }
+
+
+#define GG_CHECK_INPUT_FILE_EXISTS(name) \
+  { \
+  QString absPath = gg_InputDir->text() + QDir::separator() + AIM::Representation::name.c_str();\
+  absPath = QDir::toNativeSeparators(absPath);\
+  QFileInfo fi ( absPath );\
+  if ( fi.exists() )  {\
+    QString iconFile = QString(":/") + QString("Check") + QString("-16x16.png");\
+      name##_2->setText(AIM::Representation::name.c_str());\
+      name##Icon##_2->setPixmap(QPixmap(iconFile));\
+  } else {\
+    QString iconFile = QString(":/") + QString("Delete") + QString("-16x16.png");\
+    name##_2->setText(AIM::Representation::name.c_str());\
+    name##Icon##_2->setPixmap(QPixmap(iconFile));\
+  }\
+  }
+
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -174,15 +209,15 @@ void RepresentationUI::readSettings()
   READ_FILEPATH_SETTING(prefs, outputDir, "");
   READ_SETTING(prefs, angMaxSlice, ok, i, 300 , Int);
   READ_STRING_SETTING(prefs, angFilePrefix, "");
-  READ_SETTING(prefs, zStartIndex, ok, i, 0 , Int);
+  READ_SETTING(prefs, zStartIndex, ok, i, 1 , Int);
   READ_SETTING(prefs, zEndIndex, ok, i, 10 , Int);
-  READ_STRING_SETTING(prefs, zSpacing, "");
+  READ_STRING_SETTING(prefs, zSpacing, "0.25");
   READ_BOOL_SETTING(prefs, mergeTwins, true);
   alreadyFormed->blockSignals(true);
   READ_BOOL_SETTING(prefs, alreadyFormed, false);
   alreadyFormed->blockSignals(false);
   READ_SETTING(prefs, minAllowedGrainSize, ok, i, 8 , Int);
-  READ_SETTING(prefs, minConfidence, ok, d, 0.0 , Double);
+  READ_SETTING(prefs, minConfidence, ok, d, 0.1 , Double);
   READ_SETTING(prefs, misOrientationTolerance, ok, d, 5.0 , Double);
   READ_COMBO_BOX(prefs, crystalStructure)
 
@@ -193,7 +228,7 @@ void RepresentationUI::readSettings()
   READ_SETTING(prefs, gg_XResolution, ok, i, 0.25 , Double);
   READ_SETTING(prefs, gg_YResolution, ok, i, 0.25 , Double);
   READ_SETTING(prefs, gg_ZResolution, ok, i, 0.25 , Double);
-  READ_SETTING(prefs, gg_NumGrains, ok, i, 300 , Int);
+  READ_SETTING(prefs, gg_NumGrains, ok, i, 1000 , Int);
 
   READ_SETTING(prefs, gg_OverlapAllowed, ok, i, 0.00 , Double);
   READ_COMBO_BOX(prefs, gg_CrystalStructure)
@@ -248,15 +283,46 @@ void RepresentationUI::writeSettings()
 // -----------------------------------------------------------------------------
 void RepresentationUI::setupGui()
 {
+  // Setup the Reconstruction Tab GUI
+  setupGui_Reconstruction();
+
+  // Setup the Grain Generator Tab Gui
+  setupGui_GrainGenerator();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void RepresentationUI::setupGui_Reconstruction()
+{
   QString msg ("All files will be over written that appear in the output directory.");
 
   if (true == this->_verifyPathExists(angDir->text(), this->angDir) )
   {
     findAngMaxSliceAndPrefix();
   }
+
   if (this->_verifyPathExists(outputDir->text(), this->outputDir) )
   {
     findReconstructionOutputFiles();
+  }
+  else
+  {
+    SET_TEXT_ICON(StatsFile, Delete)
+    SET_TEXT_ICON(VolBinFile, Delete)
+    SET_TEXT_ICON(BOverABinsFile, Delete)
+    SET_TEXT_ICON(COverABinsFile, Delete)
+    SET_TEXT_ICON(COverBBinsFile, Delete)
+    SET_TEXT_ICON(SVNFile, Delete)
+    SET_TEXT_ICON(SVSFile, Delete)
+    SET_TEXT_ICON(MisorientationBinsFile, Delete)
+    SET_TEXT_ICON(MicroBinsFile, Delete)
+    SET_TEXT_ICON(ReconstructedDataFile, Delete)
+    SET_TEXT_ICON(ReconstructedVisualizationFile, Delete)
+    SET_TEXT_ICON(GrainsFile, Delete)
+    SET_TEXT_ICON(BoundaryCentersFile, Delete)
+    SET_TEXT_ICON(AxisOrientationsFile, Delete)
+    SET_TEXT_ICON(EulerAnglesFile, Delete)
   }
 
   QFileInfo fi (outputDir->text() + QDir::separator() +  AIM::Representation::ReconstructedDataFile.c_str() );
@@ -276,44 +342,7 @@ void RepresentationUI::setupGui()
   m_WidgetList << angFilePrefix << angMaxSlice << zStartIndex << zEndIndex << zSpacing;
   m_WidgetList << mergeTwins << alreadyFormed << minAllowedGrainSize << minConfidence << misOrientationTolerance;
   m_WidgetList << crystalStructure;
-
-  // Setup the Grain Generator Gui
-  setupGui_GrainGenerator();
 }
-
-#define GG_CHECK_OUTPUT_FILE_EXISTS(name) \
-  { \
-  QString absPath = gg_OutputDir->text() + QDir::separator() + AIM::Representation::name.c_str();\
-  absPath = QDir::toNativeSeparators(absPath);\
-  QFileInfo fi ( absPath );\
-  if ( fi.exists() )  {\
-    QString iconFile = QString(":/") + QString("Check") + QString("-16x16.png");\
-      name##_3->setText(AIM::Representation::name.c_str());\
-      name##Icon##_3->setPixmap(QPixmap(iconFile));\
-  } else {\
-    QString iconFile = QString(":/") + QString("Delete") + QString("-16x16.png");\
-    name##_3->setText(AIM::Representation::name.c_str());\
-    name##Icon##_3->setPixmap(QPixmap(iconFile));\
-  }\
-  }
-
-
-#define GG_CHECK_INPUT_FILE_EXISTS(name) \
-  { \
-  QString absPath = gg_InputDir->text() + QDir::separator() + AIM::Representation::name.c_str();\
-  absPath = QDir::toNativeSeparators(absPath);\
-  QFileInfo fi ( absPath );\
-  if ( fi.exists() )  {\
-    QString iconFile = QString(":/") + QString("Check") + QString("-16x16.png");\
-      name##_2->setText(AIM::Representation::name.c_str());\
-      name##Icon##_2->setPixmap(QPixmap(iconFile));\
-  } else {\
-    QString iconFile = QString(":/") + QString("Delete") + QString("-16x16.png");\
-    name##_2->setText(AIM::Representation::name.c_str());\
-    name##Icon##_2->setPixmap(QPixmap(iconFile));\
-  }\
-  }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -332,11 +361,11 @@ void RepresentationUI::setupGui_GrainGenerator()
   GG_CHECK_INPUT_FILE_EXISTS(MisorientationBinsFile)
   GG_CHECK_INPUT_FILE_EXISTS(MicroBinsFile)
 
-  GG_CHECK_OUTPUT_FILE_EXISTS( CubeFile)
-  GG_CHECK_OUTPUT_FILE_EXISTS( AnalysisFile)
-  GG_CHECK_OUTPUT_FILE_EXISTS( BoundaryCentersFile)
-  GG_CHECK_OUTPUT_FILE_EXISTS( GrainsFile)
-  GG_CHECK_OUTPUT_FILE_EXISTS( VolumeFile)
+  GG_CHECK_OUTPUT_FILE_EXISTS(CubeFile)
+  GG_CHECK_OUTPUT_FILE_EXISTS(AnalysisFile)
+  GG_CHECK_OUTPUT_FILE_EXISTS(BoundaryCentersFile)
+  GG_CHECK_OUTPUT_FILE_EXISTS(GrainsFile)
+  GG_CHECK_OUTPUT_FILE_EXISTS(VolumeFile)
 
   m_WidgetList << gg_InputDir << gg_InputDirBtn << gg_OutputDir << gg_OutputDirBtn;
   m_WidgetList << gg_CrystalStructure << gg_NumGrains << gg_XResolution << gg_YResolution << gg_ZResolution;
@@ -569,7 +598,6 @@ void RepresentationUI::findReconstructionOutputFiles()
   CHECK_OUTPUT_FILE_EXISTS(BoundaryCentersFile)
   CHECK_OUTPUT_FILE_EXISTS(AxisOrientationsFile)
   CHECK_OUTPUT_FILE_EXISTS(EulerAnglesFile)
-
 }
 
 // -----------------------------------------------------------------------------
@@ -685,7 +713,7 @@ void RepresentationUI::on_reconstructBtn_clicked()
   m_Reconstruction->setAngFilePrefix(angFilePrefix->text().toStdString());
   m_Reconstruction->setAngSeriesMaxSlice(angMaxSlice->value());
   m_Reconstruction->setZStartIndex(zStartIndex->value());
-  m_Reconstruction->setZEndIndex(zEndIndex->value());
+  m_Reconstruction->setZEndIndex(zEndIndex->value() + 1);
   m_Reconstruction->setZResolution(zSpacing->text().toDouble(&ok));
   m_Reconstruction->setMergeTwins(mergeTwins->isChecked() );
   m_Reconstruction->setMinAllowedGrainSize(minAllowedGrainSize->value());
@@ -700,15 +728,18 @@ void RepresentationUI::on_reconstructBtn_clicked()
   m_Reconstruction->setAlreadyFormed(alreadyFormed->isChecked());
 
   connect(m_Reconstruction.get(), SIGNAL(finished()),
-          this, SLOT( reconstruction_Finished() ) );
+          this, SLOT( reconstruction_ThreadFinished() ) );
   connect(m_Reconstruction.get(), SIGNAL (updateProgress(int)),
-    this, SLOT(threadProgressed(int) ) , Qt::DirectConnection);
+    this, SLOT(reconstruction_ThreadProgressed(int) ) , Qt::DirectConnection);
   connect(m_Reconstruction.get(), SIGNAL (updateMessage(QString)),
           this, SLOT(threadHasMessage(QString) ) );
 
   setWidgetListEnabled(false);
   m_Reconstruction->start();
   reconstructBtn->setText("Cancel");
+  grainGeneratorTab->setEnabled(false);
+  surfaceMeshingTab->setEnabled(false);
+  volumeMeshingTab->setEnabled(false);
 
 }
 
@@ -717,34 +748,29 @@ void RepresentationUI::on_reconstructBtn_clicked()
 // -----------------------------------------------------------------------------
 void RepresentationUI::threadHasMessage(QString message)
 {
-  std::cout << "RepresentationUI::threadHasMessage()" << message.toStdString() << std::endl;
+ // std::cout << "RepresentationUI::threadHasMessage()" << message.toStdString() << std::endl;
   this->statusBar()->showMessage(message);
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void RepresentationUI::threadFinished()
-{
-  std::cout << "thread Finished." << std::endl;
-
-}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RepresentationUI::reconstruction_Finished()
+void RepresentationUI::reconstruction_ThreadFinished()
 {
-  std::cout << "RepresentationUI::reconstruction_Finished()" << std::endl;
+ // std::cout << "RepresentationUI::reconstruction_Finished()" << std::endl;
   reconstructBtn->setText("Go");
   setWidgetListEnabled(true);
   this->progressBar->setValue(0);
+  grainGeneratorTab->setEnabled(true);
+  surfaceMeshingTab->setEnabled(true);
+  volumeMeshingTab->setEnabled(true);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RepresentationUI::threadProgressed(int val)
+void RepresentationUI::reconstruction_ThreadProgressed(int val)
 {
   this->progressBar->setValue( val );
 }
@@ -761,6 +787,9 @@ void RepresentationUI::gg_ThreadFinished()
   gg_GoBtn->setText("Go");
   setWidgetListEnabled(true);
   this->gg_progressBar->setValue(0);
+  reconstructionTab->setEnabled(true);
+  surfaceMeshingTab->setEnabled(true);
+  volumeMeshingTab->setEnabled(true);
 
 }
 
@@ -814,7 +843,7 @@ void RepresentationUI::on_gg_OutputDirBtn_clicked()
 void RepresentationUI::on_gg_GoBtn_clicked()
 {
 
-  if (reconstructBtn->text().compare("Cancel") == 0)
+  if (gg_GoBtn->text().compare("Cancel") == 0)
   {
     if(m_GrainGenerator.get() != NULL)
     {
@@ -824,7 +853,6 @@ void RepresentationUI::on_gg_GoBtn_clicked()
     return;
   }
 
-#if 0
   m_GrainGenerator = GrainGenerator::New(NULL);
   m_GrainGenerator->setInputDirectory(gg_InputDir->text().toStdString() );
   m_GrainGenerator->setOutputDirectory(gg_OutputDir->text().toStdString());
@@ -847,17 +875,40 @@ void RepresentationUI::on_gg_GoBtn_clicked()
 
 
   connect(m_GrainGenerator.get(), SIGNAL(finished()),
-          this, SLOT( reconstruction_Finished() ) );
+          this, SLOT( gg_ThreadFinished() ) );
   connect(m_GrainGenerator.get(), SIGNAL (updateProgress(int)),
-    this, SLOT(threadProgressed(int) ) , Qt::DirectConnection);
+    this, SLOT(gg_ThreadProgressed(int) ) , Qt::DirectConnection);
   connect(m_GrainGenerator.get(), SIGNAL (updateMessage(QString)),
           this, SLOT(threadHasMessage(QString) ) );
 
   setWidgetListEnabled(false);
+  reconstructionTab->setEnabled(false);
+  surfaceMeshingTab->setEnabled(false);
+  volumeMeshingTab->setEnabled(false);
   m_GrainGenerator->start();
-  reconstructBtn->setText("Cancel");
-  #endif
+  gg_GoBtn->setText("Cancel");
 }
 
+
+
+
+
+void RepresentationUI::surfaceMesh_ThreadFinished()
+{
+
+}
+void RepresentationUI::surfaceMesh_ThreadProgressed(int value)
+{
+
+}
+
+void RepresentationUI::volumeMesh_ThreadFinished()
+{
+
+}
+void RepresentationUI::volumeMesh_ThreadProgressed(int value)
+{
+
+}
 
 

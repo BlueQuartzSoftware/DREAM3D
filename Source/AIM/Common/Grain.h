@@ -24,7 +24,7 @@ class Grain
     int numvoxels;
     int numneighbors;
     int newgrainname;
-    std::vector<int> neighborlist;
+    std::vector<int>* neighborlist;
     int gotsizemerged;
     int gotcontainedmerged;
     int gottwinmerged;
