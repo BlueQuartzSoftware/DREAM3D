@@ -89,6 +89,11 @@ configure_file(${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/AIMVersion.h.in
 add_subdirectory( ${AIMRepresentation_SOURCE_DIR}/Source/MXA ${AIMRepresentation_BINARY_DIR}/MXA)
 include_directories (${AIMRepresentation_BINARY_DIR})
 
+# -----------------------------------------------------------------------
+# -- Add in the AIM Common Sources into a static library
+add_subdirectory( ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common ${AIMRepresentation_BINARY_DIR}/AIM)
+
+
 option(AIM_BUILD_QT_APPS "Compile the Qt based GUI applications" ON)
 #if we are going to build Qt based applications then we need to find Qt 4 first
 if (AIM_BUILD_QT_APPS)
@@ -108,6 +113,10 @@ if (AIM_BUILD_QT_APPS)
    # (QT_USE_FILE is a variable defined by FIND_PACKAGE( Qt4 ) that 
    # contains a path to CMake script)
    INCLUDE( ${QT_USE_FILE} )
+   
+   # Add our Qt based GUI project to the list of targets
+   ADD_SUBDIRECTORY( ${AIMRepresentation_SOURCE_DIR}/Source/AIM/GUI ${AIMRepresentation_BINARY_DIR}/AIM/GUI)
+   
 endif()
 
 include_directories(${AIMRepresentation_SOURCE_DIR}/Source)
@@ -128,9 +137,6 @@ if (AIM_BUILD_GRAIN_GENERATOR_TOOL)
     add_subdirectory(${AIMRepresentation_SOURCE_DIR}/Source/AIM/GrainGenerator ${AIMRepresentation_BINARY_DIR}/AIM/GrainGenerator)
 endif()
 
-if (AIM_BUILD_QT_APPS)
-    ADD_SUBDIRECTORY( ${AIMRepresentation_SOURCE_DIR}/Source/AIM/GUI ${AIMRepresentation_BINARY_DIR}/AIM/GUI)
-endif()
 
 #ADD_SUBDIRECTORY( ${AIMRepresentation_SOURCE_DIR}/Source/Test ${AIMRepresentation_BINARY_DIR}/Test)
 include(${AIMRepresentation_RESOURCES_DIR}/CMake/AIMInstall.cmake)

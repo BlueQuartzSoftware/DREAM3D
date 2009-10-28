@@ -10,11 +10,13 @@
 #include <AIM/ANG/AngDirectoryPatterns.h>
 #include <AIM/ANG/AngFileReader.h>
 #include <AIM/ANG/AngFileHelper.h>
+#include <AIM/GrainGenerator/SVG-3D.h>
+
 #include <MXA/Utilities/MXAFileSystemPath.h>
 
 
-#ifdef AIM_USE_QT
 
+#ifdef AIM_USE_QT
 
 #define CHECK_FOR_CANCELED(AClass)\
     if (this->m_Cancel) { \
@@ -54,8 +56,6 @@ QThread(parent),
 // -----------------------------------------------------------------------------
 GrainGenerator::GrainGenerator()
 {
-  // TODO Auto-generated constructor stub
-
 }
 #endif
 
@@ -65,17 +65,31 @@ GrainGenerator::GrainGenerator()
 // -----------------------------------------------------------------------------
 GrainGenerator::~GrainGenerator()
 {
-  // TODO Auto-generated destructor stub
 }
 
 #if AIM_USE_QT
 
 void GrainGenerator::run()
 {
-  compute();
+  jackson_compute();
   m = MicroGen3D::NullPointer();  // Clean up the memory
 }
 #endif
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void GrainGenerator::jackson_compute()
+{
+
+
+  int err = SVG_3D_Main(m_InputDirectory, m_OutputDirectory, m_NumGrains, m_ShapeClass,
+              m_XResolution, m_YResolution, m_ZResolution, m_OverlapAllowed,
+              m_OverlapAssignment, m_CrystalStructure);
+  setErrorCondition(err);
+
+}
+
 
 #define CREATE_INPUT_FILENAME(f, n)\
     std::string f = m_InputDirectory + MXAFileSystemPath::Separator + n;\
