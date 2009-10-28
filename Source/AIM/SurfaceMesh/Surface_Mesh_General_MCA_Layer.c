@@ -73,14 +73,16 @@ int SurfaceMesh_MCALayer( int xnum, int ynum, int znum,
   struct isegment *cIedge;
   struct patch *cTriangle;
   FILE *f1, *f4;
-  char postfix[64] = "_triangles_raw.txt";
   char trianglesFile[BUFSIZ];
-  char edgepostfix[64] = "_edges_raw.txt";
   char edgeFile[BUFSIZ];
-  char* meshStatsFile = MESH_STAT_FILE;
   char genericFilePath[BUFSIZ];
-  char* nodesFile = NODES_RAW_FILE;
+  char* meshStatsFile;
+  char* nodesFile;
+  char postfix[64] = "_triangles_raw.txt";
+  char edgepostfix[64] = "_edges_raw.txt";
 
+  meshStatsFile = MESH_STAT_FILE;
+  nodesFile = NODES_RAW_FILE;
   err = 0;
   NS = xnum * ynum * znum;
   NSP = xnum * ynum;
@@ -231,10 +233,13 @@ int main(int argc, char **argv)
   char* dxFile;
   int xnum, ynum, znum;
   int err;
-  char* edgeTableFile = EDGETABLE_2D_FILE;
-  char* neighspinTableFile = NEIGHSPIN_TABLE_FILE;
-
-  char* outputDir = ".";
+  char* edgeTableFile;
+  char* neighspinTableFile;
+  char* outputDir;
+  
+  edgeTableFile = EDGETABLE_2D_FILE;
+  neighspinTableFile = NEIGHSPIN_TABLE_FILE;
+  outputDir = ".";
 
   err = 0;
   dxFile = (char*)malloc( BUFSIZ * sizeof(char));
