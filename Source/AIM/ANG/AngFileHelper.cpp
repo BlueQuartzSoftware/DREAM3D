@@ -36,13 +36,14 @@ void AngFileHelper::loadData(Voxel voxels[],
   const int badgrain = -1;
   const double badeuler = 12.566370010375977;
   size_t index = 0;
-  for (size_t k = m_ZIndexStart; k < m_ZIndexEnd; k++)
+  int nSlices = m_ZIndexEnd - m_ZIndexStart;
+  for (size_t k = 0; k < nSlices; k++)
   {
     if (m_Cancel == true) { break; }
     {
       AngFileReader::Pointer reader = AngFileReader::New();
       //int slice = m_ZIndexStart + k;
-      std::string angFName = m_DirectoryPattern->generateFullPathAngFileName(k);
+      std::string angFName = m_DirectoryPattern->generateFullPathAngFileName(k + m_ZIndexStart);
       std::cout << "Reading ANG File '" << angFName << "'" << std::endl;
 
       int err = reader->readFile(angFName);
@@ -75,7 +76,7 @@ void AngFileHelper::loadData(Voxel voxels[],
            // >> junk2  // Phase Data
            // >> junk3
            // >> junk4;
-            voxels[index].zc = (k-m_ZIndexStart) * resz;
+            voxels[index].zc = k * resz;
             voxels[index].alreadychecked = zero;
             voxels[index].grainname = badgrain;
             if (voxels[index].euler1 == badeuler
