@@ -24,8 +24,6 @@ SET (CMAKE_ARCHIVE_OUTPUT_DIRECTORY
   "Single Directory for all static libraries."
   )
 
-add_definitions(-DAIM_USE_QT)
-
 # Set the GUI type for different platforms
 SET(GUI_TYPE )
 
@@ -34,6 +32,7 @@ IF(WIN32)
  SET(GUI_TYPE WIN32)
 ENDIF(WIN32)
 
+add_definitions(-DAIM_USE_QT -DSVG_3D_LIBRARY)
 
 # List the source files here
 SET (Representation_SRCS
@@ -65,41 +64,6 @@ set (AIM_Threads_HDRS
 IDE_SOURCE_PROPERTIES("Source/AIM/Threads" "${AIM_Threads_HDRS}" "${AIM_Threads_SRCS}")
 
 
-SET (COMMON_SRCS
-    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/MicroGen3D.cpp
-    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Grain.cpp
-    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Voxel.cpp
-    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Bin.cpp
-    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Orient.cpp   
-    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/AIMRandomNG.cpp
-    )
-
-SET (COMMON_HDRS
-    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/MicroGen3D.h
-    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Grain.h
-    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Voxel.h
-    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Bin.h
-    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Orient.h
-    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/AIMRandomNG.h
-    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/FeiConstants.h
-    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Constants.h
-)
-IDE_SOURCE_PROPERTIES( "Source/AIM/Common" "${COMMON_HDRS}" "${COMMON_SRCS}")
-
-
-set (ANG_SRCS
-    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/ANG/AngDirectoryPatterns.cpp
-    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/ANG/AngFileReader.cpp
-    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/ANG/AngFileHelper.cpp
- )
- 
-set (ANG_HDRS
-    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/ANG/AngDirectoryPatterns.h
-    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/ANG/AngFileReader.h
-    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/ANG/AngFileHelper.h
-)
-IDE_SOURCE_PROPERTIES( "Source/AIM/ANG" "${ANG_HDRS}" "${ANG_SRCS}")
-
 SET (Reconstruction_SRCS
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Reconstruction/Reconstruction.cpp
 )
@@ -109,19 +73,15 @@ SET (Reconstruction_HDRS
 IDE_SOURCE_PROPERTIES( "Source/AIM/Reconstruction" "${Reconstruction_HDRS}" "${Reconstruction_SRCS}")
 
 SET (GrainGenerator_SRCS
+    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/GrainGenerator/SVG-3D.cpp
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/GrainGenerator/GrainGenerator.cpp
 )
 SET (GrainGenerator_HDRS
    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/GrainGenerator/GrainGenerator.h
-    )
+   ${AIMRepresentation_SOURCE_DIR}/Source/AIM/GrainGenerator/SVG-3D.h
+)
 IDE_SOURCE_PROPERTIES( "Source/AIM/GrainGenerator" "${GrainGenerator_HDRS}" "${GrainGenerator_SRCS}")
-
-set_source_files_properties(${AIMRepresentation_SOURCE_DIR}/Source/AIM/Reconstruction/Reconstruction.h
-                            ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Reconstruction/Reconstruction.cpp
-                            ${AIMRepresentation_SOURCE_DIR}/Source/AIM/GrainGenerator/GrainGenerator.h
-                            ${AIMRepresentation_SOURCE_DIR}/Source/AIM/GrainGenerator/GrainGenerator.h
-                    PROPERTIES  DEFINITIONS "-DAIM_USE_QT" )
-
+                            
 SET( Representation_MOC_HDRS
     ${Representation_SOURCE_DIR}/RepresentationUI.h
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Qt/AIMAboutBox.h
@@ -160,10 +120,6 @@ SET (Representation_PROJECT_SRCS
     ${AIM_COMMON_QT_SRCS}
     ${AIM_Threads_SRCS}
     ${AIM_Threads_HDRS}
-    ${COMMON_SRCS}
-    ${COMMON_HDRS}
-    ${ANG_SRCS}
-    ${ANG_HDRS}
     ${Reconstruction_SRCS}
     ${Reconstruction_HDRS}
     ${GrainGenerator_SRCS}
@@ -199,7 +155,8 @@ IDE_SOURCE_PROPERTIES ("ConfiguredFiles" "${AIMRepresentation_BINARY_DIR}/AIM/Co
 # ---------- Build the Viewer Application  ----------------------
 ADD_EXECUTABLE( ${PROJECT_NAME} ${GUI_TYPE} ${Representation_PROJECT_SRCS} )
 TARGET_LINK_LIBRARIES( ${PROJECT_NAME}
-                        MXA 
+                        MXA
+                        AIMCommon
                         ${QT_LIBRARIES}  )
 
 InstallationSupport(${PROJECT_NAME} ${EXE_DEBUG_EXTENSION} ${AIMRepresentation_BINARY_DIR})

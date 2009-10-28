@@ -1,22 +1,388 @@
-#include "stdafx.h"
+
+
+#include <time.h>
+#include <stdlib.h>
+
 
 #include <string>
 #include <iostream>
 #include <cmath>
 #include <fstream>
 #include <list>
-#include <time.h>
-#include <stdlib.h>
-#include "misorientation.h"
-#include "randomc.h"
-#include "mother.cpp"
-#include "gamma.cpp"
 #include <vector>
 #include <algorithm>
 #include <numeric>
 
+
+#include <AIM/Common/AIMRandomNG.h>
+
+#ifdef SVG_3D_LIBRARY
+#include <MXA/Utilities/MXAFileSystemPath.h>
+#include <AIM/Common/Constants.h>
+
+#define CREATE_INPUT_FILENAME(f, n)\
+    std::string f = inDir + MXAFileSystemPath::Separator + n;\
+    f = MXAFileSystemPath::toNativeSeparators(f);\
+    if (MXAFileSystemPath::exists(f) == false) { return -1; }
+
+#define CREATE_OUTPUT_FILENAME(f, n)\
+    std::string f = outDir + MXAFileSystemPath::Separator + n;\
+    f = MXAFileSystemPath::toNativeSeparators(f);
+
+#endif
+
 using namespace std;
 
+/********************************** Start of Misorientation.h *************************/
+
+void computeMOg(double g1ea1,double g1ea2,double g1ea3,double gret[3][3],int cubicSymOp)
+{
+  double o[3][3];
+
+  if (cubicSymOp == 0)
+  {
+    o[0][0] = 1.0; o[0][1] = 0.0; o[0][2] = 0.0;
+    o[1][0] = 0.0; o[1][1] = 1.0; o[1][2] = 0.0;
+    o[2][0] = 0.0; o[2][1] = 0.0; o[2][2] = 1.0;
+  }
+  else if (cubicSymOp == 1)
+  {
+    o[0][0] = 1.0; o[0][1] = 0.0; o[0][2] =  0.0;
+    o[1][0] = 0.0; o[1][1] = 0.0; o[1][2] = -1.0;
+    o[2][0] = 0.0; o[2][1] = 1.0; o[2][2] =  0.0;
+  }
+  else if (cubicSymOp == 2)
+  {
+    o[0][0] = 1.0; o[0][1] =  0.0; o[0][2] =  0.0;
+    o[1][0] = 0.0; o[1][1] = -1.0; o[1][2] =  0.0;
+    o[2][0] = 0.0; o[2][1] =  0.0; o[2][2] = -1.0;
+  }
+  else if (cubicSymOp == 3)
+  {
+    o[0][0] = 1.0; o[0][1] =  0.0; o[0][2] = 0.0;
+    o[1][0] = 0.0; o[1][1] =  0.0; o[1][2] = 1.0;
+    o[2][0] = 0.0; o[2][1] = -1.0; o[2][2] = 0.0;
+  }
+  else if (cubicSymOp == 4)
+  {
+    o[0][0] = 0.0; o[0][1] = 0.0; o[0][2] = -1.0;
+    o[1][0] = 0.0; o[1][1] = 1.0; o[1][2] =  0.0;
+    o[2][0] = 1.0; o[2][1] = 0.0; o[2][2] =  0.0;
+  }
+  else if (cubicSymOp == 5)
+  {
+    o[0][0] =  0.0; o[0][1] = 0.0; o[0][2] = 1.0;
+    o[1][0] =  0.0; o[1][1] = 1.0; o[1][2] = 0.0;
+    o[2][0] = -1.0; o[2][1] = 0.0; o[2][2] = 0.0;
+  }
+  else if (cubicSymOp == 6)
+  {
+    o[0][0] = -1.0; o[0][1] = 0.0; o[0][2] =  0.0;
+    o[1][0] =  0.0; o[1][1] = 1.0; o[1][2] =  0.0;
+    o[2][0] =  0.0; o[2][1] = 0.0; o[2][2] = -1.0;
+  }
+  else if (cubicSymOp == 7)
+  {
+    o[0][0] = -1.0; o[0][1] =  0.0; o[0][2] = 0.0;
+    o[1][0] =  0.0; o[1][1] = -1.0; o[1][2] = 0.0;
+    o[2][0] =  0.0; o[2][1] =  0.0; o[2][2] = 1.0;
+  }
+  else if (cubicSymOp == 8)
+  {
+    o[0][0] =  0.0; o[0][1] = 1.0; o[0][2] = 0.0;
+    o[1][0] = -1.0; o[1][1] = 0.0; o[1][2] = 0.0;
+    o[2][0] =  0.0; o[2][1] = 0.0; o[2][2] = 1.0;
+  }
+  else if (cubicSymOp == 9)
+  {
+    o[0][0] = 0.0; o[0][1] = -1.0; o[0][2] = 0.0;
+    o[1][0] = 1.0; o[1][1] =  0.0; o[1][2] = 0.0;
+    o[2][0] = 0.0; o[2][1] =  0.0; o[2][2] = 1.0;
+  }
+  else if (cubicSymOp == 10)
+  {
+    o[0][0] =  0.0; o[0][1] = -1.0; o[0][2] = 0.0;
+    o[1][0] =  0.0; o[1][1] =  0.0; o[1][2] = 1.0;
+    o[2][0] = -1.0; o[2][1] =  0.0; o[2][2] = 0.0;
+  }
+  else if (cubicSymOp == 11)
+  {
+    o[0][0] =  0.0; o[0][1] =  0.0; o[0][2] = 1.0;
+    o[1][0] = -1.0; o[1][1] =  0.0; o[1][2] = 0.0;
+    o[2][0] =  0.0; o[2][1] = -1.0; o[2][2] = 0.0;
+  }
+  else if (cubicSymOp == 12)
+  {
+    o[0][0] = 0.0; o[0][1] = -1.0; o[0][2] =  0.0;
+    o[1][0] = 0.0; o[1][1] =  0.0; o[1][2] = -1.0;
+    o[2][0] = 1.0; o[2][1] =  0.0; o[2][2] =  0.0;
+  }
+  else if (cubicSymOp == 13)
+  {
+    o[0][0] = 0.0; o[0][1] =  0.0; o[0][2] = -1.0;
+    o[1][0] = 1.0; o[1][1] =  0.0; o[1][2] =  0.0;
+    o[2][0] = 0.0; o[2][1] = -1.0; o[2][2] =  0.0;
+  }
+  else if (cubicSymOp == 14)
+  {
+    o[0][0] =  0.0; o[0][1] = 1.0; o[0][2] =  0.0;
+    o[1][0] =  0.0; o[1][1] = 0.0; o[1][2] = -1.0;
+    o[2][0] = -1.0; o[2][1] = 0.0; o[2][2] =  0.0;
+  }
+  else if (cubicSymOp == 15)
+  {
+    o[0][0] =  0.0; o[0][1] = 0.0; o[0][2] = -1.0;
+    o[1][0] = -1.0; o[1][1] = 0.0; o[1][2] =  0.0;
+    o[2][0] =  0.0; o[2][1] = 1.0; o[2][2] =  0.0;
+  }
+  else if (cubicSymOp == 16)
+  {
+    o[0][0] = 0.0; o[0][1] = 1.0; o[0][2] = 0.0;
+    o[1][0] = 0.0; o[1][1] = 0.0; o[1][2] = 1.0;
+    o[2][0] = 1.0; o[2][1] = 0.0; o[2][2] = 0.0;
+  }
+  else if (cubicSymOp == 17)
+  {
+    o[0][0] = 0.0; o[0][1] = 0.0; o[0][2] = 1.0;
+    o[1][0] = 1.0; o[1][1] = 0.0; o[1][2] = 0.0;
+    o[2][0] = 0.0; o[2][1] = 1.0; o[2][2] = 0.0;
+  }
+  else if (cubicSymOp == 18)
+  {
+    o[0][0] = 0.0; o[0][1] = 1.0; o[0][2] =  0.0;
+    o[1][0] = 1.0; o[1][1] = 0.0; o[1][2] =  0.0;
+    o[2][0] = 0.0; o[2][1] = 0.0; o[2][2] = -1.0;
+  }
+  else if (cubicSymOp == 19)
+  {
+    o[0][0] = -1.0; o[0][1] = 0.0; o[0][2] = 0.0;
+    o[1][0] =  0.0; o[1][1] = 0.0; o[1][2] = 1.0;
+    o[2][0] =  0.0; o[2][1] = 1.0; o[2][2] = 0.0;
+  }
+  else if (cubicSymOp == 20)
+  {
+    o[0][0] = 0.0; o[0][1] =  0.0; o[0][2] = 1.0;
+    o[1][0] = 0.0; o[1][1] = -1.0; o[1][2] = 0.0;
+    o[2][0] = 1.0; o[2][1] =  0.0; o[2][2] = 0.0;
+  }
+  else if (cubicSymOp == 21)
+  {
+    o[0][0] = -1.0; o[0][1] =  0.0; o[0][2] =  0.0;
+    o[1][0] =  0.0; o[1][1] =  0.0; o[1][2] = -1.0;
+    o[2][0] =  0.0; o[2][1] = -1.0; o[2][2] =  0.0;
+  }
+  else if (cubicSymOp == 22)
+  {
+    o[0][0] =  0.0; o[0][1] =  0.0; o[0][2] = -1.0;
+    o[1][0] =  0.0; o[1][1] = -1.0; o[1][2] =  0.0;
+    o[2][0] = -1.0; o[2][1] =  0.0; o[2][2] =  0.0;
+  }
+  else if (cubicSymOp == 23)
+  {
+    o[0][0] =  0.0; o[0][1] = -1.0; o[0][2] =  0.0;
+    o[1][0] = -1.0; o[1][1] =  0.0; o[1][2] =  0.0;
+    o[2][0] =  0.0; o[2][1] =  0.0; o[2][2] = -1.0;
+  }
+
+  double ga[3][3];
+  ga[0][0] = cos(g1ea1)*cos(g1ea3)-sin(g1ea1)*sin(g1ea3)*cos(g1ea2);
+  ga[0][1] = sin(g1ea1)*cos(g1ea3)+cos(g1ea1)*sin(g1ea3)*cos(g1ea2);
+  ga[0][2] = sin(g1ea3)*sin(g1ea2);
+
+  ga[1][0] = -cos(g1ea1)*sin(g1ea3)-sin(g1ea1)*cos(g1ea3)*cos(g1ea2);
+  ga[1][1] = -sin(g1ea1)*sin(g1ea3)+cos(g1ea1)*cos(g1ea3)*cos(g1ea2);
+  ga[1][2] =  cos(g1ea3)*sin(g1ea2);
+
+  ga[2][0] =  sin(g1ea1)*sin(g1ea2);
+  ga[2][1] = -cos(g1ea1)*sin(g1ea2);
+  ga[2][2] =  cos(g1ea2);
+
+  gret[0][0] = o[0][0]*ga[0][0] + o[0][1]*ga[1][0] + o[0][2]*ga[2][0];
+  gret[0][1] = o[0][0]*ga[0][1] + o[0][1]*ga[1][1] + o[0][2]*ga[2][1];
+  gret[0][2] = o[0][0]*ga[0][2] + o[0][1]*ga[1][2] + o[0][2]*ga[2][2];
+
+  gret[1][0] = o[1][0]*ga[0][0] + o[1][1]*ga[1][0] + o[1][2]*ga[2][0];
+  gret[1][1] = o[1][0]*ga[0][1] + o[1][1]*ga[1][1] + o[1][2]*ga[2][1];
+  gret[1][2] = o[1][0]*ga[0][2] + o[1][1]*ga[1][2] + o[1][2]*ga[2][2];
+
+  gret[2][0] = o[2][0]*ga[0][0] + o[2][1]*ga[1][0] + o[2][2]*ga[2][0];
+  gret[2][1] = o[2][0]*ga[0][1] + o[2][1]*ga[1][1] + o[2][2]*ga[2][1];
+  gret[2][2] = o[2][0]*ga[0][2] + o[2][1]*ga[1][2] + o[2][2]*ga[2][2];
+}
+
+void computeMOHelperHCP(double g1ea1,double g1ea2,double g1ea3,double gret[3][3],int HexSymOp)
+{
+  double o[3][3];
+  double a=sqrt(double(3))/2;
+  if (HexSymOp == 0)
+  {
+    o[0][0] = 1.0; o[0][1] = 0.0; o[0][2] = 0.0;
+    o[1][0] = 0.0; o[1][1] = 1.0; o[1][2] = 0.0;
+    o[2][0] = 0.0; o[2][1] = 0.0; o[2][2] = 1.0;
+  }
+  else if (HexSymOp == 1)
+  {
+    o[0][0] = -0.5; o[0][1] = a; o[0][2] =  0.0;
+    o[1][0] = -a; o[1][1] = -0.5; o[1][2] = 0.0;
+    o[2][0] = 0.0; o[2][1] = 0.0; o[2][2] = 1.0;
+  }
+  else if (HexSymOp == 2)
+  {
+    o[0][0] = -0.5; o[0][1] =  -a; o[0][2] =  0.0;
+    o[1][0] = a; o[1][1] = -0.5; o[1][2] =  0.0;
+    o[2][0] = 0.0; o[2][1] =  0.0; o[2][2] = 1.0;
+  }
+  else if (HexSymOp == 3)
+  {
+    o[0][0] = 0.5; o[0][1] =  a; o[0][2] = 0.0;
+    o[1][0] = -a; o[1][1] =  0.5; o[1][2] = 0.0;
+    o[2][0] = 0.0; o[2][1] = 0.0; o[2][2] = 1.0;
+  }
+  else if (HexSymOp == 4)
+  {
+    o[0][0] = -1.0; o[0][1] = 0.0; o[0][2] = 0.0;
+    o[1][0] = 0.0; o[1][1] = -1.0; o[1][2] =  0.0;
+    o[2][0] = 0.0; o[2][1] = 0.0; o[2][2] =  1.0;
+  }
+  else if (HexSymOp == 5)
+  {
+    o[0][0] =  0.5; o[0][1] = -a; o[0][2] = 0.0;
+    o[1][0] =  a; o[1][1] = 0.5; o[1][2] = 0.0;
+    o[2][0] = 0.0; o[2][1] = 0.0; o[2][2] = 1.0;
+  }
+  else if (HexSymOp == 6)
+  {
+    o[0][0] = -0.5; o[0][1] = -a; o[0][2] =  0.0;
+    o[1][0] =  -a; o[1][1] = 0.5; o[1][2] =  0.0;
+    o[2][0] =  0.0; o[2][1] = 0.0; o[2][2] = -1.0;
+  }
+  else if (HexSymOp == 7)
+  {
+    o[0][0] = 1.0; o[0][1] =  0.0; o[0][2] = 0.0;
+    o[1][0] =  0.0; o[1][1] = -1.0; o[1][2] = 0.0;
+    o[2][0] =  0.0; o[2][1] =  0.0; o[2][2] = -1.0;
+  }
+  else if (HexSymOp == 8)
+  {
+    o[0][0] =  -0.5; o[0][1] = a; o[0][2] = 0.0;
+    o[1][0] = a; o[1][1] = 0.5; o[1][2] = 0.0;
+    o[2][0] =  0.0; o[2][1] = 0.0; o[2][2] = -1.0;
+  }
+  else if (HexSymOp == 9)
+  {
+    o[0][0] = 0.5; o[0][1] = a; o[0][2] = 0.0;
+    o[1][0] = a; o[1][1] =  -0.5; o[1][2] = 0.0;
+    o[2][0] = 0.0; o[2][1] =  0.0; o[2][2] = -1.0;
+  }
+  else if (HexSymOp == 10)
+  {
+    o[0][0] =  -1.0; o[0][1] = 0.0; o[0][2] = 0.0;
+    o[1][0] =  0.0; o[1][1] =  1.0; o[1][2] = 0.0;
+    o[2][0] = 0.0; o[2][1] =  0.0; o[2][2] = -1.0;
+  }
+  else
+  {
+    o[0][0] =  0.5; o[0][1] =  -a; o[0][2] = 0.0;
+    o[1][0] = -a; o[1][1] =  -0.5; o[1][2] = 0.0;
+    o[2][0] =  0.0; o[2][1] = 0.0; o[2][2] = -1.0;
+  }
+
+  double ga[3][3];
+  ga[0][0] = cos(g1ea1)*cos(g1ea3)-sin(g1ea1)*sin(g1ea3)*cos(g1ea2);
+  ga[0][1] = sin(g1ea1)*cos(g1ea3)+cos(g1ea1)*sin(g1ea3)*cos(g1ea2);
+  ga[0][2] = sin(g1ea3)*sin(g1ea2);
+
+  ga[1][0] = -cos(g1ea1)*sin(g1ea3)-sin(g1ea1)*cos(g1ea3)*cos(g1ea2);
+  ga[1][1] = -sin(g1ea1)*sin(g1ea3)+cos(g1ea1)*cos(g1ea3)*cos(g1ea2);
+  ga[1][2] =  cos(g1ea3)*sin(g1ea2);
+
+  ga[2][0] =  sin(g1ea1)*sin(g1ea2);
+  ga[2][1] = -cos(g1ea1)*sin(g1ea2);
+  ga[2][2] =  cos(g1ea2);
+
+  gret[0][0] = o[0][0]*ga[0][0] + o[0][1]*ga[1][0] + o[0][2]*ga[2][0];
+  gret[0][1] = o[0][0]*ga[0][1] + o[0][1]*ga[1][1] + o[0][2]*ga[2][1];
+  gret[0][2] = o[0][0]*ga[0][2] + o[0][1]*ga[1][2] + o[0][2]*ga[2][2];
+
+  gret[1][0] = o[1][0]*ga[0][0] + o[1][1]*ga[1][0] + o[1][2]*ga[2][0];
+  gret[1][1] = o[1][0]*ga[0][1] + o[1][1]*ga[1][1] + o[1][2]*ga[2][1];
+  gret[1][2] = o[1][0]*ga[0][2] + o[1][1]*ga[1][2] + o[1][2]*ga[2][2];
+
+  gret[2][0] = o[2][0]*ga[0][0] + o[2][1]*ga[1][0] + o[2][2]*ga[2][0];
+  gret[2][1] = o[2][0]*ga[0][1] + o[2][1]*ga[1][1] + o[2][2]*ga[2][1];
+  gret[2][2] = o[2][0]*ga[0][2] + o[2][1]*ga[1][2] + o[2][2]*ga[2][2];
+
+}
+
+double computemisorientation(double crystruct,double g1ea1,double g1ea2,double g1ea3,double g2ea1,double g2ea2,double g2ea3,double &n1,double &n2,double &n3)
+{
+  double wmin=9999999,na,nb,nc;
+  for (int i = 0; i < (crystruct*12); i++)
+  {
+    double gb[3][3];
+    if(crystruct == 2)
+    {
+      computeMOg(g2ea1,g2ea2,g2ea3,gb,i);
+    }
+    if(crystruct == 1)
+    {
+      computeMOHelperHCP(g2ea1,g2ea2,g2ea3,gb,i);
+    }
+    for (int j = 0; j < (crystruct*12); j++)
+    {
+      double ga[3][3];
+      if(crystruct == 2)
+      {
+        computeMOg(g1ea1,g1ea2,g1ea3,ga,j);
+      }
+      if(crystruct == 1)
+      {
+        computeMOHelperHCP(g1ea1,g1ea2,g1ea3,ga,j);
+      }
+      double dg[3][3];
+      dg[0][0] = gb[0][0]*ga[0][0] + gb[0][1]*ga[0][1] + gb[0][2]*ga[0][2];
+      dg[0][1] = gb[0][0]*ga[1][0] + gb[0][1]*ga[1][1] + gb[0][2]*ga[1][2];
+      dg[0][2] = gb[0][0]*ga[2][0] + gb[0][1]*ga[2][1] + gb[0][2]*ga[2][2];
+      dg[1][0] = gb[1][0]*ga[0][0] + gb[1][1]*ga[0][1] + gb[1][2]*ga[0][2];
+      dg[1][1] = gb[1][0]*ga[1][0] + gb[1][1]*ga[1][1] + gb[1][2]*ga[1][2];
+      dg[1][2] = gb[1][0]*ga[2][0] + gb[1][1]*ga[2][1] + gb[1][2]*ga[2][2];
+      dg[2][0] = gb[2][0]*ga[0][0] + gb[2][1]*ga[0][1] + gb[2][2]*ga[0][2];
+      dg[2][1] = gb[2][0]*ga[1][0] + gb[2][1]*ga[1][1] + gb[2][2]*ga[1][2];
+      dg[2][2] = gb[2][0]*ga[2][0] + gb[2][1]*ga[2][1] + gb[2][2]*ga[2][2];
+      double w=acos((dg[0][0]+dg[1][1]+dg[2][2]-1)/2);
+      double den=sqrt((dg[1][2]-dg[2][1])*(dg[1][2]-dg[2][1])+(dg[2][0]-dg[0][2])*(dg[2][0]-dg[0][2])+(dg[0][1]-dg[1][0])*(dg[0][1]-dg[1][0]));
+      if(den == 0)
+      {
+        na=0;
+        nb=0;
+        nc=0;
+      }
+      if(den != 0)
+      {
+        na=(dg[1][2]-dg[2][1])/den;
+        nb=(dg[2][0]-dg[0][2])/den;
+        nc=(dg[0][1]-dg[1][0])/den;
+      }
+      double nval=1/sqrt(3.0);
+      if (wmin>fabs(w))
+      {
+        wmin=fabs(w);
+        n1=na;
+        n2=nb;
+        n3=nc;
+      }
+    }
+  }
+  return wmin;
+}
+
+double GetMisorientationOnly(int crystruct,double g1ea1,double g1ea2,double g1ea3,double g2ea1,double g2ea2,double g2ea3,double &n1,double &n2,double &n3)
+{
+  double wret=computemisorientation(crystruct,g1ea1,g1ea2,g1ea3,g2ea1,g2ea2,g2ea3,n1,n2,n3);
+  return wret;
+}
+
+/********************************** End of Misorientation.h *************************/
 // class that holds seed coordinates loaded from data file
 struct grains
 {
@@ -144,7 +510,8 @@ struct packedgrains
 
 
 int32 seeder = time(0);
-TRandomMotherOfAll rg(seeder);
+AIMRandomNG rg;
+
 grains *tempgrain;
 grains *grain;
 int *gsizes;
@@ -164,8 +531,8 @@ bins *actualmisobin;
 bins *simmisobin;
 bins *actualmicrobin;
 bins *simmicrobin;
-vector<vector<int>> voxelvector;
-vector<vector<int>> neighborvector;
+std::vector< std::vector<int> > voxelvector;
+std::vector< std::vector<int> > neighborvector;
 double **svn;
 double **svs;
 double **nsdist;
@@ -236,9 +603,45 @@ void move_grains2(int numgrains);
 void freeze_grains(int numgrains);
 void write_volume(string outname5);
 
-int main()
-{
 
+
+#ifdef SVG_3D_LIBRARY
+int SVG_3D_Main(const std::string &inDir, const std::string &outDir,
+                int ng, int sc, double rx, double ry, double rz,
+                double oallowed, int oassignment, int crxst)
+{
+  numgrains = ng;
+  shapeclass = sc;
+  resx = rx;
+  resy = ry;
+  resz = rz;
+  overlapallowed = oallowed;
+  overlapassignment = oassignment;
+  crystruct = crxst;
+
+  CREATE_INPUT_FILENAME(readname1, AIM::Representation::VolBinFile)
+  CREATE_INPUT_FILENAME(readname2, AIM::Representation::BOverABinsFile)
+  CREATE_INPUT_FILENAME(readname3, AIM::Representation::COverABinsFile)
+  CREATE_INPUT_FILENAME(readname4, AIM::Representation::COverBBinsFile)
+  CREATE_INPUT_FILENAME(readname5, AIM::Representation::SeNBinsFile)
+  CREATE_INPUT_FILENAME(readname6, AIM::Representation::AxisOrientationsFile)
+  CREATE_INPUT_FILENAME(readname7, AIM::Representation::EulerAnglesFile)
+  CREATE_INPUT_FILENAME(readname8, AIM::Representation::SVNFile)
+  CREATE_INPUT_FILENAME(readname9, AIM::Representation::SVSFile)
+  CREATE_INPUT_FILENAME(readname10, AIM::Representation::MisorientationBinsFile)
+  CREATE_INPUT_FILENAME(readname11, AIM::Representation::MicroBinsFile)
+
+  CREATE_OUTPUT_FILENAME(writename1, AIM::Representation::CubeFile)
+  CREATE_OUTPUT_FILENAME(writename2, AIM::Representation::AnalysisFile)
+  CREATE_OUTPUT_FILENAME(writename3, AIM::Representation::BoundaryCentersFile)
+  CREATE_OUTPUT_FILENAME(writename4, AIM::Representation::GrainsFile)
+  CREATE_OUTPUT_FILENAME(writename5, AIM::Representation::VolumeFile)
+
+#else
+int main(int argc, char **argv)
+
+{
+  rg.RandomInit(seeder);
   string readname1;
   string readname2;
   string readname3;
@@ -289,6 +692,9 @@ int main()
   cin >> overlapassignment;
   cout << "Do you have a HCP (1) or FCC (2) material:" << endl;
   cin >> crystruct;
+#endif
+
+
   resx1 = 4*resx;
   resy1 = 4*resy;
   resz1 = 4*resz;
