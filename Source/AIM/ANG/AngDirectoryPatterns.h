@@ -1,18 +1,13 @@
-/* <distribution-statement>
- * *****************************************************************************
- * Distribution authorized to DOD components and DOD contractors only;         *
- * Administrative or Operational Use;                                          *
- * February 2009.                                                              *
- * Other requests for this document shall be referred to                       *
- * U.S. Air Force Research Laboratory                                          *
- * 2230 Tenth St., Ste. 1                                                      *
- * Wright-Patterson AFB, OH 45433-7817                                         *
- *                                                                             *
- * Destroy by contents or reconstruction of the document.                      *
- *                                                                             *
- * This code was written under the U.S. Air Force contrct F33615-03-C-5220     *
- * *****************************************************************************
- * </distribution-statement> */
+///////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2009, Michael A. Jackson. BlueQuartz Software
+//  Copyright (c) 2009, Michael Groeber, US Air Force Research Laboratory
+//  All rights reserved.
+//  BSD License: http://www.opensource.org/licenses/bsd-license.html
+//
+// This code was partly written under US Air Force Contract FA8650-07-D-5800
+//
+///////////////////////////////////////////////////////////////////////////////
 
 #ifndef _ANG_FILE_DIRECTORY_PATTERN_H_
 #define _ANG_FILE_DIRECTORY_PATTERN_H_

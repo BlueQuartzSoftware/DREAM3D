@@ -1,4 +1,13 @@
-
+///////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2009, Michael A. Jackson. BlueQuartz Software
+//  Copyright (c) 2009, Michael Groeber, US Air Force Research Laboratory
+//  All rights reserved.
+//  BSD License: http://www.opensource.org/licenses/bsd-license.html
+//
+// This code was partly written under US Air Force Contract FA8650-07-D-5800
+//
+///////////////////////////////////////////////////////////////////////////////
 
 #include <time.h>
 #include <stdlib.h>
@@ -368,7 +377,7 @@ double computemisorientation(double crystruct,double g1ea1,double g1ea2,double g
         nb=(dg[2][0]-dg[0][2])/den;
         nc=(dg[0][1]-dg[1][0])/den;
       }
-      double nval=1/sqrt(3.0);
+   //   double nval=1/sqrt(3.0);
       if (wmin>fabs(w))
       {
         wmin=fabs(w);
@@ -1089,7 +1098,7 @@ void loadeulerData(string inname7, int numeulers)
 {
     ifstream inputFile;
     inputFile.open(inname7.c_str());
-	int count = 0;
+//	int count = 0;
 	double g1ea1;
 	double g1ea2;
 	double g1ea3;
@@ -1097,7 +1106,7 @@ void loadeulerData(string inname7, int numeulers)
 	double ea2;
 	double ea3;
 	int totalcount = 0;
-	int bnum=0;
+//	int bnum=0;
 	inputFile >> numeulers;
 	for (long iter = 0; iter < numeulers; iter++)
     {
@@ -1323,7 +1332,7 @@ void loadeulerData(string inname7, int numeulers)
 				int ea3bin = ea3/(3.1415926535897/36);
 				if(ea1 >= 0 && ea2 >= 0 && ea3 >= 0 && ea1 <= (3.1415926535897/2) && ea2 <= (3.1415926535897/2) && ea3 <= (3.1415926535897/2))
 				{
-					int curcount = eulercount[ea1bin][ea2bin][ea3bin];
+				//	int curcount = eulercount[ea1bin][ea2bin][ea3bin];
 					int bnum = (ea1bin*18*18)+(ea2bin*18)+ea3bin;
 					eulerbin[bnum].euler1 = ea1;
 					eulerbin[bnum].euler2 = ea2;
@@ -1344,7 +1353,7 @@ void generate_grains(int numgrains)
 	int curbin1 = 0;
 	int curbin2 = 0;
 	int curbin3 = 0;
-	int curbin4 = 0;
+	//int curbin4 = 0;
 	int curbin5 = 0;
 	double r1 = 1;
 	int bnum=0;
@@ -1495,7 +1504,7 @@ void generate_grains(int numgrains)
 void assign_eulers(int numgrains)
 {
 	int count = 0;
-	double grainsleft = numgrains-count;
+//	double grainsleft = numgrains-count;
 	double density = 0;
 	double synea1=0,synea2=0,synea3=0;
 	for(int j = 0; j < 18; j++)
@@ -1506,7 +1515,7 @@ void assign_eulers(int numgrains)
 			{
 				double num = (numgrains)*(double(eulercount[j][k][l]))/numeulers;
 				density = density + (eulercount[j][k][l]*eulercount[j][k][l]);
-				double adjust = double(numgrains)/double(numeulers);
+		//		double adjust = double(numgrains)/double(numeulers);
 				num = num;
 				int numint = num;
 				for(int m = 0; m < numint; m++)
@@ -1673,10 +1682,10 @@ void make_points(int numgrains)
 			alreadytriedlist.pop_front();
 		}
 		double volcur = grain[i].volume;
-		double aovera = grain[i].axisa;
+	//	double aovera = grain[i].axisa;
 		double bovera = grain[i].axisb;
 		double covera = grain[i].axisc;
-		double coverb = covera/bovera;
+	//	double coverb = covera/bovera;
 		double Nvalue = grain[i].Nvalue;
 		double beta1 = (gamma((1.0/Nvalue))*gamma((1/Nvalue)))/gamma((2/Nvalue));
 		double beta2 = (gamma((2.0/Nvalue))*gamma((1/Nvalue)))/gamma((3/Nvalue));
@@ -1992,13 +2001,13 @@ void make_points(int numgrains)
 						nsdist[n][bin] = nsdist[n][bin] - 1;
 					}
 				}
-				double randomsize = rg.Random();
-				double randomsize1 = randomsize;
+			    double randomsize = rg.Random();
+			//	double randomsize1 = randomsize;
 				double acceptable = badcount/insidecount;
-				if(insidecount == 0)
-				{
-					int stop = 0;
-				}
+//				if(insidecount == 0)
+//				{
+//					int stop = 0;
+//				}
 				int toomuch = 0;
 				if(overlapassignment == 2)
 				{
@@ -2223,7 +2232,7 @@ void make_points(int numgrains)
 void fill_gaps(int numgrains)
 {
 	int count = 1;
-	int dup = 0;
+	//int dup = 0;
 	int fixed = 0;
 	list<int> neighs;
 	list<int> remove;
@@ -2359,11 +2368,11 @@ void fill_gaps(int numgrains)
 void find_neighbors(int numgrains)
 {
 	int count = 0;
-	int dup = 0;
+//	int dup = 0;
 	int column = 0;
 	int row = 0;
 	int plane = 0;
-	int shell = 0;
+//	int shell = 0;
 	int onsurf = 0;
 	list<int> nlist;
 	list<int> nlist2;
@@ -2382,7 +2391,7 @@ void find_neighbors(int numgrains)
 			column = point%xpoints;
 			row = (point/xpoints)%ypoints;
 			plane = point/(xpoints*ypoints);
-			int first = gridfine[point].grainname;
+		//	int first = gridfine[point].grainname;
 			if(column == 0 || column == (xpoints-1) || row == 0 || row == (ypoints-1) || plane == 0 || plane == (zpoints-1)) onsurf = 1;
 			if(column > 0)
 			{
@@ -2461,7 +2470,7 @@ void find_neighbors(int numgrains)
 
 void find_centroids(int numgrains)
 {
-	int size = 0;
+//	int size = 0;
 	int count = 0;
 	int onedge = 0;
 	double sumx = 0;
@@ -2518,7 +2527,7 @@ void find_moments(int numgrains)
 	double sumyz = 0;
 	int xpoints = (sizex/resx);
 	int ypoints = (sizey/resy);
-	int zpoints = (sizez/resz);
+	//int zpoints = (sizez/resz);
 	for(int i = 0; i < numgrains; i++)
 	{
 		sumxx = 0;
@@ -2624,17 +2633,17 @@ void find_axis(int numgrains)
 			if((-g/(2*r)) > 1) r = (-g/2);
 			theta = acos(-g/(2*r));
 		}
-		if(theta < 0)
-		{
-			int stop = 0;
-		}
+//		if(theta < 0)
+//		{
+//			int stop = 0;
+//		}
 		double r1 = 2*pow(r,0.33333333333)*cos(theta/3)-(b/(3*a));
 		double r2 = -pow(r,0.33333333333)*(cos(theta/3)-(1.7320508*sin(theta/3)))-(b/(3*a));
 		double r3 = -pow(r,0.33333333333)*(cos(theta/3)+(1.7320508*sin(theta/3)))-(b/(3*a));
 		packedgrain[i].axis1 = r1;
 		packedgrain[i].axis2 = r2;
 		packedgrain[i].axis3 = r3;
-		double test = cos(theta/3);
+	//	double test = cos(theta/3);
 		count++;
 	}
 }
@@ -2787,7 +2796,7 @@ void rank_misobins(int numgrains)
 		float temp = 0;
 		simmisobin[j].binrank = temp;
 	}
-	int difflast = count;
+//	int difflast = count;
 	int curbin = 0;
 	while(check < nummisobins)
 	{
@@ -2919,7 +2928,7 @@ void rank_grains1(int numgrains)
 			}
 			misolist.pop_front();
 		}
-		float frozen = packedgrain[i].frozen;
+//		float frozen = packedgrain[i].frozen;
 		packedgrain[i].grainrank = rank;
 		count++;
 	}
@@ -3005,11 +3014,11 @@ void move_grains1(int numgrains)
 				swap = pickedlist.front();
 			}
 			pickedlist.pop_front();
-			int grainname = packedgrain[j].grainname;
+	//		int grainname = packedgrain[j].grainname;
 			float ea1 = packedgrain[swap].oeuler1;
 			float ea2 = packedgrain[swap].oeuler2;
 			float ea3 = packedgrain[swap].oeuler3;
-			int nnum = packedgrain[j].neighnum;
+	//		int nnum = packedgrain[j].neighnum;
 			packedgrain[j].euler1 = ea1;
 			packedgrain[j].euler2 = ea2;
 			packedgrain[j].euler3 = ea3;
@@ -3151,19 +3160,19 @@ void move_grains2(int numgrains)
 			}
 			int swap = nonelist.front();
 			nonelist.pop_front();
-			int grainname = packedgrain[j].grainname;
+		//	int grainname = packedgrain[j].grainname;
 			float ea1 = packedgrain[swap].oeuler1;
 			float ea2 = packedgrain[swap].oeuler2;
 			float ea3 = packedgrain[swap].oeuler3;
-			int nnum = packedgrain[j].neighnum;
+		//	int nnum = packedgrain[j].neighnum;
 			packedgrain[j].euler1 = ea1;
 			packedgrain[j].euler2 = ea2;
 			packedgrain[j].euler3 = ea3;
-			int sgrainname = packedgrain[swap].grainname;
+	//		int sgrainname = packedgrain[swap].grainname;
 			float sea1 = packedgrain[j].oeuler1;
 			float sea2 = packedgrain[j].oeuler2;
 			float sea3 = packedgrain[j].oeuler3;
-			int snnum = packedgrain[swap].neighnum;
+		//	int snnum = packedgrain[swap].neighnum;
 			packedgrain[swap].euler1 = sea1;
 			packedgrain[swap].euler2 = sea2;
 			packedgrain[swap].euler3 = sea3;
@@ -3181,7 +3190,7 @@ void move_grains2(int numgrains)
 
 void freeze_grains(int numgrains)
 {
-	int count = 0;
+ //int count = 0;
 	float froze = 0;
 	for(int i = 0; i < numgrains; i++)
 	{
@@ -3212,7 +3221,7 @@ void freeze_grains(int numgrains)
 void volume_stats(int numgrains, string outname2)
 {
 	double actualgrains = 0;
-	double misocount = 0;
+//	double misocount = 0;
 	double avgvol = 0;
 	double avglnvol = 0;
 	double avgneigh = 0;
@@ -3288,10 +3297,10 @@ void volume_stats(int numgrains, string outname2)
 			double bovera = b/a;
 			double covera = c/a;
 			double coverb = c/b;
-			if(bovera < 0)
-			{
-				int stop = 0;
-			}
+//			if(bovera < 0)
+//			{
+//				int stop = 0;
+//			}
 			int nnum = packedgrain[i].neighnum;
 			double lognnum = log(double(nnum));
 //			int surfarea = packedgrain[i].getsurfarea2();
@@ -3331,10 +3340,10 @@ void volume_stats(int numgrains, string outname2)
 				int neigh = neighborvector[i][j];
 				int neighvol = packedgrain[neigh].vol;
 				double neighvoxvol = neighvol*resx*resy*resz;
-				double neighlogvol = log(neighvoxvol);
+		//		double neighlogvol = log(neighvoxvol);
 				double neighrad3 = 0.75*(1/3.1415926535897)*neighvoxvol;
 				double neighdiam = 2*pow(neighrad3,0.333333333);
-				int neighdiamint = neighdiam;
+	//			int neighdiamint = neighdiam;
 				svs[diamint][0]++;
 				svs[diamint][1] = svs[diamint][1] + neighdiam;
 				avgdiam2 = avgdiam2 + neighdiam;
@@ -3514,7 +3523,7 @@ void volume_stats(int numgrains, string outname2)
 				int neigh = neighborvector[j][k];
 				int neighvol = packedgrain[neigh].vol;
 				double neighvoxvol = neighvol*resx*resy*resz;
-				double neighlogvol = log(neighvoxvol);
+		//		double neighlogvol = log(neighvoxvol);
 				double neighrad3 = 0.75*(1/3.1415926535897)*neighvoxvol;
 				double neighdiam = 2*pow(neighrad3,0.333333333);
 				int neighdiamint = neighdiam;
@@ -3598,25 +3607,25 @@ void volume_stats(int numgrains, string outname2)
 	sddiam2 = sddiam2/neighcount;
 //	sdschmid = sdschmid/actualgrains;
 //	sdem = sdem/actualgrains;
-	double volvar = sdvol;
-	double vollnvar = sdlnvol;
+//	double volvar = sdvol;
+//	double vollnvar = sdlnvol;
 	double neighvar = sdneigh;
-	double neighlnvar = sdlnneigh;
+//	double neighlnvar = sdlnneigh;
 	double boveravar = sdbovera;
 	double coveravar = sdcovera;
 	double coverbvar = sdcoverb;
 //	double surfareavar = sdsurfarea;
-	double diamvar = sddiam;
-	double logdiamvar = sdlogdiam;
+//	double diamvar = sddiam;
+//	double logdiamvar = sdlogdiam;
 	double diamvar2 = sddiam2;
 //	double schmidvar = sdschmid;
 //	double emvar = sdem;
-	double pbovera = avgbovera*(((avgbovera*(1-avgbovera))/boveravar)-1);
-	double qbovera = (1-avgbovera)*(((avgbovera*(1-avgbovera))/boveravar)-1);
-	double pcovera = avgcovera*(((avgcovera*(1-avgcovera))/coveravar)-1);
-	double qcovera = (1-avgcovera)*(((avgcovera*(1-avgcovera))/coveravar)-1);
-	double pcoverb = avgcoverb*(((avgcoverb*(1-avgcoverb))/coverbvar)-1);
-	double qcoverb = (1-avgcoverb)*(((avgcoverb*(1-avgcoverb))/coverbvar)-1);
+//	double pbovera = avgbovera*(((avgbovera*(1-avgbovera))/boveravar)-1);
+//	double qbovera = (1-avgbovera)*(((avgbovera*(1-avgbovera))/boveravar)-1);
+//	double pcovera = avgcovera*(((avgcovera*(1-avgcovera))/coveravar)-1);
+//	double qcovera = (1-avgcovera)*(((avgcovera*(1-avgcovera))/coveravar)-1);
+//	double pcoverb = avgcoverb*(((avgcoverb*(1-avgcoverb))/coverbvar)-1);
+//	double qcoverb = (1-avgcoverb)*(((avgcoverb*(1-avgcoverb))/coverbvar)-1);
 	sdvol = pow(sdvol,0.5);
 	sdlnvol = pow(sdlnvol,0.5);
 	sdneigh = pow(sdlnneigh,0.5);
@@ -3839,16 +3848,16 @@ void writeCube(string outname1, int numgrains)
 	{
 		if(i%20 == 0 && i > 0) outFile << endl;
 		int name = gridfine[i].grainname;
-		int column = (i%xpoints);
-		int row = ((i/xpoints)%ypoints);
-		int plane = (i/(xpoints*ypoints));
-		double xc = (column*resx)+(resx/2);
-		double yc = (row*resy)+(resy/2);
-		double zc = (plane*resz)+(resz/2);
-		int gnum = gridfine[i].grainname;
-		double r = packedgrain[gnum].red;
-		double g = packedgrain[gnum].green;
-		double b = packedgrain[gnum].blue;
+//		int column = (i%xpoints);
+//		int row = ((i/xpoints)%ypoints);
+//		int plane = (i/(xpoints*ypoints));
+//		double xc = (column*resx)+(resx/2);
+//		double yc = (row*resy)+(resy/2);
+//		double zc = (plane*resz)+(resz/2);
+//		int gnum = gridfine[i].grainname;
+//		double r = packedgrain[gnum].red;
+//		double g = packedgrain[gnum].green;
+//		double b = packedgrain[gnum].blue;
 		outFile << "   ";
 		if(name < 10000) outFile << " ";
 		if(name < 1000) outFile << " ";
@@ -3892,7 +3901,7 @@ void find_boundarycenters(string outname3, int numgrains)
 	double tempcount = 0;
 	int xpoints = (sizex/resx);
 	int ypoints = (sizey/resy);
-	int zpoints = (sizez/resz);
+//	int zpoints = (sizez/resz);
 	for(int a = 0; a < 100000; a++)
 	{
 		for(int b = 0; b < 5; b++)
