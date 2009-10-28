@@ -198,7 +198,7 @@ int main(int argc, char* argv[])
   std::vector<int> tid(ntri);
   std::vector<int> nodetype(nnod) ; //  added vi 09 to keep track of node type
 
-  //Read the nodes 
+  //Read the nodes
   std::cout << "reading nodes " << std::endl;
   for (int i = 0 ; i < nnod ; i++ )
     input1 >> id(nodes[i]) >> nodetype[i] >>nodes[i][0]>>nodes[i][1]>>nodes[i][2];
@@ -208,13 +208,13 @@ int main(int argc, char* argv[])
   //Read the triangles
   std::cout << "reading triangles: " << std::endl;
   for (int i=0; i<ntri; i++) {
-	char type[3];
+	//char type[3];
 	int nid[3];
-	int reg1, reg2;
+	//int reg1, reg2;
 	input2 >> tid[i] >> nid[0] >> nid[1] >> nid[2]
-	      >> junk >> junk >> junk 
+	      >> junk >> junk >> junk
 	       >> triangles[i].region1 >> triangles[i].region2 ;
-	
+
 	triangles[i](0) = &nodes[nid[0]];
 	triangles[i](1) = &nodes[nid[1]];
 	triangles[i](2) = &nodes[nid[2]];
@@ -235,12 +235,16 @@ int main(int argc, char* argv[])
   // Find the minimum and maximum dimension of the data
   double min[3] = {2.0,2.0,2.0};
   double max[3] = {0.0,0.0,0.0};
-	
-  for (int i=0; i<nodes.size(); i++){
-	for (int j=0; j<3; j++) {
-	  if( nodes[i][j] < min[j] ) min[j]= nodes[i][j];
-	  if( nodes[i][j] > max[j] ) max[j]= nodes[i][j];			
-	}
+
+  for (size_t i = 0; i < nodes.size(); i++)
+  {
+    for (size_t j = 0; j < 3; j++)
+    {
+      if (nodes[i][j] < min[j])
+        min[j] = nodes[i][j];
+      if (nodes[i][j] > max[j])
+        max[j] = nodes[i][j];
+    }
   }
   std::cout << "Model Dimensions: " << std::endl;
   for(int i=0; i<3; i++)
@@ -270,7 +274,7 @@ int main(int argc, char* argv[])
 
 
   //Variables for logging of quality progress
-  double Q_max, Q_sum, Q_ave, Q_max_ave; 
+  double Q_max, Q_sum, Q_ave, Q_max_ave;
   int hist_count = 10;
 
   std::vector<double> Q_max_hist(hist_count);
@@ -283,212 +287,228 @@ int main(int argc, char* argv[])
 
 
   // update loop
-  //  for (int updates=1; updates<=atoi(argv[2]); updates++) {
-  for ( int updates = 1 ; updates <= atoi(argv[4]) ; updates++ ) {
+  size_t updatesMax = atoi(argv[4]);
+  for (size_t updates = 1; updates <= updatesMax; ++updates)
+  {
     // changed arg index
-	std::cout << "Update loop: " << updates << std::endl;
+    std::cout << "Update loop: " << updates << std::endl;
 
-	// compute triangle contributions to K and F
-	int ntri = triangles.size();
-	Q_max = 0;
-	Q_sum = 0;
-	for (int t=0; t<ntri; t++) { // Loop through number of trianges
-	  triangle& rtri = triangles[t];
-	  Vector<double> n(3);
-	  n = rtri.normal();
-	  double A = rtri.area();
-	  double Q = rtri.circularity(A);
-	  Q_sum += Q;
-	  if(Q > Q_max) Q_max = Q;
-	  for (int n0=0; n0<3; n0++) {
-		int i = id(rtri[n0]);
-		for (int j=0; j<3; j++) {
-		  nodes[i][j] += small;
-		  double Anew = rtri.area();
-		  double Qnew = rtri.circularity(Anew);
-		  nodes[i][j] -= small;
-		  // if( (Q_ave < 3.0) && (Q_max_ave < 10) ){
-		  //		  A_scale = 4000.0;
-		  //	  Q_scale = 1000.0;
-		  // } else {
-		  // 	  A_scale = 1000;
-		  // 	  Q_scale = 500;
-		  // }
-		  //F[3*i+j] -= ((Anew-A)*6500+(Qnew-Q)*800)/small;
-		  //F[3*i+j] -= ((Anew-A)*1000+(Qnew-Q)*2500*A)/small;
-		  F[3*i+j] -= (A_scale*(Anew-A)+Q_scale*(Qnew-Q)*A)/small;
-		}
-		for (int n1=0; n1<3; n1++) {
-		  int h = id(rtri[n1]);
-		  for (int k=0; k<3; k++) 
-			for (int j=0; j<3; j++)
-			  K[3*h+k][3*i+j] += one12th*(1.0+delta(i,h))*n[j]*n[k]*A;
-		}
-	  }
-	}
+    // compute triangle contributions to K and F
+    int ntri = triangles.size();
+    Q_max = 0;
+    Q_sum = 0;
+    for (int t = 0; t < ntri; t++)
+    { // Loop through number of trianges
+      triangle& rtri = triangles[t];
+      Vector<double> n(3);
+      n = rtri.normal();
+      double A = rtri.area();
+      double Q = rtri.circularity(A);
+      Q_sum += Q;
+      if (Q > Q_max)
+        Q_max = Q;
+      for (int n0 = 0; n0 < 3; n0++)
+      {
+        int i = id(rtri[n0]);
+        for (int j = 0; j < 3; j++)
+        {
+          nodes[i][j] += small;
+          double Anew = rtri.area();
+          double Qnew = rtri.circularity(Anew);
+          nodes[i][j] -= small;
+          // if( (Q_ave < 3.0) && (Q_max_ave < 10) ){
+          //		  A_scale = 4000.0;
+          //	  Q_scale = 1000.0;
+          // } else {
+          // 	  A_scale = 1000;
+          // 	  Q_scale = 500;
+          // }
+          //F[3*i+j] -= ((Anew-A)*6500+(Qnew-Q)*800)/small;
+          //F[3*i+j] -= ((Anew-A)*1000+(Qnew-Q)*2500*A)/small;
+          F[3 * i + j] -= (A_scale * (Anew - A) + Q_scale * (Qnew - Q) * A) / small;
+        }
+        for (int n1 = 0; n1 < 3; n1++)
+        {
+          int h = id(rtri[n1]);
+          for (int k = 0; k < 3; k++)
+            for (int j = 0; j < 3; j++)
+              K[3 * h + k][3 * i + j] += one12th * (1.0 + delta(i, h)) * n[j] * n[k] * A;
+        }
+      }
+    }
 
-	// add epsilon to the diagonal
-	for (int r=0; r<nodes.size(); r++)
-	  for (int s=0; s<3; s++)
-		K[3*r+s][3*r+s] += epsilon;
+    // add epsilon to the diagonal
+    for (size_t r = 0; r < nodes.size(); r++)
+      for (int s = 0; s < 3; s++)
+        K[3 * r + s][3 * r + s] += epsilon;
 
-	// apply boundary conditions
-	// if node i, component j is constrained, do this...
-	// K[3*i+j][3*i+j] += large;
-	for (int r=0; r<nodes.size(); r++)
-	  for (int s=0; s<3; s++) {
-		if( fabs(nodes[r][s] - max[s]) < tolerance)  K[3*r+s][3*r+s] += large;
-		if( fabs(nodes[r][s] - min[s]) < tolerance)  K[3*r+s][3*r+s] += large;
-	  }
+    // apply boundary conditions
+    // if node i, component j is constrained, do this...
+    // K[3*i+j][3*i+j] += large;
+    for (size_t r = 0; r < nodes.size(); r++)
+      for (int s = 0; s < 3; s++)
+      {
+        if (fabs(nodes[r][s] - max[s]) < tolerance)
+          K[3 * r + s][3 * r + s] += large;
+        if (fabs(nodes[r][s] - min[s]) < tolerance)
+          K[3 * r + s][3 * r + s] += large;
+      }
 
-	// solve for node velocities
-	int iterations = CR(K,x,F,4000,1.0e-5);
-	std::cout<<iterations<<" iterations ... "<<std::endl;
+    // solve for node velocities
+    int iterations = CR(K, x, F, 4000, 1.0e-5);
+    std::cout << iterations << " iterations ... " << std::endl;
 
-	//Update the quality information
-	if( updates-1 < Q_max_hist.size()){
-	  Q_max_hist[updates-1] = Q_max;
-	} else {
+    //Update the quality information
+    if (updates - 1 < Q_max_hist.size())
+    {
+      Q_max_hist[updates - 1] = Q_max;
+    }
+    else
+    {
 
-	  //Update the history of Q_max
-	  for(int i=0; i<Q_max_hist.size()-1; i++){
-	    // std::cout << i << " "<< Q_max_hist[i] << " " << Q_max_hist[i+1] << std::endl;
-		Q_max_hist[i] = Q_max_hist[i+1];
-	  }
-	  
-	  
-	  Q_max_hist[Q_max_hist.size()-1] = Q_max;
+      //Update the history of Q_max
+      for (size_t i = 0; i < Q_max_hist.size() - 1; i++)
+      {
+        // std::cout << i << " "<< Q_max_hist[i] << " " << Q_max_hist[i+1] << std::endl;
+        Q_max_hist[i] = Q_max_hist[i + 1];
+      }
 
-	  //Compute the rolling average of the Q_max
-	  Q_max_ave = 0;
-	  for(int i=0; i<Q_max_hist.size(); i++)
-		Q_max_ave += Q_max_hist[i];
-	  Q_max_ave /= Q_max_hist.size();
-	}
-	Q_ave = Q_sum/ntri;
+      Q_max_hist[Q_max_hist.size() - 1] = Q_max;
 
-// 	for(int i=0; i<Q_max_hist.size(); i++)
-// 	  std::cout<<"Q_Max history ... "<<Q_max_hist[i]<<std::endl;
-	  
+      //Compute the rolling average of the Q_max
+      Q_max_ave = 0;
+      for (size_t i = 0; i < Q_max_hist.size(); i++)
+        Q_max_ave += Q_max_hist[i];
+      Q_max_ave /= Q_max_hist.size();
+    }
+    Q_ave = Q_sum / ntri;
 
-	std::cout<<"Maximum quality ... "<<Q_max<<std::endl;
-	std::cout<<"Ave_Max quality ... "<<Q_max_ave<<std::endl;
-	std::cout<<"Average quality ... "<<Q_ave<<std::endl;
-
-	std::cout << std::endl;
+    // 	for(int i=0; i<Q_max_hist.size(); i++)
+    // 	  std::cout<<"Q_Max history ... "<<Q_max_hist[i]<<std::endl;
 
 
-	//Output velocities for examination
-	std::ostringstream iter_stream;
-	std::string iter_string;
+    std::cout << "Maximum quality ... " << Q_max << std::endl;
+    std::cout << "Ave_Max quality ... " << Q_max_ave << std::endl;
+    std::cout << "Average quality ... " << Q_ave << std::endl;
 
-	// write the iteration to a string
-	iter_stream << updates;
-	iter_string = iter_stream.str();
+    std::cout << std::endl;
 
-	// extract the basename from the provided filename
-	std::string infile = argv[3];
-	std::vector<std::string> tokens;
-	std::string delimeters = "."; // Only a period
-	std::string basename;
-	tokenize(infile, tokens, delimeters);
-	
-	if (tokens.size() > 2){
-	  std::cout << "WARNING: multiple \".\" in file name: " << infile << std::endl;
-	  std::cout << "\t Using: ." << tokens.front() << "As basename" << std::endl;
-	  basename =  tokens.front();
-	}else if( tokens.size() == 2 ){
-	  basename = tokens.front();
-	}
-	
-	
-	
-	
-	// put it all back together
-	std::string iterFileName;
-	if(updates < 9 ){
-	  iterFileName = basename+"_0"+iter_string+".inp";
-	} else {
-	  iterFileName = basename+"_"+iter_string+".inp";
-	}
+    //Output velocities for examination
+    std::ostringstream iter_stream;
+    std::string iter_string;
 
-	
-	// update node positions
-	for (int r=0; r<nodes.size(); r++){
-	  //	  velocityfile << r << " ";
-	  for (int s=0; s<3; s++){
-	    bc_dt = dt ;
-	    if( ( fabs(nodes[r][s] - max[s]) < tolerance)
-		|| ( fabs(nodes[r][s] - min[s]) < tolerance)) bc_dt = 0.0 ;
+    // write the iteration to a string
+    iter_stream << updates;
+    iter_string = iter_stream.str();
 
-	    if( fabs(dt*x[3*r+s]) > 1.0 ) nodes[r][s] += 0.0 ;
-	    else if( fabs(dt*x[3*r+s]) < 1.0 )
-	      nodes[r][s] += bc_dt * x[3*r+s] ;
-	    // velocityfile  << std::scientific << std::setw(4)
-	    // << std::setprecision(4) << F[3*r+s] << "\t"<< x[3*r+s] <<"\t";
-	  }
-	  //  velocityfile << std::endl;
-	}
-	//	velocityfile.close();
-	
-	//	if(!((updates)%10)){
-	if(!( (updates)%interval ) ) {
-	  // Open the outputfile
-	  std::ofstream inpfile;
-	  inpfile.open(iterFileName.c_str());
-	  if(!inpfile)
-	    {
-	      std::cout << "Failed to open: " << iterFileName << std::endl;
-	      exit(1);
-	    }
-	  
-	  inpfile<<nnod<<" "<<ntri<<" 0 2 0"<<std::endl ;
-	  // the "0 2 0" signals the presence of upID downID output
-	  for ( int ia = 0 ; ia < nnod ; ia++ )
-		inpfile<<id(nodes[ia])<<" "<<nodes[ia][0]<<" "<<nodes[ia][1]
-		       <<" "<<nodes[ia][2]<<std::endl;
-	  
-	  for (int i=0; i<ntri; i++) {
-		//		inpfile<<i<<" "<<triangles[i].region1>>triangles[i].region2<<" tri ";
-		inpfile<<i<<" 0 tri ";
-		inpfile<<id(triangles[i][0])<<" ";
-		inpfile<<id(triangles[i][1])<<" ";
-		inpfile<<id(triangles[i][2])<<std::endl;
-		//inpfile<<triangles[i].region1<<" ";
-		//inpfile<<triangles[i].region2<<std::endl;
-	  }
- 	  
-	  //	  for(int i=0; i<data.size(); i++)
+    // extract the basename from the provided filename
+    std::string infile = argv[3];
+    std::vector<std::string> tokens;
+    std::string delimeters = "."; // Only a period
+    std::string basename;
+    tokenize(infile, tokens, delimeters);
 
-	  inpfile<<"2 1 1"<<std::endl;
-	  inpfile<<"minID, none"<<std::endl;
-	  inpfile<<"maxID, none"<<std::endl;
-	  for(int i=0; i< ntri ; i++)  // ADR  25 jun 09
-	    inpfile<<i<<" "<<triangles[i].region1 << " " << triangles[i].region2<<std::endl; 
-	  
-	  // 	  for (int i=0; i<ntri; i++) {
-	  // 		int r1 = triangles[i].region1;
-	  // 		int r2 = triangles[i].region2;
-	  // 		int min = (r1<r2 ? r1:r2);
-	  // 		int max = (r1>r2 ? r1:r2);
-	  // 		inpfile<<i<<" "<<min<<" "<<max<std::endl;
-	  // 	  }
-	  
-	  inpfile.close();
+    if (tokens.size() > 2)
+    {
+      std::cout << "WARNING: multiple \".\" in file name: " << infile << std::endl;
+      std::cout << "\t Using: ." << tokens.front() << "As basename" << std::endl;
+      basename = tokens.front();
+    }
+    else if (tokens.size() == 2)
+    {
+      basename = tokens.front();
+    }
 
-	  inpfile.open("nodes_smoothed.txt") ;  // output Sukbin style nodes
-	  if(!inpfile) {
-	    std::cout << "Failed to open: " << "nodes_smoothed.txt" << std::endl ;
-	    exit(1);
-	  }
-	  inpfile << nnod << std::endl ;
-	  for ( int ia = 0; ia < nnod ; ia++ )
-		inpfile<<id(nodes[ia])<<" "<< nodetype[ia]<<" "
-		       << nodes[ia][0] << " " << nodes[ia][1]
-		       <<" "<<nodes[ia][2]<<std::endl;
-	  
-	}
-	
+    // put it all back together
+    std::string iterFileName;
+    if (updates < 9)
+    {
+      iterFileName = basename + "_0" + iter_string + ".inp";
+    }
+    else
+    {
+      iterFileName = basename + "_" + iter_string + ".inp";
+    }
+
+    // update node positions
+    for (size_t r = 0; r < nodes.size(); r++)
+    {
+      //	  velocityfile << r << " ";
+      for (int s = 0; s < 3; s++)
+      {
+        bc_dt = dt;
+        if ((fabs(nodes[r][s] - max[s]) < tolerance) || (fabs(nodes[r][s] - min[s]) < tolerance))
+          bc_dt = 0.0;
+
+        if (fabs(dt * x[3 * r + s]) > 1.0)
+          nodes[r][s] += 0.0;
+        else if (fabs(dt * x[3 * r + s]) < 1.0)
+          nodes[r][s] += bc_dt * x[3 * r + s];
+        // velocityfile  << std::scientific << std::setw(4)
+        // << std::setprecision(4) << F[3*r+s] << "\t"<< x[3*r+s] <<"\t";
+      }
+      //  velocityfile << std::endl;
+    }
+    //	velocityfile.close();
+
+    //	if(!((updates)%10)){
+    if (!((updates) % interval))
+    {
+      // Open the outputfile
+      std::ofstream inpfile;
+      inpfile.open(iterFileName.c_str());
+      if (!inpfile)
+      {
+        std::cout << "Failed to open: " << iterFileName << std::endl;
+        exit(1);
+      }
+
+      inpfile << nnod << " " << ntri << " 0 2 0" << std::endl;
+      // the "0 2 0" signals the presence of upID downID output
+      for (int ia = 0; ia < nnod; ia++)
+        inpfile << id(nodes[ia]) << " " << nodes[ia][0] << " " << nodes[ia][1] << " " << nodes[ia][2] << std::endl;
+
+      for (int i = 0; i < ntri; i++)
+      {
+        //		inpfile<<i<<" "<<triangles[i].region1>>triangles[i].region2<<" tri ";
+        inpfile << i << " 0 tri ";
+        inpfile << id(triangles[i][0]) << " ";
+        inpfile << id(triangles[i][1]) << " ";
+        inpfile << id(triangles[i][2]) << std::endl;
+        //inpfile<<triangles[i].region1<<" ";
+        //inpfile<<triangles[i].region2<<std::endl;
+      }
+
+      //	  for(int i=0; i<data.size(); i++)
+
+      inpfile << "2 1 1" << std::endl;
+      inpfile << "minID, none" << std::endl;
+      inpfile << "maxID, none" << std::endl;
+      for (int i = 0; i < ntri; i++) // ADR  25 jun 09
+        inpfile << i << " " << triangles[i].region1 << " " << triangles[i].region2 << std::endl;
+
+      // 	  for (int i=0; i<ntri; i++) {
+      // 		int r1 = triangles[i].region1;
+      // 		int r2 = triangles[i].region2;
+      // 		int min = (r1<r2 ? r1:r2);
+      // 		int max = (r1>r2 ? r1:r2);
+      // 		inpfile<<i<<" "<<min<<" "<<max<std::endl;
+      // 	  }
+
+      inpfile.close();
+
+      inpfile.open("nodes_smoothed.txt"); // output Sukbin style nodes
+      if (!inpfile)
+      {
+        std::cout << "Failed to open: " << "nodes_smoothed.txt" << std::endl;
+        exit(1);
+      }
+      inpfile << nnod << std::endl;
+      for (int ia = 0; ia < nnod; ia++)
+        inpfile << id(nodes[ia]) << " " << nodetype[ia] << " " << nodes[ia][0] << " " << nodes[ia][1] << " " << nodes[ia][2] << std::endl;
+
+    }
+
   }
 
   //   // output sukbin nodes file
