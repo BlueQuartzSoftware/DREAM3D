@@ -22,6 +22,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include <string.h>
 
 #define PI 3.14159265
 #define num_neigh 26
@@ -32,132 +33,24 @@
 #define MZ 0
 #define FAC (1.0/MBIG)
 
-struct voxel
+#include "Surface_Mesh_General_MCA_Layer.h"
+
+
+int SurfaceMesh(int xnum, int ynum, int znum,
+                     char* nodesFile,
+                     char* dxFile,
+                     char* edgeTableFile,
+                     char* neighspinTableFile,
+                     char* meshStatsFile)
 {
-  int spin;
-  double coord[3];
-  int atSurf; // if it's 0, it's in the bulk; if 1, it's on the surface of the domain...
-};
-
-struct neighbor
-{
-  int csiteid;
-  int neigh_id[num_neigh + 1];
-};
-
-struct face
-{
-  int site_id[4]; // stores 4 sites at the corners of each square...
-  int edge_id[4]; // stores edge id turned on...others will have dummy -1...
-  int nEdge; // number of edges on the square...
-  int turnFC; // if 1, face center is on..., else it's 0
-  int FCnode; // face center node...if not, it's -1...
-  int effect; // 0 if the square is useless; 1 is good...
-};
-
-struct node
-{
-  int nodeKind; // 2 for binary, 3 for triple, and so on...
-  double coord[3];
-  int newNodeID; // newID for used nodes; if not used, it's -1...
-};
-
-struct segment
-{
-  int neigh_spin[2]; // 0 is to the left of the arrow; 1 is at right...
-  int node_id[2]; // the segment heads from node_id[0] to node_id[1]...
-  int new_n_id[2];
-  int segKind; // 2 for binary line, 3 for triple line, and so on...
-  int where; // 0 for upper squares, 1 for side squares and 2 for bottom squares...
-};
-
-struct isegment
-{
-  int n_id[2];
-  int new_n_id[2];
-  int edgeKind;
-  int nSpin[4];
-  int burnt; // if not burnt it's -1...
-  int eff; // flag for output, if it's 1 it will be used for output...
-};
-
-struct patch
-{
-  int v_id[3]; // stores three new node id for vertices of the triangles...
-  int new_v_id[3];
-  int nSpin[2]; // neighboring two spins...
-  int edgePlace[3]; // if it's 0, face edges; if 1, inner edges...
-  double normal[3];
-  double area;
-};
-
-// function prototypes...
-void initialize_micro(struct voxel *p, int ns, int xDim, int yDim, int zDim);
-void read_edge_neighspin_table(int eT2d[20][8], int nsT2d[20][8]);
-
-void get_neighbor_list(struct neighbor *n, int ns, int nsp, int xDim, int yDim, int zDim, int zID);
-void initialize_nodes(struct voxel *p, struct node *v, int nsp, int zID);
-void initialize_squares(struct neighbor *n, struct face *sq, int ns, int nsp, int zID);
-
-int get_number_fEdges(struct face *sq, struct voxel *p, struct neighbor *n, int nsp, int zID);
-void get_nodes_fEdges(struct face *sq,
-                      struct voxel *p,
-                      struct neighbor *n,
-                      struct node *v,
-                      struct segment *e,
-                      int eT2d[20][8],
-                      int nsT2d[20][8],
-                      int ns,
-                      int nsp,
-                      int xDim,
-                      int zID);
-int get_square_index(int tns[4]);
-int treat_anomaly(int tnst[4], struct voxel *p1, struct neighbor *n1, int nsp1, int zID1);
-void get_nodes(int cst, int ord, int nidx[2], int *nid, int nsp1, int xDim1);
-void get_spins(int nSpn[4], int pID[2], int *pSpin);
-
-int get_number_triangles(struct voxel *p, struct face *sq, struct node *v, struct segment *e, int ns, int nsp, int xDim);
-int get_number_case0_triangles(int *afe, struct node *v1, struct segment *e1, int nfedge);
-int get_number_case2_triangles(int *afe, struct node *v1, struct segment *e1, int nfedge, int *afc, int nfctr);
-int get_number_caseM_triangles(int *afe, struct node *v1, struct segment *e1, int nfedge, int *afc, int nfctr);
-
-int get_triangles(struct patch *t, struct face *sq, struct node *v, struct segment *e, int ns, int nsp, int xDim);
-void get_case0_triangles(struct patch *t1, int *afe, struct node *v1, struct segment *e1, int nfedge, int tin, int *tout);
-void get_case2_triangles(struct patch *t1, int *afe, struct node *v1, struct segment *e1, int nfedge, int *afc, int nfctr, int tin, int *tout);
-void get_caseM_triangles(struct patch *t1, int *afe, struct node *v1, struct segment *e1, int nfedge, int *afc, int nfctr, int tin, int *tout, int ccn);
-void arrange_spins(struct voxel *p, struct patch *t, struct node *v, struct neighbor *n, int numT, int xDim, int nsp, int zID);
-
-int get_inner_edges(struct node *v, struct segment *fe, struct isegment *ie, struct patch *t, int nfe, int nT);
-
-void find_unique_inner_edges(struct isegment *ie, int nie, int *nEff);
-
-void copy_previous_nodes(struct node *cv, struct node *pv, int nsp);
-int assign_new_nodeID(struct node *v, int ns, int nN);
-
-void update_face_edges(struct node *v, struct segment *fe, int nfe);
-void update_inner_edges(struct node *v, struct isegment *ie, int tnie, int nie);
-void update_current_triangles(struct node *v, struct patch *t, int nT);
-
-void get_output_nodes(struct node *v, int nsp, int zID, int zDim);
-void get_output_edges(struct segment *fe, struct isegment *ie, int nfe, int tnie, int zID, int zDim, int ceid, int *feid);
-void get_output_triangles(struct patch *t, int nt, int zID, int ctid);
-
-void copy_cNodes_2_pNodes(struct node *cv, struct node *pv, int nsp);
-
-// Main function starts...
-int main(void)
-{
-
   int i;
-
+  int err;
   // Edge edge and neighboring spin table...
   int edgeTable_2d[20][8];
   int nsTable_2d[20][8];
 
-  int NS; // The number of sites(voxels) in the simulation box... 
+  int NS; // The number of sites(voxels) in the simulation box...
   int NSP;
-  int xnum, ynum, znum;
-  //int numG;
 
   int cNodeID;
   int cEdgeID, fEdgeID;
@@ -171,18 +64,20 @@ int main(void)
   struct neighbor *neigh; // contains nearest neighbor information...
   struct voxel *point; // contains voxel information...
   struct face *cSquare; // contains square information...
-  struct face *pSquare;
+ // struct face *pSquare;
   struct node *cVertex; // contains node information...
   struct node *pVertex;
   struct segment *cFedge; // cotains edges on square faces for open loops...
   struct isegment *cIedge;
   struct patch *cTriangle;
-  FILE *f1, *f2, *f3, *f4;
+  FILE *f1, *f4;
+  char postfix[64] = "_triangles_raw.txt";
+  char trianglesFile[BUFSIZ];
+  char edgepostfix[64] = "_edges_raw.txt";
+  char edgeFile[BUFSIZ];
 
-  printf("Enter the dimension of the microstructure:\n");
-  scanf("%d %d %d", &xnum, &ynum, &znum);
-  printf("%d %d %d\n", xnum, ynum, znum);
 
+  err = 0;
   NS = xnum * ynum * znum;
   NSP = xnum * ynum;
 
@@ -193,15 +88,15 @@ int main(void)
   pVertex = (struct node *) malloc(7 * 2 * NSP * sizeof(struct node));
 
   printf("\nReading microstucture...\n");
-  initialize_micro(point, NS, xnum, ynum, znum);
+  initialize_micro(point, NS, xnum, ynum, znum, dxFile );
 
   printf("\nReading edge and triangle tables...\n");
-  read_edge_neighspin_table(edgeTable_2d, nsTable_2d);
+  read_edge_neighspin_table(edgeTable_2d, nsTable_2d, edgeTableFile, neighspinTableFile);
 
-  if ((f1 = fopen("nodes_raw.txt", "w")) == NULL)
+  if ((f1 = fopen(nodesFile, "r")) == NULL)
   {
     printf("\nThe input file doesn't exist!\n");
-    exit(1);
+    return 1;
   }
 
   fclose(f1);
@@ -270,9 +165,19 @@ int main(void)
     }
 
     // Output nodes and triangles...
-    get_output_nodes(cVertex, NSP, i, znum);
-    get_output_edges(cFedge, cIedge, nFEdge, tnIEdge, i, znum, cEdgeID, &fEdgeID);
-    get_output_triangles(cTriangle, nTriangle, i, cTriID);
+    get_output_nodes(cVertex, NSP, i, znum, nodesFile );
+
+
+
+    memset(edgeFile, 0, BUFSIZ); // Clear the string first
+    sprintf(edgeFile, "%d%s", i, edgepostfix);
+    get_output_edges(cFedge, cIedge, nFEdge, tnIEdge, i, znum, cEdgeID, &fEdgeID, edgeFile);
+
+
+    memset(trianglesFile, 0, BUFSIZ); // Clear the string first
+    sprintf(trianglesFile, "%d%s", cTriID, postfix);
+
+    get_output_triangles(cTriangle, nTriangle, i, cTriID, trianglesFile);
     cEdgeID = fEdgeID;
     cTriID = cTriID + nTriangle;
 
@@ -294,37 +199,67 @@ int main(void)
   free(cVertex);
   free(pVertex);
 
-  if ((f4 = fopen("mesh_stat.txt", "w")) == NULL)
+  if ((f4 = fopen(meshStatsFile, "w")) == NULL)
   {
-    printf("\nThe input file doesn't exist!\n");
-    exit(1);
+    printf("\nThe mesh_stat.txt file doesn't exist!\n");
+    return 1;
   }
 
   fprintf(f4, "%d %d %d %d\n", cNodeID, cEdgeID, cTriID, znum - 2);
 
   fclose(f4);
-
-  return 0;
+  return err;
 }
 
-// Functions...
-void initialize_micro(struct voxel *p, int ns, int xDim, int yDim, int zDim)
+
+#ifndef SURFACE_MESH_LIBRARY
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int main(int argc, char **argv)
 {
 
-  FILE *f;
+
+  char* dxFile = (char*)malloc( BUFSIZ * sizeof(char));
+  memset(dxFile, 0, BUFSIZ);
+  char* nodesFile = "nodes_raw.txt";
+  char* edgeTableFile = "edgeTable_2d.txt";
+  char* neighspinTableFile = "neighspinTable_2d.txt";
+  char* meshStatsFile = "mesh_stat.txt";
+
+  int xnum, ynum, znum;
+
+  printf("Enter the dimension of the microstructure:\n");
+  scanf("%d %d %d", &xnum, &ynum, &znum);
+  printf("%d %d %d\n", xnum, ynum, znum);
+
+  printf("Enter the name of input microstructure dx file:\n");
+  scanf("%s", dxFile);
+
+  int err = SurfaceMesh(xnum, ynum, znum,
+                     nodesFile,
+                     dxFile, edgeTableFile, neighspinTableFile, meshStatsFile );
+
+  free(dxFile);
+  return err;
+}
+#endif
+
+// Functions...
+void initialize_micro(struct voxel *p, int ns, int xDim, int yDim, int zDim, char* name)
+{
+
+  FILE* f;
 
   int i, j, k, l;
   int id;
 
   int tspin;
 
-  char name[128];
+
   char datStr[255];
 
   double tempx, tempy, tempz;
-
-  printf("Enter the name of input microstructure dx file:\n");
-  scanf("%s", name);
 
   if ((f = fopen(name, "r")) == NULL)
   {
@@ -388,7 +323,8 @@ void initialize_micro(struct voxel *p, int ns, int xDim, int yDim, int zDim)
 
 }
 
-void read_edge_neighspin_table(int eT2d[20][8], int nsT2d[20][8])
+void read_edge_neighspin_table(int eT2d[20][8], int nsT2d[20][8],
+                               char* edgeTableFile, char* neighspinTableFile)
 {
 
   FILE *f1, *f2;
@@ -396,15 +332,15 @@ void read_edge_neighspin_table(int eT2d[20][8], int nsT2d[20][8])
   int j, k, dummy;
 
   // Read edge table in 2d...
-  if ((f1 = fopen("edgeTable_2d.txt", "r")) == NULL)
+  if ((f1 = fopen(edgeTableFile, "r")) == NULL)
   {
-    printf("\nThe input file doesn't exist!\n");
+    printf("\nThe edgeTableFile input file doesn't exist!\n");
     exit(1);
   }
 
-  if ((f2 = fopen("neighspinTable_2d.txt", "r")) == NULL)
+  if ((f2 = fopen(neighspinTableFile, "r")) == NULL)
   {
-    printf("\nThe input file doesn't exist!\n");
+    printf("\nThe neighspinTableFile input file doesn't exist!\n");
     exit(1);
   }
 
@@ -434,9 +370,9 @@ void get_neighbor_list(struct neighbor *n, int ns, int nsp, int xDim, int yDim, 
   // I assumed the square lattice...so the order of neighbors as follows...
   //
   //    4   3   2         13  12  11          22  21  20
-  //    5 site  1         14   9  10          23  18  19 
+  //    5 site  1         14   9  10          23  18  19
   //    6   7   8         15  16  17          24  25  26
-  //    
+  //
   //    in-plane          upper plane         lower plane
 
   int ii; // loop index...
@@ -601,7 +537,7 @@ void initialize_squares(struct neighbor *n, struct face *sq, int ns, int nsp, in
 
   // Gather initial information on each square...
   int id;
-  int sqid;
+ // int sqid;
   int i, j;
   int csite;
 
@@ -660,7 +596,7 @@ void initialize_squares(struct neighbor *n, struct face *sq, int ns, int nsp, in
 int get_number_fEdges(struct face *sq, struct voxel *p, struct neighbor *n, int nsp, int zID)
 {
 
-  int i, j, k, m, jj, ii;
+  int  k, m;
 
   int csite, cspin, tsite;
 
@@ -778,7 +714,7 @@ void get_nodes_fEdges(struct face *sq,
                       int zID)
 {
 
-  int i, j, k, m, jj, ii;
+  int  j, k, m, ii;
 
   int csite, cspin, tsite;
   int cubeOrigin; // stores the site id of 0th corner of each cube...
@@ -1520,7 +1456,7 @@ int get_number_triangles(struct voxel *p, struct face *sq, struct node *v, struc
 int get_number_case0_triangles(int *afe, struct node *v1, struct segment *e1, int nfedge)
 {
 
-  int ii, i, j, jj, k, kk, k1, m;
+  int ii, i, j, jj, k, kk, k1;
 
   int loopID;
   int tail, head, coin;
@@ -1528,9 +1464,9 @@ int get_number_case0_triangles(int *afe, struct node *v1, struct segment *e1, in
   int cedge, nedge;
   int cspin1, cspin2, cnode1, cnode2;
   int nspin1, nspin2, nnode1, nnode2;
-  int tspin, tnode;
+ // int tspin, tnode;
   int nucleus, chaser;
-  int start, end;
+//  int  end;
 
   int spinFlag, nodeFlag, flip;
 
@@ -1541,7 +1477,7 @@ int get_number_case0_triangles(int *afe, struct node *v1, struct segment *e1, in
   int *count;
   int numN, numTri, tnumTri;
 
-  int te, tn1, tn2;
+//  int tn1, tn2;
   int lid;
 
   burnt = (int *) malloc(nfedge * sizeof(int));
@@ -1759,7 +1695,7 @@ int get_number_case0_triangles(int *afe, struct node *v1, struct segment *e1, in
 int get_number_case2_triangles(int *afe, struct node *v1, struct segment *e1, int nfedge, int *afc, int nfctr)
 {
 
-  int ii, i, j, jj, k, kk, k1, m, n, i1, j1;
+  int ii, i, j, k, kk, k1, n, i1, j1;
 
   int loopID;
   int tail, head, coin;
@@ -1779,15 +1715,13 @@ int get_number_case2_triangles(int *afe, struct node *v1, struct segment *e1, in
   int *burnt_list;
 
   int *count;
-  int numN, numTri, tnumTri;
-
-  int te, tn1, tn2;
+  int numN, numTri;
 
   int *burnt_loop;
 
   int openL; // if a loop is an open loop, it's 1; if closed, it's 0...
-  int startEdge, endEdge;
-  int startNode, endNode;
+  int startEdge;
+  int endNode;
   int index;
 
   burnt = (int *) malloc(nfedge * sizeof(int));
@@ -2156,7 +2090,7 @@ int get_number_case2_triangles(int *afe, struct node *v1, struct segment *e1, in
 int get_number_caseM_triangles(int *afe, struct node *v1, struct segment *e1, int nfedge, int *afc, int nfctr)
 {
 
-  int ii, i, j, jj, k, kk, k1, m, n, i1, j1, n1;
+  int ii, i, j, k, kk, k1, n, i1, j1, n1;
 
   int loopID;
   int tail, head, coin;
@@ -2166,7 +2100,7 @@ int get_number_caseM_triangles(int *afe, struct node *v1, struct segment *e1, in
   int nspin1, nspin2, nnode1, nnode2;
   int tspin, tnode;
   int nucleus, chaser;
-  int start, end;
+  int start;
   int from, to;
 
   int spinFlag, nodeFlag, flip;
@@ -2177,18 +2111,18 @@ int get_number_caseM_triangles(int *afe, struct node *v1, struct segment *e1, in
 
 
   int *count;
-  int numN, numTri, tnumTri;
+  int numN, numTri;
 
-  int te, tn1, tn2;
+  //int tn1, tn2;
 
   int *burnt_loop;
 
   int openL; // if a loop is an open loop, it's 1; if closed, it's 0...
-  int startEdge, endEdge;
-  int startNode, endNode;
+  int startEdge;
+  int endNode;
   int index;
 
-  int u, temp;
+ // int temp;
 
   burnt = (int *) malloc(nfedge * sizeof(int));
   burnt_list = (int *) malloc(nfedge * sizeof(int));
@@ -2611,7 +2545,7 @@ int get_triangles(struct patch *t, struct face *sq, struct node *v, struct segme
   int fcid;
   int tindex;
   int tidIn, tidOut;
-  arrayFC = (int *) malloc(6 * sizeof(int)); 
+  arrayFC = (int *) malloc(6 * sizeof(int));
   tidIn = 0;
 
   for (i = 1; i <= nsp; i++)
@@ -2760,7 +2694,7 @@ int get_triangles(struct patch *t, struct face *sq, struct node *v, struct segme
 void get_case0_triangles(struct patch *t1, int *afe, struct node *v1, struct segment *e1, int nfedge, int tin, int *tout)
 {
 
-  int ii, i, j, jj, k, kk, k1, m, m1, mm;
+  int ii, i, j, jj, k, kk, k1, mm;
 
   int loopID;
   int tail, head, coin;
@@ -2768,9 +2702,9 @@ void get_case0_triangles(struct patch *t1, int *afe, struct node *v1, struct seg
   int cedge, nedge;
   int cspin1, cspin2, cnode1, cnode2;
   int nspin1, nspin2, nnode1, nnode2;
-  int tspin, tnode;
+//  int tspin, tnode;
   int nucleus, chaser;
-  int start, end;
+//  int start, end;
 
   int spinFlag, nodeFlag, flip;
 
@@ -2783,13 +2717,13 @@ void get_case0_triangles(struct patch *t1, int *afe, struct node *v1, struct seg
   int numN, sumN;
   int from;
 
-  int te, tn1, tn2;
+ // int te, tn1, tn2;
 
   int *loop;
   int ctid;
   int front, back;
   int ce;
-  int te0, te1, te2, tv0, tv1, tv2, ts0, ts1;
+  int te0, te1, te2, tv0, tv1, tv2;
   int numT, cnumT, new_node0, new_node1;
 
   burnt = (int *) malloc(nfedge * sizeof(int));
@@ -3056,7 +2990,7 @@ void get_case0_triangles(struct patch *t1, int *afe, struct node *v1, struct seg
 void get_case2_triangles(struct patch *t1, int *afe, struct node *v1, struct segment *e1, int nfedge, int *afc, int nfctr, int tin, int *tout)
 {
 
-  int ii, i, j, jj, k, kk, k1, m, n, i1, j1;
+  int ii, i, j, k, kk, k1, n, i1, j1;
 
   int loopID;
   int tail, head, coin;
@@ -3077,23 +3011,23 @@ void get_case2_triangles(struct patch *t1, int *afe, struct node *v1, struct seg
 
 
   int *count;
-  int numN, numTri, tnumTri;
+  int numN, numTri;
 
-  int te, tn1, tn2;
+ // int te, tn1, tn2;
 
   int *burnt_loop;
 
   int openL; // if a loop is an open loop, it's 1; if closed, it's 0...
-  int startEdge, endEdge;
-  int startNode, endNode;
+  int startEdge;
+  int endNode;
   int index;
 
-  int sumN;
+  //int sumN;
 
   int ctid;
   int front, back;
   int ce;
-  int te0, te1, te2, tv0, tv1, tv2, ts0, ts1;
+  int te0, te1, te2, tv0, tv1, tv2;
   int numT, cnumT, new_node0, new_node1;
 
   burnt = (int *) malloc(nfedge * sizeof(int));
@@ -3615,7 +3549,7 @@ void get_case2_triangles(struct patch *t1, int *afe, struct node *v1, struct seg
 void get_caseM_triangles(struct patch *t1, int *afe, struct node *v1, struct segment *e1, int nfedge, int *afc, int nfctr, int tin, int *tout, int ccn)
 {
 
-  int ii, i, j, jj, k, kk, k1, m, n, i1, j1, n1, iii;
+  int ii, i, j, k, kk, k1, n, i1, j1, n1, iii;
 
   int loopID;
   int tail, head, coin;
@@ -3625,7 +3559,7 @@ void get_caseM_triangles(struct patch *t1, int *afe, struct node *v1, struct seg
   int nspin1, nspin2, nnode1, nnode2;
   int tspin, tnode;
   int nucleus, chaser;
-  int start, end;
+  int start;
   int from, to;
 
   int spinFlag, nodeFlag, flip;
@@ -3636,20 +3570,20 @@ void get_caseM_triangles(struct patch *t1, int *afe, struct node *v1, struct seg
 
 
   int *count;
-  int numN, numTri, tnumTri;
+  int numN, numTri;
 
-  int te, tn0, tn1, tn2;
+  int tn0, tn1;
 
   int *burnt_loop;
 
   int openL; // if a loop is an open loop, it's 1; if closed, it's 0...
-  int startEdge, endEdge;
-  int startNode, endNode;
+  int startEdge;
+  int endNode;
   int index;
 
-  int u, temp;
-
-  int sumN;
+//  int u, temp;
+//
+//  int sumN;
 
   int ctid;
   int front, back;
@@ -4287,7 +4221,7 @@ void arrange_spins(struct voxel *p, struct patch *t, struct node *v, struct neig
     length2 = sqrt(tv2[0] * tv2[0] + tv2[1] * tv2[1] + tv2[2] * tv2[2]);
 
     // Getting normal vector of the triangle...(Right-hand Rule!!!)
-    // Getting 2 edge vectors of triangle originating from vertex 0... 
+    // Getting 2 edge vectors of triangle originating from vertex 0...
     u[0] = vcoord[1][0] - vcoord[0][0];
     u[1] = vcoord[1][1] - vcoord[0][1];
     u[2] = vcoord[1][2] - vcoord[0][2];
@@ -4771,7 +4705,10 @@ void update_current_triangles(struct node *v, struct patch *t, int nT)
 
 }
 
-void get_output_nodes(struct node *v, int nsp, int zID, int zDim)
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int get_output_nodes(struct node *v, int nsp, int zID, int zDim, char* nodesFile)
 {
 
   struct node *tempv;
@@ -4845,10 +4782,10 @@ void get_output_nodes(struct node *v, int nsp, int zID, int zDim)
 
 
 
-  if ((f = fopen("nodes_raw.txt", "a+")) == NULL)
+  if ((f = fopen(nodesFile, "a+")) == NULL)
   {
-    printf("\nThe input file doesn't exist!\n");
-    exit(1);
+    printf("\nThe nodesFile file doesn't exist!\n");
+    return 1;
   }
 
   for (i = 0; i < count; i++)
@@ -4866,14 +4803,13 @@ void get_output_nodes(struct node *v, int nsp, int zID, int zDim)
   fclose(f);
 
   free(tempv);
+  return 0;
 }
 
-void get_output_edges(struct segment *fe, struct isegment *ie, int nfe, int tnie, int zID, int zDim, int ceid, int *feid)
+int get_output_edges(struct segment *fe, struct isegment *ie, int nfe,
+                      int tnie, int zID, int zDim, int ceid, int *feid,
+                      char* edgeFile)
 {
-
-  char postfix[64] = "_edges_raw.txt";
-  char buf[BUFSIZ];
-
   int i, j, ii, jj;
   int flagLimit;
   int flag1, flag2;
@@ -4889,7 +4825,7 @@ void get_output_edges(struct segment *fe, struct isegment *ie, int nfe, int tnie
   int count;
   FILE *f;
 
-  sprintf(buf, "%d%s", zID, postfix);
+
   maxZ = zDim - 2;
   czid = zID;
   dummy = 0;
@@ -4930,10 +4866,10 @@ void get_output_edges(struct segment *fe, struct isegment *ie, int nfe, int tnie
 
 
 
-  if ((f = fopen(buf, "w")) == NULL)
+  if ((f = fopen(edgeFile, "w")) == NULL)
   {
-    printf("\nThe input file doesn't exist!\n");
-    exit(1);
+    printf("\nThe edgeFile file doesn't exist!\n");
+    return 1;
   }
 
   fprintf(f, "%d\n", count);
@@ -4977,15 +4913,14 @@ void get_output_edges(struct segment *fe, struct isegment *ie, int nfe, int tnie
   fclose(f);
 
   *feid = index;
+  return 0;
 }
 
-void get_output_triangles(struct patch *t, int nt, int zID, int ctid)
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int get_output_triangles(struct patch *t, int nt, int zID, int ctid, char* trianglesFile)
 {
-
-  char postfix[64] = "_triangles_raw.txt";
-  char buf[BUFSIZ];
-
-
   int i;
   int tag;
   int end;
@@ -4998,14 +4933,10 @@ void get_output_triangles(struct patch *t, int nt, int zID, int ctid)
   end = nt;
   newID = ctid;
 
-
-
-  sprintf(buf, "%d%s", zID, postfix);
-
-  if ((f = fopen(buf, "w")) == NULL)
+  if ((f = fopen(trianglesFile, "w")) == NULL)
   {
-    printf("\nThe input file doesn't exist!\n");
-    exit(1);
+    printf("\nThe trianglesFile file doesn't exist!\n");
+    return 1;
   }
 
   fprintf(f, "%d\n", end);
@@ -5025,6 +4956,7 @@ void get_output_triangles(struct patch *t, int nt, int zID, int ctid)
   }
 
   fclose(f);
+  return 0;
 }
 
 void copy_cNodes_2_pNodes(struct node *cv, struct node *pv, int nsp)
