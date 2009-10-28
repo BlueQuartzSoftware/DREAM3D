@@ -218,16 +218,19 @@ int SurfaceMesh(int xnum, int ynum, int znum,
 // -----------------------------------------------------------------------------
 int main(int argc, char **argv)
 {
-
-
-  char* dxFile = (char*)malloc( BUFSIZ * sizeof(char));
-  memset(dxFile, 0, BUFSIZ);
+  char* dxFile; 
+  int xnum, ynum, znum;
+  int err;
   char* nodesFile = "nodes_raw.txt";
   char* edgeTableFile = "edgeTable_2d.txt";
   char* neighspinTableFile = "neighspinTable_2d.txt";
   char* meshStatsFile = "mesh_stat.txt";
 
-  int xnum, ynum, znum;
+  
+  err = 0;
+  dxFile = (char*)malloc( BUFSIZ * sizeof(char));
+  memset(dxFile, 0, BUFSIZ);
+
 
   printf("Enter the dimension of the microstructure:\n");
   scanf("%d %d %d", &xnum, &ynum, &znum);
@@ -236,7 +239,7 @@ int main(int argc, char **argv)
   printf("Enter the name of input microstructure dx file:\n");
   scanf("%s", dxFile);
 
-  int err = SurfaceMesh(xnum, ynum, znum,
+  err = SurfaceMesh(xnum, ynum, znum,
                      nodesFile,
                      dxFile, edgeTableFile, neighspinTableFile, meshStatsFile );
 
