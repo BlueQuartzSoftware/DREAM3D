@@ -585,14 +585,14 @@ struct packedgrains
 	double green;
 	double blue;
 	list<float> misorientationlist;
-	float lowanglefraction;
-	float grainrank;
-	float grainmicrorank;
-	float picked;
-	float frozen;
-	float oeuler1;
-	float oeuler2;
-	float oeuler3;
+	double lowanglefraction;
+	double grainrank;
+	double grainmicrorank;
+	double picked;
+	double frozen;
+	double oeuler1;
+	double oeuler2;
+	double oeuler3;
 };
 
 
@@ -640,15 +640,15 @@ int numgrains;
 int shapeclass;
 double overlapallowed;
 int overlapassignment;
-long double sizex;
-long double sizey;
-long double sizez;
-long double resx;
-long double resy;
-long double resz;
-long double resx1;
-long double resy1;
-long double resz1;
+double sizex;
+double sizey;
+double sizez;
+double resx;
+double resy;
+double resz;
+double resx1;
+double resy1;
+double resz1;
 int numneighbins;
 int nummicros = 1;
 int crystruct;
@@ -2743,19 +2743,19 @@ void measure_misorientations (int numgrains)
 	double n3;
 	for (int i = 0; i < numgrains; i++)
 	{
-		float g1ea1 = packedgrain[i].euler1;
-		float g1ea2 = packedgrain[i].euler2;
-		float g1ea3 = packedgrain[i].euler3;
+		double g1ea1 = packedgrain[i].euler1;
+		double g1ea2 = packedgrain[i].euler2;
+		double g1ea3 = packedgrain[i].euler3;
 		int size = neighborvector[i].size();
 		for(int j = 0; j < size; j++)
 		{
 			int nname = neighborvector[i][j];
-			float g2ea1 = packedgrain[nname].euler1;
-			float g2ea2 = packedgrain[nname].euler2;
-			float g2ea3 = packedgrain[nname].euler3;
+			double g2ea1 = packedgrain[nname].euler1;
+			double g2ea2 = packedgrain[nname].euler2;
+			double g2ea3 = packedgrain[nname].euler3;
 			double angcur = GetMisorientationOnly(crystruct,g1ea1,g1ea2,g1ea3,g2ea1,g2ea2,g2ea3,n1,n2,n3);
 			angcur = 180.0*angcur/3.1415926535897;
-			misolist.push_back(angcur);
+			misolist.push_back(static_cast<float>(angcur));
 		}
 		packedgrain[i].misorientationlist = misolist;
 		count++;
@@ -2856,7 +2856,7 @@ int rank_microbins(int numgrains)
 	}
 	for(int i = 0; i < numgrains; i++)
 	{
-		float microtexture = packedgrain[i].lowanglefraction;
+		double microtexture = packedgrain[i].lowanglefraction;
 		int microcur = (microtexture*(nummicrobins));
 		float height = simmicrobin[microcur].height;
 		height = height + 1;
@@ -2951,9 +2951,9 @@ void identify_grains1(int numgrains,int nummisomoves)
 		count = 0;
 		for(int i = 0; i < numgrains; i++)
 		{
-			float rank = packedgrain[i].grainrank;
-			float picked = packedgrain[i].picked;
-			float froze = packedgrain[i].frozen;
+			double rank = packedgrain[i].grainrank;
+			double picked = packedgrain[i].picked;
+			double froze = packedgrain[i].frozen;
 			if(rank > rankcur && picked == 0 && froze == 0)
 			{
 				rankcur = rank;
@@ -2973,13 +2973,13 @@ void move_grains1(int numgrains)
 	list<int> temppickedlist;
 	for(int i = 0; i < numgrains; i++)
 	{
-		float ea1temp = packedgrain[i].euler1;
-		float ea2temp = packedgrain[i].euler2;
-		float ea3temp = packedgrain[i].euler3;
+		double ea1temp = packedgrain[i].euler1;
+		double ea2temp = packedgrain[i].euler2;
+		double ea3temp = packedgrain[i].euler3;
 		packedgrain[i].oeuler1 = ea1temp;
 		packedgrain[i].oeuler2 = ea2temp;
 		packedgrain[i].oeuler3 = ea3temp;
-		float picked = packedgrain[i].picked;
+		double picked = packedgrain[i].picked;
 		if(picked == 1)
 		{
 			pickedlist.push_back(i);
@@ -2992,8 +2992,8 @@ void move_grains1(int numgrains)
 		if(picked == 1)
 		{
 			int size = pickedlist.size();
-			float random = rg.Random();
-			float random1 = random;
+			double random = rg.Random();
+			double random1 = random;
 			int remainder = random1*size;
 			if(size <= remainder)
 			{
@@ -3015,9 +3015,9 @@ void move_grains1(int numgrains)
 			}
 			pickedlist.pop_front();
 	//		int grainname = packedgrain[j].grainname;
-			float ea1 = packedgrain[swap].oeuler1;
-			float ea2 = packedgrain[swap].oeuler2;
-			float ea3 = packedgrain[swap].oeuler3;
+			double ea1 = packedgrain[swap].oeuler1;
+			double ea2 = packedgrain[swap].oeuler2;
+			double ea3 = packedgrain[swap].oeuler3;
 	//		int nnum = packedgrain[j].neighnum;
 			packedgrain[j].euler1 = ea1;
 			packedgrain[j].euler2 = ea2;
@@ -3046,7 +3046,7 @@ void rank_grains2(int numgrains)
 		for(int j = 0; j < size; j++)
 		{
 			int neighfirst = neighborvector[i][j];
-			float neighfrac = packedgrain[neighfirst].lowanglefraction;
+			double neighfrac = packedgrain[neighfirst].lowanglefraction;
 			if(neighfrac > 0.24) neighfrac = neighfrac*4;
 			if(neighfrac > 0.49) neighfrac = neighfrac;
 			if(neighfrac > 0.74) neighfrac = neighfrac*2;
@@ -3086,11 +3086,11 @@ void identify_grains2(int numgrains,int nummicromoves)
 	}
 	while(check < nummicromoves)
 	{
-		float rankcur = 0;
+		double rankcur = 0;
 		for(int i = 0; i < numgrains; i++)
 		{
-			float rank = packedgrain[i].grainmicrorank;
-			float picked = packedgrain[i].picked;
+			double rank = packedgrain[i].grainmicrorank;
+			double picked = packedgrain[i].picked;
 			if(rank > rankcur && picked == 0)
 			{
 				rankcur = rank;
@@ -3105,8 +3105,8 @@ void identify_grains2(int numgrains,int nummicromoves)
 		float rankcur2 = 0;
 		for(int j = 0; j < numgrains; j++)
 		{
-			float rank2 = packedgrain[j].grainmicrorank;
-			float picked2 = packedgrain[j].picked;
+			double rank2 = packedgrain[j].grainmicrorank;
+			double picked2 = packedgrain[j].picked;
 			if(rank2 > rankcur2 && picked2 == 0)
 			{
 				rankcur2 = rank2;
@@ -3126,13 +3126,13 @@ void move_grains2(int numgrains)
 	list<int> tempnonelist;
 	for(int i = 0; i < numgrains; i++)
 	{
-		float ea1temp = packedgrain[i].euler1;
-		float ea2temp = packedgrain[i].euler2;
-		float ea3temp = packedgrain[i].euler3;
+		double ea1temp = packedgrain[i].euler1;
+		double ea2temp = packedgrain[i].euler2;
+		double ea3temp = packedgrain[i].euler3;
 		packedgrain[i].oeuler1 = ea1temp;
 		packedgrain[i].oeuler2 = ea2temp;
 		packedgrain[i].oeuler3 = ea3temp;
-		float picked = packedgrain[i].picked;
+		double picked = packedgrain[i].picked;
 		if(picked == 2)
 		{
 			nonelist.push_back(i);
@@ -3141,12 +3141,12 @@ void move_grains2(int numgrains)
 	}
 	for(int j = 0; j < numgrains; j++)
 	{
-		float picked = packedgrain[j].picked;
+		double picked = packedgrain[j].picked;
 		if(picked == 1)
 		{
 			int size = nonelist.size();
-			float random = rg.Random();
-			float random1 = random;
+			double random = rg.Random();
+			double random1 = random;
 			int remainder = random1*size;
 			if(size <= remainder)
 			{
@@ -3161,17 +3161,17 @@ void move_grains2(int numgrains)
 			int swap = nonelist.front();
 			nonelist.pop_front();
 		//	int grainname = packedgrain[j].grainname;
-			float ea1 = packedgrain[swap].oeuler1;
-			float ea2 = packedgrain[swap].oeuler2;
-			float ea3 = packedgrain[swap].oeuler3;
+			double ea1 = packedgrain[swap].oeuler1;
+			double ea2 = packedgrain[swap].oeuler2;
+			double ea3 = packedgrain[swap].oeuler3;
 		//	int nnum = packedgrain[j].neighnum;
 			packedgrain[j].euler1 = ea1;
 			packedgrain[j].euler2 = ea2;
 			packedgrain[j].euler3 = ea3;
 	//		int sgrainname = packedgrain[swap].grainname;
-			float sea1 = packedgrain[j].oeuler1;
-			float sea2 = packedgrain[j].oeuler2;
-			float sea3 = packedgrain[j].oeuler3;
+			double sea1 = packedgrain[j].oeuler1;
+			double sea2 = packedgrain[j].oeuler2;
+			double sea3 = packedgrain[j].oeuler3;
 		//	int snnum = packedgrain[swap].neighnum;
 			packedgrain[swap].euler1 = sea1;
 			packedgrain[swap].euler2 = sea2;
@@ -3195,7 +3195,7 @@ void freeze_grains(int numgrains)
 	for(int i = 0; i < numgrains; i++)
 	{
 		froze = 0;
-		float fraction = packedgrain[i].lowanglefraction;
+		double fraction = packedgrain[i].lowanglefraction;
 		if(fraction > 0.85)
 		{
 			froze = 1;
@@ -3206,7 +3206,7 @@ void freeze_grains(int numgrains)
 		{
 			int neighfirst = neighborvector[i][j];
 			float neighmiso = misolist.front();
-			float neighfrac = packedgrain[neighfirst].lowanglefraction;
+			double neighfrac = packedgrain[neighfirst].lowanglefraction;
 			if(neighfrac > 0.85 && neighmiso < 15)
 			{
 				froze = 1;
