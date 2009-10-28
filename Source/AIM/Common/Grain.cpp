@@ -73,10 +73,12 @@ grainmicrorank(0.0),
 picked(0.0),
 frozen(0.0)
 {
-
+  neighborlist = NULL;
 }
 
 Grain::~Grain()
 {
-//  std::cout << "~Grain()" << std::endl;
+  if (neighborlist != NULL) {
+    delete neighborlist;
+  }
 }

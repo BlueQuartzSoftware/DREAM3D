@@ -32,7 +32,7 @@ void AngFileHelper::loadData(Voxel voxels[],
                              double resz)
 {
   const int zero = 0;
-  const int checked = 1;
+ // const int checked = 1;
   const int badgrain = -1;
   const double badeuler = 12.566370010375977;
   size_t index = 0;
@@ -41,16 +41,16 @@ void AngFileHelper::loadData(Voxel voxels[],
     if (m_Cancel == true) { break; }
     {
       AngFileReader::Pointer reader = AngFileReader::New();
-      int slice = m_ZIndexStart + k;
-      std::string angFName = m_DirectoryPattern->generateFullPathAngFileName(slice);
+      //int slice = m_ZIndexStart + k;
+      std::string angFName = m_DirectoryPattern->generateFullPathAngFileName(k);
       std::cout << "Reading ANG File '" << angFName << "'" << std::endl;
 
       int err = reader->readFile(angFName);
-	  if (err < 0)
-	  {
-		  std::cout << "Error reading file '" << angFName << "'" << std::endl;
-		  break;
-	  }
+      if (err < 0)
+      {
+        std::cout << "Error reading file '" << angFName << "'" << std::endl;
+        break;
+      }
       size_t readerIndex = 0;
       float* euler1Ptr = reader->getPhi1Data()->getPointer(0);
       float* euler2Ptr = reader->getPhiData()->getPointer(0);

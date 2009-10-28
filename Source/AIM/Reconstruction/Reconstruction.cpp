@@ -331,7 +331,7 @@ void Reconstruction::progressMessage(AIM_STRING message, int progress)
 #ifdef AIM_USE_QT
       emit updateMessage(QString(message));
       emit updateProgress(progress);
-      std::cout << message.toStdString() << std::endl;
+     // std::cout << message.toStdString() << std::endl;
 #else
 
   std::cout << message << std::endl;
