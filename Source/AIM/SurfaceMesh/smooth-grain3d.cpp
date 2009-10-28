@@ -150,8 +150,11 @@ double triangle::circularity(double area) const
   return R/r;
 }
 
-
+#ifdef SURFACE_MESH_LIBRARY
+int SmoothGrain3D(int argc, char* argv[])
+#else
 int main(int argc, char* argv[])
+#endif
 {
   if( argc < 5 ) {
 	std::cout << "Usage: ./smooth nodes.txt triangles.txt "<< std::endl ;

@@ -9,18 +9,18 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-#ifndef _RECONSTRUCTION_H_
-#define _RECONSTRUCTION_H_
+#ifndef SURFACEMESH_H_
+#define SURFACEMESH_H_
 
 #if defined (_MSC_VER)
-#define WIN32_LEAN_AND_MEAN		// Exclude rarely-used stuff from Windows headers
+#define WIN32_LEAN_AND_MEAN   // Exclude rarely-used stuff from Windows headers
 #endif
 
 
 #include <MXA/Common/MXASetGetMacros.h>
 #include <MXA/Common/MXATypes.h>
 #include <AIM/Common/Constants.h>
-#include <AIM/Common/MicroGen3D.h>
+//#include <AIM/Common/MicroGen3D.h>
 
 #ifdef AIM_USE_QT
 #include <QtCore/QObject>
@@ -29,10 +29,9 @@
 #else
 #define AIM_STRING std::string
 #endif
-/*
- *
- */
-class Reconstruction
+
+
+class SurfaceMesh
 #ifdef AIM_USE_QT
  : public QThread
 #endif
@@ -42,38 +41,28 @@ Q_OBJECT
 #endif
 
   public:
-    MXA_SHARED_POINTERS(Reconstruction);
-    MXA_TYPE_MACRO(Reconstruction);
+    MXA_SHARED_POINTERS(SurfaceMesh);
+    MXA_TYPE_MACRO(SurfaceMesh);
 
 #ifdef AIM_USE_QT
     static Pointer New (QObject* parent = 0);
 #else
-    MXA_STATIC_NEW_MACRO(Reconstruction);
+    MXA_STATIC_NEW_MACRO(SurfaceMesh);
 #endif
-    virtual ~Reconstruction();
+    virtual ~SurfaceMesh();
 
-
-    MXA_INSTANCE_STRING_PROPERTY(InputDirectory, m_InputDirectory)
+    MXA_INSTANCE_STRING_PROPERTY(InputFile, m_InputFile)
     MXA_INSTANCE_STRING_PROPERTY(OutputDirectory, m_OutputDirectory)
-    MXA_INSTANCE_STRING_PROPERTY(AngFilePrefix, m_AngFilePrefix)
-    MXA_INSTANCE_PROPERTY_m(int, AngSeriesMaxSlice)
-    MXA_INSTANCE_PROPERTY_m(int, ZStartIndex)
-    MXA_INSTANCE_PROPERTY_m(int, ZEndIndex)
-    MXA_INSTANCE_PROPERTY_m(double, ZResolution)
-    MXA_INSTANCE_PROPERTY_m(bool, MergeTwins)
-    MXA_INSTANCE_PROPERTY_m(int32, MinAllowedGrainSize)
-    MXA_INSTANCE_PROPERTY_m(double, MinSeedConfidence)
-    MXA_INSTANCE_PROPERTY_m(double, MisorientationTolerance)
-    MXA_INSTANCE_PROPERTY_m(AIM::Representation::CrystalStructure, CrystalStructure)
-    MXA_INSTANCE_PROPERTY_m(bool, AlreadyFormed)
+    MXA_INSTANCE_PROPERTY_m(bool, SmoothMesh)
+    MXA_INSTANCE_PROPERTY_m(int, SmoothIterations)
+    MXA_INSTANCE_PROPERTY_m(int, SmoothFileOutputIncrement)
+    MXA_INSTANCE_PROPERTY_m(bool, SmoothLockQuadPoints)
     MXA_INSTANCE_PROPERTY_m(int, ErrorCondition);
-
-    void parseAngFile();
 
     /**
      * @brief Either prints a message or sends the message to the User Interface
      * @param message The message to print
-     * @param progress The progress of the Reconstruction normalized to a value between 0 and 100
+     * @param progress The progress of the SurfaceMesh normalized to a value between 0 and 100
      */
     void progressMessage(AIM_STRING message, int progress);
 
@@ -108,20 +97,21 @@ Q_OBJECT
 
   protected:
 #ifdef AIM_USE_QT
-    Reconstruction(QObject* parent = 0);
+    SurfaceMesh(QObject* parent = 0);
     virtual void run();
 
 #else
-    Reconstruction();
+    SurfaceMesh();
 #endif
 
   private:
-    MicroGen3D::Pointer m_microgen;
+    //MicroGen3D::Pointer m_microgen;
 
 
 
-    Reconstruction(const Reconstruction&);    // Copy Constructor Not Implemented
-    void operator=(const Reconstruction&);  // Operator '=' Not Implemented
+    SurfaceMesh(const SurfaceMesh&);    // Copy Constructor Not Implemented
+    void operator=(const SurfaceMesh&);  // Operator '=' Not Implemented
 };
 
-#endif /* RECONSTRUCTION_H_ */
+
+#endif /* SURFACEMESH_H_ */

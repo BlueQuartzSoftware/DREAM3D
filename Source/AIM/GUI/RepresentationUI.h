@@ -47,6 +47,8 @@ class RepresentationUI : public QMainWindow, private Ui::RepresentationUI
 
     void on_actionClose_triggered();
     void on_actionExit_triggered();
+
+    /* Reconstruction Slots */
     void on_angDirBtn_clicked();
     void on_outputDirBtn_clicked();
     void on_alreadyFormed_stateChanged(int);
@@ -56,6 +58,12 @@ class RepresentationUI : public QMainWindow, private Ui::RepresentationUI
     void on_gg_InputDirBtn_clicked();
     void on_gg_OutputDirBtn_clicked();
     void on_gg_GoBtn_clicked();
+
+    /* Surface Meshing Slots */
+    void on_sm_InputFileBtn_clicked();
+    void on_sm_OutputDirBtn_clicked();
+    void on_sm_GoBtn_clicked();
+
 
 
   /**
@@ -145,6 +153,7 @@ class RepresentationUI : public QMainWindow, private Ui::RepresentationUI
     void setupGui();
     void setupGui_Reconstruction();
     void setupGui_GrainGenerator();
+    void setupGui_SurfaceMeshing();
 
     /**
      * @brief Checks the currently open file for changes that need to be saved

@@ -62,6 +62,14 @@
   prefs.setValue(#var, this->var->value());
 
 
+#define READ_COMBO_BOX(prefs, combobox)\
+    { bool ok = false;\
+    int i = prefs.value(#combobox).toInt(&ok);\
+    if (false == ok) {i=0;}\
+    combobox->setCurrentIndex(i); }
+
+#define WRITE_COMBO_BOX(prefs, combobox)\
+    prefs.setValue(#combobox, this->combobox->currentIndex());
 
 #define SET_TEXT_ICON(name, icon)\
   { \
@@ -82,13 +90,6 @@
   SET_TEXT_ICON(name, Delete) }  }
 
 
-#define READ_COMBO_BOX(prefs, combobox)\
-    { bool ok = false;\
-    int i = prefs.value(#combobox).toInt(&ok);\
-    if (false == ok) {i=0;}\
-    combobox->setCurrentIndex(i); }\
-
-
 #define GG_CHECK_OUTPUT_FILE_EXISTS(name) \
   { \
   QString absPath = gg_OutputDir->text() + QDir::separator() + AIM::Representation::name.c_str();\
@@ -103,7 +104,7 @@
     name##_3->setText(AIM::Representation::name.c_str());\
     name##Icon##_3->setPixmap(QPixmap(iconFile));\
   }\
-  }
+}
 
 
 #define GG_CHECK_INPUT_FILE_EXISTS(name) \
@@ -120,8 +121,7 @@
     name##_2->setText(AIM::Representation::name.c_str());\
     name##Icon##_2->setPixmap(QPixmap(iconFile));\
   }\
-  }
-
+ }
 
 
 // -----------------------------------------------------------------------------
@@ -238,6 +238,15 @@ void RepresentationUI::readSettings()
   READ_COMBO_BOX(prefs, gg_ShapeClass)
   READ_COMBO_BOX(prefs, gg_OverlapAssignment)
 
+  /* ******** This Section is for the Surface Meshing Tab ************ */
+  READ_FILEPATH_SETTING(prefs, sm_InputFile, "");
+  READ_FILEPATH_SETTING(prefs, sm_OutputDir, "");
+  READ_BOOL_SETTING(prefs, sm_SmoothMesh, false);
+  READ_BOOL_SETTING(prefs, sm_LockQuadPoints, false);
+  READ_SETTING(prefs, sm_SmoothIterations, ok, i, 1 , Int);
+  READ_SETTING(prefs, sm_WriteOutputFileIncrement, ok, i, 10 , Int);
+
+
 }
 
 // -----------------------------------------------------------------------------
@@ -250,34 +259,43 @@ void RepresentationUI::writeSettings()
   bool ok = false;
   qint32 i = 0;
   /* ******** This Section is for the Reconstruction Tab ************ */
-  WRITE_STRING_SETTING(prefs, angDir);
-  WRITE_STRING_SETTING(prefs, outputDir);
-  WRITE_STRING_SETTING(prefs, angFilePrefix);
-  WRITE_STRING_SETTING(prefs, angMaxSlice);
-  WRITE_STRING_SETTING(prefs, zStartIndex);
-  WRITE_STRING_SETTING(prefs, zEndIndex);
-  WRITE_STRING_SETTING(prefs, zSpacing);
+  WRITE_STRING_SETTING(prefs, angDir)
+  WRITE_STRING_SETTING(prefs, outputDir)
+  WRITE_STRING_SETTING(prefs, angFilePrefix)
+  WRITE_STRING_SETTING(prefs, angMaxSlice)
+  WRITE_STRING_SETTING(prefs, zStartIndex)
+  WRITE_STRING_SETTING(prefs, zEndIndex)
+  WRITE_STRING_SETTING(prefs, zSpacing)
 
-  WRITE_BOOL_SETTING(prefs, mergeTwins, mergeTwins->isChecked());
-  WRITE_BOOL_SETTING(prefs, alreadyFormed, alreadyFormed->isChecked());
+  WRITE_BOOL_SETTING(prefs, mergeTwins, mergeTwins->isChecked())
+  WRITE_BOOL_SETTING(prefs, alreadyFormed, alreadyFormed->isChecked())
 
-  WRITE_SETTING(prefs, minAllowedGrainSize);
-  WRITE_SETTING(prefs, minConfidence);
-  WRITE_SETTING(prefs, misOrientationTolerance);
-  prefs.setValue("crystalStructure", this->crystalStructure->currentIndex());
+  WRITE_SETTING(prefs, minAllowedGrainSize)
+  WRITE_SETTING(prefs, minConfidence)
+  WRITE_SETTING(prefs, misOrientationTolerance)
+  WRITE_COMBO_BOX(prefs, crystalStructure)
 
   /* ******** This Section is for the Grain Generator Tab ************ */
-  WRITE_STRING_SETTING(prefs, gg_InputDir);
-  WRITE_STRING_SETTING(prefs, gg_OutputDir);
-  READ_SETTING(prefs, gg_XResolution, ok, i, 0.25 , Double);
-  READ_SETTING(prefs, gg_YResolution, ok, i, 0.25 , Double);
-  READ_SETTING(prefs, gg_ZResolution, ok, i, 0.25 , Double);
-  READ_SETTING(prefs, gg_NumGrains, ok, i, 300 , Int);
+  WRITE_STRING_SETTING(prefs, gg_InputDir)
+  WRITE_STRING_SETTING(prefs, gg_OutputDir)
+  WRITE_SETTING(prefs, gg_XResolution )
+  WRITE_SETTING(prefs, gg_YResolution )
+  WRITE_SETTING(prefs, gg_ZResolution )
+  WRITE_SETTING(prefs, gg_NumGrains )
 
-  READ_SETTING(prefs, gg_OverlapAllowed, ok, i, 0.00 , Double);
-  READ_COMBO_BOX(prefs, gg_CrystalStructure)
-  READ_COMBO_BOX(prefs, gg_ShapeClass)
-  READ_COMBO_BOX(prefs, gg_OverlapAssignment)
+  WRITE_SETTING(prefs, gg_OverlapAllowed )
+  WRITE_COMBO_BOX(prefs, gg_CrystalStructure)
+  WRITE_COMBO_BOX(prefs, gg_ShapeClass)
+  WRITE_COMBO_BOX(prefs, gg_OverlapAssignment)
+
+
+  /* ******** This Section is for the Surface Meshing Tab ************ */
+  WRITE_STRING_SETTING(prefs, sm_InputFile);
+  WRITE_STRING_SETTING(prefs, sm_OutputDir);
+  WRITE_BOOL_SETTING(prefs, sm_SmoothMesh, sm_SmoothMesh->isChecked() );
+  WRITE_BOOL_SETTING(prefs, sm_LockQuadPoints, sm_LockQuadPoints->isChecked() );
+  WRITE_SETTING(prefs, sm_SmoothIterations );
+  WRITE_SETTING(prefs, sm_WriteOutputFileIncrement );
 }
 
 
@@ -291,6 +309,9 @@ void RepresentationUI::setupGui()
 
   // Setup the Grain Generator Tab Gui
   setupGui_GrainGenerator();
+
+  // Setup the SurfaceMeshing Tab Gui
+  setupGui_SurfaceMeshing();
 }
 
 // -----------------------------------------------------------------------------
@@ -373,6 +394,34 @@ void RepresentationUI::setupGui_GrainGenerator()
   m_WidgetList << gg_InputDir << gg_InputDirBtn << gg_OutputDir << gg_OutputDirBtn;
   m_WidgetList << gg_CrystalStructure << gg_NumGrains << gg_XResolution << gg_YResolution << gg_ZResolution;
   m_WidgetList << gg_OverlapAllowed << gg_OverlapAssignment << gg_ShapeClass;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void RepresentationUI::setupGui_SurfaceMeshing()
+{
+  CHECK_OUTPUT_FILE_EXISTS(NodesFile)
+  CHECK_OUTPUT_FILE_EXISTS(TrianglesFile)
+  sm_Message->setText("");
+  m_WidgetList << sm_InputFile << sm_InputFileBtn << sm_OutputDir << sm_OutputDirBtn;
+  m_WidgetList << sm_Message << sm_LockQuadPoints << sm_SmoothIterations << sm_SmoothMesh;
+  m_WidgetList << sm_WriteOutputFileIncrement;
+
+  _verifyPathExists(sm_OutputDir->text(), sm_OutputDir);
+  if ( _verifyPathExists(sm_InputFile->text(), sm_InputFile) == true )
+  {
+    QFileInfo fi (sm_InputFile->text() );
+    QString ext = fi.suffix();
+    if (ext.compare(AIM::Representation::VTKExt.c_str() ) == 0)
+    {
+      sm_Message->setText("You have selected a VTK file which will need to be converted first to a 'dx' based file. This will be done for you.");
+    }
+    else
+    {
+      sm_Message->setText("You have selected a 'dx' file which can be used directly by the surface meshing code.");
+    }
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -781,29 +830,11 @@ void RepresentationUI::reconstruction_ThreadProgressed(int val)
 
 
 
-/* Grain Generator Slots*/
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void RepresentationUI::gg_ThreadFinished()
-{
-  std::cout << "RepresentationUI::grainGenerator_Finished()" << std::endl;
-  gg_GoBtn->setText("Go");
-  setWidgetListEnabled(true);
-  this->gg_progressBar->setValue(0);
-  reconstructionTab->setEnabled(true);
-  surfaceMeshingTab->setEnabled(true);
-  volumeMeshingTab->setEnabled(true);
-  setupGui_GrainGenerator();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void RepresentationUI::gg_ThreadProgressed(int val)
-{
-  this->gg_progressBar->setValue( val );
-}
+/* *****************************************************************************
+ *
+ * Grain Generator Methods
+ *
+ ***************************************************************************** */
 
 // -----------------------------------------------------------------------------
 //
@@ -834,7 +865,7 @@ void RepresentationUI::on_gg_OutputDirBtn_clicked()
   if (!outputFile.isNull())
   {
     this->gg_OutputDir->setText(outputFile);
-    if (_verifyPathExists(outputFile, outputDir) == true )
+    if (_verifyPathExists(outputFile, gg_OutputDir) == true )
     {
       setupGui_GrainGenerator();
     }
@@ -893,23 +924,120 @@ void RepresentationUI::on_gg_GoBtn_clicked()
   gg_GoBtn->setText("Cancel");
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void RepresentationUI::gg_ThreadFinished()
+{
+  std::cout << "RepresentationUI::grainGenerator_Finished()" << std::endl;
+  gg_GoBtn->setText("Go");
+  setWidgetListEnabled(true);
+  this->gg_progressBar->setValue(0);
+  reconstructionTab->setEnabled(true);
+  surfaceMeshingTab->setEnabled(true);
+  volumeMeshingTab->setEnabled(true);
+  setupGui_GrainGenerator();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void RepresentationUI::gg_ThreadProgressed(int val)
+{
+  this->gg_progressBar->setValue( val );
+}
+
+
+/* *****************************************************************************
+ *
+ * Surface Meshing Methods
+ *
+ ***************************************************************************** */
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void RepresentationUI::on_sm_InputFileBtn_clicked()
+{
+  QString file = QFileDialog::getOpenFileName(this, tr("Select Input File"),
+                                                 m_OpenDialogLastDirectory,
+                                                 tr("Viz Files (*.dx *.vtk)") );
+
+  if ( true == file.isEmpty() )
+  {
+    return;
+  }
+
+  QFileInfo fi (file);
+  QString ext = fi.suffix();
+  if (ext.compare(AIM::Representation::VTKExt.c_str() ) == 0)
+  {
+    sm_Message->setText("You have selected a VTK file which will need to be converted first to a 'dx' based file. This will be done for you.");
+  }
+  else
+  {
+    sm_Message->setText("You have selected a 'dx' file which can be used directly by the surface meshing code.");
+  }
+  sm_InputFile->setText(fi.absoluteFilePath());
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void RepresentationUI::on_sm_OutputDirBtn_clicked()
+{
+  QString outputFile = this->m_OpenDialogLastDirectory + QDir::separator();
+  outputFile = QFileDialog::getExistingDirectory(this, tr("Select Surface Meshing Output Directory"), outputFile);
+  if (!outputFile.isNull())
+  {
+    this->sm_OutputDir->setText(outputFile);
+    if (_verifyPathExists(outputFile, sm_OutputDir) == true )
+    {
+      setupGui_SurfaceMeshing();
+      sm_OutputDir->setText(outputFile);
+    }
+  }
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void RepresentationUI::on_sm_GoBtn_clicked()
+{
+  std::cout << "on_sm_GoBtn_clicked" << std::endl;
+}
 
 
 
-
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void RepresentationUI::surfaceMesh_ThreadFinished()
 {
 
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void RepresentationUI::surfaceMesh_ThreadProgressed(int value)
 {
 
 }
 
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void RepresentationUI::volumeMesh_ThreadFinished()
 {
 
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void RepresentationUI::volumeMesh_ThreadProgressed(int value)
 {
 

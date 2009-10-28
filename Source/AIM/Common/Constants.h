@@ -25,7 +25,7 @@ namespace AIM
 
   namespace Representation
   {
- //   const std::string InputFile("formed_grains.txt");
+    /*    Reconstruction related */
     const std::string StatsFile("stats.txt");//1
     const std::string VolBinFile("volbins.txt"); //2
     const std::string BOverABinsFile("boverabins.txt");//3
@@ -49,6 +49,8 @@ namespace AIM
         Cubic = 2
     };
 
+    /*  Grain Generator Related */
+
     const std::string CubeFile("cube.vtk");
     const std::string AnalysisFile("analysis.txt");
     const std::string VolumeFile("volume.txt");
@@ -67,7 +69,16 @@ namespace AIM
     };
 
 
-  }
+    /*   Surface Meshing Related   */
+
+    const std::string VTKExt("vtk");
+    const std::string DXExt ("dx");
+
+    const std::string NodesFile("nodes.txt");
+    const std::string TrianglesFile("triangles.txt");
+
+
+  } // End Namespace Representation
 }
 
 #if 0
