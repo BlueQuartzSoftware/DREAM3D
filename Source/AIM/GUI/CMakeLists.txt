@@ -42,7 +42,7 @@ IF(WIN32)
  SET(GUI_TYPE WIN32)
 ENDIF(WIN32)
 
-add_definitions(-DAIM_USE_QT -DSVG_3D_LIBRARY)
+add_definitions(-DAIM_USE_QT -DSVG_3D_LIBRARY -DSURFACE_MESH_LIBRARY)
 
 # List the source files here
 SET (Representation_SRCS
@@ -91,13 +91,27 @@ SET (GrainGenerator_HDRS
    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/GrainGenerator/SVG-3D.h
 )
 IDE_SOURCE_PROPERTIES( "Source/AIM/GrainGenerator" "${GrainGenerator_HDRS}" "${GrainGenerator_SRCS}")
-                            
+
+SET (SurfaceMesh_SRCS
+    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/SurfaceMesh/SurfaceMesh.cpp
+    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/SurfaceMesh/Surface_Mesh_General_MCA_Layer.c
+    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/SurfaceMesh/smooth-grain3d.cpp
+)
+SET (SurfaceMesh_HDRS
+   ${AIMRepresentation_SOURCE_DIR}/Source/AIM/SurfaceMesh/SurfaceMesh.h
+   ${AIMRepresentation_SOURCE_DIR}/Source/AIM/SurfaceMesh/Surface_Mesh_General_MCA_Layer.h
+   ${AIMRepresentation_SOURCE_DIR}/Source/AIM/SurfaceMesh/LinearAlgebra.h
+)
+IDE_SOURCE_PROPERTIES( "Source/AIM/SurfaceMesh" "${SurfaceMesh_HDRS}" "${SurfaceMesh_SRCS}")
+
+                        
 SET( Representation_MOC_HDRS
     ${Representation_SOURCE_DIR}/RepresentationUI.h
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Qt/AIMAboutBox.h
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Qt/QRecentFilelist.h
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Reconstruction/Reconstruction.h
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/GrainGenerator/GrainGenerator.h
+    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/SurfaceMesh/SurfaceMesh.h
     ${AIM_Threads_HDRS}
 )
 
@@ -134,6 +148,8 @@ SET (Representation_PROJECT_SRCS
     ${Reconstruction_HDRS}
     ${GrainGenerator_SRCS}
     ${GrainGenerator_HDRS}
+    ${SurfaceMesh_SRCS}
+    ${SurfaceMesh_HDRS}
     ${Generated_RC_SRCS} 
     ${Generated_UI_HDRS} 
     ${Generated_MOC_SRCS}
