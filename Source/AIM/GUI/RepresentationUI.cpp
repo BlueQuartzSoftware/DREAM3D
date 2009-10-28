@@ -123,7 +123,6 @@
   }\
  }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -239,8 +238,14 @@ void RepresentationUI::readSettings()
   READ_COMBO_BOX(prefs, gg_OverlapAssignment)
 
   /* ******** This Section is for the Surface Meshing Tab ************ */
-  READ_FILEPATH_SETTING(prefs, sm_InputFile, "");
+  READ_FILEPATH_SETTING(prefs, sm_DxFile, "");
+  READ_FILEPATH_SETTING(prefs, sm_EdgeTableFile, "");
+  READ_FILEPATH_SETTING(prefs, sm_NeighSpinTableFile, "");
   READ_FILEPATH_SETTING(prefs, sm_OutputDir, "");
+  READ_SETTING(prefs, sm_XDim, ok, i, 100 , Int);
+  READ_SETTING(prefs, sm_YDim, ok, i, 100 , Int);
+  READ_SETTING(prefs, sm_ZDim, ok, i, 100 , Int);
+
   READ_BOOL_SETTING(prefs, sm_SmoothMesh, false);
   READ_BOOL_SETTING(prefs, sm_LockQuadPoints, false);
   READ_SETTING(prefs, sm_SmoothIterations, ok, i, 1 , Int);
@@ -256,8 +261,8 @@ void RepresentationUI::writeSettings()
 {
   // std::cout << "writeSettings" << std::endl;
   QSettings prefs;
-  bool ok = false;
-  qint32 i = 0;
+//  bool ok = false;
+//  qint32 i = 0;
   /* ******** This Section is for the Reconstruction Tab ************ */
   WRITE_STRING_SETTING(prefs, angDir)
   WRITE_STRING_SETTING(prefs, outputDir)
@@ -290,7 +295,12 @@ void RepresentationUI::writeSettings()
 
 
   /* ******** This Section is for the Surface Meshing Tab ************ */
-  WRITE_STRING_SETTING(prefs, sm_InputFile);
+  WRITE_STRING_SETTING(prefs, sm_DxFile);
+  WRITE_STRING_SETTING(prefs, sm_EdgeTableFile);
+  WRITE_STRING_SETTING(prefs, sm_NeighSpinTableFile);
+  WRITE_SETTING(prefs, sm_XDim );
+  WRITE_SETTING(prefs, sm_YDim );
+  WRITE_SETTING(prefs, sm_ZDim );
   WRITE_STRING_SETTING(prefs, sm_OutputDir);
   WRITE_BOOL_SETTING(prefs, sm_SmoothMesh, sm_SmoothMesh->isChecked() );
   WRITE_BOOL_SETTING(prefs, sm_LockQuadPoints, sm_LockQuadPoints->isChecked() );
@@ -396,22 +406,55 @@ void RepresentationUI::setupGui_GrainGenerator()
   m_WidgetList << gg_OverlapAllowed << gg_OverlapAssignment << gg_ShapeClass;
 }
 
+#define SM_CS(a,b) a##b
+
+#define SM_CHECK_INPUT_FILE_EXISTS(name, Icon) \
+  { \
+  QString absPath = QDir::toNativeSeparators(name->text());\
+  QFileInfo fi ( absPath );\
+  QString iconFile;\
+  if ( fi.exists() )  {\
+    iconFile = QString(":/") + QString("Check") + QString("-16x16.png");\
+  } else {\
+    iconFile = QString(":/") + QString("Delete") + QString("-16x16.png");\
+  }\
+  Icon->setPixmap(QPixmap(iconFile));\
+ }
+
+#define SM_CHECK_OUTPUT_FILE_EXISTS(name, File) \
+  { \
+  QString absPath = sm_OutputDir->text() + QDir::separator() + AIM::Representation::name.c_str();\
+  absPath = QDir::toNativeSeparators(absPath);\
+  QFileInfo fi ( absPath );\
+  QString iconFile;\
+  if ( fi.exists() )  {\
+    iconFile = QString(":/") + QString("Check") + QString("-16x16.png");\
+  } else {\
+    iconFile = QString(":/") + QString("Delete") + QString("-16x16.png");\
+  }\
+  File->setText(AIM::Representation::name.c_str());\
+  File##Icon->setPixmap(QPixmap(iconFile)); \
+}
+
+
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void RepresentationUI::setupGui_SurfaceMeshing()
 {
-  CHECK_OUTPUT_FILE_EXISTS(NodesFile)
-  CHECK_OUTPUT_FILE_EXISTS(TrianglesFile)
+
   sm_Message->setText("");
-  m_WidgetList << sm_InputFile << sm_InputFileBtn << sm_OutputDir << sm_OutputDirBtn;
+  m_WidgetList << sm_DxFile << sm_EdgeTableFile << sm_NeighSpinTableFile;
+  m_WidgetList << sm_XDim << sm_YDim << sm_ZDim << sm_InputFileBtn << sm_OutputDir << sm_OutputDirBtn;
   m_WidgetList << sm_Message << sm_LockQuadPoints << sm_SmoothIterations << sm_SmoothMesh;
   m_WidgetList << sm_WriteOutputFileIncrement;
 
   _verifyPathExists(sm_OutputDir->text(), sm_OutputDir);
-  if ( _verifyPathExists(sm_InputFile->text(), sm_InputFile) == true )
+  if ( _verifyPathExists(sm_DxFile->text(), sm_DxFile) == true )
   {
-    QFileInfo fi (sm_InputFile->text() );
+    QFileInfo fi (sm_DxFile->text() );
     QString ext = fi.suffix();
     if (ext.compare(AIM::Representation::VTKExt.c_str() ) == 0)
     {
@@ -422,6 +465,27 @@ void RepresentationUI::setupGui_SurfaceMeshing()
       sm_Message->setText("You have selected a 'dx' file which can be used directly by the surface meshing code.");
     }
   }
+
+  {
+    QString absPath = gg_InputDir->text() + QDir::separator() + AIM::Representation::EdgeTableFile.c_str();\
+    absPath = QDir::toNativeSeparators(absPath);
+    QFileInfo fi ( absPath );
+    QString iconFile;
+    if ( fi.exists() )  {
+      iconFile = QString(":/") + QString("Check") + QString("-16x16.png");
+    } else {
+      iconFile = QString(":/") + QString("Delete") + QString("-16x16.png");
+    }
+    sm_EdgeTableFileIcon->setPixmap(QPixmap(iconFile));
+   }
+
+  SM_CHECK_INPUT_FILE_EXISTS(sm_DxFile, sm_DxFileIcon);
+  SM_CHECK_INPUT_FILE_EXISTS(sm_EdgeTableFile, sm_EdgeTableFileIcon);
+  SM_CHECK_INPUT_FILE_EXISTS(sm_NeighSpinTableFile, sm_NeighSpinTableFileIcon);
+
+
+  SM_CHECK_OUTPUT_FILE_EXISTS(NodesFile, sm_NodesFile);
+  SM_CHECK_OUTPUT_FILE_EXISTS(TrianglesFile, sm_TrianglesFile);
 }
 
 // -----------------------------------------------------------------------------
@@ -500,14 +564,14 @@ bool RepresentationUI::_verifyOutputPathParentExists(QString outFilePath, QLineE
 bool RepresentationUI::_verifyPathExists(QString outFilePath, QLineEdit* lineEdit)
 {
   QFileInfo fileinfo(outFilePath);
-  if (false == fileinfo.exists() )
-  {
-    lineEdit->setStyleSheet("border: 2px solid red;");
-  }
-  else
-  {
-    lineEdit->setStyleSheet("");
-  }
+//  if (false == fileinfo.exists() )
+//  {
+//    lineEdit->setStyleSheet("border: 2px solid red;");
+//  }
+//  else
+//  {
+//    lineEdit->setStyleSheet("");
+//  }
   return fileinfo.exists();
 }
 
@@ -663,7 +727,7 @@ void RepresentationUI::on_alreadyFormed_stateChanged(int currentState)
   QString msg ("All files will be over written that appear in the output directory.");
   if (alreadyFormed->isChecked() == true && fi.exists() == false)
   {
-    int ret = QMessageBox::critical(this, tr("AIM Representation"),
+    QMessageBox::critical(this, tr("AIM Representation"),
       tr("You have selected the 'Already Formed' check box \nbut the correct output file does not exist.\n"
       "The checkbox will revert to an unchecked state.?"),
       QMessageBox::Ok,
@@ -977,7 +1041,7 @@ void RepresentationUI::on_sm_InputFileBtn_clicked()
   {
     sm_Message->setText("You have selected a 'dx' file which can be used directly by the surface meshing code.");
   }
-  sm_InputFile->setText(fi.absoluteFilePath());
+  sm_DxFile->setText(fi.absoluteFilePath());
 
 }
 

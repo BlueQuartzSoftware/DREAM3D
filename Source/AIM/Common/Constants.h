@@ -73,6 +73,8 @@ namespace AIM
 
     const std::string VTKExt("vtk");
     const std::string DXExt ("dx");
+    const std::string EdgeTableFile("edgeTable_2d.txt");
+    const std::string NeighSpinTableFile("neighspinTable_2d.txt");
 
     const std::string NodesFile("nodes.txt");
     const std::string TrianglesFile("triangles.txt");

@@ -24,24 +24,26 @@
 #include <math.h>
 #include <string.h>
 
-#define PI 3.14159265
-#define num_neigh 26
-
-// constants for procedure ran3
-#define MBIG 1000000000
-#define MSEED 161803398
-#define MZ 0
-#define FAC (1.0/MBIG)
-
 #include "Surface_Mesh_General_MCA_Layer.h"
 
-
-int SurfaceMesh(int xnum, int ynum, int znum,
-                     char* nodesFile,
-                     char* dxFile,
-                     char* edgeTableFile,
-                     char* neighspinTableFile,
-                     char* meshStatsFile)
+/**
+ * @brief
+ * @param xnum
+ * @param ynum
+ * @param znum
+ * @param outputDir The absolute path to where the output files will be created
+ * @param nodesFile The absolute path to the nodes input file
+ * @param dxFile The absolute path to the dx file
+ * @param edgeTableFile The Absolute Path to the EdgeTable File.
+ * @param neighspinTableFile The Absolute Path to the NeighborSpinTable File
+ * @param meshStatsFile The Absolute Path to the stats file
+ * @return
+ */
+int SurfaceMesh_MCALayer( int xnum, int ynum, int znum,
+                          const char* outputDir,
+                          const char* dxFile,
+                          const char* edgeTableFile,
+                          const char* neighspinTableFile)
 {
   int i;
   int err;
@@ -75,7 +77,9 @@ int SurfaceMesh(int xnum, int ynum, int znum,
   char trianglesFile[BUFSIZ];
   char edgepostfix[64] = "_edges_raw.txt";
   char edgeFile[BUFSIZ];
-
+  char* meshStatsFile = MESH_STAT_FILE;
+  char genericFilePath[BUFSIZ];
+  char* nodesFile = NODES_RAW_FILE;
 
   err = 0;
   NS = xnum * ynum * znum;
@@ -93,9 +97,10 @@ int SurfaceMesh(int xnum, int ynum, int znum,
   printf("\nReading edge and triangle tables...\n");
   read_edge_neighspin_table(edgeTable_2d, nsTable_2d, edgeTableFile, neighspinTableFile);
 
-  if ((f1 = fopen(nodesFile, "r")) == NULL)
+
+  if ((f1 = fopen(nodesFile, "w")) == NULL)
   {
-    printf("\nThe input file doesn't exist!\n");
+    printf("\nThe nodesFile file doesn't exist!\n");
     return 1;
   }
 
@@ -165,17 +170,19 @@ int SurfaceMesh(int xnum, int ynum, int znum,
     }
 
     // Output nodes and triangles...
-    get_output_nodes(cVertex, NSP, i, znum, nodesFile );
+    memset(genericFilePath, 0, BUFSIZ); // Clear the string first
+    sprintf(genericFilePath, "%s%s", outputDir,  nodesFile);
+    get_output_nodes(cVertex, NSP, i, znum, genericFilePath );
 
 
 
     memset(edgeFile, 0, BUFSIZ); // Clear the string first
-    sprintf(edgeFile, "%d%s", i, edgepostfix);
+    sprintf(edgeFile, "%s%d%s", outputDir,  i, edgepostfix);
     get_output_edges(cFedge, cIedge, nFEdge, tnIEdge, i, znum, cEdgeID, &fEdgeID, edgeFile);
 
 
     memset(trianglesFile, 0, BUFSIZ); // Clear the string first
-    sprintf(trianglesFile, "%d%s", cTriID, postfix);
+    sprintf(trianglesFile, "%s%d%s", outputDir, cTriID, postfix);
 
     get_output_triangles(cTriangle, nTriangle, i, cTriID, trianglesFile);
     cEdgeID = fEdgeID;
@@ -199,6 +206,9 @@ int SurfaceMesh(int xnum, int ynum, int znum,
   free(cVertex);
   free(pVertex);
 
+  memset(genericFilePath, 0, BUFSIZ); // Clear the string first
+  sprintf(genericFilePath, "%s%s", outputDir,  meshStatsFile);
+
   if ((f4 = fopen(meshStatsFile, "w")) == NULL)
   {
     printf("\nThe mesh_stat.txt file doesn't exist!\n");
@@ -218,15 +228,14 @@ int SurfaceMesh(int xnum, int ynum, int znum,
 // -----------------------------------------------------------------------------
 int main(int argc, char **argv)
 {
-  char* dxFile; 
+  char* dxFile;
   int xnum, ynum, znum;
   int err;
-  char* nodesFile = "nodes_raw.txt";
-  char* edgeTableFile = "edgeTable_2d.txt";
-  char* neighspinTableFile = "neighspinTable_2d.txt";
-  char* meshStatsFile = "mesh_stat.txt";
+  char* edgeTableFile = EDGETABLE_2D_FILE;
+  char* neighspinTableFile = NEIGHSPIN_TABLE_FILE;
 
-  
+  char* outputDir = ".";
+
   err = 0;
   dxFile = (char*)malloc( BUFSIZ * sizeof(char));
   memset(dxFile, 0, BUFSIZ);
@@ -239,9 +248,10 @@ int main(int argc, char **argv)
   printf("Enter the name of input microstructure dx file:\n");
   scanf("%s", dxFile);
 
-  err = SurfaceMesh(xnum, ynum, znum,
-                     nodesFile,
-                     dxFile, edgeTableFile, neighspinTableFile, meshStatsFile );
+  err = SurfaceMesh_MCALayer(xnum, ynum, znum,
+                     outputDir,
+                     dxFile, edgeTableFile,
+                     neighspinTableFile );
 
   free(dxFile);
   return err;
@@ -249,7 +259,7 @@ int main(int argc, char **argv)
 #endif
 
 // Functions...
-void initialize_micro(struct voxel *p, int ns, int xDim, int yDim, int zDim, char* name)
+void initialize_micro(struct voxel *p, int ns, int xDim, int yDim, int zDim, const char* name)
 {
 
   FILE* f;
@@ -327,7 +337,7 @@ void initialize_micro(struct voxel *p, int ns, int xDim, int yDim, int zDim, cha
 }
 
 void read_edge_neighspin_table(int eT2d[20][8], int nsT2d[20][8],
-                               char* edgeTableFile, char* neighspinTableFile)
+                               const char* edgeTableFile, const char* neighspinTableFile)
 {
 
   FILE *f1, *f2;
