@@ -51,13 +51,20 @@ Q_OBJECT
 #endif
     virtual ~SurfaceMesh();
 
-    MXA_INSTANCE_STRING_PROPERTY(InputFile, m_InputFile)
+    MXA_INSTANCE_STRING_PROPERTY(DXFile, m_DxFile)
+    MXA_INSTANCE_STRING_PROPERTY(EdgeTableFile, m_EdgeTableFile)
+    MXA_INSTANCE_STRING_PROPERTY(NeighSpinTableFile, m_NeighSpinTableFile)
     MXA_INSTANCE_STRING_PROPERTY(OutputDirectory, m_OutputDirectory)
+    MXA_INSTANCE_PROPERTY_m(int, XDim)
+    MXA_INSTANCE_PROPERTY_m(int, YDim)
+    MXA_INSTANCE_PROPERTY_m(int, ZDim)
     MXA_INSTANCE_PROPERTY_m(bool, SmoothMesh)
     MXA_INSTANCE_PROPERTY_m(int, SmoothIterations)
     MXA_INSTANCE_PROPERTY_m(int, SmoothFileOutputIncrement)
     MXA_INSTANCE_PROPERTY_m(bool, SmoothLockQuadPoints)
-    MXA_INSTANCE_PROPERTY_m(int, ErrorCondition);
+    MXA_INSTANCE_PROPERTY_m(int, ErrorCondition)
+
+
 
     /**
      * @brief Either prints a message or sends the message to the User Interface

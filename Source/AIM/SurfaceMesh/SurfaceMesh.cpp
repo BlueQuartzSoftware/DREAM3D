@@ -12,7 +12,7 @@
 #include "SurfaceMesh.h"
 
 #include <MXA/Utilities/MXAFileSystemPath.h>
-
+#include <AIM/SurfaceMesh/Surface_Mesh_General_MCA_Layer.h>
 
 
 #ifdef AIM_USE_QT
@@ -48,7 +48,6 @@ SurfaceMesh::Pointer SurfaceMesh::New( QObject* parent)
 // -----------------------------------------------------------------------------
 SurfaceMesh::SurfaceMesh( QObject* parent) :
 QThread(parent),
-m_InputFile(""),
 m_OutputDirectory(""),
 m_SmoothMesh(false),
 m_SmoothIterations(0),
@@ -100,6 +99,16 @@ void SurfaceMesh::run()
 void SurfaceMesh::compute()
 {
 
+  m_ErrorCondition = SurfaceMesh_MCALayer(m_XDim, m_YDim, m_ZDim,
+                                 m_OutputDirectory.c_str(),
+                                 m_DxFile.c_str(),
+                                 m_EdgeTableFile.c_str(),
+                                 m_NeighSpinTableFile.c_str() );
+
+  if (m_SmoothMesh == true)
+  {
+    //TODO: Run the smoothing algorithm
+  }
 }
 
 // -----------------------------------------------------------------------------

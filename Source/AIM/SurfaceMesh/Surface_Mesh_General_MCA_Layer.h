@@ -17,6 +17,21 @@ extern "C"
 {
 #endif
 
+#define PI 3.14159265
+#define num_neigh 26
+
+// constants for procedure ran3
+#define MBIG 1000000000
+#define MSEED 161803398
+#define MZ 0
+#define FAC (1.0/MBIG)
+
+
+#define NODES_RAW_FILE "nodes_raw.txt"
+#define EDGETABLE_2D_FILE  "edgeTable_2d.txt";
+#define NEIGHSPIN_TABLE_FILE  "neighspinTable_2d.txt";
+#define MESH_STAT_FILE  "mesh_stat.txt";
+
 
   struct voxel
   {
@@ -77,10 +92,16 @@ extern "C"
     double area;
   };
 
+  int SurfaceMesh_MCALayer( int xnum, int ynum, int znum,
+                   const char* outputDir,
+                   const char* dxFile,
+                   const char* edgeTableFile,
+                   const char* neighspinTableFile );
+
   // function prototypes...
-  void initialize_micro(struct voxel *p, int ns, int xDim, int yDim, int zDim, char dxFile[] );
-  void read_edge_neighspin_table(int eT2d[20][8], int nsT2d[20][8], char* edgeTable,
-                                 char* neighspinTable);
+  void initialize_micro(struct voxel *p, int ns, int xDim, int yDim, int zDim, const char* dxFile );
+  void read_edge_neighspin_table(int eT2d[20][8], int nsT2d[20][8], const char* edgeTable,
+                                 const char* neighspinTable);
 
   void get_neighbor_list(struct neighbor *n, int ns, int nsp, int xDim, int yDim, int zDim, int zID);
   void initialize_nodes(struct voxel *p, struct node *v, int nsp, int zID);
