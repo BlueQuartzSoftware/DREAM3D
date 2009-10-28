@@ -1,3 +1,14 @@
+///////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2009, Michael A. Jackson. BlueQuartz Software
+//  Copyright (c) 2009, Michael Groeber, US Air Force Research Laboratory
+//  All rights reserved.
+//  BSD License: http://www.opensource.org/licenses/bsd-license.html
+//
+// This code was partly written under US Air Force Contract FA8650-07-D-5800
+//
+///////////////////////////////////////////////////////////////////////////////
+
 // Broderick-Groeber Diagram Maker.cpp : Defines the entry point for the console application.
 //
 
@@ -438,7 +449,7 @@ int main(int argc, char **argv) {
  inputFile2.open(readname2.c_str());
  inputFile2 >> numtriangles;
  inputFile2.close();
- 
+
  gvector.resize(numsurfnodes*100);
  tvector.resize(numsurfnodes*100);
  nnvector.resize(numsurfnodes*100);
@@ -564,7 +575,7 @@ void read_triangles(string inname3)
 	int grain2;
 	int killed = 0;
 	int ttriangle = 1;
-	int nttriangle = 0; 
+	int nttriangle = 0;
 	int onedge = 0;
 	inputFile >> numtriangles;
 	for(int i=0;i<numtriangles;i++)
@@ -903,7 +914,7 @@ void delete_triangles()
 							double b2 = originalnode[n3].yc-originalnode[n1].yc;
 							double b3 = originalnode[n3].zc-originalnode[n1].zc;
 							double nx = (a2*b3-a3*b2);
-							double ny = (a3*b1-a1*b3);	
+							double ny = (a3*b1-a1*b3);
 							double nz = (a1*b2-a2*b1);
 							double denom = pow((nx*nx+ny*ny+nz*nz),0.5);
 							nx = nx/denom;
@@ -975,7 +986,7 @@ void delete_triangles()
 							double b2 = originalnode[n3].yc-originalnode[n1].yc;
 							double b3 = originalnode[n3].zc-originalnode[n1].zc;
 							double nx = (a2*b3-a3*b2);
-							double ny = (a3*b1-a1*b3);	
+							double ny = (a3*b1-a1*b3);
 							double nz = (a1*b2-a2*b1);
 							double denom = pow((nx*nx+ny*ny+nz*nz),0.5);
 							nx = nx/denom;
@@ -1047,7 +1058,7 @@ void delete_triangles()
 							double b2 = originalnode[n3].yc-originalnode[n1].yc;
 							double b3 = originalnode[n3].zc-originalnode[n1].zc;
 							double nx = (a2*b3-a3*b2);
-							double ny = (a3*b1-a1*b3);	
+							double ny = (a3*b1-a1*b3);
 							double nz = (a1*b2-a2*b1);
 							double denom = pow((nx*nx+ny*ny+nz*nz),0.5);
 							nx = nx/denom;
@@ -1253,7 +1264,7 @@ void clean_triangles()
 							double b2 = originalnode[n3].yc-originalnode[n1].yc;
 							double b3 = originalnode[n3].zc-originalnode[n1].zc;
 							double nx = (a2*b3-a3*b2);
-							double ny = (a3*b1-a1*b3);	
+							double ny = (a3*b1-a1*b3);
 							double nz = (a1*b2-a2*b1);
 							double denom = pow((nx*nx+ny*ny+nz*nz),0.5);
 							nx = nx/denom;
@@ -1325,7 +1336,7 @@ void clean_triangles()
 							double b2 = originalnode[n3].yc-originalnode[n1].yc;
 							double b3 = originalnode[n3].zc-originalnode[n1].zc;
 							double nx = (a2*b3-a3*b2);
-							double ny = (a3*b1-a1*b3);	
+							double ny = (a3*b1-a1*b3);
 							double nz = (a1*b2-a2*b1);
 							double denom = pow((nx*nx+ny*ny+nz*nz),0.5);
 							nx = nx/denom;
@@ -1397,7 +1408,7 @@ void clean_triangles()
 							double b2 = originalnode[n3].yc-originalnode[n1].yc;
 							double b3 = originalnode[n3].zc-originalnode[n1].zc;
 							double nx = (a2*b3-a3*b2);
-							double ny = (a3*b1-a1*b3);	
+							double ny = (a3*b1-a1*b3);
 							double nz = (a1*b2-a2*b1);
 							double denom = pow((nx*nx+ny*ny+nz*nz),0.5);
 							nx = nx/denom;
@@ -1447,9 +1458,9 @@ void clean_triangles()
 			goodtriangles++;
 		}
 	}
-	outputFile << "# vtk DataFile Version 2.0" << endl; 
-	outputFile << "data set from FFT2dx_GB" << endl; 
-	outputFile << "ASCII" << endl; 
+	outputFile << "# vtk DataFile Version 2.0" << endl;
+	outputFile << "data set from FFT2dx_GB" << endl;
+	outputFile << "ASCII" << endl;
 	outputFile << "DATASET UNSTRUCTURED_GRID" << endl;
 	outputFile << endl;
 	outputFile << "POINTS " << numsurfnodes << " float" << endl;
@@ -1710,9 +1721,9 @@ void create_finalnodesandtriangles()
 	ofstream outputFile;
 	outputFile.open(fileout.c_str());
 	float minangle = 10000000;
-	outputFile << "# vtk DataFile Version 2.0" << endl; 
-	outputFile << "data set from FFT2dx_GB" << endl; 
-	outputFile << "ASCII" << endl; 
+	outputFile << "# vtk DataFile Version 2.0" << endl;
+	outputFile << "data set from FFT2dx_GB" << endl;
+	outputFile << "ASCII" << endl;
 	outputFile << "DATASET UNSTRUCTURED_GRID" << endl;
 	outputFile << endl;
 	outputFile << "POINTS " << numnodes << " float" << endl;
@@ -1740,8 +1751,8 @@ void create_finalnodesandtriangles()
 	outputFile << "LOOKUP_TABLE default" << endl;
 	for(int i=0;i<numtriangles;i++)
 	{
-		outputFile << finaltriangle[i].leftgrain << endl;		
-		outputFile << finaltriangle[i].rightgrain << endl;		
+		outputFile << finaltriangle[i].leftgrain << endl;
+		outputFile << finaltriangle[i].rightgrain << endl;
 	}
 	outputFile.close();
 }
@@ -1809,14 +1820,14 @@ void find_volumes()
 				double y4 = grain[i].ycentroid;
 				double z4 = grain[i].zcentroid;
 				double a1x = x2-x1;
-				double a1y = y2-y1;		
-				double a1z = z2-z1;			
+				double a1y = y2-y1;
+				double a1z = z2-z1;
 				double a2x = x3-x2;
 				double a2y = y3-y2;
 				double a2z = z3-z2;
 				double a3x = x4-x3;
 				double a3y = y4-y3;
-				double a3z = z4-z3;			
+				double a3z = z4-z3;
 				double determinant = ((a1x*a2y*a3z)+(a1y*a2z*a3x)+(a2x*a3y*a1z))-((a3x*a2y*a1z)+(a2x*a1y*a3z)+(a2z*a3y*a1x));
 				vol = determinant/6.0;
 				if(leftgrain == i) finaltriangle[firsttriangle].set_vol_leftgrain(vol);
@@ -2123,7 +2134,7 @@ void make_nodes(int iter)
 				if((zbuffer[iter][1][x][y]-zp) < dist) dist = (zbuffer[iter][1][x][y]-zp);
 				double prob = 2.0*(0.5-dist);
 				prob = pow(prob,2);
-				double random = rg.Random(); 
+				double random = rg.Random();
 				if(random <= prob)
 				{
 					xp = (xp*(maxx-minx))+minx;
@@ -2143,9 +2154,9 @@ void make_nodes(int iter)
 			}
 		}
 	}
-/*	outFile << "# vtk DataFile Version 2.0" << endl; 
-	outFile << "data set from FFT2dx_GB" << endl; 
-	outFile << "ASCII" << endl; 
+/*	outFile << "# vtk DataFile Version 2.0" << endl;
+	outFile << "data set from FFT2dx_GB" << endl;
+	outFile << "ASCII" << endl;
 	outFile << "DATASET UNSTRUCTURED_GRID" << endl;
 	outFile << endl;
 	outFile << "POINTS " << numsurfnodes+numnodes-numgoodsurfnodes << " float" << endl;
@@ -2307,7 +2318,7 @@ void read_elements(int idea)
 					int gnum = gvector[n1][0];
 					int size = trianglesvector[gnum].size();
 					for(int l=0;l<size;l++)
-					{	
+					{
 						int firsttriangle = trianglesvector[gnum][l];
 						int node1 = finaltriangle[firsttriangle].firstnodeleft;
 						int node2 = finaltriangle[firsttriangle].secondnodeleft;
@@ -2352,7 +2363,7 @@ void read_elements(int idea)
 							if(r <= 0.5) move = 1;
 							if(r > 0.5) move = 2;
 							intersected++;
-						}	
+						}
 						if(in == 0 && r >= 0 && r <= 1)
 						{
 							int stop = 0;
@@ -2408,7 +2419,7 @@ void read_elements(int idea)
 					int gnum = gvector[n1][0];
 					int size = trianglesvector[gnum].size();
 					for(int l=0;l<size;l++)
-					{	
+					{
 						int firsttriangle = trianglesvector[gnum][l];
 						int node1 = finaltriangle[firsttriangle].firstnodeleft;
 						int node2 = finaltriangle[firsttriangle].secondnodeleft;
@@ -2453,7 +2464,7 @@ void read_elements(int idea)
 							if(r <= 0.5) move = 2;
 							l = size;
 							intersected++;
-						}	
+						}
 						if(in == 0 && r >= 0 && r <= 1)
 						{
 							int stop = 0;
@@ -2507,7 +2518,7 @@ void read_elements(int idea)
 					int gnum = gvector[n1][0];
 					int size = trianglesvector[gnum].size();
 					for(int l=0;l<size;l++)
-					{	
+					{
 						int firsttriangle = trianglesvector[gnum][l];
 						int node1 = finaltriangle[firsttriangle].firstnodeleft;
 						int node2 = finaltriangle[firsttriangle].secondnodeleft;
@@ -2552,7 +2563,7 @@ void read_elements(int idea)
 							if(r <= 0.5) move = 1;
 							if(r <= 0.5) move = 2;
 							intersected++;
-						}	
+						}
 						if(in == 0 && r >= 0 && r <= 1)
 						{
 							int stop = 0;
@@ -2599,7 +2610,7 @@ void read_elements(int idea)
 					int gnum = gvector[n2][0];
 					int size = trianglesvector[gnum].size();
 					for(int l=0;l<size;l++)
-					{	
+					{
 						int firsttriangle = trianglesvector[gnum][l];
 						int node1 = finaltriangle[firsttriangle].firstnodeleft;
 						int node2 = finaltriangle[firsttriangle].secondnodeleft;
@@ -2644,7 +2655,7 @@ void read_elements(int idea)
 							if(r <= 0.5) move = 1;
 							if(r <= 0.5) move = 2;
 							intersected++;
-						}	
+						}
 						if(in == 0 && r >= 0 && r <= 1)
 						{
 							int stop = 0;
@@ -2696,7 +2707,7 @@ void read_elements(int idea)
 					int gnum = gvector[n2][0];
 					int size = trianglesvector[gnum].size();
 					for(int l=0;l<size;l++)
-					{	
+					{
 						int firsttriangle = trianglesvector[gnum][l];
 						int node1 = finaltriangle[firsttriangle].firstnodeleft;
 						int node2 = finaltriangle[firsttriangle].secondnodeleft;
@@ -2741,7 +2752,7 @@ void read_elements(int idea)
 							if(r <= 0.5) move = 1;
 							if(r <= 0.5) move = 2;
 							intersected++;
-						}	
+						}
 						if(in == 0 && r >= 0 && r <= 1)
 						{
 							int stop = 0;
@@ -2786,7 +2797,7 @@ void read_elements(int idea)
 					int gnum = gvector[n3][0];
 					int size = trianglesvector[gnum].size();
 					for(int l=0;l<size;l++)
-					{	
+					{
 						int firsttriangle = trianglesvector[gnum][l];
 						int node1 = finaltriangle[firsttriangle].firstnodeleft;
 						int node2 = finaltriangle[firsttriangle].secondnodeleft;
@@ -2831,7 +2842,7 @@ void read_elements(int idea)
 							if(r <= 0.5) move = 1;
 							if(r <= 0.5) move = 2;
 							intersected++;
-						}	
+						}
 						if(in == 0 && r >= 0 && r <= 1)
 						{
 							int stop = 0;
@@ -3199,7 +3210,7 @@ void measure_elements()
 		double a1z = z1-z2;
 		double b1x = x1-x3;
 		double b1y = y1-y3;
-		double b1z = z1-z3;			
+		double b1z = z1-z3;
 		double c1x = x1-x4;
 		double c1y = y1-y4;
 		double c1z = z1-z4;
@@ -3241,8 +3252,8 @@ void measure_elements()
 			double a1y = y1-y3;
 			double a1z = z1-z3;
 			double b1x = x1-x2;
-			double b1y = y1-y2;		
-			double b1z = z1-z2;			
+			double b1y = y1-y2;
+			double b1z = z1-z2;
 			double n1x = (a1y*b1z)-(a1z*b1y);
 			double n1y = (a1z*b1x)-(a1x*b1z);
 			double n1z = (a1x*b1y)-(a1y*b1x);
@@ -3251,7 +3262,7 @@ void measure_elements()
 			double a2z = z2-z3;
 			double b2x = x2-x4;
 			double b2y = y2-y4;
-			double b2z = z2-z4;			
+			double b2z = z2-z4;
 			double n2x = (a2y*b2z)-(a2z*b2y);
 			double n2y = (a2z*b2x)-(a2x*b2z);
 			double n2z = (a2x*b2y)-(a2y*b2x);
@@ -3260,7 +3271,7 @@ void measure_elements()
 			double a3z = z3-z1;
 			double b3x = x3-x4;
 			double b3y = y3-y4;
-			double b3z = z3-z4;			
+			double b3z = z3-z4;
 			double n3x = (a3y*b3z)-(a3z*b3y);
 			double n3y = (a3z*b3x)-(a3x*b3z);
 			double n3z = (a3x*b3y)-(a3y*b3x);
@@ -3269,7 +3280,7 @@ void measure_elements()
 			double a4z = z4-z1;
 			double b4x = x4-x2;
 			double b4y = y4-y2;
-			double b4z = z4-z2;			
+			double b4z = z4-z2;
 			double n4x = (a4y*b4z)-(a4z*b4y);
 			double n4y = (a4z*b4x)-(a4x*b4z);
 			double n4z = (a4x*b4y)-(a4y*b4x);
@@ -3390,30 +3401,30 @@ void measure_elements()
 			int bin = 0;
 			double volume = element[l].volume;
 			double ratio = volume/avgvol;
-			if(ratio < 1.0/10.0) bin = 0; 
-			if(ratio >= 1.0/10.0 && ratio < 1.0/9.0) bin = 1; 
-			if(ratio >= 1.0/9.0 && ratio < 1.0/8.0) bin = 2; 
-			if(ratio >= 1.0/8.0 && ratio < 1.0/7.0) bin = 3; 
-			if(ratio >= 1.0/7.0 && ratio < 1.0/6.0) bin = 4; 
-			if(ratio >= 1.0/6.0 && ratio < 1.0/5.0) bin = 5; 
-			if(ratio >= 1.0/5.0 && ratio < 1.0/4.0) bin = 6; 
-			if(ratio >= 1.0/4.0 && ratio < 1.0/3.0) bin = 7; 
-			if(ratio >= 1.0/3.0 && ratio < 1.0/2.0) bin = 8; 
-			if(ratio >= 1.0/2.0 && ratio < 1.0/1.0) bin = 9; 
-			if(ratio >= 1.0/1.0 && ratio < 2.0/1.0) bin = 10; 
-			if(ratio >= 2.0/1.0 && ratio < 3.0/1.0) bin = 11; 
-			if(ratio >= 3.0/1.0 && ratio < 4.0/1.0) bin = 12; 
-			if(ratio >= 4.0/1.0 && ratio < 5.0/1.0) bin = 13; 
-			if(ratio >= 5.0/1.0 && ratio < 6.0/1.0) bin = 14; 
-			if(ratio >= 6.0/1.0 && ratio < 7.0/1.0) bin = 15; 
-			if(ratio >= 7.0/1.0 && ratio < 8.0/1.0) bin = 16; 
-			if(ratio >= 8.0/1.0 && ratio < 9.0/1.0) bin = 17; 
-			if(ratio >= 9.0/1.0 && ratio < 10.0/1.0) bin = 18; 
-			if(ratio >= 10.0/1.0 && ratio < 11.0/1.0) bin = 19; 
-			if(ratio >= 11.0/1.0 && ratio < 12.0/1.0) bin = 20; 
-			if(ratio >= 12.0/1.0 && ratio < 13.0/1.0) bin = 21; 
-			if(ratio >= 13.0/1.0 && ratio < 14.0/1.0) bin = 22; 
-			if(ratio >= 14.0/1.0 && ratio < 15.0/1.0) bin = 23; 
+			if(ratio < 1.0/10.0) bin = 0;
+			if(ratio >= 1.0/10.0 && ratio < 1.0/9.0) bin = 1;
+			if(ratio >= 1.0/9.0 && ratio < 1.0/8.0) bin = 2;
+			if(ratio >= 1.0/8.0 && ratio < 1.0/7.0) bin = 3;
+			if(ratio >= 1.0/7.0 && ratio < 1.0/6.0) bin = 4;
+			if(ratio >= 1.0/6.0 && ratio < 1.0/5.0) bin = 5;
+			if(ratio >= 1.0/5.0 && ratio < 1.0/4.0) bin = 6;
+			if(ratio >= 1.0/4.0 && ratio < 1.0/3.0) bin = 7;
+			if(ratio >= 1.0/3.0 && ratio < 1.0/2.0) bin = 8;
+			if(ratio >= 1.0/2.0 && ratio < 1.0/1.0) bin = 9;
+			if(ratio >= 1.0/1.0 && ratio < 2.0/1.0) bin = 10;
+			if(ratio >= 2.0/1.0 && ratio < 3.0/1.0) bin = 11;
+			if(ratio >= 3.0/1.0 && ratio < 4.0/1.0) bin = 12;
+			if(ratio >= 4.0/1.0 && ratio < 5.0/1.0) bin = 13;
+			if(ratio >= 5.0/1.0 && ratio < 6.0/1.0) bin = 14;
+			if(ratio >= 6.0/1.0 && ratio < 7.0/1.0) bin = 15;
+			if(ratio >= 7.0/1.0 && ratio < 8.0/1.0) bin = 16;
+			if(ratio >= 8.0/1.0 && ratio < 9.0/1.0) bin = 17;
+			if(ratio >= 9.0/1.0 && ratio < 10.0/1.0) bin = 18;
+			if(ratio >= 10.0/1.0 && ratio < 11.0/1.0) bin = 19;
+			if(ratio >= 11.0/1.0 && ratio < 12.0/1.0) bin = 20;
+			if(ratio >= 12.0/1.0 && ratio < 13.0/1.0) bin = 21;
+			if(ratio >= 13.0/1.0 && ratio < 14.0/1.0) bin = 22;
+			if(ratio >= 14.0/1.0 && ratio < 15.0/1.0) bin = 23;
 			if(ratio >= 15.0/1.0) bin = 24;
 			int grainname = element[l].grainname;
 			int onedge = grain[grainname].edgegrain;
@@ -3478,7 +3489,7 @@ void improve_mesh()
 					if(minedgelength > element[i].edgelength5) minedgelength = element[i].edgelength5, edgetokill = 5;
 					if(minedgelength > element[i].edgelength6) minedgelength = element[i].edgelength6, edgetokill = 6;
 					element[i].set_killed(killed);
-					if(edgetokill == 1)	
+					if(edgetokill == 1)
 					{
 						count++;
 						if(finalnode[node2].numgrains > finalnode[node1].numgrains)
@@ -3523,15 +3534,15 @@ void improve_mesh()
 								double x3 = finalnode[n3].xc;
 								double y3 = finalnode[n3].yc;
 								double z3 = finalnode[n3].zc;
-								double x4 = finalnode[n4].xc;	
+								double x4 = finalnode[n4].xc;
 								double y4 = finalnode[n4].yc;
 								double z4 = finalnode[n4].zc;
 								double a1x = x1-x3;
 								double a1y = y1-y3;
 								double a1z = z1-z3;
 								double b1x = x1-x2;
-								double b1y = y1-y2;		
-								double b1z = z1-z2;			
+								double b1y = y1-y2;
+								double b1z = z1-z2;
 								double n1x = (a1y*b1z)-(a1z*b1y);
 								double n1y = (a1z*b1x)-(a1x*b1z);
 								double n1z = (a1x*b1y)-(a1y*b1x);
@@ -3540,7 +3551,7 @@ void improve_mesh()
 								double a2z = z2-z3;
 								double b2x = x2-x4;
 								double b2y = y2-y4;
-								double b2z = z2-z4;			
+								double b2z = z2-z4;
 								double n2x = (a2y*b2z)-(a2z*b2y);
 								double n2y = (a2z*b2x)-(a2x*b2z);
 								double n2z = (a2x*b2y)-(a2y*b2x);
@@ -3549,7 +3560,7 @@ void improve_mesh()
 								double a3z = z3-z1;
 								double b3x = x3-x4;
 								double b3y = y3-y4;
-								double b3z = z3-z4;			
+								double b3z = z3-z4;
 								double n3x = (a3y*b3z)-(a3z*b3y);
 								double n3y = (a3z*b3x)-(a3x*b3z);
 								double n3z = (a3x*b3y)-(a3y*b3x);
@@ -3558,7 +3569,7 @@ void improve_mesh()
 								double a4z = z4-z1;
 								double b4x = x4-x2;
 								double b4y = y4-y2;
-								double b4z = z4-z2;			
+								double b4z = z4-z2;
 								double n4x = (a4y*b4z)-(a4z*b4y);
 								double n4y = (a4z*b4x)-(a4x*b4z);
 								double n4z = (a4x*b4y)-(a4y*b4x);
@@ -3574,7 +3585,7 @@ void improve_mesh()
 								denom22 = pow(denom22,0.5);
 								double dihedral2 = ((n1x*n3x)+(n1y*n3y)+(n1z*n3z))/(denom21*denom22);
 								dihedral2 = acos(dihedral2);
-								double denom31 = (n1x*n1x)+(n1y*n1y)+(n1z*n1z);	
+								double denom31 = (n1x*n1x)+(n1y*n1y)+(n1z*n1z);
 								double denom32 = (n4x*n4x)+(n4y*n4y)+(n4z*n4z);
 								denom31 = pow(denom31,0.5);
 								denom32 = pow(denom32,0.5);
@@ -3604,11 +3615,11 @@ void improve_mesh()
 								dihedral4 = (180/3.1415926535897)*dihedral4;
 								dihedral5 = (180/3.1415926535897)*dihedral5;
 								dihedral6 = (180/3.1415926535897)*dihedral6;
-								dihedral1 = 180-dihedral1;		
-								dihedral2 = 180-dihedral2;		
-								dihedral3 = 180-dihedral3;		
-								dihedral4 = 180-dihedral4;		
-								dihedral5 = 180-dihedral5;		
+								dihedral1 = 180-dihedral1;
+								dihedral2 = 180-dihedral2;
+								dihedral3 = 180-dihedral3;
+								dihedral4 = 180-dihedral4;
+								dihedral5 = 180-dihedral5;
 								dihedral6 = 180-dihedral6;
 								element[firstelement].set_dihedralangles(dihedral1,dihedral2,dihedral3,dihedral4,dihedral5,dihedral6);
 								double length1 = ((x1-x2)*(x1-x2))+((y1-y2)*(y1-y2))+((z1-z2)*(z1-z2));
@@ -3676,15 +3687,15 @@ void improve_mesh()
 									double x3 = finalnode[n3].xc;
 									double y3 = finalnode[n3].yc;
 									double z3 = finalnode[n3].zc;
-									double x4 = finalnode[n4].xc;	
+									double x4 = finalnode[n4].xc;
 									double y4 = finalnode[n4].yc;
 									double z4 = finalnode[n4].zc;
 									double a1x = x1-x3;
 									double a1y = y1-y3;
 									double a1z = z1-z3;
 									double b1x = x1-x2;
-									double b1y = y1-y2;		
-									double b1z = z1-z2;			
+									double b1y = y1-y2;
+									double b1z = z1-z2;
 									double n1x = (a1y*b1z)-(a1z*b1y);
 									double n1y = (a1z*b1x)-(a1x*b1z);
 									double n1z = (a1x*b1y)-(a1y*b1x);
@@ -3693,7 +3704,7 @@ void improve_mesh()
 									double a2z = z2-z3;
 									double b2x = x2-x4;
 									double b2y = y2-y4;
-									double b2z = z2-z4;			
+									double b2z = z2-z4;
 									double n2x = (a2y*b2z)-(a2z*b2y);
 									double n2y = (a2z*b2x)-(a2x*b2z);
 									double n2z = (a2x*b2y)-(a2y*b2x);
@@ -3702,7 +3713,7 @@ void improve_mesh()
 									double a3z = z3-z1;
 									double b3x = x3-x4;
 									double b3y = y3-y4;
-									double b3z = z3-z4;			
+									double b3z = z3-z4;
 									double n3x = (a3y*b3z)-(a3z*b3y);
 									double n3y = (a3z*b3x)-(a3x*b3z);
 									double n3z = (a3x*b3y)-(a3y*b3x);
@@ -3711,7 +3722,7 @@ void improve_mesh()
 									double a4z = z4-z1;
 									double b4x = x4-x2;
 									double b4y = y4-y2;
-									double b4z = z4-z2;			
+									double b4z = z4-z2;
 									double n4x = (a4y*b4z)-(a4z*b4y);
 									double n4y = (a4z*b4x)-(a4x*b4z);
 									double n4z = (a4x*b4y)-(a4y*b4x);
@@ -3727,7 +3738,7 @@ void improve_mesh()
 									denom22 = pow(denom22,0.5);
 									double dihedral2 = ((n1x*n3x)+(n1y*n3y)+(n1z*n3z))/(denom21*denom22);
 									dihedral2 = acos(dihedral2);
-									double denom31 = (n1x*n1x)+(n1y*n1y)+(n1z*n1z);	
+									double denom31 = (n1x*n1x)+(n1y*n1y)+(n1z*n1z);
 									double denom32 = (n4x*n4x)+(n4y*n4y)+(n4z*n4z);
 									denom31 = pow(denom31,0.5);
 									denom32 = pow(denom32,0.5);
@@ -3757,11 +3768,11 @@ void improve_mesh()
 									dihedral4 = (180/3.1415926535897)*dihedral4;
 									dihedral5 = (180/3.1415926535897)*dihedral5;
 									dihedral6 = (180/3.1415926535897)*dihedral6;
-									dihedral1 = 180-dihedral1;		
-									dihedral2 = 180-dihedral2;		
-									dihedral3 = 180-dihedral3;		
-									dihedral4 = 180-dihedral4;		
-									dihedral5 = 180-dihedral5;		
+									dihedral1 = 180-dihedral1;
+									dihedral2 = 180-dihedral2;
+									dihedral3 = 180-dihedral3;
+									dihedral4 = 180-dihedral4;
+									dihedral5 = 180-dihedral5;
 									dihedral6 = 180-dihedral6;
 									element[firstelement].set_dihedralangles(dihedral1,dihedral2,dihedral3,dihedral4,dihedral5,dihedral6);
 									double length1 = ((x1-x2)*(x1-x2))+((y1-y2)*(y1-y2))+((z1-z2)*(z1-z2));
@@ -3780,7 +3791,7 @@ void improve_mesh()
 								}
 							}
 						}
-					}	
+					}
 					if(edgetokill == 2)
 					{
 						count++;
@@ -3826,15 +3837,15 @@ void improve_mesh()
 								double x3 = finalnode[n3].xc;
 								double y3 = finalnode[n3].yc;
 								double z3 = finalnode[n3].zc;
-								double x4 = finalnode[n4].xc;	
+								double x4 = finalnode[n4].xc;
 								double y4 = finalnode[n4].yc;
 								double z4 = finalnode[n4].zc;
 								double a1x = x1-x3;
 								double a1y = y1-y3;
 								double a1z = z1-z3;
 								double b1x = x1-x2;
-								double b1y = y1-y2;		
-								double b1z = z1-z2;			
+								double b1y = y1-y2;
+								double b1z = z1-z2;
 								double n1x = (a1y*b1z)-(a1z*b1y);
 								double n1y = (a1z*b1x)-(a1x*b1z);
 								double n1z = (a1x*b1y)-(a1y*b1x);
@@ -3843,7 +3854,7 @@ void improve_mesh()
 								double a2z = z2-z3;
 								double b2x = x2-x4;
 								double b2y = y2-y4;
-								double b2z = z2-z4;			
+								double b2z = z2-z4;
 								double n2x = (a2y*b2z)-(a2z*b2y);
 								double n2y = (a2z*b2x)-(a2x*b2z);
 								double n2z = (a2x*b2y)-(a2y*b2x);
@@ -3852,7 +3863,7 @@ void improve_mesh()
 								double a3z = z3-z1;
 								double b3x = x3-x4;
 								double b3y = y3-y4;
-								double b3z = z3-z4;			
+								double b3z = z3-z4;
 								double n3x = (a3y*b3z)-(a3z*b3y);
 								double n3y = (a3z*b3x)-(a3x*b3z);
 								double n3z = (a3x*b3y)-(a3y*b3x);
@@ -3861,7 +3872,7 @@ void improve_mesh()
 								double a4z = z4-z1;
 								double b4x = x4-x2;
 								double b4y = y4-y2;
-								double b4z = z4-z2;			
+								double b4z = z4-z2;
 								double n4x = (a4y*b4z)-(a4z*b4y);
 								double n4y = (a4z*b4x)-(a4x*b4z);
 								double n4z = (a4x*b4y)-(a4y*b4x);
@@ -3877,7 +3888,7 @@ void improve_mesh()
 								denom22 = pow(denom22,0.5);
 								double dihedral2 = ((n1x*n3x)+(n1y*n3y)+(n1z*n3z))/(denom21*denom22);
 								dihedral2 = acos(dihedral2);
-								double denom31 = (n1x*n1x)+(n1y*n1y)+(n1z*n1z);	
+								double denom31 = (n1x*n1x)+(n1y*n1y)+(n1z*n1z);
 								double denom32 = (n4x*n4x)+(n4y*n4y)+(n4z*n4z);
 								denom31 = pow(denom31,0.5);
 								denom32 = pow(denom32,0.5);
@@ -3907,11 +3918,11 @@ void improve_mesh()
 								dihedral4 = (180/3.1415926535897)*dihedral4;
 								dihedral5 = (180/3.1415926535897)*dihedral5;
 								dihedral6 = (180/3.1415926535897)*dihedral6;
-								dihedral1 = 180-dihedral1;		
-								dihedral2 = 180-dihedral2;		
-								dihedral3 = 180-dihedral3;		
-								dihedral4 = 180-dihedral4;		
-								dihedral5 = 180-dihedral5;		
+								dihedral1 = 180-dihedral1;
+								dihedral2 = 180-dihedral2;
+								dihedral3 = 180-dihedral3;
+								dihedral4 = 180-dihedral4;
+								dihedral5 = 180-dihedral5;
 								dihedral6 = 180-dihedral6;
 								element[firstelement].set_dihedralangles(dihedral1,dihedral2,dihedral3,dihedral4,dihedral5,dihedral6);
 								double length1 = ((x1-x2)*(x1-x2))+((y1-y2)*(y1-y2))+((z1-z2)*(z1-z2));
@@ -3979,15 +3990,15 @@ void improve_mesh()
 									double x3 = finalnode[n3].xc;
 									double y3 = finalnode[n3].yc;
 									double z3 = finalnode[n3].zc;
-									double x4 = finalnode[n4].xc;	
+									double x4 = finalnode[n4].xc;
 									double y4 = finalnode[n4].yc;
 									double z4 = finalnode[n4].zc;
 									double a1x = x1-x3;
 									double a1y = y1-y3;
 									double a1z = z1-z3;
 									double b1x = x1-x2;
-									double b1y = y1-y2;		
-									double b1z = z1-z2;			
+									double b1y = y1-y2;
+									double b1z = z1-z2;
 									double n1x = (a1y*b1z)-(a1z*b1y);
 									double n1y = (a1z*b1x)-(a1x*b1z);
 									double n1z = (a1x*b1y)-(a1y*b1x);
@@ -3996,7 +4007,7 @@ void improve_mesh()
 									double a2z = z2-z3;
 									double b2x = x2-x4;
 									double b2y = y2-y4;
-									double b2z = z2-z4;			
+									double b2z = z2-z4;
 									double n2x = (a2y*b2z)-(a2z*b2y);
 									double n2y = (a2z*b2x)-(a2x*b2z);
 									double n2z = (a2x*b2y)-(a2y*b2x);
@@ -4005,7 +4016,7 @@ void improve_mesh()
 									double a3z = z3-z1;
 									double b3x = x3-x4;
 									double b3y = y3-y4;
-									double b3z = z3-z4;			
+									double b3z = z3-z4;
 									double n3x = (a3y*b3z)-(a3z*b3y);
 									double n3y = (a3z*b3x)-(a3x*b3z);
 									double n3z = (a3x*b3y)-(a3y*b3x);
@@ -4014,7 +4025,7 @@ void improve_mesh()
 									double a4z = z4-z1;
 									double b4x = x4-x2;
 									double b4y = y4-y2;
-									double b4z = z4-z2;			
+									double b4z = z4-z2;
 									double n4x = (a4y*b4z)-(a4z*b4y);
 									double n4y = (a4z*b4x)-(a4x*b4z);
 									double n4z = (a4x*b4y)-(a4y*b4x);
@@ -4030,7 +4041,7 @@ void improve_mesh()
 									denom22 = pow(denom22,0.5);
 									double dihedral2 = ((n1x*n3x)+(n1y*n3y)+(n1z*n3z))/(denom21*denom22);
 									dihedral2 = acos(dihedral2);
-									double denom31 = (n1x*n1x)+(n1y*n1y)+(n1z*n1z);	
+									double denom31 = (n1x*n1x)+(n1y*n1y)+(n1z*n1z);
 									double denom32 = (n4x*n4x)+(n4y*n4y)+(n4z*n4z);
 									denom31 = pow(denom31,0.5);
 									denom32 = pow(denom32,0.5);
@@ -4060,11 +4071,11 @@ void improve_mesh()
 									dihedral4 = (180/3.1415926535897)*dihedral4;
 									dihedral5 = (180/3.1415926535897)*dihedral5;
 									dihedral6 = (180/3.1415926535897)*dihedral6;
-									dihedral1 = 180-dihedral1;		
-									dihedral2 = 180-dihedral2;		
-									dihedral3 = 180-dihedral3;		
-									dihedral4 = 180-dihedral4;		
-									dihedral5 = 180-dihedral5;		
+									dihedral1 = 180-dihedral1;
+									dihedral2 = 180-dihedral2;
+									dihedral3 = 180-dihedral3;
+									dihedral4 = 180-dihedral4;
+									dihedral5 = 180-dihedral5;
 									dihedral6 = 180-dihedral6;
 									element[firstelement].set_dihedralangles(dihedral1,dihedral2,dihedral3,dihedral4,dihedral5,dihedral6);
 									double length1 = ((x1-x2)*(x1-x2))+((y1-y2)*(y1-y2))+((z1-z2)*(z1-z2));
@@ -4129,15 +4140,15 @@ void improve_mesh()
 								double x3 = finalnode[n3].xc;
 								double y3 = finalnode[n3].yc;
 								double z3 = finalnode[n3].zc;
-								double x4 = finalnode[n4].xc;	
+								double x4 = finalnode[n4].xc;
 								double y4 = finalnode[n4].yc;
 								double z4 = finalnode[n4].zc;
 								double a1x = x1-x3;
 								double a1y = y1-y3;
 								double a1z = z1-z3;
 								double b1x = x1-x2;
-								double b1y = y1-y2;		
-								double b1z = z1-z2;			
+								double b1y = y1-y2;
+								double b1z = z1-z2;
 								double n1x = (a1y*b1z)-(a1z*b1y);
 								double n1y = (a1z*b1x)-(a1x*b1z);
 								double n1z = (a1x*b1y)-(a1y*b1x);
@@ -4146,7 +4157,7 @@ void improve_mesh()
 								double a2z = z2-z3;
 								double b2x = x2-x4;
 								double b2y = y2-y4;
-								double b2z = z2-z4;			
+								double b2z = z2-z4;
 								double n2x = (a2y*b2z)-(a2z*b2y);
 								double n2y = (a2z*b2x)-(a2x*b2z);
 								double n2z = (a2x*b2y)-(a2y*b2x);
@@ -4155,7 +4166,7 @@ void improve_mesh()
 								double a3z = z3-z1;
 								double b3x = x3-x4;
 								double b3y = y3-y4;
-								double b3z = z3-z4;			
+								double b3z = z3-z4;
 								double n3x = (a3y*b3z)-(a3z*b3y);
 								double n3y = (a3z*b3x)-(a3x*b3z);
 								double n3z = (a3x*b3y)-(a3y*b3x);
@@ -4164,7 +4175,7 @@ void improve_mesh()
 								double a4z = z4-z1;
 								double b4x = x4-x2;
 								double b4y = y4-y2;
-								double b4z = z4-z2;			
+								double b4z = z4-z2;
 								double n4x = (a4y*b4z)-(a4z*b4y);
 								double n4y = (a4z*b4x)-(a4x*b4z);
 								double n4z = (a4x*b4y)-(a4y*b4x);
@@ -4180,7 +4191,7 @@ void improve_mesh()
 								denom22 = pow(denom22,0.5);
 								double dihedral2 = ((n1x*n3x)+(n1y*n3y)+(n1z*n3z))/(denom21*denom22);
 								dihedral2 = acos(dihedral2);
-								double denom31 = (n1x*n1x)+(n1y*n1y)+(n1z*n1z);	
+								double denom31 = (n1x*n1x)+(n1y*n1y)+(n1z*n1z);
 								double denom32 = (n4x*n4x)+(n4y*n4y)+(n4z*n4z);
 								denom31 = pow(denom31,0.5);
 								denom32 = pow(denom32,0.5);
@@ -4210,11 +4221,11 @@ void improve_mesh()
 								dihedral4 = (180/3.1415926535897)*dihedral4;
 								dihedral5 = (180/3.1415926535897)*dihedral5;
 								dihedral6 = (180/3.1415926535897)*dihedral6;
-								dihedral1 = 180-dihedral1;		
-								dihedral2 = 180-dihedral2;		
-								dihedral3 = 180-dihedral3;		
-								dihedral4 = 180-dihedral4;		
-								dihedral5 = 180-dihedral5;		
+								dihedral1 = 180-dihedral1;
+								dihedral2 = 180-dihedral2;
+								dihedral3 = 180-dihedral3;
+								dihedral4 = 180-dihedral4;
+								dihedral5 = 180-dihedral5;
 								dihedral6 = 180-dihedral6;
 								element[firstelement].set_dihedralangles(dihedral1,dihedral2,dihedral3,dihedral4,dihedral5,dihedral6);
 								double length1 = ((x1-x2)*(x1-x2))+((y1-y2)*(y1-y2))+((z1-z2)*(z1-z2));
@@ -4282,15 +4293,15 @@ void improve_mesh()
 									double x3 = finalnode[n3].xc;
 									double y3 = finalnode[n3].yc;
 									double z3 = finalnode[n3].zc;
-									double x4 = finalnode[n4].xc;	
+									double x4 = finalnode[n4].xc;
 									double y4 = finalnode[n4].yc;
 									double z4 = finalnode[n4].zc;
 									double a1x = x1-x3;
 									double a1y = y1-y3;
 									double a1z = z1-z3;
 									double b1x = x1-x2;
-									double b1y = y1-y2;		
-									double b1z = z1-z2;			
+									double b1y = y1-y2;
+									double b1z = z1-z2;
 									double n1x = (a1y*b1z)-(a1z*b1y);
 									double n1y = (a1z*b1x)-(a1x*b1z);
 									double n1z = (a1x*b1y)-(a1y*b1x);
@@ -4299,7 +4310,7 @@ void improve_mesh()
 									double a2z = z2-z3;
 									double b2x = x2-x4;
 									double b2y = y2-y4;
-									double b2z = z2-z4;			
+									double b2z = z2-z4;
 									double n2x = (a2y*b2z)-(a2z*b2y);
 									double n2y = (a2z*b2x)-(a2x*b2z);
 									double n2z = (a2x*b2y)-(a2y*b2x);
@@ -4308,7 +4319,7 @@ void improve_mesh()
 									double a3z = z3-z1;
 									double b3x = x3-x4;
 									double b3y = y3-y4;
-									double b3z = z3-z4;			
+									double b3z = z3-z4;
 									double n3x = (a3y*b3z)-(a3z*b3y);
 									double n3y = (a3z*b3x)-(a3x*b3z);
 									double n3z = (a3x*b3y)-(a3y*b3x);
@@ -4317,7 +4328,7 @@ void improve_mesh()
 									double a4z = z4-z1;
 									double b4x = x4-x2;
 									double b4y = y4-y2;
-									double b4z = z4-z2;			
+									double b4z = z4-z2;
 									double n4x = (a4y*b4z)-(a4z*b4y);
 									double n4y = (a4z*b4x)-(a4x*b4z);
 									double n4z = (a4x*b4y)-(a4y*b4x);
@@ -4333,7 +4344,7 @@ void improve_mesh()
 									denom22 = pow(denom22,0.5);
 									double dihedral2 = ((n1x*n3x)+(n1y*n3y)+(n1z*n3z))/(denom21*denom22);
 									dihedral2 = acos(dihedral2);
-									double denom31 = (n1x*n1x)+(n1y*n1y)+(n1z*n1z);	
+									double denom31 = (n1x*n1x)+(n1y*n1y)+(n1z*n1z);
 									double denom32 = (n4x*n4x)+(n4y*n4y)+(n4z*n4z);
 									denom31 = pow(denom31,0.5);
 									denom32 = pow(denom32,0.5);
@@ -4363,11 +4374,11 @@ void improve_mesh()
 									dihedral4 = (180/3.1415926535897)*dihedral4;
 									dihedral5 = (180/3.1415926535897)*dihedral5;
 									dihedral6 = (180/3.1415926535897)*dihedral6;
-									dihedral1 = 180-dihedral1;		
-									dihedral2 = 180-dihedral2;		
-									dihedral3 = 180-dihedral3;		
-									dihedral4 = 180-dihedral4;		
-									dihedral5 = 180-dihedral5;		
+									dihedral1 = 180-dihedral1;
+									dihedral2 = 180-dihedral2;
+									dihedral3 = 180-dihedral3;
+									dihedral4 = 180-dihedral4;
+									dihedral5 = 180-dihedral5;
 									dihedral6 = 180-dihedral6;
 									element[firstelement].set_dihedralangles(dihedral1,dihedral2,dihedral3,dihedral4,dihedral5,dihedral6);
 									double length1 = ((x1-x2)*(x1-x2))+((y1-y2)*(y1-y2))+((z1-z2)*(z1-z2));
@@ -4432,15 +4443,15 @@ void improve_mesh()
 								double x3 = finalnode[n3].xc;
 								double y3 = finalnode[n3].yc;
 								double z3 = finalnode[n3].zc;
-								double x4 = finalnode[n4].xc;	
+								double x4 = finalnode[n4].xc;
 								double y4 = finalnode[n4].yc;
 								double z4 = finalnode[n4].zc;
 								double a1x = x1-x3;
 								double a1y = y1-y3;
 								double a1z = z1-z3;
 								double b1x = x1-x2;
-								double b1y = y1-y2;		
-								double b1z = z1-z2;			
+								double b1y = y1-y2;
+								double b1z = z1-z2;
 								double n1x = (a1y*b1z)-(a1z*b1y);
 								double n1y = (a1z*b1x)-(a1x*b1z);
 								double n1z = (a1x*b1y)-(a1y*b1x);
@@ -4449,7 +4460,7 @@ void improve_mesh()
 								double a2z = z2-z3;
 								double b2x = x2-x4;
 								double b2y = y2-y4;
-								double b2z = z2-z4;			
+								double b2z = z2-z4;
 								double n2x = (a2y*b2z)-(a2z*b2y);
 								double n2y = (a2z*b2x)-(a2x*b2z);
 								double n2z = (a2x*b2y)-(a2y*b2x);
@@ -4458,7 +4469,7 @@ void improve_mesh()
 								double a3z = z3-z1;
 								double b3x = x3-x4;
 								double b3y = y3-y4;
-								double b3z = z3-z4;			
+								double b3z = z3-z4;
 								double n3x = (a3y*b3z)-(a3z*b3y);
 								double n3y = (a3z*b3x)-(a3x*b3z);
 								double n3z = (a3x*b3y)-(a3y*b3x);
@@ -4467,7 +4478,7 @@ void improve_mesh()
 								double a4z = z4-z1;
 								double b4x = x4-x2;
 								double b4y = y4-y2;
-								double b4z = z4-z2;			
+								double b4z = z4-z2;
 								double n4x = (a4y*b4z)-(a4z*b4y);
 								double n4y = (a4z*b4x)-(a4x*b4z);
 								double n4z = (a4x*b4y)-(a4y*b4x);
@@ -4483,7 +4494,7 @@ void improve_mesh()
 								denom22 = pow(denom22,0.5);
 								double dihedral2 = ((n1x*n3x)+(n1y*n3y)+(n1z*n3z))/(denom21*denom22);
 								dihedral2 = acos(dihedral2);
-								double denom31 = (n1x*n1x)+(n1y*n1y)+(n1z*n1z);	
+								double denom31 = (n1x*n1x)+(n1y*n1y)+(n1z*n1z);
 								double denom32 = (n4x*n4x)+(n4y*n4y)+(n4z*n4z);
 								denom31 = pow(denom31,0.5);
 								denom32 = pow(denom32,0.5);
@@ -4513,11 +4524,11 @@ void improve_mesh()
 								dihedral4 = (180/3.1415926535897)*dihedral4;
 								dihedral5 = (180/3.1415926535897)*dihedral5;
 								dihedral6 = (180/3.1415926535897)*dihedral6;
-								dihedral1 = 180-dihedral1;		
-								dihedral2 = 180-dihedral2;		
-								dihedral3 = 180-dihedral3;		
-								dihedral4 = 180-dihedral4;		
-								dihedral5 = 180-dihedral5;		
+								dihedral1 = 180-dihedral1;
+								dihedral2 = 180-dihedral2;
+								dihedral3 = 180-dihedral3;
+								dihedral4 = 180-dihedral4;
+								dihedral5 = 180-dihedral5;
 								dihedral6 = 180-dihedral6;
 								element[firstelement].set_dihedralangles(dihedral1,dihedral2,dihedral3,dihedral4,dihedral5,dihedral6);
 								double length1 = ((x1-x2)*(x1-x2))+((y1-y2)*(y1-y2))+((z1-z2)*(z1-z2));
@@ -4585,15 +4596,15 @@ void improve_mesh()
 									double x3 = finalnode[n3].xc;
 									double y3 = finalnode[n3].yc;
 									double z3 = finalnode[n3].zc;
-									double x4 = finalnode[n4].xc;	
+									double x4 = finalnode[n4].xc;
 									double y4 = finalnode[n4].yc;
 									double z4 = finalnode[n4].zc;
 									double a1x = x1-x3;
 									double a1y = y1-y3;
 									double a1z = z1-z3;
 									double b1x = x1-x2;
-									double b1y = y1-y2;		
-									double b1z = z1-z2;			
+									double b1y = y1-y2;
+									double b1z = z1-z2;
 									double n1x = (a1y*b1z)-(a1z*b1y);
 									double n1y = (a1z*b1x)-(a1x*b1z);
 									double n1z = (a1x*b1y)-(a1y*b1x);
@@ -4602,7 +4613,7 @@ void improve_mesh()
 									double a2z = z2-z3;
 									double b2x = x2-x4;
 									double b2y = y2-y4;
-									double b2z = z2-z4;			
+									double b2z = z2-z4;
 									double n2x = (a2y*b2z)-(a2z*b2y);
 									double n2y = (a2z*b2x)-(a2x*b2z);
 									double n2z = (a2x*b2y)-(a2y*b2x);
@@ -4611,7 +4622,7 @@ void improve_mesh()
 									double a3z = z3-z1;
 									double b3x = x3-x4;
 									double b3y = y3-y4;
-									double b3z = z3-z4;			
+									double b3z = z3-z4;
 									double n3x = (a3y*b3z)-(a3z*b3y);
 									double n3y = (a3z*b3x)-(a3x*b3z);
 									double n3z = (a3x*b3y)-(a3y*b3x);
@@ -4620,7 +4631,7 @@ void improve_mesh()
 									double a4z = z4-z1;
 									double b4x = x4-x2;
 									double b4y = y4-y2;
-									double b4z = z4-z2;			
+									double b4z = z4-z2;
 									double n4x = (a4y*b4z)-(a4z*b4y);
 									double n4y = (a4z*b4x)-(a4x*b4z);
 									double n4z = (a4x*b4y)-(a4y*b4x);
@@ -4636,7 +4647,7 @@ void improve_mesh()
 									denom22 = pow(denom22,0.5);
 									double dihedral2 = ((n1x*n3x)+(n1y*n3y)+(n1z*n3z))/(denom21*denom22);
 									dihedral2 = acos(dihedral2);
-									double denom31 = (n1x*n1x)+(n1y*n1y)+(n1z*n1z);	
+									double denom31 = (n1x*n1x)+(n1y*n1y)+(n1z*n1z);
 									double denom32 = (n4x*n4x)+(n4y*n4y)+(n4z*n4z);
 									denom31 = pow(denom31,0.5);
 									denom32 = pow(denom32,0.5);
@@ -4666,11 +4677,11 @@ void improve_mesh()
 									dihedral4 = (180/3.1415926535897)*dihedral4;
 									dihedral5 = (180/3.1415926535897)*dihedral5;
 									dihedral6 = (180/3.1415926535897)*dihedral6;
-									dihedral1 = 180-dihedral1;		
-									dihedral2 = 180-dihedral2;		
-									dihedral3 = 180-dihedral3;		
-									dihedral4 = 180-dihedral4;		
-									dihedral5 = 180-dihedral5;		
+									dihedral1 = 180-dihedral1;
+									dihedral2 = 180-dihedral2;
+									dihedral3 = 180-dihedral3;
+									dihedral4 = 180-dihedral4;
+									dihedral5 = 180-dihedral5;
 									dihedral6 = 180-dihedral6;
 									element[firstelement].set_dihedralangles(dihedral1,dihedral2,dihedral3,dihedral4,dihedral5,dihedral6);
 									double length1 = ((x1-x2)*(x1-x2))+((y1-y2)*(y1-y2))+((z1-z2)*(z1-z2));
@@ -4735,15 +4746,15 @@ void improve_mesh()
 								double x3 = finalnode[n3].xc;
 								double y3 = finalnode[n3].yc;
 								double z3 = finalnode[n3].zc;
-								double x4 = finalnode[n4].xc;	
+								double x4 = finalnode[n4].xc;
 								double y4 = finalnode[n4].yc;
 								double z4 = finalnode[n4].zc;
 								double a1x = x1-x3;
 								double a1y = y1-y3;
 								double a1z = z1-z3;
 								double b1x = x1-x2;
-								double b1y = y1-y2;		
-								double b1z = z1-z2;			
+								double b1y = y1-y2;
+								double b1z = z1-z2;
 								double n1x = (a1y*b1z)-(a1z*b1y);
 								double n1y = (a1z*b1x)-(a1x*b1z);
 								double n1z = (a1x*b1y)-(a1y*b1x);
@@ -4752,7 +4763,7 @@ void improve_mesh()
 								double a2z = z2-z3;
 								double b2x = x2-x4;
 								double b2y = y2-y4;
-								double b2z = z2-z4;			
+								double b2z = z2-z4;
 								double n2x = (a2y*b2z)-(a2z*b2y);
 								double n2y = (a2z*b2x)-(a2x*b2z);
 								double n2z = (a2x*b2y)-(a2y*b2x);
@@ -4761,7 +4772,7 @@ void improve_mesh()
 								double a3z = z3-z1;
 								double b3x = x3-x4;
 								double b3y = y3-y4;
-								double b3z = z3-z4;			
+								double b3z = z3-z4;
 								double n3x = (a3y*b3z)-(a3z*b3y);
 								double n3y = (a3z*b3x)-(a3x*b3z);
 								double n3z = (a3x*b3y)-(a3y*b3x);
@@ -4770,7 +4781,7 @@ void improve_mesh()
 								double a4z = z4-z1;
 								double b4x = x4-x2;
 								double b4y = y4-y2;
-								double b4z = z4-z2;			
+								double b4z = z4-z2;
 								double n4x = (a4y*b4z)-(a4z*b4y);
 								double n4y = (a4z*b4x)-(a4x*b4z);
 								double n4z = (a4x*b4y)-(a4y*b4x);
@@ -4786,7 +4797,7 @@ void improve_mesh()
 								denom22 = pow(denom22,0.5);
 								double dihedral2 = ((n1x*n3x)+(n1y*n3y)+(n1z*n3z))/(denom21*denom22);
 								dihedral2 = acos(dihedral2);
-								double denom31 = (n1x*n1x)+(n1y*n1y)+(n1z*n1z);	
+								double denom31 = (n1x*n1x)+(n1y*n1y)+(n1z*n1z);
 								double denom32 = (n4x*n4x)+(n4y*n4y)+(n4z*n4z);
 								denom31 = pow(denom31,0.5);
 								denom32 = pow(denom32,0.5);
@@ -4816,11 +4827,11 @@ void improve_mesh()
 								dihedral4 = (180/3.1415926535897)*dihedral4;
 								dihedral5 = (180/3.1415926535897)*dihedral5;
 								dihedral6 = (180/3.1415926535897)*dihedral6;
-								dihedral1 = 180-dihedral1;		
-								dihedral2 = 180-dihedral2;		
-								dihedral3 = 180-dihedral3;		
-								dihedral4 = 180-dihedral4;		
-								dihedral5 = 180-dihedral5;		
+								dihedral1 = 180-dihedral1;
+								dihedral2 = 180-dihedral2;
+								dihedral3 = 180-dihedral3;
+								dihedral4 = 180-dihedral4;
+								dihedral5 = 180-dihedral5;
 								dihedral6 = 180-dihedral6;
 								element[firstelement].set_dihedralangles(dihedral1,dihedral2,dihedral3,dihedral4,dihedral5,dihedral6);
 								double length1 = ((x1-x2)*(x1-x2))+((y1-y2)*(y1-y2))+((z1-z2)*(z1-z2));
@@ -4888,15 +4899,15 @@ void improve_mesh()
 									double x3 = finalnode[n3].xc;
 									double y3 = finalnode[n3].yc;
 									double z3 = finalnode[n3].zc;
-									double x4 = finalnode[n4].xc;	
+									double x4 = finalnode[n4].xc;
 									double y4 = finalnode[n4].yc;
 									double z4 = finalnode[n4].zc;
 									double a1x = x1-x3;
 									double a1y = y1-y3;
 									double a1z = z1-z3;
 									double b1x = x1-x2;
-									double b1y = y1-y2;		
-									double b1z = z1-z2;			
+									double b1y = y1-y2;
+									double b1z = z1-z2;
 									double n1x = (a1y*b1z)-(a1z*b1y);
 									double n1y = (a1z*b1x)-(a1x*b1z);
 									double n1z = (a1x*b1y)-(a1y*b1x);
@@ -4905,7 +4916,7 @@ void improve_mesh()
 									double a2z = z2-z3;
 									double b2x = x2-x4;
 									double b2y = y2-y4;
-									double b2z = z2-z4;			
+									double b2z = z2-z4;
 									double n2x = (a2y*b2z)-(a2z*b2y);
 									double n2y = (a2z*b2x)-(a2x*b2z);
 									double n2z = (a2x*b2y)-(a2y*b2x);
@@ -4914,7 +4925,7 @@ void improve_mesh()
 									double a3z = z3-z1;
 									double b3x = x3-x4;
 									double b3y = y3-y4;
-									double b3z = z3-z4;			
+									double b3z = z3-z4;
 									double n3x = (a3y*b3z)-(a3z*b3y);
 									double n3y = (a3z*b3x)-(a3x*b3z);
 									double n3z = (a3x*b3y)-(a3y*b3x);
@@ -4923,7 +4934,7 @@ void improve_mesh()
 									double a4z = z4-z1;
 									double b4x = x4-x2;
 									double b4y = y4-y2;
-									double b4z = z4-z2;			
+									double b4z = z4-z2;
 									double n4x = (a4y*b4z)-(a4z*b4y);
 									double n4y = (a4z*b4x)-(a4x*b4z);
 									double n4z = (a4x*b4y)-(a4y*b4x);
@@ -4939,7 +4950,7 @@ void improve_mesh()
 									denom22 = pow(denom22,0.5);
 									double dihedral2 = ((n1x*n3x)+(n1y*n3y)+(n1z*n3z))/(denom21*denom22);
 									dihedral2 = acos(dihedral2);
-									double denom31 = (n1x*n1x)+(n1y*n1y)+(n1z*n1z);	
+									double denom31 = (n1x*n1x)+(n1y*n1y)+(n1z*n1z);
 									double denom32 = (n4x*n4x)+(n4y*n4y)+(n4z*n4z);
 									denom31 = pow(denom31,0.5);
 									denom32 = pow(denom32,0.5);
@@ -4969,11 +4980,11 @@ void improve_mesh()
 									dihedral4 = (180/3.1415926535897)*dihedral4;
 									dihedral5 = (180/3.1415926535897)*dihedral5;
 									dihedral6 = (180/3.1415926535897)*dihedral6;
-									dihedral1 = 180-dihedral1;		
-									dihedral2 = 180-dihedral2;		
-									dihedral3 = 180-dihedral3;		
-									dihedral4 = 180-dihedral4;		
-									dihedral5 = 180-dihedral5;		
+									dihedral1 = 180-dihedral1;
+									dihedral2 = 180-dihedral2;
+									dihedral3 = 180-dihedral3;
+									dihedral4 = 180-dihedral4;
+									dihedral5 = 180-dihedral5;
 									dihedral6 = 180-dihedral6;
 									element[firstelement].set_dihedralangles(dihedral1,dihedral2,dihedral3,dihedral4,dihedral5,dihedral6);
 									double length1 = ((x1-x2)*(x1-x2))+((y1-y2)*(y1-y2))+((z1-z2)*(z1-z2));
@@ -5038,15 +5049,15 @@ void improve_mesh()
 								double x3 = finalnode[n3].xc;
 								double y3 = finalnode[n3].yc;
 								double z3 = finalnode[n3].zc;
-								double x4 = finalnode[n4].xc;	
+								double x4 = finalnode[n4].xc;
 								double y4 = finalnode[n4].yc;
 								double z4 = finalnode[n4].zc;
 								double a1x = x1-x3;
 								double a1y = y1-y3;
 								double a1z = z1-z3;
 								double b1x = x1-x2;
-								double b1y = y1-y2;		
-								double b1z = z1-z2;			
+								double b1y = y1-y2;
+								double b1z = z1-z2;
 								double n1x = (a1y*b1z)-(a1z*b1y);
 								double n1y = (a1z*b1x)-(a1x*b1z);
 								double n1z = (a1x*b1y)-(a1y*b1x);
@@ -5055,7 +5066,7 @@ void improve_mesh()
 								double a2z = z2-z3;
 								double b2x = x2-x4;
 								double b2y = y2-y4;
-								double b2z = z2-z4;			
+								double b2z = z2-z4;
 								double n2x = (a2y*b2z)-(a2z*b2y);
 								double n2y = (a2z*b2x)-(a2x*b2z);
 								double n2z = (a2x*b2y)-(a2y*b2x);
@@ -5064,7 +5075,7 @@ void improve_mesh()
 								double a3z = z3-z1;
 								double b3x = x3-x4;
 								double b3y = y3-y4;
-								double b3z = z3-z4;			
+								double b3z = z3-z4;
 								double n3x = (a3y*b3z)-(a3z*b3y);
 								double n3y = (a3z*b3x)-(a3x*b3z);
 								double n3z = (a3x*b3y)-(a3y*b3x);
@@ -5073,7 +5084,7 @@ void improve_mesh()
 								double a4z = z4-z1;
 								double b4x = x4-x2;
 								double b4y = y4-y2;
-								double b4z = z4-z2;			
+								double b4z = z4-z2;
 								double n4x = (a4y*b4z)-(a4z*b4y);
 								double n4y = (a4z*b4x)-(a4x*b4z);
 								double n4z = (a4x*b4y)-(a4y*b4x);
@@ -5089,7 +5100,7 @@ void improve_mesh()
 								denom22 = pow(denom22,0.5);
 								double dihedral2 = ((n1x*n3x)+(n1y*n3y)+(n1z*n3z))/(denom21*denom22);
 								dihedral2 = acos(dihedral2);
-								double denom31 = (n1x*n1x)+(n1y*n1y)+(n1z*n1z);	
+								double denom31 = (n1x*n1x)+(n1y*n1y)+(n1z*n1z);
 								double denom32 = (n4x*n4x)+(n4y*n4y)+(n4z*n4z);
 								denom31 = pow(denom31,0.5);
 								denom32 = pow(denom32,0.5);
@@ -5119,11 +5130,11 @@ void improve_mesh()
 								dihedral4 = (180/3.1415926535897)*dihedral4;
 								dihedral5 = (180/3.1415926535897)*dihedral5;
 								dihedral6 = (180/3.1415926535897)*dihedral6;
-								dihedral1 = 180-dihedral1;		
-								dihedral2 = 180-dihedral2;		
-								dihedral3 = 180-dihedral3;		
-								dihedral4 = 180-dihedral4;		
-								dihedral5 = 180-dihedral5;		
+								dihedral1 = 180-dihedral1;
+								dihedral2 = 180-dihedral2;
+								dihedral3 = 180-dihedral3;
+								dihedral4 = 180-dihedral4;
+								dihedral5 = 180-dihedral5;
 								dihedral6 = 180-dihedral6;
 								element[firstelement].set_dihedralangles(dihedral1,dihedral2,dihedral3,dihedral4,dihedral5,dihedral6);
 								double length1 = ((x1-x2)*(x1-x2))+((y1-y2)*(y1-y2))+((z1-z2)*(z1-z2));
@@ -5191,15 +5202,15 @@ void improve_mesh()
 									double x3 = finalnode[n3].xc;
 									double y3 = finalnode[n3].yc;
 									double z3 = finalnode[n3].zc;
-									double x4 = finalnode[n4].xc;	
+									double x4 = finalnode[n4].xc;
 									double y4 = finalnode[n4].yc;
 									double z4 = finalnode[n4].zc;
 									double a1x = x1-x3;
 									double a1y = y1-y3;
 									double a1z = z1-z3;
 									double b1x = x1-x2;
-									double b1y = y1-y2;		
-									double b1z = z1-z2;			
+									double b1y = y1-y2;
+									double b1z = z1-z2;
 									double n1x = (a1y*b1z)-(a1z*b1y);
 									double n1y = (a1z*b1x)-(a1x*b1z);
 									double n1z = (a1x*b1y)-(a1y*b1x);
@@ -5208,7 +5219,7 @@ void improve_mesh()
 									double a2z = z2-z3;
 									double b2x = x2-x4;
 									double b2y = y2-y4;
-									double b2z = z2-z4;			
+									double b2z = z2-z4;
 									double n2x = (a2y*b2z)-(a2z*b2y);
 									double n2y = (a2z*b2x)-(a2x*b2z);
 									double n2z = (a2x*b2y)-(a2y*b2x);
@@ -5217,7 +5228,7 @@ void improve_mesh()
 									double a3z = z3-z1;
 									double b3x = x3-x4;
 									double b3y = y3-y4;
-									double b3z = z3-z4;			
+									double b3z = z3-z4;
 									double n3x = (a3y*b3z)-(a3z*b3y);
 									double n3y = (a3z*b3x)-(a3x*b3z);
 									double n3z = (a3x*b3y)-(a3y*b3x);
@@ -5226,7 +5237,7 @@ void improve_mesh()
 									double a4z = z4-z1;
 									double b4x = x4-x2;
 									double b4y = y4-y2;
-									double b4z = z4-z2;			
+									double b4z = z4-z2;
 									double n4x = (a4y*b4z)-(a4z*b4y);
 									double n4y = (a4z*b4x)-(a4x*b4z);
 									double n4z = (a4x*b4y)-(a4y*b4x);
@@ -5242,7 +5253,7 @@ void improve_mesh()
 									denom22 = pow(denom22,0.5);
 									double dihedral2 = ((n1x*n3x)+(n1y*n3y)+(n1z*n3z))/(denom21*denom22);
 									dihedral2 = acos(dihedral2);
-									double denom31 = (n1x*n1x)+(n1y*n1y)+(n1z*n1z);	
+									double denom31 = (n1x*n1x)+(n1y*n1y)+(n1z*n1z);
 									double denom32 = (n4x*n4x)+(n4y*n4y)+(n4z*n4z);
 									denom31 = pow(denom31,0.5);
 									denom32 = pow(denom32,0.5);
@@ -5272,11 +5283,11 @@ void improve_mesh()
 									dihedral4 = (180/3.1415926535897)*dihedral4;
 									dihedral5 = (180/3.1415926535897)*dihedral5;
 									dihedral6 = (180/3.1415926535897)*dihedral6;
-									dihedral1 = 180-dihedral1;		
-									dihedral2 = 180-dihedral2;		
-									dihedral3 = 180-dihedral3;		
-									dihedral4 = 180-dihedral4;		
-									dihedral5 = 180-dihedral5;		
+									dihedral1 = 180-dihedral1;
+									dihedral2 = 180-dihedral2;
+									dihedral3 = 180-dihedral3;
+									dihedral4 = 180-dihedral4;
+									dihedral5 = 180-dihedral5;
 									dihedral6 = 180-dihedral6;
 									element[firstelement].set_dihedralangles(dihedral1,dihedral2,dihedral3,dihedral4,dihedral5,dihedral6);
 									double length1 = ((x1-x2)*(x1-x2))+((y1-y2)*(y1-y2))+((z1-z2)*(z1-z2));
@@ -5306,9 +5317,9 @@ void write_meshdata(string outname1)
 	ofstream outFile;
 	outFile.open(outname1.c_str());
 	int edgeelement = 0;
-	outFile << "# vtk DataFile Version 2.0" << endl; 
-	outFile << "data set from FFT2dx_GB" << endl; 
-	outFile << "ASCII" << endl; 
+	outFile << "# vtk DataFile Version 2.0" << endl;
+	outFile << "data set from FFT2dx_GB" << endl;
+	outFile << "ASCII" << endl;
 	outFile << "DATASET UNSTRUCTURED_GRID" << endl;
 	outFile << endl;
 	outFile << "POINTS " << numnodes << " float" << endl;
@@ -5317,7 +5328,7 @@ void write_meshdata(string outname1)
 		double x = finalnode[j].xc;
 		double y = finalnode[j].yc;
 		double z = finalnode[j].zc;
-		outFile << x << " " << y << " " << z << endl;		
+		outFile << x << " " << y << " " << z << endl;
 	}
 	int goodelementcount = 0;
 	for(int i=0;i<elementcount;i++)
@@ -5331,7 +5342,7 @@ void write_meshdata(string outname1)
 	outFile << "CELLS " << goodelementcount+numnodes << " " << (goodelementcount*5)+(numnodes*2) << endl;
 	for(int j=0;j<numnodes;j++)
 	{
-		outFile << "1 " << j << endl;		
+		outFile << "1 " << j << endl;
 	}
 	for(int i=0;i<elementcount;i++)
 	{
@@ -5342,20 +5353,20 @@ void write_meshdata(string outname1)
 			int n2 = element[i].node2;
 			int n3 = element[i].node3;
 			int n4 = element[i].node4;
-			outFile << "4 " << n1 << " " << n2 << " " << n3 << " " << n4 << endl; 
+			outFile << "4 " << n1 << " " << n2 << " " << n3 << " " << n4 << endl;
 		}
 	}
 	outFile << endl;
 	outFile << "CELL_TYPES " << goodelementcount+numnodes << endl;
 	for(int j=0;j<numnodes;j++)
 	{
-		outFile << "1" << endl;		
+		outFile << "1" << endl;
 	}
 	for(int i=0;i<elementcount;i++)
 	{
 		if(element[i].elementkilled != 1)
 		{
-			outFile << "10" << endl; 
+			outFile << "10" << endl;
 		}
 	}
 	outFile << endl;
@@ -5366,8 +5377,8 @@ void write_meshdata(string outname1)
 	{
 		int nodetype = finalnode[j].surfnode;
 		outFile << nodetype << endl;
-//		if(gvector[j].size() == 1) outFile << gvector[j][0] << endl;		
-//		if(gvector[j].size() != 1) outFile << "0" << endl;		
+//		if(gvector[j].size() == 1) outFile << gvector[j][0] << endl;
+//		if(gvector[j].size() != 1) outFile << "0" << endl;
 	}
 	for(int i=0;i<elementcount;i++)
 	{
@@ -5375,7 +5386,7 @@ void write_meshdata(string outname1)
 		{
 			edgeelement = 0;
 			int gname = element[i].grainname;
-			outFile << gname << endl; 
+			outFile << gname << endl;
 		}
 	}
 	outFile << endl;
@@ -5383,7 +5394,7 @@ void write_meshdata(string outname1)
 	outFile << "LOOKUP_TABLE default" << endl;
 	for(int j=0;j<numnodes;j++)
 	{
-		outFile << "0" << endl;		
+		outFile << "0" << endl;
 	}
 	for(int i=0;i<elementcount;i++)
 	{
@@ -5424,7 +5435,7 @@ void write_meshdata(string outname1)
 			if((dihedral4) < worstangle) worstangle = (dihedral4);
 			if((dihedral5) < worstangle) worstangle = (dihedral5);
 			if((dihedral6) < worstangle) worstangle = (dihedral6);
-			outFile << worstangle << endl; 
+			outFile << worstangle << endl;
 		}
 	}
 	outFile.close();
@@ -5451,13 +5462,13 @@ void write_voxeldata(string outname3)
 {
 	ofstream outFile;
 	outFile.open(outname3.c_str());
-	outFile << "# vtk DataFile Version 2.0" << endl; 
-	outFile << "data set from FFT2dx_GB" << endl; 
-	outFile << "ASCII" << endl; 
+	outFile << "# vtk DataFile Version 2.0" << endl;
+	outFile << "data set from FFT2dx_GB" << endl;
+	outFile << "ASCII" << endl;
 	outFile << "DATASET STRUCTURED_POINTS" << endl;
 	outFile << "DIMENSIONS " << (numxvoxels) << " " << (numyvoxels) << " " << (numzvoxels) << endl;
-	outFile << "ORIGIN 0.0 0.0 0.0" << endl; 
-	outFile << "SPACING " << xres << " " << yres << " " << zres << endl; 
+	outFile << "ORIGIN 0.0 0.0 0.0" << endl;
+	outFile << "SPACING " << xres << " " << yres << " " << zres << endl;
 	outFile << "POINT_DATA " << (numxvoxels)*(numyvoxels)*(numzvoxels) << endl;
 	outFile << endl;
 	outFile << "SCALARS GrainID int 1" << endl;
