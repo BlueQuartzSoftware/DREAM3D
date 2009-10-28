@@ -765,6 +765,7 @@ void RepresentationUI::reconstruction_ThreadFinished()
   grainGeneratorTab->setEnabled(true);
   surfaceMeshingTab->setEnabled(true);
   volumeMeshingTab->setEnabled(true);
+  setupGui_Reconstruction();
 }
 
 // -----------------------------------------------------------------------------
@@ -790,7 +791,7 @@ void RepresentationUI::gg_ThreadFinished()
   reconstructionTab->setEnabled(true);
   surfaceMeshingTab->setEnabled(true);
   volumeMeshingTab->setEnabled(true);
-
+  setupGui_GrainGenerator();
 }
 
 // -----------------------------------------------------------------------------

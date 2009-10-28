@@ -82,7 +82,9 @@ void GrainGenerator::run()
 void GrainGenerator::jackson_compute()
 {
 
-
+  m_InputDirectory = MXAFileSystemPath::toNativeSeparators(m_InputDirectory);
+  m_OutputDirectory = MXAFileSystemPath::toNativeSeparators(m_OutputDirectory);
+  
   int err = SVG_3D_Main(m_InputDirectory, m_OutputDirectory, m_NumGrains, m_ShapeClass,
               m_XResolution, m_YResolution, m_ZResolution, m_OverlapAllowed,
               m_OverlapAssignment, m_CrystalStructure);

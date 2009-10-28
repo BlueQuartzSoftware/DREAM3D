@@ -117,6 +117,8 @@ void Reconstruction::compute()
     sliceCount *= 10;
   }
 
+  m_InputDirectory = MXAFileSystemPath::toNativeSeparators(m_InputDirectory);
+  m_OutputDirectory = MXAFileSystemPath::toNativeSeparators(m_OutputDirectory);
   AngDirectoryPatterns::Pointer p = AngDirectoryPatterns::New(m_InputDirectory, m_AngFilePrefix, width);
 
   AngFileReader::Pointer reader = AngFileReader::New();
@@ -229,7 +231,7 @@ void Reconstruction::compute()
   numgrains = m_microgen->renumber_grains3();
 
   CHECK_FOR_CANCELED(MicroGen3D)
-  progressMessage(AIM_STRING("write_volume2"), 42 );
+  progressMessage(AIM_STRING("Writing Reconstruction File"), 42 );
   m_microgen->write_volume2(reconFile);
 
   CHECK_FOR_CANCELED(MicroGen3D)
@@ -274,9 +276,8 @@ void Reconstruction::compute()
   std::string  misorientationFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::MisorientationBinsFile;
   std::string  microBinsFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::MicroBinsFile;
 
-#if 0
   CHECK_FOR_CANCELED(MicroGen3D)
-  progressMessage(AIM_STRING("volume_stats"), 69 );
+  progressMessage(AIM_STRING("Writing Statistics"), 69 );
   m_microgen->volume_stats(statsFile,
                          volBinFile,
                          bOverABinsFile,
@@ -286,9 +287,9 @@ void Reconstruction::compute()
                          svsFile,
                          misorientationFile,
                          microBinsFile);
-#endif
+
   CHECK_FOR_CANCELED(MicroGen3D)
-  progressMessage(AIM_STRING("write_volume2"), 72 );
+  progressMessage(AIM_STRING("Writing Reconstruction File"), 72 );
   m_microgen->write_volume2(reconFile);
 
   std::string reconVisFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::ReconstructedVisualizationFile;
@@ -299,28 +300,28 @@ void Reconstruction::compute()
   std::string boundaryFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::BoundaryCentersFile;
 
   CHECK_FOR_CANCELED(MicroGen3D)
-  progressMessage(AIM_STRING("create_visualization"), 75 );
+  progressMessage(AIM_STRING("Writing Reconstruction Visualization File"), 75 );
   m_microgen->create_visualization(reconVisFile);
 
   CHECK_FOR_CANCELED(MicroGen3D)
-  progressMessage(AIM_STRING("write_grains"), 78 );
+  progressMessage(AIM_STRING("Writing Grains File"), 78 );
   m_microgen->write_grains(grainsFile);
 
   CHECK_FOR_CANCELED(MicroGen3D)
-  progressMessage(AIM_STRING("write_axisorientations"), 81 );
+  progressMessage(AIM_STRING("Writing Axis Orientation File"), 81 );
   m_microgen->write_axisorientations(axisFile);
 
   CHECK_FOR_CANCELED(MicroGen3D)
-  progressMessage(AIM_STRING("write_eulerangles"), 84 );
+  progressMessage(AIM_STRING("Writing Euler Angle File"), 84 );
   m_microgen->write_eulerangles(eulerFile);
 
   CHECK_FOR_CANCELED(MicroGen3D)
-  progressMessage(AIM_STRING("find_boundarycenters"), 99 );
+  progressMessage(AIM_STRING("Finding and Writing Boundary Centers"), 99 );
   m_microgen->find_boundarycenters(boundaryFile);
 
   progressMessage(AIM_STRING("Reconstruction Complete"), 100 );
 
-  std::cout << "Reconstruction::compute is Complete" << std::endl;
+ // std::cout << "Reconstruction::compute is Complete" << std::endl;
 }
 
 // -----------------------------------------------------------------------------
@@ -331,7 +332,7 @@ void Reconstruction::progressMessage(AIM_STRING message, int progress)
 #ifdef AIM_USE_QT
       emit updateMessage(QString(message));
       emit updateProgress(progress);
-     // std::cout << message.toStdString() << std::endl;
+      std::cout << message.toStdString() << std::endl;
 #else
 
   std::cout << message << std::endl;
@@ -346,7 +347,7 @@ void Reconstruction::progressMessage(AIM_STRING message, int progress)
 // -----------------------------------------------------------------------------
 void Reconstruction::on_CancelWorker()
 {
-     std::cout << "Reconstruction::cancelWorker()" << std::endl;
+    // std::cout << "Reconstruction::cancelWorker()" << std::endl;
      this->m_Cancel = true;
      if (m_microgen.get() != NULL)
      {

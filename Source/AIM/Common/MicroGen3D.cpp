@@ -13,6 +13,30 @@ const static double m_OnePointThree = 1.33333333333;
 
 #include <sstream>
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+class BoundaryCenter {
+public:
+  BoundaryCenter() :
+      grain1(0),
+      grain2(0),
+      x(0.0),
+      y(0.0),
+      z(0.0)
+  {}
+
+
+  virtual ~BoundaryCenter() {}
+  int grain1;
+  int grain2;
+  double x;
+  double y;
+  double z;
+
+
+};
+
 using namespace std;
 
 MicroGen3D::MicroGen3D() :
@@ -102,7 +126,7 @@ void MicroGen3D::initialize(double stepX, double stepY, double stepZ,
   totalpoints = xpoints * ypoints * zpoints;
 
 
-#if 1
+#if 0
   std::cout << "X Size: " << sizex << std::endl;
   std::cout << "Y Size: " << sizey << std::endl;
   std::cout << "Z Size: " << sizez << std::endl;
@@ -305,7 +329,7 @@ int  MicroGen3D::renumber_grains1()
 // -----------------------------------------------------------------------------
 void MicroGen3D::write_volume1(string writename10)
 {
-  std::cout << "MicroGen3D::write_volume1: '" << writename10 << "'" << std::endl;
+  //std::cout << "MicroGen3D::write_volume1: '" << writename10 << "'" << std::endl;
   ofstream outFile;
   outFile.open(writename10.c_str());
   for (int i = 0; i < (xpoints * ypoints * zpoints); i++)
@@ -450,7 +474,7 @@ void  MicroGen3D::find_neighbors()
 
   for(int i = 0; i < numgrains; i++)
   {
-    std::cout << "find_neighbors: " << i << " of " << numgrains << " grains." << std::endl;
+    //std::cout << "find_neighbors: " << i << " of " << numgrains << " grains." << std::endl;
     if(grains[i].gotsizemerged != 1)
     {
       size_t nListIndex = 0;
@@ -617,7 +641,9 @@ int  MicroGen3D::renumber_grains2()
       vector<int>* nlist = grains[i].neighborlist;
       grains[graincount].numvoxels = size;
       grains[graincount].numneighbors = numneighbors;
-      grains[graincount].neighborlist->swap(*nlist);
+      if (nlist != NULL) {
+        grains[graincount].neighborlist->swap(*nlist);
+      }
       graincount++;
     }
   }
@@ -1064,10 +1090,10 @@ int  MicroGen3D::renumber_grains3()
       vector<int>* nlist = grains[i].neighborlist;
       goodgrain[graincount].numvoxels = size;
       goodgrain[graincount].numneighbors = numneighbors;
-    if (goodgrain[graincount].neighborlist == NULL) 
+    if (goodgrain[graincount].neighborlist == NULL)
     {
       goodgrain[graincount].neighborlist = new std::vector<int>(numneighbors);
-    } 
+    }
       if (NULL != nlist) {
           goodgrain[graincount].neighborlist->swap(*nlist);
     }
@@ -1205,9 +1231,9 @@ void  MicroGen3D::find_goodneighbors()
       nlist.erase(newend,nlist.end());
       neighcount = int(nlist.size());
       goodgrain[i].numneighbors = neighcount;
-      if (goodgrain[i].neighborlist == NULL) 
-      { 
-        goodgrain[i].neighborlist = new std::vector<int>(nlist.size() ); 
+      if (goodgrain[i].neighborlist == NULL)
+      {
+        goodgrain[i].neighborlist = new std::vector<int>(nlist.size() );
       }
       goodgrain[i].neighborlist->swap(nlist);
     }
@@ -2928,31 +2954,12 @@ void  MicroGen3D::write_eulerangles(string writename15)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-struct BoundaryCenter {
-    int grain1;
-    int grain2;
-    double x;
-    double y;
-    double z;
-};
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void  MicroGen3D::find_boundarycenters(string writename13)
 {
-  //double bcent[250000][5];
-  BoundaryCenter* bcent = new BoundaryCenter[bcentSize];
+
+  std::vector<BoundaryCenter> bcent(bcentSize);
   int count = 0;
   double tempcount = 0;
-  for(size_t a = 0; a < bcentSize; ++a)
-  {
-    bcent[a].grain1 = 0;
-    bcent[a].grain2 = 0;
-    bcent[a].x = 0.0;
-    bcent[a].y = 0.0;
-    bcent[a].z = 0.0;
-  }
   for(int i = 0; i < numgrains; i++)
   {
     vector<int>* nlist = goodgrain[i].neighborlist;
@@ -3002,6 +3009,9 @@ void  MicroGen3D::find_boundarycenters(string writename13)
               }
               if(firstvoxneigh == firstneigh)
               {
+                if (count >= static_cast<int>(bcent.size() ) ) {
+                  bcent.resize(bcent.size() * 2);
+                }
                 bcent[count].x = bcent[count].x + x;
                 bcent[count].y = bcent[count].y + y;
                 bcent[count].z = bcent[count].z + z;
@@ -3011,6 +3021,10 @@ void  MicroGen3D::find_boundarycenters(string writename13)
             }
           }
         }
+      }
+      if (count >= static_cast<int>(bcent.size() ) ) {
+        bcent.resize(bcent.size() * 2);
+        std::cout << "Resizing BoundaryCenters Vector to " << bcent.size() << std::endl;
       }
       bcent[count].grain1 = i;
       bcent[count].grain2 = firstneigh;
@@ -3036,7 +3050,7 @@ void  MicroGen3D::find_boundarycenters(string writename13)
     }
   }
   outFile.close();
-  delete [] bcent;
+ // delete [] bcent;
 }
 
 

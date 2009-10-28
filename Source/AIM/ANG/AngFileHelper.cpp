@@ -37,7 +37,7 @@ void AngFileHelper::loadData(Voxel voxels[],
   const double badeuler = 12.566370010375977;
   size_t index = 0;
   int nSlices = m_ZIndexEnd - m_ZIndexStart;
-  for (size_t k = 0; k < nSlices; k++)
+  for (int k = 0; k < nSlices; k++)
   {
     if (m_Cancel == true) { break; }
     {
