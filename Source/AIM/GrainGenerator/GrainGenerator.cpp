@@ -84,7 +84,8 @@ void GrainGenerator::run()
 // -----------------------------------------------------------------------------
 void GrainGenerator::jackson_compute()
 {
-
+  CHECK_FOR_CANCELED(Synthetic Builder)
+  progressMessage(AIM_STRING("Running Synthetic Builder"), 0 );
   m_InputDirectory = MXAFileSystemPath::toNativeSeparators(m_InputDirectory);
   m_OutputDirectory = MXAFileSystemPath::toNativeSeparators(m_OutputDirectory);
 
@@ -92,6 +93,8 @@ void GrainGenerator::jackson_compute()
               m_XResolution, m_YResolution, m_ZResolution, m_OverlapAllowed,
               m_OverlapAssignment, m_CrystalStructure);
   setErrorCondition(err);
+
+  progressMessage(AIM_STRING("Synthetic Builder Complete"), 100 );
 
 }
 
@@ -328,8 +331,8 @@ void GrainGenerator::compute()
 void GrainGenerator::progressMessage(AIM_STRING message, int progress)
 {
 #ifdef AIM_USE_QT
-   //   emit updateMessage(QString(message));
-   //   emit updateProgress(progress);
+      emit updateMessage(QString(message));
+      emit updateProgress(progress);
       std::cout << message.toStdString() << std::endl;
 #else
 

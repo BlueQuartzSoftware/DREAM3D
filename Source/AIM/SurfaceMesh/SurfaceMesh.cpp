@@ -48,6 +48,7 @@ SurfaceMesh::Pointer SurfaceMesh::New( QObject* parent)
 // -----------------------------------------------------------------------------
 SurfaceMesh::SurfaceMesh( QObject* parent) :
 QThread(parent),
+m_DxFile(""),
 m_OutputDirectory(""),
 m_SmoothMesh(false),
 m_SmoothIterations(0),
@@ -63,14 +64,13 @@ m_Cancel(false)
 //
 // -----------------------------------------------------------------------------
 SurfaceMesh::SurfaceMesh() :
-m_InputFile(""),
+m_DxFile(""),
 m_OutputDirectory(""),
 m_SmoothMesh(false),
 m_SmoothIterations(0),
 m_SmoothFileOutputIncrement(0),
 m_SmoothLockQuadPoints(false),
-m_ErrorCondition(0),
-m_Cancel(false)
+m_ErrorCondition(0)
 {
 
 }
@@ -98,7 +98,8 @@ void SurfaceMesh::run()
 // -----------------------------------------------------------------------------
 void SurfaceMesh::compute()
 {
-
+  CHECK_FOR_CANCELED(Surface Meshing)
+  progressMessage(AIM_STRING("Running Surface Meshing"), 0 );
   m_ErrorCondition = SurfaceMesh_MCALayer(m_XDim, m_YDim, m_ZDim,
                                  m_OutputDirectory.c_str(),
                                  m_DxFile.c_str(),
@@ -108,7 +109,11 @@ void SurfaceMesh::compute()
   if (m_SmoothMesh == true)
   {
     //TODO: Run the smoothing algorithm
+    CHECK_FOR_CANCELED(Surface Meshing)
+    progressMessage(AIM_STRING("Smoothing Surface Meshing"), 50 );
   }
+
+  progressMessage(AIM_STRING("Surface Meshing Complete"), 100 );
 }
 
 // -----------------------------------------------------------------------------

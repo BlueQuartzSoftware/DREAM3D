@@ -829,6 +829,8 @@ int main(int argc, char **argv)
 		  }
 	  }
   }
+
+  std::cout << "Loading Data Files.. " << std::endl;
   loadVolData(readname1,numdiambins);
   loadboveraData(readname2,numshapebins);
   loadcoveraData(readname3,numshapebins);
@@ -837,7 +839,11 @@ int main(int argc, char **argv)
   loadorientData(readname6,numorients);
   loadeulerData(readname7,numeulers);
   takencheck = new int[numgrains];
+
+  std::cout << "Generating Grains" << std::endl;
   generate_grains(numgrains);
+
+  std::cout << "assign_eulers" << std::endl;
   assign_eulers(numgrains);
   svn = new double *[numsizebins];
   svs = new double *[numsizebins];
@@ -876,50 +882,66 @@ int main(int argc, char **argv)
   {
 	  packedgrain[temp5].nserror = bigerror;
   }
+
+  std::cout << "Loading SVN and SVS data" << std::endl;
   loadSVNData(readname8);
   loadSVSData(readname9);
+
+  std::cout << "Creating Points" << std::endl;
   make_points(numgrains);
+
+  std::cout << "Fill_gaps" << std::endl;
   fill_gaps(numgrains);
+  std::cout << "find_neighbors" << std::endl;
   find_neighbors(numgrains);
+  std::cout << "find_centroids" << std::endl;
   find_centroids(numgrains);
+  std::cout << "find_moments" << std::endl;
   find_moments(numgrains);
+  std::cout << "find_axis" << std::endl;
   find_axis(numgrains);
+  std::cout << "find_colors" << std::endl;
   find_colors(numgrains);
   actualmisobin = (struct bins *)malloc((nummisobins)*sizeof(struct bins));
   simmisobin = (struct bins *)malloc((nummisobins)*sizeof(struct bins));
   actualmicrobin = (struct bins *)malloc((nummicrobins)*sizeof(struct bins));
   simmicrobin = (struct bins *)malloc((nummicrobins)*sizeof(struct bins));
+
+  std::cout << "Loading MisoData" << std::endl;
   loadMisoData(readname10);
+  std::cout << "Loading MicroData" << std::endl;
   loadMicroData(readname11);
   for(int iter = 0; iter < misoiter; iter++)
   {
-	measure_misorientations(numgrains);
-	rank_misobins(numgrains);
-	count_misorientations(numgrains);
-	freeze_grains(numgrains);
-	rank_grains1(numgrains);
-	identify_grains1(numgrains,nummisomoves);
-	move_grains1(numgrains);
+    measure_misorientations(numgrains);
+    rank_misobins(numgrains);
+    count_misorientations(numgrains);
+    freeze_grains(numgrains);
+    rank_grains1(numgrains);
+    identify_grains1(numgrains,nummisomoves);
+    move_grains1(numgrains);
   }
   while(nummicros != 1)
   {
-	measure_misorientations(numgrains);
-	count_misorientations(numgrains);
-	nummicros = rank_microbins(numgrains);
-	rank_grains2(numgrains);
-	identify_grains2(numgrains,nummicromoves);
-	move_grains2(numgrains);
+    measure_misorientations(numgrains);
+    count_misorientations(numgrains);
+    nummicros = rank_microbins(numgrains);
+    rank_grains2(numgrains);
+    identify_grains2(numgrains,nummicromoves);
+    move_grains2(numgrains);
   }
   for(int iter3 = 0; iter3 < misoiter; iter3++)
   {
-	measure_misorientations(numgrains);
-	rank_misobins(numgrains);
-	count_misorientations(numgrains);
-	freeze_grains(numgrains);
-	rank_grains1(numgrains);
-	identify_grains1(numgrains,nummisomoves);
-	move_grains1(numgrains);
+    measure_misorientations(numgrains);
+    rank_misobins(numgrains);
+    count_misorientations(numgrains);
+    freeze_grains(numgrains);
+    rank_grains1(numgrains);
+    identify_grains1(numgrains,nummisomoves);
+    move_grains1(numgrains);
   }
+
+  std::cout << "Writing Output files" << std::endl;
   volume_stats(numgrains,writename2);
   writeCube(writename1,numgrains);
   write_grains(writename4,numgrains);
@@ -1360,6 +1382,7 @@ void generate_grains(int numgrains)
 	srand(static_cast<unsigned int>(time(NULL)));
 	for(int l = 0; l < numgrains; l++)
 	{
+	  std::cout << "generate_grains: " << l << " of " << numgrains << std::endl;
 		curbin1 = 0;
 		good = 1;
 		double random = rg.Random();

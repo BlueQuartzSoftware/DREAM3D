@@ -2210,7 +2210,8 @@ void MicroGen3D::volume_stats(string writename1,
       svcoverb[diamint][1] = svcoverb[diamint][1] + coverb;
       svschmid[diamint][1] = svschmid[diamint][1] + schmid;
       svem[diamint][1] = svem[diamint][1] + em;
-      int size = int(nlist->size());
+      int size = 0;
+      if (NULL != nlist) { size = nlist->size(); }
       for(int k=0;k<size;k++)
       {
         int neigh = nlist->at(k);
@@ -2382,7 +2383,8 @@ void MicroGen3D::volume_stats(string writename1,
       svcoverb[diamint][2] = svcoverb[diamint][2] + ((coverb-svcoverb[diamint][1])*(coverb-svcoverb[diamint][1]));
       svschmid[diamint][2] = svschmid[diamint][2] + ((schmid-svschmid[diamint][1])*(schmid-svschmid[diamint][1]));
       svem[diamint][2] = svem[diamint][2] + ((em-svem[diamint][1])*(em-svem[diamint][1]));
-      int size = int(nlist->size());
+      int size = 0;
+      if (NULL != nlist) { size = nlist->size(); }
       for(int k=0;k<size;k++)
       {
         int neigh = (*nlist)[k];
