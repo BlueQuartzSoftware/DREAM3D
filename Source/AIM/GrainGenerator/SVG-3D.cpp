@@ -595,7 +595,7 @@ struct packedgrains
 	double oeuler3;
 };
 
-
+namespace SyntheticGenerator {
 int32 seeder = time(0);
 AIMRandomNG rg;
 
@@ -652,6 +652,10 @@ double resz1;
 int numneighbins;
 int nummicros = 1;
 int crystruct;
+}
+
+
+
 void loadVolData(string inname1, int numvolbins);
 void loadboveraData(string inname2, int numshapebins);
 void loadcoveraData(string inname3, int numshapebins);
@@ -690,7 +694,7 @@ void move_grains2(int numgrains);
 void freeze_grains(int numgrains);
 void write_volume(string outname5);
 
-
+using namespace SyntheticGenerator;
 
 #ifdef SVG_3D_LIBRARY
 int SVG_3D_Main(const std::string &inDir, const std::string &outDir,

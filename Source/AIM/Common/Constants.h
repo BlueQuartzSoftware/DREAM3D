@@ -79,29 +79,15 @@ namespace AIM
     const std::string NodesFile("nodes.txt");
     const std::string TrianglesFile("triangles.txt");
 
+    /* Volume Meshing Related */
+    const std::string MeshFile("volumetric_mesh_v5_1.vtk");
+    const std::string MeshFile2("volumetric_mesh_v5_2.vtk");
+    const std::string ElementQualityFile("element_quality_measures_v5.txt");
+    const std::string VoxelsFile("voxels_v5.txt");
+
+
 
   } // End Namespace Representation
 }
-
-#if 0
-
-writename1 = "stats.txt";
-writename2 = "volbins.txt";
-writename3 = "boverabins.txt";
-writename4 = "coverabins.txt";
-writename5 = "coverbbins.txt";
-writename6 = "svn.txt";
-writename7 = "svs.txt";
-writename8 = "misobins.txt";
-writename9 = "microbins.txt";
-writename10 = "reconstructed_data.txt";
-writename11 = "reconstructed_visualization.vtk";
-writename12 = "grains.txt";
-writename13 = "boundarycenters.txt";
-writename14 = "axisorientations.txt";
-writename15 = "eulerangles.txt";
-
-#endif
-
 
 #endif /* AIM_CONSTANTS_H_ */

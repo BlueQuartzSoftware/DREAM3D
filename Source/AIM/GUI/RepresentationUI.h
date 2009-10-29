@@ -67,6 +67,12 @@ class RepresentationUI : public QMainWindow, private Ui::RepresentationUI
     void on_sm_OutputDirBtn_clicked();
     void on_sm_GoBtn_clicked();
 
+    /* Volume Meshing Slots */
+    void on_vm_NodesFileBtn_clicked();
+    void on_vm_TrianglesFileBtn_clicked();
+    void on_vm_OutputDirBtn_clicked();
+    void on_vm_GoBtn_clicked();
+
 
 
   /**
@@ -110,6 +116,9 @@ class RepresentationUI : public QMainWindow, private Ui::RepresentationUI
     void on_sm_NeighSpinTableFile_textChanged(const QString & text);
     void on_sm_OutputDir_textChanged(const QString & text);
 
+    void on_vm_NodesFile_textChanged(const QString & text);
+    void on_vm_TrianglesFile_textChanged(const QString & text);
+    void on_vm_OutputDir_textChanged(const QString & text);
 
   signals:
     void parentResized();

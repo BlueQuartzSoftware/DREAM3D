@@ -42,7 +42,7 @@ IF(WIN32)
  SET(GUI_TYPE WIN32)
 ENDIF(WIN32)
 
-add_definitions(-DAIM_USE_QT -DSVG_3D_LIBRARY -DSURFACE_MESH_LIBRARY)
+add_definitions(-DAIM_USE_QT -DSVG_3D_LIBRARY -DSURFACE_MESH_LIBRARY -DVOLUME_MESH_LIBRARY)
 
 # List the source files here
 SET (Representation_SRCS
@@ -107,6 +107,16 @@ SET (SurfaceMesh_HDRS
 )
 IDE_SOURCE_PROPERTIES( "Source/AIM/SurfaceMesh" "${SurfaceMesh_HDRS}" "${SurfaceMesh_SRCS}")
 
+SET (VolumeMesh_SRCS
+    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/VolumeMesh/VolumeMesh.cpp
+    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/VolumeMesh/MeshGenerator.cpp
+)
+SET (VolumeMesh_HDRS
+   ${AIMRepresentation_SOURCE_DIR}/Source/AIM/VolumeMesh/VolumeMesh.h
+   ${AIMRepresentation_SOURCE_DIR}/Source/AIM/VolumeMesh/MeshGenerator.h
+)
+IDE_SOURCE_PROPERTIES( "Source/AIM/VolumeMesh" "${VolumeMesh_HDRS}" "${VolumeMesh_SRCS}")
+
                         
 SET( Representation_MOC_HDRS
     ${Representation_SOURCE_DIR}/RepresentationUI.h
@@ -116,6 +126,7 @@ SET( Representation_MOC_HDRS
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Reconstruction/Reconstruction.h
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/GrainGenerator/GrainGenerator.h
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/SurfaceMesh/SurfaceMesh.h
+    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/VolumeMesh/VolumeMesh.h
     ${AIM_Threads_HDRS}
 )
 
@@ -154,6 +165,8 @@ SET (Representation_PROJECT_SRCS
     ${GrainGenerator_HDRS}
     ${SurfaceMesh_SRCS}
     ${SurfaceMesh_HDRS}
+    ${VolumeMesh_SRCS}
+    ${VolumeMesh_HDRS}
     ${Generated_RC_SRCS} 
     ${Generated_UI_HDRS} 
     ${Generated_MOC_SRCS}
