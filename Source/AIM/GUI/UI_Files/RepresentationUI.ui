@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>557</width>
+    <width>571</width>
     <height>652</height>
    </rect>
   </property>
@@ -30,7 +30,7 @@
     <item row="0" column="0">
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>0</number>
+       <number>2</number>
       </property>
       <widget class="QWidget" name="reconstructionTab">
        <attribute name="title">
@@ -120,6 +120,9 @@
               <verstretch>0</verstretch>
              </sizepolicy>
             </property>
+            <property name="text">
+             <string>0.25</string>
+            </property>
            </widget>
           </item>
           <item row="1" column="0">
@@ -137,6 +140,12 @@
               <height>0</height>
              </size>
             </property>
+            <property name="maximum">
+             <number>10000000</number>
+            </property>
+            <property name="value">
+             <number>99</number>
+            </property>
            </widget>
           </item>
           <item row="0" column="1">
@@ -146,6 +155,9 @@
               <width>75</width>
               <height>0</height>
              </size>
+            </property>
+            <property name="value">
+             <number>1</number>
             </property>
            </widget>
           </item>
@@ -1345,7 +1357,7 @@
            </widget>
           </item>
           <item row="0" column="3">
-           <widget class="QPushButton" name="sm_InputFileBtn">
+           <widget class="QPushButton" name="sm_DxFileBtn">
             <property name="text">
              <string>Select</string>
             </property>
@@ -1366,7 +1378,7 @@
            </widget>
           </item>
           <item row="1" column="3">
-           <widget class="QPushButton" name="sm_InputFileBtn_2">
+           <widget class="QPushButton" name="sm_EdgeTableFileBtn">
             <property name="text">
              <string>Select</string>
             </property>
@@ -1387,7 +1399,7 @@
            </widget>
           </item>
           <item row="2" column="3">
-           <widget class="QPushButton" name="sm_InputFileBtn_3">
+           <widget class="QPushButton" name="sm_NeighSpinTableFileBtn">
             <property name="text">
              <string>Select</string>
             </property>
@@ -1782,7 +1794,7 @@
           <item>
            <widget class="QPushButton" name="sm_GoBtn">
             <property name="text">
-             <string>Create Mesh</string>
+             <string>Go</string>
             </property>
            </widget>
           </item>
@@ -1804,7 +1816,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>557</width>
+     <width>571</width>
      <height>22</height>
     </rect>
    </property>
@@ -1851,14 +1863,13 @@
   </action>
  </widget>
  <tabstops>
-  <tabstop>tabWidget</tabstop>
   <tabstop>angDir</tabstop>
   <tabstop>angDirBtn</tabstop>
   <tabstop>angFilePrefix</tabstop>
   <tabstop>angMaxSlice</tabstop>
-  <tabstop>zSpacing</tabstop>
-  <tabstop>zEndIndex</tabstop>
   <tabstop>zStartIndex</tabstop>
+  <tabstop>zEndIndex</tabstop>
+  <tabstop>zSpacing</tabstop>
   <tabstop>outputDir</tabstop>
   <tabstop>outputDirBtn</tabstop>
   <tabstop>mergeTwins</tabstop>
@@ -1868,26 +1879,36 @@
   <tabstop>misOrientationTolerance</tabstop>
   <tabstop>crystalStructure</tabstop>
   <tabstop>reconstructBtn</tabstop>
-  <tabstop>gg_InputDir</tabstop>
-  <tabstop>gg_InputDirBtn</tabstop>
-  <tabstop>gg_OutputDir</tabstop>
-  <tabstop>gg_OutputDirBtn</tabstop>
-  <tabstop>gg_CrystalStructure</tabstop>
-  <tabstop>gg_ShapeClass</tabstop>
-  <tabstop>gg_OverlapAllowed</tabstop>
-  <tabstop>gg_OverlapAssignment</tabstop>
-  <tabstop>gg_ZResolution</tabstop>
-  <tabstop>gg_YResolution</tabstop>
-  <tabstop>gg_XResolution</tabstop>
-  <tabstop>gg_NumGrains</tabstop>
-  <tabstop>gg_GoBtn</tabstop>
-  <tabstop>sm_DxFile</tabstop>
-  <tabstop>sm_InputFileBtn</tabstop>
+  <tabstop>sm_OutputDir</tabstop>
   <tabstop>sm_SmoothMesh</tabstop>
+  <tabstop>sm_EdgeTableFile</tabstop>
+  <tabstop>sm_XDim</tabstop>
   <tabstop>sm_SmoothIterations</tabstop>
+  <tabstop>sm_EdgeTableFileBtn</tabstop>
+  <tabstop>sm_YDim</tabstop>
+  <tabstop>sm_NeighSpinTableFile</tabstop>
   <tabstop>sm_LockQuadPoints</tabstop>
   <tabstop>sm_WriteOutputFileIncrement</tabstop>
   <tabstop>sm_GoBtn</tabstop>
+  <tabstop>sm_OutputDirBtn</tabstop>
+  <tabstop>sm_DxFile</tabstop>
+  <tabstop>sm_ZDim</tabstop>
+  <tabstop>gg_InputDir</tabstop>
+  <tabstop>gg_OutputDir</tabstop>
+  <tabstop>gg_NumGrains</tabstop>
+  <tabstop>gg_XResolution</tabstop>
+  <tabstop>gg_YResolution</tabstop>
+  <tabstop>gg_ZResolution</tabstop>
+  <tabstop>gg_ShapeClass</tabstop>
+  <tabstop>gg_CrystalStructure</tabstop>
+  <tabstop>gg_OverlapAllowed</tabstop>
+  <tabstop>gg_OverlapAssignment</tabstop>
+  <tabstop>gg_InputDirBtn</tabstop>
+  <tabstop>gg_OutputDirBtn</tabstop>
+  <tabstop>gg_GoBtn</tabstop>
+  <tabstop>tabWidget</tabstop>
+  <tabstop>sm_NeighSpinTableFileBtn</tabstop>
+  <tabstop>sm_DxFileBtn</tabstop>
  </tabstops>
  <resources>
   <include location="../../../../Resources/icons/images/Icons.qrc"/>

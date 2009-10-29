@@ -15,6 +15,7 @@
 #include <MXA/Common/MXASetGetMacros.h>
 #include <AIM/Reconstruction/Reconstruction.h>
 #include <AIM/GrainGenerator/GrainGenerator.h>
+#include <AIM/SurfaceMesh/SurfaceMesh.h>
 
 
 //-- Qt Includes
@@ -60,7 +61,9 @@ class RepresentationUI : public QMainWindow, private Ui::RepresentationUI
     void on_gg_GoBtn_clicked();
 
     /* Surface Meshing Slots */
-    void on_sm_InputFileBtn_clicked();
+    void on_sm_DxFileBtn_clicked();
+    void on_sm_EdgeTableFileBtn_clicked();
+    void on_sm_NeighSpinTableFileBtn_clicked();
     void on_sm_OutputDirBtn_clicked();
     void on_sm_GoBtn_clicked();
 
@@ -83,17 +86,30 @@ class RepresentationUI : public QMainWindow, private Ui::RepresentationUI
     // slots for our worker thread to communicate
     void threadHasMessage(QString message);
 
-    void reconstruction_ThreadFinished();
-    void reconstruction_ThreadProgressed(int value);
+    void rec_ThreadFinished();
+    void rec_ThreadProgressed(int value);
 
     void gg_ThreadFinished();
     void gg_ThreadProgressed(int value);
 
-    void surfaceMesh_ThreadFinished();
-    void surfaceMesh_ThreadProgressed(int value);
+    void sm_ThreadFinished();
+    void sm_ThreadProgressed(int value);
 
-    void volumeMesh_ThreadFinished();
-    void volumeMesh_ThreadProgressed(int value);
+    void vm_ThreadFinished();
+    void vm_ThreadProgressed(int value);
+
+
+    void on_angDir_textChanged(const QString & text);
+    void on_outputDir_textChanged(const QString & text);
+
+    void on_gg_InputDir_textChanged(const QString & text);
+    void on_gg_OutputDir_textChanged(const QString & text);
+
+    void on_sm_DxFile_textChanged(const QString & text);
+    void on_sm_EdgeTableFile_textChanged(const QString & text);
+    void on_sm_NeighSpinTableFile_textChanged(const QString & text);
+    void on_sm_OutputDir_textChanged(const QString & text);
+
 
   signals:
     void parentResized();
@@ -151,9 +167,18 @@ class RepresentationUI : public QMainWindow, private Ui::RepresentationUI
      * @brief Initializes some of the GUI elements with selections or other GUI related items
      */
     void setupGui();
-    void setupGui_Reconstruction();
-    void setupGui_GrainGenerator();
-    void setupGui_SurfaceMeshing();
+
+    void rec_SetupGui();
+    void rec_CheckIOFiles();
+
+    void gg_SetupGui();
+    void gg_CheckIOFiles();
+
+    void sm_SetupGui();
+    void sm_CheckIOFiles();
+
+    void vm_SetupGui();
+    void vm_CheckIOFiles();
 
     /**
      * @brief Checks the currently open file for changes that need to be saved
@@ -173,6 +198,7 @@ class RepresentationUI : public QMainWindow, private Ui::RepresentationUI
 
     Reconstruction::Pointer     m_Reconstruction;
     GrainGenerator::Pointer     m_GrainGenerator;
+    SurfaceMesh::Pointer        m_SurfaceMesh;
 
     RepresentationUI(const RepresentationUI&);    // Copy Constructor Not Implemented
     void operator=(const RepresentationUI&);  // Operator '=' Not Implemented

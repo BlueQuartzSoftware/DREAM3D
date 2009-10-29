@@ -58,10 +58,13 @@ IDE_SOURCE_PROPERTIES( "Source/AIM/GUI" "${Representation_HDRS}" "${Representati
 
 set (AIM_COMMON_QT_SRCS
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Qt/AIMAboutBox.cpp
-    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Qt/QRecentFilelist.cpp   )
+    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Qt/QRecentFilelist.cpp
+    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Qt/QR3DFileCompleter.cpp
+)
 set (AIM_COMMON_QT_HDRS
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Qt/AIMAboutBox.h
-    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Qt/QRecentFilelist.h  )
+    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Qt/QRecentFilelist.h
+    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Qt/QR3DFileCompleter.h     )
 IDE_SOURCE_PROPERTIES("Source/AIM/Common/Qt" "${AIM_COMMON_QT_HDRS}" "${AIM_COMMON_QT_SRCS}")
 
 set (AIM_Threads_SRCS 
@@ -109,6 +112,7 @@ SET( Representation_MOC_HDRS
     ${Representation_SOURCE_DIR}/RepresentationUI.h
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Qt/AIMAboutBox.h
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Qt/QRecentFilelist.h
+    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Qt/QR3DFileCompleter.h
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Reconstruction/Reconstruction.h
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/GrainGenerator/GrainGenerator.h
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/SurfaceMesh/SurfaceMesh.h
