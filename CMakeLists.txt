@@ -137,16 +137,20 @@ IF ( AIM_BUILD_RECONSTRUCTION_TOOL )
     ADD_SUBDIRECTORY( ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Reconstruction ${AIMRepresentation_BINARY_DIR}/AIM/Reconstruction)
 ENDIF ()
 
-OPTION (AIM_BUILD_SURFACE_MESHING_TOOLS "Compile the surface Meshing tools" OFF)
-if (AIM_BUILD_SURFACE_MESHING_TOOLS)
-    add_subdirectory(${AIMRepresentation_SOURCE_DIR}/Source/AIM/SurfaceMesh ${AIMRepresentation_BINARY_DIR}/AIM/SurfaceMesh)
-endif()
-
 OPTION (AIM_BUILD_GRAIN_GENERATOR_TOOL "Compile the Grain Generator Tool" OFF)
 if (AIM_BUILD_GRAIN_GENERATOR_TOOL)
     add_subdirectory(${AIMRepresentation_SOURCE_DIR}/Source/AIM/GrainGenerator ${AIMRepresentation_BINARY_DIR}/AIM/GrainGenerator)
 endif()
 
+OPTION (AIM_BUILD_SURFACE_MESHING_TOOLS "Compile the surface Meshing tools" OFF)
+if (AIM_BUILD_SURFACE_MESHING_TOOLS)
+    add_subdirectory(${AIMRepresentation_SOURCE_DIR}/Source/AIM/SurfaceMesh ${AIMRepresentation_BINARY_DIR}/AIM/SurfaceMesh)
+endif()
+
+OPTION (AIM_BUILD_VOLUME_MESHING_TOOL "Compile the Volume Meshing tools" OFF)
+if (AIM_BUILD_VOLUME_MESHING_TOOL)
+    add_subdirectory(${AIMRepresentation_SOURCE_DIR}/Source/AIM/VolumeMesh ${AIMRepresentation_BINARY_DIR}/AIM/VolumeMesh)
+endif()
 
 #ADD_SUBDIRECTORY( ${AIMRepresentation_SOURCE_DIR}/Source/Test ${AIMRepresentation_BINARY_DIR}/Test)
 include(${AIMRepresentation_RESOURCES_DIR}/CMake/AIMInstall.cmake)

@@ -64,7 +64,7 @@ set (SurfaceMesh_HDRS
 )
 IDE_SOURCE_PROPERTIES( "Source/AIM/SurfaceMesh" "${SurfaceMesh_HDRS};${SurfaceMeshSmoothing_HDRS};${SurfaceMeshMCALayer_HDRS}" 
   "${SurfaceMesh_SRCS};${SurfaceMeshSmoothing_SRCS};${SurfaceMeshMCALayer_SRCS}")
-
+                      
 set (Project_SRCS
     ${SurfaceMesh_HDRS}
     ${SurfaceMeshSmoothing_HDRS}
@@ -76,6 +76,11 @@ set (Project_SRCS
 
 
 add_executable(SurfaceMesh ${Project_SRCS} )
+target_link_libraries(SurfaceMesh 
+                        MXA
+                        AIMCommon
+                        ${Boost_PROGRAM_OPTIONS_LIBRARY} )
+set_property(TARGET SurfaceMesh PROPERTY  COMPILE_DEFINITIONS "SURFACE_MESH_LIBRARY" )
 ToolInstallationSupport(SurfaceMesh "${EXE_DEBUG_EXTENSION}" ${AIMRepresentation_BINARY_DIR} )
 
 

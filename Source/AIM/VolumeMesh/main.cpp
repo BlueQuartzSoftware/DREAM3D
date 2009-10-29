@@ -18,7 +18,7 @@
 #include <AIM/Common/AIMVersion.h>
 #include <AIM/Common/AIMArray.hpp>
 
-#include <AIM/SurfaceMesh/SurfaceMesh.h>
+#include <AIM/VolumeMesh/VolumeMesh.h>
 
 
 #include <string>
@@ -48,22 +48,23 @@
 int main(int argc, char **argv)
 {
 
-  std::cout << logTime() << "Starting Surface Meshing ... " << std::endl;
+  std::cout << logTime() << "Starting Volume Meshing ... " << std::endl;
     MXALOGGER_METHOD_VARIABLE_INSTANCE
 
-    std::string dxFile;
-    std::string edgeTableFile;
-    std::string neighSpinTableFile;
+    std::string nodesfile;
+    std::string trianglefile;
     std::string outputDir;
 
-    int xDim;
-    int yDim;
-    int zDim;
 
-    bool smoothMesh;
-    int smoothIterations;
-    int writeOutputFileIncrement;
-    bool lockQuadPoints;
+    double xDim;
+    double yDim;
+    double zDim;
+
+    double xRes;
+    double yRes;
+    double zRes;
+
+    int numgrains;
 
     std::string logFile;
 
@@ -71,17 +72,16 @@ int main(int argc, char **argv)
     boost::program_options::options_description desc("Possible Parameters");
     desc.add_options()
     ("help", "Produce help message")
-    ("dxFile", boost::program_options::value<std::string>(&dxFile), "REQUIRED: Input Dx File")
-    ("edgeTableFile", boost::program_options::value<std::string>(&edgeTableFile), "REQUIRED: Input edgeTableFile File")
-    ("neighSpinTableFile", boost::program_options::value<std::string>(&neighSpinTableFile), "REQUIRED: Input neighSpinTableFile File")
+    ("nodesfile", boost::program_options::value<std::string>(&nodesfile), "REQUIRED: Input Nodes File")
+    ("trianglefile", boost::program_options::value<std::string>(&trianglefile), "REQUIRED: Input Triangle File")
     ("outputDir", boost::program_options::value<std::string>(&outputDir), "REQUIRED: Output Directory")
-    ("xDim,x", boost::program_options::value<int>(&xDim), "REQUIRED: X Dimension of your volume")
-    ("yDim,y", boost::program_options::value<int>(&yDim), "REQUIRED: Y Dimension of your volume")
-    ("zDim,z", boost::program_options::value<int>(&zDim), "REQUIRED: Z Dimension of your volume")
-    ("smoothMesh", boost::program_options::bool_switch(&smoothMesh), "Smooth the mesh after initial mesh generation [Default=FALSE]")
-    ("smoothIterations", boost::program_options::value<int>(&smoothIterations), "How many iterations to use to smooth the mesh")
-    ("writeOutputFileIncrement", boost::program_options::value<int>(&writeOutputFileIncrement), "The inrement in iterations to write an output file")
-    ("lockQuadPoints", boost::program_options::bool_switch(&lockQuadPoints), "Lock The Quad Points during smoothing [Default=FALSE")
+    ("xDim,x", boost::program_options::value<double>(&xDim), "REQUIRED: X Dimension of your volume")
+    ("yDim,y", boost::program_options::value<double>(&yDim), "REQUIRED: Y Dimension of your volume")
+    ("zDim,z", boost::program_options::value<double>(&zDim), "REQUIRED: Z Dimension of your volume")
+    ("xRes", boost::program_options::value<double>(&xRes), "REQUIRED: X Resolution of your volume")
+    ("yRes", boost::program_options::value<double>(&yRes), "REQUIRED: Y Resolution of your volume")
+    ("zRes", boost::program_options::value<double>(&zRes), "REQUIRED: Z Resolution of your volume")
+    ("numgrains", boost::program_options::value<int>(&numgrains), "Total number of grains in the volume")
     ;
 
     int err = 0;
@@ -106,37 +106,36 @@ int main(int argc, char **argv)
       {
         mxa_log.open(logFile);
       }
-      mxa_log << logTime() << "Surface Mesh Version " << AIMRepresentation::Version::Complete << " Starting " << std::endl;
+      mxa_log << logTime() << "Volume Meshing Version " << AIMRepresentation::Version::Complete << " Starting " << std::endl;
 
       mxa_log << "Parameters being used are: " << std::endl;
 
-      CHECK_ARG( dxFile, true);
-      CHECK_ARG( edgeTableFile, true);
-      CHECK_ARG( neighSpinTableFile, true);
+      CHECK_ARG( nodesfile, true);
+      CHECK_ARG( trianglefile, true);
       CHECK_ARG( outputDir, true);
       CHECK_ARG( xDim, true);
       CHECK_ARG( yDim, true);
       CHECK_ARG( zDim, true);
-      CHECK_ARG( smoothMesh, true);
-      CHECK_ARG( smoothIterations, true);
-      CHECK_ARG( writeOutputFileIncrement, true);
-      CHECK_ARG( lockQuadPoints, true);
+      CHECK_ARG( xRes, true);
+      CHECK_ARG( yRes, true);
+      CHECK_ARG( zRes, true);
+      CHECK_ARG( numgrains, true);
 
-      SurfaceMesh::Pointer surfaceMesh = SurfaceMesh::New();
-      surfaceMesh->setDXFile(dxFile );
-      surfaceMesh->setEdgeTableFile(edgeTableFile );
-      surfaceMesh->setNeighSpinTableFile(neighSpinTableFile );
-      surfaceMesh->setOutputDirectory(outputDir);
-      surfaceMesh->setXDim(xDim);
-      surfaceMesh->setYDim(yDim);
-      surfaceMesh->setZDim(zDim);
-      surfaceMesh->setSmoothMesh(smoothMesh);
-      surfaceMesh->setSmoothIterations(smoothIterations);
-      surfaceMesh->setSmoothFileOutputIncrement(writeOutputFileIncrement);
-      surfaceMesh->setSmoothLockQuadPoints(lockQuadPoints);
+      VolumeMesh::Pointer volmesh = VolumeMesh::New();
+      volmesh->setInputNodesFile(nodesfile );
+      volmesh->setInputTriangleFile(trianglefile );
+      volmesh->setOutputDirectory(outputDir);
+      volmesh->setXDim(xDim);
+      volmesh->setYDim(yDim);
+      volmesh->setZDim(zDim);
+      volmesh->setXDim(xRes);
+      volmesh->setYDim(yRes);
+      volmesh->setZDim(zRes);
+      volmesh->setNumGrains(numgrains);
 
-      surfaceMesh->compute();
-      err = surfaceMesh->getErrorCondition();
+
+      volmesh->compute();
+      err = volmesh->getErrorCondition();
     } catch (...)
     {
       std::cout << "Error on Input: Displaying help listing instead. **" << std::endl;
@@ -147,6 +146,6 @@ int main(int argc, char **argv)
       }
       return EXIT_FAILURE;
     }
-    std::cout << "++++++++++++ Surface Meshing Complete ++++++++++++" << std::endl;
+    std::cout << "++++++++++++ Volume Meshing Complete ++++++++++++" << std::endl;
     return err;
   }
