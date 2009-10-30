@@ -124,6 +124,7 @@
   }\
  }
 
+/*
 #define SM_CS(a,b) a##b
 
 #define SM_CHECK_INPUT_FILE_EXISTS(name, Icon) \
@@ -152,6 +153,38 @@
   }\
   File->setText(AIM::Representation::name.c_str());\
   File##Icon->setPixmap(QPixmap(iconFile)); \
+}
+*/
+
+#define VM_CS(a,b) a##b
+
+#define CHECK_QLINEEDIT_FILE_EXISTS(prefix, name) \
+  { \
+  QString absPath = QDir::toNativeSeparators(prefix##name->text());\
+  QFileInfo fi ( absPath );\
+  QString iconFile;\
+  if ( fi.exists() && fi.isFile() )  {\
+    iconFile = QString(":/") + QString("Check") + QString("-16x16.png");\
+  } else {\
+    iconFile = QString(":/") + QString("Delete") + QString("-16x16.png");\
+  }\
+  VM_CS(prefix, name)Icon->setPixmap(QPixmap(iconFile));\
+ }
+
+
+#define CHECK_QLABEL_FILE_EXISTS(prefix, name) \
+{ \
+  QString absPath = prefix##OutputDir->text() + QDir::separator() + AIM::Representation::name.c_str();\
+  absPath = QDir::toNativeSeparators(absPath);\
+  QFileInfo fi ( absPath );\
+  QString iconFile;\
+  if ( fi.exists() )  {\
+  iconFile = QString(":/") + QString("Check") + QString("-16x16.png");\
+  } else {\
+  iconFile = QString(":/") + QString("Delete") + QString("-16x16.png");\
+  }\
+  VM_CS(prefix, name)->setText(AIM::Representation::name.c_str());\
+  VM_CS(prefix, name)Icon->setPixmap(QPixmap(iconFile));\
 }
 
 // -----------------------------------------------------------------------------
@@ -357,7 +390,7 @@ void RepresentationUI::setupGui()
   sm_SetupGui();
   sm_CheckIOFiles();
 
-  // Setpup the Volume Meshing Tab Gui
+  // Setup the Volume Meshing Tab Gui
   vm_SetupGui();
   vm_CheckIOFiles();
 }
@@ -1109,7 +1142,7 @@ void RepresentationUI::sm_SetupGui()
 // -----------------------------------------------------------------------------
 void RepresentationUI::sm_CheckIOFiles()
 {
-  _verifyPathExists(sm_OutputDir->text(), sm_OutputDir);
+
   if ( _verifyPathExists(sm_DxFile->text(), sm_DxFile) == true )
   {
     QFileInfo fi (sm_DxFile->text() );
@@ -1124,14 +1157,16 @@ void RepresentationUI::sm_CheckIOFiles()
     }
   }
 
+  _verifyPathExists(sm_EdgeTableFile->text(), sm_EdgeTableFile);
+  _verifyPathExists(sm_NeighSpinTableFile->text(), sm_NeighSpinTableFile);
 
-  SM_CHECK_INPUT_FILE_EXISTS(sm_DxFile, sm_DxFileIcon);
-  SM_CHECK_INPUT_FILE_EXISTS(sm_EdgeTableFile, sm_EdgeTableFileIcon);
-  SM_CHECK_INPUT_FILE_EXISTS(sm_NeighSpinTableFile, sm_NeighSpinTableFileIcon);
+  CHECK_QLINEEDIT_FILE_EXISTS(sm_, DxFile);
+  CHECK_QLINEEDIT_FILE_EXISTS(sm_, EdgeTableFile);
+  CHECK_QLINEEDIT_FILE_EXISTS(sm_, NeighSpinTableFile);
 
-
-  SM_CHECK_OUTPUT_FILE_EXISTS(NodesFile, sm_NodesFile);
-  SM_CHECK_OUTPUT_FILE_EXISTS(TrianglesFile, sm_TrianglesFile);
+  _verifyPathExists(sm_OutputDir->text(), sm_OutputDir);
+  CHECK_QLABEL_FILE_EXISTS(sm_, NodesFile);
+  CHECK_QLABEL_FILE_EXISTS(sm_, TrianglesFile);
 }
 
 
@@ -1313,11 +1348,37 @@ void RepresentationUI::sm_ThreadProgressed(int value)
  * Volume Meshing Methods
  *
  ***************************************************************************** */
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void RepresentationUI::vm_SetupGui()
 {
+  if (NULL == vm_NodesFile->completer()) {
+    QR3DFileCompleter* com4 = new QR3DFileCompleter(this, true);
+    vm_NodesFile->setCompleter(com4);
+    QObject::connect( com4, SIGNAL(activated(const QString &)),
+      this, SLOT(on_vm_NodesFile_textChanged(const QString &)));
+  }
+
+  if (NULL == vm_TrianglesFile->completer()) {
+    QR3DFileCompleter* com4 = new QR3DFileCompleter(this, true);
+    vm_TrianglesFile->setCompleter(com4);
+    QObject::connect( com4, SIGNAL(activated(const QString &)),
+      this, SLOT(on_vm_TrianglesFile_textChanged(const QString &)));
+  }
+
+  if (NULL == vm_OutputDir->completer()) {
+    QR3DFileCompleter* com4 = new QR3DFileCompleter(this, true);
+    vm_OutputDir->setCompleter(com4);
+    QObject::connect( com4, SIGNAL(activated(const QString &)),
+      this, SLOT(on_vm_OutputDir_textChanged(const QString &)));
+  }
+
+
+  m_WidgetList << vm_NodesFile << vm_NodesFileBtn << vm_TrianglesFile << vm_TrianglesFileBtn;
+  m_WidgetList << vm_XDim << vm_XRes << vm_YDim << vm_YRes << vm_ZDim << vm_ZRes;
+  m_WidgetList << vm_NumGrains << vm_OutputDir << vm_OutputDirBtn;
 
 }
 
@@ -1327,6 +1388,17 @@ void RepresentationUI::vm_SetupGui()
 void RepresentationUI::vm_CheckIOFiles()
 {
 
+  _verifyPathExists(vm_NodesFile->text(), vm_NodesFile);
+  _verifyPathExists(vm_TrianglesFile->text(), vm_TrianglesFile);
+  _verifyPathExists(vm_OutputDir->text(), vm_OutputDir );
+
+  CHECK_QLINEEDIT_FILE_EXISTS(vm_, NodesFile);
+  CHECK_QLINEEDIT_FILE_EXISTS(vm_, TrianglesFile);
+
+  CHECK_QLABEL_FILE_EXISTS(vm_, MeshFile);
+  CHECK_QLABEL_FILE_EXISTS(vm_, MeshFile2);
+  CHECK_QLABEL_FILE_EXISTS(vm_, ElementQualityFile);
+  CHECK_QLABEL_FILE_EXISTS(vm_, VoxelsFile);
 }
 
 // -----------------------------------------------------------------------------
@@ -1363,21 +1435,24 @@ void RepresentationUI::on_vm_GoBtn_clicked()
 // -----------------------------------------------------------------------------
 void RepresentationUI::on_vm_NodesFile_textChanged(const QString & text)
 {
-
+  vm_CheckIOFiles();
+  _verifyPathExists(vm_NodesFile->text(), vm_NodesFile);
 }
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void RepresentationUI::on_vm_TrianglesFile_textChanged(const QString & text)
 {
-
+  vm_CheckIOFiles();
+  _verifyPathExists(vm_TrianglesFile->text(), vm_TrianglesFile);
 }
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void RepresentationUI::on_vm_OutputDir_textChanged(const QString & text)
 {
-
+  vm_CheckIOFiles();
+  _verifyPathExists(vm_OutputDir->text(), vm_OutputDir);
 }
 
 // -----------------------------------------------------------------------------

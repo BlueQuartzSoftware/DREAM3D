@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>535</width>
-    <height>652</height>
+    <width>480</width>
+    <height>568</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -216,7 +216,10 @@
           <item row="1" column="0">
            <layout class="QFormLayout" name="formLayout_2">
             <property name="labelAlignment">
-             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+             <set>Qt::AlignCenter</set>
+            </property>
+            <property name="formAlignment">
+             <set>Qt::AlignHCenter|Qt::AlignTop</set>
             </property>
             <property name="verticalSpacing">
              <number>4</number>
@@ -1969,42 +1972,24 @@
             </property>
            </widget>
           </item>
-          <item row="0" column="1">
-           <widget class="QSpinBox" name="vm_XRes">
-            <property name="maximum">
-             <number>100000</number>
-            </property>
-            <property name="singleStep">
-             <number>10</number>
-            </property>
+          <item row="0" column="5">
+           <widget class="QDoubleSpinBox" name="vm_ZRes">
             <property name="value">
-             <number>100</number>
+             <double>0.250000000000000</double>
             </property>
            </widget>
           </item>
           <item row="0" column="3">
-           <widget class="QSpinBox" name="vm_YRes">
-            <property name="maximum">
-             <number>100000</number>
-            </property>
-            <property name="singleStep">
-             <number>10</number>
-            </property>
+           <widget class="QDoubleSpinBox" name="vm_YRes">
             <property name="value">
-             <number>100</number>
+             <double>0.250000000000000</double>
             </property>
            </widget>
           </item>
-          <item row="0" column="5">
-           <widget class="QSpinBox" name="vm_ZRes">
-            <property name="maximum">
-             <number>100000</number>
-            </property>
-            <property name="singleStep">
-             <number>10</number>
-            </property>
+          <item row="0" column="1">
+           <widget class="QDoubleSpinBox" name="vm_XRes">
             <property name="value">
-             <number>100</number>
+             <double>0.250000000000000</double>
             </property>
            </widget>
           </item>
@@ -2228,7 +2213,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>535</width>
+     <width>480</width>
      <height>22</height>
     </rect>
    </property>
@@ -2323,6 +2308,7 @@
   <tabstop>sm_DxFileBtn</tabstop>
  </tabstops>
  <resources>
+  <include location="../../../../Resources/icons/images/Icons.qrc"/>
   <include location="../../../../Resources/icons/images/Icons.qrc"/>
   <include location="../../../../Resources/icons/images/Icons.qrc"/>
   <include location="../../../../Resources/icons/images/Icons.qrc"/>

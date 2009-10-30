@@ -553,5 +553,6 @@ int main(int argc, char* argv[])
   // 		output<<id[(&triangles[i][1]-&nodes[0])/sizeof(node)]<<" ";
   // 		output<<id[(&triangles[i][2]-&nodes[0])/sizeof(node)]<<std::endl;
   // 	}
+  return EXIT_SUCCESS;
 }
 

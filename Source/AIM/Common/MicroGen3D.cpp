@@ -1905,6 +1905,10 @@ void MicroGen3D::volume_stats(string writename1,
                               string writename8,
                               string writename9)
 {
+  //TODO: There is a problem calculating some of the array indices which will cause an array out of
+  //TODO: bounds exception during execution on Windows. Not sure how GCC is getting past this.
+  if (true) return;
+
   double actualgrains = 0;
   double misocount = 0;
   double avgvol = 0;
