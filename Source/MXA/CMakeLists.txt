@@ -62,7 +62,6 @@ set (MXALib_SRCS
 include_directories( ${MXA_BINARY_DIR} )
 #-- Add a static library for the PCM registration
 add_library(MXA STATIC ${MXALib_SRCS} )
-target_link_libraries(MXA )
 StaticLibraryProperties( MXA )
 
 

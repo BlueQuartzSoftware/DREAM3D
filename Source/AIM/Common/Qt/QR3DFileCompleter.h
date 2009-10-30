@@ -8,16 +8,18 @@
 // This code was partly written under US Air Force Contract FA8650-07-D-5800
 //
 ///////////////////////////////////////////////////////////////////////////////
+#ifndef R3DFILECOMPLETER_H_
+#define R3DFILECOMPLETER_H_
 
-#include "Orient.h"
+#include <QtCore/QObject>
+#include <QtGui/QCompleter>
 
-Orient::Orient()
+class QR3DFileCompleter : public QCompleter
 {
-  // TODO Auto-generated constructor stub
+  Q_OBJECT
+public:
+  QR3DFileCompleter(QObject* o, bool dirs);
+  virtual QString pathFromIndex(const QModelIndex& idx) const;
+};
 
-}
-
-Orient::~Orient()
-{
-  // TODO Auto-generated destructor stub
-}
+#endif /* R3DFILECOMPLETER_H_ */

@@ -1,11 +1,14 @@
 ///////////////////////////////////////////////////////////////////////////////
 //
 //  Copyright (c) 2009, Michael A. Jackson. BlueQuartz Software
+//  Copyright (c) 2009, Michael Groeber, US Air Force Research Laboratory
 //  All rights reserved.
 //  BSD License: http://www.opensource.org/licenses/bsd-license.html
 //
+// This code was partly written under US Air Force Contract FA8650-07-D-5800
 //
 ///////////////////////////////////////////////////////////////////////////////
+
 #include "AngFileHelper.h"
 #include <AIM/ANG/AngFileReader.h>
 
@@ -32,19 +35,26 @@ void AngFileHelper::loadData(Voxel voxels[],
                              double resz)
 {
   const int zero = 0;
-  const int checked = 1;
+ // const int checked = 1;
   const int badgrain = -1;
+  const double badeuler = 12.566370010375977;
   size_t index = 0;
-  for (size_t k = 0; k < zpoints; k++)
+  int nSlices = m_ZIndexEnd - m_ZIndexStart;
+  for (int k = 0; k < nSlices; k++)
   {
     if (m_Cancel == true) { break; }
     {
       AngFileReader::Pointer reader = AngFileReader::New();
-      int slice = m_ZIndexStart + k;
-      std::string angFName = m_DirectoryPattern->generateFullPathAngFileName(slice);
+      //int slice = m_ZIndexStart + k;
+      std::string angFName = m_DirectoryPattern->generateFullPathAngFileName(k + m_ZIndexStart);
       std::cout << "Reading ANG File '" << angFName << "'" << std::endl;
 
-      reader->readFile(angFName);
+      int err = reader->readFile(angFName);
+      if (err < 0)
+      {
+        std::cout << "Error reading file '" << angFName << "'" << std::endl;
+        break;
+      }
       size_t readerIndex = 0;
       float* euler1Ptr = reader->getPhi1Data()->getPointer(0);
       float* euler2Ptr = reader->getPhiData()->getPointer(0);
@@ -69,12 +79,12 @@ void AngFileHelper::loadData(Voxel voxels[],
            // >> junk2  // Phase Data
            // >> junk3
            // >> junk4;
-            voxels[index].zc = (k - 1) * resz;
+            voxels[index].zc = k * resz;
             voxels[index].alreadychecked = zero;
             voxels[index].grainname = badgrain;
-            if (voxels[index].euler1 == 12.566
-                && voxels[index].euler2 == 12.566
-                && voxels[index].euler3 == 12.566)
+            if (voxels[index].euler1 == badeuler
+                && voxels[index].euler2 == badeuler
+                && voxels[index].euler3 == badeuler)
             {
               voxels[index].confidence = zero;
               voxels[index].alreadychecked = zero;

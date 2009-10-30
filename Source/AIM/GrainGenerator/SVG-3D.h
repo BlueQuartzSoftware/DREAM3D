@@ -9,15 +9,15 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-#include "Orient.h"
+#ifndef SVG3D_H_
+#define SVG3D_H_
 
-Orient::Orient()
-{
-  // TODO Auto-generated constructor stub
+#include <string>
+#ifdef SVG_3D_LIBRARY
 
-}
+int SVG_3D_Main(const std::string &inDir, const std::string &outDir,
+                  int ng, int sc, double rx, double ry, double rz,
+                  double oallowed, int oassignment, int crxst);
+#endif
 
-Orient::~Orient()
-{
-  // TODO Auto-generated destructor stub
-}
+#endif /* SVG3D_H_ */

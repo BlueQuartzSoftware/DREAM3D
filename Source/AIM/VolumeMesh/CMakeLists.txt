@@ -9,7 +9,7 @@
 #--
 #--////////////////////////////////////////////////////////////////////////////
 # set project's name
-PROJECT( GrainGenerator )
+PROJECT( VolumeMesh )
 cmake_minimum_required(VERSION 2.6)
 
 
@@ -34,30 +34,31 @@ SET (CMAKE_ARCHIVE_OUTPUT_DIRECTORY
   "Single Directory for all static libraries."
   )
 
-add_definitions(-DSVG_3D_LIBRARY)
 
-set (GrainGenerator_SRCS
-    ${GrainGenerator_SOURCE_DIR}/SVG-3D.cpp
-    ${GrainGenerator_SOURCE_DIR}/GrainGenerator.cpp
-    ${GrainGenerator_SOURCE_DIR}/main.cpp
+# Add in a target for the command line version that combines all the above code
+set (VolumeMesh_SRCS
+    ${VolumeMesh_SOURCE_DIR}/main.cpp
+    ${VolumeMesh_SOURCE_DIR}/MeshGenerator.cpp
+    ${VolumeMesh_SOURCE_DIR}/VolumeMesh.cpp
+)
+set (VolumeMesh_HDRS
+    ${VolumeMesh_SOURCE_DIR}/MeshGenerator.h
+    ${VolumeMesh_SOURCE_DIR}/VolumeMesh.h
 )
 
-set (GrainGenerator_HDRS 
-    ${GrainGenerator_SOURCE_DIR}/GrainGenerator.h
-)
-IDE_SOURCE_PROPERTIES( "Source/AIM/GrainGenerator" "${GrainGenerator_HDRS}" "${GrainGenerator_SRCS}")
+IDE_SOURCE_PROPERTIES( "Source/AIM/VolumeMesh" "${VolumeMesh_HDRS}" "${VolumeMesh_SRCS}")
 
-set (PROJECT_SRCS
-    ${GrainGenerator_SRCS}
-    ${GrainGenerator_HDRS}
+set (Project_SRCS
+    ${VolumeMesh_HDRS}
+    ${VolumeMesh_SRCS}
 )
-    
 
-ADD_EXECUTABLE ( GrainGenerator  ${PROJECT_SRCS} )
-target_link_libraries(GrainGenerator 
+
+add_executable(VolumeMesh ${Project_SRCS} )
+target_link_libraries(VolumeMesh
                         MXA
-                        AIMCommon 
+                        AIMCommon
                         ${Boost_PROGRAM_OPTIONS_LIBRARY} )
-ToolInstallationSupport(GrainGenerator "${EXE_DEBUG_EXTENSION}" ${AIMRepresentation_BINARY_DIR} )
-    
-    
+set_property(TARGET VolumeMesh PROPERTY  COMPILE_DEFINITIONS "VOLUME_MESH_LIBRARY" )
+ToolInstallationSupport(VolumeMesh "${EXE_DEBUG_EXTENSION}" ${AIMRepresentation_BINARY_DIR} )
+

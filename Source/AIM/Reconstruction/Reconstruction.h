@@ -1,9 +1,11 @@
 ///////////////////////////////////////////////////////////////////////////////
 //
 //  Copyright (c) 2009, Michael A. Jackson. BlueQuartz Software
+//  Copyright (c) 2009, Michael Groeber, US Air Force Research Laboratory
 //  All rights reserved.
 //  BSD License: http://www.opensource.org/licenses/bsd-license.html
 //
+// This code was partly written under US Air Force Contract FA8650-07-D-5800
 //
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -62,7 +64,7 @@ Q_OBJECT
     MXA_INSTANCE_PROPERTY_m(int32, MinAllowedGrainSize)
     MXA_INSTANCE_PROPERTY_m(double, MinSeedConfidence)
     MXA_INSTANCE_PROPERTY_m(double, MisorientationTolerance)
-    MXA_INSTANCE_PROPERTY_m(AIM::Reconstruction::CrystalStructure, CrystalStructure)
+    MXA_INSTANCE_PROPERTY_m(AIM::Representation::CrystalStructure, CrystalStructure)
     MXA_INSTANCE_PROPERTY_m(bool, AlreadyFormed)
     MXA_INSTANCE_PROPERTY_m(int, ErrorCondition);
 
@@ -101,7 +103,6 @@ Q_OBJECT
       /**
        * @brief Main method to run the operation
        */
-
       void compute();
 
 
