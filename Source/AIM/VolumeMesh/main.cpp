@@ -128,12 +128,10 @@ int main(int argc, char **argv)
       volmesh->setXDim(xDim);
       volmesh->setYDim(yDim);
       volmesh->setZDim(zDim);
-      volmesh->setXDim(xRes);
-      volmesh->setYDim(yRes);
-      volmesh->setZDim(zRes);
+      volmesh->setXRes(xRes);
+      volmesh->setYRes(yRes);
+      volmesh->setZRes(zRes);
       volmesh->setNumGrains(numgrains);
-
-
       volmesh->compute();
       err = volmesh->getErrorCondition();
     } catch (...)
