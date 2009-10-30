@@ -124,37 +124,6 @@
   }\
  }
 
-/*
-#define SM_CS(a,b) a##b
-
-#define SM_CHECK_INPUT_FILE_EXISTS(name, Icon) \
-  { \
-  QString absPath = QDir::toNativeSeparators(name->text());\
-  QFileInfo fi ( absPath );\
-  QString iconFile;\
-  if ( fi.exists() && fi.isFile() )  {\
-    iconFile = QString(":/") + QString("Check") + QString("-16x16.png");\
-  } else {\
-    iconFile = QString(":/") + QString("Delete") + QString("-16x16.png");\
-  }\
-  Icon->setPixmap(QPixmap(iconFile));\
- }
-
-#define SM_CHECK_OUTPUT_FILE_EXISTS(name, File) \
-  { \
-  QString absPath = sm_OutputDir->text() + QDir::separator() + AIM::Representation::name.c_str();\
-  absPath = QDir::toNativeSeparators(absPath);\
-  QFileInfo fi ( absPath );\
-  QString iconFile;\
-  if ( fi.exists() )  {\
-    iconFile = QString(":/") + QString("Check") + QString("-16x16.png");\
-  } else {\
-    iconFile = QString(":/") + QString("Delete") + QString("-16x16.png");\
-  }\
-  File->setText(AIM::Representation::name.c_str());\
-  File##Icon->setPixmap(QPixmap(iconFile)); \
-}
-*/
 
 #define VM_CS(a,b) a##b
 
@@ -186,6 +155,36 @@
   VM_CS(prefix, name)->setText(AIM::Representation::name.c_str());\
   VM_CS(prefix, name)Icon->setPixmap(QPixmap(iconFile));\
 }
+
+
+#define SANITY_CHECK_INPUT(prefix, input)\
+  if (_verifyPathExists(prefix##input->text(), prefix##input) == false) {\
+  QMessageBox::critical(this, tr("AIM Representation"),\
+  tr("The input " #input " does not exist. Please ensure the file or folder exists before starting the operation"),\
+  QMessageBox::Ok,\
+  QMessageBox::Ok);\
+  return;\
+  }
+
+
+
+#define SANITY_CHECK_QLABEL_FILE(prefix, input) \
+  { \
+  QString absPath = prefix##InputDir->text() + QDir::separator() + AIM::Representation::input.c_str();\
+  absPath = QDir::toNativeSeparators(absPath);\
+  QFileInfo fi ( absPath );\
+  QString theMessage = QString("The input ") + QString(AIM::Representation::input.c_str()) + \
+  QString(" does not exist. Please ensure the file or folder exists before starting the operation");\
+  if ( fi.exists() == false)  {\
+  QMessageBox::critical(this, tr("AIM Representation"),\
+  theMessage,\
+  QMessageBox::Ok,\
+  QMessageBox::Ok);\
+  return;\
+  }\
+ }
+
+
 
 // -----------------------------------------------------------------------------
 //
@@ -315,6 +314,18 @@ void RepresentationUI::readSettings()
   READ_SETTING(prefs, sm_SmoothIterations, ok, i, 1 , Int);
   READ_SETTING(prefs, sm_WriteOutputFileIncrement, ok, i, 10 , Int);
 
+  /* ******** This Section is for the Volume Meshing Tab ************ */
+  READ_FILEPATH_SETTING(prefs, vm_NodesFile, "");
+  READ_FILEPATH_SETTING(prefs, vm_TrianglesFile, "");
+  READ_FILEPATH_SETTING(prefs, vm_OutputDir, "");
+  READ_SETTING(prefs, vm_NumGrains, ok, i, 1000 , Int);
+  READ_SETTING(prefs, vm_XDim, ok, d, 100 , Double);
+  READ_SETTING(prefs, vm_YDim, ok, d, 100 , Double);
+  READ_SETTING(prefs, vm_ZDim, ok, d, 100 , Double);
+
+  READ_SETTING(prefs, vm_XRes, ok, d, 0.25 , Double);
+  READ_SETTING(prefs, vm_YRes, ok, d, 0.25 , Double);
+  READ_SETTING(prefs, vm_ZRes, ok, d, 0.25 , Double);
 
 }
 
@@ -357,7 +368,6 @@ void RepresentationUI::writeSettings()
   WRITE_COMBO_BOX(prefs, gg_ShapeClass)
   WRITE_COMBO_BOX(prefs, gg_OverlapAssignment)
 
-
   /* ******** This Section is for the Surface Meshing Tab ************ */
   WRITE_STRING_SETTING(prefs, sm_DxFile);
   WRITE_STRING_SETTING(prefs, sm_EdgeTableFile);
@@ -370,6 +380,20 @@ void RepresentationUI::writeSettings()
   WRITE_BOOL_SETTING(prefs, sm_LockQuadPoints, sm_LockQuadPoints->isChecked() );
   WRITE_SETTING(prefs, sm_SmoothIterations );
   WRITE_SETTING(prefs, sm_WriteOutputFileIncrement );
+
+  /* ******** This Section is for the Volume Meshing Tab ************ */
+  WRITE_STRING_SETTING(prefs, vm_NodesFile);
+  WRITE_STRING_SETTING(prefs, vm_TrianglesFile);
+  WRITE_STRING_SETTING(prefs, vm_OutputDir);
+  WRITE_SETTING(prefs, vm_NumGrains);
+  WRITE_SETTING(prefs, vm_XDim);
+  WRITE_SETTING(prefs, vm_YDim);
+  WRITE_SETTING(prefs, vm_ZDim);
+
+  WRITE_SETTING(prefs, vm_XRes);
+  WRITE_SETTING(prefs, vm_YRes);
+  WRITE_SETTING(prefs, vm_ZRes);
+
 }
 
 
@@ -824,8 +848,8 @@ void RepresentationUI::on_reconstructBtn_clicked()
     return;
   }
 
-  //TODO: Add sanity checks for input files
-  //TODO: Add warning for existing output files that will be over written
+  SANITY_CHECK_INPUT( , angDir)
+  SANITY_CHECK_INPUT( , outputDir)
 
   m_Reconstruction = Reconstruction::New();
   m_Reconstruction->setInputDirectory(angDir->text().toStdString() );
@@ -911,6 +935,9 @@ void RepresentationUI::gg_SetupGui()
   m_WidgetList << gg_InputDir << gg_InputDirBtn << gg_OutputDir << gg_OutputDirBtn;
   m_WidgetList << gg_CrystalStructure << gg_NumGrains << gg_XResolution << gg_YResolution << gg_ZResolution;
   m_WidgetList << gg_OverlapAllowed << gg_OverlapAssignment << gg_ShapeClass;
+
+  gg_inputfile_msg->setText("");
+  gg_outputfile_msg->setText("");
 
   if (NULL == gg_InputDir->completer()) {
     QR3DFileCompleter* com = new QR3DFileCompleter(this, true);
@@ -1014,6 +1041,8 @@ void RepresentationUI::on_gg_OutputDir_textChanged(const QString & text)
 }
 
 
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -1029,6 +1058,22 @@ void RepresentationUI::on_gg_GoBtn_clicked()
     }
     return;
   }
+
+
+  SANITY_CHECK_INPUT(gg_, InputDir)
+  SANITY_CHECK_INPUT(gg_, OutputDir)
+
+  SANITY_CHECK_QLABEL_FILE(gg_, VolBinFile)
+  SANITY_CHECK_QLABEL_FILE(gg_, BOverABinsFile)
+  SANITY_CHECK_QLABEL_FILE(gg_, COverABinsFile)
+  SANITY_CHECK_QLABEL_FILE(gg_, COverBBinsFile)
+  SANITY_CHECK_QLABEL_FILE(gg_, SeNBinsFile)
+  SANITY_CHECK_QLABEL_FILE(gg_, AxisOrientationsFile)
+  SANITY_CHECK_QLABEL_FILE(gg_, EulerAnglesFile)
+  SANITY_CHECK_QLABEL_FILE(gg_, SVNFile)
+  SANITY_CHECK_QLABEL_FILE(gg_, SVSFile)
+  SANITY_CHECK_QLABEL_FILE(gg_, MisorientationBinsFile)
+  SANITY_CHECK_QLABEL_FILE(gg_, MicroBinsFile)
 
   m_GrainGenerator = GrainGenerator::New(NULL);
   m_GrainGenerator->setInputDirectory(gg_InputDir->text().toStdString() );
@@ -1130,7 +1175,7 @@ void RepresentationUI::sm_SetupGui()
              this, SLOT(on_sm_OutputDir_textChanged(const QString &)));
   }
 
-  sm_Message->setText("");
+  sm_Message->setText("Any existing output files will be over written with new versions during the operation.");
   m_WidgetList << sm_DxFile << sm_EdgeTableFile << sm_NeighSpinTableFile;
   m_WidgetList << sm_XDim << sm_YDim << sm_ZDim << sm_DxFileBtn << sm_OutputDir << sm_OutputDirBtn;
   m_WidgetList << sm_Message << sm_LockQuadPoints << sm_SmoothIterations << sm_SmoothMesh;
@@ -1271,7 +1316,6 @@ void RepresentationUI::on_sm_OutputDir_textChanged(const QString & text)
   }
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -1286,6 +1330,11 @@ void RepresentationUI::on_sm_GoBtn_clicked()
     }
     return;
   }
+
+  SANITY_CHECK_INPUT(sm_, DxFile)
+  SANITY_CHECK_INPUT(sm_, EdgeTableFile)
+  SANITY_CHECK_INPUT(sm_, NeighSpinTableFile)
+  SANITY_CHECK_INPUT(sm_, OutputDir)
 
   m_SurfaceMesh = SurfaceMesh::New(NULL);
   m_SurfaceMesh->setDXFile(sm_DxFile->text().toStdString() );
@@ -1315,8 +1364,6 @@ void RepresentationUI::on_sm_GoBtn_clicked()
   m_SurfaceMesh->start();
   sm_GoBtn->setText("Cancel");
 }
-
-
 
 // -----------------------------------------------------------------------------
 //
@@ -1428,6 +1475,48 @@ void RepresentationUI::on_vm_OutputDirBtn_clicked()
 void RepresentationUI::on_vm_GoBtn_clicked()
 {
 
+  if (vm_GoBtn->text().compare("Cancel") == 0)
+  {
+    if(m_VolumeMesh.get() != NULL)
+    {
+      //std::cout << "canceling from GUI...." << std::endl;
+      emit sig_CancelWorker();
+    }
+    return;
+  }
+
+
+  SANITY_CHECK_INPUT(vm_, NodesFile);
+  SANITY_CHECK_INPUT(vm_, TrianglesFile);
+  SANITY_CHECK_INPUT(vm_, OutputDir);
+
+  m_VolumeMesh = VolumeMesh::New(NULL);
+  m_VolumeMesh->setNodesFile(vm_NodesFile->text().toStdString() );
+  m_VolumeMesh->setTrianglesFile(vm_TrianglesFile->text().toStdString() );
+  m_VolumeMesh->setOutputDirectory(vm_OutputDir->text().toStdString());
+  m_VolumeMesh->setXDim(vm_XDim->value());
+  m_VolumeMesh->setYDim(vm_YDim->value());
+  m_VolumeMesh->setZDim(vm_ZDim->value());
+
+  m_VolumeMesh->setXRes(vm_XRes->value());
+  m_VolumeMesh->setYRes(vm_YRes->value());
+  m_VolumeMesh->setZRes(vm_ZRes->value());
+  m_VolumeMesh->setNumGrains(vm_NumGrains->value());
+
+  connect(m_VolumeMesh.get(), SIGNAL(finished()),
+    this, SLOT( sm_ThreadFinished() ) );
+  connect(m_VolumeMesh.get(), SIGNAL (updateProgress(int)),
+    this, SLOT(sm_ThreadProgressed(int) ) , Qt::DirectConnection);
+  connect(m_VolumeMesh.get(), SIGNAL (updateMessage(QString)),
+    this, SLOT(threadHasMessage(QString) ) );
+
+  setWidgetListEnabled(false);
+  reconstructionTab->setEnabled(false);
+  grainGeneratorTab->setEnabled(false);
+  volumeMeshingTab->setEnabled(false);
+  m_VolumeMesh->start();
+  sm_GoBtn->setText("Cancel");
+
 }
 
 // -----------------------------------------------------------------------------
@@ -1460,7 +1549,14 @@ void RepresentationUI::on_vm_OutputDir_textChanged(const QString & text)
 // -----------------------------------------------------------------------------
 void RepresentationUI::vm_ThreadFinished()
 {
-
+  std::cout << "RepresentationUI::volume_meshing()" << std::endl;
+  sm_GoBtn->setText("Go");
+  setWidgetListEnabled(true);
+  this->vm_progressBar->setValue(0);
+  reconstructionTab->setEnabled(true);
+  grainGeneratorTab->setEnabled(true);
+  surfaceMeshingTab->setEnabled(true);
+  vm_CheckIOFiles();
 }
 
 // -----------------------------------------------------------------------------
@@ -1468,7 +1564,7 @@ void RepresentationUI::vm_ThreadFinished()
 // -----------------------------------------------------------------------------
 void RepresentationUI::vm_ThreadProgressed(int value)
 {
-
+  vm_progressBar->setValue(value);
 }
 
 

@@ -81,9 +81,10 @@ int SurfaceMesh_MCALayer( int xnum, int ynum, int znum,
   char postfix[64] = "_triangles_raw.txt";
   char edgepostfix[64] = "_edges_raw.txt";
 
+  err = 0;
   meshStatsFile = MESH_STAT_FILE;
   nodesFile = NODES_RAW_FILE;
-  err = 0;
+
   NS = xnum * ynum * znum;
   NSP = xnum * ynum;
 
@@ -94,11 +95,17 @@ int SurfaceMesh_MCALayer( int xnum, int ynum, int znum,
   pVertex = (struct node *) malloc(7 * 2 * NSP * sizeof(struct node));
 
   printf("\nReading microstucture...\n");
-  initialize_micro(point, NS, xnum, ynum, znum, dxFile );
-
+  err = initialize_micro(point, NS, xnum, ynum, znum, dxFile );
+  if (err != 0)
+  {
+    return err;
+  }
   printf("\nReading edge and triangle tables...\n");
-  read_edge_neighspin_table(edgeTable_2d, nsTable_2d, edgeTableFile, neighspinTableFile);
-
+  err = read_edge_neighspin_table(edgeTable_2d, nsTable_2d, edgeTableFile, neighspinTableFile);
+  if (err != 0)
+  {
+    return err;
+  }
 
   if ((f1 = fopen(nodesFile, "w")) == NULL)
   {
@@ -264,7 +271,7 @@ int main(int argc, char **argv)
 #endif
 
 // Functions...
-void initialize_micro(struct voxel *p, int ns, int xDim, int yDim, int zDim, const char* name)
+int initialize_micro(struct voxel *p, int ns, int xDim, int yDim, int zDim, const char* name)
 {
 
   FILE* f;
@@ -282,7 +289,7 @@ void initialize_micro(struct voxel *p, int ns, int xDim, int yDim, int zDim, con
   if ((f = fopen(name, "r")) == NULL)
   {
     printf("\nThe input file doesn't exist!\n");
-    exit(1);
+    return 1;
   }
 
   // Let's get rid of the 9 header lines in the xxx.dx produced by 3d coarsening code...
@@ -338,10 +345,10 @@ void initialize_micro(struct voxel *p, int ns, int xDim, int yDim, int zDim, con
       }
     }
   }
-
+return 0;
 }
 
-void read_edge_neighspin_table(int eT2d[20][8], int nsT2d[20][8],
+int read_edge_neighspin_table(int eT2d[20][8], int nsT2d[20][8],
                                const char* edgeTableFile, const char* neighspinTableFile)
 {
 
@@ -353,13 +360,13 @@ void read_edge_neighspin_table(int eT2d[20][8], int nsT2d[20][8],
   if ((f1 = fopen(edgeTableFile, "r")) == NULL)
   {
     printf("\nThe edgeTableFile input file doesn't exist!\n");
-    exit(1);
+    return 1;
   }
 
   if ((f2 = fopen(neighspinTableFile, "r")) == NULL)
   {
     printf("\nThe neighspinTableFile input file doesn't exist!\n");
-    exit(1);
+    return 1;
   }
 
   for (j = 0; j < 20; j++)
@@ -377,6 +384,7 @@ void read_edge_neighspin_table(int eT2d[20][8], int nsT2d[20][8],
 
   fclose(f1);
   fclose(f2);
+  return 0;
 }
 
 void get_neighbor_list(struct neighbor *n, int ns, int nsp, int xDim, int yDim, int zDim, int zID)

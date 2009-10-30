@@ -49,8 +49,8 @@ VolumeMesh::Pointer VolumeMesh::New( QObject* parent)
 // -----------------------------------------------------------------------------
 VolumeMesh::VolumeMesh( QObject* parent) :
 QThread(parent),
-m_InputNodesFile(""),
-m_InputTriangleFile(""),
+m_NodesFile(""),
+m_TrianglesFile(""),
 m_OutputDirectory(""),
 m_XDim(0.0), m_YDim(0.0), m_ZDim(0.0),
 m_XRes(0.0), m_YRes(0.0), m_ZRes(0.0), m_NumGrains(0),
@@ -64,8 +64,8 @@ m_Cancel(false)
 //
 // -----------------------------------------------------------------------------
 VolumeMesh::VolumeMesh() :
-m_InputNodesFile(""),
-m_InputTriangleFile(""),
+m_NodesFile(""),
+m_TrianglesFile(""),
 m_OutputDirectory(""),
 m_XDim(0.0), m_YDim(0.0), m_ZDim(0.0),
 m_XRes(0.0), m_YRes(0.0), m_ZRes(0.0), m_NumGrains(0),
@@ -114,16 +114,14 @@ void VolumeMesh::compute()
   voxelsFile = MXAFileSystemPath::toNativeSeparators(voxelsFile);
 
 
-  m_ErrorCondition = MeshGenerator_Main(m_InputNodesFile,
-                                     m_InputTriangleFile,
+  m_ErrorCondition = MeshGenerator_Main(m_NodesFile,
+                                     m_TrianglesFile,
                                      meshFile, // Vtk file
                                      meshFile2, // Vtk File
                                      qualFile, //"element_quality_measures_v5.txt"
                                      voxelsFile, //"voxels_v5.txt"
                                      m_XDim, m_YDim, m_ZDim,
                                      m_XRes, m_YRes, m_ZRes, m_NumGrains);
-
-
 
   progressMessage(AIM_STRING("Surface Volume Complete"), 100 );
 }

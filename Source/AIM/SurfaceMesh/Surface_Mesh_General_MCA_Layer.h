@@ -99,8 +99,8 @@ extern "C"
                    const char* neighspinTableFile );
 
   // function prototypes...
-  void initialize_micro(struct voxel *p, int ns, int xDim, int yDim, int zDim, const char* dxFile );
-  void read_edge_neighspin_table(int eT2d[20][8], int nsT2d[20][8], const char* edgeTable,
+  int initialize_micro(struct voxel *p, int ns, int xDim, int yDim, int zDim, const char* dxFile );
+  int read_edge_neighspin_table(int eT2d[20][8], int nsT2d[20][8], const char* edgeTable,
                                  const char* neighspinTable);
 
   void get_neighbor_list(struct neighbor *n, int ns, int nsp, int xDim, int yDim, int zDim, int zID);
