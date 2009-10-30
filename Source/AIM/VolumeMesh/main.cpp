@@ -122,8 +122,8 @@ int main(int argc, char **argv)
       CHECK_ARG( numgrains, true);
 
       VolumeMesh::Pointer volmesh = VolumeMesh::New();
-      volmesh->setInputNodesFile(nodesfile );
-      volmesh->setInputTriangleFile(trianglefile );
+      volmesh->setNodesFile(nodesfile );
+      volmesh->setTrianglesFile(trianglefile );
       volmesh->setOutputDirectory(outputDir);
       volmesh->setXDim(xDim);
       volmesh->setYDim(yDim);

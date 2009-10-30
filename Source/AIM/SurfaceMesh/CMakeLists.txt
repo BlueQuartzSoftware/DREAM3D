@@ -38,7 +38,8 @@ SET (CMAKE_ARCHIVE_OUTPUT_DIRECTORY
 set (SurfaceMeshMCALayer_SRCS 
  ${SurfaceMesh_SOURCE_DIR}/Surface_Mesh_General_MCA_Layer.c )
 set (SurfaceMeshMCALayer_HDRS 
- ${SurfaceMesh_SOURCE_DIR}/LinearAlgebra.h )
+ ${SurfaceMesh_SOURCE_DIR}/LinearAlgebra.h 
+ ${SurfaceMesh_SOURCE_DIR}/Surface_Mesh_General_MCA_Layer.h)
 IDE_SOURCE_PROPERTIES( "Source/AIM/SurfaceMesh" "${SurfaceMeshMCALayer_HDRS}" "${SurfaceMeshMCALayer_SRCS}")
 
 add_executable(SL_SurfaceMesh ${SurfaceMeshMCALayer_SRCS} ${SurfaceMeshMCALayer_HDRS} )

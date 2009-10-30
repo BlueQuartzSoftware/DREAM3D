@@ -16,7 +16,7 @@
 #include <AIM/Reconstruction/Reconstruction.h>
 #include <AIM/GrainGenerator/GrainGenerator.h>
 #include <AIM/SurfaceMesh/SurfaceMesh.h>
-
+#include <AIM/VolumeMesh/VolumeMesh.h>
 
 //-- Qt Includes
 #include <QtCore/QObject>
@@ -208,6 +208,7 @@ class RepresentationUI : public QMainWindow, private Ui::RepresentationUI
     Reconstruction::Pointer     m_Reconstruction;
     GrainGenerator::Pointer     m_GrainGenerator;
     SurfaceMesh::Pointer        m_SurfaceMesh;
+    VolumeMesh::Pointer         m_VolumeMesh;
 
     RepresentationUI(const RepresentationUI&);    // Copy Constructor Not Implemented
     void operator=(const RepresentationUI&);  // Operator '=' Not Implemented

@@ -197,7 +197,7 @@ public:
 	vtype operator[](itype index) const;
 	vtype value(int i) const {return data[i].value;}
 	itype index(int i) const {return data[i].index;}
-	int nonzero() const {return data.size();}
+	size_t nonzero() const {return data.size();}
 	int dimension() const {return d;}
 private:
 	std::vector<Sitem> data;
@@ -261,7 +261,7 @@ public:
 	SVector<vtype,itype>& operator[](int i) {return data[i];}
 	const SVector<vtype,itype>& operator[](int i) const {return data[i];}
 	Vector<vtype> operator*(const Vector<vtype>&) const;
-	int dimension1() const {return data.size();}
+	size_t dimension1() const {return data.size();}
 	int dimension2() const {return data[0].dimension();}
 private:
 	std::vector< SVector<vtype,itype> > data;
@@ -270,12 +270,12 @@ private:
 template <typename vtype, typename itype>
 Vector<vtype> SMatrix<vtype,itype>::operator*(const Vector<vtype>& x) const
 {
-	int m = dimension1();
-	int n = dimension2();
+	size_t m = dimension1();
+	size_t n = dimension2();
 	Vector<vtype> b(n);
-	for (int i=0; i<m; i++) {
-		int N = data[i].nonzero();
-		for (int j=0; j<N; j++) {
+	for (size_t i=0; i<m; i++) {
+		size_t N = data[i].nonzero();
+		for (size_t j=0; j<N; j++) {
 			vtype value = data[i].value(j);
 			itype index = data[i].index(j);
 			b[i] += value*x[index];
