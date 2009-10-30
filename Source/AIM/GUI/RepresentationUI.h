@@ -1,9 +1,11 @@
 ///////////////////////////////////////////////////////////////////////////////
 //
 //  Copyright (c) 2009, Michael A. Jackson. BlueQuartz Software
+//  Copyright (c) 2009, Michael Groeber, US Air Force Research Laboratory
 //  All rights reserved.
 //  BSD License: http://www.opensource.org/licenses/bsd-license.html
 //
+// This code was partly written under US Air Force Contract FA8650-07-D-5800
 //
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -12,6 +14,8 @@
 
 #include <MXA/Common/MXASetGetMacros.h>
 #include <AIM/Reconstruction/Reconstruction.h>
+#include <AIM/GrainGenerator/GrainGenerator.h>
+#include <AIM/SurfaceMesh/SurfaceMesh.h>
 
 
 //-- Qt Includes
@@ -44,10 +48,31 @@ class RepresentationUI : public QMainWindow, private Ui::RepresentationUI
 
     void on_actionClose_triggered();
     void on_actionExit_triggered();
+
+    /* Reconstruction Slots */
     void on_angDirBtn_clicked();
     void on_outputDirBtn_clicked();
     void on_alreadyFormed_stateChanged(int);
     void on_reconstructBtn_clicked();
+
+    /* Grain Generator Slots*/
+    void on_gg_InputDirBtn_clicked();
+    void on_gg_OutputDirBtn_clicked();
+    void on_gg_GoBtn_clicked();
+
+    /* Surface Meshing Slots */
+    void on_sm_DxFileBtn_clicked();
+    void on_sm_EdgeTableFileBtn_clicked();
+    void on_sm_NeighSpinTableFileBtn_clicked();
+    void on_sm_OutputDirBtn_clicked();
+    void on_sm_GoBtn_clicked();
+
+    /* Volume Meshing Slots */
+    void on_vm_NodesFileBtn_clicked();
+    void on_vm_TrianglesFileBtn_clicked();
+    void on_vm_OutputDirBtn_clicked();
+    void on_vm_GoBtn_clicked();
+
 
 
   /**
@@ -65,10 +90,35 @@ class RepresentationUI : public QMainWindow, private Ui::RepresentationUI
 
   private slots:
     // slots for our worker thread to communicate
-    void threadFinished();
-    void reconstruction_Finished();
-    void threadProgressed(int value);
     void threadHasMessage(QString message);
+
+    void rec_ThreadFinished();
+    void rec_ThreadProgressed(int value);
+
+    void gg_ThreadFinished();
+    void gg_ThreadProgressed(int value);
+
+    void sm_ThreadFinished();
+    void sm_ThreadProgressed(int value);
+
+    void vm_ThreadFinished();
+    void vm_ThreadProgressed(int value);
+
+
+    void on_angDir_textChanged(const QString & text);
+    void on_outputDir_textChanged(const QString & text);
+
+    void on_gg_InputDir_textChanged(const QString & text);
+    void on_gg_OutputDir_textChanged(const QString & text);
+
+    void on_sm_DxFile_textChanged(const QString & text);
+    void on_sm_EdgeTableFile_textChanged(const QString & text);
+    void on_sm_NeighSpinTableFile_textChanged(const QString & text);
+    void on_sm_OutputDir_textChanged(const QString & text);
+
+    void on_vm_NodesFile_textChanged(const QString & text);
+    void on_vm_TrianglesFile_textChanged(const QString & text);
+    void on_vm_OutputDir_textChanged(const QString & text);
 
   signals:
     void parentResized();
@@ -127,6 +177,18 @@ class RepresentationUI : public QMainWindow, private Ui::RepresentationUI
      */
     void setupGui();
 
+    void rec_SetupGui();
+    void rec_CheckIOFiles();
+
+    void gg_SetupGui();
+    void gg_CheckIOFiles();
+
+    void sm_SetupGui();
+    void sm_CheckIOFiles();
+
+    void vm_SetupGui();
+    void vm_CheckIOFiles();
+
     /**
      * @brief Checks the currently open file for changes that need to be saved
      * @return
@@ -144,6 +206,8 @@ class RepresentationUI : public QMainWindow, private Ui::RepresentationUI
     QList<QWidget*>             m_WidgetList;
 
     Reconstruction::Pointer     m_Reconstruction;
+    GrainGenerator::Pointer     m_GrainGenerator;
+    SurfaceMesh::Pointer        m_SurfaceMesh;
 
     RepresentationUI(const RepresentationUI&);    // Copy Constructor Not Implemented
     void operator=(const RepresentationUI&);  // Operator '=' Not Implemented

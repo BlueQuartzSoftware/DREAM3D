@@ -9,14 +9,18 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-#ifndef GRAINGENERATOR_H_
-#define GRAINGENERATOR_H_
+#ifndef SURFACEMESH_H_
+#define SURFACEMESH_H_
+
+#if defined (_MSC_VER)
+#define WIN32_LEAN_AND_MEAN   // Exclude rarely-used stuff from Windows headers
+#endif
+
 
 #include <MXA/Common/MXASetGetMacros.h>
 #include <MXA/Common/MXATypes.h>
 #include <AIM/Common/Constants.h>
-#include <AIM/Common/MicroGen3D.h>
-
+//#include <AIM/Common/MicroGen3D.h>
 
 #ifdef AIM_USE_QT
 #include <QtCore/QObject>
@@ -27,8 +31,7 @@
 #endif
 
 
-
-class GrainGenerator
+class SurfaceMesh
 #ifdef AIM_USE_QT
  : public QThread
 #endif
@@ -38,33 +41,35 @@ Q_OBJECT
 #endif
 
   public:
-    MXA_SHARED_POINTERS(GrainGenerator);
-    MXA_TYPE_MACRO(GrainGenerator);
+    MXA_SHARED_POINTERS(SurfaceMesh);
+    MXA_TYPE_MACRO(SurfaceMesh);
 
 #ifdef AIM_USE_QT
     static Pointer New (QObject* parent = 0);
 #else
-    MXA_STATIC_NEW_MACRO(GrainGenerator);
+    MXA_STATIC_NEW_MACRO(SurfaceMesh);
 #endif
-    virtual ~GrainGenerator();
+    virtual ~SurfaceMesh();
 
-
-    MXA_INSTANCE_STRING_PROPERTY(InputDirectory, m_InputDirectory)
+    MXA_INSTANCE_STRING_PROPERTY(DXFile, m_DxFile)
+    MXA_INSTANCE_STRING_PROPERTY(EdgeTableFile, m_EdgeTableFile)
+    MXA_INSTANCE_STRING_PROPERTY(NeighSpinTableFile, m_NeighSpinTableFile)
     MXA_INSTANCE_STRING_PROPERTY(OutputDirectory, m_OutputDirectory)
-    MXA_INSTANCE_PROPERTY_m(int, NumGrains)
-    MXA_INSTANCE_PROPERTY_m(int, ShapeClass)
-    MXA_INSTANCE_PROPERTY_m(double, XResolution)
-    MXA_INSTANCE_PROPERTY_m(double, YResolution)
-    MXA_INSTANCE_PROPERTY_m(double, ZResolution)
-    MXA_INSTANCE_PROPERTY_m(double, OverlapAllowed)
-    MXA_INSTANCE_PROPERTY_m(int, OverlapAssignment)
-    MXA_INSTANCE_PROPERTY_m(int, CrystalStructure)
-    MXA_INSTANCE_PROPERTY_m(int, ErrorCondition);
+    MXA_INSTANCE_PROPERTY_m(int, XDim)
+    MXA_INSTANCE_PROPERTY_m(int, YDim)
+    MXA_INSTANCE_PROPERTY_m(int, ZDim)
+    MXA_INSTANCE_PROPERTY_m(bool, SmoothMesh)
+    MXA_INSTANCE_PROPERTY_m(int, SmoothIterations)
+    MXA_INSTANCE_PROPERTY_m(int, SmoothFileOutputIncrement)
+    MXA_INSTANCE_PROPERTY_m(bool, SmoothLockQuadPoints)
+    MXA_INSTANCE_PROPERTY_m(int, ErrorCondition)
+
+
 
     /**
      * @brief Either prints a message or sends the message to the User Interface
      * @param message The message to print
-     * @param progress The progress of the GrainGenerator normalized to a value between 0 and 100
+     * @param progress The progress of the SurfaceMesh normalized to a value between 0 and 100
      */
     void progressMessage(AIM_STRING message, int progress);
 
@@ -96,26 +101,24 @@ Q_OBJECT
        */
       void compute();
 
-      /**
-       * @brief Temporary to get the code running. Eventually this will be replaced
-       * with the normal 'compute' method.
-       */
-      void jackson_compute();
 
   protected:
 #ifdef AIM_USE_QT
-    GrainGenerator(QObject* parent = 0);
+    SurfaceMesh(QObject* parent = 0);
     virtual void run();
-#else
 
-    GrainGenerator();
+#else
+    SurfaceMesh();
 #endif
 
   private:
-    MicroGen3D::Pointer m;
+    //MicroGen3D::Pointer m_microgen;
 
-    GrainGenerator(const GrainGenerator&);    // Copy Constructor Not Implemented
-    void operator=(const GrainGenerator&);  // Operator '=' Not Implemented
+
+
+    SurfaceMesh(const SurfaceMesh&);    // Copy Constructor Not Implemented
+    void operator=(const SurfaceMesh&);  // Operator '=' Not Implemented
 };
 
-#endif /* GRAINGENERATOR_H_ */
+
+#endif /* SURFACEMESH_H_ */

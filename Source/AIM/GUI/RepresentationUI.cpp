@@ -1,15 +1,19 @@
-/*
- * RepresentationUI.cpp
- *
- *  Created on: Oct 19, 2009
- *      Author: mjackson
- */
-
+///////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2009, Michael A. Jackson. BlueQuartz Software
+//  Copyright (c) 2009, Michael Groeber, US Air Force Research Laboratory
+//  All rights reserved.
+//  BSD License: http://www.opensource.org/licenses/bsd-license.html
+//
+// This code was partly written under US Air Force Contract FA8650-07-D-5800
+//
+///////////////////////////////////////////////////////////////////////////////
 #include "RepresentationUI.h"
 
+#include <AIM/Common/Constants.h>
 #include <AIM/Common/Qt/AIMAboutBox.h>
 #include <AIM/Common/Qt/QRecentFileList.h>
-#include <AIM/Common/Constants.h>
+#include <AIM/Common/Qt/QR3DFileCompleter.h>
 #include <AIM/Threads/AIMThread.h>
 
 
@@ -59,25 +63,96 @@
   prefs.setValue(#var, this->var->value());
 
 
+#define READ_COMBO_BOX(prefs, combobox)\
+    { bool ok = false;\
+    int i = prefs.value(#combobox).toInt(&ok);\
+    if (false == ok) {i=0;}\
+    combobox->setCurrentIndex(i); }
+
+#define WRITE_COMBO_BOX(prefs, combobox)\
+    prefs.setValue(#combobox, this->combobox->currentIndex());
 
 #define SET_TEXT_ICON(name, icon)\
   { \
   QString iconFile = QString(":/") + QString(#icon) + QString("-16x16.png");\
-  name->setText(AIM::Reconstruction::name.c_str());\
+  name->setText(AIM::Representation::name.c_str());\
   name##Icon->setPixmap(QPixmap(iconFile));\
   }
 
 
 #define CHECK_OUTPUT_FILE_EXISTS(name) \
   { \
-  QString absPath = outputDir->text() + QDir::separator() + AIM::Reconstruction::name.c_str();\
+  QString absPath = outputDir->text() + QDir::separator() + AIM::Representation::name.c_str();\
   absPath = QDir::toNativeSeparators(absPath);\
   QFileInfo fi ( absPath );\
   if ( fi.exists() )  {\
   SET_TEXT_ICON(name, Check)\
   } else {\
-  SET_TEXT_ICON(name, Delete) }  } \
+  SET_TEXT_ICON(name, Delete) }  }
 
+
+#define GG_CHECK_OUTPUT_FILE_EXISTS(name) \
+  { \
+  QString absPath = gg_OutputDir->text() + QDir::separator() + AIM::Representation::name.c_str();\
+  absPath = QDir::toNativeSeparators(absPath);\
+  QFileInfo fi ( absPath );\
+  if ( fi.exists() )  {\
+    QString iconFile = QString(":/") + QString("Check") + QString("-16x16.png");\
+      name##_3->setText(AIM::Representation::name.c_str());\
+      name##Icon##_3->setPixmap(QPixmap(iconFile));\
+  } else {\
+    QString iconFile = QString(":/") + QString("Delete") + QString("-16x16.png");\
+    name##_3->setText(AIM::Representation::name.c_str());\
+    name##Icon##_3->setPixmap(QPixmap(iconFile));\
+  }\
+}
+
+
+#define GG_CHECK_INPUT_FILE_EXISTS(name) \
+  { \
+  QString absPath = gg_InputDir->text() + QDir::separator() + AIM::Representation::name.c_str();\
+  absPath = QDir::toNativeSeparators(absPath);\
+  QFileInfo fi ( absPath );\
+  if ( fi.exists() )  {\
+    QString iconFile = QString(":/") + QString("Check") + QString("-16x16.png");\
+      name##_2->setText(AIM::Representation::name.c_str());\
+      name##Icon##_2->setPixmap(QPixmap(iconFile));\
+  } else {\
+    QString iconFile = QString(":/") + QString("Delete") + QString("-16x16.png");\
+    name##_2->setText(AIM::Representation::name.c_str());\
+    name##Icon##_2->setPixmap(QPixmap(iconFile));\
+  }\
+ }
+
+#define SM_CS(a,b) a##b
+
+#define SM_CHECK_INPUT_FILE_EXISTS(name, Icon) \
+  { \
+  QString absPath = QDir::toNativeSeparators(name->text());\
+  QFileInfo fi ( absPath );\
+  QString iconFile;\
+  if ( fi.exists() && fi.isFile() )  {\
+    iconFile = QString(":/") + QString("Check") + QString("-16x16.png");\
+  } else {\
+    iconFile = QString(":/") + QString("Delete") + QString("-16x16.png");\
+  }\
+  Icon->setPixmap(QPixmap(iconFile));\
+ }
+
+#define SM_CHECK_OUTPUT_FILE_EXISTS(name, File) \
+  { \
+  QString absPath = sm_OutputDir->text() + QDir::separator() + AIM::Representation::name.c_str();\
+  absPath = QDir::toNativeSeparators(absPath);\
+  QFileInfo fi ( absPath );\
+  QString iconFile;\
+  if ( fi.exists() )  {\
+    iconFile = QString(":/") + QString("Check") + QString("-16x16.png");\
+  } else {\
+    iconFile = QString(":/") + QString("Delete") + QString("-16x16.png");\
+  }\
+  File->setText(AIM::Representation::name.c_str());\
+  File##Icon->setPixmap(QPixmap(iconFile)); \
+}
 
 // -----------------------------------------------------------------------------
 //
@@ -149,6 +224,7 @@ void RepresentationUI::closeEvent(QCloseEvent *event)
   }
 }
 
+
 // -----------------------------------------------------------------------------
 //  Read the prefs from the local storage file
 // -----------------------------------------------------------------------------
@@ -166,24 +242,45 @@ void RepresentationUI::readSettings()
   READ_FILEPATH_SETTING(prefs, outputDir, "");
   READ_SETTING(prefs, angMaxSlice, ok, i, 300 , Int);
   READ_STRING_SETTING(prefs, angFilePrefix, "");
-  READ_SETTING(prefs, zStartIndex, ok, i, 0 , Int);
+  READ_SETTING(prefs, zStartIndex, ok, i, 1 , Int);
   READ_SETTING(prefs, zEndIndex, ok, i, 10 , Int);
-  READ_STRING_SETTING(prefs, zSpacing, "");
-
+  READ_STRING_SETTING(prefs, zSpacing, "0.25");
   READ_BOOL_SETTING(prefs, mergeTwins, true);
   alreadyFormed->blockSignals(true);
   READ_BOOL_SETTING(prefs, alreadyFormed, false);
   alreadyFormed->blockSignals(false);
-
   READ_SETTING(prefs, minAllowedGrainSize, ok, i, 8 , Int);
-  READ_SETTING(prefs, minConfidence, ok, d, 0.0 , Double);
+  READ_SETTING(prefs, minConfidence, ok, d, 0.1 , Double);
   READ_SETTING(prefs, misOrientationTolerance, ok, d, 5.0 , Double);
+  READ_COMBO_BOX(prefs, crystalStructure)
 
-  ok = false;
-  i = prefs.value("crystalStructure").toInt(&ok);
-  if (false == ok) {i=0;}
-  crystalStructure->setCurrentIndex(i);
 
+  /* ******** This Section is for the Grain Generator Tab ************ */
+  READ_FILEPATH_SETTING(prefs, gg_InputDir, "");
+  READ_FILEPATH_SETTING(prefs, gg_OutputDir, "");
+  READ_SETTING(prefs, gg_XResolution, ok, d, 0.25 , Double);
+  READ_SETTING(prefs, gg_YResolution, ok, d, 0.25 , Double);
+  READ_SETTING(prefs, gg_ZResolution, ok, d, 0.25 , Double);
+  READ_SETTING(prefs, gg_NumGrains, ok, i, 1000 , Int);
+
+  READ_SETTING(prefs, gg_OverlapAllowed, ok, d, 0.00 , Double);
+  READ_COMBO_BOX(prefs, gg_CrystalStructure)
+  READ_COMBO_BOX(prefs, gg_ShapeClass)
+  READ_COMBO_BOX(prefs, gg_OverlapAssignment)
+
+  /* ******** This Section is for the Surface Meshing Tab ************ */
+  READ_FILEPATH_SETTING(prefs, sm_DxFile, "");
+  READ_FILEPATH_SETTING(prefs, sm_EdgeTableFile, "");
+  READ_FILEPATH_SETTING(prefs, sm_NeighSpinTableFile, "");
+  READ_FILEPATH_SETTING(prefs, sm_OutputDir, "");
+  READ_SETTING(prefs, sm_XDim, ok, i, 100 , Int);
+  READ_SETTING(prefs, sm_YDim, ok, i, 100 , Int);
+  READ_SETTING(prefs, sm_ZDim, ok, i, 100 , Int);
+
+  READ_BOOL_SETTING(prefs, sm_SmoothMesh, false);
+  READ_BOOL_SETTING(prefs, sm_LockQuadPoints, false);
+  READ_SETTING(prefs, sm_SmoothIterations, ok, i, 1 , Int);
+  READ_SETTING(prefs, sm_WriteOutputFileIncrement, ok, i, 10 , Int);
 
 
 }
@@ -195,22 +292,51 @@ void RepresentationUI::writeSettings()
 {
   // std::cout << "writeSettings" << std::endl;
   QSettings prefs;
-  WRITE_STRING_SETTING(prefs, angDir);
-  WRITE_STRING_SETTING(prefs, outputDir);
-  WRITE_STRING_SETTING(prefs, angFilePrefix);
-  WRITE_STRING_SETTING(prefs, angMaxSlice);
-  WRITE_STRING_SETTING(prefs, zStartIndex);
-  WRITE_STRING_SETTING(prefs, zEndIndex);
-  WRITE_STRING_SETTING(prefs, zSpacing);
+//  bool ok = false;
+//  qint32 i = 0;
+  /* ******** This Section is for the Reconstruction Tab ************ */
+  WRITE_STRING_SETTING(prefs, angDir)
+  WRITE_STRING_SETTING(prefs, outputDir)
+  WRITE_STRING_SETTING(prefs, angFilePrefix)
+  WRITE_STRING_SETTING(prefs, angMaxSlice)
+  WRITE_STRING_SETTING(prefs, zStartIndex)
+  WRITE_STRING_SETTING(prefs, zEndIndex)
+  WRITE_STRING_SETTING(prefs, zSpacing)
 
-  WRITE_BOOL_SETTING(prefs, mergeTwins, mergeTwins->isChecked());
-  WRITE_BOOL_SETTING(prefs, alreadyFormed, alreadyFormed->isChecked());
+  WRITE_BOOL_SETTING(prefs, mergeTwins, mergeTwins->isChecked())
+  WRITE_BOOL_SETTING(prefs, alreadyFormed, alreadyFormed->isChecked())
 
-  WRITE_SETTING(prefs, minAllowedGrainSize);
-  WRITE_SETTING(prefs, minConfidence);
-  WRITE_SETTING(prefs, misOrientationTolerance);
-  prefs.setValue("crystalStructure", this->crystalStructure->currentIndex());
+  WRITE_SETTING(prefs, minAllowedGrainSize)
+  WRITE_SETTING(prefs, minConfidence)
+  WRITE_SETTING(prefs, misOrientationTolerance)
+  WRITE_COMBO_BOX(prefs, crystalStructure)
 
+  /* ******** This Section is for the Grain Generator Tab ************ */
+  WRITE_STRING_SETTING(prefs, gg_InputDir)
+  WRITE_STRING_SETTING(prefs, gg_OutputDir)
+  WRITE_SETTING(prefs, gg_XResolution )
+  WRITE_SETTING(prefs, gg_YResolution )
+  WRITE_SETTING(prefs, gg_ZResolution )
+  WRITE_SETTING(prefs, gg_NumGrains )
+
+  WRITE_SETTING(prefs, gg_OverlapAllowed )
+  WRITE_COMBO_BOX(prefs, gg_CrystalStructure)
+  WRITE_COMBO_BOX(prefs, gg_ShapeClass)
+  WRITE_COMBO_BOX(prefs, gg_OverlapAssignment)
+
+
+  /* ******** This Section is for the Surface Meshing Tab ************ */
+  WRITE_STRING_SETTING(prefs, sm_DxFile);
+  WRITE_STRING_SETTING(prefs, sm_EdgeTableFile);
+  WRITE_STRING_SETTING(prefs, sm_NeighSpinTableFile);
+  WRITE_SETTING(prefs, sm_XDim );
+  WRITE_SETTING(prefs, sm_YDim );
+  WRITE_SETTING(prefs, sm_ZDim );
+  WRITE_STRING_SETTING(prefs, sm_OutputDir);
+  WRITE_BOOL_SETTING(prefs, sm_SmoothMesh, sm_SmoothMesh->isChecked() );
+  WRITE_BOOL_SETTING(prefs, sm_LockQuadPoints, sm_LockQuadPoints->isChecked() );
+  WRITE_SETTING(prefs, sm_SmoothIterations );
+  WRITE_SETTING(prefs, sm_WriteOutputFileIncrement );
 }
 
 
@@ -219,53 +345,21 @@ void RepresentationUI::writeSettings()
 // -----------------------------------------------------------------------------
 void RepresentationUI::setupGui()
 {
-#if 0
-  SET_TEXT_ICON(StatsFile, Delete)
-  SET_TEXT_ICON(VolBinFile, Delete)
-  SET_TEXT_ICON(BOverABinsFile, Delete)
-  SET_TEXT_ICON(COverABinsFile, Delete)
-  SET_TEXT_ICON(COverBBinsFile, Delete)
-  SET_TEXT_ICON(SVNFile, Delete)
-  SET_TEXT_ICON(SVSFile, Delete)
-  SET_TEXT_ICON(MisorientationBinsFile, Delete)
-  SET_TEXT_ICON(MicroBinsFile, Delete)
-  SET_TEXT_ICON(ReconstructedDataFile, Delete)
-  SET_TEXT_ICON(ReconstructedVisualizationFile, Delete)
-  SET_TEXT_ICON(GrainsFile, Delete)
-  SET_TEXT_ICON(BoundaryCentersFile, Delete)
-  SET_TEXT_ICON(AxisOrientationsFile, Delete)
-  SET_TEXT_ICON(EulerAnglesFile, Delete)
-#endif
+  // Setup the Reconstruction Tab GUI
+  rec_SetupGui();
+  rec_CheckIOFiles();
 
-  QString msg ("All files will be over written that appear in the output directory.");
+  // Setup the Grain Generator Tab Gui
+  gg_SetupGui();
+  gg_CheckIOFiles();
 
-  if (true == this->_verifyPathExists(angDir->text(), this->angDir) )
-  {
-    findAngMaxSliceAndPrefix();
-  }
-  if (this->_verifyPathExists(outputDir->text(), this->outputDir) )
-  {
-    findReconstructionOutputFiles();
-  }
+  // Setup the SurfaceMeshing Tab Gui
+  sm_SetupGui();
+  sm_CheckIOFiles();
 
-  QFileInfo fi (outputDir->text() + QDir::separator() +  AIM::Reconstruction::ReconstructedDataFile.c_str() );
-  if (alreadyFormed->isChecked() == true && fi.exists() == false)
-  {
-    alreadyFormed->setChecked(false);
-  }
-
-  if (alreadyFormed->isChecked())
-  {
-    msg += QString("\nThe 'reconstructed_data.txt' file will be used as an import and NOT over written with new data");
-  }
-  messageLabel->setText(msg);
-
-
-  m_WidgetList << angDir << angDirBtn << outputDir << outputDirBtn;
-  m_WidgetList << angFilePrefix << angMaxSlice << zStartIndex << zEndIndex << zSpacing;
-  m_WidgetList << mergeTwins << alreadyFormed << minAllowedGrainSize << minConfidence << misOrientationTolerance;
-  m_WidgetList << crystalStructure;
-
+  // Setpup the Volume Meshing Tab Gui
+  vm_SetupGui();
+  vm_CheckIOFiles();
 }
 
 // -----------------------------------------------------------------------------
@@ -326,14 +420,14 @@ bool RepresentationUI::_verifyOutputPathParentExists(QString outFilePath, QLineE
 {
   QFileInfo fileinfo(outFilePath);
   QDir parent (fileinfo.dir() );
-  if (false == parent.exists() )
-  {
-    lineEdit->setStyleSheet("border: 2px solid red;");
-  }
-  else
-  {
-    lineEdit->setStyleSheet("");
-  }
+//  if (false == parent.exists() )
+//  {
+//    lineEdit->setStyleSheet("border: 1px solid red;");
+//  }
+//  else
+//  {
+//    lineEdit->setStyleSheet("");
+//  }
   return parent.exists();
 }
 
@@ -346,7 +440,7 @@ bool RepresentationUI::_verifyPathExists(QString outFilePath, QLineEdit* lineEdi
   QFileInfo fileinfo(outFilePath);
   if (false == fileinfo.exists() )
   {
-    lineEdit->setStyleSheet("border: 2px solid red;");
+    lineEdit->setStyleSheet("border: 1px solid red;");
   }
   else
   {
@@ -455,6 +549,84 @@ void RepresentationUI::openRecentFile()
 
 }
 
+//TODO: Reconstruction Methods
+/* *****************************************************************************
+ *
+ * Reconstruction Methods
+ *
+ ***************************************************************************** */
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void RepresentationUI::rec_SetupGui()
+{
+  QR3DFileCompleter* com = new QR3DFileCompleter(this, true);
+  angDir->setCompleter(com);
+  QObject::connect( com, SIGNAL(activated(const QString &)),
+           this, SLOT(on_angDir_textChanged(const QString &)));
+
+  QR3DFileCompleter* com2 = new QR3DFileCompleter(this, true);
+  outputDir->setCompleter(com2);
+  QObject::connect( com2, SIGNAL(activated(const QString &)),
+           this, SLOT(on_outputDir_textChanged(const QString &)));
+
+
+  QString msg ("All files will be over written that appear in the output directory.");
+
+  QFileInfo fi (outputDir->text() + QDir::separator() +  AIM::Representation::ReconstructedDataFile.c_str() );
+  if (alreadyFormed->isChecked() == true && fi.exists() == false)
+  {
+    alreadyFormed->setChecked(false);
+  }
+
+  if (alreadyFormed->isChecked())
+  {
+    msg += QString("\nThe 'reconstructed_data.txt' file will be used as an import and NOT over written with new data");
+  }
+  messageLabel->setText(msg);
+
+
+  m_WidgetList << angDir << angDirBtn << outputDir << outputDirBtn;
+  m_WidgetList << angFilePrefix << angMaxSlice << zStartIndex << zEndIndex << zSpacing;
+  m_WidgetList << mergeTwins << alreadyFormed << minAllowedGrainSize << minConfidence << misOrientationTolerance;
+  m_WidgetList << crystalStructure;
+}
+
+// -----------------------------------------------------------------------------
+//
+// ----------------------------------------------------------------------------_
+void RepresentationUI::rec_CheckIOFiles()
+{
+  if (true == this->_verifyPathExists(angDir->text(), this->angDir) )
+   {
+     findAngMaxSliceAndPrefix();
+   }
+
+   if (this->_verifyPathExists(outputDir->text(), this->outputDir) )
+   {
+     findReconstructionOutputFiles();
+   }
+   else
+   {
+     SET_TEXT_ICON(StatsFile, Delete)
+     SET_TEXT_ICON(VolBinFile, Delete)
+     SET_TEXT_ICON(BOverABinsFile, Delete)
+     SET_TEXT_ICON(COverABinsFile, Delete)
+     SET_TEXT_ICON(COverBBinsFile, Delete)
+     SET_TEXT_ICON(SVNFile, Delete)
+     SET_TEXT_ICON(SVSFile, Delete)
+     SET_TEXT_ICON(MisorientationBinsFile, Delete)
+     SET_TEXT_ICON(MicroBinsFile, Delete)
+     SET_TEXT_ICON(ReconstructedDataFile, Delete)
+     SET_TEXT_ICON(ReconstructedVisualizationFile, Delete)
+     SET_TEXT_ICON(GrainsFile, Delete)
+     SET_TEXT_ICON(BoundaryCentersFile, Delete)
+     SET_TEXT_ICON(AxisOrientationsFile, Delete)
+     SET_TEXT_ICON(EulerAnglesFile, Delete)
+   }
+}
 
 // -----------------------------------------------------------------------------
 //
@@ -494,7 +666,6 @@ void RepresentationUI::findReconstructionOutputFiles()
   CHECK_OUTPUT_FILE_EXISTS(BoundaryCentersFile)
   CHECK_OUTPUT_FILE_EXISTS(AxisOrientationsFile)
   CHECK_OUTPUT_FILE_EXISTS(EulerAnglesFile)
-
 }
 
 // -----------------------------------------------------------------------------
@@ -502,13 +673,13 @@ void RepresentationUI::findReconstructionOutputFiles()
 // -----------------------------------------------------------------------------
 void RepresentationUI::on_alreadyFormed_stateChanged(int currentState)
 {
-  QString absPath = outputDir->text() + QDir::separator() + AIM::Reconstruction::ReconstructedDataFile.c_str();
+  QString absPath = outputDir->text() + QDir::separator() + AIM::Representation::ReconstructedDataFile.c_str();
   absPath = QDir::toNativeSeparators(absPath);
   QFileInfo fi (absPath);
   QString msg ("All files will be over written that appear in the output directory.");
   if (alreadyFormed->isChecked() == true && fi.exists() == false)
   {
-    int ret = QMessageBox::critical(this, tr("AIM Representation"),
+    QMessageBox::critical(this, tr("AIM Representation"),
       tr("You have selected the 'Already Formed' check box \nbut the correct output file does not exist.\n"
       "The checkbox will revert to an unchecked state.?"),
       QMessageBox::Ok,
@@ -578,13 +749,30 @@ void RepresentationUI::on_outputDirBtn_clicked()
     if (_verifyPathExists(outputFile, outputDir) == true )
     {
       findReconstructionOutputFiles();
-      QFileInfo fi (outputDir->text() + QDir::separator() +  AIM::Reconstruction::ReconstructedDataFile.c_str() );
+      QFileInfo fi (outputDir->text() + QDir::separator() +  AIM::Representation::ReconstructedDataFile.c_str() );
       if (alreadyFormed->isChecked() == true && fi.exists() == false)
       {
         alreadyFormed->setChecked(false);
       }
     }
   }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void RepresentationUI::on_outputDir_textChanged(const QString & text)
+{
+  _verifyPathExists(outputDir->text(), outputDir);
+  rec_CheckIOFiles();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void RepresentationUI::on_angDir_textChanged(const QString & text)
+{
+  _verifyPathExists(angDir->text(), angDir);
 }
 
 // -----------------------------------------------------------------------------
@@ -603,6 +791,8 @@ void RepresentationUI::on_reconstructBtn_clicked()
     return;
   }
 
+  //TODO: Add sanity checks for input files
+  //TODO: Add warning for existing output files that will be over written
 
   m_Reconstruction = Reconstruction::New();
   m_Reconstruction->setInputDirectory(angDir->text().toStdString() );
@@ -610,59 +800,33 @@ void RepresentationUI::on_reconstructBtn_clicked()
   m_Reconstruction->setAngFilePrefix(angFilePrefix->text().toStdString());
   m_Reconstruction->setAngSeriesMaxSlice(angMaxSlice->value());
   m_Reconstruction->setZStartIndex(zStartIndex->value());
-  m_Reconstruction->setZEndIndex(zEndIndex->value());
+  m_Reconstruction->setZEndIndex(zEndIndex->value() + 1);
   m_Reconstruction->setZResolution(zSpacing->text().toDouble(&ok));
   m_Reconstruction->setMergeTwins(mergeTwins->isChecked() );
   m_Reconstruction->setMinAllowedGrainSize(minAllowedGrainSize->value());
   m_Reconstruction->setMinSeedConfidence(minConfidence->value());
   m_Reconstruction->setMisorientationTolerance(misOrientationTolerance->value());
 
-  AIM::Reconstruction::CrystalStructure crystruct = static_cast<AIM::Reconstruction::CrystalStructure>(crystalStructure->currentIndex());
-  if (crystruct == 0) { crystruct = AIM::Reconstruction::Cubic; }
-  else if (crystruct == 1) { crystruct = AIM::Reconstruction::Hexagonal; }
+  AIM::Representation::CrystalStructure crystruct = static_cast<AIM::Representation::CrystalStructure>(crystalStructure->currentIndex());
+  if (crystruct == 0) { crystruct = AIM::Representation::Cubic; }
+  else if (crystruct == 1) { crystruct = AIM::Representation::Hexagonal; }
 
   m_Reconstruction->setCrystalStructure(crystruct);
   m_Reconstruction->setAlreadyFormed(alreadyFormed->isChecked());
 
   connect(m_Reconstruction.get(), SIGNAL(finished()),
-          this, SLOT( reconstruction_Finished() ) );
+          this, SLOT( rec_ThreadFinished() ) );
   connect(m_Reconstruction.get(), SIGNAL (updateProgress(int)),
-    this, SLOT(threadProgressed(int) ) , Qt::DirectConnection);
- // connect(m_Reconstruction.get(), SIGNAL (updateMessage(QString)),
-//          this, SLOT(threadHasMessage(QString) ) );
-
-//  m_ThreadGroup = AIMThreadGroup::New(QThread::idealThreadCount());
-//  QString tName("Reconstruction Worker-");
-//  tName += QString::number(0);
-//
-//  m_CurrentThread = AIMThread::New(-1, tName, NULL );
-//
-//  m_Reconstruction->moveToThread(m_CurrentThread.get());
-//  // Have the worker start when the thread is started
-//  m_Reconstruction->connect(m_CurrentThread.get(), SIGNAL(started()),
-//                           SLOT(compute()));
-//
-//  // Have the worker quit the thread when it is done doing work
-//  m_CurrentThread->connect(m_Reconstruction.get(), SIGNAL(workerComplete()),
-//                                                         SLOT( quit() ), Qt::DirectConnection);
-//
-//  m_ThreadGroup->connect(m_CurrentThread.get(), SIGNAL(threadFinished(int)),
-//                       SLOT(markThreadComplete(int) ), Qt::DirectConnection );
-
-//  //Send messages from the m_Reconstruction object up to the GUI
-//  this->connect(m_Reconstruction.get(), SIGNAL(workerHasMessage(QString)),
-//                              SLOT(threadHasMessage(QString)), Qt::DirectConnection );
-//  this->connect(m_Reconstruction.get(), SIGNAL(workerProgressed(float)),
-//                              SLOT(threadProgressed(float) ), Qt::DirectConnection  );
-
-  // Send Cancel Messages from GUI to Worker
-//  m_Reconstruction->connect(this, SIGNAL(sig_CancelWorker()),
-//                        SLOT(on_CancelWorker() ), Qt::DirectConnection );
-
+    this, SLOT(rec_ThreadProgressed(int) ) );
+  connect(m_Reconstruction.get(), SIGNAL (updateMessage(QString)),
+          this, SLOT(threadHasMessage(QString) ) );
 
   setWidgetListEnabled(false);
   m_Reconstruction->start();
   reconstructBtn->setText("Cancel");
+  grainGeneratorTab->setEnabled(false);
+  surfaceMeshingTab->setEnabled(false);
+  volumeMeshingTab->setEnabled(false);
 
 }
 
@@ -671,36 +835,565 @@ void RepresentationUI::on_reconstructBtn_clicked()
 // -----------------------------------------------------------------------------
 void RepresentationUI::threadHasMessage(QString message)
 {
-  std::cout << "RepresentationUI::threadHasMessage()" << message.toStdString() << std::endl;
+ // std::cout << "RepresentationUI::threadHasMessage()" << message.toStdString() << std::endl;
   this->statusBar()->showMessage(message);
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void RepresentationUI::threadFinished()
-{
-  std::cout << "thread Finished." << std::endl;
-
-}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RepresentationUI::reconstruction_Finished()
+void RepresentationUI::rec_ThreadFinished()
 {
   std::cout << "RepresentationUI::reconstruction_Finished()" << std::endl;
   reconstructBtn->setText("Go");
   setWidgetListEnabled(true);
   this->progressBar->setValue(0);
+  grainGeneratorTab->setEnabled(true);
+  surfaceMeshingTab->setEnabled(true);
+  volumeMeshingTab->setEnabled(true);
+  rec_CheckIOFiles();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RepresentationUI::threadProgressed(int val)
+void RepresentationUI::rec_ThreadProgressed(int val)
 {
   this->progressBar->setValue( val );
+}
+
+
+//TODO: Grain Generator Methods
+/* *****************************************************************************
+ *
+ * Grain Generator Methods
+ *
+ ***************************************************************************** */
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void RepresentationUI::gg_SetupGui()
+{
+  m_WidgetList << gg_InputDir << gg_InputDirBtn << gg_OutputDir << gg_OutputDirBtn;
+  m_WidgetList << gg_CrystalStructure << gg_NumGrains << gg_XResolution << gg_YResolution << gg_ZResolution;
+  m_WidgetList << gg_OverlapAllowed << gg_OverlapAssignment << gg_ShapeClass;
+
+  if (NULL == gg_InputDir->completer()) {
+    QR3DFileCompleter* com = new QR3DFileCompleter(this, true);
+    gg_InputDir->setCompleter(com);
+    QObject::connect( com, SIGNAL(activated(const QString &)),
+             this, SLOT(on_gg_InputDir_textChanged(const QString &)));
+  }
+
+  if (NULL == gg_OutputDir->completer()) {
+    QR3DFileCompleter* com2 = new QR3DFileCompleter(this, true);
+    gg_OutputDir->setCompleter(com2);
+    QObject::connect( com2, SIGNAL(activated(const QString &)),
+             this, SLOT(on_gg_OutputDir_textChanged(const QString &)));
+  }
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void RepresentationUI::gg_CheckIOFiles()
+{
+  GG_CHECK_INPUT_FILE_EXISTS(VolBinFile)
+  GG_CHECK_INPUT_FILE_EXISTS(BOverABinsFile)
+  GG_CHECK_INPUT_FILE_EXISTS(COverABinsFile)
+  GG_CHECK_INPUT_FILE_EXISTS(COverBBinsFile)
+  GG_CHECK_INPUT_FILE_EXISTS(SeNBinsFile)
+  GG_CHECK_INPUT_FILE_EXISTS(AxisOrientationsFile)
+  GG_CHECK_INPUT_FILE_EXISTS(EulerAnglesFile)
+  GG_CHECK_INPUT_FILE_EXISTS(SVNFile)
+  GG_CHECK_INPUT_FILE_EXISTS(SVSFile)
+  GG_CHECK_INPUT_FILE_EXISTS(MisorientationBinsFile)
+  GG_CHECK_INPUT_FILE_EXISTS(MicroBinsFile)
+
+  GG_CHECK_OUTPUT_FILE_EXISTS(CubeFile)
+  GG_CHECK_OUTPUT_FILE_EXISTS(AnalysisFile)
+  GG_CHECK_OUTPUT_FILE_EXISTS(BoundaryCentersFile)
+  GG_CHECK_OUTPUT_FILE_EXISTS(GrainsFile)
+  GG_CHECK_OUTPUT_FILE_EXISTS(VolumeFile)
+}
+
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void RepresentationUI::on_gg_InputDirBtn_clicked()
+{
+  std::cout << "on_gg_InputDirBtn_clicked" << std::endl;
+  QString outputFile = this->m_OpenDialogLastDirectory + QDir::separator();
+  outputFile = QFileDialog::getExistingDirectory(this, tr("Select Input Directory"), outputFile);
+  if (!outputFile.isNull())
+  {
+    this->gg_InputDir->setText(outputFile);
+    if (_verifyPathExists(outputFile, gg_InputDir) == true)
+    {
+      gg_CheckIOFiles(); // Rescan for files in the input and output directory
+    }
+  }
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void RepresentationUI::on_gg_OutputDirBtn_clicked()
+{
+  QString outputFile = this->m_OpenDialogLastDirectory + QDir::separator();
+  outputFile = QFileDialog::getExistingDirectory(this, tr("Select Grain Generator Output Directory"), outputFile);
+  if (!outputFile.isNull())
+  {
+    this->gg_OutputDir->setText(outputFile);
+    if (_verifyPathExists(outputFile, gg_OutputDir) == true )
+    {
+      gg_CheckIOFiles();
+    }
+  }
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void RepresentationUI::on_gg_InputDir_textChanged(const QString & text)
+{
+  if (_verifyPathExists(gg_InputDir->text(), gg_InputDir) )
+  {
+    gg_CheckIOFiles();
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void RepresentationUI::on_gg_OutputDir_textChanged(const QString & text)
+{
+  if (_verifyPathExists(gg_OutputDir->text(), gg_OutputDir) )
+  {
+    gg_CheckIOFiles();
+  }
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void RepresentationUI::on_gg_GoBtn_clicked()
+{
+
+  if (gg_GoBtn->text().compare("Cancel") == 0)
+  {
+    if(m_GrainGenerator.get() != NULL)
+    {
+      //std::cout << "canceling from GUI...." << std::endl;
+      emit sig_CancelWorker();
+    }
+    return;
+  }
+
+  m_GrainGenerator = GrainGenerator::New(NULL);
+  m_GrainGenerator->setInputDirectory(gg_InputDir->text().toStdString() );
+  m_GrainGenerator->setOutputDirectory(gg_OutputDir->text().toStdString());
+  m_GrainGenerator->setNumGrains(gg_NumGrains->value());
+
+  int shapeclass = gg_ShapeClass->currentIndex() + 1;
+  m_GrainGenerator->setShapeClass(shapeclass);
+
+  m_GrainGenerator->setXResolution(gg_XResolution->value());
+  m_GrainGenerator->setYResolution(gg_YResolution->value());
+  m_GrainGenerator->setZResolution(gg_ZResolution->value());
+
+
+  m_GrainGenerator->setOverlapAllowed(gg_OverlapAllowed->value());
+  int overlapassignment = gg_OverlapAssignment->currentIndex() + 1;
+  m_GrainGenerator->setOverlapAssignment(overlapassignment);
+
+  int crystruct =  gg_CrystalStructure->currentIndex() + 1;
+  m_GrainGenerator->setCrystalStructure(crystruct);
+
+
+  connect(m_GrainGenerator.get(), SIGNAL(finished()),
+          this, SLOT( gg_ThreadFinished() ) );
+  connect(m_GrainGenerator.get(), SIGNAL (updateProgress(int)),
+    this, SLOT(gg_ThreadProgressed(int) ) , Qt::DirectConnection);
+  connect(m_GrainGenerator.get(), SIGNAL (updateMessage(QString)),
+          this, SLOT(threadHasMessage(QString) ) );
+
+  setWidgetListEnabled(false);
+  reconstructionTab->setEnabled(false);
+  surfaceMeshingTab->setEnabled(false);
+  volumeMeshingTab->setEnabled(false);
+  m_GrainGenerator->start();
+  gg_GoBtn->setText("Cancel");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void RepresentationUI::gg_ThreadFinished()
+{
+  std::cout << "RepresentationUI::grainGenerator_Finished()" << std::endl;
+  gg_GoBtn->setText("Go");
+  setWidgetListEnabled(true);
+  this->gg_progressBar->setValue(0);
+  reconstructionTab->setEnabled(true);
+  surfaceMeshingTab->setEnabled(true);
+  volumeMeshingTab->setEnabled(true);
+  gg_CheckIOFiles();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void RepresentationUI::gg_ThreadProgressed(int val)
+{
+  this->gg_progressBar->setValue( val );
+}
+
+//TODO: Surface Meshing Methods
+/* *****************************************************************************
+ *
+ * Surface Meshing Methods
+ *
+ ***************************************************************************** */
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void RepresentationUI::sm_SetupGui()
+{
+
+  if (NULL == sm_DxFile->completer()){
+    QR3DFileCompleter* com = new QR3DFileCompleter(this, false);
+    sm_DxFile->setCompleter(com);
+    QObject::connect( com, SIGNAL(activated(const QString &)),
+             this, SLOT(on_sm_DxFile_textChanged(const QString &)));
+  }
+
+  if (NULL == sm_EdgeTableFile->completer()) {
+    QR3DFileCompleter* com2 = new QR3DFileCompleter(this, false);
+    sm_EdgeTableFile->setCompleter(com2);
+    QObject::connect( com2, SIGNAL(activated(const QString &)),
+             this, SLOT(on_sm_EdgeTableFile_textChanged(const QString &)));
+  }
+
+  if (NULL == sm_NeighSpinTableFile->completer()) {
+    QR3DFileCompleter* com3 = new QR3DFileCompleter(this, false);
+    sm_NeighSpinTableFile->setCompleter(com3);
+    QObject::connect( com3, SIGNAL(activated(const QString &)),
+             this, SLOT(on_sm_NeighSpinTableFile_textChanged(const QString &)));
+  }
+
+  if (NULL == sm_OutputDir->completer()) {
+    QR3DFileCompleter* com4 = new QR3DFileCompleter(this, true);
+    sm_OutputDir->setCompleter(com4);
+    QObject::connect( com4, SIGNAL(activated(const QString &)),
+             this, SLOT(on_sm_OutputDir_textChanged(const QString &)));
+  }
+
+  sm_Message->setText("");
+  m_WidgetList << sm_DxFile << sm_EdgeTableFile << sm_NeighSpinTableFile;
+  m_WidgetList << sm_XDim << sm_YDim << sm_ZDim << sm_DxFileBtn << sm_OutputDir << sm_OutputDirBtn;
+  m_WidgetList << sm_Message << sm_LockQuadPoints << sm_SmoothIterations << sm_SmoothMesh;
+  m_WidgetList << sm_WriteOutputFileIncrement;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void RepresentationUI::sm_CheckIOFiles()
+{
+  _verifyPathExists(sm_OutputDir->text(), sm_OutputDir);
+  if ( _verifyPathExists(sm_DxFile->text(), sm_DxFile) == true )
+  {
+    QFileInfo fi (sm_DxFile->text() );
+    QString ext = fi.suffix();
+    if (ext.compare(AIM::Representation::VTKExt.c_str() ) == 0)
+    {
+      sm_Message->setText("You have selected a VTK file which will need to be converted first to a 'dx' based file. This will be done for you.");
+    }
+    else
+    {
+      sm_Message->setText("You have selected a 'dx' file which can be used directly by the surface meshing code.");
+    }
+  }
+
+
+  SM_CHECK_INPUT_FILE_EXISTS(sm_DxFile, sm_DxFileIcon);
+  SM_CHECK_INPUT_FILE_EXISTS(sm_EdgeTableFile, sm_EdgeTableFileIcon);
+  SM_CHECK_INPUT_FILE_EXISTS(sm_NeighSpinTableFile, sm_NeighSpinTableFileIcon);
+
+
+  SM_CHECK_OUTPUT_FILE_EXISTS(NodesFile, sm_NodesFile);
+  SM_CHECK_OUTPUT_FILE_EXISTS(TrianglesFile, sm_TrianglesFile);
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void RepresentationUI::on_sm_DxFileBtn_clicked()
+{
+  QString file = QFileDialog::getOpenFileName(this, tr("Select Input File"),
+                                                 m_OpenDialogLastDirectory,
+                                                 tr("Viz Files (*.dx *.vtk)") );
+  if ( true == file.isEmpty() ){return;  }
+  QFileInfo fi (file);
+  QString ext = fi.suffix();
+  if (ext.compare(AIM::Representation::VTKExt.c_str() ) == 0)
+  {
+    sm_Message->setText("You have selected a VTK file which will need to be converted first to a 'dx' based file. This will be done for you.");
+  }
+  else
+  {
+    sm_Message->setText("You have selected a 'dx' file which can be used directly by the surface meshing code.");
+  }
+  sm_DxFile->setText(fi.absoluteFilePath());
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void RepresentationUI::on_sm_EdgeTableFileBtn_clicked()
+{
+  QString file = QFileDialog::getOpenFileName(this, tr("Select EdgeTable File"),
+                                                 m_OpenDialogLastDirectory,
+                                                 tr("Text Files (*.txt)") );
+  if ( true == file.isEmpty() ){return;  }
+  sm_EdgeTableFile->setText(file);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void RepresentationUI::on_sm_NeighSpinTableFileBtn_clicked()
+{
+  QString file = QFileDialog::getOpenFileName(this, tr("Select NeighSpintTable File"),
+                                                 m_OpenDialogLastDirectory,
+                                                 tr("Text Files (*.txt)") );
+  if ( true == file.isEmpty() ){return;  }
+  sm_NeighSpinTableFile->setText(file);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void RepresentationUI::on_sm_OutputDirBtn_clicked()
+{
+  QString outputFile = this->m_OpenDialogLastDirectory + QDir::separator();
+  outputFile = QFileDialog::getExistingDirectory(this, tr("Select Surface Meshing Output Directory"), outputFile);
+  if (!outputFile.isNull())
+  {
+    this->sm_OutputDir->setText(outputFile);
+    if (_verifyPathExists(outputFile, sm_OutputDir) == true )
+    {
+      sm_CheckIOFiles();
+      sm_OutputDir->setText(outputFile);
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void RepresentationUI::on_sm_DxFile_textChanged(const QString & text)
+{
+  sm_CheckIOFiles();
+  _verifyPathExists(sm_DxFile->text(), sm_DxFile);
+}
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void RepresentationUI::on_sm_EdgeTableFile_textChanged(const QString & text)
+{
+  sm_CheckIOFiles();
+  _verifyPathExists(sm_EdgeTableFile->text(), sm_EdgeTableFile);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void RepresentationUI::on_sm_NeighSpinTableFile_textChanged(const QString & text)
+{
+  sm_CheckIOFiles();
+  _verifyPathExists(sm_EdgeTableFile->text(), sm_EdgeTableFile);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void RepresentationUI::on_sm_OutputDir_textChanged(const QString & text)
+{
+  if (_verifyPathExists(sm_OutputDir->text(), sm_OutputDir) )
+  {
+    sm_CheckIOFiles();
+  }
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void RepresentationUI::on_sm_GoBtn_clicked()
+{
+  if (sm_GoBtn->text().compare("Cancel") == 0)
+  {
+    if(m_SurfaceMesh.get() != NULL)
+    {
+      //std::cout << "canceling from GUI...." << std::endl;
+      emit sig_CancelWorker();
+    }
+    return;
+  }
+
+  m_SurfaceMesh = SurfaceMesh::New(NULL);
+  m_SurfaceMesh->setDXFile(sm_DxFile->text().toStdString() );
+  m_SurfaceMesh->setEdgeTableFile(sm_EdgeTableFile->text().toStdString() );
+  m_SurfaceMesh->setNeighSpinTableFile(sm_NeighSpinTableFile->text().toStdString() );
+  m_SurfaceMesh->setOutputDirectory(sm_OutputDir->text().toStdString());
+  m_SurfaceMesh->setXDim(sm_XDim->value());
+  m_SurfaceMesh->setYDim(sm_YDim->value());
+  m_SurfaceMesh->setZDim(sm_ZDim->value());
+  m_SurfaceMesh->setSmoothMesh(sm_SmoothMesh->isChecked());
+  m_SurfaceMesh->setSmoothIterations(sm_SmoothIterations->value());
+  m_SurfaceMesh->setSmoothFileOutputIncrement(sm_WriteOutputFileIncrement->value());
+  m_SurfaceMesh->setSmoothLockQuadPoints(sm_LockQuadPoints->isChecked());
+
+
+  connect(m_SurfaceMesh.get(), SIGNAL(finished()),
+          this, SLOT( sm_ThreadFinished() ) );
+  connect(m_SurfaceMesh.get(), SIGNAL (updateProgress(int)),
+    this, SLOT(sm_ThreadProgressed(int) ) , Qt::DirectConnection);
+  connect(m_SurfaceMesh.get(), SIGNAL (updateMessage(QString)),
+          this, SLOT(threadHasMessage(QString) ) );
+
+  setWidgetListEnabled(false);
+  reconstructionTab->setEnabled(false);
+  grainGeneratorTab->setEnabled(false);
+  volumeMeshingTab->setEnabled(false);
+  m_SurfaceMesh->start();
+  sm_GoBtn->setText("Cancel");
+}
+
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void RepresentationUI::sm_ThreadFinished()
+{
+  std::cout << "RepresentationUI::surface_meshing()" << std::endl;
+  sm_GoBtn->setText("Go");
+  setWidgetListEnabled(true);
+  this->sm_progressBar->setValue(0);
+  reconstructionTab->setEnabled(true);
+  surfaceMeshingTab->setEnabled(true);
+  volumeMeshingTab->setEnabled(true);
+  sm_CheckIOFiles();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void RepresentationUI::sm_ThreadProgressed(int value)
+{
+  sm_progressBar->setValue(value);
+}
+
+
+//TODO: Volume Meshing Methods
+/* *****************************************************************************
+ *
+ * Volume Meshing Methods
+ *
+ ***************************************************************************** */
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void RepresentationUI::vm_SetupGui()
+{
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void RepresentationUI::vm_CheckIOFiles()
+{
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void RepresentationUI::on_vm_NodesFileBtn_clicked()
+{
+
+}
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void RepresentationUI::on_vm_TrianglesFileBtn_clicked()
+{
+
+}
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void RepresentationUI::on_vm_OutputDirBtn_clicked()
+{
+
+}
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void RepresentationUI::on_vm_GoBtn_clicked()
+{
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void RepresentationUI::on_vm_NodesFile_textChanged(const QString & text)
+{
+
+}
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void RepresentationUI::on_vm_TrianglesFile_textChanged(const QString & text)
+{
+
+}
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void RepresentationUI::on_vm_OutputDir_textChanged(const QString & text)
+{
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void RepresentationUI::vm_ThreadFinished()
+{
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void RepresentationUI::vm_ThreadProgressed(int value)
+{
+
 }
 
 

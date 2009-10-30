@@ -8,51 +8,55 @@
 // This code was partly written under US Air Force Contract FA8650-07-D-5800
 //
 ///////////////////////////////////////////////////////////////////////////////
-#include "AIMRandomNG.h"
-#include <math.h>
+#include "QR3DFileCompleter.h"
+#include <QtGui/QDirModel>
 
 // -----------------------------------------------------------------------------
-//
+// use same QDirModel for all completers
 // -----------------------------------------------------------------------------
-AIMRandomNG::AIMRandomNG()
+static QDirModel* fileDirModel()
 {
+  static QDirModel* m = NULL;
+  if (!m)
+  {
+    m = new QDirModel();
+    QStringList nameFilters;
+    nameFilters << "*.*";
+    m->setNameFilters(nameFilters);
+    m->setFilter(QDir::AllDirs | QDir::Drives | QDir::NoDotAndDotDot | QDir::System | QDir::Files);
+  }
+  return m;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AIMRandomNG::~AIMRandomNG()
+static QDirModel* pathDirModel()
 {
+  static QDirModel* m = NULL;
+  if (!m)
+  {
+    m = new QDirModel();
+    m->setFilter(QDir::AllDirs | QDir::Drives | QDir::NoDotAndDotDot);
+  }
+  return m;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-double AIMRandomNG::Random()
+QR3DFileCompleter::QR3DFileCompleter(QObject* o, bool dirs) :
+  QCompleter(o)
 {
-  double c;
-  c = (double)2111111111.0 * x[3] +
-      1492.0 * (x[3] = x[2]) +
-      1776.0 * (x[2] = x[1]) +
-      5115.0 * (x[1] = x[0]) +
-      x[4];
-  x[4] = floorl(c);
-  x[0] = c - x[4];
-  x[4] = x[4] * (1./(65536.*65536.));
-  return x[0];
+  QDirModel* m = dirs ? pathDirModel() : fileDirModel();
+  this->setModel(m);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AIMRandomNG::RandomInit (uint32 seed)
+QString QR3DFileCompleter::pathFromIndex(const QModelIndex& idx) const
 {
-  int i;
-  uint32 s = seed;
-  // make random numbers and put them into the buffer
-  for (i=0; i<5; i++) {
-    s = s * 29943829 - 1;
-    x[i] = s * (1./(65536.*65536.));}
-  // randomize some more
-  for (i=0; i<19; i++) Random();
+  return QDir::fromNativeSeparators(QCompleter::pathFromIndex(idx));
 }
+

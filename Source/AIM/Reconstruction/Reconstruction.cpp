@@ -1,9 +1,11 @@
 ///////////////////////////////////////////////////////////////////////////////
 //
 //  Copyright (c) 2009, Michael A. Jackson. BlueQuartz Software
+//  Copyright (c) 2009, Michael Groeber, US Air Force Research Laboratory
 //  All rights reserved.
 //  BSD License: http://www.opensource.org/licenses/bsd-license.html
 //
+// This code was partly written under US Air Force Contract FA8650-07-D-5800
 //
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -53,7 +55,7 @@ QThread(parent),
   m_ZStartIndex(0), m_ZEndIndex(0), m_ZResolution(0.25),
   m_MergeTwins(false), m_MinAllowedGrainSize(0.0),
   m_MinSeedConfidence(0.0), m_MisorientationTolerance(0.0),
-  m_CrystalStructure(AIM::Reconstruction::Hexagonal),
+  m_CrystalStructure(AIM::Representation::Hexagonal),
   m_AlreadyFormed(false), m_ErrorCondition(0),m_Cancel(false)
 {
 
@@ -69,7 +71,7 @@ Reconstruction::Reconstruction() :
   m_ZResolution(0.25),
       m_MergeTwins(false), m_MinAllowedGrainSize(0.0),
       m_MinSeedConfidence(0.0), m_MisorientationTolerance(0.0),
-      m_CrystalStructure(AIM::Reconstruction::Hexagonal),
+      m_CrystalStructure(AIM::Representation::Hexagonal),
       m_AlreadyFormed(false)
 {
 
@@ -92,8 +94,10 @@ void Reconstruction::parseAngFile()
 
 }
 
-
 #if AIM_USE_QT
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void Reconstruction::run()
 {
   compute();
@@ -117,6 +121,8 @@ void Reconstruction::compute()
     sliceCount *= 10;
   }
 
+  m_InputDirectory = MXAFileSystemPath::toNativeSeparators(m_InputDirectory);
+  m_OutputDirectory = MXAFileSystemPath::toNativeSeparators(m_OutputDirectory);
   AngDirectoryPatterns::Pointer p = AngDirectoryPatterns::New(m_InputDirectory, m_AngFilePrefix, width);
 
   AngFileReader::Pointer reader = AngFileReader::New();
@@ -137,7 +143,7 @@ void Reconstruction::compute()
 
   int32 numgrains = 0;
 
-  std::string reconFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Reconstruction::ReconstructedDataFile;
+  std::string reconFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::ReconstructedDataFile;
   reconFile = MXAFileSystemPath::toNativeSeparators(reconFile);
   if (m_AlreadyFormed == false)
   {
@@ -229,7 +235,7 @@ void Reconstruction::compute()
   numgrains = m_microgen->renumber_grains3();
 
   CHECK_FOR_CANCELED(MicroGen3D)
-  progressMessage(AIM_STRING("write_volume2"), 42 );
+  progressMessage(AIM_STRING("Writing Reconstruction File"), 42 );
   m_microgen->write_volume2(reconFile);
 
   CHECK_FOR_CANCELED(MicroGen3D)
@@ -264,18 +270,18 @@ void Reconstruction::compute()
   progressMessage(AIM_STRING("find_convexities"), 66 );
   m_microgen->find_convexities();
 
-  std::string  statsFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Reconstruction::StatsFile;
-  std::string  volBinFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Reconstruction::VolBinFile;
-  std::string  bOverABinsFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Reconstruction::BOverABinsFile;
-  std::string  cOverABinsFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Reconstruction::COverABinsFile;
-  std::string  cOverBBinsFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Reconstruction::COverBBinsFile;
-  std::string  svnFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Reconstruction::SVNFile;
-  std::string  svsFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Reconstruction::SVSFile;
-  std::string  misorientationFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Reconstruction::MisorientationBinsFile;
-  std::string  microBinsFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Reconstruction::MicroBinsFile;
+  std::string  statsFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::StatsFile;
+  std::string  volBinFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::VolBinFile;
+  std::string  bOverABinsFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::BOverABinsFile;
+  std::string  cOverABinsFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::COverABinsFile;
+  std::string  cOverBBinsFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::COverBBinsFile;
+  std::string  svnFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::SVNFile;
+  std::string  svsFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::SVSFile;
+  std::string  misorientationFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::MisorientationBinsFile;
+  std::string  microBinsFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::MicroBinsFile;
 
   CHECK_FOR_CANCELED(MicroGen3D)
-  progressMessage(AIM_STRING("volume_stats"), 69 );
+  progressMessage(AIM_STRING("Writing Statistics"), 69 );
   m_microgen->volume_stats(statsFile,
                          volBinFile,
                          bOverABinsFile,
@@ -287,39 +293,39 @@ void Reconstruction::compute()
                          microBinsFile);
 
   CHECK_FOR_CANCELED(MicroGen3D)
-  progressMessage(AIM_STRING("write_volume2"), 72 );
+  progressMessage(AIM_STRING("Writing Reconstruction File"), 72 );
   m_microgen->write_volume2(reconFile);
 
-  std::string reconVisFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Reconstruction::ReconstructedVisualizationFile;
-  std::string grainsFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Reconstruction::GrainsFile;
+  std::string reconVisFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::ReconstructedVisualizationFile;
+  std::string grainsFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::GrainsFile;
 
-  std::string axisFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Reconstruction::AxisOrientationsFile;
-  std::string eulerFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Reconstruction::EulerAnglesFile;
-  std::string boundaryFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Reconstruction::BoundaryCentersFile;
+  std::string axisFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::AxisOrientationsFile;
+  std::string eulerFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::EulerAnglesFile;
+  std::string boundaryFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::BoundaryCentersFile;
 
   CHECK_FOR_CANCELED(MicroGen3D)
-  progressMessage(AIM_STRING("create_visualization"), 75 );
+  progressMessage(AIM_STRING("Writing Reconstruction Visualization File"), 75 );
   m_microgen->create_visualization(reconVisFile);
 
   CHECK_FOR_CANCELED(MicroGen3D)
-  progressMessage(AIM_STRING("write_grains"), 78 );
+  progressMessage(AIM_STRING("Writing Grains File"), 78 );
   m_microgen->write_grains(grainsFile);
 
   CHECK_FOR_CANCELED(MicroGen3D)
-  progressMessage(AIM_STRING("write_axisorientations"), 81 );
+  progressMessage(AIM_STRING("Writing Axis Orientation File"), 81 );
   m_microgen->write_axisorientations(axisFile);
 
   CHECK_FOR_CANCELED(MicroGen3D)
-  progressMessage(AIM_STRING("write_eulerangles"), 84 );
+  progressMessage(AIM_STRING("Writing Euler Angle File"), 84 );
   m_microgen->write_eulerangles(eulerFile);
 
   CHECK_FOR_CANCELED(MicroGen3D)
-  progressMessage(AIM_STRING("find_boundarycenters"), 99 );
+  progressMessage(AIM_STRING("Finding and Writing Boundary Centers"), 99 );
   m_microgen->find_boundarycenters(boundaryFile);
 
   progressMessage(AIM_STRING("Reconstruction Complete"), 100 );
 
-  std::cout << "Reconstruction::compute is Complete" << std::endl;
+ // std::cout << "Reconstruction::compute is Complete" << std::endl;
 }
 
 // -----------------------------------------------------------------------------
@@ -328,15 +334,14 @@ void Reconstruction::compute()
 void Reconstruction::progressMessage(AIM_STRING message, int progress)
 {
 #ifdef AIM_USE_QT
-   //   emit updateMessage(QString(message));
-   //   emit updateProgress(progress);
+      emit updateMessage(QString(message));
+      emit updateProgress(progress);
       std::cout << message.toStdString() << std::endl;
 #else
 
   std::cout << message << std::endl;
 
 #endif
-
 }
 
 #ifdef AIM_USE_QT
@@ -345,16 +350,15 @@ void Reconstruction::progressMessage(AIM_STRING message, int progress)
 // -----------------------------------------------------------------------------
 void Reconstruction::on_CancelWorker()
 {
-     std::cout << "Reconstruction::cancelWorker()" << std::endl;
-     this->m_Cancel = true;
-     if (m_microgen.get() != NULL)
-     {
-       if (m_microgen->m_angFileHelper.get() != NULL)
-       {
-         m_microgen->m_angFileHelper->setCancel(true);
-       }
-     }
-
+  // std::cout << "Reconstruction::cancelWorker()" << std::endl;
+  this->m_Cancel = true;
+  if (m_microgen.get() != NULL)
+  {
+   if (m_microgen->m_angFileHelper.get() != NULL)
+   {
+     m_microgen->m_angFileHelper->setCancel(true);
+   }
+  }
 }
 #endif
 

@@ -1,3 +1,13 @@
+#--////////////////////////////////////////////////////////////////////////////
+#--
+#--  Copyright (c) 2009, Michael A. Jackson. BlueQuartz Software
+#--  Copyright (c) 2009, Michael Groeber, US Air Force Research Laboratory
+#--  All rights reserved.
+#--  BSD License: http://www.opensource.org/licenses/bsd-license.html
+#--
+#-- This code was partly written under US Air Force Contract FA8650-07-D-5800
+#--
+#--////////////////////////////////////////////////////////////////////////////
 # set project's name
 PROJECT( Representation )
 cmake_minimum_required(VERSION 2.6)
@@ -24,8 +34,6 @@ SET (CMAKE_ARCHIVE_OUTPUT_DIRECTORY
   "Single Directory for all static libraries."
   )
 
-add_definitions(-DAIM_USE_QT)
-
 # Set the GUI type for different platforms
 SET(GUI_TYPE )
 
@@ -34,6 +42,7 @@ IF(WIN32)
  SET(GUI_TYPE WIN32)
 ENDIF(WIN32)
 
+add_definitions(-DAIM_USE_QT -DSVG_3D_LIBRARY -DSURFACE_MESH_LIBRARY -DVOLUME_MESH_LIBRARY)
 
 # List the source files here
 SET (Representation_SRCS
@@ -49,10 +58,13 @@ IDE_SOURCE_PROPERTIES( "Source/AIM/GUI" "${Representation_HDRS}" "${Representati
 
 set (AIM_COMMON_QT_SRCS
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Qt/AIMAboutBox.cpp
-    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Qt/QRecentFilelist.cpp   )
+    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Qt/QRecentFilelist.cpp
+    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Qt/QR3DFileCompleter.cpp
+)
 set (AIM_COMMON_QT_HDRS
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Qt/AIMAboutBox.h
-    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Qt/QRecentFilelist.h  )
+    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Qt/QRecentFilelist.h
+    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Qt/QR3DFileCompleter.h     )
 IDE_SOURCE_PROPERTIES("Source/AIM/Common/Qt" "${AIM_COMMON_QT_HDRS}" "${AIM_COMMON_QT_SRCS}")
 
 set (AIM_Threads_SRCS 
@@ -65,41 +77,6 @@ set (AIM_Threads_HDRS
 IDE_SOURCE_PROPERTIES("Source/AIM/Threads" "${AIM_Threads_HDRS}" "${AIM_Threads_SRCS}")
 
 
-SET (COMMON_SRCS
-    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/MicroGen3D.cpp
-    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Grain.cpp
-    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Voxel.cpp
-    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Bin.cpp
-    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Orient.cpp   
-    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/AIMRandomNG.cpp
-    )
-
-SET (COMMON_HDRS
-    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/MicroGen3D.h
-    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Grain.h
-    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Voxel.h
-    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Bin.h
-    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Orient.h
-    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/AIMRandomNG.h
-    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/FeiConstants.h
-    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Constants.h
-)
-IDE_SOURCE_PROPERTIES( "Source/AIM/Common" "${COMMON_HDRS}" "${COMMON_SRCS}")
-
-
-set (ANG_SRCS
-    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/ANG/AngDirectoryPatterns.cpp
-    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/ANG/AngFileReader.cpp
-    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/ANG/AngFileHelper.cpp
- )
- 
-set (ANG_HDRS
-    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/ANG/AngDirectoryPatterns.h
-    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/ANG/AngFileReader.h
-    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/ANG/AngFileHelper.h
-)
-IDE_SOURCE_PROPERTIES( "Source/AIM/ANG" "${ANG_HDRS}" "${ANG_SRCS}")
-
 SET (Reconstruction_SRCS
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Reconstruction/Reconstruction.cpp
 )
@@ -108,16 +85,48 @@ SET (Reconstruction_HDRS
     )
 IDE_SOURCE_PROPERTIES( "Source/AIM/Reconstruction" "${Reconstruction_HDRS}" "${Reconstruction_SRCS}")
 
-    set_source_files_properties(${AIMRepresentation_SOURCE_DIR}/Source/AIM/Reconstruction/Reconstruction.h
-                                ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Reconstruction/Reconstruction.cpp
-                        PROPERTIES  DEFINITIONS "-DAIM_USE_QT" )
+SET (GrainGenerator_SRCS
+    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/GrainGenerator/SVG-3D.cpp
+    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/GrainGenerator/GrainGenerator.cpp
+)
+SET (GrainGenerator_HDRS
+   ${AIMRepresentation_SOURCE_DIR}/Source/AIM/GrainGenerator/GrainGenerator.h
+   ${AIMRepresentation_SOURCE_DIR}/Source/AIM/GrainGenerator/SVG-3D.h
+)
+IDE_SOURCE_PROPERTIES( "Source/AIM/GrainGenerator" "${GrainGenerator_HDRS}" "${GrainGenerator_SRCS}")
 
+SET (SurfaceMesh_SRCS
+    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/SurfaceMesh/SurfaceMesh.cpp
+    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/SurfaceMesh/Surface_Mesh_General_MCA_Layer.c
+    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/SurfaceMesh/smooth-grain3d.cpp
+)
+SET (SurfaceMesh_HDRS
+   ${AIMRepresentation_SOURCE_DIR}/Source/AIM/SurfaceMesh/SurfaceMesh.h
+   ${AIMRepresentation_SOURCE_DIR}/Source/AIM/SurfaceMesh/Surface_Mesh_General_MCA_Layer.h
+   ${AIMRepresentation_SOURCE_DIR}/Source/AIM/SurfaceMesh/LinearAlgebra.h
+)
+IDE_SOURCE_PROPERTIES( "Source/AIM/SurfaceMesh" "${SurfaceMesh_HDRS}" "${SurfaceMesh_SRCS}")
 
+SET (VolumeMesh_SRCS
+    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/VolumeMesh/VolumeMesh.cpp
+    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/VolumeMesh/MeshGenerator.cpp
+)
+SET (VolumeMesh_HDRS
+   ${AIMRepresentation_SOURCE_DIR}/Source/AIM/VolumeMesh/VolumeMesh.h
+   ${AIMRepresentation_SOURCE_DIR}/Source/AIM/VolumeMesh/MeshGenerator.h
+)
+IDE_SOURCE_PROPERTIES( "Source/AIM/VolumeMesh" "${VolumeMesh_HDRS}" "${VolumeMesh_SRCS}")
+
+                        
 SET( Representation_MOC_HDRS
     ${Representation_SOURCE_DIR}/RepresentationUI.h
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Qt/AIMAboutBox.h
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Qt/QRecentFilelist.h
+    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Qt/QR3DFileCompleter.h
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Reconstruction/Reconstruction.h
+    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/GrainGenerator/GrainGenerator.h
+    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/SurfaceMesh/SurfaceMesh.h
+    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/VolumeMesh/VolumeMesh.h
     ${AIM_Threads_HDRS}
 )
 
@@ -150,12 +159,14 @@ SET (Representation_PROJECT_SRCS
     ${AIM_COMMON_QT_SRCS}
     ${AIM_Threads_SRCS}
     ${AIM_Threads_HDRS}
-    ${COMMON_SRCS}
-    ${COMMON_HDRS}
-    ${ANG_SRCS}
-    ${ANG_HDRS}
     ${Reconstruction_SRCS}
     ${Reconstruction_HDRS}
+    ${GrainGenerator_SRCS}
+    ${GrainGenerator_HDRS}
+    ${SurfaceMesh_SRCS}
+    ${SurfaceMesh_HDRS}
+    ${VolumeMesh_SRCS}
+    ${VolumeMesh_HDRS}
     ${Generated_RC_SRCS} 
     ${Generated_UI_HDRS} 
     ${Generated_MOC_SRCS}
@@ -187,7 +198,8 @@ IDE_SOURCE_PROPERTIES ("ConfiguredFiles" "${AIMRepresentation_BINARY_DIR}/AIM/Co
 # ---------- Build the Viewer Application  ----------------------
 ADD_EXECUTABLE( ${PROJECT_NAME} ${GUI_TYPE} ${Representation_PROJECT_SRCS} )
 TARGET_LINK_LIBRARIES( ${PROJECT_NAME}
-                        MXA 
+                        MXA
+                        AIMCommon
                         ${QT_LIBRARIES}  )
 
 InstallationSupport(${PROJECT_NAME} ${EXE_DEBUG_EXTENSION} ${AIMRepresentation_BINARY_DIR})
