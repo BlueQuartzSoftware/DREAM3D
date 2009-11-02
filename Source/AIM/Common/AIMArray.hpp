@@ -10,10 +10,13 @@
 #ifndef AIMARRAY_HPP_
 #define AIMARRAY_HPP_
 
+
 #include <MXA/Common/MXATypes.h>
 #include <MXA/Common/MXASetGetMacros.h>
 
 #include <iostream>
+#include <string.h>
+
 
 #if defined ( AIM_USE_SSE ) && defined ( __SSE2__ )
 #include <mm_malloc.h>

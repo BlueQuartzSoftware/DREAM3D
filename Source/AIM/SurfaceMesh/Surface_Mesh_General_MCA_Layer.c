@@ -243,7 +243,7 @@ int main(int argc, char **argv)
   char* edgeTableFile;
   char* neighspinTableFile;
   char* outputDir;
-  
+
   edgeTableFile = EDGETABLE_2D_FILE;
   neighspinTableFile = NEIGHSPIN_TABLE_FILE;
   outputDir = ".";
