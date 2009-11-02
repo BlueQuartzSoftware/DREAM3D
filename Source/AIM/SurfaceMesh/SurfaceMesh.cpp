@@ -14,6 +14,7 @@
 #include <MXA/Utilities/MXAFileSystemPath.h>
 #include <AIM/SurfaceMesh/Surface_Mesh_General_MCA_Layer.h>
 #include <AIM/SurfaceMesh/Update_Edge_Tri.h>
+#include <AIM/SurfaceMesh/smooth-grain3d.h>
 
 #ifdef AIM_USE_QT
 
@@ -107,14 +108,9 @@ void SurfaceMesh::compute()
                                  AIM::Representation::MeshStatFile.c_str(),
                                  AIM::Representation::NodesRawFile.c_str());
 
-  if (m_SmoothMesh == true)
-  {
-    //TODO: Run the smoothing algorithm
-    CHECK_FOR_CANCELED(Surface Meshing)
-    progressMessage(AIM_STRING("Smoothing Surface Meshing"), 50 );
-  }
 
-
+  CHECK_FOR_CANCELED(Surface Meshing)
+  progressMessage(AIM_STRING("Converting Slice Files to Single Nodes/Triangles Pair"), 40 );
   // Convert the output edge and triangle files into a single node/triangle file
   m_ErrorCondition = Update_Edge_Tri(AIM::Representation::MeshStatFile.c_str(),
                                      m_OutputDirectory.c_str(),
@@ -123,6 +119,22 @@ void SurfaceMesh::compute()
                                      AIM::Representation::NodesFile.c_str(),
                                      AIM::Representation::NodesRawFile.c_str() );
 
+
+  if (m_SmoothMesh == true)
+  {
+    //TODO: Run the smoothing algorithm
+    CHECK_FOR_CANCELED(Surface Meshing)
+    progressMessage(AIM_STRING("Smoothing Surface Meshing"), 70 );
+    int lockquads = 0;
+    if (m_SmoothLockQuadPoints) { lockquads = 1; }
+    m_ErrorCondition = SmoothGrain3D(AIM::Representation::NodesFile,
+                                     AIM::Representation::TrianglesFile,
+                                      m_OutputDirectory,
+                                      m_SmoothIterations,
+                                      m_SmoothFileOutputIncrement,
+                                      lockquads);
+
+  }
 
   progressMessage(AIM_STRING("Surface Meshing Complete"), 100 );
 }

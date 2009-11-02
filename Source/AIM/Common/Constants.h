@@ -75,10 +75,11 @@ namespace AIM
     const std::string DXExt ("dx");
     const std::string NodesRawFile("nodes_raw.txt");
     const std::string MeshStatFile("mesh_stat.txt");
-
     const std::string NodesFile("nodes.txt");
     const std::string TrianglesFile("triangles.txt");
     const std::string EdgesFile("edges.txt");
+    const std::string Smooth3DIterationFile("Smooth3D");
+    const std::string NodesSmoothedFile("nodes_smoothed.txt");
 
     /* Volume Meshing Related */
     const std::string MeshFile("volumetric_mesh_v5_1.vtk");

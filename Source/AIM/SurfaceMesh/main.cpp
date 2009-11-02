@@ -52,8 +52,6 @@ int main(int argc, char **argv)
     MXALOGGER_METHOD_VARIABLE_INSTANCE
 
     std::string dxFile;
-//    std::string edgeTableFile;
-//    std::string neighSpinTableFile;
     std::string outputDir;
 
     int xDim;

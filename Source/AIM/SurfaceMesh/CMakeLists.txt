@@ -53,20 +53,22 @@ ToolInstallationSupport(SL_SurfaceMesh "${EXE_DEBUG_EXTENSION}" ${AIMRepresentat
 # Add the command line version of the Smoothing program
 set (SurfaceMeshSmoothing_SRCS 
  ${SurfaceMesh_SOURCE_DIR}/smooth-grain3d.cpp )
-set (SurfaceMeshSmoothing_HDRS 
+set (SurfaceMeshSmoothing_HDRS
+${SurfaceMesh_SOURCE_DIR}/smooth-grain3d.h 
  ${SurfaceMesh_SOURCE_DIR}/LinearAlgebra.h )
 IDE_SOURCE_PROPERTIES( "Source/AIM/SurfaceMesh" "${SurfaceMeshSmoothing_HDRS}" "${SurfaceMeshSmoothing_SRCS}")
-
 add_executable(SL_MeshSmoothing ${SurfaceMeshSmoothing_SRCS} ${SurfaceMeshSmoothing_HDRS} )
+target_link_libraries(SL_MeshSmoothing 
+                      MXA
+                      ${Boost_PROGRAM_OPTIONS_LIBRARY} )
 ToolInstallationSupport(SL_MeshSmoothing "${EXE_DEBUG_EXTENSION}" ${AIMRepresentation_BINARY_DIR} )
 
-
+# Add a command line version of the UpdateEdgeTri program
 set (UpdateEdgeTri_SRCS 
  ${SurfaceMesh_SOURCE_DIR}/Update_Edge_Tri.c )
 set (UpdateEdgeTri_HDRS 
  ${SurfaceMesh_SOURCE_DIR}/Update_Edge_Tri.h)
 IDE_SOURCE_PROPERTIES( "Source/AIM/SurfaceMesh" "${UpdateEdgeTri_HDRS}" "${UpdateEdgeTri_SRCS}")
-
 add_executable(SL_UpdateEdgeTri ${UpdateEdgeTri_SRCS} ${UpdateEdgeTri_HDRS} )
 ToolInstallationSupport(SL_UpdateEdgeTri "${EXE_DEBUG_EXTENSION}" ${AIMRepresentation_BINARY_DIR} )
 
@@ -105,7 +107,8 @@ target_link_libraries(SurfaceMesh
                         ${m_lib})
 set_property(TARGET SurfaceMesh PROPERTY  
                 COMPILE_DEFINITIONS "SURFACE_MESH_LIBRARY" 
-                COMPILE_DEFINITIONS "UPDATE_EDGE_TRI_LIBRARY" )
+                COMPILE_DEFINITIONS "UPDATE_EDGE_TRI_LIBRARY" 
+                COMPILE_DEFINITIONS "SMOOTH_MESH_LIBRARY")
 ToolInstallationSupport(SurfaceMesh "${EXE_DEBUG_EXTENSION}" ${AIMRepresentation_BINARY_DIR} )
 
 
