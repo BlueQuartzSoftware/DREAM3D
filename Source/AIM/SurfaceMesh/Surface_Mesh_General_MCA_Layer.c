@@ -5117,12 +5117,11 @@ int get_output_triangles (struct patch *t, int nt, char* buf, int zID, int ctid)
   int newID;
 
   int n1, n2, n3, s1, s2;
+  FILE *f;
 
   tag = zID;
   end = nt;
   newID = ctid;
-
-  FILE *f;
 
   if( (f=fopen(buf, "w")) == NULL){
     printf("\nThe input file doesn't exist!\n");
