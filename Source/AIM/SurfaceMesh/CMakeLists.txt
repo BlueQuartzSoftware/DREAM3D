@@ -34,6 +34,10 @@ SET (CMAKE_ARCHIVE_OUTPUT_DIRECTORY
   "Single Directory for all static libraries."
   )
 
+set(m_lib "")
+if(UNIX)
+  set (m_lib "m")
+endif(UNIX)
 
 set (SurfaceMeshMCALayer_SRCS 
  ${SurfaceMesh_SOURCE_DIR}/Surface_Mesh_General_MCA_Layer.c )
@@ -43,6 +47,7 @@ set (SurfaceMeshMCALayer_HDRS
 IDE_SOURCE_PROPERTIES( "Source/AIM/SurfaceMesh" "${SurfaceMeshMCALayer_HDRS}" "${SurfaceMeshMCALayer_SRCS}")
 
 add_executable(SL_SurfaceMesh ${SurfaceMeshMCALayer_SRCS} ${SurfaceMeshMCALayer_HDRS} )
+target_link_libraries(SL_SurfaceMesh ${m_lib})
 ToolInstallationSupport(SL_SurfaceMesh "${EXE_DEBUG_EXTENSION}" ${AIMRepresentation_BINARY_DIR} )
 
 
@@ -53,6 +58,7 @@ set (SurfaceMeshSmoothing_HDRS
 IDE_SOURCE_PROPERTIES( "Source/AIM/SurfaceMesh" "${SurfaceMeshSmoothing_HDRS}" "${SurfaceMeshSmoothing_SRCS}")
 
 add_executable(SL_MeshSmoothing ${SurfaceMeshSmoothing_SRCS} ${SurfaceMeshSmoothing_HDRS} )
+
 ToolInstallationSupport(SL_MeshSmoothing "${EXE_DEBUG_EXTENSION}" ${AIMRepresentation_BINARY_DIR} )
 
 # Add in a target for the command line version that combines all the above code
@@ -80,7 +86,8 @@ add_executable(SurfaceMesh ${Project_SRCS} )
 target_link_libraries(SurfaceMesh 
                         MXA
                         AIMCommon
-                        ${Boost_PROGRAM_OPTIONS_LIBRARY} )
+                        ${Boost_PROGRAM_OPTIONS_LIBRARY} 
+                        ${m_lib})
 set_property(TARGET SurfaceMesh PROPERTY  COMPILE_DEFINITIONS "SURFACE_MESH_LIBRARY" )
 ToolInstallationSupport(SurfaceMesh "${EXE_DEBUG_EXTENSION}" ${AIMRepresentation_BINARY_DIR} )
 
