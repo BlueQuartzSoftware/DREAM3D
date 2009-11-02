@@ -125,11 +125,10 @@
  }
 
 
-#define VM_CS(a,b) a##b
 
-#define CHECK_QLINEEDIT_FILE_EXISTS(prefix, name) \
+#define CHECK_QLINEEDIT_FILE_EXISTS(name) \
   { \
-  QString absPath = QDir::toNativeSeparators(prefix##name->text());\
+  QString absPath = QDir::toNativeSeparators(name->text());\
   QFileInfo fi ( absPath );\
   QString iconFile;\
   if ( fi.exists() && fi.isFile() )  {\
@@ -137,8 +136,13 @@
   } else {\
     iconFile = QString(":/") + QString("Delete") + QString("-16x16.png");\
   }\
-  VM_CS(prefix, name)Icon->setPixmap(QPixmap(iconFile));\
+  name##Icon->setPixmap(QPixmap(iconFile));\
  }
+
+
+#define CHECK_QLABEL_FILE_EXISTS_BODY1(prefixname, name)\
+  prefixname->setText(AIM::Representation::name.c_str());\
+  prefixname##Icon->setPixmap(QPixmap(iconFile));\
 
 
 #define CHECK_QLABEL_FILE_EXISTS(prefix, name) \
@@ -152,8 +156,7 @@
   } else {\
   iconFile = QString(":/") + QString("Delete") + QString("-16x16.png");\
   }\
-  VM_CS(prefix, name)->setText(AIM::Representation::name.c_str());\
-  VM_CS(prefix, name)Icon->setPixmap(QPixmap(iconFile));\
+  CHECK_QLABEL_FILE_EXISTS_BODY1(prefix##name, name)\
 }
 
 
@@ -1205,13 +1208,28 @@ void RepresentationUI::sm_CheckIOFiles()
   _verifyPathExists(sm_EdgeTableFile->text(), sm_EdgeTableFile);
   _verifyPathExists(sm_NeighSpinTableFile->text(), sm_NeighSpinTableFile);
 
-  CHECK_QLINEEDIT_FILE_EXISTS(sm_, DxFile);
-  CHECK_QLINEEDIT_FILE_EXISTS(sm_, EdgeTableFile);
-  CHECK_QLINEEDIT_FILE_EXISTS(sm_, NeighSpinTableFile);
+  { \
+    QString absPath = QDir::toNativeSeparators(sm_EdgeTableFile->text());\
+    QFileInfo fi ( absPath );\
+    QString iconFile;\
+    if ( fi.exists() && fi.isFile() )  {\
+      iconFile = QString(":/") + QString("Check") + QString("-16x16.png");\
+    } else {\
+      iconFile = QString(":/") + QString("Delete") + QString("-16x16.png");\
+    }\
+    sm_EdgeTableFileIcon->setPixmap(QPixmap(iconFile));\
+   }
+
+  CHECK_QLINEEDIT_FILE_EXISTS(sm_DxFile)
+
+  CHECK_QLINEEDIT_FILE_EXISTS(sm_DxFile)
+  CHECK_QLINEEDIT_FILE_EXISTS(sm_EdgeTableFile)
+  CHECK_QLINEEDIT_FILE_EXISTS(sm_NeighSpinTableFile)
 
   _verifyPathExists(sm_OutputDir->text(), sm_OutputDir);
-  CHECK_QLABEL_FILE_EXISTS(sm_, NodesFile);
-  CHECK_QLABEL_FILE_EXISTS(sm_, TrianglesFile);
+
+  CHECK_QLABEL_FILE_EXISTS(sm_, NodesFile)
+  CHECK_QLABEL_FILE_EXISTS(sm_, TrianglesFile)
 }
 
 
@@ -1439,8 +1457,8 @@ void RepresentationUI::vm_CheckIOFiles()
   _verifyPathExists(vm_TrianglesFile->text(), vm_TrianglesFile);
   _verifyPathExists(vm_OutputDir->text(), vm_OutputDir );
 
-  CHECK_QLINEEDIT_FILE_EXISTS(vm_, NodesFile);
-  CHECK_QLINEEDIT_FILE_EXISTS(vm_, TrianglesFile);
+  CHECK_QLINEEDIT_FILE_EXISTS(vm_NodesFile);
+  CHECK_QLINEEDIT_FILE_EXISTS(vm_TrianglesFile);
 
   CHECK_QLABEL_FILE_EXISTS(vm_, MeshFile);
   CHECK_QLABEL_FILE_EXISTS(vm_, MeshFile2);
