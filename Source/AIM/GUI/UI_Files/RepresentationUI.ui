@@ -1477,31 +1477,22 @@
          </layout>
         </item>
         <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_11">
-          <item>
+         <layout class="QGridLayout" name="gridLayout_18">
+          <item row="1" column="0" colspan="4">
            <widget class="QLabel" name="label_30">
             <property name="text">
              <string>Existing Output Files</string>
             </property>
            </widget>
           </item>
-          <item>
-           <spacer name="horizontalSpacer_6">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
+          <item row="2" column="3">
+           <widget class="QLabel" name="sm_TrianglesFile">
+            <property name="text">
+             <string>triangles.txt</string>
             </property>
-            <property name="sizeType">
-             <enum>QSizePolicy::Fixed</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>12</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
+           </widget>
           </item>
-          <item>
+          <item row="2" column="0">
            <widget class="QLabel" name="sm_NodesFileIcon">
             <property name="text">
              <string/>
@@ -1511,30 +1502,14 @@
             </property>
            </widget>
           </item>
-          <item>
+          <item row="2" column="1">
            <widget class="QLabel" name="sm_NodesFile">
             <property name="text">
              <string>nodes.txt</string>
             </property>
            </widget>
           </item>
-          <item>
-           <spacer name="horizontalSpacer_7">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeType">
-             <enum>QSizePolicy::Fixed</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>12</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-          <item>
+          <item row="2" column="2">
            <widget class="QLabel" name="sm_TrianglesFileIcon">
             <property name="text">
              <string/>
@@ -1544,25 +1519,39 @@
             </property>
            </widget>
           </item>
-          <item>
-           <widget class="QLabel" name="sm_TrianglesFile">
+          <item row="3" column="1">
+           <widget class="QLabel" name="sm_NodesRawFile">
             <property name="text">
-             <string>triangles.txt</string>
+             <string>nodes_raw.txt</string>
             </property>
            </widget>
           </item>
-          <item>
-           <spacer name="horizontalSpacer_10">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
+          <item row="3" column="3">
+           <widget class="QLabel" name="sm_MeshStatFile">
+            <property name="text">
+             <string>mesh_stat.txt</string>
             </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>40</width>
-              <height>20</height>
-             </size>
+           </widget>
+          </item>
+          <item row="3" column="0">
+           <widget class="QLabel" name="sm_NodesRawFileIcon">
+            <property name="text">
+             <string/>
             </property>
-           </spacer>
+            <property name="pixmap">
+             <pixmap resource="../../../../Resources/icons/images/Icons.qrc">:/Delete-16x16.png</pixmap>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="2">
+           <widget class="QLabel" name="sm_MeshStatFileIcon">
+            <property name="text">
+             <string/>
+            </property>
+            <property name="pixmap">
+             <pixmap resource="../../../../Resources/icons/images/Icons.qrc">:/Delete-16x16.png</pixmap>
+            </property>
+           </widget>
           </item>
          </layout>
         </item>

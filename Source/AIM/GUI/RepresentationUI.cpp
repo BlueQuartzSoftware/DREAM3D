@@ -1188,12 +1188,12 @@ void RepresentationUI::sm_CheckIOFiles()
   }
   CHECK_QLINEEDIT_FILE_EXISTS(sm_DxFile)
 
-  CHECK_QLINEEDIT_FILE_EXISTS(sm_DxFile)
-
   _verifyPathExists(sm_OutputDir->text(), sm_OutputDir);
 
   CHECK_QLABEL_FILE_EXISTS(sm_, NodesFile)
   CHECK_QLABEL_FILE_EXISTS(sm_, TrianglesFile)
+  CHECK_QLABEL_FILE_EXISTS(sm_, MeshStatFile)
+  CHECK_QLABEL_FILE_EXISTS(sm_, NodesRawFile)
 }
 
 
@@ -1278,9 +1278,14 @@ void RepresentationUI::on_sm_GoBtn_clicked()
 
   m_SurfaceMesh = SurfaceMesh::New(NULL);
   m_SurfaceMesh->setDXFile(sm_DxFile->text().toStdString() );
-//  m_SurfaceMesh->setEdgeTableFile(sm_EdgeTableFile->text().toStdString() );
-//  m_SurfaceMesh->setNeighSpinTableFile(sm_NeighSpinTableFile->text().toStdString() );
-  m_SurfaceMesh->setOutputDirectory(sm_OutputDir->text().toStdString());
+
+  QString od = sm_OutputDir->text();
+  if (od.endsWith('/') == false && od.endsWith('\\') == false)
+  {
+    od += QDir::separator();
+  }
+
+  m_SurfaceMesh->setOutputDirectory(od.toStdString());
   m_SurfaceMesh->setXDim(sm_XDim->value());
   m_SurfaceMesh->setYDim(sm_YDim->value());
   m_SurfaceMesh->setZDim(sm_ZDim->value());

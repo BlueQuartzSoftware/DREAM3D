@@ -13,7 +13,7 @@
 
 #include <MXA/Utilities/MXAFileSystemPath.h>
 #include <AIM/SurfaceMesh/Surface_Mesh_General_MCA_Layer.h>
-
+#include <AIM/SurfaceMesh/Update_Edge_Tri.h>
 
 #ifdef AIM_USE_QT
 
@@ -100,9 +100,12 @@ void SurfaceMesh::compute()
 {
   CHECK_FOR_CANCELED(Surface Meshing)
   progressMessage(AIM_STRING("Running Surface Meshing"), 0 );
+
   m_ErrorCondition = SurfaceMesh_MCALayer(m_XDim, m_YDim, m_ZDim,
                                  m_OutputDirectory.c_str(),
-                                 m_DxFile.c_str());
+                                 m_DxFile.c_str(),
+                                 AIM::Representation::MeshStatFile.c_str(),
+                                 AIM::Representation::NodesRawFile.c_str());
 
   if (m_SmoothMesh == true)
   {
@@ -110,6 +113,16 @@ void SurfaceMesh::compute()
     CHECK_FOR_CANCELED(Surface Meshing)
     progressMessage(AIM_STRING("Smoothing Surface Meshing"), 50 );
   }
+
+
+  // Convert the output edge and triangle files into a single node/triangle file
+  m_ErrorCondition = Update_Edge_Tri(AIM::Representation::MeshStatFile.c_str(),
+                                     m_OutputDirectory.c_str(),
+                                     AIM::Representation::EdgesFile.c_str(),
+                                     AIM::Representation::TrianglesFile.c_str(),
+                                     AIM::Representation::NodesFile.c_str(),
+                                     AIM::Representation::NodesRawFile.c_str() );
+
 
   progressMessage(AIM_STRING("Surface Meshing Complete"), 100 );
 }
