@@ -166,35 +166,38 @@ SET(CPACK_PACKAGE_VERSION_MAJOR ${AIMRepresentation_VER_MAJOR})
 SET(CPACK_PACKAGE_VERSION_MINOR ${AIMRepresentation_VER_MINOR})
 SET(CPACK_PACKAGE_VERSION_PATCH ${AIMRepresentation_VER_PATCH})
 SET(CPACK_PACKAGE_VERSION ${AIMRepresentation_VERSION})
-SET(CPACK_COMPONENTS_ALL Applications Resources Unspecified SupportFiles Documentation)
+SET(CPACK_COMPONENTS_ALL Applications Tools)
 set(CPACK_COMPONENT_APPLICATIONS_DISPLAY_NAME "Applications")
 set(CPACK_COMPONENT_APPLICATIONS_DESCRIPTION  "The Gui Versions of the AIMRepresentation Software Tools Suite")
 set(CPACK_COMPONENT_APPLICATIONS_REQUIRED 1)
-set(CPACK_COMPONENT_SUPPORTFILES_DISPLAY_NAME "Tools")
-set(CPACK_COMPONENT_SUPPORTFILES_DESCRIPTION  "The Command Line versions of the AIMRepresentation Software Tools Suite")
-set(CPACK_COMPONENT_SUPPORTFILES_REQUIRED 1)
-set(CPACK_COMPONENT_RESOURCES_DISPLAY_NAME "Resources")
-set(CPACK_COMPONENT_RESOURCES_DESCRIPTION  "Contains resource files to aid in converting Zeiss Mosaic Directories into HDF5 Files.")
-set(CPACK_COMPONENT_RESOURCES_REQUIRED 1)
-set(CPACK_COMPONENT_DOCUMENTATION_DISPLAY_NAME "Documentation")
-set(CPACK_COMPONENT_DOCUMENTATION_DESCRIPTION  "Contains the AIMRepresentation API Documentation and User manuals in HTML format.")
-set(CPACK_PACKAGE_EXECUTABLES AIMFourFoldSymmetry AIMFourFoldSymmetry
-                                FourFoldSymmetry FourFoldSymmetry
-                                AIMMountMaker AIMMountMaker)
+set(CPACK_COMPONENT_TOOLS_DISPLAY_NAME "Tools")
+set(CPACK_COMPONENT_TOOLS_DESCRIPTION  "The Command Line versions of the AIMRepresentation Software Tools Suite")
+set(CPACK_COMPONENT_TOOLS_REQUIRED 1)
+
+set(CPACK_PACKAGE_EXECUTABLES
+    Representation Representation
+    Reconstruction Reconstruction
+    GrainGenerator GrainGenerator
+    SL_SurfaceMesh SL_SurfaceMesh
+    SL_MeshSmoothing SL_MeshSmoothing
+    SL_UpdateEdgeTri SL_UpdateEdgeTri
+    SurfaceMesh SurfaceMesh
+    VolumeMesh VolumeMesh
+)
     
 IF(WIN32 AND NOT UNIX)
   # There is a bug in NSI that does not handle full unix paths properly. Make
   # sure there is at least one set of four (4) backlasshes.
 # SET(CPACK_PACKAGE_ICON "${AIMRepresentation_SOURCE_DIR}/Resources/InstallerIcon.bmp")
 # SET(CPACK_NSIS_INSTALLED_ICON_NAME "bin\\\\MyExecutable.exe")
-  SET(CPACK_NSIS_DISPLAY_NAME "AIM Software Tools")
+  SET(CPACK_NSIS_DISPLAY_NAME "AIMRepresentation Software Tools")
   SET(CPACK_NSIS_HELP_LINK "http:\\\\\\\\www.bluequartz.net")
   SET(CPACK_NSIS_URL_INFO_ABOUT "http:\\\\\\\\www.bluequartz.net")
   SET(CPACK_NSIS_CONTACT "mike.jackson@bluequartz.net")
   SET(CPACK_NSIS_MODIFY_PATH ON)
   SET(CPACK_SOURCE_GENERATOR "ZIP")
   SET(CPACK_GENERATOR "NSIS")
-  SET(CPACK_PACKAGE_INSTALL_REGISTRY_KEY "AIM Software Tools")
+  SET(CPACK_PACKAGE_INSTALL_REGISTRY_KEY "AIMRepresentation Software Tools")
 
 if(MSVC80)
 #_FIND_MSVC_REDIST(8)
