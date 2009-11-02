@@ -305,8 +305,6 @@ void RepresentationUI::readSettings()
 
   /* ******** This Section is for the Surface Meshing Tab ************ */
   READ_FILEPATH_SETTING(prefs, sm_DxFile, "");
-  READ_FILEPATH_SETTING(prefs, sm_EdgeTableFile, "");
-  READ_FILEPATH_SETTING(prefs, sm_NeighSpinTableFile, "");
   READ_FILEPATH_SETTING(prefs, sm_OutputDir, "");
   READ_SETTING(prefs, sm_XDim, ok, i, 100 , Int);
   READ_SETTING(prefs, sm_YDim, ok, i, 100 , Int);
@@ -373,8 +371,6 @@ void RepresentationUI::writeSettings()
 
   /* ******** This Section is for the Surface Meshing Tab ************ */
   WRITE_STRING_SETTING(prefs, sm_DxFile);
-  WRITE_STRING_SETTING(prefs, sm_EdgeTableFile);
-  WRITE_STRING_SETTING(prefs, sm_NeighSpinTableFile);
   WRITE_SETTING(prefs, sm_XDim );
   WRITE_SETTING(prefs, sm_YDim );
   WRITE_SETTING(prefs, sm_ZDim );
@@ -1157,20 +1153,6 @@ void RepresentationUI::sm_SetupGui()
              this, SLOT(on_sm_DxFile_textChanged(const QString &)));
   }
 
-  if (NULL == sm_EdgeTableFile->completer()) {
-    QR3DFileCompleter* com2 = new QR3DFileCompleter(this, false);
-    sm_EdgeTableFile->setCompleter(com2);
-    QObject::connect( com2, SIGNAL(activated(const QString &)),
-             this, SLOT(on_sm_EdgeTableFile_textChanged(const QString &)));
-  }
-
-  if (NULL == sm_NeighSpinTableFile->completer()) {
-    QR3DFileCompleter* com3 = new QR3DFileCompleter(this, false);
-    sm_NeighSpinTableFile->setCompleter(com3);
-    QObject::connect( com3, SIGNAL(activated(const QString &)),
-             this, SLOT(on_sm_NeighSpinTableFile_textChanged(const QString &)));
-  }
-
   if (NULL == sm_OutputDir->completer()) {
     QR3DFileCompleter* com4 = new QR3DFileCompleter(this, true);
     sm_OutputDir->setCompleter(com4);
@@ -1179,7 +1161,7 @@ void RepresentationUI::sm_SetupGui()
   }
 
   sm_Message->setText("Any existing output files will be over written with new versions during the operation.");
-  m_WidgetList << sm_DxFile << sm_EdgeTableFile << sm_NeighSpinTableFile;
+  m_WidgetList << sm_DxFile;
   m_WidgetList << sm_XDim << sm_YDim << sm_ZDim << sm_DxFileBtn << sm_OutputDir << sm_OutputDirBtn;
   m_WidgetList << sm_Message << sm_LockQuadPoints << sm_SmoothIterations << sm_SmoothMesh;
   m_WidgetList << sm_WriteOutputFileIncrement;
@@ -1204,27 +1186,9 @@ void RepresentationUI::sm_CheckIOFiles()
       sm_Message->setText("You have selected a 'dx' file which can be used directly by the surface meshing code.");
     }
   }
-
-  _verifyPathExists(sm_EdgeTableFile->text(), sm_EdgeTableFile);
-  _verifyPathExists(sm_NeighSpinTableFile->text(), sm_NeighSpinTableFile);
-
-  { \
-    QString absPath = QDir::toNativeSeparators(sm_EdgeTableFile->text());\
-    QFileInfo fi ( absPath );\
-    QString iconFile;\
-    if ( fi.exists() && fi.isFile() )  {\
-      iconFile = QString(":/") + QString("Check") + QString("-16x16.png");\
-    } else {\
-      iconFile = QString(":/") + QString("Delete") + QString("-16x16.png");\
-    }\
-    sm_EdgeTableFileIcon->setPixmap(QPixmap(iconFile));\
-   }
-
   CHECK_QLINEEDIT_FILE_EXISTS(sm_DxFile)
 
   CHECK_QLINEEDIT_FILE_EXISTS(sm_DxFile)
-  CHECK_QLINEEDIT_FILE_EXISTS(sm_EdgeTableFile)
-  CHECK_QLINEEDIT_FILE_EXISTS(sm_NeighSpinTableFile)
 
   _verifyPathExists(sm_OutputDir->text(), sm_OutputDir);
 
@@ -1255,29 +1219,6 @@ void RepresentationUI::on_sm_DxFileBtn_clicked()
   sm_DxFile->setText(fi.absoluteFilePath());
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void RepresentationUI::on_sm_EdgeTableFileBtn_clicked()
-{
-  QString file = QFileDialog::getOpenFileName(this, tr("Select EdgeTable File"),
-                                                 m_OpenDialogLastDirectory,
-                                                 tr("Text Files (*.txt)") );
-  if ( true == file.isEmpty() ){return;  }
-  sm_EdgeTableFile->setText(file);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void RepresentationUI::on_sm_NeighSpinTableFileBtn_clicked()
-{
-  QString file = QFileDialog::getOpenFileName(this, tr("Select NeighSpintTable File"),
-                                                 m_OpenDialogLastDirectory,
-                                                 tr("Text Files (*.txt)") );
-  if ( true == file.isEmpty() ){return;  }
-  sm_NeighSpinTableFile->setText(file);
-}
 
 // -----------------------------------------------------------------------------
 //
@@ -1304,23 +1245,6 @@ void RepresentationUI::on_sm_DxFile_textChanged(const QString & text)
 {
   sm_CheckIOFiles();
   _verifyPathExists(sm_DxFile->text(), sm_DxFile);
-}
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void RepresentationUI::on_sm_EdgeTableFile_textChanged(const QString & text)
-{
-  sm_CheckIOFiles();
-  _verifyPathExists(sm_EdgeTableFile->text(), sm_EdgeTableFile);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void RepresentationUI::on_sm_NeighSpinTableFile_textChanged(const QString & text)
-{
-  sm_CheckIOFiles();
-  _verifyPathExists(sm_EdgeTableFile->text(), sm_EdgeTableFile);
 }
 
 // -----------------------------------------------------------------------------
@@ -1350,14 +1274,12 @@ void RepresentationUI::on_sm_GoBtn_clicked()
   }
 
   SANITY_CHECK_INPUT(sm_, DxFile)
-  SANITY_CHECK_INPUT(sm_, EdgeTableFile)
-  SANITY_CHECK_INPUT(sm_, NeighSpinTableFile)
   SANITY_CHECK_INPUT(sm_, OutputDir)
 
   m_SurfaceMesh = SurfaceMesh::New(NULL);
   m_SurfaceMesh->setDXFile(sm_DxFile->text().toStdString() );
-  m_SurfaceMesh->setEdgeTableFile(sm_EdgeTableFile->text().toStdString() );
-  m_SurfaceMesh->setNeighSpinTableFile(sm_NeighSpinTableFile->text().toStdString() );
+//  m_SurfaceMesh->setEdgeTableFile(sm_EdgeTableFile->text().toStdString() );
+//  m_SurfaceMesh->setNeighSpinTableFile(sm_NeighSpinTableFile->text().toStdString() );
   m_SurfaceMesh->setOutputDirectory(sm_OutputDir->text().toStdString());
   m_SurfaceMesh->setXDim(sm_XDim->value());
   m_SurfaceMesh->setYDim(sm_YDim->value());

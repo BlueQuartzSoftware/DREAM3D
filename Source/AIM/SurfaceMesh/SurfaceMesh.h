@@ -52,8 +52,8 @@ Q_OBJECT
     virtual ~SurfaceMesh();
 
     MXA_INSTANCE_STRING_PROPERTY(DXFile, m_DxFile)
-    MXA_INSTANCE_STRING_PROPERTY(EdgeTableFile, m_EdgeTableFile)
-    MXA_INSTANCE_STRING_PROPERTY(NeighSpinTableFile, m_NeighSpinTableFile)
+//    MXA_INSTANCE_STRING_PROPERTY(EdgeTableFile, m_EdgeTableFile)
+//    MXA_INSTANCE_STRING_PROPERTY(NeighSpinTableFile, m_NeighSpinTableFile)
     MXA_INSTANCE_STRING_PROPERTY(OutputDirectory, m_OutputDirectory)
     MXA_INSTANCE_PROPERTY_m(int, XDim)
     MXA_INSTANCE_PROPERTY_m(int, YDim)
