@@ -62,8 +62,6 @@ class RepresentationUI : public QMainWindow, private Ui::RepresentationUI
 
     /* Surface Meshing Slots */
     void on_sm_DxFileBtn_clicked();
-    void on_sm_EdgeTableFileBtn_clicked();
-    void on_sm_NeighSpinTableFileBtn_clicked();
     void on_sm_OutputDirBtn_clicked();
     void on_sm_GoBtn_clicked();
 
@@ -112,8 +110,6 @@ class RepresentationUI : public QMainWindow, private Ui::RepresentationUI
     void on_gg_OutputDir_textChanged(const QString & text);
 
     void on_sm_DxFile_textChanged(const QString & text);
-    void on_sm_EdgeTableFile_textChanged(const QString & text);
-    void on_sm_NeighSpinTableFile_textChanged(const QString & text);
     void on_sm_OutputDir_textChanged(const QString & text);
 
     void on_vm_NodesFile_textChanged(const QString & text);

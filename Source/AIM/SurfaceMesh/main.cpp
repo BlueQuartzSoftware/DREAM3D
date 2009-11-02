@@ -52,8 +52,8 @@ int main(int argc, char **argv)
     MXALOGGER_METHOD_VARIABLE_INSTANCE
 
     std::string dxFile;
-    std::string edgeTableFile;
-    std::string neighSpinTableFile;
+//    std::string edgeTableFile;
+//    std::string neighSpinTableFile;
     std::string outputDir;
 
     int xDim;
@@ -72,8 +72,8 @@ int main(int argc, char **argv)
     desc.add_options()
     ("help", "Produce help message")
     ("dxFile", boost::program_options::value<std::string>(&dxFile), "REQUIRED: Input Dx File")
-    ("edgeTableFile", boost::program_options::value<std::string>(&edgeTableFile), "REQUIRED: Input edgeTableFile File")
-    ("neighSpinTableFile", boost::program_options::value<std::string>(&neighSpinTableFile), "REQUIRED: Input neighSpinTableFile File")
+//    ("edgeTableFile", boost::program_options::value<std::string>(&edgeTableFile), "REQUIRED: Input edgeTableFile File")
+//    ("neighSpinTableFile", boost::program_options::value<std::string>(&neighSpinTableFile), "REQUIRED: Input neighSpinTableFile File")
     ("outputDir", boost::program_options::value<std::string>(&outputDir), "REQUIRED: Output Directory")
     ("xDim,x", boost::program_options::value<int>(&xDim), "REQUIRED: X Dimension of your volume")
     ("yDim,y", boost::program_options::value<int>(&yDim), "REQUIRED: Y Dimension of your volume")
@@ -111,8 +111,8 @@ int main(int argc, char **argv)
       mxa_log << "Parameters being used are: " << std::endl;
 
       CHECK_ARG( dxFile, true);
-      CHECK_ARG( edgeTableFile, true);
-      CHECK_ARG( neighSpinTableFile, true);
+//      CHECK_ARG( edgeTableFile, true);
+//      CHECK_ARG( neighSpinTableFile, true);
       CHECK_ARG( outputDir, true);
       CHECK_ARG( xDim, true);
       CHECK_ARG( yDim, true);
@@ -124,8 +124,8 @@ int main(int argc, char **argv)
 
       SurfaceMesh::Pointer surfaceMesh = SurfaceMesh::New();
       surfaceMesh->setDXFile(dxFile );
-      surfaceMesh->setEdgeTableFile(edgeTableFile );
-      surfaceMesh->setNeighSpinTableFile(neighSpinTableFile );
+//      surfaceMesh->setEdgeTableFile(edgeTableFile );
+//      surfaceMesh->setNeighSpinTableFile(neighSpinTableFile );
       surfaceMesh->setOutputDirectory(outputDir);
       surfaceMesh->setXDim(xDim);
       surfaceMesh->setYDim(yDim);

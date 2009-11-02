@@ -102,9 +102,7 @@ void SurfaceMesh::compute()
   progressMessage(AIM_STRING("Running Surface Meshing"), 0 );
   m_ErrorCondition = SurfaceMesh_MCALayer(m_XDim, m_YDim, m_ZDim,
                                  m_OutputDirectory.c_str(),
-                                 m_DxFile.c_str(),
-                                 m_EdgeTableFile.c_str(),
-                                 m_NeighSpinTableFile.c_str() );
+                                 m_DxFile.c_str());
 
   if (m_SmoothMesh == true)
   {

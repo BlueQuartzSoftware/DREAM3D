@@ -41,15 +41,10 @@
  */
 int SurfaceMesh_MCALayer( int xnum, int ynum, int znum,
                           const char* outputDir,
-                          const char* dxFile,
-                          const char* edgeTableFile,
-                          const char* neighspinTableFile)
+                          const char* dxFile)
 {
   int i;
   int err;
-  // Edge edge and neighboring spin table...
-  int edgeTable_2d[20][8];
-  int nsTable_2d[20][8];
 
   int NS; // The number of sites(voxels) in the simulation box...
   int NSP;
@@ -80,6 +75,53 @@ int SurfaceMesh_MCALayer( int xnum, int ynum, int znum,
   char* nodesFile;
   char postfix[64] = "_triangles_raw.txt";
   char edgepostfix[64] = "_edges_raw.txt";
+  // Edge edge and neighboring spin table...
+
+  int edgeTable_2d[20][8] = {
+{ -1, -1, -1, -1, -1, -1, -1, -1},
+{ -1, -1, -1, -1, -1, -1, -1, -1},
+{ -1, -1, -1, -1, -1, -1, -1, -1},
+{ 0, 1, -1, -1, -1, -1, -1, -1},
+{ -1, -1, -1, -1, -1, -1, -1, -1},
+{ 0, 2, -1, -1, -1, -1, -1, -1},
+{ 1, 2, -1, -1, -1, -1, -1, -1},
+{ 0, 4, 2, 4, 1, 4, -1, -1},
+{ -1, -1, -1, -1, -1, -1, -1, -1},
+{ 3, 0, -1, -1, -1, -1, -1, -1},
+{ 3, 1, -1, -1, -1, -1, -1, -1},
+{ 3, 4, 0, 4, 1, 4, -1, -1},
+{ 2, 3, -1, -1, -1, -1, -1, -1},
+{ 3, 4, 0, 4, 2, 4, -1, -1},
+{ 3, 4, 1, 4, 2, 4, -1, -1},
+{ 3, 0, 1, 2, -1, -1, -1, -1},
+{ 0, 1, 2, 3, -1, -1, -1, -1},
+{ 0, 1, 2, 3, -1, -1, -1, -1},
+{ 3, 0, 1, 2, -1, -1, -1, -1},
+{ 3, 4, 1, 4, 0, 4, 2, 4}
+};
+
+int nsTable_2d[20][8] = {
+  {-1, -1, -1, -1, -1, -1, -1, -1},
+  {-1, -1, -1, -1, -1, -1, -1, -1},
+  {-1, -1, -1, -1, -1, -1, -1, -1},
+  {1, 0, -1, -1, -1, -1, -1, -1},
+  {-1, -1, -1, -1, -1, -1, -1, -1 },
+  {1, 0, -1, -1, -1, -1, -1, -1, },
+  {2, 1, -1, -1, -1, -1, -1, -1},
+  {1, 0, 3, 2, 2, 1, -1, -1},
+  {-1, -1, -1, -1, -1, -1, -1, -1},
+  {0, 3, -1, -1, -1, -1, -1, -1},
+  {0, 3, -1, -1, -1, -1, -1, -1},
+  {0, 3, 1, 0, 2, 1, -1, -1},
+  {3, 2, -1, -1, -1, -1, -1, -1},
+  {0, 3, 1, 0, 3, 2, -1, -1},
+  {0, 3, 2, 1, 3, 2, -1, -1},
+  {0, 3, 2, 1, -1, -1, -1, -1},
+  {1, 0, 3, 2, -1, -1, -1, -1},
+  {1, 0, 3, 2, -1, -1, -1, -1},
+  {0, 3, 2, 1, -1, -1, -1, -1},
+  {0, 3, 2, 1, 1,  0, 3, 2 }
+};
 
   err = 0;
   meshStatsFile = MESH_STAT_FILE;
@@ -100,12 +142,12 @@ int SurfaceMesh_MCALayer( int xnum, int ynum, int znum,
   {
     return err;
   }
-  printf("\nReading edge and triangle tables...\n");
-  err = read_edge_neighspin_table(edgeTable_2d, nsTable_2d, edgeTableFile, neighspinTableFile);
-  if (err != 0)
-  {
-    return err;
-  }
+//  printf("\nReading edge and triangle tables...\n");
+//  err = read_edge_neighspin_table(edgeTable_2d, nsTable_2d, edgeTableFile, neighspinTableFile);
+//  if (err != 0)
+//  {
+//    return err;
+//  }
 
   if ((f1 = fopen(nodesFile, "w")) == NULL)
   {
@@ -262,8 +304,7 @@ int main(int argc, char **argv)
 
   err = SurfaceMesh_MCALayer(xnum, ynum, znum,
                      outputDir,
-                     dxFile, edgeTableFile,
-                     neighspinTableFile );
+                     dxFile);
 
   free(dxFile);
   return err;

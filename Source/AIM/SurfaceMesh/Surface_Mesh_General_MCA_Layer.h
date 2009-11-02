@@ -92,11 +92,10 @@ extern "C"
     double area;
   };
 
+
   int SurfaceMesh_MCALayer( int xnum, int ynum, int znum,
                    const char* outputDir,
-                   const char* dxFile,
-                   const char* edgeTableFile,
-                   const char* neighspinTableFile );
+                   const char* dxFile );
 
   // function prototypes...
   int initialize_micro(struct voxel *p, int ns, int xDim, int yDim, int zDim, const char* dxFile );
