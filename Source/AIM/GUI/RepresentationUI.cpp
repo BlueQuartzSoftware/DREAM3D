@@ -655,33 +655,33 @@ void RepresentationUI::rec_SetupGui()
 // ----------------------------------------------------------------------------_
 void RepresentationUI::rec_CheckIOFiles()
 {
-  if (true == this->_verifyPathExists(angDir->text(), this->angDir) )
-   {
-     findAngMaxSliceAndPrefix();
-   }
+  if (true == this->_verifyPathExists(angDir->text(), this->angDir))
+  {
+    findAngMaxSliceAndPrefix();
+  }
 
-   if (this->_verifyPathExists(outputDir->text(), this->outputDir) )
-   {
-     findReconstructionOutputFiles();
-   }
-   else
-   {
-     SET_TEXT_ICON(StatsFile, Delete)
-     SET_TEXT_ICON(VolBinFile, Delete)
-     SET_TEXT_ICON(BOverABinsFile, Delete)
-     SET_TEXT_ICON(COverABinsFile, Delete)
-     SET_TEXT_ICON(COverBBinsFile, Delete)
-     SET_TEXT_ICON(SVNFile, Delete)
-     SET_TEXT_ICON(SVSFile, Delete)
-     SET_TEXT_ICON(MisorientationBinsFile, Delete)
-     SET_TEXT_ICON(MicroBinsFile, Delete)
-     SET_TEXT_ICON(ReconstructedDataFile, Delete)
-     SET_TEXT_ICON(ReconstructedVisualizationFile, Delete)
-     SET_TEXT_ICON(GrainsFile, Delete)
-     SET_TEXT_ICON(BoundaryCentersFile, Delete)
-     SET_TEXT_ICON(AxisOrientationsFile, Delete)
-     SET_TEXT_ICON(EulerAnglesFile, Delete)
-   }
+  if (this->_verifyPathExists(outputDir->text(), this->outputDir))
+  {
+    findReconstructionOutputFiles();
+  }
+  else
+  {
+    SET_TEXT_ICON(StatsFile, Delete)
+    SET_TEXT_ICON(VolBinFile, Delete)
+    SET_TEXT_ICON(BOverABinsFile, Delete)
+    SET_TEXT_ICON(COverABinsFile, Delete)
+    SET_TEXT_ICON(COverBBinsFile, Delete)
+    SET_TEXT_ICON(SVNFile, Delete)
+    SET_TEXT_ICON(SVSFile, Delete)
+    SET_TEXT_ICON(MisorientationBinsFile, Delete)
+    SET_TEXT_ICON(MicroBinsFile, Delete)
+    SET_TEXT_ICON(ReconstructedDataFile, Delete)
+    SET_TEXT_ICON(ReconstructedVisualizationFile, Delete)
+    SET_TEXT_ICON(GrainsFile, Delete)
+    SET_TEXT_ICON(BoundaryCentersFile, Delete)
+    SET_TEXT_ICON(AxisOrientationsFile, Delete)
+    SET_TEXT_ICON(EulerAnglesFile, Delete)
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -1244,7 +1244,6 @@ void RepresentationUI::on_sm_OutputDirBtn_clicked()
 void RepresentationUI::on_sm_DxFile_textChanged(const QString & text)
 {
   sm_CheckIOFiles();
-  _verifyPathExists(sm_DxFile->text(), sm_DxFile);
 }
 
 // -----------------------------------------------------------------------------
@@ -1252,10 +1251,7 @@ void RepresentationUI::on_sm_DxFile_textChanged(const QString & text)
 // -----------------------------------------------------------------------------
 void RepresentationUI::on_sm_OutputDir_textChanged(const QString & text)
 {
-  if (_verifyPathExists(sm_OutputDir->text(), sm_OutputDir) )
-  {
-    sm_CheckIOFiles();
-  }
+  sm_CheckIOFiles();
 }
 
 // -----------------------------------------------------------------------------
