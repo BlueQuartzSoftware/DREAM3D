@@ -102,7 +102,7 @@ class RepresentationUI : public QMainWindow, private Ui::RepresentationUI
     void vm_ThreadFinished();
     void vm_ThreadProgressed(int value);
 
-
+    // slots to catch signals emittd by the various QLineEdit widgets
     void on_angDir_textChanged(const QString & text);
     void on_outputDir_textChanged(const QString & text);
 
@@ -116,8 +116,13 @@ class RepresentationUI : public QMainWindow, private Ui::RepresentationUI
     void on_vm_TrianglesFile_textChanged(const QString & text);
     void on_vm_OutputDir_textChanged(const QString & text);
 
+    // Our Signals that we can emit custom for this class
   signals:
     void parentResized();
+
+    /**
+     * @brief A signal that is emitted when we want to cancel a process
+     */
     void sig_CancelWorker();
 
   protected:
@@ -173,6 +178,10 @@ class RepresentationUI : public QMainWindow, private Ui::RepresentationUI
      */
     void setupGui();
 
+    /*
+     * These methods are the various GUI related setup methods that do some more setup operations on the widgets before
+     * the initial window is displayed. Each of the methods is called from the 'setupGui' method.
+     */
     void rec_SetupGui();
     void rec_CheckIOFiles();
 
@@ -191,15 +200,24 @@ class RepresentationUI : public QMainWindow, private Ui::RepresentationUI
      */
     qint32 _checkDirtyDocument();
 
-
+    /**
+     * @brief Over ride the resize event
+     * @param event The event to process
+     */
     void resizeEvent ( QResizeEvent * event );
 
+    /**
+     * @brief Method to attempt the extraction of the .ang max slice value and prefix
+     */
     void findAngMaxSliceAndPrefix();
 
   private:
     QString                     m_OpenDialogLastDirectory;
     QList<QWidget*>             m_WidgetList;
 
+    /*
+     * We keep a shared_pointer to the four types of processing that we do.
+     */
     Reconstruction::Pointer     m_Reconstruction;
     GrainGenerator::Pointer     m_GrainGenerator;
     SurfaceMesh::Pointer        m_SurfaceMesh;
