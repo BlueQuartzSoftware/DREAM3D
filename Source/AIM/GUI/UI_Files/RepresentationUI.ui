@@ -196,7 +196,7 @@
            <widget class="QLineEdit" name="rec_OutputDir"/>
           </item>
           <item>
-           <widget class="QPushButton" name="outputDirBtn">
+           <widget class="QPushButton" name="rec_OutputDirBtn">
             <property name="text">
              <string>Select</string>
             </property>
@@ -2293,7 +2293,7 @@
   <tabstop>zEndIndex</tabstop>
   <tabstop>zSpacing</tabstop>
   <tabstop>rec_OutputDir</tabstop>
-  <tabstop>outputDirBtn</tabstop>
+  <tabstop>rec_OutputDirBtn</tabstop>
   <tabstop>mergeTwins</tabstop>
   <tabstop>alreadyFormed</tabstop>
   <tabstop>minAllowedGrainSize</tabstop>
