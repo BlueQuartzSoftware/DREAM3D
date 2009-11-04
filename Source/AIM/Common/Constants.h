@@ -41,7 +41,7 @@ namespace AIM
     const std::string BoundaryCentersFile("boundarycenters.txt");//13
     const std::string AxisOrientationsFile("axisorientations.txt");//14
     const std::string EulerAnglesFile("eulerangles.txt");//15
-    const std::string SeNBinsFile("seNbins.txt");
+    const std::string SeNBinsFile("seNBins.txt");
     const std::string ReconstructedDxFile("reconstructed_data.dx");
 
     enum CrystalStructure {
