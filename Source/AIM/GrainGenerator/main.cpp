@@ -62,6 +62,9 @@ int main(int argc, char **argv)
   double xRes;
   double yRes;
   double zRes;
+  double xRes1;
+  double yRes1;
+  double zRes1;
 
   double overlapAllowed = 0.0;
   int overlapAssignment = 0;

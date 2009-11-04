@@ -101,7 +101,7 @@ void Reconstruction::parseAngFile()
 void Reconstruction::run()
 {
   compute();
-  m_microgen = MicroGen3D::NullPointer();  // Clean up the memory
+  m = ReconstructionFunc::NullPointer();  // Clean up the memory
 }
 #endif
 
@@ -133,40 +133,42 @@ void Reconstruction::compute()
   angFileHelper->setZIndexEnd(m_ZEndIndex);
   angFileHelper->setDirectoryPattern(p);
 
-  m_microgen = MicroGen3D::New();
-  m_microgen->initialize(  reader->getXStep(), reader->getYStep(), m_ZResolution,
+  m = ReconstructionFunc::New();
+  m->initialize(  reader->getXStep(), reader->getYStep(), m_ZResolution,
                        reader->getNumEvenCols(), reader->getNumRows(), (m_ZEndIndex - m_ZStartIndex),
                        m_MergeTwins, m_MinAllowedGrainSize, m_MinSeedConfidence,
                        m_MisorientationTolerance, m_CrystalStructure, m_AlreadyFormed);
-  m_microgen->m_angFileHelper = angFileHelper;
+  m->m_angFileHelper = angFileHelper;
   reader = AngFileReader::NullPointer(); // Remove this object as it is no longer needed.
 
   int32 numgrains = 0;
+  int32 mindiameter = 100000;
+  int32 maxdiameter = 0;
 
   std::string reconFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::ReconstructedDataFile;
   reconFile = MXAFileSystemPath::toNativeSeparators(reconFile);
   if (m_AlreadyFormed == false)
   {
-    CHECK_FOR_CANCELED(MicroGen3D)
+    CHECK_FOR_CANCELED(ReconstructionFunc)
     progressMessage(AIM_STRING("Loading Slices"), 3 );
-    m_microgen->loadSlices();
+    m->loadSlices();
 
-    CHECK_FOR_CANCELED(MicroGen3D)
+    CHECK_FOR_CANCELED(ReconstructionFunc)
     progressMessage(AIM_STRING("Forming Grains"), 6 );
-    numgrains = m_microgen->form_grains();
-    m_microgen->numgrains = numgrains;
+    numgrains = m->form_grains();
+    m->numgrains = numgrains;
 
-    CHECK_FOR_CANCELED(MicroGen3D)
+    CHECK_FOR_CANCELED(ReconstructionFunc)
     progressMessage(AIM_STRING("Removing Small Grains"), 9 );
-    m_microgen->remove_smallgrains();
+    m->remove_smallgrains();
 
-    CHECK_FOR_CANCELED(MicroGen3D)
+    CHECK_FOR_CANCELED(ReconstructionFunc)
     progressMessage(AIM_STRING("Renumbering Small Grains"), 12 );
-    numgrains = m_microgen->renumber_grains1();
+    numgrains = m->renumber_grains1();
 
-    CHECK_FOR_CANCELED(MicroGen3D)
-    progressMessage(AIM_STRING("Writing Reconstructed_Data.txt File"), 15 );
-    m_microgen->write_volume1(reconFile);
+    CHECK_FOR_CANCELED(ReconstructionFunc)
+    progressMessage(AIM_STRING("write_volume"), 15 );
+    m->write_volume(reconFile);
   }
 
   if (m_AlreadyFormed == true)
@@ -174,9 +176,9 @@ void Reconstruction::compute()
     // Sanity Check the the Reconstruction File does exist in the output directory
     if (MXAFileSystemPath::exists(reconFile) == true)
     {
-      CHECK_FOR_CANCELED(MicroGen3D)
+      CHECK_FOR_CANCELED(ReconstructionFunc)
       progressMessage(AIM_STRING("Loading Existing Data"), 18 );
-      m_microgen->load_data(reconFile);
+      m->load_data(reconFile);
     }
     else
     {
@@ -197,104 +199,96 @@ void Reconstruction::compute()
     {
       for (int iter3 = 0; iter3 < 180; iter3++)
       {
-        m_microgen->eulerrank[iter1][iter2][iter3] = 0;
+        m->eulerrank[iter1][iter2][iter3] = 0;
       }
     }
   }
-  CHECK_FOR_CANCELED(MicroGen3D)
+  CHECK_FOR_CANCELED(ReconstructionFunc)
   progressMessage(AIM_STRING("homogenize_grains"), 21 );
-  m_microgen->homogenize_grains();
+  m->homogenize_grains();
 
-  CHECK_FOR_CANCELED(MicroGen3D)
+  CHECK_FOR_CANCELED(ReconstructionFunc)
   progressMessage(AIM_STRING("assign_badpoints"), 24 );
-  m_microgen->assign_badpoints();
+  m->assign_badpoints();
 
-  CHECK_FOR_CANCELED(MicroGen3D)
+  CHECK_FOR_CANCELED(ReconstructionFunc)
   progressMessage(AIM_STRING("find_neighbors"), 27 );
-  m_microgen->find_neighbors();
+  m->find_neighbors();
 
-  CHECK_FOR_CANCELED(MicroGen3D)
+  CHECK_FOR_CANCELED(ReconstructionFunc)
   progressMessage(AIM_STRING("merge_containedgrains"), 30 );
-  m_microgen->merge_containedgrains();
+  m->merge_containedgrains();
 
-  CHECK_FOR_CANCELED(MicroGen3D)
+  CHECK_FOR_CANCELED(ReconstructionFunc)
   progressMessage(AIM_STRING("renumber_grains2"), 33 );
-  numgrains = m_microgen->renumber_grains2();
+  numgrains = m->renumber_grains2();
 
-  CHECK_FOR_CANCELED(MicroGen3D)
-  progressMessage(AIM_STRING("write_volume1"), 36 );
-  m_microgen->write_volume1(reconFile);
+  CHECK_FOR_CANCELED(ReconstructionFunc)
+  progressMessage(AIM_STRING("write_volume"), 36 );
+  m->write_volume(reconFile);
   if (m_MergeTwins == 1)
   {
-    m_microgen->merge_twins();
-    m_microgen->characterize_twins();
+    m->merge_twins();
+    m->characterize_twins();
   }
 
-  CHECK_FOR_CANCELED(MicroGen3D)
+  CHECK_FOR_CANCELED(ReconstructionFunc)
   progressMessage(AIM_STRING("renumber_grains3"), 39 );
-  numgrains = m_microgen->renumber_grains3();
+  numgrains = m->renumber_grains3();
 
-  CHECK_FOR_CANCELED(MicroGen3D)
-  progressMessage(AIM_STRING("Writing Reconstruction File"), 42 );
-  m_microgen->write_volume2(reconFile);
+  CHECK_FOR_CANCELED(ReconstructionFunc)
+  progressMessage(AIM_STRING("write_volume"), 42 );
+  m->write_volume(reconFile);
 
-  CHECK_FOR_CANCELED(MicroGen3D)
+  CHECK_FOR_CANCELED(ReconstructionFunc)
   progressMessage(AIM_STRING("find_goodneighbors"), 45 );
-  m_microgen->find_goodneighbors();
+  m->find_goodneighbors();
 
-  CHECK_FOR_CANCELED(MicroGen3D)
+  CHECK_FOR_CANCELED(ReconstructionFunc)
   progressMessage(AIM_STRING("find_centroids"), 48 );
-  m_microgen->find_centroids();
+  m->find_centroids();
 
-  CHECK_FOR_CANCELED(MicroGen3D)
+  CHECK_FOR_CANCELED(ReconstructionFunc)
   progressMessage(AIM_STRING("find_moments"), 51 );
-  m_microgen->find_moments();
+  m->find_moments();
 
-  CHECK_FOR_CANCELED(MicroGen3D)
+  CHECK_FOR_CANCELED(ReconstructionFunc)
   progressMessage(AIM_STRING("find_axes"), 54 );
-  m_microgen->find_axes();
+  m->find_axes();
 
-  CHECK_FOR_CANCELED(MicroGen3D)
+  CHECK_FOR_CANCELED(ReconstructionFunc)
   progressMessage(AIM_STRING("find_vectors"), 57 );
-  m_microgen->find_vectors();
+  m->find_vectors();
 
-  CHECK_FOR_CANCELED(MicroGen3D)
+  CHECK_FOR_CANCELED(ReconstructionFunc)
   progressMessage(AIM_STRING("measure_misorientations"), 60 );
-  m_microgen->measure_misorientations();
+  m->measure_misorientations();
 
-  CHECK_FOR_CANCELED(MicroGen3D)
+  CHECK_FOR_CANCELED(ReconstructionFunc)
   progressMessage(AIM_STRING("find_colors"), 63 );
-  m_microgen->find_colors();
+  m->find_colors();
 
-  CHECK_FOR_CANCELED(MicroGen3D)
+  CHECK_FOR_CANCELED(ReconstructionFunc)
   progressMessage(AIM_STRING("find_convexities"), 66 );
-  m_microgen->find_convexities();
+  m->find_convexities();
 
   std::string  statsFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::StatsFile;
-  std::string  volBinFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::VolBinFile;
-  std::string  bOverABinsFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::BOverABinsFile;
-  std::string  cOverABinsFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::COverABinsFile;
-  std::string  cOverBBinsFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::COverBBinsFile;
-  std::string  svnFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::SVNFile;
-  std::string  svsFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::SVSFile;
+//  std::string  volBinFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::VolBinFile;
+//  std::string  bOverABinsFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::BOverABinsFile;
+//  std::string  cOverABinsFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::COverABinsFile;
+//  std::string  cOverBBinsFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::COverBBinsFile;
+//  std::string  svnFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::SVNFile;
+//  std::string  svsFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::SVSFile;
   std::string  misorientationFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::MisorientationBinsFile;
   std::string  microBinsFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::MicroBinsFile;
 
-  CHECK_FOR_CANCELED(MicroGen3D)
+  CHECK_FOR_CANCELED(ReconstructionFunc)
   progressMessage(AIM_STRING("Writing Statistics"), 69 );
-  m_microgen->volume_stats(statsFile,
-                         volBinFile,
-                         bOverABinsFile,
-                         cOverABinsFile,
-                         cOverBBinsFile,
-                         svnFile,
-                         svsFile,
-                         misorientationFile,
-                         microBinsFile);
+  m->volume_stats(statsFile,misorientationFile,microBinsFile);
 
-  CHECK_FOR_CANCELED(MicroGen3D)
-  progressMessage(AIM_STRING("Writing Reconstruction File"), 72 );
-  m_microgen->write_volume2(reconFile);
+  CHECK_FOR_CANCELED(ReconstructionFunc)
+  progressMessage(AIM_STRING("write_volume"), 72 );
+  m->write_volume(reconFile);
 
   std::string reconVisFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::ReconstructedVisualizationFile;
   std::string grainsFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::GrainsFile;
@@ -303,25 +297,25 @@ void Reconstruction::compute()
   std::string eulerFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::EulerAnglesFile;
   std::string boundaryFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::BoundaryCentersFile;
 
-  CHECK_FOR_CANCELED(MicroGen3D)
+  CHECK_FOR_CANCELED(ReconstructionFunc)
   progressMessage(AIM_STRING("Writing Reconstruction Visualization File"), 75 );
-  m_microgen->create_visualization(reconVisFile);
+  m->create_visualization(reconVisFile);
 
-  CHECK_FOR_CANCELED(MicroGen3D)
+  CHECK_FOR_CANCELED(ReconstructionFunc)
   progressMessage(AIM_STRING("Writing Grains File"), 78 );
-  m_microgen->write_grains(grainsFile);
+  m->write_grains(grainsFile);
 
-  CHECK_FOR_CANCELED(MicroGen3D)
+  CHECK_FOR_CANCELED(ReconstructionFunc)
   progressMessage(AIM_STRING("Writing Axis Orientation File"), 81 );
-  m_microgen->write_axisorientations(axisFile);
+  m->write_axisorientations(axisFile);
 
-  CHECK_FOR_CANCELED(MicroGen3D)
+  CHECK_FOR_CANCELED(ReconstructionFunc)
   progressMessage(AIM_STRING("Writing Euler Angle File"), 84 );
-  m_microgen->write_eulerangles(eulerFile);
+  m->write_eulerangles(eulerFile);
 
-  CHECK_FOR_CANCELED(MicroGen3D)
+  CHECK_FOR_CANCELED(ReconstructionFunc)
   progressMessage(AIM_STRING("Finding and Writing Boundary Centers"), 99 );
-  m_microgen->find_boundarycenters(boundaryFile);
+  m->find_boundarycenters(boundaryFile);
 
   progressMessage(AIM_STRING("Reconstruction Complete"), 100 );
 
@@ -352,11 +346,11 @@ void Reconstruction::on_CancelWorker()
 {
   // std::cout << "Reconstruction::cancelWorker()" << std::endl;
   this->m_Cancel = true;
-  if (m_microgen.get() != NULL)
+  if (m.get() != NULL)
   {
-   if (m_microgen->m_angFileHelper.get() != NULL)
+   if (m->m_angFileHelper.get() != NULL)
    {
-     m_microgen->m_angFileHelper->setCancel(true);
+     m->m_angFileHelper->setCancel(true);
    }
   }
 }
