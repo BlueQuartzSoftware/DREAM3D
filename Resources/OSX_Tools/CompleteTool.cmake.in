@@ -70,6 +70,6 @@ file(MAKE_DIRECTORY "@CMAKE_INSTALL_PREFIX@/Frameworks")
 
 
 # -- Run the BundleUtilities cmake code
-include(@AIMBlades_RESOURCES_DIR@/OSX_Tools/ToolUtilities.cmake)
+include(@AIMRepresentation_RESOURCES_DIR@/OSX_Tools/ToolUtilities.cmake)
 deploy_tool("@CMAKE_INSTALL_PREFIX@/bin/@target@" "${PluginList}" "Plugins")
 

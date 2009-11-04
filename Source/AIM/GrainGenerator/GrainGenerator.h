@@ -27,7 +27,18 @@
 #endif
 
 
-
+/**
+* @class GrainGenerator GrainGenerator.h AIM/GrainGenerator/GrainGenerator.h
+* @brief This class serves as the main entry point to execute the Synthetic Grain
+* generation. When used from a Qt framework this class inherits from QThread thus making this class able to be excuted
+* on another thread of execution so that the User interface does not lock up while the code executes. The main method
+* to implement is the 'compute()' method. This method will be called from the 'run()' method during the execution of
+* the thread. The normal constructor is protected so that the end programmer must instantiate this class through the
+* static "New()" method which will produce a boost::shared_ptr instance.
+* @author Michael A. Jackson for BlueQuartz Software, Dr. Michael Groeber, USAFRL
+* @date Nov 3, 2009
+* @version 1.0
+*/
 class GrainGenerator
 #ifdef AIM_USE_QT
  : public QThread
@@ -88,7 +99,6 @@ Q_OBJECT
      * @brief Slot to receive a signal to cancel the operation
      */
       void on_CancelWorker();
-
 
 #endif
       /**

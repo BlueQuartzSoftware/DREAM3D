@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>535</width>
-    <height>652</height>
+    <height>644</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -193,10 +193,10 @@
            </widget>
           </item>
           <item>
-           <widget class="QLineEdit" name="outputDir"/>
+           <widget class="QLineEdit" name="rec_OutputDir"/>
           </item>
           <item>
-           <widget class="QPushButton" name="outputDirBtn">
+           <widget class="QPushButton" name="rec_OutputDirBtn">
             <property name="text">
              <string>Select</string>
             </property>
@@ -206,6 +206,12 @@
         </item>
         <item>
          <layout class="QGridLayout" name="gridLayout_4">
+          <property name="horizontalSpacing">
+           <number>2</number>
+          </property>
+          <property name="verticalSpacing">
+           <number>3</number>
+          </property>
           <item row="0" column="0" colspan="2">
            <widget class="QLabel" name="label_12">
             <property name="text">
@@ -225,7 +231,7 @@
              <number>4</number>
             </property>
             <item row="0" column="0">
-             <widget class="QLabel" name="ReconstructedDataFileIcon">
+             <widget class="QLabel" name="rec_ReconstructedDataFileIcon">
               <property name="text">
                <string/>
               </property>
@@ -235,14 +241,14 @@
              </widget>
             </item>
             <item row="0" column="1">
-             <widget class="QLabel" name="ReconstructedDataFile">
+             <widget class="QLabel" name="rec_ReconstructedDataFile">
               <property name="text">
-               <string>TextLabel</string>
+               <string>reconstructed_data.txt</string>
               </property>
              </widget>
             </item>
             <item row="1" column="0">
-             <widget class="QLabel" name="VolBinFileIcon">
+             <widget class="QLabel" name="rec_VolBinFileIcon">
               <property name="text">
                <string/>
               </property>
@@ -252,14 +258,14 @@
              </widget>
             </item>
             <item row="1" column="1">
-             <widget class="QLabel" name="VolBinFile">
+             <widget class="QLabel" name="rec_VolBinFile">
               <property name="text">
-               <string>TextLabel</string>
+               <string>volbins.txt</string>
               </property>
              </widget>
             </item>
             <item row="2" column="0">
-             <widget class="QLabel" name="BOverABinsFileIcon">
+             <widget class="QLabel" name="rec_BOverABinsFileIcon">
               <property name="text">
                <string/>
               </property>
@@ -269,14 +275,14 @@
              </widget>
             </item>
             <item row="2" column="1">
-             <widget class="QLabel" name="BOverABinsFile">
+             <widget class="QLabel" name="rec_BOverABinsFile">
               <property name="text">
-               <string>TextLabel</string>
+               <string>boverabins.txt</string>
               </property>
              </widget>
             </item>
             <item row="3" column="0">
-             <widget class="QLabel" name="COverABinsFileIcon">
+             <widget class="QLabel" name="rec_COverABinsFileIcon">
               <property name="text">
                <string/>
               </property>
@@ -286,14 +292,14 @@
              </widget>
             </item>
             <item row="3" column="1">
-             <widget class="QLabel" name="COverABinsFile">
+             <widget class="QLabel" name="rec_COverABinsFile">
               <property name="text">
-               <string>TextLabel</string>
+               <string>coverabins.txt</string>
               </property>
              </widget>
             </item>
             <item row="4" column="0">
-             <widget class="QLabel" name="COverBBinsFileIcon">
+             <widget class="QLabel" name="rec_COverBBinsFileIcon">
               <property name="text">
                <string/>
               </property>
@@ -303,14 +309,14 @@
              </widget>
             </item>
             <item row="4" column="1">
-             <widget class="QLabel" name="COverBBinsFile">
+             <widget class="QLabel" name="rec_COverBBinsFile">
               <property name="text">
-               <string>TextLabel</string>
+               <string>coverbbins.txt</string>
               </property>
              </widget>
             </item>
             <item row="5" column="0">
-             <widget class="QLabel" name="SVNFileIcon">
+             <widget class="QLabel" name="rec_SVNFileIcon">
               <property name="text">
                <string/>
               </property>
@@ -320,14 +326,14 @@
              </widget>
             </item>
             <item row="5" column="1">
-             <widget class="QLabel" name="SVNFile">
+             <widget class="QLabel" name="rec_SVNFile">
               <property name="text">
-               <string>TextLabel</string>
+               <string>svn.txt</string>
               </property>
              </widget>
             </item>
             <item row="6" column="0">
-             <widget class="QLabel" name="SVSFileIcon">
+             <widget class="QLabel" name="rec_SVSFileIcon">
               <property name="text">
                <string/>
               </property>
@@ -337,14 +343,14 @@
              </widget>
             </item>
             <item row="6" column="1">
-             <widget class="QLabel" name="SVSFile">
+             <widget class="QLabel" name="rec_SVSFile">
               <property name="text">
-               <string>TextLabel</string>
+               <string>svs.txt</string>
               </property>
              </widget>
             </item>
             <item row="7" column="0">
-             <widget class="QLabel" name="MisorientationBinsFileIcon">
+             <widget class="QLabel" name="rec_MisorientationBinsFileIcon">
               <property name="text">
                <string/>
               </property>
@@ -354,9 +360,26 @@
              </widget>
             </item>
             <item row="7" column="1">
-             <widget class="QLabel" name="MisorientationBinsFile">
+             <widget class="QLabel" name="rec_MisorientationBinsFile">
               <property name="text">
-               <string>TextLabel</string>
+               <string>misobins.txt</string>
+              </property>
+             </widget>
+            </item>
+            <item row="8" column="0">
+             <widget class="QLabel" name="rec_SeNBinsFileIcon">
+              <property name="text">
+               <string/>
+              </property>
+              <property name="pixmap">
+               <pixmap resource="../../../../Resources/icons/images/Icons.qrc">:/Delete-16x16.png</pixmap>
+              </property>
+             </widget>
+            </item>
+            <item row="8" column="1">
+             <widget class="QLabel" name="rec_SeNBinsFile">
+              <property name="text">
+               <string>seNbins.txt</string>
               </property>
              </widget>
             </item>
@@ -368,7 +391,7 @@
              <number>4</number>
             </property>
             <item row="0" column="0">
-             <widget class="QLabel" name="MicroBinsFileIcon">
+             <widget class="QLabel" name="rec_MicroBinsFileIcon">
               <property name="text">
                <string/>
               </property>
@@ -378,14 +401,14 @@
              </widget>
             </item>
             <item row="0" column="1">
-             <widget class="QLabel" name="MicroBinsFile">
+             <widget class="QLabel" name="rec_MicroBinsFile">
               <property name="text">
-               <string>TextLabel</string>
+               <string>microbins.txt</string>
               </property>
              </widget>
             </item>
             <item row="1" column="0">
-             <widget class="QLabel" name="StatsFileIcon">
+             <widget class="QLabel" name="rec_StatsFileIcon">
               <property name="text">
                <string/>
               </property>
@@ -395,14 +418,14 @@
              </widget>
             </item>
             <item row="1" column="1">
-             <widget class="QLabel" name="StatsFile">
+             <widget class="QLabel" name="rec_StatsFile">
               <property name="text">
-               <string>TextLabel</string>
+               <string>stats.txt</string>
               </property>
              </widget>
             </item>
             <item row="2" column="0">
-             <widget class="QLabel" name="ReconstructedVisualizationFileIcon">
+             <widget class="QLabel" name="rec_ReconstructedVisualizationFileIcon">
               <property name="text">
                <string/>
               </property>
@@ -412,14 +435,14 @@
              </widget>
             </item>
             <item row="2" column="1">
-             <widget class="QLabel" name="ReconstructedVisualizationFile">
+             <widget class="QLabel" name="rec_ReconstructedVisualizationFile">
               <property name="text">
-               <string>TextLabel</string>
+               <string>reconstructed_visualization.vtk</string>
               </property>
              </widget>
             </item>
             <item row="3" column="0">
-             <widget class="QLabel" name="GrainsFileIcon">
+             <widget class="QLabel" name="rec_GrainsFileIcon">
               <property name="text">
                <string/>
               </property>
@@ -429,14 +452,14 @@
              </widget>
             </item>
             <item row="3" column="1">
-             <widget class="QLabel" name="GrainsFile">
+             <widget class="QLabel" name="rec_GrainsFile">
               <property name="text">
-               <string>TextLabel</string>
+               <string>grains.txt</string>
               </property>
              </widget>
             </item>
             <item row="4" column="0">
-             <widget class="QLabel" name="BoundaryCentersFileIcon">
+             <widget class="QLabel" name="rec_BoundaryCentersFileIcon">
               <property name="text">
                <string/>
               </property>
@@ -446,14 +469,14 @@
              </widget>
             </item>
             <item row="4" column="1">
-             <widget class="QLabel" name="BoundaryCentersFile">
+             <widget class="QLabel" name="rec_BoundaryCentersFile">
               <property name="text">
-               <string>TextLabel</string>
+               <string>boundarycenters.txt</string>
               </property>
              </widget>
             </item>
             <item row="5" column="0">
-             <widget class="QLabel" name="AxisOrientationsFileIcon">
+             <widget class="QLabel" name="rec_AxisOrientationsFileIcon">
               <property name="text">
                <string/>
               </property>
@@ -463,14 +486,14 @@
              </widget>
             </item>
             <item row="5" column="1">
-             <widget class="QLabel" name="AxisOrientationsFile">
+             <widget class="QLabel" name="rec_AxisOrientationsFile">
               <property name="text">
-               <string>TextLabel</string>
+               <string>axisorientations.txt</string>
               </property>
              </widget>
             </item>
             <item row="6" column="0">
-             <widget class="QLabel" name="EulerAnglesFileIcon">
+             <widget class="QLabel" name="rec_EulerAnglesFileIcon">
               <property name="text">
                <string/>
               </property>
@@ -480,9 +503,26 @@
              </widget>
             </item>
             <item row="6" column="1">
-             <widget class="QLabel" name="EulerAnglesFile">
+             <widget class="QLabel" name="rec_EulerAnglesFile">
               <property name="text">
-               <string>TextLabel</string>
+               <string>eulerangles.txt</string>
+              </property>
+             </widget>
+            </item>
+            <item row="7" column="0">
+             <widget class="QLabel" name="rec_ReconstructedDxFileIcon">
+              <property name="text">
+               <string/>
+              </property>
+              <property name="pixmap">
+               <pixmap resource="../../../../Resources/icons/images/Icons.qrc">:/Delete-16x16.png</pixmap>
+              </property>
+             </widget>
+            </item>
+            <item row="7" column="1">
+             <widget class="QLabel" name="rec_ReconstructedDxFile">
+              <property name="text">
+               <string>reconstructed_data.dx</string>
               </property>
              </widget>
             </item>
@@ -534,7 +574,7 @@
             </property>
             <property name="sizeHint" stdset="0">
              <size>
-              <width>20</width>
+              <width>60</width>
               <height>20</height>
              </size>
             </property>
@@ -583,6 +623,22 @@
              <number>8</number>
             </property>
            </widget>
+          </item>
+          <item>
+           <spacer name="horizontalSpacer_6">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeType">
+             <enum>QSizePolicy::Fixed</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>20</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
           </item>
           <item>
            <widget class="QLabel" name="label_9">
@@ -655,6 +711,22 @@
              <double>5.000000000000000</double>
             </property>
            </widget>
+          </item>
+          <item>
+           <spacer name="horizontalSpacer_7">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeType">
+             <enum>QSizePolicy::Fixed</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>20</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
           </item>
           <item>
            <widget class="QComboBox" name="crystalStructure">
@@ -922,6 +994,9 @@
         </item>
         <item>
          <layout class="QGridLayout" name="gridLayout_5">
+          <property name="spacing">
+           <number>3</number>
+          </property>
           <item row="0" column="0" colspan="2">
            <widget class="QLabel" name="label_13">
             <property name="text">
@@ -941,7 +1016,7 @@
              <number>4</number>
             </property>
             <item row="0" column="0">
-             <widget class="QLabel" name="VolBinFileIcon_2">
+             <widget class="QLabel" name="gg_VolBinFileIcon">
               <property name="text">
                <string/>
               </property>
@@ -951,14 +1026,14 @@
              </widget>
             </item>
             <item row="0" column="1">
-             <widget class="QLabel" name="VolBinFile_2">
+             <widget class="QLabel" name="gg_VolBinFile">
               <property name="text">
                <string>VolBin</string>
               </property>
              </widget>
             </item>
             <item row="1" column="0">
-             <widget class="QLabel" name="BOverABinsFileIcon_2">
+             <widget class="QLabel" name="gg_BOverABinsFileIcon">
               <property name="text">
                <string/>
               </property>
@@ -968,14 +1043,14 @@
              </widget>
             </item>
             <item row="1" column="1">
-             <widget class="QLabel" name="BOverABinsFile_2">
+             <widget class="QLabel" name="gg_BOverABinsFile">
               <property name="text">
                <string>BOverABins</string>
               </property>
              </widget>
             </item>
             <item row="2" column="0">
-             <widget class="QLabel" name="COverABinsFileIcon_2">
+             <widget class="QLabel" name="gg_COverABinsFileIcon">
               <property name="text">
                <string/>
               </property>
@@ -985,14 +1060,14 @@
              </widget>
             </item>
             <item row="2" column="1">
-             <widget class="QLabel" name="COverABinsFile_2">
+             <widget class="QLabel" name="gg_COverABinsFile">
               <property name="text">
                <string>COverABins</string>
               </property>
              </widget>
             </item>
             <item row="3" column="0">
-             <widget class="QLabel" name="COverBBinsFileIcon_2">
+             <widget class="QLabel" name="gg_COverBBinsFileIcon">
               <property name="text">
                <string/>
               </property>
@@ -1002,14 +1077,14 @@
              </widget>
             </item>
             <item row="3" column="1">
-             <widget class="QLabel" name="COverBBinsFile_2">
+             <widget class="QLabel" name="gg_COverBBinsFile">
               <property name="text">
                <string>COverBBins</string>
               </property>
              </widget>
             </item>
             <item row="4" column="0">
-             <widget class="QLabel" name="SVNFileIcon_2">
+             <widget class="QLabel" name="gg_SVNFileIcon">
               <property name="text">
                <string/>
               </property>
@@ -1019,14 +1094,14 @@
              </widget>
             </item>
             <item row="4" column="1">
-             <widget class="QLabel" name="SVNFile_2">
+             <widget class="QLabel" name="gg_SVNFile">
               <property name="text">
                <string>SVNFile</string>
               </property>
              </widget>
             </item>
             <item row="5" column="0">
-             <widget class="QLabel" name="SVSFileIcon_2">
+             <widget class="QLabel" name="gg_SVSFileIcon">
               <property name="text">
                <string/>
               </property>
@@ -1036,7 +1111,7 @@
              </widget>
             </item>
             <item row="5" column="1">
-             <widget class="QLabel" name="SVSFile_2">
+             <widget class="QLabel" name="gg_SVSFile">
               <property name="text">
                <string>SVSFile</string>
               </property>
@@ -1053,7 +1128,7 @@
              <number>4</number>
             </property>
             <item row="0" column="0">
-             <widget class="QLabel" name="MicroBinsFileIcon_2">
+             <widget class="QLabel" name="gg_MicroBinsFileIcon">
               <property name="text">
                <string/>
               </property>
@@ -1063,14 +1138,14 @@
              </widget>
             </item>
             <item row="0" column="1">
-             <widget class="QLabel" name="MicroBinsFile_2">
+             <widget class="QLabel" name="gg_MicroBinsFile">
               <property name="text">
                <string>MicroBins</string>
               </property>
              </widget>
             </item>
             <item row="1" column="0">
-             <widget class="QLabel" name="SeNBinsFileIcon_2">
+             <widget class="QLabel" name="gg_SeNBinsFileIcon">
               <property name="text">
                <string/>
               </property>
@@ -1080,14 +1155,14 @@
              </widget>
             </item>
             <item row="1" column="1">
-             <widget class="QLabel" name="SeNBinsFile_2">
+             <widget class="QLabel" name="gg_SeNBinsFile">
               <property name="text">
                <string>seNBins</string>
               </property>
              </widget>
             </item>
             <item row="2" column="0">
-             <widget class="QLabel" name="MisorientationBinsFileIcon_2">
+             <widget class="QLabel" name="gg_MisorientationBinsFileIcon">
               <property name="text">
                <string/>
               </property>
@@ -1097,14 +1172,14 @@
              </widget>
             </item>
             <item row="2" column="1">
-             <widget class="QLabel" name="MisorientationBinsFile_2">
+             <widget class="QLabel" name="gg_MisorientationBinsFile">
               <property name="text">
                <string>MisorientationBins</string>
               </property>
              </widget>
             </item>
             <item row="3" column="0">
-             <widget class="QLabel" name="AxisOrientationsFileIcon_2">
+             <widget class="QLabel" name="gg_AxisOrientationsFileIcon">
               <property name="text">
                <string/>
               </property>
@@ -1114,14 +1189,14 @@
              </widget>
             </item>
             <item row="3" column="1">
-             <widget class="QLabel" name="AxisOrientationsFile_2">
+             <widget class="QLabel" name="gg_AxisOrientationsFile">
               <property name="text">
                <string>AxisOrientations</string>
               </property>
              </widget>
             </item>
             <item row="4" column="0">
-             <widget class="QLabel" name="EulerAnglesFileIcon_2">
+             <widget class="QLabel" name="gg_EulerAnglesFileIcon">
               <property name="text">
                <string/>
               </property>
@@ -1131,7 +1206,7 @@
              </widget>
             </item>
             <item row="4" column="1">
-             <widget class="QLabel" name="EulerAnglesFile_2">
+             <widget class="QLabel" name="gg_EulerAnglesFile">
               <property name="text">
                <string>EulerAngles</string>
               </property>
@@ -1161,6 +1236,9 @@
         </item>
         <item>
          <layout class="QGridLayout" name="gridLayout_8">
+          <property name="spacing">
+           <number>3</number>
+          </property>
           <item row="0" column="0" colspan="2">
            <widget class="QLabel" name="label_23">
             <property name="text">
@@ -1180,7 +1258,7 @@
              <number>4</number>
             </property>
             <item row="0" column="0">
-             <widget class="QLabel" name="CubeFileIcon_3">
+             <widget class="QLabel" name="gg_CubeFileIcon">
               <property name="text">
                <string/>
               </property>
@@ -1190,14 +1268,21 @@
              </widget>
             </item>
             <item row="0" column="1">
-             <widget class="QLabel" name="CubeFile_3">
+             <widget class="QLabel" name="gg_CubeFile">
               <property name="text">
-               <string>Cube</string>
+               <string>CubeVTK</string>
               </property>
              </widget>
             </item>
-            <item row="1" column="0">
-             <widget class="QLabel" name="AnalysisFileIcon_3">
+            <item row="3" column="1">
+             <widget class="QLabel" name="gg_AnalysisFile">
+              <property name="text">
+               <string>Analysis</string>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="0">
+             <widget class="QLabel" name="gg_AnalysisFileIcon">
               <property name="text">
                <string/>
               </property>
@@ -1206,10 +1291,20 @@
               </property>
              </widget>
             </item>
-            <item row="1" column="1">
-             <widget class="QLabel" name="AnalysisFile_3">
+            <item row="2" column="0">
+             <widget class="QLabel" name="gg_CubeDxFileIcon">
               <property name="text">
-               <string>Analysis</string>
+               <string/>
+              </property>
+              <property name="pixmap">
+               <pixmap resource="../../../../Resources/icons/images/Icons.qrc">:/Delete-16x16.png</pixmap>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="1">
+             <widget class="QLabel" name="gg_CubeDxFile">
+              <property name="text">
+               <string>CubeDx</string>
               </property>
              </widget>
             </item>
@@ -1224,7 +1319,7 @@
              <number>4</number>
             </property>
             <item row="0" column="0">
-             <widget class="QLabel" name="GrainsFileIcon_3">
+             <widget class="QLabel" name="gg_GrainsFileIcon">
               <property name="text">
                <string/>
               </property>
@@ -1234,14 +1329,14 @@
              </widget>
             </item>
             <item row="0" column="1">
-             <widget class="QLabel" name="GrainsFile_3">
+             <widget class="QLabel" name="gg_GrainsFile">
               <property name="text">
                <string>Grains</string>
               </property>
              </widget>
             </item>
             <item row="1" column="0">
-             <widget class="QLabel" name="BoundaryCentersFileIcon_3">
+             <widget class="QLabel" name="gg_BoundaryCentersFileIcon">
               <property name="text">
                <string/>
               </property>
@@ -1251,14 +1346,14 @@
              </widget>
             </item>
             <item row="1" column="1">
-             <widget class="QLabel" name="BoundaryCentersFile_3">
+             <widget class="QLabel" name="gg_BoundaryCentersFile">
               <property name="text">
                <string>BoundaryCenters</string>
               </property>
              </widget>
             </item>
             <item row="2" column="0">
-             <widget class="QLabel" name="VolumeFileIcon_3">
+             <widget class="QLabel" name="gg_VolumeFileIcon">
               <property name="text">
                <string/>
               </property>
@@ -1268,7 +1363,7 @@
              </widget>
             </item>
             <item row="2" column="1">
-             <widget class="QLabel" name="VolumeFile_3">
+             <widget class="QLabel" name="gg_VolumeFile">
               <property name="text">
                <string>Volume</string>
               </property>
@@ -1355,7 +1450,7 @@
           <item row="0" column="2">
            <widget class="QLineEdit" name="sm_DxFile">
             <property name="text">
-             <string>*.dx, *.vtk</string>
+             <string>*.dx</string>
             </property>
            </widget>
           </item>
@@ -1500,6 +1595,9 @@
             <property name="pixmap">
              <pixmap resource="../../../../Resources/icons/images/Icons.qrc">:/Delete-16x16.png</pixmap>
             </property>
+            <property name="alignment">
+             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+            </property>
            </widget>
           </item>
           <item row="2" column="1">
@@ -1516,6 +1614,9 @@
             </property>
             <property name="pixmap">
              <pixmap resource="../../../../Resources/icons/images/Icons.qrc">:/Delete-16x16.png</pixmap>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
             </property>
            </widget>
           </item>
@@ -1541,6 +1642,9 @@
             <property name="pixmap">
              <pixmap resource="../../../../Resources/icons/images/Icons.qrc">:/Delete-16x16.png</pixmap>
             </property>
+            <property name="alignment">
+             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+            </property>
            </widget>
           </item>
           <item row="3" column="2">
@@ -1550,6 +1654,9 @@
             </property>
             <property name="pixmap">
              <pixmap resource="../../../../Resources/icons/images/Icons.qrc">:/Delete-16x16.png</pixmap>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
             </property>
            </widget>
           </item>
@@ -2020,7 +2127,7 @@
             <item row="0" column="1">
              <widget class="QLabel" name="vm_MeshFile">
               <property name="text">
-               <string>Label</string>
+               <string>meshFile</string>
               </property>
              </widget>
             </item>
@@ -2037,7 +2144,7 @@
             <item row="1" column="1">
              <widget class="QLabel" name="vm_MeshFile2">
               <property name="text">
-               <string>Label</string>
+               <string>meshFile2</string>
               </property>
              </widget>
             </item>
@@ -2064,7 +2171,7 @@
             <item row="0" column="1">
              <widget class="QLabel" name="vm_ElementQualityFile">
               <property name="text">
-               <string>Label</string>
+               <string>ElementQuality File</string>
               </property>
              </widget>
             </item>
@@ -2081,7 +2188,7 @@
             <item row="1" column="1">
              <widget class="QLabel" name="vm_VoxelsFile">
               <property name="text">
-               <string>Label</string>
+               <string>Voxels File</string>
               </property>
              </widget>
             </item>
@@ -2185,8 +2292,8 @@
   <tabstop>zStartIndex</tabstop>
   <tabstop>zEndIndex</tabstop>
   <tabstop>zSpacing</tabstop>
-  <tabstop>outputDir</tabstop>
-  <tabstop>outputDirBtn</tabstop>
+  <tabstop>rec_OutputDir</tabstop>
+  <tabstop>rec_OutputDirBtn</tabstop>
   <tabstop>mergeTwins</tabstop>
   <tabstop>alreadyFormed</tabstop>
   <tabstop>minAllowedGrainSize</tabstop>

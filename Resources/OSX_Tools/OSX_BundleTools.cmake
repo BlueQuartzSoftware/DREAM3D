@@ -4,8 +4,8 @@ macro(MakeOSXBundleApp target binary_dir osx_tools_dir)
     set(binary_dir ${binary_dir})
     set(osx_tools_dir ${osx_tools_dir})
 
-  SET (OSX_MAKE_STANDALONE_BUNDLE_CMAKE_SCRIPT "${binary_dir}/${target}_OSX_MakeStandAloneBundle.cmake")
-  SET (OSX_MAKE_STANDALONE_BUNDLE_BASH_SCRIPT "${binary_dir}/${target}_OSX_MakeStandAloneBundle.sh")
+  SET (OSX_MAKE_STANDALONE_BUNDLE_CMAKE_SCRIPT "${binary_dir}/OS_X_Scripts/${target}_OSX_MakeStandAloneBundle.cmake")
+  SET (OSX_MAKE_STANDALONE_BUNDLE_BASH_SCRIPT "${binary_dir}/OS_X_Scripts/${target}_OSX_MakeStandAloneBundle.sh")
 
   CONFIGURE_FILE("${osx_tools_dir}/CompleteBundle.cmake.in"
     "${OSX_MAKE_STANDALONE_BUNDLE_CMAKE_SCRIPT}" @ONLY IMMEDIATE)
@@ -21,7 +21,7 @@ macro(MakeOSXTool target binary_dir osx_tools_dir)
     set(binary_dir ${binary_dir})
     set(osx_tools_dir ${osx_tools_dir})
 
-  SET (OSX_MAKE_STANDALONE_TOOL_CMAKE_SCRIPT "${binary_dir}/${target}_OSX_MakeStandAloneTool.cmake")
+  SET (OSX_MAKE_STANDALONE_TOOL_CMAKE_SCRIPT "${binary_dir}/OS_X_Scripts/${target}_OSX_MakeStandAloneTool.cmake")
 
   CONFIGURE_FILE("${osx_tools_dir}/CompleteTool.cmake.in"
     "${OSX_MAKE_STANDALONE_TOOL_CMAKE_SCRIPT}" @ONLY IMMEDIATE)

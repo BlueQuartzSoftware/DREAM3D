@@ -65,14 +65,14 @@ QThread(parent),
 //
 // -----------------------------------------------------------------------------
 Reconstruction::Reconstruction() :
-  m_InputDirectory("."), m_OutputDirectory("."),
-  m_AngFilePrefix("Slice_"), m_AngSeriesMaxSlice(3),
-      m_ZStartIndex(0), m_ZEndIndex(0),
-  m_ZResolution(0.25),
-      m_MergeTwins(false), m_MinAllowedGrainSize(0.0),
-      m_MinSeedConfidence(0.0), m_MisorientationTolerance(0.0),
-      m_CrystalStructure(AIM::Representation::Hexagonal),
-      m_AlreadyFormed(false)
+m_InputDirectory("."), m_OutputDirectory("."),
+m_AngFilePrefix("Slice_"), m_AngSeriesMaxSlice(3),
+m_ZStartIndex(0), m_ZEndIndex(0),
+m_ZResolution(0.25),
+m_MergeTwins(false), m_MinAllowedGrainSize(0.0),
+m_MinSeedConfidence(0.0), m_MisorientationTolerance(0.0),
+m_CrystalStructure(AIM::Representation::Hexagonal),
+m_AlreadyFormed(false)
 {
 
 }
