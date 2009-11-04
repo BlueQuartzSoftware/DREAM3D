@@ -18,6 +18,13 @@
 #include <MXA/Utilities/MXAFileSystemPath.h>
 
 
+#define CREATE_INPUT_FILENAME(f, n)\
+    std::string f = m_InputDirectory + MXAFileSystemPath::Separator + n;\
+    f = MXAFileSystemPath::toNativeSeparators(f);
+
+#define CREATE_OUTPUT_FILENAME(f, n)\
+    std::string f = m_InputDirectory + MXAFileSystemPath::Separator + n;\
+    f = MXAFileSystemPath::toNativeSeparators(f);
 
 #ifdef AIM_USE_QT
 
@@ -48,8 +55,10 @@ GrainGenerator::Pointer GrainGenerator::New( QObject* parent)
 // -----------------------------------------------------------------------------
 GrainGenerator::GrainGenerator( QObject* parent) :
 QThread(parent),
-  m_InputDirectory("."), m_OutputDirectory("."),
-   m_ErrorCondition(0),m_Cancel(false)
+m_InputDirectory("."),
+m_OutputDirectory("."),
+m_ErrorCondition(0),
+m_Cancel(false)
 {
 
 }
@@ -57,7 +66,10 @@ QThread(parent),
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-GrainGenerator::GrainGenerator()
+GrainGenerator::GrainGenerator() :
+m_InputDirectory("."),
+m_OutputDirectory("."),
+m_ErrorCondition(0)
 {
 }
 #endif
@@ -71,7 +83,9 @@ GrainGenerator::~GrainGenerator()
 }
 
 #if AIM_USE_QT
-
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void GrainGenerator::run()
 {
   jackson_compute();
@@ -98,21 +112,11 @@ void GrainGenerator::jackson_compute()
 
 }
 
-
-#define CREATE_INPUT_FILENAME(f, n)\
-    std::string f = m_InputDirectory + MXAFileSystemPath::Separator + n;\
-    f = MXAFileSystemPath::toNativeSeparators(f);
-
-#define CREATE_OUTPUT_FILENAME(f, n)\
-    std::string f = m_InputDirectory + MXAFileSystemPath::Separator + n;\
-    f = MXAFileSystemPath::toNativeSeparators(f);
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void GrainGenerator::compute()
 {
-
   CREATE_INPUT_FILENAME(readname1, AIM::Representation::VolBinFile)
   CREATE_INPUT_FILENAME(readname2, AIM::Representation::BOverABinsFile)
   CREATE_INPUT_FILENAME(readname3, AIM::Representation::COverABinsFile)

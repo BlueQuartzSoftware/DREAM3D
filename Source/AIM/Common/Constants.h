@@ -42,6 +42,7 @@ namespace AIM
     const std::string AxisOrientationsFile("axisorientations.txt");//14
     const std::string EulerAnglesFile("eulerangles.txt");//15
     const std::string SeNBinsFile("seNBins.txt");
+    const std::string ReconstructedDxFile("reconstructed_data.dx");
 
     enum CrystalStructure {
         UnknownCrystalStructure = 0,
@@ -50,8 +51,8 @@ namespace AIM
     };
 
     /*  Grain Generator Related */
-
     const std::string CubeFile("cube.vtk");
+    const std::string CubeDxFile("cube.dx");
     const std::string AnalysisFile("analysis.txt");
     const std::string VolumeFile("volume.txt");
 

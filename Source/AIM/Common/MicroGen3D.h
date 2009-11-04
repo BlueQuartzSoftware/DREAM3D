@@ -112,6 +112,13 @@ public:
 	double svs[20][20];
 	double nsdist[20][20];
 
+	// sizes are needed. Dont't change
+	  double eulerrank[180][180][180];
+
+	// sizes are needed. Dont't change
+	  int eulercount[100][100][100];
+
+
 	vector<vector<int> > voxelsvector;
 	vector<vector<int> > neighborvector;
 
@@ -146,11 +153,6 @@ public:
 	/** @brief The number of boundary center objects needed */
 	size_t bcentSize;
 
-// sizes are needed. Dont't change
-	double eulerrank[180][180][180];
-
-// sizes are needed. Dont't change
-  int eulercount[100][100][100];
 
 	void loadSlices();
 	int form_grains();

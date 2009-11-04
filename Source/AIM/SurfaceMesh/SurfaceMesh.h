@@ -30,7 +30,18 @@
 #define AIM_STRING std::string
 #endif
 
-
+/**
+* @class SurfaceMesh SurfaceMesh.h AIM/SurfaceMesh/SurfaceMesh.h
+* @brief This class serves as the main entry point to execute the Surface Mesh
+* codes. When used from a Qt framework this class inherits from QThread thus making this class able to be excuted
+* on another thread of execution so that the User interface does not lock up while the code executes. The main method
+* to implement is the 'compute()' method. This method will be called from the 'run()' method during the execution of
+* the thread. The normal constructor is protected so that the end programmer must instantiate this class through the
+* static "New()" method which will produce a boost::shared_ptr instance.
+* @author Michael A. Jackson for BlueQuartz Software, Dr. Michael Groeber, USAFRL
+* @date Nov 3, 2009
+* @version 1.0
+*/
 class SurfaceMesh
 #ifdef AIM_USE_QT
  : public QThread
@@ -52,8 +63,6 @@ Q_OBJECT
     virtual ~SurfaceMesh();
 
     MXA_INSTANCE_STRING_PROPERTY(DXFile, m_DxFile)
-//    MXA_INSTANCE_STRING_PROPERTY(MeshStatFile, m_MeshStatFile)
-//    MXA_INSTANCE_STRING_PROPERTY(NodesRawFile, m_NodesRawFile)
     MXA_INSTANCE_STRING_PROPERTY(OutputDirectory, m_OutputDirectory)
     MXA_INSTANCE_PROPERTY_m(int, XDim)
     MXA_INSTANCE_PROPERTY_m(int, YDim)
@@ -84,7 +93,6 @@ Q_OBJECT
      * Qt Signals for connections
      */
     signals:
-    //  void workerComplete();
       void updateMessage(QString message);
       void updateProgress(int value);
 
@@ -112,9 +120,6 @@ Q_OBJECT
 #endif
 
   private:
-    //MicroGen3D::Pointer m_microgen;
-
-
 
     SurfaceMesh(const SurfaceMesh&);    // Copy Constructor Not Implemented
     void operator=(const SurfaceMesh&);  // Operator '=' Not Implemented
