@@ -37,7 +37,8 @@ SET (CMAKE_ARCHIVE_OUTPUT_DIRECTORY
 
 
 SET (AIMCommon_SRCS
-    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/MicroGen3D.cpp
+    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/GrainGeneratorFunc.cpp
+    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/ReconstructionFunc.cpp
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Grain.cpp
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Voxel.cpp
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Bin.cpp
@@ -46,7 +47,8 @@ SET (AIMCommon_SRCS
     )
 
 SET (AIMCommon_HDRS
-    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/MicroGen3D.h
+    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/GrainGeneratorFunc.h
+    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/ReconstructionFunc.h
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Grain.h
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Voxel.h
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Bin.h

@@ -20,7 +20,7 @@
 #include <MXA/Common/MXASetGetMacros.h>
 #include <MXA/Common/MXATypes.h>
 #include <AIM/Common/Constants.h>
-#include <AIM/Common/MicroGen3D.h>
+#include <AIM/Common/ReconstructionFunc.h>
 
 #ifdef AIM_USE_QT
 #include <QtCore/QObject>
@@ -116,7 +116,7 @@ Q_OBJECT
 #endif
 
   private:
-    MicroGen3D::Pointer m_microgen;
+    ReconstructionFunc::Pointer m;
 
 
 

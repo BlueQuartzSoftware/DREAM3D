@@ -15,7 +15,7 @@
 #include <MXA/Common/MXASetGetMacros.h>
 #include <MXA/Common/MXATypes.h>
 #include <AIM/Common/Constants.h>
-#include <AIM/Common/MicroGen3D.h>
+#include <AIM/Common/GrainGeneratorFunc.h>
 
 
 #ifdef AIM_USE_QT
@@ -112,7 +112,7 @@ Q_OBJECT
 #endif
 
   private:
-    MicroGen3D::Pointer m;
+    GrainGeneratorFunc::Pointer m;
 
     GrainGenerator(const GrainGenerator&);    // Copy Constructor Not Implemented
     void operator=(const GrainGenerator&);  // Operator '=' Not Implemented

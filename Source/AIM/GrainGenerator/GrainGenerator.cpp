@@ -75,7 +75,7 @@ GrainGenerator::~GrainGenerator()
 void GrainGenerator::run()
 {
   jackson_compute();
-  m = MicroGen3D::NullPointer();  // Clean up the memory
+  m = GrainGeneratorFunc::NullPointer();  // Clean up the memory
 }
 #endif
 
@@ -152,8 +152,8 @@ void GrainGenerator::compute()
   writename4 = "grains.txt";
   writename5 = "volume.txt";
 #endif
-
-   m = MicroGen3D::New();
+#if 0
+   m = GrainGeneratorFunc::New();
    m->numgrains = m_NumGrains;
    m->resx = m_XResolution;
    m->resy = m_YResolution;
@@ -164,10 +164,6 @@ void GrainGenerator::compute()
    m->resz1 = 4 * m->resz;
 
 
-   m->numsizebins = 11;
-   m->numneighbins = 100;
-   m->numdiambins = 1000;
-   m->numshapebins = 1000;
    m->numseNbins = 1001;
    m->nummisobins = 10;
    m->nummicrobins = 10;
@@ -186,14 +182,9 @@ void GrainGenerator::compute()
    inputFile2.close();
    m->gsizes = new int[m->numgrains];
    m->gremovals = new int[m->numgrains];
-#if 0
    m->grains = new Grain[m->numgrains];
    m->tempgrain =  new Grain[m->numgrains];
-   m->diambin =  new Bin[m->numdiambins];
    m->orient = new Orient[m->numorients];
-   m->boverabin =  new Bin[m->numsizebins*m->numshapebins];
-   m->coverabin = new Bin[m->numsizebins*m->numshapebins];
-   m->coverbbin = new Bin[m->numsizebins*m->numshapebins];
    m->seNbin = new Bin[m->numsizebins*m->numseNbins];
    //m->eulercount = new int **[18];
    m->eulerbin = new Bin[18*18*18*100];
@@ -210,24 +201,14 @@ void GrainGenerator::compute()
      }
    }
    m->loadVolData(readname1,m->numdiambins);
-   m->loadboveraData(readname2,m->numshapebins);
-   m->loadcoveraData(readname3,m->numshapebins);
-   m->loadcoverbData(readname4,m->numshapebins);
    m->loadNData(readname5,m->numshapebins);
    m->loadorientData(readname6,m->numorients);
    m->loadeulerData(readname7,m->numeulers);
    int* takencheck = new int[m->numgrains];
    m->generate_grains(m->numgrains);
    m->assign_eulers(m->numgrains);
-//   m->svn = new double *[m->numsizebins];
-//   m->svs = new double *[m->numsizebins];
 //   double** nsdist = new double *[m->numgrains];
 //   double** bcent = new double *[100000];
-   for(int temp = 0; temp < m->numsizebins; temp++)
-   {
-     m->svn[temp] = new double [m->numneighbins];
-     m->svs[temp] = new double [m->numsizebins];
-   }
    for(int temp1 = 0; temp1 < 100000; temp1++)
    {
      bcent[temp1] = new double [5];
@@ -243,12 +224,12 @@ void GrainGenerator::compute()
        nsdist[temp3][temp4] = 0;
      }
    }
-   cout << "grains made" << endl;
-   gridfine = (struct gridpoints *)malloc(((sizex/resx))*((sizey/resy))*((sizez/resz))*sizeof(struct gridpoints));
-   cout << "fine points made" << endl;
-   gridcourse = (struct gridpoints *)malloc(((sizex/resx1))*((sizey/resy1))*((sizez/resz1))*sizeof(struct gridpoints));
-   cout << "coarse points made" << endl;
-   packedgrain = (struct packedgrains *)malloc((numgrains)*sizeof(struct packedgrains));
+//   cout << "grains made" << endl;
+//   gridfine = (struct gridpoints *)malloc(((sizex/resx))*((sizey/resy))*((sizez/resz))*sizeof(struct gridpoints));
+//   cout << "fine points made" << endl;
+//   gridcourse = (struct gridpoints *)malloc(((sizex/resx1))*((sizey/resy1))*((sizez/resz1))*sizeof(struct gridpoints));
+//   cout << "coarse points made" << endl;
+//   packedgrain = (struct packedgrains *)malloc((numgrains)*sizeof(struct packedgrains));
    voxelvector.resize(m->numgrains);
    neighborvector.resize(m->numgrains);
    int bigerror = 10;
@@ -256,15 +237,9 @@ void GrainGenerator::compute()
    {
      packedgrain[temp5].nserror = bigerror;
    }
-   m->loadSVNData(readname8);
-   m->loadSVSData(readname9);
    m->make_points(m->numgrains);
    m->fill_gaps(m->numgrains);
    m->find_neighbors();
-   m->find_centroids();
-   m->find_moments();
-   m->find_axis();
-   m->find_colors();
    m->actualmisobin = new Bin[m->nummisobins];
    m->simmisobin = new Bin[m->nummisobins];
    m->actualmicrobin = new Bin[m->nummicrobins];
@@ -273,7 +248,7 @@ void GrainGenerator::compute()
    m->loadMicroData(readname11);
    for(int iter = 0; iter < m->misoiter; iter++)
    {
-     m->measure_misorientations(m->numgrains);
+     m->measure_misorientations();
      m->rank_misobins(m->numgrains);
      m->count_misorientations(m->numgrains);
      m->freeze_grains(m->numgrains);
@@ -283,7 +258,7 @@ void GrainGenerator::compute()
    }
    while(m->nummicros != 1)
    {
-     m->measure_misorientations(m->numgrains);
+     m->measure_misorientations();
      m->count_misorientations(m->numgrains);
      nummicros = m->rank_microbins(m->numgrains);
      m->rank_grains2(m->numgrains);
@@ -292,7 +267,7 @@ void GrainGenerator::compute()
    }
    for(int iter3 = 0; iter3 < m->misoiter; iter3++)
    {
-     m->measure_misorientations(m->numgrains);
+     m->measure_misorientations();
      m->rank_misobins(m->numgrains);
      m->count_misorientations(m->numgrains);
      m->freeze_grains(m->numgrains);
@@ -300,29 +275,12 @@ void GrainGenerator::compute()
      m->identify_grains1(m->numgrains, m->nummisomoves);
      m->move_grains1(m->numgrains);
    }
-   m->volume_stats(m->numgrains, writename2);
    m->writeCube(writename1, m->numgrains);
    m->write_grains(writename4,m->numgrains);
    m->write_volume(writename5);
    m->find_boundarycenters(writename3, m->numgrains);
 
-
-  delete [] grain;
-  delete [] gridfine;
-  delete [] gridcourse;
-  delete [] packedgrain;
-  delete [] orient;
-  delete [] diambin;
-  delete [] boverabin;
-  delete [] coverabin;
-  delete [] coverbbin;
-  delete [] seNbin;
-  delete [] actualmisobin;
-  delete [] simmisobin;
-  delete [] actualmicrobin;
-  delete [] simmicrobin;
-
-#endif
+#endif 
 }
 
 // -----------------------------------------------------------------------------
