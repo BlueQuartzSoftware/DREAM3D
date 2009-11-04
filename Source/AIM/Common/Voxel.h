@@ -18,9 +18,14 @@
 
 
 #include <vector>
-/*
- *
- */
+
+/**
+* @class Voxel Voxel.h AIM/Common/Voxel.h
+* @brief Support class for the MicroGen3D class
+* @author Michael A. Jackson for BlueQuartz Software, Dr. Michael Groeber for USAFRL
+* @date Nov 4, 2009
+* @version 1.0
+*/
 class Voxel
 {
 public:

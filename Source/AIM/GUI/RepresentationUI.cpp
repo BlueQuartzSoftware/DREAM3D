@@ -72,58 +72,10 @@
 #define WRITE_COMBO_BOX(prefs, combobox)\
     prefs.setValue(#combobox, this->combobox->currentIndex());
 
-#define SET_TEXT_ICON(name, icon)\
-  { \
-  QString iconFile = QString(":/") + QString(#icon) + QString("-16x16.png");\
-  name->setText(AIM::Representation::name.c_str());\
-  name##Icon->setPixmap(QPixmap(iconFile));\
-  }
 
-
-#define CHECK_OUTPUT_FILE_EXISTS(name) \
-  { \
-  QString absPath = outputDir->text() + QDir::separator() + AIM::Representation::name.c_str();\
-  absPath = QDir::toNativeSeparators(absPath);\
-  QFileInfo fi ( absPath );\
-  if ( fi.exists() )  {\
-  SET_TEXT_ICON(name, Check)\
-  } else {\
-  SET_TEXT_ICON(name, Delete) }  }
-
-
-#define GG_CHECK_OUTPUT_FILE_EXISTS(name) \
-  { \
-  QString absPath = gg_OutputDir->text() + QDir::separator() + AIM::Representation::name.c_str();\
-  absPath = QDir::toNativeSeparators(absPath);\
-  QFileInfo fi ( absPath );\
-  if ( fi.exists() )  {\
-    QString iconFile = QString(":/") + QString("Check") + QString("-16x16.png");\
-      name##_3->setText(AIM::Representation::name.c_str());\
-      name##Icon##_3->setPixmap(QPixmap(iconFile));\
-  } else {\
-    QString iconFile = QString(":/") + QString("Delete") + QString("-16x16.png");\
-    name##_3->setText(AIM::Representation::name.c_str());\
-    name##Icon##_3->setPixmap(QPixmap(iconFile));\
-  }\
-}
-
-
-#define GG_CHECK_INPUT_FILE_EXISTS(name) \
-  { \
-  QString absPath = gg_InputDir->text() + QDir::separator() + AIM::Representation::name.c_str();\
-  absPath = QDir::toNativeSeparators(absPath);\
-  QFileInfo fi ( absPath );\
-  if ( fi.exists() )  {\
-    QString iconFile = QString(":/") + QString("Check") + QString("-16x16.png");\
-      name##_2->setText(AIM::Representation::name.c_str());\
-      name##Icon##_2->setPixmap(QPixmap(iconFile));\
-  } else {\
-    QString iconFile = QString(":/") + QString("Delete") + QString("-16x16.png");\
-    name##_2->setText(AIM::Representation::name.c_str());\
-    name##Icon##_2->setPixmap(QPixmap(iconFile));\
-  }\
- }
-
+#define CHECK_QLABEL_OUTPUT_FILE_EXISTS_BODY1(prefixname, name)\
+  prefixname->setText(AIM::Representation::name.c_str());\
+  prefixname##Icon->setPixmap(QPixmap(iconFile));\
 
 
 #define CHECK_QLINEEDIT_FILE_EXISTS(name) \
@@ -140,12 +92,7 @@
  }
 
 
-#define CHECK_QLABEL_FILE_EXISTS_BODY1(prefixname, name)\
-  prefixname->setText(AIM::Representation::name.c_str());\
-  prefixname##Icon->setPixmap(QPixmap(iconFile));\
-
-
-#define CHECK_QLABEL_FILE_EXISTS(prefix, name) \
+#define CHECK_QLABEL_OUTPUT_FILE_EXISTS(prefix, name) \
 { \
   QString absPath = prefix##OutputDir->text() + QDir::separator() + AIM::Representation::name.c_str();\
   absPath = QDir::toNativeSeparators(absPath);\
@@ -156,7 +103,22 @@
   } else {\
   iconFile = QString(":/") + QString("Delete") + QString("-16x16.png");\
   }\
-  CHECK_QLABEL_FILE_EXISTS_BODY1(prefix##name, name)\
+  CHECK_QLABEL_OUTPUT_FILE_EXISTS_BODY1(prefix##name, name)\
+}
+
+
+#define CHECK_QLABEL_INPUT_FILE_EXISTS(prefix, name) \
+{ \
+  QString absPath = prefix##InputDir->text() + QDir::separator() + AIM::Representation::name.c_str();\
+  absPath = QDir::toNativeSeparators(absPath);\
+  QFileInfo fi ( absPath );\
+  QString iconFile;\
+  if ( fi.exists() )  {\
+  iconFile = QString(":/") + QString("Check") + QString("-16x16.png");\
+  } else {\
+  iconFile = QString(":/") + QString("Delete") + QString("-16x16.png");\
+  }\
+  CHECK_QLABEL_OUTPUT_FILE_EXISTS_BODY1(prefix##name, name)\
 }
 
 
@@ -168,7 +130,6 @@
   QMessageBox::Ok);\
   return;\
   }
-
 
 
 #define SANITY_CHECK_QLABEL_FILE(prefix, input) \
@@ -209,8 +170,6 @@ m_OpenDialogLastDirectory("~/")
            this, SLOT(updateRecentFileList(const QString &)) );
    // Get out initial Recent File List
    this->updateRecentFileList(QString::null);
-
-
    this->setAcceptDrops(true);
 }
 
@@ -274,7 +233,7 @@ void RepresentationUI::readSettings()
 
   /* ******** This Section is for the Reconstruction Tab ************ */
   READ_FILEPATH_SETTING(prefs, angDir, "");
-  READ_FILEPATH_SETTING(prefs, outputDir, "");
+  READ_FILEPATH_SETTING(prefs, rec_OutputDir, "");
   READ_SETTING(prefs, angMaxSlice, ok, i, 300 , Int);
   READ_STRING_SETTING(prefs, angFilePrefix, "");
   READ_SETTING(prefs, zStartIndex, ok, i, 1 , Int);
@@ -341,7 +300,7 @@ void RepresentationUI::writeSettings()
 //  qint32 i = 0;
   /* ******** This Section is for the Reconstruction Tab ************ */
   WRITE_STRING_SETTING(prefs, angDir)
-  WRITE_STRING_SETTING(prefs, outputDir)
+  WRITE_STRING_SETTING(prefs, rec_OutputDir)
   WRITE_STRING_SETTING(prefs, angFilePrefix)
   WRITE_STRING_SETTING(prefs, angMaxSlice)
   WRITE_STRING_SETTING(prefs, zStartIndex)
@@ -624,14 +583,14 @@ void RepresentationUI::rec_SetupGui()
            this, SLOT(on_angDir_textChanged(const QString &)));
 
   QR3DFileCompleter* com2 = new QR3DFileCompleter(this, true);
-  outputDir->setCompleter(com2);
+  rec_OutputDir->setCompleter(com2);
   QObject::connect( com2, SIGNAL(activated(const QString &)),
-           this, SLOT(on_outputDir_textChanged(const QString &)));
+           this, SLOT(on_rec_OutputDir_textChanged(const QString &)));
 
 
   QString msg ("All files will be over written that appear in the output directory.");
 
-  QFileInfo fi (outputDir->text() + QDir::separator() +  AIM::Representation::ReconstructedDataFile.c_str() );
+  QFileInfo fi (rec_OutputDir->text() + QDir::separator() +  AIM::Representation::ReconstructedDataFile.c_str() );
   if (alreadyFormed->isChecked() == true && fi.exists() == false)
   {
     alreadyFormed->setChecked(false);
@@ -644,7 +603,7 @@ void RepresentationUI::rec_SetupGui()
   messageLabel->setText(msg);
 
 
-  m_WidgetList << angDir << angDirBtn << outputDir << outputDirBtn;
+  m_WidgetList << angDir << angDirBtn << rec_OutputDir << rec_OutputDirBtn;
   m_WidgetList << angFilePrefix << angMaxSlice << zStartIndex << zEndIndex << zSpacing;
   m_WidgetList << mergeTwins << alreadyFormed << minAllowedGrainSize << minConfidence << misOrientationTolerance;
   m_WidgetList << crystalStructure;
@@ -655,33 +614,29 @@ void RepresentationUI::rec_SetupGui()
 // ----------------------------------------------------------------------------_
 void RepresentationUI::rec_CheckIOFiles()
 {
-  if (true == this->_verifyPathExists(angDir->text(), this->angDir) )
-   {
-     findAngMaxSliceAndPrefix();
-   }
+  if (true == this->_verifyPathExists(angDir->text(), this->angDir))
+  {
+    findAngMaxSliceAndPrefix();
+  }
 
-   if (this->_verifyPathExists(outputDir->text(), this->outputDir) )
-   {
-     findReconstructionOutputFiles();
-   }
-   else
-   {
-     SET_TEXT_ICON(StatsFile, Delete)
-     SET_TEXT_ICON(VolBinFile, Delete)
-     SET_TEXT_ICON(BOverABinsFile, Delete)
-     SET_TEXT_ICON(COverABinsFile, Delete)
-     SET_TEXT_ICON(COverBBinsFile, Delete)
-     SET_TEXT_ICON(SVNFile, Delete)
-     SET_TEXT_ICON(SVSFile, Delete)
-     SET_TEXT_ICON(MisorientationBinsFile, Delete)
-     SET_TEXT_ICON(MicroBinsFile, Delete)
-     SET_TEXT_ICON(ReconstructedDataFile, Delete)
-     SET_TEXT_ICON(ReconstructedVisualizationFile, Delete)
-     SET_TEXT_ICON(GrainsFile, Delete)
-     SET_TEXT_ICON(BoundaryCentersFile, Delete)
-     SET_TEXT_ICON(AxisOrientationsFile, Delete)
-     SET_TEXT_ICON(EulerAnglesFile, Delete)
-   }
+  this->_verifyPathExists(rec_OutputDir->text(), this->rec_OutputDir);
+  CHECK_QLABEL_OUTPUT_FILE_EXISTS(rec_, StatsFile)
+  CHECK_QLABEL_OUTPUT_FILE_EXISTS(rec_, VolBinFile)
+  CHECK_QLABEL_OUTPUT_FILE_EXISTS(rec_, BOverABinsFile)
+  CHECK_QLABEL_OUTPUT_FILE_EXISTS(rec_, COverABinsFile)
+  CHECK_QLABEL_OUTPUT_FILE_EXISTS(rec_, COverBBinsFile)
+  CHECK_QLABEL_OUTPUT_FILE_EXISTS(rec_, SVNFile)
+  CHECK_QLABEL_OUTPUT_FILE_EXISTS(rec_, SVSFile)
+  CHECK_QLABEL_OUTPUT_FILE_EXISTS(rec_, MisorientationBinsFile)
+  CHECK_QLABEL_OUTPUT_FILE_EXISTS(rec_, MicroBinsFile)
+  CHECK_QLABEL_OUTPUT_FILE_EXISTS(rec_, ReconstructedDataFile)
+  CHECK_QLABEL_OUTPUT_FILE_EXISTS(rec_, ReconstructedVisualizationFile)
+  CHECK_QLABEL_OUTPUT_FILE_EXISTS(rec_, GrainsFile)
+  CHECK_QLABEL_OUTPUT_FILE_EXISTS(rec_, BoundaryCentersFile)
+  CHECK_QLABEL_OUTPUT_FILE_EXISTS(rec_, AxisOrientationsFile)
+  CHECK_QLABEL_OUTPUT_FILE_EXISTS(rec_, EulerAnglesFile)
+  CHECK_QLABEL_OUTPUT_FILE_EXISTS(rec_, SeNBinsFile)
+  CHECK_QLABEL_OUTPUT_FILE_EXISTS(rec_, ReconstructedDxFile)
 }
 
 // -----------------------------------------------------------------------------
@@ -701,35 +656,12 @@ void RepresentationUI::on_angDirBtn_clicked()
 
 }
 
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void RepresentationUI::findReconstructionOutputFiles()
-{
-  CHECK_OUTPUT_FILE_EXISTS(StatsFile)
-  CHECK_OUTPUT_FILE_EXISTS(VolBinFile)
-  CHECK_OUTPUT_FILE_EXISTS(BOverABinsFile)
-  CHECK_OUTPUT_FILE_EXISTS(COverABinsFile)
-  CHECK_OUTPUT_FILE_EXISTS(COverBBinsFile)
-  CHECK_OUTPUT_FILE_EXISTS(SVNFile)
-  CHECK_OUTPUT_FILE_EXISTS(SVSFile)
-  CHECK_OUTPUT_FILE_EXISTS(MisorientationBinsFile)
-  CHECK_OUTPUT_FILE_EXISTS(MicroBinsFile)
-  CHECK_OUTPUT_FILE_EXISTS(ReconstructedDataFile)
-  CHECK_OUTPUT_FILE_EXISTS(ReconstructedVisualizationFile)
-  CHECK_OUTPUT_FILE_EXISTS(GrainsFile)
-  CHECK_OUTPUT_FILE_EXISTS(BoundaryCentersFile)
-  CHECK_OUTPUT_FILE_EXISTS(AxisOrientationsFile)
-  CHECK_OUTPUT_FILE_EXISTS(EulerAnglesFile)
-}
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void RepresentationUI::on_alreadyFormed_stateChanged(int currentState)
 {
-  QString absPath = outputDir->text() + QDir::separator() + AIM::Representation::ReconstructedDataFile.c_str();
+  QString absPath = rec_OutputDir->text() + QDir::separator() + AIM::Representation::ReconstructedDataFile.c_str();
   absPath = QDir::toNativeSeparators(absPath);
   QFileInfo fi (absPath);
   QString msg ("All files will be over written that appear in the output directory.");
@@ -741,7 +673,7 @@ void RepresentationUI::on_alreadyFormed_stateChanged(int currentState)
       QMessageBox::Ok,
       QMessageBox::Ok);
       alreadyFormed->setChecked(false);
-      CHECK_OUTPUT_FILE_EXISTS(ReconstructedDataFile)
+      CHECK_QLABEL_OUTPUT_FILE_EXISTS(rec_, ReconstructedDataFile)
   }
 
   if (alreadyFormed->isChecked())
@@ -795,17 +727,17 @@ void RepresentationUI::findAngMaxSliceAndPrefix()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RepresentationUI::on_outputDirBtn_clicked()
+void RepresentationUI::on_rec_OutputDirBtn_clicked()
 {
   QString outputFile = this->m_OpenDialogLastDirectory + QDir::separator();
   outputFile = QFileDialog::getExistingDirectory(this, tr("Select Output Directory"), outputFile);
   if (!outputFile.isNull())
   {
-    this->outputDir->setText(outputFile);
-    if (_verifyPathExists(outputFile, outputDir) == true )
+    this->rec_OutputDir->setText(outputFile);
+    if (_verifyPathExists(outputFile, rec_OutputDir) == true )
     {
-      findReconstructionOutputFiles();
-      QFileInfo fi (outputDir->text() + QDir::separator() +  AIM::Representation::ReconstructedDataFile.c_str() );
+      rec_CheckIOFiles();
+      QFileInfo fi (rec_OutputDir->text() + QDir::separator() +  AIM::Representation::ReconstructedDataFile.c_str() );
       if (alreadyFormed->isChecked() == true && fi.exists() == false)
       {
         alreadyFormed->setChecked(false);
@@ -817,9 +749,9 @@ void RepresentationUI::on_outputDirBtn_clicked()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RepresentationUI::on_outputDir_textChanged(const QString & text)
+void RepresentationUI::on_rec_OutputDir_textChanged(const QString & text)
 {
-  _verifyPathExists(outputDir->text(), outputDir);
+  _verifyPathExists(rec_OutputDir->text(), rec_OutputDir);
   rec_CheckIOFiles();
 }
 
@@ -848,11 +780,11 @@ void RepresentationUI::on_reconstructBtn_clicked()
   }
 
   SANITY_CHECK_INPUT( , angDir)
-  SANITY_CHECK_INPUT( , outputDir)
+  SANITY_CHECK_INPUT(rec_ , OutputDir)
 
   m_Reconstruction = Reconstruction::New();
   m_Reconstruction->setInputDirectory(angDir->text().toStdString() );
-  m_Reconstruction->setOutputDirectory(outputDir->text().toStdString());
+  m_Reconstruction->setOutputDirectory(rec_OutputDir->text().toStdString());
   m_Reconstruction->setAngFilePrefix(angFilePrefix->text().toStdString());
   m_Reconstruction->setAngSeriesMaxSlice(angMaxSlice->value());
   m_Reconstruction->setZStartIndex(zStartIndex->value());
@@ -959,26 +891,25 @@ void RepresentationUI::gg_SetupGui()
 // -----------------------------------------------------------------------------
 void RepresentationUI::gg_CheckIOFiles()
 {
-  GG_CHECK_INPUT_FILE_EXISTS(VolBinFile)
-  GG_CHECK_INPUT_FILE_EXISTS(BOverABinsFile)
-  GG_CHECK_INPUT_FILE_EXISTS(COverABinsFile)
-  GG_CHECK_INPUT_FILE_EXISTS(COverBBinsFile)
-  GG_CHECK_INPUT_FILE_EXISTS(SeNBinsFile)
-  GG_CHECK_INPUT_FILE_EXISTS(AxisOrientationsFile)
-  GG_CHECK_INPUT_FILE_EXISTS(EulerAnglesFile)
-  GG_CHECK_INPUT_FILE_EXISTS(SVNFile)
-  GG_CHECK_INPUT_FILE_EXISTS(SVSFile)
-  GG_CHECK_INPUT_FILE_EXISTS(MisorientationBinsFile)
-  GG_CHECK_INPUT_FILE_EXISTS(MicroBinsFile)
+  CHECK_QLABEL_INPUT_FILE_EXISTS(gg_, VolBinFile)
+  CHECK_QLABEL_INPUT_FILE_EXISTS(gg_, BOverABinsFile)
+  CHECK_QLABEL_INPUT_FILE_EXISTS(gg_, COverABinsFile)
+  CHECK_QLABEL_INPUT_FILE_EXISTS(gg_, COverBBinsFile)
+  CHECK_QLABEL_INPUT_FILE_EXISTS(gg_, SeNBinsFile)
+  CHECK_QLABEL_INPUT_FILE_EXISTS(gg_, AxisOrientationsFile)
+  CHECK_QLABEL_INPUT_FILE_EXISTS(gg_, EulerAnglesFile)
+  CHECK_QLABEL_INPUT_FILE_EXISTS(gg_, SVNFile)
+  CHECK_QLABEL_INPUT_FILE_EXISTS(gg_, SVSFile)
+  CHECK_QLABEL_INPUT_FILE_EXISTS(gg_, MisorientationBinsFile)
+  CHECK_QLABEL_INPUT_FILE_EXISTS(gg_, MicroBinsFile)
 
-  GG_CHECK_OUTPUT_FILE_EXISTS(CubeFile)
-  GG_CHECK_OUTPUT_FILE_EXISTS(AnalysisFile)
-  GG_CHECK_OUTPUT_FILE_EXISTS(BoundaryCentersFile)
-  GG_CHECK_OUTPUT_FILE_EXISTS(GrainsFile)
-  GG_CHECK_OUTPUT_FILE_EXISTS(VolumeFile)
+  CHECK_QLABEL_OUTPUT_FILE_EXISTS(gg_, CubeFile)
+  CHECK_QLABEL_OUTPUT_FILE_EXISTS(gg_, CubeDxFile)
+  CHECK_QLABEL_OUTPUT_FILE_EXISTS(gg_, AnalysisFile)
+  CHECK_QLABEL_OUTPUT_FILE_EXISTS(gg_, BoundaryCentersFile)
+  CHECK_QLABEL_OUTPUT_FILE_EXISTS(gg_, GrainsFile)
+  CHECK_QLABEL_OUTPUT_FILE_EXISTS(gg_, VolumeFile)
 }
-
-
 
 // -----------------------------------------------------------------------------
 //
@@ -1190,10 +1121,10 @@ void RepresentationUI::sm_CheckIOFiles()
 
   _verifyPathExists(sm_OutputDir->text(), sm_OutputDir);
 
-  CHECK_QLABEL_FILE_EXISTS(sm_, NodesFile)
-  CHECK_QLABEL_FILE_EXISTS(sm_, TrianglesFile)
-  CHECK_QLABEL_FILE_EXISTS(sm_, MeshStatFile)
-  CHECK_QLABEL_FILE_EXISTS(sm_, NodesRawFile)
+  CHECK_QLABEL_OUTPUT_FILE_EXISTS(sm_, NodesFile)
+  CHECK_QLABEL_OUTPUT_FILE_EXISTS(sm_, TrianglesFile)
+  CHECK_QLABEL_OUTPUT_FILE_EXISTS(sm_, MeshStatFile)
+  CHECK_QLABEL_OUTPUT_FILE_EXISTS(sm_, NodesRawFile)
 }
 
 
@@ -1244,7 +1175,6 @@ void RepresentationUI::on_sm_OutputDirBtn_clicked()
 void RepresentationUI::on_sm_DxFile_textChanged(const QString & text)
 {
   sm_CheckIOFiles();
-  _verifyPathExists(sm_DxFile->text(), sm_DxFile);
 }
 
 // -----------------------------------------------------------------------------
@@ -1252,10 +1182,7 @@ void RepresentationUI::on_sm_DxFile_textChanged(const QString & text)
 // -----------------------------------------------------------------------------
 void RepresentationUI::on_sm_OutputDir_textChanged(const QString & text)
 {
-  if (_verifyPathExists(sm_OutputDir->text(), sm_OutputDir) )
-  {
-    sm_CheckIOFiles();
-  }
+  sm_CheckIOFiles();
 }
 
 // -----------------------------------------------------------------------------
@@ -1387,10 +1314,10 @@ void RepresentationUI::vm_CheckIOFiles()
   CHECK_QLINEEDIT_FILE_EXISTS(vm_NodesFile);
   CHECK_QLINEEDIT_FILE_EXISTS(vm_TrianglesFile);
 
-  CHECK_QLABEL_FILE_EXISTS(vm_, MeshFile);
-  CHECK_QLABEL_FILE_EXISTS(vm_, MeshFile2);
-  CHECK_QLABEL_FILE_EXISTS(vm_, ElementQualityFile);
-  CHECK_QLABEL_FILE_EXISTS(vm_, VoxelsFile);
+  CHECK_QLABEL_OUTPUT_FILE_EXISTS(vm_, MeshFile);
+  CHECK_QLABEL_OUTPUT_FILE_EXISTS(vm_, MeshFile2);
+  CHECK_QLABEL_OUTPUT_FILE_EXISTS(vm_, ElementQualityFile);
+  CHECK_QLABEL_OUTPUT_FILE_EXISTS(vm_, VoxelsFile);
 }
 
 // -----------------------------------------------------------------------------
