@@ -195,7 +195,6 @@ class RepresentationUI : public QMainWindow, private Ui::RepresentationUI
     void resizeEvent ( QResizeEvent * event );
 
     void findAngMaxSliceAndPrefix();
-    void findReconstructionOutputFiles();
 
   private:
     QString                     m_OpenDialogLastDirectory;
