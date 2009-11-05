@@ -87,44 +87,21 @@ public:
 
 	AIMRandomNG rg;
 	Voxel* voxels;
-	Grain* tempgrain;
 	Grain* grains;
-	Grain* goodgrain;
-	Grain* packedgrain;
-	int* gsizes;
-	int* gremovals;
-	Bin* seNbin;
 
 	Bin* eulerbin;
-	Orient* orient;
-	Voxel* gridfine;
-	Voxel* gridcourse;
-	Bin* actualmisobin;
-	Bin* simmisobin;
-	Bin* actualmicrobin;
-	Bin* simmicrobin;
-	double nsdist[20][20];
 
 	vector<vector<int> > voxelsvector;
 	vector<vector<int> > neighborvector;
 
-	int numdiambins;
-	int numshapebins;
 	int numseNbins;
-	int numsizebins;
 	int numorients;
 	int numeulers;
 	int nummisobins;
 	int nummicrobins;
-	int misoiter;
-	int nummisomoves;
-	int nummicromoves;
 	int numgrains;
-	int shapeclass;
 	int maxdiameter;
 	int mindiameter;
-	double overlapallowed;
-	int overlapassignment;
 
 
 	int32 xpoints;
@@ -132,20 +109,14 @@ public:
 	int32 zpoints;
   int totalpoints;
 
-	double resx1;
-	double resy1;
-	double resz1;
 	int numneighbins;
 	int nummicros;
-
-	/** @brief The number of boundary center objects needed */
-	size_t bcentSize;
 
 // sizes are needed. Dont't change
 	double eulerrank[180][180][180];
 
 // sizes are needed. Dont't change
-  int eulercount[100][100][100];
+  int eulercount[36][36][36];
 
 	void loadSlices();
 	int form_grains();
@@ -172,7 +143,6 @@ public:
 	void volume_stats(string,string,string);
 	void create_visualization(string);
 	void write_grains(string);
-	void find_boundarycenters(string);
 	void write_axisorientations(string);
 	void write_eulerangles(string);
 	double getmisoquat(double ,double,double ,double ,double ,double ,double,double ,double &,double &,double &);

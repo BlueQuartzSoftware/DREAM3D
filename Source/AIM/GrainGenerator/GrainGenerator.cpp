@@ -156,8 +156,13 @@ void GrainGenerator::compute()
   writename4 = "grains.txt";
   writename5 = "volume.txt";
 #endif
-#if 0
+
+
    m = GrainGeneratorFunc::New();
+   m->initialize(m_NumGrains, m_ShapeClass,
+              m_XResolution, m_YResolution, m_ZResolution, m_OverlapAllowed,
+              m_OverlapAssignment, m_CrystalStructure);
+
    m->numgrains = m_NumGrains;
    m->resx = m_XResolution;
    m->resy = m_YResolution;
@@ -168,7 +173,6 @@ void GrainGenerator::compute()
    m->resz1 = 4 * m->resz;
 
 
-   m->numseNbins = 1001;
    m->nummisobins = 10;
    m->nummicrobins = 10;
    m->misoiter = 0;
@@ -184,70 +188,16 @@ void GrainGenerator::compute()
    inputFile2.open(readname7.c_str());
    inputFile2 >> m->numeulers;
    inputFile2.close();
-   m->gsizes = new int[m->numgrains];
-   m->gremovals = new int[m->numgrains];
-   m->grains = new Grain[m->numgrains];
-   m->tempgrain =  new Grain[m->numgrains];
-   m->orient = new Orient[m->numorients];
-   m->seNbin = new Bin[m->numsizebins*m->numseNbins];
-   //m->eulercount = new int **[18];
-   m->eulerbin = new Bin[18*18*18*100];
-   for(int i = 0; i < 18; i++)
-   {
-      m->eulercount[i] = new int *[18];
-     for(int j = 0; j < 18; j++)
-     {
-       m->eulercount[i][j] = new int [18];
-       for(int k = 0; k < 18; k++)
-       {
-         m->eulercount[i][j][k] = 0;
-       }
-     }
-   }
-   m->loadVolData(readname1,m->numdiambins);
-   m->loadNData(readname5,m->numshapebins);
+   m->loadStatsData(readname1);
    m->loadorientData(readname6,m->numorients);
    m->loadeulerData(readname7,m->numeulers);
    int* takencheck = new int[m->numgrains];
    m->generate_grains(m->numgrains);
+   m->initialize2(m->xpoints,m->ypoints,m->zpoints);  
    m->assign_eulers(m->numgrains);
-//   double** nsdist = new double *[m->numgrains];
-//   double** bcent = new double *[100000];
-   for(int temp1 = 0; temp1 < 100000; temp1++)
-   {
-     bcent[temp1] = new double [5];
-   }
-   for(int temp2 = 0; temp2 < m->numgrains; temp2++)
-   {
-     nsdist[temp2] = new double [m->numsizebins];
-   }
-   for(int temp3 = 0; temp3 < m->numgrains; temp3++)
-   {
-     for(int temp4 = 0; temp4 < m->numsizebins; temp4++)
-     {
-       nsdist[temp3][temp4] = 0;
-     }
-   }
-//   cout << "grains made" << endl;
-//   gridfine = (struct gridpoints *)malloc(((sizex/resx))*((sizey/resy))*((sizez/resz))*sizeof(struct gridpoints));
-//   cout << "fine points made" << endl;
-//   gridcourse = (struct gridpoints *)malloc(((sizex/resx1))*((sizey/resy1))*((sizez/resz1))*sizeof(struct gridpoints));
-//   cout << "coarse points made" << endl;
-//   packedgrain = (struct packedgrains *)malloc((numgrains)*sizeof(struct packedgrains));
-   voxelvector.resize(m->numgrains);
-   neighborvector.resize(m->numgrains);
-   int bigerror = 10;
-   for(int temp5 = 0; temp5 < m->numgrains; temp5++)
-   {
-     packedgrain[temp5].nserror = bigerror;
-   }
    m->make_points(m->numgrains);
    m->fill_gaps(m->numgrains);
    m->find_neighbors();
-   m->actualmisobin = new Bin[m->nummisobins];
-   m->simmisobin = new Bin[m->nummisobins];
-   m->actualmicrobin = new Bin[m->nummicrobins];
-   m->simmicrobin = new Bin[m->nummicrobins];
    m->loadMisoData(readname10);
    m->loadMicroData(readname11);
    for(int iter = 0; iter < m->misoiter; iter++)
@@ -264,7 +214,7 @@ void GrainGenerator::compute()
    {
      m->measure_misorientations();
      m->count_misorientations(m->numgrains);
-     nummicros = m->rank_microbins(m->numgrains);
+     m->nummicros = m->rank_microbins(m->numgrains);
      m->rank_grains2(m->numgrains);
      m->identify_grains2(m->numgrains, m->nummicromoves);
      m->move_grains2(m->numgrains);
@@ -282,9 +232,7 @@ void GrainGenerator::compute()
    m->writeCube(writename1, m->numgrains);
    m->write_grains(writename4,m->numgrains);
    m->write_volume(writename5);
-   m->find_boundarycenters(writename3, m->numgrains);
 
-#endif 
 }
 
 // -----------------------------------------------------------------------------

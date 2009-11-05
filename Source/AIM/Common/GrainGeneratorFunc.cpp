@@ -1,4 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////
 //
 //  Copyright (c) 2009, Michael A. Jackson. BlueQuartz Software
 //  Copyright (c) 2009, Michael Groeber, US Air Force Research Laboratory
@@ -15,9 +15,6 @@
 // -i C:\Users\GroebeMA\Desktop\NewFolder --outputDir C:\Users\GroebeMA\Desktop\NewFolder -f Slice_ --angMaxSlice 400 -s 1 -e 30 -z 0.25 -t -g 10 -c 0.1 -o 5.0 -x 2
 #endif
 
-#ifndef M_PI
-#define M_PI 3.1415926535897;
-#endif
 
 const static double m_pi = 3.1415926535897;
 const static double m_OnePointThree = 1.33333333333;
@@ -27,38 +24,14 @@ const static double m_OnePointThree = 1.33333333333;
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-class BoundaryCenter {
-public:
-  BoundaryCenter() :
-      grain1(0),
-      grain2(0),
-      x(0.0),
-      y(0.0),
-      z(0.0)
-  {}
-
-
-  virtual ~BoundaryCenter() {}
-  int grain1;
-  int grain2;
-  double x;
-  double y;
-  double z;
-
-
-};
 
 using namespace std;
 
 GrainGeneratorFunc::GrainGeneratorFunc() :
-  voxels(NULL),
-  tempgrain(NULL),
   grains(NULL),
-  goodgrain(NULL),
   packedgrain(NULL),
   gsizes(NULL),
   gremovals(NULL),
-  seNbin(NULL),
   eulerbin(NULL),
   orient(NULL),
   gridfine(NULL),
@@ -74,14 +47,10 @@ GrainGeneratorFunc::GrainGeneratorFunc() :
 GrainGeneratorFunc::~GrainGeneratorFunc()
 {
 
-  delete [] voxels;
-  delete [] tempgrain;
   delete [] grains;
-  delete [] goodgrain;
   delete [] packedgrain;
   delete [] gsizes;
   delete [] gremovals;
-  delete [] seNbin;
   delete [] eulerbin;
   delete [] orient;
   delete [] gridfine;
@@ -93,76 +62,45 @@ GrainGeneratorFunc::~GrainGeneratorFunc()
 
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void GrainGeneratorFunc::initialize(double stepX, double stepY, double stepZ,
-                  int32 angNumCols, int32 angNumRows, int32 angSlices,
-                  bool v_mergetwinsoption,
-                  int32 v_minallowedgrainsize,
-                  double v_minseedconfidence,
-                  double v_misorientationtolerance,
-                  int32 v_crystruct,
-                  bool v_alreadyformed)
+void GrainGeneratorFunc::initialize(int32 m_NumGrains, int32 m_ShapeClass,
+              double m_XResolution, double m_YResolution, double m_ZResolution, double m_OverlapAllowed,
+              int32 m_OverlapAssignment, int32 m_CrystalStructure)
 {
 
-  resx = stepX;
-  resy = stepY;
-  resz = stepZ;
+  resx = m_XResolution;
+  resy = m_YResolution;
+  resz = m_ZResolution;
 
-  mergetwinsoption = (v_mergetwinsoption == true) ? 1 : 0;
-  minallowedgrainsize = v_minallowedgrainsize;
-  minseedconfidence = v_minseedconfidence;
-  misorientationtolerance = v_misorientationtolerance;
-  crystruct = v_crystruct;
-  alreadyformed = (v_alreadyformed == true) ? 1 : 0;
+  resx1 = 4*m_XResolution;
+  resy1 = 4*m_YResolution;
+  resz1 = 4*m_ZResolution;
 
+  numgrains = m_NumGrains;
+  shapeclass = m_ShapeClass;
+  overlapassignment = m_OverlapAssignment;
+  overlapallowed = m_OverlapAllowed;
+  crystruct = m_CrystalStructure;
 
-  xpoints = angNumCols;
-  ypoints = angNumRows;
-  zpoints = angSlices;
-
-  sizex = (xpoints - 1 ) * resx;
-  sizey = (ypoints - 1 ) * resy;
-  sizez = (zpoints - 1 ) * resz;
-
-  totalpoints = xpoints * ypoints * zpoints;
-
-
-#if 0
-  std::cout << "X Size: " << sizex << std::endl;
-  std::cout << "Y Size: " << sizey << std::endl;
-  std::cout << "Z Size: " << sizez << std::endl;
-  std::cout << "X Res: " << resx << std::endl;
-  std::cout << "Y Res: " << resy << std::endl;
-  std::cout << "Z Res: " << resz << std::endl;
-  std::cout << "X Points: " << xpoints << std::endl;
-  std::cout << "Y Points: " << ypoints << std::endl;
-  std::cout << "Z Points: " << zpoints << std::endl;
-  std::cout << "Total Points: " << totalpoints << std::endl;
-#endif
-
-
-
-  voxels = new Voxel[totalpoints];
-  tempgrain = new Grain[1];
-  grains = new Grain[totalpoints/20];
-  goodgrain = new Grain[totalpoints/20];
-  packedgrain = new Grain[1];
-  gsizes = new int[totalpoints/20];
-  gremovals = new int[totalpoints/20];
-  seNbin = new Bin[1000];
+  grains = new Grain[numgrains];
+  packedgrain = new Grain[numgrains];
+  gsizes = new int[numgrains];
+  gremovals = new int[numgrains];
   eulerbin = new Bin[1000];
   orient = new Orient[5000];
-#if 0
-  gridfine = new Voxel[totalpoints];
-  gridcourse = new Voxel[totalpoints];
   actualmisobin = new Bin[totalpoints];
   simmisobin = new Bin[totalpoints];
   actualmicrobin = new Bin[totalpoints];
   simmicrobin = new Bin[totalpoints];
-#endif
-  bcentSize = 0;
+}
+
+void GrainGeneratorFunc::initialize2(int32 xpoints, int32 ypoints, int32 zpoints)
+{
+
+  totalpoints = xpoints * ypoints * zpoints;
+  totalpoints1 = (xpoints/4) * (ypoints/4) * (zpoints/4);
+
+  gridfine = new Voxel[totalpoints];
+  gridcourse = new Voxel[totalpoints1];
 }
 
 void GrainGeneratorFunc::write_volume(string writename10)
@@ -172,11 +110,11 @@ void GrainGeneratorFunc::write_volume(string writename10)
   outFile.open(writename10.c_str());
   for (int i = 0; i < (xpoints * ypoints * zpoints); i++)
   {
-    int grainname = voxels[i].grainname;
-    double ea1 = voxels[i].euler1;
-    double ea2 = voxels[i].euler2;
-    double ea3 = voxels[i].euler3;
-    double ci = voxels[i].confidence;
+    int grainname = gridfine[i].grainname;
+    double ea1 = gridfine[i].euler1;
+    double ea2 = gridfine[i].euler2;
+    double ea3 = gridfine[i].euler3;
+    double ci = gridfine[i].confidence;
     outFile << grainname << " " << ea1 << " " << ea2 << " " << ea3 << " " << ci << endl;
   }
   outFile.close();
@@ -186,56 +124,62 @@ void  GrainGeneratorFunc::loadStatsData(string inname1)
 {
     ifstream inputFile;
     inputFile.open(inname1.c_str());
-	int numdiameters=0;
-	double avgdiam=0;
-	double sddiam=0;
-	inputFile >> numdiameters;
+	int diam=0;
+	double param1=0;
+	double param2=0;
+	inputFile >> numdiameters >> maxdiameter >> mindiameter;
 	inputFile >> avgdiam >> sddiam;
+	bovera.resize(maxdiameter+1);
+	covera.resize(maxdiameter+1);
+	coverb.resize(maxdiameter+1);
+	svn.resize(maxdiameter+1);
+	svs.resize(maxdiameter+1);
+	svshape.resize(maxdiameter+1);
 	for(int temp7 = 0; temp7 < numdiameters; temp7++)
 	{
-		inputFile >> temp7 >> svbovera[temp7][3] >> svbovera[temp7][4];
+		inputFile >> diam >> param1 >> param2;
+		bovera[diam].resize(2);
+		bovera[diam][0]=param1;
+		bovera[diam][1]=param2;
 	}	
 	for(int temp7 = 0; temp7 < numdiameters; temp7++)
 	{
-		inputFile >> temp7 >> svcovera[temp7][3] >> svcovera[temp7][4];
+		inputFile >> diam >> param1 >> param2;
+		covera[diam].resize(2);
+		covera[diam][0]=param1;
+		covera[diam][1]=param2;
 	}
 	for(int temp7 = 0; temp7 < numdiameters; temp7++)
 	{
-		inputFile >> temp7 >> svcoverb[temp7][1] >> svcoverb[temp7][2];
+		inputFile >> diam >> param1 >> param2;
+		coverb[diam].resize(2);
+		coverb[diam][0]=param1;
+		coverb[diam][1]=param2;
 	}
 	for(int temp7 = 0; temp7 < numdiameters; temp7++)
 	{
-		inputFile >> temp7 >> svn[temp7][1] >> svn[temp7][2];
+		inputFile >> diam >> param1 >> param2;
+		svn[diam].resize(2);
+		svn[diam][0]=param1;
+		svn[diam][1]=param2;
 	}
 	for(int temp7 = 0; temp7 < numdiameters; temp7++)
 	{
-		inputFile >> temp7 >> svs[temp7][1] >> svs[temp7][2];
+		inputFile >> diam >> param1 >> param2;
+		svs[diam].resize(2);
+		svs[diam][0]=param1;
+		svs[diam][1]=param2;
+	}
+	for(int temp7 = 0; temp7 < numdiameters; temp7++)
+	{
+		inputFile >> diam >> param1 >> param2;
+		svshape[diam].resize(2);
+		svshape[diam][0]=param1;
+		svshape[diam][1]=param2;
 	}
     inputFile.close();
 }
 
-void  GrainGeneratorFunc::loadNData(string inname5, int numshapebins)
-{
-    ifstream inputFile;
-    inputFile.open(inname5.c_str());
-  int count = 0;
-  double Nprob;
-  double N;
-  double junk;
-  int bnum=0;
-  for (long j = 0; j < numsizebins; j++)
-  {
-    for (long k = 0; k < numseNbins; k++)
-    {
-      inputFile >> junk >> Nprob >> N;
-      bnum = (j*numseNbins)+k;
-      seNbin[bnum].Nprobability = Nprob;
-      seNbin[bnum].Nvalue = N;
-          count++;
-    }
-  }
-   inputFile.close();
-}
 
 void  GrainGeneratorFunc::loadorientData(string inname6, int numorients)
 {
@@ -512,15 +456,15 @@ void  GrainGeneratorFunc::loadeulerData(string inname7, int numeulers)
         double sine1 = (m1[2][0]/sin(ea2));
         ea3 = acos(cosine3);
         ea1 = acos(cosine1);
-        if(sine3 < 0) ea3 = (2*3.1415926535897)-ea3;
-        if(sine1 < 0) ea1 = (2*3.1415926535897)-ea1;
-        int ea1bin = int(ea1/(3.1415926535897/36));
-        int ea2bin = int(ea2/(3.1415926535897/36));
-        int ea3bin = int(ea3/(3.1415926535897/36));
-        if(ea1 >= 0 && ea2 >= 0 && ea3 >= 0 && ea1 <= (3.1415926535897/2) && ea2 <= (3.1415926535897/2) && ea3 <= (3.1415926535897/2))
+        if(sine3 < 0) ea3 = (2*m_pi)-ea3;
+        if(sine1 < 0) ea1 = (2*m_pi)-ea1;
+        int ea1bin = int(ea1/(m_pi/36));
+        int ea2bin = int(ea2/(m_pi/36));
+        int ea3bin = int(ea3/(m_pi/36));
+        if(ea1 >= 0 && ea2 >= 0 && ea3 >= 0 && ea1 <= (m_pi/2) && ea2 <= (m_pi/2) && ea3 <= (m_pi/2))
         {
-//          int curcount = eulercount[ea1bin][ea2bin][ea3bin];
-          int bnum = (ea1bin*18*18)+(ea2bin*18)+ea3bin;
+          int curcount = eulercount[ea1bin][ea2bin][ea3bin];
+          int bnum = (ea1bin*36*36)+(ea2bin*36)+ea3bin;
           eulerbin[bnum].euler1 = ea1;
           eulerbin[bnum].euler2 = ea2;
           eulerbin[bnum].euler3 = ea3;
@@ -543,6 +487,10 @@ void  GrainGeneratorFunc::generate_grains(int numgrains)
 //  int curbin4 = 0;
   int curbin5 = 0;
   double r1 = 1;
+  double u=0,u1=0,u2=0;
+  double a1=0,a2=0,a3=0;
+  double b1=0,b2=0,b3=0;
+  double r2=0,r3=0;
   int bnum=0;
   int takencheck[1000];
   srand(static_cast<unsigned int>(time(NULL)));
@@ -550,58 +498,35 @@ void  GrainGeneratorFunc::generate_grains(int numgrains)
   {
     curbin1 = 0;
     good = 1;
-    double random = rg.Random();
-    double random1 = random;
-    for(int i = 0; i < numdiambins; i++)
-    {
-      double dprob = diambin[i].dprobability;
-      if(dprob < random1) curbin1 = i;
-    }
-    double diam = diambin[curbin1].diameter;
-    double vol = (4.0/3.0)*(3.1415926535897)*((diam/2.0)*(diam/2.0)*(diam/2.0));
+    u = rg.Random();
+	double diam = rg.RandNorm(u,avgdiam,sddiam);
+	diam = exp(diam);
+    double vol = (4.0/3.0)*(m_pi)*((diam/2.0)*(diam/2.0)*(diam/2.0));
     int diameter = int(diam);
-    if(diameter >= numsizebins) diameter = numsizebins-1;
+    if(diameter >= maxdiameter) diameter = maxdiameter;
+    if(diameter <= mindiameter) diameter = mindiameter;
     int good = 0;
     while(good == 0)
     {
-      random = rg.Random();
-      double random2 = random;
-      random = rg.Random();
-      double random3 = random;
-      for(int j = 0; j < numshapebins; j++)
-      {
-        bnum = (diameter*numshapebins)+j;
-        double sprob1 = boverabin[bnum].sprobability;
-        double sprob2 = coverabin[bnum].sprobability;
-        if(sprob1 < random2) curbin2 = j;
-        if(sprob2 < random3) curbin3 = j;
-      }
-      random = rg.Random();
-      double random4 = 0.01*random;
-      bnum = (diameter*numshapebins)+curbin2;
-      double tempr2 = boverabin[bnum].rad;
-      bnum = (diameter*numshapebins)+curbin3;
-      double tempr3 = coverabin[bnum].rad;
-      double coverb = tempr3/tempr2;
-      double sprob3 = 0;
-      for(int k = 0; k < numshapebins; k++)
-      {
-        bnum = (diameter*numshapebins)+k;
-        double checkcoverb = coverbbin[bnum].rad;
-        if(checkcoverb < coverb)
-        {
-          sprob3 = coverbbin[bnum].sprobability;
-        }
-      }
-      if(sprob3 > random4) good = 1;
-      if(coverb > 1) good = 0;
+	  a1 = bovera[diameter][0];
+	  b1 = bovera[diameter][1];
+	  u1 = rg.Random();
+	  u2 = rg.Random();
+	  r2 = rg.RandBeta(u1,u2,a1,b1);
+	  a2 = covera[diameter][0];
+	  b2 = covera[diameter][1];
+	  u1 = rg.Random();
+	  u2 = rg.Random();
+	  r3 = rg.RandBeta(u1,u2,a2,b2);
+      double cob = r3/r2;
+	  a3 = coverb[diameter][0];
+	  b3 = coverb[diameter][1];
+	  double prob = ((gamma((a3+b3))/(gamma(a3)*gamma(b3)))*(pow(cob,(a3-1)))*(pow((1-cob),(b3-1))));
+	  double check = rg.Random();
+      if(prob > check) good = 1;
+      if(cob > 1) good = 0;
     }
-    bnum = (diameter*numshapebins)+curbin2;
-    double r2 = boverabin[bnum].rad;
-    bnum = (diameter*numshapebins)+curbin3;
-    double r3 = coverabin[bnum].rad;
-    random = rg.Random();
-    double random5 = random;
+	double random5 = rg.Random();
     int onum = int(random5*numorients);
     double r1x = orient[onum].rad1x;
     double r1y = orient[onum].rad1y;
@@ -612,44 +537,48 @@ void  GrainGeneratorFunc::generate_grains(int numgrains)
     double r3x = orient[onum].rad3x;
     double r3y = orient[onum].rad3y;
     double r3z = orient[onum].rad3z;
-    random = rg.Random();
-    double random6 = random;
-    for(int p = 0; p < numseNbins; p++)
-    {
-      bnum = (diameter*numseNbins)+p;
-      double Nprob = seNbin[bnum].Nprobability;
-      if(Nprob < random6) curbin5 = p;
-    }
-    bnum = (diameter*numshapebins)+curbin5;
-    double N = seNbin[bnum].Nvalue;
+    u = rg.Random();
+	double m = svshape[diameter][0];
+	double s = svshape[diameter][1];
+	double N = rg.RandNorm(u,m,s);
+	N = exp(N);
     int gnum = l;
-    tempgrain[l].grainname = gnum;
-    tempgrain[l].volume = vol;
-    tempgrain[l].axis1 = r1;
-    tempgrain[l].axis2 = r2;
-    tempgrain[l].axis3 = r3;
-    tempgrain[l].axis1x = r1x;
-    tempgrain[l].axis1y = r1y;
-    tempgrain[l].axis1z = r1z;
-    tempgrain[l].axis2x = r2x;
-    tempgrain[l].axis2y = r2y;
-    tempgrain[l].axis2z = r2z;
-    tempgrain[l].axis3x = r3x;
-    tempgrain[l].axis3y = r3y;
-    tempgrain[l].axis3z = r3z;
-    tempgrain[l].Nvalue = N;
+    grains[l].grainname = gnum;
+    grains[l].volume = vol;
+    grains[l].axis1 = r1;
+    grains[l].axis2 = r2;
+    grains[l].axis3 = r3;
+    grains[l].axis1x = r1x;
+    grains[l].axis1y = r1y;
+    grains[l].axis1z = r1z;
+    grains[l].axis2x = r2x;
+    grains[l].axis2y = r2y;
+    grains[l].axis2z = r2z;
+    grains[l].axis3x = r3x;
+    grains[l].axis3y = r3y;
+    grains[l].axis3z = r3z;
+    grains[l].Nvalue = N;
     totvol = totvol + vol;
   }
-  sizex = int(pow((totvol*0.9),0.33333));
-  sizey = int(pow((totvol*0.9),0.33333));
-  sizez = int(pow((totvol*0.9),0.33333));
+  double sizex = int(pow((totvol*0.9),0.33333));
+  double sizey = int(pow((totvol*0.9),0.33333));
+  double sizez = int(pow((totvol*0.9),0.33333));
+  xpoints = int((sizex/resx)+1);
+  ypoints = int((sizey/resy)+1);
+  zpoints = int((sizez/resz)+1);
+  xpoints = int(xpoints/4)*4;
+  ypoints = int(ypoints/4)*4;
+  zpoints = int(zpoints/4)*4;
+  xpoints1 = xpoints/4;
+  ypoints1 = ypoints/4;
+  zpoints1 = zpoints/4;
   for(int i=0;i<numgrains;i++)
   {
     int maxgrain = 0;
     double maxvol = 0;
     for(int j=0;j<numgrains;j++)
     {
-      double vol = tempgrain[j].volume;
+      double vol = grains[j].volume;
       if(vol > maxvol && takencheck[j] != 1)
       {
         maxvol = vol;
@@ -657,35 +586,7 @@ void  GrainGeneratorFunc::generate_grains(int numgrains)
       }
     }
     takencheck[maxgrain] = 1;
-    double vol = tempgrain[maxgrain].volume;
-    double r1 = tempgrain[maxgrain].axis1;
-    double r2 = tempgrain[maxgrain].axis2;
-    double r3 = tempgrain[maxgrain].axis3;
-    double r1x = tempgrain[maxgrain].axis1x;
-    double r1y = tempgrain[maxgrain].axis1y;
-    double r1z = tempgrain[maxgrain].axis1z;
-    double r2x = tempgrain[maxgrain].axis2x;
-    double r2y = tempgrain[maxgrain].axis2y;
-    double r2z = tempgrain[maxgrain].axis2z;
-    double r3x = tempgrain[maxgrain].axis3x;
-    double r3y = tempgrain[maxgrain].axis3y;
-    double r3z = tempgrain[maxgrain].axis3z;
-    double N = tempgrain[maxgrain].Nvalue;
-    grains[i].grainname = i;
-    grains[i].volume = vol;
-    grains[i].axis1 = r1;
-    grains[i].axis2 = r2;
-    grains[i].axis3 = r3;
-    grains[i].axis1x = r1x;
-    grains[i].axis1y = r1y;
-    grains[i].axis1z = r1z;
-    grains[i].axis2x = r2x;
-    grains[i].axis2y = r2y;
-    grains[i].axis2z = r2z;
-    grains[i].axis3x = r3x;
-    grains[i].axis3y = r3y;
-    grains[i].axis3z = r3z;
-    grains[i].Nvalue = N;
+	grainorder[i] = maxgrain;
   }
 }
 
@@ -714,9 +615,9 @@ void  GrainGeneratorFunc::assign_eulers(int numgrains)
           double random2 = random;
           random = rg.Random();
           double random3 = random;
-          synea1 = ((3.1415926535897/36)*j)+((3.1415926535897/36)*random1);
-          synea2 = ((3.1415926535897/36)*k)+((3.1415926535897/36)*random2);
-          synea3 = ((3.1415926535897/36)*l)+((3.1415926535897/36)*random3);
+          synea1 = ((m_pi/36)*j)+((m_pi/36)*random1);
+          synea2 = ((m_pi/36)*k)+((m_pi/36)*random2);
+          synea3 = ((m_pi/36)*l)+((m_pi/36)*random3);
           grains[count].euler1 = synea1;
           grains[count].euler2 = synea2;
           grains[count].euler3 = synea3;
@@ -749,9 +650,9 @@ void  GrainGeneratorFunc::assign_eulers(int numgrains)
             double random5 = random;
             random = rg.Random();
             double random6 = random;
-            synea1 = ((3.1415926535897/36)*m)+((3.1415926535897/36)*random4);
-            synea2 = ((3.1415926535897/36)*n)+((3.1415926535897/36)*random5);
-            synea3 = ((3.1415926535897/36)*p)+((3.1415926535897/36)*random6);
+            synea1 = ((m_pi/36)*m)+((m_pi/36)*random4);
+            synea2 = ((m_pi/36)*n)+((m_pi/36)*random5);
+            synea3 = ((m_pi/36)*p)+((m_pi/36)*random6);
           }
         }
       }
@@ -803,16 +704,11 @@ void  GrainGeneratorFunc::make_points(int numgrains)
   int uniquecursize = 0;
   int totalcursize = 0;
   int uniquecurcoursesize = 0;
+  nsdist.resize(numgrains);
   vector<long> alreadytriedlist;
   srand(static_cast<unsigned int>(time(NULL)));
-  int xpoints = int(sizex/resx);
-  int ypoints = int(sizey/resy);
-  int zpoints = int(sizez/resz);
-  int xpointscourse = int(sizex/resx1);
-  int ypointscourse = int(sizey/resy1);
-  int zpointscourse = int(sizez/resz1);
   long nottakencount = (xpoints*ypoints*zpoints);
-  long nottakencountcourse = (xpointscourse*ypointscourse*zpointscourse);
+  long nottakencountcourse = (xpoints1*ypoints1*zpoints1);
   for (long a = 0; a < nottakencountcourse; a++)
   {
     gridcourse[a].available = init;
@@ -825,18 +721,20 @@ void  GrainGeneratorFunc::make_points(int numgrains)
   }
   for (int i = 0; i < numgrains; i++)
   {
+	nsdist[i].resize(numdiameters);
     good = 0;
     triedcount = 0;
+	int curgrain = grainorder[i];
     int size = int(alreadytriedlist.size());
     for(int k=0;k<size;k++)
     {
       int firstgridpoint = alreadytriedlist[k];
       gridcourse[firstgridpoint].available = init;
     }
-    double volcur = grains[i].volume;
+    double volcur = grains[curgrain].volume;
 //    double aovera = grains[i].axis1;
-    double bovera = grains[i].axis2;
-    double covera = grains[i].axis3;
+    double bovera = grains[curgrain].axis2;
+    double covera = grains[curgrain].axis3;
 //    double coverb = covera/bovera;
     double Nvalue = grains[i].Nvalue;
     double beta1 = (gamma((1.0/Nvalue))*gamma((1/Nvalue)))/gamma((2/Nvalue));
@@ -859,22 +757,22 @@ void  GrainGeneratorFunc::make_points(int numgrains)
     }
     if(shapeclass == 1)
     {
-      radcur1cube = (volcur*(3.0/4.0)*(1.0/3.1415926535897)*(1.0/bovera)*(1.0/covera));
+      radcur1cube = (volcur*(3.0/4.0)*(1.0/m_pi)*(1.0/bovera)*(1.0/covera));
     }
     double rad = pow(radcur1cube,0.333333333333);
     if(shapeclass == 3) rad = rad/2.0;
     double radcur1 = rad;
     double radcur2 = (rad*bovera);
     double radcur3 = (rad*covera);
-    double rad1x = grains[i].axis1x;
-    double rad1y = grains[i].axis1y;
-    double rad1z = grains[i].axis1z;
-    double rad2x = grains[i].axis2x;
-    double rad2y = grains[i].axis2y;
-    double rad2z = grains[i].axis2z;
-    double rad3x = grains[i].axis3x;
-    double rad3y = grains[i].axis3y;
-    double rad3z = grains[i].axis3z;
+    double rad1x = grains[curgrain].axis1x;
+    double rad1y = grains[curgrain].axis1y;
+    double rad1z = grains[curgrain].axis1z;
+    double rad2x = grains[curgrain].axis2x;
+    double rad2y = grains[curgrain].axis2y;
+    double rad2z = grains[curgrain].axis2z;
+    double rad3x = grains[curgrain].axis3x;
+    double rad3y = grains[curgrain].axis3y;
+    double rad3z = grains[curgrain].axis3z;
     while(good == 0)
     {
       double random = rg.Random();
@@ -906,9 +804,9 @@ void  GrainGeneratorFunc::make_points(int numgrains)
         }
         alreadytriedlist.push_back(j);
         good = 1;
-        columncourse = (j%xpointscourse);
-        rowcourse = ((j/xpointscourse)%ypointscourse);
-        planecourse = (j/(xpointscourse*ypointscourse));
+        columncourse = (j%xpoints1);
+        rowcourse = ((j/xpoints1)%ypoints1);
+        planecourse = (j/(xpoints1*ypoints1));
         xc = (columncourse*resx1)+(resx1/2);
         yc = (rowcourse*resy1)+(resy1/2);
         zc = (planecourse*resz1)+(resz1/2);
@@ -921,16 +819,16 @@ void  GrainGeneratorFunc::make_points(int numgrains)
         insidecount = 0;
         badcount = 0;
         xmin = 0;
-        xmax = int((sizex/resx)-1);
+        xmax = xpoints-1;
         ymin = 0;
-        ymax = int((sizey/resy)-1);
+        ymax = ypoints-1;
         zmin = 0;
-        zmax = int((sizez/resz)-1);
+        zmax = zpoints-1;
         if(column-((radcur1/resx)+1) > 0)
         {
           xmin = int(column-((radcur1/resx)+1));
         }
-        if(column+((radcur1/resx)+1) < (sizex/resx)-1)
+        if(column+((radcur1/resx)+1) < xpoints-1)
         {
           xmax = int(column+((radcur1/resx)+1));
         }
@@ -938,7 +836,7 @@ void  GrainGeneratorFunc::make_points(int numgrains)
         {
           ymin = int(row-((radcur1/resy)+1));
         }
-        if(row+((radcur1/resy)+1) < (sizey/resy)-1)
+        if(row+((radcur1/resy)+1) < ypoints-1)
         {
           ymax = int(row+((radcur1/resy)+1));
         }
@@ -946,7 +844,7 @@ void  GrainGeneratorFunc::make_points(int numgrains)
         {
           zmin = int(plane-((radcur1/resz)+1));
         }
-        if(plane+((radcur1/resz)+1) < (sizez/resz)-1)
+        if(plane+((radcur1/resz)+1) < zpoints-1)
         {
           zmax = int(plane+((radcur1/resz)+1));
         }
@@ -1075,7 +973,7 @@ void  GrainGeneratorFunc::make_points(int numgrains)
                   int columnc = column/resdiff;
                   int rowc = row/resdiff;
                   int planec = plane/resdiff;
-                  int currentpointcourse = (xpointscourse*ypointscourse*planec)+(xpointscourse*rowc)+columnc;
+                  int currentpointcourse = (xpoints1*ypoints1*planec)+(xpoints1*rowc)+columnc;
                   gridcourse[currentpointcourse].inside = in;
                 }
                 gridfine[currentpoint].inside = in;
@@ -1118,16 +1016,18 @@ void  GrainGeneratorFunc::make_points(int numgrains)
             int nnum = packedgrain[n].tempneighnum;
             double lognnum = log10(double(nnum));
             if(nnum == 0) lognnum = 0;
-            double nsizevol = 1.3333333333*(3.1415926535897)*radold1*radold2*radold3;
-            double nsize3 = ((nsizevol*(0.75))/(3.1415926535897));
+            double nsizevol = 1.3333333333*(m_pi)*radold1*radold2*radold3;
+            double nsize3 = ((nsizevol*(0.75))/(m_pi));
             double nsize = 2*(pow(nsize3,0.33333333333));
-            double sizevol = 1.3333333333*(3.1415926535897)*radcur1*radcur2*radcur3;
-            double size3 = ((sizevol*(0.75))/(3.1415926535897));
+            double sizevol = 1.3333333333*(m_pi)*radcur1*radcur2*radcur3;
+            double size3 = ((sizevol*(0.75))/(m_pi));
             double size = 2*(pow(size3,0.33333333333));
             int nbin = int(nsize);
             int bin = int(size);
-            if(nbin >= numsizebins) nbin = numsizebins-1;
-            if(bin >= numsizebins) bin = numsizebins-1;
+            if(nbin >= maxdiameter) nbin = maxdiameter;
+            if(nbin <= mindiameter) nbin = mindiameter;
+            if(bin >= maxdiameter) bin = maxdiameter;
+            if(bin <= mindiameter) bin = mindiameter;
             int was = nnum;
             nnum = nnum + 1;
             int now = nnum;
@@ -1139,12 +1039,12 @@ void  GrainGeneratorFunc::make_points(int numgrains)
             uberincrease = uberincrease + increase;
             nsdist[n][bin]++;
             double total = 0;
-            for(int q = 0; q < numsizebins; q++)
+            for(int q = mindiameter; q < maxdiameter+1; q++)
             {
               total = total + nsdist[n][q];
             }
             double error = 0;
-            for(int r = 0; r < numsizebins; r++)
+            for(int r = mindiameter; r < maxdiameter+1; r++)
             {
               error = error + (svs[nbin][r] - (nsdist[n][r]/total))*(svs[nbin][r] - (nsdist[n][r]/total));
             }
@@ -1202,7 +1102,7 @@ void  GrainGeneratorFunc::make_points(int numgrains)
               column = column/resdiff;
               row = row/resdiff;
               plane = plane/resdiff;
-              int point = (column+(row*xpointscourse)+(plane*xpointscourse*ypointscourse));
+              int point = (column+(row*xpoints1)+(plane*xpoints1*ypoints1));
               int inside = gridcourse[point].inside;
               if(inside == 1)
               {
@@ -1231,22 +1131,24 @@ void  GrainGeneratorFunc::make_points(int numgrains)
         int nnum = packedgrain[p].tempneighnum;
         nnum = nnum + 1;
         packedgrain[p].tempneighnum = nnum;
-        double volume = 1.3333333333*(3.1415926535897)*radcur1*radcur2*radcur3;
-        double volbin = volume*0.75/3.1415926535897;
+        double volume = 1.3333333333*(m_pi)*radcur1*radcur2*radcur3;
+        double volbin = volume*0.75/m_pi;
         int vbin = int(2*pow(volbin,0.3333333333));
-        if(vbin >= numsizebins) vbin = numsizebins-1;
+        if(vbin >= maxdiameter) vbin = maxdiameter;
+        if(vbin <= mindiameter) vbin = mindiameter;
         nsdist[p][vbin]++;
-        double nvolume = 1.3333333333*(3.1415926535897)*radold1*radold2*radold3;
-        double nvolbin = nvolume*0.75/3.1415926535897;
+        double nvolume = 1.3333333333*(m_pi)*radold1*radold2*radold3;
+        double nvolbin = nvolume*0.75/m_pi;
         int nvbin = int(2*pow(nvolbin,0.3333333333));
-        if(nvbin >= numsizebins) nvbin = numsizebins-1;
+        if(nvbin >= maxdiameter) vbin = maxdiameter;
+        if(nvbin <= mindiameter) vbin = mindiameter;
         double total = 0;
-        for(int q = 0; q < numsizebins; q++)
+        for(int q = mindiameter; q < maxdiameter+1; q++)
         {
           total = total + nsdist[p][q];
         }
         double error = 0;
-        for(int r = 0; r < numsizebins; r++)
+        for(int r = mindiameter; r < maxdiameter+1; r++)
         {
           error = error + (svs[nvbin][r] - (nsdist[p][r]/total))*(svs[nvbin][r] - (nsdist[p][r]/total));
         }
@@ -1305,7 +1207,7 @@ void  GrainGeneratorFunc::make_points(int numgrains)
           column = column/resdiff;
           row = row/resdiff;
           plane = plane/resdiff;
-          int point = (column+(row*xpointscourse)+(plane*xpointscourse*ypointscourse));
+          int point = (column+(row*xpoints1)+(plane*xpoints1*ypoints1));
           int inside = gridcourse[point].inside;
           if(inside == 1)
           {
@@ -1334,9 +1236,9 @@ void  GrainGeneratorFunc::make_points(int numgrains)
     nottakencount = nottakencount - uniquecursize;
     uniquecursize = 0;
     uniquecurcoursesize = 0;
-    int pointcolumn = j%xpointscourse;
-    int pointrow = (j/xpointscourse)%ypointscourse;
-    int pointplane = j/(xpointscourse*ypointscourse);
+    int pointcolumn = j%xpoints1;
+    int pointrow = (j/xpoints1)%ypoints1;
+    int pointplane = j/(xpoints1*ypoints1);
     double pointx = (pointcolumn*resx1)+(resx1/2);
     double pointy = (pointrow*resy1)+(resy1/2);
     double pointz = (pointplane*resz1)+(resz1/2);
@@ -1418,7 +1320,7 @@ void  GrainGeneratorFunc::fill_gaps(int numgrains)
             neighs.push_back(grain1);
           }
         }
-        if(column < (sizex/resx)-1)
+        if(column < xpoints-1)
         {
           int grain2 = gridfine[i+1].grainname;
           int taken2 = gridfine[i+1].available90;
@@ -1436,7 +1338,7 @@ void  GrainGeneratorFunc::fill_gaps(int numgrains)
             neighs.push_back(grain3);
           }
         }
-        if(row < (sizey/resy)-1)
+        if(row < ypoints-1)
         {
           int grain4 = gridfine[i+(xpoints)].grainname;
           int taken4 = gridfine[i+(xpoints)].available90;
@@ -1454,7 +1356,7 @@ void  GrainGeneratorFunc::fill_gaps(int numgrains)
             neighs.push_back(grain5);
           }
         }
-        if(plane < (sizez/resz)-1)
+        if(plane < zpoints-1)
         {
           int grain6 = gridfine[i+(xpoints*ypoints)].grainname;
           int taken6 = gridfine[i+(xpoints*ypoints)].available90;
@@ -1512,6 +1414,125 @@ void  GrainGeneratorFunc::fill_gaps(int numgrains)
   }
 }
 
+void  GrainGeneratorFunc::find_neighbors()
+{
+  double x = 0;
+  double y = 0;
+  double z = 0;
+  size_t nListSize = 1000;
+  vector<int> nlist(nListSize, -1);
+
+
+  for(int i = 0; i < numgrains; i++)
+  {
+    //std::cout << "find_neighbors: " << i << " of " << numgrains << " grains." << std::endl;
+      size_t nListIndex = 0;
+      for(int j = 0; j < (xpoints*ypoints*zpoints); j++)
+      {
+//        int onsurf = 0;
+        int gnum = gridfine[j].grainname;
+        if(gnum == i)
+        {
+		    x = j%xpoints;
+		    y = (j/xpoints)%ypoints;
+		    z = j/(xpoints*ypoints);
+//          int first = voxels[j].grainname;
+          if(x > 0)
+          {
+              int grain1 = gridfine[j-1].grainname;
+              if(grain1 != i)
+            {
+              nlist[nListIndex] = (grain1);
+              ++nListIndex;
+              if (nListIndex == nlist.size())
+              {
+                nlist.resize(nListIndex + nListSize);
+              }
+            }
+          }
+          if(x < xpoints-1)
+          {
+            int grain2 = gridfine[j+1].grainname;
+            if(grain2 != i)
+            {
+              nlist[nListIndex] = (grain2);
+              ++nListIndex;
+              if (nListIndex == nlist.size())
+              {
+                nlist.resize(nListIndex + nListSize);
+              }
+            }
+          }
+          if(y > 0)
+          {
+            int grain3 = gridfine[j-(xpoints)].grainname;
+            if(grain3 != i)
+            {
+              nlist[nListIndex] = (grain3);
+              ++nListIndex;
+              if (nListIndex == nlist.size())
+              {
+                nlist.resize(nListIndex + nListSize);
+              }
+            }
+          }
+          if(y < ypoints-1)
+          {
+            int grain4 = gridfine[j+(xpoints)].grainname;
+            if(grain4 != i)
+            {
+              nlist[nListIndex] = (grain4);
+              ++nListIndex;
+              if (nListIndex == nlist.size())
+              {
+                nlist.resize(nListIndex + nListSize);
+              }
+            }
+          }
+          if(z > 0)
+          {
+            int grain5 = gridfine[j-(xpoints*ypoints)].grainname;
+            if(grain5 != i)
+            {
+              nlist[nListIndex] = (grain5);
+              ++nListIndex;
+              if (nListIndex == nlist.size())
+              {
+                nlist.resize(nListIndex + nListSize);
+              }
+            }
+          }
+          if(z < zpoints-1)
+          {
+            int grain6 = gridfine[j+(xpoints*ypoints)].grainname;
+            if(grain6 != i)
+            {
+              nlist[nListIndex] = (grain6);
+              ++nListIndex;
+              if (nListIndex == nlist.size())
+              {
+                nlist.resize(nListIndex + nListSize);
+              }
+            }
+          }
+        }
+      if (nListIndex > 0)
+      {
+        vector<int>::iterator newend;
+        sort(nlist.begin(),nlist.end());
+        newend = unique(nlist.begin(),nlist.end());
+        nlist.erase(newend,nlist.end());
+        int numneighs = int(nlist.size());
+        packedgrain[i].numneighbors = numneighs;
+        packedgrain[i].neighborlist = new std::vector<int>(numneighs);
+        packedgrain[i].neighborlist->swap(nlist);
+//        grains[i].neighborlist = nlist;
+      }
+      nlist.clear();
+      nlist.resize(nListSize);
+    }
+  }
+}
 
 void  GrainGeneratorFunc::loadMisoData(string inname10)
 {
@@ -1541,6 +1562,82 @@ void  GrainGeneratorFunc::loadMicroData(string inname11)
         count++;
     }
     inputFile.close();
+}
+
+void  GrainGeneratorFunc::measure_misorientations ()
+{
+  vector<double> misolist;
+  double n1;
+  double n2;
+  double n3;
+  for (int i = 0; i < numgrains; i++)
+  {
+    vector<int>* nlist = packedgrain[i].neighborlist;
+    double g1ea1 = packedgrain[i].avgeuler1;
+    double g1ea2 = packedgrain[i].avgeuler2;
+    double g1ea3 = packedgrain[i].avgeuler3;
+    int size = 0;
+    if (NULL != nlist) { size = nlist->size(); }
+    for(int j=0;j<size;j++)
+    {
+      int nname = nlist->at(j);
+      double g2ea1 = packedgrain[nname].avgeuler1;
+      double g2ea2 = packedgrain[nname].avgeuler2;
+      double g2ea3 = packedgrain[nname].avgeuler3;
+      double w = getmisoquat(crystruct,misorientationtolerance,g1ea1,g1ea2,g1ea3,g2ea1,g2ea2,g2ea3,n1,n2,n3);
+      misolist.push_back(w);
+    }
+    packedgrain[i].misorientationlist = misolist;
+    misolist.clear();
+  }
+}
+
+double GrainGeneratorFunc::getmisoquat(double crystruct,double misorientationtolerance,double g1ea1,double g1ea2,double g1ea3,double g2ea1,double g2ea2,double g2ea3,double &n1,double &n2,double &n3)
+{
+  double wmin=9999999; //,na,nb,nc;
+  double q1[4];
+  double q2[4];
+  double qc[4];
+  double qco[4];
+  q1[0]=sin((g1ea2/2.0))*cos(((g1ea1-g1ea3)/2.0));
+  q1[1]=sin((g1ea2/2.0))*sin(((g1ea1-g1ea3)/2.0));
+  q1[2]=cos((g1ea2/2.0))*sin(((g1ea1+g1ea3)/2.0));
+  q1[3]=cos((g1ea2/2.0))*cos(((g1ea1+g1ea3)/2.0));
+  q2[0]=sin((g2ea2/2.0))*cos(((g2ea1-g2ea3)/2.0));
+  q2[1]=sin((g2ea2/2.0))*sin(((g2ea1-g2ea3)/2.0));
+  q2[2]=cos((g2ea2/2.0))*sin(((g2ea1+g2ea3)/2.0));
+  q2[3]=cos((g2ea2/2.0))*cos(((g2ea1+g2ea3)/2.0));
+  q2[0]=q2[0];
+  q2[1]=-q2[1];
+  q2[2]=-q2[2];
+  q2[3]=-q2[3];
+  qc[0]=q1[0]*q2[0]-q1[1]*q2[1]-q1[2]*q2[2]-q1[3]*q2[3];
+  qc[1]=q1[0]*q2[1]+q1[1]*q2[0]+q1[2]*q2[3]-q1[3]*q2[2];
+  qc[2]=q1[0]*q2[2]-q1[1]*q2[3]+q1[2]*q2[0]+q1[3]*q2[1];
+  qc[3]=q1[0]*q2[3]+q1[1]*q2[2]-q1[2]*q2[1]+q1[3]*q2[0];
+  qc[0]=fabs(qc[0]);
+  qc[1]=fabs(qc[1]);
+  qc[2]=fabs(qc[2]);
+  qc[3]=fabs(qc[3]);
+  for(int i=0;i<4;i++)
+  {
+    qco[i]=100000;
+    for(int j=0;j<4;j++)
+    {
+      if((qc[j] < qco[i] && i == 0) || (qc[j] < qco[i] && qc[j] > qco[i-1]))
+      {
+        qco[i] = qc[j];
+      }
+    }
+  }
+  wmin = qco[3];
+  if(((qco[2]+qco[3])/(pow(2,0.5))) > wmin) wmin = ((qco[2]+qco[3])/(pow(2,0.5)));
+  if(((qco[0]+qco[1]+qco[2]+qco[3])/2) > wmin) wmin = ((qco[0]+qco[1]+qco[2]+qco[3])/2);
+  if(wmin < -1) wmin = -1;
+  if(wmin > 1) wmin = 1;
+  wmin = acos(wmin);
+  wmin = (360.0/m_pi)*wmin;
+  return wmin;
 }
 
 void  GrainGeneratorFunc::rank_misobins(int numgrains)
@@ -1970,9 +2067,6 @@ void  GrainGeneratorFunc::writeCube(string outname1, int numgrains)
 {
     ofstream outFile;
     outFile.open(outname1.c_str());
-  int xpoints = int(sizex/resx);
-  int ypoints = int(sizey/resy);
-  int zpoints = int(sizez/resz);
   outFile << "# vtk DataFile Version 2.0" << endl;
   outFile << "data set from FFT2dx_GB" << endl;
   outFile << "ASCII" << endl;

@@ -28,6 +28,8 @@ class AIMRandomNG
 
     void RandomInit(uint32);
     double Random();
+	double RandBeta(double, double, double, double);
+	double RandNorm(double, double, double);
     double x[5];
 
   private:
