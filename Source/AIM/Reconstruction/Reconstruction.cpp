@@ -281,6 +281,7 @@ void Reconstruction::compute()
   m->write_volume(reconFile);
 
   std::string reconVisFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::ReconstructedVisualizationFile;
+  std::string dxFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::ReconstructedDxFile;
   std::string grainsFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::GrainsFile;
 
   std::string axisFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::AxisOrientationsFile;
@@ -290,6 +291,10 @@ void Reconstruction::compute()
   CHECK_FOR_CANCELED(ReconstructionFunc)
   progressMessage(AIM_STRING("Writing Reconstruction Visualization File"), 75 );
   m->create_visualization(reconVisFile);
+
+  CHECK_FOR_CANCELED(ReconstructionFunc)
+  progressMessage(AIM_STRING("Writing DX File"), 76);
+  m->create_dxfile(dxFile);
 
   CHECK_FOR_CANCELED(ReconstructionFunc)
   progressMessage(AIM_STRING("Writing Grains File"), 78 );

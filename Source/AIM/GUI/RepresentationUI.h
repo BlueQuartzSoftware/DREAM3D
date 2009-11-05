@@ -51,7 +51,7 @@ class RepresentationUI : public QMainWindow, private Ui::RepresentationUI
 
     /* Reconstruction Slots */
     void on_angDirBtn_clicked();
-    void on_rec_OutputDirBtn_clicked();
+    void on_outputDirBtn_clicked();
     void on_alreadyFormed_stateChanged(int);
     void on_reconstructBtn_clicked();
 
@@ -104,7 +104,7 @@ class RepresentationUI : public QMainWindow, private Ui::RepresentationUI
 
     // slots to catch signals emittd by the various QLineEdit widgets
     void on_angDir_textChanged(const QString & text);
-    void on_rec_OutputDir_textChanged(const QString & text);
+    void on_outputDir_textChanged(const QString & text);
 
     void on_gg_InputDir_textChanged(const QString & text);
     void on_gg_OutputDir_textChanged(const QString & text);
