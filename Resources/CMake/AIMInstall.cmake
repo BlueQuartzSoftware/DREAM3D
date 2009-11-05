@@ -230,8 +230,8 @@ ENDIF(WIN32 AND NOT UNIX)
 SET(CPACK_SOURCE_GENERATOR "ZIP")
 SET(CPACK_SOURCE_PACKAGE_FILE_NAME "AIMRepresentation-${AIMRepresentation_VERSION}-Source")
 SET(CPACK_SOURCE_TOPLEVEL_TAG "Source")
-SET(CPACK_IGNORE_FILES "/VS2008/;/zRel/;/Build/;/\\\\.git/;\\\\.*project")
-SET(CPACK_SOURCE_IGNORE_FILES "/VS2008/;/zRel/;/Build/;/\\\\.git/;\\\\.*project")
+SET(CPACK_IGNORE_FILES "/i386/;/x64/;/VS2008/;/zRel/;/Build/;/\\\\.git/;\\\\.*project")
+SET(CPACK_SOURCE_IGNORE_FILES "/i386/;/x64/;/VS2008/;/zRel/;/Build/;/\\\\.git/;\\\\.*project")
 
 
 

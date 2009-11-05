@@ -106,12 +106,6 @@ Q_OBJECT
        */
       void compute();
 
-      /**
-       * @brief Temporary to get the code running. Eventually this will be replaced
-       * with the normal 'compute' method.
-       */
-      void jackson_compute();
-
   protected:
 #ifdef AIM_USE_QT
     GrainGenerator(QObject* parent = 0);

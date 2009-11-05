@@ -37,7 +37,6 @@ SET (CMAKE_ARCHIVE_OUTPUT_DIRECTORY
 add_definitions(-DSVG_3D_LIBRARY)
 
 set (GrainGenerator_SRCS
-    ${GrainGenerator_SOURCE_DIR}/SVG-3D.cpp
     ${GrainGenerator_SOURCE_DIR}/GrainGenerator.cpp
     ${GrainGenerator_SOURCE_DIR}/main.cpp
 )
