@@ -171,6 +171,7 @@ public:
 	void find_convexities();
 	void volume_stats(string,string,string);
 	void create_visualization(string);
+	void create_dxfile(string dxfile);
 	void write_grains(string);
 	void find_boundarycenters(string);
 	void write_axisorientations(string);
