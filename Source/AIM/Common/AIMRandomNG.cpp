@@ -1,13 +1,21 @@
-///////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2009, Michael A. Jackson. BlueQuartz Software
-//  Copyright (c) 2009, Michael Groeber, US Air Force Research Laboratory
-//  All rights reserved.
-//  BSD License: http://www.opensource.org/licenses/bsd-license.html
-//
-// This code was partly written under US Air Force Contract FA8650-07-D-5800
-//
-///////////////////////////////////////////////////////////////////////////////
+/************************** MOTHER.CPP ****************** AgF 1999-03-03 *
+*  'Mother-of-All' random number generator                               *
+*                                                                        *
+*  This is a multiply-with-carry type of random number generator         *
+*  invented by George Marsaglia.  The algorithm is:                      *
+*  S = 2111111111*X[n-4] + 1492*X[n-3] + 1776*X[n-2] + 5115*X[n-1] + C   *
+*  X[n] = S modulo 2^32                                                  *
+*  C = floor(S / 2^32)                                                   *
+*                                                                        *
+*  IMPORTANT:
+*  This implementation uses a long double for C. Note that not all       *
+*  computers and compilers support the long double (80-bit) floating     *
+*  point format. It is recommended to use a Borland or Gnu compiler on   *
+*  a PC. The Microsoft compiler doesn't support the long double format.  *
+*  You will get an error message if your system doesn't support this.    *
+*                                                                        *
+* © 2002 A. Fog. GNU General Public License www.gnu.org/copyleft/gpl.html*
+*************************************************************************/
 #include "AIMRandomNG.h"
 #include <math.h>
 
@@ -56,6 +64,10 @@ void AIMRandomNG::RandomInit (uint32 seed)
   // randomize some more
   for (i=0; i<19; i++) Random();
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 double AIMRandomNG::RandBeta(double u1, double u2, double aa,double bb)
 {
 #define expmax 89.0
@@ -71,7 +83,7 @@ static long qsame;
     olda = aa;
     oldb = bb;
 S20:
-	
+
     if(aa > 1.0 && bb > 1.0) goto S100;
     if(qsame) goto S30;
     a = aa;
@@ -165,8 +177,12 @@ S220:
 #undef expmax
 #undef infnty
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 double AIMRandomNG::RandNorm(double u, double m, double s)
-{ 
+{
   const double p0 = 0.322232431088;     const double q0 = 0.099348462606;
   const double p1 = 1.0;                const double q1 = 0.588581570495;
   const double p2 = 0.342242088547;     const double q2 = 0.531103462366;

@@ -31,7 +31,8 @@
 
 /**
 * @class RepresentationUI RepresentationUI AIM/RepresentationUI/GUI/RepresentationUI.h
-* @brief
+* @brief The class is the actual implementation for the GUI window that appears on screen
+* when the application is launched.
 * @author Michael A. Jackson for BlueQuartz Software
 * @date Oct 19, 2009
 * @version 1.0
@@ -46,6 +47,7 @@ class RepresentationUI : public QMainWindow, private Ui::RepresentationUI
 
   protected slots:
 
+  /* Menu Slots */
     void on_actionClose_triggered();
     void on_actionExit_triggered();
 
@@ -90,21 +92,22 @@ class RepresentationUI : public QMainWindow, private Ui::RepresentationUI
     // slots for our worker thread to communicate
     void threadHasMessage(QString message);
 
+    /* Reconstruction Thread communicates throught these methods */
     void rec_ThreadFinished();
     void rec_ThreadProgressed(int value);
-
+    /* Synthetic Builder Thread communicates throught these methods */
     void gg_ThreadFinished();
     void gg_ThreadProgressed(int value);
-
+    /* Surface Mesh Thread communicates throught these methods */
     void sm_ThreadFinished();
     void sm_ThreadProgressed(int value);
-
+    /* Volume Mesh Thread communicates throught these methods */
     void vm_ThreadFinished();
     void vm_ThreadProgressed(int value);
 
     // slots to catch signals emittd by the various QLineEdit widgets
     void on_angDir_textChanged(const QString & text);
-    void on_outputDir_textChanged(const QString & text);
+    void on_rec_OutputDir_textChanged(const QString & text);
 
     void on_gg_InputDir_textChanged(const QString & text);
     void on_gg_OutputDir_textChanged(const QString & text);

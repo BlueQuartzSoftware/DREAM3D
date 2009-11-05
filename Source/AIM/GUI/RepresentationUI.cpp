@@ -585,7 +585,7 @@ void RepresentationUI::rec_SetupGui()
   QR3DFileCompleter* com2 = new QR3DFileCompleter(this, true);
   rec_OutputDir->setCompleter(com2);
   QObject::connect( com2, SIGNAL(activated(const QString &)),
-           this, SLOT(on_outputDir_textChanged(const QString &)));
+           this, SLOT(on_rec_OutputDir_textChanged(const QString &)));
 
 
   QString msg ("All files will be over written that appear in the output directory.");
@@ -621,12 +621,6 @@ void RepresentationUI::rec_CheckIOFiles()
 
   this->_verifyPathExists(rec_OutputDir->text(), this->rec_OutputDir);
   CHECK_QLABEL_OUTPUT_FILE_EXISTS(rec_, StatsFile)
-  CHECK_QLABEL_OUTPUT_FILE_EXISTS(rec_, VolBinFile)
-  CHECK_QLABEL_OUTPUT_FILE_EXISTS(rec_, BOverABinsFile)
-  CHECK_QLABEL_OUTPUT_FILE_EXISTS(rec_, COverABinsFile)
-  CHECK_QLABEL_OUTPUT_FILE_EXISTS(rec_, COverBBinsFile)
-  CHECK_QLABEL_OUTPUT_FILE_EXISTS(rec_, SVNFile)
-  CHECK_QLABEL_OUTPUT_FILE_EXISTS(rec_, SVSFile)
   CHECK_QLABEL_OUTPUT_FILE_EXISTS(rec_, MisorientationBinsFile)
   CHECK_QLABEL_OUTPUT_FILE_EXISTS(rec_, MicroBinsFile)
   CHECK_QLABEL_OUTPUT_FILE_EXISTS(rec_, ReconstructedDataFile)
@@ -747,7 +741,7 @@ void RepresentationUI::on_outputDirBtn_clicked()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RepresentationUI::on_outputDir_textChanged(const QString & text)
+void RepresentationUI::on_rec_OutputDir_textChanged(const QString & text)
 {
   _verifyPathExists(rec_OutputDir->text(), rec_OutputDir);
   rec_CheckIOFiles();
@@ -889,15 +883,9 @@ void RepresentationUI::gg_SetupGui()
 // -----------------------------------------------------------------------------
 void RepresentationUI::gg_CheckIOFiles()
 {
-  CHECK_QLABEL_INPUT_FILE_EXISTS(gg_, VolBinFile)
-  CHECK_QLABEL_INPUT_FILE_EXISTS(gg_, BOverABinsFile)
-  CHECK_QLABEL_INPUT_FILE_EXISTS(gg_, COverABinsFile)
-  CHECK_QLABEL_INPUT_FILE_EXISTS(gg_, COverBBinsFile)
-  CHECK_QLABEL_INPUT_FILE_EXISTS(gg_, SeNBinsFile)
+  CHECK_QLABEL_INPUT_FILE_EXISTS(gg_, StatsFile)
   CHECK_QLABEL_INPUT_FILE_EXISTS(gg_, AxisOrientationsFile)
   CHECK_QLABEL_INPUT_FILE_EXISTS(gg_, EulerAnglesFile)
-  CHECK_QLABEL_INPUT_FILE_EXISTS(gg_, SVNFile)
-  CHECK_QLABEL_INPUT_FILE_EXISTS(gg_, SVSFile)
   CHECK_QLABEL_INPUT_FILE_EXISTS(gg_, MisorientationBinsFile)
   CHECK_QLABEL_INPUT_FILE_EXISTS(gg_, MicroBinsFile)
 
@@ -991,15 +979,9 @@ void RepresentationUI::on_gg_GoBtn_clicked()
   SANITY_CHECK_INPUT(gg_, InputDir)
   SANITY_CHECK_INPUT(gg_, OutputDir)
 
-  SANITY_CHECK_QLABEL_FILE(gg_, VolBinFile)
-  SANITY_CHECK_QLABEL_FILE(gg_, BOverABinsFile)
-  SANITY_CHECK_QLABEL_FILE(gg_, COverABinsFile)
-  SANITY_CHECK_QLABEL_FILE(gg_, COverBBinsFile)
-  SANITY_CHECK_QLABEL_FILE(gg_, SeNBinsFile)
+  SANITY_CHECK_QLABEL_FILE(gg_, StatsFile)
   SANITY_CHECK_QLABEL_FILE(gg_, AxisOrientationsFile)
   SANITY_CHECK_QLABEL_FILE(gg_, EulerAnglesFile)
-  SANITY_CHECK_QLABEL_FILE(gg_, SVNFile)
-  SANITY_CHECK_QLABEL_FILE(gg_, SVSFile)
   SANITY_CHECK_QLABEL_FILE(gg_, MisorientationBinsFile)
   SANITY_CHECK_QLABEL_FILE(gg_, MicroBinsFile)
 
@@ -1323,22 +1305,46 @@ void RepresentationUI::vm_CheckIOFiles()
 // -----------------------------------------------------------------------------
 void RepresentationUI::on_vm_NodesFileBtn_clicked()
 {
-
+  QString file = QFileDialog::getOpenFileName(this, tr("Select Nodes File"),
+                                                 m_OpenDialogLastDirectory,
+                                                 tr("Txt Files (*.txt)") );
+  if ( true == file.isEmpty() ){ return;  }
+  QFileInfo fi (file);
+  vm_NodesFile->setText(fi.absoluteFilePath());
+  vm_CheckIOFiles();
 }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void RepresentationUI::on_vm_TrianglesFileBtn_clicked()
 {
-
+  QString file = QFileDialog::getOpenFileName(this, tr("Select Triangles File"),
+                                                 m_OpenDialogLastDirectory,
+                                                 tr("Txt Files (*.txt)") );
+  if ( true == file.isEmpty() ){ return;  }
+  QFileInfo fi (file);
+  vm_TrianglesFile->setText(fi.absoluteFilePath());
+  vm_CheckIOFiles();
 }
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void RepresentationUI::on_vm_OutputDirBtn_clicked()
 {
-
+  QString outputFile = this->m_OpenDialogLastDirectory + QDir::separator();
+  outputFile = QFileDialog::getExistingDirectory(this, tr("Select Volume Meshing Output Directory"), outputFile);
+  if (!outputFile.isNull())
+  {
+    this->vm_OutputDir->setText(outputFile);
+    if (_verifyPathExists(outputFile, vm_OutputDir) == true )
+    {
+      vm_CheckIOFiles();
+      vm_OutputDir->setText(outputFile);
+    }
+  }
 }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

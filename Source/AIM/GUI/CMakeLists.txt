@@ -91,12 +91,10 @@ SET (Reconstruction_HDRS
 IDE_SOURCE_PROPERTIES( "Source/AIM/Reconstruction" "${Reconstruction_HDRS}" "${Reconstruction_SRCS}")
 
 SET (GrainGenerator_SRCS
-    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/GrainGenerator/SVG-3D.cpp
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/GrainGenerator/GrainGenerator.cpp
 )
 SET (GrainGenerator_HDRS
    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/GrainGenerator/GrainGenerator.h
-   ${AIMRepresentation_SOURCE_DIR}/Source/AIM/GrainGenerator/SVG-3D.h
 )
 IDE_SOURCE_PROPERTIES( "Source/AIM/GrainGenerator" "${GrainGenerator_HDRS}" "${GrainGenerator_SRCS}")
 

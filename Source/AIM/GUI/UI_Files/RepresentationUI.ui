@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>535</width>
-    <height>644</height>
+    <height>589</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -221,6 +221,9 @@
           </item>
           <item row="1" column="0">
            <layout class="QFormLayout" name="formLayout_2">
+            <property name="fieldGrowthPolicy">
+             <enum>QFormLayout::FieldsStayAtSizeHint</enum>
+            </property>
             <property name="labelAlignment">
              <set>Qt::AlignCenter</set>
             </property>
@@ -230,126 +233,7 @@
             <property name="verticalSpacing">
              <number>4</number>
             </property>
-            <item row="0" column="0">
-             <widget class="QLabel" name="rec_ReconstructedDataFileIcon">
-              <property name="text">
-               <string/>
-              </property>
-              <property name="pixmap">
-               <pixmap resource="../../../../Resources/icons/images/Icons.qrc">:/Delete-16x16.png</pixmap>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="1">
-             <widget class="QLabel" name="rec_ReconstructedDataFile">
-              <property name="text">
-               <string>reconstructed_data.txt</string>
-              </property>
-             </widget>
-            </item>
             <item row="1" column="0">
-             <widget class="QLabel" name="rec_VolBinFileIcon">
-              <property name="text">
-               <string/>
-              </property>
-              <property name="pixmap">
-               <pixmap resource="../../../../Resources/icons/images/Icons.qrc">:/Delete-16x16.png</pixmap>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="1">
-             <widget class="QLabel" name="rec_VolBinFile">
-              <property name="text">
-               <string>volbins.txt</string>
-              </property>
-             </widget>
-            </item>
-            <item row="2" column="0">
-             <widget class="QLabel" name="rec_BOverABinsFileIcon">
-              <property name="text">
-               <string/>
-              </property>
-              <property name="pixmap">
-               <pixmap resource="../../../../Resources/icons/images/Icons.qrc">:/Delete-16x16.png</pixmap>
-              </property>
-             </widget>
-            </item>
-            <item row="2" column="1">
-             <widget class="QLabel" name="rec_BOverABinsFile">
-              <property name="text">
-               <string>boverabins.txt</string>
-              </property>
-             </widget>
-            </item>
-            <item row="3" column="0">
-             <widget class="QLabel" name="rec_COverABinsFileIcon">
-              <property name="text">
-               <string/>
-              </property>
-              <property name="pixmap">
-               <pixmap resource="../../../../Resources/icons/images/Icons.qrc">:/Delete-16x16.png</pixmap>
-              </property>
-             </widget>
-            </item>
-            <item row="3" column="1">
-             <widget class="QLabel" name="rec_COverABinsFile">
-              <property name="text">
-               <string>coverabins.txt</string>
-              </property>
-             </widget>
-            </item>
-            <item row="4" column="0">
-             <widget class="QLabel" name="rec_COverBBinsFileIcon">
-              <property name="text">
-               <string/>
-              </property>
-              <property name="pixmap">
-               <pixmap resource="../../../../Resources/icons/images/Icons.qrc">:/Delete-16x16.png</pixmap>
-              </property>
-             </widget>
-            </item>
-            <item row="4" column="1">
-             <widget class="QLabel" name="rec_COverBBinsFile">
-              <property name="text">
-               <string>coverbbins.txt</string>
-              </property>
-             </widget>
-            </item>
-            <item row="5" column="0">
-             <widget class="QLabel" name="rec_SVNFileIcon">
-              <property name="text">
-               <string/>
-              </property>
-              <property name="pixmap">
-               <pixmap resource="../../../../Resources/icons/images/Icons.qrc">:/Delete-16x16.png</pixmap>
-              </property>
-             </widget>
-            </item>
-            <item row="5" column="1">
-             <widget class="QLabel" name="rec_SVNFile">
-              <property name="text">
-               <string>svn.txt</string>
-              </property>
-             </widget>
-            </item>
-            <item row="6" column="0">
-             <widget class="QLabel" name="rec_SVSFileIcon">
-              <property name="text">
-               <string/>
-              </property>
-              <property name="pixmap">
-               <pixmap resource="../../../../Resources/icons/images/Icons.qrc">:/Delete-16x16.png</pixmap>
-              </property>
-             </widget>
-            </item>
-            <item row="6" column="1">
-             <widget class="QLabel" name="rec_SVSFile">
-              <property name="text">
-               <string>svs.txt</string>
-              </property>
-             </widget>
-            </item>
-            <item row="7" column="0">
              <widget class="QLabel" name="rec_MisorientationBinsFileIcon">
               <property name="text">
                <string/>
@@ -359,14 +243,14 @@
               </property>
              </widget>
             </item>
-            <item row="7" column="1">
+            <item row="1" column="1">
              <widget class="QLabel" name="rec_MisorientationBinsFile">
               <property name="text">
                <string>misobins.txt</string>
               </property>
              </widget>
             </item>
-            <item row="8" column="0">
+            <item row="2" column="0">
              <widget class="QLabel" name="rec_SeNBinsFileIcon">
               <property name="text">
                <string/>
@@ -376,38 +260,21 @@
               </property>
              </widget>
             </item>
-            <item row="8" column="1">
+            <item row="2" column="1">
              <widget class="QLabel" name="rec_SeNBinsFile">
               <property name="text">
                <string>seNbins.txt</string>
               </property>
              </widget>
             </item>
-           </layout>
-          </item>
-          <item row="1" column="1">
-           <layout class="QFormLayout" name="formLayout">
-            <property name="verticalSpacing">
-             <number>4</number>
-            </property>
-            <item row="0" column="0">
-             <widget class="QLabel" name="rec_MicroBinsFileIcon">
+            <item row="3" column="1">
+             <widget class="QLabel" name="rec_StatsFile">
               <property name="text">
-               <string/>
-              </property>
-              <property name="pixmap">
-               <pixmap resource="../../../../Resources/icons/images/Icons.qrc">:/Delete-16x16.png</pixmap>
+               <string>stats.txt</string>
               </property>
              </widget>
             </item>
-            <item row="0" column="1">
-             <widget class="QLabel" name="rec_MicroBinsFile">
-              <property name="text">
-               <string>microbins.txt</string>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="0">
+            <item row="3" column="0">
              <widget class="QLabel" name="rec_StatsFileIcon">
               <property name="text">
                <string/>
@@ -417,49 +284,8 @@
               </property>
              </widget>
             </item>
-            <item row="1" column="1">
-             <widget class="QLabel" name="rec_StatsFile">
-              <property name="text">
-               <string>stats.txt</string>
-              </property>
-             </widget>
-            </item>
-            <item row="2" column="0">
-             <widget class="QLabel" name="rec_ReconstructedVisualizationFileIcon">
-              <property name="text">
-               <string/>
-              </property>
-              <property name="pixmap">
-               <pixmap resource="../../../../Resources/icons/images/Icons.qrc">:/Delete-16x16.png</pixmap>
-              </property>
-             </widget>
-            </item>
-            <item row="2" column="1">
-             <widget class="QLabel" name="rec_ReconstructedVisualizationFile">
-              <property name="text">
-               <string>reconstructed_visualization.vtk</string>
-              </property>
-             </widget>
-            </item>
-            <item row="3" column="0">
-             <widget class="QLabel" name="rec_GrainsFileIcon">
-              <property name="text">
-               <string/>
-              </property>
-              <property name="pixmap">
-               <pixmap resource="../../../../Resources/icons/images/Icons.qrc">:/Delete-16x16.png</pixmap>
-              </property>
-             </widget>
-            </item>
-            <item row="3" column="1">
-             <widget class="QLabel" name="rec_GrainsFile">
-              <property name="text">
-               <string>grains.txt</string>
-              </property>
-             </widget>
-            </item>
             <item row="4" column="0">
-             <widget class="QLabel" name="rec_BoundaryCentersFileIcon">
+             <widget class="QLabel" name="rec_MicroBinsFileIcon">
               <property name="text">
                <string/>
               </property>
@@ -469,14 +295,14 @@
              </widget>
             </item>
             <item row="4" column="1">
-             <widget class="QLabel" name="rec_BoundaryCentersFile">
+             <widget class="QLabel" name="rec_MicroBinsFile">
               <property name="text">
-               <string>boundarycenters.txt</string>
+               <string>microbins.txt</string>
               </property>
              </widget>
             </item>
-            <item row="5" column="0">
-             <widget class="QLabel" name="rec_AxisOrientationsFileIcon">
+            <item row="7" column="0">
+             <widget class="QLabel" name="rec_GrainsFileIcon">
               <property name="text">
                <string/>
               </property>
@@ -485,10 +311,10 @@
               </property>
              </widget>
             </item>
-            <item row="5" column="1">
-             <widget class="QLabel" name="rec_AxisOrientationsFile">
+            <item row="7" column="1">
+             <widget class="QLabel" name="rec_GrainsFile">
               <property name="text">
-               <string>axisorientations.txt</string>
+               <string>grains.txt</string>
               </property>
              </widget>
             </item>
@@ -509,8 +335,49 @@
               </property>
              </widget>
             </item>
+           </layout>
+          </item>
+          <item row="1" column="1">
+           <layout class="QFormLayout" name="formLayout">
+            <property name="verticalSpacing">
+             <number>4</number>
+            </property>
+            <item row="3" column="0">
+             <widget class="QLabel" name="rec_ReconstructedVisualizationFileIcon">
+              <property name="text">
+               <string/>
+              </property>
+              <property name="pixmap">
+               <pixmap resource="../../../../Resources/icons/images/Icons.qrc">:/Delete-16x16.png</pixmap>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="1">
+             <widget class="QLabel" name="rec_ReconstructedVisualizationFile">
+              <property name="text">
+               <string>reconstructed_visualization.vtk</string>
+              </property>
+             </widget>
+            </item>
+            <item row="6" column="0">
+             <widget class="QLabel" name="rec_BoundaryCentersFileIcon">
+              <property name="text">
+               <string/>
+              </property>
+              <property name="pixmap">
+               <pixmap resource="../../../../Resources/icons/images/Icons.qrc">:/Delete-16x16.png</pixmap>
+              </property>
+             </widget>
+            </item>
+            <item row="6" column="1">
+             <widget class="QLabel" name="rec_BoundaryCentersFile">
+              <property name="text">
+               <string>boundarycenters.txt</string>
+              </property>
+             </widget>
+            </item>
             <item row="7" column="0">
-             <widget class="QLabel" name="rec_ReconstructedDxFileIcon">
+             <widget class="QLabel" name="rec_AxisOrientationsFileIcon">
               <property name="text">
                <string/>
               </property>
@@ -520,9 +387,43 @@
              </widget>
             </item>
             <item row="7" column="1">
+             <widget class="QLabel" name="rec_AxisOrientationsFile">
+              <property name="text">
+               <string>axisorientations.txt</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="1">
+             <widget class="QLabel" name="rec_ReconstructedDataFile">
+              <property name="text">
+               <string>reconstructed_data.txt</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="0">
+             <widget class="QLabel" name="rec_ReconstructedDataFileIcon">
+              <property name="text">
+               <string/>
+              </property>
+              <property name="pixmap">
+               <pixmap resource="../../../../Resources/icons/images/Icons.qrc">:/Delete-16x16.png</pixmap>
+              </property>
+             </widget>
+            </item>
+            <item row="5" column="1">
              <widget class="QLabel" name="rec_ReconstructedDxFile">
               <property name="text">
                <string>reconstructed_data.dx</string>
+              </property>
+             </widget>
+            </item>
+            <item row="5" column="0">
+             <widget class="QLabel" name="rec_ReconstructedDxFileIcon">
+              <property name="text">
+               <string/>
+              </property>
+              <property name="pixmap">
+               <pixmap resource="../../../../Resources/icons/images/Icons.qrc">:/Delete-16x16.png</pixmap>
               </property>
              </widget>
             </item>
@@ -1016,7 +917,7 @@
              <number>4</number>
             </property>
             <item row="0" column="0">
-             <widget class="QLabel" name="gg_VolBinFileIcon">
+             <widget class="QLabel" name="gg_StatsFileIcon">
               <property name="text">
                <string/>
               </property>
@@ -1026,31 +927,21 @@
              </widget>
             </item>
             <item row="0" column="1">
-             <widget class="QLabel" name="gg_VolBinFile">
+             <widget class="QLabel" name="gg_StatsFile">
               <property name="text">
-               <string>VolBin</string>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="0">
-             <widget class="QLabel" name="gg_BOverABinsFileIcon">
-              <property name="text">
-               <string/>
-              </property>
-              <property name="pixmap">
-               <pixmap resource="../../../../Resources/icons/images/Icons.qrc">:/Delete-16x16.png</pixmap>
+               <string>StatsFile</string>
               </property>
              </widget>
             </item>
             <item row="1" column="1">
-             <widget class="QLabel" name="gg_BOverABinsFile">
+             <widget class="QLabel" name="gg_AxisOrientationsFile">
               <property name="text">
-               <string>BOverABins</string>
+               <string>AxisOrientations</string>
               </property>
              </widget>
             </item>
-            <item row="2" column="0">
-             <widget class="QLabel" name="gg_COverABinsFileIcon">
+            <item row="1" column="0">
+             <widget class="QLabel" name="gg_AxisOrientationsFileIcon">
               <property name="text">
                <string/>
               </property>
@@ -1060,60 +951,19 @@
              </widget>
             </item>
             <item row="2" column="1">
-             <widget class="QLabel" name="gg_COverABinsFile">
+             <widget class="QLabel" name="gg_EulerAnglesFile">
               <property name="text">
-               <string>COverABins</string>
+               <string>EulerAngles</string>
               </property>
              </widget>
             </item>
-            <item row="3" column="0">
-             <widget class="QLabel" name="gg_COverBBinsFileIcon">
+            <item row="2" column="0">
+             <widget class="QLabel" name="gg_EulerAnglesFileIcon">
               <property name="text">
                <string/>
               </property>
               <property name="pixmap">
                <pixmap resource="../../../../Resources/icons/images/Icons.qrc">:/Delete-16x16.png</pixmap>
-              </property>
-             </widget>
-            </item>
-            <item row="3" column="1">
-             <widget class="QLabel" name="gg_COverBBinsFile">
-              <property name="text">
-               <string>COverBBins</string>
-              </property>
-             </widget>
-            </item>
-            <item row="4" column="0">
-             <widget class="QLabel" name="gg_SVNFileIcon">
-              <property name="text">
-               <string/>
-              </property>
-              <property name="pixmap">
-               <pixmap resource="../../../../Resources/icons/images/Icons.qrc">:/Delete-16x16.png</pixmap>
-              </property>
-             </widget>
-            </item>
-            <item row="4" column="1">
-             <widget class="QLabel" name="gg_SVNFile">
-              <property name="text">
-               <string>SVNFile</string>
-              </property>
-             </widget>
-            </item>
-            <item row="5" column="0">
-             <widget class="QLabel" name="gg_SVSFileIcon">
-              <property name="text">
-               <string/>
-              </property>
-              <property name="pixmap">
-               <pixmap resource="../../../../Resources/icons/images/Icons.qrc">:/Delete-16x16.png</pixmap>
-              </property>
-             </widget>
-            </item>
-            <item row="5" column="1">
-             <widget class="QLabel" name="gg_SVSFile">
-              <property name="text">
-               <string>SVSFile</string>
               </property>
              </widget>
             </item>
@@ -1127,41 +977,7 @@
             <property name="verticalSpacing">
              <number>4</number>
             </property>
-            <item row="0" column="0">
-             <widget class="QLabel" name="gg_MicroBinsFileIcon">
-              <property name="text">
-               <string/>
-              </property>
-              <property name="pixmap">
-               <pixmap resource="../../../../Resources/icons/images/Icons.qrc">:/Delete-16x16.png</pixmap>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="1">
-             <widget class="QLabel" name="gg_MicroBinsFile">
-              <property name="text">
-               <string>MicroBins</string>
-              </property>
-             </widget>
-            </item>
             <item row="1" column="0">
-             <widget class="QLabel" name="gg_SeNBinsFileIcon">
-              <property name="text">
-               <string/>
-              </property>
-              <property name="pixmap">
-               <pixmap resource="../../../../Resources/icons/images/Icons.qrc">:/Delete-16x16.png</pixmap>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="1">
-             <widget class="QLabel" name="gg_SeNBinsFile">
-              <property name="text">
-               <string>seNBins</string>
-              </property>
-             </widget>
-            </item>
-            <item row="2" column="0">
              <widget class="QLabel" name="gg_MisorientationBinsFileIcon">
               <property name="text">
                <string/>
@@ -1171,44 +987,27 @@
               </property>
              </widget>
             </item>
-            <item row="2" column="1">
+            <item row="1" column="1">
              <widget class="QLabel" name="gg_MisorientationBinsFile">
               <property name="text">
                <string>MisorientationBins</string>
               </property>
              </widget>
             </item>
-            <item row="3" column="0">
-             <widget class="QLabel" name="gg_AxisOrientationsFileIcon">
+            <item row="2" column="1">
+             <widget class="QLabel" name="gg_MicroBinsFile">
+              <property name="text">
+               <string>MicroBins</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="0">
+             <widget class="QLabel" name="gg_MicroBinsFileIcon">
               <property name="text">
                <string/>
               </property>
               <property name="pixmap">
                <pixmap resource="../../../../Resources/icons/images/Icons.qrc">:/Delete-16x16.png</pixmap>
-              </property>
-             </widget>
-            </item>
-            <item row="3" column="1">
-             <widget class="QLabel" name="gg_AxisOrientationsFile">
-              <property name="text">
-               <string>AxisOrientations</string>
-              </property>
-             </widget>
-            </item>
-            <item row="4" column="0">
-             <widget class="QLabel" name="gg_EulerAnglesFileIcon">
-              <property name="text">
-               <string/>
-              </property>
-              <property name="pixmap">
-               <pixmap resource="../../../../Resources/icons/images/Icons.qrc">:/Delete-16x16.png</pixmap>
-              </property>
-             </widget>
-            </item>
-            <item row="4" column="1">
-             <widget class="QLabel" name="gg_EulerAnglesFile">
-              <property name="text">
-               <string>EulerAngles</string>
               </property>
              </widget>
             </item>
@@ -1270,7 +1069,7 @@
             <item row="0" column="1">
              <widget class="QLabel" name="gg_CubeFile">
               <property name="text">
-               <string>CubeVTK</string>
+               <string>cube.vtk</string>
               </property>
              </widget>
             </item>
@@ -1304,7 +1103,7 @@
             <item row="2" column="1">
              <widget class="QLabel" name="gg_CubeDxFile">
               <property name="text">
-               <string>CubeDx</string>
+               <string>cube.dx</string>
               </property>
              </widget>
             </item>
