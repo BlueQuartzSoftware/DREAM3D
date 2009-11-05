@@ -89,15 +89,15 @@ void initialize2(int32 xpoints, int32 ypoints, int32 zpoints);
 	Bin* simmicrobin;
 
 	vector<int> grainorder;
-	vector<vector<int>> voxelsvector;
-	vector<vector<int>> neighborvector;
-	vector<vector<double>> bovera;
-	vector<vector<double>> covera;
-	vector<vector<double>> coverb;
-	vector<vector<double>> svn;
-	vector<vector<double>> svs;
-	vector<vector<double>> svshape;
-	vector<vector<int>> nsdist;
+	vector<vector<int> > voxelsvector;
+	vector<vector<int> > neighborvector;
+	vector<vector<double> > bovera;
+	vector<vector<double> > covera;
+	vector<vector<double> > coverb;
+	vector<vector<double> > svn;
+	vector<vector<double> > svs;
+	vector<vector<double> > svshape;
+	vector<vector<int> > nsdist;
 	
 
 	int numorients;

@@ -27,12 +27,12 @@ namespace AIM
   {
     /*    Reconstruction related */
     const std::string StatsFile("stats.txt");//1
-    const std::string VolBinFile("volbins.txt"); //2
-    const std::string BOverABinsFile("boverabins.txt");//3
-    const std::string COverABinsFile("coverabins.txt");//4
-    const std::string COverBBinsFile("coverbbins.txt");//5
-    const std::string SVNFile("svn.txt");//6
-    const std::string SVSFile("svs.txt");//7
+//    const std::string VolBinFile("volbins.txt"); //2
+//    const std::string BOverABinsFile("boverabins.txt");//3
+//    const std::string COverABinsFile("coverabins.txt");//4
+//    const std::string COverBBinsFile("coverbbins.txt");//5
+//    const std::string SVNFile("svn.txt");//6
+//    const std::string SVSFile("svs.txt");//7
     const std::string MisorientationBinsFile("misobins.txt");//8
     const std::string MicroBinsFile("microbins.txt");//9
     const std::string ReconstructedDataFile("reconstructed_data.txt");//10
@@ -41,7 +41,7 @@ namespace AIM
     const std::string BoundaryCentersFile("boundarycenters.txt");//13
     const std::string AxisOrientationsFile("axisorientations.txt");//14
     const std::string EulerAnglesFile("eulerangles.txt");//15
-    const std::string SeNBinsFile("seNBins.txt");
+//    const std::string SeNBinsFile("seNBins.txt");
     const std::string ReconstructedDxFile("reconstructed_data.dx");
 
     enum CrystalStructure {
