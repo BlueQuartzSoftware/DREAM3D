@@ -57,43 +57,27 @@ public:
 
   virtual ~GrainGeneratorFunc();
 
-    void initialize(double stepX, double stepY, double stepZ,
-      int32 angNumCols, int32 angNumRows, int32 angSlices,
-      bool v_mergetwinsoption,
-      int32 v_minallowedgrainsize,
-      double v_minseedconfidence,
-      double v_misorientationtolerance,
-      int32 v_crystruct,
-      bool v_alreadyformed);
+void initialize(int32 v_NumG, int32 v_ShapeClass, double stepX, double stepY, double stepZ,
+                  double v_OverAllow,int32 v_OverMethod,int32 v_crystruct);
 
+void initialize2(int32 xpoints, int32 ypoints, int32 zpoints);
 
   AngFileHelper::Pointer m_angFileHelper;
 
-  double sizex;
-  double sizey;
-  double sizez;
 
   double resx;
   double resy;
   double resz;
 
   double misorientationtolerance;
-  double minseedconfidence;
-  int minallowedgrainsize;
-  int mergetwinsoption;
   int crystruct;
-  int alreadyformed;
 
 
 	AIMRandomNG rg;
-	Voxel* voxels;
-	Grain* tempgrain;
 	Grain* grains;
-	Grain* goodgrain;
 	Grain* packedgrain;
 	int* gsizes;
 	int* gremovals;
-	Bin* seNbin;
 
 	Bin* eulerbin;
 	Orient* orient;
@@ -103,20 +87,25 @@ public:
 	Bin* simmisobin;
 	Bin* actualmicrobin;
 	Bin* simmicrobin;
-	double nsdist[20][20];
 
-	vector<vector<int> > voxelsvector;
-	vector<vector<int> > neighborvector;
+	vector<int> grainorder;
+	vector<vector<int>> voxelsvector;
+	vector<vector<int>> neighborvector;
+	vector<vector<double>> bovera;
+	vector<vector<double>> covera;
+	vector<vector<double>> coverb;
+	vector<vector<double>> svn;
+	vector<vector<double>> svs;
+	vector<vector<double>> svshape;
+	vector<vector<int>> nsdist;
+	
 
-	int numdiambins;
-	int numshapebins;
-	int numseNbins;
-	int numsizebins;
 	int numorients;
 	int numeulers;
 	int nummisobins;
 	int nummicrobins;
 	int misoiter;
+	int nummicros;
 	int nummisomoves;
 	int nummicromoves;
 	int numgrains;
@@ -125,43 +114,46 @@ public:
 	int mindiameter;
 	double overlapallowed;
 	int overlapassignment;
+	double avgdiam;
+	double sddiam;
+	int numdiameters;
 
 
 	int32 xpoints;
 	int32 ypoints;
 	int32 zpoints;
+	int32 xpoints1;
+	int32 ypoints1;
+	int32 zpoints1;
   int totalpoints;
+  int totalpoints1;
 
 	double resx1;
 	double resy1;
 	double resz1;
 	int numneighbins;
-	int nummicros;
 
 	/** @brief The number of boundary center objects needed */
 	size_t bcentSize;
 
 // sizes are needed. Dont't change
-	double eulerrank[180][180][180];
-
-// sizes are needed. Dont't change
-  int eulercount[100][100][100];
+  int eulercount[36][36][36];
 
 	void write_volume(string);
 	void loadStatsData(string);
-	void loadNData(string, int);
 	void loadorientData(string, int);
 	void loadeulerData(string, int);
 	void generate_grains(int);
 	void assign_eulers(int);
 	void make_points(int);
 	void fill_gaps(int);
+	void find_neighbors();
 	void writeCube(string, int);
 	void write_grains(string, int);
 	void find_boundarycenters1(string,int);
 	void loadMisoData(string);
 	void loadMicroData(string);
-	void measure_misorientations1(int);
+	void measure_misorientations();
 	void rank_misobins(int);
 	void count_misorientations(int);
 	int rank_microbins(int);

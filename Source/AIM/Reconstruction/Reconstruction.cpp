@@ -193,16 +193,6 @@ void Reconstruction::compute()
     }
   }
 
-  for (int iter1 = 0; iter1 < 180; iter1++)
-  {
-    for (int iter2 = 0; iter2 < 180; iter2++)
-    {
-      for (int iter3 = 0; iter3 < 180; iter3++)
-      {
-        m->eulerrank[iter1][iter2][iter3] = 0;
-      }
-    }
-  }
   CHECK_FOR_CANCELED(ReconstructionFunc)
   progressMessage(AIM_STRING("homogenize_grains"), 21 );
   m->homogenize_grains();
@@ -312,10 +302,6 @@ void Reconstruction::compute()
   CHECK_FOR_CANCELED(ReconstructionFunc)
   progressMessage(AIM_STRING("Writing Euler Angle File"), 84 );
   m->write_eulerangles(eulerFile);
-
-  CHECK_FOR_CANCELED(ReconstructionFunc)
-  progressMessage(AIM_STRING("Finding and Writing Boundary Centers"), 99 );
-  m->find_boundarycenters(boundaryFile);
 
   progressMessage(AIM_STRING("Reconstruction Complete"), 100 );
 
