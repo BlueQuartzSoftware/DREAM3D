@@ -2557,6 +2557,15 @@ void  ReconstructionFunc::create_visualization(string writename11)
 }
 
 
+void ReconstructionFunc::create_dxfile(string dxfile)
+{
+  ofstream outFile;
+  outFile.open(dxfile.c_str());
+  outFile << "object 1 class gridpositions counts " << xpoints << " " << ypoints << " " << zpoints << endl;
+  //TODO: Finish the implementation
+  outFile.close();
+}
+
 void  ReconstructionFunc::write_grains(string writename12)
 {
     ofstream outFile;
