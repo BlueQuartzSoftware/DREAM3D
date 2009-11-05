@@ -585,7 +585,7 @@ void RepresentationUI::rec_SetupGui()
   QR3DFileCompleter* com2 = new QR3DFileCompleter(this, true);
   rec_OutputDir->setCompleter(com2);
   QObject::connect( com2, SIGNAL(activated(const QString &)),
-           this, SLOT(on_rec_OutputDir_textChanged(const QString &)));
+           this, SLOT(on_outputDir_textChanged(const QString &)));
 
 
   QString msg ("All files will be over written that appear in the output directory.");
@@ -603,7 +603,7 @@ void RepresentationUI::rec_SetupGui()
   messageLabel->setText(msg);
 
 
-  m_WidgetList << angDir << angDirBtn << rec_OutputDir << rec_OutputDirBtn;
+  m_WidgetList << angDir << angDirBtn << rec_OutputDir << outputDirBtn;
   m_WidgetList << angFilePrefix << angMaxSlice << zStartIndex << zEndIndex << zSpacing;
   m_WidgetList << mergeTwins << alreadyFormed << minAllowedGrainSize << minConfidence << misOrientationTolerance;
   m_WidgetList << crystalStructure;
@@ -635,8 +635,6 @@ void RepresentationUI::rec_CheckIOFiles()
   CHECK_QLABEL_OUTPUT_FILE_EXISTS(rec_, BoundaryCentersFile)
   CHECK_QLABEL_OUTPUT_FILE_EXISTS(rec_, AxisOrientationsFile)
   CHECK_QLABEL_OUTPUT_FILE_EXISTS(rec_, EulerAnglesFile)
-  CHECK_QLABEL_OUTPUT_FILE_EXISTS(rec_, SeNBinsFile)
-  CHECK_QLABEL_OUTPUT_FILE_EXISTS(rec_, ReconstructedDxFile)
 }
 
 // -----------------------------------------------------------------------------
@@ -727,7 +725,7 @@ void RepresentationUI::findAngMaxSliceAndPrefix()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RepresentationUI::on_rec_OutputDirBtn_clicked()
+void RepresentationUI::on_outputDirBtn_clicked()
 {
   QString outputFile = this->m_OpenDialogLastDirectory + QDir::separator();
   outputFile = QFileDialog::getExistingDirectory(this, tr("Select Output Directory"), outputFile);
@@ -749,7 +747,7 @@ void RepresentationUI::on_rec_OutputDirBtn_clicked()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RepresentationUI::on_rec_OutputDir_textChanged(const QString & text)
+void RepresentationUI::on_outputDir_textChanged(const QString & text)
 {
   _verifyPathExists(rec_OutputDir->text(), rec_OutputDir);
   rec_CheckIOFiles();
