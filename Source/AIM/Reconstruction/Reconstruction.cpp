@@ -286,7 +286,6 @@ void Reconstruction::compute()
 
   std::string axisFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::AxisOrientationsFile;
   std::string eulerFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::EulerAnglesFile;
-  std::string boundaryFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::BoundaryCentersFile;
 
   CHECK_FOR_CANCELED(ReconstructionFunc)
   progressMessage(AIM_STRING("Writing Reconstruction Visualization File"), 75 );
