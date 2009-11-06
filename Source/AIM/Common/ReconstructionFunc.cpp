@@ -2342,7 +2342,13 @@ void ReconstructionFunc::volume_stats(string writename1,string writename2,string
         misobin[misocur]++;
         if(firstmiso < 15) microcount++;
       }
+      if (nummisos != 0 ) {
       microcount = microcount/nummisos;
+      }
+      else 
+      {
+        microcount = 0;
+      }
       int microcur = int(microcount/0.25);
       if(microcur == 4) microcur = 3;
       microbin[microcur]++;

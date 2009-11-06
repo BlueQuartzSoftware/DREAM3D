@@ -137,54 +137,54 @@ void GrainGenerator::compute()
    inputFile2.open(EulerAnglesFile.c_str());
    inputFile2 >> m->numeulers;
    inputFile2.close();
-//   CHECK_FOR_CANCELED(ReconstructionFunc)
-//   progressMessage(AIM_STRING("Loading Stats File"), 5 );
+   CHECK_FOR_CANCELED(ReconstructionFunc)
+   progressMessage(AIM_STRING("Loading Stats File"), 5 );
    m->loadStatsData(StatsFile);
 
-//   CHECK_FOR_CANCELED(ReconstructionFunc)
-//   progressMessage(AIM_STRING("Loading Orient File"), 10 );
+   CHECK_FOR_CANCELED(ReconstructionFunc)
+   progressMessage(AIM_STRING("Loading Orient File"), 10 );
    m->loadorientData(AxisOrientationsFile,m->numorients);
 
-//   CHECK_FOR_CANCELED(ReconstructionFunc)
-//   progressMessage(AIM_STRING("Loading Euler File"), 15 );
+   CHECK_FOR_CANCELED(ReconstructionFunc)
+   progressMessage(AIM_STRING("Loading Euler File"), 15 );
    m->loadeulerData(EulerAnglesFile,m->numeulers);
 
-//   CHECK_FOR_CANCELED(ReconstructionFunc)
-//   progressMessage(AIM_STRING("Generating Grains"), 20 );
+   CHECK_FOR_CANCELED(ReconstructionFunc)
+   progressMessage(AIM_STRING("Generating Grains"), 20 );
    m->generate_grains(m->numgrains);
 
-//   CHECK_FOR_CANCELED(ReconstructionFunc)
-//   progressMessage(AIM_STRING("Initializing"), 25 );
+   CHECK_FOR_CANCELED(ReconstructionFunc)
+   progressMessage(AIM_STRING("Initializing"), 25 );
    m->initialize2(m->xpoints,m->ypoints,m->zpoints);
 
-//   CHECK_FOR_CANCELED(ReconstructionFunc)
-//   progressMessage(AIM_STRING("Assigning Eulers"), 30 );
+   CHECK_FOR_CANCELED(ReconstructionFunc)
+   progressMessage(AIM_STRING("Assigning Eulers"), 30 );
    m->assign_eulers(m->numgrains);
 
-//   CHECK_FOR_CANCELED(ReconstructionFunc)
-//   progressMessage(AIM_STRING("Packing Grains"), 35 );
+   CHECK_FOR_CANCELED(ReconstructionFunc)
+   progressMessage(AIM_STRING("Packing Grains"), 35 );
    m->make_points(m->numgrains);
 
-//   CHECK_FOR_CANCELED(ReconstructionFunc)
-//   progressMessage(AIM_STRING("Filling Gaps"), 40 );
+   CHECK_FOR_CANCELED(ReconstructionFunc)
+   progressMessage(AIM_STRING("Filling Gaps"), 40 );
    m->fill_gaps(m->numgrains);
 
-//   CHECK_FOR_CANCELED(ReconstructionFunc)
-//   progressMessage(AIM_STRING("Finding Neighbors"), 45 );
+   CHECK_FOR_CANCELED(ReconstructionFunc)
+   progressMessage(AIM_STRING("Finding Neighbors"), 45 );
    m->find_neighbors();
 
-//   CHECK_FOR_CANCELED(ReconstructionFunc)
-//   progressMessage(AIM_STRING("Loading Misorientations"), 50 );
+   CHECK_FOR_CANCELED(ReconstructionFunc)
+   progressMessage(AIM_STRING("Loading Misorientations"), 50 );
    m->loadMisoData(MisorientationBinsFile);
 
-//   CHECK_FOR_CANCELED(ReconstructionFunc)
-//   progressMessage(AIM_STRING("Loading Microtexture"), 55 );
+   CHECK_FOR_CANCELED(ReconstructionFunc)
+   progressMessage(AIM_STRING("Loading Microtexture"), 55 );
    m->loadMicroData(MicroBinsFile);
 
    for(int iter = 0; iter < m->misoiter; iter++)
    {
-//     CHECK_FOR_CANCELED(ReconstructionFunc)
-//     progressMessage(AIM_STRING("Matching Misorientations"), 65 );
+     CHECK_FOR_CANCELED(ReconstructionFunc)
+     progressMessage(AIM_STRING("Matching Misorientations"), 65 );
      m->measure_misorientations();
      m->rank_misobins(m->numgrains);
      m->count_misorientations(m->numgrains);
@@ -195,8 +195,8 @@ void GrainGenerator::compute()
    }
    while(m->nummicros != 1)
    {
-//     CHECK_FOR_CANCELED(ReconstructionFunc)
-//     progressMessage(AIM_STRING("Matching Microtexture"), 75 );
+     CHECK_FOR_CANCELED(ReconstructionFunc)
+     progressMessage(AIM_STRING("Matching Microtexture"), 75 );
      m->measure_misorientations();
      m->count_misorientations(m->numgrains);
      m->nummicros = m->rank_microbins(m->numgrains);
@@ -206,8 +206,8 @@ void GrainGenerator::compute()
    }
    for(int iter3 = 0; iter3 < m->misoiter; iter3++)
    {
-//     CHECK_FOR_CANCELED(ReconstructionFunc)
-//     progressMessage(AIM_STRING("Rematching Misorientations"), 85 );
+     CHECK_FOR_CANCELED(ReconstructionFunc)
+     progressMessage(AIM_STRING("Rematching Misorientations"), 85 );
      m->measure_misorientations();
      m->rank_misobins(m->numgrains);
      m->count_misorientations(m->numgrains);
@@ -216,19 +216,19 @@ void GrainGenerator::compute()
      m->identify_grains1(m->numgrains, m->nummisomoves);
      m->move_grains1(m->numgrains);
    }
-//   CHECK_FOR_CANCELED(ReconstructionFunc)
-//   progressMessage(AIM_STRING("writing Cube"), 90 );
+   CHECK_FOR_CANCELED(ReconstructionFunc)
+   progressMessage(AIM_STRING("writing Cube"), 90 );
    m->writeCube(CubeFile, m->numgrains);
    
-//   CHECK_FOR_CANCELED(ReconstructionFunc)
-//   progressMessage(AIM_STRING("Writing Grains"), 95 );
+   CHECK_FOR_CANCELED(ReconstructionFunc)
+   progressMessage(AIM_STRING("Writing Grains"), 95 );
    m->write_grains(GrainsFile,m->numgrains);
    
-//   CHECK_FOR_CANCELED(ReconstructionFunc)
-//   progressMessage(AIM_STRING("Writing Volume"), 100 );
+   CHECK_FOR_CANCELED(ReconstructionFunc)
+   progressMessage(AIM_STRING("Writing Volume"), 100 );
    m->write_volume(VolumeFile);
 
-//   progressMessage(AIM_STRING("Generation Completed"), 100 );
+   progressMessage(AIM_STRING("Generation Completed"), 100 );
 }
 
 // -----------------------------------------------------------------------------

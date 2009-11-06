@@ -761,7 +761,7 @@ void RepresentationUI::on_angDir_textChanged(const QString & text)
 void RepresentationUI::on_reconstructBtn_clicked()
 {
   bool ok = false;
-  if (reconstructBtn->text().compare("Cancel") == 0)
+  if (rec_GoBtn->text().compare("Cancel") == 0)
   {
     if(m_Reconstruction.get() != NULL)
     {
@@ -803,7 +803,7 @@ void RepresentationUI::on_reconstructBtn_clicked()
 
   setWidgetListEnabled(false);
   m_Reconstruction->start();
-  reconstructBtn->setText("Cancel");
+  rec_GoBtn->setText("Cancel");
   grainGeneratorTab->setEnabled(false);
   surfaceMeshingTab->setEnabled(false);
   volumeMeshingTab->setEnabled(false);
@@ -826,7 +826,7 @@ void RepresentationUI::threadHasMessage(QString message)
 void RepresentationUI::rec_ThreadFinished()
 {
   std::cout << "RepresentationUI::reconstruction_Finished()" << std::endl;
-  reconstructBtn->setText("Go");
+  rec_GoBtn->setText("Go");
   setWidgetListEnabled(true);
   this->progressBar->setValue(0);
   grainGeneratorTab->setEnabled(true);
@@ -1009,7 +1009,7 @@ void RepresentationUI::on_gg_GoBtn_clicked()
   connect(m_GrainGenerator.get(), SIGNAL(finished()),
           this, SLOT( gg_ThreadFinished() ) );
   connect(m_GrainGenerator.get(), SIGNAL (updateProgress(int)),
-    this, SLOT(gg_ThreadProgressed(int) ) , Qt::DirectConnection);
+    this, SLOT(gg_ThreadProgressed(int) ) );
   connect(m_GrainGenerator.get(), SIGNAL (updateMessage(QString)),
           this, SLOT(threadHasMessage(QString) ) );
 
@@ -1205,7 +1205,7 @@ void RepresentationUI::on_sm_GoBtn_clicked()
   connect(m_SurfaceMesh.get(), SIGNAL(finished()),
           this, SLOT( sm_ThreadFinished() ) );
   connect(m_SurfaceMesh.get(), SIGNAL (updateProgress(int)),
-    this, SLOT(sm_ThreadProgressed(int) ) , Qt::DirectConnection);
+    this, SLOT(sm_ThreadProgressed(int) ) );
   connect(m_SurfaceMesh.get(), SIGNAL (updateMessage(QString)),
           this, SLOT(threadHasMessage(QString) ) );
 
@@ -1382,7 +1382,7 @@ void RepresentationUI::on_vm_GoBtn_clicked()
   connect(m_VolumeMesh.get(), SIGNAL(finished()),
     this, SLOT( sm_ThreadFinished() ) );
   connect(m_VolumeMesh.get(), SIGNAL (updateProgress(int)),
-    this, SLOT(sm_ThreadProgressed(int) ) , Qt::DirectConnection);
+    this, SLOT(sm_ThreadProgressed(int) ));
   connect(m_VolumeMesh.get(), SIGNAL (updateMessage(QString)),
     this, SLOT(threadHasMessage(QString) ) );
 
