@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>535</width>
-    <height>589</height>
+    <width>456</width>
+    <height>526</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -230,6 +230,9 @@
             <property name="formAlignment">
              <set>Qt::AlignHCenter|Qt::AlignTop</set>
             </property>
+            <property name="horizontalSpacing">
+             <number>12</number>
+            </property>
             <property name="verticalSpacing">
              <number>4</number>
             </property>
@@ -251,30 +254,6 @@
              </widget>
             </item>
             <item row="2" column="0">
-             <widget class="QLabel" name="rec_SeNBinsFileIcon">
-              <property name="text">
-               <string/>
-              </property>
-              <property name="pixmap">
-               <pixmap resource="../../../../Resources/icons/images/Icons.qrc">:/Delete-16x16.png</pixmap>
-              </property>
-             </widget>
-            </item>
-            <item row="2" column="1">
-             <widget class="QLabel" name="rec_SeNBinsFile">
-              <property name="text">
-               <string>seNbins.txt</string>
-              </property>
-             </widget>
-            </item>
-            <item row="3" column="1">
-             <widget class="QLabel" name="rec_StatsFile">
-              <property name="text">
-               <string>stats.txt</string>
-              </property>
-             </widget>
-            </item>
-            <item row="3" column="0">
              <widget class="QLabel" name="rec_StatsFileIcon">
               <property name="text">
                <string/>
@@ -284,7 +263,14 @@
               </property>
              </widget>
             </item>
-            <item row="4" column="0">
+            <item row="2" column="1">
+             <widget class="QLabel" name="rec_StatsFile">
+              <property name="text">
+               <string>stats.txt</string>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="0">
              <widget class="QLabel" name="rec_MicroBinsFileIcon">
               <property name="text">
                <string/>
@@ -294,31 +280,14 @@
               </property>
              </widget>
             </item>
-            <item row="4" column="1">
+            <item row="3" column="1">
              <widget class="QLabel" name="rec_MicroBinsFile">
               <property name="text">
                <string>microbins.txt</string>
               </property>
              </widget>
             </item>
-            <item row="7" column="0">
-             <widget class="QLabel" name="rec_GrainsFileIcon">
-              <property name="text">
-               <string/>
-              </property>
-              <property name="pixmap">
-               <pixmap resource="../../../../Resources/icons/images/Icons.qrc">:/Delete-16x16.png</pixmap>
-              </property>
-             </widget>
-            </item>
-            <item row="7" column="1">
-             <widget class="QLabel" name="rec_GrainsFile">
-              <property name="text">
-               <string>grains.txt</string>
-              </property>
-             </widget>
-            </item>
-            <item row="6" column="0">
+            <item row="5" column="0">
              <widget class="QLabel" name="rec_EulerAnglesFileIcon">
               <property name="text">
                <string/>
@@ -328,10 +297,27 @@
               </property>
              </widget>
             </item>
-            <item row="6" column="1">
+            <item row="5" column="1">
              <widget class="QLabel" name="rec_EulerAnglesFile">
               <property name="text">
                <string>eulerangles.txt</string>
+              </property>
+             </widget>
+            </item>
+            <item row="6" column="0">
+             <widget class="QLabel" name="rec_GrainsFileIcon">
+              <property name="text">
+               <string/>
+              </property>
+              <property name="pixmap">
+               <pixmap resource="../../../../Resources/icons/images/Icons.qrc">:/Delete-16x16.png</pixmap>
+              </property>
+             </widget>
+            </item>
+            <item row="6" column="1">
+             <widget class="QLabel" name="rec_GrainsFile">
+              <property name="text">
+               <string>grains.txt</string>
               </property>
              </widget>
             </item>
@@ -339,60 +325,21 @@
           </item>
           <item row="1" column="1">
            <layout class="QFormLayout" name="formLayout">
+            <property name="fieldGrowthPolicy">
+             <enum>QFormLayout::FieldsStayAtSizeHint</enum>
+            </property>
+            <property name="labelAlignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+            <property name="formAlignment">
+             <set>Qt::AlignHCenter|Qt::AlignTop</set>
+            </property>
+            <property name="horizontalSpacing">
+             <number>12</number>
+            </property>
             <property name="verticalSpacing">
              <number>4</number>
             </property>
-            <item row="3" column="0">
-             <widget class="QLabel" name="rec_ReconstructedVisualizationFileIcon">
-              <property name="text">
-               <string/>
-              </property>
-              <property name="pixmap">
-               <pixmap resource="../../../../Resources/icons/images/Icons.qrc">:/Delete-16x16.png</pixmap>
-              </property>
-             </widget>
-            </item>
-            <item row="3" column="1">
-             <widget class="QLabel" name="rec_ReconstructedVisualizationFile">
-              <property name="text">
-               <string>reconstructed_visualization.vtk</string>
-              </property>
-             </widget>
-            </item>
-            <item row="6" column="0">
-             <widget class="QLabel" name="rec_BoundaryCentersFileIcon">
-              <property name="text">
-               <string/>
-              </property>
-              <property name="pixmap">
-               <pixmap resource="../../../../Resources/icons/images/Icons.qrc">:/Delete-16x16.png</pixmap>
-              </property>
-             </widget>
-            </item>
-            <item row="6" column="1">
-             <widget class="QLabel" name="rec_BoundaryCentersFile">
-              <property name="text">
-               <string>boundarycenters.txt</string>
-              </property>
-             </widget>
-            </item>
-            <item row="7" column="0">
-             <widget class="QLabel" name="rec_AxisOrientationsFileIcon">
-              <property name="text">
-               <string/>
-              </property>
-              <property name="pixmap">
-               <pixmap resource="../../../../Resources/icons/images/Icons.qrc">:/Delete-16x16.png</pixmap>
-              </property>
-             </widget>
-            </item>
-            <item row="7" column="1">
-             <widget class="QLabel" name="rec_AxisOrientationsFile">
-              <property name="text">
-               <string>axisorientations.txt</string>
-              </property>
-             </widget>
-            </item>
             <item row="1" column="1">
              <widget class="QLabel" name="rec_ReconstructedDataFile">
               <property name="text">
@@ -410,15 +357,66 @@
               </property>
              </widget>
             </item>
-            <item row="5" column="1">
+            <item row="2" column="1">
+             <widget class="QLabel" name="rec_ReconstructedVisualizationFile">
+              <property name="text">
+               <string>reconstructed_visualization.vtk</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="0">
+             <widget class="QLabel" name="rec_ReconstructedVisualizationFileIcon">
+              <property name="text">
+               <string/>
+              </property>
+              <property name="pixmap">
+               <pixmap resource="../../../../Resources/icons/images/Icons.qrc">:/Delete-16x16.png</pixmap>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="1">
              <widget class="QLabel" name="rec_ReconstructedDxFile">
               <property name="text">
                <string>reconstructed_data.dx</string>
               </property>
              </widget>
             </item>
-            <item row="5" column="0">
+            <item row="3" column="0">
              <widget class="QLabel" name="rec_ReconstructedDxFileIcon">
+              <property name="text">
+               <string/>
+              </property>
+              <property name="pixmap">
+               <pixmap resource="../../../../Resources/icons/images/Icons.qrc">:/Delete-16x16.png</pixmap>
+              </property>
+             </widget>
+            </item>
+            <item row="4" column="1">
+             <widget class="QLabel" name="rec_AxisOrientationsFile">
+              <property name="text">
+               <string>axisorientations.txt</string>
+              </property>
+             </widget>
+            </item>
+            <item row="4" column="0">
+             <widget class="QLabel" name="rec_AxisOrientationsFileIcon">
+              <property name="text">
+               <string/>
+              </property>
+              <property name="pixmap">
+               <pixmap resource="../../../../Resources/icons/images/Icons.qrc">:/Delete-16x16.png</pixmap>
+              </property>
+             </widget>
+            </item>
+            <item row="5" column="1">
+             <widget class="QLabel" name="rec_BoundaryCentersFile">
+              <property name="text">
+               <string>boundarycenters.txt</string>
+              </property>
+             </widget>
+            </item>
+            <item row="5" column="0">
+             <widget class="QLabel" name="rec_BoundaryCentersFileIcon">
               <property name="text">
                <string/>
               </property>
@@ -681,7 +679,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QPushButton" name="reconstructBtn">
+           <widget class="QPushButton" name="rec_GoBtn">
             <property name="text">
              <string>Go</string>
             </property>
@@ -896,7 +894,7 @@
         <item>
          <layout class="QGridLayout" name="gridLayout_5">
           <property name="spacing">
-           <number>3</number>
+           <number>4</number>
           </property>
           <item row="0" column="0" colspan="2">
            <widget class="QLabel" name="label_13">
@@ -911,7 +909,13 @@
              <enum>QFormLayout::FieldsStayAtSizeHint</enum>
             </property>
             <property name="labelAlignment">
-             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+             <set>Qt::AlignCenter</set>
+            </property>
+            <property name="formAlignment">
+             <set>Qt::AlignHCenter|Qt::AlignTop</set>
+            </property>
+            <property name="horizontalSpacing">
+             <number>12</number>
             </property>
             <property name="verticalSpacing">
              <number>4</number>
@@ -973,6 +977,15 @@
            <layout class="QFormLayout" name="formLayout_4">
             <property name="fieldGrowthPolicy">
              <enum>QFormLayout::FieldsStayAtSizeHint</enum>
+            </property>
+            <property name="labelAlignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+            <property name="formAlignment">
+             <set>Qt::AlignHCenter|Qt::AlignTop</set>
+            </property>
+            <property name="horizontalSpacing">
+             <number>12</number>
             </property>
             <property name="verticalSpacing">
              <number>4</number>
@@ -1036,7 +1049,7 @@
         <item>
          <layout class="QGridLayout" name="gridLayout_8">
           <property name="spacing">
-           <number>3</number>
+           <number>4</number>
           </property>
           <item row="0" column="0" colspan="2">
            <widget class="QLabel" name="label_23">
@@ -1051,7 +1064,13 @@
              <enum>QFormLayout::FieldsStayAtSizeHint</enum>
             </property>
             <property name="labelAlignment">
-             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+             <set>Qt::AlignCenter</set>
+            </property>
+            <property name="formAlignment">
+             <set>Qt::AlignHCenter|Qt::AlignTop</set>
+            </property>
+            <property name="horizontalSpacing">
+             <number>12</number>
             </property>
             <property name="verticalSpacing">
              <number>4</number>
@@ -1113,6 +1132,15 @@
            <layout class="QFormLayout" name="formLayout_6">
             <property name="fieldGrowthPolicy">
              <enum>QFormLayout::FieldsStayAtSizeHint</enum>
+            </property>
+            <property name="labelAlignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+            <property name="formAlignment">
+             <set>Qt::AlignHCenter|Qt::AlignTop</set>
+            </property>
+            <property name="horizontalSpacing">
+             <number>12</number>
             </property>
             <property name="verticalSpacing">
              <number>4</number>
@@ -2037,7 +2065,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>535</width>
+     <width>456</width>
      <height>22</height>
     </rect>
    </property>
@@ -2099,7 +2127,7 @@
   <tabstop>minConfidence</tabstop>
   <tabstop>misOrientationTolerance</tabstop>
   <tabstop>crystalStructure</tabstop>
-  <tabstop>reconstructBtn</tabstop>
+  <tabstop>rec_GoBtn</tabstop>
   <tabstop>sm_OutputDir</tabstop>
   <tabstop>sm_SmoothMesh</tabstop>
   <tabstop>sm_XDim</tabstop>
@@ -2128,6 +2156,8 @@
   <tabstop>sm_DxFileBtn</tabstop>
  </tabstops>
  <resources>
+  <include location="../../../../Resources/icons/images/Icons.qrc"/>
+  <include location="../../../../Resources/icons/images/Icons.qrc"/>
   <include location="../../../../Resources/icons/images/Icons.qrc"/>
   <include location="../../../../Resources/icons/images/Icons.qrc"/>
   <include location="../../../../Resources/icons/images/Icons.qrc"/>
