@@ -1142,6 +1142,8 @@ void  ReconstructionFunc::find_centroids()
   double centerx = 0;
   double centery = 0;
   double centerz = 0;
+  maxdiameter=0;
+  mindiameter=100000;
   for(int i = 0; i < numgrains; i++)
   {
     size = 0;
@@ -1780,10 +1782,6 @@ void  ReconstructionFunc::find_convexities()
 }
 void ReconstructionFunc::volume_stats(string writename1,string writename2,string writename3)
 {
-  //TODO: There is a problem calculating some of the array indices which will cause an array out of
-  //TODO: bounds exception during execution on Windows. Not sure how GCC is getting past this.
-  if (true) return;
-
   double actualgrains = 0;
   double misocount = 0;
   double avgvol = 0;

@@ -194,24 +194,24 @@ void Reconstruction::compute()
   }
 
   CHECK_FOR_CANCELED(ReconstructionFunc)
-  progressMessage(AIM_STRING("homogenize_grains"), 21 );
-  m->homogenize_grains();
-
-  CHECK_FOR_CANCELED(ReconstructionFunc)
-  progressMessage(AIM_STRING("assign_badpoints"), 24 );
+  progressMessage(AIM_STRING("assign_badpoints"), 21 );
   m->assign_badpoints();
 
   CHECK_FOR_CANCELED(ReconstructionFunc)
-  progressMessage(AIM_STRING("find_neighbors"), 27 );
+  progressMessage(AIM_STRING("find_neighbors"), 24 );
   m->find_neighbors();
 
   CHECK_FOR_CANCELED(ReconstructionFunc)
-  progressMessage(AIM_STRING("merge_containedgrains"), 30 );
+  progressMessage(AIM_STRING("merge_containedgrains"), 27 );
   m->merge_containedgrains();
 
   CHECK_FOR_CANCELED(ReconstructionFunc)
-  progressMessage(AIM_STRING("renumber_grains2"), 33 );
+  progressMessage(AIM_STRING("renumber_grains2"), 30 );
   numgrains = m->renumber_grains2();
+
+  CHECK_FOR_CANCELED(ReconstructionFunc)
+  progressMessage(AIM_STRING("homogenize_grains"), 33 );
+  m->homogenize_grains();
 
   CHECK_FOR_CANCELED(ReconstructionFunc)
   progressMessage(AIM_STRING("write_volume"), 36 );

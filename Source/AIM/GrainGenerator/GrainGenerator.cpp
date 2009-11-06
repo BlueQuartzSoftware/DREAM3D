@@ -97,17 +97,15 @@ void GrainGenerator::run()
 // -----------------------------------------------------------------------------
 void GrainGenerator::compute()
 {
-  CREATE_INPUT_FILENAME(readname1, AIM::Representation::StatsFile)
-  CREATE_INPUT_FILENAME(readname6, AIM::Representation::AxisOrientationsFile)
-  CREATE_INPUT_FILENAME(readname7, AIM::Representation::EulerAnglesFile)
-  CREATE_INPUT_FILENAME(readname10, AIM::Representation::MisorientationBinsFile)
-  CREATE_INPUT_FILENAME(readname11, AIM::Representation::MicroBinsFile)
+  std::string  StatsFile = m_InputDirectory + MXAFileSystemPath::Separator + AIM::Representation::StatsFile;
+  std::string  AxisOrientationsFile = m_InputDirectory + MXAFileSystemPath::Separator + AIM::Representation::AxisOrientationsFile;
+  std::string  EulerAnglesFile = m_InputDirectory + MXAFileSystemPath::Separator + AIM::Representation::EulerAnglesFile;
+  std::string  MisorientationBinsFile = m_InputDirectory + MXAFileSystemPath::Separator + AIM::Representation::MisorientationBinsFile;
+  std::string  MicroBinsFile = m_InputDirectory + MXAFileSystemPath::Separator + AIM::Representation::MicroBinsFile;
 
-  CREATE_OUTPUT_FILENAME(writename1, AIM::Representation::CubeFile)
-  CREATE_OUTPUT_FILENAME(writename2, AIM::Representation::AnalysisFile)
-  CREATE_OUTPUT_FILENAME(writename3, AIM::Representation::BoundaryCentersFile)
-  CREATE_OUTPUT_FILENAME(writename4, AIM::Representation::GrainsFile)
-  CREATE_OUTPUT_FILENAME(writename5, AIM::Representation::VolumeFile)
+  std::string  CubeFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::CubeFile;
+  std::string  GrainsFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::GrainsFile;
+  std::string  VolumeFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::VolumeFile;
 
    m = GrainGeneratorFunc::New();
    m->initialize(m_NumGrains, m_ShapeClass,
@@ -132,27 +130,61 @@ void GrainGenerator::compute()
 
 
    ifstream inputFile1;
-   inputFile1.open(readname6.c_str());
+   inputFile1.open(AxisOrientationsFile.c_str());
    inputFile1 >> m->numorients;
    inputFile1.close();
    ifstream inputFile2;
-   inputFile2.open(readname7.c_str());
+   inputFile2.open(EulerAnglesFile.c_str());
    inputFile2 >> m->numeulers;
    inputFile2.close();
-   m->loadStatsData(readname1);
-   m->loadorientData(readname6,m->numorients);
-   m->loadeulerData(readname7,m->numeulers);
- //  int* takencheck = new int[m->numgrains];
+//   CHECK_FOR_CANCELED(ReconstructionFunc)
+//   progressMessage(AIM_STRING("Loading Stats File"), 5 );
+   m->loadStatsData(StatsFile);
+
+//   CHECK_FOR_CANCELED(ReconstructionFunc)
+//   progressMessage(AIM_STRING("Loading Orient File"), 10 );
+   m->loadorientData(AxisOrientationsFile,m->numorients);
+
+//   CHECK_FOR_CANCELED(ReconstructionFunc)
+//   progressMessage(AIM_STRING("Loading Euler File"), 15 );
+   m->loadeulerData(EulerAnglesFile,m->numeulers);
+
+//   CHECK_FOR_CANCELED(ReconstructionFunc)
+//   progressMessage(AIM_STRING("Generating Grains"), 20 );
    m->generate_grains(m->numgrains);
+
+//   CHECK_FOR_CANCELED(ReconstructionFunc)
+//   progressMessage(AIM_STRING("Initializing"), 25 );
    m->initialize2(m->xpoints,m->ypoints,m->zpoints);
+
+//   CHECK_FOR_CANCELED(ReconstructionFunc)
+//   progressMessage(AIM_STRING("Assigning Eulers"), 30 );
    m->assign_eulers(m->numgrains);
+
+//   CHECK_FOR_CANCELED(ReconstructionFunc)
+//   progressMessage(AIM_STRING("Packing Grains"), 35 );
    m->make_points(m->numgrains);
+
+//   CHECK_FOR_CANCELED(ReconstructionFunc)
+//   progressMessage(AIM_STRING("Filling Gaps"), 40 );
    m->fill_gaps(m->numgrains);
+
+//   CHECK_FOR_CANCELED(ReconstructionFunc)
+//   progressMessage(AIM_STRING("Finding Neighbors"), 45 );
    m->find_neighbors();
-   m->loadMisoData(readname10);
-   m->loadMicroData(readname11);
+
+//   CHECK_FOR_CANCELED(ReconstructionFunc)
+//   progressMessage(AIM_STRING("Loading Misorientations"), 50 );
+   m->loadMisoData(MisorientationBinsFile);
+
+//   CHECK_FOR_CANCELED(ReconstructionFunc)
+//   progressMessage(AIM_STRING("Loading Microtexture"), 55 );
+   m->loadMicroData(MicroBinsFile);
+
    for(int iter = 0; iter < m->misoiter; iter++)
    {
+//     CHECK_FOR_CANCELED(ReconstructionFunc)
+//     progressMessage(AIM_STRING("Matching Misorientations"), 65 );
      m->measure_misorientations();
      m->rank_misobins(m->numgrains);
      m->count_misorientations(m->numgrains);
@@ -163,6 +195,8 @@ void GrainGenerator::compute()
    }
    while(m->nummicros != 1)
    {
+//     CHECK_FOR_CANCELED(ReconstructionFunc)
+//     progressMessage(AIM_STRING("Matching Microtexture"), 75 );
      m->measure_misorientations();
      m->count_misorientations(m->numgrains);
      m->nummicros = m->rank_microbins(m->numgrains);
@@ -172,6 +206,8 @@ void GrainGenerator::compute()
    }
    for(int iter3 = 0; iter3 < m->misoiter; iter3++)
    {
+//     CHECK_FOR_CANCELED(ReconstructionFunc)
+//     progressMessage(AIM_STRING("Rematching Misorientations"), 85 );
      m->measure_misorientations();
      m->rank_misobins(m->numgrains);
      m->count_misorientations(m->numgrains);
@@ -180,10 +216,19 @@ void GrainGenerator::compute()
      m->identify_grains1(m->numgrains, m->nummisomoves);
      m->move_grains1(m->numgrains);
    }
-   m->writeCube(writename1, m->numgrains);
-   m->write_grains(writename4,m->numgrains);
-   m->write_volume(writename5);
+//   CHECK_FOR_CANCELED(ReconstructionFunc)
+//   progressMessage(AIM_STRING("writing Cube"), 90 );
+   m->writeCube(CubeFile, m->numgrains);
+   
+//   CHECK_FOR_CANCELED(ReconstructionFunc)
+//   progressMessage(AIM_STRING("Writing Grains"), 95 );
+   m->write_grains(GrainsFile,m->numgrains);
+   
+//   CHECK_FOR_CANCELED(ReconstructionFunc)
+//   progressMessage(AIM_STRING("Writing Volume"), 100 );
+   m->write_volume(VolumeFile);
 
+//   progressMessage(AIM_STRING("Generation Completed"), 100 );
 }
 
 // -----------------------------------------------------------------------------
