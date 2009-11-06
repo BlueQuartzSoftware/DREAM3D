@@ -68,14 +68,14 @@ void AIMRandomNG::RandomInit (uint32 seed)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-double AIMRandomNG::RandBeta(double u1, double u2, double aa,double bb)
+double AIMRandomNG::RandBeta(double aa,double bb)
 {
 #define expmax 89.0
 #define infnty 1.0E38
 
 static double olda = -1.0;
 static double oldb = -1.0;
-static double genbet,a,alpha,b,beta,delta,gamma,k1,k2,r,s,t,v,w,y,z;
+static double genbet,u1,u2,a,alpha,b,beta,delta,gamma,k1,k2,r,s,t,v,w,y,z;
 static long qsame;
 
     qsame = olda == aa && oldb == bb;
@@ -99,6 +99,7 @@ S20:
     gamma = a+1.0/beta;
 S30:
 S40:
+	u1 = Random();
     v = beta*log(u1/(1.0-u1));
     if(!(v > expmax)) goto S50;
     w = infnty;
@@ -138,6 +139,8 @@ S100:
     k2 = 0.25+(0.5+0.25/delta)*b;
 S110:
 S120:
+	u1 = Random();
+	u2 = Random();
     if(u1 >= 0.5) goto S130;
     y = u1*u2;
     z = u1*y;
@@ -181,15 +184,16 @@ S220:
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-double AIMRandomNG::RandNorm(double u, double m, double s)
+double AIMRandomNG::RandNorm(double m, double s)
 {
   const double p0 = 0.322232431088;     const double q0 = 0.099348462606;
   const double p1 = 1.0;                const double q1 = 0.588581570495;
   const double p2 = 0.342242088547;     const double q2 = 0.531103462366;
   const double p3 = 0.204231210245e-1;  const double q3 = 0.103537752850;
   const double p4 = 0.453642210148e-4;  const double q4 = 0.385607006340e-2;
-  double t, p, q, z;
+  double u,t, p, q, z;
 
+  u = Random();
   if (u < 0.5)
     t = sqrt(-2.0 * log(u));
   else

@@ -63,7 +63,7 @@ GrainGeneratorFunc::~GrainGeneratorFunc()
 }
 
 void GrainGeneratorFunc::initialize(int32 m_NumGrains, int32 m_ShapeClass,
-              double m_XResolution, double m_YResolution, double m_ZResolution, double m_OverlapAllowed,
+              double m_XResolution, double m_YResolution, double m_ZResolution, int32 m_OverlapAllowed,
               int32 m_OverlapAssignment, int32 m_CrystalStructure)
 {
 
@@ -85,12 +85,11 @@ void GrainGeneratorFunc::initialize(int32 m_NumGrains, int32 m_ShapeClass,
   packedgrain = new Grain[numgrains];
   gsizes = new int[numgrains];
   gremovals = new int[numgrains];
-  eulerbin = new Bin[1000];
   orient = new Orient[5000];
-  actualmisobin = new Bin[totalpoints];
-  simmisobin = new Bin[totalpoints];
-  actualmicrobin = new Bin[totalpoints];
-  simmicrobin = new Bin[totalpoints];
+  actualmisobin = new Bin[10];
+  simmisobin = new Bin[10];
+  actualmicrobin = new Bin[10];
+  simmicrobin = new Bin[10];
 }
 
 void GrainGeneratorFunc::initialize2(int32 xpoints, int32 ypoints, int32 zpoints)
@@ -465,9 +464,6 @@ void  GrainGeneratorFunc::loadeulerData(string inname7, int numeulers)
         {
           int curcount = eulercount[ea1bin][ea2bin][ea3bin];
           int bnum = (ea1bin*36*36)+(ea2bin*36)+ea3bin;
-          eulerbin[bnum].euler1 = ea1;
-          eulerbin[bnum].euler2 = ea2;
-          eulerbin[bnum].euler3 = ea3;
           eulercount[ea1bin][ea2bin][ea3bin]++;
           totalcount++;
         }
@@ -479,45 +475,37 @@ void  GrainGeneratorFunc::loadeulerData(string inname7, int numeulers)
 
 void  GrainGeneratorFunc::generate_grains(int numgrains)
 {
-  int good = 1;
+  int good = 0;
   double totvol = 0;
-  int curbin1 = 0;
-  int curbin2 = 0;
-  int curbin3 = 0;
-//  int curbin4 = 0;
-  int curbin5 = 0;
   double r1 = 1;
   double u=0,u1=0,u2=0;
   double a1=0,a2=0,a3=0;
   double b1=0,b2=0,b3=0;
   double r2=0,r3=0;
-  int bnum=0;
   int takencheck[1000];
-  srand(static_cast<unsigned int>(time(NULL)));
+  rg.RandomInit((static_cast<unsigned int>(time(NULL))));
   for(int l = 0; l < numgrains; l++)
   {
-    curbin1 = 0;
-    good = 1;
     u = rg.Random();
-	double diam = rg.RandNorm(u,avgdiam,sddiam);
+	double diam = rg.RandNorm(avgdiam,sddiam);
 	diam = exp(diam);
     double vol = (4.0/3.0)*(m_pi)*((diam/2.0)*(diam/2.0)*(diam/2.0));
     int diameter = int(diam);
     if(diameter >= maxdiameter) diameter = maxdiameter;
     if(diameter <= mindiameter) diameter = mindiameter;
-    int good = 0;
-    while(good == 0)
-    {
+    good = 0;
+//    while(good == 0)
+//    {
 	  a1 = bovera[diameter][0];
 	  b1 = bovera[diameter][1];
 	  u1 = rg.Random();
 	  u2 = rg.Random();
-	  r2 = rg.RandBeta(u1,u2,a1,b1);
+	  r2 = rg.RandBeta(a1,b1);
 	  a2 = covera[diameter][0];
 	  b2 = covera[diameter][1];
 	  u1 = rg.Random();
 	  u2 = rg.Random();
-	  r3 = rg.RandBeta(u1,u2,a2,b2);
+	  r3 = rg.RandBeta(a2,b2);
       double cob = r3/r2;
 	  a3 = coverb[diameter][0];
 	  b3 = coverb[diameter][1];
@@ -525,7 +513,7 @@ void  GrainGeneratorFunc::generate_grains(int numgrains)
 	  double check = rg.Random();
       if(prob > check) good = 1;
       if(cob > 1) good = 0;
-    }
+//    }
 	double random5 = rg.Random();
     int onum = int(random5*numorients);
     double r1x = orient[onum].rad1x;
@@ -540,7 +528,7 @@ void  GrainGeneratorFunc::generate_grains(int numgrains)
     u = rg.Random();
 	double m = svshape[diameter][0];
 	double s = svshape[diameter][1];
-	double N = rg.RandNorm(u,m,s);
+	double N = rg.RandNorm(m,s);
 	N = exp(N);
     int gnum = l;
     grains[l].grainname = gnum;
@@ -572,6 +560,7 @@ void  GrainGeneratorFunc::generate_grains(int numgrains)
   xpoints1 = xpoints/4;
   ypoints1 = ypoints/4;
   zpoints1 = zpoints/4;
+  grainorder.resize(numgrains);
   for(int i=0;i<numgrains;i++)
   {
     int maxgrain = 0;
@@ -596,11 +585,11 @@ void  GrainGeneratorFunc::assign_eulers(int numgrains)
 //  double grainssleft = numgrains-count;
   double density = 0;
   double synea1=0,synea2=0,synea3=0;
-  for(int j = 0; j < 18; j++)
+  for(int j = 0; j < 36; j++)
   {
-    for(int k = 0; k < 18; k++)
+    for(int k = 0; k < 36; k++)
     {
-      for(int l = 0; l < 18; l++)
+      for(int l = 0; l < 36; l++)
       {
         double num = (numgrains)*(double(eulercount[j][k][l]))/numeulers;
         density = density + (eulercount[j][k][l]*eulercount[j][k][l]);
@@ -615,9 +604,9 @@ void  GrainGeneratorFunc::assign_eulers(int numgrains)
           double random2 = random;
           random = rg.Random();
           double random3 = random;
-          synea1 = ((m_pi/36)*j)+((m_pi/36)*random1);
-          synea2 = ((m_pi/36)*k)+((m_pi/36)*random2);
-          synea3 = ((m_pi/36)*l)+((m_pi/36)*random3);
+          synea1 = ((m_pi/72)*j)+((m_pi/72)*random1);
+          synea2 = ((m_pi/72)*k)+((m_pi/72)*random2);
+          synea3 = ((m_pi/72)*l)+((m_pi/72)*random3);
           grains[count].euler1 = synea1;
           grains[count].euler2 = synea2;
           grains[count].euler3 = synea3;
@@ -634,11 +623,11 @@ void  GrainGeneratorFunc::assign_eulers(int numgrains)
   while(count < numgrains)
   {
     double cur = 0;
-    for(int m = 0; m < 18; m++)
+    for(int m = 0; m < 36; m++)
     {
-      for(int n = 0; n < 18; n++)
+      for(int n = 0; n < 36; n++)
       {
-        for(int p = 0; p < 18; p++)
+        for(int p = 0; p < 36; p++)
         {
           double num = eulercount[m][n][p]/numeulers;
           if(num > cur && num < lastcur)
@@ -650,9 +639,9 @@ void  GrainGeneratorFunc::assign_eulers(int numgrains)
             double random5 = random;
             random = rg.Random();
             double random6 = random;
-            synea1 = ((m_pi/36)*m)+((m_pi/36)*random4);
-            synea2 = ((m_pi/36)*n)+((m_pi/36)*random5);
-            synea3 = ((m_pi/36)*p)+((m_pi/36)*random6);
+            synea1 = ((m_pi/72)*m)+((m_pi/72)*random4);
+            synea2 = ((m_pi/72)*n)+((m_pi/72)*random5);
+            synea3 = ((m_pi/72)*p)+((m_pi/72)*random6);
           }
         }
       }
@@ -1055,7 +1044,7 @@ void  GrainGeneratorFunc::make_points(int numgrains)
         }
 //        double randomsize = rg.Random();
 //        double randomsize1 = randomsize;
-        double acceptable = badcount/insidecount;
+        double acceptable = 100*(badcount/insidecount);
         if(insidecount == 0)
         {
 //          int stop = 0;
@@ -1176,7 +1165,6 @@ void  GrainGeneratorFunc::make_points(int numgrains)
               uniquecursize++;
               totalcursize++;
               gridfine[point].grainname = i;
-              voxelsvector[i].push_back(point);
             }
             if(current == 0 && overlapassignment == 2)
             {
@@ -1184,7 +1172,6 @@ void  GrainGeneratorFunc::make_points(int numgrains)
               if((gremovals[checkgrain]/packedgrain[checkgrain].initsize) < (overlapallowed/5.0))
               {
                 gridfine[point].grainname = i;
-                voxelsvector[i].push_back(point);
                 totalcursize++;
               }
             }

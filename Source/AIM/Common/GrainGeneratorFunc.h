@@ -58,7 +58,7 @@ public:
   virtual ~GrainGeneratorFunc();
 
 void initialize(int32 v_NumG, int32 v_ShapeClass, double stepX, double stepY, double stepZ,
-                  double v_OverAllow,int32 v_OverMethod,int32 v_crystruct);
+                  int32 v_OverAllow,int32 v_OverMethod,int32 v_crystruct);
 
 void initialize2(int32 xpoints, int32 ypoints, int32 zpoints);
 
@@ -89,7 +89,6 @@ void initialize2(int32 xpoints, int32 ypoints, int32 zpoints);
 	Bin* simmicrobin;
 
 	vector<int> grainorder;
-	vector<vector<int> > voxelsvector;
 	vector<vector<int> > neighborvector;
 	vector<vector<double> > bovera;
 	vector<vector<double> > covera;
@@ -112,7 +111,7 @@ void initialize2(int32 xpoints, int32 ypoints, int32 zpoints);
 	int shapeclass;
 	int maxdiameter;
 	int mindiameter;
-	double overlapallowed;
+	int32 overlapallowed;
 	int overlapassignment;
 	double avgdiam;
 	double sddiam;

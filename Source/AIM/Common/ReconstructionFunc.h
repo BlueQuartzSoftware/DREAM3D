@@ -91,7 +91,6 @@ public:
 
 	Bin* eulerbin;
 
-	vector<vector<int> > voxelsvector;
 	vector<vector<int> > neighborvector;
 
 	int numseNbins;
