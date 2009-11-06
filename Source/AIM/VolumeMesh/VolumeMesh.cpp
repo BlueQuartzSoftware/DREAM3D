@@ -43,37 +43,38 @@ VolumeMesh::Pointer VolumeMesh::New( QObject* parent)
   Pointer sharedPtr(new VolumeMesh(parent));
   return sharedPtr;
 }
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-VolumeMesh::VolumeMesh( QObject* parent) :
-QThread(parent),
-m_NodesFile(""),
-m_TrianglesFile(""),
-m_OutputDirectory(""),
-m_XDim(0.0), m_YDim(0.0), m_ZDim(0.0),
-m_XRes(0.0), m_YRes(0.0), m_ZRes(0.0), m_NumGrains(0),
-m_ErrorCondition(0),
-m_Cancel(false)
-{
-
-}
-#else
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-VolumeMesh::VolumeMesh() :
-m_NodesFile(""),
-m_TrianglesFile(""),
-m_OutputDirectory(""),
-m_XDim(0.0), m_YDim(0.0), m_ZDim(0.0),
-m_XRes(0.0), m_YRes(0.0), m_ZRes(0.0), m_NumGrains(0),
-m_ErrorCondition(0)
-{
-
-}
 #endif
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+VolumeMesh::VolumeMesh( 
+#if AIM_USE_QT
+QObject* parent
+#endif
+) :
+#if AIM_USE_QT
+QThread(parent),
+#endif
+m_NodesFile(""),
+m_TrianglesFile(""),
+m_OutputDirectory(""),
+m_XDim(0.0),
+m_YDim(0.0),
+m_ZDim(0.0),
+m_XRes(0.0),
+m_YRes(0.0),
+m_ZRes(0.0), 
+m_NumGrains(0),
+m_ErrorCondition(0)
+#if AIM_USE_QT
+,
+m_Cancel(false)
+#endif
+{
+
+}
+
 
 // -----------------------------------------------------------------------------
 //
