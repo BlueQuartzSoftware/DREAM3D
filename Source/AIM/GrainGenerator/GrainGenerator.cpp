@@ -48,30 +48,38 @@ GrainGenerator::Pointer GrainGenerator::New( QObject* parent)
   Pointer sharedPtr(new GrainGenerator(parent));
   return sharedPtr;
 }
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-GrainGenerator::GrainGenerator( QObject* parent) :
-QThread(parent),
-m_InputDirectory("."),
-m_OutputDirectory("."),
-m_ErrorCondition(0),
-m_Cancel(false)
-{
-
-}
-#else
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-GrainGenerator::GrainGenerator() :
-m_InputDirectory("."),
-m_OutputDirectory("."),
-m_ErrorCondition(0)
-{
-}
 #endif
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+GrainGenerator::GrainGenerator(
+#if AIM_USE_QT
+QObject* parent
+#endif
+) :
+#if AIM_USE_QT
+QThread(parent),
+#endif
+m_InputDirectory("."),
+m_OutputDirectory("."),
+m_NumGrains(0),
+m_ShapeClass(0),
+m_XResolution(0.0),
+m_YResolution(0.0),
+m_ZResolution(0.0),
+m_OverlapAllowed(0),
+m_OverlapAssignment(0),
+m_CrystalStructure(0),
+m_ErrorCondition(0)
+#if AIM_USE_QT
+,
+m_Cancel(false)
+#endif
+{
+
+}
 
 
 // -----------------------------------------------------------------------------
