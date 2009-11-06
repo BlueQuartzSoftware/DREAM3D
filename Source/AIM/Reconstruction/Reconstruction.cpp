@@ -44,39 +44,40 @@ Reconstruction::Pointer Reconstruction::New( QObject* parent)
   Pointer sharedPtr(new Reconstruction(parent));
   return sharedPtr;
 }
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-Reconstruction::Reconstruction( QObject* parent) :
-QThread(parent),
-  m_InputDirectory("."), m_OutputDirectory("."),
-  m_AngFilePrefix("Slice_"), m_AngSeriesMaxSlice(3),
-  m_ZStartIndex(0), m_ZEndIndex(0), m_ZResolution(0.25),
-  m_MergeTwins(false), m_MinAllowedGrainSize(0.0),
-  m_MinSeedConfidence(0.0), m_MisorientationTolerance(0.0),
-  m_CrystalStructure(AIM::Representation::Hexagonal),
-  m_AlreadyFormed(false), m_ErrorCondition(0),m_Cancel(false)
-{
-
-}
-#else
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-Reconstruction::Reconstruction() :
-m_InputDirectory("."), m_OutputDirectory("."),
-m_AngFilePrefix("Slice_"), m_AngSeriesMaxSlice(3),
-m_ZStartIndex(0), m_ZEndIndex(0),
-m_ZResolution(0.25),
-m_MergeTwins(false), m_MinAllowedGrainSize(0.0),
-m_MinSeedConfidence(0.0), m_MisorientationTolerance(0.0),
-m_CrystalStructure(AIM::Representation::Hexagonal),
-m_AlreadyFormed(false)
-{
-
-}
 #endif
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+Reconstruction::Reconstruction( 
+#if AIM_USE_QT
+QObject* parent
+#endif
+) :
+#if AIM_USE_QT
+QThread(parent),
+#endif
+m_InputDirectory("."),
+m_OutputDirectory("."),
+m_AngFilePrefix("Slice_"), 
+m_AngSeriesMaxSlice(3),
+m_ZStartIndex(0),
+m_ZEndIndex(0), 
+m_ZResolution(0.25),
+m_MergeTwins(false),
+m_MinAllowedGrainSize(0),
+m_MinSeedConfidence(0.0),
+m_MisorientationTolerance(0.0),
+m_CrystalStructure(AIM::Representation::Hexagonal),
+m_AlreadyFormed(false), 
+m_ErrorCondition(0)
+#if AIM_USE_QT
+  ,m_Cancel(false)
+#endif
+{
+
+}
+
 
 // -----------------------------------------------------------------------------
 //

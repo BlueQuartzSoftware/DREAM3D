@@ -43,28 +43,19 @@ SurfaceMesh::Pointer SurfaceMesh::New( QObject* parent)
   Pointer sharedPtr(new SurfaceMesh(parent));
   return sharedPtr;
 }
+#endif
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-SurfaceMesh::SurfaceMesh( QObject* parent) :
+SurfaceMesh::SurfaceMesh(
+#if AIM_USE_QT
+QObject* parent
+#endif
+) :
+#if AIM_USE_QT
 QThread(parent),
-m_DxFile(""),
-m_OutputDirectory(""),
-m_SmoothMesh(false),
-m_SmoothIterations(0),
-m_SmoothFileOutputIncrement(0),
-m_SmoothLockQuadPoints(false),
-m_ErrorCondition(0),
-m_Cancel(false)
-{
-
-}
-#else
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-SurfaceMesh::SurfaceMesh() :
+#endif
 m_DxFile(""),
 m_OutputDirectory(""),
 m_SmoothMesh(false),
@@ -72,10 +63,12 @@ m_SmoothIterations(0),
 m_SmoothFileOutputIncrement(0),
 m_SmoothLockQuadPoints(false),
 m_ErrorCondition(0)
-{
-
-}
+#if AIM_USE_QT
+,
+m_Cancel(false)
 #endif
+{
+}
 
 // -----------------------------------------------------------------------------
 //
