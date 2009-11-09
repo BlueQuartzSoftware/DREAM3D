@@ -164,6 +164,7 @@ void Reconstruction::compute()
     CHECK_FOR_CANCELED(ReconstructionFunc)
     progressMessage(AIM_STRING("Renumbering Small Grains"), 12 );
     numgrains = m->renumber_grains1();
+    m->numgrains = numgrains;
 
     CHECK_FOR_CANCELED(ReconstructionFunc)
     progressMessage(AIM_STRING("write_volume"), 15 );
@@ -207,6 +208,7 @@ void Reconstruction::compute()
   CHECK_FOR_CANCELED(ReconstructionFunc)
   progressMessage(AIM_STRING("renumber_grains2"), 30 );
   numgrains = m->renumber_grains2();
+  m->numgrains = numgrains;
 
   CHECK_FOR_CANCELED(ReconstructionFunc)
   progressMessage(AIM_STRING("homogenize_grains"), 33 );
@@ -224,6 +226,7 @@ void Reconstruction::compute()
   CHECK_FOR_CANCELED(ReconstructionFunc)
   progressMessage(AIM_STRING("renumber_grains3"), 39 );
   numgrains = m->renumber_grains3();
+  m->numgrains = numgrains;
 
   CHECK_FOR_CANCELED(ReconstructionFunc)
   progressMessage(AIM_STRING("write_volume"), 42 );

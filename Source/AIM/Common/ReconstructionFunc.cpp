@@ -2473,33 +2473,6 @@ void ReconstructionFunc::create_dxfile(string dxfile)
   outFile.close();
 }
 
-void  ReconstructionFunc::write_grains(string writename12)
-{
-    ofstream outFile;
-    outFile.open(writename12.c_str());
-  outFile << numgrains<< endl;
-  for(int i=0;i<numgrains;i++)
-  {
-    double xc = grains[i].centroidx;
-    double yc = grains[i].centroidy;
-    double zc = grains[i].centroidz;
-    double ea1 = grains[i].avgeuler1;
-    double ea2 = grains[i].avgeuler2;
-    double ea3 = grains[i].avgeuler3;
-    int nnum = grains[i].numneighbors;
-    vector<int>* nlist = grains[i].neighborlist;
-    outFile << i << " " << xc << "  " << yc << "  " << zc << "  " << ea1 << " " << ea2 << " " << ea3 << " " << nnum;
-    int size = 0;
-    if (NULL != nlist) { size = nlist->size(); }
-    for(int k=0;k<size;k++)
-    {
-      int neigh = (*nlist)[k];
-      outFile << "  " << neigh;
-    }
-    outFile << endl;
-  }
-}
-
 void  ReconstructionFunc::write_axisorientations(string writename14)
 {
     ofstream outFile;
