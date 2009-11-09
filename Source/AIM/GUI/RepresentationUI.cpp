@@ -757,7 +757,7 @@ void RepresentationUI::on_angDir_textChanged(const QString & text)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RepresentationUI::on_reconstructBtn_clicked()
+void RepresentationUI::on_rec_GoBtn_clicked()
 {
   bool ok = false;
   if (rec_GoBtn->text().compare("Cancel") == 0)
