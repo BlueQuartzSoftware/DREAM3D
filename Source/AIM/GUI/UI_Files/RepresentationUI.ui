@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>456</width>
-    <height>526</height>
+    <width>535</width>
+    <height>573</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -614,12 +614,12 @@
            <widget class="QComboBox" name="crystalStructure">
             <item>
              <property name="text">
-              <string>Cubic</string>
+              <string>Hexagonal</string>
              </property>
             </item>
             <item>
              <property name="text">
-              <string>Hexagonal</string>
+              <string>Cubic</string>
              </property>
             </item>
            </widget>
@@ -741,12 +741,12 @@
            <widget class="QComboBox" name="gg_CrystalStructure">
             <item>
              <property name="text">
-              <string>Cubic</string>
+              <string>Hexagonal</string>
              </property>
             </item>
             <item>
              <property name="text">
-              <string>Hexagonal</string>
+              <string>Cubic</string>
              </property>
             </item>
            </widget>
@@ -2035,7 +2035,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>456</width>
+     <width>535</width>
      <height>22</height>
     </rect>
    </property>
