@@ -189,6 +189,7 @@ void GrainGenerator::compute()
    progressMessage(AIM_STRING("Loading Microtexture"), 55 );
    m->loadMicroData(MicroBinsFile);
 
+/*
    for(int iter = 0; iter < m->misoiter; iter++)
    {
      CHECK_FOR_CANCELED(ReconstructionFunc)
@@ -224,13 +225,11 @@ void GrainGenerator::compute()
      m->identify_grains1(m->numgrains, m->nummisomoves);
      m->move_grains1(m->numgrains);
    }
+*/
+
    CHECK_FOR_CANCELED(ReconstructionFunc)
    progressMessage(AIM_STRING("writing Cube"), 90 );
    m->writeCube(CubeFile, m->numgrains);
-   
-   CHECK_FOR_CANCELED(ReconstructionFunc)
-   progressMessage(AIM_STRING("Writing Grains"), 95 );
-   m->write_grains(GrainsFile,m->numgrains);
    
    CHECK_FOR_CANCELED(ReconstructionFunc)
    progressMessage(AIM_STRING("Writing Volume"), 100 );

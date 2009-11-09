@@ -148,7 +148,6 @@ void initialize2(int32 xpoints, int32 ypoints, int32 zpoints);
 	void fill_gaps(int);
 	void find_neighbors();
 	void writeCube(string, int);
-	void write_grains(string, int);
 	void find_boundarycenters1(string,int);
 	void loadMisoData(string);
 	void loadMicroData(string);
@@ -163,7 +162,7 @@ void initialize2(int32 xpoints, int32 ypoints, int32 zpoints);
 	void identify_grains2(int,int);
 	void move_grains2(int);
 	void freeze_grains(int);
-	double getmisoquat(double ,double,double ,double ,double ,double ,double,double ,double &,double &,double &);
+	double getmisoquat(double,double ,double ,double ,double ,double,double ,double &,double &,double &);
 	double gamma(double);
 
 protected:
