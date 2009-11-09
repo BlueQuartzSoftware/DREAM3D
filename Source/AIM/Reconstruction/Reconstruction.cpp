@@ -281,7 +281,6 @@ void Reconstruction::compute()
 
   std::string reconVisFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::ReconstructedVisualizationFile;
   std::string dxFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::ReconstructedDxFile;
-  std::string grainsFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::GrainsFile;
 
   std::string axisFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::AxisOrientationsFile;
   std::string eulerFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::EulerAnglesFile;
@@ -293,10 +292,6 @@ void Reconstruction::compute()
   CHECK_FOR_CANCELED(ReconstructionFunc)
   progressMessage(AIM_STRING("Writing DX File"), 76);
   m->create_dxfile(dxFile);
-
-  CHECK_FOR_CANCELED(ReconstructionFunc)
-  progressMessage(AIM_STRING("Writing Grains File"), 78 );
-  m->write_grains(grainsFile);
 
   CHECK_FOR_CANCELED(ReconstructionFunc)
   progressMessage(AIM_STRING("Writing Axis Orientation File"), 81 );

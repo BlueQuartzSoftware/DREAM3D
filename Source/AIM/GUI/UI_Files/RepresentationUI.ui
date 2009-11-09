@@ -304,23 +304,6 @@
               </property>
              </widget>
             </item>
-            <item row="6" column="0">
-             <widget class="QLabel" name="rec_GrainsFileIcon">
-              <property name="text">
-               <string/>
-              </property>
-              <property name="pixmap">
-               <pixmap resource="../../../../Resources/icons/images/Icons.qrc">:/Delete-16x16.png</pixmap>
-              </property>
-             </widget>
-            </item>
-            <item row="6" column="1">
-             <widget class="QLabel" name="rec_GrainsFile">
-              <property name="text">
-               <string>grains.txt</string>
-              </property>
-             </widget>
-            </item>
            </layout>
           </item>
           <item row="1" column="1">
@@ -1079,23 +1062,6 @@
               </property>
              </widget>
             </item>
-            <item row="3" column="1">
-             <widget class="QLabel" name="gg_AnalysisFile">
-              <property name="text">
-               <string>Analysis</string>
-              </property>
-             </widget>
-            </item>
-            <item row="3" column="0">
-             <widget class="QLabel" name="gg_AnalysisFileIcon">
-              <property name="text">
-               <string/>
-              </property>
-              <property name="pixmap">
-               <pixmap resource="../../../../Resources/icons/images/Icons.qrc">:/Delete-16x16.png</pixmap>
-              </property>
-             </widget>
-            </item>
             <item row="2" column="0">
              <widget class="QLabel" name="gg_CubeDxFileIcon">
               <property name="text">
@@ -1133,23 +1099,6 @@
              <number>4</number>
             </property>
             <item row="0" column="0">
-             <widget class="QLabel" name="gg_GrainsFileIcon">
-              <property name="text">
-               <string/>
-              </property>
-              <property name="pixmap">
-               <pixmap resource="../../../../Resources/icons/images/Icons.qrc">:/Delete-16x16.png</pixmap>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="1">
-             <widget class="QLabel" name="gg_GrainsFile">
-              <property name="text">
-               <string>Grains</string>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="0">
              <widget class="QLabel" name="gg_VolumeFileIcon">
               <property name="text">
                <string/>
@@ -1159,10 +1108,27 @@
               </property>
              </widget>
             </item>
-            <item row="1" column="1">
+            <item row="0" column="1">
              <widget class="QLabel" name="gg_VolumeFile">
               <property name="text">
                <string>Volume</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="0">
+             <widget class="QLabel" name="gg_AnalysisFileIcon">
+              <property name="text">
+               <string/>
+              </property>
+              <property name="pixmap">
+               <pixmap resource="../../../../Resources/icons/images/Icons.qrc">:/Delete-16x16.png</pixmap>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="1">
+             <widget class="QLabel" name="gg_AnalysisFile">
+              <property name="text">
+               <string>Analysis</string>
               </property>
              </widget>
             </item>
@@ -2122,10 +2088,10 @@
   <tabstop>gg_InputDirBtn</tabstop>
   <tabstop>gg_OutputDirBtn</tabstop>
   <tabstop>gg_GoBtn</tabstop>
-  <tabstop>tabWidget</tabstop>
   <tabstop>sm_DxFileBtn</tabstop>
  </tabstops>
  <resources>
+  <include location="../../../../Resources/icons/images/Icons.qrc"/>
   <include location="../../../../Resources/icons/images/Icons.qrc"/>
   <include location="../../../../Resources/icons/images/Icons.qrc"/>
   <include location="../../../../Resources/icons/images/Icons.qrc"/>

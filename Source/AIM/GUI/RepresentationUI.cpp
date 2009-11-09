@@ -625,7 +625,6 @@ void RepresentationUI::rec_CheckIOFiles()
   CHECK_QLABEL_OUTPUT_FILE_EXISTS(rec_, MicroBinsFile)
   CHECK_QLABEL_OUTPUT_FILE_EXISTS(rec_, ReconstructedDataFile)
   CHECK_QLABEL_OUTPUT_FILE_EXISTS(rec_, ReconstructedVisualizationFile)
-  CHECK_QLABEL_OUTPUT_FILE_EXISTS(rec_, GrainsFile)
   CHECK_QLABEL_OUTPUT_FILE_EXISTS(rec_, AxisOrientationsFile)
   CHECK_QLABEL_OUTPUT_FILE_EXISTS(rec_, EulerAnglesFile)
 }
@@ -891,7 +890,6 @@ void RepresentationUI::gg_CheckIOFiles()
   CHECK_QLABEL_OUTPUT_FILE_EXISTS(gg_, CubeFile)
   CHECK_QLABEL_OUTPUT_FILE_EXISTS(gg_, CubeDxFile)
   CHECK_QLABEL_OUTPUT_FILE_EXISTS(gg_, AnalysisFile)
-  CHECK_QLABEL_OUTPUT_FILE_EXISTS(gg_, GrainsFile)
   CHECK_QLABEL_OUTPUT_FILE_EXISTS(gg_, VolumeFile)
 }
 
