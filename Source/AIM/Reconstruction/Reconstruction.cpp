@@ -18,19 +18,17 @@
 
 
 #ifdef AIM_USE_QT
-
-
 #define CHECK_FOR_CANCELED(AClass)\
     if (this->m_Cancel) { \
       QString msg = #AClass; \
               msg += " was Canceled"; \
+              emit updateMessage(msg);\
+              emit updateProgress(0);\
       return;}
 
 #else
-
 #define CHECK_FOR_CANCELED(AClass)\
     ;
-
 #endif
 
 
@@ -321,11 +319,9 @@ void Reconstruction::progressMessage(AIM_STRING message, int progress)
 #ifdef AIM_USE_QT
       emit updateMessage(QString(message));
       emit updateProgress(progress);
-      std::cout << message.toStdString() << std::endl;
+    //  std::cout << message.toStdString() << std::endl;
 #else
-
   std::cout << message << std::endl;
-
 #endif
 }
 
@@ -335,7 +331,7 @@ void Reconstruction::progressMessage(AIM_STRING message, int progress)
 // -----------------------------------------------------------------------------
 void Reconstruction::on_CancelWorker()
 {
-  // std::cout << "Reconstruction::cancelWorker()" << std::endl;
+ // std::cout << "Reconstruction::cancelWorker()" << std::endl;
   this->m_Cancel = true;
   if (m.get() != NULL)
   {

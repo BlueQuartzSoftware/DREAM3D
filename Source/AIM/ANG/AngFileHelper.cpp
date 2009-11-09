@@ -47,7 +47,7 @@ void AngFileHelper::loadData(Voxel voxels[],
       AngFileReader::Pointer reader = AngFileReader::New();
       //int slice = m_ZIndexStart + k;
       std::string angFName = m_DirectoryPattern->generateFullPathAngFileName(k + m_ZIndexStart);
-      std::cout << "Reading ANG File '" << angFName << "'" << std::endl;
+     // std::cout << "Reading ANG File '" << angFName << "'" << std::endl;
 
       int err = reader->readFile(angFName);
       if (err < 0)
