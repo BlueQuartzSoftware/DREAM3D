@@ -68,7 +68,6 @@ void ReconstructionFunc::initialize(double stepX, double stepY, double stepZ,
   crystruct = v_crystruct;
   alreadyformed = (v_alreadyformed == true) ? 1 : 0;
 
-
   xpoints = angNumCols;
   ypoints = angNumRows;
   zpoints = angSlices;
@@ -78,22 +77,6 @@ void ReconstructionFunc::initialize(double stepX, double stepY, double stepZ,
   sizez = (zpoints - 1 ) * resz;
 
   totalpoints = xpoints * ypoints * zpoints;
-
-
-#if 0
-  std::cout << "X Size: " << sizex << std::endl;
-  std::cout << "Y Size: " << sizey << std::endl;
-  std::cout << "Z Size: " << sizez << std::endl;
-  std::cout << "X Res: " << resx << std::endl;
-  std::cout << "Y Res: " << resy << std::endl;
-  std::cout << "Z Res: " << resz << std::endl;
-  std::cout << "X Points: " << xpoints << std::endl;
-  std::cout << "Y Points: " << ypoints << std::endl;
-  std::cout << "Z Points: " << zpoints << std::endl;
-  std::cout << "Total Points: " << totalpoints << std::endl;
-#endif
-
-
 
   voxels = new Voxel[totalpoints];
   grains = new Grain[totalpoints/20];
@@ -981,13 +964,14 @@ int  ReconstructionFunc::renumber_grains3()
       vector<int>* nlist = grains[i].neighborlist;
       grains[graincount].numvoxels = size;
       grains[graincount].numneighbors = numneighbors;
-    if (grains[graincount].neighborlist == NULL)
-    {
-      grains[graincount].neighborlist = new std::vector<int>(numneighbors);
-    }
-      if (NULL != nlist) {
-          grains[graincount].neighborlist->swap(*nlist);
-    }
+      if (grains[graincount].neighborlist == NULL)
+      {
+        grains[graincount].neighborlist = new std::vector<int>(numneighbors);
+      }
+      if (NULL != nlist) 
+	  {
+        grains[graincount].neighborlist->swap(*nlist);
+      }
       grains[graincount].avgeuler1 = ea1good;
       grains[graincount].avgeuler2 = ea2good;
       grains[graincount].avgeuler3 = ea3good;
@@ -1113,7 +1097,8 @@ void  ReconstructionFunc::find_goodneighbors()
       }
       voxels[j].surfacevoxel = onsurf;
     }
-    if ( nListIndex > 0) {
+    if ( nListIndex > 0) 
+	{
       vector<int>::iterator newend;
       sort(nlist.begin(),nlist.end());
       newend = unique(nlist.begin(),nlist.end());

@@ -494,8 +494,8 @@ void  GrainGeneratorFunc::generate_grains(int numgrains)
     if(diameter >= maxdiameter) diameter = maxdiameter;
     if(diameter <= mindiameter) diameter = mindiameter;
     good = 0;
-//    while(good == 0)
-//    {
+    while(good == 0)
+    {
 	  a1 = bovera[diameter][0];
 	  b1 = bovera[diameter][1];
 	  u1 = rg.Random();
@@ -513,7 +513,7 @@ void  GrainGeneratorFunc::generate_grains(int numgrains)
 	  double check = rg.Random();
       if(prob > check) good = 1;
       if(cob > 1) good = 0;
-//    }
+    }
 	double random5 = rg.Random();
     int onum = int(random5*numorients);
     double r1x = orient[onum].rad1x;
@@ -1017,11 +1017,11 @@ void  GrainGeneratorFunc::make_points(int numgrains)
             if(nbin <= mindiameter) nbin = mindiameter;
             if(bin >= maxdiameter) bin = maxdiameter;
             if(bin <= mindiameter) bin = mindiameter;
-            int was = nnum;
+            int was = log(double(nnum));
             nnum = nnum + 1;
-            int now = nnum;
-            double wasprob = svn[nbin][was];
-            double nowprob = svn[nbin][now];
+            int now = log(double(nnum));
+            double wasprob = (1.0/pow((2*m_pi*svn[nbin][1]*svn[nbin][1]),0.5))*exp(-pow((was-svn[nbin][0]),2)/(2*svn[nbin][1]*svn[nbin][1]));
+            double nowprob = (1.0/pow((2*m_pi*svn[nbin][1]*svn[nbin][1]),0.5))*exp(-pow((now-svn[nbin][0]),2)/(2*svn[nbin][1]*svn[nbin][1]));
             double increase = (nowprob - wasprob);
             if(increase > 0) increase = 1;
             if(increase < 0) increase = -1;
@@ -1035,7 +1035,8 @@ void  GrainGeneratorFunc::make_points(int numgrains)
             double error = 0;
             for(int r = mindiameter; r < maxdiameter+1; r++)
             {
-              error = error + (svs[nbin][r] - (nsdist[n][r]/total))*(svs[nbin][r] - (nsdist[n][r]/total));
+              double diam = log(double(r));
+			  error = error + ((1.0/pow((2*m_pi*svs[nbin][1]*svs[nbin][1]),0.5))*exp(-pow((diam-svs[nbin][0]),2)/(2*svs[nbin][1]*svs[nbin][1])) - (nsdist[n][r]/total))*((1.0/pow((2*m_pi*svs[nbin][1]*svs[nbin][1]),0.5))*exp(-pow((diam-svs[nbin][0]),2)/(2*svs[nbin][1]*svs[nbin][1])) - (nsdist[n][r]/total));
             }
             double nserror = packedgrain[n].nserror;
             nsdistchange = nsdistchange + (error-nserror);
@@ -1139,7 +1140,8 @@ void  GrainGeneratorFunc::make_points(int numgrains)
         double error = 0;
         for(int r = mindiameter; r < maxdiameter+1; r++)
         {
-          error = error + (svs[nvbin][r] - (nsdist[p][r]/total))*(svs[nvbin][r] - (nsdist[p][r]/total));
+          double diam = log(double(r));
+		  error = error + ((1.0/pow((2*m_pi*svs[nvbin][1]*svs[nvbin][1]),0.5))*exp(-pow((diam-svs[nvbin][0]),2)/(2*svs[nvbin][1]*svs[nvbin][1])) - (nsdist[p][r]/total))*((1.0/pow((2*m_pi*svs[nvbin][1]*svs[nvbin][1]),0.5))*exp(-pow((diam-svs[nvbin][0]),2)/(2*svs[nvbin][1]*svs[nvbin][1])) - (nsdist[p][r]/total));
         }
         packedgrain[p].nserror = error;
       }
@@ -1503,6 +1505,7 @@ void  GrainGeneratorFunc::find_neighbors()
             }
           }
         }
+	  }
       if (nListIndex > 0)
       {
         vector<int>::iterator newend;
@@ -1517,7 +1520,6 @@ void  GrainGeneratorFunc::find_neighbors()
       }
       nlist.clear();
       nlist.resize(nListSize);
-    }
   }
 }
 
@@ -1571,7 +1573,7 @@ void  GrainGeneratorFunc::measure_misorientations ()
       double g2ea1 = packedgrain[nname].avgeuler1;
       double g2ea2 = packedgrain[nname].avgeuler2;
       double g2ea3 = packedgrain[nname].avgeuler3;
-      double w = getmisoquat(crystruct,misorientationtolerance,g1ea1,g1ea2,g1ea3,g2ea1,g2ea2,g2ea3,n1,n2,n3);
+      double w = getmisoquat(crystruct,g1ea1,g1ea2,g1ea3,g2ea1,g2ea2,g2ea3,n1,n2,n3);
       misolist.push_back(w);
     }
     packedgrain[i].misorientationlist = misolist;
@@ -1579,7 +1581,7 @@ void  GrainGeneratorFunc::measure_misorientations ()
   }
 }
 
-double GrainGeneratorFunc::getmisoquat(double crystruct,double misorientationtolerance,double g1ea1,double g1ea2,double g1ea3,double g2ea1,double g2ea2,double g2ea3,double &n1,double &n2,double &n3)
+double GrainGeneratorFunc::getmisoquat(double crystruct,double g1ea1,double g1ea2,double g1ea3,double g2ea1,double g2ea2,double g2ea3,double &n1,double &n2,double &n3)
 {
   double wmin=9999999; //,na,nb,nc;
   double q1[4];
@@ -1890,11 +1892,13 @@ void  GrainGeneratorFunc::rank_grains2(int numgrains)
     double microrank = 0;
     double temprank = 0;
     vector<double> misolist = packedgrain[i].misorientationlist;
-    int size = int(neighborvector[i].size());
-    for(int j = 0; j < size; j++)
+    vector<int>* nlist = packedgrain[i].neighborlist;
+    int size = 0;
+    if (NULL != nlist) { size = nlist->size(); }
+    for(int j=0;j<size;j++)
     {
-      int neighfirst = neighborvector[i][j];
-      double neighfrac = packedgrain[neighfirst].lowanglefraction;
+      int nname = nlist->at(j);
+      double neighfrac = packedgrain[nname].lowanglefraction;
       if(neighfrac > 0.24) neighfrac = neighfrac*4;
       if(neighfrac > 0.49) neighfrac = neighfrac;
       if(neighfrac > 0.74) neighfrac = neighfrac*2;
@@ -2034,12 +2038,14 @@ void  GrainGeneratorFunc::freeze_grains(int numgrains)
       froze = 1;
     }
     vector<double> misolist = packedgrain[i].misorientationlist;
-    int size = int(neighborvector[i].size());
-    for(int j = 0; j < size; j++)
+    vector<int>* nlist = packedgrain[i].neighborlist;
+    int size = 0;
+    if (NULL != nlist) { size = nlist->size(); }
+    for(int j=0;j<size;j++)
     {
-      int neighfirst = neighborvector[i][j];
+      int nname = nlist->at(j);
       double neighmiso = misolist[j];
-      double neighfrac = packedgrain[neighfirst].lowanglefraction;
+      double neighfrac = packedgrain[nname].lowanglefraction;
       if(neighfrac > 0.85 && neighmiso < 15)
       {
         froze = 1;
@@ -2090,32 +2096,6 @@ void  GrainGeneratorFunc::writeCube(string outname1, int numgrains)
   outFile.close();
 }
 
-
-void  GrainGeneratorFunc::write_grains(string outname4, int numgrains)
-{
-    ofstream outFile;
-    outFile.open(outname4.c_str());
-  outFile << numgrains << endl;
-  for(int i=0;i<numgrains;i++)
-  {
-    int name = packedgrain[i].grainname;
-    double xc = packedgrain[i].xc;
-    double yc = packedgrain[i].yc;
-    double zc = packedgrain[i].zc;
-    double ea1 = packedgrain[i].euler1;
-    double ea2 = packedgrain[i].euler2;
-    double ea3 = packedgrain[i].euler3;
-    int nnum = packedgrain[i].neighnum;
-    outFile << name << "  " << xc << "  " << yc << "  " << zc << "  " << ea1 << " " << ea2 << " " << ea3 << " " << nnum;
-    int size = int(neighborvector[i].size());
-    for(int j = 0; j < size; j++)
-    {
-      int neigh = neighborvector[i][j];
-      outFile << "  " << neigh;
-    }
-    outFile << endl;
-  }
-}
 double GrainGeneratorFunc::gamma(double x)
 {
     int i,k,m;
