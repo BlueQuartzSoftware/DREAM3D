@@ -114,7 +114,6 @@ void GrainGenerator::compute()
   std::string  MicroBinsFile = m_InputDirectory + MXAFileSystemPath::Separator + AIM::Representation::MicroBinsFile;
 
   std::string  CubeFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::CubeFile;
-  std::string  GrainsFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::GrainsFile;
   std::string  VolumeFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::VolumeFile;
 
    m = GrainGeneratorFunc::New();
