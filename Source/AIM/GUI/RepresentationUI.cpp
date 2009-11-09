@@ -786,9 +786,7 @@ void RepresentationUI::on_rec_GoBtn_clicked()
   m_Reconstruction->setMinSeedConfidence(minConfidence->value());
   m_Reconstruction->setMisorientationTolerance(misOrientationTolerance->value());
 
-  AIM::Representation::CrystalStructure crystruct = static_cast<AIM::Representation::CrystalStructure>(crystalStructure->currentIndex());
-  if (crystruct == 0) { crystruct = AIM::Representation::Cubic; }
-  else if (crystruct == 1) { crystruct = AIM::Representation::Hexagonal; }
+  AIM::Representation::CrystalStructure crystruct = static_cast<AIM::Representation::CrystalStructure>(crystalStructure->currentIndex() + 1);
 
   m_Reconstruction->setCrystalStructure(crystruct);
   m_Reconstruction->setAlreadyFormed(alreadyFormed->isChecked());
