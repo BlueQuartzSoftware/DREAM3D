@@ -25,19 +25,21 @@
     std::string f = m_InputDirectory + MXAFileSystemPath::Separator + n;\
     f = MXAFileSystemPath::toNativeSeparators(f);
 
-#ifdef AIM_USE_QT
 
+#ifdef AIM_USE_QT
 #define CHECK_FOR_CANCELED(AClass)\
-    if (this->m_Cancel) { \
-      QString msg = #AClass; \
-              msg += " was Canceled"; \
-      return;}
+  if (this->m_Cancel) { \
+  QString msg = #AClass; \
+  msg += " was Canceled"; \
+  emit updateMessage(msg);\
+  emit updateProgress(0);\
+  return;}
 
 #else
-
 #define CHECK_FOR_CANCELED(AClass)\
-    ;
+  ;
 #endif
+
 
 #if AIM_USE_QT
 // -----------------------------------------------------------------------------
@@ -248,11 +250,8 @@ void GrainGenerator::progressMessage(AIM_STRING message, int progress)
       emit updateProgress(progress);
     //  std::cout << message.toStdString() << std::endl;
 #else
-
   std::cout << message << std::endl;
-
 #endif
-
 }
 
 #ifdef AIM_USE_QT
@@ -261,7 +260,7 @@ void GrainGenerator::progressMessage(AIM_STRING message, int progress)
 // -----------------------------------------------------------------------------
 void GrainGenerator::on_CancelWorker()
 {
-     std::cout << "GrainGenerator::cancelWorker()" << std::endl;
+ //    std::cout << "GrainGenerator::cancelWorker()" << std::endl;
      this->m_Cancel = true;
      if (m.get() != NULL)
      {

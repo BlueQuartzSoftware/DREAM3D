@@ -635,7 +635,7 @@ void RepresentationUI::rec_CheckIOFiles()
 // -----------------------------------------------------------------------------
 void RepresentationUI::on_angDirBtn_clicked()
 {
-  std::cout << "on_angDirBtn_clicked" << std::endl;
+ // std::cout << "on_angDirBtn_clicked" << std::endl;
   QString outputFile = this->m_OpenDialogLastDirectory + QDir::separator();
   outputFile = QFileDialog::getExistingDirectory(this, tr("Select Ang Directory"), outputFile);
   if (!outputFile.isNull())
@@ -797,6 +797,8 @@ void RepresentationUI::on_rec_GoBtn_clicked()
     this, SLOT(rec_ThreadProgressed(int) ) );
   connect(m_Reconstruction.get(), SIGNAL (updateMessage(QString)),
           this, SLOT(threadHasMessage(QString) ) );
+  connect(this, SIGNAL(sig_CancelWorker() ),
+          m_Reconstruction.get(), SLOT (on_CancelWorker() ) );
 
   setWidgetListEnabled(false);
   m_Reconstruction->start();
@@ -822,7 +824,7 @@ void RepresentationUI::threadHasMessage(QString message)
 // -----------------------------------------------------------------------------
 void RepresentationUI::rec_ThreadFinished()
 {
-  std::cout << "RepresentationUI::reconstruction_Finished()" << std::endl;
+  //std::cout << "RepresentationUI::reconstruction_Finished()" << std::endl;
   rec_GoBtn->setText("Go");
   setWidgetListEnabled(true);
   this->progressBar->setValue(0);
@@ -898,7 +900,7 @@ void RepresentationUI::gg_CheckIOFiles()
 // -----------------------------------------------------------------------------
 void RepresentationUI::on_gg_InputDirBtn_clicked()
 {
-  std::cout << "on_gg_InputDirBtn_clicked" << std::endl;
+ // std::cout << "on_gg_InputDirBtn_clicked" << std::endl;
   QString outputFile = this->m_OpenDialogLastDirectory + QDir::separator();
   outputFile = QFileDialog::getExistingDirectory(this, tr("Select Input Directory"), outputFile);
   if (!outputFile.isNull())
@@ -1008,6 +1010,9 @@ void RepresentationUI::on_gg_GoBtn_clicked()
     this, SLOT(gg_ThreadProgressed(int) ) );
   connect(m_GrainGenerator.get(), SIGNAL (updateMessage(QString)),
           this, SLOT(threadHasMessage(QString) ) );
+  connect(this, SIGNAL(sig_CancelWorker() ),
+          m_GrainGenerator.get(), SLOT (on_CancelWorker() ) );
+
 
   setWidgetListEnabled(false);
   reconstructionTab->setEnabled(false);
@@ -1022,7 +1027,7 @@ void RepresentationUI::on_gg_GoBtn_clicked()
 // -----------------------------------------------------------------------------
 void RepresentationUI::gg_ThreadFinished()
 {
-  std::cout << "RepresentationUI::grainGenerator_Finished()" << std::endl;
+ // std::cout << "RepresentationUI::grainGenerator_Finished()" << std::endl;
   gg_GoBtn->setText("Go");
   setWidgetListEnabled(true);
   this->gg_progressBar->setValue(0);
@@ -1204,6 +1209,8 @@ void RepresentationUI::on_sm_GoBtn_clicked()
     this, SLOT(sm_ThreadProgressed(int) ) );
   connect(m_SurfaceMesh.get(), SIGNAL (updateMessage(QString)),
           this, SLOT(threadHasMessage(QString) ) );
+  connect(this, SIGNAL(sig_CancelWorker() ),
+      m_SurfaceMesh.get(), SLOT (on_CancelWorker() ) );
 
   setWidgetListEnabled(false);
   reconstructionTab->setEnabled(false);
@@ -1218,7 +1225,7 @@ void RepresentationUI::on_sm_GoBtn_clicked()
 // -----------------------------------------------------------------------------
 void RepresentationUI::sm_ThreadFinished()
 {
-  std::cout << "RepresentationUI::surface_meshing()" << std::endl;
+ // std::cout << "RepresentationUI::surface_meshing()" << std::endl;
   sm_GoBtn->setText("Go");
   setWidgetListEnabled(true);
   this->sm_progressBar->setValue(0);
@@ -1381,6 +1388,8 @@ void RepresentationUI::on_vm_GoBtn_clicked()
     this, SLOT(sm_ThreadProgressed(int) ));
   connect(m_VolumeMesh.get(), SIGNAL (updateMessage(QString)),
     this, SLOT(threadHasMessage(QString) ) );
+  connect(this, SIGNAL(sig_CancelWorker() ),
+    m_VolumeMesh.get(), SLOT (on_CancelWorker() ) );
 
   setWidgetListEnabled(false);
   reconstructionTab->setEnabled(false);
@@ -1421,7 +1430,7 @@ void RepresentationUI::on_vm_OutputDir_textChanged(const QString & text)
 // -----------------------------------------------------------------------------
 void RepresentationUI::vm_ThreadFinished()
 {
-  std::cout << "RepresentationUI::volume_meshing()" << std::endl;
+ // std::cout << "RepresentationUI::volume_meshing()" << std::endl;
   sm_GoBtn->setText("Go");
   setWidgetListEnabled(true);
   this->vm_progressBar->setValue(0);
