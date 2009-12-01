@@ -590,7 +590,7 @@ void RepresentationUI::rec_SetupGui()
 
   QString msg ("All files will be over written that appear in the output directory.");
 
-  QFileInfo fi (rec_OutputDir->text() + QDir::separator() +  AIM::Representation::ReconstructedDataFile.c_str() );
+  QFileInfo fi (rec_OutputDir->text() + QDir::separator() +  AIM::Representation::ReconstructedVisualizationFile.c_str() );
   if (alreadyFormed->isChecked() == true && fi.exists() == false)
   {
     alreadyFormed->setChecked(false);
@@ -623,7 +623,6 @@ void RepresentationUI::rec_CheckIOFiles()
   CHECK_QLABEL_OUTPUT_FILE_EXISTS(rec_, StatsFile)
   CHECK_QLABEL_OUTPUT_FILE_EXISTS(rec_, MisorientationBinsFile)
   CHECK_QLABEL_OUTPUT_FILE_EXISTS(rec_, MicroBinsFile)
-  CHECK_QLABEL_OUTPUT_FILE_EXISTS(rec_, ReconstructedDataFile)
   CHECK_QLABEL_OUTPUT_FILE_EXISTS(rec_, ReconstructedVisualizationFile)
   CHECK_QLABEL_OUTPUT_FILE_EXISTS(rec_, AxisOrientationsFile)
   CHECK_QLABEL_OUTPUT_FILE_EXISTS(rec_, EulerAnglesFile)
@@ -651,7 +650,7 @@ void RepresentationUI::on_angDirBtn_clicked()
 // -----------------------------------------------------------------------------
 void RepresentationUI::on_alreadyFormed_stateChanged(int currentState)
 {
-  QString absPath = rec_OutputDir->text() + QDir::separator() + AIM::Representation::ReconstructedDataFile.c_str();
+  QString absPath = rec_OutputDir->text() + QDir::separator() + AIM::Representation::ReconstructedVisualizationFile.c_str();
   absPath = QDir::toNativeSeparators(absPath);
   QFileInfo fi (absPath);
   QString msg ("All files will be over written that appear in the output directory.");
@@ -663,7 +662,7 @@ void RepresentationUI::on_alreadyFormed_stateChanged(int currentState)
       QMessageBox::Ok,
       QMessageBox::Ok);
       alreadyFormed->setChecked(false);
-      CHECK_QLABEL_OUTPUT_FILE_EXISTS(rec_, ReconstructedDataFile)
+      CHECK_QLABEL_OUTPUT_FILE_EXISTS(rec_, ReconstructedVisualizationFile)
   }
 
   if (alreadyFormed->isChecked())
@@ -727,7 +726,7 @@ void RepresentationUI::on_outputDirBtn_clicked()
     if (_verifyPathExists(outputFile, rec_OutputDir) == true )
     {
       rec_CheckIOFiles();
-      QFileInfo fi (rec_OutputDir->text() + QDir::separator() +  AIM::Representation::ReconstructedDataFile.c_str() );
+      QFileInfo fi (rec_OutputDir->text() + QDir::separator() +  AIM::Representation::ReconstructedVisualizationFile.c_str() );
       if (alreadyFormed->isChecked() == true && fi.exists() == false)
       {
         alreadyFormed->setChecked(false);
@@ -890,7 +889,7 @@ void RepresentationUI::gg_CheckIOFiles()
   CHECK_QLABEL_OUTPUT_FILE_EXISTS(gg_, CubeFile)
   CHECK_QLABEL_OUTPUT_FILE_EXISTS(gg_, CubeDxFile)
   CHECK_QLABEL_OUTPUT_FILE_EXISTS(gg_, AnalysisFile)
-  CHECK_QLABEL_OUTPUT_FILE_EXISTS(gg_, VolumeFile)
+  CHECK_QLABEL_OUTPUT_FILE_EXISTS(gg_, EulerFile)
 }
 
 // -----------------------------------------------------------------------------

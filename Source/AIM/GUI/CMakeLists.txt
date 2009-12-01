@@ -100,16 +100,9 @@ IDE_SOURCE_PROPERTIES( "Source/AIM/GrainGenerator" "${GrainGenerator_HDRS}" "${G
 
 SET (SurfaceMesh_SRCS
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/SurfaceMesh/SurfaceMesh.cpp
-    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/SurfaceMesh/Surface_Mesh_General_MCA_Layer.c
-    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/SurfaceMesh/smooth-grain3d.cpp
-    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/SurfaceMesh/Update_Edge_Tri.c
 )
 SET (SurfaceMesh_HDRS
    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/SurfaceMesh/SurfaceMesh.h
-   ${AIMRepresentation_SOURCE_DIR}/Source/AIM/SurfaceMesh/Surface_Mesh_General_MCA_Layer.h
-   ${AIMRepresentation_SOURCE_DIR}/Source/AIM/SurfaceMesh/LinearAlgebra.h
-   ${AIMRepresentation_SOURCE_DIR}/Source/AIM/SurfaceMesh/smooth-grain3d.h
-   ${AIMRepresentation_SOURCE_DIR}/Source/AIM/SurfaceMesh/Update_Edge_Tri.h
 )
 IDE_SOURCE_PROPERTIES( "Source/AIM/SurfaceMesh" "${SurfaceMesh_HDRS}" "${SurfaceMesh_SRCS}")
 

@@ -29,7 +29,6 @@ namespace AIM
     const std::string StatsFile("stats.txt");//1
     const std::string MisorientationBinsFile("misobins.txt");//8
     const std::string MicroBinsFile("microbins.txt");//9
-    const std::string ReconstructedDataFile("reconstructed_data.txt");//10
     const std::string ReconstructedVisualizationFile("reconstructed_visualization.vtk");//11
     const std::string AxisOrientationsFile("axisorientations.txt");//14
     const std::string EulerAnglesFile("eulerangles.txt");//15
@@ -45,7 +44,7 @@ namespace AIM
     const std::string CubeFile("cube.vtk");
     const std::string CubeDxFile("cube.dx");
     const std::string AnalysisFile("analysis.txt");
-    const std::string VolumeFile("volume.txt");
+    const std::string EulerFile("eulerangles.txt");
 
     enum Overlap {
         UnknownOverlap = 0,

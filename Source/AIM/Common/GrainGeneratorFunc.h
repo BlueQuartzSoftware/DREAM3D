@@ -89,6 +89,7 @@ void initialize2(int32 xpoints, int32 ypoints, int32 zpoints);
 	Bin* simmicrobin;
 
 	vector<int> grainorder;
+	vector<int> takencheck;
 	vector<vector<int> > neighborvector;
 	vector<vector<double> > bovera;
 	vector<vector<double> > covera;
@@ -138,7 +139,7 @@ void initialize2(int32 xpoints, int32 ypoints, int32 zpoints);
 // sizes are needed. Dont't change
   int eulercount[36][36][36];
 
-	void write_volume(string);
+	void write_eulerangles(string);
 	void loadStatsData(string);
 	void loadorientData(string, int);
 	void loadeulerData(string, int);
@@ -163,6 +164,7 @@ void initialize2(int32 xpoints, int32 ypoints, int32 zpoints);
 	void move_grains2(int);
 	void freeze_grains(int);
 	double getmisoquat(double,double ,double ,double ,double ,double,double ,double &,double &,double &);
+	void create_dxfile(string);
 	double gamma(double);
 
 protected:

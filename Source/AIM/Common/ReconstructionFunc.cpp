@@ -78,6 +78,9 @@ void ReconstructionFunc::initialize(double stepX, double stepY, double stepZ,
 
   totalpoints = xpoints * ypoints * zpoints;
 
+  nummisobins = 10;
+  nummicrobins = 10;
+
   voxels = new Voxel[totalpoints];
   grains = new Grain[totalpoints/20];
 } 
@@ -87,6 +90,167 @@ void ReconstructionFunc::loadSlices()
   //TODO: we should return an error code here.
 }
 
+void ReconstructionFunc::align_sections(string ofile)
+{
+  ofstream outFile;
+  outFile.open(ofile.c_str());
+  double disorientation = 0;
+  double mindisorientation = 100000;
+  int xshift = 0;
+  int yshift = 0;
+  int tempxshift = 0;
+  int tempyshift = 0;
+  int count = 0;
+  int step = 0;
+  double n1,n2,n3;
+  shifts = new int *[zpoints];
+  shifts[0] = new int [2];
+  shifts[0][0] = 0;
+  shifts[0][1] = 0;
+  for (int i=1;i<zpoints;i++)
+  {
+     shifts[i] = new int [2];
+	 mindisorientation = 100000;
+	 xshift = 0;
+	 yshift = 0;
+	 tempxshift = 0;
+	 tempyshift = 0;
+	 for(int a=0;a<2;a++)
+	 {
+		 if(a == 0) step = 5;
+		 if(a == 1) step = 1;
+		 for(int j=-5;j<6;j++)
+		 {
+			for(int k=-5;k<6;k++)
+			{
+				disorientation = 0;
+				count = 0;
+				for(int l=0;l<ypoints;l++)
+				{
+					for(int m=0;m<xpoints;m++)
+					{
+						int refposition = ((i-1)*xpoints*ypoints)+(l*xpoints)+m;
+						int curposition = ((i)*xpoints*ypoints)+((l+(j*step)+tempyshift)*xpoints)+(m+(k*step)+tempxshift);
+						if((l+(j*step)+tempyshift) >= 0 && (l+(j*step)+tempyshift) < ypoints && (m+(k*step)+tempxshift) >= 0 && (m+(k*step)+tempxshift) < xpoints)
+						{
+							double refci = voxels[refposition].confidence;
+							double curci = voxels[curposition].confidence;
+							if(refci > 0.1 && curci > 0.1)
+							{
+								double g1ea1 = voxels[refposition].euler1;
+								double g1ea2 = voxels[refposition].euler2;
+								double g1ea3 = voxels[refposition].euler3;
+								double g2ea1 = voxels[curposition].euler1;
+								double g2ea2 = voxels[curposition].euler2;
+								double g2ea3 = voxels[curposition].euler3;
+								double w = getmisoquat(crystruct,misorientationtolerance,g1ea1,g1ea2,g1ea3,g2ea1,g2ea2,g2ea3,n1,n2,n3);
+								disorientation = disorientation + w;
+								count++;
+							}
+						}
+					}
+				}
+				disorientation = disorientation/double(count);
+				outFile << disorientation << "	";
+				if(disorientation < mindisorientation)
+				{
+					xshift = (k*step)+tempxshift;
+					yshift = (j*step)+tempyshift;
+					mindisorientation = disorientation;
+				}
+			}
+			outFile << endl;
+		 }
+		 tempxshift = xshift;
+		 tempyshift = yshift;
+	 }
+	 shifts[i][0] = xshift + shifts[i-1][0];
+	 shifts[i][1] = yshift + shifts[i-1][1];
+  }
+  for (int i=1;i<zpoints;i++)
+  {
+    if(shifts[i][0] < 0 && shifts[i][1] < 0)
+	{
+		for(int l=ypoints-1;l<=0;l--)
+		{
+			for(int m=xpoints-1;m<=0;m--)
+			{
+				if((l-shifts[i][1]) >= 0 && (l-shifts[i][1]) < ypoints && (m-shifts[i][0]) >= 0 && (m-shifts[i][0]) < xpoints)
+				{
+					int position = (i*xpoints*ypoints)+(l*xpoints)+m;
+					int newposition = (i*xpoints*ypoints)+((l-shifts[i][1])*xpoints)+(m-shifts[i][0]);
+					voxels[newposition].euler1 = voxels[position].euler1; 
+					voxels[newposition].euler2 = voxels[position].euler2; 
+					voxels[newposition].euler3 = voxels[position].euler3; 
+					voxels[newposition].confidence = voxels[position].confidence; 
+					voxels[newposition].alreadychecked = voxels[position].alreadychecked; 
+					voxels[newposition].grainname = voxels[position].grainname; 
+				}
+			}
+		}
+	}
+    if(shifts[i][0] < 0 && shifts[i][1] > 0)
+	{
+		for(int l=0;l<=ypoints-1;l++)
+		{
+			for(int m=xpoints-1;m<=0;m--)
+			{
+				if((l-shifts[i][1]) >= 0 && (l-shifts[i][1]) < ypoints && (m-shifts[i][0]) >= 0 && (m-shifts[i][0]) < xpoints)
+				{
+					int position = (i*xpoints*ypoints)+(l*xpoints)+m;
+					int newposition = (i*xpoints*ypoints)+((l-shifts[i][1])*xpoints)+(m-shifts[i][0]);
+					voxels[newposition].euler1 = voxels[position].euler1; 
+					voxels[newposition].euler2 = voxels[position].euler2; 
+					voxels[newposition].euler3 = voxels[position].euler3; 
+					voxels[newposition].confidence = voxels[position].confidence; 
+					voxels[newposition].alreadychecked = voxels[position].alreadychecked; 
+					voxels[newposition].grainname = voxels[position].grainname; 
+				}
+			}
+		}
+	}
+    if(shifts[i][0] > 0 && shifts[i][1] < 0)
+	{
+		for(int l=ypoints-1;l<=0;l--)
+		{
+			for(int m=0;m<=xpoints-1;m++)
+			{
+				if((l-shifts[i][1]) >= 0 && (l-shifts[i][1]) < ypoints && (m-shifts[i][0]) >= 0 && (m-shifts[i][0]) < xpoints)
+				{
+					int position = (i*xpoints*ypoints)+(l*xpoints)+m;
+					int newposition = (i*xpoints*ypoints)+((l-shifts[i][1])*xpoints)+(m-shifts[i][0]);
+					voxels[newposition].euler1 = voxels[position].euler1; 
+					voxels[newposition].euler2 = voxels[position].euler2; 
+					voxels[newposition].euler3 = voxels[position].euler3; 
+					voxels[newposition].confidence = voxels[position].confidence; 
+					voxels[newposition].alreadychecked = voxels[position].alreadychecked; 
+					voxels[newposition].grainname = voxels[position].grainname; 
+				}
+			}
+		}
+	}
+    if(shifts[i][0] > 0 && shifts[i][1] > 0)
+	{
+		for(int l=0;l<=ypoints-1;l++)
+		{
+			for(int m=0;m<=xpoints-1;m++)
+			{
+				if((l-shifts[i][1]) >= 0 && (l-shifts[i][1]) < ypoints && (m-shifts[i][0]) >= 0 && (m-shifts[i][0]) < xpoints)
+				{
+					int position = (i*xpoints*ypoints)+(l*xpoints)+m;
+					int newposition = (i*xpoints*ypoints)+((l-shifts[i][1])*xpoints)+(m-shifts[i][0]);
+					voxels[newposition].euler1 = voxels[position].euler1; 
+					voxels[newposition].euler2 = voxels[position].euler2; 
+					voxels[newposition].euler3 = voxels[position].euler3; 
+					voxels[newposition].confidence = voxels[position].confidence;	
+					voxels[newposition].alreadychecked = voxels[position].alreadychecked; 
+					voxels[newposition].grainname = voxels[position].grainname; 
+				}
+			}
+		}
+	}
+  }
+}
 int  ReconstructionFunc::form_grains()
 {
 
@@ -230,23 +394,6 @@ int  ReconstructionFunc::renumber_grains1()
   return graincount;
 }
 
-void ReconstructionFunc::write_volume(string writename10)
-{
-  //std::cout << "ReconstructionFunc::write_volume1: '" << writename10 << "'" << std::endl;
-  ofstream outFile;
-  outFile.open(writename10.c_str());
-  for (int i = 0; i < (xpoints * ypoints * zpoints); i++)
-  {
-    int grainname = voxels[i].grainname;
-    double ea1 = voxels[i].euler1;
-    double ea2 = voxels[i].euler2;
-    double ea3 = voxels[i].euler3;
-    double ci = voxels[i].confidence;
-    outFile << grainname << " " << ea1 << " " << ea2 << " " << ea3 << " " << ci << endl;
-  }
-  outFile.close();
-}
-
 void  ReconstructionFunc::assign_badpoints()
 {
   vector<int> neighs;
@@ -368,7 +515,7 @@ void  ReconstructionFunc::find_neighbors()
   vector<int> nlist(nListSize, -1);
 
 
-  for(int i = 0; i < numgrains; i++)
+  for(int i = 1; i < numgrains; i++)
   {
     //std::cout << "find_neighbors: " << i << " of " << numgrains << " grains." << std::endl;
     if(grains[i].gotsizemerged != 1)
@@ -499,7 +646,7 @@ void  ReconstructionFunc::merge_containedgrains()
       grains[grainname].gotcontainedmerged = containedmerged;
     }
   }
-  for(int j = 0; j < numgrains; j++)
+  for(int j = 1; j < numgrains; j++)
   {
     if(grains[j].gotsizemerged != 1 && grains[j].gotcontainedmerged != 1)
     {
@@ -535,7 +682,9 @@ int  ReconstructionFunc::renumber_grains2()
       vector<int>* nlist = grains[i].neighborlist;
       grains[graincount].numvoxels = size;
       grains[graincount].numneighbors = numneighbors;
-      if (nlist != NULL) {
+      if (nlist != NULL)
+	  {
+		grains[graincount].neighborlist = new std::vector<int>(numneighbors);
         grains[graincount].neighborlist->swap(*nlist);
       }
       graincount++;
@@ -554,10 +703,10 @@ int  ReconstructionFunc::renumber_grains2()
 }
 void  ReconstructionFunc::homogenize_grains()
 {
-    grains[0].avgeuler1 = 12.566;
-    grains[0].avgeuler2 = 12.566;
-    grains[0].avgeuler3 = 12.566;
-    grains[0].averagemisorientation = 0.0;
+  grains[0].avgeuler1 = 12.566;
+  grains[0].avgeuler2 = 12.566;
+  grains[0].avgeuler3 = 12.566;
+  grains[0].averagemisorientation = 0.0;
   for(int i = 1; i < numgrains; i++)
   {
     //std::cout << "homogenize_grains: " << i << std::endl;
@@ -578,7 +727,7 @@ void  ReconstructionFunc::homogenize_grains()
     {
       int gnum = voxels[j].grainname;
       double ci = voxels[j].confidence;
-      if(gnum == i && ci > 0.25)
+      if(gnum == i && ci >= minseedconfidence)
       {
         double g1ea1 = voxels[j].euler1;
         double g1ea2 = voxels[j].euler2;
@@ -812,7 +961,7 @@ void  ReconstructionFunc::homogenize_grains()
     grains[i].averagemisorientation = avgmiso;
   }
 }
-void  ReconstructionFunc::load_data(string readname)
+int  ReconstructionFunc::load_data(string readname)
 {
   ifstream inputFile;
   inputFile.open(readname.c_str());
@@ -824,23 +973,21 @@ void  ReconstructionFunc::load_data(string readname)
   double y;
   double z;
   double ci;
+  string dummy;
+  numgrains = 0;
+  for(int i = 0; i < 12; i++)
+  {
+	getline(inputFile,dummy,'\n');
+  }
   for(int i = 0; i < (xpoints*ypoints*zpoints); i++)
   {
-    inputFile >> gnum >> ea1 >> ea2 >> ea3 >> ci;
-    x = i%xpoints;
-    y = (i/xpoints)%ypoints;
-    z = i/(xpoints*ypoints);
+    inputFile >> gnum;
     voxels[i].grainname = gnum;
-    voxels[i].euler1 = ea1;
-    voxels[i].euler2 = ea2;
-    voxels[i].euler3 = ea3;
-    voxels[i].xc = x;
-    voxels[i].yc = y;
-    voxels[i].zc = z;
-    voxels[i].confidence = ci;
-    if(gnum > numgrains) numgrains = gnum;
+	if(gnum > numgrains) numgrains = gnum;
   }
   inputFile.close();
+  ifstream inputFile2;
+return numgrains;
 }
 void  ReconstructionFunc::merge_twins ()
 {
@@ -998,7 +1145,7 @@ void  ReconstructionFunc::find_goodneighbors()
   vector<int> nlist(nListSize, -1);
     size_t nListIndex = 0;
   int neighcount = 0;
-  for(int i = 0; i < numgrains; i++)
+  for(int i = 1; i < numgrains; i++)
   {
     for(int j = 0; j < (xpoints*ypoints*zpoints); j++)
     {
@@ -1129,7 +1276,7 @@ void  ReconstructionFunc::find_centroids()
   double centerz = 0;
   maxdiameter=0;
   mindiameter=100000;
-  for(int i = 0; i < numgrains; i++)
+  for(int i = 1; i < numgrains; i++)
   {
     size = 0;
     sumx = 0;
@@ -1168,7 +1315,10 @@ void  ReconstructionFunc::find_centroids()
     grains[i].numvoxels = size;
 	double diametercubed = (0.75*size)/m_pi;
 	int diameter = int(pow(diametercubed,0.3333333333));
-	if(diameter > maxdiameter) maxdiameter = diameter;
+	if(diameter > maxdiameter)
+	{
+		maxdiameter = diameter;
+	}
 	if(diameter < mindiameter) mindiameter = diameter;
     grains[i].surfacegrain = onedge;
   }
@@ -1178,20 +1328,20 @@ void  ReconstructionFunc::find_centroids()
 void  ReconstructionFunc::find_moments ()
 {
 //  int count = 0;
-  double sumxx = 0;
-  double sumyy = 0;
-  double sumzz = 0;
-  double sumxy = 0;
-  double sumxz = 0;
-  double sumyz = 0;
-  for(int i = 0; i < numgrains; i++)
+  double u200 = 0;
+  double u020 = 0;
+  double u002 = 0;
+  double u110 = 0;
+  double u011 = 0;
+  double u101 = 0;
+  for(int i = 1; i < numgrains; i++)
   {
-    sumxx = 0;
-    sumyy = 0;
-    sumzz = 0;
-    sumxy = 0;
-    sumxz = 0;
-    sumyz = 0;
+    u200 = 0;
+    u020 = 0;
+    u002 = 0;
+    u110 = 0;
+    u011 = 0;
+    u101 = 0;
     double xc = grains[i].centroidx;
     double yc = grains[i].centroidy;
     double zc = grains[i].centroidz;
@@ -1233,31 +1383,36 @@ void  ReconstructionFunc::find_moments ()
         double xdist8 = (x2-xc);
         double ydist8 = (y2-yc);
         double zdist8 = (z2-zc);
-        sumxx = sumxx + ((ydist1)*(ydist1))+((zdist1)*(zdist1)) + ((ydist2)*(ydist2))+((zdist2)*(zdist2)) + ((ydist3)*(ydist3))+((zdist3)*(zdist3)) + ((ydist4)*(ydist4))+((zdist4)*(zdist4)) + ((ydist5)*(ydist5))+((zdist5)*(zdist5)) + ((ydist6)*(ydist6))+((zdist6)*(zdist6)) + ((ydist7)*(ydist7))+((zdist7)*(zdist7)) + ((ydist8)*(ydist8))+((zdist8)*(zdist8));
-        sumyy = sumyy + ((xdist1)*(xdist1))+((zdist1)*(zdist1)) + ((xdist2)*(xdist2))+((zdist2)*(zdist2)) + ((xdist3)*(xdist3))+((zdist3)*(zdist3)) + ((xdist4)*(xdist4))+((zdist4)*(zdist4)) + ((xdist5)*(xdist5))+((zdist5)*(zdist5)) + ((xdist6)*(xdist6))+((zdist6)*(zdist6)) + ((xdist7)*(xdist7))+((zdist7)*(zdist7)) + ((xdist8)*(xdist8))+((zdist8)*(zdist8));
-        sumzz = sumzz + ((xdist1)*(xdist1))+((ydist1)*(ydist1)) + ((xdist2)*(xdist2))+((ydist2)*(ydist2)) + ((xdist3)*(xdist3))+((ydist3)*(ydist3)) + ((xdist4)*(xdist4))+((ydist4)*(ydist4)) + ((xdist5)*(xdist5))+((ydist5)*(ydist5)) + ((xdist6)*(xdist6))+((ydist6)*(ydist6)) + ((xdist7)*(xdist7))+((ydist7)*(ydist7)) + ((xdist8)*(xdist8))+((ydist8)*(ydist8));
-        sumxy = sumxy + ((xdist1)*(ydist1)) + ((xdist2)*(ydist2)) + ((xdist3)*(ydist3)) + ((xdist4)*(ydist4)) + ((xdist5)*(ydist5)) + ((xdist6)*(ydist6)) + ((xdist7)*(ydist7)) + ((xdist8)*(ydist8));
-        sumyz = sumyz + ((ydist1)*(zdist1)) + ((ydist2)*(zdist2)) + ((ydist3)*(zdist3)) + ((ydist4)*(zdist4)) + ((ydist5)*(zdist5)) + ((ydist6)*(zdist6)) + ((ydist7)*(zdist7)) + ((ydist8)*(zdist8));
-        sumxz = sumxz + ((xdist1)*(zdist1)) + ((xdist2)*(zdist2)) + ((xdist3)*(zdist3)) + ((xdist4)*(zdist4)) + ((xdist5)*(zdist5)) + ((xdist6)*(zdist6)) + ((xdist7)*(zdist7)) + ((xdist8)*(zdist8));
+        u200 = u200 + ((ydist1)*(ydist1))+((zdist1)*(zdist1)) + ((ydist2)*(ydist2))+((zdist2)*(zdist2)) + ((ydist3)*(ydist3))+((zdist3)*(zdist3)) + ((ydist4)*(ydist4))+((zdist4)*(zdist4)) + ((ydist5)*(ydist5))+((zdist5)*(zdist5)) + ((ydist6)*(ydist6))+((zdist6)*(zdist6)) + ((ydist7)*(ydist7))+((zdist7)*(zdist7)) + ((ydist8)*(ydist8))+((zdist8)*(zdist8));
+        u020 = u020 + ((xdist1)*(xdist1))+((zdist1)*(zdist1)) + ((xdist2)*(xdist2))+((zdist2)*(zdist2)) + ((xdist3)*(xdist3))+((zdist3)*(zdist3)) + ((xdist4)*(xdist4))+((zdist4)*(zdist4)) + ((xdist5)*(xdist5))+((zdist5)*(zdist5)) + ((xdist6)*(xdist6))+((zdist6)*(zdist6)) + ((xdist7)*(xdist7))+((zdist7)*(zdist7)) + ((xdist8)*(xdist8))+((zdist8)*(zdist8));
+        u002 = u002 + ((xdist1)*(xdist1))+((ydist1)*(ydist1)) + ((xdist2)*(xdist2))+((ydist2)*(ydist2)) + ((xdist3)*(xdist3))+((ydist3)*(ydist3)) + ((xdist4)*(xdist4))+((ydist4)*(ydist4)) + ((xdist5)*(xdist5))+((ydist5)*(ydist5)) + ((xdist6)*(xdist6))+((ydist6)*(ydist6)) + ((xdist7)*(xdist7))+((ydist7)*(ydist7)) + ((xdist8)*(xdist8))+((ydist8)*(ydist8));
+        u110 = u110 + ((xdist1)*(ydist1)) + ((xdist2)*(ydist2)) + ((xdist3)*(ydist3)) + ((xdist4)*(ydist4)) + ((xdist5)*(ydist5)) + ((xdist6)*(ydist6)) + ((xdist7)*(ydist7)) + ((xdist8)*(ydist8));
+        u011 = u011 + ((ydist1)*(zdist1)) + ((ydist2)*(zdist2)) + ((ydist3)*(zdist3)) + ((ydist4)*(zdist4)) + ((ydist5)*(zdist5)) + ((ydist6)*(zdist6)) + ((ydist7)*(zdist7)) + ((ydist8)*(zdist8));
+        u101 = u101 + ((xdist1)*(zdist1)) + ((xdist2)*(zdist2)) + ((xdist3)*(zdist3)) + ((xdist4)*(zdist4)) + ((xdist5)*(zdist5)) + ((xdist6)*(zdist6)) + ((xdist7)*(zdist7)) + ((xdist8)*(zdist8));
       }
     }
-    sumxx = sumxx*(resx/2)*(resy/2)*(resz/2);
-    sumyy = sumyy*(resx/2)*(resy/2)*(resz/2);
-    sumzz = sumzz*(resx/2)*(resy/2)*(resz/2);
-    sumxy = sumxy*(resx/2)*(resy/2)*(resz/2);
-    sumyz = sumyz*(resx/2)*(resy/2)*(resz/2);
-    sumxz = sumxz*(resx/2)*(resy/2)*(resz/2);
-    grains[i].Ixx = sumxx;
-    grains[i].Iyy = sumyy;
-    grains[i].Izz = sumzz;
-    grains[i].Ixy = -sumxy;
-    grains[i].Ixz = -sumxz;
-    grains[i].Iyz = -sumyz;
+    u200 = u200*(resx/2.0)*(resy/2.0)*(resz/2.0);
+    u020 = u020*(resx/2.0)*(resy/2.0)*(resz/2.0);
+    u002 = u002*(resx/2.0)*(resy/2.0)*(resz/2.0);
+    u110 = u110*(resx/2.0)*(resy/2.0)*(resz/2.0);
+    u011 = u011*(resx/2.0)*(resy/2.0)*(resz/2.0);
+    u101 = u101*(resx/2.0)*(resy/2.0)*(resz/2.0);
+	double o3 = (u200*u020*u002)+(2.0*u110*u101*u011)-(u200*u011*u011)-(u020*u101*u101)-(u002*u110*u110);
+	double vol5 = grains[i].numvoxels*resx*resy*resz;
+	vol5 = pow(vol5,5);
+	double omega3 = vol5/o3;
+    grains[i].Ixx = u200;
+    grains[i].Iyy = u020;
+    grains[i].Izz = u002;
+    grains[i].Ixy = -u110;
+    grains[i].Ixz = -u101;
+    grains[i].Iyz = -u011;
+	grains[i].omega3 = omega3;
   }
 }
 void  ReconstructionFunc::find_axes ()
 {
-  for (int i = 0; i < numgrains; i++)
+  for (int i = 1; i < numgrains; i++)
   {
     double Ixx = grains[i].Ixx;
     double Iyy = grains[i].Iyy;
@@ -1293,7 +1448,7 @@ void  ReconstructionFunc::find_axes ()
 }
 void  ReconstructionFunc::find_vectors ()
 {
-  for(int i = 0; i < numgrains; i++)
+  for(int i = 1; i < numgrains; i++)
   {
     int size = grains[i].numvoxels;
     if(size > 1)
@@ -1440,7 +1595,7 @@ void  ReconstructionFunc::measure_misorientations ()
   double n1;
   double n2;
   double n3;
-  for (int i = 0; i < numgrains; i++)
+  for (int i = 1; i < numgrains; i++)
   {
     vector<int>* nlist = grains[i].neighborlist;
     double g1ea1 = grains[i].avgeuler1;
@@ -1511,7 +1666,7 @@ double ReconstructionFunc::getmisoquat(double crystruct,double misorientationtol
 
 void  ReconstructionFunc::find_colors()
 {
-  for(int i = 0; i < numgrains; i++)
+  for(int i = 1; i < numgrains; i++)
   {
     double g1ea1 = grains[i].avgeuler1;
     double g1ea2 = grains[i].avgeuler2;
@@ -1619,7 +1774,7 @@ void  ReconstructionFunc::find_colors()
 }
 void  ReconstructionFunc::find_convexities()
 {
-  for(int i = 0; i < numgrains; i++)
+  for(int i = 1; i < numgrains; i++)
   {
     int size = grains[i].numvoxels;
     if(size > 1)
@@ -1822,7 +1977,7 @@ void ReconstructionFunc::volume_stats(string writename1,string writename2,string
       }
     }
   }
-  for(int i = 0; i < numgrains; i++)
+  for(int i = 1; i < numgrains; i++)
   {
     int onedge = grains[i].surfacegrain;
     if(onedge == 0)
@@ -2145,7 +2300,7 @@ void ReconstructionFunc::volume_stats(string writename1,string writename2,string
   double sddiam2 = 0;
   double sdschmid = 0;
   double sdem = 0;
-  for(int j = 0; j < numgrains; j++)
+  for(int j = 1; j < numgrains; j++)
   {
     int onedge = grains[j].surfacegrain;
     if(onedge == 0)
@@ -2419,7 +2574,7 @@ void ReconstructionFunc::volume_stats(string writename1,string writename2,string
   }
   outFile8.close();
 }
-void  ReconstructionFunc::create_visualization(string writename11)
+void  ReconstructionFunc::write_volume(string writename11)
 {
     ofstream outFile;
     outFile.open(writename11.c_str());
@@ -2468,8 +2623,32 @@ void ReconstructionFunc::create_dxfile(string dxfile)
 {
   ofstream outFile;
   outFile.open(dxfile.c_str());
-  outFile << "object 1 class gridpositions counts " << xpoints << " " << ypoints << " " << zpoints << endl;
-  //TODO: Finish the implementation
+  outFile << "object 1 class gridpositions counts " << xpoints+1 << " " << ypoints+1 << " " << zpoints+1 << endl;
+  outFile << "origin	0	0	0" << endl;
+  outFile << "delta	1	0	0" << endl;
+  outFile << "delta	0	1	0" << endl;
+  outFile << "delta	0	0	0" << endl;
+  outFile << endl;
+  outFile << "object 2 class gridconnections counts " <<  xpoints+1 << " " << ypoints+1 << " " << zpoints+1 << endl;
+  outFile << endl;
+  outFile << "object 3 class array type int rank 0 items " << totalpoints << " data follows" << endl;
+  for(int i=0; i<totalpoints; i++)
+  {
+    outFile << voxels[i].grainname+1 << " ";
+    if((i!=0)&&(i%20==0))
+	{
+      outFile << endl;
+    }
+  }
+  outFile << endl;
+  outFile << "attribute 'dep' string 'connections" << endl;
+  outFile << endl;
+  outFile << "object '3d Micro' class field" << endl;
+  outFile << "component  'positions'    value 1" << endl;
+  outFile << "component  'connections'  value 2" << endl;
+  outFile << "component  'data'         value 3" << endl;
+  outFile << endl;
+  outFile << "end" << endl;
   outFile.close();
 }
 
@@ -2478,7 +2657,7 @@ void  ReconstructionFunc::write_axisorientations(string writename14)
     ofstream outFile;
     outFile.open(writename14.c_str());
   outFile << numgrains << endl;
-  for(int i = 0; i < numgrains; i++)
+  for(int i = 1; i < numgrains; i++)
   {
     double r1x = grains[i].axis1x;
     double r1y = grains[i].axis1y;
@@ -2498,12 +2677,12 @@ void  ReconstructionFunc::write_eulerangles(string writename15)
     ofstream outFile;
     outFile.open(writename15.c_str());
   outFile << numgrains <<endl;
-  for(int i = 0; i < numgrains; i++)
+  for(int i = 1; i < numgrains; i++)
   {
     double ea1 = grains[i].avgeuler1;
     double ea2 = grains[i].avgeuler2;
     double ea3 = grains[i].avgeuler3;
-    outFile << ea1 << " " << ea2 << " " << ea3 << endl;
+    outFile << i << " " << ea1 << " " << ea2 << " " << ea3 << endl;
   }
   outFile.close();
 }

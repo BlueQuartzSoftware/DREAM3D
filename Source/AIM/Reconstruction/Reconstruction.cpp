@@ -144,54 +144,59 @@ void Reconstruction::compute()
   int32 mindiameter = 100000;
   int32 maxdiameter = 0;
 
-  std::string reconFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::ReconstructedDataFile;
-  reconFile = MXAFileSystemPath::toNativeSeparators(reconFile);
-  if (m_AlreadyFormed == false)
-  {
-    CHECK_FOR_CANCELED(ReconstructionFunc)
-    progressMessage(AIM_STRING("Loading Slices"), 3 );
-    m->loadSlices();
+  std::string  statsFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::StatsFile;
+  std::string  misorientationFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::MisorientationBinsFile;
+  std::string  microBinsFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::MicroBinsFile;
+  std::string reconVisFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::ReconstructedVisualizationFile;
+  std::string dxFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::ReconstructedDxFile;
+  std::string axisFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::AxisOrientationsFile;
+  std::string eulerFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::EulerAnglesFile;
+  CHECK_FOR_CANCELED(ReconstructionFunc)
+  progressMessage(AIM_STRING("Loading Slices"), 3 );
+  m->loadSlices();
 
-    CHECK_FOR_CANCELED(ReconstructionFunc)
-    progressMessage(AIM_STRING("Forming Grains"), 6 );
-    numgrains = m->form_grains();
-    m->numgrains = numgrains;
-
-    CHECK_FOR_CANCELED(ReconstructionFunc)
-    progressMessage(AIM_STRING("Removing Small Grains"), 9 );
-    m->remove_smallgrains();
-
-    CHECK_FOR_CANCELED(ReconstructionFunc)
-    progressMessage(AIM_STRING("Renumbering Small Grains"), 12 );
-    numgrains = m->renumber_grains1();
-    m->numgrains = numgrains;
-
-    CHECK_FOR_CANCELED(ReconstructionFunc)
-    progressMessage(AIM_STRING("write_volume"), 15 );
-    m->write_volume(reconFile);
-  }
+  CHECK_FOR_CANCELED(ReconstructionFunc)
+  progressMessage(AIM_STRING("Aligning Slices"), 5 );
+  m->align_sections(statsFile);
 
   if (m_AlreadyFormed == true)
   {
     // Sanity Check the the Reconstruction File does exist in the output directory
-    if (MXAFileSystemPath::exists(reconFile) == true)
+    if (MXAFileSystemPath::exists(reconVisFile) == true)
     {
       CHECK_FOR_CANCELED(ReconstructionFunc)
-      progressMessage(AIM_STRING("Loading Existing Data"), 18 );
-      m->load_data(reconFile);
+      progressMessage(AIM_STRING("Loading Existing Data"), 8 );
+      numgrains = m->load_data(reconVisFile);
+      m->numgrains = numgrains;
     }
     else
     {
       std::cout << "******************************************************************************************" << std::endl;
       std::cout << "* Input file needed by using the --alreadyFormed option was not found. The following file " << std::endl;
       std::cout << "* should exist and be readable." << std::endl;
-      std::cout << "* " << reconFile << std::endl;
+      std::cout << "* " << reconVisFile << std::endl;
       std::cout << "******************************************************************************************" << std::endl;
       m_ErrorCondition = -1;
       return;
 
     }
   }
+  if (m_AlreadyFormed == false)
+  {
+    CHECK_FOR_CANCELED(ReconstructionFunc)
+    progressMessage(AIM_STRING("Forming Grains"), 8 );
+    numgrains = m->form_grains();
+    m->numgrains = numgrains;
+  }
+
+  CHECK_FOR_CANCELED(ReconstructionFunc)
+  progressMessage(AIM_STRING("Removing Small Grains"), 10 );
+  m->remove_smallgrains();
+
+  CHECK_FOR_CANCELED(ReconstructionFunc)
+  progressMessage(AIM_STRING("Renumbering Small Grains"), 12 );
+  numgrains = m->renumber_grains1();
+  m->numgrains = numgrains;
 
   CHECK_FOR_CANCELED(ReconstructionFunc)
   progressMessage(AIM_STRING("assign_badpoints"), 21 );
@@ -210,13 +215,10 @@ void Reconstruction::compute()
   numgrains = m->renumber_grains2();
   m->numgrains = numgrains;
 
-  CHECK_FOR_CANCELED(ReconstructionFunc)
+  CHECK_FOR_CANCELED(ReconstructionFunc) 
   progressMessage(AIM_STRING("homogenize_grains"), 33 );
   m->homogenize_grains();
 
-  CHECK_FOR_CANCELED(ReconstructionFunc)
-  progressMessage(AIM_STRING("write_volume"), 36 );
-  m->write_volume(reconFile);
   if (m_MergeTwins == 1)
   {
     m->merge_twins();
@@ -227,11 +229,7 @@ void Reconstruction::compute()
   progressMessage(AIM_STRING("renumber_grains3"), 39 );
   numgrains = m->renumber_grains3();
   m->numgrains = numgrains;
-
-  CHECK_FOR_CANCELED(ReconstructionFunc)
-  progressMessage(AIM_STRING("write_volume"), 42 );
-  m->write_volume(reconFile);
-
+  
   CHECK_FOR_CANCELED(ReconstructionFunc)
   progressMessage(AIM_STRING("find_goodneighbors"), 45 );
   m->find_goodneighbors();
@@ -264,33 +262,13 @@ void Reconstruction::compute()
   progressMessage(AIM_STRING("find_convexities"), 66 );
   m->find_convexities();
 
-  std::string  statsFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::StatsFile;
-//  std::string  volBinFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::VolBinFile;
-//  std::string  bOverABinsFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::BOverABinsFile;
-//  std::string  cOverABinsFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::COverABinsFile;
-//  std::string  cOverBBinsFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::COverBBinsFile;
-//  std::string  svnFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::SVNFile;
-//  std::string  svsFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::SVSFile;
-  std::string  misorientationFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::MisorientationBinsFile;
-  std::string  microBinsFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::MicroBinsFile;
-
   CHECK_FOR_CANCELED(ReconstructionFunc)
   progressMessage(AIM_STRING("Writing Statistics"), 69 );
   m->volume_stats(statsFile,misorientationFile,microBinsFile);
 
   CHECK_FOR_CANCELED(ReconstructionFunc)
   progressMessage(AIM_STRING("write_volume"), 72 );
-  m->write_volume(reconFile);
-
-  std::string reconVisFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::ReconstructedVisualizationFile;
-  std::string dxFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::ReconstructedDxFile;
-
-  std::string axisFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::AxisOrientationsFile;
-  std::string eulerFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::EulerAnglesFile;
-
-  CHECK_FOR_CANCELED(ReconstructionFunc)
-  progressMessage(AIM_STRING("Writing Reconstruction Visualization File"), 75 );
-  m->create_visualization(reconVisFile);
+  m->write_volume(reconVisFile);
 
   CHECK_FOR_CANCELED(ReconstructionFunc)
   progressMessage(AIM_STRING("Writing DX File"), 76);

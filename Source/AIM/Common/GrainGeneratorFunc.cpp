@@ -102,19 +102,18 @@ void GrainGeneratorFunc::initialize2(int32 xpoints, int32 ypoints, int32 zpoints
   gridcourse = new Voxel[totalpoints1];
 }
 
-void GrainGeneratorFunc::write_volume(string writename10)
+void GrainGeneratorFunc::write_eulerangles(string writename10)
 {
   //std::cout << "GrainGeneratorFunc::write_volume1: '" << writename10 << "'" << std::endl;
   ofstream outFile;
   outFile.open(writename10.c_str());
-  for (int i = 0; i < (xpoints * ypoints * zpoints); i++)
+  outFile << numgrains << endl;
+  for (int i = 0; i < numgrains; i++)
   {
-    int grainname = gridfine[i].grainname;
-    double ea1 = gridfine[i].euler1;
-    double ea2 = gridfine[i].euler2;
-    double ea3 = gridfine[i].euler3;
-    double ci = gridfine[i].confidence;
-    outFile << grainname << " " << ea1 << " " << ea2 << " " << ea3 << " " << ci << endl;
+    double ea1 = grains[i].euler1;
+    double ea2 = grains[i].euler2;
+    double ea3 = grains[i].euler3;
+    outFile << i << " " << ea1 << " " << ea2 << " " << ea3 << endl;
   }
   outFile.close();
 }
@@ -134,6 +133,15 @@ void  GrainGeneratorFunc::loadStatsData(string inname1)
 	svn.resize(maxdiameter+1);
 	svs.resize(maxdiameter+1);
 	svshape.resize(maxdiameter+1);
+	for(int iter=0;iter<mindiameter;iter++)
+	{
+		bovera[iter].resize(2);
+		covera[iter].resize(2);
+		coverb[iter].resize(2);
+		svn[iter].resize(2);
+		svs[iter].resize(2);
+		svshape[iter].resize(2);
+	}
 	for(int temp7 = 0; temp7 < numdiameters; temp7++)
 	{
 		inputFile >> diam >> param1 >> param2;
@@ -482,7 +490,6 @@ void  GrainGeneratorFunc::generate_grains(int numgrains)
   double a1=0,a2=0,a3=0;
   double b1=0,b2=0,b3=0;
   double r2=0,r3=0;
-  int takencheck[1000];
   rg.RandomInit((static_cast<unsigned int>(time(NULL))));
   for(int l = 0; l < numgrains; l++)
   {
@@ -530,6 +537,7 @@ void  GrainGeneratorFunc::generate_grains(int numgrains)
 	double s = svshape[diameter][1];
 	double N = rg.RandNorm(m,s);
 	N = exp(N);
+	N = 1.5;
     int gnum = l;
     grains[l].grainname = gnum;
     grains[l].volume = vol;
@@ -548,9 +556,9 @@ void  GrainGeneratorFunc::generate_grains(int numgrains)
     grains[l].Nvalue = N;
     totvol = totvol + vol;
   }
-  double sizex = int(pow((totvol*0.9),0.33333));
-  double sizey = int(pow((totvol*0.9),0.33333));
-  double sizez = int(pow((totvol*0.9),0.33333));
+  double sizex = int(pow((totvol*1),0.33333));
+  double sizey = int(pow((totvol*1),0.33333));
+  double sizez = int(pow((totvol*1),0.33333));
   xpoints = int((sizex/resx)+1);
   ypoints = int((sizey/resy)+1);
   zpoints = int((sizez/resz)+1);
@@ -561,6 +569,7 @@ void  GrainGeneratorFunc::generate_grains(int numgrains)
   ypoints1 = ypoints/4;
   zpoints1 = zpoints/4;
   grainorder.resize(numgrains);
+  takencheck.resize(numgrains);
   for(int i=0;i<numgrains;i++)
   {
     int maxgrain = 0;
@@ -710,7 +719,7 @@ void  GrainGeneratorFunc::make_points(int numgrains)
   }
   for (int i = 0; i < numgrains; i++)
   {
-	nsdist[i].resize(numdiameters);
+	nsdist[i].resize(maxdiameter+1);
     good = 0;
     triedcount = 0;
 	int curgrain = grainorder[i];
@@ -725,9 +734,9 @@ void  GrainGeneratorFunc::make_points(int numgrains)
     double bovera = grains[curgrain].axis2;
     double covera = grains[curgrain].axis3;
 //    double coverb = covera/bovera;
-    double Nvalue = grains[i].Nvalue;
-    double beta1 = (gamma((1.0/Nvalue))*gamma((1/Nvalue)))/gamma((2/Nvalue));
-    double beta2 = (gamma((2.0/Nvalue))*gamma((1/Nvalue)))/gamma((3/Nvalue));
+    double Nvalue = grains[curgrain].Nvalue;
+    double beta1 = (gamma((1.0/Nvalue))*gamma((1.0/Nvalue)))/gamma((2.0/Nvalue));
+    double beta2 = (gamma((2.0/Nvalue))*gamma((1.0/Nvalue)))/gamma((3.0/Nvalue));
     double radcur1cube = 1;
     if(shapeclass == 3)
     {
@@ -1059,7 +1068,8 @@ void  GrainGeneratorFunc::make_points(int numgrains)
             if(ratio < (1-(overlapallowed/2.0))) toomuch = 1;
           }
         }
-        if(acceptable > overlapallowed || uberincrease < 0 || nsdistchange > 0 || toomuch == 1) good = 0;
+//        if(acceptable > overlapallowed || uberincrease < 0 || nsdistchange > 0 || toomuch == 1) good = 0;
+        if(acceptable > overlapallowed) good = 0;
         triedcount++;
       }
       if(good == 0)
@@ -2093,6 +2103,39 @@ void  GrainGeneratorFunc::writeCube(string outname1, int numgrains)
     if(name < 10) outFile << " ";
     outFile << name;
   }
+  outFile.close();
+}
+
+void GrainGeneratorFunc::create_dxfile(string dxfile)
+{
+  ofstream outFile;
+  outFile.open(dxfile.c_str());
+  outFile << "object 1 class gridpositions counts " << xpoints+1 << " " << ypoints+1 << " " << zpoints+1 << endl;
+  outFile << "origin	0	0	0" << endl;
+  outFile << "delta	1	0	0" << endl;
+  outFile << "delta	0	1	0" << endl;
+  outFile << "delta	0	0	0" << endl;
+  outFile << endl;
+  outFile << "object 2 class gridconnections counts " <<  xpoints+1 << " " << ypoints+1 << " " << zpoints+1 << endl;
+  outFile << endl;
+  outFile << "object 3 class array type int rank 0 items " << totalpoints << " data follows" << endl;
+  for(int i=0; i<totalpoints; i++)
+  {
+    outFile << gridfine[i].grainname+1 << " ";
+    if((i!=0)&&(i%20==0))
+	{
+      outFile << endl;
+    }
+  }
+  outFile << endl;
+  outFile << "attribute 'dep' string 'connections" << endl;
+  outFile << endl;
+  outFile << "object '3d Micro' class field" << endl;
+  outFile << "component  'positions'    value 1" << endl;
+  outFile << "component  'connections'  value 2" << endl;
+  outFile << "component  'data'         value 3" << endl;
+  outFile << endl;
+  outFile << "end" << endl;
   outFile.close();
 }
 
