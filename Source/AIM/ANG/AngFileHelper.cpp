@@ -35,8 +35,9 @@ void AngFileHelper::loadData(Voxel voxels[],
                              double resz)
 {
   const int zero = 0;
- // const int checked = 1;
-  const int badgrain = -1;
+  const int checked = 1;
+  const int badgrain = 0;
+  const int init = -1;
   const double badeuler = 12.566370010375977;
   size_t index = 0;
   int nSlices = m_ZIndexEnd - m_ZIndexStart;
@@ -81,13 +82,13 @@ void AngFileHelper::loadData(Voxel voxels[],
            // >> junk4;
             voxels[index].zc = k * resz;
             voxels[index].alreadychecked = zero;
-            voxels[index].grainname = badgrain;
+            voxels[index].grainname = init;
             if (voxels[index].euler1 == badeuler
                 && voxels[index].euler2 == badeuler
                 && voxels[index].euler3 == badeuler)
             {
               voxels[index].confidence = zero;
-              voxels[index].alreadychecked = zero;
+              voxels[index].alreadychecked = checked;
               voxels[index].grainname = badgrain;
             }
             ++readerIndex;

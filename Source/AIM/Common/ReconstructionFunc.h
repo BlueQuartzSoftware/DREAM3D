@@ -90,6 +90,7 @@ public:
 	Grain* grains;
 
 	Bin* eulerbin;
+	int **shifts;
 
 	vector<vector<int> > neighborvector;
 
@@ -118,11 +119,12 @@ public:
   int eulercount[36][36][36];
 
 	void loadSlices();
+	void align_sections(string);
 	int form_grains();
 	void remove_smallgrains();
 	int renumber_grains1();
 	void write_volume(string);
-	void load_data(string);
+	int load_data(string);
 	void assign_badpoints();
 	void find_neighbors();
 	void merge_containedgrains();
@@ -140,7 +142,6 @@ public:
 	void find_colors();
 	void find_convexities();
 	void volume_stats(string,string,string);
-	void create_visualization(string);
 	void create_dxfile(string dxfile);
 	void write_axisorientations(string);
 	void write_eulerangles(string);

@@ -114,7 +114,8 @@ void GrainGenerator::compute()
   std::string  MicroBinsFile = m_InputDirectory + MXAFileSystemPath::Separator + AIM::Representation::MicroBinsFile;
 
   std::string  CubeFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::CubeFile;
-  std::string  VolumeFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::VolumeFile;
+  std::string  EulerFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::EulerFile;
+  std::string cubedxFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::CubeDxFile;
 
    m = GrainGeneratorFunc::New();
    m->initialize(m_NumGrains, m_ShapeClass,
@@ -233,8 +234,12 @@ void GrainGenerator::compute()
    m->writeCube(CubeFile, m->numgrains);
    
    CHECK_FOR_CANCELED(ReconstructionFunc)
-   progressMessage(AIM_STRING("Writing Volume"), 100 );
-   m->write_volume(VolumeFile);
+   progressMessage(AIM_STRING("Writing DX File"), 94);
+   m->create_dxfile(cubedxFile);
+
+  CHECK_FOR_CANCELED(ReconstructionFunc)
+   progressMessage(AIM_STRING("Writing Euler Angles"), 98 );
+   m->write_eulerangles(EulerFile);
 
    progressMessage(AIM_STRING("Generation Completed"), 100 );
 }

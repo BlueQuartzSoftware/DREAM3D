@@ -30,7 +30,7 @@
     <item row="0" column="0">
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="reconstructionTab">
        <attribute name="title">
@@ -324,23 +324,6 @@
              <number>4</number>
             </property>
             <item row="1" column="0">
-             <widget class="QLabel" name="rec_ReconstructedDataFileIcon">
-              <property name="text">
-               <string/>
-              </property>
-              <property name="pixmap">
-               <pixmap resource="../../../../Resources/icons/images/Icons.qrc">:/Delete-16x16.png</pixmap>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="1">
-             <widget class="QLabel" name="rec_ReconstructedDataFile">
-              <property name="text">
-               <string>reconstructed_data.txt</string>
-              </property>
-             </widget>
-            </item>
-            <item row="2" column="0">
              <widget class="QLabel" name="rec_ReconstructedVisualizationFileIcon">
               <property name="text">
                <string/>
@@ -350,14 +333,14 @@
               </property>
              </widget>
             </item>
-            <item row="2" column="1">
+            <item row="1" column="1">
              <widget class="QLabel" name="rec_ReconstructedVisualizationFile">
               <property name="text">
                <string>reconstructed_visualization.vtk</string>
               </property>
              </widget>
             </item>
-            <item row="3" column="0">
+            <item row="2" column="0">
              <widget class="QLabel" name="rec_ReconstructedDxFileIcon">
               <property name="text">
                <string/>
@@ -367,14 +350,14 @@
               </property>
              </widget>
             </item>
-            <item row="3" column="1">
+            <item row="2" column="1">
              <widget class="QLabel" name="rec_ReconstructedDxFile">
               <property name="text">
                <string>reconstructed_data.dx</string>
               </property>
              </widget>
             </item>
-            <item row="4" column="0">
+            <item row="3" column="0">
              <widget class="QLabel" name="rec_AxisOrientationsFileIcon">
               <property name="text">
                <string/>
@@ -384,7 +367,7 @@
               </property>
              </widget>
             </item>
-            <item row="4" column="1">
+            <item row="3" column="1">
              <widget class="QLabel" name="rec_AxisOrientationsFile">
               <property name="text">
                <string>axisorientations.txt</string>
@@ -1099,7 +1082,7 @@
              <number>4</number>
             </property>
             <item row="0" column="0">
-             <widget class="QLabel" name="gg_VolumeFileIcon">
+             <widget class="QLabel" name="gg_EulerFileIcon">
               <property name="text">
                <string/>
               </property>
@@ -1109,9 +1092,9 @@
              </widget>
             </item>
             <item row="0" column="1">
-             <widget class="QLabel" name="gg_VolumeFile">
+             <widget class="QLabel" name="gg_EulerFile">
               <property name="text">
-               <string>Volume</string>
+               <string>Euler Angles</string>
               </property>
              </widget>
             </item>
@@ -2091,6 +2074,9 @@
   <tabstop>sm_DxFileBtn</tabstop>
  </tabstops>
  <resources>
+  <include location="../../../../Resources/icons/images/Icons.qrc"/>
+  <include location="../../../../Resources/icons/images/Icons.qrc"/>
+  <include location="../../../../Resources/icons/images/Icons.qrc"/>
   <include location="../../../../Resources/icons/images/Icons.qrc"/>
   <include location="../../../../Resources/icons/images/Icons.qrc"/>
   <include location="../../../../Resources/icons/images/Icons.qrc"/>

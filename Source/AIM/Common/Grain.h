@@ -54,6 +54,7 @@ class Grain
     double Ixy;
     double Iyz;
     double Ixz;
+	double omega3;
     double axis1;
     double axis2;
     double axis3;
