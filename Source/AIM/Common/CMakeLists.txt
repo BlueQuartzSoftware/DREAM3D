@@ -42,6 +42,12 @@ SET (AIMCommon_SRCS
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/ReconstructionFunc.cpp
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Grain.cpp
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Voxel.cpp
+    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Patch.cpp
+    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Face.cpp
+    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Node.cpp
+    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Neighbor.cpp
+    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Segment.cpp
+    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/ISegment.cpp
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Bin.cpp
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Orient.cpp   
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/AIMRandomNG.cpp
@@ -53,6 +59,12 @@ SET (AIMCommon_HDRS
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/ReconstructionFunc.h
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Grain.h
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Voxel.h
+    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Patch.h
+    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Face.h
+    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Node.h
+    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Neighbor.h
+    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Segment.h
+    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/ISegment.h
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Bin.h
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Orient.h
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/AIMRandomNG.h

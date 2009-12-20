@@ -12,9 +12,6 @@
 #include "SurfaceMesh.h"
 
 #include <MXA/Utilities/MXAFileSystemPath.h>
-#include <AIM/SurfaceMesh/Surface_Mesh_General_MCA_Layer.h>
-#include <AIM/SurfaceMesh/Update_Edge_Tri.h>
-#include <AIM/SurfaceMesh/smooth-grain3d.h>
 
 
 #ifdef AIM_USE_QT
@@ -56,6 +53,7 @@ QObject* parent
 #if AIM_USE_QT
 QThread(parent),
 #endif
+m_InputDirectory("."),
 m_DxFile(""),
 m_OutputDirectory(""),
 m_SmoothMesh(false),
@@ -84,6 +82,7 @@ SurfaceMesh::~SurfaceMesh()
 void SurfaceMesh::run()
 {
   compute();
+  m = SurfaceMeshFunc::NullPointer();  // Clean up the memory
 }
 #endif
 
@@ -95,295 +94,214 @@ void SurfaceMesh::compute()
   CHECK_FOR_CANCELED(Surface Meshing)
   progressMessage(AIM_STRING("Running Surface Meshing"), 0 );
 
-  m_ErrorCondition = SurfaceMesh_MCALayer(m_XDim, m_YDim, m_ZDim,
-                                 m_OutputDirectory.c_str(),
-                                 m_DxFile.c_str(),
-                                 AIM::Representation::MeshStatFile.c_str(),
-                                 AIM::Representation::NodesRawFile.c_str());
+  std::string  NodesRawFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::NodesRawFile;
+  std::string  NodesFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::NodesFile;
+  std::string  TrianglesFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::TrianglesFile;
+  std::string  EdgesFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::EdgesFile;
+  std::string  EdgesFileIndex = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::EdgesFileIndex;
+  std::string  TrianglesFileIndex = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::TrianglesFileIndex;
+  std::string  VisualizationFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::VisualizationFile;
+ 
+  m = SurfaceMeshFunc::New();
+   m->initialize(m_XDim,m_YDim,m_ZDim);
+   int err = 0;
+   m->initialize_micro(m_DxFile );
 
-int SurfaceMesh_MCALayer( int xnum, int ynum, int znum,
-                          const char* outputDir,
-                          const char* dxFile,
-                          const char* meshStatFile,
-                          const char* nodesRawFile)
-{
-  int i;
-  int err;
 
-  int NS; // The number of sites(voxels) in the simulation box...
-  int NSP;
-
-  int cNodeID;
-  int cEdgeID, fEdgeID;
-  int cTriID;
-
-  int nFEdge; // number of edges on the square...
-  int nTriangle; // number of triangles...
-  int nNodes; // number of total nodes used...
-  int tnIEdge, nIEdge;
-
-  struct neighbor *neigh; // contains nearest neighbor information...
-  struct voxel *point; // contains voxel information...
-  struct face *cSquare; // contains square information...
- // struct face *pSquare;
-  struct node *cVertex; // contains node information...
-  struct node *pVertex;
-  struct segment *cFedge; // contains edges on square faces for open loops...
-  struct isegment *cIedge;
-  struct patch *cTriangle;
-  FILE *f1, *f4;
-  char trianglesFile[BUFSIZ];
-  char edgeFile[BUFSIZ];
-  char genericFilePath[BUFSIZ];
-  char postfix[64] = TRIANGLES_RAW_TXT;
-  char edgepostfix[64] = EDGES_RAW_TXT;
-  // Edge edge and neighboring spin table...
-
+  int cNodeID = 0;
+  int cEdgeID = 0;
+  int fEdgeID = 0;
+  int cTriID = 0;
+  int nFEdge = 0; // number of edges on the square...
+  int nTriangle = 0; // number of triangles...
+  int nEdge = 0; // number of triangles...
+  int npTriangle = 0; // number of triangles...
+  int ncTriangle = 0; // number of triangles...
+  int nNodes = 0; // number of total nodes used...
+  int tnIEdge = 0;
+  int nIEdge = 0;
   int edgeTable_2d[20][8] = {
-{ -1, -1, -1, -1, -1, -1, -1, -1},
-{ -1, -1, -1, -1, -1, -1, -1, -1},
-{ -1, -1, -1, -1, -1, -1, -1, -1},
-{ 0, 1, -1, -1, -1, -1, -1, -1},
-{ -1, -1, -1, -1, -1, -1, -1, -1},
-{ 0, 2, -1, -1, -1, -1, -1, -1},
-{ 1, 2, -1, -1, -1, -1, -1, -1},
-{ 0, 4, 2, 4, 1, 4, -1, -1},
-{ -1, -1, -1, -1, -1, -1, -1, -1},
-{ 3, 0, -1, -1, -1, -1, -1, -1},
-{ 3, 1, -1, -1, -1, -1, -1, -1},
-{ 3, 4, 0, 4, 1, 4, -1, -1},
-{ 2, 3, -1, -1, -1, -1, -1, -1},
-{ 3, 4, 0, 4, 2, 4, -1, -1},
-{ 3, 4, 1, 4, 2, 4, -1, -1},
-{ 3, 0, 1, 2, -1, -1, -1, -1},
-{ 0, 1, 2, 3, -1, -1, -1, -1},
-{ 0, 1, 2, 3, -1, -1, -1, -1},
-{ 3, 0, 1, 2, -1, -1, -1, -1},
-{ 3, 4, 1, 4, 0, 4, 2, 4}
-};
+	{ -1, -1, -1, -1, -1, -1, -1, -1},
+	{ -1, -1, -1, -1, -1, -1, -1, -1},
+	{ -1, -1, -1, -1, -1, -1, -1, -1},
+	{ 0, 1, -1, -1, -1, -1, -1, -1},
+	{ -1, -1, -1, -1, -1, -1, -1, -1},
+	{ 0, 2, -1, -1, -1, -1, -1, -1},
+	{ 1, 2, -1, -1, -1, -1, -1, -1},
+	{ 0, 4, 2, 4, 1, 4, -1, -1},
+	{ -1, -1, -1, -1, -1, -1, -1, -1},
+	{ 3, 0, -1, -1, -1, -1, -1, -1},
+	{ 3, 1, -1, -1, -1, -1, -1, -1},
+	{ 3, 4, 0, 4, 1, 4, -1, -1},
+	{ 2, 3, -1, -1, -1, -1, -1, -1},
+	{ 3, 4, 0, 4, 2, 4, -1, -1},
+	{ 3, 4, 1, 4, 2, 4, -1, -1},
+	{ 3, 0, 1, 2, -1, -1, -1, -1},
+	{ 0, 1, 2, 3, -1, -1, -1, -1},
+	{ 0, 1, 2, 3, -1, -1, -1, -1},
+	{ 3, 0, 1, 2, -1, -1, -1, -1},
+	{ 3, 4, 1, 4, 0, 4, 2, 4}
+	};
 
-int nsTable_2d[20][8] = {
-  {-1, -1, -1, -1, -1, -1, -1, -1},
-  {-1, -1, -1, -1, -1, -1, -1, -1},
-  {-1, -1, -1, -1, -1, -1, -1, -1},
-  {1, 0, -1, -1, -1, -1, -1, -1},
-  {-1, -1, -1, -1, -1, -1, -1, -1 },
-  {1, 0, -1, -1, -1, -1, -1, -1, },
-  {2, 1, -1, -1, -1, -1, -1, -1},
-  {1, 0, 3, 2, 2, 1, -1, -1},
-  {-1, -1, -1, -1, -1, -1, -1, -1},
-  {0, 3, -1, -1, -1, -1, -1, -1},
-  {0, 3, -1, -1, -1, -1, -1, -1},
-  {0, 3, 1, 0, 2, 1, -1, -1},
-  {3, 2, -1, -1, -1, -1, -1, -1},
-  {0, 3, 1, 0, 3, 2, -1, -1},
-  {0, 3, 2, 1, 3, 2, -1, -1},
-  {0, 3, 2, 1, -1, -1, -1, -1},
-  {1, 0, 3, 2, -1, -1, -1, -1},
-  {1, 0, 3, 2, -1, -1, -1, -1},
-  {0, 3, 2, 1, -1, -1, -1, -1},
-  {0, 3, 2, 1, 1,  0, 3, 2 }
-};
+	int nsTable_2d[20][8] = {
+	  {-1, -1, -1, -1, -1, -1, -1, -1},
+	  {-1, -1, -1, -1, -1, -1, -1, -1},
+	  {-1, -1, -1, -1, -1, -1, -1, -1},
+	  {1, 0, -1, -1, -1, -1, -1, -1},
+	  {-1, -1, -1, -1, -1, -1, -1, -1 },
+	  {1, 0, -1, -1, -1, -1, -1, -1, },
+	  {2, 1, -1, -1, -1, -1, -1, -1},
+	  {1, 0, 3, 2, 2, 1, -1, -1},
+	  {-1, -1, -1, -1, -1, -1, -1, -1},
+	  {0, 3, -1, -1, -1, -1, -1, -1},
+	  {0, 3, -1, -1, -1, -1, -1, -1},
+	  {0, 3, 1, 0, 2, 1, -1, -1},
+	  {3, 2, -1, -1, -1, -1, -1, -1},
+	  {0, 3, 1, 0, 3, 2, -1, -1},
+	  {0, 3, 2, 1, 3, 2, -1, -1},
+	  {0, 3, 2, 1, -1, -1, -1, -1},
+	  {1, 0, 3, 2, -1, -1, -1, -1},
+	  {1, 0, 3, 2, -1, -1, -1, -1},
+	  {0, 3, 2, 1, -1, -1, -1, -1},
+	  {0, 3, 2, 1, 1,  0, 3, 2 }
+	};
 
-  err = 0;
-//  meshStatsFile = MESH_STAT_FILE;
-//  nodesFile = NODES_RAW_FILE;
-
-  NS = xnum * ynum * znum;
-  NSP = xnum * ynum;
-
-  neigh = (struct neighbor *) malloc((2 * NSP + 1) * sizeof(struct neighbor));
-  point = (struct voxel *) malloc((NS + 1) * sizeof(struct voxel));
-  cSquare = (struct face *) malloc(3 * 2 * NSP * sizeof(struct face));
-  cVertex = (struct node *) malloc(7 * 2 * NSP * sizeof(struct node));
-  pVertex = (struct node *) malloc(7 * 2 * NSP * sizeof(struct node));
-
-  printf("\nReading microstucture...\n");
-  err = initialize_micro(point, NS, xnum, ynum, znum, dxFile );
-  if (err != 0)
-  {
-    return err;
-  }
-
-  memset(genericFilePath, 0, BUFSIZ); // Clear the string first
-  sprintf(genericFilePath, "%s%s", outputDir,  nodesRawFile);
-  if ((f1 = fopen(genericFilePath, "w")) == NULL)
-  {
-    printf("\nThe nodesFile file doesn't exist!\n");
-    return 1;
-  }
-
-  fclose(f1);
-
-  cNodeID = 0;
-  cEdgeID = 0;
-  fEdgeID = 0;
-  cTriID = 0;
-
-  for (i = 0; i < (znum - 1); i++)
+  for (int i = 0; i < (m_ZDim - 1); i++)
   {
 
-    printf("\nMarching Cubes between layers %5d and %5d\n", i + 1, i + 2);
+    progressMessage(AIM_STRING("Marching Cubes Between Layers "), (i*50/m_ZDim) );
 
     // initialize neighbors, possible nodes and squares of marching cubes of each layer...
-    get_neighbor_list(neigh, NS, NSP, xnum, ynum, znum, i);
-    initialize_nodes(point, cVertex, NSP, i);
-    initialize_squares(neigh, cSquare, NS, NSP, i);
+    m->get_neighbor_list(i);
+    m->initialize_nodes(i);
+    m->initialize_squares(i);
 
     // find face edges of each square of marching cubes in each layer...
-    nFEdge = get_number_fEdges(cSquare, point, neigh, NSP, i);
-    printf("\tTotal number of face edges: %d\n", nFEdge);
-    cFedge = (struct segment *) malloc(nFEdge * sizeof(struct segment));
-    get_nodes_fEdges(cSquare, point, neigh, cVertex, cFedge, edgeTable_2d, nsTable_2d, NS, NSP, xnum, i);
+    nFEdge = m->get_number_fEdges(i);
+    m->get_nodes_fEdges(edgeTable_2d, nsTable_2d, i, nFEdge);
 
     // find triangles and arrange the spins across each triangle...
-    nTriangle = get_number_triangles(point, cSquare, cVertex, cFedge, NS, NSP, xnum);
-    printf("\tNumber of triangles: %d\n", nTriangle);
+    nTriangle = m->get_number_triangles();
 
     if (nTriangle > 0)
     {
-      cTriangle = (struct patch *) malloc(nTriangle * sizeof(struct patch));
-      get_triangles(cTriangle, cSquare, cVertex, cFedge, NS, NSP, xnum);
-      arrange_spins(point, cTriangle, cVertex, neigh, nTriangle, xnum, NSP, i);
+      m->get_triangles(nTriangle);
+      m->arrange_grainnames(nTriangle, i);
     }
 
     // find unique inner edges...
     tnIEdge = 3 * nTriangle - nFEdge;
     if (tnIEdge > 0)
     {
-      cIedge = (struct isegment *) malloc(tnIEdge * sizeof(struct isegment));
-      tnIEdge = get_inner_edges(cVertex, cFedge, cIedge, cTriangle, nFEdge, nTriangle);
-      printf("\tNumber of inner edges including duplicates: %d\n", tnIEdge);
-      find_unique_inner_edges(cIedge, tnIEdge, &nIEdge);
-      printf("\tNumber of unique inner edges: %d\n", nIEdge);
+      tnIEdge = m->get_inner_edges(nFEdge, nTriangle, tnIEdge);
+      m->find_unique_inner_edges(tnIEdge, &nIEdge);
     }
     // copy the previous node and face edge information...
     if (i > 0)
     {
-      copy_previous_nodes(cVertex, pVertex, NSP);
+      m->copy_previous_nodes();
     }
 
     // assign new, cumulative node id...
-    nNodes = assign_new_nodeID(cVertex, NSP, cNodeID);
-    printf("\tNumber of nodes used: %d\n", nNodes - cNodeID);
+    nNodes = m->assign_new_nodeID(cNodeID);
     cNodeID = nNodes;
-    printf("\tCurrent node is at: %d\n", cNodeID);
 
     // rewirte the edges and the triangles with new node ids...
-    update_face_edges(cVertex, cFedge, nFEdge);
+    m->update_face_edges(nFEdge);
 
     if (nTriangle > 0 && tnIEdge > 0)
     {
-      update_inner_edges(cVertex, cIedge, tnIEdge, nIEdge);
-      update_current_triangles(cVertex, cTriangle, nTriangle);
+      m->update_inner_edges(tnIEdge, nIEdge);
+      m->update_current_triangles(nTriangle);
     }
 
     // Output nodes and triangles...
-    memset(genericFilePath, 0, BUFSIZ); // Clear the string first
-    sprintf(genericFilePath, "%s%s", outputDir,  nodesRawFile);
-    get_output_nodes(cVertex, NSP, i, znum, genericFilePath );
+    m->get_output_nodes(i, NodesRawFile);
 
-    memset(edgeFile, 0, BUFSIZ); // Clear the string first
-    sprintf(edgeFile, "%s%d%s", outputDir,  i, edgepostfix);
-    get_output_edges(cFedge, cIedge, nFEdge, tnIEdge, i, znum, cEdgeID, &fEdgeID, edgeFile);
+    m->get_output_edges(nFEdge, tnIEdge, i, cEdgeID, &fEdgeID, EdgesFileIndex);
 
-    memset(trianglesFile, 0, BUFSIZ); // Clear the string first
-    sprintf(trianglesFile, "%s%d%s", outputDir, i, postfix);
-    get_output_triangles(cTriangle, nTriangle, trianglesFile, i, cTriID);
+    m->get_output_triangles(nTriangle, TrianglesFileIndex, i, cTriID);
     cEdgeID = fEdgeID;
     cTriID = cTriID + nTriangle;
 
     // store cVertex information of bottom layer onto temporary vertex...
-    copy_cNodes_2_pNodes(cVertex, pVertex, NSP);
+    m->copy_cNodes_2_pNodes();
 
-    free(cFedge);
 
     if (nTriangle > 0 && tnIEdge > 0)
     {
-      free(cIedge);
-      free(cTriangle);
+
     }
   }
 
-  free(neigh);
-  free(point);
-  free(cSquare);
-  free(cVertex);
-  free(pVertex);
-
-  memset(genericFilePath, 0, BUFSIZ); // Clear the string first
-  sprintf(genericFilePath, "%s%s", outputDir,  meshStatFile);
-
-  if ((f4 = fopen(genericFilePath, "w")) == NULL)
-  {
-    printf("\nThe mesh_stat.txt file doesn't exist!\n");
-    return 1;
-  }
-
-  fprintf(f4, "%d %d %d %d\n", cNodeID, cEdgeID, cTriID, znum - 2);
-
-  fclose(f4);
-  return err;
-}
-
-
-#ifndef SURFACE_MESH_LIBRARY
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int main(int argc, char **argv)
-{
-  char* dxFile;
-  int xnum, ynum, znum;
-  int err;
-  char* edgeTableFile;
-  char* neighspinTableFile;
-  char* meshStatFile;
-  char* nodesRawFile;
-  char* outputDir;
-
-  edgeTableFile = EDGETABLE_2D_FILE;
-  neighspinTableFile = NEIGHSPIN_TABLE_FILE;
-  meshStatFile = MESH_STAT_FILE;
-  nodesRawFile = NODES_RAW_FILE;
-  outputDir = ".";
-
-  err = 0;
-  dxFile = (char*)malloc( BUFSIZ * sizeof(char));
-  memset(dxFile, 0, BUFSIZ);
-
-
-  printf("Enter the dimension of the microstructure:\n");
-  scanf("%d %d %d", &xnum, &ynum, &znum);
-  printf("%d %d %d\n", xnum, ynum, znum);
-
-  printf("Enter the name of input microstructure dx file:\n");
-  scanf("%s", dxFile);
-
-  err = SurfaceMesh_MCALayer(xnum, ynum, znum,
-                     outputDir,
-                     dxFile,
-                     meshStatFile, nodesRawFile);
-
-  free(dxFile);
-  return err;
-}
-#endif
-
-
-
   CHECK_FOR_CANCELED(Surface Meshing)
   progressMessage(AIM_STRING("Converting Slice Files to Single Nodes/Triangles Pair"), 40 );
+
   // Convert the output edge and triangle files into a single node/triangle file
-  m_ErrorCondition = Update_Edge_Tri(AIM::Representation::MeshStatFile.c_str(),
-                                     m_OutputDirectory.c_str(),
-                                     AIM::Representation::EdgesFile.c_str(),
-                                     AIM::Representation::TrianglesFile.c_str(),
-                                     AIM::Representation::NodesFile.c_str(),
-                                     AIM::Representation::NodesRawFile.c_str() );
+//  pTriangle = (struct patch *)malloc(1*sizeof(struct patch));
+  // Creating new or Erasing Current output files
 
+  ofstream outFile;
+  outFile.open(EdgesFile.c_str(), ios::app);
+  outFile << cEdgeID << endl;
+  outFile.close();
 
-  if (m_SmoothMesh == true)
+  outFile.open(TrianglesFile.c_str(), ios::app);
+  outFile << cTriID << endl;
+  outFile.close();
+
+  outFile.open(NodesFile.c_str(), ios::app);
+  outFile << cNodeID << endl;
+  outFile.close();
+
+  // For each layer...
+  for (int i = 0; i <= (m_ZDim-2); i++)
+  {
+
+    // get numbers of face edges, inner edges, previous triangles and current triangles...
+
+    m->UET_get_number_current_edges (&nFEdge, &nIEdge, i, EdgesFileIndex);
+    m->UET_get_number_previous_current_triangles (&npTriangle, &ncTriangle, i, TrianglesFileIndex);
+
+    // read edge and triangle information...
+    m->UET_read_current_edges (nFEdge, nIEdge, i, EdgesFileIndex);
+    m->UET_read_current_triangles (ncTriangle, i, TrianglesFileIndex);
+
+    // update edges and triangles...
+    m->UET_update_iEdges_triangles (nIEdge, ncTriangle);
+    m->UET_update_fEdges_triangles (nFEdge, npTriangle, ncTriangle, i);
+
+    // print out edge information...
+    m->UET_get_output_edges (nFEdge, nIEdge, EdgesFile);
+
+    // print out triangle information...
+    if (i > 0)
+    {
+      int type = 0;
+      if (i == (m_ZDim-2))
+      {
+	    type = 0;
+        m->UET_get_output_triangles(type, npTriangle, TrianglesFile);
+	    type = 1;
+        m->UET_get_output_triangles(type, ncTriangle, TrianglesFile);
+      }
+      else
+      {
+	    type = 0;
+        m->UET_get_output_triangles(type, npTriangle, TrianglesFile);
+      }
+    }
+
+    // make cTriangle into pTriangle...
+//    delete [] pTriangle;
+	npTriangle = ncTriangle;
+    m->UET_copy_triangles (npTriangle);
+  }
+
+  m->UET_get_output_nodes (nNodes, NodesFile, NodesRawFile);
+  m->UET_create_vtk(VisualizationFile, NodesFile, TrianglesFile);
+
+/*  if (m_SmoothMesh == true)
   {
     //TODO: Run the smoothing algorithm
     CHECK_FOR_CANCELED(Surface Meshing)
@@ -399,7 +317,7 @@ int main(int argc, char **argv)
 
   }
 
-  progressMessage(AIM_STRING("Surface Meshing Complete"), 100 );
+  progressMessage(AIM_STRING("Surface Meshing Complete"), 100 );*/
 }
 
 // -----------------------------------------------------------------------------

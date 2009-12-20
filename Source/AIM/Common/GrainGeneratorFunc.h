@@ -57,12 +57,12 @@ public:
 
   virtual ~GrainGeneratorFunc();
 
-void initialize(int32 v_NumG, int32 v_ShapeClass, double stepX, double stepY, double stepZ,
-                  int32 v_OverAllow,int32 v_OverMethod,int32 v_crystruct);
+void initialize(int32, int32 , double , double , double ,
+                  int32 ,int32 ,int32 );
 
-void initialize2(int32 xpoints, int32 ypoints, int32 zpoints);
+void initialize2(int32, int32, int32);
 
-  AngFileHelper::Pointer m_angFileHelper;
+AngFileHelper::Pointer m_angFileHelper;
 
 
   double resx;

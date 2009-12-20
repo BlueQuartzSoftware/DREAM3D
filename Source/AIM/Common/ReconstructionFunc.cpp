@@ -84,6 +84,7 @@ void ReconstructionFunc::initialize(double stepX, double stepY, double stepZ,
   voxels = new Voxel[totalpoints];
   grains = new Grain[totalpoints/20];
 } 
+
 void ReconstructionFunc::loadSlices()
 {
   m_angFileHelper->loadData(voxels, xpoints, ypoints, zpoints, resz);
