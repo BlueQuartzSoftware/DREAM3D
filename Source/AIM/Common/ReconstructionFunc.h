@@ -57,14 +57,9 @@ public:
 
   virtual ~ReconstructionFunc();
 
-    void initialize(double stepX, double stepY, double stepZ,
-      int32 angNumCols, int32 angNumRows, int32 angSlices,
-      bool v_mergetwinsoption,
-      int32 v_minallowedgrainsize,
-      double v_minseedconfidence,
-      double v_misorientationtolerance,
-      int32 v_crystruct,
-      bool v_alreadyformed);
+    void initialize(double , double stepY, double stepZ,
+      int32, int32 angNumRows, int32 angSlices,
+      bool, int32, double, double, int32, bool);
 
 
   AngFileHelper::Pointer m_angFileHelper;

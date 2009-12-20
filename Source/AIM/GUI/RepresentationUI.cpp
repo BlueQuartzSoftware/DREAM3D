@@ -1101,7 +1101,6 @@ void RepresentationUI::sm_CheckIOFiles()
 
   CHECK_QLABEL_OUTPUT_FILE_EXISTS(sm_, NodesFile)
   CHECK_QLABEL_OUTPUT_FILE_EXISTS(sm_, TrianglesFile)
-  CHECK_QLABEL_OUTPUT_FILE_EXISTS(sm_, MeshStatFile)
   CHECK_QLABEL_OUTPUT_FILE_EXISTS(sm_, NodesRawFile)
 }
 

@@ -30,7 +30,7 @@
     <item row="0" column="0">
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>1</number>
+       <number>2</number>
       </property>
       <widget class="QWidget" name="reconstructionTab">
        <attribute name="title">
@@ -960,13 +960,6 @@
               </property>
              </widget>
             </item>
-            <item row="2" column="1">
-             <widget class="QLabel" name="gg_MicroBinsFile">
-              <property name="text">
-               <string>MicroBins</string>
-              </property>
-             </widget>
-            </item>
             <item row="2" column="0">
              <widget class="QLabel" name="gg_MicroBinsFileIcon">
               <property name="text">
@@ -974,6 +967,13 @@
               </property>
               <property name="pixmap">
                <pixmap resource="../../../../Resources/icons/images/Icons.qrc">:/Delete-16x16.png</pixmap>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="1">
+             <widget class="QLabel" name="gg_MicroBinsFile">
+              <property name="text">
+               <string>MicroBins</string>
               </property>
              </widget>
             </item>
@@ -1373,28 +1373,8 @@
             </property>
            </widget>
           </item>
-          <item row="3" column="3">
-           <widget class="QLabel" name="sm_MeshStatFile">
-            <property name="text">
-             <string>mesh_stat.txt</string>
-            </property>
-           </widget>
-          </item>
           <item row="3" column="0">
            <widget class="QLabel" name="sm_NodesRawFileIcon">
-            <property name="text">
-             <string/>
-            </property>
-            <property name="pixmap">
-             <pixmap resource="../../../../Resources/icons/images/Icons.qrc">:/Delete-16x16.png</pixmap>
-            </property>
-            <property name="alignment">
-             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="2">
-           <widget class="QLabel" name="sm_MeshStatFileIcon">
             <property name="text">
              <string/>
             </property>
@@ -2074,6 +2054,7 @@
   <tabstop>sm_DxFileBtn</tabstop>
  </tabstops>
  <resources>
+  <include location="../../../../Resources/icons/images/Icons.qrc"/>
   <include location="../../../../Resources/icons/images/Icons.qrc"/>
   <include location="../../../../Resources/icons/images/Icons.qrc"/>
   <include location="../../../../Resources/icons/images/Icons.qrc"/>

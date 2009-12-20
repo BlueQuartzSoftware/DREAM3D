@@ -64,10 +64,12 @@ namespace AIM
     const std::string VTKExt("vtk");
     const std::string DXExt ("dx");
     const std::string NodesRawFile("nodes_raw.txt");
-    const std::string MeshStatFile("mesh_stat.txt");
     const std::string NodesFile("nodes.txt");
+    const std::string TrianglesFileIndex("triangles");
     const std::string TrianglesFile("triangles.txt");
+    const std::string EdgesFileIndex("edges");
     const std::string EdgesFile("edges.txt");
+    const std::string VisualizationFile("surface_mesh.vtk");
     const std::string Smooth3DIterationFile("Smooth3D");
     const std::string NodesSmoothedFile("nodes_smoothed.txt");
 

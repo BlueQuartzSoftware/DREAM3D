@@ -20,7 +20,7 @@
 #include <MXA/Common/MXASetGetMacros.h>
 #include <MXA/Common/MXATypes.h>
 #include <AIM/Common/Constants.h>
-//#include <AIM/Common/MicroGen3D.h>
+#include <AIM/Common/SurfaceMeshFunc.h>
 
 #ifdef AIM_USE_QT
 #include <QtCore/QObject>
@@ -62,6 +62,7 @@ Q_OBJECT
 #endif
     virtual ~SurfaceMesh();
 
+    MXA_INSTANCE_STRING_PROPERTY(InputDirectory, m_InputDirectory)
     MXA_INSTANCE_STRING_PROPERTY(DXFile, m_DxFile)
     MXA_INSTANCE_STRING_PROPERTY(OutputDirectory, m_OutputDirectory)
     MXA_INSTANCE_PROPERTY_m(int, XDim)
@@ -120,6 +121,7 @@ Q_OBJECT
 #endif
 
   private:
+	  SurfaceMeshFunc::Pointer m;
 
     SurfaceMesh(const SurfaceMesh&);    // Copy Constructor Not Implemented
     void operator=(const SurfaceMesh&);  // Operator '=' Not Implemented
