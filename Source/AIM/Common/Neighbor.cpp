@@ -8,25 +8,19 @@
 // This code was partly written under US Air Force Contract FA8650-07-D-5800
 //
 ///////////////////////////////////////////////////////////////////////////////
-#ifndef UPDATE_EDGE_TRI_H_
-#define UPDATE_EDGE_TRI_H_
 
-#ifdef __cplusplus
-extern "C"
+#include "Neighbor.h"
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+Neighbor::Neighbor() 
 {
-#endif
-
-int Update_Edge_Tri(const char* meshStatFile,
-                    const char* outputDir,
-                    const char* edgesFile,
-                    const char* trianglesFile,
-                    const char* nodesFile,
-                    const char* nodesRawFile);
-
-
-#ifdef __cplusplus
 }
-#endif
 
-
-#endif /* UPDATE_EDGE_TRI_H_ */
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+Neighbor::~Neighbor()
+{
+}

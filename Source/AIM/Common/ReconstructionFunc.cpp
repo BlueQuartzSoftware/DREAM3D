@@ -120,7 +120,7 @@ void ReconstructionFunc::align_sections(string ofile)
 	 {
 		 if(a == 0) step = 5;
 		 if(a == 1) step = 1;
-		 for(int j=-5;j<6;j++)
+		 for(int j=-3;j<4;j++)
 		 {
 			for(int k=-5;k<6;k++)
 			{
@@ -136,7 +136,12 @@ void ReconstructionFunc::align_sections(string ofile)
 						{
 							double refci = voxels[refposition].confidence;
 							double curci = voxels[curposition].confidence;
-							if(refci > 0.1 && curci > 0.1)
+							double refiq = voxels[refposition].imagequality;
+							double curiq = voxels[curposition].imagequality;
+							disorientation = disorientation + fabs(refiq-curiq);
+							if((refiq < 300 && curiq > 700) || (refiq > 700 && curiq < 300)) disorientation = disorientation + fabs(refiq-curiq);
+							count++;
+/*							if(refci > 0.1 && curci > 0.1)
 							{
 								double g1ea1 = voxels[refposition].euler1;
 								double g1ea2 = voxels[refposition].euler2;
@@ -148,7 +153,10 @@ void ReconstructionFunc::align_sections(string ofile)
 								disorientation = disorientation + w;
 								count++;
 							}
-						}
+							if(refci == -1 && curci != -1) disorientation = disorientation + 62.54, count++;
+							if(refci != -1 && curci == -1) disorientation = disorientation + 62.54, count++;
+							if(refci == -1 && curci == -1) disorientation = disorientation + 0.0, count++;
+*/						}
 					}
 				}
 				disorientation = disorientation/double(count);
@@ -168,88 +176,130 @@ void ReconstructionFunc::align_sections(string ofile)
 	 shifts[i][0] = xshift + shifts[i-1][0];
 	 shifts[i][1] = yshift + shifts[i-1][1];
   }
+  double lval, mval;
+  int shifted = 0;
   for (int i=1;i<zpoints;i++)
   {
-    if(shifts[i][0] < 0 && shifts[i][1] < 0)
+    if(shifts[i][0] != 0 || shifts[i][1] != 0)
 	{
-		for(int l=ypoints-1;l<=0;l--)
+		shifted = 0;
+		if(shifts[i][0] <= 0 && shifts[i][1] <= 0 && shifted == 0)
 		{
-			for(int m=xpoints-1;m<=0;m--)
+			shifted = 1;
+			for(int l=0;l<=ypoints-1;l++)
 			{
-				if((l-shifts[i][1]) >= 0 && (l-shifts[i][1]) < ypoints && (m-shifts[i][0]) >= 0 && (m-shifts[i][0]) < xpoints)
+				for(int m=0;m<=xpoints-1;m++)
 				{
-					int position = (i*xpoints*ypoints)+(l*xpoints)+m;
-					int newposition = (i*xpoints*ypoints)+((l-shifts[i][1])*xpoints)+(m-shifts[i][0]);
-					voxels[newposition].euler1 = voxels[position].euler1; 
-					voxels[newposition].euler2 = voxels[position].euler2; 
-					voxels[newposition].euler3 = voxels[position].euler3; 
-					voxels[newposition].confidence = voxels[position].confidence; 
-					voxels[newposition].alreadychecked = voxels[position].alreadychecked; 
-					voxels[newposition].grainname = voxels[position].grainname; 
+					lval = (ypoints-1)-l;
+					mval = (xpoints-1)-m;
+					if((lval-shifts[i][1]) >= 0 && (lval-shifts[i][1]) < ypoints && (mval-shifts[i][0]) >= 0 && (mval-shifts[i][0]) < xpoints)
+					{
+						int position = (i*xpoints*ypoints)+(lval*xpoints)+mval;
+						int newposition = (i*xpoints*ypoints)+((lval-shifts[i][1])*xpoints)+(mval-shifts[i][0]);
+						voxels[newposition].euler1 = voxels[position].euler1; 
+						voxels[newposition].euler2 = voxels[position].euler2; 
+						voxels[newposition].euler3 = voxels[position].euler3; 
+						voxels[newposition].quat[0] = voxels[position].quat[0];
+						voxels[newposition].quat[1] = voxels[position].quat[1];
+						voxels[newposition].quat[2] = voxels[position].quat[2];
+						voxels[newposition].quat[3] = voxels[position].quat[3];
+						voxels[newposition].quat[4] = voxels[position].quat[4];
+						voxels[newposition].confidence = voxels[position].confidence; 
+						voxels[newposition].imagequality = voxels[position].imagequality; 
+						voxels[newposition].alreadychecked = voxels[position].alreadychecked; 
+						voxels[newposition].grainname = voxels[position].grainname; 
+					}
 				}
 			}
 		}
-	}
-    if(shifts[i][0] < 0 && shifts[i][1] > 0)
-	{
-		for(int l=0;l<=ypoints-1;l++)
+		if(shifts[i][0] <= 0 && shifts[i][1] >= 0 && shifted == 0)
 		{
-			for(int m=xpoints-1;m<=0;m--)
+			shifted = 1;
+			for(int l=0;l<=ypoints-1;l++)
 			{
-				if((l-shifts[i][1]) >= 0 && (l-shifts[i][1]) < ypoints && (m-shifts[i][0]) >= 0 && (m-shifts[i][0]) < xpoints)
+				for(int m=0;m<=xpoints-1;m++)
 				{
-					int position = (i*xpoints*ypoints)+(l*xpoints)+m;
-					int newposition = (i*xpoints*ypoints)+((l-shifts[i][1])*xpoints)+(m-shifts[i][0]);
-					voxels[newposition].euler1 = voxels[position].euler1; 
-					voxels[newposition].euler2 = voxels[position].euler2; 
-					voxels[newposition].euler3 = voxels[position].euler3; 
-					voxels[newposition].confidence = voxels[position].confidence; 
-					voxels[newposition].alreadychecked = voxels[position].alreadychecked; 
-					voxels[newposition].grainname = voxels[position].grainname; 
+					lval = l;
+					mval = (xpoints-1)-m;
+					if((lval-shifts[i][1]) >= 0 && (lval-shifts[i][1]) < ypoints && (mval-shifts[i][0]) >= 0 && (mval-shifts[i][0]) < xpoints)
+					{
+						int position = (i*xpoints*ypoints)+(lval*xpoints)+mval;
+						int newposition = (i*xpoints*ypoints)+((lval-shifts[i][1])*xpoints)+(mval-shifts[i][0]);
+						voxels[newposition].euler1 = voxels[position].euler1; 
+						voxels[newposition].euler2 = voxels[position].euler2; 
+						voxels[newposition].euler3 = voxels[position].euler3; 
+						voxels[newposition].quat[0] = voxels[position].quat[0];
+						voxels[newposition].quat[1] = voxels[position].quat[1];
+						voxels[newposition].quat[2] = voxels[position].quat[2];
+						voxels[newposition].quat[3] = voxels[position].quat[3];
+						voxels[newposition].quat[4] = voxels[position].quat[4];
+						voxels[newposition].confidence = voxels[position].confidence; 
+						voxels[newposition].imagequality = voxels[position].imagequality; 
+						voxels[newposition].alreadychecked = voxels[position].alreadychecked; 
+						voxels[newposition].grainname = voxels[position].grainname; 
+					}
 				}
 			}
 		}
-	}
-    if(shifts[i][0] > 0 && shifts[i][1] < 0)
-	{
-		for(int l=ypoints-1;l<=0;l--)
+		if(shifts[i][0] >= 0 && shifts[i][1] <= 0 && shifted == 0)
 		{
-			for(int m=0;m<=xpoints-1;m++)
+			shifted = 1;
+			for(int l=0;l<=ypoints-1;l++)
 			{
-				if((l-shifts[i][1]) >= 0 && (l-shifts[i][1]) < ypoints && (m-shifts[i][0]) >= 0 && (m-shifts[i][0]) < xpoints)
+				for(int m=0;m<=xpoints-1;m++)
 				{
-					int position = (i*xpoints*ypoints)+(l*xpoints)+m;
-					int newposition = (i*xpoints*ypoints)+((l-shifts[i][1])*xpoints)+(m-shifts[i][0]);
-					voxels[newposition].euler1 = voxels[position].euler1; 
-					voxels[newposition].euler2 = voxels[position].euler2; 
-					voxels[newposition].euler3 = voxels[position].euler3; 
-					voxels[newposition].confidence = voxels[position].confidence; 
-					voxels[newposition].alreadychecked = voxels[position].alreadychecked; 
-					voxels[newposition].grainname = voxels[position].grainname; 
+					lval = (ypoints-1)-l;
+					mval = m;
+					if((lval-shifts[i][1]) >= 0 && (lval-shifts[i][1]) < ypoints && (mval-shifts[i][0]) >= 0 && (mval-shifts[i][0]) < xpoints)
+					{
+						int position = (i*xpoints*ypoints)+(lval*xpoints)+mval;
+						int newposition = (i*xpoints*ypoints)+((lval-shifts[i][1])*xpoints)+(mval-shifts[i][0]);
+						voxels[newposition].euler1 = voxels[position].euler1; 
+						voxels[newposition].euler2 = voxels[position].euler2; 
+						voxels[newposition].euler3 = voxels[position].euler3; 
+						voxels[newposition].quat[0] = voxels[position].quat[0];
+						voxels[newposition].quat[1] = voxels[position].quat[1];
+						voxels[newposition].quat[2] = voxels[position].quat[2];
+						voxels[newposition].quat[3] = voxels[position].quat[3];
+						voxels[newposition].quat[4] = voxels[position].quat[4];
+						voxels[newposition].confidence = voxels[position].confidence; 
+						voxels[newposition].imagequality = voxels[position].imagequality; 
+						voxels[newposition].alreadychecked = voxels[position].alreadychecked; 
+						voxels[newposition].grainname = voxels[position].grainname; 
+					}
 				}
 			}
 		}
-	}
-    if(shifts[i][0] > 0 && shifts[i][1] > 0)
-	{
-		for(int l=0;l<=ypoints-1;l++)
+		if(shifts[i][0] >= 0 && shifts[i][1] >= 0 && shifted == 0)
 		{
-			for(int m=0;m<=xpoints-1;m++)
+			shifted = 1;
+			for(int l=0;l<=ypoints-1;l++)
 			{
-				if((l-shifts[i][1]) >= 0 && (l-shifts[i][1]) < ypoints && (m-shifts[i][0]) >= 0 && (m-shifts[i][0]) < xpoints)
+				for(int m=0;m<=xpoints-1;m++)
 				{
-					int position = (i*xpoints*ypoints)+(l*xpoints)+m;
-					int newposition = (i*xpoints*ypoints)+((l-shifts[i][1])*xpoints)+(m-shifts[i][0]);
-					voxels[newposition].euler1 = voxels[position].euler1; 
-					voxels[newposition].euler2 = voxels[position].euler2; 
-					voxels[newposition].euler3 = voxels[position].euler3; 
-					voxels[newposition].confidence = voxels[position].confidence;	
-					voxels[newposition].alreadychecked = voxels[position].alreadychecked; 
-					voxels[newposition].grainname = voxels[position].grainname; 
+					lval = l;
+					mval = m;
+					if((lval-shifts[i][1]) >= 0 && (lval-shifts[i][1]) < ypoints && (mval-shifts[i][0]) >= 0 && (mval-shifts[i][0]) < xpoints)
+					{
+						int position = (i*xpoints*ypoints)+(lval*xpoints)+mval;
+						int newposition = (i*xpoints*ypoints)+((lval-shifts[i][1])*xpoints)+(mval-shifts[i][0]);
+						voxels[newposition].euler1 = voxels[position].euler1; 
+						voxels[newposition].euler2 = voxels[position].euler2; 
+						voxels[newposition].euler3 = voxels[position].euler3; 
+						voxels[newposition].quat[0] = voxels[position].quat[0];
+						voxels[newposition].quat[1] = voxels[position].quat[1];
+						voxels[newposition].quat[2] = voxels[position].quat[2];
+						voxels[newposition].quat[3] = voxels[position].quat[3];
+						voxels[newposition].quat[4] = voxels[position].quat[4];
+						voxels[newposition].confidence = voxels[position].confidence; 
+						voxels[newposition].imagequality = voxels[position].imagequality; 
+						voxels[newposition].alreadychecked = voxels[position].alreadychecked; 
+						voxels[newposition].grainname = voxels[position].grainname; 
+					}
 				}
 			}
 		}
-	}
+	  }
   }
 }
 int  ReconstructionFunc::form_grains()
@@ -274,6 +324,26 @@ int  ReconstructionFunc::form_grains()
   neighborhood[3] = xpoints;
   neighborhood[4] = -(xpoints*ypoints);
   neighborhood[5] = (xpoints*ypoints);
+  for(int i=0;i<xpoints*ypoints*zpoints;i++)
+  {
+	  double minneighbormis = 0;
+	  double v1ea1 = voxels[i].euler1;
+	  double v1ea2 = voxels[i].euler2;
+	  double v1ea3 = voxels[i].euler3;
+	  for(int j=0;j<6;j++)
+	  {
+          int neighbor = i+neighborhood[j];
+          if(neighbor >= 0 && neighbor < totalpoints)
+		  {
+			  double v2ea1 = voxels[(i+neighborhood[j])].euler1;
+			  double v2ea2 = voxels[(i+neighborhood[j])].euler2;
+			  double v2ea3 = voxels[(i+neighborhood[j])].euler3;
+			  double w = getmisoquat(crystruct,misorientationtolerance,v1ea1,v1ea2,v1ea3,v2ea1,v2ea2,v2ea3,n1,n2,n3);
+			  if(w > minneighbormis) minneighbormis = w;
+		  }
+	  }
+	  voxels[i].minneighbormisorientation=minneighbormis;
+  }
 
   while(noseeds == 0)
   {
@@ -293,7 +363,9 @@ int  ReconstructionFunc::form_grains()
           }
           if(seed > -1) {break;}
         }
+        if(seed > -1) {break;}
       }
+      if(seed > -1) {break;}
     }
     if(seed == -1) { noseeds = 1; }
     if(seed >= 0)
@@ -336,8 +408,14 @@ int  ReconstructionFunc::form_grains()
           }
         }
       }
+	  grains[graincount].nucleus = seed;
       grains[graincount].numvoxels = size;
       totalsize = totalsize+size;
+      if (grains[graincount].voxellist == NULL)
+      {
+        grains[graincount].voxellist = new std::vector<int>(voxelslist.size() );
+      }
+      grains[graincount].voxellist->swap(voxelslist);
       graincount++;
 	  voxelslist.clear();
 	  voxelslist.resize(initialVoxelsListSize);
@@ -514,13 +592,11 @@ void  ReconstructionFunc::find_neighbors()
   double z = 0;
   size_t nListSize = 1000;
   vector<int> nlist(nListSize, -1);
-
-
   for(int i = 1; i < numgrains; i++)
   {
     //std::cout << "find_neighbors: " << i << " of " << numgrains << " grains." << std::endl;
-    if(grains[i].gotsizemerged != 1)
-    {
+//    if(grains[i].gotsizemerged != 1)
+//    {
       size_t nListIndex = 0;
       for(int j = 0; j < (xpoints*ypoints*zpoints); j++)
       {
@@ -618,6 +694,7 @@ void  ReconstructionFunc::find_neighbors()
         sort(nlist.begin(),nlist.end());
         newend = unique(nlist.begin(),nlist.end());
         nlist.erase(newend,nlist.end());
+		nlist.erase(std::remove(nlist.begin(),nlist.end(),-1),nlist.end());
         int numneighs = int(nlist.size());
         grains[i].numneighbors = numneighs;
         grains[i].neighborlist = new std::vector<int>(numneighs);
@@ -625,8 +702,8 @@ void  ReconstructionFunc::find_neighbors()
 //        grains[i].neighborlist = nlist;
       }
       nlist.clear();
-      nlist.resize(nListSize);
-    }
+      nlist.resize(nListSize, -1);
+//    }
   }
 }
 
@@ -649,7 +726,8 @@ void  ReconstructionFunc::merge_containedgrains()
   }
   for(int j = 1; j < numgrains; j++)
   {
-    if(grains[j].gotsizemerged != 1 && grains[j].gotcontainedmerged != 1)
+//    if(grains[j].gotsizemerged != 1 && grains[j].gotcontainedmerged != 1)
+    if(grains[j].gotcontainedmerged != 1)
     {
       vector<int>* neighborlist = grains[j].neighborlist;
       int size = 0;
@@ -658,8 +736,9 @@ void  ReconstructionFunc::merge_containedgrains()
       {
         int firstneighbor = neighborlist->at(k);
         int gotcontainedmerged = grains[firstneighbor].gotcontainedmerged;
-        int gotsizemerged = grains[firstneighbor].gotsizemerged;
-        if(gotcontainedmerged != 1 && gotsizemerged != 1) nlistgood.push_back(firstneighbor);
+//        int gotsizemerged = grains[firstneighbor].gotsizemerged;
+//        if(gotcontainedmerged != 1 && gotsizemerged != 1) nlistgood.push_back(firstneighbor);
+        if(gotcontainedmerged != 1) nlistgood.push_back(firstneighbor);
       }
       int neighcount = int(nlistgood.size());
       grains[j].numneighbors = neighcount;
@@ -702,248 +781,200 @@ int  ReconstructionFunc::renumber_grains2()
   }
   return graincount;
 }
-void  ReconstructionFunc::homogenize_grains()
-{
+void  ReconstructionFunc::homogenize_grains(double quat_symm[24][5])
+{  
+  int i, j, k, ii, jj, kk, p, pp, s;
+  int sign1, sign2, sign3, sign4; // If the value is 1, it's positive; -1, negative; 0, 0.000...
+  float qT[5]; // Temporary quaternions...
+  float qN[5]; // Member quaternions inside a grain...
+  float qC[5]; // Center quaternions inside that grain...
+  float qSum[5]; // Sum of quaternions inside a cloud...
+  int numVoxel;                 // number of voxels in the grain...
+  int nucleus, nucl_site, nucl_spin;
+  int index;
+  int nid, nspin;
+  int atSurf;
+  int coin;
+  int size_threshold;
+  size_threshold = 100;          // Gonna pick inside pixel as a nucleus...
+  float q4Temp;
+  float max, min;
+  int maxid, minid, sign;
+  float dist2; // square distance between quaternions...
+  double diff, sum, tmp, wmin;
+  double g1ea1good, g1ea2good, g1ea3good, g2ea1good, g2ea2good, g2ea3good;
+  double q1tot=0, q2tot=0, q3tot=0, q4tot=0;
+  double n1,n2,n3;
+  double averagemiso;
   grains[0].avgeuler1 = 12.566;
   grains[0].avgeuler2 = 12.566;
   grains[0].avgeuler3 = 12.566;
   grains[0].averagemisorientation = 0.0;
   for(int i = 1; i < numgrains; i++)
   {
-    //std::cout << "homogenize_grains: " << i << std::endl;
-    double ea1good = 0;
-    double ea2good = 0;
-    double ea3good = 0;
-    for(int temp1 = 0; temp1 < 180; temp1++)
-    {
-      for(int temp2 = 0; temp2 < 180; temp2++)
-      {
-        for(int temp3 = 0; temp3 < 180; temp3++)
-        {
-          eulerrank[temp1][temp2][temp3] = 0;
-        }
+	averagemiso=0;
+	numVoxel = 0;
+    qSum[1] = 0.0;
+    qSum[2] = 0.0;
+    qSum[3] = 0.0;
+    qSum[4] = 0.0;
+	nucleus = -1;   
+	double maxconfidence = 0;
+	for(jj=0; jj<(xpoints*ypoints*zpoints); jj++)
+	{
+		if(voxels[jj].grainname == i && voxels[jj].confidence > maxconfidence)
+		{
+			nucleus = jj;
+			maxconfidence = voxels[jj].confidence;
+		}
+	}
+    // Selecting representative quaternions...
+    qC[1] = voxels[nucleus].quat[1];
+    qC[2] = voxels[nucleus].quat[2];
+    qC[3] = voxels[nucleus].quat[3];
+    qC[4] = voxels[nucleus].quat[4];
+    // Selecting quaternions with largest absolute valued (4th component)...
+    max = 0.0;
+    maxid = -1;
+    for(ii=0; ii<24; ii++)
+	{
+      qT[4] = quat_symm[ii][4]*qC[4] - quat_symm[ii][1]*qC[1] - quat_symm[ii][2]*qC[2] - quat_symm[ii][3]*qC[3];
+      q4Temp = (float)fabs((double)qT[4]);
+      if(q4Temp>max)
+	  {
+		  max = q4Temp;
+		  maxid = ii;
+      }
+	  else
+	  {
+		max = max;
+		maxid = maxid;
       }
     }
-    for(int j = 0; j < (xpoints*ypoints*zpoints); j++)
-    {
-      int gnum = voxels[j].grainname;
-      double ci = voxels[j].confidence;
-      if(gnum == i && ci >= minseedconfidence)
-      {
-        double g1ea1 = voxels[j].euler1;
-        double g1ea2 = voxels[j].euler2;
-        double g1ea3 = voxels[j].euler3;
-        for(int k = 0; k < 24; k++)
-        {
-          double o[3][3];
-          double ga[3][3];
-          double m1[3][3];
-          if (k == 0)
-          {
-            o[0][0] = 1.0; o[0][1] = 0.0; o[0][2] = 0.0;
-            o[1][0] = 0.0; o[1][1] = 1.0; o[1][2] = 0.0;
-            o[2][0] = 0.0; o[2][1] = 0.0; o[2][2] = 1.0;
-          }
-          else if (k == 1)
-          {
-            o[0][0] = 1.0; o[0][1] = 0.0; o[0][2] =  0.0;
-            o[1][0] = 0.0; o[1][1] = 0.0; o[1][2] = -1.0;
-            o[2][0] = 0.0; o[2][1] = 1.0; o[2][2] =  0.0;
-          }
-          else if (k == 2)
-          {
-            o[0][0] = 1.0; o[0][1] =  0.0; o[0][2] =  0.0;
-            o[1][0] = 0.0; o[1][1] = -1.0; o[1][2] =  0.0;
-            o[2][0] = 0.0; o[2][1] =  0.0; o[2][2] = -1.0;
-          }
-          else if (k == 3)
-          {
-            o[0][0] = 1.0; o[0][1] =  0.0; o[0][2] = 0.0;
-            o[1][0] = 0.0; o[1][1] =  0.0; o[1][2] = 1.0;
-            o[2][0] = 0.0; o[2][1] = -1.0; o[2][2] = 0.0;
-          }
-          else if (k == 4)
-          {
-            o[0][0] = 0.0; o[0][1] = 0.0; o[0][2] = -1.0;
-            o[1][0] = 0.0; o[1][1] = 1.0; o[1][2] =  0.0;
-            o[2][0] = 1.0; o[2][1] = 0.0; o[2][2] =  0.0;
-          }
-          else if (k == 5)
-          {
-            o[0][0] =  0.0; o[0][1] = 0.0; o[0][2] = 1.0;
-            o[1][0] =  0.0; o[1][1] = 1.0; o[1][2] = 0.0;
-            o[2][0] = -1.0; o[2][1] = 0.0; o[2][2] = 0.0;
-          }
-          else if (k == 6)
-          {
-            o[0][0] = -1.0; o[0][1] = 0.0; o[0][2] =  0.0;
-            o[1][0] =  0.0; o[1][1] = 1.0; o[1][2] =  0.0;
-            o[2][0] =  0.0; o[2][1] = 0.0; o[2][2] = -1.0;
-          }
-          else if (k == 7)
-          {
-            o[0][0] = -1.0; o[0][1] =  0.0; o[0][2] = 0.0;
-            o[1][0] =  0.0; o[1][1] = -1.0; o[1][2] = 0.0;
-            o[2][0] =  0.0; o[2][1] =  0.0; o[2][2] = 1.0;
-          }
-          else if (k == 8)
-          {
-            o[0][0] =  0.0; o[0][1] = 1.0; o[0][2] = 0.0;
-            o[1][0] = -1.0; o[1][1] = 0.0; o[1][2] = 0.0;
-            o[2][0] =  0.0; o[2][1] = 0.0; o[2][2] = 1.0;
-          }
-          else if (k == 9)
-          {
-            o[0][0] = 0.0; o[0][1] = -1.0; o[0][2] = 0.0;
-            o[1][0] = 1.0; o[1][1] =  0.0; o[1][2] = 0.0;
-            o[2][0] = 0.0; o[2][1] =  0.0; o[2][2] = 1.0;
-          }
-          else if (k == 10)
-          {
-            o[0][0] =  0.0; o[0][1] = -1.0; o[0][2] = 0.0;
-            o[1][0] =  0.0; o[1][1] =  0.0; o[1][2] = 1.0;
-            o[2][0] = -1.0; o[2][1] =  0.0; o[2][2] = 0.0;
-          }
-          else if (k == 11)
-          {
-            o[0][0] =  0.0; o[0][1] =  0.0; o[0][2] = 1.0;
-            o[1][0] = -1.0; o[1][1] =  0.0; o[1][2] = 0.0;
-            o[2][0] =  0.0; o[2][1] = -1.0; o[2][2] = 0.0;
-          }
-          else if (k == 12)
-          {
-            o[0][0] = 0.0; o[0][1] = -1.0; o[0][2] =  0.0;
-            o[1][0] = 0.0; o[1][1] =  0.0; o[1][2] = -1.0;
-            o[2][0] = 1.0; o[2][1] =  0.0; o[2][2] =  0.0;
-          }
-          else if (k == 13)
-          {
-            o[0][0] = 0.0; o[0][1] =  0.0; o[0][2] = -1.0;
-            o[1][0] = 1.0; o[1][1] =  0.0; o[1][2] =  0.0;
-            o[2][0] = 0.0; o[2][1] = -1.0; o[2][2] =  0.0;
-          }
-          else if (k == 14)
-          {
-            o[0][0] =  0.0; o[0][1] = 1.0; o[0][2] =  0.0;
-            o[1][0] =  0.0; o[1][1] = 0.0; o[1][2] = -1.0;
-            o[2][0] = -1.0; o[2][1] = 0.0; o[2][2] =  0.0;
-          }
-          else if (k == 15)
-          {
-            o[0][0] =  0.0; o[0][1] = 0.0; o[0][2] = -1.0;
-            o[1][0] = -1.0; o[1][1] = 0.0; o[1][2] =  0.0;
-            o[2][0] =  0.0; o[2][1] = 1.0; o[2][2] =  0.0;
-          }
-          else if (k == 16)
-          {
-            o[0][0] = 0.0; o[0][1] = 1.0; o[0][2] = 0.0;
-            o[1][0] = 0.0; o[1][1] = 0.0; o[1][2] = 1.0;
-            o[2][0] = 1.0; o[2][1] = 0.0; o[2][2] = 0.0;
-          }
-          else if (k == 17)
-          {
-            o[0][0] = 0.0; o[0][1] = 0.0; o[0][2] = 1.0;
-            o[1][0] = 1.0; o[1][1] = 0.0; o[1][2] = 0.0;
-            o[2][0] = 0.0; o[2][1] = 1.0; o[2][2] = 0.0;
-          }
-          else if (k == 18)
-          {
-            o[0][0] = 0.0; o[0][1] = 1.0; o[0][2] =  0.0;
-            o[1][0] = 1.0; o[1][1] = 0.0; o[1][2] =  0.0;
-            o[2][0] = 0.0; o[2][1] = 0.0; o[2][2] = -1.0;
-          }
-          else if (k == 19)
-          {
-            o[0][0] = -1.0; o[0][1] = 0.0; o[0][2] = 0.0;
-            o[1][0] =  0.0; o[1][1] = 0.0; o[1][2] = 1.0;
-            o[2][0] =  0.0; o[2][1] = 1.0; o[2][2] = 0.0;
-          }
-          else if (k == 20)
-          {
-            o[0][0] = 0.0; o[0][1] =  0.0; o[0][2] = 1.0;
-            o[1][0] = 0.0; o[1][1] = -1.0; o[1][2] = 0.0;
-            o[2][0] = 1.0; o[2][1] =  0.0; o[2][2] = 0.0;
-          }
-          else if (k == 21)
-          {
-            o[0][0] = -1.0; o[0][1] =  0.0; o[0][2] =  0.0;
-            o[1][0] =  0.0; o[1][1] =  0.0; o[1][2] = -1.0;
-            o[2][0] =  0.0; o[2][1] = -1.0; o[2][2] =  0.0;
-          }
-          else if (k == 22)
-          {
-            o[0][0] =  0.0; o[0][1] =  0.0; o[0][2] = -1.0;
-            o[1][0] =  0.0; o[1][1] = -1.0; o[1][2] =  0.0;
-            o[2][0] = -1.0; o[2][1] =  0.0; o[2][2] =  0.0;
-          }
-          else if (k == 23)
-          {
-            o[0][0] =  0.0; o[0][1] = -1.0; o[0][2] =  0.0;
-            o[1][0] = -1.0; o[1][1] =  0.0; o[1][2] =  0.0;
-            o[2][0] =  0.0; o[2][1] =  0.0; o[2][2] = -1.0;
-          }
-          ga[0][0] = cos(g1ea1)*cos(g1ea3)-sin(g1ea1)*sin(g1ea3)*cos(g1ea2);
-          ga[0][1] = sin(g1ea1)*cos(g1ea3)+cos(g1ea1)*sin(g1ea3)*cos(g1ea2);
-          ga[0][2] = sin(g1ea3)*sin(g1ea2);
-          ga[1][0] = -cos(g1ea1)*sin(g1ea3)-sin(g1ea1)*cos(g1ea3)*cos(g1ea2);
-          ga[1][1] = -sin(g1ea1)*sin(g1ea3)+cos(g1ea1)*cos(g1ea3)*cos(g1ea2);
-          ga[1][2] =  cos(g1ea3)*sin(g1ea2);
-          ga[2][0] =  sin(g1ea1)*sin(g1ea2);
-          ga[2][1] = -cos(g1ea1)*sin(g1ea2);
-          ga[2][2] =  cos(g1ea2);
-          m1[0][0] = o[0][0]*ga[0][0] + o[0][1]*ga[1][0] + o[0][2]*ga[2][0];
-          m1[0][1] = o[0][0]*ga[0][1] + o[0][1]*ga[1][1] + o[0][2]*ga[2][1];
-          m1[0][2] = o[0][0]*ga[0][2] + o[0][1]*ga[1][2] + o[0][2]*ga[2][2];
-          m1[1][0] = o[1][0]*ga[0][0] + o[1][1]*ga[1][0] + o[1][2]*ga[2][0];
-          m1[1][1] = o[1][0]*ga[0][1] + o[1][1]*ga[1][1] + o[1][2]*ga[2][1];
-          m1[1][2] = o[1][0]*ga[0][2] + o[1][1]*ga[1][2] + o[1][2]*ga[2][2];
-          m1[2][0] = o[2][0]*ga[0][0] + o[2][1]*ga[1][0] + o[2][2]*ga[2][0];
-          m1[2][1] = o[2][0]*ga[0][1] + o[2][1]*ga[1][1] + o[2][2]*ga[2][1];
-          m1[2][2] = o[2][0]*ga[0][2] + o[2][1]*ga[1][2] + o[2][2]*ga[2][2];
-          double ea2 = acos(m1[2][2]);
-          double cosine3 = (m1[1][2]/sin(ea2));
-          double sine3 = (m1[0][2]/sin(ea2));
-          double cosine1 = (-m1[2][1]/sin(ea2));
-          double sine1 = (m1[2][0]/sin(ea2));
-          double ea3 = acos(cosine3);
-          double ea1 = acos(cosine1);
-          if(sine3 < 0) ea3 = (2*m_pi)-ea3;
-          if(sine1 < 0) ea1 = (2*m_pi)-ea1;
-          int ea1bin = int(ea1/0.0087266);
-          int ea2bin = int(ea2/0.0087266);
-          int ea3bin = int(ea3/0.0087266);
-          if(ea1bin <= 179 && ea2bin <= 179 && ea3bin <= 179) eulerrank[ea1bin][ea2bin][ea3bin]++;
-        }
-      }
+    qT[1] = quat_symm[maxid][1]*qC[4] + quat_symm[maxid][4]*qC[1] - quat_symm[maxid][2]*qC[3] + quat_symm[maxid][3]*qC[2]; 
+    qT[2] = quat_symm[maxid][2]*qC[4] + quat_symm[maxid][4]*qC[2] - quat_symm[maxid][3]*qC[1] + quat_symm[maxid][1]*qC[3]; 
+    qT[3] = quat_symm[maxid][3]*qC[4] + quat_symm[maxid][4]*qC[3] - quat_symm[maxid][1]*qC[2] + quat_symm[maxid][2]*qC[1]; 
+    qT[4] = quat_symm[maxid][4]*qC[4] - quat_symm[maxid][1]*qC[1] - quat_symm[maxid][2]*qC[2] - quat_symm[maxid][3]*qC[3];
+    if(qT[4]<0.0)
+	{         // Change the sign so that 4th component is positive...
+      qT[1] = (-1.0)*qT[1];
+      qT[2] = (-1.0)*qT[2];
+      qT[3] = (-1.0)*qT[3];
+      qT[4] = (-1.0)*qT[4];
     }
-    double current = 0;
-    for(int temp4 = 0; temp4 < 180; temp4++)
-    {
-      for(int temp5 = 0; temp5 < 180; temp5++)
-      {
-        for(int temp6 = 0; temp6 < 180; temp6++)
-        {
-          if(eulerrank[temp4][temp5][temp6] > current)
-          {
-            ea1good = (temp4*0.0087266)+(0.0087266/2.0);
-            ea2good = (temp5*0.0087266)+(0.0087266/2.0);
-            ea3good = (temp6*0.0087266)+(0.0087266/2.0);
-            current = eulerrank[temp4][temp5][temp6];
-          }
-        }
-      }
+    // Now begins to calculate the avg. orientation...
+    for(jj=0; jj<(xpoints*ypoints*zpoints); jj++)
+	{
+		if(voxels[jj].grainname == i && voxels[jj].confidence > minseedconfidence)
+		{
+		  numVoxel++;
+		  for(pp=1; pp<5; pp++)
+		  {
+			qC[pp] = voxels[jj].quat[pp];
+		  }
+		  min = 10.0;
+		  minid = -1;
+		  sign = 1;
+		  for(kk=0; kk<24; kk++)
+		  {
+			 qN[1] = quat_symm[kk][1]*qC[4] + quat_symm[kk][4]*qC[1] - quat_symm[kk][2]*qC[3] + quat_symm[kk][3]*qC[2]; 
+			 qN[2] = quat_symm[kk][2]*qC[4] + quat_symm[kk][4]*qC[2] - quat_symm[kk][3]*qC[1] + quat_symm[kk][1]*qC[3]; 
+			 qN[3] = quat_symm[kk][3]*qC[4] + quat_symm[kk][4]*qC[3] - quat_symm[kk][1]*qC[2] + quat_symm[kk][2]*qC[1]; 
+			 qN[4] = quat_symm[kk][4]*qC[4] - quat_symm[kk][1]*qC[1] - quat_symm[kk][2]*qC[2] - quat_symm[kk][3]*qC[3];
+			 dist2 = 2.0 * ( 1 -( qT[4]*qN[4] + qT[1]*qN[1] + qT[2]*qN[2] + qT[3]*qN[3] ) );
+			 if(dist2<0.0)
+			 {
+			   dist2 = 0.0;
+			 }
+			 if(dist2<min)
+			 {
+			   min = dist2;
+			   minid = kk;
+			   sign = 1;
+			 }
+			 else
+			 {
+			   min = min;
+			   minid = minid;
+			   sign = sign;
+			 }
+			 dist2 = 2.0 * ( 1 + ( qT[4]*qN[4] + qT[1]*qN[1] + qT[2]*qN[2] + qT[3]*qN[3] ) );	
+			 if(dist2<0.0)
+			 {
+			   dist2 = 0.0;
+			 }
+			 if(dist2<min)
+			 {
+			   min = dist2;
+			   minid = kk;
+			   sign = -1;
+			 }
+			 else
+			 {
+			   min = min;
+			   minid = minid;
+			   sign = sign;
+			 }
+		   }
+		   qN[1] = quat_symm[minid][1]*qC[4] + quat_symm[minid][4]*qC[1] - quat_symm[minid][2]*qC[3] + quat_symm[minid][3]*qC[2]; 
+		   qN[2] = quat_symm[minid][2]*qC[4] + quat_symm[minid][4]*qC[2] - quat_symm[minid][3]*qC[1] + quat_symm[minid][1]*qC[3]; 
+		   qN[3] = quat_symm[minid][3]*qC[4] + quat_symm[minid][4]*qC[3] - quat_symm[minid][1]*qC[2] + quat_symm[minid][2]*qC[1]; 
+		   qN[4] = quat_symm[minid][4]*qC[4] - quat_symm[minid][1]*qC[1] - quat_symm[minid][2]*qC[2] - quat_symm[minid][3]*qC[3];
+		   if(sign==-1)
+		   {
+			 qN[1] = (-1.0)*qN[1];
+			 qN[2] = (-1.0)*qN[2];
+			 qN[3] = (-1.0)*qN[3];
+			 qN[4] = (-1.0)*qN[4];
+		   }
+		   for(p=1; p<5; p++)
+		   {
+			 qSum[p] = qSum[p] + qN[p];
+		   }
+		   g1ea1good = voxels[nucleus].euler1;
+		   g1ea2good = voxels[nucleus].euler2;
+		   g1ea3good = voxels[nucleus].euler3;
+		   g2ea1good = voxels[jj].euler1;
+		   g2ea2good = voxels[jj].euler2;
+		   g2ea3good = voxels[jj].euler3;
+          double wmin = getmisoquat(crystruct,misorientationtolerance,g1ea1good,g1ea2good,g1ea3good,g2ea1good,g2ea2good,g2ea3good,n1,n2,n3);
+		  averagemiso=averagemiso+wmin;
+		}
     }
+	averagemiso=averagemiso/(float)numVoxel;
+    for(int s=1; s<5; s++)
+	{
+//		grains[i].avg_quat[s] = qSum[s];
+		grains[i].avg_quat[s] = qSum[s]/(float)numVoxel;
+    }
+	double q1tot = grains[i].avg_quat[1];
+	double q2tot = grains[i].avg_quat[2];
+	double q3tot = grains[i].avg_quat[3];
+	double q4tot = grains[i].avg_quat[4];
+	double normalizer = (q1tot*q1tot)+(q2tot*q2tot)+(q3tot*q3tot)+(q4tot*q4tot);
+	normalizer = pow(normalizer,0.5);
+	q1tot = q1tot/normalizer;
+	q2tot = q2tot/normalizer;
+	q3tot = q3tot/normalizer;
+	q4tot = q4tot/normalizer;
+	diff=atan2(q2tot,q1tot);
+	sum=atan2(q3tot,q4tot);
+	double ea1good=(diff+sum);
+	double ea3good=(sum-diff);
+	tmp=(q3tot*q3tot)+(q4tot*q4tot);
+	tmp = pow(tmp,0.5);
+	if(tmp > 1.0) tmp=1.0;
+	double ea2good=2*acos(tmp);
     grains[i].avgeuler1 = ea1good;
     grains[i].avgeuler2 = ea2good;
     grains[i].avgeuler3 = ea3good;
     double avgmiso = 0;
     double totalcount = 0;
-    double n1,n2,n3;
     for(int iter = 0; iter < (xpoints*ypoints*zpoints); iter++)
     {
       int gnum = voxels[iter].grainname;
 //      double ci = voxels[iter].confidence;
-      if(gnum == i)
+	  if(gnum == i && voxels[iter].confidence > minseedconfidence)
       {
         double angcur = 1000000;
         double g1ea1 = grains[i].avgeuler1;
@@ -954,7 +985,7 @@ void  ReconstructionFunc::homogenize_grains()
         double g2ea3 = voxels[iter].euler3;
         double wmin = getmisoquat(crystruct,misorientationtolerance,g1ea1,g1ea2,g1ea3,g2ea1,g2ea2,g2ea3,n1,n2,n3);
         voxels[iter].misorientation = wmin;
-        avgmiso = avgmiso + angcur;
+        avgmiso = avgmiso + wmin;
         totalcount++;
       }
     }
@@ -967,13 +998,6 @@ int  ReconstructionFunc::load_data(string readname)
   ifstream inputFile;
   inputFile.open(readname.c_str());
   int gnum;
-  double ea1;
-  double ea2;
-  double ea3;
-  double x;
-  double y;
-  double z;
-  double ci;
   string dummy;
   numgrains = 0;
   for(int i = 0; i < 12; i++)
@@ -1000,7 +1024,8 @@ void  ReconstructionFunc::merge_twins ()
   double n1,n2,n3;
   for(int i = 1; i < numgrains; i++)
   {
-    if(grains[i].gotsizemerged != 1 && grains[i].gotcontainedmerged != 1 && grains[i].twinnewnumberbeenset != 1)
+//    if(grains[i].gotsizemerged != 1 && grains[i].gotcontainedmerged != 1 && grains[i].twinnewnumberbeenset != 1)
+    if(grains[i].twinnewnumberbeenset != 1)
     {
       twinlist.push_back(i);
       int tsize = int(twinlist.size());
@@ -1251,6 +1276,7 @@ void  ReconstructionFunc::find_goodneighbors()
       sort(nlist.begin(),nlist.end());
       newend = unique(nlist.begin(),nlist.end());
       nlist.erase(newend,nlist.end());
+	  nlist.erase(std::remove(nlist.begin(),nlist.end(),-1),nlist.end());
       neighcount = int(nlist.size());
       grains[i].numneighbors = neighcount;
       if (grains[i].neighborlist == NULL)
@@ -1260,7 +1286,7 @@ void  ReconstructionFunc::find_goodneighbors()
       grains[i].neighborlist->swap(nlist);
     }
     nlist.clear();
-    nlist.resize(nListSize);
+    nlist.resize(nListSize,-1);
     nListIndex = 0;
   }
 }
@@ -2601,6 +2627,27 @@ void  ReconstructionFunc::write_volume(string writename11)
     if(grainname < 100) outFile << " ";
     if(grainname < 10) outFile << " ";
     outFile << grainname;
+  }
+  outFile << endl;
+  outFile << "SCALARS Misorientation float" << endl;
+  outFile << "LOOKUP_TABLE default" << endl;
+  for (int i = 0; i < (xpoints*ypoints*zpoints); i++)
+  {
+    if(i%20 == 0 && i > 0) outFile << endl;
+	outFile << voxels[i].misorientation << " ";
+  }
+  outFile << endl;
+  outFile << "COLOR_SCALARS colors 3" << endl;
+  double red,green,blue;
+  int gnum;
+  for (int i = 0; i < (xpoints*ypoints*zpoints); i++)
+  {
+	gnum = voxels[i].grainname;
+	red = grains[gnum].red;
+	green = grains[gnum].green;
+	blue = grains[gnum].blue;
+    if(i%20 == 0 && i > 0) outFile << endl;
+	outFile << red << " " << green << " " << blue << endl;
   }
   outFile << endl;
   if(mergetwinsoption == 1)
