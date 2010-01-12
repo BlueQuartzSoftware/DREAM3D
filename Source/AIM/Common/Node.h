@@ -9,8 +9,8 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-#ifndef _VOXEL_H_
-#define _VOXEL_H_
+#ifndef _Node_H_
+#define _Node_H_
 
 #if defined (_MSC_VER)
 #define WIN32_LEAN_AND_MEAN		// Exclude rarely-used stuff from Windows headers
@@ -20,49 +20,28 @@
 #include <vector>
 
 /**
-* @class Voxel Voxel.h AIM/Common/Voxel.h
+* @class Node Node.h AIM/Common/Node.h
 * @brief Support class for the MicroGen3D class
 * @author Michael A. Jackson for BlueQuartz Software, Dr. Michael Groeber for USAFRL
 * @date Nov 4, 2009
 * @version 1.0
 */
-class Voxel
+class Node
 {
 public:
-    Voxel();
-    virtual ~Voxel();
+    Node();
+    virtual ~Node();
 
-    int grainname;
-    double confidence;
-    double imagequality;
-    int alreadychecked;
+    int nodeKind; // 2 for binary, 3 for triple, and so on...
     double xc;
     double yc;
     double zc;
-    double euler1;
-    double euler2;
-    double euler3;
-    int hasneighbor;
-    int neighbor;
-    double minneighbormisorientation;
-    double misorientation;
-    int surfacevoxel;
-    int neighbor1;
-    int neighbor2;
-    int neighbor3;
-    int neighbor4;
-    int neighbor5;
-    int neighbor6;
-    int available;
-    int available90;
-    int inside;
-	double quat[5];
-    std::vector<int> voxneighlist;
+    int newNodeID; // newID for used nodes; if not used, it's -1...
 
   private:
 
-    Voxel(const Voxel&);    // Copy Constructor Not Implemented
-      void operator=(const Voxel&);  // Operator '=' Not Implemented
+    Node(const Node&);    // Copy Constructor Not Implemented
+      void operator=(const Node&);  // Operator '=' Not Implemented
 };
 
-#endif /* VOXEL_H_ */
+#endif /* Node_H_ */

@@ -130,6 +130,10 @@ int32 AngFileReader::readFile(std::string angFilename)  {
   }
 
   //--Allocate the vectors to hold all the data
+ _nrows = 129;
+ _ncols_even = 137;
+ _xstep = 0.125;
+ _ystep = 0.125;
  uint32 dataSize = _nrows * _ncols_even;
  _phi1 = AIMArray<float>::New();
  _phi = AIMArray<float>::New();

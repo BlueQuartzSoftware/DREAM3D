@@ -40,7 +40,7 @@ void AngFileHelper::loadData(Voxel voxels[],
   const int init = -1;
   const double badeuler = 12.566370010375977;
   size_t index = 0;
-  int nSlices = m_ZIndexEnd - m_ZIndexStart;
+  int nSlices = (m_ZIndexEnd - m_ZIndexStart);
   for (int k = 0; k < nSlices; k++)
   {
     if (m_Cancel == true) { break; }
@@ -63,6 +63,7 @@ void AngFileHelper::loadData(Voxel voxels[],
       float* xcPtr = reader->getXData()->getPointer(0);
       float* ycPtr = reader->getYData()->getPointer(0);
       float* confPtr = reader->getConfidenceIndexData()->getPointer(0);
+      float* imqualPtr = reader->getImageQualityData()->getPointer(0);
       for (size_t j = 0; j < ypoints; j++)
       {
       //  if (j > 0 && j < ypoints - 1)
@@ -76,6 +77,7 @@ void AngFileHelper::loadData(Voxel voxels[],
             voxels[index].xc = xcPtr[readerIndex];  // X
             voxels[index].yc = ycPtr[readerIndex];  // Y
            // >> junk1   // Image Quality
+            voxels[index].imagequality = imqualPtr[readerIndex];// Confidence
             voxels[index].confidence = confPtr[readerIndex];// Confidence
            // >> junk2  // Phase Data
            // >> junk3
@@ -83,9 +85,23 @@ void AngFileHelper::loadData(Voxel voxels[],
             voxels[index].zc = k * resz;
             voxels[index].alreadychecked = zero;
             voxels[index].grainname = init;
-            if (voxels[index].euler1 == badeuler
+	        double s=sin(0.5*euler2Ptr[readerIndex]);
+		    double c=cos(0.5*euler2Ptr[readerIndex]);
+	        double s1=sin(0.5*(euler1Ptr[readerIndex]-euler3Ptr[readerIndex]));
+			double c1=cos(0.5*(euler1Ptr[readerIndex]-euler3Ptr[readerIndex]));
+			double s2=sin(0.5*(euler1Ptr[readerIndex]+euler3Ptr[readerIndex]));
+		    double c2=cos(0.5*(euler1Ptr[readerIndex]+euler3Ptr[readerIndex]));
+			double q1 = s*c1;
+			double q2 = s*s1;
+			double q3 = c*s2;
+			double q4 = c*c2;
+			voxels[index].quat[1] = q1;
+			voxels[index].quat[2] = q2;
+			voxels[index].quat[3] = q3;
+			voxels[index].quat[4] = q4;
+            if ((voxels[index].euler1 == badeuler
                 && voxels[index].euler2 == badeuler
-                && voxels[index].euler3 == badeuler)
+				&& voxels[index].euler3 == badeuler) || (voxels[index].imagequality < 300.0 && voxels[index].confidence < 0.1))
             {
               voxels[index].confidence = zero;
               voxels[index].alreadychecked = checked;

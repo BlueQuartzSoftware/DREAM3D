@@ -34,16 +34,19 @@ class Grain
     Grain();
     virtual ~Grain();
 
+	int nucleus;
     int numvoxels;
     int numneighbors;
     int newgrainname;
     std::vector<int>* neighborlist;
+    std::vector<int>* voxellist;
     int gotsizemerged;
     int gotcontainedmerged;
     int gottwinmerged;
     double avgeuler1;
     double avgeuler2;
     double avgeuler3;
+	double avg_quat[5];
     double centroidx;
     double centroidy;
     double centroidz;

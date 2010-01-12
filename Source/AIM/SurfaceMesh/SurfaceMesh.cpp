@@ -226,12 +226,6 @@ void SurfaceMesh::compute()
 
     // store cVertex information of bottom layer onto temporary vertex...
     m->copy_cNodes_2_pNodes();
-
-
-    if (nTriangle > 0 && tnIEdge > 0)
-    {
-
-    }
   }
 
   CHECK_FOR_CANCELED(Surface Meshing)
@@ -259,7 +253,6 @@ void SurfaceMesh::compute()
   {
 
     // get numbers of face edges, inner edges, previous triangles and current triangles...
-
     m->UET_get_number_current_edges (&nFEdge, &nIEdge, i, EdgesFileIndex);
     m->UET_get_number_previous_current_triangles (&npTriangle, &ncTriangle, i, TrianglesFileIndex);
 
@@ -293,7 +286,6 @@ void SurfaceMesh::compute()
     }
 
     // make cTriangle into pTriangle...
-//    delete [] pTriangle;
 	npTriangle = ncTriangle;
     m->UET_copy_triangles (npTriangle);
   }
@@ -316,8 +308,8 @@ void SurfaceMesh::compute()
                                       lockquads);
 
   }
-
-  progressMessage(AIM_STRING("Surface Meshing Complete"), 100 );*/
+*/
+  progressMessage(AIM_STRING("Surface Meshing Complete"), 100 );
 }
 
 // -----------------------------------------------------------------------------

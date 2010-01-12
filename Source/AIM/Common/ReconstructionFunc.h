@@ -108,9 +108,6 @@ public:
 	int nummicros;
 
 // sizes are needed. Dont't change
-	double eulerrank[180][180][180];
-
-// sizes are needed. Dont't change
   int eulercount[36][36][36];
 
 	void loadSlices();
@@ -124,7 +121,7 @@ public:
 	void find_neighbors();
 	void merge_containedgrains();
 	int renumber_grains2();
-	void homogenize_grains();
+	void homogenize_grains(double quat_symm[24][5]);
 	void merge_twins();
 	void characterize_twins();
 	int renumber_grains3();
