@@ -32,8 +32,8 @@ GrainGeneratorFunc::GrainGeneratorFunc() :
   packedgrain(NULL),
   gsizes(NULL),
   gremovals(NULL),
-  eulerbin(NULL),
-  orient(NULL),
+  eulerodf(NULL),
+  axisodf(NULL),
   gridfine(NULL),
   gridcourse(NULL),
   actualmisobin(NULL),
@@ -51,8 +51,8 @@ GrainGeneratorFunc::~GrainGeneratorFunc()
   delete [] packedgrain;
   delete [] gsizes;
   delete [] gremovals;
-  delete [] eulerbin;
-  delete [] orient;
+  delete [] eulerodf;
+  delete [] axisodf;
   delete [] gridfine;
   delete [] gridcourse;
   delete [] actualmisobin;
@@ -71,9 +71,9 @@ void GrainGeneratorFunc::initialize(int32 m_NumGrains, int32 m_ShapeClass,
   resy = m_YResolution;
   resz = m_ZResolution;
 
-  resx1 = 4*m_XResolution;
-  resy1 = 4*m_YResolution;
-  resz1 = 4*m_ZResolution;
+  resx1 = 2*m_XResolution;
+  resy1 = 2*m_YResolution;
+  resz1 = 2*m_ZResolution;
 
   numgrains = m_NumGrains;
   shapeclass = m_ShapeClass;
@@ -85,7 +85,8 @@ void GrainGeneratorFunc::initialize(int32 m_NumGrains, int32 m_ShapeClass,
   packedgrain = new Grain[numgrains];
   gsizes = new int[numgrains];
   gremovals = new int[numgrains];
-  orient = new Orient[5000];
+  eulerodf = new Orient[18*18*18];
+  axisodf = new Orient[18*18*18];
   actualmisobin = new Bin[10];
   simmisobin = new Bin[10];
   actualmicrobin = new Bin[10];
@@ -96,26 +97,10 @@ void GrainGeneratorFunc::initialize2(int32 xpoints, int32 ypoints, int32 zpoints
 {
 
   totalpoints = xpoints * ypoints * zpoints;
-  totalpoints1 = (xpoints/4) * (ypoints/4) * (zpoints/4);
+  totalpoints1 = (xpoints/2) * (ypoints/2) * (zpoints/2);
 
   gridfine = new Voxel[totalpoints];
   gridcourse = new Voxel[totalpoints1];
-}
-
-void GrainGeneratorFunc::write_eulerangles(string writename10)
-{
-  //std::cout << "GrainGeneratorFunc::write_volume1: '" << writename10 << "'" << std::endl;
-  ofstream outFile;
-  outFile.open(writename10.c_str());
-  outFile << numgrains << endl;
-  for (int i = 0; i < numgrains; i++)
-  {
-    double ea1 = grains[i].euler1;
-    double ea2 = grains[i].euler2;
-    double ea3 = grains[i].euler3;
-    outFile << i << " " << ea1 << " " << ea2 << " " << ea3 << endl;
-  }
-  outFile.close();
 }
 
 void  GrainGeneratorFunc::loadStatsData(string inname1)
@@ -188,309 +173,45 @@ void  GrainGeneratorFunc::loadStatsData(string inname1)
 }
 
 
-void  GrainGeneratorFunc::loadorientData(string inname6, int numorients)
+void  GrainGeneratorFunc::loadorientData(string inname6)
 {
-    ifstream inputFile;
-    inputFile.open(inname6.c_str());
+  ifstream inputFile;
+  inputFile.open(inname6.c_str());
   int count = 0;
-  double r1x;
-  double r1y;
-  double r1z;
-  double r2x;
-  double r2y;
-  double r2z;
-  double r3x;
-  double r3y;
-  double r3z;
+  double density;
   inputFile >> numorients;
-  for (long k = 0; k < numorients; k++)
-    {
-    inputFile >> r1x >> r1y >> r1z >> r2x >> r2y >> r2z >> r3x >> r3y >> r3z;
-    double denom1 = pow((r1x*r1x+r1y*r1y+r1z*r1z),0.5);
-    double denom2 = pow((r2x*r2x+r2y*r2y+r2z*r2z),0.5);
-    double denom3 = pow((r3x*r3x+r3y*r3y+r3z*r3z),0.5);
-    r1x = r1x/denom1;
-    r1y = r1y/denom1;
-    r1z = r1z/denom1;
-    r2x = r2x/denom2;
-    r2y = r2y/denom2;
-    r2z = r2z/denom2;
-    r3x = r3x/denom3;
-    r3y = r3y/denom3;
-    r3z = r3z/denom3;
-    orient[k].rad1x = r1x;
-    orient[k].rad1y = r1y;
-    orient[k].rad1z = r1z;
-    orient[k].rad2x = r2x;
-    orient[k].rad2y = r2y;
-    orient[k].rad2z = r2z;
-    orient[k].rad3x = r3x;
-    orient[k].rad3y = r3y;
-    orient[k].rad3z = r3z;
-        count++;
-    }
-    inputFile.close();
+  for (long k = 0; k < (18*18*18); k++)
+  {
+    inputFile >> density;
+	axisodf[k].density = density;
+    count++;
+  }
+  inputFile.close();
 }
 
-void  GrainGeneratorFunc::loadeulerData(string inname7, int numeulers)
+void  GrainGeneratorFunc::loadeulerData(string inname7)
 {
-    ifstream inputFile;
-    inputFile.open(inname7.c_str());
-//  int count = 0;
-  double g1ea1;
-  double g1ea2;
-  double g1ea3;
-  double ea1;
-  double ea2;
-  double ea3;
-  int totalcount = 0;
-//  int bnum=0;
-  inputFile >> numeulers;
-  for (long iter = 0; iter < numeulers; iter++)
-    {
-    inputFile >> g1ea1 >> g1ea2 >> g1ea3;
-    for(int k = 0; k < 24; k++)
-    {
-      double o[3][3];
-      double ga[3][3];
-      double m1[3][3];
-      double mo[3][3];
-      if (k == 0)
-      {
-        o[0][0] = 1.0; o[0][1] = 0.0; o[0][2] = 0.0;
-        o[1][0] = 0.0; o[1][1] = 1.0; o[1][2] = 0.0;
-        o[2][0] = 0.0; o[2][1] = 0.0; o[2][2] = 1.0;
-      }
-      else if (k == 1)
-      {
-        o[0][0] = 1.0; o[0][1] = 0.0; o[0][2] =  0.0;
-        o[1][0] = 0.0; o[1][1] = 0.0; o[1][2] = -1.0;
-        o[2][0] = 0.0; o[2][1] = 1.0; o[2][2] =  0.0;
-      }
-      else if (k == 2)
-      {
-        o[0][0] = 1.0; o[0][1] =  0.0; o[0][2] =  0.0;
-        o[1][0] = 0.0; o[1][1] = -1.0; o[1][2] =  0.0;
-        o[2][0] = 0.0; o[2][1] =  0.0; o[2][2] = -1.0;
-      }
-      else if (k == 3)
-      {
-        o[0][0] = 1.0; o[0][1] =  0.0; o[0][2] = 0.0;
-        o[1][0] = 0.0; o[1][1] =  0.0; o[1][2] = 1.0;
-        o[2][0] = 0.0; o[2][1] = -1.0; o[2][2] = 0.0;
-      }
-      else if (k == 4)
-      {
-        o[0][0] = 0.0; o[0][1] = 0.0; o[0][2] = -1.0;
-        o[1][0] = 0.0; o[1][1] = 1.0; o[1][2] =  0.0;
-        o[2][0] = 1.0; o[2][1] = 0.0; o[2][2] =  0.0;
-      }
-      else if (k == 5)
-      {
-        o[0][0] =  0.0; o[0][1] = 0.0; o[0][2] = 1.0;
-        o[1][0] =  0.0; o[1][1] = 1.0; o[1][2] = 0.0;
-        o[2][0] = -1.0; o[2][1] = 0.0; o[2][2] = 0.0;
-      }
-      else if (k == 6)
-      {
-        o[0][0] = -1.0; o[0][1] = 0.0; o[0][2] =  0.0;
-        o[1][0] =  0.0; o[1][1] = 1.0; o[1][2] =  0.0;
-        o[2][0] =  0.0; o[2][1] = 0.0; o[2][2] = -1.0;
-      }
-      else if (k == 7)
-      {
-        o[0][0] = -1.0; o[0][1] =  0.0; o[0][2] = 0.0;
-        o[1][0] =  0.0; o[1][1] = -1.0; o[1][2] = 0.0;
-        o[2][0] =  0.0; o[2][1] =  0.0; o[2][2] = 1.0;
-      }
-      else if (k == 8)
-      {
-        o[0][0] =  0.0; o[0][1] = 1.0; o[0][2] = 0.0;
-        o[1][0] = -1.0; o[1][1] = 0.0; o[1][2] = 0.0;
-        o[2][0] =  0.0; o[2][1] = 0.0; o[2][2] = 1.0;
-      }
-      else if (k == 9)
-      {
-        o[0][0] = 0.0; o[0][1] = -1.0; o[0][2] = 0.0;
-        o[1][0] = 1.0; o[1][1] =  0.0; o[1][2] = 0.0;
-        o[2][0] = 0.0; o[2][1] =  0.0; o[2][2] = 1.0;
-      }
-      else if (k == 10)
-      {
-        o[0][0] =  0.0; o[0][1] = -1.0; o[0][2] = 0.0;
-        o[1][0] =  0.0; o[1][1] =  0.0; o[1][2] = 1.0;
-        o[2][0] = -1.0; o[2][1] =  0.0; o[2][2] = 0.0;
-      }
-      else if (k == 11)
-      {
-        o[0][0] =  0.0; o[0][1] =  0.0; o[0][2] = 1.0;
-        o[1][0] = -1.0; o[1][1] =  0.0; o[1][2] = 0.0;
-        o[2][0] =  0.0; o[2][1] = -1.0; o[2][2] = 0.0;
-      }
-      else if (k == 12)
-      {
-        o[0][0] = 0.0; o[0][1] = -1.0; o[0][2] =  0.0;
-        o[1][0] = 0.0; o[1][1] =  0.0; o[1][2] = -1.0;
-        o[2][0] = 1.0; o[2][1] =  0.0; o[2][2] =  0.0;
-      }
-      else if (k == 13)
-      {
-        o[0][0] = 0.0; o[0][1] =  0.0; o[0][2] = -1.0;
-        o[1][0] = 1.0; o[1][1] =  0.0; o[1][2] =  0.0;
-        o[2][0] = 0.0; o[2][1] = -1.0; o[2][2] =  0.0;
-      }
-      else if (k == 14)
-      {
-        o[0][0] =  0.0; o[0][1] = 1.0; o[0][2] =  0.0;
-        o[1][0] =  0.0; o[1][1] = 0.0; o[1][2] = -1.0;
-        o[2][0] = -1.0; o[2][1] = 0.0; o[2][2] =  0.0;
-      }
-      else if (k == 15)
-      {
-        o[0][0] =  0.0; o[0][1] = 0.0; o[0][2] = -1.0;
-        o[1][0] = -1.0; o[1][1] = 0.0; o[1][2] =  0.0;
-        o[2][0] =  0.0; o[2][1] = 1.0; o[2][2] =  0.0;
-      }
-      else if (k == 16)
-      {
-        o[0][0] = 0.0; o[0][1] = 1.0; o[0][2] = 0.0;
-        o[1][0] = 0.0; o[1][1] = 0.0; o[1][2] = 1.0;
-        o[2][0] = 1.0; o[2][1] = 0.0; o[2][2] = 0.0;
-      }
-      else if (k == 17)
-      {
-        o[0][0] = 0.0; o[0][1] = 0.0; o[0][2] = 1.0;
-        o[1][0] = 1.0; o[1][1] = 0.0; o[1][2] = 0.0;
-        o[2][0] = 0.0; o[2][1] = 1.0; o[2][2] = 0.0;
-      }
-      else if (k == 18)
-      {
-        o[0][0] = 0.0; o[0][1] = 1.0; o[0][2] =  0.0;
-        o[1][0] = 1.0; o[1][1] = 0.0; o[1][2] =  0.0;
-        o[2][0] = 0.0; o[2][1] = 0.0; o[2][2] = -1.0;
-      }
-      else if (k == 19)
-      {
-        o[0][0] = -1.0; o[0][1] = 0.0; o[0][2] = 0.0;
-        o[1][0] =  0.0; o[1][1] = 0.0; o[1][2] = 1.0;
-        o[2][0] =  0.0; o[2][1] = 1.0; o[2][2] = 0.0;
-      }
-      else if (k == 20)
-      {
-        o[0][0] = 0.0; o[0][1] =  0.0; o[0][2] = 1.0;
-        o[1][0] = 0.0; o[1][1] = -1.0; o[1][2] = 0.0;
-        o[2][0] = 1.0; o[2][1] =  0.0; o[2][2] = 0.0;
-      }
-      else if (k == 21)
-      {
-        o[0][0] = -1.0; o[0][1] =  0.0; o[0][2] =  0.0;
-        o[1][0] =  0.0; o[1][1] =  0.0; o[1][2] = -1.0;
-        o[2][0] =  0.0; o[2][1] = -1.0; o[2][2] =  0.0;
-      }
-      else if (k == 22)
-      {
-        o[0][0] =  0.0; o[0][1] =  0.0; o[0][2] = -1.0;
-        o[1][0] =  0.0; o[1][1] = -1.0; o[1][2] =  0.0;
-        o[2][0] = -1.0; o[2][1] =  0.0; o[2][2] =  0.0;
-      }
-      else if (k == 23)
-      {
-        o[0][0] =  0.0; o[0][1] = -1.0; o[0][2] =  0.0;
-        o[1][0] = -1.0; o[1][1] =  0.0; o[1][2] =  0.0;
-        o[2][0] =  0.0; o[2][1] =  0.0; o[2][2] = -1.0;
-      }
-      for(int p = 0; p < 4; p++)
-      {
-        double o2[3][3];
-        if (p == 0)
-        {
-          o2[0][0] = 1.0; o2[0][1] = 0.0; o2[0][2] = 0.0;
-          o2[1][0] = 0.0; o2[1][1] = 1.0; o2[1][2] = 0.0;
-          o2[2][0] = 0.0; o2[2][1] = 0.0; o2[2][2] = 1.0;
-        }
-        else if (p == 1)
-        {
-          o2[0][0] = 1.0; o2[0][1] = 0.0; o2[0][2] =  0.0;
-          o2[1][0] = 0.0; o2[1][1] = -1.0; o2[1][2] = 0.0;
-          o2[2][0] = 0.0; o2[2][1] = 0.0; o2[2][2] =  -1.0;
-        }
-        else if (p == 2)
-        {
-          o2[0][0] = -1.0; o2[0][1] =  0.0; o2[0][2] =  0.0;
-          o2[1][0] = 0.0; o2[1][1] = 1.0; o2[1][2] =  0.0;
-          o2[2][0] = 0.0; o2[2][1] =  0.0; o2[2][2] = -1.0;
-        }
-        else if (p == 3)
-        {
-          o2[0][0] = -1.0; o2[0][1] =  0.0; o2[0][2] = 0.0;
-          o2[1][0] = 0.0; o2[1][1] = -1.0; o2[1][2] = 0.0;
-          o2[2][0] = 0.0; o2[2][1] = 0.0; o2[2][2] = 1.0;
-        }
-        ga[0][0] = cos(g1ea1)*cos(g1ea3)-sin(g1ea1)*sin(g1ea3)*cos(g1ea2);
-        ga[0][1] = sin(g1ea1)*cos(g1ea3)+cos(g1ea1)*sin(g1ea3)*cos(g1ea2);
-        ga[0][2] = sin(g1ea3)*sin(g1ea2);
-        ga[1][0] = -cos(g1ea1)*sin(g1ea3)-sin(g1ea1)*cos(g1ea3)*cos(g1ea2);
-        ga[1][1] = -sin(g1ea1)*sin(g1ea3)+cos(g1ea1)*cos(g1ea3)*cos(g1ea2);
-        ga[1][2] =  cos(g1ea3)*sin(g1ea2);
-        ga[2][0] =  sin(g1ea1)*sin(g1ea2);
-        ga[2][1] = -cos(g1ea1)*sin(g1ea2);
-        ga[2][2] =  cos(g1ea2);
-
-        mo[0][0] = o[0][0]*ga[0][0] + o[0][1]*ga[1][0] + o[0][2]*ga[2][0];
-        mo[0][1] = o[0][0]*ga[0][1] + o[0][1]*ga[1][1] + o[0][2]*ga[2][1];
-        mo[0][2] = o[0][0]*ga[0][2] + o[0][1]*ga[1][2] + o[0][2]*ga[2][2];
-        mo[1][0] = o[1][0]*ga[0][0] + o[1][1]*ga[1][0] + o[1][2]*ga[2][0];
-        mo[1][1] = o[1][0]*ga[0][1] + o[1][1]*ga[1][1] + o[1][2]*ga[2][1];
-        mo[1][2] = o[1][0]*ga[0][2] + o[1][1]*ga[1][2] + o[1][2]*ga[2][2];
-        mo[2][0] = o[2][0]*ga[0][0] + o[2][1]*ga[1][0] + o[2][2]*ga[2][0];
-        mo[2][1] = o[2][0]*ga[0][1] + o[2][1]*ga[1][1] + o[2][2]*ga[2][1];
-        mo[2][2] = o[2][0]*ga[0][2] + o[2][1]*ga[1][2] + o[2][2]*ga[2][2];
-
-        m1[0][0] = mo[0][0]*o2[0][0] + mo[0][1]*o2[1][0] + mo[0][2]*o2[2][0];
-        m1[0][1] = mo[0][0]*o2[0][1] + mo[0][1]*o2[1][1] + mo[0][2]*o2[2][1];
-        m1[0][2] = mo[0][0]*o2[0][2] + mo[0][1]*o2[1][2] + mo[0][2]*o2[2][2];
-        m1[1][0] = mo[1][0]*o2[0][0] + mo[1][1]*o2[1][0] + mo[1][2]*o2[2][0];
-        m1[1][1] = mo[1][0]*o2[0][1] + mo[1][1]*o2[1][1] + mo[1][2]*o2[2][1];
-        m1[1][2] = mo[1][0]*o2[0][2] + mo[1][1]*o2[1][2] + mo[1][2]*o2[2][2];
-        m1[2][0] = mo[2][0]*o2[0][0] + mo[2][1]*o2[1][0] + mo[2][2]*o2[2][0];
-        m1[2][1] = mo[2][0]*o2[0][1] + mo[2][1]*o2[1][1] + mo[2][2]*o2[2][1];
-        m1[2][2] = mo[2][0]*o2[0][2] + mo[2][1]*o2[1][2] + mo[2][2]*o2[2][2];
-
-        ea2 = acos(m1[2][2]);
-        double cosine3 = (m1[1][2]/sin(ea2));
-        double sine3 = (m1[0][2]/sin(ea2));
-        double cosine1 = (-m1[2][1]/sin(ea2));
-        double sine1 = (m1[2][0]/sin(ea2));
-        ea3 = acos(cosine3);
-        ea1 = acos(cosine1);
-        if(sine3 < 0) ea3 = (2*m_pi)-ea3;
-        if(sine1 < 0) ea1 = (2*m_pi)-ea1;
-        int ea1bin = int(ea1/(m_pi/36));
-        int ea2bin = int(ea2/(m_pi/36));
-        int ea3bin = int(ea3/(m_pi/36));
-        if(ea1 >= 0 && ea2 >= 0 && ea3 >= 0 && ea1 <= (m_pi/2) && ea2 <= (m_pi/2) && ea3 <= (m_pi/2))
-        {
-          int curcount = eulercount[ea1bin][ea2bin][ea3bin];
-          int bnum = (ea1bin*36*36)+(ea2bin*36)+ea3bin;
-          eulercount[ea1bin][ea2bin][ea3bin]++;
-          totalcount++;
-        }
-      }
-    }
-    }
-    inputFile.close();
+  ifstream inputFile;
+  inputFile.open(inname7.c_str());
+  double density;
+  for(int i=0;i<(18*18*18);i++)
+  {
+	  inputFile >> density;
+	  eulerodf[i].density = density;
+  }
+  inputFile.close();
 }
 
 void  GrainGeneratorFunc::generate_grains(int numgrains)
 {
   int good = 0;
-  double totvol = 0;
   double r1 = 1;
   double u=0,u1=0,u2=0;
   double a1=0,a2=0,a3=0;
   double b1=0,b2=0,b3=0;
   double r2=0,r3=0;
   rg.RandomInit((static_cast<unsigned int>(time(NULL))));
+  totalvol = 0;
   for(int l = 0; l < numgrains; l++)
   {
     u = rg.Random();
@@ -521,23 +242,47 @@ void  GrainGeneratorFunc::generate_grains(int numgrains)
       if(prob > check) good = 1;
       if(cob > 1) good = 0;
     }
-	double random5 = rg.Random();
-    int onum = int(random5*numorients);
-    double r1x = orient[onum].rad1x;
-    double r1y = orient[onum].rad1y;
-    double r1z = orient[onum].rad1z;
-    double r2x = orient[onum].rad2x;
-    double r2y = orient[onum].rad2y;
-    double r2z = orient[onum].rad2z;
-    double r3x = orient[onum].rad3x;
-    double r3y = orient[onum].rad3y;
-    double r3z = orient[onum].rad3z;
+	double random = rg.Random();
+	int bin=0;
+	for(int i=0;i<(18*18*18);i++)
+	{
+		double density = axisodf[i].density;
+		if(random > density) bin = i;
+		if(random < density) {break;}
+	}
+	double phi1 = bin%18;
+	double PHI = (bin/18)%18;
+	double phi2 = bin/(18*18);
+	random = rg.Random();
+	phi1 = ((phi1*5)+(random*5))*(m_pi/180.0);
+	random = rg.Random();
+	PHI = ((PHI*5)+(random*5))*(m_pi/180.0);
+	random = rg.Random();
+	phi2 = ((phi2*5)+(random*5))*(m_pi/180.0);
+	double ga[3][3];
+	ga[0][0] = cos(phi1)*cos(phi2)-sin(phi1)*sin(phi2)*cos(PHI);
+	ga[0][1] = sin(phi1)*cos(phi2)+cos(phi1)*sin(phi2)*cos(PHI);
+	ga[0][2] = sin(phi2)*sin(PHI);
+	ga[1][0] = -cos(phi1)*sin(phi2)-sin(phi1)*cos(phi2)*cos(PHI);
+	ga[1][1] = -sin(phi1)*sin(phi2)+cos(phi1)*cos(phi2)*cos(PHI);
+	ga[1][2] =  cos(phi2)*sin(PHI);
+	ga[2][0] =  sin(phi1)*sin(PHI);
+	ga[2][1] = -cos(phi1)*sin(PHI);
+	ga[2][2] =  cos(PHI);
+    double r1x = ga[0][0];
+    double r1y = ga[1][0];
+    double r1z = ga[2][0];
+    double r2x = ga[0][1];
+    double r2y = ga[1][1];
+    double r2z = ga[2][1];
+    double r3x = ga[0][2];
+    double r3y = ga[1][2];
+    double r3z = ga[2][2];
     u = rg.Random();
 	double m = svshape[diameter][0];
 	double s = svshape[diameter][1];
 	double N = rg.RandNorm(m,s);
 	N = exp(N);
-	N = 1.5;
     int gnum = l;
     grains[l].grainname = gnum;
     grains[l].volume = vol;
@@ -554,11 +299,11 @@ void  GrainGeneratorFunc::generate_grains(int numgrains)
     grains[l].axis3y = r3y;
     grains[l].axis3z = r3z;
     grains[l].Nvalue = N;
-    totvol = totvol + vol;
+    totalvol = totalvol + vol;
   }
-  double sizex = int(pow((totvol*1),0.33333));
-  double sizey = int(pow((totvol*1),0.33333));
-  double sizez = int(pow((totvol*1),0.33333));
+  double sizex = int(pow((totalvol*1),0.33333));
+  double sizey = int(pow((totalvol*1),0.33333));
+  double sizez = int(pow((totalvol*1),0.33333));
   xpoints = int((sizex/resx)+1);
   ypoints = int((sizey/resy)+1);
   zpoints = int((sizez/resz)+1);
@@ -590,22 +335,28 @@ void  GrainGeneratorFunc::generate_grains(int numgrains)
 
 void  GrainGeneratorFunc::assign_eulers(int numgrains)
 {
-  int count = 0;
-//  double grainssleft = numgrains-count;
+  int bin = 0;
+  int picked = 0;
   double density = 0;
-  double synea1=0,synea2=0,synea3=0;
-  for(int j = 0; j < 36; j++)
+  double selectedvol = 0;
+  double totalselectedvol = 0;
+  vector<int> grainlist;
+  grainlist.resize(numgrains);
+  for(int i=0;i<numgrains;i++)
   {
-    for(int k = 0; k < 36; k++)
+	grainlist[i] = i;
+  }
+  double synea1=0,synea2=0,synea3=0;
+  for(int j = 0; j < 18; j++)
+  {
+    for(int k = 0; k < 18; k++)
     {
-      for(int l = 0; l < 36; l++)
+      for(int l = 0; l < 18; l++)
       {
-        double num = (numgrains)*(double(eulercount[j][k][l]))/numeulers;
-        density = density + (eulercount[j][k][l]*eulercount[j][k][l]);
-//        double adjust = double(numgrains)/double(numeulers);
-        num = num;
-        int numint = int(num);
-        for(int m = 0; m < numint; m++)
+	    bin = (j*18*18)+(k*18)+(l);
+		double density = eulerodf[bin].density*totalvol;
+        selectedvol = 0;
+        while(selectedvol < density)
         {
           double random = rg.Random();
           double random1 = random;
@@ -613,56 +364,71 @@ void  GrainGeneratorFunc::assign_eulers(int numgrains)
           double random2 = random;
           random = rg.Random();
           double random3 = random;
-          synea1 = ((m_pi/72)*j)+((m_pi/72)*random1);
-          synea2 = ((m_pi/72)*k)+((m_pi/72)*random2);
-          synea3 = ((m_pi/72)*l)+((m_pi/72)*random3);
-          grains[count].euler1 = synea1;
-          grains[count].euler2 = synea2;
-          grains[count].euler3 = synea3;
-          count++;
-          if(count == numgrains) {break;}
+          synea1 = (5*j)+(5*random1);
+          synea2 = (5*k)+(5*random2);
+          synea3 = (5*l)+(5*random3);
+		  synea1 = synea1*(m_pi/180.0);
+		  synea2 = synea2*(m_pi/180.0);
+		  synea3 = synea3*(m_pi/180.0);
+		  random = rg.Random();
+		  picked = random*grainlist.size();
+		  if(picked == grainlist.size()) picked = grainlist.size()-1;
+		  int gnum = grainlist[picked];
+          selectedvol = selectedvol + grains[gnum].volume;
+          totalselectedvol = totalselectedvol + grains[gnum].volume;
+		  grainlist.erase(grainlist.begin()+picked);
+          grains[gnum].euler1 = synea1;
+          grains[gnum].euler2 = synea2;
+          grains[gnum].euler3 = synea3;
+		  if(totalselectedvol == totalvol) {break;}
         }
-        if(count == numgrains) {break;}
+        if(totalselectedvol == totalvol) {break;}
       }
-      if(count == numgrains) {break;}
+      if(totalselectedvol == totalvol) {break;}
     }
-    if(count == numgrains) {break;}
+    if(totalselectedvol == totalvol) {break;}
   }
   double lastcur = 1;
-  while(count < numgrains)
+  while(totalselectedvol < totalvol)
   {
     double cur = 0;
-    for(int m = 0; m < 36; m++)
+    for(int m = 0; m < 18; m++)
     {
-      for(int n = 0; n < 36; n++)
+      for(int n = 0; n < 18; n++)
       {
-        for(int p = 0; p < 36; p++)
+        for(int p = 0; p < 18; p++)
         {
-          double num = eulercount[m][n][p]/numeulers;
-          if(num > cur && num < lastcur)
+		  double density = eulerodf[bin].density;
+          if(density > cur && density < lastcur)
           {
-            cur = num;
+            cur = density;
             double random = rg.Random();
             double random4 = random;
             random = rg.Random();
             double random5 = random;
             random = rg.Random();
             double random6 = random;
-            synea1 = ((m_pi/72)*m)+((m_pi/72)*random4);
-            synea2 = ((m_pi/72)*n)+((m_pi/72)*random5);
-            synea3 = ((m_pi/72)*p)+((m_pi/72)*random6);
+	        synea1 = (5*m)+(5*random4);
+		    synea2 = (5*n)+(5*random5);
+			synea3 = (5*p)+(5*random6);
+			synea1 = synea1*(m_pi/180.0);
+			synea2 = synea2*(m_pi/180.0);
+			synea3 = synea3*(m_pi/180.0);
           }
         }
       }
     }
     lastcur = cur;
-    synea1 = rg.Random()*2*3.141592;
-    synea2 = rg.Random()*1*3.141592;
-    synea3 = rg.Random()*2*3.141592;
-    grains[count].euler1 = synea1;
-    grains[count].euler2 = synea2;
-    grains[count].euler3 = synea3;
-    count++;
+	double random = rg.Random();
+	picked = random*grainlist.size();
+	if(picked == grainlist.size()) picked = grainlist.size()-1;
+	int gnum = grainlist[picked];
+	selectedvol = selectedvol + grains[gnum].volume;
+	totalselectedvol = totalselectedvol + grains[gnum].volume;
+	grainlist.erase(grainlist.begin()+picked);
+	grains[gnum].euler1 = synea1;
+	grains[gnum].euler2 = synea2;
+	grains[gnum].euler3 = synea3;
   }
 }
 
@@ -790,7 +556,7 @@ void  GrainGeneratorFunc::make_points(int numgrains)
         }
         tempcounter++;
       }
-      int alreadypicked = 0;
+	  int alreadypicked = 0;
       int tried = gridcourse[j].available;
       gridcourse[j].available = alreadypicked;
       int noway = gridcourse[j].available90;
@@ -947,6 +713,9 @@ void  GrainGeneratorFunc::make_points(int numgrains)
               }
               if(shapeclass == 2)
               {
+			    axis1comp = fabs(axis1comp);
+			    axis2comp = fabs(axis2comp);
+			    axis3comp = fabs(axis3comp);
                 axis1comp = pow(axis1comp,Nvalue);
                 axis2comp = pow(axis2comp,Nvalue);
                 axis3comp = pow(axis3comp,Nvalue);
@@ -954,6 +723,9 @@ void  GrainGeneratorFunc::make_points(int numgrains)
               }
               if(shapeclass == 1)
               {
+			    axis1comp = fabs(axis1comp);
+			    axis2comp = fabs(axis2comp);
+			    axis3comp = fabs(axis3comp);
                 axis1comp = pow(axis1comp,2);
                 axis2comp = pow(axis2comp,2);
                 axis3comp = pow(axis3comp,2);
@@ -2102,6 +1874,22 @@ void  GrainGeneratorFunc::writeCube(string outname1, int numgrains)
     if(name < 100) outFile << " ";
     if(name < 10) outFile << " ";
     outFile << name;
+  }
+  outFile.close();
+}
+
+void GrainGeneratorFunc::write_eulerangles(string writename10)
+{
+  //std::cout << "GrainGeneratorFunc::write_volume1: '" << writename10 << "'" << std::endl;
+  ofstream outFile;
+  outFile.open(writename10.c_str());
+  outFile << numgrains << endl;
+  for (int i = 0; i < numgrains; i++)
+  {
+    double ea1 = grains[i].euler1;
+    double ea2 = grains[i].euler2;
+    double ea3 = grains[i].euler3;
+    outFile << i << " " << ea1 << " " << ea2 << " " << ea3 << endl;
   }
   outFile.close();
 }

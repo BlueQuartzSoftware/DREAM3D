@@ -31,6 +31,7 @@ namespace AIM
     const std::string MicroBinsFile("microbins.txt");//9
     const std::string ReconstructedVisualizationFile("reconstructed_visualization.vtk");//11
     const std::string AxisOrientationsFile("axisorientations.txt");//14
+    const std::string graindataFile("graindata.txt");//14
     const std::string EulerAnglesFile("eulerangles.txt");//15
     const std::string ReconstructedDxFile("reconstructed_data.dx");
 

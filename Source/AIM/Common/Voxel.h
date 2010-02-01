@@ -42,6 +42,10 @@ public:
     double euler1;
     double euler2;
     double euler3;
+	double red;
+	double green;
+	double blue;
+	double schmid;
     int hasneighbor;
     int neighbor;
     double minneighbormisorientation;
@@ -57,7 +61,6 @@ public:
     int available90;
     int inside;
 	double quat[5];
-    std::vector<int> voxneighlist;
 
   private:
 

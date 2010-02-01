@@ -175,6 +175,7 @@ void Reconstruction::compute()
   std::string reconVisFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::ReconstructedVisualizationFile;
   std::string dxFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::ReconstructedDxFile;
   std::string axisFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::AxisOrientationsFile;
+  std::string graindataFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::graindataFile;
   std::string eulerFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::EulerAnglesFile;
   CHECK_FOR_CANCELED(ReconstructionFunc)
   progressMessage(AIM_STRING("Loading Slices"), 3 );
@@ -280,6 +281,10 @@ void Reconstruction::compute()
   m->find_vectors();
 
   CHECK_FOR_CANCELED(ReconstructionFunc)
+  progressMessage(AIM_STRING("find_eulerodf"), 57 );
+  m->find_eulerodf();
+
+  CHECK_FOR_CANCELED(ReconstructionFunc)
   progressMessage(AIM_STRING("measure_misorientations"), 60 );
   m->measure_misorientations();
 
@@ -304,16 +309,19 @@ void Reconstruction::compute()
   m->create_dxfile(dxFile);
 
   CHECK_FOR_CANCELED(ReconstructionFunc)
+  progressMessage(AIM_STRING("Writing Grain Data"), 81 );
+  m->write_graindata(graindataFile);
+
+  CHECK_FOR_CANCELED(ReconstructionFunc)
   progressMessage(AIM_STRING("Writing Axis Orientation File"), 81 );
-  m->write_axisorientations(axisFile);
+  m->write_axisodf(axisFile);
 
   CHECK_FOR_CANCELED(ReconstructionFunc)
   progressMessage(AIM_STRING("Writing Euler Angle File"), 84 );
-  m->write_eulerangles(eulerFile);
+  m->write_eulerodf(eulerFile);
 
   progressMessage(AIM_STRING("Reconstruction Complete"), 100 );
 
- // std::cout << "Reconstruction::compute is Complete" << std::endl;
 }
 
 // -----------------------------------------------------------------------------

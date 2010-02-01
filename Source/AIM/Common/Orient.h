@@ -30,15 +30,7 @@ class Orient
     Orient();
     virtual ~Orient();
 
-    double rad1x;
-    double rad1y;
-    double rad1z;
-    double rad2x;
-    double rad2y;
-    double rad2z;
-    double rad3x;
-    double rad3y;
-    double rad3z;
+    double density;
 
   private:
     Orient(const Orient&);    // Copy Constructor Not Implemented
