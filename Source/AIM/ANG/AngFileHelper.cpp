@@ -101,7 +101,7 @@ void AngFileHelper::loadData(Voxel voxels[],
 			voxels[index].quat[4] = q4;
             if ((voxels[index].euler1 == badeuler
                 && voxels[index].euler2 == badeuler
-				&& voxels[index].euler3 == badeuler) || (voxels[index].imagequality < 300.0 && voxels[index].confidence < 0.1))
+				&& voxels[index].euler3 == badeuler) || (voxels[index].imagequality < 50.0 && voxels[index].confidence < 0.1))
             {
               voxels[index].confidence = zero;
               voxels[index].alreadychecked = checked;

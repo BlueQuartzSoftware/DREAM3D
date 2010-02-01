@@ -122,16 +122,6 @@ void GrainGenerator::compute()
               m_XResolution, m_YResolution, m_ZResolution, m_OverlapAllowed,
               m_OverlapAssignment, m_CrystalStructure);
 
-   m->numgrains = m_NumGrains;
-   m->resx = m_XResolution;
-   m->resy = m_YResolution;
-   m->resz = m_ZResolution;
-
-   m->resx1 = 4 * m->resx;
-   m->resy1 = 4 * m->resy;
-   m->resz1 = 4 * m->resz;
-
-
    m->nummisobins = 10;
    m->nummicrobins = 10;
    m->misoiter = 0;
@@ -139,25 +129,17 @@ void GrainGenerator::compute()
    m->nummicromoves = 25;
 
 
-   ifstream inputFile1;
-   inputFile1.open(AxisOrientationsFile.c_str());
-   inputFile1 >> m->numorients;
-   inputFile1.close();
-   ifstream inputFile2;
-   inputFile2.open(EulerAnglesFile.c_str());
-   inputFile2 >> m->numeulers;
-   inputFile2.close();
    CHECK_FOR_CANCELED(ReconstructionFunc)
    progressMessage(AIM_STRING("Loading Stats File"), 5 );
    m->loadStatsData(StatsFile);
 
    CHECK_FOR_CANCELED(ReconstructionFunc)
    progressMessage(AIM_STRING("Loading Orient File"), 10 );
-   m->loadorientData(AxisOrientationsFile,m->numorients);
+   m->loadorientData(AxisOrientationsFile);
 
    CHECK_FOR_CANCELED(ReconstructionFunc)
    progressMessage(AIM_STRING("Loading Euler File"), 15 );
-   m->loadeulerData(EulerAnglesFile,m->numeulers);
+   m->loadeulerData(EulerAnglesFile);
 
    CHECK_FOR_CANCELED(ReconstructionFunc)
    progressMessage(AIM_STRING("Generating Grains"), 20 );

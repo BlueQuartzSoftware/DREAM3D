@@ -80,7 +80,8 @@ AngFileHelper::Pointer m_angFileHelper;
 	int* gremovals;
 
 	Bin* eulerbin;
-	Orient* orient;
+	Orient* eulerodf;
+	Orient* axisodf;
 	Voxel* gridfine;
 	Voxel* gridcourse;
 	Bin* actualmisobin;
@@ -125,24 +126,19 @@ AngFileHelper::Pointer m_angFileHelper;
 	int32 xpoints1;
 	int32 ypoints1;
 	int32 zpoints1;
-  int totalpoints;
-  int totalpoints1;
+	int totalpoints;
+	int totalpoints1;
+	double totalvol;
 
 	double resx1;
 	double resy1;
 	double resz1;
 	int numneighbins;
 
-	/** @brief The number of boundary center objects needed */
-	size_t bcentSize;
-
-// sizes are needed. Dont't change
-  int eulercount[36][36][36];
-
 	void write_eulerangles(string);
 	void loadStatsData(string);
-	void loadorientData(string, int);
-	void loadeulerData(string, int);
+	void loadorientData(string);
+	void loadeulerData(string);
 	void generate_grains(int);
 	void assign_eulers(int);
 	void make_points(int);

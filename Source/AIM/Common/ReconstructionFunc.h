@@ -83,8 +83,9 @@ public:
 	AIMRandomNG rg;
 	Voxel* voxels;
 	Grain* grains;
+	Orient *eulerodf;
+	Orient *axisodf;
 
-	Bin* eulerbin;
 	int **shifts;
 
 	vector<vector<int> > neighborvector;
@@ -97,18 +98,13 @@ public:
 	int numgrains;
 	int maxdiameter;
 	int mindiameter;
-
-
 	int32 xpoints;
 	int32 ypoints;
 	int32 zpoints;
-  int totalpoints;
-
+	int totalpoints;
 	int numneighbins;
 	int nummicros;
-
-// sizes are needed. Dont't change
-  int eulercount[36][36][36];
+	double totalvol;
 
 	void loadSlices();
 	void align_sections(string);
@@ -130,13 +126,16 @@ public:
 	void find_moments();
 	void find_axes();
 	void find_vectors();
+	void find_eulerodf();
+	void find_axisodf();
 	void measure_misorientations();
 	void find_colors();
 	void find_convexities();
 	void volume_stats(string,string,string);
-	void create_dxfile(string dxfile);
-	void write_axisorientations(string);
-	void write_eulerangles(string);
+	void create_dxfile(string);
+	void write_axisodf(string);
+	void write_eulerodf(string);
+	void write_graindata(string);
 	double getmisoquat(double ,double,double ,double ,double ,double ,double,double ,double &,double &,double &);
 	double gamma(double);
 
