@@ -27,6 +27,8 @@ const static double m_OnePointThree = 1.33333333333;
 
 #include <sstream>
 
+#include <MXA/Utilities/StringUtils.h>
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -85,7 +87,7 @@ void SurfaceMeshFunc::initialize_micro(string filename)
   inputFile.open(filename.c_str());
   // Let's get rid of the 9 header lines in the xxx.dx produced by 3d coarsening code...
   for (k = 0; k < 9; k++)
-  { 
+  {
 	getline(inputFile,dummy,'\n');
   }
 
@@ -4474,12 +4476,13 @@ void SurfaceMeshFunc::get_output_edges(int nfe, int tnie, int zID, int ceid, int
   int index;
   int count;
 
-  char ZIndex[100];
-  char extension[100] = ".txt";
+  std::string ZIndex;
+  std::string extension = ".txt";
 
   string EdgesFileIndexCur;
   EdgesFileIndexCur = EdgesFileIndex;
-  _itoa_s(zID,ZIndex,10);
+  ZIndex = StringUtils::numToString(zID);
+
   EdgesFileIndexCur.append(ZIndex);
   EdgesFileIndexCur.append(extension);
 
@@ -4584,12 +4587,13 @@ void SurfaceMeshFunc::get_output_triangles (int nt, string TrianglesFileIndex, i
   end = nt;
   newID = ctid;
 
-  char ZIndex[100];
-  char extension[100] = ".txt";
+  std::string ZIndex;
+  std::string extension = ".txt";
 
   string TrianglesFileIndexCur;
   TrianglesFileIndexCur = TrianglesFileIndex;
-  _itoa_s(zID,ZIndex,10);
+
+  ZIndex = StringUtils::numToString(zID);
   TrianglesFileIndexCur.append(ZIndex);
   TrianglesFileIndexCur.append(extension);
 
@@ -4658,12 +4662,12 @@ void SurfaceMeshFunc::UET_get_number_current_edges (int *nfe, int *nie, int zID,
 
   int tne;
 
-  char ZIndex[100];
-  char extension[100] = ".txt";
+  std::string ZIndex;
+  std::string extension = ".txt";
 
   string EdgesFileIndexCur;
   EdgesFileIndexCur = EdgesFileIndex;
-  _itoa_s(zID,ZIndex,10);
+  ZIndex = StringUtils::numToString(zID);
   EdgesFileIndexCur.append(ZIndex);
   EdgesFileIndexCur.append(extension);
 
@@ -4716,12 +4720,12 @@ void SurfaceMeshFunc::UET_read_current_edges (int nFEdge, int nIEdge, int zID, s
 
   int tne;
 
-  char ZIndex[100];
-  char extension[100] = ".txt";
+  std::string ZIndex;
+  std::string extension = ".txt";
 
   string EdgesFileIndexCur;
   EdgesFileIndexCur = EdgesFileIndex;
-  _itoa_s(zID,ZIndex,10);
+  ZIndex = StringUtils::numToString(zID);
   EdgesFileIndexCur.append(ZIndex);
   EdgesFileIndexCur.append(extension);
 
@@ -4776,12 +4780,12 @@ void SurfaceMeshFunc::UET_get_number_previous_current_triangles(int *nPT, int *n
 
   int tnpt, tnct;
 
-  char ZIndex[100];
-  char extension[100] = ".txt";
+  std::string ZIndex;
+  std::string extension = ".txt";
 
   string TrianglesFileIndexCur1;
   TrianglesFileIndexCur1 = TrianglesFileIndex;
-  _itoa_s(zID,ZIndex,10);
+  ZIndex = StringUtils::numToString(zID);
   TrianglesFileIndexCur1.append(ZIndex);
   TrianglesFileIndexCur1.append(extension);
 
@@ -4796,7 +4800,7 @@ void SurfaceMeshFunc::UET_get_number_previous_current_triangles(int *nPT, int *n
   {
     string TrianglesFileIndexCur2;
     TrianglesFileIndexCur2 = TrianglesFileIndex;
-    _itoa_s((zID-1),ZIndex,10);
+    ZIndex = StringUtils::numToString(zID-1);
     TrianglesFileIndexCur2.append(ZIndex);
     TrianglesFileIndexCur2.append(extension);
 
@@ -4834,12 +4838,12 @@ void SurfaceMeshFunc::UET_read_current_triangles (int ncTriangle, int zID, strin
  // cFlag = zID;
   cid = 0;
 
-  char ZIndex[100];
-  char extension[100] = ".txt";
+  std::string ZIndex;
+  std::string extension = ".txt";
 
   string TrianglesFileIndexCur;
   TrianglesFileIndexCur = TrianglesFileIndex;
-  _itoa_s(zID,ZIndex,10);
+  ZIndex = StringUtils::numToString(zID);
   TrianglesFileIndexCur.append(ZIndex);
   TrianglesFileIndexCur.append(extension);
 
@@ -4896,7 +4900,7 @@ void SurfaceMeshFunc::UET_update_iEdges_triangles (int nIEdge, int ncTriangle)
 	  {  // for each edge of the current triangle...
 
 		bflag = cTriangle[j].e_id[k];
-	
+
 		if(bflag==-1)
 		{
 		  index1 = k;

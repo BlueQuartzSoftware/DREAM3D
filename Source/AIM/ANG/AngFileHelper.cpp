@@ -11,6 +11,7 @@
 
 #include "AngFileHelper.h"
 #include <AIM/ANG/AngFileReader.h>
+#include <math.h>
 
 // -----------------------------------------------------------------------------
 //
