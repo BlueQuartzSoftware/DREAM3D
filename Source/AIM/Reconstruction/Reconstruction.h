@@ -73,6 +73,7 @@ Q_OBJECT
     MXA_INSTANCE_PROPERTY_m(bool, MergeTwins)
     MXA_INSTANCE_PROPERTY_m(int32, MinAllowedGrainSize)
     MXA_INSTANCE_PROPERTY_m(double, MinSeedConfidence)
+    MXA_INSTANCE_PROPERTY_m(double, MinSeedImageQuality)
     MXA_INSTANCE_PROPERTY_m(double, MisorientationTolerance)
     MXA_INSTANCE_PROPERTY_m(AIM::Representation::CrystalStructure, CrystalStructure)
     MXA_INSTANCE_PROPERTY_m(bool, AlreadyFormed)

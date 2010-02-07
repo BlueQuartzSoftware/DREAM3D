@@ -473,11 +473,17 @@ void  GrainGeneratorFunc::make_points(int numgrains)
   srand(static_cast<unsigned int>(time(NULL)));
   long nottakencount = (xpoints*ypoints*zpoints);
   long nottakencountcourse = (xpoints1*ypoints1*zpoints1);
+  vector<long> availablelist;
+  vector<long> tempavailablelist;
+  availablelist.resize(nottakencountcourse);
+  tempavailablelist.resize(nottakencountcourse);
   for (long a = 0; a < nottakencountcourse; a++)
   {
     gridcourse[a].available = init;
     gridcourse[a].available90 = init;
+	availablelist[a] = a;
   }
+  tempavailablelist = availablelist;
   for (long b = 0; b < nottakencount; b++)
   {
     gridfine[b].available = init;
@@ -496,38 +502,35 @@ void  GrainGeneratorFunc::make_points(int numgrains)
       gridcourse[firstgridpoint].available = init;
     }
     double volcur = grains[curgrain].volume;
-//    double aovera = grains[i].axis1;
     double bovera = grains[curgrain].axis2;
     double covera = grains[curgrain].axis3;
-//    double coverb = covera/bovera;
     double Nvalue = grains[curgrain].Nvalue;
     double beta1 = (gamma((1.0/Nvalue))*gamma((1.0/Nvalue)))/gamma((2.0/Nvalue));
     double beta2 = (gamma((2.0/Nvalue))*gamma((1.0/Nvalue)))/gamma((3.0/Nvalue));
-    double radcur1cube = 1;
+    double radcur1 = 1;
     if(shapeclass == 3)
     {
       if(Nvalue >= 0 && Nvalue <= 1)
       {
-        radcur1cube = (volcur*6.0)/(6-(Nvalue*Nvalue*Nvalue));
+        radcur1 = (volcur*6.0)/(6-(Nvalue*Nvalue*Nvalue));
       }
       if(Nvalue > 1 && Nvalue <= 2)
       {
-        radcur1cube = (volcur*6.0)/(3+(9*Nvalue)-(9*Nvalue*Nvalue)+(2*Nvalue*Nvalue*Nvalue));
+        radcur1 = (volcur*6.0)/(3+(9*Nvalue)-(9*Nvalue*Nvalue)+(2*Nvalue*Nvalue*Nvalue));
       }
     }
     if(shapeclass == 2)
     {
-      radcur1cube = (volcur*(3.0/2.0)*(1.0/bovera)*(1.0/covera)*((Nvalue*Nvalue)/4.0)*(1.0/beta1)*(1.0/beta2));
+      radcur1 = (volcur*(3.0/2.0)*(1.0/bovera)*(1.0/covera)*((Nvalue*Nvalue)/4.0)*(1.0/beta1)*(1.0/beta2));
     }
     if(shapeclass == 1)
     {
-      radcur1cube = (volcur*(3.0/4.0)*(1.0/m_pi)*(1.0/bovera)*(1.0/covera));
+      radcur1 = (volcur*(3.0/4.0)*(1.0/m_pi)*(1.0/bovera)*(1.0/covera));
     }
-    double rad = pow(radcur1cube,0.333333333333);
-    if(shapeclass == 3) rad = rad/2.0;
-    double radcur1 = rad;
-    double radcur2 = (rad*bovera);
-    double radcur3 = (rad*covera);
+    radcur1 = pow(radcur1,0.333333333333);
+    if(shapeclass == 3) radcur1 = radcur1/2.0;
+    double radcur2 = (radcur1*bovera);
+    double radcur3 = (radcur1*covera);
     double rad1x = grains[curgrain].axis1x;
     double rad1y = grains[curgrain].axis1y;
     double rad1z = grains[curgrain].axis1z;
@@ -537,13 +540,15 @@ void  GrainGeneratorFunc::make_points(int numgrains)
     double rad3x = grains[curgrain].axis3x;
     double rad3y = grains[curgrain].axis3y;
     double rad3z = grains[curgrain].axis3z;
+	tempavailablelist = availablelist;
     while(good == 0)
     {
       double random = rg.Random();
-      double random1 = random;
       pointsleft = nottakencountcourse-triedcount;
-      int remainder = int(random1*pointsleft-1);
-      int selector = -1;
+      int remainder = int(random*pointsleft);
+	  if(remainder == pointsleft) remainder = pointsleft-1;
+	  j = tempavailablelist[remainder];
+/*      int selector = -1;
       int tempcounter = 0;
       while(selector != remainder)
       {
@@ -556,9 +561,10 @@ void  GrainGeneratorFunc::make_points(int numgrains)
         }
         tempcounter++;
       }
-	  int alreadypicked = 0;
+*/	  int alreadypicked = 0;
       int tried = gridcourse[j].available;
       gridcourse[j].available = alreadypicked;
+	  tempavailablelist.erase(tempavailablelist.begin()+remainder);
       int noway = gridcourse[j].available90;
       if(noway == 1 && tried == 1)
       {
@@ -988,6 +994,7 @@ void  GrainGeneratorFunc::make_points(int numgrains)
               uniquecurcoursesize++;
             }
             gridcourse[point].available90 = taken90;
+			availablelist.erase(remove_if(availablelist.begin(),availablelist.end(),bind2nd(equal_to<int>(),point)),availablelist.end());
           }
         }
       }

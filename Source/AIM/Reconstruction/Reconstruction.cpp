@@ -65,6 +65,7 @@ m_ZResolution(0.25),
 m_MergeTwins(false),
 m_MinAllowedGrainSize(0),
 m_MinSeedConfidence(0.0),
+m_MinSeedImageQuality(0.0),
 m_MisorientationTolerance(0.0),
 m_CrystalStructure(AIM::Representation::Hexagonal),
 m_AlreadyFormed(false), 
@@ -133,11 +134,12 @@ void Reconstruction::compute()
   angFileHelper->setDirectoryPattern(p);
 
   m = ReconstructionFunc::New();
-  m->initialize(  reader->getXStep(), reader->getYStep(), m_ZResolution,
-                       reader->getNumEvenCols(), reader->getNumRows(), (m_ZEndIndex - m_ZStartIndex),
-                       m_MergeTwins, m_MinAllowedGrainSize, m_MinSeedConfidence,
-                       m_MisorientationTolerance, m_CrystalStructure, m_AlreadyFormed);
   m->m_angFileHelper = angFileHelper;
+  m->find_cutout(p->generateFullPathAngFileName(m_ZStartIndex), reader->getNumEvenCols(), reader->getNumRows(), m_MinSeedConfidence, m_MinSeedImageQuality);
+  m->initialize(reader->getXStep(), reader->getYStep(), m_ZResolution,
+                       reader->getNumEvenCols(), reader->getNumRows(), (m_ZEndIndex - m_ZStartIndex),
+                       m_MergeTwins, m_MinAllowedGrainSize, m_MinSeedConfidence, m_MinSeedImageQuality,
+                       m_MisorientationTolerance, m_CrystalStructure, m_AlreadyFormed);
   reader = AngFileReader::NullPointer(); // Remove this object as it is no longer needed.
 
   int32 numgrains = 0;
@@ -183,7 +185,7 @@ void Reconstruction::compute()
 
   CHECK_FOR_CANCELED(ReconstructionFunc)
   progressMessage(AIM_STRING("Aligning Slices"), 5 );
-  m->align_sections(statsFile);
+  m->align_sections();
 
   if (m_AlreadyFormed == true)
   {
@@ -283,6 +285,10 @@ void Reconstruction::compute()
   CHECK_FOR_CANCELED(ReconstructionFunc)
   progressMessage(AIM_STRING("find_eulerodf"), 57 );
   m->find_eulerodf();
+
+  CHECK_FOR_CANCELED(ReconstructionFunc)
+  progressMessage(AIM_STRING("find_axisodf"), 57 );
+  m->find_axisodf();
 
   CHECK_FOR_CANCELED(ReconstructionFunc)
   progressMessage(AIM_STRING("measure_misorientations"), 60 );

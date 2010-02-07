@@ -162,6 +162,9 @@ AngFileHelper::Pointer m_angFileHelper;
 	double getmisoquat(double,double ,double ,double ,double ,double,double ,double &,double &,double &);
 	void create_dxfile(string);
 	double gamma(double);
+	double find_xcoord(long);
+	double find_ycoord(long);
+	double find_zcoord(long);
 
 protected:
   GrainGeneratorFunc();

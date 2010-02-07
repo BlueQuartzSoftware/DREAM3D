@@ -56,7 +56,7 @@ SurfaceMeshFunc::~SurfaceMeshFunc()
 
 }
 
-void SurfaceMeshFunc::initialize(int xnum,int ynum, int znum)
+void SurfaceMeshFunc::initialize(int xnum,int ynum, int znum, double xres, double yres, double zres)
 {
 
   NS = xnum * ynum * znum;
@@ -65,6 +65,9 @@ void SurfaceMeshFunc::initialize(int xnum,int ynum, int znum)
   xDim = xnum;
   yDim = ynum;
   zDim = znum;
+  xRes = xres;
+  yRes = yres;
+  zRes = zres;
 
   neigh = new Neighbor[2 * NSP + 1];
   point = new Voxel[NS + 1];
@@ -92,9 +95,6 @@ void SurfaceMeshFunc::initialize_micro(string filename)
   }
 
   point[0].grainname = 0; // Point 0 is a garbage...
-  point[0].xc = 0.0;
-  point[0].yc = 0.0;
-  point[0].zc = 0.0;
 
   // Let's input the grainname numbers for each site from micro.input...
   for (i = 1; i <= NS; i++)
@@ -118,9 +118,6 @@ void SurfaceMeshFunc::initialize_micro(string filename)
         tempz = (double) (l / (xDim * yDim));
         //printf("%10d %6.3f %6.3f %6.3f\n", id, tempx, tempy, tempz);
 
-        point[id].xc = tempx;
-        point[id].yc = tempy;
-        point[id].zc = tempz;
 
         if (tempx > (double) (xDim - 2) || tempy > (double) (yDim - 2) || tempz > (double) (zDim - 2))
         {
@@ -228,9 +225,9 @@ void SurfaceMeshFunc::initialize_nodes(int zID)
     id = 7 * (i - 1);
     tsite = zID * NSP + i;
 
-    x = point[tsite].xc;
-    y = point[tsite].yc;
-    z = point[tsite].zc;
+    x = find_xcoord(tsite);
+    y = find_ycoord(tsite);
+    z = find_zcoord(tsite);
 
     cVertex[id].xc = x + 0.5;
     cVertex[id].yc = y;
@@ -3825,25 +3822,25 @@ void SurfaceMeshFunc::arrange_grainnames(int numT, int zID)
       if (tgrainname1 == ngrainname1)
       {
 
-        xSum1 = xSum1 + point[tsite1].xc;
-        ySum1 = ySum1 + point[tsite1].yc;
-        zSum1 = zSum1 + point[tsite1].zc;
+        xSum1 = xSum1 + find_xcoord(tsite1);
+        ySum1 = ySum1 + find_ycoord(tsite1);
+        zSum1 = zSum1 + find_zcoord(tsite1);
 
-        xSum2 = xSum2 + point[tsite2].xc;
-        ySum2 = ySum2 + point[tsite2].yc;
-        zSum2 = zSum2 + point[tsite2].zc;
+        xSum2 = xSum2 + find_xcoord(tsite2);
+        ySum2 = ySum2 + find_ycoord(tsite2);
+        zSum2 = zSum2 + find_zcoord(tsite2);
 
       }
       else if (tgrainname2 == ngrainname1)
       {
 
-        xSum1 = xSum1 + point[tsite2].xc;
-        ySum1 = ySum1 + point[tsite2].yc;
-        zSum1 = zSum1 + point[tsite2].zc;
+        xSum1 = xSum1 + find_xcoord(tsite2);
+        ySum1 = ySum1 + find_ycoord(tsite2);
+        zSum1 = zSum1 + find_zcoord(tsite2);
 
-        xSum2 = xSum2 + point[tsite1].xc;
-        ySum2 = ySum2 + point[tsite1].yc;
-        zSum2 = zSum2 + point[tsite1].zc;
+        xSum2 = xSum2 + find_xcoord(tsite1);
+        ySum2 = ySum2 + find_ycoord(tsite1);
+        zSum2 = zSum2 + find_zcoord(tsite1);
 
       }
       else
@@ -4647,6 +4644,21 @@ void SurfaceMeshFunc::copy_cNodes_2_pNodes()
     }
 
   }
+}
+double SurfaceMeshFunc::find_xcoord(long index)
+{
+	double x = xRes*(index%xDim);
+	return x;
+}
+double SurfaceMeshFunc::find_ycoord(long index)
+{
+	double y = yRes*((index/xDim)%yDim);
+	return y;
+}
+double SurfaceMeshFunc::find_zcoord(long index)
+{
+	double z = zRes*(index/(xDim*yDim));
+	return z;
 }
 void SurfaceMeshFunc::UET_get_number_current_edges (int *nfe, int *nie, int zID, string EdgesFileIndex)
 {

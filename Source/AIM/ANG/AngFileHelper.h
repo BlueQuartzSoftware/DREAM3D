@@ -35,7 +35,7 @@ class AngFileHelper
 
     void loadData(Voxel voxels[],
                   size_t xpoints, size_t ypoints, size_t zpoints,
-                  double resz);
+                  double resz, double minseedconfidence, double minseedimagequality, int cmaxx, int cminx, int cmaxy, int cminy);
 
   protected:
     AngFileHelper();

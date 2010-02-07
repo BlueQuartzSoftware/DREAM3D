@@ -103,7 +103,7 @@ void SurfaceMesh::compute()
   std::string  VisualizationFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::VisualizationFile;
  
   m = SurfaceMeshFunc::New();
-   m->initialize(m_XDim,m_YDim,m_ZDim);
+   m->initialize(m_XDim,m_YDim,m_ZDim,m_XRes,m_YRes,m_ZRes);
    int err = 0;
    m->initialize_micro(m_DxFile );
 

@@ -245,6 +245,7 @@ void RepresentationUI::readSettings()
   alreadyFormed->blockSignals(false);
   READ_SETTING(prefs, minAllowedGrainSize, ok, i, 8 , Int);
   READ_SETTING(prefs, minConfidence, ok, d, 0.1 , Double);
+  READ_SETTING(prefs, minImageQuality, ok, d, 50.0 , Double);
   READ_SETTING(prefs, misOrientationTolerance, ok, d, 5.0 , Double);
   READ_COMBO_BOX(prefs, crystalStructure)
 
@@ -268,6 +269,9 @@ void RepresentationUI::readSettings()
   READ_SETTING(prefs, sm_XDim, ok, i, 100 , Int);
   READ_SETTING(prefs, sm_YDim, ok, i, 100 , Int);
   READ_SETTING(prefs, sm_ZDim, ok, i, 100 , Int);
+  READ_SETTING(prefs, sm_XRes, ok, d, 1 , Double);
+  READ_SETTING(prefs, sm_YRes, ok, d, 1 , Double);
+  READ_SETTING(prefs, sm_ZRes, ok, d, 1 , Double);
 
   READ_BOOL_SETTING(prefs, sm_SmoothMesh, false);
   READ_BOOL_SETTING(prefs, sm_LockQuadPoints, false);
@@ -312,6 +316,7 @@ void RepresentationUI::writeSettings()
 
   WRITE_SETTING(prefs, minAllowedGrainSize)
   WRITE_SETTING(prefs, minConfidence)
+  WRITE_SETTING(prefs, minImageQuality)
   WRITE_SETTING(prefs, misOrientationTolerance)
   WRITE_COMBO_BOX(prefs, crystalStructure)
 
@@ -333,6 +338,9 @@ void RepresentationUI::writeSettings()
   WRITE_SETTING(prefs, sm_XDim );
   WRITE_SETTING(prefs, sm_YDim );
   WRITE_SETTING(prefs, sm_ZDim );
+  WRITE_SETTING(prefs, sm_XRes );
+  WRITE_SETTING(prefs, sm_YRes );
+  WRITE_SETTING(prefs, sm_ZRes );
   WRITE_STRING_SETTING(prefs, sm_OutputDir);
   WRITE_BOOL_SETTING(prefs, sm_SmoothMesh, sm_SmoothMesh->isChecked() );
   WRITE_BOOL_SETTING(prefs, sm_LockQuadPoints, sm_LockQuadPoints->isChecked() );
@@ -782,6 +790,7 @@ void RepresentationUI::on_rec_GoBtn_clicked()
   m_Reconstruction->setMergeTwins(mergeTwins->isChecked() );
   m_Reconstruction->setMinAllowedGrainSize(minAllowedGrainSize->value());
   m_Reconstruction->setMinSeedConfidence(minConfidence->value());
+  m_Reconstruction->setMinSeedImageQuality(minImageQuality->value());
   m_Reconstruction->setMisorientationTolerance(misOrientationTolerance->value());
 
   AIM::Representation::CrystalStructure crystruct = static_cast<AIM::Representation::CrystalStructure>(crystalStructure->currentIndex() + 1);
@@ -1193,6 +1202,9 @@ void RepresentationUI::on_sm_GoBtn_clicked()
   m_SurfaceMesh->setXDim(sm_XDim->value());
   m_SurfaceMesh->setYDim(sm_YDim->value());
   m_SurfaceMesh->setZDim(sm_ZDim->value());
+  m_SurfaceMesh->setXRes(sm_XRes->value());
+  m_SurfaceMesh->setYRes(sm_YRes->value());
+  m_SurfaceMesh->setZRes(sm_ZRes->value());
   m_SurfaceMesh->setSmoothMesh(sm_SmoothMesh->isChecked());
   m_SurfaceMesh->setSmoothIterations(sm_SmoothIterations->value());
   m_SurfaceMesh->setSmoothFileOutputIncrement(sm_WriteOutputFileIncrement->value());
