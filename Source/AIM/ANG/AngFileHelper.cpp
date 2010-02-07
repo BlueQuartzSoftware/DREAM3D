@@ -33,7 +33,7 @@ AngFileHelper::~AngFileHelper()
 // -----------------------------------------------------------------------------
 void AngFileHelper::loadData(Voxel voxels[],
                              size_t xpoints, size_t ypoints, size_t zpoints,
-                             double resz)
+                             double resz, double minseedconfidence, double minseedimagequality, int cmaxx, int cminx, int cmaxy, int cminy)
 {
   const int zero = 0;
   const int checked = 1;
@@ -75,15 +75,12 @@ void AngFileHelper::loadData(Voxel voxels[],
             voxels[index].euler1 = euler1Ptr[readerIndex]; // Phi1
             voxels[index].euler2 = euler2Ptr[readerIndex]; // Phi
             voxels[index].euler3 = euler3Ptr[readerIndex];  // Phi2
-            voxels[index].xc = xcPtr[readerIndex];  // X
-            voxels[index].yc = ycPtr[readerIndex];  // Y
            // >> junk1   // Image Quality
             voxels[index].imagequality = imqualPtr[readerIndex];// Confidence
             voxels[index].confidence = confPtr[readerIndex];// Confidence
            // >> junk2  // Phase Data
            // >> junk3
            // >> junk4;
-            voxels[index].zc = k * resz;
             voxels[index].alreadychecked = zero;
             voxels[index].grainname = init;
 	        double s=sin(0.5*euler2Ptr[readerIndex]);
@@ -102,7 +99,7 @@ void AngFileHelper::loadData(Voxel voxels[],
 			voxels[index].quat[4] = q4;
             if ((voxels[index].euler1 == badeuler
                 && voxels[index].euler2 == badeuler
-				&& voxels[index].euler3 == badeuler) || (voxels[index].imagequality < 50.0 && voxels[index].confidence < 0.1))
+				&& voxels[index].euler3 == badeuler) || (voxels[index].imagequality < minseedimagequality && voxels[index].confidence < minseedconfidence))
             {
               voxels[index].confidence = zero;
               voxels[index].alreadychecked = checked;

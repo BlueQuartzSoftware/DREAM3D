@@ -92,6 +92,9 @@ public:
   int xDim;
   int yDim;
   int zDim;
+  int xRes;
+  int yRes;
+  int zRes;
   Neighbor* neigh; // contains nearest neighbor information...
   Voxel* point; // contains voxel information...
   Face* cSquare; // contains square information...
@@ -109,7 +112,7 @@ public:
 
 
 
-  void initialize(int, int, int);
+  void initialize(int, int, int, double, double, double);
   void initialize_micro(string);
   void get_neighbor_list(int zID);
  void initialize_nodes(int zID);
@@ -140,6 +143,9 @@ public:
   void get_output_edges(int nfe, int tnie, int zID, int ceid, int *feid, string EdgesFileIndex);
   void get_output_triangles(int nt, string TrianglesFileIndex, int zID, int ctid);
   void copy_cNodes_2_pNodes();
+  double find_xcoord(long);
+  double find_ycoord(long);
+  double find_zcoord(long);
 
   void UET_get_number_current_edges (int *nfe, int *nie, int zID, string EdgesFileIndex);
   void UET_get_number_previous_current_triangles (int *nPT, int *nCT, int zID, string trianglesFileIndex); 

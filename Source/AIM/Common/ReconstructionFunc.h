@@ -57,11 +57,6 @@ public:
 
   virtual ~ReconstructionFunc();
 
-    void initialize(double , double stepY, double stepZ,
-      int32, int32 angNumRows, int32 angSlices,
-      bool, int32, double, double, int32, bool);
-
-
   AngFileHelper::Pointer m_angFileHelper;
 
   double sizex;
@@ -74,6 +69,7 @@ public:
 
   double misorientationtolerance;
   double minseedconfidence;
+  double minseedimagequality;
   int minallowedgrainsize;
   int mergetwinsoption;
   int crystruct;
@@ -82,11 +78,13 @@ public:
 
 	AIMRandomNG rg;
 	Voxel* voxels;
+	Voxel* tempvoxels;
 	Grain* grains;
 	Orient *eulerodf;
 	Orient *axisodf;
 
 	int **shifts;
+	int **arr;
 
 	vector<vector<int> > neighborvector;
 
@@ -98,16 +96,30 @@ public:
 	int numgrains;
 	int maxdiameter;
 	int mindiameter;
-	int32 xpoints;
-	int32 ypoints;
-	int32 zpoints;
+	int cutoutxsize;
+	int cutoutysize;
+	int cmaxx;
+	int cminx;
+	int cmaxy;
+	int cminy;
+	int xpoints;
+	int ypoints;
+	int tempxpoints;
+	int tempypoints;
+	int zpoints;
 	int totalpoints;
+	int totaltemppoints;
 	int numneighbins;
 	int nummicros;
 	double totalvol;
+	double totalaxes;
 
+    void initialize(double stepX, double stepY, double stepZ,
+      int andNumCols, int angNumRows, int angSlices,
+      bool, int, double, double, double, int, bool);
+	void find_cutout(string angFName, int andNumCols, int angNumRows, double, double);
 	void loadSlices();
-	void align_sections(string);
+	void align_sections();
 	int form_grains();
 	void remove_smallgrains();
 	int renumber_grains1();
@@ -138,6 +150,9 @@ public:
 	void write_graindata(string);
 	double getmisoquat(double ,double,double ,double ,double ,double ,double,double ,double &,double &,double &);
 	double gamma(double);
+	double find_xcoord(long);
+	double find_ycoord(long);
+	double find_zcoord(long);
 
 protected:
   ReconstructionFunc();
