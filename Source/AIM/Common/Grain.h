@@ -58,9 +58,6 @@ class Grain
     double Iyz;
     double Ixz;
 	double omega3;
-    double axis1;
-    double axis2;
-    double axis3;
     double axis1x;
     double axis1y;
     double axis1z;
@@ -70,7 +67,7 @@ class Grain
     double axis3x;
     double axis3y;
     double axis3z;
-    std::vector<double> misorientationlist;
+    std::vector<double>* misorientationlist;
     double averagemisorientation;
     int twinnewnumberbeenset;
     int twinnewnumber;
@@ -86,16 +83,9 @@ class Grain
     double oeuler2;
     double oeuler3;
     int grainname;
-    int neighnum;
     double volume;
     double Nvalue;
     double nserror;
-    double x;
-    double y;
-    double z;
-    double xc;
-    double yc;
-    double zc;
     int currentsize;
     int initsize;
     int temponsurf;

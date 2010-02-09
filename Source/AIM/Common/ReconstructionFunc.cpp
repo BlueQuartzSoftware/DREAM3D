@@ -92,7 +92,7 @@ void ReconstructionFunc::initialize(double stepX, double stepY, double stepZ,
 
   tempvoxels = new Voxel[totaltemppoints];
   voxels = new Voxel[totalpoints];
-  grains = new Grain[totalpoints/20];
+  grains = new Grain[totalpoints/100];
   eulerodf = new Orient[18*18*18];
   axisodf = new Orient[18*18*18];
 } 
@@ -135,8 +135,8 @@ void ReconstructionFunc::find_cutout(string angFName, int angNumCols, int angNum
 		{
 			sum = sum+arr[i][j];
 		}
-		if(sum > 0 && j<miny) miny=j;
-		if(sum > 0 && j>maxy) maxy=j;
+		if(sum > 10 && j<miny) miny=j;
+		if(sum > 10 && j>maxy) maxy=j;
 	}
 	for (int j = 0; j < angNumCols; j++)
 	{
@@ -145,23 +145,31 @@ void ReconstructionFunc::find_cutout(string angFName, int angNumCols, int angNum
 		{
 			sum = sum+arr[j][i];
 		}
-		if(sum > 0 && j<minx) minx=j;
-		if(sum > 0 && j>maxx) maxx=j;
+		if(sum > 10 && j<minx) minx=j;
+		if(sum > 10 && j>maxx) maxx=j;
 	}
-	cmaxx = maxx-30;
-	cminx = minx+30;
-	cmaxy = maxy-15;
-	cminy = miny+15;
+	cmaxx = maxx-25;
+	cminx = minx+25;
+	cmaxy = maxy-10;
+	cminy = miny+10;
 	cutoutxsize = (cmaxx-cminx)+1;
 	cutoutysize = (cmaxy-cminy)+1;
 }
 void ReconstructionFunc::loadSlices()
 {
-  m_angFileHelper->loadData(voxels, xpoints, ypoints, zpoints, resz, minseedconfidence, minseedimagequality, cmaxx, cminx, cmaxy, cminy);
+    shifts = new int *[1];
+    shifts[0] = new int [2];
+    shifts[0][0]=0;
+    shifts[0][1]=0;
+	for(int i=0;i<zpoints;i++)
+	{
+	  m_angFileHelper->loadData(tempvoxels, tempxpoints, tempypoints, i, resz, minseedconfidence, minseedimagequality);
+	  align_sections(i);
+	}
   //TODO: we should return an error code here.
 }
 
-void ReconstructionFunc::align_sections()
+void ReconstructionFunc::align_sections(int slice)
 {
   double disorientation = 0;
   double mindisorientation = 100000;
@@ -172,20 +180,15 @@ void ReconstructionFunc::align_sections()
   int count = 0;
   int step = 0;
   double n1,n2,n3;
-  shifts = new int *[zpoints];
-  shifts[0] = new int [2];
-  shifts[0][0] = 0;
-  shifts[0][1] = 0;
-  for (int i=1;i<zpoints;i++)
+  mindisorientation = 100000;
+  xshift = 0;
+  yshift = 0;
+  tempxshift = 0;
+  tempyshift = 0;
+  if(slice > 0)
   {
-     shifts[i] = new int [2];
-	 mindisorientation = 100000;
-	 xshift = 0;
-	 yshift = 0;
-	 tempxshift = 0;
-	 tempyshift = 0;
-	 for(int a=0;a<3;a++)
-	 {
+	  for(int a=0;a<3;a++)
+	  {
 		 if(a == 0) step = 5;
 		 if(a == 1) step = 2;
 		 if(a == 2) step = 1;
@@ -195,37 +198,43 @@ void ReconstructionFunc::align_sections()
 			{
 				disorientation = 0;
 				count = 0;
-				for(int l=0;l<ypoints;l++)
+				for(int l=0;l<tempypoints;l++)
 				{
-					for(int m=0;m<xpoints;m++)
+					for(int m=0;m<tempxpoints;m++)
 					{
-						int refposition = ((i-1)*xpoints*ypoints)+(l*xpoints)+m;
-						int curposition = ((i)*xpoints*ypoints)+((l+(j*step)+tempyshift)*xpoints)+(m+(k*step)+tempxshift);
-						if((l+(j*step)+tempyshift) >= 0 && (l+(j*step)+tempyshift) < ypoints && (m+(k*step)+tempxshift) >= 0 && (m+(k*step)+tempxshift) < xpoints)
+						int refposition = (tempxpoints*tempypoints)+(l*tempxpoints)+m;
+						int curposition = ((l+(j*step)+tempyshift)*tempxpoints)+(m+(k*step)+tempxshift);
+						if((l+(j*step)+tempyshift) >= 0 && (l+(j*step)+tempyshift) < tempypoints && (m+(k*step)+tempxshift) >= 0 && (m+(k*step)+tempxshift) < tempxpoints)
 						{
-							double refci = voxels[refposition].confidence;
-							double curci = voxels[curposition].confidence;
-							double refiq = voxels[refposition].imagequality;
-							double curiq = voxels[curposition].imagequality;
-							disorientation = disorientation + fabs(refiq-curiq);
-							if((refiq < 300 && curiq > 700) || (refiq > 700 && curiq < 300)) disorientation = disorientation + fabs(refiq-curiq);
-							count++;
-/*							if(refci > 0.1 && curci > 0.1)
+							double refci = tempvoxels[refposition].confidence;
+							double curci = tempvoxels[curposition].confidence;
+							double refiq = tempvoxels[refposition].imagequality;
+							double curiq = tempvoxels[curposition].imagequality;
+							if(a < 2)
 							{
-								double g1ea1 = voxels[refposition].euler1;
-								double g1ea2 = voxels[refposition].euler2;
-								double g1ea3 = voxels[refposition].euler3;
-								double g2ea1 = voxels[curposition].euler1;
-								double g2ea2 = voxels[curposition].euler2;
-								double g2ea3 = voxels[curposition].euler3;
-								double w = getmisoquat(crystruct,misorientationtolerance,g1ea1,g1ea2,g1ea3,g2ea1,g2ea2,g2ea3,n1,n2,n3);
-								disorientation = disorientation + w;
+								disorientation = disorientation + fabs(refiq-curiq);
+								if((refiq < minseedimagequality && curiq > minseedimagequality) || (refiq > minseedimagequality && curiq < minseedimagequality)) disorientation = disorientation + fabs(refiq-curiq);
 								count++;
 							}
-							if(refci == -1 && curci != -1) disorientation = disorientation + 62.54, count++;
-							if(refci != -1 && curci == -1) disorientation = disorientation + 62.54, count++;
-							if(refci == -1 && curci == -1) disorientation = disorientation + 0.0, count++;
-*/						}
+							if(a == 2)
+							{
+								if(refci > minseedconfidence && curci > minseedconfidence)
+								{
+									double g1ea1 = tempvoxels[refposition].euler1;
+									double g1ea2 = tempvoxels[refposition].euler2;
+									double g1ea3 = tempvoxels[refposition].euler3;
+									double g2ea1 = tempvoxels[curposition].euler1;
+									double g2ea2 = tempvoxels[curposition].euler2;
+									double g2ea3 = tempvoxels[curposition].euler3;
+									double w = getmisoquat(crystruct,misorientationtolerance,g1ea1,g1ea2,g1ea3,g2ea1,g2ea2,g2ea3,n1,n2,n3);
+									disorientation = disorientation + w;
+									count++;
+								}
+								if(refci < minseedconfidence && curci > minseedconfidence) disorientation = disorientation + 62.54, count++;
+								if(refci > minseedconfidence && curci < minseedconfidence) disorientation = disorientation + 62.54, count++;
+								if(refci < minseedconfidence && curci < minseedconfidence) disorientation = disorientation + 0.0, count++;
+							}
+						}
 					}
 				}
 				disorientation = disorientation/double(count);
@@ -239,134 +248,52 @@ void ReconstructionFunc::align_sections()
 		 }
 		 tempxshift = xshift;
 		 tempyshift = yshift;
-	 }
-	 shifts[i][0] = xshift + shifts[i-1][0];
-	 shifts[i][1] = yshift + shifts[i-1][1];
-  }
-  double lval, mval;
-  int shifted = 0;
-  for (int i=1;i<zpoints;i++)
-  {
-    if(shifts[i][0] != 0 || shifts[i][1] != 0)
-	{
-		shifted = 0;
-		if(shifts[i][0] <= 0 && shifts[i][1] <= 0 && shifted == 0)
+	  }
+	  shifts[0][0] = shifts[0][0]+xshift;
+	  shifts[0][1] = shifts[0][1]+yshift;
+	  for(int l=0;l<=ypoints-1;l++)
+	  {
+		for(int m=0;m<=xpoints-1;m++)
 		{
-			shifted = 1;
-			for(int l=0;l<=ypoints-1;l++)
-			{
-				for(int m=0;m<=xpoints-1;m++)
-				{
-					lval = (ypoints-1)-l;
-					mval = (xpoints-1)-m;
-					if((lval-shifts[i][1]) >= 0 && (lval-shifts[i][1]) < ypoints && (mval-shifts[i][0]) >= 0 && (mval-shifts[i][0]) < xpoints)
-					{
-						int position = (i*xpoints*ypoints)+(lval*xpoints)+mval;
-						int newposition = (i*xpoints*ypoints)+((lval-shifts[i][1])*xpoints)+(mval-shifts[i][0]);
-						voxels[newposition].euler1 = voxels[position].euler1; 
-						voxels[newposition].euler2 = voxels[position].euler2; 
-						voxels[newposition].euler3 = voxels[position].euler3; 
-						voxels[newposition].quat[0] = voxels[position].quat[0];
-						voxels[newposition].quat[1] = voxels[position].quat[1];
-						voxels[newposition].quat[2] = voxels[position].quat[2];
-						voxels[newposition].quat[3] = voxels[position].quat[3];
-						voxels[newposition].quat[4] = voxels[position].quat[4];
-						voxels[newposition].confidence = voxels[position].confidence; 
-						voxels[newposition].imagequality = voxels[position].imagequality; 
-						voxels[newposition].alreadychecked = voxels[position].alreadychecked; 
-						voxels[newposition].grainname = voxels[position].grainname; 
-					}
-				}
-			}
-		}
-		if(shifts[i][0] <= 0 && shifts[i][1] >= 0 && shifted == 0)
-		{
-			shifted = 1;
-			for(int l=0;l<=ypoints-1;l++)
-			{
-				for(int m=0;m<=xpoints-1;m++)
-				{
-					lval = l;
-					mval = (xpoints-1)-m;
-					if((lval-shifts[i][1]) >= 0 && (lval-shifts[i][1]) < ypoints && (mval-shifts[i][0]) >= 0 && (mval-shifts[i][0]) < xpoints)
-					{
-						int position = (i*xpoints*ypoints)+(lval*xpoints)+mval;
-						int newposition = (i*xpoints*ypoints)+((lval-shifts[i][1])*xpoints)+(mval-shifts[i][0]);
-						voxels[newposition].euler1 = voxels[position].euler1; 
-						voxels[newposition].euler2 = voxels[position].euler2; 
-						voxels[newposition].euler3 = voxels[position].euler3; 
-						voxels[newposition].quat[0] = voxels[position].quat[0];
-						voxels[newposition].quat[1] = voxels[position].quat[1];
-						voxels[newposition].quat[2] = voxels[position].quat[2];
-						voxels[newposition].quat[3] = voxels[position].quat[3];
-						voxels[newposition].quat[4] = voxels[position].quat[4];
-						voxels[newposition].confidence = voxels[position].confidence; 
-						voxels[newposition].imagequality = voxels[position].imagequality; 
-						voxels[newposition].alreadychecked = voxels[position].alreadychecked; 
-						voxels[newposition].grainname = voxels[position].grainname; 
-					}
-				}
-			}
-		}
-		if(shifts[i][0] >= 0 && shifts[i][1] <= 0 && shifted == 0)
-		{
-			shifted = 1;
-			for(int l=0;l<=ypoints-1;l++)
-			{
-				for(int m=0;m<=xpoints-1;m++)
-				{
-					lval = (ypoints-1)-l;
-					mval = m;
-					if((lval-shifts[i][1]) >= 0 && (lval-shifts[i][1]) < ypoints && (mval-shifts[i][0]) >= 0 && (mval-shifts[i][0]) < xpoints)
-					{
-						int position = (i*xpoints*ypoints)+(lval*xpoints)+mval;
-						int newposition = (i*xpoints*ypoints)+((lval-shifts[i][1])*xpoints)+(mval-shifts[i][0]);
-						voxels[newposition].euler1 = voxels[position].euler1; 
-						voxels[newposition].euler2 = voxels[position].euler2; 
-						voxels[newposition].euler3 = voxels[position].euler3; 
-						voxels[newposition].quat[0] = voxels[position].quat[0];
-						voxels[newposition].quat[1] = voxels[position].quat[1];
-						voxels[newposition].quat[2] = voxels[position].quat[2];
-						voxels[newposition].quat[3] = voxels[position].quat[3];
-						voxels[newposition].quat[4] = voxels[position].quat[4];
-						voxels[newposition].confidence = voxels[position].confidence; 
-						voxels[newposition].imagequality = voxels[position].imagequality; 
-						voxels[newposition].alreadychecked = voxels[position].alreadychecked; 
-						voxels[newposition].grainname = voxels[position].grainname; 
-					}
-				}
-			}
-		}
-		if(shifts[i][0] >= 0 && shifts[i][1] >= 0 && shifted == 0)
-		{
-			shifted = 1;
-			for(int l=0;l<=ypoints-1;l++)
-			{
-				for(int m=0;m<=xpoints-1;m++)
-				{
-					lval = l;
-					mval = m;
-					if((lval-shifts[i][1]) >= 0 && (lval-shifts[i][1]) < ypoints && (mval-shifts[i][0]) >= 0 && (mval-shifts[i][0]) < xpoints)
-					{
-						int position = (i*xpoints*ypoints)+(lval*xpoints)+mval;
-						int newposition = (i*xpoints*ypoints)+((lval-shifts[i][1])*xpoints)+(mval-shifts[i][0]);
-						voxels[newposition].euler1 = voxels[position].euler1; 
-						voxels[newposition].euler2 = voxels[position].euler2; 
-						voxels[newposition].euler3 = voxels[position].euler3; 
-						voxels[newposition].quat[0] = voxels[position].quat[0];
-						voxels[newposition].quat[1] = voxels[position].quat[1];
-						voxels[newposition].quat[2] = voxels[position].quat[2];
-						voxels[newposition].quat[3] = voxels[position].quat[3];
-						voxels[newposition].quat[4] = voxels[position].quat[4];
-						voxels[newposition].confidence = voxels[position].confidence; 
-						voxels[newposition].imagequality = voxels[position].imagequality; 
-						voxels[newposition].alreadychecked = voxels[position].alreadychecked; 
-						voxels[newposition].grainname = voxels[position].grainname; 
-					}
-				}
-			}
+				int position = (slice*xpoints*ypoints)+(l*xpoints)+m;
+				int tempposition = ((l+shifts[0][1]+cminy)*tempxpoints)+(m+shifts[0][0]+cminx);
+				voxels[position].euler1 = tempvoxels[tempposition].euler1; 
+				voxels[position].euler2 = tempvoxels[tempposition].euler2; 
+				voxels[position].euler3 = tempvoxels[tempposition].euler3; 
+				voxels[position].quat[0] = tempvoxels[tempposition].quat[0];
+				voxels[position].quat[1] = tempvoxels[tempposition].quat[1];
+				voxels[position].quat[2] = tempvoxels[tempposition].quat[2];
+				voxels[position].quat[3] = tempvoxels[tempposition].quat[3];
+				voxels[position].quat[4] = tempvoxels[tempposition].quat[4];
+				voxels[position].confidence = tempvoxels[tempposition].confidence; 
+				voxels[position].imagequality = tempvoxels[tempposition].imagequality; 
+				voxels[position].alreadychecked = tempvoxels[tempposition].alreadychecked; 
+				voxels[position].grainname = tempvoxels[tempposition].grainname; 
 		}
 	  }
+  }
+  if(slice == 0)
+  {
+		for(int l=0;l<=ypoints-1;l++)
+		{
+			for(int m=0;m<=xpoints-1;m++)
+			{
+					int position = (slice*xpoints*ypoints)+(l*xpoints)+m;
+					int tempposition = ((l+cminy)*tempxpoints)+(m+cminx);
+					voxels[position].euler1 = tempvoxels[tempposition].euler1; 
+					voxels[position].euler2 = tempvoxels[tempposition].euler2; 
+					voxels[position].euler3 = tempvoxels[tempposition].euler3; 
+					voxels[position].quat[0] = tempvoxels[tempposition].quat[0];
+					voxels[position].quat[1] = tempvoxels[tempposition].quat[1];
+					voxels[position].quat[2] = tempvoxels[tempposition].quat[2];
+					voxels[position].quat[3] = tempvoxels[tempposition].quat[3];
+					voxels[position].quat[4] = tempvoxels[tempposition].quat[4];
+					voxels[position].confidence = tempvoxels[tempposition].confidence; 
+					voxels[position].imagequality = tempvoxels[tempposition].imagequality; 
+					voxels[position].alreadychecked = tempvoxels[tempposition].alreadychecked; 
+					voxels[position].grainname = tempvoxels[tempposition].grainname; 
+			}
+		}
   }
 }
 int  ReconstructionFunc::form_grains()
@@ -658,7 +585,7 @@ void  ReconstructionFunc::find_neighbors()
   vector<int> nlist(nListSize, -1);
   for(int i = 1; i < numgrains; i++)
   {
-    //std::cout << "find_neighbors: " << i << " of " << numgrains << " grains." << std::endl;
+//	  std::cout << "find_neighbors: " << i << " of " << numgrains << " grains." << std::endl;
 //    if(grains[i].gotsizemerged != 1)
 //    {
       size_t nListIndex = 0;
@@ -1229,9 +1156,9 @@ void  ReconstructionFunc::find_goodneighbors()
   double x = 0;
   double y = 0;
   double z = 0;
-    size_t nListSize = 1000;
+  size_t nListSize = 1000;
   vector<int> nlist(nListSize, -1);
-    size_t nListIndex = 0;
+  size_t nListIndex = 0;
   int neighcount = 0;
   for(int i = 1; i < numgrains; i++)
   {
@@ -1244,7 +1171,7 @@ void  ReconstructionFunc::find_goodneighbors()
 	    x = j%xpoints;
 	    y = (j/xpoints)%ypoints;
 	    z = j/(xpoints*ypoints);
-//        int first = voxels[j].grainname;
+//		int first = voxels[j].grainname;
         if(x > 0)
         {
           int grain1 = voxels[j-1].grainname;
@@ -1341,10 +1268,7 @@ void  ReconstructionFunc::find_goodneighbors()
 	  nlist.erase(std::remove(nlist.begin(),nlist.end(),-1),nlist.end());
       neighcount = int(nlist.size());
       grains[i].numneighbors = neighcount;
-      if (grains[i].neighborlist == NULL)
-      {
-        grains[i].neighborlist = new std::vector<int>(nlist.size() );
-      }
+      grains[i].neighborlist = new std::vector<int>(nlist.size() );
       grains[i].neighborlist->swap(nlist);
     }
     nlist.clear();
@@ -1410,6 +1334,14 @@ void  ReconstructionFunc::find_centroids()
 		maxdiameter = diameter;
 	}
 	if(diameter < mindiameter) mindiameter = diameter;
+    vector<int>* nlist = grains[i].neighborlist;
+    int size = 0;
+    if (NULL != nlist) { size = nlist->size(); }
+    for(int k=0;k<size;k++)
+    {
+      int nname = nlist->at(k);
+	  if(nname == 0) onedge = 1;
+    }
     grains[i].surfacegrain = onedge;
   }
 }
@@ -1531,9 +1463,9 @@ void  ReconstructionFunc::find_axes ()
     double r1 = 2*pow(r,0.33333333333)*cos(theta/3)-(b/(3*a));
     double r2 = -pow(r,0.33333333333)*(cos(theta/3)-(1.7320508*sin(theta/3)))-(b/(3*a));
     double r3 = -pow(r,0.33333333333)*(cos(theta/3)+(1.7320508*sin(theta/3)))-(b/(3*a));
-    grains[i].axis1 = r1;
-    grains[i].axis2 = r2;
-    grains[i].axis3 = r3;
+	grains[i].radius1 = r1;
+	grains[i].radius2 = r2;
+	grains[i].radius3 = r3;
   }
 }
 void  ReconstructionFunc::find_vectors ()
@@ -1549,9 +1481,9 @@ void  ReconstructionFunc::find_vectors ()
       double Ixy = grains[i].Ixy;
       double Iyz = grains[i].Iyz;
       double Ixz = grains[i].Ixz;
-      double axis1 = grains[i].axis1;
-      double axis2 = grains[i].axis2;
-      double axis3 = grains[i].axis3;
+	  double radius1 = grains[i].radius1;
+	  double radius2 = grains[i].radius2;
+	  double radius3 = grains[i].radius3;
       double m[3][3];
       double e[3][1];
       double uber[3][3];
@@ -1566,9 +1498,9 @@ void  ReconstructionFunc::find_vectors ()
       m[2][0] = Ixz;
       m[2][1] = Iyz;
       m[2][2] = Izz;
-      e[0][0] = axis1;
-      e[1][0] = axis2;
-      e[2][0] = axis3;
+      e[0][0] = radius1;
+      e[1][0] = radius2;
+      e[2][0] = radius3;
       bmat[0][0] = 0.0000001;
       bmat[1][0] = 0.0000001;
       bmat[2][0] = 0.0000001;
@@ -2012,7 +1944,8 @@ void  ReconstructionFunc::find_axisodf ()
 }
 void  ReconstructionFunc::measure_misorientations ()
 {
-  vector<double> misolist;
+  size_t initialsize = 10;
+  vector<double> misolist(initialsize,-1);
   double n1;
   double n2;
   double n3;
@@ -2024,6 +1957,7 @@ void  ReconstructionFunc::measure_misorientations ()
     double g1ea3 = grains[i].avgeuler3;
     int size = 0;
     if (NULL != nlist) { size = nlist->size(); }
+	misolist.resize(size,-1);
     for(int j=0;j<size;j++)
     {
       int nname = nlist->at(j);
@@ -2031,9 +1965,10 @@ void  ReconstructionFunc::measure_misorientations ()
       double g2ea2 = grains[nname].avgeuler2;
       double g2ea3 = grains[nname].avgeuler3;
       double w = getmisoquat(crystruct,misorientationtolerance,g1ea1,g1ea2,g1ea3,g2ea1,g2ea2,g2ea3,n1,n2,n3);
-      misolist.push_back(w);
+      misolist[j] = w;
     }
-    grains[i].misorientationlist = misolist;
+	grains[i].misorientationlist = new std::vector<double>(misolist.size() );
+	grains[i].misorientationlist->swap(misolist);
     misolist.clear();
   }
 }
@@ -2367,9 +2302,9 @@ void  ReconstructionFunc::find_convexities()
       rad3x = rad3x/mag3;
       rad3y = rad3y/mag3;
       rad3z = rad3z/mag3;
-      double I1 = grains[i].axis1;
-      double I2 = grains[i].axis2;
-      double I3 = grains[i].axis3;
+      double I1 = grains[i].radius1;
+      double I2 = grains[i].radius2;
+      double I3 = grains[i].radius3;
       I1 = (15*I1)/(4*m_pi);
       I2 = (15*I2)/(4*m_pi);
       I3 = (15*I3)/(4*m_pi);
@@ -2538,9 +2473,9 @@ void ReconstructionFunc::volume_stats(string writename1,string writename2,string
       double diam = 2*pow(rad_3,0.333333333);
       int diamint = int(diam);
       double logdiam = log(diam);
-      double I1 = grains[i].axis1;
-      double I2 = grains[i].axis2;
-      double I3 = grains[i].axis3;
+      double I1 = grains[i].radius1;
+      double I2 = grains[i].radius2;
+      double I3 = grains[i].radius3;
       I1 = (15*I1)/(4*m_pi);
       I2 = (15*I2)/(4*m_pi);
       I3 = (15*I3)/(4*m_pi);
@@ -2673,9 +2608,9 @@ void ReconstructionFunc::volume_stats(string writename1,string writename2,string
       double diam = 2*pow(rad_3,0.333333333);
       int diamint = int(diam);
       double logdiam = log(diam);
-      double I1 = grains[j].axis1;
-      double I2 = grains[j].axis2;
-      double I3 = grains[j].axis3;
+      double I1 = grains[j].radius1;
+      double I2 = grains[j].radius2;
+      double I3 = grains[j].radius3;
       I1 = (15*I1)/(4*m_pi);
       I2 = (15*I2)/(4*m_pi);
       I3 = (15*I3)/(4*m_pi);
@@ -2831,13 +2766,13 @@ void ReconstructionFunc::volume_stats(string writename1,string writename2,string
     if(onedge == 0)
     {
       double microcount = 0;
-      vector<double> misolist = grains[l].misorientationlist;
-      int nummisos = int(misolist.size());
-      int size = int(misolist.size());
+      vector<double>* misolist = grains[l].misorientationlist;
+      int nummisos = int(misolist->size());
+      int size = int(misolist->size());
       for(int k=0;k<size;k++)
       {
         misocount++;
-        double firstmiso = misolist[k];
+        double firstmiso = misolist->at(k);
         int misocur = int(firstmiso/(65.0/nummisobins));
         if(misocur == nummisobins) misocur = nummisobins-1;
         misobin[misocur]++;
