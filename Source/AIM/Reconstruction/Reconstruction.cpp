@@ -183,9 +183,9 @@ void Reconstruction::compute()
   progressMessage(AIM_STRING("Loading Slices"), 3 );
   m->loadSlices();
 
-  CHECK_FOR_CANCELED(ReconstructionFunc)
-  progressMessage(AIM_STRING("Aligning Slices"), 5 );
-  m->align_sections();
+//  CHECK_FOR_CANCELED(ReconstructionFunc)
+//  progressMessage(AIM_STRING("Aligning Slices"), 5 );
+//  m->align_sections();
 
   if (m_AlreadyFormed == true)
   {
@@ -215,24 +215,24 @@ void Reconstruction::compute()
     progressMessage(AIM_STRING("Forming Grains"), 8 );
     numgrains = m->form_grains();
     m->numgrains = numgrains;
+
+    CHECK_FOR_CANCELED(ReconstructionFunc)
+    progressMessage(AIM_STRING("Removing Small Grains"), 10 );
+    m->remove_smallgrains();
+
+    CHECK_FOR_CANCELED(ReconstructionFunc)
+    progressMessage(AIM_STRING("Renumbering Small Grains"), 12 );
+    numgrains = m->renumber_grains1();
+    m->numgrains = numgrains;
+
+    CHECK_FOR_CANCELED(ReconstructionFunc)
+    progressMessage(AIM_STRING("assign_badpoints"), 21 );
+    m->assign_badpoints();
+
+    CHECK_FOR_CANCELED(ReconstructionFunc)
+    progressMessage(AIM_STRING("write_volume"), 22 );
+    m->write_volume(reconVisFile);
   }
-
-  CHECK_FOR_CANCELED(ReconstructionFunc)
-  progressMessage(AIM_STRING("Removing Small Grains"), 10 );
-  m->remove_smallgrains();
-
-  CHECK_FOR_CANCELED(ReconstructionFunc)
-  progressMessage(AIM_STRING("Renumbering Small Grains"), 12 );
-  numgrains = m->renumber_grains1();
-  m->numgrains = numgrains;
-
-  CHECK_FOR_CANCELED(ReconstructionFunc)
-  progressMessage(AIM_STRING("assign_badpoints"), 21 );
-  m->assign_badpoints();
-
-  CHECK_FOR_CANCELED(ReconstructionFunc)
-  progressMessage(AIM_STRING("write_volume"), 22 );
-  m->write_volume(reconVisFile);
 
   CHECK_FOR_CANCELED(ReconstructionFunc)
   progressMessage(AIM_STRING("find_neighbors"), 24 );

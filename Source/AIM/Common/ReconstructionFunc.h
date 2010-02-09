@@ -119,7 +119,7 @@ public:
       bool, int, double, double, double, int, bool);
 	void find_cutout(string angFName, int andNumCols, int angNumRows, double, double);
 	void loadSlices();
-	void align_sections();
+	void align_sections(int slice);
 	int form_grains();
 	void remove_smallgrains();
 	int renumber_grains1();

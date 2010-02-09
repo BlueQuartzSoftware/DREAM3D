@@ -286,9 +286,9 @@ void  GrainGeneratorFunc::generate_grains(int numgrains)
     int gnum = l;
     grains[l].grainname = gnum;
     grains[l].volume = vol;
-    grains[l].axis1 = r1;
-    grains[l].axis2 = r2;
-    grains[l].axis3 = r3;
+	grains[l].radius1 = r1;
+	grains[l].radius2 = r2;
+	grains[l].radius3 = r3;
     grains[l].axis1x = r1x;
     grains[l].axis1y = r1y;
     grains[l].axis1z = r1z;
@@ -502,8 +502,8 @@ void  GrainGeneratorFunc::make_points(int numgrains)
       gridcourse[firstgridpoint].available = init;
     }
     double volcur = grains[curgrain].volume;
-    double bovera = grains[curgrain].axis2;
-    double covera = grains[curgrain].axis3;
+	double bovera = grains[curgrain].radius2;
+	double covera = grains[curgrain].radius3;
     double Nvalue = grains[curgrain].Nvalue;
     double beta1 = (gamma((1.0/Nvalue))*gamma((1.0/Nvalue)))/gamma((2.0/Nvalue));
     double beta2 = (gamma((2.0/Nvalue))*gamma((1.0/Nvalue)))/gamma((3.0/Nvalue));
@@ -776,9 +776,9 @@ void  GrainGeneratorFunc::make_points(int numgrains)
         double nsdistchange = 0;
         for (int n = 0; n < i; n++)
         {
-          double xold = packedgrain[n].x;
-          double yold = packedgrain[n].y;
-          double zold = packedgrain[n].z;
+          double xold = packedgrain[n].centroidx;
+          double yold = packedgrain[n].centroidy;
+          double zold = packedgrain[n].centroidz;
           double radold1 = packedgrain[n].radius1;
           double radold2 = packedgrain[n].radius2;
           double radold3 = packedgrain[n].radius3;
@@ -894,9 +894,9 @@ void  GrainGeneratorFunc::make_points(int numgrains)
     ncount = 0;
     for (int p = 0; p < i; p++)
     {
-      double xold = packedgrain[p].x;
-      double yold = packedgrain[p].y;
-      double zold = packedgrain[p].z;
+	  double xold = packedgrain[p].centroidx;
+	  double yold = packedgrain[p].centroidy;
+	  double zold = packedgrain[p].centroidz;
       double radold1 = packedgrain[p].radius1;
       double radold2 = packedgrain[p].radius2;
       double radold3 = packedgrain[p].radius3;
@@ -1014,31 +1014,24 @@ void  GrainGeneratorFunc::make_points(int numgrains)
     nottakencount = nottakencount - uniquecursize;
     uniquecursize = 0;
     uniquecurcoursesize = 0;
-    int pointcolumn = j%xpoints1;
-    int pointrow = (j/xpoints1)%ypoints1;
-    int pointplane = j/(xpoints1*ypoints1);
-    double pointx = (pointcolumn*resx1)+(resx1/2);
-    double pointy = (pointrow*resy1)+(resy1/2);
-    double pointz = (pointplane*resz1)+(resz1/2);
     double ea1 = grains[i].euler1;
     double ea2 = grains[i].euler2;
     double ea3 = grains[i].euler3;
     packedgrain[i].initsize = totalcursize;
     packedgrain[i].currentsize = totalcursize;
     packedgrain[i].grainname = i;
-    packedgrain[i].xc = pointx;
-    packedgrain[i].yc = pointy;
-    packedgrain[i].zc = pointz;
-    packedgrain[i].axis1 = radcur1;
-    packedgrain[i].axis2 = radcur2;
-    packedgrain[i].axis3 = radcur3;
+    packedgrain[i].centroidx = xc;
+    packedgrain[i].centroidy = yc;
+    packedgrain[i].centroidz = zc;
+    packedgrain[i].radius1 = radcur1;
+    packedgrain[i].radius2 = radcur2;
+    packedgrain[i].radius3 = radcur3;
     packedgrain[i].temponsurf = tempsurf;
     packedgrain[i].euler1 = ea1;
     packedgrain[i].euler2 = ea2;
     packedgrain[i].euler3 = ea3;
     packedgrain[i].tempneighnum = ncount;
     totalcursize = 0;
-    cout << i << "-" << pointx << "-" << pointy << "-" << pointz << "-" << radcur1 << "-" << radcur2 << "-" << radcur3 << endl;
     count++;
   }
   for(int u=0;u<numgrains;u++)
@@ -1344,7 +1337,8 @@ void  GrainGeneratorFunc::loadMicroData(string inname11)
 
 void  GrainGeneratorFunc::measure_misorientations ()
 {
-  vector<double> misolist;
+  size_t initialsize=10;
+  vector<double> misolist(initialsize,-1);
   double n1;
   double n2;
   double n3;
@@ -1363,9 +1357,10 @@ void  GrainGeneratorFunc::measure_misorientations ()
       double g2ea2 = packedgrain[nname].avgeuler2;
       double g2ea3 = packedgrain[nname].avgeuler3;
       double w = getmisoquat(crystruct,g1ea1,g1ea2,g1ea3,g2ea1,g2ea2,g2ea3,n1,n2,n3);
-      misolist.push_back(w);
+      misolist[j] = w;
     }
-    packedgrain[i].misorientationlist = misolist;
+	packedgrain[i].misorientationlist = new std::vector<double>(misolist.size() );
+	packedgrain[i].misorientationlist->swap(misolist);
     misolist.clear();
   }
 }
@@ -1429,11 +1424,11 @@ void  GrainGeneratorFunc::rank_misobins(int numgrains)
   }
   for(int i = 0; i < numgrains; i++)
   {
-    vector<double> misolist = packedgrain[i].misorientationlist;
-    int size = int(misolist.size());
+    vector<double>* misolist = packedgrain[i].misorientationlist;
+    int size = int(misolist->size());
     for(int k=0;k<size;k++)
     {
-      double misofirst = misolist[k];
+      double misofirst = misolist->at(k);
       int misocur = int(misofirst/(100/nummisobins));
       double height = simmisobin[misocur].height;
       height = height + 1;
@@ -1486,11 +1481,11 @@ void  GrainGeneratorFunc::count_misorientations(int numgrains)
   for(int i = 0; i < numgrains; i++)
   {
     lowangle = 0;
-    vector<double> misolist = packedgrain[i].misorientationlist;
-    int size = int(misolist.size());
+    vector<double>* misolist = packedgrain[i].misorientationlist;
+    int size = int(misolist->size());
     for(int k=0;k<size;k++)
     {
-      double misofirst = misolist[k];
+      double misofirst = misolist->at(k);
       if(misofirst < 15) lowangle++;
     }
     double fraction = lowangle/size;
@@ -1569,11 +1564,11 @@ void  GrainGeneratorFunc::rank_grains1(int numgrains)
   {
     double rank = 0;
     double temprank = 0;
-    vector<double> misolist = packedgrain[i].misorientationlist;
-    int size = int(misolist.size());
+    vector<double>* misolist = packedgrain[i].misorientationlist;
+    int size = int(misolist->size());
     for(int k=0;k<size;k++)
     {
-      double misofirst = misolist[k];
+      double misofirst = misolist->at(k);
       int misocur = int(misofirst/(100/nummisobins));
       temprank = simmisobin[misocur].binrank;
       rank = rank + temprank;
@@ -1680,7 +1675,7 @@ void  GrainGeneratorFunc::rank_grains2(int numgrains)
   {
     double microrank = 0;
     double temprank = 0;
-    vector<double> misolist = packedgrain[i].misorientationlist;
+    vector<double>* misolist = packedgrain[i].misorientationlist;
     vector<int>* nlist = packedgrain[i].neighborlist;
     int size = 0;
     if (NULL != nlist) { size = nlist->size(); }
@@ -1692,7 +1687,7 @@ void  GrainGeneratorFunc::rank_grains2(int numgrains)
       if(neighfrac > 0.49) neighfrac = neighfrac;
       if(neighfrac > 0.74) neighfrac = neighfrac*2;
       temprank = neighfrac;
-      double misofirst = misolist[j];
+      double misofirst = misolist->at(j);
       if(misofirst < 15)
       {
         temprank = 0;
@@ -1826,14 +1821,14 @@ void  GrainGeneratorFunc::freeze_grains(int numgrains)
     {
       froze = 1;
     }
-    vector<double> misolist = packedgrain[i].misorientationlist;
+    vector<double>* misolist = packedgrain[i].misorientationlist;
     vector<int>* nlist = packedgrain[i].neighborlist;
     int size = 0;
     if (NULL != nlist) { size = nlist->size(); }
     for(int j=0;j<size;j++)
     {
       int nname = nlist->at(j);
-      double neighmiso = misolist[j];
+      double neighmiso = misolist->at(j);
       double neighfrac = packedgrain[nname].lowanglefraction;
       if(neighfrac > 0.85 && neighmiso < 15)
       {
