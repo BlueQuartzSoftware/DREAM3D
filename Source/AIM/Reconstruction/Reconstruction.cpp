@@ -183,10 +183,6 @@ void Reconstruction::compute()
   progressMessage(AIM_STRING("Loading Slices"), 3 );
   m->loadSlices();
 
-//  CHECK_FOR_CANCELED(ReconstructionFunc)
-//  progressMessage(AIM_STRING("Aligning Slices"), 5 );
-//  m->align_sections();
-
   if (m_AlreadyFormed == true)
   {
     // Sanity Check the the Reconstruction File does exist in the output directory

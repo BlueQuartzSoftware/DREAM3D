@@ -85,6 +85,8 @@ public:
 
 	int **shifts;
 	int **arr;
+	double **graincenters;
+	double **grainmoments;
 
 	vector<vector<int> > neighborvector;
 
