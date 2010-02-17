@@ -232,6 +232,7 @@ void AngFileReader::_readHeader( const std::string& line )
 // -----------------------------------------------------------------------------
 void AngFileReader::_readData( const std::string &line, uint32 index )
 {
+#if 1
   std::istringstream in ( line );
   float f;
   float d1, d2;
@@ -245,6 +246,36 @@ void AngFileReader::_readData( const std::string &line, uint32 index )
   in >> f; _ci->setValue(f, index);
   in >> f; _phaseData->setValue(f, index);
   in >> d1 >> d2;
+#else
+  std::istringstream in(line);
+  float p1, p, p2, x, y, iqual, conf, ph, d1, d2;
+  in >> p1;
+  in >> p;
+  in >> p2;
+  in >> x;
+  in >> y;
+  in >> iqual;
+  in >> conf;
+  in >> ph;
+  in >> d1 >> d2;
+
+  float xMaxIndex = (_ncols_odd - 1);
+  // Now figure out the correct offset into the array to set all the values
+
+  size_t offset = static_cast<size_t>((y/_ystep)*_ncols_odd + (-1*(x/_xstep)) + xMaxIndex);
+
+  p1 = p1 - 90.0f;
+  if (p1 < 0) { p1 = p1 + 270.0f; }
+  _phi1->setValue(p1 , offset);
+  _phi->setValue(p , offset);
+  _phi2->setValue(p2 , offset);
+  _iq->setValue(iqual , offset);
+  _ci->setValue( conf , offset);
+  _phaseData->setValue( ph, offset);
+  m_X->setValue(x , offset);
+  m_Y->setValue(y , offset);
+
+#endif
 }
 
 

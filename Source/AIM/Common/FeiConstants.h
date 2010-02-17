@@ -1,17 +1,17 @@
 ///////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) Mike Jackson, 
+//  Copyright (c) Mike Jackson,
 //  All rights reserved.
 //  BSD License: http://www.opensource.org/licenses/bsd-license.html
 //
-//  This code was written under United States Air Force Contract number 
+//  This code was written under United States Air Force Contract number
 //                           FA8650-04-C-5229
 //
 ///////////////////////////////////////////////////////////////////////////////
 #ifndef __FeiConstants_H
-#define __FeiConstants_H 
+#define __FeiConstants_H
 
-/*
+/**
  *  @file FEI/FeiConstants.h
  *  @brief This file contains string constants for use with Fei instrument code
  *
@@ -97,8 +97,8 @@
 // -----------------------------------------------------------------------------
 // Constants for .ang files
 // -----------------------------------------------------------------------------
-#define OIM_TEM_PIXPERUM     "TEM_PIXperUM"   
-#define OIM_X_STAR           "X-Star"   
+#define OIM_TEM_PIXPERUM     "TEM_PIXperUM"
+#define OIM_X_STAR           "X-Star"
 #define OIM_Y_STAR           "Y-Star"
 #define OIM_Z_STAR           "Z-Star"
 #define OIM_WORKING_DISTANCE "Working Distance"
@@ -112,12 +112,12 @@
 #define OIM_NUMBER_FAMILIES   "Number Families"
 #define OIM_HKL_FAMILIES      "hkl Families"
 #define OIM_CATEGORIES        "Categories"
-#define OIM_GRID              "Grid" 
-#define OIM_X_STEP            "x-Step" 
-#define OIM_Y_STEP            "y-Step" 
-#define OIM_NCOLS_ODD         "Ncols Odd" 
-#define OIM_NCOLS_EVEN        "Ncols Even" 
-#define OIM_NROWS             "NRows" 
+#define OIM_GRID              "Grid"
+#define OIM_X_STEP            "x-Step"
+#define OIM_Y_STEP            "y-Step"
+#define OIM_NCOLS_ODD         "Ncols Odd"
+#define OIM_NCOLS_EVEN        "Ncols Even"
+#define OIM_NROWS             "NRows"
 #define OIM_OPERATOR          "Operator"
 #define OIM_SAMPLE_ID         "Sampleid"
 #define OIM_SCAN_ID           "Scan ID"
@@ -130,10 +130,10 @@ namespace Fei
   const std::string AttrFilename(FEI_ATTR_FILENAME);
   const std::string Scale(FEI_SCALE);
   const std::string AttrDescription(FEI_ATTR_DESCRIPTION);
-  
+
 // -----------------------------------------------------------------------------
 //  Constants Related to the Data Model
-// -----------------------------------------------------------------------------  
+// -----------------------------------------------------------------------------
 
   // Define the Names of the Data Records
   const std::string SEI (FEI_SEI);
@@ -145,11 +145,11 @@ namespace Fei
   const std::string Phi1(FEI_PHI_1);
   const std::string Phi(FEI_PHI);
   const std::string Phi2(FEI_PHI_2);
-  
+
   // Define the Data Record Paths within the Model
-  const std::string OimPath(FEI_OIM_PATH);             
-  const std::string ImageQualityPath(FEI_IMAGE_QUALITY_PATH);    
-  const std::string ConfidenceIndexPath(FEI_CONFIDENCEINDEX_PATH);   
+  const std::string OimPath(FEI_OIM_PATH);
+  const std::string ImageQualityPath(FEI_IMAGE_QUALITY_PATH);
+  const std::string ConfidenceIndexPath(FEI_CONFIDENCEINDEX_PATH);
   const std::string PhasePath(FEI_PHASE_PATH);
   const std::string EulerAnglesPath(FEI_EULER_ANGLES_PATH);
   const std::string Phi1Path(FEI_PHI_1_PATH);
@@ -179,7 +179,7 @@ namespace Fei
     const std::string Grid (OIM_GRID );
     const std::string XStep (OIM_X_STEP );
     const std::string YStep (OIM_Y_STEP );
-    const std::string NColsOdd (OIM_NCOLS_ODD); 
+    const std::string NColsOdd (OIM_NCOLS_ODD);
     const std::string NColsEven (OIM_NCOLS_EVEN );
     const std::string NRows (OIM_NROWS );
     const std::string Operator (OIM_OPERATOR);
@@ -187,7 +187,7 @@ namespace Fei
     const std::string ScanId (OIM_SCAN_ID);
   }
 
-  
+
 }
 
 
