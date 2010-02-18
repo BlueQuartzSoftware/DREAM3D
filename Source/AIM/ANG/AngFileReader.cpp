@@ -130,24 +130,24 @@ int32 AngFileReader::readFile(std::string angFilename)  {
   }
 
   //--Allocate the vectors to hold all the data
- uint32 dataSize = _nrows * _ncols_even;
- _phi1 = AIMArray<float>::New();
- _phi = AIMArray<float>::New();
- _phi2 = AIMArray<float>::New();
- _iq = AIMArray<float>::New();
- _ci = AIMArray<float>::New();
- _phaseData = AIMArray<float>::New();
- m_X = AIMArray<float>::New();
- m_Y = AIMArray<float>::New();
+  uint32 dataSize = _nrows * _ncols_even;
+  _phi1 = AIMArray<float>::New();
+  _phi = AIMArray<float>::New();
+  _phi2 = AIMArray<float>::New();
+  _iq = AIMArray<float>::New();
+  _ci = AIMArray<float>::New();
+  _phaseData = AIMArray<float>::New();
+  m_X = AIMArray<float>::New();
+  m_Y = AIMArray<float>::New();
 
- _phi1->allocateArray(dataSize);
- _phi->allocateArray(dataSize);
- _phi2->allocateArray(dataSize);
- _iq->allocateArray(dataSize);
- _ci->allocateArray(dataSize);
- _phaseData->allocateArray(dataSize);
- m_X->allocateArray(dataSize);
- m_Y->allocateArray(dataSize);
+  _phi1->allocateArray(dataSize);
+  _phi->allocateArray(dataSize);
+  _phi2->allocateArray(dataSize);
+  _iq->allocateArray(dataSize);
+  _ci->allocateArray(dataSize);
+  _phaseData->allocateArray(dataSize);
+  m_X->allocateArray(dataSize);
+  m_Y->allocateArray(dataSize);
 
   this->_readData(buf, 0); // Read what is in the buffer...
   uint32 i;
