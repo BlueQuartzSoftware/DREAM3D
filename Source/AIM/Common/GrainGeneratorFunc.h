@@ -139,7 +139,7 @@ AngFileHelper::Pointer m_angFileHelper;
 	void loadStatsData(string);
 	void loadorientData(string);
 	void loadeulerData(string);
-	void generate_grains(int);
+	void generate_grains(int, string);
 	void assign_eulers(int);
 	void make_points(int);
 	void fill_gaps(int);

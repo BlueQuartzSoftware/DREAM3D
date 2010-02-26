@@ -116,6 +116,7 @@ void GrainGenerator::compute()
   std::string  CubeFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::CubeFile;
   std::string  EulerFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::EulerFile;
   std::string cubedxFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::CubeDxFile;
+  std::string AnalysisFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::AnalysisFile;
 
    m = GrainGeneratorFunc::New();
    m->initialize(m_NumGrains, m_ShapeClass,
@@ -143,7 +144,7 @@ void GrainGenerator::compute()
 
    CHECK_FOR_CANCELED(ReconstructionFunc)
    progressMessage(AIM_STRING("Generating Grains"), 20 );
-   m->generate_grains(m->numgrains);
+   m->generate_grains(m->numgrains, AnalysisFile);
 
    CHECK_FOR_CANCELED(ReconstructionFunc)
    progressMessage(AIM_STRING("Initializing"), 25 );
@@ -157,7 +158,7 @@ void GrainGenerator::compute()
    progressMessage(AIM_STRING("Packing Grains"), 35 );
    m->make_points(m->numgrains);
 
-   CHECK_FOR_CANCELED(ReconstructionFunc)
+/*   CHECK_FOR_CANCELED(ReconstructionFunc)
    progressMessage(AIM_STRING("Filling Gaps"), 40 );
    m->fill_gaps(m->numgrains);
 
@@ -173,7 +174,7 @@ void GrainGenerator::compute()
    progressMessage(AIM_STRING("Loading Microtexture"), 55 );
    m->loadMicroData(MicroBinsFile);
 
-/*
+
    for(int iter = 0; iter < m->misoiter; iter++)
    {
      CHECK_FOR_CANCELED(ReconstructionFunc)
