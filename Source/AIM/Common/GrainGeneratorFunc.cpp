@@ -202,7 +202,7 @@ void  GrainGeneratorFunc::loadeulerData(string inname7)
   inputFile.close();
 }
 
-void  GrainGeneratorFunc::generate_grains(int numgrains)
+void  GrainGeneratorFunc::generate_grains(int numgrains, string afile)
 {
   int good = 0;
   double r1 = 1;
@@ -210,14 +210,25 @@ void  GrainGeneratorFunc::generate_grains(int numgrains)
   double a1=0,a2=0,a3=0;
   double b1=0,b2=0,b3=0;
   double r2=0,r3=0;
+  double diam = 0;
+  double vol = 0;
   rg.RandomInit((static_cast<unsigned int>(time(NULL))));
   totalvol = 0;
+  ofstream outFile;
+  outFile.open(afile.c_str());
   for(int l = 0; l < numgrains; l++)
   {
-    u = rg.Random();
-	double diam = rg.RandNorm(avgdiam,sddiam);
-	diam = exp(diam);
-    double vol = (4.0/3.0)*(m_pi)*((diam/2.0)*(diam/2.0)*(diam/2.0));
+    int volgood = 0;
+    while(volgood == 0)
+	{
+		volgood = 1;
+	    u = rg.Random();
+		diam = rg.RandNorm(avgdiam,sddiam);
+		diam = exp(diam);
+		if((fabs(diam-avgdiam)/sddiam) > 3.0) volgood = 0;
+		outFile << diam << endl;
+		vol = (4.0/3.0)*(m_pi)*((diam/2.0)*(diam/2.0)*(diam/2.0));
+	}
     int diameter = int(diam);
     if(diameter >= maxdiameter) diameter = maxdiameter;
     if(diameter <= mindiameter) diameter = mindiameter;
@@ -310,9 +321,9 @@ void  GrainGeneratorFunc::generate_grains(int numgrains)
   xpoints = int(xpoints/4)*4;
   ypoints = int(ypoints/4)*4;
   zpoints = int(zpoints/4)*4;
-  xpoints1 = xpoints/4;
-  ypoints1 = ypoints/4;
-  zpoints1 = zpoints/4;
+  xpoints1 = xpoints/(resx1/resx);
+  ypoints1 = ypoints/(resx1/resx);
+  zpoints1 = zpoints/(resx1/resx);
   grainorder.resize(numgrains);
   takencheck.resize(numgrains);
   for(int i=0;i<numgrains;i++)
@@ -336,7 +347,10 @@ void  GrainGeneratorFunc::generate_grains(int numgrains)
 void  GrainGeneratorFunc::assign_eulers(int numgrains)
 {
   int bin = 0;
+  int size = 0;
   int picked = 0;
+  int gnum = 0;
+  double closest = 0;
   double density = 0;
   double selectedvol = 0;
   double totalselectedvol = 0;
@@ -370,10 +384,20 @@ void  GrainGeneratorFunc::assign_eulers(int numgrains)
 		  synea1 = synea1*(m_pi/180.0);
 		  synea2 = synea2*(m_pi/180.0);
 		  synea3 = synea3*(m_pi/180.0);
-		  random = rg.Random();
-		  picked = random*grainlist.size();
-		  if(picked == grainlist.size()) picked = grainlist.size()-1;
-		  int gnum = grainlist[picked];
+		  size = grainlist.size();
+		  closest = 1000000.0;
+		  if(size == 0) {break;}
+		  for(int i=0;i<size;i++)
+		  {
+			  gnum = grainlist[i];
+			  double vol = grains[gnum].volume;
+			  if(fabs(vol-(density-selectedvol)) < closest)
+			  {
+				closest = fabs(vol-density);
+				picked = i;
+			  }
+		  }
+		  gnum = grainlist[picked];
           selectedvol = selectedvol + grains[gnum].volume;
           totalselectedvol = totalselectedvol + grains[gnum].volume;
 		  grainlist.erase(grainlist.begin()+picked);
@@ -389,7 +413,7 @@ void  GrainGeneratorFunc::assign_eulers(int numgrains)
     if(totalselectedvol == totalvol) {break;}
   }
   double lastcur = 1;
-  while(totalselectedvol < totalvol)
+  while(totalselectedvol < totalvol && grainlist.size() > 0)
   {
     double cur = 0;
     for(int m = 0; m < 18; m++)
@@ -489,7 +513,7 @@ void  GrainGeneratorFunc::make_points(int numgrains)
     gridfine[b].available = init;
     gridfine[b].available90 = init;
   }
-  for (int i = 0; i < numgrains; i++)
+  for (int i = 0; i < 500; i++)
   {
 	nsdist[i].resize(maxdiameter+1);
     good = 0;

@@ -65,13 +65,14 @@ void ReconstructionFunc::initialize(double stepX, double stepY, double stepZ,
                   bool v_alreadyformed)
 {
 
-  resx = 2*stepX;
-  resy = 2*stepY;
-  resz = 2*stepZ;
+  resx = stepX;
+  resy = stepY;
+  resz = stepZ;
 
   mergetwinsoption = (v_mergetwinsoption == true) ? 1 : 0;
   minallowedgrainsize = v_minallowedgrainsize;
   minseedconfidence = v_minseedconfidence;
+  minseedimagequality = v_minseedimagequality;
   misorientationtolerance = v_misorientationtolerance;
   crystruct = v_crystruct;
   alreadyformed = (v_alreadyformed == true) ? 1 : 0;
@@ -150,10 +151,10 @@ void ReconstructionFunc::find_cutout(string angFName, int angNumCols, int angNum
 		if(sum > 10 && j<minx) minx=j;
 		if(sum > 10 && j>maxx) maxx=j;
 	}
-	cmaxx = maxx-25;
-	cminx = minx+25;
-	cmaxy = maxy-12;
-	cminy = miny+12;
+	cmaxx = maxx+5;
+	cminx = minx-5;
+	cmaxy = maxy+5;
+	cminy = miny-5;
 	cutoutxsize = (cmaxx-cminx)+1;
 	cutoutysize = (cmaxy-cminy)+1;
 }
@@ -189,9 +190,9 @@ void ReconstructionFunc::align_sections(int slice)
   tempyshift = 0;
   if(slice > 0)
   {
-	  for(int a=0;a<3;a++)
+	  for(int a=2;a<3;a++)
 	  {
-		 if(a == 0) step = 5;
+		 if(a == 0) step = 3;
 		 if(a == 1) step = 2;
 		 if(a == 2) step = 1;
 		 for(int j=-3;j<4;j++)
@@ -215,7 +216,6 @@ void ReconstructionFunc::align_sections(int slice)
 							if(a < 2)
 							{
 								disorientation = disorientation + fabs(refiq-curiq);
-								if((refiq < minseedimagequality && curiq > minseedimagequality) || (refiq > minseedimagequality && curiq < minseedimagequality)) disorientation = disorientation + fabs(refiq-curiq);
 								count++;
 							}
 							if(a == 2)
@@ -232,9 +232,9 @@ void ReconstructionFunc::align_sections(int slice)
 									disorientation = disorientation + w;
 									count++;
 								}
-								if(refci < minseedconfidence && curci > minseedconfidence) disorientation = disorientation + 62.54, count++;
-								if(refci > minseedconfidence && curci < minseedconfidence) disorientation = disorientation + 62.54, count++;
-								if(refci < minseedconfidence && curci < minseedconfidence) disorientation = disorientation + 0.0, count++;
+//								if(refci < minseedconfidence && curci > minseedconfidence) disorientation = disorientation + 62.54, count++;
+//								if(refci > minseedconfidence && curci < minseedconfidence) disorientation = disorientation + 62.54, count++;
+//								if(refci < minseedconfidence && curci < minseedconfidence) disorientation = disorientation + 0.0, count++;
 							}
 						}
 					}
@@ -257,7 +257,7 @@ void ReconstructionFunc::align_sections(int slice)
 	  {
 		for(int m=0;m<=xpoints-1;m++)
 		{
-				int position = (slice*xpoints*ypoints)+(l*xpoints)+m;
+				int position = (((zpoints-1)-slice)*xpoints*ypoints)+(l*xpoints)+m;
 				int tempposition = ((l+shifts[0][1]+cminy)*tempxpoints)+(m+shifts[0][0]+cminx);
 				voxels[position].euler1 = tempvoxels[tempposition].euler1; 
 				voxels[position].euler2 = tempvoxels[tempposition].euler2; 
@@ -280,7 +280,7 @@ void ReconstructionFunc::align_sections(int slice)
 		{
 			for(int m=0;m<=xpoints-1;m++)
 			{
-					int position = (slice*xpoints*ypoints)+(l*xpoints)+m;
+					int position = (((zpoints-1)-slice)*xpoints*ypoints)+(l*xpoints)+m;
 					int tempposition = ((l+cminy)*tempxpoints)+(m+cminx);
 					voxels[position].euler1 = tempvoxels[tempposition].euler1; 
 					voxels[position].euler2 = tempvoxels[tempposition].euler2; 
@@ -309,7 +309,6 @@ int  ReconstructionFunc::form_grains()
   double n2;
   double n3;
   size_t size = 0;
-
   //  int voxelslist[100000];
   size_t initialVoxelsListSize = 1000;
   std::vector<int> voxelslist(initialVoxelsListSize, 0);
@@ -366,7 +365,7 @@ int  ReconstructionFunc::form_grains()
       size = 0;
       voxels[seed].alreadychecked = checked;
       voxels[seed].grainname = graincount;
-     // cout << "Making Grain - " << graincount << endl;
+      cout << "Making Grain - " << graincount << endl;
 
       voxelslist[size] = seed;
       size++;
@@ -395,7 +394,7 @@ int  ReconstructionFunc::form_grains()
               if (size >= voxelslist.size() )
               {
                // std::cout << "Resizing voxelslist to " << size << std::endl;
-                voxelslist.resize( size + initialVoxelsListSize);
+                voxelslist.resize(size+initialVoxelsListSize,-1);
               }
             }
           }
@@ -404,14 +403,15 @@ int  ReconstructionFunc::form_grains()
 	  grains[graincount].nucleus = seed;
       grains[graincount].numvoxels = size;
       totalsize = totalsize+size;
+	  voxelslist.erase(std::remove(voxelslist.begin(),voxelslist.end(),-1),voxelslist.end());
       if (grains[graincount].voxellist == NULL)
       {
-        grains[graincount].voxellist = new std::vector<int>(voxelslist.size() );
+        grains[graincount].voxellist = new std::vector<int>(voxelslist.size(),-1);
       }
       grains[graincount].voxellist->swap(voxelslist);
       graincount++;
 	  voxelslist.clear();
-	  voxelslist.resize(initialVoxelsListSize);
+	  voxelslist.resize(initialVoxelsListSize,-1);
     }
   }
   numgrains = graincount;
@@ -613,9 +613,9 @@ void  ReconstructionFunc::find_neighbors()
 	  {
 		  nnum = grains[grain].numneighbors;
 		  vector<int>* nlist = grains[grain].neighborlist;
-          if (nnum >= (nlist->size()/2))
+          if (nnum >= (0.9*nlist->size()))
           {
-             nlist->resize(nlist->size() + nListSize);
+             nlist->resize(nnum + nListSize);
           }
 		  nlist->at(nnum) = grain1;
 		  nnum++;
@@ -629,9 +629,9 @@ void  ReconstructionFunc::find_neighbors()
 	  {
 		  nnum = grains[grain].numneighbors;
 		  vector<int>* nlist = grains[grain].neighborlist;
-          if (nnum >= (nlist->size()/2))
+          if (nnum >= (0.9*nlist->size()))
           {
-             nlist->resize(nlist->size() + nListSize);
+             nlist->resize(nnum + nListSize);
           }
 		  nlist->at(nnum) = grain2;
 		  nnum++;
@@ -645,9 +645,9 @@ void  ReconstructionFunc::find_neighbors()
 	  {
 		  nnum = grains[grain].numneighbors;
 		  vector<int>* nlist = grains[grain].neighborlist;
-          if (nnum >= (nlist->size()/2))
+          if (nnum >= (0.9*nlist->size()))
           {
-             nlist->resize(nlist->size() + nListSize);
+             nlist->resize(nnum + nListSize);
           }
 		  nlist->at(nnum) = grain3;
 		  nnum++;
@@ -661,9 +661,9 @@ void  ReconstructionFunc::find_neighbors()
 	  {
 		  nnum = grains[grain].numneighbors;
 		  vector<int>* nlist = grains[grain].neighborlist;
-          if (nnum >= (nlist->size()/2))
+          if (nnum >= (0.9*nlist->size()))
           {
-             nlist->resize(nlist->size() + nListSize);
+             nlist->resize(nnum + nListSize);
           }
 		  nlist->at(nnum) = grain4;
 		  nnum++;
@@ -677,9 +677,9 @@ void  ReconstructionFunc::find_neighbors()
 	  {
 		  nnum = grains[grain].numneighbors;
 		  vector<int>* nlist = grains[grain].neighborlist;
-          if (nnum >= (nlist->size()/2))
+          if (nnum >= (0.9*nlist->size()))
           {
-             nlist->resize(nlist->size() + nListSize);
+             nlist->resize(nnum + nListSize);
           }
 		  nlist->at(nnum) = grain5;
 		  nnum++;
@@ -693,9 +693,9 @@ void  ReconstructionFunc::find_neighbors()
 	  {
 		  nnum = grains[grain].numneighbors;
 		  vector<int>* nlist = grains[grain].neighborlist;
-          if (nnum >= (nlist->size()/2))
+          if (nnum >= (0.9*nlist->size()))
           {
-             nlist->resize(nlist->size() + nListSize);
+             nlist->resize(nnum + nListSize);
           }
 		  nlist->at(nnum) = grain6;
 		  nnum++;
@@ -885,14 +885,17 @@ void  ReconstructionFunc::homogenize_grains(double quat_symm[24][5])
       qT[4] = (-1.0)*qT[4];
     }
     // Now begins to calculate the avg. orientation...
-    for(jj=0; jj<(xpoints*ypoints*zpoints); jj++)
+	vector<int>* voxellist = grains[i].voxellist;
+	int size = voxellist->size();
+	for(jj=0; jj<size; jj++)
 	{
-		if(voxels[jj].grainname == i && voxels[jj].confidence > minseedconfidence)
+		int index = voxellist->at(jj);
+		if(voxels[index].confidence > minseedconfidence)
 		{
 		  numVoxel++;
 		  for(pp=1; pp<5; pp++)
 		  {
-			qC[pp] = voxels[jj].quat[pp];
+			qC[pp] = voxels[index].quat[pp];
 		  }
 		  min = 10.0;
 		  minid = -1;
@@ -982,21 +985,22 @@ void  ReconstructionFunc::homogenize_grains(double quat_symm[24][5])
     grains[i].avgeuler3 = ea3good;
     double avgmiso = 0;
     double totalcount = 0;
-    for(int iter = 0; iter < (xpoints*ypoints*zpoints); iter++)
-    {
-	  if(voxels[iter].grainname == i && voxels[iter].confidence > minseedconfidence)
-      {
-        double angcur = 1000000;
-        double g1ea1 = grains[i].avgeuler1;
-        double g1ea2 = grains[i].avgeuler2;
-        double g1ea3 = grains[i].avgeuler3;
-        double g2ea1 = voxels[iter].euler1;
-        double g2ea2 = voxels[iter].euler2;
-        double g2ea3 = voxels[iter].euler3;
-        double wmin = getmisoquat(crystruct,misorientationtolerance,g1ea1,g1ea2,g1ea3,g2ea1,g2ea2,g2ea3,n1,n2,n3);
-        voxels[iter].misorientation = wmin;
-        avgmiso = avgmiso + wmin;
-        totalcount++;
+	for(jj=0; jj<size; jj++)
+	{
+		int index = voxellist->at(jj);
+		if(voxels[index].confidence > minseedconfidence)
+		{
+	       double angcur = 1000000;
+	       double g1ea1 = grains[i].avgeuler1;
+	       double g1ea2 = grains[i].avgeuler2;
+	       double g1ea3 = grains[i].avgeuler3;
+	       double g2ea1 = voxels[index].euler1;
+	       double g2ea2 = voxels[index].euler2;
+	       double g2ea3 = voxels[index].euler3;
+	       double wmin = getmisoquat(crystruct,misorientationtolerance,g1ea1,g1ea2,g1ea3,g2ea1,g2ea2,g2ea3,n1,n2,n3);
+	       voxels[index].misorientation = wmin;
+		   avgmiso = avgmiso + wmin;
+		   totalcount++;
       }
     }
     avgmiso = avgmiso/totalcount;
@@ -1010,6 +1014,8 @@ int  ReconstructionFunc::load_data(string readname)
   int gnum;
   string dummy;
   numgrains = 0;
+  int vnum;
+  int vListSize = 1000;
   for(int i = 0; i < 12; i++)
   {
 	getline(inputFile,dummy,'\n');
@@ -1017,12 +1023,40 @@ int  ReconstructionFunc::load_data(string readname)
   for(int i = 0; i < (xpoints*ypoints*zpoints); i++)
   {
     inputFile >> gnum;
+	if(gnum == 7520)
+	{
+		int stop = 0;
+	}
     voxels[i].grainname = gnum;
+	vnum = grains[gnum].numvoxels;
+    if (grains[gnum].voxellist == NULL)
+    {
+      grains[gnum].voxellist = new std::vector<int>(vListSize,-1);
+    }
+	vector<int>* vlist = grains[gnum].voxellist;
+	if (vnum >= (vlist->size()/2))
+	{
+	   vlist->resize(vlist->size()+vListSize,-1);
+	}
+	vlist->at(vnum) = i;
+	vnum++;
+	grains[gnum].numvoxels = vnum;
 	if(gnum > numgrains) numgrains = gnum;
   }
   numgrains = numgrains+1;
+  for(int i=0;i<numgrains;i++)
+  {
+	if(grains[i].numvoxels > 0)
+	{
+		vector<int>* vlist = grains[i].voxellist;
+		vlist->erase(std::remove(vlist->begin(),vlist->end(),-1),vlist->end());
+		int numvoxels = int(vlist->size());
+		grains[i].numvoxels = numvoxels;
+		grains[i].voxellist = new std::vector<int>(numvoxels);
+		grains[i].voxellist = vlist;
+	}
+  }
   inputFile.close();
-  ifstream inputFile2;
 return numgrains;
 }
 void  ReconstructionFunc::merge_twins ()
@@ -1209,9 +1243,9 @@ void  ReconstructionFunc::find_goodneighbors()
 	  {
 		  nnum = grains[grain].numneighbors;
 		  vector<int>* nlist = grains[grain].neighborlist;
-          if (nnum >= (nlist->size()/2))
+          if (nnum >= (0.9*nlist->size()))
           {
-             nlist->resize(nlist->size() + nListSize);
+             nlist->resize(nnum + nListSize);
           }
 		  nlist->at(nnum) = grain1;
 		  nnum++;
@@ -1225,9 +1259,9 @@ void  ReconstructionFunc::find_goodneighbors()
 	  {
 		  nnum = grains[grain].numneighbors;
 		  vector<int>* nlist = grains[grain].neighborlist;
-          if (nnum >= (nlist->size()/2))
+          if (nnum >= (0.9*nlist->size()))
           {
-             nlist->resize(nlist->size() + nListSize);
+             nlist->resize(nnum + nListSize);
           }
 		  nlist->at(nnum) = grain2;
 		  nnum++;
@@ -1241,9 +1275,9 @@ void  ReconstructionFunc::find_goodneighbors()
 	  {
 		  nnum = grains[grain].numneighbors;
 		  vector<int>* nlist = grains[grain].neighborlist;
-          if (nnum >= (nlist->size()/2))
+          if (nnum >= (0.9*nlist->size()))
           {
-             nlist->resize(nlist->size() + nListSize);
+             nlist->resize(nnum + nListSize);
           }
 		  nlist->at(nnum) = grain3;
 		  nnum++;
@@ -1257,9 +1291,9 @@ void  ReconstructionFunc::find_goodneighbors()
 	  {
 		  nnum = grains[grain].numneighbors;
 		  vector<int>* nlist = grains[grain].neighborlist;
-          if (nnum >= (nlist->size()/2))
+          if (nnum >= (0.9*nlist->size()))
           {
-             nlist->resize(nlist->size() + nListSize);
+             nlist->resize(nnum + nListSize);
           }
 		  nlist->at(nnum) = grain4;
 		  nnum++;
@@ -1273,9 +1307,9 @@ void  ReconstructionFunc::find_goodneighbors()
 	  {
 		  nnum = grains[grain].numneighbors;
 		  vector<int>* nlist = grains[grain].neighborlist;
-          if (nnum >= (nlist->size()/2))
+          if (nnum >= (0.9*nlist->size()))
           {
-             nlist->resize(nlist->size() + nListSize);
+             nlist->resize(nnum + nListSize);
           }
 		  nlist->at(nnum) = grain5;
 		  nnum++;
@@ -1289,9 +1323,9 @@ void  ReconstructionFunc::find_goodneighbors()
 	  {
 		  nnum = grains[grain].numneighbors;
 		  vector<int>* nlist = grains[grain].neighborlist;
-          if (nnum >= (nlist->size()/2))
+          if (nnum >= (0.9*nlist->size()))
           {
-             nlist->resize(nlist->size() + nListSize);
+             nlist->resize(nnum + nListSize);
           }
 		  nlist->at(nnum) = grain6;
 		  nnum++;
@@ -2923,7 +2957,7 @@ void  ReconstructionFunc::write_volume(string writename11)
   outFile << "DATASET STRUCTURED_POINTS" << endl;
   outFile << "DIMENSIONS " << xpoints << " " << ypoints << " " << zpoints << endl;
   outFile << "ORIGIN 0.0 0.0 0.0" << endl;
-  outFile << "SPACING " << resx << " " << -resy << " " << -resz << endl;
+  outFile << "SPACING " << resx << " " << resy << " " << resz << endl;
   outFile << "POINT_DATA " << xpoints*ypoints*zpoints << endl;
   outFile << endl;
   outFile << endl;
@@ -2947,6 +2981,14 @@ void  ReconstructionFunc::write_volume(string writename11)
   {
     if(i%20 == 0 && i > 0) outFile << endl;
 	outFile << voxels[i].misorientation << " ";
+  }
+  outFile << endl;
+  outFile << "SCALARS ImageQuality float" << endl;
+  outFile << "LOOKUP_TABLE default" << endl;
+  for (int i = 0; i < (xpoints*ypoints*zpoints); i++)
+  {
+    if(i%20 == 0 && i > 0) outFile << endl;
+	outFile << voxels[i].imagequality << " ";
   }
   outFile << endl;
   outFile << "COLOR_SCALARS colors 3" << endl;
