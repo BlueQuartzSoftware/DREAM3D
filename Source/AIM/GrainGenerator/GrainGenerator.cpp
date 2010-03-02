@@ -144,7 +144,7 @@ void GrainGenerator::compute()
 
    CHECK_FOR_CANCELED(ReconstructionFunc)
    progressMessage(AIM_STRING("Generating Grains"), 20 );
-   m->generate_grains(m->numgrains, AnalysisFile);
+   m->generate_grains(m->numgrains);
 
    CHECK_FOR_CANCELED(ReconstructionFunc)
    progressMessage(AIM_STRING("Initializing"), 25 );
@@ -158,11 +158,11 @@ void GrainGenerator::compute()
    progressMessage(AIM_STRING("Packing Grains"), 35 );
    m->make_points(m->numgrains);
 
-/*   CHECK_FOR_CANCELED(ReconstructionFunc)
+   CHECK_FOR_CANCELED(ReconstructionFunc)
    progressMessage(AIM_STRING("Filling Gaps"), 40 );
    m->fill_gaps(m->numgrains);
 
-   CHECK_FOR_CANCELED(ReconstructionFunc)
+/*   CHECK_FOR_CANCELED(ReconstructionFunc)
    progressMessage(AIM_STRING("Finding Neighbors"), 45 );
    m->find_neighbors();
 
@@ -214,7 +214,7 @@ void GrainGenerator::compute()
 
    CHECK_FOR_CANCELED(ReconstructionFunc)
    progressMessage(AIM_STRING("writing Cube"), 90 );
-   m->writeCube(CubeFile, m->numgrains);
+   m->writeCube(CubeFile, m->numgrains, AnalysisFile);
    
    CHECK_FOR_CANCELED(ReconstructionFunc)
    progressMessage(AIM_STRING("Writing DX File"), 94);
