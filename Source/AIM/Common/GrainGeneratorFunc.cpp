@@ -177,14 +177,14 @@ void  GrainGeneratorFunc::loadorientData(string inname6)
 {
   ifstream inputFile;
   inputFile.open(inname6.c_str());
-  int count = 0;
   double density;
+  double totaldensity = 0;
   inputFile >> numorients;
   for (long k = 0; k < (18*18*18); k++)
   {
     inputFile >> density;
-	axisodf[k].density = density;
-    count++;
+	totaldensity = totaldensity+density;
+	axisodf[k].density = totaldensity;
   }
   inputFile.close();
 }
@@ -202,7 +202,7 @@ void  GrainGeneratorFunc::loadeulerData(string inname7)
   inputFile.close();
 }
 
-void  GrainGeneratorFunc::generate_grains(int numgrains, string afile)
+void  GrainGeneratorFunc::generate_grains(int numgrains)
 {
   int good = 0;
   double r1 = 1;
@@ -214,8 +214,6 @@ void  GrainGeneratorFunc::generate_grains(int numgrains, string afile)
   double vol = 0;
   rg.RandomInit((static_cast<unsigned int>(time(NULL))));
   totalvol = 0;
-  ofstream outFile;
-  outFile.open(afile.c_str());
   for(int l = 0; l < numgrains; l++)
   {
     int volgood = 0;
@@ -224,9 +222,8 @@ void  GrainGeneratorFunc::generate_grains(int numgrains, string afile)
 		volgood = 1;
 	    u = rg.Random();
 		diam = rg.RandNorm(avgdiam,sddiam);
+		if((fabs(diam-avgdiam)/sddiam) > 2.0) volgood = 0;
 		diam = exp(diam);
-		if((fabs(diam-avgdiam)/sddiam) > 3.0) volgood = 0;
-		outFile << diam << endl;
 		vol = (4.0/3.0)*(m_pi)*((diam/2.0)*(diam/2.0)*(diam/2.0));
 	}
     int diameter = int(diam);
@@ -513,7 +510,7 @@ void  GrainGeneratorFunc::make_points(int numgrains)
     gridfine[b].available = init;
     gridfine[b].available90 = init;
   }
-  for (int i = 0; i < 500; i++)
+  for (int i = 0; i < numgrains; i++)
   {
 	nsdist[i].resize(maxdiameter+1);
     good = 0;
@@ -942,8 +939,8 @@ void  GrainGeneratorFunc::make_points(int numgrains)
         double nvolume = 1.3333333333*(m_pi)*radold1*radold2*radold3;
         double nvolbin = nvolume*0.75/m_pi;
         int nvbin = int(2*pow(nvolbin,0.3333333333));
-        if(nvbin >= maxdiameter) vbin = maxdiameter;
-        if(nvbin <= mindiameter) vbin = mindiameter;
+        if(nvbin >= maxdiameter) nvbin = maxdiameter;
+        if(nvbin <= mindiameter) nvbin = mindiameter;
         double total = 0;
         for(int q = mindiameter; q < maxdiameter+1; q++)
         {
@@ -1018,11 +1015,21 @@ void  GrainGeneratorFunc::make_points(int numgrains)
               uniquecurcoursesize++;
             }
             gridcourse[point].available90 = taken90;
-			availablelist.erase(remove_if(availablelist.begin(),availablelist.end(),bind2nd(equal_to<int>(),point)),availablelist.end());
           }
         }
       }
     }
+	size = availablelist.size();
+	for(int p=0;p<size;p++)
+	{
+		int point = availablelist[p];
+		if(gridcourse[point].available90 == 0)
+		{
+			availablelist.erase(availablelist.begin()+p);
+			p = p-1;
+			size = availablelist.size();
+		}
+	}
     if(overlapassignment == 2)
     {
       for(int e=0;e<i;e++)
@@ -1864,10 +1871,10 @@ void  GrainGeneratorFunc::freeze_grains(int numgrains)
 }
 
 
-void  GrainGeneratorFunc::writeCube(string outname1, int numgrains)
+void  GrainGeneratorFunc::writeCube(string outname1, int numgrains, string outname2)
 {
-    ofstream outFile;
-    outFile.open(outname1.c_str());
+  ofstream outFile;
+  outFile.open(outname1.c_str());
   outFile << "# vtk DataFile Version 2.0" << endl;
   outFile << "data set from FFT2dx_GB" << endl;
   outFile << "ASCII" << endl;
@@ -1880,10 +1887,15 @@ void  GrainGeneratorFunc::writeCube(string outname1, int numgrains)
   outFile << endl;
   outFile << "SCALARS GrainID int  1" << endl;
   outFile << "LOOKUP_TABLE default" << endl;
+  for (int i = 0; i < numgrains; i++)
+  {
+	gsizes[i]=0;
+  }
   for (int i = 0; i < (xpoints*ypoints*zpoints); i++)
   {
     if(i%20 == 0 && i > 0) outFile << endl;
     int name = gridfine[i].grainname;
+	gsizes[name]++;
 //    int column = (i%xpoints);
 //    int row = ((i/xpoints)%ypoints);
 //    int plane = (i/(xpoints*ypoints));
@@ -1902,6 +1914,12 @@ void  GrainGeneratorFunc::writeCube(string outname1, int numgrains)
     outFile << name;
   }
   outFile.close();
+  ofstream outFile2;
+  outFile2.open(outname2.c_str());
+  for(int i=0;i<numgrains;i++)
+  {
+	outFile2 << double(gsizes[i])/64.0 << endl;
+  }
 }
 
 void GrainGeneratorFunc::write_eulerangles(string writename10)
