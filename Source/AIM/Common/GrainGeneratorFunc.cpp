@@ -85,8 +85,8 @@ void GrainGeneratorFunc::initialize(int32 m_NumGrains, int32 m_ShapeClass,
   packedgrain = new Grain[numgrains];
   gsizes = new int[numgrains];
   gremovals = new int[numgrains];
-  eulerodf = new Orient[18*18*18];
-  axisodf = new Orient[18*18*18];
+  eulerodf = new Bin[18*18*18];
+  axisodf = new Bin[18*18*18];
   actualmisobin = new Bin[10];
   simmisobin = new Bin[10];
   actualmicrobin = new Bin[10];
@@ -117,7 +117,7 @@ void  GrainGeneratorFunc::loadStatsData(string inname1)
 	coverb.resize(maxdiameter+1);
 	svn.resize(maxdiameter+1);
 	svs.resize(maxdiameter+1);
-	svshape.resize(maxdiameter+1);
+	svomega3.resize(maxdiameter+1);
 	for(int iter=0;iter<mindiameter;iter++)
 	{
 		bovera[iter].resize(2);
@@ -125,7 +125,7 @@ void  GrainGeneratorFunc::loadStatsData(string inname1)
 		coverb[iter].resize(2);
 		svn[iter].resize(2);
 		svs[iter].resize(2);
-		svshape[iter].resize(2);
+		svomega3[iter].resize(2);
 	}
 	for(int temp7 = 0; temp7 < numdiameters; temp7++)
 	{
@@ -165,9 +165,9 @@ void  GrainGeneratorFunc::loadStatsData(string inname1)
 	for(int temp7 = 0; temp7 < numdiameters; temp7++)
 	{
 		inputFile >> diam >> param1 >> param2;
-		svshape[diam].resize(2);
-		svshape[diam][0]=param1;
-		svshape[diam][1]=param2;
+		svomega3[diam].resize(2);
+		svomega3[diam][0]=param1;
+		svomega3[diam][1]=param2;
 	}
     inputFile.close();
 }
@@ -234,13 +234,9 @@ void  GrainGeneratorFunc::generate_grains(int numgrains)
     {
 	  a1 = bovera[diameter][0];
 	  b1 = bovera[diameter][1];
-	  u1 = rg.Random();
-	  u2 = rg.Random();
 	  r2 = rg.RandBeta(a1,b1);
 	  a2 = covera[diameter][0];
 	  b2 = covera[diameter][1];
-	  u1 = rg.Random();
-	  u2 = rg.Random();
 	  r3 = rg.RandBeta(a2,b2);
       double cob = r3/r2;
 	  a3 = coverb[diameter][0];
@@ -286,11 +282,9 @@ void  GrainGeneratorFunc::generate_grains(int numgrains)
     double r3x = ga[0][2];
     double r3y = ga[1][2];
     double r3z = ga[2][2];
-    u = rg.Random();
-	double m = svshape[diameter][0];
-	double s = svshape[diameter][1];
-	double N = rg.RandNorm(m,s);
-	N = exp(N);
+	double m = svomega3[diameter][0];
+	double s = svomega3[diameter][1];
+	double omega3 = rg.RandBeta(m,s);
     int gnum = l;
     grains[l].grainname = gnum;
     grains[l].volume = vol;
@@ -306,7 +300,7 @@ void  GrainGeneratorFunc::generate_grains(int numgrains)
     grains[l].axis3x = r3x;
     grains[l].axis3y = r3y;
     grains[l].axis3z = r3z;
-    grains[l].Nvalue = N;
+	grains[l].omega3 = omega3;
     totalvol = totalvol + vol;
   }
   double sizex = int(pow((totalvol*1),0.33333));
@@ -472,6 +466,8 @@ void  GrainGeneratorFunc::make_points(int numgrains)
   int zmin = 0;
   int zmax = 0;
   long j = 0;
+  double Nvalue = 0;
+  double Gvalue = 0;
   double xc = 0;
   double yc = 0;
   double zc = 0;
@@ -525,23 +521,26 @@ void  GrainGeneratorFunc::make_points(int numgrains)
     double volcur = grains[curgrain].volume;
 	double bovera = grains[curgrain].radius2;
 	double covera = grains[curgrain].radius3;
-    double Nvalue = grains[curgrain].Nvalue;
-    double beta1 = (gamma((1.0/Nvalue))*gamma((1.0/Nvalue)))/gamma((2.0/Nvalue));
-    double beta2 = (gamma((2.0/Nvalue))*gamma((1.0/Nvalue)))/gamma((3.0/Nvalue));
+	double omega3 = grains[curgrain].omega3;
+
     double radcur1 = 1;
     if(shapeclass == 3)
     {
-      if(Nvalue >= 0 && Nvalue <= 1)
+	  Gvalue = omega3;
+      if(Gvalue >= 0 && Gvalue <= 1)
       {
-        radcur1 = (volcur*6.0)/(6-(Nvalue*Nvalue*Nvalue));
+        radcur1 = (volcur*6.0)/(6-(Gvalue*Gvalue*Gvalue));
       }
-      if(Nvalue > 1 && Nvalue <= 2)
+      if(Gvalue > 1 && Gvalue <= 2)
       {
-        radcur1 = (volcur*6.0)/(3+(9*Nvalue)-(9*Nvalue*Nvalue)+(2*Nvalue*Nvalue*Nvalue));
+        radcur1 = (volcur*6.0)/(3+(9*Gvalue)-(9*Gvalue*Gvalue)+(2*Gvalue*Gvalue*Gvalue));
       }
     }
     if(shapeclass == 2)
     {
+	  Nvalue = omega3;
+      double beta1 = (gamma((1.0/Nvalue))*gamma((1.0/Nvalue)))/gamma((2.0/Nvalue));
+      double beta2 = (gamma((2.0/Nvalue))*gamma((1.0/Nvalue)))/gamma((3.0/Nvalue));
       radcur1 = (volcur*(3.0/2.0)*(1.0/bovera)*(1.0/covera)*((Nvalue*Nvalue)/4.0)*(1.0/beta1)*(1.0/beta2));
     }
     if(shapeclass == 1)
@@ -728,14 +727,14 @@ void  GrainGeneratorFunc::make_points(int numgrains)
                   axis1comp = axis1comp+1;
                   axis2comp = axis2comp+1;
                   axis3comp = axis3comp+1;
-                  if(((-axis1comp)+(-axis2comp)+(axis3comp)-((-0.5*Nvalue)+(-0.5*Nvalue)+2)) > 0) inside = -1;
-                  if(((axis1comp)+(-axis2comp)+(axis3comp)-((2-(0.5*Nvalue))+(-0.5*Nvalue)+2)) > 0) inside = -1;
-                  if(((axis1comp)+(axis2comp)+(axis3comp)-((2-(0.5*Nvalue))+(2-(0.5*Nvalue))+2)) > 0) inside = -1;
-                  if(((-axis1comp)+(axis2comp)+(axis3comp)-((-0.5*Nvalue)+(2-(0.5*Nvalue))+2)) > 0) inside = -1;
-                  if(((-axis1comp)+(-axis2comp)+(-axis3comp)-((-0.5*Nvalue)+(-0.5*Nvalue))) > 0) inside = -1;
-                  if(((axis1comp)+(-axis2comp)+(-axis3comp)-((2-(0.5*Nvalue))+(-0.5*Nvalue))) > 0) inside = -1;
-                  if(((axis1comp)+(axis2comp)+(-axis3comp)-((2-(0.5*Nvalue))+(2-(0.5*Nvalue)))) > 0) inside = -1;
-                  if(((-axis1comp)+(axis2comp)+(-axis3comp)-((-0.5*Nvalue)+(2-(0.5*Nvalue)))) > 0) inside = -1;
+                  if(((-axis1comp)+(-axis2comp)+(axis3comp)-((-0.5*Gvalue)+(-0.5*Gvalue)+2)) > 0) inside = -1;
+                  if(((axis1comp)+(-axis2comp)+(axis3comp)-((2-(0.5*Gvalue))+(-0.5*Gvalue)+2)) > 0) inside = -1;
+                  if(((axis1comp)+(axis2comp)+(axis3comp)-((2-(0.5*Gvalue))+(2-(0.5*Gvalue))+2)) > 0) inside = -1;
+                  if(((-axis1comp)+(axis2comp)+(axis3comp)-((-0.5*Gvalue)+(2-(0.5*Gvalue))+2)) > 0) inside = -1;
+                  if(((-axis1comp)+(-axis2comp)+(-axis3comp)-((-0.5*Gvalue)+(-0.5*Gvalue))) > 0) inside = -1;
+                  if(((axis1comp)+(-axis2comp)+(-axis3comp)-((2-(0.5*Gvalue))+(-0.5*Gvalue))) > 0) inside = -1;
+                  if(((axis1comp)+(axis2comp)+(-axis3comp)-((2-(0.5*Gvalue))+(2-(0.5*Gvalue)))) > 0) inside = -1;
+                  if(((-axis1comp)+(axis2comp)+(-axis3comp)-((-0.5*Gvalue)+(2-(0.5*Gvalue)))) > 0) inside = -1;
                 }
               }
               if(shapeclass == 2)
@@ -1341,11 +1340,11 @@ void  GrainGeneratorFunc::loadMisoData(string inname10)
     ifstream inputFile;
     inputFile.open(inname10.c_str());
   int count = 0;
-  double height = 0;
+  double density = 0;
     for (int k = 0; k < nummisobins; k++)
     {
-    inputFile >> height;
-    actualmisobin[count].height = height;
+		inputFile >> density;
+		actualmisobin[count].density = density;
         count++;
     }
     inputFile.close();
@@ -1356,11 +1355,11 @@ void  GrainGeneratorFunc::loadMicroData(string inname11)
     ifstream inputFile;
     inputFile.open(inname11.c_str());
   int count = 0;
-  double height = 0;
+  double density = 0;
     for (int k = 0; k < nummicrobins; k++)
     {
-    inputFile >> height;
-    actualmicrobin[count].height = height;
+		inputFile >> density;
+		actualmicrobin[count].density = density;
         count++;
     }
     inputFile.close();
@@ -1450,8 +1449,8 @@ void  GrainGeneratorFunc::rank_misobins(int numgrains)
   int check = 0;
   for(int h = 0; h < nummisobins; h++)
   {
-    int tempheight = 0;
-    simmisobin[h].height = tempheight;
+    int tempdensity = 0;
+	simmisobin[h].density = tempdensity;
   }
   for(int i = 0; i < numgrains; i++)
   {
@@ -1461,18 +1460,18 @@ void  GrainGeneratorFunc::rank_misobins(int numgrains)
     {
       double misofirst = misolist->at(k);
       int misocur = int(misofirst/(100/nummisobins));
-      double height = simmisobin[misocur].height;
-      height = height + 1;
-      simmisobin[misocur].height = height;
+	  double density = simmisobin[misocur].density;
+      density = density + 1;
+      simmisobin[misocur].density = density;
       count++;
     }
   }
   for(int j = 0; j < nummisobins; j ++)
   {
-    double actualheight = actualmisobin[j].height;
-    actualheight = actualheight*count;
-    double simheight = simmisobin[j].height;
-    double diff = fabs(simheight-actualheight);
+    double actualdensity = actualmisobin[j].density;
+    actualdensity = actualdensity*count;
+    double simdensity = simmisobin[j].density;
+    double diff = fabs(simdensity-actualdensity);
     simmisobin[j].difference = diff;
     double temp = 0;
     simmisobin[j].binrank = temp;
@@ -1493,9 +1492,9 @@ void  GrainGeneratorFunc::rank_misobins(int numgrains)
       }
     }
     double rank = nummisobins-check;
-    double actual = actualmisobin[curbin].height;
+    double actual = actualmisobin[curbin].density;
     actual = actual*count;
-    double sim = simmisobin[curbin].height;
+    double sim = simmisobin[curbin].density;
     if((sim-actual) < 0)
     {
       rank = -rank;
@@ -1531,23 +1530,23 @@ int  GrainGeneratorFunc::rank_microbins(int numgrains)
   int check = 0;
   for(int h = 0; h < nummicrobins; h++)
   {
-    int tempheight = 0;
-    simmicrobin[h].height = tempheight;
+    int tempdensity = 0;
+    simmicrobin[h].density = tempdensity;
   }
   for(int i = 0; i < numgrains; i++)
   {
     double microtexture = packedgrain[i].lowanglefraction;
     int microcur = int(microtexture*(nummicrobins));
-    double height = simmicrobin[microcur].height;
-    height = height + 1;
-    simmicrobin[microcur].height = height;
+    double density = simmicrobin[microcur].density;
+    density = density + 1;
+    simmicrobin[microcur].density = density;
   }
   for(int j = 0; j < nummicrobins; j ++)
   {
-    double actualheight = actualmicrobin[j].height;
-    actualheight = actualheight*numgrains;
-    double simheight = simmicrobin[j].height;
-    double diff = fabs(simheight-actualheight);
+    double actualdensity = actualmicrobin[j].density;
+    actualdensity = actualdensity*numgrains;
+    double simdensity = simmicrobin[j].density;
+    double diff = fabs(simdensity-actualdensity);
     simmicrobin[j].difference = diff;
     double temp = 0;
     simmicrobin[j].binrank = temp;
@@ -1567,9 +1566,9 @@ int  GrainGeneratorFunc::rank_microbins(int numgrains)
       }
     }
     double rank = nummicrobins-check;
-    double actual = actualmicrobin[curbin].height;
+    double actual = actualmicrobin[curbin].density;
     actual = actual*numgrains;
-    double sim = simmicrobin[curbin].height;
+    double sim = simmicrobin[curbin].density;
     if((sim-actual) < 0)
     {
       rank = -rank;
@@ -1577,10 +1576,10 @@ int  GrainGeneratorFunc::rank_microbins(int numgrains)
     simmicrobin[curbin].binrank = rank;
     check++;
   }
-  double heightcheck = simmicrobin[nummicrobins-1].height;
-  double heightcheck2temp = actualmicrobin[nummicrobins-1].height;
-  double heightcheck2 = heightcheck2temp*numgrains;
-  double percenterror = (heightcheck2-heightcheck)/heightcheck2;
+  double densitycheck = simmicrobin[nummicrobins-1].density;
+  double densitycheck2temp = actualmicrobin[nummicrobins-1].density;
+  double densitycheck2 = densitycheck2temp*numgrains;
+  double percenterror = (densitycheck2-densitycheck)/densitycheck2;
   if(percenterror < 0.15)
   {
     count = 1;
@@ -1879,10 +1878,10 @@ void  GrainGeneratorFunc::writeCube(string outname1, int numgrains, string outna
   outFile << "data set from FFT2dx_GB" << endl;
   outFile << "ASCII" << endl;
   outFile << "DATASET STRUCTURED_POINTS" << endl;
-  outFile << "DIMENSIONS " << xpoints << " " << ypoints << " " << zpoints << endl;
+  outFile << "DIMENSIONS " << xpoints << " " << ypoints << " " << (zpoints/2.0) << endl;
   outFile << "ORIGIN 0.0 0.0 0.0" << endl;
   outFile << "SPACING " << resx << " " << resy << " " << resz << endl;
-  outFile << "POINT_DATA " << xpoints*ypoints*zpoints << endl;
+  outFile << "POINT_DATA " << xpoints*ypoints*(zpoints/2.0) << endl;
   outFile << endl;
   outFile << endl;
   outFile << "SCALARS GrainID int  1" << endl;
@@ -1893,7 +1892,6 @@ void  GrainGeneratorFunc::writeCube(string outname1, int numgrains, string outna
   }
   for (int i = 0; i < (xpoints*ypoints*zpoints); i++)
   {
-    if(i%20 == 0 && i > 0) outFile << endl;
     int name = gridfine[i].grainname;
 	gsizes[name]++;
 //    int column = (i%xpoints);
@@ -1906,12 +1904,17 @@ void  GrainGeneratorFunc::writeCube(string outname1, int numgrains, string outna
 //    double r = packedgrain[gnum].red;
 //    double g = packedgrain[gnum].green;
 //    double b = packedgrain[gnum].blue;
-    outFile << "   ";
-    if(name < 10000) outFile << " ";
-    if(name < 1000) outFile << " ";
-    if(name < 100) outFile << " ";
-    if(name < 10) outFile << " ";
-    outFile << name;
+    double z = find_zcoord(i);
+	if((z/resz) > (zpoints/2.0))
+	{
+		if(i%20 == 0 && i > 0) outFile << endl;
+	    outFile << "   ";
+		if(name < 10000) outFile << " ";
+		if(name < 1000) outFile << " ";
+		if(name < 100) outFile << " ";
+		if(name < 10) outFile << " ";
+		outFile << name;
+	}
   }
   outFile.close();
   ofstream outFile2;
@@ -2042,3 +2045,19 @@ double GrainGeneratorFunc::gamma(double x)
     return ga;
 }
 
+
+double GrainGeneratorFunc::find_xcoord(long index)
+{
+	double x = resx*double(index%xpoints);
+	return x;
+}
+double GrainGeneratorFunc::find_ycoord(long index)
+{
+	double y = resy*double((index/xpoints)%ypoints);
+	return y;
+}
+double GrainGeneratorFunc::find_zcoord(long index)
+{
+	double z = resz*double(index/(xpoints*ypoints));
+	return z;
+}

@@ -18,7 +18,7 @@
 
 
 /**
-* @class Bin Bin.h AIM/Common/Bin.h
+* @class Orient Orient.h AIM/Common/Orient.h
 * @brief Support class for the MicroGen3D class
 * @author Michael A. Jackson for BlueQuartz Software, Dr. Michael Groeber for USAFRL
 * @date Nov 4, 2009
@@ -30,20 +30,9 @@ class Bin
     Bin();
     virtual ~Bin();
 
-    double euler1;
-    double euler2;
-    double euler3;
-    double dprobability;
-    double sprobability;
-    double Nprobability;
-    double Nvalue;
-    double bctotprobability;
-    double diameter;
-    double rad;
-    double bctotal;
-    double difference;
-    double height;
-    double binrank;
+    double density;
+	double difference;
+	int binrank;
 
   private:
     Bin(const Bin&);    // Copy Constructor Not Implemented

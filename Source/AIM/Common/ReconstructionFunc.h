@@ -36,7 +36,6 @@
 #include <AIM/Common/Grain.h>
 #include <AIM/Common/Voxel.h>
 #include <AIM/Common/Bin.h>
-#include <AIM/Common/Orient.h>
 #include <AIM/Common/AIMRandomNG.h>
 #include <AIM/ANG/AngFileHelper.h>
 
@@ -80,8 +79,8 @@ public:
 	Voxel* voxels;
 	Voxel* tempvoxels;
 	Grain* grains;
-	Orient *eulerodf;
-	Orient *axisodf;
+	Bin *eulerodf;
+	Bin *axisodf;
 
 	int **shifts;
 	int **arr;

@@ -36,7 +36,6 @@
 #include <AIM/Common/Grain.h>
 #include <AIM/Common/Voxel.h>
 #include <AIM/Common/Bin.h>
-#include <AIM/Common/Orient.h>
 #include <AIM/Common/AIMRandomNG.h>
 #include <AIM/ANG/AngFileHelper.h>
 
@@ -79,9 +78,8 @@ AngFileHelper::Pointer m_angFileHelper;
 	int* gsizes;
 	int* gremovals;
 
-	Bin* eulerbin;
-	Orient* eulerodf;
-	Orient* axisodf;
+	Bin* eulerodf;
+	Bin* axisodf;
 	Voxel* gridfine;
 	Voxel* gridcourse;
 	Bin* actualmisobin;
@@ -97,7 +95,7 @@ AngFileHelper::Pointer m_angFileHelper;
 	vector<vector<double> > coverb;
 	vector<vector<double> > svn;
 	vector<vector<double> > svs;
-	vector<vector<double> > svshape;
+	vector<vector<double> > svomega3;
 	vector<vector<int> > nsdist;
 	
 

@@ -84,7 +84,6 @@ class Grain
     double oeuler3;
     int grainname;
     double volume;
-    double Nvalue;
     double nserror;
     int currentsize;
     int initsize;

@@ -66,7 +66,7 @@ void AngFileHelper::loadData(Voxel tempvoxels[],
       for (int i = 0; i < tempxpoints; i++)
       {
         index = ((j * tempxpoints) + i);
-	    if(slice > 0)
+	    if(slice == 1)
 		{
 			newindex = index+(tempxpoints*tempypoints);
 			tempvoxels[newindex].euler1 = tempvoxels[index].euler1; 

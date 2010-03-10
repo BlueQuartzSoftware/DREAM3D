@@ -99,8 +99,12 @@ void SurfaceMeshFunc::initialize_micro(string filename)
   // Let's input the grainname numbers for each site from micro.input...
   for (i = 1; i <= NS; i++)
   {
+	int col = (i-1)%xDim;
+	int row = ((i-1)/xDim)%yDim;
+	int plane = (i-1)/(xDim*yDim);
     inputFile >> tgrainname;
     point[i].grainname = tgrainname;
+	if(col == 0 || col == (xDim-1) || row == 0 || row == (yDim-1) || plane == 0 || plane == (zDim-1)) point[i].grainname = -3;
   }
 
   inputFile.close();
@@ -229,45 +233,45 @@ void SurfaceMeshFunc::initialize_nodes(int zID)
     y = find_ycoord(tsite);
     z = find_zcoord(tsite);
 
-    cVertex[id].xc = x + 0.5;
+    cVertex[id].xc = x + (0.5*xRes);
     cVertex[id].yc = y;
     cVertex[id].zc = z;
     cVertex[id].nodeKind = 0;
     cVertex[id].newNodeID = -1;
 
     cVertex[id + 1].xc = x;
-    cVertex[id + 1].yc = y + 0.5;
+    cVertex[id + 1].yc = y + (0.5*yRes);
     cVertex[id + 1].zc = z;
     cVertex[id + 1].nodeKind = 0;
     cVertex[id + 1].newNodeID = -1;
 
     cVertex[id + 2].xc = x;
     cVertex[id + 2].yc = y;
-    cVertex[id + 2].zc = z + 0.5;
+    cVertex[id + 2].zc = z + (0.5*zRes);
     cVertex[id + 2].nodeKind = 0;
     cVertex[id + 2].newNodeID = -1;
 
-   cVertex [id + 3].xc = x + 0.5;
-   cVertex [id + 3].yc = y + 0.5;
+   cVertex [id + 3].xc = x + (0.5*xRes);
+   cVertex [id + 3].yc = y + (0.5*yRes);
    cVertex [id + 3].zc = z;
    cVertex [id + 3].nodeKind = 0;
    cVertex [id + 3].newNodeID = -1;
 
-   cVertex [id + 4].xc = x + 0.5;
+   cVertex [id + 4].xc = x + (0.5*xRes);
    cVertex [id + 4].yc = y;
-   cVertex [id + 4].zc = z + 0.5;
+   cVertex [id + 4].zc = z + (0.5*zRes);
    cVertex [id + 4].nodeKind = 0;
    cVertex [id + 4].newNodeID = -1;
 
    cVertex [id + 5].xc = x;
-   cVertex [id + 5].yc = y + 0.5;
-   cVertex [id + 5].zc = z + 0.5;
+   cVertex [id + 5].yc = y + (0.5*yRes);
+   cVertex [id + 5].zc = z + (0.5*zRes);
    cVertex [id + 5].nodeKind = 0;
    cVertex [id + 5].newNodeID = -1;
 
-    cVertex[id + 6].xc = x + 0.5;
-    cVertex[id + 6].yc = y + 0.5;
-    cVertex[id + 6].zc = z + 0.5;
+    cVertex[id + 6].xc = x + (0.5*xRes);
+    cVertex[id + 6].yc = y + (0.5*yRes);
+    cVertex[id + 6].zc = z + (0.5*zRes);
     cVertex[id + 6].nodeKind = 0;
     cVertex[id + 6].newNodeID = -1;
 
@@ -275,6 +279,24 @@ void SurfaceMeshFunc::initialize_nodes(int zID)
 
 }
 
+double SurfaceMeshFunc::find_xcoord(long index)
+{
+	index = index-1;
+	double x = xRes*double(index%xDim);
+	return x;
+}
+double SurfaceMeshFunc::find_ycoord(long index)
+{
+	index = index-1;
+	double y = yRes*double((index/xDim)%yDim);
+	return y;
+}
+double SurfaceMeshFunc::find_zcoord(long index)
+{
+	index = index-1;
+	double z = zRes*double(index/(xDim*yDim));
+	return z;
+}
 void SurfaceMeshFunc::initialize_squares(int zID)
 {
 
@@ -488,8 +510,6 @@ void SurfaceMeshFunc::get_nodes_fEdges(int eT2d[20][8], int NST2d[20][8], int zI
 			  get_grainnames(tngrainname,pixIndex,pixgrainname);
 			  if(pixgrainname[0] > 0 || pixgrainname[1] >0)
 			  {
-				  cFedge[eid].node_id[0] = tnode1; // actual node ids for each edge...
-				  cFedge[eid].node_id[1] = tnode2;
 				  // Categorize the node...if it's triple junction or not...
 				  for (ii = 0; ii < 2; ii++)
 				  {
@@ -521,9 +541,8 @@ void SurfaceMeshFunc::get_nodes_fEdges(int eT2d[20][8], int NST2d[20][8], int zI
 					}
 				  }
 
-				  // Get the grain grainname across the edges...
-				  get_grainnames(tngrainname, pixIndex, pixgrainname);
-
+				  cFedge[eid].node_id[0] = tnode1; // actual node ids for each edge...
+				  cFedge[eid].node_id[1] = tnode2;
 				  cFedge[eid].neigh_grainname[0] = pixgrainname[0];
 				  cFedge[eid].neigh_grainname[1] = pixgrainname[1];
 				  //if(pixgrainname[0]==pixgrainname[1]){
@@ -677,7 +696,7 @@ int SurfaceMeshFunc::treat_anomaly(int tNSt[4], int zID1)
   int min, minid;
 
   int numNeigh[4];
-  min = 0;
+  min = 27;
   minid = -1;
 
   for (k = 0; k < 4; k++)
@@ -1312,10 +1331,10 @@ int SurfaceMeshFunc::get_number_case0_triangles(int *afe, int nfedge)
             lid = burnt[kk];
           }
         }
-        printf("%5d   %3d   %5d %5d   %5d %5d\n", cedge, lid, cFedge[cedge].node_id[0], cFedge[cedge].node_id[1], cFedge[cedge].neigh_grainname[0], cFedge[cedge].neigh_grainname[1]);
+//        printf("%5d   %3d   %5d %5d   %5d %5d\n", cedge, lid, cFedge[cedge].node_id[0], cFedge[cedge].node_id[1], cFedge[cedge].neigh_grainname[0], cFedge[cedge].neigh_grainname[1]);
       }
 
-      printf("\n");
+//      printf("\n");
 
     }
 
@@ -4411,8 +4430,8 @@ void SurfaceMeshFunc::get_output_nodes(int zID, string NodesRawFile)
 
   start = end - count + 1;
 
-//  tempcVertex = new Node[count];
-  order.resize(count);
+  tempcVertex = new Node[count];
+//  order.resize(count);
   // rearrange the order...
   for (k = 0; k < finish; k++)
   {
@@ -4424,12 +4443,12 @@ void SurfaceMeshFunc::get_output_nodes(int zID, string NodesRawFile)
     if (tID != -1)
     {
       index = tID - start;
-      order[index] = k;
-//      tempcVertex[index].newNodeID = tID;
-//      tempcVertex[index].nodeKind = nk;
-//      tempcVertex[index].xc = x;
-//      tempcVertex[index].yc = y;
-//      tempcVertex[index].zc = z;
+//      order[index] = k;
+      tempcVertex[index].newNodeID = tID;
+      tempcVertex[index].nodeKind = nk;
+      tempcVertex[index].xc = x;
+      tempcVertex[index].yc = y;
+      tempcVertex[index].zc = z;
     }
   }
 
@@ -4438,23 +4457,23 @@ outFile.open(NodesRawFile.c_str(), ios::app);
 
   for (i = 0; i < count; i++)
   {
-       int cur = order[i];
-	   tID = cVertex[cur].newNodeID;
-	   nk = cVertex[cur].nodeKind;
-	   x = cVertex[cur].xc;
-	   y = cVertex[cur].yc;
-	   z = cVertex[cur].zc;
-//    tID = tempcVertex[i].newNodeID;
-//    nk= tempcVertex[i].nodeKind;
-//    x = tempcVertex[i].xc;
-//    y = tempcVertex[i].yc;
-//    z = tempcVertex[i].zc;
+//       int cur = order[i];
+//	   tID = cVertex[cur].newNodeID;
+//	   nk = cVertex[cur].nodeKind;
+//	   x = cVertex[cur].xc;
+//	   y = cVertex[cur].yc;
+//	   z = cVertex[cur].zc;
+    tID = tempcVertex[i].newNodeID;
+    nk= tempcVertex[i].nodeKind;
+    x = tempcVertex[i].xc;
+    y = tempcVertex[i].yc;
+    z = tempcVertex[i].zc;
 
     outFile << tID << "	" << czid << "	" << nk << "	" << x << "	" << y << "	" << z << endl;
   }
 
   outFile.close();
-//  if(count > 0) delete [] tempcVertex;
+  if(count > 0) delete [] tempcVertex;
 }
 
 void SurfaceMeshFunc::get_output_edges(int nfe, int tnie, int zID, int ceid, int *feid, string EdgesFileIndex)
@@ -4644,21 +4663,6 @@ void SurfaceMeshFunc::copy_cNodes_2_pNodes()
     }
 
   }
-}
-double SurfaceMeshFunc::find_xcoord(long index)
-{
-	double x = xRes*(index%xDim);
-	return x;
-}
-double SurfaceMeshFunc::find_ycoord(long index)
-{
-	double y = yRes*((index/xDim)%yDim);
-	return y;
-}
-double SurfaceMeshFunc::find_zcoord(long index)
-{
-	double z = zRes*(index/(xDim*yDim));
-	return z;
 }
 void SurfaceMeshFunc::UET_get_number_current_edges (int *nfe, int *nie, int zID, string EdgesFileIndex)
 {
