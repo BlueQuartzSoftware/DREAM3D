@@ -225,11 +225,6 @@ void AngFileReader::_readHeader( const std::string& line )
     in >>  _scanid;
   }
 
-  _ncols_even = 137;
-  _ncols_odd = 137;
-  _nrows = 129;
-  _xstep = 0.125;
-  _ystep = 0.125;
 }
 
 // -----------------------------------------------------------------------------

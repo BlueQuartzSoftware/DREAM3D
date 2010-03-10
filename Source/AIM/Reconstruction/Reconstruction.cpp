@@ -243,10 +243,6 @@ void Reconstruction::compute()
   numgrains = m->renumber_grains2();
   m->numgrains = numgrains;
 
-  CHECK_FOR_CANCELED(ReconstructionFunc) 
-  progressMessage(AIM_STRING("homogenize_grains"), 33 );
-  m->homogenize_grains(quat_symm);
-
   if (m_MergeTwins == 1)
   {
     m->merge_twins();
@@ -277,6 +273,10 @@ void Reconstruction::compute()
   CHECK_FOR_CANCELED(ReconstructionFunc)
   progressMessage(AIM_STRING("find_vectors"), 57 );
   m->find_vectors();
+
+  CHECK_FOR_CANCELED(ReconstructionFunc) 
+  progressMessage(AIM_STRING("homogenize_grains"), 33 );
+  m->homogenize_grains(quat_symm);
 
   CHECK_FOR_CANCELED(ReconstructionFunc)
   progressMessage(AIM_STRING("find_eulerodf"), 57 );

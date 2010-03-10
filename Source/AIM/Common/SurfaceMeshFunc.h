@@ -42,7 +42,6 @@
 #include <AIM/Common/Segment.h>
 #include <AIM/Common/ISegment.h>
 #include <AIM/Common/Bin.h>
-#include <AIM/Common/Orient.h>
 #include <AIM/Common/AIMRandomNG.h>
 #include <AIM/ANG/AngFileHelper.h>
 
@@ -92,9 +91,9 @@ public:
   int xDim;
   int yDim;
   int zDim;
-  int xRes;
-  int yRes;
-  int zRes;
+  double xRes;
+  double yRes;
+  double zRes;
   Neighbor* neigh; // contains nearest neighbor information...
   Voxel* point; // contains voxel information...
   Face* cSquare; // contains square information...
