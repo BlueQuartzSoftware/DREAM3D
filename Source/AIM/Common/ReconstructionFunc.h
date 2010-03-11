@@ -149,7 +149,8 @@ public:
 	void write_axisodf(string);
 	void write_eulerodf(string);
 	void write_graindata(string);
-	double getmisoquat(double ,double,double ,double ,double ,double ,double,double ,double &,double &,double &);
+	double getmisoquatcubic(double ,double,double ,double ,double ,double ,double,double ,double &,double &,double &);
+	double getmisoquathexagonal(double ,double,double ,double ,double ,double ,double,double ,double &,double &,double &);
 	double gamma(double);
 	double find_xcoord(long);
 	double find_ycoord(long);

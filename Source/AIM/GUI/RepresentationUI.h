@@ -60,6 +60,7 @@ class RepresentationUI : public QMainWindow, private Ui::RepresentationUI
     /* Grain Generator Slots*/
     void on_gg_InputDirBtn_clicked();
     void on_gg_OutputDirBtn_clicked();
+    void on_gg_AlreadyFormed_stateChanged(int);
     void on_gg_GoBtn_clicked();
 
     /* Surface Meshing Slots */

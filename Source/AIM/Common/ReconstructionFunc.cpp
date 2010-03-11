@@ -228,7 +228,7 @@ void ReconstructionFunc::align_sections(int slice)
 									double g2ea1 = tempvoxels[curposition].euler1;
 									double g2ea2 = tempvoxels[curposition].euler2;
 									double g2ea3 = tempvoxels[curposition].euler3;
-									double w = getmisoquat(crystruct,misorientationtolerance,g1ea1,g1ea2,g1ea3,g2ea1,g2ea2,g2ea3,n1,n2,n3);
+									double w = getmisoquatcubic(crystruct,misorientationtolerance,g1ea1,g1ea2,g1ea3,g2ea1,g2ea2,g2ea3,n1,n2,n3);
 									if(w < 5) w = 0;
 									if(w > 5) w = 1;
 									disorientation = disorientation + w;
@@ -336,7 +336,7 @@ int  ReconstructionFunc::form_grains()
 			  double v2ea1 = voxels[(i+neighborhood[j])].euler1;
 			  double v2ea2 = voxels[(i+neighborhood[j])].euler2;
 			  double v2ea3 = voxels[(i+neighborhood[j])].euler3;
-			  double w = getmisoquat(crystruct,misorientationtolerance,v1ea1,v1ea2,v1ea3,v2ea1,v2ea2,v2ea3,n1,n2,n3);
+			  double w = getmisoquatcubic(crystruct,misorientationtolerance,v1ea1,v1ea2,v1ea3,v2ea1,v2ea2,v2ea3,n1,n2,n3);
 		  }
 	  }
   }
@@ -387,7 +387,7 @@ int  ReconstructionFunc::form_grains()
             double v2ea1 = voxels[neighbor].euler1;
             double v2ea2 = voxels[neighbor].euler2;
             double v2ea3 = voxels[neighbor].euler3;
-            double w = getmisoquat(crystruct,misorientationtolerance,v1ea1,v1ea2,v1ea3,v2ea1,v2ea2,v2ea3,n1,n2,n3);
+            double w = getmisoquatcubic(crystruct,misorientationtolerance,v1ea1,v1ea2,v1ea3,v2ea1,v2ea2,v2ea3,n1,n2,n3);
 //            double w2 = GetMisorientationOnly(crystruct,misorientationtolerance,v1ea1,v1ea2,v1ea3,v2ea1,v2ea2,v2ea3,n1,n2,n3);
             if(w < misorientationtolerance)
             {
@@ -1019,7 +1019,7 @@ void  ReconstructionFunc::homogenize_grains(double quat_symm[24][5])
 	       double g2ea1 = voxels[index].euler1;
 	       double g2ea2 = voxels[index].euler2;
 	       double g2ea3 = voxels[index].euler3;
-	       double wmin = getmisoquat(crystruct,misorientationtolerance,g1ea1,g1ea2,g1ea3,g2ea1,g2ea2,g2ea3,n1,n2,n3);
+	       double wmin = getmisoquatcubic(crystruct,misorientationtolerance,g1ea1,g1ea2,g1ea3,g2ea1,g2ea2,g2ea3,n1,n2,n3);
 	       voxels[index].misorientation = wmin;
 		   avgmiso = avgmiso + wmin;
 		   totalcount++;
@@ -1115,7 +1115,7 @@ void  ReconstructionFunc::merge_twins ()
             double g2ea1 = grains[neigh].avgeuler1;
             double g2ea2 = grains[neigh].avgeuler2;
             double g2ea3 = grains[neigh].avgeuler3;
-            double w = getmisoquat(crystruct,misorientationtolerance,g1ea1,g1ea2,g1ea3,g2ea1,g2ea2,g2ea3,n1,n2,n3);
+            double w = getmisoquatcubic(crystruct,misorientationtolerance,g1ea1,g1ea2,g1ea3,g2ea1,g2ea2,g2ea3,n1,n2,n3);
             double tanhalfang = tan(w/2.0);
             double rodvect1 = tanhalfang*n1;
             double rodvect2 = tanhalfang*n2;
@@ -2062,7 +2062,7 @@ void  ReconstructionFunc::measure_misorientations ()
       double g2ea1 = grains[nname].avgeuler1;
       double g2ea2 = grains[nname].avgeuler2;
       double g2ea3 = grains[nname].avgeuler3;
-      double w = getmisoquat(crystruct,misorientationtolerance,g1ea1,g1ea2,g1ea3,g2ea1,g2ea2,g2ea3,n1,n2,n3);
+      double w = getmisoquatcubic(crystruct,misorientationtolerance,g1ea1,g1ea2,g1ea3,g2ea1,g2ea2,g2ea3,n1,n2,n3);
       misolist[j] = w;
     }
 	grains[i].misorientationlist = new std::vector<double>(misolist.size() );
@@ -2070,7 +2070,55 @@ void  ReconstructionFunc::measure_misorientations ()
     misolist.clear();
   }
 }
-double ReconstructionFunc::getmisoquat(double crystruct,double misorientationtolerance,double g1ea1,double g1ea2,double g1ea3,double g2ea1,double g2ea2,double g2ea3,double &n1,double &n2,double &n3)
+double ReconstructionFunc::getmisoquatcubic(double crystruct,double misorientationtolerance,double g1ea1,double g1ea2,double g1ea3,double g2ea1,double g2ea2,double g2ea3,double &n1,double &n2,double &n3)
+{
+  double wmin=9999999; //,na,nb,nc;
+  double q1[4];
+  double q2[4];
+  double qc[4];
+  double qco[4];
+  q1[0]=sin((g1ea2/2.0))*cos(((g1ea1-g1ea3)/2.0));
+  q1[1]=sin((g1ea2/2.0))*sin(((g1ea1-g1ea3)/2.0));
+  q1[2]=cos((g1ea2/2.0))*sin(((g1ea1+g1ea3)/2.0));
+  q1[3]=cos((g1ea2/2.0))*cos(((g1ea1+g1ea3)/2.0));
+  q2[0]=sin((g2ea2/2.0))*cos(((g2ea1-g2ea3)/2.0));
+  q2[1]=sin((g2ea2/2.0))*sin(((g2ea1-g2ea3)/2.0));
+  q2[2]=cos((g2ea2/2.0))*sin(((g2ea1+g2ea3)/2.0));
+  q2[3]=cos((g2ea2/2.0))*cos(((g2ea1+g2ea3)/2.0));
+  q2[0]=q2[0];
+  q2[1]=-q2[1];
+  q2[2]=-q2[2];
+  q2[3]=-q2[3];
+  qc[0]=q1[0]*q2[0]-q1[1]*q2[1]-q1[2]*q2[2]-q1[3]*q2[3];
+  qc[1]=q1[0]*q2[1]+q1[1]*q2[0]+q1[2]*q2[3]-q1[3]*q2[2];
+  qc[2]=q1[0]*q2[2]-q1[1]*q2[3]+q1[2]*q2[0]+q1[3]*q2[1];
+  qc[3]=q1[0]*q2[3]+q1[1]*q2[2]-q1[2]*q2[1]+q1[3]*q2[0];
+  qc[0]=fabs(qc[0]);
+  qc[1]=fabs(qc[1]);
+  qc[2]=fabs(qc[2]);
+  qc[3]=fabs(qc[3]);
+  for(int i=0;i<4;i++)
+  {
+    qco[i]=100000;
+    for(int j=0;j<4;j++)
+    {
+      if((qc[j] < qco[i] && i == 0) || (qc[j] < qco[i] && qc[j] > qco[i-1]))
+      {
+        qco[i] = qc[j];
+      }
+    }
+  }
+  wmin = qco[3];
+  if(((qco[2]+qco[3])/(pow(2,0.5))) > wmin) wmin = ((qco[2]+qco[3])/(pow(2,0.5)));
+  if(((qco[0]+qco[1]+qco[2]+qco[3])/2) > wmin) wmin = ((qco[0]+qco[1]+qco[2]+qco[3])/2);
+  if(wmin < -1) wmin = -1;
+  if(wmin > 1) wmin = 1;
+  wmin = acos(wmin);
+  wmin = (360.0/m_pi)*wmin;
+  return wmin;
+}
+
+double ReconstructionFunc::getmisoquathexagonal(double crystruct,double misorientationtolerance,double g1ea1,double g1ea2,double g1ea3,double g2ea1,double g2ea2,double g2ea3,double &n1,double &n2,double &n3)
 {
   double wmin=9999999; //,na,nb,nc;
   double q1[4];

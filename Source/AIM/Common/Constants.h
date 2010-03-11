@@ -43,6 +43,7 @@ namespace AIM
 
     /*  Grain Generator Related */
     const std::string CubeFile("cube.vtk");
+    const std::string StructureFile("cube.vtk");
     const std::string CubeDxFile("cube.dx");
     const std::string AnalysisFile("analysis.txt");
     const std::string EulerFile("eulerangles.txt");

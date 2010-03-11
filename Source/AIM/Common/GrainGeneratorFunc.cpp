@@ -93,7 +93,7 @@ void GrainGeneratorFunc::initialize(int32 m_NumGrains, int32 m_ShapeClass,
   simmicrobin = new Bin[10];
 }
 
-void GrainGeneratorFunc::initialize2(int32 xpoints, int32 ypoints, int32 zpoints)
+void GrainGeneratorFunc::initialize2()
 {
 
   totalpoints = xpoints * ypoints * zpoints;
@@ -1215,6 +1215,15 @@ void  GrainGeneratorFunc::fill_gaps(int numgrains)
   }
 }
 
+void GrainGeneratorFunc::read_structure(string inname8)
+{
+    ifstream inputFile;
+    inputFile.open(inname8.c_str());
+	for(int i=0;i<(xpoints*ypoints*zpoints);i++)
+	{
+
+	}
+}
 void  GrainGeneratorFunc::find_neighbors()
 {
   double x = 0;

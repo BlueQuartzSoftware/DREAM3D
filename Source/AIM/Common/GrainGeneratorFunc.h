@@ -59,7 +59,7 @@ public:
 void initialize(int32, int32 , double , double , double ,
                   int32 ,int32 ,int32 );
 
-void initialize2(int32, int32, int32);
+void initialize2();
 
 AngFileHelper::Pointer m_angFileHelper;
 
@@ -141,6 +141,7 @@ AngFileHelper::Pointer m_angFileHelper;
 	void assign_eulers(int);
 	void make_points(int);
 	void fill_gaps(int);
+	void read_structure(string);
 	void find_neighbors();
 	void writeCube(string, int, string);
 	void find_boundarycenters1(string,int);

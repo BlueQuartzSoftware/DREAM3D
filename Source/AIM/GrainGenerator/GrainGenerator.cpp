@@ -72,12 +72,12 @@ m_XResolution(0.0),
 m_YResolution(0.0),
 m_ZResolution(0.0),
 m_OverlapAllowed(0),
+m_AlreadyFormed(false),
 m_OverlapAssignment(0),
 m_CrystalStructure(0),
 m_ErrorCondition(0)
 #if AIM_USE_QT
-,
-m_Cancel(false)
+  ,m_Cancel(false)
 #endif
 {
 
@@ -109,6 +109,7 @@ void GrainGenerator::compute()
 {
   std::string  StatsFile = m_InputDirectory + MXAFileSystemPath::Separator + AIM::Representation::StatsFile;
   std::string  AxisOrientationsFile = m_InputDirectory + MXAFileSystemPath::Separator + AIM::Representation::AxisOrientationsFile;
+  std::string  StructureFile = m_InputDirectory + MXAFileSystemPath::Separator + AIM::Representation::StructureFile;
   std::string  EulerAnglesFile = m_InputDirectory + MXAFileSystemPath::Separator + AIM::Representation::EulerAnglesFile;
   std::string  MisorientationBinsFile = m_InputDirectory + MXAFileSystemPath::Separator + AIM::Representation::MisorientationBinsFile;
   std::string  MicroBinsFile = m_InputDirectory + MXAFileSystemPath::Separator + AIM::Representation::MicroBinsFile;
@@ -129,55 +130,66 @@ void GrainGenerator::compute()
    m->nummisomoves = 250;
    m->nummicromoves = 25;
 
+   if(m_AlreadyFormed == false)
+   {
+	   CHECK_FOR_CANCELED(GrainGeneratorFunc)
+	   progressMessage(AIM_STRING("Loading Stats File"), 5 );
+	   m->loadStatsData(StatsFile);
 
-   CHECK_FOR_CANCELED(ReconstructionFunc)
-   progressMessage(AIM_STRING("Loading Stats File"), 5 );
-   m->loadStatsData(StatsFile);
+	   CHECK_FOR_CANCELED(GrainGeneratorFunc)
+	   progressMessage(AIM_STRING("Loading Orient File"), 10 );
+	   m->loadorientData(AxisOrientationsFile);
 
-   CHECK_FOR_CANCELED(ReconstructionFunc)
-   progressMessage(AIM_STRING("Loading Orient File"), 10 );
-   m->loadorientData(AxisOrientationsFile);
+	   CHECK_FOR_CANCELED(GrainGeneratorFunc)
+	   progressMessage(AIM_STRING("Generating Grains"), 20 );
+	   m->generate_grains(m->numgrains);
 
-   CHECK_FOR_CANCELED(ReconstructionFunc)
-   progressMessage(AIM_STRING("Loading Euler File"), 15 );
-   m->loadeulerData(EulerAnglesFile);
+	   CHECK_FOR_CANCELED(GrainGeneratorFunc)
+	   progressMessage(AIM_STRING("Initializing"), 25 );
+	   m->initialize2();
 
-   CHECK_FOR_CANCELED(ReconstructionFunc)
-   progressMessage(AIM_STRING("Generating Grains"), 20 );
-   m->generate_grains(m->numgrains);
+	   CHECK_FOR_CANCELED(GrainGeneratorFunc)
+	   progressMessage(AIM_STRING("Assigning Eulers"), 30 );
+	   m->assign_eulers(m->numgrains);
 
-   CHECK_FOR_CANCELED(ReconstructionFunc)
-   progressMessage(AIM_STRING("Initializing"), 25 );
-   m->initialize2(m->xpoints,m->ypoints,m->zpoints);
+	   CHECK_FOR_CANCELED(GrainGeneratorFunc)
+	   progressMessage(AIM_STRING("Packing Grains"), 35 );
+	   m->make_points(m->numgrains);
 
-   CHECK_FOR_CANCELED(ReconstructionFunc)
-   progressMessage(AIM_STRING("Assigning Eulers"), 30 );
-   m->assign_eulers(m->numgrains);
+	   CHECK_FOR_CANCELED(GrainGeneratorFunc)
+	   progressMessage(AIM_STRING("Filling Gaps"), 40 );
+	   m->fill_gaps(m->numgrains);
+   }
+   if(m_AlreadyFormed == true)
+   {
+	   CHECK_FOR_CANCELED(GrainGeneratorFunc)
+	   progressMessage(AIM_STRING("Reading Structure"), 40 );
+	   m->read_structure(StructureFile);
 
-   CHECK_FOR_CANCELED(ReconstructionFunc)
-   progressMessage(AIM_STRING("Packing Grains"), 35 );
-   m->make_points(m->numgrains);
-
-   CHECK_FOR_CANCELED(ReconstructionFunc)
-   progressMessage(AIM_STRING("Filling Gaps"), 40 );
-   m->fill_gaps(m->numgrains);
-
-/*   CHECK_FOR_CANCELED(ReconstructionFunc)
+	   CHECK_FOR_CANCELED(GrainGeneratorFunc)
+	   progressMessage(AIM_STRING("Initializing"), 25 );
+	   m->initialize2();
+   }
+   CHECK_FOR_CANCELED(GrainGeneratorFunc)
    progressMessage(AIM_STRING("Finding Neighbors"), 45 );
    m->find_neighbors();
 
-   CHECK_FOR_CANCELED(ReconstructionFunc)
+   CHECK_FOR_CANCELED(GrainGeneratorFunc)
+   progressMessage(AIM_STRING("Loading Euler File"), 15 );
+   m->loadeulerData(EulerAnglesFile);
+
+   CHECK_FOR_CANCELED(GrainGeneratorFunc)
    progressMessage(AIM_STRING("Loading Misorientations"), 50 );
    m->loadMisoData(MisorientationBinsFile);
 
-   CHECK_FOR_CANCELED(ReconstructionFunc)
+   CHECK_FOR_CANCELED(GrainGeneratorFunc)
    progressMessage(AIM_STRING("Loading Microtexture"), 55 );
    m->loadMicroData(MicroBinsFile);
 
 
    for(int iter = 0; iter < m->misoiter; iter++)
    {
-     CHECK_FOR_CANCELED(ReconstructionFunc)
+     CHECK_FOR_CANCELED(GrainGeneratorFunc)
      progressMessage(AIM_STRING("Matching Misorientations"), 65 );
      m->measure_misorientations();
      m->rank_misobins(m->numgrains);
@@ -189,7 +201,7 @@ void GrainGenerator::compute()
    }
    while(m->nummicros != 1)
    {
-     CHECK_FOR_CANCELED(ReconstructionFunc)
+     CHECK_FOR_CANCELED(GrainGeneratorFunc)
      progressMessage(AIM_STRING("Matching Microtexture"), 75 );
      m->measure_misorientations();
      m->count_misorientations(m->numgrains);
@@ -200,7 +212,7 @@ void GrainGenerator::compute()
    }
    for(int iter3 = 0; iter3 < m->misoiter; iter3++)
    {
-     CHECK_FOR_CANCELED(ReconstructionFunc)
+     CHECK_FOR_CANCELED(GrainGeneratorFunc)
      progressMessage(AIM_STRING("Rematching Misorientations"), 85 );
      m->measure_misorientations();
      m->rank_misobins(m->numgrains);
@@ -210,17 +222,17 @@ void GrainGenerator::compute()
      m->identify_grains1(m->numgrains, m->nummisomoves);
      m->move_grains1(m->numgrains);
    }
-*/
 
-   CHECK_FOR_CANCELED(ReconstructionFunc)
+
+   CHECK_FOR_CANCELED(GrainGeneratorFunc)
    progressMessage(AIM_STRING("writing Cube"), 90 );
    m->writeCube(CubeFile, m->numgrains, AnalysisFile);
    
-   CHECK_FOR_CANCELED(ReconstructionFunc)
+   CHECK_FOR_CANCELED(GrainGeneratorFunc)
    progressMessage(AIM_STRING("Writing DX File"), 94);
    m->create_dxfile(cubedxFile);
 
-  CHECK_FOR_CANCELED(ReconstructionFunc)
+  CHECK_FOR_CANCELED(GrainGeneratorFunc)
    progressMessage(AIM_STRING("Writing Euler Angles"), 98 );
    m->write_eulerangles(EulerFile);
 
