@@ -239,8 +239,8 @@ void RepresentationUI::readSettings()
   READ_SETTING(prefs, zStartIndex, ok, i, 1 , Int);
   READ_SETTING(prefs, zEndIndex, ok, i, 10 , Int);
   READ_STRING_SETTING(prefs, zSpacing, "0.25");
-  READ_BOOL_SETTING(prefs, mergeTwins, true);
-  alreadyFormed->blockSignals(true);
+  READ_BOOL_SETTING(prefs, mergeTwins, false);
+  mergeTwins->blockSignals(false);
   READ_BOOL_SETTING(prefs, alreadyFormed, false);
   alreadyFormed->blockSignals(false);
   READ_SETTING(prefs, minAllowedGrainSize, ok, i, 8 , Int);
@@ -259,6 +259,8 @@ void RepresentationUI::readSettings()
   READ_SETTING(prefs, gg_NumGrains, ok, i, 1000 , Int);
 
   READ_SETTING(prefs, gg_OverlapAllowed, ok, d, 0.00 , Double);
+  READ_BOOL_SETTING(prefs, gg_AlreadyFormed, false);
+  gg_AlreadyFormed->blockSignals(false);
   READ_COMBO_BOX(prefs, gg_CrystalStructure)
   READ_COMBO_BOX(prefs, gg_ShapeClass)
   READ_COMBO_BOX(prefs, gg_OverlapAssignment)
@@ -329,6 +331,7 @@ void RepresentationUI::writeSettings()
   WRITE_SETTING(prefs, gg_NumGrains )
 
   WRITE_SETTING(prefs, gg_OverlapAllowed )
+  WRITE_BOOL_SETTING(prefs, gg_AlreadyFormed, gg_AlreadyFormed->isChecked())
   WRITE_COMBO_BOX(prefs, gg_CrystalStructure)
   WRITE_COMBO_BOX(prefs, gg_ShapeClass)
   WRITE_COMBO_BOX(prefs, gg_OverlapAssignment)
@@ -861,10 +864,6 @@ void RepresentationUI::rec_ThreadProgressed(int val)
 // -----------------------------------------------------------------------------
 void RepresentationUI::gg_SetupGui()
 {
-  m_WidgetList << gg_InputDir << gg_InputDirBtn << gg_OutputDir << gg_OutputDirBtn;
-  m_WidgetList << gg_CrystalStructure << gg_NumGrains << gg_XResolution << gg_YResolution << gg_ZResolution;
-  m_WidgetList << gg_OverlapAllowed << gg_OverlapAssignment << gg_ShapeClass;
-
   gg_inputfile_msg->setText("");
   gg_outputfile_msg->setText("");
 
@@ -881,6 +880,25 @@ void RepresentationUI::gg_SetupGui()
     QObject::connect( com2, SIGNAL(activated(const QString &)),
              this, SLOT(on_gg_OutputDir_textChanged(const QString &)));
   }
+  QString msg ("All files will be over written that appear in the output directory.");
+
+  QFileInfo fi (gg_OutputDir->text() + QDir::separator() +  AIM::Representation::CubeFile.c_str() );
+  if (gg_AlreadyFormed->isChecked() == true && fi.exists() == false)
+  {
+    gg_AlreadyFormed->setChecked(false);
+  }
+
+  if (gg_AlreadyFormed->isChecked())
+  {
+    msg += QString("\nThe 'Cube.vtk' file will be used as an import and NOT over written with new data");
+  }
+  messageLabel->setText(msg);
+
+  m_WidgetList << gg_InputDir << gg_InputDirBtn << gg_OutputDir << gg_OutputDirBtn;
+  m_WidgetList << gg_CrystalStructure << gg_NumGrains << gg_XResolution << gg_YResolution << gg_ZResolution;
+  m_WidgetList << gg_OverlapAllowed << gg_OverlapAssignment << gg_ShapeClass << gg_AlreadyFormed;
+
+
 
 }
 
@@ -899,6 +917,32 @@ void RepresentationUI::gg_CheckIOFiles()
   CHECK_QLABEL_OUTPUT_FILE_EXISTS(gg_, CubeDxFile)
   CHECK_QLABEL_OUTPUT_FILE_EXISTS(gg_, AnalysisFile)
   CHECK_QLABEL_OUTPUT_FILE_EXISTS(gg_, EulerFile)
+}
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void RepresentationUI::on_gg_AlreadyFormed_stateChanged(int currentState)
+{
+  QString absPath = gg_OutputDir->text() + QDir::separator() + AIM::Representation::CubeFile.c_str();
+  absPath = QDir::toNativeSeparators(absPath);
+  QFileInfo fi (absPath);
+  QString msg ("All files will be over written that appear in the output directory.");
+  if (gg_AlreadyFormed->isChecked() == true && fi.exists() == false)
+  {
+    QMessageBox::critical(this, tr("AIM Representation"),
+      tr("You have selected the 'Already Formed' check box \nbut the correct output file does not exist.\n"
+      "The checkbox will revert to an unchecked state.?"),
+      QMessageBox::Ok,
+      QMessageBox::Ok);
+      gg_AlreadyFormed->setChecked(false);
+      CHECK_QLABEL_OUTPUT_FILE_EXISTS(gg_, CubeFile)
+  }
+
+  if (gg_AlreadyFormed->isChecked())
+  {
+    msg += QString("\nThe 'reconstructed_data.txt' file will be used as an import and NOT over written with new data");
+  }
+  messageLabel->setText(msg);
 }
 
 // -----------------------------------------------------------------------------
@@ -933,6 +977,11 @@ void RepresentationUI::on_gg_OutputDirBtn_clicked()
     if (_verifyPathExists(outputFile, gg_OutputDir) == true )
     {
       gg_CheckIOFiles();
+      QFileInfo fi (gg_OutputDir->text() + QDir::separator() +  AIM::Representation::CubeFile.c_str() );
+      if (gg_AlreadyFormed->isChecked() == true && fi.exists() == false)
+      {
+        gg_AlreadyFormed->setChecked(false);
+      }
     }
   }
 }
@@ -1003,6 +1052,7 @@ void RepresentationUI::on_gg_GoBtn_clicked()
 
 
   m_GrainGenerator->setOverlapAllowed(gg_OverlapAllowed->value());
+  m_GrainGenerator->setAlreadyFormed(gg_AlreadyFormed->isChecked() );
   int overlapassignment = gg_OverlapAssignment->currentIndex() + 1;
   m_GrainGenerator->setOverlapAssignment(overlapassignment);
 

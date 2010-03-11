@@ -30,7 +30,7 @@
     <item row="0" column="0">
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>2</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="reconstructionTab">
        <attribute name="title">
@@ -875,6 +875,13 @@
            <widget class="QSpinBox" name="gg_OverlapAllowed">
             <property name="maximum">
              <number>100</number>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="3">
+           <widget class="QCheckBox" name="gg_AlreadyFormed">
+            <property name="text">
+             <string>Structure Already Formed</string>
             </property>
            </widget>
           </item>
@@ -2145,6 +2152,8 @@
   <tabstop>sm_DxFileBtn</tabstop>
  </tabstops>
  <resources>
+  <include location="../../../../Resources/icons/images/Icons.qrc"/>
+  <include location="../../../../Resources/icons/images/Icons.qrc"/>
   <include location="../../../../Resources/icons/images/Icons.qrc"/>
   <include location="../../../../Resources/icons/images/Icons.qrc"/>
   <include location="../../../../Resources/icons/images/Icons.qrc"/>
