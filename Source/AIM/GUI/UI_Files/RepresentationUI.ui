@@ -879,13 +879,49 @@
            </widget>
           </item>
           <item row="4" column="3">
-           <widget class="QCheckBox" name="gg_AlreadyFormed">
+           <widget class="QComboBox" name="gg_Precipitates">
+            <item>
+             <property name="text">
+              <string>No Precipitates</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Boundary Precipitates</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Bulk Precipitates</string>
+             </property>
+            </item>
+           </widget>
+          </item>
+          <item row="4" column="2">
+           <widget class="QLabel" name="label_48">
             <property name="text">
-             <string>Structure Already Formed</string>
+             <string>Precipitate Structure</string>
+            </property>
+           </widget>
+          </item>
+          <item row="5" column="3">
+           <widget class="QDoubleSpinBox" name="gg_FractionPrecipitates"/>
+          </item>
+          <item row="5" column="2">
+           <widget class="QLabel" name="label_49">
+            <property name="text">
+             <string>Volume Fraction Precipitates</string>
             </property>
            </widget>
           </item>
          </layout>
+        </item>
+        <item>
+         <widget class="QCheckBox" name="gg_AlreadyFormed">
+          <property name="text">
+           <string>Structure Already Formed</string>
+          </property>
+         </widget>
         </item>
         <item>
          <layout class="QGridLayout" name="gridLayout_5">
@@ -2152,6 +2188,9 @@
   <tabstop>sm_DxFileBtn</tabstop>
  </tabstops>
  <resources>
+  <include location="../../../../Resources/icons/images/Icons.qrc"/>
+  <include location="../../../../Resources/icons/images/Icons.qrc"/>
+  <include location="../../../../Resources/icons/images/Icons.qrc"/>
   <include location="../../../../Resources/icons/images/Icons.qrc"/>
   <include location="../../../../Resources/icons/images/Icons.qrc"/>
   <include location="../../../../Resources/icons/images/Icons.qrc"/>

@@ -256,6 +256,7 @@ void RepresentationUI::readSettings()
   READ_SETTING(prefs, gg_XResolution, ok, d, 0.25 , Double);
   READ_SETTING(prefs, gg_YResolution, ok, d, 0.25 , Double);
   READ_SETTING(prefs, gg_ZResolution, ok, d, 0.25 , Double);
+  READ_SETTING(prefs, gg_FractionPrecipitates, ok, d, 25 , Double);
   READ_SETTING(prefs, gg_NumGrains, ok, i, 1000 , Int);
 
   READ_SETTING(prefs, gg_OverlapAllowed, ok, d, 0.00 , Double);
@@ -263,6 +264,7 @@ void RepresentationUI::readSettings()
   gg_AlreadyFormed->blockSignals(false);
   READ_COMBO_BOX(prefs, gg_CrystalStructure)
   READ_COMBO_BOX(prefs, gg_ShapeClass)
+  READ_COMBO_BOX(prefs, gg_Precipitates)
   READ_COMBO_BOX(prefs, gg_OverlapAssignment)
 
   /* ******** This Section is for the Surface Meshing Tab ************ */
@@ -328,12 +330,14 @@ void RepresentationUI::writeSettings()
   WRITE_SETTING(prefs, gg_XResolution )
   WRITE_SETTING(prefs, gg_YResolution )
   WRITE_SETTING(prefs, gg_ZResolution )
+  WRITE_SETTING(prefs, gg_FractionPrecipitates )
   WRITE_SETTING(prefs, gg_NumGrains )
 
   WRITE_SETTING(prefs, gg_OverlapAllowed )
   WRITE_BOOL_SETTING(prefs, gg_AlreadyFormed, gg_AlreadyFormed->isChecked())
   WRITE_COMBO_BOX(prefs, gg_CrystalStructure)
   WRITE_COMBO_BOX(prefs, gg_ShapeClass)
+  WRITE_COMBO_BOX(prefs, gg_Precipitates)
   WRITE_COMBO_BOX(prefs, gg_OverlapAssignment)
 
   /* ******** This Section is for the Surface Meshing Tab ************ */
@@ -895,10 +899,8 @@ void RepresentationUI::gg_SetupGui()
   messageLabel->setText(msg);
 
   m_WidgetList << gg_InputDir << gg_InputDirBtn << gg_OutputDir << gg_OutputDirBtn;
-  m_WidgetList << gg_CrystalStructure << gg_NumGrains << gg_XResolution << gg_YResolution << gg_ZResolution;
-  m_WidgetList << gg_OverlapAllowed << gg_OverlapAssignment << gg_ShapeClass << gg_AlreadyFormed;
-
-
+  m_WidgetList << gg_CrystalStructure << gg_NumGrains << gg_XResolution << gg_YResolution << gg_ZResolution << gg_FractionPrecipitates;
+  m_WidgetList << gg_OverlapAllowed << gg_OverlapAssignment << gg_ShapeClass << gg_Precipitates << gg_AlreadyFormed;
 
 }
 
@@ -923,6 +925,7 @@ void RepresentationUI::gg_CheckIOFiles()
 // -----------------------------------------------------------------------------
 void RepresentationUI::on_gg_AlreadyFormed_stateChanged(int currentState)
 {
+
   QString absPath = gg_OutputDir->text() + QDir::separator() + AIM::Representation::CubeFile.c_str();
   absPath = QDir::toNativeSeparators(absPath);
   QFileInfo fi (absPath);
@@ -1046,9 +1049,13 @@ void RepresentationUI::on_gg_GoBtn_clicked()
   int shapeclass = gg_ShapeClass->currentIndex() + 1;
   m_GrainGenerator->setShapeClass(shapeclass);
 
+  int Precipitates = gg_Precipitates->currentIndex() + 1;
+  m_GrainGenerator->setPrecipitates(Precipitates);
+
   m_GrainGenerator->setXResolution(gg_XResolution->value());
   m_GrainGenerator->setYResolution(gg_YResolution->value());
   m_GrainGenerator->setZResolution(gg_ZResolution->value());
+  m_GrainGenerator->setFractionPrecipitates(gg_FractionPrecipitates->value());
 
 
   m_GrainGenerator->setOverlapAllowed(gg_OverlapAllowed->value());
@@ -1056,7 +1063,8 @@ void RepresentationUI::on_gg_GoBtn_clicked()
   int overlapassignment = gg_OverlapAssignment->currentIndex() + 1;
   m_GrainGenerator->setOverlapAssignment(overlapassignment);
 
-  int crystruct =  gg_CrystalStructure->currentIndex() + 1;
+  AIM::Representation::CrystalStructure crystruct = static_cast<AIM::Representation::CrystalStructure>(crystalStructure->currentIndex() + 1);
+
   m_GrainGenerator->setCrystalStructure(crystruct);
 
 

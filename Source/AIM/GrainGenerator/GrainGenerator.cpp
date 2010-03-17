@@ -73,8 +73,9 @@ m_YResolution(0.0),
 m_ZResolution(0.0),
 m_OverlapAllowed(0),
 m_AlreadyFormed(false),
+m_Precipitates(0),
 m_OverlapAssignment(0),
-m_CrystalStructure(0),
+m_CrystalStructure(AIM::Representation::Cubic),
 m_ErrorCondition(0)
 #if AIM_USE_QT
   ,m_Cancel(false)
@@ -122,7 +123,7 @@ void GrainGenerator::compute()
    m = GrainGeneratorFunc::New();
    m->initialize(m_NumGrains, m_ShapeClass,
               m_XResolution, m_YResolution, m_ZResolution, m_OverlapAllowed,
-              m_OverlapAssignment, m_CrystalStructure);
+              m_OverlapAssignment, m_Precipitates, m_CrystalStructure, m_FractionPrecipitates);
 
    m->nummisobins = 10;
    m->nummicrobins = 10;
@@ -149,28 +150,37 @@ void GrainGenerator::compute()
 	   m->initialize2();
 
 	   CHECK_FOR_CANCELED(GrainGeneratorFunc)
-	   progressMessage(AIM_STRING("Assigning Eulers"), 30 );
-	   m->assign_eulers(m->numgrains);
-
-	   CHECK_FOR_CANCELED(GrainGeneratorFunc)
 	   progressMessage(AIM_STRING("Packing Grains"), 35 );
-	   m->make_points(m->numgrains);
+	   m->pack_grains(m->numgrains);
 
 	   CHECK_FOR_CANCELED(GrainGeneratorFunc)
 	   progressMessage(AIM_STRING("Filling Gaps"), 40 );
 	   m->fill_gaps(m->numgrains);
+
+	   CHECK_FOR_CANCELED(GrainGeneratorFunc)
+	   progressMessage(AIM_STRING("Finding Surface Voxels"), 45 );
+	   m->find_surfacevoxels();
+
+	   if(m_Precipitates > 1)
+	   {
+		   CHECK_FOR_CANCELED(GrainGeneratorFunc)
+		   progressMessage(AIM_STRING("Generating Precipitates"), 40 );
+		   m->numprecipitates = m->create_precipitates();
+
+		   CHECK_FOR_CANCELED(GrainGeneratorFunc)
+		   progressMessage(AIM_STRING("Inserting Precipitates"), 40 );
+		   m->insert_precipitates(m->numprecipitates);
+	   }
    }
+
    if(m_AlreadyFormed == true)
    {
 	   CHECK_FOR_CANCELED(GrainGeneratorFunc)
 	   progressMessage(AIM_STRING("Reading Structure"), 40 );
 	   m->read_structure(StructureFile);
-
-	   CHECK_FOR_CANCELED(GrainGeneratorFunc)
-	   progressMessage(AIM_STRING("Initializing"), 25 );
-	   m->initialize2();
    }
-   CHECK_FOR_CANCELED(GrainGeneratorFunc)
+
+/*   CHECK_FOR_CANCELED(GrainGeneratorFunc)
    progressMessage(AIM_STRING("Finding Neighbors"), 45 );
    m->find_neighbors();
 
@@ -186,6 +196,9 @@ void GrainGenerator::compute()
    progressMessage(AIM_STRING("Loading Microtexture"), 55 );
    m->loadMicroData(MicroBinsFile);
 
+   CHECK_FOR_CANCELED(GrainGeneratorFunc)
+   progressMessage(AIM_STRING("Assigning Eulers"), 30 );
+   m->assign_eulers(m->numgrains);
 
    for(int iter = 0; iter < m->misoiter; iter++)
    {
@@ -224,7 +237,7 @@ void GrainGenerator::compute()
    }
 
 
-   CHECK_FOR_CANCELED(GrainGeneratorFunc)
+*/   CHECK_FOR_CANCELED(GrainGeneratorFunc)
    progressMessage(AIM_STRING("writing Cube"), 90 );
    m->writeCube(CubeFile, m->numgrains, AnalysisFile);
    

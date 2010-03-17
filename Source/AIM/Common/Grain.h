@@ -83,6 +83,7 @@ class Grain
     double oeuler2;
     double oeuler3;
     int grainname;
+    int precipitatename;
     double volume;
     double nserror;
     int currentsize;
