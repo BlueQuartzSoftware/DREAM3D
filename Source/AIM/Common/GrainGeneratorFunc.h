@@ -57,7 +57,7 @@ public:
   virtual ~GrainGeneratorFunc();
 
 void initialize(int32, int32 , double , double , double ,
-                  int32 ,int32 ,int32 );
+                  int32 ,int32 ,int32, int32, double);
 
 void initialize2();
 
@@ -74,12 +74,14 @@ AngFileHelper::Pointer m_angFileHelper;
 
 	AIMRandomNG rg;
 	Grain* grains;
-	Grain* packedgrain;
+	Grain* precipitates;
 	int* gsizes;
+	int* psizes;
 	int* gremovals;
 
 	Bin* eulerodf;
 	Bin* axisodf;
+	Bin* precipaxisodf;
 	Voxel* gridfine;
 	Voxel* gridcourse;
 	Bin* actualmisobin;
@@ -88,14 +90,19 @@ AngFileHelper::Pointer m_angFileHelper;
 	Bin* simmicrobin;
 
 	vector<int> grainorder;
+	vector<int> precipitateorder;
 	vector<int> takencheck;
 	vector<vector<int> > neighborvector;
 	vector<vector<double> > bovera;
 	vector<vector<double> > covera;
 	vector<vector<double> > coverb;
+	vector<vector<double> > precipbovera;
+	vector<vector<double> > precipcovera;
+	vector<vector<double> > precipcoverb;
 	vector<vector<double> > svn;
 	vector<vector<double> > svs;
 	vector<vector<double> > svomega3;
+	vector<vector<double> > precipsvomega3;
 	vector<vector<int> > nsdist;
 	
 
@@ -105,17 +112,26 @@ AngFileHelper::Pointer m_angFileHelper;
 	int nummicrobins;
 	int misoiter;
 	int nummicros;
+	int resdiff;
 	int nummisomoves;
 	int nummicromoves;
 	int numgrains;
+	int numprecipitates;
 	int shapeclass;
+	int preciptype;
 	int maxdiameter;
 	int mindiameter;
+	int maxprecipdiameter;
+	int minprecipdiameter;
 	int32 overlapallowed;
 	int overlapassignment;
+	double fractionprecip;
 	double avgdiam;
 	double sddiam;
+	double avgprecipdiam;
+	double sdprecipdiam;
 	int numdiameters;
+	int numprecipdiameters;
 
 
 	int32 xpoints;
@@ -139,10 +155,13 @@ AngFileHelper::Pointer m_angFileHelper;
 	void loadeulerData(string);
 	void generate_grains(int);
 	void assign_eulers(int);
-	void make_points(int);
+	void pack_grains(int);
 	void fill_gaps(int);
+	int create_precipitates();
+	void insert_precipitates(int);
 	void read_structure(string);
 	void find_neighbors();
+	void find_surfacevoxels();
 	void writeCube(string, int, string);
 	void find_boundarycenters1(string,int);
 	void loadMisoData(string);

@@ -33,6 +33,7 @@ public:
     virtual ~Voxel();
 
     int grainname;
+    int precipitatename;
     double confidence;
     double imagequality;
     int alreadychecked;
@@ -43,8 +44,6 @@ public:
     int neighbor;
     double misorientation;
     int surfacevoxel;
-    int available;
-    int available90;
     int inside;
 	double quat[5];
 

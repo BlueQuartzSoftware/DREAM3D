@@ -67,7 +67,7 @@ m_MinAllowedGrainSize(0),
 m_MinSeedConfidence(0.0),
 m_MinSeedImageQuality(0.0),
 m_MisorientationTolerance(0.0),
-m_CrystalStructure(AIM::Representation::Hexagonal),
+m_CrystalStructure(AIM::Representation::Cubic),
 m_AlreadyFormed(false), 
 m_ErrorCondition(0)
 #if AIM_USE_QT
@@ -142,7 +142,6 @@ void Reconstruction::compute()
                        m_MisorientationTolerance, m_CrystalStructure, m_AlreadyFormed);
   reader = AngFileReader::NullPointer(); // Remove this object as it is no longer needed.
 
-  int32 numgrains = 0;
   int32 mindiameter = 100000;
   int32 maxdiameter = 0;
   double quat_symm[24][5] = {
@@ -190,8 +189,7 @@ void Reconstruction::compute()
     {
       CHECK_FOR_CANCELED(ReconstructionFunc)
       progressMessage(AIM_STRING("Loading Existing Data"), 8 );
-      numgrains = m->load_data(reconVisFile);
-      m->numgrains = numgrains;
+      m->numgrains = m->load_data(reconVisFile);
     }
     else
     {
@@ -209,8 +207,7 @@ void Reconstruction::compute()
   {
     CHECK_FOR_CANCELED(ReconstructionFunc)
     progressMessage(AIM_STRING("Forming Grains"), 8 );
-    numgrains = m->form_grains();
-    m->numgrains = numgrains;
+    m->numgrains = m->form_grains();
 
     CHECK_FOR_CANCELED(ReconstructionFunc)
     progressMessage(AIM_STRING("Removing Small Grains"), 10 );
@@ -218,8 +215,7 @@ void Reconstruction::compute()
 
     CHECK_FOR_CANCELED(ReconstructionFunc)
     progressMessage(AIM_STRING("Renumbering Small Grains"), 12 );
-    numgrains = m->renumber_grains1();
-    m->numgrains = numgrains;
+    m->numgrains = m->renumber_grains1();
 
     CHECK_FOR_CANCELED(ReconstructionFunc)
     progressMessage(AIM_STRING("assign_badpoints"), 21 );
@@ -240,8 +236,7 @@ void Reconstruction::compute()
 
   CHECK_FOR_CANCELED(ReconstructionFunc)
   progressMessage(AIM_STRING("renumber_grains2"), 30 );
-  numgrains = m->renumber_grains2();
-  m->numgrains = numgrains;
+  m->numgrains = m->renumber_grains2();
 
   if (m_MergeTwins == 1)
   {
@@ -251,8 +246,7 @@ void Reconstruction::compute()
 
   CHECK_FOR_CANCELED(ReconstructionFunc)
   progressMessage(AIM_STRING("renumber_grains3"), 39 );
-  numgrains = m->renumber_grains3();
-  m->numgrains = numgrains;
+  m->numgrains = m->renumber_grains3();
   
   CHECK_FOR_CANCELED(ReconstructionFunc)
   progressMessage(AIM_STRING("find_goodneighbors"), 45 );

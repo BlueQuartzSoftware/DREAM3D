@@ -2975,35 +2975,37 @@ void ReconstructionFunc::volume_stats(string writename1,string writename2,string
   }
   ofstream outFile;
   outFile.open(writename1.c_str());
+  outFile << "STATS" << endl;
+  outFile << "Grain_Diameter_Info" << endl;
   outFile << (maxdiameter-mindiameter)+1 << " " << maxdiameter << " " << mindiameter << endl;
-  outFile << endl;
+  outFile << "Grain_Size_Distribution" << endl;
   outFile << avglogdiam << " " << sdlogdiam << endl;
-  outFile << endl;
+  outFile << "Grain_SizeVBoverA_Distributions" << endl;
   for(int temp7 = mindiameter; temp7 < (maxdiameter)+1; temp7++)
   {
 	outFile << temp7 <<	" " << svbovera[temp7][3] << " " << svbovera[temp7][4] << endl;
   }
-  outFile << endl;
+  outFile << "Grain_SizeVCoverA_Distributions" << endl;
   for(int temp7 = mindiameter; temp7 < (maxdiameter)+1; temp7++)
   {
     outFile << temp7 << " " << svcovera[temp7][3] << "  " << svcovera[temp7][4] << endl;
   }
-  outFile << endl;
+  outFile << "Grain_SizeVCoverB_Distributions" << endl;
   for(int temp7 = mindiameter; temp7 < (maxdiameter)+1; temp7++)
   {
     outFile << temp7 << " " << svcoverb[temp7][3] << "  " << svcoverb[temp7][4] << endl;
   }
-  outFile << endl;
+  outFile << "Grain_SizeVNeighbors_Distributions" << endl;
   for(int temp7 = mindiameter; temp7 < (maxdiameter)+1; temp7++)
   {
     outFile << temp7 << " " << svn[temp7][3] << " " << svn[temp7][4] << endl;
   }
-  outFile << endl;
+  outFile << "Grain_SizeVNeighborSize_Distributions" << endl;
   for(int temp7 = mindiameter; temp7 < (maxdiameter)+1; temp7++)
   {
     outFile << temp7 << " " << svs[temp7][3] << " " << svs[temp7][4] << endl;
   }
-  outFile << endl;
+  outFile << "Grain_SizeVOmega3_Distributions" << endl;
   for(int temp7 = mindiameter; temp7 < (maxdiameter)+1; temp7++)
   {
     outFile << temp7 << " " << svomega3[temp7][3] << " " << svomega3[temp7][4] << endl;
