@@ -110,14 +110,13 @@ void GrainGenerator::compute()
 {
   std::string  StatsFile = m_InputDirectory + MXAFileSystemPath::Separator + AIM::Representation::StatsFile;
   std::string  AxisOrientationsFile = m_InputDirectory + MXAFileSystemPath::Separator + AIM::Representation::AxisOrientationsFile;
-  std::string  StructureFile = m_InputDirectory + MXAFileSystemPath::Separator + AIM::Representation::StructureFile;
   std::string  EulerAnglesFile = m_InputDirectory + MXAFileSystemPath::Separator + AIM::Representation::EulerAnglesFile;
+  std::string  StructureFile = m_InputDirectory + MXAFileSystemPath::Separator + AIM::Representation::StructureFile;
   std::string  MisorientationBinsFile = m_InputDirectory + MXAFileSystemPath::Separator + AIM::Representation::MisorientationBinsFile;
   std::string  MicroBinsFile = m_InputDirectory + MXAFileSystemPath::Separator + AIM::Representation::MicroBinsFile;
 
   std::string  CubeFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::CubeFile;
   std::string  EulerFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::EulerFile;
-  std::string cubedxFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::CubeDxFile;
   std::string AnalysisFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::AnalysisFile;
 
    m = GrainGeneratorFunc::New();
@@ -241,10 +240,6 @@ void GrainGenerator::compute()
    progressMessage(AIM_STRING("writing Cube"), 90 );
    m->writeCube(CubeFile, m->numgrains, AnalysisFile);
    
-   CHECK_FOR_CANCELED(GrainGeneratorFunc)
-   progressMessage(AIM_STRING("Writing DX File"), 94);
-   m->create_dxfile(cubedxFile);
-
   CHECK_FOR_CANCELED(GrainGeneratorFunc)
    progressMessage(AIM_STRING("Writing Euler Angles"), 98 );
    m->write_eulerangles(EulerFile);

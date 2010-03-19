@@ -145,7 +145,6 @@ public:
 	void find_colors();
 	void find_convexities();
 	void volume_stats(string,string,string);
-	void create_dxfile(string);
 	void write_axisodf(string);
 	void write_eulerodf(string);
 	void write_graindata(string);

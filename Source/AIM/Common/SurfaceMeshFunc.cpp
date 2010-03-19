@@ -81,60 +81,63 @@ void SurfaceMeshFunc::initialize(int xnum,int ynum, int znum, double xres, doubl
 void SurfaceMeshFunc::initialize_micro(string filename)
 {
 
-  int i, j, k, l;
-  int id;
-  int tgrainname;
-  string dummy;
-  double tempx, tempy, tempz;
-  ifstream inputFile;
-  inputFile.open(filename.c_str());
-  // Let's get rid of the 9 header lines in the xxx.dx produced by 3d coarsening code...
-  for (k = 0; k < 9; k++)
-  {
-	getline(inputFile,dummy,'\n');
-  }
+	int i, j, k, l;
+	int id;
+	int tgrainname;
+	string dummy;
+	double tempx, tempy, tempz;
+	const unsigned int size ( 1024 );
+	char buf [ size ];
+	std::ifstream in (filename.c_str() );
+	std::string word;
+	bool headerdone = false;
+	while(headerdone == false)
+	{
+		in.getline( buf, size );
+		std::string line = buf;
+		in >> word;
+		if(word == "LOOKUP_TABLE")
+		{
+			headerdone = true;
+			in >> word;
+		}
+	}
+	int gnum=0;
+	for(i=1;i<=NS;i++)
+	{
+		in >> gnum;
+		int col = (i-1)%xDim;
+		int row = ((i-1)/xDim)%yDim;
+		int plane = (i-1)/(xDim*yDim);
+		point[i].grainname = tgrainname;
+		if(col == 0 || col == (xDim-1) || row == 0 || row == (yDim-1) || plane == 0 || plane == (zDim-1)) point[i].grainname = -3;
+	}
+	point[0].grainname = 0; // Point 0 is a garbage...
+	// Let's input the grainname numbers for each site from micro.input...
+	in.close();
+	// Let's fill out the coordinate of each voxel. Remember that x coordinate goes fastest...
+	for (l = 0; l <= NS - xDim * yDim; l = l + xDim * yDim)
+	{
+		for (k = 0; k <= xDim * yDim - xDim; k = k + xDim)
+		{
+		  for (j = 1; j <= xDim; j++)
+		  {
+			id = l + k + j;
+			tempx = (double) (j - 1);
+			tempy = (double) (k / xDim);
+			tempz = (double) (l / (xDim * yDim));
+			if (tempx > (double) (xDim - 2) || tempy > (double) (yDim - 2) || tempz > (double) (zDim - 2))
+			{
+			  point[id].surfacevoxel = 1;
+			}
+			else
+			{
+			  point[id].surfacevoxel = 0;
+			}
 
-  point[0].grainname = 0; // Point 0 is a garbage...
-
-  // Let's input the grainname numbers for each site from micro.input...
-  for (i = 1; i <= NS; i++)
-  {
-	int col = (i-1)%xDim;
-	int row = ((i-1)/xDim)%yDim;
-	int plane = (i-1)/(xDim*yDim);
-    inputFile >> tgrainname;
-    point[i].grainname = tgrainname;
-	if(col == 0 || col == (xDim-1) || row == 0 || row == (yDim-1) || plane == 0 || plane == (zDim-1)) point[i].grainname = -3;
-  }
-
-  inputFile.close();
-
-  // Let's fill out the coordinate of each voxel. Remember that x coordinate goes fastest...
-  for (l = 0; l <= NS - xDim * yDim; l = l + xDim * yDim)
-  {
-    for (k = 0; k <= xDim * yDim - xDim; k = k + xDim)
-    {
-      for (j = 1; j <= xDim; j++)
-      {
-        id = l + k + j;
-        tempx = (double) (j - 1);
-        tempy = (double) (k / xDim);
-        tempz = (double) (l / (xDim * yDim));
-        //printf("%10d %6.3f %6.3f %6.3f\n", id, tempx, tempy, tempz);
-
-
-        if (tempx > (double) (xDim - 2) || tempy > (double) (yDim - 2) || tempz > (double) (zDim - 2))
-        {
-          point[id].surfacevoxel = 1;
-        }
-        else
-        {
-          point[id].surfacevoxel = 0;
-        }
-
-      }
-    }
-  }
+		  }
+		}
+	}
 }
 
 void SurfaceMeshFunc::get_neighbor_list(int zID)

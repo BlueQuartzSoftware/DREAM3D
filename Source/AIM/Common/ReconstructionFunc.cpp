@@ -426,7 +426,7 @@ int  ReconstructionFunc::form_grains()
 void  ReconstructionFunc::remove_smallgrains()
 {
   int zero = 0;
-  int badgrain = -1;
+  int badgrain = 0;
   int sizemerged = 1;
   for(int i = 0; i < (xpoints*ypoints*zpoints); i++)
   {
@@ -496,7 +496,7 @@ void  ReconstructionFunc::assign_badpoints()
     for(int i = 0; i < (xpoints*ypoints*zpoints); i++)
     {
       int grainname = voxels[i].grainname;
-      if(grainname == -1)
+      if(grainname == 0)
       {
         for(int c = 1; c < numgrains; c++)
         {
@@ -509,7 +509,7 @@ void  ReconstructionFunc::assign_badpoints()
         if(x > 0)
         {
           int grain1 = voxels[i-1].grainname;
-          if(grain1 > -1)
+          if(grain1 > 0)
           {
             neighs.push_back(grain1);
           }
@@ -517,7 +517,7 @@ void  ReconstructionFunc::assign_badpoints()
         if(x < xpoints-1)
         {
           int grain2 = voxels[i+1].grainname;
-          if(grain2 > -1)
+          if(grain2 > 0)
           {
             neighs.push_back(grain2);
           }
@@ -525,7 +525,7 @@ void  ReconstructionFunc::assign_badpoints()
         if(y > 0)
         {
           int grain3 = voxels[i-(xpoints)].grainname;
-          if(grain3 > -1)
+          if(grain3 > 0)
           {
             neighs.push_back(grain3);
           }
@@ -533,7 +533,7 @@ void  ReconstructionFunc::assign_badpoints()
         if(y < ypoints-1)
         {
           int grain4 = voxels[i+(xpoints)].grainname;
-          if(grain4 > -1)
+          if(grain4 > 0)
           {
             neighs.push_back(grain4);
           }
@@ -541,7 +541,7 @@ void  ReconstructionFunc::assign_badpoints()
         if(z > 0)
         {
           int grain5 = voxels[i-(xpoints*ypoints)].grainname;
-          if(grain5 > -1)
+          if(grain5 > 0)
           {
             neighs.push_back(grain5);
           }
@@ -549,7 +549,7 @@ void  ReconstructionFunc::assign_badpoints()
         if(z < zpoints-1)
         {
           int grain6 = voxels[i+(xpoints*ypoints)].grainname;
-          if(grain6 > -1)
+          if(grain6 > 0)
           {
             neighs.push_back(grain6);
           }
@@ -582,7 +582,7 @@ void  ReconstructionFunc::assign_badpoints()
     {
       int grainname = voxels[j].grainname;
       int hasneighbor = voxels[j].hasneighbor;
-      if(grainname == -1 && hasneighbor == 1)
+      if(grainname == 0 && hasneighbor == 1)
       {
         int neighbor = voxels[j].neighbor;
         voxels[j].grainname = neighbor;
@@ -3103,39 +3103,6 @@ void  ReconstructionFunc::write_volume(string writename11)
   outFile.close();
 }
 
-
-void ReconstructionFunc::create_dxfile(string dxfile)
-{
-  ofstream outFile;
-  outFile.open(dxfile.c_str());
-  outFile << "object 1 class gridpositions counts " << xpoints+1 << " " << ypoints+1 << " " << zpoints+1 << endl;
-  outFile << "origin	0	0	0" << endl;
-  outFile << "delta	1	0	0" << endl;
-  outFile << "delta	0	1	0" << endl;
-  outFile << "delta	0	0	0" << endl;
-  outFile << endl;
-  outFile << "object 2 class gridconnections counts " <<  xpoints+1 << " " << ypoints+1 << " " << zpoints+1 << endl;
-  outFile << endl;
-  outFile << "object 3 class array type int rank 0 items " << totalpoints << " data follows" << endl;
-  for(int i=0; i<totalpoints; i++)
-  {
-    outFile << voxels[i].grainname+1 << " ";
-    if((i!=0)&&(i%20==0))
-	{
-      outFile << endl;
-    }
-  }
-  outFile << endl;
-  outFile << "attribute 'dep' string 'connections" << endl;
-  outFile << endl;
-  outFile << "object '3d Micro' class field" << endl;
-  outFile << "component  'positions'    value 1" << endl;
-  outFile << "component  'connections'  value 2" << endl;
-  outFile << "component  'data'         value 3" << endl;
-  outFile << endl;
-  outFile << "end" << endl;
-  outFile.close();
-}
 
 void ReconstructionFunc::write_graindata(string gdata)
 {

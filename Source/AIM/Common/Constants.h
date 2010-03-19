@@ -26,14 +26,14 @@ namespace AIM
   namespace Representation
   {
     /*    Reconstruction related */
-    const std::string StatsFile("stats.txt");//1
-    const std::string MisorientationBinsFile("misobins.txt");//8
-    const std::string MicroBinsFile("microbins.txt");//9
-    const std::string ReconstructedVisualizationFile("reconstructed_visualization.vtk");//11
-    const std::string AxisOrientationsFile("axisorientations.txt");//14
-    const std::string graindataFile("graindata.txt");//14
-    const std::string EulerAnglesFile("eulerangles.txt");//15
-    const std::string ReconstructedDxFile("reconstructed_data.dx");
+    const std::string StatsFile("Reconstruction_Stats.txt");//1
+    const std::string MisorientationBinsFile("Reconstruction_MoDF.txt");//8
+    const std::string MicroBinsFile("Reconstruction_MicroTexture.txt");//9
+    const std::string ReconstructedVisualizationFile("Reconstruction_Vis.vtk");//11
+    const std::string StructureFile("Reconstruction_Vis.vtk");//11
+    const std::string AxisOrientationsFile("Reconstruction_AxisODF.txt");//14
+    const std::string graindataFile("Reconstruction_GrainData.txt");//14
+    const std::string EulerAnglesFile("Reconstruction_ODF.txt");//15
 
     enum CrystalStructure {
         UnknownCrystalStructure = 0,
@@ -42,11 +42,9 @@ namespace AIM
     };
 
     /*  Grain Generator Related */
-    const std::string CubeFile("cube.vtk");
-    const std::string StructureFile("cube.vtk");
-    const std::string CubeDxFile("cube.dx");
-    const std::string AnalysisFile("analysis.txt");
-    const std::string EulerFile("eulerangles.txt");
+    const std::string CubeFile("Synthetic_Vis.vtk");
+    const std::string AnalysisFile("Synthetic_Stats.txt");
+    const std::string EulerFile("Synthetic_GrainAngles.txt");
 
     enum Overlap {
         UnknownOverlap = 0,
@@ -64,14 +62,13 @@ namespace AIM
 
     /*   Surface Meshing Related   */
     const std::string VTKExt("vtk");
-    const std::string DXExt ("dx");
     const std::string NodesRawFile("nodes_raw.txt");
     const std::string NodesFile("nodes.txt");
     const std::string TrianglesFileIndex("triangles");
     const std::string TrianglesFile("triangles.txt");
     const std::string EdgesFileIndex("edges");
     const std::string EdgesFile("edges.txt");
-    const std::string VisualizationFile("surface_mesh.vtk");
+    const std::string VisualizationFile("SurfaceMesh_Vis.vtk");
     const std::string Smooth3DIterationFile("Smooth3D");
     const std::string NodesSmoothedFile("nodes_smoothed.txt");
 

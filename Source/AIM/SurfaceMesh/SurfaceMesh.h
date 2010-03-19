@@ -63,7 +63,7 @@ Q_OBJECT
     virtual ~SurfaceMesh();
 
     MXA_INSTANCE_STRING_PROPERTY(InputDirectory, m_InputDirectory)
-    MXA_INSTANCE_STRING_PROPERTY(DXFile, m_DxFile)
+    MXA_INSTANCE_STRING_PROPERTY(InputFile, m_InputFile)
     MXA_INSTANCE_STRING_PROPERTY(OutputDirectory, m_OutputDirectory)
     MXA_INSTANCE_PROPERTY_m(int, XDim)
     MXA_INSTANCE_PROPERTY_m(int, YDim)
