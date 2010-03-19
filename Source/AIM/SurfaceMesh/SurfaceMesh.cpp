@@ -54,7 +54,7 @@ QObject* parent
 QThread(parent),
 #endif
 m_InputDirectory("."),
-m_DxFile(""),
+m_InputFile(""),
 m_OutputDirectory(""),
 m_SmoothMesh(false),
 m_SmoothIterations(0),
@@ -105,7 +105,7 @@ void SurfaceMesh::compute()
   m = SurfaceMeshFunc::New();
    m->initialize(m_XDim,m_YDim,m_ZDim,m_XRes,m_YRes,m_ZRes);
    int err = 0;
-   m->initialize_micro(m_DxFile );
+   m->initialize_micro(m_InputFile );
 
 
   int cNodeID = 0;

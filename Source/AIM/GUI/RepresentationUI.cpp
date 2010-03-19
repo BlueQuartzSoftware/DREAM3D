@@ -268,7 +268,7 @@ void RepresentationUI::readSettings()
   READ_COMBO_BOX(prefs, gg_OverlapAssignment)
 
   /* ******** This Section is for the Surface Meshing Tab ************ */
-  READ_FILEPATH_SETTING(prefs, sm_DxFile, "");
+  READ_FILEPATH_SETTING(prefs, sm_InputFile, "");
   READ_FILEPATH_SETTING(prefs, sm_OutputDir, "");
   READ_SETTING(prefs, sm_XDim, ok, i, 100 , Int);
   READ_SETTING(prefs, sm_YDim, ok, i, 100 , Int);
@@ -341,7 +341,7 @@ void RepresentationUI::writeSettings()
   WRITE_COMBO_BOX(prefs, gg_OverlapAssignment)
 
   /* ******** This Section is for the Surface Meshing Tab ************ */
-  WRITE_STRING_SETTING(prefs, sm_DxFile);
+  WRITE_STRING_SETTING(prefs, sm_InputFile);
   WRITE_SETTING(prefs, sm_XDim );
   WRITE_SETTING(prefs, sm_YDim );
   WRITE_SETTING(prefs, sm_ZDim );
@@ -916,7 +916,6 @@ void RepresentationUI::gg_CheckIOFiles()
   CHECK_QLABEL_INPUT_FILE_EXISTS(gg_, MicroBinsFile)
 
   CHECK_QLABEL_OUTPUT_FILE_EXISTS(gg_, CubeFile)
-  CHECK_QLABEL_OUTPUT_FILE_EXISTS(gg_, CubeDxFile)
   CHECK_QLABEL_OUTPUT_FILE_EXISTS(gg_, AnalysisFile)
   CHECK_QLABEL_OUTPUT_FILE_EXISTS(gg_, EulerFile)
 }
@@ -1122,11 +1121,11 @@ void RepresentationUI::gg_ThreadProgressed(int val)
 void RepresentationUI::sm_SetupGui()
 {
 
-  if (NULL == sm_DxFile->completer()){
+  if (NULL == sm_InputFile->completer()){
     QR3DFileCompleter* com = new QR3DFileCompleter(this, false);
-    sm_DxFile->setCompleter(com);
+    sm_InputFile->setCompleter(com);
     QObject::connect( com, SIGNAL(activated(const QString &)),
-             this, SLOT(on_sm_DxFile_textChanged(const QString &)));
+             this, SLOT(on_sm_InputFile_textChanged(const QString &)));
   }
 
   if (NULL == sm_OutputDir->completer()) {
@@ -1137,8 +1136,8 @@ void RepresentationUI::sm_SetupGui()
   }
 
   sm_Message->setText("Any existing output files will be over written with new versions during the operation.");
-  m_WidgetList << sm_DxFile;
-  m_WidgetList << sm_XDim << sm_YDim << sm_ZDim << sm_DxFileBtn << sm_OutputDir << sm_OutputDirBtn;
+  m_WidgetList << sm_InputFile;
+  m_WidgetList << sm_XDim << sm_YDim << sm_ZDim << sm_InputFileBtn << sm_OutputDir << sm_OutputDirBtn;
   m_WidgetList << sm_Message << sm_LockQuadPoints << sm_SmoothIterations << sm_SmoothMesh;
   m_WidgetList << sm_WriteOutputFileIncrement;
 }
@@ -1149,20 +1148,12 @@ void RepresentationUI::sm_SetupGui()
 void RepresentationUI::sm_CheckIOFiles()
 {
 
-  if ( _verifyPathExists(sm_DxFile->text(), sm_DxFile) == true )
+  if ( _verifyPathExists(sm_InputFile->text(), sm_InputFile) == true )
   {
-    QFileInfo fi (sm_DxFile->text() );
+    QFileInfo fi (sm_InputFile->text() );
     QString ext = fi.suffix();
-    if (ext.compare(AIM::Representation::VTKExt.c_str() ) == 0)
-    {
-      sm_Message->setText("You have selected a VTK file which will need to be converted first to a 'dx' based file. This will be done for you.");
-    }
-    else
-    {
-      sm_Message->setText("You have selected a 'dx' file which can be used directly by the surface meshing code.");
-    }
   }
-  CHECK_QLINEEDIT_FILE_EXISTS(sm_DxFile)
+  CHECK_QLINEEDIT_FILE_EXISTS(sm_InputFile)
 
   _verifyPathExists(sm_OutputDir->text(), sm_OutputDir);
 
@@ -1175,23 +1166,15 @@ void RepresentationUI::sm_CheckIOFiles()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RepresentationUI::on_sm_DxFileBtn_clicked()
+void RepresentationUI::on_sm_InputFileBtn_clicked()
 {
   QString file = QFileDialog::getOpenFileName(this, tr("Select Input File"),
                                                  m_OpenDialogLastDirectory,
-                                                 tr("Viz Files (*.dx *.vtk)") );
+                                                 tr("Viz Files (*.vtk)") );
   if ( true == file.isEmpty() ){return;  }
   QFileInfo fi (file);
   QString ext = fi.suffix();
-  if (ext.compare(AIM::Representation::VTKExt.c_str() ) == 0)
-  {
-    sm_Message->setText("You have selected a VTK file which will need to be converted first to a 'dx' based file. This will be done for you.");
-  }
-  else
-  {
-    sm_Message->setText("You have selected a 'dx' file which can be used directly by the surface meshing code.");
-  }
-  sm_DxFile->setText(fi.absoluteFilePath());
+  sm_InputFile->setText(fi.absoluteFilePath());
 }
 
 
@@ -1216,7 +1199,7 @@ void RepresentationUI::on_sm_OutputDirBtn_clicked()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RepresentationUI::on_sm_DxFile_textChanged(const QString & text)
+void RepresentationUI::on_sm_InputFile_textChanged(const QString & text)
 {
   sm_CheckIOFiles();
 }
@@ -1244,11 +1227,11 @@ void RepresentationUI::on_sm_GoBtn_clicked()
     return;
   }
 
-  SANITY_CHECK_INPUT(sm_, DxFile)
+  SANITY_CHECK_INPUT(sm_, InputFile)
   SANITY_CHECK_INPUT(sm_, OutputDir)
 
   m_SurfaceMesh = SurfaceMesh::New(NULL);
-  m_SurfaceMesh->setDXFile(sm_DxFile->text().toStdString() );
+  m_SurfaceMesh->setInputFile(sm_InputFile->text().toStdString() );
 
   QString od = sm_OutputDir->text();
   if (od.endsWith('/') == false && od.endsWith('\\') == false)
