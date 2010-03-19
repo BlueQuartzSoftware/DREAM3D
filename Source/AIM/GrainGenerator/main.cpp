@@ -136,7 +136,7 @@ int main(int argc, char **argv)
     r->setZResolution(zRes);
     r->setOverlapAllowed(overlapAllowed);
     r->setOverlapAssignment(overlapAssignment);
-    r->setCrystalStructure(crystruct);
+    r->setCrystalStructure( static_cast<AIM::Representation::CrystalStructure>(crystruct) );
 
     r->compute();
     err = r->getErrorCondition();
