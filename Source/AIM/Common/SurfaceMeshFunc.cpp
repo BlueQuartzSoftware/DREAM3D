@@ -56,36 +56,15 @@ SurfaceMeshFunc::~SurfaceMeshFunc()
 
 }
 
-void SurfaceMeshFunc::initialize(int xnum,int ynum, int znum, double xres, double yres, double zres)
-{
-
-  NS = xnum * ynum * znum;
-  NSP = xnum * ynum;
-
-  xDim = xnum;
-  yDim = ynum;
-  zDim = znum;
-  xRes = xres;
-  yRes = yres;
-  zRes = zres;
-
-  neigh = new Neighbor[2 * NSP + 1];
-  point = new Voxel[NS + 1];
-  cSquare = new Face[3 * 2 * NSP];
-  cVertex = new Node[7 * 2 * NSP];
-  pVertex = new Node[7 * 2 * NSP];
-
-
-}
-
 void SurfaceMeshFunc::initialize_micro(string filename)
 {
 
 	int i, j, k, l;
 	int id;
 	int tgrainname;
-	string dummy;
 	double tempx, tempy, tempz;
+	int xnum, ynum, znum;
+	double xres, yres, zres;
 	const unsigned int size ( 1024 );
 	char buf [ size ];
 	std::ifstream in (filename.c_str() );
@@ -101,11 +80,35 @@ void SurfaceMeshFunc::initialize_micro(string filename)
 			headerdone = true;
 			in >> word;
 		}
+		if(word == "DIMENSIONS")
+		{
+			in >> xnum >> ynum >> znum;
+
+			NS = xnum * ynum * znum;
+			NSP = xnum * ynum;
+
+			xDim = xnum;
+			yDim = ynum;
+			zDim = znum;
+
+			neigh = new Neighbor[2 * NSP + 1];
+			point = new Voxel[NS + 1];
+			cSquare = new Face[3 * 2 * NSP];
+			cVertex = new Node[7 * 2 * NSP];
+			pVertex = new Node[7 * 2 * NSP];
+		}
+		if(word == "SPACING")
+		{
+			in >> xres >> yres >> zres;
+
+			xRes = xres;
+			yRes = yres;
+			zRes = zres;
+		}
 	}
-	int gnum=0;
 	for(i=1;i<=NS;i++)
 	{
-		in >> gnum;
+		in >> tgrainname;
 		int col = (i-1)%xDim;
 		int row = ((i-1)/xDim)%yDim;
 		int plane = (i-1)/(xDim*yDim);

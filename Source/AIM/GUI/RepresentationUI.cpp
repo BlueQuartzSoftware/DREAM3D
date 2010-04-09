@@ -241,6 +241,8 @@ void RepresentationUI::readSettings()
   READ_STRING_SETTING(prefs, zSpacing, "0.25");
   READ_BOOL_SETTING(prefs, mergeTwins, false);
   mergeTwins->blockSignals(false);
+  READ_BOOL_SETTING(prefs, mergeColonies, false);
+  mergeColonies->blockSignals(false);
   READ_BOOL_SETTING(prefs, alreadyFormed, false);
   alreadyFormed->blockSignals(false);
   READ_SETTING(prefs, minAllowedGrainSize, ok, i, 8 , Int);
@@ -270,12 +272,6 @@ void RepresentationUI::readSettings()
   /* ******** This Section is for the Surface Meshing Tab ************ */
   READ_FILEPATH_SETTING(prefs, sm_InputFile, "");
   READ_FILEPATH_SETTING(prefs, sm_OutputDir, "");
-  READ_SETTING(prefs, sm_XDim, ok, i, 100 , Int);
-  READ_SETTING(prefs, sm_YDim, ok, i, 100 , Int);
-  READ_SETTING(prefs, sm_ZDim, ok, i, 100 , Int);
-  READ_SETTING(prefs, sm_XRes, ok, d, 1 , Double);
-  READ_SETTING(prefs, sm_YRes, ok, d, 1 , Double);
-  READ_SETTING(prefs, sm_ZRes, ok, d, 1 , Double);
 
   READ_BOOL_SETTING(prefs, sm_SmoothMesh, false);
   READ_BOOL_SETTING(prefs, sm_LockQuadPoints, false);
@@ -316,6 +312,7 @@ void RepresentationUI::writeSettings()
   WRITE_STRING_SETTING(prefs, zSpacing)
 
   WRITE_BOOL_SETTING(prefs, mergeTwins, mergeTwins->isChecked())
+  WRITE_BOOL_SETTING(prefs, mergeColonies, mergeColonies->isChecked())
   WRITE_BOOL_SETTING(prefs, alreadyFormed, alreadyFormed->isChecked())
 
   WRITE_SETTING(prefs, minAllowedGrainSize)
@@ -342,12 +339,6 @@ void RepresentationUI::writeSettings()
 
   /* ******** This Section is for the Surface Meshing Tab ************ */
   WRITE_STRING_SETTING(prefs, sm_InputFile);
-  WRITE_SETTING(prefs, sm_XDim );
-  WRITE_SETTING(prefs, sm_YDim );
-  WRITE_SETTING(prefs, sm_ZDim );
-  WRITE_SETTING(prefs, sm_XRes );
-  WRITE_SETTING(prefs, sm_YRes );
-  WRITE_SETTING(prefs, sm_ZRes );
   WRITE_STRING_SETTING(prefs, sm_OutputDir);
   WRITE_BOOL_SETTING(prefs, sm_SmoothMesh, sm_SmoothMesh->isChecked() );
   WRITE_BOOL_SETTING(prefs, sm_LockQuadPoints, sm_LockQuadPoints->isChecked() );
@@ -620,7 +611,7 @@ void RepresentationUI::rec_SetupGui()
 
   m_WidgetList << angDir << angDirBtn << rec_OutputDir << outputDirBtn;
   m_WidgetList << angFilePrefix << angMaxSlice << zStartIndex << zEndIndex << zSpacing;
-  m_WidgetList << mergeTwins << alreadyFormed << minAllowedGrainSize << minConfidence << misOrientationTolerance;
+  m_WidgetList << mergeTwins << mergeColonies << alreadyFormed << minAllowedGrainSize << minConfidence << misOrientationTolerance;
   m_WidgetList << crystalStructure;
 }
 
@@ -795,6 +786,7 @@ void RepresentationUI::on_rec_GoBtn_clicked()
   m_Reconstruction->setZEndIndex(zEndIndex->value() + 1);
   m_Reconstruction->setZResolution(zSpacing->text().toDouble(&ok));
   m_Reconstruction->setMergeTwins(mergeTwins->isChecked() );
+  m_Reconstruction->setMergeColonies(mergeColonies->isChecked() );
   m_Reconstruction->setMinAllowedGrainSize(minAllowedGrainSize->value());
   m_Reconstruction->setMinSeedConfidence(minConfidence->value());
   m_Reconstruction->setMinSeedImageQuality(minImageQuality->value());
@@ -1137,7 +1129,7 @@ void RepresentationUI::sm_SetupGui()
 
   sm_Message->setText("Any existing output files will be over written with new versions during the operation.");
   m_WidgetList << sm_InputFile;
-  m_WidgetList << sm_XDim << sm_YDim << sm_ZDim << sm_InputFileBtn << sm_OutputDir << sm_OutputDirBtn;
+  m_WidgetList << sm_InputFileBtn << sm_OutputDir << sm_OutputDirBtn;
   m_WidgetList << sm_Message << sm_LockQuadPoints << sm_SmoothIterations << sm_SmoothMesh;
   m_WidgetList << sm_WriteOutputFileIncrement;
 }
@@ -1240,12 +1232,6 @@ void RepresentationUI::on_sm_GoBtn_clicked()
   }
 
   m_SurfaceMesh->setOutputDirectory(od.toStdString());
-  m_SurfaceMesh->setXDim(sm_XDim->value());
-  m_SurfaceMesh->setYDim(sm_YDim->value());
-  m_SurfaceMesh->setZDim(sm_ZDim->value());
-  m_SurfaceMesh->setXRes(sm_XRes->value());
-  m_SurfaceMesh->setYRes(sm_YRes->value());
-  m_SurfaceMesh->setZRes(sm_ZRes->value());
   m_SurfaceMesh->setSmoothMesh(sm_SmoothMesh->isChecked());
   m_SurfaceMesh->setSmoothIterations(sm_SmoothIterations->value());
   m_SurfaceMesh->setSmoothFileOutputIncrement(sm_WriteOutputFileIncrement->value());

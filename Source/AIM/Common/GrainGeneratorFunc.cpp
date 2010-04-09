@@ -450,9 +450,9 @@ void  GrainGeneratorFunc::generate_grains(int numgrains)
   xpoints = int(xpoints/4)*4;
   ypoints = int(ypoints/4)*4;
   zpoints = int(zpoints/4)*4;
-  xpoints1 = xpoints/(resx1/resx);
-  ypoints1 = ypoints/(resx1/resx);
-  zpoints1 = zpoints/(resx1/resx);
+  xpoints1 = xpoints/int(resx1/resx);
+  ypoints1 = ypoints/int(resx1/resx);
+  zpoints1 = zpoints/int(resx1/resx);
   grainorder.resize(numgrains);
   takencheck.resize(numgrains);
   for(int i=0;i<numgrains;i++)
@@ -575,7 +575,7 @@ void  GrainGeneratorFunc::assign_eulers(int numgrains)
     }
     lastcur = cur;
 	double random = rg.Random();
-	picked = random*grainlist.size();
+	picked = int(random*grainlist.size());
 	if(picked == grainlist.size()) picked = grainlist.size()-1;
 	int gnum = grainlist[picked];
 	int cursize = grains[gnum].currentsize;
@@ -922,9 +922,9 @@ void  GrainGeneratorFunc::pack_grains(int numgrains)
             if(nbin <= mindiameter) nbin = mindiameter;
             if(bin >= maxdiameter) bin = maxdiameter;
             if(bin <= mindiameter) bin = mindiameter;
-            int was = log(double(nnum));
+            int was = int(log(double(nnum)));
             nnum = nnum + 1;
-            int now = log(double(nnum));
+            int now = int(log(double(nnum)));
             double wasprob = (1.0/pow((2*m_pi*svn[nbin][1]*svn[nbin][1]),0.5))*exp(-pow((was-svn[nbin][0]),2)/(2*svn[nbin][1]*svn[nbin][1]));
             double nowprob = (1.0/pow((2*m_pi*svn[nbin][1]*svn[nbin][1]),0.5))*exp(-pow((now-svn[nbin][0]),2)/(2*svn[nbin][1]*svn[nbin][1]));
             double increase = (nowprob - wasprob);
@@ -1407,9 +1407,9 @@ int GrainGeneratorFunc::create_precipitates()
   xpoints = int(xpoints/4)*4;
   ypoints = int(ypoints/4)*4;
   zpoints = int(zpoints/4)*4;
-  xpoints1 = xpoints/(resx1/resx);
-  ypoints1 = ypoints/(resx1/resx);
-  zpoints1 = zpoints/(resx1/resx);
+  xpoints1 = xpoints/int(resx1/resx);
+  ypoints1 = ypoints/int(resx1/resx);
+  zpoints1 = zpoints/int(resx1/resx);
   precipitateorder.resize(count);
   takencheck.resize(count);
   for(int i=0;i<count;i++)
@@ -1847,7 +1847,6 @@ void  GrainGeneratorFunc::find_neighbors()
   double x = 0;
   double y = 0;
   double z = 0;
-  int grain;
   int grain1;
   int grain2;
   int grain3;
@@ -1988,7 +1987,6 @@ void  GrainGeneratorFunc::find_surfacevoxels()
   double x = 0;
   double y = 0;
   double z = 0;
-  int grain;
   int grain1;
   int grain2;
   int grain3;
@@ -2084,10 +2082,11 @@ void  GrainGeneratorFunc::loadMicroData(string inname11)
     inputFile.close();
 }
 
-void  GrainGeneratorFunc::measure_misorientations ()
+void  GrainGeneratorFunc::measure_misorientations (double quat_symmcubic[24][5],double quat_symmhex[12][5])
 {
   size_t initialsize=10;
   vector<double> misolist(initialsize,-1);
+  double w;
   double n1;
   double n2;
   double n3;
@@ -2105,7 +2104,8 @@ void  GrainGeneratorFunc::measure_misorientations ()
       double g2ea1 = grains[nname].avgeuler1;
       double g2ea2 = grains[nname].avgeuler2;
       double g2ea3 = grains[nname].avgeuler3;
-      double w = getmisoquat(crystruct,g1ea1,g1ea2,g1ea3,g2ea1,g2ea2,g2ea3,n1,n2,n3);
+      if(crystruct == 1) w = getmisoquathexagonal(quat_symmhex,g1ea1,g1ea2,g1ea3,g2ea1,g2ea2,g2ea3,n1,n2,n3);
+      if(crystruct == 2) w = getmisoquatcubic(g1ea1,g1ea2,g1ea3,g2ea1,g2ea2,g2ea3,n1,n2,n3);
       misolist[j] = w;
     }
 	grains[i].misorientationlist = new std::vector<double>(misolist.size() );
@@ -2114,7 +2114,7 @@ void  GrainGeneratorFunc::measure_misorientations ()
   }
 }
 
-double GrainGeneratorFunc::getmisoquat(double crystruct,double g1ea1,double g1ea2,double g1ea3,double g2ea1,double g2ea2,double g2ea3,double &n1,double &n2,double &n3)
+double GrainGeneratorFunc::getmisoquatcubic(double g1ea1,double g1ea2,double g1ea3,double g2ea1,double g2ea2,double g2ea3,double &n1,double &n2,double &n3)
 {
   double wmin=9999999; //,na,nb,nc;
   double q1[4];
@@ -2137,6 +2137,59 @@ double GrainGeneratorFunc::getmisoquat(double crystruct,double g1ea1,double g1ea
   qc[1]=q1[0]*q2[1]+q1[1]*q2[0]+q1[2]*q2[3]-q1[3]*q2[2];
   qc[2]=q1[0]*q2[2]-q1[1]*q2[3]+q1[2]*q2[0]+q1[3]*q2[1];
   qc[3]=q1[0]*q2[3]+q1[1]*q2[2]-q1[2]*q2[1]+q1[3]*q2[0];
+  qc[0]=fabs(qc[0]);
+  qc[1]=fabs(qc[1]);
+  qc[2]=fabs(qc[2]);
+  qc[3]=fabs(qc[3]);
+  for(int i=0;i<4;i++)
+  {
+    qco[i]=100000;
+    for(int j=0;j<4;j++)
+    {
+      if((qc[j] < qco[i] && i == 0) || (qc[j] < qco[i] && qc[j] > qco[i-1]))
+      {
+        qco[i] = qc[j];
+      }
+    }
+  }
+  wmin = qco[3];
+  if(((qco[2]+qco[3])/(pow(2,0.5))) > wmin) wmin = ((qco[2]+qco[3])/(pow(2,0.5)));
+  if(((qco[0]+qco[1]+qco[2]+qco[3])/2) > wmin) wmin = ((qco[0]+qco[1]+qco[2]+qco[3])/2);
+  if(wmin < -1) wmin = -1;
+  if(wmin > 1) wmin = 1;
+  wmin = acos(wmin);
+  wmin = (360.0/m_pi)*wmin;
+  return wmin;
+}
+
+double GrainGeneratorFunc::getmisoquathexagonal(double quat_symmhex[12][5],double g1ea1,double g1ea2,double g1ea3,double g2ea1,double g2ea2,double g2ea3,double &n1,double &n2,double &n3)
+{
+  double wmin=9999999; //,na,nb,nc;
+  double q1[4];
+  double q2[4];
+  double qr[4];
+  double qc[4];
+  double qco[4];
+  q1[0]=sin((g1ea2/2.0))*cos(((g1ea1-g1ea3)/2.0));
+  q1[1]=sin((g1ea2/2.0))*sin(((g1ea1-g1ea3)/2.0));
+  q1[2]=cos((g1ea2/2.0))*sin(((g1ea1+g1ea3)/2.0));
+  q1[3]=cos((g1ea2/2.0))*cos(((g1ea1+g1ea3)/2.0));
+  q2[0]=sin((g2ea2/2.0))*cos(((g2ea1-g2ea3)/2.0));
+  q2[1]=sin((g2ea2/2.0))*sin(((g2ea1-g2ea3)/2.0));
+  q2[2]=cos((g2ea2/2.0))*sin(((g2ea1+g2ea3)/2.0));
+  q2[3]=cos((g2ea2/2.0))*cos(((g2ea1+g2ea3)/2.0));
+  q2[0]=q2[0];
+  q2[1]=-q2[1];
+  q2[2]=-q2[2];
+  q2[3]=-q2[3];
+  qr[0]=q1[0]*q2[3]-q1[3]*q2[0]+q1[1]*q2[2]-q1[2]*q2[1];
+  qr[1]=q1[1]*q2[3]-q1[3]*q2[1]+q1[2]*q2[0]-q1[0]*q2[2];
+  qr[2]=q1[2]*q2[3]-q1[3]*q2[2]+q1[0]*q2[1]-q1[1]*q2[0];
+  qr[3]=q1[3]*q2[3]+q1[0]*q2[0]+q1[1]*q2[1]+q1[2]*q2[2];
+  qr[0]=q1[0]*q2[3]-q1[3]*q2[0]+q1[1]*q2[2]-q1[2]*q2[1];
+  qr[1]=q1[1]*q2[3]-q1[3]*q2[1]+q1[2]*q2[0]-q1[0]*q2[2];
+  qr[2]=q1[2]*q2[3]-q1[3]*q2[2]+q1[0]*q2[1]-q1[1]*q2[0];
+  qr[3]=q1[3]*q2[3]+q1[0]*q2[0]+q1[1]*q2[1]+q1[2]*q2[2];
   qc[0]=fabs(qc[0]);
   qc[1]=fabs(qc[1]);
   qc[2]=fabs(qc[2]);
@@ -2192,7 +2245,7 @@ void  GrainGeneratorFunc::rank_misobins(int numgrains)
     double simdensity = simmisobin[j].density;
     double diff = fabs(simdensity-actualdensity);
     simmisobin[j].difference = diff;
-    double temp = 0;
+    int temp = 0;
     simmisobin[j].binrank = temp;
   }
 //  int difflast = count;
@@ -2210,7 +2263,7 @@ void  GrainGeneratorFunc::rank_misobins(int numgrains)
         curbin = k;
       }
     }
-    double rank = nummisobins-check;
+    int rank = nummisobins-check;
     double actual = actualmisobin[curbin].density;
     actual = actual*count;
     double sim = simmisobin[curbin].density;
@@ -2267,7 +2320,7 @@ int  GrainGeneratorFunc::rank_microbins(int numgrains)
     double simdensity = simmicrobin[j].density;
     double diff = fabs(simdensity-actualdensity);
     simmicrobin[j].difference = diff;
-    double temp = 0;
+    int temp = 0;
     simmicrobin[j].binrank = temp;
   }
   int curbin = 0;
@@ -2284,7 +2337,7 @@ int  GrainGeneratorFunc::rank_microbins(int numgrains)
         curbin = k;
       }
     }
-    double rank = nummicrobins-check;
+    int rank = nummicrobins-check;
     double actual = actualmicrobin[curbin].density;
     actual = actual*numgrains;
     double sim = simmicrobin[curbin].density;

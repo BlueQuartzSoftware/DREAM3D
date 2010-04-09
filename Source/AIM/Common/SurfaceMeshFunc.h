@@ -111,7 +111,6 @@ public:
 
 
 
-  void initialize(int, int, int, double, double, double);
   void initialize_micro(string);
   void get_neighbor_list(int zID);
  void initialize_nodes(int zID);
