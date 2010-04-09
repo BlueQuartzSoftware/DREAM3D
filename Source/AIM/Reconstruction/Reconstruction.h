@@ -71,6 +71,7 @@ Q_OBJECT
     MXA_INSTANCE_PROPERTY_m(int, ZEndIndex)
     MXA_INSTANCE_PROPERTY_m(double, ZResolution)
     MXA_INSTANCE_PROPERTY_m(bool, MergeTwins)
+    MXA_INSTANCE_PROPERTY_m(bool, MergeColonies)
     MXA_INSTANCE_PROPERTY_m(int32, MinAllowedGrainSize)
     MXA_INSTANCE_PROPERTY_m(double, MinSeedConfidence)
     MXA_INSTANCE_PROPERTY_m(double, MinSeedImageQuality)

@@ -71,6 +71,7 @@ public:
   double minseedimagequality;
   int minallowedgrainsize;
   int mergetwinsoption;
+  int mergecoloniesoption;
   int crystruct;
   int alreadyformed;
 
@@ -86,6 +87,7 @@ public:
 	int **arr;
 	double **graincenters;
 	double **grainmoments;
+	double **quat_symm;
 
 	vector<vector<int> > neighborvector;
 
@@ -117,11 +119,11 @@ public:
 
     void initialize(double stepX, double stepY, double stepZ,
       int andNumCols, int angNumRows, int angSlices,
-      bool, int, double, double, double, int, bool);
+      bool, bool, int, double, double, double, int, bool);
 	void find_cutout(string angFName, int andNumCols, int angNumRows, double, double);
-	void loadSlices();
-	void align_sections(int slice);
-	int form_grains();
+	void loadSlices(double quat_symmcubic[24][5],double quat_symmhex[12][5]);
+	void align_sections(int slice,double quat_symmcubic[24][5],double quat_symmhex[12][5]);
+	int form_grains(double quat_symmcubic[24][5],double quat_symmhex[12][5]);
 	void remove_smallgrains();
 	int renumber_grains1();
 	void write_volume(string);
@@ -130,9 +132,11 @@ public:
 	void find_neighbors();
 	void merge_containedgrains();
 	int renumber_grains2();
-	void homogenize_grains(double quat_symm[24][5]);
-	void merge_twins();
+	void homogenize_grains(double quat_symmcubic[24][5],double quat_symmhex[12][5]);
+	void merge_twins(double quat_symmcubic[24][5],double quat_symmhex[12][5]);
+	void merge_colonies(double quat_symmcubic[24][5],double quat_symmhex[12][5]);
 	void characterize_twins();
+	void characterize_colonies();
 	int renumber_grains3();
 	void find_goodneighbors();
 	void find_centroids ();
@@ -141,15 +145,15 @@ public:
 	void find_vectors();
 	void find_eulerodf();
 	void find_axisodf();
-	void measure_misorientations();
-	void find_colors();
+	void measure_misorientations(double quat_symmcubic[24][5],double quat_symmhex[12][5]);
+	void find_colors(double quat_symmcubic[24][5],double quat_symmhex[12][5]);
 	void find_convexities();
 	void volume_stats(string,string,string);
 	void write_axisodf(string);
 	void write_eulerodf(string);
 	void write_graindata(string);
-	double getmisoquatcubic(double ,double,double ,double ,double ,double ,double,double ,double &,double &,double &);
-	double getmisoquathexagonal(double ,double,double ,double ,double ,double ,double,double ,double &,double &,double &);
+	double getmisoquatcubic(double,double ,double ,double ,double ,double,double ,double &,double &,double &);
+	double getmisoquathexagonal(double quat_symmhex[12][5],double,double ,double ,double ,double ,double,double ,double &,double &,double &);
 	double gamma(double);
 	double find_xcoord(long);
 	double find_ycoord(long);

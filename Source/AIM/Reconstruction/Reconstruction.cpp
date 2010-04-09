@@ -63,6 +63,7 @@ m_ZStartIndex(0),
 m_ZEndIndex(0), 
 m_ZResolution(0.25),
 m_MergeTwins(false),
+m_MergeColonies(false),
 m_MinAllowedGrainSize(0),
 m_MinSeedConfidence(0.0),
 m_MinSeedImageQuality(0.0),
@@ -138,13 +139,13 @@ void Reconstruction::compute()
   m->find_cutout(p->generateFullPathAngFileName(m_ZStartIndex), reader->getNumEvenCols(), reader->getNumRows(), m_MinSeedConfidence, m_MinSeedImageQuality);
   m->initialize(reader->getXStep(), reader->getYStep(), m_ZResolution,
                        reader->getNumEvenCols(), reader->getNumRows(), (m_ZEndIndex - m_ZStartIndex),
-                       m_MergeTwins, m_MinAllowedGrainSize, m_MinSeedConfidence, m_MinSeedImageQuality,
+                       m_MergeTwins, m_MergeColonies, m_MinAllowedGrainSize, m_MinSeedConfidence, m_MinSeedImageQuality,
                        m_MisorientationTolerance, m_CrystalStructure, m_AlreadyFormed);
   reader = AngFileReader::NullPointer(); // Remove this object as it is no longer needed.
 
   int32 mindiameter = 100000;
   int32 maxdiameter = 0;
-  double quat_symm[24][5] = {
+  double quat_symmcubic[24][5] = {
 	  {0.000000000, 0.000000000, 0.000000000, 0.000000000, 1.000000000},
 	  {0.000000000, 1.000000000, 0.000000000, 0.000000000, 0.000000000},
 	  {0.000000000, 0.000000000, 1.000000000, 0.000000000, 0.000000000},
@@ -170,6 +171,20 @@ void Reconstruction::compute()
 	  {0.000000000, -0.500000000, -0.500000000, 0.500000000, 0.500000000},
 	  {0.000000000, 0.500000000, 0.500000000, -0.500000000, 0.500000000}};
 
+  double quat_symmhex[12][5] = {
+	  {0.000000000, 0.000000000, 0.000000000, 0.000000000, 1.000000000},
+	  {0.000000000, 0.000000000, 0.000000000, 0.500000000, 0.866025400},
+	  {0.000000000, 0.000000000, 0.000000000, 0.866025400, 0.500000000},
+	  {0.000000000, 0.000000000, 0.000000000, 1.000000000, 0.000000000},
+	  {0.000000000, 0.000000000, 0.000000000, 0.866025400, -0.50000000},
+	  {0.000000000, 0.000000000, 0.000000000, 0.500000000, -0.86602540},
+	  {0.000000000, 1.000000000, 0.000000000, 0.000000000, 0.000000000},
+	  {0.000000000, 0.866025400, 0.500000000, 0.000000000, 0.000000000},
+	  {0.000000000, 0.500000000, 0.866025400, 0.000000000, 0.000000000},
+	  {0.000000000, 0.000000000, 1.000000000, 0.000000000, 0.000000000},
+	  {0.000000000, -0.50000000, 0.866025400, 0.000000000, 0.000000000},
+	  {0.000000000, -0.86602540, 0.500000000, 0.000000000, 0.000000000}};
+
   std::string  statsFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::StatsFile;
   std::string  misorientationFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::MisorientationBinsFile;
   std::string  microBinsFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::MicroBinsFile;
@@ -179,7 +194,7 @@ void Reconstruction::compute()
   std::string eulerFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::EulerAnglesFile;
   CHECK_FOR_CANCELED(ReconstructionFunc)
   progressMessage(AIM_STRING("Loading Slices"), 3 );
-  m->loadSlices();
+  m->loadSlices(quat_symmcubic, quat_symmhex);
 
   if (m_AlreadyFormed == true)
   {
@@ -206,7 +221,7 @@ void Reconstruction::compute()
   {
     CHECK_FOR_CANCELED(ReconstructionFunc)
     progressMessage(AIM_STRING("Forming Grains"), 8 );
-    m->numgrains = m->form_grains();
+    m->numgrains = m->form_grains(quat_symmcubic, quat_symmhex);
 
     CHECK_FOR_CANCELED(ReconstructionFunc)
     progressMessage(AIM_STRING("Removing Small Grains"), 10 );
@@ -237,10 +252,16 @@ void Reconstruction::compute()
   progressMessage(AIM_STRING("renumber_grains2"), 30 );
   m->numgrains = m->renumber_grains2();
 
-  if (m_MergeTwins == 1)
+  if (m_MergeTwins == true)
   {
-    m->merge_twins();
+    m->merge_twins(quat_symmcubic, quat_symmhex);
     m->characterize_twins();
+  }
+
+  if (m_MergeColonies == true)
+  {
+    m->merge_colonies(quat_symmcubic, quat_symmhex);
+    m->characterize_colonies();
   }
 
   CHECK_FOR_CANCELED(ReconstructionFunc)
@@ -269,7 +290,7 @@ void Reconstruction::compute()
 
   CHECK_FOR_CANCELED(ReconstructionFunc) 
   progressMessage(AIM_STRING("homogenize_grains"), 33 );
-  m->homogenize_grains(quat_symm);
+  m->homogenize_grains(quat_symmcubic, quat_symmhex);
 
   CHECK_FOR_CANCELED(ReconstructionFunc)
   progressMessage(AIM_STRING("find_eulerodf"), 57 );
@@ -281,11 +302,11 @@ void Reconstruction::compute()
 
   CHECK_FOR_CANCELED(ReconstructionFunc)
   progressMessage(AIM_STRING("measure_misorientations"), 60 );
-  m->measure_misorientations();
+  m->measure_misorientations(quat_symmcubic, quat_symmhex);
 
   CHECK_FOR_CANCELED(ReconstructionFunc)
   progressMessage(AIM_STRING("find_colors"), 63 );
-  m->find_colors();
+  m->find_colors(quat_symmcubic, quat_symmhex);
 
   CHECK_FOR_CANCELED(ReconstructionFunc)
   progressMessage(AIM_STRING("find_convexities"), 66 );

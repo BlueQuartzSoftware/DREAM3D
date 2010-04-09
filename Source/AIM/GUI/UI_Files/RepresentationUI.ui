@@ -415,6 +415,26 @@
            </spacer>
           </item>
           <item>
+           <widget class="QCheckBox" name="mergeColonies">
+            <property name="text">
+             <string>Reconstruct Beta Grains</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="horizontalSpacer_13">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item>
            <widget class="QCheckBox" name="alreadyFormed">
             <property name="text">
              <string>Already Formed</string>
@@ -1265,123 +1285,7 @@
          </layout>
         </item>
         <item>
-         <layout class="QGridLayout" name="gridLayout_12">
-          <item row="0" column="0">
-           <widget class="QLabel" name="label_29">
-            <property name="text">
-             <string>X Dim:</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="2">
-           <widget class="QLabel" name="label_33">
-            <property name="text">
-             <string>Y Dim:</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="4">
-           <widget class="QLabel" name="label_34">
-            <property name="text">
-             <string>Z Dim:</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="1">
-           <widget class="QSpinBox" name="sm_XDim">
-            <property name="maximum">
-             <number>100000</number>
-            </property>
-            <property name="singleStep">
-             <number>10</number>
-            </property>
-            <property name="value">
-             <number>100</number>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="3">
-           <widget class="QSpinBox" name="sm_YDim">
-            <property name="maximum">
-             <number>100000</number>
-            </property>
-            <property name="singleStep">
-             <number>10</number>
-            </property>
-            <property name="value">
-             <number>100</number>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="5">
-           <widget class="QSpinBox" name="sm_ZDim">
-            <property name="maximum">
-             <number>100000</number>
-            </property>
-            <property name="singleStep">
-             <number>10</number>
-            </property>
-            <property name="value">
-             <number>100</number>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </item>
-        <item>
-         <layout class="QGridLayout" name="gridLayout_20">
-          <item row="0" column="5">
-           <widget class="QDoubleSpinBox" name="sm_ZRes">
-            <property name="singleStep">
-             <double>0.250000000000000</double>
-            </property>
-            <property name="value">
-             <double>1.000000000000000</double>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="3">
-           <widget class="QDoubleSpinBox" name="sm_YRes">
-            <property name="singleStep">
-             <double>0.250000000000000</double>
-            </property>
-            <property name="value">
-             <double>1.000000000000000</double>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="1">
-           <widget class="QDoubleSpinBox" name="sm_XRes">
-            <property name="singleStep">
-             <double>0.250000000000000</double>
-            </property>
-            <property name="value">
-             <double>1.000000000000000</double>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="0">
-           <widget class="QLabel" name="label_32">
-            <property name="text">
-             <string>X Res</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="2">
-           <widget class="QLabel" name="label_46">
-            <property name="text">
-             <string>Y Res</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="4">
-           <widget class="QLabel" name="label_47">
-            <property name="text">
-             <string>Z Res</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
+         <layout class="QGridLayout" name="gridLayout_12"/>
         </item>
         <item>
          <widget class="Line" name="line_4">
@@ -2129,15 +2033,12 @@
   <tabstop>rec_GoBtn</tabstop>
   <tabstop>sm_OutputDir</tabstop>
   <tabstop>sm_SmoothMesh</tabstop>
-  <tabstop>sm_XDim</tabstop>
   <tabstop>sm_SmoothIterations</tabstop>
-  <tabstop>sm_YDim</tabstop>
   <tabstop>sm_LockQuadPoints</tabstop>
   <tabstop>sm_WriteOutputFileIncrement</tabstop>
   <tabstop>sm_GoBtn</tabstop>
   <tabstop>sm_OutputDirBtn</tabstop>
   <tabstop>sm_InputFile</tabstop>
-  <tabstop>sm_ZDim</tabstop>
   <tabstop>gg_InputDir</tabstop>
   <tabstop>gg_OutputDir</tabstop>
   <tabstop>gg_NumGrains</tabstop>
@@ -2179,7 +2080,11 @@
   <include location="../../../../Resources/icons/images/Icons.qrc"/>
   <include location="../../../../Resources/icons/images/Icons.qrc"/>
   <include location="../../../../Resources/icons/images/Icons.qrc"/>
-  <include location="../../../../../../../../../Resources/icons/images/Icons.qrc"/>
+  <include location="../../../../Resources/icons/images/Icons.qrc"/>
+  <include location="../../../../Resources/icons/images/Icons.qrc"/>
+  <include location="../../../../Resources/icons/images/Icons.qrc"/>
+  <include location="../../../../Resources/icons/images/Icons.qrc"/>
+  <include location="../../../../Resources/icons/images/Icons.qrc"/>
  </resources>
  <connections>
   <connection>

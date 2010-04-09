@@ -43,6 +43,7 @@ class Grain
     int gotsizemerged;
     int gotcontainedmerged;
     int gottwinmerged;
+    int gotcolonymerged;
     double avgeuler1;
     double avgeuler2;
     double avgeuler3;
@@ -71,6 +72,8 @@ class Grain
     double averagemisorientation;
     int twinnewnumberbeenset;
     int twinnewnumber;
+    int colonynewnumberbeenset;
+    int colonynewnumber;
     double red;
     double green;
     double blue;
