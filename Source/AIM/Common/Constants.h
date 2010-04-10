@@ -59,6 +59,13 @@ namespace AIM
         CubeOctahedron = 3
     };
 
+	enum Precipitates {
+        UnknownPrecipitates = 0,
+        NoPrecipitates= 1,
+        BoundaryPrecipitates = 2,
+        BulkPrecipitates = 3
+    };
+
 
     /*   Surface Meshing Related   */
     const std::string VTKExt("vtk");
