@@ -71,7 +71,7 @@ GrainGeneratorFunc::~GrainGeneratorFunc()
 
 void GrainGeneratorFunc::initialize(int32 m_NumGrains, int32 m_ShapeClass,
               double m_XResolution, double m_YResolution, double m_ZResolution, int32 m_OverlapAllowed,
-              int32 m_OverlapAssignment, int32 m_CrystalStructure, int32 m_Precipitates, double m_FractionPrecipitates)
+              int32 m_OverlapAssignment, int32 m_Precipitates, int32 m_CrystalStructure, double m_FractionPrecipitates)
 {
 
   resx = m_XResolution;
