@@ -220,10 +220,6 @@ void GrainGenerator::compute()
    m->find_neighbors();
 
    CHECK_FOR_CANCELED(GrainGeneratorFunc)
-   progressMessage(AIM_STRING("Measuring Misorientations"), 65 );
-   m->measure_misorientations(quat_symmcubic, quat_symmhex);
-
-   CHECK_FOR_CANCELED(GrainGeneratorFunc)
    progressMessage(AIM_STRING("Loading Euler File"), 15 );
    m->loadeulerData(EulerAnglesFile);
 
@@ -238,6 +234,10 @@ void GrainGenerator::compute()
    CHECK_FOR_CANCELED(GrainGeneratorFunc)
    progressMessage(AIM_STRING("Assigning Eulers"), 60 );
    m->assign_eulers(m->numgrains);
+
+   CHECK_FOR_CANCELED(GrainGeneratorFunc)
+   progressMessage(AIM_STRING("Measuring Misorientations"), 65 );
+   m->measure_misorientations(quat_symmcubic, quat_symmhex);
 
    CHECK_FOR_CANCELED(GrainGeneratorFunc)
    progressMessage(AIM_STRING("Matching Crystallography"), 65 );
