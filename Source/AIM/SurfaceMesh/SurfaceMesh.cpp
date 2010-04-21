@@ -104,7 +104,7 @@ void SurfaceMesh::compute()
  
   m = SurfaceMeshFunc::New();
   int err = 0;
-  m->initialize_micro(m_InputFile );
+  m_ZDim = m->initialize_micro(m_InputFile);
 
 
   int cNodeID = 0;

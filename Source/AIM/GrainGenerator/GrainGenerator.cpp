@@ -165,11 +165,6 @@ void GrainGenerator::compute()
               m_XResolution, m_YResolution, m_ZResolution, m_OverlapAllowed,
               m_OverlapAssignment, m_Precipitates, m_CrystalStructure, m_FractionPrecipitates);
 
-   m->nummisobins = 10;
-   m->nummicrobins = 10;
-   m->misoiter = 0;
-   m->nummisomoves = 250;
-   m->nummicromoves = 25;
 
    if(m_AlreadyFormed == false)
    {
@@ -220,9 +215,13 @@ void GrainGenerator::compute()
 	   m->read_structure(StructureFile);
    }
 
-/*   CHECK_FOR_CANCELED(GrainGeneratorFunc)
+   CHECK_FOR_CANCELED(GrainGeneratorFunc)
    progressMessage(AIM_STRING("Finding Neighbors"), 45 );
    m->find_neighbors();
+
+   CHECK_FOR_CANCELED(GrainGeneratorFunc)
+   progressMessage(AIM_STRING("Measuring Misorientations"), 65 );
+   m->measure_misorientations(quat_symmcubic, quat_symmhex);
 
    CHECK_FOR_CANCELED(GrainGeneratorFunc)
    progressMessage(AIM_STRING("Loading Euler File"), 15 );
@@ -237,51 +236,18 @@ void GrainGenerator::compute()
    m->loadMicroData(MicroBinsFile);
 
    CHECK_FOR_CANCELED(GrainGeneratorFunc)
-   progressMessage(AIM_STRING("Assigning Eulers"), 30 );
+   progressMessage(AIM_STRING("Assigning Eulers"), 60 );
    m->assign_eulers(m->numgrains);
 
-   for(int iter = 0; iter < m->misoiter; iter++)
-   {
-     CHECK_FOR_CANCELED(GrainGeneratorFunc)
-     progressMessage(AIM_STRING("Matching Misorientations"), 65 );
-     m->measure_misorientations(quat_symmcubic, quat_symmhex);
-     m->rank_misobins(m->numgrains);
-     m->count_misorientations(m->numgrains);
-     m->freeze_grains(m->numgrains);
-     m->rank_grains1(m->numgrains);
-     m->identify_grains1(m->numgrains, m->nummisomoves);
-     m->move_grains1(m->numgrains);
-   }
-   while(m->nummicros != 1)
-   {
-     CHECK_FOR_CANCELED(GrainGeneratorFunc)
-     progressMessage(AIM_STRING("Matching Microtexture"), 75 );
-     m->measure_misorientations(quat_symmcubic, quat_symmhex);
-     m->count_misorientations(m->numgrains);
-     m->nummicros = m->rank_microbins(m->numgrains);
-     m->rank_grains2(m->numgrains);
-     m->identify_grains2(m->numgrains, m->nummicromoves);
-     m->move_grains2(m->numgrains);
-   }
-   for(int iter3 = 0; iter3 < m->misoiter; iter3++)
-   {
-     CHECK_FOR_CANCELED(GrainGeneratorFunc)
-     progressMessage(AIM_STRING("Rematching Misorientations"), 85 );
-     m->measure_misorientations(quat_symmcubic, quat_symmhex);
-     m->rank_misobins(m->numgrains);
-     m->count_misorientations(m->numgrains);
-     m->freeze_grains(m->numgrains);
-     m->rank_grains1(m->numgrains);
-     m->identify_grains1(m->numgrains, m->nummisomoves);
-     m->move_grains1(m->numgrains);
-   }
+   CHECK_FOR_CANCELED(GrainGeneratorFunc)
+   progressMessage(AIM_STRING("Matching Crystallography"), 65 );
+   m->matchCrystallography(quat_symmcubic, quat_symmhex);
 
-
-*/   CHECK_FOR_CANCELED(GrainGeneratorFunc)
+   CHECK_FOR_CANCELED(GrainGeneratorFunc)
    progressMessage(AIM_STRING("writing Cube"), 90 );
    m->writeCube(CubeFile, m->numgrains, AnalysisFile);
    
-  CHECK_FOR_CANCELED(GrainGeneratorFunc)
+   CHECK_FOR_CANCELED(GrainGeneratorFunc)
    progressMessage(AIM_STRING("Writing Euler Angles"), 98 );
    m->write_eulerangles(EulerFile);
 

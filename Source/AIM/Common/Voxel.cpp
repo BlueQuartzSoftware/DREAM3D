@@ -15,8 +15,8 @@
 //
 // -----------------------------------------------------------------------------
 Voxel::Voxel() :
-grainname(-1),
-precipitatename(-1),
+grainname(0),
+precipitatename(0),
 confidence(0.0),
 imagequality(0.0),
 alreadychecked(0),
@@ -26,9 +26,9 @@ euler3(-1.0),
 hasneighbor(0),
 neighbor(-1),
 misorientation(0.0),
-surfacevoxel(0),
-inside(0)
+surfacevoxel(0)
 {
+
 }
 
 // -----------------------------------------------------------------------------

@@ -111,9 +111,9 @@ public:
 
 
 
-  void initialize_micro(string);
+  int initialize_micro(string);
   void get_neighbor_list(int zID);
- void initialize_nodes(int zID);
+  void initialize_nodes(int zID);
   void initialize_squares(int zID);
   int get_number_fEdges(int zID);
   void get_nodes_fEdges(int et2d[20][8], int NST2d[20][8], int zID, int nFEdge);

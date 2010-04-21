@@ -88,7 +88,7 @@ void AngFileHelper::loadData(Voxel tempvoxels[],
         tempvoxels[index].imagequality = imqualPtr[readerIndex];// Image Quality
         tempvoxels[index].confidence = confPtr[readerIndex];// Confidence
         tempvoxels[index].alreadychecked = zero;
-        tempvoxels[index].grainname = badgrain;
+        tempvoxels[index].grainname = init;
         double s=sin(0.5*euler2Ptr[readerIndex]);
 	    double c=cos(0.5*euler2Ptr[readerIndex]);
         double s1=sin(0.5*(euler1Ptr[readerIndex]-euler3Ptr[readerIndex]));

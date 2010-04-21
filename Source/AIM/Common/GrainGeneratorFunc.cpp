@@ -39,14 +39,15 @@ GrainGeneratorFunc::GrainGeneratorFunc() :
   precipitates(NULL),
   gsizes(NULL),
   gremovals(NULL),
-  eulerodf(NULL),
+  actualodf(NULL),
+  simodf(NULL),
   axisodf(NULL),
   gridfine(NULL),
   gridcourse(NULL),
-  actualmisobin(NULL),
-  simmisobin(NULL),
-  actualmicrobin(NULL),
-  simmicrobin(NULL)
+  actualmdf(NULL),
+  simmdf(NULL),
+  actualmicrotex(NULL),
+  simmicrotex(NULL)
 {
 
 }
@@ -58,14 +59,15 @@ GrainGeneratorFunc::~GrainGeneratorFunc()
   delete [] precipitates;
   delete [] gsizes;
   delete [] gremovals;
-  delete [] eulerodf;
+  delete [] actualodf;
+  delete [] simodf;
   delete [] axisodf;
   delete [] gridfine;
   delete [] gridcourse;
-  delete [] actualmisobin;
-  delete [] simmisobin;
-  delete [] actualmicrobin;
-  delete [] simmicrobin;
+  delete [] actualmdf;
+  delete [] simmdf;
+  delete [] actualmicrotex;
+  delete [] simmicrotex;
 
 }
 
@@ -92,16 +94,17 @@ void GrainGeneratorFunc::initialize(int32 m_NumGrains, int32 m_ShapeClass,
   overlapallowed = m_OverlapAllowed;
   crystruct = m_CrystalStructure;
 
-  grains = new Grain[numgrains];
-  gsizes = new int[numgrains];
-  gremovals = new int[numgrains];
-  eulerodf = new Bin[18*18*18];
+  grains = new Grain[numgrains+1];
+  gsizes = new int[numgrains+1];
+  gremovals = new int[numgrains+1];
+  actualodf = new Bin[18*18*18];
+  simodf = new Bin[18*18*18];
   axisodf = new Bin[18*18*18];
   precipaxisodf = new Bin[18*18*18];
-  actualmisobin = new Bin[10];
-  simmisobin = new Bin[10];
-  actualmicrobin = new Bin[10];
-  simmicrobin = new Bin[10];
+  actualmdf = new Bin[36];
+  simmdf = new Bin[36];
+  actualmicrotex = new Bin[10];
+  simmicrotex = new Bin[10];
 }
 
 void GrainGeneratorFunc::initialize2()
@@ -335,7 +338,7 @@ void  GrainGeneratorFunc::loadeulerData(string inname7)
   for(int i=0;i<(18*18*18);i++)
   {
 	  inputFile >> density;
-	  eulerodf[i].density = density;
+	  actualodf[i].density = density;
   }
   inputFile.close();
 }
@@ -352,7 +355,7 @@ void  GrainGeneratorFunc::generate_grains(int numgrains)
   double vol = 0;
   rg.RandomInit((static_cast<unsigned int>(time(NULL))));
   totalvol = 0;
-  for(int l = 0; l < numgrains; l++)
+  for(int l=1;l<numgrains+1;l++)
   {
     int volgood = 0;
     while(volgood == 0)
@@ -401,43 +404,16 @@ void  GrainGeneratorFunc::generate_grains(int numgrains)
 	PHI = ((PHI*5)+(random*5))*(m_pi/180.0);
 	random = rg.Random();
 	phi2 = ((phi2*5)+(random*5))*(m_pi/180.0);
-	double ga[3][3];
-	ga[0][0] = cos(phi1)*cos(phi2)-sin(phi1)*sin(phi2)*cos(PHI);
-	ga[0][1] = sin(phi1)*cos(phi2)+cos(phi1)*sin(phi2)*cos(PHI);
-	ga[0][2] = sin(phi2)*sin(PHI);
-	ga[1][0] = -cos(phi1)*sin(phi2)-sin(phi1)*cos(phi2)*cos(PHI);
-	ga[1][1] = -sin(phi1)*sin(phi2)+cos(phi1)*cos(phi2)*cos(PHI);
-	ga[1][2] =  cos(phi2)*sin(PHI);
-	ga[2][0] =  sin(phi1)*sin(PHI);
-	ga[2][1] = -cos(phi1)*sin(PHI);
-	ga[2][2] =  cos(PHI);
-    double r1x = ga[0][0];
-    double r1y = ga[1][0];
-    double r1z = ga[2][0];
-    double r2x = ga[0][1];
-    double r2y = ga[1][1];
-    double r2z = ga[2][1];
-    double r3x = ga[0][2];
-    double r3y = ga[1][2];
-    double r3z = ga[2][2];
 	double m = svomega3[diameter][0];
 	double s = svomega3[diameter][1];
 	double omega3 = rg.RandBeta(m,s);
-    int gnum = l;
-    grains[l].grainname = gnum;
     grains[l].volume = vol;
 	grains[l].radius1 = r1;
 	grains[l].radius2 = r2;
 	grains[l].radius3 = r3;
-    grains[l].axis1x = r1x;
-    grains[l].axis1y = r1y;
-    grains[l].axis1z = r1z;
-    grains[l].axis2x = r2x;
-    grains[l].axis2y = r2y;
-    grains[l].axis2z = r2z;
-    grains[l].axis3x = r3x;
-    grains[l].axis3y = r3y;
-    grains[l].axis3z = r3z;
+    grains[l].axiseuler1 = phi1;
+    grains[l].axiseuler2 = PHI;
+    grains[l].axiseuler3 = phi2;
 	grains[l].omega3 = omega3;
     totalvol = totalvol + vol;
   }
@@ -453,13 +429,14 @@ void  GrainGeneratorFunc::generate_grains(int numgrains)
   xpoints1 = xpoints/int(resx1/resx);
   ypoints1 = ypoints/int(resx1/resx);
   zpoints1 = zpoints/int(resx1/resx);
-  grainorder.resize(numgrains);
-  takencheck.resize(numgrains);
-  for(int i=0;i<numgrains;i++)
+  totalvol = (xpoints*resx)*(ypoints*resy)*(zpoints*resz);
+  grainorder.resize(numgrains+1);
+  takencheck.resize(numgrains+1);
+  for(int i=1;i<numgrains+1;i++)
   {
     int maxgrain = 0;
     double maxvol = 0;
-    for(int j=0;j<numgrains;j++)
+    for(int j=1;j<numgrains+1;j++)
     {
       double vol = grains[j].volume;
       if(vol > maxvol && takencheck[j] != 1)
@@ -470,121 +447,6 @@ void  GrainGeneratorFunc::generate_grains(int numgrains)
     }
     takencheck[maxgrain] = 1;
 	grainorder[i] = maxgrain;
-  }
-}
-
-void  GrainGeneratorFunc::assign_eulers(int numgrains)
-{
-  int bin = 0;
-  int size = 0;
-  int picked = 0;
-  int gnum = 0;
-  double closest = 0;
-  double density = 0;
-  double selectedvol = 0;
-  double totalselectedvol = 0;
-  vector<int> grainlist;
-  grainlist.resize(numgrains);
-  for(int i=0;i<numgrains;i++)
-  {
-	grainlist[i] = i;
-  }
-  double synea1=0,synea2=0,synea3=0;
-  for(int j = 0; j < 18; j++)
-  {
-    for(int k = 0; k < 18; k++)
-    {
-      for(int l = 0; l < 18; l++)
-      {
-	    bin = (j*18*18)+(k*18)+(l);
-		double density = eulerodf[bin].density*totalvol;
-        selectedvol = 0;
-        while(selectedvol < density)
-        {
-          double random = rg.Random();
-          double random1 = random;
-          random = rg.Random();
-          double random2 = random;
-          random = rg.Random();
-          double random3 = random;
-          synea1 = (5*j)+(5*random1);
-          synea2 = (5*k)+(5*random2);
-          synea3 = (5*l)+(5*random3);
-		  synea1 = synea1*(m_pi/180.0);
-		  synea2 = synea2*(m_pi/180.0);
-		  synea3 = synea3*(m_pi/180.0);
-		  size = grainlist.size();
-		  closest = 1000000.0;
-		  if(size == 0) {break;}
-		  for(int i=0;i<size;i++)
-		  {
-			  gnum = grainlist[i];
-			  int cursize = grains[gnum].currentsize;
-			  double vol = double(cursize*resx*resy*resz);
-			  if(fabs(vol-(density-selectedvol)) < closest)
-			  {
-				closest = fabs(vol-density);
-				picked = i;
-			  }
-		  }
-		  gnum = grainlist[picked];
-		  int cursize = grains[gnum].currentsize;
-          selectedvol = selectedvol + double(cursize*resx*resy*resz);
-          totalselectedvol = totalselectedvol + double(cursize*resx*resy*resz);
-		  grainlist.erase(grainlist.begin()+picked);
-          grains[gnum].euler1 = synea1;
-          grains[gnum].euler2 = synea2;
-          grains[gnum].euler3 = synea3;
-		  if(totalselectedvol == totalvol) {break;}
-        }
-        if(totalselectedvol == totalvol) {break;}
-      }
-      if(totalselectedvol == totalvol) {break;}
-    }
-    if(totalselectedvol == totalvol) {break;}
-  }
-  double lastcur = 1;
-  while(totalselectedvol < totalvol && grainlist.size() > 0)
-  {
-    double cur = 0;
-    for(int m = 0; m < 18; m++)
-    {
-      for(int n = 0; n < 18; n++)
-      {
-        for(int p = 0; p < 18; p++)
-        {
-		  double density = eulerodf[bin].density;
-          if(density > cur && density < lastcur)
-          {
-            cur = density;
-            double random = rg.Random();
-            double random4 = random;
-            random = rg.Random();
-            double random5 = random;
-            random = rg.Random();
-            double random6 = random;
-	        synea1 = (5*m)+(5*random4);
-		    synea2 = (5*n)+(5*random5);
-			synea3 = (5*p)+(5*random6);
-			synea1 = synea1*(m_pi/180.0);
-			synea2 = synea2*(m_pi/180.0);
-			synea3 = synea3*(m_pi/180.0);
-          }
-        }
-      }
-    }
-    lastcur = cur;
-	double random = rg.Random();
-	picked = int(random*grainlist.size());
-	if(picked == grainlist.size()) picked = grainlist.size()-1;
-	int gnum = grainlist[picked];
-	int cursize = grains[gnum].currentsize;
-	selectedvol = selectedvol + double(cursize*resx*resy*resz);
-	totalselectedvol = totalselectedvol + double(cursize*resx*resy*resz);
-	grainlist.erase(grainlist.begin()+picked);
-	grains[gnum].euler1 = synea1;
-	grains[gnum].euler2 = synea2;
-	grains[gnum].euler3 = synea3;
   }
 }
 
@@ -624,17 +486,19 @@ void  GrainGeneratorFunc::pack_grains(int numgrains)
   double badcount = 0;
   int uniquecursize = 0;
   int totalcursize = 0;
-  nsdist.resize(numgrains);
+  nsdist.resize(numgrains+1);
   srand(static_cast<unsigned int>(time(NULL)));
   vector<long> availablelist;
   vector<long> tempavailablelist;
+  vector<long> insidelist;
   availablelist.resize(xpoints1*ypoints1*zpoints1);
   tempavailablelist.resize(xpoints1*ypoints1*zpoints1);
+  insidelist.resize(1000,0);
   for (long a = 0; a < (xpoints1*ypoints1*zpoints1); a++)
   {
 	availablelist[a] = a;
   }
-  for (int i = 0; i < numgrains; i++)
+  for(int i=1;i<numgrains+1;i++)
   {
 	nsdist[i].resize(maxdiameter+1);
     good = 0;
@@ -671,15 +535,28 @@ void  GrainGeneratorFunc::pack_grains(int numgrains)
     if(shapeclass == 3) radcur1 = radcur1/2.0;
     double radcur2 = (radcur1*bovera);
     double radcur3 = (radcur1*covera);
-    double rad1x = grains[curgrain].axis1x;
-    double rad1y = grains[curgrain].axis1y;
-    double rad1z = grains[curgrain].axis1z;
-    double rad2x = grains[curgrain].axis2x;
-    double rad2y = grains[curgrain].axis2y;
-    double rad2z = grains[curgrain].axis2z;
-    double rad3x = grains[curgrain].axis3x;
-    double rad3y = grains[curgrain].axis3y;
-    double rad3z = grains[curgrain].axis3z;
+	double phi1 = grains[curgrain].axiseuler1;
+	double PHI = grains[curgrain].axiseuler2;
+	double phi2 = grains[curgrain].axiseuler3;
+	double ga[3][3];
+	ga[0][0] = cos(phi1)*cos(phi2)-sin(phi1)*sin(phi2)*cos(PHI);
+	ga[0][1] = sin(phi1)*cos(phi2)+cos(phi1)*sin(phi2)*cos(PHI);
+	ga[0][2] = sin(phi2)*sin(PHI);
+	ga[1][0] = -cos(phi1)*sin(phi2)-sin(phi1)*cos(phi2)*cos(PHI);
+	ga[1][1] = -sin(phi1)*sin(phi2)+cos(phi1)*cos(phi2)*cos(PHI);
+	ga[1][2] =  cos(phi2)*sin(PHI);
+	ga[2][0] =  sin(phi1)*sin(PHI);
+	ga[2][1] = -cos(phi1)*sin(PHI);
+	ga[2][2] =  cos(PHI);
+    double rad1x = ga[0][0];
+    double rad1y = ga[1][0];
+    double rad1z = ga[2][0];
+    double rad2x = ga[0][1];
+    double rad2y = ga[1][1];
+    double rad2z = ga[2][1];
+    double rad3x = ga[0][2];
+    double rad3y = ga[1][2];
+    double rad3z = ga[2][2];
 	tempavailablelist = availablelist;
     while(good == 0)
     {
@@ -860,21 +737,11 @@ void  GrainGeneratorFunc::pack_grains(int numgrains)
               if(inside >= 0)
               {
                 int currentpoint = (xpoints*ypoints*plane)+(xpoints*row)+column;
-                int columnleft = column%resdiff;
-                int rowleft = row%resdiff;
-                int planeleft = plane%resdiff;
-                if(columnleft == (resdiff/2) && rowleft == (resdiff/2) && planeleft == (resdiff/2))
-                {
-                  int columnc = column/resdiff;
-                  int rowc = row/resdiff;
-                  int planec = plane/resdiff;
-                  int currentpointcourse = (xpoints1*ypoints1*planec)+(xpoints1*rowc)+columnc;
-                  gridcourse[currentpointcourse].inside = in;
-                }
-                gridfine[currentpoint].inside = in;
+				insidelist[insidecount] = currentpoint;
+				if (insidecount >= (0.9*insidelist.size())) insidelist.resize(insidecount + 1000);
                 insidecount++;
-				if(gridfine[currentpoint].grainname != -1 && overlapassignment == 1) badcount++;
-                if(gridfine[currentpoint].grainname != -1 && overlapassignment == 2)
+				if(gridfine[currentpoint].grainname != 0 && overlapassignment == 1) badcount++;
+                if(gridfine[currentpoint].grainname != 0 && overlapassignment == 2)
                 {
                   int usedgrain = gridfine[currentpoint].grainname;
                   if((i%2) == 0)
@@ -892,7 +759,7 @@ void  GrainGeneratorFunc::pack_grains(int numgrains)
         }
         double uberincrease = 0;
         double nsdistchange = 0;
-        for (int n = 0; n < i; n++)
+        for (int n = 1; n < i; n++)
         {
           double xold = grains[n].centroidx;
           double yold = grains[n].centroidy;
@@ -962,46 +829,12 @@ void  GrainGeneratorFunc::pack_grains(int numgrains)
         if(acceptable > overlapallowed) good = 0;
         if(good == 0)
         {
-			for(int temp1 = xmin; temp1 < xmax+1; temp1++)
-			{
-			  for(int temp2 = ymin; temp2 < ymax+1; temp2++)
-			  {
-				for(int temp3 = zmin; temp3 < zmax+1; temp3++)
-				{
-				  int point = (temp1+(temp2*xpoints)+(temp3*xpoints*ypoints));
-				  int inside = gridfine[point].inside;
-				  if(inside == 1)
-				  {
-					gridfine[point].inside = out;
-				  }
-				}
-			  }
-			}
-			for(int temp4 = xmin; temp4 < xmax+1; temp4++)
-			{
-			  for(int temp5 = ymin; temp5 < ymax+1; temp5++)
-			  {
-				for(int temp6 = zmin; temp6 < zmax+1; temp6++)
-				{
-				  int column = temp4;
-				  int row = temp5;
-				  int plane = temp6;
-				  column = column/resdiff;
-				  row = row/resdiff;
-				  plane = plane/resdiff;
-				  int point = (column+(row*xpoints1)+(plane*xpoints1*ypoints1));
-				  int inside = gridcourse[point].inside;
-				  if(inside == 1)
-				  {
-					gridcourse[point].inside = out;
-				  }
-				}
-			  }
-			}
+			insidelist.clear();
+			insidelist.resize(1000);
 		}
 	}
 	ncount = 0;
-    for (int p = 0; p < i; p++)
+    for (int p = 1; p < i; p++)
     {
 	  double xold = grains[p].centroidx;
 	  double yold = grains[p].centroidy;
@@ -1044,69 +877,53 @@ void  GrainGeneratorFunc::pack_grains(int numgrains)
       }
     }
     tempsurf = 0;
-    for(int temp7 = xmin; temp7 < xmax+1; temp7++)
+	for(int a=0;a<insidecount;a++)
     {
-      for(int temp8 = ymin; temp8 < ymax+1; temp8++)
+      int point = insidelist[a];
+      int columncheck = point%xpoints;
+      int rowcheck = (point/xpoints)%ypoints;
+      int planecheck = point/(xpoints*ypoints);
+	  int columnleft = columncheck%resdiff;
+	  int rowleft = rowcheck%resdiff;
+	  int planeleft = planecheck%resdiff;
+      if(columncheck == 0 || rowcheck == 0 || planecheck == 0 || columncheck == (xpoints-1) || rowcheck == (ypoints-1) || planecheck == (zpoints-1)) tempsurf = 1;
+	  if(gridfine[point].grainname == 0)
       {
-        for(int temp9 = zmin; temp9 < zmax+1; temp9++)
-        {
-          int point = (temp7+(temp8*xpoints)+(temp9*xpoints*ypoints));
-          int inside = gridfine[point].inside;
-          if(inside == 1)
-          {
-            int columncheck = point%xpoints;
-            int rowcheck = (point/xpoints)%ypoints;
-            int planecheck = point/(xpoints*ypoints);
-            if(columncheck == 0 || rowcheck == 0 || planecheck == 0 || columncheck == (xpoints-1) || rowcheck == (ypoints-1) || planecheck == (zpoints-1)) tempsurf = 1;
-			if(gridfine[point].grainname == -1)
-            {
-              uniquecursize++;
-              totalcursize++;
-              gridfine[point].grainname = i;
-            }
-            if(gridfine[point].grainname != -1 && overlapassignment == 2)
-            {
-              int checkgrain = gridfine[point].grainname;
-              if((gremovals[checkgrain]/grains[checkgrain].initsize) < (overlapallowed/5.0))
-              {
-                gridfine[point].grainname = i;
-                totalcursize++;
-              }
-            }
-            gridfine[point].inside = out;
-          }
-        }
+          uniquecursize++;
+          totalcursize++;
+          gridfine[point].grainname = i;
+		  if(columnleft == (resdiff/2) && rowleft == (resdiff/2) && planeleft == (resdiff/2))
+		  {
+			int columnc = columncheck/resdiff;
+			int rowc = rowcheck/resdiff;
+			int planec = planecheck/resdiff;
+			int currentpointcourse = (xpoints1*ypoints1*planec)+(xpoints1*rowc)+columnc;
+			gridcourse[currentpointcourse].grainname = i;
+  		  }
       }
-    }
-    for(int temp10 = xmin; temp10 < xmax+1; temp10++)
-    {
-      for(int temp11 = ymin; temp11 < ymax+1; temp11++)
+      if(gridfine[point].grainname != 0 && overlapassignment == 2)
       {
-        for(int temp12 = zmin; temp12 < zmax+1; temp12++)
-        {
-          int column = temp10;
-          int row = temp11;
-          int plane = temp12;
-          column = column/resdiff;
-          row = row/resdiff;
-          plane = plane/resdiff;
-          int point = (column+(row*xpoints1)+(plane*xpoints1*ypoints1));
-          int inside = gridcourse[point].inside;
-          if(inside == 1)
+          int checkgrain = gridfine[point].grainname;
+          if((gremovals[checkgrain]/grains[checkgrain].initsize) < (overlapallowed/5.0))
           {
-			if(gridcourse[point].grainname == -1)
-			{
-			   gridcourse[point].grainname = i;
-			}
+            gridfine[point].grainname = i;
+            totalcursize++;
+		    if(columnleft == (resdiff/2) && rowleft == (resdiff/2) && planeleft == (resdiff/2))
+		    {
+				int columnc = columncheck/resdiff;
+				int rowc = rowcheck/resdiff;
+				int planec = planecheck/resdiff;
+				int currentpointcourse = (xpoints1*ypoints1*planec)+(xpoints1*rowc)+columnc;
+				gridcourse[currentpointcourse].grainname = i;
+  		    }
           }
-        }
       }
     }
 	int size = availablelist.size();
 	for(int p=0;p<size;p++)
 	{
 		int point = availablelist[p];
-		if(gridcourse[point].grainname != -1)
+		if(gridcourse[point].grainname != 0)
 		{
 			availablelist.erase(availablelist.begin()+p);
 			p = p-1;
@@ -1125,10 +942,8 @@ void  GrainGeneratorFunc::pack_grains(int numgrains)
       }
     }
     uniquecursize = 0;
-	grains[curgrain].grainname = curgrain;
     grains[curgrain].initsize = totalcursize;
     grains[curgrain].currentsize = totalcursize;
-    grains[curgrain].grainname = i;
     grains[curgrain].centroidx = xc;
     grains[curgrain].centroidy = yc;
     grains[curgrain].centroidz = zc;
@@ -1140,7 +955,7 @@ void  GrainGeneratorFunc::pack_grains(int numgrains)
     totalcursize = 0;
     count++;
   }
-  for(int u=0;u<numgrains;u++)
+  for(int u=1;u<numgrains+1;u++)
   {
     gsizes[u] = 0;
   }
@@ -1152,10 +967,48 @@ void  GrainGeneratorFunc::pack_grains(int numgrains)
       gsizes[gname]++;
     }
   }
-  for(int v=0;v<numgrains;v++)
+  for(int v=1;v<numgrains+1;v++)
   {
     int cursize = gsizes[v];
     grains[v].currentsize = cursize;
+  }
+}
+
+void  GrainGeneratorFunc::assign_eulers(int numgrains)
+{
+  int bin = 0;
+  int size = 0;
+  int picked = 0;
+  int gnum = 0;
+  double totaldensity = 0;
+  double synea1=0,synea2=0,synea3=0;
+  for(int i=1;i<numgrains+1;i++)
+  {
+	  double random = rg.Random();
+	  int choose = 0;
+	  totaldensity = 0;
+	  for(int j=0;j<(18*18*18);j++)
+	  {
+		  double density = actualodf[j].density;
+		  totaldensity = totaldensity + density;
+		  if(random >= totaldensity) choose = j;
+	  }
+	  int phi1 = choose%18;
+	  int PHI = (choose/18)%18;
+	  int phi2 = choose/(18*18);
+	  double random1 = rg.Random();
+	  double random2 = rg.Random();
+	  double random3 = rg.Random();
+	  synea1 = (5*phi1)+(5*random1);
+	  synea2 = (5*PHI)+(5*random2);
+	  synea3 = (5*phi2)+(5*random3);
+	  synea1 = synea1*(m_pi/180.0);
+	  synea2 = synea2*(m_pi/180.0);
+	  synea3 = synea3*(m_pi/180.0);
+	  grains[i].euler1 = synea1;
+	  grains[i].euler2 = synea2;
+	  grains[i].euler3 = synea3;
+	  simodf[choose].density = simodf[choose].density + (grains[i].volume/totalvol);
   }
 }
 
@@ -1176,7 +1029,7 @@ void  GrainGeneratorFunc::fill_gaps(int numgrains)
     count = 0;
     for(int i = 0; i < (xpoints*ypoints*zpoints); i++)
     {
-	  if(gridfine[i].grainname == -1)
+	  if(gridfine[i].grainname == 0)
       {
         for(int c = 0; c < numgrains; c++)
         {
@@ -1189,7 +1042,7 @@ void  GrainGeneratorFunc::fill_gaps(int numgrains)
         if(column > 0)
         {
           int grain1 = gridfine[i-1].grainname;
-          if(grain1 != -1)
+          if(grain1 != 0)
           {
             neighs.push_back(grain1);
           }
@@ -1197,7 +1050,7 @@ void  GrainGeneratorFunc::fill_gaps(int numgrains)
         if(column < xpoints-1)
         {
           int grain2 = gridfine[i+1].grainname;
-          if(grain2 != -1)
+          if(grain2 != 0)
           {
             neighs.push_back(grain2);
           }
@@ -1205,7 +1058,7 @@ void  GrainGeneratorFunc::fill_gaps(int numgrains)
         if(row > 0)
         {
           int grain3 = gridfine[i-(xpoints)].grainname;
-          if(grain3 != -1)
+          if(grain3 != 0)
           {
             neighs.push_back(grain3);
           }
@@ -1213,7 +1066,7 @@ void  GrainGeneratorFunc::fill_gaps(int numgrains)
         if(row < ypoints-1)
         {
           int grain4 = gridfine[i+(xpoints)].grainname;
-          if(grain4 != -1)
+          if(grain4 != 0)
           {
             neighs.push_back(grain4);
           }
@@ -1221,7 +1074,7 @@ void  GrainGeneratorFunc::fill_gaps(int numgrains)
         if(plane > 0)
         {
           int grain5 = gridfine[i-(xpoints*ypoints)].grainname;
-          if(grain5 != -1)
+          if(grain5 != 0)
           {
             neighs.push_back(grain5);
           }
@@ -1229,7 +1082,7 @@ void  GrainGeneratorFunc::fill_gaps(int numgrains)
         if(plane < zpoints-1)
         {
           int grain6 = gridfine[i+(xpoints*ypoints)].grainname;
-          if(grain6 != -1)
+          if(grain6 != 0)
           {
             neighs.push_back(grain6);
           }
@@ -1272,12 +1125,29 @@ void  GrainGeneratorFunc::fill_gaps(int numgrains)
     for(int j = 0; j < (xpoints*ypoints*zpoints); j++)
     {
       int hasneigh = gridfine[j].hasneighbor;
-	  if(gridfine[j].grainname == -1 && hasneigh == 1)
+	  if(gridfine[j].grainname == 0 && hasneigh == 1)
       {
         int neighbor = gridfine[j].neighbor;
         gridfine[j].grainname = neighbor;
       }
     }
+  }
+  for(int u=1;u<numgrains+1;u++)
+  {
+    gsizes[u] = 0;
+  }
+  for(int t=0;t<(xpoints*ypoints*zpoints);t++)
+  {
+    if(gridfine[t].grainname != -1)
+    {
+      int gname = gridfine[t].grainname;
+      gsizes[gname]++;
+    }
+  }
+  for(int v=1;v<numgrains+1;v++)
+  {
+    int cursize = gsizes[v];
+    grains[v].currentsize = cursize;
   }
 }
 
@@ -1316,7 +1186,7 @@ int GrainGeneratorFunc::create_precipitates()
     totalprecipvol = totalprecipvol + vol;
   }
   precipitates = new Grain[count];
-  for(int a=0;a<count;a++)
+  for(int a=1;a<count+1;a++)
   {
     vol = vollist[a];
 	diam = (3.0/4.0)*(1.0/m_pi)*vol;
@@ -1359,43 +1229,16 @@ int GrainGeneratorFunc::create_precipitates()
 	PHI = ((PHI*5)+(random*5))*(m_pi/180.0);
 	random = rg.Random();
 	phi2 = ((phi2*5)+(random*5))*(m_pi/180.0);
-	double ga[3][3];
-	ga[0][0] = cos(phi1)*cos(phi2)-sin(phi1)*sin(phi2)*cos(PHI);
-	ga[0][1] = sin(phi1)*cos(phi2)+cos(phi1)*sin(phi2)*cos(PHI);
-	ga[0][2] = sin(phi2)*sin(PHI);
-	ga[1][0] = -cos(phi1)*sin(phi2)-sin(phi1)*cos(phi2)*cos(PHI);
-	ga[1][1] = -sin(phi1)*sin(phi2)+cos(phi1)*cos(phi2)*cos(PHI);
-	ga[1][2] =  cos(phi2)*sin(PHI);
-	ga[2][0] =  sin(phi1)*sin(PHI);
-	ga[2][1] = -cos(phi1)*sin(PHI);
-	ga[2][2] =  cos(PHI);
-    double r1x = ga[0][0];
-    double r1y = ga[1][0];
-    double r1z = ga[2][0];
-    double r2x = ga[0][1];
-    double r2y = ga[1][1];
-    double r2z = ga[2][1];
-    double r3x = ga[0][2];
-    double r3y = ga[1][2];
-    double r3z = ga[2][2];
 	double m = precipsvomega3[diameter][0];
 	double s = precipsvomega3[diameter][1];
 	double omega3 = rg.RandBeta(m,s);
-    int pnum = count;
-    precipitates[a].grainname = pnum;
     precipitates[a].volume = vol;
 	precipitates[a].radius1 = r1;
 	precipitates[a].radius2 = r2;
 	precipitates[a].radius3 = r3;
-    precipitates[a].axis1x = r1x;
-    precipitates[a].axis1y = r1y;
-    precipitates[a].axis1z = r1z;
-    precipitates[a].axis2x = r2x;
-    precipitates[a].axis2y = r2y;
-    precipitates[a].axis2z = r2z;
-    precipitates[a].axis3x = r3x;
-    precipitates[a].axis3y = r3y;
-    precipitates[a].axis3z = r3z;
+    precipitates[a].axiseuler1 = phi1;
+    precipitates[a].axiseuler2 = PHI;
+    precipitates[a].axiseuler3 = phi2;
 	precipitates[a].omega3 = omega3;
   }
   double sizex = int(pow((totalvol*1),0.33333));
@@ -1412,11 +1255,11 @@ int GrainGeneratorFunc::create_precipitates()
   zpoints1 = zpoints/int(resx1/resx);
   precipitateorder.resize(count);
   takencheck.resize(count);
-  for(int i=0;i<count;i++)
+  for(int i=1;i<count+1;i++)
   {
     int maxprecipitate = 0;
     double maxvol = 0;
-    for(int j=0;j<count;j++)
+    for(int j=1;j<count+1;j++)
     {
       double vol = precipitates[j].volume;
       if(vol > maxvol && takencheck[j] != 1)
@@ -1471,8 +1314,10 @@ void GrainGeneratorFunc::insert_precipitates(int numprecipitates)
   srand(static_cast<unsigned int>(time(NULL)));
   vector<long> availablelist;
   vector<long> tempavailablelist;
+  vector<long> insidelist;
   availablelist.resize(xpoints*ypoints*zpoints);
   tempavailablelist.resize(xpoints*ypoints*zpoints);
+  insidelist.resize(100);
   for (long a = 0; a < (xpoints*ypoints*zpoints); a++)
   {
 	if(preciptype == 2)
@@ -1491,7 +1336,7 @@ void GrainGeneratorFunc::insert_precipitates(int numprecipitates)
   }
   availablelist.resize(counter);
   tempavailablelist.resize(counter);
-  for (int i = 0; i < numprecipitates; i++)
+  for (int i=1;i<numprecipitates+1; i++)
   {
     good = 0;
 	int curprecip = precipitateorder[i];
@@ -1527,15 +1372,28 @@ void GrainGeneratorFunc::insert_precipitates(int numprecipitates)
     if(shapeclass == 3) radcur1 = radcur1/2.0;
     double radcur2 = (radcur1*bovera);
     double radcur3 = (radcur1*covera);
-    double rad1x = precipitates[curprecip].axis1x;
-    double rad1y = precipitates[curprecip].axis1y;
-    double rad1z = precipitates[curprecip].axis1z;
-    double rad2x = precipitates[curprecip].axis2x;
-    double rad2y = precipitates[curprecip].axis2y;
-    double rad2z = precipitates[curprecip].axis2z;
-    double rad3x = precipitates[curprecip].axis3x;
-    double rad3y = precipitates[curprecip].axis3y;
-    double rad3z = precipitates[curprecip].axis3z;
+	double ga[3][3];
+	double phi1 = precipitates[curprecip].axiseuler1;
+	double PHI = precipitates[curprecip].axiseuler2;
+	double phi2 = precipitates[curprecip].axiseuler3;
+	ga[0][0] = cos(phi1)*cos(phi2)-sin(phi1)*sin(phi2)*cos(PHI);
+	ga[0][1] = sin(phi1)*cos(phi2)+cos(phi1)*sin(phi2)*cos(PHI);
+	ga[0][2] = sin(phi2)*sin(PHI);
+	ga[1][0] = -cos(phi1)*sin(phi2)-sin(phi1)*cos(phi2)*cos(PHI);
+	ga[1][1] = -sin(phi1)*sin(phi2)+cos(phi1)*cos(phi2)*cos(PHI);
+	ga[1][2] =  cos(phi2)*sin(PHI);
+	ga[2][0] =  sin(phi1)*sin(PHI);
+	ga[2][1] = -cos(phi1)*sin(PHI);
+	ga[2][2] =  cos(PHI);
+    double rad1x = ga[0][0];
+    double rad1y = ga[1][0];
+    double rad1z = ga[2][0];
+    double rad2x = ga[0][1];
+    double rad2y = ga[1][1];
+    double rad2z = ga[2][1];
+    double rad3x = ga[0][2];
+    double rad3y = ga[1][2];
+    double rad3z = ga[2][2];
 	tempavailablelist = availablelist;
     while(good == 0)
     {
@@ -1710,7 +1568,8 @@ void GrainGeneratorFunc::insert_precipitates(int numprecipitates)
               if(inside >= 0)
               {
                 int currentpoint = (xpoints*ypoints*plane)+(xpoints*row)+column;
-                gridfine[currentpoint].inside = in;
+				insidelist[insidecount] = currentpoint;
+				if(insidecount >= (0.9*insidelist.size())) insidelist.resize(insidecount+100);
                 insidecount++;
 				if(gridfine[currentpoint].precipitatename != -1) badcount++;
               }
@@ -1721,47 +1580,22 @@ void GrainGeneratorFunc::insert_precipitates(int numprecipitates)
         if(acceptable > overlapallowed) good = 0;
         if(good == 0)
         {
-			for(int temp1 = xmin; temp1 < xmax+1; temp1++)
-			{
-			  for(int temp2 = ymin; temp2 < ymax+1; temp2++)
-			  {
-				for(int temp3 = zmin; temp3 < zmax+1; temp3++)
-				{
-				  int point = (temp1+(temp2*xpoints)+(temp3*xpoints*ypoints));
-				  int inside = gridfine[point].inside;
-				  if(inside == 1)
-				  {
-					gridfine[point].inside = out;
-				  }
-				}
-			  }
-			}
+			insidelist.clear();
 		}
 	}
     tempsurf = 0;
-    for(int temp7 = xmin; temp7 < xmax+1; temp7++)
+    for(int a=0;a<insidecount;a++)
     {
-      for(int temp8 = ymin; temp8 < ymax+1; temp8++)
+      int point = insidelist[insidecount];
+      int columncheck = point%xpoints;
+      int rowcheck = (point/xpoints)%ypoints;
+      int planecheck = point/(xpoints*ypoints);
+      if(columncheck == 0 || rowcheck == 0 || planecheck == 0 || columncheck == (xpoints-1) || rowcheck == (ypoints-1) || planecheck == (zpoints-1)) tempsurf = 1;
+	  if(gridfine[point].precipitatename == -1)
       {
-        for(int temp9 = zmin; temp9 < zmax+1; temp9++)
-        {
-          int point = (temp7+(temp8*xpoints)+(temp9*xpoints*ypoints));
-          int inside = gridfine[point].inside;
-          if(inside == 1)
-          {
-            int columncheck = point%xpoints;
-            int rowcheck = (point/xpoints)%ypoints;
-            int planecheck = point/(xpoints*ypoints);
-            if(columncheck == 0 || rowcheck == 0 || planecheck == 0 || columncheck == (xpoints-1) || rowcheck == (ypoints-1) || planecheck == (zpoints-1)) tempsurf = 1;
-			if(gridfine[point].precipitatename == -1)
-            {
-              uniquecursize++;
-              totalcursize++;
-			  gridfine[point].precipitatename = i;
-            }
-            gridfine[point].inside = out;
-          }
-        }
+          uniquecursize++;
+          totalcursize++;
+		  gridfine[point].precipitatename = i;
       }
     }
 	int size = availablelist.size();
@@ -1776,7 +1610,6 @@ void GrainGeneratorFunc::insert_precipitates(int numprecipitates)
 		}
 	}
     uniquecursize = 0;
-	precipitates[curprecip].precipitatename = curprecip;
     precipitates[curprecip].initsize = totalcursize;
     precipitates[curprecip].currentsize = totalcursize;
     precipitates[curprecip].centroidx = xc;
@@ -1790,7 +1623,7 @@ void GrainGeneratorFunc::insert_precipitates(int numprecipitates)
     totalcursize = 0;
     count++;
   }
-  for(int u=0;u<numprecipitates;u++)
+  for(int u=1;u<numprecipitates+1;u++)
   {
     psizes[u] = 0;
   }
@@ -1803,7 +1636,7 @@ void GrainGeneratorFunc::insert_precipitates(int numprecipitates)
 	  gridfine[t].grainname = -1;
     }
   }
-  for(int v=0;v<numprecipitates;v++)
+  for(int v=1;v<numprecipitates+1;v++)
   {
     int cursize = psizes[v];
     precipitates[v].currentsize = cursize;
@@ -1847,6 +1680,7 @@ void  GrainGeneratorFunc::find_neighbors()
   double x = 0;
   double y = 0;
   double z = 0;
+  int grain;
   int grain1;
   int grain2;
   int grain3;
@@ -1854,134 +1688,162 @@ void  GrainGeneratorFunc::find_neighbors()
   int grain5;
   int grain6;
   int nnum;
+  totalsurfacearea=0;
   int nListSize = 1000;
   std::vector<int> nlist(nListSize, -1);
-  for(int i=0;i<numgrains;i++)
+  std::vector<double> nsalist(nListSize, -1);
+  for(int i=1;i<numgrains+1;i++)
   {
     int numneighs = int(nlist.size());
 	grains[i].numneighbors = 0;
     grains[i].neighborlist = new std::vector<int>(numneighs);
     grains[i].neighborlist->swap(nlist);
+    grains[i].neighborsurfarealist = new std::vector<double>(numneighs);
+    grains[i].neighborsurfarealist->swap(nsalist);
   }
   for(int j = 0; j < (xpoints*ypoints*zpoints); j++)
   {
+    int onsurf = 0;
     int grain = gridfine[j].grainname;
-	x = j%xpoints;
-	y = (j/xpoints)%ypoints;
-	z = j/(xpoints*ypoints);
-	if(x > 0)
+	if(grain != 0)
 	{
-	  grain1 = gridfine[j-1].grainname;
-	  if(grain1 != grain && grain1!= 0)
-	  {
-		  nnum = grains[grain].numneighbors;
-		  vector<int>* nlist = grains[grain].neighborlist;
-          if (nnum >= (0.9*nlist->size()))
-          {
-             nlist->resize(nnum + nListSize);
-          }
-		  nlist->at(nnum) = grain1;
-		  nnum++;
-		  grains[grain].numneighbors = nnum;
-	  }
-	}
-	if(x < xpoints-1)
-	{
-	  grain2 = gridfine[j+1].grainname;
-	  if(grain2 != grain && grain2!= 0)
-	  {
-		  nnum = grains[grain].numneighbors;
-		  vector<int>* nlist = grains[grain].neighborlist;
-          if (nnum >= (0.9*nlist->size()))
-          {
-             nlist->resize(nnum + nListSize);
-          }
-		  nlist->at(nnum) = grain2;
-		  nnum++;
-		  grains[grain].numneighbors = nnum;
-	  }
-	}
-	if(y > 0)
-	{
-	  grain3 = gridfine[j-(xpoints)].grainname;
-	  if(grain3 != grain && grain3!= 0)
-	  {
-		  nnum = grains[grain].numneighbors;
-		  vector<int>* nlist = grains[grain].neighborlist;
-          if (nnum >= (0.9*nlist->size()))
-          {
-             nlist->resize(nnum + nListSize);
-          }
-		  nlist->at(nnum) = grain3;
-		  nnum++;
-		  grains[grain].numneighbors = nnum;
-	  }
-	}
-	if(y < ypoints-1)
-	{
-	  grain4 = gridfine[j+(xpoints)].grainname;
-	  if(grain4 != grain && grain4!= 0)
-	  {
-		  nnum = grains[grain].numneighbors;
-		  vector<int>* nlist = grains[grain].neighborlist;
-          if (nnum >= (0.9*nlist->size()))
-          {
-             nlist->resize(nnum + nListSize);
-          }
-		  nlist->at(nnum) = grain4;
-		  nnum++;
-		  grains[grain].numneighbors = nnum;
-	  }
-	}
-	if(z > 0)
-	{
-	  grain5 = gridfine[j-(xpoints*ypoints)].grainname;
-	  if(grain5 != grain && grain5!= 0)
-	  {
-		  nnum = grains[grain].numneighbors;
-		  vector<int>* nlist = grains[grain].neighborlist;
-          if (nnum >= (0.9*nlist->size()))
-          {
-             nlist->resize(nnum + nListSize);
-          }
-		  nlist->at(nnum) = grain5;
-		  nnum++;
-		  grains[grain].numneighbors = nnum;
-	  }
-	}
-	if(z < zpoints-1)
-	{
-	  grain6 = gridfine[j+(xpoints*ypoints)].grainname;
-	  if(grain6 != grain && grain6!= 0)
-	  {
-		  nnum = grains[grain].numneighbors;
-		  vector<int>* nlist = grains[grain].neighborlist;
-          if (nnum >= (0.9*nlist->size()))
-          {
-             nlist->resize(nnum + nListSize);
-          }
-		  nlist->at(nnum) = grain6;
-		  nnum++;
-		  grains[grain].numneighbors = nnum;
-	  }
+		x = j%xpoints;
+		y = (j/xpoints)%ypoints;
+		z = j/(xpoints*ypoints);
+		if(x > 0)
+		{
+		  grain1 = gridfine[j-1].grainname;
+		  if(grain1 != grain && grain1!= 0)
+		  {
+			  onsurf++;
+			  nnum = grains[grain].numneighbors;
+			  vector<int>* nlist = grains[grain].neighborlist;
+			  if (nnum >= (0.9*nlist->size()))
+			  {
+				 nlist->resize(nnum + nListSize);
+			  }
+			  nlist->at(nnum) = grain1;
+			  nnum++;
+			  grains[grain].numneighbors = nnum;
+		  }
+		}
+		if(x < xpoints-1)
+		{
+		  grain2 = gridfine[j+1].grainname;
+		  if(grain2 != grain && grain2!= 0)
+		  {
+			  onsurf++;
+			  nnum = grains[grain].numneighbors;
+			  vector<int>* nlist = grains[grain].neighborlist;
+			  if (nnum >= (0.9*nlist->size()))
+			  {
+				 nlist->resize(nnum + nListSize);
+			  }
+			  nlist->at(nnum) = grain2;
+			  nnum++;
+			  grains[grain].numneighbors = nnum;
+		  }
+		}
+		if(y > 0)
+		{
+		  grain3 = gridfine[j-(xpoints)].grainname;
+		  if(grain3 != grain && grain3!= 0)
+		  {
+			  onsurf++;
+			  nnum = grains[grain].numneighbors;
+			  vector<int>* nlist = grains[grain].neighborlist;
+			  if (nnum >= (0.9*nlist->size()))
+			  {
+				 nlist->resize(nnum + nListSize);
+			  }
+			  nlist->at(nnum) = grain3;
+			  nnum++;
+			  grains[grain].numneighbors = nnum;
+		  }
+		}
+		if(y < ypoints-1)
+		{
+		  grain4 = gridfine[j+(xpoints)].grainname;
+		  if(grain4 != grain && grain4!= 0)
+		  {
+			  onsurf++;
+			  nnum = grains[grain].numneighbors;
+			  vector<int>* nlist = grains[grain].neighborlist;
+			  if (nnum >= (0.9*nlist->size()))
+			  {
+				 nlist->resize(nnum + nListSize);
+			  }
+			  nlist->at(nnum) = grain4;
+			  nnum++;
+			  grains[grain].numneighbors = nnum;
+		  }
+		}
+		if(z > 0)
+		{
+		  grain5 = gridfine[j-(xpoints*ypoints)].grainname;
+		  if(grain5 != grain && grain5!= 0)
+		  {
+			  onsurf++;
+			  nnum = grains[grain].numneighbors;
+			  vector<int>* nlist = grains[grain].neighborlist;
+			  if (nnum >= (0.9*nlist->size()))
+			  {
+				 nlist->resize(nnum + nListSize);
+			  }
+			  nlist->at(nnum) = grain5;
+			  nnum++;
+			  grains[grain].numneighbors = nnum;
+		  }
+		}
+		if(z < zpoints-1)
+		{
+		  grain6 = gridfine[j+(xpoints*ypoints)].grainname;
+		  if(grain6 != grain && grain6!= 0)
+		  {
+			  onsurf++;
+			  nnum = grains[grain].numneighbors;
+			  vector<int>* nlist = grains[grain].neighborlist;
+			  if (nnum >= (0.9*nlist->size()))
+			  {
+				 nlist->resize(nnum + nListSize);
+			  }
+			  nlist->at(nnum) = grain6;
+			  nnum++;
+			  grains[grain].numneighbors = nnum;
+		  }
+		}
+		gridfine[j].surfacevoxel = onsurf;
 	}
   }
-  for(int i=1;i<numgrains;i++)
+  vector<int> nlistcopy;
+  for(int i=1;i<numgrains+1;i++)
   {
 	vector<int>* nlist = grains[i].neighborlist;
+	vector<double>* nsalist = grains[i].neighborsurfarealist;
 	vector<int>::iterator newend;
 	sort(nlist->begin(),nlist->end());
+	nlistcopy.resize(nlist->size());
+	copy(nlist->begin(),nlist->end(),nlistcopy.begin());
     newend = unique(nlist->begin(),nlist->end());
     nlist->erase(newend,nlist->end());
 	nlist->erase(std::remove(nlist->begin(),nlist->end(),-1),nlist->end());
 	nlist->erase(std::remove(nlist->begin(),nlist->end(),0),nlist->end());
-    int numneighs = int(nlist->size());
+	int numneighs = int(nlist->size());
+	for(int j=0;j<numneighs;j++)
+	{
+		int neigh = nlist->at(j);
+		int number = std::count(nlistcopy.begin(),nlistcopy.end(),neigh);
+		double area = number*resx*resx;
+		nsalist->at(j) = area;
+		totalsurfacearea = totalsurfacearea + area;
+	}
     grains[i].numneighbors = numneighs;
     grains[i].neighborlist = new std::vector<int>(numneighs);
     grains[i].neighborlist = nlist;
+    grains[i].neighborsurfarealist = new std::vector<double>(numneighs);
+    grains[i].neighborsurfarealist = nsalist;
   }
 }
-
 void  GrainGeneratorFunc::find_surfacevoxels()
 {
   double x = 0;
@@ -2056,12 +1918,12 @@ void  GrainGeneratorFunc::loadMisoData(string inname10)
 {
     ifstream inputFile;
     inputFile.open(inname10.c_str());
-  int count = 0;
-  double density = 0;
-    for (int k = 0; k < nummisobins; k++)
+	int count = 0;
+	double density = 0;
+    for (int k = 0; k < 36; k++)
     {
 		inputFile >> density;
-		actualmisobin[count].density = density;
+		actualmdf[count].density = density;
         count++;
     }
     inputFile.close();
@@ -2073,37 +1935,139 @@ void  GrainGeneratorFunc::loadMicroData(string inname11)
     inputFile.open(inname11.c_str());
   int count = 0;
   double density = 0;
-    for (int k = 0; k < nummicrobins; k++)
+    for (int k = 0; k < 10; k++)
     {
 		inputFile >> density;
-		actualmicrobin[count].density = density;
+		actualmicrotex[count].density = density;
         count++;
     }
     inputFile.close();
 }
 
+void GrainGeneratorFunc::matchCrystallography(double quat_symmcubic[24][5],double quat_symmhex[12][5])
+{
+	double deltaerror = 1.0;
+	int iterations = 0;
+	double currentodferror = 0;
+	double currentmdferror = 0;
+	double n1,n2,n3;
+	double totaldensity = 0;
+	for(int i=0;i<(18*18*18);i++)
+	{
+		currentodferror = currentodferror + ((actualodf[i].density-simodf[i].density)*(actualodf[i].density-simodf[i].density));
+	}
+	for(int i=0;i<(10);i++)
+	{
+		currentmdferror = currentmdferror + ((actualmdf[i].density-simmdf[i].density)*(actualmdf[i].density-simmdf[i].density));
+	}
+	while(iterations < 10000)
+	{
+		iterations++;
+		double random = rg.Random();
+		if(random < 0.5)
+		{
+			int selectedgrain = int(rg.Random()*numgrains)+1;
+			if(selectedgrain == numgrains+1) selectedgrain = numgrains;
+			double curea1 = grains[selectedgrain].euler1;
+			double curea2 = grains[selectedgrain].euler2;
+			double curea3 = grains[selectedgrain].euler3;
+			int cureuler1bin = int(curea1/(5.0*m_pi/180.0));
+			int cureuler2bin = int(curea2/(5.0*m_pi/180.0));
+			int cureuler3bin = int(curea3/(5.0*m_pi/180.0));
+			int curodfbin = (cureuler3bin*18*18)+(cureuler2bin*18)+cureuler1bin;
+			double random = rg.Random();
+			int choose = 0;
+			totaldensity = 0;
+			for(int i=0;i<(18*18*18);i++)
+			{
+				double density = actualodf[i].density;
+				totaldensity = totaldensity + density;
+				if(random >= totaldensity) choose = i;
+			}
+			int phi1 = choose%18;
+			int PHI = (choose/18)%18;
+			int phi2 = choose/(18*18);
+			double random1 = rg.Random();
+			double random2 = rg.Random();
+			double random3 = rg.Random();
+			double chooseea1 = (5*phi1)+(5*random1);
+			double chooseea2 = (5*PHI)+(5*random2);
+			double chooseea3 = (5*phi2)+(5*random3);
+			chooseea1 = chooseea1*(m_pi/180.0);
+			chooseea2 = chooseea2*(m_pi/180.0);
+			chooseea3 = chooseea3*(m_pi/180.0);
+			double odfchange = ((actualodf[choose].density - simodf[choose].density)*(actualodf[choose].density - simodf[choose].density)) - ((actualodf[choose].density - (simodf[choose].density+(grains[selectedgrain].currentsize*resx*resy*resz/totalvol)))*(actualodf[choose].density - (simodf[choose].density+(grains[selectedgrain].currentsize*resx*resy*resz/totalvol))));
+			odfchange = odfchange + (((actualodf[curodfbin].density - simodf[curodfbin].density)*(actualodf[curodfbin].density - simodf[curodfbin].density)) - ((actualodf[curodfbin].density - (simodf[curodfbin].density-(grains[selectedgrain].currentsize*resx*resy*resz/totalvol)))*(actualodf[curodfbin].density - (simodf[curodfbin].density-(grains[selectedgrain].currentsize*resx*resy*resz/totalvol)))));
+			vector<int>* nlist = grains[selectedgrain].neighborlist;
+			vector<double>* misolist = grains[selectedgrain].misorientationlist;
+			vector<double>* neighborsurfarealist = grains[selectedgrain].neighborsurfarealist;
+			double mdfchange = 0;
+			for(int j=0;j<nlist->size();j++)
+			{
+				int neighbor = nlist->at(j);
+				double curmiso = misolist->at(j);
+				double neighsurfarea = neighborsurfarealist->at(j);
+				int curmisobin = int(curmiso/(5.0*m_pi/180.0));
+				double neighea1 = grains[neighbor].euler1;
+				double neighea2 = grains[neighbor].euler2;
+				double neighea3 = grains[neighbor].euler3;
+				double newmiso = 0;
+				if(crystruct == 1) newmiso = getmisoquathexagonal(quat_symmhex,chooseea1,chooseea2,chooseea3,neighea1,neighea2,neighea3,n1,n2,n3); 
+				if(crystruct == 2) newmiso = getmisoquatcubic(chooseea1,chooseea2,chooseea3,neighea1,neighea2,neighea3,n1,n2,n3);
+				int newmisobin = int(newmiso/5.0);
+				mdfchange = mdfchange + (((actualmdf[curmisobin].density-simmdf[curmisobin].density)*(actualmdf[curmisobin].density-simmdf[curmisobin].density)) - ((actualmdf[curmisobin].density-(simmdf[curmisobin].density-(neighsurfarea/totalsurfacearea)))*(actualmdf[curmisobin].density-(simmdf[curmisobin].density-(neighsurfarea/totalsurfacearea)))));
+				mdfchange = mdfchange + (((actualmdf[newmisobin].density-simmdf[newmisobin].density)*(actualmdf[newmisobin].density-simmdf[newmisobin].density)) - ((actualmdf[newmisobin].density-(simmdf[newmisobin].density+(neighsurfarea/totalsurfacearea)))*(actualmdf[newmisobin].density-(simmdf[newmisobin].density+(neighsurfarea/totalsurfacearea)))));
+			}
+			deltaerror = (odfchange/currentodferror) + (mdfchange/currentmdferror);
+			if(deltaerror > 0)
+			{
+				simodf[choose].density = simodf[choose].density + (grains[selectedgrain].volume/totalvol);
+				simodf[curodfbin].density = simodf[curodfbin].density - (grains[selectedgrain].volume/totalvol);
+				for(int j=0;j<nlist->size();j++)
+				{
+					int neighbor = nlist->at(j);
+					double curmiso = misolist->at(j);
+					double neighsurfarea = neighborsurfarealist->at(j);
+					int curmisobin = int(curmiso/(5.0*m_pi/180.0));
+					double neighea1 = grains[neighbor].euler1;
+					double neighea2 = grains[neighbor].euler2;
+					double neighea3 = grains[neighbor].euler3;
+					double newmiso = 0;
+					if(crystruct == 1) newmiso = getmisoquathexagonal(quat_symmhex,chooseea1,chooseea2,chooseea3,neighea1,neighea2,neighea3,n1,n2,n3); 
+					if(crystruct == 2) newmiso = getmisoquatcubic(chooseea1,chooseea2,chooseea3,neighea1,neighea2,neighea3,n1,n2,n3);
+					int newmisobin = int(newmiso/(5.0*m_pi/180.0));
+					misolist->at(j) = newmiso;
+					simmdf[curmisobin].density = simmdf[curmisobin].density - (neighsurfarea/totalsurfacearea);
+					simmdf[newmisobin].density = simmdf[newmisobin].density + (neighsurfarea/totalsurfacearea);
+				}
+				currentodferror = currentodferror - odfchange;
+				currentmdferror = currentmdferror - mdfchange;
+			}
+		}
+	}
+}
 void  GrainGeneratorFunc::measure_misorientations (double quat_symmcubic[24][5],double quat_symmhex[12][5])
 {
-  size_t initialsize=10;
-  vector<double> misolist(initialsize,-1);
+  vector<double> misolist;
   double w;
   double n1;
   double n2;
   double n3;
-  for (int i = 0; i < numgrains; i++)
+  for (int i = 1; i < numgrains+1; i++)
   {
     vector<int>* nlist = grains[i].neighborlist;
-    double g1ea1 = grains[i].avgeuler1;
-    double g1ea2 = grains[i].avgeuler2;
-    double g1ea3 = grains[i].avgeuler3;
+	misolist.resize(nlist->size());
+    double g1ea1 = grains[i].euler1;
+    double g1ea2 = grains[i].euler2;
+    double g1ea3 = grains[i].euler3;
     int size = 0;
     if (NULL != nlist) { size = nlist->size(); }
     for(int j=0;j<size;j++)
     {
       int nname = nlist->at(j);
-      double g2ea1 = grains[nname].avgeuler1;
-      double g2ea2 = grains[nname].avgeuler2;
-      double g2ea3 = grains[nname].avgeuler3;
+      double g2ea1 = grains[nname].euler1;
+      double g2ea2 = grains[nname].euler2;
+      double g2ea3 = grains[nname].euler3;
       if(crystruct == 1) w = getmisoquathexagonal(quat_symmhex,g1ea1,g1ea2,g1ea3,g2ea1,g2ea2,g2ea3,n1,n2,n3);
       if(crystruct == 2) w = getmisoquatcubic(g1ea1,g1ea2,g1ea3,g2ea1,g2ea2,g2ea3,n1,n2,n3);
       misolist[j] = w;
@@ -2215,433 +2179,6 @@ double GrainGeneratorFunc::getmisoquathexagonal(double quat_symmhex[12][5],doubl
   return wmin;
 }
 
-void  GrainGeneratorFunc::rank_misobins(int numgrains)
-{
-  int count = 0;
-  int check = 0;
-  for(int h = 0; h < nummisobins; h++)
-  {
-    int tempdensity = 0;
-	simmisobin[h].density = tempdensity;
-  }
-  for(int i = 0; i < numgrains; i++)
-  {
-    vector<double>* misolist = grains[i].misorientationlist;
-    int size = int(misolist->size());
-    for(int k=0;k<size;k++)
-    {
-      double misofirst = misolist->at(k);
-      int misocur = int(misofirst/(100/nummisobins));
-	  double density = simmisobin[misocur].density;
-      density = density + 1;
-      simmisobin[misocur].density = density;
-      count++;
-    }
-  }
-  for(int j = 0; j < nummisobins; j ++)
-  {
-    double actualdensity = actualmisobin[j].density;
-    actualdensity = actualdensity*count;
-    double simdensity = simmisobin[j].density;
-    double diff = fabs(simdensity-actualdensity);
-    simmisobin[j].difference = diff;
-    int temp = 0;
-    simmisobin[j].binrank = temp;
-  }
-//  int difflast = count;
-  int curbin = 0;
-  while(check < nummisobins)
-  {
-    int diffcur = 0;
-    for(int k = 0; k < nummisobins; k++)
-    {
-      double diff = simmisobin[k].difference;
-      double ranked = simmisobin[k].binrank;
-      if(diff > diffcur && ranked == 0)
-      {
-        diffcur = int(diff);
-        curbin = k;
-      }
-    }
-    int rank = nummisobins-check;
-    double actual = actualmisobin[curbin].density;
-    actual = actual*count;
-    double sim = simmisobin[curbin].density;
-    if((sim-actual) < 0)
-    {
-      rank = -rank;
-    }
-    simmisobin[curbin].binrank = rank;
-    check++;
-  }
-}
-
-void  GrainGeneratorFunc::count_misorientations(int numgrains)
-{
-  int count = 0;
-  double lowangle = 0;
-  for(int i = 0; i < numgrains; i++)
-  {
-    lowangle = 0;
-    vector<double>* misolist = grains[i].misorientationlist;
-    int size = int(misolist->size());
-    for(int k=0;k<size;k++)
-    {
-      double misofirst = misolist->at(k);
-      if(misofirst < 15) lowangle++;
-    }
-    double fraction = lowangle/size;
-    grains[i].lowanglefraction = fraction;
-    count++;
-  }
-}
-
-int  GrainGeneratorFunc::rank_microbins(int numgrains)
-{
-  int count = 0;
-  int check = 0;
-  for(int h = 0; h < nummicrobins; h++)
-  {
-    int tempdensity = 0;
-    simmicrobin[h].density = tempdensity;
-  }
-  for(int i = 0; i < numgrains; i++)
-  {
-    double microtexture = grains[i].lowanglefraction;
-    int microcur = int(microtexture*(nummicrobins));
-    double density = simmicrobin[microcur].density;
-    density = density + 1;
-    simmicrobin[microcur].density = density;
-  }
-  for(int j = 0; j < nummicrobins; j ++)
-  {
-    double actualdensity = actualmicrobin[j].density;
-    actualdensity = actualdensity*numgrains;
-    double simdensity = simmicrobin[j].density;
-    double diff = fabs(simdensity-actualdensity);
-    simmicrobin[j].difference = diff;
-    int temp = 0;
-    simmicrobin[j].binrank = temp;
-  }
-  int curbin = 0;
-  while(check < nummicrobins)
-  {
-    int diffcur = 0;
-    for(int k = 0; k < nummicrobins; k++)
-    {
-      double diff = simmicrobin[k].difference;
-      double ranked = simmicrobin[k].binrank;
-      if(diff > diffcur && ranked == 0)
-      {
-        diffcur = int(diff);
-        curbin = k;
-      }
-    }
-    int rank = nummicrobins-check;
-    double actual = actualmicrobin[curbin].density;
-    actual = actual*numgrains;
-    double sim = simmicrobin[curbin].density;
-    if((sim-actual) < 0)
-    {
-      rank = -rank;
-    }
-    simmicrobin[curbin].binrank = rank;
-    check++;
-  }
-  double densitycheck = simmicrobin[nummicrobins-1].density;
-  double densitycheck2temp = actualmicrobin[nummicrobins-1].density;
-  double densitycheck2 = densitycheck2temp*numgrains;
-  double percenterror = (densitycheck2-densitycheck)/densitycheck2;
-  if(percenterror < 0.15)
-  {
-    count = 1;
-  }
-return count;
-}
-
-void  GrainGeneratorFunc::rank_grains1(int numgrains)
-{
-  int count = 0;
-  for(int i = 0; i < numgrains; i++)
-  {
-    double rank = 0;
-    double temprank = 0;
-    vector<double>* misolist = grains[i].misorientationlist;
-    int size = int(misolist->size());
-    for(int k=0;k<size;k++)
-    {
-      double misofirst = misolist->at(k);
-      int misocur = int(misofirst/(100/nummisobins));
-      temprank = simmisobin[misocur].binrank;
-      rank = rank + temprank;
-      if(misofirst == 0)
-      {
-        rank = rank + 100;
-      }
-    }
-//    double frozen = grains[i].frozen;
-    grains[i].grainrank = rank;
-    count++;
-  }
-}
-
-void  GrainGeneratorFunc::identify_grains1(int numgrains,int nummisomoves)
-{
-  int check = 0;
-  int worst = 0;
-  int clear = 0;
-  double bad = 1;
-  int count = 0;
-  for(int h = 0; h < numgrains; h++)
-  {
-    grains[h].picked = clear;
-  }
-  while(check < nummisomoves)
-  {
-    double rankcur = -10000000;
-    count = 0;
-    for(int i = 0; i < numgrains; i++)
-    {
-      double rank = grains[i].grainrank;
-      double picked = grains[i].picked;
-      double froze = grains[i].frozen;
-      if(rank > rankcur && picked == 0 && froze == 0)
-      {
-        rankcur = rank;
-        worst = i;
-        count++;
-      }
-    }
-    grains[worst].picked = bad;
-    check++;
-  }
-}
-
-void  GrainGeneratorFunc::move_grains1(int numgrains)
-{
-  int check = 0;
-  vector<int> pickedlist;
-  vector<int> temppickedlist;
-  for(int i = 0; i < numgrains; i++)
-  {
-    double ea1temp = grains[i].euler1;
-    double ea2temp = grains[i].euler2;
-    double ea3temp = grains[i].euler3;
-    grains[i].oeuler1 = ea1temp;
-    grains[i].oeuler2 = ea2temp;
-    grains[i].oeuler3 = ea3temp;
-    double picked = grains[i].picked;
-    if(picked == 1)
-    {
-      pickedlist.push_back(i);
-      check++;
-    }
-  }
-  for(int j = 0; j < numgrains; j++)
-  {
-    double picked = grains[j].picked;
-    if(picked == 1)
-    {
-      int size = int(pickedlist.size());
-      double random = rg.Random();
-      double random1 = random;
-      int remainder = int(random1*size);
-      if(size <= remainder)
-      {
-        remainder = remainder - 1;
-      }
-      int swap = pickedlist[remainder];
-      int sizecheck = int(pickedlist.size());
-      if(swap == j && sizecheck > 1)
-      {
-        swap = pickedlist[(remainder+1)];
-        pickedlist.erase(pickedlist.begin()+remainder+1);
-      }
-      if(swap != j) pickedlist.erase(pickedlist.begin()+remainder);
-//      int grainname = grains[j].grainname;
-      double ea1 = grains[swap].oeuler1;
-      double ea2 = grains[swap].oeuler2;
-      double ea3 = grains[swap].oeuler3;
-//      int nnum = grains[j].neighnum;
-      grains[j].euler1 = ea1;
-      grains[j].euler2 = ea2;
-      grains[j].euler3 = ea3;
-    }
-  }
-}
-
-void  GrainGeneratorFunc::rank_grains2(int numgrains)
-{
-  int count = 0;
-  for(int i = 0; i < numgrains; i++)
-  {
-    double microrank = 0;
-    double temprank = 0;
-    vector<double>* misolist = grains[i].misorientationlist;
-    vector<int>* nlist = grains[i].neighborlist;
-    int size = 0;
-    if (NULL != nlist) { size = nlist->size(); }
-    for(int j=0;j<size;j++)
-    {
-      int nname = nlist->at(j);
-      double neighfrac = grains[nname].lowanglefraction;
-      if(neighfrac > 0.24) neighfrac = neighfrac*4;
-      if(neighfrac > 0.49) neighfrac = neighfrac;
-      if(neighfrac > 0.74) neighfrac = neighfrac*2;
-      temprank = neighfrac;
-      double misofirst = misolist->at(j);
-      if(misofirst < 15)
-      {
-        temprank = 0;
-        if(neighfrac > 4)
-        {
-          microrank = 0;
-          {break;}
-        }
-      }
-      double ownfrac = grains[i].lowanglefraction;
-      if(ownfrac < 0.4) temprank = temprank*2;
-      microrank = microrank + temprank;
-    }
-    grains[i].grainrank = microrank;
-    count++;
-  }
-}
-
-void  GrainGeneratorFunc::identify_grains2(int numgrains,int nummicromoves)
-{
-  int check = 0;
-  int check2 = 0;
-  int worst = 0;
-  int clear = 0;
-  double bad = 1;
-  double none = 2;
-  nummicromoves = 150;
-  for(int h = 0; h < numgrains; h++)
-  {
-    grains[h].picked = clear;
-  }
-  while(check < nummicromoves)
-  {
-    double rankcur = 0;
-    for(int i = 0; i < numgrains; i++)
-    {
-      double rank = grains[i].grainmicrorank;
-      double picked = grains[i].picked;
-      if(rank > rankcur && picked == 0)
-      {
-        rankcur = rank;
-        worst = i;
-      }
-    }
-    grains[worst].picked = bad;
-    check++;
-  }
-  while(check2 < nummicromoves)
-  {
-    double rankcur2 = 0;
-    for(int j = 0; j < numgrains; j++)
-    {
-      double rank2 = grains[j].grainmicrorank;
-      double picked2 = grains[j].picked;
-      if(rank2 > rankcur2 && picked2 == 0)
-      {
-        rankcur2 = rank2;
-        worst = j;
-      }
-    }
-    grains[worst].picked = none;
-    check2++;
-  }
-}
-
-void  GrainGeneratorFunc::move_grains2(int numgrains)
-{
-  int check = 0;
-  vector<int> pickedlist;
-  vector<int> nonelist;
-  vector<int> tempnonelist;
-  for(int i = 0; i < numgrains; i++)
-  {
-    double ea1temp = grains[i].euler1;
-    double ea2temp = grains[i].euler2;
-    double ea3temp = grains[i].euler3;
-    grains[i].oeuler1 = ea1temp;
-    grains[i].oeuler2 = ea2temp;
-    grains[i].oeuler3 = ea3temp;
-    double picked = grains[i].picked;
-    if(picked == 2)
-    {
-      nonelist.push_back(i);
-      check++;
-    }
-  }
-  for(int j = 0; j < numgrains; j++)
-  {
-    double picked = grains[j].picked;
-    if(picked == 1)
-    {
-      int size = int(nonelist.size());
-      double random = rg.Random();
-      double random1 = random;
-      int remainder = int(random1*size);
-      if(size <= remainder)
-      {
-        remainder = remainder - 1;
-      }
-      int swap = nonelist[remainder];
-      nonelist.erase(nonelist.begin()+remainder);
-//      int grainname = grains[j].grainname;
-      double ea1 = grains[swap].oeuler1;
-      double ea2 = grains[swap].oeuler2;
-      double ea3 = grains[swap].oeuler3;
-//      int nnum = grains[j].neighnum;
-      grains[j].euler1 = ea1;
-      grains[j].euler2 = ea2;
-      grains[j].euler3 = ea3;
-//      int sgrainname = grains[swap].grainname;
-      double sea1 = grains[j].oeuler1;
-      double sea2 = grains[j].oeuler2;
-      double sea3 = grains[j].oeuler3;
-//      int snnum = grains[swap].neighnum;
-      grains[swap].euler1 = sea1;
-      grains[swap].euler2 = sea2;
-      grains[swap].euler3 = sea3;
-    }
-  }
-}
-
-void  GrainGeneratorFunc::freeze_grains(int numgrains)
-{
-//  int count = 0;
-  double froze = 0;
-  for(int i = 0; i < numgrains; i++)
-  {
-    froze = 0;
-    double fraction = grains[i].lowanglefraction;
-    if(fraction > 0.85)
-    {
-      froze = 1;
-    }
-    vector<double>* misolist = grains[i].misorientationlist;
-    vector<int>* nlist = grains[i].neighborlist;
-    int size = 0;
-    if (NULL != nlist) { size = nlist->size(); }
-    for(int j=0;j<size;j++)
-    {
-      int nname = nlist->at(j);
-      double neighmiso = misolist->at(j);
-      double neighfrac = grains[nname].lowanglefraction;
-      if(neighfrac > 0.85 && neighmiso < 15)
-      {
-        froze = 1;
-      }
-    }
-    grains[i].frozen = froze;
-  }
-}
-
-
 void  GrainGeneratorFunc::writeCube(string outname1, int numgrains, string outname2)
 {
   ofstream outFile;
@@ -2658,7 +2195,7 @@ void  GrainGeneratorFunc::writeCube(string outname1, int numgrains, string outna
   outFile << endl;
   outFile << "SCALARS GrainID int  1" << endl;
   outFile << "LOOKUP_TABLE default" << endl;
-  for (int i = 0; i < numgrains; i++)
+  for (int i = 1; i < numgrains+1; i++)
   {
 	gsizes[i]=0;
   }
@@ -2701,7 +2238,7 @@ void  GrainGeneratorFunc::writeCube(string outname1, int numgrains, string outna
   outFile.close();
   ofstream outFile2;
   outFile2.open(outname2.c_str());
-  for(int i=0;i<numgrains;i++)
+  for(int i=1;i<numgrains+1;i++)
   {
 	outFile2 << double(gsizes[i])/64.0 << endl;
   }
@@ -2713,46 +2250,13 @@ void GrainGeneratorFunc::write_eulerangles(string writename10)
   ofstream outFile;
   outFile.open(writename10.c_str());
   outFile << numgrains << endl;
-  for (int i = 0; i < numgrains; i++)
+  for (int i = 1; i < numgrains+1; i++)
   {
     double ea1 = grains[i].euler1;
     double ea2 = grains[i].euler2;
     double ea3 = grains[i].euler3;
     outFile << i << " " << ea1 << " " << ea2 << " " << ea3 << endl;
   }
-  outFile.close();
-}
-
-void GrainGeneratorFunc::create_dxfile(string dxfile)
-{
-  ofstream outFile;
-  outFile.open(dxfile.c_str());
-  outFile << "object 1 class gridpositions counts " << xpoints+1 << " " << ypoints+1 << " " << zpoints+1 << endl;
-  outFile << "origin	0	0	0" << endl;
-  outFile << "delta	1	0	0" << endl;
-  outFile << "delta	0	1	0" << endl;
-  outFile << "delta	0	0	0" << endl;
-  outFile << endl;
-  outFile << "object 2 class gridconnections counts " <<  xpoints+1 << " " << ypoints+1 << " " << zpoints+1 << endl;
-  outFile << endl;
-  outFile << "object 3 class array type int rank 0 items " << totalpoints << " data follows" << endl;
-  for(int i=0; i<totalpoints; i++)
-  {
-    outFile << gridfine[i].grainname+1 << " ";
-    if((i!=0)&&(i%20==0))
-	{
-      outFile << endl;
-    }
-  }
-  outFile << endl;
-  outFile << "attribute 'dep' string 'connections" << endl;
-  outFile << endl;
-  outFile << "object '3d Micro' class field" << endl;
-  outFile << "component  'positions'    value 1" << endl;
-  outFile << "component  'connections'  value 2" << endl;
-  outFile << "component  'data'         value 3" << endl;
-  outFile << endl;
-  outFile << "end" << endl;
   outFile.close();
 }
 

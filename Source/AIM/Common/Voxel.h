@@ -44,7 +44,6 @@ public:
     int neighbor;
     double misorientation;
     int surfacevoxel;
-    int inside;
 	double quat[5];
 
   private:
