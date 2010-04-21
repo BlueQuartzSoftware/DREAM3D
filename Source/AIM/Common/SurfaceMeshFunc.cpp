@@ -56,12 +56,13 @@ SurfaceMeshFunc::~SurfaceMeshFunc()
 
 }
 
-void SurfaceMeshFunc::initialize_micro(string filename)
+int SurfaceMeshFunc::initialize_micro(string filename)
 {
 
 	int i, j, k, l;
 	int id;
 	int tgrainname;
+	int surfacevoxel;
 	double tempx, tempy, tempz;
 	int xnum, ynum, znum;
 	double xres, yres, zres;
@@ -116,31 +117,29 @@ void SurfaceMeshFunc::initialize_micro(string filename)
 		if(col == 0 || col == (xDim-1) || row == 0 || row == (yDim-1) || plane == 0 || plane == (zDim-1)) point[i].grainname = -3;
 	}
 	point[0].grainname = 0; // Point 0 is a garbage...
-	// Let's input the grainname numbers for each site from micro.input...
-	in.close();
-	// Let's fill out the coordinate of each voxel. Remember that x coordinate goes fastest...
-	for (l = 0; l <= NS - xDim * yDim; l = l + xDim * yDim)
+	headerdone = false;
+	while(headerdone == false)
 	{
-		for (k = 0; k <= xDim * yDim - xDim; k = k + xDim)
+		in.getline( buf, size );
+		std::string line = buf;
+		in >> word;
+		if(word == "LOOKUP_TABLE")
 		{
-		  for (j = 1; j <= xDim; j++)
-		  {
-			id = l + k + j;
-			tempx = (double) (j - 1);
-			tempy = (double) (k / xDim);
-			tempz = (double) (l / (xDim * yDim));
-			if (tempx > (double) (xDim - 2) || tempy > (double) (yDim - 2) || tempz > (double) (zDim - 2))
-			{
-			  point[id].surfacevoxel = 1;
-			}
-			else
-			{
-			  point[id].surfacevoxel = 0;
-			}
-
-		  }
+			headerdone = true;
+			in >> word;
 		}
 	}
+	for(i=1;i<=NS;i++)
+	{
+		in >> surfacevoxel;
+		int col = (i-1)%xDim;
+		int row = ((i-1)/xDim)%yDim;
+		int plane = (i-1)/(xDim*yDim);
+		point[i].surfacevoxel = surfacevoxel;
+	}
+	// Let's input the grainname numbers for each site from micro.input...
+	in.close();
+	return zDim;
 }
 
 void SurfaceMeshFunc::get_neighbor_list(int zID)
@@ -408,7 +407,10 @@ int SurfaceMeshFunc::get_number_fEdges(int zID)
 //      if (cgrainname > -10 && atBulk == 0)
       if (atBulk > 0)
       { // coNSider the square iNSide the bulk only..
-        sqIndex = get_square_index(tngrainname);
+		if(point[csite].surfacevoxel > 0)
+		{
+			sqIndex = get_square_index(tngrainname);
+		}
         if (sqIndex == 15)
         {
           anFlag = treat_anomaly(tNSite, zID);
@@ -494,7 +496,11 @@ void SurfaceMeshFunc::get_nodes_fEdges(int eT2d[20][8], int NST2d[20][8], int zI
 //      if (cgrainname > -10 && atBulk == 0)
       if (atBulk > 0)
       { // coNSider the square iNSide the bulk only...
-        sqIndex = get_square_index(tngrainname);
+		sqIndex = 0;
+		if(point[csite].surfacevoxel > 0)
+		{
+			sqIndex = get_square_index(tngrainname);
+		}
         if (sqIndex == 15)
         {
           anFlag = treat_anomaly(tNSite, zID);

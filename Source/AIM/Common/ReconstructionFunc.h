@@ -94,9 +94,8 @@ public:
 	int numseNbins;
 	int numorients;
 	int numeulers;
-	int nummisobins;
-	int nummicrobins;
 	int numgrains;
+	double totalsurfacearea;
 	int maxdiameter;
 	int mindiameter;
 	int cutoutxsize;
@@ -113,20 +112,18 @@ public:
 	int totalpoints;
 	int totaltemppoints;
 	int numneighbins;
-	int nummicros;
 	double totalvol;
 	double totalaxes;
 
-    void initialize(double stepX, double stepY, double stepZ,
-      int andNumCols, int angNumRows, int angSlices,
+    void initialize(int angSlices,
       bool, bool, int, double, double, double, int, bool);
-	void find_cutout(string angFName, int andNumCols, int angNumRows, double, double);
+	void find_cutout(string angFName, double, double, double);
 	void loadSlices(double quat_symmcubic[24][5],double quat_symmhex[12][5]);
 	void align_sections(int slice,double quat_symmcubic[24][5],double quat_symmhex[12][5]);
 	int form_grains(double quat_symmcubic[24][5],double quat_symmhex[12][5]);
 	void remove_smallgrains();
 	int renumber_grains1();
-	void write_volume(string);
+	void write_volume(string, string, string, string, bool, bool, bool);
 	int load_data(string);
 	void assign_badpoints();
 	void find_neighbors();
@@ -138,13 +135,11 @@ public:
 	void characterize_twins();
 	void characterize_colonies();
 	int renumber_grains3();
-	void find_goodneighbors();
 	void find_centroids ();
 	void find_moments();
 	void find_axes();
 	void find_vectors();
 	void find_eulerodf();
-	void find_axisodf();
 	void measure_misorientations(double quat_symmcubic[24][5],double quat_symmhex[12][5]);
 	void find_colors(double quat_symmcubic[24][5],double quat_symmhex[12][5]);
 	void find_convexities();

@@ -126,9 +126,6 @@ void Reconstruction::compute()
   m_OutputDirectory = MXAFileSystemPath::toNativeSeparators(m_OutputDirectory);
   AngDirectoryPatterns::Pointer p = AngDirectoryPatterns::New(m_InputDirectory, m_AngFilePrefix, width);
 
-  AngFileReader::Pointer reader = AngFileReader::New();
-  reader->readFile(p->generateFullPathAngFileName(m_ZStartIndex));
-
   AngFileHelper::Pointer angFileHelper = AngFileHelper::New();
   angFileHelper->setZIndexStart(m_ZStartIndex);
   angFileHelper->setZIndexEnd(m_ZEndIndex);
@@ -136,12 +133,10 @@ void Reconstruction::compute()
 
   m = ReconstructionFunc::New();
   m->m_angFileHelper = angFileHelper;
-  m->find_cutout(p->generateFullPathAngFileName(m_ZStartIndex), reader->getNumEvenCols(), reader->getNumRows(), m_MinSeedConfidence, m_MinSeedImageQuality);
-  m->initialize(reader->getXStep(), reader->getYStep(), m_ZResolution,
-                       reader->getNumEvenCols(), reader->getNumRows(), (m_ZEndIndex - m_ZStartIndex),
+  m->find_cutout(p->generateFullPathAngFileName(m_ZStartIndex), m_ZResolution, m_MinSeedConfidence, m_MinSeedImageQuality);
+  m->initialize((m_ZEndIndex - m_ZStartIndex),
                        m_MergeTwins, m_MergeColonies, m_MinAllowedGrainSize, m_MinSeedConfidence, m_MinSeedImageQuality,
                        m_MisorientationTolerance, m_CrystalStructure, m_AlreadyFormed);
-  reader = AngFileReader::NullPointer(); // Remove this object as it is no longer needed.
 
   int32 mindiameter = 100000;
   int32 maxdiameter = 0;
@@ -189,6 +184,9 @@ void Reconstruction::compute()
   std::string  misorientationFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::MisorientationBinsFile;
   std::string  microBinsFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::MicroBinsFile;
   std::string reconVisFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::ReconstructedVisualizationFile;
+  std::string reconIPFVisFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::ReconstructedIPFVisualizationFile;
+  std::string reconDisVisFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::ReconstructedDisVisualizationFile;
+  std::string reconIQVisFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::ReconstructedIQVisualizationFile;
   std::string axisFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::AxisOrientationsFile;
   std::string graindataFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::graindataFile;
   std::string eulerFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::EulerAnglesFile;
@@ -237,12 +235,13 @@ void Reconstruction::compute()
 
     CHECK_FOR_CANCELED(ReconstructionFunc)
     progressMessage(AIM_STRING("write_volume"), 22 );
-    m->write_volume(reconVisFile);
+    m->write_volume(reconVisFile, reconIPFVisFile, reconIPFVisFile, reconIPFVisFile, 0, 0, 0);
   }
 
   CHECK_FOR_CANCELED(ReconstructionFunc)
-  progressMessage(AIM_STRING("find_neighbors"), 24 );
+  progressMessage(AIM_STRING("find_neighbors"), 45 );
   m->find_neighbors();
+
 
   CHECK_FOR_CANCELED(ReconstructionFunc)
   progressMessage(AIM_STRING("merge_containedgrains"), 27 );
@@ -256,6 +255,10 @@ void Reconstruction::compute()
   {
     m->merge_twins(quat_symmcubic, quat_symmhex);
     m->characterize_twins();
+	CHECK_FOR_CANCELED(ReconstructionFunc)
+    progressMessage(AIM_STRING("renumber_grains3"), 39 );
+    m->numgrains = m->renumber_grains3();
+  
   }
 
   if (m_MergeColonies == true)
@@ -265,12 +268,8 @@ void Reconstruction::compute()
   }
 
   CHECK_FOR_CANCELED(ReconstructionFunc)
-  progressMessage(AIM_STRING("renumber_grains3"), 39 );
-  m->numgrains = m->renumber_grains3();
-  
-  CHECK_FOR_CANCELED(ReconstructionFunc)
-  progressMessage(AIM_STRING("find_goodneighbors"), 45 );
-  m->find_goodneighbors();
+  progressMessage(AIM_STRING("find_neighbors"), 45 );
+  m->find_neighbors();
 
   CHECK_FOR_CANCELED(ReconstructionFunc)
   progressMessage(AIM_STRING("find_centroids"), 48 );
@@ -297,10 +296,6 @@ void Reconstruction::compute()
   m->find_eulerodf();
 
   CHECK_FOR_CANCELED(ReconstructionFunc)
-  progressMessage(AIM_STRING("find_axisodf"), 57 );
-  m->find_axisodf();
-
-  CHECK_FOR_CANCELED(ReconstructionFunc)
   progressMessage(AIM_STRING("measure_misorientations"), 60 );
   m->measure_misorientations(quat_symmcubic, quat_symmhex);
 
@@ -318,7 +313,7 @@ void Reconstruction::compute()
 
   CHECK_FOR_CANCELED(ReconstructionFunc)
   progressMessage(AIM_STRING("write_volume"), 72 );
-  m->write_volume(reconVisFile);
+  m->write_volume(reconVisFile, reconIPFVisFile, reconDisVisFile, reconIQVisFile, m_IPFoutputoption, m_Disorientationoutputoption, m_ImageQualityoutputoption);
 
   CHECK_FOR_CANCELED(ReconstructionFunc)
   progressMessage(AIM_STRING("Writing Grain Data"), 81 );
