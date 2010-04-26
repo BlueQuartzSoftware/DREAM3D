@@ -33,9 +33,7 @@ class AngFileHelper
     MXA_INSTANCE_PROPERTY_m(int, ZIndexEnd)
     MXA_INSTANCE_PROPERTY_m(bool, Cancel);
 
-    void loadData(Voxel tempvoxels[],
-                  int tempxpoints, int tempypoints, int slice,
-                  double resz, double minseedconfidence, double minseedimagequality);
+    void loadData(Voxel voxels[], int xpoints, int ypoints, int zpoints, int slice);
 
   protected:
     AngFileHelper();

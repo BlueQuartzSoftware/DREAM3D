@@ -16,7 +16,6 @@
 // -----------------------------------------------------------------------------
 Voxel::Voxel() :
 grainname(0),
-precipitatename(0),
 confidence(0.0),
 imagequality(0.0),
 alreadychecked(0),

@@ -78,7 +78,6 @@ public:
 
 	AIMRandomNG rg;
 	Voxel* voxels;
-	Voxel* tempvoxels;
 	Grain* grains;
 	Bin *eulerodf;
 	Bin *axisodf;
@@ -115,11 +114,10 @@ public:
 	double totalvol;
 	double totalaxes;
 
-    void initialize(int angSlices,
-      bool, bool, int, double, double, double, int, bool);
-	void find_cutout(string angFName, double, double, double);
+    void initialize(string, int angSlices, double, bool, bool, int, double, double, double, int, bool);
 	void loadSlices(double quat_symmcubic[24][5],double quat_symmhex[12][5]);
-	void align_sections(int slice,double quat_symmcubic[24][5],double quat_symmhex[12][5]);
+	void align_sections(double quat_symmcubic[24][5],double quat_symmhex[12][5]);
+	void find_border();
 	int form_grains(double quat_symmcubic[24][5],double quat_symmhex[12][5]);
 	void remove_smallgrains();
 	int renumber_grains1();
@@ -129,6 +127,8 @@ public:
 	void find_neighbors();
 	void merge_containedgrains();
 	int renumber_grains2();
+	void reburn_grains();
+	void cleanup_data();
 	void homogenize_grains(double quat_symmcubic[24][5],double quat_symmhex[12][5]);
 	void merge_twins(double quat_symmcubic[24][5],double quat_symmhex[12][5]);
 	void merge_colonies(double quat_symmcubic[24][5],double quat_symmhex[12][5]);
