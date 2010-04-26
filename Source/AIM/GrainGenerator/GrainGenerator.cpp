@@ -192,10 +192,6 @@ void GrainGenerator::compute()
 	   progressMessage(AIM_STRING("Filling Gaps"), 40 );
 	   m->fill_gaps(m->numgrains);
 
-	   CHECK_FOR_CANCELED(GrainGeneratorFunc)
-	   progressMessage(AIM_STRING("Finding Surface Voxels"), 45 );
-	   m->find_surfacevoxels();
-
 	   if(m_Precipitates > 1)
 	   {
 		   CHECK_FOR_CANCELED(GrainGeneratorFunc)
@@ -245,7 +241,7 @@ void GrainGenerator::compute()
 
    CHECK_FOR_CANCELED(GrainGeneratorFunc)
    progressMessage(AIM_STRING("writing Cube"), 90 );
-   m->writeCube(CubeFile, m->numgrains, AnalysisFile);
+   m->writeCube(CubeFile, m->numgrains);
    
    CHECK_FOR_CANCELED(GrainGeneratorFunc)
    progressMessage(AIM_STRING("Writing Euler Angles"), 98 );

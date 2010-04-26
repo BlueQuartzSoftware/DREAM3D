@@ -33,7 +33,6 @@ public:
     virtual ~Voxel();
 
     int grainname;
-    int precipitatename;
     double confidence;
     double imagequality;
     int alreadychecked;

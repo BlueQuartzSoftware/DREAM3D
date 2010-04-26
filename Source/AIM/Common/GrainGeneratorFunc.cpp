@@ -1571,7 +1571,7 @@ void GrainGeneratorFunc::insert_precipitates(int numprecipitates)
 				insidelist[insidecount] = currentpoint;
 				if(insidecount >= (0.9*insidelist.size())) insidelist.resize(insidecount+100);
                 insidecount++;
-				if(gridfine[currentpoint].precipitatename != -1) badcount++;
+				if(gridfine[currentpoint].grainname > numgrains) badcount++;
               }
             }
           }
@@ -1591,18 +1591,18 @@ void GrainGeneratorFunc::insert_precipitates(int numprecipitates)
       int rowcheck = (point/xpoints)%ypoints;
       int planecheck = point/(xpoints*ypoints);
       if(columncheck == 0 || rowcheck == 0 || planecheck == 0 || columncheck == (xpoints-1) || rowcheck == (ypoints-1) || planecheck == (zpoints-1)) tempsurf = 1;
-	  if(gridfine[point].precipitatename == -1)
+	  if(gridfine[point].grainname <= numgrains)
       {
           uniquecursize++;
           totalcursize++;
-		  gridfine[point].precipitatename = i;
+		  gridfine[point].grainname = i+numgrains;
       }
     }
 	int size = availablelist.size();
 	for(int p=0;p<size;p++)
 	{
 		int point = availablelist[p];
-		if(gridfine[point].precipitatename != -1)
+		if(gridfine[point].grainname > numgrains)
 		{
 			availablelist.erase(availablelist.begin()+p);
 			p = p-1;
@@ -1629,11 +1629,11 @@ void GrainGeneratorFunc::insert_precipitates(int numprecipitates)
   }
   for(int t=0;t<(xpoints*ypoints*zpoints);t++)
   {
-	if(gridfine[t].precipitatename != -1)
+	if(gridfine[t].grainname > numgrains)
     {
-	  int gname = gridfine[t].precipitatename;
+	  int gname = gridfine[t].grainname;
+	  gname = gname-numgrains;
       psizes[gname]++;
-	  gridfine[t].grainname = -1;
     }
   }
   for(int v=1;v<numprecipitates+1;v++)
@@ -1844,76 +1844,6 @@ void  GrainGeneratorFunc::find_neighbors()
     grains[i].neighborsurfarealist = nsalist;
   }
 }
-void  GrainGeneratorFunc::find_surfacevoxels()
-{
-  double x = 0;
-  double y = 0;
-  double z = 0;
-  int grain1;
-  int grain2;
-  int grain3;
-  int grain4;
-  int grain5;
-  int grain6;
-  for(int j = 0; j < (xpoints*ypoints*zpoints); j++)
-  {
-    int onsurf = 0;
-    int grain = gridfine[j].grainname;
-	x = j%xpoints;
-	y = (j/xpoints)%ypoints;
-	z = j/(xpoints*ypoints);
-	if(x > 0)
-	{
-	  grain1 = gridfine[j-1].grainname;
-	  if(grain1 != grain && grain1!= 0)
-	  {
-		onsurf = 1;
-	  }
-	}
-	if(x < xpoints-1)
-	{
-	  grain2 = gridfine[j+1].grainname;
-	  if(grain2 != grain && grain2!= 0)
-	  {
-		onsurf = 1;
-	  }
-	}
-	if(y > 0)
-	{
-	  grain3 = gridfine[j-(xpoints)].grainname;
-	  if(grain3 != grain && grain3!= 0)
-	  {
-		onsurf = 1;
-	  }
-	}
-	if(y < ypoints-1)
-	{
-	  grain4 = gridfine[j+(xpoints)].grainname;
-	  if(grain4 != grain && grain4!= 0)
-	  {
-		onsurf = 1;
-	  }
-	}
-	if(z > 0)
-	{
-	  grain5 = gridfine[j-(xpoints*ypoints)].grainname;
-	  if(grain5 != grain && grain5!= 0)
-	  {
-		onsurf = 1;
-	  }
-	}
-	if(z < zpoints-1)
-	{
-	  grain6 = gridfine[j+(xpoints*ypoints)].grainname;
-	  if(grain6 != grain && grain6!= 0)
-	  {
-		onsurf = 1;
-	  }
-	}
-    gridfine[j].surfacevoxel = onsurf;
-  }
-}
-
 void  GrainGeneratorFunc::loadMisoData(string inname10)
 {
     ifstream inputFile;
@@ -2312,7 +2242,7 @@ double GrainGeneratorFunc::getmisoquathexagonal(double quat_symmhex[12][5],doubl
   return wmin;
 }
 
-void  GrainGeneratorFunc::writeCube(string outname1, int numgrains, string outname2)
+void  GrainGeneratorFunc::writeCube(string outname1, int numgrains)
 {
   ofstream outFile;
   outFile.open(outname1.c_str());
@@ -2328,10 +2258,6 @@ void  GrainGeneratorFunc::writeCube(string outname1, int numgrains, string outna
   outFile << endl;
   outFile << "SCALARS GrainID int  1" << endl;
   outFile << "LOOKUP_TABLE default" << endl;
-  for (int i = 1; i < numgrains+1; i++)
-  {
-	gsizes[i]=0;
-  }
   for (int i = 0; i < (xpoints*ypoints*zpoints); i++)
   {
     int name = gridfine[i].grainname;
@@ -2345,11 +2271,11 @@ void  GrainGeneratorFunc::writeCube(string outname1, int numgrains, string outna
 	outFile << name;
   }
   outFile << endl;
-  outFile << "SCALARS PrecipitateID int  1" << endl;
+  outFile << "SCALARS SurfaceVoxel int  1" << endl;
   outFile << "LOOKUP_TABLE default" << endl;
   for (int i = 0; i < (xpoints*ypoints*zpoints); i++)
   {
-	int name = gridfine[i].precipitatename;
+	int name = gridfine[i].surfacevoxel;
 	if(i%20 == 0 && i > 0) outFile << endl;
     outFile << "   ";
 	if(name < 10000) outFile << " ";
@@ -2363,18 +2289,12 @@ void  GrainGeneratorFunc::writeCube(string outname1, int numgrains, string outna
   outFile << "LOOKUP_TABLE default" << endl;
   for (int i = 0; i < (xpoints*ypoints*zpoints); i++)
   {
-	int name = gridfine[i].precipitatename;
+	int name = gridfine[i].grainname;
 	if(i%20 == 0 && i > 0) outFile << endl;
-    if(name == 0) outFile << "       1";
-    if(name != 0) outFile << "       2";
+    if(name <= numgrains) outFile << "       1";
+    if(name > numgrains) outFile << "       2";
   }
   outFile.close();
-  ofstream outFile2;
-  outFile2.open(outname2.c_str());
-  for(int i=1;i<numgrains+1;i++)
-  {
-	outFile2 << double(gsizes[i])/64.0 << endl;
-  }
 }
 
 void GrainGeneratorFunc::write_eulerangles(string writename10)

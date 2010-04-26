@@ -133,10 +133,8 @@ void Reconstruction::compute()
 
   m = ReconstructionFunc::New();
   m->m_angFileHelper = angFileHelper;
-  m->find_cutout(p->generateFullPathAngFileName(m_ZStartIndex), m_ZResolution, m_MinSeedConfidence, m_MinSeedImageQuality);
-  m->initialize((m_ZEndIndex - m_ZStartIndex),
-                       m_MergeTwins, m_MergeColonies, m_MinAllowedGrainSize, m_MinSeedConfidence, m_MinSeedImageQuality,
-                       m_MisorientationTolerance, m_CrystalStructure, m_AlreadyFormed);
+  m->initialize(p->generateFullPathAngFileName(m_ZStartIndex),(m_ZEndIndex - m_ZStartIndex), m_ZResolution, m_MergeTwins, m_MergeColonies, m_MinAllowedGrainSize, 
+	                   m_MinSeedConfidence, m_MinSeedImageQuality, m_MisorientationTolerance, m_CrystalStructure, m_AlreadyFormed);
 
   int32 mindiameter = 100000;
   int32 maxdiameter = 0;
@@ -190,9 +188,18 @@ void Reconstruction::compute()
   std::string axisFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::AxisOrientationsFile;
   std::string graindataFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::graindataFile;
   std::string eulerFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::EulerAnglesFile;
+
   CHECK_FOR_CANCELED(ReconstructionFunc)
   progressMessage(AIM_STRING("Loading Slices"), 3 );
   m->loadSlices(quat_symmcubic, quat_symmhex);
+
+  CHECK_FOR_CANCELED(ReconstructionFunc)
+  progressMessage(AIM_STRING("Finding Border"), 3 );
+  m->find_border();
+
+  CHECK_FOR_CANCELED(ReconstructionFunc)
+  progressMessage(AIM_STRING("Aligning Slices"), 3 );
+  m->align_sections(quat_symmcubic, quat_symmhex);
 
   if (m_AlreadyFormed == true)
   {
@@ -272,6 +279,10 @@ void Reconstruction::compute()
   m->find_neighbors();
 
   CHECK_FOR_CANCELED(ReconstructionFunc)
+  progressMessage(AIM_STRING("reburn_grains"), 47 );
+  m->reburn_grains();
+
+  CHECK_FOR_CANCELED(ReconstructionFunc)
   progressMessage(AIM_STRING("find_centroids"), 48 );
   m->find_centroids();
 
@@ -286,6 +297,10 @@ void Reconstruction::compute()
   CHECK_FOR_CANCELED(ReconstructionFunc)
   progressMessage(AIM_STRING("find_vectors"), 57 );
   m->find_vectors();
+
+  CHECK_FOR_CANCELED(ReconstructionFunc) 
+  progressMessage(AIM_STRING("cleanup_data"), 33 );
+  m->cleanup_data();
 
   CHECK_FOR_CANCELED(ReconstructionFunc) 
   progressMessage(AIM_STRING("homogenize_grains"), 33 );
