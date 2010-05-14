@@ -191,7 +191,7 @@ void Reconstruction::compute()
 
   CHECK_FOR_CANCELED(ReconstructionFunc)
   progressMessage(AIM_STRING("Loading Slices"), 3 );
-  m->loadSlices(quat_symmcubic, quat_symmhex);
+  m->loadSlices();
 
   CHECK_FOR_CANCELED(ReconstructionFunc)
   progressMessage(AIM_STRING("Finding Border"), 3 );
@@ -229,14 +229,6 @@ void Reconstruction::compute()
     m->numgrains = m->form_grains(quat_symmcubic, quat_symmhex);
 
     CHECK_FOR_CANCELED(ReconstructionFunc)
-    progressMessage(AIM_STRING("Removing Small Grains"), 10 );
-    m->remove_smallgrains();
-
-    CHECK_FOR_CANCELED(ReconstructionFunc)
-    progressMessage(AIM_STRING("Renumbering Small Grains"), 12 );
-    m->numgrains = m->renumber_grains1();
-
-    CHECK_FOR_CANCELED(ReconstructionFunc)
     progressMessage(AIM_STRING("assign_badpoints"), 21 );
     m->assign_badpoints();
 
@@ -257,22 +249,6 @@ void Reconstruction::compute()
   CHECK_FOR_CANCELED(ReconstructionFunc)
   progressMessage(AIM_STRING("renumber_grains2"), 30 );
   m->numgrains = m->renumber_grains2();
-
-  if (m_MergeTwins == true)
-  {
-    m->merge_twins(quat_symmcubic, quat_symmhex);
-    m->characterize_twins();
-	CHECK_FOR_CANCELED(ReconstructionFunc)
-    progressMessage(AIM_STRING("renumber_grains3"), 39 );
-    m->numgrains = m->renumber_grains3();
-  
-  }
-
-  if (m_MergeColonies == true)
-  {
-    m->merge_colonies(quat_symmcubic, quat_symmhex);
-    m->characterize_colonies();
-  }
 
   CHECK_FOR_CANCELED(ReconstructionFunc)
   progressMessage(AIM_STRING("find_neighbors"), 45 );
@@ -305,6 +281,21 @@ void Reconstruction::compute()
   CHECK_FOR_CANCELED(ReconstructionFunc) 
   progressMessage(AIM_STRING("homogenize_grains"), 33 );
   m->homogenize_grains(quat_symmcubic, quat_symmhex);
+
+  if (m_MergeTwins == true)
+  {
+    m->merge_twins(quat_symmcubic, quat_symmhex);
+    m->characterize_twins();
+	CHECK_FOR_CANCELED(ReconstructionFunc)
+    progressMessage(AIM_STRING("renumber_grains3"), 39 );
+    m->numgrains = m->renumber_grains3();
+  }
+
+  if (m_MergeColonies == true)
+  {
+    m->merge_colonies(quat_symmcubic, quat_symmhex);
+    m->characterize_colonies();
+  }
 
   CHECK_FOR_CANCELED(ReconstructionFunc)
   progressMessage(AIM_STRING("find_eulerodf"), 57 );

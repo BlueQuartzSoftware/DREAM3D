@@ -38,7 +38,6 @@ class Grain
     int numvoxels;
     int numneighbors;
     int newgrainname;
-    int gotsizemerged;
     int gotcontainedmerged;
     int gottwinmerged;
     int gotcolonymerged;
