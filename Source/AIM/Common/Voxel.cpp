@@ -22,10 +22,10 @@ alreadychecked(0),
 euler1(-1.0),
 euler2(-1.0),
 euler3(-1.0),
-hasneighbor(0),
 neighbor(-1),
 misorientation(0.0),
-surfacevoxel(0)
+surfacevoxel(0),
+unassigned(0)
 {
 
 }

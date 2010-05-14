@@ -39,10 +39,10 @@ public:
     double euler1;
     double euler2;
     double euler3;
-    int hasneighbor;
     int neighbor;
     double misorientation;
     int surfacevoxel;
+	int unassigned;
 	double quat[5];
 
   private:
