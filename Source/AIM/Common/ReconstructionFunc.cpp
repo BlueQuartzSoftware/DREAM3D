@@ -702,7 +702,7 @@ void ReconstructionFunc::cleanup_data()
 				for(int j=0;j<6;j++)
 				{
 					int neighbor = i+neighborhood[j];
-					if(neighbor >= 0 && neighbor < totalpoints && voxels[neighbor].confidence > bestneighborconfidence)
+					if(neighbor >= 0 && neighbor < totalpoints && voxels[neighbor].confidence > bestneighborconfidence && voxels[neighbor].grainname == voxels[i].grainname)
 					{
 						bestneighbor = neighbor;
 						bestneighborconfidence = voxels[neighbor].confidence;
