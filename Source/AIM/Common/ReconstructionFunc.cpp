@@ -169,14 +169,9 @@ void ReconstructionFunc::align_sections(double quat_symmcubic[24][5],double quat
   int xspot,yspot;
   double w;
   double n1,n2,n3;
-  mindisorientation = 100000;
-  xshift = 0;
-  yshift = 0;
-  tempxshift = 0;
-  tempyshift = 0;
   for(int slice=1;slice<zpoints;slice++)
   {
-	  for(int a=0;a<2;a++)
+	  for(int a=0;a<3;a++)
 	  {
 		 if(a == 0) step = 3, nsteps = 2;
 		 if(a == 1) step = 2, nsteps = 2;
@@ -765,29 +760,7 @@ void  ReconstructionFunc::homogenize_grains(double quat_symmcubic[24][5],double 
 		}
 	}
   }
-/*  nucleus = -1;   
-  for(int i = 0; i < numgrains; i++)
-  {
-	grains[i].nucleus = nucleus;
-  }
-  int gnum = 0;
-  for(jj=0; jj<(xpoints*ypoints*zpoints); jj++)
-  {
-	gnum = voxels[jj].grainname;
-	if(grains[gnum].nucleus != -1)
-	{
-		nucleus = grains[gnum].nucleus;
-		if(voxels[jj].confidence > voxels[nucleus].confidence)
-		{
-			grains[gnum].nucleus = jj;
-		}
-	}
-	if(grains[gnum].nucleus == -1)
-	{
-		grains[gnum].nucleus = jj;
-	}
-  }
-*/  for(int i = 1; i < numgrains; i++)
+  for(int i = 1; i < numgrains; i++)
   {
 	averagemiso=0;
 	numVoxel = 0;
@@ -2356,7 +2329,7 @@ void  ReconstructionFunc::find_convexities()
   double convexity = 1;
   for(int i = 1; i < numgrains; i++)
   {
-/*    int size = grains[i].numvoxels;
+    int size = grains[i].numvoxels;
     if(size > 1)
     {
       double insidecount = 0;
@@ -2365,15 +2338,28 @@ void  ReconstructionFunc::find_convexities()
       double xc = grains[i].centroidx;
       double yc = grains[i].centroidy;
       double zc = grains[i].centroidz;
-      double rad1x = grains[i].axis1x;
-      double rad1y = grains[i].axis1y;
-      double rad1z = grains[i].axis1z;
-      double rad2x = grains[i].axis2x;
-      double rad2y = grains[i].axis2y;
-      double rad2z = grains[i].axis2z;
-      double rad3x = grains[i].axis3x;
-      double rad3y = grains[i].axis3y;
-      double rad3z = grains[i].axis3z;
+	  double phi1 = grains[i].axiseuler1;
+	  double PHI = grains[i].axiseuler2;
+	  double phi2 = grains[i].axiseuler3;
+	  double ga[3][3];
+	  ga[0][0] = cos(phi1)*cos(phi2)-sin(phi1)*sin(phi2)*cos(PHI);
+	  ga[0][1] = sin(phi1)*cos(phi2)+cos(phi1)*sin(phi2)*cos(PHI);
+	  ga[0][2] = sin(phi2)*sin(PHI);
+	  ga[1][0] = -cos(phi1)*sin(phi2)-sin(phi1)*cos(phi2)*cos(PHI);
+	  ga[1][1] = -sin(phi1)*sin(phi2)+cos(phi1)*cos(phi2)*cos(PHI);
+	  ga[1][2] =  cos(phi2)*sin(PHI);
+	  ga[2][0] =  sin(phi1)*sin(PHI);
+	  ga[2][1] = -cos(phi1)*sin(PHI);
+	  ga[2][2] =  cos(PHI);
+      double rad1x = ga[0][0];
+      double rad1y = ga[1][0];
+      double rad1z = ga[2][0];
+      double rad2x = ga[0][1];
+      double rad2y = ga[1][1];
+      double rad2z = ga[2][1];
+      double rad3x = ga[0][2];
+      double rad3y = ga[1][2];
+      double rad3z = ga[2][2];
       double mag1 = (rad1x*rad1x)+(rad1y*rad1y)+(rad1z*rad1z);
       mag1 = pow(mag1,0.5);
       double mag2 = (rad2x*rad2x)+(rad2y*rad2y)+(rad2z*rad2z);
@@ -2410,14 +2396,14 @@ void  ReconstructionFunc::find_convexities()
       rad_1 = pow(rad_1,0.3333333);
       double rad_2 = rad_1*bovera;
       double rad_3 = rad_1*covera;
-      for(int j = 0; j < (xpoints*ypoints*zpoints); j++)
-      {
-        int gnum = voxels[j].grainname;
-        if(gnum == i)
-        {
-          double x = find_xcoord(j);
-	      double y = find_ycoord(j);
-	      double z = find_zcoord(j);
+	  vector<int>* voxellist = grains[i].voxellist;
+	  int size = voxellist->size();
+	  for(int j=0;j<size;j++)
+	  { 
+		  int point = voxellist->at(j);
+          double x = find_xcoord(point);
+	      double y = find_ycoord(point);
+	      double z = find_zcoord(point);
           double axis[3][3];
           double diff[3][1];
           double axiselim[3][3];
@@ -2488,7 +2474,6 @@ void  ReconstructionFunc::find_convexities()
           {
             insidecount++;
           }
-        }
       }
       double convex = insidecount/size;
       grains[i].convexity = convex;
@@ -2498,8 +2483,81 @@ void  ReconstructionFunc::find_convexities()
       double convex = 1;
       grains[i].convexity = convex;
     }
-*/
-	grains[i].convexity = convexity;
+  }
+}
+void ReconstructionFunc::find_schmids()
+{
+  double schmid=0;
+  double phi1,PHI,phi2;
+  double loadx,loady,loadz;
+  double theta1,theta2,theta3,theta4;
+  double lambda1,lambda2,lambda3,lambda4,lambda5,lambda6;
+  double schmid1,schmid2,schmid3,schmid4,schmid5,schmid6,schmid7,schmid8,schmid9,schmid10,schmid11,schmid12;
+  double ga[3][3];
+  for(int i=1;i<numgrains;i++)
+  {
+		phi1 = grains[i].euler1;
+		PHI = grains[i].euler2;
+		phi2 = grains[i].euler3;
+		ga[0][0] = cos(phi1)*cos(phi2)-sin(phi1)*sin(phi2)*cos(PHI);
+		ga[0][1] = sin(phi1)*cos(phi2)+cos(phi1)*sin(phi2)*cos(PHI);
+		ga[0][2] = sin(phi2)*sin(PHI);
+		ga[1][0] = -cos(phi1)*sin(phi2)-sin(phi1)*cos(phi2)*cos(PHI);
+		ga[1][1] = -sin(phi1)*sin(phi2)+cos(phi1)*cos(phi2)*cos(PHI);
+		ga[1][2] =  cos(phi2)*sin(PHI);
+		ga[2][0] =  sin(phi1)*sin(PHI);
+		ga[2][1] = -cos(phi1)*sin(PHI);
+		ga[2][2] =  cos(PHI);
+		double loadx = ga[0][0];
+		double loady = ga[0][1];
+		double loadz = ga[0][2];
+		double mag = loadx*loadx+loady*loady+loadz*loadz;
+		mag = pow(mag,0.5);
+		theta1 = (loadx+loady+loadz)/(mag*1.732);
+		theta1 = fabs(theta1);
+		theta2 = (loadx+loady-loadz)/(mag*1.732);
+		theta2 = fabs(theta2);
+		theta3 = (loadx-loady+loadz)/(mag*1.732);
+		theta3 = fabs(theta3);
+		theta4 = (-loadx+loady+loadz)/(mag*1.732);
+		theta4 = fabs(theta4);
+		lambda1 = (loadx+loady)/(mag*1.414);
+		lambda1 = fabs(lambda1);
+		lambda2 = (loadx+loadz)/(mag*1.414);
+		lambda2 = fabs(lambda2);
+		lambda3 = (loadx-loady)/(mag*1.414);
+		lambda3 = fabs(lambda3);
+		lambda4 = (loadx-loadz)/(mag*1.414);
+		lambda4 = fabs(lambda4);
+		lambda5 = (loady+loadz)/(mag*1.414);
+		lambda5 = fabs(lambda5);
+		lambda6 = (loady-loadz)/(mag*1.414);
+		lambda6 = fabs(lambda6);
+		schmid1 = theta1*lambda6;
+		schmid2 = theta1*lambda4;
+		schmid3 = theta1*lambda3;
+		schmid4 = theta2*lambda3;
+		schmid5 = theta2*lambda2;
+		schmid6 = theta2*lambda5;
+		schmid7 = theta3*lambda1;
+		schmid8 = theta3*lambda5;
+		schmid9 = theta3*lambda4;
+		schmid10 = theta4*lambda1;
+		schmid11 = theta4*lambda2;
+		schmid12 = theta4*lambda6;
+		schmid = schmid1;
+		if(schmid2 > schmid) schmid = schmid2;
+		if(schmid3 > schmid) schmid = schmid3;
+		if(schmid4 > schmid) schmid = schmid4;
+		if(schmid5 > schmid) schmid = schmid5;
+		if(schmid6 > schmid) schmid = schmid6;
+		if(schmid7 > schmid) schmid = schmid7;
+		if(schmid8 > schmid) schmid = schmid8;
+		if(schmid9 > schmid) schmid = schmid9;
+		if(schmid10 > schmid) schmid = schmid10;
+		if(schmid11 > schmid) schmid = schmid11;
+		if(schmid12 > schmid) schmid = schmid12;
+		grains[i].schmidfactor = schmid;
   }
 }
 void ReconstructionFunc::volume_stats(string writename1,string writename2,string writename3)
@@ -2968,16 +3026,17 @@ void ReconstructionFunc::volume_stats(string writename1,string writename2,string
   }
   outFile8.close();
 }
-void  ReconstructionFunc::write_volume(string writename1, string writename2, string writename3, string writename4, bool IPFoption, bool Disoption, bool IQoption)
+void  ReconstructionFunc::write_volume(string writename1, string writename2, string writename3, string writename4, string writename5, bool IPFoption, bool Disoption, bool IQoption, bool Schmidoption)
 {
   ofstream outFile;
-  for(int a=0;a<4;a++)
+  for(int a=0;a<5;a++)
   {
 	  if(a == 0) outFile.open(writename1.c_str());
 	  if(a == 1) outFile.open(writename2.c_str());
 	  if(a == 2) outFile.open(writename3.c_str());
 	  if(a == 3) outFile.open(writename4.c_str());
-	  if(a == 0 || (a == 1 && IPFoption == true) || (a == 2 && Disoption == true) || (a == 3 && IQoption == true))
+	  if(a == 4) outFile.open(writename5.c_str());
+	  if(a == 0 || (a == 1 && IPFoption == true) || (a == 2 && Disoption == true) || (a == 3 && IQoption == true) || (a == 4 && Schmidoption == true))
 	  {
 		  outFile << "# vtk DataFile Version 2.0" << endl;
 		  outFile << "data set from FFT2dx_GB" << endl;
@@ -2989,29 +3048,22 @@ void  ReconstructionFunc::write_volume(string writename1, string writename2, str
 		  outFile << "POINT_DATA " << xpoints*ypoints*zpoints << endl;
 		  outFile << endl;
 		  outFile << endl;
+		  outFile << "SCALARS GrainID int  1" << endl;
+		  outFile << "LOOKUP_TABLE default" << endl;
+		  for (int i = 0; i < (xpoints*ypoints*zpoints); i++)
+		  {
+			if(i%20 == 0 && i > 0) outFile << endl;
+			int grainname = voxels[i].grainname;
+			outFile << "   ";
+			if(grainname < 10000) outFile << " ";
+			if(grainname < 1000) outFile << " ";
+			if(grainname < 100) outFile << " ";
+			if(grainname < 10) outFile << " ";
+			outFile << grainname;
+		  }
+		  outFile << endl;
 		  if(a == 0)
 		  {
-			  int *sizecounter;
-			  sizecounter = new int [numgrains];
-			  for(int a=0;a<numgrains;a++)
-			  {
-				sizecounter[a]=0;
-			  }
-			  outFile << "SCALARS GrainID int  1" << endl;
-			  outFile << "LOOKUP_TABLE default" << endl;
-			  for (int i = 0; i < (xpoints*ypoints*zpoints); i++)
-			  {
-				if(i%20 == 0 && i > 0) outFile << endl;
-				int grainname = voxels[i].grainname;
-				outFile << "   ";
-				if(grainname < 10000) outFile << " ";
-				if(grainname < 1000) outFile << " ";
-				if(grainname < 100) outFile << " ";
-				if(grainname < 10) outFile << " ";
-				outFile << grainname;
-				sizecounter[grainname]++;
-			  }
-			  outFile << endl;
 			  outFile << "SCALARS SurfaceVoxel int 1" << endl;
 			  outFile << "LOOKUP_TABLE default" << endl;
 			  for (int i = 0; i < (xpoints*ypoints*zpoints); i++)
@@ -3066,6 +3118,17 @@ void  ReconstructionFunc::write_volume(string writename1, string writename2, str
 			  {
 				if(i%20 == 0 && i > 0) outFile << endl;
 				outFile << voxels[i].imagequality << " ";
+			  }
+		  }
+		  if(a == 4)
+		  {
+			  outFile << "SCALARS SchmidFactor float" << endl;
+			  outFile << "LOOKUP_TABLE default" << endl;
+			  for (int i = 0; i < (xpoints*ypoints*zpoints); i++)
+			  {
+				int gnum = voxels[i].grainname;
+				if(i%20 == 0 && i > 0) outFile << endl;
+				outFile << grains[gnum].schmidfactor << " ";
 			  }
 		  }
 		  outFile.close();

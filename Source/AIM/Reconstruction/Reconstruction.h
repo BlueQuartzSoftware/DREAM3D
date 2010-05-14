@@ -81,6 +81,7 @@ Q_OBJECT
     MXA_INSTANCE_PROPERTY_m(bool, IPFoutputoption)
     MXA_INSTANCE_PROPERTY_m(bool, Disorientationoutputoption)
     MXA_INSTANCE_PROPERTY_m(bool, ImageQualityoutputoption)
+    MXA_INSTANCE_PROPERTY_m(bool, SchmidFactoroutputoption)
     MXA_INSTANCE_PROPERTY_m(int, ErrorCondition);
 
     void parseAngFile();

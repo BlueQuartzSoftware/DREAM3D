@@ -185,6 +185,7 @@ void Reconstruction::compute()
   std::string reconIPFVisFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::ReconstructedIPFVisualizationFile;
   std::string reconDisVisFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::ReconstructedDisVisualizationFile;
   std::string reconIQVisFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::ReconstructedIQVisualizationFile;
+  std::string reconSFVisFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::ReconstructedSFVisualizationFile;
   std::string axisFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::AxisOrientationsFile;
   std::string graindataFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::graindataFile;
   std::string eulerFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::EulerAnglesFile;
@@ -242,7 +243,7 @@ void Reconstruction::compute()
 
     CHECK_FOR_CANCELED(ReconstructionFunc)
     progressMessage(AIM_STRING("write_volume"), 22 );
-    m->write_volume(reconVisFile, reconIPFVisFile, reconIPFVisFile, reconIPFVisFile, 0, 0, 0);
+    m->write_volume(reconVisFile, reconIPFVisFile, reconDisVisFile, reconIQVisFile, reconSFVisFile, false, false, false, false);
   }
 
   CHECK_FOR_CANCELED(ReconstructionFunc)
@@ -328,7 +329,7 @@ void Reconstruction::compute()
 
   CHECK_FOR_CANCELED(ReconstructionFunc)
   progressMessage(AIM_STRING("write_volume"), 72 );
-  m->write_volume(reconVisFile, reconIPFVisFile, reconDisVisFile, reconIQVisFile, m_IPFoutputoption, m_Disorientationoutputoption, m_ImageQualityoutputoption);
+  m->write_volume(reconVisFile, reconIPFVisFile, reconDisVisFile, reconIQVisFile, reconSFVisFile, m_IPFoutputoption, m_Disorientationoutputoption, m_ImageQualityoutputoption, m_SchmidFactoroutputoption);
 
   CHECK_FOR_CANCELED(ReconstructionFunc)
   progressMessage(AIM_STRING("Writing Grain Data"), 81 );

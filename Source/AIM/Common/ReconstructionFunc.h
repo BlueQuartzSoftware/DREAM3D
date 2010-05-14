@@ -121,7 +121,7 @@ public:
 	int form_grains(double quat_symmcubic[24][5],double quat_symmhex[12][5]);
 	void remove_smallgrains();
 	int renumber_grains1();
-	void write_volume(string, string, string, string, bool, bool, bool);
+	void write_volume(string, string, string, string, string, bool, bool, bool, bool);
 	int load_data(string);
 	void assign_badpoints();
 	void find_neighbors();
@@ -143,6 +143,7 @@ public:
 	void measure_misorientations(double quat_symmcubic[24][5],double quat_symmhex[12][5]);
 	void find_colors(double quat_symmcubic[24][5],double quat_symmhex[12][5]);
 	void find_convexities();
+	void find_schmids();
 	void volume_stats(string,string,string);
 	void write_axisodf(string);
 	void write_eulerodf(string);

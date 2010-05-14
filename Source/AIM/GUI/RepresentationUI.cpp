@@ -256,6 +256,8 @@ void RepresentationUI::readSettings()
   Disorientationoutputoption->blockSignals(false);
   READ_BOOL_SETTING(prefs, ImageQualityoutputoption, false);
   ImageQualityoutputoption->blockSignals(false);
+  READ_BOOL_SETTING(prefs, SchmidFactoroutputoption, false);
+  SchmidFactoroutputoption->blockSignals(false);
 
 
   /* ******** This Section is for the Grain Generator Tab ************ */
@@ -329,6 +331,7 @@ void RepresentationUI::writeSettings()
   WRITE_BOOL_SETTING(prefs, IPFoutputoption, IPFoutputoption->isChecked())
   WRITE_BOOL_SETTING(prefs, Disorientationoutputoption, Disorientationoutputoption->isChecked())
   WRITE_BOOL_SETTING(prefs, ImageQualityoutputoption, ImageQualityoutputoption->isChecked())
+  WRITE_BOOL_SETTING(prefs, SchmidFactoroutputoption, SchmidFactoroutputoption->isChecked())
 
   /* ******** This Section is for the Grain Generator Tab ************ */
   WRITE_STRING_SETTING(prefs, gg_InputDir)
@@ -621,7 +624,7 @@ void RepresentationUI::rec_SetupGui()
   m_WidgetList << angDir << angDirBtn << rec_OutputDir << outputDirBtn;
   m_WidgetList << angFilePrefix << angMaxSlice << zStartIndex << zEndIndex << zSpacing;
   m_WidgetList << mergeTwins << mergeColonies << alreadyFormed << minAllowedGrainSize << minConfidence << misOrientationTolerance;
-  m_WidgetList << crystalStructure << IPFoutputoption << Disorientationoutputoption << ImageQualityoutputoption;
+  m_WidgetList << crystalStructure << IPFoutputoption << Disorientationoutputoption << ImageQualityoutputoption << SchmidFactoroutputoption;
 }
 
 // -----------------------------------------------------------------------------
@@ -808,6 +811,7 @@ void RepresentationUI::on_rec_GoBtn_clicked()
   m_Reconstruction->setIPFoutputoption(IPFoutputoption->isChecked());
   m_Reconstruction->setDisorientationoutputoption(Disorientationoutputoption->isChecked());
   m_Reconstruction->setImageQualityoutputoption(ImageQualityoutputoption->isChecked());
+  m_Reconstruction->setSchmidFactoroutputoption(SchmidFactoroutputoption->isChecked());
 
   connect(m_Reconstruction.get(), SIGNAL(finished()),
           this, SLOT( rec_ThreadFinished() ) );
