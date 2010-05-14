@@ -169,118 +169,110 @@ void ReconstructionFunc::align_sections(double quat_symmcubic[24][5],double quat
   int xspot,yspot;
   double w;
   double n1,n2,n3;
+  double q1[5];
+  double q2[5];
   for(int slice=1;slice<zpoints;slice++)
   {
+	  mindisorientation = 100000;
+	  xshift = 0;
+	  yshift = 0;
+	  tempxshift = 0;
+	  tempyshift = 0;
 	  for(int a=0;a<3;a++)
 	  {
-		  double q1[5];
-		  double q2[5];
 		  mindisorientation = 100000;
-		  xshift = 0;
-		  yshift = 0;
-		  tempxshift = 0;
-		  tempyshift = 0;
-		  for(int slice=1;slice<zpoints;slice++)
+		  if(a == 0) step = 3, nsteps = 2;
+		  if(a == 1) step = 1, nsteps = 4;
+		  if(a == 2) step = 1, nsteps = 2;
+		  for(int j=-nsteps;j<(nsteps+1);j++)
 		  {
-			  mindisorientation = 100000;
-			  tempxshift = 0;
-			  tempyshift = 0;
-			  for(int a=0;a<3;a++)
-			  {
-				 if(a == 0) step = 3, nsteps = 3;
-				 if(a == 1) step = 1, nsteps = 5;
-				 if(a == 2) step = 1, nsteps = 3;
-				 for(int j=-nsteps;j<(nsteps+1);j++)
-				 {
-					for(int k=-nsteps;k<(nsteps+1);k++)
+			for(int k=-nsteps;k<(nsteps+1);k++)
+			{
+				disorientation = 0;
+				count = 0;
+				for(int l=0;l<ypoints;l++)
+				{
+					for(int m=0;m<xpoints;m++)
 					{
-						disorientation = 0;
-						count = 0;
-						for(int l=0;l<ypoints;l++)
+						int refposition = ((slice-1)*xpoints*ypoints)+(l*xpoints)+m;
+						int curposition = (slice*xpoints*ypoints)+((l+(j*step)+tempyshift)*xpoints)+(m+(k*step)+tempxshift);
+						if((l+(j*step)+tempyshift) >= 0 && (l+(j*step)+tempyshift) < ypoints && (m+(k*step)+tempxshift) >= 0 && (m+(k*step)+tempxshift) < xpoints)
 						{
-							for(int m=0;m<xpoints;m++)
+							double refci = voxels[refposition].confidence;
+							double curci = voxels[curposition].confidence;
+							double refiq = voxels[refposition].imagequality;
+							double curiq = voxels[curposition].imagequality;
+							double refgnum = voxels[refposition].grainname;
+							double curgnum = voxels[curposition].grainname;
+							if(a < 2)
 							{
-								int refposition = ((0)*xpoints*ypoints)+(l*xpoints)+m;
-								int curposition = (slice*xpoints*ypoints)+((l+(j*step)+tempyshift)*xpoints)+(m+(k*step)+tempxshift);
-								if((l+(j*step)+tempyshift) >= 0 && (l+(j*step)+tempyshift) < ypoints && (m+(k*step)+tempxshift) >= 0 && (m+(k*step)+tempxshift) < xpoints)
+//								disorientation = disorientation + fabs(refiq-curiq);
+								disorientation = disorientation + fabs(refgnum-curgnum);
+								count++;
+							}
+							if(a >= 2)
+							{
+								if(refci > minseedconfidence && curci > minseedconfidence)
 								{
-									double refci = voxels[refposition].confidence;
-									double curci = voxels[curposition].confidence;
-									double refiq = voxels[refposition].imagequality;
-									double curiq = voxels[curposition].imagequality;
-									double refgnum = voxels[refposition].grainname;
-									double curgnum = voxels[curposition].grainname;
-									if(a < 2)
-									{
-										disorientation = disorientation + fabs(refiq-curiq);
-//										disorientation = disorientation + fabs(refgnum-curgnum);
-										count++;
-									}
-									if(a == 2)
-									{
-										if(refci > minseedconfidence && curci > minseedconfidence)
-										{
-											q1[1] = voxels[refposition].quat[1];
-											q1[2] = voxels[refposition].quat[2];
-											q1[3] = voxels[refposition].quat[3];
-											q1[4] = voxels[refposition].quat[4];
-											q2[1] = voxels[curposition].quat[1];
-											q2[2] = voxels[curposition].quat[2];
-											q2[3] = voxels[curposition].quat[3];
-											q2[4] = voxels[curposition].quat[4];
-											if(crystruct == 1) w = getmisoquathexagonal(quat_symmhex,misorientationtolerance,q1,q2,n1,n2,n3);
-											if(crystruct == 2) w = getmisoquatcubic(misorientationtolerance,q1,q2,n1,n2,n3);
-											if(w < misorientationtolerance) w = 0;
-											if(w > misorientationtolerance) w = 1;
-											disorientation = disorientation + w;
-											count++;
-										}
-									}
+									q1[1] = voxels[refposition].quat[1];
+									q1[2] = voxels[refposition].quat[2];
+									q1[3] = voxels[refposition].quat[3];
+									q1[4] = voxels[refposition].quat[4];
+									q2[1] = voxels[curposition].quat[1];
+									q2[2] = voxels[curposition].quat[2];
+									q2[3] = voxels[curposition].quat[3];
+									q2[4] = voxels[curposition].quat[4];
+									if(crystruct == 1) w = getmisoquathexagonal(quat_symmhex,misorientationtolerance,q1,q2,n1,n2,n3);
+									if(crystruct == 2) w = getmisoquatcubic(misorientationtolerance,q1,q2,n1,n2,n3);
+									if(w < misorientationtolerance) w = 0;
+									if(w > misorientationtolerance) w = 1;
+									disorientation = disorientation + w;
+									count++;
 								}
 							}
 						}
-						disorientation = disorientation/double(count);
-						if(disorientation < mindisorientation)
-						{
-							xshift = (k*step)+tempxshift;
-							yshift = (j*step)+tempyshift;
-							mindisorientation = disorientation;
-						}
 					}
-				 }
-				 tempxshift = xshift;
-				 tempyshift = yshift;
-			  }
-			  for(int l=0;l<ypoints;l++)
-			  {
-				for(int m=0;m<xpoints;m++)
-				{
-					if(yshift >= 0) yspot = l;
-					if(xshift >= 0) xspot = m;
-					if(yshift < 0) yspot = ypoints-1-l;
-					if(xshift < 0) xspot = xpoints-1-m;
-					int position = (slice*xpoints*ypoints)+(yspot*xpoints)+xspot;
-					int tempposition = ((slice*xpoints*ypoints)+(yspot+yshift)*xpoints)+(xspot+xshift);
-					if((yspot+yshift) < 0) tempposition = tempposition + (ypoints*xpoints);
-					if((yspot+yshift) > ypoints-1) tempposition = tempposition - (ypoints*xpoints);
-					if((xspot+xshift) < 0) tempposition = tempposition + (xpoints);
-					if((xspot+xshift) > xpoints-1) tempposition = tempposition - (xpoints);
-					voxels[position].euler1 = voxels[tempposition].euler1; 
-					voxels[position].euler2 = voxels[tempposition].euler2; 
-					voxels[position].euler3 = voxels[tempposition].euler3; 
-					voxels[position].quat[0] = voxels[tempposition].quat[0];
-					voxels[position].quat[1] = voxels[tempposition].quat[1];
-					voxels[position].quat[2] = voxels[tempposition].quat[2];
-					voxels[position].quat[3] = voxels[tempposition].quat[3];
-					voxels[position].quat[4] = voxels[tempposition].quat[4];
-					voxels[position].confidence = voxels[tempposition].confidence; 
-					voxels[position].imagequality = voxels[tempposition].imagequality; 
-					voxels[position].alreadychecked = voxels[tempposition].alreadychecked; 
-					voxels[position].grainname = voxels[tempposition].grainname; 
 				}
-			  }
-		  }
-	}
+				disorientation = disorientation/double(count);
+				if(disorientation < mindisorientation)
+				{
+						xshift = (k*step)+tempxshift;
+						yshift = (j*step)+tempyshift;
+						mindisorientation = disorientation;
+				}
+			}
+		 }
+		 tempxshift = xshift;
+		 tempyshift = yshift;
+	  }
+	  for(int l=0;l<ypoints;l++)
+	  {
+		for(int m=0;m<xpoints;m++)
+		{
+			if(yshift >= 0) yspot = l;
+			if(xshift >= 0) xspot = m;
+			if(yshift < 0) yspot = ypoints-1-l;
+			if(xshift < 0) xspot = xpoints-1-m;
+			int position = (slice*xpoints*ypoints)+(yspot*xpoints)+xspot;
+			int tempposition = ((slice*xpoints*ypoints)+(yspot+yshift)*xpoints)+(xspot+xshift);
+			if((yspot+yshift) < 0) tempposition = tempposition + (ypoints*xpoints);
+			if((yspot+yshift) > ypoints-1) tempposition = tempposition - (ypoints*xpoints);
+			if((xspot+xshift) < 0) tempposition = tempposition + (xpoints);
+			if((xspot+xshift) > xpoints-1) tempposition = tempposition - (xpoints);
+			voxels[position].euler1 = voxels[tempposition].euler1; 
+			voxels[position].euler2 = voxels[tempposition].euler2; 
+			voxels[position].euler3 = voxels[tempposition].euler3; 
+			voxels[position].quat[0] = voxels[tempposition].quat[0];
+			voxels[position].quat[1] = voxels[tempposition].quat[1];
+			voxels[position].quat[2] = voxels[tempposition].quat[2];
+			voxels[position].quat[3] = voxels[tempposition].quat[3];
+			voxels[position].quat[4] = voxels[tempposition].quat[4];
+			voxels[position].confidence = voxels[tempposition].confidence; 
+			voxels[position].imagequality = voxels[tempposition].imagequality; 
+			voxels[position].alreadychecked = voxels[tempposition].alreadychecked; 
+			voxels[position].grainname = voxels[tempposition].grainname; 
+		}
+	  }
   }
 }
 int  ReconstructionFunc::form_grains(double quat_symmcubic[24][5],double quat_symmhex[12][5])

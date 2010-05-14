@@ -191,15 +191,15 @@ void Reconstruction::compute()
   std::string eulerFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::EulerAnglesFile;
 
   CHECK_FOR_CANCELED(ReconstructionFunc)
-  progressMessage(AIM_STRING("Loading Slices"), 3 );
+  progressMessage(AIM_STRING("Loading Slices"), 4 );
   m->loadSlices();
 
   CHECK_FOR_CANCELED(ReconstructionFunc)
-  progressMessage(AIM_STRING("Finding Border"), 3 );
+  progressMessage(AIM_STRING("Finding Border"), 8 );
   m->find_border();
 
   CHECK_FOR_CANCELED(ReconstructionFunc)
-  progressMessage(AIM_STRING("Aligning Slices"), 3 );
+  progressMessage(AIM_STRING("Aligning Slices"), 12 );
   m->align_sections(quat_symmcubic, quat_symmhex);
 
   if (m_AlreadyFormed == true)
@@ -208,7 +208,7 @@ void Reconstruction::compute()
     if (MXAFileSystemPath::exists(reconVisFile) == true)
     {
       CHECK_FOR_CANCELED(ReconstructionFunc)
-      progressMessage(AIM_STRING("Loading Existing Data"), 8 );
+      progressMessage(AIM_STRING("Loading Existing Data"), 24 );
       m->numgrains = m->load_data(reconVisFile);
     }
     else
@@ -226,37 +226,37 @@ void Reconstruction::compute()
   if (m_AlreadyFormed == false)
   {
     CHECK_FOR_CANCELED(ReconstructionFunc)
-    progressMessage(AIM_STRING("Forming Grains"), 8 );
+    progressMessage(AIM_STRING("Forming Grains"), 16 );
     m->numgrains = m->form_grains(quat_symmcubic, quat_symmhex);
 
     CHECK_FOR_CANCELED(ReconstructionFunc)
-    progressMessage(AIM_STRING("assign_badpoints"), 21 );
+    progressMessage(AIM_STRING("assign_badpoints"), 20 );
     m->assign_badpoints();
 
     CHECK_FOR_CANCELED(ReconstructionFunc)
-    progressMessage(AIM_STRING("write_volume"), 22 );
+    progressMessage(AIM_STRING("write_volume"), 24 );
     m->write_volume(reconVisFile, reconIPFVisFile, reconDisVisFile, reconIQVisFile, reconSFVisFile, false, false, false, false);
   }
 
   CHECK_FOR_CANCELED(ReconstructionFunc)
-  progressMessage(AIM_STRING("find_neighbors"), 45 );
+  progressMessage(AIM_STRING("find_neighbors"), 28 );
   m->find_neighbors();
 
 
   CHECK_FOR_CANCELED(ReconstructionFunc)
-  progressMessage(AIM_STRING("merge_containedgrains"), 27 );
+  progressMessage(AIM_STRING("merge_containedgrains"), 32 );
   m->merge_containedgrains();
 
   CHECK_FOR_CANCELED(ReconstructionFunc)
-  progressMessage(AIM_STRING("renumber_grains2"), 30 );
+  progressMessage(AIM_STRING("renumber_grains2"), 36 );
   m->numgrains = m->renumber_grains2();
 
   CHECK_FOR_CANCELED(ReconstructionFunc)
-  progressMessage(AIM_STRING("find_neighbors"), 45 );
+  progressMessage(AIM_STRING("find_neighbors"), 40 );
   m->find_neighbors();
 
   CHECK_FOR_CANCELED(ReconstructionFunc)
-  progressMessage(AIM_STRING("reburn_grains"), 47 );
+  progressMessage(AIM_STRING("reburn_grains"), 44 );
   m->reburn_grains();
 
   CHECK_FOR_CANCELED(ReconstructionFunc)
@@ -264,23 +264,23 @@ void Reconstruction::compute()
   m->find_centroids();
 
   CHECK_FOR_CANCELED(ReconstructionFunc)
-  progressMessage(AIM_STRING("find_moments"), 51 );
+  progressMessage(AIM_STRING("find_moments"), 52 );
   m->find_moments();
 
   CHECK_FOR_CANCELED(ReconstructionFunc)
-  progressMessage(AIM_STRING("find_axes"), 54 );
+  progressMessage(AIM_STRING("find_axes"), 56 );
   m->find_axes();
 
   CHECK_FOR_CANCELED(ReconstructionFunc)
-  progressMessage(AIM_STRING("find_vectors"), 57 );
+  progressMessage(AIM_STRING("find_vectors"), 60 );
   m->find_vectors();
 
   CHECK_FOR_CANCELED(ReconstructionFunc) 
-  progressMessage(AIM_STRING("cleanup_data"), 33 );
+  progressMessage(AIM_STRING("cleanup_data"), 64 );
   m->cleanup_data();
 
   CHECK_FOR_CANCELED(ReconstructionFunc) 
-  progressMessage(AIM_STRING("homogenize_grains"), 33 );
+  progressMessage(AIM_STRING("homogenize_grains"), 68 );
   m->homogenize_grains(quat_symmcubic, quat_symmhex);
 
   if (m_MergeTwins == true)
@@ -288,7 +288,7 @@ void Reconstruction::compute()
     m->merge_twins(quat_symmcubic, quat_symmhex);
     m->characterize_twins();
 	CHECK_FOR_CANCELED(ReconstructionFunc)
-    progressMessage(AIM_STRING("renumber_grains3"), 39 );
+    progressMessage(AIM_STRING("renumber_grains3"), 72 );
     m->numgrains = m->renumber_grains3();
   }
 
@@ -299,39 +299,43 @@ void Reconstruction::compute()
   }
 
   CHECK_FOR_CANCELED(ReconstructionFunc)
-  progressMessage(AIM_STRING("find_eulerodf"), 57 );
+  progressMessage(AIM_STRING("find_eulerodf"), 72 );
   m->find_eulerodf();
 
   CHECK_FOR_CANCELED(ReconstructionFunc)
-  progressMessage(AIM_STRING("measure_misorientations"), 60 );
+  progressMessage(AIM_STRING("measure_misorientations"), 72 );
   m->measure_misorientations(quat_symmcubic, quat_symmhex);
 
   CHECK_FOR_CANCELED(ReconstructionFunc)
-  progressMessage(AIM_STRING("find_colors"), 63 );
+  progressMessage(AIM_STRING("find_colors"), 76 );
   m->find_colors(quat_symmcubic, quat_symmhex);
 
   CHECK_FOR_CANCELED(ReconstructionFunc)
-  progressMessage(AIM_STRING("find_convexities"), 66 );
+  progressMessage(AIM_STRING("find_convexities"), 80 );
   m->find_convexities();
 
   CHECK_FOR_CANCELED(ReconstructionFunc)
-  progressMessage(AIM_STRING("Writing Statistics"), 69 );
+  progressMessage(AIM_STRING("find_schmids"), 84 );
+  m->find_schmids();
+
+  CHECK_FOR_CANCELED(ReconstructionFunc)
+  progressMessage(AIM_STRING("Writing Statistics"), 88 );
   m->volume_stats(statsFile,misorientationFile,microBinsFile);
 
   CHECK_FOR_CANCELED(ReconstructionFunc)
-  progressMessage(AIM_STRING("write_volume"), 72 );
+  progressMessage(AIM_STRING("write_volume"), 92 );
   m->write_volume(reconVisFile, reconIPFVisFile, reconDisVisFile, reconIQVisFile, reconSFVisFile, m_IPFoutputoption, m_Disorientationoutputoption, m_ImageQualityoutputoption, m_SchmidFactoroutputoption);
 
   CHECK_FOR_CANCELED(ReconstructionFunc)
-  progressMessage(AIM_STRING("Writing Grain Data"), 81 );
+  progressMessage(AIM_STRING("Writing Grain Data"), 96 );
   m->write_graindata(graindataFile);
 
   CHECK_FOR_CANCELED(ReconstructionFunc)
-  progressMessage(AIM_STRING("Writing Axis Orientation File"), 81 );
+  progressMessage(AIM_STRING("Writing Axis Orientation File"), 100 );
   m->write_axisodf(axisFile);
 
   CHECK_FOR_CANCELED(ReconstructionFunc)
-  progressMessage(AIM_STRING("Writing Euler Angle File"), 84 );
+  progressMessage(AIM_STRING("Writing Euler Angle File"), 100 );
   m->write_eulerodf(eulerFile);
 
   progressMessage(AIM_STRING("Reconstruction Complete"), 100 );
