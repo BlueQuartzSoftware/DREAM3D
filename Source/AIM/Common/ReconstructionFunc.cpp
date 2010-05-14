@@ -2302,56 +2302,6 @@ void  ReconstructionFunc::find_colors(double quat_symmcubic[24][5],double quat_s
 		grains[i].green = green;
 		grains[i].blue = blue;
 	}
-    double loadx = p[0];
-    double loady = p[1];
-    double loadz = p[2];
-    double mag = loadx*loadx+loady*loady+loadz*loadz;
-    mag = pow(mag,0.5);
-    double theta1 = (loadx+loady+loadz)/(mag*1.732);
-    theta1 = fabs(theta1);
-    double theta2 = (loadx+loady-loadz)/(mag*1.732);
-    theta2 = fabs(theta2);
-    double theta3 = (loadx-loady+loadz)/(mag*1.732);
-    theta3 = fabs(theta3);
-    double theta4 = (-loadx+loady+loadz)/(mag*1.732);
-    theta4 = fabs(theta4);
-    double lambda1 = (loadx+loady)/(mag*1.414);
-    lambda1 = fabs(lambda1);
-    double lambda2 = (loadx+loadz)/(mag*1.414);
-    lambda2 = fabs(lambda2);
-    double lambda3 = (loadx-loady)/(mag*1.414);
-    lambda3 = fabs(lambda3);
-    double lambda4 = (loadx-loadz)/(mag*1.414);
-    lambda4 = fabs(lambda4);
-    double lambda5 = (loady+loadz)/(mag*1.414);
-    lambda5 = fabs(lambda5);
-    double lambda6 = (loady-loadz)/(mag*1.414);
-    lambda6 = fabs(lambda6);
-    double schmid1 = theta1*lambda6;
-    double schmid2 = theta1*lambda4;
-    double schmid3 = theta1*lambda3;
-    double schmid4 = theta2*lambda3;
-    double schmid5 = theta2*lambda2;
-    double schmid6 = theta2*lambda5;
-    double schmid7 = theta3*lambda1;
-    double schmid8 = theta3*lambda5;
-    double schmid9 = theta3*lambda4;
-    double schmid10 = theta4*lambda1;
-    double schmid11 = theta4*lambda2;
-    double schmid12 = theta4*lambda6;
-    double schmid = schmid1;
-    if(schmid2 > schmid) schmid = schmid2;
-    if(schmid3 > schmid) schmid = schmid3;
-    if(schmid4 > schmid) schmid = schmid4;
-    if(schmid5 > schmid) schmid = schmid5;
-    if(schmid6 > schmid) schmid = schmid6;
-    if(schmid7 > schmid) schmid = schmid7;
-    if(schmid8 > schmid) schmid = schmid8;
-    if(schmid9 > schmid) schmid = schmid9;
-    if(schmid10 > schmid) schmid = schmid10;
-    if(schmid11 > schmid) schmid = schmid11;
-    if(schmid12 > schmid) schmid = schmid12;
-    grains[i].schmidfactor = schmid;
   }
 }
 void  ReconstructionFunc::find_convexities()
