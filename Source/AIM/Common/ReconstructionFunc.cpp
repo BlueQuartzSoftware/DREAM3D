@@ -185,7 +185,7 @@ void ReconstructionFunc::align_sections(double quat_symmcubic[24][5],double quat
 			  mindisorientation = 100000;
 			  tempxshift = 0;
 			  tempyshift = 0;
-			  for(int a=0;a<2;a++)
+			  for(int a=0;a<3;a++)
 			  {
 				 if(a == 0) step = 3, nsteps = 3;
 				 if(a == 1) step = 1, nsteps = 5;
@@ -213,7 +213,7 @@ void ReconstructionFunc::align_sections(double quat_symmcubic[24][5],double quat
 									if(a < 2)
 									{
 										disorientation = disorientation + fabs(refiq-curiq);
-		//								disorientation = disorientation + fabs(refgnum-curgnum);
+//										disorientation = disorientation + fabs(refgnum-curgnum);
 										count++;
 									}
 									if(a == 2)
