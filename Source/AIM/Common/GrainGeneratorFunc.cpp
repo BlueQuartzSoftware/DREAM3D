@@ -1008,6 +1008,16 @@ void  GrainGeneratorFunc::assign_eulers(int numgrains)
 	  grains[i].euler1 = synea1;
 	  grains[i].euler2 = synea2;
 	  grains[i].euler3 = synea3;
+      double s=sin(0.5*synea2);
+	  double c=cos(0.5*synea2);
+	  double s1=sin(0.5*(synea1-synea3));
+	  double c1=cos(0.5*(synea1-synea3));
+	  double s2=sin(0.5*(synea1+synea3));
+	  double c2=cos(0.5*(synea1+synea3));
+	  grains[i].avg_quat[1] = s*c1;
+	  grains[i].avg_quat[2] = s*s1;
+	  grains[i].avg_quat[3] = c*s2;
+	  grains[i].avg_quat[4] = c*c2;
 	  simodf[choose].density = simodf[choose].density + (grains[i].volume/totalvol);
   }
 }
@@ -1116,7 +1126,6 @@ void  GrainGeneratorFunc::fill_gaps(int numgrains)
         if(size > 0)
         {
           int bordered = 1;
-          gridfine[i].hasneighbor = bordered;
           gridfine[i].neighbor = curgrain;
           neighs.clear();
         }
@@ -1124,10 +1133,9 @@ void  GrainGeneratorFunc::fill_gaps(int numgrains)
     }
     for(int j = 0; j < (xpoints*ypoints*zpoints); j++)
     {
-      int hasneigh = gridfine[j].hasneighbor;
-	  if(gridfine[j].grainname == 0 && hasneigh == 1)
+      int neighbor = gridfine[j].neighbor;
+	  if(gridfine[j].grainname == 0 && neighbor != -11)
       {
-        int neighbor = gridfine[j].neighbor;
         gridfine[j].grainname = neighbor;
       }
     }
@@ -1884,8 +1892,11 @@ void GrainGeneratorFunc::matchCrystallography(double quat_symmcubic[24][5],doubl
 	double currentodferror = 0;
 	double currentmdferror = 0;
 	double n1,n2,n3;
+	double q1[5];
+	double q2[5];
 	double totaldensity = 0;
 	int badtrycount = 0;
+	double s,c,s1,c1,s2,c2;
 	for(int i=0;i<(18*18*18);i++)
 	{
 		currentodferror = currentodferror + ((actualodf[i].density-simodf[i].density)*(actualodf[i].density-simodf[i].density));
@@ -1932,6 +1943,16 @@ void GrainGeneratorFunc::matchCrystallography(double quat_symmcubic[24][5],doubl
 			chooseea1 = chooseea1*(m_pi/180.0);
 			chooseea2 = chooseea2*(m_pi/180.0);
 			chooseea3 = chooseea3*(m_pi/180.0);
+	        s=sin(0.5*chooseea2);
+		    c=cos(0.5*chooseea2);
+		    s1=sin(0.5*(chooseea1-chooseea3));
+			c1=cos(0.5*(chooseea1-chooseea3));
+			s2=sin(0.5*(chooseea1+chooseea3));
+		    c2=cos(0.5*(chooseea1+chooseea3));
+			q1[1] = s*c1;
+			q1[2] = s*s1;
+			q1[3] = c*s2;
+			q1[4] = c*c2;
 			double odfchange = ((actualodf[choose].density - simodf[choose].density)*(actualodf[choose].density - simodf[choose].density)) - ((actualodf[choose].density - (simodf[choose].density+(grains[selectedgrain].currentsize*resx*resy*resz/totalvol)))*(actualodf[choose].density - (simodf[choose].density+(grains[selectedgrain].currentsize*resx*resy*resz/totalvol))));
 			odfchange = odfchange + (((actualodf[curodfbin].density - simodf[curodfbin].density)*(actualodf[curodfbin].density - simodf[curodfbin].density)) - ((actualodf[curodfbin].density - (simodf[curodfbin].density-(grains[selectedgrain].currentsize*resx*resy*resz/totalvol)))*(actualodf[curodfbin].density - (simodf[curodfbin].density-(grains[selectedgrain].currentsize*resx*resy*resz/totalvol)))));
 			vector<int>* nlist = grains[selectedgrain].neighborlist;
@@ -1944,12 +1965,13 @@ void GrainGeneratorFunc::matchCrystallography(double quat_symmcubic[24][5],doubl
 				double curmiso = misolist->at(j);
 				double neighsurfarea = neighborsurfarealist->at(j);
 				int curmisobin = int(curmiso/5.0);
-				double neighea1 = grains[neighbor].euler1;
-				double neighea2 = grains[neighbor].euler2;
-				double neighea3 = grains[neighbor].euler3;
+				q2[1] = grains[neighbor].avg_quat[1];
+				q2[2] = grains[neighbor].avg_quat[2];
+				q2[3] = grains[neighbor].avg_quat[3];
+				q2[4] = grains[neighbor].avg_quat[4];
 				double newmiso = 0;
-				if(crystruct == 1) newmiso = getmisoquathexagonal(quat_symmhex,chooseea1,chooseea2,chooseea3,neighea1,neighea2,neighea3,n1,n2,n3); 
-				if(crystruct == 2) newmiso = getmisoquatcubic(chooseea1,chooseea2,chooseea3,neighea1,neighea2,neighea3,n1,n2,n3);
+				if(crystruct == 1) newmiso = getmisoquathexagonal(quat_symmhex,q1,q2,n1,n2,n3); 
+				if(crystruct == 2) newmiso = getmisoquatcubic(q1,q2,n1,n2,n3);
 				int newmisobin = int(newmiso/5.0);
 				mdfchange = mdfchange + (((actualmdf[curmisobin].density-simmdf[curmisobin].density)*(actualmdf[curmisobin].density-simmdf[curmisobin].density)) - ((actualmdf[curmisobin].density-(simmdf[curmisobin].density-(neighsurfarea/totalsurfacearea)))*(actualmdf[curmisobin].density-(simmdf[curmisobin].density-(neighsurfarea/totalsurfacearea)))));
 				mdfchange = mdfchange + (((actualmdf[newmisobin].density-simmdf[newmisobin].density)*(actualmdf[newmisobin].density-simmdf[newmisobin].density)) - ((actualmdf[newmisobin].density-(simmdf[newmisobin].density+(neighsurfarea/totalsurfacearea)))*(actualmdf[newmisobin].density-(simmdf[newmisobin].density+(neighsurfarea/totalsurfacearea)))));
@@ -1969,12 +1991,13 @@ void GrainGeneratorFunc::matchCrystallography(double quat_symmcubic[24][5],doubl
 					double curmiso = misolist->at(j);
 					double neighsurfarea = neighborsurfarealist->at(j);
 					int curmisobin = int(curmiso/5.0);
-					double neighea1 = grains[neighbor].euler1;
-					double neighea2 = grains[neighbor].euler2;
-					double neighea3 = grains[neighbor].euler3;
+					q2[1] = grains[neighbor].avg_quat[1];
+					q2[2] = grains[neighbor].avg_quat[2];
+					q2[3] = grains[neighbor].avg_quat[3];
+					q2[4] = grains[neighbor].avg_quat[4];
 					double newmiso = 0;
-					if(crystruct == 1) newmiso = getmisoquathexagonal(quat_symmhex,chooseea1,chooseea2,chooseea3,neighea1,neighea2,neighea3,n1,n2,n3); 
-					if(crystruct == 2) newmiso = getmisoquatcubic(chooseea1,chooseea2,chooseea3,neighea1,neighea2,neighea3,n1,n2,n3);
+					if(crystruct == 1) newmiso = getmisoquathexagonal(quat_symmhex,q1,q2,n1,n2,n3); 
+					if(crystruct == 2) newmiso = getmisoquatcubic(q1,q2,n1,n2,n3);
 					int newmisobin = int(newmiso/5.0);
 					misolist->at(j) = newmiso;
 					simmdf[curmisobin].density = simmdf[curmisobin].density - (neighsurfarea/totalsurfacearea);
@@ -2011,18 +2034,29 @@ void GrainGeneratorFunc::matchCrystallography(double quat_symmcubic[24][5],doubl
 			vector<double>* misolist = grains[selectedgrain1].misorientationlist;
 			vector<double>* neighborsurfarealist = grains[selectedgrain1].neighborsurfarealist;
 			double mdfchange = 0;
+	        s=sin(0.5*g2ea2);
+		    c=cos(0.5*g2ea2);
+		    s1=sin(0.5*(g2ea1-g2ea3));
+			c1=cos(0.5*(g2ea1-g2ea3));
+			s2=sin(0.5*(g2ea1+g2ea3));
+		    c2=cos(0.5*(g2ea1+g2ea3));
+			q1[1] = s*c1;
+			q1[2] = s*s1;
+			q1[3] = c*s2;
+			q1[4] = c*c2;
 			for(int j=0;j<nlist->size();j++)
 			{
 				int neighbor = nlist->at(j);
 				double curmiso = misolist->at(j);
 				double neighsurfarea = neighborsurfarealist->at(j);
 				int curmisobin = int(curmiso/5.0);
-				double neighea1 = grains[neighbor].euler1;
-				double neighea2 = grains[neighbor].euler2;
-				double neighea3 = grains[neighbor].euler3;
+				q2[1] = grains[neighbor].avg_quat[1];
+				q2[2] = grains[neighbor].avg_quat[2];
+				q2[3] = grains[neighbor].avg_quat[3];
+				q2[4] = grains[neighbor].avg_quat[4];
 				double newmiso = 0;
-				if(crystruct == 1) newmiso = getmisoquathexagonal(quat_symmhex,g2ea1,g2ea2,g2ea3,neighea1,neighea2,neighea3,n1,n2,n3); 
-				if(crystruct == 2) newmiso = getmisoquatcubic(g2ea1,g2ea2,g2ea3,neighea1,neighea2,neighea3,n1,n2,n3);
+				if(crystruct == 1) newmiso = getmisoquathexagonal(quat_symmhex,q1,q2,n1,n2,n3); 
+				if(crystruct == 2) newmiso = getmisoquatcubic(q1,q2,n1,n2,n3);
 				int newmisobin = int(newmiso/5.0);
 				mdfchange = mdfchange + (((actualmdf[curmisobin].density-simmdf[curmisobin].density)*(actualmdf[curmisobin].density-simmdf[curmisobin].density)) - ((actualmdf[curmisobin].density-(simmdf[curmisobin].density-(neighsurfarea/totalsurfacearea)))*(actualmdf[curmisobin].density-(simmdf[curmisobin].density-(neighsurfarea/totalsurfacearea)))));
 				mdfchange = mdfchange + (((actualmdf[newmisobin].density-simmdf[newmisobin].density)*(actualmdf[newmisobin].density-simmdf[newmisobin].density)) - ((actualmdf[newmisobin].density-(simmdf[newmisobin].density+(neighsurfarea/totalsurfacearea)))*(actualmdf[newmisobin].density-(simmdf[newmisobin].density+(neighsurfarea/totalsurfacearea)))));
@@ -2030,18 +2064,29 @@ void GrainGeneratorFunc::matchCrystallography(double quat_symmcubic[24][5],doubl
 			nlist = grains[selectedgrain2].neighborlist;
 			misolist = grains[selectedgrain2].misorientationlist;
 			neighborsurfarealist = grains[selectedgrain2].neighborsurfarealist;
+	        s=sin(0.5*g1ea2);
+		    c=cos(0.5*g1ea2);
+		    s1=sin(0.5*(g1ea1-g1ea3));
+			c1=cos(0.5*(g1ea1-g1ea3));
+			s2=sin(0.5*(g1ea1+g1ea3));
+		    c2=cos(0.5*(g1ea1+g1ea3));
+			q1[1] = s*c1;
+			q1[2] = s*s1;
+			q1[3] = c*s2;
+			q1[4] = c*c2;
 			for(int j=0;j<nlist->size();j++)
 			{
 				int neighbor = nlist->at(j);
 				double curmiso = misolist->at(j);
 				double neighsurfarea = neighborsurfarealist->at(j);
 				int curmisobin = int(curmiso/5.0);
-				double neighea1 = grains[neighbor].euler1;
-				double neighea2 = grains[neighbor].euler2;
-				double neighea3 = grains[neighbor].euler3;
+				q2[1] = grains[neighbor].avg_quat[1];
+				q2[2] = grains[neighbor].avg_quat[2];
+				q2[3] = grains[neighbor].avg_quat[3];
+				q2[4] = grains[neighbor].avg_quat[4];
 				double newmiso = 0;
-				if(crystruct == 1) newmiso = getmisoquathexagonal(quat_symmhex,g1ea1,g1ea2,g1ea3,neighea1,neighea2,neighea3,n1,n2,n3); 
-				if(crystruct == 2) newmiso = getmisoquatcubic(g1ea1,g1ea2,g1ea3,neighea1,neighea2,neighea3,n1,n2,n3);
+				if(crystruct == 1) newmiso = getmisoquathexagonal(quat_symmhex,q1,q2,n1,n2,n3); 
+				if(crystruct == 2) newmiso = getmisoquatcubic(q1,q2,n1,n2,n3);
 				int newmisobin = int(newmiso/5.0);
 				mdfchange = mdfchange + (((actualmdf[curmisobin].density-simmdf[curmisobin].density)*(actualmdf[curmisobin].density-simmdf[curmisobin].density)) - ((actualmdf[curmisobin].density-(simmdf[curmisobin].density-(neighsurfarea/totalsurfacearea)))*(actualmdf[curmisobin].density-(simmdf[curmisobin].density-(neighsurfarea/totalsurfacearea)))));
 				mdfchange = mdfchange + (((actualmdf[newmisobin].density-simmdf[newmisobin].density)*(actualmdf[newmisobin].density-simmdf[newmisobin].density)) - ((actualmdf[newmisobin].density-(simmdf[newmisobin].density+(neighsurfarea/totalsurfacearea)))*(actualmdf[newmisobin].density-(simmdf[newmisobin].density+(neighsurfarea/totalsurfacearea)))));
@@ -2061,18 +2106,29 @@ void GrainGeneratorFunc::matchCrystallography(double quat_symmcubic[24][5],doubl
 				nlist = grains[selectedgrain1].neighborlist;
 				misolist = grains[selectedgrain1].misorientationlist;
 				neighborsurfarealist = grains[selectedgrain1].neighborsurfarealist;
+		        s=sin(0.5*g2ea2);
+			    c=cos(0.5*g2ea2);
+			    s1=sin(0.5*(g2ea1-g2ea3));
+				c1=cos(0.5*(g2ea1-g2ea3));
+				s2=sin(0.5*(g2ea1+g2ea3));
+			    c2=cos(0.5*(g2ea1+g2ea3));
+				q1[1] = s*c1;
+				q1[2] = s*s1;
+				q1[3] = c*s2;
+				q1[4] = c*c2;
 				for(int j=0;j<nlist->size();j++)
 				{
 					int neighbor = nlist->at(j);
 					double curmiso = misolist->at(j);
 					double neighsurfarea = neighborsurfarealist->at(j);
 					int curmisobin = int(curmiso/5.0);
-					double neighea1 = grains[neighbor].euler1;
-					double neighea2 = grains[neighbor].euler2;
-					double neighea3 = grains[neighbor].euler3;
+					q2[1] = grains[neighbor].avg_quat[1];
+					q2[2] = grains[neighbor].avg_quat[2];
+					q2[3] = grains[neighbor].avg_quat[3];
+					q2[4] = grains[neighbor].avg_quat[4];
 					double newmiso = 0;
-					if(crystruct == 1) newmiso = getmisoquathexagonal(quat_symmhex,g2ea1,g2ea2,g2ea3,neighea1,neighea2,neighea3,n1,n2,n3); 
-					if(crystruct == 2) newmiso = getmisoquatcubic(g2ea1,g2ea2,g2ea3,neighea1,neighea2,neighea3,n1,n2,n3);
+					if(crystruct == 1) newmiso = getmisoquathexagonal(quat_symmhex,q1,q2,n1,n2,n3); 
+					if(crystruct == 2) newmiso = getmisoquatcubic(q1,q2,n1,n2,n3);
 					int newmisobin = int(newmiso/5.0);
 					misolist->at(j) = newmiso;
 					simmdf[curmisobin].density = simmdf[curmisobin].density - (neighsurfarea/totalsurfacearea);
@@ -2081,18 +2137,29 @@ void GrainGeneratorFunc::matchCrystallography(double quat_symmcubic[24][5],doubl
 				nlist = grains[selectedgrain2].neighborlist;
 				misolist = grains[selectedgrain2].misorientationlist;
 				neighborsurfarealist = grains[selectedgrain2].neighborsurfarealist;
+		        s=sin(0.5*g1ea2);
+			    c=cos(0.5*g1ea2);
+			    s1=sin(0.5*(g1ea1-g1ea3));
+				c1=cos(0.5*(g1ea1-g1ea3));
+				s2=sin(0.5*(g1ea1+g1ea3));
+			    c2=cos(0.5*(g1ea1+g1ea3));
+				q1[1] = s*c1;
+				q1[2] = s*s1;
+				q1[3] = c*s2;
+				q1[4] = c*c2;
 				for(int j=0;j<nlist->size();j++)
 				{
 					int neighbor = nlist->at(j);
 					double curmiso = misolist->at(j);
 					double neighsurfarea = neighborsurfarealist->at(j);
 					int curmisobin = int(curmiso/5.0);
-					double neighea1 = grains[neighbor].euler1;
-					double neighea2 = grains[neighbor].euler2;
-					double neighea3 = grains[neighbor].euler3;
+					q2[1] = grains[neighbor].avg_quat[1];
+					q2[2] = grains[neighbor].avg_quat[2];
+					q2[3] = grains[neighbor].avg_quat[3];
+					q2[4] = grains[neighbor].avg_quat[4];
 					double newmiso = 0;
-					if(crystruct == 1) newmiso = getmisoquathexagonal(quat_symmhex,g1ea1,g1ea2,g1ea3,neighea1,neighea2,neighea3,n1,n2,n3); 
-					if(crystruct == 2) newmiso = getmisoquatcubic(g1ea1,g1ea2,g1ea3,neighea1,neighea2,neighea3,n1,n2,n3);
+					if(crystruct == 1) newmiso = getmisoquathexagonal(quat_symmhex,q1,q2,n1,n2,n3); 
+					if(crystruct == 2) newmiso = getmisoquatcubic(q1,q2,n1,n2,n3);
 					int newmisobin = int(newmiso/5.0);
 					misolist->at(j) = newmiso;
 					simmdf[curmisobin].density = simmdf[curmisobin].density - (neighsurfarea/totalsurfacearea);
@@ -2112,25 +2179,29 @@ void  GrainGeneratorFunc::measure_misorientations (double quat_symmcubic[24][5],
   double n1;
   double n2;
   double n3;
+  double q1[5];
+  double q2[5];
   for (int i = 1; i < numgrains+1; i++)
   {
     vector<int>* nlist = grains[i].neighborlist;
 	vector<double>* neighsurfarealist = grains[i].neighborsurfarealist;
 	misolist.resize(nlist->size());
-    double g1ea1 = grains[i].euler1;
-    double g1ea2 = grains[i].euler2;
-    double g1ea3 = grains[i].euler3;
+	q1[1] = grains[i].avg_quat[1];
+	q1[2] = grains[i].avg_quat[2];
+	q1[3] = grains[i].avg_quat[3];
+	q1[4] = grains[i].avg_quat[4];
     int size = 0;
     if (NULL != nlist) { size = nlist->size(); }
     for(int j=0;j<size;j++)
     {
       int nname = nlist->at(j);
       double neighsurfarea = neighsurfarealist->at(j);
-	  double g2ea1 = grains[nname].euler1;
-      double g2ea2 = grains[nname].euler2;
-      double g2ea3 = grains[nname].euler3;
-      if(crystruct == 1) w = getmisoquathexagonal(quat_symmhex,g1ea1,g1ea2,g1ea3,g2ea1,g2ea2,g2ea3,n1,n2,n3);
-      if(crystruct == 2) w = getmisoquatcubic(g1ea1,g1ea2,g1ea3,g2ea1,g2ea2,g2ea3,n1,n2,n3);
+	  q2[1] = grains[nname].avg_quat[1];
+	  q2[2] = grains[nname].avg_quat[2];
+	  q2[3] = grains[nname].avg_quat[3];
+	  q2[4] = grains[nname].avg_quat[4];
+      if(crystruct == 1) w = getmisoquathexagonal(quat_symmhex,q1,q2,n1,n2,n3);
+      if(crystruct == 2) w = getmisoquatcubic(q1,q2,n1,n2,n3);
       misolist[j] = w;
 	  int misobin = int(w/5.0);
 	  simmdf[misobin].density = simmdf[misobin].density + (neighsurfarea/totalsurfacearea);
@@ -2141,29 +2212,23 @@ void  GrainGeneratorFunc::measure_misorientations (double quat_symmcubic[24][5],
   }
 }
 
-double GrainGeneratorFunc::getmisoquatcubic(double g1ea1,double g1ea2,double g1ea3,double g2ea1,double g2ea2,double g2ea3,double &n1,double &n2,double &n3)
+double GrainGeneratorFunc::getmisoquatcubic(double q1[5],double q2[5],double &n1,double &n2,double &n3)
 {
   double wmin=9999999; //,na,nb,nc;
-  double q1[4];
-  double q2[4];
   double qc[4];
   double qco[4];
-  q1[0]=sin((g1ea2/2.0))*cos(((g1ea1-g1ea3)/2.0));
-  q1[1]=sin((g1ea2/2.0))*sin(((g1ea1-g1ea3)/2.0));
-  q1[2]=cos((g1ea2/2.0))*sin(((g1ea1+g1ea3)/2.0));
-  q1[3]=cos((g1ea2/2.0))*cos(((g1ea1+g1ea3)/2.0));
-  q2[0]=sin((g2ea2/2.0))*cos(((g2ea1-g2ea3)/2.0));
-  q2[1]=sin((g2ea2/2.0))*sin(((g2ea1-g2ea3)/2.0));
-  q2[2]=cos((g2ea2/2.0))*sin(((g2ea1+g2ea3)/2.0));
-  q2[3]=cos((g2ea2/2.0))*cos(((g2ea1+g2ea3)/2.0));
-  q2[0]=q2[0];
-  q2[1]=-q2[1];
-  q2[2]=-q2[2];
-  q2[3]=-q2[3];
-  qc[0]=q1[0]*q2[0]-q1[1]*q2[1]-q1[2]*q2[2]-q1[3]*q2[3];
-  qc[1]=q1[0]*q2[1]+q1[1]*q2[0]+q1[2]*q2[3]-q1[3]*q2[2];
-  qc[2]=q1[0]*q2[2]-q1[1]*q2[3]+q1[2]*q2[0]+q1[3]*q2[1];
-  qc[3]=q1[0]*q2[3]+q1[1]*q2[2]-q1[2]*q2[1]+q1[3]*q2[0];
+//  q2[0]=q2[0];
+//  q2[1]=-q2[1];
+//  q2[2]=-q2[2];
+//  q2[3]=-q2[3];
+//  qc[0]=q1[0]*q2[0]-q1[1]*q2[1]-q1[2]*q2[2]-q1[3]*q2[3];
+//  qc[1]=q1[0]*q2[1]+q1[1]*q2[0]+q1[2]*q2[3]-q1[3]*q2[2];
+//  qc[2]=q1[0]*q2[2]-q1[1]*q2[3]+q1[2]*q2[0]+q1[3]*q2[1];
+//  qc[3]=q1[0]*q2[3]+q1[1]*q2[2]-q1[2]*q2[1]+q1[3]*q2[0];
+  qc[0]=-q1[1]*q2[4]+q1[4]*q2[1]-q1[2]*q2[3]+q1[3]*q2[2];
+  qc[1]=-q1[2]*q2[4]+q1[4]*q2[2]-q1[3]*q2[1]+q1[1]*q2[3];
+  qc[2]=-q1[3]*q2[4]+q1[4]*q2[3]-q1[1]*q2[2]+q1[2]*q2[1];
+  qc[3]=-q1[4]*q2[4]-q1[1]*q2[1]-q1[2]*q2[2]-q1[3]*q2[3];
   qc[0]=fabs(qc[0]);
   qc[1]=fabs(qc[1]);
   qc[2]=fabs(qc[2]);
@@ -2189,56 +2254,49 @@ double GrainGeneratorFunc::getmisoquatcubic(double g1ea1,double g1ea2,double g1e
   return wmin;
 }
 
-double GrainGeneratorFunc::getmisoquathexagonal(double quat_symmhex[12][5],double g1ea1,double g1ea2,double g1ea3,double g2ea1,double g2ea2,double g2ea3,double &n1,double &n2,double &n3)
+double GrainGeneratorFunc::getmisoquathexagonal(double quat_symmhex[12][5],double q1[5],double q2[5],double &n1,double &n2,double &n3)
 {
   double wmin=9999999; //,na,nb,nc;
-  double q1[4];
-  double q2[4];
+  double w=0;
+  double n1min, n2min, n3min;
   double qr[4];
   double qc[4];
   double qco[4];
-  q1[0]=sin((g1ea2/2.0))*cos(((g1ea1-g1ea3)/2.0));
-  q1[1]=sin((g1ea2/2.0))*sin(((g1ea1-g1ea3)/2.0));
-  q1[2]=cos((g1ea2/2.0))*sin(((g1ea1+g1ea3)/2.0));
-  q1[3]=cos((g1ea2/2.0))*cos(((g1ea1+g1ea3)/2.0));
-  q2[0]=sin((g2ea2/2.0))*cos(((g2ea1-g2ea3)/2.0));
-  q2[1]=sin((g2ea2/2.0))*sin(((g2ea1-g2ea3)/2.0));
-  q2[2]=cos((g2ea2/2.0))*sin(((g2ea1+g2ea3)/2.0));
-  q2[3]=cos((g2ea2/2.0))*cos(((g2ea1+g2ea3)/2.0));
-  q2[0]=q2[0];
-  q2[1]=-q2[1];
-  q2[2]=-q2[2];
-  q2[3]=-q2[3];
-  qr[0]=q1[0]*q2[3]-q1[3]*q2[0]+q1[1]*q2[2]-q1[2]*q2[1];
-  qr[1]=q1[1]*q2[3]-q1[3]*q2[1]+q1[2]*q2[0]-q1[0]*q2[2];
-  qr[2]=q1[2]*q2[3]-q1[3]*q2[2]+q1[0]*q2[1]-q1[1]*q2[0];
-  qr[3]=q1[3]*q2[3]+q1[0]*q2[0]+q1[1]*q2[1]+q1[2]*q2[2];
-  qr[0]=q1[0]*q2[3]-q1[3]*q2[0]+q1[1]*q2[2]-q1[2]*q2[1];
-  qr[1]=q1[1]*q2[3]-q1[3]*q2[1]+q1[2]*q2[0]-q1[0]*q2[2];
-  qr[2]=q1[2]*q2[3]-q1[3]*q2[2]+q1[0]*q2[1]-q1[1]*q2[0];
-  qr[3]=q1[3]*q2[3]+q1[0]*q2[0]+q1[1]*q2[1]+q1[2]*q2[2];
-  qc[0]=fabs(qc[0]);
-  qc[1]=fabs(qc[1]);
-  qc[2]=fabs(qc[2]);
-  qc[3]=fabs(qc[3]);
-  for(int i=0;i<4;i++)
+//  q2[0]=-q2[0];
+//  q2[1]=-q2[1];
+//  q2[2]=-q2[2];
+//  q2[3]=q2[3];
+//  qr[0]=q1[0]*q2[3]+q1[3]*q2[0]-q1[1]*q2[2]+q1[2]*q2[1];
+//  qr[1]=q1[1]*q2[3]+q1[3]*q2[1]-q1[2]*q2[0]+q1[0]*q2[2];
+//  qr[2]=q1[2]*q2[3]+q1[3]*q2[2]-q1[0]*q2[1]+q1[1]*q2[0];
+//  qr[3]=q1[3]*q2[3]-q1[0]*q2[0]-q1[1]*q2[1]-q1[2]*q2[2];
+  qr[0]=-q1[1]*q2[4]+q1[4]*q2[1]-q1[2]*q2[3]+q1[3]*q2[2];
+  qr[1]=-q1[2]*q2[4]+q1[4]*q2[2]-q1[3]*q2[1]+q1[1]*q2[3];
+  qr[2]=-q1[3]*q2[4]+q1[4]*q2[3]-q1[1]*q2[2]+q1[2]*q2[1];
+  qr[3]=-q1[4]*q2[4]-q1[1]*q2[1]-q1[2]*q2[2]-q1[3]*q2[3];
+  for(int i=0;i<12;i++)
   {
-    qco[i]=100000;
-    for(int j=0;j<4;j++)
-    {
-      if((qc[j] < qco[i] && i == 0) || (qc[j] < qco[i] && qc[j] > qco[i-1]))
-      {
-        qco[i] = qc[j];
-      }
-    }
+	  qc[0]=quat_symmhex[i][1]*qr[3]+quat_symmhex[i][4]*qr[0]-quat_symmhex[i][2]*qr[2]+quat_symmhex[i][3]*qr[1];
+	  qc[1]=quat_symmhex[i][2]*qr[3]+quat_symmhex[i][4]*qr[1]-quat_symmhex[i][3]*qr[0]+quat_symmhex[i][1]*qr[2];
+	  qc[2]=quat_symmhex[i][3]*qr[3]+quat_symmhex[i][4]*qr[2]-quat_symmhex[i][1]*qr[1]+quat_symmhex[i][2]*qr[0];
+	  qc[3]=quat_symmhex[i][4]*qr[3]-quat_symmhex[i][1]*qr[0]-quat_symmhex[i][2]*qr[1]-quat_symmhex[i][3]*qr[2];
+	  if(qc[3] < -1) qc[3] = -1;
+	  if(qc[3] > 1) qc[3] = 1;
+	  w = acos(qc[3]);
+	  w = 2*w;
+	  n1 = qc[0]/sin(w/2.0);
+	  n2 = qc[1]/sin(w/2.0);
+	  n3 = qc[2]/sin(w/2.0);
+	  if(w > m_pi) w = (2*m_pi)-w;
+	  if(w < wmin)
+	  {
+		  wmin = w;
+		  n1min = n1;
+		  n2min = n2;
+		  n3min = n3;
+	  }
   }
-  wmin = qco[3];
-  if(((qco[2]+qco[3])/(pow(2,0.5))) > wmin) wmin = ((qco[2]+qco[3])/(pow(2,0.5)));
-  if(((qco[0]+qco[1]+qco[2]+qco[3])/2) > wmin) wmin = ((qco[0]+qco[1]+qco[2]+qco[3])/2);
-  if(wmin < -1) wmin = -1;
-  if(wmin > 1) wmin = 1;
-  wmin = acos(wmin);
-  wmin = (360.0/m_pi)*wmin;
+  wmin = (180.0/m_pi)*wmin;
   return wmin;
 }
 
