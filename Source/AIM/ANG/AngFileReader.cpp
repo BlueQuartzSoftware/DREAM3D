@@ -262,7 +262,7 @@ void AngFileReader::_readData( const std::string &line, uint32 index )
   float xMaxIndex = (_ncols_odd - 1);
   // Now figure out the correct offset into the array to set all the values
 
-  int32 offset = ((y/_ystep)*_ncols_odd + (-1*(x/_xstep)) + xMaxIndex);
+  int32 offset = ((y/_ystep)*_ncols_odd) + (xMaxIndex-(x/_xstep));
 
   p1 = p1 - 1.5707f;
   if (p1 < 0) { p1 = p1 + 6.283f; }
