@@ -33,6 +33,7 @@ namespace AIM
     const std::string ReconstructedIPFVisualizationFile("Reconstruction_IPF_Visualization.vtk");//11
     const std::string ReconstructedDisVisualizationFile("Reconstruction_Disorientation_Visualization.vtk");//11
     const std::string ReconstructedIQVisualizationFile("Reconstruction_ImageQuality_Visualization.vtk");//11
+    const std::string ReconstructedSFVisualizationFile("Reconstruction_SchmidFactor_Visualization.vtk");//11
     const std::string StructureFile("Reconstruction_Vis.vtk");//11
     const std::string AxisOrientationsFile("Reconstruction_AxisODF.txt");//14
     const std::string graindataFile("Reconstruction_GrainData.txt");//14
