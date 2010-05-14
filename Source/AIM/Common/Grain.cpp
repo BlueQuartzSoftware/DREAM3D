@@ -19,7 +19,6 @@ Grain::Grain() :
 numvoxels(0),
 numneighbors(0),
 newgrainname(0),
-gotsizemerged(0),
 gotcontainedmerged(0),
 gottwinmerged(0),
 gotcolonymerged(0),
