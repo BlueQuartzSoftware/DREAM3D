@@ -121,7 +121,7 @@ int main(int argc, char **argv)
       CHECK_ARG( lockQuadPoints, true);
 
       SurfaceMesh::Pointer surfaceMesh = SurfaceMesh::New();
-      surfaceMesh->setDXFile(dxFile );
+//     surfaceMesh->setDXFile(dxFile );
 //      surfaceMesh->setEdgeTableFile(edgeTableFile );
 //      surfaceMesh->setNeighSpinTableFile(neighSpinTableFile );
       surfaceMesh->setOutputDirectory(outputDir);
