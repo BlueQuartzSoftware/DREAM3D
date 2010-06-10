@@ -110,11 +110,12 @@ int SurfaceMeshFunc::initialize_micro(string filename)
 	for(i=1;i<=NS;i++)
 	{
 		in >> tgrainname;
+		if(tgrainname <= 0) tgrainname = -3;
 		int col = (i-1)%xDim;
 		int row = ((i-1)/xDim)%yDim;
 		int plane = (i-1)/(xDim*yDim);
 		point[i].grainname = tgrainname;
-		if(col == 0 || col == (xDim-1) || row == 0 || row == (yDim-1) || plane == 0 || plane == (zDim-1)) point[i].grainname = -3;
+//		if(col == 0 || col == (xDim-1) || row == 0 || row == (yDim-1) || plane == 0 || plane == (zDim-1)) point[i].grainname = -3;
 	}
 	point[0].grainname = 0; // Point 0 is a garbage...
 	headerdone = false;
@@ -376,6 +377,9 @@ int SurfaceMeshFunc::get_number_fEdges(int zID)
   int sumEdge;
   int numCEdge;
   sumEdge = 0;
+  string filename = "test.txt";
+  ofstream outFile;
+  outFile.open(filename.c_str());
   for (k = 0; k < (3 * 2 * NSP); k++)
   { // for each square on upper layer...
     quot = k / (3 * NSP);
@@ -401,15 +405,17 @@ int SurfaceMeshFunc::get_number_fEdges(int zID)
       }
       if (atBulk > 0)
       {
-        cSquare[k].effect = 1; // mark current square as effective one that can be "marching cubed"...
+//        cSquare[k].effect = 1; // mark current square as effective one that can be "marching cubed"...
       }
       // Let's count the number of edges...
 //      if (cgrainname > -10 && atBulk == 0)
       if (atBulk > 0)
       { // coNSider the square iNSide the bulk only..
-		if(point[csite].surfacevoxel > 0)
+	    sqIndex = 0;
+		if(point[csite].surfacevoxel >= 0)
 		{
 			sqIndex = get_square_index(tngrainname);
+			cSquare[k].effect = 1;
 		}
         if (sqIndex == 15)
         {
@@ -437,11 +443,13 @@ int SurfaceMeshFunc::get_number_fEdges(int zID)
         {
           numCEdge = 1;
         }
+		outFile << k << "	" << sqIndex << "	" << numCEdge << endl;
         sumEdge = sumEdge + numCEdge;
       }
     }
   }
   return sumEdge;
+  outFile.close();
 }
 
 void SurfaceMeshFunc::get_nodes_fEdges(int eT2d[20][8], int NST2d[20][8], int zID, int nFEdge)
@@ -497,7 +505,7 @@ void SurfaceMeshFunc::get_nodes_fEdges(int eT2d[20][8], int NST2d[20][8], int zI
       if (atBulk > 0)
       { // coNSider the square iNSide the bulk only...
 		sqIndex = 0;
-		if(point[csite].surfacevoxel > 0)
+		if(point[csite].surfacevoxel >= 0)
 		{
 			sqIndex = get_square_index(tngrainname);
 		}
@@ -520,7 +528,7 @@ void SurfaceMeshFunc::get_nodes_fEdges(int eT2d[20][8], int NST2d[20][8], int zI
               tnode1 = nodeID[0];
               tnode2 = nodeID[1];
 			  get_grainnames(tngrainname,pixIndex,pixgrainname);
-			  if(pixgrainname[0] > 0 || pixgrainname[1] >0)
+			  if(pixgrainname[0] > 0 || pixgrainname[1] > 0)
 			  {
 				  // Categorize the node...if it's triple junction or not...
 				  for (ii = 0; ii < 2; ii++)
@@ -552,7 +560,6 @@ void SurfaceMeshFunc::get_nodes_fEdges(int eT2d[20][8], int NST2d[20][8], int zI
 					  cVertex[tnode].nodeKind = 2;
 					}
 				  }
-
 				  cFedge[eid].node_id[0] = tnode1; // actual node ids for each edge...
 				  cFedge[eid].node_id[1] = tnode2;
 				  cFedge[eid].neigh_grainname[0] = pixgrainname[0];

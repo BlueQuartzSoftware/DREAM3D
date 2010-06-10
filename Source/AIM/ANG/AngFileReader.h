@@ -51,7 +51,7 @@ public:
  * @param filename
  * @return Error Condition. Negative is error.
  */
-  int32 readFile(std::string filename);
+  int32 readFile(std::string filename, int header);
 
   float32 getTEMpixPerum() { return _tem_pixperum;}
   float32 getXStar() { return _xStar;}

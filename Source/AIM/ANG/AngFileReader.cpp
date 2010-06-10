@@ -104,7 +104,8 @@ AngFileReader::~AngFileReader()
 // -----------------------------------------------------------------------------
 //  Import the ANG data from the File
 // -----------------------------------------------------------------------------
-int32 AngFileReader::readFile(std::string angFilename)  {
+int32 AngFileReader::readFile(std::string angFilename, int header)  
+{
   int32 err = 0;
 
   const unsigned int size ( 1024 );
@@ -127,6 +128,10 @@ int32 AngFileReader::readFile(std::string angFilename)  {
     } else {
       this->_readHeader( buf );
     }
+  }
+  if(header == 1)
+  {
+	return err;
   }
 
   //--Allocate the vectors to hold all the data
@@ -262,7 +267,9 @@ void AngFileReader::_readData( const std::string &line, uint32 index )
   float xMaxIndex = (_ncols_odd - 1);
   // Now figure out the correct offset into the array to set all the values
 
-  int32 offset = ((y/_ystep)*_ncols_odd) + (xMaxIndex-(x/_xstep));
+  int32 xspot = int(double(x/_xstep)+0.5);
+  int32 yspot = int(double(y/_ystep)+0.5);
+  int32 offset = (yspot*_ncols_odd) + (xMaxIndex-xspot);
 
   p1 = p1 - 1.5707f;
   if (p1 < 0) { p1 = p1 + 6.283f; }

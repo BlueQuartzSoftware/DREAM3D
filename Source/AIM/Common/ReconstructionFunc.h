@@ -38,6 +38,7 @@
 #include <AIM/Common/Bin.h>
 #include <AIM/Common/AIMRandomNG.h>
 #include <AIM/ANG/AngFileHelper.h>
+#include <AIM/ANG/AngDirectoryPatterns.h>
 
 
 using namespace std;
@@ -52,6 +53,7 @@ public:
 
     MXA_SHARED_POINTERS(ReconstructionFunc)
     MXA_STATIC_NEW_MACRO(ReconstructionFunc)
+    MXA_INSTANCE_PROPERTY_m(AngDirectoryPatterns::Pointer, DirectoryPattern);
 
 
   virtual ~ReconstructionFunc();
@@ -73,6 +75,7 @@ public:
   int mergetwinsoption;
   int mergecoloniesoption;
   int crystruct;
+  int alignmeth;
   int alreadyformed;
 
 
@@ -84,6 +87,7 @@ public:
 
 	int **shifts;
 	int **arr;
+	int *graincounts;
 	double **graincenters;
 	double **grainmoments;
 	double **quat_symm;
@@ -114,11 +118,12 @@ public:
 	double totalvol;
 	double totalaxes;
 
-    void initialize(string, int angSlices, double, bool, bool, int, double, double, double, int, bool);
+    void initialize(int, int, double, bool, bool, int, double, double, double, int, int, bool);
 	void loadSlices();
 	void align_sections(double quat_symmcubic[24][5],double quat_symmhex[12][5]);
 	void find_border();
 	int form_grains(double quat_symmcubic[24][5],double quat_symmhex[12][5]);
+	void form_grains_sections(double quat_symmcubic[24][5],double quat_symmhex[12][5]);
 	void remove_smallgrains();
 	int renumber_grains1();
 	void write_volume(string, string, string, string, string, bool, bool, bool, bool);
@@ -129,12 +134,14 @@ public:
 	int renumber_grains2();
 	void reburn_grains();
 	void cleanup_data();
+	void find_kernels(double quat_symmcubic[24][5],double quat_symmhex[12][5]);
 	void homogenize_grains(double quat_symmcubic[24][5],double quat_symmhex[12][5]);
 	void merge_twins(double quat_symmcubic[24][5],double quat_symmhex[12][5]);
 	void merge_colonies(double quat_symmcubic[24][5],double quat_symmhex[12][5]);
 	void characterize_twins();
 	void characterize_colonies();
 	int renumber_grains3();
+	void find_euclidean_map ();
 	void find_centroids ();
 	void find_moments();
 	void find_axes();

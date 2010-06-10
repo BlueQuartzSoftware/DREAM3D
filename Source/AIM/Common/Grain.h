@@ -46,10 +46,6 @@ class Grain
     int twinnewnumber;
     int colonynewnumberbeenset;
     int colonynewnumber;
-    int currentsize;
-    int initsize;
-    int temponsurf;
-    int tempneighnum;
     double centroidx;
     double centroidy;
     double centroidz;
@@ -61,6 +57,7 @@ class Grain
     double Ixz;
 	double omega3;
     double averagemisorientation;
+    double kernelmisorientation;
     double red;
     double green;
     double blue;

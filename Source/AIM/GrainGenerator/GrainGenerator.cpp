@@ -152,13 +152,13 @@ void GrainGenerator::compute()
   std::string  StatsFile = m_InputDirectory + MXAFileSystemPath::Separator + AIM::Representation::StatsFile;
   std::string  AxisOrientationsFile = m_InputDirectory + MXAFileSystemPath::Separator + AIM::Representation::AxisOrientationsFile;
   std::string  EulerAnglesFile = m_InputDirectory + MXAFileSystemPath::Separator + AIM::Representation::EulerAnglesFile;
-  std::string  StructureFile = m_InputDirectory + MXAFileSystemPath::Separator + AIM::Representation::StructureFile;
   std::string  MisorientationBinsFile = m_InputDirectory + MXAFileSystemPath::Separator + AIM::Representation::MisorientationBinsFile;
   std::string  MicroBinsFile = m_InputDirectory + MXAFileSystemPath::Separator + AIM::Representation::MicroBinsFile;
 
   std::string  CubeFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::CubeFile;
   std::string  EulerFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::EulerFile;
   std::string AnalysisFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::AnalysisFile;
+  std::string graindataFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::graindataFile;
 
    m = GrainGeneratorFunc::New();
    m->initialize(m_NumGrains, m_ShapeClass,
@@ -208,7 +208,7 @@ void GrainGenerator::compute()
    {
 	   CHECK_FOR_CANCELED(GrainGeneratorFunc)
 	   progressMessage(AIM_STRING("Reading Structure"), 40 );
-	   m->read_structure(StructureFile);
+	   m->read_structure(CubeFile);
    }
 
    CHECK_FOR_CANCELED(GrainGeneratorFunc)
@@ -243,6 +243,10 @@ void GrainGenerator::compute()
    progressMessage(AIM_STRING("writing Cube"), 90 );
    m->writeCube(CubeFile, m->numgrains);
    
+   CHECK_FOR_CANCELED(GrainGeneratorFunc)
+   progressMessage(AIM_STRING("Writing Grain Data"), 94 );
+   m->write_graindata(graindataFile);
+
    CHECK_FOR_CANCELED(GrainGeneratorFunc)
    progressMessage(AIM_STRING("Writing Euler Angles"), 98 );
    m->write_eulerangles(EulerFile);
