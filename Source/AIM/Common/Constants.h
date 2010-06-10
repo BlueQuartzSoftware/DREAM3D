@@ -45,6 +45,11 @@ namespace AIM
         Cubic = 2
     };
 
+    enum AlignmentMethod {
+        OuterBoundary = 0,
+        Misorientation = 1,
+        MutualInformation = 2
+    };
     /*  Grain Generator Related */
     const std::string CubeFile("Synthetic_Vis.vtk");
     const std::string AnalysisFile("Synthetic_Stats.txt");

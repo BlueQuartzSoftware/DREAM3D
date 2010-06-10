@@ -77,7 +77,6 @@ AngFileHelper::Pointer m_angFileHelper;
 	Grain* precipitates;
 	int* gsizes;
 	int* psizes;
-	int* gremovals;
 
 	Bin* actualodf;
 	Bin* simodf;
@@ -165,6 +164,7 @@ AngFileHelper::Pointer m_angFileHelper;
 	double getmisoquatcubic(double q1[5],double q2[5],double &,double &,double &);
 	double getmisoquathexagonal(double quat_symmhex[12][5],double q1[5],double q2[5],double &,double &,double &);
 	double gamma(double);
+	void write_graindata(string);
 	double find_xcoord(long);
 	double find_ycoord(long);
 	double find_zcoord(long);

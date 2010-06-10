@@ -36,11 +36,15 @@ public:
     double confidence;
     double imagequality;
     int alreadychecked;
+	int nearestneighbor;
+	double nearestneighbordistance;
     double euler1;
     double euler2;
     double euler3;
     int neighbor;
+	int numowners;
     double misorientation;
+	double kernelmisorientation;
     int surfacevoxel;
 	int unassigned;
 	double quat[5];

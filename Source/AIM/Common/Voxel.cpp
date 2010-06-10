@@ -17,13 +17,17 @@
 Voxel::Voxel() :
 grainname(0),
 confidence(0.0),
+nearestneighbor(-1),
+nearestneighbordistance(-1),
 imagequality(0.0),
 alreadychecked(0),
 euler1(-1.0),
 euler2(-1.0),
 euler3(-1.0),
 neighbor(-1),
+numowners(0),
 misorientation(0.0),
+kernelmisorientation(0.0),
 surfacevoxel(0),
 unassigned(0)
 {

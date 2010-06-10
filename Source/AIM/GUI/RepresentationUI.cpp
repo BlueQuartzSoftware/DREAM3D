@@ -250,6 +250,7 @@ void RepresentationUI::readSettings()
   READ_SETTING(prefs, minImageQuality, ok, d, 50.0 , Double);
   READ_SETTING(prefs, misOrientationTolerance, ok, d, 5.0 , Double);
   READ_COMBO_BOX(prefs, crystalStructure)
+  READ_COMBO_BOX(prefs, alignMeth)
   READ_BOOL_SETTING(prefs, IPFoutputoption, false);
   IPFoutputoption->blockSignals(false);
   READ_BOOL_SETTING(prefs, Disorientationoutputoption, false);
@@ -328,6 +329,7 @@ void RepresentationUI::writeSettings()
   WRITE_SETTING(prefs, minImageQuality)
   WRITE_SETTING(prefs, misOrientationTolerance)
   WRITE_COMBO_BOX(prefs, crystalStructure)
+  WRITE_COMBO_BOX(prefs, alignMeth)
   WRITE_BOOL_SETTING(prefs, IPFoutputoption, IPFoutputoption->isChecked())
   WRITE_BOOL_SETTING(prefs, Disorientationoutputoption, Disorientationoutputoption->isChecked())
   WRITE_BOOL_SETTING(prefs, ImageQualityoutputoption, ImageQualityoutputoption->isChecked())
@@ -623,7 +625,7 @@ void RepresentationUI::rec_SetupGui()
 
   m_WidgetList << angDir << angDirBtn << rec_OutputDir << outputDirBtn;
   m_WidgetList << angFilePrefix << angMaxSlice << zStartIndex << zEndIndex << zSpacing;
-  m_WidgetList << mergeTwins << mergeColonies << alreadyFormed << minAllowedGrainSize << minConfidence << misOrientationTolerance;
+  m_WidgetList << mergeTwins << mergeColonies << alreadyFormed << alignMeth << minAllowedGrainSize << minConfidence << misOrientationTolerance;
   m_WidgetList << crystalStructure << IPFoutputoption << Disorientationoutputoption << ImageQualityoutputoption << SchmidFactoroutputoption;
 }
 
@@ -805,8 +807,10 @@ void RepresentationUI::on_rec_GoBtn_clicked()
   m_Reconstruction->setMisorientationTolerance(misOrientationTolerance->value());
 
   AIM::Representation::CrystalStructure crystruct = static_cast<AIM::Representation::CrystalStructure>(crystalStructure->currentIndex() + 1);
+  AIM::Representation::AlignmentMethod alignmeth = static_cast<AIM::Representation::AlignmentMethod>(alignMeth->currentIndex() + 1);
 
   m_Reconstruction->setCrystalStructure(crystruct);
+  m_Reconstruction->setAlignmentMethod(alignmeth);
   m_Reconstruction->setAlreadyFormed(alreadyFormed->isChecked());
   m_Reconstruction->setIPFoutputoption(IPFoutputoption->isChecked());
   m_Reconstruction->setDisorientationoutputoption(Disorientationoutputoption->isChecked());

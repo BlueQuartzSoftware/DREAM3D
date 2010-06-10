@@ -77,6 +77,7 @@ Q_OBJECT
     MXA_INSTANCE_PROPERTY_m(double, MinSeedImageQuality)
     MXA_INSTANCE_PROPERTY_m(double, MisorientationTolerance)
     MXA_INSTANCE_PROPERTY_m(AIM::Representation::CrystalStructure, CrystalStructure)
+    MXA_INSTANCE_PROPERTY_m(AIM::Representation::AlignmentMethod, AlignmentMethod)
     MXA_INSTANCE_PROPERTY_m(bool, AlreadyFormed)
     MXA_INSTANCE_PROPERTY_m(bool, IPFoutputoption)
     MXA_INSTANCE_PROPERTY_m(bool, Disorientationoutputoption)
