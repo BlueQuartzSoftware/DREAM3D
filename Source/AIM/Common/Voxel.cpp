@@ -15,7 +15,7 @@
 //
 // -----------------------------------------------------------------------------
 Voxel::Voxel() :
-grainname(0),
+grainname(-1),
 confidence(0.0),
 nearestneighbor(-1),
 nearestneighbordistance(-1),

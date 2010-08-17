@@ -18,6 +18,7 @@
 #include <assert.h>
 #include <stdio.h>
 #include <time.h>
+#include <math.h>
 #include <stdlib.h>
 
 #include <cstddef>
@@ -82,8 +83,7 @@ AngFileHelper::Pointer m_angFileHelper;
 	Bin* simodf;
 	Bin* axisodf;
 	Bin* precipaxisodf;
-	Voxel* gridfine;
-	Voxel* gridcourse;
+	Voxel* voxels;
 	Bin* actualmdf;
 	Bin* simmdf;
 	Bin* actualmicrotex;

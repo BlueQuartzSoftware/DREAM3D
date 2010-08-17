@@ -75,10 +75,6 @@ class Grain
     double radius2;
     double radius3;
     double lowanglefraction;
-    double grainrank;
-    double grainmicrorank;
-    double picked;
-    double frozen;
 	double avg_quat[5];
     std::vector<int>* neighborlist;
     std::vector<int>* voxellist;

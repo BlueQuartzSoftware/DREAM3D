@@ -5227,7 +5227,6 @@ void SurfaceMeshFunc::UET_create_vtk (string VisualizationFile, string NodesFile
 	outFile << "data set from FFT2dx_GB" << endl;
 	outFile << "ASCII" << endl;
 	outFile << "DATASET UNSTRUCTURED_GRID" << endl;
-	outFile << endl;
 	outFile << "POINTS " << numnodes << " float" << endl;
 
 	int nodenum;

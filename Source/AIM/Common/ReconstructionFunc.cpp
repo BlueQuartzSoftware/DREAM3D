@@ -92,7 +92,8 @@ void ReconstructionFunc::initialize(int m_ZStartSlice, int m_ZEndSlice, double m
   totalpoints = xpoints * ypoints * zpoints;
 
   voxels = new Voxel[totalpoints];
-  eulerodf = new Bin[18*18*18];
+  if(crystruct == 1) eulerodf = new Bin[36*36*12];
+  if(crystruct == 2) eulerodf = new Bin[18*18*18];
   axisodf = new Bin[18*18*18];
 } 
 void ReconstructionFunc::loadSlices()
@@ -119,12 +120,11 @@ void ReconstructionFunc::cleanup_data()
 	for(int i=0;i<(xpoints*ypoints*zpoints);i++)
 	{
 		int grainname = voxels[i].grainname;
-		if(grainname != 0)
+		if(grainname == -1)
 		{
 			double confidence = voxels[i].confidence;
 			if(confidence < minseedconfidence)
 			{
-				voxels[i].alreadychecked = 1;
 				bestneighbor = 0;
 				bestneighborconfidence = minseedconfidence;
 				col = i%xpoints;
@@ -140,9 +140,9 @@ void ReconstructionFunc::cleanup_data()
 			       if(j == 4 && row == (ypoints-1)) good = 0;
 			       if(j == 2 && col == 0) good = 0;
 			       if(j == 3 && col == (xpoints-1)) good = 0;
-			       if(good == 1)
+				   if(good == 1 && voxels[neighbor].grainname == -1)
 			       {
-					    if(voxels[neighbor].confidence > bestneighborconfidence && voxels[neighbor].alreadychecked == 0)
+					    if(voxels[neighbor].confidence > bestneighborconfidence)
 						{
 							bestneighbor = neighbor;
 							bestneighborconfidence = voxels[neighbor].confidence;
@@ -198,16 +198,18 @@ void ReconstructionFunc::find_border()
   int seed = -1;
   int point = 0;
   int size = 0;
-  int checked = 1;
   int good = 0;
   int currentpoint = 0;
   int neighbor = 0;
   int col, row, plane;
   size_t initialVoxelsListSize = 1000;
   std::vector<int> voxelslist(initialVoxelsListSize, -1);
-  for(int iter=0;iter<(xpoints*ypoints*zpoints);iter++)
+  if(alignmeth == 3)
   {
-	voxels[iter].grainname = -1;
+	  for(int iter=0;iter<(xpoints*ypoints*zpoints);iter++)
+	  {
+		voxels[iter].grainname = -1;
+	  }
   }
   for(int k = 0; k < zpoints; ++k)
   {
@@ -216,7 +218,7 @@ void ReconstructionFunc::find_border()
         for(int i = 0; i < xpoints; ++i)
         {
 		  point = (k*xpoints*ypoints)+(j*xpoints)+i;
-          if(voxels[point].imagequality < minseedimagequality)
+		  if(voxels[point].imagequality < minseedimagequality && voxels[point].grainname == -1)
           {
             seed = point;
           }
@@ -229,7 +231,6 @@ void ReconstructionFunc::find_border()
   if(seed >= 0)
   {
       size = 0;
-      voxels[seed].alreadychecked = checked;
       voxels[seed].grainname = 0;
       voxelslist[size] = seed;
       size++;
@@ -249,11 +250,10 @@ void ReconstructionFunc::find_border()
           if((i == 6 || i == 7 || i == 8 || i == 14 || i == 15 || i == 16 || i == 23 || i == 24 || i == 25) && row == (ypoints-1)) good = 0;
           if((i == 0 || i == 3 || i == 6 || i == 9 || i == 12 || i == 14 || i == 17 || i == 20 || i == 23) && col == 0) good = 0;
           if((i == 2 || i == 5 || i == 8 || i == 11 || i == 13 || i == 16 || i == 19 || i == 22 || i == 25) && col == (xpoints-1)) good = 0;
-          if(good == 1 && voxels[neighbor].alreadychecked == 0)
+		  if(good == 1 && voxels[neighbor].grainname == -1)
           {
 	        if(voxels[neighbor].imagequality < minseedimagequality)
             {
-              voxels[neighbor].alreadychecked = checked;
               voxels[neighbor].grainname = 0;
               voxelslist[size] = neighbor;
               size++;
@@ -265,11 +265,7 @@ void ReconstructionFunc::find_border()
           }
         }
       }
-	  for(int i=0;i<size;i++)
-	  {
-		  currentpoint = voxelslist[i];
-		  voxels[currentpoint].alreadychecked = 0;
-	  }
+	  voxelslist.erase(std::remove(voxelslist.begin(),voxelslist.end(),-1),voxelslist.end());
   }
 }
 void ReconstructionFunc::align_sections(double quat_symmcubic[24][5],double quat_symmhex[12][5])
@@ -366,7 +362,7 @@ void ReconstructionFunc::align_sections(double quat_symmcubic[24][5],double quat
 							curgnum = voxels[curposition].grainname;
 							if(alignmeth == 3)
 							{
-								if(curgnum > 0 && refgnum > 0)
+								if(curgnum >= 0 && refgnum >= 0)
 								{
 									count++;
 									mutualinfo12[curgnum][refgnum]++;
@@ -453,8 +449,6 @@ void ReconstructionFunc::align_sections(double quat_symmcubic[24][5],double quat
 		 tempxshift = xshift;
 		 tempyshift = yshift;
 	  }
-//	  shifts[iter][0] = xshift;
-//	  shifts[iter][1] = yshift;
 	  shifts[iter][0] = shifts[iter-1][0] + xshift;
 	  shifts[iter][1] = shifts[iter-1][1] + yshift;
 	}
@@ -483,8 +477,6 @@ void ReconstructionFunc::align_sections(double quat_symmcubic[24][5],double quat
 				voxels[position].quat[4] = voxels[tempposition].quat[4];
 				voxels[position].confidence = voxels[tempposition].confidence; 
 				voxels[position].imagequality = voxels[tempposition].imagequality; 
-				voxels[position].alreadychecked = voxels[tempposition].alreadychecked; 
-				voxels[position].unassigned = voxels[tempposition].unassigned; 
 				voxels[position].grainname = voxels[tempposition].grainname; 
 			}
 			if((yspot+shifts[iter][1]) < 0 || (yspot+shifts[iter][1]) > ypoints-1 || (xspot+shifts[iter][0]) < 0 || (xspot+shifts[iter][0]) > xpoints-1)
@@ -499,7 +491,6 @@ void ReconstructionFunc::align_sections(double quat_symmcubic[24][5],double quat
 				voxels[position].quat[4] = 0.0;
 				voxels[position].confidence = 0.0; 
 				voxels[position].imagequality = 0.0; 
-				voxels[position].alreadychecked = 0; 
 				voxels[position].grainname = 0; 
 			}
 		}
@@ -511,7 +502,6 @@ void  ReconstructionFunc::form_grains_sections(double quat_symmcubic[24][5],doub
 {
   int point = 0;
   int noseeds = 0;
-  int checked = 1;
   int graincount = 1;
   graincounts = new int[zpoints];
   int currentpoint, neighbor;
@@ -563,7 +553,7 @@ void  ReconstructionFunc::form_grains_sections(double quat_symmcubic[24][5],doub
 			  double confidence = voxels[point].confidence;
 			  double imagequality = voxels[point].imagequality;
 			  int grainname = voxels[point].grainname;
-			  if(confidence > minseedconfidence && imagequality > minseedimagequality && voxels[point].alreadychecked == 0)
+			  if(confidence > minseedconfidence && imagequality > minseedimagequality && voxels[point].grainname == -1)
 			  {
 				seed = point;
 			  }
@@ -575,15 +565,14 @@ void  ReconstructionFunc::form_grains_sections(double quat_symmcubic[24][5],doub
 		if(seed >= 0)
 		{
 		  size = 0;
-		  voxels[seed].alreadychecked = checked;
 		  voxels[seed].grainname = graincount;
 		  voxelslist[size] = seed;
 		  size++;
-		  q1[0] = 0;
-		  q1[1] = voxels[seed].quat[1];
-		  q1[2] = voxels[seed].quat[2];
-		  q1[3] = voxels[seed].quat[3];
-		  q1[4] = voxels[seed].quat[4];
+		  qs[0] = 0;
+		  qs[1] = voxels[seed].quat[1];
+		  qs[2] = voxels[seed].quat[2];
+		  qs[3] = voxels[seed].quat[3];
+		  qs[4] = voxels[seed].quat[4];
 		  for(size_t j = 0; j < size; ++j)
 		  {
 			int currentpoint = voxelslist[j];
@@ -602,7 +591,7 @@ void  ReconstructionFunc::form_grains_sections(double quat_symmcubic[24][5],doub
 			  if((i == 5 || i == 6 || i == 7) && row == (ypoints-1)) good = 0;
 			  if((i == 0 || i == 3 || i == 5) && col == 0) good = 0;
 			  if((i == 2 || i == 4 || i == 7) && col == (xpoints-1)) good = 0;
-			  if(good == 1 && voxels[neighbor].alreadychecked == 0 && voxels[neighbor].grainname != 0)
+			  if(good == 1 && voxels[neighbor].grainname == -1)
 			  {
 				q2[0] = 0;
 				q2[1] = voxels[neighbor].quat[1];
@@ -614,20 +603,11 @@ void  ReconstructionFunc::form_grains_sections(double quat_symmcubic[24][5],doub
 				if(crystruct == 1) w2 = getmisoquathexagonal(quat_symmhex,misorientationtolerance,qs,q2,n1,n2,n3);
 				if(crystruct == 2) w2 = getmisoquatcubic(misorientationtolerance,qs,q2,n1,n2,n3);
 				if(w < misorientationtolerance)
-	//            if(w < misorientationtolerance && w2 < 15)
+//	            if(w < misorientationtolerance && w2 < 15)
 				{
-				  voxels[neighbor].alreadychecked = checked;
 				  voxels[neighbor].grainname = graincount;
 				  voxelslist[size] = neighbor;
 				  size++;
-				  q1[0] = 0;
-				  q1[1] = voxels[seed].quat[1];
-				  q1[2] = voxels[seed].quat[2];
-				  q1[3] = voxels[seed].quat[3];
-				  q1[4] = voxels[seed].quat[4];
-				  if(crystruct == 1) w = getmisoquathexagonal(quat_symmhex,misorientationtolerance,q1,q2,n1,n2,n3);
-				  if(crystruct == 2) w = getmisoquatcubic(misorientationtolerance,q1,q2,n1,n2,n3);
-				  voxels[neighbor].misorientation = w;
 				  if (size >= voxelslist.size() )
 				  {
 					voxelslist.resize(size+initialVoxelsListSize,-1);
@@ -650,6 +630,7 @@ int  ReconstructionFunc::form_grains(double quat_symmcubic[24][5],double quat_sy
 {
   int point = 0;
   int totalsize = 0;
+  int toosmallsize = 0;
   int noseeds = 0;
   int checked = 1;
   int graincount = 1;
@@ -703,14 +684,6 @@ int  ReconstructionFunc::form_grains(double quat_symmcubic[24][5],double quat_sy
   neighborhood[24] = (xpoints*ypoints)+xpoints;
   neighborhood[25] = (xpoints*ypoints)+xpoints+1;
   rg.RandomInit((static_cast<unsigned int>(time(NULL))));
-  for(int iter=0;iter<(xpoints*ypoints*zpoints);iter++)
-  {
-	  if(voxels[iter].grainname != 0)
-	  {
-		  voxels[iter].grainname = -1;
-		  voxels[iter].alreadychecked = 0;
-	  }
-  }
   while(noseeds == 0)
   {
     seed = -1;
@@ -730,7 +703,7 @@ int  ReconstructionFunc::form_grains(double quat_symmcubic[24][5],double quat_sy
 		  if(y > ypoints-1) y = y-ypoints;
 		  if(z > zpoints-1) z = z-zpoints;
           point = (z*xpoints*ypoints)+(y*xpoints)+x;
-          if(voxels[point].confidence > minseedconfidence && voxels[point].imagequality > minseedimagequality && voxels[point].alreadychecked == 0 && voxels[point].grainname == -1)
+          if(voxels[point].confidence > minseedconfidence && voxels[point].imagequality > minseedimagequality && voxels[point].grainname == -1)
           {
             seed = point;
           }
@@ -744,7 +717,6 @@ int  ReconstructionFunc::form_grains(double quat_symmcubic[24][5],double quat_sy
     if(seed >= 0)
     {
       size = 0;
-      voxels[seed].alreadychecked = checked;
       voxels[seed].grainname = graincount;
       voxelslist[size] = seed;
       size++;
@@ -774,7 +746,7 @@ int  ReconstructionFunc::form_grains(double quat_symmcubic[24][5],double quat_sy
           if((i == 6 || i == 7 || i == 8 || i == 14 || i == 15 || i == 16 || i == 23 || i == 24 || i == 25) && row == (ypoints-1)) good = 0;
           if((i == 0 || i == 3 || i == 6 || i == 9 || i == 12 || i == 14 || i == 17 || i == 20 || i == 23) && col == 0) good = 0;
           if((i == 2 || i == 5 || i == 8 || i == 11 || i == 13 || i == 16 || i == 19 || i == 22 || i == 25) && col == (xpoints-1)) good = 0;
-		  if(good == 1 && voxels[neighbor].alreadychecked == 0)
+		  if(good == 1 && voxels[neighbor].grainname == -1)
           {
 			q2[0] = 0;
 			q2[1] = voxels[neighbor].quat[1];
@@ -788,10 +760,10 @@ int  ReconstructionFunc::form_grains(double quat_symmcubic[24][5],double quat_sy
 			if(w < misorientationtolerance)
 //            if(w < misorientationtolerance && w2 < 10.0)
             {
-	          voxels[neighbor].alreadychecked = checked;
               voxels[neighbor].grainname = graincount;
               voxelslist[size] = neighbor;
               size++;
+			  voxels[neighbor].misorientation = w2;
 			  if (size >= voxelslist.size() )
               {
                 voxelslist.resize(size+initialVoxelsListSize,-1);
@@ -821,8 +793,9 @@ int  ReconstructionFunc::form_grains(double quat_symmcubic[24][5],double quat_sy
 		for(int b=0;b<size;b++)
 		{
 			int index = voxelslist[b];
-			voxels[index].grainname = -1;
+			voxels[index].grainname = -2;
 		}
+		toosmallsize = toosmallsize + size;
 		voxelslist.clear();
 		voxelslist.resize(initialVoxelsListSize,-1);
 	  }
@@ -830,7 +803,7 @@ int  ReconstructionFunc::form_grains(double quat_symmcubic[24][5],double quat_sy
   }
   numgrains = graincount;
   grains = new Grain[numgrains];
-  for(int a=0;a<numgrains;a++)
+  for(int a=1;a<numgrains;a++)
   {
 	  grains[a].nucleus = grainnucleuslist[a];
 	  grains[a].numvoxels = grainsizelist[a];
@@ -855,7 +828,7 @@ void  ReconstructionFunc::assign_badpoints()
     for(int i = 0; i < (xpoints*ypoints*zpoints); i++)
     {
       int grainname = voxels[i].grainname;
-      if(grainname == -1)
+      if(grainname <= -1)
       {
 		voxels[i].unassigned = 1;
         for(int c = 1; c < numgrains; c++)
@@ -940,10 +913,9 @@ void  ReconstructionFunc::assign_badpoints()
     {
       int grainname = voxels[j].grainname;
       int neighbor = voxels[j].neighbor;
-      if(grainname == -1 && neighbor != -1)
+      if(grainname <= -1 && neighbor >= 0)
       {
         voxels[j].grainname = neighbor;
-        voxels[j].alreadychecked = checked;
       }
     }
   }
@@ -986,7 +958,7 @@ void  ReconstructionFunc::merge_containedgrains()
     }
   }
 }
-int  ReconstructionFunc::renumber_grains2()
+int  ReconstructionFunc::renumber_grains()
 {
   int graincount = 1;
   for(int i=1;i<numgrains;i++)
@@ -995,18 +967,8 @@ int  ReconstructionFunc::renumber_grains2()
     if(gotcontainedmerged != 1)
     {
       grains[i].newgrainname = graincount;
-      int size = grains[i].numvoxels;
-      int numneighbors = grains[i].numneighbors;
-      vector<int>* nlist = grains[i].neighborlist;
 	  int nucleus = grains[i].nucleus;
-      grains[graincount].numvoxels = size;
-      grains[graincount].numneighbors = numneighbors;
 	  grains[graincount].nucleus = nucleus;
-      if (nlist != NULL)
-	  {
-		grains[graincount].neighborlist = new std::vector<int>(numneighbors);
-        grains[graincount].neighborlist->swap(*nlist);
-      }
       graincount++;
     }
   }
@@ -1058,23 +1020,12 @@ void ReconstructionFunc::reburn_grains()
 	int currentpoint = 0;
 	int neighbor = 0;
 	int col, row, plane;
-	for(int a=0;a<(xpoints*ypoints*zpoints);a++)
-	{
-		voxels[a].alreadychecked = 0;
-		if(voxels[a].surfacevoxel == 0)
-		{
-			voxels[a].neighbor = -1;
-			voxels[a].nearestneighbor = -1;
-			voxels[a].nearestneighbordistance = -1;
-		}
-	}
 	for(int i=1;i<numgrains;i++)
 	{
 		size = 0;
 		int nucleus = grains[i].nucleus;
         voxelslist[size] = nucleus;
 		size++;
-		voxels[nucleus].alreadychecked = 1;
         for(size_t j = 0; j < size; ++j)
         {
 			int currentpoint = voxelslist[j];
@@ -1091,23 +1042,19 @@ void ReconstructionFunc::reburn_grains()
 		       if((k == 6 || k == 7 || k == 8 || k == 14 || k == 15 || k == 16 || k == 23 || k == 24 || k == 25) && row == (ypoints-1)) good = 0;
 		       if((k == 0 || k == 3 || k == 6 || k == 9 || k == 12 || k == 14 || k == 17 || k == 20 || k == 23) && col == 0) good = 0;
 		       if((k == 2 || k == 5 || k == 8 || k == 11 || k == 13 || k == 16 || k == 19 || k == 22 || k == 25) && col == (xpoints-1)) good = 0;
-		       if(good == 1 && voxels[neighbor].alreadychecked == 0)
+			   if(good == 1 && voxels[neighbor].alreadychecked == 0)
 	           {
-				  int neighbor = currentpoint+neighborhood[k];
-				  if(neighbor >= 0 && neighbor < totalpoints && voxels[neighbor].alreadychecked == 0)
-			 	  {  
 					int grainname = voxels[neighbor].grainname;
 					if(grainname == i)
 					{
-						voxels[neighbor].alreadychecked = 1;
 						voxelslist[size] = neighbor;
+						voxels[neighbor].alreadychecked = 1;
 						size++;
 						if (size >= voxelslist.size())
 						{
 							voxelslist.resize(size+initialVoxelsListSize,-1);
 						}
 					}
-				  }
 			   }
 			}
 		}
@@ -1116,6 +1063,7 @@ void ReconstructionFunc::reburn_grains()
 		{
 			grains[i].voxellist = new std::vector<int>(voxelslist.size());
 		}
+		grains[i].numvoxels = voxelslist.size();
 		grains[i].voxellist->swap(voxelslist);
 		voxelslist.clear();
 		voxelslist.resize(initialVoxelsListSize,-1);
@@ -1134,7 +1082,7 @@ void  ReconstructionFunc::find_kernels(double quat_symmcubic[24][5],double quat_
   double w, totalmisorientation;
   double n1,n2,n3;
   grains[0].averagemisorientation = 0.0;
-  int steps = 1;
+  int steps = 2;
   for(int i=0;i<(xpoints*ypoints*zpoints);i++)
   {
     totalmisorientation = 0.0;
@@ -1169,16 +1117,16 @@ void  ReconstructionFunc::find_kernels(double quat_symmcubic[24][5],double quat_
 				  q2[4] = voxels[neighbor].quat[4];
 				  if(crystruct == 1) w = getmisoquathexagonal(quat_symmhex,misorientationtolerance,q1,q2,n1,n2,n3);
 				  if(crystruct == 2) w = getmisoquatcubic(misorientationtolerance,q1,q2,n1,n2,n3);
-				  totalmisorientation = totalmisorientation + w;
-		//		  totalmisorientation = totalmisorientation + voxels[neighbor].imagequality;
+//				  totalmisorientation = totalmisorientation + w;
+				  totalmisorientation = totalmisorientation + voxels[neighbor].imagequality;
 			  }
 			}
 		}
 	}
 	voxels[i].kernelmisorientation = totalmisorientation/(float)numVoxel;
 	gnum = voxels[i].grainname;
-//	if(grains[gnum].kernelmisorientation < voxels[i].kernelmisorientation)
-	if(grains[gnum].kernelmisorientation > voxels[i].kernelmisorientation)
+	if(grains[gnum].kernelmisorientation < voxels[i].kernelmisorientation)
+//	if(grains[gnum].kernelmisorientation > voxels[i].kernelmisorientation)
 	{
 		grains[gnum].nucleus = i;
 		grains[gnum].kernelmisorientation = voxels[i].kernelmisorientation;
@@ -1425,14 +1373,13 @@ void  ReconstructionFunc::homogenize_grains(double quat_symmcubic[24][5],double 
     avgmisoorig = avgmisoorig/totalcount;
 	grains[i].averagemisorientation = avgmiso;
   }
-/*  string filename = "orientations.vtk";
+  string filename = "orientations.vtk";
   ofstream outFile;
   outFile.open(filename.c_str());
   outFile << "# vtk DataFile Version 2.0" << endl;
   outFile << "data set from FFT2dx_GB" << endl;
   outFile << "ASCII" << endl;
   outFile << "DATASET UNSTRUCTURED_GRID" << endl;
-  outFile << endl;
   outFile << "POINTS " << (xpoints*ypoints*zpoints) << " float" << endl;
   for(int i=0;i<(xpoints*ypoints*zpoints);i++)
   {
@@ -1459,7 +1406,7 @@ void  ReconstructionFunc::homogenize_grains(double quat_symmcubic[24][5],double 
 	int gnum = voxels[i].grainname;
 	outFile << gnum << endl;
   }
-  outFile.close();*/
+  outFile.close();
 }
 int  ReconstructionFunc::load_data(string readname)
 {
@@ -1809,7 +1756,7 @@ void  ReconstructionFunc::find_neighbors()
   {
     int onsurf = 0;
     int grain = voxels[j].grainname;
-	if(grain != -1)
+	if(grain > 0)
 	{
 		column = j%xpoints;
 		row = (j/xpoints)%ypoints;
@@ -1824,7 +1771,7 @@ void  ReconstructionFunc::find_neighbors()
           if((k == 6 || k == 7 || k == 8 || k == 14 || k == 15 || k == 16 || k == 23 || k == 24 || k == 25) && row == (ypoints-1)) good = 0;
           if((k == 0 || k == 3 || k == 6 || k == 9 || k == 12 || k == 14 || k == 17 || k == 20 || k == 23) && column == 0) good = 0;
           if((k == 2 || k == 5 || k == 8 || k == 11 || k == 13 || k == 16 || k == 19 || k == 22 || k == 25) && column == (xpoints-1)) good = 0;
-          if(good == 1 && voxels[neighbor].grainname != grain && voxels[neighbor].grainname != 0)
+		  if(good == 1 && voxels[neighbor].grainname != grain && voxels[neighbor].grainname > 0)
           {
 			  onsurf++;
 			  nnum = grains[grain].numneighbors;
@@ -1945,7 +1892,15 @@ void  ReconstructionFunc::find_euclidean_map()
   double x = 0;
   double y = 0;
   double z = 0;
-
+  for(int a=0;a<(xpoints*ypoints*zpoints);a++)
+  {
+	  if(voxels[a].surfacevoxel == 0)
+	  {
+		voxels[a].neighbor = -1;
+		voxels[a].nearestneighbor = -1;
+		voxels[a].nearestneighbordistance = -1;
+	  }
+  }
   while(count != 0)
   {
     count = 0;
@@ -2377,6 +2332,7 @@ void  ReconstructionFunc::find_vectors ()
 void  ReconstructionFunc::find_eulerodf ()
 {
 	totalvol = 0;
+	double a = sqrt(3.0)/2.0;
 	double Oc[3][3];
 	double Os[3][3];
 	double ga[3][3];
@@ -2390,223 +2346,377 @@ void  ReconstructionFunc::find_eulerodf ()
 			double ea1good = grains[i].euler1;
 			double ea2good = grains[i].euler2;
 			double ea3good = grains[i].euler3;
-			for(int k = 0; k < 24; k++)
+			if(crystruct == 1)
 			{
-				if (k == 0)
+				for(int k = 0; k < 12; k++)
 				{
-				  Oc[0][0] = 1.0; Oc[0][1] = 0.0; Oc[0][2] = 0.0;
-				  Oc[1][0] = 0.0; Oc[1][1] = 1.0; Oc[1][2] = 0.0;
-				  Oc[2][0] = 0.0; Oc[2][1] = 0.0; Oc[2][2] = 1.0;
-				}
-				else if (k == 1)
-				{
-				  Oc[0][0] = 1.0; Oc[0][1] = 0.0; Oc[0][2] =  0.0;
-				  Oc[1][0] = 0.0; Oc[1][1] = 0.0; Oc[1][2] = -1.0;
-				  Oc[2][0] = 0.0; Oc[2][1] = 1.0; Oc[2][2] =  0.0;
-				}
-				else if (k == 2)
-				{
-				  Oc[0][0] = 1.0; Oc[0][1] =  0.0; Oc[0][2] =  0.0;
-				  Oc[1][0] = 0.0; Oc[1][1] = -1.0; Oc[1][2] =  0.0;
-				  Oc[2][0] = 0.0; Oc[2][1] =  0.0; Oc[2][2] = -1.0;
-				}
-				else if (k == 3)
-				{
-				  Oc[0][0] = 1.0; Oc[0][1] =  0.0; Oc[0][2] = 0.0;
-				  Oc[1][0] = 0.0; Oc[1][1] =  0.0; Oc[1][2] = 1.0;
-				  Oc[2][0] = 0.0; Oc[2][1] = -1.0; Oc[2][2] = 0.0;
-				}
-				else if (k == 4)
-				{
-				  Oc[0][0] = 0.0; Oc[0][1] = 0.0; Oc[0][2] = -1.0;
-				  Oc[1][0] = 0.0; Oc[1][1] = 1.0; Oc[1][2] =  0.0;
-				  Oc[2][0] = 1.0; Oc[2][1] = 0.0; Oc[2][2] =  0.0;
-				}
-				else if (k == 5)
-				{
-				  Oc[0][0] =  0.0; Oc[0][1] = 0.0; Oc[0][2] = 1.0;
-				  Oc[1][0] =  0.0; Oc[1][1] = 1.0; Oc[1][2] = 0.0;
-				  Oc[2][0] = -1.0; Oc[2][1] = 0.0; Oc[2][2] = 0.0;
-				}
-				else if (k == 6)
-				{
-				  Oc[0][0] = -1.0; Oc[0][1] = 0.0; Oc[0][2] =  0.0;
-				  Oc[1][0] =  0.0; Oc[1][1] = 1.0; Oc[1][2] =  0.0;
-				  Oc[2][0] =  0.0; Oc[2][1] = 0.0; Oc[2][2] = -1.0;
-				}
-				else if (k == 7)
-				{
-				  Oc[0][0] = -1.0; Oc[0][1] =  0.0; Oc[0][2] = 0.0;
-				  Oc[1][0] =  0.0; Oc[1][1] = -1.0; Oc[1][2] = 0.0;
-				  Oc[2][0] =  0.0; Oc[2][1] =  0.0; Oc[2][2] = 1.0;
-				}
-				else if (k == 8)
-				{
-				  Oc[0][0] =  0.0; Oc[0][1] = 1.0; Oc[0][2] = 0.0;
-				  Oc[1][0] = -1.0; Oc[1][1] = 0.0; Oc[1][2] = 0.0;
-				  Oc[2][0] =  0.0; Oc[2][1] = 0.0; Oc[2][2] = 1.0;
-				}
-				else if (k == 9)
-				{
-				  Oc[0][0] = 0.0; Oc[0][1] = -1.0; Oc[0][2] = 0.0;
-				  Oc[1][0] = 1.0; Oc[1][1] =  0.0; Oc[1][2] = 0.0;
-				  Oc[2][0] = 0.0; Oc[2][1] =  0.0; Oc[2][2] = 1.0;
-				}
-				else if (k == 10)
-				{
-				  Oc[0][0] =  0.0; Oc[0][1] = -1.0; Oc[0][2] = 0.0;
-				  Oc[1][0] =  0.0; Oc[1][1] =  0.0; Oc[1][2] = 1.0;
-				  Oc[2][0] = -1.0; Oc[2][1] =  0.0; Oc[2][2] = 0.0;
-				}
-				else if (k == 11)
-				{
-				  Oc[0][0] =  0.0; Oc[0][1] =  0.0; Oc[0][2] = 1.0;
-				  Oc[1][0] = -1.0; Oc[1][1] =  0.0; Oc[1][2] = 0.0;
-				  Oc[2][0] =  0.0; Oc[2][1] = -1.0; Oc[2][2] = 0.0;
-				}
-				else if (k == 12)
-				{
-				  Oc[0][0] = 0.0; Oc[0][1] = -1.0; Oc[0][2] =  0.0;
-				  Oc[1][0] = 0.0; Oc[1][1] =  0.0; Oc[1][2] = -1.0;
-				  Oc[2][0] = 1.0; Oc[2][1] =  0.0; Oc[2][2] =  0.0;
-				}
-				else if (k == 13)
-				{
-				  Oc[0][0] = 0.0; Oc[0][1] =  0.0; Oc[0][2] = -1.0;
-				  Oc[1][0] = 1.0; Oc[1][1] =  0.0; Oc[1][2] =  0.0;
-				  Oc[2][0] = 0.0; Oc[2][1] = -1.0; Oc[2][2] =  0.0;
-				}
-				else if (k == 14)
-				{
-				  Oc[0][0] =  0.0; Oc[0][1] = 1.0; Oc[0][2] =  0.0;
-				  Oc[1][0] =  0.0; Oc[1][1] = 0.0; Oc[1][2] = -1.0;
-				  Oc[2][0] = -1.0; Oc[2][1] = 0.0; Oc[2][2] =  0.0;
-				}
-				else if (k == 15)
-				{
-				  Oc[0][0] =  0.0; Oc[0][1] = 0.0; Oc[0][2] = -1.0;
-				  Oc[1][0] = -1.0; Oc[1][1] = 0.0; Oc[1][2] =  0.0;
-				  Oc[2][0] =  0.0; Oc[2][1] = 1.0; Oc[2][2] =  0.0;
-				}
-				else if (k == 16)
-				{
-				  Oc[0][0] = 0.0; Oc[0][1] = 1.0; Oc[0][2] = 0.0;
-				  Oc[1][0] = 0.0; Oc[1][1] = 0.0; Oc[1][2] = 1.0;
-				  Oc[2][0] = 1.0; Oc[2][1] = 0.0; Oc[2][2] = 0.0;
-				}
-				else if (k == 17)
-				{
-				  Oc[0][0] = 0.0; Oc[0][1] = 0.0; Oc[0][2] = 1.0;
-				  Oc[1][0] = 1.0; Oc[1][1] = 0.0; Oc[1][2] = 0.0;
-				  Oc[2][0] = 0.0; Oc[2][1] = 1.0; Oc[2][2] = 0.0;
-				}
-				else if (k == 18)
-				{
-				  Oc[0][0] = 0.0; Oc[0][1] = 1.0; Oc[0][2] =  0.0;
-				  Oc[1][0] = 1.0; Oc[1][1] = 0.0; Oc[1][2] =  0.0;
-				  Oc[2][0] = 0.0; Oc[2][1] = 0.0; Oc[2][2] = -1.0;
-				}
-				else if (k == 19)
-				{
-				  Oc[0][0] = -1.0; Oc[0][1] = 0.0; Oc[0][2] = 0.0;
-				  Oc[1][0] =  0.0; Oc[1][1] = 0.0; Oc[1][2] = 1.0;
-				  Oc[2][0] =  0.0; Oc[2][1] = 1.0; Oc[2][2] = 0.0;
-				}
-				else if (k == 20)
-				{
-				  Oc[0][0] = 0.0; Oc[0][1] =  0.0; Oc[0][2] = 1.0;
-				  Oc[1][0] = 0.0; Oc[1][1] = -1.0; Oc[1][2] = 0.0;
-				  Oc[2][0] = 1.0; Oc[2][1] =  0.0; Oc[2][2] = 0.0;
-				}
-				else if (k == 21)
-				{
-				  Oc[0][0] = -1.0; Oc[0][1] =  0.0; Oc[0][2] =  0.0;
-				  Oc[1][0] =  0.0; Oc[1][1] =  0.0; Oc[1][2] = -1.0;
-				  Oc[2][0] =  0.0; Oc[2][1] = -1.0; Oc[2][2] =  0.0;
-				}
-				else if (k == 22)
-				{
-				  Oc[0][0] =  0.0; Oc[0][1] =  0.0; Oc[0][2] = -1.0;
-				  Oc[1][0] =  0.0; Oc[1][1] = -1.0; Oc[1][2] =  0.0;
-				  Oc[2][0] = -1.0; Oc[2][1] =  0.0; Oc[2][2] =  0.0;
-				}
-				else if (k == 23)
-				{
-				  Oc[0][0] =  0.0; Oc[0][1] = -1.0; Oc[0][2] =  0.0;
-				  Oc[1][0] = -1.0; Oc[1][1] =  0.0; Oc[1][2] =  0.0;
-				  Oc[2][0] =  0.0; Oc[2][1] =  0.0; Oc[2][2] = -1.0;
-				}
-				ga[0][0] = cos(ea1good)*cos(ea3good)-sin(ea1good)*sin(ea3good)*cos(ea2good);
-				ga[0][1] = sin(ea1good)*cos(ea3good)+cos(ea1good)*sin(ea3good)*cos(ea2good);
-				ga[0][2] = sin(ea3good)*sin(ea2good);
-				ga[1][0] = -cos(ea1good)*sin(ea3good)-sin(ea1good)*cos(ea3good)*cos(ea2good);
-				ga[1][1] = -sin(ea1good)*sin(ea3good)+cos(ea1good)*cos(ea3good)*cos(ea2good);
-				ga[1][2] =  cos(ea3good)*sin(ea2good);
-				ga[2][0] =  sin(ea1good)*sin(ea2good);
-				ga[2][1] = -cos(ea1good)*sin(ea2good);
-				ga[2][2] =  cos(ea2good);
-				m1[0][0] = Oc[0][0]*ga[0][0] + Oc[0][1]*ga[1][0] + Oc[0][2]*ga[2][0];
-				m1[0][1] = Oc[0][0]*ga[0][1] + Oc[0][1]*ga[1][1] + Oc[0][2]*ga[2][1];
-				m1[0][2] = Oc[0][0]*ga[0][2] + Oc[0][1]*ga[1][2] + Oc[0][2]*ga[2][2];
-				m1[1][0] = Oc[1][0]*ga[0][0] + Oc[1][1]*ga[1][0] + Oc[1][2]*ga[2][0];
-				m1[1][1] = Oc[1][0]*ga[0][1] + Oc[1][1]*ga[1][1] + Oc[1][2]*ga[2][1];
-				m1[1][2] = Oc[1][0]*ga[0][2] + Oc[1][1]*ga[1][2] + Oc[1][2]*ga[2][2];
-				m1[2][0] = Oc[2][0]*ga[0][0] + Oc[2][1]*ga[1][0] + Oc[2][2]*ga[2][0];
-				m1[2][1] = Oc[2][0]*ga[0][1] + Oc[2][1]*ga[1][1] + Oc[2][2]*ga[2][1];
-				m1[2][2] = Oc[2][0]*ga[0][2] + Oc[2][1]*ga[1][2] + Oc[2][2]*ga[2][2];
-				for(int l=0;l<4;l++)
-				{
-					if (l == 0)
+					if (k == 0)
 					{
-					  Os[0][0] = 1.0; Os[0][1] = 0.0; Os[0][2] = 0.0;
-					  Os[1][0] = 0.0; Os[1][1] = 1.0; Os[1][2] = 0.0;
-					  Os[2][0] = 0.0; Os[2][1] = 0.0; Os[2][2] = 1.0;
+						Oc[0][0] = 1.0; Oc[0][1] = 0.0; Oc[0][2] = 0.0;
+						Oc[1][0] = 0.0; Oc[1][1] = 1.0; Oc[1][2] = 0.0;
+						Oc[2][0] = 0.0; Oc[2][1] = 0.0; Oc[2][2] = 1.0;
 					}
-					else if (l == 1)
+					else if (k == 1)
 					{
-					  Os[0][0] = -1.0; Os[0][1] = 0.0; Os[0][2] = 0.0;
-					  Os[1][0] = 0.0; Os[1][1] = 1.0; Os[1][2] = 0.0;
-					  Os[2][0] = 0.0; Os[2][1] = 0.0; Os[2][2] = -1.0;
+						Oc[0][0] = -0.5; Oc[0][1] = a; Oc[0][2] =  0.0;
+						Oc[1][0] = -a; Oc[1][1] = -0.5; Oc[1][2] = 0.0;
+						Oc[2][0] = 0.0; Oc[2][1] = 0.0; Oc[2][2] = 1.0;
 					}
-					else if (l == 2)
+					else if (k == 2)
 					{
-					  Os[0][0] = 1.0; Os[0][1] = 0.0; Os[0][2] = 0.0;
-					  Os[1][0] = 0.0; Os[1][1] = -1.0; Os[1][2] = 0.0;
-					  Os[2][0] = 0.0; Os[2][1] = 0.0; Os[2][2] = -1.0;
+						Oc[0][0] = -0.5; Oc[0][1] =  -a; Oc[0][2] =  0.0;
+						Oc[1][0] = a; Oc[1][1] = -0.5; Oc[1][2] =  0.0;
+						Oc[2][0] = 0.0; Oc[2][1] =  0.0; Oc[2][2] = 1.0;
 					}
-					else if (l == 3)
+					else if (k == 3)
 					{
-					  Os[0][0] = -1.0; Os[0][1] = 0.0; Os[0][2] = 0.0;
-					  Os[1][0] = 0.0; Os[1][1] = -1.0; Os[1][2] = 0.0;
-					  Os[2][0] = 0.0; Os[2][1] = 0.0; Os[2][2] = 1.0;
+						Oc[0][0] = 0.5; Oc[0][1] =  a; Oc[0][2] = 0.0;
+						Oc[1][0] = -a; Oc[1][1] =  0.5; Oc[1][2] = 0.0;
+						Oc[2][0] = 0.0; Oc[2][1] = 0.0; Oc[2][2] = 1.0;
 					}
-					m2[0][0] = Os[0][0]*m1[0][0] + Os[1][0]*m1[0][1] + Os[2][0]*m1[0][2];
-					m2[0][1] = Os[0][1]*m1[0][0] + Os[1][1]*m1[0][1] + Os[2][1]*m1[0][2];
-					m2[0][2] = Os[0][2]*m1[0][0] + Os[1][2]*m1[0][1] + Os[2][2]*m1[0][2];
-					m2[1][0] = Os[0][0]*m1[1][0] + Os[1][0]*m1[1][1] + Os[2][0]*m1[1][2];
-					m2[1][1] = Os[0][1]*m1[1][0] + Os[1][1]*m1[1][1] + Os[2][1]*m1[1][2];
-					m2[1][2] = Os[0][2]*m1[1][0] + Os[1][2]*m1[1][1] + Os[2][2]*m1[1][2];
-					m2[2][0] = Os[0][0]*m1[2][0] + Os[1][0]*m1[2][1] + Os[2][0]*m1[2][2];
-					m2[2][1] = Os[0][1]*m1[2][0] + Os[1][1]*m1[2][1] + Os[2][1]*m1[2][2];
-					m2[2][2] = Os[0][2]*m1[2][0] + Os[1][2]*m1[2][1] + Os[2][2]*m1[2][2];
-					double ea2 = acos(m2[2][2]);
-					double cosine3 = (m2[1][2]/sin(ea2));
-					double sine3 = (m2[0][2]/sin(ea2));
-					double cosine1 = (-m2[2][1]/sin(ea2));
-					double sine1 = (m2[2][0]/sin(ea2));
-					double ea3 = acos(cosine3);	
-					double ea1 = acos(cosine1);
-					if(sine3 < 0) ea3 = (2*m_pi)-ea3;
-					if(sine1 < 0) ea1 = (2*m_pi)-ea1;
-					int ea1bin = int(ea1/(m_pi/36));
-					int ea2bin = int(ea2/(m_pi/36));
-					int ea3bin = int(ea3/(m_pi/36));
-					int bin=0;
-					if(ea1 >= 0.0 && ea2 >= 0.0 && ea3 >= 0.0 && ea1 <= (m_pi/2.0) && ea2 <= (m_pi/2.0) && ea3 <= (m_pi/2.0))
+					else if (k == 4)
 					{
-					  bin = (ea3bin*18*18)+(ea2bin*18)+(ea1bin);
-					  eulerodf[bin].density = eulerodf[bin].density+vol;
-					  totalvol = totalvol + vol;
+						Oc[0][0] = -1.0; Oc[0][1] = 0.0; Oc[0][2] = 0.0;
+						Oc[1][0] = 0.0; Oc[1][1] = -1.0; Oc[1][2] =  0.0;
+						Oc[2][0] = 0.0; Oc[2][1] = 0.0; Oc[2][2] =  1.0;
+					}
+					else if (k == 5)
+					{
+						Oc[0][0] =  0.5; Oc[0][1] = -a; Oc[0][2] = 0.0;
+						Oc[1][0] =  a; Oc[1][1] = 0.5; Oc[1][2] = 0.0;
+						Oc[2][0] = 0.0; Oc[2][1] = 0.0; Oc[2][2] = 1.0;
+					}
+					else if (k == 6)
+					{
+						Oc[0][0] = -0.5; Oc[0][1] = -a; Oc[0][2] =  0.0;
+						Oc[1][0] =  -a; Oc[1][1] = 0.5; Oc[1][2] =  0.0;
+						Oc[2][0] =  0.0; Oc[2][1] = 0.0; Oc[2][2] = -1.0;
+					}
+					else if (k == 7)
+					{
+						Oc[0][0] = 1.0; Oc[0][1] =  0.0; Oc[0][2] = 0.0;
+						Oc[1][0] =  0.0; Oc[1][1] = -1.0; Oc[1][2] = 0.0;
+						Oc[2][0] =  0.0; Oc[2][1] =  0.0; Oc[2][2] = -1.0;
+					}
+					else if (k == 8)
+					{
+						Oc[0][0] =  -0.5; Oc[0][1] = a; Oc[0][2] = 0.0;
+						Oc[1][0] = a; Oc[1][1] = 0.5; Oc[1][2] = 0.0;
+						Oc[2][0] =  0.0; Oc[2][1] = 0.0; Oc[2][2] = -1.0;
+					}
+					else if (k == 9)
+					{
+						Oc[0][0] = 0.5; Oc[0][1] = a; Oc[0][2] = 0.0;
+						Oc[1][0] = a; Oc[1][1] =  -0.5; Oc[1][2] = 0.0;
+						Oc[2][0] = 0.0; Oc[2][1] =  0.0; Oc[2][2] = -1.0;
+					}
+					else if (k == 10)
+					{
+						Oc[0][0] =  -1.0; Oc[0][1] = 0.0; Oc[0][2] = 0.0;
+						Oc[1][0] =  0.0; Oc[1][1] =  1.0; Oc[1][2] = 0.0;
+						Oc[2][0] = 0.0; Oc[2][1] =  0.0; Oc[2][2] = -1.0;
+					}
+					else
+					{
+						Oc[0][0] =  0.5; Oc[0][1] =  -a; Oc[0][2] = 0.0;
+						Oc[1][0] = -a; Oc[1][1] =  -0.5; Oc[1][2] = 0.0;
+						Oc[2][0] =  0.0; Oc[2][1] = 0.0; Oc[2][2] = -1.0;
+					}
+					ga[0][0] = cos(ea1good)*cos(ea3good)-sin(ea1good)*sin(ea3good)*cos(ea2good);
+					ga[0][1] = sin(ea1good)*cos(ea3good)+cos(ea1good)*sin(ea3good)*cos(ea2good);
+					ga[0][2] = sin(ea3good)*sin(ea2good);
+					ga[1][0] = -cos(ea1good)*sin(ea3good)-sin(ea1good)*cos(ea3good)*cos(ea2good);
+					ga[1][1] = -sin(ea1good)*sin(ea3good)+cos(ea1good)*cos(ea3good)*cos(ea2good);
+					ga[1][2] =  cos(ea3good)*sin(ea2good);
+					ga[2][0] =  sin(ea1good)*sin(ea2good);
+					ga[2][1] = -cos(ea1good)*sin(ea2good);
+					ga[2][2] =  cos(ea2good);
+					m1[0][0] = Oc[0][0]*ga[0][0] + Oc[0][1]*ga[1][0] + Oc[0][2]*ga[2][0];
+					m1[0][1] = Oc[0][0]*ga[0][1] + Oc[0][1]*ga[1][1] + Oc[0][2]*ga[2][1];
+					m1[0][2] = Oc[0][0]*ga[0][2] + Oc[0][1]*ga[1][2] + Oc[0][2]*ga[2][2];
+					m1[1][0] = Oc[1][0]*ga[0][0] + Oc[1][1]*ga[1][0] + Oc[1][2]*ga[2][0];
+					m1[1][1] = Oc[1][0]*ga[0][1] + Oc[1][1]*ga[1][1] + Oc[1][2]*ga[2][1];
+					m1[1][2] = Oc[1][0]*ga[0][2] + Oc[1][1]*ga[1][2] + Oc[1][2]*ga[2][2];
+					m1[2][0] = Oc[2][0]*ga[0][0] + Oc[2][1]*ga[1][0] + Oc[2][2]*ga[2][0];
+					m1[2][1] = Oc[2][0]*ga[0][1] + Oc[2][1]*ga[1][1] + Oc[2][2]*ga[2][1];
+					m1[2][2] = Oc[2][0]*ga[0][2] + Oc[2][1]*ga[1][2] + Oc[2][2]*ga[2][2];
+					for(int l=0;l<4;l++)
+					{
+						if (l == 0)
+						{
+						  Os[0][0] = 1.0; Os[0][1] = 0.0; Os[0][2] = 0.0;
+						  Os[1][0] = 0.0; Os[1][1] = 1.0; Os[1][2] = 0.0;
+						  Os[2][0] = 0.0; Os[2][1] = 0.0; Os[2][2] = 1.0;
+						}
+						else if (l == 1)
+						{
+						  Os[0][0] = -1.0; Os[0][1] = 0.0; Os[0][2] = 0.0;
+						  Os[1][0] = 0.0; Os[1][1] = 1.0; Os[1][2] = 0.0;
+						  Os[2][0] = 0.0; Os[2][1] = 0.0; Os[2][2] = -1.0;
+						}
+						else if (l == 2)
+						{
+						  Os[0][0] = 1.0; Os[0][1] = 0.0; Os[0][2] = 0.0;
+						  Os[1][0] = 0.0; Os[1][1] = -1.0; Os[1][2] = 0.0;
+						  Os[2][0] = 0.0; Os[2][1] = 0.0; Os[2][2] = -1.0;
+						}
+						else if (l == 3)
+						{
+						  Os[0][0] = -1.0; Os[0][1] = 0.0; Os[0][2] = 0.0;
+						  Os[1][0] = 0.0; Os[1][1] = -1.0; Os[1][2] = 0.0;
+						  Os[2][0] = 0.0; Os[2][1] = 0.0; Os[2][2] = 1.0;
+						}
+						m2[0][0] = Os[0][0]*m1[0][0] + Os[1][0]*m1[0][1] + Os[2][0]*m1[0][2];
+						m2[0][1] = Os[0][1]*m1[0][0] + Os[1][1]*m1[0][1] + Os[2][1]*m1[0][2];
+						m2[0][2] = Os[0][2]*m1[0][0] + Os[1][2]*m1[0][1] + Os[2][2]*m1[0][2];
+						m2[1][0] = Os[0][0]*m1[1][0] + Os[1][0]*m1[1][1] + Os[2][0]*m1[1][2];
+						m2[1][1] = Os[0][1]*m1[1][0] + Os[1][1]*m1[1][1] + Os[2][1]*m1[1][2];
+						m2[1][2] = Os[0][2]*m1[1][0] + Os[1][2]*m1[1][1] + Os[2][2]*m1[1][2];
+						m2[2][0] = Os[0][0]*m1[2][0] + Os[1][0]*m1[2][1] + Os[2][0]*m1[2][2];
+						m2[2][1] = Os[0][1]*m1[2][0] + Os[1][1]*m1[2][1] + Os[2][1]*m1[2][2];
+						m2[2][2] = Os[0][2]*m1[2][0] + Os[1][2]*m1[2][1] + Os[2][2]*m1[2][2];
+						double ea2 = acos(m2[2][2]);
+						double cosine3 = (m2[1][2]/sin(ea2));
+						double sine3 = (m2[0][2]/sin(ea2));
+						double cosine1 = (-m2[2][1]/sin(ea2));
+						double sine1 = (m2[2][0]/sin(ea2));
+						double ea3 = acos(cosine3);	
+						double ea1 = acos(cosine1);
+						if(sine3 < 0) ea3 = (2*m_pi)-ea3;
+						if(sine1 < 0) ea1 = (2*m_pi)-ea1;
+						int ea1bin = int(ea1/(m_pi/36));
+						int ea2bin = int(ea2/(m_pi/36));
+						int ea3bin = int(ea3/(m_pi/36));
+						int bin=0;
+						if(ea1 >= 0.0 && ea2 >= 0.0 && ea3 >= 0.0 && ea1 <= (m_pi) && ea2 <= (m_pi) && ea3 <= (m_pi/3.0))
+						{
+						  bin = (ea3bin*36*36)+(ea2bin*36)+(ea1bin);
+						  eulerodf[bin].density = eulerodf[bin].density+vol;
+						  totalvol = totalvol + vol;
+						}
+					}
+				}
+			}
+			if(crystruct == 2)
+			{
+				for(int k = 0; k < 24; k++)
+				{
+					if (k == 0)
+					{
+					  Oc[0][0] = 1.0; Oc[0][1] = 0.0; Oc[0][2] = 0.0;
+					  Oc[1][0] = 0.0; Oc[1][1] = 1.0; Oc[1][2] = 0.0;
+					  Oc[2][0] = 0.0; Oc[2][1] = 0.0; Oc[2][2] = 1.0;
+					}
+					else if (k == 1)
+					{
+					  Oc[0][0] = 1.0; Oc[0][1] = 0.0; Oc[0][2] =  0.0;
+					  Oc[1][0] = 0.0; Oc[1][1] = 0.0; Oc[1][2] = -1.0;
+					  Oc[2][0] = 0.0; Oc[2][1] = 1.0; Oc[2][2] =  0.0;
+					}
+					else if (k == 2)
+					{
+					  Oc[0][0] = 1.0; Oc[0][1] =  0.0; Oc[0][2] =  0.0;
+					  Oc[1][0] = 0.0; Oc[1][1] = -1.0; Oc[1][2] =  0.0;
+					  Oc[2][0] = 0.0; Oc[2][1] =  0.0; Oc[2][2] = -1.0;
+					}
+					else if (k == 3)
+					{
+					  Oc[0][0] = 1.0; Oc[0][1] =  0.0; Oc[0][2] = 0.0;
+					  Oc[1][0] = 0.0; Oc[1][1] =  0.0; Oc[1][2] = 1.0;
+					  Oc[2][0] = 0.0; Oc[2][1] = -1.0; Oc[2][2] = 0.0;
+					}
+					else if (k == 4)
+					{
+					  Oc[0][0] = 0.0; Oc[0][1] = 0.0; Oc[0][2] = -1.0;
+					  Oc[1][0] = 0.0; Oc[1][1] = 1.0; Oc[1][2] =  0.0;
+					  Oc[2][0] = 1.0; Oc[2][1] = 0.0; Oc[2][2] =  0.0;
+					}
+					else if (k == 5)
+					{
+					  Oc[0][0] =  0.0; Oc[0][1] = 0.0; Oc[0][2] = 1.0;
+					  Oc[1][0] =  0.0; Oc[1][1] = 1.0; Oc[1][2] = 0.0;
+					  Oc[2][0] = -1.0; Oc[2][1] = 0.0; Oc[2][2] = 0.0;
+					}
+					else if (k == 6)
+					{
+					  Oc[0][0] = -1.0; Oc[0][1] = 0.0; Oc[0][2] =  0.0;
+					  Oc[1][0] =  0.0; Oc[1][1] = 1.0; Oc[1][2] =  0.0;
+					  Oc[2][0] =  0.0; Oc[2][1] = 0.0; Oc[2][2] = -1.0;
+					}
+					else if (k == 7)
+					{
+					  Oc[0][0] = -1.0; Oc[0][1] =  0.0; Oc[0][2] = 0.0;
+					  Oc[1][0] =  0.0; Oc[1][1] = -1.0; Oc[1][2] = 0.0;
+					  Oc[2][0] =  0.0; Oc[2][1] =  0.0; Oc[2][2] = 1.0;
+					}
+					else if (k == 8)
+					{
+					  Oc[0][0] =  0.0; Oc[0][1] = 1.0; Oc[0][2] = 0.0;
+					  Oc[1][0] = -1.0; Oc[1][1] = 0.0; Oc[1][2] = 0.0;
+					  Oc[2][0] =  0.0; Oc[2][1] = 0.0; Oc[2][2] = 1.0;
+					}
+					else if (k == 9)
+					{
+					  Oc[0][0] = 0.0; Oc[0][1] = -1.0; Oc[0][2] = 0.0;
+					  Oc[1][0] = 1.0; Oc[1][1] =  0.0; Oc[1][2] = 0.0;
+					  Oc[2][0] = 0.0; Oc[2][1] =  0.0; Oc[2][2] = 1.0;
+					}
+					else if (k == 10)
+					{
+					  Oc[0][0] =  0.0; Oc[0][1] = -1.0; Oc[0][2] = 0.0;
+					  Oc[1][0] =  0.0; Oc[1][1] =  0.0; Oc[1][2] = 1.0;
+					  Oc[2][0] = -1.0; Oc[2][1] =  0.0; Oc[2][2] = 0.0;
+					}
+					else if (k == 11)
+					{
+					  Oc[0][0] =  0.0; Oc[0][1] =  0.0; Oc[0][2] = 1.0;
+					  Oc[1][0] = -1.0; Oc[1][1] =  0.0; Oc[1][2] = 0.0;
+					  Oc[2][0] =  0.0; Oc[2][1] = -1.0; Oc[2][2] = 0.0;
+					}
+					else if (k == 12)
+					{
+					  Oc[0][0] = 0.0; Oc[0][1] = -1.0; Oc[0][2] =  0.0;
+					  Oc[1][0] = 0.0; Oc[1][1] =  0.0; Oc[1][2] = -1.0;
+					  Oc[2][0] = 1.0; Oc[2][1] =  0.0; Oc[2][2] =  0.0;
+					}
+					else if (k == 13)
+					{
+					  Oc[0][0] = 0.0; Oc[0][1] =  0.0; Oc[0][2] = -1.0;
+					  Oc[1][0] = 1.0; Oc[1][1] =  0.0; Oc[1][2] =  0.0;
+					  Oc[2][0] = 0.0; Oc[2][1] = -1.0; Oc[2][2] =  0.0;
+					}
+					else if (k == 14)
+					{
+					  Oc[0][0] =  0.0; Oc[0][1] = 1.0; Oc[0][2] =  0.0;
+					  Oc[1][0] =  0.0; Oc[1][1] = 0.0; Oc[1][2] = -1.0;
+					  Oc[2][0] = -1.0; Oc[2][1] = 0.0; Oc[2][2] =  0.0;
+					}
+					else if (k == 15)
+					{
+					  Oc[0][0] =  0.0; Oc[0][1] = 0.0; Oc[0][2] = -1.0;
+					  Oc[1][0] = -1.0; Oc[1][1] = 0.0; Oc[1][2] =  0.0;
+					  Oc[2][0] =  0.0; Oc[2][1] = 1.0; Oc[2][2] =  0.0;
+					}
+					else if (k == 16)
+					{
+					  Oc[0][0] = 0.0; Oc[0][1] = 1.0; Oc[0][2] = 0.0;
+					  Oc[1][0] = 0.0; Oc[1][1] = 0.0; Oc[1][2] = 1.0;
+					  Oc[2][0] = 1.0; Oc[2][1] = 0.0; Oc[2][2] = 0.0;
+					}
+					else if (k == 17)
+					{
+					  Oc[0][0] = 0.0; Oc[0][1] = 0.0; Oc[0][2] = 1.0;
+					  Oc[1][0] = 1.0; Oc[1][1] = 0.0; Oc[1][2] = 0.0;
+					  Oc[2][0] = 0.0; Oc[2][1] = 1.0; Oc[2][2] = 0.0;
+					}
+					else if (k == 18)
+					{
+					  Oc[0][0] = 0.0; Oc[0][1] = 1.0; Oc[0][2] =  0.0;
+					  Oc[1][0] = 1.0; Oc[1][1] = 0.0; Oc[1][2] =  0.0;
+					  Oc[2][0] = 0.0; Oc[2][1] = 0.0; Oc[2][2] = -1.0;
+					}
+					else if (k == 19)
+					{
+					  Oc[0][0] = -1.0; Oc[0][1] = 0.0; Oc[0][2] = 0.0;
+					  Oc[1][0] =  0.0; Oc[1][1] = 0.0; Oc[1][2] = 1.0;
+					  Oc[2][0] =  0.0; Oc[2][1] = 1.0; Oc[2][2] = 0.0;
+					}
+					else if (k == 20)
+					{
+					  Oc[0][0] = 0.0; Oc[0][1] =  0.0; Oc[0][2] = 1.0;
+					  Oc[1][0] = 0.0; Oc[1][1] = -1.0; Oc[1][2] = 0.0;
+					  Oc[2][0] = 1.0; Oc[2][1] =  0.0; Oc[2][2] = 0.0;
+					}
+					else if (k == 21)
+					{
+					  Oc[0][0] = -1.0; Oc[0][1] =  0.0; Oc[0][2] =  0.0;
+					  Oc[1][0] =  0.0; Oc[1][1] =  0.0; Oc[1][2] = -1.0;
+					  Oc[2][0] =  0.0; Oc[2][1] = -1.0; Oc[2][2] =  0.0;
+					}
+					else if (k == 22)
+					{
+					  Oc[0][0] =  0.0; Oc[0][1] =  0.0; Oc[0][2] = -1.0;
+					  Oc[1][0] =  0.0; Oc[1][1] = -1.0; Oc[1][2] =  0.0;
+					  Oc[2][0] = -1.0; Oc[2][1] =  0.0; Oc[2][2] =  0.0;
+					}
+					else if (k == 23)
+					{
+					  Oc[0][0] =  0.0; Oc[0][1] = -1.0; Oc[0][2] =  0.0;
+					  Oc[1][0] = -1.0; Oc[1][1] =  0.0; Oc[1][2] =  0.0;
+					  Oc[2][0] =  0.0; Oc[2][1] =  0.0; Oc[2][2] = -1.0;
+					}
+					ga[0][0] = cos(ea1good)*cos(ea3good)-sin(ea1good)*sin(ea3good)*cos(ea2good);
+					ga[0][1] = sin(ea1good)*cos(ea3good)+cos(ea1good)*sin(ea3good)*cos(ea2good);
+					ga[0][2] = sin(ea3good)*sin(ea2good);
+					ga[1][0] = -cos(ea1good)*sin(ea3good)-sin(ea1good)*cos(ea3good)*cos(ea2good);
+					ga[1][1] = -sin(ea1good)*sin(ea3good)+cos(ea1good)*cos(ea3good)*cos(ea2good);
+					ga[1][2] =  cos(ea3good)*sin(ea2good);
+					ga[2][0] =  sin(ea1good)*sin(ea2good);
+					ga[2][1] = -cos(ea1good)*sin(ea2good);
+					ga[2][2] =  cos(ea2good);
+					m1[0][0] = Oc[0][0]*ga[0][0] + Oc[0][1]*ga[1][0] + Oc[0][2]*ga[2][0];
+					m1[0][1] = Oc[0][0]*ga[0][1] + Oc[0][1]*ga[1][1] + Oc[0][2]*ga[2][1];
+					m1[0][2] = Oc[0][0]*ga[0][2] + Oc[0][1]*ga[1][2] + Oc[0][2]*ga[2][2];
+					m1[1][0] = Oc[1][0]*ga[0][0] + Oc[1][1]*ga[1][0] + Oc[1][2]*ga[2][0];
+					m1[1][1] = Oc[1][0]*ga[0][1] + Oc[1][1]*ga[1][1] + Oc[1][2]*ga[2][1];
+					m1[1][2] = Oc[1][0]*ga[0][2] + Oc[1][1]*ga[1][2] + Oc[1][2]*ga[2][2];
+					m1[2][0] = Oc[2][0]*ga[0][0] + Oc[2][1]*ga[1][0] + Oc[2][2]*ga[2][0];
+					m1[2][1] = Oc[2][0]*ga[0][1] + Oc[2][1]*ga[1][1] + Oc[2][2]*ga[2][1];
+					m1[2][2] = Oc[2][0]*ga[0][2] + Oc[2][1]*ga[1][2] + Oc[2][2]*ga[2][2];
+					for(int l=0;l<4;l++)
+					{
+						if (l == 0)
+						{
+						  Os[0][0] = 1.0; Os[0][1] = 0.0; Os[0][2] = 0.0;
+						  Os[1][0] = 0.0; Os[1][1] = 1.0; Os[1][2] = 0.0;
+						  Os[2][0] = 0.0; Os[2][1] = 0.0; Os[2][2] = 1.0;
+						}
+						else if (l == 1)
+						{
+						  Os[0][0] = -1.0; Os[0][1] = 0.0; Os[0][2] = 0.0;
+						  Os[1][0] = 0.0; Os[1][1] = 1.0; Os[1][2] = 0.0;
+						  Os[2][0] = 0.0; Os[2][1] = 0.0; Os[2][2] = -1.0;
+						}
+						else if (l == 2)
+						{
+						  Os[0][0] = 1.0; Os[0][1] = 0.0; Os[0][2] = 0.0;
+						  Os[1][0] = 0.0; Os[1][1] = -1.0; Os[1][2] = 0.0;
+						  Os[2][0] = 0.0; Os[2][1] = 0.0; Os[2][2] = -1.0;
+						}
+						else if (l == 3)
+						{
+						  Os[0][0] = -1.0; Os[0][1] = 0.0; Os[0][2] = 0.0;
+						  Os[1][0] = 0.0; Os[1][1] = -1.0; Os[1][2] = 0.0;
+						  Os[2][0] = 0.0; Os[2][1] = 0.0; Os[2][2] = 1.0;
+						}
+						m2[0][0] = Os[0][0]*m1[0][0] + Os[1][0]*m1[0][1] + Os[2][0]*m1[0][2];
+						m2[0][1] = Os[0][1]*m1[0][0] + Os[1][1]*m1[0][1] + Os[2][1]*m1[0][2];
+						m2[0][2] = Os[0][2]*m1[0][0] + Os[1][2]*m1[0][1] + Os[2][2]*m1[0][2];
+						m2[1][0] = Os[0][0]*m1[1][0] + Os[1][0]*m1[1][1] + Os[2][0]*m1[1][2];
+						m2[1][1] = Os[0][1]*m1[1][0] + Os[1][1]*m1[1][1] + Os[2][1]*m1[1][2];
+						m2[1][2] = Os[0][2]*m1[1][0] + Os[1][2]*m1[1][1] + Os[2][2]*m1[1][2];
+						m2[2][0] = Os[0][0]*m1[2][0] + Os[1][0]*m1[2][1] + Os[2][0]*m1[2][2];
+						m2[2][1] = Os[0][1]*m1[2][0] + Os[1][1]*m1[2][1] + Os[2][1]*m1[2][2];
+						m2[2][2] = Os[0][2]*m1[2][0] + Os[1][2]*m1[2][1] + Os[2][2]*m1[2][2];
+						double ea2 = acos(m2[2][2]);
+						double cosine3 = (m2[1][2]/sin(ea2));
+						double sine3 = (m2[0][2]/sin(ea2));
+						double cosine1 = (-m2[2][1]/sin(ea2));
+						double sine1 = (m2[2][0]/sin(ea2));
+						double ea3 = acos(cosine3);	
+						double ea1 = acos(cosine1);
+						if(sine3 < 0) ea3 = (2*m_pi)-ea3;
+						if(sine1 < 0) ea1 = (2*m_pi)-ea1;
+						int ea1bin = int(ea1/(m_pi/36));
+						int ea2bin = int(ea2/(m_pi/36));
+						int ea3bin = int(ea3/(m_pi/36));
+						int bin=0;
+						if(ea1 >= 0.0 && ea2 >= 0.0 && ea3 >= 0.0 && ea1 <= (m_pi/2.0) && ea2 <= (m_pi/2.0) && ea3 <= (m_pi/2.0))
+						{
+						  bin = (ea3bin*18*18)+(ea2bin*18)+(ea1bin);
+						  eulerodf[bin].density = eulerodf[bin].density+vol;
+						  totalvol = totalvol + vol;
+						}
 					}
 				}
 			}
@@ -3707,6 +3817,22 @@ void ReconstructionFunc::volume_stats(string writename1,string writename2,string
 }
 void  ReconstructionFunc::write_volume(string writename1, string writename2, string writename3, string writename4, string writename5, bool IPFoption, bool Disoption, bool IQoption, bool Schmidoption)
 {
+  #if 1
+  {
+  std::cout << "Writing volume of size " <<  xpoints << " " << ypoints << " " << zpoints << std::endl;
+  ofstream bin("GrainIDVolume.bin", std::ios::binary);
+  bin.write(reinterpret_cast<char *>(&(xpoints)), sizeof(xpoints));
+  bin.write(reinterpret_cast<char *>(&(ypoints)), sizeof(ypoints));
+  bin.write(reinterpret_cast<char *>(&(zpoints)), sizeof(zpoints));
+  size_t bytesToWrite = sizeof(voxels[0].grainname);
+  for (int i = 0; i < (xpoints*ypoints*zpoints); i++)
+	{
+		bin.write ( reinterpret_cast<char *>(&(voxels[i].grainname)), bytesToWrite);
+	}
+  }
+  #endif
+  
+  
   ofstream outFile;
   for(int a=0;a<5;a++)
   {
@@ -3725,8 +3851,6 @@ void  ReconstructionFunc::write_volume(string writename1, string writename2, str
 		  outFile << "ORIGIN 0.0 0.0 0.0" << endl;
 		  outFile << "SPACING " << resx << " " << resy << " " << resz << endl;
 		  outFile << "POINT_DATA " << xpoints*ypoints*zpoints << endl;
-		  outFile << endl;
-		  outFile << endl;
 		  outFile << "SCALARS GrainID int  1" << endl;
 		  outFile << "LOOKUP_TABLE default" << endl;
 		  for (int i = 0; i < (xpoints*ypoints*zpoints); i++)
@@ -3852,9 +3976,11 @@ void  ReconstructionFunc::write_eulerodf(string writename15)
 {
   ofstream outFile;
   outFile.open(writename15.c_str());
-  outFile << numgrains <<endl;
   double density;
-  for(int i = 0; i < (18*18*18); i++)
+  int numbins = 0;
+  if(crystruct == 1) numbins = 36*36*12;
+  if(crystruct == 2) numbins = 18*18*18;
+  for(int i = 0; i < numbins; i++)
   {
 	density = eulerodf[i].density;
     outFile << double(density/totalvol) << endl;

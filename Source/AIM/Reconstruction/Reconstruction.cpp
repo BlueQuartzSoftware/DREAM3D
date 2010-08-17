@@ -267,15 +267,15 @@ void Reconstruction::compute()
 
   CHECK_FOR_CANCELED(ReconstructionFunc)
   progressMessage(AIM_STRING("Renumbering Grains"), 40 );
-  m->numgrains = m->renumber_grains2();
+  m->numgrains = m->renumber_grains();
 
   CHECK_FOR_CANCELED(ReconstructionFunc)
-  progressMessage(AIM_STRING("Refinding Neighbors"), 44 );
-  m->find_neighbors();
-
-  CHECK_FOR_CANCELED(ReconstructionFunc)
-  progressMessage(AIM_STRING("Redefining Grains"), 48 );
+  progressMessage(AIM_STRING("Redefining Grains"), 44 );
   m->reburn_grains();
+
+  CHECK_FOR_CANCELED(ReconstructionFunc)
+  progressMessage(AIM_STRING("Refinding Neighbors"), 48 );
+  m->find_neighbors();
 
   CHECK_FOR_CANCELED(ReconstructionFunc)
   progressMessage(AIM_STRING("Finding Euclidean Distance Maps"), 52 );

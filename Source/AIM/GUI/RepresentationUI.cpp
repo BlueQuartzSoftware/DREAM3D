@@ -1074,7 +1074,7 @@ void RepresentationUI::on_gg_GoBtn_clicked()
   int overlapassignment = gg_OverlapAssignment->currentIndex() + 1;
   m_GrainGenerator->setOverlapAssignment(overlapassignment);
 
-  AIM::Representation::CrystalStructure crystruct = static_cast<AIM::Representation::CrystalStructure>(crystalStructure->currentIndex() + 1);
+  AIM::Representation::CrystalStructure crystruct = static_cast<AIM::Representation::CrystalStructure>(gg_CrystalStructure->currentIndex() + 1);
 
   m_GrainGenerator->setCrystalStructure(crystruct);
 

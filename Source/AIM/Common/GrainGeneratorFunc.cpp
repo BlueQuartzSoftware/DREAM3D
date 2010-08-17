@@ -41,8 +41,7 @@ GrainGeneratorFunc::GrainGeneratorFunc() :
   actualodf(NULL),
   simodf(NULL),
   axisodf(NULL),
-  gridfine(NULL),
-  gridcourse(NULL),
+  voxels(NULL),
   actualmdf(NULL),
   simmdf(NULL),
   actualmicrotex(NULL),
@@ -60,8 +59,7 @@ GrainGeneratorFunc::~GrainGeneratorFunc()
   delete [] actualodf;
   delete [] simodf;
   delete [] axisodf;
-  delete [] gridfine;
-  delete [] gridcourse;
+  delete [] voxels;
   delete [] actualmdf;
   delete [] simmdf;
   delete [] actualmicrotex;
@@ -92,10 +90,18 @@ void GrainGeneratorFunc::initialize(int32 m_NumGrains, int32 m_ShapeClass,
   overlapallowed = m_OverlapAllowed;
   crystruct = m_CrystalStructure;
 
-  grains = new Grain[numgrains+1];
-  gsizes = new int[numgrains+1];
-  actualodf = new Bin[18*18*18];
-  simodf = new Bin[18*18*18];
+  grains = new Grain[(100*numgrains)+1];
+  gsizes = new int[(100*numgrains)+1];
+  if(crystruct == 1)
+  {
+	  actualodf = new Bin[36*36*12];
+	  simodf = new Bin[36*36*12];
+  }
+  if(crystruct == 2)
+  {
+	  actualodf = new Bin[18*18*18];
+	  simodf = new Bin[18*18*18];
+  }
   axisodf = new Bin[18*18*18];
   precipaxisodf = new Bin[18*18*18];
   actualmdf = new Bin[36];
@@ -110,8 +116,7 @@ void GrainGeneratorFunc::initialize2()
   totalpoints = xpoints * ypoints * zpoints;
   totalpoints1 = (xpoints/2) * (ypoints/2) * (zpoints/2);
 
-  gridfine = new Voxel[totalpoints];
-  gridcourse = new Voxel[totalpoints1];
+  voxels = new Voxel[totalpoints1];
 }
 
 void  GrainGeneratorFunc::loadStatsData(string inname1)
@@ -332,7 +337,10 @@ void  GrainGeneratorFunc::loadeulerData(string inname7)
   ifstream inputFile;
   inputFile.open(inname7.c_str());
   double density;
-  for(int i=0;i<(18*18*18);i++)
+  int numbins = 0;
+  if(crystruct == 1) numbins = 36*36*12;
+  if(crystruct == 2) numbins = 18*18*18;
+  for(int i=0;i<numbins;i++)
   {
 	  inputFile >> density;
 	  actualodf[i].density = density;
@@ -456,9 +464,12 @@ void  GrainGeneratorFunc::pack_grains(int numgrains)
   int in = 1;
   int out = 0;
   int nnum = 0;
+  double currentfillingerror = 0;
+  double currentneighborerror = 0;
+  double currentneighsizeerror = 0;
+  double currentsizedisterror = 0;
   double insidecount = 0;
-  nsdist.resize(numgrains+1);
-  srand(static_cast<unsigned int>(time(NULL)));
+  rg.RandomInit((static_cast<unsigned int>(time(NULL))));
   std::vector<int> insidelist;
   insidelist.resize(1000,-1);
   std::vector<int> nlist;
@@ -679,7 +690,7 @@ void  GrainGeneratorFunc::pack_grains(int numgrains)
           if(inside >= 0)
           {
             int currentpoint = (xpoints1*ypoints1*plane)+(xpoints1*row)+column;
-			gridfine[currentpoint].numowners++;
+			voxels[currentpoint].numowners++;
 			insidelist[insidecount] = currentpoint;
 			if (insidecount >= (0.9*insidelist.size())) insidelist.resize(insidecount + 1000,-1);
           }
@@ -724,8 +735,15 @@ void  GrainGeneratorFunc::pack_grains(int numgrains)
 	grains[i].numneighbors = nnum;
 	grains[i].neighborlist->swap(nlist);
 	nlist.clear();
+	int diam = int(pow(((3.0*4.0)*((1.0/m_pi))*grains[i].volume),0.33333333));
+	double neighprob = ((1.0/pow((2*m_pi*svn[diam][1]*svn[diam][1]),0.5))*exp(-pow((nnum-svn[diam][0]),2)/(2*svn[diam][1]*svn[diam][1])));
+	currentneighborerror = currentneighborerror + ((neighprob-0.5)*(neighprob-0.5));
   }
-  for(int iter=0;iter<1000000;iter++)
+  for(int iter=0;iter<(xpoints1*ypoints1*zpoints1);iter++)
+  {
+	  currentfillingerror = currentfillingerror + ((voxels[iter].numowners-1)*(voxels[iter].numowners-1));
+  }
+  for(int iter=0;iter<(numgrains*100);iter++)
   {
     int option = iter%5;
 	if(option == 0)
@@ -813,18 +831,18 @@ void  GrainGeneratorFunc::pack_grains(int numgrains)
 	  int columnleft = columncheck%resdiff;
 	  int rowleft = rowcheck%resdiff;
 	  int planeleft = planecheck%resdiff;
-	  if(gridfine[point].grainname == 0)
+	  if(voxels[point].grainname == 0)
       {
           uniquecursize++;
           totalcursize++;
-          gridfine[point].grainname = i;
+          voxels[point].grainname = i;
 		  if(columnleft == (resdiff/2) && rowleft == (resdiff/2) && planeleft == (resdiff/2))
 		  {
 			int columnc = columncheck/resdiff;
 			int rowc = rowcheck/resdiff;
 			int planec = planecheck/resdiff;
 			int currentpointcourse = (xpoints1*ypoints1*planec)+(xpoints1*rowc)+columnc;
-			gridcourse[currentpointcourse].grainname = i;
+			voxels[currentpointcourse].grainname = i;
   		  }
       }
     }
@@ -832,7 +850,7 @@ void  GrainGeneratorFunc::pack_grains(int numgrains)
 	for(int p=0;p<size;p++)
 	{
 		int point = availablelist[p];
-		if(gridcourse[point].grainname != 0)
+		if(voxels[point].grainname != 0)
 		{
 			availablelist.erase(availablelist.begin()+p);
 			p = p-1;
@@ -856,9 +874,9 @@ void  GrainGeneratorFunc::pack_grains(int numgrains)
   }
   for(int t=0;t<(xpoints*ypoints*zpoints);t++)
   {
-    if(gridfine[t].grainname != 0)
+    if(voxels[t].grainname != 0)
     {
-      int gname = gridfine[t].grainname;
+      int gname = voxels[t].grainname;
       gsizes[gname]++;
     }
   }
@@ -875,22 +893,36 @@ void  GrainGeneratorFunc::assign_eulers(int numgrains)
   int size = 0;
   int picked = 0;
   int gnum = 0;
+  int phi1, PHI, phi2;
+  int numbins = 0;
+  if(crystruct == 1) numbins = 36*36*12;
+  if(crystruct == 2) numbins = 18*18*18;
   double totaldensity = 0;
   double synea1=0,synea2=0,synea3=0;
+  rg.RandomInit((static_cast<unsigned int>(time(NULL))));
   for(int i=1;i<numgrains+1;i++)
   {
 	  double random = rg.Random();
 	  int choose = 0;
 	  totaldensity = 0;
-	  for(int j=0;j<(18*18*18);j++)
+	  for(int j=0;j<numbins;j++)
 	  {
 		  double density = actualodf[j].density;
 		  totaldensity = totaldensity + density;
 		  if(random >= totaldensity) choose = j;
 	  }
-	  int phi1 = choose%18;
-	  int PHI = (choose/18)%18;
-	  int phi2 = choose/(18*18);
+	  if(crystruct == 1)
+	  {
+		  phi1 = choose%36;
+		  PHI = (choose/36)%36;
+		  phi2 = choose/(36*36);
+	  }
+	  if(crystruct == 2)
+	  {
+		  phi1 = choose%18;
+		  PHI = (choose/18)%18;
+		  phi2 = choose/(18*18);
+	  }
 	  double random1 = rg.Random();
 	  double random2 = rg.Random();
 	  double random3 = rg.Random();
@@ -913,7 +945,7 @@ void  GrainGeneratorFunc::assign_eulers(int numgrains)
 	  grains[i].avg_quat[2] = s*s1;
 	  grains[i].avg_quat[3] = c*s2;
 	  grains[i].avg_quat[4] = c*c2;
-	  simodf[choose].density = simodf[choose].density + (grains[i].volume/totalvol);
+	  simodf[choose].density = simodf[choose].density + (double(grains[i].numvoxels)*resx*resy*resz/totalvol);
   }
 }
 
@@ -934,7 +966,7 @@ void  GrainGeneratorFunc::fill_gaps(int numgrains)
     count = 0;
     for(int i = 0; i < (xpoints*ypoints*zpoints); i++)
     {
-	  if(gridfine[i].grainname == 0)
+	  if(voxels[i].grainname == 0)
       {
         for(int c = 0; c < numgrains; c++)
         {
@@ -946,7 +978,7 @@ void  GrainGeneratorFunc::fill_gaps(int numgrains)
         count++;
         if(column > 0)
         {
-          int grain1 = gridfine[i-1].grainname;
+          int grain1 = voxels[i-1].grainname;
           if(grain1 != 0)
           {
             neighs.push_back(grain1);
@@ -954,7 +986,7 @@ void  GrainGeneratorFunc::fill_gaps(int numgrains)
         }
         if(column < xpoints-1)
         {
-          int grain2 = gridfine[i+1].grainname;
+          int grain2 = voxels[i+1].grainname;
           if(grain2 != 0)
           {
             neighs.push_back(grain2);
@@ -962,7 +994,7 @@ void  GrainGeneratorFunc::fill_gaps(int numgrains)
         }
         if(row > 0)
         {
-          int grain3 = gridfine[i-(xpoints)].grainname;
+          int grain3 = voxels[i-(xpoints)].grainname;
           if(grain3 != 0)
           {
             neighs.push_back(grain3);
@@ -970,7 +1002,7 @@ void  GrainGeneratorFunc::fill_gaps(int numgrains)
         }
         if(row < ypoints-1)
         {
-          int grain4 = gridfine[i+(xpoints)].grainname;
+          int grain4 = voxels[i+(xpoints)].grainname;
           if(grain4 != 0)
           {
             neighs.push_back(grain4);
@@ -978,7 +1010,7 @@ void  GrainGeneratorFunc::fill_gaps(int numgrains)
         }
         if(plane > 0)
         {
-          int grain5 = gridfine[i-(xpoints*ypoints)].grainname;
+          int grain5 = voxels[i-(xpoints*ypoints)].grainname;
           if(grain5 != 0)
           {
             neighs.push_back(grain5);
@@ -986,7 +1018,7 @@ void  GrainGeneratorFunc::fill_gaps(int numgrains)
         }
         if(plane < zpoints-1)
         {
-          int grain6 = gridfine[i+(xpoints*ypoints)].grainname;
+          int grain6 = voxels[i+(xpoints*ypoints)].grainname;
           if(grain6 != 0)
           {
             neighs.push_back(grain6);
@@ -1019,17 +1051,17 @@ void  GrainGeneratorFunc::fill_gaps(int numgrains)
         if(size > 0)
         {
           int bordered = 1;
-          gridfine[i].neighbor = curgrain;
+          voxels[i].neighbor = curgrain;
           neighs.clear();
         }
       }
     }
     for(int j = 0; j < (xpoints*ypoints*zpoints); j++)
     {
-      int neighbor = gridfine[j].neighbor;
-	  if(gridfine[j].grainname == 0 && neighbor != -1)
+      int neighbor = voxels[j].neighbor;
+	  if(voxels[j].grainname == 0 && neighbor != -1)
       {
-        gridfine[j].grainname = neighbor;
+        voxels[j].grainname = neighbor;
       }
     }
   }
@@ -1039,9 +1071,9 @@ void  GrainGeneratorFunc::fill_gaps(int numgrains)
   }
   for(int t=0;t<(xpoints*ypoints*zpoints);t++)
   {
-    if(gridfine[t].grainname != 0)
+    if(voxels[t].grainname != 0)
     {
-      int gname = gridfine[t].grainname;
+      int gname = voxels[t].grainname;
       gsizes[gname]++;
     }
   }
@@ -1223,7 +1255,7 @@ void GrainGeneratorFunc::insert_precipitates(int numprecipitates)
   {
 	if(preciptype == 2)
 	{
-		if(gridfine[a].surfacevoxel == 1)
+		if(voxels[a].surfacevoxel == 1)
 		{
 			availablelist[counter] = a;
 			counter++;
@@ -1468,7 +1500,7 @@ void GrainGeneratorFunc::insert_precipitates(int numprecipitates)
 				insidelist[insidecount] = currentpoint;
 				if(insidecount >= (0.9*insidelist.size())) insidelist.resize(insidecount+100);
                 insidecount++;
-				if(gridfine[currentpoint].grainname > numgrains) badcount++;
+				if(voxels[currentpoint].grainname > numgrains) badcount++;
               }
             }
           }
@@ -1487,18 +1519,18 @@ void GrainGeneratorFunc::insert_precipitates(int numprecipitates)
       int columncheck = point%xpoints;
       int rowcheck = (point/xpoints)%ypoints;
       int planecheck = point/(xpoints*ypoints);
-	  if(gridfine[point].grainname <= numgrains)
+	  if(voxels[point].grainname <= numgrains)
       {
           uniquecursize++;
           totalcursize++;
-		  gridfine[point].grainname = i+numgrains;
+		  voxels[point].grainname = i+numgrains;
       }
     }
 	int size = availablelist.size();
 	for(int p=0;p<size;p++)
 	{
 		int point = availablelist[p];
-		if(gridfine[point].grainname > numgrains)
+		if(voxels[point].grainname > numgrains)
 		{
 			availablelist.erase(availablelist.begin()+p);
 			p = p-1;
@@ -1522,9 +1554,9 @@ void GrainGeneratorFunc::insert_precipitates(int numprecipitates)
   }
   for(int t=0;t<(xpoints*ypoints*zpoints);t++)
   {
-	if(gridfine[t].grainname > numgrains)
+	if(voxels[t].grainname > numgrains)
     {
-	  int gname = gridfine[t].grainname;
+	  int gname = voxels[t].grainname;
 	  gname = gname-numgrains;
       psizes[gname]++;
     }
@@ -1552,7 +1584,8 @@ void GrainGeneratorFunc::read_structure(string inname8)
 		    in >> xpoints >> ypoints >> zpoints;
 			totalpoints = xpoints * ypoints * zpoints;
 			totalpoints1 = (xpoints/2) * (ypoints/2) * (zpoints/2);
-			gridfine = new Voxel[totalpoints];
+			voxels = new Voxel[totalpoints];
+			totalvol = double(totalpoints)*resx*resy*resz;
 		}
 		if(LOOKUP == word)
 		{
@@ -1565,7 +1598,7 @@ void GrainGeneratorFunc::read_structure(string inname8)
 	for(int i=0;i<(xpoints*ypoints*zpoints);i++)
 	{
 		in >> gnum;
-		gridfine[i].grainname = gnum;
+		voxels[i].grainname = gnum;
 	}
 }
 void  GrainGeneratorFunc::find_neighbors()
@@ -1597,15 +1630,16 @@ void  GrainGeneratorFunc::find_neighbors()
   for(int j = 0; j < (xpoints*ypoints*zpoints); j++)
   {
     int onsurf = 0;
-    int grain = gridfine[j].grainname;
+    int grain = voxels[j].grainname;
 	if(grain != 0)
 	{
 		x = j%xpoints;
 		y = (j/xpoints)%ypoints;
 		z = j/(xpoints*ypoints);
+		grains[grain].numvoxels++;
 		if(x > 0)
 		{
-		  grain1 = gridfine[j-1].grainname;
+		  grain1 = voxels[j-1].grainname;
 		  if(grain1 != grain && grain1!= 0)
 		  {
 			  onsurf++;
@@ -1622,7 +1656,7 @@ void  GrainGeneratorFunc::find_neighbors()
 		}
 		if(x < xpoints-1)
 		{
-		  grain2 = gridfine[j+1].grainname;
+		  grain2 = voxels[j+1].grainname;
 		  if(grain2 != grain && grain2!= 0)
 		  {
 			  onsurf++;
@@ -1639,7 +1673,7 @@ void  GrainGeneratorFunc::find_neighbors()
 		}
 		if(y > 0)
 		{
-		  grain3 = gridfine[j-(xpoints)].grainname;
+		  grain3 = voxels[j-(xpoints)].grainname;
 		  if(grain3 != grain && grain3!= 0)
 		  {
 			  onsurf++;
@@ -1656,7 +1690,7 @@ void  GrainGeneratorFunc::find_neighbors()
 		}
 		if(y < ypoints-1)
 		{
-		  grain4 = gridfine[j+(xpoints)].grainname;
+		  grain4 = voxels[j+(xpoints)].grainname;
 		  if(grain4 != grain && grain4!= 0)
 		  {
 			  onsurf++;
@@ -1673,7 +1707,7 @@ void  GrainGeneratorFunc::find_neighbors()
 		}
 		if(z > 0)
 		{
-		  grain5 = gridfine[j-(xpoints*ypoints)].grainname;
+		  grain5 = voxels[j-(xpoints*ypoints)].grainname;
 		  if(grain5 != grain && grain5!= 0)
 		  {
 			  onsurf++;
@@ -1690,7 +1724,7 @@ void  GrainGeneratorFunc::find_neighbors()
 		}
 		if(z < zpoints-1)
 		{
-		  grain6 = gridfine[j+(xpoints*ypoints)].grainname;
+		  grain6 = voxels[j+(xpoints*ypoints)].grainname;
 		  if(grain6 != grain && grain6!= 0)
 		  {
 			  onsurf++;
@@ -1705,7 +1739,7 @@ void  GrainGeneratorFunc::find_neighbors()
 			  grains[grain].numneighbors = nnum;
 		  }
 		}
-		gridfine[j].surfacevoxel = onsurf;
+		voxels[j].surfacevoxel = onsurf;
 	}
   }
   vector<int> nlistcopy;
@@ -1782,7 +1816,14 @@ void GrainGeneratorFunc::matchCrystallography(double quat_symmcubic[24][5],doubl
 	double totaldensity = 0;
 	int badtrycount = 0;
 	double s,c,s1,c1,s2,c2;
-	for(int i=0;i<(18*18*18);i++)
+	int phi1, PHI, phi2;
+	int curodfbin;
+	int g1odfbin, g2odfbin;
+	int numbins = 0;
+	if(crystruct == 1) numbins = 36*36*12;
+	if(crystruct == 2) numbins = 18*18*18;
+    rg.RandomInit((static_cast<unsigned int>(time(NULL))));
+	for(int i=0;i<numbins;i++)
 	{
 		currentodferror = currentodferror + ((actualodf[i].density-simodf[i].density)*(actualodf[i].density-simodf[i].density));
 	}
@@ -1806,19 +1847,29 @@ void GrainGeneratorFunc::matchCrystallography(double quat_symmcubic[24][5],doubl
 			int cureuler1bin = int(curea1/(5.0*m_pi/180.0));
 			int cureuler2bin = int(curea2/(5.0*m_pi/180.0));
 			int cureuler3bin = int(curea3/(5.0*m_pi/180.0));
-			int curodfbin = (cureuler3bin*18*18)+(cureuler2bin*18)+cureuler1bin;
+			if(crystruct == 1) curodfbin = (cureuler3bin*36*36)+(cureuler2bin*36)+cureuler1bin;
+			if(crystruct == 2) curodfbin = (cureuler3bin*18*18)+(cureuler2bin*18)+cureuler1bin;
 			double random = rg.Random();
 			int choose = 0;
 			totaldensity = 0;
-			for(int i=0;i<(18*18*18);i++)
+			for(int i=0;i<numbins;i++)
 			{
 				double density = actualodf[i].density;
 				totaldensity = totaldensity + density;
 				if(random >= totaldensity) choose = i;
 			}
-			int phi1 = choose%18;
-			int PHI = (choose/18)%18;
-			int phi2 = choose/(18*18);
+		    if(crystruct == 1)
+		    {
+				  phi1 = choose%36;
+				  PHI = (choose/36)%36;
+				  phi2 = choose/(36*36);
+		    }
+		    if(crystruct == 2)
+		    {
+				  phi1 = choose%18;
+				  PHI = (choose/18)%18;
+				  phi2 = choose/(18*18);
+		    }
 			double random1 = rg.Random();
 			double random2 = rg.Random();
 			double random3 = rg.Random();
@@ -1838,8 +1889,8 @@ void GrainGeneratorFunc::matchCrystallography(double quat_symmcubic[24][5],doubl
 			q1[2] = s*s1;
 			q1[3] = c*s2;
 			q1[4] = c*c2;
-			double odfchange = ((actualodf[choose].density - simodf[choose].density)*(actualodf[choose].density - simodf[choose].density)) - ((actualodf[choose].density - (simodf[choose].density+(grains[selectedgrain].numvoxels*resx*resy*resz/totalvol)))*(actualodf[choose].density - (simodf[choose].density+(grains[selectedgrain].numvoxels*resx*resy*resz/totalvol))));
-			odfchange = odfchange + (((actualodf[curodfbin].density - simodf[curodfbin].density)*(actualodf[curodfbin].density - simodf[curodfbin].density)) - ((actualodf[curodfbin].density - (simodf[curodfbin].density-(grains[selectedgrain].numvoxels*resx*resy*resz/totalvol)))*(actualodf[curodfbin].density - (simodf[curodfbin].density-(grains[selectedgrain].numvoxels*resx*resy*resz/totalvol)))));
+			double odfchange = ((actualodf[choose].density - simodf[choose].density)*(actualodf[choose].density - simodf[choose].density)) - ((actualodf[choose].density - (simodf[choose].density+(double(grains[selectedgrain].numvoxels)*resx*resy*resz/totalvol)))*(actualodf[choose].density - (simodf[choose].density+(double(grains[selectedgrain].numvoxels)*resx*resy*resz/totalvol))));
+			odfchange = odfchange + (((actualodf[curodfbin].density - simodf[curodfbin].density)*(actualodf[curodfbin].density - simodf[curodfbin].density)) - ((actualodf[curodfbin].density - (simodf[curodfbin].density-(double(grains[selectedgrain].numvoxels)*resx*resy*resz/totalvol)))*(actualodf[curodfbin].density - (simodf[curodfbin].density-(double(grains[selectedgrain].numvoxels)*resx*resy*resz/totalvol)))));
 			vector<int>* nlist = grains[selectedgrain].neighborlist;
 			vector<double>* misolist = grains[selectedgrain].misorientationlist;
 			vector<double>* neighborsurfarealist = grains[selectedgrain].neighborsurfarealist;
@@ -1868,8 +1919,8 @@ void GrainGeneratorFunc::matchCrystallography(double quat_symmcubic[24][5],doubl
 				grains[selectedgrain].euler1 = chooseea1;
 				grains[selectedgrain].euler2 = chooseea2;
 				grains[selectedgrain].euler3 = chooseea3;
-				simodf[choose].density = simodf[choose].density + (grains[selectedgrain].numvoxels*resx*resy*resz/totalvol);
-				simodf[curodfbin].density = simodf[curodfbin].density - (grains[selectedgrain].numvoxels*resx*resy*resz/totalvol);
+				simodf[choose].density = simodf[choose].density + (double(grains[selectedgrain].numvoxels)*resx*resy*resz/totalvol);
+				simodf[curodfbin].density = simodf[curodfbin].density - (double(grains[selectedgrain].numvoxels)*resx*resy*resz/totalvol);
 				for(int j=0;j<nlist->size();j++)
 				{
 					int neighbor = nlist->at(j);
@@ -1910,11 +1961,11 @@ void GrainGeneratorFunc::matchCrystallography(double quat_symmcubic[24][5],doubl
 			int g2euler1bin = int(g2ea1/(5.0*m_pi/180.0));
 			int g2euler2bin = int(g2ea2/(5.0*m_pi/180.0));
 			int g2euler3bin = int(g2ea3/(5.0*m_pi/180.0));
-			int g1odfbin = (g1euler3bin*18*18)+(g1euler2bin*18)+g1euler1bin;
-			int g2odfbin = (g2euler3bin*18*18)+(g2euler2bin*18)+g2euler1bin;
+			if(crystruct == 1) g1odfbin = (g1euler3bin*36*36)+(g1euler2bin*36)+g1euler1bin, g2odfbin = (g2euler3bin*36*36)+(g2euler2bin*36)+g2euler1bin;
+			if(crystruct == 2) g1odfbin = (g1euler3bin*18*18)+(g1euler2bin*18)+g1euler1bin, g2odfbin = (g2euler3bin*18*18)+(g2euler2bin*18)+g2euler1bin;
 			double random = rg.Random();
-			double odfchange = ((actualodf[g1odfbin].density - simodf[g1odfbin].density)*(actualodf[g1odfbin].density - simodf[g1odfbin].density)) - ((actualodf[g1odfbin].density - (simodf[g1odfbin].density-(grains[selectedgrain1].numvoxels*resx*resy*resz/totalvol)+(grains[selectedgrain2].numvoxels*resx*resy*resz/totalvol)))*(actualodf[g1odfbin].density - (simodf[g1odfbin].density-(grains[selectedgrain1].numvoxels*resx*resy*resz/totalvol)+(grains[selectedgrain2].numvoxels*resx*resy*resz/totalvol))));
-			odfchange = odfchange + (((actualodf[g2odfbin].density - simodf[g2odfbin].density)*(actualodf[g2odfbin].density - simodf[g2odfbin].density)) - ((actualodf[g2odfbin].density - (simodf[g2odfbin].density-(grains[selectedgrain2].numvoxels*resx*resy*resz/totalvol)+(grains[selectedgrain1].numvoxels*resx*resy*resz/totalvol)))*(actualodf[g2odfbin].density - (simodf[g2odfbin].density-(grains[selectedgrain2].numvoxels*resx*resy*resz/totalvol)+(grains[selectedgrain1].numvoxels*resx*resy*resz/totalvol)))));
+			double odfchange = ((actualodf[g1odfbin].density - simodf[g1odfbin].density)*(actualodf[g1odfbin].density - simodf[g1odfbin].density)) - ((actualodf[g1odfbin].density - (simodf[g1odfbin].density-(double(grains[selectedgrain1].numvoxels)*resx*resy*resz/totalvol)+(double(grains[selectedgrain2].numvoxels)*resx*resy*resz/totalvol)))*(actualodf[g1odfbin].density - (simodf[g1odfbin].density-(double(grains[selectedgrain1].numvoxels)*resx*resy*resz/totalvol)+(double(grains[selectedgrain2].numvoxels)*resx*resy*resz/totalvol))));
+			odfchange = odfchange + (((actualodf[g2odfbin].density - simodf[g2odfbin].density)*(actualodf[g2odfbin].density - simodf[g2odfbin].density)) - ((actualodf[g2odfbin].density - (simodf[g2odfbin].density-(double(grains[selectedgrain2].numvoxels)*resx*resy*resz/totalvol)+(double(grains[selectedgrain1].numvoxels)*resx*resy*resz/totalvol)))*(actualodf[g2odfbin].density - (simodf[g2odfbin].density-(double(grains[selectedgrain2].numvoxels)*resx*resy*resz/totalvol)+(double(grains[selectedgrain1].numvoxels)*resx*resy*resz/totalvol)))));
 			vector<int>* nlist = grains[selectedgrain1].neighborlist;
 			vector<double>* misolist = grains[selectedgrain1].misorientationlist;
 			vector<double>* neighborsurfarealist = grains[selectedgrain1].neighborsurfarealist;
@@ -1986,8 +2037,8 @@ void GrainGeneratorFunc::matchCrystallography(double quat_symmcubic[24][5],doubl
 				grains[selectedgrain2].euler1 = g1ea1;
 				grains[selectedgrain2].euler2 = g1ea2;
 				grains[selectedgrain2].euler3 = g1ea3;
-				simodf[g1odfbin].density = simodf[g1odfbin].density + (grains[selectedgrain2].numvoxels*resx*resy*resz/totalvol) - (grains[selectedgrain1].numvoxels*resx*resy*resz/totalvol);
-				simodf[g2odfbin].density = simodf[g2odfbin].density + (grains[selectedgrain1].numvoxels*resx*resy*resz/totalvol) - (grains[selectedgrain2].numvoxels*resx*resy*resz/totalvol);
+				simodf[g1odfbin].density = simodf[g1odfbin].density + (double(grains[selectedgrain2].numvoxels)*resx*resy*resz/totalvol) - (double(grains[selectedgrain1].numvoxels)*resx*resy*resz/totalvol);
+				simodf[g2odfbin].density = simodf[g2odfbin].density + (double(grains[selectedgrain1].numvoxels)*resx*resy*resz/totalvol) - (double(grains[selectedgrain2].numvoxels)*resx*resy*resz/totalvol);
 				nlist = grains[selectedgrain1].neighborlist;
 				misolist = grains[selectedgrain1].misorientationlist;
 				neighborsurfarealist = grains[selectedgrain1].neighborsurfarealist;
@@ -2197,13 +2248,11 @@ void  GrainGeneratorFunc::writeCube(string outname1, int numgrains)
   outFile << "ORIGIN 0.0 0.0 0.0" << endl;
   outFile << "SPACING " << resx << " " << resy << " " << resz << endl;
   outFile << "POINT_DATA " << xpoints*ypoints*zpoints << endl;
-  outFile << endl;
-  outFile << endl;
   outFile << "SCALARS GrainID int  1" << endl;
   outFile << "LOOKUP_TABLE default" << endl;
   for (int i = 0; i < (xpoints*ypoints*zpoints); i++)
   {
-    int name = gridfine[i].grainname;
+    int name = voxels[i].grainname;
 	gsizes[name]++;
 	if(i%20 == 0 && i > 0) outFile << endl;
     outFile << "   ";
@@ -2218,7 +2267,7 @@ void  GrainGeneratorFunc::writeCube(string outname1, int numgrains)
   outFile << "LOOKUP_TABLE default" << endl;
   for (int i = 0; i < (xpoints*ypoints*zpoints); i++)
   {
-	int name = gridfine[i].surfacevoxel;
+	int name = voxels[i].surfacevoxel;
 	if(i%20 == 0 && i > 0) outFile << endl;
     outFile << "   ";
 	if(name < 10000) outFile << " ";
@@ -2232,7 +2281,7 @@ void  GrainGeneratorFunc::writeCube(string outname1, int numgrains)
   outFile << "LOOKUP_TABLE default" << endl;
   for (int i = 0; i < (xpoints*ypoints*zpoints); i++)
   {
-	int name = gridfine[i].grainname;
+	int name = voxels[i].grainname;
 	if(i%20 == 0 && i > 0) outFile << endl;
     if(name <= numgrains) outFile << "       1";
     if(name > numgrains) outFile << "       2";
