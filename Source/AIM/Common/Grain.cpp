@@ -55,11 +55,7 @@ nserror(10.0),
 radius1(0.0),
 radius2(0.0),
 radius3(0.0),
-lowanglefraction(0.0),
-grainrank(0.0),
-grainmicrorank(0.0),
-picked(0.0),
-frozen(0.0)
+lowanglefraction(0.0)
 {
   neighborlist = NULL;
   voxellist = NULL;

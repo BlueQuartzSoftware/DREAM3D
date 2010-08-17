@@ -131,7 +131,7 @@ public:
 	void assign_badpoints();
 	void find_neighbors();
 	void merge_containedgrains();
-	int renumber_grains2();
+	int renumber_grains();
 	void reburn_grains();
 	void cleanup_data();
 	void find_kernels(double quat_symmcubic[24][5],double quat_symmhex[12][5]);
