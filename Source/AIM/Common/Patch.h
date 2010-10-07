@@ -28,7 +28,7 @@
 */
 class Patch
 {
-public:
+  public:
     Patch();
     virtual ~Patch();
 
@@ -38,14 +38,14 @@ public:
     int edgePlace[3]; // if it's 0, face edges; if 1, inner edges...
     double normal[3];
     double area;
-	int triID;
-	int e_id[3];
-	int nSpin[2];
+    int triID;
+    int e_id[3];
+    int nSpin[2];
 
   private:
 
-    Patch(const Patch&);    // Copy Constructor Not Implemented
-      void operator=(const Patch&);  // Operator '=' Not Implemented
+    Patch(const Patch&); // Copy Constructor Not Implemented
+    void operator=(const Patch&); // Operator '=' Not Implemented
 };
 
 #endif /* Patch_H_ */
