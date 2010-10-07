@@ -52,18 +52,19 @@ SurfaceMeshFunc::~SurfaceMeshFunc()
   delete []cSquare;
   delete []cVertex;
   delete []pVertex;
-
+  delete []cFedge;
 
 }
 
 int SurfaceMeshFunc::initialize_micro(string filename)
 {
 
-	int i, j, k, l;
-	int id;
+ int i; //, j, k;
+//	int l;
+//	int id;
 	int tgrainname;
 	int surfacevoxel;
-	double tempx, tempy, tempz;
+//	double tempx, tempy, tempz;
 	int xnum, ynum, znum;
 	double xres, yres, zres;
 	const unsigned int size ( 1024 );
@@ -111,9 +112,9 @@ int SurfaceMeshFunc::initialize_micro(string filename)
 	{
 		in >> tgrainname;
 		if(tgrainname <= 0) tgrainname = -3;
-		int col = (i-1)%xDim;
-		int row = ((i-1)/xDim)%yDim;
-		int plane = (i-1)/(xDim*yDim);
+//		int col = (i-1)%xDim;
+//		int row = ((i-1)/xDim)%yDim;
+//		int plane = (i-1)/(xDim*yDim);
 		point[i].grainname = tgrainname;
 //		if(col == 0 || col == (xDim-1) || row == 0 || row == (yDim-1) || plane == 0 || plane == (zDim-1)) point[i].grainname = -3;
 	}
@@ -133,9 +134,9 @@ int SurfaceMeshFunc::initialize_micro(string filename)
 	for(i=1;i<=NS;i++)
 	{
 		in >> surfacevoxel;
-		int col = (i-1)%xDim;
-		int row = ((i-1)/xDim)%yDim;
-		int plane = (i-1)/(xDim*yDim);
+//		int col = (i-1)%xDim;
+//		int row = ((i-1)/xDim)%yDim;
+//		int plane = (i-1)/(xDim*yDim);
 		point[i].surfacevoxel = surfacevoxel;
 	}
 	// Let's input the grainname numbers for each site from micro.input...
@@ -239,45 +240,45 @@ void SurfaceMeshFunc::initialize_nodes(int zID)
     y = find_ycoord(tsite);
     z = find_zcoord(tsite);
 
-    cVertex[id].xc = x + (0.5*xRes);
+    cVertex[id].xc = x + (0.5 * xRes);
     cVertex[id].yc = y;
     cVertex[id].zc = z;
     cVertex[id].nodeKind = 0;
     cVertex[id].newNodeID = -1;
 
     cVertex[id + 1].xc = x;
-    cVertex[id + 1].yc = y + (0.5*yRes);
+    cVertex[id + 1].yc = y + (0.5 * yRes);
     cVertex[id + 1].zc = z;
     cVertex[id + 1].nodeKind = 0;
     cVertex[id + 1].newNodeID = -1;
 
     cVertex[id + 2].xc = x;
     cVertex[id + 2].yc = y;
-    cVertex[id + 2].zc = z + (0.5*zRes);
+    cVertex[id + 2].zc = z + (0.5 * zRes);
     cVertex[id + 2].nodeKind = 0;
     cVertex[id + 2].newNodeID = -1;
 
-   cVertex [id + 3].xc = x + (0.5*xRes);
-   cVertex [id + 3].yc = y + (0.5*yRes);
-   cVertex [id + 3].zc = z;
-   cVertex [id + 3].nodeKind = 0;
-   cVertex [id + 3].newNodeID = -1;
+    cVertex[id + 3].xc = x + (0.5 * xRes);
+    cVertex[id + 3].yc = y + (0.5 * yRes);
+    cVertex[id + 3].zc = z;
+    cVertex[id + 3].nodeKind = 0;
+    cVertex[id + 3].newNodeID = -1;
 
-   cVertex [id + 4].xc = x + (0.5*xRes);
-   cVertex [id + 4].yc = y;
-   cVertex [id + 4].zc = z + (0.5*zRes);
-   cVertex [id + 4].nodeKind = 0;
-   cVertex [id + 4].newNodeID = -1;
+    cVertex[id + 4].xc = x + (0.5 * xRes);
+    cVertex[id + 4].yc = y;
+    cVertex[id + 4].zc = z + (0.5 * zRes);
+    cVertex[id + 4].nodeKind = 0;
+    cVertex[id + 4].newNodeID = -1;
 
-   cVertex [id + 5].xc = x;
-   cVertex [id + 5].yc = y + (0.5*yRes);
-   cVertex [id + 5].zc = z + (0.5*zRes);
-   cVertex [id + 5].nodeKind = 0;
-   cVertex [id + 5].newNodeID = -1;
+    cVertex[id + 5].xc = x;
+    cVertex[id + 5].yc = y + (0.5 * yRes);
+    cVertex[id + 5].zc = z + (0.5 * zRes);
+    cVertex[id + 5].nodeKind = 0;
+    cVertex[id + 5].newNodeID = -1;
 
-    cVertex[id + 6].xc = x + (0.5*xRes);
-    cVertex[id + 6].yc = y + (0.5*yRes);
-    cVertex[id + 6].zc = z + (0.5*zRes);
+    cVertex[id + 6].xc = x + (0.5 * xRes);
+    cVertex[id + 6].yc = y + (0.5 * yRes);
+    cVertex[id + 6].zc = z + (0.5 * zRes);
     cVertex[id + 6].nodeKind = 0;
     cVertex[id + 6].newNodeID = -1;
 
@@ -366,7 +367,7 @@ void SurfaceMeshFunc::initialize_squares(int zID)
 
 int SurfaceMeshFunc::get_number_fEdges(int zID)
 {
-  int  k, m;
+  int k, m;
   int csite, cgrainname, tsite;
   int tNSite[4];
   int tngrainname[4];
@@ -405,18 +406,18 @@ int SurfaceMeshFunc::get_number_fEdges(int zID)
       }
       if (atBulk > 0)
       {
-//        cSquare[k].effect = 1; // mark current square as effective one that can be "marching cubed"...
+        //        cSquare[k].effect = 1; // mark current square as effective one that can be "marching cubed"...
       }
       // Let's count the number of edges...
-//      if (cgrainname > -10 && atBulk == 0)
+      //      if (cgrainname > -10 && atBulk == 0)
       if (atBulk > 0)
       { // coNSider the square iNSide the bulk only..
-	    sqIndex = 0;
-		if(point[csite].surfacevoxel >= 0)
-		{
-			sqIndex = get_square_index(tngrainname);
-			cSquare[k].effect = 1;
-		}
+        sqIndex = 0;
+        if (point[csite].surfacevoxel >= 0)
+        {
+          sqIndex = get_square_index(tngrainname);
+          cSquare[k].effect = 1;
+        }
         if (sqIndex == 15)
         {
           anFlag = treat_anomaly(tNSite, zID);
@@ -443,13 +444,13 @@ int SurfaceMeshFunc::get_number_fEdges(int zID)
         {
           numCEdge = 1;
         }
-		outFile << k << "	" << sqIndex << "	" << numCEdge << endl;
+        outFile << k << "	" << sqIndex << "	" << numCEdge << endl;
         sumEdge = sumEdge + numCEdge;
       }
     }
   }
-  return sumEdge;
   outFile.close();
+  return sumEdge;
 }
 
 void SurfaceMeshFunc::get_nodes_fEdges(int eT2d[20][8], int NST2d[20][8], int zID, int nFEdge)
@@ -564,6 +565,7 @@ void SurfaceMeshFunc::get_nodes_fEdges(int eT2d[20][8], int NST2d[20][8], int zI
 				  cFedge[eid].node_id[1] = tnode2;
 				  cFedge[eid].neigh_grainname[0] = pixgrainname[0];
 				  cFedge[eid].neigh_grainname[1] = pixgrainname[1];
+				  updateVertEdgeMap(tnode1, tnode2, eid);
 				  //if(pixgrainname[0]==pixgrainname[1]){
 				  //printf("wrong %10d   %3d   %10d %10d   %10d %10d\n",
 				  //eid, sqIndex, pixIndex[0], pixIndex[1], pixgrainname[0], pixgrainname[1]);
@@ -1075,57 +1077,15 @@ int SurfaceMeshFunc::get_number_triangles()
       // CoNSider each case as Z. Wu's paper...
       if (nFC == 0)
       { // when there's no face center
-
         nTri0 = nTri0 + get_number_case0_triangles(arrayFE, nFE);
-
       }
       else if (nFC == 2)
       {
-
         nTri2 = nTri2 + get_number_case2_triangles(arrayFE, nFE, arrayFC, nFC);
-        /*
-         int m;
-         int s1, s2, s3, s0;
-         for(m=0; m<6; m++){
-         printf("%5d ", arrayFC[m]);
-         }
-         printf("  ");
-         m = 0;
-         for(m=0; m<6; m++){
-         tsq = sqID[m];
-         s0 = cSquare[tsq].site_id[0];
-         s1 = cSquare[tsq].site_id[1];
-         s2 = cSquare[tsq].site_id[2];
-         s3 = cSquare[tsq].site_id[3];
-         printf("%2d %2d %2d %2d   ", point[s0].grainname, point[s1].grainname, point[s2].grainname, point[s3].grainname);
-         }
-         printf("\n");
-         */
-
       }
       else if (nFC > 2 && nFC <= 6)
       {
-
         nTriM = nTriM + get_number_caseM_triangles(arrayFE, nFE, arrayFC, nFC);
-        /*
-         int m;
-         int s1, s2, s3, s0;
-         for(m=0; m<6; m++){
-         printf("%5d ", arrayFC[m]);
-         }
-         printf("  ");
-         m = 0;
-         for(m=0; m<6; m++){
-         tsq = sqID[m];
-         s0 = cSquare[tsq].site_id[0];
-         s1 = cSquare[tsq].site_id[1];
-         s2 = cSquare[tsq].site_id[2];
-         s3 = cSquare[tsq].site_id[3];
-         printf("%2d %2d %2d %2d   ", point[s0].grainname, point[s1].grainname, point[s2].grainname, point[s3].grainname);
-         }
-         printf("\n");
-         */
-
       }
       else
       {
@@ -1263,6 +1223,7 @@ int SurfaceMeshFunc::get_number_case0_triangles(int *afe, int nfedge)
                 //cFedge[nedge].neigh_grainname[1] = ngrainname1;
                 cFedge[nedge].node_id[0] = nnode2;
                 cFedge[nedge].node_id[1] = nnode1;
+                updateVertEdgeMap(nnode2, nnode1, nedge);
               }
 
             }
@@ -1409,7 +1370,7 @@ int SurfaceMeshFunc::get_number_case2_triangles(int *afe,  int nfedge, int *afc,
   int *count;
   int numN, numTri;
 
-  int *burnt_loop;
+  int *loop;
 
   int openL; // if a loop is an open loop, it's 1; if closed, it's 0...
   int startEdge;
@@ -1579,7 +1540,7 @@ int SurfaceMeshFunc::get_number_case2_triangles(int *afe,  int nfedge, int *afc,
 
     //printf("%5d %5d   ", from, to);
 
-    burnt_loop = new int[numN + 2];
+    loop = new int[numN + 2];
 
     for (i1 = from; i1 < to; i1++)
     {
@@ -1623,13 +1584,14 @@ int SurfaceMeshFunc::get_number_case2_triangles(int *afe,  int nfedge, int *afc,
         cFedge[startEdge].node_id[1] = tnode;
         cFedge[startEdge].neigh_grainname[0] = cFedge[startEdge].neigh_grainname[1];
         cFedge[startEdge].neigh_grainname[1] = tgrainname;
+        updateVertEdgeMap(cFedge[startEdge].node_id[0], cFedge[startEdge].node_id[1], startEdge);
       }
       else
       {
         // do nothing...
       }
 
-      burnt_loop[0] = startEdge;
+      loop[0] = startEdge;
       index = 1;
       endNode = cFedge[startEdge].node_id[1];
       chaser = startEdge;
@@ -1645,12 +1607,12 @@ int SurfaceMeshFunc::get_number_case2_triangles(int *afe,  int nfedge, int *afc,
           cnode2 = cFedge[cedge].node_id[1];
           if ((cedge != chaser) && (endNode == cnode1))
           {
-            burnt_loop[index] = cedge;
+            loop[index] = cedge;
             index++;
           }
           else if ((cedge != chaser) && (endNode == cnode2))
           {
-            burnt_loop[index] = cedge;
+            loop[index] = cedge;
             index++;
             // flip...
             tnode = cFedge[cedge].node_id[0];
@@ -1659,6 +1621,7 @@ int SurfaceMeshFunc::get_number_case2_triangles(int *afe,  int nfedge, int *afc,
             cFedge[cedge].node_id[1] = tnode;
             cFedge[cedge].neigh_grainname[0] = cFedge[cedge].neigh_grainname[1];
             cFedge[cedge].neigh_grainname[1] = tgrainname;
+            updateVertEdgeMap(cFedge[cedge].node_id[0], cFedge[cedge].node_id[1], cedge);
           }
           else
           {
@@ -1667,7 +1630,7 @@ int SurfaceMeshFunc::get_number_case2_triangles(int *afe,  int nfedge, int *afc,
 
         }
 
-        chaser = burnt_loop[index - 1];
+        chaser = loop[index - 1];
         endNode = cFedge[chaser].node_id[1];
 
       } while (index < numN);
@@ -1685,14 +1648,14 @@ int SurfaceMeshFunc::get_number_case2_triangles(int *afe,  int nfedge, int *afc,
         //do nothing...
       }
 
-      delete [] burnt_loop;
+      delete [] loop;
 
     }
     else
     { // if current loop is a closed one....i.e., openL = 0...
 
       startEdge = burnt_list[from];
-      burnt_loop[0] = startEdge;
+      loop[0] = startEdge;
       index = 1;
       endNode = cFedge[startEdge].node_id[1];
       chaser = startEdge;
@@ -1708,12 +1671,12 @@ int SurfaceMeshFunc::get_number_case2_triangles(int *afe,  int nfedge, int *afc,
           cnode2 = cFedge[cedge].node_id[1];
           if ((cedge != chaser) && (endNode == cnode1))
           {
-            burnt_loop[index] = cedge;
+            loop[index] = cedge;
             index++;
           }
           else if ((cedge != chaser) && (endNode == cnode2))
           {
-            burnt_loop[index] = cedge;
+            loop[index] = cedge;
             index++;
             // flip...
             tnode = cFedge[cedge].node_id[0];
@@ -1722,6 +1685,7 @@ int SurfaceMeshFunc::get_number_case2_triangles(int *afe,  int nfedge, int *afc,
             cFedge[cedge].node_id[1] = tnode;
             cFedge[cedge].neigh_grainname[0] = cFedge[cedge].neigh_grainname[1];
             cFedge[cedge].neigh_grainname[1] = tgrainname;
+            updateVertEdgeMap(cFedge[cedge].node_id[0], cFedge[cedge].node_id[1], cedge);
           }
           else
           {
@@ -1730,7 +1694,7 @@ int SurfaceMeshFunc::get_number_case2_triangles(int *afe,  int nfedge, int *afc,
 
         }
 
-        chaser = burnt_loop[index - 1];
+        chaser = loop[index - 1];
         endNode = cFedge[chaser].node_id[1];
 
       } while (index < numN);
@@ -1748,7 +1712,7 @@ int SurfaceMeshFunc::get_number_case2_triangles(int *afe,  int nfedge, int *afc,
         //do nothing...
       }
 
-      delete [] burnt_loop;
+      delete [] loop;
     }
 
   }
@@ -1807,7 +1771,7 @@ int SurfaceMeshFunc::get_number_caseM_triangles(int *afe, int nfedge, int *afc, 
 
   //int tn1, tn2;
 
-  int *burnt_loop;
+  int *loop;
 
   int openL; // if a loop is an open loop, it's 1; if closed, it's 0...
   int startEdge;
@@ -1985,7 +1949,7 @@ int SurfaceMeshFunc::get_number_caseM_triangles(int *afe, int nfedge, int *afc, 
 
     //printf("%5d %5d   ", from, to);
 
-    burnt_loop = new int[(numN + 2)];
+    loop = new int[(numN + 2)];
 
     for (i1 = from; i1 < to; i1++)
     {
@@ -2037,13 +2001,14 @@ int SurfaceMeshFunc::get_number_caseM_triangles(int *afe, int nfedge, int *afc, 
         cFedge[startEdge].node_id[1] = tnode;
         cFedge[startEdge].neigh_grainname[0] = cFedge[startEdge].neigh_grainname[1];
         cFedge[startEdge].neigh_grainname[1] = tgrainname;
+        updateVertEdgeMap(cFedge[startEdge].node_id[0], cFedge[startEdge].node_id[1], startEdge);
       }
       else
       {
         // do nothing...
       }
 
-      burnt_loop[0] = startEdge;
+      loop[0] = startEdge;
       index = 1;
       endNode = cFedge[startEdge].node_id[1];
       chaser = startEdge;
@@ -2059,12 +2024,12 @@ int SurfaceMeshFunc::get_number_caseM_triangles(int *afe, int nfedge, int *afc, 
           cnode2 = cFedge[cedge].node_id[1];
           if ((cedge != chaser) && (endNode == cnode1))
           {
-            burnt_loop[index] = cedge;
+            loop[index] = cedge;
             index++;
           }
           else if ((cedge != chaser) && (endNode == cnode2))
           {
-            burnt_loop[index] = cedge;
+            loop[index] = cedge;
             index++;
             // flip...
             tnode = cFedge[cedge].node_id[0];
@@ -2073,6 +2038,7 @@ int SurfaceMeshFunc::get_number_caseM_triangles(int *afe, int nfedge, int *afc, 
             cFedge[cedge].node_id[1] = tnode;
             cFedge[cedge].neigh_grainname[0] = cFedge[cedge].neigh_grainname[1];
             cFedge[cedge].neigh_grainname[1] = tgrainname;
+            updateVertEdgeMap(cFedge[cedge].node_id[0], cFedge[cedge].node_id[1], cedge);
           }
           else
           {
@@ -2081,7 +2047,7 @@ int SurfaceMeshFunc::get_number_caseM_triangles(int *afe, int nfedge, int *afc, 
 
         }
 
-        chaser = burnt_loop[index - 1];
+        chaser = loop[index - 1];
         endNode = cFedge[chaser].node_id[1];
 
       } while (index < numN);
@@ -2089,7 +2055,7 @@ int SurfaceMeshFunc::get_number_caseM_triangles(int *afe, int nfedge, int *afc, 
       /*
        u = 0;
        for(u=0; u<index; u++){
-       temp = burnt_loop[u];
+       temp = loop[u];
        printf("%5d   %3d   %5d %5d   %5d %5d\n", temp, j1,
        cFedge[temp].node_id[0], cFedge[temp].node_id[1], cFedge[temp].neigh_grainname[0], cFedge[temp].neigh_grainname[1]);
        }
@@ -2108,14 +2074,14 @@ int SurfaceMeshFunc::get_number_caseM_triangles(int *afe, int nfedge, int *afc, 
         //do nothing...
       }
 
-      delete [] burnt_loop;
+      delete [] loop;
 
     }
     else
     { // if current loop is a closed one....i.e., openL = 0...
 
       startEdge = burnt_list[from];
-      burnt_loop[0] = startEdge;
+      loop[0] = startEdge;
       index = 1;
       endNode = cFedge[startEdge].node_id[1];
       chaser = startEdge;
@@ -2131,12 +2097,12 @@ int SurfaceMeshFunc::get_number_caseM_triangles(int *afe, int nfedge, int *afc, 
           cnode2 = cFedge[cedge].node_id[1];
           if ((cedge != chaser) && (endNode == cnode1))
           {
-            burnt_loop[index] = cedge;
+            loop[index] = cedge;
             index++;
           }
           else if ((cedge != chaser) && (endNode == cnode2))
           {
-            burnt_loop[index] = cedge;
+            loop[index] = cedge;
             index++;
             // flip...
             tnode = cFedge[cedge].node_id[0];
@@ -2145,6 +2111,7 @@ int SurfaceMeshFunc::get_number_caseM_triangles(int *afe, int nfedge, int *afc, 
             cFedge[cedge].node_id[1] = tnode;
             cFedge[cedge].neigh_grainname[0] = cFedge[cedge].neigh_grainname[1];
             cFedge[cedge].neigh_grainname[1] = tgrainname;
+            updateVertEdgeMap(cFedge[cedge].node_id[0], cFedge[cedge].node_id[1], cedge);
           }
           else
           {
@@ -2153,7 +2120,7 @@ int SurfaceMeshFunc::get_number_caseM_triangles(int *afe, int nfedge, int *afc, 
 
         }
 
-        chaser = burnt_loop[index - 1];
+        chaser = loop[index - 1];
         endNode = cFedge[chaser].node_id[1];
 
       } while (index < numN);
@@ -2161,7 +2128,7 @@ int SurfaceMeshFunc::get_number_caseM_triangles(int *afe, int nfedge, int *afc, 
       /*
        u = 0;
        for(u=0; u<index; u++){
-       temp = burnt_loop[u];
+       temp = loop[u];
        printf("%5d   %3d   %5d %5d   %5d %5d\n", temp, j1,
        cFedge[temp].node_id[0], cFedge[temp].node_id[1], cFedge[temp].neigh_grainname[0], cFedge[temp].neigh_grainname[1]);
        }
@@ -2180,7 +2147,7 @@ int SurfaceMeshFunc::get_number_caseM_triangles(int *afe, int nfedge, int *afc, 
         //do nothing...
       }
 
-      delete [] burnt_loop;
+      delete [] loop;
     }
 
   }
@@ -2354,7 +2321,7 @@ int SurfaceMeshFunc::get_triangles(int nTriangle)
       {
 
         //printf("%5d ", tidIn);
-        get_case2_triangles(arrayFE, nFE, arrayFC, nFC, tidIn, &tidOut);
+        get_case2_triangles(arrayFE, nFE, arrayFC, nFC, tidIn, &tidOut, bodyCtr, CASE_2);
         tidIn = tidOut;
         //printf("%5d\n", tidIn);
 
@@ -2362,7 +2329,7 @@ int SurfaceMeshFunc::get_triangles(int nTriangle)
       else if (nFC > 2 && nFC <= 6)
       {
 
-        get_caseM_triangles(arrayFE, nFE, arrayFC, nFC, tidIn, &tidOut, bodyCtr);
+        get_case2_triangles(arrayFE, nFE, arrayFC, nFC, tidIn, &tidOut, bodyCtr, CASE_M);
         tidIn = tidOut;
 
       }
@@ -2379,39 +2346,174 @@ int SurfaceMeshFunc::get_triangles(int nTriangle)
 
   }
 
+  delete []arrayFC;
   //printf("%5d\n", tidIn);
 
   return 0;
 }
 
+template<typename T>
+void TripletSort(T a, T b, T c, T* sorted)
+{
+  if ( a > b && a > c)
+  {
+    sorted[2] = a;
+    if (b > c) { sorted[1] = b; sorted[0] = c; }
+    else { sorted[1] = c; sorted[0] = b; }
+  }
+  else if ( b > a && b > c)
+  {
+    sorted[2] = b;
+    if (a > c) { sorted[1] = a; sorted[0] = c; }
+    else { sorted[1] = c; sorted[0] = a; }
+  }
+  else if ( a > b )
+  {
+    sorted[1] = a; sorted[0] = b; sorted[2] = c;
+  }
+  else if (a >= c && b >=c)
+  {
+    sorted[0] = c; sorted[1] = a; sorted[2] = b;
+  }
+  else
+  { sorted[0] = a; sorted[1] = b; sorted[2] = c;}
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void SurfaceMeshFunc::initialize_VertEdgemap()
+{
+  vertPairEdgeIdMap.clear();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void SurfaceMeshFunc::updateVertEdgeMap(int v0, int v1, int edgeId)
+{
+  uint64_t u;
+  if (v0 < v1)
+  {
+    u = ((uint64_t)(v0) << 32) + v1;
+  }
+  else
+  {
+    u = ( (uint64_t)(v1) << 32) + v0;
+  }
+  vertPairEdgeIdMap.insert(std::pair<uint64_t, int>(u, edgeId ) );
+}
+
+
+void SurfaceMeshFunc::updateTriangleEdgeIds(int triId, int v0, int v1, int v2)
+{
+  int v[3];
+  TripletSort<int>(v0, v1, v2, v);
+  uint64_t v64[3] = {v[0], v[1], v[2]}; // Convert to 64 bit values
+  uint64_t u = (v64[0] << 32) + v64[1];
+  int edgeId = vertPairEdgeIdMap[u];
+  cTriangle[triId].e_id[0] = edgeId;
+
+  u = (v64[0] << 32) + v64[2];
+  edgeId = vertPairEdgeIdMap[u];
+  cTriangle[triId].e_id[1] = edgeId;
+
+  u = (v64[1] << 32) + v64[2];
+  edgeId = vertPairEdgeIdMap[u];
+  cTriangle[triId].e_id[2] = edgeId;
+}
+
+void SurfaceMeshFunc::getCaseNumN_GT_3(int & numT, int & numN, int & cnumT,
+                                       int & front, int & back, int & te0,
+                                       int* loop, int & te1, int & tv0, int & tcVertex, int & tv2, int & ctid, int & new_node0, int & new_node1, int & ce)
+{
+    numT = numN - 2;
+    cnumT = 0;
+    front = 0;
+    back = numN - 1;
+    te0 = loop[front];
+    te1 = loop[back];
+    tv0 = cFedge[te0].node_id[0];
+    tcVertex = cFedge[te0].node_id[1];
+    tv2 = cFedge[te1].node_id[0];
+    cTriangle[ctid].v_id[0] = tv0;
+    cTriangle[ctid].v_id[1] = tcVertex;
+    cTriangle[ctid].v_id[2] = tv2;
+    cTriangle[ctid].ngrainname[0] = cFedge[te0].neigh_grainname[0];
+    cTriangle[ctid].ngrainname[1] = cFedge[te0].neigh_grainname[1];
+    updateTriangleEdgeIds(ctid, tv0, tcVertex, tv2);
+    new_node0 = tv2;
+    new_node1 = tcVertex;
+    cnumT++;
+    ctid++;
+    do{
+        if((cnumT % 2) != 0){
+            front = front + 1;
+            ce = loop[front];
+            tv0 = cFedge[ce].node_id[0];
+            tcVertex = cFedge[ce].node_id[1];
+            tv2 = new_node0;
+            cTriangle[ctid].v_id[0] = tv0;
+            cTriangle[ctid].v_id[1] = tcVertex;
+            cTriangle[ctid].v_id[2] = tv2;
+            cTriangle[ctid].ngrainname[0] = cFedge[ce].neigh_grainname[0];
+            cTriangle[ctid].ngrainname[1] = cFedge[ce].neigh_grainname[1];
+            updateTriangleEdgeIds(ctid, tv0, tcVertex, tv2);
+            new_node0 = tcVertex;
+            cnumT++;
+            ctid++;
+        }else{
+            back = back - 1;
+            ce = loop[back];
+            tv0 = cFedge[ce].node_id[0];
+            tcVertex = cFedge[ce].node_id[1];
+            tv2 = new_node0;
+            cTriangle[ctid].v_id[0] = tv0;
+            cTriangle[ctid].v_id[1] = tcVertex;
+            cTriangle[ctid].v_id[2] = tv2;
+            cTriangle[ctid].ngrainname[0] = cFedge[ce].neigh_grainname[0];
+            cTriangle[ctid].ngrainname[1] = cFedge[ce].neigh_grainname[1];
+            updateTriangleEdgeIds(ctid, tv0, tcVertex, tv2);
+            new_node0 = tv0;
+            cnumT++;
+            ctid++;
+        }
+    }
+     while(cnumT < numT);
+}
+
+
+void SurfaceMeshFunc::getCaseNumN_EQ_3(int & te0, int* loop, int & te1, int & te2, int & ctid)
+{
+    te0 = loop[0];
+    te1 = loop[1];
+    te2 = loop[2];
+    cTriangle[ctid].v_id[0] = cFedge[te0].node_id[0];
+    cTriangle[ctid].v_id[1] = cFedge[te1].node_id[0];
+    cTriangle[ctid].v_id[2] = cFedge[te2].node_id[0];
+    cTriangle[ctid].ngrainname[0] = cFedge[te0].neigh_grainname[0];
+    cTriangle[ctid].ngrainname[1] = cFedge[te0].neigh_grainname[1];
+    updateTriangleEdgeIds(ctid, cFedge[te0].node_id[0], cFedge[te1].node_id[0], cFedge[te2].node_id[0]);
+    ctid++;
+}
+
 void SurfaceMeshFunc::get_case0_triangles(int *afe, int nfedge, int tin, int *tout)
 {
 
-  int ii, i, j, jj, k, kk, k1, mm;
-
+  int ii, i, j, k, kk, k1, j1, i1;
   int loopID;
   int tail, head, coin;
-
   int cedge, nedge;
   int cgrainname1, cgrainname2, cnode1, cnode2;
   int ngrainname1, ngrainname2, nnode1, nnode2;
-//  int tgrainname, tnode;
   int nucleus, chaser;
-//  int start, end;
-
   int grainnameFlag, nodeFlag, flip;
-
   int bflag, nbflag;
   int *burnt;
   int *burnt_list;
-
-
   int *count;
-  int numN, sumN;
-  int from;
-
- // int te, tn1, tn2;
-
+  int numN;
+  int from, to;
   int *loop;
   int ctid;
   int front, back;
@@ -2421,7 +2523,6 @@ void SurfaceMeshFunc::get_case0_triangles(int *afe, int nfedge, int tin, int *to
 
   burnt = new int[nfedge];
   burnt_list = new int[nfedge];
-
 
   // initialize burn flags for face edges...
   for (ii = 0; ii < nfedge; ii++)
@@ -2511,20 +2612,18 @@ void SurfaceMeshFunc::get_case0_triangles(int *afe, int nfedge, int tin, int *to
                 //cFedge[nedge].neigh_grainname[1] = ngrainname1;
                 cFedge[nedge].node_id[0] = nnode2;
                 cFedge[nedge].node_id[1] = nnode1;
+                updateVertEdgeMap(nnode2, nnode1, nedge);
               }
-
             }
             else
             {
               // do nothing...
             }
-
           }
           else
           {
             // do nothing...
           }
-
         }
 
         if (tail == head)
@@ -2565,728 +2664,82 @@ void SurfaceMeshFunc::get_case0_triangles(int *afe, int nfedge, int tin, int *to
   }
 
   // Let's do triangulation...
-  sumN = 0;
+  to = 0;
   ctid = tin;
 
-  for (jj = 1; jj < loopID; jj++)
+  for (j1 = 1; j1 < loopID; j1++)
   {
 
-    numN = count[jj];
-    sumN = sumN + numN;
-    from = sumN - numN;
+    numN = count[j1];
+    to = to + numN;
+    from = to - numN;
 
     loop = new int[numN];
 
-    for (mm = 0; mm < numN; mm++)
+    for (i1 = 0; i1 < numN; i1++)
     {
-      loop[mm] = burnt_list[from + mm];
+      loop[i1] = burnt_list[from + i1];
     }
 
     if (numN == 3)
     {
-
-      te0 = loop[0];
-      te1 = loop[1];
-      te2 = loop[2];
-      cTriangle[ctid].v_id[0] = cFedge[te0].node_id[0];
-      cTriangle[ctid].v_id[1] = cFedge[te1].node_id[0];
-      cTriangle[ctid].v_id[2] = cFedge[te2].node_id[0];
-      cTriangle[ctid].ngrainname[0] = cFedge[te0].neigh_grainname[0];
-      cTriangle[ctid].ngrainname[1] = cFedge[te0].neigh_grainname[1];
-      ctid++;
-
+      getCaseNumN_EQ_3(te0, loop, te1, te2, ctid);
     }
     else if (numN > 3)
     {
-
-      numT = numN - 2;
-      cnumT = 0;
-      front = 0;
-      back = numN - 1;
-
-      te0 = loop[front];
-      te1 = loop[back];
-      tv0 = cFedge[te0].node_id[0];
-      tcVertex = cFedge[te0].node_id[1];
-      tv2 = cFedge[te1].node_id[0];
-      cTriangle[ctid].v_id[0] = tv0;
-      cTriangle[ctid].v_id[1] = tcVertex;
-      cTriangle[ctid].v_id[2] = tv2;
-      cTriangle[ctid].ngrainname[0] = cFedge[te0].neigh_grainname[0];
-      cTriangle[ctid].ngrainname[1] = cFedge[te0].neigh_grainname[1];
-      new_node0 = tv2;
-      new_node1 = tcVertex;
-
-      cnumT++;
-      ctid++;
-
-      do
-      {
-
-        if ((cnumT % 2) != 0)
-        {
-
-          front = front + 1;
-          ce = loop[front];
-          tv0 = cFedge[ce].node_id[0];
-          tcVertex = cFedge[ce].node_id[1];
-          tv2 = new_node0;
-          cTriangle[ctid].v_id[0] = tv0;
-          cTriangle[ctid].v_id[1] = tcVertex;
-          cTriangle[ctid].v_id[2] = tv2;
-          cTriangle[ctid].ngrainname[0] = cFedge[ce].neigh_grainname[0];
-          cTriangle[ctid].ngrainname[1] = cFedge[ce].neigh_grainname[1];
-          new_node0 = tcVertex;
-          cnumT++;
-          ctid++;
-
-        }
-        else
-        {
-
-          back = back - 1;
-          ce = loop[back];
-          tv0 = cFedge[ce].node_id[0];
-          tcVertex = cFedge[ce].node_id[1];
-          tv2 = new_node0;
-          cTriangle[ctid].v_id[0] = tv0;
-          cTriangle[ctid].v_id[1] = tcVertex;
-          cTriangle[ctid].v_id[2] = tv2;
-          cTriangle[ctid].ngrainname[0] = cFedge[ce].neigh_grainname[0];
-          cTriangle[ctid].ngrainname[1] = cFedge[ce].neigh_grainname[1];
-          new_node0 = tv0;
-          cnumT++;
-          ctid++;
-        }
-
-      } while (cnumT < numT);
-
+      getCaseNumN_GT_3(numT, numN, cnumT, front, back, te0, loop, te1, tv0, tcVertex, tv2, ctid, new_node0, new_node1, ce);
     }
     else
     {
       // do nothing...
     }
-
     delete [] loop;
-
   }
 
   *tout = ctid;
-  //printf("%10d\n", ctid);
-
   delete [] burnt;
   delete [] burnt_list;
   delete [] count;
-
 }
 
-void SurfaceMeshFunc::get_case2_triangles(int *afe, int nfedge, int *afc, int nfctr, int tin, int *tout)
+void SurfaceMeshFunc::get_case2_triangles(int *afe, int nfedge, int *afc, int nfctr,
+                                          int tin, int *tout, int ccn, int tcase)
 {
-
-  int ii, i, j, k, kk, k1, n, i1, j1;
-
+  int ii, i, j, k, kk, k1, j1, i1;
   int loopID;
   int tail, head, coin;
-
   int cedge, nedge;
   int cgrainname1, cgrainname2, cnode1, cnode2;
   int ngrainname1, ngrainname2, nnode1, nnode2;
-  int tgrainname, tnode;
   int nucleus, chaser;
-  int start, end;
-  int from, to;
-
   int grainnameFlag, nodeFlag, flip;
-
   int bflag, nbflag;
   int *burnt;
   int *burnt_list;
-
-
   int *count;
-  int numN, numTri;
-
- // int te, tn1, tn2;
-
-  int *burnt_loop;
-
-  int openL; // if a loop is an open loop, it's 1; if closed, it's 0...
-  int startEdge;
-  int endNode;
-  int index;
-
-  //int sumN;
-
+  int numN;
+  int from, to;
+  int *loop;
   int ctid;
   int front, back;
   int ce;
   int te0, te1, te2, tv0, tcVertex, tv2;
   int numT, cnumT, new_node0, new_node1;
 
-  burnt = new int[nfedge];
-  burnt_list = new int[nfedge];
-
-
-  // initialize burn flags for face edges...
-  for (ii = 0; ii < nfedge; ii++)
-  {
-    burnt[ii] = 0;
-    burnt_list[ii] = -1;
-  }
-
-  loopID = 1;
-  tail = 0;
-  head = 0;
-
-  for (i = 0; i < nfedge; i++)
-  {
-
-    cedge = afe[i];
-    bflag = burnt[i];
-
-    if (bflag == 0)
-    {
-
-      nucleus = cedge;
-      burnt[i] = loopID;
-      burnt_list[tail] = cedge;
-
-      do
-      {
-
-        chaser = burnt_list[tail];
-
-        cgrainname1 = cFedge[chaser].neigh_grainname[0];
-        cgrainname2 = cFedge[chaser].neigh_grainname[1];
-        cnode1 = cFedge[chaser].node_id[0];
-        cnode2 = cFedge[chaser].node_id[1];
-
-        for (j = 0; j < nfedge; j++)
-        {
-
-          nedge = afe[j];
-          nbflag = burnt[j];
-
-          if (nbflag == 0)
-          {
-
-            ngrainname1 = cFedge[nedge].neigh_grainname[0];
-            ngrainname2 = cFedge[nedge].neigh_grainname[1];
-            nnode1 = cFedge[nedge].node_id[0];
-            nnode2 = cFedge[nedge].node_id[1];
-
-            // checking if neighbor edge has same neighboring grainnames...
-            if (((cgrainname1 == ngrainname1) && (cgrainname2 == ngrainname2)) || ((cgrainname1 == ngrainname2) && (cgrainname2 == ngrainname1)))
-            {
-              grainnameFlag = 1;
-            }
-            else
-            {
-              grainnameFlag = 0;
-            }
-
-            // checking if neighor egde is contiguous...
-            if ((cnode1 == nnode1) && (cnode2 != nnode2))
-            {
-              nodeFlag = 1;
-            }
-            else if ((cnode1 == nnode2) && (cnode2 != nnode1))
-            {
-              nodeFlag = 1;
-            }
-            else if ((cnode2 == nnode1) && (cnode1 != nnode2))
-            {
-              nodeFlag = 1;
-            }
-            else if ((cnode2 == nnode2) && (cnode1 != nnode1))
-            {
-              nodeFlag = 1;
-            }
-            else
-            {
-              nodeFlag = 0;
-            }
-
-            if (grainnameFlag == 1 && nodeFlag == 1)
-            {
-
-              head = head + 1;
-              burnt_list[head] = nedge;
-              burnt[j] = loopID;
-
-            }
-            else
-            {
-              // do nothing...
-            }
-
-          }
-          else
-          {
-            // do nothing...
-          }
-
-        }
-
-        if (tail == head)
-        {
-          coin = 0;
-          tail = tail + 1;
-          head = tail;
-          loopID++;
-        }
-        else
-        {
-          tail = tail + 1;
-          coin = 1;
-        }
-
-      } while (coin);
-
-    }
-
-  }
-
-  count = new int[loopID];
-
-  for (k1 = 1; k1 < loopID; k1++)
-  {
-    count[k1] = 0;
-  }
-
-  for (k = 1; k < loopID; k++)
-  {
-    for (kk = 0; kk < nfedge; kk++)
-    {
-      if (k == burnt[kk])
-      {
-        count[k] = count[k] + 1;
-      }
-    }
-  }
-
-  // Let's make complete loops...
-  numTri = 0;
-  start = afc[0];
-  end = afc[1];
-  //printf("\n\n");
-  //printf("%10d %10d\n", start, end);
-  to = 0;
-  from = 0;
-  j1 = 1;
-
-  // Let's do triangulation...
-  ctid = tin;
-
-  for (j1 = 1; j1 < loopID; j1++)
-  {
-
-    openL = 0; // current loop is closed...
-
-    numN = count[j1];
-
-    to = to + numN;
-    from = to - numN;
-
-    burnt_loop = new int[numN];
-
-    for (i1 = from; i1 < to; i1++)
-    {
-
-      cedge = burnt_list[i1];
-      cnode1 = cFedge[cedge].node_id[0];
-      cnode2 = cFedge[cedge].node_id[1];
-
-      if (start == cnode1)
-      {
-        openL = 1; // loop is open...
-        startEdge = cedge;
-        flip = 0;
-      }
-      else if (start == cnode2)
-      {
-        openL = 1;
-        startEdge = cedge;
-        flip = 1;
-      }
-      else
-      {
-        // do nothing...
-      }
-
-    }
-
-    //printf("   start edge & node: %5d %5d", startEdge, cFedge[startEdge].node_id[0]);
-    //printf("   open flag: %2d", openL);
-    //printf("   flip flag: %2d", flip);
-    //printf("\n");
-
-    if (openL == 1)
-    { // if current loop is an open loop...
-
-      if (flip == 1)
-      {
-        tnode = cFedge[startEdge].node_id[0];
-        tgrainname = cFedge[startEdge].neigh_grainname[0];
-        cFedge[startEdge].node_id[0] = cFedge[startEdge].node_id[1];
-        cFedge[startEdge].node_id[1] = tnode;
-        cFedge[startEdge].neigh_grainname[0] = cFedge[startEdge].neigh_grainname[1];
-        cFedge[startEdge].neigh_grainname[1] = tgrainname;
-      }
-      else
-      {
-        // do nothing...
-      }
-
-      burnt_loop[0] = startEdge;
-      index = 1;
-      endNode = cFedge[startEdge].node_id[1];
-      chaser = startEdge;
-
-      do
-      {
-
-        for (n = from; n < to; n++)
-        {
-
-          cedge = burnt_list[n];
-          cnode1 = cFedge[cedge].node_id[0];
-          cnode2 = cFedge[cedge].node_id[1];
-          if ((cedge != chaser) && (endNode == cnode1))
-          {
-            burnt_loop[index] = cedge;
-            index++;
-          }
-          else if ((cedge != chaser) && (endNode == cnode2))
-          {
-            burnt_loop[index] = cedge;
-            index++;
-            // flip...
-            tnode = cFedge[cedge].node_id[0];
-            tgrainname = cFedge[cedge].neigh_grainname[0];
-            cFedge[cedge].node_id[0] = cFedge[cedge].node_id[1];
-            cFedge[cedge].node_id[1] = tnode;
-            cFedge[cedge].neigh_grainname[0] = cFedge[cedge].neigh_grainname[1];
-            cFedge[cedge].neigh_grainname[1] = tgrainname;
-          }
-          else
-          {
-            // do nothing...
-          }
-
-        }
-
-        chaser = burnt_loop[index - 1];
-        endNode = cFedge[chaser].node_id[1];
-
-      } while (index < numN);
-
-      if (numN == 2)
-      {
-
-        te0 = burnt_loop[0];
-        te1 = burnt_loop[1];
-        cTriangle[ctid].v_id[0] = cFedge[te0].node_id[0];
-        cTriangle[ctid].v_id[1] = cFedge[te1].node_id[0];
-        cTriangle[ctid].v_id[2] = cFedge[te1].node_id[1];
-        cTriangle[ctid].ngrainname[0] = cFedge[te0].neigh_grainname[0];
-        cTriangle[ctid].ngrainname[1] = cFedge[te0].neigh_grainname[1];
-        ctid++;
-
-      }
-      else if (numN > 2)
-      {
-
-        numT = numN - 1; // Note that it's open loop...
-        cnumT = 0;
-        front = 0;
-        back = numN;
-
-        te0 = burnt_loop[front];
-        te1 = burnt_loop[back - 1];
-        tv0 = cFedge[te0].node_id[0];
-        tcVertex = cFedge[te0].node_id[1];
-        tv2 = cFedge[te1].node_id[1];
-        cTriangle[ctid].v_id[0] = tv0;
-        cTriangle[ctid].v_id[1] = tcVertex;
-        cTriangle[ctid].v_id[2] = tv2;
-        cTriangle[ctid].ngrainname[0] = cFedge[te0].neigh_grainname[0];
-        cTriangle[ctid].ngrainname[1] = cFedge[te0].neigh_grainname[1];
-        new_node0 = tv2;
-        new_node1 = tcVertex;
-
-        cnumT++;
-        ctid++;
-
-        do
-        {
-
-          if ((cnumT % 2) != 0)
-          {
-
-            front = front + 1;
-            ce = burnt_loop[front];
-            tv0 = cFedge[ce].node_id[0];
-            tcVertex = cFedge[ce].node_id[1];
-            tv2 = new_node0;
-            cTriangle[ctid].v_id[0] = tv0;
-            cTriangle[ctid].v_id[1] = tcVertex;
-            cTriangle[ctid].v_id[2] = tv2;
-            cTriangle[ctid].ngrainname[0] = cFedge[ce].neigh_grainname[0];
-            cTriangle[ctid].ngrainname[1] = cFedge[ce].neigh_grainname[1];
-            new_node0 = tcVertex;
-            cnumT++;
-            ctid++;
-
-          }
-          else
-          {
-
-            back = back - 1;
-            ce = burnt_loop[back];
-            tv0 = cFedge[ce].node_id[0];
-            tcVertex = cFedge[ce].node_id[1];
-            tv2 = new_node0;
-            cTriangle[ctid].v_id[0] = tv0;
-            cTriangle[ctid].v_id[1] = tcVertex;
-            cTriangle[ctid].v_id[2] = tv2;
-            cTriangle[ctid].ngrainname[0] = cFedge[ce].neigh_grainname[0];
-            cTriangle[ctid].ngrainname[1] = cFedge[ce].neigh_grainname[1];
-            new_node0 = tv0;
-            cnumT++;
-            ctid++;
-          }
-
-        } while (cnumT < numT);
-
-      }
-      else
-      {
-        // do nothing...
-      }
-
-      /*
-       int s;
-       int temp, temp1, temp2;
-       for(s=0; s<numN; s++){
-       temp = burnt_loop[s];
-       temp1 = cFedge[temp].node_id[0];
-       temp2 = cFedge[temp].node_id[1];
-       printf("%5d   %5d %5d\n", temp, temp1, temp2);
-       }
-       printf("\n");
-       */
-
-      delete [] burnt_loop;
-
-    }
-    else
-    { // if current loop is a closed one....i.e., openL = 0...
-
-      startEdge = burnt_list[from];
-      burnt_loop[0] = startEdge;
-      index = 1;
-      endNode = cFedge[startEdge].node_id[1];
-      chaser = startEdge;
-
-      do
-      {
-
-        for (n = from; n < to; n++)
-        {
-
-          cedge = burnt_list[n];
-          cnode1 = cFedge[cedge].node_id[0];
-          cnode2 = cFedge[cedge].node_id[1];
-          if ((cedge != chaser) && (endNode == cnode1))
-          {
-            burnt_loop[index] = cedge;
-            index++;
-          }
-          else if ((cedge != chaser) && (endNode == cnode2))
-          {
-            burnt_loop[index] = cedge;
-            index++;
-            // flip...
-            tnode = cFedge[cedge].node_id[0];
-            tgrainname = cFedge[cedge].neigh_grainname[0];
-            cFedge[cedge].node_id[0] = cFedge[cedge].node_id[1];
-            cFedge[cedge].node_id[1] = tnode;
-            cFedge[cedge].neigh_grainname[0] = cFedge[cedge].neigh_grainname[1];
-            cFedge[cedge].neigh_grainname[1] = tgrainname;
-          }
-          else
-          {
-            // do nothing...
-          }
-
-        }
-
-        chaser = burnt_loop[index - 1];
-        endNode = cFedge[chaser].node_id[1];
-
-      } while (index < numN);
-
-      if (numN == 3)
-      {
-
-        te0 = burnt_loop[0];
-        te1 = burnt_loop[1];
-        te2 = burnt_loop[2];
-        cTriangle[ctid].v_id[0] = cFedge[te0].node_id[0];
-        cTriangle[ctid].v_id[1] = cFedge[te1].node_id[0];
-        cTriangle[ctid].v_id[2] = cFedge[te2].node_id[0];
-        cTriangle[ctid].ngrainname[0] = cFedge[te0].neigh_grainname[0];
-        cTriangle[ctid].ngrainname[1] = cFedge[te0].neigh_grainname[1];
-        ctid++;
-
-      }
-      else if (numN > 3)
-      {
-
-        numT = numN - 2;
-        cnumT = 0;
-        front = 0;
-        back = numN - 1;
-
-        te0 = burnt_loop[front];
-        te1 = burnt_loop[back];
-        tv0 = cFedge[te0].node_id[0];
-        tcVertex = cFedge[te0].node_id[1];
-        tv2 = cFedge[te1].node_id[0];
-        cTriangle[ctid].v_id[0] = tv0;
-        cTriangle[ctid].v_id[1] = tcVertex;
-        cTriangle[ctid].v_id[2] = tv2;
-        cTriangle[ctid].ngrainname[0] = cFedge[te0].neigh_grainname[0];
-        cTriangle[ctid].ngrainname[1] = cFedge[te0].neigh_grainname[1];
-        new_node0 = tv2;
-        new_node1 = tcVertex;
-
-        cnumT++;
-        ctid++;
-
-        do
-        {
-
-          if ((cnumT % 2) != 0)
-          {
-
-            front = front + 1;
-            ce = burnt_loop[front];
-            tv0 = cFedge[ce].node_id[0];
-            tcVertex = cFedge[ce].node_id[1];
-            tv2 = new_node0;
-            cTriangle[ctid].v_id[0] = tv0;
-            cTriangle[ctid].v_id[1] = tcVertex;
-            cTriangle[ctid].v_id[2] = tv2;
-            cTriangle[ctid].ngrainname[0] = cFedge[ce].neigh_grainname[0];
-            cTriangle[ctid].ngrainname[1] = cFedge[ce].neigh_grainname[1];
-            new_node0 = tcVertex;
-            cnumT++;
-            ctid++;
-
-          }
-          else
-          {
-
-            back = back - 1;
-            ce = burnt_loop[back];
-            tv0 = cFedge[ce].node_id[0];
-            tcVertex = cFedge[ce].node_id[1];
-            tv2 = new_node0;
-            cTriangle[ctid].v_id[0] = tv0;
-            cTriangle[ctid].v_id[1] = tcVertex;
-            cTriangle[ctid].v_id[2] = tv2;
-            cTriangle[ctid].ngrainname[0] = cFedge[ce].neigh_grainname[0];
-            cTriangle[ctid].ngrainname[1] = cFedge[ce].neigh_grainname[1];
-            new_node0 = tv0;
-            cnumT++;
-            ctid++;
-          }
-
-        } while (cnumT < numT);
-
-      }
-      else
-      {
-        // do nothing...
-      }
-
-      /*
-       int s1;
-       int ttemp, ttemp1, ttemp2;
-       for(s1=0; s1<numN; s1++){
-       ttemp = burnt_loop[s1];
-       ttemp1 = cFedge[ttemp].node_id[0];
-       ttemp2 = cFedge[ttemp].node_id[1];
-       printf("%5d   %5d %5d\n", ttemp, ttemp1, ttemp2);
-       }
-       printf("\n");
-       */
-
-      delete [] burnt_loop;
-
-    }
-
-  }
-
-  *tout = ctid;
-  //printf("%10d ", ctid);
-
-  delete [] burnt;
-  delete [] burnt_list;
-  delete [] count;
-
-}
-
-void SurfaceMeshFunc::get_caseM_triangles(int *afe, int nfedge, int *afc, int nfctr, int tin, int *tout, int ccn)
-{
-
-  int ii, i, j, k, kk, k1, n, i1, j1, n1, iii;
-
-  int loopID;
-  int tail, head, coin;
-
-  int cedge, nedge;
-  int cgrainname1, cgrainname2, cnode1, cnode2;
-  int ngrainname1, ngrainname2, nnode1, nnode2;
+  int  n;
   int tgrainname, tnode;
-  int nucleus, chaser;
   int start;
-  int from, to;
-
-  int grainnameFlag, nodeFlag, flip;
-
-  int bflag, nbflag;
-  int *burnt;
-  int *burnt_list;
-
-
-  int *count;
-  int numN, numTri;
-
-  int tn0, tn1;
-
-  int *burnt_loop;
-
+  int numTri;
   int openL; // if a loop is an open loop, it's 1; if closed, it's 0...
   int startEdge;
   int endNode;
   int index;
-
-//  int u, temp;
-//
-//  int sumN;
-
-  int ctid;
-  int front, back;
-  int ce;
-  int te0, te1, te2, tv0, tcVertex, tv2, ts0, ts1;
-  int numT, cnumT, new_node0, new_node1;
+  int tn0, tn1;
+  int n1, iii;
+  int ts0, ts1;
 
   burnt = new int[nfedge];
   burnt_list = new int[nfedge];
-
 
   // initialize burn flags for face edges...
   for (ii = 0; ii < nfedge; ii++)
@@ -3347,19 +2800,19 @@ void SurfaceMeshFunc::get_caseM_triangles(int *afe, int nfedge, int *afc, int nf
             }
 
             // checking if neighor egde is contiguous...
-            if ((cnode1 == nnode1) && (cnode2 != nnode2))
+            if ((cnode2 == nnode1) && (cnode1 != nnode2))
+            {
+               nodeFlag = 1;
+            }
+            else if ((cnode2 == nnode2) && (cnode1 != nnode1))
+            {
+              nodeFlag = 1;
+            }
+            else if ((cnode1 == nnode1) && (cnode2 != nnode2))
             {
               nodeFlag = 1;
             }
             else if ((cnode1 == nnode2) && (cnode2 != nnode1))
-            {
-              nodeFlag = 1;
-            }
-            else if ((cnode2 == nnode1) && (cnode1 != nnode2))
-            {
-              nodeFlag = 1;
-            }
-            else if ((cnode2 == nnode2) && (cnode1 != nnode1))
             {
               nodeFlag = 1;
             }
@@ -3380,13 +2833,11 @@ void SurfaceMeshFunc::get_caseM_triangles(int *afe, int nfedge, int *afc, int nf
             {
               // do nothing...
             }
-
           }
           else
           {
             // do nothing...
           }
-
         }
 
         if (tail == head)
@@ -3428,36 +2879,28 @@ void SurfaceMeshFunc::get_caseM_triangles(int *afe, int nfedge, int *afc, int nf
 
   // Let's make complete loops...
   numTri = 0;
-  to = 0;
   from = 0;
   j1 = 1;
 
+  // Let's do triangulation...
+  to = 0;
   ctid = tin;
 
   for (j1 = 1; j1 < loopID; j1++)
   {
-
     openL = 0; // current loop is closed...
-
     numN = count[j1];
-
     to = to + numN;
     from = to - numN;
-
-    burnt_loop = new int[numN];
-
+    loop = new int[numN];
     for (i1 = from; i1 < to; i1++)
     {
-
       cedge = burnt_list[i1];
       cnode1 = cFedge[cedge].node_id[0];
       cnode2 = cFedge[cedge].node_id[1];
-
       for (n1 = 0; n1 < nfctr; n1++)
       {
-
         start = afc[n1];
-
         if (start == cnode1)
         {
           openL = 1; // loop is open...
@@ -3475,7 +2918,6 @@ void SurfaceMeshFunc::get_caseM_triangles(int *afe, int nfedge, int *afc, int nf
           // do nothing...
         }
       }
-
     }
 
     if (openL == 1)
@@ -3489,13 +2931,15 @@ void SurfaceMeshFunc::get_caseM_triangles(int *afe, int nfedge, int *afc, int nf
         cFedge[startEdge].node_id[1] = tnode;
         cFedge[startEdge].neigh_grainname[0] = cFedge[startEdge].neigh_grainname[1];
         cFedge[startEdge].neigh_grainname[1] = tgrainname;
+        updateVertEdgeMap(cFedge[startEdge].node_id[0], cFedge[startEdge].node_id[1], startEdge);
+
       }
       else
       {
         // do nothing...
       }
 
-      burnt_loop[0] = startEdge;
+      loop[0] = startEdge;
       index = 1;
       endNode = cFedge[startEdge].node_id[1];
       chaser = startEdge;
@@ -3511,12 +2955,12 @@ void SurfaceMeshFunc::get_caseM_triangles(int *afe, int nfedge, int *afc, int nf
           cnode2 = cFedge[cedge].node_id[1];
           if ((cedge != chaser) && (endNode == cnode1))
           {
-            burnt_loop[index] = cedge;
+            loop[index] = cedge;
             index++;
           }
           else if ((cedge != chaser) && (endNode == cnode2))
           {
-            burnt_loop[index] = cedge;
+            loop[index] = cedge;
             index++;
             // flip...
             tnode = cFedge[cedge].node_id[0];
@@ -3525,6 +2969,8 @@ void SurfaceMeshFunc::get_caseM_triangles(int *afe, int nfedge, int *afc, int nf
             cFedge[cedge].node_id[1] = tnode;
             cFedge[cedge].neigh_grainname[0] = cFedge[cedge].neigh_grainname[1];
             cFedge[cedge].neigh_grainname[1] = tgrainname;
+            updateVertEdgeMap(cFedge[cedge].node_id[0], cFedge[cedge].node_id[1], cedge);
+
           }
           else
           {
@@ -3533,127 +2979,63 @@ void SurfaceMeshFunc::get_caseM_triangles(int *afe, int nfedge, int *afc, int nf
 
         }
 
-        chaser = burnt_loop[index - 1];
+        chaser = loop[index - 1];
         endNode = cFedge[chaser].node_id[1];
 
       } while (index < numN);
 
-      /*
-       u = 0;
-       for(u=0; u<index; u++){
-       temp = burnt_loop[u];
-       printf("%5d   %3d   %5d %5d   %5d %5d\n", temp, j1,
-       cFedge[temp].node_id[0], cFedge[temp].node_id[1], cFedge[temp].neigh_grainname[0], cFedge[temp].neigh_grainname[1]);
-       }
-       */
-
-      //triangulation...
-      for (iii = 0; iii < numN; iii++)
-      {
-        ce = burnt_loop[iii];
-        tn0 = cFedge[ce].node_id[0];
-        tn1 = cFedge[ce].node_id[1];
-        ts0 = cFedge[ce].neigh_grainname[0];
-        ts1 = cFedge[ce].neigh_grainname[1];
-        cTriangle[ctid].v_id[0] = ccn;
-        cTriangle[ctid].v_id[1] = tn0;
-        cTriangle[ctid].v_id[2] = tn1;
-        cTriangle[ctid].ngrainname[0] = ts0;
-        cTriangle[ctid].ngrainname[1] = ts1;
-        ctid++;
-      }
-
-      delete [] burnt_loop;
-
-    }
-    else
-    { // if current loop is a closed one....i.e., openL = 0...
-
-      startEdge = burnt_list[from];
-      burnt_loop[0] = startEdge;
-      index = 1;
-      endNode = cFedge[startEdge].node_id[1];
-      chaser = startEdge;
-
-      do
-      {
-
-        for (n = from; n < to; n++)
+  if (tcase == CASE_M)
+  {
+    //triangulation...
+       for (iii = 0; iii < numN; iii++)
         {
-
-          cedge = burnt_list[n];
-          cnode1 = cFedge[cedge].node_id[0];
-          cnode2 = cFedge[cedge].node_id[1];
-          if ((cedge != chaser) && (endNode == cnode1))
-          {
-            burnt_loop[index] = cedge;
-            index++;
-          }
-          else if ((cedge != chaser) && (endNode == cnode2))
-          {
-            burnt_loop[index] = cedge;
-            index++;
-            // flip...
-            tnode = cFedge[cedge].node_id[0];
-            tgrainname = cFedge[cedge].neigh_grainname[0];
-            cFedge[cedge].node_id[0] = cFedge[cedge].node_id[1];
-            cFedge[cedge].node_id[1] = tnode;
-            cFedge[cedge].neigh_grainname[0] = cFedge[cedge].neigh_grainname[1];
-            cFedge[cedge].neigh_grainname[1] = tgrainname;
-          }
-          else
-          {
-            // do nothing...
-          }
-
+          ce = loop[iii];
+          tn0 = cFedge[ce].node_id[0];
+          tn1 = cFedge[ce].node_id[1];
+          ts0 = cFedge[ce].neigh_grainname[0];
+          ts1 = cFedge[ce].neigh_grainname[1];
+          cTriangle[ctid].v_id[0] = ccn;
+          cTriangle[ctid].v_id[1] = tn0;
+          cTriangle[ctid].v_id[2] = tn1;
+          cTriangle[ctid].ngrainname[0] = ts0;
+          cTriangle[ctid].ngrainname[1] = ts1;
+          updateTriangleEdgeIds(ctid, ccn, tn0, tn1);
+          ctid++;
         }
-
-        chaser = burnt_loop[index - 1];
-        endNode = cFedge[chaser].node_id[1];
-
-      } while (index < numN);
-
-      /*
-       u = 0;
-       for(u=0; u<index; u++){
-       temp = burnt_loop[u];
-       printf("%5d   %3d   %5d %5d   %5d %5d\n", temp, j1,
-       cFedge[temp].node_id[0], cFedge[temp].node_id[1], cFedge[temp].neigh_grainname[0], cFedge[temp].neigh_grainname[1]);
-       }
-       */
-
-      if (numN == 3)
+  }
+  else if (tcase == CASE_2)
+  {
+      if (numN == 2)
       {
-
-        te0 = burnt_loop[0];
-        te1 = burnt_loop[1];
-        te2 = burnt_loop[2];
+        te0 = loop[0];
+        te1 = loop[1];
         cTriangle[ctid].v_id[0] = cFedge[te0].node_id[0];
         cTriangle[ctid].v_id[1] = cFedge[te1].node_id[0];
-        cTriangle[ctid].v_id[2] = cFedge[te2].node_id[0];
+        cTriangle[ctid].v_id[2] = cFedge[te1].node_id[1];
         cTriangle[ctid].ngrainname[0] = cFedge[te0].neigh_grainname[0];
         cTriangle[ctid].ngrainname[1] = cFedge[te0].neigh_grainname[1];
+        updateTriangleEdgeIds(ctid, cFedge[te0].node_id[0], cFedge[te1].node_id[0], cFedge[te1].node_id[1]);
         ctid++;
-
       }
-      else if (numN > 3)
+      else if (numN > 2)
       {
 
-        numT = numN - 2;
+        numT = numN - 1; // Note that it's open loop...
         cnumT = 0;
         front = 0;
-        back = numN - 1;
+        back = numN;
 
-        te0 = burnt_loop[front];
-        te1 = burnt_loop[back];
+        te0 = loop[front];
+        te1 = loop[back - 1];
         tv0 = cFedge[te0].node_id[0];
         tcVertex = cFedge[te0].node_id[1];
-        tv2 = cFedge[te1].node_id[0];
+        tv2 = cFedge[te1].node_id[1];
         cTriangle[ctid].v_id[0] = tv0;
         cTriangle[ctid].v_id[1] = tcVertex;
         cTriangle[ctid].v_id[2] = tv2;
         cTriangle[ctid].ngrainname[0] = cFedge[te0].neigh_grainname[0];
         cTriangle[ctid].ngrainname[1] = cFedge[te0].neigh_grainname[1];
+        updateTriangleEdgeIds(ctid, tv0, tcVertex, tv2);
         new_node0 = tv2;
         new_node1 = tcVertex;
 
@@ -3667,7 +3049,7 @@ void SurfaceMeshFunc::get_caseM_triangles(int *afe, int nfedge, int *afc, int nf
           {
 
             front = front + 1;
-            ce = burnt_loop[front];
+            ce = loop[front];
             tv0 = cFedge[ce].node_id[0];
             tcVertex = cFedge[ce].node_id[1];
             tv2 = new_node0;
@@ -3676,6 +3058,7 @@ void SurfaceMeshFunc::get_caseM_triangles(int *afe, int nfedge, int *afc, int nf
             cTriangle[ctid].v_id[2] = tv2;
             cTriangle[ctid].ngrainname[0] = cFedge[ce].neigh_grainname[0];
             cTriangle[ctid].ngrainname[1] = cFedge[ce].neigh_grainname[1];
+            updateTriangleEdgeIds(ctid, tv0, tcVertex, tv2);
             new_node0 = tcVertex;
             cnumT++;
             ctid++;
@@ -3685,7 +3068,7 @@ void SurfaceMeshFunc::get_caseM_triangles(int *afe, int nfedge, int *afc, int nf
           {
 
             back = back - 1;
-            ce = burnt_loop[back];
+            ce = loop[back];
             tv0 = cFedge[ce].node_id[0];
             tcVertex = cFedge[ce].node_id[1];
             tv2 = new_node0;
@@ -3694,6 +3077,7 @@ void SurfaceMeshFunc::get_caseM_triangles(int *afe, int nfedge, int *afc, int nf
             cTriangle[ctid].v_id[2] = tv2;
             cTriangle[ctid].ngrainname[0] = cFedge[ce].neigh_grainname[0];
             cTriangle[ctid].ngrainname[1] = cFedge[ce].neigh_grainname[1];
+            updateTriangleEdgeIds(ctid, tv0, tcVertex, tv2);
             new_node0 = tv0;
             cnumT++;
             ctid++;
@@ -3706,40 +3090,84 @@ void SurfaceMeshFunc::get_caseM_triangles(int *afe, int nfedge, int *afc, int nf
       {
         // do nothing...
       }
-
-      delete [] burnt_loop;
     }
+      delete [] loop;
 
+    }
+    else
+    { // if current loop is a closed one....i.e., openL = 0...
+
+      startEdge = burnt_list[from];
+      loop[0] = startEdge;
+      index = 1;
+      endNode = cFedge[startEdge].node_id[1];
+      chaser = startEdge;
+
+      do
+      {
+
+        for (n = from; n < to; n++)
+        {
+
+          cedge = burnt_list[n];
+          cnode1 = cFedge[cedge].node_id[0];
+          cnode2 = cFedge[cedge].node_id[1];
+          if ((cedge != chaser) && (endNode == cnode1))
+          {
+            loop[index] = cedge;
+            index++;
+          }
+          else if ((cedge != chaser) && (endNode == cnode2))
+          {
+            loop[index] = cedge;
+            index++;
+            // flip...
+            tnode = cFedge[cedge].node_id[0];
+            tgrainname = cFedge[cedge].neigh_grainname[0];
+            cFedge[cedge].node_id[0] = cFedge[cedge].node_id[1];
+            cFedge[cedge].node_id[1] = tnode;
+            cFedge[cedge].neigh_grainname[0] = cFedge[cedge].neigh_grainname[1];
+            cFedge[cedge].neigh_grainname[1] = tgrainname;
+            updateVertEdgeMap(cFedge[cedge].node_id[0], cFedge[cedge].node_id[1], cedge );
+          }
+          else
+          {
+            // do nothing...
+          }
+
+        }
+
+        chaser = loop[index - 1];
+        endNode = cFedge[chaser].node_id[1];
+
+      } while (index < numN);
+
+      if (numN == 3)
+      {
+          getCaseNumN_EQ_3(te0, loop, te1, te2, ctid);
+      }
+      else if (numN > 3)
+      {
+          getCaseNumN_GT_3(numT, numN, cnumT, front, back, te0, loop, te1, tv0, tcVertex, tv2, ctid, new_node0, new_node1, ce);
+      }
+      else
+      {
+        // do nothing...
+      }
+      delete [] loop;
+    }
   }
 
   *tout = ctid;
-
-  /*
-   int lid;
-   int u;
-   k = 0;
-   kk = 0;
-   for(u=0; u<nfctr; u++){
-   printf("%5d ", afc[u]);
-   }
-   printf("\n");
-   for(k=0; k<nfedge; k++){
-   cedge = burnt_list[k];
-   for(kk=0; kk<nfedge; kk++){
-   if(cedge==afe[kk]){
-   lid = burnt[kk];
-   }
-   }
-   printf("%5d   %3d   %5d %5d   %5d %5d\n", cedge, lid,
-   cFedge[cedge].node_id[0], cFedge[cedge].node_id[1], cFedge[cedge].neigh_grainname[0], cFedge[cedge].neigh_grainname[1]);
-   }
-   printf("\n");
-   */
-
   delete [] burnt;
   delete [] burnt_list;
   delete [] count;
+}
 
+void SurfaceMeshFunc::get_caseM_triangles_old(int *afe, int nfedge, int *afc, int nfctr,
+                                              int tin, int *tout, int ccn)
+{
+std::cout << "SurfaceMeshFunc::get_caseM_triangles() This method has been merged with the get_case2_triangles method" << std::endl;
 }
 
 void SurfaceMeshFunc::arrange_grainnames(int numT, int zID)
@@ -4002,7 +3430,7 @@ void SurfaceMeshFunc::arrange_grainnames(int numT, int zID)
 int SurfaceMeshFunc::get_inner_edges(int nfe, int nT, int tnIEdge)
 {
 
-  int i, j, ii, jj, kk, i1, j1;
+  int i, j, jj, kk, i1, j1;
 
   int index;
   int index1, index2;
@@ -4059,7 +3487,50 @@ int SurfaceMeshFunc::get_inner_edges(int nfe, int nT, int tnIEdge)
   // mark face edges...
   //printf("\tmarking face edges (this will take some time)...\n");
   //printf("\t\t%d\n", nfe);
-  for (ii = 0; ii < nfe; ii++)
+#if 1
+  for (jj = 0; jj < nT; jj++)   //Loop over each 'Patch' Object
+  {
+    Patch& p = cTriangle[jj];
+    for (kk = 0; kk < 3; kk++)  // Loop over Each 'Segment' in the Patch
+    {
+
+      bflag = cTriangle[jj].edgePlace[kk];
+
+      if (bflag == -1)
+      {
+
+        index1 = kk;
+        index2 = kk + 1;
+
+        if (index1 == 2)
+        {
+          index2 = 0;
+        }
+
+        // Find nodes...
+        n1 = cTriangle[jj].v_id[index1];
+        n2 = cTriangle[jj].v_id[index2];
+
+        for (int e = 0; e < 3; ++e) {
+          int edgeId = cTriangle[jj].e_id[e];
+          cn1 = cFedge[edgeId].node_id[0];
+          cn2 = cFedge[edgeId].node_id[1];
+
+
+          if ((cn1 == n1 && cn2 == n2) || (cn1 == n2 && cn2 == n1))
+          {
+            cTriangle[jj].edgePlace[kk] = 0;
+            break;
+          }
+        }
+
+      }
+
+    }
+
+  }
+#else
+  for (int ii = 0; ii < nfe; ii++)
   {
 
     //if(ii%10000==0){
@@ -4103,6 +3574,7 @@ int SurfaceMeshFunc::get_inner_edges(int nfe, int nT, int tnIEdge)
 
     }
   }
+#endif
 
   // mark -1 as inner edges too...
   index = 0;

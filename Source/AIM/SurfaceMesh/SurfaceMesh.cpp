@@ -11,6 +11,7 @@
 
 #include "SurfaceMesh.h"
 
+#include <MXA/Common/LogTime.h>
 #include <MXA/Utilities/MXAFileSystemPath.h>
 
 
@@ -101,9 +102,9 @@ void SurfaceMesh::compute()
   std::string  EdgesFileIndex = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::EdgesFileIndex;
   std::string  TrianglesFileIndex = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::TrianglesFileIndex;
   std::string  VisualizationFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::VisualizationFile;
- 
+
   m = SurfaceMeshFunc::New();
-  int err = 0;
+//  int err = 0;
   m_ZDim = m->initialize_micro(m_InputFile);
 
 
@@ -113,7 +114,7 @@ void SurfaceMesh::compute()
   int cTriID = 0;
   int nFEdge = 0; // number of edges on the square...
   int nTriangle = 0; // number of triangles...
-  int nEdge = 0; // number of triangles...
+//  int nEdge = 0; // number of edges...
   int npTriangle = 0; // number of triangles...
   int ncTriangle = 0; // number of triangles...
   int nNodes = 0; // number of total nodes used...
@@ -168,12 +169,13 @@ void SurfaceMesh::compute()
   for (int i = 0; i < (m_ZDim - 1); i++)
   {
 
-    progressMessage(AIM_STRING("Marching Cubes Between Layers "), (i*50/m_ZDim) );
+    progressMessage(AIM_STRING("Marching Cubes Between Layers "), (i) );
 
     // initialize neighbors, possible nodes and squares of marching cubes of each layer...
     m->get_neighbor_list(i);
     m->initialize_nodes(i);
     m->initialize_squares(i);
+    m->initialize_VertEdgemap();
 
     // find face edges of each square of marching cubes in each layer...
     nFEdge = m->get_number_fEdges(i);
@@ -205,7 +207,7 @@ void SurfaceMesh::compute()
     nNodes = m->assign_new_nodeID(cNodeID);
     cNodeID = nNodes;
 
-    // rewirte the edges and the triangles with new node ids...
+    // rewrite the edges and the triangles with new node ids...
     m->update_face_edges(nFEdge);
 
     if (nTriangle > 0 && tnIEdge > 0)
@@ -319,9 +321,9 @@ void SurfaceMesh::progressMessage(AIM_STRING message, int progress)
 #ifdef AIM_USE_QT
   emit updateMessage(QString(message));
   emit updateProgress(progress);
-  //  std::cout << message.toStdString() << std::endl;
+  std::cout << message.toStdString() << " " << progress << std::endl;
 #else
-  std::cout << message << std::endl;
+  std::cout << logTime() << "{" << progress << "} " << message << std::endl;
 #endif
 }
 
