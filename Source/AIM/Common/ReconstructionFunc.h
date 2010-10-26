@@ -71,6 +71,7 @@ public:
   double misorientationtolerance;
   double minseedconfidence;
   double minseedimagequality;
+  double downsamplefactor;
   int minallowedgrainsize;
   int mergetwinsoption;
   int mergecoloniesoption;
@@ -81,7 +82,8 @@ public:
 
 	AIMRandomNG rg;
 	Voxel* voxels;
-	Grain* grains;
+	Voxel* voxelstemp;
+	vector<Grain> grains;
 	Bin *eulerodf;
 	Bin *axisodf;
 
@@ -92,7 +94,12 @@ public:
 	double **grainmoments;
 	double **quat_symm;
 
-	vector<vector<int> > neighborvector;
+	vector<vector<int> > neighborhood;
+	vector<vector<double> > svbovera;
+	vector<vector<double> > svcovera;
+	vector<vector<double> > svcoverb;
+	vector<vector<double> > svschmid;
+	vector<vector<double> > svomega3;
 
 	int numseNbins;
 	int numorients;
@@ -118,7 +125,7 @@ public:
 	double totalvol;
 	double totalaxes;
 
-    void initialize(int, int, double, bool, bool, int, double, double, double, int, int, bool);
+    void initialize(int, int, double, bool, bool, int, double, double, double, double, int, int, bool);
 	void loadSlices();
 	void align_sections(double quat_symmcubic[24][5],double quat_symmhex[12][5]);
 	void find_border();
@@ -126,13 +133,14 @@ public:
 	void form_grains_sections(double quat_symmcubic[24][5],double quat_symmhex[12][5]);
 	void remove_smallgrains();
 	int renumber_grains1();
-	void write_volume(string, string, string, string, string, bool, bool, bool, bool);
+	void write_volume(string, string, string, string, string, string, bool, bool, bool, bool,double quat_symmcubic[24][5],double quat_symmhex[12][5]);
 	int load_data(string);
-	void assign_badpoints();
+	void assign_badpoints(double quat_symmcubic[24][5],double quat_symmhex[12][5]);
 	void find_neighbors();
 	void merge_containedgrains();
-	int renumber_grains2();
-	void reburn_grains();
+	int renumber_grains();
+	int define_subgrains(double quat_symmcubic[24][5],double quat_symmhex[12][5]);
+	int reburn_grains(double quat_symmcubic[24][5],double quat_symmhex[12][5]);
 	void cleanup_data();
 	void find_kernels(double quat_symmcubic[24][5],double quat_symmhex[12][5]);
 	void homogenize_grains(double quat_symmcubic[24][5],double quat_symmhex[12][5]);
@@ -155,6 +163,7 @@ public:
 	void write_axisodf(string);
 	void write_eulerodf(string);
 	void write_graindata(string);
+	void write_grains(double quat_symmcubic[24][5],double quat_symmhex[12][5]);
 	double getmisoquatcubic(double,double q1[5],double q2[5],double &,double &,double &);
 	double getmisoquathexagonal(double quat_symmhex[12][5],double,double q1[5],double q2[5],double &,double &,double &);
 	double gamma(double);

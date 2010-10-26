@@ -15,7 +15,8 @@
 //
 // -----------------------------------------------------------------------------
 Voxel::Voxel() :
-grainname(0),
+grainname(-1),
+ellipfunc(0.0),
 confidence(0.0),
 nearestneighbor(-1),
 nearestneighbordistance(-1),
@@ -31,7 +32,8 @@ kernelmisorientation(0.0),
 surfacevoxel(0),
 unassigned(0)
 {
-
+	grainlist = new std::vector<int>;
+	ellipfunclist = new std::vector<double>;
 }
 
 // -----------------------------------------------------------------------------

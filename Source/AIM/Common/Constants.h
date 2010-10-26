@@ -34,6 +34,7 @@ namespace AIM
     const std::string ReconstructedDisVisualizationFile("Reconstruction_Disorientation_Visualization.vtk");//11
     const std::string ReconstructedIQVisualizationFile("Reconstruction_ImageQuality_Visualization.vtk");//11
     const std::string ReconstructedSFVisualizationFile("Reconstruction_SchmidFactor_Visualization.vtk");//11
+    const std::string ReconstructedDSVisualizationFile("Reconstruction_DownSampled_Visualization.vtk");//11
     const std::string StructureFile("Reconstruction_Vis.vtk");//11
     const std::string AxisOrientationsFile("Reconstruction_AxisODF.txt");//14
     const std::string graindataFile("Reconstruction_GrainData.txt");//14
@@ -52,6 +53,8 @@ namespace AIM
     };
     /*  Grain Generator Related */
     const std::string CubeFile("Synthetic_Vis.vtk");
+    const std::string MoDFFile("Synthetic_MoDF.txt");
+    const std::string CrystallographicErrorFile("Synthetic_CrystallographicError.txt");
     const std::string AnalysisFile("Synthetic_Stats.txt");
     const std::string EulerFile("Synthetic_GrainAngles.txt");
 

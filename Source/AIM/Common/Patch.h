@@ -40,7 +40,6 @@ public:
     double area;
 	int triID;
 	int e_id[3];
-	int nSpin[2];
 
   private:
 

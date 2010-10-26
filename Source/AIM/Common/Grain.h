@@ -32,9 +32,10 @@ class Grain
 
   public:
     Grain();
-    virtual ~Grain();
 
 	int nucleus;
+	double packquality;
+	int active;
     int numvoxels;
     int numneighbors;
     int newgrainname;
@@ -42,9 +43,7 @@ class Grain
     int gottwinmerged;
     int gotcolonymerged;
     int surfacegrain;
-    int twinnewnumberbeenset;
     int twinnewnumber;
-    int colonynewnumberbeenset;
     int colonynewnumber;
     double centroidx;
     double centroidy;
@@ -70,24 +69,21 @@ class Grain
     double axiseuler2;
     double axiseuler3;
     double volume;
-    double nserror;
+    double equivdiameter;
+    double neigherror;
     double radius1;
     double radius2;
     double radius3;
     double lowanglefraction;
-    double grainrank;
-    double grainmicrorank;
-    double picked;
-    double frozen;
 	double avg_quat[5];
+    std::vector<int> neighbordistfunc;
     std::vector<int>* neighborlist;
     std::vector<int>* voxellist;
+    std::vector<double>* ellipfunclist;
     std::vector<double>* misorientationlist;
     std::vector<double>* neighborsurfarealist;
+	std::vector<std::vector<int> > neighbordistfunclist;
 
-  private:
-    Grain(const Grain&);    // Copy Constructor Not Implemented
-    void operator=(const Grain&);  // Operator '=' Not Implemented
 };
 
 #endif /* GRAINS_H_ */

@@ -17,6 +17,8 @@
 // -----------------------------------------------------------------------------
 Grain::Grain() :
 numvoxels(0),
+active(0),
+packquality(0.0),
 numneighbors(0),
 newgrainname(0),
 gotcontainedmerged(0),
@@ -34,11 +36,9 @@ Iyz(0.0),
 Ixz(0.0),
 omega3(0.0),
 averagemisorientation(0.0),
-kernelmisorientation(0.0),
-twinnewnumberbeenset(0),
-twinnewnumber(0),
-colonynewnumberbeenset(0),
-colonynewnumber(0),
+kernelmisorientation(10000.0),
+twinnewnumber(-1),
+colonynewnumber(-1),
 red(0.0),
 green(0.0),
 blue(0.0),
@@ -51,28 +51,20 @@ axiseuler1(0.0),
 axiseuler2(0.0),
 axiseuler3(0.0),
 volume(0.0),
-nserror(10.0),
+equivdiameter(0.0),
+neigherror(0.0),
 radius1(0.0),
 radius2(0.0),
 radius3(0.0),
-lowanglefraction(0.0),
-grainrank(0.0),
-grainmicrorank(0.0),
-picked(0.0),
-frozen(0.0)
+lowanglefraction(0.0)
 {
-  neighborlist = NULL;
-  voxellist = NULL;
-  neighborsurfarealist = NULL;
-  misorientationlist = NULL;
+  neighborlist = new std::vector<int>;
+  voxellist = new std::vector<int>;
+  ellipfunclist = new std::vector<double>;
+  neighborsurfarealist = new std::vector<double>;
+  misorientationlist = new std::vector<double>;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-Grain::~Grain()
-{
-  if (neighborlist != NULL) {
-    delete neighborlist;
-  }
-}

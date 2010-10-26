@@ -158,6 +158,8 @@ void GrainGenerator::compute()
   std::string  CubeFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::CubeFile;
   std::string  EulerFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::EulerFile;
   std::string AnalysisFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::AnalysisFile;
+  std::string MoDFFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::MoDFFile;
+  std::string CrystallographicErrorFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::CrystallographicErrorFile;
   std::string graindataFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::graindataFile;
 
    m = GrainGeneratorFunc::New();
@@ -177,16 +179,12 @@ void GrainGenerator::compute()
 	   m->loadorientData(AxisOrientationsFile);
 
 	   CHECK_FOR_CANCELED(GrainGeneratorFunc)
-	   progressMessage(AIM_STRING("Generating Grains"), 20 );
-	   m->generate_grains(m->numgrains);
+	   progressMessage(AIM_STRING("Packing Grains"), 25 );
+	   m->numgrains = m->pack_grains(m->numgrains);
 
 	   CHECK_FOR_CANCELED(GrainGeneratorFunc)
-	   progressMessage(AIM_STRING("Initializing"), 25 );
-	   m->initialize2();
-
-	   CHECK_FOR_CANCELED(GrainGeneratorFunc)
-	   progressMessage(AIM_STRING("Packing Grains"), 35 );
-	   m->pack_grains(m->numgrains);
+	   progressMessage(AIM_STRING("Assigning Voxels"), 30 );
+	   m->numgrains = m->assign_voxels(m->numgrains);
 
 	   CHECK_FOR_CANCELED(GrainGeneratorFunc)
 	   progressMessage(AIM_STRING("Filling Gaps"), 40 );
@@ -237,7 +235,7 @@ void GrainGenerator::compute()
 
    CHECK_FOR_CANCELED(GrainGeneratorFunc)
    progressMessage(AIM_STRING("Matching Crystallography"), 65 );
-   m->matchCrystallography(quat_symmcubic, quat_symmhex);
+   m->matchCrystallography(quat_symmcubic, quat_symmhex, CrystallographicErrorFile);
 
    CHECK_FOR_CANCELED(GrainGeneratorFunc)
    progressMessage(AIM_STRING("writing Cube"), 90 );
@@ -245,7 +243,7 @@ void GrainGenerator::compute()
    
    CHECK_FOR_CANCELED(GrainGeneratorFunc)
    progressMessage(AIM_STRING("Writing Grain Data"), 94 );
-   m->write_graindata(graindataFile);
+   m->write_graindata(graindataFile, MoDFFile);
 
    CHECK_FOR_CANCELED(GrainGeneratorFunc)
    progressMessage(AIM_STRING("Writing Euler Angles"), 98 );

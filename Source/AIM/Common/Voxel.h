@@ -35,6 +35,7 @@ public:
     int grainname;
     double confidence;
     double imagequality;
+	double ellipfunc;
     int alreadychecked;
 	int nearestneighbor;
 	double nearestneighbordistance;
@@ -48,11 +49,9 @@ public:
     int surfacevoxel;
 	int unassigned;
 	double quat[5];
+    std::vector<int>* grainlist;
+    std::vector<double>* ellipfunclist;
 
-  private:
-
-    Voxel(const Voxel&);    // Copy Constructor Not Implemented
-      void operator=(const Voxel&);  // Operator '=' Not Implemented
 };
 
 #endif /* VOXEL_H_ */

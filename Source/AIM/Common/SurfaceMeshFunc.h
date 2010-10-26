@@ -156,7 +156,7 @@ public:
   void UET_get_output_edges (int nFEdge, int nIEdge, string edgesFile);
   void UET_get_output_triangles (int type, int nTriangle, string trianglesFile);
   void UET_get_output_nodes (int nNodes, string nodesFile, string nodesRawFile);
-  void UET_create_vtk (string VisualizationFile, string NodesFile, string TrianglesFile);
+  void UET_create_vtk (int nNodes, int nTriangles, string VisualizationFile, string NodesFile, string TrianglesFile);
 
 
 protected:

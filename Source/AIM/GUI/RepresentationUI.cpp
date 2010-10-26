@@ -247,6 +247,7 @@ void RepresentationUI::readSettings()
   alreadyFormed->blockSignals(false);
   READ_SETTING(prefs, minAllowedGrainSize, ok, i, 8 , Int);
   READ_SETTING(prefs, minConfidence, ok, d, 0.1 , Double);
+  READ_SETTING(prefs, downsampleFactor, ok, d, 1.0 , Double);
   READ_SETTING(prefs, minImageQuality, ok, d, 50.0 , Double);
   READ_SETTING(prefs, misOrientationTolerance, ok, d, 5.0 , Double);
   READ_COMBO_BOX(prefs, crystalStructure)
@@ -326,6 +327,7 @@ void RepresentationUI::writeSettings()
 
   WRITE_SETTING(prefs, minAllowedGrainSize)
   WRITE_SETTING(prefs, minConfidence)
+  WRITE_SETTING(prefs, downsampleFactor)
   WRITE_SETTING(prefs, minImageQuality)
   WRITE_SETTING(prefs, misOrientationTolerance)
   WRITE_COMBO_BOX(prefs, crystalStructure)
@@ -625,7 +627,7 @@ void RepresentationUI::rec_SetupGui()
 
   m_WidgetList << angDir << angDirBtn << rec_OutputDir << outputDirBtn;
   m_WidgetList << angFilePrefix << angMaxSlice << zStartIndex << zEndIndex << zSpacing;
-  m_WidgetList << mergeTwins << mergeColonies << alreadyFormed << alignMeth << minAllowedGrainSize << minConfidence << misOrientationTolerance;
+  m_WidgetList << mergeTwins << mergeColonies << alreadyFormed << alignMeth << minAllowedGrainSize << minConfidence << downsampleFactor << misOrientationTolerance;
   m_WidgetList << crystalStructure << IPFoutputoption << Disorientationoutputoption << ImageQualityoutputoption << SchmidFactoroutputoption;
 }
 
@@ -803,6 +805,7 @@ void RepresentationUI::on_rec_GoBtn_clicked()
   m_Reconstruction->setMergeColonies(mergeColonies->isChecked() );
   m_Reconstruction->setMinAllowedGrainSize(minAllowedGrainSize->value());
   m_Reconstruction->setMinSeedConfidence(minConfidence->value());
+  m_Reconstruction->setDownSampleFactor(downsampleFactor->value());
   m_Reconstruction->setMinSeedImageQuality(minImageQuality->value());
   m_Reconstruction->setMisorientationTolerance(misOrientationTolerance->value());
 
@@ -1074,7 +1077,7 @@ void RepresentationUI::on_gg_GoBtn_clicked()
   int overlapassignment = gg_OverlapAssignment->currentIndex() + 1;
   m_GrainGenerator->setOverlapAssignment(overlapassignment);
 
-  AIM::Representation::CrystalStructure crystruct = static_cast<AIM::Representation::CrystalStructure>(crystalStructure->currentIndex() + 1);
+  AIM::Representation::CrystalStructure crystruct = static_cast<AIM::Representation::CrystalStructure>(gg_CrystalStructure->currentIndex() + 1);
 
   m_GrainGenerator->setCrystalStructure(crystruct);
 
