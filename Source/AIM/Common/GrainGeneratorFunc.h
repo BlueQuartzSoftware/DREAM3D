@@ -56,10 +56,6 @@ public:
 
   virtual ~GrainGeneratorFunc();
 
-void initialize(int32, int32 , double , double , double ,
-                  int32 ,int32 ,int32, int32, double);
-
-void initialize2();
 
 AngFileHelper::Pointer m_angFileHelper;
 
@@ -67,50 +63,59 @@ AngFileHelper::Pointer m_angFileHelper;
   double resx;
   double resy;
   double resz;
+  double sizex;
+  double sizey;
+  double sizez;
 
   double misorientationtolerance;
   int crystruct;
 
 
 	AIMRandomNG rg;
-	Grain* grains;
+	vector<Grain> grains;
 	Grain* precipitates;
-	int* gsizes;
 	int* psizes;
 
 	Bin* actualodf;
 	Bin* simodf;
 	Bin* axisodf;
 	Bin* precipaxisodf;
-	Voxel* gridfine;
-	Voxel* gridcourse;
+	Voxel* voxels;
 	Bin* actualmdf;
 	Bin* simmdf;
 	Bin* actualmicrotex;
 	Bin* simmicrotex;
 
-	vector<int> grainorder;
+	vector<int> gsizes;
+	vector<int> activegrainlist;
 	vector<int> precipitateorder;
 	vector<int> takencheck;
-	vector<vector<int> > neighborvector;
+	vector<double> grainsizedist;
+	vector<double> precipsizedist;
 	vector<vector<double> > bovera;
 	vector<vector<double> > covera;
 	vector<vector<double> > coverb;
 	vector<vector<double> > precipbovera;
 	vector<vector<double> > precipcovera;
 	vector<vector<double> > precipcoverb;
-	vector<vector<double> > svn;
-	vector<vector<double> > svs;
+	vector<vector<double> > neighborhood;
 	vector<vector<double> > svomega3;
 	vector<vector<double> > precipsvomega3;
-	vector<vector<int> > nsdist;
+	vector<vector<double> > neighbordist;
 	
 
+	void initialize(int32, int32 , double , double , double ,
+                  int32 ,int32 ,int32, int32, double);
+	void initialize2();
+	double machineepsilon;
+	double maxrealnumber;
+	double minrealnumber;
 	int numorients;
 	int numeulers;
 	int resdiff;
 	double totalsurfacearea;
 	int numgrains;
+	int numextragrains;
 	int numprecipitates;
 	int shapeclass;
 	int preciptype;
@@ -126,31 +131,40 @@ AngFileHelper::Pointer m_angFileHelper;
 	double avgprecipdiam;
 	double sdprecipdiam;
 	int numdiameters;
+	int worstgrain;
 	int numprecipdiameters;
 
 
 	int32 xpoints;
 	int32 ypoints;
 	int32 zpoints;
-	int32 xpoints1;
-	int32 ypoints1;
-	int32 zpoints1;
 	int totalpoints;
-	int totalpoints1;
 	double totalvol;
 
-	double resx1;
-	double resy1;
-	double resz1;
 	int numneighbins;
+	double volcheck;
+	int ownercheck;
+
+	double currentfillingerror,oldfillingerror;
+	double currentneighborhooderror,oldneighborhooderror;
+	double currentsizedisterror,oldsizedisterror;
 
 	void write_eulerangles(string);
 	void loadStatsData(string);
 	void loadorientData(string);
 	void loadeulerData(string);
-	void generate_grains(int);
+	void generate_grain(int);
 	void assign_eulers(int);
-	void pack_grains(int);
+	void insert_grain(int);
+	void add_grain(int);
+	void remove_grain(int);
+	double costcheck_remove(int);
+	double costcheck_add(int);
+	void determine_neighbors();
+	double check_neighborhooderror(int gadd, int gremove);
+	double check_sizedisterror(int gadd, int gremove);
+	int pack_grains(int);
+	int assign_voxels(int);
 	void fill_gaps(int);
 	int create_precipitates();
 	void insert_precipitates(int);
@@ -159,12 +173,20 @@ AngFileHelper::Pointer m_angFileHelper;
 	void writeCube(string, int);
 	void loadMisoData(string);
 	void loadMicroData(string);
-	void matchCrystallography(double quat_symmcubic[24][5],double quat_symmhex[12][5]);
+	void matchCrystallography(double quat_symmcubic[24][5],double quat_symmhex[12][5], string);
 	void measure_misorientations(double quat_symmcubic[24][5],double quat_symmhex[12][5]);
 	double getmisoquatcubic(double q1[5],double q2[5],double &,double &,double &);
 	double getmisoquathexagonal(double quat_symmhex[12][5],double q1[5],double q2[5],double &,double &,double &);
 	double gamma(double);
-	void write_graindata(string);
+	double erf(double);
+	double erfc(double);
+	double gammastirf(double);
+	double lngamma(double, double&);
+	double incompletebeta(double, double, double);
+	double incompletebetafe(double, double, double, double, double);
+	double incompletebetafe2(double, double, double, double, double);
+	double incompletebetaps(double, double, double, double);
+	void write_graindata(string, string);
 	double find_xcoord(long);
 	double find_ycoord(long);
 	double find_zcoord(long);

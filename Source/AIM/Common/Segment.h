@@ -39,7 +39,7 @@ public:
     int edgeID;
     int n_id[2];
     int edgeKind;
-    int nSpin[4];
+    int ngrainname[4];
     int where; // 0 for upper squares, 1 for side squares and 2 for bottom squares...
 
   private:

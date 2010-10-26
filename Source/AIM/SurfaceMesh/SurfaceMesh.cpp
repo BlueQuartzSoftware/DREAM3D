@@ -215,11 +215,11 @@ void SurfaceMesh::compute()
     }
 
     // Output nodes and triangles...
-    m->get_output_nodes(i, NodesRawFile);
+    m->get_output_nodes(i, NodesFile);
 
-    m->get_output_edges(nFEdge, tnIEdge, i, cEdgeID, &fEdgeID, EdgesFileIndex);
+    m->get_output_edges(nFEdge, tnIEdge, i, cEdgeID, &fEdgeID, EdgesFile);
 
-    m->get_output_triangles(nTriangle, TrianglesFileIndex, i, cTriID);
+    m->get_output_triangles(nTriangle, TrianglesFile, i, cTriID);
     cEdgeID = fEdgeID;
     cTriID = cTriID + nTriangle;
 
@@ -234,37 +234,37 @@ void SurfaceMesh::compute()
 //  pTriangle = (struct patch *)malloc(1*sizeof(struct patch));
   // Creating new or Erasing Current output files
 
-  ofstream outFile;
-  outFile.open(EdgesFile.c_str(), ios::app);
-  outFile << cEdgeID << endl;
-  outFile.close();
+//  ofstream outFile;
+//  outFile.open(EdgesFile.c_str(), ios::app);
+//  outFile << cEdgeID << endl;
+//  outFile.close();
 
-  outFile.open(TrianglesFile.c_str(), ios::app);
-  outFile << cTriID << endl;
-  outFile.close();
+//  outFile.open(TrianglesFile.c_str(), ios::app);
+//  outFile << cTriID << endl;
+//  outFile.close();
 
-  outFile.open(NodesFile.c_str(), ios::app);
-  outFile << cNodeID << endl;
-  outFile.close();
+//  outFile.open(NodesFile.c_str(), ios::app);
+//  outFile << cNodeID << endl;
+//  outFile.close();
 
   // For each layer...
   for (int i = 0; i <= (m_ZDim-2); i++)
   {
 
     // get numbers of face edges, inner edges, previous triangles and current triangles...
-    m->UET_get_number_current_edges (&nFEdge, &nIEdge, i, EdgesFileIndex);
-    m->UET_get_number_previous_current_triangles (&npTriangle, &ncTriangle, i, TrianglesFileIndex);
+//    m->UET_get_number_current_edges (&nFEdge, &nIEdge, i, EdgesFileIndex);
+//    m->UET_get_number_previous_current_triangles (&npTriangle, &ncTriangle, i, TrianglesFileIndex);
 
     // read edge and triangle information...
-    m->UET_read_current_edges (nFEdge, nIEdge, i, EdgesFileIndex);
-    m->UET_read_current_triangles (ncTriangle, i, TrianglesFileIndex);
+//    m->UET_read_current_edges (nFEdge, nIEdge, i, EdgesFileIndex);
+//    m->UET_read_current_triangles (ncTriangle, i, TrianglesFileIndex);
 
     // update edges and triangles...
-    m->UET_update_iEdges_triangles (nIEdge, ncTriangle);
-    m->UET_update_fEdges_triangles (nFEdge, npTriangle, ncTriangle, i);
+//    m->UET_update_iEdges_triangles (nIEdge, ncTriangle);
+//    m->UET_update_fEdges_triangles (nFEdge, npTriangle, ncTriangle, i);
 
     // print out edge information...
-    m->UET_get_output_edges (nFEdge, nIEdge, EdgesFile);
+//    m->UET_get_output_edges (nFEdge, nIEdge, EdgesFile);
 
     // print out triangle information...
     if (i > 0)
@@ -273,24 +273,24 @@ void SurfaceMesh::compute()
       if (i == (m_ZDim-2))
       {
 	    type = 0;
-        m->UET_get_output_triangles(type, npTriangle, TrianglesFile);
+//        m->UET_get_output_triangles(type, npTriangle, TrianglesFile);
 	    type = 1;
-        m->UET_get_output_triangles(type, ncTriangle, TrianglesFile);
+//        m->UET_get_output_triangles(type, ncTriangle, TrianglesFile);
       }
       else
       {
 	    type = 0;
-        m->UET_get_output_triangles(type, npTriangle, TrianglesFile);
+//        m->UET_get_output_triangles(type, npTriangle, TrianglesFile);
       }
     }
 
     // make cTriangle into pTriangle...
-	npTriangle = ncTriangle;
-    m->UET_copy_triangles (npTriangle);
+//	npTriangle = ncTriangle;
+//    m->UET_copy_triangles (npTriangle);
   }
 
-  m->UET_get_output_nodes (nNodes, NodesFile, NodesRawFile);
-  m->UET_create_vtk(VisualizationFile, NodesFile, TrianglesFile);
+//  m->UET_get_output_nodes (nNodes, NodesFile, NodesRawFile);
+  m->UET_create_vtk(nNodes, cTriID, VisualizationFile, NodesFile, TrianglesFile);
 
 /*  if (m_SmoothMesh == true)
   {
