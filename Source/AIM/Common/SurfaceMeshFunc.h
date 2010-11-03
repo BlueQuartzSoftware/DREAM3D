@@ -101,12 +101,9 @@ public:
   Node* cVertex; // contains node information...
   Node* tempcVertex;
   Node* pVertex;
-  Segment* cFedge; // contains edges on square faces for open loops...
-  ISegment* cIedge;
+  vector<Segment> cEdge; // contains edges on square faces for open loops...
   Patch* cTriangle;
   Patch* pTriangle;
-  Segment* Fedge; // contains edges on square faces for open loops...
-  Segment* Iedge; // contains edges on square faces for open loops...
   // Edge edge and neighboring grainname table...
 
 
@@ -115,8 +112,8 @@ public:
   void get_neighbor_list(int zID);
   void initialize_nodes(int zID);
   void initialize_squares(int zID);
-  int get_number_fEdges(int zID);
-  void get_nodes_fEdges(int et2d[20][8], int NST2d[20][8], int zID, int nFEdge);
+  int get_number_Edges(int zID);
+  void get_nodes_Edges(int et2d[20][8], int NST2d[20][8], int zID, int nFEdge);
   int get_square_index(int tns[4]);
   int treat_anomaly(int tnst[4], int zID1);
   void get_nodes(int cst, int ord, int nidx[2], int *nid);
@@ -131,14 +128,13 @@ public:
   void get_caseM_triangles(int *afe, int nfedge, int *afc, int nfctr, int tin, int *tout, int ccn);
   void arrange_grainnames(int numT, int zID);
   int get_inner_edges(int nfe, int nT, int tnIEdge);
-  void find_unique_inner_edges(int nie, int *nEff);
+  void find_unique_inner_edges(int nne, int ne, int *nEff);
   void copy_previous_nodes();
   int assign_new_nodeID(int nN);
-  void update_face_edges(int nfe);
-  void update_inner_edges(int tnie, int nie);
+  void update_edges(int nne, int ne);
   void update_current_triangles(int nT);
   void get_output_nodes(int zID, string NodesRawFile);
-  void get_output_edges(int nfe, int tnie, int zID, int ceid, int *feid, string EdgesFileIndex);
+  void get_output_edges(int ne, int nne, int zID, int ceid, int *feid, string EdgesFileIndex);
   void get_output_triangles(int nt, string TrianglesFileIndex, int zID, int ctid);
   void copy_cNodes_2_pNodes();
   double find_xcoord(long);
