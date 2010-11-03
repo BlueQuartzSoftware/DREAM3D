@@ -114,11 +114,10 @@ void SurfaceMesh::compute()
   int nFEdge = 0; // number of edges on the square...
   int nTriangle = 0; // number of triangles...
   int nEdge = 0; // number of triangles...
+  int nnEdge = 0; // number of triangles...
   int npTriangle = 0; // number of triangles...
   int ncTriangle = 0; // number of triangles...
   int nNodes = 0; // number of total nodes used...
-  int tnIEdge = 0;
-  int nIEdge = 0;
   int edgeTable_2d[20][8] = {
 	{ -1, -1, -1, -1, -1, -1, -1, -1},
 	{ -1, -1, -1, -1, -1, -1, -1, -1},
@@ -176,8 +175,8 @@ void SurfaceMesh::compute()
     m->initialize_squares(i);
 
     // find face edges of each square of marching cubes in each layer...
-    nFEdge = m->get_number_fEdges(i);
-    m->get_nodes_fEdges(edgeTable_2d, nsTable_2d, i, nFEdge);
+    nEdge = m->get_number_Edges(i);
+    m->get_nodes_Edges(edgeTable_2d, nsTable_2d, i, nFEdge);
 
     // find triangles and arrange the spins across each triangle...
     nTriangle = m->get_number_triangles();
@@ -189,11 +188,11 @@ void SurfaceMesh::compute()
     }
 
     // find unique inner edges...
-    tnIEdge = 3 * nTriangle - nFEdge;
-    if (tnIEdge > 0)
+    nnEdge = 3 * nTriangle - nEdge;
+    if (nnEdge > 0)
     {
-      tnIEdge = m->get_inner_edges(nFEdge, nTriangle, tnIEdge);
-      m->find_unique_inner_edges(tnIEdge, &nIEdge);
+      nnEdge = m->get_inner_edges(nEdge, nTriangle, nnEdge);
+      m->find_unique_inner_edges(nnEdge, nEdge, &nEdge);
     }
     // copy the previous node and face edge information...
     if (i > 0)
@@ -206,18 +205,17 @@ void SurfaceMesh::compute()
     cNodeID = nNodes;
 
     // rewirte the edges and the triangles with new node ids...
-    m->update_face_edges(nFEdge);
+    m->update_edges(nnEdge, nEdge);
 
-    if (nTriangle > 0 && tnIEdge > 0)
+    if (nTriangle > 0)
     {
-      m->update_inner_edges(tnIEdge, nIEdge);
       m->update_current_triangles(nTriangle);
     }
 
     // Output nodes and triangles...
     m->get_output_nodes(i, NodesFile);
 
-    m->get_output_edges(nFEdge, tnIEdge, i, cEdgeID, &fEdgeID, EdgesFile);
+    m->get_output_edges(nEdge, nnEdge, i, cEdgeID, &fEdgeID, EdgesFile);
 
     m->get_output_triangles(nTriangle, TrianglesFile, i, cTriID);
     cEdgeID = fEdgeID;
