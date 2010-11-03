@@ -9,6 +9,11 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
+#include <string>
+#include <iostream>
+
+#include <tclap/CmdLine.h>
+#include <tclap/ValueArg.h>
 
 #include <MXA/Common/LogTime.h>
 #include <MXA/Utilities/MXALogger.h>
@@ -19,16 +24,6 @@
 #include <AIM/Common/AIMArray.hpp>
 
 #include <AIM/SurfaceMesh/SurfaceMesh.h>
-
-
-#include <string>
-#include <iostream>
-
-//-- Boost Program Options
-#include <boost/program_options.hpp>
-
-#include <iostream>
-
 
 #define CHECK_ARG(var, mandatory)\
     if (vm.count(#var) > 1) { mxa_log << logTime() << "Multiple Occurances for Parameter " << #var << std::endl; }\
@@ -44,107 +39,91 @@
   if (var == true) { mxa_log << "TRUE"; } else { mxa_log << "FALSE"; }\
   mxa_log << "" << std::endl;
 
-
 int main(int argc, char **argv)
 {
 
   std::cout << logTime() << "Starting Surface Meshing ... " << std::endl;
-    MXALOGGER_METHOD_VARIABLE_INSTANCE
+  MXALOGGER_METHOD_VARIABLE_INSTANCE
+  int err = EXIT_FAILURE;
 
-    std::string dxFile;
-    std::string outputDir;
-
-    int xDim;
-    int yDim;
-    int zDim;
-
-    bool smoothMesh;
-    int smoothIterations;
-    int writeOutputFileIncrement;
-    bool lockQuadPoints;
-
-    std::string logFile;
+  std::string logFile;
+  try
+  {
 
     // Handle program options passed on command line.
-    boost::program_options::options_description desc("Possible Parameters");
-    desc.add_options()
-    ("help", "Produce help message")
-    ("dxFile", boost::program_options::value<std::string>(&dxFile), "REQUIRED: Input Dx File")
-//    ("edgeTableFile", boost::program_options::value<std::string>(&edgeTableFile), "REQUIRED: Input edgeTableFile File")
-//    ("neighSpinTableFile", boost::program_options::value<std::string>(&neighSpinTableFile), "REQUIRED: Input neighSpinTableFile File")
-    ("outputDir", boost::program_options::value<std::string>(&outputDir), "REQUIRED: Output Directory")
-    ("xDim,x", boost::program_options::value<int>(&xDim), "REQUIRED: X Dimension of your volume")
-    ("yDim,y", boost::program_options::value<int>(&yDim), "REQUIRED: Y Dimension of your volume")
-    ("zDim,z", boost::program_options::value<int>(&zDim), "REQUIRED: Z Dimension of your volume")
-    ("smoothMesh", boost::program_options::bool_switch(&smoothMesh), "Smooth the mesh after initial mesh generation [Default=FALSE]")
-    ("smoothIterations", boost::program_options::value<int>(&smoothIterations), "How many iterations to use to smooth the mesh")
-    ("writeOutputFileIncrement", boost::program_options::value<int>(&writeOutputFileIncrement), "The inrement in iterations to write an output file")
-    ("lockQuadPoints", boost::program_options::bool_switch(&lockQuadPoints), "Lock The Quad Points during smoothing [Default=FALSE")
-    ;
+    TCLAP::CmdLine cmd("AIMRepresentation Surface Meshing", ' ', "1.0");
+
+    TCLAP::ValueArg<std::string> vtkFile("v", "vtkfile", "VTK Structured Points File to be used as input.", false, "", "VTK Structured Points File");
+    cmd.add(vtkFile);
+
+#if 0
+    TCLAP::ValueArg<std::string > dxFile("", "dxfile", "Input DX File", false, "", "Input DX File");
+    cmd.add(dxFile);
+
+    TCLAP::ValueArg<int >
+    xDim("x", "xDim", "xDim", false, 0, "X Dimension");
+    cmd.add(xDim);
+
+    TCLAP::ValueArg<int >
+    yDim("y", "yDim", "yDim", false, 0, "Y Dimension");
+    cmd.add(yDim);
+
+    TCLAP::ValueArg<int >
+    zDim("z", "zDim", "zDim", false, 0, "Z Dimension");
+    cmd.add(zDim);
+#endif
+
+
+    TCLAP::ValueArg<std::string > outputDir("o", "outputDir", "Output Directory", false, "", "Output Directory");
+    cmd.add(outputDir);
+
+    TCLAP::SwitchArg smoothMesh("", "smoothMesh", "Smooth the mesh after initial mesh generation [Default=FALSE]", false);
+    cmd.add(smoothMesh);
+
+    TCLAP::ValueArg<int >
+        smoothIterations("", "smoothiterations", "Smooth Iterations. Anything greater than 0 will trigger a Laplacian smoothing of the mesh. 6 is a good place to start.", false, 0, "Smooth Iterations");
+    cmd.add(smoothIterations);
+
+    TCLAP::SwitchArg lockQuadPoints("q", "lockquad", "Lock Quad (or More) Juntions Points from Smoothing & decimation", false);
+    cmd.add(lockQuadPoints);
+
+    TCLAP::ValueArg<int >
+        writeOutputFileIncrement("", "writeOutputFileIncrement", "The inrement in iterations to write an output file", false, 0, "The inrement in iterations to write an output file");
+    cmd.add(writeOutputFileIncrement);
 
     int err = 0;
-    try
+
+    // Parse the argv array.
+    cmd.parse(argc, argv);
+    if (argc == 1)
     {
-
-      boost::program_options::variables_map vm;
-      boost::program_options::store(boost::program_options::parse_command_line(argc, argv, desc), vm);
-      boost::program_options::notify(vm);
-
-      // Print help message if requested by user and return.
-      if (vm.count("help") || argc < 2)
-      {
-        std::cout << desc << std::endl;
-        return EXIT_SUCCESS;
-      }
-      if (vm.count("logfile") != 0)
-      {
-        logFile = MXAFileSystemPath::toNativeSeparators(logFile);
-      }
-      if (false == logFile.empty())
-      {
-        mxa_log.open(logFile);
-      }
-      mxa_log << logTime() << "Surface Mesh Version " << AIMRepresentation::Version::Complete << " Starting " << std::endl;
-
-      mxa_log << "Parameters being used are: " << std::endl;
-
-      CHECK_ARG( dxFile, true);
-//      CHECK_ARG( edgeTableFile, true);
-//      CHECK_ARG( neighSpinTableFile, true);
-      CHECK_ARG( outputDir, true);
-      CHECK_ARG( xDim, true);
-      CHECK_ARG( yDim, true);
-      CHECK_ARG( zDim, true);
-      CHECK_ARG( smoothMesh, true);
-      CHECK_ARG( smoothIterations, true);
-      CHECK_ARG( writeOutputFileIncrement, true);
-      CHECK_ARG( lockQuadPoints, true);
-
-      SurfaceMesh::Pointer surfaceMesh = SurfaceMesh::New();
-//     surfaceMesh->setDXFile(dxFile );
-//      surfaceMesh->setEdgeTableFile(edgeTableFile );
-//      surfaceMesh->setNeighSpinTableFile(neighSpinTableFile );
-      surfaceMesh->setOutputDirectory(outputDir);
-      surfaceMesh->setXDim(xDim);
-      surfaceMesh->setYDim(yDim);
-      surfaceMesh->setZDim(zDim);
-      surfaceMesh->setSmoothMesh(smoothMesh);
-      surfaceMesh->setSmoothIterations(smoothIterations);
-      surfaceMesh->setSmoothFileOutputIncrement(writeOutputFileIncrement);
-      surfaceMesh->setSmoothLockQuadPoints(lockQuadPoints);
-
-      surfaceMesh->compute();
-      err = surfaceMesh->getErrorCondition();
-    } catch (...)
-    {
-      std::cout << "Error on Input: Displaying help listing instead. **" << std::endl;
-      std::cout << desc << std::endl;
-      for (int i = 0; i < argc; ++i)
-      {
-        std::cout << argv[i] << std::endl;
-      }
+      std::cout << "m3c program was not provided any arguments. Use the --help argument to show the help listing." << std::endl;
       return EXIT_FAILURE;
     }
-    std::cout << "++++++++++++ Surface Meshing Complete ++++++++++++" << std::endl;
-    return err;
+
+    SurfaceMesh::Pointer surfaceMesh = SurfaceMesh::New();
+
+#if 0
+    surfaceMesh->setXDim(xDim.getValue());
+    surfaceMesh->setYDim(yDim.getValue());
+    surfaceMesh->setZDim(zDim.getValue());
+#endif
+
+    surfaceMesh->setInputFile(vtkFile.getValue());
+    surfaceMesh->setOutputDirectory(outputDir.getValue());
+    surfaceMesh->setSmoothMesh(smoothMesh.getValue());
+    surfaceMesh->setSmoothIterations(smoothIterations.getValue());
+    surfaceMesh->setSmoothFileOutputIncrement(writeOutputFileIncrement.getValue());
+    surfaceMesh->setSmoothLockQuadPoints(lockQuadPoints.getValue());
+
+    surfaceMesh->compute();
+    err = surfaceMesh->getErrorCondition();
   }
+  catch (TCLAP::ArgException &e) // catch any exceptions
+  {
+    std::cerr << logTime() << " error: " << e.error() << " for arg " << e.argId() << std::endl;
+    return EXIT_FAILURE;
+  }
+  std::cout << "++++++++++++ Surface Meshing Complete ++++++++++++" << std::endl;
+  return err;
+}
