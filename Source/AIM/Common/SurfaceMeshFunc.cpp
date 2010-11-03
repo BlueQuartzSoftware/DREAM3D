@@ -114,27 +114,6 @@ int SurfaceMeshFunc::initialize_micro(string filename)
 		if(col == 0 || col == (xDim-1) || row == 0 || row == (yDim-1) || plane == 0 || plane == (zDim-1)) point[i].grainname = -3;
 	}
 	point[0].grainname = 0; // Point 0 is a garbage...
-	headerdone = false;
-	while(headerdone == false)
-	{
-		in.getline( buf, size );
-		std::string line = buf;
-		in >> word;
-		if(word == "LOOKUP_TABLE")
-		{
-			headerdone = true;
-			in >> word;
-		}
-	}
-	for(i=1;i<=NS;i++)
-	{
-		in >> surfacevoxel;
-		int col = (i-1)%xDim;
-		int row = ((i-1)/xDim)%yDim;
-		int plane = (i-1)/(xDim*yDim);
-		point[i].surfacevoxel = surfacevoxel;
-	}
-	// Let's input the grainname numbers for each site from micro.input...
 	in.close();
 	return zDim;
 }
@@ -220,36 +199,43 @@ void SurfaceMeshFunc::initialize_nodes(int zID)
     cVertex[id].zc = z;
     cVertex[id].nodeKind = 0;
     cVertex[id].newNodeID = -1;
+	cVertex[id].point = tsite;
     cVertex[id + 1].xc = x;
     cVertex[id + 1].yc = y + (0.5*yRes);
     cVertex[id + 1].zc = z;
     cVertex[id + 1].nodeKind = 0;
     cVertex[id + 1].newNodeID = -1;
+	cVertex[id + 1].point = tsite;
     cVertex[id + 2].xc = x;
     cVertex[id + 2].yc = y;
     cVertex[id + 2].zc = z + (0.5*zRes);
     cVertex[id + 2].nodeKind = 0;
     cVertex[id + 2].newNodeID = -1;
-   cVertex [id + 3].xc = x + (0.5*xRes);
-   cVertex [id + 3].yc = y + (0.5*yRes);
-   cVertex [id + 3].zc = z;
-   cVertex [id + 3].nodeKind = 0;
-   cVertex [id + 3].newNodeID = -1;
-   cVertex [id + 4].xc = x + (0.5*xRes);
-   cVertex [id + 4].yc = y;
-   cVertex [id + 4].zc = z + (0.5*zRes);
-   cVertex [id + 4].nodeKind = 0;
-   cVertex [id + 4].newNodeID = -1;
-   cVertex [id + 5].xc = x;
-   cVertex [id + 5].yc = y + (0.5*yRes);
-   cVertex [id + 5].zc = z + (0.5*zRes);
-   cVertex [id + 5].nodeKind = 0;
-   cVertex [id + 5].newNodeID = -1;
+	cVertex[id + 2].point = tsite;
+    cVertex[id + 3].xc = x + (0.5*xRes);
+    cVertex[id + 3].yc = y + (0.5*yRes);
+    cVertex[id + 3].zc = z;
+    cVertex[id + 3].nodeKind = 0;
+    cVertex[id + 3].newNodeID = -1;
+	cVertex[id + 3].point = tsite;
+    cVertex[id + 4].xc = x + (0.5*xRes);
+    cVertex[id + 4].yc = y;
+    cVertex[id + 4].zc = z + (0.5*zRes);
+    cVertex[id + 4].nodeKind = 0;
+    cVertex[id + 4].newNodeID = -1;
+	cVertex[id + 4].point = tsite;
+    cVertex[id + 5].xc = x;
+    cVertex[id + 5].yc = y + (0.5*yRes);
+    cVertex[id + 5].zc = z + (0.5*zRes);
+    cVertex[id + 5].nodeKind = 0;
+    cVertex[id + 5].newNodeID = -1;
+	cVertex[id + 5].point = tsite;
     cVertex[id + 6].xc = x + (0.5*xRes);
     cVertex[id + 6].yc = y + (0.5*yRes);
     cVertex[id + 6].zc = z + (0.5*zRes);
     cVertex[id + 6].nodeKind = 0;
     cVertex[id + 6].newNodeID = -1;
+	cVertex[id + 6].point = tsite;
   }
 }
 
@@ -355,20 +341,12 @@ int SurfaceMeshFunc::get_number_fEdges(int zID)
           atBulk++;
         }
       }
-      if (atBulk > 0)
-      {
-//        cSquare[k].effect = 1; // mark current square as effective one that can be "marching cubed"...
-      }
       // Let's count the number of edges...
-//      if (cgrainname > -10 && atBulk == 0)
       if (atBulk > 0)
       { // coNSider the square iNSide the bulk only..
 	    sqIndex = 0;
-		if(point[csite].surfacevoxel >= 0)
-		{
-			sqIndex = get_square_index(tngrainname);
-			cSquare[k].effect = 1;
-		}
+		sqIndex = get_square_index(tngrainname);
+		cSquare[k].effect = 1;
         if (sqIndex == 15)
         {
           anFlag = treat_anomaly(tNSite, zID);
@@ -451,14 +429,9 @@ void SurfaceMeshFunc::get_nodes_fEdges(int eT2d[20][8], int NST2d[20][8], int zI
       }
       edgeCount = 0;
       // Let's find the edges...
-//      if (cgrainname > -10 && atBulk == 0)
       if (atBulk > 0)
       { // coNSider the square iNSide the bulk only...
-		sqIndex = 0;
-		if(point[csite].surfacevoxel >= 0)
-		{
-			sqIndex = get_square_index(tngrainname);
-		}
+		sqIndex = get_square_index(tngrainname);
         if (sqIndex == 15)
         {
           anFlag = treat_anomaly(tNSite, zID);
@@ -3291,435 +3264,7 @@ void SurfaceMeshFunc::copy_cNodes_2_pNodes()
     }
   }
 }
-void SurfaceMeshFunc::UET_get_number_current_edges (int *nfe, int *nie, int zID, string EdgesFileIndex)
-{
-  int i;
-  int eid;
-  int ek;
-  int feFlag, ieFlag;
-  int tnfe, tnie;
-  int layerIndex, kindIndex;
-  int n1, n2;
-  int s1, s2, s3, s4;
-  int tne;
-  std::string ZIndex;
-  std::string extension = ".txt";
-  string EdgesFileIndexCur;
-  EdgesFileIndexCur = EdgesFileIndex;
-  ZIndex = StringUtils::numToString(zID);
-  EdgesFileIndexCur.append(ZIndex);
-  EdgesFileIndexCur.append(extension);
-  ifstream inputFile;
-  inputFile.open(EdgesFileIndexCur.c_str());
-  feFlag = 0;
-  ieFlag = 1;
-  tnfe = 0;
-  tnie = 0;
-  inputFile >> tne;
-  for(i=0; i<tne; i++)
-  {
-    inputFile >> eid >> layerIndex >> kindIndex >> n1 >> n2 >> ek >> s1 >> s2 >> s3 >> s4;
-    if(kindIndex==feFlag)
-	{
-      tnfe++;
-    }
-	else if(kindIndex==ieFlag)
-	{
-      tnie++;
-    }
-  }
-  inputFile.close();
-  *nfe = tnfe;
-  *nie = tnie;
-}
-void SurfaceMeshFunc::UET_read_current_edges (int nFEdge, int nIEdge, int zID, string EdgesFileIndex)
-{
-  int i;
-  int feid;
-  int ieid;
-  int eid;
-  int ek;
-  int feFlag, ieFlag;
-  int layerIndex, kindIndex;
-  int n1, n2;
-  int s1, s2, s3, s4;
-  int tne;
-  std::string ZIndex;
-  std::string extension = ".txt";
-  string EdgesFileIndexCur;
-  EdgesFileIndexCur = EdgesFileIndex;
-  ZIndex = StringUtils::numToString(zID);
-  EdgesFileIndexCur.append(ZIndex);
-  EdgesFileIndexCur.append(extension);
-  ifstream inputFile;
-  inputFile.open(EdgesFileIndexCur.c_str());
-  feFlag = 0;
-  ieFlag = 1;
-  feid = 0;
-  ieid = 0;
-  inputFile >> tne;
-  Fedge = new Segment[nFEdge];
-  Iedge = new Segment[nIEdge];
-  for(i=0; i<tne; i++)
-  {
-    inputFile >> eid >> layerIndex >> kindIndex >> n1 >> n2 >> ek >> s1 >> s2 >> s3 >> s4;
-    if(kindIndex==feFlag)
-	{
-      Fedge[feid].edgeID = eid;
-      Fedge[feid].n_id[0] = n1;
-      Fedge[feid].n_id[1] = n2;
-      Fedge[feid].edgeKind = ek;
-      Fedge[feid].ngrainname[0] = s1;
-      Fedge[feid].ngrainname[1] = s2;
-      Fedge[feid].ngrainname[2] = s3;
-      Fedge[feid].ngrainname[3] = s4;
-      feid++;
-    }
-	else if(kindIndex==ieFlag)
-	{
-      Iedge[ieid].edgeID = eid;
-      Iedge[ieid].n_id[0] = n1;
-      Iedge[ieid].n_id[1] = n2;
-      Iedge[ieid].edgeKind = ek;
-      Iedge[ieid].ngrainname[0] = s1;
-      Iedge[ieid].ngrainname[1] = s2;
-      Iedge[ieid].ngrainname[2] = s3;
-      Iedge[ieid].ngrainname[3] = s4;
-      ieid++;
-    }
-  }
-  inputFile.close();
-}
-void SurfaceMeshFunc::UET_get_number_previous_current_triangles(int *nPT, int *nCT, int zID, string TrianglesFileIndex)
-{
-  int tnpt, tnct;
-  std::string ZIndex;
-  std::string extension = ".txt";
-  string TrianglesFileIndexCur1;
-  TrianglesFileIndexCur1 = TrianglesFileIndex;
-  ZIndex = StringUtils::numToString(zID);
-  TrianglesFileIndexCur1.append(ZIndex);
-  TrianglesFileIndexCur1.append(extension);
-  ifstream inputFile;
-  inputFile.open(TrianglesFileIndexCur1.c_str());
-  inputFile >> tnct;
-  inputFile.close();
-  if (zID > 0)
-  {
-    string TrianglesFileIndexCur2;
-    TrianglesFileIndexCur2 = TrianglesFileIndex;
-    ZIndex = StringUtils::numToString(zID-1);
-    TrianglesFileIndexCur2.append(ZIndex);
-    TrianglesFileIndexCur2.append(extension);
-    ifstream inputFile2;
-    inputFile2.open(TrianglesFileIndexCur2.c_str());
-    inputFile2 >> tnpt;
-    inputFile.close();
-  }
-  else
-  {
-    tnpt = 0;
-  }
-  *nPT = tnpt;
-  *nCT = tnct;
-}
-void SurfaceMeshFunc::UET_read_current_triangles (int ncTriangle, int zID, string TrianglesFileIndex)
-{
-
-  int i;
-
-  //int cFlag;
-  int tid;
-  int index;
-  int n1, n2, n3, s1, s2;
-  int cid;
-
-  int tnt;
-
- // cFlag = zID;
-  cid = 0;
-
-  std::string ZIndex;
-  std::string extension = ".txt";
-
-  string TrianglesFileIndexCur;
-  TrianglesFileIndexCur = TrianglesFileIndex;
-  ZIndex = StringUtils::numToString(zID);
-  TrianglesFileIndexCur.append(ZIndex);
-  TrianglesFileIndexCur.append(extension);
-
-  ifstream inputFile;
-  inputFile.open(TrianglesFileIndexCur.c_str());
-
-  inputFile >> tnt;
-
-  cTriangle = new Patch [ncTriangle];
-
-
-  for(i=0; i<tnt; i++){
-
-    inputFile >> tid >> index >> n1 >> n2 >> n3 >> s1 >> s2;
-
-    cTriangle[cid].triID = tid;
-    cTriangle[cid].v_id[0] = n1;
-    cTriangle[cid].v_id[1] = n2;
-    cTriangle[cid].v_id[2] = n3;
-    cTriangle[cid].e_id[0] = -1;
-    cTriangle[cid].e_id[1] = -1;
-    cTriangle[cid].e_id[2] = -1;
-	cTriangle[cid].ngrainname[0] = s1;
-	cTriangle[cid].ngrainname[1] = s2;
-    cid++;
-  }
-
-  inputFile.close();
-}
-void SurfaceMeshFunc::UET_update_iEdges_triangles (int nIEdge, int ncTriangle)
-{
-  int i, j, k;
-  int cn1, cn2, nn1, nn2;
-  int teid;
-  int tSpin[2];
-  int type = 0;
-  int index1, index2;
-  int bflag;
-  for(i=0; i<nIEdge; i++)
-  {
-    cn1 = Iedge[i].n_id[0];
-    cn2 = Iedge[i].n_id[1];
-    teid = Iedge[i].edgeID;
-    for(j=0; j<ncTriangle; j++)
-	{
-      for(k=0; k<3; k++)
-	  {  // for each edge of the current triangle...
-		bflag = cTriangle[j].e_id[k];
-		if(bflag==-1)
-		{
-		  index1 = k;
-		  if(index1==2)
-		  {
-			  index2 = 0;
-		  }
-		  else
-		  {
-			index2 = k + 1;
-		  }
-		  // Find nodes...
-		  nn1 = cTriangle[j].v_id[index1];
-		  nn2 = cTriangle[j].v_id[index2];
-		  if( (cn1==nn1 && cn2==nn2) || (cn1==nn2 && cn2==nn1))
-		  {
-			cTriangle[j].e_id[k] = teid;
-			tSpin[0] = cTriangle[j].ngrainname[0];
-			tSpin[1] = cTriangle[j].ngrainname[1];
-			UET_update_edge_neigh_spins (type, i, tSpin);
-		  }
-	     }
-        }
-      }
-    }
-}
-void SurfaceMeshFunc::UET_update_fEdges_triangles (int nFEdge, int npTriangle, int ncTriangle, int zID)
-{
-  int i, j, k, ii, jj, kk;
-  int cn1, cn2, nn1, nn2;
-  int teid;
-  int tSpin[2];
-  int index1, index2;
-  int bflag;
-  int type = 1;
-  int zFlag;
-  zFlag = zID;
-  for(i=0; i<nFEdge; i++)
-  {
-    cn1 = Fedge[i].n_id[0];
-    cn2 = Fedge[i].n_id[1];
-    teid = Fedge[i].edgeID;
-    for(j=0; j<ncTriangle; j++)
-	{
-      for(k=0; k<3; k++)
-	  {  // for each edge of the current triangle...
-		bflag = cTriangle[j].e_id[k];
-		if(bflag==-1)
-		{
-		  index1 = k;
-		  if(index1==2)
-		  {
-			index2 = 0;
-		  }
-		  else
-		  {
-		    index2 = k + 1;
-		  }
-		  // Find nodes...
-		  nn1 = cTriangle[j].v_id[index1];
-		  nn2 = cTriangle[j].v_id[index2];
-		  if( (cn1==nn1 && cn2==nn2) || (cn1==nn2 && cn2==nn1))
-		  {
-		    cTriangle[j].e_id[k] = teid;
-		    tSpin[0] = cTriangle[j].ngrainname[0];
-		    tSpin[1] = cTriangle[j].ngrainname[1];
-		    UET_update_edge_neigh_spins (type, i, tSpin);
-		  }
-		}
-      }
-    }
-  }
-  if(zFlag>0)
-  {
-    for(ii=0; ii<nFEdge; ii++)
-	{
-      cn1 = Fedge[ii].n_id[0];
-      cn2 = Fedge[ii].n_id[1];
-      teid = Fedge[ii].edgeID;
-      for(jj=0; jj<npTriangle; jj++)
-	  {
-		for(kk=0; kk<3; kk++)
-		{  // for each edge of the current triangle...
-		  bflag = pTriangle[jj].e_id[kk];
-		  if(bflag==-1)
-		  {
-		    index1 = kk;	
-		    if(index1==2)
-			{
-		      index2 = 0;
-		    }
-			else
-			{
-		      index2 = kk + 1;
-		    }
-		    // Find nodes...
-		    nn1 = pTriangle[jj].v_id[index1];
-		    nn2 = pTriangle[jj].v_id[index2];
-		    if( (cn1==nn1 && cn2==nn2) || (cn1==nn2 && cn2==nn1))
-			{	
-		      pTriangle[jj].e_id[kk] = teid;
-		      tSpin[0] = pTriangle[jj].ngrainname[0];
-		      tSpin[1] = pTriangle[jj].ngrainname[1];
-		      UET_update_edge_neigh_spins (type, ii, tSpin);
-		    }
-		  }
-		}
-      }
-    }
-  }
-}
-void SurfaceMeshFunc::UET_update_edge_neigh_spins (int type, int eid, int tsp[2])
-{
-  int i;
-  int index;
-  int numCN, newCN1, newCN2;
-  int cns;
-  int nns1, nns2;
-  index = eid;
-  nns1 = tsp[0];
-  nns2 = tsp[1];
-  if(type == 0)
-  {
-	  numCN = Iedge[index].edgeKind;
-  }
-  if(type == 1)
-  {
-	  numCN = Fedge[index].edgeKind;
-  }
-  newCN1 = 0;
-  newCN2 = 0;
-  for(i=0; i<numCN; i++)
-  {   // remember nns1 is different from nns2...
-    if(type == 0) cns = Iedge[index].ngrainname[i];
-    if(type == 1) cns = Fedge[index].ngrainname[i];
-    if(cns==nns1)
-	{
-      newCN1++;
-    }
-    if(cns==nns2)
-	{
-      newCN2++;
-    }
-  }
-  if(newCN1==0)
-  {
-    if(type == 0) Iedge[index].ngrainname[numCN] = nns1;
-    if(type == 1) Fedge[index].ngrainname[numCN] = nns1;
-    numCN++;
-  }
-  if(newCN2==0)
-  {
-    if(type == 0) Iedge[index].ngrainname[numCN] = nns2;
-    if(type == 1) Fedge[index].ngrainname[numCN] = nns2;
-    numCN++;
-  }
-  if(type == 0) Iedge[index].edgeKind = numCN;
-  if(type == 1) Fedge[index].edgeKind = numCN;
-}
-void SurfaceMeshFunc::UET_copy_triangles (int npTriangle)
-{
-  int i;
-  pTriangle = new Patch[npTriangle];
-  for(i=0; i<npTriangle; i++)
-  {
-    pTriangle[i].triID = cTriangle[i].triID;
-    pTriangle[i].v_id[0] = cTriangle[i].v_id[0];
-    pTriangle[i].v_id[1] = cTriangle[i].v_id[1];
-    pTriangle[i].v_id[2] = cTriangle[i].v_id[2];
-    pTriangle[i].e_id[0] = cTriangle[i].e_id[0];
-    pTriangle[i].e_id[1] = cTriangle[i].e_id[1];
-    pTriangle[i].e_id[2] = cTriangle[i].e_id[2];
-    pTriangle[i].ngrainname[0] = cTriangle[i].ngrainname[0];
-    pTriangle[i].ngrainname[1] = cTriangle[i].ngrainname[1];
-  }
-}
-void SurfaceMeshFunc::UET_get_output_edges (int nFEdge, int nIEdge, string EdgesFile)
-{
-  int i, j;
-  ofstream outFile;
-  outFile.open(EdgesFile.c_str(), ios::app);
-  for(i=0; i<nFEdge; i++)
-  {
-      outFile << Fedge[i].edgeID << "	" << Fedge[i].n_id[0] << "	" << Fedge[i].n_id[1] << "	" << Fedge[i].edgeKind << "	" << Fedge[i].ngrainname[0] << "	" << Fedge[i].ngrainname[1] << "	" << Fedge[i].ngrainname[2] << "	" << Fedge[i].ngrainname[3] << endl;
-  }
-  for(j=0; j<nIEdge; j++)
-  {
-	  outFile << Iedge[j].edgeID << "	" << Iedge[j].n_id[0] << "	" << Iedge[j].n_id[1] << "	" << Iedge[j].edgeKind << "	" << Iedge[j].ngrainname[0] << "	" << Iedge[j].ngrainname[1] << "	" << Iedge[j].ngrainname[2] << "	" << Iedge[j].ngrainname[3] << endl;
-  }
-  outFile.close();
-}
-void SurfaceMeshFunc::UET_get_output_triangles (int type, int nTriangle, string TrianglesFile)
-{
-  int i;
-  ofstream outFile;
-  outFile.open(TrianglesFile.c_str(), ios::app);
-  for(i=0; i<nTriangle; i++)
-  {
-    if(type == 0)
-	{
-	  outFile << pTriangle[i].triID << "	" << pTriangle[i].v_id[0] << "	" << pTriangle[i].v_id[1] << "	" << pTriangle[i].v_id[2] << "	" << pTriangle[i].ngrainname[0] << "	" << pTriangle[i].ngrainname[1] << endl;
-	}
-    if(type == 1)
-	{
-	  outFile << cTriangle[i].triID << "	" << cTriangle[i].v_id[0] << "	" << cTriangle[i].v_id[1] << "	" << cTriangle[i].v_id[2] << "	" << cTriangle[i].ngrainname[0] << "	" << cTriangle[i].ngrainname[1] << endl;
-	}
-  }
-  outFile.close();
-}
-void SurfaceMeshFunc::UET_get_output_nodes (int nNodes, string NodesFile, string NodesRawFile)
-{
-  int i;
-  int id, dummy, nk;
-  double x, y, z;
-  ifstream inputFile;
-  inputFile.open(NodesRawFile.c_str());
-  ofstream outFile;
-  outFile.open(NodesFile.c_str(), ios::app);
-  for(i=0; i<nNodes; i++)
-  {
-    inputFile >> id >> dummy >> nk >> x >> y >> z;
-    outFile << id << "	" << nk << "	" << x << "	" << y << "	" << z << endl;
-  }
-  inputFile.close();
-  outFile.close();
-}
-void SurfaceMeshFunc::UET_create_vtk (int nNodes, int nTriangles, string VisualizationFile, string NodesFile, string TrianglesFile)
+void SurfaceMeshFunc::create_vtk (int nNodes, int nTriangles, string VisualizationFile, string NodesFile, string TrianglesFile)
 {
 	ofstream outFile;
 	outFile.open(VisualizationFile.c_str());
@@ -3758,7 +3303,8 @@ void SurfaceMeshFunc::UET_create_vtk (int nNodes, int nTriangles, string Visuali
 	for(int i=0;i<nTriangles;i++)
 	{
 		inputFile2 >> trianglenum >> node1 >> node2 >> node3 >> grain1 >> grain2;
-		outFile << "3	" << node1 << "	" << node2 << "	" << node3 << endl;
+		if(grain1 < grain2) outFile << "3	" << node1 << "	" << node2 << "	" << node3 << endl;
+		if(grain1 > grain2) outFile << "3	" << node3 << "	" << node2 << "	" << node1 << endl;
 	}
 	inputFile2.close();
 	outFile << endl;

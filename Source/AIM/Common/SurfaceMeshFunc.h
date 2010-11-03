@@ -144,19 +144,7 @@ public:
   double find_xcoord(long);
   double find_ycoord(long);
   double find_zcoord(long);
-
-  void UET_get_number_current_edges (int *nfe, int *nie, int zID, string EdgesFileIndex);
-  void UET_get_number_previous_current_triangles (int *nPT, int *nCT, int zID, string trianglesFileIndex); 
-  void UET_read_current_edges (int nFEdge, int nIEdge, int zID, string EdgesFileIndex);
-  void UET_read_current_triangles (int ncTriangle, int zID, string TrianglesFileIndex);
-  void UET_update_iEdges_triangles (int nIEdge, int ncTriangle);
-  void UET_update_fEdges_triangles (int nFEdge, int npTriangle, int ncTriangle, int zID);
-  void UET_update_edge_neigh_spins (int type, int eid, int tsp[2]);
-  void UET_copy_triangles (int npTriangle);
-  void UET_get_output_edges (int nFEdge, int nIEdge, string edgesFile);
-  void UET_get_output_triangles (int type, int nTriangle, string trianglesFile);
-  void UET_get_output_nodes (int nNodes, string nodesFile, string nodesRawFile);
-  void UET_create_vtk (int nNodes, int nTriangles, string VisualizationFile, string NodesFile, string TrianglesFile);
+  void create_vtk (int nNodes, int nTriangles, string VisualizationFile, string NodesFile, string TrianglesFile);
 
 
 protected:
