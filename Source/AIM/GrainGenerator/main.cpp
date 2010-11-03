@@ -88,6 +88,16 @@ int main(int argc, char **argv)
     TCLAP::ValueArg<int>  crystruct( "", "crystruct", "Do you have a HCP (1) or FCC (2) material", true, 2, "Do you have a HCP (1) or FCC (2) material");
     cmd.add(crystruct);
 
+
+    // Parse the argv array.
+    cmd.parse(argc, argv);
+    if (argc == 1)
+    {
+      std::cout << "Grain Generator program was not provided any arguments. Use the --help argument to show the help listing." << std::endl;
+      return EXIT_FAILURE;
+    }
+
+
     GrainGenerator::Pointer r = GrainGenerator::New();
     r->setInputDirectory(inputDir.getValue());
     r->setOutputDirectory(outputDir.getValue());
