@@ -36,6 +36,7 @@ public:
     double xc;
     double yc;
     double zc;
+	int point;
     int newNodeID; // newID for used nodes; if not used, it's -1...
 
   private:

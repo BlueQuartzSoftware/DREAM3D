@@ -168,7 +168,7 @@ void SurfaceMesh::compute()
   for (int i = 0; i < (m_ZDim - 1); i++)
   {
 
-    progressMessage(AIM_STRING("Marching Cubes Between Layers "), (i*50/m_ZDim) );
+    progressMessage(AIM_STRING("Marching Cubes Between Layers "), (i*90/m_ZDim) );
 
     // initialize neighbors, possible nodes and squares of marching cubes of each layer...
     m->get_neighbor_list(i);
@@ -227,70 +227,8 @@ void SurfaceMesh::compute()
     m->copy_cNodes_2_pNodes();
   }
 
-  CHECK_FOR_CANCELED(Surface Meshing)
-  progressMessage(AIM_STRING("Converting Slice Files to Single Nodes/Triangles Pair"), 40 );
-
-  // Convert the output edge and triangle files into a single node/triangle file
-//  pTriangle = (struct patch *)malloc(1*sizeof(struct patch));
-  // Creating new or Erasing Current output files
-
-//  ofstream outFile;
-//  outFile.open(EdgesFile.c_str(), ios::app);
-//  outFile << cEdgeID << endl;
-//  outFile.close();
-
-//  outFile.open(TrianglesFile.c_str(), ios::app);
-//  outFile << cTriID << endl;
-//  outFile.close();
-
-//  outFile.open(NodesFile.c_str(), ios::app);
-//  outFile << cNodeID << endl;
-//  outFile.close();
-
-  // For each layer...
-  for (int i = 0; i <= (m_ZDim-2); i++)
-  {
-
-    // get numbers of face edges, inner edges, previous triangles and current triangles...
-//    m->UET_get_number_current_edges (&nFEdge, &nIEdge, i, EdgesFileIndex);
-//    m->UET_get_number_previous_current_triangles (&npTriangle, &ncTriangle, i, TrianglesFileIndex);
-
-    // read edge and triangle information...
-//    m->UET_read_current_edges (nFEdge, nIEdge, i, EdgesFileIndex);
-//    m->UET_read_current_triangles (ncTriangle, i, TrianglesFileIndex);
-
-    // update edges and triangles...
-//    m->UET_update_iEdges_triangles (nIEdge, ncTriangle);
-//    m->UET_update_fEdges_triangles (nFEdge, npTriangle, ncTriangle, i);
-
-    // print out edge information...
-//    m->UET_get_output_edges (nFEdge, nIEdge, EdgesFile);
-
-    // print out triangle information...
-    if (i > 0)
-    {
-      int type = 0;
-      if (i == (m_ZDim-2))
-      {
-	    type = 0;
-//        m->UET_get_output_triangles(type, npTriangle, TrianglesFile);
-	    type = 1;
-//        m->UET_get_output_triangles(type, ncTriangle, TrianglesFile);
-      }
-      else
-      {
-	    type = 0;
-//        m->UET_get_output_triangles(type, npTriangle, TrianglesFile);
-      }
-    }
-
-    // make cTriangle into pTriangle...
-//	npTriangle = ncTriangle;
-//    m->UET_copy_triangles (npTriangle);
-  }
-
-//  m->UET_get_output_nodes (nNodes, NodesFile, NodesRawFile);
-  m->UET_create_vtk(nNodes, cTriID, VisualizationFile, NodesFile, TrianglesFile);
+  progressMessage(AIM_STRING("Writing Surface Mesh Visualization "), 90 );
+  m->create_vtk(nNodes, cTriID, VisualizationFile, NodesFile, TrianglesFile);
 
 /*  if (m_SmoothMesh == true)
   {
