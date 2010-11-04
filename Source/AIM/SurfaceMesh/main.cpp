@@ -41,8 +41,6 @@
 
 int main(int argc, char **argv)
 {
-
-  std::cout << logTime() << "Starting Surface Meshing ... " << std::endl;
   MXALOGGER_METHOD_VARIABLE_INSTANCE
   int err = EXIT_FAILURE;
 
@@ -51,7 +49,7 @@ int main(int argc, char **argv)
   {
 
     // Handle program options passed on command line.
-    TCLAP::CmdLine cmd("AIMRepresentation Surface Meshing", ' ', "1.0");
+    TCLAP::CmdLine cmd("AIMRepresentation Surface Meshing", ' ', AIMRepresentation::Version::Complete);
 
     TCLAP::ValueArg<std::string> vtkFile("v", "vtkfile", "VTK Structured Points File to be used as input.", false, "", "VTK Structured Points File");
     cmd.add(vtkFile);
@@ -97,10 +95,11 @@ int main(int argc, char **argv)
     cmd.parse(argc, argv);
     if (argc == 1)
     {
-      std::cout << "m3c program was not provided any arguments. Use the --help argument to show the help listing." << std::endl;
+      std::cout << "AIMRepresentation Surface Mesh program was not provided any arguments. Use the --help argument to show the help listing." << std::endl;
       return EXIT_FAILURE;
     }
 
+    std::cout << logTime() << "Starting Surface Meshing ... " << std::endl;
     SurfaceMesh::Pointer surfaceMesh = SurfaceMesh::New();
 
 #if 0
