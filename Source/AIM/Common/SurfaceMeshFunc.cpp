@@ -15,19 +15,26 @@
 #define WIN32_LEAN_AND_MEAN		// Exclude rarely-used stuff from Windows headers
 #endif
 
+// C Includes
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
 #include <string.h>
-#include <vector>
 
+// C++ Includes
+#include <vector>
+#include <sstream>
+
+#include <MXA/Utilities/StringUtils.h>
+
+#include "VTKFileUtils.h"
 
 const static double m_pi = 3.1415926535897;
 const static double m_OnePointThree = 1.33333333333;
 
-#include <sstream>
 
-#include <MXA/Utilities/StringUtils.h>
+
+
 
 // -----------------------------------------------------------------------------
 //
@@ -56,65 +63,79 @@ SurfaceMeshFunc::~SurfaceMeshFunc()
 
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 int SurfaceMeshFunc::initialize_micro(string filename)
 {
 
-	int i, j, k, l;
-	int id;
-	int tgrainname;
-	int surfacevoxel;
-	double tempx, tempy, tempz;
-	int xnum, ynum, znum;
-	double xres, yres, zres;
-	const unsigned int size ( 1024 );
-	char buf [ size ];
-	std::ifstream in (filename.c_str() );
-	std::string word;
-	bool headerdone = false;
-	while(headerdone == false)
-	{
-		in.getline( buf, size );
-		std::string line = buf;
-		in >> word;
-		if(word == "LOOKUP_TABLE")
-		{
-			headerdone = true;
-			in >> word;
-		}
-		if(word == "DIMENSIONS")
-		{
-			in >> xnum >> ynum >> znum;
-			NS = xnum * ynum * znum;
-			NSP = xnum * ynum;
-			xDim = xnum;
-			yDim = ynum;
-			zDim = znum;
-			neigh = new Neighbor[2 * NSP + 1];
-			point = new Voxel[NS + 1];
-			cSquare = new Face[3 * 2 * NSP];
-			cVertex = new Node[7 * 2 * NSP];
-			pVertex = new Node[7 * 2 * NSP];
-		}
-		if(word == "SPACING")
-		{
-			in >> xres >> yres >> zres;
-			xRes = xres;
-			yRes = yres;
-			zRes = zres;
-		}
-	}
-	for(i=1;i<=NS;i++)
-	{
-		in >> tgrainname;
-		if(tgrainname <= 0) tgrainname = -3;
-		int col = (i-1)%xDim;
-		int row = ((i-1)/xDim)%yDim;
-		int plane = (i-1)/(xDim*yDim);
-		point[i].grainname = tgrainname;
-		if(col == 0 || col == (xDim-1) || row == 0 || row == (yDim-1) || plane == 0 || plane == (zDim-1)) point[i].grainname = -3;
-	}
-	point[0].grainname = 0; // Point 0 is a garbage...
-	in.close();
+#if 1
+  VTKFileUtils vtk;
+  int err = vtk.readVtkFile(this, filename);
+  if (err < 0)
+  {
+    return -1;
+  }
+#else
+
+  int i, j, k, l;
+  int id;
+  int tgrainname;
+  int surfacevoxel;
+  double tempx, tempy, tempz;
+  int xnum, ynum, znum;
+  double xres, yres, zres;
+  const unsigned int size ( 1024 );
+  char buf [ size ];
+  std::ifstream in (filename.c_str() );
+  std::string word;
+  bool headerdone = false;
+  while(headerdone == false)
+  {
+    in.getline( buf, size );
+    std::string line = buf;
+    in >> word;
+    if(word == "LOOKUP_TABLE")
+    {
+      headerdone = true;
+      in >> word;
+    }
+    if(word == "DIMENSIONS")
+    {
+      in >> xnum >> ynum >> znum;
+      NS = xnum * ynum * znum;
+      NSP = xnum * ynum;
+      xDim = xnum;
+      yDim = ynum;
+      zDim = znum;
+      neigh = new Neighbor[2 * NSP + 1];
+      point = new Voxel[NS + 1];
+      cSquare = new Face[3 * 2 * NSP];
+      cVertex = new Node[7 * 2 * NSP];
+      pVertex = new Node[7 * 2 * NSP];
+    }
+    if(word == "SPACING")
+    {
+      in >> xres >> yres >> zres;
+      xRes = xres;
+      yRes = yres;
+      zRes = zres;
+    }
+  }
+  for(i=1;i<=NS;i++)
+  {
+    in >> tgrainname;
+    if(tgrainname <= 0) tgrainname = -3;
+    int col = (i-1)%xDim;
+    int row = ((i-1)/xDim)%yDim;
+    int plane = (i-1)/(xDim*yDim);
+    point[i].grainname = tgrainname;
+    if(col == 0 || col == (xDim-1) || row == 0 || row == (yDim-1) || plane == 0 || plane == (zDim-1)) point[i].grainname = -3;
+  }
+  point[0].grainname = 0; // Point 0 is a garbage...
+  in.close();
+#endif
+
 	return zDim;
 }
 
