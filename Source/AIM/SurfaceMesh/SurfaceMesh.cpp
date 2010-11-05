@@ -11,6 +11,7 @@
 
 #include "SurfaceMesh.h"
 
+#include <MXA/Common/LogTime.h>
 #include <MXA/Utilities/MXAFileSystemPath.h>
 
 
@@ -105,6 +106,11 @@ void SurfaceMesh::compute()
   m = SurfaceMeshFunc::New();
   int err = 0;
   m_ZDim = m->initialize_micro(m_InputFile);
+  if (m_ZDim < 1)
+  {
+    progressMessage(AIM_STRING("Error reading vtk file"), 100);
+    return;
+  }
 
 
   int cNodeID = 0;
@@ -259,7 +265,7 @@ void SurfaceMesh::progressMessage(AIM_STRING message, int progress)
   emit updateProgress(progress);
   //  std::cout << message.toStdString() << std::endl;
 #else
-  std::cout << progress << "% - " << message << std::endl;
+  std::cout << logTime() << progress << "% - " << message << std::endl;
 #endif
 }
 
