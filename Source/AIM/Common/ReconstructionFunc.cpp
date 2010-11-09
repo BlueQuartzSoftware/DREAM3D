@@ -4346,6 +4346,8 @@ void ReconstructionFunc::write_graindata(string gdata)
   outFile.close();
 
 }
+
+//TODO: Convert this to HDF5 format
 void ReconstructionFunc::write_grains(double quat_symmcubic[24][5],double quat_symmhex[12][5])
 {
   ofstream outFile;

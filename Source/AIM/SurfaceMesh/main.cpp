@@ -51,7 +51,7 @@ int main(int argc, char **argv)
   {
 
     // Handle program options passed on command line.
-    TCLAP::CmdLine cmd("AIMRepresentation Surface Meshing", ' ', "1.0");
+    TCLAP::CmdLine cmd("AIMRepresentation Surface Meshing", ' ', AIMRepresentation::Version::Complete);
 
     TCLAP::ValueArg<std::string> vtkFile("v", "vtkfile", "VTK Structured Points File to be used as input.", false, "", "VTK Structured Points File");
     cmd.add(vtkFile);
