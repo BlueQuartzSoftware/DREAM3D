@@ -40,7 +40,6 @@
 #include <AIM/Common/Neighbor.h>
 #include <AIM/Common/Node.h>
 #include <AIM/Common/Segment.h>
-#include <AIM/Common/ISegment.h>
 #include <AIM/Common/Bin.h>
 #include <AIM/Common/AIMRandomNG.h>
 #include <AIM/ANG/AngFileHelper.h>
@@ -101,9 +100,10 @@ public:
   Node* cVertex; // contains node information...
   Node* tempcVertex;
   Node* pVertex;
-  vector<Segment> cEdge; // contains edges on square faces for open loops...
+  vector<Segment*>* cEdge; // contains edges on square faces for open loops...
   Patch* cTriangle;
   Patch* pTriangle;
+  Segment* cSeg;
   // Edge edge and neighboring grainname table...
 
 
