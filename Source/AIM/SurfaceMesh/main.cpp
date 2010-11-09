@@ -123,6 +123,6 @@ int main(int argc, char **argv)
     std::cerr << logTime() << " error: " << e.error() << " for arg " << e.argId() << std::endl;
     return EXIT_FAILURE;
   }
-  std::cout << "++++++++++++ Surface Meshing Complete ++++++++++++" << std::endl;
+  std::cout << logTime() <<  "++++++++++++ Surface Meshing Complete ++++++++++++" << std::endl;
   return err;
 }
