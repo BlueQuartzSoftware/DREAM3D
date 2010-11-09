@@ -176,7 +176,7 @@ void SurfaceMesh::compute()
 
     // find face edges of each square of marching cubes in each layer...
     nEdge = m->get_number_Edges(i);
-    m->get_nodes_Edges(edgeTable_2d, nsTable_2d, i, nFEdge);
+    m->get_nodes_Edges(edgeTable_2d, nsTable_2d, i, nEdge);
 
     // find triangles and arrange the spins across each triangle...
     nTriangle = m->get_number_triangles();
