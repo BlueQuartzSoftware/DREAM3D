@@ -84,6 +84,7 @@ public:
 
   virtual ~SurfaceMeshFunc();
 
+  std::ifstream in;
   int err;
   int NS; // The number of sites(voxels) in the simulation box...
   int NSP;
@@ -100,18 +101,14 @@ public:
   Voxel* point; // contains voxel information...
   Face* cSquare; // contains square information...
  // Face* pSquare;
-  Node* cVertex; // contains node information...
-  Node* tempcVertex;
-  Node* pVertex;
-  vector<Segment*>* cEdge; // contains edges on square faces for open loops...
+  Node* cVertex; // contains edges on square faces for open loops...
+  Segment* cEdge; // contains edges on square faces for open loops...
   Patch* cTriangle;
-  Patch* pTriangle;
-  Segment* cSeg;
   // Edge edge and neighboring grainname table...
 
 
 
-  int initialize_micro(string);
+  int initialize_micro(string, int);
   void get_neighbor_list(int zID);
   void initialize_nodes(int zID);
   void initialize_squares(int zID);
@@ -130,16 +127,10 @@ public:
   void get_case2_triangles(int *afe, int nfedge, int *afc, int nfctr, int tin, int *tout);
   void get_caseM_triangles(int *afe, int nfedge, int *afc, int nfctr, int tin, int *tout, int ccn);
   void arrange_grainnames(int numT, int zID);
-  int get_inner_edges(int nfe, int nT, int tnIEdge);
-  void find_unique_inner_edges(int nne, int ne, int *nEff);
-  void copy_previous_nodes();
-  int assign_new_nodeID(int nN);
-  void update_edges(int nne, int ne);
+  int assign_nodeID(int nN, int zID);
   void update_current_triangles(int nT);
-  void get_output_nodes(int zID, string NodesRawFile);
-  void get_output_edges(int ne, int nne, int zID, int ceid, int *feid, string EdgesFileIndex);
+  void get_output_nodes(int zID, int cNodeID, string NodesRawFile);
   void get_output_triangles(int nt, string TrianglesFileIndex, int zID, int ctid);
-  void copy_cNodes_2_pNodes();
   double find_xcoord(long);
   double find_ycoord(long);
   double find_zcoord(long);

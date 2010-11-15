@@ -12,8 +12,9 @@
 #include "SurfaceMesh.h"
 
 #include <MXA/Common/LogTime.h>
-#include <MXA/Utilities/MXAFileSystemPath.h>
-
+#include <MXA/Utilities/MXADir.h>
+#include <MXA/Utilities/MXAFileInfo.h>
+#include "AIM/Common/VTKFileUtils.h"
 
 #ifdef AIM_USE_QT
 #define CHECK_FOR_CANCELED(AClass)\
@@ -95,34 +96,57 @@ void SurfaceMesh::compute()
   CHECK_FOR_CANCELED(Surface Meshing)
   progressMessage(AIM_STRING("Running Surface Meshing"), 0 );
 
-  std::string  NodesRawFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::NodesRawFile;
-  std::string  NodesFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::NodesFile;
-  std::string  TrianglesFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::TrianglesFile;
-  std::string  EdgesFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::EdgesFile;
-  std::string  EdgesFileIndex = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::EdgesFileIndex;
-  std::string  TrianglesFileIndex = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::TrianglesFileIndex;
-  std::string  VisualizationFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::VisualizationFile;
+  std::string  NodesRawFile = m_OutputDirectory + MXADir::Separator + AIM::Representation::NodesRawFile;
+  std::string  NodesFile = m_OutputDirectory + MXADir::Separator + AIM::Representation::NodesFile;
+  std::string  TrianglesFile = m_OutputDirectory + MXADir::Separator + AIM::Representation::TrianglesFile;
+  std::string  EdgesFile = m_OutputDirectory + MXADir::Separator + AIM::Representation::EdgesFile;
+  std::string  EdgesFileIndex = m_OutputDirectory + MXADir::Separator + AIM::Representation::EdgesFileIndex;
+  std::string  TrianglesFileIndex = m_OutputDirectory + MXADir::Separator + AIM::Representation::TrianglesFileIndex;
+  std::string  VisualizationFile = m_OutputDirectory + MXADir::Separator + AIM::Representation::VisualizationFile;
+
+  // Create the output directory if needed
+  if (MXADir::exists(m_OutputDirectory) == false)
+  {
+    if (MXADir::mkdir(m_OutputDirectory, true) == false)
+    {
+#ifdef AIM_USE_QT
+    this->m_Cancel = true;
+#endif
+    this->m_ErrorCondition = 1;
+    CHECK_FOR_CANCELED(Surface Meshing)
+    progressMessage(AIM_STRING("Could not create output directory."), 100 );
+    return;
+    }
+  }
 
   m = SurfaceMeshFunc::New();
   int err = 0;
-  m_ZDim = m->initialize_micro(m_InputFile);
-  if (m_ZDim < 1)
+
+//  m_ZDim = m->initialize_micro(m_InputFile, -1);
+  VTKFileUtils vtkReader;
+  err = vtkReader.readHeader(m.get(), m_InputFile);
+  if (err < 0)
   {
-    progressMessage(AIM_STRING("Error reading vtk file"), 100);
+#ifdef AIM_USE_QT
+    this->m_Cancel = true;
+#endif
+    this->m_ErrorCondition = 1;
+    CHECK_FOR_CANCELED(Surface Meshing)
+    progressMessage(AIM_STRING("Error Opening Input file to Surface Meshing"), 100 );
     return;
   }
-
+  m_ZDim = m->zDim;
 
   int cNodeID = 0;
-  int cEdgeID = 0;
-  int fEdgeID = 0;
+//  int cEdgeID = 0;
+//  int fEdgeID = 0;
   int cTriID = 0;
-  int nFEdge = 0; // number of edges on the square...
+//  int nFEdge = 0; // number of edges on the square...
   int nTriangle = 0; // number of triangles...
   int nEdge = 0; // number of triangles...
-  int nnEdge = 0; // number of triangles...
-  int npTriangle = 0; // number of triangles...
-  int ncTriangle = 0; // number of triangles...
+//  int nnEdge = 0; // number of triangles...
+//  int npTriangle = 0; // number of triangles...
+//  int ncTriangle = 0; // number of triangles...
   int nNodes = 0; // number of total nodes used...
   int edgeTable_2d[20][8] = {
 	{ -1, -1, -1, -1, -1, -1, -1, -1},
@@ -170,12 +194,39 @@ void SurfaceMesh::compute()
 	  {0, 3, 2, 1, 1,  0, 3, 2 }
 	};
 
-  for (int i = 0; i < (m_ZDim - 1); i++)
+	// Read the first slice (0) into memory
+	err = vtkReader.readFirstZSlice( m.get() );
+  if (err < 0)
   {
+#ifdef AIM_USE_QT
+    this->m_Cancel = true;
+#endif
+    this->m_ErrorCondition = 1;
+    CHECK_FOR_CANCELED(Surface Meshing)
+    progressMessage(AIM_STRING("Error Reading Input file to Surface Meshing"), 100 );
+    return;
+  }
 
-    progressMessage(AIM_STRING("Marching Cubes Between Layers "), (i*90/m_ZDim) );
+  std::stringstream ss;
+  // We already read the first slice so start at Slice = 1
+  for (int i = 1; i < m_ZDim; i++)
+  {
+    ss.str("");
+    ss << "Marching Cubes Between Layers " << (i-1) << " and " << i;
+    progressMessage(AIM_STRING(ss.str().c_str()), (i*90/m_ZDim) );
+//    progressMessage(AIM_STRING("Marching Cubes Between Layers "), i );
+    err = vtkReader.readNextZSlice( m.get() );
+    if (err < 0)
+    {
+#ifdef AIM_USE_QT
+    this->m_Cancel = true;
+#endif
+      this->m_ErrorCondition = 1;
+      CHECK_FOR_CANCELED(Surface Meshing)
+      progressMessage(AIM_STRING("Error Reading Input file to Surface Meshing"), 100 );
+      return;
+    }
 
-    // initialize neighbors, possible nodes and squares of marching cubes of each layer...
     m->get_neighbor_list(i);
     m->initialize_nodes(i);
     m->initialize_squares(i);
@@ -193,45 +244,31 @@ void SurfaceMesh::compute()
       m->arrange_grainnames(nTriangle, i);
     }
 
-    // find unique inner edges...
-    nnEdge = 3 * nTriangle - nEdge;
-    if (nnEdge > 0)
-    {
-      nnEdge = m->get_inner_edges(nEdge, nTriangle, nnEdge);
-      m->find_unique_inner_edges(nnEdge, nEdge, &nEdge);
-    }
-    // copy the previous node and face edge information...
-    if (i > 0)
-    {
-      m->copy_previous_nodes();
-    }
-
     // assign new, cumulative node id...
-    nNodes = m->assign_new_nodeID(cNodeID);
-    cNodeID = nNodes;
-
-    // rewirte the edges and the triangles with new node ids...
-    m->update_edges(nnEdge, nEdge);
-
-    if (nTriangle > 0)
-    {
-      m->update_current_triangles(nTriangle);
-    }
+    nNodes = m->assign_nodeID(cNodeID, i);
 
     // Output nodes and triangles...
-    m->get_output_nodes(i, NodesFile);
-
-    m->get_output_edges(nEdge, nnEdge, i, cEdgeID, &fEdgeID, EdgesFile);
-
+    m->get_output_nodes(i, cNodeID, NodesFile);
     m->get_output_triangles(nTriangle, TrianglesFile, i, cTriID);
-    cEdgeID = fEdgeID;
+    cNodeID = nNodes;
     cTriID = cTriID + nTriangle;
 
-    // store cVertex information of bottom layer onto temporary vertex...
-    m->copy_cNodes_2_pNodes();
+    // Copy the second slice data into the first slice area
+    for (int n = 1; n <= m->NSP; n++)
+    {
+      m->point[n] = m->point[n + m->NSP];
+    }
   }
 
-  progressMessage(AIM_STRING("Writing Surface Mesh Visualization "), 90 );
+#ifdef AIM_USE_QT
+  QString msg("Writing Surface Mesh File: ");
+  msg.append(QString::fromStdString(VisualizationFile));
+#else
+  std::string msg("Writing Surface Mesh File: ");
+  msg.append(VisualizationFile);
+#endif
+
+  progressMessage(msg, 90 );
   m->create_vtk(nNodes, cTriID, VisualizationFile, NodesFile, TrianglesFile);
 
 /*  if (m_SmoothMesh == true)
