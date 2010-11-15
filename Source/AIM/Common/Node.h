@@ -37,12 +37,8 @@ public:
     double yc;
     double zc;
 	int point;
-    int newNodeID; // newID for used nodes; if not used, it's -1...
+    int NodeID; // newID for used nodes; if not used, it's -1...
 
-  private:
-
-    Node(const Node&);    // Copy Constructor Not Implemented
-      void operator=(const Node&);  // Operator '=' Not Implemented
 };
 
 #endif /* Node_H_ */
