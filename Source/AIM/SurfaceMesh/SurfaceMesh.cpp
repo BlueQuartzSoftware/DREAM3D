@@ -101,7 +101,7 @@ void SurfaceMesh::compute()
   std::string  EdgesFileIndex = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::EdgesFileIndex;
   std::string  TrianglesFileIndex = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::TrianglesFileIndex;
   std::string  VisualizationFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::VisualizationFile;
- 
+
   m = SurfaceMeshFunc::New();
   int err = 0;
   m_ZDim = m->initialize_micro(m_InputFile, -1);
@@ -230,7 +230,7 @@ void SurfaceMesh::progressMessage(AIM_STRING message, int progress)
   emit updateProgress(progress);
   //  std::cout << message.toStdString() << std::endl;
 #else
-  std::cout << message << std::endl;
+  std::cout  << progress << "% - "<< message << std::endl;
 #endif
 }
 
