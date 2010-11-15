@@ -14,16 +14,17 @@
 #include <AIM/ANG/AngFileReader.h>
 #include <AIM/ANG/AngFileHelper.h>
 
-#include <MXA/Utilities/MXAFileSystemPath.h>
+#include <MXA/Utilities/MXADir.h>
+#include <MXA/Utilities/MXAFileInfo.h>
 
 
 #define CREATE_INPUT_FILENAME(f, n)\
-    std::string f = m_InputDirectory + MXAFileSystemPath::Separator + n;\
-    f = MXAFileSystemPath::toNativeSeparators(f);
+    std::string f = m_InputDirectory + MXADir::Separator + n;\
+    f = MXADir::toNativeSeparators(f);
 
 #define CREATE_OUTPUT_FILENAME(f, n)\
-    std::string f = m_InputDirectory + MXAFileSystemPath::Separator + n;\
-    f = MXAFileSystemPath::toNativeSeparators(f);
+    std::string f = m_InputDirectory + MXADir::Separator + n;\
+    f = MXADir::toNativeSeparators(f);
 
 
 #ifdef AIM_USE_QT
@@ -149,18 +150,18 @@ void GrainGenerator::compute()
 	  {0.000000000, -0.50000000, 0.866025400, 0.000000000, 0.000000000},
 	  {0.000000000, -0.86602540, 0.500000000, 0.000000000, 0.000000000}};
 
-  std::string  StatsFile = m_InputDirectory + MXAFileSystemPath::Separator + AIM::Representation::StatsFile;
-  std::string  AxisOrientationsFile = m_InputDirectory + MXAFileSystemPath::Separator + AIM::Representation::AxisOrientationsFile;
-  std::string  EulerAnglesFile = m_InputDirectory + MXAFileSystemPath::Separator + AIM::Representation::EulerAnglesFile;
-  std::string  MisorientationBinsFile = m_InputDirectory + MXAFileSystemPath::Separator + AIM::Representation::MisorientationBinsFile;
-  std::string  MicroBinsFile = m_InputDirectory + MXAFileSystemPath::Separator + AIM::Representation::MicroBinsFile;
+  std::string  StatsFile = m_InputDirectory + MXADir::Separator + AIM::Representation::StatsFile;
+  std::string  AxisOrientationsFile = m_InputDirectory + MXADir::Separator + AIM::Representation::AxisOrientationsFile;
+  std::string  EulerAnglesFile = m_InputDirectory + MXADir::Separator + AIM::Representation::EulerAnglesFile;
+  std::string  MisorientationBinsFile = m_InputDirectory + MXADir::Separator + AIM::Representation::MisorientationBinsFile;
+  std::string  MicroBinsFile = m_InputDirectory + MXADir::Separator + AIM::Representation::MicroBinsFile;
 
-  std::string  CubeFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::CubeFile;
-  std::string  EulerFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::EulerFile;
-  std::string AnalysisFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::AnalysisFile;
-  std::string MoDFFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::MoDFFile;
-  std::string CrystallographicErrorFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::CrystallographicErrorFile;
-  std::string graindataFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::graindataFile;
+  std::string  CubeFile = m_OutputDirectory + MXADir::Separator + AIM::Representation::CubeFile;
+  std::string  EulerFile = m_OutputDirectory + MXADir::Separator + AIM::Representation::EulerFile;
+  std::string AnalysisFile = m_OutputDirectory + MXADir::Separator + AIM::Representation::AnalysisFile;
+  std::string MoDFFile = m_OutputDirectory + MXADir::Separator + AIM::Representation::MoDFFile;
+  std::string CrystallographicErrorFile = m_OutputDirectory + MXADir::Separator + AIM::Representation::CrystallographicErrorFile;
+  std::string graindataFile = m_OutputDirectory + MXADir::Separator + AIM::Representation::graindataFile;
 
    m = GrainGeneratorFunc::New();
    m->initialize(m_NumGrains, m_ShapeClass,
@@ -240,7 +241,7 @@ void GrainGenerator::compute()
    CHECK_FOR_CANCELED(GrainGeneratorFunc)
    progressMessage(AIM_STRING("writing Cube"), 90 );
    m->writeCube(CubeFile, m->numgrains);
-   
+
    CHECK_FOR_CANCELED(GrainGeneratorFunc)
    progressMessage(AIM_STRING("Writing Grain Data"), 94 );
    m->write_graindata(graindataFile, MoDFFile);

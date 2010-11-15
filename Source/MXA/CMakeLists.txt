@@ -32,10 +32,14 @@ CONFIGURE_FILE(${MXA_SOURCE_DIR}/Common/MXAConfiguration.h.in
 
 SET (MXA_UTILITIES_SRCS 
     ${MXA_SOURCE_DIR}/Utilities/MXALogger.cpp
-    ${MXA_SOURCE_DIR}/Utilities/MXAFileSystemPath.cpp )
+    ${MXA_SOURCE_DIR}/Utilities/MXADir.cpp
+    ${MXA_SOURCE_DIR}/Utilities/MXAFileInfo.cpp
+     )
 SET (MXA_UTILITIES_HDRS 
     ${MXA_SOURCE_DIR}/Utilities/MXALogger.h
-    ${MXA_SOURCE_DIR}/Utilities/MXAFileSystemPath.h  )
+    ${MXA_SOURCE_DIR}/Utilities/MXADir.h
+    ${MXA_SOURCE_DIR}/Utilities/MXAFileInfo.h
+    )
     
 IF (MSVC)
     SET (MXA_UTILITIES_SRCS ${MXA_UTILITIES_SRCS} ${MXA_SOURCE_DIR}/Utilities/MXADirent.c )

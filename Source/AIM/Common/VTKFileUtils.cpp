@@ -28,6 +28,7 @@
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "VTKFileUtils.h"
+#include "SurfaceMeshFunc.h"
 
 #include <sstream>
 
@@ -37,7 +38,11 @@
 //
 // -----------------------------------------------------------------------------
 
-VTKFileUtils::VTKFileUtils()
+VTKFileUtils::VTKFileUtils() :
+m_fileIsBinary(false),
+m_HeaderComplete(false),
+m_CurrentSlice(-1),
+m_IntByteSize(1)
 {
 
 }
@@ -67,7 +72,9 @@ int VTKFileUtils::parseFloat3V(const char* input, float* output, float defaultVa
   return 0;
 }
 
-
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 int VTKFileUtils::readLine(std::istream &in, char* buf, int bufSize)
 {
 
@@ -120,12 +127,144 @@ size_t parseByteSize(char text[256])
   return 0;
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int VTKFileUtils::readFirstZSlice(SurfaceMeshFunc* m)
+{
+  int error = 0;
+  if (m_HeaderComplete == false)
+  {
+    return -1;
+  }
+  m_CurrentSlice = 0;
+  size_t i = 1;
+  if (m_fileIsBinary == true)
+  {
+    int* buffer = new int[m->xDim];
+
+    //for (int z = 0; z < m->zDim; ++z)
+    {
+      for (int y = 0; y < m->yDim; ++y)
+      {
+        // Read all the xpoints in one shot into a buffer
+        m_InputFile.read(reinterpret_cast<char* > (buffer), (m->xDim * m_IntByteSize));
+        if (m_InputFile.gcount() != (m->xDim * m_IntByteSize))
+        {
+          std::cout << logTime() << " ERROR READING BINARY FILE. Bytes read was not the same as func->xDim *. " << m_IntByteSize << "." << m_InputFile.gcount()
+              << " vs " << (m->xDim * m_IntByteSize) << std::endl;
+          return -1;
+        }
+        for (int x = 0; x < m->xDim; ++x)
+        {
+          if (buffer[x] <= 0) buffer[x] = -3;
+          m->point[i].grainname = buffer[x];
+          if ((m_CurrentSlice == 0 || m_CurrentSlice == m->zDim - 1) || (y == 0 || y == m->yDim - 1) || (x == 0 || x == m->xDim - 1))
+          {
+            m->point[i].grainname = -3;
+          }
+          ++i; // increment i;
+        }
+      }
+    }
+    delete buffer;
+  }
+  else
+  {
+    int tmp = -1;
+    // for (int z = 0; z < m->zDim; ++z)
+    {
+      for (int y = 0; y < m->yDim; ++y)
+      {
+        for (int x = 0; x < m->xDim; ++x)
+        {
+          m_InputFile >> tmp;
+          if (tmp <= 0) tmp = -3;
+          m->point[i].grainname = tmp;
+          if ((m_CurrentSlice == 0 || m_CurrentSlice == m->zDim - 1) || (y == 0 || y == m->yDim - 1) || (x == 0 || x == m->xDim - 1))
+          {
+            m->point[i].grainname = -3;
+          }
+          ++i; // increment i;
+        }
+      }
+    }
+  }
+  return error;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+int VTKFileUtils::readNextZSlice(SurfaceMeshFunc* m)
+{
+  int error = 0;
+  if (m_HeaderComplete == false)
+  {
+    return -1;
+  }
+  m_CurrentSlice++;
+  size_t i = m->NSP + 1;
+  if (m_fileIsBinary == true)
+  {
+    int* buffer = new int[m->xDim];
 
-int VTKFileUtils::readVtkFile(SurfaceMeshFunc* func, const std::string &file)
+    //for (int z = 0; z < m->zDim; ++z)
+    {
+      for (int y = 0; y < m->yDim; ++y)
+      {
+        // Read all the xpoints in one shot into a buffer
+        m_InputFile.read(reinterpret_cast<char* > (buffer), (m->xDim * m_IntByteSize));
+        if (m_InputFile.gcount() != (m->xDim * m_IntByteSize))
+        {
+          std::cout << logTime() << " ERROR READING BINARY FILE. Bytes read was not the same as func->xDim *. " << m_IntByteSize << "." << m_InputFile.gcount()
+              << " vs " << (m->xDim * m_IntByteSize) << std::endl;
+          return -1;
+        }
+        for (int x = 0; x < m->xDim; ++x)
+        {
+          if (buffer[x] <= 0) { buffer[x] = -3; }
+          m->point[i].grainname = buffer[x];
+          if ((m_CurrentSlice == 0 || m_CurrentSlice == m->zDim - 1)
+              || (y == 0 || y == m->yDim - 1)
+              || (x == 0 || x == m->xDim - 1))
+          {
+            m->point[i].grainname = -3;
+          }
+          ++i; // increment i;
+        }
+      }
+    }
+    delete buffer;
+  }
+  else
+  {
+    int tmp = -1;
+    // for (int z = 0; z < m->zDim; ++z)
+    {
+      for (int y = 0; y < m->yDim; ++y)
+      {
+        for (int x = 0; x < m->xDim; ++x)
+        {
+          m_InputFile >> tmp;
+          if (tmp <= 0) tmp = -3;
+          m->point[i].grainname = tmp;
+          if ((m_CurrentSlice == 0 || m_CurrentSlice == m->zDim - 1) || (y == 0 || y == m->yDim - 1) || (x == 0 || x == m->xDim - 1))
+          {
+            m->point[i].grainname = -3;
+          }
+          ++i; // increment i;
+        }
+      }
+    }
+  }
+  return error;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int VTKFileUtils::readHeader(SurfaceMeshFunc* m, const std::string &file)
 {
   /*
    1: # vtk DataFile Version 2.0
@@ -157,136 +296,91 @@ int VTKFileUtils::readVtkFile(SurfaceMeshFunc* func, const std::string &file)
    0
    */
   int err = 0;
-  std::cout << logTime() << " Reading vtk ascii file " << file << std::endl;
-  std::ifstream in(file.c_str());
+  std::cout << logTime() << " Reading vtk file " << file << std::endl;
+  //std::ifstream m_InputFile(file.c_str());
 
-  if (!in.is_open())
+  m_InputFile.open(file.c_str());
+  if (!m_InputFile.is_open())
   {
-    std::cout << logTime() << " vtk ascii file could not be opened: " << file << std::endl;
+    std::cout << logTime() << " vtk file could not be opened: " << file << std::endl;
     return -1;
   }
   char buf[kBufferSize];
-  in.getline(buf, kBufferSize); // Read Line 1
-  in.getline(buf, kBufferSize); // Read Line 2
+  m_InputFile.getline(buf, kBufferSize); // Read Line 1
+  m_InputFile.getline(buf, kBufferSize); // Read Line 2
   ::memset(buf, 0, kBufferSize);
-  in.getline(buf, kBufferSize); // Read Line 3
+  m_InputFile.getline(buf, kBufferSize); // Read Line 3
   std::string fileType(buf);
-
-  in.getline(buf, kBufferSize); // Read Line 4
+  if (fileType.find("BINARY", 0) == 0)
+  {
+    m_fileIsBinary = true;
+  }
+  else if (fileType.find("ASCII", 0) == 0)
+  {
+    m_fileIsBinary = false;
+  }
+  m_InputFile.getline(buf, kBufferSize); // Read Line 4
   // Start reading Line 5
   std::string dimension_label;
 //  int xpoints = 0;
 //  int ypoints = 0;
 //  int zpoints = 0;
-  in >> dimension_label >>  func->xDim >>  func->yDim >>  func->zDim; // Read Line 5
-//  func->zDim = 3;
-  std::cout << logTime() << " Volume Size: " << func->xDim << " " << func->yDim << " " << func->zDim << std::endl;
-  func->NS = func->xDim * func->yDim * func->zDim;
-  func->NSP = func->xDim * func->yDim;
+  m_InputFile >> dimension_label >>  m->xDim >>  m->yDim >>  m->zDim; // Read Line 5
+//  m->zDim = 5;
+  std::cout << logTime() << " Volume Size: " << m->xDim << " " << m->yDim << " " << m->zDim << std::endl;
+  m->NS = m->xDim * m->yDim * m->zDim;
+  m->NSP = m->xDim * m->yDim;
 
-  func->neigh = new Neighbor[2 * func->NSP + 1];
-  func->point = new Voxel[func->NS + 1];
-  func->cSquare = new Face[3 * 2 * func->NSP];
-  func->cVertex = new Node[7 * 2 * func->NSP];
-  func->pVertex = new Node[7 * 2 * func->NSP];
+  m->neigh = new Neighbor[2 * m->NSP + 1];
+  m->point = new Voxel[2 * m->NSP + 1];
+  m->cSquare = new Face[3 * 2 * m->NSP];
+  m->cVertex = new Node[2 * 7 * m->NSP];
 
-  in.getline(buf, kBufferSize); // Read Remainder of Line 5
+  m_InputFile.getline(buf, kBufferSize); // Read Remainder of Line 5
   ::memset(buf, 0, kBufferSize);
-  in.getline(buf, kBufferSize); // Read Line 6 which is the Origin values
+  m_InputFile.getline(buf, kBufferSize); // Read Line 6 which is the Origin values
   float origin[3];
   err = parseFloat3V(buf, origin, 0.0f);
-  func->xOrigin = origin[0];
-  func->yOrigin = origin[1];
-  func->zOrigin = origin[2];
+  m->xOrigin = origin[0];
+  m->yOrigin = origin[1];
+  m->zOrigin = origin[2];
 
   ::memset(buf, 0, kBufferSize);
-  in.getline(buf, kBufferSize); // Read Line 7 which is the Scaling values
+  m_InputFile.getline(buf, kBufferSize); // Read Line 7 which is the Scaling values
   float scaling[3];
   err = parseFloat3V(buf, scaling, 1.0f);
-  func->xRes = scaling[0];
-  func->yRes = scaling[1];
-  func->zRes = scaling[2];
+  m->xRes = scaling[0];
+  m->yRes = scaling[1];
+  m->zRes = scaling[2];
 
   ::memset(buf, 0, kBufferSize);
-  in.getline(buf, kBufferSize); // Read Line 8
+  m_InputFile.getline(buf, kBufferSize); // Read Line 8
   ::memset(buf, 0, kBufferSize);
   char text1[kBufferSize]; ::memset(text1, 0, kBufferSize);
   char text2[kBufferSize]; ::memset(text2, 0, kBufferSize);
   int fieldNum = 0;
   int nComponents = 0;
   int totalValues = 0;
-  size_t i = 1;
-  if (fileType.find("BINARY", 0) == 0)
+
+  if (m_fileIsBinary == true)
   {
 
-    readLine(in, buf, kBufferSize); // Read Line 9
+    readLine(m_InputFile, buf, kBufferSize); // Read Line 9
     int n = sscanf(buf, "%s %s %d", text1, text2, &fieldNum);
     ::memset(text1, 0, kBufferSize);
     ::memset(text2, 0, kBufferSize);
 
-    readLine(in, buf, kBufferSize); // Read Line 10
+    readLine(m_InputFile, buf, kBufferSize); // Read Line 10
     n = sscanf(buf, "%s %d %d %s", text1, &nComponents, &totalValues, text2);
-    size_t int_byte_size = parseByteSize(text2);
-
-
-    int* buffer = new int[func->xDim];
-
-    for (int z = 0; z < func->zDim; ++z)
-    {
-      for (int y = 0; y < func->yDim; ++y)
-      {
-        // Read all the xpoints in one shot into a buffer
-        in.read(reinterpret_cast<char* > (buffer), (func->xDim * int_byte_size));
-        if (in.gcount() != (func->xDim * int_byte_size))
-        {
-          std::cout << logTime() <<
-              " ERROR READING BINARY FILE. Bytes read was not the same as func->xDim *. "
-              << int_byte_size << "." << in.gcount() << " vs " << (func->xDim * int_byte_size)
-              << std::endl;
-          return -1;
-        }
-        for (int x = 0; x < func->xDim; ++x)
-        {
-          if (buffer[x] <= 0) buffer[x] = -3;
-          func->point[i].grainname = buffer[x];
-          if ((z == 0 || z == func->zDim - 1)
-              || (y == 0 || y == func->yDim - 1)
-              || (x == 0 || x == func->xDim - 1))
-          {
-            func->point[i].grainname = -3;
-          }
-          ++i; // increment i;
-        }
-      }
-    }
-    delete buffer;
+    m_IntByteSize = parseByteSize(text2);
+    m_HeaderComplete = true;
     return 1;
   }
-  else if (fileType.find("ASCII", 0) == 0)
+  else
   {
-    readLine(in, buf, kBufferSize);
-    readLine(in, buf, kBufferSize);
-
-    int tmp = -1;
-    for (int z = 0; z < func->zDim; ++z)
-    {
-      for (int y = 0; y < func->yDim; ++y)
-      {
-        for (int x = 0; x < func->xDim; ++x)
-        {
-          in >> tmp;
-          if (tmp <= 0) tmp = -3;
-          func->point[i].grainname = tmp;
-          if ((z == 0 || z == func->zDim - 1)
-              || (y == 0 || y == func->yDim - 1)
-              || (x == 0 || x == func->xDim - 1))
-          {
-            func->point[i].grainname = -3;
-          }
-          ++i; // increment i;
-        }
-      }
-    }
+    readLine(m_InputFile, buf, kBufferSize);
+    readLine(m_InputFile, buf, kBufferSize);
+    m_HeaderComplete = true;
     return 1;
   }
 

@@ -32,6 +32,7 @@
 
 #include <string>
 #include <map>
+#include <fstream>
 
 #include <boost/shared_ptr.hpp>
 
@@ -55,11 +56,25 @@ class VTKFileUtils
     virtual ~VTKFileUtils();
 
     /**
+     * @brief
+     * @param m
+     * @param file
+     * @param slice
+     * @return
+     */
+    int readHeader(SurfaceMeshFunc* m, const std::string &file);
+
+
+    int readFirstZSlice(SurfaceMeshFunc* m);
+
+    int readNextZSlice(SurfaceMeshFunc* m);
+
+    /**
      * @brief Reads a specific subset of VTK legacy ASCII or BINARY files
      * @param inputs The M3CInputs pointer
      * @return
      */
-    int readVtkFile(SurfaceMeshFunc* func, const std::string &file);
+ //   int readVtkFile(SurfaceMeshFunc* func, const std::string &file);
 
     /**
      * @brief Writes a VTK POLYDATA legacy ASCII file
@@ -82,12 +97,16 @@ class VTKFileUtils
 
   private:
 
+    std::ifstream m_InputFile;
+    bool          m_fileIsBinary;
+    bool          m_HeaderComplete;
+    int           m_CurrentSlice;
+    size_t        m_IntByteSize;
+
     VTKFileUtils(const VTKFileUtils&); // Copy Constructor Not Implemented
     void operator=(const VTKFileUtils&); // Operator '=' Not Implemented
 
 };
 
-// Include the implementation files
-#include "VTKFileUtils.txx"
 
 #endif /* _VTKFileUtils.h_  */
