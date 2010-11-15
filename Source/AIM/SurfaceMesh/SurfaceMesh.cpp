@@ -104,7 +104,7 @@ void SurfaceMesh::compute()
  
   m = SurfaceMeshFunc::New();
   int err = 0;
-  m_ZDim = m->initialize_micro(m_InputFile);
+  m_ZDim = m->initialize_micro(m_InputFile, -1);
 
 
   int cNodeID = 0;
@@ -170,6 +170,7 @@ void SurfaceMesh::compute()
     progressMessage(AIM_STRING("Marching Cubes Between Layers "), (i*90/m_ZDim) );
 
     // initialize neighbors, possible nodes and squares of marching cubes of each layer...
+	m_ZDim = m->initialize_micro(m_InputFile, i);
     m->get_neighbor_list(i);
     m->initialize_nodes(i);
     m->initialize_squares(i);
@@ -187,42 +188,14 @@ void SurfaceMesh::compute()
       m->arrange_grainnames(nTriangle, i);
     }
 
-    // find unique inner edges...
-    nnEdge = 3 * nTriangle - nEdge;
-    if (nnEdge > 0)
-    {
-      nnEdge = m->get_inner_edges(nEdge, nTriangle, nnEdge);
-      m->find_unique_inner_edges(nnEdge, nEdge, &nEdge);
-    }
-    // copy the previous node and face edge information...
-    if (i > 0)
-    {
-      m->copy_previous_nodes();
-    }
-
     // assign new, cumulative node id...
-    nNodes = m->assign_new_nodeID(cNodeID);
-    cNodeID = nNodes;
-
-    // rewirte the edges and the triangles with new node ids...
-    m->update_edges(nnEdge, nEdge);
-
-    if (nTriangle > 0)
-    {
-      m->update_current_triangles(nTriangle);
-    }
+    nNodes = m->assign_nodeID(cNodeID, i);
 
     // Output nodes and triangles...
-    m->get_output_nodes(i, NodesFile);
-
-    m->get_output_edges(nEdge, nnEdge, i, cEdgeID, &fEdgeID, EdgesFile);
-
+    m->get_output_nodes(i, cNodeID, NodesFile);
     m->get_output_triangles(nTriangle, TrianglesFile, i, cTriID);
-    cEdgeID = fEdgeID;
+    cNodeID = nNodes;
     cTriID = cTriID + nTriangle;
-
-    // store cVertex information of bottom layer onto temporary vertex...
-    m->copy_cNodes_2_pNodes();
   }
 
   progressMessage(AIM_STRING("Writing Surface Mesh Visualization "), 90 );
