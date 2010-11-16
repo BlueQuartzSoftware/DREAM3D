@@ -14,8 +14,7 @@
 #include <AIM/ANG/AngDirectoryPatterns.h>
 #include <AIM/ANG/AngFileReader.h>
 #include <AIM/ANG/AngFileHelper.h>
-#include <MXA/Utilities/MXADir.h>
-#include <MXA/Utilities/MXAFileInfo.h>
+#include <MXA/Utilities/MXAFileSystemPath.h>
 
 
 #ifdef AIM_USE_QT
@@ -48,7 +47,7 @@ Reconstruction::Pointer Reconstruction::New( QObject* parent)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-Reconstruction::Reconstruction(
+Reconstruction::Reconstruction( 
 #if AIM_USE_QT
 QObject* parent
 #endif
@@ -58,10 +57,10 @@ QThread(parent),
 #endif
 m_InputDirectory("."),
 m_OutputDirectory("."),
-m_AngFilePrefix("Slice_"),
+m_AngFilePrefix("Slice_"), 
 m_AngSeriesMaxSlice(3),
 m_ZStartIndex(0),
-m_ZEndIndex(0),
+m_ZEndIndex(0), 
 m_ZResolution(0.25),
 m_MergeTwins(false),
 m_MergeColonies(false),
@@ -70,7 +69,7 @@ m_MinSeedConfidence(0.0),
 m_MinSeedImageQuality(0.0),
 m_MisorientationTolerance(0.0),
 m_CrystalStructure(AIM::Representation::Cubic),
-m_AlreadyFormed(false),
+m_AlreadyFormed(false), 
 m_ErrorCondition(0)
 #if AIM_USE_QT
   ,m_Cancel(false)
@@ -123,8 +122,8 @@ void Reconstruction::compute()
     sliceCount *= 10;
   }
 
-  m_InputDirectory = MXADir::toNativeSeparators(m_InputDirectory);
-  m_OutputDirectory = MXADir::toNativeSeparators(m_OutputDirectory);
+  m_InputDirectory = MXAFileSystemPath::toNativeSeparators(m_InputDirectory);
+  m_OutputDirectory = MXAFileSystemPath::toNativeSeparators(m_OutputDirectory);
   AngDirectoryPatterns::Pointer p = AngDirectoryPatterns::New(m_InputDirectory, m_AngFilePrefix, width);
 
   AngFileHelper::Pointer angFileHelper = AngFileHelper::New();
@@ -135,7 +134,7 @@ void Reconstruction::compute()
   m = ReconstructionFunc::New();
   m->m_angFileHelper = angFileHelper;
   m->setDirectoryPattern(p);
-  m->initialize(m_ZStartIndex, m_ZEndIndex, m_ZResolution, m_MergeTwins, m_MergeColonies, m_MinAllowedGrainSize,
+  m->initialize(m_ZStartIndex, m_ZEndIndex, m_ZResolution, m_MergeTwins, m_MergeColonies, m_MinAllowedGrainSize, 
 	                   m_MinSeedConfidence, m_DownSampleFactor, m_MinSeedImageQuality, m_MisorientationTolerance, m_CrystalStructure, m_AlignmentMethod, m_AlreadyFormed);
 
   int32 mindiameter = 100000;
@@ -180,23 +179,23 @@ void Reconstruction::compute()
 	  {0.000000000, -0.50000000, 0.866025400, 0.000000000, 0.000000000},
 	  {0.000000000, -0.86602540, 0.500000000, 0.000000000, 0.000000000}};
 
-  std::string  statsFile = m_OutputDirectory + MXADir::Separator + AIM::Representation::StatsFile;
-  std::string  misorientationFile = m_OutputDirectory + MXADir::Separator + AIM::Representation::MisorientationBinsFile;
-  std::string  microBinsFile = m_OutputDirectory + MXADir::Separator + AIM::Representation::MicroBinsFile;
-  std::string reconVisFile = m_OutputDirectory + MXADir::Separator + AIM::Representation::ReconstructedVisualizationFile;
-  std::string reconIPFVisFile = m_OutputDirectory + MXADir::Separator + AIM::Representation::ReconstructedIPFVisualizationFile;
-  std::string reconDisVisFile = m_OutputDirectory + MXADir::Separator + AIM::Representation::ReconstructedDisVisualizationFile;
-  std::string reconIQVisFile = m_OutputDirectory + MXADir::Separator + AIM::Representation::ReconstructedIQVisualizationFile;
-  std::string reconSFVisFile = m_OutputDirectory + MXADir::Separator + AIM::Representation::ReconstructedSFVisualizationFile;
-  std::string reconDSVisFile = m_OutputDirectory + MXADir::Separator + AIM::Representation::ReconstructedDSVisualizationFile;
-  std::string axisFile = m_OutputDirectory + MXADir::Separator + AIM::Representation::AxisOrientationsFile;
-  std::string graindataFile = m_OutputDirectory + MXADir::Separator + AIM::Representation::graindataFile;
-  std::string eulerFile = m_OutputDirectory + MXADir::Separator + AIM::Representation::EulerAnglesFile;
+  std::string  statsFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::StatsFile;
+  std::string  misorientationFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::MisorientationBinsFile;
+  std::string  microBinsFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::MicroBinsFile;
+  std::string reconVisFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::ReconstructedVisualizationFile;
+  std::string reconIPFVisFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::ReconstructedIPFVisualizationFile;
+  std::string reconDisVisFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::ReconstructedDisVisualizationFile;
+  std::string reconIQVisFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::ReconstructedIQVisualizationFile;
+  std::string reconSFVisFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::ReconstructedSFVisualizationFile;
+  std::string reconDSVisFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::ReconstructedDSVisualizationFile;
+  std::string axisFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::AxisOrientationsFile;
+  std::string graindataFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::graindataFile;
+  std::string eulerFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::EulerAnglesFile;
 
   if (m_AlreadyFormed == true)
   {
     // Sanity Check the the Reconstruction File does exist in the output directory
-    if (MXAFileInfo::exists(reconVisFile) == true)
+    if (MXAFileSystemPath::exists(reconVisFile) == true)
     {
       CHECK_FOR_CANCELED(ReconstructionFunc)
       progressMessage(AIM_STRING("Loading Existing Data"), 31);
@@ -224,7 +223,7 @@ void Reconstruction::compute()
 	progressMessage(AIM_STRING("Finding Border"), 6 );
 	m->find_border();
 
-	CHECK_FOR_CANCELED(ReconstructionFunc)
+	CHECK_FOR_CANCELED(ReconstructionFunc) 
 	progressMessage(AIM_STRING("Cleaning Data"), 9 );
 	m->cleanup_data();
 
@@ -250,11 +249,11 @@ void Reconstruction::compute()
     progressMessage(AIM_STRING("Forming Macro-Grains"), 19);
     m->numgrains = m->form_grains(quat_symmcubic, quat_symmhex);
 
-	CHECK_FOR_CANCELED(ReconstructionFunc)
+	CHECK_FOR_CANCELED(ReconstructionFunc) 
 	progressMessage(AIM_STRING("Finding Grain Reference Orientations"), 22);
 	m->find_kernels(quat_symmcubic, quat_symmhex);
 
-	CHECK_FOR_CANCELED(ReconstructionFunc)
+	CHECK_FOR_CANCELED(ReconstructionFunc) 
 	progressMessage(AIM_STRING("Defining Sub-Grains"), 25);
 	m->numgrains = m->define_subgrains(quat_symmcubic, quat_symmhex);
 
@@ -275,15 +274,15 @@ void Reconstruction::compute()
   progressMessage(AIM_STRING("Renumbering Grains"), 37);
   m->numgrains = m->renumber_grains();
 
-  CHECK_FOR_CANCELED(ReconstructionFunc)
+  CHECK_FOR_CANCELED(ReconstructionFunc) 
   progressMessage(AIM_STRING("Identifying Grains"), 40);
   m->numgrains = m->reburn_grains(quat_symmcubic, quat_symmhex);
 
-  CHECK_FOR_CANCELED(ReconstructionFunc)
+  CHECK_FOR_CANCELED(ReconstructionFunc) 
   progressMessage(AIM_STRING("Finding Grain Reference Orientations"), 43);
   m->find_kernels(quat_symmcubic, quat_symmhex);
 
-  CHECK_FOR_CANCELED(ReconstructionFunc)
+  CHECK_FOR_CANCELED(ReconstructionFunc) 
   progressMessage(AIM_STRING("Finding Grain Average Orientations"), 49);
   m->homogenize_grains(quat_symmcubic, quat_symmhex);
 

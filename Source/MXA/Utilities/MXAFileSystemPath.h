@@ -1,30 +1,34 @@
 ///////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2010, Michael A. Jackson. BlueQuartz Software
+//  Copyright (c) 2009, Michael A. Jackson. BlueQuartz Software
 //  All rights reserved.
 //  BSD License: http://www.opensource.org/licenses/bsd-license.html
 //
+//
 ///////////////////////////////////////////////////////////////////////////////
+#ifndef _MXAFileSystemPath_h_
+#define _MXAFileSystemPath_h_
 
-#ifndef MXAFILEINFO_H_
-#define MXAFILEINFO_H_
-
-//-- STL includes
-#include <string>
-//#include <vector>
-
-//-- MXA Includes
 #include <MXA/Common/MXATypes.h>
 
 
-class  MXAFileInfo
+//-- STL includes
+#include <string>
+
+
+/**
+* @class MXAFileSystemPath MXAFileSystemPath.h PathToHeader/MXAFileSystemPath.h
+* @brief The class allows for some interrogation of the file system regarding the
+* existance of files or directories and also allows for the creation and deletion
+* of files or directories from the filesystem.
+*
+* @author mjackson
+* @date Mar 10, 2009
+* @version $Revision$
+*/
+class MXAFileSystemPath
 {
   public:
-
-    virtual ~MXAFileInfo();
-    // -----------------------------------------------------------------------------
-    //  These methods are common to both MXADir and MXAFileInfo
-    // -----------------------------------------------------------------------------
 #if defined (WIN32)
     static MXA_EXPORT const char Separator = '\\';
 #else
@@ -88,10 +92,64 @@ class  MXAFileInfo
     static MXA_EXPORT std::string absolutePath(const std::string &path);
 
     /**
+     * @brief Returns a list of the contents of a directory. No filtering is attempted.
+     * @param path The path to the directory
+     * @return List of contents
+     */
+    static MXA_EXPORT std::vector<std::string> entryList(const std::string &path);
+
+    /**
+     * @brief Get the size of the file in bytes
+     */
+    static MXA_EXPORT uint64 fileSize(const std::string &path);
+
+    /**
      * @brief Does the path actually exist on the file system
      * @param path Path to examine
      */
     static MXA_EXPORT bool exists(const std::string &path);
+
+    /**
+     * @brief Get any file extension on the filepath
+     * @param path Path to examine
+     */
+    static MXA_EXPORT std::string extension(const std::string &path);
+
+    /**
+     * @brief Return the filename WITH the extension
+     * @param path Path to examine
+     */
+    static MXA_EXPORT std::string filename(const std::string &path);
+
+    /**
+     * @brief Returns the filename without the extension
+     * @param path Path to examine
+     */
+    static MXA_EXPORT std::string fileNameWithOutExtension(const std::string &path);
+
+    /**
+     * @brief Create a directory or structure of directories
+     * @param path The path to create
+     * @param createParentDirectories If true then any directories missing from
+     * the path will also be created.
+     * @return True if all directories were created successfully.
+     */
+    static MXA_EXPORT bool mkdir(const std::string &path, bool createParentDirectories);
+
+    /**
+     * @brief Removes a directory from the file system. Note that the directory
+     * must be empty, including hidden files
+     * @param path to delete from the filesystem
+     * @param recurseParentDirectories
+     */
+    static MXA_EXPORT bool rmdir(const std::string &path, bool recurseParentDirectories);
+
+    /**
+     * @brief Remove a file from the filesystem
+     * @param path The path to the file to remove
+     * @return True on successful removal
+     */
+    static MXA_EXPORT bool remove(const std::string &path);
 
     /**
      * @brief Cleans a file system path of extra './', '//' and '/../' elements
@@ -118,40 +176,17 @@ class  MXAFileInfo
     static MXA_EXPORT bool isDirPath(const std::string &path, bool *existed);
 #endif
 
+  protected:
+    MXAFileSystemPath();
+    ~MXAFileSystemPath();
 
-    // -----------------------------------------------------------------------------
-    //  These are specific to MXAFileInfo
-    // -----------------------------------------------------------------------------
-    /**
-     * @brief Get the size of the file in bytes
-     */
-    static MXA_EXPORT uint64_t fileSize(const std::string &path);
+  private:
+      MXAFileSystemPath(const MXAFileSystemPath&);    //Not Implemented
+      void operator=(const MXAFileSystemPath&); //Not Implemented
 
-    /**
-     * @brief Get any file extension on the filepath
-     * @param path Path to examine
-     */
-    static MXA_EXPORT std::string extension(const std::string &path);
-
-    /**
-     * @brief Return the filename WITH the extension
-     * @param path Path to examine
-     */
-    static MXA_EXPORT std::string filename(const std::string &path);
-
-    /**
-     * @brief Returns the filename without the extension
-     * @param path Path to examine
-     */
-    static MXA_EXPORT std::string fileNameWithOutExtension(const std::string &path);
-
-
-protected:
-    MXAFileInfo();
-
-private:
-    MXAFileInfo(const MXAFileInfo&);    // Copy Constructor Not Implemented
-      void operator=(const MXAFileInfo&);  // Operator '=' Not Implemented
 };
 
-#endif /* MXAFILEINFO_H_ */
+#endif //_MXAFileSystemPath_h_
+
+
+

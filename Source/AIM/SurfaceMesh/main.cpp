@@ -17,8 +17,7 @@
 
 #include <MXA/Common/LogTime.h>
 #include <MXA/Utilities/MXALogger.h>
-#include <MXA/Utilities/MXADir.h>
-#include <MXA/Utilities/MXAFileInfo.h>
+#include <MXA/Utilities/MXAFileSystemPath.h>
 
 #include <AIM/Common/Constants.h>
 #include <AIM/Common/AIMVersion.h>
@@ -124,6 +123,6 @@ int main(int argc, char **argv)
     std::cerr << logTime() << " error: " << e.error() << " for arg " << e.argId() << std::endl;
     return EXIT_FAILURE;
   }
-  std::cout << logTime() <<  "++++++++++++ Surface Meshing Complete ++++++++++++" << std::endl;
+  std::cout << "++++++++++++ Surface Meshing Complete ++++++++++++" << std::endl;
   return err;
 }
