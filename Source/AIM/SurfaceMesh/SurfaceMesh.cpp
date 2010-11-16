@@ -63,7 +63,9 @@ m_SmoothMesh(false),
 m_SmoothIterations(0),
 m_SmoothFileOutputIncrement(0),
 m_SmoothLockQuadPoints(false),
-m_ErrorCondition(0)
+m_ErrorCondition(0),
+m_BinaryVTKFile(false),
+m_ConformalMesh(true)
 #if AIM_USE_QT
 ,
 m_Cancel(false)
@@ -231,8 +233,8 @@ void SurfaceMesh::compute()
     nNodes = m->assign_nodeID(cNodeID, i);
 
     // Output nodes and triangles...
-    m->get_output_nodes(i, cNodeID, NodesFile);
-    m->get_output_triangles(nTriangle, TrianglesFile, i, cTriID);
+    m->writeNodesFile(i, cNodeID, NodesFile);
+    m->writeTrianglesFile(nTriangle, TrianglesFile, i, cTriID);
     cNodeID = nNodes;
     cTriID = cTriID + nTriangle;
   }
@@ -246,7 +248,8 @@ void SurfaceMesh::compute()
 #endif
 
   progressMessage(msg, 90 );
-  m->create_vtk(nNodes, cTriID, VisualizationFile, NodesFile, TrianglesFile);
+
+  m->writeVTKOutputFile(nNodes, cTriID, VisualizationFile, NodesFile, TrianglesFile, m_BinaryVTKFile, m_ConformalMesh);
 
 /*  if (m_SmoothMesh == true)
   {

@@ -76,12 +76,23 @@ class VTKFileUtils
      */
  //   int readVtkFile(SurfaceMeshFunc* func, const std::string &file);
 
-    /**
-     * @brief Writes a VTK POLYDATA legacy ASCII file
-     * @param mesh The M3C Constructed Mesh
-     * @param vtkFileName The filename to write the data to.
-     */
-    void writeVTKFile( );
+/**
+ * @brief Writes a VTK POLYDATA legacy ASCII file
+ * @param m
+ * @param nNodes
+ * @param nTriangles
+ * @param VisualizationFile
+ * @param NodesFile
+ * @param TrianglesFile
+ * @param binaryFile
+ * @return
+ */
+    int writeVTKFile(SurfaceMeshFunc* m,
+                      int nNodes, int nTriangles,
+                      const std::string &VisualizationFile,
+                      const std::string &NodesFile,
+                      const std::string &TrianglesFile,
+                      bool binaryFile);
 
     /**
      * @brief This function parses 3 floating point values from a comma delimited string
