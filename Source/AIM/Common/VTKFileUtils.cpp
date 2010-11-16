@@ -41,7 +41,7 @@
 VTKFileUtils::VTKFileUtils() :
 m_fileIsBinary(false),
 m_HeaderComplete(false),
-m_CurrentSlice(-1),
+//m_CurrentSlice(-1),
 m_IntByteSize(1)
 {
 
@@ -130,20 +130,34 @@ size_t parseByteSize(char text[256])
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int VTKFileUtils::readFirstZSlice(SurfaceMeshFunc* m)
+int VTKFileUtils::readZSlice(SurfaceMeshFunc* m, int zID)
 {
-  int error = 0;
   if (m_HeaderComplete == false)
   {
     return -1;
   }
-  m_CurrentSlice = 0;
-  size_t i = 1;
+  int start = m->NSP + 1;
+  int zEnd = 1;
+  if(zID == 0) { // This is the first read so read a pair of slices
+    start = 1;
+    zEnd = 2;
+  }
+  // If we are on slice > 0, then copy the Voxels from the top half of the
+  // points array to the bottom half
+  if(zID > 0)
+  {
+    for (int i = 1; i <= m->NSP; i++)
+    {
+      m->point[i] = m->point[i+m->NSP];
+    }
+  }
+  int index = start;
+
   if (m_fileIsBinary == true)
   {
     int* buffer = new int[m->xDim];
-
-    //for (int z = 0; z < m->zDim; ++z)
+   // int i = 1;
+    for (int z = 0; z < zEnd; ++z)
     {
       for (int y = 0; y < m->yDim; ++y)
       {
@@ -157,13 +171,17 @@ int VTKFileUtils::readFirstZSlice(SurfaceMeshFunc* m)
         }
         for (int x = 0; x < m->xDim; ++x)
         {
-          if (buffer[x] <= 0) { buffer[x] = -3; }
-          m->point[i].grainname = buffer[x];
-          if ((m_CurrentSlice == 0 || m_CurrentSlice == m->zDim - 1) || (y == 0 || y == m->yDim - 1) || (x == 0 || x == m->xDim - 1))
-          {
-            m->point[i].grainname = -3;
+          if (buffer[x] <= 0) {
+            buffer[x] = -3;
           }
-          ++i; // increment i;
+          m->point[index].grainname = buffer[x];
+          if ((zID == 0 || zID == m->zDim - 1)
+              || (y == 0 || y == m->yDim - 1)
+              || (x == 0 || x == m->xDim - 1))
+          {
+            m->point[index].grainname = -3;
+          }
+          ++index; // increment i;
         }
       }
     }
@@ -171,45 +189,52 @@ int VTKFileUtils::readFirstZSlice(SurfaceMeshFunc* m)
   }
   else
   {
+
     int tmp = -1;
-    // for (int z = 0; z < m->zDim; ++z)
+    for (int z = 0; z < zEnd; ++z)
     {
       for (int y = 0; y < m->yDim; ++y)
       {
         for (int x = 0; x < m->xDim; ++x)
         {
           m_InputFile >> tmp;
-          if (tmp <= 0) tmp = -3;
-          m->point[i].grainname = tmp;
-          if ((m_CurrentSlice == 0 || m_CurrentSlice == m->zDim - 1) || (y == 0 || y == m->yDim - 1) || (x == 0 || x == m->xDim - 1))
+          if (tmp <= 0)
+            { tmp = -3; }
+          m->point[index].grainname = tmp;
+          if ((zID == 0 || zID == m->zDim - 1)
+              || (y == 0 || y == m->yDim - 1)
+              || (x == 0 || x == m->xDim - 1))
           {
-            m->point[i].grainname = -3;
+            m->point[index].grainname = -3;
           }
-          ++i; // increment i;
+          ++index; // increment i;
         }
       }
     }
   }
-  return error;
+  return m->zDim;
+
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int VTKFileUtils::readNextZSlice(SurfaceMeshFunc* m)
+#if 0
+int VTKFileUtils::readNextZSlice(SurfaceMeshFunc* m, int zID)
 {
   int error = 0;
   if (m_HeaderComplete == false)
   {
     return -1;
   }
-  m_CurrentSlice++;
+
   size_t i = m->NSP + 1;
   if (m_fileIsBinary == true)
   {
     int* buffer = new int[m->xDim];
 
     //for (int z = 0; z < m->zDim; ++z)
+
     {
       for (int y = 0; y < m->yDim; ++y)
       {
@@ -218,14 +243,15 @@ int VTKFileUtils::readNextZSlice(SurfaceMeshFunc* m)
         if (m_InputFile.gcount() != (m->xDim * m_IntByteSize))
         {
           std::cout << logTime() << " ERROR READING BINARY FILE. Bytes read was not the same as func->xDim *. " << m_IntByteSize << "." << m_InputFile.gcount()
-              << " vs " << (m->xDim * m_IntByteSize) << std::endl;
+          << " vs " << (m->xDim * m_IntByteSize) << std::endl;
           return -1;
         }
         for (int x = 0; x < m->xDim; ++x)
         {
-          if (buffer[x] <= 0) { buffer[x] = -3; }
+          if (buffer[x] <= 0)
+          { buffer[x] = -3;}
           m->point[i].grainname = buffer[x];
-          if ((m_CurrentSlice == 0 || m_CurrentSlice == m->zDim - 1)
+          if ((zID == 0 || zID == m->zDim - 1)
               || (y == 0 || y == m->yDim - 1)
               || (x == 0 || x == m->xDim - 1))
           {
@@ -242,6 +268,7 @@ int VTKFileUtils::readNextZSlice(SurfaceMeshFunc* m)
     int tmp = -1;
 
     // for (int z = 0; z < m->zDim; ++z)
+
     {
       for (int y = 0; y < m->yDim; ++y)
       {
@@ -251,7 +278,7 @@ int VTKFileUtils::readNextZSlice(SurfaceMeshFunc* m)
           if (tmp <= 0) tmp = -3;
           Voxel& v = m->point[i];
           v.grainname = tmp;
-          if ((m_CurrentSlice == 0 || m_CurrentSlice == m->zDim - 1) || (y == 0 || y == m->yDim - 1) || (x == 0 || x == m->xDim - 1))
+          if ((zID == 0 || zID == m->zDim - 1) || (y == 0 || y == m->yDim - 1) || (x == 0 || x == m->xDim - 1))
           {
             v.grainname = -3;
           }
@@ -262,6 +289,8 @@ int VTKFileUtils::readNextZSlice(SurfaceMeshFunc* m)
   }
   return error;
 }
+#endif
+
 
 // -----------------------------------------------------------------------------
 //
@@ -335,7 +364,7 @@ int VTKFileUtils::readHeader(SurfaceMeshFunc* m, const std::string &file)
 //  int ypoints = 0;
 //  int zpoints = 0;
   m_InputFile >> dimension_label >>  m->xDim >>  m->yDim >>  m->zDim; // Read Line 5
-//  m->zDim = 5;
+  m->zDim = 6;
   std::cout << logTime() << " Volume Size: " << m->xDim << " " << m->yDim << " " << m->zDim << std::endl;
   m->NS = m->xDim * m->yDim * m->zDim;
   m->NSP = m->xDim * m->yDim;
@@ -391,7 +420,7 @@ int VTKFileUtils::readHeader(SurfaceMeshFunc* m, const std::string &file)
     m_HeaderComplete = true;
     err = 1;
   }
-  return err;
+  return m->zDim;
 }
 
 

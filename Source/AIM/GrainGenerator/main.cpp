@@ -18,7 +18,7 @@
 
 #include <MXA/Common/LogTime.h>
 #include <MXA/Utilities/MXALogger.h>
-#include <MXA/Utilities/MXAFileSystemPath.h>
+#include <MXA/Utilities/MXADir.h>
 
 #include <AIM/Common/Constants.h>
 #include <AIM/Common/AIMVersion.h>

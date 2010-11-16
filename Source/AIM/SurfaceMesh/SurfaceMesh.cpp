@@ -10,8 +10,10 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 #include "SurfaceMesh.h"
+#include "AIM/Common/VTKFileUtils.h"
 
 #include <MXA/Utilities/MXADir.h>
+
 
 
 #ifdef AIM_USE_QT
@@ -86,6 +88,8 @@ void SurfaceMesh::run()
 }
 #endif
 
+#define USE_VTK_FILE_UTILS 1
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -118,15 +122,15 @@ void SurfaceMesh::compute()
   }
 
   int cNodeID = 0;
-  int cEdgeID = 0;
-  int fEdgeID = 0;
+//  int cEdgeID = 0;
+//  int fEdgeID = 0;
   int cTriID = 0;
-  int nFEdge = 0; // number of edges on the square...
+//  int nFEdge = 0; // number of edges on the square...
   int nTriangle = 0; // number of triangles...
   int nEdge = 0; // number of triangles...
-  int nnEdge = 0; // number of triangles...
-  int npTriangle = 0; // number of triangles...
-  int ncTriangle = 0; // number of triangles...
+//  int nnEdge = 0; // number of triangles...
+//  int npTriangle = 0; // number of triangles...
+//  int ncTriangle = 0; // number of triangles...
   int nNodes = 0; // number of total nodes used...
   int edgeTable_2d[20][8] = {
 	{ -1, -1, -1, -1, -1, -1, -1, -1},
@@ -176,8 +180,14 @@ void SurfaceMesh::compute()
 
 
   m = SurfaceMeshFunc::New();
-  int err = 0;
+//  int err = 0;
+#if  USE_VTK_FILE_UTILS
+  VTKFileUtils vtkreader;
+  m_ZDim = vtkreader.readHeader(m.get(), m_InputFile);
+
+#else
   m_ZDim = m->initialize_micro(m_InputFile, -1);
+#endif
   std::stringstream ss;
   for (int i = 0; i < (m_ZDim - 1); i++)
   {
@@ -186,7 +196,19 @@ void SurfaceMesh::compute()
     progressMessage(AIM_STRING(ss.str().c_str()), (i*90/m_ZDim) );
 
     // initialize neighbors, possible nodes and squares of marching cubes of each layer...
+#if  USE_VTK_FILE_UTILS
+    m_ZDim = vtkreader.readZSlice(m.get(), i);
+    if(m_ZDim == -1)
+    {
+      ss.str("");
+      ss << "Error loading slice data from vtk file.";
+      this->m_ErrorCondition = 1;
+      progressMessage(AIM_STRING(ss.str().c_str()), 100 );
+      return;
+    }
+#else
     m_ZDim = m->initialize_micro(m_InputFile, i);
+#endif
     m->get_neighbor_list(i);
     m->initialize_nodes(i);
     m->initialize_squares(i);

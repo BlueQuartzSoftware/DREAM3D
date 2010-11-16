@@ -11,7 +11,7 @@
 
 #include "VolumeMesh.h"
 
-#include <MXA/Utilities/MXAFileSystemPath.h>
+#include <MXA/Utilities/MXADir.h>
 #include <AIM/Common/Constants.h>
 #include <AIM/VolumeMesh/MeshGenerator.h>
 
@@ -46,7 +46,7 @@ VolumeMesh::Pointer VolumeMesh::New( QObject* parent)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-VolumeMesh::VolumeMesh( 
+VolumeMesh::VolumeMesh(
 #if AIM_USE_QT
 QObject* parent
 #endif
@@ -62,7 +62,7 @@ m_YDim(0.0),
 m_ZDim(0.0),
 m_XRes(0.0),
 m_YRes(0.0),
-m_ZRes(0.0), 
+m_ZRes(0.0),
 m_NumGrains(0),
 m_ErrorCondition(0)
 #if AIM_USE_QT
@@ -100,17 +100,17 @@ void VolumeMesh::compute()
   progressMessage(AIM_STRING("Running Volume Meshing"), 0 );
 
 
-  std::string meshFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::MeshFile;
-  meshFile = MXAFileSystemPath::toNativeSeparators(meshFile);
+  std::string meshFile = m_OutputDirectory + MXADir::Separator + AIM::Representation::MeshFile;
+  meshFile = MXADir::toNativeSeparators(meshFile);
 
-  std::string meshFile2 = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::MeshFile2;
-  meshFile2 = MXAFileSystemPath::toNativeSeparators(meshFile2);
+  std::string meshFile2 = m_OutputDirectory + MXADir::Separator + AIM::Representation::MeshFile2;
+  meshFile2 = MXADir::toNativeSeparators(meshFile2);
 
-  std::string qualFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::ElementQualityFile;
-  qualFile = MXAFileSystemPath::toNativeSeparators(qualFile);
+  std::string qualFile = m_OutputDirectory + MXADir::Separator + AIM::Representation::ElementQualityFile;
+  qualFile = MXADir::toNativeSeparators(qualFile);
 
-  std::string voxelsFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::VoxelsFile;
-  voxelsFile = MXAFileSystemPath::toNativeSeparators(voxelsFile);
+  std::string voxelsFile = m_OutputDirectory + MXADir::Separator + AIM::Representation::VoxelsFile;
+  voxelsFile = MXADir::toNativeSeparators(voxelsFile);
 
 
   m_ErrorCondition = MeshGenerator_Main(m_NodesFile,
