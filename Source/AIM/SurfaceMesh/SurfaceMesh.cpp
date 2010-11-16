@@ -11,7 +11,7 @@
 
 #include "SurfaceMesh.h"
 
-#include <MXA/Utilities/MXAFileSystemPath.h>
+#include <MXA/Utilities/MXADir.h>
 
 
 #ifdef AIM_USE_QT
@@ -94,18 +94,18 @@ void SurfaceMesh::compute()
   CHECK_FOR_CANCELED(Surface Meshing)
   progressMessage(AIM_STRING("Running Surface Meshing"), 0 );
 
-  std::string  NodesRawFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::NodesRawFile;
-  std::string  NodesFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::NodesFile;
-  std::string  TrianglesFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::TrianglesFile;
-  std::string  EdgesFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::EdgesFile;
-  std::string  EdgesFileIndex = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::EdgesFileIndex;
-  std::string  TrianglesFileIndex = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::TrianglesFileIndex;
-  std::string  VisualizationFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::VisualizationFile;
+  std::string  NodesRawFile = m_OutputDirectory + MXADir::Separator + AIM::Representation::NodesRawFile;
+  std::string  NodesFile = m_OutputDirectory + MXADir::Separator + AIM::Representation::NodesFile;
+  std::string  TrianglesFile = m_OutputDirectory + MXADir::Separator + AIM::Representation::TrianglesFile;
+  std::string  EdgesFile = m_OutputDirectory + MXADir::Separator + AIM::Representation::EdgesFile;
+  std::string  EdgesFileIndex = m_OutputDirectory + MXADir::Separator + AIM::Representation::EdgesFileIndex;
+  std::string  TrianglesFileIndex = m_OutputDirectory + MXADir::Separator + AIM::Representation::TrianglesFileIndex;
+  std::string  VisualizationFile = m_OutputDirectory + MXADir::Separator + AIM::Representation::VisualizationFile;
 
   // Create the output directory if needed
-  if (MXAFileSystemPath::exists(m_OutputDirectory) == false)
+  if (MXADir::exists(m_OutputDirectory) == false)
   {
-    if (MXAFileSystemPath::mkdir(m_OutputDirectory, true) == false)
+    if (MXADir::mkdir(m_OutputDirectory, true) == false)
     {
 #ifdef AIM_USE_QT
     this->m_Cancel = true;
