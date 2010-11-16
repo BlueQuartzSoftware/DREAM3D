@@ -13,7 +13,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AIMThread::Pointer AIMThread::New(int32 threadSlot, QString tname,
+AIMThread::Pointer AIMThread::New(qint32 threadSlot, QString tname,
                                 QObject* parent)
 {
   Pointer sharedPtr(new AIMThread(parent));

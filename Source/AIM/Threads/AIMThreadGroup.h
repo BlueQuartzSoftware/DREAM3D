@@ -16,7 +16,7 @@
 
 
 //-- MXA Includes
-#include <MXA/Common/MXATypes.h>
+#include <MXA/MXATypes.h>
 #include <MXA/Common/LogTime.h>
 #include <MXA/Common/MXASetGetMacros.h>
 
@@ -91,7 +91,7 @@ class AIMThreadGroup : public QObject
       * @param slot
       * @return
       */
-     AIMThread::Pointer getThread(int32 slot);
+     AIMThread::Pointer getThread(qint32 slot);
 
      /**
       * @brief calls "join()" on all the threads currently running and managed

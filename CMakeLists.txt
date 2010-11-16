@@ -9,7 +9,7 @@
 #--
 #--////////////////////////////////////////////////////////////////////////////
 project (AIMRepresentation)
-cmake_minimum_required(VERSION 2.6)
+cmake_minimum_required(VERSION 2.8)
 
 # ---------- Setup output Directories -------------------------
 SET (CMAKE_LIBRARY_OUTPUT_DIRECTORY
@@ -32,34 +32,65 @@ SET (CMAKE_ARCHIVE_OUTPUT_DIRECTORY
   "Single Directory for all static libraries."
   )
 
+SET (PROJECT_CODE_DIR ${PROJECT_SOURCE_DIR}/Source)
+SET (PROJECT_RESOURCES_DIR ${AIMRepresentation_SOURCE_DIR}/Resources)
+SET (PROJECT_PREFIX "MXA" CACHE STRING "The Prefix to be used for Preprocessor definitions")
+SET (EXE_DEBUG_EXTENSION "_debug")
 
-SET (AIMRepresentation_PROJECT_DIR ${AIMRepresentation_SOURCE_DIR})
-SET (AIMRepresentation_RESOURCES_DIR ${AIMRepresentation_SOURCE_DIR}/Resources)
-set (AIMRepresentation_CMAKE_DIR  ${AIMRepresentation_RESOURCES_DIR}/CMake)
-SET (OSX_TOOLS_DIR ${AIMRepresentation_RESOURCES_DIR}/OSX_Tools)
-SET (MXADATAMODEL_LIB_NAME MXADataModel)
+#-------------------------------------------------------------------------------
+# Include the cmp project to perform all the basic configuration tests for the 
+# project.
+#------------------------------------------------------------------------------- 
+set (CMP_HEADER_DIR ${AIMRepresentation_BINARY_DIR}/MXA)
+set (CMP_CONFIGURATION_FILE_NAME "CMPConfiguration.h")
+set (CMP_TYPES_FILE_NAME "MXATypes.h")
+set (CMP_VERSION_HEADER_FILE_NAME "MXAVersion.h")
+set (CMP_EXTRA_CONFIGURATION_FILE "MXAConfiguration.h")
+set (CMP_PROJECT_NAMESPACE "MXA")
+set (CMP_PROJECT_NAME "MXA")
+SET (CMP_INSTALL_FILES "1")
+set (CMP_ENABLE_PLUGINS "1")
+INCLUDE (${PROJECT_RESOURCES_DIR}/cmp/cmpProject.cmake)
+# --------------------------------------------------------------------
+# Generate a Header file with Compile Version variables
+# --------------------------------------------------------------------
+cmpGenerateVersionString( "${AIMRepresentation_BINARY_DIR}/${PROJECT_NAME}/Common/${PROJECT_NAME}Version.h" 
+                          "AIMRepresentation" 
+                          "AIMRepresentation")
+                          
+# --------------------------------------------------------------------
+# Generate our ReadMe and License Files
+configure_file(${PROJECT_SOURCE_DIR}/License.txt.in
+                ${PROJECT_BINARY_DIR}/License.txt )
+configure_file(${PROJECT_SOURCE_DIR}/ReadMe.txt.in
+                ${PROJECT_BINARY_DIR}/ReadMe.txt )
+                
+                
+# --------------------------------------------------------------------
+# Generate the License File Headers
+include(${PROJECT_SOURCE_DIR}/License/License.cmake)
 
+SET (MXA_INSTALL_FILES "0")
+SET (MXA_SOURCE_DIR ${PROJECT_CODE_DIR})
 
-# Generate the version string for the projects
-SET(${PROJECT_NAME}_VERSION "1970.01.01")
-SET(${PROJECT_NAME}_VER_MAJOR "1970")
-SET(${PROJECT_NAME}_VER_MINOR "01")
-SET(${PROJECT_NAME}_VER_PATCH "01")
-SET(SSE_COMPILE_FLAGS "")
+# Include some directories for the compiler
+include_directories(${PROJECT_BINARY_DIR})
 
-include (${AIMRepresentation_RESOURCES_DIR}/CMake/AIMTestTypes.cmake )
-include (${AIMRepresentation_RESOURCES_DIR}/CMake/ConfigureChecks.cmake)
-
+# Build shared libraries
+OPTION (BUILD_SHARED_LIBS "Build Shared Libraries" OFF)
+SET (LIB_TYPE STATIC)
+IF (BUILD_SHARED_LIBS)
+  SET (LIB_TYPE SHARED)
+ENDIF (BUILD_SHARED_LIBS)
 
 # ---------- Find Boost Headers/Libraries -----------------------
 SET (Boost_FIND_REQUIRED TRUE)
-SET (Boost_FIND_QUIETLY TRUE)
 SET (Boost_DEBUG FALSE)
 set (Boost_USE_MULTITHREADED TRUE)
 set (Boost_USE_STATIC_LIBS TRUE)
-SET (Boost_ADDITIONAL_VERSIONS  "1.44.0" "1.44"  "1.36" "1.36.0")
-
-FIND_PACKAGE(Boost COMPONENTS )
+SET (Boost_ADDITIONAL_VERSIONS "1.44.0" "1.44" "1.36" "1.36.0" "1.41" "1.41.0" "1.39" "1.39.0")
+SET (MXA_BOOST_COMPONENTS "")
+FIND_PACKAGE(Boost COMPONENTS  ${MXA_BOOST_COMPONENTS} )
 INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIRS})
 LINK_DIRECTORIES(${Boost_LIBRARY_DIRS})
 
@@ -80,19 +111,6 @@ IF(CMAKE_COMPILER_IS_GNUCXX)
   SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fmessage-length=0")
 ENDIF(CMAKE_COMPILER_IS_GNUCXX) 
 
-# Include some directories for the compiler
-include_directories(${PROJECT_BINARY_DIR})
-include_directories(${AIMRepresentation_SOURCE_DIR}/Source)
-
-#-- Pull in some macros
-include (${AIMRepresentation_RESOURCES_DIR}/CMake/AIMCMakeMacros.cmake)
-SET (EXE_DEBUG_EXTENSION "_debug")
-include (${AIMRepresentation_RESOURCES_DIR}/CMake/InstallationSupport.cmake)
-
-
-GenerateVersionString(${PROJECT_NAME})
-configure_file(${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/AIMVersion.h.in
-               ${AIMRepresentation_BINARY_DIR}/AIM/Common/AIMVersion.h @ONLY)
                
 # -----------------------------------------------------------------------
 # -- Add in the Necessary MXA Sources into a static library
@@ -152,6 +170,5 @@ if (AIM_BUILD_VOLUME_MESHING_TOOL)
     add_subdirectory(${AIMRepresentation_SOURCE_DIR}/Source/AIM/VolumeMesh ${AIMRepresentation_BINARY_DIR}/AIM/VolumeMesh)
 endif()
 
-#ADD_SUBDIRECTORY( ${AIMRepresentation_SOURCE_DIR}/Source/Test ${AIMRepresentation_BINARY_DIR}/Test)
-include(${AIMRepresentation_RESOURCES_DIR}/CMake/AIMInstall.cmake)
+include(${PROJECT_RESOURCES_DIR}/CPack/PackageProject.cmake)
 

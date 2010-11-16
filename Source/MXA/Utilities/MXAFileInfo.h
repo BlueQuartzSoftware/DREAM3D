@@ -14,7 +14,7 @@
 //#include <vector>
 
 //-- MXA Includes
-#include <MXA/Common/MXATypes.h>
+#include "MXA/MXATypes.h"
 
 
 class  MXAFileInfo

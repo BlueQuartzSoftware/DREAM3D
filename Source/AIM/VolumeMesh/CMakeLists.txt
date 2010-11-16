@@ -10,7 +10,7 @@
 #--////////////////////////////////////////////////////////////////////////////
 # set project's name
 PROJECT( VolumeMesh )
-cmake_minimum_required(VERSION 2.6)
+cmake_minimum_required(VERSION 2.8)
 
 
 # ---------- Setup output Directories -------------------------
@@ -46,7 +46,7 @@ set (VolumeMesh_HDRS
     ${VolumeMesh_SOURCE_DIR}/VolumeMesh.h
 )
 
-IDE_SOURCE_PROPERTIES( "Source/AIM/VolumeMesh" "${VolumeMesh_HDRS}" "${VolumeMesh_SRCS}")
+cmp_IDE_SOURCE_PROPERTIES( "Source/AIM/VolumeMesh" "${VolumeMesh_HDRS}" "${VolumeMesh_SRCS}" ${CMP_INSTALL_FILES})
 
 set (Project_SRCS
     ${VolumeMesh_HDRS}
@@ -56,9 +56,9 @@ set (Project_SRCS
 
 add_executable(VolumeMesh ${Project_SRCS} )
 target_link_libraries(VolumeMesh
-                        MXA
+                        MXADataModel
                         AIMCommon
                         ${Boost_PROGRAM_OPTIONS_LIBRARY} )
 set_property(TARGET VolumeMesh PROPERTY  COMPILE_DEFINITIONS "VOLUME_MESH_LIBRARY" )
-ToolInstallationSupport(VolumeMesh "${EXE_DEBUG_EXTENSION}" ${AIMRepresentation_BINARY_DIR} )
+cmp_ToolInstallationSupport(VolumeMesh "${EXE_DEBUG_EXTENSION}" ${VolumeMesh_BINARY_DIR} )
 

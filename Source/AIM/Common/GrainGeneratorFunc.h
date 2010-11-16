@@ -30,7 +30,7 @@
 #include <algorithm>
 #include <numeric>
 
-#include <MXA/Common/MXATypes.h>
+#include <MXA/MXATypes.h>
 #include <MXA/Common/MXASetGetMacros.h>
 
 #include <AIM/Common/Grain.h>
@@ -102,10 +102,10 @@ AngFileHelper::Pointer m_angFileHelper;
 	vector<vector<double> > svomega3;
 	vector<vector<double> > precipsvomega3;
 	vector<vector<double> > neighbordist;
-	
 
-	void initialize(int32, int32 , double , double , double ,
-                  int32 ,int32 ,int32, int32, double);
+
+	void initialize(int32_t, int32_t , double , double , double ,
+                  int32_t ,int32_t ,int32_t, int32_t, double);
 	void initialize2();
 	double machineepsilon;
 	double maxrealnumber;
@@ -123,7 +123,7 @@ AngFileHelper::Pointer m_angFileHelper;
 	int mindiameter;
 	int maxprecipdiameter;
 	int minprecipdiameter;
-	int32 overlapallowed;
+	int32_t overlapallowed;
 	int overlapassignment;
 	double fractionprecip;
 	double avgdiam;
@@ -135,9 +135,9 @@ AngFileHelper::Pointer m_angFileHelper;
 	int numprecipdiameters;
 
 
-	int32 xpoints;
-	int32 ypoints;
-	int32 zpoints;
+	int32_t xpoints;
+	int32_t ypoints;
+	int32_t zpoints;
 	int totalpoints;
 	double totalvol;
 

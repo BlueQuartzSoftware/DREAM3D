@@ -77,7 +77,7 @@ int numgoodsurfnodes = 0;
 double globalvolmeshvol = 0;
 double globalsurfmeshvol = 0;
 double avgarea = 0;
-int32 seeder = time(0);
+int32_t seeder = time(0);
 AIMRandomNG rg;
 }
 

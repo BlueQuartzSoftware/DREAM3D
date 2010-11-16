@@ -69,7 +69,7 @@ SET (AIMCommon_HDRS
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Constants.h
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/VTKFileUtils.h
 )
-IDE_SOURCE_PROPERTIES( "Source/AIM/Common" "${AIMCommon_HDRS}" "${AIMCommon_SRCS}")
+cmp_IDE_SOURCE_PROPERTIES( "Source/AIM/Common" "${AIMCommon_HDRS}" "${AIMCommon_SRCS}" ${CMP_INSTALL_FILES})
 
 
 set (ANG_SRCS
@@ -83,7 +83,7 @@ set (ANG_HDRS
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/ANG/AngFileReader.h
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/ANG/AngFileHelper.h
 )
-IDE_SOURCE_PROPERTIES( "Source/AIM/ANG" "${ANG_HDRS}" "${ANG_SRCS}")
+cmp_IDE_SOURCE_PROPERTIES( "Source/AIM/ANG" "${ANG_HDRS}" "${ANG_SRCS}" ${CMP_INSTALL_FILES})
 
 set (AIMCommon_SRCS
     ${AIMCommon_SRCS}
@@ -94,6 +94,7 @@ set (AIMCommon_SRCS
 
     
 include_directories( ${AIMRepresentation_BINARY_DIR} )
+include_directories( ${PROJECT_CODE_DIR} )
 #-- Add a static library for the PCM registration
 add_library(AIMCommon STATIC ${AIMCommon_SRCS} )
 StaticLibraryProperties( AIMCommon )

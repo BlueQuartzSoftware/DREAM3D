@@ -21,7 +21,7 @@
 // -----------------------------------------------------------------------------
 AngDirectoryPatterns::Pointer AngDirectoryPatterns::New(const std::string &parentDirectory,
     const std::string &fileprefix,
-    int32 width)
+    int32_t width)
 {
   Pointer sharedPtr (new AngDirectoryPatterns);
   sharedPtr->setParentDirectory(parentDirectory);

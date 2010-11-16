@@ -20,7 +20,7 @@
 #include <MXA/Utilities/MXADir.h>
 
 #include <AIM/Common/Constants.h>
-#include <AIM/Common/AIMVersion.h>
+#include <AIMRepresentation/Common/AIMRepresentationVersion.h>
 #include <AIM/Common/AIMArray.hpp>
 
 #include <AIM/Reconstruction/Reconstruction.h>

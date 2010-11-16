@@ -28,10 +28,10 @@ class AngFileHelper
     MXA_STATIC_NEW_MACRO(AngFileHelper)
     virtual ~AngFileHelper();
 
-    MXA_INSTANCE_PROPERTY_m(AngDirectoryPatterns::Pointer, DirectoryPattern);
-    MXA_INSTANCE_PROPERTY_m(int, ZIndexStart)
-    MXA_INSTANCE_PROPERTY_m(int, ZIndexEnd)
-    MXA_INSTANCE_PROPERTY_m(bool, Cancel);
+    MXA_INSTANCE_PROPERTY(AngDirectoryPatterns::Pointer, DirectoryPattern);
+    MXA_INSTANCE_PROPERTY(int, ZIndexStart)
+    MXA_INSTANCE_PROPERTY(int, ZIndexEnd)
+    MXA_INSTANCE_PROPERTY(bool, Cancel);
 
     void loadData(Voxel voxels[], int xpoints, int ypoints, int zpoints, int slice);
 

@@ -64,7 +64,7 @@ int AIMThreadGroup::waitForOpenSlot()
 {
   //std::cout << logTime() << "AIMThreadGroup::waitForOpenSlot()" << std::endl;
   AIMThread::Pointer currentThread = AIMThread::NullPointer();
-  int32 openSlot = -1;
+  qint32 openSlot = -1;
   while (openSlot == -1)
   {
     QMutexLocker lk(&m_monitor);
@@ -131,7 +131,7 @@ void AIMThreadGroup::removeThread(AIMThread::Pointer thread)
   }
 }
 
-AIMThread::Pointer AIMThreadGroup::getThread(int32 slot)
+AIMThread::Pointer AIMThreadGroup::getThread(qint32 slot)
 {
   QMutexLocker lk(&m_monitor);
   return m_threads[slot];

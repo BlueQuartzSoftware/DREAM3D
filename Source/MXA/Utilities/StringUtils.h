@@ -230,7 +230,7 @@ static bool endsWith(const std::string &base, const std::string ending) {
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-static std::string indent(int32 depth)
+static std::string indent(int32_t depth)
 {
   return std::string(2 * depth, ' ');
 }
