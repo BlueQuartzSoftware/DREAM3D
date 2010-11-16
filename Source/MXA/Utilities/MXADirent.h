@@ -1,9 +1,6 @@
 #ifndef DIRENT_INCLUDED
 #define DIRENT_INCLUDED
 
-#if !defined (WIN32)
-#error This header is NOT to be included on POSIX systems
-#endif
 /*
 
  Declaration of POSIX directory browsing functions and types for Win32.

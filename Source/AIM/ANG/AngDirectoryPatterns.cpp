@@ -10,9 +10,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 #include "AngDirectoryPatterns.h"
 
-#include <MXA/Utilities/MXADir.h>
-#include <MXA/Utilities/MXAFileInfo.h>
-
+#include <MXA/Utilities/MXAFileSystemPath.h>
 #include <MXA/Utilities/StringUtils.h>
 
 #include <sstream>
@@ -59,7 +57,7 @@ std::string AngDirectoryPatterns::generateFullPathAngFileName(int slice)
   ss.setf(std::ios::fixed);
   ss.fill('0');
 
-  ss << m_ParentDirectory << MXADir::Separator << m_Prefix << std::setw(m_MaxSlice) << slice << m_Suffix << Ang::DirectoryPatterns::Dot << m_Extension;
+  ss << m_ParentDirectory << MXAFileSystemPath::Separator << m_Prefix << std::setw(m_MaxSlice) << slice << m_Suffix << Ang::DirectoryPatterns::Dot << m_Extension;
   return ss.str();
 }
 
