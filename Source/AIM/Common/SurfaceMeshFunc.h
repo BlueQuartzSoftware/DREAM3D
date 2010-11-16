@@ -129,12 +129,20 @@ public:
   void arrange_grainnames(int numT, int zID);
   int assign_nodeID(int nN, int zID);
   void update_current_triangles(int nT);
-  void get_output_nodes(int zID, int cNodeID, string NodesRawFile);
-  void get_output_triangles(int nt, string TrianglesFileIndex, int zID, int ctid);
+
   double find_xcoord(long);
   double find_ycoord(long);
   double find_zcoord(long);
-  void create_vtk (int nNodes, int nTriangles, string VisualizationFile, string NodesFile, string TrianglesFile);
+
+
+  void writeNodesFile(int zID, int cNodeID, const std::string &NodesRawFile);
+  void writeTrianglesFile(int nt, const std::string &TrianglesFileIndex, int zID, int ctid);
+  void writeVTKOutputFile (int nNodes, int nTriangles,
+                           const std::string &VisualizationFile,
+                           const std::string &NodesFile,
+                           const std::string &TrianglesFile,
+                           bool binaryFile,
+                           bool conformalMesh);
 
 
 protected:

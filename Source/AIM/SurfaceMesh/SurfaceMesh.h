@@ -76,6 +76,8 @@ Q_OBJECT
     MXA_INSTANCE_PROPERTY_m(int, SmoothFileOutputIncrement)
     MXA_INSTANCE_PROPERTY_m(bool, SmoothLockQuadPoints)
     MXA_INSTANCE_PROPERTY_m(int, ErrorCondition)
+    MXA_INSTANCE_PROPERTY_m(bool, BinaryVTKFile)
+    MXA_INSTANCE_PROPERTY_m(bool, ConformalMesh)
 
 
 

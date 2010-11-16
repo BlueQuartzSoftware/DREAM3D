@@ -175,7 +175,7 @@ int VTKFileUtils::readZSlice(SurfaceMeshFunc* m, int zID)
             buffer[x] = -3;
           }
           m->point[index].grainname = buffer[x];
-          if ((zID == 0 || zID == m->zDim - 1)
+          if ((zID == 0 || zID == m->zDim - 2)
               || (y == 0 || y == m->yDim - 1)
               || (x == 0 || x == m->xDim - 1))
           {
@@ -201,7 +201,7 @@ int VTKFileUtils::readZSlice(SurfaceMeshFunc* m, int zID)
           if (tmp <= 0)
             { tmp = -3; }
           m->point[index].grainname = tmp;
-          if ((zID == 0 || zID == m->zDim - 1)
+          if ((zID == 0 || zID == m->zDim - 2)
               || (y == 0 || y == m->yDim - 1)
               || (x == 0 || x == m->xDim - 1))
           {
@@ -364,7 +364,7 @@ int VTKFileUtils::readHeader(SurfaceMeshFunc* m, const std::string &file)
 //  int ypoints = 0;
 //  int zpoints = 0;
   m_InputFile >> dimension_label >>  m->xDim >>  m->yDim >>  m->zDim; // Read Line 5
-//  m->zDim = 6;
+//  m->zDim = 5;
   std::cout << logTime() << " Volume Size: " << m->xDim << " " << m->yDim << " " << m->zDim << std::endl;
   m->NS = m->xDim * m->yDim * m->zDim;
   m->NSP = m->xDim * m->yDim;
@@ -428,8 +428,17 @@ int VTKFileUtils::readHeader(SurfaceMeshFunc* m, const std::string &file)
 //
 // -----------------------------------------------------------------------------
 
-void VTKFileUtils::writeVTKFile()
+int VTKFileUtils::writeVTKFile(SurfaceMeshFunc* m,
+                                int nNodes, int nTriangles,
+                                const std::string &VisualizationFile,
+                                const std::string &NodesFile,
+                                const std::string &TrianglesFile,
+                                bool binaryFile)
 {
+
+
+
+
 
 #if 0
   bool conformalMesh = inputs->conformalMesh;

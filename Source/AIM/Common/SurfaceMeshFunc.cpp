@@ -2860,132 +2860,284 @@ int SurfaceMeshFunc::assign_nodeID(int nN, int zID)
   }
   return (nid);
 }
-void SurfaceMeshFunc::get_output_nodes(int zID, int cNodeID, string NodesFile)
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+//void SurfaceMeshFunc::get_output_nodes(int zID, int cNodeID, string NodesFile)
+void SurfaceMeshFunc::writeNodesFile(int zID, int cNodeID, const std::string &nodesFile)
 {
-  int index;
-  int i, j, k;
-  int finish;
+//  int index;
+//  int i, j, k;
+//  int finish;
   int tID;
   int nk;
   int czid;
   double x, y, z;
-  int start, end;
+//  int start, end;
   int count;
-  vector<int> order;
-  end = -1;
+  vector<int > order;
+ // end = -1;
   count = 0;
   czid = zID;
-  ofstream outFile;
-  if(zID == 0) outFile.open(NodesFile.c_str());
-  if(zID > 0) outFile.open(NodesFile.c_str(), ios::app);
-  for (k = 0; k < (7*2*NSP); k++)
+  FILE* f = NULL;
+
+  // Create a new file if this is our first slice
+  if (zID == 0)
   {
-	tID = cVertex[k].NodeID;
-    if (tID > cNodeID-1)
+    f = fopen(nodesFile.c_str(), "w");
+  }
+  // Append to existing file if we are on z>0 slice
+  if (zID > 0)
+  {
+    f = fopen(nodesFile.c_str(), "a");
+  }
+  //  if(zID == 0) outFile.open(nodesFile.c_str());
+  //  if(zID > 0) outFile.open(nodesFile.c_str(), ios::app);
+  for (int k = 0; k < (7 * 2 * NSP); k++)
+  {
+    tID = cVertex[k].NodeID;
+    if (tID > cNodeID - 1)
     {
-		nk = cVertex[k].nodeKind;
-		x = cVertex[k].xc;
-		y = cVertex[k].yc;
-		z = cVertex[k].zc;
-	    outFile << tID << "	" << nk << "	" << x << "	" << y << "	" << z << endl;
+      nk = cVertex[k].nodeKind;
+      x = cVertex[k].xc;
+      y = cVertex[k].yc;
+      z = cVertex[k].zc;
+      fprintf(f, "%d %d %f %f %f\n", tID, nk, x, y, z);
+   //   outFile << tID << "	" << nk << "	" << x << "	" << y << "	" << z << endl;
     }
   }
-  outFile.close();
+  fclose(f);
 }
 
-void SurfaceMeshFunc::get_output_triangles (int nt, string TrianglesFile, int zID, int ctid)
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void SurfaceMeshFunc::writeTrianglesFile (int nt, const std::string &trianglesFile, int zID, int ctid)
 {
-  int i;
+  //int i;
   int tag;
   int end;
   int newID;
   int n1, n2, n3, s1, s2;
-  double x1, x2, x3;
-  double y1, y2, y3;
-  double z1, z2, z3;
+  //  double x1, x2, x3;
+  //  double y1, y2, y3;
+  //  double z1, z2, z3;
   tag = zID;
   end = nt;
   newID = ctid;
-  ofstream outFile;
-  if(zID == 0) outFile.open(TrianglesFile.c_str());
-  if(zID > 0) outFile.open(TrianglesFile.c_str(), ios::app);
-//  outFile << nt <<endl;
-  for(i=0; i<end; i++){
+  FILE* f = NULL;
+
+  // Create a new file if this is our first slice
+  if (zID == 0)
+  {
+    f = fopen(trianglesFile.c_str(), "w");
+  }
+  // Append to existing file if we are on z>0 slice
+  if (zID > 0)
+  {
+    f = fopen(trianglesFile.c_str(), "a");
+  }
+  //  outFile << nt <<endl;
+  for (int i = 0; i < end; i++)
+  {
     n1 = cTriangle[i].node_id[0];
     n2 = cTriangle[i].node_id[1];
     n3 = cTriangle[i].node_id[2];
-	n1 = cVertex[n1].NodeID;
-	n2 = cVertex[n2].NodeID;
-	n3 = cVertex[n3].NodeID;
+    n1 = cVertex[n1].NodeID;
+    n2 = cVertex[n2].NodeID;
+    n3 = cVertex[n3].NodeID;
     s1 = cTriangle[i].ngrainname[0];
     s2 = cTriangle[i].ngrainname[1];
-    outFile << newID << "	" << n1 << "	" << n2 << "	" << n3 << "	" << s1 << "	" << s2 << endl;
+    fprintf(f, "%d %d %d %d %d %d\n", newID, n1, n2, n3, s1, s2);
+//    outFile << newID << "	" << n1 << "	" << n2 << "	" << n3 << "	" << s1 << "	" << s2 << endl;
     newID++;
   }
-  outFile.close();
-  if(end > 0) delete [] cTriangle;
+  fclose(f);
+  if (end > 0) delete[] cTriangle;
 }
 
-void SurfaceMeshFunc::create_vtk (int nNodes, int nTriangles, string VisualizationFile, string NodesFile, string TrianglesFile)
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void SurfaceMeshFunc::writeVTKOutputFile (int nNodes, int nTriangles,
+                                  const std::string &VisualizationFile,
+                                  const std::string &NodesFile,
+                                  const std::string &TrianglesFile,
+                                  bool binaryFile,
+                                  bool conformalMesh)
 {
-	ofstream outFile;
-	outFile.open(VisualizationFile.c_str());
-	ifstream inputFile1;
-	inputFile1.open(NodesFile.c_str());
-	ifstream inputFile2;
-	inputFile2.open(TrianglesFile.c_str());
-	outFile << "# vtk DataFile Version 2.0" << endl;
-	outFile << "data set from FFT2dx_GB" << endl;
-	outFile << "ASCII" << endl;
-	outFile << "DATASET UNSTRUCTURED_GRID" << endl;
-	outFile << endl;
-	outFile << "POINTS " << nNodes << " float" << endl;
+#if 1
+  FILE* vtkFile = NULL;
+  FILE* nodes = NULL;
+  FILE* tris = NULL;
+
+
+  vtkFile = fopen(VisualizationFile.c_str(), "w");
+  if (NULL == vtkFile)
+  {
+    std::cout << "Error Creating VTK Visualization File '" << VisualizationFile << "'" << std::endl;
+    return;
+  }
+  nodes = fopen(NodesFile.c_str(), "r");
+  if (NULL == nodes)
+  {
+    std::cout << "Error Opening Nodes file '" << NodesFile << "'" << std::endl;
+    fclose(vtkFile);
+    return;
+  }
+  tris = fopen(TrianglesFile.c_str(), "r");
+  if (NULL == tris)
+  {
+    std::cout << "Error Opening Triangles file'" << TrianglesFile << "'" << std::endl;
+    fclose(vtkFile);
+    fclose(nodes);
+    return;
+  }
+
+  fprintf(vtkFile, "# vtk DataFile Version 2.0\n");
+  fprintf(vtkFile,  "data set from FFT2dx_GB\n");
+	fprintf(vtkFile,  "ASCII\n");
+	fprintf(vtkFile,  "DATASET UNSTRUCTURED_GRID\n");
+	fprintf(vtkFile,  "POINTS %d float\n", nNodes);
 	int nodenum;
 	int nodetype;
-	double x;
-	double y;
-	double z;
+	float x;
+	float y;
+	float z;
+	// Read in the nodes one line at a time and write them out to the vtk file
 	for(int i=0;i<nNodes;i++)
 	{
-		inputFile1 >> nodenum >> nodetype >> x >> y >> z;
-		outFile << x << "	" << y << "	" << z << endl;
+		fscanf(nodes, "%d %d %f %f %f\n", &nodenum, &nodetype, &x, &y, &z);
+		fprintf(vtkFile, "%f %f %f\n", x, y, z);
 	}
-	inputFile1.close();
+	//inputFile1.close();
+	fclose(nodes);
+	nodes = NULL;
+
+	// Write the triangle indices into the vtk File
 	int trianglenum;
 	int node1;
 	int node2;
 	int node3;
-	int edge1;
-	int edge2;
-	int edge3;
-	int grain1;
-	int grain2;
-	outFile << endl;
-	outFile << "CELLS " << nTriangles << " " << (nTriangles*4) << endl;
+
+
+  fprintf(vtkFile, "CELLS %d %d\n", nTriangles, (nTriangles*4));
+  // Stoe the Grain Ids so we don't have to re-read the triangles file again
+	int* grainIds = (int*)malloc(nTriangles * 2 * 4);
+	size_t index = 0;
 	for(int i=0;i<nTriangles;i++)
 	{
-		inputFile2 >> trianglenum >> node1 >> node2 >> node3 >> grain1 >> grain2;
-		if(grain1 < grain2) outFile << "3	" << node1 << "	" << node2 << "	" << node3 << endl;
-		if(grain1 > grain2) outFile << "3	" << node3 << "	" << node2 << "	" << node1 << endl;
+	  // Read a line from the Triangles File
+	  fscanf(tris, "%d %d %d %d %d %d", &trianglenum, &node1, &node2, &node3, &grainIds[index], &grainIds[index+1]);
+
+    if (grainIds[index] < grainIds[index+1])
+    {
+      fprintf(vtkFile, "3 %d %d %d\n", node1, node2, node3);
+    }
+    else
+    {
+      fprintf(vtkFile, "3 %d %d %d\n", node3, node2, node1);
+    }
+
+	  index = index + 2;
 	}
-	inputFile2.close();
-	outFile << endl;
-	outFile << "CELL_TYPES " << nTriangles << endl;
-	for(int i=0;i<nTriangles;i++)
-	{
-		outFile << "5" << endl;
-	}
-	inputFile2.open(TrianglesFile.c_str());
-	outFile << endl;
-	outFile << "CELL_DATA " << nTriangles << endl;
-	outFile << "SCALARS GrainID float" << endl;
-	outFile << "LOOKUP_TABLE default" << endl;
-	for(int i=0;i<nTriangles;i++)
-	{
-		inputFile2 >> trianglenum >> node1 >> node2 >> node3 >> grain1 >> grain2;
-		if(grain1 < grain2) outFile << grain1 << endl;
-		if(grain1 > grain2) outFile << grain2 << endl;
-	}
-	inputFile2.close();
-	outFile.close();
+	fclose(tris);
+	tris = NULL;
+
+	// Write the CELL_TYPES into the file
+	fprintf(vtkFile, "\n");
+	fprintf(vtkFile, "CELL_TYPES %d\n", nTriangles);
+  for(int i=0;i<nTriangles;i++)
+  {
+    fprintf(vtkFile, "5\n");
+  }
+
+
+  // Write the GrainId Data to teh file
+  fprintf(vtkFile, "\n");
+  fprintf(vtkFile, "CELL_DATA %d\n", nTriangles);
+  fprintf(vtkFile, "SCALARS GrainID int\n");
+  fprintf(vtkFile, "LOOKUP_TABLE default\n");
+  index = 0;
+  for (int i = 0; i < nTriangles; i++)
+  {
+    if (grainIds[index] < grainIds[index + 1])
+    {
+      fprintf(vtkFile, "%d\n", grainIds[index]);
+    }
+    else
+    {
+      fprintf(vtkFile, "%d\n", grainIds[index + 1]);
+    }
+    index = index + 2;
+  }
+  // Free the memory
+  free(grainIds);
+  // Close the input and output files
+  fclose(vtkFile);
+
+#else
+  ofstream outFile;
+  outFile.open(VisualizationFile.c_str());
+  ifstream inputFile1;
+  inputFile1.open(NodesFile.c_str());
+  ifstream inputFile2;
+  inputFile2.open(TrianglesFile.c_str());
+  outFile << "# vtk DataFile Version 2.0" << endl;
+  outFile << "data set from FFT2dx_GB" << endl;
+  outFile << "ASCII" << endl;
+  outFile << "DATASET UNSTRUCTURED_GRID" << endl;
+  outFile << endl;
+  outFile << "POINTS " << nNodes << " float" << endl;
+  int nodenum;
+  int nodetype;
+  double x;
+  double y;
+  double z;
+  for(int i=0;i<nNodes;i++)
+  {
+    inputFile1 >> nodenum >> nodetype >> x >> y >> z;
+    outFile << x << " " << y << " " << z << endl;
+  }
+  inputFile1.close();
+  int trianglenum;
+  int node1;
+  int node2;
+  int node3;
+//  int edge1;
+//  int edge2;
+//  int edge3;
+  int grain1;
+  int grain2;
+  outFile << endl;
+  outFile << "CELLS " << nTriangles << " " << (nTriangles*4) << endl;
+  for(int i=0;i<nTriangles;i++)
+  {
+    inputFile2 >> trianglenum >> node1 >> node2 >> node3 >> grain1 >> grain2;
+    if(grain1 < grain2) outFile << "3 " << node1 << " " << node2 << " " << node3 << endl;
+    if(grain1 > grain2) outFile << "3 " << node3 << " " << node2 << " " << node1 << endl;
+  }
+  inputFile2.close();
+  outFile << endl;
+  outFile << "CELL_TYPES " << nTriangles << endl;
+  for(int i=0;i<nTriangles;i++)
+  {
+    outFile << "5" << endl;
+  }
+  inputFile2.open(TrianglesFile.c_str());
+  outFile << endl;
+  outFile << "CELL_DATA " << nTriangles << endl;
+  outFile << "SCALARS GrainID float" << endl;
+  outFile << "LOOKUP_TABLE default" << endl;
+  for(int i=0;i<nTriangles;i++)
+  {
+    inputFile2 >> trianglenum >> node1 >> node2 >> node3 >> grain1 >> grain2;
+    if(grain1 < grain2) outFile << grain1 << endl;
+    if(grain1 > grain2) outFile << grain2 << endl;
+  }
+  inputFile2.close();
+  outFile.close();
+#endif
 }
