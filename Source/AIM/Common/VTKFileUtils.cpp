@@ -364,7 +364,7 @@ int VTKFileUtils::readHeader(SurfaceMeshFunc* m, const std::string &file)
 //  int ypoints = 0;
 //  int zpoints = 0;
   m_InputFile >> dimension_label >>  m->xDim >>  m->yDim >>  m->zDim; // Read Line 5
-  m->zDim = 6;
+//  m->zDim = 6;
   std::cout << logTime() << " Volume Size: " << m->xDim << " " << m->yDim << " " << m->zDim << std::endl;
   m->NS = m->xDim * m->yDim * m->zDim;
   m->NSP = m->xDim * m->yDim;
