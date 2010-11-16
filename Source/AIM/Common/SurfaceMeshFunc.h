@@ -94,6 +94,9 @@ public:
   double xRes;
   double yRes;
   double zRes;
+  double xOrigin;
+  double yOrigin;
+  double zOrigin;
   Neighbor* neigh; // contains nearest neighbor information...
   Voxel* point; // contains voxel information...
   Face* cSquare; // contains square information...
