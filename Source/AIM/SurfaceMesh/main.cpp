@@ -53,40 +53,35 @@ int main(int argc, char **argv)
     TCLAP::ValueArg<std::string> vtkFile("v", "vtkfile", "VTK Structured Points File to be used as input.", false, "", "VTK Structured Points File");
     cmd.add(vtkFile);
 
-#if 0
-    TCLAP::ValueArg<std::string > dxFile("", "dxfile", "Input DX File", false, "", "Input DX File");
-    cmd.add(dxFile);
-
-    TCLAP::ValueArg<int >
-    xDim("x", "xDim", "xDim", false, 0, "X Dimension");
-    cmd.add(xDim);
-
-    TCLAP::ValueArg<int >
-    yDim("y", "yDim", "yDim", false, 0, "Y Dimension");
-    cmd.add(yDim);
-
-    TCLAP::ValueArg<int >
-    zDim("z", "zDim", "zDim", false, 0, "Z Dimension");
-    cmd.add(zDim);
-#endif
-
 
     TCLAP::ValueArg<std::string > outputDir("o", "outputDir", "Output Directory", false, "", "Output Directory");
     cmd.add(outputDir);
 
-    TCLAP::SwitchArg smoothMesh("", "smoothMesh", "Smooth the mesh after initial mesh generation [Default=FALSE]", false);
-    cmd.add(smoothMesh);
 
-    TCLAP::ValueArg<int >
-        smoothIterations("", "smoothiterations", "Smooth Iterations. Anything greater than 0 will trigger a Laplacian smoothing of the mesh. 6 is a good place to start.", false, 0, "Smooth Iterations");
-    cmd.add(smoothIterations);
+    TCLAP::ValueArg<std::string > dxFile("", "dxfile", "Input DX File", false, "", "Input DX File");
+ //   cmd.add(dxFile);
+
+    TCLAP::ValueArg<int > xDim("x", "xDim", "xDim", false, 0, "X Dimension");
+  //  cmd.add(xDim);
+
+    TCLAP::ValueArg<int > yDim("y", "yDim", "yDim", false, 0, "Y Dimension");
+//    cmd.add(yDim);
+
+    TCLAP::ValueArg<int >  zDim("z", "zDim", "zDim", false, 0, "Z Dimension");
+//    cmd.add(zDim);
+
+    TCLAP::SwitchArg smoothMesh("", "smoothMesh", "Smooth the mesh after initial mesh generation [Default=FALSE]", false);
+ //   cmd.add(smoothMesh);
+
+    TCLAP::ValueArg<int > smoothIterations("", "smoothiterations", "Smooth Iterations. Anything greater than 0 will trigger a Laplacian smoothing of the mesh. 6 is a good place to start.", false, 0, "Smooth Iterations");
+//    cmd.add(smoothIterations);
 
     TCLAP::SwitchArg lockQuadPoints("q", "lockquad", "Lock Quad (or More) Juntions Points from Smoothing & decimation", false);
-    cmd.add(lockQuadPoints);
+ //   cmd.add(lockQuadPoints);
 
-    TCLAP::ValueArg<int >
-        writeOutputFileIncrement("", "writeOutputFileIncrement", "The inrement in iterations to write an output file", false, 0, "The inrement in iterations to write an output file");
-    cmd.add(writeOutputFileIncrement);
+    TCLAP::ValueArg<int > writeOutputFileIncrement("", "writeOutputFileIncrement", "The inrement in iterations to write an output file", false, 0, "The inrement in iterations to write an output file");
+//    cmd.add(writeOutputFileIncrement);
+
 
     int err = 0;
 
