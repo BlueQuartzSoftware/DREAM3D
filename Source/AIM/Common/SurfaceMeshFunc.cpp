@@ -2868,19 +2868,12 @@ int SurfaceMeshFunc::assign_nodeID(int nN, int zID)
 //void SurfaceMeshFunc::get_output_nodes(int zID, int cNodeID, string NodesFile)
 void SurfaceMeshFunc::writeNodesFile(int zID, int cNodeID, const std::string &nodesFile)
 {
-//  int index;
-//  int i, j, k;
-//  int finish;
   int tID;
   int nk;
-  int czid;
   double x, y, z;
-//  int start, end;
   int count;
-  vector<int > order;
- // end = -1;
   count = 0;
-  czid = zID;
+
   FILE* f = NULL;
 
   // Create a new file if this is our first slice
@@ -2893,8 +2886,7 @@ void SurfaceMeshFunc::writeNodesFile(int zID, int cNodeID, const std::string &no
   {
     f = fopen(nodesFile.c_str(), "a");
   }
-  //  if(zID == 0) outFile.open(nodesFile.c_str());
-  //  if(zID > 0) outFile.open(nodesFile.c_str(), ios::app);
+
   for (int k = 0; k < (7 * 2 * NSP); k++)
   {
     tID = cVertex[k].NodeID;
@@ -2905,7 +2897,6 @@ void SurfaceMeshFunc::writeNodesFile(int zID, int cNodeID, const std::string &no
       y = cVertex[k].yc;
       z = cVertex[k].zc;
       fprintf(f, "%d %d %f %f %f\n", tID, nk, x, y, z);
-   //   outFile << tID << "	" << nk << "	" << x << "	" << y << "	" << z << endl;
     }
   }
   fclose(f);
@@ -2921,9 +2912,6 @@ void SurfaceMeshFunc::writeTrianglesFile (int nt, const std::string &trianglesFi
   int end;
   int newID;
   int n1, n2, n3, s1, s2;
-  //  double x1, x2, x3;
-  //  double y1, y2, y3;
-  //  double z1, z2, z3;
   tag = zID;
   end = nt;
   newID = ctid;
@@ -2951,7 +2939,6 @@ void SurfaceMeshFunc::writeTrianglesFile (int nt, const std::string &trianglesFi
     s1 = cTriangle[i].ngrainname[0];
     s2 = cTriangle[i].ngrainname[1];
     fprintf(f, "%d %d %d %d %d %d\n", newID, n1, n2, n3, s1, s2);
-//    outFile << newID << "	" << n1 << "	" << n2 << "	" << n3 << "	" << s1 << "	" << s2 << endl;
     newID++;
   }
   fclose(f);
@@ -2968,11 +2955,9 @@ void SurfaceMeshFunc::writeVTKOutputFile (int nNodes, int nTriangles,
                                   bool binaryFile,
                                   bool conformalMesh)
 {
-#if 1
   FILE* vtkFile = NULL;
   FILE* nodes = NULL;
   FILE* tris = NULL;
-
 
   vtkFile = fopen(VisualizationFile.c_str(), "w");
   if (NULL == vtkFile)
@@ -3077,67 +3062,4 @@ void SurfaceMeshFunc::writeVTKOutputFile (int nNodes, int nTriangles,
   free(grainIds);
   // Close the input and output files
   fclose(vtkFile);
-
-#else
-  ofstream outFile;
-  outFile.open(VisualizationFile.c_str());
-  ifstream inputFile1;
-  inputFile1.open(NodesFile.c_str());
-  ifstream inputFile2;
-  inputFile2.open(TrianglesFile.c_str());
-  outFile << "# vtk DataFile Version 2.0" << endl;
-  outFile << "data set from FFT2dx_GB" << endl;
-  outFile << "ASCII" << endl;
-  outFile << "DATASET UNSTRUCTURED_GRID" << endl;
-  outFile << endl;
-  outFile << "POINTS " << nNodes << " float" << endl;
-  int nodenum;
-  int nodetype;
-  double x;
-  double y;
-  double z;
-  for(int i=0;i<nNodes;i++)
-  {
-    inputFile1 >> nodenum >> nodetype >> x >> y >> z;
-    outFile << x << " " << y << " " << z << endl;
-  }
-  inputFile1.close();
-  int trianglenum;
-  int node1;
-  int node2;
-  int node3;
-//  int edge1;
-//  int edge2;
-//  int edge3;
-  int grain1;
-  int grain2;
-  outFile << endl;
-  outFile << "CELLS " << nTriangles << " " << (nTriangles*4) << endl;
-  for(int i=0;i<nTriangles;i++)
-  {
-    inputFile2 >> trianglenum >> node1 >> node2 >> node3 >> grain1 >> grain2;
-    if(grain1 < grain2) outFile << "3 " << node1 << " " << node2 << " " << node3 << endl;
-    if(grain1 > grain2) outFile << "3 " << node3 << " " << node2 << " " << node1 << endl;
-  }
-  inputFile2.close();
-  outFile << endl;
-  outFile << "CELL_TYPES " << nTriangles << endl;
-  for(int i=0;i<nTriangles;i++)
-  {
-    outFile << "5" << endl;
-  }
-  inputFile2.open(TrianglesFile.c_str());
-  outFile << endl;
-  outFile << "CELL_DATA " << nTriangles << endl;
-  outFile << "SCALARS GrainID float" << endl;
-  outFile << "LOOKUP_TABLE default" << endl;
-  for(int i=0;i<nTriangles;i++)
-  {
-    inputFile2 >> trianglenum >> node1 >> node2 >> node3 >> grain1 >> grain2;
-    if(grain1 < grain2) outFile << grain1 << endl;
-    if(grain1 > grain2) outFile << grain2 << endl;
-  }
-  inputFile2.close();
-  outFile.close();
-#endif
 }
