@@ -65,9 +65,9 @@ class VTKFileUtils
     int readHeader(SurfaceMeshFunc* m, const std::string &file);
 
 
-    int readFirstZSlice(SurfaceMeshFunc* m);
+    int readZSlice(SurfaceMeshFunc* m, int zID);
 
-    int readNextZSlice(SurfaceMeshFunc* m);
+//    int readNextZSlice(SurfaceMeshFunc* m, int zID);
 
     /**
      * @brief Reads a specific subset of VTK legacy ASCII or BINARY files
@@ -100,7 +100,7 @@ class VTKFileUtils
     std::ifstream m_InputFile;
     bool          m_fileIsBinary;
     bool          m_HeaderComplete;
-    int           m_CurrentSlice;
+  //  int           m_CurrentSlice;
     size_t        m_IntByteSize;
 
     VTKFileUtils(const VTKFileUtils&); // Copy Constructor Not Implemented
