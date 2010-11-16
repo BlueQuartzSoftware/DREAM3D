@@ -12,6 +12,7 @@
 #include "SurfaceMesh.h"
 #include "AIM/Common/VTKFileUtils.h"
 
+#include <MXA/Common/LogTime.h>
 #include <MXA/Utilities/MXADir.h>
 
 
@@ -276,7 +277,7 @@ void SurfaceMesh::progressMessage(AIM_STRING message, int progress)
   emit updateProgress(progress);
   //  std::cout << message.toStdString() << std::endl;
 #else
-  std::cout  << progress << "% - "<< message << std::endl;
+  std::cout << logTime() << progress << "% - "<< message << std::endl;
 #endif
 }
 
