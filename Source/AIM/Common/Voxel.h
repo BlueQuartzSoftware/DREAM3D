@@ -16,42 +16,47 @@
 #define WIN32_LEAN_AND_MEAN		// Exclude rarely-used stuff from Windows headers
 #endif
 
-
 #include <vector>
 
 /**
-* @class Voxel Voxel.h AIM/Common/Voxel.h
-* @brief Support class for the MicroGen3D class
-* @author Michael A. Jackson for BlueQuartz Software, Dr. Michael Groeber for USAFRL
-* @date Nov 4, 2009
-* @version 1.0
-*/
+ * @class Voxel Voxel.h AIM/Common/Voxel.h
+ * @brief Support class for the MicroGen3D class
+ * @author Michael A. Jackson for BlueQuartz Software, Dr. Michael Groeber for USAFRL
+ * @date Nov 4, 2009
+ * @version 1.0
+ */
 class Voxel
 {
-public:
+  public:
     Voxel();
     virtual ~Voxel();
 
     int grainname;
     double confidence;
     double imagequality;
-	double ellipfunc;
+    double ellipfunc;
     int alreadychecked;
-	int nearestneighbor;
-	double nearestneighbordistance;
+    int nearestneighbor;
+    double nearestneighbordistance;
     double euler1;
     double euler2;
     double euler3;
     int neighbor;
-	int numowners;
+    int numowners;
     double misorientation;
-	double kernelmisorientation;
+    double kernelmisorientation;
     int surfacevoxel;
-	int unassigned;
-	double quat[5];
-    std::vector<int>* grainlist;
-    std::vector<double>* ellipfunclist;
+    int unassigned;
+    double quat[5];
+    std::vector<int >* grainlist;
+    std::vector<double >* ellipfunclist;
 
+    void copyVoxel(Voxel* v);
+
+    void operator=(Voxel& v); // Operator '=' Not Implemented
+
+  private:
+    Voxel(const Voxel&); // Copy Constructor Not Implemented
 };
 
 #endif /* VOXEL_H_ */

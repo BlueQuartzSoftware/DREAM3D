@@ -209,10 +209,10 @@ void SurfaceMesh::compute()
 
   std::stringstream ss;
   // We already read the first slice so start at Slice = 1
-  for (int i = 1; i < m_ZDim; i++)
+  for (int i = 0; i < m_ZDim-1; i++)
   {
     ss.str("");
-    ss << "Marching Cubes Between Layers " << (i-1) << " and " << i;
+    ss << "Marching Cubes Between Layers " << i << " and " << i+1;
     progressMessage(AIM_STRING(ss.str().c_str()), (i*90/m_ZDim) );
 //    progressMessage(AIM_STRING("Marching Cubes Between Layers "), i );
     err = vtkReader.readNextZSlice( m.get() );

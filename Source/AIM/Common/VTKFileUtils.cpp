@@ -157,7 +157,7 @@ int VTKFileUtils::readFirstZSlice(SurfaceMeshFunc* m)
         }
         for (int x = 0; x < m->xDim; ++x)
         {
-          if (buffer[x] <= 0) buffer[x] = -3;
+          if (buffer[x] <= 0) { buffer[x] = -3; }
           m->point[i].grainname = buffer[x];
           if ((m_CurrentSlice == 0 || m_CurrentSlice == m->zDim - 1) || (y == 0 || y == m->yDim - 1) || (x == 0 || x == m->xDim - 1))
           {
@@ -240,6 +240,7 @@ int VTKFileUtils::readNextZSlice(SurfaceMeshFunc* m)
   else
   {
     int tmp = -1;
+
     // for (int z = 0; z < m->zDim; ++z)
     {
       for (int y = 0; y < m->yDim; ++y)
@@ -248,10 +249,11 @@ int VTKFileUtils::readNextZSlice(SurfaceMeshFunc* m)
         {
           m_InputFile >> tmp;
           if (tmp <= 0) tmp = -3;
-          m->point[i].grainname = tmp;
+          Voxel& v = m->point[i];
+          v.grainname = tmp;
           if ((m_CurrentSlice == 0 || m_CurrentSlice == m->zDim - 1) || (y == 0 || y == m->yDim - 1) || (x == 0 || x == m->xDim - 1))
           {
-            m->point[i].grainname = -3;
+            v.grainname = -3;
           }
           ++i; // increment i;
         }
@@ -319,6 +321,13 @@ int VTKFileUtils::readHeader(SurfaceMeshFunc* m, const std::string &file)
   {
     m_fileIsBinary = false;
   }
+  else
+  {
+    err = -1;
+    std::cout << logTime() << "The file type of the VTK legacy file could not be determined. It should be ASCII' or 'BINARY' and should appear on line 3 of the file."
+        << std::endl;
+    return err;
+  }
   m_InputFile.getline(buf, kBufferSize); // Read Line 4
   // Start reading Line 5
   std::string dimension_label;
@@ -364,7 +373,6 @@ int VTKFileUtils::readHeader(SurfaceMeshFunc* m, const std::string &file)
 
   if (m_fileIsBinary == true)
   {
-
     readLine(m_InputFile, buf, kBufferSize); // Read Line 9
     int n = sscanf(buf, "%s %s %d", text1, text2, &fieldNum);
     ::memset(text1, 0, kBufferSize);
@@ -374,19 +382,16 @@ int VTKFileUtils::readHeader(SurfaceMeshFunc* m, const std::string &file)
     n = sscanf(buf, "%s %d %d %s", text1, &nComponents, &totalValues, text2);
     m_IntByteSize = parseByteSize(text2);
     m_HeaderComplete = true;
-    return 1;
+    err = 1;
   }
   else
   {
     readLine(m_InputFile, buf, kBufferSize);
     readLine(m_InputFile, buf, kBufferSize);
     m_HeaderComplete = true;
-    return 1;
+    err = 1;
   }
-
-  std::cout << logTime() << " The file type of the VTK Legacy file should be set to 'ASCII' or 'BINARY'" << " and should appear on line 3 of the file."
-      << std::endl;
-  return -1;
+  return err;
 }
 
 

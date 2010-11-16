@@ -116,7 +116,7 @@ int SurfaceMeshFunc::initialize_micro(string filename, int zID)
 		{
 		  for (i = 1; i <= NSP; i++)
 		  {
-			point[i] = point[i+NSP];
+			   point[i] = point[i+NSP]; //Copies the content from one pointer to the other
 		  }
 		}
 		for(i=start;i<=(2*NSP);i++)
@@ -127,7 +127,12 @@ int SurfaceMeshFunc::initialize_micro(string filename, int zID)
 			row = ((i+shift-1)/xDim)%yDim;
 			plane = (i+shift-1)/(xDim*yDim);
 			point[i].grainname = tgrainname;
-			if(col == 0 || col == (xDim-1) || row == 0 || row == (yDim-1) || plane == 0 || plane == (zDim-1)) point[i].grainname = -3;
+			if(col == 0 || col == (xDim-1)
+			    || row == 0 || row == (yDim-1)
+			    || plane == 0 || plane == (zDim-1))
+			  {
+			    point[i].grainname = -3;
+			  }
 		}
 		point[0].grainname = 0; // Point 0 is a garbage...
 	}
@@ -2889,13 +2894,13 @@ void SurfaceMeshFunc::get_output_nodes(int zID, int cNodeID, string NodesFile)
   if(zID > 0) outFile.open(NodesFile.c_str(), ios::app);
   for (k = 0; k < (7*2*NSP); k++)
   {
-	tID = cVertex[k].NodeID;
+	  tID = cVertex[k].NodeID;
     if (tID > cNodeID-1)
     {
-		nk = cVertex[k].nodeKind;
-		x = cVertex[k].xc;
-		y = cVertex[k].yc;
-		z = cVertex[k].zc;
+      nk = cVertex[k].nodeKind;
+      x = cVertex[k].xc;
+      y = cVertex[k].yc;
+      z = cVertex[k].zc;
 	    outFile << tID << "	" << nk << "	" << x << "	" << y << "	" << z << endl;
     }
   }
@@ -2944,7 +2949,7 @@ void SurfaceMeshFunc::create_vtk (int nNodes, int nTriangles, string Visualizati
 	ifstream inputFile2;
 	inputFile2.open(TrianglesFile.c_str());
 	outFile << "# vtk DataFile Version 2.0" << endl;
-	outFile << "data set from FFT2dx_GB" << endl;
+	outFile << "AIMRepresentation Surface Mesh Generation" << endl;
 	outFile << "ASCII" << endl;
 	outFile << "DATASET UNSTRUCTURED_GRID" << endl;
 	outFile << endl;
