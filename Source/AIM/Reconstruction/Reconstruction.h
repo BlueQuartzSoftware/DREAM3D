@@ -18,7 +18,7 @@
 
 
 #include <MXA/Common/MXASetGetMacros.h>
-#include <MXA/Common/MXATypes.h>
+#include <MXA/MXATypes.h>
 #include <AIM/Common/Constants.h>
 #include <AIM/Common/ReconstructionFunc.h>
 
@@ -63,28 +63,28 @@ Q_OBJECT
     virtual ~Reconstruction();
 
 
-    MXA_INSTANCE_STRING_PROPERTY(InputDirectory, m_InputDirectory)
-    MXA_INSTANCE_STRING_PROPERTY(OutputDirectory, m_OutputDirectory)
-    MXA_INSTANCE_STRING_PROPERTY(AngFilePrefix, m_AngFilePrefix)
-    MXA_INSTANCE_PROPERTY_m(int, AngSeriesMaxSlice)
-    MXA_INSTANCE_PROPERTY_m(int, ZStartIndex)
-    MXA_INSTANCE_PROPERTY_m(int, ZEndIndex)
-    MXA_INSTANCE_PROPERTY_m(double, ZResolution)
-    MXA_INSTANCE_PROPERTY_m(bool, MergeTwins)
-    MXA_INSTANCE_PROPERTY_m(bool, MergeColonies)
-    MXA_INSTANCE_PROPERTY_m(int32, MinAllowedGrainSize)
-    MXA_INSTANCE_PROPERTY_m(double, MinSeedConfidence)
-    MXA_INSTANCE_PROPERTY_m(double, DownSampleFactor)
-    MXA_INSTANCE_PROPERTY_m(double, MinSeedImageQuality)
-    MXA_INSTANCE_PROPERTY_m(double, MisorientationTolerance)
-    MXA_INSTANCE_PROPERTY_m(AIM::Representation::CrystalStructure, CrystalStructure)
-    MXA_INSTANCE_PROPERTY_m(AIM::Representation::AlignmentMethod, AlignmentMethod)
-    MXA_INSTANCE_PROPERTY_m(bool, AlreadyFormed)
-    MXA_INSTANCE_PROPERTY_m(bool, IPFoutputoption)
-    MXA_INSTANCE_PROPERTY_m(bool, Disorientationoutputoption)
-    MXA_INSTANCE_PROPERTY_m(bool, ImageQualityoutputoption)
-    MXA_INSTANCE_PROPERTY_m(bool, SchmidFactoroutputoption)
-    MXA_INSTANCE_PROPERTY_m(int, ErrorCondition);
+    MXA_INSTANCE_STRING_PROPERTY(InputDirectory)
+    MXA_INSTANCE_STRING_PROPERTY(OutputDirectory)
+    MXA_INSTANCE_STRING_PROPERTY(AngFilePrefix)
+    MXA_INSTANCE_PROPERTY(int, AngSeriesMaxSlice)
+    MXA_INSTANCE_PROPERTY(int, ZStartIndex)
+    MXA_INSTANCE_PROPERTY(int, ZEndIndex)
+    MXA_INSTANCE_PROPERTY(double, ZResolution)
+    MXA_INSTANCE_PROPERTY(bool, MergeTwins)
+    MXA_INSTANCE_PROPERTY(bool, MergeColonies)
+    MXA_INSTANCE_PROPERTY(int32_t, MinAllowedGrainSize)
+    MXA_INSTANCE_PROPERTY(double, MinSeedConfidence)
+    MXA_INSTANCE_PROPERTY(double, DownSampleFactor)
+    MXA_INSTANCE_PROPERTY(double, MinSeedImageQuality)
+    MXA_INSTANCE_PROPERTY(double, MisorientationTolerance)
+    MXA_INSTANCE_PROPERTY(AIM::Representation::CrystalStructure, CrystalStructure)
+    MXA_INSTANCE_PROPERTY(AIM::Representation::AlignmentMethod, AlignmentMethod)
+    MXA_INSTANCE_PROPERTY(bool, AlreadyFormed)
+    MXA_INSTANCE_PROPERTY(bool, IPFoutputoption)
+    MXA_INSTANCE_PROPERTY(bool, Disorientationoutputoption)
+    MXA_INSTANCE_PROPERTY(bool, ImageQualityoutputoption)
+    MXA_INSTANCE_PROPERTY(bool, SchmidFactoroutputoption)
+    MXA_INSTANCE_PROPERTY(int, ErrorCondition);
 
     void parseAngFile();
 
@@ -100,7 +100,7 @@ Q_OBJECT
     /**
      * @brief Cancel the operation
      */
-    MXA_INSTANCE_PROPERTY_m(bool, Cancel);
+    MXA_INSTANCE_PROPERTY(bool, Cancel);
 
     /**
      * Qt Signals for connections

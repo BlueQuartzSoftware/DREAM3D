@@ -113,9 +113,9 @@ void Reconstruction::run()
 void Reconstruction::compute()
 {
 //  std::cout << "Reconstruction::compute" << std::endl;
-  int32 sliceCount = 1;
-  int32 width = 0;
-  int32 totalSlices = m_AngSeriesMaxSlice;
+  int32_t sliceCount = 1;
+  int32_t width = 0;
+  int32_t totalSlices = m_AngSeriesMaxSlice;
   while (sliceCount < totalSlices)
   {
     ++width;
@@ -137,8 +137,8 @@ void Reconstruction::compute()
   m->initialize(m_ZStartIndex, m_ZEndIndex, m_ZResolution, m_MergeTwins, m_MergeColonies, m_MinAllowedGrainSize,
 	                   m_MinSeedConfidence, m_DownSampleFactor, m_MinSeedImageQuality, m_MisorientationTolerance, m_CrystalStructure, m_AlignmentMethod, m_AlreadyFormed);
 
-  int32 mindiameter = 100000;
-  int32 maxdiameter = 0;
+  int32_t mindiameter = 100000;
+  int32_t maxdiameter = 0;
   double quat_symmcubic[24][5] = {
 	  {0.000000000, 0.000000000, 0.000000000, 0.000000000, 1.000000000},
 	  {0.000000000, 1.000000000, 0.000000000, 0.000000000, 0.000000000},

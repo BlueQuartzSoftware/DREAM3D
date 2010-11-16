@@ -104,9 +104,9 @@ AngFileReader::~AngFileReader()
 // -----------------------------------------------------------------------------
 //  Import the ANG data from the File
 // -----------------------------------------------------------------------------
-int32 AngFileReader::readFile(std::string angFilename, int header)  
+int32_t AngFileReader::readFile(std::string angFilename, int header)
 {
-  int32 err = 0;
+  int32_t err = 0;
 
   const unsigned int size ( 1024 );
   char buf [ size ];
@@ -135,7 +135,7 @@ int32 AngFileReader::readFile(std::string angFilename, int header)
   }
 
   //--Allocate the vectors to hold all the data
-  uint32 dataSize = _nrows * _ncols_even;
+  uint32_t dataSize = _nrows * _ncols_even;
   _phi1 = AIMArray<float>::New();
   _phi = AIMArray<float>::New();
   _phi2 = AIMArray<float>::New();
@@ -155,7 +155,7 @@ int32 AngFileReader::readFile(std::string angFilename, int header)
   m_Y->allocateArray(dataSize);
 
   this->_readData(buf, 0); // Read what is in the buffer...
-  uint32 i;
+  uint32_t i;
   for (i = 1; i < dataSize; ++i) {
     if (in.eof()) { break;}
     in.getline(buf, size);
@@ -235,7 +235,7 @@ void AngFileReader::_readHeader( const std::string& line )
 // -----------------------------------------------------------------------------
 //  Read the data part of the ANG file
 // -----------------------------------------------------------------------------
-void AngFileReader::_readData( const std::string &line, uint32 index )
+void AngFileReader::_readData( const std::string &line, uint32_t index )
 {
 #if 0
   std::istringstream in ( line );
@@ -267,9 +267,9 @@ void AngFileReader::_readData( const std::string &line, uint32 index )
   float xMaxIndex = (_ncols_odd - 1);
   // Now figure out the correct offset into the array to set all the values
 
-  int32 xspot = int(double(x/_xstep)+0.5);
-  int32 yspot = int(double(y/_ystep)+0.5);
-  int32 offset = (yspot*_ncols_odd) + (xMaxIndex-xspot);
+  int32_t xspot = int(double(x/_xstep)+0.5);
+  int32_t yspot = int(double(y/_ystep)+0.5);
+  int32_t offset = (yspot*_ncols_odd) + (xMaxIndex-xspot);
 
   p1 = p1 - 1.5707f;
   if (p1 < 0) { p1 = p1 + 6.283f; }

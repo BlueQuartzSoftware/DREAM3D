@@ -24,7 +24,7 @@
 #endif
 
 
-#include <MXA/Common/MXATypes.h>
+#include <MXA/MXATypes.h>
 
 /**
 * @class AIMRandomNG AIMRandomNG.h AIM/Common/AIMRandomNG.h
@@ -39,7 +39,7 @@ class AIMRandomNG
     AIMRandomNG();
     virtual ~AIMRandomNG();
 
-    void RandomInit(uint32);
+    void RandomInit(uint32_t);
     double Random();
     double RandBeta(double, double);
     double RandNorm(double, double);

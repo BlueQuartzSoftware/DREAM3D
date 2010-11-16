@@ -17,7 +17,7 @@
 
 
 //-- MXA Includes
-#include <MXA/Common/MXATypes.h>
+#include <MXA/MXATypes.h>
 #include <MXA/Common/MXASetGetMacros.h>
 #include <AIM/Common/AIMArray.hpp>
 
@@ -51,7 +51,7 @@ public:
  * @param filename
  * @return Error Condition. Negative is error.
  */
-  int32 readFile(std::string filename, int header);
+  int32_t readFile(std::string filename, int header);
 
   float32 getTEMpixPerum() { return _tem_pixperum;}
   float32 getXStar() { return _xStar;}
@@ -70,9 +70,9 @@ public:
   std::string getGrid() { return _grid; }
   float32 getXStep() { return _xstep; }
   float32 getYStep() { return _ystep; }
-  int32 getNumOddCols() { return _ncols_odd;}
-  int32 getNumEvenCols()  { return _ncols_even;}
-  int32 getNumRows() { return _nrows;}
+  int32_t getNumOddCols() { return _ncols_odd;}
+  int32_t getNumEvenCols()  { return _ncols_even;}
+  int32_t getNumRows() { return _nrows;}
   std::string getOIMOperator() { return _oimOperator;}
   std::string getSampleID() { return _sampleid;}
   std::string getScanID() { return _scanid;}
@@ -90,7 +90,7 @@ public:
 protected:
   AngFileReader();
   void _readHeader( const std::string& line );
-  void _readData( const std::string& line, uint32 index);
+  void _readData( const std::string& line, uint32_t index);
 
 private:
 
@@ -114,9 +114,9 @@ private:
   std::string _grid;
   float32 _xstep;
   float32 _ystep;
-  int32 _ncols_odd;
-  int32 _ncols_even;
-  int32 _nrows;
+  int32_t _ncols_odd;
+  int32_t _ncols_even;
+  int32_t _nrows;
 
   std::string _oimOperator;
   std::string _sampleid;

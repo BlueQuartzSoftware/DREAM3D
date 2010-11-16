@@ -18,7 +18,7 @@
 
 
 #include <MXA/Common/MXASetGetMacros.h>
-#include <MXA/Common/MXATypes.h>
+#include <MXA/MXATypes.h>
 #include <string>
 
 namespace Ang {
@@ -38,15 +38,15 @@ class AngDirectoryPatterns
     MXA_TYPE_MACRO(AngDirectoryPatterns)
     static Pointer New(const std::string &parentDirectory,
                        const std::string &fileprefix,
-                       int32 width);
+                       int32_t width);
 
     virtual ~AngDirectoryPatterns();
 
-    MXA_INSTANCE_STRING_PROPERTY(ParentDirectory, m_ParentDirectory)
-    MXA_INSTANCE_STRING_PROPERTY(Prefix, m_Prefix)
-    MXA_INSTANCE_STRING_PROPERTY(Suffix, m_Suffix)
-    MXA_INSTANCE_STRING_PROPERTY(Extension, m_Extension)
-    MXA_INSTANCE_PROPERTY_m(int , MaxSlice);
+    MXA_INSTANCE_STRING_PROPERTY(ParentDirectory)
+    MXA_INSTANCE_STRING_PROPERTY(Prefix)
+    MXA_INSTANCE_STRING_PROPERTY(Suffix)
+    MXA_INSTANCE_STRING_PROPERTY(Extension)
+    MXA_INSTANCE_PROPERTY(int32_t, MaxSlice);
 
     std::string generateFullPathAngFileName(int slice);
 

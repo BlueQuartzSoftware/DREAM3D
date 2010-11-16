@@ -13,7 +13,7 @@
 #error REMOVE THE DEFINITION YOU DONT NEED IT ANYMORE
 #endif
 
-#include <MXA/Common/MXATypes.h>
+#include <MXA/MXATypes.h>
 #include <MXA/Common/LogTime.h>
 #include <MXA/Common/MXASetGetMacros.h>
 
@@ -21,8 +21,6 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
-
-#include <boost/noncopyable.hpp>
 
 
 /**
@@ -52,10 +50,10 @@
 
 
 #define CHECK_PRECONDITION( stuff )\
-  if(_isFileBased == false){\
+  if(m_IsFileBased == false){\
     std::cout << stuff; return std::cout;}\
     else {\
-      _out << (stuff);  return _out; }
+      m_OutStream << (stuff);  return m_OutStream; }
 
 
 /**
@@ -66,15 +64,15 @@
 * @date May 22, 2009
 * @version $Revision$
 */
-class MXA_EXPORT MXALogger_Implementation : private boost::noncopyable
+class MXA_EXPORT MXALogger_Implementation
 {
 
   public:
 	  MXALogger_Implementation();
     virtual ~MXALogger_Implementation();
 
-    MXA_INSTANCE_PROPERTY(bool, IsFileBased, _isFileBased)
-    MXA_INSTANCE_STRING_PROPERTY(FileName, _fileName)
+    MXA_INSTANCE_PROPERTY(bool, IsFileBased)
+    MXA_INSTANCE_STRING_PROPERTY(FileName)
 
     bool open(const std::string &fn, std::ios::openmode mode = std::ios::trunc);
     bool close();
@@ -82,20 +80,20 @@ class MXA_EXPORT MXALogger_Implementation : private boost::noncopyable
     std::ostream& dateTime() { CHECK_PRECONDITION(logTime()) }
     std::ostream& warn() { CHECK_PRECONDITION("[Warning] ")}
     std::ostream& error() { CHECK_PRECONDITION("[Error] ")}
-    std::ostream& operator<<(uint8 v) { CHECK_PRECONDITION(v) }
-    std::ostream& operator<<(int8 v) { CHECK_PRECONDITION(v) }
-    std::ostream& operator<<(uint16 v) { CHECK_PRECONDITION(v) }
-    std::ostream& operator<<(uint32 v) { CHECK_PRECONDITION(v) }
-    std::ostream& operator<<(int32 v) { CHECK_PRECONDITION(v) }
-    std::ostream& operator<<(uint64 v) { CHECK_PRECONDITION(v) }
-    std::ostream& operator<<(int64 v) { CHECK_PRECONDITION(v) }
+    std::ostream& operator<<(uint8_t v) { CHECK_PRECONDITION(v) }
+    std::ostream& operator<<(int8_t v) { CHECK_PRECONDITION(v) }
+    std::ostream& operator<<(uint16_t v) { CHECK_PRECONDITION(v) }
+    std::ostream& operator<<(uint32_t v) { CHECK_PRECONDITION(v) }
+    std::ostream& operator<<(int32_t v) { CHECK_PRECONDITION(v) }
+    std::ostream& operator<<(uint64_t v) { CHECK_PRECONDITION(v) }
+    std::ostream& operator<<(int64_t v) { CHECK_PRECONDITION(v) }
     std::ostream& operator<<(double v)  { CHECK_PRECONDITION(v) }
     std::ostream& operator<<(const std::string &v) { CHECK_PRECONDITION(v) }
     std::ostream& operator<<(const char* v) { CHECK_PRECONDITION(v) }
 
   private:
-    std::ofstream _out;
-
+    std::ofstream m_OutStream;
+    MXALogger_Implementation(const MXALogger_Implementation&);   //Copy Constructor Not Implemented
     void operator=(const MXALogger_Implementation&);  // Operator '=' Not Implemented
 
 };

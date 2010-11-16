@@ -10,7 +10,7 @@
 #--////////////////////////////////////////////////////////////////////////////
 # set project's name
 PROJECT( SurfaceMesh )
-cmake_minimum_required(VERSION 2.6)
+cmake_minimum_required(VERSION 2.8)
 
 
 # ---------- Setup output Directories -------------------------
@@ -41,7 +41,7 @@ set (SurfaceMesh_SRCS
 set (SurfaceMesh_HDRS
     ${SurfaceMesh_SOURCE_DIR}/SurfaceMesh.h
 )
-IDE_SOURCE_PROPERTIES( "AIM/SurfaceMesh" "Source/AIM/SurfaceMesh" "${SurfaceMesh_HDRS};${SurfaceMesh_SRCS}")
+cmp_IDE_SOURCE_PROPERTIES( "AIM/SurfaceMesh" "Source/AIM/SurfaceMesh" "${SurfaceMesh_HDRS};${SurfaceMesh_SRCS}" ${CMP_INSTALL_FILES})
                       
 set (Project_SRCS
     ${SurfaceMesh_SRCS}
@@ -51,9 +51,9 @@ set (Project_SRCS
 
 add_executable(SurfaceMesh ${Project_SRCS} )
 target_link_libraries(SurfaceMesh 
-                        MXA
+                        MXADataModel
                         AIMCommon
                         ${Boost_PROGRAM_OPTIONS_LIBRARY} )
-ToolInstallationSupport(SurfaceMesh "${EXE_DEBUG_EXTENSION}" ${AIMRepresentation_BINARY_DIR} )
+cmp_ToolInstallationSupport(SurfaceMesh "${EXE_DEBUG_EXTENSION}" ${SurfaceMesh_BINARY_DIR} )
 
 

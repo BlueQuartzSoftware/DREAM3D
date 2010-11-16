@@ -30,7 +30,7 @@
 #include <algorithm>
 #include <numeric>
 
-#include <MXA/Common/MXATypes.h>
+#include <MXA/MXATypes.h>
 #include <MXA/Common/MXASetGetMacros.h>
 
 #include <AIM/Common/Grain.h>
@@ -53,7 +53,7 @@ public:
 
     MXA_SHARED_POINTERS(ReconstructionFunc)
     MXA_STATIC_NEW_MACRO(ReconstructionFunc)
-    MXA_INSTANCE_PROPERTY_m(AngDirectoryPatterns::Pointer, DirectoryPattern);
+    MXA_INSTANCE_PROPERTY(AngDirectoryPatterns::Pointer, DirectoryPattern);
 
 
   virtual ~ReconstructionFunc();

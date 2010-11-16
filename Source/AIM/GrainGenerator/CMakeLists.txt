@@ -10,7 +10,7 @@
 #--////////////////////////////////////////////////////////////////////////////
 # set project's name
 PROJECT( GrainGenerator )
-cmake_minimum_required(VERSION 2.6)
+cmake_minimum_required(VERSION 2.8)
 
 
 # ---------- Setup output Directories -------------------------
@@ -44,7 +44,7 @@ set (GrainGenerator_SRCS
 set (GrainGenerator_HDRS 
     ${GrainGenerator_SOURCE_DIR}/GrainGenerator.h
 )
-IDE_SOURCE_PROPERTIES( "Source/AIM/GrainGenerator" "${GrainGenerator_HDRS}" "${GrainGenerator_SRCS}")
+cmp_IDE_SOURCE_PROPERTIES( "Source/AIM/GrainGenerator" "${GrainGenerator_HDRS}" "${GrainGenerator_SRCS}" ${CMP_INSTALL_FILES} )
 
 set (PROJECT_SRCS
     ${GrainGenerator_SRCS}
@@ -54,9 +54,9 @@ set (PROJECT_SRCS
 
 ADD_EXECUTABLE ( GrainGenerator  ${PROJECT_SRCS} )
 target_link_libraries(GrainGenerator 
-                        MXA
+                        MXADataModel
                         AIMCommon 
                         ${Boost_PROGRAM_OPTIONS_LIBRARY} )
-ToolInstallationSupport(GrainGenerator "${EXE_DEBUG_EXTENSION}" ${AIMRepresentation_BINARY_DIR} )
+cmp_ToolInstallationSupport(GrainGenerator "${EXE_DEBUG_EXTENSION}" ${GrainGenerator_BINARY_DIR} )
     
     
