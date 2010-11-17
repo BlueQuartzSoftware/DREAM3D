@@ -4348,7 +4348,7 @@ void ReconstructionFunc::write_graindata(string gdata)
 }
 
 //TODO: Convert this to HDF5 format
-void ReconstructionFunc::write_grains(double quat_symmcubic[24][5],double quat_symmhex[12][5])
+void ReconstructionFunc::write_grains(/* double quat_symmcubic[24][5],double quat_symmhex[12][5] */)
 {
   ofstream outFile;
   char extension[15] = ".vtk";

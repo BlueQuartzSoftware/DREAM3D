@@ -84,9 +84,11 @@ cmp_IDE_SOURCE_PROPERTIES("Source/AIM/Threads" "${AIM_Threads_HDRS}" "${AIM_Thre
 
 SET (Reconstruction_SRCS
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Reconstruction/Reconstruction.cpp
+    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Reconstruction/H5PolyDataWriter.cpp
 )
 SET (Reconstruction_HDRS
    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Reconstruction/Reconstruction.h
+   ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Reconstruction/H5PolyDataWriter.h
     )
 cmp_IDE_SOURCE_PROPERTIES( "Source/AIM/Reconstruction" "${Reconstruction_HDRS}" "${Reconstruction_SRCS}" ${CMP_INSTALL_FILES})
 
@@ -172,8 +174,11 @@ SET (Representation_PROJECT_SRCS
 )
 
 
-include_directories( ${Representation_BINARY_DIR} )
+
 include_directories(${PROJECT_CODE_DIR})
+include_directories(${HDF5_INCLUDE_DIR})
+include_directories( ${Representation_BINARY_DIR} )
+
 #-- Set up OS X Application Bundle properties
 #-- This file have tools for OS X Bunlde creation and configuration
 INCLUDE (${CMP_OSX_TOOLS_SOURCE_DIR}/OSX_BundleTools.cmake)
@@ -198,6 +203,7 @@ cmp_IDE_SOURCE_PROPERTIES ("ConfiguredFiles" "${AIMRepresentation_BINARY_DIR}/AI
 # ---------- Build the Viewer Application  ----------------------
 ADD_EXECUTABLE( ${PROJECT_NAME} ${GUI_TYPE} ${Representation_PROJECT_SRCS} )
 TARGET_LINK_LIBRARIES( ${PROJECT_NAME}
+                        ${HDF5_LIBRARIES} 
                         MXADataModel
                         AIMCommon
                         ${QT_LIBRARIES}  )
