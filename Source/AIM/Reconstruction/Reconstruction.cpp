@@ -14,6 +14,8 @@
 #include <AIM/ANG/AngDirectoryPatterns.h>
 #include <AIM/ANG/AngFileReader.h>
 #include <AIM/ANG/AngFileHelper.h>
+#include <AIM/Reconstruction/H5PolyDataWriter.h>
+
 #include <MXA/Utilities/MXADir.h>
 
 
@@ -191,7 +193,7 @@ void Reconstruction::compute()
   std::string axisFile = m_OutputDirectory + MXADir::Separator + AIM::Representation::AxisOrientationsFile;
   std::string graindataFile = m_OutputDirectory + MXADir::Separator + AIM::Representation::graindataFile;
   std::string eulerFile = m_OutputDirectory + MXADir::Separator + AIM::Representation::EulerAnglesFile;
-
+  std::string hdf5GrainFile = m_OutputDirectory + MXADir::Separator + AIM::Representation::HDF5GrainFile;
   if (m_AlreadyFormed == true)
   {
     // Sanity Check the the Reconstruction File does exist in the output directory
@@ -358,7 +360,9 @@ void Reconstruction::compute()
 
   CHECK_FOR_CANCELED(ReconstructionFunc)
   progressMessage(AIM_STRING("Writing Out Grains"), 94);
-  m->write_grains(quat_symmcubic, quat_symmhex);
+ // m->write_grains( /* quat_symmcubic, quat_symmhex */);
+  H5PolyDataWriter::Pointer grainWriter = H5PolyDataWriter::New();
+  grainWriter->writePolyData(hdf5GrainFile, m.get(), false);
 
   CHECK_FOR_CANCELED(ReconstructionFunc)
   progressMessage(AIM_STRING("Writing Grain Data"), 96);

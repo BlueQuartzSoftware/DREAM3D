@@ -54,10 +54,13 @@ set (PROJECT_SRCS
     ${ANG_SRCS}
     ${ANG_HDRS}
     )
+    
+include_directories(${HDF5_INCLUDE_DIR})
 
 ADD_EXECUTABLE ( Reconstruction  ${PROJECT_SRCS} )
-target_link_libraries(Reconstruction 
+target_link_libraries(Reconstruction
+                        ${HDF5_LIBRARIES} 
                         MXADataModel
                         AIMCommon
-                        ${Boost_PROGRAM_OPTIONS_LIBRARY} )
+                         )
 cmp_ToolInstallationSupport(Reconstruction "${EXE_DEBUG_EXTENSION}" ${Reconstruction_BINARY_DIR} )
