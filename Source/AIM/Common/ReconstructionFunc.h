@@ -127,7 +127,9 @@ public:
 
     void initialize(int, int, double, bool, bool, int, double, double, double, double, int, int, bool);
 	void loadSlices();
-	void align_sections(double quat_symmcubic[24][5],double quat_symmhex[12][5]);
+	void align_sections(const std::string &filename,
+                      double quat_symmcubic[24][5],
+                      double quat_symmhex[12][5]);
 	void find_border();
 	int form_grains(double quat_symmcubic[24][5],double quat_symmhex[12][5]);
 	void form_grains_sections(double quat_symmcubic[24][5],double quat_symmhex[12][5]);

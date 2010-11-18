@@ -39,7 +39,8 @@ namespace AIM
     const std::string AxisOrientationsFile("Reconstruction_AxisODF.txt");//14
     const std::string graindataFile("Reconstruction_GrainData.txt");//14
     const std::string EulerAnglesFile("Reconstruction_ODF.txt");//15
-    const std::string HDF5GrainFile("Reconstruction_Grains.h5p");
+    const std::string HDF5GrainFile("Reconstruction_Grains.h5u");
+    const std::string AlignmentFile("Reconstruction_Alignment.txt");
 
     enum CrystalStructure {
         UnknownCrystalStructure = 0,

@@ -132,6 +132,16 @@ Q_OBJECT
     Reconstruction();
 #endif
 
+    /**
+     * @brief
+     * @param hdfFile
+     * @param r
+     * @return
+     */
+    int writeHDF5GrainsFile(const std::string &hdfFile,
+                                              ReconstructionFunc::Pointer r);
+
+
   private:
     ReconstructionFunc::Pointer m;
 

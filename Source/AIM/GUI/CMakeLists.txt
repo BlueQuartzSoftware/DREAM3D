@@ -84,11 +84,11 @@ cmp_IDE_SOURCE_PROPERTIES("Source/AIM/Threads" "${AIM_Threads_HDRS}" "${AIM_Thre
 
 SET (Reconstruction_SRCS
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Reconstruction/Reconstruction.cpp
-    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Reconstruction/H5PolyDataWriter.cpp
+    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Reconstruction/AIMH5DataWriter.cpp
 )
 SET (Reconstruction_HDRS
    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Reconstruction/Reconstruction.h
-   ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Reconstruction/H5PolyDataWriter.h
+   ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Reconstruction/AIMH5DataWriter.h
     )
 cmp_IDE_SOURCE_PROPERTIES( "Source/AIM/Reconstruction" "${Reconstruction_HDRS}" "${Reconstruction_SRCS}" ${CMP_INSTALL_FILES})
 

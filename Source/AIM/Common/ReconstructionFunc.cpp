@@ -284,9 +284,15 @@ void ReconstructionFunc::find_border()
 	  grains[0].voxellist->swap(voxelslist);
   }
 }
-void ReconstructionFunc::align_sections(double quat_symmcubic[24][5],double quat_symmhex[12][5])
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ReconstructionFunc::align_sections(const std::string &filename,
+                                        double quat_symmcubic[24][5],
+                                        double quat_symmhex[12][5])
 {
-  string filename = "alignment.txt";
+
   ofstream outFile;
   outFile.open(filename.c_str());
   double disorientation = 0;
