@@ -183,6 +183,9 @@ static std::string HDFTypeForPrimitiveAsStr(T value)
   if (typeid(value) == typeid(int8_t)) return "H5T_NATIVE_INT8";
   if (typeid(value) == typeid(uint8_t)) return "H5T_NATIVE_UINT8";
 
+  if (typeid(value) == typeid(signed char)) return "H5T_NATIVE_INT8";
+  if (typeid(value) == typeid(unsigned char)) return "H5T_NATIVE_UINT8";
+
   if (typeid(value) == typeid(int16_t)) return "H5T_NATIVE_INT16";
   if (typeid(value) == typeid(uint16_t)) return "H5T_NATIVE_UINT16";
 
@@ -217,6 +220,11 @@ static hid_t HDFTypeForPrimitive(T value)
   if (typeid(value) == typeid(int8_t)) return H5T_NATIVE_INT8;
   if (typeid(value) == typeid(uint8_t)) return H5T_NATIVE_UINT8;
 
+
+  if (typeid(value) == typeid(signed char)) return H5T_NATIVE_INT8;
+  if (typeid(value) == typeid(unsigned char)) return H5T_NATIVE_UINT8;
+
+
   if (typeid(value) == typeid(int16_t)) return H5T_NATIVE_INT16;
   if (typeid(value) == typeid(uint16_t)) return H5T_NATIVE_UINT16;
 
@@ -232,6 +240,10 @@ static hid_t HDFTypeForPrimitive(T value)
   const char* name = typeid(value).name();
   if (NULL != name && name[0] == 'l' ) {
     std::cout << "You are using 'long int' as a type which is not 32/64 bit safe. Suggest you use one of the MXATypes defined in <Common/MXATypes.h> such as int32_t or uint32_t." << std::endl;
+  }
+  if (NULL != name && name[0] == 'm') {
+    std::cout << "You are using 'long unsigned int' as a type which is not 32/64 bit safe. Suggest you use one of the MXATypes defined in <Common/MXATypes.h> such as int32_t or uint32_t." << std::endl;
+
   }
   return -1;
 }

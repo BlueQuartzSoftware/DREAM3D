@@ -37,11 +37,11 @@ SET (CMAKE_ARCHIVE_OUTPUT_DIRECTORY
 SET (Reconstruction_SRCS
     ${Reconstruction_SOURCE_DIR}/main.cpp
     ${Reconstruction_SOURCE_DIR}/Reconstruction.cpp
-    ${Reconstruction_SOURCE_DIR}/H5PolyDataWriter.cpp
+    ${Reconstruction_SOURCE_DIR}/AIMH5DataWriter.cpp
 )
 SET (Reconstruction_HDRS
     ${Reconstruction_SOURCE_DIR}/Reconstruction.h
-    ${Reconstruction_SOURCE_DIR}/H5PolyDataWriter.h
+    ${Reconstruction_SOURCE_DIR}/AIMH5DataWriter.h
     )
 cmp_IDE_SOURCE_PROPERTIES( "Source/AIM/Reconstruction" "${Reconstruction_HDRS}" "${Reconstruction_SRCS}" ${CMP_INSTALL_FILES})
 

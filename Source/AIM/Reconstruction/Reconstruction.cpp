@@ -11,12 +11,15 @@
 
 #include "Reconstruction.h"
 
-#include <AIM/ANG/AngDirectoryPatterns.h>
-#include <AIM/ANG/AngFileReader.h>
-#include <AIM/ANG/AngFileHelper.h>
-#include <AIM/Reconstruction/H5PolyDataWriter.h>
+#include "MXA/MXATypes.h"
+#include "MXA/Utilities/MXADir.h"
 
-#include <MXA/Utilities/MXADir.h>
+#include "AIM/ANG/AngDirectoryPatterns.h"
+#include "AIM/ANG/AngFileReader.h"
+#include "AIM/ANG/AngFileHelper.h"
+#include "AIMH5DataWriter.h"
+
+
 
 
 #ifdef AIM_USE_QT
@@ -32,6 +35,9 @@
 #define CHECK_FOR_CANCELED(AClass)\
     ;
 #endif
+
+
+
 
 
 #if AIM_USE_QT
@@ -194,6 +200,8 @@ void Reconstruction::compute()
   std::string graindataFile = m_OutputDirectory + MXADir::Separator + AIM::Representation::graindataFile;
   std::string eulerFile = m_OutputDirectory + MXADir::Separator + AIM::Representation::EulerAnglesFile;
   std::string hdf5GrainFile = m_OutputDirectory + MXADir::Separator + AIM::Representation::HDF5GrainFile;
+  std::string alignmentFile = m_OutputDirectory + MXADir::Separator + AIM::Representation::AlignmentFile;
+
   if (m_AlreadyFormed == true)
   {
     // Sanity Check the the Reconstruction File does exist in the output directory
@@ -238,14 +246,14 @@ void Reconstruction::compute()
 
 	CHECK_FOR_CANCELED(ReconstructionFunc)
 	progressMessage(AIM_STRING("Aligning Slices"), 14 );
-	m->align_sections(quat_symmcubic, quat_symmhex);
+	m->align_sections(alignmentFile, quat_symmcubic, quat_symmhex);
 
-    if(m_AlignmentMethod == 3)
-    {
-	  CHECK_FOR_CANCELED(ReconstructionFunc)
-	  progressMessage(AIM_STRING("Redefining Border"), 16 );
-	  m->find_border();
-    }
+  if (m_AlignmentMethod == 3)
+  {
+    CHECK_FOR_CANCELED(ReconstructionFunc)
+    progressMessage(AIM_STRING("Redefining Border"), 16);
+    m->find_border();
+  }
 
     CHECK_FOR_CANCELED(ReconstructionFunc)
     progressMessage(AIM_STRING("Forming Macro-Grains"), 19);
@@ -361,8 +369,7 @@ void Reconstruction::compute()
   CHECK_FOR_CANCELED(ReconstructionFunc)
   progressMessage(AIM_STRING("Writing Out Grains"), 94);
  // m->write_grains( /* quat_symmcubic, quat_symmhex */);
-  H5PolyDataWriter::Pointer grainWriter = H5PolyDataWriter::New();
-  grainWriter->writePolyData(hdf5GrainFile, m.get(), false);
+  writeHDF5GrainsFile(hdf5GrainFile, m);
 
   CHECK_FOR_CANCELED(ReconstructionFunc)
   progressMessage(AIM_STRING("Writing Grain Data"), 96);
@@ -412,3 +419,281 @@ void Reconstruction::on_CancelWorker()
 }
 #endif
 
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int Reconstruction::writeHDF5GrainsFile(const std::string &hdfFile,
+                                          ReconstructionFunc::Pointer r)
+{
+  AIMH5DataWriter::Pointer h5writer = AIMH5DataWriter::New();
+  h5writer->setFileName(hdfFile);
+  int err = h5writer->openFile(false); // Open a new file over writing any other file
+
+  std::stringstream ss;
+  std::string hdfPath;
+  for (int i = 1; i < r->numgrains; i++)
+  {
+    vector<int>* vlist = r->grains[i].voxellist;
+    int vid = vlist->at(0);
+    ss.str("");
+    ss << "/" << i;
+    hdfPath = ss.str();
+    err = h5writer->createGroup(hdfPath, H5_VTK_UNSTRUCTURED_GRID);
+    err = h5writer->openGroup(hdfPath);
+
+    vector<int> plist(((r->xpoints + 1) * (r->ypoints + 1) * (r->zpoints + 1)), 0);
+    int pcount = 0;
+    int ocol, orow, oplane;
+    int col, row, plane;
+    int pid;
+    int err = 0;
+    // outFile << "POINTS " << pcount << " float" << endl;
+    std::vector<float> points;
+  //  points.reserve(8*vlist->size());
+
+    std::vector<int32_t> cells;
+   // cells.reserve(vlist->size() * 9);
+
+    std::vector<float> kernelAvgDisorientation(vlist->size());
+    std::vector<float> grainAvgDisorientation(vlist->size());
+    std::vector<float> imageQuality(vlist->size());
+    std::vector<float> schmidFactor(1);
+
+    std::vector<int32_t> grainName(1);
+
+
+    pcount = 0;
+    plist.clear();
+    plist.resize(((r->xpoints + 1) * (r->ypoints + 1) * (r->zpoints + 1)), 0);
+    for (std::vector<int>::size_type j = 0; j < vlist->size(); j++)
+    {
+      vid = vlist->at(j);
+      ocol = vid % r->xpoints;
+      orow = (vid / r->xpoints) % r->ypoints;
+      oplane = vid / (r->xpoints * r->ypoints);
+      cells.push_back(8);
+      for (int k = 0; k < 8; k++)
+      {
+        if (k == 0) col = ocol, row = orow, plane = oplane;
+        if (k == 1) col = ocol + 1, row = orow, plane = oplane;
+        if (k == 2) col = ocol, row = orow + 1, plane = oplane;
+        if (k == 3) col = ocol + 1, row = orow + 1, plane = oplane;
+        if (k == 4) col = ocol, row = orow, plane = oplane + 1;
+        if (k == 5) col = ocol + 1, row = orow, plane = oplane + 1;
+        if (k == 6) col = ocol, row = orow + 1, plane = oplane + 1;
+        if (k == 7) col = ocol + 1, row = orow + 1, plane = oplane + 1;
+        pid = (plane * (r->xpoints + 1) * (r->ypoints + 1)) + (row * (r->xpoints + 1)) + col;
+        if (plist[pid] == 0)
+        {
+          plist[pid] = pcount;
+          pcount++;
+     //     outFile << (col * r->resx) << "  " << (row * r->resy) << "  " << (plane * r->resz) << endl;
+          points.push_back((col * r->resx));
+          points.push_back( (row * r->resy));
+          points.push_back((plane * r->resz));
+        }
+        // Add onto our cells vector
+        cells.push_back(plist[pid]);
+      }
+      // Append a grainId to the grainIds vector
+      kernelAvgDisorientation[j] = r->voxels[vid].kernelmisorientation;
+      grainAvgDisorientation[j] = r->voxels[vid].misorientation;
+      imageQuality[j] = r->voxels[vid].imagequality;
+      grainName[0] = r->voxels[vid].grainname;
+    }
+
+    std::vector<int32_t> cell_types(vlist->size(), VTK_CELLTYPE_VOXEL);
+    err = h5writer->writeUnstructuredGrid(points, cells, cell_types);
+    points.resize(0);
+    cells.resize(0);
+    cell_types.resize(0);
+
+
+#if 0
+    //Write the Points
+    err = h5writer->writePoints<float>(points);
+    points.resize(0);
+
+    // WRITE the CELLS
+    err = h5writer->writePolyCells(cells, H5_CELLS, 9);
+    cells.resize(0);
+#endif
+
+
+
+    //Write the Field Data
+
+    err = h5writer->writeFieldData<int>( grainName, "Grain_ID", 1);
+
+    schmidFactor[0] = r->grains[i].schmidfactor;
+    err = h5writer->writeFieldData<float>( schmidFactor, "SchmidFactor", 1);
+
+    // Write CELL_DATA
+    err = h5writer->writeCellData<float>(kernelAvgDisorientation, "KernelAvgDisorientation", 1);
+    err = h5writer->writeCellData<float>(grainAvgDisorientation, "GrainAvgDisorientation", 1);
+    err = h5writer->writeCellData<float>(imageQuality, "ImageQuality", 1);
+
+
+    h5writer->closeCurrentGroup();
+
+  }
+
+  err = h5writer->closeFile();
+
+  return err;
+#if 0
+  ofstream outFile;
+  char extension[15] = ".vtk";
+  char index[5];
+  vector<int >* vlist;
+  vector<int > plist(((r->xpoints + 1) * (r->ypoints + 1) * (r->zpoints + 1)), 0);
+  int pcount = 0;
+  int ocol, orow, oplane;
+  int col, row, plane;
+  int vid, pid;
+  for (int i = 1; i < numgrains; i++)
+  {
+    char filename[15] = "Grain ";
+    sprintf(index, "%5.5d", i);
+    strcat(filename, index);
+    strcat(filename, extension);
+    outFile.open(filename);
+    outFile << "# vtk DataFile Version 2.0" << endl;
+    outFile << "data set from FFT2dx_GB" << endl;
+    outFile << "ASCII" << endl;
+    outFile << "DATASET UNSTRUCTURED_GRID" << endl;
+    vlist = grains[i].voxellist;
+    pcount = 0;
+    for (int j = 0; j < vlist->size(); j++)
+    {
+      vid = vlist->at(j);
+      ocol = vid % xpoints;
+      orow = (vid / xpoints) % ypoints;
+      oplane = vid / (xpoints * ypoints);
+      for (int k = 0; k < 8; k++)
+      {
+        if (k == 0) col = ocol, row = orow, plane = oplane;
+        if (k == 1) col = ocol + 1, row = orow, plane = oplane;
+        if (k == 2) col = ocol, row = orow + 1, plane = oplane;
+        if (k == 3) col = ocol + 1, row = orow + 1, plane = oplane;
+        if (k == 4) col = ocol, row = orow, plane = oplane + 1;
+        if (k == 5) col = ocol + 1, row = orow, plane = oplane + 1;
+        if (k == 6) col = ocol, row = orow + 1, plane = oplane + 1;
+        if (k == 7) col = ocol + 1, row = orow + 1, plane = oplane + 1;
+        pid = (plane * (xpoints + 1) * (ypoints + 1)) + (row * (xpoints + 1)) + col;
+        if (plist[pid] == 0)
+        {
+          plist[pid] = pcount;
+          pcount++;
+        }
+      }
+    }
+    outFile << "POINTS " << pcount << " float" << endl;
+    pcount = 0;
+    plist.clear();
+    plist.resize(((xpoints + 1) * (ypoints + 1) * (zpoints + 1)), 0);
+    for (int j = 0; j < vlist->size(); j++)
+    {
+      vid = vlist->at(j);
+      ocol = vid % xpoints;
+      orow = (vid / xpoints) % ypoints;
+      oplane = vid / (xpoints * ypoints);
+      for (int k = 0; k < 8; k++)
+      {
+        if (k == 0) col = ocol, row = orow, plane = oplane;
+        if (k == 1) col = ocol + 1, row = orow, plane = oplane;
+        if (k == 2) col = ocol, row = orow + 1, plane = oplane;
+        if (k == 3) col = ocol + 1, row = orow + 1, plane = oplane;
+        if (k == 4) col = ocol, row = orow, plane = oplane + 1;
+        if (k == 5) col = ocol + 1, row = orow, plane = oplane + 1;
+        if (k == 6) col = ocol, row = orow + 1, plane = oplane + 1;
+        if (k == 7) col = ocol + 1, row = orow + 1, plane = oplane + 1;
+        pid = (plane * (xpoints + 1) * (ypoints + 1)) + (row * (xpoints + 1)) + col;
+        if (plist[pid] == 0)
+        {
+          plist[pid] = pcount;
+          pcount++;
+          outFile << (col * resx) << "  " << (row * resy) << "  " << (plane * resz) << endl;
+        }
+      }
+    }
+    outFile << endl;
+    outFile << "CELLS " << vlist->size() << " " << vlist->size() * 9 << endl;
+    for (int j = 0; j < vlist->size(); j++)
+    {
+      vid = vlist->at(j);
+      ocol = vid % xpoints;
+      orow = (vid / xpoints) % ypoints;
+      oplane = vid / (xpoints * ypoints);
+      outFile << "8 ";
+      for (int k = 0; k < 8; k++)
+      {
+        if (k == 0) col = ocol, row = orow, plane = oplane;
+        if (k == 1) col = ocol + 1, row = orow, plane = oplane;
+        if (k == 2) col = ocol, row = orow + 1, plane = oplane;
+        if (k == 3) col = ocol + 1, row = orow + 1, plane = oplane;
+        if (k == 4) col = ocol, row = orow, plane = oplane + 1;
+        if (k == 5) col = ocol + 1, row = orow, plane = oplane + 1;
+        if (k == 6) col = ocol, row = orow + 1, plane = oplane + 1;
+        if (k == 7) col = ocol + 1, row = orow + 1, plane = oplane + 1;
+        pid = (plane * (xpoints + 1) * (ypoints + 1)) + (row * (xpoints + 1)) + col;
+        outFile << plist[pid] << "  ";
+      }
+      outFile << endl;
+    }
+    outFile << endl;
+    outFile << "CELL_TYPES " << vlist->size() << endl;
+    for (int j = 0; j < vlist->size(); j++)
+    {
+      outFile << "11" << endl;
+    }
+    outFile << endl;
+    outFile << "CELL_DATA " << vlist->size() << endl;
+    outFile << "SCALARS GrainID int" << endl;
+    outFile << "LOOKUP_TABLE default" << endl;
+    for (int j = 0; j < vlist->size(); j++)
+    {
+      vid = vlist->at(j);
+      outFile << voxels[vid].grainname << endl;
+    }
+    outFile << endl;
+    outFile << "SCALARS KernelAvgDisorientation float" << endl;
+    outFile << "LOOKUP_TABLE default" << endl;
+    for (int j = 0; j < vlist->size(); j++)
+    {
+      vid = vlist->at(j);
+      outFile << voxels[vid].kernelmisorientation << endl;
+    }
+    outFile << endl;
+    outFile << "SCALARS GrainAvgDisorientation float" << endl;
+    outFile << "LOOKUP_TABLE default" << endl;
+    for (int j = 0; j < vlist->size(); j++)
+    {
+      vid = vlist->at(j);
+      outFile << voxels[vid].misorientation << endl;
+    }
+    outFile << endl;
+    outFile << "SCALARS ImageQuality float" << endl;
+    outFile << "LOOKUP_TABLE default" << endl;
+    for (int j = 0; j < vlist->size(); j++)
+    {
+      vid = vlist->at(j);
+      outFile << voxels[vid].imagequality << endl;
+    }
+    outFile << endl;
+    outFile << "SCALARS SchmidFactor float" << endl;
+    outFile << "LOOKUP_TABLE default" << endl;
+    for (int j = 0; j < vlist->size(); j++)
+    {
+      outFile << grains[i].schmidfactor << endl;
+    }
+    outFile.close();
+    plist.clear();
+    plist.resize(((xpoints + 1) * (ypoints + 1) * (zpoints + 1)), 0);
+  }
+#endif
+
+
+}

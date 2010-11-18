@@ -70,9 +70,10 @@ Q_OBJECT
     MXA_INSTANCE_PROPERTY(double, FractionPrecipitates)
     MXA_INSTANCE_PROPERTY(int, OverlapAllowed)
     MXA_INSTANCE_PROPERTY(bool, AlreadyFormed)
+    MXA_INSTANCE_PROPERTY(int, Precipitates)
     MXA_INSTANCE_PROPERTY(int, OverlapAssignment)
     MXA_INSTANCE_PROPERTY(AIM::Representation::CrystalStructure, CrystalStructure)
-    MXA_INSTANCE_PROPERTY(int, Precipitates)
+
     MXA_INSTANCE_PROPERTY(int, ErrorCondition);
 
     /**
