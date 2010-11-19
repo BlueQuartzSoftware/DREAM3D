@@ -11,19 +11,19 @@
 #define AIMARRAY_HPP_
 
 
+#include <string.h>
+#include <iostream>
+
+#include "AIM/Common/AIMCommonConfiguration.h"
 #include <MXA/MXATypes.h>
 #include <MXA/Common/MXASetGetMacros.h>
-
-#include <iostream>
-#include <string.h>
-
 
 #if defined ( AIM_USE_SSE ) && defined ( __SSE2__ )
 #include <mm_malloc.h>
 #endif
 
 template<typename T>
-class AIMArray
+class AIMCOMMON_EXPORT AIMArray
 {
   public:
 

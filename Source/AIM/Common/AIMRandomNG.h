@@ -23,7 +23,7 @@
 #define WIN32_LEAN_AND_MEAN		// Exclude rarely-used stuff from Windows headers
 #endif
 
-
+#include "AIM/Common/AIMCommonConfiguration.h"
 #include <MXA/MXATypes.h>
 
 /**
@@ -33,7 +33,7 @@
 * @date Nov 5, 2009
 * @version 1.0
 */
-class AIMRandomNG
+class AIMCOMMON_EXPORT  AIMRandomNG
 {
   public:
     AIMRandomNG();

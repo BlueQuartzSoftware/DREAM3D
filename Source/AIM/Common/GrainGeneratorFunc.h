@@ -33,6 +33,7 @@
 #include <MXA/MXATypes.h>
 #include <MXA/Common/MXASetGetMacros.h>
 
+#include "AIM/Common/AIMCommonConfiguration.h"
 #include <AIM/Common/Grain.h>
 #include <AIM/Common/Voxel.h>
 #include <AIM/Common/Bin.h>
@@ -45,7 +46,7 @@ using namespace std;
 
 
 
-class GrainGeneratorFunc
+class AIMCOMMON_EXPORT GrainGeneratorFunc
 {
 
 public:

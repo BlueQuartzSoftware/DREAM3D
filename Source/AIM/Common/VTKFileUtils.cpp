@@ -436,10 +436,7 @@ int VTKFileUtils::writeVTKFile(SurfaceMeshFunc* m,
                                 bool binaryFile)
 {
 
-
-
-
-
+int err = -1;
 #if 0
   bool conformalMesh = inputs->conformalMesh;
   bool labelPointData = inputs->labelPointData;
@@ -601,6 +598,6 @@ int VTKFileUtils::writeVTKFile(SurfaceMeshFunc* m,
     }
   }
 #endif
-
+  return err;
 }
 

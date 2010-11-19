@@ -34,6 +34,13 @@ SET (CMAKE_ARCHIVE_OUTPUT_DIRECTORY
   "Single Directory for all static libraries."
   )
 
+SET (AIMCOMMON_BUILT_AS_DYNAMIC_LIB)
+IF (BUILD_SHARED_LIBS)
+    SET (AIMCOMMON_BUILT_AS_DYNAMIC_LIB 1)
+    IF (WIN32)
+        ADD_DEFINITIONS("-DAIMCOMMON_BUILT_AS_DYNAMIC_LIB")
+    ENDIF (WIN32)
+ENDIF (BUILD_SHARED_LIBS)
 
 
 SET (AIMCommon_SRCS
@@ -109,7 +116,10 @@ set (AIMCommon_SRCS
     ${HDF5_HDRS}
     )
 
-    
+configure_file(${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/AIMCommonConfiguration.h.in
+               ${AIMRepresentation_BINARY_DIR}/AIM/Common/AIMCommonConfiguration.h)
+               
+               
 include_directories( ${AIMRepresentation_BINARY_DIR} )
 include_directories( ${PROJECT_CODE_DIR} )
 

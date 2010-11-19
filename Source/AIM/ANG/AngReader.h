@@ -13,6 +13,7 @@
 #include <string>
 #include <map>
 
+#include "AIM/Common/AIMCommonConfiguration.h"
 #include "AngConstants.h"
 #include "AngHeaderEntry.h"
 

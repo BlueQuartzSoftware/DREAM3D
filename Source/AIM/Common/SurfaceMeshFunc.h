@@ -33,6 +33,7 @@
 #include <MXA/MXATypes.h>
 #include <MXA/Common/MXASetGetMacros.h>
 
+#include "AIM/Common/AIMCommonConfiguration.h"
 #include <AIM/Common/Grain.h>
 #include <AIM/Common/Voxel.h>
 #include <AIM/Common/Patch.h>
@@ -74,7 +75,7 @@ using namespace std;
 
 
 
-class SurfaceMeshFunc
+class AIMCOMMON_EXPORT SurfaceMeshFunc
 {
 
 public:
