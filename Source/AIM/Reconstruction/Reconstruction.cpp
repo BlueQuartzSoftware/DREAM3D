@@ -14,11 +14,12 @@
 #include "MXA/MXATypes.h"
 #include "MXA/Utilities/MXADir.h"
 
+#include "AIM/Common/AIMCommonConfiguration.h"
 #include "AIM/ANG/AngDirectoryPatterns.h"
 #include "AIM/ANG/AngReader.h"
 #include "AIM/ANG/AngFileHelper.h"
 
-#if MXA_HDF5_SUPPORT
+#if AIM_HDF5_SUPPORT
 #include "AIM/HDF5/AIMH5DataWriter.h"
 #endif
 
@@ -429,7 +430,7 @@ int Reconstruction::writeHDF5GrainsFile(const std::string &hdfFile,
                                           ReconstructionFunc::Pointer r)
 {
   int err = -1;
-#if MXA_HDF5_SUPPORT
+#if AIM_HDF5_SUPPORT
   AIMH5DataWriter::Pointer h5writer = AIMH5DataWriter::New();
   h5writer->setFileName(hdfFile);
   err = h5writer->openFile(false); // Open a new file over writing any other file
