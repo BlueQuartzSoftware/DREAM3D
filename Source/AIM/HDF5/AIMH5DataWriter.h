@@ -156,7 +156,7 @@ class AIMCOMMON_EXPORT AIMH5DataWriter
     template<typename T>
     int writePoints(hid_t groupId, const std::vector<T> &points)
     {
-      std::vector<T>::size_type numPts;
+      typename std::vector<T>::size_type numPts;
 
       if (points.size() < 3)
         {
