@@ -96,7 +96,9 @@ cmp_IDE_SOURCE_PROPERTIES( "Source/AIM/ANG" "${ANG_HDRS}" "${ANG_SRCS}" ${CMP_IN
 
 set(HDF5_SRCS "")
 set(HDF5_HDRS "")
-if (AIM_USE_HDF5)    
+set(AIM_HDF5_SUPPORT "0")
+if (AIM_USE_HDF5)
+    set(AIM_HDF5_SUPPORT "1")
     SET (HDF5_SRCS
         ${AIMRepresentation_SOURCE_DIR}/Source/AIM/HDF5/AIMH5DataWriter.cpp)
     SET (HDF5_HDRS

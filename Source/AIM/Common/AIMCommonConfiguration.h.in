@@ -7,7 +7,7 @@
 
 
 /* Did we compile with HDF5 support */
-#define AIM_HDF5_SUPPORT @MXA_HDF5_SUPPORT@
+#define AIM_HDF5_SUPPORT @AIM_HDF5_SUPPORT@
 
 
 /* Include the DLL export preprocessor defines */
