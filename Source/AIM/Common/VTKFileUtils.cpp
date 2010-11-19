@@ -94,7 +94,7 @@ int VTKFileUtils::readLine(std::istream &in, char* buf, int bufSize)
       readAnotherLine = false;
     }
   }
-  return in.gcount();
+  return static_cast<int>(in.gcount());
 }
 
 // -----------------------------------------------------------------------------
