@@ -150,6 +150,9 @@ if (AIM_BUILD_QT_APPS)
    # this command finds Qt4 libraries and sets all required variables
    # note that it's Qt4, not QT4 or qt4
    FIND_PACKAGE( Qt4 REQUIRED )
+    IF (QT4_FOUND)
+        CMP_COPY_QT4_RUNTIME_LIBRARIES( "QtCore;QtGui" )
+    endif()
    # add some useful macros and variables
    # (QT_USE_FILE is a variable defined by FIND_PACKAGE( Qt4 ) that 
    # contains a path to CMake script)
