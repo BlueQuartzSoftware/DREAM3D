@@ -84,11 +84,9 @@ cmp_IDE_SOURCE_PROPERTIES("Source/AIM/Threads" "${AIM_Threads_HDRS}" "${AIM_Thre
 
 SET (Reconstruction_SRCS
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Reconstruction/Reconstruction.cpp
-    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Reconstruction/AIMH5DataWriter.cpp
 )
 SET (Reconstruction_HDRS
    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Reconstruction/Reconstruction.h
-   ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Reconstruction/AIMH5DataWriter.h
     )
 cmp_IDE_SOURCE_PROPERTIES( "Source/AIM/Reconstruction" "${Reconstruction_HDRS}" "${Reconstruction_SRCS}" ${CMP_INSTALL_FILES})
 
@@ -203,7 +201,6 @@ cmp_IDE_SOURCE_PROPERTIES ("ConfiguredFiles" "${AIMRepresentation_BINARY_DIR}/AI
 # ---------- Build the Viewer Application  ----------------------
 ADD_EXECUTABLE( ${PROJECT_NAME} ${GUI_TYPE} ${Representation_PROJECT_SRCS} )
 TARGET_LINK_LIBRARIES( ${PROJECT_NAME}
-                        ${HDF5_LIBRARIES} 
                         MXADataModel
                         AIMCommon
                         ${QT_LIBRARIES}  )

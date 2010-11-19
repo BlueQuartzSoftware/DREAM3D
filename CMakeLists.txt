@@ -51,6 +51,7 @@ set (CMP_PROJECT_NAME "MXA")
 SET (CMP_INSTALL_FILES "1")
 set (CMP_ENABLE_PLUGINS "1")
 INCLUDE (${PROJECT_RESOURCES_DIR}/cmp/cmpProject.cmake)
+
 # --------------------------------------------------------------------
 # Generate a Header file with Compile Version variables
 # --------------------------------------------------------------------
@@ -93,6 +94,18 @@ SET (MXA_BOOST_COMPONENTS "")
 FIND_PACKAGE(Boost COMPONENTS  ${MXA_BOOST_COMPONENTS} )
 INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIRS})
 LINK_DIRECTORIES(${Boost_LIBRARY_DIRS})
+
+# -- This needs to be here so that the configured file gets written correctly
+option(AIM_USE_HDF5 "Use HDF5 writing capability" OFF)
+if (AIM_USE_HDF5)
+    find_package(HDF5)
+    IF(HDF5_FOUND)
+      file(APPEND ${CMP_PLUGIN_SEARCHDIR_FILE} "${HDF5_LIBRARY_DIRS};")
+      include_directories(${HDF5_INCLUDE_DIRS} )
+    ELSE(HDF5_FOUND)
+      MESSAGE(FATAL_ERROR "Cannot build without HDF5.  Please set HDF5_INSTALL environment variable to point to your HDF5 installation.")
+    ENDIF(HDF5_FOUND)
+endif()
 
 # --------------------------------------------------------------------
 # Add in some compiler definitions

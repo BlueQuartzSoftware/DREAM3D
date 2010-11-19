@@ -17,6 +17,7 @@ IF (BUILD_SHARED_LIBS)
     ENDIF (WIN32)
 ENDIF (BUILD_SHARED_LIBS)
 
+
 Macro(MXACompileDir DirName)
     include(${MXADataModel_SOURCE_DIR}/${DirName}/SourceList.cmake)
     set (Project_SRCS ${Project_SRCS} ${MXA_${DirName}_SRCS} ${MXA_${DirName}_HDRS})
@@ -24,7 +25,13 @@ endMacro()
 
 MXACompileDir(Common)
 MXACompileDir(Utilities)
-MXACompileDir(HDF5)
+
+set (MXA_HDF5_SUPPORT "0")
+if (AIM_USE_HDF5)
+    set (MXA_HDF5_SUPPORT "1")
+    MXACompileDir(HDF5)
+endif()
+
 
 set (Project_SRCS 
     ${Project_SRCS} 
@@ -34,14 +41,6 @@ include_directories(${MXADataModel_SOURCE_DIR}/..)
 include_directories(${MXADataModel_BINARY_DIR})
 include_directories(${MXADataModel_BINARY_DIR}/..)
 
-set (MXA_HDF5_SUPPORT "1")
-find_package(HDF5)
-IF(HDF5_FOUND)
-  file(APPEND ${CMP_PLUGIN_SEARCHDIR_FILE} "${HDF5_LIBRARY_DIRS};")
-  include_directories(${HDF5_INCLUDE_DIRS} )
-ELSE(HDF5_FOUND)
-  MESSAGE(FATAL_ERROR "Cannot build without HDF5.  Please set HDF5_INSTALL environment variable to point to your HDF5 installation.")
-ENDIF(HDF5_FOUND)
 
 set (MXA_TIFF_SUPPORT "0")
 set (MXA_XML_SUPPORT "0")

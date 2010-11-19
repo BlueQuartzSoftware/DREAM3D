@@ -87,19 +87,39 @@ set (ANG_HDRS
 )
 cmp_IDE_SOURCE_PROPERTIES( "Source/AIM/ANG" "${ANG_HDRS}" "${ANG_SRCS}" ${CMP_INSTALL_FILES})
 
+set(HDF5_SRCS "")
+set(HDF5_HDRS "")
+if (AIM_USE_HDF5)    
+    SET (HDF5_SRCS
+        ${AIMRepresentation_SOURCE_DIR}/Source/AIM/HDF5/AIMH5DataWriter.cpp)
+    SET (HDF5_HDRS
+        ${AIMRepresentation_SOURCE_DIR}/Source/AIM/HDF5/AIMH5DataWriter.h
+        ${AIMRepresentation_SOURCE_DIR}/Source/AIM/HDF5/VTKH5Constants.h)
+    include_directories(${HDF5_INCLUDE_DIR})
+    set (AIMCOMMON_DEP_LIBS ${HDF5_LIBRARIES} MXADataModel)
+    cmp_IDE_SOURCE_PROPERTIES( "Source/AIM/HDF5" "${HDF5_HDRS}" "${HDF5_SRCS}" ${CMP_INSTALL_FILES})
+endif()
+
 set (AIMCommon_SRCS
     ${AIMCommon_SRCS}
     ${AIMCommon_HDRS}
     ${ANG_SRCS}
     ${ANG_HDRS}
+    ${HDF5_SRCS}
+    ${HDF5_HDRS}
     )
 
     
 include_directories( ${AIMRepresentation_BINARY_DIR} )
 include_directories( ${PROJECT_CODE_DIR} )
-#-- Add a static library for the PCM registration
-add_library(AIMCommon STATIC ${AIMCommon_SRCS} )
-StaticLibraryProperties( AIMCommon )
+
+#-- Add a library for the AIMCommon Code
+add_library(AIMCommon ${LIB_TYPE} ${AIMCommon_SRCS} )
+target_link_libraries(AIMCommon ${AIMCOMMON_DEP_LIBS} )
+if (AIM_USE_HDF5)
+    CMP_COPY_DEPENDENT_LIBRARIES("hdf5")
+endif()
+LibraryProperties( AIMCommon ${EXE_DEBUG_EXTENSION} )
 
 
     
