@@ -140,7 +140,7 @@ int AIMH5DataWriter::writeUnstructuredGrid(const std::string &hdfPath,
   {
      std::cout << "Error Writing CELL array for " << hdfPath << std::endl;
   }
-  int32_t size = cell_types.size();
+  std::vector<int32_t>::size_type size = cell_types.size();
   err = H5Lite::writeScalarAttribute(gid, H5_CELLS, "Number Of Cells", size);
 
   // Write the CELL_TYPE array
