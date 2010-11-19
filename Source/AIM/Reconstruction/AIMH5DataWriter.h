@@ -28,8 +28,8 @@
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef H5POLYDATAWRITER_H_
-#define H5POLYDATAWRITER_H_
+#ifndef _AIMH5DATAWRITER_H_
+#define _AIMH5DATAWRITER_H_
 
 
 
@@ -46,8 +46,41 @@
 #include "MXA/HDF5/H5Lite.h"
 
 class ReconstructionFunc;
+
 /**
+ * @class AIMH5DataWriter AIMH5DataWriter.h AIM/Reconstruction/AIMH5DataWriter.h
+ * @brief This class is designed to write VTK style objects into an HDF5 type file.
+ * Currently supported types are
+ * <li> UnstructuredGrid
  *
+ * One needs to create at a minimum the points, cells and cell_types array. See the
+ * method signatures to create the proper types for each array. Currently STL container
+ * vector is used to hold the data to be written. Some sample code
+ *
+ * @code
+ * AIMH5DataWriter::Pointer h5writer = AIMH5DataWriter::New();
+ * h5writer->setFileName(hdfFile);
+ * int err = h5writer->openFile(false);
+ *  std::vector<float> points;
+    std::vector<int32_t> cells;
+    std::vector<int32_t> cell_types(number_of_cells, VTK_CELLTYPE_VOXEL);
+    std::string hdfPath ("/SomePathToTheData");
+    ... Code to populate the arrays ....
+    int err = h5writer->writeUnstructuredGrid(hdfPath, points, cells, cell_types);
+ * @endcode
+ *
+ * Cell Data, Point Data and Field Data can also be added to the vtk object.
+ * @code
+ * err = h5writer->writeFieldData<int>( hdfPath, grainName, "Grain_ID", 1);
+ * std::vector<float> kernelAvgDisorientation(vlist->size());
+ * ...Code to copy data into the vector ....
+ * err = h5writer->writeCellData<float>(hdfPath, kernelAvgDisorientation, "KernelAvgDisorientation", 1);
+ *
+ * @endcode
+ *
+ * @author Michael A. Jackson for BlueQuartz Software
+ * @date Nov 19, 2010
+ * @version 1.0
  */
 class AIMH5DataWriter
 {
@@ -59,48 +92,33 @@ class AIMH5DataWriter
 
     MXA_INSTANCE_STRING_PROPERTY(FileName);
 
+    /**
+     * @brief Opens or Creates an HDF5 file to write data into
+     * @param append Should a new file be created or append data to a currenlty existing file
+     * @return
+     */
     int openFile(bool append = false);
+
+    /**
+     * @brief Closes the currently open file
+     * @return
+     */
     int closeFile();
 
-    /**
-     * @brief
-     * @param hdfGroupPath
-     * @param vtkDataObjectType The type of vtk data ojbect that is going to be written such as H5_VTK_UNSTRUCTURED_GRID
-     * or H5_VTK_POLYDATA
-     * @return
-     */
-    int createGroup(const std::string &hdfGroupPath, const char* vtkDataObjectType);
 
-    int openGroup(const std::string &hdfGroupPath);
 
-    int closeCurrentGroup();
-
-/**
- *
- * @param points
- * @param cells
- * @param cell_types
- * @return
- */
-    int writeUnstructuredGrid(const std::vector<float> &points, const std::vector<int32_t> &cells,
+  /**
+   * @brief
+   * @param hdfPath
+   * @param points
+   * @param cells
+   * @param cell_types
+   * @return
+   */
+    int writeUnstructuredGrid(const std::string &hdfPath,
+                              const std::vector<float> &points,
+                              const std::vector<int32_t> &cells,
                               const std::vector<int32_t> &cell_types);
-
-
-
-    /**
-     * @brief
-     * @param cells
-     * @param label
-     * @param polygonEntrySize The TOTAL number of elements that make up an entry for a polygon.
-     * this should be the first value + 1. So for triangles we have a value of 4 because the
-     * entry is setup as follows: "3 2 4 8" which says there are "3" indices followed by the
-     * values of those indices (2 4 8). We assume that you are writing a HOMOGENEOUS set of
-     * polygons, ie, ALL triangles or ALL cubes.
-     * @return
-     */
-    int writePolyCells( const std::vector<int> &cells, const char *label, int polygonEntrySize);
-
-
 
     /**
      * @brief
@@ -128,13 +146,13 @@ class AIMH5DataWriter
       return err;
     }
 
-/**
- * @brief
- * @param points
- * @return
- */
+  /**
+   * @brief
+   * @param points
+   * @return
+   */
     template<typename T>
-    int writePoints(const std::vector<T> &points)
+    int writePoints(hid_t groupId, const std::vector<T> &points)
     {
       int numPts;
 
@@ -145,14 +163,14 @@ class AIMH5DataWriter
 
       numPts=points.size()/3;
 
-      int err = this->vtkWriteDataArray<T>(m_CurrentGroupId, &(points.front()), H5_POINTS, numPts, 3);
+      int err = this->vtkWriteDataArray<T>(groupId, &(points.front()), H5_POINTS, numPts, 3);
       if (err != 1)
       {
         // std::cout << "Error Writing Points Array" << std::endl;
       }
       //Write the attributes to the dataset
       int32_t numComp = 3;
-      err = H5Lite::writeScalarAttribute(m_CurrentGroupId, H5_POINTS, H5_NUMCOMPONENTS, numComp);
+      err = H5Lite::writeScalarAttribute(groupId, H5_POINTS, H5_NUMCOMPONENTS, numComp);
       if (err < 0)
       {
         // std::cout << "Error Writing NumComponents attribute to dataset." << std::endl;
@@ -162,25 +180,30 @@ class AIMH5DataWriter
 
     /**
      * @brief
+     * @param hdfPath
      * @param field_data
      * @param label
      * @param numComp
      * @return
      */
     template<typename T>
-    int writeFieldData(const std::vector<T> &field_data, const char* label, int numComp)
+    int writeFieldData(const std::string &hdfPath,
+                       const std::vector<T> &field_data,
+                       const char* label,
+                       int numComp)
     {
 
-      int err = H5Utilities::createGroupsFromPath(H5_FIELD_DATA_GROUP_NAME, m_CurrentGroupId);
+      hid_t gid = H5Gopen(m_FileId, hdfPath.c_str() );
+      int err = H5Utilities::createGroupsFromPath(H5_FIELD_DATA_GROUP_NAME, gid);
       if (err < 0)
       {
         std::cout << "Error creating HDF Group " << H5_FIELD_DATA_GROUP_NAME << std::endl;
         return err;
       }
-      err = H5Lite::writeStringAttribute(m_CurrentGroupId, H5_FIELD_DATA_GROUP_NAME, H5_NAME, H5_FIELD_DATA_DEFAULT);
+      err = H5Lite::writeStringAttribute(gid, H5_FIELD_DATA_GROUP_NAME, H5_NAME, H5_FIELD_DATA_DEFAULT);
 
-      hid_t prevGid = m_CurrentGroupId;
-      m_CurrentGroupId = H5Gopen(m_CurrentGroupId, H5_FIELD_DATA_GROUP_NAME );
+
+      hid_t fieldGroupId = H5Gopen(gid, H5_FIELD_DATA_GROUP_NAME );
       if(err < 0)
       {
         std::cout << "Error writing string attribute to HDF Group " << H5_FIELD_DATA_GROUP_NAME << std::endl;
@@ -189,20 +212,17 @@ class AIMH5DataWriter
 
       T* data = const_cast<T*>(&(field_data.front()));
       int num = field_data.size() / numComp;
-      err = vtkWriteDataArray(m_CurrentGroupId, data, label, num, numComp);
+      err = vtkWriteDataArray(fieldGroupId, data, label, num, numComp);
       if (err < 0)
       {
         std::cout << "Error writing dataset " << label << std::endl;
       }
-      H5Gclose(m_CurrentGroupId);
+      err = H5Gclose(fieldGroupId);
 
-      m_CurrentGroupId = prevGid;
+      err = H5Gclose(gid);
 
       return err;
     }
-
-
-
 
     /**
      * @brief
@@ -212,16 +232,19 @@ class AIMH5DataWriter
      * @return
      */
     template<typename T>
-    int writeCellData(const std::vector<T> &cell_data, const char *label, int numComp)
+    int writeCellData(const std::string &hdfPath,
+                      const std::vector<T> &cell_data,
+                      const char *label,
+                      int numComp)
     {
-      hid_t prevGid = m_CurrentGroupId;
-      herr_t err = H5Utilities::createGroupsFromPath(H5_CELL_DATA_GROUP_NAME, m_CurrentGroupId);
+      hid_t gid = H5Gopen(m_FileId, hdfPath.c_str() );
+      herr_t err = H5Utilities::createGroupsFromPath(H5_CELL_DATA_GROUP_NAME, gid);
       if (err < 0)
       {
         std::cout << "Error creating HDF Group " << H5_CELL_DATA_GROUP_NAME << std::endl;
         return err;
       }
-      m_CurrentGroupId = H5Gopen(m_CurrentGroupId, H5_CELL_DATA_GROUP_NAME );
+      hid_t cellGroupId = H5Gopen(gid, H5_CELL_DATA_GROUP_NAME );
       if(err < 0)
       {
         std::cout << "Error writing string attribute to HDF Group " << H5_CELL_DATA_GROUP_NAME << std::endl;
@@ -230,29 +253,35 @@ class AIMH5DataWriter
 
       T* data = const_cast<T*>(&(cell_data.front()));
       int num = cell_data.size() / numComp;
-      err = vtkWriteDataArray(m_CurrentGroupId, data, label, num, numComp);
+      err = vtkWriteDataArray(cellGroupId, data, label, num, numComp);
       if (err < 0)
       {
         std::cout << "Error writing dataset " << label << std::endl;
       }
-      H5Gclose(m_CurrentGroupId);
+      err = H5Gclose(cellGroupId);
 
-      m_CurrentGroupId = prevGid;
+      err = H5Gclose(gid);
       return err;
     }
 
   protected:
     AIMH5DataWriter();
 
+    /**
+     * @brief
+     * @param hdfGroupPath
+     * @param vtkDataObjectType The type of vtk data ojbect that is going to be written such as H5_VTK_UNSTRUCTURED_GRID
+     * or H5_VTK_POLYDATA
+     * @return
+     */
+    int createVtkObjectGroup(const std::string &hdfGroupPath, const char* vtkDataObjectType);
+
+
   private:
     hid_t m_FileId;
-    hid_t m_CurrentGroupId;
-    std::string m_CurrentGroupPath;
-
-
 
     AIMH5DataWriter(const AIMH5DataWriter&); // Copy Constructor Not Implemented
     void operator=(const AIMH5DataWriter&); // Operator '=' Not Implemented
 };
 
-#endif /* H5POLYDATAWRITER_H_ */
+#endif /* _AIMH5DATAWRITER_H_ */

@@ -165,7 +165,7 @@ public:
 	void write_axisodf(string);
 	void write_eulerodf(string);
 	void write_graindata(string);
-	void write_grains(/* double quat_symmcubic[24][5],double quat_symmhex[12][5] */);
+	void write_grains(const std::string &outputdir/* double quat_symmcubic[24][5],double quat_symmhex[12][5] */);
 	double getmisoquatcubic(double,double q1[5],double q2[5],double &,double &,double &);
 	double getmisoquathexagonal(double quat_symmhex[12][5],double,double q1[5],double q2[5],double &,double &,double &);
 	double gamma(double);

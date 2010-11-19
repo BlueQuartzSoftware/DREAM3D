@@ -10,7 +10,15 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 #include "ReconstructionFunc.h"
-#include <AIM/ANG/AngReader.h>
+
+#include <iomanip>
+#include <iostream>
+#include <string>
+#include <sstream>
+
+
+#include "MXA/Utilities/MXADir.h"
+#include "AIM/ANG/AngReader.h"
 
 #if 0
 // -i C:\Users\GroebeMA\Desktop\NewFolder --outputDir C:\Users\GroebeMA\Desktop\NewFolder -f Slice_ --angMaxSlice 400 -s 1 -e 30 -z 0.25 -t -g 10 -c 0.1 -o 5.0 -x 2
@@ -328,10 +336,14 @@ void ReconstructionFunc::align_sections(const std::string &filename,
   int refgnum, curgnum;
   int refposition=0;
   int curposition=0;
-  int curposition1=0;
-  int curposition2=0;
-  int position, tempposition, alternatetempposition;
-  int halfshift=0;
+//  int curposition1=0;
+//  int curposition2=0;
+//  int alternatetempposition;
+//  int halfshift=0;
+  int position;
+  int tempposition;
+
+
   shifts = new int *[zpoints];
   for(int a=0;a<zpoints;a++)
   {
@@ -4361,12 +4373,18 @@ void ReconstructionFunc::write_graindata(string gdata)
 
 }
 
-//TODO: Convert this to HDF5 format
-void ReconstructionFunc::write_grains(/* double quat_symmcubic[24][5],double quat_symmhex[12][5] */)
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ReconstructionFunc::write_grains(const std::string &outputdir)
 {
-  ofstream outFile;
-  char extension[15] = ".vtk";
-  char index[5];
+  std::stringstream ss;
+  ss.setf(std::ios::fixed);
+  ss.fill('0');
+
+  std::ofstream outFile;
+//  char extension[15] = ".vtk";
+//  char index[5];
   vector<int >* vlist;
   vector<int > plist(((xpoints + 1) * (ypoints + 1) * (zpoints + 1)), 0);
   int pcount = 0;
@@ -4375,18 +4393,21 @@ void ReconstructionFunc::write_grains(/* double quat_symmcubic[24][5],double qua
   int vid, pid;
   for (int i = 1; i < numgrains; i++)
   {
-    char filename[15] = "Grain ";
-    sprintf(index, "%5.5d", i);
-    strcat(filename, index);
-    strcat(filename, extension);
-    outFile.open(filename);
+//    char filename[15] = "Grain ";
+//    sprintf(index, "%5d", i);
+//    strcat(filename, index);
+//    strcat(filename, extension);
+    ss.str("");
+    ss << outputdir << MXADir::Separator << "Grain_" << std::setw(5) << i << ".vtk";
+
+    outFile.open(ss.str().c_str(), std::ios::trunc);
     outFile << "# vtk DataFile Version 2.0" << endl;
     outFile << "data set from FFT2dx_GB" << endl;
     outFile << "ASCII" << endl;
     outFile << "DATASET UNSTRUCTURED_GRID" << endl;
     vlist = grains[i].voxellist;
     pcount = 0;
-    for (int j = 0; j < vlist->size(); j++)
+    for (std::vector<int>::size_type j = 0; j < vlist->size(); j++)
     {
       vid = vlist->at(j);
       ocol = vid % xpoints;
@@ -4414,7 +4435,7 @@ void ReconstructionFunc::write_grains(/* double quat_symmcubic[24][5],double qua
     pcount = 0;
     plist.clear();
     plist.resize(((xpoints + 1) * (ypoints + 1) * (zpoints + 1)), 0);
-    for (int j = 0; j < vlist->size(); j++)
+    for (std::vector<int>::size_type j = 0; j < vlist->size(); j++)
     {
       vid = vlist->at(j);
       ocol = vid % xpoints;
@@ -4441,7 +4462,7 @@ void ReconstructionFunc::write_grains(/* double quat_symmcubic[24][5],double qua
     }
     outFile << endl;
     outFile << "CELLS " << vlist->size() << " " << vlist->size() * 9 << endl;
-    for (int j = 0; j < vlist->size(); j++)
+    for (std::vector<int>::size_type j = 0; j < vlist->size(); j++)
     {
       vid = vlist->at(j);
       ocol = vid % xpoints;
@@ -4465,7 +4486,7 @@ void ReconstructionFunc::write_grains(/* double quat_symmcubic[24][5],double qua
     }
     outFile << endl;
     outFile << "CELL_TYPES " << vlist->size() << endl;
-    for (int j = 0; j < vlist->size(); j++)
+    for (std::vector<int>::size_type j = 0; j < vlist->size(); j++)
     {
       outFile << "11" << endl;
     }
@@ -4473,7 +4494,7 @@ void ReconstructionFunc::write_grains(/* double quat_symmcubic[24][5],double qua
     outFile << "CELL_DATA " << vlist->size() << endl;
     outFile << "SCALARS GrainID int" << endl;
     outFile << "LOOKUP_TABLE default" << endl;
-    for (int j = 0; j < vlist->size(); j++)
+    for (std::vector<int>::size_type j = 0; j < vlist->size(); j++)
     {
       vid = vlist->at(j);
       outFile << voxels[vid].grainname << endl;
@@ -4481,7 +4502,7 @@ void ReconstructionFunc::write_grains(/* double quat_symmcubic[24][5],double qua
     outFile << endl;
     outFile << "SCALARS KernelAvgDisorientation float" << endl;
     outFile << "LOOKUP_TABLE default" << endl;
-    for (int j = 0; j < vlist->size(); j++)
+    for (std::vector<int>::size_type j = 0; j < vlist->size(); j++)
     {
       vid = vlist->at(j);
       outFile << voxels[vid].kernelmisorientation << endl;
@@ -4489,7 +4510,7 @@ void ReconstructionFunc::write_grains(/* double quat_symmcubic[24][5],double qua
     outFile << endl;
     outFile << "SCALARS GrainAvgDisorientation float" << endl;
     outFile << "LOOKUP_TABLE default" << endl;
-    for (int j = 0; j < vlist->size(); j++)
+    for (std::vector<int>::size_type j = 0; j < vlist->size(); j++)
     {
       vid = vlist->at(j);
       outFile << voxels[vid].misorientation << endl;
@@ -4497,7 +4518,7 @@ void ReconstructionFunc::write_grains(/* double quat_symmcubic[24][5],double qua
     outFile << endl;
     outFile << "SCALARS ImageQuality float" << endl;
     outFile << "LOOKUP_TABLE default" << endl;
-    for (int j = 0; j < vlist->size(); j++)
+    for (std::vector<int>::size_type j = 0; j < vlist->size(); j++)
     {
       vid = vlist->at(j);
       outFile << voxels[vid].imagequality << endl;
@@ -4505,7 +4526,7 @@ void ReconstructionFunc::write_grains(/* double quat_symmcubic[24][5],double qua
     outFile << endl;
     outFile << "SCALARS SchmidFactor float" << endl;
     outFile << "LOOKUP_TABLE default" << endl;
-    for (int j = 0; j < vlist->size(); j++)
+    for (std::vector<int>::size_type j = 0; j < vlist->size(); j++)
     {
       outFile << grains[i].schmidfactor << endl;
     }

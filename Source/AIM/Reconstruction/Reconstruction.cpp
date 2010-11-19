@@ -145,8 +145,8 @@ void Reconstruction::compute()
   m->initialize(m_ZStartIndex, m_ZEndIndex, m_ZResolution, m_MergeTwins, m_MergeColonies, m_MinAllowedGrainSize,
 	                   m_MinSeedConfidence, m_DownSampleFactor, m_MinSeedImageQuality, m_MisorientationTolerance, m_CrystalStructure, m_AlignmentMethod, m_AlreadyFormed);
 
-  int32_t mindiameter = 100000;
-  int32_t maxdiameter = 0;
+//  int32_t mindiameter = 100000;
+//  int32_t maxdiameter = 0;
   double quat_symmcubic[24][5] = {
 	  {0.000000000, 0.000000000, 0.000000000, 0.000000000, 1.000000000},
 	  {0.000000000, 1.000000000, 0.000000000, 0.000000000, 0.000000000},
@@ -368,7 +368,7 @@ void Reconstruction::compute()
 
   CHECK_FOR_CANCELED(ReconstructionFunc)
   progressMessage(AIM_STRING("Writing Out Grains"), 94);
- // m->write_grains( /* quat_symmcubic, quat_symmhex */);
+  m->write_grains(m_OutputDirectory /* quat_symmcubic, quat_symmhex */);
   writeHDF5GrainsFile(hdf5GrainFile, m);
 
   CHECK_FOR_CANCELED(ReconstructionFunc)
@@ -440,8 +440,7 @@ int Reconstruction::writeHDF5GrainsFile(const std::string &hdfFile,
     ss.str("");
     ss << "/" << i;
     hdfPath = ss.str();
-    err = h5writer->createGroup(hdfPath, H5_VTK_UNSTRUCTURED_GRID);
-    err = h5writer->openGroup(hdfPath);
+
 
     vector<int> plist(((r->xpoints + 1) * (r->ypoints + 1) * (r->zpoints + 1)), 0);
     int pcount = 0;
@@ -451,10 +450,8 @@ int Reconstruction::writeHDF5GrainsFile(const std::string &hdfFile,
     int err = 0;
     // outFile << "POINTS " << pcount << " float" << endl;
     std::vector<float> points;
-  //  points.reserve(8*vlist->size());
-
     std::vector<int32_t> cells;
-   // cells.reserve(vlist->size() * 9);
+    std::vector<int32_t> cell_types(vlist->size(), VTK_CELLTYPE_VOXEL);
 
     std::vector<float> kernelAvgDisorientation(vlist->size());
     std::vector<float> grainAvgDisorientation(vlist->size());
@@ -504,196 +501,25 @@ int Reconstruction::writeHDF5GrainsFile(const std::string &hdfFile,
       grainName[0] = r->voxels[vid].grainname;
     }
 
-    std::vector<int32_t> cell_types(vlist->size(), VTK_CELLTYPE_VOXEL);
-    err = h5writer->writeUnstructuredGrid(points, cells, cell_types);
+
+    err = h5writer->writeUnstructuredGrid(hdfPath, points, cells, cell_types);
     points.resize(0);
     cells.resize(0);
     cell_types.resize(0);
 
-
-#if 0
-    //Write the Points
-    err = h5writer->writePoints<float>(points);
-    points.resize(0);
-
-    // WRITE the CELLS
-    err = h5writer->writePolyCells(cells, H5_CELLS, 9);
-    cells.resize(0);
-#endif
-
-
-
     //Write the Field Data
-
-    err = h5writer->writeFieldData<int>( grainName, "Grain_ID", 1);
+    err = h5writer->writeFieldData<int>( hdfPath, grainName, "Grain_ID", 1);
 
     schmidFactor[0] = r->grains[i].schmidfactor;
-    err = h5writer->writeFieldData<float>( schmidFactor, "SchmidFactor", 1);
+    err = h5writer->writeFieldData<float>( hdfPath, schmidFactor, "SchmidFactor", 1);
 
     // Write CELL_DATA
-    err = h5writer->writeCellData<float>(kernelAvgDisorientation, "KernelAvgDisorientation", 1);
-    err = h5writer->writeCellData<float>(grainAvgDisorientation, "GrainAvgDisorientation", 1);
-    err = h5writer->writeCellData<float>(imageQuality, "ImageQuality", 1);
-
-
-    h5writer->closeCurrentGroup();
-
+    err = h5writer->writeCellData<float>(hdfPath, kernelAvgDisorientation, "KernelAvgDisorientation", 1);
+    err = h5writer->writeCellData<float>(hdfPath, grainAvgDisorientation, "GrainAvgDisorientation", 1);
+    err = h5writer->writeCellData<float>(hdfPath, imageQuality, "ImageQuality", 1);
   }
 
   err = h5writer->closeFile();
 
   return err;
-#if 0
-  ofstream outFile;
-  char extension[15] = ".vtk";
-  char index[5];
-  vector<int >* vlist;
-  vector<int > plist(((r->xpoints + 1) * (r->ypoints + 1) * (r->zpoints + 1)), 0);
-  int pcount = 0;
-  int ocol, orow, oplane;
-  int col, row, plane;
-  int vid, pid;
-  for (int i = 1; i < numgrains; i++)
-  {
-    char filename[15] = "Grain ";
-    sprintf(index, "%5.5d", i);
-    strcat(filename, index);
-    strcat(filename, extension);
-    outFile.open(filename);
-    outFile << "# vtk DataFile Version 2.0" << endl;
-    outFile << "data set from FFT2dx_GB" << endl;
-    outFile << "ASCII" << endl;
-    outFile << "DATASET UNSTRUCTURED_GRID" << endl;
-    vlist = grains[i].voxellist;
-    pcount = 0;
-    for (int j = 0; j < vlist->size(); j++)
-    {
-      vid = vlist->at(j);
-      ocol = vid % xpoints;
-      orow = (vid / xpoints) % ypoints;
-      oplane = vid / (xpoints * ypoints);
-      for (int k = 0; k < 8; k++)
-      {
-        if (k == 0) col = ocol, row = orow, plane = oplane;
-        if (k == 1) col = ocol + 1, row = orow, plane = oplane;
-        if (k == 2) col = ocol, row = orow + 1, plane = oplane;
-        if (k == 3) col = ocol + 1, row = orow + 1, plane = oplane;
-        if (k == 4) col = ocol, row = orow, plane = oplane + 1;
-        if (k == 5) col = ocol + 1, row = orow, plane = oplane + 1;
-        if (k == 6) col = ocol, row = orow + 1, plane = oplane + 1;
-        if (k == 7) col = ocol + 1, row = orow + 1, plane = oplane + 1;
-        pid = (plane * (xpoints + 1) * (ypoints + 1)) + (row * (xpoints + 1)) + col;
-        if (plist[pid] == 0)
-        {
-          plist[pid] = pcount;
-          pcount++;
-        }
-      }
-    }
-    outFile << "POINTS " << pcount << " float" << endl;
-    pcount = 0;
-    plist.clear();
-    plist.resize(((xpoints + 1) * (ypoints + 1) * (zpoints + 1)), 0);
-    for (int j = 0; j < vlist->size(); j++)
-    {
-      vid = vlist->at(j);
-      ocol = vid % xpoints;
-      orow = (vid / xpoints) % ypoints;
-      oplane = vid / (xpoints * ypoints);
-      for (int k = 0; k < 8; k++)
-      {
-        if (k == 0) col = ocol, row = orow, plane = oplane;
-        if (k == 1) col = ocol + 1, row = orow, plane = oplane;
-        if (k == 2) col = ocol, row = orow + 1, plane = oplane;
-        if (k == 3) col = ocol + 1, row = orow + 1, plane = oplane;
-        if (k == 4) col = ocol, row = orow, plane = oplane + 1;
-        if (k == 5) col = ocol + 1, row = orow, plane = oplane + 1;
-        if (k == 6) col = ocol, row = orow + 1, plane = oplane + 1;
-        if (k == 7) col = ocol + 1, row = orow + 1, plane = oplane + 1;
-        pid = (plane * (xpoints + 1) * (ypoints + 1)) + (row * (xpoints + 1)) + col;
-        if (plist[pid] == 0)
-        {
-          plist[pid] = pcount;
-          pcount++;
-          outFile << (col * resx) << "  " << (row * resy) << "  " << (plane * resz) << endl;
-        }
-      }
-    }
-    outFile << endl;
-    outFile << "CELLS " << vlist->size() << " " << vlist->size() * 9 << endl;
-    for (int j = 0; j < vlist->size(); j++)
-    {
-      vid = vlist->at(j);
-      ocol = vid % xpoints;
-      orow = (vid / xpoints) % ypoints;
-      oplane = vid / (xpoints * ypoints);
-      outFile << "8 ";
-      for (int k = 0; k < 8; k++)
-      {
-        if (k == 0) col = ocol, row = orow, plane = oplane;
-        if (k == 1) col = ocol + 1, row = orow, plane = oplane;
-        if (k == 2) col = ocol, row = orow + 1, plane = oplane;
-        if (k == 3) col = ocol + 1, row = orow + 1, plane = oplane;
-        if (k == 4) col = ocol, row = orow, plane = oplane + 1;
-        if (k == 5) col = ocol + 1, row = orow, plane = oplane + 1;
-        if (k == 6) col = ocol, row = orow + 1, plane = oplane + 1;
-        if (k == 7) col = ocol + 1, row = orow + 1, plane = oplane + 1;
-        pid = (plane * (xpoints + 1) * (ypoints + 1)) + (row * (xpoints + 1)) + col;
-        outFile << plist[pid] << "  ";
-      }
-      outFile << endl;
-    }
-    outFile << endl;
-    outFile << "CELL_TYPES " << vlist->size() << endl;
-    for (int j = 0; j < vlist->size(); j++)
-    {
-      outFile << "11" << endl;
-    }
-    outFile << endl;
-    outFile << "CELL_DATA " << vlist->size() << endl;
-    outFile << "SCALARS GrainID int" << endl;
-    outFile << "LOOKUP_TABLE default" << endl;
-    for (int j = 0; j < vlist->size(); j++)
-    {
-      vid = vlist->at(j);
-      outFile << voxels[vid].grainname << endl;
-    }
-    outFile << endl;
-    outFile << "SCALARS KernelAvgDisorientation float" << endl;
-    outFile << "LOOKUP_TABLE default" << endl;
-    for (int j = 0; j < vlist->size(); j++)
-    {
-      vid = vlist->at(j);
-      outFile << voxels[vid].kernelmisorientation << endl;
-    }
-    outFile << endl;
-    outFile << "SCALARS GrainAvgDisorientation float" << endl;
-    outFile << "LOOKUP_TABLE default" << endl;
-    for (int j = 0; j < vlist->size(); j++)
-    {
-      vid = vlist->at(j);
-      outFile << voxels[vid].misorientation << endl;
-    }
-    outFile << endl;
-    outFile << "SCALARS ImageQuality float" << endl;
-    outFile << "LOOKUP_TABLE default" << endl;
-    for (int j = 0; j < vlist->size(); j++)
-    {
-      vid = vlist->at(j);
-      outFile << voxels[vid].imagequality << endl;
-    }
-    outFile << endl;
-    outFile << "SCALARS SchmidFactor float" << endl;
-    outFile << "LOOKUP_TABLE default" << endl;
-    for (int j = 0; j < vlist->size(); j++)
-    {
-      outFile << grains[i].schmidfactor << endl;
-    }
-    outFile.close();
-    plist.clear();
-    plist.resize(((xpoints + 1) * (ypoints + 1) * (zpoints + 1)), 0);
-  }
-#endif
-
-
 }

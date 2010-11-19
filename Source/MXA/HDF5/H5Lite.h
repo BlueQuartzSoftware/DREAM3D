@@ -183,9 +183,6 @@ static std::string HDFTypeForPrimitiveAsStr(T value)
   if (typeid(value) == typeid(int8_t)) return "H5T_NATIVE_INT8";
   if (typeid(value) == typeid(uint8_t)) return "H5T_NATIVE_UINT8";
 
-  if (typeid(value) == typeid(signed char)) return "H5T_NATIVE_INT8";
-  if (typeid(value) == typeid(unsigned char)) return "H5T_NATIVE_UINT8";
-
   if (typeid(value) == typeid(int16_t)) return "H5T_NATIVE_INT16";
   if (typeid(value) == typeid(uint16_t)) return "H5T_NATIVE_UINT16";
 
@@ -219,18 +216,47 @@ static hid_t HDFTypeForPrimitive(T value)
 
   if (typeid(value) == typeid(int8_t)) return H5T_NATIVE_INT8;
   if (typeid(value) == typeid(uint8_t)) return H5T_NATIVE_UINT8;
-
-
+# if CMP_TYPE_CHAR_IS_SIGNED
+  if (typeid(value) == typeid(char)) return H5T_NATIVE_INT8;
+#else
+  if (typeid(value) == typeid(char)) return H5T_NATIVE_UINT8;
+#endif
   if (typeid(value) == typeid(signed char)) return H5T_NATIVE_INT8;
   if (typeid(value) == typeid(unsigned char)) return H5T_NATIVE_UINT8;
 
 
   if (typeid(value) == typeid(int16_t)) return H5T_NATIVE_INT16;
+  if (typeid(value) == typeid(short)) return H5T_NATIVE_INT16;
+  if (typeid(value) == typeid(signed short)) return H5T_NATIVE_INT16;
   if (typeid(value) == typeid(uint16_t)) return H5T_NATIVE_UINT16;
+  if (typeid(value) == typeid(unsigned short)) return H5T_NATIVE_UINT16;
+
 
   if (typeid(value) == typeid(int32_t)) return H5T_NATIVE_INT32;
   if (typeid(value) == typeid(uint32_t)) return H5T_NATIVE_UINT32;
+#if (CMP_SIZEOF_INT == 4)
+  if (typeid(value) == typeid(int)) return H5T_NATIVE_INT32;
+  if (typeid(value) == typeid(signed int)) return H5T_NATIVE_INT32;
+  if (typeid(value) == typeid(unsigned int)) return H5T_NATIVE_UINT32;
+#endif
 
+
+#if (CMP_SIZEOF_LONG == 4)
+  if (typeid(value) == typeid(long int)) return H5T_NATIVE_INT32;
+  if (typeid(value) == typeid(signed long int)) return H5T_NATIVE_INT32;
+  if (typeid(value) == typeid(unsigned long int)) return H5T_NATIVE_UINT32;
+#elif (CMP_SIZEOF_LONG == 8)
+  if (typeid(value) == typeid(long int)) return H5T_NATIVE_INT64;
+  if (typeid(value) == typeid(signed long int)) return H5T_NATIVE_INT64;
+  if (typeid(value) == typeid(unsigned long int)) return H5T_NATIVE_UINT64;
+#endif
+
+
+#if (CMP_SIZEOF_LONG_LONG == 8)
+  if (typeid(value) == typeid(long long int)) return H5T_NATIVE_INT64;
+  if (typeid(value) == typeid(signed long long int)) return H5T_NATIVE_INT64;
+  if (typeid(value) == typeid(unsigned long long int)) return H5T_NATIVE_UINT64;
+#endif
   if (typeid(value) == typeid(int64_t)) return H5T_NATIVE_INT64;
   if (typeid(value) == typeid(uint64_t)) return H5T_NATIVE_UINT64;
 
@@ -240,10 +266,6 @@ static hid_t HDFTypeForPrimitive(T value)
   const char* name = typeid(value).name();
   if (NULL != name && name[0] == 'l' ) {
     std::cout << "You are using 'long int' as a type which is not 32/64 bit safe. Suggest you use one of the MXATypes defined in <Common/MXATypes.h> such as int32_t or uint32_t." << std::endl;
-  }
-  if (NULL != name && name[0] == 'm') {
-    std::cout << "You are using 'long unsigned int' as a type which is not 32/64 bit safe. Suggest you use one of the MXATypes defined in <Common/MXATypes.h> such as int32_t or uint32_t." << std::endl;
-
   }
   return -1;
 }
