@@ -42,8 +42,7 @@
 //
 // -----------------------------------------------------------------------------
 AIMH5DataWriter::AIMH5DataWriter() :
-m_FileId(-1),
-m_CurrentGroupId(-1)
+m_FileId(-1)
 {
 
 }
@@ -53,14 +52,13 @@ m_CurrentGroupId(-1)
 // -----------------------------------------------------------------------------
 AIMH5DataWriter::~AIMH5DataWriter()
 {
-  if (m_CurrentGroupId != -1)
-  {
-    closeCurrentGroup();
-  }
   closeFile();
 }
 
-int AIMH5DataWriter::createGroup(const std::string &hdfGroupPath, const char* vtkDataObjectType)
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int AIMH5DataWriter::createVtkObjectGroup(const std::string &hdfGroupPath, const char* vtkDataObjectType)
 {
   // std::cout << "   vtkH5DataWriter::WritePoints()" << std::endl;
   herr_t err = H5Utilities::createGroupsFromPath(hdfGroupPath, m_FileId);
@@ -76,26 +74,6 @@ int AIMH5DataWriter::createGroup(const std::string &hdfGroupPath, const char* vt
   return err;
 }
 
-int AIMH5DataWriter::openGroup(const std::string &hdfGroupPath)
-{
-  m_CurrentGroupId = H5Gopen(m_FileId, hdfGroupPath.c_str() );
-  m_CurrentGroupPath = hdfGroupPath;
-
-  return m_CurrentGroupId;
-}
-
-int AIMH5DataWriter::closeCurrentGroup()
-{
-  // Close the PolyData group when we are finished with it
-  int err = H5Gclose(m_CurrentGroupId);
-  if (err < 0)
-  {
-     std::cout << "Error closing group: "  << m_CurrentGroupPath << std::endl;
-  }
-  m_CurrentGroupPath = "";
-  m_CurrentGroupId = -1;
-  return err;
-}
 
 // -----------------------------------------------------------------------------
 //
@@ -135,14 +113,21 @@ int AIMH5DataWriter::closeFile()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int AIMH5DataWriter::writeUnstructuredGrid(const std::vector<float> &points, const std::vector<int32_t> &cells,
+int AIMH5DataWriter::writeUnstructuredGrid(const std::string &hdfPath,
+                                           const std::vector<float> &points,
+                                           const std::vector<int32_t> &cells,
                                            const std::vector<int32_t> &cell_types)
 {
+  herr_t err = 0;
+  err = createVtkObjectGroup(hdfPath, H5_VTK_UNSTRUCTURED_GRID);
+  hid_t gid = H5Gopen(m_FileId, hdfPath.c_str() );
+
   // Write the Points
-  int err = writePoints(points);
+  err = writePoints(gid, points);
   if (err < 0)
   {
-    std::cout << "Error writing Points for Unstructured Grid into " << m_CurrentGroupPath << std::endl;
+    H5Gclose(gid);
+    std::cout << "Error writing Points for Unstructured Grid into " << hdfPath << std::endl;
     return err;
   }
 
@@ -150,53 +135,25 @@ int AIMH5DataWriter::writeUnstructuredGrid(const std::vector<float> &points, con
   int32_t* tempArray = const_cast<int32_t*>(&(cells.front()));
   int32_t rank =1;
   uint64_t dims[1] = {cells.size()};
-  err = H5Lite::writePointerDataset(m_CurrentGroupId, H5_CELLS, rank, dims, tempArray);
+  err = H5Lite::writePointerDataset(gid, H5_CELLS, rank, dims, tempArray);
   if (err < 0)
   {
-     std::cout << "Error Writing CELL array for " << m_CurrentGroupPath << std::endl;
+     std::cout << "Error Writing CELL array for " << hdfPath << std::endl;
   }
   int32_t size = cell_types.size();
-  err = H5Lite::writeScalarAttribute(m_CurrentGroupId, H5_CELLS, "Number Of Cells", size);
+  err = H5Lite::writeScalarAttribute(gid, H5_CELLS, "Number Of Cells", size);
 
   // Write the CELL_TYPE array
   int32_t* cTypePtr = const_cast<int32_t*>(&(cell_types.front()));
   dims[0] = cell_types.size();
-  err = H5Lite::writePointerDataset(m_CurrentGroupId, H5_CELL_TYPES, rank, dims, cTypePtr);
+  err = H5Lite::writePointerDataset(gid, H5_CELL_TYPES, rank, dims, cTypePtr);
   if (err < 0)
   {
-     std::cout << "Error Writing CELL_TYPES for " << m_CurrentGroupPath << std::endl;
+     std::cout << "Error Writing CELL_TYPES for " << hdfPath << std::endl;
   }
+
+  err = H5Gclose(gid);
   return err;
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int AIMH5DataWriter::writePolyCells( const std::vector<int> &cells, const char *label, int polygonEntrySize)
-{
-  // std::cout << "   vtkH5DataWriter::WriteCells()" << std::endl;
-  if ( cells.size() == 0 )
-    {
-    return 1;
-    }
-
-  int ncells=cells.size() / polygonEntrySize;
-  int size=cells.size();
-
-  if ( ncells < 1 )
-    {
-    return 1;
-    }
-  int* tempArray = const_cast<int*>(&(cells.front()));
-  int32_t rank =1;
-  uint64_t dims[1] = {size};
-  herr_t err = H5Lite::writePointerDataset(m_CurrentGroupId, label, rank, dims, tempArray);
-  if (err < 0)
-  {
-    // std::cout << "Error Writing Vertices." << std::endl;
-  }
-  err = H5Lite::writeScalarAttribute(m_CurrentGroupId, label, "Number Of Cells", ncells);
-
-  return err;
-}
 
