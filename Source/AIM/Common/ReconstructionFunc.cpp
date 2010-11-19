@@ -10,7 +10,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 #include "ReconstructionFunc.h"
-#include <AIM/ANG/AngFileReader.h>
+#include <AIM/ANG/AngReader.h>
 
 #if 0
 // -i C:\Users\GroebeMA\Desktop\NewFolder --outputDir C:\Users\GroebeMA\Desktop\NewFolder -f Slice_ --angMaxSlice 400 -s 1 -e 30 -z 0.25 -t -g 10 -c 0.1 -o 5.0 -x 2
@@ -75,13 +75,20 @@ void ReconstructionFunc::initialize(int m_ZStartSlice, int m_ZEndSlice, double m
   for(int i=0;i<zpoints;i++)
   {
 	  std::string angFName = m_DirectoryPattern->generateFullPathAngFileName(i + m_ZStartSlice);
-	  AngFileReader::Pointer reader = AngFileReader::New();
-	  int err = reader->readFile(angFName, 1);
-	  resx = reader->getXStep();
-	  resy = reader->getYStep();
+	  AngReader reader;
+	  reader.setFileName(angFName);
+	  int err = reader.readHeaderOnly();
+	  if (err < 0)
+	  {
+	    std::cout << "Error reading the .ang file " << angFName << std::endl;
+	    totalpoints = -1;
+	    return;
+	  }
+	  resx = reader.getXStep();
+	  resy = reader.getYStep();
 	  resz = m_ZResolution;
-	  xpointstemp = reader->getNumEvenCols();
-	  ypointstemp = reader->getNumRows();
+	  xpointstemp = reader.getNumEvenCols();
+	  ypointstemp = reader.getNumRows();
 	  if(xpointstemp > xpoints) xpoints = xpointstemp;
 	  if(ypointstemp > ypoints) ypoints = ypointstemp;
   }
@@ -98,6 +105,7 @@ void ReconstructionFunc::initialize(int m_ZStartSlice, int m_ZEndSlice, double m
   if(crystruct == 2) eulerodf = new Bin[18*18*18];
   axisodf = new Bin[18*18*18];
 }
+
 void ReconstructionFunc::loadSlices()
 {
 	for(int i=0;i<zpoints;i++)

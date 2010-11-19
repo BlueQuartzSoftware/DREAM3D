@@ -15,7 +15,7 @@
 #include "MXA/Utilities/MXADir.h"
 
 #include "AIM/ANG/AngDirectoryPatterns.h"
-#include "AIM/ANG/AngFileReader.h"
+#include "AIM/ANG/AngReader.h"
 #include "AIM/ANG/AngFileHelper.h"
 #include "AIMH5DataWriter.h"
 
