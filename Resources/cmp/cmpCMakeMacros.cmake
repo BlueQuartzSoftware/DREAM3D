@@ -344,10 +344,10 @@ endmacro(FindQt4Plugins pluginlist)
 # --------------------------------------------------------------------
 #-- Copy all the dependent DLLs into the current build directory so that the test
 #-- can run.
-MACRO (CMP_COPY_DEPENDENT_LIBRARIES mxa_lib_list)
+MACRO (CMP_COPY_DEPENDENT_LIBRARIES _libraryList)
  # message(STATUS "#--------------------------------------------")
- # message(STATUS "CMP_COPY_DEPENDENT_LIBRARIES: ${mxa_lib_list}")
-  set (mxa_lib_list ${mxa_lib_list})
+ # message(STATUS "CMP_COPY_DEPENDENT_LIBRARIES: ${_libraryList}")
+  set (_libraryList ${_libraryList})
   SET (TYPES Debug Release)
   if (MSVC)
     # Make all the necessary intermediate directories for Visual Studio
@@ -355,7 +355,7 @@ MACRO (CMP_COPY_DEPENDENT_LIBRARIES mxa_lib_list)
     file(MAKE_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Release)
     file(MAKE_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/MinSizeRel)
     file(MAKE_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/RelWithDebInfo)
-    FOREACH(lib ${mxa_lib_list})
+    FOREACH(lib ${_libraryList})
     
       STRING(TOUPPER ${lib} upperlib)
     #  message(STATUS "upperlib: ${upperlib}")
@@ -391,7 +391,7 @@ MACRO (CMP_COPY_DEPENDENT_LIBRARIES mxa_lib_list)
 
         ENDFOREACH(BTYPE ${TYPES})
       ENDIF(${upperlib}_IS_SHARED)
-    ENDFOREACH(lib ${mxa_lib_list})
+    ENDFOREACH(lib ${_libraryList})
   ENDIF(MSVC)  
 endmacro()
 
@@ -432,12 +432,12 @@ endmacro()
 # dependent DLL libraries (HDF5, Tiff, Expat, MXADataModel) will be
 # properly installed with your project.
 # --------------------------------------------------------------------
-MACRO (CMP_LIBRARIES_INSTALL_RULES mxa_lib_list destination)
-  set (mxa_lib_list ${mxa_lib_list})
+MACRO (CMP_LIBRARIES_INSTALL_RULES _libraryList destination)
+  set (_libraryList ${_libraryList})
   SET (TYPES Debug Release)
   if (MSVC)
    
-    FOREACH(lib ${mxa_lib_list})
+    FOREACH(lib ${_libraryList})
         STRING(TOUPPER ${lib} upperlib)
       
         FOREACH(BTYPE ${TYPES} )
@@ -466,7 +466,7 @@ MACRO (CMP_LIBRARIES_INSTALL_RULES mxa_lib_list destination)
           endif()
         
         ENDFOREACH(BTYPE ${TYPES})
-    ENDFOREACH(lib ${mxa_lib_list})
+    ENDFOREACH(lib ${_libraryList})
   ENDIF(MSVC) 
 ENDMACRO()
 

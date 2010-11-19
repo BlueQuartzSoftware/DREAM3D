@@ -17,8 +17,10 @@
 #include "AIM/ANG/AngDirectoryPatterns.h"
 #include "AIM/ANG/AngReader.h"
 #include "AIM/ANG/AngFileHelper.h"
-#include "AIMH5DataWriter.h"
 
+#if MXA_HDF5_SUPPORT
+#include "AIM/HDF5/AIMH5DataWriter.h"
+#endif
 
 
 
@@ -420,16 +422,17 @@ void Reconstruction::on_CancelWorker()
 #endif
 
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 int Reconstruction::writeHDF5GrainsFile(const std::string &hdfFile,
                                           ReconstructionFunc::Pointer r)
 {
+  int err = -1;
+#if MXA_HDF5_SUPPORT
   AIMH5DataWriter::Pointer h5writer = AIMH5DataWriter::New();
   h5writer->setFileName(hdfFile);
-  int err = h5writer->openFile(false); // Open a new file over writing any other file
+  err = h5writer->openFile(false); // Open a new file over writing any other file
 
   std::stringstream ss;
   std::string hdfPath;
@@ -520,6 +523,9 @@ int Reconstruction::writeHDF5GrainsFile(const std::string &hdfFile,
   }
 
   err = h5writer->closeFile();
-
+#else
+  std::cout << "HDF5 support was not enabled in this build. Please reconfigure and recompile the sources." << std::endl;
+#endif
   return err;
 }
+
