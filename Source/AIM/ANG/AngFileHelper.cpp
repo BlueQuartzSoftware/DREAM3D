@@ -10,7 +10,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 #include "AngFileHelper.h"
-#include <AIM/ANG/AngFileReader.h>
+#include <AIM/ANG/AngReader.h>
 #include <math.h>
 
 // -----------------------------------------------------------------------------
@@ -37,20 +37,22 @@ void AngFileHelper::loadData(Voxel voxels[], int xpoints, int ypoints, int zpoin
   const int checked = 1;
   const int init = -1;
   int index = 0;
-  AngFileReader::Pointer reader = AngFileReader::New();
-  std::string angFName = m_DirectoryPattern->generateFullPathAngFileName(slice + m_ZIndexStart);
+  AngReader reader;
 
-  int err = reader->readFile(angFName, 0);
+  std::string angFName = m_DirectoryPattern->generateFullPathAngFileName(slice + m_ZIndexStart);
+  reader.setFileName(angFName);
+
+  int err = reader.readFile();
   int readerIndex = 0;
-  int xpointstemp = reader->getNumEvenCols();
-  int ypointstemp = reader->getNumRows();
-  float* euler1Ptr = reader->getPhi1Data()->getPointer(0);
-  float* euler2Ptr = reader->getPhiData()->getPointer(0);
-  float* euler3Ptr = reader->getPhi2Data()->getPointer(0);
-  float* xcPtr = reader->getXData()->getPointer(0);
-  float* ycPtr = reader->getYData()->getPointer(0);
-  float* confPtr = reader->getConfidenceIndexData()->getPointer(0);
-  float* imqualPtr = reader->getImageQualityData()->getPointer(0);
+  int xpointstemp = reader.getNumEvenCols();
+  int ypointstemp = reader.getNumRows();
+  float* euler1Ptr = reader.getPhi1Pointer();
+  float* euler2Ptr = reader.getPhiPointer();
+  float* euler3Ptr = reader.getPhi2Pointer();
+  float* xcPtr = reader.getXPosPointer();
+  float* ycPtr = reader.getYPosPointer();
+  float* confPtr = reader.getConfidenceIndexPointer();
+  float* imqualPtr = reader.getImageQualityPointer();
   int xstartspot = (xpoints - xpointstemp) / 2;
   int ystartspot = (ypoints - ypointstemp) / 2;
   for (int j = 0; j < ypointstemp; j++)
