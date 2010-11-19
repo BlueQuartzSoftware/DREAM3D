@@ -36,6 +36,7 @@
 
 #include <boost/shared_ptr.hpp>
 
+#include "AIM/Common/AIMCommonConfiguration.h"
 
 #define kBufferSize 1024
 
@@ -49,7 +50,7 @@ class SurfaceMeshFunc;
  * @date Aug 13, 2010
  * @version 1.0
  */
-class VTKFileUtils
+class AIMCOMMON_EXPORT VTKFileUtils
 {
   public:
     VTKFileUtils();

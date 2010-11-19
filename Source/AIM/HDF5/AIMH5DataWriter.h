@@ -45,6 +45,8 @@
 #include "MXA/HDF5/H5Utilities.h"
 #include "MXA/HDF5/H5Lite.h"
 
+#include "AIM/Common/AIMCommonConfiguration.h"
+
 class ReconstructionFunc;
 
 /**
@@ -82,7 +84,7 @@ class ReconstructionFunc;
  * @date Nov 19, 2010
  * @version 1.0
  */
-class AIMH5DataWriter
+class AIMCOMMON_EXPORT AIMH5DataWriter
 {
   public:
     MXA_SHARED_POINTERS(AIMH5DataWriter);

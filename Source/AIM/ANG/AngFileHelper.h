@@ -17,11 +17,12 @@
 
 
 #include <MXA/Common/MXASetGetMacros.h>
+#include "AIM/Common/AIMCommonConfiguration.h"
 #include <AIM/Common/Voxel.h>
 #include <AIM/ANG/AngDirectoryPatterns.h>
 
 
-class AngFileHelper
+class AIMCOMMON_EXPORT AngFileHelper
 {
   public:
     MXA_SHARED_POINTERS(AngFileHelper)

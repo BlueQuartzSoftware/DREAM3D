@@ -2,6 +2,7 @@
 #include <iostream>
 
 #include "MXA/Common/MXASetGetMacros.h"
+#include "AIM/Common/AIMCommonConfiguration.h"
 
 /**
  * @brief Creates a static "New" method that creates an instance of thisClass
@@ -17,7 +18,7 @@
 /**
  *
  */
-class HeaderEntry
+class AIMCOMMON_EXPORT HeaderEntry
 {
   public:
     MXA_SHARED_POINTERS(HeaderEntry);
@@ -38,7 +39,7 @@ class HeaderEntry
 
 
 template<typename T>
-class AngHeaderEntry : public HeaderEntry
+class AIMCOMMON_EXPORT AngHeaderEntry : public HeaderEntry
 {
 
   public:

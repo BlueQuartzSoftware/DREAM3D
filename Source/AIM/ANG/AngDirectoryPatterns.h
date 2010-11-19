@@ -16,10 +16,14 @@
 #define WIN32_LEAN_AND_MEAN		// Exclude rarely-used stuff from Windows headers
 #endif
 
+#include <string>
 
 #include <MXA/Common/MXASetGetMacros.h>
 #include <MXA/MXATypes.h>
-#include <string>
+
+#include "AIM/Common/AIMCommonConfiguration.h"
+
+
 
 namespace Ang {
   namespace DirectoryPatterns {
@@ -31,7 +35,7 @@ namespace Ang {
 /**
  *
  */
-class AngDirectoryPatterns
+class AIMCOMMON_EXPORT AngDirectoryPatterns
 {
   public:
     MXA_SHARED_POINTERS(AngDirectoryPatterns)

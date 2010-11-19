@@ -20,6 +20,8 @@
 
 #include <vector>
 
+#include "AIM/Common/AIMCommonConfiguration.h"
+
 /**
 * @class Neighbor Neighbor.h AIM/Common/Neighbor.h
 * @brief Support class for the MicroGen3D class
@@ -27,7 +29,7 @@
 * @date Nov 4, 2009
 * @version 1.0
 */
-class Neighbor
+class AIMCOMMON_EXPORT Neighbor
 {
 public:
     Neighbor();

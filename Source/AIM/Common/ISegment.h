@@ -19,6 +19,8 @@
 
 #include <vector>
 
+#include "AIM/Common/AIMCommonConfiguration.h"
+
 /**
 * @class ISegment ISegment.h AIM/Common/ISegment.h
 * @brief Support class for the MicroGen3D class
@@ -26,7 +28,7 @@
 * @date Nov 4, 2009
 * @version 1.0
 */
-class ISegment
+class AIMCOMMON_EXPORT ISegment
 {
 public:
     ISegment();
