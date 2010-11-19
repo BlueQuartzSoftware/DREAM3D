@@ -84,7 +84,7 @@ public:
 	AIMRandomNG rg;
 	Voxel* voxels;
 	Voxel* voxelstemp;
-	vector<Grain> grains;
+	vector<Grain> m_Grains;
 	Bin *eulerodf;
 	Bin *axisodf;
 

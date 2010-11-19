@@ -16,28 +16,31 @@
 #define WIN32_LEAN_AND_MEAN		// Exclude rarely-used stuff from Windows headers
 #endif
 
-
 #include <vector>
 
 #include "AIM/Common/AIMCommonConfiguration.h"
 
 /**
-* @class Grain Grain.h AIM/Common/Grain.h
-* @brief Support class for the MicroGen3D class
-* @author Michael A. Jackson for BlueQuartz Software, Dr. Michael Groeber for USAFRL
-* @date Nov 4, 2009
-* @version 1.0
-*/
+ * @class Grain Grain.h AIM/Common/Grain.h
+ * @brief Support class for the MicroGen3D class
+ * @author Michael A. Jackson for BlueQuartz Software, Dr. Michael Groeber for USAFRL
+ * @date Nov 4, 2009
+ * @version 1.0
+ */
 class AIMCOMMON_EXPORT Grain
 {
 
-
   public:
     Grain();
+    Grain(const Grain&);
+    Grain(Grain& grain);
+    virtual ~Grain();
+    Grain& operator=(const Grain&);
 
-	int nucleus;
-	double packquality;
-	int active;
+
+    int nucleus;
+    double packquality;
+    int active;
     int numvoxels;
     int numneighbors;
     int newgrainname;
@@ -56,7 +59,7 @@ class AIMCOMMON_EXPORT Grain
     double Ixy;
     double Iyz;
     double Ixz;
-	double omega3;
+    double omega3;
     double averagemisorientation;
     double kernelmisorientation;
     double red;
@@ -77,15 +80,14 @@ class AIMCOMMON_EXPORT Grain
     double radius2;
     double radius3;
     double lowanglefraction;
-	double avg_quat[5];
-    std::vector<int> neighbordistfunc;
-    std::vector<int>* neighborlist;
-    std::vector<int>* voxellist;
-    std::vector<double>* ellipfunclist;
-    std::vector<double>* misorientationlist;
-    std::vector<double>* neighborsurfarealist;
-	std::vector<std::vector<int> > neighbordistfunclist;
-
+    double avg_quat[5];
+    std::vector<int > neighbordistfunc;
+    std::vector<int >* neighborlist;
+    std::vector<int >* voxellist;
+    std::vector<double >* ellipfunclist;
+    std::vector<double >* misorientationlist;
+    std::vector<double >* neighborsurfarealist;
+    std::vector<std::vector<int > > neighbordistfunclist;
 };
 
 #endif /* GRAINS_H_ */

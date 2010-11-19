@@ -304,7 +304,7 @@ void Reconstruction::compute()
     m->merge_twins(quat_symmcubic, quat_symmhex);
     progressMessage(AIM_STRING("Merging Twins"), 51);
     m->characterize_twins();
-	CHECK_FOR_CANCELED(ReconstructionFunc)
+	  CHECK_FOR_CANCELED(ReconstructionFunc)
     progressMessage(AIM_STRING("Renumbering Grains"), 53);
     m->numgrains = m->renumber_grains3();
   }
@@ -439,7 +439,7 @@ int Reconstruction::writeHDF5GrainsFile(const std::string &hdfFile,
   std::string hdfPath;
   for (int i = 1; i < r->numgrains; i++)
   {
-    vector<int>* vlist = r->grains[i].voxellist;
+    vector<int>* vlist = r->m_Grains[i].voxellist;
     int vid = vlist->at(0);
     ss.str("");
     ss << "/" << i;
@@ -514,7 +514,7 @@ int Reconstruction::writeHDF5GrainsFile(const std::string &hdfFile,
     //Write the Field Data
     err = h5writer->writeFieldData<int>( hdfPath, grainName, "Grain_ID", 1);
 
-    schmidFactor[0] = r->grains[i].schmidfactor;
+    schmidFactor[0] = r->m_Grains[i].schmidfactor;
     err = h5writer->writeFieldData<float>( hdfPath, schmidFactor, "SchmidFactor", 1);
 
     // Write CELL_DATA
