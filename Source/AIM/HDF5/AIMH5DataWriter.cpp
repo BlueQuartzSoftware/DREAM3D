@@ -156,4 +156,38 @@ int AIMH5DataWriter::writeUnstructuredGrid(const std::string &hdfPath,
   return err;
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int AIMH5DataWriter::writeObjectIndex(std::vector<std::string> &hdfPaths)
+{
+  herr_t err = 0;
+  err = H5Utilities::createGroupsFromPath(H5_VTK_OBJECT_INDEX_PATH, m_FileId);
+  if (err < 0)
+  {
+    std::cout << "Error creating HDF Group " << H5_VTK_OBJECT_INDEX_PATH << std::endl;
+  }
+
+  hid_t gid = H5Gopen(m_FileId, H5_VTK_OBJECT_INDEX_PATH);
+  if(gid < 0)
+  {
+    std::cout << "Error writing string attribute to HDF Group " << H5_VTK_OBJECT_INDEX_PATH << std::endl;
+  }
+
+  std::stringstream ss;
+  std::vector<std::string>::size_type stop = hdfPaths.size();
+  std::vector<std::string>::size_type p = 0;
+  for (p = 0; p < stop; ++p)
+  {
+    ss.str("");
+    ss << p;
+    err = H5Lite::writeStringDataset(gid, ss.str(), hdfPaths[p]);
+    if (err < 0)
+    {
+      std::cout << "Error writing VTK Object Index" << std::endl;
+    }
+  }
+  err = H5Gclose(gid);
+  return err;
+}
 

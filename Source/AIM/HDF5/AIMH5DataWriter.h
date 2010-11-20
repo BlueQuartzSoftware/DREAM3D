@@ -123,6 +123,12 @@ class AIMCOMMON_EXPORT AIMH5DataWriter
                               const std::vector<int32_t> &cell_types);
 
     /**
+     *
+     */
+    int writeObjectIndex(std::vector<std::string> &hdfPaths);
+
+
+    /**
      * @brief
      * @param fp
      * @param data

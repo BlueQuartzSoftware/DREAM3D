@@ -437,6 +437,7 @@ int Reconstruction::writeHDF5GrainsFile(const std::string &hdfFile,
 
   std::stringstream ss;
   std::string hdfPath;
+  std::vector<std::string> hdfPaths;
   for (int i = 1; i < r->numgrains; i++)
   {
     vector<int>* vlist = r->m_Grains[i].voxellist;
@@ -444,7 +445,7 @@ int Reconstruction::writeHDF5GrainsFile(const std::string &hdfFile,
     ss.str("");
     ss << "/" << i;
     hdfPath = ss.str();
-
+    hdfPaths.push_back(hdfPath);
 
     vector<int> plist(((r->xpoints + 1) * (r->ypoints + 1) * (r->zpoints + 1)), 0);
     int pcount = 0;
@@ -523,6 +524,7 @@ int Reconstruction::writeHDF5GrainsFile(const std::string &hdfFile,
     err = h5writer->writeCellData<float>(hdfPath, imageQuality, "ImageQuality", 1);
   }
 
+  err = h5writer->writeObjectIndex(hdfPaths);
   err = h5writer->closeFile();
 #else
   std::cout << "HDF5 support was not enabled in this build. Please reconfigure and recompile the sources." << std::endl;
