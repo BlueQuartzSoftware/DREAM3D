@@ -12,13 +12,18 @@
 
 # MESSAGE (STATUS "Finding MINGW library and headers..." )
 
+# Only set MINGW_INSTALL to the environment variable if it is blank
+if ("${MINGW_INSTALL}" STREQUAL "")
+    SET (MINGW_INSTALL  $ENV{MINGW_INSTALL})
+endif()
+
 # Look for the header file.
 SET(MINGW_INCLUDE_SEARCH_DIRS
-  $ENV{MINGW_INSTALL}/include
+  ${MINGW_INSTALL}/include
 )
 
 SET (MINGW_LIB_SEARCH_DIRS
-  $ENV{MINGW_INSTALL}/bin
+  ${MINGW_INSTALL}/bin
   )
 
 FIND_PATH(MINGW_INCLUDE_DIR 
