@@ -65,6 +65,7 @@ lowanglefraction(0.0)
   neighborsurfarealist = NULL; //new std::vector<double>;
 }
 
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -148,9 +149,11 @@ Grain::Grain(const Grain& grain)
   }
 }
 
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+#if 0
 Grain::Grain(Grain& grain)
 {
   numvoxels = grain.numvoxels ;
@@ -230,6 +233,7 @@ Grain::Grain(Grain& grain)
     neighborsurfarealist->assign(grain.neighborsurfarealist->begin(), grain.neighborsurfarealist->end());
   }
 }
+#endif
 
 // -----------------------------------------------------------------------------
 //

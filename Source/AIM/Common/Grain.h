@@ -33,7 +33,7 @@ class AIMCOMMON_EXPORT Grain
   public:
     Grain();
     Grain(const Grain&);
-    Grain(Grain& grain);
+ //   Grain(Grain& grain);
     virtual ~Grain();
     Grain& operator=(const Grain&);
 
