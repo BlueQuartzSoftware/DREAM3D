@@ -47,6 +47,7 @@
 
 #include "AIM/Common/AIMCommonConfiguration.h"
 
+
 class ReconstructionFunc;
 
 /**
@@ -171,7 +172,7 @@ class AIMCOMMON_EXPORT AIMH5DataWriter
 
       numPts=points.size()/3;
 
-      int err = this->vtkWriteDataArray<T>(groupId, &(points.front()), H5_POINTS, numPts, 3);
+      int err = this->vtkWriteDataArray<T>(groupId, &(points.front()), H5_POINTS, (int)numPts, 3);
       if (err != 1)
       {
         // std::cout << "Error Writing Points Array" << std::endl;
@@ -219,7 +220,7 @@ class AIMCOMMON_EXPORT AIMH5DataWriter
       }
 
       T* data = const_cast<T*>(&(field_data.front()));
-      int num = field_data.size() / numComp;
+      int num = static_cast<int>(field_data.size() / numComp);
       err = vtkWriteDataArray(fieldGroupId, data, label, num, numComp);
       if (err < 0)
       {
@@ -260,7 +261,7 @@ class AIMCOMMON_EXPORT AIMH5DataWriter
       }
 
       T* data = const_cast<T*>(&(cell_data.front()));
-      int num = cell_data.size() / numComp;
+      int num = static_cast<int>(cell_data.size() / numComp);
       err = vtkWriteDataArray(cellGroupId, data, label, num, numComp);
       if (err < 0)
       {
