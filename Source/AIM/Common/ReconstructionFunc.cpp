@@ -298,7 +298,7 @@ void ReconstructionFunc::find_border()
 	  size = voxelslist.size();
 	  if (m_Grains[0].voxellist != NULL)
 	  {
-	    std::cout << "Deleting VoxelList at " << m_Grains[0].voxellist << std::endl;
+	  //  std::cout << "Deleting VoxelList at " << m_Grains[0].voxellist << std::endl;
 	    delete m_Grains[0].voxellist;
 	    m_Grains[0].voxellist = NULL;
 	  }
