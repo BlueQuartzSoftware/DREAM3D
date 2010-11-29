@@ -89,6 +89,7 @@ public:
   int err;
   int NS; // The number of sites(voxels) in the simulation box...
   int NSP;
+  int numgrains;
   int xDim;
   int yDim;
   int zDim;
@@ -130,20 +131,13 @@ public:
   void arrange_grainnames(int numT, int zID);
   int assign_nodeID(int nN, int zID);
   void update_current_triangles(int nT);
-
   double find_xcoord(long);
   double find_ycoord(long);
   double find_zcoord(long);
-
-
+  void smooth_boundaries(int nNodes, int nTriangles, string NodesFile, string TrianglesFile);
   void writeNodesFile(int zID, int cNodeID, const std::string &NodesRawFile);
   void writeTrianglesFile(int nt, const std::string &TrianglesFileIndex, int zID, int ctid);
-  void writeVTKOutputFile (int nNodes, int nTriangles,
-                           const std::string &VisualizationFile,
-                           const std::string &NodesFile,
-                           const std::string &TrianglesFile,
-                           bool binaryFile,
-                           bool conformalMesh);
+  void writeVTKOutputFile (int nNodes, int nTriangles, const std::string &VisualizationFile, const std::string &NodesFile, const std::string &TrianglesFile, bool binaryFile, bool conformalMesh);
 
 
 protected:

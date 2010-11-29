@@ -247,26 +247,12 @@ void SurfaceMesh::compute()
   msg.append(VisualizationFile);
 #endif
 
-  progressMessage(msg, 90 );
+  progressMessage(AIM_STRING("Smoothing Boundaries"), 90 );
+  m->smooth_boundaries(nNodes, cTriID, NodesFile, TrianglesFile);
 
+  progressMessage(msg, 95 );
   m->writeVTKOutputFile(nNodes, cTriID, VisualizationFile, NodesFile, TrianglesFile, m_BinaryVTKFile, m_ConformalMesh);
 
-/*  if (m_SmoothMesh == true)
-  {
-    //TODO: Run the smoothing algorithm
-    CHECK_FOR_CANCELED(Surface Meshing)
-    progressMessage(AIM_STRING("Smoothing Surface Meshing"), 70 );
-    int lockquads = 0;
-    if (m_SmoothLockQuadPoints) { lockquads = 1; }
-    m_ErrorCondition = SmoothGrain3D(AIM::Representation::NodesFile,
-                                     AIM::Representation::TrianglesFile,
-                                      m_OutputDirectory,
-                                      m_SmoothIterations,
-                                      m_SmoothFileOutputIncrement,
-                                      lockquads);
-
-  }
-*/
   progressMessage(AIM_STRING("Surface Meshing Complete"), 100 );
 }
 

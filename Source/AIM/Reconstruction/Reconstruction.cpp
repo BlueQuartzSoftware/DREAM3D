@@ -319,19 +319,23 @@ void Reconstruction::compute()
 
   CHECK_FOR_CANCELED(ReconstructionFunc)
   progressMessage(AIM_STRING("Finding Grain Centroids"), 56);
-  m->find_centroids();
+  if(m_ZEndIndex-m_ZStartIndex > 1) m->find_centroids();
+  if(m_ZEndIndex-m_ZStartIndex == 1)m->find_centroids2D();
 
   CHECK_FOR_CANCELED(ReconstructionFunc)
   progressMessage(AIM_STRING("Finding Grain Moments"), 59);
-  m->find_moments();
-
+  if(m_ZEndIndex-m_ZStartIndex > 1) m->find_moments();
+  if(m_ZEndIndex-m_ZStartIndex == 1) m->find_moments2D();
+  
   CHECK_FOR_CANCELED(ReconstructionFunc)
   progressMessage(AIM_STRING("Finding Grain Principal Axes Lengths"), 62);
-  m->find_axes();
+  if(m_ZEndIndex-m_ZStartIndex > 1) m->find_axes();
+  if(m_ZEndIndex-m_ZStartIndex == 1) m->find_axes2D();
 
   CHECK_FOR_CANCELED(ReconstructionFunc)
   progressMessage(AIM_STRING("Finding Grain Pricipal Axes Vectors"), 65);
-  m->find_vectors();
+  if(m_ZEndIndex-m_ZStartIndex > 1) m->find_vectors();
+  if(m_ZEndIndex-m_ZStartIndex == 1) m->find_vectors2D();
 
   CHECK_FOR_CANCELED(ReconstructionFunc)
   progressMessage(AIM_STRING("Refinding Neighbors"), 68);
@@ -363,7 +367,8 @@ void Reconstruction::compute()
 
   CHECK_FOR_CANCELED(ReconstructionFunc)
   progressMessage(AIM_STRING("Writing Statistics"), 89);
-  m->volume_stats(statsFile,misorientationFile,microBinsFile);
+  if(m_ZEndIndex-m_ZStartIndex > 1) m->volume_stats(statsFile,misorientationFile,microBinsFile);
+  if(m_ZEndIndex-m_ZStartIndex == 1) m->volume_stats2D(statsFile,misorientationFile,microBinsFile);
 
   CHECK_FOR_CANCELED(ReconstructionFunc)
   progressMessage(AIM_STRING("Writing Out Volume"), 92);
@@ -371,8 +376,8 @@ void Reconstruction::compute()
 
   CHECK_FOR_CANCELED(ReconstructionFunc)
   progressMessage(AIM_STRING("Writing Out Grains"), 94);
-  m->write_grains(m_OutputDirectory /* quat_symmcubic, quat_symmhex */);
-  writeHDF5GrainsFile(hdf5GrainFile, m);
+//  m->write_grains(m_OutputDirectory);
+//  writeHDF5GrainsFile(hdf5GrainFile, m);
 
   CHECK_FOR_CANCELED(ReconstructionFunc)
   progressMessage(AIM_STRING("Writing Grain Data"), 96);
