@@ -157,12 +157,17 @@ public:
 	void find_moments();
 	void find_axes();
 	void find_vectors();
+	void find_centroids2D();
+	void find_moments2D();
+	void find_axes2D();
+	void find_vectors2D();
 	void find_eulerodf();
 	void measure_misorientations(double quat_symmcubic[24][5],double quat_symmhex[12][5]);
 	void find_colors(double quat_symmcubic[24][5],double quat_symmhex[12][5]);
 	void find_convexities();
 	void find_schmids();
 	void volume_stats(string,string,string);
+	void volume_stats2D(string,string,string);
 	void write_axisodf(string);
 	void write_eulerodf(string);
 	void write_graindata(string);
