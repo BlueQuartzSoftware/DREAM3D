@@ -14,6 +14,7 @@
 #include "MXA/MXATypes.h"
 #include "MXA/Utilities/MXADir.h"
 
+#include "AIM/Common/Constants.h"
 #include "AIM/Common/AIMCommonConfiguration.h"
 #include "AIM/ANG/AngDirectoryPatterns.h"
 #include "AIM/ANG/AngReader.h"
@@ -376,8 +377,8 @@ void Reconstruction::compute()
 
   CHECK_FOR_CANCELED(ReconstructionFunc)
   progressMessage(AIM_STRING("Writing Out Grains"), 94);
-//  m->write_grains(m_OutputDirectory);
-//  writeHDF5GrainsFile(hdf5GrainFile, m);
+  writeHDF5GrainsFile(hdf5GrainFile, m);
+  m->write_grains(m_OutputDirectory /* quat_symmcubic, quat_symmhex */);
 
   CHECK_FOR_CANCELED(ReconstructionFunc)
   progressMessage(AIM_STRING("Writing Grain Data"), 96);
@@ -518,15 +519,18 @@ int Reconstruction::writeHDF5GrainsFile(const std::string &hdfFile,
     cell_types.resize(0);
 
     //Write the Field Data
-    err = h5writer->writeFieldData<int>( hdfPath, grainName, "Grain_ID", 1);
+    err = h5writer->writeFieldData<int>( hdfPath, grainName, AIM::Representation::Grain_ID.c_str(), 1);
 
     schmidFactor[0] = r->m_Grains[i].schmidfactor;
-    err = h5writer->writeFieldData<float>( hdfPath, schmidFactor, "SchmidFactor", 1);
+    err = h5writer->writeFieldData<float>( hdfPath, schmidFactor,  AIM::Representation::SchmidFactor.c_str(), 1);
+
+    // Write the Neighbor list
+    err = h5writer->writeFieldData<int>(hdfPath, *(r->m_Grains[i].neighborlist),  AIM::Representation::Neighbor_Grain_ID_List.c_str(), 1);
 
     // Write CELL_DATA
-    err = h5writer->writeCellData<float>(hdfPath, kernelAvgDisorientation, "KernelAvgDisorientation", 1);
-    err = h5writer->writeCellData<float>(hdfPath, grainAvgDisorientation, "GrainAvgDisorientation", 1);
-    err = h5writer->writeCellData<float>(hdfPath, imageQuality, "ImageQuality", 1);
+    err = h5writer->writeCellData<float>(hdfPath, kernelAvgDisorientation,  AIM::Representation::KernelAvgDisorientation.c_str(), 1);
+    err = h5writer->writeCellData<float>(hdfPath, grainAvgDisorientation,  AIM::Representation::GrainAvgDisorientation.c_str(), 1);
+    err = h5writer->writeCellData<float>(hdfPath, imageQuality,  AIM::Representation::ImageQuality.c_str(), 1);
   }
 
   err = h5writer->writeObjectIndex(hdfPaths);
