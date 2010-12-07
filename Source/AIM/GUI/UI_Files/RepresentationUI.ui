@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>653</width>
-    <height>634</height>
+    <width>658</width>
+    <height>617</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -31,7 +31,7 @@
      <widget class="QTabWidget" name="tabWidget">
       <property name="minimumSize">
        <size>
-        <width>527</width>
+        <width>650</width>
         <height>0</height>
        </size>
       </property>
@@ -666,9 +666,6 @@
          </layout>
         </item>
         <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_11"/>
-        </item>
-        <item>
          <widget class="Line" name="line_6">
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
@@ -680,7 +677,7 @@
           <item>
            <widget class="QLabel" name="label_29">
             <property name="text">
-             <string>Visualization Options</string>
+             <string>Visualization Ouput Files: Each option will be saved into its own file</string>
             </property>
            </widget>
           </item>
@@ -702,6 +699,20 @@
               </property>
              </widget>
             </item>
+            <item row="2" column="0">
+             <widget class="QCheckBox" name="Disorientationoutputoption">
+              <property name="text">
+               <string>Disorientation</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="1">
+             <widget class="QCheckBox" name="SchmidFactoroutputoption">
+              <property name="text">
+               <string>Schmid Factor</string>
+              </property>
+             </widget>
+            </item>
             <item row="1" column="1">
              <widget class="QCheckBox" name="ImageQualityoutputoption">
               <property name="text">
@@ -709,28 +720,7 @@
               </property>
              </widget>
             </item>
-            <item row="1" column="2">
-             <widget class="QCheckBox" name="SchmidFactoroutputoption">
-              <property name="text">
-               <string>Schmid Factor</string>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="3">
-             <widget class="QCheckBox" name="Disorientationoutputoption">
-              <property name="text">
-               <string>Disorientation</string>
-              </property>
-             </widget>
-            </item>
            </layout>
-          </item>
-          <item>
-           <widget class="QLabel" name="label_32">
-            <property name="text">
-             <string>Each option will be saved into its own file</string>
-            </property>
-           </widget>
           </item>
          </layout>
         </item>
@@ -2058,7 +2048,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>653</width>
+     <width>658</width>
      <height>22</height>
     </rect>
    </property>
