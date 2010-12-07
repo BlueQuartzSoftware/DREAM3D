@@ -395,8 +395,9 @@ void RepresentationUI::setupGui()
   sm_CheckIOFiles();
 
   // Setup the Volume Meshing Tab Gui
-  vm_SetupGui();
-  vm_CheckIOFiles();
+//  vm_SetupGui();
+//  vm_CheckIOFiles();
+  this->tabWidget->removeTab(3);
 }
 
 // -----------------------------------------------------------------------------
