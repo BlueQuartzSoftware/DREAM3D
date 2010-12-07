@@ -298,7 +298,7 @@ void ReconstructionFunc::find_border()
 	  size = voxelslist.size();
 	  if (m_Grains[0].voxellist != NULL)
 	  {
-	    std::cout << "Deleting VoxelList at " << m_Grains[0].voxellist << std::endl;
+	  //  std::cout << "Deleting VoxelList at " << m_Grains[0].voxellist << std::endl;
 	    delete m_Grains[0].voxellist;
 	    m_Grains[0].voxellist = NULL;
 	  }
@@ -307,12 +307,7 @@ void ReconstructionFunc::find_border()
   }
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void ReconstructionFunc::align_sections(const std::string &filename,
-                                        double quat_symmcubic[24][5],
-                                        double quat_symmhex[12][5])
+void ReconstructionFunc::align_sections(const std::string &filename, double quat_symmcubic[24][5], double quat_symmhex[12][5])
 {
 
   ofstream outFile;
@@ -1013,9 +1008,6 @@ void  ReconstructionFunc::merge_containedgrains()
   }
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 int  ReconstructionFunc::renumber_grains()
 {
   int graincount = 1;
@@ -1042,9 +1034,6 @@ int  ReconstructionFunc::renumber_grains()
   return graincount;
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 int ReconstructionFunc::define_subgrains(double quat_symmcubic[24][5],double quat_symmhex[12][5])
 {
   size_t initialVoxelsListSize = 1000;
@@ -2147,7 +2136,8 @@ void  ReconstructionFunc::find_neighbors()
 		column = j%xpoints;
 		row = (j/xpoints)%ypoints;
 		plane = j/(xpoints*ypoints);
-		if(column == 0 || column == (xpoints-1) || row == 0 || row == (ypoints-1) || plane == 0 || plane == (zpoints-1)) m_Grains[grain].surfacegrain = surfacegrain;
+		if((column == 0 || column == (xpoints-1) || row == 0 || row == (ypoints-1) || plane == 0 || plane == (zpoints-1)) && zpoints != 1) m_Grains[grain].surfacegrain = surfacegrain;
+		if((column == 0 || column == (xpoints-1) || row == 0 || row == (ypoints-1)) && zpoints == 1) m_Grains[grain].surfacegrain = surfacegrain;
         for(int k=0;k<6;k++)
         {
 		  good = 1;
@@ -2208,16 +2198,14 @@ void  ReconstructionFunc::find_neighbors()
     m_Grains[i].neighborsurfarealist = new std::vector<double>(numneighs);
     m_Grains[i].neighborsurfarealist = nsalist;
   }
-  if(m_Grains[1].numvoxels != 0)
+  if(m_Grains[1].equivdiameter != 0)
   {
 	  for(int i=1;i<numgrains;i++)
 	  {
 		x = m_Grains[i].centroidx;
 		y = m_Grains[i].centroidy;
 		z = m_Grains[i].centroidz;
-		vol = m_Grains[i].numvoxels*resx*resy*resz;
-		rad = vol*(3.0/4.0)*(1.0/m_pi);
-		rad = pow(rad,0.333333333333);
+		rad = m_Grains[i].equivdiameter/2.0;
 		for(int j=1;j<numgrains;j++)
 		{
 			xn = m_Grains[j].centroidx;
@@ -2243,9 +2231,9 @@ void  ReconstructionFunc::find_centroids()
   int onedge = 0;
   maxdiameter=0;
   mindiameter=100000;
-  double x;
-  double y;
-  double z;
+  double x, y, z;
+  double radcubed;
+  double diameter;
   graincenters = new double *[numgrains];
   for(int i = 0; i < numgrains; i++)
   {
@@ -2265,13 +2253,13 @@ void  ReconstructionFunc::find_centroids()
         z = find_zcoord(j);
 	    int col = j%xpoints;
 	    int row = (j/xpoints)%ypoints;
-	 //   int plane = j/(xpoints*ypoints);
+		int plane = j/(xpoints*ypoints);
         if(col <= 0) onedge = 1;
         if(col >= xpoints-1) onedge = 1;
         if(row <= 0) onedge = 1;
         if(row >= ypoints-1) onedge = 1;
-//        if(plane <= 0) onedge = 1;
-//        if(plane >= zpoints-1) onedge = 1;
+		if(plane <= 0) onedge = 1;
+		if(plane >= zpoints-1) onedge = 1;
         graincenters[gnum][1] = graincenters[gnum][1] + x;
         graincenters[gnum][2] = graincenters[gnum][2] + y;
         graincenters[gnum][3] = graincenters[gnum][3] + z;
@@ -2288,12 +2276,63 @@ void  ReconstructionFunc::find_centroids()
     m_Grains[i].numvoxels = graincenters[i][0];
 	m_Grains[i].volume = (graincenters[i][0]*resx*resy*resz);
     m_Grains[i].surfacegrain = graincenters[i][4];
-	double radcubed = (0.75*m_Grains[i].volume)/m_pi;
-	double diameter = (2*pow(radcubed,0.3333333333));
+	radcubed = (0.75*m_Grains[i].volume)/m_pi;
+	diameter = (2*pow(radcubed,0.3333333333));
 	m_Grains[i].equivdiameter = diameter;
-//	int col = grains[i].centroidx/resx;
-//	int row = grains[i].centroidy/resy;
-//	int plane = grains[i].centroidz/resz;
+	if(int(diameter) > maxdiameter)
+	{
+		maxdiameter = int(diameter);
+	}
+	if(diameter < mindiameter) mindiameter = diameter;
+  }
+}
+void  ReconstructionFunc::find_centroids2D()
+{
+//  int count = 0;
+  int onedge = 0;
+  maxdiameter=0;
+  mindiameter=100000;
+  double x, y, z;
+  double radsquared;
+  double diameter;
+  graincenters = new double *[numgrains];
+  for(int i = 0; i < numgrains; i++)
+  {
+    graincenters[i] = new double [5];
+	for(int j=0;j<4;j++)
+	{
+		graincenters[i][j]=0;
+	}
+  }
+  for(int j = 0; j < (xpoints*ypoints*zpoints); j++)
+  {
+	    onedge = 0;
+        int gnum = voxels[j].grainname;
+        graincenters[gnum][0]++;
+        x = find_xcoord(j);
+        y = find_ycoord(j);
+	    int col = j%xpoints;
+	    int row = (j/xpoints)%ypoints;
+        if(col <= 0) onedge = 1;
+        if(col >= xpoints-1) onedge = 1;
+        if(row <= 0) onedge = 1;
+        if(row >= ypoints-1) onedge = 1;
+        graincenters[gnum][1] = graincenters[gnum][1] + x;
+        graincenters[gnum][2] = graincenters[gnum][2] + y;
+		if(onedge == 1) graincenters[gnum][3] = 1;
+  }
+  for(int i=1;i<numgrains;i++)
+  {
+    graincenters[i][1] = graincenters[i][1]/graincenters[i][0];
+    graincenters[i][2] = graincenters[i][2]/graincenters[i][0];
+    m_Grains[i].centroidx = graincenters[i][1];
+    m_Grains[i].centroidy = graincenters[i][2];
+    m_Grains[i].numvoxels = graincenters[i][0];
+	m_Grains[i].volume = (graincenters[i][0]*resx*resy);
+    m_Grains[i].surfacegrain = graincenters[i][3];
+	radsquared = m_Grains[i].volume/m_pi;
+	diameter = (2*pow(radsquared,0.5));
+	m_Grains[i].equivdiameter = diameter;
 	if(int(diameter) > maxdiameter)
 	{
 		maxdiameter = int(diameter);
@@ -2712,6 +2751,118 @@ void  ReconstructionFunc::find_vectors ()
 			}
 		}
     }
+  }
+}
+void  ReconstructionFunc::find_moments2D()
+{
+//  int count = 0;
+  double u200=0;
+  double u020=0;
+  double u110=0;
+  grainmoments = new double *[numgrains];
+  for(int i = 0; i < numgrains; i++)
+  {
+	grainmoments[i] = new double [3];
+	for(int j=0;j<3;j++)
+	{
+		grainmoments[i][j] = 0;
+	}
+  }
+  for(int j = 0; j < (xpoints*ypoints*zpoints); j++)
+  {
+	  u200=0;
+	  u020=0;
+	  u110=0;
+      int gnum = voxels[j].grainname;
+      double x = find_xcoord(j);
+      double y = find_ycoord(j);
+      double x1 = x+(resx/2);
+      double x2 = x-(resx/2);
+      double y1 = y+(resy/2);
+      double y2 = y-(resy/2);
+      double xdist1 = (x1-graincenters[gnum][1]);
+      double ydist1 = (y1-graincenters[gnum][2]);
+      double xdist2 = (x1-graincenters[gnum][1]);
+      double ydist2 = (y2-graincenters[gnum][2]);
+      double xdist3 = (x2-graincenters[gnum][1]);
+      double ydist3 = (y1-graincenters[gnum][2]);
+      double xdist4 = (x2-graincenters[gnum][1]);
+      double ydist4 = (y2-graincenters[gnum][2]);
+      u200 = u200 + ((ydist1)*(ydist1)) + ((ydist2)*(ydist2)) + ((ydist3)*(ydist3)) + ((ydist4)*(ydist4));
+      u020 = u020 + ((xdist1)*(xdist1)) + ((xdist2)*(xdist2)) + ((xdist3)*(xdist3)) + ((xdist4)*(xdist4));
+      u110 = u110 + ((xdist1)*(ydist1)) + ((xdist2)*(ydist2)) + ((xdist3)*(ydist3)) + ((xdist4)*(ydist4));
+	  grainmoments[gnum][0] = grainmoments[gnum][0] + u200;
+	  grainmoments[gnum][1] = grainmoments[gnum][1] + u020;
+	  grainmoments[gnum][2] = grainmoments[gnum][2] + u110;
+  }
+  for(int i=1;i<numgrains;i++)
+  {
+	grainmoments[i][0] = grainmoments[i][0]*(resx/2.0)*(resy/2.0);
+	grainmoments[i][1] = grainmoments[i][1]*(resx/2.0)*(resy/2.0);
+	grainmoments[i][2] = grainmoments[i][2]*(resx/2.0)*(resy/2.0);
+//	double o3 = (grainmoments[i][0]*grainmoments[i][1]*grainmoments[i][2])+(2.0*grainmoments[i][3]*grainmoments[i][5]*grainmoments[i][4])-(grainmoments[i][0]*grainmoments[i][4]*grainmoments[i][4])-(grainmoments[i][1]*grainmoments[i][5]*grainmoments[i][5])-(grainmoments[i][2]*grainmoments[i][3]*grainmoments[i][3]);
+//	double vol5 = m_Grains[i].volume;
+//	vol5 = pow(vol5,5);
+//	double omega3 = vol5/o3;
+	m_Grains[i].Ixx = grainmoments[i][0];
+	m_Grains[i].Iyy = grainmoments[i][1];
+	m_Grains[i].Ixy = -grainmoments[i][2];
+//	m_Grains[i].omega3 = omega3;
+  }
+}
+void  ReconstructionFunc::find_axes2D()
+{
+  for (int i = 1; i < numgrains; i++)
+  {
+    double Ixx = m_Grains[i].Ixx;
+    double Iyy = m_Grains[i].Iyy;
+    double Ixy = m_Grains[i].Ixy;
+    double r1 = (Ixx+Iyy)/2.0 + sqrt(((Ixx+Iyy)*(Ixx+Iyy))/4.0+(Ixy*Ixy-Ixx*Iyy));
+    double r2 = (Ixx+Iyy)/2.0 - sqrt(((Ixx+Iyy)*(Ixx+Iyy))/4.0+(Ixy*Ixy-Ixx*Iyy));
+	double preterm = 4/3.1415926535897;
+	preterm = pow(preterm,0.25);
+	double postterm1 = r1*r1*r1/r2;
+	double postterm2 = r2*r2*r2/r1;
+	postterm1 = pow(postterm1,0.125);
+	postterm2 = pow(postterm2,0.125);
+	r1 = preterm*postterm1;
+	r2 = preterm*postterm2;
+	m_Grains[i].radius1 = r1;
+	m_Grains[i].radius2 = r2;
+  }
+}
+void  ReconstructionFunc::find_vectors2D()
+{
+  for(int i = 1; i < numgrains; i++)
+  {
+ //   int size = grains[i].numvoxels;
+    double Ixx = m_Grains[i].Ixx;
+    double Iyy = m_Grains[i].Iyy;
+    double Ixy = m_Grains[i].Ixy;
+    double I1 = (Ixx+Iyy)/2.0 + sqrt(((Ixx+Iyy)*(Ixx+Iyy))/4.0+(Ixy*Ixy-Ixx*Iyy));
+    double I2 = (Ixx+Iyy)/2.0 - sqrt(((Ixx+Iyy)*(Ixx+Iyy))/4.0+(Ixy*Ixy-Ixx*Iyy));
+	double n1x = (Ixx-I1)/Ixy;
+	double n1y = 1;
+	double n2x = (Ixx-I2)/Ixy;
+	double n2y = 1;
+	double norm1 = pow((n1x*n1x+n1y*n1y),0.5);
+	double norm2 = pow((n2x*n2x+n2y*n2y),0.5);
+	n1x = n1x/norm1;
+	n1y = n1y/norm1;
+	n2x = n2x/norm2;
+	n2y = n2y/norm2;
+	double cosine1 = n1x;
+	double ea1 = acos(cosine1);
+	if(ea1 > m_pi) ea1 = ea1-m_pi;
+	int ea1bin = int(ea1/(m_pi/18));
+	int bin=0;
+	if(ea1 >= 0.0 && ea1 < (m_pi))
+	{
+		m_Grains[i].axiseuler1 = ea1;
+		bin = ea1bin;
+		axisodf[bin].density = axisodf[bin].density+1;
+		totalaxes = totalaxes+1;
+	}
   }
 }
 void  ReconstructionFunc::find_eulerodf ()
@@ -4105,6 +4256,426 @@ void ReconstructionFunc::volume_stats(string writename1,string writename2,string
   }
   outFile8.close();
 }
+void ReconstructionFunc::volume_stats2D(string writename1,string writename2,string writename3)
+{
+  double actualgrains = 0;
+  double misocount = 0;
+  double avgvol = 0;
+  double avglnvol = 0;
+  double avgbovera = 0;
+  double avgcovera = 0;
+  double avgcoverb = 0;
+  double avgdiam = 0;
+  double avglogdiam = 0;
+  double avgdiam2 = 0;
+  double avgschmid = 0;
+  double avgomega3 = 0;
+  double neighcount = 0;
+  double maxvol = 0;
+  double maxdiam = 0;
+  double maxlogdiam = 0;
+  double maxbovera = 0;
+  double maxcovera = 0;
+  double maxcoverb = 0;
+  double maxschmid = 0;
+  double maxomega3 = 0;
+  vector<int> neighdistfunc;
+  neighborhood.resize(maxdiameter+1);
+  svbovera.resize(maxdiameter+1);
+  svschmid.resize(maxdiameter+1);
+  svomega3.resize(maxdiameter+1);
+  for(int temp = 0; temp < (maxdiameter+1); temp++)
+  {
+	neighborhood[temp].resize(9,0);
+    svbovera[temp].resize(5,0);
+    svschmid[temp].resize(5,0);
+    svomega3[temp].resize(5,0);
+  }
+  for(int i = 1; i < numgrains; i++)
+  {
+    int onedge = m_Grains[i].surfacegrain;
+    if(onedge == 0)
+    {
+      actualgrains++;
+      int vol = m_Grains[i].numvoxels;
+      double voxvol = vol*resx*resy;
+      double logvol = log(voxvol);
+	  double diam = m_Grains[i].equivdiameter;
+      int diamint = int(diam);
+      double logdiam = log(diam);
+      double rad1 = m_Grains[i].radius1;
+      double rad2 = m_Grains[i].radius2;
+	  double bovera = rad2/rad1;
+      double schmid = m_Grains[i].schmidfactor;
+//	  double omega3 = m_Grains[i].omega3;
+      neighdistfunc = m_Grains[i].neighbordistfunc;
+      avgvol = avgvol+voxvol;
+      avglnvol = avglnvol+logvol;
+      avgbovera = avgbovera+bovera;
+      avgdiam = avgdiam + diam;
+      avglogdiam = avglogdiam+logdiam;
+      avgschmid = avgschmid+schmid;
+//      avgomega3 = avgomega3+omega3;
+      neighborhood[diamint][0]++;
+      svbovera[diamint][0]++;
+      svschmid[diamint][0]++;
+      svomega3[diamint][0]++;
+      svbovera[diamint][1] = svbovera[diamint][1] + bovera;
+      svschmid[diamint][1] = svschmid[diamint][1] + schmid;
+//      svomega3[diamint][1] = svomega3[diamint][1] + omega3;
+      int size = 0;
+      size = neighdistfunc.size();
+	  neighborhood[diamint][0]++;
+      for(int k=0;k<size;k++)
+      {
+        int nnum = neighdistfunc[k];
+		neighborhood[diamint][((2*k)+1)] = neighborhood[diamint][((2*k)+1)] + nnum;
+	  }
+      if(voxvol > maxvol) maxvol = voxvol;
+      if(bovera > maxbovera) maxbovera = bovera;
+      if(diam > maxdiam) maxdiam = diam;
+      if(logdiam > maxlogdiam) maxlogdiam = logdiam;
+      if(schmid > maxschmid) maxschmid = schmid;
+//      if(omega3 > maxomega3) maxomega3 = omega3;
+    }
+  }
+  int maxdiamint = int(maxdiam);
+  for(int temp3 = 0; temp3 < (maxdiamint+1); temp3++)
+  {
+    if(svbovera[temp3][0] != 0)
+    {
+      neighborhood[temp3][1] = neighborhood[temp3][1]/neighborhood[temp3][0];
+      neighborhood[temp3][3] = neighborhood[temp3][3]/neighborhood[temp3][0];
+      neighborhood[temp3][5] = neighborhood[temp3][5]/neighborhood[temp3][0];
+      neighborhood[temp3][7] = neighborhood[temp3][7]/neighborhood[temp3][0];
+      svbovera[temp3][1] = svbovera[temp3][1]/svbovera[temp3][0];
+      svschmid[temp3][1] = svschmid[temp3][1]/svschmid[temp3][0];
+//      svomega3[temp3][1] = svomega3[temp3][1]/svomega3[temp3][0];
+    }
+  }
+  avgvol = avgvol/actualgrains;
+  avglnvol = avglnvol/actualgrains;
+  avgbovera = avgbovera/actualgrains;
+  avgdiam = avgdiam/actualgrains;
+  avglogdiam = avglogdiam/actualgrains;
+  avgdiam2 = avgdiam2/neighcount;
+  avgschmid = avgschmid/actualgrains;
+//  avgomega3 = avgomega3/actualgrains;
+  maxvol = maxvol/avgvol;
+  double misobin[36];
+  double microbin[10];
+  for(int e = 0; e < 36; e++)
+  {
+    misobin[e] = 0;
+	if(e < 10) microbin[e] = 0;
+  }
+  double sdvol = 0;
+  double sdlnvol = 0;
+  double sdbovera = 0;
+  double sddiam = 0;
+  double sdlogdiam = 0;
+  double sddiam2 = 0;
+  double sdschmid = 0;
+  double sdomega3 = 0;
+  for(int j = 1; j < numgrains; j++)
+  {
+    int onedge = m_Grains[j].surfacegrain;
+    if(onedge == 0)
+    {
+      int vol = m_Grains[j].numvoxels;
+      double voxvol = vol*resx*resy*resz;
+      double logvol = log(voxvol);
+	  double diam = m_Grains[j].equivdiameter;
+      int diamint = int(diam);
+      double logdiam = log(diam);
+      double rad1 = m_Grains[j].radius1;
+      double rad2 = m_Grains[j].radius2;
+	  double bovera = rad2/rad1;
+      double schmid = m_Grains[j].schmidfactor;
+//	  double omega3 = m_Grains[j].omega3;
+      neighdistfunc = m_Grains[j].neighbordistfunc;
+      sdvol = sdvol + ((voxvol-avgvol)*(voxvol-avgvol));
+      sdlnvol = sdlnvol + ((logvol-avglnvol)*(logvol-avglnvol));
+      sdbovera = sdbovera + ((bovera-avgbovera)*(bovera-avgbovera));
+      sddiam = sddiam + ((diam-avgdiam)*(diam-avgdiam));
+      sdlogdiam = sdlogdiam + ((logdiam-avglogdiam)*(logdiam-avglogdiam));
+      sdschmid = sdschmid + ((schmid-avgschmid)*(schmid-avgschmid));
+//      sdomega3 = sdomega3 + ((omega3-avgomega3)*(omega3-avgomega3));
+      svbovera[diamint][2] = svbovera[diamint][2] + ((bovera-svbovera[diamint][1])*(bovera-svbovera[diamint][1]));
+      svschmid[diamint][2] = svschmid[diamint][2] + ((schmid-svschmid[diamint][1])*(schmid-svschmid[diamint][1]));
+//      svomega3[diamint][2] = svomega3[diamint][2] + ((omega3-svomega3[diamint][1])*(omega3-svomega3[diamint][1]));
+      int size = 0;
+      size = neighdistfunc.size();
+      for(int k=0;k<size;k++)
+      {
+        int nnum = neighdistfunc[k];
+		neighborhood[diamint][((2*k)+2)] = neighborhood[diamint][((2*k)+2)] + ((neighborhood[diamint][((2*k)+1)]-nnum)*(neighborhood[diamint][((2*k)+1)]-nnum));
+	  }
+    }
+  }
+  for(int temp4 = 0; temp4 < (maxdiamint+1); temp4++)
+  {
+    if(svbovera[temp4][0] != 0)
+    {
+      neighborhood[temp4][2] = neighborhood[temp4][2]/neighborhood[temp4][0];
+      neighborhood[temp4][4] = neighborhood[temp4][4]/neighborhood[temp4][0];
+      neighborhood[temp4][6] = neighborhood[temp4][6]/neighborhood[temp4][0];
+      neighborhood[temp4][8] = neighborhood[temp4][8]/neighborhood[temp4][0];
+      svbovera[temp4][2] = svbovera[temp4][2]/svbovera[temp4][0];
+      svschmid[temp4][2] = svschmid[temp4][2]/svschmid[temp4][0];
+//      svomega3[temp4][2] = svomega3[temp4][2]/svomega3[temp4][0];
+      svbovera[temp4][3] = svbovera[temp4][1]*(((svbovera[temp4][1]*(1-svbovera[temp4][1]))/svbovera[temp4][2])-1);
+      svbovera[temp4][4] = (1-svbovera[temp4][1])*(((svbovera[temp4][1]*(1-svbovera[temp4][1]))/svbovera[temp4][2])-1);
+//      svomega3[temp4][3] = svomega3[temp4][1]*(((svomega3[temp4][1]*(1-svomega3[temp4][1]))/svomega3[temp4][2])-1);
+//      svomega3[temp4][4] = (1-svomega3[temp4][1])*(((svomega3[temp4][1]*(1-svomega3[temp4][1]))/svomega3[temp4][2])-1);
+      neighborhood[temp4][2] = pow(neighborhood[temp4][2],0.5);
+      neighborhood[temp4][4] = pow(neighborhood[temp4][4],0.5);
+      neighborhood[temp4][6] = pow(neighborhood[temp4][6],0.5);
+      neighborhood[temp4][8] = pow(neighborhood[temp4][8],0.5);
+      svbovera[temp4][2] = pow(svbovera[temp4][2],0.5);
+      svschmid[temp4][2] = pow(svschmid[temp4][2],0.5);
+//      svomega3[temp4][2] = pow(svomega3[temp4][2],0.5);
+    }
+  }
+  sdvol = sdvol/actualgrains;
+  sdlnvol = sdlnvol/actualgrains;
+  sdbovera = sdbovera/actualgrains;
+  sddiam = sddiam/actualgrains;
+  sdlogdiam = sdlogdiam/actualgrains;
+  sddiam2 = sddiam2/neighcount;
+  sdschmid = sdschmid/actualgrains;
+//  sdomega3 = sdomega3/actualgrains;
+//  double volvar = sdvol;
+//  double vollnvar = sdlnvol;
+  double boveravar = sdbovera;
+//  double diamvar = sddiam;
+//  double logdiamvar = sdlogdiam;
+//  double diamvar2 = sddiam2;
+  double schmidvar = sdschmid;
+  double omega3var = sdomega3;
+//  double pbovera = avgbovera*(((avgbovera*(1-avgbovera))/boveravar)-1);
+//  double qbovera = (1-avgbovera)*(((avgbovera*(1-avgbovera))/boveravar)-1);
+//  double pcovera = avgcovera*(((avgcovera*(1-avgcovera))/coveravar)-1);
+//  double qcovera = (1-avgcovera)*(((avgcovera*(1-avgcovera))/coveravar)-1);
+//  double pcoverb = avgcoverb*(((avgcoverb*(1-avgcoverb))/coverbvar)-1);
+//  double qcoverb = (1-avgcoverb)*(((avgcoverb*(1-avgcoverb))/coverbvar)-1);
+  sdvol = pow(sdvol,0.5);
+  sdlnvol = pow(sdlnvol,0.5);
+  sdbovera = pow(sdbovera,0.5);
+  sddiam = pow(sddiam,0.5);
+  sdlogdiam = pow(sdlogdiam,0.5);
+  sddiam2 = pow(sddiam2,0.5);
+  sdschmid = pow(sdschmid,0.5);
+//  sdomega3 = pow(sdomega3,0.5);
+  double svboveracr = 0;
+  double svschmidcr = 0;
+//  double svomega3cr = 0;
+  for(int temp5 = 0; temp5 < (maxdiamint+1); temp5++)
+  {
+    svboveracr = svboveracr + (svbovera[temp5][0]*((svbovera[temp5][1]-avgbovera)*(svbovera[temp5][1]-avgbovera)));
+    svschmidcr = svschmidcr + (svschmid[temp5][0]*((svschmid[temp5][1]-avgschmid)*(svschmid[temp5][1]-avgschmid)));
+//    svomega3cr = svomega3cr + (svomega3[temp5][0]*((svomega3[temp5][1]-avgomega3)*(svomega3[temp5][1]-avgomega3)));
+  }
+  svboveracr = svboveracr/(actualgrains*boveravar);
+  svschmidcr = svschmidcr/(actualgrains*schmidvar);
+//  svomega3cr = svomega3cr/(actualgrains*omega3var);
+  for(int l = 1; l < numgrains; l++)
+  {
+	if(m_Grains[l].surfacegrain == 0)
+    {
+      double microcount = 0;
+	  vector<int>* nlist = m_Grains[l].neighborlist;
+      vector<double>* misolist = m_Grains[l].misorientationlist;
+	  vector<double>* neighborsurfarealist = m_Grains[l].neighborsurfarealist;
+      int size = int(misolist->size());
+      for(int k=0;k<size;k++)
+      {
+        int neigh = nlist->at(k);
+        double firstmiso = misolist->at(k);
+        double firstnsa = neighborsurfarealist->at(k);
+        int misocur = int(firstmiso/5.0);
+        if(misocur == 36) misocur = 35;
+	    if(firstmiso < 15) microcount++;
+		if(neigh > l || m_Grains[neigh].surfacegrain == 1)
+		{
+	        misobin[misocur] = misobin[misocur] + (firstnsa/totalsurfacearea);
+	        misocount++;
+		}
+      }
+      if (size != 0 )
+	  {
+        microcount = microcount/size;
+      }
+      else
+      {
+        microcount = 0;
+      }
+      int microcur = int(microcount/0.1);
+      if(microcur == 10) microcur = 9;
+      microbin[microcur]++;
+    }
+  }
+ // double orand[15][2];
+  double delta = m_pi/18;
+  double texindex = 0;
+  double texstrength = 0;
+  int bin = 0;
+  for(int iter51 = 0; iter51 < 18; iter51++)
+  {
+    for(int iter52 = 0; iter52 < 18; iter52++)
+    {
+      for(int iter53 = 0; iter53 < 18; iter53++)
+      {
+        double f = 0;
+		bin = (iter51*18*18)+(iter52*18)+(iter53);
+        if(iter52 == 0)
+        {
+			f = (m_pi*m_pi/4)*(double(eulerodf[bin].density/totalvol)/((delta)*(delta)*cos(double((iter52*delta)+(delta/2)))));
+        }
+        if(iter52 == 18)
+        {
+			f = (m_pi*m_pi/4)*(double(eulerodf[bin].density/totalvol)/((delta)*(delta)*cos(double((iter52*delta)-(delta/2)))));
+        }
+        if(iter52 != 0 && iter52 != 18)
+        {
+			f = (m_pi*m_pi/4)*(double(eulerodf[bin].density/totalvol)/((delta)*(delta)*(cos(double((iter52*delta)-(delta/2)))-cos(double((iter52*delta)+(delta/2))))));
+        }
+        texindex = texindex + (f*f);
+      }
+    }
+    texindex = texindex/(18*18*18);
+    texstrength = pow(texindex,0.5);
+  }
+/*  double schmidvdis[10][25];
+  double schmidvdis2[10][25];
+  double disviq[25][50];
+  double disvdist[25][50];
+  for(int iter=0;iter<10;iter++)
+  {
+	for(int iter2=0;iter2<25;iter2++)
+	{
+		schmidvdis[iter][iter2] = 0;
+		schmidvdis2[iter][iter2] = 0;
+	}
+  }
+  for(int iter=0;iter<25;iter++)
+  {
+	for(int iter2=0;iter2<50;iter2++)
+	{
+		disviq[iter][iter2] = 0;
+		disvdist[iter][iter2] = 0;
+	}
+  }
+  for(int i=0;i<(xpoints*ypoints*zpoints);i++)
+  {
+	int gnum = voxels[i].grainname;
+	int gnumnn = voxels[i].nearestneighbor;
+	double schmid = grains[gnum].schmidfactor;
+	double schmidnn = grains[gnumnn].schmidfactor;
+	double disorientation = voxels[i].misorientation;
+	double imagequality = voxels[i].imagequality;
+	double distance = voxels[i].nearestneighbordistance;
+	int schmidbin = int((schmid-0.25)/0.025);
+	int schmidbinnn = int(((schmid/schmidnn)-0.5)/0.2);
+	int iqbin = int((imagequality)/50);
+	int distbin = int((distance)/0.2);
+	if(schmidbin > 9) schmidbin = 9;
+	if(schmidbinnn > 9) schmidbinnn = 9;
+	if(iqbin > 49) iqbin = 49;
+	if(distbin > 49) distbin = 49;
+	int disbin = int(disorientation/1.0);
+	if(disbin > 24) disbin = 24;
+	if(gnum != 0 && schmidbin >= 0)
+	{
+		schmidvdis[schmidbin][disbin]++;
+	}
+	if(gnumnn != 0 && schmidbinnn >= 0)
+	{
+		schmidvdis2[schmidbinnn][disbin]++;
+	}
+	if(gnum != 0)
+	{
+		disviq[disbin][iqbin]++;
+		disvdist[disbin][distbin]++;
+	}
+  }
+  string filename = "Schmid Factor v Disorientation.txt";
+  ofstream outFile2;
+  outFile2.open(filename.c_str());
+  for(int iter=0;iter<10;iter++)
+  {
+	for(int iter2=0;iter2<25;iter2++)
+	{
+		outFile2 << schmidvdis[iter][iter2] << "	";
+	}
+	outFile2 << endl;
+  }
+  outFile2 << endl;
+  for(int iter=0;iter<10;iter++)
+  {
+	for(int iter2=0;iter2<25;iter2++)
+	{
+		outFile2 << schmidvdis2[iter][iter2] << "	";
+	}
+	outFile2 << endl;
+  }
+  outFile2 << endl;
+  for(int iter=0;iter<25;iter++)
+  {
+	for(int iter2=0;iter2<50;iter2++)
+	{
+		outFile2 << disviq[iter][iter2] << "	";
+	}
+	outFile2 << endl;
+  }
+  outFile2 << endl;
+  for(int iter=0;iter<25;iter++)
+  {
+	for(int iter2=0;iter2<50;iter2++)
+	{
+		outFile2 << disvdist[iter][iter2] << "	";
+	}
+	outFile2 << endl;
+  }
+  outFile2.close();
+*/  ofstream outFile;
+  outFile.open(writename1.c_str());
+  outFile << "STATS" << endl;
+  outFile << "Grain_Diameter_Info" << endl;
+  outFile << (maxdiameter-mindiameter)+1 << " " << maxdiameter << " " << mindiameter << endl;
+  outFile << "Grain_Size_Distribution" << endl;
+  outFile << avglogdiam << " " << sdlogdiam << "	" << actualgrains << endl;
+  outFile << "Grain_SizeVBoverA_Distributions" << endl;
+  for(int temp7 = mindiameter; temp7 < (maxdiameter)+1; temp7++)
+  {
+	outFile << temp7 <<	" " << svbovera[temp7][3] << " " << svbovera[temp7][4] << "	" << svbovera[temp7][0] << endl;
+  }
+  outFile << "Grain_SizeVNeighbors_Distributions" << endl;
+  for(int temp7 = mindiameter; temp7 < (maxdiameter)+1; temp7++)
+  {
+    outFile << temp7 << " " << neighborhood[temp7][1] << " " << neighborhood[temp7][2] << "	" << neighborhood[temp7][3] << " " << neighborhood[temp7][4] << "	" <<  neighborhood[temp7][5] << " " << neighborhood[temp7][6] << "	" <<  neighborhood[temp7][7] << " " << neighborhood[temp7][8] << "	" << neighborhood[temp7][0]  << endl;
+  }
+//  outFile << "Grain_SizeVOmega3_Distributions" << endl;
+//  for(int temp7 = mindiameter; temp7 < (maxdiameter)+1; temp7++)
+//  {
+//    outFile << temp7 << " " << svomega3[temp7][3] << " " << svomega3[temp7][4] << "	" << svomega3[temp7][0]  << endl;
+//  }
+  outFile.close();
+  ofstream outFile7;
+  outFile7.open(writename2.c_str());
+  for(int i = 0; i < 36; i++)
+  {
+    outFile7 << misobin[i] << endl;
+  }
+  outFile7.close();
+  ofstream outFile8;
+  outFile8.open(writename3.c_str());
+  for(int i = 0; i < 10; i++)
+  {
+    outFile8 << (microbin[i]/actualgrains) << endl;
+  }
+  outFile8.close();
+}
 void  ReconstructionFunc::write_volume(string writename1, string writename2, string writename3, string writename4, string writename5, string writename6, bool IPFoption, bool Disoption, bool IQoption, bool Schmidoption, double quat_symmcubic[24][5],double quat_symmhex[12][5])
 {
   ofstream outFile;
@@ -4393,11 +4964,11 @@ void ReconstructionFunc::write_graindata(string gdata)
   ofstream outFile;
   outFile.open(gdata.c_str());
   outFile << numgrains << endl;
-  outFile << "Grain ID	Euler1	Euler2	Euler3	Equiv. Sphere Radius	Grain Avg. Disorientation	Surface Grain	No. Neighbors	List of Neighbors ->" << endl;
+  outFile << "Grain ID	Euler1	Euler2	Euler3	Equiv. Sphere Diameter	Grain Avg. Disorientation	Surface Grain	No. Neighbors	List of Neighbors ->" << endl;
   for(int i = 1; i < numgrains; i++)
   {
 	double volume = m_Grains[i].volume;
-	double radius = pow(((0.75)*(1.0/m_pi)*volume),0.3333333333);
+	double radius = m_Grains[i].equivdiameter;
 	int onsurface = m_Grains[i].surfacegrain;
 	double avgmiso = m_Grains[i].averagemisorientation;
 	nlist = m_Grains[i].neighborlist;
@@ -4420,9 +4991,6 @@ void ReconstructionFunc::write_graindata(string gdata)
 
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void ReconstructionFunc::write_grains(const std::string &outputdir)
 {
   std::stringstream ss;
@@ -4585,7 +5153,6 @@ void  ReconstructionFunc::write_axisodf(string writename14)
 {
   ofstream outFile;
   outFile.open(writename14.c_str());
-  outFile << numgrains << endl;
   double density;
   for(int i = 0; i < (18*18*18); i++)
   {

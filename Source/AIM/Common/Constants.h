@@ -39,7 +39,7 @@ namespace AIM
     const std::string AxisOrientationsFile("Reconstruction_AxisODF.txt");//14
     const std::string graindataFile("Reconstruction_GrainData.txt");//14
     const std::string EulerAnglesFile("Reconstruction_ODF.txt");//15
-    const std::string HDF5GrainFile("Reconstruction_Grains.h5u");
+    const std::string HDF5GrainFile("Reconstruction_Grains.h5grain");
     const std::string AlignmentFile("Reconstruction_Alignment.txt");
 
     enum CrystalStructure {
@@ -99,6 +99,12 @@ namespace AIM
     const std::string ElementQualityFile("element_quality_measures_v5.txt");
     const std::string VoxelsFile("voxels_v5.txt");
 
+    const std::string Grain_ID("Grain_ID");
+    const std::string SchmidFactor ("SchmidFactor");
+    const std::string Neighbor_Grain_ID_List( "Neighbor_Grain_ID_List");
+    const std::string KernelAvgDisorientation( "KernelAvgDisorientation");
+    const std::string GrainAvgDisorientation ("GrainAvgDisorientation");
+    const std::string ImageQuality( "ImageQuality");
 
 
   } // End Namespace Representation
