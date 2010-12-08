@@ -15,7 +15,12 @@
 #define WIN32_LEAN_AND_MEAN		// Exclude rarely-used stuff from Windows headers
 #endif
 
+#include "AIM/Common/AIMCommonConfiguration.h"
+
 #include <string>
+
+
+
 
 // -----------------------------------------------------------------------------
 //
@@ -23,6 +28,27 @@
 namespace AIM
 {
 
+  /**
+   * @brief This class is just designed to hold the Quarterions for the Cubic and
+   * hexagonal crystal structures.
+   */
+  class Quaternions
+  {
+    public:
+      ~Quaternions() { }
+      static AIMCOMMON_EXPORT void Hex_MultiplyByUnitQuaterion(double* unitQuat, size_t i, double* outQuat);
+      static AIMCOMMON_EXPORT double quat_symmcubic[24][5];
+      static AIMCOMMON_EXPORT double quat_symmhex[12][5];
+    protected:
+      Quaternions(){};
+
+    private:
+      Quaternions(const Quaternions&); // Copy Constructor Not Implemented
+      void operator=(const Quaternions&); // Operator '=' Not Implemented
+  };
+
+
+  // These are also used as HDF5 Group/Data/Attribute names so DONT change these.
   namespace Representation {
     const std::string Grain_ID("Grain_ID");
     const std::string SchmidFactor ("SchmidFactor");
@@ -30,6 +56,7 @@ namespace AIM
     const std::string KernelAvgDisorientation( "KernelAvgDisorientation");
     const std::string GrainAvgDisorientation ("GrainAvgDisorientation");
     const std::string ImageQuality( "ImageQuality");
+    const std::string IPFColor("IPFColor");
   }
 
 

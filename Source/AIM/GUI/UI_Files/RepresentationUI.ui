@@ -392,6 +392,9 @@
               <property name="text">
                <string>Inverse Pole Figure</string>
               </property>
+              <property name="checked">
+               <bool>true</bool>
+              </property>
              </widget>
             </item>
             <item row="3" column="0">
@@ -408,6 +411,9 @@
              <widget class="QCheckBox" name="rec_DisorientationVizFile">
               <property name="text">
                <string>Disorientation</string>
+              </property>
+              <property name="checked">
+               <bool>true</bool>
               </property>
              </widget>
             </item>
@@ -426,6 +432,9 @@
               <property name="text">
                <string>Image Quality</string>
               </property>
+              <property name="checked">
+               <bool>true</bool>
+              </property>
              </widget>
             </item>
             <item row="5" column="0">
@@ -443,6 +452,9 @@
               <property name="text">
                <string>Schmid Factor</string>
               </property>
+              <property name="checked">
+               <bool>true</bool>
+              </property>
              </widget>
             </item>
             <item row="1" column="1">
@@ -450,12 +462,18 @@
               <property name="text">
                <string>VTK Visualization File</string>
               </property>
+              <property name="checked">
+               <bool>true</bool>
+              </property>
              </widget>
             </item>
             <item row="7" column="1">
              <widget class="QCheckBox" name="rec_HDF5GrainFile">
               <property name="text">
                <string>HDF5 Grain File</string>
+              </property>
+              <property name="checked">
+               <bool>true</bool>
               </property>
              </widget>
             </item>
@@ -473,6 +491,9 @@
              <widget class="QCheckBox" name="rec_DownSampledVizFile">
               <property name="text">
                <string>Downsampled File</string>
+              </property>
+              <property name="checked">
+               <bool>true</bool>
               </property>
              </widget>
             </item>
