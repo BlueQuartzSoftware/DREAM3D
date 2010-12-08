@@ -539,7 +539,7 @@
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout_2">
           <item>
-           <widget class="QCheckBox" name="mergeTwins">
+           <widget class="QCheckBox" name="rec_mergeTwins">
             <property name="text">
              <string>Merge Twins</string>
             </property>
@@ -559,7 +559,7 @@
            </spacer>
           </item>
           <item>
-           <widget class="QCheckBox" name="mergeColonies">
+           <widget class="QCheckBox" name="rec_mergeColonies">
             <property name="text">
              <string>Merge Colonies</string>
             </property>
@@ -579,7 +579,7 @@
            </spacer>
           </item>
           <item>
-           <widget class="QCheckBox" name="alreadyFormed">
+           <widget class="QCheckBox" name="rec_alreadyFormed">
             <property name="text">
              <string>Grains Formed</string>
             </property>
@@ -2207,8 +2207,8 @@
   <tabstop>zStartIndex</tabstop>
   <tabstop>rec_OutputDir</tabstop>
   <tabstop>outputDirBtn</tabstop>
-  <tabstop>mergeTwins</tabstop>
-  <tabstop>alreadyFormed</tabstop>
+  <tabstop>rec_mergeTwins</tabstop>
+  <tabstop>rec_alreadyFormed</tabstop>
   <tabstop>rec_GoBtn</tabstop>
   <tabstop>sm_OutputDir</tabstop>
   <tabstop>sm_SmoothMesh</tabstop>
