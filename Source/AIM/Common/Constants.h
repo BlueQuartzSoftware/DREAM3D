@@ -24,30 +24,25 @@ namespace AIM
 {
 
   namespace Representation {
-
     const std::string Grain_ID("Grain_ID");
     const std::string SchmidFactor ("SchmidFactor");
     const std::string Neighbor_Grain_ID_List( "Neighbor_Grain_ID_List");
     const std::string KernelAvgDisorientation( "KernelAvgDisorientation");
     const std::string GrainAvgDisorientation ("GrainAvgDisorientation");
     const std::string ImageQuality( "ImageQuality");
-
-
   }
 
 
   namespace Reconstruction
   {
     /*    Reconstruction related */
-    const std::string StatsFile("Reconstruction_Stats.txt");//1
-    const std::string MisorientationBinsFile("Reconstruction_MoDF.txt");//8
-    const std::string MicroBinsFile("Reconstruction_MicroTexture.txt");//9
+    const std::string AlignmentFile("Reconstruction_Alignment.txt");
     const std::string AxisOrientationsFile("Reconstruction_AxisODF.txt");//14
     const std::string GrainDataFile("Reconstruction_GrainData.txt");//14
+    const std::string MicroBinsFile("Reconstruction_MicroTexture.txt");//9
+    const std::string MisorientationBinsFile("Reconstruction_MoDF.txt");//8
     const std::string EulerAnglesFile("Reconstruction_ODF.txt");//15
-    const std::string AlignmentFile("Reconstruction_Alignment.txt");
-
-//    const std::string StructureFile("Reconstruction_Vis.vtk");//11
+    const std::string StatsFile("Reconstruction_Stats.txt");
 
     const std::string DisorientationVizFile("Reconstruction_Disorientation_Visualization.vtk");//11
     const std::string ImageQualityVizFile("Reconstruction_ImageQuality_Visualization.vtk");//11
@@ -57,7 +52,6 @@ namespace AIM
     const std::string DownSampledVizFile("Reconstruction_DownSampled_Visualization.vtk");//11
 
     const std::string HDF5GrainFile("Reconstruction_Grains.h5grain");
-
 
     enum CrystalStructure {
         UnknownCrystalStructure = 0,
@@ -103,6 +97,7 @@ namespace AIM
     };
 
   }
+
   namespace SurfaceMeshing {
 
     /*   Surface Meshing Related   */

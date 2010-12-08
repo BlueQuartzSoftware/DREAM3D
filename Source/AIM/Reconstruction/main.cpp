@@ -121,7 +121,7 @@ int main(int argc, char **argv)
     r->setMinAllowedGrainSize(minallowedgrainsize.getValue());
     r->setMinSeedConfidence(minseedconfidence.getValue());
     r->setMisorientationTolerance(misorientationtolerance.getValue());
-    r->setCrystalStructure(static_cast<AIM::Representation::CrystalStructure> (crystruct.getValue()));
+    r->setCrystalStructure(static_cast<AIM::Reconstruction::CrystalStructure> (crystruct.getValue()));
     r->setAlreadyFormed(alreadyformed.getValue());
 
     r->compute();
