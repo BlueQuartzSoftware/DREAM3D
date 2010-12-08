@@ -160,48 +160,6 @@ void Reconstruction::compute()
   m->initialize(m_ZStartIndex, m_ZEndIndex, m_ZResolution, m_MergeTwins, m_MergeColonies, m_MinAllowedGrainSize,
 	                   m_MinSeedConfidence, m_DownSampleFactor, m_MinSeedImageQuality, m_MisorientationTolerance, m_CrystalStructure, m_AlignmentMethod, m_AlreadyFormed);
 
-//  int32_t mindiameter = 100000;
-//  int32_t maxdiameter = 0;
-  double quat_symmcubic[24][5] = {
-	  {0.000000000, 0.000000000, 0.000000000, 0.000000000, 1.000000000},
-	  {0.000000000, 1.000000000, 0.000000000, 0.000000000, 0.000000000},
-	  {0.000000000, 0.000000000, 1.000000000, 0.000000000, 0.000000000},
-	  {0.000000000, 0.000000000, 0.000000000, 1.000000000, 0.000000000},
-	  {0.000000000, 0.707106781, 0.000000000, 0.000000000, 0.707106781},
-	  {0.000000000, 0.000000000, 0.707106781, 0.000000000, 0.707106781},
-	  {0.000000000, 0.000000000, 0.000000000, 0.707106781, 0.707106781},
-	  {0.000000000, -0.707106781, 0.000000000, 0.000000000, 0.707106781},
-	  {0.000000000, 0.000000000, -0.707106781, 0.000000000, 0.707106781},
-	  {0.000000000, 0.000000000, 0.000000000, -0.707106781, 0.707106781},
-	  {0.000000000, 0.707106781, 0.707106781, 0.000000000, 0.000000000},
-	  {0.000000000, -0.707106781, 0.707106781, 0.000000000, 0.000000000},
-	  {0.000000000, 0.000000000, 0.707106781, 0.707106781, 0.000000000},
-	  {0.000000000, 0.000000000, -0.707106781, 0.707106781, 0.000000000},
-	  {0.000000000, 0.707106781, 0.000000000, 0.707106781, 0.000000000},
-	  {0.000000000, -0.707106781, 0.000000000, 0.707106781, 0.000000000},
-	  {0.000000000, 0.500000000, 0.500000000, 0.500000000, 0.500000000},
-	  {0.000000000, -0.500000000, -0.500000000, -0.500000000, 0.500000000},
-	  {0.000000000, 0.500000000, -0.500000000, 0.500000000, 0.500000000},
-	  {0.000000000, -0.500000000, 0.500000000, -0.500000000, 0.500000000},
-	  {0.000000000, -0.500000000, 0.500000000, 0.500000000, 0.500000000},
-	  {0.000000000, 0.500000000, -0.500000000, -0.500000000, 0.500000000},
-	  {0.000000000, -0.500000000, -0.500000000, 0.500000000, 0.500000000},
-	  {0.000000000, 0.500000000, 0.500000000, -0.500000000, 0.500000000}};
-
-  double quat_symmhex[12][5] = {
-	  {0.000000000, 0.000000000, 0.000000000, 0.000000000, 1.000000000},
-	  {0.000000000, 0.000000000, 0.000000000, 0.500000000, 0.866025400},
-	  {0.000000000, 0.000000000, 0.000000000, 0.866025400, 0.500000000},
-	  {0.000000000, 0.000000000, 0.000000000, 1.000000000, 0.000000000},
-	  {0.000000000, 0.000000000, 0.000000000, 0.866025400, -0.50000000},
-	  {0.000000000, 0.000000000, 0.000000000, 0.500000000, -0.86602540},
-	  {0.000000000, 1.000000000, 0.000000000, 0.000000000, 0.000000000},
-	  {0.000000000, 0.866025400, 0.500000000, 0.000000000, 0.000000000},
-	  {0.000000000, 0.500000000, 0.866025400, 0.000000000, 0.000000000},
-	  {0.000000000, 0.000000000, 1.000000000, 0.000000000, 0.000000000},
-	  {0.000000000, -0.50000000, 0.866025400, 0.000000000, 0.000000000},
-	  {0.000000000, -0.86602540, 0.500000000, 0.000000000, 0.000000000}};
-
   std::string  statsFile = m_OutputDirectory + MXADir::Separator + AIM::Reconstruction::StatsFile;
   std::string  misorientationFile = m_OutputDirectory + MXADir::Separator + AIM::Reconstruction::MisorientationBinsFile;
   std::string  microBinsFile = m_OutputDirectory + MXADir::Separator + AIM::Reconstruction::MicroBinsFile;
@@ -258,12 +216,12 @@ void Reconstruction::compute()
     {
       CHECK_FOR_CANCELED(ReconstructionFunc)
       progressMessage(AIM_STRING("Identifying Grains on Sections"), 11);
-      m->form_grains_sections(quat_symmcubic, quat_symmhex);
+      m->form_grains_sections();
     }
 
     CHECK_FOR_CANCELED(ReconstructionFunc)
     progressMessage(AIM_STRING("Aligning Slices"), 14);
-    m->align_sections(alignmentFile, quat_symmcubic, quat_symmhex);
+    m->align_sections(alignmentFile);
 
     if (m_AlignmentMethod == 3)
     {
@@ -274,19 +232,19 @@ void Reconstruction::compute()
 
     CHECK_FOR_CANCELED(ReconstructionFunc)
     progressMessage(AIM_STRING("Forming Macro-Grains"), 19);
-    m->numgrains = m->form_grains(quat_symmcubic, quat_symmhex);
+    m->numgrains = m->form_grains();
 
     CHECK_FOR_CANCELED(ReconstructionFunc)
     progressMessage(AIM_STRING("Finding Grain Reference Orientations"), 22);
-    m->find_kernels(quat_symmcubic, quat_symmhex);
+    m->find_kernels();
 
     CHECK_FOR_CANCELED(ReconstructionFunc)
     progressMessage(AIM_STRING("Defining Sub-Grains"), 25);
-    m->numgrains = m->define_subgrains(quat_symmcubic, quat_symmhex);
+    m->numgrains = m->define_subgrains();
 
     CHECK_FOR_CANCELED(ReconstructionFunc)
     progressMessage(AIM_STRING("Assigning Bad Points"), 28);
-    m->assign_badpoints(quat_symmcubic, quat_symmhex);
+    m->assign_badpoints();
   }
 
   CHECK_FOR_CANCELED(ReconstructionFunc)
@@ -303,19 +261,19 @@ void Reconstruction::compute()
 
   CHECK_FOR_CANCELED(ReconstructionFunc)
   progressMessage(AIM_STRING("Identifying Grains"), 40);
-  m->numgrains = m->reburn_grains(quat_symmcubic, quat_symmhex);
+  m->numgrains = m->reburn_grains();
 
   CHECK_FOR_CANCELED(ReconstructionFunc)
   progressMessage(AIM_STRING("Finding Grain Reference Orientations"), 43);
-  m->find_kernels(quat_symmcubic, quat_symmhex);
+  m->find_kernels();
 
   CHECK_FOR_CANCELED(ReconstructionFunc)
   progressMessage(AIM_STRING("Finding Grain Average Orientations"), 49);
-  m->homogenize_grains(quat_symmcubic, quat_symmhex);
+  m->homogenize_grains();
 
   if (m_MergeTwins == true)
   {
-    m->merge_twins(quat_symmcubic, quat_symmhex);
+    m->merge_twins();
     progressMessage(AIM_STRING("Merging Twins"), 51);
     m->characterize_twins();
 	  CHECK_FOR_CANCELED(ReconstructionFunc)
@@ -326,7 +284,7 @@ void Reconstruction::compute()
   if (m_MergeColonies == true)
   {
     progressMessage(AIM_STRING("Merging Colonies"), 51);
-    m->merge_colonies(quat_symmcubic, quat_symmhex);
+    m->merge_colonies();
     progressMessage(AIM_STRING("Renumbering Grains"), 53);
     m->characterize_colonies();
   }
@@ -365,11 +323,11 @@ void Reconstruction::compute()
 
   CHECK_FOR_CANCELED(ReconstructionFunc)
   progressMessage(AIM_STRING("Measuring Misorientations"), 67);
-  m->measure_misorientations(quat_symmcubic, quat_symmhex);
+  m->measure_misorientations();
 
   CHECK_FOR_CANCELED(ReconstructionFunc)
   progressMessage(AIM_STRING("Finding Grain IPF Colors"), 69);
-  m->find_colors(quat_symmcubic, quat_symmhex);
+  m->find_colors();
 
   CHECK_FOR_CANCELED(ReconstructionFunc)
   progressMessage(AIM_STRING("Finding Grain Convexities"), 70);
@@ -389,7 +347,7 @@ void Reconstruction::compute()
   if (m_WriteVisualizationFile) {m->writeVisualizationFile(reconVisFile);}
 
   progressMessage(AIM_STRING("Writing VTK Inverse Pole Figure File"), 82);
-  if (m_WriteIPFFile) {m->writeIPFVizFile(reconIPFVisFile, quat_symmhex);}
+  if (m_WriteIPFFile) {m->writeIPFVizFile(reconIPFVisFile);}
 
   progressMessage(AIM_STRING("Writing VTK Disorientation File"), 83);
   if (m_WriteDisorientationFile) {m->writeDisorientationVizFile(reconDisVisFile);}
@@ -497,6 +455,7 @@ int Reconstruction::writeHDF5GrainsFile(const std::string &hdfFile,
     std::vector<float> kernelAvgDisorientation(vlist->size());
     std::vector<float> grainAvgDisorientation(vlist->size());
     std::vector<float> imageQuality(vlist->size());
+    std::vector<float> ipfColor(vlist->size() * 3);
     std::vector<float> schmidFactor(1);
 
     std::vector<int32_t> grainName(1);
@@ -539,6 +498,9 @@ int Reconstruction::writeHDF5GrainsFile(const std::string &hdfFile,
       kernelAvgDisorientation[j] = r->voxels[vid].kernelmisorientation;
       grainAvgDisorientation[j] = r->voxels[vid].misorientation;
       imageQuality[j] = r->voxels[vid].imagequality;
+      ipfColor[j*3] = r->m_Grains[i].red;
+      ipfColor[j*3+1] = r->m_Grains[i].green;
+      ipfColor[j*3+2] = r->m_Grains[i].blue;
       grainName[0] = r->voxels[vid].grainname;
     }
 
@@ -561,6 +523,8 @@ int Reconstruction::writeHDF5GrainsFile(const std::string &hdfFile,
     err = h5writer->writeCellData<float>(hdfPath, kernelAvgDisorientation,  AIM::Representation::KernelAvgDisorientation.c_str(), 1);
     err = h5writer->writeCellData<float>(hdfPath, grainAvgDisorientation,  AIM::Representation::GrainAvgDisorientation.c_str(), 1);
     err = h5writer->writeCellData<float>(hdfPath, imageQuality,  AIM::Representation::ImageQuality.c_str(), 1);
+    err = h5writer->writeCellData<float>(hdfPath, ipfColor,  AIM::Representation::IPFColor.c_str(), 3);
+
   }
 
   err = h5writer->writeObjectIndex(hdfPaths);
