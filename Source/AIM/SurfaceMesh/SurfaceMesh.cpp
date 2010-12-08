@@ -101,13 +101,13 @@ void SurfaceMesh::compute()
   CHECK_FOR_CANCELED(Surface Meshing)
   progressMessage(AIM_STRING("Running Surface Meshing"), 0 );
 
-  std::string  NodesRawFile = m_OutputDirectory + MXADir::Separator + AIM::Representation::NodesRawFile;
-  std::string  NodesFile = m_OutputDirectory + MXADir::Separator + AIM::Representation::NodesFile;
-  std::string  TrianglesFile = m_OutputDirectory + MXADir::Separator + AIM::Representation::TrianglesFile;
-  std::string  EdgesFile = m_OutputDirectory + MXADir::Separator + AIM::Representation::EdgesFile;
-  std::string  EdgesFileIndex = m_OutputDirectory + MXADir::Separator + AIM::Representation::EdgesFileIndex;
-  std::string  TrianglesFileIndex = m_OutputDirectory + MXADir::Separator + AIM::Representation::TrianglesFileIndex;
-  std::string  VisualizationFile = m_OutputDirectory + MXADir::Separator + AIM::Representation::VisualizationFile;
+  std::string  NodesRawFile = m_OutputDirectory + MXADir::Separator + AIM::SurfaceMeshing::NodesRawFile;
+  std::string  NodesFile = m_OutputDirectory + MXADir::Separator + AIM::SurfaceMeshing::NodesFile;
+  std::string  TrianglesFile = m_OutputDirectory + MXADir::Separator + AIM::SurfaceMeshing::TrianglesFile;
+  std::string  EdgesFile = m_OutputDirectory + MXADir::Separator + AIM::SurfaceMeshing::EdgesFile;
+  std::string  EdgesFileIndex = m_OutputDirectory + MXADir::Separator + AIM::SurfaceMeshing::EdgesFileIndex;
+  std::string  TrianglesFileIndex = m_OutputDirectory + MXADir::Separator + AIM::SurfaceMeshing::TrianglesFileIndex;
+  std::string  VisualizationFile = m_OutputDirectory + MXADir::Separator + AIM::SurfaceMeshing::VisualizationFile;
 
   // Create the output directory if needed
   if (MXADir::exists(m_OutputDirectory) == false)
