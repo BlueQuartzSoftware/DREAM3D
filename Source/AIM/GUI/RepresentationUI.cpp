@@ -639,7 +639,10 @@ void RepresentationUI::rec_SetupGui()
   }
   messageLabel->setText(msg);
 
-
+#if (AIM_HDF5_SUPPORT == 0)
+  rec_HDF5GrainFile->setVisible(false);
+  rec_HDF5GrainFileIcon->setVisible(false);
+#endif
   m_WidgetList << angDir << angDirBtn << rec_OutputDir << outputDirBtn;
   m_WidgetList << angFilePrefix << angMaxSlice << zStartIndex << zEndIndex << zSpacing;
   m_WidgetList << mergeTwins << mergeColonies << alreadyFormed << alignMeth << minAllowedGrainSize << minConfidence << downsampleFactor << misOrientationTolerance;
@@ -661,9 +664,11 @@ void RepresentationUI::rec_CheckIOFiles()
   CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::Reconstruction,rec_, StatsFile)
   CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::Reconstruction,rec_, MisorientationBinsFile)
   CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::Reconstruction,rec_, MicroBinsFile)
-  CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::Reconstruction,rec_, VisualizationVizFile)
+  CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::Reconstruction,rec_, GrainDataFile)
   CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::Reconstruction,rec_, AxisOrientationsFile)
   CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::Reconstruction,rec_, EulerAnglesFile)
+  CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::Reconstruction,rec_, AlignmentFile)
+
 
   CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(AIM::Reconstruction, rec_ , DisorientationVizFile)
   CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(AIM::Reconstruction, rec_ , ImageQualityVizFile)
@@ -671,8 +676,9 @@ void RepresentationUI::rec_CheckIOFiles()
   CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(AIM::Reconstruction, rec_ , SchmidFactorVizFile)
   CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(AIM::Reconstruction, rec_ , VisualizationVizFile)
   CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(AIM::Reconstruction, rec_ , DownSampledVizFile)
+#if AIM_HDF5_SUPPORT
   CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(AIM::Reconstruction, rec_ , HDF5GrainFile)
-
+#endif
 }
 
 // -----------------------------------------------------------------------------
@@ -848,7 +854,9 @@ void RepresentationUI::on_rec_GoBtn_clicked()
   m_Reconstruction->setWriteSchmidFactorFile(rec_SchmidFactorVizFile->isChecked());
   m_Reconstruction->setWriteDownSampledFile(rec_DownSampledVizFile->isChecked());
 
+#if AIM_HDF5_SUPPORT
   m_Reconstruction->setWriteHDF5GrainFile(rec_HDF5GrainFile->isChecked());
+#endif
 
   connect(m_Reconstruction.get(), SIGNAL(finished()),
           this, SLOT( rec_ThreadFinished() ) );

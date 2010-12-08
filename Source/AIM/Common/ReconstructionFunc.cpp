@@ -3388,11 +3388,14 @@ double ReconstructionFunc::getmisoquathexagonal(double quat_symmhex[12][5],doubl
   return wmin;
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void  ReconstructionFunc::find_colors(double quat_symmcubic[24][5],double quat_symmhex[12][5])
 {
   double red, green, blue;
   double theta, phi;
-  for(int i = 1; i < numgrains; i++)
+  for (int i = 1; i < numgrains; i++)
   {
     double g1ea1 = m_Grains[i].euler1;
     double g1ea2 = m_Grains[i].euler2;
@@ -3401,125 +3404,125 @@ void  ReconstructionFunc::find_colors(double quat_symmcubic[24][5],double quat_s
     double qc[4];
     double p[3];
     double d[3];
-	q1[0]=sin((g1ea2/2.0))*cos(((g1ea1-g1ea3)/2.0));
-	q1[1]=sin((g1ea2/2.0))*sin(((g1ea1-g1ea3)/2.0));
-	q1[2]=cos((g1ea2/2.0))*sin(((g1ea1+g1ea3)/2.0));
-	q1[3]=cos((g1ea2/2.0))*cos(((g1ea1+g1ea3)/2.0));
-	if(crystruct == 2)
-	{
-	    p[0] = (2*q1[0]*q1[2]+2*q1[1]*q1[3])*1;
-		p[1] = (2*q1[1]*q1[2]+2*q1[0]*q1[3])*1;
-		p[2] = (1-2*q1[0]*q1[0]-2*q1[1]*q1[1])*1;
-		double denom = p[0]*p[0]+p[1]*p[1]+p[2]*p[2];
-		denom = pow(denom,0.5);
-		p[0] = fabs(p[0]/denom);
-		p[1] = fabs(p[1]/denom);
-		p[2] = fabs(p[2]/denom);
-		int j, k, flag = 1;
-		double temp;
-		for(j = 0; (j<3)&&flag==1; j++)
-		{
-		  flag = 0;
-		  for (k=0; k<2; k++)
-		  {
-			if (p[k+1] < p[k])
-			{
-			   temp = p[k];
-			   p[k] = p[k+1];
-			   p[k+1] = temp;
-			   flag = 1;
-			}
-		  }
-		}
-		theta = (p[0]*0)+(p[1]*-sqrt(2.0)/2.0)+(p[2]*sqrt(2.0)/2.0);
-		theta = (180.0/m_pi)*acos(theta);
-		red = (90.0-theta)/45.0;
-		d[0] = (p[1]*1)-(p[2]*0);
-		d[1] = (p[2]*0)-(p[0]*1);
-		d[2] = (p[0]*0)-(p[1]*0);
-		d[0] = -(d[1]+d[2])/d[0];
-		d[1] = 1;
-		d[2] = 1;
-		double norm = pow(((d[0]*d[0])+(d[1]*d[1])+(d[2]*d[2])),0.5);
-		d[0] = d[0]/norm;
-		d[1] = d[1]/norm;
-		d[2] = d[2]/norm;
-		phi = (d[0]*0)+(d[1]*sqrt(2.0)/2.0)+(d[2]*sqrt(2.0)/2.0);
-		phi = (180.0/m_pi)*acos(phi);
-		green = (1-red)*((35.26-phi)/35.26);
-		blue = (1-red)-green;
-		double max = red;
-		if(green > max) max = green;
-		if(blue > max) max = blue;
-		red = red/max;
-		green = green/max;
-		blue = blue/max;
-		red = (0.75*red)+0.25;
-		green = (0.75*green)+0.25;
-		blue = (0.75*blue)+0.25;
-		m_Grains[i].red = red;
-		m_Grains[i].green = green;
-		m_Grains[i].blue = blue;
-	}
-	if(crystruct == 1)
-	{
-		red=1.0/3.0;
-		green=1.0/3.0;
-		blue=1.0/3.0;
-		for(int j=0;j<12;j++)
-		{
-			qc[0]=quat_symmhex[j][1]*q1[3]+quat_symmhex[j][4]*q1[0]-quat_symmhex[j][2]*q1[2]+quat_symmhex[j][3]*q1[1];
-			qc[1]=quat_symmhex[j][2]*q1[3]+quat_symmhex[j][4]*q1[1]-quat_symmhex[j][3]*q1[0]+quat_symmhex[j][1]*q1[2];
-			qc[2]=quat_symmhex[j][3]*q1[3]+quat_symmhex[j][4]*q1[2]-quat_symmhex[j][1]*q1[1]+quat_symmhex[j][2]*q1[0];
-			qc[3]=quat_symmhex[j][4]*q1[3]-quat_symmhex[j][1]*q1[0]-quat_symmhex[j][2]*q1[1]-quat_symmhex[j][3]*q1[2];
-		    p[0] = ((2*qc[0]*qc[2])-(2*qc[1]*qc[3]))*1;
-			p[1] = ((2*qc[1]*qc[2])+(2*qc[0]*qc[3]))*1;
-			p[2] = (1-(2*qc[0]*qc[0])-(2*qc[1]*qc[1]))*1;
-			double denom = p[0]*p[0]+p[1]*p[1]+p[2]*p[2];
-			denom = pow(denom,0.5);
-			p[0] = p[0]/denom;
-			p[1] = p[1]/denom;
-			p[2] = p[2]/denom;
-			if(p[2] < 0)
-			{
-				p[0] = -p[0];
-				p[1] = -p[1];
-				p[2] = -p[2];
-			}
-			d[0] = (p[1]*1)-(p[2]*0);
-			d[1] = (p[2]*0)-(p[0]*1);
-			d[2] = (p[0]*0)-(p[1]*0);
-			d[0] = -d[1]/d[0];
-			d[1] = 1;
-			d[2] = 0;
-			double norm = pow(((d[0]*d[0])+(d[1]*d[1])+(d[2]*d[2])),0.5);
-			d[0] = d[0]/norm;
-			d[1] = d[1]/norm;
-			d[2] = d[2]/norm;
-			if(atan(d[1]/d[0]) >= 0 && atan(d[1]/d[0]) <= (30.0*m_pi/180.0))
-			{
-				theta = (p[0]*0)+(p[1]*0)+(p[2]*1);
-				theta = (180.0/m_pi)*acos(theta);
-				red = (90.0-theta)/90.0;
-				phi = (d[0]*1)+(d[1]*0)+(d[2]*0);
-				phi = (180.0/m_pi)*acos(phi);
-				green = (1-red)*((30.0-phi)/30.0);
-				blue = (1-red)-green;
-			}
-		}
-		double max = red;
-		if(green > max) max = green;
-		if(blue > max) max = blue;
-		red = red/max;
-		green = green/max;
-		blue = blue/max;
-		red = (0.75*red)+0.25;
-		green = (0.75*green)+0.25;
-		blue = (0.75*blue)+0.25;
-		m_Grains[i].red = red;
-		m_Grains[i].green = green;
-		m_Grains[i].blue = blue;
-	}
+    q1[0] = sin((g1ea2 / 2.0)) * cos(((g1ea1 - g1ea3) / 2.0));
+    q1[1] = sin((g1ea2 / 2.0)) * sin(((g1ea1 - g1ea3) / 2.0));
+    q1[2] = cos((g1ea2 / 2.0)) * sin(((g1ea1 + g1ea3) / 2.0));
+    q1[3] = cos((g1ea2 / 2.0)) * cos(((g1ea1 + g1ea3) / 2.0));
+    if (crystruct == 2)
+    {
+      p[0] = (2 * q1[0] * q1[2] + 2 * q1[1] * q1[3]) * 1;
+      p[1] = (2 * q1[1] * q1[2] + 2 * q1[0] * q1[3]) * 1;
+      p[2] = (1 - 2 * q1[0] * q1[0] - 2 * q1[1] * q1[1]) * 1;
+      double denom = p[0] * p[0] + p[1] * p[1] + p[2] * p[2];
+      denom = pow(denom, 0.5);
+      p[0] = fabs(p[0] / denom);
+      p[1] = fabs(p[1] / denom);
+      p[2] = fabs(p[2] / denom);
+      int j, k, flag = 1;
+      double temp;
+      for (j = 0; (j < 3) && flag == 1; j++)
+      {
+        flag = 0;
+        for (k = 0; k < 2; k++)
+        {
+          if (p[k + 1] < p[k])
+          {
+            temp = p[k];
+            p[k] = p[k + 1];
+            p[k + 1] = temp;
+            flag = 1;
+          }
+        }
+      }
+      theta = (p[0] * 0) + (p[1] * -sqrt(2.0) / 2.0) + (p[2] * sqrt(2.0) / 2.0);
+      theta = (180.0 / m_pi) * acos(theta);
+      red = (90.0 - theta) / 45.0;
+      d[0] = (p[1] * 1) - (p[2] * 0);
+      d[1] = (p[2] * 0) - (p[0] * 1);
+      d[2] = (p[0] * 0) - (p[1] * 0);
+      d[0] = -(d[1] + d[2]) / d[0];
+      d[1] = 1;
+      d[2] = 1;
+      double norm = pow(((d[0] * d[0]) + (d[1] * d[1]) + (d[2] * d[2])), 0.5);
+      d[0] = d[0] / norm;
+      d[1] = d[1] / norm;
+      d[2] = d[2] / norm;
+      phi = (d[0] * 0) + (d[1] * sqrt(2.0) / 2.0) + (d[2] * sqrt(2.0) / 2.0);
+      phi = (180.0 / m_pi) * acos(phi);
+      green = (1 - red) * ((35.26 - phi) / 35.26);
+      blue = (1 - red) - green;
+      double max = red;
+      if (green > max) max = green;
+      if (blue > max) max = blue;
+      red = red / max;
+      green = green / max;
+      blue = blue / max;
+      red = (0.75 * red) + 0.25;
+      green = (0.75 * green) + 0.25;
+      blue = (0.75 * blue) + 0.25;
+      m_Grains[i].red = red;
+      m_Grains[i].green = green;
+      m_Grains[i].blue = blue;
+    }
+    if (crystruct == 1)
+    {
+      red = 1.0 / 3.0;
+      green = 1.0 / 3.0;
+      blue = 1.0 / 3.0;
+      for (int j = 0; j < 12; j++)
+      {
+        qc[0] = quat_symmhex[j][1] * q1[3] + quat_symmhex[j][4] * q1[0] - quat_symmhex[j][2] * q1[2] + quat_symmhex[j][3] * q1[1];
+        qc[1] = quat_symmhex[j][2] * q1[3] + quat_symmhex[j][4] * q1[1] - quat_symmhex[j][3] * q1[0] + quat_symmhex[j][1] * q1[2];
+        qc[2] = quat_symmhex[j][3] * q1[3] + quat_symmhex[j][4] * q1[2] - quat_symmhex[j][1] * q1[1] + quat_symmhex[j][2] * q1[0];
+        qc[3] = quat_symmhex[j][4] * q1[3] - quat_symmhex[j][1] * q1[0] - quat_symmhex[j][2] * q1[1] - quat_symmhex[j][3] * q1[2];
+        p[0] = ((2 * qc[0] * qc[2]) - (2 * qc[1] * qc[3])) * 1;
+        p[1] = ((2 * qc[1] * qc[2]) + (2 * qc[0] * qc[3])) * 1;
+        p[2] = (1 - (2 * qc[0] * qc[0]) - (2 * qc[1] * qc[1])) * 1;
+        double denom = p[0] * p[0] + p[1] * p[1] + p[2] * p[2];
+        denom = pow(denom, 0.5);
+        p[0] = p[0] / denom;
+        p[1] = p[1] / denom;
+        p[2] = p[2] / denom;
+        if (p[2] < 0)
+        {
+          p[0] = -p[0];
+          p[1] = -p[1];
+          p[2] = -p[2];
+        }
+        d[0] = (p[1] * 1) - (p[2] * 0);
+        d[1] = (p[2] * 0) - (p[0] * 1);
+        d[2] = (p[0] * 0) - (p[1] * 0);
+        d[0] = -d[1] / d[0];
+        d[1] = 1;
+        d[2] = 0;
+        double norm = pow(((d[0] * d[0]) + (d[1] * d[1]) + (d[2] * d[2])), 0.5);
+        d[0] = d[0] / norm;
+        d[1] = d[1] / norm;
+        d[2] = d[2] / norm;
+        if (atan(d[1] / d[0]) >= 0 && atan(d[1] / d[0]) <= (30.0 * m_pi / 180.0))
+        {
+          theta = (p[0] * 0) + (p[1] * 0) + (p[2] * 1);
+          theta = (180.0 / m_pi) * acos(theta);
+          red = (90.0 - theta) / 90.0;
+          phi = (d[0] * 1) + (d[1] * 0) + (d[2] * 0);
+          phi = (180.0 / m_pi) * acos(phi);
+          green = (1 - red) * ((30.0 - phi) / 30.0);
+          blue = (1 - red) - green;
+        }
+      }
+      double max = red;
+      if (green > max) max = green;
+      if (blue > max) max = blue;
+      red = red / max;
+      green = green / max;
+      blue = blue / max;
+      red = (0.75 * red) + 0.25;
+      green = (0.75 * green) + 0.25;
+      blue = (0.75 * blue) + 0.25;
+      m_Grains[i].red = red;
+      m_Grains[i].green = green;
+      m_Grains[i].blue = blue;
+    }
   }
 }
 void  ReconstructionFunc::find_convexities()
