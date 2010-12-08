@@ -54,7 +54,7 @@ class RepresentationUI : public QMainWindow, private Ui::RepresentationUI
     /* Reconstruction Slots */
     void on_angDirBtn_clicked();
     void on_outputDirBtn_clicked();
-    void on_alreadyFormed_stateChanged(int);
+    void on_rec_alreadyFormed_stateChanged(int);
     void on_rec_GoBtn_clicked();
 
     /* Grain Generator Slots*/

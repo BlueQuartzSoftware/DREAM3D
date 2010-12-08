@@ -455,7 +455,7 @@ int Reconstruction::writeHDF5GrainsFile(const std::string &hdfFile,
     std::vector<float> kernelAvgDisorientation(vlist->size());
     std::vector<float> grainAvgDisorientation(vlist->size());
     std::vector<float> imageQuality(vlist->size());
-    std::vector<float> ipfColor(vlist->size() * 3);
+    std::vector<unsigned char> ipfColor(vlist->size() * 3);
     std::vector<float> schmidFactor(1);
 
     std::vector<int32_t> grainName(1);
@@ -498,9 +498,9 @@ int Reconstruction::writeHDF5GrainsFile(const std::string &hdfFile,
       kernelAvgDisorientation[j] = r->voxels[vid].kernelmisorientation;
       grainAvgDisorientation[j] = r->voxels[vid].misorientation;
       imageQuality[j] = r->voxels[vid].imagequality;
-      ipfColor[j*3] = r->m_Grains[i].red;
-      ipfColor[j*3+1] = r->m_Grains[i].green;
-      ipfColor[j*3+2] = r->m_Grains[i].blue;
+      ipfColor[j*3] = r->m_Grains[i].red * 255;
+      ipfColor[j*3+1] = r->m_Grains[i].green * 255;
+      ipfColor[j*3+2] = r->m_Grains[i].blue * 255;
       grainName[0] = r->voxels[vid].grainname;
     }
 
@@ -523,7 +523,7 @@ int Reconstruction::writeHDF5GrainsFile(const std::string &hdfFile,
     err = h5writer->writeCellData<float>(hdfPath, kernelAvgDisorientation,  AIM::Representation::KernelAvgDisorientation.c_str(), 1);
     err = h5writer->writeCellData<float>(hdfPath, grainAvgDisorientation,  AIM::Representation::GrainAvgDisorientation.c_str(), 1);
     err = h5writer->writeCellData<float>(hdfPath, imageQuality,  AIM::Representation::ImageQuality.c_str(), 1);
-    err = h5writer->writeCellData<float>(hdfPath, ipfColor,  AIM::Representation::IPFColor.c_str(), 3);
+    err = h5writer->writeCellData<unsigned char>(hdfPath, ipfColor,  AIM::Representation::IPFColor.c_str(), 3);
 
   }
 

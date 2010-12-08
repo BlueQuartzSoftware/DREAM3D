@@ -47,14 +47,14 @@
   if (false == ok) {temp = default;}\
   var->setValue(temp);
 
-#define READ_BOOL_SETTING(prefs, var, emptyValue)\
-  { QString s = prefs.value(#var).toString();\
+#define READ_BOOL_SETTING(prefs, prefix, tag, emptyValue)\
+  { QString s = prefs.value(#tag).toString();\
   if (s.isEmpty() == false) {\
-    bool bb = prefs.value(#var).toBool();\
-  var->setChecked(bb); } else { var->setChecked(emptyValue); } }
+    bool bb = prefs.value(#tag).toBool();\
+  prefix##tag->setChecked(bb); } else { prefix##tag->setChecked(emptyValue); } }
 
-#define WRITE_BOOL_SETTING(prefs, var, b)\
-    prefs.setValue(#var, (b) );
+#define WRITE_BOOL_SETTING(prefs, tag,  b)\
+    prefs.setValue(#tag, (b) );
 
 #define WRITE_STRING_SETTING(prefs, var)\
   prefs.setValue(#var , this->var->text());
@@ -253,12 +253,9 @@ void RepresentationUI::readSettings()
   READ_SETTING(prefs, zStartIndex, ok, i, 1 , Int);
   READ_SETTING(prefs, zEndIndex, ok, i, 10 , Int);
   READ_STRING_SETTING(prefs, zSpacing, "0.25");
-  READ_BOOL_SETTING(prefs, mergeTwins, false);
-  mergeTwins->blockSignals(false);
-  READ_BOOL_SETTING(prefs, mergeColonies, false);
-  mergeColonies->blockSignals(false);
-  READ_BOOL_SETTING(prefs, alreadyFormed, false);
-  alreadyFormed->blockSignals(false);
+  READ_BOOL_SETTING(prefs, rec_, mergeTwins, false);
+  READ_BOOL_SETTING(prefs, rec_, mergeColonies, false);
+  READ_BOOL_SETTING(prefs, rec_, alreadyFormed, false);
   READ_SETTING(prefs, minAllowedGrainSize, ok, i, 8 , Int);
   READ_SETTING(prefs, minConfidence, ok, d, 0.1 , Double);
   READ_SETTING(prefs, downsampleFactor, ok, d, 1.0 , Double);
@@ -266,14 +263,16 @@ void RepresentationUI::readSettings()
   READ_SETTING(prefs, misOrientationTolerance, ok, d, 5.0 , Double);
   READ_COMBO_BOX(prefs, crystalStructure)
   READ_COMBO_BOX(prefs, alignMeth)
-  READ_BOOL_SETTING(prefs, rec_IPFVizFile, false);
-  rec_IPFVizFile->blockSignals(false);
-  READ_BOOL_SETTING(prefs, rec_DisorientationVizFile, false);
-  rec_DisorientationVizFile->blockSignals(false);
-  READ_BOOL_SETTING(prefs, rec_ImageQualityVizFile, false);
-  rec_ImageQualityVizFile->blockSignals(false);
-  READ_BOOL_SETTING(prefs, rec_SchmidFactorVizFile, false);
-  rec_SchmidFactorVizFile->blockSignals(false);
+
+  READ_BOOL_SETTING(prefs, rec_, DisorientationVizFile, true);
+  READ_BOOL_SETTING(prefs, rec_, ImageQualityVizFile, true);
+  READ_BOOL_SETTING(prefs, rec_, IPFVizFile, true);
+  READ_BOOL_SETTING(prefs, rec_, SchmidFactorVizFile, true);
+  READ_BOOL_SETTING(prefs, rec_, VisualizationVizFile, true);
+  READ_BOOL_SETTING(prefs, rec_, DownSampledVizFile, true);
+#if AIM_HDF5_SUPPORT
+  READ_BOOL_SETTING(prefs, rec_, HDF5GrainFile, true);
+#endif
 
 
   /* ******** This Section is for the Grain Generator Tab ************ */
@@ -286,7 +285,7 @@ void RepresentationUI::readSettings()
   READ_SETTING(prefs, gg_NumGrains, ok, i, 1000 , Int);
 
   READ_SETTING(prefs, gg_OverlapAllowed, ok, d, 0.00 , Double);
-  READ_BOOL_SETTING(prefs, gg_AlreadyFormed, false);
+  READ_BOOL_SETTING(prefs, gg_, AlreadyFormed, false);
   gg_AlreadyFormed->blockSignals(false);
   READ_COMBO_BOX(prefs, gg_CrystalStructure)
   READ_COMBO_BOX(prefs, gg_ShapeClass)
@@ -297,8 +296,8 @@ void RepresentationUI::readSettings()
   READ_FILEPATH_SETTING(prefs, sm_InputFile, "");
   READ_FILEPATH_SETTING(prefs, sm_OutputDir, "");
 
-  READ_BOOL_SETTING(prefs, sm_SmoothMesh, false);
-  READ_BOOL_SETTING(prefs, sm_LockQuadPoints, false);
+  READ_BOOL_SETTING(prefs, sm_, SmoothMesh, false);
+  READ_BOOL_SETTING(prefs, sm_, LockQuadPoints, false);
   READ_SETTING(prefs, sm_SmoothIterations, ok, i, 1 , Int);
   READ_SETTING(prefs, sm_WriteOutputFileIncrement, ok, i, 10 , Int);
 
@@ -335,9 +334,9 @@ void RepresentationUI::writeSettings()
   WRITE_STRING_SETTING(prefs, zEndIndex)
   WRITE_STRING_SETTING(prefs, zSpacing)
 
-  WRITE_BOOL_SETTING(prefs, mergeTwins, mergeTwins->isChecked())
-  WRITE_BOOL_SETTING(prefs, mergeColonies, mergeColonies->isChecked())
-  WRITE_BOOL_SETTING(prefs, alreadyFormed, alreadyFormed->isChecked())
+  WRITE_BOOL_SETTING(prefs, mergeTwins, rec_mergeTwins->isChecked())
+  WRITE_BOOL_SETTING(prefs, mergeColonies, rec_mergeColonies->isChecked())
+  WRITE_BOOL_SETTING(prefs, alreadyFormed, rec_alreadyFormed->isChecked())
 
   WRITE_SETTING(prefs, minAllowedGrainSize)
   WRITE_SETTING(prefs, minConfidence)
@@ -346,10 +345,17 @@ void RepresentationUI::writeSettings()
   WRITE_SETTING(prefs, misOrientationTolerance)
   WRITE_COMBO_BOX(prefs, crystalStructure)
   WRITE_COMBO_BOX(prefs, alignMeth)
-  WRITE_BOOL_SETTING(prefs, IPFVizFile, rec_IPFVizFile->isChecked())
+
   WRITE_BOOL_SETTING(prefs, DisorientationVizFile, rec_DisorientationVizFile->isChecked())
   WRITE_BOOL_SETTING(prefs, ImageQualityVizFile, rec_ImageQualityVizFile->isChecked())
+  WRITE_BOOL_SETTING(prefs, IPFVizFile, rec_IPFVizFile->isChecked())
   WRITE_BOOL_SETTING(prefs, SchmidFactorVizFile, rec_SchmidFactorVizFile->isChecked())
+  WRITE_BOOL_SETTING(prefs, VisualizationVizFile, rec_VisualizationVizFile->isChecked())
+  WRITE_BOOL_SETTING(prefs, DownSampledVizFile, rec_DownSampledVizFile->isChecked())
+#if AIM_HDF5_SUPPORT
+  WRITE_BOOL_SETTING(prefs, HDF5GrainFile, rec_HDF5GrainFile->isChecked())
+#endif
+
 
   /* ******** This Section is for the Grain Generator Tab ************ */
   WRITE_STRING_SETTING(prefs, gg_InputDir)
@@ -628,12 +634,12 @@ void RepresentationUI::rec_SetupGui()
   QString msg ("All files will be over written that appear in the output directory.");
 
   QFileInfo fi (rec_OutputDir->text() + QDir::separator() +  AIM::Reconstruction::VisualizationVizFile.c_str() );
-  if (alreadyFormed->isChecked() == true && fi.exists() == false)
+  if (rec_alreadyFormed->isChecked() == true && fi.exists() == false)
   {
-    alreadyFormed->setChecked(false);
+    rec_alreadyFormed->setChecked(false);
   }
 
-  if (alreadyFormed->isChecked())
+  if (rec_alreadyFormed->isChecked())
   {
     msg += QString("\nThe 'reconstructed_data.txt' file will be used as an import and NOT over written with new data");
   }
@@ -645,8 +651,12 @@ void RepresentationUI::rec_SetupGui()
 #endif
   m_WidgetList << angDir << angDirBtn << rec_OutputDir << outputDirBtn;
   m_WidgetList << angFilePrefix << angMaxSlice << zStartIndex << zEndIndex << zSpacing;
-  m_WidgetList << mergeTwins << mergeColonies << alreadyFormed << alignMeth << minAllowedGrainSize << minConfidence << downsampleFactor << misOrientationTolerance;
-  m_WidgetList << crystalStructure << rec_IPFVizFile << rec_DisorientationVizFile << rec_ImageQualityVizFile << rec_SchmidFactorVizFile;
+  m_WidgetList << rec_mergeTwins << rec_mergeColonies << rec_alreadyFormed << alignMeth << minAllowedGrainSize << minConfidence << downsampleFactor << misOrientationTolerance;
+  m_WidgetList << crystalStructure;
+  m_WidgetList << rec_DisorientationVizFile << rec_ImageQualityVizFile << rec_IPFVizFile << rec_SchmidFactorVizFile << rec_VisualizationVizFile << rec_DownSampledVizFile;
+#if AIM_HDF5_SUPPORT
+  m_WidgetList << rec_HDF5GrainFile;
+#endif
 }
 
 
@@ -701,24 +711,24 @@ void RepresentationUI::on_angDirBtn_clicked()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RepresentationUI::on_alreadyFormed_stateChanged(int currentState)
+void RepresentationUI::on_rec_alreadyFormed_stateChanged(int currentState)
 {
   QString absPath = rec_OutputDir->text() + QDir::separator() + AIM::Reconstruction::VisualizationVizFile.c_str();
   absPath = QDir::toNativeSeparators(absPath);
   QFileInfo fi (absPath);
   QString msg ("All files will be over written that appear in the output directory.");
-  if (alreadyFormed->isChecked() == true && fi.exists() == false)
+  if (rec_alreadyFormed->isChecked() == true && fi.exists() == false)
   {
     QMessageBox::critical(this, tr("AIM Representation"),
       tr("You have selected the 'Already Formed' check box \nbut the correct output file does not exist.\n"
       "The checkbox will revert to an unchecked state.?"),
       QMessageBox::Ok,
       QMessageBox::Ok);
-      alreadyFormed->setChecked(false);
+    rec_alreadyFormed->setChecked(false);
       CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(AIM::Reconstruction, rec_, VisualizationVizFile)
   }
 
-  if (alreadyFormed->isChecked())
+  if (rec_alreadyFormed->isChecked())
   {
     msg += QString("\nThe 'reconstructed_data.txt' file will be used as an import and NOT over written with new data");
   }
@@ -780,9 +790,9 @@ void RepresentationUI::on_outputDirBtn_clicked()
     {
       rec_CheckIOFiles();
       QFileInfo fi (rec_OutputDir->text() + QDir::separator() +  AIM::Reconstruction::VisualizationVizFile.c_str() );
-      if (alreadyFormed->isChecked() == true && fi.exists() == false)
+      if (rec_alreadyFormed->isChecked() == true && fi.exists() == false)
       {
-        alreadyFormed->setChecked(false);
+        rec_alreadyFormed->setChecked(false);
       }
     }
   }
@@ -832,8 +842,8 @@ void RepresentationUI::on_rec_GoBtn_clicked()
   m_Reconstruction->setZStartIndex(zStartIndex->value());
   m_Reconstruction->setZEndIndex(zEndIndex->value() + 1);
   m_Reconstruction->setZResolution(zSpacing->text().toDouble(&ok));
-  m_Reconstruction->setMergeTwins(mergeTwins->isChecked() );
-  m_Reconstruction->setMergeColonies(mergeColonies->isChecked() );
+  m_Reconstruction->setMergeTwins(rec_mergeTwins->isChecked() );
+  m_Reconstruction->setMergeColonies(rec_mergeColonies->isChecked() );
   m_Reconstruction->setMinAllowedGrainSize(minAllowedGrainSize->value());
   m_Reconstruction->setMinSeedConfidence(minConfidence->value());
   m_Reconstruction->setDownSampleFactor(downsampleFactor->value());
@@ -845,7 +855,7 @@ void RepresentationUI::on_rec_GoBtn_clicked()
 
   m_Reconstruction->setCrystalStructure(crystruct);
   m_Reconstruction->setAlignmentMethod(alignmeth);
-  m_Reconstruction->setAlreadyFormed(alreadyFormed->isChecked());
+  m_Reconstruction->setAlreadyFormed(rec_alreadyFormed->isChecked());
 
   m_Reconstruction->setWriteVisualizationFile(rec_VisualizationVizFile->isChecked());
   m_Reconstruction->setWriteIPFFile(rec_IPFVizFile->isChecked());
