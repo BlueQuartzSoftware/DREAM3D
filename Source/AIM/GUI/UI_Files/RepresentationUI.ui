@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>658</width>
-    <height>617</height>
+    <height>626</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -297,6 +297,23 @@
               </property>
              </widget>
             </item>
+            <item row="6" column="1">
+             <widget class="QLabel" name="rec_AxisOrientationsFile">
+              <property name="text">
+               <string>axisorientations.txt</string>
+              </property>
+             </widget>
+            </item>
+            <item row="6" column="0">
+             <widget class="QLabel" name="rec_AxisOrientationsFileIcon">
+              <property name="text">
+               <string/>
+              </property>
+              <property name="pixmap">
+               <pixmap resource="../../../../Resources/icons/images/Icons.qrc">:/Delete-16x16.png</pixmap>
+              </property>
+             </widget>
+            </item>
            </layout>
           </item>
           <item row="1" column="1">
@@ -317,7 +334,7 @@
              <number>1</number>
             </property>
             <item row="1" column="0">
-             <widget class="QLabel" name="rec_ReconstructedVisualizationFileIcon">
+             <widget class="QLabel" name="rec_VisualizationVizFileIcon">
               <property name="text">
                <string/>
               </property>
@@ -326,22 +343,107 @@
               </property>
              </widget>
             </item>
-            <item row="1" column="1">
-             <widget class="QLabel" name="rec_ReconstructedVisualizationFile">
+            <item row="2" column="0">
+             <widget class="QLabel" name="rec_IPFVizFileIcon">
               <property name="text">
-               <string>reconstructed_visualization.vtk</string>
+               <string/>
+              </property>
+              <property name="pixmap">
+               <pixmap resource="../../../../Resources/icons/images/Icons.qrc">:/Delete-16x16.png</pixmap>
               </property>
              </widget>
             </item>
             <item row="2" column="1">
-             <widget class="QLabel" name="rec_AxisOrientationsFile">
+             <widget class="QCheckBox" name="rec_IPFVizFile">
               <property name="text">
-               <string>axisorientations.txt</string>
+               <string>Inverse Pole Figure</string>
               </property>
              </widget>
             </item>
-            <item row="2" column="0">
-             <widget class="QLabel" name="rec_AxisOrientationsFileIcon">
+            <item row="3" column="0">
+             <widget class="QLabel" name="rec_DisorientationVizFileIcon">
+              <property name="text">
+               <string/>
+              </property>
+              <property name="pixmap">
+               <pixmap resource="../../../../Resources/icons/images/Icons.qrc">:/Delete-16x16.png</pixmap>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="1">
+             <widget class="QCheckBox" name="rec_DisorientationVizFile">
+              <property name="text">
+               <string>Disorientation</string>
+              </property>
+             </widget>
+            </item>
+            <item row="4" column="0">
+             <widget class="QLabel" name="rec_ImageQualityVizFileIcon">
+              <property name="text">
+               <string/>
+              </property>
+              <property name="pixmap">
+               <pixmap resource="../../../../Resources/icons/images/Icons.qrc">:/Delete-16x16.png</pixmap>
+              </property>
+             </widget>
+            </item>
+            <item row="4" column="1">
+             <widget class="QCheckBox" name="rec_ImageQualityVizFile">
+              <property name="text">
+               <string>Image Quality</string>
+              </property>
+             </widget>
+            </item>
+            <item row="5" column="0">
+             <widget class="QLabel" name="rec_SchmidFactorVizFileIcon">
+              <property name="text">
+               <string/>
+              </property>
+              <property name="pixmap">
+               <pixmap resource="../../../../Resources/icons/images/Icons.qrc">:/Delete-16x16.png</pixmap>
+              </property>
+             </widget>
+            </item>
+            <item row="5" column="1">
+             <widget class="QCheckBox" name="rec_SchmidFactorVizFile">
+              <property name="text">
+               <string>Schmid Factor</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="1">
+             <widget class="QCheckBox" name="rec_VisualizationVizFile">
+              <property name="text">
+               <string>VTK Visualization File</string>
+              </property>
+             </widget>
+            </item>
+            <item row="7" column="1">
+             <widget class="QCheckBox" name="rec_HDF5GrainFile">
+              <property name="text">
+               <string>HDF5 Grain File</string>
+              </property>
+             </widget>
+            </item>
+            <item row="7" column="0">
+             <widget class="QLabel" name="rec_HDF5GrainFileIcon">
+              <property name="text">
+               <string/>
+              </property>
+              <property name="pixmap">
+               <pixmap resource="../../../../Resources/icons/images/Icons.qrc">:/Delete-16x16.png</pixmap>
+              </property>
+             </widget>
+            </item>
+            <item row="6" column="1">
+             <widget class="QCheckBox" name="rec_DownSampledVizFile">
+              <property name="text">
+               <string>Downsampled File</string>
+              </property>
+             </widget>
+            </item>
+            <item row="6" column="0">
+             <widget class="QLabel" name="rec_DownSampledVizFileIcon">
               <property name="text">
                <string/>
               </property>
@@ -671,58 +773,6 @@
            <enum>Qt::Horizontal</enum>
           </property>
          </widget>
-        </item>
-        <item>
-         <layout class="QVBoxLayout" name="verticalLayout_5">
-          <item>
-           <widget class="QLabel" name="label_29">
-            <property name="text">
-             <string>Visualization Ouput Files: Each option will be saved into its own file</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <layout class="QGridLayout" name="gridLayout_19">
-            <property name="bottomMargin">
-             <number>10</number>
-            </property>
-            <property name="horizontalSpacing">
-             <number>12</number>
-            </property>
-            <property name="verticalSpacing">
-             <number>4</number>
-            </property>
-            <item row="0" column="0" rowspan="2">
-             <widget class="QCheckBox" name="IPFoutputoption">
-              <property name="text">
-               <string>Inverse Pole Figure</string>
-              </property>
-             </widget>
-            </item>
-            <item row="2" column="0">
-             <widget class="QCheckBox" name="Disorientationoutputoption">
-              <property name="text">
-               <string>Disorientation</string>
-              </property>
-             </widget>
-            </item>
-            <item row="2" column="1">
-             <widget class="QCheckBox" name="SchmidFactoroutputoption">
-              <property name="text">
-               <string>Schmid Factor</string>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="1">
-             <widget class="QCheckBox" name="ImageQualityoutputoption">
-              <property name="text">
-               <string>Image Quality</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </item>
-         </layout>
         </item>
         <item>
          <spacer name="verticalSpacer">

@@ -100,16 +100,16 @@ void VolumeMesh::compute()
   progressMessage(AIM_STRING("Running Volume Meshing"), 0 );
 
 
-  std::string meshFile = m_OutputDirectory + MXADir::Separator + AIM::Representation::MeshFile;
+  std::string meshFile = m_OutputDirectory + MXADir::Separator + AIM::VolumeMeshing::MeshFile;
   meshFile = MXADir::toNativeSeparators(meshFile);
 
-  std::string meshFile2 = m_OutputDirectory + MXADir::Separator + AIM::Representation::MeshFile2;
+  std::string meshFile2 = m_OutputDirectory + MXADir::Separator + AIM::VolumeMeshing::MeshFile2;
   meshFile2 = MXADir::toNativeSeparators(meshFile2);
 
-  std::string qualFile = m_OutputDirectory + MXADir::Separator + AIM::Representation::ElementQualityFile;
+  std::string qualFile = m_OutputDirectory + MXADir::Separator + AIM::VolumeMeshing::ElementQualityFile;
   qualFile = MXADir::toNativeSeparators(qualFile);
 
-  std::string voxelsFile = m_OutputDirectory + MXADir::Separator + AIM::Representation::VoxelsFile;
+  std::string voxelsFile = m_OutputDirectory + MXADir::Separator + AIM::VolumeMeshing::VoxelsFile;
   voxelsFile = MXADir::toNativeSeparators(voxelsFile);
 
 

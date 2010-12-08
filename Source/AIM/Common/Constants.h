@@ -23,24 +23,41 @@
 namespace AIM
 {
 
-  namespace Representation
+  namespace Representation {
+
+    const std::string Grain_ID("Grain_ID");
+    const std::string SchmidFactor ("SchmidFactor");
+    const std::string Neighbor_Grain_ID_List( "Neighbor_Grain_ID_List");
+    const std::string KernelAvgDisorientation( "KernelAvgDisorientation");
+    const std::string GrainAvgDisorientation ("GrainAvgDisorientation");
+    const std::string ImageQuality( "ImageQuality");
+
+
+  }
+
+
+  namespace Reconstruction
   {
     /*    Reconstruction related */
     const std::string StatsFile("Reconstruction_Stats.txt");//1
     const std::string MisorientationBinsFile("Reconstruction_MoDF.txt");//8
     const std::string MicroBinsFile("Reconstruction_MicroTexture.txt");//9
-    const std::string ReconstructedVisualizationFile("Reconstruction_Visualization.vtk");//11
-    const std::string ReconstructedIPFVisualizationFile("Reconstruction_IPF_Visualization.vtk");//11
-    const std::string ReconstructedDisVisualizationFile("Reconstruction_Disorientation_Visualization.vtk");//11
-    const std::string ReconstructedIQVisualizationFile("Reconstruction_ImageQuality_Visualization.vtk");//11
-    const std::string ReconstructedSFVisualizationFile("Reconstruction_SchmidFactor_Visualization.vtk");//11
-    const std::string ReconstructedDSVisualizationFile("Reconstruction_DownSampled_Visualization.vtk");//11
-    const std::string StructureFile("Reconstruction_Vis.vtk");//11
     const std::string AxisOrientationsFile("Reconstruction_AxisODF.txt");//14
-    const std::string graindataFile("Reconstruction_GrainData.txt");//14
+    const std::string GrainDataFile("Reconstruction_GrainData.txt");//14
     const std::string EulerAnglesFile("Reconstruction_ODF.txt");//15
-    const std::string HDF5GrainFile("Reconstruction_Grains.h5grain");
     const std::string AlignmentFile("Reconstruction_Alignment.txt");
+
+//    const std::string StructureFile("Reconstruction_Vis.vtk");//11
+
+    const std::string DisorientationVizFile("Reconstruction_Disorientation_Visualization.vtk");//11
+    const std::string ImageQualityVizFile("Reconstruction_ImageQuality_Visualization.vtk");//11
+    const std::string IPFVizFile("Reconstruction_IPF_Visualization.vtk");//11
+    const std::string SchmidFactorVizFile("Reconstruction_SchmidFactor_Visualization.vtk");//11
+    const std::string VisualizationVizFile("Reconstruction_Visualization.vtk");//11
+    const std::string DownSampledVizFile("Reconstruction_DownSampled_Visualization.vtk");//11
+
+    const std::string HDF5GrainFile("Reconstruction_Grains.h5grain");
+
 
     enum CrystalStructure {
         UnknownCrystalStructure = 0,
@@ -53,6 +70,11 @@ namespace AIM
         Misorientation = 1,
         MutualInformation = 2
     };
+
+  }
+
+  namespace SyntheticBuilder
+  {
     /*  Grain Generator Related */
     const std::string CubeFile("Synthetic_Vis.vtk");
     const std::string MoDFFile("Synthetic_MoDF.txt");
@@ -80,6 +102,8 @@ namespace AIM
         BulkPrecipitates = 3
     };
 
+  }
+  namespace SurfaceMeshing {
 
     /*   Surface Meshing Related   */
     const std::string VTKExt("vtk");
@@ -92,21 +116,14 @@ namespace AIM
     const std::string VisualizationFile("SurfaceMesh_Vis.vtk");
     const std::string Smooth3DIterationFile("Smooth3D");
     const std::string NodesSmoothedFile("nodes_smoothed.txt");
+  }
 
+  namespace VolumeMeshing {
     /* Volume Meshing Related */
     const std::string MeshFile("volumetric_mesh_v5_1.vtk");
     const std::string MeshFile2("volumetric_mesh_v5_2.vtk");
     const std::string ElementQualityFile("element_quality_measures_v5.txt");
     const std::string VoxelsFile("voxels_v5.txt");
-
-    const std::string Grain_ID("Grain_ID");
-    const std::string SchmidFactor ("SchmidFactor");
-    const std::string Neighbor_Grain_ID_List( "Neighbor_Grain_ID_List");
-    const std::string KernelAvgDisorientation( "KernelAvgDisorientation");
-    const std::string GrainAvgDisorientation ("GrainAvgDisorientation");
-    const std::string ImageQuality( "ImageQuality");
-
-
   } // End Namespace Representation
 }
 

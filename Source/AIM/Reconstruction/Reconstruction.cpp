@@ -80,13 +80,24 @@ m_MinAllowedGrainSize(0),
 m_MinSeedConfidence(0.0),
 m_MinSeedImageQuality(0.0),
 m_MisorientationTolerance(0.0),
-m_CrystalStructure(AIM::Representation::Cubic),
+m_CrystalStructure(AIM::Reconstruction::Cubic),
 m_AlreadyFormed(false),
+m_WriteVisualizationFile(false),
+m_WriteIPFFile(false),
+m_WriteDisorientationFile(false),
+m_WriteImageQualityFile(false),
+m_WriteSchmidFactorFile(false),
+m_WriteDownSampledFile(false),
+m_WriteHDF5GrainFile(false),
 m_ErrorCondition(0)
 #if AIM_USE_QT
   ,m_Cancel(false)
 #endif
 {
+
+
+
+
 
 }
 
@@ -191,20 +202,22 @@ void Reconstruction::compute()
 	  {0.000000000, -0.50000000, 0.866025400, 0.000000000, 0.000000000},
 	  {0.000000000, -0.86602540, 0.500000000, 0.000000000, 0.000000000}};
 
-  std::string  statsFile = m_OutputDirectory + MXADir::Separator + AIM::Representation::StatsFile;
-  std::string  misorientationFile = m_OutputDirectory + MXADir::Separator + AIM::Representation::MisorientationBinsFile;
-  std::string  microBinsFile = m_OutputDirectory + MXADir::Separator + AIM::Representation::MicroBinsFile;
-  std::string reconVisFile = m_OutputDirectory + MXADir::Separator + AIM::Representation::ReconstructedVisualizationFile;
-  std::string reconIPFVisFile = m_OutputDirectory + MXADir::Separator + AIM::Representation::ReconstructedIPFVisualizationFile;
-  std::string reconDisVisFile = m_OutputDirectory + MXADir::Separator + AIM::Representation::ReconstructedDisVisualizationFile;
-  std::string reconIQVisFile = m_OutputDirectory + MXADir::Separator + AIM::Representation::ReconstructedIQVisualizationFile;
-  std::string reconSFVisFile = m_OutputDirectory + MXADir::Separator + AIM::Representation::ReconstructedSFVisualizationFile;
-  std::string reconDSVisFile = m_OutputDirectory + MXADir::Separator + AIM::Representation::ReconstructedDSVisualizationFile;
-  std::string axisFile = m_OutputDirectory + MXADir::Separator + AIM::Representation::AxisOrientationsFile;
-  std::string graindataFile = m_OutputDirectory + MXADir::Separator + AIM::Representation::graindataFile;
-  std::string eulerFile = m_OutputDirectory + MXADir::Separator + AIM::Representation::EulerAnglesFile;
-  std::string hdf5GrainFile = m_OutputDirectory + MXADir::Separator + AIM::Representation::HDF5GrainFile;
-  std::string alignmentFile = m_OutputDirectory + MXADir::Separator + AIM::Representation::AlignmentFile;
+  std::string  statsFile = m_OutputDirectory + MXADir::Separator + AIM::Reconstruction::StatsFile;
+  std::string  misorientationFile = m_OutputDirectory + MXADir::Separator + AIM::Reconstruction::MisorientationBinsFile;
+  std::string  microBinsFile = m_OutputDirectory + MXADir::Separator + AIM::Reconstruction::MicroBinsFile;
+
+  std::string axisFile = m_OutputDirectory + MXADir::Separator + AIM::Reconstruction::AxisOrientationsFile;
+  std::string graindataFile = m_OutputDirectory + MXADir::Separator + AIM::Reconstruction::GrainDataFile;
+  std::string eulerFile = m_OutputDirectory + MXADir::Separator + AIM::Reconstruction::EulerAnglesFile;
+  std::string hdf5GrainFile = m_OutputDirectory + MXADir::Separator + AIM::Reconstruction::HDF5GrainFile;
+  std::string alignmentFile = m_OutputDirectory + MXADir::Separator + AIM::Reconstruction::AlignmentFile;
+
+  std::string reconVisFile = m_OutputDirectory + MXADir::Separator + AIM::Reconstruction::VisualizationVizFile;
+  std::string reconIPFVisFile = m_OutputDirectory + MXADir::Separator + AIM::Reconstruction::IPFVizFile;
+  std::string reconDisVisFile = m_OutputDirectory + MXADir::Separator + AIM::Reconstruction::DisorientationVizFile;
+  std::string reconIQVisFile = m_OutputDirectory + MXADir::Separator + AIM::Reconstruction::ImageQualityVizFile;
+  std::string reconSFVisFile = m_OutputDirectory + MXADir::Separator + AIM::Reconstruction::SchmidFactorVizFile;
+  std::string reconDSVisFile = m_OutputDirectory + MXADir::Separator + AIM::Reconstruction::DownSampledVizFile;
 
   if (m_AlreadyFormed == true)
   {
@@ -327,7 +340,7 @@ void Reconstruction::compute()
   progressMessage(AIM_STRING("Finding Grain Moments"), 59);
   if(m_ZEndIndex-m_ZStartIndex > 1) m->find_moments();
   if(m_ZEndIndex-m_ZStartIndex == 1) m->find_moments2D();
-  
+
   CHECK_FOR_CANCELED(ReconstructionFunc)
   progressMessage(AIM_STRING("Finding Grain Principal Axes Lengths"), 62);
   if(m_ZEndIndex-m_ZStartIndex > 1) m->find_axes();
@@ -372,13 +385,27 @@ void Reconstruction::compute()
   if(m_ZEndIndex-m_ZStartIndex == 1) m->volume_stats2D(statsFile,misorientationFile,microBinsFile);
 
   CHECK_FOR_CANCELED(ReconstructionFunc)
-  progressMessage(AIM_STRING("Writing Out Volume"), 92);
-  m->write_volume(reconVisFile, reconIPFVisFile, reconDisVisFile, reconIQVisFile, reconSFVisFile, reconDSVisFile, m_IPFoutputoption, m_Disorientationoutputoption, m_ImageQualityoutputoption, m_SchmidFactoroutputoption, quat_symmcubic, quat_symmhex);
+  progressMessage(AIM_STRING("Writing VTK Visualization File"), 92);
+  if (m_WriteVisualizationFile) {m->writeVisualizationFile(reconVisFile);}
+  progressMessage(AIM_STRING("Writing VTK Inverse Pole Figure File"), 92);
+  if (m_WriteIPFFile) {m->writeIPFVizFile(reconIPFVisFile, quat_symmhex);}
+  progressMessage(AIM_STRING("Writing VTK Disorientation File"), 92);
+  if (m_WriteDisorientationFile) {m->writeDisorientationVizFile(reconDisVisFile);}
+  progressMessage(AIM_STRING("Writing VTK Image Quality File"), 92);
+  if (m_WriteImageQualityFile) {m->writeImageQualityVizFile(reconIQVisFile);}
+  progressMessage(AIM_STRING("Writing VTK Schmid Factor File"), 92);
+  if (m_WriteSchmidFactorFile) {m->writeSchmidFactorVizFile(reconSFVisFile);}
+  progressMessage(AIM_STRING("Writing VTK Down Sampled File"), 92);
+  if (m_WriteDownSampledFile) {m->writeDownSampledVizFile(reconDSVisFile);}
+
+//  m->write_volume(reconVisFile, reconIPFVisFile, reconDSVisFile,
+//                  m_IPFoutputoption, m_Disorientationoutputoption, m_ImageQualityoutputoption, m_SchmidFactoroutputoption,
+//                  quat_symmcubic, quat_symmhex);
 
   CHECK_FOR_CANCELED(ReconstructionFunc)
-  progressMessage(AIM_STRING("Writing Out Grains"), 94);
-  writeHDF5GrainsFile(hdf5GrainFile, m);
-  m->write_grains(m_OutputDirectory /* quat_symmcubic, quat_symmhex */);
+  progressMessage(AIM_STRING("Writing Out HDF5 Grain File"), 94);
+  if (m_WriteHDF5GrainFile) { writeHDF5GrainsFile(hdf5GrainFile, m); }
+//  m->write_grains(m_OutputDirectory /* quat_symmcubic, quat_symmhex */);
 
   CHECK_FOR_CANCELED(ReconstructionFunc)
   progressMessage(AIM_STRING("Writing Grain Data"), 96);
