@@ -126,29 +126,26 @@ public:
 	double totalvol;
 	double totalaxes;
 
-    void initialize(int, int, double, bool, bool, int, double, double, double, double, int, int, bool);
+  void initialize(int, int, double, bool, bool, int, double, double, double, double, int, int, bool);
 	void loadSlices();
-	void align_sections(const std::string &filename,
-                      double quat_symmcubic[24][5],
-                      double quat_symmhex[12][5]);
-	void find_border(double quat_symmcubic[24][5], double quat_symmhex[12][5]);
-	int form_grains(double quat_symmcubic[24][5],double quat_symmhex[12][5]);
-	void form_grains_sections(double quat_symmcubic[24][5],double quat_symmhex[12][5]);
+	void align_sections(const std::string &filename );
+	void find_border();
+	int form_grains();
+	void form_grains_sections();
 	void remove_smallgrains();
 	int renumber_grains1();
-	void write_volume(string, string, string, string, string, string, bool, bool, bool, bool,double quat_symmcubic[24][5],double quat_symmhex[12][5]);
 	int load_data(string);
-	void assign_badpoints(double quat_symmcubic[24][5],double quat_symmhex[12][5]);
+	void assign_badpoints();
 	void find_neighbors();
 	void merge_containedgrains();
 	int renumber_grains();
-	int define_subgrains(double quat_symmcubic[24][5],double quat_symmhex[12][5]);
-	int reburn_grains(double quat_symmcubic[24][5],double quat_symmhex[12][5]);
+	int define_subgrains();
+	int reburn_grains();
 	void cleanup_data();
-	void find_kernels(double quat_symmcubic[24][5],double quat_symmhex[12][5]);
-	void homogenize_grains(double quat_symmcubic[24][5],double quat_symmhex[12][5]);
-	void merge_twins(double quat_symmcubic[24][5],double quat_symmhex[12][5]);
-	void merge_colonies(double quat_symmcubic[24][5],double quat_symmhex[12][5]);
+	void find_kernels();
+	void homogenize_grains();
+	void merge_twins();
+	void merge_colonies();
 	void characterize_twins();
 	void characterize_colonies();
 	int renumber_grains3();
@@ -162,8 +159,8 @@ public:
 	void find_axes2D();
 	void find_vectors2D();
 	void find_eulerodf();
-	void measure_misorientations(double quat_symmcubic[24][5],double quat_symmhex[12][5]);
-	void find_colors(double quat_symmcubic[24][5],double quat_symmhex[12][5]);
+	void measure_misorientations();
+	void find_colors();
 	void find_convexities();
 	void find_schmids();
 	void volume_stats(string,string,string);
@@ -172,12 +169,29 @@ public:
 	void write_eulerodf(string);
 	void write_graindata(string);
 	void write_grains(const std::string &outputdir/* double quat_symmcubic[24][5],double quat_symmhex[12][5] */);
+
+//  void write_volume(string, string, string, string, string, string,
+//                    bool, bool, bool, bool,double quat_symmcubic[24][5],double quat_symmhex[12][5]);
+
+	int writeVisualizationFile(const std::string &file); // DONE
+  int writeIPFVizFile(const std::string &file);
+  int writeDisorientationVizFile(const std::string &file); // DONE
+  int writeImageQualityVizFile(const std::string &file); // DONE
+  int writeSchmidFactorVizFile(const std::string &file); // DONE
+  int writeDownSampledVizFile(const std::string &file);
+
+ // void calculateCubicIPFColor(double q1[4], double &red, double &green, double &blue);
+
+//  void calculateHexIPFColor(double q1[4], double & red, double & green, double & blue);
+
 	double getmisoquatcubic(double,double q1[5],double q2[5],double &,double &,double &);
-	double getmisoquathexagonal(double quat_symmhex[12][5],double,double q1[5],double q2[5],double &,double &,double &);
+	double getmisoquathexagonal(double,double q1[5],double q2[5],double &,double &,double &);
 	double gamma(double);
 	double find_xcoord(long);
 	double find_ycoord(long);
 	double find_zcoord(long);
+
+
 
 protected:
   ReconstructionFunc();

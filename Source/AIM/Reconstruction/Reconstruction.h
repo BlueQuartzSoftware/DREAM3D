@@ -77,14 +77,21 @@ Q_OBJECT
     MXA_INSTANCE_PROPERTY(double, DownSampleFactor)
     MXA_INSTANCE_PROPERTY(double, MinSeedImageQuality)
     MXA_INSTANCE_PROPERTY(double, MisorientationTolerance)
-    MXA_INSTANCE_PROPERTY(AIM::Representation::CrystalStructure, CrystalStructure)
-    MXA_INSTANCE_PROPERTY(AIM::Representation::AlignmentMethod, AlignmentMethod)
+    MXA_INSTANCE_PROPERTY(AIM::Reconstruction::CrystalStructure, CrystalStructure)
+    MXA_INSTANCE_PROPERTY(AIM::Reconstruction::AlignmentMethod, AlignmentMethod)
     MXA_INSTANCE_PROPERTY(bool, AlreadyFormed)
-    MXA_INSTANCE_PROPERTY(bool, IPFoutputoption)
-    MXA_INSTANCE_PROPERTY(bool, Disorientationoutputoption)
-    MXA_INSTANCE_PROPERTY(bool, ImageQualityoutputoption)
-    MXA_INSTANCE_PROPERTY(bool, SchmidFactoroutputoption)
-    MXA_INSTANCE_PROPERTY(int, ErrorCondition);
+
+
+    MXA_INSTANCE_PROPERTY(bool, WriteVisualizationFile)
+    MXA_INSTANCE_PROPERTY(bool, WriteIPFFile)
+    MXA_INSTANCE_PROPERTY(bool, WriteDisorientationFile)
+    MXA_INSTANCE_PROPERTY(bool, WriteImageQualityFile)
+    MXA_INSTANCE_PROPERTY(bool, WriteSchmidFactorFile)
+    MXA_INSTANCE_PROPERTY(bool, WriteDownSampledFile)
+
+    MXA_INSTANCE_PROPERTY(bool, WriteHDF5GrainFile)
+
+    MXA_INSTANCE_PROPERTY(int, ErrorCondition)
 
     void parseAngFile();
 

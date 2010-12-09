@@ -75,7 +75,7 @@ m_OverlapAllowed(0),
 m_AlreadyFormed(false),
 m_Precipitates(0),
 m_OverlapAssignment(0),
-m_CrystalStructure(AIM::Representation::Cubic),
+m_CrystalStructure(AIM::Reconstruction::Cubic),
 m_ErrorCondition(0)
 #if AIM_USE_QT
   ,m_Cancel(false)
@@ -149,18 +149,18 @@ void GrainGenerator::compute()
 	  {0.000000000, -0.50000000, 0.866025400, 0.000000000, 0.000000000},
 	  {0.000000000, -0.86602540, 0.500000000, 0.000000000, 0.000000000}};
 
-  std::string  StatsFile = m_InputDirectory + MXADir::Separator + AIM::Representation::StatsFile;
-  std::string  AxisOrientationsFile = m_InputDirectory + MXADir::Separator + AIM::Representation::AxisOrientationsFile;
-  std::string  EulerAnglesFile = m_InputDirectory + MXADir::Separator + AIM::Representation::EulerAnglesFile;
-  std::string  MisorientationBinsFile = m_InputDirectory + MXADir::Separator + AIM::Representation::MisorientationBinsFile;
-  std::string  MicroBinsFile = m_InputDirectory + MXADir::Separator + AIM::Representation::MicroBinsFile;
+  std::string  StatsFile = m_InputDirectory + MXADir::Separator + AIM::Reconstruction::StatsFile;
+  std::string  AxisOrientationsFile = m_InputDirectory + MXADir::Separator + AIM::Reconstruction::AxisOrientationsFile;
+  std::string  EulerAnglesFile = m_InputDirectory + MXADir::Separator + AIM::Reconstruction::EulerAnglesFile;
+  std::string  MisorientationBinsFile = m_InputDirectory + MXADir::Separator + AIM::Reconstruction::MisorientationBinsFile;
+  std::string  MicroBinsFile = m_InputDirectory + MXADir::Separator + AIM::Reconstruction::MicroBinsFile;
 
-  std::string  CubeFile = m_OutputDirectory + MXADir::Separator + AIM::Representation::CubeFile;
-  std::string  EulerFile = m_OutputDirectory + MXADir::Separator + AIM::Representation::EulerFile;
-  std::string AnalysisFile = m_OutputDirectory + MXADir::Separator + AIM::Representation::AnalysisFile;
-  std::string MoDFFile = m_OutputDirectory + MXADir::Separator + AIM::Representation::MoDFFile;
-  std::string CrystallographicErrorFile = m_OutputDirectory + MXADir::Separator + AIM::Representation::CrystallographicErrorFile;
-  std::string graindataFile = m_OutputDirectory + MXADir::Separator + AIM::Representation::graindataFile;
+  std::string  CubeFile = m_OutputDirectory + MXADir::Separator + AIM::SyntheticBuilder::CubeFile;
+  std::string  EulerFile = m_OutputDirectory + MXADir::Separator + AIM::SyntheticBuilder::EulerFile;
+  std::string AnalysisFile = m_OutputDirectory + MXADir::Separator + AIM::SyntheticBuilder::AnalysisFile;
+  std::string MoDFFile = m_OutputDirectory + MXADir::Separator + AIM::SyntheticBuilder::MoDFFile;
+  std::string CrystallographicErrorFile = m_OutputDirectory + MXADir::Separator + AIM::SyntheticBuilder::CrystallographicErrorFile;
+  std::string graindataFile = m_OutputDirectory + MXADir::Separator + AIM::Reconstruction::GrainDataFile;
 
    m = GrainGeneratorFunc::New();
    m->initialize(m_NumGrains, m_ShapeClass,

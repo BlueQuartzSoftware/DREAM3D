@@ -80,13 +80,24 @@ m_MinAllowedGrainSize(0),
 m_MinSeedConfidence(0.0),
 m_MinSeedImageQuality(0.0),
 m_MisorientationTolerance(0.0),
-m_CrystalStructure(AIM::Representation::Cubic),
+m_CrystalStructure(AIM::Reconstruction::Cubic),
 m_AlreadyFormed(false),
+m_WriteVisualizationFile(false),
+m_WriteIPFFile(false),
+m_WriteDisorientationFile(false),
+m_WriteImageQualityFile(false),
+m_WriteSchmidFactorFile(false),
+m_WriteDownSampledFile(false),
+m_WriteHDF5GrainFile(false),
 m_ErrorCondition(0)
 #if AIM_USE_QT
   ,m_Cancel(false)
 #endif
 {
+
+
+
+
 
 }
 
@@ -149,62 +160,22 @@ void Reconstruction::compute()
   m->initialize(m_ZStartIndex, m_ZEndIndex, m_ZResolution, m_MergeTwins, m_MergeColonies, m_MinAllowedGrainSize,
 	                   m_MinSeedConfidence, m_DownSampleFactor, m_MinSeedImageQuality, m_MisorientationTolerance, m_CrystalStructure, m_AlignmentMethod, m_AlreadyFormed);
 
-//  int32_t mindiameter = 100000;
-//  int32_t maxdiameter = 0;
-  double quat_symmcubic[24][5] = {
-	  {0.000000000, 0.000000000, 0.000000000, 0.000000000, 1.000000000},
-	  {0.000000000, 1.000000000, 0.000000000, 0.000000000, 0.000000000},
-	  {0.000000000, 0.000000000, 1.000000000, 0.000000000, 0.000000000},
-	  {0.000000000, 0.000000000, 0.000000000, 1.000000000, 0.000000000},
-	  {0.000000000, 0.707106781, 0.000000000, 0.000000000, 0.707106781},
-	  {0.000000000, 0.000000000, 0.707106781, 0.000000000, 0.707106781},
-	  {0.000000000, 0.000000000, 0.000000000, 0.707106781, 0.707106781},
-	  {0.000000000, -0.707106781, 0.000000000, 0.000000000, 0.707106781},
-	  {0.000000000, 0.000000000, -0.707106781, 0.000000000, 0.707106781},
-	  {0.000000000, 0.000000000, 0.000000000, -0.707106781, 0.707106781},
-	  {0.000000000, 0.707106781, 0.707106781, 0.000000000, 0.000000000},
-	  {0.000000000, -0.707106781, 0.707106781, 0.000000000, 0.000000000},
-	  {0.000000000, 0.000000000, 0.707106781, 0.707106781, 0.000000000},
-	  {0.000000000, 0.000000000, -0.707106781, 0.707106781, 0.000000000},
-	  {0.000000000, 0.707106781, 0.000000000, 0.707106781, 0.000000000},
-	  {0.000000000, -0.707106781, 0.000000000, 0.707106781, 0.000000000},
-	  {0.000000000, 0.500000000, 0.500000000, 0.500000000, 0.500000000},
-	  {0.000000000, -0.500000000, -0.500000000, -0.500000000, 0.500000000},
-	  {0.000000000, 0.500000000, -0.500000000, 0.500000000, 0.500000000},
-	  {0.000000000, -0.500000000, 0.500000000, -0.500000000, 0.500000000},
-	  {0.000000000, -0.500000000, 0.500000000, 0.500000000, 0.500000000},
-	  {0.000000000, 0.500000000, -0.500000000, -0.500000000, 0.500000000},
-	  {0.000000000, -0.500000000, -0.500000000, 0.500000000, 0.500000000},
-	  {0.000000000, 0.500000000, 0.500000000, -0.500000000, 0.500000000}};
+  std::string  statsFile = m_OutputDirectory + MXADir::Separator + AIM::Reconstruction::StatsFile;
+  std::string  misorientationFile = m_OutputDirectory + MXADir::Separator + AIM::Reconstruction::MisorientationBinsFile;
+  std::string  microBinsFile = m_OutputDirectory + MXADir::Separator + AIM::Reconstruction::MicroBinsFile;
 
-  double quat_symmhex[12][5] = {
-	  {0.000000000, 0.000000000, 0.000000000, 0.000000000, 1.000000000},
-	  {0.000000000, 0.000000000, 0.000000000, 0.500000000, 0.866025400},
-	  {0.000000000, 0.000000000, 0.000000000, 0.866025400, 0.500000000},
-	  {0.000000000, 0.000000000, 0.000000000, 1.000000000, 0.000000000},
-	  {0.000000000, 0.000000000, 0.000000000, 0.866025400, -0.50000000},
-	  {0.000000000, 0.000000000, 0.000000000, 0.500000000, -0.86602540},
-	  {0.000000000, 1.000000000, 0.000000000, 0.000000000, 0.000000000},
-	  {0.000000000, 0.866025400, 0.500000000, 0.000000000, 0.000000000},
-	  {0.000000000, 0.500000000, 0.866025400, 0.000000000, 0.000000000},
-	  {0.000000000, 0.000000000, 1.000000000, 0.000000000, 0.000000000},
-	  {0.000000000, -0.50000000, 0.866025400, 0.000000000, 0.000000000},
-	  {0.000000000, -0.86602540, 0.500000000, 0.000000000, 0.000000000}};
+  std::string axisFile = m_OutputDirectory + MXADir::Separator + AIM::Reconstruction::AxisOrientationsFile;
+  std::string graindataFile = m_OutputDirectory + MXADir::Separator + AIM::Reconstruction::GrainDataFile;
+  std::string eulerFile = m_OutputDirectory + MXADir::Separator + AIM::Reconstruction::EulerAnglesFile;
+  std::string hdf5GrainFile = m_OutputDirectory + MXADir::Separator + AIM::Reconstruction::HDF5GrainFile;
+  std::string alignmentFile = m_OutputDirectory + MXADir::Separator + AIM::Reconstruction::AlignmentFile;
 
-  std::string  statsFile = m_OutputDirectory + MXADir::Separator + AIM::Representation::StatsFile;
-  std::string  misorientationFile = m_OutputDirectory + MXADir::Separator + AIM::Representation::MisorientationBinsFile;
-  std::string  microBinsFile = m_OutputDirectory + MXADir::Separator + AIM::Representation::MicroBinsFile;
-  std::string reconVisFile = m_OutputDirectory + MXADir::Separator + AIM::Representation::ReconstructedVisualizationFile;
-  std::string reconIPFVisFile = m_OutputDirectory + MXADir::Separator + AIM::Representation::ReconstructedIPFVisualizationFile;
-  std::string reconDisVisFile = m_OutputDirectory + MXADir::Separator + AIM::Representation::ReconstructedDisVisualizationFile;
-  std::string reconIQVisFile = m_OutputDirectory + MXADir::Separator + AIM::Representation::ReconstructedIQVisualizationFile;
-  std::string reconSFVisFile = m_OutputDirectory + MXADir::Separator + AIM::Representation::ReconstructedSFVisualizationFile;
-  std::string reconDSVisFile = m_OutputDirectory + MXADir::Separator + AIM::Representation::ReconstructedDSVisualizationFile;
-  std::string axisFile = m_OutputDirectory + MXADir::Separator + AIM::Representation::AxisOrientationsFile;
-  std::string graindataFile = m_OutputDirectory + MXADir::Separator + AIM::Representation::graindataFile;
-  std::string eulerFile = m_OutputDirectory + MXADir::Separator + AIM::Representation::EulerAnglesFile;
-  std::string hdf5GrainFile = m_OutputDirectory + MXADir::Separator + AIM::Representation::HDF5GrainFile;
-  std::string alignmentFile = m_OutputDirectory + MXADir::Separator + AIM::Representation::AlignmentFile;
+  std::string reconVisFile = m_OutputDirectory + MXADir::Separator + AIM::Reconstruction::VisualizationVizFile;
+  std::string reconIPFVisFile = m_OutputDirectory + MXADir::Separator + AIM::Reconstruction::IPFVizFile;
+  std::string reconDisVisFile = m_OutputDirectory + MXADir::Separator + AIM::Reconstruction::DisorientationVizFile;
+  std::string reconIQVisFile = m_OutputDirectory + MXADir::Separator + AIM::Reconstruction::ImageQualityVizFile;
+  std::string reconSFVisFile = m_OutputDirectory + MXADir::Separator + AIM::Reconstruction::SchmidFactorVizFile;
+  std::string reconDSVisFile = m_OutputDirectory + MXADir::Separator + AIM::Reconstruction::DownSampledVizFile;
 
   if (m_AlreadyFormed == true)
   {
@@ -229,51 +200,51 @@ void Reconstruction::compute()
   }
   if (m_AlreadyFormed == false)
   {
-	CHECK_FOR_CANCELED(ReconstructionFunc)
-	progressMessage(AIM_STRING("Loading Slices"), 3 );
-	m->loadSlices();
+    CHECK_FOR_CANCELED(ReconstructionFunc)
+    progressMessage(AIM_STRING("Loading Slices"), 3);
+    m->loadSlices();
 
-	CHECK_FOR_CANCELED(ReconstructionFunc)
-	progressMessage(AIM_STRING("Finding Border"), 6 );
-	m->find_border(quat_symmcubic, quat_symmhex);
-  }
-/*	CHECK_FOR_CANCELED(ReconstructionFunc)
-	progressMessage(AIM_STRING("Cleaning Data"), 9 );
-	m->cleanup_data();
+    CHECK_FOR_CANCELED(ReconstructionFunc)
+    progressMessage(AIM_STRING("Finding Border"), 6);
+    m->find_border();
 
-	if(m_AlignmentMethod == 3)
-	{
-		CHECK_FOR_CANCELED(ReconstructionFunc)
-		progressMessage(AIM_STRING("Identifying Grains on Sections"), 11 );
-		m->form_grains_sections(quat_symmcubic, quat_symmhex);
-	}
+    CHECK_FOR_CANCELED(ReconstructionFunc)
+    progressMessage(AIM_STRING("Cleaning Data"), 9);
+    m->cleanup_data();
 
-	CHECK_FOR_CANCELED(ReconstructionFunc)
-	progressMessage(AIM_STRING("Aligning Slices"), 14 );
-	m->align_sections(alignmentFile, quat_symmcubic, quat_symmhex);
+    if (m_AlignmentMethod == 3)
+    {
+      CHECK_FOR_CANCELED(ReconstructionFunc)
+      progressMessage(AIM_STRING("Identifying Grains on Sections"), 11);
+      m->form_grains_sections();
+    }
 
-	if (m_AlignmentMethod == 3)
-	{
-	    CHECK_FOR_CANCELED(ReconstructionFunc)
-	    progressMessage(AIM_STRING("Redefining Border"), 16);
-	    m->find_border(quat_symmcubic, quat_symmhex);
-	}
+    CHECK_FOR_CANCELED(ReconstructionFunc)
+    progressMessage(AIM_STRING("Aligning Slices"), 14);
+    m->align_sections(alignmentFile);
+
+    if (m_AlignmentMethod == 3)
+    {
+      CHECK_FOR_CANCELED(ReconstructionFunc)
+      progressMessage(AIM_STRING("Redefining Border"), 16);
+      m->find_border();
+    }
 
     CHECK_FOR_CANCELED(ReconstructionFunc)
     progressMessage(AIM_STRING("Forming Macro-Grains"), 19);
-    m->numgrains = m->form_grains(quat_symmcubic, quat_symmhex);
+    m->numgrains = m->form_grains();
 
-	CHECK_FOR_CANCELED(ReconstructionFunc)
-	progressMessage(AIM_STRING("Finding Grain Reference Orientations"), 22);
-	m->find_kernels(quat_symmcubic, quat_symmhex);
+    CHECK_FOR_CANCELED(ReconstructionFunc)
+    progressMessage(AIM_STRING("Finding Grain Reference Orientations"), 22);
+    m->find_kernels();
 
-	CHECK_FOR_CANCELED(ReconstructionFunc)
-	progressMessage(AIM_STRING("Defining Sub-Grains"), 25);
-	m->numgrains = m->define_subgrains(quat_symmcubic, quat_symmhex);
+    CHECK_FOR_CANCELED(ReconstructionFunc)
+    progressMessage(AIM_STRING("Defining Sub-Grains"), 25);
+    m->numgrains = m->define_subgrains();
 
     CHECK_FOR_CANCELED(ReconstructionFunc)
     progressMessage(AIM_STRING("Assigning Bad Points"), 28);
-    m->assign_badpoints(quat_symmcubic, quat_symmhex);
+    m->assign_badpoints();
   }
 
   CHECK_FOR_CANCELED(ReconstructionFunc)
@@ -290,19 +261,19 @@ void Reconstruction::compute()
 
   CHECK_FOR_CANCELED(ReconstructionFunc)
   progressMessage(AIM_STRING("Identifying Grains"), 40);
-  m->numgrains = m->reburn_grains(quat_symmcubic, quat_symmhex);
+  m->numgrains = m->reburn_grains();
 
   CHECK_FOR_CANCELED(ReconstructionFunc)
   progressMessage(AIM_STRING("Finding Grain Reference Orientations"), 43);
-  m->find_kernels(quat_symmcubic, quat_symmhex);
+  m->find_kernels();
 
   CHECK_FOR_CANCELED(ReconstructionFunc)
   progressMessage(AIM_STRING("Finding Grain Average Orientations"), 49);
-  m->homogenize_grains(quat_symmcubic, quat_symmhex);
+  m->homogenize_grains();
 
   if (m_MergeTwins == true)
   {
-    m->merge_twins(quat_symmcubic, quat_symmhex);
+    m->merge_twins();
     progressMessage(AIM_STRING("Merging Twins"), 51);
     m->characterize_twins();
 	  CHECK_FOR_CANCELED(ReconstructionFunc)
@@ -313,87 +284,103 @@ void Reconstruction::compute()
   if (m_MergeColonies == true)
   {
     progressMessage(AIM_STRING("Merging Colonies"), 51);
-    m->merge_colonies(quat_symmcubic, quat_symmhex);
+    m->merge_colonies();
     progressMessage(AIM_STRING("Renumbering Grains"), 53);
     m->characterize_colonies();
   }
 
   CHECK_FOR_CANCELED(ReconstructionFunc)
-  progressMessage(AIM_STRING("Finding Grain Centroids"), 56);
+  progressMessage(AIM_STRING("Finding Grain Centroids"), 55);
   if(m_ZEndIndex-m_ZStartIndex > 1) m->find_centroids();
   if(m_ZEndIndex-m_ZStartIndex == 1)m->find_centroids2D();
 
   CHECK_FOR_CANCELED(ReconstructionFunc)
-  progressMessage(AIM_STRING("Finding Grain Moments"), 59);
+  progressMessage(AIM_STRING("Finding Grain Moments"), 57);
   if(m_ZEndIndex-m_ZStartIndex > 1) m->find_moments();
   if(m_ZEndIndex-m_ZStartIndex == 1) m->find_moments2D();
-  
+
   CHECK_FOR_CANCELED(ReconstructionFunc)
-  progressMessage(AIM_STRING("Finding Grain Principal Axes Lengths"), 62);
+  progressMessage(AIM_STRING("Finding Grain Principal Axes Lengths"), 59);
   if(m_ZEndIndex-m_ZStartIndex > 1) m->find_axes();
   if(m_ZEndIndex-m_ZStartIndex == 1) m->find_axes2D();
 
   CHECK_FOR_CANCELED(ReconstructionFunc)
-  progressMessage(AIM_STRING("Finding Grain Pricipal Axes Vectors"), 65);
+  progressMessage(AIM_STRING("Finding Grain Pricipal Axes Vectors"), 61);
   if(m_ZEndIndex-m_ZStartIndex > 1) m->find_vectors();
   if(m_ZEndIndex-m_ZStartIndex == 1) m->find_vectors2D();
 
   CHECK_FOR_CANCELED(ReconstructionFunc)
-  progressMessage(AIM_STRING("Refinding Neighbors"), 68);
+  progressMessage(AIM_STRING("Refinding Neighbors"), 63);
   m->find_neighbors();
 
   CHECK_FOR_CANCELED(ReconstructionFunc)
-  progressMessage(AIM_STRING("Finding Euclidean Distance Maps"), 71);
+  progressMessage(AIM_STRING("Finding Euclidean Distance Maps"), 65);
   m->find_euclidean_map();
 
   CHECK_FOR_CANCELED(ReconstructionFunc)
-  progressMessage(AIM_STRING("Finding Euler ODF"), 74);
+  progressMessage(AIM_STRING("Finding Euler ODF"), 66);
   m->find_eulerodf();
 
   CHECK_FOR_CANCELED(ReconstructionFunc)
-  progressMessage(AIM_STRING("Measuring Misorientations"), 77);
-  m->measure_misorientations(quat_symmcubic, quat_symmhex);
+  progressMessage(AIM_STRING("Measuring Misorientations"), 67);
+  m->measure_misorientations();
 
   CHECK_FOR_CANCELED(ReconstructionFunc)
-  progressMessage(AIM_STRING("Finding Grain IPF Colors"), 80);
-  m->find_colors(quat_symmcubic, quat_symmhex);
+  progressMessage(AIM_STRING("Finding Grain IPF Colors"), 69);
+  m->find_colors();
 
   CHECK_FOR_CANCELED(ReconstructionFunc)
-  progressMessage(AIM_STRING("Finding Grain Convexities"), 83);
+  progressMessage(AIM_STRING("Finding Grain Convexities"), 70);
   m->find_convexities();
 
   CHECK_FOR_CANCELED(ReconstructionFunc)
-  progressMessage(AIM_STRING("Finding Grain Schmid Factors"), 86);
+  progressMessage(AIM_STRING("Finding Grain Schmid Factors"), 71);
   m->find_schmids();
 
   CHECK_FOR_CANCELED(ReconstructionFunc)
-  progressMessage(AIM_STRING("Writing Statistics"), 89);
+  progressMessage(AIM_STRING("Writing Statistics"), 80);
   if(m_ZEndIndex-m_ZStartIndex > 1) m->volume_stats(statsFile,misorientationFile,microBinsFile);
   if(m_ZEndIndex-m_ZStartIndex == 1) m->volume_stats2D(statsFile,misorientationFile,microBinsFile);
 
-*/  CHECK_FOR_CANCELED(ReconstructionFunc)
-  progressMessage(AIM_STRING("Writing Out Volume"), 92);
-  m->write_volume(reconVisFile, reconIPFVisFile, reconDisVisFile, reconIQVisFile, reconSFVisFile, reconDSVisFile, m_IPFoutputoption, m_Disorientationoutputoption, m_ImageQualityoutputoption, m_SchmidFactoroutputoption, quat_symmcubic, quat_symmhex);
+  CHECK_FOR_CANCELED(ReconstructionFunc)
+  progressMessage(AIM_STRING("Writing VTK Visualization File"), 81);
+  if (m_WriteVisualizationFile) {m->writeVisualizationFile(reconVisFile);}
+
+  progressMessage(AIM_STRING("Writing VTK Inverse Pole Figure File"), 82);
+  if (m_WriteIPFFile) {m->writeIPFVizFile(reconIPFVisFile);}
+
+  progressMessage(AIM_STRING("Writing VTK Disorientation File"), 83);
+  if (m_WriteDisorientationFile) {m->writeDisorientationVizFile(reconDisVisFile);}
+
+  progressMessage(AIM_STRING("Writing VTK Image Quality File"), 84);
+  if (m_WriteImageQualityFile) {m->writeImageQualityVizFile(reconIQVisFile);}
+
+  progressMessage(AIM_STRING("Writing VTK Schmid Factor File"), 85);
+  if (m_WriteSchmidFactorFile) {m->writeSchmidFactorVizFile(reconSFVisFile);}
+
+  progressMessage(AIM_STRING("Writing VTK Down Sampled File"), 86);
+  if (m_WriteDownSampledFile) {m->writeDownSampledVizFile(reconDSVisFile);}
+
+#if AIM_HDF5_SUPPORT
+  CHECK_FOR_CANCELED(ReconstructionFunc)
+  progressMessage(AIM_STRING("Writing Out HDF5 Grain File"), 87);
+  if (m_WriteHDF5GrainFile) { writeHDF5GrainsFile(hdf5GrainFile, m); }
+//  m->write_grains(m_OutputDirectory /* quat_symmcubic, quat_symmhex */);
+#endif
 
   CHECK_FOR_CANCELED(ReconstructionFunc)
-  progressMessage(AIM_STRING("Writing Out Grains"), 94);
-
-  writeHDF5GrainsFile(hdf5GrainFile, m);
-//  m->write_grains(m_OutputDirectory);
-
-/*  CHECK_FOR_CANCELED(ReconstructionFunc)
-  progressMessage(AIM_STRING("Writing Grain Data"), 96);
+  progressMessage(AIM_STRING("Writing Grain Data"), 88);
   m->write_graindata(graindataFile);
 
   CHECK_FOR_CANCELED(ReconstructionFunc)
-  progressMessage(AIM_STRING("Writing Axis Orientation File"), 98);
+  progressMessage(AIM_STRING("Writing Axis Orientation File"), 90);
   m->write_axisodf(axisFile);
 
   CHECK_FOR_CANCELED(ReconstructionFunc)
-  progressMessage(AIM_STRING("Writing Euler Angle File"), 100);
+  progressMessage(AIM_STRING("Writing Euler Angle File"), 92);
   m->write_eulerodf(eulerFile);
 
-*/  progressMessage(AIM_STRING("Reconstruction Complete"), 100);
+  progressMessage(AIM_STRING("Reconstruction Complete"), 100);
 
 }
 
@@ -468,6 +455,7 @@ int Reconstruction::writeHDF5GrainsFile(const std::string &hdfFile,
     std::vector<float> kernelAvgDisorientation(vlist->size());
     std::vector<float> grainAvgDisorientation(vlist->size());
     std::vector<float> imageQuality(vlist->size());
+    std::vector<unsigned char> ipfColor(vlist->size() * 3);
     std::vector<float> schmidFactor(1);
 
     std::vector<int32_t> grainName(1);
@@ -510,6 +498,9 @@ int Reconstruction::writeHDF5GrainsFile(const std::string &hdfFile,
       kernelAvgDisorientation[j] = r->voxels[vid].kernelmisorientation;
       grainAvgDisorientation[j] = r->voxels[vid].misorientation;
       imageQuality[j] = r->voxels[vid].imagequality;
+      ipfColor[j*3] = r->m_Grains[i].red * 255;
+      ipfColor[j*3+1] = r->m_Grains[i].green * 255;
+      ipfColor[j*3+2] = r->m_Grains[i].blue * 255;
       grainName[0] = r->voxels[vid].grainname;
     }
 
@@ -532,6 +523,8 @@ int Reconstruction::writeHDF5GrainsFile(const std::string &hdfFile,
     err = h5writer->writeCellData<float>(hdfPath, kernelAvgDisorientation,  AIM::Representation::KernelAvgDisorientation.c_str(), 1);
     err = h5writer->writeCellData<float>(hdfPath, grainAvgDisorientation,  AIM::Representation::GrainAvgDisorientation.c_str(), 1);
     err = h5writer->writeCellData<float>(hdfPath, imageQuality,  AIM::Representation::ImageQuality.c_str(), 1);
+    err = h5writer->writeCellData<unsigned char>(hdfPath, ipfColor,  AIM::Representation::IPFColor.c_str(), 3);
+
   }
 
   err = h5writer->writeObjectIndex(hdfPaths);
