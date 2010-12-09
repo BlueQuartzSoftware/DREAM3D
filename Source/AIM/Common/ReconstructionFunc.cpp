@@ -291,8 +291,8 @@ void ReconstructionFunc::find_border()
          q2[2] = voxels[neighbor].quat[2];
          q2[3] = voxels[neighbor].quat[3];
          q2[4] = voxels[neighbor].quat[4];
-	   if(crystruct == 1) w = getmisoquathexagonal(misorientationtolerance,q1,q2,n1,n2,n3);
-	   if(crystruct == 2) w = getmisoquatcubic(misorientationtolerance,q1,q2,n1,n2,n3);
+		 if(crystruct == 1) w = getmisoquathexagonal(misorientationtolerance,q1,q2,n1,n2,n3);
+		 if(crystruct == 2) w = getmisoquatcubic(misorientationtolerance,q1,q2,n1,n2,n3);
          if (w < 3.0)
          {
              voxels[neighbor].grainname = -2;

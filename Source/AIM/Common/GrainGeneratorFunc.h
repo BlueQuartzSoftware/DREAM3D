@@ -106,7 +106,7 @@ AngFileHelper::Pointer m_angFileHelper;
 
 
 	void initialize(int32_t, int32_t , double , double , double ,
-                  int32_t ,int32_t ,int32_t, int32_t, double);
+                  int32_t, int32_t, double);
 	void initialize2();
 	double machineepsilon;
 	double maxrealnumber;
@@ -124,8 +124,6 @@ AngFileHelper::Pointer m_angFileHelper;
 	int mindiameter;
 	int maxprecipdiameter;
 	int minprecipdiameter;
-	int32_t overlapallowed;
-	int overlapassignment;
 	double fractionprecip;
 	double avgdiam;
 	double sddiam;
