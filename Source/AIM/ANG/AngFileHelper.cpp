@@ -53,6 +53,7 @@ void AngFileHelper::loadData(Voxel voxels[], int xpoints, int ypoints, int zpoin
   float* ycPtr = reader.getYPosPointer();
   float* confPtr = reader.getConfidenceIndexPointer();
   float* imqualPtr = reader.getImageQualityPointer();
+  float* imqual2Ptr = reader.getImageQuality2Pointer();
   int xstartspot = (xpoints - xpointstemp) / 2;
   int ystartspot = (ypoints - ypointstemp) / 2;
   for (int j = 0; j < ypointstemp; j++)
@@ -64,6 +65,7 @@ void AngFileHelper::loadData(Voxel voxels[], int xpoints, int ypoints, int zpoin
       voxels[index].euler2 = euler2Ptr[readerIndex]; // Phi
       voxels[index].euler3 = euler3Ptr[readerIndex]; // Phi2
       voxels[index].imagequality = imqualPtr[readerIndex];// Image Quality
+      voxels[index].imagequality2 = imqual2Ptr[readerIndex];// Image Quality
       voxels[index].confidence = confPtr[readerIndex];// Confidence
       double s = sin(0.5 * euler2Ptr[readerIndex]);
       double c = cos(0.5 * euler2Ptr[readerIndex]);

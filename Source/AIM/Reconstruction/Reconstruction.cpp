@@ -235,29 +235,29 @@ void Reconstruction::compute()
 
 	CHECK_FOR_CANCELED(ReconstructionFunc)
 	progressMessage(AIM_STRING("Finding Border"), 6 );
-	m->find_border();
-
-	CHECK_FOR_CANCELED(ReconstructionFunc)
+	m->find_border(quat_symmcubic, quat_symmhex);
+  }
+/*	CHECK_FOR_CANCELED(ReconstructionFunc)
 	progressMessage(AIM_STRING("Cleaning Data"), 9 );
 	m->cleanup_data();
 
 	if(m_AlignmentMethod == 3)
 	{
-	  CHECK_FOR_CANCELED(ReconstructionFunc)
-	  progressMessage(AIM_STRING("Identifying Grains on Sections"), 11 );
-	  m->form_grains_sections(quat_symmcubic, quat_symmhex);
+		CHECK_FOR_CANCELED(ReconstructionFunc)
+		progressMessage(AIM_STRING("Identifying Grains on Sections"), 11 );
+		m->form_grains_sections(quat_symmcubic, quat_symmhex);
 	}
 
 	CHECK_FOR_CANCELED(ReconstructionFunc)
 	progressMessage(AIM_STRING("Aligning Slices"), 14 );
 	m->align_sections(alignmentFile, quat_symmcubic, quat_symmhex);
 
-  if (m_AlignmentMethod == 3)
-  {
-    CHECK_FOR_CANCELED(ReconstructionFunc)
-    progressMessage(AIM_STRING("Redefining Border"), 16);
-    m->find_border();
-  }
+	if (m_AlignmentMethod == 3)
+	{
+	    CHECK_FOR_CANCELED(ReconstructionFunc)
+	    progressMessage(AIM_STRING("Redefining Border"), 16);
+	    m->find_border(quat_symmcubic, quat_symmhex);
+	}
 
     CHECK_FOR_CANCELED(ReconstructionFunc)
     progressMessage(AIM_STRING("Forming Macro-Grains"), 19);
@@ -371,16 +371,17 @@ void Reconstruction::compute()
   if(m_ZEndIndex-m_ZStartIndex > 1) m->volume_stats(statsFile,misorientationFile,microBinsFile);
   if(m_ZEndIndex-m_ZStartIndex == 1) m->volume_stats2D(statsFile,misorientationFile,microBinsFile);
 
-  CHECK_FOR_CANCELED(ReconstructionFunc)
+*/  CHECK_FOR_CANCELED(ReconstructionFunc)
   progressMessage(AIM_STRING("Writing Out Volume"), 92);
   m->write_volume(reconVisFile, reconIPFVisFile, reconDisVisFile, reconIQVisFile, reconSFVisFile, reconDSVisFile, m_IPFoutputoption, m_Disorientationoutputoption, m_ImageQualityoutputoption, m_SchmidFactoroutputoption, quat_symmcubic, quat_symmhex);
 
   CHECK_FOR_CANCELED(ReconstructionFunc)
   progressMessage(AIM_STRING("Writing Out Grains"), 94);
-  writeHDF5GrainsFile(hdf5GrainFile, m);
-  m->write_grains(m_OutputDirectory /* quat_symmcubic, quat_symmhex */);
 
-  CHECK_FOR_CANCELED(ReconstructionFunc)
+  writeHDF5GrainsFile(hdf5GrainFile, m);
+//  m->write_grains(m_OutputDirectory);
+
+/*  CHECK_FOR_CANCELED(ReconstructionFunc)
   progressMessage(AIM_STRING("Writing Grain Data"), 96);
   m->write_graindata(graindataFile);
 
@@ -392,7 +393,7 @@ void Reconstruction::compute()
   progressMessage(AIM_STRING("Writing Euler Angle File"), 100);
   m->write_eulerodf(eulerFile);
 
-  progressMessage(AIM_STRING("Reconstruction Complete"), 100);
+*/  progressMessage(AIM_STRING("Reconstruction Complete"), 100);
 
 }
 

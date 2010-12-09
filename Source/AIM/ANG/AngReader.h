@@ -184,6 +184,7 @@ class AngReader
     float* getXPosPointer() { return m_X; }
     float* getYPosPointer() { return m_Y; }
     float* getImageQualityPointer() { return m_Iq; }
+    float* getImageQuality2Pointer() { return m_Iq2; }
     float* getConfidenceIndexPointer() { return m_Ci; }
     float* getPhasePointer() { return m_PhaseData; }
 
@@ -215,6 +216,7 @@ private:
     float* m_Phi;
     float* m_Phi2;
     float* m_Iq;
+    float* m_Iq2;
     float* m_Ci;
     float* m_PhaseData;
     float* m_X;

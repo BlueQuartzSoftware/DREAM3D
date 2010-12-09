@@ -37,6 +37,7 @@ m_NumberOfElements(0), m_ManageMemory(true)
   m_Phi = NULL;
   m_Phi2 = NULL;
   m_Iq = NULL;
+  m_Iq2 = NULL;
   m_Ci = NULL;
   m_PhaseData = NULL;
   m_X = NULL;
@@ -100,6 +101,7 @@ void AngReader::initPointers(size_t numElements)
   m_Phi = allocateArray<float > (numElements);
   m_Phi2 = allocateArray<float > (numElements);
   m_Iq = allocateArray<float > (numElements);
+  m_Iq2 = allocateArray<float > (numElements);
   m_Ci = allocateArray<float > (numElements);
   m_PhaseData = allocateArray<float > (numElements);
   m_X = allocateArray<float > (numElements);
@@ -109,6 +111,7 @@ void AngReader::initPointers(size_t numElements)
   ::memset(m_Phi, 0, numBytes);
   ::memset(m_Phi2, 0, numBytes);
   ::memset(m_Iq, 0, numBytes);
+  ::memset(m_Iq2, 0, numBytes);
   ::memset(m_Ci, 0, numBytes);
   ::memset(m_PhaseData, 0, numBytes);
   ::memset(m_X, 0, numBytes);
@@ -124,6 +127,7 @@ void AngReader::deletePointers()
   this->deallocateArrayData<float > (m_Phi);
   this->deallocateArrayData<float > (m_Phi2);
   this->deallocateArrayData<float > (m_Iq);
+  this->deallocateArrayData<float > (m_Iq2);
   this->deallocateArrayData<float > (m_Ci);
   this->deallocateArrayData<float > (m_PhaseData);
   this->deallocateArrayData<float > (m_X);
@@ -212,7 +216,7 @@ int AngReader::readFile()
 
   initPointers(numElements);
 
-  if (NULL == m_Phi1 || NULL == m_Phi || NULL == m_Phi2 || NULL == m_Iq || NULL == m_Ci || NULL == m_PhaseData || m_X == NULL || m_Y == NULL)
+  if (NULL == m_Phi1 || NULL == m_Phi || NULL == m_Phi2 || NULL == m_Iq || NULL == m_Iq2 || NULL == m_Ci || NULL == m_PhaseData || m_X == NULL || m_Y == NULL)
   {
     return -1;
   }
@@ -376,6 +380,7 @@ void AngReader::readData(const std::string &line, float xMaxValue, float yMaxVal
   m_Phi[offset] = p;
   m_Phi2[offset] = p2;
   m_Iq[offset] = iqual;
+  m_Iq2[offset] = d1;
   m_Ci[offset] = conf;
   m_PhaseData[offset] = ph;
   m_X[offset] = x;
