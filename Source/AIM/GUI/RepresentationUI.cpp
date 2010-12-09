@@ -284,13 +284,11 @@ void RepresentationUI::readSettings()
   READ_SETTING(prefs, gg_FractionPrecipitates, ok, d, 25 , Double);
   READ_SETTING(prefs, gg_NumGrains, ok, i, 1000 , Int);
 
-  READ_SETTING(prefs, gg_OverlapAllowed, ok, d, 0.00 , Double);
   READ_BOOL_SETTING(prefs, gg_, AlreadyFormed, false);
   gg_AlreadyFormed->blockSignals(false);
   READ_COMBO_BOX(prefs, gg_CrystalStructure)
   READ_COMBO_BOX(prefs, gg_ShapeClass)
   READ_COMBO_BOX(prefs, gg_Precipitates)
-  READ_COMBO_BOX(prefs, gg_OverlapAssignment)
 
   /* ******** This Section is for the Surface Meshing Tab ************ */
   READ_FILEPATH_SETTING(prefs, sm_InputFile, "");
@@ -366,12 +364,10 @@ void RepresentationUI::writeSettings()
   WRITE_SETTING(prefs, gg_FractionPrecipitates )
   WRITE_SETTING(prefs, gg_NumGrains )
 
-  WRITE_SETTING(prefs, gg_OverlapAllowed )
   WRITE_BOOL_SETTING(prefs, gg_AlreadyFormed, gg_AlreadyFormed->isChecked())
   WRITE_COMBO_BOX(prefs, gg_CrystalStructure)
   WRITE_COMBO_BOX(prefs, gg_ShapeClass)
   WRITE_COMBO_BOX(prefs, gg_Precipitates)
-  WRITE_COMBO_BOX(prefs, gg_OverlapAssignment)
 
   /* ******** This Section is for the Surface Meshing Tab ************ */
   WRITE_STRING_SETTING(prefs, sm_InputFile);
@@ -963,7 +959,7 @@ void RepresentationUI::gg_SetupGui()
 
   m_WidgetList << gg_InputDir << gg_InputDirBtn << gg_OutputDir << gg_OutputDirBtn;
   m_WidgetList << gg_CrystalStructure << gg_NumGrains << gg_XResolution << gg_YResolution << gg_ZResolution << gg_FractionPrecipitates;
-  m_WidgetList << gg_OverlapAllowed << gg_OverlapAssignment << gg_ShapeClass << gg_Precipitates << gg_AlreadyFormed;
+  m_WidgetList << gg_ShapeClass << gg_Precipitates << gg_AlreadyFormed;
 
 }
 
@@ -1122,10 +1118,7 @@ void RepresentationUI::on_gg_GoBtn_clicked()
   m_GrainGenerator->setFractionPrecipitates(gg_FractionPrecipitates->value());
 
 
-  m_GrainGenerator->setOverlapAllowed(gg_OverlapAllowed->value());
   m_GrainGenerator->setAlreadyFormed(gg_AlreadyFormed->isChecked() );
-  int overlapassignment = gg_OverlapAssignment->currentIndex() + 1;
-  m_GrainGenerator->setOverlapAssignment(overlapassignment);
 
   AIM::Reconstruction::CrystalStructure crystruct = static_cast<AIM::Reconstruction::CrystalStructure>(gg_CrystalStructure->currentIndex() + 1);
 
