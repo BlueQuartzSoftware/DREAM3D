@@ -15,12 +15,13 @@
 //
 // -----------------------------------------------------------------------------
 Voxel::Voxel() :
-grainname(-1),
+grainname(0),
 ellipfunc(0.0),
 confidence(0.0),
 nearestneighbor(-1),
 nearestneighbordistance(-1),
 imagequality(0.0),
+imagequality2(0.0),
 alreadychecked(0),
 euler1(-1.0),
 euler2(-1.0),

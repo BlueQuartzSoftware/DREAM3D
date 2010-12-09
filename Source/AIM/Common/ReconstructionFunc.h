@@ -131,7 +131,7 @@ public:
 	void align_sections(const std::string &filename,
                       double quat_symmcubic[24][5],
                       double quat_symmhex[12][5]);
-	void find_border();
+	void find_border(double quat_symmcubic[24][5], double quat_symmhex[12][5]);
 	int form_grains(double quat_symmcubic[24][5],double quat_symmhex[12][5]);
 	void form_grains_sections(double quat_symmcubic[24][5],double quat_symmhex[12][5]);
 	void remove_smallgrains();

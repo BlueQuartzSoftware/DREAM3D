@@ -19,26 +19,21 @@
 #  EMMPM_FOUND        - True if EM/MPM found.
 #  EMMPM_RESOURCES_DIR - The directory where supporting cmake files and other files can be found
 
-# Only set EMMPM_INSTALL to the environment variable if it is blank
-if ("${EMMPM_INSTALL}" STREQUAL "")
-SET (EMMPM_INSTALL  $ENV{EMMPM_INSTALL})
-endif()
-
 # Look for the header file.
  
 # MESSAGE (STATUS "Finding EM/MPM library and headers..." )
 # SET (EMMPM_DEBUG 1)
 
 SET(EMMPM_INCLUDE_SEARCH_DIRS
-  ${EMMPM_INSTALL}/include
+  $ENV{EMMPM_INSTALL}/include
 )
 
 SET (EMMPM_LIB_SEARCH_DIRS
-  ${EMMPM_INSTALL}/lib
+  $ENV{EMMPM_INSTALL}/lib
   )
 
 SET (EMMPM_BIN_SEARCH_DIRS
-  ${EMMPM_INSTALL}/bin
+  $ENV{EMMPM_INSTALL}/bin
 )
 
 FIND_PATH(EMMPM_INCLUDE_DIR 
