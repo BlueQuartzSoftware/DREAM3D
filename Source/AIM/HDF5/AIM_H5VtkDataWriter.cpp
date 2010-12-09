@@ -28,7 +28,7 @@
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "AIMH5DataWriter.h"
+#include "AIM_H5VtkDataWriter.h"
 #include "AIM/Common/ReconstructionFunc.h"
 
 
@@ -41,7 +41,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AIMH5DataWriter::AIMH5DataWriter() :
+AIM_H5VtkDataWriter::AIM_H5VtkDataWriter() :
 m_FileId(-1)
 {
 
@@ -50,7 +50,7 @@ m_FileId(-1)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AIMH5DataWriter::~AIMH5DataWriter()
+AIM_H5VtkDataWriter::~AIM_H5VtkDataWriter()
 {
   closeFile();
 }
@@ -58,7 +58,7 @@ AIMH5DataWriter::~AIMH5DataWriter()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int AIMH5DataWriter::createVtkObjectGroup(const std::string &hdfGroupPath, const char* vtkDataObjectType)
+int AIM_H5VtkDataWriter::createVtkObjectGroup(const std::string &hdfGroupPath, const char* vtkDataObjectType)
 {
   // std::cout << "   vtkH5DataWriter::WritePoints()" << std::endl;
   herr_t err = H5Utilities::createGroupsFromPath(hdfGroupPath, m_FileId);
@@ -78,7 +78,7 @@ int AIMH5DataWriter::createVtkObjectGroup(const std::string &hdfGroupPath, const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int AIMH5DataWriter::openFile(bool appendData)
+int AIM_H5VtkDataWriter::openFile(bool appendData)
 {
   // Try to open a file to append data into
     if (APPEND_DATA_TRUE == appendData)
@@ -104,7 +104,7 @@ int AIMH5DataWriter::openFile(bool appendData)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int AIMH5DataWriter::closeFile()
+int AIM_H5VtkDataWriter::closeFile()
 {
   // Close the file when we are finished with it
   return H5Utilities::closeFile(m_FileId);
@@ -113,7 +113,7 @@ int AIMH5DataWriter::closeFile()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int AIMH5DataWriter::writeUnstructuredGrid(const std::string &hdfPath,
+int AIM_H5VtkDataWriter::writeUnstructuredGrid(const std::string &hdfPath,
                                            const std::vector<float> &points,
                                            const std::vector<int32_t> &cells,
                                            const std::vector<int32_t> &cell_types)
@@ -159,7 +159,7 @@ int AIMH5DataWriter::writeUnstructuredGrid(const std::string &hdfPath,
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int AIMH5DataWriter::writeObjectIndex(std::vector<std::string> &hdfPaths)
+int AIM_H5VtkDataWriter::writeObjectIndex(std::vector<std::string> &hdfPaths)
 {
   herr_t err = 0;
   err = H5Utilities::createGroupsFromPath(H5_VTK_OBJECT_INDEX_PATH, m_FileId);
