@@ -85,13 +85,13 @@ class ReconstructionFunc;
  * @date Nov 19, 2010
  * @version 1.0
  */
-class AIMCOMMON_EXPORT AIMH5DataWriter
+class AIMCOMMON_EXPORT AIM_H5VtkDataWriter
 {
   public:
-    MXA_SHARED_POINTERS(AIMH5DataWriter);
-    MXA_STATIC_NEW_MACRO(AIMH5DataWriter);
+    MXA_SHARED_POINTERS(AIM_H5VtkDataWriter);
+    MXA_STATIC_NEW_MACRO(AIM_H5VtkDataWriter);
 
-    virtual ~AIMH5DataWriter();
+    virtual ~AIM_H5VtkDataWriter();
 
     MXA_INSTANCE_STRING_PROPERTY(FileName);
 
@@ -274,7 +274,7 @@ class AIMCOMMON_EXPORT AIMH5DataWriter
     }
 
   protected:
-    AIMH5DataWriter();
+    AIM_H5VtkDataWriter();
 
     /**
      * @brief
@@ -289,8 +289,8 @@ class AIMCOMMON_EXPORT AIMH5DataWriter
   private:
     hid_t m_FileId;
 
-    AIMH5DataWriter(const AIMH5DataWriter&); // Copy Constructor Not Implemented
-    void operator=(const AIMH5DataWriter&); // Operator '=' Not Implemented
+    AIM_H5VtkDataWriter(const AIM_H5VtkDataWriter&); // Copy Constructor Not Implemented
+    void operator=(const AIM_H5VtkDataWriter&); // Operator '=' Not Implemented
 };
 
 #endif /* _AIMH5DATAWRITER_H_ */

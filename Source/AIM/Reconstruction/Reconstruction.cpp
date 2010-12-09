@@ -21,7 +21,7 @@
 #include "AIM/ANG/AngFileHelper.h"
 
 #if AIM_HDF5_SUPPORT
-#include "AIM/HDF5/AIMH5DataWriter.h"
+#include "AIM/HDF5/AIM_H5VtkDataWriter.h"
 #endif
 
 
@@ -425,7 +425,7 @@ int Reconstruction::writeHDF5GrainsFile(const std::string &hdfFile,
 {
   int err = -1;
 #if AIM_HDF5_SUPPORT
-  AIMH5DataWriter::Pointer h5writer = AIMH5DataWriter::New();
+  AIM_H5VtkDataWriter::Pointer h5writer = AIM_H5VtkDataWriter::New();
   h5writer->setFileName(hdfFile);
   err = h5writer->openFile(false); // Open a new file over writing any other file
 
