@@ -37,6 +37,7 @@ public:
     int grainname;
     double confidence;
     double imagequality;
+    double imagequality2;
 	double ellipfunc;
     int alreadychecked;
 	int nearestneighbor;

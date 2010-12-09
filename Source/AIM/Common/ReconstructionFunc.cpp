@@ -203,113 +203,107 @@ void ReconstructionFunc::cleanup_data()
 void ReconstructionFunc::find_border()
 {
   int neighbors[26];
-  neighbors[0] = -(xpoints*ypoints)-xpoints-1;
-  neighbors[1] = -(xpoints*ypoints)-xpoints;
-  neighbors[2] = -(xpoints*ypoints)-xpoints+1;
-  neighbors[3] = -(xpoints*ypoints)-1;
-  neighbors[4] = -(xpoints*ypoints);
-  neighbors[5] = -(xpoints*ypoints)+1;
-  neighbors[6] = -(xpoints*ypoints)+xpoints-1;
-  neighbors[7] = -(xpoints*ypoints)+xpoints;
-  neighbors[8] = -(xpoints*ypoints)+xpoints+1;
-  neighbors[9] = -xpoints-1;
-  neighbors[10] = -xpoints;
-  neighbors[11] = -xpoints+1;
-  neighbors[12] = -1;
-  neighbors[13] = 1;
-  neighbors[14] = xpoints-1;
-  neighbors[15] = xpoints;
-  neighbors[16] = xpoints+1;
-  neighbors[17] = (xpoints*ypoints)-xpoints-1;
-  neighbors[18] = (xpoints*ypoints)-xpoints;
-  neighbors[19] = (xpoints*ypoints)-xpoints+1;
-  neighbors[20] = (xpoints*ypoints)-1;
-  neighbors[21] = (xpoints*ypoints);
-  neighbors[22] = (xpoints*ypoints)+1;
-  neighbors[23] = (xpoints*ypoints)+xpoints-1;
-  neighbors[24] = (xpoints*ypoints)+xpoints;
-  neighbors[25] = (xpoints*ypoints)+xpoints+1;
-  int seed = -1;
-  int point = 0;
-  size_t size = 0;
+  neighbors[0] = -(xpoints * ypoints);
+  neighbors[1] = -xpoints;
+  neighbors[2] = -1;
+  neighbors[3] = 1;
+  neighbors[4] = xpoints;
+  neighbors[5] = (xpoints * ypoints);
+  double w, n1, n2, n3;
+  double q1[5];
+  double q2[5];
+  int seed = 0;
+  int size = 0;
   int good = 0;
+  int count = 0, goodcount = 0;
   int currentpoint = 0;
   int neighbor = 0;
+  int keepgoing = 1;
   int col, row, plane;
-  size_t initialVoxelsListSize = 1000;
+  int initialVoxelsListSize = 10000;
   std::vector<int> voxelslist(initialVoxelsListSize, -1);
   if(alignmeth == 3)
   {
 	  for(int iter=0;iter<(xpoints*ypoints*zpoints);iter++)
 	  {
-		voxels[iter].grainname = -1;
+		voxels[iter].grainname = 0;
 	  }
   }
-  for(int k = 0; k < zpoints; ++k)
+  for(int j = 0; j < (xpoints*ypoints*zpoints); j++)
   {
-     for(int j = 0; j < ypoints; ++j)
-     {
-        for(int i = 0; i < xpoints; ++i)
-        {
-		  point = (k*xpoints*ypoints)+(j*xpoints)+i;
-		  if(voxels[point].imagequality < minseedimagequality)
-          {
-            seed = point;
-          }
-          if(seed > -1) {break;}
-        }
-        if(seed > -1) {break;}
-     }
-     if(seed > -1) {break;}
-  }
-  if(seed >= 0)
-  {
-      size = 0;
-      voxels[seed].grainname = 0;
-      voxelslist[size] = seed;
+    if (voxels[j].imagequality > minseedimagequality && voxels[j].imagequality2 > 15000)
+	{
+	    count = 0;
+	    goodcount = 0;
+		col = j%xpoints;
+		row = (j/xpoints)%ypoints;
+		plane = j/(xpoints*ypoints);
+		for(int i = 0; i < 6; i++)
+		{
+			good = 1;
+			neighbor = j+neighbors[i];
+			if (i == 0 && plane == 0) good = 0;
+			if (i == 5 && plane == (zpoints - 1)) good = 0;
+			if (i == 1 && row == 0) good = 0;
+			if (i == 4 && row == (ypoints - 1)) good = 0;
+			if (i == 2 && col == 0) good = 0;
+			if (i == 3 && col == (xpoints - 1)) good = 0;
+			if(good == 1)
+			{
+				count++;
+				if (voxels[neighbor].imagequality > minseedimagequality && voxels[neighbor].imagequality2 > 15000) goodcount++;
+			}
+		}
+    }
+	if(goodcount == count)
+	{
+      voxels[j].grainname = -1;
+      voxelslist[size] = j;
       size++;
-      for(size_t j = 0; j < size; ++j)
-      {
-        currentpoint = voxelslist[j];
-		col = currentpoint%xpoints;
-		row = (currentpoint/xpoints)%ypoints;
-		plane = currentpoint/(xpoints*ypoints);
-        for(int i = 0; i < 26; i++)
-        {
-		  good = 1;
-		  neighbor = currentpoint+neighbors[i];
-          if(i < 9 && plane == 0) good = 0;
-          if(i > 16 && plane == (zpoints-1)) good = 0;
-          if((i == 0 || i == 1 || i == 2 || i == 9 || i == 10 || i == 11 || i == 17 || i == 18 || i == 19) && row == 0) good = 0;
-          if((i == 6 || i == 7 || i == 8 || i == 14 || i == 15 || i == 16 || i == 23 || i == 24 || i == 25) && row == (ypoints-1)) good = 0;
-          if((i == 0 || i == 3 || i == 6 || i == 9 || i == 12 || i == 14 || i == 17 || i == 20 || i == 23) && col == 0) good = 0;
-          if((i == 2 || i == 5 || i == 8 || i == 11 || i == 13 || i == 16 || i == 19 || i == 22 || i == 25) && col == (xpoints-1)) good = 0;
-		  if(good == 1 && voxels[neighbor].grainname == -1)
-          {
-	        if(voxels[neighbor].imagequality < minseedimagequality)
-            {
-              voxels[neighbor].grainname = 0;
-              voxelslist[size] = neighbor;
-              size++;
-              if (size >= voxelslist.size() )
-              {
-                voxelslist.resize(size+initialVoxelsListSize,-1);
-              }
-            }
-          }
-        }
-      }
-	  voxelslist.erase(std::remove(voxelslist.begin(),voxelslist.end(),-1),voxelslist.end());
-	  size = voxelslist.size();
-	  if (m_Grains[0].voxellist != NULL)
-	  {
-	  //  std::cout << "Deleting VoxelList at " << m_Grains[0].voxellist << std::endl;
-	    delete m_Grains[0].voxellist;
-	    m_Grains[0].voxellist = NULL;
-	  }
-	  m_Grains[0].voxellist = new std::vector<int>(size);
-	  m_Grains[0].voxellist->swap(voxelslist);
+      if (size >= voxelslist.size()) voxelslist.resize(size + initialVoxelsListSize, -1);
+	}
   }
+  for(int j = 0; j < size; j++)
+  {
+	currentpoint = voxelslist[j];
+	col = currentpoint%xpoints;
+	row = (currentpoint/xpoints)%ypoints;
+	plane = currentpoint/(xpoints*ypoints);
+    q1[0] = 0;
+    q1[1] = voxels[currentpoint].quat[1];
+    q1[2] = voxels[currentpoint].quat[2];
+    q1[3] = voxels[currentpoint].quat[3];
+    q1[4] = voxels[currentpoint].quat[4];
+    for(int i = 1; i < 6; i++)
+    {
+	  good = 1;
+	  neighbor = currentpoint+neighbors[i];
+      if (i == 0 && plane == 0) good = 0;
+      if (i == 5 && plane == (zpoints - 1)) good = 0;
+      if (i == 1 && row == 0) good = 0;
+      if (i == 4 && row == (ypoints - 1)) good = 0;
+      if (i == 2 && col == 0) good = 0;
+      if (i == 3 && col == (xpoints - 1)) good = 0;
+	  if(good == 1 && voxels[neighbor].grainname == 0)
+      {
+         q2[0] = 0;
+         q2[1] = voxels[neighbor].quat[1];
+         q2[2] = voxels[neighbor].quat[2];
+         q2[3] = voxels[neighbor].quat[3];
+         q2[4] = voxels[neighbor].quat[4];
+	   if(crystruct == 1) w = getmisoquathexagonal(misorientationtolerance,q1,q2,n1,n2,n3);
+	   if(crystruct == 2) w = getmisoquatcubic(misorientationtolerance,q1,q2,n1,n2,n3);
+         if (w < 3.0)
+         {
+             voxels[neighbor].grainname = -2;
+//             voxelslist[size] = neighbor;
+//             size++;
+//             if (size >= voxelslist.size()) voxelslist.resize(size + initialVoxelsListSize, -1);
+         }
+      }
+    }
+  }
+  voxelslist.clear();
 }
 
 void ReconstructionFunc::align_sections(const std::string &filename)
@@ -737,7 +731,6 @@ int  ReconstructionFunc::form_grains()
   int neighbor;
   double q1[5];
   double q2[5];
-  double qs[5];
   double w;
   //double w2;
   double n1;
@@ -753,7 +746,7 @@ int  ReconstructionFunc::form_grains()
   size_t size = 0;
   size_t initialVoxelsListSize = 1000;
   std::vector<int > voxelslist(initialVoxelsListSize, -1);
-  int neighbors[26];
+  int neighbors[6];
   neighbors[0] = -(xpoints * ypoints);
   neighbors[1] = -xpoints;
   neighbors[2] = -1;
@@ -809,11 +802,6 @@ int  ReconstructionFunc::form_grains()
       voxels[seed].grainname = graincount;
       voxelslist[size] = seed;
       size++;
-      qs[0] = 0;
-      qs[1] = voxels[seed].quat[1];
-      qs[2] = voxels[seed].quat[2];
-      qs[3] = voxels[seed].quat[3];
-      qs[4] = voxels[seed].quat[4];
       for (size_t j = 0; j < size; ++j)
       {
         int currentpoint = voxelslist[j];
@@ -1281,7 +1269,7 @@ int ReconstructionFunc::reburn_grains()
 					point = (k*xpoints*ypoints)+(j*xpoints)+i;
 					if(voxels[point].grainname == 0)
 					{
-						voxels[point].grainname = -1;
+//						voxels[point].grainname = -1;
 						voxels[point].neighbor = -1;
 						voxels[point].unassigned = 1;
 					}
@@ -1487,7 +1475,6 @@ void  ReconstructionFunc::homogenize_grains()
 //  double g1ea1good, g1ea2good, g1ea3good, g2ea1good, g2ea2good, g2ea3good;
 //  double q1tot=0, q2tot=0, q3tot=0, q4tot=0;
   double n1,n2,n3;
-  double averagemiso;
   m_Grains[0].euler1 = 12.566;
   m_Grains[0].euler2 = 12.566;
   m_Grains[0].euler3 = 12.566;
@@ -1520,7 +1507,6 @@ void  ReconstructionFunc::homogenize_grains()
   }
   for(int i = 1; i < numgrains; i++)
   {
-	averagemiso=0;
 	numVoxel = 0;
     qSum[0] = 0.0;
     qSum[1] = 0.0;
@@ -1670,6 +1656,7 @@ void  ReconstructionFunc::homogenize_grains()
     m_Grains[i].euler2 = ea2good;
     m_Grains[i].euler3 = ea3good;
     double avgmiso = 0;
+	double averageiq;
     double avgmisoorig = 0;
     double totalcount = 0;
     q1[1] = voxels[nucleus].quat[1];
@@ -1682,7 +1669,8 @@ void  ReconstructionFunc::homogenize_grains()
 		if(voxels[index].unassigned == 0)
 		{
 		   avgmisoorig = avgmisoorig+voxels[index].misorientation;
-	//       double angcur = 1000000;
+		   averageiq = averageiq+voxels[index].imagequality;
+//		   double angcur = 1000000;
 		   q2[1] = voxels[index].quat[1];
 		   q2[2] = voxels[index].quat[2];
 		   q2[3] = voxels[index].quat[3];
@@ -1700,8 +1688,10 @@ void  ReconstructionFunc::homogenize_grains()
 		}
     }
     avgmiso = avgmiso/totalcount;
+    averageiq = averageiq/totalcount;
     avgmisoorig = avgmisoorig/totalcount;
 	m_Grains[i].averagemisorientation = avgmiso;
+	m_Grains[i].averageimagequality = averageiq;
   }
 /*  string filename = "orientations.vtk";
   ofstream outFile;
