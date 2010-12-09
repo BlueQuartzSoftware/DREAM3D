@@ -11,6 +11,8 @@
 
 #include "ReconstructionFunc.h"
 
+#include <stdio.h>
+
 #include <iomanip>
 #include <iostream>
 #include <string>
@@ -19,6 +21,8 @@
 
 #include "MXA/Utilities/MXADir.h"
 #include "AIM/ANG/AngReader.h"
+#include "AIM/Common/Constants.h"
+#include "AIM/Common/OIMColoring.hpp"
 
 #if 0
 // -i C:\Users\GroebeMA\Desktop\NewFolder --outputDir C:\Users\GroebeMA\Desktop\NewFolder -f Slice_ --angMaxSlice 400 -s 1 -e 30 -z 0.25 -t -g 10 -c 0.1 -o 5.0 -x 2
@@ -64,6 +68,7 @@ void ReconstructionFunc::initialize(int m_ZStartSlice, int m_ZEndSlice, double m
 				  bool v_mergecoloniesoption, int v_minallowedgrainsize, double v_minseedconfidence, double v_downsamplefactor,
 				  double v_minseedimagequality, double v_misorientationtolerance, int v_crystruct, int v_alignmeth, bool v_alreadyformed)
 {
+
   mergetwinsoption = (v_mergetwinsoption == true) ? 1 : 0;
   mergecoloniesoption = (v_mergecoloniesoption == true) ? 1 : 0;
   minallowedgrainsize = v_minallowedgrainsize;
@@ -195,7 +200,7 @@ void ReconstructionFunc::cleanup_data()
 	    }
 	}
 }
-void ReconstructionFunc::find_border(double quat_symmcubic[24][5], double quat_symmhex[12][5])
+void ReconstructionFunc::find_border()
 {
   int neighbors[26];
   neighbors[0] = -(xpoints * ypoints);
@@ -286,8 +291,8 @@ void ReconstructionFunc::find_border(double quat_symmcubic[24][5], double quat_s
          q2[2] = voxels[neighbor].quat[2];
          q2[3] = voxels[neighbor].quat[3];
          q2[4] = voxels[neighbor].quat[4];
-         if (crystruct == 1) w = getmisoquathexagonal(quat_symmhex, misorientationtolerance, q1, q2, n1, n2, n3);
-         if (crystruct == 2) w = getmisoquatcubic(misorientationtolerance, q1, q2, n1, n2, n3);
+	   if(crystruct == 1) w = getmisoquathexagonal(misorientationtolerance,q1,q2,n1,n2,n3);
+	   if(crystruct == 2) w = getmisoquatcubic(misorientationtolerance,q1,q2,n1,n2,n3);
          if (w < 3.0)
          {
              voxels[neighbor].grainname = -2;
@@ -301,7 +306,7 @@ void ReconstructionFunc::find_border(double quat_symmcubic[24][5], double quat_s
   voxelslist.clear();
 }
 
-void ReconstructionFunc::align_sections(const std::string &filename, double quat_symmcubic[24][5], double quat_symmhex[12][5])
+void ReconstructionFunc::align_sections(const std::string &filename)
 {
 
   ofstream outFile;
@@ -461,7 +466,7 @@ void ReconstructionFunc::align_sections(const std::string &filename, double quat
 										q2[2] = voxels[curposition].quat[2];
 										q2[3] = voxels[curposition].quat[3];
 										q2[4] = voxels[curposition].quat[4];
-										if(crystruct == 1) w = getmisoquathexagonal(quat_symmhex,misorientationtolerance,q1,q2,n1,n2,n3);
+										if(crystruct == 1) w = getmisoquathexagonal(misorientationtolerance,q1,q2,n1,n2,n3);
 										if(crystruct == 2) w = getmisoquatcubic(misorientationtolerance,q1,q2,n1,n2,n3);
 										if(w > misorientationtolerance) disorientation++;
 									}
@@ -588,7 +593,7 @@ void ReconstructionFunc::align_sections(const std::string &filename, double quat
   }
   outFile.close();
 }
-void  ReconstructionFunc::form_grains_sections(double quat_symmcubic[24][5],double quat_symmhex[12][5])
+void  ReconstructionFunc::form_grains_sections()
 {
   int point = 0;
   int noseeds = 0;
@@ -689,9 +694,9 @@ void  ReconstructionFunc::form_grains_sections(double quat_symmcubic[24][5],doub
 				q2[2] = voxels[neighbor].quat[2];
 				q2[3] = voxels[neighbor].quat[3];
 				q2[4] = voxels[neighbor].quat[4];
-				if(crystruct == 1) w = getmisoquathexagonal(quat_symmhex,misorientationtolerance,q1,q2,n1,n2,n3);
+				if(crystruct == 1) w = getmisoquathexagonal(misorientationtolerance,q1,q2,n1,n2,n3);
 				if(crystruct == 2) w = getmisoquatcubic(misorientationtolerance,q1,q2,n1,n2,n3);
-				if(crystruct == 1) w2 = getmisoquathexagonal(quat_symmhex,misorientationtolerance,qs,q2,n1,n2,n3);
+				if(crystruct == 1) w2 = getmisoquathexagonal(misorientationtolerance,qs,q2,n1,n2,n3);
 				if(crystruct == 2) w2 = getmisoquatcubic(misorientationtolerance,qs,q2,n1,n2,n3);
 				if(w < misorientationtolerance)
 //	            if(w < misorientationtolerance && w2 < 15)
@@ -714,7 +719,7 @@ void  ReconstructionFunc::form_grains_sections(double quat_symmcubic[24][5],doub
   }
 }
 
-int  ReconstructionFunc::form_grains(double quat_symmcubic[24][5],double quat_symmhex[12][5])
+int  ReconstructionFunc::form_grains()
 {
   int point = 0;
   int totalsize = 0;
@@ -825,7 +830,7 @@ int  ReconstructionFunc::form_grains(double quat_symmcubic[24][5],double quat_sy
             q2[2] = voxels[neighbor].quat[2];
             q2[3] = voxels[neighbor].quat[3];
             q2[4] = voxels[neighbor].quat[4];
-            if (crystruct == 1) w = getmisoquathexagonal(quat_symmhex, misorientationtolerance, q1, q2, n1, n2, n3);
+            if (crystruct == 1) w = getmisoquathexagonal(misorientationtolerance, q1, q2, n1, n2, n3);
             if (crystruct == 2) w = getmisoquatcubic(misorientationtolerance, q1, q2, n1, n2, n3);
             if (w < misorientationtolerance)
             {
@@ -867,7 +872,7 @@ int  ReconstructionFunc::form_grains(double quat_symmcubic[24][5],double quat_sy
   return graincount;
 }
 
-void  ReconstructionFunc::assign_badpoints(double quat_symmcubic[24][5],double quat_symmhex[12][5])
+void  ReconstructionFunc::assign_badpoints()
 {
   vector<int> neighs;
   vector<int> remove;
@@ -1022,7 +1027,7 @@ int  ReconstructionFunc::renumber_grains()
   return graincount;
 }
 
-int ReconstructionFunc::define_subgrains(double quat_symmcubic[24][5],double quat_symmhex[12][5])
+int ReconstructionFunc::define_subgrains()
 {
   size_t initialVoxelsListSize = 1000;
   std::vector<int > voxelslist;
@@ -1185,7 +1190,7 @@ int ReconstructionFunc::define_subgrains(double quat_symmcubic[24][5],double qua
             q2[2] = voxels[neighbor].quat[2];
             q2[3] = voxels[neighbor].quat[3];
             q2[4] = voxels[neighbor].quat[4];
-            if (crystruct == 1) w = getmisoquathexagonal(quat_symmhex, misorientationtolerance, q1, q2, n1, n2, n3);
+            if (crystruct == 1) w = getmisoquathexagonal(misorientationtolerance, q1, q2, n1, n2, n3);
             if (crystruct == 2) w = getmisoquatcubic(misorientationtolerance, q1, q2, n1, n2, n3);
             if (w < minw) name = voxels[neighbor].grainname, minw = w;
           }
@@ -1201,7 +1206,7 @@ int ReconstructionFunc::define_subgrains(double quat_symmcubic[24][5],double qua
   }
   return newnumgrains;
 }
-int ReconstructionFunc::reburn_grains(double quat_symmcubic[24][5],double quat_symmhex[12][5])
+int ReconstructionFunc::reburn_grains()
 {
     size_t initialVoxelsListSize = 1000;
     std::vector<int> voxelslist;
@@ -1285,7 +1290,7 @@ int ReconstructionFunc::reburn_grains(double quat_symmcubic[24][5],double quat_s
 		}
 		delete [] voxelstemp;
 	}
-//	assign_badpoints(quat_symmcubic, quat_symmhex);
+	assign_badpoints();
 	neighbors[0] = -(xpoints*ypoints)-xpoints-1;
 	neighbors[1] = -(xpoints*ypoints)-xpoints;
 	neighbors[2] = -(xpoints*ypoints)-xpoints+1;
@@ -1373,7 +1378,7 @@ int ReconstructionFunc::reburn_grains(double quat_symmcubic[24][5],double quat_s
 	}
 	return graincount;
 }
-void  ReconstructionFunc::find_kernels(double quat_symmcubic[24][5],double quat_symmhex[12][5])
+void  ReconstructionFunc::find_kernels()
 {
   double q1[5];
   double q2[5];
@@ -1421,7 +1426,7 @@ void  ReconstructionFunc::find_kernels(double quat_symmcubic[24][5],double quat_
 					  q2[2] = voxels[neighbor].quat[2];
 					  q2[3] = voxels[neighbor].quat[3];
 					  q2[4] = voxels[neighbor].quat[4];
-					  if(crystruct == 1) w = getmisoquathexagonal(quat_symmhex,misorientationtolerance,q1,q2,n1,n2,n3);
+					  if(crystruct == 1) w = getmisoquathexagonal(misorientationtolerance,q1,q2,n1,n2,n3);
 					  if(crystruct == 2) w = getmisoquatcubic(misorientationtolerance,q1,q2,n1,n2,n3);
 					  totalmisorientation = totalmisorientation + w;
 				  }
@@ -1442,7 +1447,7 @@ void  ReconstructionFunc::find_kernels(double quat_symmcubic[24][5],double quat_
 	  }
   }
 }
-void  ReconstructionFunc::homogenize_grains(double quat_symmcubic[24][5],double quat_symmhex[12][5])
+void  ReconstructionFunc::homogenize_grains()
 {
   int i, j, ii, jj, kk, p, pp;
 //  int sign1, sign2, sign3, sign4; // If the value is 1, it's positive; -1, negative; 0, 0.000...
@@ -1483,7 +1488,7 @@ void  ReconstructionFunc::homogenize_grains(double quat_symmcubic[24][5],double 
 		quat_symm[i] = new double [5];
 		for(j=0;j<5;j++)
 		{
-			quat_symm[i][j] = quat_symmhex[i][j];
+			quat_symm[i][j] = AIM::Quaternions::quat_symmhex[i][j];
 		}
 	}
   }
@@ -1496,7 +1501,7 @@ void  ReconstructionFunc::homogenize_grains(double quat_symmcubic[24][5],double 
 		quat_symm[i] = new double [5];
 		for(j=0;j<5;j++)
 		{
-			quat_symm[i][j] = quat_symmcubic[i][j];
+			quat_symm[i][j] = AIM::Quaternions::quat_symmcubic[i][j];
 		}
 	}
   }
@@ -1670,7 +1675,7 @@ void  ReconstructionFunc::homogenize_grains(double quat_symmcubic[24][5],double 
 		   q2[2] = voxels[index].quat[2];
 		   q2[3] = voxels[index].quat[3];
 		   q2[4] = voxels[index].quat[4];
-	       if(crystruct == 1) wmin = getmisoquathexagonal(quat_symmhex,misorientationtolerance,q1,q2,n1,n2,n3);
+	       if(crystruct == 1) wmin = getmisoquathexagonal(misorientationtolerance,q1,q2,n1,n2,n3);
 		   if(crystruct == 2) wmin = getmisoquatcubic(misorientationtolerance,q1,q2,n1,n2,n3);
 	       voxels[index].misorientation = wmin;
 		   avgmiso = avgmiso + wmin;
@@ -1831,7 +1836,7 @@ int  ReconstructionFunc::load_data(string readname)
   inputFile.close();
 return numgrains;
 }
-void  ReconstructionFunc::merge_twins (double quat_symmcubic[24][5],double quat_symmhex[12][5])
+void  ReconstructionFunc::merge_twins ()
 {
   int twinmerged = 1;
   double angcur = 180;
@@ -1887,7 +1892,7 @@ void  ReconstructionFunc::merge_twins (double quat_symmcubic[24][5],double quat_
 			q2[2] = s*s1;
 			q2[3] = c*s2;
 			q2[4] = c*c2;
-		    if(crystruct == 1) w = getmisoquathexagonal(quat_symmhex,misorientationtolerance,q1,q2,n1,n2,n3);
+		    if(crystruct == 1) w = getmisoquathexagonal(misorientationtolerance,q1,q2,n1,n2,n3);
 			if(crystruct == 2) w = getmisoquatcubic(misorientationtolerance,q1,q2,n1,n2,n3);
 			w = w*(m_pi/180.0);
             double tanhalfang = tan(w/2.0);
@@ -1943,7 +1948,7 @@ void  ReconstructionFunc::merge_twins (double quat_symmcubic[24][5],double quat_
   }
 }
 
-void  ReconstructionFunc::merge_colonies (double quat_symmcubic[24][5],double quat_symmhex[12][5])
+void  ReconstructionFunc::merge_colonies ()
 {
   int colonymerged = 1;
   double angcur = 180;
@@ -1979,7 +1984,7 @@ void  ReconstructionFunc::merge_colonies (double quat_symmcubic[24][5],double qu
 			q2[2] = m_Grains[neigh].avg_quat[2];
 			q2[3] = m_Grains[neigh].avg_quat[3];
 			q2[4] = m_Grains[neigh].avg_quat[4];
-		    if(crystruct == 1) w = getmisoquathexagonal(quat_symmhex,misorientationtolerance,q1,q2,n1,n2,n3);
+		    if(crystruct == 1) w = getmisoquathexagonal(misorientationtolerance,q1,q2,n1,n2,n3);
 			if(crystruct == 2) w = getmisoquatcubic(misorientationtolerance,q1,q2,n1,n2,n3);
             double tanhalfang = tan((w*m_pi/180.0)/2.0);
             double rodvect1 = tanhalfang*n1;
@@ -3249,7 +3254,7 @@ void  ReconstructionFunc::find_eulerodf ()
 		}
 	}
 }
-void  ReconstructionFunc::measure_misorientations (double quat_symmcubic[24][5],double quat_symmhex[12][5])
+void  ReconstructionFunc::measure_misorientations ()
 {
   size_t initialsize = 10;
   vector<double> misolist(initialsize,-1);
@@ -3276,7 +3281,7 @@ void  ReconstructionFunc::measure_misorientations (double quat_symmcubic[24][5],
 	  q2[2] = m_Grains[nname].avg_quat[2];
 	  q2[3] = m_Grains[nname].avg_quat[3];
 	  q2[4] = m_Grains[nname].avg_quat[4];
-      if(crystruct == 1) w = getmisoquathexagonal(quat_symmhex,misorientationtolerance,q1,q2,n1,n2,n3);
+      if(crystruct == 1) w = getmisoquathexagonal(misorientationtolerance,q1,q2,n1,n2,n3);
       if(crystruct == 2) w = getmisoquatcubic(misorientationtolerance,q1,q2,n1,n2,n3);
       misolist[j] = w;
     }
@@ -3330,7 +3335,7 @@ double ReconstructionFunc::getmisoquatcubic(double misorientationtolerance,doubl
   return wmin;
 }
 
-double ReconstructionFunc::getmisoquathexagonal(double quat_symmhex[12][5],double misorientationtolerance,double q1[5],double q2[5],double &n1,double &n2,double &n3)
+double ReconstructionFunc::getmisoquathexagonal(double misorientationtolerance,double q1[5],double q2[5],double &n1,double &n2,double &n3)
 {
   double wmin=9999999; //,na,nb,nc;
   double w=0;
@@ -3352,10 +3357,11 @@ double ReconstructionFunc::getmisoquathexagonal(double quat_symmhex[12][5],doubl
   qr[3]=-q1[4]*q2[4]-q1[1]*q2[1]-q1[2]*q2[2]-q1[3]*q2[3];
   for(int i=0;i<12;i++)
   {
-	  qc[0]=quat_symmhex[i][1]*qr[3]+quat_symmhex[i][4]*qr[0]-quat_symmhex[i][2]*qr[2]+quat_symmhex[i][3]*qr[1];
-	  qc[1]=quat_symmhex[i][2]*qr[3]+quat_symmhex[i][4]*qr[1]-quat_symmhex[i][3]*qr[0]+quat_symmhex[i][1]*qr[2];
-	  qc[2]=quat_symmhex[i][3]*qr[3]+quat_symmhex[i][4]*qr[2]-quat_symmhex[i][1]*qr[1]+quat_symmhex[i][2]*qr[0];
-	  qc[3]=quat_symmhex[i][4]*qr[3]-quat_symmhex[i][1]*qr[0]-quat_symmhex[i][2]*qr[1]-quat_symmhex[i][3]*qr[2];
+    AIM::Quaternions::Hex_MultiplyByUnitQuaterion(qr, i, qc);
+//	  qc[0]=quat_symmhex[i][1]*qr[3]+quat_symmhex[i][4]*qr[0]-quat_symmhex[i][2]*qr[2]+quat_symmhex[i][3]*qr[1];
+//	  qc[1]=quat_symmhex[i][2]*qr[3]+quat_symmhex[i][4]*qr[1]-quat_symmhex[i][3]*qr[0]+quat_symmhex[i][1]*qr[2];
+//	  qc[2]=quat_symmhex[i][3]*qr[3]+quat_symmhex[i][4]*qr[2]-quat_symmhex[i][1]*qr[1]+quat_symmhex[i][2]*qr[0];
+//	  qc[3]=quat_symmhex[i][4]*qr[3]-quat_symmhex[i][1]*qr[0]-quat_symmhex[i][2]*qr[1]-quat_symmhex[i][3]*qr[2];
 	  if(qc[3] < -1) qc[3] = -1;
 	  if(qc[3] > 1) qc[3] = 1;
 	  w = acos(qc[3]);
@@ -3376,138 +3382,151 @@ double ReconstructionFunc::getmisoquathexagonal(double quat_symmhex[12][5],doubl
   return wmin;
 }
 
-void  ReconstructionFunc::find_colors(double quat_symmcubic[24][5],double quat_symmhex[12][5])
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void  ReconstructionFunc::find_colors()
 {
   double red, green, blue;
   double theta, phi;
-  for(int i = 1; i < numgrains; i++)
+  unsigned char rgb[3] = {0, 0, 0};
+  double RefDirection[3] = {0.0, 0.0, 1.0};
+  for (int i = 1; i < numgrains; i++)
   {
     double g1ea1 = m_Grains[i].euler1;
     double g1ea2 = m_Grains[i].euler2;
     double g1ea3 = m_Grains[i].euler3;
+
     double q1[4];
     double qc[4];
     double p[3];
     double d[3];
-	q1[0]=sin((g1ea2/2.0))*cos(((g1ea1-g1ea3)/2.0));
-	q1[1]=sin((g1ea2/2.0))*sin(((g1ea1-g1ea3)/2.0));
-	q1[2]=cos((g1ea2/2.0))*sin(((g1ea1+g1ea3)/2.0));
-	q1[3]=cos((g1ea2/2.0))*cos(((g1ea1+g1ea3)/2.0));
-	if(crystruct == 2)
-	{
-	    p[0] = (2*q1[0]*q1[2]+2*q1[1]*q1[3])*1;
-		p[1] = (2*q1[1]*q1[2]+2*q1[0]*q1[3])*1;
-		p[2] = (1-2*q1[0]*q1[0]-2*q1[1]*q1[1])*1;
-		double denom = p[0]*p[0]+p[1]*p[1]+p[2]*p[2];
-		denom = pow(denom,0.5);
-		p[0] = fabs(p[0]/denom);
-		p[1] = fabs(p[1]/denom);
-		p[2] = fabs(p[2]/denom);
-		int j, k, flag = 1;
-		double temp;
-		for(j = 0; (j<3)&&flag==1; j++)
-		{
-		  flag = 0;
-		  for (k=0; k<2; k++)
-		  {
-			if (p[k+1] < p[k])
-			{
-			   temp = p[k];
-			   p[k] = p[k+1];
-			   p[k+1] = temp;
-			   flag = 1;
-			}
-		  }
-		}
-		theta = (p[0]*0)+(p[1]*-sqrt(2.0)/2.0)+(p[2]*sqrt(2.0)/2.0);
-		theta = (180.0/m_pi)*acos(theta);
-		red = (90.0-theta)/45.0;
-		d[0] = (p[1]*1)-(p[2]*0);
-		d[1] = (p[2]*0)-(p[0]*1);
-		d[2] = (p[0]*0)-(p[1]*0);
-		d[0] = -(d[1]+d[2])/d[0];
-		d[1] = 1;
-		d[2] = 1;
-		double norm = pow(((d[0]*d[0])+(d[1]*d[1])+(d[2]*d[2])),0.5);
-		d[0] = d[0]/norm;
-		d[1] = d[1]/norm;
-		d[2] = d[2]/norm;
-		phi = (d[0]*0)+(d[1]*sqrt(2.0)/2.0)+(d[2]*sqrt(2.0)/2.0);
-		phi = (180.0/m_pi)*acos(phi);
-		green = (1-red)*((35.26-phi)/35.26);
-		blue = (1-red)-green;
-		double max = red;
-		if(green > max) max = green;
-		if(blue > max) max = blue;
-		red = red/max;
-		green = green/max;
-		blue = blue/max;
-		red = (0.75*red)+0.25;
-		green = (0.75*green)+0.25;
-		blue = (0.75*blue)+0.25;
-		m_Grains[i].red = red;
-		m_Grains[i].green = green;
-		m_Grains[i].blue = blue;
-	}
-	if(crystruct == 1)
-	{
-		red=1.0/3.0;
-		green=1.0/3.0;
-		blue=1.0/3.0;
-		for(int j=0;j<12;j++)
-		{
-			qc[0]=quat_symmhex[j][1]*q1[3]+quat_symmhex[j][4]*q1[0]-quat_symmhex[j][2]*q1[2]+quat_symmhex[j][3]*q1[1];
-			qc[1]=quat_symmhex[j][2]*q1[3]+quat_symmhex[j][4]*q1[1]-quat_symmhex[j][3]*q1[0]+quat_symmhex[j][1]*q1[2];
-			qc[2]=quat_symmhex[j][3]*q1[3]+quat_symmhex[j][4]*q1[2]-quat_symmhex[j][1]*q1[1]+quat_symmhex[j][2]*q1[0];
-			qc[3]=quat_symmhex[j][4]*q1[3]-quat_symmhex[j][1]*q1[0]-quat_symmhex[j][2]*q1[1]-quat_symmhex[j][3]*q1[2];
-		    p[0] = ((2*qc[0]*qc[2])-(2*qc[1]*qc[3]))*1;
-			p[1] = ((2*qc[1]*qc[2])+(2*qc[0]*qc[3]))*1;
-			p[2] = (1-(2*qc[0]*qc[0])-(2*qc[1]*qc[1]))*1;
-			double denom = p[0]*p[0]+p[1]*p[1]+p[2]*p[2];
-			denom = pow(denom,0.5);
-			p[0] = p[0]/denom;
-			p[1] = p[1]/denom;
-			p[2] = p[2]/denom;
-			if(p[2] < 0)
-			{
-				p[0] = -p[0];
-				p[1] = -p[1];
-				p[2] = -p[2];
-			}
-			d[0] = (p[1]*1)-(p[2]*0);
-			d[1] = (p[2]*0)-(p[0]*1);
-			d[2] = (p[0]*0)-(p[1]*0);
-			d[0] = -d[1]/d[0];
-			d[1] = 1;
-			d[2] = 0;
-			double norm = pow(((d[0]*d[0])+(d[1]*d[1])+(d[2]*d[2])),0.5);
-			d[0] = d[0]/norm;
-			d[1] = d[1]/norm;
-			d[2] = d[2]/norm;
-			if(atan(d[1]/d[0]) >= 0 && atan(d[1]/d[0]) <= (30.0*m_pi/180.0))
-			{
-				theta = (p[0]*0)+(p[1]*0)+(p[2]*1);
-				theta = (180.0/m_pi)*acos(theta);
-				red = (90.0-theta)/90.0;
-				phi = (d[0]*1)+(d[1]*0)+(d[2]*0);
-				phi = (180.0/m_pi)*acos(phi);
-				green = (1-red)*((30.0-phi)/30.0);
-				blue = (1-red)-green;
-			}
-		}
-		double max = red;
-		if(green > max) max = green;
-		if(blue > max) max = blue;
-		red = red/max;
-		green = green/max;
-		blue = blue/max;
-		red = (0.75*red)+0.25;
-		green = (0.75*green)+0.25;
-		blue = (0.75*blue)+0.25;
-		m_Grains[i].red = red;
-		m_Grains[i].green = green;
-		m_Grains[i].blue = blue;
-	}
+    // Create a Unit Quaterion based on the Euler Angles
+    q1[0] = sin((g1ea2 / 2.0)) * cos(((g1ea1 - g1ea3) / 2.0));
+    q1[1] = sin((g1ea2 / 2.0)) * sin(((g1ea1 - g1ea3) / 2.0));
+    q1[2] = cos((g1ea2 / 2.0)) * sin(((g1ea1 + g1ea3) / 2.0));
+    q1[3] = cos((g1ea2 / 2.0)) * cos(((g1ea1 + g1ea3) / 2.0));
+    if (crystruct == AIM::Reconstruction::Cubic)
+    {
+      OIMColoring::GenerateIPFColor(g1ea1, g1ea2, g1ea3, RefDirection[0], RefDirection[1], RefDirection[2], rgb);
+#if 0
+      p[0] = (2 * q1[0] * q1[2] + 2 * q1[1] * q1[3]) * 1;
+      p[1] = (2 * q1[1] * q1[2] + 2 * q1[0] * q1[3]) * 1;
+      p[2] = (1 - 2 * q1[0] * q1[0] - 2 * q1[1] * q1[1]) * 1;
+      double denom = p[0] * p[0] + p[1] * p[1] + p[2] * p[2];
+      denom = pow(denom, 0.5);
+      p[0] = fabs(p[0] / denom);
+      p[1] = fabs(p[1] / denom);
+      p[2] = fabs(p[2] / denom);
+      int j, k, flag = 1;
+      double temp;
+      for (j = 0; (j < 3) && flag == 1; j++)
+      {
+        flag = 0;
+        for (k = 0; k < 2; k++)
+        {
+          if (p[k + 1] < p[k])
+          {
+            temp = p[k];
+            p[k] = p[k + 1];
+            p[k + 1] = temp;
+            flag = 1;
+          }
+        }
+      }
+      theta = (p[0] * 0) + (p[1] * -sqrt(2.0) / 2.0) + (p[2] * sqrt(2.0) / 2.0);
+      theta = (180.0 / m_pi) * acos(theta);
+      red = (90.0 - theta) / 45.0;
+      d[0] = (p[1] * 1) - (p[2] * 0);
+      d[1] = (p[2] * 0) - (p[0] * 1);
+      d[2] = (p[0] * 0) - (p[1] * 0);
+      d[0] = -(d[1] + d[2]) / d[0];
+      d[1] = 1;
+      d[2] = 1;
+      double norm = pow(((d[0] * d[0]) + (d[1] * d[1]) + (d[2] * d[2])), 0.5);
+      d[0] = d[0] / norm;
+      d[1] = d[1] / norm;
+      d[2] = d[2] / norm;
+      phi = (d[0] * 0) + (d[1] * sqrt(2.0) / 2.0) + (d[2] * sqrt(2.0) / 2.0);
+      phi = (180.0 / m_pi) * acos(phi);
+      green = (1 - red) * ((35.26 - phi) / 35.26);
+      blue = (1 - red) - green;
+      double max = red;
+      if (green > max) max = green;
+      if (blue > max) max = blue;
+      red = red / max;
+      green = green / max;
+      blue = blue / max;
+      red = (0.75 * red) + 0.25;
+      green = (0.75 * green) + 0.25;
+      blue = (0.75 * blue) + 0.25;
+#endif
+
+      m_Grains[i].red = static_cast<double>(rgb[0]/255.0);
+      m_Grains[i].green = static_cast<double>(rgb[1]/255.0);;
+      m_Grains[i].blue = static_cast<double>(rgb[2]/255.0);;
+    }
+
+    if (crystruct == AIM::Reconstruction::Hexagonal)
+    {
+      red = 1.0 / 3.0;
+      green = 1.0 / 3.0;
+      blue = 1.0 / 3.0;
+      OIMColoring::CalculateHexIPFColor(q1, red, green, blue);
+#if 0
+      for (int j = 0; j < 12; j++)
+      {
+        AIM::Quaternions::Hex_MultiplyByUnitQuaterion(q1, j, qc);
+        p[0] = ((2 * qc[0] * qc[2]) - (2 * qc[1] * qc[3])) * 1;
+        p[1] = ((2 * qc[1] * qc[2]) + (2 * qc[0] * qc[3])) * 1;
+        p[2] = (1 - (2 * qc[0] * qc[0]) - (2 * qc[1] * qc[1])) * 1;
+        double denom = p[0] * p[0] + p[1] * p[1] + p[2] * p[2];
+        denom = pow(denom, 0.5);
+        p[0] = p[0] / denom;
+        p[1] = p[1] / denom;
+        p[2] = p[2] / denom;
+        if (p[2] < 0)
+        {
+          p[0] = -p[0];
+          p[1] = -p[1];
+          p[2] = -p[2];
+        }
+        d[0] = (p[1] * 1) - (p[2] * 0);
+        d[1] = (p[2] * 0) - (p[0] * 1);
+        d[2] = (p[0] * 0) - (p[1] * 0);
+        d[0] = -d[1] / d[0];
+        d[1] = 1;
+        d[2] = 0;
+        double norm = pow(((d[0] * d[0]) + (d[1] * d[1]) + (d[2] * d[2])), 0.5);
+        d[0] = d[0] / norm;
+        d[1] = d[1] / norm;
+        d[2] = d[2] / norm;
+        if (atan(d[1] / d[0]) >= 0 && atan(d[1] / d[0]) <= (30.0 * m_pi / 180.0))
+        {
+          theta = (p[0] * 0) + (p[1] * 0) + (p[2] * 1);
+          theta = (180.0 / m_pi) * acos(theta);
+          red = (90.0 - theta) / 90.0;
+          phi = (d[0] * 1) + (d[1] * 0) + (d[2] * 0);
+          phi = (180.0 / m_pi) * acos(phi);
+          green = (1 - red) * ((30.0 - phi) / 30.0);
+          blue = (1 - red) - green;
+        }
+      }
+      double max = red;
+      if (green > max) max = green;
+      if (blue > max) max = blue;
+      red = red / max;
+      green = green / max;
+      blue = blue / max;
+      red = (0.75 * red) + 0.25;
+      green = (0.75 * green) + 0.25;
+      blue = (0.75 * blue) + 0.25;
+#endif
+
+      m_Grains[i].red = red/255.0;
+      m_Grains[i].green = green/255.0;
+      m_Grains[i].blue = blue/255.0;
+    }
   }
 }
 void  ReconstructionFunc::find_convexities()
@@ -4666,285 +4685,289 @@ void ReconstructionFunc::volume_stats2D(string writename1,string writename2,stri
   }
   outFile8.close();
 }
-void  ReconstructionFunc::write_volume(string writename1, string writename2, string writename3, string writename4, string writename5, string writename6, bool IPFoption, bool Disoption, bool IQoption, bool Schmidoption, double quat_symmcubic[24][5],double quat_symmhex[12][5])
-{
-  ofstream outFile;
-  for(int a=0;a<6;a++)
-  {
-	  if(a == 0 || (a == 1 && IPFoption == true) || (a == 2 && Disoption == true) || (a == 3 && IQoption == true) || (a == 4 && Schmidoption == true) || (a == 5 && downsamplefactor != 1))
-	  {
-		  if(a == 0) outFile.open(writename1.c_str());
-		  if(a == 1) outFile.open(writename2.c_str());
-		  if(a == 2) outFile.open(writename3.c_str());
-		  if(a == 3) outFile.open(writename4.c_str());
-		  if(a == 4) outFile.open(writename5.c_str());
-		  if(a == 5) outFile.open(writename6.c_str());
-		  if(a < 5)
-		  {
-			  outFile << "# vtk DataFile Version 2.0" << endl;
-			  outFile << "data set from FFT2dx_GB" << endl;
-			  outFile << "ASCII" << endl;
-			  outFile << "DATASET STRUCTURED_POINTS" << endl;
-			  outFile << "DIMENSIONS " << xpoints << " " << ypoints << " " << zpoints << endl;
-			  outFile << "ORIGIN 0.0 0.0 0.0" << endl;
-			  outFile << "SPACING " << resx << " " << resy << " " << resz << endl;
-			  outFile << "POINT_DATA " << xpoints*ypoints*zpoints << endl;
-			  outFile << endl;
-			  outFile << endl;
-			  outFile << "SCALARS GrainID int  1" << endl;
-			  outFile << "LOOKUP_TABLE default" << endl;
-			  for (int i = 0; i < (xpoints*ypoints*zpoints); i++)
-			  {
-				if(i%20 == 0 && i > 0) outFile << endl;
-				int grainname = voxels[i].grainname;
-				outFile << "   ";
-				if(grainname < 10000) outFile << " ";
-				if(grainname < 1000) outFile << " ";
-				if(grainname < 100) outFile << " ";
-				if(grainname < 10) outFile << " ";
-				outFile << grainname;
-			  }
-			  outFile << endl;
-		  }
-		  if(a == 0)
-		  {
-			  outFile << "SCALARS Surfacevoxel float" << endl;
-			  outFile << "LOOKUP_TABLE default" << endl;
-			  for (int i = 0; i < (xpoints*ypoints*zpoints); i++)
-			  {
-				if(i%20 == 0 && i > 0) outFile << endl;
-				outFile << voxels[i].nearestneighbordistance << " ";
-			  }
-			  outFile << endl;
-			  if(mergetwinsoption == 1)
-			  {
-				outFile << "SCALARS WasTwin int  1" << endl;
-				outFile << "LOOKUP_TABLE default" << endl;
-				for (int i = 0; i < (xpoints*ypoints*zpoints); i++)
-				{
-				  if(i%20 == 0 && i > 0) outFile << endl;
-				  int grainname = voxels[i].grainname;
-				  int twinmerged = m_Grains[grainname].gottwinmerged;
-				  outFile << "       ";
-				  outFile << twinmerged;
-				}
-			  }
-		  }
-		  if(a == 1)
-		  {
-			  outFile << "COLOR_SCALARS colors 3" << endl;
-			  double red,green,blue;
-	//		  int gnum;
-			  double theta, phi;
-			  double q1[4];
-			  double qc[4];
-			  double p[3];
-			  double d[3];
-			  for (int i = 0; i < (xpoints*ypoints*zpoints); i++)
-			  {
-				  q1[0]=voxels[i].quat[1];
-				  q1[1]=voxels[i].quat[2];
-				  q1[2]=voxels[i].quat[3];
-				  q1[3]=voxels[i].quat[4];
-				  if(crystruct == 2)
-				  {
-						p[0] = (2*q1[0]*q1[2]+2*q1[1]*q1[3])*1;
-						p[1] = (2*q1[1]*q1[2]+2*q1[0]*q1[3])*1;
-						p[2] = (1-2*q1[0]*q1[0]-2*q1[1]*q1[1])*1;
-						double denom = p[0]*p[0]+p[1]*p[1]+p[2]*p[2];
-						denom = pow(denom,0.5);
-						p[0] = fabs(p[0]/denom);
-						p[1] = fabs(p[1]/denom);
-						p[2] = fabs(p[2]/denom);
-						int j, k, flag = 1;
-						double temp;
-						for(j = 0; (j<3)&&flag==1; j++)
-						{
-						  flag = 0;
-						  for (k=0; k<2; k++)
-						  {
-							if (p[k+1] < p[k])
-							{
-							   temp = p[k];
-							   p[k] = p[k+1];
-							   p[k+1] = temp;
-							   flag = 1;
-							}
-						  }
-						}
-						theta = (p[0]*0)+(p[1]*-sqrt(2.0)/2.0)+(p[2]*sqrt(2.0)/2.0);
-						if(theta > 1) theta = 1;
-						if(theta < -1) theta = -1;
-						theta = (180.0/m_pi)*acos(theta);
-						red = (90.0-theta)/45.0;
-						d[0] = (p[1]*1)-(p[2]*0);
-						d[1] = (p[2]*0)-(p[0]*1);
-						d[2] = (p[0]*0)-(p[1]*0);
-						if(d[0] != 0) d[0] = -(d[1]+d[2])/d[0];
-						if(d[0] == 0) d[0] = 0;
-						d[1] = 1;
-						d[2] = 1;
-						double norm = pow(((d[0]*d[0])+(d[1]*d[1])+(d[2]*d[2])),0.5);
-						d[0] = d[0]/norm;
-						d[1] = d[1]/norm;
-						d[2] = d[2]/norm;
-						phi = (d[0]*0)+(d[1]*sqrt(2.0)/2.0)+(d[2]*sqrt(2.0)/2.0);
-						if(phi > 1) phi = 1;
-						if(phi < -1) phi = -1;
-						phi = (180.0/m_pi)*acos(phi);
-						green = (1-red)*((35.26-phi)/35.26);
-						blue = (1-red)-green;
-						double max = red;
-						if(green > max) max = green;
-						if(blue > max) max = blue;
-						red = red/max;
-						green = green/max;
-						blue = blue/max;
-						red = (0.75*red)+0.25;
-						green = (0.75*green)+0.25;
-						blue = (0.75*blue)+0.25;
-				  }
-				  if(crystruct == 1)
-				  {
-						for(int j=0;j<12;j++)
-						{
-							qc[0]=quat_symmhex[j][1]*q1[3]+quat_symmhex[j][4]*q1[0]-quat_symmhex[j][2]*q1[2]+quat_symmhex[j][3]*q1[1];
-							qc[1]=quat_symmhex[j][2]*q1[3]+quat_symmhex[j][4]*q1[1]-quat_symmhex[j][3]*q1[0]+quat_symmhex[j][1]*q1[2];
-							qc[2]=quat_symmhex[j][3]*q1[3]+quat_symmhex[j][4]*q1[2]-quat_symmhex[j][1]*q1[1]+quat_symmhex[j][2]*q1[0];
-							qc[3]=quat_symmhex[j][4]*q1[3]-quat_symmhex[j][1]*q1[0]-quat_symmhex[j][2]*q1[1]-quat_symmhex[j][3]*q1[2];
-							p[0] = ((2*qc[0]*qc[2])-(2*qc[1]*qc[3]))*1;
-							p[1] = ((2*qc[1]*qc[2])+(2*qc[0]*qc[3]))*1;
-							p[2] = (1-(2*qc[0]*qc[0])-(2*qc[1]*qc[1]))*1;
-							double denom = p[0]*p[0]+p[1]*p[1]+p[2]*p[2];
-							denom = pow(denom,0.5);
-							p[0] = p[0]/denom;
-							p[1] = p[1]/denom;
-							p[2] = p[2]/denom;
-							if(p[2] < 0)
-							{
-								p[0] = -p[0];
-								p[1] = -p[1];
-								p[2] = -p[2];
-							}
-							d[0] = (p[1]*1)-(p[2]*0);
-							d[1] = (p[2]*0)-(p[0]*1);
-							d[2] = (p[0]*0)-(p[1]*0);
-							if(d[0] != 0) d[0] = -d[1]/d[0];
-							if(d[0] == 0) d[0] = 0;
-							d[1] = 1;
-							d[2] = 0;
-							double norm = pow(((d[0]*d[0])+(d[1]*d[1])+(d[2]*d[2])),0.5);
-							d[0] = d[0]/norm;
-							d[1] = d[1]/norm;
-							d[2] = d[2]/norm;
-							if(atan(d[1]/d[0]) >= 0 && atan(d[1]/d[0]) <= (30.0*m_pi/180.0))
-							{
-								theta = (p[0]*0)+(p[1]*0)+(p[2]*1);
-								if(theta > 1) theta = 1;
-								if(theta < -1) theta = -1;
-								theta = (180.0/m_pi)*acos(theta);
-								red = (90.0-theta)/90.0;
-								phi = (d[0]*1)+(d[1]*0)+(d[2]*0);
-								if(phi > 1) phi = 1;
-								if(phi < -1) phi = -1;
-								phi = (180.0/m_pi)*acos(phi);
-								green = (1-red)*((30.0-phi)/30.0);
-								blue = (1-red)-green;
-							}
-						}
-						double max = red;
-						if(green > max) max = green;
-						if(blue > max) max = blue;
-						red = red/max;
-						green = green/max;
-						blue = blue/max;
-						red = (0.75*red)+0.25;
-						green = (0.75*green)+0.25;
-						blue = (0.75*blue)+0.25;
-				  }
-				  outFile << red << " " << green << " " << blue << endl;
-			  }
-		  }
-		  if(a == 2)
-		  {
-			  outFile << "SCALARS Misorientation float" << endl;
-			  outFile << "LOOKUP_TABLE default" << endl;
-			  for (int i = 0; i < (xpoints*ypoints*zpoints); i++)
-			  {
-				if(i%20 == 0 && i > 0) outFile << endl;
-				outFile << voxels[i].kernelmisorientation << " ";
-			  }
-		  }
-		  if(a == 3)
-		  {
-			  outFile << "SCALARS ImageQuality float" << endl;
-			  outFile << "LOOKUP_TABLE default" << endl;
-			  for (int i = 0; i < (xpoints*ypoints*zpoints); i++)
-			  {
-				if(i%20 == 0 && i > 0) outFile << endl;
-				outFile << voxels[i].imagequality << " ";
-			  }
-		  }
-		  if(a == 4)
-		  {
-			  outFile << "SCALARS SchmidFactor float" << endl;
-			  outFile << "LOOKUP_TABLE default" << endl;
-			  for (int i = 0; i < (xpoints*ypoints*zpoints); i++)
-			  {
-				int gnum = voxels[i].grainname;
-				if(i%20 == 0 && i > 0) outFile << endl;
-				outFile << m_Grains[gnum].schmidfactor << " ";
-			  }
-		  }
-		  if(a == 5)
-		  {
-		    int counter = 0;
-		    double x, y, z;
-			double dsresx, dsresy, dsresz;
-			int col, row, plane;
-			int index;
-			int dsxpoints = int(sizex/(resx*downsamplefactor));
-			int dsypoints = int(sizey/(resy*downsamplefactor));
-			int dszpoints = int(sizez/(resz*downsamplefactor));
-			dsresx = resx*downsamplefactor;
-			dsresy = resy*downsamplefactor;
-			dsresz = resz*downsamplefactor;
-		    outFile << "# vtk DataFile Version 2.0" << endl;
-		    outFile << "data set from FFT2dx_GB" << endl;
-		    outFile << "ASCII" << endl;
-		    outFile << "DATASET STRUCTURED_POINTS" << endl;
-		    outFile << "DIMENSIONS " << dsxpoints << " " << dsypoints << " " << dszpoints << endl;
-		    outFile << "ORIGIN 0.0 0.0 0.0" << endl;
-		    outFile << "SPACING " << dsresx << " " << dsresy << " " << dsresz << endl;
-		    outFile << "POINT_DATA " << dsxpoints*dsypoints*dszpoints << endl;
-		    outFile << endl;
-		    outFile << endl;
-		    outFile << "SCALARS GrainID int  1" << endl;
-		    outFile << "LOOKUP_TABLE default" << endl;
-			for(int i=0;i<dszpoints;i++)
-			{
-				for(int j=0;j<dsypoints;j++)
-				{
-					for(int k=0;k<dsxpoints;k++)
-					{
-						x = (k*dsresx)+(dsresx/2.0);
-						y = (j*dsresy)+(dsresy/2.0);
-						z = (i*dsresz)+(dsresz/2.0);
-						col = int(x/resx);
-						row = int(y/resy);
-						plane = int(z/resz);
-						index = (plane*xpoints*ypoints)+(row*xpoints)+col;
-						if(counter%20 == 0 && counter > 0) outFile << endl;
-						outFile << voxels[index].grainname << " ";
-						counter++;
-					}
-				}
-			}
-		  }
-		  outFile.close();
-	 }
-  }
+
+#define WRITE_VTK_GRAIN_HEADER()\
+  fprintf(f, "# vtk DataFile Version 2.0\n");\
+  fprintf(f, "data set from AIMReconstruction\n");\
+  fprintf(f, "ASCII\n");\
+  fprintf(f, "DATASET STRUCTURED_POINTS\n");\
+  fprintf(f, "DIMENSIONS %d %d %d\n", xpoints, ypoints, zpoints);\
+  fprintf(f, "ORIGIN 0.0 0.0 0.0\n");\
+  fprintf(f, "SPACING %f %f %f\n", resx, resy, resz);\
+  fprintf(f, "POINT_DATA %d\n\n", xpoints*ypoints*zpoints );\
+
+
+
+#define WRITE_VTK_GRAIN_IDS()\
+  fprintf(f, "SCALARS GrainID int  1\n");\
+  fprintf(f, "LOOKUP_TABLE default\n");\
+  for (size_t i = 0; i < total; i++) {\
+    if(i%20 == 0 && i > 0) { fprintf(f, "\n"); }\
+    fprintf(f, "%d ", voxels[i].grainname);\
+  }\
+  fprintf(f, "\n");\
+
+
+#define WRITE_VTK_SCALARS_FROM_VOXEL(name, type, var)\
+  fprintf(f, "SCALARS %s %s\n", #name, #type);\
+  fprintf(f, "LOOKUP_TABLE default\n");\
+  for (size_t i = 0; i < total; i++) {\
+    if(i%20 == 0 && i > 0) { fprintf(f, "\n");}\
+    fprintf(f, "%f ", voxels[i].var);\
+  }\
+
+
+#define WRITE_VTK_GRAIN_WITH_VOXEL_SCALAR_VALUE(name, var)\
+int ReconstructionFunc::write##name##VizFile(const std::string &file)\
+{\
+  FILE* f = NULL;\
+  f = fopen(file.c_str(), "w");\
+  if (NULL == f) {return 1;}\
+  WRITE_VTK_GRAIN_HEADER()\
+  size_t total = xpoints*ypoints*zpoints;\
+  WRITE_VTK_GRAIN_IDS()\
+  WRITE_VTK_SCALARS_FROM_VOXEL(name, float, var)\
+  fclose(f);\
+  return 0;\
 }
+
+
+#define WRITE_VTK_GRAIN_WITH_GRAIN_SCALAR_VALUE(name, var)\
+int ReconstructionFunc::write##name##VizFile(const std::string &file)\
+{\
+  FILE* f = NULL;\
+  f = fopen(file.c_str(), "w");\
+  if (NULL == f) {return 1;}\
+  WRITE_VTK_GRAIN_HEADER()\
+  size_t total = xpoints*ypoints*zpoints;\
+  WRITE_VTK_GRAIN_IDS()\
+  fprintf(f, "SCALARS SchmidFactor float\n");\
+  fprintf(f, "LOOKUP_TABLE default\n");\
+  for (size_t i = 0; i < total; i++) {\
+    if(i%20 == 0 && i > 0) { fprintf(f, "\n");}\
+    fprintf(f, "%f ", m_Grains[voxels[i].grainname].schmidfactor);\
+  }\
+  fclose(f);\
+  return 0;\
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+WRITE_VTK_GRAIN_WITH_VOXEL_SCALAR_VALUE(Disorientation, kernelmisorientation);
+WRITE_VTK_GRAIN_WITH_VOXEL_SCALAR_VALUE(ImageQuality, imagequality);
+WRITE_VTK_GRAIN_WITH_GRAIN_SCALAR_VALUE(SchmidFactor, schmidfactor);
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int ReconstructionFunc::writeVisualizationFile(const std::string &file)
+{
+  FILE* f = NULL;
+  f = fopen(file.c_str(), "w");
+  if (NULL == f) {return 1;}
+  WRITE_VTK_GRAIN_HEADER()
+  size_t total = xpoints*ypoints*zpoints;
+  WRITE_VTK_GRAIN_IDS()
+
+  WRITE_VTK_SCALARS_FROM_VOXEL(SurfaceVoxel, float, nearestneighbordistance)
+
+  if (mergetwinsoption == 1)
+  {
+    fprintf(f, "SCALARS WasTwin int 1");
+    fprintf(f, "LOOKUP_TABLE default\n");
+    size_t grainname = 0;
+    for (int i = 0; i < total; i++) {
+      if(i%20 == 0 && i > 0) { fprintf(f, "\n");}
+      grainname = voxels[i].grainname;
+      fprintf(f, "%d ", m_Grains[grainname].gottwinmerged);
+    }
+  }
+
+  fclose(f);
+  return 0;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int ReconstructionFunc::writeIPFVizFile(const std::string &file)
+{
+  FILE* f = NULL;
+  f = fopen(file.c_str(), "w");
+  if (NULL == f) {return 1;}
+  WRITE_VTK_GRAIN_HEADER()
+  size_t total = xpoints*ypoints*zpoints;
+  WRITE_VTK_GRAIN_IDS()
+
+  fprintf(f, "COLOR_SCALARS colors 3\n");
+  double red,green,blue;
+  double q1[4];
+  unsigned char rgb[3] = {0, 0, 0};
+  double RefDirection[3] = {0.0, 0.0, 1.0};
+  for (size_t i = 0; i < total; i++)
+  {
+    if(crystruct == AIM::Reconstruction::Cubic)
+    {
+      OIMColoring::GenerateIPFColor(voxels[i].euler1, voxels[i].euler2, voxels[i].euler3, RefDirection[0], RefDirection[1], RefDirection[2], rgb);
+      red = static_cast<double>(double(rgb[0])/255.0);
+      green = static_cast<double>(double(rgb[1])/255.0);
+      blue = static_cast<double>(double(rgb[2])/255.0);
+      //  calculateCubicIPFColor( q1, red, green, blue);
+    }
+    if(crystruct == AIM::Reconstruction::Hexagonal)
+    {
+      q1[0]=voxels[i].quat[1];
+      q1[1]=voxels[i].quat[2];
+      q1[2]=voxels[i].quat[3];
+      q1[3]=voxels[i].quat[4];
+      OIMColoring::CalculateHexIPFColor(q1, red, green, blue);
+    }
+    fprintf(f, "%f %f %f\n",red, green, blue);
+  }
+
+
+  fclose(f);
+  return 0;
+}
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int  ReconstructionFunc::writeDownSampledVizFile(const std::string &file )
+{
+  FILE* f = NULL;
+  f = fopen(file.c_str(), "w");
+  if (NULL == f) {return 1;}
+  int counter = 0;
+  double x, y, z;
+  double dsresx, dsresy, dsresz;
+  int col, row, plane;
+  int index;
+  int dsxpoints = int(sizex / (resx * downsamplefactor));
+  int dsypoints = int(sizey / (resy * downsamplefactor));
+  int dszpoints = int(sizez / (resz * downsamplefactor));
+  dsresx = resx * downsamplefactor;
+  dsresy = resy * downsamplefactor;
+  dsresz = resz * downsamplefactor;
+  fprintf(f, "# vtk DataFile Version 2.0\n");
+  fprintf(f, "Down Sampled from AIMReconstruction\n");
+  fprintf(f, "ASCII\n");
+  fprintf(f, "DATASET STRUCTURED_POINTS\n");
+  fprintf(f, "DIMENSIONS %d %d %d\n", dsxpoints, dsypoints, dszpoints);
+  fprintf(f, "ORIGIN 0.0 0.0 0.0\n");
+  fprintf(f, "SPACING %f %f %f\n", dsresx, dsresy, dsresz);
+  fprintf(f, "POINT_DATA %d\n\n", dsxpoints*dsypoints*dszpoints );
+  fprintf(f, "SCALARS GrainID int  1\n");
+  fprintf(f, "LOOKUP_TABLE default\n");
+  for (int i = 0; i < dszpoints; i++)
+  {
+    for (int j = 0; j < dsypoints; j++)
+    {
+      for (int k = 0; k < dsxpoints; k++)
+      {
+        x = (k * dsresx) + (dsresx / 2.0);
+        y = (j * dsresy) + (dsresy / 2.0);
+        z = (i * dsresz) + (dsresz / 2.0);
+        col = int(x / resx);
+        row = int(y / resy);
+        plane = int(z / resz);
+        index = (plane * xpoints * ypoints) + (row * xpoints) + col;
+        if(counter%20 == 0 && counter > 0) { fprintf(f, "\n"); }
+        fprintf(f,"%d ", voxels[index].grainname);
+        counter++;
+      }
+    }
+  }
+
+  fclose(f);
+  return 0;
+}
+
+
+#if 0
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ReconstructionFunc::calculateCubicIPFColor(double q1[4],
+    double &red, double &green, double &blue)
+{
+  double p[3];
+  double d[3];
+  double theta, phi;
+  p[0] = (2 * q1[0] * q1[2] + 2 * q1[1] * q1[3]) * 1;
+  p[1] = (2 * q1[1] * q1[2] + 2 * q1[0] * q1[3]) * 1;
+  p[2] = (1 - 2 * q1[0] * q1[0] - 2 * q1[1] * q1[1]) * 1;
+  double denom = p[0] * p[0] + p[1] * p[1] + p[2] * p[2];
+  denom = pow(denom, 0.5);
+  p[0] = fabs(p[0] / denom);
+  p[1] = fabs(p[1] / denom);
+  p[2] = fabs(p[2] / denom);
+  int j, k, flag = 1;
+  double temp;
+  for (j = 0; (j < 3) && flag == 1; j++)
+  {
+    flag = 0;
+    for (k = 0; k < 2; k++)
+    {
+      if (p[k + 1] < p[k])
+      {
+        temp = p[k];
+        p[k] = p[k + 1];
+        p[k + 1] = temp;
+        flag = 1;
+      }
+    }
+
+  }
+
+  theta = (p[0] * 0) + (p[1] * -sqrt(2.0) / 2.0) + (p[2] * sqrt(2.0) / 2.0);
+  if (theta > 1) theta = 1;
+
+  if (theta < -1) theta = -1;
+
+  theta = (180.0 / m_pi) * acos(theta);
+  red = (90.0 - theta) / 45.0;
+  d[0] = (p[1] * 1) - (p[2] * 0);
+  d[1] = (p[2] * 0) - (p[0] * 1);
+  d[2] = (p[0] * 0) - (p[1] * 0);
+  if (d[0] != 0) d[0] = -(d[1] + d[2]) / d[0];
+
+  if (d[0] == 0) d[0] = 0;
+
+  d[1] = 1;
+  d[2] = 1;
+  double norm = pow(((d[0] * d[0]) + (d[1] * d[1]) + (d[2] * d[2])), 0.5);
+  d[0] = d[0] / norm;
+  d[1] = d[1] / norm;
+  d[2] = d[2] / norm;
+  phi = (d[0] * 0) + (d[1] * sqrt(2.0) / 2.0) + (d[2] * sqrt(2.0) / 2.0);
+  if (phi > 1) phi = 1;
+
+  if (phi < -1) phi = -1;
+
+  phi = (180.0 / m_pi) * acos(phi);
+  green = (1 - red) * ((35.26 - phi) / 35.26);
+  blue = (1 - red) - green;
+  double max = red;
+  if (green > max) max = green;
+
+  if (blue > max) max = blue;
+
+  red = red / max;
+  green = green / max;
+  blue = blue / max;
+  red = (0.75 * red) + 0.25;
+  green = (0.75 * green) + 0.25;
+  blue = (0.75 * blue) + 0.25;
+}
+#endif
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+
+
 
 
 void ReconstructionFunc::write_graindata(string gdata)

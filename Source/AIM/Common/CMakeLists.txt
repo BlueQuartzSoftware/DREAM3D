@@ -56,6 +56,7 @@ SET (AIMCommon_SRCS
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Segment.cpp
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Bin.cpp   
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/AIMRandomNG.cpp
+    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Constants.cpp
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/VTKFileUtils.cpp
     )
 
