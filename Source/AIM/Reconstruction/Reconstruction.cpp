@@ -22,6 +22,7 @@
 
 #if AIM_HDF5_SUPPORT
 #include "AIM/HDF5/AIM_H5VtkDataWriter.h"
+#include "AIM/Reconstruction/H5ReconstructionIO.h"
 #endif
 
 
@@ -139,6 +140,7 @@ void Reconstruction::compute()
   int32_t sliceCount = 1;
   int32_t width = 0;
   int32_t totalSlices = m_AngSeriesMaxSlice;
+  int32_t err = 0;
   while (sliceCount < totalSlices)
   {
     ++width;
@@ -160,14 +162,13 @@ void Reconstruction::compute()
   m->initialize(m_ZStartIndex, m_ZEndIndex, m_ZResolution, m_MergeTwins, m_MergeColonies, m_MinAllowedGrainSize,
 	                   m_MinSeedConfidence, m_DownSampleFactor, m_MinSeedImageQuality, m_MisorientationTolerance, m_CrystalStructure, m_AlignmentMethod, m_AlreadyFormed);
 
-  std::string  statsFile = m_OutputDirectory + MXADir::Separator + AIM::Reconstruction::StatsFile;
-  std::string  misorientationFile = m_OutputDirectory + MXADir::Separator + AIM::Reconstruction::MisorientationBinsFile;
-  std::string  microBinsFile = m_OutputDirectory + MXADir::Separator + AIM::Reconstruction::MicroBinsFile;
+  std::string statsFile = m_OutputDirectory + MXADir::Separator + AIM::Reconstruction::StatsFile;
+  std::string microBinsFile = m_OutputDirectory + MXADir::Separator + AIM::Reconstruction::MicroTextureFile;
+  std::string misorientationFile = m_OutputDirectory + MXADir::Separator + AIM::Reconstruction::MisorientationBinsFile;
 
   std::string axisFile = m_OutputDirectory + MXADir::Separator + AIM::Reconstruction::AxisOrientationsFile;
+  std::string eulerFile = m_OutputDirectory + MXADir::Separator + AIM::Reconstruction::ODFFile;
   std::string graindataFile = m_OutputDirectory + MXADir::Separator + AIM::Reconstruction::GrainDataFile;
-  std::string eulerFile = m_OutputDirectory + MXADir::Separator + AIM::Reconstruction::EulerAnglesFile;
-  std::string hdf5GrainFile = m_OutputDirectory + MXADir::Separator + AIM::Reconstruction::HDF5GrainFile;
   std::string alignmentFile = m_OutputDirectory + MXADir::Separator + AIM::Reconstruction::AlignmentFile;
 
   std::string reconVisFile = m_OutputDirectory + MXADir::Separator + AIM::Reconstruction::VisualizationVizFile;
@@ -176,6 +177,14 @@ void Reconstruction::compute()
   std::string reconIQVisFile = m_OutputDirectory + MXADir::Separator + AIM::Reconstruction::ImageQualityVizFile;
   std::string reconSFVisFile = m_OutputDirectory + MXADir::Separator + AIM::Reconstruction::SchmidFactorVizFile;
   std::string reconDSVisFile = m_OutputDirectory + MXADir::Separator + AIM::Reconstruction::DownSampledVizFile;
+
+  std::string hdf5GrainFile = m_OutputDirectory + MXADir::Separator + AIM::Reconstruction::HDF5GrainFile;
+  std::string hdf5ResultsFile = m_OutputDirectory + MXADir::Separator + AIM::Reconstruction::HDF5ResultsFile;
+
+#if AIM_HDF5_SUPPORT
+  // Create a new HDF5 Results file by overwriting any HDF5 file that may be in the way
+  H5ReconstructionIO::Pointer h5io = H5ReconstructionIO::New(hdf5ResultsFile);
+#endif
 
   if (m_AlreadyFormed == true)
   {
@@ -339,10 +348,22 @@ void Reconstruction::compute()
 
   CHECK_FOR_CANCELED(ReconstructionFunc)
   progressMessage(AIM_STRING("Writing Statistics"), 80);
+
+
+  //TODO: Write HDF5 StatsFile
+  //TODO: Write HDF5 MisorientationBinsFile
+  //TODO: Write HDF5 MicroTextureFile
+#if AIM_HDF5_SUPPORT
+  if(m_ZEndIndex-m_ZStartIndex > 1) m->volume_stats(h5io);
+  if(m_ZEndIndex-m_ZStartIndex == 1) m->volume_stats2D(h5io);
+#else
   if(m_ZEndIndex-m_ZStartIndex > 1) m->volume_stats(statsFile,misorientationFile,microBinsFile);
   if(m_ZEndIndex-m_ZStartIndex == 1) m->volume_stats2D(statsFile,misorientationFile,microBinsFile);
+#endif
 
   CHECK_FOR_CANCELED(ReconstructionFunc)
+  /** ********** This section writes the ASCII based vtk files for visualization *** */
+
   progressMessage(AIM_STRING("Writing VTK Visualization File"), 81);
   if (m_WriteVisualizationFile) {m->writeVisualizationFile(reconVisFile);}
 
@@ -361,12 +382,18 @@ void Reconstruction::compute()
   progressMessage(AIM_STRING("Writing VTK Down Sampled File"), 86);
   if (m_WriteDownSampledFile) {m->writeDownSampledVizFile(reconDSVisFile);}
 
+  /** ******* End VTK Visualization File Writing Section ****** */
+
 #if AIM_HDF5_SUPPORT
   CHECK_FOR_CANCELED(ReconstructionFunc)
   progressMessage(AIM_STRING("Writing Out HDF5 Grain File"), 87);
   if (m_WriteHDF5GrainFile) { writeHDF5GrainsFile(hdf5GrainFile, m); }
-//  m->write_grains(m_OutputDirectory /* quat_symmcubic, quat_symmhex */);
+#else
+  m->write_grains(m_OutputDirectory);
 #endif
+
+
+
 
   CHECK_FOR_CANCELED(ReconstructionFunc)
   progressMessage(AIM_STRING("Writing Grain Data"), 88);
@@ -374,11 +401,22 @@ void Reconstruction::compute()
 
   CHECK_FOR_CANCELED(ReconstructionFunc)
   progressMessage(AIM_STRING("Writing Axis Orientation File"), 90);
+#if AIM_HDF5_SUPPORT
+  err = h5io->writeAxisOrientationData(m->axisodf, m->crystruct, m->totalaxes);
+#else
   m->write_axisodf(axisFile);
+#endif
 
   CHECK_FOR_CANCELED(ReconstructionFunc)
   progressMessage(AIM_STRING("Writing Euler Angle File"), 92);
+  //DONE: Write HDF5 ODFFile
+#if AIM_HDF5_SUPPORT
+  err = h5io->writeODFData(m->crystruct, m->eulerodf, m->totalvol);
+#else
   m->write_eulerodf(eulerFile);
+#endif
+
+
 
   progressMessage(AIM_STRING("Reconstruction Complete"), 100);
 
@@ -394,7 +432,7 @@ void Reconstruction::progressMessage(AIM_STRING message, int progress)
       emit updateProgress(progress);
     //  std::cout << message.toStdString() << std::endl;
 #else
-  std::cout << message << std::endl;
+  std::cout << progress << "% " << message << std::endl;
 #endif
 }
 
