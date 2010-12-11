@@ -28,9 +28,8 @@
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _H5RECONSTRUCTIONIO_H_
-#define _H5RECONSTRUCTIONIO_H_
-
+#ifndef H5RECONSTATSREADER_H_
+#define H5RECONSTATSREADER_H_
 
 #include "hdf5.h"
 
@@ -45,41 +44,29 @@
 
 class Bin;
 
-class AIMCOMMON_EXPORT H5ReconstructionIO
+
+class AIMCOMMON_EXPORT H5ReconStatsReader
 {
   public:
-    MXA_SHARED_POINTERS(H5ReconstructionIO);
-    MXA_STATIC_NEW_MACRO(H5ReconstructionIO);
-
+    MXA_SHARED_POINTERS(H5ReconStatsReader);
+    MXA_STATIC_NEW_MACRO(H5ReconStatsReader);
     static Pointer New(const std::string &filename);
 
-    virtual ~H5ReconstructionIO();
+    virtual ~H5ReconStatsReader();
+
 
     MXA_INSTANCE_STRING_PROPERTY(FileName);
 
-    int writeAxisOrientationData(Bin* axisodf,
-                                 AIM::Reconstruction::CrystalStructure crystruct,
-                                 double totalaxes);
-    int writeMicroTextureData(double* microbin, size_t nElements, double actualgrains);
-    int writeMisorientationBinsData(double* misobins, size_t nElements);
-    int writeODFData(AIM::Reconstruction::CrystalStructure crystruct,
-                     Bin* eulerodf, double totalvol);
-    int writeStatsData(int maxdiameter, int mindiameter,
-                       double avglogdiam, double sdlogdiam, double actualgrains,
-                       const std::vector<std::vector<int> > &neighborhood,
-                       const std::vector<std::vector<double> > &svbovera,
-                       const std::vector<std::vector<double> > &svcovera,
-                       const std::vector<std::vector<double> > &svcoverb,
-                       const std::vector<std::vector<double> > &svschmid,
-                       const std::vector<std::vector<double> > &svomega3);
+    int readAxisOrientationData(std::vector<double> &data);
 
   protected:
-    H5ReconstructionIO();
+    H5ReconStatsReader();
   private:
     hid_t m_FileId;
 
-    H5ReconstructionIO(const H5ReconstructionIO&); // Copy Constructor Not Implemented
-    void operator=(const H5ReconstructionIO&); // Operator '=' Not Implemented
+    H5ReconStatsReader(const H5ReconStatsReader&); // Copy Constructor Not Implemented
+    void operator=(const H5ReconStatsReader&); // Operator '=' Not Implemented
+
 };
 
-#endif /* _H5RECONSTRUCTIONIO_H_ */
+#endif /* H5RECONSTATSREADER_H_ */

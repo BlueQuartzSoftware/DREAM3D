@@ -34,11 +34,12 @@
 #include <MXA/Common/MXASetGetMacros.h>
 
 #include "AIM/Common/AIMCommonConfiguration.h"
-#include <AIM/Common/Grain.h>
-#include <AIM/Common/Voxel.h>
-#include <AIM/Common/Bin.h>
-#include <AIM/Common/AIMRandomNG.h>
-#include <AIM/ANG/AngFileHelper.h>
+#include "AIM/Common/Grain.h"
+#include "AIM/Common/Voxel.h"
+#include "AIM/Common/Bin.h"
+#include "AIM/Common/AIMRandomNG.h"
+#include "AIM/ANG/AngFileHelper.h"
+#include "AIM/Reconstruction/H5ReconStatsReader.h"
 
 
 using namespace std;
@@ -69,13 +70,9 @@ AngFileHelper::Pointer m_angFileHelper;
   double sizez;
 
   double misorientationtolerance;
-  int crystruct;
-
+  AIM::Reconstruction::CrystalStructure crystruct;
 
 	AIMRandomNG rg;
-	vector<Grain> grains;
-	Grain* precipitates;
-	int* psizes;
 
 	Bin* actualodf;
 	Bin* simodf;
@@ -86,6 +83,10 @@ AngFileHelper::Pointer m_angFileHelper;
 	Bin* simmdf;
 	Bin* actualmicrotex;
 	Bin* simmicrotex;
+
+  Grain* precipitates;
+  int* psizes;
+  vector<Grain> grains;
 
 	vector<int> gsizes;
 	vector<int> activegrainlist;
@@ -105,8 +106,11 @@ AngFileHelper::Pointer m_angFileHelper;
 	vector<vector<double> > neighbordist;
 
 
-	void initialize(int32_t, int32_t , double , double , double ,
-                  int32_t ,int32_t ,int32_t, int32_t, double);
+	void initialize(int32_t m_NumGrains, int32_t m_ShapeClass,
+	                double m_XResolution, double m_YResolution, double m_ZResolution,
+	                int32_t m_OverlapAllowed,
+	                int32_t m_OverlapAssignment, int32_t m_Precipitates,
+	                AIM::Reconstruction::CrystalStructure m_CrystalStructure, double m_FractionPrecipitates);
 	void initialize2();
 	double machineepsilon;
 	double maxrealnumber;
@@ -151,9 +155,22 @@ AngFileHelper::Pointer m_angFileHelper;
 	double currentsizedisterror,oldsizedisterror;
 
 	void write_eulerangles(string);
-	void loadStatsData(string);
-	void loadorientData(string);
-	void loadeulerData(string);
+
+
+#if AIM_HDF5_SUPPORT
+	int readReconStatsData(H5ReconStatsReader::Pointer h5io);
+  int readAxisOrientationData(H5ReconStatsReader::Pointer h5io);
+  int readODFData(H5ReconStatsReader::Pointer h5io);
+  int readMisorientationData(H5ReconStatsReader::Pointer h5io);
+  int readMicroTextureData(H5ReconStatsReader::Pointer h5io);
+#else
+void readReconStatsData(string);
+void readAxisOrientationData(string inname6);
+void readODFData(string);
+void readMisorientationData(string);
+void readMicroTextureData(string);
+#endif
+
 	void generate_grain(int);
 	void assign_eulers(int);
 	void insert_grain(int);
@@ -172,8 +189,7 @@ AngFileHelper::Pointer m_angFileHelper;
 	void read_structure(string);
 	void find_neighbors();
 	void writeCube(string, int);
-	void loadMisoData(string);
-	void loadMicroData(string);
+
 	void matchCrystallography(double quat_symmcubic[24][5],double quat_symmhex[12][5], string);
 	void measure_misorientations(double quat_symmcubic[24][5],double quat_symmhex[12][5]);
 	double getmisoquatcubic(double q1[5],double q2[5],double &,double &,double &);

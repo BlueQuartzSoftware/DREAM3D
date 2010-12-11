@@ -102,12 +102,14 @@ if (AIM_USE_HDF5)
     set(AIM_HDF5_SUPPORT "1")
     SET (HDF5_SRCS
         ${AIMRepresentation_SOURCE_DIR}/Source/AIM/HDF5/AIM_H5VtkDataWriter.cpp
-        ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Reconstruction/H5ReconstructionIO.cpp
+        ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Reconstruction/H5ReconStatsWriter.cpp
+        ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Reconstruction/H5ReconStatsReader.cpp
         )
     SET (HDF5_HDRS
         ${AIMRepresentation_SOURCE_DIR}/Source/AIM/HDF5/AIM_H5VtkDataWriter.h
         ${AIMRepresentation_SOURCE_DIR}/Source/AIM/HDF5/VTKH5Constants.h
-        ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Reconstruction/H5ReconstructionIO.h
+        ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Reconstruction/H5ReconStatsWriter.h
+        ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Reconstruction/H5ReconStatsReader.h
         )
     include_directories(${HDF5_INCLUDE_DIR})
     set (AIMCOMMON_DEP_LIBS ${HDF5_LIBRARIES} MXADataModel)

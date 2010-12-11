@@ -10,9 +10,10 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 #include "GrainGenerator.h"
-#include <AIM/ANG/AngDirectoryPatterns.h>
-#include <AIM/ANG/AngReader.h>
-#include <AIM/ANG/AngFileHelper.h>
+#include "AIM/ANG/AngDirectoryPatterns.h"
+#include "AIM/ANG/AngReader.h"
+#include "AIM/ANG/AngFileHelper.h"
+#include "AIM/Reconstruction/H5ReconStatsReader.h"
 
 #include <MXA/Utilities/MXADir.h>
 
@@ -108,7 +109,7 @@ void GrainGenerator::run()
 // -----------------------------------------------------------------------------
 void GrainGenerator::compute()
 {
-
+  int err = 0;
   double quat_symmcubic[24][5] = {
 	  {0.000000000, 0.000000000, 0.000000000, 0.000000000, 1.000000000},
 	  {0.000000000, 1.000000000, 0.000000000, 0.000000000, 0.000000000},
@@ -149,18 +150,28 @@ void GrainGenerator::compute()
 	  {0.000000000, -0.50000000, 0.866025400, 0.000000000, 0.000000000},
 	  {0.000000000, -0.86602540, 0.500000000, 0.000000000, 0.000000000}};
 
+#if AIM_HDF5_SUPPORT
+    H5ReconStatsReader::Pointer h5reader = H5ReconStatsReader::New(m_InputDirectory + MXADir::Separator + AIM::Reconstruction::HDF5ResultsFile);
+    if (h5reader.get() == NULL)
+    {
+      progressMessage(AIM_STRING("Error Opening HDF5 Stats File. Nothing generated"), 100 );
+      return;
+    }
+#else
   std::string  StatsFile = m_InputDirectory + MXADir::Separator + AIM::Reconstruction::StatsFile;
   std::string  AxisOrientationsFile = m_InputDirectory + MXADir::Separator + AIM::Reconstruction::AxisOrientationsFile;
   std::string  EulerAnglesFile = m_InputDirectory + MXADir::Separator + AIM::Reconstruction::ODFFile;
   std::string  MisorientationBinsFile = m_InputDirectory + MXADir::Separator + AIM::Reconstruction::MisorientationBinsFile;
   std::string  MicroBinsFile = m_InputDirectory + MXADir::Separator + AIM::Reconstruction::MicroTextureFile;
-
+#endif
   std::string  CubeFile = m_OutputDirectory + MXADir::Separator + AIM::SyntheticBuilder::CubeFile;
   std::string  EulerFile = m_OutputDirectory + MXADir::Separator + AIM::SyntheticBuilder::EulerFile;
   std::string AnalysisFile = m_OutputDirectory + MXADir::Separator + AIM::SyntheticBuilder::AnalysisFile;
   std::string MoDFFile = m_OutputDirectory + MXADir::Separator + AIM::SyntheticBuilder::MoDFFile;
   std::string CrystallographicErrorFile = m_OutputDirectory + MXADir::Separator + AIM::SyntheticBuilder::CrystallographicErrorFile;
   std::string graindataFile = m_OutputDirectory + MXADir::Separator + AIM::Reconstruction::GrainDataFile;
+
+
 
    m = GrainGeneratorFunc::New();
    m->initialize(m_NumGrains, m_ShapeClass,
@@ -172,11 +183,18 @@ void GrainGenerator::compute()
    {
 	   CHECK_FOR_CANCELED(GrainGeneratorFunc)
 	   progressMessage(AIM_STRING("Loading Stats File"), 5 );
-	   m->loadStatsData(StatsFile);
-
+#if AIM_HDF5_SUPPORT
+	   m->readReconStatsData(h5reader);
+#else
+	   m->readReconStatsData(StatsFile);
+#endif
 	   CHECK_FOR_CANCELED(GrainGeneratorFunc)
 	   progressMessage(AIM_STRING("Loading Orient File"), 10 );
-	   m->loadorientData(AxisOrientationsFile);
+#if AIM_HDF5_SUPPORT
+	   m->readAxisOrientationData(h5reader);
+#else
+	   m->readAxisOrientationData(AxisOrientationsFile);
+#endif
 
 	   CHECK_FOR_CANCELED(GrainGeneratorFunc)
 	   progressMessage(AIM_STRING("Packing Grains"), 25 );
@@ -215,15 +233,27 @@ void GrainGenerator::compute()
 
    CHECK_FOR_CANCELED(GrainGeneratorFunc)
    progressMessage(AIM_STRING("Loading Euler File"), 15 );
-   m->loadeulerData(EulerAnglesFile);
+#if AIM_HDF5_SUPPORT
+   m->readODFData(h5reader);
+#else
+   m->readODFData(EulerAnglesFile);
+#endif
 
    CHECK_FOR_CANCELED(GrainGeneratorFunc)
    progressMessage(AIM_STRING("Loading Misorientations"), 50 );
-   m->loadMisoData(MisorientationBinsFile);
+#if AIM_HDF5_SUPPORT
+   m->readMisorientationData(h5reader);
+   #else
+   m->readMisorientationData(MisorientationBinsFile);
+#endif
 
    CHECK_FOR_CANCELED(GrainGeneratorFunc)
    progressMessage(AIM_STRING("Loading Microtexture"), 55 );
-   m->loadMicroData(MicroBinsFile);
+#if AIM_HDF5_SUPPORT
+   m->readMicroTextureData(h5reader);
+#else
+   m->readMicroTextureData(MicroBinsFile);
+#endif
 
    CHECK_FOR_CANCELED(GrainGeneratorFunc)
    progressMessage(AIM_STRING("Assigning Eulers"), 60 );

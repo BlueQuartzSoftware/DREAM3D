@@ -3767,7 +3767,7 @@ void ReconstructionFunc::find_schmids()
 
 
 #if AIM_HDF5_SUPPORT
-void ReconstructionFunc::volume_stats(H5ReconstructionIO::Pointer h5io)
+void ReconstructionFunc::volume_stats(H5ReconStatsWriter::Pointer h5io)
 #else
 void ReconstructionFunc::volume_stats(const std::string &statsfile,
                                       const std::string &misorientationFile,
@@ -4205,7 +4205,7 @@ void ReconstructionFunc::volume_stats(const std::string &statsfile,
 
 
 #if AIM_HDF5_SUPPORT
-void ReconstructionFunc::volume_stats2D(H5ReconstructionIO::Pointer h5io)
+void ReconstructionFunc::volume_stats2D(H5ReconStatsWriter::Pointer h5io)
 #else
 void ReconstructionFunc::volume_stats2D(const std::string &writename1,
                                         const std::string &writename2,
