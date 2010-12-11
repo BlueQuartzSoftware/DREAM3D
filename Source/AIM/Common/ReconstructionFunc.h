@@ -30,17 +30,20 @@
 #include <algorithm>
 #include <numeric>
 
-#include <MXA/MXATypes.h>
-#include <MXA/Common/MXASetGetMacros.h>
+#include "MXA/MXATypes.h"
+#include "MXA/Common/MXASetGetMacros.h"
 
 #include "AIM/Common/AIMCommonConfiguration.h"
-#include <AIM/Common/Grain.h>
-#include <AIM/Common/Voxel.h>
-#include <AIM/Common/Bin.h>
-#include <AIM/Common/AIMRandomNG.h>
-#include <AIM/ANG/AngFileHelper.h>
-#include <AIM/ANG/AngDirectoryPatterns.h>
-
+#include "AIM/Common/Constants.h"
+#include "AIM/Common/Grain.h"
+#include "AIM/Common/Voxel.h"
+#include "AIM/Common/Bin.h"
+#include "AIM/Common/AIMRandomNG.h"
+#include "AIM/ANG/AngFileHelper.h"
+#include "AIM/ANG/AngDirectoryPatterns.h"
+#if AIM_HDF5_SUPPORT
+#include "AIM/Reconstruction/H5ReconstructionIO.h"
+#endif
 
 using namespace std;
 
@@ -76,7 +79,7 @@ public:
   int minallowedgrainsize;
   int mergetwinsoption;
   int mergecoloniesoption;
-  int crystruct;
+  AIM::Reconstruction::CrystalStructure crystruct;
   int alignmeth;
   int alreadyformed;
 
@@ -85,8 +88,8 @@ public:
 	Voxel* voxels;
 	Voxel* voxelstemp;
 	vector<Grain> m_Grains;
-	Bin *eulerodf;
-	Bin *axisodf;
+	Bin* eulerodf;
+	Bin* axisodf;
 
 	int **shifts;
 	int **arr;
@@ -126,9 +129,11 @@ public:
 	double totalvol;
 	double totalaxes;
 
-  void initialize(int, int, double, bool, bool, int, double, double, double, double, int, int, bool);
+  void initialize(int m_ZStartSlice, int m_ZEndSlice, double m_ZResolution, bool v_mergetwinsoption,
+                  bool v_mergecoloniesoption, int v_minallowedgrainsize, double v_minseedconfidence, double v_downsamplefactor,
+                  double v_minseedimagequality, double v_misorientationtolerance, AIM::Reconstruction::CrystalStructure v_crystruct, int v_alignmeth, bool v_alreadyformed);
 	void loadSlices();
-	void align_sections(const std::string &filename );
+
 	void find_border();
 	int form_grains();
 	void form_grains_sections();
@@ -163,15 +168,25 @@ public:
 	void find_colors();
 	void find_convexities();
 	void find_schmids();
-	void volume_stats(string,string,string);
-	void volume_stats2D(string,string,string);
-	void write_axisodf(string);
-	void write_eulerodf(string);
-	void write_graindata(string);
-	void write_grains(const std::string &outputdir/* double quat_symmcubic[24][5],double quat_symmhex[12][5] */);
 
-//  void write_volume(string, string, string, string, string, string,
-//                    bool, bool, bool, bool,double quat_symmcubic[24][5],double quat_symmhex[12][5]);
+  void write_axisodf(const std::string &axisFile);
+  void write_eulerodf(const std::string &eulerFile);
+  void write_graindata(const std::string &graindataFile);
+	void align_sections(const std::string &filename );
+
+#if AIM_HDF5_SUPPORT
+void volume_stats(H5ReconstructionIO::Pointer h5io);
+void volume_stats2D(H5ReconstructionIO::Pointer h5io);
+#else
+void volume_stats(const std::string &statsfile,
+                                      const std::string &misorientationFile,
+                                      const std::string &microBinsFile);
+
+void volume_stats2D(const std::string &stats, const std::string &misorientation, const std::string &microBins);
+#endif
+
+
+
 
 	int writeVisualizationFile(const std::string &file); // DONE
   int writeIPFVizFile(const std::string &file);
@@ -180,9 +195,6 @@ public:
   int writeSchmidFactorVizFile(const std::string &file); // DONE
   int writeDownSampledVizFile(const std::string &file);
 
- // void calculateCubicIPFColor(double q1[4], double &red, double &green, double &blue);
-
-//  void calculateHexIPFColor(double q1[4], double & red, double & green, double & blue);
 
 	double getmisoquatcubic(double,double q1[5],double q2[5],double &,double &,double &);
 	double getmisoquathexagonal(double,double q1[5],double q2[5],double &,double &,double &);
@@ -192,6 +204,8 @@ public:
 	double find_zcoord(long);
 
 
+  /* This is deprecated in favor of the HDF5 output file */
+  void write_grains(const std::string &outputdir);
 
 protected:
   ReconstructionFunc();

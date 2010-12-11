@@ -151,9 +151,9 @@ void GrainGenerator::compute()
 
   std::string  StatsFile = m_InputDirectory + MXADir::Separator + AIM::Reconstruction::StatsFile;
   std::string  AxisOrientationsFile = m_InputDirectory + MXADir::Separator + AIM::Reconstruction::AxisOrientationsFile;
-  std::string  EulerAnglesFile = m_InputDirectory + MXADir::Separator + AIM::Reconstruction::EulerAnglesFile;
+  std::string  EulerAnglesFile = m_InputDirectory + MXADir::Separator + AIM::Reconstruction::ODFFile;
   std::string  MisorientationBinsFile = m_InputDirectory + MXADir::Separator + AIM::Reconstruction::MisorientationBinsFile;
-  std::string  MicroBinsFile = m_InputDirectory + MXADir::Separator + AIM::Reconstruction::MicroBinsFile;
+  std::string  MicroBinsFile = m_InputDirectory + MXADir::Separator + AIM::Reconstruction::MicroTextureFile;
 
   std::string  CubeFile = m_OutputDirectory + MXADir::Separator + AIM::SyntheticBuilder::CubeFile;
   std::string  EulerFile = m_OutputDirectory + MXADir::Separator + AIM::SyntheticBuilder::EulerFile;

@@ -16,7 +16,6 @@
 QRecentFileList::QRecentFileList(QObject* parent) :
 QObject(parent)
 {
-  // TODO Auto-generated constructor stub
   //std::cout << "QRecentFileList()" << std::endl;
 }
 
@@ -25,7 +24,6 @@ QObject(parent)
 // -----------------------------------------------------------------------------
 QRecentFileList::~QRecentFileList()
 {
-  // TODO Auto-generated destructor stub
  // std::cout << "~QRecentFileList()" << std::endl;
 }
 

@@ -673,10 +673,10 @@ void RepresentationUI::rec_CheckIOFiles()
   this->_verifyPathExists(rec_OutputDir->text(), this->rec_OutputDir);
   CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::Reconstruction,rec_, StatsFile)
   CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::Reconstruction,rec_, MisorientationBinsFile)
-  CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::Reconstruction,rec_, MicroBinsFile)
+  CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::Reconstruction,rec_, MicroTextureFile)
   CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::Reconstruction,rec_, GrainDataFile)
   CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::Reconstruction,rec_, AxisOrientationsFile)
-  CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::Reconstruction,rec_, EulerAnglesFile)
+  CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::Reconstruction,rec_, ODFFile)
   CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::Reconstruction,rec_, AlignmentFile)
 
 
@@ -974,9 +974,9 @@ void RepresentationUI::gg_CheckIOFiles()
 {
   CHECK_QLABEL_INPUT_FILE_EXISTS(AIM::Reconstruction, gg_, StatsFile)
   CHECK_QLABEL_INPUT_FILE_EXISTS(AIM::Reconstruction, gg_, AxisOrientationsFile)
-  CHECK_QLABEL_INPUT_FILE_EXISTS(AIM::Reconstruction, gg_, EulerAnglesFile)
+  CHECK_QLABEL_INPUT_FILE_EXISTS(AIM::Reconstruction, gg_, ODFFile)
   CHECK_QLABEL_INPUT_FILE_EXISTS(AIM::Reconstruction, gg_, MisorientationBinsFile)
-  CHECK_QLABEL_INPUT_FILE_EXISTS(AIM::Reconstruction, gg_, MicroBinsFile)
+  CHECK_QLABEL_INPUT_FILE_EXISTS(AIM::Reconstruction, gg_, MicroTextureFile)
 
   CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::SyntheticBuilder, gg_, CubeFile)
   CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::SyntheticBuilder, gg_, AnalysisFile)
@@ -1101,9 +1101,9 @@ void RepresentationUI::on_gg_GoBtn_clicked()
 
   SANITY_CHECK_QLABEL_FILE(AIM::Reconstruction, gg_, StatsFile)
   SANITY_CHECK_QLABEL_FILE(AIM::Reconstruction, gg_, AxisOrientationsFile)
-  SANITY_CHECK_QLABEL_FILE(AIM::Reconstruction, gg_, EulerAnglesFile)
+  SANITY_CHECK_QLABEL_FILE(AIM::Reconstruction, gg_, ODFFile)
   SANITY_CHECK_QLABEL_FILE(AIM::Reconstruction, gg_, MisorientationBinsFile)
-  SANITY_CHECK_QLABEL_FILE(AIM::Reconstruction, gg_, MicroBinsFile)
+  SANITY_CHECK_QLABEL_FILE(AIM::Reconstruction, gg_, MicroTextureFile)
 
   m_GrainGenerator = GrainGenerator::New(NULL);
   m_GrainGenerator->setInputDirectory(gg_InputDir->text().toStdString() );

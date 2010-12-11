@@ -221,10 +221,13 @@ class AIMCOMMON_EXPORT AIM_H5VtkDataWriter
 
       T* data = const_cast<T*>(&(field_data.front()));
       int num = static_cast<int>(field_data.size() / numComp);
-      err = vtkWriteDataArray(fieldGroupId, data, label, num, numComp);
-      if (err < 0)
+      if(field_data.size() > 0)
       {
-        std::cout << "Error writing dataset " << label << std::endl;
+        err = vtkWriteDataArray(fieldGroupId, data, label, num, numComp);
+        if (err < 0)
+        {
+          std::cout << "Error writing dataset " << label << std::endl;
+        }
       }
       err = H5Gclose(fieldGroupId);
 

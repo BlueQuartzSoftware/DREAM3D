@@ -63,9 +63,12 @@ int main(int argc, char **argv)
     TCLAP::ValueArg<std::string>   inputDir( "i", "inputDir", "Input Directory", false, "", "Input Directory");
     cmd.add(inputDir);
 
-    TCLAP::ValueArg<std::string > outputDir("", "outputDir", "Output Directory", false, "", "Output Directory");
+    TCLAP::ValueArg<std::string> outputDir("", "outputDir", "Output Directory", false, "", "Output Directory");
     cmd.add(outputDir);
-
+#if AIM_HDF5_SUPPORT
+    TCLAP::SwitchArg h5GrainFile("", "h5grain", "Write the HDF5 Grain Visualization File", false);
+    cmd.add(h5GrainFile);
+#endif
     TCLAP::ValueArg<std::string>  angFilePrefix( "f", "angFilePrefix", "Ang File Prefix", false, "", "Ang File Prefix");
     cmd.add(angFilePrefix);
 
@@ -76,22 +79,22 @@ int main(int argc, char **argv)
     cmd.add(zStartIndex);
     TCLAP::ValueArg<int>  zEndIndex( "e", "zEndIndex", "Ending Slice", false, 0, "Ending Slice");
     cmd.add(zEndIndex);
-    TCLAP::ValueArg<double>  resz( "z", "resz", "z resolution of your volume", false, 0.0, "z resolution of your volume");
+    TCLAP::ValueArg<double>  resz( "z", "resz", "z resolution of your volume", false, 0.25, "z resolution of your volume");
     cmd.add(resz);
 
     TCLAP::SwitchArg mergetwinsoption("t", "merge-twins", "Do you want to merge twins", false);
     cmd.add(mergetwinsoption);
 
-    TCLAP::ValueArg<int>  minallowedgrainsize( "g", "minallowedgrainsize", "What is the minimum allowed grain size", false, 0, "What is the minimum allowed grain size");
+    TCLAP::ValueArg<int>  minallowedgrainsize( "g", "minallowedgrainsize", "What is the minimum allowed grain size", false, 50, "What is the minimum allowed grain size");
     cmd.add(minallowedgrainsize);
 
 
-    TCLAP::ValueArg<double>  minseedconfidence( "c", "minseedconfidence", "AWhat is the minimum allowed confidence", false, 0.0, "What is the minimum allowed confidence");
+    TCLAP::ValueArg<double>  minseedconfidence( "c", "minseedconfidence", "What is the minimum allowed confidence", false, 0.1, "What is the minimum allowed confidence");
     cmd.add(minseedconfidence);
 
-    TCLAP::ValueArg<double>  misorientationtolerance( "o", "misorientationtolerance", "What is the misorientation tolerance (degrees)", false, 0.0, "What is the misorientation tolerance (degrees)");
+    TCLAP::ValueArg<double>  misorientationtolerance( "o", "misorientationtolerance", "What is the misorientation tolerance (degrees)", false, 4.0, "What is the misorientation tolerance (degrees)");
     cmd.add(misorientationtolerance);
-    TCLAP::ValueArg<int>  crystruct( "x", "crystruct", "Do you have a HCP (1) or FCC (2) material", false, 0, "Do you have a HCP (1) or FCC (2) material");
+    TCLAP::ValueArg<int>  crystruct( "x", "crystruct", "Do you have a HCP (1) or FCC (2) material", false, 2, "Do you have a HCP (1) or FCC (2) material");
     cmd.add(crystruct);
 
     TCLAP::SwitchArg alreadyformed("a", "alreadyformed", "Have you already formed grains", false);
@@ -118,11 +121,28 @@ int main(int argc, char **argv)
     r->setZEndIndex(zEndIndex.getValue());
     r->setZResolution(resz.getValue());
     r->setMergeTwins(mergetwinsoption.getValue());
+    r->setMergeColonies(false);
     r->setMinAllowedGrainSize(minallowedgrainsize.getValue());
     r->setMinSeedConfidence(minseedconfidence.getValue());
+    r->setDownSampleFactor(1.0);
+    r->setMinSeedImageQuality(50.0);
     r->setMisorientationTolerance(misorientationtolerance.getValue());
+
     r->setCrystalStructure(static_cast<AIM::Reconstruction::CrystalStructure> (crystruct.getValue()));
+    r->setAlignmentMethod(AIM::Reconstruction::Misorientation);
     r->setAlreadyFormed(alreadyformed.getValue());
+
+    r->setWriteVisualizationFile(true);
+    r->setWriteIPFFile(true);
+    r->setWriteDisorientationFile(true);
+    r->setWriteImageQualityFile(true);
+    r->setWriteSchmidFactorFile(true);
+    r->setWriteDownSampledFile(true);
+
+
+#if AIM_HDF5_SUPPORT
+    r->setWriteHDF5GrainFile(h5GrainFile.getValue());
+#endif
 
     r->compute();
     err = r->getErrorCondition();

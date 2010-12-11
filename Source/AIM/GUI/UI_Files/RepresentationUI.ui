@@ -36,7 +36,7 @@
        </size>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="reconstructionTab">
        <attribute name="title">
@@ -315,14 +315,14 @@
              </widget>
             </item>
             <item row="4" column="1">
-             <widget class="QLabel" name="rec_MicroBinsFile">
+             <widget class="QLabel" name="rec_MicroTextureFile">
               <property name="text">
                <string>Micro Texture File</string>
               </property>
              </widget>
             </item>
             <item row="4" column="0">
-             <widget class="QLabel" name="rec_MicroBinsFileIcon">
+             <widget class="QLabel" name="rec_MicroTextureFileIcon">
               <property name="text">
                <string/>
               </property>
@@ -332,14 +332,14 @@
              </widget>
             </item>
             <item row="6" column="1">
-             <widget class="QLabel" name="rec_EulerAnglesFile">
+             <widget class="QLabel" name="rec_ODFFile">
               <property name="text">
                <string>ODF File</string>
               </property>
              </widget>
             </item>
             <item row="6" column="0">
-             <widget class="QLabel" name="rec_EulerAnglesFileIcon">
+             <widget class="QLabel" name="rec_ODFFileIcon">
               <property name="text">
                <string/>
               </property>
@@ -1175,14 +1175,14 @@
              </widget>
             </item>
             <item row="2" column="1">
-             <widget class="QLabel" name="gg_EulerAnglesFile">
+             <widget class="QLabel" name="gg_ODFFile">
               <property name="text">
                <string>EulerAngles</string>
               </property>
              </widget>
             </item>
             <item row="2" column="0">
-             <widget class="QLabel" name="gg_EulerAnglesFileIcon">
+             <widget class="QLabel" name="gg_ODFFileIcon">
               <property name="text">
                <string/>
               </property>
@@ -1228,7 +1228,7 @@
              </widget>
             </item>
             <item row="2" column="0">
-             <widget class="QLabel" name="gg_MicroBinsFileIcon">
+             <widget class="QLabel" name="gg_MicroTextureFileIcon">
               <property name="text">
                <string/>
               </property>
@@ -1238,7 +1238,7 @@
              </widget>
             </item>
             <item row="2" column="1">
-             <widget class="QLabel" name="gg_MicroBinsFile">
+             <widget class="QLabel" name="gg_MicroTextureFile">
               <property name="text">
                <string>MicroBins</string>
               </property>
