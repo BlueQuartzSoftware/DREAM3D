@@ -51,17 +51,14 @@ macro(cmp_InstallationSupport EXE_NAME EXE_DEBUG_EXTENSION EXE_BINARY_DIR appNee
         DEBUG_OUTPUT_NAME ${EXE_NAME}${EXE_DEBUG_EXTENSION}
         RELEASE_OUTPUT_NAME ${EXE_NAME}
     )
-    if ( DEFINED CMP_INSTALL_FILES)
-        if ( ${CMP_INSTALL_FILES} EQUAL 1 )
-            INSTALL(TARGETS ${EXE_NAME} 
-                COMPONENT Applications
-                RUNTIME DESTINATION ./
-                LIBRARY DESTINATION ./ 
-                ARCHIVE DESTINATION ./        
-                BUNDLE DESTINATION ./
-            )   
-        endif()
-    endif()
+
+    INSTALL(TARGETS ${EXE_NAME} 
+        COMPONENT Applications
+        RUNTIME DESTINATION ./
+        LIBRARY DESTINATION ./ 
+        ARCHIVE DESTINATION ./        
+        BUNDLE DESTINATION ./
+    )   
     
     # --------------------------------------------------------------------
     # Get the plugin list from the plugin file
@@ -114,21 +111,16 @@ macro(cmp_ToolInstallationSupport EXE_NAME EXE_DEBUG_EXTENSION EXE_BINARY_DIR)
         RELEASE_OUTPUT_NAME ${EXE_NAME}
     )
     
-    if (APPLE)
-        set(TOOL_INSTALL_LOCATION "bin")
-    else()
-        set(TOOL_INSTALL_LOCATION "bin")
-    endif()
-    
+
     INSTALL(TARGETS ${EXE_NAME} 
-        RUNTIME
-        DESTINATION ${TOOL_INSTALL_LOCATION}
-        COMPONENT Tools
-        LIBRARY DESTINATION ${TOOL_INSTALL_LOCATION} 
-        ARCHIVE DESTINATION lib
-        RUNTIME DESTINATION ${TOOL_INSTALL_LOCATION}
+        COMPONENT Applications
+        RUNTIME DESTINATION ./
+        LIBRARY DESTINATION ./ 
+        ARCHIVE DESTINATION ./        
         BUNDLE DESTINATION ./
     )   
+
+    
     
     #   message(STATUS "Creating Install CMake file for tool application ${EXE_NAME}")
     if (APPLE)
@@ -399,19 +391,12 @@ endmacro()
 #-- Copy all the Qt4 dependent DLLs into the current build directory so that
 #-- one can debug an application or library that depends on Qt4 libraries.
 macro (CMP_COPY_QT4_RUNTIME_LIBRARIES QTLIBLIST)
+    #message(STATUS "CMP_COPY_QT4_RUNTIME_LIBRARIES")
     if (MSVC)
         if (DEFINED QT_QMAKE_EXECUTABLE)
             set(TYPE "d")
             FOREACH(qtlib ${QTLIBLIST})
                 GET_FILENAME_COMPONENT(QT_DLL_PATH_tmp ${QT_QMAKE_EXECUTABLE} PATH)
-                INSTALL(FILES ${QT_DLL_PATH_tmp}/${qtlib}${type}d4.dll 
-                    DESTINATION ./
-                    CONFIGURATIONS Debug
-                    COMPONENT Applications)
-                INSTALL(FILES ${QT_DLL_PATH_tmp}/${qtlib}4.dll 
-                    DESTINATION ./
-                    CONFIGURATIONS Release
-                    COMPONENT Applications)
                 add_custom_target(ZZ_${qtlib}-Debug-Copy ALL
                             COMMAND ${CMAKE_COMMAND} -E copy_if_different ${QT_DLL_PATH_tmp}/${qtlib}${TYPE}4.dll
                             ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Debug/ 
@@ -426,6 +411,32 @@ macro (CMP_COPY_QT4_RUNTIME_LIBRARIES QTLIBLIST)
     endif()
 endmacro()
 
+# --------------------------------------------------------------------
+#
+#
+macro (CMP_QT_LIBRARIES_INSTALL_RULES QTLIBLIST destination)
+   # message(STATUS "CMP_COPY_QT4_RUNTIME_LIBRARIES")
+    if (MSVC)
+        if (DEFINED QT_QMAKE_EXECUTABLE)
+            set(TYPE "d")
+            FOREACH(qtlib ${QTLIBLIST})
+                
+                GET_FILENAME_COMPONENT(QT_DLL_PATH_tmp ${QT_QMAKE_EXECUTABLE} PATH)
+                INSTALL(FILES ${QT_DLL_PATH_tmp}/${qtlib}${type}d4.dll 
+                    DESTINATION "${destination}"
+                    CONFIGURATIONS Debug
+                    COMPONENT Applications)
+                INSTALL(FILES ${QT_DLL_PATH_tmp}/${qtlib}4.dll 
+                    DESTINATION "${destination}"
+                    CONFIGURATIONS Release
+                    COMPONENT Applications)   
+                message(STATUS "Generating Install Rule for DLL Library ${QT_DLL_PATH_tmp}/${qtlib}4.dll")
+                message(STATUS "Generating Install Rule for DLL Library ${QT_DLL_PATH_tmp}/${qtlib}d4.dll")       
+            ENDFOREACH(qtlib)
+        endif(DEFINED QT_QMAKE_EXECUTABLE)
+    endif()
+endmacro()
+
 #
 # --------------------------------------------------------------------
 # This macro generates install rules for Visual Studio builds so that
@@ -433,6 +444,7 @@ endmacro()
 # properly installed with your project.
 # --------------------------------------------------------------------
 MACRO (CMP_LIBRARIES_INSTALL_RULES _libraryList destination)
+  #  message(STATUS "CMP_LIBRARIES_INSTALL_RULES")
   set (_libraryList ${_libraryList})
   SET (TYPES Debug Release)
   if (MSVC)
@@ -452,17 +464,17 @@ MACRO (CMP_LIBRARIES_INSTALL_RULES _libraryList destination)
          # message(STATUS "${upperlib}_LIBRARY_DLL_${TYPE}: ${${upperlib}_LIBRARY_DLL_${TYPE}}")
           mark_as_advanced(${upperlib}_LIBRARY_DLL_${TYPE})
           if ( ${${upperlib}_LIBRARY_DLL_${TYPE}} STREQUAL  "${upperlib}_LIBRARY_DLL_${TYPE}-NOTFOUND")
-            # message(STATUS "A Companion DLL for ${upperlib}_LIBRARY_${TYPE} was NOT found which usually means"
-            #                    " that the library was NOT built as a DLL. I looked in the "
-            #                    " following locations:  ${lib_path}\n  ${lib_path}/..\n  ${lib_path}/../bin")
+             message(STATUS "A Companion DLL for ${upperlib}_LIBRARY_${TYPE} was NOT found which usually means"
+                                " that the library was NOT built as a DLL. I looked in the "
+                                " following locations:  ${lib_path}\n  ${lib_path}/..\n  ${lib_path}/../bin")
           else()
              # set(${upperlib}_LIBRARY_DLL_${TYPE}  ${${upperlib}_LIBRARY_DLL_${TYPE}}/${lib_name}.dll)
              # message(STATUS "${upperlib}_LIBRARY_DLL_${TYPE}: ${${upperlib}_LIBRARY_DLL_${TYPE}}")
-              message(STATUS "Generating Install Rule for DLL File for ${upperlib}_LIBRARY_${TYPE}")
+              message(STATUS "Generating Install Rule for DLL File for ${${upperlib}_LIBRARY_${TYPE}}")
               INSTALL(FILES ${${upperlib}_LIBRARY_DLL_${TYPE}}
                 DESTINATION ${destination} 
                 CONFIGURATIONS ${BTYPE} 
-                COMPONENT Runtime)
+                COMPONENT Applications)
           endif()
         
         ENDFOREACH(BTYPE ${TYPES})

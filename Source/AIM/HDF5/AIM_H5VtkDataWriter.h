@@ -201,7 +201,11 @@ class AIMCOMMON_EXPORT AIM_H5VtkDataWriter
                        const char* label,
                        int numComp)
     {
-
+      if (field_data.size() == 0 )
+      {
+        std::cout << "Field Data '" << label << "' has a Zero length array. No data is written" << std::endl;
+        return -1;
+      }
       hid_t gid = H5Gopen(m_FileId, hdfPath.c_str() );
       int err = H5Utilities::createGroupsFromPath(H5_FIELD_DATA_GROUP_NAME, gid);
       if (err < 0)

@@ -34,13 +34,15 @@
 #include <MXA/Common/MXASetGetMacros.h>
 
 #include "AIM/Common/AIMCommonConfiguration.h"
+#include "AIM/Common/Constants.h"
 #include "AIM/Common/Grain.h"
 #include "AIM/Common/Voxel.h"
 #include "AIM/Common/Bin.h"
 #include "AIM/Common/AIMRandomNG.h"
 #include "AIM/ANG/AngFileHelper.h"
+#if AIM_HDF5_SUPPORT
 #include "AIM/Reconstruction/H5ReconStatsReader.h"
-
+#endif
 
 using namespace std;
 

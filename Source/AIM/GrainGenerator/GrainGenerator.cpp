@@ -13,7 +13,9 @@
 #include "AIM/ANG/AngDirectoryPatterns.h"
 #include "AIM/ANG/AngReader.h"
 #include "AIM/ANG/AngFileHelper.h"
+#if AIM_HDF5_SUPPORT
 #include "AIM/Reconstruction/H5ReconStatsReader.h"
+#endif
 
 #include <MXA/Utilities/MXADir.h>
 
