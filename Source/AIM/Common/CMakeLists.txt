@@ -135,9 +135,6 @@ include_directories( ${PROJECT_CODE_DIR} )
 #-- Add a library for the AIMCommon Code
 add_library(AIMCommon ${LIB_TYPE} ${AIMCommon_SRCS} )
 target_link_libraries(AIMCommon ${AIMCOMMON_DEP_LIBS} )
-if (AIM_USE_HDF5)
-    CMP_COPY_DEPENDENT_LIBRARIES("hdf5")
-endif()
 LibraryProperties( AIMCommon ${EXE_DEBUG_EXTENSION} )
 
 

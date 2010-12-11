@@ -196,7 +196,7 @@ IF(Q_WS_WIN)
 ENDIF(Q_WS_WIN)
 
 #cmp_IDE_SOURCE_PROPERTIES ("ConfiguredFiles" "${AIMRepresentation_BINARY_DIR}/MXA/MXAConfiguration.h" "")
-cmp_IDE_SOURCE_PROPERTIES ("ConfiguredFiles" "${AIMRepresentation_BINARY_DIR}/AIM/Common/AIMVersion.h" ""  ${CMP_INSTALL_FILES})  
+#cmp_IDE_SOURCE_PROPERTIES ("ConfiguredFiles" "${AIMRepresentation_BINARY_DIR}/AIM/Common/AIMVersion.h" ""  ${CMP_INSTALL_FILES})  
 
 # ---------- Build the Viewer Application  ----------------------
 ADD_EXECUTABLE( ${PROJECT_NAME} ${GUI_TYPE} ${Representation_PROJECT_SRCS} )

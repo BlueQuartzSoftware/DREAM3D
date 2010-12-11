@@ -936,7 +936,7 @@ int SurfaceMeshFunc::get_number_case0_triangles(int *ae, int nedge)
   int *burnt_list;
   int *count;
   int numN, numTri, tnumTri;
-  int lid;
+//  int lid;
   burnt = new int[nedge];
   burnt_list = new int[nedge];
   // initialize burn flags for face edges...
@@ -2978,10 +2978,10 @@ void SurfaceMeshFunc::smooth_boundaries (int nNodes, int nTriangles, string Node
 	double tNx, tNy, tNz;
 	double BCx, BCy, BCz;
 	double t1, t2, t3;
-	double Rx, Ry, Rz;
-	double theta, costheta, sintheta;
-	double rotmat[3][3];
-	double ax, ay, az;
+//	double Rx, Ry, Rz;
+//	double theta, costheta, sintheta;
+//	double rotmat[3][3];
+//	double ax, ay, az;
 	vector<vector<vector<int> > > boundarytrianglelist;
 	vector<vector<vector<double> > > boundarynormals;
 	boundarytrianglelist.resize(numgrains+1);

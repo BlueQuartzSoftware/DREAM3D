@@ -11,7 +11,7 @@
 # This CMake code sets up for CPack to be used to generate native installers
 # ------------------------------------------------------------------------------
 INCLUDE (${CMP_INSTALLATION_SUPPORT_SOURCE_DIR}/InstallMSVCLibraries.cmake)
-SET(CPACK_PACKAGE_DESCRIPTION_SUMMARY "GUI Application that runs various image processing algorithms through a plugin interface.")
+SET(CPACK_PACKAGE_DESCRIPTION_SUMMARY "AIMRepresentation Tools")
 SET(CPACK_PACKAGE_VENDOR "BlueQuartz Software, Michael A. Jackson")
 SET(CPACK_PACKAGE_DESCRIPTION_FILE "${PROJECT_BINARY_DIR}/ReadMe.txt")
 SET(CPACK_RESOURCE_FILE_LICENSE "${PROJECT_BINARY_DIR}/License.txt")
@@ -24,14 +24,13 @@ set(CPACK_COMPONENT_APPLICATIONS_DISPLAY_NAME "Applications")
 set(CPACK_COMPONENT_APPLICATIONS_DESCRIPTION  "The Gui Versions of the AIMRepresentation Software Tools Suite")
 set(CPACK_COMPONENT_APPLICATIONS_REQUIRED 1)
 set(CPACK_PACKAGE_EXECUTABLES
-    AIMRepresentation AIMRepresentation
+    Representation Representation Reconstruction Reconstruction SurfaceMesh SurfaceMesh
 )
 
 IF (APPLE)
   set(CPACK_PACKAGE_FILE_NAME "${PROJECT_NAME}-OSX")
 elseif(WIN32)
-	if ( ${CMAKE_SIZEOF_VOID_P} EQUAL 8)
-	
+	if ( "${CMAKE_SIZEOF_VOID_P}" EQUAL "8" )
 		set(CPACK_PACKAGE_FILE_NAME "${PROJECT_NAME}-Win64")
 	else()
 		set(CPACK_PACKAGE_FILE_NAME "${PROJECT_NAME}-Win32")
@@ -50,7 +49,7 @@ IF(WIN32 AND NOT UNIX)
   SET(CPACK_NSIS_URL_INFO_ABOUT "http:\\\\\\\\www.bluequartz.net")
   SET(CPACK_NSIS_CONTACT "mike.jackson@bluequartz.net")
   SET(CPACK_NSIS_MODIFY_PATH ON)
-  SET(CPACK_GENERATOR "ZIP")
+  SET(CPACK_GENERATOR "NSIS")
   SET(CPACK_BINARY_ZIP "ON")
   SET(CPACK_PACKAGE_INSTALL_REGISTRY_KEY "AIMRepresentation Software Tools")
 ELSE(WIN32 AND NOT UNIX)
