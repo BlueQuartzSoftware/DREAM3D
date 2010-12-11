@@ -42,7 +42,7 @@
 #include "AIM/ANG/AngFileHelper.h"
 #include "AIM/ANG/AngDirectoryPatterns.h"
 #if AIM_HDF5_SUPPORT
-#include "AIM/Reconstruction/H5ReconstructionIO.h"
+#include "AIM/Reconstruction/H5ReconStatsWriter.h"
 #endif
 
 using namespace std;
@@ -175,8 +175,8 @@ public:
 	void align_sections(const std::string &filename );
 
 #if AIM_HDF5_SUPPORT
-void volume_stats(H5ReconstructionIO::Pointer h5io);
-void volume_stats2D(H5ReconstructionIO::Pointer h5io);
+void volume_stats(H5ReconStatsWriter::Pointer h5io);
+void volume_stats2D(H5ReconStatsWriter::Pointer h5io);
 #else
 void volume_stats(const std::string &statsfile,
                                       const std::string &misorientationFile,

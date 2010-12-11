@@ -22,7 +22,7 @@
 
 #if AIM_HDF5_SUPPORT
 #include "AIM/HDF5/AIM_H5VtkDataWriter.h"
-#include "AIM/Reconstruction/H5ReconstructionIO.h"
+#include "AIM/Reconstruction/H5ReconStatsWriter.h"
 #endif
 
 
@@ -162,12 +162,17 @@ void Reconstruction::compute()
   m->initialize(m_ZStartIndex, m_ZEndIndex, m_ZResolution, m_MergeTwins, m_MergeColonies, m_MinAllowedGrainSize,
 	                   m_MinSeedConfidence, m_DownSampleFactor, m_MinSeedImageQuality, m_MisorientationTolerance, m_CrystalStructure, m_AlignmentMethod, m_AlreadyFormed);
 
+#if AIM_HDF5_SUPPORT
+  // Create a new HDF5 Results file by overwriting any HDF5 file that may be in the way
+  std::string hdf5ResultsFile = m_OutputDirectory + MXADir::Separator + AIM::Reconstruction::HDF5ResultsFile;
+  H5ReconStatsWriter::Pointer h5io = H5ReconStatsWriter::New(hdf5ResultsFile);
+#else
   std::string statsFile = m_OutputDirectory + MXADir::Separator + AIM::Reconstruction::StatsFile;
   std::string microBinsFile = m_OutputDirectory + MXADir::Separator + AIM::Reconstruction::MicroTextureFile;
   std::string misorientationFile = m_OutputDirectory + MXADir::Separator + AIM::Reconstruction::MisorientationBinsFile;
-
   std::string axisFile = m_OutputDirectory + MXADir::Separator + AIM::Reconstruction::AxisOrientationsFile;
   std::string eulerFile = m_OutputDirectory + MXADir::Separator + AIM::Reconstruction::ODFFile;
+#endif
   std::string graindataFile = m_OutputDirectory + MXADir::Separator + AIM::Reconstruction::GrainDataFile;
   std::string alignmentFile = m_OutputDirectory + MXADir::Separator + AIM::Reconstruction::AlignmentFile;
 
@@ -179,12 +184,6 @@ void Reconstruction::compute()
   std::string reconDSVisFile = m_OutputDirectory + MXADir::Separator + AIM::Reconstruction::DownSampledVizFile;
 
   std::string hdf5GrainFile = m_OutputDirectory + MXADir::Separator + AIM::Reconstruction::HDF5GrainFile;
-  std::string hdf5ResultsFile = m_OutputDirectory + MXADir::Separator + AIM::Reconstruction::HDF5ResultsFile;
-
-#if AIM_HDF5_SUPPORT
-  // Create a new HDF5 Results file by overwriting any HDF5 file that may be in the way
-  H5ReconstructionIO::Pointer h5io = H5ReconstructionIO::New(hdf5ResultsFile);
-#endif
 
   if (m_AlreadyFormed == true)
   {

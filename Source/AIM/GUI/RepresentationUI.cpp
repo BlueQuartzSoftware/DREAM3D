@@ -961,6 +961,23 @@ void RepresentationUI::gg_SetupGui()
   }
   messageLabel->setText(msg);
 
+
+#if AIM_HDF5_SUPPORT
+  gg_StatsFile->setVisible(false);
+  gg_AxisOrientationsFile->setVisible(false);
+  gg_ODFFile->setVisible(false);
+  gg_MisorientationBinsFile->setVisible(false);
+  gg_MicroTextureFile->setVisible(false);
+  gg_StatsFileIcon->setVisible(false);
+  gg_AxisOrientationsFileIcon->setVisible(false);
+  gg_ODFFileIcon->setVisible(false);
+  gg_MisorientationBinsFileIcon->setVisible(false);
+  gg_MicroTextureFileIcon->setVisible(false);
+#else
+  gg_HDF5ResultsFile->setVisible(false);
+  gg_HDF5ResultsFileIcon->setVisible(false);
+#endif
+
   m_WidgetList << gg_InputDir << gg_InputDirBtn << gg_OutputDir << gg_OutputDirBtn;
   m_WidgetList << gg_CrystalStructure << gg_NumGrains << gg_XResolution << gg_YResolution << gg_ZResolution << gg_FractionPrecipitates;
   m_WidgetList << gg_OverlapAllowed << gg_OverlapAssignment << gg_ShapeClass << gg_Precipitates << gg_AlreadyFormed;
@@ -972,12 +989,15 @@ void RepresentationUI::gg_SetupGui()
 // -----------------------------------------------------------------------------
 void RepresentationUI::gg_CheckIOFiles()
 {
+#if AIM_HDF5_SUPPORT
+  CHECK_QLABEL_INPUT_FILE_EXISTS(AIM::Reconstruction, gg_, HDF5ResultsFile)
+#else
   CHECK_QLABEL_INPUT_FILE_EXISTS(AIM::Reconstruction, gg_, StatsFile)
   CHECK_QLABEL_INPUT_FILE_EXISTS(AIM::Reconstruction, gg_, AxisOrientationsFile)
   CHECK_QLABEL_INPUT_FILE_EXISTS(AIM::Reconstruction, gg_, ODFFile)
   CHECK_QLABEL_INPUT_FILE_EXISTS(AIM::Reconstruction, gg_, MisorientationBinsFile)
   CHECK_QLABEL_INPUT_FILE_EXISTS(AIM::Reconstruction, gg_, MicroTextureFile)
-
+#endif
   CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::SyntheticBuilder, gg_, CubeFile)
   CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::SyntheticBuilder, gg_, AnalysisFile)
   CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::SyntheticBuilder, gg_, EulerFile)

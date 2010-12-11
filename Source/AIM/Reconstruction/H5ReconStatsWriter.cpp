@@ -28,7 +28,7 @@
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "H5ReconstructionIO.h"
+#include "H5ReconStatsWriter.h"
 
 #include "AIM/Common/Constants.h"
 #include "AIM/Common/Bin.h"
@@ -50,23 +50,23 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-H5ReconstructionIO::H5ReconstructionIO()
+H5ReconStatsWriter::H5ReconStatsWriter()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-H5ReconstructionIO::~H5ReconstructionIO()
+H5ReconStatsWriter::~H5ReconStatsWriter()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-H5ReconstructionIO::Pointer H5ReconstructionIO::New(const std::string &filename)
+H5ReconStatsWriter::Pointer H5ReconStatsWriter::New(const std::string &filename)
 {
-  Pointer sharedPtr(new H5ReconstructionIO);
+  Pointer sharedPtr(new H5ReconStatsWriter);
   sharedPtr->setFileName(filename);
   hid_t fileId = H5Utilities::createFile(filename);
   if (fileId < 0)
@@ -84,7 +84,7 @@ H5ReconstructionIO::Pointer H5ReconstructionIO::New(const std::string &filename)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5ReconstructionIO::writeStatsData(int maxdiameter, int mindiameter,
+int H5ReconStatsWriter::writeStatsData(int maxdiameter, int mindiameter,
                                        double avglogdiam, double sdlogdiam, double actualgrains,
                                        const std::vector<std::vector<int> > &neighborhood,
                                        const std::vector<std::vector<double> > &svbovera,
@@ -244,7 +244,7 @@ int H5ReconstructionIO::writeStatsData(int maxdiameter, int mindiameter,
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5ReconstructionIO::writeMisorientationBinsData(double* misobins, size_t nElements)
+int H5ReconStatsWriter::writeMisorientationBinsData(double* misobins, size_t nElements)
 {
   herr_t err = 0;
   herr_t retErr = 0;
@@ -265,7 +265,7 @@ int H5ReconstructionIO::writeMisorientationBinsData(double* misobins, size_t nEl
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5ReconstructionIO::writeMicroTextureData(double* microbin, size_t nElements, double actualgrains)
+int H5ReconStatsWriter::writeMicroTextureData(double* microbin, size_t nElements, double actualgrains)
 {
   herr_t err = 0;
   herr_t retErr = 0;
@@ -294,7 +294,7 @@ int H5ReconstructionIO::writeMicroTextureData(double* microbin, size_t nElements
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5ReconstructionIO::writeAxisOrientationData(Bin* axisodf,
+int H5ReconStatsWriter::writeAxisOrientationData(Bin* axisodf,
                                                  AIM::Reconstruction::CrystalStructure crystruct,
                                                  double totalaxes)
 {
@@ -329,7 +329,7 @@ int H5ReconstructionIO::writeAxisOrientationData(Bin* axisodf,
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5ReconstructionIO::writeODFData(AIM::Reconstruction::CrystalStructure crystruct,
+int H5ReconStatsWriter::writeODFData(AIM::Reconstruction::CrystalStructure crystruct,
                                      Bin* eulerodf, double totalvol)
 {
   herr_t err = 0;
