@@ -43,6 +43,13 @@ IF (BUILD_SHARED_LIBS)
 ENDIF (BUILD_SHARED_LIBS)
 
 
+set(HDF5_SRCS "")
+set(HDF5_HDRS "")
+set(AIM_HDF5_SUPPORT "0")
+if (AIM_USE_HDF5)
+    set(AIM_HDF5_SUPPORT "1")
+endif()
+
 SET (AIMCommon_SRCS
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/GrainGeneratorFunc.cpp
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/SurfaceMeshFunc.cpp
@@ -77,35 +84,17 @@ SET (AIMCommon_HDRS
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Constants.h
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/VTKFileUtils.h
 )
-cmp_IDE_SOURCE_PROPERTIES( "Source/AIM/Common" "${AIMCommon_HDRS}" "${AIMCommon_SRCS}" ${CMP_INSTALL_FILES})
 
-
-set (ANG_SRCS
-    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/ANG/AngDirectoryPatterns.cpp
-    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/ANG/AngFileHelper.cpp
-    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/ANG/AngReader.cpp
- )
- 
-set (ANG_HDRS
-    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/ANG/AngDirectoryPatterns.h
-    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/ANG/AngFileHelper.h
-    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/ANG/AngReader.h
-    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/ANG/AngConstants.h
-    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/ANG/AngHeaderEntry.h
-)
-cmp_IDE_SOURCE_PROPERTIES( "Source/AIM/ANG" "${ANG_HDRS}" "${ANG_SRCS}" ${CMP_INSTALL_FILES})
-
-set(HDF5_SRCS "")
-set(HDF5_HDRS "")
-set(AIM_HDF5_SUPPORT "0")
+# --------------------------------------------------------------------
 if (AIM_USE_HDF5)
-    set(AIM_HDF5_SUPPORT "1")
-    SET (HDF5_SRCS
+    SET (AIMCommon_SRCS
+        ${AIMCommon_SRCS}
         ${AIMRepresentation_SOURCE_DIR}/Source/AIM/HDF5/AIM_H5VtkDataWriter.cpp
         ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Reconstruction/H5ReconStatsWriter.cpp
         ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Reconstruction/H5ReconStatsReader.cpp
         )
-    SET (HDF5_HDRS
+    SET (AIMCommon_HDRS
+        ${AIMCommon_HDRS}
         ${AIMRepresentation_SOURCE_DIR}/Source/AIM/HDF5/AIM_H5VtkDataWriter.h
         ${AIMRepresentation_SOURCE_DIR}/Source/AIM/HDF5/VTKH5Constants.h
         ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Reconstruction/H5ReconStatsWriter.h
@@ -116,13 +105,16 @@ if (AIM_USE_HDF5)
     cmp_IDE_SOURCE_PROPERTIES( "Source/AIM/HDF5" "${HDF5_HDRS}" "${HDF5_SRCS}" ${CMP_INSTALL_FILES})
 endif()
 
+cmp_IDE_SOURCE_PROPERTIES( "Source/AIM/Common" "${AIMCommon_HDRS}" "${AIMCommon_SRCS}" ${CMP_INSTALL_FILES})
+
+include (${AIMRepresentation_SOURCE_DIR}/Source/AIM/ANG/Sources.cmake)
+
+
 set (AIMCommon_SRCS
     ${AIMCommon_SRCS}
     ${AIMCommon_HDRS}
     ${ANG_SRCS}
     ${ANG_HDRS}
-    ${HDF5_SRCS}
-    ${HDF5_HDRS}
     )
 
 configure_file(${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/AIMCommonConfiguration.h.in
