@@ -37,12 +37,14 @@ m_NumberOfElements(0), m_ManageMemory(true)
   m_Phi = NULL;
   m_Phi2 = NULL;
   m_Iq = NULL;
-  m_Iq2 = NULL;
   m_Ci = NULL;
   m_PhaseData = NULL;
   m_X = NULL;
   m_Y = NULL;
+  m_D1 = NULL;
+  m_D2 = NULL;
 
+  m_NumFields = 8;
   // Initialize the map of header key to header value
   m_Headermap[TSL::OIM::TEMPIXPerUM] = AngHeaderEntry<float>::NewHeaderEntry(TSL::OIM::TEMPIXPerUM);
   m_Headermap[TSL::OIM::XStar] = AngHeaderEntry<float>::NewHeaderEntry(TSL::OIM::XStar);
@@ -101,21 +103,23 @@ void AngReader::initPointers(size_t numElements)
   m_Phi = allocateArray<float > (numElements);
   m_Phi2 = allocateArray<float > (numElements);
   m_Iq = allocateArray<float > (numElements);
-  m_Iq2 = allocateArray<float > (numElements);
   m_Ci = allocateArray<float > (numElements);
   m_PhaseData = allocateArray<float > (numElements);
   m_X = allocateArray<float > (numElements);
   m_Y = allocateArray<float > (numElements);
+  m_D1 = allocateArray<float > (numElements);
+  m_D2 = allocateArray<float > (numElements);
 
   ::memset(m_Phi1, 0, numBytes);
   ::memset(m_Phi, 0, numBytes);
   ::memset(m_Phi2, 0, numBytes);
   ::memset(m_Iq, 0, numBytes);
-  ::memset(m_Iq2, 0, numBytes);
   ::memset(m_Ci, 0, numBytes);
   ::memset(m_PhaseData, 0, numBytes);
   ::memset(m_X, 0, numBytes);
   ::memset(m_Y, 0, numBytes);
+  ::memset(m_D1, 0, numBytes);
+  ::memset(m_D2, 0, numBytes);
 }
 
 // -----------------------------------------------------------------------------
@@ -127,11 +131,12 @@ void AngReader::deletePointers()
   this->deallocateArrayData<float > (m_Phi);
   this->deallocateArrayData<float > (m_Phi2);
   this->deallocateArrayData<float > (m_Iq);
-  this->deallocateArrayData<float > (m_Iq2);
   this->deallocateArrayData<float > (m_Ci);
   this->deallocateArrayData<float > (m_PhaseData);
   this->deallocateArrayData<float > (m_X);
   this->deallocateArrayData<float > (m_Y);
+  this->deallocateArrayData<float > (m_D1);
+  this->deallocateArrayData<float > (m_D2);
 }
 
 // -----------------------------------------------------------------------------
@@ -149,11 +154,14 @@ int AngReader::readHeaderOnly()
     return -100;
   }
 
+  m_FileHeaderData.clear();
+
   while (!in.eof() && !m_headerComplete)
   {
     ::memset(buf, 0, kBufferSize);
     in.getline(buf, kBufferSize);
     parseHeaderLine(buf, kBufferSize);
+    m_FileHeaderData.append(buf);
   }
   return err;
 }
@@ -174,11 +182,15 @@ int AngReader::readFile()
     return -100;
   }
 
+  m_FileHeaderData.clear();
   while (!in.eof() && !m_headerComplete)
   {
     ::memset(buf, 0, kBufferSize);
     in.getline(buf, kBufferSize);
     parseHeaderLine(buf, kBufferSize);
+    if (m_headerComplete == false) {
+      m_FileHeaderData.append(buf);
+    }
   }
 
   // Delete any currently existing pointers
@@ -190,7 +202,6 @@ int AngReader::readFile()
 
   int nOddCols = getNumOddCols();
   int nEvenCols = getNumEvenCols();
- // int nCols = getNumCols();
   int nRows = getNumRows();
 
   if (nRows < 1)
@@ -216,7 +227,7 @@ int AngReader::readFile()
 
   initPointers(numElements);
 
-  if (NULL == m_Phi1 || NULL == m_Phi || NULL == m_Phi2 || NULL == m_Iq || NULL == m_Iq2 || NULL == m_Ci || NULL == m_PhaseData || m_X == NULL || m_Y == NULL)
+  if (NULL == m_Phi1 || NULL == m_Phi || NULL == m_Phi2 || NULL == m_Iq || NULL == m_D1 || NULL == m_Ci || NULL == m_PhaseData || m_X == NULL || m_Y == NULL)
   {
     return -1;
   }
@@ -240,6 +251,14 @@ int AngReader::readFile()
   {
     std::cout << "Premature End Of File reached while reading the .ang file.\n NumRows=" << nRows << "nEvenCols=" << nEvenCols << " Total Data Points Read="
         << counter << std::endl;
+  }
+  if (m_NumFields < 10)
+  {
+    this->deallocateArrayData<float > (m_D2);
+  }
+  if (m_NumFields < 9)
+  {
+    this->deallocateArrayData<float > (m_D1);
   }
   return err;
 }
@@ -323,7 +342,7 @@ void AngReader::readData(const std::string &line, float xMaxValue, float yMaxVal
    */
   float p1, p, p2, x, y, iqual, conf, ph, d1, d2;
 
-  sscanf(line.c_str(), "%f %f %f %f %f %f %f %f %f %f", &p1, &p,&p2, &x, &y, &iqual, &conf, &ph, &d1, &d2);
+  m_NumFields = sscanf(line.c_str(), "%f %f %f %f %f %f %f %f %f %f", &p1, &p,&p2, &x, &y, &iqual, &conf, &ph, &d1, &d2);
 
   // Do we transform the data
   if (m_UserOrigin == UpperRightOrigin)
@@ -380,10 +399,16 @@ void AngReader::readData(const std::string &line, float xMaxValue, float yMaxVal
   m_Phi[offset] = p;
   m_Phi2[offset] = p2;
   m_Iq[offset] = iqual;
-  m_Iq2[offset] = d1;
   m_Ci[offset] = conf;
   m_PhaseData[offset] = ph;
   m_X[offset] = x;
   m_Y[offset] = y;
+  if (m_NumFields > 8) {
+    m_D1[offset] = d1;
+  }
+  if (m_NumFields > 9)
+  {
+    m_D2[offset] = d2;
+  }
 }
 

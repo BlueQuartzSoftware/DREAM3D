@@ -23,6 +23,7 @@
 #if AIM_HDF5_SUPPORT
 #include "AIM/HDF5/AIM_H5VtkDataWriter.h"
 #include "AIM/Reconstruction/H5ReconStatsWriter.h"
+#include "AIM/ANG/H5AngImporter.h"
 #endif
 
 
@@ -161,6 +162,15 @@ void Reconstruction::compute()
   m->setDirectoryPattern(p);
   m->initialize(m_ZStartIndex, m_ZEndIndex, m_ZResolution, m_MergeTwins, m_MergeColonies, m_MinAllowedGrainSize,
 	                   m_MinSeedConfidence, m_DownSampleFactor, m_MinSeedImageQuality, m_MisorientationTolerance, m_CrystalStructure, m_AlignmentMethod, m_AlreadyFormed);
+
+  H5AngImporter::Pointer h5importer = H5AngImporter::New();
+  h5importer->setOutputFile("/tmp/H5AngFile.h5ang");
+  h5importer->setDirectoryPattern(p);
+  h5importer->setZIndexStart(m_ZStartIndex);
+  h5importer->setZIndexEnd(m_ZEndIndex);
+  h5importer->setZResolution(m_ZResolution);
+  err = h5importer->run();
+
 
 #if AIM_HDF5_SUPPORT
   // Create a new HDF5 Results file by overwriting any HDF5 file that may be in the way

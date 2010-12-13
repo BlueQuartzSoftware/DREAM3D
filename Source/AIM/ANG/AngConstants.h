@@ -39,7 +39,6 @@
 #define ANG_Y_STEP            "YSTEP"
 #define ANG_NCOLS_ODD         "NCOLS_ODD"
 #define ANG_NCOLS_EVEN        "NCOLS_EVEN"
-//#define ANG_NCOLS             "NCOLS"
 #define ANG_NROWS             "NROWS"
 #define ANG_OPERATOR          "OPERATOR"
 #define ANG_SAMPLE_ID         "SAMPLEID"
@@ -53,9 +52,11 @@
 #define ANG_PHI2 "Phi2"
 #define ANG_IMAGE_QUALITY "Image Quality"
 #define ANG_CONFIDENCE_INDEX "Confidence Index"
-#define ANG_PHASE_DATA "Phase"
+#define ANG_PHASE_DATA "PhaseData"
 #define ANG_X_POSITION "X Position"
 #define ANG_Y_POSITION "Y Position"
+#define ANG_D1 "D1"
+#define ANG_D2 "D2"
 #define ANG_Z_STEP "ZStep"
 #define ANG_Z_POS "ZPos"
 #define ANG_Z_MAX "ZMax"
@@ -100,6 +101,8 @@ namespace TSL {
    const std::string PhaseData(ANG_PHASE_DATA);
    const std::string XPosition(ANG_X_POSITION);
    const std::string YPosition(ANG_Y_POSITION);
+   const std::string D1(ANG_D1);
+   const std::string D2(ANG_D2);
 
    const std::string SquareGrid(ANG_SQUARE_GRID);
    const std::string HexGrid(ANG_HEX_GRID);

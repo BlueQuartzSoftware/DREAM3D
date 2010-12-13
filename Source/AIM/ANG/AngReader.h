@@ -107,7 +107,7 @@
 * @date Mar 1, 2010
 * @version 1.0
 */
-class AngReader
+class AIMCOMMON_EXPORT AngReader
 {
   public:
     AngReader();
@@ -127,9 +127,10 @@ class AngReader
     angStringProperty_old( FileName )
     angInstanceProperty_old(size_t, NumberOfElements);
 
-    /** @brief Header Values from the TSL ang file */
+    std::string getCompleteHeader() { return m_FileHeaderData; }
 
   public:
+    /** @brief Header Values from the TSL ang file */
 
     angInstanceProperty(AngHeaderEntry<float>, float, TEMpixPerum, TSL::OIM::TEMPIXPerUM)
     angInstanceProperty(AngHeaderEntry<float>, float, XStar, TSL::OIM::XStar)
@@ -153,7 +154,6 @@ class AngReader
     angInstanceProperty(AngHeaderEntry<float>, float, ZMax, TSL::OIM::ZMax) // NOT actually in the file, but may be needed
     angInstanceProperty(AngHeaderEntry<int>, int, NumOddCols, TSL::OIM::NColsOdd)
     angInstanceProperty(AngHeaderEntry<int>, int, NumEvenCols, TSL::OIM::NColsEven)
- //   angInstanceProperty(AngHeaderEntry<int>, int, NumCols, TSL::OIM::NCols)
     angInstanceProperty(AngHeaderEntry<int>, int, NumRows, TSL::OIM::NRows)
     angInstanceProperty(AngStringHeaderEntry, std::string, OIMOperator, TSL::OIM::Operator)
     angInstanceProperty(AngStringHeaderEntry, std::string, SampleID, TSL::OIM::SampleId)
@@ -184,9 +184,11 @@ class AngReader
     float* getXPosPointer() { return m_X; }
     float* getYPosPointer() { return m_Y; }
     float* getImageQualityPointer() { return m_Iq; }
-    float* getImageQuality2Pointer() { return m_Iq2; }
+    float* getImageQuality2Pointer() { return m_D1; }
     float* getConfidenceIndexPointer() { return m_Ci; }
     float* getPhasePointer() { return m_PhaseData; }
+    float* getD1Pointer() { return m_D1; }
+    float* getD2Pointer() { return m_D1; }
 
 protected:
 
@@ -216,13 +218,17 @@ private:
     float* m_Phi;
     float* m_Phi2;
     float* m_Iq;
-    float* m_Iq2;
     float* m_Ci;
     float* m_PhaseData;
     float* m_X;
     float* m_Y;
+    float* m_D1;
+    float* m_D2;
     bool m_ManageMemory;  // We are going to forcibly manage the memory. There is currently NO option otherwise.
     bool m_headerComplete;
+    int m_NumFields;
+
+    std::string m_FileHeaderData;
 
   /**
    * @brief Allocats a contiguous chunk of memory to store values from the .ang file

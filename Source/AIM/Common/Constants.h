@@ -59,6 +59,20 @@ namespace AIM
     const std::string IPFColor("IPFColor");
   }
 
+  namespace ANG
+  {
+    const std::string AngHeader("AngHeader");
+    const std::string ZIndexStart("ZIndexStart");
+    const std::string ZIndexEnd("ZIndexEnd");
+    const std::string ZResolution("ZResolution");
+    const std::string Manufacturer("Manufacturer");
+    const std::string TSL("TSL");
+    const std::string OriginalFile("OriginalFile");
+    const std::string Index("Index");
+    const std::string Header("Header");
+    const std::string Data("Data");
+  }
+
   namespace HDF5
   {
     const std::string Reconstruction("Reconstruction");

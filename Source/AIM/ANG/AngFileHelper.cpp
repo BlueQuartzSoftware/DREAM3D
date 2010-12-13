@@ -43,6 +43,11 @@ void AngFileHelper::loadData(Voxel voxels[], int xpoints, int ypoints, int zpoin
   reader.setFileName(angFName);
 
   int err = reader.readFile();
+  if (err < 0)
+  {
+    std::cout << "AngFileHelper Error: There was an issue loading the data from the .ang file." << std::endl;
+    return;
+  }
   int readerIndex = 0;
   int xpointstemp = reader.getNumEvenCols();
   int ypointstemp = reader.getNumRows();
