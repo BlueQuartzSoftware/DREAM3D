@@ -64,9 +64,14 @@ ReconstructionFunc::~ReconstructionFunc()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ReconstructionFunc::initialize(int m_ZStartSlice, int m_ZEndSlice, double m_ZResolution, bool v_mergetwinsoption,
-				  bool v_mergecoloniesoption, int v_minallowedgrainsize, double v_minseedconfidence, double v_downsamplefactor,
-				  double v_minseedimagequality, double v_misorientationtolerance, AIM::Reconstruction::CrystalStructure v_crystruct, int v_alignmeth, bool v_alreadyformed)
+void ReconstructionFunc::initialize(int nX, int nY, int nZ,
+                                    double xRes, double yRes, double zRes,
+                                    bool v_mergetwinsoption, bool v_mergecoloniesoption,
+                                    int v_minallowedgrainsize, double v_minseedconfidence,
+                                    double v_downsamplefactor, double v_minseedimagequality,
+                                    double v_misorientationtolerance,
+                                    AIM::Reconstruction::CrystalStructure v_crystruct,
+                                    int v_alignmeth, bool v_alreadyformed)
 {
 
   mergetwinsoption = (v_mergetwinsoption == true) ? 1 : 0;
@@ -80,31 +85,13 @@ void ReconstructionFunc::initialize(int m_ZStartSlice, int m_ZEndSlice, double m
   alignmeth = v_alignmeth;
   alreadyformed = (v_alreadyformed == true) ? 1 : 0;
 
-  zpoints = (m_ZEndSlice-m_ZStartSlice);
-  int xpointstemp = 0;
-  int ypointstemp = 0;
-  xpoints = 0;
-  ypoints = 0;
-  for(int i=0;i<zpoints;i++)
-  {
-	  std::string angFName = m_DirectoryPattern->generateFullPathAngFileName(i + m_ZStartSlice);
-	  AngReader reader;
-	  reader.setFileName(angFName);
-	  int err = reader.readHeaderOnly();
-	  if (err < 0)
-	  {
-	    std::cout << "Error reading the .ang file " << angFName << std::endl;
-	    totalpoints = -1;
-	    return;
-	  }
-	  resx = reader.getXStep();
-	  resy = reader.getYStep();
-	  resz = m_ZResolution;
-	  xpointstemp = reader.getNumEvenCols();
-	  ypointstemp = reader.getNumRows();
-	  if(xpointstemp > xpoints) xpoints = xpointstemp;
-	  if(ypointstemp > ypoints) ypoints = ypointstemp;
-  }
+  totalpoints = -1;
+  xpoints = nX;
+  ypoints = nY;
+  zpoints = nZ;
+  resx = xRes;
+  resy = yRes;
+  resz = zRes;
 
   sizex = (xpoints - 1 ) * resx;
   sizey = (ypoints - 1 ) * resy;
@@ -119,13 +106,20 @@ void ReconstructionFunc::initialize(int m_ZStartSlice, int m_ZEndSlice, double m
   axisodf = new Bin[18*18*18];
 }
 
-void ReconstructionFunc::loadSlices()
-{
-	for(int i=0;i<zpoints;i++)
-	{
-	  m_angFileHelper->loadData(voxels, xpoints, ypoints, zpoints, i);
-	}
-}
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+//void ReconstructionFunc::loadSlices(AbstractAngDataLoader::Pointer dataLoader)
+//{
+//	for(int i=0;i<zpoints;i++)
+//	{
+//	  dataLoader->loadData(voxels, xpoints, ypoints, zpoints, i);
+//	}
+//}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void ReconstructionFunc::cleanup_data()
 {
 	double bestneighborconfidence;

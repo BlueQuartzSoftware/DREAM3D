@@ -62,8 +62,8 @@ namespace AIM
   namespace ANG
   {
     const std::string AngHeader("AngHeader");
-    const std::string ZIndexStart("ZIndexStart");
-    const std::string ZIndexEnd("ZIndexEnd");
+    const std::string ZStartIndex("ZStartIndex");
+    const std::string ZEndIndex("ZEndIndex");
     const std::string ZResolution("ZResolution");
     const std::string Manufacturer("Manufacturer");
     const std::string TSL("TSL");

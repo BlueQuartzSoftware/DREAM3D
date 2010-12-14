@@ -29,8 +29,10 @@
 //
 // -----------------------------------------------------------------------------
 AngReader::AngReader() :
-m_UserOrigin(UpperRightOrigin), m_FileName(""),
-m_NumberOfElements(0), m_ManageMemory(true)
+m_UserOrigin(UpperRightOrigin),
+m_FileName(""),
+m_NumberOfElements(0),
+m_ManageMemory(true)
 {
   // Init all the arrays to NULL
   m_Phi1 = NULL;
@@ -80,9 +82,9 @@ m_NumberOfElements(0), m_ManageMemory(true)
   setNumOddCols(-1);
   setNumEvenCols(-1);
   setNumRows(-1);
-  setZStep(1.0);
-  setZMax(1.0);
-  setZPos(0.0);
+//  setZStep(1.0);
+//  setZMax(1.0);
+//  setZPos(0.0);
 }
 
 // -----------------------------------------------------------------------------
@@ -154,14 +156,14 @@ int AngReader::readHeaderOnly()
     return -100;
   }
 
-  m_FileHeaderData.clear();
+  m_CompleteHeader.clear();
 
   while (!in.eof() && !m_headerComplete)
   {
     ::memset(buf, 0, kBufferSize);
     in.getline(buf, kBufferSize);
     parseHeaderLine(buf, kBufferSize);
-    m_FileHeaderData.append(buf);
+    m_CompleteHeader.append(buf);
   }
   return err;
 }
@@ -182,14 +184,14 @@ int AngReader::readFile()
     return -100;
   }
 
-  m_FileHeaderData.clear();
+  m_CompleteHeader.clear();
   while (!in.eof() && !m_headerComplete)
   {
     ::memset(buf, 0, kBufferSize);
     in.getline(buf, kBufferSize);
     parseHeaderLine(buf, kBufferSize);
     if (m_headerComplete == false) {
-      m_FileHeaderData.append(buf);
+      m_CompleteHeader.append(buf);
     }
   }
 

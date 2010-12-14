@@ -18,12 +18,13 @@
 #include "AIM/Common/AIMCommonConfiguration.h"
 #include "AIM/ANG/AngDirectoryPatterns.h"
 #include "AIM/ANG/AngReader.h"
-#include "AIM/ANG/AngFileHelper.h"
+#include "AIM/ANG/AbstractAngDataLoader.h"
+#include "AIM/ANG/AngDataLoader.h"
 
 #if AIM_HDF5_SUPPORT
 #include "AIM/HDF5/AIM_H5VtkDataWriter.h"
 #include "AIM/Reconstruction/H5ReconStatsWriter.h"
-#include "AIM/ANG/H5AngImporter.h"
+#include "AIM/ANG/H5AngDataLoader.h"
 #endif
 
 
@@ -69,13 +70,18 @@ QObject* parent
 #if AIM_USE_QT
 QThread(parent),
 #endif
+
+#if AIM_HDF5_SUPPORT
+m_H5AngFile(""),
+#else
 m_InputDirectory("."),
-m_OutputDirectory("."),
 m_AngFilePrefix("Slice_"),
 m_AngSeriesMaxSlice(3),
 m_ZStartIndex(0),
 m_ZEndIndex(0),
 m_ZResolution(0.25),
+#endif
+m_OutputDirectory("."),
 m_MergeTwins(false),
 m_MergeColonies(false),
 m_MinAllowedGrainSize(0),
@@ -96,10 +102,6 @@ m_ErrorCondition(0)
   ,m_Cancel(false)
 #endif
 {
-
-
-
-
 
 }
 
@@ -138,10 +140,20 @@ void Reconstruction::run()
 void Reconstruction::compute()
 {
 //  std::cout << "Reconstruction::compute" << std::endl;
+  int err = -1;
+#if AIM_HDF5_SUPPORT
+  AbstractAngDataLoader::Pointer oimDataLoader = H5AngDataLoader::New();
+  H5AngDataLoader* ptr = dynamic_cast<H5AngDataLoader*>(oimDataLoader.get());
+  ptr->setFilename(m_H5AngFile);
+  ptr->setZStartIndex(m_ZStartIndex);
+  ptr->setZEndIndex(m_ZEndIndex);
+#else
+  AbstractAngDataLoader::Pointer oimDataLoader = AngDataLoader::New();
+  AngDataLoader* ptr = dynamic_cast<AngDataLoader*>(oimDataLoader.get());
+
   int32_t sliceCount = 1;
   int32_t width = 0;
   int32_t totalSlices = m_AngSeriesMaxSlice;
-  int32_t err = 0;
   while (sliceCount < totalSlices)
   {
     ++width;
@@ -149,28 +161,28 @@ void Reconstruction::compute()
   }
 
   m_InputDirectory = MXADir::toNativeSeparators(m_InputDirectory);
-  m_OutputDirectory = MXADir::toNativeSeparators(m_OutputDirectory);
-  AngDirectoryPatterns::Pointer p = AngDirectoryPatterns::New(m_InputDirectory, m_AngFilePrefix, width);
-
-  AngFileHelper::Pointer angFileHelper = AngFileHelper::New();
-  angFileHelper->setZIndexStart(m_ZStartIndex);
-  angFileHelper->setZIndexEnd(m_ZEndIndex);
-  angFileHelper->setDirectoryPattern(p);
+  AngDirectoryPatterns::Pointer p
+          = AngDirectoryPatterns::New(m_InputDirectory, m_AngFilePrefix, width);
+  ptr->setZResolution(m_ZResolution);
+  ptr->setDirectoryPattern(p);
+  ptr->setZStartIndex(m_ZStartIndex);
+  ptr->setZEndIndex(m_ZEndIndex);
+#endif
 
   m = ReconstructionFunc::New();
-  m->m_angFileHelper = angFileHelper;
-  m->setDirectoryPattern(p);
-  m->initialize(m_ZStartIndex, m_ZEndIndex, m_ZResolution, m_MergeTwins, m_MergeColonies, m_MinAllowedGrainSize,
-	                   m_MinSeedConfidence, m_DownSampleFactor, m_MinSeedImageQuality, m_MisorientationTolerance, m_CrystalStructure, m_AlignmentMethod, m_AlreadyFormed);
-
-  H5AngImporter::Pointer h5importer = H5AngImporter::New();
-  h5importer->setOutputFile("/tmp/H5AngFile.h5ang");
-  h5importer->setDirectoryPattern(p);
-  h5importer->setZIndexStart(m_ZStartIndex);
-  h5importer->setZIndexEnd(m_ZEndIndex);
-  h5importer->setZResolution(m_ZResolution);
-  err = h5importer->run();
-
+  err = oimDataLoader->getSizeAndResolution(m->xpoints, m->ypoints, m->zpoints, m->resx, m->resy, m->resz);
+  if (err < 0)
+  {
+     std::cout << "ReconstructionFunc Error: Problem loading data size and resolutions" << std::endl;
+     return;
+  }
+  m->initialize(m->xpoints, m->ypoints, m->zpoints,
+                m->resx, m->resy, m->resz,
+                m_MergeTwins, m_MergeColonies, m_MinAllowedGrainSize,
+	              m_MinSeedConfidence, m_DownSampleFactor, m_MinSeedImageQuality,
+	              m_MisorientationTolerance, m_CrystalStructure, m_AlignmentMethod,
+	              m_AlreadyFormed);
+  m_OutputDirectory = MXADir::toNativeSeparators(m_OutputDirectory);
 
 #if AIM_HDF5_SUPPORT
   // Create a new HDF5 Results file by overwriting any HDF5 file that may be in the way
@@ -220,7 +232,9 @@ void Reconstruction::compute()
   {
     CHECK_FOR_CANCELED(ReconstructionFunc)
     progressMessage(AIM_STRING("Loading Slices"), 3);
-    m->loadSlices();
+//    m->loadSlices();
+    oimDataLoader->loadData(m->voxels, m->xpoints, m->ypoints, m->zpoints);
+
 
     CHECK_FOR_CANCELED(ReconstructionFunc)
     progressMessage(AIM_STRING("Finding Border"), 6);
@@ -280,7 +294,7 @@ void Reconstruction::compute()
   CHECK_FOR_CANCELED(ReconstructionFunc)
   progressMessage(AIM_STRING("Identifying Grains"), 40);
   m->numgrains = m->reburn_grains();
-
+//TODO: DIES HERE
   CHECK_FOR_CANCELED(ReconstructionFunc)
   progressMessage(AIM_STRING("Finding Grain Reference Orientations"), 43);
   m->find_kernels();
@@ -455,10 +469,7 @@ void Reconstruction::on_CancelWorker()
   this->m_Cancel = true;
   if (m.get() != NULL)
   {
-   if (m->m_angFileHelper.get() != NULL)
-   {
-     m->m_angFileHelper->setCancel(true);
-   }
+
   }
 }
 #endif

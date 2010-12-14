@@ -28,33 +28,100 @@
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef H5ANGIMPORTER_H_
-#define H5ANGIMPORTER_H_
+#ifndef _H5ANGIMPORTER_H_
+#define _H5ANGIMPORTER_H_
+
+#if defined (_MSC_VER)
+#define WIN32_LEAN_AND_MEAN   // Exclude rarely-used stuff from Windows headers
+#endif
+
 
 #include "hdf5.h"
 
+#ifdef AIM_USE_QT
+#include <QtCore/QObject>
+#include <QtCore/QThread>
+#endif
+
 #include "MXA/Common/MXASetGetMacros.h"
-#include "AIM/ANG/AngDirectoryPatterns.h"
+#include "AIM/Common/AIMCommonConfiguration.h"
 
-
+/**
+ * @class H5AngImporter H5AngImporter.h AIM/ANG/H5AngImporter.h
+ * @brief
+ * @author Michael A. Jackson for BlueQuartz Software
+ * @date Dec 13, 2010
+ * @version 1.0
+ */
 class AIMCOMMON_EXPORT H5AngImporter
+#ifdef AIM_USE_QT
+ : public QThread
+#endif
 {
+#ifdef AIM_USE_QT
+Q_OBJECT
+#endif
+
   public:
     MXA_SHARED_POINTERS(H5AngImporter)
+    MXA_TYPE_MACRO(H5AngImporter)
+
+#ifdef AIM_USE_QT
+    static Pointer New (QObject* parent = 0);
+#else
     MXA_STATIC_NEW_MACRO(H5AngImporter)
+#endif
+
     virtual ~H5AngImporter();
 
     MXA_INSTANCE_STRING_PROPERTY(OutputFile)
-    MXA_INSTANCE_PROPERTY(AngDirectoryPatterns::Pointer, DirectoryPattern);
-    MXA_INSTANCE_PROPERTY(int, ZIndexStart)
-    MXA_INSTANCE_PROPERTY(int, ZIndexEnd)
+    MXA_INSTANCE_STRING_PROPERTY(InputDirectory)
+    MXA_INSTANCE_STRING_PROPERTY(AngFilePrefix)
+    MXA_INSTANCE_PROPERTY(int, AngSeriesMaxSlice)
+    MXA_INSTANCE_PROPERTY(int, ZStartIndex)
+    MXA_INSTANCE_PROPERTY(int, ZEndIndex)
     MXA_INSTANCE_PROPERTY(float, ZResolution)
+
+    /**
+     * @brief Cancel the operation
+     */
     MXA_INSTANCE_PROPERTY(bool, Cancel);
 
-    int run();
+    /**
+     * @brief Either prints a message or sends the message to the User Interface
+     * @param message The message to print
+     * @param progress The progress of the Reconstruction normalized to a value between 0 and 100
+     */
+    void progressMessage(const std::string &message, int progress);
+
+#ifdef AIM_USE_QT
+    /**
+     * Qt Signals for connections
+     */
+    signals:
+      void updateMessage(QString message);
+      void updateProgress(int value);
+
+    public slots:
+    /**
+     * @brief Slot to receive a signal to cancel the operation
+     */
+      void on_CancelWorker();
+#endif
+
+      /**
+       * @brief Main method to run the operation
+       */
+      void compute();
 
   protected:
+#ifdef AIM_USE_QT
+    H5AngImporter(QObject* parent = 0);
+    virtual void run();
+
+#else
     H5AngImporter();
+#endif
 
     int importAngFile(hid_t fileId, int index, const std::string &angFile);
 
@@ -64,4 +131,4 @@ class AIMCOMMON_EXPORT H5AngImporter
     void operator=(const H5AngImporter&); // Operator '=' Not Implemented
 };
 
-#endif /* H5ANGIMPORTER_H_ */
+#endif /* _H5ANGIMPORTER_H_ */

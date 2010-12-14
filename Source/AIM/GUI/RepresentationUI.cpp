@@ -246,13 +246,13 @@ void RepresentationUI::readSettings()
   double d;
 
   /* ******** This Section is for the Reconstruction Tab ************ */
-  READ_FILEPATH_SETTING(prefs, angDir, "");
+  READ_FILEPATH_SETTING(prefs, oim_InputDir, "");
   READ_FILEPATH_SETTING(prefs, rec_OutputDir, "");
-  READ_SETTING(prefs, angMaxSlice, ok, i, 300 , Int);
-  READ_STRING_SETTING(prefs, angFilePrefix, "");
-  READ_SETTING(prefs, zStartIndex, ok, i, 1 , Int);
-  READ_SETTING(prefs, zEndIndex, ok, i, 10 , Int);
-  READ_STRING_SETTING(prefs, zSpacing, "0.25");
+  READ_SETTING(prefs, oim_AngMaxSlice, ok, i, 300 , Int);
+  READ_STRING_SETTING(prefs, oim_AngFilePrefix, "");
+  READ_SETTING(prefs, oim_zStartIndex, ok, i, 1 , Int);
+  READ_SETTING(prefs, oim_zEndIndex, ok, i, 10 , Int);
+  READ_STRING_SETTING(prefs, oim_zSpacing, "0.25");
   READ_BOOL_SETTING(prefs, rec_, mergeTwins, false);
   READ_BOOL_SETTING(prefs, rec_, mergeColonies, false);
   READ_BOOL_SETTING(prefs, rec_, alreadyFormed, false);
@@ -326,13 +326,13 @@ void RepresentationUI::writeSettings()
 //  bool ok = false;
 //  qint32 i = 0;
   /* ******** This Section is for the Reconstruction Tab ************ */
-  WRITE_STRING_SETTING(prefs, angDir)
+  WRITE_STRING_SETTING(prefs, oim_InputDir)
   WRITE_STRING_SETTING(prefs, rec_OutputDir)
-  WRITE_STRING_SETTING(prefs, angFilePrefix)
-  WRITE_STRING_SETTING(prefs, angMaxSlice)
-  WRITE_STRING_SETTING(prefs, zStartIndex)
-  WRITE_STRING_SETTING(prefs, zEndIndex)
-  WRITE_STRING_SETTING(prefs, zSpacing)
+  WRITE_STRING_SETTING(prefs, oim_AngFilePrefix)
+  WRITE_STRING_SETTING(prefs, oim_AngMaxSlice)
+  WRITE_STRING_SETTING(prefs, oim_zStartIndex)
+  WRITE_STRING_SETTING(prefs, oim_zEndIndex)
+  WRITE_STRING_SETTING(prefs, oim_zSpacing)
 
   WRITE_BOOL_SETTING(prefs, mergeTwins, rec_mergeTwins->isChecked())
   WRITE_BOOL_SETTING(prefs, mergeColonies, rec_mergeColonies->isChecked())
@@ -402,6 +402,10 @@ void RepresentationUI::writeSettings()
 // -----------------------------------------------------------------------------
 void RepresentationUI::setupGui()
 {
+  // Setup the OIM Data Import Tab
+  oim_SetupGui();
+  oim_CheckIOFiles();
+
   // Setup the Reconstruction Tab GUI
   rec_SetupGui();
   rec_CheckIOFiles();
@@ -417,7 +421,7 @@ void RepresentationUI::setupGui()
   // Setup the Volume Meshing Tab Gui
 //  vm_SetupGui();
 //  vm_CheckIOFiles();
-  this->tabWidget->removeTab(3);
+  this->tabWidget->removeTab(4);
 }
 
 // -----------------------------------------------------------------------------
@@ -620,10 +624,6 @@ void RepresentationUI::openRecentFile()
 // -----------------------------------------------------------------------------
 void RepresentationUI::rec_SetupGui()
 {
-  QR3DFileCompleter* com = new QR3DFileCompleter(this, true);
-  angDir->setCompleter(com);
-  QObject::connect( com, SIGNAL(activated(const QString &)),
-           this, SLOT(on_angDir_textChanged(const QString &)));
 
   QR3DFileCompleter* com2 = new QR3DFileCompleter(this, true);
   rec_OutputDir->setCompleter(com2);
@@ -649,8 +649,7 @@ void RepresentationUI::rec_SetupGui()
   rec_HDF5GrainFile->setVisible(false);
   rec_HDF5GrainFileIcon->setVisible(false);
 #endif
-  m_WidgetList << angDir << angDirBtn << rec_OutputDir << outputDirBtn;
-  m_WidgetList << angFilePrefix << angMaxSlice << zStartIndex << zEndIndex << zSpacing;
+  m_WidgetList << rec_OutputDir << rec_OutputDirBtn;
   m_WidgetList << rec_mergeTwins << rec_mergeColonies << rec_alreadyFormed << alignMeth << minAllowedGrainSize << minConfidence << downsampleFactor << misOrientationTolerance;
   m_WidgetList << crystalStructure;
   m_WidgetList << rec_DisorientationVizFile << rec_ImageQualityVizFile << rec_IPFVizFile << rec_SchmidFactorVizFile << rec_VisualizationVizFile << rec_DownSampledVizFile;
@@ -665,10 +664,6 @@ void RepresentationUI::rec_SetupGui()
 // ----------------------------------------------------------------------------_
 void RepresentationUI::rec_CheckIOFiles()
 {
-  if (true == this->_verifyPathExists(angDir->text(), this->angDir))
-  {
-    findAngMaxSliceAndPrefix();
-  }
 
   this->_verifyPathExists(rec_OutputDir->text(), this->rec_OutputDir);
   CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::Reconstruction,rec_, StatsFile)
@@ -689,23 +684,6 @@ void RepresentationUI::rec_CheckIOFiles()
 #if AIM_HDF5_SUPPORT
   CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(AIM::Reconstruction, rec_ , HDF5GrainFile)
 #endif
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void RepresentationUI::on_angDirBtn_clicked()
-{
- // std::cout << "on_angDirBtn_clicked" << std::endl;
-  QString outputFile = this->m_OpenDialogLastDirectory + QDir::separator();
-  outputFile = QFileDialog::getExistingDirectory(this, tr("Select Ang Directory"), outputFile);
-  if (!outputFile.isNull())
-  {
-    this->angDir->setText(outputFile);
-    findAngMaxSliceAndPrefix();
-    _verifyPathExists(outputFile, angDir);
-  }
-
 }
 
 // -----------------------------------------------------------------------------
@@ -735,51 +713,12 @@ void RepresentationUI::on_rec_alreadyFormed_stateChanged(int currentState)
   messageLabel->setText(msg);
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void RepresentationUI::findAngMaxSliceAndPrefix()
-{
-  if (angDir->text().length() == 0) { return; }
-  QDir dir(angDir->text());
-  QStringList filters;
-  filters << "*.ang";
-  dir.setNameFilters(filters);
-  QFileInfoList angList = dir.entryInfoList();
-  int maxSlice = 0;
-  int currValue =0;
-  bool ok;
-  QString fPrefix;
-  QRegExp rx("(\\d+)");
-  QStringList list;
-  int pos = 0;
-  foreach(QFileInfo fi, angList)
-  {
-    if (fi.suffix().compare(".ang") && fi.isFile() == true)
-    {
-      pos = 0;
-      list.clear();
-      QString fn = fi.baseName();
-      while ((pos = rx.indexIn(fn, pos)) != -1)
-      {
-        list << rx.cap(0);
-        fPrefix = fn.left(pos);
-        pos += rx.matchedLength();
-      }
-      if (list.size() > 0) {
-        currValue = list.front().toInt(&ok);
-        if (currValue > maxSlice) { maxSlice = currValue; }
-      }
-    }
-  }
-  this->angMaxSlice->setValue(maxSlice);
-  this->angFilePrefix->setText(fPrefix);
-}
+
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RepresentationUI::on_outputDirBtn_clicked()
+void RepresentationUI::on_rec_OutputDirBtn_clicked()
 {
   QString outputFile = this->m_OpenDialogLastDirectory + QDir::separator();
   outputFile = QFileDialog::getExistingDirectory(this, tr("Select Output Directory"), outputFile);
@@ -807,20 +746,12 @@ void RepresentationUI::on_rec_OutputDir_textChanged(const QString & text)
   rec_CheckIOFiles();
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void RepresentationUI::on_angDir_textChanged(const QString & text)
-{
-  _verifyPathExists(angDir->text(), angDir);
-}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void RepresentationUI::on_rec_GoBtn_clicked()
 {
-  bool ok = false;
   if (rec_GoBtn->text().compare("Cancel") == 0)
   {
     if(m_Reconstruction.get() != NULL)
@@ -831,17 +762,22 @@ void RepresentationUI::on_rec_GoBtn_clicked()
     return;
   }
 
-  SANITY_CHECK_INPUT( , angDir)
   SANITY_CHECK_INPUT(rec_ , OutputDir)
 
   m_Reconstruction = Reconstruction::New();
-  m_Reconstruction->setInputDirectory(angDir->text().toStdString() );
+#if AIM_HDF5_SUPPORT
+  m_Reconstruction->setH5AngFile(rec_H5InputFile->text().toStdString());
+#else
+  bool ok = false;
+  m_Reconstruction->setInputDirectory(oim_InputDir->text().toStdString() );
+  m_Reconstruction->setAngFilePrefix(oim_AngFilePrefix->text().toStdString());
+  m_Reconstruction->setAngSeriesMaxSlice(oim_AngMaxSlice->value());
+  m_Reconstruction->setZResolution(oim_zSpacing->text().toDouble(&ok));
+#endif
+  m_Reconstruction->setZStartIndex(rec_zStartIndex->value());
+  m_Reconstruction->setZEndIndex(rec_zEndIndex->value() + 1);
   m_Reconstruction->setOutputDirectory(rec_OutputDir->text().toStdString());
-  m_Reconstruction->setAngFilePrefix(angFilePrefix->text().toStdString());
-  m_Reconstruction->setAngSeriesMaxSlice(angMaxSlice->value());
-  m_Reconstruction->setZStartIndex(zStartIndex->value());
-  m_Reconstruction->setZEndIndex(zEndIndex->value() + 1);
-  m_Reconstruction->setZResolution(zSpacing->text().toDouble(&ok));
+
   m_Reconstruction->setMergeTwins(rec_mergeTwins->isChecked() );
   m_Reconstruction->setMergeColonies(rec_mergeColonies->isChecked() );
   m_Reconstruction->setMinAllowedGrainSize(minAllowedGrainSize->value());
@@ -908,6 +844,7 @@ void RepresentationUI::rec_ThreadFinished()
   grainGeneratorTab->setEnabled(true);
   surfaceMeshingTab->setEnabled(true);
   volumeMeshingTab->setEnabled(true);
+  oimImportTab->setEnabled(true);
   rec_CheckIOFiles();
 }
 
@@ -1576,4 +1513,167 @@ void RepresentationUI::vm_ThreadProgressed(int value)
   vm_progressBar->setValue(value);
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void RepresentationUI::oim_SetupGui()
+{
+  QR3DFileCompleter* com = new QR3DFileCompleter(this, true);
+  oim_InputDir->setCompleter(com);
+  QObject::connect( com, SIGNAL(activated(const QString &)),
+           this, SLOT(on_angDir_textChanged(const QString &)));
+  m_WidgetList << oim_InputDir << oim_InputDirBtn;
+  m_WidgetList << oim_AngFilePrefix << oim_AngMaxSlice << oim_zStartIndex << oim_zEndIndex << oim_zSpacing;
 
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void RepresentationUI::oim_CheckIOFiles()
+{
+  if (true == this->_verifyPathExists(oim_InputDir->text(), this->oim_InputDir))
+   {
+     oim_findAngMaxSliceAndPrefix();
+   }
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void RepresentationUI::on_oim_OutputFileBtn_clicked()
+{
+  std::cout << "on_oimOutputFileBtn_clicked" << std::endl;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void RepresentationUI::on_oim_InputDirBtn_clicked()
+{
+  // std::cout << "on_angDirBtn_clicked" << std::endl;
+  QString outputFile = this->m_OpenDialogLastDirectory + QDir::separator();
+  outputFile = QFileDialog::getExistingDirectory(this, tr("Select Ang Directory"), outputFile);
+  if (!outputFile.isNull())
+  {
+    this->oim_InputDir->setText(outputFile);
+    oim_findAngMaxSliceAndPrefix();
+    _verifyPathExists(outputFile, oim_InputDir);
+  }
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void RepresentationUI::on_oim_InputDir_textChanged(const QString & text)
+{
+  _verifyPathExists(oim_InputDir->text(), oim_InputDir);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void RepresentationUI::on_oim_GoBtn_clicked()
+{
+#if AIM_HDF5_SUPPORT
+  bool ok = false;
+  SANITY_CHECK_INPUT( , oim_InputDir)
+
+  m_H5AngImporter = H5AngImporter::New();
+  m_H5AngImporter->setInputDirectory(oim_InputDir->text().toStdString() );
+  m_H5AngImporter->setAngFilePrefix(oim_AngFilePrefix->text().toStdString());
+  m_H5AngImporter->setAngSeriesMaxSlice(oim_AngMaxSlice->value());
+  m_H5AngImporter->setZStartIndex(oim_zStartIndex->value());
+  m_H5AngImporter->setZEndIndex(oim_zEndIndex->value());
+  m_H5AngImporter->setZResolution(oim_zSpacing->text().toDouble(&ok));
+  m_H5AngImporter->setOutputFile(oim_OutputFile->text().toStdString() );
+
+
+  connect(m_H5AngImporter.get(), SIGNAL(finished()),
+          this, SLOT( oim_ThreadFinished() ) );
+  connect(m_H5AngImporter.get(), SIGNAL (updateProgress(int)),
+    this, SLOT(oim_ThreadProgressed(int) ) );
+  connect(m_H5AngImporter.get(), SIGNAL (updateMessage(QString)),
+          this, SLOT(threadHasMessage(QString) ) );
+  connect(this, SIGNAL(sig_CancelWorker() ),
+          m_H5AngImporter.get(), SLOT (on_CancelWorker() ) );
+
+  setWidgetListEnabled(false);
+  m_H5AngImporter->start();
+  oim_GoBtn->setText("Cancel");
+  reconstructionTab->setEnabled(false);
+  grainGeneratorTab->setEnabled(false);
+  surfaceMeshingTab->setEnabled(false);
+  volumeMeshingTab->setEnabled(false);
+#else
+  this->statusBar()->showMessage("HDF5 Support was NOT Enabled");
+#endif
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void RepresentationUI::oim_findAngMaxSliceAndPrefix()
+{
+  if (oim_InputDir->text().length() == 0) { return; }
+  QDir dir(oim_InputDir->text());
+  QStringList filters;
+  filters << "*.ang";
+  dir.setNameFilters(filters);
+  QFileInfoList angList = dir.entryInfoList();
+  int maxSlice = 0;
+  int currValue =0;
+  bool ok;
+  QString fPrefix;
+  QRegExp rx("(\\d+)");
+  QStringList list;
+  int pos = 0;
+  foreach(QFileInfo fi, angList)
+  {
+    if (fi.suffix().compare(".ang") && fi.isFile() == true)
+    {
+      pos = 0;
+      list.clear();
+      QString fn = fi.baseName();
+      while ((pos = rx.indexIn(fn, pos)) != -1)
+      {
+        list << rx.cap(0);
+        fPrefix = fn.left(pos);
+        pos += rx.matchedLength();
+      }
+      if (list.size() > 0) {
+        currValue = list.front().toInt(&ok);
+        if (currValue > maxSlice) { maxSlice = currValue; }
+      }
+    }
+  }
+  this->oim_AngMaxSlice->setValue(maxSlice);
+  this->oim_AngFilePrefix->setText(fPrefix);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void RepresentationUI::oim_ThreadFinished()
+{
+  //std::cout << "RepresentationUI::reconstruction_Finished()" << std::endl;
+  oim_GoBtn->setText("Go");
+  setWidgetListEnabled(true);
+  this->progressBar->setValue(0);
+  reconstructionTab->setEnabled(true);
+  grainGeneratorTab->setEnabled(true);
+  surfaceMeshingTab->setEnabled(true);
+  volumeMeshingTab->setEnabled(true);
+  oimImportTab->setEnabled(true);
+  oim_CheckIOFiles();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void RepresentationUI::oim_ThreadProgressed(int val)
+{
+  this->progressBar->setValue( val );
+}

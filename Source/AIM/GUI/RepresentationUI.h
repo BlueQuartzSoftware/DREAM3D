@@ -13,6 +13,7 @@
 #define AIMREPRESENTATION_H_
 
 #include <MXA/Common/MXASetGetMacros.h>
+#include "AIM/ANG/H5AngImporter.h"
 #include <AIM/Reconstruction/Reconstruction.h>
 #include <AIM/GrainGenerator/GrainGenerator.h>
 #include <AIM/SurfaceMesh/SurfaceMesh.h>
@@ -52,10 +53,15 @@ class RepresentationUI : public QMainWindow, private Ui::RepresentationUI
     void on_actionExit_triggered();
 
     /* Reconstruction Slots */
-    void on_angDirBtn_clicked();
-    void on_outputDirBtn_clicked();
+    void on_rec_OutputDirBtn_clicked();
     void on_rec_alreadyFormed_stateChanged(int);
     void on_rec_GoBtn_clicked();
+
+    /* OIM Data Import Slots */
+    void on_oim_InputDirBtn_clicked();
+    void on_oim_OutputFileBtn_clicked();
+    void on_oim_GoBtn_clicked();
+
 
     /* Grain Generator Slots*/
     void on_gg_InputDirBtn_clicked();
@@ -93,6 +99,10 @@ class RepresentationUI : public QMainWindow, private Ui::RepresentationUI
     // slots for our worker thread to communicate
     void threadHasMessage(QString message);
 
+    /* OIM Data Import Thread communicates throught these methods */
+    void oim_ThreadFinished();
+    void oim_ThreadProgressed(int value);
+
     /* Reconstruction Thread communicates throught these methods */
     void rec_ThreadFinished();
     void rec_ThreadProgressed(int value);
@@ -107,7 +117,7 @@ class RepresentationUI : public QMainWindow, private Ui::RepresentationUI
     void vm_ThreadProgressed(int value);
 
     // slots to catch signals emittd by the various QLineEdit widgets
-    void on_angDir_textChanged(const QString & text);
+    void on_oim_InputDir_textChanged(const QString & text);
     void on_rec_OutputDir_textChanged(const QString & text);
 
     void on_gg_InputDir_textChanged(const QString & text);
@@ -186,6 +196,9 @@ class RepresentationUI : public QMainWindow, private Ui::RepresentationUI
      * These methods are the various GUI related setup methods that do some more setup operations on the widgets before
      * the initial window is displayed. Each of the methods is called from the 'setupGui' method.
      */
+    void oim_SetupGui();
+    void oim_CheckIOFiles();
+
     void rec_SetupGui();
     void rec_CheckIOFiles();
 
@@ -213,7 +226,7 @@ class RepresentationUI : public QMainWindow, private Ui::RepresentationUI
     /**
      * @brief Method to attempt the extraction of the .ang max slice value and prefix
      */
-    void findAngMaxSliceAndPrefix();
+    void oim_findAngMaxSliceAndPrefix();
 
   private:
     QString                     m_OpenDialogLastDirectory;
@@ -222,6 +235,7 @@ class RepresentationUI : public QMainWindow, private Ui::RepresentationUI
     /*
      * We keep a shared_pointer to the four types of processing that we do.
      */
+    H5AngImporter::Pointer      m_H5AngImporter;
     Reconstruction::Pointer     m_Reconstruction;
     GrainGenerator::Pointer     m_GrainGenerator;
     SurfaceMesh::Pointer        m_SurfaceMesh;

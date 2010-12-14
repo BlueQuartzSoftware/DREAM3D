@@ -113,13 +113,17 @@ int main(int argc, char **argv)
 
 
     Reconstruction::Pointer r = Reconstruction::New();
+#if AIM_HDF5_SUPPORT
+    r->setH5AngFile(inputDir.getValue());
+#else
     r->setInputDirectory(inputDir.getValue());
-    r->setOutputDirectory(outputDir.getValue());
     r->setAngFilePrefix(angFilePrefix.getValue());
     r->setAngSeriesMaxSlice(angMaxSlice.getValue());
+    r->setZResolution(resz.getValue());
+#endif
+    r->setOutputDirectory(outputDir.getValue());
     r->setZStartIndex(zStartIndex.getValue());
     r->setZEndIndex(zEndIndex.getValue());
-    r->setZResolution(resz.getValue());
     r->setMergeTwins(mergetwinsoption.getValue());
     r->setMergeColonies(false);
     r->setMinAllowedGrainSize(minallowedgrainsize.getValue());
