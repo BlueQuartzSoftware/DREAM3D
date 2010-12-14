@@ -12,7 +12,7 @@
 #include "GrainGenerator.h"
 #include "AIM/ANG/AngDirectoryPatterns.h"
 #include "AIM/ANG/AngReader.h"
-#include "AIM/ANG/AngFileHelper.h"
+#include "AIM/ANG/AngDataLoader.h"
 #if AIM_HDF5_SUPPORT
 #include "AIM/Reconstruction/H5ReconStatsReader.h"
 #endif

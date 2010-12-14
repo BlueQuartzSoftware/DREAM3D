@@ -64,12 +64,8 @@
     angSetStringMacro_old(prpty, m_##prpty)
 
 
-
-
 #define STATIC_STRING_CONSTANT(str, quoted)\
   static std::string str##() { return std::string(quoted); }
-
-
 
 // -----------------------------------------------------------------------------
 //
@@ -98,6 +94,16 @@
     angSetMacro(HeaderType, type, prpty, key)\
     angGetMacro(HeaderType, type, prpty, key)
 
+#define SET_POINTER(name, var)\
+void set##name##Pointer(float* f)\
+  {\
+    if (m_##var != NULL && m_##var != f)\
+    {\
+      deallocateArrayData(m_##var);\
+      m_##var = NULL;\
+    }\
+    m_##var = f;\
+  }
 
 /**
 * @class AngReader AngReader.h AngReader/AngReader.h
@@ -126,10 +132,10 @@ class AIMCOMMON_EXPORT AngReader
     /** @brief Sets the file name of the ang file to be read */
     angStringProperty_old( FileName )
     angInstanceProperty_old(size_t, NumberOfElements);
+    angInstanceProperty_old(int, NumFields);
 
-    std::string getCompleteHeader() { return m_FileHeaderData; }
+    MXA_INSTANCE_STRING_PROPERTY(CompleteHeader);
 
-  public:
     /** @brief Header Values from the TSL ang file */
 
     angInstanceProperty(AngHeaderEntry<float>, float, TEMpixPerum, TSL::OIM::TEMPIXPerUM)
@@ -149,9 +155,9 @@ class AIMCOMMON_EXPORT AngReader
     angInstanceProperty(AngStringHeaderEntry, std::string, Grid, TSL::OIM::Grid)
     angInstanceProperty(AngHeaderEntry<float>, float, XStep, TSL::OIM::XStep)
     angInstanceProperty(AngHeaderEntry<float>, float, YStep, TSL::OIM::YStep)
-    angInstanceProperty(AngHeaderEntry<float>, float, ZStep, TSL::OIM::ZStep) // NOT actually in the file, but may be needed
-    angInstanceProperty(AngHeaderEntry<float>, float, ZPos, TSL::OIM::ZPos) // NOT actually in the file, but may be needed
-    angInstanceProperty(AngHeaderEntry<float>, float, ZMax, TSL::OIM::ZMax) // NOT actually in the file, but may be needed
+//    angInstanceProperty(AngHeaderEntry<float>, float, ZStep, TSL::OIM::ZStep) // NOT actually in the file, but may be needed
+//    angInstanceProperty(AngHeaderEntry<float>, float, ZPos, TSL::OIM::ZPos) // NOT actually in the file, but may be needed
+//    angInstanceProperty(AngHeaderEntry<float>, float, ZMax, TSL::OIM::ZMax) // NOT actually in the file, but may be needed
     angInstanceProperty(AngHeaderEntry<int>, int, NumOddCols, TSL::OIM::NColsOdd)
     angInstanceProperty(AngHeaderEntry<int>, int, NumEvenCols, TSL::OIM::NColsEven)
     angInstanceProperty(AngHeaderEntry<int>, int, NumRows, TSL::OIM::NRows)
@@ -159,20 +165,17 @@ class AIMCOMMON_EXPORT AngReader
     angInstanceProperty(AngStringHeaderEntry, std::string, SampleID, TSL::OIM::SampleId)
     angInstanceProperty(AngStringHeaderEntry, std::string, ScanID, TSL::OIM::ScanId)
 
-
-
-
     /**
     * @brief Reads the complete TSL .ang file.
     * @return 1 on success
     */
-    int readFile();
+    virtual int readFile();
 
     /**
     * @brief Reads ONLY the header portion of the TSL .ang file
     * @return 1 on success
     */
-    int readHeaderOnly();
+    virtual int readHeaderOnly();
 
 
     /** @brief Get a pointer to the Phi1 data. Note that this array WILL be deleted
@@ -190,7 +193,20 @@ class AIMCOMMON_EXPORT AngReader
     float* getD1Pointer() { return m_D1; }
     float* getD2Pointer() { return m_D1; }
 
+    SET_POINTER(Phi1, Phi1)
+    SET_POINTER(Phi, Phi)
+    SET_POINTER(Phi2, Phi2)
+    SET_POINTER(XPos, X)
+    SET_POINTER(YPos, Y)
+    SET_POINTER(ImageQuality, Iq)
+    SET_POINTER(ConfidenceIndex, Ci)
+    SET_POINTER(Phase, PhaseData)
+    SET_POINTER(D1, D1)
+    SET_POINTER(D2, D2)
+
 protected:
+    // Needed by subclasses
+    std::map<std::string, HeaderEntry::Pointer> m_Headermap;
 
     /** @brief Allocates the proper amount of memory (after reading the header portion of the file)
     * and then splats '0' across all the bytes of the memory allocation
@@ -201,18 +217,46 @@ protected:
     */
     void deletePointers();
 
-    /** @brief Parses the value from a single line of the header section of the TSL .ang file
-    * @param line The line to parse
-    */
-    void parseHeaderLine(char* buf, size_t length);
+    /**
+     * @brief Allocats a contiguous chunk of memory to store values from the .ang file
+     * @param numberOfElements The number of elements in the Array. This method can
+     * also optionally produce SSE aligned memory for use with SSE intrinsics
+     * @return Pointer to allocated memory
+     */
+      template<typename T>
+      T* allocateArray(size_t numberOfElements)
+      {
+  #if defined ( AIM_USE_SSE ) && defined ( __SSE2__ )
+        T* m_buffer = static_cast<T*>( _mm_malloc (numberOfElements * sizeof(T), 16) );
+  #else
+        T*  m_buffer = new T[numberOfElements];
+  #endif
+        m_NumberOfElements = numberOfElements;
+        return m_buffer;
+      }
 
-    /** @brief Parses the data from a line of data from the TSL .ang file
-    * @param line The line of data to parse
-    */
-    void readData(const std::string &line, float xMaxValue, float yMaxValue, int nCols, float xstep, float ystep);
+    /**
+     * @brief Deallocates memory that has been previously allocated. This will set the
+     * value of the pointer passed in as the argument to NULL.
+     * @param ptr The pointer to be freed.
+     */
+      template<typename T>
+      void deallocateArrayData(T* &ptr)
+      {
+        if (ptr != NULL && this->m_ManageMemory == true)
+        {
+  #if defined ( AIM_USE_SSE ) && defined ( __SSE2__ )
+          _mm_free(ptr );
+  #else
+          delete[] ptr;
+  #endif
+          ptr = NULL;
+          m_NumberOfElements = 0;
+        }
+      }
 
 private:
-    std::map<std::string, HeaderEntry::Pointer> m_Headermap;
+
 
     float* m_Phi1;
     float* m_Phi;
@@ -226,47 +270,16 @@ private:
     float* m_D2;
     bool m_ManageMemory;  // We are going to forcibly manage the memory. There is currently NO option otherwise.
     bool m_headerComplete;
-    int m_NumFields;
 
-    std::string m_FileHeaderData;
+    /** @brief Parses the value from a single line of the header section of the TSL .ang file
+    * @param line The line to parse
+    */
+    void parseHeaderLine(char* buf, size_t length);
 
-  /**
-   * @brief Allocats a contiguous chunk of memory to store values from the .ang file
-   * @param numberOfElements The number of elements in the Array. This method can
-   * also optionally produce SSE aligned memory for use with SSE intrinsics
-   * @return Pointer to allocated memory
-   */
-    template<typename T>
-    T* allocateArray(size_t numberOfElements)
-    {
-#if defined ( AIM_USE_SSE ) && defined ( __SSE2__ )
-      T* m_buffer = static_cast<T*>( _mm_malloc (numberOfElements * sizeof(T), 16) );
-#else
-      T*  m_buffer = new T[numberOfElements];
-#endif
-      m_NumberOfElements = numberOfElements;
-      return m_buffer;
-    }
-
-  /**
-   * @brief Deallocates memory that has been previously allocated. This will set the
-   * value of the pointer passed in as the argument to NULL.
-   * @param ptr The pointer to be freed.
-   */
-    template<typename T>
-    void deallocateArrayData(T* &ptr)
-    {
-      if (ptr != NULL && this->m_ManageMemory == true)
-      {
-#if defined ( AIM_USE_SSE ) && defined ( __SSE2__ )
-        _mm_free(ptr );
-#else
-        delete[] ptr;
-#endif
-        ptr = NULL;
-        m_NumberOfElements = 0;
-      }
-    }
+    /** @brief Parses the data from a line of data from the TSL .ang file
+    * @param line The line of data to parse
+    */
+    void readData(const std::string &line, float xMaxValue, float yMaxValue, int nCols, float xstep, float ystep);
 
     AngReader(const AngReader&);    // Copy Constructor Not Implemented
     void operator=(const AngReader&);  // Operator '=' Not Implemented

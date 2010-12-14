@@ -39,7 +39,7 @@
 #include "AIM/Common/Voxel.h"
 #include "AIM/Common/Bin.h"
 #include "AIM/Common/AIMRandomNG.h"
-#include "AIM/ANG/AngFileHelper.h"
+#include "AIM/ANG/AbstractAngDataLoader.h"
 #include "AIM/ANG/AngDirectoryPatterns.h"
 #if AIM_HDF5_SUPPORT
 #include "AIM/Reconstruction/H5ReconStatsWriter.h"
@@ -62,7 +62,7 @@ public:
 
   virtual ~ReconstructionFunc();
 
-  AngFileHelper::Pointer m_angFileHelper;
+  // AngFileHelper::Pointer m_angFileHelper;
 
   double sizex;
   double sizey;
@@ -129,10 +129,24 @@ public:
 	double totalvol;
 	double totalaxes;
 
+#if 1
+  void initialize(int nX, int nY, int nZ,
+                  double xRes, double yRes, double zRes,
+                  bool v_mergetwinsoption,
+                  bool v_mergecoloniesoption, int v_minallowedgrainsize,
+                  double v_minseedconfidence, double v_downsamplefactor,
+                  double v_minseedimagequality, double v_misorientationtolerance,
+                  AIM::Reconstruction::CrystalStructure v_crystruct,
+                  int v_alignmeth, bool v_alreadyformed);
+
+#else
   void initialize(int m_ZStartSlice, int m_ZEndSlice, double m_ZResolution, bool v_mergetwinsoption,
                   bool v_mergecoloniesoption, int v_minallowedgrainsize, double v_minseedconfidence, double v_downsamplefactor,
                   double v_minseedimagequality, double v_misorientationtolerance, AIM::Reconstruction::CrystalStructure v_crystruct, int v_alignmeth, bool v_alreadyformed);
-	void loadSlices();
+#endif
+
+
+//  void loadSlices(AbstractAngDataLoader::Pointer dataLoader);
 
 	void find_border();
 	int form_grains();

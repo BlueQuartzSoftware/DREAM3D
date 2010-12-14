@@ -43,7 +43,7 @@
 #include <AIM/Common/Segment.h>
 #include <AIM/Common/Bin.h>
 #include <AIM/Common/AIMRandomNG.h>
-#include <AIM/ANG/AngFileHelper.h>
+#include <AIM/ANG/AngDataLoader.h>
 
 
 using namespace std;
