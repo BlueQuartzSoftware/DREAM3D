@@ -161,7 +161,7 @@ void H5AngImporter::compute()
 
   std::vector<int> indices;
   // Loop on Each Ang File
-  for(int z=m_ZStartIndex;z<=m_ZEndIndex;z++)
+  for (int z = m_ZStartIndex; z <= m_ZEndIndex; z++)
   {
     if (m_Cancel == true)
     {
