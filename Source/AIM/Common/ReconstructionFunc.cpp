@@ -22,12 +22,7 @@
 #include "MXA/Utilities/MXADir.h"
 #include "AIM/ANG/AngReader.h"
 #include "AIM/Common/Constants.h"
-
-#define USE_OIM_COLORING 0
-
-#if USE_OIM_COLORING
 #include "AIM/Common/OIMColoring.hpp"
-#endif
 
 #if 0
 // -i C:\Users\GroebeMA\Desktop\NewFolder --outputDir C:\Users\GroebeMA\Desktop\NewFolder -f Slice_ --angMaxSlice 400 -s 1 -e 30 -z 0.25 -t -g 10 -c 0.1 -o 5.0 -x 2
@@ -3407,9 +3402,8 @@ void  ReconstructionFunc::find_colors()
     q1[3] = cos((g1ea2 / 2.0)) * cos(((g1ea1 + g1ea3) / 2.0));
     if (crystruct == AIM::Reconstruction::Cubic)
     {
-#if USE_OIM_COLORING
       OIMColoring::GenerateIPFColor(g1ea1, g1ea2, g1ea3, RefDirection[0], RefDirection[1], RefDirection[2], rgb);
-#else
+#if 0
       p[0] = (2 * q1[0] * q1[2] + 2 * q1[1] * q1[3]) * 1;
       p[1] = (2 * q1[1] * q1[2] + 2 * q1[0] * q1[3]) * 1;
       p[2] = (1 - 2 * q1[0] * q1[0] - 2 * q1[1] * q1[1]) * 1;
@@ -3472,9 +3466,8 @@ void  ReconstructionFunc::find_colors()
       red = 1.0 / 3.0;
       green = 1.0 / 3.0;
       blue = 1.0 / 3.0;
-#if USE_OIM_COLORING
       OIMColoring::CalculateHexIPFColor(q1, red, green, blue);
-#else
+#if 0
       for (int j = 0; j < 12; j++)
       {
         AIM::Quaternions::Hex_MultiplyByUnitQuaterion(q1, j, qc);
@@ -4754,25 +4747,17 @@ int ReconstructionFunc::writeIPFVizFile(const std::string &file)
   fprintf(f, "COLOR_SCALARS colors 3\n");
   double red,green,blue;
   double q1[4];
-  double qc[4];
-  double p[3];
-  double d[3];
-  double theta;
-  double phi;
   unsigned char rgb[3] = {0, 0, 0};
   double RefDirection[3] = {0.0, 0.0, 1.0};
   for (size_t i = 0; i < total; i++)
   {
     if(crystruct == AIM::Reconstruction::Cubic)
     {
-#if USE_OIM_COLORING
       OIMColoring::GenerateIPFColor(voxels[i].euler1, voxels[i].euler2, voxels[i].euler3, RefDirection[0], RefDirection[1], RefDirection[2], rgb);
       red = static_cast<double>(double(rgb[0])/255.0);
       green = static_cast<double>(double(rgb[1])/255.0);
       blue = static_cast<double>(double(rgb[2])/255.0);
-#else
-      calculateCubicIPFColor(q1, red, green, blue);
-#endif
+      //  calculateCubicIPFColor( q1, red, green, blue);
     }
     if(crystruct == AIM::Reconstruction::Hexagonal)
     {
@@ -4780,78 +4765,7 @@ int ReconstructionFunc::writeIPFVizFile(const std::string &file)
       q1[1]=voxels[i].quat[2];
       q1[2]=voxels[i].quat[3];
       q1[3]=voxels[i].quat[4];
-#if USE_OIM_COLORING
       OIMColoring::CalculateHexIPFColor(q1, red, green, blue);
-#else
-      double quat_symmhex[12][5] = {
-        {0.000000000, 0.000000000, 0.000000000, 0.000000000, 1.000000000},
-        {0.000000000, 0.000000000, 0.000000000, 0.500000000, 0.866025400},
-        {0.000000000, 0.000000000, 0.000000000, 0.866025400, 0.500000000},
-        {0.000000000, 0.000000000, 0.000000000, 1.000000000, 0.000000000},
-        {0.000000000, 0.000000000, 0.000000000, 0.866025400, -0.50000000},
-        {0.000000000, 0.000000000, 0.000000000, 0.500000000, -0.86602540},
-        {0.000000000, 1.000000000, 0.000000000, 0.000000000, 0.000000000},
-        {0.000000000, 0.866025400, 0.500000000, 0.000000000, 0.000000000},
-        {0.000000000, 0.500000000, 0.866025400, 0.000000000, 0.000000000},
-        {0.000000000, 0.000000000, 1.000000000, 0.000000000, 0.000000000},
-        {0.000000000, -0.50000000, 0.866025400, 0.000000000, 0.000000000},
-        {0.000000000, -0.86602540, 0.500000000, 0.000000000, 0.000000000}};
-      for(int j=0;j<12;j++)
-      {
-        qc[0] = quat_symmhex[j][1] * q1[3] + quat_symmhex[j][4] * q1[0] - quat_symmhex[j][2] * q1[2] + quat_symmhex[j][3] * q1[1];
-        qc[1] = quat_symmhex[j][2] * q1[3] + quat_symmhex[j][4] * q1[1] - quat_symmhex[j][3] * q1[0] + quat_symmhex[j][1] * q1[2];
-        qc[2] = quat_symmhex[j][3] * q1[3] + quat_symmhex[j][4] * q1[2] - quat_symmhex[j][1] * q1[1] + quat_symmhex[j][2] * q1[0];
-        qc[3] = quat_symmhex[j][4] * q1[3] - quat_symmhex[j][1] * q1[0] - quat_symmhex[j][2] * q1[1] - quat_symmhex[j][3] * q1[2];
-        p[0] = ((2 * qc[0] * qc[2]) - (2 * qc[1] * qc[3])) * 1;
-        p[1] = ((2 * qc[1] * qc[2]) + (2 * qc[0] * qc[3])) * 1;
-        p[2] = (1 - (2 * qc[0] * qc[0]) - (2 * qc[1] * qc[1])) * 1;
-        double denom = p[0] * p[0] + p[1] * p[1] + p[2] * p[2];
-        denom = pow(denom, 0.5);
-        p[0] = p[0] / denom;
-        p[1] = p[1] / denom;
-        p[2] = p[2] / denom;
-        if (p[2] < 0)
-        {
-          p[0] = -p[0];
-          p[1] = -p[1];
-          p[2] = -p[2];
-        }
-        d[0] = (p[1] * 1) - (p[2] * 0);
-        d[1] = (p[2] * 0) - (p[0] * 1);
-        d[2] = (p[0] * 0) - (p[1] * 0);
-        if (d[0] != 0) d[0] = -d[1] / d[0];
-        if (d[0] == 0) d[0] = 0;
-        d[1] = 1;
-        d[2] = 0;
-        double norm = pow(((d[0] * d[0]) + (d[1] * d[1]) + (d[2] * d[2])), 0.5);
-        d[0] = d[0] / norm;
-        d[1] = d[1] / norm;
-        d[2] = d[2] / norm;
-        if (atan(d[1] / d[0]) >= 0 && atan(d[1] / d[0]) <= (30.0 * m_pi / 180.0))
-        {
-          theta = (p[0] * 0) + (p[1] * 0) + (p[2] * 1);
-          if (theta > 1) theta = 1;
-          if (theta < -1) theta = -1;
-          theta = (180.0 / m_pi) * acos(theta);
-          red = (90.0 - theta) / 90.0;
-          phi = (d[0] * 1) + (d[1] * 0) + (d[2] * 0);
-          if (phi > 1) phi = 1;
-          if (phi < -1) phi = -1;
-          phi = (180.0 / m_pi) * acos(phi);
-          green = (1 - red) * ((30.0 - phi) / 30.0);
-          blue = (1 - red) - green;
-        }
-      }
-                  double max = red;
-                  if(green > max) max = green;
-                  if(blue > max) max = blue;
-                  red = red/max;
-                  green = green/max;
-                  blue = blue/max;
-                  red = (0.75*red)+0.25;
-                  green = (0.75*green)+0.25;
-                  blue = (0.75*blue)+0.25;
-#endif
     }
     fprintf(f, "%f %f %f\n",red, green, blue);
   }
@@ -4914,7 +4828,7 @@ int  ReconstructionFunc::writeDownSampledVizFile(const std::string &file )
 }
 
 
-#if !USE_OIM_COLORING
+#if 0
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

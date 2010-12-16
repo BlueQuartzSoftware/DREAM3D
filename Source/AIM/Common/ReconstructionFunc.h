@@ -209,8 +209,6 @@ void volume_stats2D(const std::string &stats, const std::string &misorientation,
   int writeSchmidFactorVizFile(const std::string &file); // DONE
   int writeDownSampledVizFile(const std::string &file);
 
-  void calculateCubicIPFColor(double q1[4],
-      double &red, double &green, double &blue);
 
 	double getmisoquatcubic(double,double q1[5],double q2[5],double &,double &,double &);
 	double getmisoquathexagonal(double,double q1[5],double q2[5],double &,double &,double &);
