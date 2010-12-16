@@ -487,7 +487,7 @@ int Reconstruction::writeHDF5GrainsFile(const std::string &hdfFile,
 {
   int err = -1;
 #if AIM_HDF5_SUPPORT
-  AIMH5DataWriter::Pointer h5writer = AIMH5DataWriter::New();
+  AIM_H5VtkDataWriter::Pointer h5writer = AIM_H5VtkDataWriter::New();
   h5writer->setFileName(hdfFile);
   err = h5writer->openFile(false); // Open a new file over writing any other file
 
