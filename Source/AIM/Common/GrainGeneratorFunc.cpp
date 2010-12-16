@@ -87,8 +87,6 @@ void GrainGeneratorFunc::initialize(int32_t m_NumGrains, int32_t m_ShapeClass,
   numextragrains = (25*m_NumGrains);
   shapeclass = m_ShapeClass;
   preciptype = m_Precipitates;
-  overlapassignment = m_OverlapAssignment;
-  overlapallowed = m_OverlapAllowed;
   crystruct = m_CrystalStructure;
 
   grains.resize((numextragrains+1), Grain());
@@ -2203,7 +2201,7 @@ void GrainGeneratorFunc::insert_precipitates(int numprecipitates)
           }
         }
         double acceptable = 100*(badcount/insidecount);
-        if(acceptable > overlapallowed) good = 0;
+        if(acceptable > 0.25) good = 0;
         if(good == 0)
         {
 			insidelist.clear();

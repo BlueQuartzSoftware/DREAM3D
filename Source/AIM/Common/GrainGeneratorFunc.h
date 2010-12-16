@@ -107,7 +107,6 @@ AngDataLoader::Pointer m_angFileHelper;
 	vector<vector<double> > precipsvomega3;
 	vector<vector<double> > neighbordist;
 
-
 	void initialize(int32_t m_NumGrains, int32_t m_ShapeClass,
 	                double m_XResolution, double m_YResolution, double m_ZResolution,
 	                int32_t m_OverlapAllowed,
@@ -130,8 +129,6 @@ AngDataLoader::Pointer m_angFileHelper;
 	int mindiameter;
 	int maxprecipdiameter;
 	int minprecipdiameter;
-	int32_t overlapallowed;
-	int overlapassignment;
 	double fractionprecip;
 	double avgdiam;
 	double sddiam;

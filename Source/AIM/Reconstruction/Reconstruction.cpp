@@ -267,12 +267,16 @@ void Reconstruction::compute()
     m->numgrains = m->form_grains();
 
     CHECK_FOR_CANCELED(ReconstructionFunc)
-    progressMessage(AIM_STRING("Finding Grain Reference Orientations"), 22);
+    progressMessage(AIM_STRING("Finding Reference Orientations For Grains"), 22);
     m->find_kernels();
+
+	CHECK_FOR_CANCELED(ReconstructionFunc)
+	progressMessage(AIM_STRING("Creating Voxel Lists For Grains"), 24);
+	m->numgrains = m->reburn_grains();
 
     CHECK_FOR_CANCELED(ReconstructionFunc)
     progressMessage(AIM_STRING("Defining Sub-Grains"), 25);
-    m->numgrains = m->define_subgrains();
+//    m->numgrains = m->define_subgrains();
 
     CHECK_FOR_CANCELED(ReconstructionFunc)
     progressMessage(AIM_STRING("Assigning Bad Points"), 28);
@@ -292,15 +296,15 @@ void Reconstruction::compute()
   m->numgrains = m->renumber_grains();
 
   CHECK_FOR_CANCELED(ReconstructionFunc)
-  progressMessage(AIM_STRING("Identifying Grains"), 40);
-  m->numgrains = m->reburn_grains();
-//TODO: DIES HERE
-  CHECK_FOR_CANCELED(ReconstructionFunc)
-  progressMessage(AIM_STRING("Finding Grain Reference Orientations"), 43);
+  progressMessage(AIM_STRING("Updating Reference Orientations For Grains"), 40);
   m->find_kernels();
 
   CHECK_FOR_CANCELED(ReconstructionFunc)
-  progressMessage(AIM_STRING("Finding Grain Average Orientations"), 49);
+  progressMessage(AIM_STRING("Updating Voxel Lists For Grains"), 43);
+  m->numgrains = m->reburn_grains();
+
+  CHECK_FOR_CANCELED(ReconstructionFunc)
+  progressMessage(AIM_STRING("Finding Average Orientations For Grains"), 49);
   m->homogenize_grains();
 
   if (m_MergeTwins == true)
@@ -483,7 +487,7 @@ int Reconstruction::writeHDF5GrainsFile(const std::string &hdfFile,
 {
   int err = -1;
 #if AIM_HDF5_SUPPORT
-  AIM_H5VtkDataWriter::Pointer h5writer = AIM_H5VtkDataWriter::New();
+  AIMH5DataWriter::Pointer h5writer = AIMH5DataWriter::New();
   h5writer->setFileName(hdfFile);
   err = h5writer->openFile(false); // Open a new file over writing any other file
 
