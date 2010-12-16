@@ -53,6 +53,7 @@ class RepresentationUI : public QMainWindow, private Ui::RepresentationUI
     void on_actionExit_triggered();
 
     /* Reconstruction Slots */
+    void on_rec_OIMH5Btn_clicked();
     void on_rec_OutputDirBtn_clicked();
     void on_rec_alreadyFormed_stateChanged(int);
     void on_rec_GoBtn_clicked();
@@ -118,7 +119,10 @@ class RepresentationUI : public QMainWindow, private Ui::RepresentationUI
 
     // slots to catch signals emittd by the various QLineEdit widgets
     void on_oim_InputDir_textChanged(const QString & text);
+    void on_oim_OutputFile_textChanged(const QString & text);
+
     void on_rec_OutputDir_textChanged(const QString & text);
+    void on_rec_H5InputFile_textChanged(const QString &text);
 
     void on_gg_InputDir_textChanged(const QString & text);
     void on_gg_OutputDir_textChanged(const QString & text);
@@ -227,6 +231,11 @@ class RepresentationUI : public QMainWindow, private Ui::RepresentationUI
      * @brief Method to attempt the extraction of the .ang max slice value and prefix
      */
     void oim_findAngMaxSliceAndPrefix();
+
+    /**
+     *
+     */
+    void rec_SetSliceInfo();
 
   private:
     QString                     m_OpenDialogLastDirectory;
