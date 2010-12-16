@@ -52,7 +52,9 @@ class AIMCOMMON_EXPORT H5AngDataLoader : public AbstractAngDataLoader
 
     int loadData(Voxel voxels[], int xpoints, int ypoints, int zpoints);
     int getSizeAndResolution(int &xpoints, int &ypoints, int &zpoints,
-                                        double &xres, double &yres, double &zres);
+                             double &xres, double &yres, double &zres);
+
+    int readZHeader(int &zStart, int &zEnd, float &zRes);
 
   protected:
     H5AngDataLoader();
