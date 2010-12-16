@@ -36,16 +36,13 @@
        </size>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="oimImportTab">
        <attribute name="title">
         <string>OIM Data Import</string>
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout_5">
-        <property name="spacing">
-         <number>6</number>
-        </property>
         <property name="margin">
          <number>4</number>
         </property>
@@ -80,7 +77,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QLineEdit" name="oim_AngFilePrefix">
+           <widget class="QLineEdit" name="oim_FilePrefix">
             <property name="text">
              <string>Slice_</string>
             </property>
@@ -94,7 +91,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QSpinBox" name="oim_AngMaxSlice">
+           <widget class="QSpinBox" name="oim_ZMaxSlice">
             <property name="maximum">
              <number>100000000</number>
             </property>
@@ -112,7 +109,7 @@
            </widget>
           </item>
           <item row="0" column="1">
-           <widget class="QSpinBox" name="oim_zStartIndex">
+           <widget class="QSpinBox" name="oim_ZStartIndex">
             <property name="minimumSize">
              <size>
               <width>75</width>
@@ -135,7 +132,7 @@
            </widget>
           </item>
           <item row="0" column="3">
-           <widget class="QSpinBox" name="oim_zEndIndex">
+           <widget class="QSpinBox" name="oim_ZEndIndex">
             <property name="minimumSize">
              <size>
               <width>75</width>
@@ -260,15 +257,57 @@
         </item>
         <item>
          <layout class="QGridLayout" name="gridLayout_3">
-          <item row="0" column="0">
+          <item row="1" column="0">
            <widget class="QLabel" name="label_5">
             <property name="text">
              <string>Start Slice</string>
             </property>
            </widget>
           </item>
+          <item row="0" column="0">
+           <widget class="QLabel" name="label_7">
+            <property name="text">
+             <string>Minimum Slice</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="4">
+           <widget class="QLabel" name="rec_ZMax">
+            <property name="text">
+             <string>100</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="2">
+           <widget class="QLabel" name="label_54">
+            <property name="text">
+             <string>Maximum Slice</string>
+            </property>
+           </widget>
+          </item>
           <item row="0" column="1">
-           <widget class="QSpinBox" name="rec_zStartIndex">
+           <widget class="QLabel" name="rec_ZMin">
+            <property name="text">
+             <string>0</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="5">
+           <widget class="QLabel" name="rec_ZMax_2">
+            <property name="text">
+             <string>Z Resolution</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="6">
+           <widget class="QLabel" name="rec_ZRes">
+            <property name="text">
+             <string>0.0</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QSpinBox" name="rec_ZStartIndex">
             <property name="minimumSize">
              <size>
               <width>75</width>
@@ -283,15 +322,15 @@
             </property>
            </widget>
           </item>
-          <item row="0" column="2">
+          <item row="1" column="2">
            <widget class="QLabel" name="label_6">
             <property name="text">
              <string>End Slice</string>
             </property>
            </widget>
           </item>
-          <item row="0" column="3">
-           <widget class="QSpinBox" name="rec_zEndIndex">
+          <item row="1" column="4">
+           <widget class="QSpinBox" name="rec_ZEndIndex">
             <property name="minimumSize">
              <size>
               <width>75</width>
@@ -305,6 +344,19 @@
              <number>99</number>
             </property>
            </widget>
+          </item>
+          <item row="1" column="5" colspan="2">
+           <spacer name="horizontalSpacer_2">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
           </item>
          </layout>
         </item>
@@ -2358,7 +2410,6 @@
  <tabstops>
   <tabstop>rec_H5InputFile</tabstop>
   <tabstop>rec_OIMH5Btn</tabstop>
-  <tabstop>rec_zStartIndex</tabstop>
   <tabstop>rec_OutputDir</tabstop>
   <tabstop>rec_OutputDirBtn</tabstop>
   <tabstop>rec_mergeTwins</tabstop>
