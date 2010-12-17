@@ -13,7 +13,7 @@
 
 #include <math.h>
 #include <string>
-#include "AIM/Common/Constants.h"
+#include "AIM/Common/Quaternions.h"
 
 #define MXA_PI          3.141592653589793
 #define MXA_PI_OVER_4   0.785398163397448
