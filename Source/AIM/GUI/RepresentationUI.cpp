@@ -249,14 +249,19 @@ void RepresentationUI::readSettings()
   qint32 i;
   double d;
 
-  /* ******** This Section is for the Reconstruction Tab ************ */
+  /* ******** This Section is for the OIM Import Data Tab ************ */
   READ_FILEPATH_SETTING(prefs, oim_InputDir, "");
-  READ_FILEPATH_SETTING(prefs, rec_OutputDir, "");
-  READ_SETTING(prefs, oim_ZMaxSlice, ok, i, 300 , Int);
   READ_STRING_SETTING(prefs, oim_FilePrefix, "");
+  READ_SETTING(prefs, oim_ZMaxSlice, ok, i, 300 , Int);
   READ_SETTING(prefs, oim_ZStartIndex, ok, i, 1 , Int);
   READ_SETTING(prefs, oim_ZEndIndex, ok, i, 10 , Int);
   READ_STRING_SETTING(prefs, oim_zSpacing, "0.25");
+  READ_STRING_SETTING(prefs, oim_OutputFile, "*.h5ang");
+
+
+  /* ******** This Section is for the Reconstruction Tab ************ */
+  READ_FILEPATH_SETTING(prefs, rec_OutputDir, "");
+  READ_FILEPATH_SETTING(prefs, rec_H5InputFile, "");
   READ_BOOL_SETTING(prefs, rec_, mergeTwins, false);
   READ_BOOL_SETTING(prefs, rec_, mergeColonies, false);
   READ_BOOL_SETTING(prefs, rec_, alreadyFormed, false);
@@ -338,6 +343,7 @@ void RepresentationUI::writeSettings()
 
   /* ******** This Section is for the Reconstruction Tab ************ */
   WRITE_STRING_SETTING(prefs, rec_OutputDir)
+  WRITE_STRING_SETTING(prefs, rec_H5InputFile)
   WRITE_BOOL_SETTING(prefs, mergeTwins, rec_mergeTwins->isChecked())
   WRITE_BOOL_SETTING(prefs, mergeColonies, rec_mergeColonies->isChecked())
   WRITE_BOOL_SETTING(prefs, alreadyFormed, rec_alreadyFormed->isChecked())
