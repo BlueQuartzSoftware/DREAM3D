@@ -347,13 +347,13 @@ int  GrainGeneratorFunc::readAxisOrientationData(H5ReconStatsReader::Pointer h5i
   int err = 0;
   double totaldensity = 0;
 //FIXME: Where is the reading of the Precipiate Data?
-  err = h5io->readAxisOrientationData(density);
+  err = h5io->readStatsDataset(AIM::HDF5::AxisOrientation, density);
 //FIXME: This seems to be forcing FCC. What if the reconstruction was Hexagonal?
   size_t size = 18 * 18 * 18;
 
   if (size != density.size() )
   {
-    std::cout << "GrainGeneratorFunc::loadorientData Error: Mismatch in number of elements in the 'AxisOrientation' "
+    std::cout << "GrainGeneratorFunc::readAxisOrientationData Error: Mismatch in number of elements in the 'AxisOrientation' "
          << " Arrays. The Array stored in the Reconstruction HDF5 file has " << density.size()
          << " elements and we need " << size << " Elements. "<< std::endl;
     return -1;
@@ -406,7 +406,7 @@ int GrainGeneratorFunc::readODFData(H5ReconStatsReader::Pointer h5io)
 {
   std::vector<double> density;
   int err = 0;
-  err = h5io->readODFData(density);
+  err = h5io->readStatsDataset(AIM::HDF5::ODF, density);
   size_t numbins = 0;
   if(crystruct == AIM::Reconstruction::Hexagonal) numbins = 36*36*12;
   if(crystruct == AIM::Reconstruction::Cubic) numbins = 18*18*18;
@@ -445,33 +445,63 @@ void  GrainGeneratorFunc::readODFData(string inname7)
 #if AIM_HDF5_SUPPORT
 int GrainGeneratorFunc::readMisorientationData(H5ReconStatsReader::Pointer h5io)
 {
-  int err = -1;
-  std::cout << "NOT IMPLEMENTED YET:" << __FILE__ << " " << __LINE__ << std::endl;
+  std::vector<double> density;
+  int err = 0;
+  err = h5io->readStatsDataset(AIM::HDF5::MisorientationBins, density);
+  size_t numbins = 36;
+
+  if (numbins != density.size() )
+  {
+    std::cout << "GrainGeneratorFunc::readMisorientationData Error: Mismatch in number of elements in the 'ODF' "
+         << " Arrays. The Array stored in the Reconstruction HDF5 file has " << density.size()
+         << " elements and we need " << numbins << " Elements. "<< std::endl;
+    return -1;
+  }
+
+  for (size_t k = 0; k < numbins; k++)
+  {
+    actualmdf[k].density = density[k];
+  }
   return err;
 }
 #else
 void  GrainGeneratorFunc::readMisorientationData(string inname10)
 {
-    ifstream inputFile;
-    inputFile.open(inname10.c_str());
+  ifstream inputFile;
+  inputFile.open(inname10.c_str());
   int count = 0;
   double density = 0;
-    for (int k = 0; k < 36; k++)
-    {
+  for (int k = 0; k < 36; k++)
+  {
     inputFile >> density;
     actualmdf[count].density = density;
-        count++;
-    }
-    inputFile.close();
+    count++;
+  }
+  inputFile.close();
 }
 #endif
 
 #if AIM_HDF5_SUPPORT
 int GrainGeneratorFunc::readMicroTextureData(H5ReconStatsReader::Pointer h5io)
 {
-  int err = -1;
-  std::cout << "NOT IMPLEMENTED YET:" << __FILE__ << " " << __LINE__ << std::endl;
-  return -1;
+  std::vector<double> density;
+  int err = 0;
+  err = h5io->readStatsDataset(AIM::HDF5::MicroTextureBins, density);
+  size_t numbins = 10;
+
+  if (numbins != density.size() )
+  {
+    std::cout << "GrainGeneratorFunc::readMicroTextureData Error: Mismatch in number of elements in the 'ODF' "
+         << " Arrays. The Array stored in the Reconstruction HDF5 file has " << density.size()
+         << " elements and we need " << numbins << " Elements. "<< std::endl;
+    return -1;
+  }
+
+  for (size_t k = 0; k < numbins; k++)
+  {
+    actualmdf[k].density = density[k];
+  }
+  return err;
 }
 
 #else
@@ -495,7 +525,7 @@ void  GrainGeneratorFunc::generate_grain(int gnum)
 {
   int good = 0;
   double r1 = 1;
-  double u=0,u1=0,u2=0;
+  double u=0 ;
   double a1=0,a2=0,a3=0;
   double b1=0,b2=0,b3=0;
   double r2=0,r3=0;
@@ -565,10 +595,10 @@ void  GrainGeneratorFunc::generate_grain(int gnum)
 
 void  GrainGeneratorFunc::insert_grain(int gnum)
 {
-  int count = 0;
-  int good = 0;
-  long j = 0;
-  double dist, dist1, dist2;
+//  int count = 0;
+//  int good = 0;
+//  long j = 0;
+  double dist;
   double Nvalue = 0;
   double Gvalue = 0;
   double inside = -1;
@@ -578,8 +608,8 @@ void  GrainGeneratorFunc::insert_grain(int gnum)
   double xc, yc, zc;
   double xp, yp, zp;
   double x, y, z;
-  double x1, y1, z1;
-  double x2, y2, z2;
+//  double x1, y1, z1;
+//  double x2, y2, z2;
   double ellipfunc = 0;
   double insidecount = 0;
   rg.RandomInit((static_cast<unsigned int>(time(NULL))));
@@ -752,7 +782,7 @@ void  GrainGeneratorFunc::remove_grain(int gnum)
   int index;
   double ellipfunc;
   int neigh;
-  for(int i=0;i<grains[gnum].voxellist->size();i++)
+  for(size_t i=0;i<grains[gnum].voxellist->size();i++)
   {
 	index = grains[gnum].voxellist->at(i);
 	ellipfunc = grains[gnum].ellipfunclist->at(i);
@@ -761,7 +791,7 @@ void  GrainGeneratorFunc::remove_grain(int gnum)
   }
   for(int i=0;i<4;i++)
   {
-	  for(int j=0;j<grains[gnum].neighbordistfunclist[i].size();j++)
+	  for(size_t j=0;j<grains[gnum].neighbordistfunclist[i].size();j++)
 	  {
 		index = grains[gnum].neighbordistfunclist[i][j];
 		grains[index].neighbordistfunc[i] = grains[index].neighbordistfunc[i]-1;
@@ -773,7 +803,7 @@ void  GrainGeneratorFunc::add_grain(int gnum)
   int index;
   double ellipfunc;
   int neigh;
-  for(int i=0;i<grains[gnum].voxellist->size();i++)
+  for(size_t i=0;i<grains[gnum].voxellist->size();i++)
   {
 	index = grains[gnum].voxellist->at(i);
 	ellipfunc = grains[gnum].ellipfunclist->at(i);
@@ -795,8 +825,7 @@ void GrainGeneratorFunc::determine_neighbors()
 {
   double x, y, z;
   double rad1, rad2;
-  double bovera, covera, omega3;
-  double Gvalue, Nvalue;
+
   double xn, yn, zn;
   double dia, dia2;
   int DoverR;
@@ -839,7 +868,7 @@ void GrainGeneratorFunc::determine_neighbors()
 }
 double GrainGeneratorFunc::check_neighborhooderror(int gadd, int gremove)
 {
-	double c, p, df;
+	double p, df;
 	double uvar;
 	double tvalue;
 	double neighborerror = 0;
@@ -862,7 +891,7 @@ double GrainGeneratorFunc::check_neighborhooderror(int gadd, int gremove)
 	{
 	  for(int i=0;i<4;i++)
 	  {
-		  for(int j=0;j<grains[gadd].neighbordistfunclist[i].size();j++)
+		  for(size_t j=0;j<grains[gadd].neighbordistfunclist[i].size();j++)
 		  {
 			index = grains[gadd].neighbordistfunclist[i][j];
 			grains[index].neighbordistfunc[i]++;
@@ -873,14 +902,14 @@ double GrainGeneratorFunc::check_neighborhooderror(int gadd, int gremove)
 	{
 	  for(int i=0;i<4;i++)
 	  {
-		  for(int j=0;j<grains[gremove].neighbordistfunclist[i].size();j++)
+		  for(size_t j=0;j<grains[gremove].neighbordistfunclist[i].size();j++)
 		  {
 			index = grains[gremove].neighbordistfunclist[i][j];
 			grains[index].neighbordistfunc[i] = grains[index].neighbordistfunc[i]-1;
 		  }
 	  }
 	}
-	for(int i=1;i<activegrainlist.size();i++)
+	for(size_t i=1;i<activegrainlist.size();i++)
 	{
 		nnum=0;
 		index = activegrainlist[i];
@@ -923,7 +952,7 @@ double GrainGeneratorFunc::check_neighborhooderror(int gadd, int gremove)
 			if(neighbordist[i][8] == 0) neighbordist[i][(2*j)] = 0;
 		}
 	}
-	for(int i=1;i<activegrainlist.size();i++)
+	for(size_t i=1;i<activegrainlist.size();i++)
 	{
 		index = activegrainlist[i];
 		if(index != gremove)
@@ -978,7 +1007,7 @@ double GrainGeneratorFunc::check_neighborhooderror(int gadd, int gremove)
 	{
 	  for(int i=0;i<4;i++)
 	  {
-		  for(int j=0;j<grains[gadd].neighbordistfunclist[i].size();j++)
+		  for(size_t j=0;j<grains[gadd].neighbordistfunclist[i].size();j++)
 		  {
 			index = grains[gadd].neighbordistfunclist[i][j];
 			grains[index].neighbordistfunc[i] = grains[index].neighbordistfunc[i]-1;
@@ -989,7 +1018,7 @@ double GrainGeneratorFunc::check_neighborhooderror(int gadd, int gremove)
 	{
 	  for(int i=0;i<4;i++)
 	  {
-		  for(int j=0;j<grains[gremove].neighbordistfunclist[i].size();j++)
+		  for(size_t j=0;j<grains[gremove].neighbordistfunclist[i].size();j++)
 		  {
 			index = grains[gremove].neighbordistfunclist[i][j];
 			grains[index].neighbordistfunc[i]++;
@@ -1002,7 +1031,7 @@ double GrainGeneratorFunc::costcheck_remove(int gnum)
 {
   int index;
   double removecost = 0;
-  for(int i=0;i<grains[gnum].voxellist->size();i++)
+  for(size_t i=0;i<grains[gnum].voxellist->size();i++)
   {
 	index = grains[gnum].voxellist->at(i);
 	if(voxels[index].grainlist->size() == 1) removecost = removecost+1.0;
@@ -1018,7 +1047,7 @@ double GrainGeneratorFunc::costcheck_add(int gnum)
 {
   int index;
   double addcost = 0;
-  for(int i=0;i<grains[gnum].voxellist->size();i++)
+  for(size_t i=0;i<grains[gnum].voxellist->size();i++)
   {
 	index = grains[gnum].voxellist->at(i);
 	if(voxels[index].grainlist->size() == 0) addcost = addcost-1.0;
@@ -1032,16 +1061,15 @@ double GrainGeneratorFunc::costcheck_add(int gnum)
 }
 double GrainGeneratorFunc::check_sizedisterror(int gadd, int gremove)
 {
-	double c, p, df;
+	double p, df;
 	double avgdia=0, stddia=0;
 	double uvar;
-	double vol, dia;
+	double dia;
 	double tvalue;
 	double sizedisterror;
 	int index;
-	double curtotvol=0;
 	int count = 0;
-	for(int b=1;b<activegrainlist.size();b++)
+	for(size_t b=1;b<activegrainlist.size();b++)
 	{
 		index = activegrainlist[b];
 		if(index != gremove)
@@ -1058,7 +1086,7 @@ double GrainGeneratorFunc::check_sizedisterror(int gadd, int gremove)
 		count++;
 	}
 	avgdia = avgdia/(count);
-	for(int b=1;b<activegrainlist.size();b++)
+	for(size_t b=1;b<activegrainlist.size();b++)
 	{
 		index = activegrainlist[b];
 		if(index != gremove)
@@ -1085,13 +1113,10 @@ double GrainGeneratorFunc::check_sizedisterror(int gadd, int gremove)
 int  GrainGeneratorFunc::pack_grains(int numgrains)
 {
   totalvol = 0;
-  double change1, change2, change3, change4;
+  double change1, change2, change3;
   double allowablechange, totalchange;
-  double Nvalue, Gvalue;
-  double volcur, bovera, covera, omega3;
-  double radcur1, radcur2, radcur3;
+
   int index;
-  int col, row, plane;
   double xc, yc, zc;
   currentfillingerror=0,oldfillingerror=0;
   currentneighborhooderror=0,oldneighborhooderror=0;
@@ -1099,7 +1124,7 @@ int  GrainGeneratorFunc::pack_grains(int numgrains)
   double addcost, removecost;
   int acceptedmoves=0;
   rg.RandomInit((static_cast<unsigned int>(time(NULL))));
-  std::vector<int>* nlist;
+ // std::vector<int>* nlist;
   string filename = "test.txt";
   ofstream outFile;
   outFile.open(filename.c_str());
@@ -1191,7 +1216,7 @@ int  GrainGeneratorFunc::pack_grains(int numgrains)
 	}
 	if(option == 1)
 	{
-		int random = int(rg.Random()*activegrainlist.size());
+		size_t random = int(rg.Random()*activegrainlist.size());
 		if(random == 0) random = 1;
 		if(random == activegrainlist.size()) random = activegrainlist.size()-1;
 		random = activegrainlist[random];

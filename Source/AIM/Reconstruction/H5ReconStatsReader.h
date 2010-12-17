@@ -57,9 +57,11 @@ class AIMCOMMON_EXPORT H5ReconStatsReader
 
     MXA_INSTANCE_STRING_PROPERTY(FileName);
 
-    int readAxisOrientationData(std::vector<double> &data);
-    int readODFData(std::vector<double> &data);
-    int readReconStatsData();
+    int readStatsDataset(const std::string &name, std::vector<double> &data);
+
+//    int readAxisOrientationData(std::vector<double> &data);
+//    int readODFData(std::vector<double> &data);
+//    int readReconStatsData();
 
   protected:
     H5ReconStatsReader();
