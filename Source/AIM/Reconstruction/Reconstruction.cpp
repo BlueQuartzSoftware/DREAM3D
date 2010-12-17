@@ -188,7 +188,7 @@ void Reconstruction::compute()
   // Create a new HDF5 Results file by overwriting any HDF5 file that may be in the way
   std::string hdf5ResultsFile = m_OutputDirectory + MXADir::Separator + AIM::Reconstruction::HDF5ResultsFile;
   H5ReconStatsWriter::Pointer h5io = H5ReconStatsWriter::New(hdf5ResultsFile);
-#else
+//#else
   std::string statsFile = m_OutputDirectory + MXADir::Separator + AIM::Reconstruction::StatsFile;
   std::string microBinsFile = m_OutputDirectory + MXADir::Separator + AIM::Reconstruction::MicroTextureFile;
   std::string misorientationFile = m_OutputDirectory + MXADir::Separator + AIM::Reconstruction::MisorientationBinsFile;
@@ -381,7 +381,7 @@ void Reconstruction::compute()
   //TODO: Write HDF5 MisorientationBinsFile
   //TODO: Write HDF5 MicroTextureFile
 #if AIM_HDF5_SUPPORT
-  if(m_ZEndIndex-m_ZStartIndex > 1) m->volume_stats(h5io);
+  if(m_ZEndIndex-m_ZStartIndex > 1) m->volume_stats(h5io, statsFile,misorientationFile,microBinsFile);
   if(m_ZEndIndex-m_ZStartIndex == 1) m->volume_stats2D(h5io);
 #else
   if(m_ZEndIndex-m_ZStartIndex > 1) m->volume_stats(statsFile,misorientationFile,microBinsFile);
@@ -430,7 +430,7 @@ void Reconstruction::compute()
   progressMessage(AIM_STRING("Writing Axis Orientation File"), 90);
 #if AIM_HDF5_SUPPORT
   err = h5io->writeAxisOrientationData(m->axisodf, m->crystruct, m->totalaxes);
-#else
+//#else
   m->write_axisodf(axisFile);
 #endif
 
@@ -439,7 +439,7 @@ void Reconstruction::compute()
   //DONE: Write HDF5 ODFFile
 #if AIM_HDF5_SUPPORT
   err = h5io->writeODFData(m->crystruct, m->eulerodf, m->totalvol);
-#else
+//#else
   m->write_eulerodf(eulerFile);
 #endif
 

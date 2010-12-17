@@ -138,7 +138,8 @@ void GrainGeneratorFunc::initialize2()
 int GrainGeneratorFunc::readReconStatsData(H5ReconStatsReader::Pointer h5io)
 {
   int err = -1;
-  std::cout << "NOT IMPLEMENTED YET:" << __FILE__ << " " << __LINE__ << std::endl;
+
+  err = h5io->readReconStatsData();
   return err;
 }
 #else
@@ -403,8 +404,24 @@ void  GrainGeneratorFunc::readAxisOrientationData(string inname6)
 #if AIM_HDF5_SUPPORT
 int GrainGeneratorFunc::readODFData(H5ReconStatsReader::Pointer h5io)
 {
-  int err = -1;
-  std::cout << "NOT IMPLEMENTED YET:" << __FILE__ << " " << __LINE__ << std::endl;
+  std::vector<double> density;
+  int err = 0;
+  err = h5io->readODFData(density);
+  size_t numbins = 0;
+  if(crystruct == AIM::Reconstruction::Hexagonal) numbins = 36*36*12;
+  if(crystruct == AIM::Reconstruction::Cubic) numbins = 18*18*18;
+
+  if (numbins != density.size() )
+  {
+    std::cout << "GrainGeneratorFunc::readODFData Error: Mismatch in number of elements in the 'ODF' "
+         << " Arrays. The Array stored in the Reconstruction HDF5 file has " << density.size()
+         << " elements and we need " << numbins << " Elements. "<< std::endl;
+    return -1;
+  }
+  for (size_t i = 0; i < numbins; i++)
+  {
+    actualodf[i].density = density[i];
+  }
   return err;
 }
 #else
