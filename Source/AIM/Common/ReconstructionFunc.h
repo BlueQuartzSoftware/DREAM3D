@@ -210,8 +210,9 @@ void volume_stats2D(const std::string &stats, const std::string &misorientation,
   int writeDownSampledVizFile(const std::string &file);
 
 
-	double getmisoquatcubic(double,double q1[5],double q2[5],double &,double &,double &);
-	double getmisoquathexagonal(double,double q1[5],double q2[5],double &,double &,double &);
+	double getmisoquatcubic(double q1[5],double q2[5],double &n1,double &n2,double &n3);
+	double getmisoquathexagonal(double q1[5],double q2[5],double &n1,double &n2,double &n3);
+
 	double gamma(double);
 	double find_xcoord(long);
 	double find_ycoord(long);
