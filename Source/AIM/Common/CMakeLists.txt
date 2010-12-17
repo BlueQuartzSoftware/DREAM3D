@@ -63,8 +63,9 @@ SET (AIMCommon_SRCS
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Segment.cpp
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Bin.cpp   
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/AIMRandomNG.cpp
-    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Constants.cpp
+    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Quaternions.cpp
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/VTKFileUtils.cpp
+    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/MisorientationCalculations.cpp
     )
 
 SET (AIMCommon_HDRS
@@ -83,6 +84,8 @@ SET (AIMCommon_HDRS
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/FeiConstants.h
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Constants.h
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/VTKFileUtils.h
+    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Quaternions.h
+    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/MisorientationCalculations.h
 )
 
 # --------------------------------------------------------------------

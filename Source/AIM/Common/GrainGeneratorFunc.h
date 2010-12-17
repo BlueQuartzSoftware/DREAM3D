@@ -189,10 +189,9 @@ void readMicroTextureData(string);
 	void find_neighbors();
 	void writeCube(string, int);
 
-	void matchCrystallography(double quat_symmcubic[24][5],double quat_symmhex[12][5], string);
-	void measure_misorientations(double quat_symmcubic[24][5],double quat_symmhex[12][5]);
-	double getmisoquatcubic(double q1[5],double q2[5],double &,double &,double &);
-	double getmisoquathexagonal(double quat_symmhex[12][5],double q1[5],double q2[5],double &,double &,double &);
+	void matchCrystallography(const std::string &ErrorFile);
+	void measure_misorientations();
+
 	double gamma(double);
 	double erf(double);
 	double erfc(double);
