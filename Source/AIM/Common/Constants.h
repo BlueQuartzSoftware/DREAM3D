@@ -68,7 +68,7 @@ namespace AIM
     const std::string Grain_Size_Distribution("GrainSize Distribution");
     const std::string Grain_SizeVBoverA_Distributions("GrainSize Vs B Over A Distributions");
     const std::string Grain_SizeVCoverA_Distributions("GrainSize Vs C Over A Distributions");
-    const std::string Grain_SizeVCoverB_Distributions("GrainSize Vs CoverB Distributions");
+    const std::string Grain_SizeVCoverB_Distributions("GrainSize Vs C Over B Distributions");
     const std::string Grain_SizeVNeighbors_Distributions("GrainSize Vs Neighbors Distributions");
     const std::string Grain_SizeVOmega3_Distributions("GrainSize Vs Omega3 Distributions");
 

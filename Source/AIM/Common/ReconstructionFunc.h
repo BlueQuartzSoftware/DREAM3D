@@ -189,7 +189,10 @@ public:
 	void align_sections(const std::string &filename );
 
 #if AIM_HDF5_SUPPORT
-void volume_stats(H5ReconStatsWriter::Pointer h5io);
+void volume_stats(H5ReconStatsWriter::Pointer h5io,
+                  const std::string &statsfile,
+                  const std::string &misorientationFile,
+                  const std::string &microBinsFile);
 void volume_stats2D(H5ReconStatsWriter::Pointer h5io);
 #else
 void volume_stats(const std::string &statsfile,

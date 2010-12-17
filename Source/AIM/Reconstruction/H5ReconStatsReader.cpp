@@ -82,6 +82,47 @@ H5ReconStatsReader::Pointer H5ReconStatsReader::New(const std::string &filename)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+int H5ReconStatsReader::readReconStatsData()
+{
+  int err = -1;
+
+  return err;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int H5ReconStatsReader::readODFData(std::vector<double> &data)
+{
+  herr_t err = 0;
+  herr_t retErr = 0;
+  OPEN_HDF5_FILE(fileId, m_FileName)
+
+  OPEN_RECONSTRUCTION_GROUP(reconGid, AIM::HDF5::Reconstruction.c_str(), fileId)
+
+  err = H5Lite::readVectorDataset(reconGid, AIM::HDF5::ODF, data);
+  if (err < 0)
+  {
+    data.clear(); // Clear all the data from the vector.
+    retErr = err;
+  }
+
+  err = H5Gclose(reconGid);
+  if (err < 0)
+  {
+    retErr = err;
+  }
+  err = H5Utilities::closeFile(fileId);
+  if (err < 0)
+  {
+    retErr = err;
+  }
+  return retErr;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 int H5ReconStatsReader::readAxisOrientationData(std::vector<double> &data)
 {
   herr_t err = 0;
@@ -91,30 +132,20 @@ int H5ReconStatsReader::readAxisOrientationData(std::vector<double> &data)
   OPEN_RECONSTRUCTION_GROUP(reconGid, AIM::HDF5::Reconstruction.c_str(), fileId)
 
   err = H5Lite::readVectorDataset(reconGid, AIM::HDF5::AxisOrientation, data);
-
-
-#if 0
-  int size = 0;
-  if (crystruct == AIM::Reconstruction::Hexagonal) size = 36 * 36 * 12;
-  if (crystruct == AIM::Reconstruction::Cubic) size = 18 * 18 * 18;
-
-  for (int i = 0; i < size; ++i)
-  {
-    data[i] = axisodf[i].density / totalaxes;
-  }
-
-  std::vector<hsize_t> dims(1);
-  dims[0] = size;
-  err = H5Lite::writeVectorDataset(gid, AIM::HDF5::AxisOrientation, dims, data);
   if (err < 0)
   {
     retErr = err;
   }
-#endif
-
 
   err = H5Gclose(reconGid);
+  if (err < 0)
+  {
+    retErr = err;
+  }
   err = H5Utilities::closeFile(fileId);
-
-  return err;
+  if (err < 0)
+  {
+    retErr = err;
+  }
+  return retErr;
 }

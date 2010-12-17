@@ -112,49 +112,6 @@ void GrainGenerator::run()
 void GrainGenerator::compute()
 {
   int err = 0;
-#if 0
-  double quat_symmcubic[24][5] =
-  {
-    { 0.000000000, 0.000000000, 0.000000000, 0.000000000, 1.000000000},
-    { 0.000000000, 1.000000000, 0.000000000, 0.000000000, 0.000000000},
-    { 0.000000000, 0.000000000, 1.000000000, 0.000000000, 0.000000000},
-    { 0.000000000, 0.000000000, 0.000000000, 1.000000000, 0.000000000},
-    { 0.000000000, 0.707106781, 0.000000000, 0.000000000, 0.707106781},
-    { 0.000000000, 0.000000000, 0.707106781, 0.000000000, 0.707106781},
-    { 0.000000000, 0.000000000, 0.000000000, 0.707106781, 0.707106781},
-    { 0.000000000, -0.707106781, 0.000000000, 0.000000000, 0.707106781},
-    { 0.000000000, 0.000000000, -0.707106781, 0.000000000, 0.707106781},
-    { 0.000000000, 0.000000000, 0.000000000, -0.707106781, 0.707106781},
-    { 0.000000000, 0.707106781, 0.707106781, 0.000000000, 0.000000000},
-    { 0.000000000, -0.707106781, 0.707106781, 0.000000000, 0.000000000},
-    { 0.000000000, 0.000000000, 0.707106781, 0.707106781, 0.000000000},
-    { 0.000000000, 0.000000000, -0.707106781, 0.707106781, 0.000000000},
-    { 0.000000000, 0.707106781, 0.000000000, 0.707106781, 0.000000000},
-    { 0.000000000, -0.707106781, 0.000000000, 0.707106781, 0.000000000},
-    { 0.000000000, 0.500000000, 0.500000000, 0.500000000, 0.500000000},
-    { 0.000000000, -0.500000000, -0.500000000, -0.500000000, 0.500000000},
-    { 0.000000000, 0.500000000, -0.500000000, 0.500000000, 0.500000000},
-    { 0.000000000, -0.500000000, 0.500000000, -0.500000000, 0.500000000},
-    { 0.000000000, -0.500000000, 0.500000000, 0.500000000, 0.500000000},
-    { 0.000000000, 0.500000000, -0.500000000, -0.500000000, 0.500000000},
-    { 0.000000000, -0.500000000, -0.500000000, 0.500000000, 0.500000000},
-    { 0.000000000, 0.500000000, 0.500000000, -0.500000000, 0.500000000}};
-
-  double quat_symmhex[12][5] =
-  {
-    { 0.000000000, 0.000000000, 0.000000000, 0.000000000, 1.000000000},
-    { 0.000000000, 0.000000000, 0.000000000, 0.500000000, 0.866025400},
-    { 0.000000000, 0.000000000, 0.000000000, 0.866025400, 0.500000000},
-    { 0.000000000, 0.000000000, 0.000000000, 1.000000000, 0.000000000},
-    { 0.000000000, 0.000000000, 0.000000000, 0.866025400, -0.50000000},
-    { 0.000000000, 0.000000000, 0.000000000, 0.500000000, -0.86602540},
-    { 0.000000000, 1.000000000, 0.000000000, 0.000000000, 0.000000000},
-    { 0.000000000, 0.866025400, 0.500000000, 0.000000000, 0.000000000},
-    { 0.000000000, 0.500000000, 0.866025400, 0.000000000, 0.000000000},
-    { 0.000000000, 0.000000000, 1.000000000, 0.000000000, 0.000000000},
-    { 0.000000000, -0.50000000, 0.866025400, 0.000000000, 0.000000000},
-    { 0.000000000, -0.86602540, 0.500000000, 0.000000000, 0.000000000}};
-#endif
 
 
 #if AIM_HDF5_SUPPORT
@@ -165,14 +122,14 @@ void GrainGenerator::compute()
       return;
     }
 #else
-  std::string  StatsFile = m_InputDirectory + MXADir::Separator + AIM::Reconstruction::StatsFile;
-  std::string  AxisOrientationsFile = m_InputDirectory + MXADir::Separator + AIM::Reconstruction::AxisOrientationsFile;
-  std::string  EulerAnglesFile = m_InputDirectory + MXADir::Separator + AIM::Reconstruction::ODFFile;
-  std::string  MisorientationBinsFile = m_InputDirectory + MXADir::Separator + AIM::Reconstruction::MisorientationBinsFile;
-  std::string  MicroBinsFile = m_InputDirectory + MXADir::Separator + AIM::Reconstruction::MicroTextureFile;
+  std::string StatsFile = m_InputDirectory + MXADir::Separator + AIM::Reconstruction::StatsFile;
+  std::string AxisOrientationsFile = m_InputDirectory + MXADir::Separator + AIM::Reconstruction::AxisOrientationsFile;
+  std::string EulerAnglesFile = m_InputDirectory + MXADir::Separator + AIM::Reconstruction::ODFFile;
+  std::string MisorientationBinsFile = m_InputDirectory + MXADir::Separator + AIM::Reconstruction::MisorientationBinsFile;
+  std::string MicroBinsFile = m_InputDirectory + MXADir::Separator + AIM::Reconstruction::MicroTextureFile;
 #endif
-  std::string  CubeFile = m_OutputDirectory + MXADir::Separator + AIM::SyntheticBuilder::CubeFile;
-  std::string  EulerFile = m_OutputDirectory + MXADir::Separator + AIM::SyntheticBuilder::EulerFile;
+  std::string CubeFile = m_OutputDirectory + MXADir::Separator + AIM::SyntheticBuilder::CubeFile;
+  std::string EulerFile = m_OutputDirectory + MXADir::Separator + AIM::SyntheticBuilder::EulerFile;
   std::string AnalysisFile = m_OutputDirectory + MXADir::Separator + AIM::SyntheticBuilder::AnalysisFile;
   std::string MoDFFile = m_OutputDirectory + MXADir::Separator + AIM::SyntheticBuilder::MoDFFile;
   std::string CrystallographicErrorFile = m_OutputDirectory + MXADir::Separator + AIM::SyntheticBuilder::CrystallographicErrorFile;
