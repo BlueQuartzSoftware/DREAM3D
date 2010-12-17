@@ -56,6 +56,42 @@ H5AngDataLoader::~H5AngDataLoader()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+int H5AngDataLoader::readZHeader(int &zStart, int &zEnd, float &zRes)
+{
+  int err = -1;
+  int retErr = 0;
+  hid_t fileId = H5Utilities::openFile(m_Filename, true);
+  if (fileId < 0)
+  {
+    std::cout << "Error Opening file '" << m_Filename << "'" << std::endl;
+    return -1;
+  }
+  err = H5Lite::readScalarDataset(fileId, AIM::ANG::ZResolution, zRes);
+  if (err < 0)
+  {
+    std::cout << "H5AngDataLoader::readZHeader Error: Could not load ZResolution data" << std::endl;
+    retErr = err;
+  }
+  err = H5Lite::readScalarDataset(fileId, AIM::ANG::ZStartIndex, zStart);
+  if (err < 0)
+  {
+    std::cout << "H5AngDataLoader::readZHeader Error: Could not load ZStartIndex data" << std::endl;
+    retErr = err;
+  }
+  err = H5Lite::readScalarDataset(fileId, AIM::ANG::ZEndIndex, zEnd);
+  if (err < 0)
+  {
+    std::cout << "H5AngDataLoader::readZHeader Error: Could not load ZEndIndex data" << std::endl;
+    retErr = err;
+  }
+
+  err = H5Fclose(fileId);
+  return retErr;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 int H5AngDataLoader::getSizeAndResolution(int &xpoints, int &ypoints, int &zpoints,
                                     double &xres, double &yres, double &zres)
 {
@@ -79,7 +115,6 @@ int H5AngDataLoader::getSizeAndResolution(int &xpoints, int &ypoints, int &zpoin
 
   for(int i=0;i<zpoints;i++)
   {
-
     std::string index = StringUtils::numToString(i + getZStartIndex());
     hid_t gid = H5Gopen(fileId, index.c_str());
     H5AngReader::Pointer reader = H5AngReader::New();

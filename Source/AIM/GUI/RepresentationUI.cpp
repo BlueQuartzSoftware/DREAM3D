@@ -16,6 +16,10 @@
 #include <AIM/Common/Qt/QR3DFileCompleter.h>
 #include <AIM/Threads/AIMThread.h>
 
+#if AIM_HDF5_SUPPORT
+#include "AIM/ANG/H5AngDataLoader.h"
+#endif
+
 
 //-- Qt Includes
 #include <QtCore/QFileInfo>
@@ -248,10 +252,10 @@ void RepresentationUI::readSettings()
   /* ******** This Section is for the Reconstruction Tab ************ */
   READ_FILEPATH_SETTING(prefs, oim_InputDir, "");
   READ_FILEPATH_SETTING(prefs, rec_OutputDir, "");
-  READ_SETTING(prefs, oim_AngMaxSlice, ok, i, 300 , Int);
-  READ_STRING_SETTING(prefs, oim_AngFilePrefix, "");
-  READ_SETTING(prefs, oim_zStartIndex, ok, i, 1 , Int);
-  READ_SETTING(prefs, oim_zEndIndex, ok, i, 10 , Int);
+  READ_SETTING(prefs, oim_ZMaxSlice, ok, i, 300 , Int);
+  READ_STRING_SETTING(prefs, oim_FilePrefix, "");
+  READ_SETTING(prefs, oim_ZStartIndex, ok, i, 1 , Int);
+  READ_SETTING(prefs, oim_ZEndIndex, ok, i, 10 , Int);
   READ_STRING_SETTING(prefs, oim_zSpacing, "0.25");
   READ_BOOL_SETTING(prefs, rec_, mergeTwins, false);
   READ_BOOL_SETTING(prefs, rec_, mergeColonies, false);
@@ -323,15 +327,17 @@ void RepresentationUI::writeSettings()
   QSettings prefs;
 //  bool ok = false;
 //  qint32 i = 0;
-  /* ******** This Section is for the Reconstruction Tab ************ */
+  /* ******** This Section is for the OIM Import Data Tab ************ */
   WRITE_STRING_SETTING(prefs, oim_InputDir)
-  WRITE_STRING_SETTING(prefs, rec_OutputDir)
-  WRITE_STRING_SETTING(prefs, oim_AngFilePrefix)
-  WRITE_STRING_SETTING(prefs, oim_AngMaxSlice)
-  WRITE_STRING_SETTING(prefs, oim_zStartIndex)
-  WRITE_STRING_SETTING(prefs, oim_zEndIndex)
+  WRITE_STRING_SETTING(prefs, oim_FilePrefix)
+  WRITE_STRING_SETTING(prefs, oim_ZMaxSlice)
+  WRITE_STRING_SETTING(prefs, oim_ZStartIndex)
+  WRITE_STRING_SETTING(prefs, oim_ZEndIndex)
   WRITE_STRING_SETTING(prefs, oim_zSpacing)
+  WRITE_STRING_SETTING(prefs, oim_OutputFile)
 
+  /* ******** This Section is for the Reconstruction Tab ************ */
+  WRITE_STRING_SETTING(prefs, rec_OutputDir)
   WRITE_BOOL_SETTING(prefs, mergeTwins, rec_mergeTwins->isChecked())
   WRITE_BOOL_SETTING(prefs, mergeColonies, rec_mergeColonies->isChecked())
   WRITE_BOOL_SETTING(prefs, alreadyFormed, rec_alreadyFormed->isChecked())
@@ -626,6 +632,10 @@ void RepresentationUI::rec_SetupGui()
   QObject::connect( com2, SIGNAL(activated(const QString &)),
            this, SLOT(on_rec_OutputDir_textChanged(const QString &)));
 
+  QR3DFileCompleter* com1 = new QR3DFileCompleter(this, false);
+  rec_H5InputFile->setCompleter(com1);
+  QObject::connect( com1, SIGNAL(activated(const QString &)),
+           this, SLOT(on_rec_H5InputFile_textChanged(const QString &)));
 
   QString msg ("All files will be over written that appear in the output directory.");
 
@@ -646,9 +656,11 @@ void RepresentationUI::rec_SetupGui()
   rec_HDF5GrainFileIcon->setVisible(false);
 #endif
   m_WidgetList << rec_OutputDir << rec_OutputDirBtn;
+  m_WidgetList << rec_ZStartIndex << rec_ZEndIndex;
   m_WidgetList << rec_mergeTwins << rec_mergeColonies << rec_alreadyFormed << alignMeth << minAllowedGrainSize << minConfidence << downsampleFactor << misOrientationTolerance;
   m_WidgetList << crystalStructure;
   m_WidgetList << rec_DisorientationVizFile << rec_ImageQualityVizFile << rec_IPFVizFile << rec_SchmidFactorVizFile << rec_VisualizationVizFile << rec_DownSampledVizFile;
+  m_WidgetList << minImageQuality;
 #if AIM_HDF5_SUPPORT
   m_WidgetList << rec_HDF5GrainFile;
 #endif
@@ -680,6 +692,22 @@ void RepresentationUI::rec_CheckIOFiles()
 #if AIM_HDF5_SUPPORT
   CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(AIM::Reconstruction, rec_ , HDF5GrainFile)
 #endif
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void RepresentationUI::on_rec_OIMH5Btn_clicked()
+{
+  QString file = QFileDialog::getOpenFileName(this, tr("Select Input File"),
+                                                 m_OpenDialogLastDirectory,
+                                                 tr("HDF5 OIM Files (*.h5 *.hdf5 *.h5ang)") );
+  if ( true == file.isEmpty() ){return;  }
+  QFileInfo fi (file);
+  QString ext = fi.suffix();
+  rec_H5InputFile->setText(fi.absoluteFilePath());
+  rec_SetSliceInfo();
 }
 
 // -----------------------------------------------------------------------------
@@ -736,6 +764,45 @@ void RepresentationUI::on_rec_OutputDirBtn_clicked()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void RepresentationUI::on_rec_H5InputFile_textChanged(const QString &text)
+{
+  if (_verifyPathExists(rec_H5InputFile->text(), rec_H5InputFile) )
+  {
+    rec_SetSliceInfo();
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void RepresentationUI::rec_SetSliceInfo()
+{
+  AbstractAngDataLoader::Pointer ptr = H5AngDataLoader::New();
+  H5AngDataLoader* reader = dynamic_cast<H5AngDataLoader*>(ptr.get());
+  QFileInfo fi(rec_H5InputFile->text());
+  if (fi.isFile() == false)
+  {
+    return;
+  }
+
+  reader->setFilename(rec_H5InputFile->text().toStdString());
+  int zStart = -1, zEnd = -1;
+  float zRes = 1.0;
+  if (reader->readZHeader(zStart, zEnd, zRes) >= 0)
+  {
+    rec_ZStartIndex->setValue(zStart);
+    rec_ZStartIndex->setRange(zStart, zEnd);
+    rec_ZEndIndex->setValue(zEnd);
+    rec_ZEndIndex->setRange(zStart, zEnd);
+    rec_ZRes->setText(QString::number(zRes));
+    rec_ZMin->setText(QString::number(zStart));
+    rec_ZMax->setText(QString::number(zEnd));
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void RepresentationUI::on_rec_OutputDir_textChanged(const QString & text)
 {
   _verifyPathExists(rec_OutputDir->text(), rec_OutputDir);
@@ -766,12 +833,12 @@ void RepresentationUI::on_rec_GoBtn_clicked()
 #else
   bool ok = false;
   m_Reconstruction->setInputDirectory(oim_InputDir->text().toStdString() );
-  m_Reconstruction->setAngFilePrefix(oim_AngFilePrefix->text().toStdString());
-  m_Reconstruction->setAngSeriesMaxSlice(oim_AngMaxSlice->value());
+  m_Reconstruction->setAngFilePrefix(oim_FilePrefix->text().toStdString());
+  m_Reconstruction->setAngSeriesMaxSlice(oim_ZMaxSlice->value());
   m_Reconstruction->setZResolution(oim_zSpacing->text().toDouble(&ok));
 #endif
-  m_Reconstruction->setZStartIndex(rec_zStartIndex->value());
-  m_Reconstruction->setZEndIndex(rec_zEndIndex->value() + 1);
+  m_Reconstruction->setZStartIndex(rec_ZStartIndex->value());
+  m_Reconstruction->setZEndIndex(rec_ZEndIndex->value() + 1);
   m_Reconstruction->setOutputDirectory(rec_OutputDir->text().toStdString());
 
   m_Reconstruction->setMergeTwins(rec_mergeTwins->isChecked() );
@@ -1514,9 +1581,23 @@ void RepresentationUI::oim_SetupGui()
   QR3DFileCompleter* com = new QR3DFileCompleter(this, true);
   oim_InputDir->setCompleter(com);
   QObject::connect( com, SIGNAL(activated(const QString &)),
-           this, SLOT(on_angDir_textChanged(const QString &)));
-  m_WidgetList << oim_InputDir << oim_InputDirBtn;
-  m_WidgetList << oim_AngFilePrefix << oim_AngMaxSlice << oim_zStartIndex << oim_zEndIndex << oim_zSpacing;
+           this, SLOT(on_oim_InputDir_textChanged(const QString &)));
+
+  QR3DFileCompleter* com1 = new QR3DFileCompleter(this, false);
+  oim_OutputFile->setCompleter(com1);
+  QObject::connect( com1, SIGNAL(activated(const QString &)),
+           this, SLOT(on_oim_OutputFile_textChanged(const QString &)));
+
+  m_WidgetList << oim_InputDir << oim_InputDirBtn << oim_OutputFile << oim_OutputFileBtn;
+  m_WidgetList << oim_FilePrefix << oim_ZMaxSlice << oim_ZStartIndex << oim_ZEndIndex << oim_zSpacing;
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void RepresentationUI::on_oim_OutputFile_textChanged(const QString & text)
+{
 
 }
 
@@ -1529,7 +1610,6 @@ void RepresentationUI::oim_CheckIOFiles()
    {
      oim_findAngMaxSliceAndPrefix();
    }
-
 }
 
 // -----------------------------------------------------------------------------
@@ -1537,7 +1617,14 @@ void RepresentationUI::oim_CheckIOFiles()
 // -----------------------------------------------------------------------------
 void RepresentationUI::on_oim_OutputFileBtn_clicked()
 {
-  std::cout << "on_oimOutputFileBtn_clicked" << std::endl;
+  QString file = QFileDialog::getSaveFileName(this, tr("Save OIM HDF5 File"),
+                                                 m_OpenDialogLastDirectory,
+                                                 tr("HDF5 OIM Files (*.h5ang)") );
+  if ( true == file.isEmpty() ){ return;  }
+  QFileInfo fi (file);
+  QString ext = fi.suffix();
+  oim_OutputFile->setText(fi.absoluteFilePath());
+  m_OpenDialogLastDirectory = fi.path();
 }
 
 // -----------------------------------------------------------------------------
@@ -1553,6 +1640,7 @@ void RepresentationUI::on_oim_InputDirBtn_clicked()
     this->oim_InputDir->setText(outputFile);
     oim_findAngMaxSliceAndPrefix();
     _verifyPathExists(outputFile, oim_InputDir);
+    m_OpenDialogLastDirectory = outputFile;
   }
 }
 
@@ -1562,7 +1650,10 @@ void RepresentationUI::on_oim_InputDirBtn_clicked()
 // -----------------------------------------------------------------------------
 void RepresentationUI::on_oim_InputDir_textChanged(const QString & text)
 {
-  _verifyPathExists(oim_InputDir->text(), oim_InputDir);
+  if (_verifyPathExists(oim_InputDir->text(), oim_InputDir) )
+  {
+    oim_findAngMaxSliceAndPrefix();
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -1576,10 +1667,10 @@ void RepresentationUI::on_oim_GoBtn_clicked()
 
   m_H5AngImporter = H5AngImporter::New();
   m_H5AngImporter->setInputDirectory(oim_InputDir->text().toStdString() );
-  m_H5AngImporter->setAngFilePrefix(oim_AngFilePrefix->text().toStdString());
-  m_H5AngImporter->setAngSeriesMaxSlice(oim_AngMaxSlice->value());
-  m_H5AngImporter->setZStartIndex(oim_zStartIndex->value());
-  m_H5AngImporter->setZEndIndex(oim_zEndIndex->value());
+  m_H5AngImporter->setAngFilePrefix(oim_FilePrefix->text().toStdString());
+  m_H5AngImporter->setAngSeriesMaxSlice(oim_ZMaxSlice->value());
+  m_H5AngImporter->setZStartIndex(oim_ZStartIndex->value());
+  m_H5AngImporter->setZEndIndex(oim_ZEndIndex->value());
   m_H5AngImporter->setZResolution(oim_zSpacing->text().toDouble(&ok));
   m_H5AngImporter->setOutputFile(oim_OutputFile->text().toStdString() );
 
@@ -1616,8 +1707,10 @@ void RepresentationUI::oim_findAngMaxSliceAndPrefix()
   filters << "*.ang";
   dir.setNameFilters(filters);
   QFileInfoList angList = dir.entryInfoList();
+  int minSlice = 0;
   int maxSlice = 0;
-  int currValue =0;
+  int currValue = 0;
+  bool flag = false;
   bool ok;
   QString fPrefix;
   QRegExp rx("(\\d+)");
@@ -1638,12 +1731,16 @@ void RepresentationUI::oim_findAngMaxSliceAndPrefix()
       }
       if (list.size() > 0) {
         currValue = list.front().toInt(&ok);
+        if (false == flag) { minSlice = currValue; flag = true;}
         if (currValue > maxSlice) { maxSlice = currValue; }
+        if (currValue < minSlice) { minSlice = currValue; }
       }
     }
   }
-  this->oim_AngMaxSlice->setValue(maxSlice);
-  this->oim_AngFilePrefix->setText(fPrefix);
+  this->oim_ZMaxSlice->setValue(maxSlice);
+  this->oim_FilePrefix->setText(fPrefix);
+  this->oim_ZStartIndex->setValue(minSlice);
+  this->oim_ZEndIndex->setValue(maxSlice);
 }
 
 // -----------------------------------------------------------------------------

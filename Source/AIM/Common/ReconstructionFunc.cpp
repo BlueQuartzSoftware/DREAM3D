@@ -18,7 +18,6 @@
 #include <string>
 #include <sstream>
 
-
 #include "MXA/Utilities/MXADir.h"
 #include "AIM/ANG/AngReader.h"
 #include "AIM/Common/Constants.h"
@@ -31,8 +30,14 @@
 
 const static double m_pi = 3.1415926535897;
 const static double m_OnePointThree = 1.33333333333;
+const double threesixty_over_pi = 360.0/m_pi;
+const double sqrt_two = pow(2.0, 0.5);
 
-#include <sstream>
+const double acos_neg_one = acos(-1);
+const double acos_pos_one = acos(1);
+const double sin_wmin_neg_1_over_2 = sin(acos_neg_one/2.0);
+const double sin_wmin_pos_1_over_2 = sin(acos_pos_one/2.0);
+
 
 // -----------------------------------------------------------------------------
 //
@@ -225,10 +230,7 @@ void ReconstructionFunc::find_border()
   }
   for(int j = 0; j < (xpoints*ypoints*zpoints); j++)
   {
-    count = 0;
-    goodcount = 0;
-//    if (voxels[j].imagequality > minseedimagequality && voxels[j].imagequality2 > 15000)
-    if (voxels[j].imagequality > minseedimagequality)
+    if (voxels[j].imagequality > minseedimagequality )
 	{
 	    count = 0;
 	    goodcount = 0;
@@ -2156,7 +2158,7 @@ void  ReconstructionFunc::find_neighbors()
     newend = unique(nlist->begin(),nlist->end());
     nlist->erase(newend,nlist->end());
 	nlist->erase(std::remove(nlist->begin(),nlist->end(),-1),nlist->end());
-	nlist->erase(std::remove(nlist->begin(),nlist->end(),0),nlist->end());
+//	nlist->erase(std::remove(nlist->begin(),nlist->end(),0),nlist->end());
 	int numneighs = int(nlist->size());
 	for(int j=0;j<numneighs;j++)
 	{
@@ -3272,19 +3274,15 @@ void  ReconstructionFunc::measure_misorientations ()
     misolist.clear();
   }
 }
+
+
 double ReconstructionFunc::getmisoquatcubic(double misorientationtolerance,double q1[5],double q2[5],double &n1,double &n2,double &n3)
 {
-  double wmin=9999999; //,na,nb,nc;
+  double wmin=9999999.0; //,na,nb,nc;
   double qc[4];
   double qco[4];
-//  q2[0]=q2[0];
-//  q2[1]=-q2[1];
-//  q2[2]=-q2[2];
-//  q2[3]=-q2[3];
-//  qc[0]=q1[0]*q2[0]-q1[1]*q2[1]-q1[2]*q2[2]-q1[3]*q2[3];
-//  qc[1]=q1[0]*q2[1]+q1[1]*q2[0]+q1[2]*q2[3]-q1[3]*q2[2];
-//  qc[2]=q1[0]*q2[2]-q1[1]*q2[3]+q1[2]*q2[0]+q1[3]*q2[1];
-//  qc[3]=q1[0]*q2[3]+q1[1]*q2[2]-q1[2]*q2[1]+q1[3]*q2[0];
+  double sin_wmin_over_2 = 0.0;
+
   qc[0]=-q1[1]*q2[4]+q1[4]*q2[1]-q1[2]*q2[3]+q1[3]*q2[2];
   qc[1]=-q1[2]*q2[4]+q1[4]*q2[2]-q1[3]*q2[1]+q1[1]*q2[3];
   qc[2]=-q1[3]*q2[4]+q1[4]*q2[3]-q1[1]*q2[2]+q1[2]*q2[1];
@@ -3305,15 +3303,36 @@ double ReconstructionFunc::getmisoquatcubic(double misorientationtolerance,doubl
     }
   }
   wmin = qco[3];
-  if(((qco[2]+qco[3])/(pow(2,0.5))) > wmin) wmin = ((qco[2]+qco[3])/(pow(2,0.5)));
-  if(((qco[0]+qco[1]+qco[2]+qco[3])/2) > wmin) wmin = ((qco[0]+qco[1]+qco[2]+qco[3])/2);
-  if(wmin < -1) wmin = -1;
-  if(wmin > 1) wmin = 1;
-  wmin = acos(wmin);
-  n1 = qco[0]/sin(wmin/2.0);
-  n2 = qco[1]/sin(wmin/2.0);
-  n3 = qco[2]/sin(wmin/2.0);
-  wmin = (360.0/m_pi)*wmin;
+  if (((qco[2] + qco[3]) / (sqrt_two)) > wmin)
+  {
+    wmin = ((qco[2] + qco[3]) / (sqrt_two));
+  }
+  if (((qco[0] + qco[1] + qco[2] + qco[3]) / 2) > wmin)
+  {
+    wmin = ((qco[0] + qco[1] + qco[2] + qco[3]) / 2);
+  }
+  if (wmin < -1.0)
+  {
+  //  wmin = -1.0;
+    wmin = acos_neg_one;
+    sin_wmin_over_2 = sin_wmin_neg_1_over_2;
+  }
+  else if (wmin > 1.0)
+  {
+ //   wmin = 1.0;
+    wmin = acos_pos_one;
+    sin_wmin_over_2 = sin_wmin_pos_1_over_2;
+  }
+  else
+  {
+    wmin = acos(wmin);
+    sin_wmin_over_2 = sin(wmin / 2.0);
+  }
+
+  n1 = qco[0] / sin_wmin_over_2;
+  n2 = qco[1] / sin_wmin_over_2;
+  n3 = qco[2] / sin_wmin_over_2;
+  wmin = (threesixty_over_pi) * wmin;
   return wmin;
 }
 
@@ -3391,58 +3410,6 @@ void  ReconstructionFunc::find_colors()
     if (crystruct == AIM::Reconstruction::Cubic)
     {
       OIMColoring::GenerateIPFColor(g1ea1, g1ea2, g1ea3, RefDirection[0], RefDirection[1], RefDirection[2], rgb);
-#if 0
-      p[0] = (2 * q1[0] * q1[2] + 2 * q1[1] * q1[3]) * 1;
-      p[1] = (2 * q1[1] * q1[2] + 2 * q1[0] * q1[3]) * 1;
-      p[2] = (1 - 2 * q1[0] * q1[0] - 2 * q1[1] * q1[1]) * 1;
-      double denom = p[0] * p[0] + p[1] * p[1] + p[2] * p[2];
-      denom = pow(denom, 0.5);
-      p[0] = fabs(p[0] / denom);
-      p[1] = fabs(p[1] / denom);
-      p[2] = fabs(p[2] / denom);
-      int j, k, flag = 1;
-      double temp;
-      for (j = 0; (j < 3) && flag == 1; j++)
-      {
-        flag = 0;
-        for (k = 0; k < 2; k++)
-        {
-          if (p[k + 1] < p[k])
-          {
-            temp = p[k];
-            p[k] = p[k + 1];
-            p[k + 1] = temp;
-            flag = 1;
-          }
-        }
-      }
-      theta = (p[0] * 0) + (p[1] * -sqrt(2.0) / 2.0) + (p[2] * sqrt(2.0) / 2.0);
-      theta = (180.0 / m_pi) * acos(theta);
-      red = (90.0 - theta) / 45.0;
-      d[0] = (p[1] * 1) - (p[2] * 0);
-      d[1] = (p[2] * 0) - (p[0] * 1);
-      d[2] = (p[0] * 0) - (p[1] * 0);
-      d[0] = -(d[1] + d[2]) / d[0];
-      d[1] = 1;
-      d[2] = 1;
-      double norm = pow(((d[0] * d[0]) + (d[1] * d[1]) + (d[2] * d[2])), 0.5);
-      d[0] = d[0] / norm;
-      d[1] = d[1] / norm;
-      d[2] = d[2] / norm;
-      phi = (d[0] * 0) + (d[1] * sqrt(2.0) / 2.0) + (d[2] * sqrt(2.0) / 2.0);
-      phi = (180.0 / m_pi) * acos(phi);
-      green = (1 - red) * ((35.26 - phi) / 35.26);
-      blue = (1 - red) - green;
-      double max = red;
-      if (green > max) max = green;
-      if (blue > max) max = blue;
-      red = red / max;
-      green = green / max;
-      blue = blue / max;
-      red = (0.75 * red) + 0.25;
-      green = (0.75 * green) + 0.25;
-      blue = (0.75 * blue) + 0.25;
-#endif
 
       m_Grains[i].red = static_cast<double>(rgb[0]/255.0);
       m_Grains[i].green = static_cast<double>(rgb[1]/255.0);;
@@ -3455,56 +3422,6 @@ void  ReconstructionFunc::find_colors()
       green = 1.0 / 3.0;
       blue = 1.0 / 3.0;
       OIMColoring::CalculateHexIPFColor(q1, red, green, blue);
-#if 0
-      for (int j = 0; j < 12; j++)
-      {
-        AIM::Quaternions::Hex_MultiplyByUnitQuaterion(q1, j, qc);
-        p[0] = ((2 * qc[0] * qc[2]) - (2 * qc[1] * qc[3])) * 1;
-        p[1] = ((2 * qc[1] * qc[2]) + (2 * qc[0] * qc[3])) * 1;
-        p[2] = (1 - (2 * qc[0] * qc[0]) - (2 * qc[1] * qc[1])) * 1;
-        double denom = p[0] * p[0] + p[1] * p[1] + p[2] * p[2];
-        denom = pow(denom, 0.5);
-        p[0] = p[0] / denom;
-        p[1] = p[1] / denom;
-        p[2] = p[2] / denom;
-        if (p[2] < 0)
-        {
-          p[0] = -p[0];
-          p[1] = -p[1];
-          p[2] = -p[2];
-        }
-        d[0] = (p[1] * 1) - (p[2] * 0);
-        d[1] = (p[2] * 0) - (p[0] * 1);
-        d[2] = (p[0] * 0) - (p[1] * 0);
-        d[0] = -d[1] / d[0];
-        d[1] = 1;
-        d[2] = 0;
-        double norm = pow(((d[0] * d[0]) + (d[1] * d[1]) + (d[2] * d[2])), 0.5);
-        d[0] = d[0] / norm;
-        d[1] = d[1] / norm;
-        d[2] = d[2] / norm;
-        if (atan(d[1] / d[0]) >= 0 && atan(d[1] / d[0]) <= (30.0 * m_pi / 180.0))
-        {
-          theta = (p[0] * 0) + (p[1] * 0) + (p[2] * 1);
-          theta = (180.0 / m_pi) * acos(theta);
-          red = (90.0 - theta) / 90.0;
-          phi = (d[0] * 1) + (d[1] * 0) + (d[2] * 0);
-          phi = (180.0 / m_pi) * acos(phi);
-          green = (1 - red) * ((30.0 - phi) / 30.0);
-          blue = (1 - red) - green;
-        }
-      }
-      double max = red;
-      if (green > max) max = green;
-      if (blue > max) max = blue;
-      red = red / max;
-      green = green / max;
-      blue = blue / max;
-      red = (0.75 * red) + 0.25;
-      green = (0.75 * green) + 0.25;
-      blue = (0.75 * blue) + 0.25;
-#endif
-
       m_Grains[i].red = red/255.0;
       m_Grains[i].green = green/255.0;
       m_Grains[i].blue = blue/255.0;
