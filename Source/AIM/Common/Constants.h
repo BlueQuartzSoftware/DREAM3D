@@ -87,8 +87,6 @@ namespace AIM
     const std::string Shell_2_StdDev("Shell 2 Standard Deviation");
     const std::string Shell_3_StdDev("Shell 3 Standard Deviation");
     const std::string Shell_4_StdDev("Shell 4 Standard Deviation");
-
-
   }
 
   namespace Reconstruction
@@ -110,7 +108,7 @@ namespace AIM
     const std::string DownSampledVizFile("Reconstruction_DownSampled_Visualization.vtk");//11
 
     const std::string HDF5GrainFile("Reconstruction_Grains.h5grain");
-    const std::string HDF5ResultsFile("Reconstruction_Results.h5");
+    const std::string H5StatisticsFile("Reconstruction_Results.h5");
 
     enum CrystalStructure {
         UnknownCrystalStructure = 0,
