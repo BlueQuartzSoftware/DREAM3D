@@ -36,7 +36,7 @@
        </size>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="oimImportTab">
        <attribute name="title">
@@ -417,7 +417,7 @@
             <property name="verticalSpacing">
              <number>1</number>
             </property>
-            <item row="5" column="0">
+            <item row="7" column="0">
              <widget class="QLabel" name="rec_MisorientationBinsFileIcon">
               <property name="text">
                <string/>
@@ -427,27 +427,10 @@
               </property>
              </widget>
             </item>
-            <item row="5" column="1">
+            <item row="7" column="1">
              <widget class="QLabel" name="rec_MisorientationBinsFile">
               <property name="text">
                <string>Misorientation Bins File</string>
-              </property>
-             </widget>
-            </item>
-            <item row="7" column="0">
-             <widget class="QLabel" name="rec_StatsFileIcon">
-              <property name="text">
-               <string/>
-              </property>
-              <property name="pixmap">
-               <pixmap resource="../../../../Resources/icons/images/Icons.qrc">:/Delete-16x16.png</pixmap>
-              </property>
-             </widget>
-            </item>
-            <item row="7" column="1">
-             <widget class="QLabel" name="rec_StatsFile">
-              <property name="text">
-               <string>Statistics File</string>
               </property>
              </widget>
             </item>
@@ -468,14 +451,14 @@
               </property>
              </widget>
             </item>
-            <item row="2" column="1">
+            <item row="4" column="1">
              <widget class="QLabel" name="rec_AxisOrientationsFile">
               <property name="text">
                <string>Axis Orientation File</string>
               </property>
              </widget>
             </item>
-            <item row="2" column="0">
+            <item row="4" column="0">
              <widget class="QLabel" name="rec_AxisOrientationsFileIcon">
               <property name="text">
                <string/>
@@ -485,31 +468,14 @@
               </property>
              </widget>
             </item>
-            <item row="3" column="1">
-             <widget class="QLabel" name="rec_GrainDataFile">
-              <property name="text">
-               <string>Grain Data File</string>
-              </property>
-             </widget>
-            </item>
-            <item row="3" column="0">
-             <widget class="QLabel" name="rec_GrainDataFileIcon">
-              <property name="text">
-               <string/>
-              </property>
-              <property name="pixmap">
-               <pixmap resource="../../../../Resources/icons/images/Icons.qrc">:/Delete-16x16.png</pixmap>
-              </property>
-             </widget>
-            </item>
-            <item row="4" column="1">
+            <item row="6" column="1">
              <widget class="QLabel" name="rec_MicroTextureFile">
               <property name="text">
                <string>Micro Texture File</string>
               </property>
              </widget>
             </item>
-            <item row="4" column="0">
+            <item row="6" column="0">
              <widget class="QLabel" name="rec_MicroTextureFileIcon">
               <property name="text">
                <string/>
@@ -519,15 +485,66 @@
               </property>
              </widget>
             </item>
-            <item row="6" column="1">
+            <item row="8" column="1">
              <widget class="QLabel" name="rec_ODFFile">
               <property name="text">
                <string>ODF File</string>
               </property>
              </widget>
             </item>
-            <item row="6" column="0">
+            <item row="8" column="0">
              <widget class="QLabel" name="rec_ODFFileIcon">
+              <property name="text">
+               <string/>
+              </property>
+              <property name="pixmap">
+               <pixmap resource="../../../../Resources/icons/images/Icons.qrc">:/Delete-16x16.png</pixmap>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="1">
+             <widget class="QLabel" name="rec_GrainDataFile">
+              <property name="text">
+               <string>Grain Data File</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="0">
+             <widget class="QLabel" name="rec_GrainDataFileIcon">
+              <property name="text">
+               <string/>
+              </property>
+              <property name="pixmap">
+               <pixmap resource="../../../../Resources/icons/images/Icons.qrc">:/Delete-16x16.png</pixmap>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="1">
+             <widget class="QLabel" name="rec_StatsFile">
+              <property name="text">
+               <string>Statistics File</string>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="0">
+             <widget class="QLabel" name="rec_StatsFileIcon">
+              <property name="text">
+               <string/>
+              </property>
+              <property name="pixmap">
+               <pixmap resource="../../../../Resources/icons/images/Icons.qrc">:/Delete-16x16.png</pixmap>
+              </property>
+             </widget>
+            </item>
+            <item row="9" column="1">
+             <widget class="QLabel" name="rec_H5StatisticsFile">
+              <property name="text">
+               <string>HDF5 Statistics File</string>
+              </property>
+             </widget>
+            </item>
+            <item row="9" column="0">
+             <widget class="QLabel" name="rec_H5StatisticsFileIcon">
               <property name="text">
                <string/>
               </property>
@@ -908,7 +925,7 @@
              <number>1</number>
             </property>
             <property name="maximum">
-             <number>64</number>
+             <number>1000</number>
             </property>
             <property name="value">
              <number>8</number>
@@ -1418,7 +1435,7 @@
            </widget>
           </item>
           <item row="1" column="0">
-           <widget class="QLabel" name="gg_HDF5ResultsFileIcon">
+           <widget class="QLabel" name="gg_H5StatisticsFileIcon">
             <property name="text">
              <string/>
             </property>
@@ -1431,7 +1448,7 @@
            </widget>
           </item>
           <item row="1" column="1">
-           <widget class="QLabel" name="gg_HDF5ResultsFile">
+           <widget class="QLabel" name="gg_H5StatisticsFile">
             <property name="text">
              <string>HDF5 Reconstruction Results File</string>
             </property>
@@ -2327,7 +2344,7 @@
      <x>0</x>
      <y>0</y>
      <width>658</width>
-     <height>18</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
