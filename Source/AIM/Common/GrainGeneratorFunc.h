@@ -163,11 +163,11 @@ AngDataLoader::Pointer m_angFileHelper;
   int readMisorientationData(H5ReconStatsReader::Pointer h5io);
   int readMicroTextureData(H5ReconStatsReader::Pointer h5io);
 #else
-void readReconStatsData(string);
-void readAxisOrientationData(string inname6);
-void readODFData(string);
-void readMisorientationData(string);
-void readMicroTextureData(string);
+void readReconStatsData(const std::string &statsFile);
+void readAxisOrientationData(const std::string &file);
+void readODFData(const std::string &file);
+void readMisorientationData(const std::string &file);
+void readMicroTextureData(const std::string &file);
 #endif
 
 	void generate_grain(int);
