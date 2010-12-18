@@ -3550,8 +3550,9 @@ void ReconstructionFunc::find_schmids()
 
 
 #if AIM_HDF5_SUPPORT
-void ReconstructionFunc::volume_stats(H5ReconStatsWriter::Pointer h5io,
-                                      const std::string &statsfile,
+void ReconstructionFunc::volume_stats(H5ReconStatsWriter::Pointer h5io)
+#else
+void ReconstructionFunc::volume_stats(const std::string &statsfile,
                                       const std::string &misorientationFile,
                                       const std::string &microBinsFile)
 #endif
@@ -3926,9 +3927,7 @@ void ReconstructionFunc::volume_stats(H5ReconStatsWriter::Pointer h5io,
   h5io->writeMisorientationBinsData(misobin, 36);
   h5io->writeMicroTextureData(microbin, 10, actualgrains);
 
-//#else
-
-
+#else
   ofstream outFile;
   outFile.open(statsfile.c_str());
   outFile << "STATS" << endl;
