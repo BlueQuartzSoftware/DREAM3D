@@ -37,12 +37,25 @@
 
 #include "MXA/MXATypes.h"
 #include "MXA/Common/MXASetGetMacros.h"
-
+#include "MXA/HDF5/H5Utilities.h"
+#include "MXA/HDF5/H5Lite.h"
 
 #include "AIM/Common/AIMCommonConfiguration.h"
 #include "AIM/Common/Constants.h"
+#include "AIM/Common/Bin.h"
 
-class Bin;
+
+#define OPEN_HDF5_FILE(fileId, filename)\
+  hid_t fileId = H5Utilities::openFile(filename, false);\
+  if (fileId < 0) { return fileId; }
+
+
+#define OPEN_RECONSTRUCTION_GROUP(gid, name, fileId)\
+  hid_t gid = H5Gopen(fileId, name);\
+  if (gid < 0) { \
+    err = H5Utilities::closeFile(fileId);\
+    return -1; }
+
 
 
 class AIMCOMMON_EXPORT H5ReconStatsReader
@@ -57,11 +70,35 @@ class AIMCOMMON_EXPORT H5ReconStatsReader
 
     MXA_INSTANCE_STRING_PROPERTY(FileName);
 
-    int readStatsDataset(const std::string &name, std::vector<double> &data);
 
-//    int readAxisOrientationData(std::vector<double> &data);
-//    int readODFData(std::vector<double> &data);
-//    int readReconStatsData();
+    template<typename T>
+    int readStatsDataset(const std::string &name, std::vector<T> &data)
+    {
+      herr_t err = 0;
+      herr_t retErr = 0;
+      OPEN_HDF5_FILE(fileId, m_FileName)
+
+      OPEN_RECONSTRUCTION_GROUP(reconGid, AIM::HDF5::Reconstruction.c_str(), fileId)
+
+      err = H5Lite::readVectorDataset(reconGid, name, data);
+      if (err < 0)
+      {
+        data.clear(); // Clear all the data from the vector.
+        retErr = err;
+      }
+
+      err = H5Gclose(reconGid);
+      if (err < 0)
+      {
+        retErr = err;
+      }
+      err = H5Utilities::closeFile(fileId);
+      if (err < 0)
+      {
+        retErr = err;
+      }
+      return retErr;
+    }
 
   protected:
     H5ReconStatsReader();
