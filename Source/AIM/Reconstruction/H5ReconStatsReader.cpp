@@ -30,21 +30,7 @@
 
 #include "H5ReconStatsReader.h"
 
-#include "AIM/Common/Constants.h"
-#include "AIM/Common/Bin.h"
-#include "MXA/HDF5/H5Utilities.h"
-#include "MXA/HDF5/H5Lite.h"
 
-#define OPEN_HDF5_FILE(fileId, filename)\
-  hid_t fileId = H5Utilities::openFile(filename, false);\
-  if (fileId < 0) { return fileId; }
-
-
-#define OPEN_RECONSTRUCTION_GROUP(gid, name, fileId)\
-  hid_t gid = H5Gopen(fileId, name);\
-  if (gid < 0) { \
-    err = H5Utilities::closeFile(fileId);\
-    return -1; }
 
 // -----------------------------------------------------------------------------
 //
@@ -77,47 +63,6 @@ H5ReconStatsReader::Pointer H5ReconStatsReader::New(const std::string &filename)
     H5Utilities::closeFile(fileId);
   }
   return sharedPtr;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int H5ReconStatsReader::readReconStatsData()
-{
-  int err = -1;
-
-  return err;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int H5ReconStatsReader::readStatsDataset(const std::string &name, std::vector<double> &data)
-{
-  herr_t err = 0;
-  herr_t retErr = 0;
-  OPEN_HDF5_FILE(fileId, m_FileName)
-
-  OPEN_RECONSTRUCTION_GROUP(reconGid, name.c_str(), fileId)
-
-  err = H5Lite::readVectorDataset(reconGid, AIM::HDF5::ODF, data);
-  if (err < 0)
-  {
-    data.clear(); // Clear all the data from the vector.
-    retErr = err;
-  }
-
-  err = H5Gclose(reconGid);
-  if (err < 0)
-  {
-    retErr = err;
-  }
-  err = H5Utilities::closeFile(fileId);
-  if (err < 0)
-  {
-    retErr = err;
-  }
-  return retErr;
 }
 
 #if 0
