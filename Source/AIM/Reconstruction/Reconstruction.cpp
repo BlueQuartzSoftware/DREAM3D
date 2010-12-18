@@ -170,6 +170,7 @@ void Reconstruction::compute()
 #endif
 
   m = ReconstructionFunc::New();
+  progressMessage(AIM_STRING("Gathering Size and Resolution Information from OIM Data"), 1);
   err = oimDataLoader->getSizeAndResolution(m->xpoints, m->ypoints, m->zpoints, m->resx, m->resy, m->resz);
   if (err < 0)
   {
@@ -186,9 +187,9 @@ void Reconstruction::compute()
 
 #if AIM_HDF5_SUPPORT
   // Create a new HDF5 Results file by overwriting any HDF5 file that may be in the way
-  std::string hdf5ResultsFile = m_OutputDirectory + MXADir::Separator + AIM::Reconstruction::HDF5ResultsFile;
+  std::string hdf5ResultsFile = m_OutputDirectory + MXADir::Separator + AIM::Reconstruction::H5StatisticsFile;
   H5ReconStatsWriter::Pointer h5io = H5ReconStatsWriter::New(hdf5ResultsFile);
-//#else
+#else
   std::string statsFile = m_OutputDirectory + MXADir::Separator + AIM::Reconstruction::StatsFile;
   std::string microBinsFile = m_OutputDirectory + MXADir::Separator + AIM::Reconstruction::MicroTextureFile;
   std::string misorientationFile = m_OutputDirectory + MXADir::Separator + AIM::Reconstruction::MisorientationBinsFile;
@@ -232,7 +233,6 @@ void Reconstruction::compute()
   {
     CHECK_FOR_CANCELED(ReconstructionFunc)
     progressMessage(AIM_STRING("Loading Slices"), 3);
-//    m->loadSlices();
     oimDataLoader->loadData(m->voxels, m->xpoints, m->ypoints, m->zpoints);
 
 
@@ -376,74 +376,66 @@ void Reconstruction::compute()
   CHECK_FOR_CANCELED(ReconstructionFunc)
   progressMessage(AIM_STRING("Writing Statistics"), 80);
 
-
-  //TODO: Write HDF5 StatsFile
-  //TODO: Write HDF5 MisorientationBinsFile
-  //TODO: Write HDF5 MicroTextureFile
 #if AIM_HDF5_SUPPORT
-  if(m_ZEndIndex-m_ZStartIndex > 1) m->volume_stats(h5io, statsFile,misorientationFile,microBinsFile);
+  if(m_ZEndIndex-m_ZStartIndex > 1) m->volume_stats(h5io);
   if(m_ZEndIndex-m_ZStartIndex == 1) m->volume_stats2D(h5io);
 #else
   if(m_ZEndIndex-m_ZStartIndex > 1) m->volume_stats(statsFile,misorientationFile,microBinsFile);
   if(m_ZEndIndex-m_ZStartIndex == 1) m->volume_stats2D(statsFile,misorientationFile,microBinsFile);
 #endif
+  CHECK_FOR_CANCELED(ReconstructionFunc)
+  CHECK_FOR_CANCELED(ReconstructionFunc)
+  progressMessage(AIM_STRING("Writing Grain Data"), 82);
+  m->write_graindata(graindataFile);
 
   CHECK_FOR_CANCELED(ReconstructionFunc)
+  progressMessage(AIM_STRING("Writing Axis Orientation File"), 84);
+#if AIM_HDF5_SUPPORT
+  err = h5io->writeAxisOrientationData(m->axisodf, m->crystruct, m->totalaxes);
+#else
+  m->write_axisodf(axisFile);
+#endif
+
+  CHECK_FOR_CANCELED(ReconstructionFunc)
+  progressMessage(AIM_STRING("Writing Euler Angle File"), 86);
+  //DONE: Write HDF5 ODFFile
+#if AIM_HDF5_SUPPORT
+  err = h5io->writeODFData(m->crystruct, m->eulerodf, m->totalvol);
+#else
+  m->write_eulerodf(eulerFile);
+#endif
+
+
+
   /** ********** This section writes the ASCII based vtk files for visualization *** */
 
-  progressMessage(AIM_STRING("Writing VTK Visualization File"), 81);
+  progressMessage(AIM_STRING("Writing VTK Visualization File"), 88);
   if (m_WriteVisualizationFile) {m->writeVisualizationFile(reconVisFile);}
 
-  progressMessage(AIM_STRING("Writing VTK Inverse Pole Figure File"), 82);
+  progressMessage(AIM_STRING("Writing VTK Inverse Pole Figure File"), 89);
   if (m_WriteIPFFile) {m->writeIPFVizFile(reconIPFVisFile);}
 
-  progressMessage(AIM_STRING("Writing VTK Disorientation File"), 83);
+  progressMessage(AIM_STRING("Writing VTK Disorientation File"), 90);
   if (m_WriteDisorientationFile) {m->writeDisorientationVizFile(reconDisVisFile);}
 
-  progressMessage(AIM_STRING("Writing VTK Image Quality File"), 84);
+  progressMessage(AIM_STRING("Writing VTK Image Quality File"), 91);
   if (m_WriteImageQualityFile) {m->writeImageQualityVizFile(reconIQVisFile);}
 
-  progressMessage(AIM_STRING("Writing VTK Schmid Factor File"), 85);
+  progressMessage(AIM_STRING("Writing VTK Schmid Factor File"), 92);
   if (m_WriteSchmidFactorFile) {m->writeSchmidFactorVizFile(reconSFVisFile);}
 
-  progressMessage(AIM_STRING("Writing VTK Down Sampled File"), 86);
+  progressMessage(AIM_STRING("Writing VTK Down Sampled File"), 93);
   if (m_WriteDownSampledFile) {m->writeDownSampledVizFile(reconDSVisFile);}
 
   /** ******* End VTK Visualization File Writing Section ****** */
 
 #if AIM_HDF5_SUPPORT
   CHECK_FOR_CANCELED(ReconstructionFunc)
-  progressMessage(AIM_STRING("Writing Out HDF5 Grain File"), 87);
+  progressMessage(AIM_STRING("Writing Out HDF5 Grain File"), 95);
   if (m_WriteHDF5GrainFile) { writeHDF5GrainsFile(hdf5GrainFile, m); }
 #else
   m->write_grains(m_OutputDirectory);
 #endif
-
-
-
-
-  CHECK_FOR_CANCELED(ReconstructionFunc)
-  progressMessage(AIM_STRING("Writing Grain Data"), 88);
-  m->write_graindata(graindataFile);
-
-  CHECK_FOR_CANCELED(ReconstructionFunc)
-  progressMessage(AIM_STRING("Writing Axis Orientation File"), 90);
-#if AIM_HDF5_SUPPORT
-  err = h5io->writeAxisOrientationData(m->axisodf, m->crystruct, m->totalaxes);
-//#else
-  m->write_axisodf(axisFile);
-#endif
-
-  CHECK_FOR_CANCELED(ReconstructionFunc)
-  progressMessage(AIM_STRING("Writing Euler Angle File"), 92);
-  //DONE: Write HDF5 ODFFile
-#if AIM_HDF5_SUPPORT
-  err = h5io->writeODFData(m->crystruct, m->eulerodf, m->totalvol);
-//#else
-  m->write_eulerodf(eulerFile);
-#endif
-
-
 
   progressMessage(AIM_STRING("Reconstruction Complete"), 100);
 
@@ -493,40 +485,41 @@ int Reconstruction::writeHDF5GrainsFile(const std::string &hdfFile,
 
   std::stringstream ss;
   std::string hdfPath;
-  std::vector<std::string> hdfPaths;
+  std::vector<std::string > hdfPaths;
+  std::cout << "Writing out " << r->numgrains << " to an HDF5 Grain File..." << std::endl;
   for (int i = 1; i < r->numgrains; i++)
   {
-    vector<int>* vlist = r->m_Grains[i].voxellist;
+    std::cout << " Grain: " << i << " Gathering Data" << std::endl;
+    vector<int >* vlist = r->m_Grains[i].voxellist;
     int vid = vlist->at(0);
     ss.str("");
     ss << "/" << i;
     hdfPath = ss.str();
     hdfPaths.push_back(hdfPath);
 
-    vector<int> plist(((r->xpoints + 1) * (r->ypoints + 1) * (r->zpoints + 1)), 0);
+    vector<int > plist(((r->xpoints + 1) * (r->ypoints + 1) * (r->zpoints + 1)), 0);
     int pcount = 0;
     int ocol, orow, oplane;
     int col, row, plane;
     int pid;
     int err = 0;
     // outFile << "POINTS " << pcount << " float" << endl;
-    std::vector<float> points;
-    std::vector<int32_t> cells;
-    std::vector<int32_t> cell_types(vlist->size(), VTK_CELLTYPE_VOXEL);
+    std::vector<float > points;
+    std::vector<int32_t > cells;
+    std::vector<int32_t > cell_types(vlist->size(), VTK_CELLTYPE_VOXEL);
 
-    std::vector<float> kernelAvgDisorientation(vlist->size());
-    std::vector<float> grainAvgDisorientation(vlist->size());
-    std::vector<float> imageQuality(vlist->size());
-    std::vector<unsigned char> ipfColor(vlist->size() * 3);
-    std::vector<float> schmidFactor(1);
+    std::vector<float > kernelAvgDisorientation(vlist->size());
+    std::vector<float > grainAvgDisorientation(vlist->size());
+    std::vector<float > imageQuality(vlist->size());
+    std::vector<unsigned char > ipfColor(vlist->size() * 3);
+    std::vector<float > schmidFactor(1);
 
-    std::vector<int32_t> grainName(1);
-
+    std::vector<int32_t > grainName(1);
 
     pcount = 0;
     plist.clear();
     plist.resize(((r->xpoints + 1) * (r->ypoints + 1) * (r->zpoints + 1)), 0);
-    for (std::vector<int>::size_type j = 0; j < vlist->size(); j++)
+    for (std::vector<int >::size_type j = 0; j < vlist->size(); j++)
     {
       vid = vlist->at(j);
       ocol = vid % r->xpoints;
@@ -548,9 +541,9 @@ int Reconstruction::writeHDF5GrainsFile(const std::string &hdfFile,
         {
           plist[pid] = pcount;
           pcount++;
-     //     outFile << (col * r->resx) << "  " << (row * r->resy) << "  " << (plane * r->resz) << endl;
+          //     outFile << (col * r->resx) << "  " << (row * r->resy) << "  " << (plane * r->resz) << endl;
           points.push_back((col * r->resx));
-          points.push_back( (row * r->resy));
+          points.push_back((row * r->resy));
           points.push_back((plane * r->resz));
         }
         // Add onto our cells vector
@@ -560,32 +553,31 @@ int Reconstruction::writeHDF5GrainsFile(const std::string &hdfFile,
       kernelAvgDisorientation[j] = r->voxels[vid].kernelmisorientation;
       grainAvgDisorientation[j] = r->voxels[vid].misorientation;
       imageQuality[j] = r->voxels[vid].imagequality;
-      ipfColor[j*3] = r->m_Grains[i].red * 255;
-      ipfColor[j*3+1] = r->m_Grains[i].green * 255;
-      ipfColor[j*3+2] = r->m_Grains[i].blue * 255;
+      ipfColor[j * 3] = r->m_Grains[i].red * 255;
+      ipfColor[j * 3 + 1] = r->m_Grains[i].green * 255;
+      ipfColor[j * 3 + 2] = r->m_Grains[i].blue * 255;
       grainName[0] = r->voxels[vid].grainname;
     }
-
-
+    std::cout << " Grain: " << i << " Writing HDF5 File" << std::endl;
     err = h5writer->writeUnstructuredGrid(hdfPath, points, cells, cell_types);
     points.resize(0);
     cells.resize(0);
     cell_types.resize(0);
 
     //Write the Field Data
-    err = h5writer->writeFieldData<int>( hdfPath, grainName, AIM::Representation::Grain_ID.c_str(), 1);
+    err = h5writer->writeFieldData<int > (hdfPath, grainName, AIM::Representation::Grain_ID.c_str(), 1);
 
     schmidFactor[0] = r->m_Grains[i].schmidfactor;
-    err = h5writer->writeFieldData<float>( hdfPath, schmidFactor,  AIM::Representation::SchmidFactor.c_str(), 1);
+    err = h5writer->writeFieldData<float > (hdfPath, schmidFactor, AIM::Representation::SchmidFactor.c_str(), 1);
 
     // Write the Neighbor list
-    err = h5writer->writeFieldData<int>(hdfPath, *(r->m_Grains[i].neighborlist),  AIM::Representation::Neighbor_Grain_ID_List.c_str(), 1);
+    err = h5writer->writeFieldData<int > (hdfPath, *(r->m_Grains[i].neighborlist), AIM::Representation::Neighbor_Grain_ID_List.c_str(), 1);
 
     // Write CELL_DATA
-    err = h5writer->writeCellData<float>(hdfPath, kernelAvgDisorientation,  AIM::Representation::KernelAvgDisorientation.c_str(), 1);
-    err = h5writer->writeCellData<float>(hdfPath, grainAvgDisorientation,  AIM::Representation::GrainAvgDisorientation.c_str(), 1);
-    err = h5writer->writeCellData<float>(hdfPath, imageQuality,  AIM::Representation::ImageQuality.c_str(), 1);
-    err = h5writer->writeCellData<unsigned char>(hdfPath, ipfColor,  AIM::Representation::IPFColor.c_str(), 3);
+    err = h5writer->writeCellData<float > (hdfPath, kernelAvgDisorientation, AIM::Representation::KernelAvgDisorientation.c_str(), 1);
+    err = h5writer->writeCellData<float > (hdfPath, grainAvgDisorientation, AIM::Representation::GrainAvgDisorientation.c_str(), 1);
+    err = h5writer->writeCellData<float > (hdfPath, imageQuality, AIM::Representation::ImageQuality.c_str(), 1);
+    err = h5writer->writeCellData<unsigned char > (hdfPath, ipfColor, AIM::Representation::IPFColor.c_str(), 3);
 
   }
 
