@@ -115,7 +115,7 @@ void GrainGenerator::compute()
 
 
 #if AIM_HDF5_SUPPORT
-    H5ReconStatsReader::Pointer h5reader = H5ReconStatsReader::New(m_InputDirectory + MXADir::Separator + AIM::Reconstruction::HDF5ResultsFile);
+    H5ReconStatsReader::Pointer h5reader = H5ReconStatsReader::New(m_InputDirectory + MXADir::Separator + AIM::Reconstruction::H5StatisticsFile);
     if (h5reader.get() == NULL)
     {
       progressMessage(AIM_STRING("Error Opening HDF5 Stats File. Nothing generated"), 100 );
@@ -146,16 +146,18 @@ void GrainGenerator::compute()
    if(m_AlreadyFormed == false)
    {
 	   CHECK_FOR_CANCELED(GrainGeneratorFunc)
-	   progressMessage(AIM_STRING("Loading Stats File"), 5 );
+	   progressMessage(AIM_STRING("Loading Stats Data"), 5 );
 #if AIM_HDF5_SUPPORT
-	   m->readReconStatsData(h5reader);
+	   err = m->readReconStatsData(h5reader);
+	   if (err < 0) { setErrorCondition(err); return; }
 #else
 	   m->readReconStatsData(StatsFile);
 #endif
 	   CHECK_FOR_CANCELED(GrainGeneratorFunc)
-	   progressMessage(AIM_STRING("Loading Orient File"), 10 );
+	   progressMessage(AIM_STRING("Loading Axis Orientation Data"), 10 );
 #if AIM_HDF5_SUPPORT
-	   m->readAxisOrientationData(h5reader);
+	   err = m->readAxisOrientationData(h5reader);
+	   if (err < 0) { setErrorCondition(err); return; }
 #else
 	   m->readAxisOrientationData(AxisOrientationsFile);
 #endif
@@ -196,25 +198,29 @@ void GrainGenerator::compute()
    m->find_neighbors();
 
    CHECK_FOR_CANCELED(GrainGeneratorFunc)
-   progressMessage(AIM_STRING("Loading Euler File"), 15 );
+   progressMessage(AIM_STRING("Loading ODF Data"), 15 );
 #if AIM_HDF5_SUPPORT
-   m->readODFData(h5reader);
+   err = m->readODFData(h5reader);
+   if (err < 0) { setErrorCondition(err); return; }
 #else
    m->readODFData(EulerAnglesFile);
 #endif
 
    CHECK_FOR_CANCELED(GrainGeneratorFunc)
-   progressMessage(AIM_STRING("Loading Misorientations"), 50 );
+   progressMessage(AIM_STRING("Loading Misorientation Data"), 50 );
 #if AIM_HDF5_SUPPORT
-   m->readMisorientationData(h5reader);
+   err = m->readMisorientationData(h5reader);
+   if (err < 0) { setErrorCondition(err); return; }
+
    #else
    m->readMisorientationData(MisorientationBinsFile);
 #endif
 
    CHECK_FOR_CANCELED(GrainGeneratorFunc)
-   progressMessage(AIM_STRING("Loading Microtexture"), 55 );
+   progressMessage(AIM_STRING("Loading Microtexture Data "), 55 );
 #if AIM_HDF5_SUPPORT
-   m->readMicroTextureData(h5reader);
+   err = m->readMicroTextureData(h5reader);
+   if (err < 0) { setErrorCondition(err); return; }
 #else
    m->readMicroTextureData(MicroBinsFile);
 #endif

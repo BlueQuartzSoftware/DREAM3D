@@ -657,9 +657,22 @@ void RepresentationUI::rec_SetupGui()
   }
   messageLabel->setText(msg);
 
-#if (AIM_HDF5_SUPPORT == 0)
+#if AIM_HDF5_SUPPORT
+  rec_StatsFile->setVisible(false);
+  rec_MisorientationBinsFile->setVisible(false);
+  rec_MicroTextureFile->setVisible(false);
+  rec_AxisOrientationsFile->setVisible(false);
+  rec_ODFFile->setVisible(false);
+  rec_StatsFileIcon->setVisible(false);
+  rec_MisorientationBinsFileIcon->setVisible(false);
+  rec_MicroTextureFileIcon->setVisible(false);
+  rec_AxisOrientationsFileIcon->setVisible(false);
+  rec_ODFFileIcon->setVisible(false);
+#else
   rec_HDF5GrainFile->setVisible(false);
   rec_HDF5GrainFileIcon->setVisible(false);
+  rec_H5StatisticsFile->setVisible(false);
+  rec_H5StatisticsFileIcon->setVisible(false);
 #endif
   m_WidgetList << rec_OutputDir << rec_OutputDirBtn;
   m_WidgetList << rec_ZStartIndex << rec_ZEndIndex;
@@ -668,7 +681,7 @@ void RepresentationUI::rec_SetupGui()
   m_WidgetList << rec_DisorientationVizFile << rec_ImageQualityVizFile << rec_IPFVizFile << rec_SchmidFactorVizFile << rec_VisualizationVizFile << rec_DownSampledVizFile;
   m_WidgetList << minImageQuality;
 #if AIM_HDF5_SUPPORT
-  m_WidgetList << rec_HDF5GrainFile;
+  m_WidgetList << rec_HDF5GrainFile << rec_H5StatisticsFile;
 #endif
 }
 
@@ -680,14 +693,9 @@ void RepresentationUI::rec_CheckIOFiles()
 {
 
   this->_verifyPathExists(rec_OutputDir->text(), this->rec_OutputDir);
-  CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::Reconstruction,rec_, StatsFile)
-  CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::Reconstruction,rec_, MisorientationBinsFile)
-  CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::Reconstruction,rec_, MicroTextureFile)
-  CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::Reconstruction,rec_, GrainDataFile)
-  CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::Reconstruction,rec_, AxisOrientationsFile)
-  CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::Reconstruction,rec_, ODFFile)
-  CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::Reconstruction,rec_, AlignmentFile)
 
+  CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::Reconstruction,rec_, AlignmentFile)
+  CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::Reconstruction,rec_, GrainDataFile)
 
   CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(AIM::Reconstruction, rec_ , DisorientationVizFile)
   CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(AIM::Reconstruction, rec_ , ImageQualityVizFile)
@@ -697,6 +705,13 @@ void RepresentationUI::rec_CheckIOFiles()
   CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(AIM::Reconstruction, rec_ , DownSampledVizFile)
 #if AIM_HDF5_SUPPORT
   CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(AIM::Reconstruction, rec_ , HDF5GrainFile)
+  CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::Reconstruction, rec_ , H5StatisticsFile)
+#else
+  CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::Reconstruction,rec_, StatsFile)
+  CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::Reconstruction,rec_, MisorientationBinsFile)
+  CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::Reconstruction,rec_, MicroTextureFile)
+  CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::Reconstruction,rec_, AxisOrientationsFile)
+  CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::Reconstruction,rec_, ODFFile)
 #endif
 }
 
@@ -980,8 +995,8 @@ void RepresentationUI::gg_SetupGui()
   gg_MisorientationBinsFileIcon->setVisible(false);
   gg_MicroTextureFileIcon->setVisible(false);
 #else
-  gg_HDF5ResultsFile->setVisible(false);
-  gg_HDF5ResultsFileIcon->setVisible(false);
+  gg_H5StatisticsFile->setVisible(false);
+  gg_H5StatisticsFileIcon->setVisible(false);
 #endif
 
   m_WidgetList << gg_InputDir << gg_InputDirBtn << gg_OutputDir << gg_OutputDirBtn;
@@ -996,7 +1011,7 @@ void RepresentationUI::gg_SetupGui()
 void RepresentationUI::gg_CheckIOFiles()
 {
 #if AIM_HDF5_SUPPORT
-  CHECK_QLABEL_INPUT_FILE_EXISTS(AIM::Reconstruction, gg_, HDF5ResultsFile)
+  CHECK_QLABEL_INPUT_FILE_EXISTS(AIM::Reconstruction, gg_, H5StatisticsFile)
 #else
   CHECK_QLABEL_INPUT_FILE_EXISTS(AIM::Reconstruction, gg_, StatsFile)
   CHECK_QLABEL_INPUT_FILE_EXISTS(AIM::Reconstruction, gg_, AxisOrientationsFile)
@@ -1124,12 +1139,15 @@ void RepresentationUI::on_gg_GoBtn_clicked()
 
   SANITY_CHECK_INPUT(gg_, InputDir)
   SANITY_CHECK_INPUT(gg_, OutputDir)
-
+#if AIM_HDF5_SUPPORT
+  SANITY_CHECK_QLABEL_FILE(AIM::Reconstruction, gg_, H5StatisticsFile)
+#else
   SANITY_CHECK_QLABEL_FILE(AIM::Reconstruction, gg_, StatsFile)
   SANITY_CHECK_QLABEL_FILE(AIM::Reconstruction, gg_, AxisOrientationsFile)
   SANITY_CHECK_QLABEL_FILE(AIM::Reconstruction, gg_, ODFFile)
   SANITY_CHECK_QLABEL_FILE(AIM::Reconstruction, gg_, MisorientationBinsFile)
   SANITY_CHECK_QLABEL_FILE(AIM::Reconstruction, gg_, MicroTextureFile)
+#endif
 
   m_GrainGenerator = GrainGenerator::New(NULL);
   m_GrainGenerator->setInputDirectory(gg_InputDir->text().toStdString() );
