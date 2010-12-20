@@ -38,6 +38,10 @@
 
 #include "hdf5.h"
 
+#include <MXA/Common/MXASetGetMacros.h>
+#include <MXA/MXATypes.h>
+#include <AIM/Common/Constants.h>
+
 #ifdef AIM_USE_QT
 #include <QtCore/QObject>
 #include <QtCore/QThread>
@@ -53,7 +57,7 @@
  * @date Dec 13, 2010
  * @version 1.0
  */
-class AIMCOMMON_EXPORT H5AngImporter
+class H5AngImporter
 #ifdef AIM_USE_QT
  : public QThread
 #endif

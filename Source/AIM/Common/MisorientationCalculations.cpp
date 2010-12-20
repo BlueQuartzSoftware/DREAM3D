@@ -29,7 +29,7 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "MisorientationCalculations.h"
 
-#include <cmath>
+#include <math.h>
 
 #include "AIM/Common/Quaternions.h"
 
@@ -40,8 +40,8 @@ const static double m_OnePointThree = 1.33333333333;
 const double threesixty_over_pi = 360.0/m_pi;
 const double sqrt_two = pow(2.0, 0.5);
 
-const double acos_neg_one = acos(-1);
-const double acos_pos_one = acos(1);
+const double acos_neg_one = acos(-1.0);
+const double acos_pos_one = acos(1.0);
 const double sin_wmin_neg_1_over_2 = sin(acos_neg_one/2.0);
 const double sin_wmin_pos_1_over_2 = sin(acos_pos_one/2.0);
 
