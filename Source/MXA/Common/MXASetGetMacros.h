@@ -14,26 +14,22 @@
 #include <sstream>
 #include <stdexcept>
 
-#ifdef QT_CORE_LIB
-#undef QT_CORE_LIB
-#define redef_QT_CORE_LIB
-#endif
 
 
 #if defined(QT_CORE_LIB)
 //-- Qt includes
 #include <QtCore/QSharedPointer>
-#define RAW_PTR  data
-#else
+//#define RAW_PTR  data
+#endif
+
 //-- Boost Includes
 #include <boost/shared_ptr.hpp>
 #include <boost/weak_ptr.hpp>
-#define RAW_PTR  get
-#endif
+//#define RAW_PTR  get
+
 
 #define SHARED_IS_NULL(ptr)\
   (  (ptr).get() == NULL )
-
 
 /**
  * @brief Creates a static method that returns a NULL pointer wrapped in a
@@ -46,18 +42,17 @@
     return Pointer(static_cast<thisClass*>(NULL));\
   }
 
-#if defined(QT_CORE_LIB)
+
 /**
  * @brief Creates some basic typedefs that can be used throughout the code to
  * reference the class.
  */
-#define MXA_SHARED_POINTERS(thisClass)\
+#define QT_SHARED_POINTERS(thisClass)\
   typedef thisClass                      Self;\
   typedef QSharedPointer< Self >        Pointer;\
   typedef QSharedPointer<const Self >  ConstPointer;\
   MXA_NULL_SHARED_POINTER(thisClass)
 
-#else
 /**
  * @brief Creates some basic typedefs that can be used throughout the code to
  * reference the class.
@@ -69,9 +64,6 @@
   typedef boost::weak_ptr<thisClass > WeakPointer;\
   typedef boost::weak_ptr<thisClass > ConstWeakPointer;\
   MXA_NULL_SHARED_POINTER(thisClass)
-
-#endif
-
 
 
 #define MXA_STATIC_NEW_SUPERCLASS(superclass, theclass)\
@@ -295,8 +287,5 @@ namespace MXA
 
 #endif
 
-#ifdef redef_QT_CORE_LIB
-#define QT_CORE_LIB
-#endif
 
 #endif /* _MXASetGetMacros_h_  */
