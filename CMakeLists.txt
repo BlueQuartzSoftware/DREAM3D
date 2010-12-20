@@ -165,7 +165,10 @@ if (AIM_BUILD_QT_APPS)
    
    # Add our Qt based GUI project to the list of targets
    ADD_SUBDIRECTORY( ${AIMRepresentation_SOURCE_DIR}/Source/AIM/GUI ${AIMRepresentation_BINARY_DIR}/AIM/GUI)
-   
+   OPTION (AIM_BUILD_STATS_GENERATOR "Compile the Statistics Generator GUI Application" OFF)
+   if (AIM_BUILD_STATS_GENERATOR)
+    add_subdirectory(${AIMRepresentation_SOURCE_DIR}/Source/AIM/StatsGenerator ${AIMRepresentation_BINARY_DIR}/AIM/StatsGenerator)
+   endif()
 endif()
 
 include_directories(${AIMRepresentation_SOURCE_DIR}/Source)
@@ -190,6 +193,8 @@ OPTION (AIM_BUILD_VOLUME_MESHING_TOOL "Compile the Volume Meshing tools" OFF)
 if (AIM_BUILD_VOLUME_MESHING_TOOL)
     add_subdirectory(${AIMRepresentation_SOURCE_DIR}/Source/AIM/VolumeMesh ${AIMRepresentation_BINARY_DIR}/AIM/VolumeMesh)
 endif()
+
+
 
 include(${PROJECT_RESOURCES_DIR}/CPack/PackageProject.cmake)
 
