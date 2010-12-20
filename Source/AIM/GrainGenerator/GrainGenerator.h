@@ -26,6 +26,8 @@
 #define AIM_STRING std::string
 #endif
 
+#include "MXA/Common/MXASetGetMacros.h"
+#include "AIM/Common/AIMCommonConfiguration.h"
 
 /**
 * @class GrainGenerator GrainGenerator.h AIM/GrainGenerator/GrainGenerator.h
