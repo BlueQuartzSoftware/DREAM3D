@@ -56,12 +56,13 @@
       QString msg = #AClass; \
               msg += " was Canceled"; \
               emit updateMessage(msg);\
-              emit updateProgress(0);\
-      return;}
+              emit updateProgress(100);\
+      break;}
 
 #else
 #define CHECK_FOR_CANCELED(AClass)\
-    ;
+    if (m_Cancel == true){\
+      break; }
 #endif
 
 
@@ -161,13 +162,18 @@ void H5AngImporter::compute()
 
   std::vector<int> indices;
   // Loop on Each Ang File
+  float total = m_ZEndIndex - m_ZStartIndex;
+  int progress = 0;
   for (int z = m_ZStartIndex; z <= m_ZEndIndex; z++)
   {
-    if (m_Cancel == true)
-    {
-      break;
-    }
     std::string angFName = p->generateFullPathAngFileName(z);
+
+    CHECK_FOR_CANCELED(H5AngImporter)
+    progress = z - m_ZStartIndex;
+    progress = (int)(100.0f * (float)(progress)/total);
+    std::string msg = "Importing: " + angFName;
+    progressMessage(msg, progress );
+
     err = importAngFile(fileId, z, angFName);
     if (err < 0)
     {
@@ -246,7 +252,7 @@ int H5AngImporter::importAngFile(hid_t fileId, int z, const std::string &angFile
     return -1;
   }
 
-  std::cout << "H5AngImporter: Importing " << angFile << std::endl;
+//  std::cout << "H5AngImporter: Importing " << angFile << std::endl;
   AngReader reader;
   reader.setFileName(angFile);
   reader.setUserOrigin(AngReader::NoOrientation);
@@ -348,7 +354,6 @@ void H5AngImporter::progressMessage(const std::string &message, int progress)
 // -----------------------------------------------------------------------------
 void H5AngImporter::on_CancelWorker()
 {
- // std::cout << "H5AngImporter::cancelWorker()" << std::endl;
   this->m_Cancel = true;
 }
 #endif

@@ -924,7 +924,7 @@ void RepresentationUI::rec_ThreadFinished()
   //std::cout << "RepresentationUI::reconstruction_Finished()" << std::endl;
   rec_GoBtn->setText("Go");
   setWidgetListEnabled(true);
-  this->progressBar->setValue(0);
+  this->rec_progressBar->setValue(0);
   grainGeneratorTab->setEnabled(true);
   surfaceMeshingTab->setEnabled(true);
   volumeMeshingTab->setEnabled(true);
@@ -937,7 +937,7 @@ void RepresentationUI::rec_ThreadFinished()
 // -----------------------------------------------------------------------------
 void RepresentationUI::rec_ThreadProgressed(int val)
 {
-  this->progressBar->setValue( val );
+  this->rec_progressBar->setValue( val );
 }
 
 
@@ -1687,8 +1687,16 @@ void RepresentationUI::on_oim_GoBtn_clicked()
 {
 #if AIM_HDF5_SUPPORT
   bool ok = false;
-  SANITY_CHECK_INPUT( , oim_InputDir)
+  if (oim_GoBtn->text().compare("Cancel") == 0)
+  {
+    if(m_H5AngImporter.get() != NULL)
+    {
+      emit sig_CancelWorker();
+    }
+    return;
+  }
 
+  SANITY_CHECK_INPUT( , oim_InputDir)
   m_H5AngImporter = H5AngImporter::New();
   m_H5AngImporter->setInputDirectory(oim_InputDir->text().toStdString() );
   m_H5AngImporter->setAngFilePrefix(oim_FilePrefix->text().toStdString());
@@ -1775,7 +1783,7 @@ void RepresentationUI::oim_ThreadFinished()
   //std::cout << "RepresentationUI::reconstruction_Finished()" << std::endl;
   oim_GoBtn->setText("Go");
   setWidgetListEnabled(true);
-  this->progressBar->setValue(0);
+  this->oim_progressBar->setValue(0);
   reconstructionTab->setEnabled(true);
   grainGeneratorTab->setEnabled(true);
   surfaceMeshingTab->setEnabled(true);
@@ -1789,5 +1797,5 @@ void RepresentationUI::oim_ThreadFinished()
 // -----------------------------------------------------------------------------
 void RepresentationUI::oim_ThreadProgressed(int val)
 {
-  this->progressBar->setValue( val );
+  this->oim_progressBar->setValue( val );
 }
