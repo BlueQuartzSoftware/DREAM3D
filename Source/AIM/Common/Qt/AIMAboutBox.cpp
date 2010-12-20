@@ -14,7 +14,7 @@
  * *****************************************************************************
  * </distribution-statement> */
 #include "AIMAboutBox.h"
-#include <AIM/Common/AIMVersion.h>
+#include <AIMRepresentation/Common/AIMRepresentationVersion.h>
 
 #include <iostream>
 
@@ -45,7 +45,7 @@ void AIMAboutBox::setApplicationName(QString applicationName)
 
   appName->setText(applicationName);
   QString version("Version ");
-  version.append(AIMRepresentation_VERSION);
+  version.append(AIMRepresentation_COMPLETE);
   appVersion->setText( version );
 }
 

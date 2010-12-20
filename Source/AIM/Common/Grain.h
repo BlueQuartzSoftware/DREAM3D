@@ -16,25 +16,31 @@
 #define WIN32_LEAN_AND_MEAN		// Exclude rarely-used stuff from Windows headers
 #endif
 
-
 #include <vector>
 
-/**
-* @class Grain Grain.h AIM/Common/Grain.h
-* @brief Support class for the MicroGen3D class
-* @author Michael A. Jackson for BlueQuartz Software, Dr. Michael Groeber for USAFRL
-* @date Nov 4, 2009
-* @version 1.0
-*/
-class Grain
-{
+#include "AIM/Common/AIMCommonConfiguration.h"
 
+/**
+ * @class Grain Grain.h AIM/Common/Grain.h
+ * @brief Support class for the MicroGen3D class
+ * @author Michael A. Jackson for BlueQuartz Software, Dr. Michael Groeber for USAFRL
+ * @date Nov 4, 2009
+ * @version 1.0
+ */
+class AIMCOMMON_EXPORT Grain
+{
 
   public:
     Grain();
+    Grain(const Grain&);
+ //   Grain(Grain& grain);
     virtual ~Grain();
+    Grain& operator=(const Grain&);
 
-	int nucleus;
+
+    int nucleus;
+    double packquality;
+    int active;
     int numvoxels;
     int numneighbors;
     int newgrainname;
@@ -42,9 +48,7 @@ class Grain
     int gottwinmerged;
     int gotcolonymerged;
     int surfacegrain;
-    int twinnewnumberbeenset;
     int twinnewnumber;
-    int colonynewnumberbeenset;
     int colonynewnumber;
     double centroidx;
     double centroidy;
@@ -55,7 +59,8 @@ class Grain
     double Ixy;
     double Iyz;
     double Ixz;
-	double omega3;
+    double omega3;
+	double averageimagequality;
     double averagemisorientation;
     double kernelmisorientation;
     double red;
@@ -70,20 +75,20 @@ class Grain
     double axiseuler2;
     double axiseuler3;
     double volume;
-    double nserror;
+    double equivdiameter;
+    double neigherror;
     double radius1;
     double radius2;
     double radius3;
     double lowanglefraction;
-	double avg_quat[5];
-    std::vector<int>* neighborlist;
-    std::vector<int>* voxellist;
-    std::vector<double>* misorientationlist;
-    std::vector<double>* neighborsurfarealist;
-
-  private:
-    Grain(const Grain&);    // Copy Constructor Not Implemented
-    void operator=(const Grain&);  // Operator '=' Not Implemented
+    double avg_quat[5];
+    std::vector<int > neighbordistfunc;
+    std::vector<int >* neighborlist;
+    std::vector<int >* voxellist;
+    std::vector<double >* ellipfunclist;
+    std::vector<double >* misorientationlist;
+    std::vector<double >* neighborsurfarealist;
+    std::vector<std::vector<int > > neighbordistfunclist;
 };
 
 #endif /* GRAINS_H_ */

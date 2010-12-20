@@ -30,35 +30,39 @@
 #include <algorithm>
 #include <numeric>
 
-#include <MXA/Common/MXATypes.h>
-#include <MXA/Common/MXASetGetMacros.h>
+#include "MXA/MXATypes.h"
+#include "MXA/Common/MXASetGetMacros.h"
 
-#include <AIM/Common/Grain.h>
-#include <AIM/Common/Voxel.h>
-#include <AIM/Common/Bin.h>
-#include <AIM/Common/AIMRandomNG.h>
-#include <AIM/ANG/AngFileHelper.h>
-#include <AIM/ANG/AngDirectoryPatterns.h>
-
+#include "AIM/Common/AIMCommonConfiguration.h"
+#include "AIM/Common/Constants.h"
+#include "AIM/Common/Grain.h"
+#include "AIM/Common/Voxel.h"
+#include "AIM/Common/Bin.h"
+#include "AIM/Common/AIMRandomNG.h"
+#include "AIM/ANG/AbstractAngDataLoader.h"
+#include "AIM/ANG/AngDirectoryPatterns.h"
+#if AIM_HDF5_SUPPORT
+#include "AIM/Reconstruction/H5ReconStatsWriter.h"
+#endif
 
 using namespace std;
 
 
 
 
-class ReconstructionFunc
+class AIMCOMMON_EXPORT ReconstructionFunc
 {
 
 public:
 
     MXA_SHARED_POINTERS(ReconstructionFunc)
     MXA_STATIC_NEW_MACRO(ReconstructionFunc)
-    MXA_INSTANCE_PROPERTY_m(AngDirectoryPatterns::Pointer, DirectoryPattern);
+    MXA_INSTANCE_PROPERTY(AngDirectoryPatterns::Pointer, DirectoryPattern);
 
 
   virtual ~ReconstructionFunc();
 
-  AngFileHelper::Pointer m_angFileHelper;
+  // AngFileHelper::Pointer m_angFileHelper;
 
   double sizex;
   double sizey;
@@ -71,19 +75,21 @@ public:
   double misorientationtolerance;
   double minseedconfidence;
   double minseedimagequality;
+  double downsamplefactor;
   int minallowedgrainsize;
   int mergetwinsoption;
   int mergecoloniesoption;
-  int crystruct;
+  AIM::Reconstruction::CrystalStructure crystruct;
   int alignmeth;
   int alreadyformed;
 
 
 	AIMRandomNG rg;
 	Voxel* voxels;
-	Grain* grains;
-	Bin *eulerodf;
-	Bin *axisodf;
+	Voxel* voxelstemp;
+	vector<Grain> m_Grains;
+	Bin* eulerodf;
+	Bin* axisodf;
 
 	int **shifts;
 	int **arr;
@@ -92,7 +98,12 @@ public:
 	double **grainmoments;
 	double **quat_symm;
 
-	vector<vector<int> > neighborvector;
+	vector<vector<int> > neighborhood;
+	vector<vector<double> > svbovera;
+	vector<vector<double> > svcovera;
+	vector<vector<double> > svcoverb;
+	vector<vector<double> > svschmid;
+	vector<vector<double> > svomega3;
 
 	int numseNbins;
 	int numorients;
@@ -118,26 +129,42 @@ public:
 	double totalvol;
 	double totalaxes;
 
-    void initialize(int, int, double, bool, bool, int, double, double, double, int, int, bool);
-	void loadSlices();
-	void align_sections(double quat_symmcubic[24][5],double quat_symmhex[12][5]);
+#if 1
+  void initialize(int nX, int nY, int nZ,
+                  double xRes, double yRes, double zRes,
+                  bool v_mergetwinsoption,
+                  bool v_mergecoloniesoption, int v_minallowedgrainsize,
+                  double v_minseedconfidence, double v_downsamplefactor,
+                  double v_minseedimagequality, double v_misorientationtolerance,
+                  AIM::Reconstruction::CrystalStructure v_crystruct,
+                  int v_alignmeth, bool v_alreadyformed);
+
+#else
+  void initialize(int m_ZStartSlice, int m_ZEndSlice, double m_ZResolution, bool v_mergetwinsoption,
+                  bool v_mergecoloniesoption, int v_minallowedgrainsize, double v_minseedconfidence, double v_downsamplefactor,
+                  double v_minseedimagequality, double v_misorientationtolerance, AIM::Reconstruction::CrystalStructure v_crystruct, int v_alignmeth, bool v_alreadyformed);
+#endif
+
+
+//  void loadSlices(AbstractAngDataLoader::Pointer dataLoader);
+
 	void find_border();
-	int form_grains(double quat_symmcubic[24][5],double quat_symmhex[12][5]);
-	void form_grains_sections(double quat_symmcubic[24][5],double quat_symmhex[12][5]);
+	int form_grains();
+	void form_grains_sections();
 	void remove_smallgrains();
 	int renumber_grains1();
-	void write_volume(string, string, string, string, string, bool, bool, bool, bool);
 	int load_data(string);
 	void assign_badpoints();
 	void find_neighbors();
 	void merge_containedgrains();
 	int renumber_grains();
-	void reburn_grains();
+	int define_subgrains();
+	int reburn_grains();
 	void cleanup_data();
-	void find_kernels(double quat_symmcubic[24][5],double quat_symmhex[12][5]);
-	void homogenize_grains(double quat_symmcubic[24][5],double quat_symmhex[12][5]);
-	void merge_twins(double quat_symmcubic[24][5],double quat_symmhex[12][5]);
-	void merge_colonies(double quat_symmcubic[24][5],double quat_symmhex[12][5]);
+	void find_kernels();
+	void homogenize_grains();
+	void merge_twins();
+	void merge_colonies();
 	void characterize_twins();
 	void characterize_colonies();
 	int renumber_grains3();
@@ -146,21 +173,54 @@ public:
 	void find_moments();
 	void find_axes();
 	void find_vectors();
+	void find_centroids2D();
+	void find_moments2D();
+	void find_axes2D();
+	void find_vectors2D();
 	void find_eulerodf();
-	void measure_misorientations(double quat_symmcubic[24][5],double quat_symmhex[12][5]);
-	void find_colors(double quat_symmcubic[24][5],double quat_symmhex[12][5]);
+	void measure_misorientations();
+	void find_colors();
 	void find_convexities();
 	void find_schmids();
-	void volume_stats(string,string,string);
-	void write_axisodf(string);
-	void write_eulerodf(string);
-	void write_graindata(string);
-	double getmisoquatcubic(double,double q1[5],double q2[5],double &,double &,double &);
-	double getmisoquathexagonal(double quat_symmhex[12][5],double,double q1[5],double q2[5],double &,double &,double &);
+
+  void write_axisodf(const std::string &axisFile);
+  void write_eulerodf(const std::string &eulerFile);
+  void write_graindata(const std::string &graindataFile);
+	void align_sections(const std::string &filename );
+
+#if AIM_HDF5_SUPPORT
+void volume_stats(H5ReconStatsWriter::Pointer h5io);
+void volume_stats2D(H5ReconStatsWriter::Pointer h5io);
+#else
+void volume_stats(const std::string &statsfile,
+                                      const std::string &misorientationFile,
+                                      const std::string &microBinsFile);
+
+void volume_stats2D(const std::string &stats, const std::string &misorientation, const std::string &microBins);
+#endif
+
+
+
+
+	int writeVisualizationFile(const std::string &file); // DONE
+  int writeIPFVizFile(const std::string &file);
+  int writeDisorientationVizFile(const std::string &file); // DONE
+  int writeImageQualityVizFile(const std::string &file); // DONE
+  int writeSchmidFactorVizFile(const std::string &file); // DONE
+  int writeDownSampledVizFile(const std::string &file);
+
+
+	double getmisoquatcubic(double q1[5],double q2[5],double &n1,double &n2,double &n3);
+	double getmisoquathexagonal(double q1[5],double q2[5],double &n1,double &n2,double &n3);
+
 	double gamma(double);
 	double find_xcoord(long);
 	double find_ycoord(long);
 	double find_zcoord(long);
+
+
+  /* This is deprecated in favor of the HDF5 output file */
+  void write_grains(const std::string &outputdir);
 
 protected:
   ReconstructionFunc();

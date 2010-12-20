@@ -15,7 +15,7 @@
 #if defined (_MSC_VER)
 #define WIN32_LEAN_AND_MEAN		// Exclude rarely-used stuff from Windows headers
 #endif
-
+#include "AIM/Common/AIMCommonConfiguration.h"
 
 /**
 * @class Orient Orient.h AIM/Common/Orient.h
@@ -24,7 +24,7 @@
 * @date Nov 4, 2009
 * @version 1.0
 */
-class Bin
+class AIMCOMMON_EXPORT Bin
 {
   public:
     Bin();

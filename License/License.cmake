@@ -18,7 +18,7 @@ foreach(lf ${LICENSE_FILES})
     configure_file("${lf}" ${PROJECT_BINARY_DIR}/License/${cmp_text_file_name}   COPYONLY )
         
     # create the Qt Resource File
-    configure_file(${PROJECT_CMAKE_DIR}/ConfiguredFiles/QtResourceFile.qrc.in 
+    configure_file(${CMP_CONFIGURED_FILES_SOURCE_DIR}/QtResourceFile.qrc.in 
                    ${PROJECT_BINARY_DIR}/License/${lf_fn}.qrc)
                    
     set(QRC_LICENSE_FILES ${QRC_LICENSE_FILES} ${PROJECT_BINARY_DIR}/License/${lf_fn}.qrc)

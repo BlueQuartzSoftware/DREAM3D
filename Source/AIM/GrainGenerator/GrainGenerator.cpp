@@ -10,20 +10,23 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 #include "GrainGenerator.h"
-#include <AIM/ANG/AngDirectoryPatterns.h>
-#include <AIM/ANG/AngFileReader.h>
-#include <AIM/ANG/AngFileHelper.h>
+#include "AIM/ANG/AngDirectoryPatterns.h"
+#include "AIM/ANG/AngReader.h"
+#include "AIM/ANG/AngDataLoader.h"
+#if AIM_HDF5_SUPPORT
+#include "AIM/Reconstruction/H5ReconStatsReader.h"
+#endif
 
-#include <MXA/Utilities/MXAFileSystemPath.h>
+#include <MXA/Utilities/MXADir.h>
 
 
 #define CREATE_INPUT_FILENAME(f, n)\
-    std::string f = m_InputDirectory + MXAFileSystemPath::Separator + n;\
-    f = MXAFileSystemPath::toNativeSeparators(f);
+    std::string f = m_InputDirectory + MXADir::Separator + n;\
+    f = MXADir::toNativeSeparators(f);
 
 #define CREATE_OUTPUT_FILENAME(f, n)\
-    std::string f = m_InputDirectory + MXAFileSystemPath::Separator + n;\
-    f = MXAFileSystemPath::toNativeSeparators(f);
+    std::string f = m_InputDirectory + MXADir::Separator + n;\
+    f = MXADir::toNativeSeparators(f);
 
 
 #ifdef AIM_USE_QT
@@ -75,7 +78,7 @@ m_OverlapAllowed(0),
 m_AlreadyFormed(false),
 m_Precipitates(0),
 m_OverlapAssignment(0),
-m_CrystalStructure(AIM::Representation::Cubic),
+m_CrystalStructure(AIM::Reconstruction::Cubic),
 m_ErrorCondition(0)
 #if AIM_USE_QT
   ,m_Cancel(false)
@@ -108,57 +111,31 @@ void GrainGenerator::run()
 // -----------------------------------------------------------------------------
 void GrainGenerator::compute()
 {
+  int err = 0;
 
-  double quat_symmcubic[24][5] = {
-	  {0.000000000, 0.000000000, 0.000000000, 0.000000000, 1.000000000},
-	  {0.000000000, 1.000000000, 0.000000000, 0.000000000, 0.000000000},
-	  {0.000000000, 0.000000000, 1.000000000, 0.000000000, 0.000000000},
-	  {0.000000000, 0.000000000, 0.000000000, 1.000000000, 0.000000000},
-	  {0.000000000, 0.707106781, 0.000000000, 0.000000000, 0.707106781},
-	  {0.000000000, 0.000000000, 0.707106781, 0.000000000, 0.707106781},
-	  {0.000000000, 0.000000000, 0.000000000, 0.707106781, 0.707106781},
-	  {0.000000000, -0.707106781, 0.000000000, 0.000000000, 0.707106781},
-	  {0.000000000, 0.000000000, -0.707106781, 0.000000000, 0.707106781},
-	  {0.000000000, 0.000000000, 0.000000000, -0.707106781, 0.707106781},
-	  {0.000000000, 0.707106781, 0.707106781, 0.000000000, 0.000000000},
-	  {0.000000000, -0.707106781, 0.707106781, 0.000000000, 0.000000000},
-	  {0.000000000, 0.000000000, 0.707106781, 0.707106781, 0.000000000},
-	  {0.000000000, 0.000000000, -0.707106781, 0.707106781, 0.000000000},
-	  {0.000000000, 0.707106781, 0.000000000, 0.707106781, 0.000000000},
-	  {0.000000000, -0.707106781, 0.000000000, 0.707106781, 0.000000000},
-	  {0.000000000, 0.500000000, 0.500000000, 0.500000000, 0.500000000},
-	  {0.000000000, -0.500000000, -0.500000000, -0.500000000, 0.500000000},
-	  {0.000000000, 0.500000000, -0.500000000, 0.500000000, 0.500000000},
-	  {0.000000000, -0.500000000, 0.500000000, -0.500000000, 0.500000000},
-	  {0.000000000, -0.500000000, 0.500000000, 0.500000000, 0.500000000},
-	  {0.000000000, 0.500000000, -0.500000000, -0.500000000, 0.500000000},
-	  {0.000000000, -0.500000000, -0.500000000, 0.500000000, 0.500000000},
-	  {0.000000000, 0.500000000, 0.500000000, -0.500000000, 0.500000000}};
 
-  double quat_symmhex[12][5] = {
-	  {0.000000000, 0.000000000, 0.000000000, 0.000000000, 1.000000000},
-	  {0.000000000, 0.000000000, 0.000000000, 0.500000000, 0.866025400},
-	  {0.000000000, 0.000000000, 0.000000000, 0.866025400, 0.500000000},
-	  {0.000000000, 0.000000000, 0.000000000, 1.000000000, 0.000000000},
-	  {0.000000000, 0.000000000, 0.000000000, 0.866025400, -0.50000000},
-	  {0.000000000, 0.000000000, 0.000000000, 0.500000000, -0.86602540},
-	  {0.000000000, 1.000000000, 0.000000000, 0.000000000, 0.000000000},
-	  {0.000000000, 0.866025400, 0.500000000, 0.000000000, 0.000000000},
-	  {0.000000000, 0.500000000, 0.866025400, 0.000000000, 0.000000000},
-	  {0.000000000, 0.000000000, 1.000000000, 0.000000000, 0.000000000},
-	  {0.000000000, -0.50000000, 0.866025400, 0.000000000, 0.000000000},
-	  {0.000000000, -0.86602540, 0.500000000, 0.000000000, 0.000000000}};
+#if AIM_HDF5_SUPPORT
+    H5ReconStatsReader::Pointer h5reader = H5ReconStatsReader::New(m_InputDirectory + MXADir::Separator + AIM::Reconstruction::H5StatisticsFile);
+    if (h5reader.get() == NULL)
+    {
+      progressMessage(AIM_STRING("Error Opening HDF5 Stats File. Nothing generated"), 100 );
+      return;
+    }
+#else
+  std::string StatsFile = m_InputDirectory + MXADir::Separator + AIM::Reconstruction::StatsFile;
+  std::string AxisOrientationsFile = m_InputDirectory + MXADir::Separator + AIM::Reconstruction::AxisOrientationsFile;
+  std::string EulerAnglesFile = m_InputDirectory + MXADir::Separator + AIM::Reconstruction::ODFFile;
+  std::string MisorientationBinsFile = m_InputDirectory + MXADir::Separator + AIM::Reconstruction::MisorientationBinsFile;
+  std::string MicroBinsFile = m_InputDirectory + MXADir::Separator + AIM::Reconstruction::MicroTextureFile;
+#endif
+  std::string CubeFile = m_OutputDirectory + MXADir::Separator + AIM::SyntheticBuilder::CubeFile;
+  std::string EulerFile = m_OutputDirectory + MXADir::Separator + AIM::SyntheticBuilder::EulerFile;
+  std::string AnalysisFile = m_OutputDirectory + MXADir::Separator + AIM::SyntheticBuilder::AnalysisFile;
+  std::string MoDFFile = m_OutputDirectory + MXADir::Separator + AIM::SyntheticBuilder::MoDFFile;
+  std::string CrystallographicErrorFile = m_OutputDirectory + MXADir::Separator + AIM::SyntheticBuilder::CrystallographicErrorFile;
+  std::string graindataFile = m_OutputDirectory + MXADir::Separator + AIM::Reconstruction::GrainDataFile;
 
-  std::string  StatsFile = m_InputDirectory + MXAFileSystemPath::Separator + AIM::Representation::StatsFile;
-  std::string  AxisOrientationsFile = m_InputDirectory + MXAFileSystemPath::Separator + AIM::Representation::AxisOrientationsFile;
-  std::string  EulerAnglesFile = m_InputDirectory + MXAFileSystemPath::Separator + AIM::Representation::EulerAnglesFile;
-  std::string  MisorientationBinsFile = m_InputDirectory + MXAFileSystemPath::Separator + AIM::Representation::MisorientationBinsFile;
-  std::string  MicroBinsFile = m_InputDirectory + MXAFileSystemPath::Separator + AIM::Representation::MicroBinsFile;
 
-  std::string  CubeFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::CubeFile;
-  std::string  EulerFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::EulerFile;
-  std::string AnalysisFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::AnalysisFile;
-  std::string graindataFile = m_OutputDirectory + MXAFileSystemPath::Separator + AIM::Representation::graindataFile;
 
    m = GrainGeneratorFunc::New();
    m->initialize(m_NumGrains, m_ShapeClass,
@@ -169,24 +146,29 @@ void GrainGenerator::compute()
    if(m_AlreadyFormed == false)
    {
 	   CHECK_FOR_CANCELED(GrainGeneratorFunc)
-	   progressMessage(AIM_STRING("Loading Stats File"), 5 );
-	   m->loadStatsData(StatsFile);
+	   progressMessage(AIM_STRING("Loading Stats Data"), 5 );
+#if AIM_HDF5_SUPPORT
+	   err = m->readReconStatsData(h5reader);
+	   if (err < 0) { setErrorCondition(err); return; }
+#else
+	   m->readReconStatsData(StatsFile);
+#endif
+	   CHECK_FOR_CANCELED(GrainGeneratorFunc)
+	   progressMessage(AIM_STRING("Loading Axis Orientation Data"), 10 );
+#if AIM_HDF5_SUPPORT
+	   err = m->readAxisOrientationData(h5reader);
+	   if (err < 0) { setErrorCondition(err); return; }
+#else
+	   m->readAxisOrientationData(AxisOrientationsFile);
+#endif
 
 	   CHECK_FOR_CANCELED(GrainGeneratorFunc)
-	   progressMessage(AIM_STRING("Loading Orient File"), 10 );
-	   m->loadorientData(AxisOrientationsFile);
+	   progressMessage(AIM_STRING("Packing Grains"), 25 );
+	   m->numgrains = m->pack_grains(m->numgrains);
 
 	   CHECK_FOR_CANCELED(GrainGeneratorFunc)
-	   progressMessage(AIM_STRING("Generating Grains"), 20 );
-	   m->generate_grains(m->numgrains);
-
-	   CHECK_FOR_CANCELED(GrainGeneratorFunc)
-	   progressMessage(AIM_STRING("Initializing"), 25 );
-	   m->initialize2();
-
-	   CHECK_FOR_CANCELED(GrainGeneratorFunc)
-	   progressMessage(AIM_STRING("Packing Grains"), 35 );
-	   m->pack_grains(m->numgrains);
+	   progressMessage(AIM_STRING("Assigning Voxels"), 30 );
+	   m->numgrains = m->assign_voxels(m->numgrains);
 
 	   CHECK_FOR_CANCELED(GrainGeneratorFunc)
 	   progressMessage(AIM_STRING("Filling Gaps"), 40 );
@@ -216,16 +198,32 @@ void GrainGenerator::compute()
    m->find_neighbors();
 
    CHECK_FOR_CANCELED(GrainGeneratorFunc)
-   progressMessage(AIM_STRING("Loading Euler File"), 15 );
-   m->loadeulerData(EulerAnglesFile);
+   progressMessage(AIM_STRING("Loading ODF Data"), 15 );
+#if AIM_HDF5_SUPPORT
+   err = m->readODFData(h5reader);
+   if (err < 0) { setErrorCondition(err); return; }
+#else
+   m->readODFData(EulerAnglesFile);
+#endif
 
    CHECK_FOR_CANCELED(GrainGeneratorFunc)
-   progressMessage(AIM_STRING("Loading Misorientations"), 50 );
-   m->loadMisoData(MisorientationBinsFile);
+   progressMessage(AIM_STRING("Loading Misorientation Data"), 50 );
+#if AIM_HDF5_SUPPORT
+   err = m->readMisorientationData(h5reader);
+   if (err < 0) { setErrorCondition(err); return; }
+
+   #else
+   m->readMisorientationData(MisorientationBinsFile);
+#endif
 
    CHECK_FOR_CANCELED(GrainGeneratorFunc)
-   progressMessage(AIM_STRING("Loading Microtexture"), 55 );
-   m->loadMicroData(MicroBinsFile);
+   progressMessage(AIM_STRING("Loading Microtexture Data "), 55 );
+#if AIM_HDF5_SUPPORT
+   err = m->readMicroTextureData(h5reader);
+   if (err < 0) { setErrorCondition(err); return; }
+#else
+   m->readMicroTextureData(MicroBinsFile);
+#endif
 
    CHECK_FOR_CANCELED(GrainGeneratorFunc)
    progressMessage(AIM_STRING("Assigning Eulers"), 60 );
@@ -233,19 +231,19 @@ void GrainGenerator::compute()
 
    CHECK_FOR_CANCELED(GrainGeneratorFunc)
    progressMessage(AIM_STRING("Measuring Misorientations"), 65 );
-   m->measure_misorientations(quat_symmcubic, quat_symmhex);
+   m->measure_misorientations();
 
    CHECK_FOR_CANCELED(GrainGeneratorFunc)
    progressMessage(AIM_STRING("Matching Crystallography"), 65 );
-   m->matchCrystallography(quat_symmcubic, quat_symmhex);
+   m->matchCrystallography(CrystallographicErrorFile);
 
    CHECK_FOR_CANCELED(GrainGeneratorFunc)
    progressMessage(AIM_STRING("writing Cube"), 90 );
    m->writeCube(CubeFile, m->numgrains);
-   
+
    CHECK_FOR_CANCELED(GrainGeneratorFunc)
    progressMessage(AIM_STRING("Writing Grain Data"), 94 );
-   m->write_graindata(graindataFile);
+   m->write_graindata(graindataFile, MoDFFile);
 
    CHECK_FOR_CANCELED(GrainGeneratorFunc)
    progressMessage(AIM_STRING("Writing Euler Angles"), 98 );

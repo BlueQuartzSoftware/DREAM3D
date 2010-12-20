@@ -19,6 +19,8 @@
 
 #include <vector>
 
+#include "AIM/Common/AIMCommonConfiguration.h"
+
 /**
 * @class Node Node.h AIM/Common/Node.h
 * @brief Support class for the MicroGen3D class
@@ -26,7 +28,7 @@
 * @date Nov 4, 2009
 * @version 1.0
 */
-class Node
+class AIMCOMMON_EXPORT Node
 {
 public:
     Node();
@@ -36,12 +38,9 @@ public:
     double xc;
     double yc;
     double zc;
-    int newNodeID; // newID for used nodes; if not used, it's -1...
+	int point;
+    int NodeID; // newID for used nodes; if not used, it's -1...
 
-  private:
-
-    Node(const Node&);    // Copy Constructor Not Implemented
-      void operator=(const Node&);  // Operator '=' Not Implemented
 };
 
 #endif /* Node_H_ */

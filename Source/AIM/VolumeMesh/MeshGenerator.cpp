@@ -77,7 +77,7 @@ int numgoodsurfnodes = 0;
 double globalvolmeshvol = 0;
 double globalsurfmeshvol = 0;
 double avgarea = 0;
-int32 seeder = time(0);
+int32_t seeder = time(0);
 AIMRandomNG rg;
 }
 
@@ -1295,6 +1295,7 @@ void clean_triangles()
    outputFile << "data set from FFT2dx_GB" << endl;
    outputFile << "ASCII" << endl;
    outputFile << "DATASET UNSTRUCTURED_GRID" << endl;
+   outputFile << endl;
    outputFile << "POINTS " << numsurfnodes << " float" << endl;
    for(int i=0;i<numsurfnodes;i++)
    {
@@ -1560,6 +1561,7 @@ void create_finalnodesandtriangles()
   outputFile << "data set from FFT2dx_GB" << endl;
   outputFile << "ASCII" << endl;
   outputFile << "DATASET UNSTRUCTURED_GRID" << endl;
+  outputFile << endl;
   outputFile << "POINTS " << numnodes << " float" << endl;
   for (int i = 0; i < numnodes; i++)
   {
@@ -2063,6 +2065,7 @@ void make_nodes(int iter)
    outFile << "data set from FFT2dx_GB" << endl;
    outFile << "ASCII" << endl;
    outFile << "DATASET UNSTRUCTURED_GRID" << endl;
+   outFile << endl;
    outFile << "POINTS " << numsurfnodes+numnodes-numgoodsurfnodes << " float" << endl;
    for(int i=0;i<numsurfnodes;i++)
    {
@@ -5431,6 +5434,7 @@ void write_meshdata(string outname1)
   outFile << "data set from FFT2dx_GB" << endl;
   outFile << "ASCII" << endl;
   outFile << "DATASET UNSTRUCTURED_GRID" << endl;
+  outFile << endl;
   outFile << "POINTS " << numnodes << " float" << endl;
   for (int j = 0; j < numnodes; j++)
   {
@@ -5584,6 +5588,7 @@ void write_voxeldata(string outname3)
   outFile << "ORIGIN 0.0 0.0 0.0" << endl;
   outFile << "SPACING " << xres << " " << yres << " " << zres << endl;
   outFile << "POINT_DATA " << (numxvoxels) * (numyvoxels) * (numzvoxels) << endl;
+  outFile << endl;
   outFile << "SCALARS GrainID int 1" << endl;
   outFile << "LOOKUP_TABLE default" << endl;
   int counter = 0;

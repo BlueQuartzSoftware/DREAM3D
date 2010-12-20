@@ -13,7 +13,7 @@
 #define GRAINGENERATOR_H_
 
 #include <MXA/Common/MXASetGetMacros.h>
-#include <MXA/Common/MXATypes.h>
+#include <MXA/MXATypes.h>
 #include <AIM/Common/Constants.h>
 #include <AIM/Common/GrainGeneratorFunc.h>
 
@@ -26,6 +26,8 @@
 #define AIM_STRING std::string
 #endif
 
+#include "MXA/Common/MXASetGetMacros.h"
+#include "AIM/Common/AIMCommonConfiguration.h"
 
 /**
 * @class GrainGenerator GrainGenerator.h AIM/GrainGenerator/GrainGenerator.h
@@ -60,20 +62,21 @@ Q_OBJECT
     virtual ~GrainGenerator();
 
 
-    MXA_INSTANCE_STRING_PROPERTY(InputDirectory, m_InputDirectory)
-    MXA_INSTANCE_STRING_PROPERTY(OutputDirectory, m_OutputDirectory)
-    MXA_INSTANCE_PROPERTY_m(int, NumGrains)
-    MXA_INSTANCE_PROPERTY_m(int, ShapeClass)
-    MXA_INSTANCE_PROPERTY_m(double, XResolution)
-    MXA_INSTANCE_PROPERTY_m(double, YResolution)
-    MXA_INSTANCE_PROPERTY_m(double, ZResolution)
-    MXA_INSTANCE_PROPERTY_m(double, FractionPrecipitates)
-    MXA_INSTANCE_PROPERTY_m(int, OverlapAllowed)
-    MXA_INSTANCE_PROPERTY_m(bool, AlreadyFormed)
-    MXA_INSTANCE_PROPERTY_m(int, OverlapAssignment)
-    MXA_INSTANCE_PROPERTY_m(AIM::Representation::CrystalStructure, CrystalStructure)
-    MXA_INSTANCE_PROPERTY_m(int, Precipitates)
-    MXA_INSTANCE_PROPERTY_m(int, ErrorCondition);
+    MXA_INSTANCE_STRING_PROPERTY(InputDirectory)
+    MXA_INSTANCE_STRING_PROPERTY(OutputDirectory)
+    MXA_INSTANCE_PROPERTY(int, NumGrains)
+    MXA_INSTANCE_PROPERTY(int, ShapeClass)
+    MXA_INSTANCE_PROPERTY(double, XResolution)
+    MXA_INSTANCE_PROPERTY(double, YResolution)
+    MXA_INSTANCE_PROPERTY(double, ZResolution)
+    MXA_INSTANCE_PROPERTY(double, FractionPrecipitates)
+    MXA_INSTANCE_PROPERTY(int, OverlapAllowed)
+    MXA_INSTANCE_PROPERTY(bool, AlreadyFormed)
+    MXA_INSTANCE_PROPERTY(int, Precipitates)
+    MXA_INSTANCE_PROPERTY(int, OverlapAssignment)
+    MXA_INSTANCE_PROPERTY(AIM::Reconstruction::CrystalStructure, CrystalStructure)
+
+    MXA_INSTANCE_PROPERTY(int, ErrorCondition);
 
     /**
      * @brief Either prints a message or sends the message to the User Interface
@@ -87,7 +90,7 @@ Q_OBJECT
     /**
      * @brief Cancel the operation
      */
-    MXA_INSTANCE_PROPERTY_m(bool, Cancel);
+    MXA_INSTANCE_PROPERTY(bool, Cancel);
 
     /**
      * Qt Signals for connections

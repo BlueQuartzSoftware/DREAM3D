@@ -10,7 +10,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 #include "AngDirectoryPatterns.h"
 
-#include <MXA/Utilities/MXAFileSystemPath.h>
+#include <MXA/Utilities/MXADir.h>
 #include <MXA/Utilities/StringUtils.h>
 
 #include <sstream>
@@ -21,7 +21,7 @@
 // -----------------------------------------------------------------------------
 AngDirectoryPatterns::Pointer AngDirectoryPatterns::New(const std::string &parentDirectory,
     const std::string &fileprefix,
-    int32 width)
+    int32_t width)
 {
   Pointer sharedPtr (new AngDirectoryPatterns);
   sharedPtr->setParentDirectory(parentDirectory);
@@ -57,7 +57,7 @@ std::string AngDirectoryPatterns::generateFullPathAngFileName(int slice)
   ss.setf(std::ios::fixed);
   ss.fill('0');
 
-  ss << m_ParentDirectory << MXAFileSystemPath::Separator << m_Prefix << std::setw(m_MaxSlice) << slice << m_Suffix << Ang::DirectoryPatterns::Dot << m_Extension;
+  ss << m_ParentDirectory << MXADir::Separator << m_Prefix << std::setw(m_MaxSlice) << slice << m_Suffix << Ang::DirectoryPatterns::Dot << m_Extension;
   return ss.str();
 }
 
@@ -107,7 +107,7 @@ int AngDirectoryPatterns::parseDocumentName(const std::string &prefix,
                                             const std::string &sampleAngFile)
 {
   //std::cout << "AngDirectoryPatterns::parseDocumentName: " << sampleAngFile << std::endl;
-  m_Extension = MXAFileSystemPath::extension(sampleAngFile);
+  m_Extension = MXADir::extension(sampleAngFile);
 
   std::string::size_type m_PrefixPos = sampleAngFile.find(prefix);
   if (m_PrefixPos != std::string::npos  && m_PrefixPos == 0)

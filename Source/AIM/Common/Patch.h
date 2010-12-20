@@ -19,6 +19,8 @@
 
 #include <vector>
 
+#include "AIM/Common/AIMCommonConfiguration.h"
+
 /**
 * @class Patch Patch.h AIM/Common/Patch.h
 * @brief Support class for the MicroGen3D class
@@ -26,26 +28,24 @@
 * @date Nov 4, 2009
 * @version 1.0
 */
-class Patch
+class AIMCOMMON_EXPORT Patch
 {
-  public:
+public:
     Patch();
     virtual ~Patch();
 
-    int v_id[3]; // stores three new node id for vertices of the triangles...
-    int new_v_id[3];
+    int node_id[3]; // stores three new node id for vertices of the triangles...
     int ngrainname[2]; // neighboring two grainnames...
     int edgePlace[3]; // if it's 0, face edges; if 1, inner edges...
     double normal[3];
     double area;
-    int triID;
-    int e_id[3];
-    int nSpin[2];
+	int triID;
+	int e_id[3];
 
   private:
 
-    Patch(const Patch&); // Copy Constructor Not Implemented
-    void operator=(const Patch&); // Operator '=' Not Implemented
+    Patch(const Patch&);    // Copy Constructor Not Implemented
+      void operator=(const Patch&);  // Operator '=' Not Implemented
 };
 
 #endif /* Patch_H_ */
