@@ -36,7 +36,7 @@
        </size>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="oimImportTab">
        <attribute name="title">
@@ -1050,7 +1050,7 @@
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout_5">
           <item>
-           <widget class="QProgressBar" name="progressBar">
+           <widget class="QProgressBar" name="rec_progressBar">
             <property name="value">
              <number>0</number>
             </property>
