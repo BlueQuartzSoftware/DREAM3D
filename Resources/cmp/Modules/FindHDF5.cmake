@@ -21,7 +21,6 @@ SET (HDF5_FOUND "NO")
 SET (HDF5_HL_FOUND "NO")
 
 # Only set HDF5_INSTALL to the environment variable if it is blank
-message(STATUS "HDF5_INSTALL: ${HDF5_INSTALL}")
 if ("${HDF5_INSTALL}" STREQUAL "")
 SET (HDF5_INSTALL  $ENV{HDF5_INSTALL})
 endif()
