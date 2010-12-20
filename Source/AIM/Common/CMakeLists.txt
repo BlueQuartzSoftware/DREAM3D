@@ -34,7 +34,21 @@ SET (CMAKE_ARCHIVE_OUTPUT_DIRECTORY
   "Single Directory for all static libraries."
   )
 
+SET (AIMCOMMON_BUILT_AS_DYNAMIC_LIB)
+IF (BUILD_SHARED_LIBS)
+    SET (AIMCOMMON_BUILT_AS_DYNAMIC_LIB 1)
+    IF (WIN32)
+        ADD_DEFINITIONS("-DAIMCOMMON_BUILT_AS_DYNAMIC_LIB")
+    ENDIF (WIN32)
+ENDIF (BUILD_SHARED_LIBS)
 
+
+set(HDF5_SRCS "")
+set(HDF5_HDRS "")
+set(AIM_HDF5_SUPPORT "0")
+if (AIM_USE_HDF5)
+    set(AIM_HDF5_SUPPORT "1")
+endif()
 
 SET (AIMCommon_SRCS
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/GrainGeneratorFunc.cpp
@@ -47,9 +61,11 @@ SET (AIMCommon_SRCS
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Node.cpp
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Neighbor.cpp
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Segment.cpp
-    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/ISegment.cpp
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Bin.cpp   
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/AIMRandomNG.cpp
+    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Quaternions.cpp
+    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/VTKFileUtils.cpp
+    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/MisorientationCalculations.cpp
     )
 
 SET (AIMCommon_HDRS
@@ -63,27 +79,39 @@ SET (AIMCommon_HDRS
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Node.h
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Neighbor.h
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Segment.h
-    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/ISegment.h
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Bin.h
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/AIMRandomNG.h
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/FeiConstants.h
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Constants.h
+    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/VTKFileUtils.h
+    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Quaternions.h
+    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/MisorientationCalculations.h
 )
-IDE_SOURCE_PROPERTIES( "Source/AIM/Common" "${AIMCommon_HDRS}" "${AIMCommon_SRCS}")
 
+# --------------------------------------------------------------------
+if (AIM_USE_HDF5)
+    SET (AIMCommon_SRCS
+        ${AIMCommon_SRCS}
+        ${AIMRepresentation_SOURCE_DIR}/Source/AIM/HDF5/AIM_H5VtkDataWriter.cpp
+        ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Reconstruction/H5ReconStatsWriter.cpp
+        ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Reconstruction/H5ReconStatsReader.cpp
+        )
+    SET (AIMCommon_HDRS
+        ${AIMCommon_HDRS}
+        ${AIMRepresentation_SOURCE_DIR}/Source/AIM/HDF5/AIM_H5VtkDataWriter.h
+        ${AIMRepresentation_SOURCE_DIR}/Source/AIM/HDF5/VTKH5Constants.h
+        ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Reconstruction/H5ReconStatsWriter.h
+        ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Reconstruction/H5ReconStatsReader.h
+        )
+    include_directories(${HDF5_INCLUDE_DIR})
+    set (AIMCOMMON_DEP_LIBS ${HDF5_LIBRARIES} MXADataModel)
+    cmp_IDE_SOURCE_PROPERTIES( "Source/AIM/HDF5" "${HDF5_HDRS}" "${HDF5_SRCS}" ${CMP_INSTALL_FILES})
+endif()
 
-set (ANG_SRCS
-    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/ANG/AngDirectoryPatterns.cpp
-    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/ANG/AngFileReader.cpp
-    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/ANG/AngFileHelper.cpp
- )
- 
-set (ANG_HDRS
-    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/ANG/AngDirectoryPatterns.h
-    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/ANG/AngFileReader.h
-    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/ANG/AngFileHelper.h
-)
-IDE_SOURCE_PROPERTIES( "Source/AIM/ANG" "${ANG_HDRS}" "${ANG_SRCS}")
+cmp_IDE_SOURCE_PROPERTIES( "Source/AIM/Common" "${AIMCommon_HDRS}" "${AIMCommon_SRCS}" ${CMP_INSTALL_FILES})
+
+include (${AIMRepresentation_SOURCE_DIR}/Source/AIM/ANG/Sources.cmake)
+
 
 set (AIMCommon_SRCS
     ${AIMCommon_SRCS}
@@ -92,11 +120,17 @@ set (AIMCommon_SRCS
     ${ANG_HDRS}
     )
 
-    
+configure_file(${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/AIMCommonConfiguration.h.in
+               ${AIMRepresentation_BINARY_DIR}/AIM/Common/AIMCommonConfiguration.h)
+               
+               
 include_directories( ${AIMRepresentation_BINARY_DIR} )
-#-- Add a static library for the PCM registration
-add_library(AIMCommon STATIC ${AIMCommon_SRCS} )
-StaticLibraryProperties( AIMCommon )
+include_directories( ${PROJECT_CODE_DIR} )
+
+#-- Add a library for the AIMCommon Code
+add_library(AIMCommon ${LIB_TYPE} ${AIMCommon_SRCS} )
+target_link_libraries(AIMCommon ${AIMCOMMON_DEP_LIBS} )
+LibraryProperties( AIMCommon ${EXE_DEBUG_EXTENSION} )
 
 
     

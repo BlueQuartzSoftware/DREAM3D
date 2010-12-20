@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>535</width>
-    <height>625</height>
+    <width>658</width>
+    <height>657</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -31,13 +31,198 @@
      <widget class="QTabWidget" name="tabWidget">
       <property name="minimumSize">
        <size>
-        <width>527</width>
+        <width>650</width>
         <height>0</height>
        </size>
       </property>
       <property name="currentIndex">
        <number>0</number>
       </property>
+      <widget class="QWidget" name="oimImportTab">
+       <attribute name="title">
+        <string>OIM Data Import</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout_5">
+        <property name="margin">
+         <number>4</number>
+        </property>
+        <item>
+         <layout class="QGridLayout" name="gridLayout_19">
+          <item row="0" column="0">
+           <widget class="QLabel" name="label_29">
+            <property name="text">
+             <string>Ang Directory</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QLineEdit" name="oim_InputDir"/>
+          </item>
+          <item row="0" column="2">
+           <widget class="QPushButton" name="oim_InputDirBtn">
+            <property name="text">
+             <string>Select</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_11">
+          <item>
+           <widget class="QLabel" name="label_32">
+            <property name="text">
+             <string>Ang File Prefix</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLineEdit" name="oim_FilePrefix">
+            <property name="text">
+             <string>Slice_</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_47">
+            <property name="text">
+             <string>Max Slice</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QSpinBox" name="oim_ZMaxSlice">
+            <property name="maximum">
+             <number>100000000</number>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QGridLayout" name="gridLayout_20">
+          <item row="0" column="0">
+           <widget class="QLabel" name="label_50">
+            <property name="text">
+             <string>Start Slice</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QSpinBox" name="oim_ZStartIndex">
+            <property name="minimumSize">
+             <size>
+              <width>75</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="maximum">
+             <number>100000</number>
+            </property>
+            <property name="value">
+             <number>1</number>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="2">
+           <widget class="QLabel" name="label_51">
+            <property name="text">
+             <string>End Slice</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="3">
+           <widget class="QSpinBox" name="oim_ZEndIndex">
+            <property name="minimumSize">
+             <size>
+              <width>75</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="maximum">
+             <number>1000000</number>
+            </property>
+            <property name="value">
+             <number>99</number>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="4">
+           <widget class="QLabel" name="label_52">
+            <property name="text">
+             <string>Z Spacing</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="5">
+           <widget class="QLineEdit" name="oim_zSpacing">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>0.25</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_14">
+          <item>
+           <widget class="QLabel" name="label_53">
+            <property name="text">
+             <string>Output File</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLineEdit" name="oim_OutputFile"/>
+          </item>
+          <item>
+           <widget class="QPushButton" name="oim_OutputFileBtn">
+            <property name="text">
+             <string>Select</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <spacer name="verticalSpacer_5">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>380</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_15">
+          <item>
+           <widget class="QProgressBar" name="oim_progressBar">
+            <property name="value">
+             <number>0</number>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="oim_GoBtn">
+            <property name="text">
+             <string>Go</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </widget>
       <widget class="QWidget" name="reconstructionTab">
        <attribute name="title">
         <string>Reconstruction</string>
@@ -54,15 +239,15 @@
           <item row="0" column="0">
            <widget class="QLabel" name="label">
             <property name="text">
-             <string>Ang Directory</string>
+             <string>OIM HDF5 File</string>
             </property>
            </widget>
           </item>
           <item row="0" column="1">
-           <widget class="QLineEdit" name="angDir"/>
+           <widget class="QLineEdit" name="rec_H5InputFile"/>
           </item>
           <item row="0" column="2">
-           <widget class="QPushButton" name="angDirBtn">
+           <widget class="QPushButton" name="rec_OIMH5Btn">
             <property name="text">
              <string>Select</string>
             </property>
@@ -71,48 +256,58 @@
          </layout>
         </item>
         <item>
-         <layout class="QHBoxLayout" name="horizontalLayout">
-          <item>
-           <widget class="QLabel" name="label_3">
-            <property name="text">
-             <string>Ang File Prefix</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QLineEdit" name="angFilePrefix">
-            <property name="text">
-             <string>Slice_</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QLabel" name="label_4">
-            <property name="text">
-             <string>Max Slice</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QSpinBox" name="angMaxSlice">
-            <property name="maximum">
-             <number>100000000</number>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </item>
-        <item>
          <layout class="QGridLayout" name="gridLayout_3">
-          <item row="0" column="0">
+          <item row="1" column="0">
            <widget class="QLabel" name="label_5">
             <property name="text">
              <string>Start Slice</string>
             </property>
            </widget>
           </item>
+          <item row="0" column="0">
+           <widget class="QLabel" name="label_7">
+            <property name="text">
+             <string>Minimum Slice</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="4">
+           <widget class="QLabel" name="rec_ZMax">
+            <property name="text">
+             <string>100</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="2">
+           <widget class="QLabel" name="label_54">
+            <property name="text">
+             <string>Maximum Slice</string>
+            </property>
+           </widget>
+          </item>
           <item row="0" column="1">
-           <widget class="QSpinBox" name="zStartIndex">
+           <widget class="QLabel" name="rec_ZMin">
+            <property name="text">
+             <string>0</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="5">
+           <widget class="QLabel" name="rec_ZMax_2">
+            <property name="text">
+             <string>Z Resolution</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="6">
+           <widget class="QLabel" name="rec_ZRes">
+            <property name="text">
+             <string>0.0</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QSpinBox" name="rec_ZStartIndex">
             <property name="minimumSize">
              <size>
               <width>75</width>
@@ -127,15 +322,15 @@
             </property>
            </widget>
           </item>
-          <item row="0" column="2">
+          <item row="1" column="2">
            <widget class="QLabel" name="label_6">
             <property name="text">
              <string>End Slice</string>
             </property>
            </widget>
           </item>
-          <item row="0" column="3">
-           <widget class="QSpinBox" name="zEndIndex">
+          <item row="1" column="4">
+           <widget class="QSpinBox" name="rec_ZEndIndex">
             <property name="minimumSize">
              <size>
               <width>75</width>
@@ -150,25 +345,18 @@
             </property>
            </widget>
           </item>
-          <item row="0" column="4">
-           <widget class="QLabel" name="label_7">
-            <property name="text">
-             <string>Z Spacing</string>
+          <item row="1" column="5" colspan="2">
+           <spacer name="horizontalSpacer_2">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
             </property>
-           </widget>
-          </item>
-          <item row="0" column="5">
-           <widget class="QLineEdit" name="zSpacing">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
             </property>
-            <property name="text">
-             <string>0.25</string>
-            </property>
-           </widget>
+           </spacer>
           </item>
          </layout>
         </item>
@@ -192,7 +380,7 @@
            <widget class="QLineEdit" name="rec_OutputDir"/>
           </item>
           <item>
-           <widget class="QPushButton" name="outputDirBtn">
+           <widget class="QPushButton" name="rec_OutputDirBtn">
             <property name="text">
              <string>Select</string>
             </property>
@@ -229,7 +417,7 @@
             <property name="verticalSpacing">
              <number>1</number>
             </property>
-            <item row="1" column="0">
+            <item row="7" column="0">
              <widget class="QLabel" name="rec_MisorientationBinsFileIcon">
               <property name="text">
                <string/>
@@ -239,15 +427,73 @@
               </property>
              </widget>
             </item>
-            <item row="1" column="1">
+            <item row="7" column="1">
              <widget class="QLabel" name="rec_MisorientationBinsFile">
               <property name="text">
-               <string>misobins.txt</string>
+               <string>Misorientation Bins File</string>
               </property>
              </widget>
             </item>
-            <item row="2" column="0">
-             <widget class="QLabel" name="rec_StatsFileIcon">
+            <item row="1" column="1">
+             <widget class="QLabel" name="rec_AlignmentFile">
+              <property name="text">
+               <string>Alignment File</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="0">
+             <widget class="QLabel" name="rec_AlignmentFileIcon">
+              <property name="text">
+               <string/>
+              </property>
+              <property name="pixmap">
+               <pixmap resource="../../../../Resources/icons/images/Icons.qrc">:/Delete-16x16.png</pixmap>
+              </property>
+             </widget>
+            </item>
+            <item row="4" column="1">
+             <widget class="QLabel" name="rec_AxisOrientationsFile">
+              <property name="text">
+               <string>Axis Orientation File</string>
+              </property>
+             </widget>
+            </item>
+            <item row="4" column="0">
+             <widget class="QLabel" name="rec_AxisOrientationsFileIcon">
+              <property name="text">
+               <string/>
+              </property>
+              <property name="pixmap">
+               <pixmap resource="../../../../Resources/icons/images/Icons.qrc">:/Delete-16x16.png</pixmap>
+              </property>
+             </widget>
+            </item>
+            <item row="6" column="1">
+             <widget class="QLabel" name="rec_MicroTextureFile">
+              <property name="text">
+               <string>Micro Texture File</string>
+              </property>
+             </widget>
+            </item>
+            <item row="6" column="0">
+             <widget class="QLabel" name="rec_MicroTextureFileIcon">
+              <property name="text">
+               <string/>
+              </property>
+              <property name="pixmap">
+               <pixmap resource="../../../../Resources/icons/images/Icons.qrc">:/Delete-16x16.png</pixmap>
+              </property>
+             </widget>
+            </item>
+            <item row="8" column="1">
+             <widget class="QLabel" name="rec_ODFFile">
+              <property name="text">
+               <string>ODF File</string>
+              </property>
+             </widget>
+            </item>
+            <item row="8" column="0">
+             <widget class="QLabel" name="rec_ODFFileIcon">
               <property name="text">
                <string/>
               </property>
@@ -257,14 +503,14 @@
              </widget>
             </item>
             <item row="2" column="1">
-             <widget class="QLabel" name="rec_StatsFile">
+             <widget class="QLabel" name="rec_GrainDataFile">
               <property name="text">
-               <string>stats.txt</string>
+               <string>Grain Data File</string>
               </property>
              </widget>
             </item>
-            <item row="3" column="0">
-             <widget class="QLabel" name="rec_MicroBinsFileIcon">
+            <item row="2" column="0">
+             <widget class="QLabel" name="rec_GrainDataFileIcon">
               <property name="text">
                <string/>
               </property>
@@ -274,14 +520,14 @@
              </widget>
             </item>
             <item row="3" column="1">
-             <widget class="QLabel" name="rec_MicroBinsFile">
+             <widget class="QLabel" name="rec_StatsFile">
               <property name="text">
-               <string>microbins.txt</string>
+               <string>Statistics File</string>
               </property>
              </widget>
             </item>
-            <item row="5" column="0">
-             <widget class="QLabel" name="rec_EulerAnglesFileIcon">
+            <item row="3" column="0">
+             <widget class="QLabel" name="rec_StatsFileIcon">
               <property name="text">
                <string/>
               </property>
@@ -290,10 +536,20 @@
               </property>
              </widget>
             </item>
-            <item row="5" column="1">
-             <widget class="QLabel" name="rec_EulerAnglesFile">
+            <item row="9" column="1">
+             <widget class="QLabel" name="rec_H5StatisticsFile">
               <property name="text">
-               <string>eulerangles.txt</string>
+               <string>HDF5 Statistics File</string>
+              </property>
+             </widget>
+            </item>
+            <item row="9" column="0">
+             <widget class="QLabel" name="rec_H5StatisticsFileIcon">
+              <property name="text">
+               <string/>
+              </property>
+              <property name="pixmap">
+               <pixmap resource="../../../../Resources/icons/images/Icons.qrc">:/Delete-16x16.png</pixmap>
               </property>
              </widget>
             </item>
@@ -317,7 +573,7 @@
              <number>1</number>
             </property>
             <item row="1" column="0">
-             <widget class="QLabel" name="rec_ReconstructedVisualizationFileIcon">
+             <widget class="QLabel" name="rec_VisualizationVizFileIcon">
               <property name="text">
                <string/>
               </property>
@@ -326,22 +582,128 @@
               </property>
              </widget>
             </item>
-            <item row="1" column="1">
-             <widget class="QLabel" name="rec_ReconstructedVisualizationFile">
+            <item row="2" column="0">
+             <widget class="QLabel" name="rec_IPFVizFileIcon">
               <property name="text">
-               <string>reconstructed_visualization.vtk</string>
+               <string/>
+              </property>
+              <property name="pixmap">
+               <pixmap resource="../../../../Resources/icons/images/Icons.qrc">:/Delete-16x16.png</pixmap>
               </property>
              </widget>
             </item>
             <item row="2" column="1">
-             <widget class="QLabel" name="rec_AxisOrientationsFile">
+             <widget class="QCheckBox" name="rec_IPFVizFile">
               <property name="text">
-               <string>axisorientations.txt</string>
+               <string>Inverse Pole Figure</string>
+              </property>
+              <property name="checked">
+               <bool>true</bool>
               </property>
              </widget>
             </item>
-            <item row="2" column="0">
-             <widget class="QLabel" name="rec_AxisOrientationsFileIcon">
+            <item row="3" column="0">
+             <widget class="QLabel" name="rec_DisorientationVizFileIcon">
+              <property name="text">
+               <string/>
+              </property>
+              <property name="pixmap">
+               <pixmap resource="../../../../Resources/icons/images/Icons.qrc">:/Delete-16x16.png</pixmap>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="1">
+             <widget class="QCheckBox" name="rec_DisorientationVizFile">
+              <property name="text">
+               <string>Disorientation</string>
+              </property>
+              <property name="checked">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item row="4" column="0">
+             <widget class="QLabel" name="rec_ImageQualityVizFileIcon">
+              <property name="text">
+               <string/>
+              </property>
+              <property name="pixmap">
+               <pixmap resource="../../../../Resources/icons/images/Icons.qrc">:/Delete-16x16.png</pixmap>
+              </property>
+             </widget>
+            </item>
+            <item row="4" column="1">
+             <widget class="QCheckBox" name="rec_ImageQualityVizFile">
+              <property name="text">
+               <string>Image Quality</string>
+              </property>
+              <property name="checked">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item row="5" column="0">
+             <widget class="QLabel" name="rec_SchmidFactorVizFileIcon">
+              <property name="text">
+               <string/>
+              </property>
+              <property name="pixmap">
+               <pixmap resource="../../../../Resources/icons/images/Icons.qrc">:/Delete-16x16.png</pixmap>
+              </property>
+             </widget>
+            </item>
+            <item row="5" column="1">
+             <widget class="QCheckBox" name="rec_SchmidFactorVizFile">
+              <property name="text">
+               <string>Schmid Factor</string>
+              </property>
+              <property name="checked">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="1">
+             <widget class="QCheckBox" name="rec_VisualizationVizFile">
+              <property name="text">
+               <string>VTK Visualization File</string>
+              </property>
+              <property name="checked">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item row="7" column="1">
+             <widget class="QCheckBox" name="rec_HDF5GrainFile">
+              <property name="text">
+               <string>HDF5 Grain File</string>
+              </property>
+              <property name="checked">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item row="7" column="0">
+             <widget class="QLabel" name="rec_HDF5GrainFileIcon">
+              <property name="text">
+               <string/>
+              </property>
+              <property name="pixmap">
+               <pixmap resource="../../../../Resources/icons/images/Icons.qrc">:/Delete-16x16.png</pixmap>
+              </property>
+             </widget>
+            </item>
+            <item row="6" column="1">
+             <widget class="QCheckBox" name="rec_DownSampledVizFile">
+              <property name="text">
+               <string>Downsampled File</string>
+              </property>
+              <property name="checked">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item row="6" column="0">
+             <widget class="QLabel" name="rec_DownSampledVizFileIcon">
               <property name="text">
                <string/>
               </property>
@@ -382,7 +744,7 @@
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout_2">
           <item>
-           <widget class="QCheckBox" name="mergeTwins">
+           <widget class="QCheckBox" name="rec_mergeTwins">
             <property name="text">
              <string>Merge Twins</string>
             </property>
@@ -402,7 +764,7 @@
            </spacer>
           </item>
           <item>
-           <widget class="QCheckBox" name="mergeColonies">
+           <widget class="QCheckBox" name="rec_mergeColonies">
             <property name="text">
              <string>Merge Colonies</string>
             </property>
@@ -422,7 +784,7 @@
            </spacer>
           </item>
           <item>
-           <widget class="QCheckBox" name="alreadyFormed">
+           <widget class="QCheckBox" name="rec_alreadyFormed">
             <property name="text">
              <string>Grains Formed</string>
             </property>
@@ -472,61 +834,34 @@
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout_3">
           <item>
-           <widget class="QLabel" name="label_8">
+           <widget class="QLabel" name="label_10">
             <property name="text">
-             <string>Minimum Grain Size</string>
+             <string>Disorient. Tol.</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QSpinBox" name="minAllowedGrainSize">
-            <property name="minimum">
-             <number>1</number>
-            </property>
-            <property name="maximum">
-             <number>64</number>
-            </property>
-            <property name="value">
-             <number>8</number>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <spacer name="horizontalSpacer_6">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeType">
-             <enum>QSizePolicy::Fixed</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
+           <widget class="QDoubleSpinBox" name="misOrientationTolerance">
+            <property name="minimumSize">
              <size>
-              <width>20</width>
-              <height>20</height>
+              <width>120</width>
+              <height>0</height>
              </size>
             </property>
-           </spacer>
-          </item>
-          <item>
-           <widget class="QLabel" name="label_9">
-            <property name="text">
-             <string>Minimum CI</string>
+            <property name="suffix">
+             <string> Deg</string>
             </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QDoubleSpinBox" name="minConfidence">
             <property name="decimals">
-             <number>4</number>
+             <number>2</number>
             </property>
             <property name="maximum">
-             <double>1.000000000000000</double>
+             <double>180.000000000000000</double>
             </property>
             <property name="singleStep">
-             <double>0.100000000000000</double>
+             <double>1.000000000000000</double>
             </property>
             <property name="value">
-             <double>0.100000000000000</double>
+             <double>5.000000000000000</double>
             </property>
            </widget>
           </item>
@@ -544,94 +879,9 @@
            </spacer>
           </item>
           <item>
-           <widget class="QLabel" name="label_31">
-            <property name="text">
-             <string>Minimum IQ</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QDoubleSpinBox" name="minImageQuality">
-            <property name="maximum">
-             <double>5000.000000000000000</double>
-            </property>
-            <property name="singleStep">
-             <double>10.000000000000000</double>
-            </property>
-            <property name="value">
-             <double>50.000000000000000</double>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <spacer name="horizontalSpacer_2">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>40</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-         </layout>
-        </item>
-        <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_4">
-          <item>
-           <widget class="QLabel" name="label_10">
-            <property name="text">
-             <string>Misorientation Tolerance</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QDoubleSpinBox" name="misOrientationTolerance">
-            <property name="minimumSize">
-             <size>
-              <width>120</width>
-              <height>0</height>
-             </size>
-            </property>
-            <property name="suffix">
-             <string> Deg</string>
-            </property>
-            <property name="decimals">
-             <number>4</number>
-            </property>
-            <property name="maximum">
-             <double>180.000000000000000</double>
-            </property>
-            <property name="singleStep">
-             <double>1.000000000000000</double>
-            </property>
-            <property name="value">
-             <double>5.000000000000000</double>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <spacer name="horizontalSpacer_7">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeType">
-             <enum>QSizePolicy::Fixed</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>20</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-          <item>
            <widget class="QLabel" name="label_33">
             <property name="text">
-             <string>Crystal Structure</string>
+             <string>Cryst. Struct.</string>
             </property>
            </widget>
           </item>
@@ -662,10 +912,120 @@
             </property>
            </spacer>
           </item>
+          <item>
+           <widget class="QLabel" name="label_8">
+            <property name="text">
+             <string>Min. Grain Size</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QSpinBox" name="minAllowedGrainSize">
+            <property name="minimum">
+             <number>1</number>
+            </property>
+            <property name="maximum">
+             <number>1000</number>
+            </property>
+            <property name="value">
+             <number>8</number>
+            </property>
+           </widget>
+          </item>
          </layout>
         </item>
         <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_11"/>
+         <layout class="QHBoxLayout" name="horizontalLayout_4">
+          <item>
+           <widget class="QLabel" name="label_31">
+            <property name="text">
+             <string>Min IQ</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QDoubleSpinBox" name="minImageQuality">
+            <property name="maximum">
+             <double>5000.000000000000000</double>
+            </property>
+            <property name="singleStep">
+             <double>10.000000000000000</double>
+            </property>
+            <property name="value">
+             <double>50.000000000000000</double>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="horizontalSpacer_7">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeType">
+             <enum>QSizePolicy::Fixed</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>20</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_9">
+            <property name="text">
+             <string>Min CI</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QDoubleSpinBox" name="minConfidence">
+            <property name="decimals">
+             <number>4</number>
+            </property>
+            <property name="maximum">
+             <double>1.000000000000000</double>
+            </property>
+            <property name="singleStep">
+             <double>0.100000000000000</double>
+            </property>
+            <property name="value">
+             <double>0.100000000000000</double>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="horizontalSpacer_6">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeType">
+             <enum>QSizePolicy::Fixed</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>20</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_46">
+            <property name="text">
+             <string>Down-sample Res.</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QDoubleSpinBox" name="downsampleFactor">
+            <property name="value">
+             <double>1.000000000000000</double>
+            </property>
+           </widget>
+          </item>
+         </layout>
         </item>
         <item>
          <widget class="Line" name="line_6">
@@ -673,75 +1033,6 @@
            <enum>Qt::Horizontal</enum>
           </property>
          </widget>
-        </item>
-        <item>
-         <layout class="QVBoxLayout" name="verticalLayout_5">
-          <item>
-           <widget class="QLabel" name="label_29">
-            <property name="text">
-             <string>Visualization Options</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <layout class="QFormLayout" name="formLayout_10">
-            <property name="fieldGrowthPolicy">
-             <enum>QFormLayout::FieldsStayAtSizeHint</enum>
-            </property>
-            <property name="labelAlignment">
-             <set>Qt::AlignCenter</set>
-            </property>
-            <property name="horizontalSpacing">
-             <number>12</number>
-            </property>
-            <property name="verticalSpacing">
-             <number>4</number>
-            </property>
-            <property name="bottomMargin">
-             <number>10</number>
-            </property>
-            <item row="0" column="0">
-             <widget class="QCheckBox" name="IPFoutputoption">
-              <property name="text">
-               <string>Inverse Pole Figure</string>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="0">
-             <widget class="QCheckBox" name="Disorientationoutputoption">
-              <property name="text">
-               <string>Disorientation</string>
-              </property>
-             </widget>
-            </item>
-            <item row="2" column="0">
-             <widget class="QCheckBox" name="ImageQualityoutputoption">
-              <property name="text">
-               <string>Image Quality</string>
-              </property>
-             </widget>
-            </item>
-            <item row="3" column="0">
-             <widget class="QCheckBox" name="SchmidFactoroutputoption">
-              <property name="text">
-               <string>Schmid Factor</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </item>
-          <item>
-           <widget class="QLabel" name="label_32">
-            <property name="text">
-             <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt; font-style:italic;&quot;&gt;Each option will be saved into its own file&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
         </item>
         <item>
          <spacer name="verticalSpacer">
@@ -759,7 +1050,7 @@ p, li { white-space: pre-wrap; }
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout_5">
           <item>
-           <widget class="QProgressBar" name="progressBar">
+           <widget class="QProgressBar" name="rec_progressBar">
             <property name="value">
              <number>0</number>
             </property>
@@ -827,13 +1118,6 @@ p, li { white-space: pre-wrap; }
         </item>
         <item>
          <layout class="QGridLayout" name="gridLayout_7">
-          <item row="2" column="2">
-           <widget class="QLabel" name="label_21">
-            <property name="text">
-             <string>Overlap</string>
-            </property>
-           </widget>
-          </item>
           <item row="1" column="2">
            <widget class="QLabel" name="label_19">
             <property name="text">
@@ -877,27 +1161,6 @@ p, li { white-space: pre-wrap; }
             <item>
              <property name="text">
               <string>Cube-Octahedron</string>
-             </property>
-            </item>
-           </widget>
-          </item>
-          <item row="3" column="2">
-           <widget class="QLabel" name="label_17">
-            <property name="text">
-             <string>Overlap Assignment</string>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="3">
-           <widget class="QComboBox" name="gg_OverlapAssignment">
-            <item>
-             <property name="text">
-              <string>Rigid</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>Progressive</string>
              </property>
             </item>
            </widget>
@@ -973,14 +1236,14 @@ p, li { white-space: pre-wrap; }
             </property>
            </widget>
           </item>
-          <item row="2" column="3">
-           <widget class="QSpinBox" name="gg_OverlapAllowed">
-            <property name="maximum">
-             <number>100</number>
+          <item row="2" column="2">
+           <widget class="QLabel" name="label_48">
+            <property name="text">
+             <string>Precipitate Structure</string>
             </property>
            </widget>
           </item>
-          <item row="4" column="3">
+          <item row="2" column="3">
            <widget class="QComboBox" name="gg_Precipitates">
             <item>
              <property name="text">
@@ -999,22 +1262,15 @@ p, li { white-space: pre-wrap; }
             </item>
            </widget>
           </item>
-          <item row="4" column="2">
-           <widget class="QLabel" name="label_48">
-            <property name="text">
-             <string>Precipitate Structure</string>
-            </property>
-           </widget>
-          </item>
-          <item row="5" column="3">
-           <widget class="QDoubleSpinBox" name="gg_FractionPrecipitates"/>
-          </item>
-          <item row="5" column="2">
+          <item row="3" column="2">
            <widget class="QLabel" name="label_49">
             <property name="text">
              <string>Volume Fraction Precipitates</string>
             </property>
            </widget>
+          </item>
+          <item row="3" column="3">
+           <widget class="QDoubleSpinBox" name="gg_FractionPrecipitates"/>
           </item>
          </layout>
         </item>
@@ -1037,7 +1293,7 @@ p, li { white-space: pre-wrap; }
             </property>
            </widget>
           </item>
-          <item row="1" column="0">
+          <item row="4" column="0">
            <layout class="QFormLayout" name="formLayout_3">
             <property name="fieldGrowthPolicy">
              <enum>QFormLayout::FieldsStayAtSizeHint</enum>
@@ -1089,14 +1345,14 @@ p, li { white-space: pre-wrap; }
              </widget>
             </item>
             <item row="2" column="1">
-             <widget class="QLabel" name="gg_EulerAnglesFile">
+             <widget class="QLabel" name="gg_ODFFile">
               <property name="text">
                <string>EulerAngles</string>
               </property>
              </widget>
             </item>
             <item row="2" column="0">
-             <widget class="QLabel" name="gg_EulerAnglesFileIcon">
+             <widget class="QLabel" name="gg_ODFFileIcon">
               <property name="text">
                <string/>
               </property>
@@ -1107,7 +1363,7 @@ p, li { white-space: pre-wrap; }
             </item>
            </layout>
           </item>
-          <item row="1" column="1">
+          <item row="4" column="1">
            <layout class="QFormLayout" name="formLayout_4">
             <property name="fieldGrowthPolicy">
              <enum>QFormLayout::FieldsStayAtSizeHint</enum>
@@ -1142,7 +1398,7 @@ p, li { white-space: pre-wrap; }
              </widget>
             </item>
             <item row="2" column="0">
-             <widget class="QLabel" name="gg_MicroBinsFileIcon">
+             <widget class="QLabel" name="gg_MicroTextureFileIcon">
               <property name="text">
                <string/>
               </property>
@@ -1152,7 +1408,7 @@ p, li { white-space: pre-wrap; }
              </widget>
             </item>
             <item row="2" column="1">
-             <widget class="QLabel" name="gg_MicroBinsFile">
+             <widget class="QLabel" name="gg_MicroTextureFile">
               <property name="text">
                <string>MicroBins</string>
               </property>
@@ -1160,7 +1416,7 @@ p, li { white-space: pre-wrap; }
             </item>
            </layout>
           </item>
-          <item row="2" column="0" colspan="2">
+          <item row="5" column="0" colspan="2">
            <widget class="QLabel" name="gg_inputfile_msg">
             <property name="font">
              <font>
@@ -1175,6 +1431,26 @@ p, li { white-space: pre-wrap; }
             </property>
             <property name="margin">
              <number>3</number>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="gg_H5StatisticsFileIcon">
+            <property name="text">
+             <string/>
+            </property>
+            <property name="pixmap">
+             <pixmap resource="../../../../Resources/icons/images/Icons.qrc">:/Delete-16x16.png</pixmap>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QLabel" name="gg_H5StatisticsFile">
+            <property name="text">
+             <string>HDF5 Reconstruction Results File</string>
             </property>
            </widget>
           </item>
@@ -2067,7 +2343,7 @@ p, li { white-space: pre-wrap; }
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>535</width>
+     <width>658</width>
      <height>22</height>
     </rect>
    </property>
@@ -2114,19 +2390,12 @@ p, li { white-space: pre-wrap; }
   </action>
  </widget>
  <tabstops>
-  <tabstop>angDir</tabstop>
-  <tabstop>angDirBtn</tabstop>
-  <tabstop>angFilePrefix</tabstop>
-  <tabstop>angMaxSlice</tabstop>
-  <tabstop>zStartIndex</tabstop>
+  <tabstop>rec_H5InputFile</tabstop>
+  <tabstop>rec_OIMH5Btn</tabstop>
   <tabstop>rec_OutputDir</tabstop>
-  <tabstop>outputDirBtn</tabstop>
-  <tabstop>mergeTwins</tabstop>
-  <tabstop>alreadyFormed</tabstop>
-  <tabstop>minAllowedGrainSize</tabstop>
-  <tabstop>minConfidence</tabstop>
-  <tabstop>misOrientationTolerance</tabstop>
-  <tabstop>crystalStructure</tabstop>
+  <tabstop>rec_OutputDirBtn</tabstop>
+  <tabstop>rec_mergeTwins</tabstop>
+  <tabstop>rec_alreadyFormed</tabstop>
   <tabstop>rec_GoBtn</tabstop>
   <tabstop>sm_OutputDir</tabstop>
   <tabstop>sm_SmoothMesh</tabstop>
@@ -2144,14 +2413,14 @@ p, li { white-space: pre-wrap; }
   <tabstop>gg_ZResolution</tabstop>
   <tabstop>gg_ShapeClass</tabstop>
   <tabstop>gg_CrystalStructure</tabstop>
-  <tabstop>gg_OverlapAllowed</tabstop>
-  <tabstop>gg_OverlapAssignment</tabstop>
   <tabstop>gg_InputDirBtn</tabstop>
   <tabstop>gg_OutputDirBtn</tabstop>
   <tabstop>gg_GoBtn</tabstop>
   <tabstop>sm_InputFileBtn</tabstop>
  </tabstops>
  <resources>
+  <include location="../../../../Resources/icons/images/Icons.qrc"/>
+  <include location="../../../../Resources/icons/images/Icons.qrc"/>
   <include location="../../../../Resources/icons/images/Icons.qrc"/>
   <include location="../../../../Resources/icons/images/Icons.qrc"/>
   <include location="../../../../Resources/icons/images/Icons.qrc"/>

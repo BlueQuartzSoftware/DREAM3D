@@ -1,68 +1,63 @@
-# set project's name
-PROJECT( MXA )
-cmake_minimum_required(VERSION 2.6)
+#///////////////////////////////////////////////////////////////////////////////
+#  Copyright (c) 2010, Michael A. Jackson. BlueQuartz Software
+#  All rights reserved.
+#  BSD License: http://www.opensource.org/licenses/bsd-license.html
+#///////////////////////////////////////////////////////////////////////////////
+project(MXADataModel)
+
+set (MXA_SOURCE_DIR ${PROJECT_CODE_DIR} )
+set (Project_SRCS "")
+set (Project_HDRS "")
+
+SET (MXA_BUILT_AS_DYNAMIC_LIB)
+IF (BUILD_SHARED_LIBS)
+    SET (MXA_BUILT_AS_DYNAMIC_LIB 1)
+    IF (WIN32)
+        ADD_DEFINITIONS("-DMXA_BUILT_AS_DYNAMIC_LIB")
+    ENDIF (WIN32)
+ENDIF (BUILD_SHARED_LIBS)
 
 
-# ---------- Setup output Directories -------------------------
-SET (CMAKE_LIBRARY_OUTPUT_DIRECTORY
-  ${PROJECT_BINARY_DIR}/Bin
-  CACHE PATH
-  "Single Directory for all Libraries"
-  )
+Macro(MXACompileDir DirName)
+    include(${MXADataModel_SOURCE_DIR}/${DirName}/SourceList.cmake)
+    set (Project_SRCS ${Project_SRCS} ${MXA_${DirName}_SRCS} ${MXA_${DirName}_HDRS})
+endMacro()
 
-# --------- Setup the Executable output Directory -------------
-SET (CMAKE_RUNTIME_OUTPUT_DIRECTORY
-  ${PROJECT_BINARY_DIR}/Bin
-  CACHE PATH
-  "Single Directory for all Executables."
-  )
+MXACompileDir(Common)
+MXACompileDir(Utilities)
 
-# --------- Setup the Executable output Directory -------------
-SET (CMAKE_ARCHIVE_OUTPUT_DIRECTORY
-  ${PROJECT_BINARY_DIR}/Bin
-  CACHE PATH
-  "Single Directory for all static libraries."
-  )
-
-
-#-- Configure the Header file and then add the Binary Directory to the Includes list
-CONFIGURE_FILE(${MXA_SOURCE_DIR}/Common/MXAConfiguration.h.in
-               ${MXA_BINARY_DIR}/MXAConfiguration.h @ONLY IMMEDIATE)
-               
-
-SET (MXA_UTILITIES_SRCS 
-    ${MXA_SOURCE_DIR}/Utilities/MXALogger.cpp
-    ${MXA_SOURCE_DIR}/Utilities/MXAFileSystemPath.cpp )
-SET (MXA_UTILITIES_HDRS 
-    ${MXA_SOURCE_DIR}/Utilities/MXALogger.h
-    ${MXA_SOURCE_DIR}/Utilities/MXAFileSystemPath.h  )
-    
-IF (MSVC)
-    SET (MXA_UTILITIES_SRCS ${MXA_UTILITIES_SRCS} ${MXA_SOURCE_DIR}/Utilities/MXADirent.c )
-    SET (MXA_UTILITIES_HEADERS ${MXA_UTILITIES_HEADERS} ${MXA_SOURCE_DIR}/Utilities/MXADirent.h )
+set (MXA_HDF5_SUPPORT "0")
+if (AIM_USE_HDF5)
+    set (MXA_HDF5_SUPPORT "1")
+    MXACompileDir(HDF5)
 endif()
-IDE_SOURCE_PROPERTIES( "Source/MXA/Utilities" "${MXA_UTILITIES_HDRS}" "${MXA_UTILITIES_SRCS}")
 
-SET (MXA_COMMON_SRCS "")
-SET (MXA_COMMON_HDRS 
-    ${MXA_SOURCE_DIR}/Common/DLLExport.h
-    ${MXA_SOURCE_DIR}/Common/LogTime.h
-    ${MXA_SOURCE_DIR}/Common/MXASetGetMacros.h
-    ${MXA_SOURCE_DIR}/Common/MXATypes.h
-)
-IDE_SOURCE_PROPERTIES("Source/MXA/Common" "${MXA_COMMON_HDRS}" "${MXA_COMMON_SRCS}")
 
-set (MXALib_SRCS
-    ${MXA_COMMON_SRCS}
-    ${MXA_COMMON_HDRS}
-    ${MXA_UTILITIES_SRCS}
-    ${MXA_UTILITIES_HDRS}
+set (Project_SRCS 
+    ${Project_SRCS} 
     )
-    
-include_directories( ${MXA_BINARY_DIR} )
-#-- Add a static library for the PCM registration
-add_library(MXA STATIC ${MXALib_SRCS} )
-StaticLibraryProperties( MXA )
+
+include_directories(${MXADataModel_SOURCE_DIR}/..)
+include_directories(${MXADataModel_BINARY_DIR})
+include_directories(${MXADataModel_BINARY_DIR}/..)
 
 
-  
+set (MXA_TIFF_SUPPORT "0")
+set (MXA_XML_SUPPORT "0")
+set (HDF5_VTK_BRIDGE "0")
+
+configure_file(${PROJECT_RESOURCES_DIR}/MXACMake/MXAConfiguration.h.in
+               ${CMP_HEADER_DIR}/${CMP_EXTRA_CONFIGURATION_FILE})
+               
+# add_definitions(-DQT_CORE_LIB)
+
+# - Check to see if any other project is redefining the library names
+IF ( NOT DEFINED  MXADATAMODEL_LIB_NAME)
+  SET (MXADATAMODEL_LIB_NAME MXADataModel)
+ENDIF ( NOT DEFINED MXADATAMODEL_LIB_NAME )
+
+add_library(${MXADATAMODEL_LIB_NAME} ${LIB_TYPE}  ${Project_SRCS})
+target_link_libraries(${MXADATAMODEL_LIB_NAME} ${HDF5_LIBRARIES} )
+
+LibraryProperties( ${MXADATAMODEL_LIB_NAME} ${EXE_DEBUG_EXTENSION})
+

@@ -10,7 +10,7 @@
 #--////////////////////////////////////////////////////////////////////////////
 # Set project's name
 PROJECT( Reconstruction )
-cmake_minimum_required(VERSION 2.6)
+cmake_minimum_required(VERSION 2.8)
 
 
 # ---------- Setup output Directories -------------------------
@@ -41,7 +41,7 @@ SET (Reconstruction_SRCS
 SET (Reconstruction_HDRS
     ${Reconstruction_SOURCE_DIR}/Reconstruction.h
     )
-IDE_SOURCE_PROPERTIES( "Source/AIM/Reconstruction" "${Reconstruction_HDRS}" "${Reconstruction_SRCS}")
+cmp_IDE_SOURCE_PROPERTIES( "Source/AIM/Reconstruction" "${Reconstruction_HDRS}" "${Reconstruction_SRCS}" ${CMP_INSTALL_FILES})
 
  
 set (PROJECT_SRCS
@@ -53,9 +53,10 @@ set (PROJECT_SRCS
     ${ANG_HDRS}
     )
 
+
 ADD_EXECUTABLE ( Reconstruction  ${PROJECT_SRCS} )
-target_link_libraries(Reconstruction 
-                        MXA
+target_link_libraries(Reconstruction
+                        MXADataModel
                         AIMCommon
-                        ${Boost_PROGRAM_OPTIONS_LIBRARY} )
-ToolInstallationSupport(Reconstruction "${EXE_DEBUG_EXTENSION}" ${AIMRepresentation_BINARY_DIR} )
+                        )
+cmp_ToolInstallationSupport(Reconstruction "${EXE_DEBUG_EXTENSION}" ${Reconstruction_BINARY_DIR} )

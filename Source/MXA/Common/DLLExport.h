@@ -8,10 +8,9 @@
 //                           FA8650-04-C-5229
 //
 ///////////////////////////////////////////////////////////////////////////////
-#ifndef _AIM_DLL_EXPORT_H_
-#define _AIM_DLL_EXPORT_H_
+#ifndef _MXA_DLL_EXPORT_H_
+#define _MXA_DLL_EXPORT_H_
 
-#include <MXA/MXAConfiguration.h>
 
 #if defined (_MSC_VER)
   #pragma warning(disable: 4251)
@@ -74,4 +73,4 @@ building the MXADatModel DLL on windows.
 #endif
 #endif
 
-#endif /* _AIM_DLL_EXPORT_H_ */
+#endif /* _MXA_DLL_EXPORT_H_ */

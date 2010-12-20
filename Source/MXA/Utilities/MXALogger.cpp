@@ -46,8 +46,8 @@ MXALogger::Pointer MXALogger::instance()
 //
 // -----------------------------------------------------------------------------
 MXALogger_Implementation::MXALogger_Implementation() :
-  _isFileBased(false),
-  _fileName("NO FILE SET")
+  m_IsFileBased(false),
+  m_FileName("NO FILE SET")
 {
 	//std::cout << "MXALogger_Implementation constructing" << std::endl;
 }
@@ -57,8 +57,8 @@ MXALogger_Implementation::MXALogger_Implementation() :
 // -----------------------------------------------------------------------------
 MXALogger_Implementation::~MXALogger_Implementation()
 {
-  this->_out.flush();
-  this->_out.close();
+  this->m_OutStream.flush();
+  this->m_OutStream.close();
 }
 
 
@@ -67,29 +67,29 @@ MXALogger_Implementation::~MXALogger_Implementation()
 // -----------------------------------------------------------------------------
 bool MXALogger_Implementation::open(const std::string &fn, std::ios::openmode mode)
 {
-  if (fn == this->_fileName && _out.is_open() == true) {
+  if (fn == this->m_FileName && m_OutStream.is_open() == true) {
     return true;
   }
-  if (fn != this->_fileName && _out.is_open() == true) {
-     this->_out.flush();
-     this->_out.close();
-     this->_isFileBased = false;
-     this->_fileName = ""; // Close the current file stream
+  if (fn != this->m_FileName && m_OutStream.is_open() == true) {
+     this->m_OutStream.flush();
+     this->m_OutStream.close();
+     this->m_IsFileBased = false;
+     this->m_FileName = ""; // Close the current file stream
    }
 
 
-  this->_fileName = fn;
-  _out.open(_fileName.c_str(),  std::ios::out | mode);
-  if (_out.is_open() )
+  this->m_FileName = fn;
+  m_OutStream.open(m_FileName.c_str(),  std::ios::out | mode);
+  if (m_OutStream.is_open() )
   {
-    this->_isFileBased = true;
+    this->m_IsFileBased = true;
   }
   else
   {
-    this->_fileName = "";
-    this->_isFileBased = false;
+    this->m_FileName = "";
+    this->m_IsFileBased = false;
   }
-  return _isFileBased;
+  return m_IsFileBased;
 }
 
 // -----------------------------------------------------------------------------
@@ -97,9 +97,9 @@ bool MXALogger_Implementation::open(const std::string &fn, std::ios::openmode mo
 // -----------------------------------------------------------------------------
 bool MXALogger_Implementation::close()
 {
-  _out.flush();
-  _out.close();
-  _isFileBased = false;
+  m_OutStream.flush();
+  m_OutStream.close();
+  m_IsFileBased = false;
   setFileName("");
-  return !_out.is_open();
+  return !m_OutStream.is_open();
 }

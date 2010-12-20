@@ -11,19 +11,19 @@
 #define AIMARRAY_HPP_
 
 
-#include <MXA/Common/MXATypes.h>
-#include <MXA/Common/MXASetGetMacros.h>
-
-#include <iostream>
 #include <string.h>
+#include <iostream>
 
+#include "AIM/Common/AIMCommonConfiguration.h"
+#include <MXA/MXATypes.h>
+#include <MXA/Common/MXASetGetMacros.h>
 
 #if defined ( AIM_USE_SSE ) && defined ( __SSE2__ )
 #include <mm_malloc.h>
 #endif
 
 template<typename T>
-class AIMArray
+class AIMCOMMON_EXPORT AIMArray
 {
   public:
 
@@ -33,18 +33,18 @@ class AIMArray
 
     virtual ~AIMArray()
     {
-      if (this->m_buffer != NULL && this->_managememory == true)
+      if (this->m_buffer != NULL && this->m_ManageMemory == true)
       {
         this->deallocateArrayData();
       }
     }
 
-    MXA_INSTANCE_PROPERTY_m(size_t, NumberOfElements);
+    MXA_INSTANCE_PROPERTY(size_t, NumberOfElements);
 
     // -----------------------------------------------------------------------------
     // Tested
     // -----------------------------------------------------------------------------
-    MXA_INSTANCE_PROPERTY(bool, ManageMemory, _managememory)
+    MXA_INSTANCE_PROPERTY(bool, ManageMemory)
 
 
     // -----------------------------------------------------------------------------
@@ -52,7 +52,7 @@ class AIMArray
     // -----------------------------------------------------------------------------
     void setArrayData(T* value, bool manageMemory = false)
     {
-      if (this->m_buffer != NULL && this->_managememory == true && value != this->m_buffer)
+      if (this->m_buffer != NULL && this->m_ManageMemory == true && value != this->m_buffer)
       {
         this->deallocateArrayData();
       }
@@ -85,7 +85,7 @@ class AIMArray
         m_buffer = new T[numberOfElements];
 #endif
         m_NumberOfElements = numberOfElements;
-      this->_managememory = manageMemory;
+      this->m_ManageMemory = manageMemory;
       return m_buffer;
     }
 
@@ -103,7 +103,7 @@ class AIMArray
     // -----------------------------------------------------------------------------
     void deallocateArrayData()
     {
-      if (this->m_buffer != NULL && this->_managememory == true)
+      if (this->m_buffer != NULL && this->m_ManageMemory == true)
       {
 #if defined ( AIM_USE_SSE ) && defined ( __SSE2__ )
         _mm_free( this->m_buffer );
@@ -118,7 +118,7 @@ class AIMArray
     // -----------------------------------------------------------------------------
     // Tested
     // -----------------------------------------------------------------------------
-    int32 initializeImageWithSourceData(size_t numberOfElements, T* source)
+    int32_t initializeImageWithSourceData(size_t numberOfElements, T* source)
     {
       this->allocateArray(numberOfElements, true);
 
@@ -129,7 +129,7 @@ class AIMArray
     // -----------------------------------------------------------------------------
     // Tested
     // -----------------------------------------------------------------------------
-    int32 zeroArrayData()
+    int32_t zeroArrayData()
     {
       ::memset(m_buffer, 0, m_NumberOfElements);
       return (NULL != m_buffer) ? 1 : -1;
@@ -145,7 +145,7 @@ class AIMArray
       //out << "  ImageMicronSize:        " << _micronSize[0] << " x " << _micronSize[1] << std::endl;
       out << "  Number Of Elements:         " << m_NumberOfElements << std::endl;
       //out << "  Scaling:                " << _scaling[0] << ", " << _scaling[1] << std::endl;
-      out << "  ManageMemory:           " << _managememory << std::endl;
+      out << "  ManageMemory:           " << m_ManageMemory << std::endl;
       out << "  ImageBuffer:            " << *m_buffer << std::endl;
       // _intersectedTile->printSelf(out);
     }
@@ -154,7 +154,7 @@ class AIMArray
     AIMArray()
     {
       m_NumberOfElements = 0;
-      _managememory = false;
+      m_ManageMemory = false;
       this->m_buffer = NULL;
     }
 

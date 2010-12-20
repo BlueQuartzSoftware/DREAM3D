@@ -16,7 +16,7 @@
 
 
 #include <MXA/Common/MXASetGetMacros.h>
-#include <MXA/Common/MXATypes.h>
+#include <MXA/MXATypes.h>
 
 //-- Qt Includes
 #include <QtCore/QThread>
@@ -33,7 +33,7 @@ class AIMThread : public QThread
 
 
 
-    static Pointer New(int32 threadSlot,
+    static Pointer New(qint32 threadSlot,
                        QString tname,
                        QObject* parent = 0);
 
@@ -57,36 +57,36 @@ class AIMThread : public QThread
 
   public slots:
       void on_KillIt();
-  
-  
+
+
   public:
 
   /**
      * @brief Sets the value of the slot in the R3DThreadGroup that holds the pointer
      * to this thread.
      */
-    MXA_INSTANCE_PROPERTY_m(int32, ThreadSlot);
+    MXA_INSTANCE_PROPERTY(qint32, ThreadSlot);
 
     /**
      * Sets the name of the thread which should be unique
      */
-    MXA_INSTANCE_PROPERTY_m(QString, ThreadName)
+    MXA_INSTANCE_PROPERTY(QString, ThreadName)
 
     /**
      * @brief Sets and gets any error condition that might be noteworthy during the
      * execution of the thread.
      */
-    MXA_INSTANCE_PROPERTY_m(int32, ErrorCondition);
+    MXA_INSTANCE_PROPERTY(qint32, ErrorCondition);
 
     /**
      * @brief Should this thread try to nicely cancel itself
      */
-    MXA_INSTANCE_PROPERTY_m(bool, Cancel);
+    MXA_INSTANCE_PROPERTY(bool, Cancel);
 
 
   protected:
     AIMThread(QObject* parent);
-    
+
   void run();
 
   private:

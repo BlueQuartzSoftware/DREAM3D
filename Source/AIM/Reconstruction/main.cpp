@@ -9,23 +9,23 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
+#include <string>
+#include <iostream>
+
+#include <tclap/CmdLine.h>
+#include <tclap/ValueArg.h>
 
 #include <MXA/Common/LogTime.h>
 #include <MXA/Utilities/MXALogger.h>
-#include <MXA/Utilities/MXAFileSystemPath.h>
+#include <MXA/Utilities/MXADir.h>
 
 #include <AIM/Common/Constants.h>
-#include <AIM/Common/AIMVersion.h>
+#include <AIMRepresentation/Common/AIMRepresentationVersion.h>
 #include <AIM/Common/AIMArray.hpp>
 
 #include <AIM/Reconstruction/Reconstruction.h>
 
 
-#include <string>
-#include <iostream>
-
-//-- Boost Program Options
-#include <boost/program_options.hpp>
 
 
 
@@ -52,112 +52,108 @@ int main(int argc, char **argv)
 
   std::cout << logTime() << "Starting Reconstruction ... " << std::endl;
   MXALOGGER_METHOD_VARIABLE_INSTANCE
+  int err = EXIT_FAILURE;
 
-  std::string inputDir;
-  std::string outputDir;
-  std::string angFilePrefix;
-  int angMaxSlice = 300;
-
-  int zStartIndex = 0;
-  int zEndIndex = 0;
-
-  double resz = 0.0;
-
-  bool mergetwinsoption = false;
-  int minallowedgrainsize = 0.0;
-  double minseedconfidence = 0.0;
-  double misorientationtolerance = 0.0;
-
-  int crystruct = AIM::Representation::UnknownCrystalStructure;
-  bool alreadyformed = false;
-
-  std::string logFile;
-
-  // Handle program options passed on command line.
-  boost::program_options::options_description desc("Possible Parameters");
-  desc.add_options()
-  ("help", "Produce help message")
-  ("inputDir,i", boost::program_options::value<std::string>(&inputDir), "REQUIRED: Input Directory")
-  ("outputDir", boost::program_options::value<std::string>(&outputDir), "REQUIRED: Output Directory")
-  ("angFilePrefix,f", boost::program_options::value<std::string>(&angFilePrefix), "REQUIRED: The prefix that is common to every ANG file")
-  ("angMaxSlice", boost::program_options::value<int>(&angMaxSlice), "The max slice value of the series. Needed to be able to generate ang file names")
-  ("zStartIndex,s", boost::program_options::value<int>(&zStartIndex), "Starting Slice")
-  ("zEndIndex,e", boost::program_options::value<int>(&zEndIndex), "Ending Slice")
-  ("resz,z", boost::program_options::value<double>(&resz), "z resolution of your volume")
-  ("merge-twins,t", boost::program_options::bool_switch(&mergetwinsoption), "Do you want to merge twins")
-  ("minallowedgrainsize,g", boost::program_options::value<int>(&minallowedgrainsize), "What is the minimum allowed grain size")
-  ("minseedconfidence,c", boost::program_options::value<double>(&minseedconfidence), "What is the minimum allowed confidence")
-  ("misorientationtolerance,o", boost::program_options::value<double>(&misorientationtolerance), "What is the misorientation tolerance (degrees)")
-  ("crystruct,x", boost::program_options::value<int>(&crystruct), "Do you have a HCP (1) or FCC (2) material")
-  ("alreadyformed,a", boost::program_options::bool_switch(&alreadyformed), "Have you already formed grains (1) Yes (0) No")
-  ("logfile,l", boost::program_options::value<std::string>(&logFile), "Name of the Log file to store any output into")
-  ;
-
-  int err = 0;
   try
   {
 
-    boost::program_options::variables_map vm;
-    boost::program_options::store(boost::program_options::parse_command_line(argc, argv, desc), vm);
-    boost::program_options::notify(vm);
+    // Handle program options passed on command line.
+    TCLAP::CmdLine cmd("AIMRepresentation Reconstruction", ' ', AIMRepresentation::Version::Complete);
 
-    // Print help message if requested by user and return.
-    if (vm.count("help") || argc < 2)
-    {
-      std::cout << desc << std::endl;
-      return EXIT_SUCCESS;
-    }
-    if (vm.count("logfile") != 0)
-    {
-      logFile = MXAFileSystemPath::toNativeSeparators(logFile);
-    }
-    if (false == logFile.empty())
-    {
-      mxa_log.open(logFile);
-    }
-    mxa_log << logTime() << "Reconstruction Version " << AIMRepresentation::Version::Complete << " Starting " << std::endl;
+    TCLAP::ValueArg<std::string>   inputDir( "i", "inputDir", "Input Directory", false, "", "Input Directory");
+    cmd.add(inputDir);
 
-    mxa_log << "Parameters being used are: " << std::endl;
+    TCLAP::ValueArg<std::string> outputDir("", "outputDir", "Output Directory", false, "", "Output Directory");
+    cmd.add(outputDir);
+#if AIM_HDF5_SUPPORT
+    TCLAP::SwitchArg h5GrainFile("", "h5grain", "Write the HDF5 Grain Visualization File", false);
+    cmd.add(h5GrainFile);
+#endif
+    TCLAP::ValueArg<std::string>  angFilePrefix( "f", "angFilePrefix", "Ang File Prefix", false, "", "Ang File Prefix");
+    cmd.add(angFilePrefix);
 
-    CHECK_ARG( inputDir, true);
-    CHECK_ARG( outputDir, true);
-    CHECK_ARG( angFilePrefix, true);
-    CHECK_ARG( angMaxSlice, true);
-    CHECK_ARG( zStartIndex, true);
-    CHECK_ARG( zEndIndex, true);
-    CHECK_ARG( resz, true);
-    CHECK_BOOL_ARG( mergetwinsoption);
-    CHECK_ARG( minallowedgrainsize, true);
-    CHECK_ARG( minseedconfidence, true);
-    CHECK_ARG( misorientationtolerance, true);
-    CHECK_ARG( crystruct, true);
-    CHECK_BOOL_ARG( alreadyformed);
+    TCLAP::ValueArg<int>  angMaxSlice( "", "angMaxSlice", "Ang Max Slice Number", false, 0, "Ang Max Slice Number");
+    cmd.add(angMaxSlice);
+
+    TCLAP::ValueArg<int>  zStartIndex( "s", "zStartIndex", "Starting Slice", false, 0, "Starting Slice");
+    cmd.add(zStartIndex);
+    TCLAP::ValueArg<int>  zEndIndex( "e", "zEndIndex", "Ending Slice", false, 0, "Ending Slice");
+    cmd.add(zEndIndex);
+    TCLAP::ValueArg<double>  resz( "z", "resz", "z resolution of your volume", false, 0.25, "z resolution of your volume");
+    cmd.add(resz);
+
+    TCLAP::SwitchArg mergetwinsoption("t", "merge-twins", "Do you want to merge twins", false);
+    cmd.add(mergetwinsoption);
+
+    TCLAP::ValueArg<int>  minallowedgrainsize( "g", "minallowedgrainsize", "What is the minimum allowed grain size", false, 50, "What is the minimum allowed grain size");
+    cmd.add(minallowedgrainsize);
+
+
+    TCLAP::ValueArg<double>  minseedconfidence( "c", "minseedconfidence", "What is the minimum allowed confidence", false, 0.1, "What is the minimum allowed confidence");
+    cmd.add(minseedconfidence);
+
+    TCLAP::ValueArg<double>  misorientationtolerance( "o", "misorientationtolerance", "What is the misorientation tolerance (degrees)", false, 4.0, "What is the misorientation tolerance (degrees)");
+    cmd.add(misorientationtolerance);
+    TCLAP::ValueArg<int>  crystruct( "x", "crystruct", "Do you have a HCP (1) or FCC (2) material", false, 2, "Do you have a HCP (1) or FCC (2) material");
+    cmd.add(crystruct);
+
+    TCLAP::SwitchArg alreadyformed("a", "alreadyformed", "Have you already formed grains", false);
+    cmd.add(alreadyformed);
+
+    TCLAP::ValueArg<std::string > logfile("l", "logfile", "Name of the Log file to store any output into", false, "", "Name of the Log file to store any output into");
+    cmd.add(logfile);
+
+    // Parse the argv array.
+    cmd.parse(argc, argv);
+    if (argc == 1)
+    {
+      std::cout << "AIM Reconstruction program was not provided any arguments. Use the --help argument to show the help listing." << std::endl;
+      return EXIT_FAILURE;
+    }
+
 
     Reconstruction::Pointer r = Reconstruction::New();
-    r->setInputDirectory(inputDir);
-    r->setOutputDirectory(outputDir);
-    r->setAngFilePrefix(angFilePrefix);
-    r->setAngSeriesMaxSlice(angMaxSlice);
-    r->setZStartIndex(zStartIndex);
-    r->setZEndIndex(zEndIndex);
-    r->setZResolution(resz);
-    r->setMergeTwins(mergetwinsoption);
-    r->setMinAllowedGrainSize(minallowedgrainsize);
-    r->setMinSeedConfidence(minseedconfidence);
-    r->setMisorientationTolerance(misorientationtolerance);
-    r->setCrystalStructure(static_cast<AIM::Representation::CrystalStructure> (crystruct));
-    r->setAlreadyFormed(alreadyformed);
+#if AIM_HDF5_SUPPORT
+    r->setH5AngFile(inputDir.getValue());
+#else
+    r->setInputDirectory(inputDir.getValue());
+    r->setAngFilePrefix(angFilePrefix.getValue());
+    r->setAngSeriesMaxSlice(angMaxSlice.getValue());
+    r->setZResolution(resz.getValue());
+#endif
+    r->setOutputDirectory(outputDir.getValue());
+    r->setZStartIndex(zStartIndex.getValue());
+    r->setZEndIndex(zEndIndex.getValue());
+    r->setMergeTwins(mergetwinsoption.getValue());
+    r->setMergeColonies(false);
+    r->setMinAllowedGrainSize(minallowedgrainsize.getValue());
+    r->setMinSeedConfidence(minseedconfidence.getValue());
+    r->setDownSampleFactor(1.0);
+    r->setMinSeedImageQuality(50.0);
+    r->setMisorientationTolerance(misorientationtolerance.getValue());
+
+    r->setCrystalStructure(static_cast<AIM::Reconstruction::CrystalStructure> (crystruct.getValue()));
+    r->setAlignmentMethod(AIM::Reconstruction::Misorientation);
+    r->setAlreadyFormed(alreadyformed.getValue());
+
+    r->setWriteVisualizationFile(true);
+    r->setWriteIPFFile(true);
+    r->setWriteDisorientationFile(true);
+    r->setWriteImageQualityFile(true);
+    r->setWriteSchmidFactorFile(true);
+    r->setWriteDownSampledFile(true);
+
+
+#if AIM_HDF5_SUPPORT
+    r->setWriteHDF5GrainFile(h5GrainFile.getValue());
+#endif
 
     r->compute();
     err = r->getErrorCondition();
-  } catch (...)
+  }
+  catch (TCLAP::ArgException &e) // catch any exceptions
   {
-    std::cout << "Error on Input: Displaying help listing instead. **" << std::endl;
-    std::cout << desc << std::endl;
-    for (int i = 0; i < argc; ++i)
-    {
-      std::cout << argv[i] << std::endl;
-    }
+    std::cerr << logTime() << " error: " << e.error() << " for arg " << e.argId() << std::endl;
     return EXIT_FAILURE;
   }
   std::cout << "++++++++++++ Reconstruction Complete ++++++++++++" << std::endl;

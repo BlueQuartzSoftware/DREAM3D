@@ -18,7 +18,6 @@
 #include <assert.h>
 #include <stdio.h>
 #include <time.h>
-#include <math.h>
 #include <stdlib.h>
 
 #include <cstddef>
@@ -31,22 +30,26 @@
 #include <algorithm>
 #include <numeric>
 
-#include <MXA/Common/MXATypes.h>
+#include <MXA/MXATypes.h>
 #include <MXA/Common/MXASetGetMacros.h>
 
-#include <AIM/Common/Grain.h>
-#include <AIM/Common/Voxel.h>
-#include <AIM/Common/Bin.h>
-#include <AIM/Common/AIMRandomNG.h>
-#include <AIM/ANG/AngFileHelper.h>
-
+#include "AIM/Common/AIMCommonConfiguration.h"
+#include "AIM/Common/Constants.h"
+#include "AIM/Common/Grain.h"
+#include "AIM/Common/Voxel.h"
+#include "AIM/Common/Bin.h"
+#include "AIM/Common/AIMRandomNG.h"
+#include "AIM/ANG/AngDataLoader.h"
+#if AIM_HDF5_SUPPORT
+#include "AIM/Reconstruction/H5ReconStatsReader.h"
+#endif
 
 using namespace std;
 
 
 
 
-class GrainGeneratorFunc
+class AIMCOMMON_EXPORT GrainGeneratorFunc
 {
 
 public:
@@ -57,27 +60,21 @@ public:
 
   virtual ~GrainGeneratorFunc();
 
-void initialize(int32, int32 , double , double , double ,
-                  int32 ,int32 ,int32, int32, double);
 
-void initialize2();
-
-AngFileHelper::Pointer m_angFileHelper;
+AngDataLoader::Pointer m_angFileHelper;
 
 
   double resx;
   double resy;
   double resz;
+  double sizex;
+  double sizey;
+  double sizez;
 
   double misorientationtolerance;
-  int crystruct;
-
+  AIM::Reconstruction::CrystalStructure crystruct;
 
 	AIMRandomNG rg;
-	Grain* grains;
-	Grain* precipitates;
-	int* gsizes;
-	int* psizes;
 
 	Bin* actualodf;
 	Bin* simodf;
@@ -89,28 +86,42 @@ AngFileHelper::Pointer m_angFileHelper;
 	Bin* actualmicrotex;
 	Bin* simmicrotex;
 
-	vector<int> grainorder;
+  Grain* precipitates;
+  int* psizes;
+  vector<Grain> grains;
+
+	vector<int> gsizes;
+	vector<int> activegrainlist;
 	vector<int> precipitateorder;
 	vector<int> takencheck;
-	vector<vector<int> > neighborvector;
+	vector<double> grainsizedist;
+	vector<double> precipsizedist;
 	vector<vector<double> > bovera;
 	vector<vector<double> > covera;
 	vector<vector<double> > coverb;
 	vector<vector<double> > precipbovera;
 	vector<vector<double> > precipcovera;
 	vector<vector<double> > precipcoverb;
-	vector<vector<double> > svn;
-	vector<vector<double> > svs;
+	vector<vector<double> > neighborhood;
 	vector<vector<double> > svomega3;
 	vector<vector<double> > precipsvomega3;
-	vector<vector<int> > nsdist;
-	
+	vector<vector<double> > neighbordist;
 
+	void initialize(int32_t m_NumGrains, int32_t m_ShapeClass,
+	                double m_XResolution, double m_YResolution, double m_ZResolution,
+	                int32_t m_OverlapAllowed,
+	                int32_t m_OverlapAssignment, int32_t m_Precipitates,
+	                AIM::Reconstruction::CrystalStructure m_CrystalStructure, double m_FractionPrecipitates);
+	void initialize2();
+	double machineepsilon;
+	double maxrealnumber;
+	double minrealnumber;
 	int numorients;
 	int numeulers;
 	int resdiff;
 	double totalsurfacearea;
 	int numgrains;
+	int numextragrains;
 	int numprecipitates;
 	int shapeclass;
 	int preciptype;
@@ -118,53 +129,79 @@ AngFileHelper::Pointer m_angFileHelper;
 	int mindiameter;
 	int maxprecipdiameter;
 	int minprecipdiameter;
-	int32 overlapallowed;
-	int overlapassignment;
 	double fractionprecip;
 	double avgdiam;
 	double sddiam;
 	double avgprecipdiam;
 	double sdprecipdiam;
 	int numdiameters;
+	int worstgrain;
 	int numprecipdiameters;
 
 
-	int32 xpoints;
-	int32 ypoints;
-	int32 zpoints;
-	int32 xpoints1;
-	int32 ypoints1;
-	int32 zpoints1;
+	int32_t xpoints;
+	int32_t ypoints;
+	int32_t zpoints;
 	int totalpoints;
-	int totalpoints1;
 	double totalvol;
 
-	double resx1;
-	double resy1;
-	double resz1;
 	int numneighbins;
+	double volcheck;
+	int ownercheck;
+
+	double currentfillingerror,oldfillingerror;
+	double currentneighborhooderror,oldneighborhooderror;
+	double currentsizedisterror,oldsizedisterror;
 
 	void write_eulerangles(string);
-	void loadStatsData(string);
-	void loadorientData(string);
-	void loadeulerData(string);
-	void generate_grains(int);
+
+
+#if AIM_HDF5_SUPPORT
+	int readReconStatsData(H5ReconStatsReader::Pointer h5io);
+  int readAxisOrientationData(H5ReconStatsReader::Pointer h5io);
+  int readODFData(H5ReconStatsReader::Pointer h5io);
+  int readMisorientationData(H5ReconStatsReader::Pointer h5io);
+  int readMicroTextureData(H5ReconStatsReader::Pointer h5io);
+#else
+void readReconStatsData(const std::string &statsFile);
+void readAxisOrientationData(const std::string &file);
+void readODFData(const std::string &file);
+void readMisorientationData(const std::string &file);
+void readMicroTextureData(const std::string &file);
+#endif
+
+	void generate_grain(int);
 	void assign_eulers(int);
-	void pack_grains(int);
+	void insert_grain(int);
+	void add_grain(int);
+	void remove_grain(int);
+	double costcheck_remove(int);
+	double costcheck_add(int);
+	void determine_neighbors();
+	double check_neighborhooderror(int gadd, int gremove);
+	double check_sizedisterror(int gadd, int gremove);
+	int pack_grains(int);
+	int assign_voxels(int);
 	void fill_gaps(int);
 	int create_precipitates();
 	void insert_precipitates(int);
 	void read_structure(string);
 	void find_neighbors();
 	void writeCube(string, int);
-	void loadMisoData(string);
-	void loadMicroData(string);
-	void matchCrystallography(double quat_symmcubic[24][5],double quat_symmhex[12][5]);
-	void measure_misorientations(double quat_symmcubic[24][5],double quat_symmhex[12][5]);
-	double getmisoquatcubic(double q1[5],double q2[5],double &,double &,double &);
-	double getmisoquathexagonal(double quat_symmhex[12][5],double q1[5],double q2[5],double &,double &,double &);
+
+	void matchCrystallography(const std::string &ErrorFile);
+	void measure_misorientations();
+
 	double gamma(double);
-	void write_graindata(string);
+	double erf(double);
+	double erfc(double);
+	double gammastirf(double);
+	double lngamma(double, double&);
+	double incompletebeta(double, double, double);
+	double incompletebetafe(double, double, double, double, double);
+	double incompletebetafe2(double, double, double, double, double);
+	double incompletebetaps(double, double, double, double);
+	void write_graindata(string, string);
 	double find_xcoord(long);
 	double find_ycoord(long);
 	double find_zcoord(long);

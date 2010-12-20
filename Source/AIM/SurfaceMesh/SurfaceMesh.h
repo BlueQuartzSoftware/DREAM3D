@@ -18,7 +18,7 @@
 
 
 #include <MXA/Common/MXASetGetMacros.h>
-#include <MXA/Common/MXATypes.h>
+#include <MXA/MXATypes.h>
 #include <AIM/Common/Constants.h>
 #include <AIM/Common/SurfaceMeshFunc.h>
 
@@ -62,20 +62,22 @@ Q_OBJECT
 #endif
     virtual ~SurfaceMesh();
 
-    MXA_INSTANCE_STRING_PROPERTY(InputDirectory, m_InputDirectory)
-    MXA_INSTANCE_STRING_PROPERTY(InputFile, m_InputFile)
-    MXA_INSTANCE_STRING_PROPERTY(OutputDirectory, m_OutputDirectory)
-    MXA_INSTANCE_PROPERTY_m(int, XDim)
-    MXA_INSTANCE_PROPERTY_m(int, YDim)
-    MXA_INSTANCE_PROPERTY_m(int, ZDim)
-    MXA_INSTANCE_PROPERTY_m(double, XRes)
-    MXA_INSTANCE_PROPERTY_m(double, YRes)
-    MXA_INSTANCE_PROPERTY_m(double, ZRes)
-    MXA_INSTANCE_PROPERTY_m(bool, SmoothMesh)
-    MXA_INSTANCE_PROPERTY_m(int, SmoothIterations)
-    MXA_INSTANCE_PROPERTY_m(int, SmoothFileOutputIncrement)
-    MXA_INSTANCE_PROPERTY_m(bool, SmoothLockQuadPoints)
-    MXA_INSTANCE_PROPERTY_m(int, ErrorCondition)
+    MXA_INSTANCE_STRING_PROPERTY(InputDirectory)
+    MXA_INSTANCE_STRING_PROPERTY(InputFile)
+    MXA_INSTANCE_STRING_PROPERTY(OutputDirectory)
+    MXA_INSTANCE_PROPERTY(int, XDim)
+    MXA_INSTANCE_PROPERTY(int, YDim)
+    MXA_INSTANCE_PROPERTY(int, ZDim)
+    MXA_INSTANCE_PROPERTY(double, XRes)
+    MXA_INSTANCE_PROPERTY(double, YRes)
+    MXA_INSTANCE_PROPERTY(double, ZRes)
+    MXA_INSTANCE_PROPERTY(bool, SmoothMesh)
+    MXA_INSTANCE_PROPERTY(int, SmoothIterations)
+    MXA_INSTANCE_PROPERTY(int, SmoothFileOutputIncrement)
+    MXA_INSTANCE_PROPERTY(bool, SmoothLockQuadPoints)
+    MXA_INSTANCE_PROPERTY(int, ErrorCondition)
+    MXA_INSTANCE_PROPERTY(bool, BinaryVTKFile)
+    MXA_INSTANCE_PROPERTY(bool, ConformalMesh)
 
 
 
@@ -91,7 +93,7 @@ Q_OBJECT
     /**
      * @brief Cancel the operation
      */
-    MXA_INSTANCE_PROPERTY_m(bool, Cancel);
+    MXA_INSTANCE_PROPERTY(bool, Cancel);
 
     /**
      * Qt Signals for connections

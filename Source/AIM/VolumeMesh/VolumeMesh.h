@@ -18,7 +18,7 @@
 
 
 #include <MXA/Common/MXASetGetMacros.h>
-#include <MXA/Common/MXATypes.h>
+#include <MXA/MXATypes.h>
 #include <AIM/Common/Constants.h>
 
 
@@ -62,22 +62,22 @@ Q_OBJECT
 #endif
     virtual ~VolumeMesh();
 
-    MXA_INSTANCE_STRING_PROPERTY_m(NodesFile)
-    MXA_INSTANCE_STRING_PROPERTY_m(TrianglesFile)
-    MXA_INSTANCE_STRING_PROPERTY_m(OutputDirectory)
+    MXA_INSTANCE_STRING_PROPERTY(NodesFile)
+    MXA_INSTANCE_STRING_PROPERTY(TrianglesFile)
+    MXA_INSTANCE_STRING_PROPERTY(OutputDirectory)
 
-    MXA_INSTANCE_PROPERTY_m(double, XDim)
-    MXA_INSTANCE_PROPERTY_m(double, YDim)
-    MXA_INSTANCE_PROPERTY_m(double, ZDim)
+    MXA_INSTANCE_PROPERTY(double, XDim)
+    MXA_INSTANCE_PROPERTY(double, YDim)
+    MXA_INSTANCE_PROPERTY(double, ZDim)
 
-    MXA_INSTANCE_PROPERTY_m(double, XRes)
-    MXA_INSTANCE_PROPERTY_m(double, YRes)
-    MXA_INSTANCE_PROPERTY_m(double, ZRes)
+    MXA_INSTANCE_PROPERTY(double, XRes)
+    MXA_INSTANCE_PROPERTY(double, YRes)
+    MXA_INSTANCE_PROPERTY(double, ZRes)
 
-    MXA_INSTANCE_PROPERTY_m(int, NumGrains)
+    MXA_INSTANCE_PROPERTY(int, NumGrains)
 
 
-    MXA_INSTANCE_PROPERTY_m(int, ErrorCondition)
+    MXA_INSTANCE_PROPERTY(int, ErrorCondition)
 
     /**
      * @brief Either prints a message or sends the message to the User Interface
@@ -91,7 +91,7 @@ Q_OBJECT
     /**
      * @brief Cancel the operation
      */
-    MXA_INSTANCE_PROPERTY_m(bool, Cancel);
+    MXA_INSTANCE_PROPERTY(bool, Cancel);
 
     /**
      * Qt Signals for connections

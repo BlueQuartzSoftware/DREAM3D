@@ -14,7 +14,7 @@
 
 /*
  * Example usage:
- * int32 value;
+ * int32_t value;
  *  ReadFromSomeFile(...., value);
  *  MXA::Endian::FromLittleToSystem::convert(value);
  */
@@ -23,7 +23,7 @@
 #define MXAENDIAN_H_
 
 
-#include "MXATypes.h"
+#include "MXA/MXATypes.h"
 
 #include <iosfwd>
 #include <string>
@@ -138,10 +138,10 @@ namespace Detail {
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-inline void _reverseBytes ( uint16 &n )
+inline void _reverseBytes ( uint16_t &n )
 {
-  n = ( ((((uint16)n)>>8) & 0x00FF) |
-        ((((uint16)n)<<8) & 0xFF00) );
+  n = ( ((((uint16_t)n)>>8) & 0x00FF) |
+        ((((uint16_t)n)<<8) & 0xFF00) );
 }
 
 
@@ -154,10 +154,10 @@ inline void _reverseBytes ( uint16 &n )
 inline void _reverseBytes ( float32 &n )
 {
   n = static_cast < float32 >
-      ( ((((uint32)n)<<24) & 0xFF000000) |
-        ((((uint32)n)<< 8) & 0x00FF0000) |
-        ((((uint32)n)>> 8) & 0x0000FF00) |
-        ((((uint32)n)>>24) & 0x000000FF) );
+      ( ((((uint32_t)n)<<24) & 0xFF000000) |
+        ((((uint32_t)n)<< 8) & 0x00FF0000) |
+        ((((uint32_t)n)>> 8) & 0x0000FF00) |
+        ((((uint32_t)n)>>24) & 0x000000FF) );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -166,12 +166,12 @@ inline void _reverseBytes ( float32 &n )
 //
 //////////////////////////////////////////////////////////////////////////
 
-inline void _reverseBytes ( uint32 &n )
+inline void _reverseBytes ( uint32_t &n )
 {
-  n = ( ((((uint32)n)<<24) & 0xFF000000) |
-        ((((uint32)n)<< 8) & 0x00FF0000) |
-        ((((uint32)n)>> 8) & 0x0000FF00) |
-        ((((uint32)n)>>24) & 0x000000FF) );
+  n = ( ((((uint32_t)n)<<24) & 0xFF000000) |
+        ((((uint32_t)n)<< 8) & 0x00FF0000) |
+        ((((uint32_t)n)>> 8) & 0x0000FF00) |
+        ((((uint32_t)n)>>24) & 0x000000FF) );
 }
 
 
@@ -181,9 +181,9 @@ inline void _reverseBytes ( uint32 &n )
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-inline void _reverseBytes ( uint64 &n )
+inline void _reverseBytes ( uint64_t &n )
 {
-  typedef uint64 UInt64;
+  typedef uint64_t UInt64;
 
  n = ( ((((UInt64)n)<<56) & 0xFF00000000000000ULL) |
        ((((UInt64)n)<<40) & 0x00FF000000000000ULL) |
@@ -202,46 +202,46 @@ inline void _reverseBytes ( uint64 &n )
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-template < uint32 Size > struct ReverseBytes;
-template <> struct ReverseBytes < sizeof ( uint16 ) >
+template < uint32_t Size > struct ReverseBytes;
+template <> struct ReverseBytes < sizeof ( uint16_t ) >
 {
-  void operator () ( uint16 &n ) const
+  void operator () ( uint16_t &n ) const
   {
     MXA::Endian::Detail::_reverseBytes ( n );
   }
-  void operator () ( int16 &n ) const
+  void operator () ( int16_t &n ) const
   {
-    MXA::Endian::Detail::_reverseBytes ( (uint16&)n );
+    MXA::Endian::Detail::_reverseBytes ( (uint16_t&)n );
   }
 };
-template <> struct ReverseBytes < sizeof ( uint32 ) >
+template <> struct ReverseBytes < sizeof ( uint32_t ) >
 {
-  void operator () ( uint32 &n ) const
+  void operator () ( uint32_t &n ) const
   {
     MXA::Endian::Detail::_reverseBytes ( n );
   }
-  void operator () ( int32 &n ) const
+  void operator () ( int32_t &n ) const
   {
-    MXA::Endian::Detail::_reverseBytes ( (uint32&)n  );
+    MXA::Endian::Detail::_reverseBytes ( (uint32_t&)n  );
   }
   void operator () ( float32 &n ) const
   {
-    MXA::Endian::Detail::_reverseBytes ( ( uint32&)n );
+    MXA::Endian::Detail::_reverseBytes ( ( uint32_t&)n );
   }
 };
-template <> struct ReverseBytes < sizeof ( uint64 ) >
+template <> struct ReverseBytes < sizeof ( uint64_t ) >
 {
-  void operator () ( uint64 &n ) const
+  void operator () ( uint64_t &n ) const
   {
     MXA::Endian::Detail::_reverseBytes ( n );
   }
-  void operator () ( int64 &n ) const
+  void operator () ( int64_t &n ) const
   {
-    MXA::Endian::Detail::_reverseBytes ( (uint64&)n );
+    MXA::Endian::Detail::_reverseBytes ( (uint64_t&)n );
   }
   void operator () ( float64 &n ) const
   {
-    MXA::Endian::Detail::_reverseBytes ( (uint64&)n );
+    MXA::Endian::Detail::_reverseBytes ( (uint64_t&)n );
   }
 };
 

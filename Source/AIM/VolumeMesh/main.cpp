@@ -9,26 +9,21 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-
-#include <MXA/Common/LogTime.h>
-#include <MXA/Utilities/MXALogger.h>
-#include <MXA/Utilities/MXAFileSystemPath.h>
-
-#include <AIM/Common/Constants.h>
-#include <AIM/Common/AIMVersion.h>
-#include <AIM/Common/AIMArray.hpp>
-
-#include <AIM/VolumeMesh/VolumeMesh.h>
-
-
 #include <string>
 #include <iostream>
 
-//-- Boost Program Options
-#include <boost/program_options.hpp>
+#include <tclap/CmdLine.h>
+#include <tclap/ValueArg.h>
 
-#include <iostream>
+#include <MXA/Common/LogTime.h>
+#include <MXA/Utilities/MXALogger.h>
+#include <MXA/Utilities/MXADir.h>
 
+#include <AIM/Common/Constants.h>
+#include <AIMRepresentation/Common/AIMRepresentationVersion.h>
+#include <AIM/Common/AIMArray.hpp>
+
+#include <AIM/VolumeMesh/VolumeMesh.h>
 
 #define CHECK_ARG(var, mandatory)\
     if (vm.count(#var) > 1) { mxa_log << logTime() << "Multiple Occurances for Parameter " << #var << std::endl; }\
@@ -44,106 +39,72 @@
   if (var == true) { mxa_log << "TRUE"; } else { mxa_log << "FALSE"; }\
   mxa_log << "" << std::endl;
 
-
 int main(int argc, char **argv)
 {
 
   std::cout << logTime() << "Starting Volume Meshing ... " << std::endl;
-    MXALOGGER_METHOD_VARIABLE_INSTANCE
+  MXALOGGER_METHOD_VARIABLE_INSTANCE
 
-    std::string nodesfile;
-    std::string trianglefile;
-    std::string outputDir;
+  int err = 0;
+  try
+  {
+    TCLAP::CmdLine cmd("AIMRepresentation Volume Meshing", ' ', AIMRepresentation::Version::Complete);
 
+    TCLAP::ValueArg<std::string > nodesfile("", "nodesfile", "Input Nodes File", false, "", "Input Nodes File");
+    cmd.add(nodesfile);
 
-    double xDim;
-    double yDim;
-    double zDim;
+    TCLAP::ValueArg<std::string > trianglefile("", "trianglefile", "Input Triangle File", false, "", "Input Triangle File");
+    cmd.add(trianglefile);
 
-    double xRes;
-    double yRes;
-    double zRes;
+    TCLAP::ValueArg<std::string > outputDir("", "outputDir", "Output Directory", false, "", "Output Directory");
+    cmd.add(outputDir);
 
-    int numgrains;
+    TCLAP::ValueArg<int > xDim("x", "xDim", "xDim", false, 0, "X Dimension");
+    cmd.add(xDim);
 
-    std::string logFile;
+    TCLAP::ValueArg<int > yDim("y", "yDim", "yDim", false, 0, "Y Dimension");
+    cmd.add(yDim);
 
-    // Handle program options passed on command line.
-    boost::program_options::options_description desc("Possible Parameters");
-    desc.add_options()
-    ("help", "Produce help message")
-    ("nodesfile", boost::program_options::value<std::string>(&nodesfile), "REQUIRED: Input Nodes File")
-    ("trianglefile", boost::program_options::value<std::string>(&trianglefile), "REQUIRED: Input Triangle File")
-    ("outputDir", boost::program_options::value<std::string>(&outputDir), "REQUIRED: Output Directory")
-    ("xDim,x", boost::program_options::value<double>(&xDim), "REQUIRED: X Dimension of your volume")
-    ("yDim,y", boost::program_options::value<double>(&yDim), "REQUIRED: Y Dimension of your volume")
-    ("zDim,z", boost::program_options::value<double>(&zDim), "REQUIRED: Z Dimension of your volume")
-    ("xRes", boost::program_options::value<double>(&xRes), "REQUIRED: X Resolution of your volume")
-    ("yRes", boost::program_options::value<double>(&yRes), "REQUIRED: Y Resolution of your volume")
-    ("zRes", boost::program_options::value<double>(&zRes), "REQUIRED: Z Resolution of your volume")
-    ("numgrains", boost::program_options::value<int>(&numgrains), "Total number of grains in the volume")
-    ;
+    TCLAP::ValueArg<int > zDim("z", "zDim", "zDim", false, 0, "Z Dimension");
+    cmd.add(zDim);
 
-    int err = 0;
-    try
+    TCLAP::ValueArg<double > xRes("", "xRes", "X resolution of your volume", true, 0.0, "X resolution of your volume");
+    cmd.add(xRes);
+    TCLAP::ValueArg<double > yRes("", "yRes", "Y resolution of your volume", true, 0.0, "Y resolution of your volume");
+    cmd.add(yRes);
+    TCLAP::ValueArg<double > zRes("", "zRes", "Z resolution of your volume", true, 0.0, "Z resolution of your volume");
+    cmd.add(zRes);
+
+    TCLAP::ValueArg<int > numGrains("", "numGrains", "The total number of grains to be created", true, 0, "The total number of grains to be created");
+    cmd.add(numGrains);
+
+    // Parse the argv array.
+    cmd.parse(argc, argv);
+    if (argc == 1)
     {
-
-      boost::program_options::variables_map vm;
-      boost::program_options::store(boost::program_options::parse_command_line(argc, argv, desc), vm);
-      boost::program_options::notify(vm);
-
-      // Print help message if requested by user and return.
-      if (vm.count("help") || argc < 2)
-      {
-        std::cout << desc << std::endl;
-        return EXIT_SUCCESS;
-      }
-      if (vm.count("logfile") != 0)
-      {
-        logFile = MXAFileSystemPath::toNativeSeparators(logFile);
-      }
-      if (false == logFile.empty())
-      {
-        mxa_log.open(logFile);
-      }
-      mxa_log << logTime() << "Volume Meshing Version " << AIMRepresentation::Version::Complete << " Starting " << std::endl;
-
-      mxa_log << "Parameters being used are: " << std::endl;
-
-      CHECK_ARG( nodesfile, true);
-      CHECK_ARG( trianglefile, true);
-      CHECK_ARG( outputDir, true);
-      CHECK_ARG( xDim, true);
-      CHECK_ARG( yDim, true);
-      CHECK_ARG( zDim, true);
-      CHECK_ARG( xRes, true);
-      CHECK_ARG( yRes, true);
-      CHECK_ARG( zRes, true);
-      CHECK_ARG( numgrains, true);
-
-      VolumeMesh::Pointer volmesh = VolumeMesh::New();
-      volmesh->setNodesFile(nodesfile );
-      volmesh->setTrianglesFile(trianglefile );
-      volmesh->setOutputDirectory(outputDir);
-      volmesh->setXDim(xDim);
-      volmesh->setYDim(yDim);
-      volmesh->setZDim(zDim);
-      volmesh->setXRes(xRes);
-      volmesh->setYRes(yRes);
-      volmesh->setZRes(zRes);
-      volmesh->setNumGrains(numgrains);
-      volmesh->compute();
-      err = volmesh->getErrorCondition();
-    } catch (...)
-    {
-      std::cout << "Error on Input: Displaying help listing instead. **" << std::endl;
-      std::cout << desc << std::endl;
-      for (int i = 0; i < argc; ++i)
-      {
-        std::cout << argv[i] << std::endl;
-      }
+      std::cout << "Volume Meshing program was not provided any arguments. Use the --help argument to show the help listing." << std::endl;
       return EXIT_FAILURE;
     }
-    std::cout << "++++++++++++ Volume Meshing Complete ++++++++++++" << std::endl;
-    return err;
+
+    VolumeMesh::Pointer volmesh = VolumeMesh::New();
+    volmesh->setNodesFile(nodesfile.getValue());
+    volmesh->setTrianglesFile(trianglefile.getValue());
+    volmesh->setOutputDirectory(outputDir.getValue());
+    volmesh->setXDim(xDim.getValue());
+    volmesh->setYDim(yDim.getValue());
+    volmesh->setZDim(zDim.getValue());
+    volmesh->setXRes(xRes.getValue());
+    volmesh->setYRes(yRes.getValue());
+    volmesh->setZRes(zRes.getValue());
+    volmesh->setNumGrains(numGrains.getValue());
+    volmesh->compute();
+    err = volmesh->getErrorCondition();
   }
+  catch (TCLAP::ArgException &e) // catch any exceptions
+  {
+    std::cerr << logTime() << " error: " << e.error() << " for arg " << e.argId() << std::endl;
+    return EXIT_FAILURE;
+  }
+  std::cout << "++++++++++++ Volume Meshing Complete ++++++++++++" << std::endl;
+  return err;
+}

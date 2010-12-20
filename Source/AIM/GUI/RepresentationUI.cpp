@@ -16,6 +16,10 @@
 #include <AIM/Common/Qt/QR3DFileCompleter.h>
 #include <AIM/Threads/AIMThread.h>
 
+#if AIM_HDF5_SUPPORT
+#include "AIM/ANG/H5AngDataLoader.h"
+#endif
+
 
 //-- Qt Includes
 #include <QtCore/QFileInfo>
@@ -47,14 +51,14 @@
   if (false == ok) {temp = default;}\
   var->setValue(temp);
 
-#define READ_BOOL_SETTING(prefs, var, emptyValue)\
-  { QString s = prefs.value(#var).toString();\
+#define READ_BOOL_SETTING(prefs, prefix, tag, emptyValue)\
+  { QString s = prefs.value(#tag).toString();\
   if (s.isEmpty() == false) {\
-    bool bb = prefs.value(#var).toBool();\
-  var->setChecked(bb); } else { var->setChecked(emptyValue); } }
+    bool bb = prefs.value(#tag).toBool();\
+  prefix##tag->setChecked(bb); } else { prefix##tag->setChecked(emptyValue); } }
 
-#define WRITE_BOOL_SETTING(prefs, var, b)\
-    prefs.setValue(#var, (b) );
+#define WRITE_BOOL_SETTING(prefs, tag,  b)\
+    prefs.setValue(#tag, (b) );
 
 #define WRITE_STRING_SETTING(prefs, var)\
   prefs.setValue(#var , this->var->text());
@@ -73,9 +77,10 @@
     prefs.setValue(#combobox, this->combobox->currentIndex());
 
 
-#define CHECK_QLABEL_OUTPUT_FILE_EXISTS_BODY1(prefixname, name)\
-  prefixname->setText(AIM::Representation::name.c_str());\
+#define CHECK_QLABEL_OUTPUT_FILE_EXISTS_BODY1(ns, prefixname, name)\
+  prefixname->setText(ns::name.c_str());\
   prefixname##Icon->setPixmap(QPixmap(iconFile));\
+
 
 
 #define CHECK_QLINEEDIT_FILE_EXISTS(name) \
@@ -92,35 +97,34 @@
  }
 
 
-#define CHECK_QLABEL_OUTPUT_FILE_EXISTS(prefix, name) \
+#define CHECK_QLABEL_OUTPUT_FILE_EXISTS(ns, prefix, name) \
 { \
-  QString absPath = prefix##OutputDir->text() + QDir::separator() + AIM::Representation::name.c_str();\
+  QString absPath = prefix##OutputDir->text() + QDir::separator() + ns::name.c_str();\
   absPath = QDir::toNativeSeparators(absPath);\
   QFileInfo fi ( absPath );\
   QString iconFile;\
   if ( fi.exists() )  {\
-  iconFile = QString(":/") + QString("Check") + QString("-16x16.png");\
+    iconFile = QString(":/") + QString("Check") + QString("-16x16.png");\
   } else {\
-  iconFile = QString(":/") + QString("Delete") + QString("-16x16.png");\
+    iconFile = QString(":/") + QString("Delete") + QString("-16x16.png");\
   }\
-  CHECK_QLABEL_OUTPUT_FILE_EXISTS_BODY1(prefix##name, name)\
+  CHECK_QLABEL_OUTPUT_FILE_EXISTS_BODY1(ns, prefix##name, name)\
 }
 
 
-#define CHECK_QLABEL_INPUT_FILE_EXISTS(prefix, name) \
+#define CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(ns, prefix, name) \
 { \
-  QString absPath = prefix##InputDir->text() + QDir::separator() + AIM::Representation::name.c_str();\
+  QString absPath = prefix##OutputDir->text() + QDir::separator() + ns::name.c_str();\
   absPath = QDir::toNativeSeparators(absPath);\
   QFileInfo fi ( absPath );\
   QString iconFile;\
   if ( fi.exists() )  {\
-  iconFile = QString(":/") + QString("Check") + QString("-16x16.png");\
+    iconFile = QString(":/") + QString("Check") + QString("-16x16.png");\
   } else {\
-  iconFile = QString(":/") + QString("Delete") + QString("-16x16.png");\
+    iconFile = QString(":/") + QString("Delete") + QString("-16x16.png");\
   }\
-  CHECK_QLABEL_OUTPUT_FILE_EXISTS_BODY1(prefix##name, name)\
+  CHECK_QLABEL_OUTPUT_FILE_EXISTS_BODY1(ns, prefix##name, name)\
 }
-
 
 #define SANITY_CHECK_INPUT(prefix, input)\
   if (_verifyPathExists(prefix##input->text(), prefix##input) == false) {\
@@ -132,12 +136,12 @@
   }
 
 
-#define SANITY_CHECK_QLABEL_FILE(prefix, input) \
+#define SANITY_CHECK_QLABEL_FILE(ns, prefix, input) \
   { \
-  QString absPath = prefix##InputDir->text() + QDir::separator() + AIM::Representation::input.c_str();\
+  QString absPath = prefix##InputDir->text() + QDir::separator() + ns::input.c_str();\
   absPath = QDir::toNativeSeparators(absPath);\
   QFileInfo fi ( absPath );\
-  QString theMessage = QString("The input ") + QString(AIM::Representation::input.c_str()) + \
+  QString theMessage = QString("The input ") + QString(ns::input.c_str()) + \
   QString(" does not exist. Please ensure the file or folder exists before starting the operation");\
   if ( fi.exists() == false)  {\
   QMessageBox::critical(this, tr("AIM Representation"),\
@@ -147,6 +151,20 @@
   return;\
   }\
  }
+
+#define CHECK_QLABEL_INPUT_FILE_EXISTS(ns, prefix, name) \
+{ \
+  QString absPath = prefix##InputDir->text() + QDir::separator() + ns::name.c_str();\
+  absPath = QDir::toNativeSeparators(absPath);\
+  QFileInfo fi ( absPath );\
+  QString iconFile;\
+  if ( fi.exists() )  {\
+    iconFile = QString(":/") + QString("Check") + QString("-16x16.png");\
+  } else {\
+    iconFile = QString(":/") + QString("Delete") + QString("-16x16.png");\
+  }\
+  CHECK_QLABEL_OUTPUT_FILE_EXISTS_BODY1(ns, prefix##name, name)\
+}
 
 
 
@@ -231,34 +249,39 @@ void RepresentationUI::readSettings()
   qint32 i;
   double d;
 
+  /* ******** This Section is for the OIM Import Data Tab ************ */
+  READ_FILEPATH_SETTING(prefs, oim_InputDir, "");
+  READ_STRING_SETTING(prefs, oim_FilePrefix, "");
+  READ_SETTING(prefs, oim_ZMaxSlice, ok, i, 300 , Int);
+  READ_SETTING(prefs, oim_ZStartIndex, ok, i, 1 , Int);
+  READ_SETTING(prefs, oim_ZEndIndex, ok, i, 10 , Int);
+  READ_STRING_SETTING(prefs, oim_zSpacing, "0.25");
+  READ_STRING_SETTING(prefs, oim_OutputFile, "*.h5ang");
+
+
   /* ******** This Section is for the Reconstruction Tab ************ */
-  READ_FILEPATH_SETTING(prefs, angDir, "");
   READ_FILEPATH_SETTING(prefs, rec_OutputDir, "");
-  READ_SETTING(prefs, angMaxSlice, ok, i, 300 , Int);
-  READ_STRING_SETTING(prefs, angFilePrefix, "");
-  READ_SETTING(prefs, zStartIndex, ok, i, 1 , Int);
-  READ_SETTING(prefs, zEndIndex, ok, i, 10 , Int);
-  READ_STRING_SETTING(prefs, zSpacing, "0.25");
-  READ_BOOL_SETTING(prefs, mergeTwins, false);
-  mergeTwins->blockSignals(false);
-  READ_BOOL_SETTING(prefs, mergeColonies, false);
-  mergeColonies->blockSignals(false);
-  READ_BOOL_SETTING(prefs, alreadyFormed, false);
-  alreadyFormed->blockSignals(false);
+  READ_FILEPATH_SETTING(prefs, rec_H5InputFile, "");
+  READ_BOOL_SETTING(prefs, rec_, mergeTwins, false);
+  READ_BOOL_SETTING(prefs, rec_, mergeColonies, false);
+  READ_BOOL_SETTING(prefs, rec_, alreadyFormed, false);
   READ_SETTING(prefs, minAllowedGrainSize, ok, i, 8 , Int);
   READ_SETTING(prefs, minConfidence, ok, d, 0.1 , Double);
+  READ_SETTING(prefs, downsampleFactor, ok, d, 1.0 , Double);
   READ_SETTING(prefs, minImageQuality, ok, d, 50.0 , Double);
   READ_SETTING(prefs, misOrientationTolerance, ok, d, 5.0 , Double);
   READ_COMBO_BOX(prefs, crystalStructure)
   READ_COMBO_BOX(prefs, alignMeth)
-  READ_BOOL_SETTING(prefs, IPFoutputoption, false);
-  IPFoutputoption->blockSignals(false);
-  READ_BOOL_SETTING(prefs, Disorientationoutputoption, false);
-  Disorientationoutputoption->blockSignals(false);
-  READ_BOOL_SETTING(prefs, ImageQualityoutputoption, false);
-  ImageQualityoutputoption->blockSignals(false);
-  READ_BOOL_SETTING(prefs, SchmidFactoroutputoption, false);
-  SchmidFactoroutputoption->blockSignals(false);
+
+  READ_BOOL_SETTING(prefs, rec_, DisorientationVizFile, true);
+  READ_BOOL_SETTING(prefs, rec_, ImageQualityVizFile, true);
+  READ_BOOL_SETTING(prefs, rec_, IPFVizFile, true);
+  READ_BOOL_SETTING(prefs, rec_, SchmidFactorVizFile, true);
+  READ_BOOL_SETTING(prefs, rec_, VisualizationVizFile, true);
+  READ_BOOL_SETTING(prefs, rec_, DownSampledVizFile, true);
+#if AIM_HDF5_SUPPORT
+  READ_BOOL_SETTING(prefs, rec_, HDF5GrainFile, true);
+#endif
 
 
   /* ******** This Section is for the Grain Generator Tab ************ */
@@ -270,20 +293,18 @@ void RepresentationUI::readSettings()
   READ_SETTING(prefs, gg_FractionPrecipitates, ok, d, 25 , Double);
   READ_SETTING(prefs, gg_NumGrains, ok, i, 1000 , Int);
 
-  READ_SETTING(prefs, gg_OverlapAllowed, ok, d, 0.00 , Double);
-  READ_BOOL_SETTING(prefs, gg_AlreadyFormed, false);
+  READ_BOOL_SETTING(prefs, gg_, AlreadyFormed, false);
   gg_AlreadyFormed->blockSignals(false);
   READ_COMBO_BOX(prefs, gg_CrystalStructure)
   READ_COMBO_BOX(prefs, gg_ShapeClass)
   READ_COMBO_BOX(prefs, gg_Precipitates)
-  READ_COMBO_BOX(prefs, gg_OverlapAssignment)
 
   /* ******** This Section is for the Surface Meshing Tab ************ */
   READ_FILEPATH_SETTING(prefs, sm_InputFile, "");
   READ_FILEPATH_SETTING(prefs, sm_OutputDir, "");
 
-  READ_BOOL_SETTING(prefs, sm_SmoothMesh, false);
-  READ_BOOL_SETTING(prefs, sm_LockQuadPoints, false);
+  READ_BOOL_SETTING(prefs, sm_, SmoothMesh, false);
+  READ_BOOL_SETTING(prefs, sm_, LockQuadPoints, false);
   READ_SETTING(prefs, sm_SmoothIterations, ok, i, 1 , Int);
   READ_SETTING(prefs, sm_WriteOutputFileIncrement, ok, i, 10 , Int);
 
@@ -311,29 +332,40 @@ void RepresentationUI::writeSettings()
   QSettings prefs;
 //  bool ok = false;
 //  qint32 i = 0;
-  /* ******** This Section is for the Reconstruction Tab ************ */
-  WRITE_STRING_SETTING(prefs, angDir)
-  WRITE_STRING_SETTING(prefs, rec_OutputDir)
-  WRITE_STRING_SETTING(prefs, angFilePrefix)
-  WRITE_STRING_SETTING(prefs, angMaxSlice)
-  WRITE_STRING_SETTING(prefs, zStartIndex)
-  WRITE_STRING_SETTING(prefs, zEndIndex)
-  WRITE_STRING_SETTING(prefs, zSpacing)
+  /* ******** This Section is for the OIM Import Data Tab ************ */
+  WRITE_STRING_SETTING(prefs, oim_InputDir)
+  WRITE_STRING_SETTING(prefs, oim_FilePrefix)
+  WRITE_STRING_SETTING(prefs, oim_ZMaxSlice)
+  WRITE_STRING_SETTING(prefs, oim_ZStartIndex)
+  WRITE_STRING_SETTING(prefs, oim_ZEndIndex)
+  WRITE_STRING_SETTING(prefs, oim_zSpacing)
+  WRITE_STRING_SETTING(prefs, oim_OutputFile)
 
-  WRITE_BOOL_SETTING(prefs, mergeTwins, mergeTwins->isChecked())
-  WRITE_BOOL_SETTING(prefs, mergeColonies, mergeColonies->isChecked())
-  WRITE_BOOL_SETTING(prefs, alreadyFormed, alreadyFormed->isChecked())
+  /* ******** This Section is for the Reconstruction Tab ************ */
+  WRITE_STRING_SETTING(prefs, rec_OutputDir)
+  WRITE_STRING_SETTING(prefs, rec_H5InputFile)
+  WRITE_BOOL_SETTING(prefs, mergeTwins, rec_mergeTwins->isChecked())
+  WRITE_BOOL_SETTING(prefs, mergeColonies, rec_mergeColonies->isChecked())
+  WRITE_BOOL_SETTING(prefs, alreadyFormed, rec_alreadyFormed->isChecked())
 
   WRITE_SETTING(prefs, minAllowedGrainSize)
   WRITE_SETTING(prefs, minConfidence)
+  WRITE_SETTING(prefs, downsampleFactor)
   WRITE_SETTING(prefs, minImageQuality)
   WRITE_SETTING(prefs, misOrientationTolerance)
   WRITE_COMBO_BOX(prefs, crystalStructure)
   WRITE_COMBO_BOX(prefs, alignMeth)
-  WRITE_BOOL_SETTING(prefs, IPFoutputoption, IPFoutputoption->isChecked())
-  WRITE_BOOL_SETTING(prefs, Disorientationoutputoption, Disorientationoutputoption->isChecked())
-  WRITE_BOOL_SETTING(prefs, ImageQualityoutputoption, ImageQualityoutputoption->isChecked())
-  WRITE_BOOL_SETTING(prefs, SchmidFactoroutputoption, SchmidFactoroutputoption->isChecked())
+
+  WRITE_BOOL_SETTING(prefs, DisorientationVizFile, rec_DisorientationVizFile->isChecked())
+  WRITE_BOOL_SETTING(prefs, ImageQualityVizFile, rec_ImageQualityVizFile->isChecked())
+  WRITE_BOOL_SETTING(prefs, IPFVizFile, rec_IPFVizFile->isChecked())
+  WRITE_BOOL_SETTING(prefs, SchmidFactorVizFile, rec_SchmidFactorVizFile->isChecked())
+  WRITE_BOOL_SETTING(prefs, VisualizationVizFile, rec_VisualizationVizFile->isChecked())
+  WRITE_BOOL_SETTING(prefs, DownSampledVizFile, rec_DownSampledVizFile->isChecked())
+#if AIM_HDF5_SUPPORT
+  WRITE_BOOL_SETTING(prefs, HDF5GrainFile, rec_HDF5GrainFile->isChecked())
+#endif
+
 
   /* ******** This Section is for the Grain Generator Tab ************ */
   WRITE_STRING_SETTING(prefs, gg_InputDir)
@@ -344,12 +376,10 @@ void RepresentationUI::writeSettings()
   WRITE_SETTING(prefs, gg_FractionPrecipitates )
   WRITE_SETTING(prefs, gg_NumGrains )
 
-  WRITE_SETTING(prefs, gg_OverlapAllowed )
   WRITE_BOOL_SETTING(prefs, gg_AlreadyFormed, gg_AlreadyFormed->isChecked())
   WRITE_COMBO_BOX(prefs, gg_CrystalStructure)
   WRITE_COMBO_BOX(prefs, gg_ShapeClass)
   WRITE_COMBO_BOX(prefs, gg_Precipitates)
-  WRITE_COMBO_BOX(prefs, gg_OverlapAssignment)
 
   /* ******** This Section is for the Surface Meshing Tab ************ */
   WRITE_STRING_SETTING(prefs, sm_InputFile);
@@ -380,6 +410,10 @@ void RepresentationUI::writeSettings()
 // -----------------------------------------------------------------------------
 void RepresentationUI::setupGui()
 {
+  // Setup the OIM Data Import Tab
+  oim_SetupGui();
+  oim_CheckIOFiles();
+
   // Setup the Reconstruction Tab GUI
   rec_SetupGui();
   rec_CheckIOFiles();
@@ -393,8 +427,9 @@ void RepresentationUI::setupGui()
   sm_CheckIOFiles();
 
   // Setup the Volume Meshing Tab Gui
-  vm_SetupGui();
-  vm_CheckIOFiles();
+//  vm_SetupGui();
+//  vm_CheckIOFiles();
+  this->tabWidget->removeTab(4);
 }
 
 // -----------------------------------------------------------------------------
@@ -584,7 +619,7 @@ void RepresentationUI::openRecentFile()
 
 }
 
-//TODO: Reconstruction Methods
+// Reconstruction Methods
 /* *****************************************************************************
  *
  * Reconstruction Methods
@@ -597,146 +632,138 @@ void RepresentationUI::openRecentFile()
 // -----------------------------------------------------------------------------
 void RepresentationUI::rec_SetupGui()
 {
-  QR3DFileCompleter* com = new QR3DFileCompleter(this, true);
-  angDir->setCompleter(com);
-  QObject::connect( com, SIGNAL(activated(const QString &)),
-           this, SLOT(on_angDir_textChanged(const QString &)));
 
   QR3DFileCompleter* com2 = new QR3DFileCompleter(this, true);
   rec_OutputDir->setCompleter(com2);
   QObject::connect( com2, SIGNAL(activated(const QString &)),
            this, SLOT(on_rec_OutputDir_textChanged(const QString &)));
 
+  QR3DFileCompleter* com1 = new QR3DFileCompleter(this, false);
+  rec_H5InputFile->setCompleter(com1);
+  QObject::connect( com1, SIGNAL(activated(const QString &)),
+           this, SLOT(on_rec_H5InputFile_textChanged(const QString &)));
 
   QString msg ("All files will be over written that appear in the output directory.");
 
-  QFileInfo fi (rec_OutputDir->text() + QDir::separator() +  AIM::Representation::ReconstructedVisualizationFile.c_str() );
-  if (alreadyFormed->isChecked() == true && fi.exists() == false)
+  QFileInfo fi (rec_OutputDir->text() + QDir::separator() +  AIM::Reconstruction::VisualizationVizFile.c_str() );
+  if (rec_alreadyFormed->isChecked() == true && fi.exists() == false)
   {
-    alreadyFormed->setChecked(false);
+    rec_alreadyFormed->setChecked(false);
   }
 
-  if (alreadyFormed->isChecked())
+  if (rec_alreadyFormed->isChecked())
   {
     msg += QString("\nThe 'reconstructed_data.txt' file will be used as an import and NOT over written with new data");
   }
   messageLabel->setText(msg);
 
-
-  m_WidgetList << angDir << angDirBtn << rec_OutputDir << outputDirBtn;
-  m_WidgetList << angFilePrefix << angMaxSlice << zStartIndex << zEndIndex << zSpacing;
-  m_WidgetList << mergeTwins << mergeColonies << alreadyFormed << alignMeth << minAllowedGrainSize << minConfidence << misOrientationTolerance;
-  m_WidgetList << crystalStructure << IPFoutputoption << Disorientationoutputoption << ImageQualityoutputoption << SchmidFactoroutputoption;
+#if AIM_HDF5_SUPPORT
+  rec_StatsFile->setVisible(false);
+  rec_MisorientationBinsFile->setVisible(false);
+  rec_MicroTextureFile->setVisible(false);
+  rec_AxisOrientationsFile->setVisible(false);
+  rec_ODFFile->setVisible(false);
+  rec_StatsFileIcon->setVisible(false);
+  rec_MisorientationBinsFileIcon->setVisible(false);
+  rec_MicroTextureFileIcon->setVisible(false);
+  rec_AxisOrientationsFileIcon->setVisible(false);
+  rec_ODFFileIcon->setVisible(false);
+#else
+  rec_HDF5GrainFile->setVisible(false);
+  rec_HDF5GrainFileIcon->setVisible(false);
+  rec_H5StatisticsFile->setVisible(false);
+  rec_H5StatisticsFileIcon->setVisible(false);
+#endif
+  m_WidgetList << rec_OutputDir << rec_OutputDirBtn;
+  m_WidgetList << rec_ZStartIndex << rec_ZEndIndex;
+  m_WidgetList << rec_mergeTwins << rec_mergeColonies << rec_alreadyFormed << alignMeth << minAllowedGrainSize << minConfidence << downsampleFactor << misOrientationTolerance;
+  m_WidgetList << crystalStructure;
+  m_WidgetList << rec_DisorientationVizFile << rec_ImageQualityVizFile << rec_IPFVizFile << rec_SchmidFactorVizFile << rec_VisualizationVizFile << rec_DownSampledVizFile;
+  m_WidgetList << minImageQuality;
+#if AIM_HDF5_SUPPORT
+  m_WidgetList << rec_HDF5GrainFile << rec_H5StatisticsFile;
+#endif
 }
+
 
 // -----------------------------------------------------------------------------
 //
 // ----------------------------------------------------------------------------_
 void RepresentationUI::rec_CheckIOFiles()
 {
-  if (true == this->_verifyPathExists(angDir->text(), this->angDir))
-  {
-    findAngMaxSliceAndPrefix();
-  }
 
   this->_verifyPathExists(rec_OutputDir->text(), this->rec_OutputDir);
-  CHECK_QLABEL_OUTPUT_FILE_EXISTS(rec_, StatsFile)
-  CHECK_QLABEL_OUTPUT_FILE_EXISTS(rec_, MisorientationBinsFile)
-  CHECK_QLABEL_OUTPUT_FILE_EXISTS(rec_, MicroBinsFile)
-  CHECK_QLABEL_OUTPUT_FILE_EXISTS(rec_, ReconstructedVisualizationFile)
-  CHECK_QLABEL_OUTPUT_FILE_EXISTS(rec_, AxisOrientationsFile)
-  CHECK_QLABEL_OUTPUT_FILE_EXISTS(rec_, EulerAnglesFile)
+
+  CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::Reconstruction,rec_, AlignmentFile)
+  CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::Reconstruction,rec_, GrainDataFile)
+
+  CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(AIM::Reconstruction, rec_ , DisorientationVizFile)
+  CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(AIM::Reconstruction, rec_ , ImageQualityVizFile)
+  CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(AIM::Reconstruction, rec_ , IPFVizFile)
+  CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(AIM::Reconstruction, rec_ , SchmidFactorVizFile)
+  CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(AIM::Reconstruction, rec_ , VisualizationVizFile)
+  CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(AIM::Reconstruction, rec_ , DownSampledVizFile)
+#if AIM_HDF5_SUPPORT
+  CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(AIM::Reconstruction, rec_ , HDF5GrainFile)
+  CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::Reconstruction, rec_ , H5StatisticsFile)
+#else
+  CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::Reconstruction,rec_, StatsFile)
+  CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::Reconstruction,rec_, MisorientationBinsFile)
+  CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::Reconstruction,rec_, MicroTextureFile)
+  CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::Reconstruction,rec_, AxisOrientationsFile)
+  CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::Reconstruction,rec_, ODFFile)
+#endif
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void RepresentationUI::on_rec_OIMH5Btn_clicked()
+{
+  QString file = QFileDialog::getOpenFileName(this, tr("Select Input File"),
+                                                 m_OpenDialogLastDirectory,
+                                                 tr("HDF5 OIM Files (*.h5 *.hdf5 *.h5ang)") );
+  if ( true == file.isEmpty() ){return;  }
+  QFileInfo fi (file);
+  QString ext = fi.suffix();
+  rec_H5InputFile->setText(fi.absoluteFilePath());
+  rec_SetSliceInfo();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RepresentationUI::on_angDirBtn_clicked()
+void RepresentationUI::on_rec_alreadyFormed_stateChanged(int currentState)
 {
- // std::cout << "on_angDirBtn_clicked" << std::endl;
-  QString outputFile = this->m_OpenDialogLastDirectory + QDir::separator();
-  outputFile = QFileDialog::getExistingDirectory(this, tr("Select Ang Directory"), outputFile);
-  if (!outputFile.isNull())
-  {
-    this->angDir->setText(outputFile);
-    findAngMaxSliceAndPrefix();
-    _verifyPathExists(outputFile, angDir);
-  }
-
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void RepresentationUI::on_alreadyFormed_stateChanged(int currentState)
-{
-  QString absPath = rec_OutputDir->text() + QDir::separator() + AIM::Representation::ReconstructedVisualizationFile.c_str();
+  QString absPath = rec_OutputDir->text() + QDir::separator() + AIM::Reconstruction::VisualizationVizFile.c_str();
   absPath = QDir::toNativeSeparators(absPath);
   QFileInfo fi (absPath);
   QString msg ("All files will be over written that appear in the output directory.");
-  if (alreadyFormed->isChecked() == true && fi.exists() == false)
+  if (rec_alreadyFormed->isChecked() == true && fi.exists() == false)
   {
     QMessageBox::critical(this, tr("AIM Representation"),
       tr("You have selected the 'Already Formed' check box \nbut the correct output file does not exist.\n"
       "The checkbox will revert to an unchecked state.?"),
       QMessageBox::Ok,
       QMessageBox::Ok);
-      alreadyFormed->setChecked(false);
-      CHECK_QLABEL_OUTPUT_FILE_EXISTS(rec_, ReconstructedVisualizationFile)
+    rec_alreadyFormed->setChecked(false);
+      CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(AIM::Reconstruction, rec_, VisualizationVizFile)
   }
 
-  if (alreadyFormed->isChecked())
+  if (rec_alreadyFormed->isChecked())
   {
     msg += QString("\nThe 'reconstructed_data.txt' file will be used as an import and NOT over written with new data");
   }
   messageLabel->setText(msg);
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void RepresentationUI::findAngMaxSliceAndPrefix()
-{
-  if (angDir->text().length() == 0) { return; }
-  QDir dir(angDir->text());
-  QStringList filters;
-  filters << "*.ang";
-  dir.setNameFilters(filters);
-  QFileInfoList angList = dir.entryInfoList();
-  int maxSlice = 0;
-  int currValue =0;
-  bool ok;
-  QString fPrefix;
-  QRegExp rx("(\\d+)");
-  QStringList list;
-  int pos = 0;
-  foreach(QFileInfo fi, angList)
-  {
-    if (fi.suffix().compare(".ang") && fi.isFile() == true)
-    {
-      pos = 0;
-      list.clear();
-      QString fn = fi.baseName();
-      while ((pos = rx.indexIn(fn, pos)) != -1)
-      {
-        list << rx.cap(0);
-        fPrefix = fn.left(pos);
-        pos += rx.matchedLength();
-      }
-      if (list.size() > 0) {
-        currValue = list.front().toInt(&ok);
-        if (currValue > maxSlice) { maxSlice = currValue; }
-      }
-    }
-  }
-  this->angMaxSlice->setValue(maxSlice);
-  this->angFilePrefix->setText(fPrefix);
-}
+
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RepresentationUI::on_outputDirBtn_clicked()
+void RepresentationUI::on_rec_OutputDirBtn_clicked()
 {
   QString outputFile = this->m_OpenDialogLastDirectory + QDir::separator();
   outputFile = QFileDialog::getExistingDirectory(this, tr("Select Output Directory"), outputFile);
@@ -746,12 +773,51 @@ void RepresentationUI::on_outputDirBtn_clicked()
     if (_verifyPathExists(outputFile, rec_OutputDir) == true )
     {
       rec_CheckIOFiles();
-      QFileInfo fi (rec_OutputDir->text() + QDir::separator() +  AIM::Representation::ReconstructedVisualizationFile.c_str() );
-      if (alreadyFormed->isChecked() == true && fi.exists() == false)
+      QFileInfo fi (rec_OutputDir->text() + QDir::separator() +  AIM::Reconstruction::VisualizationVizFile.c_str() );
+      if (rec_alreadyFormed->isChecked() == true && fi.exists() == false)
       {
-        alreadyFormed->setChecked(false);
+        rec_alreadyFormed->setChecked(false);
       }
     }
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void RepresentationUI::on_rec_H5InputFile_textChanged(const QString &text)
+{
+  if (_verifyPathExists(rec_H5InputFile->text(), rec_H5InputFile) )
+  {
+    rec_SetSliceInfo();
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void RepresentationUI::rec_SetSliceInfo()
+{
+  AbstractAngDataLoader::Pointer ptr = H5AngDataLoader::New();
+  H5AngDataLoader* reader = dynamic_cast<H5AngDataLoader*>(ptr.get());
+  QFileInfo fi(rec_H5InputFile->text());
+  if (fi.isFile() == false)
+  {
+    return;
+  }
+
+  reader->setFilename(rec_H5InputFile->text().toStdString());
+  int zStart = -1, zEnd = -1;
+  float zRes = 1.0;
+  if (reader->readZHeader(zStart, zEnd, zRes) >= 0)
+  {
+    rec_ZStartIndex->setValue(zStart);
+    rec_ZStartIndex->setRange(zStart, zEnd);
+    rec_ZEndIndex->setValue(zEnd);
+    rec_ZEndIndex->setRange(zStart, zEnd);
+    rec_ZRes->setText(QString::number(zRes));
+    rec_ZMin->setText(QString::number(zStart));
+    rec_ZMax->setText(QString::number(zEnd));
   }
 }
 
@@ -764,20 +830,12 @@ void RepresentationUI::on_rec_OutputDir_textChanged(const QString & text)
   rec_CheckIOFiles();
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void RepresentationUI::on_angDir_textChanged(const QString & text)
-{
-  _verifyPathExists(angDir->text(), angDir);
-}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void RepresentationUI::on_rec_GoBtn_clicked()
 {
-  bool ok = false;
   if (rec_GoBtn->text().compare("Cancel") == 0)
   {
     if(m_Reconstruction.get() != NULL)
@@ -788,34 +846,47 @@ void RepresentationUI::on_rec_GoBtn_clicked()
     return;
   }
 
-  SANITY_CHECK_INPUT( , angDir)
   SANITY_CHECK_INPUT(rec_ , OutputDir)
 
   m_Reconstruction = Reconstruction::New();
-  m_Reconstruction->setInputDirectory(angDir->text().toStdString() );
+#if AIM_HDF5_SUPPORT
+  m_Reconstruction->setH5AngFile(rec_H5InputFile->text().toStdString());
+#else
+  bool ok = false;
+  m_Reconstruction->setInputDirectory(oim_InputDir->text().toStdString() );
+  m_Reconstruction->setAngFilePrefix(oim_FilePrefix->text().toStdString());
+  m_Reconstruction->setAngSeriesMaxSlice(oim_ZMaxSlice->value());
+  m_Reconstruction->setZResolution(oim_zSpacing->text().toDouble(&ok));
+#endif
+  m_Reconstruction->setZStartIndex(rec_ZStartIndex->value());
+  m_Reconstruction->setZEndIndex(rec_ZEndIndex->value() + 1);
   m_Reconstruction->setOutputDirectory(rec_OutputDir->text().toStdString());
-  m_Reconstruction->setAngFilePrefix(angFilePrefix->text().toStdString());
-  m_Reconstruction->setAngSeriesMaxSlice(angMaxSlice->value());
-  m_Reconstruction->setZStartIndex(zStartIndex->value());
-  m_Reconstruction->setZEndIndex(zEndIndex->value() + 1);
-  m_Reconstruction->setZResolution(zSpacing->text().toDouble(&ok));
-  m_Reconstruction->setMergeTwins(mergeTwins->isChecked() );
-  m_Reconstruction->setMergeColonies(mergeColonies->isChecked() );
+
+  m_Reconstruction->setMergeTwins(rec_mergeTwins->isChecked() );
+  m_Reconstruction->setMergeColonies(rec_mergeColonies->isChecked() );
   m_Reconstruction->setMinAllowedGrainSize(minAllowedGrainSize->value());
   m_Reconstruction->setMinSeedConfidence(minConfidence->value());
+  m_Reconstruction->setDownSampleFactor(downsampleFactor->value());
   m_Reconstruction->setMinSeedImageQuality(minImageQuality->value());
   m_Reconstruction->setMisorientationTolerance(misOrientationTolerance->value());
 
-  AIM::Representation::CrystalStructure crystruct = static_cast<AIM::Representation::CrystalStructure>(crystalStructure->currentIndex() + 1);
-  AIM::Representation::AlignmentMethod alignmeth = static_cast<AIM::Representation::AlignmentMethod>(alignMeth->currentIndex() + 1);
+  AIM::Reconstruction::CrystalStructure crystruct = static_cast<AIM::Reconstruction::CrystalStructure>(crystalStructure->currentIndex() + 1);
+  AIM::Reconstruction::AlignmentMethod alignmeth = static_cast<AIM::Reconstruction::AlignmentMethod>(alignMeth->currentIndex() + 1);
 
   m_Reconstruction->setCrystalStructure(crystruct);
   m_Reconstruction->setAlignmentMethod(alignmeth);
-  m_Reconstruction->setAlreadyFormed(alreadyFormed->isChecked());
-  m_Reconstruction->setIPFoutputoption(IPFoutputoption->isChecked());
-  m_Reconstruction->setDisorientationoutputoption(Disorientationoutputoption->isChecked());
-  m_Reconstruction->setImageQualityoutputoption(ImageQualityoutputoption->isChecked());
-  m_Reconstruction->setSchmidFactoroutputoption(SchmidFactoroutputoption->isChecked());
+  m_Reconstruction->setAlreadyFormed(rec_alreadyFormed->isChecked());
+
+  m_Reconstruction->setWriteVisualizationFile(rec_VisualizationVizFile->isChecked());
+  m_Reconstruction->setWriteIPFFile(rec_IPFVizFile->isChecked());
+  m_Reconstruction->setWriteDisorientationFile(rec_DisorientationVizFile->isChecked());
+  m_Reconstruction->setWriteImageQualityFile(rec_ImageQualityVizFile->isChecked());
+  m_Reconstruction->setWriteSchmidFactorFile(rec_SchmidFactorVizFile->isChecked());
+  m_Reconstruction->setWriteDownSampledFile(rec_DownSampledVizFile->isChecked());
+
+#if AIM_HDF5_SUPPORT
+  m_Reconstruction->setWriteHDF5GrainFile(rec_HDF5GrainFile->isChecked());
+#endif
 
   connect(m_Reconstruction.get(), SIGNAL(finished()),
           this, SLOT( rec_ThreadFinished() ) );
@@ -853,10 +924,11 @@ void RepresentationUI::rec_ThreadFinished()
   //std::cout << "RepresentationUI::reconstruction_Finished()" << std::endl;
   rec_GoBtn->setText("Go");
   setWidgetListEnabled(true);
-  this->progressBar->setValue(0);
+  this->rec_progressBar->setValue(0);
   grainGeneratorTab->setEnabled(true);
   surfaceMeshingTab->setEnabled(true);
   volumeMeshingTab->setEnabled(true);
+  oimImportTab->setEnabled(true);
   rec_CheckIOFiles();
 }
 
@@ -865,7 +937,7 @@ void RepresentationUI::rec_ThreadFinished()
 // -----------------------------------------------------------------------------
 void RepresentationUI::rec_ThreadProgressed(int val)
 {
-  this->progressBar->setValue( val );
+  this->rec_progressBar->setValue( val );
 }
 
 
@@ -898,7 +970,7 @@ void RepresentationUI::gg_SetupGui()
   }
   QString msg ("All files will be over written that appear in the output directory.");
 
-  QFileInfo fi (gg_OutputDir->text() + QDir::separator() +  AIM::Representation::CubeFile.c_str() );
+  QFileInfo fi (gg_OutputDir->text() + QDir::separator() +  AIM::SyntheticBuilder::CubeFile.c_str() );
   if (gg_AlreadyFormed->isChecked() == true && fi.exists() == false)
   {
     gg_AlreadyFormed->setChecked(false);
@@ -910,9 +982,26 @@ void RepresentationUI::gg_SetupGui()
   }
   messageLabel->setText(msg);
 
+
+#if AIM_HDF5_SUPPORT
+  gg_StatsFile->setVisible(false);
+  gg_AxisOrientationsFile->setVisible(false);
+  gg_ODFFile->setVisible(false);
+  gg_MisorientationBinsFile->setVisible(false);
+  gg_MicroTextureFile->setVisible(false);
+  gg_StatsFileIcon->setVisible(false);
+  gg_AxisOrientationsFileIcon->setVisible(false);
+  gg_ODFFileIcon->setVisible(false);
+  gg_MisorientationBinsFileIcon->setVisible(false);
+  gg_MicroTextureFileIcon->setVisible(false);
+#else
+  gg_H5StatisticsFile->setVisible(false);
+  gg_H5StatisticsFileIcon->setVisible(false);
+#endif
+
   m_WidgetList << gg_InputDir << gg_InputDirBtn << gg_OutputDir << gg_OutputDirBtn;
   m_WidgetList << gg_CrystalStructure << gg_NumGrains << gg_XResolution << gg_YResolution << gg_ZResolution << gg_FractionPrecipitates;
-  m_WidgetList << gg_OverlapAllowed << gg_OverlapAssignment << gg_ShapeClass << gg_Precipitates << gg_AlreadyFormed;
+  m_WidgetList << gg_ShapeClass << gg_Precipitates << gg_AlreadyFormed;
 
 }
 
@@ -921,23 +1010,28 @@ void RepresentationUI::gg_SetupGui()
 // -----------------------------------------------------------------------------
 void RepresentationUI::gg_CheckIOFiles()
 {
-  CHECK_QLABEL_INPUT_FILE_EXISTS(gg_, StatsFile)
-  CHECK_QLABEL_INPUT_FILE_EXISTS(gg_, AxisOrientationsFile)
-  CHECK_QLABEL_INPUT_FILE_EXISTS(gg_, EulerAnglesFile)
-  CHECK_QLABEL_INPUT_FILE_EXISTS(gg_, MisorientationBinsFile)
-  CHECK_QLABEL_INPUT_FILE_EXISTS(gg_, MicroBinsFile)
-
-  CHECK_QLABEL_OUTPUT_FILE_EXISTS(gg_, CubeFile)
-  CHECK_QLABEL_OUTPUT_FILE_EXISTS(gg_, AnalysisFile)
-  CHECK_QLABEL_OUTPUT_FILE_EXISTS(gg_, EulerFile)
+#if AIM_HDF5_SUPPORT
+  CHECK_QLABEL_INPUT_FILE_EXISTS(AIM::Reconstruction, gg_, H5StatisticsFile)
+#else
+  CHECK_QLABEL_INPUT_FILE_EXISTS(AIM::Reconstruction, gg_, StatsFile)
+  CHECK_QLABEL_INPUT_FILE_EXISTS(AIM::Reconstruction, gg_, AxisOrientationsFile)
+  CHECK_QLABEL_INPUT_FILE_EXISTS(AIM::Reconstruction, gg_, ODFFile)
+  CHECK_QLABEL_INPUT_FILE_EXISTS(AIM::Reconstruction, gg_, MisorientationBinsFile)
+  CHECK_QLABEL_INPUT_FILE_EXISTS(AIM::Reconstruction, gg_, MicroTextureFile)
+#endif
+  CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::SyntheticBuilder, gg_, CubeFile)
+  CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::SyntheticBuilder, gg_, AnalysisFile)
+  CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::SyntheticBuilder, gg_, EulerFile)
 }
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void RepresentationUI::on_gg_AlreadyFormed_stateChanged(int currentState)
 {
 
-  QString absPath = gg_OutputDir->text() + QDir::separator() + AIM::Representation::CubeFile.c_str();
+  QString absPath = gg_OutputDir->text() + QDir::separator() + AIM::SyntheticBuilder::CubeFile.c_str();
   absPath = QDir::toNativeSeparators(absPath);
   QFileInfo fi (absPath);
   QString msg ("All files will be over written that appear in the output directory.");
@@ -949,7 +1043,7 @@ void RepresentationUI::on_gg_AlreadyFormed_stateChanged(int currentState)
       QMessageBox::Ok,
       QMessageBox::Ok);
       gg_AlreadyFormed->setChecked(false);
-      CHECK_QLABEL_OUTPUT_FILE_EXISTS(gg_, CubeFile)
+      CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::SyntheticBuilder, gg_, CubeFile)
   }
 
   if (gg_AlreadyFormed->isChecked())
@@ -991,7 +1085,7 @@ void RepresentationUI::on_gg_OutputDirBtn_clicked()
     if (_verifyPathExists(outputFile, gg_OutputDir) == true )
     {
       gg_CheckIOFiles();
-      QFileInfo fi (gg_OutputDir->text() + QDir::separator() +  AIM::Representation::CubeFile.c_str() );
+      QFileInfo fi (gg_OutputDir->text() + QDir::separator() +  AIM::SyntheticBuilder::CubeFile.c_str() );
       if (gg_AlreadyFormed->isChecked() == true && fi.exists() == false)
       {
         gg_AlreadyFormed->setChecked(false);
@@ -1045,12 +1139,15 @@ void RepresentationUI::on_gg_GoBtn_clicked()
 
   SANITY_CHECK_INPUT(gg_, InputDir)
   SANITY_CHECK_INPUT(gg_, OutputDir)
-
-  SANITY_CHECK_QLABEL_FILE(gg_, StatsFile)
-  SANITY_CHECK_QLABEL_FILE(gg_, AxisOrientationsFile)
-  SANITY_CHECK_QLABEL_FILE(gg_, EulerAnglesFile)
-  SANITY_CHECK_QLABEL_FILE(gg_, MisorientationBinsFile)
-  SANITY_CHECK_QLABEL_FILE(gg_, MicroBinsFile)
+#if AIM_HDF5_SUPPORT
+  SANITY_CHECK_QLABEL_FILE(AIM::Reconstruction, gg_, H5StatisticsFile)
+#else
+  SANITY_CHECK_QLABEL_FILE(AIM::Reconstruction, gg_, StatsFile)
+  SANITY_CHECK_QLABEL_FILE(AIM::Reconstruction, gg_, AxisOrientationsFile)
+  SANITY_CHECK_QLABEL_FILE(AIM::Reconstruction, gg_, ODFFile)
+  SANITY_CHECK_QLABEL_FILE(AIM::Reconstruction, gg_, MisorientationBinsFile)
+  SANITY_CHECK_QLABEL_FILE(AIM::Reconstruction, gg_, MicroTextureFile)
+#endif
 
   m_GrainGenerator = GrainGenerator::New(NULL);
   m_GrainGenerator->setInputDirectory(gg_InputDir->text().toStdString() );
@@ -1069,12 +1166,9 @@ void RepresentationUI::on_gg_GoBtn_clicked()
   m_GrainGenerator->setFractionPrecipitates(gg_FractionPrecipitates->value());
 
 
-  m_GrainGenerator->setOverlapAllowed(gg_OverlapAllowed->value());
   m_GrainGenerator->setAlreadyFormed(gg_AlreadyFormed->isChecked() );
-  int overlapassignment = gg_OverlapAssignment->currentIndex() + 1;
-  m_GrainGenerator->setOverlapAssignment(overlapassignment);
 
-  AIM::Representation::CrystalStructure crystruct = static_cast<AIM::Representation::CrystalStructure>(gg_CrystalStructure->currentIndex() + 1);
+  AIM::Reconstruction::CrystalStructure crystruct = static_cast<AIM::Reconstruction::CrystalStructure>(gg_CrystalStructure->currentIndex() + 1);
 
   m_GrainGenerator->setCrystalStructure(crystruct);
 
@@ -1169,9 +1263,9 @@ void RepresentationUI::sm_CheckIOFiles()
 
   _verifyPathExists(sm_OutputDir->text(), sm_OutputDir);
 
-  CHECK_QLABEL_OUTPUT_FILE_EXISTS(sm_, NodesFile)
-  CHECK_QLABEL_OUTPUT_FILE_EXISTS(sm_, TrianglesFile)
-  CHECK_QLABEL_OUTPUT_FILE_EXISTS(sm_, NodesRawFile)
+  CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::SurfaceMeshing, sm_, NodesFile)
+  CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::SurfaceMeshing, sm_, TrianglesFile)
+  CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::SurfaceMeshing, sm_, NodesRawFile)
 }
 
 
@@ -1352,10 +1446,10 @@ void RepresentationUI::vm_CheckIOFiles()
   CHECK_QLINEEDIT_FILE_EXISTS(vm_NodesFile);
   CHECK_QLINEEDIT_FILE_EXISTS(vm_TrianglesFile);
 
-  CHECK_QLABEL_OUTPUT_FILE_EXISTS(vm_, MeshFile);
-  CHECK_QLABEL_OUTPUT_FILE_EXISTS(vm_, MeshFile2);
-  CHECK_QLABEL_OUTPUT_FILE_EXISTS(vm_, ElementQualityFile);
-  CHECK_QLABEL_OUTPUT_FILE_EXISTS(vm_, VoxelsFile);
+  CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::VolumeMeshing, vm_, MeshFile);
+  CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::VolumeMeshing, vm_, MeshFile2);
+  CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::VolumeMeshing, vm_, ElementQualityFile);
+  CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::VolumeMeshing, vm_, VoxelsFile);
 }
 
 // -----------------------------------------------------------------------------
@@ -1503,4 +1597,205 @@ void RepresentationUI::vm_ThreadProgressed(int value)
   vm_progressBar->setValue(value);
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void RepresentationUI::oim_SetupGui()
+{
+  QR3DFileCompleter* com = new QR3DFileCompleter(this, true);
+  oim_InputDir->setCompleter(com);
+  QObject::connect( com, SIGNAL(activated(const QString &)),
+           this, SLOT(on_oim_InputDir_textChanged(const QString &)));
 
+  QR3DFileCompleter* com1 = new QR3DFileCompleter(this, false);
+  oim_OutputFile->setCompleter(com1);
+  QObject::connect( com1, SIGNAL(activated(const QString &)),
+           this, SLOT(on_oim_OutputFile_textChanged(const QString &)));
+
+  m_WidgetList << oim_InputDir << oim_InputDirBtn << oim_OutputFile << oim_OutputFileBtn;
+  m_WidgetList << oim_FilePrefix << oim_ZMaxSlice << oim_ZStartIndex << oim_ZEndIndex << oim_zSpacing;
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void RepresentationUI::on_oim_OutputFile_textChanged(const QString & text)
+{
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void RepresentationUI::oim_CheckIOFiles()
+{
+  if (true == this->_verifyPathExists(oim_InputDir->text(), this->oim_InputDir))
+   {
+     oim_findAngMaxSliceAndPrefix();
+   }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void RepresentationUI::on_oim_OutputFileBtn_clicked()
+{
+  QString file = QFileDialog::getSaveFileName(this, tr("Save OIM HDF5 File"),
+                                                 m_OpenDialogLastDirectory,
+                                                 tr("HDF5 OIM Files (*.h5ang)") );
+  if ( true == file.isEmpty() ){ return;  }
+  QFileInfo fi (file);
+  QString ext = fi.suffix();
+  oim_OutputFile->setText(fi.absoluteFilePath());
+  m_OpenDialogLastDirectory = fi.path();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void RepresentationUI::on_oim_InputDirBtn_clicked()
+{
+  // std::cout << "on_angDirBtn_clicked" << std::endl;
+  QString outputFile = this->m_OpenDialogLastDirectory + QDir::separator();
+  outputFile = QFileDialog::getExistingDirectory(this, tr("Select Ang Directory"), outputFile);
+  if (!outputFile.isNull())
+  {
+    this->oim_InputDir->setText(outputFile);
+    oim_findAngMaxSliceAndPrefix();
+    _verifyPathExists(outputFile, oim_InputDir);
+    m_OpenDialogLastDirectory = outputFile;
+  }
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void RepresentationUI::on_oim_InputDir_textChanged(const QString & text)
+{
+  if (_verifyPathExists(oim_InputDir->text(), oim_InputDir) )
+  {
+    oim_findAngMaxSliceAndPrefix();
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void RepresentationUI::on_oim_GoBtn_clicked()
+{
+#if AIM_HDF5_SUPPORT
+  bool ok = false;
+  if (oim_GoBtn->text().compare("Cancel") == 0)
+  {
+    if(m_H5AngImporter.get() != NULL)
+    {
+      emit sig_CancelWorker();
+    }
+    return;
+  }
+
+  SANITY_CHECK_INPUT( , oim_InputDir)
+  m_H5AngImporter = H5AngImporter::New();
+  m_H5AngImporter->setInputDirectory(oim_InputDir->text().toStdString() );
+  m_H5AngImporter->setAngFilePrefix(oim_FilePrefix->text().toStdString());
+  m_H5AngImporter->setAngSeriesMaxSlice(oim_ZMaxSlice->value());
+  m_H5AngImporter->setZStartIndex(oim_ZStartIndex->value());
+  m_H5AngImporter->setZEndIndex(oim_ZEndIndex->value());
+  m_H5AngImporter->setZResolution(oim_zSpacing->text().toDouble(&ok));
+  m_H5AngImporter->setOutputFile(oim_OutputFile->text().toStdString() );
+
+
+  connect(m_H5AngImporter.get(), SIGNAL(finished()),
+          this, SLOT( oim_ThreadFinished() ) );
+  connect(m_H5AngImporter.get(), SIGNAL (updateProgress(int)),
+    this, SLOT(oim_ThreadProgressed(int) ) );
+  connect(m_H5AngImporter.get(), SIGNAL (updateMessage(QString)),
+          this, SLOT(threadHasMessage(QString) ) );
+  connect(this, SIGNAL(sig_CancelWorker() ),
+          m_H5AngImporter.get(), SLOT (on_CancelWorker() ) );
+
+  setWidgetListEnabled(false);
+  m_H5AngImporter->start();
+  oim_GoBtn->setText("Cancel");
+  reconstructionTab->setEnabled(false);
+  grainGeneratorTab->setEnabled(false);
+  surfaceMeshingTab->setEnabled(false);
+  volumeMeshingTab->setEnabled(false);
+#else
+  this->statusBar()->showMessage("HDF5 Support was NOT Enabled");
+#endif
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void RepresentationUI::oim_findAngMaxSliceAndPrefix()
+{
+  if (oim_InputDir->text().length() == 0) { return; }
+  QDir dir(oim_InputDir->text());
+  QStringList filters;
+  filters << "*.ang";
+  dir.setNameFilters(filters);
+  QFileInfoList angList = dir.entryInfoList();
+  int minSlice = 0;
+  int maxSlice = 0;
+  int currValue = 0;
+  bool flag = false;
+  bool ok;
+  QString fPrefix;
+  QRegExp rx("(\\d+)");
+  QStringList list;
+  int pos = 0;
+  foreach(QFileInfo fi, angList)
+  {
+    if (fi.suffix().compare(".ang") && fi.isFile() == true)
+    {
+      pos = 0;
+      list.clear();
+      QString fn = fi.baseName();
+      while ((pos = rx.indexIn(fn, pos)) != -1)
+      {
+        list << rx.cap(0);
+        fPrefix = fn.left(pos);
+        pos += rx.matchedLength();
+      }
+      if (list.size() > 0) {
+        currValue = list.front().toInt(&ok);
+        if (false == flag) { minSlice = currValue; flag = true;}
+        if (currValue > maxSlice) { maxSlice = currValue; }
+        if (currValue < minSlice) { minSlice = currValue; }
+      }
+    }
+  }
+  this->oim_ZMaxSlice->setValue(maxSlice);
+  this->oim_FilePrefix->setText(fPrefix);
+  this->oim_ZStartIndex->setValue(minSlice);
+  this->oim_ZEndIndex->setValue(maxSlice);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void RepresentationUI::oim_ThreadFinished()
+{
+  //std::cout << "RepresentationUI::reconstruction_Finished()" << std::endl;
+  oim_GoBtn->setText("Go");
+  setWidgetListEnabled(true);
+  this->oim_progressBar->setValue(0);
+  reconstructionTab->setEnabled(true);
+  grainGeneratorTab->setEnabled(true);
+  surfaceMeshingTab->setEnabled(true);
+  volumeMeshingTab->setEnabled(true);
+  oimImportTab->setEnabled(true);
+  oim_CheckIOFiles();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void RepresentationUI::oim_ThreadProgressed(int val)
+{
+  this->oim_progressBar->setValue( val );
+}

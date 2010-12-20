@@ -23,8 +23,8 @@
 #define WIN32_LEAN_AND_MEAN		// Exclude rarely-used stuff from Windows headers
 #endif
 
-
-#include <MXA/Common/MXATypes.h>
+#include "AIM/Common/AIMCommonConfiguration.h"
+#include <MXA/MXATypes.h>
 
 /**
 * @class AIMRandomNG AIMRandomNG.h AIM/Common/AIMRandomNG.h
@@ -33,13 +33,13 @@
 * @date Nov 5, 2009
 * @version 1.0
 */
-class AIMRandomNG
+class AIMCOMMON_EXPORT  AIMRandomNG
 {
   public:
     AIMRandomNG();
     virtual ~AIMRandomNG();
 
-    void RandomInit(uint32);
+    void RandomInit(uint32_t);
     double Random();
     double RandBeta(double, double);
     double RandNorm(double, double);

@@ -19,6 +19,8 @@
 
 #include <vector>
 
+#include "AIM/Common/AIMCommonConfiguration.h"
+
 /**
 * @class Voxel Voxel.h AIM/Common/Voxel.h
 * @brief Support class for the MicroGen3D class
@@ -26,7 +28,7 @@
 * @date Nov 4, 2009
 * @version 1.0
 */
-class Voxel
+class AIMCOMMON_EXPORT Voxel
 {
 public:
     Voxel();
@@ -35,6 +37,8 @@ public:
     int grainname;
     double confidence;
     double imagequality;
+    double imagequality2;
+	double ellipfunc;
     int alreadychecked;
 	int nearestneighbor;
 	double nearestneighbordistance;
@@ -48,11 +52,9 @@ public:
     int surfacevoxel;
 	int unassigned;
 	double quat[5];
+    std::vector<int>* grainlist;
+    std::vector<double>* ellipfunclist;
 
-  private:
-
-    Voxel(const Voxel&);    // Copy Constructor Not Implemented
-      void operator=(const Voxel&);  // Operator '=' Not Implemented
 };
 
 #endif /* VOXEL_H_ */
