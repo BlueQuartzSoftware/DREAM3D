@@ -13,17 +13,22 @@
 
 # MESSAGE (STATUS "Finding Qwt library and headers..." )
 
+# Only set HDF5_INSTALL to the environment variable if it is blank
+if ("${QWT_INSTALL}" STREQUAL "")
+    SET (QWT_INSTALL  $ENV{QWT_INSTALL})
+endif()
+
 # Look for the header file.
 SET(QWT_INCLUDE_SEARCH_DIRS
-  $ENV{QWT_INSTALL}/include
+  ${QWT_INSTALL}/include
 )
 
 SET (QWT_LIB_SEARCH_DIRS
-  $ENV{QWT_INSTALL}/lib
+  ${QWT_INSTALL}/lib
   )
 
 SET (QWT_BIN_SEARCH_DIRS
-  $ENV{QWT_INSTALL}/bin
+  ${QWT_INSTALL}/bin
 )
 
 FIND_PATH(QWT_INCLUDE_DIR 
