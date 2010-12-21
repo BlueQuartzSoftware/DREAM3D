@@ -137,6 +137,7 @@ private slots:
     QList<QWidget*> m_WidgetList;
 
     QwtPlotCurve* m_SizeDistributionCurve;
+    QwtPlotCurve* m_SizeDistributionCutoffCurve;
     QwtPlotZoomer* m_zoomer;
     QwtPlotPicker* m_picker;
     QwtPlotPanner* m_panner;

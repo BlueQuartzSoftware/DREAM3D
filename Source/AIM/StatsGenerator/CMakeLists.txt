@@ -41,11 +41,10 @@ add_definitions(-DAIM_USE_QT
 set (StatsGeneratorUI_SRCS 
     ${StatsGeneratorUI_SOURCE_DIR}/main.cpp
     ${StatsGeneratorUI_SOURCE_DIR}/StatsGeneratorUI.cpp
-#    ${StatsGeneratorUI_SOURCE_DIR}/StatsGen.cpp 
+    ${StatsGeneratorUI_SOURCE_DIR}/StatsGen.cpp 
 )
 set (StatsGeneratorUI_HDRS 
     ${StatsGeneratorUI_SOURCE_DIR}/StatsGen.h
-    ${StatsGeneratorUI_SOURCE_DIR}/StatsGen.txx
 )
 cmp_IDE_SOURCE_PROPERTIES( "Source/AIM/StatsGenerator" "${StatsGeneratorUI_HDRS}" "${StatsGeneratorUI_SRCS}" ${CMP_INSTALL_FILES})
 

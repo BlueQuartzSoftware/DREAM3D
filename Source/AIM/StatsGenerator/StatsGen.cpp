@@ -35,16 +35,16 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template<typename T>
-StatsGen<T>::StatsGen()
+
+StatsGen::StatsGen()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template<typename T>
-StatsGen<T>::~StatsGen()
+
+StatsGen::~StatsGen()
 {
 }
 
@@ -118,8 +118,7 @@ int StatsGen::GenCutOff(double m, double s, double value, std::vector<int> &cuto
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template<typename T>
-double StatsGen<T>::gamma(double value)
+double StatsGen::gamma(double value)
 {
     int i,k,m;
     double ga,gr,r,z;
