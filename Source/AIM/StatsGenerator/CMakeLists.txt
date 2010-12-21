@@ -2,6 +2,16 @@ project(StatsGeneratorUI)
 cmake_minimum_required(VERSION 2.8)
 
 # ------------------------------------------------------------------------------
+#  Qt 4 Section
+# ------------------------------------------------------------------------------
+if(QT4_FOUND)
+    include( ${QT_USE_FILE} )
+    CMP_COPY_QT4_RUNTIME_LIBRARIES( "QtSvg;QtScript" )
+else()
+    message(FATAL_ERROR "Qt 4 is Needed for this project.")
+endif(QT4_FOUND)
+
+# ------------------------------------------------------------------------------
 #  Qwt Section
 # ------------------------------------------------------------------------------
 find_package(Qwt)
@@ -31,10 +41,11 @@ add_definitions(-DAIM_USE_QT
 set (StatsGeneratorUI_SRCS 
     ${StatsGeneratorUI_SOURCE_DIR}/main.cpp
     ${StatsGeneratorUI_SOURCE_DIR}/StatsGeneratorUI.cpp
-    ${StatsGeneratorUI_SOURCE_DIR}/StatsGen.cpp 
+#    ${StatsGeneratorUI_SOURCE_DIR}/StatsGen.cpp 
 )
 set (StatsGeneratorUI_HDRS 
     ${StatsGeneratorUI_SOURCE_DIR}/StatsGen.h
+    ${StatsGeneratorUI_SOURCE_DIR}/StatsGen.txx
 )
 cmp_IDE_SOURCE_PROPERTIES( "Source/AIM/StatsGenerator" "${StatsGeneratorUI_HDRS}" "${StatsGeneratorUI_SRCS}" ${CMP_INSTALL_FILES})
 

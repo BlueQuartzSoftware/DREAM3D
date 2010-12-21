@@ -1,38 +1,54 @@
-/************************** MOTHER.CPP ****************** AgF 1999-03-03 *
-*  'Mother-of-All' random number generator                               *
-*                                                                        *
-*  This is a multiply-with-carry type of random number generator         *
-*  invented by George Marsaglia.  The algorithm is:                      *
-*  S = 2111111111*X[n-4] + 1492*X[n-3] + 1776*X[n-2] + 5115*X[n-1] + C   *
-*  X[n] = S modulo 2^32                                                  *
-*  C = floor(S / 2^32)                                                   *
-*                                                                        *
-*  IMPORTANT:
-*  This implementation uses a long double for C. Note that not all       *
-*  computers and compilers support the long double (80-bit) floating     *
-*  point format. It is recommended to use a Borland or Gnu compiler on   *
-*  a PC. The Microsoft compiler doesn't support the long double format.  *
-*  You will get an error message if your system doesn't support this.    *
-*                                                                        *
-* © 2002 A. Fog. GNU General Public License www.gnu.org/copyleft/gpl.html*
-*************************************************************************/
+/* ============================================================================
+ * Copyright (c) 2010, Michael A. Jackson (BlueQuartz Software)
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without modification,
+ * are permitted provided that the following conditions are met:
+ *
+ * Redistributions of source code must retain the above copyright notice, this
+ * list of conditions and the following disclaimer.
+ *
+ * Redistributions in binary form must reproduce the above copyright notice, this
+ * list of conditions and the following disclaimer in the documentation and/or
+ * other materials provided with the distribution.
+ *
+ * Neither the name of Michael A. Jackson nor the names of its contributors may
+ * be used to endorse or promote products derived from this software without
+ * specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+ * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+
 #include "StatsGen.h"
+
 #include <math.h>
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-StatsGen::StatsGen()
+template<typename T>
+StatsGen<T>::StatsGen()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-StatsGen::~StatsGen()
+template<typename T>
+StatsGen<T>::~StatsGen()
 {
 }
 
+#if 0
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -83,6 +99,9 @@ int StatsGen::GenLogNormal(double m, double s, std::vector<float> &x, std::vecto
 	return err;
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 int StatsGen::GenCutOff(double m, double s, double value, std::vector<int> &cutoffs)
 {
 	int err=0;
@@ -94,8 +113,13 @@ int StatsGen::GenCutOff(double m, double s, double value, std::vector<int> &cuto
 	cutoffs[1] = max;
 	return err;
 }
+#endif
 
-double StatsGen::gamma(double value)
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+template<typename T>
+double StatsGen<T>::gamma(double value)
 {
     int i,k,m;
     double ga,gr,r,z;
@@ -166,5 +190,9 @@ double StatsGen::gamma(double value)
     }
     return ga;
 }
+
+
+
+
 
 

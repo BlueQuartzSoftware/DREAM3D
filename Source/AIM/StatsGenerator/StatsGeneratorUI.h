@@ -54,6 +54,15 @@ class StatsGeneratorUI : public QMainWindow, private Ui::StatsGeneratorUI
     StatsGeneratorUI(QWidget *parent = 0);
     virtual ~StatsGeneratorUI();
 
+    void plotSizeDistribution();
+
+
+    protected slots:
+      void on_m_Mu_SizeDistribution_textChanged(const QString &text);
+      void on_m_Sigma_SizeDistribution_textChanged(const QString &text);
+      void on_m_SigmaCutOff_SizeDistribution_textChanged(const QString &text);
+
+
   protected:
 
     /**
@@ -125,7 +134,6 @@ private slots:
     void openRecentFile();
 
   private:
-    QString m_OpenDialogLastDirectory;
     QList<QWidget*> m_WidgetList;
 
     QwtPlotCurve* m_SizeDistributionCurve;
@@ -134,6 +142,7 @@ private slots:
     QwtPlotPanner* m_panner;
     QwtPlotGrid*   m_grid;
 
+    QString m_OpenDialogLastDirectory;  // Must be last in the list
     StatsGeneratorUI(const StatsGeneratorUI&); // Copy Constructor Not Implemented
     void operator=(const StatsGeneratorUI&); // Operator '=' Not Implemented
 };

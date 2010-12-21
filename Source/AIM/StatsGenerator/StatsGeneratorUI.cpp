@@ -30,15 +30,16 @@
 
 #include "StatsGeneratorUI.h"
 
+#include <iostream>
+#include <limits>
 
 #include <QtCore/QFileInfo>
 #include <QtCore/QFile>
 #include <QtCore/QDir>
 #include <QtCore/QString>
 #include <QtCore/QSettings>
+#include <QtCore/QVector>
 #include <QtGui/QCloseEvent>
-
-#include "AIM/Common/Qt/QRecentFileList.h"
 
 //-- Qwt Includes
 #include <qwt.h>
@@ -51,11 +52,20 @@
 #include <qwt_plot_panner.h>
 #include <qwt_plot_curve.h>
 
+#include "AIM/Common/Qt/QRecentFileList.h"
+#include "StatsGen.h"
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 StatsGeneratorUI::StatsGeneratorUI(QWidget *parent) :
   QMainWindow(parent),
+  m_SizeDistributionCurve(NULL),
+  m_zoomer(NULL),
+  m_picker(NULL),
+  m_panner(NULL),
+  m_grid(NULL),
 #if defined(Q_WS_WIN)
       m_OpenDialogLastDirectory("C:\\")
 #else
@@ -140,6 +150,8 @@ void StatsGeneratorUI::setupGui()
   m_grid->setMajPen(QPen(Qt::gray, 0, Qt::SolidLine));
   m_grid->setMinPen(QPen(Qt::lightGray, 0, Qt::DotLine));
 //  m_grid->attach(m_HistogramPlot);
+
+  plotSizeDistribution();
 
 #if 0
   m_zoomer = new QwtPlotZoomer(QwtPlot::xBottom, QwtPlot::yLeft, m_HistogramPlot->canvas());
@@ -268,4 +280,92 @@ void StatsGeneratorUI::openFile(QString imageFile)
   QRecentFileList::instance()->addFile(imageFile);
   setWidgetListEnabled(true);
   updateRecentFileList(imageFile);
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void StatsGeneratorUI::on_m_SigmaCutOff_SizeDistribution_textChanged(const QString &text)
+{
+  plotSizeDistribution();
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void StatsGeneratorUI::on_m_Sigma_SizeDistribution_textChanged(const QString &text)
+{
+  plotSizeDistribution();}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void StatsGeneratorUI::on_m_Mu_SizeDistribution_textChanged(const QString &text)
+{
+  plotSizeDistribution();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void StatsGeneratorUI::plotSizeDistribution()
+{
+  bool ok = false;
+  double mu = 1.0;
+  double sigma = 1.0;
+  double cutOff = 1.0;
+  int err = 0;
+  mu = m_Mu_SizeDistribution->text().toDouble(&ok);
+  if (ok == false)
+  {
+    //TODO: Present Error Message
+  }
+  sigma = m_Sigma_SizeDistribution->text().toDouble(&ok);
+  if (ok == false)
+  {
+    //TODO: Present Error Message
+  }
+  cutOff = m_SigmaCutOff_SizeDistribution->text().toDouble(&ok);
+  if (ok == false)
+  {
+    //TODO: Present Error Message
+  }
+
+  int size = 256;
+  QwtArray<double> x;
+  QwtArray<double> y;
+  StatsGen<QwtArray<double> > sg;
+  err = sg.GenBeta(mu, sigma, x, y, size);
+  if (err == 1)
+  {
+    //TODO: Present Error Message
+    return;
+  }
+
+  double xMax = std::numeric_limits<double>::min();
+  double yMax = std::numeric_limits<double>::min();
+  for (int i = 0; i < size; ++i)
+  {
+ //   std::cout << x[i] << "  " << y[i] << std::endl;
+    if (x[i] > xMax) { xMax = x[i]; }
+    if (y[i] > yMax) { yMax = y[i]; }
+  }
+
+
+  if (NULL == m_SizeDistributionCurve)
+  {
+    m_SizeDistributionCurve = new QwtPlotCurve("Size Distribution");
+    m_SizeDistributionCurve->setRenderHint(QwtPlotItem::RenderAntialiased);
+    m_SizeDistributionCurve->setPen(QPen(Qt::red));
+    m_SizeDistributionCurve->attach(m_SizeDistributionPlot);
+  }
+
+  m_SizeDistributionCurve->setData(x, y);
+
+  m_SizeDistributionPlot->setAxisScale(QwtPlot::yLeft, 0.0, yMax);
+  m_SizeDistributionPlot->setAxisScale(QwtPlot::xBottom, 0.0, xMax);
+  m_SizeDistributionPlot->replot();
+
 }
