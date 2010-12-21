@@ -62,6 +62,7 @@
 StatsGeneratorUI::StatsGeneratorUI(QWidget *parent) :
   QMainWindow(parent),
   m_SizeDistributionCurve(NULL),
+  m_SizeDistributionCutoffCurve(NULL),
   m_zoomer(NULL),
   m_picker(NULL),
   m_panner(NULL),
@@ -282,6 +283,20 @@ void StatsGeneratorUI::openFile(QString imageFile)
   updateRecentFileList(imageFile);
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void StatsGeneratorUI::on_m_Mu_SizeDistribution_textChanged(const QString &text)
+{
+  plotSizeDistribution();
+}
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void StatsGeneratorUI::on_m_Sigma_SizeDistribution_textChanged(const QString &text)
+{
+  plotSizeDistribution();
+}
 
 // -----------------------------------------------------------------------------
 //
@@ -292,20 +307,7 @@ void StatsGeneratorUI::on_m_SigmaCutOff_SizeDistribution_textChanged(const QStri
 }
 
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void StatsGeneratorUI::on_m_Sigma_SizeDistribution_textChanged(const QString &text)
-{
-  plotSizeDistribution();}
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void StatsGeneratorUI::on_m_Mu_SizeDistribution_textChanged(const QString &text)
-{
-  plotSizeDistribution();
-}
 
 // -----------------------------------------------------------------------------
 //
@@ -336,8 +338,8 @@ void StatsGeneratorUI::plotSizeDistribution()
   int size = 256;
   QwtArray<double> x;
   QwtArray<double> y;
-  StatsGen<QwtArray<double> > sg;
-  err = sg.GenBeta(mu, sigma, x, y, size);
+  StatsGen sg;
+  err = sg.GenLogNormal<QwtArray<double> >(mu, sigma, x, y, size);
   if (err == 1)
   {
     //TODO: Present Error Message
@@ -353,6 +355,14 @@ void StatsGeneratorUI::plotSizeDistribution()
     if (y[i] > yMax) { yMax = y[i]; }
   }
 
+  QwtArray<double> xCo;
+  QwtArray<double> yCo;
+  err = sg.GenCutOff<QwtArray<double> >(mu, sigma, cutOff, xCo, yCo, yMax);
+
+  for (int i = 0; i < 6; ++i )
+  {
+    std::cout << xCo[i] << " "<< yCo[i] << std::endl;
+  }
 
   if (NULL == m_SizeDistributionCurve)
   {
@@ -361,11 +371,18 @@ void StatsGeneratorUI::plotSizeDistribution()
     m_SizeDistributionCurve->setPen(QPen(Qt::red));
     m_SizeDistributionCurve->attach(m_SizeDistributionPlot);
   }
+  if (NULL == m_SizeDistributionCutoffCurve)
+  {
+    m_SizeDistributionCutoffCurve = new QwtPlotCurve("Cut Off Value");
+    m_SizeDistributionCutoffCurve->setRenderHint(QwtPlotItem::RenderAntialiased);
+    m_SizeDistributionCutoffCurve->setPen(QPen(Qt::blue));
+    m_SizeDistributionCutoffCurve->attach(m_SizeDistributionPlot);
+  }
 
   m_SizeDistributionCurve->setData(x, y);
+  m_SizeDistributionCutoffCurve->setData(xCo, yCo);
 
   m_SizeDistributionPlot->setAxisScale(QwtPlot::yLeft, 0.0, yMax);
   m_SizeDistributionPlot->setAxisScale(QwtPlot::xBottom, 0.0, xMax);
   m_SizeDistributionPlot->replot();
-
 }
