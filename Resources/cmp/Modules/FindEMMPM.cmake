@@ -20,20 +20,24 @@
 #  EMMPM_RESOURCES_DIR - The directory where supporting cmake files and other files can be found
 
 # Look for the header file.
+# Only set HDF5_INSTALL to the environment variable if it is blank
+if ("${EMMPM_INSTALL}" STREQUAL "")
+SET (EMMPM_INSTALL  $ENV{EMMPM_INSTALL})
+endif()
  
 # MESSAGE (STATUS "Finding EM/MPM library and headers..." )
 # SET (EMMPM_DEBUG 1)
 
 SET(EMMPM_INCLUDE_SEARCH_DIRS
-  $ENV{EMMPM_INSTALL}/include
+  ${EMMPM_INSTALL}/include
 )
 
 SET (EMMPM_LIB_SEARCH_DIRS
-  $ENV{EMMPM_INSTALL}/lib
+  ${EMMPM_INSTALL}/lib
   )
 
 SET (EMMPM_BIN_SEARCH_DIRS
-  $ENV{EMMPM_INSTALL}/bin
+  ${EMMPM_INSTALL}/bin
 )
 
 FIND_PATH(EMMPM_INCLUDE_DIR 
