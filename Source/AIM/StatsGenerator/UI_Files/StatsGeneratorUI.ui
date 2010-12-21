@@ -19,7 +19,7 @@
      <widget class="QLabel" name="label_2">
       <property name="font">
        <font>
-        <pointsize>14</pointsize>
+        <pointsize>13</pointsize>
        </font>
       </property>
       <property name="text">

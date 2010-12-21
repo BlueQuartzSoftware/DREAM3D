@@ -143,7 +143,7 @@ void StatsGeneratorUI::setupGui()
 
   // Configure the Histogram Plot
   m_SizeDistributionPlot->setCanvasBackground(QColor(Qt::white));
-  m_SizeDistributionPlot->setTitle("Histogram");
+  m_SizeDistributionPlot->setTitle("Size Distribution");
   //  m_HistogramPlot->setAxisTitle(QwtPlot::xBottom, "Gray Scale Value");
   m_grid = new QwtPlotGrid;
   m_grid->enableXMin(true);
