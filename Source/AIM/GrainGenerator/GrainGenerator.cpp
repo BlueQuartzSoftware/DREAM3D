@@ -74,10 +74,11 @@ m_ShapeClass(0),
 m_XResolution(0.0),
 m_YResolution(0.0),
 m_ZResolution(0.0),
-m_OverlapAllowed(0),
+m_FillingErrorWeight(0.0),
+m_NeighborhoodErrorWeight(0.0),
+m_SizeDistErrorWeight(0.0),
 m_AlreadyFormed(false),
 m_Precipitates(0),
-m_OverlapAssignment(0),
 m_CrystalStructure(AIM::Reconstruction::Cubic),
 m_ErrorCondition(0)
 #if AIM_USE_QT
@@ -138,9 +139,9 @@ void GrainGenerator::compute()
 
 
    m = GrainGeneratorFunc::New();
-   m->initialize(m_NumGrains, m_ShapeClass,
-              m_XResolution, m_YResolution, m_ZResolution, m_OverlapAllowed,
-              m_OverlapAssignment, m_Precipitates, m_CrystalStructure, m_FractionPrecipitates);
+   m->initialize(m_NumGrains, m_ShapeClass, m_XResolution, m_YResolution, m_ZResolution, 
+			  m_FillingErrorWeight, m_NeighborhoodErrorWeight, m_SizeDistErrorWeight,
+              m_Precipitates, m_CrystalStructure, m_FractionPrecipitates);
 
 
    if(m_AlreadyFormed == false)

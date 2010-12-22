@@ -20,6 +20,8 @@
 #include "AIM/ANG/AngReader.h"
 #include "AIM/ANG/AbstractAngDataLoader.h"
 #include "AIM/ANG/AngDataLoader.h"
+#include "AIM/Common/OIMColoring.hpp"
+
 
 #if AIM_HDF5_SUPPORT
 #include "AIM/HDF5/AIM_H5VtkDataWriter.h"
@@ -267,18 +269,6 @@ void Reconstruction::compute()
     m->numgrains = m->form_grains();
 
     CHECK_FOR_CANCELED(ReconstructionFunc)
-    progressMessage(AIM_STRING("Finding Reference Orientations For Grains"), 22);
-    m->find_kernels();
-
-	CHECK_FOR_CANCELED(ReconstructionFunc)
-	progressMessage(AIM_STRING("Creating Voxel Lists For Grains"), 24);
-	m->numgrains = m->reburn_grains();
-
-    CHECK_FOR_CANCELED(ReconstructionFunc)
-    progressMessage(AIM_STRING("Defining Sub-Grains"), 25);
-//    m->numgrains = m->define_subgrains();
-
-    CHECK_FOR_CANCELED(ReconstructionFunc)
     progressMessage(AIM_STRING("Assigning Bad Points"), 28);
     m->assign_badpoints();
   }
@@ -499,6 +489,9 @@ int Reconstruction::writeHDF5GrainsFile(const std::string &hdfFile,
 
     vector<int > plist(((r->xpoints + 1) * (r->ypoints + 1) * (r->zpoints + 1)), 0);
     int pcount = 0;
+	double q1[5];
+	unsigned char rgb[3] = {0, 0, 0};
+	double RefDirection[3] = {0.0, 0.0, 1.0};
     int ocol, orow, oplane;
     int col, row, plane;
     int pid;
@@ -553,9 +546,24 @@ int Reconstruction::writeHDF5GrainsFile(const std::string &hdfFile,
       kernelAvgDisorientation[j] = r->voxels[vid].kernelmisorientation;
       grainAvgDisorientation[j] = r->voxels[vid].misorientation;
       imageQuality[j] = r->voxels[vid].imagequality;
-      ipfColor[j * 3] = r->m_Grains[i].red * 255;
-      ipfColor[j * 3 + 1] = r->m_Grains[i].green * 255;
-      ipfColor[j * 3 + 2] = r->m_Grains[i].blue * 255;
+	  if(m_CrystalStructure == AIM::Reconstruction::Cubic)
+      {
+        OIMColoring::GenerateIPFColor(r->voxels[vid].euler1, r->voxels[vid].euler2, r->voxels[vid].euler3, RefDirection[0], RefDirection[1], RefDirection[2], rgb);
+        ipfColor[j * 3] = static_cast<double>(double(rgb[0])/255.0);
+        ipfColor[j * 3 + 1] = static_cast<double>(double(rgb[1])/255.0);
+        ipfColor[j * 3 + 2] = static_cast<double>(double(rgb[2])/255.0);
+      }
+      if(m_CrystalStructure == AIM::Reconstruction::Hexagonal)
+      {
+        q1[0]=r->voxels[i].quat[1];
+        q1[1]=r->voxels[i].quat[2];
+        q1[2]=r->voxels[i].quat[3];
+        q1[3]=r->voxels[i].quat[4];
+        OIMColoring::CalculateHexIPFColor(q1, rgb);
+        ipfColor[j * 3] = static_cast<double>(double(rgb[0])/255.0);
+        ipfColor[j * 3 + 1] = static_cast<double>(double(rgb[1])/255.0);
+        ipfColor[j * 3 + 2] = static_cast<double>(double(rgb[2])/255.0);
+      }
       grainName[0] = r->voxels[vid].grainname;
     }
     std::cout << " Grain: " << i << " Writing HDF5 File" << std::endl;

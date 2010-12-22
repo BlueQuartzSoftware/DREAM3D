@@ -90,7 +90,6 @@ AngDataLoader::Pointer m_angFileHelper;
   int* psizes;
   vector<Grain> grains;
 
-	vector<int> gsizes;
 	vector<int> activegrainlist;
 	vector<int> precipitateorder;
 	vector<int> takencheck;
@@ -107,10 +106,8 @@ AngDataLoader::Pointer m_angFileHelper;
 	vector<vector<double> > precipsvomega3;
 	vector<vector<double> > neighbordist;
 
-	void initialize(int32_t m_NumGrains, int32_t m_ShapeClass,
-	                double m_XResolution, double m_YResolution, double m_ZResolution,
-	                int32_t m_OverlapAllowed,
-	                int32_t m_OverlapAssignment, int32_t m_Precipitates,
+	void initialize(int32_t m_NumGrains, int32_t m_ShapeClass, double m_XResolution, double m_YResolution, double m_ZResolution, 
+					double m_fillingerrorweight, double m_neighborhooderrorweight, double m_sizedisterrorweight, int32_t m_Precipitates,
 	                AIM::Reconstruction::CrystalStructure m_CrystalStructure, double m_FractionPrecipitates);
 	void initialize2();
 	double machineepsilon;
@@ -138,7 +135,6 @@ AngDataLoader::Pointer m_angFileHelper;
 	int worstgrain;
 	int numprecipdiameters;
 
-
 	int32_t xpoints;
 	int32_t ypoints;
 	int32_t zpoints;
@@ -152,6 +148,10 @@ AngDataLoader::Pointer m_angFileHelper;
 	double currentfillingerror,oldfillingerror;
 	double currentneighborhooderror,oldneighborhooderror;
 	double currentsizedisterror,oldsizedisterror;
+
+	double fillingerrorweight;
+	double neighborhooderrorweight;
+	double sizedisterrorweight;
 
 	void write_eulerangles(string);
 
