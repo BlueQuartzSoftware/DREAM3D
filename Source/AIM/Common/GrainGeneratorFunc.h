@@ -39,16 +39,18 @@
 #include "AIM/Common/Voxel.h"
 #include "AIM/Common/Bin.h"
 #include "AIM/Common/AIMRandomNG.h"
-#include "AIM/ANG/AngDataLoader.h"
-#if AIM_HDF5_SUPPORT
 #include "AIM/Reconstruction/H5ReconStatsReader.h"
-#endif
+
 
 using namespace std;
 
-
-
-
+/**
+ * @class GrainGeneratorFunc GrainGeneratorFunc.h AIM/Common/GrainGeneratorFunc.h
+ * @brief
+ * @author
+ * @date
+ * @version 1.0
+ */
 class AIMCOMMON_EXPORT GrainGeneratorFunc
 {
 
@@ -57,12 +59,7 @@ public:
     MXA_SHARED_POINTERS(GrainGeneratorFunc)
     MXA_STATIC_NEW_MACRO(GrainGeneratorFunc)
 
-
   virtual ~GrainGeneratorFunc();
-
-
-AngDataLoader::Pointer m_angFileHelper;
-
 
   double resx;
   double resy;
@@ -156,19 +153,12 @@ AngDataLoader::Pointer m_angFileHelper;
 	void write_eulerangles(string);
 
 
-#if AIM_HDF5_SUPPORT
 	int readReconStatsData(H5ReconStatsReader::Pointer h5io);
   int readAxisOrientationData(H5ReconStatsReader::Pointer h5io);
   int readODFData(H5ReconStatsReader::Pointer h5io);
   int readMisorientationData(H5ReconStatsReader::Pointer h5io);
   int readMicroTextureData(H5ReconStatsReader::Pointer h5io);
-#else
-void readReconStatsData(const std::string &statsFile);
-void readAxisOrientationData(const std::string &file);
-void readODFData(const std::string &file);
-void readMisorientationData(const std::string &file);
-void readMicroTextureData(const std::string &file);
-#endif
+
 
 	void generate_grain(int);
 	void assign_eulers(int);

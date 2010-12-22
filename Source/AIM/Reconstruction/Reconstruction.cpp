@@ -19,13 +19,9 @@
 #include "AIM/ANG/AngDirectoryPatterns.h"
 #include "AIM/ANG/AngReader.h"
 #include "AIM/ANG/AbstractAngDataLoader.h"
-#include "AIM/ANG/AngDataLoader.h"
-
-#if AIM_HDF5_SUPPORT
+#include "AIM/ANG/H5AngDataLoader.h"
 #include "AIM/HDF5/AIM_H5VtkDataWriter.h"
 #include "AIM/Reconstruction/H5ReconStatsWriter.h"
-#include "AIM/ANG/H5AngDataLoader.h"
-#endif
 
 
 
@@ -62,25 +58,13 @@ Reconstruction::Pointer Reconstruction::New( QObject* parent)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-Reconstruction::Reconstruction(
 #if AIM_USE_QT
-QObject* parent
-#endif
-) :
-#if AIM_USE_QT
+Reconstruction::Reconstruction(QObject* parent) :
 QThread(parent),
-#endif
-
-#if AIM_HDF5_SUPPORT
-m_H5AngFile(""),
 #else
-m_InputDirectory("."),
-m_AngFilePrefix("Slice_"),
-m_AngSeriesMaxSlice(3),
-m_ZStartIndex(0),
-m_ZEndIndex(0),
-m_ZResolution(0.25),
+Reconstruction::Reconstruction() :
 #endif
+m_H5AngFile(""),
 m_OutputDirectory("."),
 m_MergeTwins(false),
 m_MergeColonies(false),
@@ -141,33 +125,13 @@ void Reconstruction::compute()
 {
 //  std::cout << "Reconstruction::compute" << std::endl;
   int err = -1;
-#if AIM_HDF5_SUPPORT
+
   AbstractAngDataLoader::Pointer oimDataLoader = H5AngDataLoader::New();
   H5AngDataLoader* ptr = dynamic_cast<H5AngDataLoader*>(oimDataLoader.get());
   ptr->setFilename(m_H5AngFile);
   ptr->setZStartIndex(m_ZStartIndex);
   ptr->setZEndIndex(m_ZEndIndex);
-#else
-  AbstractAngDataLoader::Pointer oimDataLoader = AngDataLoader::New();
-  AngDataLoader* ptr = dynamic_cast<AngDataLoader*>(oimDataLoader.get());
 
-  int32_t sliceCount = 1;
-  int32_t width = 0;
-  int32_t totalSlices = m_AngSeriesMaxSlice;
-  while (sliceCount < totalSlices)
-  {
-    ++width;
-    sliceCount *= 10;
-  }
-
-  m_InputDirectory = MXADir::toNativeSeparators(m_InputDirectory);
-  AngDirectoryPatterns::Pointer p
-          = AngDirectoryPatterns::New(m_InputDirectory, m_AngFilePrefix, width);
-  ptr->setZResolution(m_ZResolution);
-  ptr->setDirectoryPattern(p);
-  ptr->setZStartIndex(m_ZStartIndex);
-  ptr->setZEndIndex(m_ZEndIndex);
-#endif
 
   m = ReconstructionFunc::New();
   progressMessage(AIM_STRING("Gathering Size and Resolution Information from OIM Data"), 1);
@@ -185,17 +149,9 @@ void Reconstruction::compute()
 	              m_AlreadyFormed);
   m_OutputDirectory = MXADir::toNativeSeparators(m_OutputDirectory);
 
-#if AIM_HDF5_SUPPORT
   // Create a new HDF5 Results file by overwriting any HDF5 file that may be in the way
   std::string hdf5ResultsFile = m_OutputDirectory + MXADir::Separator + AIM::Reconstruction::H5StatisticsFile;
   H5ReconStatsWriter::Pointer h5io = H5ReconStatsWriter::New(hdf5ResultsFile);
-#else
-  std::string statsFile = m_OutputDirectory + MXADir::Separator + AIM::Reconstruction::StatsFile;
-  std::string microBinsFile = m_OutputDirectory + MXADir::Separator + AIM::Reconstruction::MicroTextureFile;
-  std::string misorientationFile = m_OutputDirectory + MXADir::Separator + AIM::Reconstruction::MisorientationBinsFile;
-  std::string axisFile = m_OutputDirectory + MXADir::Separator + AIM::Reconstruction::AxisOrientationsFile;
-  std::string eulerFile = m_OutputDirectory + MXADir::Separator + AIM::Reconstruction::ODFFile;
-#endif
   std::string graindataFile = m_OutputDirectory + MXADir::Separator + AIM::Reconstruction::GrainDataFile;
   std::string alignmentFile = m_OutputDirectory + MXADir::Separator + AIM::Reconstruction::AlignmentFile;
 
@@ -375,37 +331,22 @@ void Reconstruction::compute()
 
   CHECK_FOR_CANCELED(ReconstructionFunc)
   progressMessage(AIM_STRING("Writing Statistics"), 80);
-
-#if AIM_HDF5_SUPPORT
   if(m_ZEndIndex-m_ZStartIndex > 1) m->volume_stats(h5io);
   if(m_ZEndIndex-m_ZStartIndex == 1) m->volume_stats2D(h5io);
-#else
-  if(m_ZEndIndex-m_ZStartIndex > 1) m->volume_stats(statsFile,misorientationFile,microBinsFile);
-  if(m_ZEndIndex-m_ZStartIndex == 1) m->volume_stats2D(statsFile,misorientationFile,microBinsFile);
-#endif
-  CHECK_FOR_CANCELED(ReconstructionFunc)
+
+
   CHECK_FOR_CANCELED(ReconstructionFunc)
   progressMessage(AIM_STRING("Writing Grain Data"), 82);
   m->write_graindata(graindataFile);
 
   CHECK_FOR_CANCELED(ReconstructionFunc)
   progressMessage(AIM_STRING("Writing Axis Orientation File"), 84);
-#if AIM_HDF5_SUPPORT
   err = h5io->writeAxisOrientationData(m->axisodf, m->crystruct, m->totalaxes);
-#else
-  m->write_axisodf(axisFile);
-#endif
+
 
   CHECK_FOR_CANCELED(ReconstructionFunc)
   progressMessage(AIM_STRING("Writing Euler Angle File"), 86);
-  //DONE: Write HDF5 ODFFile
-#if AIM_HDF5_SUPPORT
   err = h5io->writeODFData(m->crystruct, m->eulerodf, m->totalvol);
-#else
-  m->write_eulerodf(eulerFile);
-#endif
-
-
 
   /** ********** This section writes the ASCII based vtk files for visualization *** */
 
@@ -429,13 +370,9 @@ void Reconstruction::compute()
 
   /** ******* End VTK Visualization File Writing Section ****** */
 
-#if AIM_HDF5_SUPPORT
   CHECK_FOR_CANCELED(ReconstructionFunc)
   progressMessage(AIM_STRING("Writing Out HDF5 Grain File"), 95);
   if (m_WriteHDF5GrainFile) { writeHDF5GrainsFile(hdf5GrainFile, m); }
-#else
-  m->write_grains(m_OutputDirectory);
-#endif
 
   progressMessage(AIM_STRING("Reconstruction Complete"), 100);
 
@@ -478,7 +415,6 @@ int Reconstruction::writeHDF5GrainsFile(const std::string &hdfFile,
                                           ReconstructionFunc::Pointer r)
 {
   int err = -1;
-#if AIM_HDF5_SUPPORT
   AIM_H5VtkDataWriter::Pointer h5writer = AIM_H5VtkDataWriter::New();
   h5writer->setFileName(hdfFile);
   err = h5writer->openFile(false); // Open a new file over writing any other file
@@ -583,9 +519,6 @@ int Reconstruction::writeHDF5GrainsFile(const std::string &hdfFile,
 
   err = h5writer->writeObjectIndex(hdfPaths);
   err = h5writer->closeFile();
-#else
-  std::cout << "HDF5 support was not enabled in this build. Please reconfigure and recompile the sources." << std::endl;
-#endif
   return err;
 }
 

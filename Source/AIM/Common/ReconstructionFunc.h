@@ -40,10 +40,8 @@
 #include "AIM/Common/Bin.h"
 #include "AIM/Common/AIMRandomNG.h"
 #include "AIM/ANG/AbstractAngDataLoader.h"
-#include "AIM/ANG/AngDirectoryPatterns.h"
-#if AIM_HDF5_SUPPORT
 #include "AIM/Reconstruction/H5ReconStatsWriter.h"
-#endif
+
 
 using namespace std;
 
@@ -57,7 +55,7 @@ public:
 
     MXA_SHARED_POINTERS(ReconstructionFunc)
     MXA_STATIC_NEW_MACRO(ReconstructionFunc)
-    MXA_INSTANCE_PROPERTY(AngDirectoryPatterns::Pointer, DirectoryPattern);
+//    MXA_INSTANCE_PROPERTY(AngDirectoryPatterns::Pointer, DirectoryPattern);
 
 
   virtual ~ReconstructionFunc();
@@ -188,16 +186,10 @@ public:
   void write_graindata(const std::string &graindataFile);
 	void align_sections(const std::string &filename );
 
-#if AIM_HDF5_SUPPORT
+
 void volume_stats(H5ReconStatsWriter::Pointer h5io);
 void volume_stats2D(H5ReconStatsWriter::Pointer h5io);
-#else
-void volume_stats(const std::string &statsfile,
-                                      const std::string &misorientationFile,
-                                      const std::string &microBinsFile);
 
-void volume_stats2D(const std::string &stats, const std::string &misorientation, const std::string &microBins);
-#endif
 
 
 

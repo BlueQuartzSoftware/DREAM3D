@@ -167,7 +167,7 @@ if (err < 0) {\
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-#if AIM_HDF5_SUPPORT
+#if 1
 int GrainGeneratorFunc::readReconStatsData(H5ReconStatsReader::Pointer h5io)
 {
   int err = -1;
@@ -468,8 +468,6 @@ void  GrainGeneratorFunc::readReconStatsData(string inname1)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-/* H5StatsReader::readAxisOrientationData(....) */
-#if AIM_HDF5_SUPPORT
 int  GrainGeneratorFunc::readAxisOrientationData(H5ReconStatsReader::Pointer h5io)
 {
   std::vector<double> density;
@@ -494,43 +492,11 @@ int  GrainGeneratorFunc::readAxisOrientationData(H5ReconStatsReader::Pointer h5i
   }
   return err;
 }
-#else
-void  GrainGeneratorFunc::readAxisOrientationData(string inname6)
-{
-  ifstream inputFile;
-  inputFile.open(inname6.c_str());
-  double density;
-  double totaldensity = 0;
-  string word;
-  inputFile >> word;
-  while (!inputFile.eof())
-  {
-    inputFile >> word;
-    if (word == "Grain_AxisODF")
-    {
-      for (long k = 0; k < (18 * 18 * 18); k++)
-      {
-        inputFile >> density;
-        totaldensity = totaldensity + density;
-        axisodf[k].density = totaldensity;
-      }
-    }
-    if (word == "Precipitate_AxisODF")
-    {
-      for (long k = 0; k < (18 * 18 * 18); k++)
-      {
-        inputFile >> density;
-        totaldensity = totaldensity + density;
-        precipaxisodf[k].density = totaldensity;
-      }
-    }
-  }
-  inputFile.close();
-}
-#endif
 
 
-#if AIM_HDF5_SUPPORT
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 int GrainGeneratorFunc::readODFData(H5ReconStatsReader::Pointer h5io)
 {
   std::vector<double> density;
@@ -553,25 +519,10 @@ int GrainGeneratorFunc::readODFData(H5ReconStatsReader::Pointer h5io)
   }
   return err;
 }
-#else
-void  GrainGeneratorFunc::readODFData(string inname7)
-{
-  ifstream inputFile;
-  inputFile.open(inname7.c_str());
-  double density;
-  int numbins = 0;
-  if(crystruct == 1) numbins = 36*36*12;
-  if(crystruct == 2) numbins = 18*18*18;
-  for(int i=0;i<numbins;i++)
-  {
-	  inputFile >> density;
-	  actualodf[i].density = density;
-  }
-  inputFile.close();
-}
-#endif
 
-#if AIM_HDF5_SUPPORT
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 int GrainGeneratorFunc::readMisorientationData(H5ReconStatsReader::Pointer h5io)
 {
   std::vector<double> density;
@@ -593,24 +544,11 @@ int GrainGeneratorFunc::readMisorientationData(H5ReconStatsReader::Pointer h5io)
   }
   return err;
 }
-#else
-void  GrainGeneratorFunc::readMisorientationData(string inname10)
-{
-  ifstream inputFile;
-  inputFile.open(inname10.c_str());
-  int count = 0;
-  double density = 0;
-  for (int k = 0; k < 36; k++)
-  {
-    inputFile >> density;
-    actualmdf[count].density = density;
-    count++;
-  }
-  inputFile.close();
-}
-#endif
 
-#if AIM_HDF5_SUPPORT
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 int GrainGeneratorFunc::readMicroTextureData(H5ReconStatsReader::Pointer h5io)
 {
   std::vector<double> density;
@@ -633,23 +571,9 @@ int GrainGeneratorFunc::readMicroTextureData(H5ReconStatsReader::Pointer h5io)
   return err;
 }
 
-#else
-void  GrainGeneratorFunc::readMicroTextureData(string inname11)
-{
-    ifstream inputFile;
-    inputFile.open(inname11.c_str());
-  int count = 0;
-  double density = 0;
-    for (int k = 0; k < 10; k++)
-    {
-    inputFile >> density;
-    actualmicrotex[count].density = density;
-        count++;
-    }
-    inputFile.close();
-}
-#endif
-
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void  GrainGeneratorFunc::generate_grain(int gnum)
 {
   int good = 0;
