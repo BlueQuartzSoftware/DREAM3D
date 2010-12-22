@@ -81,8 +81,6 @@ set (AIM_Threads_HDRS
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Threads/AIMThreadGroup.h   )
 cmp_IDE_SOURCE_PROPERTIES("Source/AIM/Threads" "${AIM_Threads_HDRS}" "${AIM_Threads_SRCS}" ${CMP_INSTALL_FILES})
 
-if (AIM_USE_HDF5)
-
 set (ANG_IMPORTER_SRCS
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/ANG/H5AngImporter.cpp
     )
@@ -90,8 +88,6 @@ set (ANG_IMPORTER_HDRS
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/ANG/H5AngImporter.h
     )
 cmp_IDE_SOURCE_PROPERTIES( "Source/AIM/AngImporter" "${ANG_IMPORTER_HDRS}" "${ANG_IMPORTER_SRCS}" ${CMP_INSTALL_FILES})
-    
-endif()
 
 
 SET (Reconstruction_SRCS

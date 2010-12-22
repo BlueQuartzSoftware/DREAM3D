@@ -3548,14 +3548,10 @@ void ReconstructionFunc::find_schmids()
   }
 }
 
-
-#if AIM_HDF5_SUPPORT
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void ReconstructionFunc::volume_stats(H5ReconStatsWriter::Pointer h5io)
-#else
-void ReconstructionFunc::volume_stats(const std::string &statsfile,
-                                      const std::string &misorientationFile,
-                                      const std::string &microBinsFile)
-#endif
 {
   double actualgrains = 0;
   double misocount = 0;
@@ -3919,85 +3915,21 @@ void ReconstructionFunc::volume_stats(const std::string &statsfile,
     texstrength = pow(texindex, 0.5);
   }
 
-#if AIM_HDF5_SUPPORT
+
   h5io->writeStatsData(maxdiameter, mindiameter,
                        avglogdiam, sdlogdiam, actualgrains,
                        neighborhood, svbovera, svcovera, svcoverb,
                        svschmid, svomega3);
   h5io->writeMisorientationBinsData(misobin, 36);
   h5io->writeMicroTextureData(microbin, 10, actualgrains);
-
-#else
-  ofstream outFile;
-  outFile.open(statsfile.c_str());
-  outFile << "STATS" << endl;
-  outFile << "Grain_Diameter_Info" << endl;
-  outFile << (maxdiameter - mindiameter) + 1 << " " << maxdiameter << " " << mindiameter << endl;
-  outFile << "Grain_Size_Distribution" << endl;
-  outFile << avglogdiam << " " << sdlogdiam << "	" << actualgrains << endl;
-  outFile << "Grain_SizeVBoverA_Distributions" << endl;
-  for (int temp7 = mindiameter; temp7 < (maxdiameter) + 1; temp7++)
-  {
-    outFile << temp7 << " " << svbovera[temp7][3] << " " << svbovera[temp7][4] << "	" << svbovera[temp7][0] << endl;
-  }
-  outFile << "Grain_SizeVCoverA_Distributions" << endl;
-  for (int temp7 = mindiameter; temp7 < (maxdiameter) + 1; temp7++)
-  {
-    outFile << temp7 << " " << svcovera[temp7][3] << "  " << svcovera[temp7][4] << "	" << svcovera[temp7][0] << endl;
-  }
-  outFile << "Grain_SizeVCoverB_Distributions" << endl;
-  for (int temp7 = mindiameter; temp7 < (maxdiameter) + 1; temp7++)
-  {
-    outFile << temp7 << " " << svcoverb[temp7][3] << "  " << svcoverb[temp7][4] << "	" << svcoverb[temp7][0] << endl;
-  }
-  outFile << "Grain_SizeVNeighbors_Distributions" << endl;
-  for (int temp7 = mindiameter; temp7 < (maxdiameter) + 1; temp7++)
-  {
-    outFile << temp7 << " " << neighborhood[temp7][1] << " " << neighborhood[temp7][2] << "	" << neighborhood[temp7][3] << " " << neighborhood[temp7][4] << "	"
-        << neighborhood[temp7][5] << " " << neighborhood[temp7][6] << "	" << neighborhood[temp7][7] << " " << neighborhood[temp7][8] << "	"
-        << neighborhood[temp7][0] << endl;
-  }
-  outFile << "Grain_SizeVOmega3_Distributions" << endl;
-  for (int temp7 = mindiameter; temp7 < (maxdiameter) + 1; temp7++)
-  {
-    outFile << temp7 << " " << svomega3[temp7][3] << " " << svomega3[temp7][4] << "	" << svomega3[temp7][0] << endl;
-  }
-  outFile.close();
-
-
-  ofstream outFile7;
-  outFile7.open(misorientationFile.c_str());
-  for (int i = 0; i < 36; i++)
-  {
-    outFile7 << misobin[i] << endl;
-  }
-  outFile7.close();
-
-  ofstream outFile8;
-  outFile8.open(microBinsFile.c_str());
-  for (int i = 0; i < 10; i++)
-  {
-    outFile8 << (microbin[i] / actualgrains) << endl;
-  }
-  outFile8.close();
-#endif
-
 }
 
 
-#if AIM_HDF5_SUPPORT
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void ReconstructionFunc::volume_stats2D(H5ReconStatsWriter::Pointer h5io)
-#else
-void ReconstructionFunc::volume_stats2D(const std::string &writename1,
-                                        const std::string &writename2,
-                                        const std::string &writename3)
-#endif
 {
-#if AIM_HDF5_SUPPORT
-  const std::string writename1("tmp/writename1.txt");
-  const std::string writename2("tmp/writename2.txt");
-  const std::string writename3("tmp/writename3.txt");
-#endif
   double actualgrains = 0;
   double misocount = 0;
   double avgvol = 0;
@@ -4255,7 +4187,7 @@ void ReconstructionFunc::volume_stats2D(const std::string &writename1,
       microbin[microcur]++;
     }
   }
- // double orand[15][2];
+
   double delta = m_pi/18;
   double texindex = 0;
   double texstrength = 0;
@@ -4286,135 +4218,7 @@ void ReconstructionFunc::volume_stats2D(const std::string &writename1,
     texindex = texindex/(18*18*18);
     texstrength = pow(texindex,0.5);
   }
-/*  double schmidvdis[10][25];
-  double schmidvdis2[10][25];
-  double disviq[25][50];
-  double disvdist[25][50];
-  for(int iter=0;iter<10;iter++)
-  {
-	for(int iter2=0;iter2<25;iter2++)
-	{
-		schmidvdis[iter][iter2] = 0;
-		schmidvdis2[iter][iter2] = 0;
-	}
-  }
-  for(int iter=0;iter<25;iter++)
-  {
-	for(int iter2=0;iter2<50;iter2++)
-	{
-		disviq[iter][iter2] = 0;
-		disvdist[iter][iter2] = 0;
-	}
-  }
-  for(int i=0;i<(xpoints*ypoints*zpoints);i++)
-  {
-	int gnum = voxels[i].grainname;
-	int gnumnn = voxels[i].nearestneighbor;
-	double schmid = grains[gnum].schmidfactor;
-	double schmidnn = grains[gnumnn].schmidfactor;
-	double disorientation = voxels[i].misorientation;
-	double imagequality = voxels[i].imagequality;
-	double distance = voxels[i].nearestneighbordistance;
-	int schmidbin = int((schmid-0.25)/0.025);
-	int schmidbinnn = int(((schmid/schmidnn)-0.5)/0.2);
-	int iqbin = int((imagequality)/50);
-	int distbin = int((distance)/0.2);
-	if(schmidbin > 9) schmidbin = 9;
-	if(schmidbinnn > 9) schmidbinnn = 9;
-	if(iqbin > 49) iqbin = 49;
-	if(distbin > 49) distbin = 49;
-	int disbin = int(disorientation/1.0);
-	if(disbin > 24) disbin = 24;
-	if(gnum != 0 && schmidbin >= 0)
-	{
-		schmidvdis[schmidbin][disbin]++;
-	}
-	if(gnumnn != 0 && schmidbinnn >= 0)
-	{
-		schmidvdis2[schmidbinnn][disbin]++;
-	}
-	if(gnum != 0)
-	{
-		disviq[disbin][iqbin]++;
-		disvdist[disbin][distbin]++;
-	}
-  }
-  string filename = "Schmid Factor v Disorientation.txt";
-  ofstream outFile2;
-  outFile2.open(filename.c_str());
-  for(int iter=0;iter<10;iter++)
-  {
-	for(int iter2=0;iter2<25;iter2++)
-	{
-		outFile2 << schmidvdis[iter][iter2] << "	";
-	}
-	outFile2 << endl;
-  }
-  outFile2 << endl;
-  for(int iter=0;iter<10;iter++)
-  {
-	for(int iter2=0;iter2<25;iter2++)
-	{
-		outFile2 << schmidvdis2[iter][iter2] << "	";
-	}
-	outFile2 << endl;
-  }
-  outFile2 << endl;
-  for(int iter=0;iter<25;iter++)
-  {
-	for(int iter2=0;iter2<50;iter2++)
-	{
-		outFile2 << disviq[iter][iter2] << "	";
-	}
-	outFile2 << endl;
-  }
-  outFile2 << endl;
-  for(int iter=0;iter<25;iter++)
-  {
-	for(int iter2=0;iter2<50;iter2++)
-	{
-		outFile2 << disvdist[iter][iter2] << "	";
-	}
-	outFile2 << endl;
-  }
-  outFile2.close();
-*/  ofstream outFile;
-  outFile.open(writename1.c_str());
-  outFile << "STATS" << endl;
-  outFile << "Grain_Diameter_Info" << endl;
-  outFile << (maxdiameter-mindiameter)+1 << " " << maxdiameter << " " << mindiameter << endl;
-  outFile << "Grain_Size_Distribution" << endl;
-  outFile << avglogdiam << " " << sdlogdiam << "	" << actualgrains << endl;
-  outFile << "Grain_SizeVBoverA_Distributions" << endl;
-  for(int temp7 = mindiameter; temp7 < (maxdiameter)+1; temp7++)
-  {
-	outFile << temp7 <<	" " << svbovera[temp7][3] << " " << svbovera[temp7][4] << "	" << svbovera[temp7][0] << endl;
-  }
-  outFile << "Grain_SizeVNeighbors_Distributions" << endl;
-  for(int temp7 = mindiameter; temp7 < (maxdiameter)+1; temp7++)
-  {
-    outFile << temp7 << " " << neighborhood[temp7][1] << " " << neighborhood[temp7][2] << "	" << neighborhood[temp7][3] << " " << neighborhood[temp7][4] << "	" <<  neighborhood[temp7][5] << " " << neighborhood[temp7][6] << "	" <<  neighborhood[temp7][7] << " " << neighborhood[temp7][8] << "	" << neighborhood[temp7][0]  << endl;
-  }
-//  outFile << "Grain_SizeVOmega3_Distributions" << endl;
-//  for(int temp7 = mindiameter; temp7 < (maxdiameter)+1; temp7++)
-//  {
-//    outFile << temp7 << " " << svomega3[temp7][3] << " " << svomega3[temp7][4] << "	" << svomega3[temp7][0]  << endl;
-//  }
-  outFile.close();
-  ofstream outFile7;
-  outFile7.open(writename2.c_str());
-  for(int i = 0; i < 36; i++)
-  {
-    outFile7 << misobin[i] << endl;
-  }
-  outFile7.close();
-  ofstream outFile8;
-  outFile8.open(writename3.c_str());
-  for(int i = 0; i < 10; i++)
-  {
-    outFile8 << (microbin[i]/actualgrains) << endl;
-  }
-  outFile8.close();
+
 }
 
 #define WRITE_VTK_GRAIN_HEADER()\
@@ -4557,7 +4361,6 @@ int ReconstructionFunc::writeIPFVizFile(const std::string &file)
     fprintf(f, "%f %f %f\n",red, green, blue);
   }
 
-
   fclose(f);
   return 0;
 }
@@ -4614,93 +4417,9 @@ int  ReconstructionFunc::writeDownSampledVizFile(const std::string &file )
   return 0;
 }
 
-
-#if 0
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ReconstructionFunc::calculateCubicIPFColor(double q1[4],
-    double &red, double &green, double &blue)
-{
-  double p[3];
-  double d[3];
-  double theta, phi;
-  p[0] = (2 * q1[0] * q1[2] + 2 * q1[1] * q1[3]) * 1;
-  p[1] = (2 * q1[1] * q1[2] + 2 * q1[0] * q1[3]) * 1;
-  p[2] = (1 - 2 * q1[0] * q1[0] - 2 * q1[1] * q1[1]) * 1;
-  double denom = p[0] * p[0] + p[1] * p[1] + p[2] * p[2];
-  denom = pow(denom, 0.5);
-  p[0] = fabs(p[0] / denom);
-  p[1] = fabs(p[1] / denom);
-  p[2] = fabs(p[2] / denom);
-  int j, k, flag = 1;
-  double temp;
-  for (j = 0; (j < 3) && flag == 1; j++)
-  {
-    flag = 0;
-    for (k = 0; k < 2; k++)
-    {
-      if (p[k + 1] < p[k])
-      {
-        temp = p[k];
-        p[k] = p[k + 1];
-        p[k + 1] = temp;
-        flag = 1;
-      }
-    }
-
-  }
-
-  theta = (p[0] * 0) + (p[1] * -sqrt(2.0) / 2.0) + (p[2] * sqrt(2.0) / 2.0);
-  if (theta > 1) theta = 1;
-
-  if (theta < -1) theta = -1;
-
-  theta = (180.0 / m_pi) * acos(theta);
-  red = (90.0 - theta) / 45.0;
-  d[0] = (p[1] * 1) - (p[2] * 0);
-  d[1] = (p[2] * 0) - (p[0] * 1);
-  d[2] = (p[0] * 0) - (p[1] * 0);
-  if (d[0] != 0) d[0] = -(d[1] + d[2]) / d[0];
-
-  if (d[0] == 0) d[0] = 0;
-
-  d[1] = 1;
-  d[2] = 1;
-  double norm = pow(((d[0] * d[0]) + (d[1] * d[1]) + (d[2] * d[2])), 0.5);
-  d[0] = d[0] / norm;
-  d[1] = d[1] / norm;
-  d[2] = d[2] / norm;
-  phi = (d[0] * 0) + (d[1] * sqrt(2.0) / 2.0) + (d[2] * sqrt(2.0) / 2.0);
-  if (phi > 1) phi = 1;
-
-  if (phi < -1) phi = -1;
-
-  phi = (180.0 / m_pi) * acos(phi);
-  green = (1 - red) * ((35.26 - phi) / 35.26);
-  blue = (1 - red) - green;
-  double max = red;
-  if (green > max) max = green;
-
-  if (blue > max) max = blue;
-
-  red = red / max;
-  green = green / max;
-  blue = blue / max;
-  red = (0.75 * red) + 0.25;
-  green = (0.75 * green) + 0.25;
-  blue = (0.75 * blue) + 0.25;
-}
-#endif
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-
-
-
-
 void ReconstructionFunc::write_graindata(const std::string &graindataFile)
 {
   vector<int>* nlist;

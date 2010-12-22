@@ -42,14 +42,6 @@ IF (BUILD_SHARED_LIBS)
     ENDIF (WIN32)
 ENDIF (BUILD_SHARED_LIBS)
 
-
-set(HDF5_SRCS "")
-set(HDF5_HDRS "")
-set(AIM_HDF5_SUPPORT "0")
-if (AIM_USE_HDF5)
-    set(AIM_HDF5_SUPPORT "1")
-endif()
-
 SET (AIMCommon_SRCS
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/GrainGeneratorFunc.cpp
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/SurfaceMeshFunc.cpp
@@ -66,6 +58,9 @@ SET (AIMCommon_SRCS
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Quaternions.cpp
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/VTKFileUtils.cpp
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/MisorientationCalculations.cpp
+    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/HDF5/AIM_H5VtkDataWriter.cpp
+    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Reconstruction/H5ReconStatsWriter.cpp
+    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Reconstruction/H5ReconStatsReader.cpp
     )
 
 SET (AIMCommon_HDRS
@@ -86,30 +81,19 @@ SET (AIMCommon_HDRS
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/VTKFileUtils.h
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Quaternions.h
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/MisorientationCalculations.h
-)
-
-# --------------------------------------------------------------------
-if (AIM_USE_HDF5)
-    SET (AIMCommon_SRCS
-        ${AIMCommon_SRCS}
-        ${AIMRepresentation_SOURCE_DIR}/Source/AIM/HDF5/AIM_H5VtkDataWriter.cpp
-        ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Reconstruction/H5ReconStatsWriter.cpp
-        ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Reconstruction/H5ReconStatsReader.cpp
+    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/HDF5/AIM_H5VtkDataWriter.h
+    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/HDF5/VTKH5Constants.h
+    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Reconstruction/H5ReconStatsWriter.h
+    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Reconstruction/H5ReconStatsReader.h
         )
-    SET (AIMCommon_HDRS
-        ${AIMCommon_HDRS}
-        ${AIMRepresentation_SOURCE_DIR}/Source/AIM/HDF5/AIM_H5VtkDataWriter.h
-        ${AIMRepresentation_SOURCE_DIR}/Source/AIM/HDF5/VTKH5Constants.h
-        ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Reconstruction/H5ReconStatsWriter.h
-        ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Reconstruction/H5ReconStatsReader.h
-        )
-    include_directories(${HDF5_INCLUDE_DIR})
-    set (AIMCOMMON_DEP_LIBS ${HDF5_LIBRARIES} MXADataModel)
-    cmp_IDE_SOURCE_PROPERTIES( "Source/AIM/HDF5" "${HDF5_HDRS}" "${HDF5_SRCS}" ${CMP_INSTALL_FILES})
-endif()
 
 cmp_IDE_SOURCE_PROPERTIES( "Source/AIM/Common" "${AIMCommon_HDRS}" "${AIMCommon_SRCS}" ${CMP_INSTALL_FILES})
 
+# --------------------------------------------------------------------
+include_directories(${HDF5_INCLUDE_DIR})
+set (AIMCOMMON_DEP_LIBS ${HDF5_LIBRARIES} MXADataModel)
+
+# --------------------------------------------------------------------
 include (${AIMRepresentation_SOURCE_DIR}/Source/AIM/ANG/Sources.cmake)
 
 
