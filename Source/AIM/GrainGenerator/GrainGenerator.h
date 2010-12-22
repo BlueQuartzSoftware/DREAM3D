@@ -69,11 +69,12 @@ Q_OBJECT
     MXA_INSTANCE_PROPERTY(double, XResolution)
     MXA_INSTANCE_PROPERTY(double, YResolution)
     MXA_INSTANCE_PROPERTY(double, ZResolution)
+    MXA_INSTANCE_PROPERTY(double, FillingErrorWeight)
+    MXA_INSTANCE_PROPERTY(double, NeighborhoodErrorWeight)
+    MXA_INSTANCE_PROPERTY(double, SizeDistErrorWeight)
     MXA_INSTANCE_PROPERTY(double, FractionPrecipitates)
-    MXA_INSTANCE_PROPERTY(int, OverlapAllowed)
     MXA_INSTANCE_PROPERTY(bool, AlreadyFormed)
     MXA_INSTANCE_PROPERTY(int, Precipitates)
-    MXA_INSTANCE_PROPERTY(int, OverlapAssignment)
     MXA_INSTANCE_PROPERTY(AIM::Reconstruction::CrystalStructure, CrystalStructure)
 
     MXA_INSTANCE_PROPERTY(int, ErrorCondition);

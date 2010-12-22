@@ -3305,7 +3305,7 @@ void  ReconstructionFunc::find_colors()
       red = 1.0 / 3.0;
       green = 1.0 / 3.0;
       blue = 1.0 / 3.0;
-      OIMColoring::CalculateHexIPFColor(q1, red, green, blue);
+      OIMColoring::CalculateHexIPFColor(q1, rgb);
       m_Grains[i].red = red/255.0;
       m_Grains[i].green = green/255.0;
       m_Grains[i].blue = blue/255.0;
@@ -4195,10 +4195,6 @@ void ReconstructionFunc::volume_stats2D(const std::string &writename1,
   double omega3var = sdomega3;
 //  double pbovera = avgbovera*(((avgbovera*(1-avgbovera))/boveravar)-1);
 //  double qbovera = (1-avgbovera)*(((avgbovera*(1-avgbovera))/boveravar)-1);
-//  double pcovera = avgcovera*(((avgcovera*(1-avgcovera))/coveravar)-1);
-//  double qcovera = (1-avgcovera)*(((avgcovera*(1-avgcovera))/coveravar)-1);
-//  double pcoverb = avgcoverb*(((avgcoverb*(1-avgcoverb))/coverbvar)-1);
-//  double qcoverb = (1-avgcoverb)*(((avgcoverb*(1-avgcoverb))/coverbvar)-1);
   sdvol = pow(sdvol,0.5);
   sdlnvol = pow(sdlnvol,0.5);
   sdbovera = pow(sdbovera,0.5);
@@ -4255,7 +4251,6 @@ void ReconstructionFunc::volume_stats2D(const std::string &writename1,
       microbin[microcur]++;
     }
   }
- // double orand[15][2];
   double delta = m_pi/18;
   double texindex = 0;
   double texstrength = 0;
@@ -4286,99 +4281,7 @@ void ReconstructionFunc::volume_stats2D(const std::string &writename1,
     texindex = texindex/(18*18*18);
     texstrength = pow(texindex,0.5);
   }
-/*  double schmidvdis[10][25];
-  double schmidvdis2[10][25];
-  double disviq[25][50];
-  double disvdist[25][50];
-  for(int iter=0;iter<10;iter++)
-  {
-	for(int iter2=0;iter2<25;iter2++)
-	{
-		schmidvdis[iter][iter2] = 0;
-		schmidvdis2[iter][iter2] = 0;
-	}
-  }
-  for(int iter=0;iter<25;iter++)
-  {
-	for(int iter2=0;iter2<50;iter2++)
-	{
-		disviq[iter][iter2] = 0;
-		disvdist[iter][iter2] = 0;
-	}
-  }
-  for(int i=0;i<(xpoints*ypoints*zpoints);i++)
-  {
-	int gnum = voxels[i].grainname;
-	int gnumnn = voxels[i].nearestneighbor;
-	double schmid = grains[gnum].schmidfactor;
-	double schmidnn = grains[gnumnn].schmidfactor;
-	double disorientation = voxels[i].misorientation;
-	double imagequality = voxels[i].imagequality;
-	double distance = voxels[i].nearestneighbordistance;
-	int schmidbin = int((schmid-0.25)/0.025);
-	int schmidbinnn = int(((schmid/schmidnn)-0.5)/0.2);
-	int iqbin = int((imagequality)/50);
-	int distbin = int((distance)/0.2);
-	if(schmidbin > 9) schmidbin = 9;
-	if(schmidbinnn > 9) schmidbinnn = 9;
-	if(iqbin > 49) iqbin = 49;
-	if(distbin > 49) distbin = 49;
-	int disbin = int(disorientation/1.0);
-	if(disbin > 24) disbin = 24;
-	if(gnum != 0 && schmidbin >= 0)
-	{
-		schmidvdis[schmidbin][disbin]++;
-	}
-	if(gnumnn != 0 && schmidbinnn >= 0)
-	{
-		schmidvdis2[schmidbinnn][disbin]++;
-	}
-	if(gnum != 0)
-	{
-		disviq[disbin][iqbin]++;
-		disvdist[disbin][distbin]++;
-	}
-  }
-  string filename = "Schmid Factor v Disorientation.txt";
-  ofstream outFile2;
-  outFile2.open(filename.c_str());
-  for(int iter=0;iter<10;iter++)
-  {
-	for(int iter2=0;iter2<25;iter2++)
-	{
-		outFile2 << schmidvdis[iter][iter2] << "	";
-	}
-	outFile2 << endl;
-  }
-  outFile2 << endl;
-  for(int iter=0;iter<10;iter++)
-  {
-	for(int iter2=0;iter2<25;iter2++)
-	{
-		outFile2 << schmidvdis2[iter][iter2] << "	";
-	}
-	outFile2 << endl;
-  }
-  outFile2 << endl;
-  for(int iter=0;iter<25;iter++)
-  {
-	for(int iter2=0;iter2<50;iter2++)
-	{
-		outFile2 << disviq[iter][iter2] << "	";
-	}
-	outFile2 << endl;
-  }
-  outFile2 << endl;
-  for(int iter=0;iter<25;iter++)
-  {
-	for(int iter2=0;iter2<50;iter2++)
-	{
-		outFile2 << disvdist[iter][iter2] << "	";
-	}
-	outFile2 << endl;
-  }
-  outFile2.close();
-*/  ofstream outFile;
+  ofstream outFile;
   outFile.open(writename1.c_str());
   outFile << "STATS" << endl;
   outFile << "Grain_Diameter_Info" << endl;
@@ -4519,9 +4422,6 @@ int ReconstructionFunc::writeVisualizationFile(const std::string &file)
   return 0;
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 int ReconstructionFunc::writeIPFVizFile(const std::string &file)
 {
   FILE* f = NULL;
@@ -4544,7 +4444,6 @@ int ReconstructionFunc::writeIPFVizFile(const std::string &file)
       red = static_cast<double>(double(rgb[0])/255.0);
       green = static_cast<double>(double(rgb[1])/255.0);
       blue = static_cast<double>(double(rgb[2])/255.0);
-      //  calculateCubicIPFColor( q1, red, green, blue);
     }
     if(crystruct == AIM::Reconstruction::Hexagonal)
     {
@@ -4552,7 +4451,10 @@ int ReconstructionFunc::writeIPFVizFile(const std::string &file)
       q1[1]=voxels[i].quat[2];
       q1[2]=voxels[i].quat[3];
       q1[3]=voxels[i].quat[4];
-      OIMColoring::CalculateHexIPFColor(q1, red, green, blue);
+      OIMColoring::CalculateHexIPFColor(q1, rgb);
+      red = static_cast<double>(double(rgb[0])/255.0);
+      green = static_cast<double>(double(rgb[1])/255.0);
+      blue = static_cast<double>(double(rgb[2])/255.0);
     }
     fprintf(f, "%f %f %f\n",red, green, blue);
   }
@@ -4561,9 +4463,6 @@ int ReconstructionFunc::writeIPFVizFile(const std::string &file)
   fclose(f);
   return 0;
 }
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 int  ReconstructionFunc::writeDownSampledVizFile(const std::string &file )
 {
   FILE* f = NULL;
@@ -4613,91 +4512,6 @@ int  ReconstructionFunc::writeDownSampledVizFile(const std::string &file )
   fclose(f);
   return 0;
 }
-
-
-#if 0
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void ReconstructionFunc::calculateCubicIPFColor(double q1[4],
-    double &red, double &green, double &blue)
-{
-  double p[3];
-  double d[3];
-  double theta, phi;
-  p[0] = (2 * q1[0] * q1[2] + 2 * q1[1] * q1[3]) * 1;
-  p[1] = (2 * q1[1] * q1[2] + 2 * q1[0] * q1[3]) * 1;
-  p[2] = (1 - 2 * q1[0] * q1[0] - 2 * q1[1] * q1[1]) * 1;
-  double denom = p[0] * p[0] + p[1] * p[1] + p[2] * p[2];
-  denom = pow(denom, 0.5);
-  p[0] = fabs(p[0] / denom);
-  p[1] = fabs(p[1] / denom);
-  p[2] = fabs(p[2] / denom);
-  int j, k, flag = 1;
-  double temp;
-  for (j = 0; (j < 3) && flag == 1; j++)
-  {
-    flag = 0;
-    for (k = 0; k < 2; k++)
-    {
-      if (p[k + 1] < p[k])
-      {
-        temp = p[k];
-        p[k] = p[k + 1];
-        p[k + 1] = temp;
-        flag = 1;
-      }
-    }
-
-  }
-
-  theta = (p[0] * 0) + (p[1] * -sqrt(2.0) / 2.0) + (p[2] * sqrt(2.0) / 2.0);
-  if (theta > 1) theta = 1;
-
-  if (theta < -1) theta = -1;
-
-  theta = (180.0 / m_pi) * acos(theta);
-  red = (90.0 - theta) / 45.0;
-  d[0] = (p[1] * 1) - (p[2] * 0);
-  d[1] = (p[2] * 0) - (p[0] * 1);
-  d[2] = (p[0] * 0) - (p[1] * 0);
-  if (d[0] != 0) d[0] = -(d[1] + d[2]) / d[0];
-
-  if (d[0] == 0) d[0] = 0;
-
-  d[1] = 1;
-  d[2] = 1;
-  double norm = pow(((d[0] * d[0]) + (d[1] * d[1]) + (d[2] * d[2])), 0.5);
-  d[0] = d[0] / norm;
-  d[1] = d[1] / norm;
-  d[2] = d[2] / norm;
-  phi = (d[0] * 0) + (d[1] * sqrt(2.0) / 2.0) + (d[2] * sqrt(2.0) / 2.0);
-  if (phi > 1) phi = 1;
-
-  if (phi < -1) phi = -1;
-
-  phi = (180.0 / m_pi) * acos(phi);
-  green = (1 - red) * ((35.26 - phi) / 35.26);
-  blue = (1 - red) - green;
-  double max = red;
-  if (green > max) max = green;
-
-  if (blue > max) max = blue;
-
-  red = red / max;
-  green = green / max;
-  blue = blue / max;
-  red = (0.75 * red) + 0.25;
-  green = (0.75 * green) + 0.25;
-  blue = (0.75 * blue) + 0.25;
-}
-#endif
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-
 
 
 
@@ -4894,9 +4708,6 @@ void ReconstructionFunc::write_grains(const std::string &outputdir)
   }
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void ReconstructionFunc::write_axisodf(const std::string &axisFile)
 {
   ofstream outFile;
@@ -4910,9 +4721,6 @@ void ReconstructionFunc::write_axisodf(const std::string &axisFile)
   outFile.close();
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void ReconstructionFunc::write_eulerodf(const std::string &eulerFile)
 {
   ofstream outFile;

@@ -290,6 +290,9 @@ void RepresentationUI::readSettings()
   READ_SETTING(prefs, gg_XResolution, ok, d, 0.25 , Double);
   READ_SETTING(prefs, gg_YResolution, ok, d, 0.25 , Double);
   READ_SETTING(prefs, gg_ZResolution, ok, d, 0.25 , Double);
+  READ_SETTING(prefs, gg_FillingErrorWeight, ok, d, 1.0 , Double);
+  READ_SETTING(prefs, gg_NeighborhoodErrorWeight, ok, d, 1.0 , Double);
+  READ_SETTING(prefs, gg_SizeDistErrorWeight, ok, d, 1.0 , Double);
   READ_SETTING(prefs, gg_FractionPrecipitates, ok, d, 25 , Double);
   READ_SETTING(prefs, gg_NumGrains, ok, i, 1000 , Int);
 
@@ -373,6 +376,9 @@ void RepresentationUI::writeSettings()
   WRITE_SETTING(prefs, gg_XResolution )
   WRITE_SETTING(prefs, gg_YResolution )
   WRITE_SETTING(prefs, gg_ZResolution )
+  WRITE_SETTING(prefs, gg_FillingErrorWeight )
+  WRITE_SETTING(prefs, gg_NeighborhoodErrorWeight )
+  WRITE_SETTING(prefs, gg_SizeDistErrorWeight )
   WRITE_SETTING(prefs, gg_FractionPrecipitates )
   WRITE_SETTING(prefs, gg_NumGrains )
 
@@ -1000,7 +1006,8 @@ void RepresentationUI::gg_SetupGui()
 #endif
 
   m_WidgetList << gg_InputDir << gg_InputDirBtn << gg_OutputDir << gg_OutputDirBtn;
-  m_WidgetList << gg_CrystalStructure << gg_NumGrains << gg_XResolution << gg_YResolution << gg_ZResolution << gg_FractionPrecipitates;
+  m_WidgetList << gg_CrystalStructure << gg_NumGrains << gg_XResolution << gg_YResolution << gg_ZResolution << gg_FillingErrorWeight,
+  m_WidgetList << gg_NeighborhoodErrorWeight << gg_SizeDistErrorWeight << gg_FractionPrecipitates;
   m_WidgetList << gg_ShapeClass << gg_Precipitates << gg_AlreadyFormed;
 
 }
@@ -1163,6 +1170,9 @@ void RepresentationUI::on_gg_GoBtn_clicked()
   m_GrainGenerator->setXResolution(gg_XResolution->value());
   m_GrainGenerator->setYResolution(gg_YResolution->value());
   m_GrainGenerator->setZResolution(gg_ZResolution->value());
+  m_GrainGenerator->setFillingErrorWeight(gg_FillingErrorWeight->value());
+  m_GrainGenerator->setFillingErrorWeight(gg_NeighborhoodErrorWeight->value());
+  m_GrainGenerator->setFillingErrorWeight(gg_SizeDistErrorWeight->value());
   m_GrainGenerator->setFractionPrecipitates(gg_FractionPrecipitates->value());
 
 

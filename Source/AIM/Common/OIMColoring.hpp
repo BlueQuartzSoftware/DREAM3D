@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2010, Michael A. Jackson. BlueQuartz Software
+//  Copyright (c) 2010, Michael A. Jackson. rgb[2]Quartz Software
 //  Copyright (c) 2010, Michael Groeber. US Air Force
 //  All rights reserved.
 //  BSD License: http://www.opensource.org/licenses/bsd-license.html
@@ -22,7 +22,7 @@
 * @class OIMColoring OIMColoring.hpp Server/IPFFilter/OIMColoring.hpp
 * @brief This class helps generate an RGB color based on a Euler Angle and a
 * Reference Direction.
-* @author Michael A. Jackson for BlueQuartz Software
+* @author Michael A. Jackson for rgb[2]Quartz Software
 * @author Michael Groeber for the US Air Force
 * @date Feb 24, 2010
 * @version 1.0
@@ -69,9 +69,9 @@ class OIMColoring
 
 /**
  * @brief Returns the maximum value of the three values
- * @param red
- * @param green
- * @param blue
+ * @param rgb[0]
+ * @param rgb[1]
+ * @param rgb[2]
  * @return
  */
     template<typename T>
@@ -224,12 +224,12 @@ class OIMColoring
 /**
  *
  * @param q1 Quaternion to calculate the RGB value for
- * @param red in/out Red value expressed as a decimal between 0 and 1
- * @param green in/out Green value expressed as a decimal between 0 and 1
- * @param blue in/out Blue value expressed as a decimal between 0 and 1
+ * @param rgb[0] in/out rgb[0] value expressed as a decimal between 0 and 1
+ * @param rgb[1] in/out rgb[1] value expressed as a decimal between 0 and 1
+ * @param rgb[2] in/out rgb[2] value expressed as a decimal between 0 and 1
  */
     void static CalculateHexIPFColor(double q1[4],
-                              double &red, double &green, double &blue)
+                              unsigned char* rgb)
     {
       double qc[4];
       double p[3];
@@ -273,29 +273,34 @@ class OIMColoring
           if (theta < -1) theta = -1;
 
           theta = (180.0 / MXA_PI) * acos(theta);
-          red = (90.0 - theta) / 90.0;
+          rgb[0] = (90.0 - theta) / 90.0;
           phi = (d[0] * 1) + (d[1] * 0) + (d[2] * 0);
           if (phi > 1) phi = 1;
 
           if (phi < -1) phi = -1;
 
           phi = (180.0 / MXA_PI) * acos(phi);
-          green = (1 - red) * ((30.0 - phi) / 30.0);
-          blue = (1 - red) - green;
+          rgb[1] = (1 - rgb[0]) * ((30.0 - phi) / 30.0);
+          rgb[2] = (1 - rgb[0]) - rgb[1];
         }
       }
 
-      double max = red;
-      if (green > max) max = green;
+      double max = rgb[0];
+      if (rgb[1] > max) max = rgb[1];
 
-      if (blue > max) max = blue;
+      if (rgb[2] > max) max = rgb[2];
 
-      red = red / max;
-      green = green / max;
-      blue = blue / max;
-      red = (0.75 * red) + 0.25;
-      green = (0.75 * green) + 0.25;
-      blue = (0.75 * blue) + 0.25;
+      rgb[0] = rgb[0] / max;
+      rgb[1] = rgb[1] / max;
+      rgb[2] = rgb[2] / max;
+      rgb[0] = (0.75 * rgb[0]) + 0.25;
+      rgb[1] = (0.75 * rgb[1]) + 0.25;
+      rgb[2] = (0.75 * rgb[2]) + 0.25;
+
+      // Multiply by 255 to get an R/G/B value
+      rgb[0] = rgb[0] * 255.0f;
+      rgb[1] = rgb[1] * 255.0f;
+      rgb[2] = rgb[2] * 255.0f;
     }
 
 
