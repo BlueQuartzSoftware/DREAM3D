@@ -152,7 +152,7 @@ void StatsGeneratorUI::setupGui()
   m_grid->setMinPen(QPen(Qt::lightGray, 0, Qt::DotLine));
 //  m_grid->attach(m_HistogramPlot);
 
-  plotSizeDistribution();
+//  plotSizeDistribution();
 
 #if 0
   m_zoomer = new QwtPlotZoomer(QwtPlot::xBottom, QwtPlot::yLeft, m_HistogramPlot->canvas());
@@ -362,10 +362,10 @@ void StatsGeneratorUI::plotSizeDistribution()
   QwtArray<double> numgrains;
   err = sg.GenCutOff<QwtArray<double> >(mu, sigma, cutOff, xCo, yCo, yMax, numsizebins, binsizes, numgrains);
 
-  for (int i = 0; i < 6; ++i )
-  {
-    std::cout << xCo[i] << " "<< yCo[i] << std::endl;
-  }
+//  for (int i = 0; i < 6; ++i )
+//  {
+//    std::cout << xCo[i] << " "<< yCo[i] << std::endl;
+//  }
 
   if (NULL == m_SizeDistributionCurve)
   {
