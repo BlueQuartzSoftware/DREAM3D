@@ -101,30 +101,30 @@ template<typename T>
     template<typename T>
     int GenCutOff(double m, double s, double value, T &x, T &y, double yMax, int &numsizebins, T &binsizes, T &numgrains)
     {
-      int err=0;
+      int err = 0;
       double lognormin, lognormout, max, min;
       double s2 = pow(s, 2);
       double root2pi = pow((2.0 * 3.1415926535897), 0.5);
       x.resize(6);
       y.resize(6);
-      min = exp(m - (value*s));
-      max = exp(m + (value*s));
+      min = exp(m - (value * s));
+      max = exp(m + (value * s));
       x[0] = x[1] = x[2] = min;
       x[3] = x[4] = x[5] = max;
 
       y[0] = y[2] = y[3] = y[5] = 0.0;
       y[1] = y[4] = yMax;
 
-	  numsizebins = int(max)-int(min)+1;
-	  binsizes.resize(numsizebins);
-	  numgrains.resize(numsizebins);
-	  for(int i=0;i<numsizebins;i++)
-	  {
-		binsizes[i] = int(min) + i;
-        lognormin = (int(min) + i) + (1.0/2.0);
+      numsizebins = int(max) - int(min) + 1;
+      binsizes.resize(numsizebins);
+      numgrains.resize(numsizebins);
+      for (int i = 0; i < numsizebins; i++)
+      {
+        binsizes[i] = int(min) + i;
+        lognormin = (int(min) + i) + (1.0 / 2.0);
         lognormout = (1.0 / (lognormin * s * root2pi)) * exp(-((log(lognormin) - m) * (log(lognormin) - m)) / (2 * s2));
-		numgrains[i] = lognormout*1000;
-	  }
+        numgrains[i] = lognormout * 1000;
+      }
       return err;
     }
 

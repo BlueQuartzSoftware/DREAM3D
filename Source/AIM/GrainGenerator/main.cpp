@@ -81,10 +81,10 @@ int main(int argc, char **argv)
     cmd.add(yRes);
     TCLAP::ValueArg<double>  zRes( "z", "zRes", "Z resolution of your volume", true, 0.0, "Z resolution of your volume");
     cmd.add(zRes);
-    TCLAP::ValueArg<double>  overlapAllowed( "", "overlapAllowed", "The overlap between grains that is acceptable", true, 0.0, "The overlap between grains that is acceptable");
-    cmd.add(overlapAllowed);
-    TCLAP::ValueArg<int>  overlapAssignment( "", "overlapAssignment", "Enter how the overlap between grains is handled (1)Rigid (2)Progressive.", true, 1, "Enter how the overlap between grains is handled (1)Rigid (2)Progressive.");
-    cmd.add(overlapAssignment);
+//    TCLAP::ValueArg<double>  overlapAllowed( "", "overlapAllowed", "The overlap between grains that is acceptable", true, 0.0, "The overlap between grains that is acceptable");
+//    cmd.add(overlapAllowed);
+//    TCLAP::ValueArg<int>  overlapAssignment( "", "overlapAssignment", "Enter how the overlap between grains is handled (1)Rigid (2)Progressive.", true, 1, "Enter how the overlap between grains is handled (1)Rigid (2)Progressive.");
+//    cmd.add(overlapAssignment);
     TCLAP::ValueArg<int>  crystruct( "", "crystruct", "Do you have a HCP (1) or FCC (2) material", true, 2, "Do you have a HCP (1) or FCC (2) material");
     cmd.add(crystruct);
 
