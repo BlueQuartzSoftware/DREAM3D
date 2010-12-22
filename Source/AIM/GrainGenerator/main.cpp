@@ -106,8 +106,6 @@ int main(int argc, char **argv)
     r->setXResolution(xRes.getValue());
     r->setYResolution(yRes.getValue());
     r->setZResolution(zRes.getValue());
-    r->setOverlapAllowed(overlapAllowed.getValue());
-    r->setOverlapAssignment(overlapAssignment.getValue());
     r->setCrystalStructure( static_cast<AIM::Reconstruction::CrystalStructure>(crystruct.getValue()) );
 
     r->compute();
