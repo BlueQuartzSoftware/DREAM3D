@@ -84,11 +84,11 @@ template<typename T>
       double root2pi = pow((2.0 * 3.1415926535897), 0.5);
       x.resize(size);
       y.resize(size);
-      min = exp(m - (10 * s));
-      max = exp(m + (10 * s));
+      min = exp(m - (5 * s));
+      max = exp(m + (5 * s));
       for (int i = 0; i < size; i++)
       {
-        lognormin = (i * ((max - min) / double(size))) + (((max - min) / double(size)) / 2.0);
+        lognormin = (i * ((max - min) / double(size))) + (((max - min) / double(size)) / 2.0) + min;
         lognormout = (1.0 / (lognormin * s * root2pi)) * exp(-((log(lognormin) - m) * (log(lognormin) - m)) / (2 * s2));
         x[i] = lognormin;
         y[i] = lognormout * ((max - min) / double(size));
@@ -99,10 +99,12 @@ template<typename T>
 
 
     template<typename T>
-    int GenCutOff(double m, double s, double value, T &x, T &y, double yMax)
+    int GenCutOff(double m, double s, double value, T &x, T &y, double yMax, int &numsizebins, T &binsizes, T &numgrains)
     {
       int err=0;
-      double max, min;
+      double lognormin, lognormout, max, min;
+      double s2 = pow(s, 2);
+      double root2pi = pow((2.0 * 3.1415926535897), 0.5);
       x.resize(6);
       y.resize(6);
       min = exp(m - (value*s));
@@ -113,6 +115,16 @@ template<typename T>
       y[0] = y[2] = y[3] = y[5] = 0.0;
       y[1] = y[4] = yMax;
 
+	  numsizebins = int(max)-int(min)+1;
+	  binsizes.resize(numsizebins);
+	  numgrains.resize(numsizebins);
+	  for(int i=0;i<numsizebins;i++)
+	  {
+		binsizes[i] = int(min) + i;
+        lognormin = (int(min) + i) + (1.0/2.0);
+        lognormout = (1.0 / (lognormin * s * root2pi)) * exp(-((log(lognormin) - m) * (log(lognormin) - m)) / (2 * s2));
+		numgrains[i] = lognormout*1000;
+	  }
       return err;
     }
 

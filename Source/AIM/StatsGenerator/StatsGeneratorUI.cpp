@@ -357,7 +357,10 @@ void StatsGeneratorUI::plotSizeDistribution()
 
   QwtArray<double> xCo;
   QwtArray<double> yCo;
-  err = sg.GenCutOff<QwtArray<double> >(mu, sigma, cutOff, xCo, yCo, yMax);
+  int numsizebins = 1;
+  QwtArray<double> binsizes;
+  QwtArray<double> numgrains;
+  err = sg.GenCutOff<QwtArray<double> >(mu, sigma, cutOff, xCo, yCo, yMax, numsizebins, binsizes, numgrains);
 
   for (int i = 0; i < 6; ++i )
   {

@@ -168,7 +168,6 @@ if (err < 0) {\
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-#if 1
 int GrainGeneratorFunc::readReconStatsData(H5ReconStatsReader::Pointer h5io)
 {
   int err = -1;
@@ -272,203 +271,7 @@ int GrainGeneratorFunc::readReconStatsData(H5ReconStatsReader::Pointer h5io)
 
   return err;
 }
-#else
-void  GrainGeneratorFunc::readReconStatsData(string inname1)
-{
-  ifstream inputFile;
-  inputFile.open(inname1.c_str());
-  int diam = 0;
-  //int ngrains = 0;
-  int nprecips = 0;
-  double param1 = 0;
-  double param2 = 0;
-  double shell0a, shell1a, shell2a, shell3a;
-  double shell0s, shell1s, shell2s, shell3s;
-  string word;
-  inputFile >> word;
-  while (!inputFile.eof())
-  {
-    inputFile >> word;
-//    if (word == "Grain_Diameter_Info") // Done
-//    {
-//      inputFile >> numdiameters >> maxdiameter >> mindiameter;
-//    }
-    if (word == "Precipitate_Diameter_Info")
-    {
-      inputFile >> numprecipdiameters >> maxprecipdiameter >> minprecipdiameter;
-    }
-//    grainsizedist.resize(3);
-//    if (word == "Grain_Size_Distribution") // DONE
-//    {
-//      inputFile >> avgdiam >> sddiam >> ngrains;
-//      grainsizedist[0] = avgdiam;
-//      grainsizedist[1] = sddiam;
-//      grainsizedist[2] = ngrains;
-//    }
-    precipsizedist.resize(3);
-    if (word == "Precipitate_Size_Distribution")
-    {
-      inputFile >> avgprecipdiam >> sdprecipdiam >> nprecips;
-      precipsizedist[0] = avgprecipdiam;
-      precipsizedist[1] = sdprecipdiam;
-      precipsizedist[2] = nprecips;
-    }
-//    if (word == "Grain_SizeVBoverA_Distributions") //DONE
-//    {
-//      bovera.resize(maxdiameter + 1);
-//      for (int temp7 = 0; temp7 < maxdiameter + 1; temp7++)
-//      {
-//        if (temp7 < mindiameter) bovera[temp7].resize(3, 0);
-//        if (temp7 >= mindiameter)
-//        {
-//          inputFile >> diam >> param1 >> param2 >> ngrains;
-//          bovera[diam].resize(3);
-//          bovera[diam][0] = param1;
-//          bovera[diam][1] = param2;
-//          bovera[diam][2] = ngrains;
-//        }
-//      }
-//    }
-//    if (word == "Grain_SizeVCoverA_Distributions") //DONE
-//    {
-//      covera.resize(maxdiameter + 1);
-//      for (int temp7 = 0; temp7 < maxdiameter + 1; temp7++)
-//      {
-//        if (temp7 < mindiameter) covera[temp7].resize(3, 0);
-//        if (temp7 >= mindiameter)
-//        {
-//          inputFile >> diam >> param1 >> param2 >> ngrains;
-//          covera[diam].resize(3);
-//          covera[diam][0] = param1;
-//          covera[diam][1] = param2;
-//          covera[diam][2] = ngrains;
-//        }
-//      }
-//    }
-//    if (word == "Grain_SizeVCoverB_Distributions") //DONE
-//    {
-//      coverb.resize(maxdiameter + 1);
-//      for (int temp7 = 0; temp7 < maxdiameter + 1; temp7++)
-//      {
-//        if (temp7 < mindiameter) coverb[temp7].resize(3, 0);
-//        if (temp7 >= mindiameter)
-//        {
-//          inputFile >> diam >> param1 >> param2 >> ngrains;
-//          coverb[diam].resize(3);
-//          coverb[diam][0] = param1;
-//          coverb[diam][1] = param2;
-//          coverb[diam][2] = ngrains;
-//        }
-//      }
-//    }
-//    if (word == "Grain_SizeVNeighbors_Distributions")  //DONE
-//    {
-//      neighborhood.resize(maxdiameter + 1);
-//      for (int temp7 = 0; temp7 < maxdiameter + 1; temp7++)
-//      {
-//        if (temp7 < mindiameter) neighborhood[temp7].resize(9, 0);
-//        if (temp7 >= mindiameter)
-//        {
-//          inputFile >> diam >> shell0a >> shell0s >> shell1a >> shell1s >> shell2a >> shell2s >> shell3a >> shell3s >> ngrains;
-//          neighborhood[diam].resize(9);
-//          neighborhood[diam][0] = shell0a;
-//          neighborhood[diam][1] = shell0s;
-//          neighborhood[diam][2] = shell1a;
-//          neighborhood[diam][3] = shell1s;
-//          neighborhood[diam][4] = shell2a;
-//          neighborhood[diam][5] = shell2s;
-//          neighborhood[diam][6] = shell3a;
-//          neighborhood[diam][7] = shell3s;
-//          neighborhood[diam][8] = ngrains;
-//        }
-//      }
-//    }
-//    if (word == "Grain_SizeVOmega3_Distributions") //DONE
-//    {
-//      svomega3.resize(maxdiameter + 1);
-//      for (int temp7 = 0; temp7 < maxdiameter + 1; temp7++)
-//      {
-//        if (temp7 < mindiameter) svomega3[temp7].resize(3, 0);
-//        inputFile >> diam >> param1 >> param2 >> ngrains;
-//        svomega3[diam].resize(3);
-//        svomega3[diam][0] = param1;
-//        svomega3[diam][1] = param2;
-//        svomega3[diam][2] = ngrains;
-//      }
-//    }
-    if (word == "Precipitate_SizeVBoverA_Distributions")
-    {
-      precipbovera.resize(maxprecipdiameter + 1);
-      for (int temp7 = 0; temp7 < maxprecipdiameter + 1; temp7++)
-      {
-        if (temp7 < minprecipdiameter) precipbovera[temp7].resize(2, 0);
-        if (temp7 >= minprecipdiameter)
-        {
-          inputFile >> diam >> param1 >> param2;
-          precipbovera[diam].resize(2);
-          precipbovera[diam][0] = param1;
-          precipbovera[diam][1] = param2;
-        }
-      }
-    }
-    if (word == "Precipitate_SizeVCoverA_Distributions")
-    {
-      precipcovera.resize(maxprecipdiameter + 1);
-      for (int temp7 = 0; temp7 < maxprecipdiameter + 1; temp7++)
-      {
-        if (temp7 < minprecipdiameter) precipcovera[temp7].resize(2, 0);
-        if (temp7 >= minprecipdiameter)
-        {
-          inputFile >> diam >> param1 >> param2;
-          precipcovera[diam].resize(2);
-          precipcovera[diam][0] = param1;
-          precipcovera[diam][1] = param2;
-        }
-      }
-    }
-    if (word == "Precipitate_SizeVCoverB_Distributions")
-    {
-      precipcoverb.resize(maxprecipdiameter + 1);
-      for (int temp7 = 0; temp7 < maxprecipdiameter + 1; temp7++)
-      {
-        if (temp7 < minprecipdiameter) precipcoverb[temp7].resize(2, 0);
-        if (temp7 >= minprecipdiameter)
-        {
-          inputFile >> diam >> param1 >> param2;
-          precipcoverb[diam].resize(2);
-          precipcoverb[diam][0] = param1;
-          precipcoverb[diam][1] = param2;
-        }
-      }
-    }
-    if (word == "Precipitate_SizeVOmega3_Distributions")
-    {
-      precipsvomega3.resize(maxprecipdiameter + 1);
-      for (int temp7 = 0; temp7 < maxprecipdiameter + 1; temp7++)
-      {
-        if (temp7 < minprecipdiameter) precipsvomega3[temp7].resize(2, 0);
-        if (temp7 >= minprecipdiameter)
-        {
-          inputFile >> diam >> param1 >> param2;
-          precipsvomega3[diam].resize(2);
-          precipsvomega3[diam][0] = param1;
-          precipsvomega3[diam][1] = param2;
-        }
-      }
-    }
-  }
-  neighbordist.resize(maxdiameter + 1);
-  for (int i = 0; i < maxdiameter + 1; i++)
-  {
-    neighbordist[i].resize(9, 0.0);
-  }
-  inputFile.close();
-}
-#endif
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 int  GrainGeneratorFunc::readAxisOrientationData(H5ReconStatsReader::Pointer h5io)
 {
   std::vector<double> density;
@@ -495,9 +298,6 @@ int  GrainGeneratorFunc::readAxisOrientationData(H5ReconStatsReader::Pointer h5i
 }
 
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 int GrainGeneratorFunc::readODFData(H5ReconStatsReader::Pointer h5io)
 {
   std::vector<double> density;
@@ -521,9 +321,6 @@ int GrainGeneratorFunc::readODFData(H5ReconStatsReader::Pointer h5io)
   return err;
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 int GrainGeneratorFunc::readMisorientationData(H5ReconStatsReader::Pointer h5io)
 {
   std::vector<double> density;
@@ -547,9 +344,6 @@ int GrainGeneratorFunc::readMisorientationData(H5ReconStatsReader::Pointer h5io)
 }
 
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 int GrainGeneratorFunc::readMicroTextureData(H5ReconStatsReader::Pointer h5io)
 {
   std::vector<double> density;
@@ -1179,9 +973,6 @@ int  GrainGeneratorFunc::pack_grains(int numgrains)
   int acceptedmoves = 0;
   rg.RandomInit((static_cast<unsigned int > (time(NULL))));
   // std::vector<int>* nlist;
-  string filename = "test.txt";
-  ofstream outFile;
-  outFile.open(filename.c_str());
   activegrainlist.resize(numgrains + 1);
   for (int i = 1; i < (numextragrains + 1); i++)
   {
@@ -1228,7 +1019,6 @@ int  GrainGeneratorFunc::pack_grains(int numgrains)
   for (int iteration = 0; iteration < (1000000); iteration++)
   {
     int option = iteration % 4;
-    if (iteration % 80 == 0) outFile << iteration << "	" << oldfillingerror << "	" << oldsizedisterror << "	" << oldneighborhooderror << "	" << activegrainlist.size() << endl;
     allowablechange = (0.4 * totalchange / acceptedmoves) * pow((1000000.0 - double(iteration)) / 1000000.0, 2);
     if (acceptedmoves == 0) allowablechange = 0.0;
     if (option == 0)
