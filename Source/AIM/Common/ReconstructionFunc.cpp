@@ -4213,43 +4213,12 @@ void ReconstructionFunc::volume_stats2D(H5ReconStatsWriter::Pointer h5io)
     texindex = texindex/(18*18*18);
     texstrength = pow(texindex,0.5);
   }
-  ofstream outFile;
-  outFile.open(writename1.c_str());
-  outFile << "STATS" << endl;
-  outFile << "Grain_Diameter_Info" << endl;
-  outFile << (maxdiameter-mindiameter)+1 << " " << maxdiameter << " " << mindiameter << endl;
-  outFile << "Grain_Size_Distribution" << endl;
-  outFile << avglogdiam << " " << sdlogdiam << "	" << actualgrains << endl;
-  outFile << "Grain_SizeVBoverA_Distributions" << endl;
-  for(int temp7 = mindiameter; temp7 < (maxdiameter)+1; temp7++)
-  {
-	outFile << temp7 <<	" " << svbovera[temp7][3] << " " << svbovera[temp7][4] << "	" << svbovera[temp7][0] << endl;
-  }
-  outFile << "Grain_SizeVNeighbors_Distributions" << endl;
-  for(int temp7 = mindiameter; temp7 < (maxdiameter)+1; temp7++)
-  {
-    outFile << temp7 << " " << neighborhood[temp7][1] << " " << neighborhood[temp7][2] << "	" << neighborhood[temp7][3] << " " << neighborhood[temp7][4] << "	" <<  neighborhood[temp7][5] << " " << neighborhood[temp7][6] << "	" <<  neighborhood[temp7][7] << " " << neighborhood[temp7][8] << "	" << neighborhood[temp7][0]  << endl;
-  }
-//  outFile << "Grain_SizeVOmega3_Distributions" << endl;
-//  for(int temp7 = mindiameter; temp7 < (maxdiameter)+1; temp7++)
-//  {
-//    outFile << temp7 << " " << svomega3[temp7][3] << " " << svomega3[temp7][4] << "	" << svomega3[temp7][0]  << endl;
-//  }
-  outFile.close();
-  ofstream outFile7;
-  outFile7.open(writename2.c_str());
-  for(int i = 0; i < 36; i++)
-  {
-    outFile7 << misobin[i] << endl;
-  }
-  outFile7.close();
-  ofstream outFile8;
-  outFile8.open(writename3.c_str());
-  for(int i = 0; i < 10; i++)
-  {
-    outFile8 << (microbin[i]/actualgrains) << endl;
-  }
-  outFile8.close();
+  h5io->writeStatsData(maxdiameter, mindiameter,
+                       avglogdiam, sdlogdiam, actualgrains,
+                       neighborhood, svbovera, svcovera, svcoverb,
+                       svschmid, svomega3);
+  h5io->writeMisorientationBinsData(misobin, 36);
+  h5io->writeMicroTextureData(microbin, 10, actualgrains);
 }
 
 #define WRITE_VTK_GRAIN_HEADER()\

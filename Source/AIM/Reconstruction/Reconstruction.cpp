@@ -23,7 +23,6 @@
 #include "AIM/Common/OIMColoring.hpp"
 
 
-#if AIM_HDF5_SUPPORT
 #include "AIM/ANG/H5AngDataLoader.h"
 #include "AIM/HDF5/AIM_H5VtkDataWriter.h"
 #include "AIM/Reconstruction/H5ReconStatsWriter.h"
