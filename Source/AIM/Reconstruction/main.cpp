@@ -56,31 +56,30 @@ int main(int argc, char **argv)
 
   try
   {
-
     // Handle program options passed on command line.
     TCLAP::CmdLine cmd("AIMRepresentation Reconstruction", ' ', AIMRepresentation::Version::Complete);
 
-    TCLAP::ValueArg<std::string>   inputDir( "i", "inputDir", "Input Directory", false, "", "Input Directory");
-    cmd.add(inputDir);
+    TCLAP::ValueArg<std::string>   h5OIMFile( "i", "input", "HDF5 Input File", false, "", "HDF5 Input File");
+    cmd.add(h5OIMFile);
 
     TCLAP::ValueArg<std::string> outputDir("", "outputDir", "Output Directory", false, "", "Output Directory");
     cmd.add(outputDir);
-#if AIM_HDF5_SUPPORT
+
     TCLAP::SwitchArg h5GrainFile("", "h5grain", "Write the HDF5 Grain Visualization File", false);
     cmd.add(h5GrainFile);
-#endif
-    TCLAP::ValueArg<std::string>  angFilePrefix( "f", "angFilePrefix", "Ang File Prefix", false, "", "Ang File Prefix");
-    cmd.add(angFilePrefix);
 
-    TCLAP::ValueArg<int>  angMaxSlice( "", "angMaxSlice", "Ang Max Slice Number", false, 0, "Ang Max Slice Number");
-    cmd.add(angMaxSlice);
+//    TCLAP::ValueArg<std::string>  angFilePrefix( "f", "angFilePrefix", "Ang File Prefix", false, "", "Ang File Prefix");
+//    cmd.add(angFilePrefix);
+//
+//    TCLAP::ValueArg<int>  angMaxSlice( "", "angMaxSlice", "Ang Max Slice Number", false, 0, "Ang Max Slice Number");
+//    cmd.add(angMaxSlice);
 
     TCLAP::ValueArg<int>  zStartIndex( "s", "zStartIndex", "Starting Slice", false, 0, "Starting Slice");
     cmd.add(zStartIndex);
     TCLAP::ValueArg<int>  zEndIndex( "e", "zEndIndex", "Ending Slice", false, 0, "Ending Slice");
     cmd.add(zEndIndex);
-    TCLAP::ValueArg<double>  resz( "z", "resz", "z resolution of your volume", false, 0.25, "z resolution of your volume");
-    cmd.add(resz);
+//    TCLAP::ValueArg<double>  resz( "z", "resz", "z resolution of your volume", false, 0.25, "z resolution of your volume");
+//    cmd.add(resz);
 
     TCLAP::SwitchArg mergetwinsoption("t", "merge-twins", "Do you want to merge twins", false);
     cmd.add(mergetwinsoption);
@@ -113,8 +112,8 @@ int main(int argc, char **argv)
 
 
     Reconstruction::Pointer r = Reconstruction::New();
-#if AIM_HDF5_SUPPORT
-    r->setH5AngFile(inputDir.getValue());
+#if 1
+    r->setH5AngFile(h5OIMFile.getValue());
 #else
     r->setInputDirectory(inputDir.getValue());
     r->setAngFilePrefix(angFilePrefix.getValue());
@@ -142,11 +141,7 @@ int main(int argc, char **argv)
     r->setWriteImageQualityFile(true);
     r->setWriteSchmidFactorFile(true);
     r->setWriteDownSampledFile(true);
-
-
-#if AIM_HDF5_SUPPORT
     r->setWriteHDF5GrainFile(h5GrainFile.getValue());
-#endif
 
     r->compute();
     err = r->getErrorCondition();

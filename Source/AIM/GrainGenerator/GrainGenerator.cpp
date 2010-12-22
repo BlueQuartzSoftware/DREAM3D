@@ -10,13 +10,10 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 #include "GrainGenerator.h"
-#include "AIM/ANG/AngDirectoryPatterns.h"
-#include "AIM/ANG/AngReader.h"
-#include "AIM/ANG/AngDataLoader.h"
-#if AIM_HDF5_SUPPORT
+//#include "AIM/ANG/AngDirectoryPatterns.h"
+//#include "AIM/ANG/AngReader.h"
+//#include "AIM/ANG/AngDataLoader.h"
 #include "AIM/Reconstruction/H5ReconStatsReader.h"
-#endif
-
 #include <MXA/Utilities/MXADir.h>
 
 
@@ -115,20 +112,13 @@ void GrainGenerator::compute()
   int err = 0;
 
 
-#if AIM_HDF5_SUPPORT
-    H5ReconStatsReader::Pointer h5reader = H5ReconStatsReader::New(m_InputDirectory + MXADir::Separator + AIM::Reconstruction::H5StatisticsFile);
-    if (h5reader.get() == NULL)
-    {
-      progressMessage(AIM_STRING("Error Opening HDF5 Stats File. Nothing generated"), 100 );
-      return;
-    }
-#else
-  std::string StatsFile = m_InputDirectory + MXADir::Separator + AIM::Reconstruction::StatsFile;
-  std::string AxisOrientationsFile = m_InputDirectory + MXADir::Separator + AIM::Reconstruction::AxisOrientationsFile;
-  std::string EulerAnglesFile = m_InputDirectory + MXADir::Separator + AIM::Reconstruction::ODFFile;
-  std::string MisorientationBinsFile = m_InputDirectory + MXADir::Separator + AIM::Reconstruction::MisorientationBinsFile;
-  std::string MicroBinsFile = m_InputDirectory + MXADir::Separator + AIM::Reconstruction::MicroTextureFile;
-#endif
+  H5ReconStatsReader::Pointer h5reader = H5ReconStatsReader::New(m_InputDirectory + MXADir::Separator + AIM::Reconstruction::H5StatisticsFile);
+  if (h5reader.get() == NULL)
+  {
+    progressMessage(AIM_STRING("Error Opening HDF5 Stats File. Nothing generated"), 100 );
+    return;
+  }
+
   std::string CubeFile = m_OutputDirectory + MXADir::Separator + AIM::SyntheticBuilder::CubeFile;
   std::string EulerFile = m_OutputDirectory + MXADir::Separator + AIM::SyntheticBuilder::EulerFile;
   std::string AnalysisFile = m_OutputDirectory + MXADir::Separator + AIM::SyntheticBuilder::AnalysisFile;
@@ -148,20 +138,14 @@ void GrainGenerator::compute()
    {
 	   CHECK_FOR_CANCELED(GrainGeneratorFunc)
 	   progressMessage(AIM_STRING("Loading Stats Data"), 5 );
-#if AIM_HDF5_SUPPORT
 	   err = m->readReconStatsData(h5reader);
 	   if (err < 0) { setErrorCondition(err); return; }
-#else
-	   m->readReconStatsData(StatsFile);
-#endif
+
 	   CHECK_FOR_CANCELED(GrainGeneratorFunc)
 	   progressMessage(AIM_STRING("Loading Axis Orientation Data"), 10 );
-#if AIM_HDF5_SUPPORT
 	   err = m->readAxisOrientationData(h5reader);
 	   if (err < 0) { setErrorCondition(err); return; }
-#else
-	   m->readAxisOrientationData(AxisOrientationsFile);
-#endif
+
 
 	   CHECK_FOR_CANCELED(GrainGeneratorFunc)
 	   progressMessage(AIM_STRING("Packing Grains"), 25 );
@@ -200,31 +184,20 @@ void GrainGenerator::compute()
 
    CHECK_FOR_CANCELED(GrainGeneratorFunc)
    progressMessage(AIM_STRING("Loading ODF Data"), 15 );
-#if AIM_HDF5_SUPPORT
    err = m->readODFData(h5reader);
    if (err < 0) { setErrorCondition(err); return; }
-#else
-   m->readODFData(EulerAnglesFile);
-#endif
+
 
    CHECK_FOR_CANCELED(GrainGeneratorFunc)
    progressMessage(AIM_STRING("Loading Misorientation Data"), 50 );
-#if AIM_HDF5_SUPPORT
    err = m->readMisorientationData(h5reader);
    if (err < 0) { setErrorCondition(err); return; }
 
-   #else
-   m->readMisorientationData(MisorientationBinsFile);
-#endif
-
    CHECK_FOR_CANCELED(GrainGeneratorFunc)
    progressMessage(AIM_STRING("Loading Microtexture Data "), 55 );
-#if AIM_HDF5_SUPPORT
    err = m->readMicroTextureData(h5reader);
    if (err < 0) { setErrorCondition(err); return; }
-#else
-   m->readMicroTextureData(MicroBinsFile);
-#endif
+
 
    CHECK_FOR_CANCELED(GrainGeneratorFunc)
    progressMessage(AIM_STRING("Assigning Eulers"), 60 );
@@ -275,14 +248,6 @@ void GrainGenerator::on_CancelWorker()
 {
  //    std::cout << "GrainGenerator::cancelWorker()" << std::endl;
      this->m_Cancel = true;
-     if (m.get() != NULL)
-     {
-       if (m->m_angFileHelper.get() != NULL)
-       {
-         m->m_angFileHelper->setCancel(true);
-       }
-     }
-
 }
 #endif
 
