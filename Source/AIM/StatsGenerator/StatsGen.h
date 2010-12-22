@@ -98,6 +98,27 @@ template<typename T>
     }
 
 
+template<typename T>
+    int GenPowerLaw(double a, double k, T &x, T &y, int size)
+    {
+      int err = 0;
+      double in, out, max, min;
+      x.resize(size);
+      y.resize(size);
+      min = 0;
+      max = 5;
+      for (int i = 0; i < size; i++)
+      {
+        in = (i * ((max - min) / double(size))) + (((max - min) / double(size)) / 2.0) + min;
+        out = a*pow(in,k);
+        x[i] = in;
+        y[i] = out;
+        if (out < 0) err = 1;
+      }
+      return err;
+    }
+
+
     template<typename T>
     int GenCutOff(double m, double s, double value, T &x, T &y, double yMax, int &numsizebins, T &binsizes, T &numgrains)
     {
