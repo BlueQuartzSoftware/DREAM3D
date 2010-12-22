@@ -3548,14 +3548,10 @@ void ReconstructionFunc::find_schmids()
   }
 }
 
-
-#if AIM_HDF5_SUPPORT
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void ReconstructionFunc::volume_stats(H5ReconStatsWriter::Pointer h5io)
-#else
-void ReconstructionFunc::volume_stats(const std::string &statsfile,
-                                      const std::string &misorientationFile,
-                                      const std::string &microBinsFile)
-#endif
 {
   double actualgrains = 0;
   double misocount = 0;
@@ -3919,85 +3915,21 @@ void ReconstructionFunc::volume_stats(const std::string &statsfile,
     texstrength = pow(texindex, 0.5);
   }
 
-#if AIM_HDF5_SUPPORT
+
   h5io->writeStatsData(maxdiameter, mindiameter,
                        avglogdiam, sdlogdiam, actualgrains,
                        neighborhood, svbovera, svcovera, svcoverb,
                        svschmid, svomega3);
   h5io->writeMisorientationBinsData(misobin, 36);
   h5io->writeMicroTextureData(microbin, 10, actualgrains);
-
-#else
-  ofstream outFile;
-  outFile.open(statsfile.c_str());
-  outFile << "STATS" << endl;
-  outFile << "Grain_Diameter_Info" << endl;
-  outFile << (maxdiameter - mindiameter) + 1 << " " << maxdiameter << " " << mindiameter << endl;
-  outFile << "Grain_Size_Distribution" << endl;
-  outFile << avglogdiam << " " << sdlogdiam << "	" << actualgrains << endl;
-  outFile << "Grain_SizeVBoverA_Distributions" << endl;
-  for (int temp7 = mindiameter; temp7 < (maxdiameter) + 1; temp7++)
-  {
-    outFile << temp7 << " " << svbovera[temp7][3] << " " << svbovera[temp7][4] << "	" << svbovera[temp7][0] << endl;
-  }
-  outFile << "Grain_SizeVCoverA_Distributions" << endl;
-  for (int temp7 = mindiameter; temp7 < (maxdiameter) + 1; temp7++)
-  {
-    outFile << temp7 << " " << svcovera[temp7][3] << "  " << svcovera[temp7][4] << "	" << svcovera[temp7][0] << endl;
-  }
-  outFile << "Grain_SizeVCoverB_Distributions" << endl;
-  for (int temp7 = mindiameter; temp7 < (maxdiameter) + 1; temp7++)
-  {
-    outFile << temp7 << " " << svcoverb[temp7][3] << "  " << svcoverb[temp7][4] << "	" << svcoverb[temp7][0] << endl;
-  }
-  outFile << "Grain_SizeVNeighbors_Distributions" << endl;
-  for (int temp7 = mindiameter; temp7 < (maxdiameter) + 1; temp7++)
-  {
-    outFile << temp7 << " " << neighborhood[temp7][1] << " " << neighborhood[temp7][2] << "	" << neighborhood[temp7][3] << " " << neighborhood[temp7][4] << "	"
-        << neighborhood[temp7][5] << " " << neighborhood[temp7][6] << "	" << neighborhood[temp7][7] << " " << neighborhood[temp7][8] << "	"
-        << neighborhood[temp7][0] << endl;
-  }
-  outFile << "Grain_SizeVOmega3_Distributions" << endl;
-  for (int temp7 = mindiameter; temp7 < (maxdiameter) + 1; temp7++)
-  {
-    outFile << temp7 << " " << svomega3[temp7][3] << " " << svomega3[temp7][4] << "	" << svomega3[temp7][0] << endl;
-  }
-  outFile.close();
-
-
-  ofstream outFile7;
-  outFile7.open(misorientationFile.c_str());
-  for (int i = 0; i < 36; i++)
-  {
-    outFile7 << misobin[i] << endl;
-  }
-  outFile7.close();
-
-  ofstream outFile8;
-  outFile8.open(microBinsFile.c_str());
-  for (int i = 0; i < 10; i++)
-  {
-    outFile8 << (microbin[i] / actualgrains) << endl;
-  }
-  outFile8.close();
-#endif
-
 }
 
 
-#if AIM_HDF5_SUPPORT
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void ReconstructionFunc::volume_stats2D(H5ReconStatsWriter::Pointer h5io)
-#else
-void ReconstructionFunc::volume_stats2D(const std::string &writename1,
-                                        const std::string &writename2,
-                                        const std::string &writename3)
-#endif
 {
-#if AIM_HDF5_SUPPORT
-  const std::string writename1("tmp/writename1.txt");
-  const std::string writename2("tmp/writename2.txt");
-  const std::string writename3("tmp/writename3.txt");
-#endif
   double actualgrains = 0;
   double misocount = 0;
   double avgvol = 0;
@@ -4459,7 +4391,6 @@ int ReconstructionFunc::writeIPFVizFile(const std::string &file)
     fprintf(f, "%f %f %f\n",red, green, blue);
   }
 
-
   fclose(f);
   return 0;
 }
@@ -4513,8 +4444,9 @@ int  ReconstructionFunc::writeDownSampledVizFile(const std::string &file )
   return 0;
 }
 
-
-
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void ReconstructionFunc::write_graindata(const std::string &graindataFile)
 {
   vector<int>* nlist;

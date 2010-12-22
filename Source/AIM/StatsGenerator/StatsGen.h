@@ -43,13 +43,14 @@
  * @date Dec 16, 2010
  * @version 1.0
  */
-template<typename T>
+
 class StatsGen
 {
   public:
     StatsGen();
     virtual ~StatsGen();
 
+    template<typename T>
     int GenBeta(double p, double q, T &x, T &y, int size)
     {
       int err=0;
@@ -73,10 +74,48 @@ class StatsGen
       return err;
     }
 
-#if 0
-    int GenLogNormal(double m, double s, std::vector<float> &x, std::vector<float> &y, int size);
-    int GenCutOff(double m, double s, double value, std::vector<int> &cutoffs);
-#endif
+
+template<typename T>
+    int GenLogNormal(double m, double s, T &x, T &y, int size)
+    {
+      int err = 0;
+      double lognormin, lognormout, max, min;
+      double s2 = pow(s, 2);
+      double root2pi = pow((2.0 * 3.1415926535897), 0.5);
+      x.resize(size);
+      y.resize(size);
+      min = exp(m - (10 * s));
+      max = exp(m + (10 * s));
+      for (int i = 0; i < size; i++)
+      {
+        lognormin = (i * ((max - min) / double(size))) + (((max - min) / double(size)) / 2.0);
+        lognormout = (1.0 / (lognormin * s * root2pi)) * exp(-((log(lognormin) - m) * (log(lognormin) - m)) / (2 * s2));
+        x[i] = lognormin;
+        y[i] = lognormout * ((max - min) / double(size));
+        if (lognormout < 0) err = 1;
+      }
+      return err;
+    }
+
+
+    template<typename T>
+    int GenCutOff(double m, double s, double value, T &x, T &y, double yMax)
+    {
+      int err=0;
+      double max, min;
+      x.resize(6);
+      y.resize(6);
+      min = exp(m - (value*s));
+      max = exp(m + (value*s));
+      x[0] = x[1] = x[2] = min;
+      x[3] = x[4] = x[5] = max;
+
+      y[0] = y[2] = y[3] = y[5] = 0.0;
+      y[1] = y[4] = yMax;
+
+      return err;
+    }
+
     double gamma(double value);
 
 
@@ -85,6 +124,5 @@ class StatsGen
     void operator=(const StatsGen&); // Operator '=' Not Implemented
 };
 
-#include "StatsGen.txx"
 
 #endif /* _STATSGEN_H_ */

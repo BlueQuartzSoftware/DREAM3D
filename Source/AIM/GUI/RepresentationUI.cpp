@@ -15,10 +15,8 @@
 #include <AIM/Common/Qt/QRecentFileList.h>
 #include <AIM/Common/Qt/QR3DFileCompleter.h>
 #include <AIM/Threads/AIMThread.h>
-
-#if AIM_HDF5_SUPPORT
 #include "AIM/ANG/H5AngDataLoader.h"
-#endif
+
 
 
 //-- Qt Includes
@@ -279,9 +277,8 @@ void RepresentationUI::readSettings()
   READ_BOOL_SETTING(prefs, rec_, SchmidFactorVizFile, true);
   READ_BOOL_SETTING(prefs, rec_, VisualizationVizFile, true);
   READ_BOOL_SETTING(prefs, rec_, DownSampledVizFile, true);
-#if AIM_HDF5_SUPPORT
   READ_BOOL_SETTING(prefs, rec_, HDF5GrainFile, true);
-#endif
+
 
 
   /* ******** This Section is for the Grain Generator Tab ************ */
@@ -365,9 +362,8 @@ void RepresentationUI::writeSettings()
   WRITE_BOOL_SETTING(prefs, SchmidFactorVizFile, rec_SchmidFactorVizFile->isChecked())
   WRITE_BOOL_SETTING(prefs, VisualizationVizFile, rec_VisualizationVizFile->isChecked())
   WRITE_BOOL_SETTING(prefs, DownSampledVizFile, rec_DownSampledVizFile->isChecked())
-#if AIM_HDF5_SUPPORT
   WRITE_BOOL_SETTING(prefs, HDF5GrainFile, rec_HDF5GrainFile->isChecked())
-#endif
+
 
 
   /* ******** This Section is for the Grain Generator Tab ************ */
@@ -663,32 +659,26 @@ void RepresentationUI::rec_SetupGui()
   }
   messageLabel->setText(msg);
 
-#if AIM_HDF5_SUPPORT
-  rec_StatsFile->setVisible(false);
-  rec_MisorientationBinsFile->setVisible(false);
-  rec_MicroTextureFile->setVisible(false);
-  rec_AxisOrientationsFile->setVisible(false);
-  rec_ODFFile->setVisible(false);
-  rec_StatsFileIcon->setVisible(false);
-  rec_MisorientationBinsFileIcon->setVisible(false);
-  rec_MicroTextureFileIcon->setVisible(false);
-  rec_AxisOrientationsFileIcon->setVisible(false);
-  rec_ODFFileIcon->setVisible(false);
-#else
-  rec_HDF5GrainFile->setVisible(false);
-  rec_HDF5GrainFileIcon->setVisible(false);
-  rec_H5StatisticsFile->setVisible(false);
-  rec_H5StatisticsFileIcon->setVisible(false);
-#endif
+
+//  rec_StatsFile->setVisible(false);
+//  rec_MisorientationBinsFile->setVisible(false);
+//  rec_MicroTextureFile->setVisible(false);
+//  rec_AxisOrientationsFile->setVisible(false);
+//  rec_ODFFile->setVisible(false);
+//  rec_StatsFileIcon->setVisible(false);
+//  rec_MisorientationBinsFileIcon->setVisible(false);
+//  rec_MicroTextureFileIcon->setVisible(false);
+//  rec_AxisOrientationsFileIcon->setVisible(false);
+//  rec_ODFFileIcon->setVisible(false);
+
   m_WidgetList << rec_OutputDir << rec_OutputDirBtn;
   m_WidgetList << rec_ZStartIndex << rec_ZEndIndex;
   m_WidgetList << rec_mergeTwins << rec_mergeColonies << rec_alreadyFormed << alignMeth << minAllowedGrainSize << minConfidence << downsampleFactor << misOrientationTolerance;
   m_WidgetList << crystalStructure;
   m_WidgetList << rec_DisorientationVizFile << rec_ImageQualityVizFile << rec_IPFVizFile << rec_SchmidFactorVizFile << rec_VisualizationVizFile << rec_DownSampledVizFile;
   m_WidgetList << minImageQuality;
-#if AIM_HDF5_SUPPORT
   m_WidgetList << rec_HDF5GrainFile << rec_H5StatisticsFile;
-#endif
+
 }
 
 
@@ -709,16 +699,13 @@ void RepresentationUI::rec_CheckIOFiles()
   CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(AIM::Reconstruction, rec_ , SchmidFactorVizFile)
   CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(AIM::Reconstruction, rec_ , VisualizationVizFile)
   CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(AIM::Reconstruction, rec_ , DownSampledVizFile)
-#if AIM_HDF5_SUPPORT
   CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(AIM::Reconstruction, rec_ , HDF5GrainFile)
   CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::Reconstruction, rec_ , H5StatisticsFile)
-#else
   CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::Reconstruction,rec_, StatsFile)
   CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::Reconstruction,rec_, MisorientationBinsFile)
   CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::Reconstruction,rec_, MicroTextureFile)
   CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::Reconstruction,rec_, AxisOrientationsFile)
   CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::Reconstruction,rec_, ODFFile)
-#endif
 }
 
 
@@ -855,15 +842,9 @@ void RepresentationUI::on_rec_GoBtn_clicked()
   SANITY_CHECK_INPUT(rec_ , OutputDir)
 
   m_Reconstruction = Reconstruction::New();
-#if AIM_HDF5_SUPPORT
+
   m_Reconstruction->setH5AngFile(rec_H5InputFile->text().toStdString());
-#else
-  bool ok = false;
-  m_Reconstruction->setInputDirectory(oim_InputDir->text().toStdString() );
-  m_Reconstruction->setAngFilePrefix(oim_FilePrefix->text().toStdString());
-  m_Reconstruction->setAngSeriesMaxSlice(oim_ZMaxSlice->value());
-  m_Reconstruction->setZResolution(oim_zSpacing->text().toDouble(&ok));
-#endif
+
   m_Reconstruction->setZStartIndex(rec_ZStartIndex->value());
   m_Reconstruction->setZEndIndex(rec_ZEndIndex->value() + 1);
   m_Reconstruction->setOutputDirectory(rec_OutputDir->text().toStdString());
@@ -889,10 +870,8 @@ void RepresentationUI::on_rec_GoBtn_clicked()
   m_Reconstruction->setWriteImageQualityFile(rec_ImageQualityVizFile->isChecked());
   m_Reconstruction->setWriteSchmidFactorFile(rec_SchmidFactorVizFile->isChecked());
   m_Reconstruction->setWriteDownSampledFile(rec_DownSampledVizFile->isChecked());
-
-#if AIM_HDF5_SUPPORT
   m_Reconstruction->setWriteHDF5GrainFile(rec_HDF5GrainFile->isChecked());
-#endif
+
 
   connect(m_Reconstruction.get(), SIGNAL(finished()),
           this, SLOT( rec_ThreadFinished() ) );
@@ -988,23 +967,6 @@ void RepresentationUI::gg_SetupGui()
   }
   messageLabel->setText(msg);
 
-
-#if AIM_HDF5_SUPPORT
-  gg_StatsFile->setVisible(false);
-  gg_AxisOrientationsFile->setVisible(false);
-  gg_ODFFile->setVisible(false);
-  gg_MisorientationBinsFile->setVisible(false);
-  gg_MicroTextureFile->setVisible(false);
-  gg_StatsFileIcon->setVisible(false);
-  gg_AxisOrientationsFileIcon->setVisible(false);
-  gg_ODFFileIcon->setVisible(false);
-  gg_MisorientationBinsFileIcon->setVisible(false);
-  gg_MicroTextureFileIcon->setVisible(false);
-#else
-  gg_H5StatisticsFile->setVisible(false);
-  gg_H5StatisticsFileIcon->setVisible(false);
-#endif
-
   m_WidgetList << gg_InputDir << gg_InputDirBtn << gg_OutputDir << gg_OutputDirBtn;
   m_WidgetList << gg_CrystalStructure << gg_NumGrains << gg_XResolution << gg_YResolution << gg_ZResolution << gg_FillingErrorWeight,
   m_WidgetList << gg_NeighborhoodErrorWeight << gg_SizeDistErrorWeight << gg_FractionPrecipitates;
@@ -1017,15 +979,15 @@ void RepresentationUI::gg_SetupGui()
 // -----------------------------------------------------------------------------
 void RepresentationUI::gg_CheckIOFiles()
 {
-#if AIM_HDF5_SUPPORT
+
   CHECK_QLABEL_INPUT_FILE_EXISTS(AIM::Reconstruction, gg_, H5StatisticsFile)
-#else
+
   CHECK_QLABEL_INPUT_FILE_EXISTS(AIM::Reconstruction, gg_, StatsFile)
   CHECK_QLABEL_INPUT_FILE_EXISTS(AIM::Reconstruction, gg_, AxisOrientationsFile)
   CHECK_QLABEL_INPUT_FILE_EXISTS(AIM::Reconstruction, gg_, ODFFile)
   CHECK_QLABEL_INPUT_FILE_EXISTS(AIM::Reconstruction, gg_, MisorientationBinsFile)
   CHECK_QLABEL_INPUT_FILE_EXISTS(AIM::Reconstruction, gg_, MicroTextureFile)
-#endif
+
   CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::SyntheticBuilder, gg_, CubeFile)
   CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::SyntheticBuilder, gg_, AnalysisFile)
   CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::SyntheticBuilder, gg_, EulerFile)
@@ -1146,15 +1108,9 @@ void RepresentationUI::on_gg_GoBtn_clicked()
 
   SANITY_CHECK_INPUT(gg_, InputDir)
   SANITY_CHECK_INPUT(gg_, OutputDir)
-#if AIM_HDF5_SUPPORT
+
   SANITY_CHECK_QLABEL_FILE(AIM::Reconstruction, gg_, H5StatisticsFile)
-#else
-  SANITY_CHECK_QLABEL_FILE(AIM::Reconstruction, gg_, StatsFile)
-  SANITY_CHECK_QLABEL_FILE(AIM::Reconstruction, gg_, AxisOrientationsFile)
-  SANITY_CHECK_QLABEL_FILE(AIM::Reconstruction, gg_, ODFFile)
-  SANITY_CHECK_QLABEL_FILE(AIM::Reconstruction, gg_, MisorientationBinsFile)
-  SANITY_CHECK_QLABEL_FILE(AIM::Reconstruction, gg_, MicroTextureFile)
-#endif
+
 
   m_GrainGenerator = GrainGenerator::New(NULL);
   m_GrainGenerator->setInputDirectory(gg_InputDir->text().toStdString() );
@@ -1695,7 +1651,7 @@ void RepresentationUI::on_oim_InputDir_textChanged(const QString & text)
 // -----------------------------------------------------------------------------
 void RepresentationUI::on_oim_GoBtn_clicked()
 {
-#if AIM_HDF5_SUPPORT
+
   bool ok = false;
   if (oim_GoBtn->text().compare("Cancel") == 0)
   {
@@ -1733,9 +1689,6 @@ void RepresentationUI::on_oim_GoBtn_clicked()
   grainGeneratorTab->setEnabled(false);
   surfaceMeshingTab->setEnabled(false);
   volumeMeshingTab->setEnabled(false);
-#else
-  this->statusBar()->showMessage("HDF5 Support was NOT Enabled");
-#endif
 }
 
 // -----------------------------------------------------------------------------

@@ -19,7 +19,7 @@
      <widget class="QLabel" name="label_2">
       <property name="font">
        <font>
-        <pointsize>14</pointsize>
+        <pointsize>13</pointsize>
        </font>
       </property>
       <property name="text">
@@ -39,7 +39,7 @@
       <item row="0" column="1">
        <widget class="QLineEdit" name="m_Mu_SizeDistribution">
         <property name="text">
-         <string>1.25</string>
+         <string>1.0</string>
         </property>
        </widget>
       </item>
@@ -60,14 +60,14 @@
       <item row="2" column="1">
        <widget class="QLineEdit" name="m_SigmaCutOff_SizeDistribution">
         <property name="text">
-         <string>119</string>
+         <string>8</string>
         </property>
        </widget>
       </item>
       <item row="1" column="1">
        <widget class="QLineEdit" name="m_Sigma_SizeDistribution">
         <property name="text">
-         <string>0.79</string>
+         <string>0.1</string>
         </property>
        </widget>
       </item>

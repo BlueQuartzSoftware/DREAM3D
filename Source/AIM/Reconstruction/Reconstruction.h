@@ -62,14 +62,8 @@ Q_OBJECT
 #endif
     virtual ~Reconstruction();
 
-#if AIM_HDF5_SUPPORT
+
     MXA_INSTANCE_STRING_PROPERTY(H5AngFile)
-#else
-    MXA_INSTANCE_STRING_PROPERTY(InputDirectory)
-    MXA_INSTANCE_STRING_PROPERTY(AngFilePrefix)
-    MXA_INSTANCE_PROPERTY(int, AngSeriesMaxSlice)
-    MXA_INSTANCE_PROPERTY(double, ZResolution)
-#endif
     MXA_INSTANCE_PROPERTY(int, ZStartIndex)
     MXA_INSTANCE_PROPERTY(int, ZEndIndex)
     MXA_INSTANCE_STRING_PROPERTY(OutputDirectory)

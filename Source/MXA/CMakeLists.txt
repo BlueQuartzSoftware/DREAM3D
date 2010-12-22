@@ -25,12 +25,9 @@ endMacro()
 
 MXACompileDir(Common)
 MXACompileDir(Utilities)
+set (MXA_HDF5_SUPPORT "1")
+MXACompileDir(HDF5)
 
-set (MXA_HDF5_SUPPORT "0")
-if (AIM_USE_HDF5)
-    set (MXA_HDF5_SUPPORT "1")
-    MXACompileDir(HDF5)
-endif()
 
 
 set (Project_SRCS 

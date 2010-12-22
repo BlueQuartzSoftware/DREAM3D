@@ -96,20 +96,16 @@ INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIRS})
 LINK_DIRECTORIES(${Boost_LIBRARY_DIRS})
 
 # -- This needs to be here so that the configured file gets written correctly
-option(AIM_USE_HDF5 "Use HDF5 writing capability" OFF)
-if (AIM_USE_HDF5)
-    find_package(HDF5)
-    IF(HDF5_FOUND)
-        file(APPEND ${CMP_PLUGIN_SEARCHDIR_FILE} "${HDF5_LIBRARY_DIRS};")
-        include_directories(${HDF5_INCLUDE_DIRS} )
-        if (AIM_USE_HDF5)
-            CMP_COPY_DEPENDENT_LIBRARIES("hdf5")
-            CMP_LIBRARIES_INSTALL_RULES("hdf5" "./")
-        endif()
-    ELSE(HDF5_FOUND)
-      MESSAGE(FATAL_ERROR "Cannot build without HDF5.  Please set HDF5_INSTALL environment variable to point to your HDF5 installation.")
-    ENDIF(HDF5_FOUND)
-endif()
+find_package(HDF5)
+IF(HDF5_FOUND)
+    file(APPEND ${CMP_PLUGIN_SEARCHDIR_FILE} "${HDF5_LIBRARY_DIRS};")
+    include_directories(${HDF5_INCLUDE_DIRS} )
+    CMP_COPY_DEPENDENT_LIBRARIES("hdf5")
+    CMP_LIBRARIES_INSTALL_RULES("hdf5" "./")
+ELSE(HDF5_FOUND)
+  MESSAGE(FATAL_ERROR "Cannot build without HDF5.  Please set HDF5_INSTALL environment variable to point to your HDF5 installation.")
+ENDIF(HDF5_FOUND)
+
 
 # --------------------------------------------------------------------
 # Add in some compiler definitions
