@@ -47,7 +47,14 @@ class Bin;
 
 
 
-
+/**
+ * @class H5ReconStatsWriter H5ReconStatsWriter.h AIM/Common/H5ReconStatsWriter.h
+ * @brief Writes Statistics data as a result of running the Reconstruction Module
+ * or as a result of running the StatsGen program.
+ * @author Michael A. Jackson for BlueQuartz Software
+ * @date Dec 23, 2010
+ * @version 1.0
+ */
 class AIMCOMMON_EXPORT H5ReconStatsWriter
 {
   public:
