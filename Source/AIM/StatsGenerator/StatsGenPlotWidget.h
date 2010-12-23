@@ -71,6 +71,11 @@ class StatsGenPlotWidget : public QWidget, private Ui::StatsGenPlotWidget
     protected slots:
       void updatePlot();
 
+      void on_addRowBtn_clicked();
+      void on_deleteRowBtn_clicked();
+
+
+
     protected:
 
     private:

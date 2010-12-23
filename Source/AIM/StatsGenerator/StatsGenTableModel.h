@@ -58,6 +58,12 @@ class StatsGenTableModel : public QAbstractTableModel
     QVariant  data ( const QModelIndex & index, int role = Qt::DisplayRole ) const;
     QVariant  headerData ( int section, Qt::Orientation orientation, int role = Qt::DisplayRole ) const;
 
+    virtual bool setData ( const QModelIndex & index, const QVariant & value, int role = Qt::EditRole);
+    virtual Qt::ItemFlags flags(const QModelIndex &index) const;
+
+
+
+
     QVector<qint32>& getBinNumbers() { return m_BinNumbers; }
     QVector<qint32>& getNumGrains() { return m_NumGrains; }
     QVector<double>& getMu() { return m_Mu; }

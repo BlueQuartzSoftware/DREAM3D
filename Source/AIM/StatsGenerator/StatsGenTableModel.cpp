@@ -124,9 +124,9 @@ QVariant StatsGenTableModel::data(const QModelIndex &index, qint32 role) const
   if (role == Qt::TextAlignmentRole) {
     return int(Qt::AlignRight | Qt::AlignVCenter);
   }
-  else if (role == Qt::DisplayRole)
+  else if (role == Qt::DisplayRole || role == Qt::EditRole)
   {
-
+//    std::cout << "StatsGenTableModel::data" << std::endl;
     int col = index.column();
     if (col == 0)
     {
@@ -152,6 +152,63 @@ QVariant StatsGenTableModel::data(const QModelIndex &index, qint32 role) const
 
   return QVariant();
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+bool StatsGenTableModel::setData ( const QModelIndex & index, const QVariant & value, int role)
+{
+  std::cout << "StatsGenTableModel::setData " << std::endl;
+  // if (role == Qt::EditRole)
+  {
+    int col = index.column();
+    std::cout << "  Setting data for Column " << col << std::endl;
+  }
+  emit dataChanged(index, index);
+  return true;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+Qt::ItemFlags StatsGenTableModel::flags(const QModelIndex &index) const
+{
+//  std::cout << "StatsGenTableModel::flags" << std::endl;
+//  if (! index.isValid())
+//  {
+//    return Qt::NoItemFlags;
+//  }
+  Qt::ItemFlags theFlags = QAbstractTableModel::flags(index);
+  if (index.isValid())
+  {
+    theFlags |= Qt::ItemIsEditable | Qt::ItemIsSelectable | Qt::ItemIsEnabled;
+
+    int col = index.column();
+    if (col == 0)
+    {
+      theFlags = Qt::ItemIsEnabled;
+    }
+    else if (col == 1)
+    {
+      theFlags = Qt::ItemIsEnabled;
+    }
+    else if (col == 2)
+    {
+      theFlags = Qt::ItemIsEditable | Qt::ItemIsSelectable | Qt::ItemIsEnabled;
+    }
+    else if (col == 3)
+    {
+      theFlags = Qt::ItemIsEditable | Qt::ItemIsSelectable | Qt::ItemIsEnabled;
+    }
+    else if (col == 4)
+    {
+      theFlags = Qt::ItemIsEditable | Qt::ItemIsSelectable | Qt::ItemIsEnabled;
+    }
+}
+  return theFlags;
+}
+
+
 
 // -----------------------------------------------------------------------------
 //

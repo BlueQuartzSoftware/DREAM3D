@@ -245,3 +245,20 @@ void StatsGenPlotWidget::setRowOperationEnabled(bool b)
   addRowBtn->setVisible(b);
   deleteRowBtn->setVisible(b);
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void StatsGenPlotWidget::on_deleteRowBtn_clicked()
+{
+QModelIndexList selections = m_TableView->selectionModel()->selectedRows(0);
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void StatsGenPlotWidget::on_addRowBtn_clicked()
+{
+  m_TableModel->addRow(0, 1, 1.0, 0.5);
+}
