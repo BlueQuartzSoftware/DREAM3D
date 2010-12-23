@@ -202,12 +202,6 @@ int GrainGeneratorFunc::readReconStatsData(H5ReconStatsReader::Pointer h5io)
   READ_STATS_DATA_DISTRIBUTION(err, AIM::HDF5::Grain_SizeVOmega3_Distributions, svomega3)
   std::vector<double> s1_averages;
   std::vector<double> s1_stdDevs;
-  std::vector<double> s2_averages;
-  std::vector<double> s2_stdDevs;
-  std::vector<double> s3_averages;
-  std::vector<double> s3_stdDevs;
-  std::vector<double> s4_averages;
-  std::vector<double> s4_stdDevs;
 
 
   path = AIM::HDF5::Grain_SizeVNeighbors_Distributions + ("/") + AIM::HDF5::BinNumber;
@@ -224,27 +218,6 @@ int GrainGeneratorFunc::readReconStatsData(H5ReconStatsReader::Pointer h5io)
   err = h5io->readStatsDataset(path, s1_stdDevs);
   CHECK_STATS_READ_ERROR(err, path)
 
-  path = AIM::HDF5::Grain_SizeVNeighbors_Distributions + ("/") + AIM::HDF5::Shell_2_Average;
-  err = h5io->readStatsDataset(path, s2_averages);
-  CHECK_STATS_READ_ERROR(err, path)
-  path = AIM::HDF5::Grain_SizeVNeighbors_Distributions + ("/") + AIM::HDF5::Shell_2_StdDev;
-  err = h5io->readStatsDataset(path, s2_stdDevs);
-  CHECK_STATS_READ_ERROR(err, path)
-
-  path = AIM::HDF5::Grain_SizeVNeighbors_Distributions + ("/") + AIM::HDF5::Shell_3_Average;
-  err = h5io->readStatsDataset(path, s3_averages);
-  CHECK_STATS_READ_ERROR(err, path)
-  path = AIM::HDF5::Grain_SizeVNeighbors_Distributions + ("/") + AIM::HDF5::Shell_3_StdDev;
-  err = h5io->readStatsDataset(path, s3_stdDevs);
-  CHECK_STATS_READ_ERROR(err, path)
-
-  path = AIM::HDF5::Grain_SizeVNeighbors_Distributions + ("/") + AIM::HDF5::Shell_4_Average;
-  err = h5io->readStatsDataset(path, s4_averages);
-  CHECK_STATS_READ_ERROR(err, path)
-  path = AIM::HDF5::Grain_SizeVNeighbors_Distributions + ("/") + AIM::HDF5::Shell_4_StdDev;
-  err = h5io->readStatsDataset(path, s4_stdDevs);
-  CHECK_STATS_READ_ERROR(err, path)
-
   neighborhood.resize(maxdiameter + 1);
   for (int temp7 = 0; temp7 < maxdiameter + 1; temp7++)
   {
@@ -254,19 +227,13 @@ int GrainGeneratorFunc::readReconStatsData(H5ReconStatsReader::Pointer h5io)
       neighborhood[binNumbers[temp7]].resize(9);
       neighborhood[binNumbers[temp7]][0] = s1_averages[temp7];
       neighborhood[binNumbers[temp7]][1] = s1_stdDevs[temp7];
-      neighborhood[binNumbers[temp7]][2] = s2_averages[temp7];
-      neighborhood[binNumbers[temp7]][3] = s2_stdDevs[temp7];
-      neighborhood[binNumbers[temp7]][4] = s3_averages[temp7];
-      neighborhood[binNumbers[temp7]][5] = s3_stdDevs[temp7];
-      neighborhood[binNumbers[temp7]][6] = s4_averages[temp7];
-      neighborhood[binNumbers[temp7]][7] = s4_stdDevs[temp7];
-      neighborhood[binNumbers[temp7]][8] = numGrains[temp7];
+      neighborhood[binNumbers[temp7]][2] = numGrains[temp7];
     }
   }
   neighbordist.resize(maxdiameter + 1);
   for (int i = 0; i < maxdiameter + 1; i++)
   {
-    neighbordist[i].resize(9, 0.0);
+    neighbordist[i].resize(1, 0.0);
   }
 
   return err;

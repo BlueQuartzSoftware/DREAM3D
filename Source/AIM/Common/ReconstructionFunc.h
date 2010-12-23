@@ -96,7 +96,7 @@ public:
 	double **grainmoments;
 	double **quat_symm;
 
-	vector<vector<int> > neighborhood;
+	vector<vector<double> > neighborhood;
 	vector<vector<double> > svbovera;
 	vector<vector<double> > svcovera;
 	vector<vector<double> > svcoverb;
