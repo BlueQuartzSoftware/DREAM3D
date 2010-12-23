@@ -210,8 +210,10 @@ void StatsGenPlotWidget::createLogNormalCurve(int tableRow)
     //TODO: Present Error Message
     return;
   }
-  double xMax = std::numeric_limits<double>::min();
-  double yMax = std::numeric_limits<double>::min();
+//  double xMax = std::numeric_limits<double>::min();
+//  double yMax = std::numeric_limits<double>::min();
+  double xMax = 0.0;
+  double yMax = 0.0;
   for (int i = 0; i < size; ++i)
   {
  //   std::cout << x[i] << "  " << y[i] << std::endl;

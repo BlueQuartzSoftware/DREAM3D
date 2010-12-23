@@ -79,26 +79,15 @@ namespace AIM
     const std::string StandardDeviation("Standard Deviation");
 
     const std::string Shell_1_Average("Shell 1 Average");
-    const std::string Shell_2_Average("Shell 2 Average");
-    const std::string Shell_3_Average("Shell 3 Average");
-    const std::string Shell_4_Average("Shell 4 Average");
 
     const std::string Shell_1_StdDev("Shell 1 Standard Deviation");
-    const std::string Shell_2_StdDev("Shell 2 Standard Deviation");
-    const std::string Shell_3_StdDev("Shell 3 Standard Deviation");
-    const std::string Shell_4_StdDev("Shell 4 Standard Deviation");
   }
 
   namespace Reconstruction
   {
     /*    Reconstruction related */
     const std::string AlignmentFile("Reconstruction_Alignment.txt");
-    const std::string AxisOrientationsFile("Reconstruction_AxisODF.txt"); // Convert To HDF5
     const std::string GrainDataFile("Reconstruction_GrainData.txt");//14
-    const std::string MicroTextureFile("Reconstruction_MicroTexture.txt"); // Convert To HDF5
-    const std::string MisorientationBinsFile("Reconstruction_MoDF.txt"); // Convert To HDF5
-    const std::string ODFFile("Reconstruction_ODF.txt"); // Convert To HDF5
-    const std::string StatsFile("Reconstruction_Stats.txt"); // Convert To HDF5
 
     const std::string DisorientationVizFile("Reconstruction_Disorientation_Visualization.vtk");//11
     const std::string ImageQualityVizFile("Reconstruction_ImageQuality_Visualization.vtk");//11

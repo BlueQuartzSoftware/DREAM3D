@@ -70,7 +70,7 @@ class AIMCOMMON_EXPORT H5ReconStatsWriter
                      Bin* eulerodf, double totalvol);
     int writeStatsData(int maxdiameter, int mindiameter,
                        double avglogdiam, double sdlogdiam, double actualgrains,
-                       const std::vector<std::vector<int> > &neighborhood,
+                       const std::vector<std::vector<double> > &neighborhood,
                        const std::vector<std::vector<double> > &svbovera,
                        const std::vector<std::vector<double> > &svcovera,
                        const std::vector<std::vector<double> > &svcoverb,
