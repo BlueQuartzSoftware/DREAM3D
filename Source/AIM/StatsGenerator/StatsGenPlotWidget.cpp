@@ -136,6 +136,10 @@ void StatsGenPlotWidget::setupGui()
   m_grid->setMinPen(QPen(Qt::lightGray, 0, Qt::DotLine));
   m_grid->attach(m_PlotView);
 
+  // Add the ability to pan the plots
+  m_panner = new QwtPlotPanner(m_PlotView->canvas());
+  m_panner->setMouseButton(Qt::MidButton);
+
 
   connect(m_TableModel, SIGNAL(layoutChanged()),
           this, SLOT(updatePlot()));
@@ -236,3 +240,8 @@ void StatsGenPlotWidget::createPowerCurve(int tableRow)
 }
 
 
+void StatsGenPlotWidget::setRowOperationEnabled(bool b)
+{
+  addRowBtn->setVisible(b);
+  deleteRowBtn->setVisible(b);
+}
