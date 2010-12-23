@@ -155,9 +155,27 @@ void StatsGeneratorUI::setupGui()
 
  plotSizeDistribution();
 
+ // LeftButton for the zooming
+ // MidButton for the panning
+ // RightButton: zoom out by 1
+ // Ctrl+RighButton: zoom out to full size
+
   m_panner = new QwtPlotPanner(m_SizeDistributionPlot->canvas());
   m_panner->setMouseButton(Qt::MidButton);
 #if 0
+  QwtPlotZoomer* zoomer = new QwtPlotZoomer(m_SizeDistributionPlot->canvas());
+  zoomer->setMousePattern(QwtEventPattern::MouseSelect1, Qt::LeftButton);
+ // zoomer->setMousePattern(QwtEventPattern::MouseSelect2, Qt::RightButton, Qt::ControlModifier);
+
+ // zoomer->setMousePattern(QwtEventPattern::MouseSelect3, Qt::RightButton);
+  zoomer->setRubberBand(QwtPicker::EllipseRubberBand);
+  zoomer->setRubberBandPen(QColor(Qt::green));
+  zoomer->setTrackerMode(QwtPicker::AlwaysOn);
+  const QColor c(Qt::red);
+//  zoomer->setRubberBandPen(c);
+  zoomer->setTrackerPen(c);
+
+
 
   m_zoomer = new QwtPlotZoomer(QwtPlot::xBottom, QwtPlot::yLeft, m_SizeDistributionPlot->canvas());
   m_zoomer->setRubberBand(QwtPicker::RectRubberBand);
@@ -180,6 +198,13 @@ void StatsGeneratorUI::setupGui()
   m_Omega3Plot->setXAxisName(QString("Omega 3"));
   m_Omega3Plot->setYAxisName(QString("Frequency"));
   m_Omega3Plot->setCurveType(StatsGen::LogNormal);
+
+  m_BOverAPlot->setPlotTitle(QString("B/A Shape Distribution"));
+  m_COverAPlot->setPlotTitle(QString("C/A Shape Distribution"));
+  m_COverBPlot->setPlotTitle(QString("C/B Shape Distribution"));
+  m_COverBPlot->setRowOperationEnabled(false);
+
+  m_NeighborPlot->setPlotTitle(QString("Neighbors Distributions"));
 
 }
 

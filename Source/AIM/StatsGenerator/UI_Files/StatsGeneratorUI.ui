@@ -24,13 +24,16 @@
        <enum>QTabWidget::Triangular</enum>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
-      <widget class="QWidget" name="tab">
+      <widget class="QWidget" name="sizeDistributionTab">
        <attribute name="title">
         <string>Size Distribution</string>
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout_5">
+        <property name="margin">
+         <number>4</number>
+        </property>
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout">
           <item>
@@ -115,20 +118,50 @@
         </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="tab_2">
+      <widget class="QWidget" name="omega3DistributionTab">
        <attribute name="title">
         <string>Omega 3 Distributions</string>
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout_4">
+        <property name="margin">
+         <number>4</number>
+        </property>
         <item>
          <widget class="StatsGenPlotWidget" name="m_Omega3Plot" native="true"/>
         </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="tab_3">
+      <widget class="QWidget" name="shapeDistributionTab">
        <attribute name="title">
-        <string>Page</string>
+        <string>Shape Distributions</string>
        </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout_3">
+        <property name="margin">
+         <number>4</number>
+        </property>
+        <item>
+         <widget class="StatsGenPlotWidget" name="m_BOverAPlot" native="true"/>
+        </item>
+        <item>
+         <widget class="StatsGenPlotWidget" name="m_COverAPlot" native="true"/>
+        </item>
+        <item>
+         <widget class="StatsGenPlotWidget" name="m_COverBPlot" native="true"/>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="neighborDistributionTab">
+       <attribute name="title">
+        <string>Neighbor Distributions</string>
+       </attribute>
+       <layout class="QHBoxLayout" name="horizontalLayout_2">
+        <property name="margin">
+         <number>4</number>
+        </property>
+        <item>
+         <widget class="StatsGenPlotWidget" name="m_NeighborPlot" native="true"/>
+        </item>
+       </layout>
       </widget>
      </widget>
     </item>

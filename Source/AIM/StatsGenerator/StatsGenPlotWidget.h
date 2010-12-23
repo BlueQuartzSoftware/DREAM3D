@@ -60,6 +60,8 @@ class StatsGenPlotWidget : public QWidget, private Ui::StatsGenPlotWidget
     void setXAxisName(QString name);
     void setYAxisName(QString name);
 
+    void setRowOperationEnabled(bool b);
+
     void setupGui();
 
     void createBetaCurve(int tableRow);
