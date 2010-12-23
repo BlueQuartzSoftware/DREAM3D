@@ -28,41 +28,61 @@
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "StatsGeneratorUI.h"
+#ifndef _STATSGENPLOTWIDGET_H_
+#define _STATSGENPLOTWIDGET_H_
 
-#include <AIM/Common/Qt/QRecentFileList.h>
+#include <QtGui/QWidget>
+#include "ui_StatsGenPlotWidget.h"
 
-//-- Qt Headers
-#include <QtGui/QApplication>
+#include "StatsGen.h"
 
-/**
- * @brief The Main entry point for the application
- */
-int main (int argc, char *argv[])
+class StatsGenTableModel;
+class QwtPlotZoomer;
+class QwtPlotPicker;
+class QwtPlotPanner;
+class QwtPlotGrid;
+class QwtPlotCurve;
+
+class StatsGenPlotWidget : public QWidget, private Ui::StatsGenPlotWidget
 {
-  QApplication app(argc, argv);
-  QCoreApplication::setOrganizationName("BlueQuartz Software");
-  QCoreApplication::setOrganizationDomain("bluequartz.net");
-  QCoreApplication::setApplicationName("StatsGeneratorUI");
-#if defined( Q_WS_MAC )
-  //Needed for typical Mac program behavior.
-  app.setQuitOnLastWindowClosed( true );
-#endif //APPLE
 
-#if defined (Q_OS_MAC)
-  QSettings prefs(QSettings::NativeFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
-#else
-  QSettings prefs(QSettings::IniFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
-#endif
-  QRecentFileList::instance()->readList(prefs);
+  Q_OBJECT
 
+  public:
+    StatsGenPlotWidget(QWidget *parent = 0);
+    virtual ~StatsGenPlotWidget();
 
-  StatsGeneratorUI *viewer = new StatsGeneratorUI;
-  viewer->show();
-  int app_return = app.exec();
+    void setPlotTitle(QString title);
 
-  QRecentFileList::instance()->writeList(prefs);
+    int writeDataToHDF5(QString hdf5File);
 
-  return app_return;
-}
+    void setCurveType(StatsGen::CurveType curveType);
+    void setXAxisName(QString name);
+    void setYAxisName(QString name);
 
+    void setupGui();
+
+    void createBetaCurve(int tableRow);
+    void createLogNormalCurve(int tableRow);
+    void createPowerCurve(int tableRow);
+
+    protected slots:
+      void updatePlot();
+
+    protected:
+
+    private:
+      StatsGenTableModel* m_TableModel;
+      QwtPlotZoomer* m_zoomer;
+      QwtPlotPicker* m_picker;
+      QwtPlotPanner* m_panner;
+      QwtPlotGrid*   m_grid;
+      StatsGen::CurveType m_CurveType;
+
+      QVector<QwtPlotCurve*>  m_PlotCurves;
+
+    StatsGenPlotWidget(const StatsGenPlotWidget&); // Copy Constructor Not Implemented
+    void operator=(const StatsGenPlotWidget&); // Operator '=' Not Implemented
+};
+
+#endif /* _STATSGENPLOTWIDGET_H_ */

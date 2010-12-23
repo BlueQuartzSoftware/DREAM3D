@@ -51,6 +51,7 @@
 #include <qwt_plot_zoomer.h>
 #include <qwt_plot_panner.h>
 #include <qwt_plot_curve.h>
+#include <qwt_plot_marker.h>
 
 #include "AIM/Common/Qt/QRecentFileList.h"
 #include "StatsGen.h"
@@ -150,26 +151,35 @@ void StatsGeneratorUI::setupGui()
   m_grid->enableYMin(true);
   m_grid->setMajPen(QPen(Qt::gray, 0, Qt::SolidLine));
   m_grid->setMinPen(QPen(Qt::lightGray, 0, Qt::DotLine));
-//  m_grid->attach(m_HistogramPlot);
+  m_grid->attach(m_SizeDistributionPlot);
 
-//  plotSizeDistribution();
+ plotSizeDistribution();
 
+  m_panner = new QwtPlotPanner(m_SizeDistributionPlot->canvas());
+  m_panner->setMouseButton(Qt::MidButton);
 #if 0
-  m_zoomer = new QwtPlotZoomer(QwtPlot::xBottom, QwtPlot::yLeft, m_HistogramPlot->canvas());
+
+  m_zoomer = new QwtPlotZoomer(QwtPlot::xBottom, QwtPlot::yLeft, m_SizeDistributionPlot->canvas());
   m_zoomer->setRubberBand(QwtPicker::RectRubberBand);
   m_zoomer->setRubberBandPen(QColor(Qt::green));
   m_zoomer->setTrackerMode(QwtPicker::ActiveOnly);
   m_zoomer->setTrackerPen(QColor(Qt::blue));
 
-  m_panner = new QwtPlotPanner(m_HistogramPlot->canvas());
-  m_panner->setMouseButton(Qt::MidButton);
 
-  m_picker
-  = new QwtPlotPicker(QwtPlot::xBottom, QwtPlot::yLeft, QwtPicker::PointSelection | QwtPicker::DragSelection, QwtPlotPicker::CrossRubberBand, QwtPicker::AlwaysOn, m_HistogramPlot->canvas());
+  m_picker = new QwtPlotPicker(QwtPlot::xBottom, QwtPlot::yLeft,
+                               QwtPicker::PointSelection | QwtPicker::DragSelection,
+                               QwtPlotPicker::CrossRubberBand,
+                               QwtPicker::AlwaysOn, m_SizeDistributionPlot->canvas());
   m_picker->setRubberBandPen(QColor(Qt::green));
   m_picker->setRubberBand(QwtPicker::CrossRubberBand);
   m_picker->setTrackerPen(QColor(Qt::blue));
 #endif
+
+  // Setup Each Plot Widget
+  m_Omega3Plot->setPlotTitle(QString("Size Vs. Omega 3"));
+  m_Omega3Plot->setXAxisName(QString("Omega 3"));
+  m_Omega3Plot->setYAxisName(QString("Frequency"));
+  m_Omega3Plot->setCurveType(StatsGen::LogNormal);
 
 }
 
@@ -374,6 +384,8 @@ void StatsGeneratorUI::plotSizeDistribution()
     m_SizeDistributionCurve->setPen(QPen(Qt::red));
     m_SizeDistributionCurve->attach(m_SizeDistributionPlot);
   }
+
+  // QwtPlotMarker* marker = new QwtPlotMarker;
   if (NULL == m_SizeDistributionCutoffCurve)
   {
     m_SizeDistributionCutoffCurve = new QwtPlotCurve("Cut Off Value");

@@ -50,6 +50,15 @@ class StatsGen
     StatsGen();
     virtual ~StatsGen();
 
+    enum CurveType
+    {
+      Beta = 0,
+      LogNormal = 1,
+      Power = 2,
+      Unknown = 999
+    };
+
+
     template<typename T>
     int GenBeta(double p, double q, T &x, T &y, int size)
     {
