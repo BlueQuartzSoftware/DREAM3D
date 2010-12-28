@@ -28,74 +28,29 @@
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _STATSGENPLOTWIDGET_H_
-#define _STATSGENPLOTWIDGET_H_
+#ifndef COLORCOMBOPICKER_H_
+#define COLORCOMBOPICKER_H_
 
-#include <QtGui/QWidget>
-#include "ui_StatsGenPlotWidget.h"
+#include <QComboBox>
 
-#include "StatsGen.h"
+class QColor;
+class QWidget;
 
-class StatsGenTableModel;
-class QwtPlotZoomer;
-class QwtPlotPicker;
-class QwtPlotPanner;
-class QwtPlotGrid;
-class QwtPlotCurve;
-
-namespace UIA
+class ColorComboPicker : public QComboBox
 {
-  const static int Alpha = 255;
-}
-
-
-class StatsGenPlotWidget : public QWidget, private Ui::StatsGenPlotWidget
-{
-
-  Q_OBJECT
+  Q_OBJECT;
+  Q_PROPERTY(QColor color READ color WRITE setColor USER true);
 
   public:
-    StatsGenPlotWidget(QWidget *parent = 0);
-    virtual ~StatsGenPlotWidget();
+    ColorComboPicker(QWidget *widget = 0);
 
-    void setPlotTitle(QString title);
+  public:
+    QColor color() const;
+    void setColor(QColor c);
 
-    int writeDataToHDF5(QString hdf5File);
-
-    void setCurveType(StatsGen::CurveType curveType);
-    void setXAxisName(QString name);
-    void setYAxisName(QString name);
-
-    void setRowOperationEnabled(bool b);
-
-    void setupGui();
-
-    void createBetaCurve(int tableRow, double &xMax, double &yMax);
-    void createLogNormalCurve(int tableRow, double &xMax, double &yMax);
-    void createPowerCurve(int tableRow, double &xMax, double &yMax);
-
-    protected slots:
-      void updatePlot();
-
-      void on_addRowBtn_clicked();
-      void on_deleteRowBtn_clicked();
-
-
-
-    protected:
-
-    private:
-      StatsGenTableModel* m_TableModel;
-      QwtPlotZoomer* m_zoomer;
-      QwtPlotPicker* m_picker;
-      QwtPlotPanner* m_panner;
-      QwtPlotGrid*   m_grid;
-      StatsGen::CurveType m_CurveType;
-
-      QVector<QwtPlotCurve*>  m_PlotCurves;
-
-    StatsGenPlotWidget(const StatsGenPlotWidget&); // Copy Constructor Not Implemented
-    void operator=(const StatsGenPlotWidget&); // Operator '=' Not Implemented
+  private:
+    void populateList();
 };
 
-#endif /* _STATSGENPLOTWIDGET_H_ */
+#endif
+
