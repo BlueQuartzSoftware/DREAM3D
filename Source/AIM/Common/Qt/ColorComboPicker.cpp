@@ -28,74 +28,44 @@
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _STATSGENPLOTWIDGET_H_
-#define _STATSGENPLOTWIDGET_H_
+#include <QtGui>
 
-#include <QtGui/QWidget>
-#include "ui_StatsGenPlotWidget.h"
+#include "ColorComboPicker.h"
 
-#include "StatsGen.h"
-
-class StatsGenTableModel;
-class QwtPlotZoomer;
-class QwtPlotPicker;
-class QwtPlotPanner;
-class QwtPlotGrid;
-class QwtPlotCurve;
-
-namespace UIA
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+ColorComboPicker::ColorComboPicker(QWidget *widget) :
+  QComboBox(widget)
 {
-  const static int Alpha = 255;
+  populateList();
 }
-
-
-class StatsGenPlotWidget : public QWidget, private Ui::StatsGenPlotWidget
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QColor ColorComboPicker::color() const
 {
+  return qVariantValue<QColor > (itemData(currentIndex(), Qt::DecorationRole));
+}
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ColorComboPicker::setColor(QColor color)
+{
+  setCurrentIndex(findData(color, int(Qt::DecorationRole)));
+}
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ColorComboPicker::populateList()
+{
+  QStringList colorNames = QColor::colorNames();
 
-  Q_OBJECT
+  for (int i = 0; i < colorNames.size(); ++i)
+  {
+    QColor color(colorNames[i]);
 
-  public:
-    StatsGenPlotWidget(QWidget *parent = 0);
-    virtual ~StatsGenPlotWidget();
-
-    void setPlotTitle(QString title);
-
-    int writeDataToHDF5(QString hdf5File);
-
-    void setCurveType(StatsGen::CurveType curveType);
-    void setXAxisName(QString name);
-    void setYAxisName(QString name);
-
-    void setRowOperationEnabled(bool b);
-
-    void setupGui();
-
-    void createBetaCurve(int tableRow, double &xMax, double &yMax);
-    void createLogNormalCurve(int tableRow, double &xMax, double &yMax);
-    void createPowerCurve(int tableRow, double &xMax, double &yMax);
-
-    protected slots:
-      void updatePlot();
-
-      void on_addRowBtn_clicked();
-      void on_deleteRowBtn_clicked();
-
-
-
-    protected:
-
-    private:
-      StatsGenTableModel* m_TableModel;
-      QwtPlotZoomer* m_zoomer;
-      QwtPlotPicker* m_picker;
-      QwtPlotPanner* m_panner;
-      QwtPlotGrid*   m_grid;
-      StatsGen::CurveType m_CurveType;
-
-      QVector<QwtPlotCurve*>  m_PlotCurves;
-
-    StatsGenPlotWidget(const StatsGenPlotWidget&); // Copy Constructor Not Implemented
-    void operator=(const StatsGenPlotWidget&); // Operator '=' Not Implemented
-};
-
-#endif /* _STATSGENPLOTWIDGET_H_ */
+    insertItem(i, colorNames[i]);
+    setItemData(i, color, Qt::DecorationRole);
+  }
+}

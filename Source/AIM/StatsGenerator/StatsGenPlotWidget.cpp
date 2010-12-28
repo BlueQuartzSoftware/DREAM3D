@@ -45,7 +45,7 @@
 #include <qwt_plot_curve.h>
 
 
-
+#include "SGItemDelegate.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -116,12 +116,15 @@ void StatsGenPlotWidget::setYAxisName(QString name)
 // -----------------------------------------------------------------------------
 void StatsGenPlotWidget::setupGui()
 {
+
+
   // Setup the TableView and Table Models
   QHeaderView* headerView = new QHeaderView(Qt::Horizontal, m_TableView);
   headerView->setResizeMode(QHeaderView::Interactive);
   m_TableView->setHorizontalHeader(headerView);
   m_TableModel = new StatsGenTableModel;
   m_TableView->setModel(m_TableModel);
+  m_TableView->setItemDelegate(new SGItemDelegate(this));
   headerView->show();
 
   // Setup the Qwt Plot Wigets
@@ -143,8 +146,8 @@ void StatsGenPlotWidget::setupGui()
 
   connect(m_TableModel, SIGNAL(layoutChanged()),
           this, SLOT(updatePlot()));
-
-//  m_TableModel->addRow(0, 10, 1.0, 0.5, Qt::red);
+  connect(m_TableModel, SIGNAL(dataChanged(const QModelIndex &, const QModelIndex &)),
+          this, SLOT(updatePlot()));
 
 }
 
@@ -154,42 +157,92 @@ void StatsGenPlotWidget::setupGui()
 // -----------------------------------------------------------------------------
 void StatsGenPlotWidget::updatePlot()
 {
-  std::cout << "update Plot" << std::endl;
+ // std::cout << "StatsGenPlotWidget::updatePlot" << std::endl;
   //Loop over each entry in the table
   QwtPlotCurve* curve = NULL;
-  qint32 nRows = m_TableModel->rowCount();
+
+  // Delete all the plots
+  qint32 nRows = m_PlotCurves.count();
+  for (qint32 r = nRows - 1; r >= 0; --r)
+  {
+    curve = m_PlotCurves[r];
+    curve->detach();
+    m_PlotCurves.remove(r);
+    delete curve;
+  }
+
+  nRows = m_TableModel->rowCount();
+  double xMax = 0.0;
+  double yMax = 0.0;
+
   for(qint32 r = 0; r < nRows; ++r)
   {
     if (r == m_PlotCurves.size())
     {
       curve = new QwtPlotCurve("");
       curve->setRenderHint(QwtPlotItem::RenderAntialiased);
-      curve->setPen(QPen(m_TableModel->getColors().at(r)));
+      QColor c = QColor(m_TableModel->getColor(r));
+      c.setAlpha(UIA::Alpha);
+      curve->setPen(QPen(c));
       curve->attach(m_PlotView);
       m_PlotCurves.append(curve);
     }
+    else
+    {
+      curve = m_PlotCurves[r];
+      QColor c = QColor(m_TableModel->getColor(r));
+      c.setAlpha(UIA::Alpha);
+      curve->setPen(QPen(c));
+    }
+
     switch(m_CurveType)
     {
       case StatsGen::Beta:
-        createBetaCurve(r);
+        createBetaCurve(r, xMax, yMax);
         break;
       case StatsGen::LogNormal:
-        createLogNormalCurve(r);
+        createLogNormalCurve(r, xMax, yMax);
         break;
       case StatsGen::Power:
-        createPowerCurve(r);
+        createPowerCurve(r, xMax, yMax);
         break;
       default:
         break;
     }
   }
+  m_PlotView->replot();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void StatsGenPlotWidget::createBetaCurve(int tableRow)
+void StatsGenPlotWidget::createBetaCurve(int tableRow, double &xMax, double &yMax)
 {
+  QwtPlotCurve* curve = m_PlotCurves[tableRow];
+  int err = 0;
+  double mu = m_TableModel->getMu(tableRow);
+  double sigma = m_TableModel->getSigma(tableRow);
+  int size = 256;
+  QwtArray<double > x;
+  QwtArray<double > y;
+  StatsGen sg;
+  err = sg.GenBeta<QwtArray<double > > (mu, sigma, x, y, size);
+  if (err == 1)
+  {
+    //TODO: Present Error Message
+    return;
+  }
+
+  for (int i = 0; i < size; ++i)
+  {
+ //   std::cout << x[i] << "  " << y[i] << std::endl;
+    if (x[i] > xMax) { xMax = x[i]; }
+    if (y[i] > yMax) { yMax = y[i]; }
+  }
+  curve->setData(x, y);
+
+  m_PlotView->setAxisScale(QwtPlot::yLeft, 0.0, yMax);
+  m_PlotView->setAxisScale(QwtPlot::xBottom, 0.0, xMax);
 
 }
 
@@ -197,7 +250,7 @@ void StatsGenPlotWidget::createBetaCurve(int tableRow)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void StatsGenPlotWidget::createLogNormalCurve(int tableRow)
+void StatsGenPlotWidget::createLogNormalCurve(int tableRow, double &xMax, double &yMax)
 {
   QwtPlotCurve* curve = m_PlotCurves[tableRow];
   int err = 0;
@@ -208,16 +261,12 @@ void StatsGenPlotWidget::createLogNormalCurve(int tableRow)
   QwtArray<double > y;
   StatsGen sg;
   err = sg.GenLogNormal<QwtArray<double > > (mu, sigma, x, y, size);
-  err = sg.GenLogNormal<QwtArray<double > > (mu, sigma, x, y, size);
   if (err == 1)
   {
     //TODO: Present Error Message
     return;
   }
-//  double xMax = std::numeric_limits<double>::min();
-//  double yMax = std::numeric_limits<double>::min();
-  double xMax = 0.0;
-  double yMax = 0.0;
+
   for (int i = 0; i < size; ++i)
   {
  //   std::cout << x[i] << "  " << y[i] << std::endl;
@@ -225,33 +274,51 @@ void StatsGenPlotWidget::createLogNormalCurve(int tableRow)
     if (y[i] > yMax) { yMax = y[i]; }
   }
   curve->setData(x, y);
+
   m_PlotView->setAxisScale(QwtPlot::yLeft, 0.0, yMax);
   m_PlotView->setAxisScale(QwtPlot::xBottom, 0.0, xMax);
-  m_PlotView->replot();
 }
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void StatsGenPlotWidget::createPowerCurve(int tableRow)
+void StatsGenPlotWidget::createPowerCurve(int tableRow, double &xMax, double &yMax)
 {
+  QwtPlotCurve* curve = m_PlotCurves[tableRow];
+  int err = 0;
+  double mu = m_TableModel->getMu(tableRow);
+  double sigma = m_TableModel->getSigma(tableRow);
+  int size = 256;
+  QwtArray<double > x;
+  QwtArray<double > y;
+  StatsGen sg;
+  err = sg.GenPowerLaw<QwtArray<double > > (mu, sigma, x, y, size);
+  if (err == 1)
+  {
+    //TODO: Present Error Message
+    return;
+  }
 
+  for (int i = 0; i < size; ++i)
+  {
+ //   std::cout << x[i] << "  " << y[i] << std::endl;
+    if (x[i] > xMax) { xMax = x[i]; }
+    if (y[i] > yMax) { yMax = y[i]; }
+  }
+  curve->setData(x, y);
+
+  m_PlotView->setAxisScale(QwtPlot::yLeft, 0.0, yMax);
+  m_PlotView->setAxisScale(QwtPlot::xBottom, 0.0, xMax);
 }
 
-
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void StatsGenPlotWidget::setRowOperationEnabled(bool b)
 {
   addRowBtn->setVisible(b);
   deleteRowBtn->setVisible(b);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void StatsGenPlotWidget::on_deleteRowBtn_clicked()
-{
-QModelIndexList selections = m_TableView->selectionModel()->selectedRows(0);
 }
 
 
@@ -260,5 +327,30 @@ QModelIndexList selections = m_TableView->selectionModel()->selectedRows(0);
 // -----------------------------------------------------------------------------
 void StatsGenPlotWidget::on_addRowBtn_clicked()
 {
-  m_TableModel->addRow(0, 1, 1.0, 0.5);
+  if (!m_TableModel->insertRow(m_TableModel->rowCount()))
+      return;
+  m_TableView->resizeColumnsToContents();
+  m_TableView->scrollToBottom();
+  m_TableView->setFocus();
+  QModelIndex index = m_TableModel->index(m_TableModel->rowCount() - 1, 0);
+  m_TableView->setCurrentIndex(index);
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void StatsGenPlotWidget::on_deleteRowBtn_clicked()
+{
+  QItemSelectionModel *selectionModel = m_TableView->selectionModel();
+  if (!selectionModel->hasSelection())
+      return;
+  QModelIndex index =  selectionModel->currentIndex();
+  if (!index.isValid())
+      return;
+  m_TableModel->removeRow(index.row(), index.parent());
+  if (m_TableModel->rowCount() > 0)
+  {
+    m_TableView->resizeColumnsToContents();
+  }
 }

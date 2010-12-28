@@ -27,75 +27,48 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+#ifndef _SGITEMDELEGATE_HPP_
+#define _SGITEMDELEGATE_HPP_
 
-#ifndef _STATSGENPLOTWIDGET_H_
-#define _STATSGENPLOTWIDGET_H_
+#include <QStyledItemDelegate>
+#include <QtCore/QModelIndex>
 
-#include <QtGui/QWidget>
-#include "ui_StatsGenPlotWidget.h"
+class QModelIndex;
+class QPainter;
+class QStyleOptionViewItem;
+class QAbstractItemModel;
 
-#include "StatsGen.h"
-
-class StatsGenTableModel;
-class QwtPlotZoomer;
-class QwtPlotPicker;
-class QwtPlotPanner;
-class QwtPlotGrid;
-class QwtPlotCurve;
-
-namespace UIA
+/**
+ * @class SGItemDelegate SGItemDelegate.h AIM/StatsGenerator/SGItemDelegate.h
+ * @brief This class creates the appropriate Editor Widget for the Tables
+ * @author Michael A. Jackson for BlueQuartz Software
+ * @date Dec 28, 2010
+ * @version 1.0
+ */
+class SGItemDelegate : public QStyledItemDelegate
 {
-  const static int Alpha = 255;
-}
+    Q_OBJECT
+
+public:
+    explicit SGItemDelegate(QObject *parent=0)
+        : QStyledItemDelegate(parent){}
+
+    void paint(QPainter *painter, const QStyleOptionViewItem &option,
+               const QModelIndex &index) const;
+    QWidget *createEditor(QWidget *parent,
+                          const QStyleOptionViewItem &option,
+                          const QModelIndex &index) const;
+    void setEditorData(QWidget *editor,
+                       const QModelIndex &index) const;
+    void setModelData(QWidget *editor, QAbstractItemModel *model,
+                      const QModelIndex &index) const;
 
 
-class StatsGenPlotWidget : public QWidget, private Ui::StatsGenPlotWidget
-{
+private:
+    QModelIndex m_Index;
+    QWidget* m_Widget;
+    QAbstractItemModel* m_Model;
 
-  Q_OBJECT
-
-  public:
-    StatsGenPlotWidget(QWidget *parent = 0);
-    virtual ~StatsGenPlotWidget();
-
-    void setPlotTitle(QString title);
-
-    int writeDataToHDF5(QString hdf5File);
-
-    void setCurveType(StatsGen::CurveType curveType);
-    void setXAxisName(QString name);
-    void setYAxisName(QString name);
-
-    void setRowOperationEnabled(bool b);
-
-    void setupGui();
-
-    void createBetaCurve(int tableRow, double &xMax, double &yMax);
-    void createLogNormalCurve(int tableRow, double &xMax, double &yMax);
-    void createPowerCurve(int tableRow, double &xMax, double &yMax);
-
-    protected slots:
-      void updatePlot();
-
-      void on_addRowBtn_clicked();
-      void on_deleteRowBtn_clicked();
-
-
-
-    protected:
-
-    private:
-      StatsGenTableModel* m_TableModel;
-      QwtPlotZoomer* m_zoomer;
-      QwtPlotPicker* m_picker;
-      QwtPlotPanner* m_panner;
-      QwtPlotGrid*   m_grid;
-      StatsGen::CurveType m_CurveType;
-
-      QVector<QwtPlotCurve*>  m_PlotCurves;
-
-    StatsGenPlotWidget(const StatsGenPlotWidget&); // Copy Constructor Not Implemented
-    void operator=(const StatsGenPlotWidget&); // Operator '=' Not Implemented
 };
 
-#endif /* _STATSGENPLOTWIDGET_H_ */
+#endif // _SGITEMDELEGATE_HPP_
