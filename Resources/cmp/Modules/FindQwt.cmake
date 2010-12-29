@@ -11,9 +11,14 @@
 #  QWT_LIBRARY_DEBUG - Debug version of qwt library
 #  QWT_LIBRARY_RELEASE - Release Version of qwt library
 
-# MESSAGE (STATUS "Finding Qwt library and headers..." )
 
-# Only set HDF5_INSTALL to the environment variable if it is blank
+set (QWT_CMAKE_DEBUG 1)
+if (QWT_CMAKE_DEBUG)
+    MESSAGE (STATUS "Finding Qwt library and headers..." )
+endif()
+
+
+# Only set QWT_INSTALL to the environment variable if it is blank
 if ("${QWT_INSTALL}" STREQUAL "")
     SET (QWT_INSTALL  $ENV{QWT_INSTALL})
 endif()
@@ -58,7 +63,13 @@ FIND_LIBRARY(QWT_LIBRARY_RELEASE
   NO_DEFAULT_PATH
   )
 
-if (false)
+if ( QWT_CMAKE_DEBUG )
+message(STATUS "QWT_INCLUDE_SEARCH_DIRS: ${QWT_INCLUDE_SEARCH_DIRS}")
+message(STATUS "QWT_LIB_SEARCH_DIRS: ${QWT_LIB_SEARCH_DIRS}")
+message(STATUS "QWT_BIN_SEARCH_DIRS: ${QWT_BIN_SEARCH_DIRS}")
+message(STATUS "QWT_SEARCH_DEBUG_NAMES: ${QWT_SEARCH_DEBUG_NAMES}")
+message(STATUS "QWT_SEARCH_RELEASE_NAMES: ${QWT_SEARCH_RELEASE_NAMES}")
+
 MESSAGE(STATUS "QWT_INCLUDE_DIR: ${QWT_INCLUDE_DIR}")
 MESSAGE(STATUS "QWT_LIBRARY_DEBUG: ${QWT_LIBRARY_DEBUG}")
 MESSAGE(STATUS "QWT_LIBRARY_RELEASE: ${QWT_LIBRARY_RELEASE}")
