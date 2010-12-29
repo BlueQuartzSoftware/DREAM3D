@@ -50,49 +50,30 @@ class StatsGenTableModel : public QAbstractTableModel
     Q_OBJECT;
 
   public:
-
-    enum ColumnIndexes {
-      BinNumber = 0,
-      NumGrains,
-      Mu,
-      Sigma,
-      LineColor
-    };
-
     StatsGenTableModel(QObject* parent = 0);
     virtual ~StatsGenTableModel();
 
-    Qt::ItemFlags flags(const QModelIndex &index) const;
-    QVariant data(const QModelIndex &index,
-                  int role=Qt::DisplayRole) const;
-    QVariant headerData(int section, Qt::Orientation orientation,
-                        int role=Qt::DisplayRole) const;
-    int rowCount(const QModelIndex &parent=QModelIndex()) const;
-    int columnCount(const QModelIndex &parent=QModelIndex()) const;
-
-    bool setData(const QModelIndex &index, const QVariant &value,
-                 int role=Qt::EditRole);
-    bool setHeaderData(int, Qt::Orientation, const QVariant&,
-                       int=Qt::EditRole) { return false; }
-
-    bool insertRows(int row, int count,
-                    const QModelIndex &parent=QModelIndex());
-    bool removeRows(int row, int count,
-                    const QModelIndex &parent=QModelIndex());
-
+    int rowCount ( const QModelIndex & parent = QModelIndex() ) const;
+    int  columnCount ( const QModelIndex & parent = QModelIndex() ) const;
+    QVariant  data ( const QModelIndex & index, int role = Qt::DisplayRole ) const;
+    QVariant  headerData ( int section, Qt::Orientation orientation, int role = Qt::DisplayRole ) const;
 
     QVector<qint32>& getBinNumbers() { return m_BinNumbers; }
     QVector<qint32>& getNumGrains() { return m_NumGrains; }
     QVector<double>& getMu() { return m_Mu; }
     QVector<double>& getSigma() { return m_Sigma; }
-    QVector<QString>& getColors() { return m_Colors; }
+    QVector<QColor>& getColors() { return m_Colors; }
 
     qint32 getBinNumber(qint32 row) { return m_BinNumbers[row]; }
     qint32 getNumGrains(qint32 row) { return m_NumGrains[row]; }
     double getMu(qint32 row) { return m_Mu[row]; }
     double getSigma(qint32 row) { return m_Sigma[row]; }
-    QString getColor(qint32 row) { return m_Colors[row]; }
+    QColor getColor(qint32 row) { return m_Colors[row]; }
 
+    public slots:
+      void addRow(qint32 binNum, qint32 nGrains, double mu, double sigma, QColor color = QColor(Qt::blue));
+      void updateRow(qint32 row, qint32 binNum, qint32 nGrains, double mu, double sigma, QColor color = QColor(Qt::blue));
+      void deleteRow(qint32 row);
 
   private:
     int m_ColumnCount;
@@ -102,7 +83,7 @@ class StatsGenTableModel : public QAbstractTableModel
     QVector<qint32> m_NumGrains;
     QVector<double> m_Mu;
     QVector<double> m_Sigma;
-    QVector<QString> m_Colors;
+    QVector<QColor> m_Colors;
 
 
     StatsGenTableModel(const StatsGenTableModel&); // Copy Constructor Not Implemented
