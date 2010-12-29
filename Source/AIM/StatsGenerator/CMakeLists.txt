@@ -7,7 +7,7 @@ cmake_minimum_required(VERSION 2.8)
 if(QT4_FOUND)
     include( ${QT_USE_FILE} )
     CMP_COPY_QT4_RUNTIME_LIBRARIES( "QtSvg;QtScript")
-    CMP_QT_LIBRARIES_INSTALL_RULES( "QtSvg;QtScript" "./")
+  #  CMP_QT_LIBRARIES_INSTALL_RULES( "QtSvg;QtScript" "./")
 else()
     message(FATAL_ERROR "Qt 4 is Needed for this project.")
 endif(QT4_FOUND)
@@ -19,7 +19,7 @@ find_package(Qwt)
 if (QWT_FOUND)
     include_directories(${QWT_INCLUDE_DIR})
     CMP_COPY_DEPENDENT_LIBRARIES("qwt")
-    CMP_LIBRARIES_INSTALL_RULES("qwt" "./")
+ #   CMP_LIBRARIES_INSTALL_RULES("qwt" "./")
 else()
     message(FATAL_ERROR "Qwt is required for this project")
 endif()
@@ -145,7 +145,53 @@ TARGET_LINK_LIBRARIES( ${PROJECT_NAME}
                         ${QT_LIBRARIES}
                         ${QWT_LIBRARIES}  )
 
-cmp_InstallationSupport(${PROJECT_NAME} ${EXE_DEBUG_EXTENSION} ${StatsGeneratorUI_BINARY_DIR} "1")
-
-
+if (APPLE)
+    cmp_InstallationSupport(${PROJECT_NAME} ${EXE_DEBUG_EXTENSION} ${StatsGeneratorUI_BINARY_DIR} "1")
+else()
+    install(TARGETS ${PROJECT_NAME} DESTINATION ./ COMPONENT Applications)
+    
+    #------------------------------------------------------------------------------
+    # Add install rules for required system runtimes such as MSVCRxx.dll
+    SET (CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS_SKIP ON)
+    SET (CMAKE_INSTALL_DEBUG_LIBRARIES ON)
+    INCLUDE(InstallRequiredSystemLibraries)
+    IF (CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS)
+      INSTALL(FILES ${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS}
+        DESTINATION ./
+        PERMISSIONS OWNER_WRITE OWNER_READ OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ
+        COMPONENT Runtime)
+    
+      # Install the runtimes to the lib dir as well since python modules are
+      # installed in that directory and the manifest files need to present there as
+      # well.
+      INSTALL(FILES ${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS}
+        DESTINATION ./
+        PERMISSIONS OWNER_WRITE OWNER_READ OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ
+        COMPONENT Runtime)
+    ENDIF (CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS)
+    
+    list(APPEND DIRS 
+        ${QT_BINARY_DIR}
+        ${QT_LIBRARY_DIR}
+        ${QWT_BINARY_DIR}
+        ${QWT_LIBRARY_DIR}
+        ${HDF5_BINARY_DIR}
+        ${HDF5_LIBRARY_DIR}
+        ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
+        ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Debug
+        ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Release
+    )
+    set(_extension)
+    set(_dir "")
+    
+    IF(WIN32)
+      set(_extension ".exe")
+      set(_dir "")
+    ENDIF(WIN32)
+    set(APPS "\${CMAKE_INSTALL_PREFIX}/${_dir}/${PROJECT_NAME}${_extension}")  # paths to executables
+    INSTALL(CODE "
+       include(\"${CMAKE_ROOT}/Modules/BundleUtilities.cmake\")
+       fixup_bundle(\"${APPS}\"   \"\"   \"${DIRS}\")
+       " COMPONENT Applications)
+endif()
 
