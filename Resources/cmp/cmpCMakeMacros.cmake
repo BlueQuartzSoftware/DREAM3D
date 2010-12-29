@@ -152,18 +152,27 @@ macro(LibraryProperties targetName DEBUG_EXTENSION)
         PROPERTIES
         DEBUG_POSTFIX ${DEBUG_EXTENSION} )
     
-    IF (APPLE AND BUILD_SHARED_LIBS)
-      OPTION (CMP_BUILD_WITH_INSTALL_NAME "Build Libraries with the install_name set to the installation prefix. This is good if you are going to run from the installation location" OFF)
-      IF(CMP_BUILD_WITH_INSTALL_NAME)
-      
-          SET_TARGET_PROPERTIES(${MXADATAMODEL_LIB_NAME}
-             PROPERTIES
-             LINK_FLAGS "-current_version ${${CMP_PROJECT_NAME}_VERSION} -compatibility_version ${${CMP_PROJECT_NAME}_VERSION}"
-             INSTALL_NAME_DIR "${CMAKE_INSTALL_PREFIX}/lib"
-             BUILD_WITH_INSTALL_RPATH ${CMP_BUILD_WITH_INSTALL_NAME}
-          )
-     ENDIF(CMP_BUILD_WITH_INSTALL_NAME)
-   ENDIF (APPLE AND BUILD_SHARED_LIBS)
+    IF (BUILD_SHARED_LIBS)
+      if (APPLE)
+          OPTION (CMP_BUILD_WITH_INSTALL_NAME "Build Libraries with the install_name set to the installation prefix. This is good if you are going to run from the installation location" OFF)
+          IF(CMP_BUILD_WITH_INSTALL_NAME)
+          
+              SET_TARGET_PROPERTIES(${MXADATAMODEL_LIB_NAME}
+                 PROPERTIES
+                 LINK_FLAGS "-current_version ${${CMP_PROJECT_NAME}_VERSION} -compatibility_version ${${CMP_PROJECT_NAME}_VERSION}"
+                 INSTALL_NAME_DIR "${CMAKE_INSTALL_PREFIX}/lib"
+                 BUILD_WITH_INSTALL_RPATH ${CMP_BUILD_WITH_INSTALL_NAME}
+              )
+         ENDIF(CMP_BUILD_WITH_INSTALL_NAME)
+     endif(APPLE)
+     INSTALL(TARGETS ${targetName} 
+        COMPONENT Applications
+        RUNTIME DESTINATION ./
+        LIBRARY DESTINATION ./ 
+        ARCHIVE DESTINATION ./        
+        BUNDLE DESTINATION ./
+    )   
+   ENDIF( BUILD_SHARED_LIBS)
 
 endmacro(LibraryProperties DEBUG_EXTENSION)
 
