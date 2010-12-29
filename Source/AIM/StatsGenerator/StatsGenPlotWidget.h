@@ -43,6 +43,12 @@ class QwtPlotPanner;
 class QwtPlotGrid;
 class QwtPlotCurve;
 
+namespace UIA
+{
+  const static int Alpha = 255;
+}
+
+
 class StatsGenPlotWidget : public QWidget, private Ui::StatsGenPlotWidget
 {
 
@@ -64,12 +70,17 @@ class StatsGenPlotWidget : public QWidget, private Ui::StatsGenPlotWidget
 
     void setupGui();
 
-    void createBetaCurve(int tableRow);
-    void createLogNormalCurve(int tableRow);
-    void createPowerCurve(int tableRow);
+    void createBetaCurve(int tableRow, double &xMax, double &yMax);
+    void createLogNormalCurve(int tableRow, double &xMax, double &yMax);
+    void createPowerCurve(int tableRow, double &xMax, double &yMax);
 
     protected slots:
       void updatePlot();
+
+      void on_addRowBtn_clicked();
+      void on_deleteRowBtn_clicked();
+
+
 
     protected:
 
