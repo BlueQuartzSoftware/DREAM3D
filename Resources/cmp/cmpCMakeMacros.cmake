@@ -165,13 +165,13 @@ macro(LibraryProperties targetName DEBUG_EXTENSION)
               )
          ENDIF(CMP_BUILD_WITH_INSTALL_NAME)
      endif(APPLE)
-     INSTALL(TARGETS ${targetName} 
-        COMPONENT Applications
-        RUNTIME DESTINATION ./
-        LIBRARY DESTINATION ./ 
-        ARCHIVE DESTINATION ./        
-        BUNDLE DESTINATION ./
-    )   
+#     INSTALL(TARGETS ${targetName} 
+#        COMPONENT Applications
+#        RUNTIME DESTINATION ./
+#        LIBRARY DESTINATION ./ 
+#        ARCHIVE DESTINATION ./        
+#        BUNDLE DESTINATION ./
+#      )   
    ENDIF( BUILD_SHARED_LIBS)
 
 endmacro(LibraryProperties DEBUG_EXTENSION)
@@ -384,7 +384,7 @@ MACRO (CMP_COPY_DEPENDENT_LIBRARIES _libraryList)
 
          # SET(${upperlib}_LIBRARY_DLL_${TYPE} "${${upperlib}_LIBRARY_DLL_${TYPE}}/${lib_name}.dll" CACHE FILEPATH "The path to the DLL Portion of the library" FORCE)
          # message(STATUS "${upperlib}_LIBRARY_DLL_${TYPE}: ${${upperlib}_LIBRARY_DLL_${TYPE}}")
-         # message(STATUS "Generating Copy Rule for DLL File for  ${${upperlib}_LIBRARY_DLL_${TYPE}}")
+          message(STATUS "Generating Copy Rule for DLL Library ${${upperlib}_LIBRARY_DLL_${TYPE}}")
           ADD_CUSTOM_TARGET(ZZ_${upperlib}_DLL_${TYPE}-Copy ALL 
                       COMMAND ${CMAKE_COMMAND} -E copy_if_different ${${upperlib}_LIBRARY_DLL_${TYPE}}
                       ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${BTYPE}/ 
