@@ -57,14 +57,7 @@
     return -1; }
 
 
-/**
- * @class H5ReconStatsReader H5ReconStatsReader.h AIM/Reconstruction/H5ReconStatsReader.h
- * @brief This class reads the statistics that are generated during a Reconstruction
- * phase or a file that was generated with the StatsGenerator Program.
- * @author Michael A. Jackson for BlueQuartz Software
- * @date Dec 23, 2010
- * @version 1.0
- */
+
 class AIMCOMMON_EXPORT H5ReconStatsReader
 {
   public:

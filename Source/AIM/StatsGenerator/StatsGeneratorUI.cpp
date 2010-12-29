@@ -200,13 +200,8 @@ void StatsGeneratorUI::setupGui()
   m_Omega3Plot->setCurveType(StatsGen::LogNormal);
 
   m_BOverAPlot->setPlotTitle(QString("B/A Shape Distribution"));
-  m_BOverAPlot->setCurveType(StatsGen::Beta);
-
   m_COverAPlot->setPlotTitle(QString("C/A Shape Distribution"));
-  m_COverAPlot->setCurveType(StatsGen::Beta);
-
   m_COverBPlot->setPlotTitle(QString("C/B Shape Distribution"));
-  m_COverBPlot->setCurveType(StatsGen::Beta);
   m_COverBPlot->setRowOperationEnabled(false);
 
   m_NeighborPlot->setPlotTitle(QString("Neighbors Distributions"));
