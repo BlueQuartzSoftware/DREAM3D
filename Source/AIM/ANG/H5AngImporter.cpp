@@ -189,6 +189,7 @@ void H5AngImporter::compute()
     err = H5Lite::writeVectorDataset(fileId, AIM::ANG::Index, dims, indices);
   }
   err = H5Fclose(fileId);
+  progressMessage("Import Complete", 100);
   return;
 }
 
