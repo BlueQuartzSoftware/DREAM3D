@@ -97,6 +97,7 @@ public:
 	double **quat_symm;
 
 	vector<vector<double> > neighborhood;
+	vector<vector<double> > neighborhoodfit;
 	vector<vector<double> > svbovera;
 	vector<vector<double> > svcovera;
 	vector<vector<double> > svcoverb;
