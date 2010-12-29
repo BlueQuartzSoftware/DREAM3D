@@ -78,9 +78,9 @@ namespace AIM
     const std::string Average("Average");
     const std::string StandardDeviation("Standard Deviation");
 
-    const std::string Shell_1_Average("Shell 1 Average");
-
-    const std::string Shell_1_StdDev("Shell 1 Standard Deviation");
+    const std::string alpha("Alpha");
+    const std::string beta("Beta");
+    const std::string Exp_k("Exponent K");
   }
 
   namespace Reconstruction

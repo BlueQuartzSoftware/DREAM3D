@@ -31,8 +31,6 @@
 #include "StatsGenTableModel.h"
 #include <iostream>
 
-#include <QApplication>
-#include <QtGui/QStyleOptionComboBox>
 
 // -----------------------------------------------------------------------------
 //
@@ -54,185 +52,9 @@ StatsGenTableModel::~StatsGenTableModel()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-Qt::ItemFlags StatsGenTableModel::flags(const QModelIndex &index) const
-{
-  //  std::cout << "StatsGenTableModel::flags" << std::endl;
-    if (! index.isValid())
-    {
-      return Qt::NoItemFlags;
-    }
-  Qt::ItemFlags theFlags = QAbstractTableModel::flags(index);
-  if (index.isValid())
-  {
-    theFlags |= Qt::ItemIsEditable | Qt::ItemIsSelectable | Qt::ItemIsEnabled;
-
-    int col = index.column();
-    if (col == BinNumber)
-    {
-      theFlags = Qt::ItemIsEnabled;
-    }
-    else if (col == NumGrains)
-    {
-      theFlags = Qt::ItemIsEnabled;
-    }
-    else if (col == Mu)
-    {
-      theFlags = Qt::ItemIsEditable | Qt::ItemIsSelectable | Qt::ItemIsEnabled;
-    }
-    else if (col == Sigma)
-    {
-      theFlags = Qt::ItemIsEditable | Qt::ItemIsSelectable | Qt::ItemIsEnabled;
-    }
-    else if (col == LineColor)
-    {
-      theFlags = Qt::ItemIsEditable | Qt::ItemIsSelectable | Qt::ItemIsEnabled;
-    }
-  }
-  return theFlags;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-QVariant StatsGenTableModel::data(const QModelIndex &index, qint32 role) const
-{
-
-  if (! index.isValid())
-  {
-    return QVariant();
-  }
-
-  if (role == Qt::SizeHintRole) {
-      QStyleOptionComboBox comboBox;
-
-      switch (index.column())
-      {
-          case BinNumber:
-          {
-              comboBox.currentText = QString("1");
-              const QString header = headerData(BinNumber,
-                      Qt::Horizontal, Qt::DisplayRole).toString();
-              if (header.length() > comboBox.currentText.length())
-                  comboBox.currentText = header;
-              break;
-          }
-          case NumGrains:
-          {
-              comboBox.currentText = QString("1");
-              const QString header = headerData(BinNumber,
-                      Qt::Horizontal, Qt::DisplayRole).toString();
-              if (header.length() > comboBox.currentText.length())
-                  comboBox.currentText = header;
-              break;
-          }
-          case Mu:
-          {
-            comboBox.currentText = QString("11");
-              const QString header = headerData(BinNumber,
-                      Qt::Horizontal, Qt::DisplayRole).toString();
-              if (header.length() > comboBox.currentText.length())
-                  comboBox.currentText = header;
-              break;
-          }
-          case Sigma:
-          {
-            comboBox.currentText = QString("11");
-              const QString header = headerData(BinNumber,
-                      Qt::Horizontal, Qt::DisplayRole).toString();
-              if (header.length() > comboBox.currentText.length())
-                  comboBox.currentText = header;
-              break;
-          }
-          case LineColor:
-          {
-            comboBox.currentText = QString("Dark Blue");
-            const QString header = headerData(BinNumber, Qt::Horizontal, Qt::DisplayRole).toString();
-            if (header.length() > comboBox.currentText.length())
-            {
-              comboBox.currentText = header;
-            }
-            break;
-          }
-          default: Q_ASSERT(false);
-      }
-      QFontMetrics fontMetrics(data(index, Qt::FontRole)
-                               .value<QFont>());
-      comboBox.fontMetrics = fontMetrics;
-      QSize size(fontMetrics.width(comboBox.currentText),
-                 fontMetrics.height());
-      return qApp->style()->sizeFromContents(QStyle::CT_ComboBox,
-                                             &comboBox, size);
-  }
-  else if (role == Qt::TextAlignmentRole) {
-    return int(Qt::AlignRight | Qt::AlignVCenter);
-  }
-  else if (role == Qt::DisplayRole || role == Qt::EditRole)
-  {
-    int col = index.column();
-    if (col == BinNumber)
-    {
-     return QVariant(m_BinNumbers[index.row()]);
-    }
-    else if (col == NumGrains)
-    {
-      return QVariant(m_NumGrains[index.row()]);
-    }
-    else if (col == Mu)
-    {
-      return QVariant(m_Mu[index.row()]);
-    }
-    else if (col == Sigma)
-    {
-      return QVariant(m_Sigma[index.row()]);
-    }
-    else if (col == LineColor)
-    {
-      return QVariant(m_Colors[index.row()]);
-    }
-  }
-
-  return QVariant();
-}
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-QVariant  StatsGenTableModel::headerData ( int section, Qt::Orientation orientation, int role ) const
-{
-  if (orientation == Qt::Horizontal && role == Qt::DisplayRole)
-  {
-    switch(section)
-    {
-      case BinNumber:
-        return QVariant(QString("Bin"));
-        break;
-      case NumGrains:
-        return QVariant(QString("Num Grains"));
-        break;
-      case Mu:
-        return QVariant(QString("Average"));
-        break;
-      case Sigma:
-        return QVariant(QString("Std Dev"));
-        break;
-      case LineColor:
-        return QVariant(QString("Color"));
-        break;
-      default:
-        break;
-    }
-
-  }
-  return QVariant();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 int StatsGenTableModel::rowCount(const QModelIndex &index) const
 {
-  return index.isValid() ? 0 : m_RowCount;
+  return m_RowCount;
 }
 
 // -----------------------------------------------------------------------------
@@ -240,98 +62,9 @@ int StatsGenTableModel::rowCount(const QModelIndex &index) const
 // -----------------------------------------------------------------------------
 int StatsGenTableModel::columnCount(const QModelIndex &index) const
 {
-  return index.isValid() ? 0 : m_ColumnCount;
+  return m_ColumnCount;
 }
 
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-bool StatsGenTableModel::setData ( const QModelIndex & index, const QVariant & value, int role)
-{
- // std::cout << "StatsGenTableModel::setData " << value.toString().toStdString() << std::endl;
-  if (!index.isValid() || role != Qt::EditRole ||
-      index.row() < 0 || index.row() >= m_BinNumbers.count() ||
-      index.column() < 0 || index.column() >= m_ColumnCount) {
-      return false;
-  }
-  bool ok;
-  qint32 row = index.row();
-  qint32 col = index.column();
-  switch (col) {
-    case BinNumber:
-      m_BinNumbers[row] = value.toInt(&ok);
-      break;
-    case NumGrains:
-      m_NumGrains[row] = value.toInt(&ok);
-      break;
-    case Mu:
-      m_Mu[row] = value.toDouble(&ok);
-      break;
-    case Sigma:
-      m_Sigma[row] = value.toDouble(&ok);
-      break;
-    case LineColor:
-      m_Colors[row] = value.toString();
-      break;
-    default: Q_ASSERT(false);
-
-  }
-
-  emit dataChanged(index, index);
-  return true;
-}
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-bool StatsGenTableModel::insertRows(int row, int count, const QModelIndex& index)
-{
-  qint32 binNum = 0;
-  qint32 nGrains = 0;
-  double mu = 1.0;
-  double sigma = 0.5;
-  QString c ("blue");
-
-  beginInsertRows(QModelIndex(), row, row + count - 1);
-  for (int i = 0; i < count; ++i) {
-    m_BinNumbers.append(binNum);
-    m_NumGrains.append(nGrains);
-    m_Mu.append(mu);
-    m_Sigma.append(sigma);
-    m_Colors.append(c);
-    m_RowCount = m_BinNumbers.count();
-  }
-  endInsertRows();
-  emit dataChanged(index, index);
-  return true;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-bool StatsGenTableModel::removeRows(int row, int count, const QModelIndex& index)
-{
-    beginRemoveRows(QModelIndex(), row, row + count - 1);
-    for (int i = 0; i < count; ++i) {
-      m_BinNumbers.remove(row);
-      m_NumGrains.remove(row);
-      m_Mu.remove(row);
-      m_Sigma.remove(row);
-      m_Colors.remove(row);
-      m_RowCount = m_BinNumbers.count();
-    }
-    endRemoveRows();
-    emit dataChanged(index, index);
-    return true;
-}
-
-
-
-
-#if 0
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -376,5 +109,79 @@ void StatsGenTableModel::updateRow(qint32 row, qint32 binNum, qint32 nGrains, do
   QModelIndex index1 = createIndex(row, m_ColumnCount);
   emit dataChanged(index0, index1);
 }
-#endif
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QVariant StatsGenTableModel::data(const QModelIndex &index, qint32 role) const
+{
+
+  if (! index.isValid())
+  {
+    return QVariant();
+  }
+
+  if (role == Qt::TextAlignmentRole) {
+    return int(Qt::AlignRight | Qt::AlignVCenter);
+  }
+  else if (role == Qt::DisplayRole)
+  {
+
+    int col = index.column();
+    if (col == 0)
+    {
+     return QVariant(m_BinNumbers[index.row()]);
+    }
+    else if (col == 1)
+    {
+      return QVariant(m_NumGrains[index.row()]);
+    }
+    else if (col == 2)
+    {
+      return QVariant(m_Mu[index.row()]);
+    }
+    else if (col == 3)
+    {
+      return QVariant(m_Sigma[index.row()]);
+    }
+    else if (col == 4)
+    {
+      return QVariant(m_Colors[index.row()]);
+    }
+  }
+
+  return QVariant();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QVariant  StatsGenTableModel::headerData ( int section, Qt::Orientation orientation, int role ) const
+{
+  if (orientation == Qt::Horizontal && role == Qt::DisplayRole)
+  {
+    switch(section)
+    {
+      case 0:
+        return QVariant(QString("Bin"));
+        break;
+      case 1:
+        return QVariant(QString("Num Grains"));
+        break;
+      case 2:
+        return QVariant(QString("Average"));
+        break;
+      case 3:
+        return QVariant(QString("Std Dev"));
+        break;
+      case 4:
+        return QVariant(QString("Color"));
+        break;
+      default:
+        break;
+    }
+
+  }
+  return QVariant();
+}
 

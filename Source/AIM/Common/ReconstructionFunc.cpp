@@ -107,20 +107,6 @@ void ReconstructionFunc::initialize(int nX, int nY, int nZ,
   axisodf = new Bin[18*18*18];
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-//void ReconstructionFunc::loadSlices(AbstractAngDataLoader::Pointer dataLoader)
-//{
-//	for(int i=0;i<zpoints;i++)
-//	{
-//	  dataLoader->loadData(voxels, xpoints, ypoints, zpoints, i);
-//	}
-//}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void ReconstructionFunc::cleanup_data()
 {
 	double bestneighborconfidence;
@@ -1710,9 +1696,6 @@ void  ReconstructionFunc::homogenize_grains()
 
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 int  ReconstructionFunc::load_data(string readname)
 {
   ifstream inputFile;
@@ -2073,8 +2056,7 @@ void  ReconstructionFunc::find_neighbors()
   int grain;
   int nnum;
   int onsurf = 0;
-  double dist, vol, rad;
-//  double totdist;
+  double dist, dist2, vol, diam, diam2;
   int good = 0;
   int neighbor = 0;
   totalsurfacearea=0;
@@ -2090,7 +2072,7 @@ void  ReconstructionFunc::find_neighbors()
     m_Grains[i].neighborlist->swap(nlist);
     m_Grains[i].neighborsurfarealist = new std::vector<double>(numneighs);
     m_Grains[i].neighborsurfarealist->swap(nsalist);
-	m_Grains[i].neighbordistfunc.resize(4,0);
+	m_Grains[i].neighbordistfunc.resize(3,0);
   }
   for(int j = 0; j < (xpoints*ypoints*zpoints); j++)
   {
@@ -2170,21 +2152,28 @@ void  ReconstructionFunc::find_neighbors()
 		x = m_Grains[i].centroidx;
 		y = m_Grains[i].centroidy;
 		z = m_Grains[i].centroidz;
-		rad = m_Grains[i].equivdiameter/2.0;
-		for(int j=1;j<numgrains;j++)
+		diam = m_Grains[i].equivdiameter;
+		for(int j=i;j<numgrains;j++)
 		{
 			xn = m_Grains[j].centroidx;
 			yn = m_Grains[j].centroidy;
 			zn = m_Grains[j].centroidz;
+			diam2 = m_Grains[j].equivdiameter;
 			xdist = fabs(x-xn);
 			ydist = fabs(y-yn);
 			zdist = fabs(z-zn);
 			dist = (xdist*xdist)+(ydist*ydist)+(zdist*zdist);
 			dist = pow(dist,0.5);
-			dist = int(dist/rad);
-			if(dist < 4)
+			dist2 = dist;
+			dist = int(dist/diam);
+			dist2 = int(dist2/diam2);
+			if(dist < 3)
 			{
 				m_Grains[i].neighbordistfunc[dist]++;
+			}
+			if(dist2 < 3)
+			{
+				m_Grains[j].neighbordistfunc[dist2]++;
 			}
 		}
 	  }
@@ -3271,9 +3260,6 @@ void  ReconstructionFunc::measure_misorientations ()
 }
 
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void  ReconstructionFunc::find_colors()
 {
   double red, green, blue;
@@ -3548,9 +3534,6 @@ void ReconstructionFunc::find_schmids()
   }
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void ReconstructionFunc::volume_stats(H5ReconStatsWriter::Pointer h5io)
 {
   double actualgrains = 0;
@@ -3576,6 +3559,7 @@ void ReconstructionFunc::volume_stats(H5ReconStatsWriter::Pointer h5io)
   double maxomega3 = 0;
   vector<int > neighdistfunc;
   neighborhood.resize(maxdiameter + 1);
+  neighborhoodfit.resize(maxdiameter + 1);
   svbovera.resize(maxdiameter + 1);
   svcovera.resize(maxdiameter + 1);
   svcoverb.resize(maxdiameter + 1);
@@ -3583,7 +3567,8 @@ void ReconstructionFunc::volume_stats(H5ReconStatsWriter::Pointer h5io)
   svomega3.resize(maxdiameter + 1);
   for (int temp = 0; temp < (maxdiameter + 1); temp++)
   {
-    neighborhood[temp].resize(9, 0);
+    neighborhood[temp].resize(7, 0);
+    neighborhoodfit[temp].resize(4, 0);
     svbovera[temp].resize(5, 0);
     svcovera[temp].resize(5, 0);
     svcoverb[temp].resize(5, 0);
@@ -3668,12 +3653,15 @@ void ReconstructionFunc::volume_stats(H5ReconStatsWriter::Pointer h5io)
       neighborhood[temp3][1] = neighborhood[temp3][1] / neighborhood[temp3][0];
       neighborhood[temp3][3] = neighborhood[temp3][3] / neighborhood[temp3][0];
       neighborhood[temp3][5] = neighborhood[temp3][5] / neighborhood[temp3][0];
-      neighborhood[temp3][7] = neighborhood[temp3][7] / neighborhood[temp3][0];
       svbovera[temp3][1] = svbovera[temp3][1] / svbovera[temp3][0];
       svcovera[temp3][1] = svcovera[temp3][1] / svcovera[temp3][0];
       svcoverb[temp3][1] = svcoverb[temp3][1] / svcoverb[temp3][0];
       svschmid[temp3][1] = svschmid[temp3][1] / svschmid[temp3][0];
       svomega3[temp3][1] = svomega3[temp3][1] / svomega3[temp3][0];
+      neighborhoodfit[temp3][0] = neighborhood[temp3][0];
+      neighborhoodfit[temp3][1] = neighborhood[temp3][3] - neighborhood[temp3][1];
+      neighborhoodfit[temp3][2] = neighborhood[temp3][1];
+      neighborhoodfit[temp3][3] = log((neighborhood[temp3][5]-neighborhoodfit[temp3][2])/neighborhoodfit[temp3][1])/log(2.0);
     }
   }
   avgvol = avgvol / actualgrains;
@@ -3767,7 +3755,6 @@ void ReconstructionFunc::volume_stats(H5ReconStatsWriter::Pointer h5io)
       neighborhood[temp4][2] = neighborhood[temp4][2] / neighborhood[temp4][0];
       neighborhood[temp4][4] = neighborhood[temp4][4] / neighborhood[temp4][0];
       neighborhood[temp4][6] = neighborhood[temp4][6] / neighborhood[temp4][0];
-      neighborhood[temp4][8] = neighborhood[temp4][8] / neighborhood[temp4][0];
       svbovera[temp4][2] = svbovera[temp4][2] / svbovera[temp4][0];
       svcovera[temp4][2] = svcovera[temp4][2] / svcovera[temp4][0];
       svcoverb[temp4][2] = svcoverb[temp4][2] / svcoverb[temp4][0];
@@ -3784,7 +3771,6 @@ void ReconstructionFunc::volume_stats(H5ReconStatsWriter::Pointer h5io)
       neighborhood[temp4][2] = pow(neighborhood[temp4][2], 0.5);
       neighborhood[temp4][4] = pow(neighborhood[temp4][4], 0.5);
       neighborhood[temp4][6] = pow(neighborhood[temp4][6], 0.5);
-      neighborhood[temp4][8] = pow(neighborhood[temp4][8], 0.5);
       svbovera[temp4][2] = pow(svbovera[temp4][2], 0.5);
       svcovera[temp4][2] = pow(svcovera[temp4][2], 0.5);
       svcoverb[temp4][2] = pow(svcoverb[temp4][2], 0.5);
@@ -3918,16 +3904,13 @@ void ReconstructionFunc::volume_stats(H5ReconStatsWriter::Pointer h5io)
 
   h5io->writeStatsData(maxdiameter, mindiameter,
                        avglogdiam, sdlogdiam, actualgrains,
-                       neighborhood, svbovera, svcovera, svcoverb,
+                       neighborhoodfit, svbovera, svcovera, svcoverb,
                        svschmid, svomega3);
   h5io->writeMisorientationBinsData(misobin, 36);
   h5io->writeMicroTextureData(microbin, 10, actualgrains);
 }
 
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void ReconstructionFunc::volume_stats2D(H5ReconStatsWriter::Pointer h5io)
 {
   double actualgrains = 0;
@@ -3953,12 +3936,14 @@ void ReconstructionFunc::volume_stats2D(H5ReconStatsWriter::Pointer h5io)
   double maxomega3 = 0;
   vector<int> neighdistfunc;
   neighborhood.resize(maxdiameter+1);
+  neighborhoodfit.resize(maxdiameter+1);
   svbovera.resize(maxdiameter+1);
   svschmid.resize(maxdiameter+1);
   svomega3.resize(maxdiameter+1);
   for(int temp = 0; temp < (maxdiameter+1); temp++)
   {
-	neighborhood[temp].resize(9,0);
+	neighborhood[temp].resize(7,0);
+	neighborhoodfit[temp].resize(4,0);
     svbovera[temp].resize(5,0);
     svschmid[temp].resize(5,0);
     svomega3[temp].resize(5,0);
@@ -4019,10 +4004,13 @@ void ReconstructionFunc::volume_stats2D(H5ReconStatsWriter::Pointer h5io)
       neighborhood[temp3][1] = neighborhood[temp3][1]/neighborhood[temp3][0];
       neighborhood[temp3][3] = neighborhood[temp3][3]/neighborhood[temp3][0];
       neighborhood[temp3][5] = neighborhood[temp3][5]/neighborhood[temp3][0];
-      neighborhood[temp3][7] = neighborhood[temp3][7]/neighborhood[temp3][0];
       svbovera[temp3][1] = svbovera[temp3][1]/svbovera[temp3][0];
       svschmid[temp3][1] = svschmid[temp3][1]/svschmid[temp3][0];
 //      svomega3[temp3][1] = svomega3[temp3][1]/svomega3[temp3][0];
+      neighborhoodfit[temp3][0] = neighborhood[temp3][0];
+      neighborhoodfit[temp3][1] = neighborhood[temp3][3] - neighborhood[temp3][1];
+      neighborhoodfit[temp3][2] = neighborhood[temp3][1];
+      neighborhoodfit[temp3][3] = log((neighborhood[temp3][5]-neighborhoodfit[temp3][2])/neighborhoodfit[temp3][1])/log(2.0);
     }
   }
   avgvol = avgvol/actualgrains;
@@ -4092,7 +4080,6 @@ void ReconstructionFunc::volume_stats2D(H5ReconStatsWriter::Pointer h5io)
       neighborhood[temp4][2] = neighborhood[temp4][2]/neighborhood[temp4][0];
       neighborhood[temp4][4] = neighborhood[temp4][4]/neighborhood[temp4][0];
       neighborhood[temp4][6] = neighborhood[temp4][6]/neighborhood[temp4][0];
-      neighborhood[temp4][8] = neighborhood[temp4][8]/neighborhood[temp4][0];
       svbovera[temp4][2] = svbovera[temp4][2]/svbovera[temp4][0];
       svschmid[temp4][2] = svschmid[temp4][2]/svschmid[temp4][0];
 //      svomega3[temp4][2] = svomega3[temp4][2]/svomega3[temp4][0];
@@ -4103,7 +4090,6 @@ void ReconstructionFunc::volume_stats2D(H5ReconStatsWriter::Pointer h5io)
       neighborhood[temp4][2] = pow(neighborhood[temp4][2],0.5);
       neighborhood[temp4][4] = pow(neighborhood[temp4][4],0.5);
       neighborhood[temp4][6] = pow(neighborhood[temp4][6],0.5);
-      neighborhood[temp4][8] = pow(neighborhood[temp4][8],0.5);
       svbovera[temp4][2] = pow(svbovera[temp4][2],0.5);
       svschmid[temp4][2] = pow(svschmid[temp4][2],0.5);
 //      svomega3[temp4][2] = pow(svomega3[temp4][2],0.5);
@@ -4215,7 +4201,7 @@ void ReconstructionFunc::volume_stats2D(H5ReconStatsWriter::Pointer h5io)
   }
   h5io->writeStatsData(maxdiameter, mindiameter,
                        avglogdiam, sdlogdiam, actualgrains,
-                       neighborhood, svbovera, svcovera, svcoverb,
+                       neighborhoodfit, svbovera, svcovera, svcoverb,
                        svschmid, svomega3);
   h5io->writeMisorientationBinsData(misobin, 36);
   h5io->writeMicroTextureData(microbin, 10, actualgrains);
@@ -4286,16 +4272,10 @@ int ReconstructionFunc::write##name##VizFile(const std::string &file)\
   return 0;\
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 WRITE_VTK_GRAIN_WITH_VOXEL_SCALAR_VALUE(Disorientation, kernelmisorientation);
 WRITE_VTK_GRAIN_WITH_VOXEL_SCALAR_VALUE(ImageQuality, imagequality);
 WRITE_VTK_GRAIN_WITH_GRAIN_SCALAR_VALUE(SchmidFactor, schmidfactor);
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 int ReconstructionFunc::writeVisualizationFile(const std::string &file)
 {
   FILE* f = NULL;
@@ -4413,9 +4393,6 @@ int  ReconstructionFunc::writeDownSampledVizFile(const std::string &file )
   return 0;
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void ReconstructionFunc::write_graindata(const std::string &graindataFile)
 {
   vector<int>* nlist;
@@ -4607,35 +4584,6 @@ void ReconstructionFunc::write_grains(const std::string &outputdir)
     plist.clear();
     plist.resize(((xpoints + 1) * (ypoints + 1) * (zpoints + 1)), 0);
   }
-}
-
-void ReconstructionFunc::write_axisodf(const std::string &axisFile)
-{
-  ofstream outFile;
-  outFile.open(axisFile.c_str());
-  double density;
-  for (int i = 0; i < (18 * 18 * 18); i++)
-  {
-    density = axisodf[i].density;
-    outFile << double(density / totalaxes) << endl;
-  }
-  outFile.close();
-}
-
-void ReconstructionFunc::write_eulerodf(const std::string &eulerFile)
-{
-  ofstream outFile;
-  outFile.open(eulerFile.c_str());
-  double density;
-  int numbins = 0;
-  if (crystruct == AIM::Reconstruction::Hexagonal) numbins = 36 * 36 * 12;
-  if (crystruct == AIM::Reconstruction::Cubic) numbins = 18 * 18 * 18;
-  for (int i = 0; i < numbins; i++)
-  {
-    density = eulerodf[i].density;
-    outFile << double(density / totalvol) << endl;
-  }
-  outFile.close();
 }
 
 double ReconstructionFunc::gamma(double x)

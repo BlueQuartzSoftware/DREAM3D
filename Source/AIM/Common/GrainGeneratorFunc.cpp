@@ -200,8 +200,9 @@ int GrainGeneratorFunc::readReconStatsData(H5ReconStatsReader::Pointer h5io)
   READ_STATS_DATA_DISTRIBUTION(err, AIM::HDF5::Grain_SizeVCoverA_Distributions, covera)
   READ_STATS_DATA_DISTRIBUTION(err, AIM::HDF5::Grain_SizeVCoverB_Distributions, coverb)
   READ_STATS_DATA_DISTRIBUTION(err, AIM::HDF5::Grain_SizeVOmega3_Distributions, svomega3)
-  std::vector<double> s1_averages;
-  std::vector<double> s1_stdDevs;
+  std::vector<double> a;
+  std::vector<double> b;
+  std::vector<double> k;
 
 
   path = AIM::HDF5::Grain_SizeVNeighbors_Distributions + ("/") + AIM::HDF5::BinNumber;
@@ -211,23 +212,27 @@ int GrainGeneratorFunc::readReconStatsData(H5ReconStatsReader::Pointer h5io)
   err = h5io->readStatsDataset(path, numGrains);
   CHECK_STATS_READ_ERROR(err, path)
 
-  path = AIM::HDF5::Grain_SizeVNeighbors_Distributions + ("/") + AIM::HDF5::Shell_1_Average;
-  err = h5io->readStatsDataset(path, s1_averages);
+  path = AIM::HDF5::Grain_SizeVNeighbors_Distributions + ("/") + AIM::HDF5::alpha;
+  err = h5io->readStatsDataset(path, a);
   CHECK_STATS_READ_ERROR(err, path)
-  path = AIM::HDF5::Grain_SizeVNeighbors_Distributions + ("/") + AIM::HDF5::Shell_1_StdDev;
-  err = h5io->readStatsDataset(path, s1_stdDevs);
+  path = AIM::HDF5::Grain_SizeVNeighbors_Distributions + ("/") + AIM::HDF5::beta;
+  err = h5io->readStatsDataset(path, b);
+  CHECK_STATS_READ_ERROR(err, path)
+  path = AIM::HDF5::Grain_SizeVNeighbors_Distributions + ("/") + AIM::HDF5::Exp_k;
+  err = h5io->readStatsDataset(path, k);
   CHECK_STATS_READ_ERROR(err, path)
 
   neighborhood.resize(maxdiameter + 1);
   for (int temp7 = 0; temp7 < maxdiameter + 1; temp7++)
   {
-    if (temp7 < mindiameter) neighborhood[temp7].resize(9, 0);
+    if (temp7 < mindiameter) neighborhood[temp7].resize(4, 0);
     if (temp7 >= mindiameter)
     {
       neighborhood[binNumbers[temp7]].resize(9);
-      neighborhood[binNumbers[temp7]][0] = s1_averages[temp7];
-      neighborhood[binNumbers[temp7]][1] = s1_stdDevs[temp7];
-      neighborhood[binNumbers[temp7]][2] = numGrains[temp7];
+      neighborhood[binNumbers[temp7]][0] = a[temp7];
+      neighborhood[binNumbers[temp7]][1] = b[temp7];
+      neighborhood[binNumbers[temp7]][2] = k[temp7];
+      neighborhood[binNumbers[temp7]][3] = numGrains[temp7];
     }
   }
   neighbordist.resize(maxdiameter + 1);

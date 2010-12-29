@@ -86,7 +86,7 @@ H5ReconStatsWriter::Pointer H5ReconStatsWriter::New(const std::string &filename)
 // -----------------------------------------------------------------------------
 int H5ReconStatsWriter::writeStatsData(int maxdiameter, int mindiameter,
                                        double avglogdiam, double sdlogdiam, double actualgrains,
-                                       const std::vector<std::vector<double> > &neighborhood,
+                                       const std::vector<std::vector<double> > &neighborhoodfit,
                                        const std::vector<std::vector<double> > &svbovera,
                                        const std::vector<std::vector<double> > &svcovera,
                                        const std::vector<std::vector<double> > &svcoverb,
@@ -181,21 +181,24 @@ int H5ReconStatsWriter::writeStatsData(int maxdiameter, int mindiameter,
 
   /* ************   Grain_SizeVNeighbors_Distributions *************************** */
   disId = H5Utilities::createGroup(gid, AIM::HDF5::Grain_SizeVNeighbors_Distributions);
-  std::vector<double> s1avg((maxdiameter) + 1, 0.0);
-  std::vector<double> s1stddev((maxdiameter) + 1, 0.0);
+  std::vector<double> a((maxdiameter) + 1, 0.0);
+  std::vector<double> b((maxdiameter) + 1, 0.0);
+  std::vector<double> k((maxdiameter) + 1, 0.0);
   for (int temp7 = mindiameter; temp7 < (maxdiameter) + 1; temp7++)
   {
     binNum[temp7] = temp7;
-    nGrains[temp7] = static_cast<int>(neighborhood[temp7][0]);
-    s1avg[temp7] = neighborhood[temp7][1];
-    s1stddev[temp7] =  neighborhood[temp7][2];
+    nGrains[temp7] = static_cast<int>(neighborhoodfit[temp7][0]);
+    a[temp7] = neighborhoodfit[temp7][1];
+    b[temp7] =  neighborhoodfit[temp7][2];
+    k[temp7] =  neighborhoodfit[temp7][3];
   }
   dims.resize(1); // Single Dimension
   dims[0] = binNum.size();
   err = H5Lite::writeVectorDataset(disId, AIM::HDF5::BinNumber, dims, binNum);
   err = H5Lite::writeVectorDataset(disId, AIM::HDF5::NumGrains, dims, nGrains);
-  err = H5Lite::writeVectorDataset(disId, AIM::HDF5::Shell_1_Average, dims, s1avg);
-  err = H5Lite::writeVectorDataset(disId, AIM::HDF5::Shell_1_StdDev, dims, s1stddev);
+  err = H5Lite::writeVectorDataset(disId, AIM::HDF5::alpha, dims, a);
+  err = H5Lite::writeVectorDataset(disId, AIM::HDF5::beta, dims, b);
+  err = H5Lite::writeVectorDataset(disId, AIM::HDF5::Exp_k, dims, k);
   err = H5Gclose(disId);
 
   /* ************   Grain_SizeVOmega3_Distributions *************************** */
