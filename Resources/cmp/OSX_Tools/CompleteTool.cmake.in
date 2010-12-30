@@ -51,7 +51,7 @@ function(gp_item_default_embedded_path_override item default_embedded_path_var)
   # Embed .dylibs right next to the main bundle executable:
   #
   if(item MATCHES "\\.dylib$")
-    set(path "@executable_path/tool_lib")
+    set(path "@executable_path/lib")
     set(overridden 1)
   endif(item MATCHES "\\.dylib$")
 
@@ -75,7 +75,7 @@ function(gp_item_default_embedded_path_override item default_embedded_path_var)
 endfunction(gp_item_default_embedded_path_override)
 
 #-- Be sure all the internal directories are created first before calling the 'fixup_bundle'
-file(MAKE_DIRECTORY "${CMAKE_INSTALL_PREFIX}/bin/tool_lib")
+file(MAKE_DIRECTORY "${CMAKE_INSTALL_PREFIX}/Utilities")
 #file(MAKE_DIRECTORY "${CMAKE_INSTALL_PREFIX}/Plugins")
 #file(MAKE_DIRECTORY "${CMAKE_INSTALL_PREFIX}/Frameworks")
 #file(MAKE_DIRECTORY "${CMAKE_INSTALL_PREFIX}/Support")
@@ -83,5 +83,5 @@ file(MAKE_DIRECTORY "${CMAKE_INSTALL_PREFIX}/bin/tool_lib")
 
 # -- Run the BundleUtilities cmake code
 include(@CMP_OSX_TOOLS_SOURCE_DIR@/ToolUtilities.cmake)
-deploy_tool("${CMAKE_INSTALL_PREFIX}/bin/@target@" "${PluginList}" "")
+deploy_tool("${CMAKE_INSTALL_PREFIX}/Utilities/@target@" "${PluginList}" "")
 
