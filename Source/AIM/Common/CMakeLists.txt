@@ -81,11 +81,12 @@ SET (AIMCommon_HDRS
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/VTKFileUtils.h
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Quaternions.h
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/MisorientationCalculations.h
+    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/OIMColoring.hpp
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/HDF5/AIM_H5VtkDataWriter.h
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/HDF5/VTKH5Constants.h
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Reconstruction/H5ReconStatsWriter.h
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Reconstruction/H5ReconStatsReader.h
-        )
+)
 
 cmp_IDE_SOURCE_PROPERTIES( "Source/AIM/Common" "${AIMCommon_HDRS}" "${AIMCommon_SRCS}" ${CMP_INSTALL_FILES})
 
