@@ -288,9 +288,7 @@ int H5ReconStatsWriter::writeAxisOrientationData(Bin* axisodf,
   OPEN_HDF5_FILE(m_FileName)
   CREATE_RECONSTRUCTION_GROUP(AIM::HDF5::Reconstruction)
 
-  int size = 0;
-  if (crystruct == AIM::Reconstruction::Hexagonal) size = 36 * 36 * 12;
-  if (crystruct == AIM::Reconstruction::Cubic) size = 18 * 18 * 18;
+  int size = 18 * 18 * 18;
   std::vector<double> data(size, 0.0);
   for (int i = 0; i < size; ++i)
   {
