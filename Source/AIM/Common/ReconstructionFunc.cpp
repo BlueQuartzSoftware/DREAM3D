@@ -2514,6 +2514,7 @@ void  ReconstructionFunc::find_axes ()
 }
 void  ReconstructionFunc::find_vectors ()
 {
+  totalaxes = 0.0;
   for(int i = 1; i < numgrains; i++)
   {
  //   int size = grains[i].numvoxels;
@@ -2700,8 +2701,8 @@ void  ReconstructionFunc::find_vectors ()
 				m_Grains[i].axiseuler2 = ea2;
 				m_Grains[i].axiseuler3 = ea3;
 				bin = (ea3bin*18*18)+(ea2bin*18)+(ea1bin);
-				axisodf[bin].density = axisodf[bin].density+1;
-				totalaxes = totalaxes+1;
+				axisodf[bin].density = axisodf[bin].density+1.0;
+				totalaxes = totalaxes+1.0;
 			}
 		}
     }
@@ -2787,6 +2788,7 @@ void  ReconstructionFunc::find_axes2D()
 }
 void  ReconstructionFunc::find_vectors2D()
 {
+  totalaxes = 0.0;
   for(int i = 1; i < numgrains; i++)
   {
  //   int size = grains[i].numvoxels;
@@ -2814,8 +2816,8 @@ void  ReconstructionFunc::find_vectors2D()
 	{
 		m_Grains[i].axiseuler1 = ea1;
 		bin = ea1bin;
-		axisodf[bin].density = axisodf[bin].density+1;
-		totalaxes = totalaxes+1;
+		axisodf[bin].density = axisodf[bin].density+1.0;
+		totalaxes = totalaxes+1.0;
 	}
   }
 }
@@ -4406,7 +4408,6 @@ void ReconstructionFunc::write_graindata(const std::string &graindataFile)
   outFile << "Grain ID	Euler1	Euler2	Euler3	Equiv. Diameter	Grain Avg. Disorientation	Surface Grain	No. Neighbors" << endl;
   for(int i = 1; i < numgrains; i++)
   {
-	double volume = m_Grains[i].volume;
 	double diameter = m_Grains[i].equivdiameter;
 	int onsurface = m_Grains[i].surfacegrain;
 	double avgmiso = m_Grains[i].averagemisorientation;
