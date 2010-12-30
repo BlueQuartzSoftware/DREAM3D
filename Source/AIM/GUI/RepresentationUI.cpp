@@ -71,8 +71,16 @@
     if (false == ok) {i=0;}\
     combobox->setCurrentIndex(i); }
 
+#define WRITE_INT_SETTING(prefs, var)\
+    prefs.setValue(#var, var);
+
+#define READ_INT_SETTING(prefs, var)\
+    { bool ok = false;\
+    int i = prefs.value(#var).toInt(&ok);\
+    if (false == ok) {i=0;} }
+
 #define WRITE_COMBO_BOX(prefs, combobox)\
-    prefs.setValue(#combobox, this->combobox->currentIndex());
+  prefs.setValue(#combobox, this->combobox->currentIndex());
 
 
 #define CHECK_QLABEL_OUTPUT_FILE_EXISTS_BODY1(ns, prefixname, name)\
@@ -241,11 +249,19 @@ void RepresentationUI::closeEvent(QCloseEvent *event)
 void RepresentationUI::readSettings()
 {
   // std::cout << "Read Settings" << std::endl;
-  QSettings prefs;
+#if defined (Q_OS_MAC)
+  QSettings prefs(QSettings::NativeFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
+#else
+  QSettings prefs(QSettings::IniFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
+#endif
   QString val;
   bool ok;
   qint32 i;
   double d;
+  
+  int ActiveTab = 0;
+  READ_INT_SETTING(prefs, ActiveTab);
+  this->tabWidget->setCurrentIndex(ActiveTab);
 
   /* ******** This Section is for the OIM Import Data Tab ************ */
   READ_FILEPATH_SETTING(prefs, oim_InputDir, "");
@@ -329,9 +345,16 @@ void RepresentationUI::readSettings()
 void RepresentationUI::writeSettings()
 {
   // std::cout << "writeSettings" << std::endl;
-  QSettings prefs;
+#if defined (Q_OS_MAC)
+  QSettings prefs(QSettings::NativeFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
+#else
+  QSettings prefs(QSettings::IniFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
+#endif
 //  bool ok = false;
 //  qint32 i = 0;
+  int ActiveTab = this->tabWidget->currentIndex();
+  WRITE_INT_SETTING(prefs, ActiveTab);
+
   /* ******** This Section is for the OIM Import Data Tab ************ */
   WRITE_STRING_SETTING(prefs, oim_InputDir)
   WRITE_STRING_SETTING(prefs, oim_FilePrefix)
