@@ -3938,6 +3938,8 @@ void ReconstructionFunc::volume_stats2D(H5ReconStatsWriter::Pointer h5io)
   neighborhood.resize(maxdiameter+1);
   neighborhoodfit.resize(maxdiameter+1);
   svbovera.resize(maxdiameter+1);
+  svcovera.resize(maxdiameter+1);
+  svcoverb.resize(maxdiameter+1);
   svschmid.resize(maxdiameter+1);
   svomega3.resize(maxdiameter+1);
   for(int temp = 0; temp < (maxdiameter+1); temp++)
