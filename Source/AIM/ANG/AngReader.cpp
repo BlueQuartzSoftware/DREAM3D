@@ -29,7 +29,7 @@
 //
 // -----------------------------------------------------------------------------
 AngReader::AngReader() :
-m_UserOrigin(UpperRightOrigin),
+m_UserOrigin(NoOrientation),
 m_FileName(""),
 m_NumberOfElements(0),
 m_ManageMemory(true)
@@ -244,10 +244,11 @@ int AngReader::readFile()
   int counter = 0;
   while (in.eof() == false)
   {
-    ++counter;
-    this->readData(buf, xMaxValue, yMaxValue, nEvenCols, xstep, ystep);
+
+    this->readData(buf, xMaxValue, yMaxValue, nEvenCols, xstep, ystep, counter);
     // Read the next line of data
     in.getline(buf, kBufferSize);
+    ++counter;
   }
   if (counter != totalDataRows && in.eof() == true)
   {
@@ -324,7 +325,7 @@ void AngReader::parseHeaderLine(char* buf, size_t length)
 //  Read the data part of the ANG file
 // -----------------------------------------------------------------------------
 void AngReader::readData(const std::string &line, float xMaxValue, float yMaxValue,
-                        int nCols, float xstep, float ystep)
+                        int nCols, float xstep, float ystep, size_t counter)
 {
   /* When reading the data there should be at least 8 cols of data. There may even
    * be 10 columns of data. The column names should be the following:
@@ -395,8 +396,37 @@ void AngReader::readData(const std::string &line, float xMaxValue, float yMaxVal
     x = xMaxValue - x;
     y = yMaxValue - y;
   }
-  size_t offset = static_cast<size_t > ((y / ystep) * nCols + (x / xstep));
 
+  size_t offset  = 0;
+  
+  if (m_UserOrigin == NoOrientation) 
+  {
+    // If the user/programmer sets "NoOrientation" then we simply read the data
+    // from the file and copy the values into the arrays without any regard for
+    // the true X and Y positions in the grid. We are simply trying to keep the
+    // data as close to the original as possible.
+    offset = counter;
+  }
+  else
+  {
+    // The next set of calculations figures out where to place the data
+    // in the arrays, ie, which offset based on the array really being a 
+    // 2D array that is laid out with the X Axis moving the fastest and
+    // the Y Axis moving the slowest. On Visual Studio there seems to be some
+    // sort of round off error when the floats are converted to size_t types.
+    // In order for Visual Studio compilers to get the conversion correct
+    // it seems that we need to break up the calculations, at least on 32 bit
+    // compiles. 64 Bit compiles did not show this issue. If the user/programmer
+    // sets any type of Orientation preference then we have to calculate
+    // the offsets based on the x, y, xStep and yStep values. Changes to the
+    // x and y values from the "if" statements above will effect what the final
+    // offset is calculated to be.
+    float xTemp = x / xstep;
+    float yTemp = y / ystep;
+    size_t xTempSizeT = static_cast<size_t>(xTemp);
+    size_t yTempSizeT = static_cast<size_t>(yTemp);
+    offset = yTempSizeT * nCols + xTempSizeT;
+  }
   m_Phi1[offset] = p1;
   m_Phi[offset] = p;
   m_Phi2[offset] = p2;

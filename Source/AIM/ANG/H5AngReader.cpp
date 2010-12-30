@@ -348,7 +348,35 @@ int H5AngReader::readData(hid_t parId)
         x[i] = xMaxValue - x[i];
         y[i] = yMaxValue - y[i];
       }
-      offset = static_cast<size_t > ((y[i] / ystep) * nCols + (x[i] / xstep));
+
+      if (userOrigin == NoOrientation) 
+      {
+        // If the user/programmer sets "NoOrientation" then we simply read the data
+        // from the file and copy the values into the arrays without any regard for
+        // the true X and Y positions in the grid. We are simply trying to keep the
+        // data as close to the original as possible.
+        offset = i;
+      }
+      else
+      {
+        // The next set of calculations figures out where to place the data
+        // in the arrays, ie, which offset based on the array really being a 
+        // 2D array that is laid out with the X Axis moving the fastest and
+        // the Y Axis moving the slowest. On Visual Studio there seems to be some
+        // sort of round off error when the floats are converted to size_t types.
+        // In order for Visual Studio compilers to get the conversion correct
+        // it seems that we need to break up the calculations, at least on 32 bit
+        // compiles. 64 Bit compiles did not show this issue. If the user/programmer
+        // sets any type of Orientation preference then we have to calculate
+        // the offsets based on the x, y, xStep and yStep values. Changes to the
+        // x and y values from the "if" statements above will effect what the final
+        // offset is calculated to be.
+        float xTemp = x[i] / xstep;
+        float yTemp = y[i] / ystep;
+        size_t xTempSizeT = static_cast<size_t>(xTemp);
+        size_t yTempSizeT = static_cast<size_t>(yTemp);
+        offset = yTempSizeT * nCols + xTempSizeT;
+      }
       shuffleTable[i] = offset;
   }
 
