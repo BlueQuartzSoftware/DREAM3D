@@ -113,7 +113,8 @@ class OIMColoring
 
 
     /**
-     * @brief Wrapper for convenience
+     * @brief Wrapper for convenience - Generates an RGB color based on the Inverse
+     * Pole Figure coloring for a Cubic Crystal Structure
      * @param eulers The euler angles which MUST be encode into the array in the following order:
      * phi1, Phi, phi2
      * @param refDir The Reference direction. Usually either the ND (001), RD(100), or TD(010)
@@ -128,13 +129,14 @@ class OIMColoring
 
     /**
      * @brief Generates an RGB color based on the Inverse Pole Figure coloring
+     * for a Cubic Crystal Structure
      * @param phi1 The phi1 euler Angle
      * @param phi The Phi euler Angle
      * @param phi2 The phi2 euler Angle
      * @param refDir0 The first component of the Reference direction vector
      * @param refDir1 The Second component of the Reference direction vector
      * @param refDir2 The third component of the Reference direction vector
-     * @param rgb A pointer to store the RGB value into
+     * @param rgb Output - A pointer to store the RGB value into a unsigned char[3] array.
      */
     template <typename T>
     static void GenerateIPFColor(T phi1, T phi, T phi2,
@@ -216,17 +218,15 @@ class OIMColoring
       green = green * 255.0f;
       blue = blue * 255.0f;
 
-      rgb[0] = static_cast<unsigned int>(red);
-      rgb[1] = static_cast<unsigned int>(green);
-      rgb[2] = static_cast<unsigned int>(blue);
+      rgb[0] = static_cast<unsigned char>(red);
+      rgb[1] = static_cast<unsigned char>(green);
+      rgb[2] = static_cast<unsigned char>(blue);
     }
 
 /**
- *
+ * @brief Calculates the IPF Color in RGB for a Hexagonal Crystal Structure.
  * @param q1 Quaternion to calculate the RGB value for
- * @param rgb[0] in/out rgb[0] value expressed as a decimal between 0 and 1
- * @param rgb[1] in/out rgb[1] value expressed as a decimal between 0 and 1
- * @param rgb[2] in/out rgb[2] value expressed as a decimal between 0 and 1
+ * @param rgb Output - A pointer to store the RGB value into a unsigned char[3] array.
  */
     void static CalculateHexIPFColor(double q1[4],
                               unsigned char* rgb)
@@ -235,6 +235,7 @@ class OIMColoring
       double p[3];
       double d[3];
       double theta, phi;
+      double _rgb[3] = { 0.0, 0.0, 0.0};
       for (int j = 0; j < 12; j++)
       {
         AIM::Quaternions::Hex_MultiplyByUnitQuaterion(q1, j,qc);
@@ -273,34 +274,37 @@ class OIMColoring
           if (theta < -1) theta = -1;
 
           theta = (180.0 / MXA_PI) * acos(theta);
-          rgb[0] = (90.0 - theta) / 90.0;
+          _rgb[0] = (90.0 - theta) / 90.0;
           phi = (d[0] * 1) + (d[1] * 0) + (d[2] * 0);
           if (phi > 1) phi = 1;
 
           if (phi < -1) phi = -1;
 
           phi = (180.0 / MXA_PI) * acos(phi);
-          rgb[1] = (1 - rgb[0]) * ((30.0 - phi) / 30.0);
-          rgb[2] = (1 - rgb[0]) - rgb[1];
+          _rgb[1] = (1 - _rgb[0]) * ((30.0 - phi) / 30.0);
+          _rgb[2] = (1 - _rgb[0]) - _rgb[1];
         }
       }
 
-      double max = rgb[0];
-      if (rgb[1] > max) max = rgb[1];
+      double max = _rgb[0];
+      if (_rgb[1] > max) max = _rgb[1];
+      if (_rgb[2] > max) max = _rgb[2];
 
-      if (rgb[2] > max) max = rgb[2];
-
-      rgb[0] = rgb[0] / max;
-      rgb[1] = rgb[1] / max;
-      rgb[2] = rgb[2] / max;
-      rgb[0] = (0.75 * rgb[0]) + 0.25;
-      rgb[1] = (0.75 * rgb[1]) + 0.25;
-      rgb[2] = (0.75 * rgb[2]) + 0.25;
+      _rgb[0] = _rgb[0] / max;
+      _rgb[1] = _rgb[1] / max;
+      _rgb[2] = _rgb[2] / max;
+      _rgb[0] = (0.75 * _rgb[0]) + 0.25;
+      _rgb[1] = (0.75 * _rgb[1]) + 0.25;
+      _rgb[2] = (0.75 * _rgb[2]) + 0.25;
 
       // Multiply by 255 to get an R/G/B value
-      rgb[0] = rgb[0] * 255.0f;
-      rgb[1] = rgb[1] * 255.0f;
-      rgb[2] = rgb[2] * 255.0f;
+      _rgb[0] = _rgb[0] * 255.0f;
+      _rgb[1] = _rgb[1] * 255.0f;
+      _rgb[2] = _rgb[2] * 255.0f;
+
+      rgb[0] = static_cast<unsigned char>(_rgb[0]);
+      rgb[1] = static_cast<unsigned char>(_rgb[1]);
+      rgb[2] = static_cast<unsigned char>(_rgb[2]);
     }
 
 
