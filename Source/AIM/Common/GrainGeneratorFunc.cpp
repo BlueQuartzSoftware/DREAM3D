@@ -1500,7 +1500,7 @@ void  GrainGeneratorFunc::fill_gaps(int numgrains)
       }
     }
   }
-  gsizes.resize(numgrains,0);
+  gsizes.resize(numgrains+1,0);
   for (int i = 0; i < (xpoints*ypoints*zpoints); i++)
   {
     int name = voxels[i].grainname;

@@ -121,6 +121,7 @@ namespace AIM
     const std::string CrystallographicErrorFile("Synthetic_CrystallographicError.txt");
     const std::string AnalysisFile("Synthetic_Stats.txt");
     const std::string EulerFile("Synthetic_GrainAngles.txt");
+    const std::string GrainDataFile("Synthetic_GrainData.txt");//14
 
     enum Overlap {
         UnknownOverlap = 0,

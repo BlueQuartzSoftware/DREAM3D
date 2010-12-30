@@ -4400,31 +4400,19 @@ int  ReconstructionFunc::writeDownSampledVizFile(const std::string &file )
 void ReconstructionFunc::write_graindata(const std::string &graindataFile)
 {
   vector<int>* nlist;
-  vector<int> neighdistfunc;
   ofstream outFile;
   outFile.open(graindataFile.c_str());
   outFile << numgrains << endl;
-  outFile << "Grain ID	Euler1	Euler2	Euler3	Equiv. Sphere Diameter	Grain Avg. Disorientation	Surface Grain	No. Neighbors	List of Neighbors ->" << endl;
+  outFile << "Grain ID	Euler1	Euler2	Euler3	Equiv. Diameter	Grain Avg. Disorientation	Surface Grain	No. Neighbors" << endl;
   for(int i = 1; i < numgrains; i++)
   {
 	double volume = m_Grains[i].volume;
-	double radius = m_Grains[i].equivdiameter;
+	double diameter = m_Grains[i].equivdiameter;
 	int onsurface = m_Grains[i].surfacegrain;
 	double avgmiso = m_Grains[i].averagemisorientation;
 	nlist = m_Grains[i].neighborlist;
-	neighdistfunc = m_Grains[i].neighbordistfunc;
 	int nucleus = m_Grains[i].nucleus;
-	outFile << i << "	" << voxels[nucleus].euler1 <<  "	" << voxels[nucleus].euler2 <<  "	" << voxels[nucleus].euler3 << "	" << radius << "	" << avgmiso << "	" << onsurface << "	";
-//	for(int j=0;j<neighdistfunc.size();j++)
-//	{
-//		outFile << neighdistfunc[j] << "	";
-//	}
-	outFile << i << "	" << voxels[nucleus].euler1 <<  "	" << voxels[nucleus].euler2 <<  "	" << voxels[nucleus].euler3 << "	" << radius << "	" << avgmiso << "	" << onsurface << "	" << nlist->size() << "	";
-	size_t stop = nlist->size();
-	for(size_t j=0;j<stop;j++)
-	{
-		outFile << nlist->at(j) << "	";
-	}
+	outFile << i << "	" << voxels[nucleus].euler1 <<  "	" << voxels[nucleus].euler2 <<  "	" << voxels[nucleus].euler3 << "	" << diameter << "	" << avgmiso << "	" << onsurface << "	" << nlist->size() << "	";
 	outFile << endl;
   }
   outFile.close();
