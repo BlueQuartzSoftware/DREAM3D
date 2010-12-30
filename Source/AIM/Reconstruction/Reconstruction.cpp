@@ -363,7 +363,7 @@ void Reconstruction::compute()
   /** ******* End VTK Visualization File Writing Section ****** */
 
   CHECK_FOR_CANCELED(ReconstructionFunc)
-  progressMessage(AIM_STRING("Writing Out HDF5 Grain File"), 95);
+  progressMessage(AIM_STRING("Writing Out HDF5 Grain File. This may take a few minutes to complete."), 95);
   if (m_WriteHDF5GrainFile) { writeHDF5GrainsFile(hdf5GrainFile, m); }
 
   progressMessage(AIM_STRING("Reconstruction Complete"), 100);
@@ -417,7 +417,7 @@ int Reconstruction::writeHDF5GrainsFile(const std::string &hdfFile,
   std::cout << "Writing out " << r->numgrains << " to an HDF5 Grain File..." << std::endl;
   for (int i = 1; i < r->numgrains; i++)
   {
-    std::cout << " Grain: " << i << " Gathering Data" << std::endl;
+ //   std::cout << " Grain: " << i << " Gathering Data" << std::endl;
     vector<int >* vlist = r->m_Grains[i].voxellist;
     int vid = vlist->at(0);
     ss.str("");
@@ -427,9 +427,9 @@ int Reconstruction::writeHDF5GrainsFile(const std::string &hdfFile,
 
     vector<int > plist(((r->xpoints + 1) * (r->ypoints + 1) * (r->zpoints + 1)), 0);
     int pcount = 0;
-	double q1[5];
-	unsigned char rgb[3] = {0, 0, 0};
-	double RefDirection[3] = {0.0, 0.0, 1.0};
+	  double q1[5];
+	  unsigned char rgb[3] = {0, 0, 0};
+	  double RefDirection[3] = {0.0, 0.0, 1.0};
     int ocol, orow, oplane;
     int col, row, plane;
     int pid;
@@ -504,7 +504,7 @@ int Reconstruction::writeHDF5GrainsFile(const std::string &hdfFile,
       }
       grainName[0] = r->voxels[vid].grainname;
     }
-    std::cout << " Grain: " << i << " Writing HDF5 File" << std::endl;
+ //   std::cout << " Grain: " << i << " Writing HDF5 File" << std::endl;
     err = h5writer->writeUnstructuredGrid(hdfPath, points, cells, cell_types);
     points.resize(0);
     cells.resize(0);
