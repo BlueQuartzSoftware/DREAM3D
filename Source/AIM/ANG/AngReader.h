@@ -279,7 +279,9 @@ private:
     /** @brief Parses the data from a line of data from the TSL .ang file
     * @param line The line of data to parse
     */
-    void readData(const std::string &line, float xMaxValue, float yMaxValue, int nCols, float xstep, float ystep);
+    void readData(const std::string &line, 
+      float xMaxValue, float yMaxValue, int nCols, 
+      float xstep, float ystep, size_t counter);
 
     AngReader(const AngReader&);    // Copy Constructor Not Implemented
     void operator=(const AngReader&);  // Operator '=' Not Implemented
