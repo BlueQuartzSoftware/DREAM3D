@@ -3947,6 +3947,8 @@ void ReconstructionFunc::volume_stats2D(H5ReconStatsWriter::Pointer h5io)
 	neighborhood[temp].resize(7,0);
 	neighborhoodfit[temp].resize(4,0);
     svbovera[temp].resize(5,0);
+    svcovera[temp].resize(5,0);
+    svcoverb[temp].resize(5,0);
     svschmid[temp].resize(5,0);
     svomega3[temp].resize(5,0);
   }
