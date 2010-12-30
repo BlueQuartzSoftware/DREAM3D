@@ -110,18 +110,15 @@ macro(cmp_ToolInstallationSupport EXE_NAME EXE_DEBUG_EXTENSION EXE_BINARY_DIR)
         DEBUG_OUTPUT_NAME ${EXE_NAME}${EXE_DEBUG_EXTENSION}
         RELEASE_OUTPUT_NAME ${EXE_NAME}
     )
-    
 
     INSTALL(TARGETS ${EXE_NAME} 
         COMPONENT Applications
-        RUNTIME DESTINATION ./
+        RUNTIME DESTINATION Utilities
         LIBRARY DESTINATION ./ 
         ARCHIVE DESTINATION ./        
         BUNDLE DESTINATION ./
     )   
 
-    
-    
     #   message(STATUS "Creating Install CMake file for tool application ${EXE_NAME}")
     if (APPLE)
         if(CMAKE_BUILD_TYPE MATCHES "Debug")
