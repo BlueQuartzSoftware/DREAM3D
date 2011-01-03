@@ -24,7 +24,6 @@
 #include <QtCore/QFile>
 #include <QtCore/QDir>
 #include <QtCore/QString>
-#include <QtCore/QSettings>
 #include <QtCore/QUrl>
 #include <QtCore/QThread>
 #include <QtCore/QFileInfoList>
@@ -243,6 +242,7 @@ void RepresentationUI::closeEvent(QCloseEvent *event)
 }
 
 
+
 // -----------------------------------------------------------------------------
 //  Read the prefs from the local storage file
 // -----------------------------------------------------------------------------
@@ -258,71 +258,22 @@ void RepresentationUI::readSettings()
   bool ok;
   qint32 i;
   double d;
-  
+
   int ActiveTab = 0;
   READ_INT_SETTING(prefs, ActiveTab);
   this->tabWidget->setCurrentIndex(ActiveTab);
 
   /* ******** This Section is for the OIM Import Data Tab ************ */
-  READ_FILEPATH_SETTING(prefs, oim_InputDir, "");
-  READ_STRING_SETTING(prefs, oim_FilePrefix, "");
-  READ_SETTING(prefs, oim_ZMaxSlice, ok, i, 300 , Int);
-  READ_SETTING(prefs, oim_ZStartIndex, ok, i, 1 , Int);
-  READ_SETTING(prefs, oim_ZEndIndex, ok, i, 10 , Int);
-  READ_STRING_SETTING(prefs, oim_zSpacing, "0.25");
-  READ_STRING_SETTING(prefs, oim_OutputFile, "*.h5ang");
-
+  oim_LoadSettings(prefs);
 
   /* ******** This Section is for the Reconstruction Tab ************ */
-  READ_FILEPATH_SETTING(prefs, rec_OutputDir, "");
-  READ_FILEPATH_SETTING(prefs, rec_H5InputFile, "");
-  READ_BOOL_SETTING(prefs, rec_, mergeTwins, false);
-  READ_BOOL_SETTING(prefs, rec_, mergeColonies, false);
-  READ_BOOL_SETTING(prefs, rec_, alreadyFormed, false);
-  READ_SETTING(prefs, minAllowedGrainSize, ok, i, 8 , Int);
-  READ_SETTING(prefs, minConfidence, ok, d, 0.1 , Double);
-  READ_SETTING(prefs, downsampleFactor, ok, d, 1.0 , Double);
-  READ_SETTING(prefs, minImageQuality, ok, d, 50.0 , Double);
-  READ_SETTING(prefs, misOrientationTolerance, ok, d, 5.0 , Double);
-  READ_COMBO_BOX(prefs, crystalStructure)
-  READ_COMBO_BOX(prefs, alignMeth)
-
-  READ_BOOL_SETTING(prefs, rec_, DisorientationVizFile, true);
-  READ_BOOL_SETTING(prefs, rec_, ImageQualityVizFile, true);
-  READ_BOOL_SETTING(prefs, rec_, IPFVizFile, true);
-  READ_BOOL_SETTING(prefs, rec_, SchmidFactorVizFile, true);
-  READ_BOOL_SETTING(prefs, rec_, VisualizationVizFile, true);
-  READ_BOOL_SETTING(prefs, rec_, DownSampledVizFile, true);
-  READ_BOOL_SETTING(prefs, rec_, HDF5GrainFile, true);
-
-
+  rec_LoadSettings(prefs);
 
   /* ******** This Section is for the Grain Generator Tab ************ */
-  READ_FILEPATH_SETTING(prefs, gg_InputDir, "");
-  READ_FILEPATH_SETTING(prefs, gg_OutputDir, "");
-  READ_SETTING(prefs, gg_XResolution, ok, d, 0.25 , Double);
-  READ_SETTING(prefs, gg_YResolution, ok, d, 0.25 , Double);
-  READ_SETTING(prefs, gg_ZResolution, ok, d, 0.25 , Double);
-  READ_SETTING(prefs, gg_FillingErrorWeight, ok, d, 1.0 , Double);
-  READ_SETTING(prefs, gg_NeighborhoodErrorWeight, ok, d, 1.0 , Double);
-  READ_SETTING(prefs, gg_SizeDistErrorWeight, ok, d, 1.0 , Double);
-  READ_SETTING(prefs, gg_FractionPrecipitates, ok, d, 25 , Double);
-  READ_SETTING(prefs, gg_NumGrains, ok, i, 1000 , Int);
-
-  READ_BOOL_SETTING(prefs, gg_, AlreadyFormed, false);
-  gg_AlreadyFormed->blockSignals(false);
-  READ_COMBO_BOX(prefs, gg_CrystalStructure)
-  READ_COMBO_BOX(prefs, gg_ShapeClass)
-  READ_COMBO_BOX(prefs, gg_Precipitates)
+  gg_LoadSettings(prefs);
 
   /* ******** This Section is for the Surface Meshing Tab ************ */
-  READ_FILEPATH_SETTING(prefs, sm_InputFile, "");
-  READ_FILEPATH_SETTING(prefs, sm_OutputDir, "");
-
-  READ_BOOL_SETTING(prefs, sm_, SmoothMesh, false);
-  READ_BOOL_SETTING(prefs, sm_, LockQuadPoints, false);
-  READ_SETTING(prefs, sm_SmoothIterations, ok, i, 1 , Int);
-  READ_SETTING(prefs, sm_WriteOutputFileIncrement, ok, i, 10 , Int);
+  sm_LoadSettings(prefs);
 
   /* ******** This Section is for the Volume Meshing Tab ************ */
   READ_FILEPATH_SETTING(prefs, vm_NodesFile, "");
@@ -356,63 +307,16 @@ void RepresentationUI::writeSettings()
   WRITE_INT_SETTING(prefs, ActiveTab);
 
   /* ******** This Section is for the OIM Import Data Tab ************ */
-  WRITE_STRING_SETTING(prefs, oim_InputDir)
-  WRITE_STRING_SETTING(prefs, oim_FilePrefix)
-  WRITE_STRING_SETTING(prefs, oim_ZMaxSlice)
-  WRITE_STRING_SETTING(prefs, oim_ZStartIndex)
-  WRITE_STRING_SETTING(prefs, oim_ZEndIndex)
-  WRITE_STRING_SETTING(prefs, oim_zSpacing)
-  WRITE_STRING_SETTING(prefs, oim_OutputFile)
+  oim_SaveSettings(prefs);
 
   /* ******** This Section is for the Reconstruction Tab ************ */
-  WRITE_STRING_SETTING(prefs, rec_OutputDir)
-  WRITE_STRING_SETTING(prefs, rec_H5InputFile)
-  WRITE_BOOL_SETTING(prefs, mergeTwins, rec_mergeTwins->isChecked())
-  WRITE_BOOL_SETTING(prefs, mergeColonies, rec_mergeColonies->isChecked())
-  WRITE_BOOL_SETTING(prefs, alreadyFormed, rec_alreadyFormed->isChecked())
-
-  WRITE_SETTING(prefs, minAllowedGrainSize)
-  WRITE_SETTING(prefs, minConfidence)
-  WRITE_SETTING(prefs, downsampleFactor)
-  WRITE_SETTING(prefs, minImageQuality)
-  WRITE_SETTING(prefs, misOrientationTolerance)
-  WRITE_COMBO_BOX(prefs, crystalStructure)
-  WRITE_COMBO_BOX(prefs, alignMeth)
-
-  WRITE_BOOL_SETTING(prefs, DisorientationVizFile, rec_DisorientationVizFile->isChecked())
-  WRITE_BOOL_SETTING(prefs, ImageQualityVizFile, rec_ImageQualityVizFile->isChecked())
-  WRITE_BOOL_SETTING(prefs, IPFVizFile, rec_IPFVizFile->isChecked())
-  WRITE_BOOL_SETTING(prefs, SchmidFactorVizFile, rec_SchmidFactorVizFile->isChecked())
-  WRITE_BOOL_SETTING(prefs, VisualizationVizFile, rec_VisualizationVizFile->isChecked())
-  WRITE_BOOL_SETTING(prefs, DownSampledVizFile, rec_DownSampledVizFile->isChecked())
-  WRITE_BOOL_SETTING(prefs, HDF5GrainFile, rec_HDF5GrainFile->isChecked())
-
-
+  rec_SaveSettings(prefs);
 
   /* ******** This Section is for the Grain Generator Tab ************ */
-  WRITE_STRING_SETTING(prefs, gg_InputDir)
-  WRITE_STRING_SETTING(prefs, gg_OutputDir)
-  WRITE_SETTING(prefs, gg_XResolution )
-  WRITE_SETTING(prefs, gg_YResolution )
-  WRITE_SETTING(prefs, gg_ZResolution )
-  WRITE_SETTING(prefs, gg_FillingErrorWeight )
-  WRITE_SETTING(prefs, gg_NeighborhoodErrorWeight )
-  WRITE_SETTING(prefs, gg_SizeDistErrorWeight )
-  WRITE_SETTING(prefs, gg_FractionPrecipitates )
-  WRITE_SETTING(prefs, gg_NumGrains )
-
-  WRITE_BOOL_SETTING(prefs, gg_AlreadyFormed, gg_AlreadyFormed->isChecked())
-  WRITE_COMBO_BOX(prefs, gg_CrystalStructure)
-  WRITE_COMBO_BOX(prefs, gg_ShapeClass)
-  WRITE_COMBO_BOX(prefs, gg_Precipitates)
+  gg_SaveSettings(prefs);
 
   /* ******** This Section is for the Surface Meshing Tab ************ */
-  WRITE_STRING_SETTING(prefs, sm_InputFile);
-  WRITE_STRING_SETTING(prefs, sm_OutputDir);
-  WRITE_BOOL_SETTING(prefs, sm_SmoothMesh, sm_SmoothMesh->isChecked() );
-  WRITE_BOOL_SETTING(prefs, sm_LockQuadPoints, sm_LockQuadPoints->isChecked() );
-  WRITE_SETTING(prefs, sm_SmoothIterations );
-  WRITE_SETTING(prefs, sm_WriteOutputFileIncrement );
+  sm_SaveSettings(prefs);
 
   /* ******** This Section is for the Volume Meshing Tab ************ */
   WRITE_STRING_SETTING(prefs, vm_NodesFile);
@@ -726,6 +630,96 @@ void RepresentationUI::rec_CheckIOFiles()
   CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::Reconstruction, rec_ , H5StatisticsFile)
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void RepresentationUI::on_rec_SaveSettingsBtn_clicked()
+{
+  QString proposedFile = m_OpenDialogLastDirectory + QDir::separator() + "Settings.txt";
+  QString file = QFileDialog::getSaveFileName(this, tr("Save Reconstruction Settings"),
+                                              proposedFile,
+                                              tr("*.txt") );
+  if ( true == file.isEmpty() ){ return;  }
+
+  QSettings prefs(file, QSettings::IniFormat, this);
+  rec_SaveSettings(prefs);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void RepresentationUI::rec_SaveSettings(QSettings &prefs)
+{
+  prefs.beginGroup("Reconstruction");
+  WRITE_STRING_SETTING(prefs, rec_OutputDir)
+  WRITE_STRING_SETTING(prefs, rec_H5InputFile)
+  WRITE_BOOL_SETTING(prefs, mergeTwins, rec_mergeTwins->isChecked())
+  WRITE_BOOL_SETTING(prefs, mergeColonies, rec_mergeColonies->isChecked())
+  WRITE_BOOL_SETTING(prefs, alreadyFormed, rec_alreadyFormed->isChecked())
+
+  WRITE_SETTING(prefs, minAllowedGrainSize)
+  WRITE_SETTING(prefs, minConfidence)
+  WRITE_SETTING(prefs, downsampleFactor)
+  WRITE_SETTING(prefs, minImageQuality)
+  WRITE_SETTING(prefs, misOrientationTolerance)
+  WRITE_COMBO_BOX(prefs, crystalStructure)
+  WRITE_COMBO_BOX(prefs, alignMeth)
+
+  WRITE_BOOL_SETTING(prefs, DisorientationVizFile, rec_DisorientationVizFile->isChecked())
+  WRITE_BOOL_SETTING(prefs, ImageQualityVizFile, rec_ImageQualityVizFile->isChecked())
+  WRITE_BOOL_SETTING(prefs, IPFVizFile, rec_IPFVizFile->isChecked())
+  WRITE_BOOL_SETTING(prefs, SchmidFactorVizFile, rec_SchmidFactorVizFile->isChecked())
+  WRITE_BOOL_SETTING(prefs, VisualizationVizFile, rec_VisualizationVizFile->isChecked())
+  WRITE_BOOL_SETTING(prefs, DownSampledVizFile, rec_DownSampledVizFile->isChecked())
+  WRITE_BOOL_SETTING(prefs, HDF5GrainFile, rec_HDF5GrainFile->isChecked())
+  prefs.endGroup();
+}
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void RepresentationUI::on_rec_LoadSettingsBtn_clicked()
+{
+  QString file = QFileDialog::getOpenFileName(this, tr("Select Settings File"),
+                                                 m_OpenDialogLastDirectory,
+                                                 tr("Settings File (*.txt)") );
+  if ( true == file.isEmpty() ){return;  }
+  QSettings prefs(file, QSettings::IniFormat, this);
+  rec_LoadSettings(prefs);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void RepresentationUI::rec_LoadSettings(QSettings &prefs)
+{
+  QString val;
+  bool ok;
+  qint32 i;
+  double d;
+
+  prefs.beginGroup("Reconstruction");
+  READ_FILEPATH_SETTING(prefs, rec_OutputDir, "");
+  READ_FILEPATH_SETTING(prefs, rec_H5InputFile, "");
+  READ_BOOL_SETTING(prefs, rec_, mergeTwins, false);
+  READ_BOOL_SETTING(prefs, rec_, mergeColonies, false);
+  READ_BOOL_SETTING(prefs, rec_, alreadyFormed, false);
+  READ_SETTING(prefs, minAllowedGrainSize, ok, i, 8 , Int);
+  READ_SETTING(prefs, minConfidence, ok, d, 0.1 , Double);
+  READ_SETTING(prefs, downsampleFactor, ok, d, 1.0 , Double);
+  READ_SETTING(prefs, minImageQuality, ok, d, 50.0 , Double);
+  READ_SETTING(prefs, misOrientationTolerance, ok, d, 5.0 , Double);
+  READ_COMBO_BOX(prefs, crystalStructure)
+  READ_COMBO_BOX(prefs, alignMeth)
+
+  READ_BOOL_SETTING(prefs, rec_, DisorientationVizFile, true);
+  READ_BOOL_SETTING(prefs, rec_, ImageQualityVizFile, true);
+  READ_BOOL_SETTING(prefs, rec_, IPFVizFile, true);
+  READ_BOOL_SETTING(prefs, rec_, SchmidFactorVizFile, true);
+  READ_BOOL_SETTING(prefs, rec_, VisualizationVizFile, true);
+  READ_BOOL_SETTING(prefs, rec_, DownSampledVizFile, true);
+  READ_BOOL_SETTING(prefs, rec_, HDF5GrainFile, true);
+  prefs.endGroup();
+}
 
 // -----------------------------------------------------------------------------
 //
@@ -995,6 +989,60 @@ void RepresentationUI::gg_SetupGui()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void RepresentationUI::gg_SaveSettings(QSettings &prefs)
+{
+  prefs.beginGroup("GrainGenerator");
+  WRITE_STRING_SETTING(prefs, gg_InputDir)
+  WRITE_STRING_SETTING(prefs, gg_OutputDir)
+  WRITE_SETTING(prefs, gg_XResolution )
+  WRITE_SETTING(prefs, gg_YResolution )
+  WRITE_SETTING(prefs, gg_ZResolution )
+  WRITE_SETTING(prefs, gg_FillingErrorWeight )
+  WRITE_SETTING(prefs, gg_NeighborhoodErrorWeight )
+  WRITE_SETTING(prefs, gg_SizeDistErrorWeight )
+  WRITE_SETTING(prefs, gg_FractionPrecipitates )
+  WRITE_SETTING(prefs, gg_NumGrains )
+
+  WRITE_BOOL_SETTING(prefs, gg_AlreadyFormed, gg_AlreadyFormed->isChecked())
+  WRITE_COMBO_BOX(prefs, gg_CrystalStructure)
+  WRITE_COMBO_BOX(prefs, gg_ShapeClass)
+  WRITE_COMBO_BOX(prefs, gg_Precipitates)
+  prefs.endGroup();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void RepresentationUI::gg_LoadSettings(QSettings &prefs)
+{
+  QString val;
+  bool ok;
+  qint32 i;
+  double d;
+
+  prefs.beginGroup("GrainGenerator");
+  READ_FILEPATH_SETTING(prefs, gg_InputDir, "");
+  READ_FILEPATH_SETTING(prefs, gg_OutputDir, "");
+  READ_SETTING(prefs, gg_XResolution, ok, d, 0.25 , Double);
+  READ_SETTING(prefs, gg_YResolution, ok, d, 0.25 , Double);
+  READ_SETTING(prefs, gg_ZResolution, ok, d, 0.25 , Double);
+  READ_SETTING(prefs, gg_FillingErrorWeight, ok, d, 1.0 , Double);
+  READ_SETTING(prefs, gg_NeighborhoodErrorWeight, ok, d, 1.0 , Double);
+  READ_SETTING(prefs, gg_SizeDistErrorWeight, ok, d, 1.0 , Double);
+  READ_SETTING(prefs, gg_FractionPrecipitates, ok, d, 25 , Double);
+  READ_SETTING(prefs, gg_NumGrains, ok, i, 1000 , Int);
+
+  READ_BOOL_SETTING(prefs, gg_, AlreadyFormed, false);
+  gg_AlreadyFormed->blockSignals(false);
+  READ_COMBO_BOX(prefs, gg_CrystalStructure)
+  READ_COMBO_BOX(prefs, gg_ShapeClass)
+  READ_COMBO_BOX(prefs, gg_Precipitates)
+  prefs.endGroup();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void RepresentationUI::gg_CheckIOFiles()
 {
 
@@ -1199,6 +1247,43 @@ void RepresentationUI::gg_ThreadProgressed(int val)
  * Surface Meshing Methods
  *
  ***************************************************************************** */
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void RepresentationUI::sm_SaveSettings(QSettings &prefs)
+{
+  prefs.beginGroup("SurfaceMesh");
+  WRITE_STRING_SETTING(prefs, sm_InputFile);
+  WRITE_STRING_SETTING(prefs, sm_OutputDir);
+  WRITE_BOOL_SETTING(prefs, sm_SmoothMesh, sm_SmoothMesh->isChecked() );
+  WRITE_BOOL_SETTING(prefs, sm_LockQuadPoints, sm_LockQuadPoints->isChecked() );
+  WRITE_SETTING(prefs, sm_SmoothIterations );
+  WRITE_SETTING(prefs, sm_WriteOutputFileIncrement );
+  prefs.endGroup();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void RepresentationUI::sm_LoadSettings(QSettings &prefs)
+{
+  QString val;
+  bool ok;
+  qint32 i;
+  double d;
+
+  prefs.beginGroup("SurfaceMesh");
+  READ_FILEPATH_SETTING(prefs, sm_InputFile, "");
+  READ_FILEPATH_SETTING(prefs, sm_OutputDir, "");
+
+  READ_BOOL_SETTING(prefs, sm_, SmoothMesh, false);
+  READ_BOOL_SETTING(prefs, sm_, LockQuadPoints, false);
+  READ_SETTING(prefs, sm_SmoothIterations, ok, i, 1 , Int);
+  READ_SETTING(prefs, sm_WriteOutputFileIncrement, ok, i, 10 , Int);
+  prefs.endGroup();
+}
+
 
 // -----------------------------------------------------------------------------
 //
@@ -1595,6 +1680,46 @@ void RepresentationUI::oim_SetupGui()
   m_WidgetList << oim_FilePrefix << oim_ZMaxSlice << oim_ZStartIndex << oim_ZEndIndex << oim_zSpacing;
 
 }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void RepresentationUI::oim_SaveSettings(QSettings &prefs)
+{
+  prefs.beginGroup("OIMImport");
+  WRITE_STRING_SETTING(prefs, oim_InputDir)
+  WRITE_STRING_SETTING(prefs, oim_FilePrefix)
+  WRITE_STRING_SETTING(prefs, oim_ZMaxSlice)
+  WRITE_STRING_SETTING(prefs, oim_ZStartIndex)
+  WRITE_STRING_SETTING(prefs, oim_ZEndIndex)
+  WRITE_STRING_SETTING(prefs, oim_zSpacing)
+  WRITE_STRING_SETTING(prefs, oim_OutputFile)
+
+  prefs.endGroup();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void RepresentationUI::oim_LoadSettings(QSettings &prefs)
+{
+  QString val;
+  bool ok;
+  qint32 i;
+  double d;
+
+  prefs.beginGroup("OIMImport");
+  READ_FILEPATH_SETTING(prefs, oim_InputDir, "");
+  READ_STRING_SETTING(prefs, oim_FilePrefix, "");
+  READ_SETTING(prefs, oim_ZMaxSlice, ok, i, 300 , Int);
+  READ_SETTING(prefs, oim_ZStartIndex, ok, i, 1 , Int);
+  READ_SETTING(prefs, oim_ZEndIndex, ok, i, 10 , Int);
+  READ_STRING_SETTING(prefs, oim_zSpacing, "0.25");
+  READ_STRING_SETTING(prefs, oim_OutputFile, "*.h5ang");
+  prefs.endGroup();
+}
+
 
 // -----------------------------------------------------------------------------
 //
