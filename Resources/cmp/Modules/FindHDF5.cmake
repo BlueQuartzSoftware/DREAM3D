@@ -22,7 +22,7 @@ SET (HDF5_HL_FOUND "NO")
 
 # Only set HDF5_INSTALL to the environment variable if it is blank
 if ("${HDF5_INSTALL}" STREQUAL "")
-SET (HDF5_INSTALL  $ENV{HDF5_INSTALL})
+    SET (HDF5_INSTALL  $ENV{HDF5_INSTALL})
 endif()
 
 SET(HDF5_INCLUDE_SEARCH_DIRS
@@ -110,15 +110,15 @@ IF(HDF5_INCLUDE_DIR AND HDF5_LIBRARY)
   SET(HDF5_INCLUDE_DIRS ${HDF5_INCLUDE_DIR})
   IF (HDF5_LIBRARY_DEBUG)
     GET_FILENAME_COMPONENT(HDF5_LIBRARY_PATH ${HDF5_LIBRARY_DEBUG} PATH)
+    SET(HDF5_LIB_DIR  ${HDF5_LIBRARY_PATH})
   ELSEIF(HDF5_LIBRARY_RELEASE)
     GET_FILENAME_COMPONENT(HDF5_LIBRARY_PATH ${HDF5_LIBRARY_RELEASE} PATH)
+    SET(HDF5_LIB_DIR  ${HDF5_LIBRARY_PATH})
   ENDIF(HDF5_LIBRARY_DEBUG)
   
-  SET(HDF5_LIBRARY_DIR  ${HDF5_LIBRARY_PATH} CACHE FILEPATH "HDF5 Library Directory" )
-      
   IF (HDF5_DUMP_PROG)
     GET_FILENAME_COMPONENT(HDF5_BIN_PATH ${HDF5_DUMP_PROG} PATH)
-    SET(HDF5_BINARY_DIR  ${HDF5_BIN_PATH} CACHE FILEPATH "HDF5 Binary Directory")
+    SET(HDF5_BIN_DIR  ${HDF5_BIN_PATH})
   ENDIF (HDF5_DUMP_PROG)
   
 ELSE(HDF5_INCLUDE_DIR AND HDF5_LIBRARY)
@@ -183,25 +183,46 @@ ENDIF ( HDF5_USE_HIGH_LEVEL )
 
 
 IF (HDF5_FOUND)
-  INCLUDE(CheckSymbolExists)
-  #############################################
-  # Find out if HDF5 was build using dll's
-  #############################################
-  # Save required variable
-  SET(CMAKE_REQUIRED_INCLUDES_SAVE ${CMAKE_REQUIRED_INCLUDES})
-  SET(CMAKE_REQUIRED_FLAGS_SAVE    ${CMAKE_REQUIRED_FLAGS})
-  # Add HDF5_INCLUDE_DIR to CMAKE_REQUIRED_INCLUDES
-  SET(CMAKE_REQUIRED_INCLUDES "${CMAKE_REQUIRED_INCLUDES};${HDF5_INCLUDE_DIRS}")
+    INCLUDE(CheckSymbolExists)
+    #############################################
+    # Find out if HDF5 was build using dll's
+    #############################################
+    # Save required variable
+    SET(CMAKE_REQUIRED_INCLUDES_SAVE ${CMAKE_REQUIRED_INCLUDES})
+    SET(CMAKE_REQUIRED_FLAGS_SAVE${CMAKE_REQUIRED_FLAGS})
+    # Add HDF5_INCLUDE_DIR to CMAKE_REQUIRED_INCLUDES
+    SET(CMAKE_REQUIRED_INCLUDES "${CMAKE_REQUIRED_INCLUDES};${HDF5_INCLUDE_DIRS}")
+    
+    CHECK_SYMBOL_EXISTS(H5_BUILT_AS_DYNAMIC_LIB "H5pubconf.h" HAVE_HDF5_DLL)
+    if (HAVE_HDF5_DLL)
+     SET (HDF5_IS_SHARED 1 CACHE INTERNAL "HDF5 Built as DLL or Shared Library")
+    endif()
+    
+    # Restore CMAKE_REQUIRED_INCLUDES and CMAKE_REQUIRED_FLAGS variables
+    SET(CMAKE_REQUIRED_INCLUDES ${CMAKE_REQUIRED_INCLUDES_SAVE})
+    SET(CMAKE_REQUIRED_FLAGS${CMAKE_REQUIRED_FLAGS_SAVE})
+    #
+    #############################################
+    
+    if (NOT HDF5_VERSION)
+        # We parse the version information from the boost/version.hpp header.
+        file(STRINGS ${HDF5_INCLUDE_DIRS}/H5pubconf.h HDF5_VERSIONSTR
+          REGEX "#define[ ]+H5_PACKAGE_VERSION[ ]+\"[0-9]+\\.[0-9]+\\.[0-9]+\"")
+        string(REGEX MATCH "[0-9]+\\.[0-9]+\\.[0-9]+" HDF5_VERSIONSTR ${HDF5_VERSIONSTR})
+        string(REGEX MATCHALL "[0-9]+" VERSION_LIST ${HDF5_VERSIONSTR})
+        list(GET VERSION_LIST 0 HDF5_VERSION_MAJOR)
+        list(GET VERSION_LIST 1 HDF5_VERSION_MINOR)
+        list(GET VERSION_LIST 2 HDF5_VERSION_SUBMINOR)
+        if (HDF5_VERSIONSTR)
+          set(HDF5_VERSION "${HDF5_VERSION_MAJOR}.${HDF5_VERSION_MINOR}.${HDF5_VERSION_SUBMINOR}" CACHE STRING "Version of HDF5 found")
+          mark_as_advanced(HDF5_VERSION)
+          message(STATUS "Found HDF5 Version ${HDF5_VERSION_MAJOR}.${HDF5_VERSION_MINOR}.${HDF5_VERSION_SUBMINOR}")
+        else()
+          message(FATAL_ERROR 
+            "Unable to parse HDF5 version from ${HDF5_INCLUDE_DIRS}/H5pubconf.h")
+        endif()
+    endif()
 
-  CHECK_SYMBOL_EXISTS(HDF5_BUILT_AS_DYNAMIC_LIB "H5config.h" HAVE_HDF5_DLL)
-  if (HAVE_HDF5_DLL)
-   SET (HDF5_IS_SHARED 1 CACHE INTERNAL "HDF5 Built as DLL or Shared Library")
-  endif()
 
-  # Restore CMAKE_REQUIRED_INCLUDES and CMAKE_REQUIRED_FLAGS variables
-  SET(CMAKE_REQUIRED_INCLUDES ${CMAKE_REQUIRED_INCLUDES_SAVE})
-  SET(CMAKE_REQUIRED_FLAGS    ${CMAKE_REQUIRED_FLAGS_SAVE})
-  #
-  #############################################
 
 ENDIF (HDF5_FOUND)

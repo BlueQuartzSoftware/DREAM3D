@@ -189,7 +189,7 @@ include_directories(${HDF5_INCLUDE_DIR})
 include_directories( ${Representation_BINARY_DIR} )
 
 #-- Set up OS X Application Bundle properties
-#-- This file have tools for OS X Bunlde creation and configuration
+#-- This file has tools for OS X Bunlde creation and configuration
 INCLUDE (${CMP_OSX_TOOLS_SOURCE_DIR}/OSX_BundleTools.cmake)
 SET (EXE_DEBUG_EXTENSION "_debug")
 IF(APPLE)
@@ -206,9 +206,6 @@ IF(Q_WS_WIN)
     cmp_IDE_SOURCE_PROPERTIES ("ConfiguredFiles" "${${PROJECT_NAME}_BINARY_DIR}/${PROJECT_NAME}.rc" ""  ${CMP_INSTALL_FILES})
 ENDIF(Q_WS_WIN)
 
-#cmp_IDE_SOURCE_PROPERTIES ("ConfiguredFiles" "${AIMRepresentation_BINARY_DIR}/MXA/MXAConfiguration.h" "")
-#cmp_IDE_SOURCE_PROPERTIES ("ConfiguredFiles" "${AIMRepresentation_BINARY_DIR}/AIM/Common/AIMVersion.h" ""  ${CMP_INSTALL_FILES})  
-
 # ---------- Build the Viewer Application  ----------------------
 ADD_EXECUTABLE( ${PROJECT_NAME} ${GUI_TYPE} ${Representation_PROJECT_SRCS} )
 TARGET_LINK_LIBRARIES( ${PROJECT_NAME}
@@ -216,7 +213,7 @@ TARGET_LINK_LIBRARIES( ${PROJECT_NAME}
                         AIMCommon
                         ${QT_LIBRARIES}  )
 
-cmp_InstallationSupport(${PROJECT_NAME} ${EXE_DEBUG_EXTENSION} ${Representation_BINARY_DIR} "1")
+cmp_InstallationSupport(${PROJECT_NAME} ${EXE_DEBUG_EXTENSION} ${Representation_BINARY_DIR} "0")
 
 
 
