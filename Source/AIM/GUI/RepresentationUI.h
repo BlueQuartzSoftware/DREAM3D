@@ -23,9 +23,11 @@
 #include <QtCore/QObject>
 #include <QtCore/QString>
 #include <QtCore/QList>
+#include <QtCore/QSettings>
 #include <QtGui/QWidget>
 #include <QtGui/QMainWindow>
 #include <QtGui/QResizeEvent>
+
 
 //-- UIC generated Header
 #include <ui_RepresentationUI.h>
@@ -52,17 +54,18 @@ class RepresentationUI : public QMainWindow, private Ui::RepresentationUI
     void on_actionClose_triggered();
     void on_actionExit_triggered();
 
-    /* Reconstruction Slots */
-    void on_rec_OIMH5Btn_clicked();
-    void on_rec_OutputDirBtn_clicked();
-    void on_rec_alreadyFormed_stateChanged(int);
-    void on_rec_GoBtn_clicked();
-
     /* OIM Data Import Slots */
     void on_oim_InputDirBtn_clicked();
     void on_oim_OutputFileBtn_clicked();
     void on_oim_GoBtn_clicked();
 
+    /* Reconstruction Slots */
+    void on_rec_OIMH5Btn_clicked();
+    void on_rec_OutputDirBtn_clicked();
+    void on_rec_alreadyFormed_stateChanged(int);
+    void on_rec_GoBtn_clicked();
+    void on_rec_SaveSettingsBtn_clicked();
+    void on_rec_LoadSettingsBtn_clicked();
 
     /* Grain Generator Slots*/
     void on_gg_InputDirBtn_clicked();
@@ -202,15 +205,24 @@ class RepresentationUI : public QMainWindow, private Ui::RepresentationUI
      */
     void oim_SetupGui();
     void oim_CheckIOFiles();
+    void oim_SaveSettings(QSettings &prefs);
+    void oim_LoadSettings(QSettings &prefs);
 
     void rec_SetupGui();
     void rec_CheckIOFiles();
+    void rec_SaveSettings(QSettings &prefs);
+    void rec_LoadSettings(QSettings &prefs);
 
     void gg_SetupGui();
     void gg_CheckIOFiles();
+    void gg_SaveSettings(QSettings &prefs);
+    void gg_LoadSettings(QSettings &prefs);
 
     void sm_SetupGui();
     void sm_CheckIOFiles();
+    void sm_SaveSettings(QSettings &prefs);
+    void sm_LoadSettings(QSettings &prefs);
+
 
     void vm_SetupGui();
     void vm_CheckIOFiles();
