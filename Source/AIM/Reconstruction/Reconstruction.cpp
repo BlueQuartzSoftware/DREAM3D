@@ -414,7 +414,7 @@ int Reconstruction::writeHDF5GrainsFile(const std::string &hdfFile,
   std::stringstream ss;
   std::string hdfPath;
   std::vector<std::string > hdfPaths;
-  std::cout << "Writing out " << r->numgrains << " to an HDF5 Grain File..." << std::endl;
+ // std::cout << "Writing out " << r->numgrains << " to an HDF5 Grain File..." << std::endl;
   for (int i = 1; i < r->numgrains; i++)
   {
  //   std::cout << " Grain: " << i << " Gathering Data" << std::endl;
@@ -486,8 +486,8 @@ int Reconstruction::writeHDF5GrainsFile(const std::string &hdfFile,
       imageQuality[j] = r->voxels[vid].imagequality;
 	  if(m_CrystalStructure == AIM::Reconstruction::Cubic)
       {
-        OIMColoring::GenerateIPFColor(r->voxels[vid].euler1, r->voxels[vid].euler2, r->voxels[vid].euler3, 
-                                      RefDirection[0], RefDirection[1], RefDirection[2], 
+        OIMColoring::GenerateIPFColor(r->voxels[vid].euler1, r->voxels[vid].euler2, r->voxels[vid].euler3,
+                                      RefDirection[0], RefDirection[1], RefDirection[2],
                                       rgb);
       }
       if(m_CrystalStructure == AIM::Reconstruction::Hexagonal)
