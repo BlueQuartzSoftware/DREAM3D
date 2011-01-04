@@ -190,7 +190,7 @@ int GrainGeneratorFunc::readReconStatsData(H5ReconStatsReader::Pointer h5io)
 	if(i < mindiameter) grainsizedist[i] = 0;
 	if(i >= mindiameter)
 	{
-		grainsizedist[i] = (1.0 / (double(i) * double_data[1] * root2pi)) * exp(-((log(double(i)) - double_data[0]) * (log(double(i)) - double_data[0])) / (2 * double_data[1 * double_data[1]]));
+		grainsizedist[i] = (1.0 / (double(i+0.5) * double_data[1] * root2pi)) * exp(-((log(double(i+0.5)) - double_data[0]) * (log(double(i+0.5)) - double_data[0])) / (2 * double_data[1 * double_data[1]]));
 	}
   }
 
@@ -824,7 +824,7 @@ double GrainGeneratorFunc::check_sizedisterror(int gadd, int gremove)
 	double uvar;
 	double dia;
 	double tvalue;
-	double sizedisterror;
+	double sizedisterror = 0;
 	int index;
 	int count = 0;
 	for(int i=0;i<maxdiameter+1;i++)
