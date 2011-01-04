@@ -129,7 +129,7 @@ template<typename T>
 
 
     template<typename T>
-    int GenCutOff(double m, double s, double value, T &x, T &y, double yMax, int &numsizebins, T &binsizes, T &numgrains)
+    int GenCutOff(double m, double s, double value, T &x, T &y, double yMax, int &numsizebins, T &binsizes)
     {
       int err = 0;
       double lognormin, lognormout, max, min;
@@ -147,13 +147,11 @@ template<typename T>
 
       numsizebins = int(max) - int(min) + 1;
       binsizes.resize(numsizebins);
-      numgrains.resize(numsizebins);
       for (int i = 0; i < numsizebins; i++)
       {
         binsizes[i] = int(min) + i;
         lognormin = (int(min) + i) + (1.0 / 2.0);
         lognormout = (1.0 / (lognormin * s * root2pi)) * exp(-((log(lognormin) - m) * (log(lognormin) - m)) / (2 * s2));
-        numgrains[i] = lognormout * 1000;
       }
       return err;
     }
