@@ -208,17 +208,17 @@ IF (HDF5_FOUND)
         # We parse the version information from the boost/version.hpp header.
         file(STRINGS ${HDF5_INCLUDE_DIRS}/H5pubconf.h HDF5_VERSIONSTR
           REGEX "#define[ ]+H5_PACKAGE_VERSION[ ]+\"[0-9]+\\.[0-9]+\\.[0-9]+\"")
-        string(REGEX MATCH "[0-9]+\\.[0-9]+\\.[0-9]+" HDF5_VERSIONSTR ${HDF5_VERSIONSTR})
-        string(REGEX MATCHALL "[0-9]+" VERSION_LIST ${HDF5_VERSIONSTR})
-        list(GET VERSION_LIST 0 HDF5_VERSION_MAJOR)
-        list(GET VERSION_LIST 1 HDF5_VERSION_MINOR)
-        list(GET VERSION_LIST 2 HDF5_VERSION_SUBMINOR)
         if (HDF5_VERSIONSTR)
+          string(REGEX MATCH "[0-9]+\\.[0-9]+\\.[0-9]+" HDF5_VERSIONSTR ${HDF5_VERSIONSTR})
+          string(REGEX MATCHALL "[0-9]+" VERSION_LIST ${HDF5_VERSIONSTR})
+          list(GET VERSION_LIST 0 HDF5_VERSION_MAJOR)
+          list(GET VERSION_LIST 1 HDF5_VERSION_MINOR)
+          list(GET VERSION_LIST 2 HDF5_VERSION_SUBMINOR)
           set(HDF5_VERSION "${HDF5_VERSION_MAJOR}.${HDF5_VERSION_MINOR}.${HDF5_VERSION_SUBMINOR}" CACHE STRING "Version of HDF5 found")
           mark_as_advanced(HDF5_VERSION)
           message(STATUS "Found HDF5 Version ${HDF5_VERSION_MAJOR}.${HDF5_VERSION_MINOR}.${HDF5_VERSION_SUBMINOR}")
         else()
-          message(FATAL_ERROR 
+          message(WARNING
             "Unable to parse HDF5 version from ${HDF5_INCLUDE_DIRS}/H5pubconf.h")
         endif()
     endif()
