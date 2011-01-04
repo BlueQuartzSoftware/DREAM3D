@@ -73,7 +73,6 @@ namespace AIM
     const std::string Grain_SizeVOmega3_Distributions("GrainSize Vs Omega3 Distributions");
 
     const std::string BinNumber("BinNumber");
-    const std::string NumGrains("NumGrains");
 
     const std::string Average("Average");
     const std::string StandardDeviation("Standard Deviation");

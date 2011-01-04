@@ -980,7 +980,7 @@ void RepresentationUI::gg_SetupGui()
   messageLabel->setText(msg);
 
   m_WidgetList << gg_InputDir << gg_InputDirBtn << gg_OutputDir << gg_OutputDirBtn;
-  m_WidgetList << gg_CrystalStructure << gg_NumGrains << gg_XResolution << gg_YResolution << gg_ZResolution << gg_FillingErrorWeight,
+  m_WidgetList << gg_CrystalStructure << gg_NumGrains << gg_XResolution << gg_YResolution << gg_ZResolution << gg_FillingErrorWeight;
   m_WidgetList << gg_NeighborhoodErrorWeight << gg_SizeDistErrorWeight << gg_FractionPrecipitates;
   m_WidgetList << gg_ShapeClass << gg_Precipitates << gg_AlreadyFormed;
 
@@ -1188,8 +1188,8 @@ void RepresentationUI::on_gg_GoBtn_clicked()
   m_GrainGenerator->setYResolution(gg_YResolution->value());
   m_GrainGenerator->setZResolution(gg_ZResolution->value());
   m_GrainGenerator->setFillingErrorWeight(gg_FillingErrorWeight->value());
-  m_GrainGenerator->setFillingErrorWeight(gg_NeighborhoodErrorWeight->value());
-  m_GrainGenerator->setFillingErrorWeight(gg_SizeDistErrorWeight->value());
+  m_GrainGenerator->setNeighborhoodErrorWeight(gg_NeighborhoodErrorWeight->value());
+  m_GrainGenerator->setSizeDistErrorWeight(gg_SizeDistErrorWeight->value());
   m_GrainGenerator->setFractionPrecipitates(gg_FractionPrecipitates->value());
 
 
