@@ -51,7 +51,7 @@ set (StatsGeneratorUI_SRCS
 set (StatsGeneratorUI_HDRS 
     ${StatsGeneratorUI_SOURCE_DIR}/StatsGen.h
 )
-cmp_IDE_SOURCE_PROPERTIES( "Source/AIM/StatsGenerator" "${StatsGeneratorUI_HDRS}" "${StatsGeneratorUI_SRCS}" ${CMP_INSTALL_FILES})
+cmp_IDE_SOURCE_PROPERTIES( "Source/AIM/StatsGenerator" "${StatsGeneratorUI_HDRS}" "${StatsGeneratorUI_SRCS}" ${PROJECT_INSTALL_HEADERS})
                    
 SET( StatsGeneratorUI_MOC_HDRS
     ${StatsGeneratorUI_SOURCE_DIR}/StatsGeneratorUI.h
@@ -59,7 +59,7 @@ SET( StatsGeneratorUI_MOC_HDRS
     ${StatsGeneratorUI_SOURCE_DIR}/StatsGenTableModel.h
     ${StatsGeneratorUI_SOURCE_DIR}/SGItemDelegate.h
 )
-cmp_IDE_SOURCE_PROPERTIES( "Source/AIM/StatsGenerator" "${StatsGeneratorUI_MOC_HDRS}" "${StatsGeneratorUI_SRCS}" ${CMP_INSTALL_FILES})
+cmp_IDE_SOURCE_PROPERTIES( "Source/AIM/StatsGenerator" "${StatsGeneratorUI_MOC_HDRS}" "${StatsGeneratorUI_SRCS}" ${PROJECT_INSTALL_HEADERS})
 
 set (AIM_COMMON_QT_SRCS
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Qt/AIMAboutBox.cpp
@@ -73,7 +73,7 @@ set (AIM_COMMON_QT_HDRS
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Qt/QR3DFileCompleter.h
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Qt/ColorComboPicker.h     
 )
-cmp_IDE_SOURCE_PROPERTIES("Source/AIM/Common/Qt" "${AIM_COMMON_QT_HDRS}" "${AIM_COMMON_QT_SRCS}" ${CMP_INSTALL_FILES})
+cmp_IDE_SOURCE_PROPERTIES("Source/AIM/Common/Qt" "${AIM_COMMON_QT_HDRS}" "${AIM_COMMON_QT_SRCS}" ${PROJECT_INSTALL_HEADERS})
 
 
 
@@ -98,7 +98,7 @@ QT4_WRAP_UI( Generated_UI_HDRS ${StatsGeneratorUI_UIS} )
 QT4_WRAP_CPP( Generated_MOC_SRCS ${StatsGeneratorUI_MOC_HDRS} ${AIM_COMMON_QT_HDRS} )
 
 #-- Put the generated files into their own group for IDEs
-cmp_IDE_SOURCE_PROPERTIES( "Generated" "${Generated_UI_HDRS}" "${Generated_MOC_SRCS};${Generated_RC_SRCS}" ${CMP_INSTALL_FILES})
+cmp_IDE_SOURCE_PROPERTIES( "Generated" "${Generated_UI_HDRS}" "${Generated_MOC_SRCS};${Generated_RC_SRCS}" ${PROJECT_INSTALL_HEADERS})
 
 # -- Finally set the Project Sources to include all the sources
 SET (StatsGeneratorUI_PROJECT_SRCS 
@@ -133,7 +133,7 @@ IF(Q_WS_WIN)
     include_directories(${PROJECT_RESOURCES_DIR}/icons/ico)
     configure_file(${PROJECT_RESOURCES_DIR}/icons/ico/IconResource.rc.in ${${PROJECT_NAME}_BINARY_DIR}/${PROJECT_NAME}.rc)
     SET (${PROJECT_NAME}_PROJECT_SRCS ${${PROJECT_NAME}_PROJECT_SRCS} ${${PROJECT_NAME}_BINARY_DIR}/${PROJECT_NAME}.rc) 
-    cmp_IDE_SOURCE_PROPERTIES ("ConfiguredFiles" "${${PROJECT_NAME}_BINARY_DIR}/${PROJECT_NAME}.rc" ""  ${CMP_INSTALL_FILES})
+    cmp_IDE_SOURCE_PROPERTIES ("ConfiguredFiles" "${${PROJECT_NAME}_BINARY_DIR}/${PROJECT_NAME}.rc" ""  ${PROJECT_INSTALL_HEADERS})
 ENDIF(Q_WS_WIN)
 
 
@@ -145,53 +145,63 @@ TARGET_LINK_LIBRARIES( ${PROJECT_NAME}
                         ${QT_LIBRARIES}
                         ${QWT_LIBRARIES}  )
 
-if (APPLE)
-    cmp_InstallationSupport(${PROJECT_NAME} ${EXE_DEBUG_EXTENSION} ${StatsGeneratorUI_BINARY_DIR} "1")
-else()
-    install(TARGETS ${PROJECT_NAME} DESTINATION ./ COMPONENT Applications)
-    
+set(AppNeedsPlugins "0")
+list(APPEND libSearchDirs 
+    ${QT_BINARY_DIR}
+    ${QT_LIBRARY_DIR}
+    ${QWT_BINARY_DIR}
+    ${QWT_LIBRARY_DIR}
+    ${HDF5_BINARY_DIR}
+    ${HDF5_LIBRARY_DIR}
+    ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
+    ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Debug
+    ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Release )
+cmp_InstallationSupport(${PROJECT_NAME} 
+                        ${EXE_DEBUG_EXTENSION} 
+                        ${StatsGeneratorUI_BINARY_DIR} 
+                        "${AppNeedsPlugins}" 
+                        "${PROJECT_INSTALL_EXECUTABLES}"
+                        "Applications"
+                        "./"
+                        "${libSearchDirs}"
+                        )
+#else()
+#    install(TARGETS ${PROJECT_NAME} DESTINATION ./ COMPONENT Applications)
+#    
     #------------------------------------------------------------------------------
     # Add install rules for required system runtimes such as MSVCRxx.dll
-    SET (CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS_SKIP ON)
-    SET (CMAKE_INSTALL_DEBUG_LIBRARIES ON)
-    INCLUDE(InstallRequiredSystemLibraries)
-    IF (CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS)
-      INSTALL(FILES ${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS}
-        DESTINATION ./
-        PERMISSIONS OWNER_WRITE OWNER_READ OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ
-        COMPONENT Runtime)
-    
-      # Install the runtimes to the lib dir as well since python modules are
-      # installed in that directory and the manifest files need to present there as
-      # well.
-      INSTALL(FILES ${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS}
-        DESTINATION ./
-        PERMISSIONS OWNER_WRITE OWNER_READ OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ
-        COMPONENT Runtime)
-    ENDIF (CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS)
-    
-    list(APPEND DIRS 
-        ${QT_BINARY_DIR}
-        ${QT_LIBRARY_DIR}
-        ${QWT_BINARY_DIR}
-        ${QWT_LIBRARY_DIR}
-        ${HDF5_BINARY_DIR}
-        ${HDF5_LIBRARY_DIR}
-        ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
-        ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Debug
-        ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Release
-    )
-    set(_extension)
-    set(_dir "")
-    
-    IF(WIN32)
-      set(_extension ".exe")
-      set(_dir "")
-    ENDIF(WIN32)
-    set(APPS "\${CMAKE_INSTALL_PREFIX}/${_dir}/${PROJECT_NAME}${_extension}")  # paths to executables
-    INSTALL(CODE "
-       include(\"${CMAKE_ROOT}/Modules/BundleUtilities.cmake\")
-       fixup_bundle(\"${APPS}\"   \"\"   \"${DIRS}\")
-       " COMPONENT Applications)
-endif()
+#    SET (CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS_SKIP ON)
+#    SET (CMAKE_INSTALL_DEBUG_LIBRARIES ON)
+#    INCLUDE(InstallRequiredSystemLibraries)
+#    IF (CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS)
+#      INSTALL(FILES ${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS}
+#        DESTINATION ./
+#        PERMISSIONS OWNER_WRITE OWNER_READ OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ
+#        COMPONENT Runtime)
+#    ENDIF (CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS)
+#    
+#    list(APPEND DIRS 
+#        ${QT_BINARY_DIR}
+#        ${QT_LIBRARY_DIR}
+#        ${QWT_BINARY_DIR}
+#        ${QWT_LIBRARY_DIR}
+#        ${HDF5_BINARY_DIR}
+#        ${HDF5_LIBRARY_DIR}
+#        ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
+#        ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Debug
+#        ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Release
+#    )
+#    set(_extension)
+#    set(_dir "")
+#    
+#    IF(WIN32)
+#      set(_extension ".exe")
+#      set(_dir "")
+#    ENDIF(WIN32)
+#    set(APPS "\${CMAKE_INSTALL_PREFIX}/${_dir}/${PROJECT_NAME}${_extension}")  # paths to executables
+#    INSTALL(CODE "
+#       include(\"${CMAKE_ROOT}/Modules/BundleUtilities.cmake\")
+#       fixup_bundle(\"${APPS}\"   \"\"   \"${DIRS}\")
+#       " COMPONENT Applications)
+#endif()
 
