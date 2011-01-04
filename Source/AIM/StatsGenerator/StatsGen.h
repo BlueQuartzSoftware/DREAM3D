@@ -38,12 +38,11 @@
 #include <math.h>
 
 /**
- * @class StatsGen StatsGen.h
- * @author Michael A. Groeber
+ * @class StatsGen StatsGen.h AIM/StatsGenerator/StatsGen.h
+ * @author Michael A. Groeber US Air Force Research Laboratory
  * @date Dec 16, 2010
  * @version 1.0
  */
-
 class StatsGen
 {
   public:
@@ -84,7 +83,7 @@ class StatsGen
     }
 
 
-template<typename T>
+    template<typename T>
     int GenLogNormal(double m, double s, T &x, T &y, int size)
     {
       int err = 0;
@@ -107,7 +106,7 @@ template<typename T>
     }
 
 
-template<typename T>
+    template<typename T>
     int GenPowerLaw(double a, double k, T &x, T &y, int size)
     {
       int err = 0;
@@ -127,23 +126,24 @@ template<typename T>
       return err;
     }
 
-
-    template<typename T>
-    int GenCutOff(double m, double s, double value, T &x, T &y, double yMax, int &numsizebins, T &binsizes)
+    template<typename J, typename T, typename K>
+    int GenCutOff(J mu, J sigma, J cutoff,
+                  T &x, T &y, J yMax,
+                  int &numsizebins, K &binsizes)
     {
       int err = 0;
-      double lognormin, lognormout, max, min;
-      double s2 = pow(s, 2);
-      double root2pi = pow((2.0 * 3.1415926535897), 0.5);
-      x.resize(6);
-      y.resize(6);
-      min = exp(m - (value * s));
-      max = exp(m + (value * s));
-      x[0] = x[1] = x[2] = min;
-      x[3] = x[4] = x[5] = max;
+      J lognormin, lognormout, max, min;
+      J s2 = pow(sigma, 2);
+      J root2pi = pow((2.0 * 3.1415926535897), 0.5);
+      x.resize(2);
+      y.resize(2);
+      min = exp(mu - (cutoff * sigma));
+      max = exp(mu + (cutoff * sigma));
+      x[0] = min;
+      x[1] = max;
 
-      y[0] = y[2] = y[3] = y[5] = 0.0;
-      y[1] = y[4] = yMax;
+      y[0] = 0.0;
+      y[1] = yMax;
 
       numsizebins = int(max) - int(min) + 1;
       binsizes.resize(numsizebins);
@@ -151,11 +151,17 @@ template<typename T>
       {
         binsizes[i] = int(min) + i;
         lognormin = (int(min) + i) + (1.0 / 2.0);
-        lognormout = (1.0 / (lognormin * s * root2pi)) * exp(-((log(lognormin) - m) * (log(lognormin) - m)) / (2 * s2));
+        lognormout = (1.0 / (lognormin * sigma * root2pi)) * exp(-((log(lognormin) - mu) * (log(lognormin) - mu)) / (2 * s2));
+
       }
       return err;
     }
 
+    /**
+     * @brief
+     * @param value
+     * @return
+     */
     double gamma(double value);
 
 

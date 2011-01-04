@@ -9,13 +9,13 @@
 
 # Look for the header file.
 
-# Only set HDF5_INSTALL to the environment variable if it is blank
-if ("${EXPAT_INSTALL}" STREQUAL "")
-SET (EXPAT_INSTALL  $ENV{EXPAT_INSTALL})
-endif()
-
 #MESSAGE (STATUS "Finding expat library and headers..." )
 SET (EXPAT_DEBUG 0)
+
+if ("${EXPAT_INSTALL}" STREQUAL "")
+    SET (EXPAT_INSTALL  $ENV{EXPAT_INSTALL})
+endif()
+
 
 SET(EXPAT_INCLUDE_SEARCH_DIRS
   ${EXPAT_INSTALL}/include

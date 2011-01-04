@@ -63,7 +63,8 @@
 StatsGeneratorUI::StatsGeneratorUI(QWidget *parent) :
   QMainWindow(parent),
   m_SizeDistributionCurve(NULL),
-  m_SizeDistributionCutoffCurve(NULL),
+  m_CutOffMin(NULL),
+  m_CutOffMax(NULL),
   m_zoomer(NULL),
   m_picker(NULL),
   m_panner(NULL),
@@ -141,6 +142,8 @@ void StatsGeneratorUI::writeSettings()
 // -----------------------------------------------------------------------------
 void StatsGeneratorUI::setupGui()
 {
+  // Turn off all the plot widgets
+  setTabsPlotTabsEnabled(false);
 
   // Configure the Histogram Plot
   m_SizeDistributionPlot->setCanvasBackground(QColor(Qt::white));
@@ -153,16 +156,14 @@ void StatsGeneratorUI::setupGui()
   m_grid->setMinPen(QPen(Qt::lightGray, 0, Qt::DotLine));
   m_grid->attach(m_SizeDistributionPlot);
 
- plotSizeDistribution();
-
  // LeftButton for the zooming
  // MidButton for the panning
  // RightButton: zoom out by 1
  // Ctrl+RighButton: zoom out to full size
-
+#if 0
   m_panner = new QwtPlotPanner(m_SizeDistributionPlot->canvas());
   m_panner->setMouseButton(Qt::MidButton);
-#if 0
+
   QwtPlotZoomer* zoomer = new QwtPlotZoomer(m_SizeDistributionPlot->canvas());
   zoomer->setMousePattern(QwtEventPattern::MouseSelect1, Qt::LeftButton);
  // zoomer->setMousePattern(QwtEventPattern::MouseSelect2, Qt::RightButton, Qt::ControlModifier);
@@ -200,17 +201,40 @@ void StatsGeneratorUI::setupGui()
   m_Omega3Plot->setCurveType(StatsGen::LogNormal);
 
   m_BOverAPlot->setPlotTitle(QString("B/A Shape Distribution"));
+  m_BOverAPlot->setXAxisName(QString("B/A"));
+  m_BOverAPlot->setYAxisName(QString("Frequency"));
   m_BOverAPlot->setCurveType(StatsGen::Beta);
 
   m_COverAPlot->setPlotTitle(QString("C/A Shape Distribution"));
+  m_COverAPlot->setXAxisName(QString("C/A"));
+  m_COverAPlot->setYAxisName(QString("Frequency"));
   m_COverAPlot->setCurveType(StatsGen::Beta);
 
   m_COverBPlot->setPlotTitle(QString("C/B Shape Distribution"));
+  m_COverBPlot->setXAxisName(QString("C/B"));
+  m_COverBPlot->setYAxisName(QString("Frequency"));
   m_COverBPlot->setCurveType(StatsGen::Beta);
   m_COverBPlot->setRowOperationEnabled(false);
 
   m_NeighborPlot->setPlotTitle(QString("Neighbors Distributions"));
+  m_NeighborPlot->setXAxisName(QString("Number of Neighbors"));
+  m_NeighborPlot->setYAxisName(QString("Frequency"));
+  m_NeighborPlot->setCurveType(StatsGen::Power);
 
+
+  plotSizeDistribution();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void StatsGeneratorUI::setTabsPlotTabsEnabled(bool b)
+{
+  qint32 count = this->tabWidget->count();
+  for(qint32 i = 1; i < count; ++i)
+  {
+    this->tabWidget->setTabEnabled(i, b);
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -346,9 +370,6 @@ void StatsGeneratorUI::on_m_SigmaCutOff_SizeDistribution_textChanged(const QStri
   plotSizeDistribution();
 }
 
-
-
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -363,19 +384,22 @@ void StatsGeneratorUI::plotSizeDistribution()
   if (ok == false)
   {
     //TODO: Present Error Message
+    return;
   }
   sigma = m_Sigma_SizeDistribution->text().toDouble(&ok);
   if (ok == false)
   {
     //TODO: Present Error Message
+    return;
   }
   cutOff = m_SigmaCutOff_SizeDistribution->text().toDouble(&ok);
   if (ok == false)
   {
     //TODO: Present Error Message
+    return;
   }
 
-  int size = 256;
+  int size = 20;
   QwtArray<double> x;
   QwtArray<double> y;
   StatsGen sg;
@@ -385,6 +409,9 @@ void StatsGeneratorUI::plotSizeDistribution()
     //TODO: Present Error Message
     return;
   }
+
+  // We have valid data so enable the other plot tabs
+  setTabsPlotTabsEnabled(true);
 
   double xMax = std::numeric_limits<double>::min();
   double yMax = std::numeric_limits<double>::min();
@@ -398,13 +425,21 @@ void StatsGeneratorUI::plotSizeDistribution()
   QwtArray<double> xCo;
   QwtArray<double> yCo;
   int numsizebins = 1;
-  QwtArray<double> binsizes;
-  err = sg.GenCutOff<QwtArray<double> >(mu, sigma, cutOff, xCo, yCo, yMax, numsizebins, binsizes);
+  QwtArray<int> binsizes;
+ // QwtArray<int> numgrains;
+  err = sg.GenCutOff<double, QwtArray<double>, QwtArray<int> >(mu, sigma, cutOff, xCo, yCo, yMax, numsizebins, binsizes);
 
-//  for (int i = 0; i < 6; ++i )
-//  {
-//    std::cout << xCo[i] << " "<< yCo[i] << std::endl;
-//  }
+  std::cout << "Cut Off Values" << std::endl;
+  for (int i = 0; i < 2; ++i )
+  {
+    std::cout << "xCo[" << i << "]: " << xCo[i] << "  yCo[" << i << "]: "<< yCo[i] << std::endl;
+  }
+
+  std::cout << "Bin#" << std::endl;
+  for(int i = 0; i < numsizebins; ++i)
+  {
+    std::cout << binsizes[i] << std::endl;
+  }
 
   if (NULL == m_SizeDistributionCurve)
   {
@@ -414,7 +449,31 @@ void StatsGeneratorUI::plotSizeDistribution()
     m_SizeDistributionCurve->attach(m_SizeDistributionPlot);
   }
 
-  // QwtPlotMarker* marker = new QwtPlotMarker;
+  // Place a vertical Line on the plot where the Min and Max Cutoff values are
+  if (NULL == m_CutOffMin) {
+    m_CutOffMin = new QwtPlotMarker();
+    m_CutOffMin->attach(m_SizeDistributionPlot);
+  }
+  m_CutOffMin->setLabel(QString::fromLatin1("Cut Off Min Grain Diameter"));
+  m_CutOffMin->setLabelAlignment(Qt::AlignLeft | Qt::AlignBottom);
+  m_CutOffMin->setLabelOrientation(Qt::Vertical);
+  m_CutOffMin->setLineStyle(QwtPlotMarker::VLine);
+  m_CutOffMin->setLinePen(QPen(Qt::blue, 1, Qt::SolidLine));
+  m_CutOffMin->setXValue(xCo[0]);
+
+  if (NULL == m_CutOffMax) {
+    m_CutOffMax = new QwtPlotMarker();
+    m_CutOffMax->attach(m_SizeDistributionPlot);
+  }
+  m_CutOffMax->setLabel(QString::fromLatin1("Cut Off Max Grain Diameter"));
+  m_CutOffMax->setLabelAlignment(Qt::AlignLeft | Qt::AlignBottom);
+  m_CutOffMax->setLabelOrientation(Qt::Vertical);
+  m_CutOffMax->setLineStyle(QwtPlotMarker::VLine);
+  m_CutOffMax->setLinePen(QPen(Qt::blue, 1, Qt::SolidLine));
+  m_CutOffMax->setXValue(xCo[1]);
+
+
+#if 0
   if (NULL == m_SizeDistributionCutoffCurve)
   {
     m_SizeDistributionCutoffCurve = new QwtPlotCurve("Cut Off Value");
@@ -423,10 +482,28 @@ void StatsGeneratorUI::plotSizeDistribution()
     m_SizeDistributionCutoffCurve->attach(m_SizeDistributionPlot);
   }
 
-  m_SizeDistributionCurve->setData(x, y);
-  m_SizeDistributionCutoffCurve->setData(xCo, yCo);
 
+  m_SizeDistributionCutoffCurve->setData(xCo, yCo);
+#endif
+  m_SizeDistributionCurve->setData(x, y);
+  std::cout << "----------------" << std::endl;
+  std::cout << "yMax: " << yMax << std::endl;
+  std::cout << "xMax: " << xMax << std::endl;
   m_SizeDistributionPlot->setAxisScale(QwtPlot::yLeft, 0.0, yMax);
-  m_SizeDistributionPlot->setAxisScale(QwtPlot::xBottom, 0.0, xMax);
+  m_SizeDistributionPlot->setAxisScale(QwtPlot::xBottom, 0.0, xMax * 1.10);
   m_SizeDistributionPlot->replot();
+
+  // Now that we have bins and grain sizes, push those to the other plot widgets
+  // Setup Each Plot Widget
+  m_Omega3Plot->setBins(binsizes);
+
+  m_BOverAPlot->setBins(binsizes);
+
+  m_COverAPlot->setBins(binsizes);
+
+  m_COverBPlot->setBins(binsizes);
+
+  m_NeighborPlot->setBins(binsizes);
+
+
 }

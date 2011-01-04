@@ -12,9 +12,10 @@
 #  TIFF_LIBRARY_RELEASE - Release Version of tiff library
 
 # MESSAGE (STATUS "Finding Tiff library and headers..." )
-# Only set HDF5_INSTALL to the environment variable if it is blank
+
+# Only set TIFF_INSTALL to the environment variable if it is blank
 if ("${TIFF_INSTALL}" STREQUAL "")
-SET (TIFF_INSTALL  $ENV{TIFF_INSTALL})
+    SET (TIFF_INSTALL  $ENV{TIFF_INSTALL})
 endif()
 
 # Look for the header file.

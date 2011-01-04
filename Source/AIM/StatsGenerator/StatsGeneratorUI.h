@@ -41,9 +41,13 @@ class QwtPlotPicker;
 class QwtPlotPanner;
 class QwtPlotGrid;
 class QwtPlotCurve;
-
-/*
- *
+class QwtPlotMarker;
+/**
+ * @class StatsGeneratorUI StatsGeneratorUI.h AIM/StatsGenerator/StatsGeneratorUI.h
+ * @brief
+ * @author Michael A. Jackson for BlueQuartz Software
+ * @date Jan 4, 2011
+ * @version 1.0
  */
 class StatsGeneratorUI : public QMainWindow, private Ui::StatsGeneratorUI
 {
@@ -118,6 +122,12 @@ class StatsGeneratorUI : public QMainWindow, private Ui::StatsGeneratorUI
      */
     void openFile(QString imageFile);
 
+    /**
+     * @brief Enables or disables the various PlotWidgetTabs
+     * @param b Enable or disable the plotwidgets
+     */
+    void setTabsPlotTabsEnabled(bool b);
+
 
 private slots:
 
@@ -137,7 +147,8 @@ private slots:
     QList<QWidget*> m_WidgetList;
 
     QwtPlotCurve* m_SizeDistributionCurve;
-    QwtPlotCurve* m_SizeDistributionCutoffCurve;
+    QwtPlotMarker* m_CutOffMin;
+    QwtPlotMarker* m_CutOffMax;
     QwtPlotZoomer* m_zoomer;
     QwtPlotPicker* m_picker;
     QwtPlotPanner* m_panner;
