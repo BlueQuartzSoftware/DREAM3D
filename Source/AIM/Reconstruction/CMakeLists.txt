@@ -41,7 +41,7 @@ SET (Reconstruction_SRCS
 SET (Reconstruction_HDRS
     ${Reconstruction_SOURCE_DIR}/Reconstruction.h
     )
-cmp_IDE_SOURCE_PROPERTIES( "Source/AIM/Reconstruction" "${Reconstruction_HDRS}" "${Reconstruction_SRCS}" ${CMP_INSTALL_FILES})
+cmp_IDE_SOURCE_PROPERTIES( "Source/AIM/Reconstruction" "${Reconstruction_HDRS}" "${Reconstruction_SRCS}" ${PROJECT_INSTALL_HEADERS})
 
  
 set (PROJECT_SRCS
@@ -54,9 +54,15 @@ set (PROJECT_SRCS
     )
 
 
-ADD_EXECUTABLE ( Reconstruction  ${PROJECT_SRCS} )
-target_link_libraries(Reconstruction
+ADD_EXECUTABLE ( ${PROJECT_NAME}  ${PROJECT_SRCS} )
+target_link_libraries(${PROJECT_NAME}
                         MXADataModel
                         AIMCommon
                         )
-cmp_ToolInstallationSupport(Reconstruction "${EXE_DEBUG_EXTENSION}" ${Reconstruction_BINARY_DIR} )
+cmp_ToolInstallationSupport(${PROJECT_NAME} 
+                        "${EXE_DEBUG_EXTENSION}" 
+                        ${${PROJECT_NAME}_BINARY_DIR} 
+                        "${PROJECT_INSTALL_EXECUTABLES}"
+                        "Applications"
+                        "Utilities"
+                        )

@@ -44,7 +44,7 @@ set (GrainGenerator_SRCS
 set (GrainGenerator_HDRS 
     ${GrainGenerator_SOURCE_DIR}/GrainGenerator.h
 )
-cmp_IDE_SOURCE_PROPERTIES( "Source/AIM/GrainGenerator" "${GrainGenerator_HDRS}" "${GrainGenerator_SRCS}" ${CMP_INSTALL_FILES} )
+cmp_IDE_SOURCE_PROPERTIES( "Source/AIM/GrainGenerator" "${GrainGenerator_HDRS}" "${GrainGenerator_SRCS}" ${PROJECT_INSTALL_HEADERS} )
 
 set (PROJECT_SRCS
     ${GrainGenerator_SRCS}
@@ -52,11 +52,17 @@ set (PROJECT_SRCS
 )
     
 
-ADD_EXECUTABLE ( GrainGenerator  ${PROJECT_SRCS} )
-target_link_libraries(GrainGenerator 
+ADD_EXECUTABLE ( ${PROJECT_NAME}  ${PROJECT_SRCS} )
+target_link_libraries(${PROJECT_NAME} 
                         MXADataModel
                         AIMCommon 
                         ${Boost_PROGRAM_OPTIONS_LIBRARY} )
-cmp_ToolInstallationSupport(GrainGenerator "${EXE_DEBUG_EXTENSION}" ${GrainGenerator_BINARY_DIR} )
+cmp_ToolInstallationSupport(${PROJECT_NAME} 
+                        "${EXE_DEBUG_EXTENSION}" 
+                        ${${PROJECT_NAME}_BINARY_DIR} 
+                        "${PROJECT_INSTALL_EXECUTABLES}"
+                        "Applications"
+                        "Utilities"
+                        )
     
     
