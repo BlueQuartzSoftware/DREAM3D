@@ -74,7 +74,7 @@ class StatsGenPlotWidget : public QWidget, private Ui::StatsGenPlotWidget
     void createLogNormalCurve(int tableRow, double &xMax, double &yMax);
     void createPowerCurve(int tableRow, double &xMax, double &yMax);
 
-    void setBinsAndGrains(QVector<int> &binNumbers, QVector<int> &numGrains);
+    void setBins(QVector<int> &binNumbers);
 
   protected slots:
     void updatePlot();

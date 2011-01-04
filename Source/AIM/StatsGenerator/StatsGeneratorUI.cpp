@@ -495,15 +495,15 @@ void StatsGeneratorUI::plotSizeDistribution()
 
   // Now that we have bins and grain sizes, push those to the other plot widgets
   // Setup Each Plot Widget
-  m_Omega3Plot->setBinsAndGrains(binsizes, numgrains);
+  m_Omega3Plot->setBins(binsizes);
 
-  m_BOverAPlot->setBinsAndGrains(binsizes, numgrains);
+  m_BOverAPlot->setBins(binsizes);
 
-  m_COverAPlot->setBinsAndGrains(binsizes, numgrains);
+  m_COverAPlot->setBins(binsizes);
 
-  m_COverBPlot->setBinsAndGrains(binsizes, numgrains);
+  m_COverBPlot->setBins(binsizes);
 
-  m_NeighborPlot->setBinsAndGrains(binsizes, numgrains);
+  m_NeighborPlot->setBins(binsizes);
 
 
 }
