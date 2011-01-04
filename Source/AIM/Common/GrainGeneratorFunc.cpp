@@ -142,9 +142,6 @@ if (err < 0) {\
     path = group + ("/") + AIM::HDF5::BinNumber;\
     err = h5io->readStatsDataset(path, binNumbers);\
     CHECK_STATS_READ_ERROR(err, path)\
-    path = group + ("/") + AIM::HDF5::NumGrains;\
-    err = h5io->readStatsDataset(path, numGrains);\
-    CHECK_STATS_READ_ERROR(err, path)\
     path = group + ("/") + AIM::HDF5::Average;\
     err = h5io->readStatsDataset(path, averages);\
     CHECK_STATS_READ_ERROR(err, path)\
@@ -154,13 +151,12 @@ if (err < 0) {\
     var.resize(maxdiameter + 1);\
     for (int temp7 = 0; temp7 < maxdiameter + 1; temp7++)\
     {\
-      if (temp7 < mindiameter) var[temp7].resize(3, 0);\
+      if (temp7 < mindiameter) var[temp7].resize(2, 0);\
       if (temp7 >= mindiameter)\
       {\
         var[binNumbers[temp7]].resize(3);\
         var[binNumbers[temp7]][0] = averages[temp7];\
         var[binNumbers[temp7]][1] = stdDevs[temp7];\
-        var[binNumbers[temp7]][2] = numGrains[temp7];\
       }\
     }
 
@@ -201,7 +197,6 @@ int GrainGeneratorFunc::readReconStatsData(H5ReconStatsReader::Pointer h5io)
 
   /* Read the Grain_SizeVBoverA_Distributions Data */
   std::vector<int> binNumbers;
-  std::vector<int> numGrains;
   std::vector<double> averages;
   std::vector<double>  stdDevs;
 
@@ -217,9 +212,6 @@ int GrainGeneratorFunc::readReconStatsData(H5ReconStatsReader::Pointer h5io)
   path = AIM::HDF5::Grain_SizeVNeighbors_Distributions + ("/") + AIM::HDF5::BinNumber;
   err = h5io->readStatsDataset(path, binNumbers);
   CHECK_STATS_READ_ERROR(err, path)
-  path = AIM::HDF5::Grain_SizeVNeighbors_Distributions + ("/") + AIM::HDF5::NumGrains;
-  err = h5io->readStatsDataset(path, numGrains);
-  CHECK_STATS_READ_ERROR(err, path)
 
   path = AIM::HDF5::Grain_SizeVNeighbors_Distributions + ("/") + AIM::HDF5::alpha;
   err = h5io->readStatsDataset(path, a);
@@ -234,10 +226,10 @@ int GrainGeneratorFunc::readReconStatsData(H5ReconStatsReader::Pointer h5io)
   neighborhood.resize(maxdiameter + 1);
   for (int temp7 = 0; temp7 < maxdiameter + 1; temp7++)
   {
-    if (temp7 < mindiameter) neighborhood[temp7].resize(4, 0);
+    if (temp7 < mindiameter) neighborhood[temp7].resize(3, 0);
     if (temp7 >= mindiameter)
     {
-      neighborhood[binNumbers[temp7]].resize(4);
+      neighborhood[binNumbers[temp7]].resize(3);
       neighborhood[binNumbers[temp7]][0] = a[temp7]*pow(1,k[temp7])+b[temp7];
       neighborhood[binNumbers[temp7]][1] = a[temp7]*pow(2,k[temp7])+b[temp7];
       neighborhood[binNumbers[temp7]][2] = a[temp7]*pow(3,k[temp7])+b[temp7];
@@ -870,7 +862,9 @@ int  GrainGeneratorFunc::pack_grains(int numgrains)
   totalvol = 0;
   double change1, change2, change3;
   double allowablechange, totalchange;
-
+  ofstream outFile;
+  string filename = "test.txt";
+  outFile.open(filename.c_str());
   size_t index;
   double xc, yc, zc;
   currentfillingerror = 0, oldfillingerror = 0;
@@ -923,9 +917,10 @@ int  GrainGeneratorFunc::pack_grains(int numgrains)
   oldsizedisterror = 1;
   oldneighborhooderror = (maxdiameter + 1) * 4;
   totalchange = 0.0;
-  for (int iteration = 0; iteration < (1000000); iteration++)
+  for (int iteration = 0; iteration < (250000); iteration++)
   {
     int option = iteration % 4;
+	if(iteration%50 == 0) outFile << oldfillingerror << "	" << oldsizedisterror << "	" << oldneighborhooderror << endl;
     allowablechange = (0.25 * totalchange / acceptedmoves) * pow((1000000.0 - double(iteration)) / 1000000.0, 2);
     if (acceptedmoves == 0) allowablechange = 0.0;
     if (option == 0)
@@ -943,9 +938,6 @@ int  GrainGeneratorFunc::pack_grains(int numgrains)
       if(fillingerrorweight > 0) currentfillingerror = oldfillingerror + addcost;
       if(sizedisterrorweight > 0) currentsizedisterror = check_sizedisterror(random,-1000);
       if(neighborhooderrorweight > 0) currentneighborhooderror = check_neighborhooderror(random,-1000);
-      currentfillingerror = oldfillingerror + addcost;
-      currentsizedisterror = check_sizedisterror(random, -1000);
-      //		currentneighborhooderror = check_neighborhooderror(random,-1000);
       change1 = (currentfillingerror - oldfillingerror) / oldfillingerror;
       if (oldfillingerror < 0) change1 = -change1;
       change2 = (currentsizedisterror - oldsizedisterror) / oldsizedisterror;
