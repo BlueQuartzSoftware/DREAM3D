@@ -142,9 +142,6 @@ if (err < 0) {\
     path = group + ("/") + AIM::HDF5::BinNumber;\
     err = h5io->readStatsDataset(path, binNumbers);\
     CHECK_STATS_READ_ERROR(err, path)\
-    path = group + ("/") + AIM::HDF5::NumGrains;\
-    err = h5io->readStatsDataset(path, numGrains);\
-    CHECK_STATS_READ_ERROR(err, path)\
     path = group + ("/") + AIM::HDF5::Average;\
     err = h5io->readStatsDataset(path, averages);\
     CHECK_STATS_READ_ERROR(err, path)\
@@ -154,13 +151,12 @@ if (err < 0) {\
     var.resize(maxdiameter + 1);\
     for (int temp7 = 0; temp7 < maxdiameter + 1; temp7++)\
     {\
-      if (temp7 < mindiameter) var[temp7].resize(3, 0);\
+      if (temp7 < mindiameter) var[temp7].resize(2, 0);\
       if (temp7 >= mindiameter)\
       {\
         var[binNumbers[temp7]].resize(3);\
         var[binNumbers[temp7]][0] = averages[temp7];\
         var[binNumbers[temp7]][1] = stdDevs[temp7];\
-        var[binNumbers[temp7]][2] = numGrains[temp7];\
       }\
     }
 
@@ -184,15 +180,23 @@ int GrainGeneratorFunc::readReconStatsData(H5ReconStatsReader::Pointer h5io)
   /* Read the Grain_Size_Distribution Data */
   err = h5io->readStatsDataset(AIM::HDF5::Grain_Size_Distribution, double_data);
   CHECK_STATS_READ_ERROR(err, AIM::HDF5::Grain_Size_Distribution)
-  grainsizedist.resize(3);
-  grainsizedist[0] = avgdiam = double_data[0];
-  grainsizedist[1] = sddiam = double_data[1];
-  grainsizedist[2] = double_data[2];
+  avgdiam = double_data[0];
+  sddiam = double_data[1];
+  grainsizedist.resize(maxdiameter+1);
+  simgrainsizedist.resize(maxdiameter+1);
+  double root2pi = pow((2.0 * 3.1415926535897), 0.5);
+  for(int i=0;i<maxdiameter+1;i++)
+  {
+	if(i < mindiameter) grainsizedist[i] = 0;
+	if(i >= mindiameter)
+	{
+		grainsizedist[i] = (1.0 / (double(i+0.5) * double_data[1] * root2pi)) * exp(-((log(double(i+0.5)) - double_data[0]) * (log(double(i+0.5)) - double_data[0])) / (2 * double_data[1 * double_data[1]]));
+	}
+  }
 
 
   /* Read the Grain_SizeVBoverA_Distributions Data */
   std::vector<int> binNumbers;
-  std::vector<int> numGrains;
   std::vector<double> averages;
   std::vector<double>  stdDevs;
 
@@ -208,9 +212,6 @@ int GrainGeneratorFunc::readReconStatsData(H5ReconStatsReader::Pointer h5io)
   path = AIM::HDF5::Grain_SizeVNeighbors_Distributions + ("/") + AIM::HDF5::BinNumber;
   err = h5io->readStatsDataset(path, binNumbers);
   CHECK_STATS_READ_ERROR(err, path)
-  path = AIM::HDF5::Grain_SizeVNeighbors_Distributions + ("/") + AIM::HDF5::NumGrains;
-  err = h5io->readStatsDataset(path, numGrains);
-  CHECK_STATS_READ_ERROR(err, path)
 
   path = AIM::HDF5::Grain_SizeVNeighbors_Distributions + ("/") + AIM::HDF5::alpha;
   err = h5io->readStatsDataset(path, a);
@@ -225,20 +226,19 @@ int GrainGeneratorFunc::readReconStatsData(H5ReconStatsReader::Pointer h5io)
   neighborhood.resize(maxdiameter + 1);
   for (int temp7 = 0; temp7 < maxdiameter + 1; temp7++)
   {
-    if (temp7 < mindiameter) neighborhood[temp7].resize(4, 0);
+    if (temp7 < mindiameter) neighborhood[temp7].resize(3, 0);
     if (temp7 >= mindiameter)
     {
-      neighborhood[binNumbers[temp7]].resize(9);
-      neighborhood[binNumbers[temp7]][0] = a[temp7];
-      neighborhood[binNumbers[temp7]][1] = b[temp7];
-      neighborhood[binNumbers[temp7]][2] = k[temp7];
-      neighborhood[binNumbers[temp7]][3] = numGrains[temp7];
+      neighborhood[binNumbers[temp7]].resize(3);
+      neighborhood[binNumbers[temp7]][0] = a[temp7]*pow(1,k[temp7])+b[temp7];
+      neighborhood[binNumbers[temp7]][1] = a[temp7]*pow(2,k[temp7])+b[temp7];
+      neighborhood[binNumbers[temp7]][2] = a[temp7]*pow(3,k[temp7])+b[temp7];
     }
   }
   neighbordist.resize(maxdiameter + 1);
   for (int i = 0; i < maxdiameter + 1; i++)
   {
-    neighbordist[i].resize(1, 0.0);
+    neighbordist[i].resize(3, 0.0);
   }
 
   return err;
@@ -658,28 +658,26 @@ void GrainGeneratorFunc::determine_neighbors()
 		y = grains[gnum].centroidy;
 		z = grains[gnum].centroidz;
 		dia = grains[gnum].equivdiameter;
-		rad1 = dia/2.0;
 		for(int n=gnum;n<(numextragrains+1);n++)
 		{
 			xn = grains[n].centroidx;
 			yn = grains[n].centroidy;
 			zn = grains[n].centroidz;
 			dia2 = grains[n].equivdiameter;
-			rad2 = dia2/2.0;
 			xdist = fabs(x-xn);
 			ydist = fabs(y-yn);
 			zdist = fabs(z-zn);
 			totdist = (xdist*xdist)+(ydist*ydist)+(zdist*zdist);
 			totdist = pow(totdist,0.5);
-			if(totdist < (4*rad1))
+			if(totdist < (3*dia))
 			{
-				DoverR = int(totdist/rad1);
+				DoverR = int(totdist/dia);
 				grains[n].neighbordistfunclist[int(DoverR)].resize(grains[n].neighbordistfunclist[int(DoverR)].size()+1);
 				grains[n].neighbordistfunclist[int(DoverR)][(grains[n].neighbordistfunclist[int(DoverR)].size()-1)] = gnum;
 			}
-			if(totdist < (4*rad2))
+			if(totdist < (3*dia2))
 			{
-				DoverR = int(totdist/rad2);
+				DoverR = int(totdist/dia2);
 				grains[gnum].neighbordistfunclist[int(DoverR)].resize(grains[gnum].neighbordistfunclist[int(DoverR)].size()+1);
 				grains[gnum].neighbordistfunclist[int(DoverR)][(grains[gnum].neighbordistfunclist[int(DoverR)].size()-1)] = n;
 			}
@@ -700,16 +698,10 @@ double GrainGeneratorFunc::check_neighborhooderror(int gadd, int gremove)
 		neighbordist[i][0] = 0;
 		neighbordist[i][1] = 0;
 		neighbordist[i][2] = 0;
-		neighbordist[i][3] = 0;
-		neighbordist[i][4] = 0;
-		neighbordist[i][5] = 0;
-		neighbordist[i][6] = 0;
-		neighbordist[i][7] = 0;
-		neighbordist[i][8] = 0;
 	}
 	if(gadd > 0)
 	{
-	  for(int i=0;i<4;i++)
+	  for(int i=0;i<3;i++)
 	  {
 		  for(size_t j=0;j<grains[gadd].neighbordistfunclist[i].size();j++)
 		  {
@@ -720,7 +712,7 @@ double GrainGeneratorFunc::check_neighborhooderror(int gadd, int gremove)
 	}
 	if(gremove > 0)
 	{
-	  for(int i=0;i<4;i++)
+	  for(int i=0;i<3;i++)
 	  {
 		  for(size_t j=0;j<grains[gremove].neighbordistfunclist[i].size();j++)
 		  {
@@ -735,49 +727,7 @@ double GrainGeneratorFunc::check_neighborhooderror(int gadd, int gremove)
 		index = activegrainlist[i];
 		if(index != gremove)
 		{
-			for(int j=0;j<4;j++)
-			{
-				nnum = grains[index].neighbordistfunc[j];
-				dia = grains[index].equivdiameter;
-				if(dia > maxdiameter) dia = maxdiameter;
-				if(dia < mindiameter) dia = mindiameter;
-				if (j == 0) neighbordist[dia][8]++;
-				if(nnum > 0)
-				{
-					neighbordist[dia][(j*2)] = neighbordist[dia][(j*2)]+nnum;
-				}
-			}
-		}
-	}
-	if(gadd > 0)
-	{
-		for(int j=0;j<4;j++)
-		{
-			nnum = grains[index].neighbordistfunc[j];
-			dia = grains[index].equivdiameter;
-			if(dia > maxdiameter) dia = maxdiameter;
-			if(dia < mindiameter) dia = mindiameter;
-			if (j == 0) neighbordist[dia][8]++;
-			if(nnum > 0)
-			{
-				neighbordist[dia][(j*2)] = neighbordist[dia][(j*2)]+nnum;
-			}
-		}
-	}
-	for(int i=0;i<maxdiameter+1;i++)
-	{
-		for(int j=0;j<4;j++)
-		{
-			neighbordist[i][(2*j)] = neighbordist[i][(2*j)]/neighbordist[i][8];
-			if(neighbordist[i][8] == 0) neighbordist[i][(2*j)] = 0;
-		}
-	}
-	for(size_t i=1;i<activegrainlist.size();i++)
-	{
-		index = activegrainlist[i];
-		if(index != gremove)
-		{
-			for(int j=0;j<4;j++)
+			for(int j=0;j<3;j++)
 			{
 				nnum = grains[index].neighbordistfunc[j];
 				dia = grains[index].equivdiameter;
@@ -785,14 +735,14 @@ double GrainGeneratorFunc::check_neighborhooderror(int gadd, int gremove)
 				if(dia < mindiameter) dia = mindiameter;
 				if(nnum > 0)
 				{
-					neighbordist[dia][((j*2)+1)] = neighbordist[dia][((j*2)+1)]+((neighbordist[dia][(2*j)]-nnum)*(neighbordist[dia][(2*j)]-nnum));
+					neighbordist[dia][j] = neighbordist[dia][j]+nnum;
 				}
 			}
 		}
 	}
 	if(gadd > 0)
 	{
-		for(int j=0;j<4;j++)
+		for(int j=0;j<3;j++)
 		{
 			nnum = grains[index].neighbordistfunc[j];
 			dia = grains[index].equivdiameter;
@@ -800,27 +750,15 @@ double GrainGeneratorFunc::check_neighborhooderror(int gadd, int gremove)
 			if(dia < mindiameter) dia = mindiameter;
 			if(nnum > 0)
 			{
-				neighbordist[dia][((j*2)+1)] = neighbordist[dia][((j*2)+1)]+((neighbordist[dia][(2*j)]-nnum)*(neighbordist[dia][(2*j)]-nnum));
+				neighbordist[dia][j] = neighbordist[dia][j]+nnum;
 			}
 		}
 	}
 	for(int i=0;i<maxdiameter+1;i++)
 	{
-		for(int j=0;j<4;j++)
+		for(int j=0;j<3;j++)
 		{
-			uvar = neighbordist[i][((2*j)+1)]/(neighbordist[i][8]-1);
-			neighbordist[i][((2*j)+1)] = neighbordist[i][((2*j)+1)]/neighbordist[i][8];
-			if(neighbordist[i][8] == 0) neighbordist[i][((2*j)+1)] = 0;
-			neighbordist[i][((2*j)+1)] = pow(neighbordist[i][((2*j)+1)],0.5);
-			if(neighbordist[i][8] <= 1) p = 0.5;
-			if(neighbordist[i][8] > 1)
-			{
-				tvalue = (neighborhood[i][(2*j)]-neighbordist[i][(2*j)])/pow(((uvar/neighbordist[i][8])+(((neighborhood[i][((2*j)+1)]*neighborhood[i][((2*j)+1)]*neighborhood[i][8])/(neighborhood[i][8]-1))/neighborhood[i][8])),0.5);
-				df = pow(((uvar/neighbordist[i][8])+(((neighborhood[i][((2*j)+1)]*neighborhood[i][((2*j)+1)]*neighborhood[i][8])/(neighborhood[i][8]-1))/neighborhood[i][8])),2)/((pow((uvar/neighbordist[i][8]),2)/(neighbordist[i][8]-1))+(pow((((neighborhood[i][((2*j)+1)]*neighborhood[i][((2*j)+1)]*neighborhood[i][8])/(neighborhood[i][8]-1))/neighborhood[i][8]),2)/(neighborhood[i][8]-1)));
-				tvalue = fabs(tvalue);
-				p = 0.5*incompletebeta(df/2, 0.5, df/(df+(tvalue*tvalue)));
-			}
-			neighborerror = neighborerror + (1.0-(2.0*p));
+			neighborerror = neighborerror + ((neighborhood[i][j]-neighbordist[i][j])*(neighborhood[i][j]-neighbordist[i][j]));
 		}
 	}
 	if(gadd > 0)
@@ -886,48 +824,37 @@ double GrainGeneratorFunc::check_sizedisterror(int gadd, int gremove)
 	double uvar;
 	double dia;
 	double tvalue;
-	double sizedisterror;
+	double sizedisterror = 0;
 	int index;
 	int count = 0;
+	for(int i=0;i<maxdiameter+1;i++)
+	{
+		simgrainsizedist[i] = 0.0;
+	}
 	for(size_t b=1;b<activegrainlist.size();b++)
 	{
 		index = activegrainlist[b];
 		if(index != gremove)
 		{
 			dia = grains[index].equivdiameter;
-			avgdia = avgdia + log(dia);
+			simgrainsizedist[int(dia)]++;
 			count++;
 		}
 	}
 	if(gadd > 0)
 	{
 		dia = grains[gadd].equivdiameter;
-		avgdia = avgdia + log(dia);
+		simgrainsizedist[int(dia)]++;
 		count++;
 	}
-	avgdia = avgdia/(count);
-	for(size_t b=1;b<activegrainlist.size();b++)
+	for(int i=0;i<maxdiameter+1;i++)
 	{
-		index = activegrainlist[b];
-		if(index != gremove)
-		{
-			dia = grains[index].equivdiameter;
-			stddia = stddia + ((avgdia-log(dia))*(avgdia-log(dia)));
-		}
+		simgrainsizedist[i] = simgrainsizedist[i]/double(count);
 	}
-	if(gadd > 0)
+	for(int i=0;i<maxdiameter+1;i++)
 	{
-		dia = grains[gadd].equivdiameter;
-		stddia = stddia + ((avgdia-log(dia))*(avgdia-log(dia)));
+		sizedisterror = sizedisterror + ((simgrainsizedist[i]-grainsizedist[i])*(simgrainsizedist[i]-grainsizedist[i]));
 	}
-	uvar = stddia/(count-1);
-	stddia = stddia/(count);
-	stddia = pow(stddia,0.5);
-	tvalue = (grainsizedist[0]-avgdia)/(pow(((uvar/count)+(((grainsizedist[1]*grainsizedist[1]*grainsizedist[2])/(grainsizedist[2]-1))/grainsizedist[2])),0.5));
-    df = pow(((uvar/count)+(((grainsizedist[1]*grainsizedist[1]*grainsizedist[2])/(grainsizedist[2]-1))/grainsizedist[2])),2)/((pow((uvar/count),2)/(count-1))+(pow((((grainsizedist[1]*grainsizedist[1]*grainsizedist[2])/(grainsizedist[2]-1))/grainsizedist[2]),2)/(grainsizedist[2]-1)));
-	tvalue = fabs(tvalue);
-    p = 0.5*incompletebeta(df/2, 0.5, df/(df+(tvalue*tvalue)));
-	sizedisterror = 1.0-(2*p);
 	return sizedisterror;
 }
 int  GrainGeneratorFunc::pack_grains(int numgrains)
@@ -935,7 +862,9 @@ int  GrainGeneratorFunc::pack_grains(int numgrains)
   totalvol = 0;
   double change1, change2, change3;
   double allowablechange, totalchange;
-
+  ofstream outFile;
+  string filename = "test.txt";
+  outFile.open(filename.c_str());
   size_t index;
   double xc, yc, zc;
   currentfillingerror = 0, oldfillingerror = 0;
@@ -988,10 +917,11 @@ int  GrainGeneratorFunc::pack_grains(int numgrains)
   oldsizedisterror = 1;
   oldneighborhooderror = (maxdiameter + 1) * 4;
   totalchange = 0.0;
-  for (int iteration = 0; iteration < (1000000); iteration++)
+  for (int iteration = 0; iteration < (250000); iteration++)
   {
     int option = iteration % 4;
-    allowablechange = (0.4 * totalchange / acceptedmoves) * pow((1000000.0 - double(iteration)) / 1000000.0, 2);
+	if(iteration%50 == 0) outFile << oldfillingerror << "	" << oldsizedisterror << "	" << oldneighborhooderror << endl;
+    allowablechange = (0.25 * totalchange / acceptedmoves) * pow((1000000.0 - double(iteration)) / 1000000.0, 2);
     if (acceptedmoves == 0) allowablechange = 0.0;
     if (option == 0)
     {
@@ -1008,9 +938,6 @@ int  GrainGeneratorFunc::pack_grains(int numgrains)
       if(fillingerrorweight > 0) currentfillingerror = oldfillingerror + addcost;
       if(sizedisterrorweight > 0) currentsizedisterror = check_sizedisterror(random,-1000);
       if(neighborhooderrorweight > 0) currentneighborhooderror = check_neighborhooderror(random,-1000);
-      currentfillingerror = oldfillingerror + addcost;
-      currentsizedisterror = check_sizedisterror(random, -1000);
-      //		currentneighborhooderror = check_neighborhooderror(random,-1000);
       change1 = (currentfillingerror - oldfillingerror) / oldfillingerror;
       if (oldfillingerror < 0) change1 = -change1;
       change2 = (currentsizedisterror - oldsizedisterror) / oldsizedisterror;
@@ -1026,7 +953,7 @@ int  GrainGeneratorFunc::pack_grains(int numgrains)
         oldfillingerror = currentfillingerror;
         oldneighborhooderror = currentneighborhooderror;
         oldsizedisterror = currentsizedisterror;
-        totalchange = totalchange + fabs(change1 + change2);
+        totalchange = totalchange + fabs(change1 + change2 +change3);
         acceptedmoves++;
       }
     }
@@ -1054,7 +981,7 @@ int  GrainGeneratorFunc::pack_grains(int numgrains)
         oldfillingerror = currentfillingerror;
         oldneighborhooderror = currentneighborhooderror;
         oldsizedisterror = currentsizedisterror;
-        totalchange = totalchange + fabs(change1 + change2);
+        totalchange = totalchange + fabs(change1 + change2 +change3);
         acceptedmoves++;
       }
     }
@@ -1096,7 +1023,7 @@ int  GrainGeneratorFunc::pack_grains(int numgrains)
         oldfillingerror = currentfillingerror;
         oldneighborhooderror = currentneighborhooderror;
         oldsizedisterror = currentsizedisterror;
-        totalchange = totalchange + fabs(change1 + change2);
+        totalchange = totalchange + fabs(change1 + change2 +change3);
         acceptedmoves++;
       }
     }
@@ -1142,7 +1069,7 @@ int  GrainGeneratorFunc::pack_grains(int numgrains)
           oldfillingerror = currentfillingerror;
           oldneighborhooderror = currentneighborhooderror;
           oldsizedisterror = currentsizedisterror;
-          totalchange = totalchange + fabs(change1 + change2);
+		  totalchange = totalchange + fabs(change1 + change2 +change3);
           acceptedmoves++;
         }
       }

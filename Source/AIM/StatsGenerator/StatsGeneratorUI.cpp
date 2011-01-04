@@ -424,10 +424,10 @@ void StatsGeneratorUI::plotSizeDistribution()
 
   QwtArray<double> xCo;
   QwtArray<double> yCo;
-  int numsizebins = 10;
+  int numsizebins = 1;
   QwtArray<int> binsizes;
-  QwtArray<int> numgrains;
-  err = sg.GenCutOff<double, QwtArray<double>, QwtArray<int> >(mu, sigma, cutOff, xCo, yCo, yMax, numsizebins, binsizes, numgrains);
+ // QwtArray<int> numgrains;
+  err = sg.GenCutOff<double, QwtArray<double>, QwtArray<int> >(mu, sigma, cutOff, xCo, yCo, yMax, numsizebins, binsizes);
 
   std::cout << "Cut Off Values" << std::endl;
   for (int i = 0; i < 2; ++i )
@@ -435,10 +435,10 @@ void StatsGeneratorUI::plotSizeDistribution()
     std::cout << "xCo[" << i << "]: " << xCo[i] << "  yCo[" << i << "]: "<< yCo[i] << std::endl;
   }
 
-  std::cout << "Bin#\tNumGrains" << std::endl;
+  std::cout << "Bin#" << std::endl;
   for(int i = 0; i < numsizebins; ++i)
   {
-    std::cout << binsizes[i] << "\t" << numgrains[i] << std::endl;
+    std::cout << binsizes[i] << std::endl;
   }
 
   if (NULL == m_SizeDistributionCurve)

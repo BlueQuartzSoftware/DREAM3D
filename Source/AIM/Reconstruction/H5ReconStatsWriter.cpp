@@ -107,32 +107,27 @@ int H5ReconStatsWriter::writeStatsData(int maxdiameter, int mindiameter,
   err = H5Lite::writeVectorDataset(gid, AIM::HDF5::Grain_Diameter_Info, dims, int_data);
   //TODO: Check for error
 
-  std::vector<double> double_data(3);
+  std::vector<double> double_data(2);
   double_data[0] = avglogdiam;
   double_data[1] = sdlogdiam;
-  double_data[2] = actualgrains;
   err = H5Lite::writeVectorDataset(gid, AIM::HDF5::Grain_Size_Distribution, dims, double_data);
   //TODO: Check for error
 
 /* ************   Grain_SizeVBoverA_Distributions *************************** */
   hid_t disId = H5Utilities::createGroup(gid, AIM::HDF5::Grain_SizeVBoverA_Distributions);
   std::vector<int> binNum((maxdiameter) + 1);
-  std::vector<int> nGrains((maxdiameter) + 1);
   std::vector<double> average((maxdiameter) + 1, 0.0);
   std::vector<double> stdDev((maxdiameter) + 1, 0.0);
   // Convert from Row Major to Column Major
   for (int temp7 = mindiameter; temp7 < (maxdiameter) + 1; temp7++)
   {
     binNum[temp7] = temp7;
-    nGrains[temp7] = static_cast<int>(svbovera[temp7][0]);
     average[temp7] = svbovera[temp7][3];
     stdDev[temp7] = svbovera[temp7][4];
   }
   dims.resize(1); // Single Dimension
   dims[0] = binNum.size();
   err = H5Lite::writeVectorDataset(disId, AIM::HDF5::BinNumber, dims, binNum);
-  //TODO: Check Error
-  err = H5Lite::writeVectorDataset(disId, AIM::HDF5::NumGrains, dims, nGrains);
   //TODO: Check Error
   err = H5Lite::writeVectorDataset(disId, AIM::HDF5::Average, dims, average);
   err = H5Lite::writeVectorDataset(disId, AIM::HDF5::StandardDeviation, dims, stdDev);
@@ -145,15 +140,12 @@ int H5ReconStatsWriter::writeStatsData(int maxdiameter, int mindiameter,
   for (int temp7 = mindiameter; temp7 < (maxdiameter) + 1; temp7++)
   {
     binNum[temp7] = temp7;
-    nGrains[temp7] = static_cast<int>(svcovera[temp7][0]);
     average[temp7] = svcovera[temp7][3];
     stdDev[temp7] = svcovera[temp7][4];
   }
   dims.resize(1); // Single Dimension
   dims[0] = binNum.size();
   err = H5Lite::writeVectorDataset(disId, AIM::HDF5::BinNumber, dims, binNum);
-  //TODO: Check Error
-  err = H5Lite::writeVectorDataset(disId, AIM::HDF5::NumGrains, dims, nGrains);
   //TODO: Check Error
   err = H5Lite::writeVectorDataset(disId, AIM::HDF5::Average, dims, average);
   err = H5Lite::writeVectorDataset(disId, AIM::HDF5::StandardDeviation, dims, stdDev);
@@ -165,15 +157,12 @@ int H5ReconStatsWriter::writeStatsData(int maxdiameter, int mindiameter,
   for (int temp7 = mindiameter; temp7 < (maxdiameter) + 1; temp7++)
   {
     binNum[temp7] = temp7;
-    nGrains[temp7] = static_cast<int>(svcoverb[temp7][0]);
     average[temp7] = svcoverb[temp7][3];
     stdDev[temp7] = svcoverb[temp7][4];
   }
   dims.resize(1); // Single Dimension
   dims[0] = binNum.size();
   err = H5Lite::writeVectorDataset(disId, AIM::HDF5::BinNumber, dims, binNum);
-  //TODO: Check Error
-  err = H5Lite::writeVectorDataset(disId, AIM::HDF5::NumGrains, dims, nGrains);
   //TODO: Check Error
   err = H5Lite::writeVectorDataset(disId, AIM::HDF5::Average, dims, average);
   err = H5Lite::writeVectorDataset(disId, AIM::HDF5::StandardDeviation, dims, stdDev);
@@ -187,7 +176,6 @@ int H5ReconStatsWriter::writeStatsData(int maxdiameter, int mindiameter,
   for (int temp7 = mindiameter; temp7 < (maxdiameter) + 1; temp7++)
   {
     binNum[temp7] = temp7;
-    nGrains[temp7] = static_cast<int>(neighborhoodfit[temp7][0]);
     a[temp7] = neighborhoodfit[temp7][1];
     b[temp7] =  neighborhoodfit[temp7][2];
     k[temp7] =  neighborhoodfit[temp7][3];
@@ -195,7 +183,6 @@ int H5ReconStatsWriter::writeStatsData(int maxdiameter, int mindiameter,
   dims.resize(1); // Single Dimension
   dims[0] = binNum.size();
   err = H5Lite::writeVectorDataset(disId, AIM::HDF5::BinNumber, dims, binNum);
-  err = H5Lite::writeVectorDataset(disId, AIM::HDF5::NumGrains, dims, nGrains);
   err = H5Lite::writeVectorDataset(disId, AIM::HDF5::alpha, dims, a);
   err = H5Lite::writeVectorDataset(disId, AIM::HDF5::beta, dims, b);
   err = H5Lite::writeVectorDataset(disId, AIM::HDF5::Exp_k, dims, k);
@@ -206,14 +193,12 @@ int H5ReconStatsWriter::writeStatsData(int maxdiameter, int mindiameter,
   for (int temp7 = mindiameter; temp7 < (maxdiameter) + 1; temp7++)
   {
     binNum[temp7] = temp7;
-    nGrains[temp7] = static_cast<int>(svomega3[temp7][0]);
     average[temp7] = svomega3[temp7][3];
     stdDev[temp7] = svomega3[temp7][4];
   }
   dims.resize(1); // Single Dimension
   dims[0] = binNum.size();
   err = H5Lite::writeVectorDataset(disId, AIM::HDF5::BinNumber, dims, binNum);
-  err = H5Lite::writeVectorDataset(disId, AIM::HDF5::NumGrains, dims, nGrains);
   err = H5Lite::writeVectorDataset(disId, AIM::HDF5::Average, dims, average);
   err = H5Lite::writeVectorDataset(disId, AIM::HDF5::StandardDeviation, dims, stdDev);
   err = H5Gclose(disId);

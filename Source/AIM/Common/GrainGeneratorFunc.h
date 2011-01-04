@@ -91,7 +91,9 @@ public:
 	vector<int> precipitateorder;
 	vector<int> takencheck;
 	vector<double> grainsizedist;
+	vector<double> simgrainsizedist;
 	vector<double> precipsizedist;
+	vector<double> simprecipsizedist;
 	vector<vector<double> > bovera;
 	vector<vector<double> > covera;
 	vector<vector<double> > coverb;

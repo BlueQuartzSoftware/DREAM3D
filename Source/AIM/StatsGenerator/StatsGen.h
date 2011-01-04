@@ -126,11 +126,10 @@ class StatsGen
       return err;
     }
 
-
     template<typename J, typename T, typename K>
     int GenCutOff(J mu, J sigma, J cutoff,
                   T &x, T &y, J yMax,
-                  int &numsizebins, K &binsizes, K &numgrains)
+                  int &numsizebins, K &binsizes)
     {
       int err = 0;
       J lognormin, lognormout, max, min;
@@ -148,13 +147,12 @@ class StatsGen
 
       numsizebins = int(max) - int(min) + 1;
       binsizes.resize(numsizebins);
-      numgrains.resize(numsizebins);
       for (int i = 0; i < numsizebins; i++)
       {
         binsizes[i] = int(min) + i;
         lognormin = (int(min) + i) + (1.0 / 2.0);
         lognormout = (1.0 / (lognormin * sigma * root2pi)) * exp(-((log(lognormin) - mu) * (log(lognormin) - mu)) / (2 * s2));
-        numgrains[i] = lognormout * 1000;
+
       }
       return err;
     }
