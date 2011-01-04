@@ -324,7 +324,7 @@ void StatsGenPlotWidget::setRowOperationEnabled(bool b)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void StatsGenPlotWidget::setBinsAndGrains(QVector<int> &binNumbers, QVector<int> &numGrains)
+void StatsGenPlotWidget::setBins(QVector<int> &binNumbers)
 {
   qint32 count = binNumbers.count();
 
@@ -347,10 +347,6 @@ void StatsGenPlotWidget::setBinsAndGrains(QVector<int> &binNumbers, QVector<int>
     QModelIndex binNumberIndex = m_TableModel->index(m_TableModel->rowCount() - 1, StatsGenTableModel::BinNumber);
     m_TableView->setCurrentIndex(binNumberIndex);
     m_TableModel->setData(binNumberIndex, QVariant(binNumbers[i]), Qt::EditRole);
-
-    QModelIndex numGrainsIndex = m_TableModel->index(m_TableModel->rowCount() - 1, StatsGenTableModel::NumGrains);
-    m_TableView->setCurrentIndex(numGrainsIndex);
-    m_TableModel->setData(numGrainsIndex, QVariant(numGrains[i]), Qt::EditRole);
 
     QModelIndex muIndex = m_TableModel->index(m_TableModel->rowCount() - 1, StatsGenTableModel::Mu);
     m_TableView->setCurrentIndex(muIndex);
