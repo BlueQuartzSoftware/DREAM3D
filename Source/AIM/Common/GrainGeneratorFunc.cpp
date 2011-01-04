@@ -920,6 +920,9 @@ int  GrainGeneratorFunc::pack_grains(int numgrains)
   oldneighborhooderror = (maxdiameter + 1) * 4;
   for (int iteration = 0; iteration < (250000); iteration++)
   {
+	change1 = 0;
+	change2 = 0;
+	change3 = 0;
     int option = iteration % 4;
 	if(iteration%50 == 0) outFile << oldfillingerror << "	" << oldsizedisterror << "	" << oldneighborhooderror << "	" << acceptedmoves << endl;
     if (option == 0)
@@ -937,10 +940,10 @@ int  GrainGeneratorFunc::pack_grains(int numgrains)
       if(fillingerrorweight > 0) currentfillingerror = oldfillingerror + addcost;
       if(sizedisterrorweight > 0) currentsizedisterror = check_sizedisterror(random,-1000);
       if(neighborhooderrorweight > 0) currentneighborhooderror = check_neighborhooderror(random,-1000);
-      change1 = (currentfillingerror - oldfillingerror) / oldfillingerror;
-      if (oldfillingerror < 0) change1 = -change1;
-      change2 = (currentsizedisterror - oldsizedisterror) / oldsizedisterror;
-      change3 = (currentneighborhooderror - oldneighborhooderror) / oldneighborhooderror;
+      if(fillingerrorweight > 0) change1 = (currentfillingerror - oldfillingerror) / oldfillingerror;
+      if(fillingerrorweight > 0 && oldfillingerror < 0) change1 = -change1;
+      if(sizedisterrorweight > 0) change2 = (currentsizedisterror - oldsizedisterror) / oldsizedisterror;
+      if(neighborhooderrorweight > 0) change3 = (currentneighborhooderror - oldneighborhooderror) / oldneighborhooderror;
       if (fillingerrorweight*change1 + sizedisterrorweight*change2 + neighborhooderrorweight*change3 <= 0.0)
       {
         grains[random].active = 1;
@@ -963,10 +966,10 @@ int  GrainGeneratorFunc::pack_grains(int numgrains)
       if(fillingerrorweight > 0) currentfillingerror = oldfillingerror + removecost;
       if(sizedisterrorweight > 0) currentsizedisterror = check_sizedisterror(-1000, random);
       if(neighborhooderrorweight > 0) currentneighborhooderror = check_neighborhooderror(-1000,random);
-      change1 = (currentfillingerror - oldfillingerror) / oldfillingerror;
-      if (oldfillingerror < 0) change1 = -change1;
-      change2 = (currentsizedisterror - oldsizedisterror) / oldsizedisterror;
-      change3 = (currentneighborhooderror - oldneighborhooderror) / oldneighborhooderror;
+      if(fillingerrorweight > 0) change1 = (currentfillingerror - oldfillingerror) / oldfillingerror;
+      if(fillingerrorweight > 0 && oldfillingerror < 0) change1 = -change1;
+      if(sizedisterrorweight > 0) change2 = (currentsizedisterror - oldsizedisterror) / oldsizedisterror;
+      if(neighborhooderrorweight > 0) change3 = (currentneighborhooderror - oldneighborhooderror) / oldneighborhooderror;
       if (fillingerrorweight*change1 + sizedisterrorweight*change2 + neighborhooderrorweight*change3 <= 0.0)
       {
         grains[random].active = 0;
@@ -998,10 +1001,10 @@ int  GrainGeneratorFunc::pack_grains(int numgrains)
       if(fillingerrorweight > 0) currentfillingerror = oldfillingerror + addcost + removecost;
       if(sizedisterrorweight > 0) currentsizedisterror = check_sizedisterror(random, random1);
       if(neighborhooderrorweight > 0) currentneighborhooderror = check_neighborhooderror(random,random1);
-      change1 = (currentfillingerror - oldfillingerror) / oldfillingerror;
-      if (oldfillingerror < 0) change1 = -change1;
-      change2 = (currentsizedisterror - oldsizedisterror) / oldsizedisterror;
-      change3 = (currentneighborhooderror - oldneighborhooderror) / oldneighborhooderror;
+      if(fillingerrorweight > 0) change1 = (currentfillingerror - oldfillingerror) / oldfillingerror;
+      if(fillingerrorweight > 0 && oldfillingerror < 0) change1 = -change1;
+      if(sizedisterrorweight > 0) change2 = (currentsizedisterror - oldsizedisterror) / oldsizedisterror;
+      if(neighborhooderrorweight > 0) change3 = (currentneighborhooderror - oldneighborhooderror) / oldneighborhooderror;
       if (fillingerrorweight*change1 + sizedisterrorweight*change2 + neighborhooderrorweight*change3 <= 0.0)
       {
         grains[random].active = 1;
@@ -1041,10 +1044,10 @@ int  GrainGeneratorFunc::pack_grains(int numgrains)
         if(fillingerrorweight > 0) currentfillingerror = oldfillingerror + addcost + removecost;
         if(sizedisterrorweight > 0) currentsizedisterror = check_sizedisterror(random, random1);
         if(neighborhooderrorweight > 0) currentneighborhooderror = check_neighborhooderror(random,random1);
-        change1 = (currentfillingerror - oldfillingerror) / oldfillingerror;
-        if (oldfillingerror < 0) change1 = -change1;
-        change2 = (currentsizedisterror - oldsizedisterror) / oldsizedisterror;
-        change3 = (currentneighborhooderror - oldneighborhooderror) / oldneighborhooderror;
+        if(fillingerrorweight > 0) change1 = (currentfillingerror - oldfillingerror) / oldfillingerror;
+        if(fillingerrorweight > 0 && oldfillingerror < 0) change1 = -change1;
+        if(sizedisterrorweight > 0) change2 = (currentsizedisterror - oldsizedisterror) / oldsizedisterror;
+        if(neighborhooderrorweight > 0) change3 = (currentneighborhooderror - oldneighborhooderror) / oldneighborhooderror;
         if (fillingerrorweight*change1 + sizedisterrorweight*change2 + neighborhooderrorweight*change3 <= 0.0)
         {
           grains[random].active = 1;
