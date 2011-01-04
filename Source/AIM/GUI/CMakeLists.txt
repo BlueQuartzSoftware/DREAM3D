@@ -214,13 +214,11 @@ TARGET_LINK_LIBRARIES( ${PROJECT_NAME}
                         MXADataModel
                         AIMCommon
                         ${QT_LIBRARIES}  )
-
+message(STATUS "HDF5_BINARY_DIR: ${HDF5_BINARY_DIR}")
 set(AppNeedsPlugins "0")
 list(APPEND libSearchDirs 
     ${QT_BINARY_DIR}
     ${QT_LIBRARY_DIR}
-    ${QWT_BINARY_DIR}
-    ${QWT_LIBRARY_DIR}
     ${HDF5_BINARY_DIR}
     ${HDF5_LIBRARY_DIR}
     ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
@@ -232,7 +230,7 @@ cmp_InstallationSupport(${PROJECT_NAME}
                         "${AppNeedsPlugins}" 
                         "${PROJECT_INSTALL_EXECUTABLES}"
                         "Applications"
-                        "./"
+                        "."
                         "${libSearchDirs}"
                         )
 
