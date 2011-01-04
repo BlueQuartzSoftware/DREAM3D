@@ -41,7 +41,7 @@ set (SurfaceMesh_SRCS
 set (SurfaceMesh_HDRS
     ${SurfaceMesh_SOURCE_DIR}/SurfaceMesh.h
 )
-cmp_IDE_SOURCE_PROPERTIES( "AIM/SurfaceMesh" "${SurfaceMesh_HDRS}" "${SurfaceMesh_SRCS}" ${CMP_INSTALL_FILES})
+cmp_IDE_SOURCE_PROPERTIES( "AIM/SurfaceMesh" "${SurfaceMesh_HDRS}" "${SurfaceMesh_SRCS}" ${PROJECT_INSTALL_HEADERS})
                       
 set (Project_SRCS
     ${SurfaceMesh_SRCS}
@@ -49,11 +49,15 @@ set (Project_SRCS
     )
 
 
-add_executable(SurfaceMesh ${Project_SRCS} )
-target_link_libraries(SurfaceMesh 
+add_executable(${PROJECT_NAME}  ${Project_SRCS} )
+target_link_libraries(${PROJECT_NAME}  
                         MXADataModel
                         AIMCommon
                         ${Boost_PROGRAM_OPTIONS_LIBRARY} )
-cmp_ToolInstallationSupport(SurfaceMesh "${EXE_DEBUG_EXTENSION}" ${SurfaceMesh_BINARY_DIR} )
-
-
+cmp_ToolInstallationSupport(${PROJECT_NAME} 
+                        "${EXE_DEBUG_EXTENSION}" 
+                        ${${PROJECT_NAME}_BINARY_DIR} 
+                        "${PROJECT_INSTALL_EXECUTABLES}"
+                        "Applications"
+                        "Utilities"
+                        )

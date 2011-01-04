@@ -36,6 +36,8 @@ SET (PROJECT_CODE_DIR ${PROJECT_SOURCE_DIR}/Source)
 SET (PROJECT_RESOURCES_DIR ${AIMRepresentation_SOURCE_DIR}/Resources)
 SET (PROJECT_PREFIX "MXA" CACHE STRING "The Prefix to be used for Preprocessor definitions")
 SET (EXE_DEBUG_EXTENSION "_debug")
+SET (PROJECT_INSTALL_HEADERS "0")
+SET (PROJECT_INSTALL_EXECUTABLES "1")
 
 #-------------------------------------------------------------------------------
 # Include the cmp project to perform all the basic configuration tests for the 
@@ -48,7 +50,6 @@ set (CMP_VERSION_HEADER_FILE_NAME "MXAVersion.h")
 set (CMP_EXTRA_CONFIGURATION_FILE "MXAConfiguration.h")
 set (CMP_PROJECT_NAMESPACE "MXA")
 set (CMP_PROJECT_NAME "MXA")
-SET (CMP_INSTALL_FILES "0")
 set (CMP_ENABLE_PLUGINS "1")
 INCLUDE (${PROJECT_RESOURCES_DIR}/cmp/cmpProject.cmake)
 

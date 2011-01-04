@@ -321,6 +321,43 @@ void StatsGenPlotWidget::setRowOperationEnabled(bool b)
   deleteRowBtn->setVisible(b);
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void StatsGenPlotWidget::setBins(QVector<int> &binNumbers)
+{
+  qint32 count = binNumbers.count();
+
+  // Remove all the current rows in the table model
+  m_TableModel->removeRows(0, m_TableModel->rowCount());
+
+  double mu = 1.0;
+
+  QStringList colorNames = QColor::colorNames();
+  qint32 colorOffset = 21;
+
+  // Now Populate the table data with the data that was passed in
+  for (qint32 i = 0; i < count; ++i)
+  {
+    if (!m_TableModel->insertRow(m_TableModel->rowCount()))
+        return;
+    m_TableView->resizeColumnsToContents();
+    m_TableView->scrollToBottom();
+    m_TableView->setFocus();
+    QModelIndex binNumberIndex = m_TableModel->index(m_TableModel->rowCount() - 1, StatsGenTableModel::BinNumber);
+    m_TableView->setCurrentIndex(binNumberIndex);
+    m_TableModel->setData(binNumberIndex, QVariant(binNumbers[i]), Qt::EditRole);
+
+    QModelIndex muIndex = m_TableModel->index(m_TableModel->rowCount() - 1, StatsGenTableModel::Mu);
+    m_TableView->setCurrentIndex(muIndex);
+    m_TableModel->setData(muIndex, QVariant(mu++), Qt::EditRole);
+
+    QModelIndex colorIndex = m_TableModel->index(m_TableModel->rowCount() - 1, StatsGenTableModel::LineColor);
+    m_TableView->setCurrentIndex(colorIndex);
+    m_TableModel->setData(colorIndex, QVariant(colorNames[colorOffset++]), Qt::EditRole);
+  }
+
+}
 
 // -----------------------------------------------------------------------------
 //
