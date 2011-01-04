@@ -861,7 +861,6 @@ int  GrainGeneratorFunc::pack_grains(int numgrains)
 {
   totalvol = 0;
   double change1, change2, change3;
-  double allowablechange, totalchange;
   ofstream outFile;
   string filename = "test.txt";
   outFile.open(filename.c_str());
@@ -914,15 +913,15 @@ int  GrainGeneratorFunc::pack_grains(int numgrains)
     activegrainlist[i] = random;
     oldfillingerror = oldfillingerror + addcost;
   }
-  oldsizedisterror = 1;
+  for(int i=0;i<maxdiameter+1;i++)
+  {
+	  oldsizedisterror = oldsizedisterror + (grainsizedist[i]*grainsizedist[i]);
+  }
   oldneighborhooderror = (maxdiameter + 1) * 4;
-  totalchange = 0.0;
   for (int iteration = 0; iteration < (250000); iteration++)
   {
     int option = iteration % 4;
-	if(iteration%50 == 0) outFile << oldfillingerror << "	" << oldsizedisterror << "	" << oldneighborhooderror << endl;
-    allowablechange = (0.25 * totalchange / acceptedmoves) * pow((1000000.0 - double(iteration)) / 1000000.0, 2);
-    if (acceptedmoves == 0) allowablechange = 0.0;
+	if(iteration%50 == 0) outFile << oldfillingerror << "	" << oldsizedisterror << "	" << oldneighborhooderror << "	" << acceptedmoves << endl;
     if (option == 0)
     {
       int random = int(rg.Random() * (numextragrains));
@@ -942,9 +941,7 @@ int  GrainGeneratorFunc::pack_grains(int numgrains)
       if (oldfillingerror < 0) change1 = -change1;
       change2 = (currentsizedisterror - oldsizedisterror) / oldsizedisterror;
       change3 = (currentneighborhooderror - oldneighborhooderror) / oldneighborhooderror;
-      if (currentsizedisterror <= 0.05) change2 = 0;
-      if ((currentneighborhooderror / double((maxdiameter + 1) * 4)) <= 0.05) change3 = 0;
-      if (fillingerrorweight*change1 + sizedisterrorweight*change2 + neighborhooderrorweight*change3 <= allowablechange)
+      if (fillingerrorweight*change1 + sizedisterrorweight*change2 + neighborhooderrorweight*change3 <= 0.0)
       {
         grains[random].active = 1;
         add_grain(random);
@@ -953,7 +950,6 @@ int  GrainGeneratorFunc::pack_grains(int numgrains)
         oldfillingerror = currentfillingerror;
         oldneighborhooderror = currentneighborhooderror;
         oldsizedisterror = currentsizedisterror;
-        totalchange = totalchange + fabs(change1 + change2 +change3);
         acceptedmoves++;
       }
     }
@@ -971,9 +967,7 @@ int  GrainGeneratorFunc::pack_grains(int numgrains)
       if (oldfillingerror < 0) change1 = -change1;
       change2 = (currentsizedisterror - oldsizedisterror) / oldsizedisterror;
       change3 = (currentneighborhooderror - oldneighborhooderror) / oldneighborhooderror;
-      if (currentsizedisterror <= 0.05) change2 = 0;
-      if ((currentneighborhooderror / double((maxdiameter + 1) * 4)) <= 0.05) change3 = 0;
-      if (fillingerrorweight*change1 + sizedisterrorweight*change2 + neighborhooderrorweight*change3 <= allowablechange)
+      if (fillingerrorweight*change1 + sizedisterrorweight*change2 + neighborhooderrorweight*change3 <= 0.0)
       {
         grains[random].active = 0;
         remove_grain(random);
@@ -981,7 +975,6 @@ int  GrainGeneratorFunc::pack_grains(int numgrains)
         oldfillingerror = currentfillingerror;
         oldneighborhooderror = currentneighborhooderror;
         oldsizedisterror = currentsizedisterror;
-        totalchange = totalchange + fabs(change1 + change2 +change3);
         acceptedmoves++;
       }
     }
@@ -1009,9 +1002,7 @@ int  GrainGeneratorFunc::pack_grains(int numgrains)
       if (oldfillingerror < 0) change1 = -change1;
       change2 = (currentsizedisterror - oldsizedisterror) / oldsizedisterror;
       change3 = (currentneighborhooderror - oldneighborhooderror) / oldneighborhooderror;
-      if (currentsizedisterror <= 0.05) change2 = 0;
-      if ((currentneighborhooderror / double((maxdiameter + 1) * 4)) <= 0.05) change3 = 0;
-      if (fillingerrorweight*change1 + sizedisterrorweight*change2 + neighborhooderrorweight*change3 <= allowablechange)
+      if (fillingerrorweight*change1 + sizedisterrorweight*change2 + neighborhooderrorweight*change3 <= 0.0)
       {
         grains[random].active = 1;
         grains[random1].active = 0;
@@ -1023,7 +1014,6 @@ int  GrainGeneratorFunc::pack_grains(int numgrains)
         oldfillingerror = currentfillingerror;
         oldneighborhooderror = currentneighborhooderror;
         oldsizedisterror = currentsizedisterror;
-        totalchange = totalchange + fabs(change1 + change2 +change3);
         acceptedmoves++;
       }
     }
@@ -1055,9 +1045,7 @@ int  GrainGeneratorFunc::pack_grains(int numgrains)
         if (oldfillingerror < 0) change1 = -change1;
         change2 = (currentsizedisterror - oldsizedisterror) / oldsizedisterror;
         change3 = (currentneighborhooderror - oldneighborhooderror) / oldneighborhooderror;
-        if (currentsizedisterror <= 0.05) change2 = 0;
-        if ((currentneighborhooderror / double((maxdiameter + 1) * 4)) <= 0.05) change3 = 0;
-        if (fillingerrorweight*change1 + sizedisterrorweight*change2 + neighborhooderrorweight*change3 <= allowablechange)
+        if (fillingerrorweight*change1 + sizedisterrorweight*change2 + neighborhooderrorweight*change3 <= 0.0)
         {
           grains[random].active = 1;
           grains[random1].active = 0;
@@ -1069,7 +1057,6 @@ int  GrainGeneratorFunc::pack_grains(int numgrains)
           oldfillingerror = currentfillingerror;
           oldneighborhooderror = currentneighborhooderror;
           oldsizedisterror = currentsizedisterror;
-		  totalchange = totalchange + fabs(change1 + change2 +change3);
           acceptedmoves++;
         }
       }
