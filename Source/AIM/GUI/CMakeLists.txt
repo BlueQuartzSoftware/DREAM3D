@@ -58,7 +58,7 @@ SET (Representation_SRCS
 SET (Representation_HDRS
     ${Representation_SOURCE_DIR}/RepresentationUI.h
 )
-cmp_IDE_SOURCE_PROPERTIES( "Source/AIM/GUI" "${Representation_HDRS}" "${Representation_SRCS}" ${PROJECT_INSTALL_HEADERS})
+cmp_IDE_SOURCE_PROPERTIES( "AIM/GUI" "${Representation_HDRS}" "${Representation_SRCS}" ${PROJECT_INSTALL_HEADERS})
 
 
 set (AIM_COMMON_QT_SRCS
@@ -70,7 +70,7 @@ set (AIM_COMMON_QT_HDRS
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Qt/AIMAboutBox.h
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Qt/QRecentFileList.h
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Qt/QR3DFileCompleter.h     )
-cmp_IDE_SOURCE_PROPERTIES("Source/AIM/Common/Qt" "${AIM_COMMON_QT_HDRS}" "${AIM_COMMON_QT_SRCS}" ${PROJECT_INSTALL_HEADERS})
+cmp_IDE_SOURCE_PROPERTIES("AIM/Common/Qt" "${AIM_COMMON_QT_HDRS}" "${AIM_COMMON_QT_SRCS}" ${PROJECT_INSTALL_HEADERS})
 
 set (AIM_Threads_SRCS 
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Threads/AIMThread.cpp
@@ -79,7 +79,7 @@ set (AIM_Threads_SRCS
 set (AIM_Threads_HDRS
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Threads/AIMThread.h
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Threads/AIMThreadGroup.h   )
-cmp_IDE_SOURCE_PROPERTIES("Source/AIM/Threads" "${AIM_Threads_HDRS}" "${AIM_Threads_SRCS}" ${PROJECT_INSTALL_HEADERS})
+cmp_IDE_SOURCE_PROPERTIES("AIM/Threads" "${AIM_Threads_HDRS}" "${AIM_Threads_SRCS}" ${PROJECT_INSTALL_HEADERS})
 
 set (ANG_IMPORTER_SRCS
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/ANG/H5AngImporter.cpp
@@ -87,7 +87,7 @@ set (ANG_IMPORTER_SRCS
 set (ANG_IMPORTER_HDRS
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/ANG/H5AngImporter.h
     )
-cmp_IDE_SOURCE_PROPERTIES( "Source/AIM/AngImporter" "${ANG_IMPORTER_HDRS}" "${ANG_IMPORTER_SRCS}" ${PROJECT_INSTALL_HEADERS})
+cmp_IDE_SOURCE_PROPERTIES( "AIM/AngImporter" "${ANG_IMPORTER_HDRS}" "${ANG_IMPORTER_SRCS}" ${PROJECT_INSTALL_HEADERS})
 
 
 SET (Reconstruction_SRCS
@@ -96,7 +96,7 @@ SET (Reconstruction_SRCS
 SET (Reconstruction_HDRS
    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Reconstruction/Reconstruction.h
     )
-cmp_IDE_SOURCE_PROPERTIES( "Source/AIM/Reconstruction" "${Reconstruction_HDRS}" "${Reconstruction_SRCS}" ${PROJECT_INSTALL_HEADERS})
+cmp_IDE_SOURCE_PROPERTIES( "AIM/Reconstruction" "${Reconstruction_HDRS}" "${Reconstruction_SRCS}" ${PROJECT_INSTALL_HEADERS})
 
 SET (GrainGenerator_SRCS
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/GrainGenerator/GrainGenerator.cpp
@@ -104,7 +104,7 @@ SET (GrainGenerator_SRCS
 SET (GrainGenerator_HDRS
    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/GrainGenerator/GrainGenerator.h
 )
-cmp_IDE_SOURCE_PROPERTIES( "Source/AIM/GrainGenerator" "${GrainGenerator_HDRS}" "${GrainGenerator_SRCS}" ${PROJECT_INSTALL_HEADERS})
+cmp_IDE_SOURCE_PROPERTIES( "AIM/GrainGenerator" "${GrainGenerator_HDRS}" "${GrainGenerator_SRCS}" ${PROJECT_INSTALL_HEADERS})
 
 SET (SurfaceMesh_SRCS
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/SurfaceMesh/SurfaceMesh.cpp
@@ -112,7 +112,7 @@ SET (SurfaceMesh_SRCS
 SET (SurfaceMesh_HDRS
    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/SurfaceMesh/SurfaceMesh.h
 )
-cmp_IDE_SOURCE_PROPERTIES( "Source/AIM/SurfaceMesh" "${SurfaceMesh_HDRS}" "${SurfaceMesh_SRCS}" ${PROJECT_INSTALL_HEADERS})
+cmp_IDE_SOURCE_PROPERTIES( "AIM/SurfaceMesh" "${SurfaceMesh_HDRS}" "${SurfaceMesh_SRCS}" ${PROJECT_INSTALL_HEADERS})
 
 SET (VolumeMesh_SRCS
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/VolumeMesh/VolumeMesh.cpp
@@ -122,7 +122,7 @@ SET (VolumeMesh_HDRS
    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/VolumeMesh/VolumeMesh.h
    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/VolumeMesh/MeshGenerator.h
 )
-cmp_IDE_SOURCE_PROPERTIES( "Source/AIM/VolumeMesh" "${VolumeMesh_HDRS}" "${VolumeMesh_SRCS}" ${PROJECT_INSTALL_HEADERS})
+cmp_IDE_SOURCE_PROPERTIES( "AIM/VolumeMesh" "${VolumeMesh_HDRS}" "${VolumeMesh_SRCS}" ${PROJECT_INSTALL_HEADERS})
 
                         
 SET( Representation_MOC_HDRS

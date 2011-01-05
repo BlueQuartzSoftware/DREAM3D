@@ -41,7 +41,7 @@ SET (Reconstruction_SRCS
 SET (Reconstruction_HDRS
     ${Reconstruction_SOURCE_DIR}/Reconstruction.h
     )
-cmp_IDE_SOURCE_PROPERTIES( "Source/AIM/Reconstruction" "${Reconstruction_HDRS}" "${Reconstruction_SRCS}" ${PROJECT_INSTALL_HEADERS})
+cmp_IDE_SOURCE_PROPERTIES( "AIM/Reconstruction" "${Reconstruction_HDRS}" "${Reconstruction_SRCS}" ${PROJECT_INSTALL_HEADERS})
 
  
 set (PROJECT_SRCS

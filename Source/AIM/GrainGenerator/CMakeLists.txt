@@ -44,7 +44,7 @@ set (GrainGenerator_SRCS
 set (GrainGenerator_HDRS 
     ${GrainGenerator_SOURCE_DIR}/GrainGenerator.h
 )
-cmp_IDE_SOURCE_PROPERTIES( "Source/AIM/GrainGenerator" "${GrainGenerator_HDRS}" "${GrainGenerator_SRCS}" ${PROJECT_INSTALL_HEADERS} )
+cmp_IDE_SOURCE_PROPERTIES( "AIM/GrainGenerator" "${GrainGenerator_HDRS}" "${GrainGenerator_SRCS}" ${PROJECT_INSTALL_HEADERS} )
 
 set (PROJECT_SRCS
     ${GrainGenerator_SRCS}
