@@ -314,6 +314,7 @@ bool StatsGenTableModel::insertRows(int row, int count, const QModelIndex& index
 // -----------------------------------------------------------------------------
 bool StatsGenTableModel::removeRows(int row, int count, const QModelIndex& index)
 {
+  if (count < 1) { return true; } // No Rows to remove
     beginRemoveRows(QModelIndex(), row, row + count - 1);
     for (int i = 0; i < count; ++i) {
       m_BinNumbers.remove(row);
