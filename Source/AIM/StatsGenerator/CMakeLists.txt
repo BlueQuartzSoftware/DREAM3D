@@ -41,34 +41,30 @@ IF(WIN32)
  SET(GUI_TYPE WIN32)
 ENDIF(WIN32)
 
-add_definitions(-DAIM_USE_QT 
-                -DSVG_3D_LIBRARY 
-                -DSURFACE_MESH_LIBRARY
-                -DSMOOTH_MESH_LIBRARY
-                -DVOLUME_MESH_LIBRARY 
-                -DUPDATE_EDGE_TRI_LIBRARY)
+add_definitions(-DAIM_USE_QT)
                 
                 
 set (StatsGenerator_SRCS 
     ${StatsGenerator_SOURCE_DIR}/main.cpp
+    ${StatsGenerator_SOURCE_DIR}/SGItemDelegate.cpp
+    ${StatsGenerator_SOURCE_DIR}/StatsGen.cpp
     ${StatsGenerator_SOURCE_DIR}/StatsGeneratorUI.cpp
     ${StatsGenerator_SOURCE_DIR}/StatsGenPlotWidget.cpp
-    ${StatsGenerator_SOURCE_DIR}/StatsGen.cpp
     ${StatsGenerator_SOURCE_DIR}/StatsGenTableModel.cpp
-    ${StatsGenerator_SOURCE_DIR}/SGItemDelegate.cpp
+    ${StatsGenerator_SOURCE_DIR}/SGPowerLawTableModel.cpp
 )
 set (StatsGenerator_HDRS 
     ${StatsGenerator_SOURCE_DIR}/StatsGen.h
 )
-cmp_IDE_SOURCE_PROPERTIES( "AIM/StatsGenerator" "${StatsGenerator_HDRS}" "${StatsGenerator_SRCS}" ${PROJECT_INSTALL_HEADERS})
                    
 SET( StatsGenerator_MOC_HDRS
+    ${StatsGenerator_SOURCE_DIR}/SGItemDelegate.h
     ${StatsGenerator_SOURCE_DIR}/StatsGeneratorUI.h
     ${StatsGenerator_SOURCE_DIR}/StatsGenPlotWidget.h
     ${StatsGenerator_SOURCE_DIR}/StatsGenTableModel.h
-    ${StatsGenerator_SOURCE_DIR}/SGItemDelegate.h
+    ${StatsGenerator_SOURCE_DIR}/SGPowerLawTableModel.h    
 )
-cmp_IDE_SOURCE_PROPERTIES( "AIM/StatsGenerator" "${StatsGenerator_MOC_HDRS}" "${StatsGenerator_SRCS}" ${PROJECT_INSTALL_HEADERS})
+cmp_IDE_SOURCE_PROPERTIES( "AIM/StatsGenerator" "${StatsGenerator_HDRS};${StatsGenerator_MOC_HDRS}" "${StatsGenerator_SRCS}" ${PROJECT_INSTALL_HEADERS})
 
 set (AIM_COMMON_QT_SRCS
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Qt/AIMAboutBox.cpp
@@ -113,7 +109,7 @@ cmp_IDE_SOURCE_PROPERTIES( "Generated" "${Generated_UI_HDRS}" "${Generated_MOC_S
 SET (StatsGenerator_PROJECT_SRCS 
     ${StatsGenerator_SRCS}
     ${StatsGenerator_HDRS}
-    
+    ${StatsGenerator_MOC_HDRS}
     ${AIM_COMMON_QT_HDRS}
     ${AIM_COMMON_QT_SRCS}
     ${Generated_RC_SRCS} 
