@@ -53,6 +53,7 @@
 StatsGenPlotWidget::StatsGenPlotWidget(QWidget *parent) :
 QWidget(parent),
 m_TableModel(NULL),
+m_PowerLawModel(NULL),
 m_zoomer(NULL),
 m_picker(NULL),
 m_panner(NULL),
@@ -116,8 +117,6 @@ void StatsGenPlotWidget::setYAxisName(QString name)
 // -----------------------------------------------------------------------------
 void StatsGenPlotWidget::setupGui()
 {
-
-
   // Setup the TableView and Table Models
   QHeaderView* headerView = new QHeaderView(Qt::Horizontal, m_TableView);
   headerView->setResizeMode(QHeaderView::Interactive);
