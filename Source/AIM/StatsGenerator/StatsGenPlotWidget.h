@@ -37,6 +37,7 @@
 #include "StatsGen.h"
 
 class StatsGenTableModel;
+class SGPowerLawTableModel;
 class QwtPlotZoomer;
 class QwtPlotPicker;
 class QwtPlotPanner;
@@ -88,6 +89,8 @@ class StatsGenPlotWidget : public QWidget, private Ui::StatsGenPlotWidget
 
     private:
       StatsGenTableModel* m_TableModel;
+      SGPowerLawTableModel* m_PowerLawModel;
+
       QwtPlotZoomer* m_zoomer;
       QwtPlotPicker* m_picker;
       QwtPlotPanner* m_panner;
