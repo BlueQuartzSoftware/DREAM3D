@@ -121,7 +121,7 @@ if (BUILD_SHARED_LIBS)
         COMPONENT Applications
         RUNTIME DESTINATION ./
         LIBRARY DESTINATION ./ 
-        ARCHIVE DESTINATION ./        
+        ARCHIVE DESTINATION lib        
         BUNDLE DESTINATION ./
     ) 
 endif()
