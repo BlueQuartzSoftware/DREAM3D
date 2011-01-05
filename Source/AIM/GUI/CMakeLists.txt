@@ -214,7 +214,9 @@ TARGET_LINK_LIBRARIES( ${PROJECT_NAME}
                         MXADataModel
                         AIMCommon
                         ${QT_LIBRARIES}  )
-message(STATUS "HDF5_BINARY_DIR: ${HDF5_BINARY_DIR}")
+                        
+# --------------------------------------------------------------------
+# Setup our installation rules
 set(AppNeedsPlugins "0")
 list(APPEND libSearchDirs 
     ${QT_BINARY_DIR}
@@ -224,6 +226,7 @@ list(APPEND libSearchDirs
     ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
     ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Debug
     ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Release )
+ 
 cmp_InstallationSupport(${PROJECT_NAME} 
                         ${EXE_DEBUG_EXTENSION} 
                         ${Representation_BINARY_DIR} 
@@ -233,9 +236,3 @@ cmp_InstallationSupport(${PROJECT_NAME}
                         "."
                         "${libSearchDirs}"
                         )
-
-
-
-
-
-
