@@ -353,6 +353,7 @@ void StatsGeneratorUI::openFile(QString imageFile)
 void StatsGeneratorUI::on_m_Mu_SizeDistribution_textChanged(const QString &text)
 {
   plotSizeDistribution();
+  m_Mu_SizeDistribution->setFocus();
 }
 // -----------------------------------------------------------------------------
 //
@@ -360,6 +361,7 @@ void StatsGeneratorUI::on_m_Mu_SizeDistribution_textChanged(const QString &text)
 void StatsGeneratorUI::on_m_Sigma_SizeDistribution_textChanged(const QString &text)
 {
   plotSizeDistribution();
+  m_Sigma_SizeDistribution->setFocus();
 }
 
 // -----------------------------------------------------------------------------
@@ -368,6 +370,7 @@ void StatsGeneratorUI::on_m_Sigma_SizeDistribution_textChanged(const QString &te
 void StatsGeneratorUI::on_m_SigmaCutOff_SizeDistribution_textChanged(const QString &text)
 {
   plotSizeDistribution();
+  m_SigmaCutOff_SizeDistribution->setFocus();
 }
 
 // -----------------------------------------------------------------------------
@@ -399,7 +402,7 @@ void StatsGeneratorUI::plotSizeDistribution()
     return;
   }
 
-  int size = 20;
+  int size = 100;
   QwtArray<double> x;
   QwtArray<double> y;
   StatsGen sg;
