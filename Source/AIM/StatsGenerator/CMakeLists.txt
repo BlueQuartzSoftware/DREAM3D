@@ -147,7 +147,7 @@ TARGET_LINK_LIBRARIES( ${PROJECT_NAME}
 
 # --------------------------------------------------------------------
 # Setup our installation rules
-set(AppNeedsPlugins "0")  
+set(AppNeedsPlugins "0")
 cmp_InstallationSupport(${PROJECT_NAME} 
                         ${EXE_DEBUG_EXTENSION} 
                         ${StatsGeneratorUI_BINARY_DIR} 

@@ -115,12 +115,20 @@ include_directories( ${PROJECT_CODE_DIR} )
 add_library(${PROJECT_NAME} ${LIB_TYPE} ${AIMCommon_SRCS} )
 target_link_libraries(${PROJECT_NAME} MXADataModel ${HDF5_LIBRARIES} )
 LibraryProperties( ${PROJECT_NAME} ${EXE_DEBUG_EXTENSION} )
+
+set(install_dir "tools")
+set(lib_install_dir "lib")
+if (WIN32)
+    set (install_dir ".")
+    set(lib_install_dir "")
+endif()
+
 if (BUILD_SHARED_LIBS)
     INSTALL(TARGETS ${PROJECT_NAME} 
         COMPONENT Applications
-        RUNTIME DESTINATION tools
-        LIBRARY DESTINATION lib
-        ARCHIVE DESTINATION lib       
+        RUNTIME DESTINATION ${install_dir}
+        LIBRARY DESTINATION ${lib_install_dir}
+        ARCHIVE DESTINATION ${lib_install_dir}       
         BUNDLE DESTINATION "."
     ) 
 endif() 

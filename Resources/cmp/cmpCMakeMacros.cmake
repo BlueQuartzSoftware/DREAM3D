@@ -41,6 +41,40 @@ MACRO (cmp_IDE_SOURCE_PROPERTIES SOURCE_PATH HEADERS SOURCES INSTALL_FILES)
 ENDMACRO (cmp_IDE_SOURCE_PROPERTIES NAME HEADERS SOURCES INSTALL_FILES)
 
 
+
+# --------------------------------------------------------------------
+#
+# --------------------------------------------------------------------
+macro(cmp_WindowsInstallationSupport EXE_NAME EXE_DEBUG_EXTENSION EXE_BINARY_DIR 
+                                appNeedsPlugins installFiles comp dest lib_search_dirs)
+    #------------------------------------------------------------------------------
+    # Add install rules for required system runtimes such as MSVCRxx.dll
+    SET (CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS_SKIP ON)
+    SET (CMAKE_INSTALL_DEBUG_LIBRARIES ON)
+    
+    INCLUDE(InstallRequiredSystemLibraries)
+    IF (CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS)
+      INSTALL(FILES ${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS}
+        DESTINATION ./
+        PERMISSIONS OWNER_WRITE OWNER_READ OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ
+        COMPONENT Runtime)
+    ENDIF (CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS)                
+    
+    set(_extension)
+    set(_dir "")
+    
+    IF(WIN32)
+      set(_extension ".exe")
+      set(_dir "")
+    ENDIF(WIN32)
+    set(APPS "\${CMAKE_INSTALL_PREFIX}/${EXE_NAME}${EXE_DEBUG_EXTENSION}${_extension}")  # paths to executables
+    INSTALL(CODE "
+       include(\"${CMAKE_ROOT}/Modules/BundleUtilities.cmake\")
+       fixup_bundle(\"${APPS}\"   \"\"   \"${lib_search_dirs}\")
+       " COMPONENT ${comp})
+                                  
+endmacro()
+
 # ------------------------------------------------------------------------------ 
 # This CMake code installs the needed support libraries
 # ------------------------------------------------------------------------------ 
@@ -98,32 +132,8 @@ endif()
                 endif()
             endif()
         else()    
-            #------------------------------------------------------------------------------
-            # Add install rules for required system runtimes such as MSVCRxx.dll
-            SET (CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS_SKIP ON)
-            SET (CMAKE_INSTALL_DEBUG_LIBRARIES ON)
-            
-            INCLUDE(InstallRequiredSystemLibraries)
-            IF (CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS)
-              INSTALL(FILES ${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS}
-                DESTINATION ./
-                PERMISSIONS OWNER_WRITE OWNER_READ OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ
-                COMPONENT Runtime)
-            ENDIF (CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS)                
-            
-            set(_extension)
-            set(_dir "")
-            
-            IF(WIN32)
-              set(_extension ".exe")
-              set(_dir "")
-            ENDIF(WIN32)
-            set(APPS "\${CMAKE_INSTALL_PREFIX}/${EXE_NAME}${EXE_DEBUG_EXTENSION}${_extension}")  # paths to executables
-            INSTALL(CODE "
-               include(\"${CMAKE_ROOT}/Modules/BundleUtilities.cmake\")
-               fixup_bundle(\"${APPS}\"   \"\"   \"${lib_search_dirs}\")
-               " COMPONENT ${comp})
-            
+            cmp_WindowsInstallationSupport("${EXE_NAME}" "${EXE_DEBUG_EXTENSION}" "${EXE_BINARY_DIR}" 
+                                            "${appNeedsPlugins}" "${installFiles}" "${comp}" "${dest}" "${lib_search_dirs}" )
         endif(APPLE)
     endif()
 endmacro()
@@ -133,7 +143,7 @@ endmacro()
 # --------------------------------------------------------------------
 macro(cmp_ToolInstallationSupport EXE_NAME EXE_DEBUG_EXTENSION EXE_BINARY_DIR installFiles 
                                   comp dest lib_search_dirs)
-if (true)
+if (false)
     message(STATUS "EXE_NAME: ${EXE_NAME}")
     message(STATUS "EXE_DEBUG_EXTENSION: ${EXE_DEBUG_EXTENSION}")
     message(STATUS "EXE_BINARY_DIR: ${EXE_BINARY_DIR}")
@@ -173,6 +183,9 @@ endif()
                              "${dest}"
                              "${lib_search_dirs}")
             endif()
+        else()    
+            cmp_WindowsInstallationSupport("${EXE_NAME}" "${EXE_DEBUG_EXTENSION}" "${EXE_BINARY_DIR}" 
+                                            "${appNeedsPlugins}" "${installFiles}" "${comp}" "${dest}" "${lib_search_dirs}" )
         endif(APPLE)
     endif()
 endmacro()
