@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>909</width>
-    <height>643</height>
+    <width>880</width>
+    <height>722</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -21,7 +21,7 @@
        <enum>QTabWidget::North</enum>
       </property>
       <property name="tabShape">
-       <enum>QTabWidget::Triangular</enum>
+       <enum>QTabWidget::Rounded</enum>
       </property>
       <property name="currentIndex">
        <number>0</number>
@@ -152,13 +152,35 @@
          <number>4</number>
         </property>
         <item>
-         <widget class="StatsGenPlotWidget" name="m_BOverAPlot" native="true"/>
-        </item>
-        <item>
-         <widget class="StatsGenPlotWidget" name="m_COverAPlot" native="true"/>
-        </item>
-        <item>
-         <widget class="StatsGenPlotWidget" name="m_COverBPlot" native="true"/>
+         <widget class="QScrollArea" name="scrollArea">
+          <property name="widgetResizable">
+           <bool>true</bool>
+          </property>
+          <widget class="QWidget" name="scrollAreaWidgetContents">
+           <property name="geometry">
+            <rect>
+             <x>0</x>
+             <y>0</y>
+             <width>846</width>
+             <height>627</height>
+            </rect>
+           </property>
+           <layout class="QVBoxLayout" name="verticalLayout">
+            <property name="margin">
+             <number>4</number>
+            </property>
+            <item>
+             <widget class="StatsGenPlotWidget" name="m_BOverAPlot" native="true"/>
+            </item>
+            <item>
+             <widget class="StatsGenPlotWidget" name="m_COverAPlot" native="true"/>
+            </item>
+            <item>
+             <widget class="StatsGenPlotWidget" name="m_COverBPlot" native="true"/>
+            </item>
+           </layout>
+          </widget>
+         </widget>
         </item>
        </layout>
       </widget>
@@ -184,8 +206,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>909</width>
-     <height>22</height>
+     <width>880</width>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">

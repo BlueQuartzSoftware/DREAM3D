@@ -76,7 +76,7 @@ StatsGenPlotWidget::~StatsGenPlotWidget()
 // -----------------------------------------------------------------------------
 void StatsGenPlotWidget::setPlotTitle(QString title)
 {
-  this->m_PlotTitle->setText(title);
+ // this->m_PlotTitle->setText(title);
 }
 
 // -----------------------------------------------------------------------------
@@ -355,6 +355,10 @@ void StatsGenPlotWidget::setBins(QVector<int> &binNumbers)
     QModelIndex colorIndex = m_TableModel->index(m_TableModel->rowCount() - 1, StatsGenTableModel::LineColor);
     m_TableView->setCurrentIndex(colorIndex);
     m_TableModel->setData(colorIndex, QVariant(colorNames[colorOffset++]), Qt::EditRole);
+    if (colorOffset == colorNames.count() ) 
+    {
+      colorOffset = colorNames.count() - 1;
+    }
   }
 
 }
