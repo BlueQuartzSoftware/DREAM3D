@@ -1344,7 +1344,7 @@ void  GrainGeneratorFunc::fill_gaps(int numgrains)
     for(int i = 0; i < (xpoints*ypoints*zpoints); i++)
     {
       int grainname = voxels[i].grainname;
-      if(grainname <= 0)
+      if(grainname < 0)
       {
 		count++;
 		voxels[i].unassigned = 1;
