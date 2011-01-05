@@ -88,11 +88,10 @@ SET (AIMCommon_HDRS
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Reconstruction/H5ReconStatsReader.h
 )
 
-cmp_IDE_SOURCE_PROPERTIES( "Source/AIM/Common" "${AIMCommon_HDRS}" "${AIMCommon_SRCS}" ${PROJECT_INSTALL_HEADERS})
+cmp_IDE_SOURCE_PROPERTIES( "AIM/Common" "${AIMCommon_HDRS}" "${AIMCommon_SRCS}" ${PROJECT_INSTALL_HEADERS})
 
 # --------------------------------------------------------------------
 include_directories(${HDF5_INCLUDE_DIR})
-set (AIMCOMMON_DEP_LIBS ${HDF5_LIBRARIES} MXADataModel)
 
 # --------------------------------------------------------------------
 include (${AIMRepresentation_SOURCE_DIR}/Source/AIM/ANG/Sources.cmake)
@@ -114,15 +113,23 @@ include_directories( ${PROJECT_CODE_DIR} )
 
 #-- Add a library for the AIMCommon Code
 add_library(${PROJECT_NAME} ${LIB_TYPE} ${AIMCommon_SRCS} )
-target_link_libraries(${PROJECT_NAME} ${AIMCOMMON_DEP_LIBS} )
+target_link_libraries(${PROJECT_NAME} MXADataModel ${HDF5_LIBRARIES} )
 LibraryProperties( ${PROJECT_NAME} ${EXE_DEBUG_EXTENSION} )
+
+set(install_dir "tools")
+set(lib_install_dir "lib")
+if (WIN32)
+    set (install_dir ".")
+    set(lib_install_dir "")
+endif()
+
 if (BUILD_SHARED_LIBS)
     INSTALL(TARGETS ${PROJECT_NAME} 
         COMPONENT Applications
-        RUNTIME DESTINATION ./
-        LIBRARY DESTINATION ./ 
-        ARCHIVE DESTINATION lib        
-        BUNDLE DESTINATION ./
+        RUNTIME DESTINATION ${install_dir}
+        LIBRARY DESTINATION ${lib_install_dir}
+        ARCHIVE DESTINATION ${lib_install_dir}       
+        BUNDLE DESTINATION "."
     ) 
-endif()
+endif() 
     

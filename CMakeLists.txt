@@ -51,12 +51,13 @@ set (CMP_EXTRA_CONFIGURATION_FILE "MXAConfiguration.h")
 set (CMP_PROJECT_NAMESPACE "MXA")
 set (CMP_PROJECT_NAME "MXA")
 set (CMP_ENABLE_PLUGINS "1")
+set (CMP_LIB_SEARCH_DIRS "")
 INCLUDE (${PROJECT_RESOURCES_DIR}/cmp/cmpProject.cmake)
 
 # --------------------------------------------------------------------
 # Generate a Header file with Compile Version variables
 # --------------------------------------------------------------------
-cmpGenerateVersionString( "${AIMRepresentation_BINARY_DIR}/${PROJECT_NAME}/Common/${PROJECT_NAME}Version.h" 
+cmpGenerateVersionString( "${AIMRepresentation_BINARY_DIR}/AIM/Common/${PROJECT_NAME}Version.h" 
                           "AIMRepresentation" 
                           "AIMRepresentation")
                           
@@ -82,7 +83,12 @@ include_directories(${PROJECT_BINARY_DIR})
 OPTION (BUILD_SHARED_LIBS "Build Shared Libraries" OFF)
 SET (LIB_TYPE STATIC)
 IF (BUILD_SHARED_LIBS)
-  SET (LIB_TYPE SHARED)
+    SET (LIB_TYPE SHARED)
+    list(APPEND CMP_LIB_SEARCH_DIRS  ${CMAKE_RUNTIME_OUTPUT_DIRECTORY} )
+    if (MSVC)
+        list(APPEND CMP_LIB_SEARCH_DIRS ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Debug
+                                    ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Release )
+    endif()
 ENDIF (BUILD_SHARED_LIBS)
 
 # ---------- Find Boost Headers/Libraries -----------------------
@@ -101,10 +107,14 @@ find_package(HDF5)
 IF(HDF5_FOUND)
     file(APPEND ${CMP_PLUGIN_SEARCHDIR_FILE} "${HDF5_LIBRARY_DIRS};")
     include_directories(${HDF5_INCLUDE_DIRS} )
+    # This copies the DLL (if needed) into the various build directories on MSVC systems
     CMP_COPY_DEPENDENT_LIBRARIES("hdf5")
-  #  CMP_LIBRARIES_INSTALL_RULES("hdf5" "./")
+    # Append the locations of the HDF5 libraries to our Library Search Paths
+    list(APPEND CMP_LIB_SEARCH_DIRS ${HDF5_BINARY_DIR} ${HDF5_LIBRARY_DIR} )
+    # Create an install rule to copy the dependent shared library over to the installed location
+    CMP_LIBRARIES_INSTALL_RULES("hdf5" ".")
 ELSE(HDF5_FOUND)
-  MESSAGE(FATAL_ERROR "Cannot build without HDF5.  Please set HDF5_INSTALL environment variable to point to your HDF5 installation.")
+    MESSAGE(FATAL_ERROR "Cannot build without HDF5.  Please set HDF5_INSTALL environment variable to point to your HDF5 installation.")
 ENDIF(HDF5_FOUND)
 
 
@@ -151,46 +161,53 @@ if (AIM_BUILD_QT_APPS)
    # this command finds Qt4 libraries and sets all required variables
    # note that it's Qt4, not QT4 or qt4
    FIND_PACKAGE( Qt4 REQUIRED )
-    IF (QT4_FOUND)
-        CMP_COPY_QT4_RUNTIME_LIBRARIES( "QtCore;QtGui")
-     #   CMP_QT_LIBRARIES_INSTALL_RULES( "QtCore;QtGui" "./")
-    endif()
+   IF (QT4_FOUND)
+       CMP_COPY_QT4_RUNTIME_LIBRARIES( "QtCore;QtGui")
+       CMP_QT_LIBRARIES_INSTALL_RULES("QtCore;QtGui" ".")
+   endif()
    # add some useful macros and variables
    # (QT_USE_FILE is a variable defined by FIND_PACKAGE( Qt4 ) that 
    # contains a path to CMake script)
    INCLUDE( ${QT_USE_FILE} )
    
+   # Append the locations of the Qt libraries to our Library Search Paths
+   list(APPEND CMP_LIB_SEARCH_DIRS ${QT_BINARY_DIR} ${QT_LIBRARY_DIR} )
+   
    # Add our Qt based GUI project to the list of targets
-   option(AIM_BUILD_REPRESENTATION_GUI "Compile the AIMRepresentation GUI Application" ON)
-   if (AIM_BUILD_REPRESENTATION_GUI)
+   option(AIM_BUILD_GUI_REPRESENTATION "Compile the AIMRepresentation GUI Application" ON)
+   if (AIM_BUILD_GUI_REPRESENTATION)
        ADD_SUBDIRECTORY( ${AIMRepresentation_SOURCE_DIR}/Source/AIM/GUI ${AIMRepresentation_BINARY_DIR}/AIM/GUI)
    endif()
-   OPTION (AIM_BUILD_STATS_GENERATOR "Compile the Statistics Generator GUI Application" OFF)
-   if (AIM_BUILD_STATS_GENERATOR)
+   OPTION (AIM_BUILD_GUI_STATS_GENERATOR "Compile the Statistics Generator GUI Application" ON)
+   if (AIM_BUILD_GUI_STATS_GENERATOR)
     add_subdirectory(${AIMRepresentation_SOURCE_DIR}/Source/AIM/StatsGenerator ${AIMRepresentation_BINARY_DIR}/AIM/StatsGenerator)
    endif()
+   
+else()
+    set (AIM_BUILD_GUI_REPRESENTATION "OFF" CACHE BOOL "" FORCE)
+    set (AIM_BUILD_GUI_STATS_GENERATOR "OFF" CACHE BOOL "" FORCE)
 endif()
 
 include_directories(${AIMRepresentation_SOURCE_DIR}/Source)
 
 # add the Reconstruction Command line Tool
-OPTION(AIM_BUILD_RECONSTRUCTION_TOOL "Compile Reconstruction Tool" OFF)
-IF ( AIM_BUILD_RECONSTRUCTION_TOOL )
+OPTION(AIM_BUILD_TOOL_RECONSTRUCTION "Compile Reconstruction Tool" OFF)
+IF ( AIM_BUILD_TOOL_RECONSTRUCTION )
     ADD_SUBDIRECTORY( ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Reconstruction ${AIMRepresentation_BINARY_DIR}/AIM/Reconstruction)
 ENDIF ()
 
-OPTION (AIM_BUILD_GRAIN_GENERATOR_TOOL "Compile the Grain Generator Tool" OFF)
-if (AIM_BUILD_GRAIN_GENERATOR_TOOL)
+OPTION (AIM_BUILD_TOOL_GRAIN_GENERATOR "Compile the Grain Generator Tool" OFF)
+if (AIM_BUILD_TOOL_GRAIN_GENERATOR)
     add_subdirectory(${AIMRepresentation_SOURCE_DIR}/Source/AIM/GrainGenerator ${AIMRepresentation_BINARY_DIR}/AIM/GrainGenerator)
 endif()
 
-OPTION (AIM_BUILD_SURFACE_MESHING_TOOL "Compile the surface Meshing tool" OFF)
-if (AIM_BUILD_SURFACE_MESHING_TOOL)
+OPTION (AIM_BUILD_TOOL_SURFACE_MESHING "Compile the surface Meshing tool" OFF)
+if (AIM_BUILD_TOOL_SURFACE_MESHING)
     add_subdirectory(${AIMRepresentation_SOURCE_DIR}/Source/AIM/SurfaceMesh ${AIMRepresentation_BINARY_DIR}/AIM/SurfaceMesh)
 endif()
 
-OPTION (AIM_BUILD_VOLUME_MESHING_TOOL "Compile the Volume Meshing tools" OFF)
-if (AIM_BUILD_VOLUME_MESHING_TOOL)
+OPTION (AIM_BUILD_TOOL_VOLUME_MESHING "Compile the Volume Meshing tools" OFF)
+if (AIM_BUILD_TOOL_VOLUME_MESHING)
     add_subdirectory(${AIMRepresentation_SOURCE_DIR}/Source/AIM/VolumeMesh ${AIMRepresentation_BINARY_DIR}/AIM/VolumeMesh)
 endif()
 
