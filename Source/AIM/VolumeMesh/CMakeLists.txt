@@ -56,14 +56,14 @@ set (Project_SRCS
 
 add_executable(${PROJECT_NAME} ${Project_SRCS} )
 target_link_libraries(${PROJECT_NAME}
-                        MXADataModel
-                        AIMCommon
-                        ${Boost_PROGRAM_OPTIONS_LIBRARY} )
+                        #MXADataModel
+                        AIMCommon )
 set_property(TARGET ${PROJECT_NAME} PROPERTY  COMPILE_DEFINITIONS "VOLUME_MESH_LIBRARY" )
 cmp_ToolInstallationSupport(${PROJECT_NAME} 
                         "${EXE_DEBUG_EXTENSION}" 
                         ${${PROJECT_NAME}_BINARY_DIR} 
                         "${PROJECT_INSTALL_EXECUTABLES}"
                         "Applications"
-                        "Utilities"
+                        "tools"
+                        "${CMP_LIB_SEARCH_DIRS}"
                         )

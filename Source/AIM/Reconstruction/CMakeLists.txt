@@ -56,7 +56,7 @@ set (PROJECT_SRCS
 
 ADD_EXECUTABLE ( ${PROJECT_NAME}  ${PROJECT_SRCS} )
 target_link_libraries(${PROJECT_NAME}
-                        MXADataModel
+                        # MXADataModel
                         AIMCommon
                         )
 cmp_ToolInstallationSupport(${PROJECT_NAME} 
@@ -64,5 +64,6 @@ cmp_ToolInstallationSupport(${PROJECT_NAME}
                         ${${PROJECT_NAME}_BINARY_DIR} 
                         "${PROJECT_INSTALL_EXECUTABLES}"
                         "Applications"
-                        "Utilities"
+                        "tools"
+                        "${CMP_LIB_SEARCH_DIRS}"
                         )
