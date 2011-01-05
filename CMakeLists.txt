@@ -111,6 +111,8 @@ IF(HDF5_FOUND)
     CMP_COPY_DEPENDENT_LIBRARIES("hdf5")
     # Append the locations of the HDF5 libraries to our Library Search Paths
     list(APPEND CMP_LIB_SEARCH_DIRS ${HDF5_BINARY_DIR} ${HDF5_LIBRARY_DIR} )
+    # Create an install rule to copy the dependent shared library over to the installed location
+    CMP_LIBRARIES_INSTALL_RULES("hdf5" ".")
 ELSE(HDF5_FOUND)
     MESSAGE(FATAL_ERROR "Cannot build without HDF5.  Please set HDF5_INSTALL environment variable to point to your HDF5 installation.")
 ENDIF(HDF5_FOUND)
@@ -161,6 +163,7 @@ if (AIM_BUILD_QT_APPS)
    FIND_PACKAGE( Qt4 REQUIRED )
    IF (QT4_FOUND)
        CMP_COPY_QT4_RUNTIME_LIBRARIES( "QtCore;QtGui")
+       CMP_QT_LIBRARIES_INSTALL_RULES("QtCore;QtGui" ".")
    endif()
    # add some useful macros and variables
    # (QT_USE_FILE is a variable defined by FIND_PACKAGE( Qt4 ) that 
