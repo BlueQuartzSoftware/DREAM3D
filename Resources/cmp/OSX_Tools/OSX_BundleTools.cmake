@@ -16,15 +16,17 @@ endmacro(MakeOSXBundleApp)
 
 
 # -------- Function to build OS X Stand Alone Bundles -----------------
-macro(MakeOSXTool target binary_dir osx_tools_dir)
+macro(MakeOSXTool target binary_dir cmp_osx_tools_dir install_dest_dir lib_search_dir)
     set(target ${target})
     set(binary_dir ${binary_dir})
-    set(osx_tools_dir ${osx_tools_dir})
+    set(cmp_osx_tools_dir ${cmp_osx_tools_dir})
+    set(install_dest_dir "${install_dest_dir}")
+    set(PLUGIN_SEARCH_DIRS "${lib_search_dir}")
 
     SET (OSX_MAKE_STANDALONE_TOOL_CMAKE_SCRIPT 
         "${binary_dir}/OS_X_Scripts/${target}_OSX_MakeStandAloneTool.cmake")
     
-    CONFIGURE_FILE("${osx_tools_dir}/CompleteTool.cmake.in"
+    CONFIGURE_FILE("${cmp_osx_tools_dir}/CompleteTool.cmake.in"
             "${OSX_MAKE_STANDALONE_TOOL_CMAKE_SCRIPT}" @ONLY IMMEDIATE)
      
     install(SCRIPT "${OSX_MAKE_STANDALONE_TOOL_CMAKE_SCRIPT}")

@@ -14,7 +14,7 @@
  * *****************************************************************************
  * </distribution-statement> */
 #include "AIMAboutBox.h"
-#include <AIMRepresentation/Common/AIMRepresentationVersion.h>
+#include <AIM/Common/AIMRepresentationVersion.h>
 
 #include <iostream>
 
