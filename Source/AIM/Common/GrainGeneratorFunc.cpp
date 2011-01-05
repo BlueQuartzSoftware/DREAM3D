@@ -572,7 +572,7 @@ void  GrainGeneratorFunc::insert_grain(int gnum)
 			  if(inside >= 0)
 			  {
 				int currentpoint = index;
-				ellipfunc = (-0.5/(1.0-(1.0/(0.95*0.95))))*(1.0-(((axis1comp+axis2comp+axis3comp)*(axis1comp+axis2comp+axis3comp))/(0.95*0.95)));
+				ellipfunc = (-0.1/(1.0-(1.0/(0.90*0.90))))*(1.0-(((axis1comp+axis2comp+axis3comp)*(axis1comp+axis2comp+axis3comp))/(0.90*0.90)));
 				insidelist[insidecount] = currentpoint;
 				ellipfunclist[insidecount] = ellipfunc;
 				insidecount++;
@@ -592,8 +592,8 @@ void  GrainGeneratorFunc::insert_grain(int gnum)
   grains[gnum].ellipfunclist = new std::vector<double>(insidecount);
   grains[gnum].voxellist->swap(insidelist);
   grains[gnum].ellipfunclist->swap(ellipfunclist);
-  grains[gnum].neighbordistfunc.resize(4,0);
-  grains[gnum].neighbordistfunclist.resize(4);
+  grains[gnum].neighbordistfunc.resize(3,0);
+  grains[gnum].neighbordistfunclist.resize(3);
   insidelist.clear();
 }
 
@@ -609,7 +609,7 @@ void  GrainGeneratorFunc::remove_grain(int gnum)
 	voxels[index].grainlist->erase(std::remove(voxels[index].grainlist->begin(),voxels[index].grainlist->end(),gnum),voxels[index].grainlist->end());
 	voxels[index].ellipfunclist->erase(std::remove(voxels[index].ellipfunclist->begin(),voxels[index].ellipfunclist->end(),ellipfunc),voxels[index].ellipfunclist->end());
   }
-  for(int i=0;i<4;i++)
+  for(int i=0;i<3;i++)
   {
 	  for(size_t j=0;j<grains[gnum].neighbordistfunclist[i].size();j++)
 	  {
@@ -632,7 +632,7 @@ void  GrainGeneratorFunc::add_grain(int gnum)
 	voxels[index].grainlist->at(voxels[index].grainlist->size()-1) = gnum;
 	voxels[index].ellipfunclist->at(voxels[index].ellipfunclist->size()-1) = ellipfunc;
   }
-  for(int i=0;i<4;i++)
+  for(int i=0;i<3;i++)
   {
 	  for(size_t j=0;j<grains[gnum].neighbordistfunclist[i].size();j++)
 	  {
@@ -1088,8 +1088,6 @@ int GrainGeneratorFunc::assign_voxels(int numgrains)
   double dist;
   double x, y, z;
   int xmin, xmax, ymin, ymax, zmin, zmax;
-  double insidecount = 0;
-  std::vector<int> insidelist(1000,-1);
   resx = resx/4.0;
   resy = resy/4.0;
   resz = resz/4.0;
@@ -1101,7 +1099,6 @@ int GrainGeneratorFunc::assign_voxels(int numgrains)
   voxels = new Voxel[totalpoints];
   for(int i=1;i<numgrains+1;i++)
   {
-	  insidecount = 0;
 	  count++;
 	  double volcur = grains[i].volume;
 	  double bovera = grains[i].radius2;
@@ -1248,23 +1245,15 @@ int GrainGeneratorFunc::assign_voxels(int numgrains)
 					if(voxels[currentpoint].grainname == 0 && voxels[currentpoint].unassigned == 0)
 					{
 						voxels[currentpoint].grainname = i;
-						insidelist[insidecount] = currentpoint;
-						insidecount++;
-						if (insidecount >= (0.9*insidelist.size())) insidelist.resize(insidecount + 1000,-1);
 					}
 				  }
 			  }
 			}
 		 }
 	  }
-	  insidelist.erase(std::remove(insidelist.begin(),insidelist.end(),-1),insidelist.end());
 	  grains[i].centroidx = xc;
 	  grains[i].centroidy = yc;
 	  grains[i].centroidz = zc;
-	  grains[i].voxellist = new std::vector<int>(insidecount);
-	  grains[i].voxellist->swap(insidelist);
-	  insidelist.clear();
-	  insidelist.resize(1000,-1);
   }
   return(count);
 }
@@ -1399,6 +1388,11 @@ void  GrainGeneratorFunc::fill_gaps(int numgrains)
             most = current;
             curgrain = neighbor;
           }
+		  if(current == most && grains[neighbor].equivdiameter > grains[curgrain].equivdiameter)
+		  {
+            most = current;
+            curgrain = neighbor;
+		  }
         }
         if(size > 0)
         {
@@ -2534,13 +2528,14 @@ void GrainGeneratorFunc::write_graindata(string gdata, string MoDFFile)
   for(int i = 1; i < numgrains; i++)
   {
 	double volume = grains[i].numvoxels*resx*resy*resz;
+	double equivdiam = grains[i].equivdiameter;
 	double diam = 2*pow(((0.75)*(1.0/m_pi)*volume),0.3333333333);
 	int onsurface = grains[i].surfacegrain;
 	double ea1 = grains[i].euler1;
 	double ea2 = grains[i].euler2;
 	double ea3 = grains[i].euler3;
 	int numneighbors = grains[i].numneighbors;
-	outFile << i << "	" << diam << "	" << numneighbors << "	" << onsurface << "	" << ea1 << "	" << ea2 << "	" << ea3 << endl;
+	outFile << i << "	" << diam << "	" << equivdiam << "	" << numneighbors << "	" << onsurface << "	" << ea1 << "	" << ea2 << "	" << ea3 << endl;
   }
   outFile.close();
   outFile.open(MoDFFile.c_str());
