@@ -40,41 +40,6 @@ MACRO (cmp_IDE_SOURCE_PROPERTIES SOURCE_PATH HEADERS SOURCES INSTALL_FILES)
 
 ENDMACRO (cmp_IDE_SOURCE_PROPERTIES NAME HEADERS SOURCES INSTALL_FILES)
 
-
-
-# --------------------------------------------------------------------
-#
-# --------------------------------------------------------------------
-macro(cmp_WindowsInstallationSupport EXE_NAME EXE_DEBUG_EXTENSION EXE_BINARY_DIR 
-                                appNeedsPlugins installFiles comp dest lib_search_dirs)
-    #------------------------------------------------------------------------------
-    # Add install rules for required system runtimes such as MSVCRxx.dll
-    SET (CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS_SKIP ON)
-    SET (CMAKE_INSTALL_DEBUG_LIBRARIES ON)
-    
-    INCLUDE(InstallRequiredSystemLibraries)
-    IF (CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS)
-      INSTALL(FILES ${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS}
-        DESTINATION ./
-        PERMISSIONS OWNER_WRITE OWNER_READ OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ
-        COMPONENT Applications)
-    ENDIF (CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS)                
-    
-    set(_extension)
-    set(_dir "")
-    
-    IF(WIN32)
-      set(_extension ".exe")
-      set(_dir "")
-    ENDIF(WIN32)
-    set(APPS "\${CMAKE_INSTALL_PREFIX}/${EXE_NAME}${EXE_DEBUG_EXTENSION}${_extension}")  # paths to executables
-    INSTALL(CODE "
-       include(\"${CMAKE_ROOT}/Modules/BundleUtilities.cmake\")
-       fixup_bundle(\"${APPS}\"   \"\"   \"${lib_search_dirs}\")
-       " COMPONENT ${comp})
-                                  
-endmacro()
-
 # ------------------------------------------------------------------------------ 
 # This CMake code installs the needed support libraries
 # ------------------------------------------------------------------------------ 
@@ -131,9 +96,6 @@ endif()
                              ${CMP_OSX_TOOLS_SOURCE_DIR} )
                 endif()
             endif()
-        else()    
-            cmp_WindowsInstallationSupport("${EXE_NAME}" "${EXE_DEBUG_EXTENSION}" "${EXE_BINARY_DIR}" 
-                                            "${appNeedsPlugins}" "${installFiles}" "${comp}" "${dest}" "${lib_search_dirs}" )
         endif(APPLE)
     endif()
 endmacro()
@@ -183,9 +145,6 @@ endif()
                              "${dest}"
                              "${lib_search_dirs}")
             endif()
-        else()    
-            cmp_WindowsInstallationSupport("${EXE_NAME}" "${EXE_DEBUG_EXTENSION}" "${EXE_BINARY_DIR}" 
-                                            "${appNeedsPlugins}" "${installFiles}" "${comp}" "${dest}" "${lib_search_dirs}" )
         endif(APPLE)
     endif()
 endmacro()
@@ -217,13 +176,7 @@ macro(LibraryProperties targetName DEBUG_EXTENSION)
               )   
          ENDIF(CMP_BUILD_WITH_INSTALL_NAME)
      endif(APPLE)
-#     INSTALL(TARGETS ${targetName} 
-#        COMPONENT Applications
-#        RUNTIME DESTINATION ./
-#        LIBRARY DESTINATION ./ 
-#        ARCHIVE DESTINATION ./        
-#        BUNDLE DESTINATION ./
-#      )   
+ 
    ENDIF( BUILD_SHARED_LIBS)
 
 endmacro(LibraryProperties DEBUG_EXTENSION)
@@ -350,13 +303,13 @@ macro (FindQt4Plugins pluginlist pluginfile libdirsearchfile plugintype)
                 INSTALL(FILES ${QT_IMAGEFORMAT_PLUGIN_${PLUGIN}_${BTYPE}}
                     DESTINATION ./plugins/${plugintype} 
                     CONFIGURATIONS ${BTYPE} 
-                    COMPONENT Runtime)
+                    COMPONENT Applications)
             endif()
         elseif (UNIX AND NOT APPLE)
             INSTALL(FILES ${QT_IMAGEFORMAT_PLUGIN_${PLUGIN}_${BTYPE}}
                 DESTINATION ./plugins/${plugintype} 
                 CONFIGURATIONS ${BTYPE} 
-                COMPONENT Runtime)
+                COMPONENT Applications)
 
         endif()             
                       
@@ -384,7 +337,7 @@ macro (FindQt4Plugins pluginlist pluginfile libdirsearchfile plugintype)
         FILE(WRITE ${PROJECT_BINARY_DIR}/qt.conf "[Paths]\nPlugins = plugins")
         INSTALL(FILES ${PROJECT_BINARY_DIR}/qt.conf
                 DESTINATION .
-                COMPONENT Runtime)
+                COMPONENT Applications)
     endif()
     file(APPEND ${pluginfile} "${QTPLUGINS};")
     file(APPEND ${libdirsearchfile} "${QT_PLUGINS_DIR}/imageformats;")
@@ -426,16 +379,16 @@ macro (CMP_QT_LIBRARIES_INSTALL_RULES QTLIBLIST destination)
             FOREACH(qtlib ${QTLIBLIST})
                 
                 GET_FILENAME_COMPONENT(QT_DLL_PATH_tmp ${QT_QMAKE_EXECUTABLE} PATH)
+                message(STATUS "Generating Install Rule for DLL Library ${QT_DLL_PATH_tmp}/${qtlib}d4.dll")  
                 INSTALL(FILES ${QT_DLL_PATH_tmp}/${qtlib}${type}d4.dll 
                     DESTINATION "${destination}"
                     CONFIGURATIONS Debug
                     COMPONENT Applications)
+                message(STATUS "Generating Install Rule for DLL Library ${QT_DLL_PATH_tmp}/${qtlib}4.dll")
                 INSTALL(FILES ${QT_DLL_PATH_tmp}/${qtlib}4.dll 
                     DESTINATION "${destination}"
                     CONFIGURATIONS Release
-                    COMPONENT Applications)   
-                message(STATUS "Generating Install Rule for DLL Library ${QT_DLL_PATH_tmp}/${qtlib}4.dll")
-                message(STATUS "Generating Install Rule for DLL Library ${QT_DLL_PATH_tmp}/${qtlib}d4.dll")       
+                    COMPONENT Applications)                        
             ENDFOREACH(qtlib)
         endif(DEFINED QT_QMAKE_EXECUTABLE)
     endif()

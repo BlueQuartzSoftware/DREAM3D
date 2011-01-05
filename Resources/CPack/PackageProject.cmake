@@ -11,15 +11,24 @@
 # This CMake code sets up for CPack to be used to generate native installers
 # ------------------------------------------------------------------------------
 if (MSVC)
-#SET (CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS_SKIP 1)
-SET (CMAKE_INSTALL_DEBUG_LIBRARIES OFF)
-INCLUDE (InstallRequiredSystemLibraries)
-#INSTALL(FILES  ${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS}
-#        COMPONENT Applications
-#        DESTINATION ./)
+    # Skip the install rules, we only want to gather a list of the system libraries
+    SET(CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS_SKIP 1)
+    #SET(CMAKE_INSTALL_DEBUG_LIBRARIES OFF)
+    
+    # Gather the list of system level runtime libraries
+    INCLUDE (InstallRequiredSystemLibraries)
+    
+    # Our own Install rule for Release builds of the MSVC runtime libs
+    IF (CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS)
+      INSTALL(FILES ${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS}
+        DESTINATION ./
+        PERMISSIONS OWNER_WRITE OWNER_READ OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ
+        COMPONENT Applications
+        CONFIGURATIONS Release)
+    ENDIF (CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS)
 endif()
 
-
+SET(CPACK_INSTALL_COMMANDS "cmake -P ${PROJECT_BINARY_DIR}/SomeFile.cmake")
 SET(CPACK_PACKAGE_DESCRIPTION_SUMMARY "AIMRepresentation Tools")
 SET(CPACK_PACKAGE_VENDOR "BlueQuartz Software, Michael A. Jackson")
 SET(CPACK_PACKAGE_DESCRIPTION_FILE "${PROJECT_BINARY_DIR}/ReadMe.txt")
@@ -29,15 +38,15 @@ SET(CPACK_PACKAGE_VERSION_MINOR ${AIMRepresentation_VER_MINOR})
 SET(CPACK_PACKAGE_VERSION_PATCH ${AIMRepresentation_VER_PATCH})
 SET(CPACK_PACKAGE_VERSION ${AIMRepresentation_VERSION})
 #SET(CPACK_COMPONENTS_ALL Applications Headers)
-set(CPACK_COMPONENT_APPLICATIONS_DISPLAY_NAME "Applications")
-set(CPACK_COMPONENT_APPLICATIONS_DESCRIPTION  "The AIMRepresentation Software Tools Suite")
-set(CPACK_COMPONENT_APPLICATIONS_REQUIRED 1)
-set(CPACK_COMPONENT_HEADERS_DISPLAY_NAME "Headers")
-set(CPACK_COMPONENT_HEADERS_DESCRIPTION  "Development Header Files")
-set(CPACK_COMPONENT_HEADERS_REQUIRED 0)
-set(CPACK_COMPONENT_RUNTIME_DISPLAY_NAME "Runtime")
-set(CPACK_COMPONENT_RUNTIME_DESCRIPTION  "Runtime Libraries")
-set(CPACK_COMPONENT_RUNTIME_REQUIRED 0)
+#set(CPACK_COMPONENT_APPLICATIONS_DISPLAY_NAME "Applications")
+#set(CPACK_COMPONENT_APPLICATIONS_DESCRIPTION  "The AIMRepresentation Software Tools Suite")
+#set(CPACK_COMPONENT_APPLICATIONS_REQUIRED 1)
+#set(CPACK_COMPONENT_HEADERS_DISPLAY_NAME "Headers")
+#set(CPACK_COMPONENT_HEADERS_DESCRIPTION  "Development Header Files")
+#set(CPACK_COMPONENT_HEADERS_REQUIRED 0)
+#set(CPACK_COMPONENT_RUNTIME_DISPLAY_NAME "Runtime")
+#set(CPACK_COMPONENT_RUNTIME_DESCRIPTION  "Runtime Libraries")
+#set(CPACK_COMPONENT_RUNTIME_REQUIRED 1)
 
 set(CPACK_PACKAGE_EXECUTABLES
     Representation Representation StatsGenerator StatsGenerator)
@@ -57,8 +66,6 @@ endif()
 IF(WIN32 AND NOT UNIX)
   # There is a bug in NSI that does not handle full unix paths properly. Make
   # sure there is at least one set of four (4) backlasshes.
-# SET(CPACK_PACKAGE_ICON "${EmMpmProj_SOURCE_DIR}/Resources/InstallerIcon.bmp")
-# SET(CPACK_NSIS_INSTALLED_ICON_NAME "bin\\\\MyExecutable.exe")
   SET(CPACK_NSIS_DISPLAY_NAME "AIMRepresentation Software Tools")
   SET(CPACK_NSIS_HELP_LINK "http:\\\\\\\\www.bluequartz.net")
   SET(CPACK_NSIS_URL_INFO_ABOUT "http:\\\\\\\\www.bluequartz.net")
