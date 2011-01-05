@@ -16,5 +16,5 @@ set (ANG_HDRS
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/ANG/H5AngDataLoader.h   
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/ANG/H5AngReader.h
 )
-cmp_IDE_SOURCE_PROPERTIES( "Source/AIM/ANG" "${ANG_HDRS}" "${ANG_SRCS}" ${PROJECT_INSTALL_HEADERS})
+cmp_IDE_SOURCE_PROPERTIES( "AIM/ANG" "${ANG_HDRS}" "${ANG_SRCS}" ${PROJECT_INSTALL_HEADERS})
 

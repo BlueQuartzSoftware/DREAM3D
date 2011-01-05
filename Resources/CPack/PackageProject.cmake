@@ -10,7 +10,16 @@
 # ------------------------------------------------------------------------------ 
 # This CMake code sets up for CPack to be used to generate native installers
 # ------------------------------------------------------------------------------
-# INCLUDE (${CMP_INSTALLATION_SUPPORT_SOURCE_DIR}/InstallMSVCLibraries.cmake)
+if (MSVC)
+#SET (CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS_SKIP 1)
+SET (CMAKE_INSTALL_DEBUG_LIBRARIES OFF)
+INCLUDE (InstallRequiredSystemLibraries)
+#INSTALL(FILES  ${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS}
+#        COMPONENT Applications
+#        DESTINATION ./)
+endif()
+
+
 SET(CPACK_PACKAGE_DESCRIPTION_SUMMARY "AIMRepresentation Tools")
 SET(CPACK_PACKAGE_VENDOR "BlueQuartz Software, Michael A. Jackson")
 SET(CPACK_PACKAGE_DESCRIPTION_FILE "${PROJECT_BINARY_DIR}/ReadMe.txt")
@@ -19,26 +28,32 @@ SET(CPACK_PACKAGE_VERSION_MAJOR ${AIMRepresentation_VER_MAJOR})
 SET(CPACK_PACKAGE_VERSION_MINOR ${AIMRepresentation_VER_MINOR})
 SET(CPACK_PACKAGE_VERSION_PATCH ${AIMRepresentation_VER_PATCH})
 SET(CPACK_PACKAGE_VERSION ${AIMRepresentation_VERSION})
-SET(CPACK_COMPONENTS_ALL Applications)
+#SET(CPACK_COMPONENTS_ALL Applications Headers)
 set(CPACK_COMPONENT_APPLICATIONS_DISPLAY_NAME "Applications")
-set(CPACK_COMPONENT_APPLICATIONS_DESCRIPTION  "The Gui Versions of the AIMRepresentation Software Tools Suite")
+set(CPACK_COMPONENT_APPLICATIONS_DESCRIPTION  "The AIMRepresentation Software Tools Suite")
 set(CPACK_COMPONENT_APPLICATIONS_REQUIRED 1)
+set(CPACK_COMPONENT_HEADERS_DISPLAY_NAME "Headers")
+set(CPACK_COMPONENT_HEADERS_DESCRIPTION  "Development Header Files")
+set(CPACK_COMPONENT_HEADERS_REQUIRED 0)
+set(CPACK_COMPONENT_RUNTIME_DISPLAY_NAME "Runtime")
+set(CPACK_COMPONENT_RUNTIME_DESCRIPTION  "Runtime Libraries")
+set(CPACK_COMPONENT_RUNTIME_REQUIRED 0)
+
 set(CPACK_PACKAGE_EXECUTABLES
-    Representation Representation Reconstruction Reconstruction SurfaceMesh SurfaceMesh
-)
+    Representation Representation StatsGenerator StatsGenerator)
 
 IF (APPLE)
-  set(CPACK_PACKAGE_FILE_NAME "${PROJECT_NAME}-OSX")
+    set(CPACK_PACKAGE_FILE_NAME "${PROJECT_NAME}-${AIMRepresentation_VERSION}-OSX")
 elseif(WIN32)
 	if ( "${CMAKE_SIZEOF_VOID_P}" EQUAL "8" )
-		set(CPACK_PACKAGE_FILE_NAME "${PROJECT_NAME}-Win64")
+		set(CPACK_PACKAGE_FILE_NAME "${PROJECT_NAME}-${AIMRepresentation_VERSION}-Win64")
 	else()
-		set(CPACK_PACKAGE_FILE_NAME "${PROJECT_NAME}-Win32")
+		set(CPACK_PACKAGE_FILE_NAME "${PROJECT_NAME}-${AIMRepresentation_VERSION}-Win32")
 	endif()
 else()
-  set(CPACK_PACKAGE_FILE_NAME "${PROJECT_NAME}-${CMAKE_SYSTEM_NAME}")
+  set(CPACK_PACKAGE_FILE_NAME "${PROJECT_NAME}-${AIMRepresentation_VERSION}-${CMAKE_SYSTEM_NAME}")
 endif()
-# Create an NSID based installer for Windows Systems
+# Create an NSIS based installer for Windows Systems
 IF(WIN32 AND NOT UNIX)
   # There is a bug in NSI that does not handle full unix paths properly. Make
   # sure there is at least one set of four (4) backlasshes.
@@ -49,7 +64,7 @@ IF(WIN32 AND NOT UNIX)
   SET(CPACK_NSIS_URL_INFO_ABOUT "http:\\\\\\\\www.bluequartz.net")
   SET(CPACK_NSIS_CONTACT "mike.jackson@bluequartz.net")
   SET(CPACK_NSIS_MODIFY_PATH ON)
-  SET(CPACK_GENERATOR "NSIS")
+  SET(CPACK_GENERATOR "ZIP")
   SET(CPACK_BINARY_ZIP "ON")
   SET(CPACK_PACKAGE_INSTALL_REGISTRY_KEY "AIMRepresentation Software Tools")
 ELSE(WIN32 AND NOT UNIX)

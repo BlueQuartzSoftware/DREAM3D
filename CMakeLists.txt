@@ -57,7 +57,7 @@ INCLUDE (${PROJECT_RESOURCES_DIR}/cmp/cmpProject.cmake)
 # --------------------------------------------------------------------
 # Generate a Header file with Compile Version variables
 # --------------------------------------------------------------------
-cmpGenerateVersionString( "${AIMRepresentation_BINARY_DIR}/${PROJECT_NAME}/Common/${PROJECT_NAME}Version.h" 
+cmpGenerateVersionString( "${AIMRepresentation_BINARY_DIR}/AIM/Common/${PROJECT_NAME}Version.h" 
                           "AIMRepresentation" 
                           "AIMRepresentation")
                           

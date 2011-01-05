@@ -46,7 +46,7 @@ set (VolumeMesh_HDRS
     ${VolumeMesh_SOURCE_DIR}/VolumeMesh.h
 )
 
-cmp_IDE_SOURCE_PROPERTIES( "Source/AIM/VolumeMesh" "${VolumeMesh_HDRS}" "${VolumeMesh_SRCS}" ${PROJECT_INSTALL_HEADERS})
+cmp_IDE_SOURCE_PROPERTIES( "AIM/VolumeMesh" "${VolumeMesh_HDRS}" "${VolumeMesh_SRCS}" ${PROJECT_INSTALL_HEADERS})
 
 set (Project_SRCS
     ${VolumeMesh_HDRS}
