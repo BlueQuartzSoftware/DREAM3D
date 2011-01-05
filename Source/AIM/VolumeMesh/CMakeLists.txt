@@ -59,11 +59,17 @@ target_link_libraries(${PROJECT_NAME}
                         #MXADataModel
                         AIMCommon )
 set_property(TARGET ${PROJECT_NAME} PROPERTY  COMPILE_DEFINITIONS "VOLUME_MESH_LIBRARY" )
+# --------------------------------------------------------------------
+# Setup the install rules for the various platforms
+set(install_dir "tools")
+if (WIN32)
+    set (install_dir ".")
+endif()
 cmp_ToolInstallationSupport(${PROJECT_NAME} 
                         "${EXE_DEBUG_EXTENSION}" 
                         ${${PROJECT_NAME}_BINARY_DIR} 
                         "${PROJECT_INSTALL_EXECUTABLES}"
                         "Applications"
-                        "tools"
+                        "${install_dir}"
                         "${CMP_LIB_SEARCH_DIRS}"
                         )
