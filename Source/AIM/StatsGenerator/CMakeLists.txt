@@ -147,18 +147,7 @@ TARGET_LINK_LIBRARIES( ${PROJECT_NAME}
 
 # --------------------------------------------------------------------
 # Setup our installation rules
-set(AppNeedsPlugins "0")
-list(APPEND libSearchDirs 
-    ${QT_BINARY_DIR}
-    ${QT_LIBRARY_DIR}
-    ${QWT_BINARY_DIR}
-    ${QWT_LIBRARY_DIR}
-    ${HDF5_BINARY_DIR}
-    ${HDF5_LIBRARY_DIR}
-    ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
-    ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Debug
-    ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Release )
-    
+set(AppNeedsPlugins "0")  
 cmp_InstallationSupport(${PROJECT_NAME} 
                         ${EXE_DEBUG_EXTENSION} 
                         ${StatsGeneratorUI_BINARY_DIR} 
@@ -166,5 +155,5 @@ cmp_InstallationSupport(${PROJECT_NAME}
                         "${PROJECT_INSTALL_EXECUTABLES}"
                         "Applications"
                         "."
-                        "${libSearchDirs}"
+                        "${CMP_LIB_SEARCH_DIRS}"
                         )

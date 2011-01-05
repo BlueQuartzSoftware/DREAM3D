@@ -45,7 +45,7 @@ ENDMACRO (cmp_IDE_SOURCE_PROPERTIES NAME HEADERS SOURCES INSTALL_FILES)
 # This CMake code installs the needed support libraries
 # ------------------------------------------------------------------------------ 
 macro(cmp_InstallationSupport EXE_NAME EXE_DEBUG_EXTENSION EXE_BINARY_DIR 
-                                appNeedsPlugins installFiles comp dest searchDirs)
+                                appNeedsPlugins installFiles comp dest lib_search_dirs)
 
 if (false)
     message(STATUS "EXE_NAME: ${EXE_NAME}")
@@ -55,7 +55,7 @@ if (false)
     message(STATUS "installFiles: ${installFiles}")
     message(STATUS "comp: ${comp}")
     message(STATUS "dest: ${dest}")
-    message(STATUS "searchDirs: ${searchDirs}")
+    message(STATUS "lib_search_dirs: ${lib_search_dirs}")
 endif()
 
 
@@ -84,7 +84,7 @@ endif()
         if (APPLE)
             # --- If we are on OS X copy all the embedded libraries to the app bundle
             # message(STATUS "Creating Install CMake file for GUI application ${EXE_NAME}")
-            set (PLUGIN_SEARCH_DIRS "searchDirs")
+            set (PLUGIN_SEARCH_DIRS "${lib_search_dirs}")
             if(${GUI_TYPE} STREQUAL "MACOSX_BUNDLE")
                 include (${CMP_OSX_TOOLS_SOURCE_DIR}/OSX_BundleTools.cmake)
                 if(CMAKE_BUILD_TYPE MATCHES "Debug")
@@ -121,7 +121,7 @@ endif()
             set(APPS "\${CMAKE_INSTALL_PREFIX}/${EXE_NAME}${EXE_DEBUG_EXTENSION}${_extension}")  # paths to executables
             INSTALL(CODE "
                include(\"${CMAKE_ROOT}/Modules/BundleUtilities.cmake\")
-               fixup_bundle(\"${APPS}\"   \"\"   \"${searchDirs}\")
+               fixup_bundle(\"${APPS}\"   \"\"   \"${lib_search_dirs}\")
                " COMPONENT ${comp})
             
         endif(APPLE)
@@ -131,7 +131,18 @@ endmacro()
 # --------------------------------------------------------------------
 #
 # --------------------------------------------------------------------
-macro(cmp_ToolInstallationSupport EXE_NAME EXE_DEBUG_EXTENSION EXE_BINARY_DIR installFiles comp dest)
+macro(cmp_ToolInstallationSupport EXE_NAME EXE_DEBUG_EXTENSION EXE_BINARY_DIR installFiles 
+                                  comp dest lib_search_dirs)
+if (true)
+    message(STATUS "EXE_NAME: ${EXE_NAME}")
+    message(STATUS "EXE_DEBUG_EXTENSION: ${EXE_DEBUG_EXTENSION}")
+    message(STATUS "EXE_BINARY_DIR: ${EXE_BINARY_DIR}")
+    message(STATUS "appNeedsPlugins: ${appNeedsPlugins}")
+    message(STATUS "installFiles: ${installFiles}")
+    message(STATUS "comp: ${comp}")
+    message(STATUS "dest: ${dest}")
+    message(STATUS "lib_search_dirs: ${lib_search_dirs}")
+endif()
 
     SET_TARGET_PROPERTIES( ${EXE_NAME} 
         PROPERTIES
@@ -141,22 +152,26 @@ macro(cmp_ToolInstallationSupport EXE_NAME EXE_DEBUG_EXTENSION EXE_BINARY_DIR in
     IF (${installFiles} EQUAL 1)
         INSTALL(TARGETS ${EXE_NAME} 
             COMPONENT ${comp}
-            LIBRARY DESTINATION ${dest} 
-            ARCHIVE DESTINATION lib
             RUNTIME DESTINATION ${dest}
-            BUNDLE DESTINATION ./
+            LIBRARY DESTINATION ${dest} 
+            ARCHIVE DESTINATION ${dest}        
+            BUNDLE DESTINATION  ${dest}
         )   
     
         #   message(STATUS "Creating Install CMake file for tool application ${EXE_NAME}")
         if (APPLE)
             if(CMAKE_BUILD_TYPE MATCHES "Debug")
                 MakeOSXTool( "${EXE_NAME}${EXE_DEBUG_EXTENSION}" 
-                                    ${EXE_BINARY_DIR}
-                                    ${CMP_OSX_TOOLS_SOURCE_DIR} )
+                            ${EXE_BINARY_DIR}
+                            ${CMP_OSX_TOOLS_SOURCE_DIR} 
+                            "${dest}"
+                            "${lib_search_dirs}")
             else (CMAKE_BUILD_TYPE MATCHES "Debug")
                 MakeOSXTool(${EXE_NAME} 
-                                 ${EXE_BINARY_DIR}
-                                 ${CMP_OSX_TOOLS_SOURCE_DIR} )
+                             ${EXE_BINARY_DIR}
+                             ${CMP_OSX_TOOLS_SOURCE_DIR} 
+                             "${dest}"
+                             "${lib_search_dirs}")
             endif()
         endif(APPLE)
     endif()
@@ -181,13 +196,12 @@ macro(LibraryProperties targetName DEBUG_EXTENSION)
       if (APPLE)
           OPTION (CMP_BUILD_WITH_INSTALL_NAME "Build Libraries with the install_name set to the installation prefix. This is good if you are going to run from the installation location" OFF)
           IF(CMP_BUILD_WITH_INSTALL_NAME)
-          
-              SET_TARGET_PROPERTIES(${MXADATAMODEL_LIB_NAME}
+              SET_TARGET_PROPERTIES(${targetName}
                  PROPERTIES
                  LINK_FLAGS "-current_version ${${CMP_PROJECT_NAME}_VERSION} -compatibility_version ${${CMP_PROJECT_NAME}_VERSION}"
                  INSTALL_NAME_DIR "${CMAKE_INSTALL_PREFIX}/lib"
                  BUILD_WITH_INSTALL_RPATH ${CMP_BUILD_WITH_INSTALL_NAME}
-              )
+              )   
          ENDIF(CMP_BUILD_WITH_INSTALL_NAME)
      endif(APPLE)
 #     INSTALL(TARGETS ${targetName} 
