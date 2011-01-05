@@ -145,6 +145,8 @@ TARGET_LINK_LIBRARIES( ${PROJECT_NAME}
                         ${QT_LIBRARIES}
                         ${QWT_LIBRARIES}  )
 
+# --------------------------------------------------------------------
+# Setup our installation rules
 set(AppNeedsPlugins "0")
 list(APPEND libSearchDirs 
     ${QT_BINARY_DIR}
@@ -156,52 +158,13 @@ list(APPEND libSearchDirs
     ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
     ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Debug
     ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Release )
+    
 cmp_InstallationSupport(${PROJECT_NAME} 
                         ${EXE_DEBUG_EXTENSION} 
                         ${StatsGeneratorUI_BINARY_DIR} 
                         "${AppNeedsPlugins}" 
                         "${PROJECT_INSTALL_EXECUTABLES}"
                         "Applications"
-                        "./"
+                        "."
                         "${libSearchDirs}"
                         )
-#else()
-#    install(TARGETS ${PROJECT_NAME} DESTINATION ./ COMPONENT Applications)
-#    
-    #------------------------------------------------------------------------------
-    # Add install rules for required system runtimes such as MSVCRxx.dll
-#    SET (CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS_SKIP ON)
-#    SET (CMAKE_INSTALL_DEBUG_LIBRARIES ON)
-#    INCLUDE(InstallRequiredSystemLibraries)
-#    IF (CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS)
-#      INSTALL(FILES ${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS}
-#        DESTINATION ./
-#        PERMISSIONS OWNER_WRITE OWNER_READ OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ
-#        COMPONENT Runtime)
-#    ENDIF (CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS)
-#    
-#    list(APPEND DIRS 
-#        ${QT_BINARY_DIR}
-#        ${QT_LIBRARY_DIR}
-#        ${QWT_BINARY_DIR}
-#        ${QWT_LIBRARY_DIR}
-#        ${HDF5_BINARY_DIR}
-#        ${HDF5_LIBRARY_DIR}
-#        ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
-#        ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Debug
-#        ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Release
-#    )
-#    set(_extension)
-#    set(_dir "")
-#    
-#    IF(WIN32)
-#      set(_extension ".exe")
-#      set(_dir "")
-#    ENDIF(WIN32)
-#    set(APPS "\${CMAKE_INSTALL_PREFIX}/${_dir}/${PROJECT_NAME}${_extension}")  # paths to executables
-#    INSTALL(CODE "
-#       include(\"${CMAKE_ROOT}/Modules/BundleUtilities.cmake\")
-#       fixup_bundle(\"${APPS}\"   \"\"   \"${DIRS}\")
-#       " COMPONENT Applications)
-#endif()
-

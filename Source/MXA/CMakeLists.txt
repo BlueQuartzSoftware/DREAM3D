@@ -50,11 +50,18 @@ configure_file(${PROJECT_RESOURCES_DIR}/MXACMake/MXAConfiguration.h.in
 
 # - Check to see if any other project is redefining the library names
 IF ( NOT DEFINED  MXADATAMODEL_LIB_NAME)
-  SET (MXADATAMODEL_LIB_NAME MXADataModel)
+  SET (MXADATAMODEL_LIB_NAME ${PROJECT_NAME})
 ENDIF ( NOT DEFINED MXADATAMODEL_LIB_NAME )
 
-add_library(${MXADATAMODEL_LIB_NAME} ${LIB_TYPE}  ${Project_SRCS})
-target_link_libraries(${MXADATAMODEL_LIB_NAME} ${HDF5_LIBRARIES} )
-
-LibraryProperties( ${MXADATAMODEL_LIB_NAME} ${EXE_DEBUG_EXTENSION})
-
+add_library(${PROJECT_NAME} ${LIB_TYPE}  ${Project_SRCS})
+target_link_libraries(${PROJECT_NAME} ${HDF5_LIBRARIES} )
+LibraryProperties( ${PROJECT_NAME} ${EXE_DEBUG_EXTENSION})
+if (BUILD_SHARED_LIBS)
+    INSTALL(TARGETS ${PROJECT_NAME} 
+        COMPONENT Applications
+        RUNTIME DESTINATION ./
+        LIBRARY DESTINATION ./ 
+        ARCHIVE DESTINATION lib       
+        BUNDLE DESTINATION ./
+    ) 
+endif() 

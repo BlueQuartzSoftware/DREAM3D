@@ -47,6 +47,18 @@ ENDMACRO (cmp_IDE_SOURCE_PROPERTIES NAME HEADERS SOURCES INSTALL_FILES)
 macro(cmp_InstallationSupport EXE_NAME EXE_DEBUG_EXTENSION EXE_BINARY_DIR 
                                 appNeedsPlugins installFiles comp dest searchDirs)
 
+if (false)
+    message(STATUS "EXE_NAME: ${EXE_NAME}")
+    message(STATUS "EXE_DEBUG_EXTENSION: ${EXE_DEBUG_EXTENSION}")
+    message(STATUS "EXE_BINARY_DIR: ${EXE_BINARY_DIR}")
+    message(STATUS "appNeedsPlugins: ${appNeedsPlugins}")
+    message(STATUS "installFiles: ${installFiles}")
+    message(STATUS "comp: ${comp}")
+    message(STATUS "dest: ${dest}")
+    message(STATUS "searchDirs: ${searchDirs}")
+endif()
+
+
     SET_TARGET_PROPERTIES( ${EXE_NAME} 
                 PROPERTIES
                 DEBUG_OUTPUT_NAME ${EXE_NAME}${EXE_DEBUG_EXTENSION}
@@ -90,6 +102,7 @@ macro(cmp_InstallationSupport EXE_NAME EXE_DEBUG_EXTENSION EXE_BINARY_DIR
             # Add install rules for required system runtimes such as MSVCRxx.dll
             SET (CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS_SKIP ON)
             SET (CMAKE_INSTALL_DEBUG_LIBRARIES ON)
+            
             INCLUDE(InstallRequiredSystemLibraries)
             IF (CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS)
               INSTALL(FILES ${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS}
@@ -105,7 +118,7 @@ macro(cmp_InstallationSupport EXE_NAME EXE_DEBUG_EXTENSION EXE_BINARY_DIR
               set(_extension ".exe")
               set(_dir "")
             ENDIF(WIN32)
-            set(APPS "\${CMAKE_INSTALL_PREFIX}/${dest}/${EXE_NAME}${EXE_DEBUG_EXTENSION}${_extension}")  # paths to executables
+            set(APPS "\${CMAKE_INSTALL_PREFIX}/${EXE_NAME}${EXE_DEBUG_EXTENSION}${_extension}")  # paths to executables
             INSTALL(CODE "
                include(\"${CMAKE_ROOT}/Modules/BundleUtilities.cmake\")
                fixup_bundle(\"${APPS}\"   \"\"   \"${searchDirs}\")

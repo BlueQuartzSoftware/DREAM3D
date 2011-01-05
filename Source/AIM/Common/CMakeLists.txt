@@ -113,9 +113,16 @@ include_directories( ${AIMRepresentation_BINARY_DIR} )
 include_directories( ${PROJECT_CODE_DIR} )
 
 #-- Add a library for the AIMCommon Code
-add_library(AIMCommon ${LIB_TYPE} ${AIMCommon_SRCS} )
-target_link_libraries(AIMCommon ${AIMCOMMON_DEP_LIBS} )
-LibraryProperties( AIMCommon ${EXE_DEBUG_EXTENSION} )
-
-
+add_library(${PROJECT_NAME} ${LIB_TYPE} ${AIMCommon_SRCS} )
+target_link_libraries(${PROJECT_NAME} ${AIMCOMMON_DEP_LIBS} )
+LibraryProperties( ${PROJECT_NAME} ${EXE_DEBUG_EXTENSION} )
+if (BUILD_SHARED_LIBS)
+    INSTALL(TARGETS ${PROJECT_NAME} 
+        COMPONENT Applications
+        RUNTIME DESTINATION ./
+        LIBRARY DESTINATION ./ 
+        ARCHIVE DESTINATION lib        
+        BUNDLE DESTINATION ./
+    ) 
+endif()
     
