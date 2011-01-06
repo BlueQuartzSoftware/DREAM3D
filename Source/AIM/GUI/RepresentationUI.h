@@ -231,7 +231,7 @@ class RepresentationUI : public QMainWindow, private Ui::RepresentationUI
      * @brief Checks the currently open file for changes that need to be saved
      * @return
      */
-    qint32 _checkDirtyDocument();
+    qint32 checkDirtyDocument();
 
     /**
      * @brief Over ride the resize event
