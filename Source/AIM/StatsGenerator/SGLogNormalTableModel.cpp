@@ -35,17 +35,15 @@
 #include <QtGui/QStyleOptionComboBox>
 #include <QtGui/QAbstractItemDelegate>
 
-
 #include "SGLogNormalItemDelegate.h"
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 SGLogNormalTableModel::SGLogNormalTableModel(QObject* parent) :
-SGAbstractTableModel(parent),
-m_RowCount(0)
+  SGAbstractTableModel(parent), m_RowCount(0)
 {
-    m_ColumnCount = ColumnCount;
+  m_ColumnCount = ColumnCount;
 }
 
 // -----------------------------------------------------------------------------
@@ -61,10 +59,10 @@ SGLogNormalTableModel::~SGLogNormalTableModel()
 Qt::ItemFlags SGLogNormalTableModel::flags(const QModelIndex &index) const
 {
   //  std::cout << "SGLogNormalTableModel::flags" << std::endl;
-    if (! index.isValid())
-    {
-      return Qt::NoItemFlags;
-    }
+  if (!index.isValid())
+  {
+    return Qt::NoItemFlags;
+  }
   Qt::ItemFlags theFlags = QAbstractTableModel::flags(index);
   if (index.isValid())
   {
@@ -97,64 +95,58 @@ Qt::ItemFlags SGLogNormalTableModel::flags(const QModelIndex &index) const
 QVariant SGLogNormalTableModel::data(const QModelIndex &index, qint32 role) const
 {
 
-  if (! index.isValid())
+  if (!index.isValid())
   {
     return QVariant();
   }
 
-  if (role == Qt::SizeHintRole) {
-      QStyleOptionComboBox comboBox;
+  if (role == Qt::SizeHintRole)
+  {
+    QStyleOptionComboBox comboBox;
 
-      switch (index.column())
+    switch(index.column())
+    {
+      case BinNumber:
       {
-          case BinNumber:
-          {
-              comboBox.currentText = QString("101");
-              const QString header = headerData(BinNumber,
-                      Qt::Horizontal, Qt::DisplayRole).toString();
-              if (header.length() > comboBox.currentText.length())
-                  comboBox.currentText = header;
-              break;
-          }
-          case Average:
-          {
-              comboBox.currentText = QString("10001");
-              const QString header = headerData(BinNumber,
-                      Qt::Horizontal, Qt::DisplayRole).toString();
-              if (header.length() > comboBox.currentText.length())
-                  comboBox.currentText = header;
-              break;
-          }
-          case StdDev:
-          {
-            comboBox.currentText = QString("10001");
-              const QString header = headerData(BinNumber,
-                      Qt::Horizontal, Qt::DisplayRole).toString();
-              if (header.length() > comboBox.currentText.length())
-                  comboBox.currentText = header;
-              break;
-          }
-          case LineColor:
-          {
-            comboBox.currentText = QString("Dark Blue      ");
-            const QString header = headerData(BinNumber, Qt::Horizontal, Qt::DisplayRole).toString();
-            if (header.length() > comboBox.currentText.length())
-            {
-              comboBox.currentText = header;
-            }
-            break;
-          }
-          default: Q_ASSERT(false);
+        comboBox.currentText = QString("101");
+        const QString header = headerData(BinNumber, Qt::Horizontal, Qt::DisplayRole).toString();
+        if (header.length() > comboBox.currentText.length()) comboBox.currentText = header;
+        break;
       }
-      QFontMetrics fontMetrics(data(index, Qt::FontRole)
-                               .value<QFont>());
-      comboBox.fontMetrics = fontMetrics;
-      QSize size(fontMetrics.width(comboBox.currentText),
-                 fontMetrics.height());
-      return qApp->style()->sizeFromContents(QStyle::CT_ComboBox,
-                                             &comboBox, size);
+      case Average:
+      {
+        comboBox.currentText = QString("10001");
+        const QString header = headerData(BinNumber, Qt::Horizontal, Qt::DisplayRole).toString();
+        if (header.length() > comboBox.currentText.length()) comboBox.currentText = header;
+        break;
+      }
+      case StdDev:
+      {
+        comboBox.currentText = QString("10001");
+        const QString header = headerData(BinNumber, Qt::Horizontal, Qt::DisplayRole).toString();
+        if (header.length() > comboBox.currentText.length()) comboBox.currentText = header;
+        break;
+      }
+      case LineColor:
+      {
+        comboBox.currentText = QString("Dark Blue      ");
+        const QString header = headerData(BinNumber, Qt::Horizontal, Qt::DisplayRole).toString();
+        if (header.length() > comboBox.currentText.length())
+        {
+          comboBox.currentText = header;
+        }
+        break;
+      }
+      default:
+        Q_ASSERT(false);
+    }
+    QFontMetrics fontMetrics(data(index, Qt::FontRole) .value<QFont > ());
+    comboBox.fontMetrics = fontMetrics;
+    QSize size(fontMetrics.width(comboBox.currentText), fontMetrics.height());
+    return qApp->style()->sizeFromContents(QStyle::CT_ComboBox, &comboBox, size);
   }
-  else if (role == Qt::TextAlignmentRole) {
+  else if (role == Qt::TextAlignmentRole)
+  {
     return int(Qt::AlignRight | Qt::AlignVCenter);
   }
   else if (role == Qt::DisplayRole || role == Qt::EditRole)
@@ -162,7 +154,7 @@ QVariant SGLogNormalTableModel::data(const QModelIndex &index, qint32 role) cons
     int col = index.column();
     if (col == BinNumber)
     {
-     return QVariant(m_BinNumbers[index.row()]);
+      return QVariant(m_BinNumbers[index.row()]);
     }
     else if (col == Average)
     {
@@ -184,7 +176,7 @@ QVariant SGLogNormalTableModel::data(const QModelIndex &index, qint32 role) cons
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QVariant  SGLogNormalTableModel::headerData ( int section, Qt::Orientation orientation, int role ) const
+QVariant SGLogNormalTableModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
   if (orientation == Qt::Horizontal && role == Qt::DisplayRole)
   {
@@ -226,23 +218,22 @@ int SGLogNormalTableModel::columnCount(const QModelIndex &index) const
   return index.isValid() ? 0 : m_ColumnCount;
 }
 
-
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool SGLogNormalTableModel::setData ( const QModelIndex & index, const QVariant & value, int role)
+bool SGLogNormalTableModel::setData(const QModelIndex & index, const QVariant & value, int role)
 {
- // std::cout << "SGLogNormalTableModel::setData " << value.toString().toStdString() << std::endl;
-  if (!index.isValid() || role != Qt::EditRole ||
-      index.row() < 0 || index.row() >= m_BinNumbers.count() ||
-      index.column() < 0 || index.column() >= m_ColumnCount) {
-      return false;
+  // std::cout << "SGLogNormalTableModel::setData " << value.toString().toStdString() << std::endl;
+  if (!index.isValid() || role != Qt::EditRole || index.row() < 0 || index.row() >= m_BinNumbers.count() || index.column() < 0 || index.column()
+      >= m_ColumnCount)
+  {
+    return false;
   }
   bool ok;
   qint32 row = index.row();
   qint32 col = index.column();
-  switch (col) {
+  switch(col)
+  {
     case BinNumber:
       m_BinNumbers[row] = value.toInt(&ok);
       break;
@@ -255,14 +246,15 @@ bool SGLogNormalTableModel::setData ( const QModelIndex & index, const QVariant 
     case LineColor:
       m_Colors[row] = value.toString();
       break;
-    default: Q_ASSERT(false);
+    default:
+      Q_ASSERT(false);
 
   }
 
-  emit dataChanged(index, index);
+  emit
+  dataChanged(index, index);
   return true;
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -272,10 +264,11 @@ bool SGLogNormalTableModel::insertRows(int row, int count, const QModelIndex& in
   qint32 binNum = 0;
   double avg = 1.0;
   double stdDev = 0.25;
-  QString c ("blue");
+  QString c("blue");
 
   beginInsertRows(QModelIndex(), row, row + count - 1);
-  for (int i = 0; i < count; ++i) {
+  for (int i = 0; i < count; ++i)
+  {
     m_BinNumbers.append(binNum);
     m_Average.append(avg);
     m_StdDev.append(stdDev);
@@ -283,7 +276,8 @@ bool SGLogNormalTableModel::insertRows(int row, int count, const QModelIndex& in
     m_RowCount = m_BinNumbers.count();
   }
   endInsertRows();
-  emit dataChanged(index, index);
+  emit
+  dataChanged(index, index);
   return true;
 }
 
@@ -292,34 +286,41 @@ bool SGLogNormalTableModel::insertRows(int row, int count, const QModelIndex& in
 // -----------------------------------------------------------------------------
 bool SGLogNormalTableModel::removeRows(int row, int count, const QModelIndex& index)
 {
-  if (count < 1) { return true; } // No Rows to remove
-    beginRemoveRows(QModelIndex(), row, row + count - 1);
-    for (int i = 0; i < count; ++i) {
-      m_BinNumbers.remove(row);
-      m_Average.remove(row);
-      m_StdDev.remove(row);
-      m_Colors.remove(row);
-      m_RowCount = m_BinNumbers.count();
-    }
-    endRemoveRows();
-    emit dataChanged(index, index);
+  if (count < 1)
+  {
     return true;
+  } // No Rows to remove
+  beginRemoveRows(QModelIndex(), row, row + count - 1);
+  for (int i = 0; i < count; ++i)
+  {
+    m_BinNumbers.remove(row);
+    m_Average.remove(row);
+    m_StdDev.remove(row);
+    m_Colors.remove(row);
+    m_RowCount = m_BinNumbers.count();
+  }
+  endRemoveRows();
+  emit
+  dataChanged(index, index);
+  return true;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QVector<double> SGLogNormalTableModel::getData(int col)
+QVector<double > SGLogNormalTableModel::getData(int col)
 {
 
-  switch (col) {
+  switch(col)
+  {
     case Average:
       return m_Average;
     case StdDev:
       return m_StdDev;
-    default: Q_ASSERT(false);
+    default:
+      Q_ASSERT(false);
   }
-    return QVector<double>();
+  return QVector<double > ();
 }
 
 // -----------------------------------------------------------------------------
@@ -327,12 +328,14 @@ QVector<double> SGLogNormalTableModel::getData(int col)
 // -----------------------------------------------------------------------------
 double SGLogNormalTableModel::getDataValue(int col, int row)
 {
-  switch (col) {
+  switch(col)
+  {
     case Average:
       return m_Average[row];
     case StdDev:
       return m_StdDev[row];
-    default: Q_ASSERT(false);
+    default:
+      Q_ASSERT(false);
   }
   return 0.0;
 }
@@ -340,7 +343,7 @@ double SGLogNormalTableModel::getDataValue(int col, int row)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SGLogNormalTableModel::setBinNumbers(QVector<int> binNumbers)
+void SGLogNormalTableModel::setBinNumbers(QVector<int > binNumbers)
 {
 
   qint32 count = binNumbers.count();
@@ -351,8 +354,8 @@ void SGLogNormalTableModel::setBinNumbers(QVector<int> binNumbers)
   double avg = 1.0;
   double stdDev = 0.10;
 
-  double avgStep = 1.0/(double)(count);
-  double stdDevStep = 0.2/(double)(count);
+  double avgStep = 1.0 / (double)(count);
+  double stdDevStep = 0.2 / (double)(count);
 
   QStringList colorNames = QColor::colorNames();
   qint32 colorOffset = 21;
@@ -360,8 +363,7 @@ void SGLogNormalTableModel::setBinNumbers(QVector<int> binNumbers)
   // Now Populate the table data with the data that was passed in
   for (qint32 i = 0; i < count; ++i)
   {
-    if (!insertRow(rowCount()))
-      return;
+    if (!insertRow(rowCount())) return;
 
     QModelIndex binNumberIndex = index(rowCount() - 1, SGAbstractTableModel::BinNumber);
     setData(binNumberIndex, QVariant(binNumbers[i]), Qt::EditRole);
@@ -371,20 +373,19 @@ void SGLogNormalTableModel::setBinNumbers(QVector<int> binNumbers)
 
     QModelIndex stdDevIndex = index(rowCount() - 1, StdDev);
     setData(stdDevIndex, QVariant(stdDev), Qt::EditRole);
-    
+
     avg += avgStep;
     stdDev += stdDevStep;
 
     QModelIndex colorIndex = index(rowCount() - 1, LineColor);
     setData(colorIndex, QVariant(colorNames[colorOffset++]), Qt::EditRole);
-    if (colorOffset == colorNames.count() ) 
+    if (colorOffset == colorNames.count())
     {
       colorOffset = colorNames.count() - 1;
     }
   }
 
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -393,5 +394,4 @@ QAbstractItemDelegate* SGLogNormalTableModel::getItemDelegate()
 {
   return new SGLogNormalItemDelegate;
 }
-
 

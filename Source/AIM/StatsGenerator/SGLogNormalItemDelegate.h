@@ -52,18 +52,18 @@
  */
 class SGLogNormalItemDelegate : public QStyledItemDelegate
 {
-    Q_OBJECT
+  Q_OBJECT
 
-public:
-    explicit SGLogNormalItemDelegate(QObject *parent=0)
-        : QStyledItemDelegate(parent){}
+  public:
+    explicit SGLogNormalItemDelegate(QObject *parent = 0) :
+      QStyledItemDelegate(parent)
+    {
+    }
 
     // -----------------------------------------------------------------------------
     //
     // -----------------------------------------------------------------------------
-    void paint(QPainter *painter,
-      const QStyleOptionViewItem &option,
-      const QModelIndex &index) const
+    void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
     {
       QStyledItemDelegate::paint(painter, option, index);
     }
@@ -71,9 +71,7 @@ public:
     // -----------------------------------------------------------------------------
     //
     // -----------------------------------------------------------------------------
-    QWidget* createEditor(QWidget *parent,
-      const QStyleOptionViewItem &option,
-      const QModelIndex &index) const
+    QWidget* createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const
     {
       QDoubleSpinBox* spin;
       QDoubleSpinBox* spin2;
@@ -82,27 +80,27 @@ public:
       qint32 col = index.column();
       switch(col)
       {
-      case SGLogNormalTableModel::BinNumber:
-        return NULL;
-        break;
+        case SGLogNormalTableModel::BinNumber:
+          return NULL;
+          break;
 
-      case SGLogNormalTableModel::Average:
-        spin = new QDoubleSpinBox(parent);
-        spin->setRange(0.0, 1000);
-        spin->setDecimals(5);
-        spin->setSingleStep(0.1);
-        return spin;
-      case SGLogNormalTableModel::StdDev:
-        spin2 = new QDoubleSpinBox(parent);
-        spin2->setRange(0.0, 1000);
-        spin2->setDecimals(5);
-        spin2->setSingleStep(0.1);
-        return spin2;
-      case SGLogNormalTableModel::LineColor:
-        colorCombo = new ColorComboPicker(parent);
-        return colorCombo;
-      default:
-        break;
+        case SGLogNormalTableModel::Average:
+          spin = new QDoubleSpinBox(parent);
+          spin->setRange(0.0, 1000);
+          spin->setDecimals(5);
+          spin->setSingleStep(0.1);
+          return spin;
+        case SGLogNormalTableModel::StdDev:
+          spin2 = new QDoubleSpinBox(parent);
+          spin2->setRange(0.0, 1000);
+          spin2->setDecimals(5);
+          spin2->setSingleStep(0.1);
+          return spin2;
+        case SGLogNormalTableModel::LineColor:
+          colorCombo = new ColorComboPicker(parent);
+          return colorCombo;
+        default:
+          break;
       }
       return QStyledItemDelegate::createEditor(parent, option, index);
     }
@@ -110,8 +108,7 @@ public:
     // -----------------------------------------------------------------------------
     //
     // -----------------------------------------------------------------------------
-    void setEditorData(QWidget *editor,
-      const QModelIndex &index) const
+    void setEditorData(QWidget *editor, const QModelIndex &index) const
     {
       qint32 col = index.column();
       bool ok = false;
@@ -132,13 +129,10 @@ public:
       else QStyledItemDelegate::setEditorData(editor, index);
     }
 
-
     // -----------------------------------------------------------------------------
     //
     // -----------------------------------------------------------------------------
-    void setModelData(QWidget *editor,
-      QAbstractItemModel *model,
-      const QModelIndex &index) const
+    void setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const
     {
       //  std::cout << "SGLogNormalItemDelegate::setModelData" << std::endl;
       qint32 col = index.column();
@@ -159,14 +153,11 @@ public:
       else QStyledItemDelegate::setModelData(editor, model, index);
     }
 
-
-
-private:
+  private:
     QModelIndex m_Index;
     QWidget* m_Widget;
     QAbstractItemModel* m_Model;
 
 };
-
 
 #endif /* SGLOGNORMALITEMDELEGATE_H_ */
