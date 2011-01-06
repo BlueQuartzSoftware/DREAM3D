@@ -28,8 +28,8 @@
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _SG_POWER_LAW_TABLEMODEL_H_
-#define _SG_POWER_LAW_TABLEMODEL_H_
+#ifndef _SG_LOG_NORMAL_TABLEMODEL_H_
+#define _SG_LOG_NORMAL_TABLEMODEL_H_
 
 #include <QtCore/QVector>
 #include <QtCore/QVariant>
@@ -39,13 +39,13 @@
 class QAbstractItemDelegate;
 
 /**
- * @class SGPowerLawTableModel SGPowerLawTableModel.h AIM/StatsGenerator/SGPowerLawTableModel.h
+ * @class SGLogNormalTableModel SGLogNormalTableModel.h AIM/StatsGenerator/SGLogNormalTableModel.h
  * @brief
  * @author Michael A. Jackson for BlueQuartz Software
  * @date Dec 22, 2010
  * @version 1.0
  */
-class SGPowerLawTableModel : public SGAbstractTableModel
+class SGLogNormalTableModel : public SGAbstractTableModel
 {
 
     Q_OBJECT;
@@ -54,15 +54,14 @@ class SGPowerLawTableModel : public SGAbstractTableModel
 
     enum ColumnIndexes {
       BinNumber = 0,
-      Alpha,
-      K,
-      Beta,
+      Average,
+      StdDev,
       LineColor,
       ColumnCount
     };
 
-    SGPowerLawTableModel(QObject* parent = 0);
-    virtual ~SGPowerLawTableModel();
+    SGLogNormalTableModel(QObject* parent = 0);
+    virtual ~SGLogNormalTableModel();
 
     Qt::ItemFlags flags(const QModelIndex &index) const;
     QVariant data(const QModelIndex &index,
@@ -95,27 +94,25 @@ class SGPowerLawTableModel : public SGAbstractTableModel
     virtual QVector<double> getData(int col);
     virtual double getDataValue(int col, int row);
 
-    QVector<double>& getAlphas() { return m_Alpha; }
-    QVector<double>& getKs() { return m_K; }
-    QVector<double>& getBetas() { return m_Beta; }
 
-    double getAlpha(qint32 row) { return m_Alpha[row]; }
-    double getK(qint32 row) { return m_K[row]; }
-    double getBeta(qint32 row) { return m_Beta[row]; }
+    QVector<double>& getAvergaes() { return m_Average; }
+    QVector<double>& getStdDevs() { return m_StdDev; }
+
+    double getAverage(qint32 row) { return m_Average[row]; }
+    double getStdDev(qint32 row) { return m_StdDev[row]; }
 
   private:
     int m_ColumnCount;
     int m_RowCount;
 
     QVector<qint32> m_BinNumbers;
-    QVector<double> m_Alpha;
-    QVector<double> m_K;
-    QVector<double> m_Beta;
+    QVector<double> m_Average;
+    QVector<double> m_StdDev;
     QVector<QString> m_Colors;
 
 
-    SGPowerLawTableModel(const SGPowerLawTableModel&); // Copy Constructor Not Implemented
-    void operator=(const SGPowerLawTableModel&); // Operator '=' Not Implemented
+    SGLogNormalTableModel(const SGLogNormalTableModel&); // Copy Constructor Not Implemented
+    void operator=(const SGLogNormalTableModel&); // Operator '=' Not Implemented
 };
 
-#endif /* _SG_POWER_LAW_TABLEMODEL_H_ */
+#endif /* _SG_LOG_NORMAL_TABLEMODEL_H_ */

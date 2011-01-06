@@ -28,38 +28,39 @@
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "SGPowerLawTableModel.h"
+#include "SGBetaTableModel.h"
 #include <iostream>
 
 #include <QApplication>
 #include <QtGui/QStyleOptionComboBox>
 #include <QtGui/QAbstractItemDelegate>
 
-#include "SGPowerLawItemDelegate.h"
+
+#include "SGBetaItemDelegate.h"
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-SGPowerLawTableModel::SGPowerLawTableModel(QObject* parent) :
+SGBetaTableModel::SGBetaTableModel(QObject* parent) :
 SGAbstractTableModel(parent),
 m_RowCount(0)
 {
-    m_ColumnCount = ColumnCount;
+  m_ColumnCount = ColumnCount;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-SGPowerLawTableModel::~SGPowerLawTableModel()
+SGBetaTableModel::~SGBetaTableModel()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-Qt::ItemFlags SGPowerLawTableModel::flags(const QModelIndex &index) const
+Qt::ItemFlags SGBetaTableModel::flags(const QModelIndex &index) const
 {
-  //  std::cout << "SGPowerLawTableModel::flags" << std::endl;
+  //  std::cout << "SGBetaTableModel::flags" << std::endl;
     if (! index.isValid())
     {
       return Qt::NoItemFlags;
@@ -78,10 +79,6 @@ Qt::ItemFlags SGPowerLawTableModel::flags(const QModelIndex &index) const
     {
       theFlags = Qt::ItemIsEditable | Qt::ItemIsSelectable | Qt::ItemIsEnabled;
     }
-    else if (col == K)
-    {
-      theFlags = Qt::ItemIsEditable | Qt::ItemIsSelectable | Qt::ItemIsEnabled;
-    }
     else if (col == Beta)
     {
       theFlags = Qt::ItemIsEditable | Qt::ItemIsSelectable | Qt::ItemIsEnabled;
@@ -97,7 +94,7 @@ Qt::ItemFlags SGPowerLawTableModel::flags(const QModelIndex &index) const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QVariant SGPowerLawTableModel::data(const QModelIndex &index, qint32 role) const
+QVariant SGBetaTableModel::data(const QModelIndex &index, qint32 role) const
 {
 
   if (! index.isValid())
@@ -121,16 +118,7 @@ QVariant SGPowerLawTableModel::data(const QModelIndex &index, qint32 role) const
           }
           case Alpha:
           {
-              comboBox.currentText = QString("00011");
-              const QString header = headerData(BinNumber,
-                      Qt::Horizontal, Qt::DisplayRole).toString();
-              if (header.length() > comboBox.currentText.length())
-                  comboBox.currentText = header;
-              break;
-          }
-          case K:
-          {
-            comboBox.currentText = QString("10001");
+              comboBox.currentText = QString("10001");
               const QString header = headerData(BinNumber,
                       Qt::Horizontal, Qt::DisplayRole).toString();
               if (header.length() > comboBox.currentText.length())
@@ -180,10 +168,6 @@ QVariant SGPowerLawTableModel::data(const QModelIndex &index, qint32 role) const
     {
       return QVariant(m_Alpha[index.row()]);
     }
-    else if (col == K)
-    {
-      return QVariant(m_K[index.row()]);
-    }
     else if (col == Beta)
     {
       return QVariant(m_Beta[index.row()]);
@@ -200,7 +184,7 @@ QVariant SGPowerLawTableModel::data(const QModelIndex &index, qint32 role) const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QVariant  SGPowerLawTableModel::headerData ( int section, Qt::Orientation orientation, int role ) const
+QVariant  SGBetaTableModel::headerData ( int section, Qt::Orientation orientation, int role ) const
 {
   if (orientation == Qt::Horizontal && role == Qt::DisplayRole)
   {
@@ -211,9 +195,6 @@ QVariant  SGPowerLawTableModel::headerData ( int section, Qt::Orientation orient
         break;
       case Alpha:
         return QVariant(QString("Alpha"));
-        break;
-      case K:
-        return QVariant(QString("K"));
         break;
       case Beta:
         return QVariant(QString("Beta"));
@@ -232,7 +213,7 @@ QVariant  SGPowerLawTableModel::headerData ( int section, Qt::Orientation orient
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int SGPowerLawTableModel::rowCount(const QModelIndex &index) const
+int SGBetaTableModel::rowCount(const QModelIndex &index) const
 {
   return index.isValid() ? 0 : m_RowCount;
 }
@@ -240,7 +221,7 @@ int SGPowerLawTableModel::rowCount(const QModelIndex &index) const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int SGPowerLawTableModel::columnCount(const QModelIndex &index) const
+int SGBetaTableModel::columnCount(const QModelIndex &index) const
 {
   return index.isValid() ? 0 : m_ColumnCount;
 }
@@ -250,9 +231,9 @@ int SGPowerLawTableModel::columnCount(const QModelIndex &index) const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool SGPowerLawTableModel::setData ( const QModelIndex & index, const QVariant & value, int role)
+bool SGBetaTableModel::setData ( const QModelIndex & index, const QVariant & value, int role)
 {
- // std::cout << "SGPowerLawTableModel::setData " << value.toString().toStdString() << std::endl;
+ // std::cout << "SGBetaTableModel::setData " << value.toString().toStdString() << std::endl;
   if (!index.isValid() || role != Qt::EditRole ||
       index.row() < 0 || index.row() >= m_BinNumbers.count() ||
       index.column() < 0 || index.column() >= m_ColumnCount) {
@@ -267,9 +248,6 @@ bool SGPowerLawTableModel::setData ( const QModelIndex & index, const QVariant &
       break;
     case Alpha:
       m_Alpha[row] = value.toDouble(&ok);
-      break;
-    case K:
-      m_K[row] = value.toDouble(&ok);
       break;
     case Beta:
       m_Beta[row] = value.toDouble(&ok);
@@ -289,19 +267,18 @@ bool SGPowerLawTableModel::setData ( const QModelIndex & index, const QVariant &
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool SGPowerLawTableModel::insertRows(int row, int count, const QModelIndex& index)
+bool SGBetaTableModel::insertRows(int row, int count, const QModelIndex& index)
 {
   qint32 binNum = 0;
-  double alpha = 15.0;
-  double k = 2.0;
-  double beta = 1.0;
+  double alpha = 5.0;
+  double beta = 5.0;
+
   QString c ("blue");
 
   beginInsertRows(QModelIndex(), row, row + count - 1);
   for (int i = 0; i < count; ++i) {
     m_BinNumbers.append(binNum);
     m_Alpha.append(alpha);
-    m_K.append(k);
     m_Beta.append(beta);
     m_Colors.append(c);
     m_RowCount = m_BinNumbers.count();
@@ -314,14 +291,13 @@ bool SGPowerLawTableModel::insertRows(int row, int count, const QModelIndex& ind
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool SGPowerLawTableModel::removeRows(int row, int count, const QModelIndex& index)
+bool SGBetaTableModel::removeRows(int row, int count, const QModelIndex& index)
 {
   if (count < 1) { return true; } // No Rows to remove
     beginRemoveRows(QModelIndex(), row, row + count - 1);
     for (int i = 0; i < count; ++i) {
       m_BinNumbers.remove(row);
       m_Alpha.remove(row);
-      m_K.remove(row);
       m_Beta.remove(row);
       m_Colors.remove(row);
       m_RowCount = m_BinNumbers.count();
@@ -334,57 +310,50 @@ bool SGPowerLawTableModel::removeRows(int row, int count, const QModelIndex& ind
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QVector<double> SGPowerLawTableModel::getData(int col)
+QVector<double> SGBetaTableModel::getData(int col)
 {
 
   switch (col) {
     case Alpha:
       return m_Alpha;
-    case K:
-      return m_K;
     case Beta:
       return m_Beta;
     default: Q_ASSERT(false);
   }
-  return QVector<double>();
+    return QVector<double>();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-double SGPowerLawTableModel::getDataValue(int col, int row)
+double SGBetaTableModel::getDataValue(int col, int row)
 {
   switch (col) {
     case Alpha:
       return m_Alpha[row];
-    case K:
-      return m_K[row];
     case Beta:
       return m_Beta[row];
     default: Q_ASSERT(false);
   }
-  return 0.0f;
+  return 0.0;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SGPowerLawTableModel::setBinNumbers(QVector<int> binNumbers)
+void SGBetaTableModel::setBinNumbers(QVector<int> binNumbers)
 {
 
   qint32 count = binNumbers.count();
+
 
   // Remove all the current rows in the table model
   removeRows(0, rowCount());
 
   //TODO: SET SOME SESIBLE Defaults
-  double alpha = 14.0;
-  double k = 1.0;
+  double alpha = 5.0;
   double beta = 1.0;
-
-  double alphaStep = 2.0 / (double)(count);
-  double kStep = 0.25 / (double)(count);
-  double betaStep = 20.0 / (double)(count);
+  double betaStep = 10.0 / count;
 
   QStringList colorNames = QColor::colorNames();
   qint32 colorOffset = 21;
@@ -401,16 +370,12 @@ void SGPowerLawTableModel::setBinNumbers(QVector<int> binNumbers)
     QModelIndex alphaIndex = index(rowCount() - 1, Alpha);
     setData(alphaIndex, QVariant(alpha), Qt::EditRole);
 
-    QModelIndex kIndex = index(rowCount() - 1, K);
-    setData(kIndex, QVariant(k), Qt::EditRole);
-
     QModelIndex betaIndex = index(rowCount() - 1, Beta);
     setData(betaIndex, QVariant(beta), Qt::EditRole);
-   
-    alpha += alphaStep;
-    k += kStep;
-    beta += betaStep;
 
+    alpha += 0.1;
+    beta += betaStep;
+    
     QModelIndex colorIndex = index(rowCount() - 1, LineColor);
     setData(colorIndex, QVariant(colorNames[colorOffset++]), Qt::EditRole);
     if (colorOffset == colorNames.count() ) 
@@ -424,8 +389,9 @@ void SGPowerLawTableModel::setBinNumbers(QVector<int> binNumbers)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QAbstractItemDelegate* SGPowerLawTableModel::getItemDelegate()
+QAbstractItemDelegate* SGBetaTableModel::getItemDelegate()
 {
-  return new SGPowerLawItemDelegate;
+  return new SGBetaItemDelegate;
 }
+
 

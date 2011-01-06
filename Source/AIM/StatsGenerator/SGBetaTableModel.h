@@ -28,24 +28,25 @@
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _SG_POWER_LAW_TABLEMODEL_H_
-#define _SG_POWER_LAW_TABLEMODEL_H_
+#ifndef _SG_BETA_TABLEMODEL_H_
+#define _SG_BETA_TABLEMODEL_H_
 
 #include <QtCore/QVector>
 #include <QtCore/QVariant>
 #include <QtGui/QColor>
 #include "SGAbstractTableModel.h"
 
+
 class QAbstractItemDelegate;
 
 /**
- * @class SGPowerLawTableModel SGPowerLawTableModel.h AIM/StatsGenerator/SGPowerLawTableModel.h
+ * @class SGBetaTableModel SGBetaTableModel.h AIM/StatsGenerator/SGBetaTableModel.h
  * @brief
  * @author Michael A. Jackson for BlueQuartz Software
  * @date Dec 22, 2010
  * @version 1.0
  */
-class SGPowerLawTableModel : public SGAbstractTableModel
+class SGBetaTableModel : public SGAbstractTableModel
 {
 
     Q_OBJECT;
@@ -55,14 +56,13 @@ class SGPowerLawTableModel : public SGAbstractTableModel
     enum ColumnIndexes {
       BinNumber = 0,
       Alpha,
-      K,
       Beta,
       LineColor,
       ColumnCount
     };
 
-    SGPowerLawTableModel(QObject* parent = 0);
-    virtual ~SGPowerLawTableModel();
+    SGBetaTableModel(QObject* parent = 0);
+    virtual ~SGBetaTableModel();
 
     Qt::ItemFlags flags(const QModelIndex &index) const;
     QVariant data(const QModelIndex &index,
@@ -96,11 +96,9 @@ class SGPowerLawTableModel : public SGAbstractTableModel
     virtual double getDataValue(int col, int row);
 
     QVector<double>& getAlphas() { return m_Alpha; }
-    QVector<double>& getKs() { return m_K; }
     QVector<double>& getBetas() { return m_Beta; }
 
     double getAlpha(qint32 row) { return m_Alpha[row]; }
-    double getK(qint32 row) { return m_K[row]; }
     double getBeta(qint32 row) { return m_Beta[row]; }
 
   private:
@@ -109,13 +107,12 @@ class SGPowerLawTableModel : public SGAbstractTableModel
 
     QVector<qint32> m_BinNumbers;
     QVector<double> m_Alpha;
-    QVector<double> m_K;
     QVector<double> m_Beta;
     QVector<QString> m_Colors;
 
 
-    SGPowerLawTableModel(const SGPowerLawTableModel&); // Copy Constructor Not Implemented
-    void operator=(const SGPowerLawTableModel&); // Operator '=' Not Implemented
+    SGBetaTableModel(const SGBetaTableModel&); // Copy Constructor Not Implemented
+    void operator=(const SGBetaTableModel&); // Operator '=' Not Implemented
 };
 
-#endif /* _SG_POWER_LAW_TABLEMODEL_H_ */
+#endif /* _SG_BETA_TABLEMODEL_H_ */
