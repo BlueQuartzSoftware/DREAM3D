@@ -222,7 +222,7 @@
     <addaction name="actionSave"/>
     <addaction name="actionOpen"/>
     <addaction name="actionSave_As"/>
-    <addaction name="actionQuit"/>
+    <addaction name="actionExit"/>
     <addaction name="separator"/>
     <addaction name="actionClose"/>
     <addaction name="separator"/>
@@ -252,19 +252,14 @@
     <string>Save As</string>
    </property>
   </action>
-  <action name="actionQuit">
+  <action name="actionExit">
    <property name="text">
-    <string>Quit</string>
+    <string>Exit</string>
    </property>
   </action>
   <action name="actionClose">
    <property name="text">
     <string>Close</string>
-   </property>
-  </action>
-  <action name="actionSOmething">
-   <property name="text">
-    <string>SOmething</string>
    </property>
   </action>
  </widget>
