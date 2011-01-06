@@ -46,23 +46,32 @@ add_definitions(-DAIM_USE_QT)
                 
 set (StatsGenerator_SRCS 
     ${StatsGenerator_SOURCE_DIR}/main.cpp
-    ${StatsGenerator_SOURCE_DIR}/SGItemDelegate.cpp
+#    ${StatsGenerator_SOURCE_DIR}/SGItemDelegate.cpp
     ${StatsGenerator_SOURCE_DIR}/StatsGen.cpp
     ${StatsGenerator_SOURCE_DIR}/StatsGeneratorUI.cpp
     ${StatsGenerator_SOURCE_DIR}/StatsGenPlotWidget.cpp
-    ${StatsGenerator_SOURCE_DIR}/StatsGenTableModel.cpp
+#    ${StatsGenerator_SOURCE_DIR}/StatsGenTableModel.cpp
+    ${StatsGenerator_SOURCE_DIR}/SGAbstractTableModel.cpp
+    ${StatsGenerator_SOURCE_DIR}/SGBetaTableModel.cpp
     ${StatsGenerator_SOURCE_DIR}/SGPowerLawTableModel.cpp
+    ${StatsGenerator_SOURCE_DIR}/SGLogNormalTableModel.cpp
 )
 set (StatsGenerator_HDRS 
     ${StatsGenerator_SOURCE_DIR}/StatsGen.h
 )
                    
 SET( StatsGenerator_MOC_HDRS
-    ${StatsGenerator_SOURCE_DIR}/SGItemDelegate.h
+#    ${StatsGenerator_SOURCE_DIR}/SGItemDelegate.h
     ${StatsGenerator_SOURCE_DIR}/StatsGeneratorUI.h
     ${StatsGenerator_SOURCE_DIR}/StatsGenPlotWidget.h
-    ${StatsGenerator_SOURCE_DIR}/StatsGenTableModel.h
-    ${StatsGenerator_SOURCE_DIR}/SGPowerLawTableModel.h    
+#    ${StatsGenerator_SOURCE_DIR}/StatsGenTableModel.h
+    ${StatsGenerator_SOURCE_DIR}/SGAbstractTableModel.h
+    ${StatsGenerator_SOURCE_DIR}/SGBetaTableModel.h  
+    ${StatsGenerator_SOURCE_DIR}/SGPowerLawTableModel.h
+    ${StatsGenerator_SOURCE_DIR}/SGLogNormalTableModel.h
+    ${StatsGenerator_SOURCE_DIR}/SGBetaItemDelegate.h
+    ${StatsGenerator_SOURCE_DIR}/SGLogNormalItemDelegate.h
+    ${StatsGenerator_SOURCE_DIR}/SGPowerLawItemDelegate.h
 )
 cmp_IDE_SOURCE_PROPERTIES( "AIM/StatsGenerator" "${StatsGenerator_HDRS};${StatsGenerator_MOC_HDRS}" "${StatsGenerator_SRCS}" ${PROJECT_INSTALL_HEADERS})
 
