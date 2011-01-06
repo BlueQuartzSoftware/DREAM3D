@@ -62,6 +62,12 @@ class StatsGeneratorUI : public QMainWindow, private Ui::StatsGeneratorUI
 
 
     protected slots:
+
+      /* Menu Slots */
+      void on_actionClose_triggered();
+      void on_actionExit_triggered();
+
+
       void on_m_Mu_SizeDistribution_textChanged(const QString &text);
       void on_m_Sigma_SizeDistribution_textChanged(const QString &text);
       void on_m_SigmaCutOff_SizeDistribution_textChanged(const QString &text);
@@ -149,9 +155,10 @@ private slots:
     QwtPlotCurve* m_SizeDistributionCurve;
     QwtPlotMarker* m_CutOffMin;
     QwtPlotMarker* m_CutOffMax;
-    QwtPlotZoomer* m_zoomer;
-    QwtPlotPicker* m_picker;
-    QwtPlotPanner* m_panner;
+
+//    QwtPlotZoomer* m_zoomer;
+//    QwtPlotPicker* m_picker;
+//    QwtPlotPanner* m_panner;
     QwtPlotGrid*   m_grid;
 
     QString m_OpenDialogLastDirectory;  // Must be last in the list

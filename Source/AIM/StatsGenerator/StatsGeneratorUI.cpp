@@ -40,6 +40,7 @@
 #include <QtCore/QSettings>
 #include <QtCore/QVector>
 #include <QtGui/QCloseEvent>
+#include <QtGui/QMessageBox>
 
 //-- Qwt Includes
 #include <qwt.h>
@@ -65,9 +66,9 @@ StatsGeneratorUI::StatsGeneratorUI(QWidget *parent) :
   m_SizeDistributionCurve(NULL),
   m_CutOffMin(NULL),
   m_CutOffMax(NULL),
-  m_zoomer(NULL),
-  m_picker(NULL),
-  m_panner(NULL),
+ // m_zoomer(NULL),
+//  m_picker(NULL),
+//  m_panner(NULL),
   m_grid(NULL),
 #if defined(Q_WS_WIN)
       m_OpenDialogLastDirectory("C:\\")
@@ -91,6 +92,14 @@ StatsGeneratorUI::StatsGeneratorUI(QWidget *parent) :
 StatsGeneratorUI::~StatsGeneratorUI()
 {
   // TODO Auto-generated destructor stub
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void StatsGeneratorUI::on_actionExit_triggered()
+{
+  this->close();
 }
 
 // -----------------------------------------------------------------------------
@@ -228,6 +237,64 @@ void StatsGeneratorUI::setupGui()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+qint32 StatsGeneratorUI::checkDirtyDocument()
+{
+  qint32 err = -1;
+
+  if (this->isWindowModified() == true)
+  {
+    int r = QMessageBox::warning(this, tr("AIM Mount Maker"),
+      tr("The Image has been modified.\nDo you want to save your changes?"),
+      QMessageBox::Save | QMessageBox::Default,
+      QMessageBox::Discard,
+      QMessageBox::Cancel | QMessageBox::Escape);
+    if (r == QMessageBox::Save)
+    {
+      //TODO: Save the current document or otherwise save the state.
+    }
+    else if (r == QMessageBox::Discard)
+    {
+      err = 1;
+    }
+    else if (r == QMessageBox::Cancel)
+    {
+      err = -1;
+    }
+  }
+  else
+  {
+    err = 1;
+  }
+
+  return err;
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void StatsGeneratorUI::on_actionClose_triggered() {
+  // std::cout << "RepresentationUI::on_actionClose_triggered" << std::endl;
+  qint32 err = -1;
+  err = checkDirtyDocument();
+  if (err >= 0)
+  {
+    // Close the window. Files have been saved if needed
+    if (QApplication::activeWindow() == this)
+    {
+      this->close();
+    }
+    else
+    {
+      QApplication::activeWindow()->close();
+    }
+  }
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void StatsGeneratorUI::setTabsPlotTabsEnabled(bool b)
 {
   qint32 count = this->tabWidget->count();
@@ -275,20 +342,6 @@ bool StatsGeneratorUI::verifyPathExists(QString outFilePath, QLineEdit* lineEdit
   }
   return fileinfo.exists();
 }
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-qint32 StatsGeneratorUI::checkDirtyDocument()
-{
-  qint32 err = -1;
-  {
-    err = 1;
-  }
-  return err;
-}
-
 
 // -----------------------------------------------------------------------------
 //
