@@ -29,6 +29,9 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "SGItemDelegate.h"
 
+#error DO NOT USE THIS FILE
+
+
 #include <iostream>
 
 

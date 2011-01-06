@@ -30,6 +30,8 @@
 #ifndef _SGITEMDELEGATE_HPP_
 #define _SGITEMDELEGATE_HPP_
 
+#error DO NOT USE THIS FILE
+
 #include <QStyledItemDelegate>
 #include <QtCore/QModelIndex>
 
