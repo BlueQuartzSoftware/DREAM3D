@@ -48,18 +48,11 @@
 #include "SGLogNormalTableModel.h"
 #include "SGPowerLawTableModel.h"
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 StatsGenPlotWidget::StatsGenPlotWidget(QWidget *parent) :
-QWidget(parent),
-m_TableModel(NULL),
-m_zoomer(NULL),
-m_picker(NULL),
-m_panner(NULL),
-m_grid(NULL),
-m_CurveType(StatsGen::LogNormal)
+  QWidget(parent), m_TableModel(NULL), m_zoomer(NULL), m_picker(NULL), m_panner(NULL), m_grid(NULL), m_CurveType(StatsGen::LogNormal)
 {
   this->setupUi(this);
   this->setupGui();
@@ -78,7 +71,7 @@ StatsGenPlotWidget::~StatsGenPlotWidget()
 // -----------------------------------------------------------------------------
 void StatsGenPlotWidget::setPlotTitle(QString title)
 {
- // this->m_PlotTitle->setText(title);
+  // this->m_PlotTitle->setText(title);
 }
 
 // -----------------------------------------------------------------------------
@@ -97,26 +90,25 @@ void StatsGenPlotWidget::setCurveType(StatsGen::CurveType curveType)
   m_CurveType = curveType;
   switch(curveType)
   {
-  case StatsGen::Beta:
-    m_TableModel = new SGBetaTableModel;
-    break;
-  case StatsGen::LogNormal:
-    m_TableModel = new SGLogNormalTableModel;
-    break;
-  case StatsGen::Power:
-    m_TableModel = new SGPowerLawTableModel;
-    break;
+    case StatsGen::Beta:
+      m_TableModel = new SGBetaTableModel;
+      break;
+    case StatsGen::LogNormal:
+      m_TableModel = new SGLogNormalTableModel;
+      break;
+    case StatsGen::Power:
+      m_TableModel = new SGPowerLawTableModel;
+      break;
 
-  default:
-     Q_ASSERT(false);
+    default:
+      Q_ASSERT(false);
   }
 
   m_TableView->setModel(m_TableModel);
   m_TableView->setItemDelegate(m_TableModel->getItemDelegate());
 
-  connect(m_TableModel, SIGNAL(layoutChanged()),
-    this, SLOT(updatePlot()));
-  connect(m_TableModel, SIGNAL(dataChanged(const QModelIndex &, const QModelIndex &)),
+  connect(m_TableModel, SIGNAL(layoutChanged()), this, SLOT(updatePlot()));
+connect(m_TableModel, SIGNAL(dataChanged(const QModelIndex &, const QModelIndex &)),
     this, SLOT(updatePlot()));
 
 }
@@ -147,13 +139,12 @@ void StatsGenPlotWidget::setupGui()
   headerView->setResizeMode(QHeaderView::Interactive);
   m_TableView->setHorizontalHeader(headerView);
 
-  
   headerView->show();
 
   // Setup the Qwt Plot Wigets
   // Configure the Histogram Plot
   m_PlotView->setCanvasBackground(QColor(Qt::white));
-//  m_PlotView->setTitle(m_PlotTitle->text());
+  //  m_PlotView->setTitle(m_PlotTitle->text());
 
   m_grid = new QwtPlotGrid;
   m_grid->enableXMin(true);
@@ -168,13 +159,12 @@ void StatsGenPlotWidget::setupGui()
 
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void StatsGenPlotWidget::updatePlot()
 {
- // std::cout << "StatsGenPlotWidget::updatePlot" << std::endl;
+  // std::cout << "StatsGenPlotWidget::updatePlot" << std::endl;
   //Loop over each entry in the table
   QwtPlotCurve* curve = NULL;
 
@@ -192,7 +182,7 @@ void StatsGenPlotWidget::updatePlot()
   double xMax = 0.0;
   double yMax = 0.0;
 
-  for(qint32 r = 0; r < nRows; ++r)
+  for (qint32 r = 0; r < nRows; ++r)
   {
     if (r == m_PlotCurves.size())
     {
@@ -252,9 +242,15 @@ void StatsGenPlotWidget::createBetaCurve(int tableRow, double &xMax, double &yMa
 
   for (int i = 0; i < size; ++i)
   {
- //   std::cout << x[i] << "  " << y[i] << std::endl;
-    if (x[i] > xMax) { xMax = x[i]; }
-    if (y[i] > yMax) { yMax = y[i]; }
+    //   std::cout << x[i] << "  " << y[i] << std::endl;
+    if (x[i] > xMax)
+    {
+      xMax = x[i];
+    }
+    if (y[i] > yMax)
+    {
+      yMax = y[i];
+    }
   }
   curve->setData(x, y);
 
@@ -262,7 +258,6 @@ void StatsGenPlotWidget::createBetaCurve(int tableRow, double &xMax, double &yMa
   m_PlotView->setAxisScale(QwtPlot::xBottom, 0.0, xMax);
 
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -286,16 +281,21 @@ void StatsGenPlotWidget::createLogNormalCurve(int tableRow, double &xMax, double
 
   for (int i = 0; i < size; ++i)
   {
- //   std::cout << x[i] << "  " << y[i] << std::endl;
-    if (x[i] > xMax) { xMax = x[i]; }
-    if (y[i] > yMax) { yMax = y[i]; }
+    //   std::cout << x[i] << "  " << y[i] << std::endl;
+    if (x[i] > xMax)
+    {
+      xMax = x[i];
+    }
+    if (y[i] > yMax)
+    {
+      yMax = y[i];
+    }
   }
   curve->setData(x, y);
 
   m_PlotView->setAxisScale(QwtPlot::yLeft, 0.0, yMax);
   m_PlotView->setAxisScale(QwtPlot::xBottom, 0.0, xMax);
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -304,7 +304,7 @@ void StatsGenPlotWidget::createPowerCurve(int tableRow, double &xMax, double &yM
 {
   QwtPlotCurve* curve = m_PlotCurves[tableRow];
   int err = 0;
-  double alpha =m_TableModel->getDataValue(SGPowerLawTableModel::Alpha, tableRow);
+  double alpha = m_TableModel->getDataValue(SGPowerLawTableModel::Alpha, tableRow);
   double k = m_TableModel->getDataValue(SGPowerLawTableModel::K, tableRow);
   double beta = m_TableModel->getDataValue(SGPowerLawTableModel::Beta, tableRow);
   int size = 256;
@@ -320,9 +320,15 @@ void StatsGenPlotWidget::createPowerCurve(int tableRow, double &xMax, double &yM
 
   for (int i = 0; i < size; ++i)
   {
- //   std::cout << x[i] << "  " << y[i] << std::endl;
-    if (x[i] > xMax) { xMax = x[i]; }
-    if (y[i] > yMax) { yMax = y[i]; }
+    //   std::cout << x[i] << "  " << y[i] << std::endl;
+    if (x[i] > xMax)
+    {
+      xMax = x[i];
+    }
+    if (y[i] > yMax)
+    {
+      yMax = y[i];
+    }
   }
   curve->setData(x, y);
 
@@ -342,7 +348,7 @@ void StatsGenPlotWidget::setRowOperationEnabled(bool b)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void StatsGenPlotWidget::setBins(QVector<int> &binNumbers)
+void StatsGenPlotWidget::setBins(QVector<int > &binNumbers)
 {
   m_TableModel->setBinNumbers(binNumbers);
   m_TableView->resizeColumnsToContents();
@@ -363,7 +369,7 @@ void StatsGenPlotWidget::setBins(QVector<int> &binNumbers)
   for (qint32 i = 0; i < count; ++i)
   {
     if (!m_TableModel->insertRow(m_TableModel->rowCount()))
-        return;
+    return;
     m_TableView->resizeColumnsToContents();
     m_TableView->scrollToBottom();
     m_TableView->setFocus();
@@ -378,7 +384,7 @@ void StatsGenPlotWidget::setBins(QVector<int> &binNumbers)
     QModelIndex colorIndex = m_TableModel->index(m_TableModel->rowCount() - 1, StatsGenTableModel::LineColor);
     m_TableView->setCurrentIndex(colorIndex);
     m_TableModel->setData(colorIndex, QVariant(colorNames[colorOffset++]), Qt::EditRole);
-    if (colorOffset == colorNames.count() ) 
+    if (colorOffset == colorNames.count() )
     {
       colorOffset = colorNames.count() - 1;
     }
@@ -391,8 +397,7 @@ void StatsGenPlotWidget::setBins(QVector<int> &binNumbers)
 // -----------------------------------------------------------------------------
 void StatsGenPlotWidget::on_addRowBtn_clicked()
 {
-  if (!m_TableModel->insertRow(m_TableModel->rowCount()))
-      return;
+  if (!m_TableModel->insertRow(m_TableModel->rowCount())) return;
   m_TableView->resizeColumnsToContents();
   m_TableView->scrollToBottom();
   m_TableView->setFocus();
@@ -400,18 +405,15 @@ void StatsGenPlotWidget::on_addRowBtn_clicked()
   m_TableView->setCurrentIndex(index);
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void StatsGenPlotWidget::on_deleteRowBtn_clicked()
 {
   QItemSelectionModel *selectionModel = m_TableView->selectionModel();
-  if (!selectionModel->hasSelection())
-      return;
-  QModelIndex index =  selectionModel->currentIndex();
-  if (!index.isValid())
-      return;
+  if (!selectionModel->hasSelection()) return;
+  QModelIndex index = selectionModel->currentIndex();
+  if (!index.isValid()) return;
   m_TableModel->removeRow(index.row(), index.parent());
   if (m_TableModel->rowCount() > 0)
   {

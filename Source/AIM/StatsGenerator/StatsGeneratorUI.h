@@ -51,29 +51,25 @@ class QwtPlotMarker;
  */
 class StatsGeneratorUI : public QMainWindow, private Ui::StatsGeneratorUI
 {
-  Q_OBJECT
-    ;
+Q_OBJECT    ;
 
-  public:
+    public:
     StatsGeneratorUI(QWidget *parent = 0);
     virtual ~StatsGeneratorUI();
 
     void plotSizeDistribution();
 
-
     protected slots:
 
-      /* Menu Slots */
-      void on_actionClose_triggered();
-      void on_actionExit_triggered();
+    /* Menu Slots */
+    void on_actionClose_triggered();
+    void on_actionExit_triggered();
 
+    void on_m_Mu_SizeDistribution_textChanged(const QString &text);
+    void on_m_Sigma_SizeDistribution_textChanged(const QString &text);
+    void on_m_SigmaCutOff_SizeDistribution_textChanged(const QString &text);
 
-      void on_m_Mu_SizeDistribution_textChanged(const QString &text);
-      void on_m_Sigma_SizeDistribution_textChanged(const QString &text);
-      void on_m_SigmaCutOff_SizeDistribution_textChanged(const QString &text);
-
-
-  protected:
+    protected:
 
     /**
      * @brief Implements the CloseEvent to Quit the application and write settings
@@ -134,8 +130,7 @@ class StatsGeneratorUI : public QMainWindow, private Ui::StatsGeneratorUI
      */
     void setTabsPlotTabsEnabled(bool b);
 
-
-private slots:
+    private slots:
 
     /**
      * @brief Updates the QMenu 'Recent Files' with the latest list of files. This
@@ -149,21 +144,21 @@ private slots:
      */
     void openRecentFile();
 
-  private:
+    private:
     QList<QWidget*> m_WidgetList;
 
     QwtPlotCurve* m_SizeDistributionCurve;
     QwtPlotMarker* m_CutOffMin;
     QwtPlotMarker* m_CutOffMax;
 
-//    QwtPlotZoomer* m_zoomer;
-//    QwtPlotPicker* m_picker;
-//    QwtPlotPanner* m_panner;
-    QwtPlotGrid*   m_grid;
+    //    QwtPlotZoomer* m_zoomer;
+    //    QwtPlotPicker* m_picker;
+    //    QwtPlotPanner* m_panner;
+    QwtPlotGrid* m_grid;
 
-    QString m_OpenDialogLastDirectory;  // Must be last in the list
+    QString m_OpenDialogLastDirectory; // Must be last in the list
     StatsGeneratorUI(const StatsGeneratorUI&); // Copy Constructor Not Implemented
     void operator=(const StatsGeneratorUI&); // Operator '=' Not Implemented
-};
+  };
 
 #endif /* _STATSGENERATOR_H_ */

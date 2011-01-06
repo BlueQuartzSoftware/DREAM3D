@@ -38,7 +38,7 @@
 //
 // -----------------------------------------------------------------------------
 SGAbstractTableModel::SGAbstractTableModel(QObject* parent) :
-QAbstractTableModel(parent)
+  QAbstractTableModel(parent)
 {
 }
 
@@ -57,10 +57,10 @@ SGAbstractTableModel::~SGAbstractTableModel()
 Qt::ItemFlags SGAbstractTableModel::flags(const QModelIndex &index) const
 {
   //  std::cout << "SGAbstractTableModel::flags" << std::endl;
-    if (! index.isValid())
-    {
-      return Qt::NoItemFlags;
-    }
+  if (! index.isValid())
+  {
+    return Qt::NoItemFlags;
+  }
   Qt::ItemFlags theFlags = QAbstractTableModel::flags(index);
   if (index.isValid())
   {
@@ -102,68 +102,70 @@ QVariant SGAbstractTableModel::data(const QModelIndex &index, qint32 role) const
     return QVariant();
   }
 
-  if (role == Qt::SizeHintRole) {
-      QStyleOptionComboBox comboBox;
+  if (role == Qt::SizeHintRole)
+  {
+    QStyleOptionComboBox comboBox;
 
-      switch (index.column())
+    switch (index.column())
+    {
+      case BinNumber:
       {
-          case BinNumber:
-          {
-              comboBox.currentText = QString("1");
-              const QString header = headerData(BinNumber,
-                      Qt::Horizontal, Qt::DisplayRole).toString();
-              if (header.length() > comboBox.currentText.length())
-                  comboBox.currentText = header;
-              break;
-          }
-          case NumGrains:
-          {
-              comboBox.currentText = QString("1");
-              const QString header = headerData(BinNumber,
-                      Qt::Horizontal, Qt::DisplayRole).toString();
-              if (header.length() > comboBox.currentText.length())
-                  comboBox.currentText = header;
-              break;
-          }
-          case Mu:
-          {
-            comboBox.currentText = QString("11");
-              const QString header = headerData(BinNumber,
-                      Qt::Horizontal, Qt::DisplayRole).toString();
-              if (header.length() > comboBox.currentText.length())
-                  comboBox.currentText = header;
-              break;
-          }
-          case Sigma:
-          {
-            comboBox.currentText = QString("11");
-              const QString header = headerData(BinNumber,
-                      Qt::Horizontal, Qt::DisplayRole).toString();
-              if (header.length() > comboBox.currentText.length())
-                  comboBox.currentText = header;
-              break;
-          }
-          case LineColor:
-          {
-            comboBox.currentText = QString("Dark Blue");
-            const QString header = headerData(BinNumber, Qt::Horizontal, Qt::DisplayRole).toString();
-            if (header.length() > comboBox.currentText.length())
-            {
-              comboBox.currentText = header;
-            }
-            break;
-          }
-          default: Q_ASSERT(false);
+        comboBox.currentText = QString("1");
+        const QString header = headerData(BinNumber,
+            Qt::Horizontal, Qt::DisplayRole).toString();
+        if (header.length() > comboBox.currentText.length())
+        comboBox.currentText = header;
+        break;
       }
-      QFontMetrics fontMetrics(data(index, Qt::FontRole)
-                               .value<QFont>());
-      comboBox.fontMetrics = fontMetrics;
-      QSize size(fontMetrics.width(comboBox.currentText),
-                 fontMetrics.height());
-      return qApp->style()->sizeFromContents(QStyle::CT_ComboBox,
-                                             &comboBox, size);
+      case NumGrains:
+      {
+        comboBox.currentText = QString("1");
+        const QString header = headerData(BinNumber,
+            Qt::Horizontal, Qt::DisplayRole).toString();
+        if (header.length() > comboBox.currentText.length())
+        comboBox.currentText = header;
+        break;
+      }
+      case Mu:
+      {
+        comboBox.currentText = QString("11");
+        const QString header = headerData(BinNumber,
+            Qt::Horizontal, Qt::DisplayRole).toString();
+        if (header.length() > comboBox.currentText.length())
+        comboBox.currentText = header;
+        break;
+      }
+      case Sigma:
+      {
+        comboBox.currentText = QString("11");
+        const QString header = headerData(BinNumber,
+            Qt::Horizontal, Qt::DisplayRole).toString();
+        if (header.length() > comboBox.currentText.length())
+        comboBox.currentText = header;
+        break;
+      }
+      case LineColor:
+      {
+        comboBox.currentText = QString("Dark Blue");
+        const QString header = headerData(BinNumber, Qt::Horizontal, Qt::DisplayRole).toString();
+        if (header.length() > comboBox.currentText.length())
+        {
+          comboBox.currentText = header;
+        }
+        break;
+      }
+      default: Q_ASSERT(false);
+    }
+    QFontMetrics fontMetrics(data(index, Qt::FontRole)
+        .value<QFont>());
+    comboBox.fontMetrics = fontMetrics;
+    QSize size(fontMetrics.width(comboBox.currentText),
+        fontMetrics.height());
+    return qApp->style()->sizeFromContents(QStyle::CT_ComboBox,
+        &comboBox, size);
   }
-  else if (role == Qt::TextAlignmentRole) {
+  else if (role == Qt::TextAlignmentRole)
+  {
     return int(Qt::AlignRight | Qt::AlignVCenter);
   }
   else if (role == Qt::DisplayRole || role == Qt::EditRole)
@@ -171,7 +173,7 @@ QVariant SGAbstractTableModel::data(const QModelIndex &index, qint32 role) const
     int col = index.column();
     if (col == BinNumber)
     {
-     return QVariant(m_BinNumbers[index.row()]);
+      return QVariant(m_BinNumbers[index.row()]);
     }
     else if (col == NumGrains)
     {
@@ -194,33 +196,32 @@ QVariant SGAbstractTableModel::data(const QModelIndex &index, qint32 role) const
   return QVariant();
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QVariant  SGAbstractTableModel::headerData ( int section, Qt::Orientation orientation, int role ) const
+QVariant SGAbstractTableModel::headerData ( int section, Qt::Orientation orientation, int role ) const
 {
   if (orientation == Qt::Horizontal && role == Qt::DisplayRole)
   {
     switch(section)
     {
       case BinNumber:
-        return QVariant(QString("Bin"));
-        break;
+      return QVariant(QString("Bin"));
+      break;
       case NumGrains:
-        return QVariant(QString("Num Grains"));
-        break;
+      return QVariant(QString("Num Grains"));
+      break;
       case Mu:
-        return QVariant(QString("Average"));
-        break;
+      return QVariant(QString("Average"));
+      break;
       case Sigma:
-        return QVariant(QString("Std Dev"));
-        break;
+      return QVariant(QString("Std Dev"));
+      break;
       case LineColor:
-        return QVariant(QString("Color"));
-        break;
+      return QVariant(QString("Color"));
+      break;
       default:
-        break;
+      break;
     }
 
   }
@@ -243,38 +244,38 @@ int SGAbstractTableModel::columnCount(const QModelIndex &index) const
   return index.isValid() ? 0 : m_ColumnCount;
 }
 
-
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 bool SGAbstractTableModel::setData ( const QModelIndex & index, const QVariant & value, int role)
 {
- // std::cout << "SGAbstractTableModel::setData " << value.toString().toStdString() << std::endl;
+  // std::cout << "SGAbstractTableModel::setData " << value.toString().toStdString() << std::endl;
   if (!index.isValid() || role != Qt::EditRole ||
       index.row() < 0 || index.row() >= m_BinNumbers.count() ||
-      index.column() < 0 || index.column() >= m_ColumnCount) {
-      return false;
+      index.column() < 0 || index.column() >= m_ColumnCount)
+  {
+    return false;
   }
   bool ok;
   qint32 row = index.row();
   qint32 col = index.column();
-  switch (col) {
+  switch (col)
+  {
     case BinNumber:
-      m_BinNumbers[row] = value.toInt(&ok);
-      break;
+    m_BinNumbers[row] = value.toInt(&ok);
+    break;
     case NumGrains:
-      m_NumGrains[row] = value.toInt(&ok);
-      break;
+    m_NumGrains[row] = value.toInt(&ok);
+    break;
     case Mu:
-      m_Mu[row] = value.toDouble(&ok);
-      break;
+    m_Mu[row] = value.toDouble(&ok);
+    break;
     case Sigma:
-      m_Sigma[row] = value.toDouble(&ok);
-      break;
+    m_Sigma[row] = value.toDouble(&ok);
+    break;
     case LineColor:
-      m_Colors[row] = value.toString();
-      break;
+    m_Colors[row] = value.toString();
+    break;
     default: Q_ASSERT(false);
 
   }
@@ -282,7 +283,6 @@ bool SGAbstractTableModel::setData ( const QModelIndex & index, const QVariant &
   emit dataChanged(index, index);
   return true;
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -296,7 +296,8 @@ bool SGAbstractTableModel::insertRows(int row, int count, const QModelIndex& ind
   QString c ("blue");
 
   beginInsertRows(QModelIndex(), row, row + count - 1);
-  for (int i = 0; i < count; ++i) {
+  for (int i = 0; i < count; ++i)
+  {
     m_BinNumbers.append(binNum);
     m_NumGrains.append(nGrains);
     m_Mu.append(mu);
@@ -314,19 +315,21 @@ bool SGAbstractTableModel::insertRows(int row, int count, const QModelIndex& ind
 // -----------------------------------------------------------------------------
 bool SGAbstractTableModel::removeRows(int row, int count, const QModelIndex& index)
 {
-  if (count < 1) { return true; } // No Rows to remove
-    beginRemoveRows(QModelIndex(), row, row + count - 1);
-    for (int i = 0; i < count; ++i) {
-      m_BinNumbers.remove(row);
-      m_NumGrains.remove(row);
-      m_Mu.remove(row);
-      m_Sigma.remove(row);
-      m_Colors.remove(row);
-      m_RowCount = m_BinNumbers.count();
-    }
-    endRemoveRows();
-    emit dataChanged(index, index);
-    return true;
+  if (count < 1)
+  { return true;} // No Rows to remove
+  beginRemoveRows(QModelIndex(), row, row + count - 1);
+  for (int i = 0; i < count; ++i)
+  {
+    m_BinNumbers.remove(row);
+    m_NumGrains.remove(row);
+    m_Mu.remove(row);
+    m_Sigma.remove(row);
+    m_Colors.remove(row);
+    m_RowCount = m_BinNumbers.count();
+  }
+  endRemoveRows();
+  emit dataChanged(index, index);
+  return true;
 }
 
 #endif

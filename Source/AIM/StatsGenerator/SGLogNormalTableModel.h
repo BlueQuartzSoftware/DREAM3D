@@ -48,11 +48,12 @@ class QAbstractItemDelegate;
 class SGLogNormalTableModel : public SGAbstractTableModel
 {
 
-    Q_OBJECT;
+Q_OBJECT    ;
 
-  public:
+    public:
 
-    enum ColumnIndexes {
+    enum ColumnIndexes
+    {
       BinNumber = 0,
       Average,
       StdDev,
@@ -65,43 +66,51 @@ class SGLogNormalTableModel : public SGAbstractTableModel
 
     Qt::ItemFlags flags(const QModelIndex &index) const;
     QVariant data(const QModelIndex &index,
-                  int role=Qt::DisplayRole) const;
+        int role=Qt::DisplayRole) const;
     QVariant headerData(int section, Qt::Orientation orientation,
-                        int role=Qt::DisplayRole) const;
+        int role=Qt::DisplayRole) const;
     int rowCount(const QModelIndex &parent=QModelIndex()) const;
     int columnCount(const QModelIndex &parent=QModelIndex()) const;
 
     bool setData(const QModelIndex &index, const QVariant &value,
-                 int role=Qt::EditRole);
+        int role=Qt::EditRole);
     bool setHeaderData(int, Qt::Orientation, const QVariant&,
-                       int=Qt::EditRole) { return false; }
+        int=Qt::EditRole)
+    { return false;}
 
     bool insertRows(int row, int count,
-                    const QModelIndex &parent=QModelIndex());
+        const QModelIndex &parent=QModelIndex());
     bool removeRows(int row, int count,
-                    const QModelIndex &parent=QModelIndex());
+        const QModelIndex &parent=QModelIndex());
 
     QAbstractItemDelegate* getItemDelegate();
 
     void setBinNumbers(QVector<int> binNumbers);
 
-    QVector<qint32>& getBinNumbers() { return m_BinNumbers; }
-    qint32 getBinNumber(qint32 row) { return m_BinNumbers[row]; }
+    QVector<qint32>& getBinNumbers()
+    { return m_BinNumbers;}
+    qint32 getBinNumber(qint32 row)
+    { return m_BinNumbers[row];}
 
-    QVector<QString>& getColors() { return m_Colors; }
-    QString getColor(qint32 row) { return m_Colors[row]; }
+    QVector<QString>& getColors()
+    { return m_Colors;}
+    QString getColor(qint32 row)
+    { return m_Colors[row];}
 
     virtual QVector<double> getData(int col);
     virtual double getDataValue(int col, int row);
 
+    QVector<double>& getAvergaes()
+    { return m_Average;}
+    QVector<double>& getStdDevs()
+    { return m_StdDev;}
 
-    QVector<double>& getAvergaes() { return m_Average; }
-    QVector<double>& getStdDevs() { return m_StdDev; }
+    double getAverage(qint32 row)
+    { return m_Average[row];}
+    double getStdDev(qint32 row)
+    { return m_StdDev[row];}
 
-    double getAverage(qint32 row) { return m_Average[row]; }
-    double getStdDev(qint32 row) { return m_StdDev[row]; }
-
-  private:
+    private:
     int m_ColumnCount;
     int m_RowCount;
 
@@ -110,9 +119,8 @@ class SGLogNormalTableModel : public SGAbstractTableModel
     QVector<double> m_StdDev;
     QVector<QString> m_Colors;
 
-
     SGLogNormalTableModel(const SGLogNormalTableModel&); // Copy Constructor Not Implemented
     void operator=(const SGLogNormalTableModel&); // Operator '=' Not Implemented
-};
+  };
 
 #endif /* _SG_LOG_NORMAL_TABLEMODEL_H_ */

@@ -48,7 +48,6 @@ namespace UIA
   const static int Alpha = 255;
 }
 
-
 class StatsGenPlotWidget : public QWidget, private Ui::StatsGenPlotWidget
 {
 
@@ -74,28 +73,26 @@ class StatsGenPlotWidget : public QWidget, private Ui::StatsGenPlotWidget
     void createLogNormalCurve(int tableRow, double &xMax, double &yMax);
     void createPowerCurve(int tableRow, double &xMax, double &yMax);
 
-    void setBins(QVector<int> &binNumbers);
+    void setBins(QVector<int > &binNumbers);
 
-  protected slots:
+    protected slots:
     void updatePlot();
 
     void on_addRowBtn_clicked();
     void on_deleteRowBtn_clicked();
 
+  protected:
 
+  private:
+    SGAbstractTableModel* m_TableModel;
 
-    protected:
+    QwtPlotZoomer* m_zoomer;
+    QwtPlotPicker* m_picker;
+    QwtPlotPanner* m_panner;
+    QwtPlotGrid* m_grid;
+    StatsGen::CurveType m_CurveType;
 
-    private:
-      SGAbstractTableModel* m_TableModel;
-
-      QwtPlotZoomer* m_zoomer;
-      QwtPlotPicker* m_picker;
-      QwtPlotPanner* m_panner;
-      QwtPlotGrid*   m_grid;
-      StatsGen::CurveType m_CurveType;
-
-      QVector<QwtPlotCurve*>  m_PlotCurves;
+    QVector<QwtPlotCurve* > m_PlotCurves;
 
     StatsGenPlotWidget(const StatsGenPlotWidget&); // Copy Constructor Not Implemented
     void operator=(const StatsGenPlotWidget&); // Operator '=' Not Implemented
