@@ -354,10 +354,12 @@ macro (CMP_COPY_QT4_RUNTIME_LIBRARIES QTLIBLIST)
             set(TYPE "d")
             FOREACH(qtlib ${QTLIBLIST})
                 GET_FILENAME_COMPONENT(QT_DLL_PATH_tmp ${QT_QMAKE_EXECUTABLE} PATH)
+                message(STATUS "Generating Copy Rule for Qt Debug DLL Library ${QT_DLL_PATH_tmp}/${qtlib}d4.dll")  
                 add_custom_target(ZZ_${qtlib}-Debug-Copy ALL
                             COMMAND ${CMAKE_COMMAND} -E copy_if_different ${QT_DLL_PATH_tmp}/${qtlib}${TYPE}4.dll
                             ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Debug/ 
                             COMMENT "Copying ${qtlib}${TYPE}4.dll to ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Debug/")
+                message(STATUS "Generating Copy Rule for Qt Release DLL Library ${QT_DLL_PATH_tmp}/${qtlib}d4.dll")  
                 add_custom_target(ZZ_${qtlib}-Release-Copy ALL
                             COMMAND ${CMAKE_COMMAND} -E copy_if_different ${QT_DLL_PATH_tmp}/${qtlib}4.dll
                             ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Release/ 
@@ -379,12 +381,12 @@ macro (CMP_QT_LIBRARIES_INSTALL_RULES QTLIBLIST destination)
             FOREACH(qtlib ${QTLIBLIST})
                 
                 GET_FILENAME_COMPONENT(QT_DLL_PATH_tmp ${QT_QMAKE_EXECUTABLE} PATH)
-                message(STATUS "Generating Install Rule for DLL Library ${QT_DLL_PATH_tmp}/${qtlib}d4.dll")  
+                message(STATUS "Generating Install Rule for Qt Debug DLL Library ${QT_DLL_PATH_tmp}/${qtlib}d4.dll")  
                 INSTALL(FILES ${QT_DLL_PATH_tmp}/${qtlib}${type}d4.dll 
                     DESTINATION "${destination}"
                     CONFIGURATIONS Debug
                     COMPONENT Applications)
-                message(STATUS "Generating Install Rule for DLL Library ${QT_DLL_PATH_tmp}/${qtlib}4.dll")
+                message(STATUS "Generating Install Rule for Qt Release DLL Library ${QT_DLL_PATH_tmp}/${qtlib}4.dll")
                 INSTALL(FILES ${QT_DLL_PATH_tmp}/${qtlib}4.dll 
                     DESTINATION "${destination}"
                     CONFIGURATIONS Release
@@ -411,11 +413,11 @@ MACRO (CMP_COPY_DEPENDENT_LIBRARIES _libraryList)
     FOREACH(lib ${_libraryList})
     
       STRING(TOUPPER ${lib} upperlib)
-    #  message(STATUS "upperlib: ${upperlib}")
-    #  message(STATUS "${upperlib}_IS_SHARED: ${${upperlib}_IS_SHARED}")
+     # message(STATUS "upperlib: ${upperlib}")
+     # message(STATUS "${upperlib}_IS_SHARED: ${${upperlib}_IS_SHARED}")
       if (${upperlib}_IS_SHARED)
         FOREACH(BTYPE ${TYPES} )
-      #    message(STATUS "Looking for ${BTYPE} DLL Version of ${lib}")
+         # message(STATUS "Looking for ${BTYPE} DLL Version of ${lib}")
           STRING(TOUPPER ${BTYPE} TYPE)        
           get_filename_component(lib_path ${${upperlib}_LIBRARY_${TYPE}} PATH)
           get_filename_component(lib_name ${${upperlib}_LIBRARY_${TYPE}} NAME_WE)
@@ -436,7 +438,7 @@ MACRO (CMP_COPY_DEPENDENT_LIBRARIES _libraryList)
 
          # SET(${upperlib}_LIBRARY_DLL_${TYPE} "${${upperlib}_LIBRARY_DLL_${TYPE}}/${lib_name}.dll" CACHE FILEPATH "The path to the DLL Portion of the library" FORCE)
          # message(STATUS "${upperlib}_LIBRARY_DLL_${TYPE}: ${${upperlib}_LIBRARY_DLL_${TYPE}}")
-          message(STATUS "Generating Copy Rule for DLL Library ${${upperlib}_LIBRARY_DLL_${TYPE}}")
+          message(STATUS "Generating Copy Rule for ${BTYPE} DLL Library ${${upperlib}_LIBRARY_DLL_${TYPE}}")
           ADD_CUSTOM_TARGET(ZZ_${upperlib}_DLL_${TYPE}-Copy ALL 
                       COMMAND ${CMAKE_COMMAND} -E copy_if_different ${${upperlib}_LIBRARY_DLL_${TYPE}}
                       ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${BTYPE}/ 
