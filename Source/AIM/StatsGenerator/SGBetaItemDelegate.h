@@ -36,7 +36,8 @@
 #include <QtGui/QComboBox>
 #include <QtGui/QPainter>
 #include <QtGui/QStyleOptionViewItemV4>
-#include <QtGui/QDoubleSpinBox>
+#include <QtGui/QLineEdit>
+#include <QtGui/QDoubleValidator>
 #include <QtGui/QStyledItemDelegate>
 
 #include "StatsGen.h"
@@ -73,8 +74,10 @@ class SGBetaItemDelegate : public QStyledItemDelegate
     // -----------------------------------------------------------------------------
     QWidget* createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const
     {
-      QDoubleSpinBox* spin;
-      QDoubleSpinBox* spin2;
+      QLineEdit* alpha;
+      QLineEdit* beta;
+      QDoubleValidator* alphaValidator;
+      QDoubleValidator* betaValidator;
       QComboBox* colorCombo;
 
       qint32 col = index.column();
@@ -85,17 +88,19 @@ class SGBetaItemDelegate : public QStyledItemDelegate
           break;
 
         case SGBetaTableModel::Alpha:
-          spin = new QDoubleSpinBox(parent);
-          spin->setRange(0.0, 1000);
-          spin->setDecimals(5);
-          spin->setSingleStep(0.1);
-          return spin;
+          alpha = new QLineEdit(parent);
+          alpha->setFrame(false);
+          alphaValidator = new QDoubleValidator(alpha);
+          alphaValidator->setDecimals(6);
+          alpha->setValidator(alphaValidator);
+          return alpha;
         case SGBetaTableModel::Beta:
-          spin2 = new QDoubleSpinBox(parent);
-          spin2->setRange(0.0, 1000);
-          spin2->setDecimals(5);
-          spin2->setSingleStep(0.1);
-          return spin2;
+          beta = new QLineEdit(parent);
+          beta->setFrame(false);
+          betaValidator = new QDoubleValidator(beta);
+          betaValidator->setDecimals(6);
+          beta->setValidator(betaValidator);
+          return beta;
         case SGBetaTableModel::LineColor:
           colorCombo = new ColorComboPicker(parent);
           return colorCombo;
@@ -114,10 +119,10 @@ class SGBetaItemDelegate : public QStyledItemDelegate
       bool ok = false;
       if (col == SGBetaTableModel::Alpha || col == SGBetaTableModel::Beta)
       {
-        double value = index.model()->data(index).toDouble(&ok);
-        QDoubleSpinBox* spinBox = qobject_cast<QDoubleSpinBox* > (editor);
-        Q_ASSERT(spinBox);
-        spinBox->setValue(value);
+   //     double value = index.model()->data(index).toDouble(&ok);
+        QLineEdit* lineEdit = qobject_cast<QLineEdit* > (editor);
+        Q_ASSERT(lineEdit);
+        lineEdit->setText(index.model()->data(index).toString());
       }
       else if (col == SGBetaTableModel::LineColor)
       {
@@ -139,10 +144,11 @@ class SGBetaItemDelegate : public QStyledItemDelegate
       //  bool ok = false;
       if (col == SGBetaTableModel::Alpha || col == SGBetaTableModel::Beta)
       {
-        QDoubleSpinBox* spinBox = qobject_cast<QDoubleSpinBox* > (editor);
-        Q_ASSERT(spinBox);
-        spinBox->interpretText();
-        model->setData(index, spinBox->value());
+        QLineEdit* lineEdit = qobject_cast<QLineEdit* > (editor);
+        Q_ASSERT(lineEdit);
+        bool ok = false;
+        double v = lineEdit->text().toDouble(&ok);
+        model->setData(index, v);
       }
       else if (col == SGBetaTableModel::LineColor)
       {

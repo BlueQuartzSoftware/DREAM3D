@@ -52,7 +52,9 @@
 //
 // -----------------------------------------------------------------------------
 StatsGenPlotWidget::StatsGenPlotWidget(QWidget *parent) :
-  QWidget(parent), m_TableModel(NULL), m_zoomer(NULL), m_picker(NULL), m_panner(NULL), m_grid(NULL), m_CurveType(StatsGen::LogNormal)
+  QWidget(parent), m_TableModel(NULL),
+    //m_zoomer(NULL), m_picker(NULL), m_panner(NULL), 
+    m_grid(NULL), m_CurveType(StatsGen::LogNormal)
 {
   this->setupUi(this);
   this->setupGui();
@@ -85,32 +87,60 @@ int StatsGenPlotWidget::writeDataToHDF5(QString hdf5File)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void StatsGenPlotWidget::setCurveType(StatsGen::CurveType curveType)
+void StatsGenPlotWidget::resetTableModel()
 {
-  m_CurveType = curveType;
-  switch(curveType)
+  QVector<qint32> bins;
+  // Get a copy of the bins from the current TableModel if available
+  if (NULL != m_TableModel)
   {
-    case StatsGen::Beta:
-      m_TableModel = new SGBetaTableModel;
-      break;
-    case StatsGen::LogNormal:
-      m_TableModel = new SGLogNormalTableModel;
-      break;
-    case StatsGen::Power:
-      m_TableModel = new SGPowerLawTableModel;
-      break;
-
-    default:
-      Q_ASSERT(false);
+    bins = m_TableModel->getBinNumbers();
   }
+
+  // Create a new Table Model
+  switch(m_CurveType)
+  {
+  case StatsGen::Beta:
+    m_TableModel = new SGBetaTableModel;
+    break;
+  case StatsGen::LogNormal:
+    m_TableModel = new SGLogNormalTableModel;
+    break;
+  case StatsGen::Power:
+    m_TableModel = new SGPowerLawTableModel;
+    break;
+
+  default:
+    Q_ASSERT(false);
+  }
+  
 
   m_TableView->setModel(m_TableModel);
   m_TableView->setItemDelegate(m_TableModel->getItemDelegate());
 
-  connect(m_TableModel, SIGNAL(layoutChanged()), this, SLOT(updatePlot()));
-connect(m_TableModel, SIGNAL(dataChanged(const QModelIndex &, const QModelIndex &)),
-    this, SLOT(updatePlot()));
+  connect(m_TableModel, SIGNAL(layoutChanged()),
+    this, SLOT(updatePlotCurves()));
+  connect(m_TableModel, SIGNAL(dataChanged(const QModelIndex &, const QModelIndex &)),
+    this, SLOT(updatePlotCurves()));
 
+  setBins(bins);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void StatsGenPlotWidget::setCurveType(StatsGen::CurveType curveType)
+{
+  m_CurveType = curveType;
+  curveTypeCombo->setCurrentIndex(m_CurveType);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void StatsGenPlotWidget::on_curveTypeCombo_currentIndexChanged(int index)
+{
+  m_CurveType = static_cast<StatsGen::CurveType>(curveTypeCombo->currentIndex());
+  resetTableModel();
 }
 
 // -----------------------------------------------------------------------------
@@ -134,6 +164,11 @@ void StatsGenPlotWidget::setYAxisName(QString name)
 // -----------------------------------------------------------------------------
 void StatsGenPlotWidget::setupGui()
 {
+
+  curveTypeCombo->addItem(QString("Beta"));
+  curveTypeCombo->addItem(QString("Log Normal"));
+  curveTypeCombo->addItem(QString("Power Law"));
+
   // Setup the TableView and Table Models
   QHeaderView* headerView = new QHeaderView(Qt::Horizontal, m_TableView);
   headerView->setResizeMode(QHeaderView::Interactive);
@@ -154,17 +189,17 @@ void StatsGenPlotWidget::setupGui()
   m_grid->attach(m_PlotView);
 
   // Add the ability to pan the plots
-  m_panner = new QwtPlotPanner(m_PlotView->canvas());
-  m_panner->setMouseButton(Qt::MidButton);
+//  m_panner = new QwtPlotPanner(m_PlotView->canvas());
+//  m_panner->setMouseButton(Qt::MidButton);
 
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void StatsGenPlotWidget::updatePlot()
+void StatsGenPlotWidget::updatePlotCurves()
 {
-  // std::cout << "StatsGenPlotWidget::updatePlot" << std::endl;
+  // std::cout << "StatsGenPlotWidget::updatePlotCurves" << std::endl;
   //Loop over each entry in the table
   QwtPlotCurve* curve = NULL;
 
