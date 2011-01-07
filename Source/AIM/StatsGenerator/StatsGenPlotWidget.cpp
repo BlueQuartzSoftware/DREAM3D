@@ -116,13 +116,15 @@ void StatsGenPlotWidget::resetTableModel()
 
   m_TableView->setModel(m_TableModel);
   m_TableView->setItemDelegate(m_TableModel->getItemDelegate());
+  setBins(bins);
 
   connect(m_TableModel, SIGNAL(layoutChanged()),
     this, SLOT(updatePlotCurves()));
   connect(m_TableModel, SIGNAL(dataChanged(const QModelIndex &, const QModelIndex &)),
     this, SLOT(updatePlotCurves()));
 
-  setBins(bins);
+  // Update the plots
+  updatePlotCurves();
 }
 
 // -----------------------------------------------------------------------------
@@ -199,7 +201,6 @@ void StatsGenPlotWidget::setupGui()
 // -----------------------------------------------------------------------------
 void StatsGenPlotWidget::updatePlotCurves()
 {
-  // std::cout << "StatsGenPlotWidget::updatePlotCurves" << std::endl;
   //Loop over each entry in the table
   QwtPlotCurve* curve = NULL;
 
@@ -389,42 +390,7 @@ void StatsGenPlotWidget::setBins(QVector<int > &binNumbers)
   m_TableView->resizeColumnsToContents();
   m_TableView->scrollToBottom();
   m_TableView->setFocus();
-#if 0
-  qint32 count = binNumbers.count();
-
-  // Remove all the current rows in the table model
-  m_TableModel->removeRows(0, m_TableModel->rowCount());
-
-  double mu = 1.0;
-
-  QStringList colorNames = QColor::colorNames();
-  qint32 colorOffset = 21;
-
-  // Now Populate the table data with the data that was passed in
-  for (qint32 i = 0; i < count; ++i)
-  {
-    if (!m_TableModel->insertRow(m_TableModel->rowCount()))
-    return;
-    m_TableView->resizeColumnsToContents();
-    m_TableView->scrollToBottom();
-    m_TableView->setFocus();
-    QModelIndex binNumberIndex = m_TableModel->index(m_TableModel->rowCount() - 1, SGAbstractTableModel::BinNumber);
-    m_TableView->setCurrentIndex(binNumberIndex);
-    m_TableModel->setData(binNumberIndex, QVariant(binNumbers[i]), Qt::EditRole);
-
-    QModelIndex muIndex = m_TableModel->index(m_TableModel->rowCount() - 1, StatsGenTableModel::Mu);
-    m_TableView->setCurrentIndex(muIndex);
-    m_TableModel->setData(muIndex, QVariant(mu++), Qt::EditRole);
-
-    QModelIndex colorIndex = m_TableModel->index(m_TableModel->rowCount() - 1, StatsGenTableModel::LineColor);
-    m_TableView->setCurrentIndex(colorIndex);
-    m_TableModel->setData(colorIndex, QVariant(colorNames[colorOffset++]), Qt::EditRole);
-    if (colorOffset == colorNames.count() )
-    {
-      colorOffset = colorNames.count() - 1;
-    }
-  }
-#endif
+  updatePlotCurves();
 }
 
 // -----------------------------------------------------------------------------

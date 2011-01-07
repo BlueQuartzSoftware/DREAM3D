@@ -476,17 +476,18 @@ void StatsGeneratorUI::plotSizeDistribution()
   // QwtArray<int> numgrains;
   err = sg.GenCutOff<double, QwtArray<double > , QwtArray<int > > (mu, sigma, cutOff, xCo, yCo, yMax, numsizebins, binsizes);
 
+#if 0
   std::cout << "Cut Off Values" << std::endl;
   for (int i = 0; i < 2; ++i)
   {
     std::cout << "xCo[" << i << "]: " << xCo[i] << "  yCo[" << i << "]: " << yCo[i] << std::endl;
   }
-
   std::cout << "Bin#" << std::endl;
   for (int i = 0; i < numsizebins; ++i)
   {
     std::cout << binsizes[i] << std::endl;
   }
+#endif
 
   if (NULL == m_SizeDistributionCurve)
   {
@@ -521,21 +522,10 @@ void StatsGeneratorUI::plotSizeDistribution()
   m_CutOffMax->setLinePen(QPen(Qt::blue, 1, Qt::SolidLine));
   m_CutOffMax->setXValue(xCo[1]);
 
-#if 0
-  if (NULL == m_SizeDistributionCutoffCurve)
-  {
-    m_SizeDistributionCutoffCurve = new QwtPlotCurve("Cut Off Value");
-    m_SizeDistributionCutoffCurve->setRenderHint(QwtPlotItem::RenderAntialiased);
-    m_SizeDistributionCutoffCurve->setPen(QPen(Qt::blue));
-    m_SizeDistributionCutoffCurve->attach(m_SizeDistributionPlot);
-  }
-
-  m_SizeDistributionCutoffCurve->setData(xCo, yCo);
-#endif
   m_SizeDistributionCurve->setData(x, y);
-  std::cout << "----------------" << std::endl;
-  std::cout << "yMax: " << yMax << std::endl;
-  std::cout << "xMax: " << xMax << std::endl;
+//  std::cout << "----------------" << std::endl;
+//  std::cout << "yMax: " << yMax << std::endl;
+//  std::cout << "xMax: " << xMax << std::endl;
   m_SizeDistributionPlot->setAxisScale(QwtPlot::yLeft, 0.0, yMax);
   m_SizeDistributionPlot->setAxisScale(QwtPlot::xBottom, 0.0, xMax * 1.10);
   m_SizeDistributionPlot->replot();
