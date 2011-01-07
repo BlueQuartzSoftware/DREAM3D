@@ -338,9 +338,6 @@ int GrainGeneratorFunc::readMicroTextureData(H5ReconStatsReader::Pointer h5io)
   return err;
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void  GrainGeneratorFunc::generate_grain(int gnum)
 {
   int good = 0;
@@ -415,9 +412,6 @@ void  GrainGeneratorFunc::generate_grain(int gnum)
 
 void  GrainGeneratorFunc::insert_grain(int gnum)
 {
-//  int count = 0;
-//  int good = 0;
-//  long j = 0;
   double dist;
   double Nvalue = 0;
   double Gvalue = 0;
@@ -572,7 +566,7 @@ void  GrainGeneratorFunc::insert_grain(int gnum)
 			  if(inside >= 0)
 			  {
 				int currentpoint = index;
-				ellipfunc = (-0.1/(1.0-(1.0/(0.90*0.90))))*(1.0-(((axis1comp+axis2comp+axis3comp)*(axis1comp+axis2comp+axis3comp))/(0.90*0.90)));
+				ellipfunc = (-0.1/((pow((axis1comp+axis2comp+axis3comp),1)*(1.0-(1.0/(0.80*0.80))))))*(1.0-(((axis1comp+axis2comp+axis3comp)*(axis1comp+axis2comp+axis3comp))/(0.80*0.80)));
 				insidelist[insidecount] = currentpoint;
 				ellipfunclist[insidecount] = ellipfunc;
 				insidecount++;
@@ -1325,6 +1319,7 @@ void  GrainGeneratorFunc::fill_gaps(int numgrains)
   vector<int> neighs;
   vector<int> remove;
   vector<int> gsizes;
+  vector<int>* voxellist;
   int count = 1;
   int good = 1;
   double x, y, z;
@@ -1388,11 +1383,6 @@ void  GrainGeneratorFunc::fill_gaps(int numgrains)
             most = current;
             curgrain = neighbor;
           }
-		  if(current == most && grains[neighbor].equivdiameter > grains[curgrain].equivdiameter)
-		  {
-            most = current;
-            curgrain = neighbor;
-		  }
         }
         if(size > 0)
         {
@@ -1416,6 +1406,153 @@ void  GrainGeneratorFunc::fill_gaps(int numgrains)
   {
     int name = voxels[i].grainname;
 	gsizes[name]++;
+  }
+  count = 1;
+  int testcount = 0;
+  int size = 0;
+  int current = 0;
+  int most = 0;
+  int curgrain = 0;
+  int checkcount = 0;
+  while(count != 0)
+  {
+    count = 0;
+    for(int i = 0; i < (xpoints*ypoints*zpoints); i++)
+    {
+      int grainname = voxels[i].grainname;
+      if(grainname == 0)
+      {
+	    testcount++;
+		voxels[i].unassigned = 1;
+        for(int c = 1; c < numgrains; c++)
+        {
+          n[c] = 0;
+        }
+	    x = i%xpoints;
+		y = (i/xpoints)%ypoints;
+	    z = i/(xpoints*ypoints);
+		for(int j=0;j<6;j++)
+		{
+			good = 1;
+			neighpoint = i+neighbors[j];
+		    if(j == 0 && z == 0) good = 0;
+		    if(j == 5 && z == (zpoints-1)) good = 0;
+		    if(j == 1 && y == 0) good = 0;
+		    if(j == 4 && y == (ypoints-1)) good = 0;
+		    if(j == 2 && x == 0) good = 0;
+		    if(j == 3 && x == (xpoints-1)) good = 0;
+			if(good == 1)
+	        {
+				int grain = voxels[neighpoint].grainname;
+				if(grain > 0)
+				{
+					neighs.push_back(grain);
+				}
+			}
+        }
+        size = int(neighs.size());
+		current = 0;
+		most = 0;
+		curgrain = -1;
+        for(int k=0;k<size;k++)
+        {
+          int neighbor = neighs[k];
+          n[neighbor]++;
+          current = n[neighbor];
+		  if(current > most && (gsizes[neighbor]*resx*resy*resz) < (1.3333*m_pi*pow((grains[neighbor].equivdiameter/2.0),3)))
+          {
+			most = current;
+	        curgrain = neighbor;
+          }
+        }
+        if(size > 0 && curgrain > 0)
+        {
+          voxels[i].neighbor = curgrain;
+          neighs.clear();
+        }
+      }
+    }
+    for(int j = 0; j < (xpoints*ypoints*zpoints); j++)
+    {
+      int grainname = voxels[j].grainname;
+      int neighbor = voxels[j].neighbor;
+      if(grainname == 0 && neighbor > 0)
+      {
+		count++;
+        voxels[j].grainname = neighbor;
+		gsizes[neighbor]++;
+      }
+    }
+  }
+  count = 1;
+  while(count != 0)
+  {
+    count = 0;
+    for(int i = 0; i < (xpoints*ypoints*zpoints); i++)
+    {
+      int grainname = voxels[i].grainname;
+      if(grainname == 0)
+      {
+		count++;
+		voxels[i].unassigned = 1;
+        for(int c = 1; c < numgrains; c++)
+        {
+          n[c] = 0;
+        }
+	    x = i%xpoints;
+		y = (i/xpoints)%ypoints;
+	    z = i/(xpoints*ypoints);
+		for(int j=0;j<6;j++)
+		{
+			good = 1;
+			neighpoint = i+neighbors[j];
+		    if(j == 0 && z == 0) good = 0;
+		    if(j == 5 && z == (zpoints-1)) good = 0;
+		    if(j == 1 && y == 0) good = 0;
+		    if(j == 4 && y == (ypoints-1)) good = 0;
+		    if(j == 2 && x == 0) good = 0;
+		    if(j == 3 && x == (xpoints-1)) good = 0;
+			if(good == 1)
+	        {
+				int grain = voxels[neighpoint].grainname;
+				if(grain > 0)
+				{
+					neighs.push_back(grain);
+				}
+			}
+        }
+        int current = 0;
+        int most = 0;
+        int curgrain = 0;
+        int size = int(neighs.size());
+        for(int k=0;k<size;k++)
+        {
+          int neighbor = neighs[k];
+          n[neighbor]++;
+          current = n[neighbor];
+		  if(current > most)
+          {
+            most = current;
+            curgrain = neighbor;
+          }
+        }
+        if(size > 0)
+        {
+          voxels[i].neighbor = curgrain;
+          neighs.clear();
+        }
+      }
+    }
+    for(int j = 0; j < (xpoints*ypoints*zpoints); j++)
+    {
+      int grainname = voxels[j].grainname;
+      int neighbor = voxels[j].neighbor;
+      if(grainname <= 0 && neighbor > 0)
+      {
+        voxels[j].grainname = neighbor;
+		gsizes[neighbor]++;
+      }
+    }
   }
   for (int i = 1; i < numgrains+1; i++)
   {
