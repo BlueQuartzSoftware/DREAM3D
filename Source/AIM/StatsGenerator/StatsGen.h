@@ -59,22 +59,22 @@ class StatsGen
 
 
     template<typename T>
-    int GenBeta(double p, double q, T &x, T &y, int size)
+    int GenBeta(double alpha, double beta, T &x, T &y, int size)
     {
       int err=0;
       double value, gammapq, gammap, gammaq, betain, betaout;
       x.resize(size);
       y.resize(size);
-      value = p;
+      value = alpha;
       gammap = gamma(value);
-      value = q;
+      value = beta;
       gammaq = gamma(value);
-      value = p+q;
+      value = alpha+beta;
       gammapq = gamma(value);
       for(int i=0;i<size;i++)
       {
         betain = (i*(1.0/double(size)))+((1.0/double(size))/2.0);
-        betaout = (gammapq/(gammap*gammaq))*pow(betain,(p-1))*pow((1-betain),(q-1));
+        betaout = (gammapq/(gammap*gammaq))*pow(betain,(alpha-1))*pow((1-betain),(beta-1));
         x[i] = betain;
         y[i] = betaout*(1.0/double(size));
         if(betaout < 0) err = 1;
@@ -84,20 +84,20 @@ class StatsGen
 
 
     template<typename T>
-    int GenLogNormal(double m, double s, T &x, T &y, int size)
+    int GenLogNormal(double avg, double stdDev, T &x, T &y, int size)
     {
       int err = 0;
       double lognormin, lognormout, max, min;
-      double s2 = pow(s, 2);
+      double s2 = pow(stdDev, 2);
       double root2pi = pow((2.0 * 3.1415926535897), 0.5);
       x.resize(size);
       y.resize(size);
-      min = exp(m - (5 * s));
-      max = exp(m + (5 * s));
+      min = exp(avg - (5 * stdDev));
+      max = exp(avg + (5 * stdDev));
       for (int i = 0; i < size; i++)
       {
         lognormin = (i * ((max - min) / double(size))) + (((max - min) / double(size)) / 2.0) + min;
-        lognormout = (1.0 / (lognormin * s * root2pi)) * exp(-((log(lognormin) - m) * (log(lognormin) - m)) / (2 * s2));
+        lognormout = (1.0 / (lognormin * stdDev * root2pi)) * exp(-((log(lognormin) - avg) * (log(lognormin) - avg)) / (2 * s2));
         x[i] = lognormin;
         y[i] = lognormout * ((max - min) / double(size));
         if (lognormout < 0) err = 1;
@@ -107,7 +107,7 @@ class StatsGen
 
 
     template<typename T>
-    int GenPowerLaw(double a, double k, T &x, T &y, int size)
+    int GenPowerLaw(double alpha, double k, double beta, T &x, T &y, int size)
     {
       int err = 0;
       double in, out, max, min;
@@ -118,7 +118,7 @@ class StatsGen
       for (int i = 0; i < size; i++)
       {
         in = (i * ((max - min) / double(size))) + (((max - min) / double(size)) / 2.0) + min;
-        out = a*pow(in,k);
+        out = alpha*pow(in,k) + beta;
         x[i] = in;
         y[i] = out;
         if (out < 0) err = 1;

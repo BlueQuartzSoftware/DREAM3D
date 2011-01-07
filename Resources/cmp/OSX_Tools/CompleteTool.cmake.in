@@ -51,14 +51,14 @@ function(gp_item_default_embedded_path_override item default_embedded_path_var)
   # Embed .dylibs right next to the main bundle executable:
   #
   if(item MATCHES "\\.dylib$")
-    set(path "@executable_path/lib")
+    set(path "@executable_path/../lib")
     set(overridden 1)
   endif(item MATCHES "\\.dylib$")
 
   # Embed .so right next to the main bundle executable:
   #
   if(item MATCHES "\\.so$")
-    set(path "@executable_path/Plugins")
+    set(path "@executable_path/../Plugins")
     set(overridden 1)
   endif(item MATCHES "\\.so$")
   
@@ -66,7 +66,7 @@ function(gp_item_default_embedded_path_override item default_embedded_path_var)
   #
   if(NOT overridden)
     if(item MATCHES "[^/]+\\.framework/")
-      set(path "@executable_path/Frameworks")
+      set(path "@executable_path/../Frameworks")
       set(overridden 1)
     endif(item MATCHES "[^/]+\\.framework/")
   endif(NOT overridden)
@@ -75,7 +75,7 @@ function(gp_item_default_embedded_path_override item default_embedded_path_var)
 endfunction(gp_item_default_embedded_path_override)
 
 #-- Be sure all the internal directories are created first before calling the 'fixup_bundle'
-file(MAKE_DIRECTORY "${CMAKE_INSTALL_PREFIX}/Utilities")
+file(MAKE_DIRECTORY "${CMAKE_INSTALL_PREFIX}/@install_dest_dir@")
 #file(MAKE_DIRECTORY "${CMAKE_INSTALL_PREFIX}/Plugins")
 #file(MAKE_DIRECTORY "${CMAKE_INSTALL_PREFIX}/Frameworks")
 #file(MAKE_DIRECTORY "${CMAKE_INSTALL_PREFIX}/Support")
@@ -83,5 +83,5 @@ file(MAKE_DIRECTORY "${CMAKE_INSTALL_PREFIX}/Utilities")
 
 # -- Run the BundleUtilities cmake code
 include(@CMP_OSX_TOOLS_SOURCE_DIR@/ToolUtilities.cmake)
-deploy_tool("${CMAKE_INSTALL_PREFIX}/Utilities/@target@" "${PluginList}" "")
+deploy_tool("${CMAKE_INSTALL_PREFIX}/@install_dest_dir@/@target@" "@COMPLETE_PLUGIN_LIST@" "@PLUGIN_SEARCH_DIRS@")
 

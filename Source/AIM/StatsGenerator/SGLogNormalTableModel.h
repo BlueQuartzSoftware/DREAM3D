@@ -28,85 +28,99 @@
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef STATSGENTABLEMODEL_H_
-#define STATSGENTABLEMODEL_H_
+#ifndef _SG_LOG_NORMAL_TABLEMODEL_H_
+#define _SG_LOG_NORMAL_TABLEMODEL_H_
 
-#include <QtCore/QAbstractTableModel>
 #include <QtCore/QVector>
 #include <QtCore/QVariant>
 #include <QtGui/QColor>
+#include "SGAbstractTableModel.h"
 
+class QAbstractItemDelegate;
 
 /**
- * @class StatsGenTableModel StatsGenTableModel.h AIM/StatsGenerator/StatsGenTableModel.h
+ * @class SGLogNormalTableModel SGLogNormalTableModel.h AIM/StatsGenerator/SGLogNormalTableModel.h
  * @brief
  * @author Michael A. Jackson for BlueQuartz Software
  * @date Dec 22, 2010
  * @version 1.0
  */
-class StatsGenTableModel : public QAbstractTableModel
+class SGLogNormalTableModel : public SGAbstractTableModel
 {
 
-    Q_OBJECT;
+Q_OBJECT    ;
 
-  public:
+    public:
 
-    enum ColumnIndexes {
+    enum ColumnIndexes
+    {
       BinNumber = 0,
-      NumGrains,
-      Mu,
-      Sigma,
-      LineColor
+      Average,
+      StdDev,
+      LineColor,
+      ColumnCount
     };
 
-    StatsGenTableModel(QObject* parent = 0);
-    virtual ~StatsGenTableModel();
+    SGLogNormalTableModel(QObject* parent = 0);
+    virtual ~SGLogNormalTableModel();
 
     Qt::ItemFlags flags(const QModelIndex &index) const;
     QVariant data(const QModelIndex &index,
-                  int role=Qt::DisplayRole) const;
+        int role=Qt::DisplayRole) const;
     QVariant headerData(int section, Qt::Orientation orientation,
-                        int role=Qt::DisplayRole) const;
+        int role=Qt::DisplayRole) const;
     int rowCount(const QModelIndex &parent=QModelIndex()) const;
     int columnCount(const QModelIndex &parent=QModelIndex()) const;
 
     bool setData(const QModelIndex &index, const QVariant &value,
-                 int role=Qt::EditRole);
+        int role=Qt::EditRole);
     bool setHeaderData(int, Qt::Orientation, const QVariant&,
-                       int=Qt::EditRole) { return false; }
+        int=Qt::EditRole)
+    { return false;}
 
     bool insertRows(int row, int count,
-                    const QModelIndex &parent=QModelIndex());
+        const QModelIndex &parent=QModelIndex());
     bool removeRows(int row, int count,
-                    const QModelIndex &parent=QModelIndex());
+        const QModelIndex &parent=QModelIndex());
 
+    QAbstractItemDelegate* getItemDelegate();
 
-    QVector<qint32>& getBinNumbers() { return m_BinNumbers; }
-    QVector<qint32>& getNumGrains() { return m_NumGrains; }
-    QVector<double>& getMu() { return m_Mu; }
-    QVector<double>& getSigma() { return m_Sigma; }
-    QVector<QString>& getColors() { return m_Colors; }
+    void setBinNumbers(QVector<int> binNumbers);
 
-    qint32 getBinNumber(qint32 row) { return m_BinNumbers[row]; }
-    qint32 getNumGrains(qint32 row) { return m_NumGrains[row]; }
-    double getMu(qint32 row) { return m_Mu[row]; }
-    double getSigma(qint32 row) { return m_Sigma[row]; }
-    QString getColor(qint32 row) { return m_Colors[row]; }
+    QVector<qint32>& getBinNumbers()
+    { return m_BinNumbers;}
+    qint32 getBinNumber(qint32 row)
+    { return m_BinNumbers[row];}
 
+    QVector<QString>& getColors()
+    { return m_Colors;}
+    QString getColor(qint32 row)
+    { return m_Colors[row];}
 
-  private:
+    virtual QVector<double> getData(int col);
+    virtual double getDataValue(int col, int row);
+
+    QVector<double>& getAvergaes()
+    { return m_Average;}
+    QVector<double>& getStdDevs()
+    { return m_StdDev;}
+
+    double getAverage(qint32 row)
+    { return m_Average[row];}
+    double getStdDev(qint32 row)
+    { return m_StdDev[row];}
+
+    private:
     int m_ColumnCount;
     int m_RowCount;
 
     QVector<qint32> m_BinNumbers;
-    QVector<qint32> m_NumGrains;
-    QVector<double> m_Mu;
-    QVector<double> m_Sigma;
+    QVector<double> m_Average;
+    QVector<double> m_StdDev;
     QVector<QString> m_Colors;
 
+    SGLogNormalTableModel(const SGLogNormalTableModel&); // Copy Constructor Not Implemented
+    void operator=(const SGLogNormalTableModel&); // Operator '=' Not Implemented
+  };
 
-    StatsGenTableModel(const StatsGenTableModel&); // Copy Constructor Not Implemented
-    void operator=(const StatsGenTableModel&); // Operator '=' Not Implemented
-};
-
-#endif /* STATSGENTABLEMODEL_H_ */
+#endif /* _SG_LOG_NORMAL_TABLEMODEL_H_ */

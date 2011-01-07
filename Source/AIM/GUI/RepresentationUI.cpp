@@ -229,7 +229,7 @@ void RepresentationUI::on_actionExit_triggered()
 // -----------------------------------------------------------------------------
 void RepresentationUI::closeEvent(QCloseEvent *event)
 {
-  qint32 err = _checkDirtyDocument();
+  qint32 err = checkDirtyDocument();
   if (err < 0)
   {
     event->ignore();
@@ -452,7 +452,7 @@ bool RepresentationUI::_verifyPathExists(QString outFilePath, QLineEdit* lineEdi
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-qint32 RepresentationUI::_checkDirtyDocument()
+qint32 RepresentationUI::checkDirtyDocument()
 {
   qint32 err = -1;
 
@@ -491,7 +491,7 @@ qint32 RepresentationUI::_checkDirtyDocument()
 void RepresentationUI::on_actionClose_triggered() {
  // std::cout << "RepresentationUI::on_actionClose_triggered" << std::endl;
   qint32 err = -1;
-  err = _checkDirtyDocument();
+  err = checkDirtyDocument();
   if (err >= 0)
   {
     // Close the window. Files have been saved if needed

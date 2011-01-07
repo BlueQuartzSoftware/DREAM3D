@@ -1,3 +1,6 @@
+# --------------------------------------------------------------------
+# This CMake file will get called from a CMake script that is generated
+# during CMake time and run during the installation process.
 
 include(GetPrerequisites)
 
