@@ -36,7 +36,8 @@
 #include <QtGui/QComboBox>
 #include <QtGui/QPainter>
 #include <QtGui/QStyleOptionViewItemV4>
-#include <QtGui/QDoubleSpinBox>
+#include <QtGui/QLineEdit>
+#include <QtGui/QDoubleValidator>
 #include <QtGui/QStyledItemDelegate>
 
 #include "StatsGen.h"
@@ -73,8 +74,13 @@ class SGPowerLawItemDelegate : public QStyledItemDelegate
     // -----------------------------------------------------------------------------
     QWidget* createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const
     {
-      QDoubleSpinBox* spin;
-      QDoubleSpinBox* spin2;
+      QLineEdit* alpha;
+      QLineEdit* beta;
+      QDoubleValidator* alphaValidator;
+      QDoubleValidator* betaValidator;
+      QLineEdit* k;
+      QDoubleValidator* kValidator;
+
       QComboBox* colorCombo;
 
       qint32 col = index.column();
@@ -85,23 +91,26 @@ class SGPowerLawItemDelegate : public QStyledItemDelegate
           break;
 
         case SGPowerLawTableModel::Alpha:
-          spin = new QDoubleSpinBox(parent);
-          spin->setRange(0.0, 1000);
-          spin->setDecimals(5);
-          spin->setSingleStep(0.1);
-          return spin;
+          alpha = new QLineEdit(parent);
+          alpha->setFrame(false);
+          alphaValidator = new QDoubleValidator(alpha);
+          alphaValidator->setDecimals(6);
+          alpha->setValidator(alphaValidator);
+          return alpha;
         case SGPowerLawTableModel::K:
-          spin2 = new QDoubleSpinBox(parent);
-          spin2->setRange(0.0, 1000);
-          spin2->setDecimals(5);
-          spin2->setSingleStep(0.1);
-          return spin2;
+          k = new QLineEdit(parent);
+          k->setFrame(false);
+          kValidator = new QDoubleValidator(k);
+          kValidator->setDecimals(6);
+          k->setValidator(kValidator);
+          return k;
         case SGPowerLawTableModel::Beta:
-          spin2 = new QDoubleSpinBox(parent);
-          spin2->setRange(0.0, 1000);
-          spin2->setDecimals(5);
-          spin2->setSingleStep(0.1);
-          return spin2;
+          beta = new QLineEdit(parent);
+          beta->setFrame(false);
+          betaValidator = new QDoubleValidator(beta);
+          betaValidator->setDecimals(6);
+          beta->setValidator(betaValidator);
+          return beta;
         case SGPowerLawTableModel::LineColor:
           colorCombo = new ColorComboPicker(parent);
           return colorCombo;
@@ -120,10 +129,10 @@ class SGPowerLawItemDelegate : public QStyledItemDelegate
       bool ok = false;
       if (col == SGPowerLawTableModel::Alpha || col == SGPowerLawTableModel::K || col == SGPowerLawTableModel::Beta)
       {
-        double value = index.model()->data(index).toDouble(&ok);
-        QDoubleSpinBox* spinBox = qobject_cast<QDoubleSpinBox* > (editor);
-        Q_ASSERT(spinBox);
-        spinBox->setValue(value);
+    //    double value = index.model()->data(index).toDouble(&ok);
+        QLineEdit* lineEdit = qobject_cast<QLineEdit* > (editor);
+        Q_ASSERT(lineEdit);
+        lineEdit->setText(index.model()->data(index).toString());
       }
       else if (col == SGPowerLawTableModel::LineColor)
       {
@@ -145,10 +154,11 @@ class SGPowerLawItemDelegate : public QStyledItemDelegate
       //  bool ok = false;
       if (col == SGPowerLawTableModel::Alpha || col == SGPowerLawTableModel::K || col == SGPowerLawTableModel::Beta)
       {
-        QDoubleSpinBox* spinBox = qobject_cast<QDoubleSpinBox* > (editor);
-        Q_ASSERT(spinBox);
-        spinBox->interpretText();
-        model->setData(index, spinBox->value());
+        QLineEdit* lineEdit = qobject_cast<QLineEdit* > (editor);
+        Q_ASSERT(lineEdit);
+        bool ok = false;
+        double v = lineEdit->text().toDouble(&ok);
+        model->setData(index, v);
       }
       else if (col == SGPowerLawTableModel::LineColor)
       {
