@@ -40,6 +40,7 @@
 #include <QtCore/QSettings>
 #include <QtCore/QVector>
 #include <QtGui/QCloseEvent>
+#include <QtGui/QMessageBox>
 
 //-- Qwt Includes
 #include <qwt.h>
@@ -56,19 +57,15 @@
 #include "AIM/Common/Qt/QRecentFileList.h"
 #include "StatsGen.h"
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 StatsGeneratorUI::StatsGeneratorUI(QWidget *parent) :
-  QMainWindow(parent),
-  m_SizeDistributionCurve(NULL),
-  m_CutOffMin(NULL),
-  m_CutOffMax(NULL),
-  m_zoomer(NULL),
-  m_picker(NULL),
-  m_panner(NULL),
-  m_grid(NULL),
+  QMainWindow(parent), m_SizeDistributionCurve(NULL), m_CutOffMin(NULL), m_CutOffMax(NULL),
+  // m_zoomer(NULL),
+      //  m_picker(NULL),
+      //  m_panner(NULL),
+      m_grid(NULL),
 #if defined(Q_WS_WIN)
       m_OpenDialogLastDirectory("C:\\")
 #else
@@ -91,6 +88,14 @@ StatsGeneratorUI::StatsGeneratorUI(QWidget *parent) :
 StatsGeneratorUI::~StatsGeneratorUI()
 {
   // TODO Auto-generated destructor stub
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void StatsGeneratorUI::on_actionExit_triggered()
+{
+  this->close();
 }
 
 // -----------------------------------------------------------------------------
@@ -136,7 +141,6 @@ void StatsGeneratorUI::writeSettings()
 
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -156,27 +160,25 @@ void StatsGeneratorUI::setupGui()
   m_grid->setMinPen(QPen(Qt::lightGray, 0, Qt::DotLine));
   m_grid->attach(m_SizeDistributionPlot);
 
- // LeftButton for the zooming
- // MidButton for the panning
- // RightButton: zoom out by 1
- // Ctrl+RighButton: zoom out to full size
+  // LeftButton for the zooming
+  // MidButton for the panning
+  // RightButton: zoom out by 1
+  // Ctrl+RighButton: zoom out to full size
 #if 0
   m_panner = new QwtPlotPanner(m_SizeDistributionPlot->canvas());
   m_panner->setMouseButton(Qt::MidButton);
 
   QwtPlotZoomer* zoomer = new QwtPlotZoomer(m_SizeDistributionPlot->canvas());
   zoomer->setMousePattern(QwtEventPattern::MouseSelect1, Qt::LeftButton);
- // zoomer->setMousePattern(QwtEventPattern::MouseSelect2, Qt::RightButton, Qt::ControlModifier);
+  // zoomer->setMousePattern(QwtEventPattern::MouseSelect2, Qt::RightButton, Qt::ControlModifier);
 
- // zoomer->setMousePattern(QwtEventPattern::MouseSelect3, Qt::RightButton);
+  // zoomer->setMousePattern(QwtEventPattern::MouseSelect3, Qt::RightButton);
   zoomer->setRubberBand(QwtPicker::EllipseRubberBand);
   zoomer->setRubberBandPen(QColor(Qt::green));
   zoomer->setTrackerMode(QwtPicker::AlwaysOn);
   const QColor c(Qt::red);
-//  zoomer->setRubberBandPen(c);
+  //  zoomer->setRubberBandPen(c);
   zoomer->setTrackerPen(c);
-
-
 
   m_zoomer = new QwtPlotZoomer(QwtPlot::xBottom, QwtPlot::yLeft, m_SizeDistributionPlot->canvas());
   m_zoomer->setRubberBand(QwtPicker::RectRubberBand);
@@ -184,11 +186,10 @@ void StatsGeneratorUI::setupGui()
   m_zoomer->setTrackerMode(QwtPicker::ActiveOnly);
   m_zoomer->setTrackerPen(QColor(Qt::blue));
 
-
   m_picker = new QwtPlotPicker(QwtPlot::xBottom, QwtPlot::yLeft,
-                               QwtPicker::PointSelection | QwtPicker::DragSelection,
-                               QwtPlotPicker::CrossRubberBand,
-                               QwtPicker::AlwaysOn, m_SizeDistributionPlot->canvas());
+      QwtPicker::PointSelection | QwtPicker::DragSelection,
+      QwtPlotPicker::CrossRubberBand,
+      QwtPicker::AlwaysOn, m_SizeDistributionPlot->canvas());
   m_picker->setRubberBandPen(QColor(Qt::green));
   m_picker->setRubberBand(QwtPicker::CrossRubberBand);
   m_picker->setTrackerPen(QColor(Qt::blue));
@@ -221,8 +222,61 @@ void StatsGeneratorUI::setupGui()
   m_NeighborPlot->setYAxisName(QString("Frequency"));
   m_NeighborPlot->setCurveType(StatsGen::Power);
 
-
   plotSizeDistribution();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+qint32 StatsGeneratorUI::checkDirtyDocument()
+{
+  qint32 err = -1;
+
+  if (this->isWindowModified() == true)
+  {
+    int r = QMessageBox::warning(this, tr("AIM Mount Maker"), tr("The Image has been modified.\nDo you want to save your changes?"), QMessageBox::Save
+        | QMessageBox::Default, QMessageBox::Discard, QMessageBox::Cancel | QMessageBox::Escape);
+    if (r == QMessageBox::Save)
+    {
+      //TODO: Save the current document or otherwise save the state.
+    }
+    else if (r == QMessageBox::Discard)
+    {
+      err = 1;
+    }
+    else if (r == QMessageBox::Cancel)
+    {
+      err = -1;
+    }
+  }
+  else
+  {
+    err = 1;
+  }
+
+  return err;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void StatsGeneratorUI::on_actionClose_triggered()
+{
+  // std::cout << "RepresentationUI::on_actionClose_triggered" << std::endl;
+  qint32 err = -1;
+  err = checkDirtyDocument();
+  if (err >= 0)
+  {
+    // Close the window. Files have been saved if needed
+    if (QApplication::activeWindow() == this)
+    {
+      this->close();
+    }
+    else
+    {
+      QApplication::activeWindow()->close();
+    }
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -231,7 +285,7 @@ void StatsGeneratorUI::setupGui()
 void StatsGeneratorUI::setTabsPlotTabsEnabled(bool b)
 {
   qint32 count = this->tabWidget->count();
-  for(qint32 i = 1; i < count; ++i)
+  for (qint32 i = 1; i < count; ++i)
   {
     this->tabWidget->setTabEnabled(i, b);
   }
@@ -243,11 +297,10 @@ void StatsGeneratorUI::setTabsPlotTabsEnabled(bool b)
 void StatsGeneratorUI::setWidgetListEnabled(bool b)
 {
   foreach (QWidget* w, m_WidgetList)
-  {
-    w->setEnabled(b);
-  }
+    {
+      w->setEnabled(b);
+    }
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -275,20 +328,6 @@ bool StatsGeneratorUI::verifyPathExists(QString outFilePath, QLineEdit* lineEdit
   }
   return fileinfo.exists();
 }
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-qint32 StatsGeneratorUI::checkDirtyDocument()
-{
-  qint32 err = -1;
-  {
-    err = 1;
-  }
-  return err;
-}
-
 
 // -----------------------------------------------------------------------------
 //
@@ -320,12 +359,12 @@ void StatsGeneratorUI::openRecentFile()
 {
   //std::cout << "QRecentFileList::openRecentFile()" << std::endl;
 
-  QAction *action = qobject_cast<QAction *>(sender());
+  QAction *action = qobject_cast<QAction * > (sender());
   if (action)
   {
     //std::cout << "Opening Recent file: " << action->data().toString().toStdString() << std::endl;
     QString file = action->data().toString();
-    openFile( file );
+    openFile(file);
   }
 
 }
@@ -335,11 +374,10 @@ void StatsGeneratorUI::openRecentFile()
 // -----------------------------------------------------------------------------
 void StatsGeneratorUI::openFile(QString imageFile)
 {
-  if ( true == imageFile.isEmpty() ) // User cancelled the operation
+  if (true == imageFile.isEmpty()) // User cancelled the operation
   {
     return;
   }
-
 
   // Tell the RecentFileList to update itself then broadcast those changes.
   QRecentFileList::instance()->addFile(imageFile);
@@ -403,10 +441,10 @@ void StatsGeneratorUI::plotSizeDistribution()
   }
 
   int size = 100;
-  QwtArray<double> x;
-  QwtArray<double> y;
+  QwtArray<double > x;
+  QwtArray<double > y;
   StatsGen sg;
-  err = sg.GenLogNormal<QwtArray<double> >(mu, sigma, x, y, size);
+  err = sg.GenLogNormal<QwtArray<double > > (mu, sigma, x, y, size);
   if (err == 1)
   {
     //TODO: Present Error Message
@@ -416,30 +454,36 @@ void StatsGeneratorUI::plotSizeDistribution()
   // We have valid data so enable the other plot tabs
   setTabsPlotTabsEnabled(true);
 
-  double xMax = std::numeric_limits<double>::min();
-  double yMax = std::numeric_limits<double>::min();
+  double xMax = std::numeric_limits<double >::min();
+  double yMax = std::numeric_limits<double >::min();
   for (int i = 0; i < size; ++i)
   {
- //   std::cout << x[i] << "  " << y[i] << std::endl;
-    if (x[i] > xMax) { xMax = x[i]; }
-    if (y[i] > yMax) { yMax = y[i]; }
+    //   std::cout << x[i] << "  " << y[i] << std::endl;
+    if (x[i] > xMax)
+    {
+      xMax = x[i];
+    }
+    if (y[i] > yMax)
+    {
+      yMax = y[i];
+    }
   }
 
-  QwtArray<double> xCo;
-  QwtArray<double> yCo;
+  QwtArray<double > xCo;
+  QwtArray<double > yCo;
   int numsizebins = 1;
-  QwtArray<int> binsizes;
- // QwtArray<int> numgrains;
-  err = sg.GenCutOff<double, QwtArray<double>, QwtArray<int> >(mu, sigma, cutOff, xCo, yCo, yMax, numsizebins, binsizes);
+  QwtArray<int > binsizes;
+  // QwtArray<int> numgrains;
+  err = sg.GenCutOff<double, QwtArray<double > , QwtArray<int > > (mu, sigma, cutOff, xCo, yCo, yMax, numsizebins, binsizes);
 
   std::cout << "Cut Off Values" << std::endl;
-  for (int i = 0; i < 2; ++i )
+  for (int i = 0; i < 2; ++i)
   {
-    std::cout << "xCo[" << i << "]: " << xCo[i] << "  yCo[" << i << "]: "<< yCo[i] << std::endl;
+    std::cout << "xCo[" << i << "]: " << xCo[i] << "  yCo[" << i << "]: " << yCo[i] << std::endl;
   }
 
   std::cout << "Bin#" << std::endl;
-  for(int i = 0; i < numsizebins; ++i)
+  for (int i = 0; i < numsizebins; ++i)
   {
     std::cout << binsizes[i] << std::endl;
   }
@@ -453,7 +497,8 @@ void StatsGeneratorUI::plotSizeDistribution()
   }
 
   // Place a vertical Line on the plot where the Min and Max Cutoff values are
-  if (NULL == m_CutOffMin) {
+  if (NULL == m_CutOffMin)
+  {
     m_CutOffMin = new QwtPlotMarker();
     m_CutOffMin->attach(m_SizeDistributionPlot);
   }
@@ -464,7 +509,8 @@ void StatsGeneratorUI::plotSizeDistribution()
   m_CutOffMin->setLinePen(QPen(Qt::blue, 1, Qt::SolidLine));
   m_CutOffMin->setXValue(xCo[0]);
 
-  if (NULL == m_CutOffMax) {
+  if (NULL == m_CutOffMax)
+  {
     m_CutOffMax = new QwtPlotMarker();
     m_CutOffMax->attach(m_SizeDistributionPlot);
   }
@@ -475,7 +521,6 @@ void StatsGeneratorUI::plotSizeDistribution()
   m_CutOffMax->setLinePen(QPen(Qt::blue, 1, Qt::SolidLine));
   m_CutOffMax->setXValue(xCo[1]);
 
-
 #if 0
   if (NULL == m_SizeDistributionCutoffCurve)
   {
@@ -484,7 +529,6 @@ void StatsGeneratorUI::plotSizeDistribution()
     m_SizeDistributionCutoffCurve->setPen(QPen(Qt::blue));
     m_SizeDistributionCutoffCurve->attach(m_SizeDistributionPlot);
   }
-
 
   m_SizeDistributionCutoffCurve->setData(xCo, yCo);
 #endif
@@ -507,6 +551,5 @@ void StatsGeneratorUI::plotSizeDistribution()
   m_COverBPlot->setBins(binsizes);
 
   m_NeighborPlot->setBins(binsizes);
-
 
 }

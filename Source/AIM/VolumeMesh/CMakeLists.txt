@@ -46,7 +46,7 @@ set (VolumeMesh_HDRS
     ${VolumeMesh_SOURCE_DIR}/VolumeMesh.h
 )
 
-cmp_IDE_SOURCE_PROPERTIES( "Source/AIM/VolumeMesh" "${VolumeMesh_HDRS}" "${VolumeMesh_SRCS}" ${PROJECT_INSTALL_HEADERS})
+cmp_IDE_SOURCE_PROPERTIES( "AIM/VolumeMesh" "${VolumeMesh_HDRS}" "${VolumeMesh_SRCS}" ${PROJECT_INSTALL_HEADERS})
 
 set (Project_SRCS
     ${VolumeMesh_HDRS}
@@ -56,14 +56,20 @@ set (Project_SRCS
 
 add_executable(${PROJECT_NAME} ${Project_SRCS} )
 target_link_libraries(${PROJECT_NAME}
-                        MXADataModel
-                        AIMCommon
-                        ${Boost_PROGRAM_OPTIONS_LIBRARY} )
+                        #MXADataModel
+                        AIMCommon )
 set_property(TARGET ${PROJECT_NAME} PROPERTY  COMPILE_DEFINITIONS "VOLUME_MESH_LIBRARY" )
+# --------------------------------------------------------------------
+# Setup the install rules for the various platforms
+set(install_dir "tools")
+if (WIN32)
+    set (install_dir ".")
+endif()
 cmp_ToolInstallationSupport(${PROJECT_NAME} 
                         "${EXE_DEBUG_EXTENSION}" 
                         ${${PROJECT_NAME}_BINARY_DIR} 
                         "${PROJECT_INSTALL_EXECUTABLES}"
                         "Applications"
-                        "Utilities"
+                        "${install_dir}"
+                        "${CMP_LIB_SEARCH_DIRS}"
                         )

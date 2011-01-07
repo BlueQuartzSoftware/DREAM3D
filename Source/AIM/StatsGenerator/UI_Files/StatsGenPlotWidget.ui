@@ -20,13 +20,16 @@
    <item>
     <widget class="QSplitter" name="splitter">
      <property name="frameShape">
-      <enum>QFrame::StyledPanel</enum>
+      <enum>QFrame::NoFrame</enum>
      </property>
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
-     <widget class="QWidget" name="">
+     <widget class="QWidget" name="layoutWidget">
       <layout class="QVBoxLayout" name="verticalLayout_3">
+       <property name="sizeConstraint">
+        <enum>QLayout::SetMinimumSize</enum>
+       </property>
        <item>
         <widget class="QTableView" name="m_TableView">
          <property name="alternatingRowColors">
@@ -86,6 +89,12 @@
       </layout>
      </widget>
      <widget class="QwtPlot" name="m_PlotView">
+      <property name="minimumSize">
+       <size>
+        <width>500</width>
+        <height>0</height>
+       </size>
+      </property>
       <property name="frameShape">
        <enum>QFrame::Box</enum>
       </property>
