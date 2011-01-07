@@ -410,7 +410,7 @@ void  GrainGeneratorFunc::generate_grain(int gnum)
   grains[gnum].omega3 = omega3;
 }
 
-void  GrainGeneratorFunc::insert_grain(int gnum)
+void  GrainGeneratorFunc::insert_grain(size_t gnum)
 {
   double dist;
   double Nvalue = 0;
@@ -591,7 +591,7 @@ void  GrainGeneratorFunc::insert_grain(int gnum)
   insidelist.clear();
 }
 
-void  GrainGeneratorFunc::remove_grain(int gnum)
+void  GrainGeneratorFunc::remove_grain(size_t gnum)
 {
   int index;
   double ellipfunc;
@@ -612,11 +612,13 @@ void  GrainGeneratorFunc::remove_grain(int gnum)
 	  }
   }
 }
-void  GrainGeneratorFunc::add_grain(int gnum)
+
+
+void  GrainGeneratorFunc::add_grain(size_t gnum)
 {
   int index;
   double ellipfunc;
-  int neigh;
+//  int neigh;
   for(size_t i=0;i<grains[gnum].voxellist->size();i++)
   {
 	index = grains[gnum].voxellist->at(i);
@@ -638,7 +640,7 @@ void  GrainGeneratorFunc::add_grain(int gnum)
 void GrainGeneratorFunc::determine_neighbors()
 {
   double x, y, z;
-  double rad1, rad2;
+//  double rad1, rad2;
 
   double xn, yn, zn;
   double dia, dia2;
@@ -680,9 +682,9 @@ void GrainGeneratorFunc::determine_neighbors()
 }
 double GrainGeneratorFunc::check_neighborhooderror(int gadd, int gremove)
 {
-	double p, df;
-	double uvar;
-	double tvalue;
+//	double p, df;
+//	double uvar;
+//	double tvalue;
 	double neighborerror = 0;
 	double dia;
 	int nnum;
@@ -779,7 +781,7 @@ double GrainGeneratorFunc::check_neighborhooderror(int gadd, int gremove)
 	}
 	return neighborerror;
 }
-double GrainGeneratorFunc::costcheck_remove(int gnum)
+double GrainGeneratorFunc::costcheck_remove(size_t gnum)
 {
   int index;
   double removecost = 0;
@@ -795,7 +797,7 @@ double GrainGeneratorFunc::costcheck_remove(int gnum)
   }
   return removecost;
 }
-double GrainGeneratorFunc::costcheck_add(int gnum)
+double GrainGeneratorFunc::costcheck_add(size_t gnum)
 {
   int index;
   double addcost = 0;
@@ -813,11 +815,11 @@ double GrainGeneratorFunc::costcheck_add(int gnum)
 }
 double GrainGeneratorFunc::check_sizedisterror(int gadd, int gremove)
 {
-	double p, df;
+//	double p, df;
 	double avgdia=0, stddia=0;
-	double uvar;
+//	double uvar;
 	double dia;
-	double tvalue;
+//	double tvalue;
 	double sizedisterror = 0;
 	int index;
 	int count = 0;
@@ -1319,7 +1321,7 @@ void  GrainGeneratorFunc::fill_gaps(int numgrains)
   vector<int> neighs;
   vector<int> remove;
   vector<int> gsizes;
-  vector<int>* voxellist;
+//  vector<int>* voxellist;
   int count = 1;
   int good = 1;
   double x, y, z;
@@ -1564,7 +1566,7 @@ void  GrainGeneratorFunc::fill_gaps(int numgrains)
 int GrainGeneratorFunc::create_precipitates()
 {
   int good = 0;
-  int count = 0;
+  size_t count = 0;
   double r1 = 1;
   double u=0;
   double a1=0,a2=0,a3=0;
@@ -1572,7 +1574,7 @@ int GrainGeneratorFunc::create_precipitates()
   double r2=0,r3=0;
   double diam = 0;
   double vol = 0;
-  int size=0;
+  size_t size=0;
   rg.RandomInit((static_cast<unsigned int>(time(NULL))));
   double totalprecipvol = 0;
   vector<double> vollist;
@@ -1692,7 +1694,7 @@ void GrainGeneratorFunc::insert_precipitates(int numprecipitates)
   int ymax = 0;
   int zmin = 0;
   int zmax = 0;
-  long j = 0;
+  size_t j = 0;
   double Nvalue = 0;
   double Gvalue = 0;
   double xc = 0;
@@ -1702,7 +1704,7 @@ void GrainGeneratorFunc::insert_precipitates(int numprecipitates)
   double y = 0;
   double z = 0;
 
-  long pointsleft = 0;
+  size_t pointsleft = 0;
   double insidecount = 0;
   double badcount = 0;
   int uniquecursize = 0;
@@ -1782,20 +1784,20 @@ void GrainGeneratorFunc::insert_precipitates(int numprecipitates)
 	ga[2][0] =  sin(phi1)*sin(PHI);
 	ga[2][1] = -cos(phi1)*sin(PHI);
 	ga[2][2] =  cos(PHI);
-    double rad1x = ga[0][0];
-    double rad1y = ga[1][0];
-    double rad1z = ga[2][0];
-    double rad2x = ga[0][1];
-    double rad2y = ga[1][1];
-    double rad2z = ga[2][1];
-    double rad3x = ga[0][2];
-    double rad3y = ga[1][2];
-    double rad3z = ga[2][2];
-	tempavailablelist = availablelist;
+  double rad1x = ga[0][0];
+  double rad1y = ga[1][0];
+  double rad1z = ga[2][0];
+  double rad2x = ga[0][1];
+  double rad2y = ga[1][1];
+  double rad2z = ga[2][1];
+  double rad3x = ga[0][2];
+  double rad3y = ga[1][2];
+  double rad3z = ga[2][2];
+	  tempavailablelist = availablelist;
     while(good == 0)
     {
         double random = rg.Random();
-		pointsleft = tempavailablelist.size();
+		  pointsleft = tempavailablelist.size();
         int remainder = int(random*pointsleft);
 	    if(remainder == pointsleft) remainder = pointsleft-1;
 	    j = tempavailablelist[remainder];
@@ -1940,9 +1942,9 @@ void GrainGeneratorFunc::insert_precipitates(int numprecipitates)
               }
               if(shapeclass == 2)
               {
-			    axis1comp = fabs(axis1comp);
-			    axis2comp = fabs(axis2comp);
-			    axis3comp = fabs(axis3comp);
+			          axis1comp = fabs(axis1comp);
+			          axis2comp = fabs(axis2comp);
+			          axis3comp = fabs(axis3comp);
                 axis1comp = pow(axis1comp,Nvalue);
                 axis2comp = pow(axis2comp,Nvalue);
                 axis3comp = pow(axis3comp,Nvalue);
@@ -1950,9 +1952,9 @@ void GrainGeneratorFunc::insert_precipitates(int numprecipitates)
               }
               if(shapeclass == 1)
               {
-			    axis1comp = fabs(axis1comp);
-			    axis2comp = fabs(axis2comp);
-			    axis3comp = fabs(axis3comp);
+			          axis1comp = fabs(axis1comp);
+			          axis2comp = fabs(axis2comp);
+			          axis3comp = fabs(axis3comp);
                 axis1comp = pow(axis1comp,2);
                 axis2comp = pow(axis2comp,2);
                 axis3comp = pow(axis3comp,2);
@@ -1961,10 +1963,10 @@ void GrainGeneratorFunc::insert_precipitates(int numprecipitates)
               if(inside >= 0)
               {
                 int currentpoint = (xpoints*ypoints*plane)+(xpoints*row)+column;
-				insidelist[insidecount] = currentpoint;
-				if(insidecount >= (0.9*insidelist.size())) insidelist.resize(insidecount+100);
+				        insidelist[insidecount] = currentpoint;
+				        if(insidecount >= (0.9*insidelist.size())) insidelist.resize(insidecount+100);
                 insidecount++;
-				if(voxels[currentpoint].grainname > numgrains) badcount++;
+		      		  if(voxels[currentpoint].grainname > numgrains) badcount++;
               }
             }
           }
@@ -1990,8 +1992,8 @@ void GrainGeneratorFunc::insert_precipitates(int numprecipitates)
         voxels[point].grainname = i + numgrains;
       }
     }
-	int size = availablelist.size();
-	for(int p=0;p<size;p++)
+	size_t size = availablelist.size();
+	for(size_t p=0;p<size;p++)
 	{
 		int point = availablelist[p];
 		if(voxels[point].grainname > numgrains)
@@ -2547,12 +2549,12 @@ void  GrainGeneratorFunc::measure_misorientations ()
     q1[2] = grains[i].avg_quat[2];
     q1[3] = grains[i].avg_quat[3];
     q1[4] = grains[i].avg_quat[4];
-    int size = 0;
+    size_t size = 0;
     if (NULL != nlist)
     {
       size = nlist->size();
     }
-    for (int j = 0; j < size; j++)
+    for (size_t j = 0; j < size; j++)
     {
       int nname = nlist->at(j);
       double neighsurfarea = neighsurfarealist->at(j);

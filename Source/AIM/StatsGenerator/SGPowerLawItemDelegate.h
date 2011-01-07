@@ -126,7 +126,7 @@ class SGPowerLawItemDelegate : public QStyledItemDelegate
     void setEditorData(QWidget *editor, const QModelIndex &index) const
     {
       qint32 col = index.column();
-      bool ok = false;
+     // bool ok = false;
       if (col == SGPowerLawTableModel::Alpha || col == SGPowerLawTableModel::K || col == SGPowerLawTableModel::Beta)
       {
     //    double value = index.model()->data(index).toDouble(&ok);

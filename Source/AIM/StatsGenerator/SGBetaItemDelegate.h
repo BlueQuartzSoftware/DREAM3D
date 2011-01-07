@@ -116,7 +116,7 @@ class SGBetaItemDelegate : public QStyledItemDelegate
     void setEditorData(QWidget *editor, const QModelIndex &index) const
     {
       qint32 col = index.column();
-      bool ok = false;
+   //   bool ok = false;
       if (col == SGBetaTableModel::Alpha || col == SGBetaTableModel::Beta)
       {
    //     double value = index.model()->data(index).toDouble(&ok);
