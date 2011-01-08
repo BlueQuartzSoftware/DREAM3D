@@ -37,7 +37,6 @@
 #include "AIM/Common/Constants.h"
 #include "AIM/Common/Grain.h"
 #include "AIM/Common/Voxel.h"
-#include "AIM/Common/Bin.h"
 #include "AIM/Common/AIMRandomNG.h"
 #include "AIM/ANG/AbstractAngDataLoader.h"
 #include "AIM/Reconstruction/H5ReconStatsWriter.h"
@@ -86,8 +85,6 @@ public:
 	Voxel* voxels;
 	Voxel* voxelstemp;
 	vector<Grain> m_Grains;
-	Bin* eulerodf;
-	Bin* axisodf;
 
 	int **shifts;
 	int **arr;
@@ -171,13 +168,13 @@ public:
 	void find_centroids ();
 	void find_moments();
 	void find_axes();
-	void find_vectors();
+	void find_vectors(H5ReconStatsWriter::Pointer h5io);
 	void find_centroids2D();
 	void find_moments2D();
 	void find_axes2D();
-	void find_vectors2D();
-	void find_eulerodf();
-	void measure_misorientations();
+	void find_vectors2D(H5ReconStatsWriter::Pointer h5io);
+	void find_eulerodf(H5ReconStatsWriter::Pointer h5io);
+	void measure_misorientations(H5ReconStatsWriter::Pointer h5io);
 	void find_colors();
 	void find_convexities();
 	void find_schmids();

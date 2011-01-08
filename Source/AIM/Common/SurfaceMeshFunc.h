@@ -41,7 +41,6 @@
 #include <AIM/Common/Neighbor.h>
 #include <AIM/Common/Node.h>
 #include <AIM/Common/Segment.h>
-#include <AIM/Common/Bin.h>
 #include <AIM/Common/AIMRandomNG.h>
 #include <AIM/ANG/AngDataLoader.h>
 
