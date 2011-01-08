@@ -97,20 +97,20 @@ void GrainGeneratorFunc::initialize(int32_t m_NumGrains, int32_t m_ShapeClass, d
   grains.resize((numextragrains+1), Grain());
   if(crystruct == 1)
   {
-	  actualodf = new Bin[36*36*12];
-	  simodf = new Bin[36*36*12];
+	  actualodf = new double [36*36*12];
+	  simodf = new double [36*36*12];
   }
   if(crystruct == 2)
   {
-	  actualodf = new Bin[18*18*18];
-	  simodf = new Bin[18*18*18];
+	  actualodf = new  double [18*18*18];
+	  simodf = new double [18*18*18];
   }
-  axisodf = new Bin[18*18*18];
-  precipaxisodf = new Bin[18*18*18];
-  actualmdf = new Bin[36];
-  simmdf = new Bin[36];
-  actualmicrotex = new Bin[10];
-  simmicrotex = new Bin[10];
+  axisodf = new double [18*18*18];
+  precipaxisodf = new double [18*18*18];
+  actualmdf = new double [36];
+  simmdf = new double [36];
+  actualmicrotex = new double [10];
+  simmicrotex = new double [10];
 }
 void GrainGeneratorFunc::initialize2()
 {
@@ -264,7 +264,7 @@ int  GrainGeneratorFunc::readAxisOrientationData(H5ReconStatsReader::Pointer h5i
   for (size_t k = 0; k < size; k++)
   {
     totaldensity = totaldensity + density[k];
-    axisodf[k].density = totaldensity;
+    axisodf[k] = totaldensity;
   }
   return err;
 }
@@ -288,7 +288,7 @@ int GrainGeneratorFunc::readODFData(H5ReconStatsReader::Pointer h5io)
   }
   for (size_t i = 0; i < numbins; i++)
   {
-    actualodf[i].density = density[i];
+    actualodf[i] = density[i];
   }
   return err;
 }
@@ -310,7 +310,7 @@ int GrainGeneratorFunc::readMisorientationData(H5ReconStatsReader::Pointer h5io)
 
   for (size_t k = 0; k < numbins; k++)
   {
-    actualmdf[k].density = density[k];
+    actualmdf[k] = density[k];
   }
   return err;
 }
@@ -333,7 +333,7 @@ int GrainGeneratorFunc::readMicroTextureData(H5ReconStatsReader::Pointer h5io)
 
   for (size_t k = 0; k < numbins; k++)
   {
-    actualmdf[k].density = density[k];
+    actualmdf[k] = density[k];
   }
   return err;
 }
@@ -355,13 +355,12 @@ void  GrainGeneratorFunc::generate_grain(int gnum)
 	volgood = 1;
 	u = rg.Random();
 	diam = rg.RandNorm(avgdiam,sddiam);
-	if((fabs(diam-avgdiam)/sddiam) > 2.0) volgood = 0;
 	diam = exp(diam);
+	if(diam > (maxdiameter+1)) volgood = 0;
+	if(diam < mindiameter) volgood = 0;
 	vol = (4.0/3.0)*(m_pi)*((diam/2.0)*(diam/2.0)*(diam/2.0));
   }
   int diameter = int(diam);
-  if(diameter >= maxdiameter) diameter = maxdiameter;
-  if(diameter <= mindiameter) diameter = mindiameter;
   good = 0;
   while(good == 0)
   {
@@ -383,7 +382,7 @@ void  GrainGeneratorFunc::generate_grain(int gnum)
   int bin=0;
   for(int i=0;i<(18*18*18);i++)
   {
-	  double density = axisodf[i].density;
+	  double density = axisodf[i];
 	  if(random > density) bin = i;
 	  if(random < density) {break;}
   }
@@ -1269,7 +1268,7 @@ void  GrainGeneratorFunc::assign_eulers(int numgrains)
 	  totaldensity = 0;
 	  for(int j=0;j<numbins;j++)
 	  {
-		  double density = actualodf[j].density;
+		  double density = actualodf[j];
 		  totaldensity = totaldensity + density;
 		  if(random >= totaldensity) choose = j;
 	  }
@@ -1309,7 +1308,7 @@ void  GrainGeneratorFunc::assign_eulers(int numgrains)
 	  grains[i].avg_quat[4] = c*c2;
 	  if(grains[gnum].surfacegrain == 0)
 	  {
-		  simodf[choose].density = simodf[choose].density + (double(grains[i].numvoxels)*resx*resy*resz/totalvol);
+		  simodf[choose] = simodf[choose] + (double(grains[i].numvoxels)*resx*resy*resz/totalvol);
 	  }
   }
 }
@@ -1626,7 +1625,7 @@ int GrainGeneratorFunc::create_precipitates()
 	int bin=0;
 	for(int i=0;i<(18*18*18);i++)
 	{
-		double density = precipaxisodf[i].density;
+		double density = precipaxisodf[i];
 		if(random > density) bin = i;
 		if(random < density) {break;}
 	}
@@ -2207,11 +2206,11 @@ void GrainGeneratorFunc::matchCrystallography(const std::string &ErrorFile)
 		currentmdferror = 0;
 		for(int i=0;i<numbins;i++)
 		{
-			currentodferror = currentodferror + ((actualodf[i].density-simodf[i].density)*(actualodf[i].density-simodf[i].density));
+			currentodferror = currentodferror + ((actualodf[i]-simodf[i])*(actualodf[i]-simodf[i]));
 		}
 		for(int i=0;i<(36);i++)
 		{
-			currentmdferror = currentmdferror + ((actualmdf[i].density-simmdf[i].density)*(actualmdf[i].density-simmdf[i].density));
+			currentmdferror = currentmdferror + ((actualmdf[i]-simmdf[i])*(actualmdf[i]-simmdf[i]));
 		}
 		outFile << iterations << "	" << currentodferror << "	" << currentmdferror << endl;
 		iterations++;
@@ -2240,7 +2239,7 @@ void GrainGeneratorFunc::matchCrystallography(const std::string &ErrorFile)
 			totaldensity = 0;
 			for(int i=0;i<numbins;i++)
 			{
-				double density = actualodf[i].density;
+				double density = actualodf[i];
 				totaldensity = totaldensity + density;
 				if(random >= totaldensity) choose = i;
 			}
@@ -2275,8 +2274,8 @@ void GrainGeneratorFunc::matchCrystallography(const std::string &ErrorFile)
 			q1[2] = s*s1;
 			q1[3] = c*s2;
 			q1[4] = c*c2;
-			double odfchange = ((actualodf[choose].density - simodf[choose].density)*(actualodf[choose].density - simodf[choose].density)) - ((actualodf[choose].density - (simodf[choose].density+(double(grains[selectedgrain].numvoxels)*resx*resy*resz/totalvol)))*(actualodf[choose].density - (simodf[choose].density+(double(grains[selectedgrain].numvoxels)*resx*resy*resz/totalvol))));
-			odfchange = odfchange + (((actualodf[curodfbin].density - simodf[curodfbin].density)*(actualodf[curodfbin].density - simodf[curodfbin].density)) - ((actualodf[curodfbin].density - (simodf[curodfbin].density-(double(grains[selectedgrain].numvoxels)*resx*resy*resz/totalvol)))*(actualodf[curodfbin].density - (simodf[curodfbin].density-(double(grains[selectedgrain].numvoxels)*resx*resy*resz/totalvol)))));
+			double odfchange = ((actualodf[choose] - simodf[choose])*(actualodf[choose] - simodf[choose])) - ((actualodf[choose] - (simodf[choose]+(double(grains[selectedgrain].numvoxels)*resx*resy*resz/totalvol)))*(actualodf[choose] - (simodf[choose]+(double(grains[selectedgrain].numvoxels)*resx*resy*resz/totalvol))));
+			odfchange = odfchange + (((actualodf[curodfbin] - simodf[curodfbin])*(actualodf[curodfbin] - simodf[curodfbin])) - ((actualodf[curodfbin] - (simodf[curodfbin]-(double(grains[selectedgrain].numvoxels)*resx*resy*resz/totalvol)))*(actualodf[curodfbin] - (simodf[curodfbin]-(double(grains[selectedgrain].numvoxels)*resx*resy*resz/totalvol)))));
 			vector<int>* nlist = grains[selectedgrain].neighborlist;
 			vector<double>* misolist = grains[selectedgrain].misorientationlist;
 			vector<double>* neighborsurfarealist = grains[selectedgrain].neighborsurfarealist;
@@ -2300,8 +2299,8 @@ void GrainGeneratorFunc::matchCrystallography(const std::string &ErrorFile)
 	      }
 
 				int newmisobin = int(newmiso/5.0);
-				mdfchange = mdfchange + (((actualmdf[curmisobin].density-simmdf[curmisobin].density)*(actualmdf[curmisobin].density-simmdf[curmisobin].density)) - ((actualmdf[curmisobin].density-(simmdf[curmisobin].density-(neighsurfarea/totalsurfacearea)))*(actualmdf[curmisobin].density-(simmdf[curmisobin].density-(neighsurfarea/totalsurfacearea)))));
-				mdfchange = mdfchange + (((actualmdf[newmisobin].density-simmdf[newmisobin].density)*(actualmdf[newmisobin].density-simmdf[newmisobin].density)) - ((actualmdf[newmisobin].density-(simmdf[newmisobin].density+(neighsurfarea/totalsurfacearea)))*(actualmdf[newmisobin].density-(simmdf[newmisobin].density+(neighsurfarea/totalsurfacearea)))));
+				mdfchange = mdfchange + (((actualmdf[curmisobin]-simmdf[curmisobin])*(actualmdf[curmisobin]-simmdf[curmisobin])) - ((actualmdf[curmisobin]-(simmdf[curmisobin]-(neighsurfarea/totalsurfacearea)))*(actualmdf[curmisobin]-(simmdf[curmisobin]-(neighsurfarea/totalsurfacearea)))));
+				mdfchange = mdfchange + (((actualmdf[newmisobin]-simmdf[newmisobin])*(actualmdf[newmisobin]-simmdf[newmisobin])) - ((actualmdf[newmisobin]-(simmdf[newmisobin]+(neighsurfarea/totalsurfacearea)))*(actualmdf[newmisobin]-(simmdf[newmisobin]+(neighsurfarea/totalsurfacearea)))));
 			}
 			deltaerror = 4.0*odfchange + 0.25*mdfchange;
 			if(deltaerror > 0)
@@ -2310,8 +2309,8 @@ void GrainGeneratorFunc::matchCrystallography(const std::string &ErrorFile)
 				grains[selectedgrain].euler1 = chooseea1;
 				grains[selectedgrain].euler2 = chooseea2;
 				grains[selectedgrain].euler3 = chooseea3;
-				simodf[choose].density = simodf[choose].density + (double(grains[selectedgrain].numvoxels)*resx*resy*resz/totalvol);
-				simodf[curodfbin].density = simodf[curodfbin].density - (double(grains[selectedgrain].numvoxels)*resx*resy*resz/totalvol);
+				simodf[choose] = simodf[choose] + (double(grains[selectedgrain].numvoxels)*resx*resy*resz/totalvol);
+				simodf[curodfbin] = simodf[curodfbin] - (double(grains[selectedgrain].numvoxels)*resx*resy*resz/totalvol);
 				for(size_t j=0;j<nlist->size();j++)
 				{
 					int neighbor = nlist->at(j);
@@ -2332,8 +2331,8 @@ void GrainGeneratorFunc::matchCrystallography(const std::string &ErrorFile)
 
 					int newmisobin = int(newmiso/5.0);
 					misolist->at(j) = newmiso;
-					simmdf[curmisobin].density = simmdf[curmisobin].density - (neighsurfarea/totalsurfacearea);
-					simmdf[newmisobin].density = simmdf[newmisobin].density + (neighsurfarea/totalsurfacearea);
+					simmdf[curmisobin] = simmdf[curmisobin] - (neighsurfarea/totalsurfacearea);
+					simmdf[newmisobin] = simmdf[newmisobin] + (neighsurfarea/totalsurfacearea);
 				}
 //				currentodferror = currentodferror - odfchange;
 //				currentmdferror = currentmdferror - mdfchange;
@@ -2367,8 +2366,8 @@ void GrainGeneratorFunc::matchCrystallography(const std::string &ErrorFile)
 			if(crystruct == 1) g1odfbin = (g1euler3bin*36*36)+(g1euler2bin*36)+g1euler1bin, g2odfbin = (g2euler3bin*36*36)+(g2euler2bin*36)+g2euler1bin;
 			if(crystruct == 2) g1odfbin = (g1euler3bin*18*18)+(g1euler2bin*18)+g1euler1bin, g2odfbin = (g2euler3bin*18*18)+(g2euler2bin*18)+g2euler1bin;
 			double random = rg.Random();
-			double odfchange = ((actualodf[g1odfbin].density - simodf[g1odfbin].density)*(actualodf[g1odfbin].density - simodf[g1odfbin].density)) - ((actualodf[g1odfbin].density - (simodf[g1odfbin].density-(double(grains[selectedgrain1].numvoxels)*resx*resy*resz/totalvol)+(double(grains[selectedgrain2].numvoxels)*resx*resy*resz/totalvol)))*(actualodf[g1odfbin].density - (simodf[g1odfbin].density-(double(grains[selectedgrain1].numvoxels)*resx*resy*resz/totalvol)+(double(grains[selectedgrain2].numvoxels)*resx*resy*resz/totalvol))));
-			odfchange = odfchange + (((actualodf[g2odfbin].density - simodf[g2odfbin].density)*(actualodf[g2odfbin].density - simodf[g2odfbin].density)) - ((actualodf[g2odfbin].density - (simodf[g2odfbin].density-(double(grains[selectedgrain2].numvoxels)*resx*resy*resz/totalvol)+(double(grains[selectedgrain1].numvoxels)*resx*resy*resz/totalvol)))*(actualodf[g2odfbin].density - (simodf[g2odfbin].density-(double(grains[selectedgrain2].numvoxels)*resx*resy*resz/totalvol)+(double(grains[selectedgrain1].numvoxels)*resx*resy*resz/totalvol)))));
+			double odfchange = ((actualodf[g1odfbin] - simodf[g1odfbin])*(actualodf[g1odfbin] - simodf[g1odfbin])) - ((actualodf[g1odfbin] - (simodf[g1odfbin]-(double(grains[selectedgrain1].numvoxels)*resx*resy*resz/totalvol)+(double(grains[selectedgrain2].numvoxels)*resx*resy*resz/totalvol)))*(actualodf[g1odfbin] - (simodf[g1odfbin]-(double(grains[selectedgrain1].numvoxels)*resx*resy*resz/totalvol)+(double(grains[selectedgrain2].numvoxels)*resx*resy*resz/totalvol))));
+			odfchange = odfchange + (((actualodf[g2odfbin] - simodf[g2odfbin])*(actualodf[g2odfbin] - simodf[g2odfbin])) - ((actualodf[g2odfbin] - (simodf[g2odfbin]-(double(grains[selectedgrain2].numvoxels)*resx*resy*resz/totalvol)+(double(grains[selectedgrain1].numvoxels)*resx*resy*resz/totalvol)))*(actualodf[g2odfbin] - (simodf[g2odfbin]-(double(grains[selectedgrain2].numvoxels)*resx*resy*resz/totalvol)+(double(grains[selectedgrain1].numvoxels)*resx*resy*resz/totalvol)))));
 			vector<int>* nlist = grains[selectedgrain1].neighborlist;
 			vector<double>* misolist = grains[selectedgrain1].misorientationlist;
 			vector<double>* neighborsurfarealist = grains[selectedgrain1].neighborsurfarealist;
@@ -2402,8 +2401,8 @@ void GrainGeneratorFunc::matchCrystallography(const std::string &ErrorFile)
 	      }
 
 				int newmisobin = int(newmiso/5.0);
-				mdfchange = mdfchange + (((actualmdf[curmisobin].density-simmdf[curmisobin].density)*(actualmdf[curmisobin].density-simmdf[curmisobin].density)) - ((actualmdf[curmisobin].density-(simmdf[curmisobin].density-(neighsurfarea/totalsurfacearea)))*(actualmdf[curmisobin].density-(simmdf[curmisobin].density-(neighsurfarea/totalsurfacearea)))));
-				mdfchange = mdfchange + (((actualmdf[newmisobin].density-simmdf[newmisobin].density)*(actualmdf[newmisobin].density-simmdf[newmisobin].density)) - ((actualmdf[newmisobin].density-(simmdf[newmisobin].density+(neighsurfarea/totalsurfacearea)))*(actualmdf[newmisobin].density-(simmdf[newmisobin].density+(neighsurfarea/totalsurfacearea)))));
+				mdfchange = mdfchange + (((actualmdf[curmisobin]-simmdf[curmisobin])*(actualmdf[curmisobin]-simmdf[curmisobin])) - ((actualmdf[curmisobin]-(simmdf[curmisobin]-(neighsurfarea/totalsurfacearea)))*(actualmdf[curmisobin]-(simmdf[curmisobin]-(neighsurfarea/totalsurfacearea)))));
+				mdfchange = mdfchange + (((actualmdf[newmisobin]-simmdf[newmisobin])*(actualmdf[newmisobin]-simmdf[newmisobin])) - ((actualmdf[newmisobin]-(simmdf[newmisobin]+(neighsurfarea/totalsurfacearea)))*(actualmdf[newmisobin]-(simmdf[newmisobin]+(neighsurfarea/totalsurfacearea)))));
 			}
 			nlist = grains[selectedgrain2].neighborlist;
 			misolist = grains[selectedgrain2].misorientationlist;
@@ -2436,8 +2435,8 @@ void GrainGeneratorFunc::matchCrystallography(const std::string &ErrorFile)
 	        newmiso = MisorientationCalculations::getMisoQuatCubic(q1,q2,n1,n2,n3);
 	      }
 				int newmisobin = int(newmiso/5.0);
-				mdfchange = mdfchange + (((actualmdf[curmisobin].density-simmdf[curmisobin].density)*(actualmdf[curmisobin].density-simmdf[curmisobin].density)) - ((actualmdf[curmisobin].density-(simmdf[curmisobin].density-(neighsurfarea/totalsurfacearea)))*(actualmdf[curmisobin].density-(simmdf[curmisobin].density-(neighsurfarea/totalsurfacearea)))));
-				mdfchange = mdfchange + (((actualmdf[newmisobin].density-simmdf[newmisobin].density)*(actualmdf[newmisobin].density-simmdf[newmisobin].density)) - ((actualmdf[newmisobin].density-(simmdf[newmisobin].density+(neighsurfarea/totalsurfacearea)))*(actualmdf[newmisobin].density-(simmdf[newmisobin].density+(neighsurfarea/totalsurfacearea)))));
+				mdfchange = mdfchange + (((actualmdf[curmisobin]-simmdf[curmisobin])*(actualmdf[curmisobin]-simmdf[curmisobin])) - ((actualmdf[curmisobin]-(simmdf[curmisobin]-(neighsurfarea/totalsurfacearea)))*(actualmdf[curmisobin]-(simmdf[curmisobin]-(neighsurfarea/totalsurfacearea)))));
+				mdfchange = mdfchange + (((actualmdf[newmisobin]-simmdf[newmisobin])*(actualmdf[newmisobin]-simmdf[newmisobin])) - ((actualmdf[newmisobin]-(simmdf[newmisobin]+(neighsurfarea/totalsurfacearea)))*(actualmdf[newmisobin]-(simmdf[newmisobin]+(neighsurfarea/totalsurfacearea)))));
 			}
 			deltaerror = 4.0*odfchange + 0.25*mdfchange;
 			if(deltaerror > 0)
@@ -2449,8 +2448,8 @@ void GrainGeneratorFunc::matchCrystallography(const std::string &ErrorFile)
 				grains[selectedgrain2].euler1 = g1ea1;
 				grains[selectedgrain2].euler2 = g1ea2;
 				grains[selectedgrain2].euler3 = g1ea3;
-				simodf[g1odfbin].density = simodf[g1odfbin].density + (double(grains[selectedgrain2].numvoxels)*resx*resy*resz/totalvol) - (double(grains[selectedgrain1].numvoxels)*resx*resy*resz/totalvol);
-				simodf[g2odfbin].density = simodf[g2odfbin].density + (double(grains[selectedgrain1].numvoxels)*resx*resy*resz/totalvol) - (double(grains[selectedgrain2].numvoxels)*resx*resy*resz/totalvol);
+				simodf[g1odfbin] = simodf[g1odfbin] + (double(grains[selectedgrain2].numvoxels)*resx*resy*resz/totalvol) - (double(grains[selectedgrain1].numvoxels)*resx*resy*resz/totalvol);
+				simodf[g2odfbin] = simodf[g2odfbin] + (double(grains[selectedgrain1].numvoxels)*resx*resy*resz/totalvol) - (double(grains[selectedgrain2].numvoxels)*resx*resy*resz/totalvol);
 				nlist = grains[selectedgrain1].neighborlist;
 				misolist = grains[selectedgrain1].misorientationlist;
 				neighborsurfarealist = grains[selectedgrain1].neighborsurfarealist;
@@ -2484,8 +2483,8 @@ void GrainGeneratorFunc::matchCrystallography(const std::string &ErrorFile)
 
 					int newmisobin = int(newmiso/5.0);
 					misolist->at(j) = newmiso;
-					simmdf[curmisobin].density = simmdf[curmisobin].density - (neighsurfarea/totalsurfacearea);
-					simmdf[newmisobin].density = simmdf[newmisobin].density + (neighsurfarea/totalsurfacearea);
+					simmdf[curmisobin] = simmdf[curmisobin] - (neighsurfarea/totalsurfacearea);
+					simmdf[newmisobin] = simmdf[newmisobin] + (neighsurfarea/totalsurfacearea);
 				}
 				nlist = grains[selectedgrain2].neighborlist;
 				misolist = grains[selectedgrain2].misorientationlist;
@@ -2519,8 +2518,8 @@ void GrainGeneratorFunc::matchCrystallography(const std::string &ErrorFile)
 		      }
 					int newmisobin = int(newmiso/5.0);
 					misolist->at(j) = newmiso;
-					simmdf[curmisobin].density = simmdf[curmisobin].density - (neighsurfarea/totalsurfacearea);
-					simmdf[newmisobin].density = simmdf[newmisobin].density + (neighsurfarea/totalsurfacearea);
+					simmdf[curmisobin] = simmdf[curmisobin] - (neighsurfarea/totalsurfacearea);
+					simmdf[newmisobin] = simmdf[newmisobin] + (neighsurfarea/totalsurfacearea);
 				}
 //				currentodferror = currentodferror - odfchange;
 //				currentmdferror = currentmdferror - mdfchange;
@@ -2570,7 +2569,7 @@ void  GrainGeneratorFunc::measure_misorientations ()
       int misobin = int(w / 5.0);
       if (grains[i].surfacegrain == 0 && (nname > i || grains[nname].surfacegrain == 1))
       {
-        simmdf[misobin].density = simmdf[misobin].density + (neighsurfarea / totalsurfacearea);
+        simmdf[misobin] = simmdf[misobin] + (neighsurfarea / totalsurfacearea);
       }
     }
     grains[i].misorientationlist = new std::vector<double >(misolist.size());

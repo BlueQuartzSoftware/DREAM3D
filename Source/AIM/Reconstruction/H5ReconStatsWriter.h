@@ -61,13 +61,11 @@ class AIMCOMMON_EXPORT H5ReconStatsWriter
     MXA_INSTANCE_STRING_PROPERTY(FileName);
 
     //FIXME: We are NOT writing the Precipitate data?
-    int writeAxisOrientationData(Bin* axisodf,
-                                 AIM::Reconstruction::CrystalStructure crystruct,
-                                 double totalaxes);
+    int writeAxisOrientationData(double* axisodf, double totalaxes);
     int writeMicroTextureData(double* microbin, size_t nElements, double actualgrains);
     int writeMisorientationBinsData(double* misobins, size_t nElements);
     int writeODFData(AIM::Reconstruction::CrystalStructure crystruct,
-                     Bin* eulerodf, double totalvol);
+                     double* eulerodf, double totalvol);
     int writeStatsData(int maxdiameter, int mindiameter,
                        double avglogdiam, double sdlogdiam, double actualgrains,
                        const std::vector<std::vector<double> > &neighborhood,

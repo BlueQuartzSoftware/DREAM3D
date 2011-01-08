@@ -290,8 +290,8 @@ void Reconstruction::compute()
 
   CHECK_FOR_CANCELED(ReconstructionFunc)
   progressMessage(AIM_STRING("Finding Grain Pricipal Axes Vectors"), 61);
-  if(m_ZEndIndex-m_ZStartIndex > 1) m->find_vectors();
-  if(m_ZEndIndex-m_ZStartIndex == 1) m->find_vectors2D();
+  if(m_ZEndIndex-m_ZStartIndex > 1) m->find_vectors(h5io);
+  if(m_ZEndIndex-m_ZStartIndex == 1) m->find_vectors2D(h5io);
 
   CHECK_FOR_CANCELED(ReconstructionFunc)
   progressMessage(AIM_STRING("Refinding Neighbors"), 63);
@@ -303,11 +303,11 @@ void Reconstruction::compute()
 
   CHECK_FOR_CANCELED(ReconstructionFunc)
   progressMessage(AIM_STRING("Finding Euler ODF"), 66);
-  m->find_eulerodf();
+  m->find_eulerodf(h5io);
 
   CHECK_FOR_CANCELED(ReconstructionFunc)
   progressMessage(AIM_STRING("Measuring Misorientations"), 67);
-  m->measure_misorientations();
+  m->measure_misorientations(h5io);
 
   CHECK_FOR_CANCELED(ReconstructionFunc)
   progressMessage(AIM_STRING("Finding Grain IPF Colors"), 69);
@@ -330,15 +330,6 @@ void Reconstruction::compute()
   CHECK_FOR_CANCELED(ReconstructionFunc)
   progressMessage(AIM_STRING("Writing Grain Data"), 82);
   m->write_graindata(graindataFile);
-
-  CHECK_FOR_CANCELED(ReconstructionFunc)
-  progressMessage(AIM_STRING("Writing Axis Orientation File"), 84);
-  err = h5io->writeAxisOrientationData(m->axisodf, m->crystruct, m->totalaxes);
-
-
-  CHECK_FOR_CANCELED(ReconstructionFunc)
-  progressMessage(AIM_STRING("Writing Euler Angle File"), 86);
-  err = h5io->writeODFData(m->crystruct, m->eulerodf, m->totalvol);
 
   /** ********** This section writes the ASCII based vtk files for visualization *** */
 
