@@ -1,4 +1,3 @@
-
 /* ============================================================================
  * Copyright (c) 2010, Michael A. Jackson (BlueQuartz Software)
  * All rights reserved.
@@ -53,7 +52,9 @@
 //
 // -----------------------------------------------------------------------------
 StatsGenPlotWidget::StatsGenPlotWidget(QWidget *parent) :
-  QWidget(parent), m_TableModel(NULL), m_zoomer(NULL), m_picker(NULL), m_panner(NULL), m_grid(NULL), m_CurveType(StatsGen::LogNormal)
+  QWidget(parent), m_TableModel(NULL),
+    //m_zoomer(NULL), m_picker(NULL), m_panner(NULL), 
+    m_grid(NULL), m_CurveType(StatsGen::LogNormal)
 {
   this->setupUi(this);
   this->setupGui();
@@ -86,32 +87,62 @@ int StatsGenPlotWidget::writeDataToHDF5(QString hdf5File)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void StatsGenPlotWidget::setCurveType(StatsGen::CurveType curveType)
+void StatsGenPlotWidget::resetTableModel()
 {
-  m_CurveType = curveType;
-  switch(curveType)
+  QVector<qint32> bins;
+  // Get a copy of the bins from the current TableModel if available
+  if (NULL != m_TableModel)
   {
-    case StatsGen::Beta:
-      m_TableModel = new SGBetaTableModel;
-      break;
-    case StatsGen::LogNormal:
-      m_TableModel = new SGLogNormalTableModel;
-      break;
-    case StatsGen::Power:
-      m_TableModel = new SGPowerLawTableModel;
-      break;
-
-    default:
-      Q_ASSERT(false);
+    bins = m_TableModel->getBinNumbers();
   }
+
+  // Create a new Table Model
+  switch(m_CurveType)
+  {
+  case StatsGen::Beta:
+    m_TableModel = new SGBetaTableModel;
+    break;
+  case StatsGen::LogNormal:
+    m_TableModel = new SGLogNormalTableModel;
+    break;
+  case StatsGen::Power:
+    m_TableModel = new SGPowerLawTableModel;
+    break;
+
+  default:
+    Q_ASSERT(false);
+  }
+  
 
   m_TableView->setModel(m_TableModel);
   m_TableView->setItemDelegate(m_TableModel->getItemDelegate());
+  setBins(bins);
 
-  connect(m_TableModel, SIGNAL(layoutChanged()), this, SLOT(updatePlot()));
-connect(m_TableModel, SIGNAL(dataChanged(const QModelIndex &, const QModelIndex &)),
-    this, SLOT(updatePlot()));
+  connect(m_TableModel, SIGNAL(layoutChanged()),
+    this, SLOT(updatePlotCurves()));
+  connect(m_TableModel, SIGNAL(dataChanged(const QModelIndex &, const QModelIndex &)),
+    this, SLOT(updatePlotCurves()));
 
+  // Update the plots
+  updatePlotCurves();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void StatsGenPlotWidget::setCurveType(StatsGen::CurveType curveType)
+{
+  m_CurveType = curveType;
+  curveTypeCombo->setCurrentIndex(m_CurveType);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void StatsGenPlotWidget::on_curveTypeCombo_currentIndexChanged(int index)
+{
+  m_CurveType = static_cast<StatsGen::CurveType>(curveTypeCombo->currentIndex());
+  resetTableModel();
 }
 
 // -----------------------------------------------------------------------------
@@ -135,6 +166,11 @@ void StatsGenPlotWidget::setYAxisName(QString name)
 // -----------------------------------------------------------------------------
 void StatsGenPlotWidget::setupGui()
 {
+
+  curveTypeCombo->addItem(QString("Beta"));
+  curveTypeCombo->addItem(QString("Log Normal"));
+  curveTypeCombo->addItem(QString("Power Law"));
+
   // Setup the TableView and Table Models
   QHeaderView* headerView = new QHeaderView(Qt::Horizontal, m_TableView);
   headerView->setResizeMode(QHeaderView::Interactive);
@@ -155,17 +191,16 @@ void StatsGenPlotWidget::setupGui()
   m_grid->attach(m_PlotView);
 
   // Add the ability to pan the plots
-  m_panner = new QwtPlotPanner(m_PlotView->canvas());
-  m_panner->setMouseButton(Qt::MidButton);
+//  m_panner = new QwtPlotPanner(m_PlotView->canvas());
+//  m_panner->setMouseButton(Qt::MidButton);
 
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void StatsGenPlotWidget::updatePlot()
+void StatsGenPlotWidget::updatePlotCurves()
 {
-  // std::cout << "StatsGenPlotWidget::updatePlot" << std::endl;
   //Loop over each entry in the table
   QwtPlotCurve* curve = NULL;
 
@@ -355,42 +390,7 @@ void StatsGenPlotWidget::setBins(QVector<int > &binNumbers)
   m_TableView->resizeColumnsToContents();
   m_TableView->scrollToBottom();
   m_TableView->setFocus();
-#if 0
-  qint32 count = binNumbers.count();
-
-  // Remove all the current rows in the table model
-  m_TableModel->removeRows(0, m_TableModel->rowCount());
-
-  double mu = 1.0;
-
-  QStringList colorNames = QColor::colorNames();
-  qint32 colorOffset = 21;
-
-  // Now Populate the table data with the data that was passed in
-  for (qint32 i = 0; i < count; ++i)
-  {
-    if (!m_TableModel->insertRow(m_TableModel->rowCount()))
-    return;
-    m_TableView->resizeColumnsToContents();
-    m_TableView->scrollToBottom();
-    m_TableView->setFocus();
-    QModelIndex binNumberIndex = m_TableModel->index(m_TableModel->rowCount() - 1, SGAbstractTableModel::BinNumber);
-    m_TableView->setCurrentIndex(binNumberIndex);
-    m_TableModel->setData(binNumberIndex, QVariant(binNumbers[i]), Qt::EditRole);
-
-    QModelIndex muIndex = m_TableModel->index(m_TableModel->rowCount() - 1, StatsGenTableModel::Mu);
-    m_TableView->setCurrentIndex(muIndex);
-    m_TableModel->setData(muIndex, QVariant(mu++), Qt::EditRole);
-
-    QModelIndex colorIndex = m_TableModel->index(m_TableModel->rowCount() - 1, StatsGenTableModel::LineColor);
-    m_TableView->setCurrentIndex(colorIndex);
-    m_TableModel->setData(colorIndex, QVariant(colorNames[colorOffset++]), Qt::EditRole);
-    if (colorOffset == colorNames.count() )
-    {
-      colorOffset = colorNames.count() - 1;
-    }
-  }
-#endif
+  updatePlotCurves();
 }
 
 // -----------------------------------------------------------------------------

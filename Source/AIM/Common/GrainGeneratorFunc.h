@@ -163,11 +163,11 @@ public:
 
 	void generate_grain(int);
 	void assign_eulers(int);
-	void insert_grain(int);
-	void add_grain(int);
-	void remove_grain(int);
-	double costcheck_remove(int);
-	double costcheck_add(int);
+	void insert_grain(size_t grainNum);
+	void add_grain(size_t grainNum);
+	void remove_grain(size_t grainNum);
+	double costcheck_remove(size_t grainNum);
+	double costcheck_add(size_t grainNum);
 	void determine_neighbors();
 	double check_neighborhooderror(int gadd, int gremove);
 	double check_sizedisterror(int gadd, int gremove);
