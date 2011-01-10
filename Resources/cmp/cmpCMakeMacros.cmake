@@ -225,13 +225,6 @@ macro(PluginProperties targetName DEBUG_EXTENSION projectVersion binaryDir)
         DEBUG_POSTFIX ${DEBUG_EXTENSION}
         SUFFIX ".plugin" )
     
-    IF (APPLE AND BUILD_SHARED_LIBS)
-      SET_TARGET_PROPERTIES(${targetName}
-         PROPERTIES
-         LINK_FLAGS "-current_version ${projectVersion} -compatibility_version ${projectVersion}"
-      )
-    ENDIF (APPLE AND BUILD_SHARED_LIBS)
-    
     # Add the plugin to our list of plugins that will need to be installed
     if (CMAKE_BUILD_TYPE STREQUAL "Debug")
         file(APPEND ${binaryDir}/plugins.txt "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/lib${targetName}${DEBUG_EXTENSION}.plugin;")
