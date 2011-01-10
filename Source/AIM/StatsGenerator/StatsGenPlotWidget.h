@@ -75,20 +75,23 @@ class StatsGenPlotWidget : public QWidget, private Ui::StatsGenPlotWidget
 
     void setBins(QVector<int > &binNumbers);
 
-    protected slots:
-    void updatePlot();
+  protected slots:
+    void updatePlotCurves();
 
     void on_addRowBtn_clicked();
     void on_deleteRowBtn_clicked();
+    void on_curveTypeCombo_currentIndexChanged(int index);
 
   protected:
+    void resetTableModel();
+
 
   private:
     SGAbstractTableModel* m_TableModel;
 
-    QwtPlotZoomer* m_zoomer;
-    QwtPlotPicker* m_picker;
-    QwtPlotPanner* m_panner;
+//    QwtPlotZoomer* m_zoomer;
+//    QwtPlotPicker* m_picker;
+//    QwtPlotPanner* m_panner;
     QwtPlotGrid* m_grid;
     StatsGen::CurveType m_CurveType;
 

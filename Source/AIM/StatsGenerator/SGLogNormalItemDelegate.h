@@ -36,7 +36,8 @@
 #include <QtGui/QComboBox>
 #include <QtGui/QPainter>
 #include <QtGui/QStyleOptionViewItemV4>
-#include <QtGui/QDoubleSpinBox>
+#include <QtGui/QLineEdit>
+#include <QtGui/QDoubleValidator>
 #include <QtGui/QStyledItemDelegate>
 
 #include "StatsGen.h"
@@ -73,8 +74,10 @@ class SGLogNormalItemDelegate : public QStyledItemDelegate
     // -----------------------------------------------------------------------------
     QWidget* createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const
     {
-      QDoubleSpinBox* spin;
-      QDoubleSpinBox* spin2;
+      QLineEdit* avg;
+      QLineEdit* stdDev;
+      QDoubleValidator* avgValidator;
+      QDoubleValidator* stdDevValidator;
       QComboBox* colorCombo;
 
       qint32 col = index.column();
@@ -85,17 +88,19 @@ class SGLogNormalItemDelegate : public QStyledItemDelegate
           break;
 
         case SGLogNormalTableModel::Average:
-          spin = new QDoubleSpinBox(parent);
-          spin->setRange(0.0, 1000);
-          spin->setDecimals(5);
-          spin->setSingleStep(0.1);
-          return spin;
+          avg = new QLineEdit(parent);
+          avg->setFrame(false);
+          avgValidator = new QDoubleValidator(avg);
+          avgValidator->setDecimals(6);
+          avg->setValidator(avgValidator);
+          return avg;
         case SGLogNormalTableModel::StdDev:
-          spin2 = new QDoubleSpinBox(parent);
-          spin2->setRange(0.0, 1000);
-          spin2->setDecimals(5);
-          spin2->setSingleStep(0.1);
-          return spin2;
+          stdDev = new QLineEdit(parent);
+          stdDev->setFrame(false);
+          stdDevValidator = new QDoubleValidator(stdDev);
+          stdDevValidator->setDecimals(6);
+          stdDev->setValidator(stdDevValidator);
+          return stdDev;
         case SGLogNormalTableModel::LineColor:
           colorCombo = new ColorComboPicker(parent);
           return colorCombo;
@@ -111,13 +116,13 @@ class SGLogNormalItemDelegate : public QStyledItemDelegate
     void setEditorData(QWidget *editor, const QModelIndex &index) const
     {
       qint32 col = index.column();
-      bool ok = false;
+    //  bool ok = false;
       if (col == SGLogNormalTableModel::Average || col == SGLogNormalTableModel::StdDev)
       {
-        double value = index.model()->data(index).toDouble(&ok);
-        QDoubleSpinBox* spinBox = qobject_cast<QDoubleSpinBox* > (editor);
-        Q_ASSERT(spinBox);
-        spinBox->setValue(value);
+        //     double value = index.model()->data(index).toDouble(&ok);
+        QLineEdit* lineEdit = qobject_cast<QLineEdit* > (editor);
+        Q_ASSERT(lineEdit);
+        lineEdit->setText(index.model()->data(index).toString());
       }
       else if (col == SGLogNormalTableModel::LineColor)
       {
@@ -139,10 +144,11 @@ class SGLogNormalItemDelegate : public QStyledItemDelegate
       //  bool ok = false;
       if (col == SGLogNormalTableModel::Average || col == SGLogNormalTableModel::StdDev)
       {
-        QDoubleSpinBox* spinBox = qobject_cast<QDoubleSpinBox* > (editor);
-        Q_ASSERT(spinBox);
-        spinBox->interpretText();
-        model->setData(index, spinBox->value());
+        QLineEdit* lineEdit = qobject_cast<QLineEdit* > (editor);
+        Q_ASSERT(lineEdit);
+        bool ok = false;
+        double v = lineEdit->text().toDouble(&ok);
+        model->setData(index, v);
       }
       else if (col == SGLogNormalTableModel::LineColor)
       {

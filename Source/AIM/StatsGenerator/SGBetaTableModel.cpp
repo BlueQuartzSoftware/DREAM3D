@@ -348,7 +348,7 @@ void SGBetaTableModel::setBinNumbers(QVector<int > binNumbers)
 {
 
   qint32 count = binNumbers.count();
-
+  
   // Remove all the current rows in the table model
   removeRows(0, rowCount());
 
