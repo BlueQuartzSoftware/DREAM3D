@@ -2704,6 +2704,7 @@ void  ReconstructionFunc::find_vectors (H5ReconStatsWriter::Pointer h5io)
   }
   int err;
   err = h5io->writeAxisOrientationData(axisodf, totalaxes);
+  delete [] axisodf;
 }
 void  ReconstructionFunc::find_moments2D()
 {
@@ -2821,6 +2822,7 @@ void  ReconstructionFunc::find_vectors2D(H5ReconStatsWriter::Pointer h5io)
   }
   int err;
   err = h5io->writeAxisOrientationData(axisodf, totalaxes);
+  delete [] axisodf;
 }
 void  ReconstructionFunc::find_eulerodf (H5ReconStatsWriter::Pointer h5io)
 {
@@ -3251,17 +3253,21 @@ void  ReconstructionFunc::find_eulerodf (H5ReconStatsWriter::Pointer h5io)
 	}
 	texindex = texindex / (18 * 18 * 18);
 	texstrength = pow(texindex, 0.5);
+	delete [] eulerodf;
 }
 void  ReconstructionFunc::measure_misorientations (H5ReconStatsWriter::Pointer h5io)
 {
   size_t initialsize = 10;
   vector<double > misolist(initialsize, -1);
-  double n1;
-  double n2;
-  double n3;
+  double degtorad = m_pi/180.0;
+  double dim = pow((0.75*((m_pi/4.0)-sin((m_pi/4.0)))),(1.0/3.0));
+  double n1, n2, n3;
+  int miso1bin, miso2bin, miso3bin;
   double w;
   double q1[5];
   double q2[5];
+  double axis[3];
+  double denom = 0;
   for (int i = 1; i < numgrains; i++)
   {
     vector<int >* nlist = m_Grains[i].neighborlist;
@@ -3274,7 +3280,7 @@ void  ReconstructionFunc::measure_misorientations (H5ReconStatsWriter::Pointer h
     {
       size = nlist->size();
     }
-    misolist.resize(size, -1);
+    misolist.resize(size*3, -1);
     for (int j = 0; j < size; j++)
     {
       int nname = nlist->at(j);
@@ -3290,7 +3296,32 @@ void  ReconstructionFunc::measure_misorientations (H5ReconStatsWriter::Pointer h
       {
         w = MisorientationCalculations::getMisoQuatCubic(q1, q2, n1, n2, n3);
       }
-      misolist[j] = w;
+	  w = w*degtorad;
+	  denom = (n1*n1)+(n2*n2)+(n3*n3);
+	  denom = pow(denom,0.5);
+	  n1 = n1/denom;
+	  n2 = n2/denom;
+	  n3 = n3/denom;
+      if ( n1 >= n2 && n1 >= n3)
+      {
+        axis[0] = n1;
+        if (n2 > n3) { axis[1] = n2; axis[2] = n3; }
+        else { axis[1] = n3; axis[2] = n2; }
+      }
+      else if ( n2 >= n1 && n2 >= n3)
+      {
+        axis[0] = n2;
+        if (n1 > n3) { axis[1] = n1; axis[2] = n3; }
+        else { axis[1] = n3; axis[2] = n1; }
+      }
+      else if ( n1 >= n2 )
+      {
+        axis[1] = n1; axis[2] = n2; axis[0] = n3;
+      }
+      else { axis[2] = n1; axis[1] = n2; axis[0] = n3;}
+	  misolist[3*j] = n1*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
+      misolist[3*j+1] = n2*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
+      misolist[3*j+2] = n3*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));	  
     }
     m_Grains[i].misorientationlist = new std::vector<double >(misolist.size());
     m_Grains[i].misorientationlist->swap(misolist);
@@ -3298,33 +3329,42 @@ void  ReconstructionFunc::measure_misorientations (H5ReconStatsWriter::Pointer h
   }
   double actualgrains = 0;
   double misocount = 0;
-  double misobin[36];
+  double misobin[18*18*18];
   double microbin[10];
-  for (int e = 0; e < 36; e++)
+  for (int e = 0; e < 18*18*18; e++)
   {
     misobin[e] = 0;
     if (e < 10) microbin[e] = 0;
   }
+  int neigh, size;
+  double microcount = 0;
+  double nsa, miso1, miso2, miso3;
+  vector<int >* nlist;
+  vector<double >* mlist;
+  vector<double >* neighborsurfarealist;
   for (int l = 1; l < numgrains; l++)
   {
     if (m_Grains[l].surfacegrain == 0)
     {
-      double microcount = 0;
-      vector<int >* nlist = m_Grains[l].neighborlist;
-      vector<double >* misolist = m_Grains[l].misorientationlist;
-      vector<double >* neighborsurfarealist = m_Grains[l].neighborsurfarealist;
-      int size = int(misolist->size());
+      microcount = 0;
+      nlist = m_Grains[l].neighborlist;
+      mlist = m_Grains[l].misorientationlist;
+      neighborsurfarealist = m_Grains[l].neighborsurfarealist;
+      size = int(nlist->size());
       for (int k = 0; k < size; k++)
       {
-        int neigh = nlist->at(k);
-        double firstmiso = misolist->at(k);
-        double firstnsa = neighborsurfarealist->at(k);
-        int misocur = int(firstmiso / 5.0);
-        if (misocur == 36) misocur = 35;
-        if (firstmiso < 15) microcount++;
+        neigh = nlist->at(k);
+        miso1 = mlist->at(3*k);
+        miso2 = mlist->at(3*k+1);
+        miso3 = mlist->at(3*k+2);
+        nsa = neighborsurfarealist->at(k);
+		miso1bin = int(miso1*18.0/dim);
+		miso2bin = int(miso2*18.0/dim);
+		miso3bin = int(miso3*18.0/dim);
+        if (miso1 < 15) microcount++;
         if (neigh > l || m_Grains[neigh].surfacegrain == 1)
         {
-          misobin[misocur] = misobin[misocur] + (firstnsa / totalsurfacearea);
+          misobin[(18*18*miso3bin)+(18*miso2bin)+miso1bin] = misobin[(18*18*miso3bin)+(18*miso2bin)+miso1bin] + (nsa / totalsurfacearea);
           misocount++;
         }
       }
@@ -3341,8 +3381,9 @@ void  ReconstructionFunc::measure_misorientations (H5ReconStatsWriter::Pointer h
       microbin[microcur]++;
     }
   }
-  h5io->writeMisorientationBinsData(misobin, 36);
+  h5io->writeMisorientationBinsData(misobin, 18*18*18);
   h5io->writeMicroTextureData(microbin, 10, actualgrains);
+  delete [] misobin;
 }
 
 
