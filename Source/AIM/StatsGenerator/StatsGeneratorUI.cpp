@@ -218,8 +218,8 @@ void StatsGeneratorUI::setupGui()
   m_COverBPlot->setRowOperationEnabled(false);
 
   m_NeighborPlot->setPlotTitle(QString("Neighbors Distributions"));
-  m_NeighborPlot->setXAxisName(QString("Number of Neighbors"));
-  m_NeighborPlot->setYAxisName(QString("Frequency"));
+  m_NeighborPlot->setXAxisName(QString("Distance (Multiples of Diameter)"));
+  m_NeighborPlot->setYAxisName(QString("Number of Grains"));
   m_NeighborPlot->setCurveType(StatsGen::Power);
 
   plotSizeDistribution();
