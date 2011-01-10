@@ -3905,9 +3905,9 @@ void ReconstructionFunc::volume_stats(H5ReconStatsWriter::Pointer h5io)
 
 
   h5io->writeStatsData(maxdiameter, mindiameter,
-                       avglogdiam, sdlogdiam, actualgrains,
+                       avglogdiam, sdlogdiam,
                        neighborhoodfit, svbovera, svcovera, svcoverb,
-                       svschmid, svomega3);
+                       svomega3);
   h5io->writeMisorientationBinsData(misobin, 36);
   h5io->writeMicroTextureData(microbin, 10, actualgrains);
 }
@@ -4206,9 +4206,9 @@ void ReconstructionFunc::volume_stats2D(H5ReconStatsWriter::Pointer h5io)
     texstrength = pow(texindex,0.5);
   }
   h5io->writeStatsData(maxdiameter, mindiameter,
-                       avglogdiam, sdlogdiam, actualgrains,
+                       avglogdiam, sdlogdiam,
                        neighborhoodfit, svbovera, svcovera, svcoverb,
-                       svschmid, svomega3);
+                       svomega3);
   h5io->writeMisorientationBinsData(misobin, 36);
   h5io->writeMicroTextureData(microbin, 10, actualgrains);
 }
