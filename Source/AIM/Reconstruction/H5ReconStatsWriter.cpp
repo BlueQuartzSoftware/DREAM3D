@@ -263,9 +263,7 @@ int H5ReconStatsWriter::writeMicroTextureData(double* microbin, size_t nElements
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5ReconStatsWriter::writeAxisOrientationData(Bin* axisodf,
-                                                 AIM::Reconstruction::CrystalStructure crystruct,
-                                                 double totalaxes)
+int H5ReconStatsWriter::writeAxisOrientationData(double* axisodf, double totalaxes)
 {
   herr_t err = 0;
   herr_t retErr = 0;
@@ -276,7 +274,7 @@ int H5ReconStatsWriter::writeAxisOrientationData(Bin* axisodf,
   std::vector<double> data(size, 0.0);
   for (int i = 0; i < size; ++i)
   {
-    data[i] = axisodf[i].density / totalaxes;
+    data[i] = axisodf[i] / totalaxes;
   }
 
   std::vector<hsize_t> dims(1);
@@ -297,7 +295,7 @@ int H5ReconStatsWriter::writeAxisOrientationData(Bin* axisodf,
 //
 // -----------------------------------------------------------------------------
 int H5ReconStatsWriter::writeODFData(AIM::Reconstruction::CrystalStructure crystruct,
-                                     Bin* eulerodf, double totalvol)
+                                     double* eulerodf, double totalvol)
 {
   herr_t err = 0;
   herr_t retErr = 0;
@@ -311,7 +309,7 @@ int H5ReconStatsWriter::writeODFData(AIM::Reconstruction::CrystalStructure cryst
   std::vector<double> data(numbins, 0.0);
   for (size_t i = 0; i < numbins; i++)
   {
-    data[i] = eulerodf[i].density / totalvol;
+    data[i] = eulerodf[i] / totalvol;
   }
   std::vector<hsize_t> dims(1);
   dims[0] = numbins;

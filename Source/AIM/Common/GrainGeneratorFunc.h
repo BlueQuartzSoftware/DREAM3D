@@ -37,7 +37,6 @@
 #include "AIM/Common/Constants.h"
 #include "AIM/Common/Grain.h"
 #include "AIM/Common/Voxel.h"
-#include "AIM/Common/Bin.h"
 #include "AIM/Common/AIMRandomNG.h"
 #include "AIM/Reconstruction/H5ReconStatsReader.h"
 
@@ -73,15 +72,15 @@ public:
 
 	AIMRandomNG rg;
 
-	Bin* actualodf;
-	Bin* simodf;
-	Bin* axisodf;
-	Bin* precipaxisodf;
+	double* actualodf;
+	double* simodf;
+	double* axisodf;
+	double* precipaxisodf;
 	Voxel* voxels;
-	Bin* actualmdf;
-	Bin* simmdf;
-	Bin* actualmicrotex;
-	Bin* simmicrotex;
+	double* actualmdf;
+	double* simmdf;
+	double* actualmicrotex;
+	double* simmicrotex;
 
   Grain* precipitates;
   int* psizes;
