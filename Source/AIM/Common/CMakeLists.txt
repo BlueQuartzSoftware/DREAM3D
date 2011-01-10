@@ -53,7 +53,6 @@ SET (AIMCommon_SRCS
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Node.cpp
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Neighbor.cpp
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Segment.cpp
-    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Bin.cpp   
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/AIMRandomNG.cpp
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Quaternions.cpp
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/VTKFileUtils.cpp
@@ -74,7 +73,6 @@ SET (AIMCommon_HDRS
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Node.h
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Neighbor.h
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Segment.h
-    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Bin.h
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/AIMRandomNG.h
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/FeiConstants.h
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Constants.h

@@ -43,9 +43,7 @@ using namespace std;
 
 ReconstructionFunc::ReconstructionFunc() :
   voxels(NULL),
-  m_Grains(NULL),
-  eulerodf(NULL),
-  axisodf(NULL)
+  m_Grains(NULL)
 {
 
 }
@@ -57,8 +55,6 @@ ReconstructionFunc::~ReconstructionFunc()
   m_Grains.clear();
   delete [] graincenters;
   delete [] grainmoments;
-  delete [] eulerodf;
-  delete [] axisodf;
 
 }
 
@@ -102,9 +98,6 @@ void ReconstructionFunc::initialize(int nX, int nY, int nZ,
 
   m_Grains.resize(100, Grain());
   voxels = new Voxel[totalpoints];
-  if(crystruct == AIM::Reconstruction::Hexagonal) eulerodf = new Bin[36*36*12];
-  if(crystruct == AIM::Reconstruction::Cubic) eulerodf = new Bin[18*18*18];
-  axisodf = new Bin[18*18*18];
 }
 
 void ReconstructionFunc::cleanup_data()
@@ -2512,9 +2505,11 @@ void  ReconstructionFunc::find_axes ()
 	m_Grains[i].radius3 = r3;
   }
 }
-void  ReconstructionFunc::find_vectors ()
+void  ReconstructionFunc::find_vectors (H5ReconStatsWriter::Pointer h5io)
 {
   totalaxes = 0.0;
+  double *axisodf;
+  axisodf = new double [18*18*18];
   for(int i = 1; i < numgrains; i++)
   {
  //   int size = grains[i].numvoxels;
@@ -2701,12 +2696,15 @@ void  ReconstructionFunc::find_vectors ()
 				m_Grains[i].axiseuler2 = ea2;
 				m_Grains[i].axiseuler3 = ea3;
 				bin = (ea3bin*18*18)+(ea2bin*18)+(ea1bin);
-				axisodf[bin].density = axisodf[bin].density+1.0;
+				axisodf[bin] = axisodf[bin] + 1.0;
 				totalaxes = totalaxes+1.0;
 			}
 		}
     }
   }
+  int err;
+  err = h5io->writeAxisOrientationData(axisodf, totalaxes);
+  delete [] axisodf;
 }
 void  ReconstructionFunc::find_moments2D()
 {
@@ -2786,9 +2784,11 @@ void  ReconstructionFunc::find_axes2D()
 	m_Grains[i].radius2 = r2;
   }
 }
-void  ReconstructionFunc::find_vectors2D()
+void  ReconstructionFunc::find_vectors2D(H5ReconStatsWriter::Pointer h5io)
 {
   totalaxes = 0.0;
+  double *axisodf;
+  axisodf = new double [18*18*18];
   for(int i = 1; i < numgrains; i++)
   {
  //   int size = grains[i].numvoxels;
@@ -2816,14 +2816,20 @@ void  ReconstructionFunc::find_vectors2D()
 	{
 		m_Grains[i].axiseuler1 = ea1;
 		bin = ea1bin;
-		axisodf[bin].density = axisodf[bin].density+1.0;
+		axisodf[bin] = axisodf[bin] + 1.0;
 		totalaxes = totalaxes+1.0;
 	}
   }
+  int err;
+  err = h5io->writeAxisOrientationData(axisodf, totalaxes);
+  delete [] axisodf;
 }
-void  ReconstructionFunc::find_eulerodf ()
+void  ReconstructionFunc::find_eulerodf (H5ReconStatsWriter::Pointer h5io)
 {
 	totalvol = 0;
+	double *eulerodf;
+	if(crystruct == AIM::Reconstruction::Hexagonal) eulerodf = new double [36*36*12];
+	if(crystruct == AIM::Reconstruction::Cubic) eulerodf = new double [18*18*18];
 	double a = sqrt(3.0)/2.0;
 	double Oc[3][3];
 	double Os[3][3];
@@ -2983,7 +2989,7 @@ void  ReconstructionFunc::find_eulerodf ()
 						if(ea1 >= 0.0 && ea2 >= 0.0 && ea3 >= 0.0 && ea1 <= (m_pi) && ea2 <= (m_pi) && ea3 <= (m_pi/3.0))
 						{
 						  bin = (ea3bin*36*36)+(ea2bin*36)+(ea1bin);
-						  eulerodf[bin].density = eulerodf[bin].density+vol;
+						  eulerodf[bin] = eulerodf[bin] + vol;
 						  totalvol = totalvol + vol;
 						}
 					}
@@ -3206,7 +3212,7 @@ void  ReconstructionFunc::find_eulerodf ()
 						if(ea1 >= 0.0 && ea2 >= 0.0 && ea3 >= 0.0 && ea1 <= (m_pi/2.0) && ea2 <= (m_pi/2.0) && ea3 <= (m_pi/2.0))
 						{
 						  bin = (ea3bin*18*18)+(ea2bin*18)+(ea1bin);
-						  eulerodf[bin].density = eulerodf[bin].density+vol;
+						  eulerodf[bin] = eulerodf[bin] + vol;
 						  totalvol = totalvol + vol;
 						}
 					}
@@ -3214,17 +3220,54 @@ void  ReconstructionFunc::find_eulerodf ()
 			}
 		}
 	}
+	int err;
+	err = h5io->writeODFData(crystruct, eulerodf, totalvol);
+	double delta = m_pi / 18;
+	double texindex = 0;
+	double texstrength = 0;
+	int bin = 0;
+	for (int iter51 = 0; iter51 < 18; iter51++)
+	{
+		for (int iter52 = 0; iter52 < 18; iter52++)
+		{
+		  for (int iter53 = 0; iter53 < 18; iter53++)
+		  {
+			double f = 0;
+			bin = (iter51 * 18 * 18) + (iter52 * 18) + (iter53);
+			if (iter52 == 0)
+			{
+			  f = (m_pi * m_pi / 4) * (double(eulerodf[bin] / totalvol) / ((delta) * (delta) * cos(double((iter52 * delta) + (delta / 2)))));
+			}
+			if (iter52 == 18)
+			{
+			  f = (m_pi * m_pi / 4) * (double(eulerodf[bin] / totalvol) / ((delta) * (delta) * cos(double((iter52 * delta) - (delta / 2)))));
+			}
+			if (iter52 != 0 && iter52 != 18)
+			{
+			  f = (m_pi * m_pi / 4) * (double(eulerodf[bin] / totalvol) / ((delta) * (delta) * (cos(double((iter52 * delta) - (delta / 2)))
+				  - cos(double((iter52 * delta) + (delta / 2))))));
+			}
+			texindex = texindex + (f * f);
+		  }
+		}
+	}
+	texindex = texindex / (18 * 18 * 18);
+	texstrength = pow(texindex, 0.5);
+	delete [] eulerodf;
 }
-void  ReconstructionFunc::measure_misorientations ()
+void  ReconstructionFunc::measure_misorientations (H5ReconStatsWriter::Pointer h5io)
 {
   size_t initialsize = 10;
   vector<double > misolist(initialsize, -1);
-  double n1;
-  double n2;
-  double n3;
+  double degtorad = m_pi/180.0;
+  double dim = pow((0.75*((m_pi/4.0)-sin((m_pi/4.0)))),(1.0/3.0));
+  double n1, n2, n3;
+  int miso1bin, miso2bin, miso3bin;
   double w;
   double q1[5];
   double q2[5];
+  double axis[3];
+  double denom = 0;
   for (int i = 1; i < numgrains; i++)
   {
     vector<int >* nlist = m_Grains[i].neighborlist;
@@ -3237,7 +3280,7 @@ void  ReconstructionFunc::measure_misorientations ()
     {
       size = nlist->size();
     }
-    misolist.resize(size, -1);
+    misolist.resize(size*3, -1);
     for (int j = 0; j < size; j++)
     {
       int nname = nlist->at(j);
@@ -3253,12 +3296,94 @@ void  ReconstructionFunc::measure_misorientations ()
       {
         w = MisorientationCalculations::getMisoQuatCubic(q1, q2, n1, n2, n3);
       }
-      misolist[j] = w;
+	  w = w*degtorad;
+	  denom = (n1*n1)+(n2*n2)+(n3*n3);
+	  denom = pow(denom,0.5);
+	  n1 = n1/denom;
+	  n2 = n2/denom;
+	  n3 = n3/denom;
+      if ( n1 >= n2 && n1 >= n3)
+      {
+        axis[0] = n1;
+        if (n2 > n3) { axis[1] = n2; axis[2] = n3; }
+        else { axis[1] = n3; axis[2] = n2; }
+      }
+      else if ( n2 >= n1 && n2 >= n3)
+      {
+        axis[0] = n2;
+        if (n1 > n3) { axis[1] = n1; axis[2] = n3; }
+        else { axis[1] = n3; axis[2] = n1; }
+      }
+      else if ( n1 >= n2 )
+      {
+        axis[1] = n1; axis[2] = n2; axis[0] = n3;
+      }
+      else { axis[2] = n1; axis[1] = n2; axis[0] = n3;}
+	  misolist[3*j] = n1*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
+      misolist[3*j+1] = n2*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
+      misolist[3*j+2] = n3*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
     }
     m_Grains[i].misorientationlist = new std::vector<double >(misolist.size());
     m_Grains[i].misorientationlist->swap(misolist);
     misolist.clear();
   }
+  double actualgrains = 0;
+  double misocount = 0;
+  double misobin[18*18*18];
+  double microbin[10];
+  for (int e = 0; e < 18*18*18; e++)
+  {
+    misobin[e] = 0;
+    if (e < 10) microbin[e] = 0;
+  }
+  int neigh, size;
+  double microcount = 0;
+  double nsa, miso1, miso2, miso3;
+  vector<int >* nlist;
+  vector<double >* mlist;
+  vector<double >* neighborsurfarealist;
+  for (int l = 1; l < numgrains; l++)
+  {
+    if (m_Grains[l].surfacegrain == 0)
+    {
+      microcount = 0;
+      nlist = m_Grains[l].neighborlist;
+      mlist = m_Grains[l].misorientationlist;
+      neighborsurfarealist = m_Grains[l].neighborsurfarealist;
+      size = int(nlist->size());
+      for (int k = 0; k < size; k++)
+      {
+        neigh = nlist->at(k);
+        miso1 = mlist->at(3*k);
+        miso2 = mlist->at(3*k+1);
+        miso3 = mlist->at(3*k+2);
+        nsa = neighborsurfarealist->at(k);
+		miso1bin = int(miso1*18.0/dim);
+		miso2bin = int(miso2*18.0/dim);
+		miso3bin = int(miso3*18.0/dim);
+        if (miso1 < 15) microcount++;
+        if (neigh > l || m_Grains[neigh].surfacegrain == 1)
+        {
+          misobin[(18*18*miso3bin)+(18*miso2bin)+miso1bin] = misobin[(18*18*miso3bin)+(18*miso2bin)+miso1bin] + (nsa / totalsurfacearea);
+          misocount++;
+        }
+      }
+      if (size != 0)
+      {
+        microcount = microcount / size;
+      }
+      else
+      {
+        microcount = 0;
+      }
+      int microcur = int(microcount / 0.1);
+      if (microcur == 10) microcur = 9;
+      microbin[microcur]++;
+    }
+  }
+  h5io->writeMisorientationBinsData(misobin, 18*18*18);
+  h5io->writeMicroTextureData(microbin, 10, actualgrains);
+  delete [] misobin;
 }
 
 
@@ -3539,7 +3664,6 @@ void ReconstructionFunc::find_schmids()
 void ReconstructionFunc::volume_stats(H5ReconStatsWriter::Pointer h5io)
 {
   double actualgrains = 0;
-  double misocount = 0;
   double avgvol = 0;
   double avglnvol = 0;
   double avgbovera = 0;
@@ -3677,13 +3801,6 @@ void ReconstructionFunc::volume_stats(H5ReconStatsWriter::Pointer h5io)
   avgschmid = avgschmid / actualgrains;
   avgomega3 = avgomega3 / actualgrains;
   maxvol = maxvol / avgvol;
-  double misobin[36];
-  double microbin[10];
-  for (int e = 0; e < 36; e++)
-  {
-    misobin[e] = 0;
-    if (e < 10) microbin[e] = 0;
-  }
   double sdvol = 0;
   double sdlnvol = 0;
   double sdbovera = 0;
@@ -3834,89 +3951,19 @@ void ReconstructionFunc::volume_stats(H5ReconStatsWriter::Pointer h5io)
   svcoverbcr = svcoverbcr / (actualgrains * coverbvar);
   svschmidcr = svschmidcr / (actualgrains * schmidvar);
   svomega3cr = svomega3cr / (actualgrains * omega3var);
-  for (int l = 1; l < numgrains; l++)
-  {
-    if (m_Grains[l].surfacegrain == 0)
-    {
-      double microcount = 0;
-      vector<int >* nlist = m_Grains[l].neighborlist;
-      vector<double >* misolist = m_Grains[l].misorientationlist;
-      vector<double >* neighborsurfarealist = m_Grains[l].neighborsurfarealist;
-      int size = int(misolist->size());
-      for (int k = 0; k < size; k++)
-      {
-        int neigh = nlist->at(k);
-        double firstmiso = misolist->at(k);
-        double firstnsa = neighborsurfarealist->at(k);
-        int misocur = int(firstmiso / 5.0);
-        if (misocur == 36) misocur = 35;
-        if (firstmiso < 15) microcount++;
-        if (neigh > l || m_Grains[neigh].surfacegrain == 1)
-        {
-          misobin[misocur] = misobin[misocur] + (firstnsa / totalsurfacearea);
-          misocount++;
-        }
-      }
-      if (size != 0)
-      {
-        microcount = microcount / size;
-      }
-      else
-      {
-        microcount = 0;
-      }
-      int microcur = int(microcount / 0.1);
-      if (microcur == 10) microcur = 9;
-      microbin[microcur]++;
-    }
-  }
-  // double orand[15][2];
-  double delta = m_pi / 18;
-  double texindex = 0;
-  double texstrength = 0;
-  int bin = 0;
-  for (int iter51 = 0; iter51 < 18; iter51++)
-  {
-    for (int iter52 = 0; iter52 < 18; iter52++)
-    {
-      for (int iter53 = 0; iter53 < 18; iter53++)
-      {
-        double f = 0;
-        bin = (iter51 * 18 * 18) + (iter52 * 18) + (iter53);
-        if (iter52 == 0)
-        {
-          f = (m_pi * m_pi / 4) * (double(eulerodf[bin].density / totalvol) / ((delta) * (delta) * cos(double((iter52 * delta) + (delta / 2)))));
-        }
-        if (iter52 == 18)
-        {
-          f = (m_pi * m_pi / 4) * (double(eulerodf[bin].density / totalvol) / ((delta) * (delta) * cos(double((iter52 * delta) - (delta / 2)))));
-        }
-        if (iter52 != 0 && iter52 != 18)
-        {
-          f = (m_pi * m_pi / 4) * (double(eulerodf[bin].density / totalvol) / ((delta) * (delta) * (cos(double((iter52 * delta) - (delta / 2)))
-              - cos(double((iter52 * delta) + (delta / 2))))));
-        }
-        texindex = texindex + (f * f);
-      }
-    }
-    texindex = texindex / (18 * 18 * 18);
-    texstrength = pow(texindex, 0.5);
-  }
 
 
   h5io->writeStatsData(maxdiameter, mindiameter,
                        avglogdiam, sdlogdiam,
                        neighborhoodfit, svbovera, svcovera, svcoverb,
                        svomega3);
-  h5io->writeMisorientationBinsData(misobin, 36);
-  h5io->writeMicroTextureData(microbin, 10, actualgrains);
+
 }
 
 
 void ReconstructionFunc::volume_stats2D(H5ReconStatsWriter::Pointer h5io)
 {
   double actualgrains = 0;
-  double misocount = 0;
   double avgvol = 0;
   double avglnvol = 0;
   double avgbovera = 0;
@@ -4028,13 +4075,6 @@ void ReconstructionFunc::volume_stats2D(H5ReconStatsWriter::Pointer h5io)
   avgschmid = avgschmid/actualgrains;
 //  avgomega3 = avgomega3/actualgrains;
   maxvol = maxvol/avgvol;
-  double misobin[36];
-  double microbin[10];
-  for(int e = 0; e < 36; e++)
-  {
-    misobin[e] = 0;
-	if(e < 10) microbin[e] = 0;
-  }
   double sdvol = 0;
   double sdlnvol = 0;
   double sdbovera = 0;
@@ -4139,78 +4179,10 @@ void ReconstructionFunc::volume_stats2D(H5ReconStatsWriter::Pointer h5io)
   svboveracr = svboveracr/(actualgrains*boveravar);
   svschmidcr = svschmidcr/(actualgrains*schmidvar);
 //  svomega3cr = svomega3cr/(actualgrains*omega3var);
-  for(int l = 1; l < numgrains; l++)
-  {
-	if(m_Grains[l].surfacegrain == 0)
-    {
-      double microcount = 0;
-	  vector<int>* nlist = m_Grains[l].neighborlist;
-      vector<double>* misolist = m_Grains[l].misorientationlist;
-	  vector<double>* neighborsurfarealist = m_Grains[l].neighborsurfarealist;
-      int size = int(misolist->size());
-      for(int k=0;k<size;k++)
-      {
-        int neigh = nlist->at(k);
-        double firstmiso = misolist->at(k);
-        double firstnsa = neighborsurfarealist->at(k);
-        int misocur = int(firstmiso/5.0);
-        if(misocur == 36) misocur = 35;
-	    if(firstmiso < 15) microcount++;
-		if(neigh > l || m_Grains[neigh].surfacegrain == 1)
-		{
-	        misobin[misocur] = misobin[misocur] + (firstnsa/totalsurfacearea);
-	        misocount++;
-		}
-      }
-      if (size != 0 )
-	  {
-        microcount = microcount/size;
-      }
-      else
-      {
-        microcount = 0;
-      }
-      int microcur = int(microcount/0.1);
-      if(microcur == 10) microcur = 9;
-      microbin[microcur]++;
-    }
-  }
-  double delta = m_pi/18;
-  double texindex = 0;
-  double texstrength = 0;
-  int bin = 0;
-  for(int iter51 = 0; iter51 < 18; iter51++)
-  {
-    for(int iter52 = 0; iter52 < 18; iter52++)
-    {
-      for(int iter53 = 0; iter53 < 18; iter53++)
-      {
-        double f = 0;
-		bin = (iter51*18*18)+(iter52*18)+(iter53);
-        if(iter52 == 0)
-        {
-			f = (m_pi*m_pi/4)*(double(eulerodf[bin].density/totalvol)/((delta)*(delta)*cos(double((iter52*delta)+(delta/2)))));
-        }
-        if(iter52 == 18)
-        {
-			f = (m_pi*m_pi/4)*(double(eulerodf[bin].density/totalvol)/((delta)*(delta)*cos(double((iter52*delta)-(delta/2)))));
-        }
-        if(iter52 != 0 && iter52 != 18)
-        {
-			f = (m_pi*m_pi/4)*(double(eulerodf[bin].density/totalvol)/((delta)*(delta)*(cos(double((iter52*delta)-(delta/2)))-cos(double((iter52*delta)+(delta/2))))));
-        }
-        texindex = texindex + (f*f);
-      }
-    }
-    texindex = texindex/(18*18*18);
-    texstrength = pow(texindex,0.5);
-  }
   h5io->writeStatsData(maxdiameter, mindiameter,
                        avglogdiam, sdlogdiam,
                        neighborhoodfit, svbovera, svcovera, svcoverb,
                        svomega3);
-  h5io->writeMisorientationBinsData(misobin, 36);
-  h5io->writeMicroTextureData(microbin, 10, actualgrains);
 }
 
 #define WRITE_VTK_GRAIN_HEADER()\
