@@ -192,7 +192,7 @@ public:
 	double incompletebetafe(double, double, double, double, double);
 	double incompletebetafe2(double, double, double, double, double);
 	double incompletebetaps(double, double, double, double);
-	void write_graindata(string, string);
+	void write_graindata(string);
 	double find_xcoord(long);
 	double find_ycoord(long);
 	double find_zcoord(long);
