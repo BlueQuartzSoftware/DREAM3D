@@ -3268,9 +3268,10 @@ void  ReconstructionFunc::measure_misorientations (H5ReconStatsWriter::Pointer h
   double q2[5];
   double axis[3];
   double denom = 0;
+  vector<int >* nlist;
   for (int i = 1; i < numgrains; i++)
   {
-    vector<int >* nlist = m_Grains[i].neighborlist;
+    nlist = m_Grains[i].neighborlist;
     q1[1] = m_Grains[i].avg_quat[1];
     q1[2] = m_Grains[i].avg_quat[2];
     q1[3] = m_Grains[i].avg_quat[3];
@@ -3284,52 +3285,56 @@ void  ReconstructionFunc::measure_misorientations (H5ReconStatsWriter::Pointer h
     for (int j = 0; j < size; j++)
     {
       int nname = nlist->at(j);
-      q2[1] = m_Grains[nname].avg_quat[1];
-      q2[2] = m_Grains[nname].avg_quat[2];
-      q2[3] = m_Grains[nname].avg_quat[3];
-      q2[4] = m_Grains[nname].avg_quat[4];
-      if (crystruct == AIM::Reconstruction::Hexagonal)
-      {
-        w = MisorientationCalculations::getMisoQuatHexagonal(q1, q2, n1, n2, n3);
-      }
-      if (crystruct == AIM::Reconstruction::Cubic)
-      {
-        w = MisorientationCalculations::getMisoQuatCubic(q1, q2, n1, n2, n3);
-      }
-	  w = w*degtorad;
-	  denom = (n1*n1)+(n2*n2)+(n3*n3);
-	  denom = pow(denom,0.5);
-	  n1 = n1/denom;
-	  n2 = n2/denom;
-	  n3 = n3/denom;
-      if ( n1 >= n2 && n1 >= n3)
-      {
-        axis[0] = n1;
-        if (n2 > n3) { axis[1] = n2; axis[2] = n3; }
-        else { axis[1] = n3; axis[2] = n2; }
-      }
-      else if ( n2 >= n1 && n2 >= n3)
-      {
-        axis[0] = n2;
-        if (n1 > n3) { axis[1] = n1; axis[2] = n3; }
-        else { axis[1] = n3; axis[2] = n1; }
-      }
-      else if ( n1 >= n2 )
-      {
-        axis[1] = n1; axis[2] = n2; axis[0] = n3;
-      }
-      else { axis[2] = n1; axis[1] = n2; axis[0] = n3;}
-	  misolist[3*j] = n1*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
-      misolist[3*j+1] = n2*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
-      misolist[3*j+2] = n3*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));	  
-    }
+	  if(nname > 0)
+	  {
+	      q2[1] = m_Grains[nname].avg_quat[1];
+	      q2[2] = m_Grains[nname].avg_quat[2];
+	      q2[3] = m_Grains[nname].avg_quat[3];
+	      q2[4] = m_Grains[nname].avg_quat[4];
+	      if (crystruct == AIM::Reconstruction::Hexagonal)
+	      {
+	        w = MisorientationCalculations::getMisoQuatHexagonal(q1, q2, n1, n2, n3);
+	      }
+	      if (crystruct == AIM::Reconstruction::Cubic)
+	      {
+	        w = MisorientationCalculations::getMisoQuatCubic(q1, q2, n1, n2, n3);
+	      }
+		  w = w*degtorad;
+		  denom = (n1*n1)+(n2*n2)+(n3*n3);
+		  denom = pow(denom,0.5);
+		  n1 = n1/denom;
+		  n2 = n2/denom;
+		  n3 = n3/denom;
+	      if ( n1 >= n2 && n1 >= n3)
+	      {
+	        axis[0] = n1;
+	        if (n2 > n3) { axis[1] = n2; axis[2] = n3; }
+	        else { axis[1] = n3; axis[2] = n2; }
+	      }
+	      else if ( n2 >= n1 && n2 >= n3)
+	      {
+	        axis[0] = n2;
+	        if (n1 > n3) { axis[1] = n1; axis[2] = n3; }
+	        else { axis[1] = n3; axis[2] = n1; }
+	      }
+	      else if ( n1 >= n2 )	
+	      {
+	        axis[1] = n1; axis[2] = n2; axis[0] = n3;
+	      }
+	      else { axis[2] = n1; axis[1] = n2; axis[0] = n3;}
+		  misolist[3*j] = axis[0]*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
+	      misolist[3*j+1] = axis[1]*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
+	      misolist[3*j+2] = axis[2]*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));	  
+	    }
+	}
     m_Grains[i].misorientationlist = new std::vector<double >(misolist.size());
     m_Grains[i].misorientationlist->swap(misolist);
     misolist.clear();
   }
   double actualgrains = 0;
   double misocount = 0;
-  double misobin[18*18*18];
+  double *misobin;
+  misobin = new double [18*18*18];
   double microbin[10];
   for (int e = 0; e < 18*18*18; e++)
   {
@@ -3339,7 +3344,6 @@ void  ReconstructionFunc::measure_misorientations (H5ReconStatsWriter::Pointer h
   int neigh, size;
   double microcount = 0;
   double nsa, miso1, miso2, miso3;
-  vector<int >* nlist;
   vector<double >* mlist;
   vector<double >* neighborsurfarealist;
   for (int l = 1; l < numgrains; l++)
