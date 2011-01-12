@@ -164,7 +164,7 @@ TARGET_LINK_LIBRARIES( ${PROJECT_NAME}
 set(AppNeedsPlugins "0")
 cmp_InstallationSupport(${PROJECT_NAME} 
                         ${EXE_DEBUG_EXTENSION} 
-                        ${StatsGenerator_BINARY_DIR} 
+                        ${${PROJECT_NAME}_BINARY_DIR} 
                         "${AppNeedsPlugins}" 
                         "${PROJECT_INSTALL_EXECUTABLES}"
                         "Applications"

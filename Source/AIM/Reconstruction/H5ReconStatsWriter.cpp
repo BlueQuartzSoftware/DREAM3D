@@ -85,12 +85,11 @@ H5ReconStatsWriter::Pointer H5ReconStatsWriter::New(const std::string &filename)
 //
 // -----------------------------------------------------------------------------
 int H5ReconStatsWriter::writeStatsData(int maxdiameter, int mindiameter,
-                                       double avglogdiam, double sdlogdiam, double actualgrains,
+                                       double avglogdiam, double sdlogdiam,
                                        const std::vector<std::vector<double> > &neighborhoodfit,
                                        const std::vector<std::vector<double> > &svbovera,
                                        const std::vector<std::vector<double> > &svcovera,
                                        const std::vector<std::vector<double> > &svcoverb,
-                                       const std::vector<std::vector<double> > &svschmid,
                                        const std::vector<std::vector<double> > &svomega3)
 {
   herr_t err = 0;
