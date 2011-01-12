@@ -356,7 +356,7 @@ void  GrainGeneratorFunc::generate_grain(int gnum)
 	u = rg.Random();
 	diam = rg.RandNorm(avgdiam,sddiam);
 	diam = exp(diam);
-	if(diam > (maxdiameter+1)) volgood = 0;
+	if(diam >= (maxdiameter)) volgood = 0;
 	if(diam < mindiameter) volgood = 0;
 	vol = (4.0/3.0)*(m_pi)*((diam/2.0)*(diam/2.0)*(diam/2.0));
   }
