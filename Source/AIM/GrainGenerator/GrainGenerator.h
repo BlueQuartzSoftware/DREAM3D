@@ -62,7 +62,7 @@ Q_OBJECT
     virtual ~GrainGenerator();
 
 
-    MXA_INSTANCE_STRING_PROPERTY(InputDirectory)
+    MXA_INSTANCE_STRING_PROPERTY(H5StatsFile)
     MXA_INSTANCE_STRING_PROPERTY(OutputDirectory)
     MXA_INSTANCE_PROPERTY(int, NumGrains)
     MXA_INSTANCE_PROPERTY(int, ShapeClass)

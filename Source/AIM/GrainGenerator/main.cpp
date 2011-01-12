@@ -62,8 +62,8 @@ int main(int argc, char **argv)
     // Handle program options passed on command line.
     TCLAP::CmdLine cmd("AIMRepresentation Grain Generator", ' ', AIMRepresentation::Version::Complete);
 
-    TCLAP::ValueArg<std::string>   inputDir( "i", "inputDir", "Input Directory", true, "", "Input Directory");
-    cmd.add(inputDir);
+    TCLAP::ValueArg<std::string>   h5StatsFile( "i", "input", "HDF5 Stats File", true, "", "HDF5 Stats File");
+    cmd.add(h5StatsFile);
 
     TCLAP::ValueArg<std::string > outputDir("", "outputDir", "Output Directory", true, "", "Output Directory");
     cmd.add(outputDir);
@@ -99,7 +99,7 @@ int main(int argc, char **argv)
 
 
     GrainGenerator::Pointer r = GrainGenerator::New();
-    r->setInputDirectory(inputDir.getValue());
+    r->setH5StatsFile(h5StatsFile.getValue());
     r->setOutputDirectory(outputDir.getValue());
     r->setNumGrains(numGrains.getValue());
     r->setShapeClass(shapeClass.getValue());
