@@ -2828,8 +2828,22 @@ void  ReconstructionFunc::find_eulerodf (H5ReconStatsWriter::Pointer h5io)
 {
 	totalvol = 0;
 	double *eulerodf;
-	if(crystruct == AIM::Reconstruction::Hexagonal) eulerodf = new double [36*36*12];
-	if(crystruct == AIM::Reconstruction::Cubic) eulerodf = new double [18*18*18];
+	if(crystruct == AIM::Reconstruction::Hexagonal)
+	{
+		eulerodf = new double [36*36*12];
+		for(int i=0;i<36*36*12;i++)
+		{
+			eulerodf[i] = 0.0;
+		}
+	}
+	if(crystruct == AIM::Reconstruction::Cubic)
+	{
+		eulerodf = new double [18*18*18];
+		for(int i=0;i<18*18*18;i++)
+		{
+			eulerodf[i] = 0.0;
+		}
+	}
 	double a = sqrt(3.0)/2.0;
 	double Oc[3][3];
 	double Os[3][3];
