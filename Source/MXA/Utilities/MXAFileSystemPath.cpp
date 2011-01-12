@@ -59,10 +59,10 @@
 
 #elif defined (__APPLE__)
 
-#define MXA_STATBUF    struct stat64
-#define MXA_STATBUF4TSTAT  struct stat64
-#define MXA_STAT     stat64
-#define MXA_FSTAT    fstat64
+#define MXA_STATBUF    struct stat
+#define MXA_STATBUF4TSTAT  struct stat
+#define MXA_STAT     stat
+#define MXA_FSTAT    fstat
 
 #define MXA_STAT_REG   S_IFREG
 #define MXA_STAT_DIR   S_IFDIR

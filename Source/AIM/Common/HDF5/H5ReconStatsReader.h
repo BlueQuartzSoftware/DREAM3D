@@ -42,7 +42,7 @@
 
 #include "AIM/Common/AIMCommonConfiguration.h"
 #include "AIM/Common/Constants.h"
-#include "AIM/Common/Bin.h"
+
 
 
 #define OPEN_HDF5_FILE(fileId, filename)\

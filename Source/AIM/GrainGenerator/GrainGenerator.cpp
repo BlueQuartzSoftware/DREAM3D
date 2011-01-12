@@ -13,7 +13,7 @@
 //#include "AIM/ANG/AngDirectoryPatterns.h"
 //#include "AIM/ANG/AngReader.h"
 //#include "AIM/ANG/AngDataLoader.h"
-#include "AIM/Reconstruction/H5ReconStatsReader.h"
+#include "AIM/Common/HDF5/H5ReconStatsReader.h"
 #include <MXA/Utilities/MXADir.h>
 
 
@@ -64,7 +64,7 @@ QObject* parent
 #if AIM_USE_QT
 QThread(parent),
 #endif
-m_InputDirectory("."),
+m_H5StatsFile(""),
 m_OutputDirectory("."),
 m_NumGrains(0),
 m_ShapeClass(0),
@@ -112,7 +112,7 @@ void GrainGenerator::compute()
   int err = 0;
 
 
-  H5ReconStatsReader::Pointer h5reader = H5ReconStatsReader::New(m_InputDirectory + MXADir::Separator + AIM::Reconstruction::H5StatisticsFile);
+  H5ReconStatsReader::Pointer h5reader = H5ReconStatsReader::New(m_H5StatsFile);
   if (h5reader.get() == NULL)
   {
     progressMessage(AIM_STRING("Error Opening HDF5 Stats File. Nothing generated"), 100 );
@@ -128,7 +128,7 @@ void GrainGenerator::compute()
 
 
    m = GrainGeneratorFunc::New();
-   m->initialize(m_NumGrains, m_ShapeClass, m_XResolution, m_YResolution, m_ZResolution, 
+   m->initialize(m_NumGrains, m_ShapeClass, m_XResolution, m_YResolution, m_ZResolution,
 			  m_FillingErrorWeight, m_NeighborhoodErrorWeight, m_SizeDistErrorWeight,
               m_Precipitates, m_CrystalStructure, m_FractionPrecipitates);
 
