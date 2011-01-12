@@ -46,7 +46,7 @@ ENDMACRO (cmp_IDE_SOURCE_PROPERTIES NAME HEADERS SOURCES INSTALL_FILES)
 macro(cmp_InstallationSupport EXE_NAME EXE_DEBUG_EXTENSION EXE_BINARY_DIR 
                                 appNeedsPlugins installFiles comp dest lib_search_dirs)
 
-if (false)
+if (1)
     message(STATUS "EXE_NAME: ${EXE_NAME}")
     message(STATUS "EXE_DEBUG_EXTENSION: ${EXE_DEBUG_EXTENSION}")
     message(STATUS "EXE_BINARY_DIR: ${EXE_BINARY_DIR}")

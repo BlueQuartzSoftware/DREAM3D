@@ -24,8 +24,8 @@
 
 
 #include "AIM/ANG/H5AngDataLoader.h"
-#include "AIM/HDF5/AIM_H5VtkDataWriter.h"
-#include "AIM/Reconstruction/H5ReconStatsWriter.h"
+#include "AIM/Common/HDF5/AIM_H5VtkDataWriter.h"
+#include "AIM/Common/HDF5/H5ReconStatsWriter.h"
 
 
 

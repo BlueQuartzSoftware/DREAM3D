@@ -949,14 +949,13 @@ void RepresentationUI::rec_ThreadProgressed(int val)
 // -----------------------------------------------------------------------------
 void RepresentationUI::gg_SetupGui()
 {
-  gg_inputfile_msg->setText("");
   gg_outputfile_msg->setText("");
 
-  if (NULL == gg_InputDir->completer()) {
-    QR3DFileCompleter* com = new QR3DFileCompleter(this, true);
-    gg_InputDir->setCompleter(com);
+  if (NULL == gg_H5StatisticsFile->completer()) {
+    QR3DFileCompleter* com = new QR3DFileCompleter(this, false);
+    gg_H5StatisticsFile->setCompleter(com);
     QObject::connect( com, SIGNAL(activated(const QString &)),
-             this, SLOT(on_gg_InputDir_textChanged(const QString &)));
+             this, SLOT(on_gg_StatisticsFile_textChanged(const QString &)));
   }
 
   if (NULL == gg_OutputDir->completer()) {
@@ -979,7 +978,7 @@ void RepresentationUI::gg_SetupGui()
   }
   messageLabel->setText(msg);
 
-  m_WidgetList << gg_InputDir << gg_InputDirBtn << gg_OutputDir << gg_OutputDirBtn;
+  m_WidgetList << gg_H5StatisticsFile << gg_H5StatsFileBtn << gg_OutputDir << gg_OutputDirBtn;
   m_WidgetList << gg_CrystalStructure << gg_NumGrains << gg_XResolution << gg_YResolution << gg_ZResolution << gg_FillingErrorWeight;
   m_WidgetList << gg_NeighborhoodErrorWeight << gg_SizeDistErrorWeight << gg_FractionPrecipitates;
   m_WidgetList << gg_ShapeClass << gg_Precipitates << gg_AlreadyFormed;
@@ -992,7 +991,7 @@ void RepresentationUI::gg_SetupGui()
 void RepresentationUI::gg_SaveSettings(QSettings &prefs)
 {
   prefs.beginGroup("GrainGenerator");
-  WRITE_STRING_SETTING(prefs, gg_InputDir)
+  WRITE_STRING_SETTING(prefs, gg_H5StatisticsFile)
   WRITE_STRING_SETTING(prefs, gg_OutputDir)
   WRITE_SETTING(prefs, gg_XResolution )
   WRITE_SETTING(prefs, gg_YResolution )
@@ -1021,7 +1020,7 @@ void RepresentationUI::gg_LoadSettings(QSettings &prefs)
   double d;
 
   prefs.beginGroup("GrainGenerator");
-  READ_FILEPATH_SETTING(prefs, gg_InputDir, "");
+  READ_FILEPATH_SETTING(prefs, gg_H5StatisticsFile, "");
   READ_FILEPATH_SETTING(prefs, gg_OutputDir, "");
   READ_SETTING(prefs, gg_XResolution, ok, d, 0.25 , Double);
   READ_SETTING(prefs, gg_YResolution, ok, d, 0.25 , Double);
@@ -1046,7 +1045,7 @@ void RepresentationUI::gg_LoadSettings(QSettings &prefs)
 void RepresentationUI::gg_CheckIOFiles()
 {
 
-  CHECK_QLABEL_INPUT_FILE_EXISTS(AIM::Reconstruction, gg_, H5StatisticsFile)
+ // CHECK_QLABEL_INPUT_FILE_EXISTS(AIM::Reconstruction, gg_, H5StatisticsFile)
 
 
   CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::SyntheticBuilder, gg_, CubeFile)
@@ -1086,20 +1085,15 @@ void RepresentationUI::on_gg_AlreadyFormed_stateChanged(int currentState)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RepresentationUI::on_gg_InputDirBtn_clicked()
+void RepresentationUI::on_gg_H5StatsFileBtn_clicked()
 {
- // std::cout << "on_gg_InputDirBtn_clicked" << std::endl;
-  QString outputFile = this->m_OpenDialogLastDirectory + QDir::separator();
-  outputFile = QFileDialog::getExistingDirectory(this, tr("Select Input Directory"), outputFile);
-  if (!outputFile.isNull())
-  {
-    this->gg_InputDir->setText(outputFile);
-    if (_verifyPathExists(outputFile, gg_InputDir) == true)
-    {
-      gg_CheckIOFiles(); // Rescan for files in the input and output directory
-    }
-  }
-
+  QString file = QFileDialog::getOpenFileName(this, tr("Select Input File"),
+                                                 m_OpenDialogLastDirectory,
+                                                 tr("HDF5 Stats Files (*.h5 *.hdf5)") );
+  if ( true == file.isEmpty() ){return;  }
+  QFileInfo fi (file);
+  QString ext = fi.suffix();
+  gg_H5StatisticsFile->setText(fi.absoluteFilePath());
 }
 
 // -----------------------------------------------------------------------------
@@ -1124,18 +1118,6 @@ void RepresentationUI::on_gg_OutputDirBtn_clicked()
   }
 }
 
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void RepresentationUI::on_gg_InputDir_textChanged(const QString & text)
-{
-  if (_verifyPathExists(gg_InputDir->text(), gg_InputDir) )
-  {
-    gg_CheckIOFiles();
-  }
-}
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -1147,8 +1129,14 @@ void RepresentationUI::on_gg_OutputDir_textChanged(const QString & text)
   }
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void RepresentationUI::on_gg_H5StatisticsFile_textChanged(const QString & text)
+{
 
 
+}
 
 // -----------------------------------------------------------------------------
 //
@@ -1166,15 +1154,13 @@ void RepresentationUI::on_gg_GoBtn_clicked()
     return;
   }
 
-
-  SANITY_CHECK_INPUT(gg_, InputDir)
   SANITY_CHECK_INPUT(gg_, OutputDir)
 
-  SANITY_CHECK_QLABEL_FILE(AIM::Reconstruction, gg_, H5StatisticsFile)
+//  SANITY_CHECK_QLABEL_FILE(AIM::Reconstruction, gg_, H5StatisticsFile)
 
 
   m_GrainGenerator = GrainGenerator::New(NULL);
-  m_GrainGenerator->setInputDirectory(gg_InputDir->text().toStdString() );
+  m_GrainGenerator->setH5StatsFile(gg_H5StatisticsFile->text().toStdString() );
   m_GrainGenerator->setOutputDirectory(gg_OutputDir->text().toStdString());
   m_GrainGenerator->setNumGrains(gg_NumGrains->value());
 
