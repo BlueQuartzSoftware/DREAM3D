@@ -186,13 +186,13 @@ void ReconstructionFunc::find_border()
   double w, n1, n2, n3;
   double q1[5];
   double q2[5];
-  int seed = 0;
-  int size = 0;
+//  int seed = 0;
+  size_t size = 0;
   int good = 0;
   int count = 0, goodcount = 0;
   int currentpoint = 0;
   int neighbor = 0;
-  int keepgoing = 1;
+//  int keepgoing = 1;
   int col, row, plane;
   int initialVoxelsListSize = 10000;
   std::vector<int> voxelslist(initialVoxelsListSize, -1);
@@ -237,7 +237,7 @@ void ReconstructionFunc::find_border()
       if (size >= voxelslist.size()) voxelslist.resize(size + initialVoxelsListSize, -1);
 	}
   }
-  for(int j = 0; j < size; j++)
+  for(size_t j = 0; j < size; j++)
   {
 	currentpoint = voxelslist[j];
 	col = currentpoint%xpoints;
@@ -714,8 +714,8 @@ void  ReconstructionFunc::form_grains_sections()
 int  ReconstructionFunc::form_grains()
 {
   int point = 0;
-  int totalsize = 0;
-  int toosmallsize = 0;
+//  int totalsize = 0;
+//  int toosmallsize = 0;
   int noseeds = 0;
   //  int checked = 1;
   size_t graincount = 1;
@@ -1204,10 +1204,10 @@ int ReconstructionFunc::reburn_grains()
 	//int currentpoint = 0;
 	int neighbor = 0;
 	int col, row, plane;
-	int newvoxelcount=0;
+//	int newvoxelcount=0;
 	int mincol, maxcol, minrow, maxrow, minplane, maxplane;
 	int gnum;
-	int point;
+//	int point;
 	mincol = xpoints;
 	minrow = ypoints;
 	minplane = zpoints;
@@ -1375,7 +1375,7 @@ void  ReconstructionFunc::find_kernels()
   double q2[5];
   int numVoxel;                 // number of voxels in the grain...
 //  int index;
-  int gnum;
+//  int gnum;
   int good = 0;
   int neighbor;
   int col, row, plane;
@@ -2049,7 +2049,7 @@ void  ReconstructionFunc::find_neighbors()
   int grain;
   int nnum;
   int onsurf = 0;
-  double dist, dist2, vol, diam, diam2;
+  double dist, dist2, diam, diam2;
   int good = 0;
   int neighbor = 0;
   totalsurfacearea=0;
@@ -3401,7 +3401,7 @@ void  ReconstructionFunc::measure_misorientations (H5ReconStatsWriter::Pointer h
   }
   h5io->writeMisorientationBinsData(misobin, 18*18*18);
   h5io->writeMicroTextureData(microbin, 10, actualgrains);
-  delete [] misobin;
+ // delete [] misobin;
 }
 
 
@@ -3679,8 +3679,13 @@ void ReconstructionFunc::find_schmids()
   }
 }
 
-void ReconstructionFunc::volume_stats(H5ReconStatsWriter::Pointer h5io)
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int ReconstructionFunc::volume_stats(H5ReconStatsWriter::Pointer h5io)
 {
+  int err = 0;
+  int retErr = 0;
   double actualgrains = 0;
   double avgvol = 0;
   double avglnvol = 0;
@@ -3971,36 +3976,45 @@ void ReconstructionFunc::volume_stats(H5ReconStatsWriter::Pointer h5io)
   svomega3cr = svomega3cr / (actualgrains * omega3var);
 
 
-  h5io->writeStatsData(maxdiameter, mindiameter,
-                       avglogdiam, sdlogdiam,
-                       neighborhoodfit, svbovera, svcovera, svcoverb,
-                       svomega3);
+  err = h5io->writeSizeDistribution(maxdiameter, mindiameter, avglogdiam, sdlogdiam);
+  if (err < 0) { retErr = err; }
+  err = h5io->writeShapeDistribution(maxdiameter, mindiameter, svbovera, svcovera, svcoverb);
+  if (err < 0) { retErr = err; }
+  err = h5io->writeNeighborhoodDistribution(maxdiameter, mindiameter,neighborhoodfit);
+  if (err < 0) { retErr = err; }
+  err = h5io->writeOmega3Distribution(maxdiameter, mindiameter,svomega3);
+  if (err < 0) { retErr = err; }
 
+  return retErr;
 }
 
-
-void ReconstructionFunc::volume_stats2D(H5ReconStatsWriter::Pointer h5io)
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int ReconstructionFunc::volume_stats2D(H5ReconStatsWriter::Pointer h5io)
 {
+  int err = 0;
+  int retErr = 0;
   double actualgrains = 0;
   double avgvol = 0;
   double avglnvol = 0;
   double avgbovera = 0;
-  double avgcovera = 0;
-  double avgcoverb = 0;
+//  double avgcovera = 0;
+//  double avgcoverb = 0;
   double avgdiam = 0;
   double avglogdiam = 0;
   double avgdiam2 = 0;
   double avgschmid = 0;
-  double avgomega3 = 0;
+//  double avgomega3 = 0;
   double neighcount = 0;
   double maxvol = 0;
   double maxdiam = 0;
   double maxlogdiam = 0;
   double maxbovera = 0;
-  double maxcovera = 0;
-  double maxcoverb = 0;
+//  double maxcovera = 0;
+//  double maxcoverb = 0;
   double maxschmid = 0;
-  double maxomega3 = 0;
+//  double maxomega3 = 0;
   vector<int> neighdistfunc;
   neighborhood.resize(maxdiameter+1);
   neighborhoodfit.resize(maxdiameter+1);
@@ -4100,7 +4114,7 @@ void ReconstructionFunc::volume_stats2D(H5ReconStatsWriter::Pointer h5io)
   double sdlogdiam = 0;
   double sddiam2 = 0;
   double sdschmid = 0;
-  double sdomega3 = 0;
+//  double sdomega3 = 0;
   for(int j = 1; j < numgrains; j++)
   {
     int onedge = m_Grains[j].surfacegrain;
@@ -4174,7 +4188,7 @@ void ReconstructionFunc::volume_stats2D(H5ReconStatsWriter::Pointer h5io)
 //  double logdiamvar = sdlogdiam;
 //  double diamvar2 = sddiam2;
   double schmidvar = sdschmid;
-  double omega3var = sdomega3;
+//  double omega3var = sdomega3;
 //  double pbovera = avgbovera*(((avgbovera*(1-avgbovera))/boveravar)-1);
 //  double qbovera = (1-avgbovera)*(((avgbovera*(1-avgbovera))/boveravar)-1);
   sdvol = pow(sdvol,0.5);
@@ -4197,10 +4211,17 @@ void ReconstructionFunc::volume_stats2D(H5ReconStatsWriter::Pointer h5io)
   svboveracr = svboveracr/(actualgrains*boveravar);
   svschmidcr = svschmidcr/(actualgrains*schmidvar);
 //  svomega3cr = svomega3cr/(actualgrains*omega3var);
-  h5io->writeStatsData(maxdiameter, mindiameter,
-                       avglogdiam, sdlogdiam,
-                       neighborhoodfit, svbovera, svcovera, svcoverb,
-                       svomega3);
+
+  err = h5io->writeSizeDistribution(maxdiameter, mindiameter, avglogdiam, sdlogdiam);
+  if (err < 0) { retErr = err; }
+  err = h5io->writeShapeDistribution(maxdiameter, mindiameter, svbovera, svcovera, svcoverb);
+  if (err < 0) { retErr = err; }
+  err = h5io->writeNeighborhoodDistribution(maxdiameter, mindiameter,neighborhoodfit);
+  if (err < 0) { retErr = err; }
+  err = h5io->writeOmega3Distribution(maxdiameter, mindiameter,svomega3);
+  if (err < 0) { retErr = err; }
+
+  return retErr;
 }
 
 #define WRITE_VTK_GRAIN_HEADER()\
@@ -4288,7 +4309,7 @@ int ReconstructionFunc::writeVisualizationFile(const std::string &file)
     fprintf(f, "SCALARS WasTwin int 1");
     fprintf(f, "LOOKUP_TABLE default\n");
     size_t grainname = 0;
-    for (int i = 0; i < total; i++) {
+    for (size_t i = 0; i < total; i++) {
       if(i%20 == 0 && i > 0) { fprintf(f, "\n");}
       grainname = voxels[i].grainname;
       fprintf(f, "%d ", m_Grains[grainname].gottwinmerged);

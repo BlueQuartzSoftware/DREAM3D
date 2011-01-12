@@ -57,9 +57,9 @@ SET (AIMCommon_SRCS
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Quaternions.cpp
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/VTKFileUtils.cpp
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/MisorientationCalculations.cpp
-    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/HDF5/AIM_H5VtkDataWriter.cpp
-    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Reconstruction/H5ReconStatsWriter.cpp
-    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Reconstruction/H5ReconStatsReader.cpp
+    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/HDF5/AIM_H5VtkDataWriter.cpp
+    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/HDF5/H5ReconStatsWriter.cpp
+    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/HDF5/H5ReconStatsReader.cpp
     )
 
 SET (AIMCommon_HDRS
@@ -80,10 +80,10 @@ SET (AIMCommon_HDRS
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Quaternions.h
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/MisorientationCalculations.h
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/OIMColoring.hpp
-    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/HDF5/AIM_H5VtkDataWriter.h
-    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/HDF5/VTKH5Constants.h
-    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Reconstruction/H5ReconStatsWriter.h
-    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Reconstruction/H5ReconStatsReader.h
+    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/HDF5/AIM_H5VtkDataWriter.h
+    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/HDF5/VTKH5Constants.h
+    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/HDF5/H5ReconStatsWriter.h
+    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/HDF5/H5ReconStatsReader.h
 )
 
 cmp_IDE_SOURCE_PROPERTIES( "AIM/Common" "${AIMCommon_HDRS}" "${AIMCommon_SRCS}" ${PROJECT_INSTALL_HEADERS})
