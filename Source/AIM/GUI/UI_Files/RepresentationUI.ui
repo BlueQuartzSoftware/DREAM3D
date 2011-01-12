@@ -36,7 +36,7 @@
        </size>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>2</number>
       </property>
       <widget class="QWidget" name="oimImportTab">
        <attribute name="title">
@@ -1055,15 +1055,15 @@
           <item row="0" column="0">
            <widget class="QLabel" name="label_11">
             <property name="text">
-             <string>Input Directory</string>
+             <string>HDF5 Stats File</string>
             </property>
            </widget>
           </item>
           <item row="0" column="1">
-           <widget class="QLineEdit" name="gg_InputDir"/>
+           <widget class="QLineEdit" name="gg_H5StatisticsFile"/>
           </item>
           <item row="0" column="2">
-           <widget class="QPushButton" name="gg_InputDirBtn">
+           <widget class="QPushButton" name="gg_H5StatsFileBtn">
             <property name="text">
              <string>Select</string>
             </property>
@@ -1316,58 +1316,6 @@
            <string>Structure Already Formed</string>
           </property>
          </widget>
-        </item>
-        <item>
-         <layout class="QGridLayout" name="gridLayout_5">
-          <property name="spacing">
-           <number>4</number>
-          </property>
-          <item row="0" column="0" colspan="2">
-           <widget class="QLabel" name="label_13">
-            <property name="text">
-             <string>Required Input Files</string>
-            </property>
-           </widget>
-          </item>
-          <item row="4" column="0" colspan="2">
-           <widget class="QLabel" name="gg_inputfile_msg">
-            <property name="font">
-             <font>
-              <italic>true</italic>
-             </font>
-            </property>
-            <property name="text">
-             <string>Message:</string>
-            </property>
-            <property name="wordWrap">
-             <bool>true</bool>
-            </property>
-            <property name="margin">
-             <number>3</number>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="0">
-           <widget class="QLabel" name="gg_H5StatisticsFileIcon">
-            <property name="text">
-             <string/>
-            </property>
-            <property name="pixmap">
-             <pixmap resource="../../../../Resources/icons/images/Icons.qrc">:/Delete-16x16.png</pixmap>
-            </property>
-            <property name="alignment">
-             <set>Qt::AlignCenter</set>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="1">
-           <widget class="QLabel" name="gg_H5StatisticsFile">
-            <property name="text">
-             <string>HDF5 Reconstruction Results File</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
         </item>
         <item>
          <layout class="QGridLayout" name="gridLayout_8">
@@ -2257,7 +2205,7 @@
      <x>0</x>
      <y>0</y>
      <width>658</width>
-     <height>22</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -2318,7 +2266,7 @@
   <tabstop>sm_GoBtn</tabstop>
   <tabstop>sm_OutputDirBtn</tabstop>
   <tabstop>sm_InputFile</tabstop>
-  <tabstop>gg_InputDir</tabstop>
+  <tabstop>gg_H5StatisticsFile</tabstop>
   <tabstop>gg_OutputDir</tabstop>
   <tabstop>gg_NumGrains</tabstop>
   <tabstop>gg_XResolution</tabstop>
@@ -2326,12 +2274,13 @@
   <tabstop>gg_ZResolution</tabstop>
   <tabstop>gg_ShapeClass</tabstop>
   <tabstop>gg_CrystalStructure</tabstop>
-  <tabstop>gg_InputDirBtn</tabstop>
+  <tabstop>gg_H5StatsFileBtn</tabstop>
   <tabstop>gg_OutputDirBtn</tabstop>
   <tabstop>gg_GoBtn</tabstop>
   <tabstop>sm_InputFileBtn</tabstop>
  </tabstops>
  <resources>
+  <include location="../../../../Resources/icons/images/Icons.qrc"/>
   <include location="../../../../Resources/icons/images/Icons.qrc"/>
   <include location="../../../../Resources/icons/images/Icons.qrc"/>
   <include location="../../../../Resources/icons/images/Icons.qrc"/>

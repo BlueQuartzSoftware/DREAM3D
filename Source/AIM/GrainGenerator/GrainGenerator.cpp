@@ -64,7 +64,7 @@ QObject* parent
 #if AIM_USE_QT
 QThread(parent),
 #endif
-m_InputDirectory("."),
+m_H5StatsFile(""),
 m_OutputDirectory("."),
 m_NumGrains(0),
 m_ShapeClass(0),
@@ -112,7 +112,7 @@ void GrainGenerator::compute()
   int err = 0;
 
 
-  H5ReconStatsReader::Pointer h5reader = H5ReconStatsReader::New(m_InputDirectory + MXADir::Separator + AIM::Reconstruction::H5StatisticsFile);
+  H5ReconStatsReader::Pointer h5reader = H5ReconStatsReader::New(m_H5StatsFile);
   if (h5reader.get() == NULL)
   {
     progressMessage(AIM_STRING("Error Opening HDF5 Stats File. Nothing generated"), 100 );
