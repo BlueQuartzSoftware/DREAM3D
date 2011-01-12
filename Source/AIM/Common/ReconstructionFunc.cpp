@@ -3972,9 +3972,10 @@ void ReconstructionFunc::volume_stats(H5ReconStatsWriter::Pointer h5io)
 
 
   h5io->writeStatsData(maxdiameter, mindiameter,
-                       avglogdiam, sdlogdiam, actualgrains,
+                       avglogdiam, sdlogdiam,
                        neighborhoodfit, svbovera, svcovera, svcoverb,
-                       svschmid, svomega3);
+                       svomega3);
+
 }
 
 
@@ -4197,9 +4198,9 @@ void ReconstructionFunc::volume_stats2D(H5ReconStatsWriter::Pointer h5io)
   svschmidcr = svschmidcr/(actualgrains*schmidvar);
 //  svomega3cr = svomega3cr/(actualgrains*omega3var);
   h5io->writeStatsData(maxdiameter, mindiameter,
-                       avglogdiam, sdlogdiam, actualgrains,
+                       avglogdiam, sdlogdiam,
                        neighborhoodfit, svbovera, svcovera, svcoverb,
-                       svschmid, svomega3);
+                       svomega3);
 }
 
 #define WRITE_VTK_GRAIN_HEADER()\

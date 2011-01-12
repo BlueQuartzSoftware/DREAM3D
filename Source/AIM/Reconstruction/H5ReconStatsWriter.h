@@ -66,13 +66,13 @@ class AIMCOMMON_EXPORT H5ReconStatsWriter
     int writeMisorientationBinsData(double* misobins, size_t nElements);
     int writeODFData(AIM::Reconstruction::CrystalStructure crystruct,
                      double* eulerodf, double totalvol);
+
     int writeStatsData(int maxdiameter, int mindiameter,
-                       double avglogdiam, double sdlogdiam, double actualgrains,
+                       double avglogdiam, double sdlogdiam,
                        const std::vector<std::vector<double> > &neighborhood,
                        const std::vector<std::vector<double> > &svbovera,
                        const std::vector<std::vector<double> > &svcovera,
                        const std::vector<std::vector<double> > &svcoverb,
-                       const std::vector<std::vector<double> > &svschmid,
                        const std::vector<std::vector<double> > &svomega3);
 
   protected:
