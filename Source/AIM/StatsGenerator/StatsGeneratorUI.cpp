@@ -41,6 +41,7 @@
 #include <QtCore/QVector>
 #include <QtGui/QCloseEvent>
 #include <QtGui/QMessageBox>
+#include <QtGui/QFileDialog>
 
 //-- Qwt Includes
 #include <qwt.h>
@@ -55,6 +56,7 @@
 #include <qwt_plot_marker.h>
 
 #include "AIM/Common/Qt/QRecentFileList.h"
+#include "AIM/Common/HDF5/H5ReconStatsWriter.h"
 #include "StatsGen.h"
 
 // -----------------------------------------------------------------------------
@@ -383,6 +385,25 @@ void StatsGeneratorUI::openFile(QString imageFile)
   QRecentFileList::instance()->addFile(imageFile);
   setWidgetListEnabled(true);
   updateRecentFileList(imageFile);
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void StatsGeneratorUI::on_actionSave_triggered()
+{
+  std::cout << "StatsGeneratorUI::on_actionSave_triggered()" << std::endl;
+  QString h5file = QFileDialog::getSaveFileName(this, tr("Save OIM HDF5 File"),
+                                                 m_OpenDialogLastDirectory,
+                                                 tr("HDF5 OIM Files (*.h5ang)") );
+  if ( true == h5file.isEmpty() ){ return;  }
+  QFileInfo fi (h5file);
+  QString ext = fi.suffix();
+  m_OpenDialogLastDirectory = fi.path();
+
+
+  H5ReconStatsWriter::Pointer writer = new H5ReconStatsWriter::New(h5file.toStdString());
 }
 
 // -----------------------------------------------------------------------------

@@ -35,6 +35,7 @@
 #include "ui_StatsGenPlotWidget.h"
 
 #include "StatsGen.h"
+#include "AIM/Common/HDF5/H5ReconStatsWriter.h"
 
 class SGAbstractTableModel;
 class QwtPlotZoomer;
@@ -59,7 +60,7 @@ class StatsGenPlotWidget : public QWidget, private Ui::StatsGenPlotWidget
 
     void setPlotTitle(QString title);
 
-    int writeDataToHDF5(QString hdf5File);
+    int writeDataToHDF5(H5ReconStatsWriter::Pointer writer);
 
     void setCurveType(StatsGen::CurveType curveType);
     void setXAxisName(QString name);
