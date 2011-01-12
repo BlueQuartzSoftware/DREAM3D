@@ -53,7 +53,7 @@
 // -----------------------------------------------------------------------------
 StatsGenPlotWidget::StatsGenPlotWidget(QWidget *parent) :
   QWidget(parent), m_TableModel(NULL),
-    //m_zoomer(NULL), m_picker(NULL), m_panner(NULL), 
+    //m_zoomer(NULL), m_picker(NULL), m_panner(NULL),
     m_grid(NULL), m_CurveType(StatsGen::LogNormal)
 {
   this->setupUi(this);
@@ -79,9 +79,12 @@ void StatsGenPlotWidget::setPlotTitle(QString title)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int StatsGenPlotWidget::writeDataToHDF5(QString hdf5File)
+int StatsGenPlotWidget::writeDataToHDF5(H5ReconStatsWriter::Pointer writer)
 {
-  return -1;
+  int err = 0;
+
+
+  return err;
 }
 
 // -----------------------------------------------------------------------------
@@ -112,7 +115,7 @@ void StatsGenPlotWidget::resetTableModel()
   default:
     Q_ASSERT(false);
   }
-  
+
 
   m_TableView->setModel(m_TableModel);
   m_TableView->setItemDelegate(m_TableModel->getItemDelegate());
