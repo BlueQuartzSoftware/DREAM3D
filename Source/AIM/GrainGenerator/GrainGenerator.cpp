@@ -13,7 +13,7 @@
 //#include "AIM/ANG/AngDirectoryPatterns.h"
 //#include "AIM/ANG/AngReader.h"
 //#include "AIM/ANG/AngDataLoader.h"
-#include "AIM/Reconstruction/H5ReconStatsReader.h"
+#include "AIM/Common/HDF5/H5ReconStatsReader.h"
 #include <MXA/Utilities/MXADir.h>
 
 
@@ -129,7 +129,7 @@ void GrainGenerator::compute()
 
 
    m = GrainGeneratorFunc::New();
-   m->initialize(m_NumGrains, m_ShapeClass, m_XResolution, m_YResolution, m_ZResolution, 
+   m->initialize(m_NumGrains, m_ShapeClass, m_XResolution, m_YResolution, m_ZResolution,
 			  m_FillingErrorWeight, m_NeighborhoodErrorWeight, m_SizeDistErrorWeight,
               m_Precipitates, m_CrystalStructure, m_FractionPrecipitates);
 
