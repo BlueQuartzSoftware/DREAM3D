@@ -122,7 +122,6 @@ void GrainGenerator::compute()
   std::string CubeFile = m_OutputDirectory + MXADir::Separator + AIM::SyntheticBuilder::CubeFile;
   std::string EulerFile = m_OutputDirectory + MXADir::Separator + AIM::SyntheticBuilder::EulerFile;
   std::string AnalysisFile = m_OutputDirectory + MXADir::Separator + AIM::SyntheticBuilder::AnalysisFile;
-  std::string MoDFFile = m_OutputDirectory + MXADir::Separator + AIM::SyntheticBuilder::MoDFFile;
   std::string CrystallographicErrorFile = m_OutputDirectory + MXADir::Separator + AIM::SyntheticBuilder::CrystallographicErrorFile;
   std::string graindataFile = m_OutputDirectory + MXADir::Separator + AIM::SyntheticBuilder::GrainDataFile;
 
@@ -217,7 +216,7 @@ void GrainGenerator::compute()
 
    CHECK_FOR_CANCELED(GrainGeneratorFunc)
    progressMessage(AIM_STRING("Writing Grain Data"), 94 );
-   m->write_graindata(graindataFile, MoDFFile);
+   m->write_graindata(graindataFile);
 
    CHECK_FOR_CANCELED(GrainGeneratorFunc)
    progressMessage(AIM_STRING("Writing Euler Angles"), 98 );
