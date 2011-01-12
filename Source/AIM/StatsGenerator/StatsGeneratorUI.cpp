@@ -394,16 +394,24 @@ void StatsGeneratorUI::openFile(QString imageFile)
 void StatsGeneratorUI::on_actionSave_triggered()
 {
   std::cout << "StatsGeneratorUI::on_actionSave_triggered()" << std::endl;
-  QString h5file = QFileDialog::getSaveFileName(this, tr("Save OIM HDF5 File"),
+  QString h5file = QFileDialog::getSaveFileName(this, tr("Save HDF5 File"),
                                                  m_OpenDialogLastDirectory,
-                                                 tr("HDF5 OIM Files (*.h5ang)") );
+                                                 tr("HDF5 Files (*.h5)") );
   if ( true == h5file.isEmpty() ){ return;  }
   QFileInfo fi (h5file);
   QString ext = fi.suffix();
   m_OpenDialogLastDirectory = fi.path();
 
 
-  H5ReconStatsWriter::Pointer writer = new H5ReconStatsWriter::New(h5file.toStdString());
+  H5ReconStatsWriter::Pointer writer = H5ReconStatsWriter::New(h5file.toStdString());
+
+
+
+
+
+
+
+  writer = H5ReconStatsWriter::NullPointer();
 }
 
 // -----------------------------------------------------------------------------
@@ -495,7 +503,7 @@ void StatsGeneratorUI::plotSizeDistribution()
   int numsizebins = 1;
   QwtArray<int > binsizes;
   // QwtArray<int> numgrains;
-  err = sg.GenCutOff<double, QwtArray<double > , QwtArray<int > > (mu, sigma, cutOff, xCo, yCo, yMax, numsizebins, binsizes);
+  err = sg.GenCutOff<double, QwtArray<double> , QwtArray<int> > (mu, sigma, cutOff, xCo, yCo, yMax, numsizebins, binsizes);
 
 #if 0
   std::cout << "Cut Off Values" << std::endl;
@@ -503,12 +511,13 @@ void StatsGeneratorUI::plotSizeDistribution()
   {
     std::cout << "xCo[" << i << "]: " << xCo[i] << "  yCo[" << i << "]: " << yCo[i] << std::endl;
   }
+#endif
   std::cout << "Bin#" << std::endl;
   for (int i = 0; i < numsizebins; ++i)
   {
     std::cout << binsizes[i] << std::endl;
   }
-#endif
+
 
   if (NULL == m_SizeDistributionCurve)
   {
