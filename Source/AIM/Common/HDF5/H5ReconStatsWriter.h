@@ -75,6 +75,16 @@ class AIMCOMMON_EXPORT H5ReconStatsWriter
                        const std::vector<std::vector<double> > &svcoverb,
                        const std::vector<std::vector<double> > &svomega3);
 
+    int writeSizeDistribution(int maxdiameter, int mindiameter,
+                       double avglogdiam, double sdlogdiam);
+    int writeNeighborhoodDistribution(int maxdiameter, int mindiameter,
+                              const std::vector<std::vector<double> > &neighborhoodfit);
+    int writeShapeDistribution(int maxdiameter, int mindiameter,
+                               const std::vector<std::vector<double> > &svbovera,
+                               const std::vector<std::vector<double> > &svcovera,
+                               const std::vector<std::vector<double> > &svcoverb);
+    int writeOmega3Distribution(int maxdiameter, int mindiameter,
+                                const std::vector<std::vector<double> > &svomega3);
   protected:
     H5ReconStatsWriter();
   private:

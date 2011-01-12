@@ -39,7 +39,7 @@
 #include "AIM/Common/Voxel.h"
 #include "AIM/Common/AIMRandomNG.h"
 #include "AIM/ANG/AbstractAngDataLoader.h"
-#include "AIM/Reconstruction/H5ReconStatsWriter.h"
+#include "AIM/Common/HDF5/H5ReconStatsWriter.h"
 
 
 using namespace std;
@@ -185,8 +185,8 @@ public:
 	void align_sections(const std::string &filename );
 
 
-void volume_stats(H5ReconStatsWriter::Pointer h5io);
-void volume_stats2D(H5ReconStatsWriter::Pointer h5io);
+  int volume_stats(H5ReconStatsWriter::Pointer h5io);
+  int volume_stats2D(H5ReconStatsWriter::Pointer h5io);
 
 
 

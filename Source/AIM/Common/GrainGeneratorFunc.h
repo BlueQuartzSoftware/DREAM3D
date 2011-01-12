@@ -38,7 +38,7 @@
 #include "AIM/Common/Grain.h"
 #include "AIM/Common/Voxel.h"
 #include "AIM/Common/AIMRandomNG.h"
-#include "AIM/Reconstruction/H5ReconStatsReader.h"
+#include "AIM/Common/HDF5/H5ReconStatsReader.h"
 
 
 using namespace std;
@@ -104,7 +104,7 @@ public:
 	vector<vector<double> > precipsvomega3;
 	vector<vector<double> > neighbordist;
 
-	void initialize(int32_t m_NumGrains, int32_t m_ShapeClass, double m_XResolution, double m_YResolution, double m_ZResolution, 
+	void initialize(int32_t m_NumGrains, int32_t m_ShapeClass, double m_XResolution, double m_YResolution, double m_ZResolution,
 					double m_fillingerrorweight, double m_neighborhooderrorweight, double m_sizedisterrorweight, int32_t m_Precipitates,
 	                AIM::Reconstruction::CrystalStructure m_CrystalStructure, double m_FractionPrecipitates);
 	void initialize2();
