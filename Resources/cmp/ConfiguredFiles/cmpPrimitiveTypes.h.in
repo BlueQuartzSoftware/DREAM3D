@@ -36,13 +36,16 @@ typedef unsigned char         uint8_t;
 typedef signed char           int8_t;
 #endif /*_INT8_T */
 
-# define CMP_TYPE_UINT8 CMP_UNSIGNED_CHAR
-# if CMP_TYPE_CHAR_IS_SIGNED
+# define CMP_TYPE_UINT8 CMP_UNSIGNED_CHAR 
+
+#ifndef CMP_TYPE_INT8
+# if CMP_TYPE_CHAR_IS_SIGNED 
 #  define CMP_TYPE_INT8 CMP_CHAR
 # else
 #  define CMP_TYPE_INT8 CMP_SIGNED_CHAR
 # endif
-#else
+#endif
+#else   /* CMP_SIZEOF_CHAR == 1 */
 # error "No native data type can represent an 8-bit integer."
 #endif
 
