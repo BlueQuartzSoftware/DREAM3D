@@ -39,8 +39,11 @@
   if (var->text().isEmpty() == true) { var->setText(emptyValue); }
 
 #define READ_FILEPATH_SETTING(prefs, var, emptyValue)\
+    var->blockSignals(true);\
   var->setText( prefs.value(#var).toString() );\
-  if (var->text().isEmpty() == true) { var->setText(emptyValue); }
+  _verifyPathExists(prefs.value(#var).toString(), var);\
+  if (var->text().isEmpty() == true) { var->setText(emptyValue); }\
+  var->blockSignals(false);
 
 #define READ_SETTING(prefs, var, ok, temp, default, type)\
   ok = false;\
@@ -436,6 +439,7 @@ bool RepresentationUI::_verifyOutputPathParentExists(QString outFilePath, QLineE
 // -----------------------------------------------------------------------------
 bool RepresentationUI::_verifyPathExists(QString outFilePath, QLineEdit* lineEdit)
 {
+//  std::cout << "outFilePath: " << outFilePath.toStdString() << std::endl;
   QFileInfo fileinfo(outFilePath);
   if (false == fileinfo.exists() )
   {
@@ -604,7 +608,8 @@ void RepresentationUI::rec_SetupGui()
   m_WidgetList << crystalStructure;
   m_WidgetList << rec_DisorientationVizFile << rec_ImageQualityVizFile << rec_IPFVizFile << rec_SchmidFactorVizFile << rec_VisualizationVizFile << rec_DownSampledVizFile;
   m_WidgetList << minImageQuality;
-  m_WidgetList << rec_HDF5GrainFile << rec_H5StatisticsFile;
+  m_WidgetList << rec_HDF5GrainFile << rec_H5StatisticsFile << rec_AlignmentFile << rec_GrainDataFile;
+  m_WidgetList << rec_LoadSettingsBtn << rec_SaveSettingsBtn;
 
 }
 
@@ -653,6 +658,8 @@ void RepresentationUI::rec_SaveSettings(QSettings &prefs)
   prefs.beginGroup("Reconstruction");
   WRITE_STRING_SETTING(prefs, rec_OutputDir)
   WRITE_STRING_SETTING(prefs, rec_H5InputFile)
+  WRITE_SETTING(prefs, rec_ZStartIndex)
+  WRITE_SETTING(prefs, rec_ZEndIndex)
   WRITE_BOOL_SETTING(prefs, mergeTwins, rec_mergeTwins->isChecked())
   WRITE_BOOL_SETTING(prefs, mergeColonies, rec_mergeColonies->isChecked())
   WRITE_BOOL_SETTING(prefs, alreadyFormed, rec_alreadyFormed->isChecked())
@@ -700,6 +707,13 @@ void RepresentationUI::rec_LoadSettings(QSettings &prefs)
   prefs.beginGroup("Reconstruction");
   READ_FILEPATH_SETTING(prefs, rec_OutputDir, "");
   READ_FILEPATH_SETTING(prefs, rec_H5InputFile, "");
+  if (_verifyPathExists(rec_H5InputFile->text(), rec_H5InputFile) )
+  {
+    rec_SetSliceInfo();
+  }
+  READ_SETTING(prefs, rec_ZStartIndex, ok, i, 0, Int)
+  READ_SETTING(prefs, rec_ZEndIndex, ok, i, 0, Int)
+
   READ_BOOL_SETTING(prefs, rec_, mergeTwins, false);
   READ_BOOL_SETTING(prefs, rec_, mergeColonies, false);
   READ_BOOL_SETTING(prefs, rec_, alreadyFormed, false);
@@ -719,6 +733,8 @@ void RepresentationUI::rec_LoadSettings(QSettings &prefs)
   READ_BOOL_SETTING(prefs, rec_, DownSampledVizFile, true);
   READ_BOOL_SETTING(prefs, rec_, HDF5GrainFile, true);
   prefs.endGroup();
+
+
 }
 
 // -----------------------------------------------------------------------------
@@ -731,7 +747,8 @@ void RepresentationUI::on_rec_OIMH5Btn_clicked()
                                                  tr("HDF5 OIM Files (*.h5 *.hdf5 *.h5ang)") );
   if ( true == file.isEmpty() ){return;  }
   QFileInfo fi (file);
-  QString ext = fi.suffix();
+ // QString ext = fi.suffix();
+  _verifyPathExists(file, rec_H5InputFile);
   rec_H5InputFile->setText(fi.absoluteFilePath());
   rec_SetSliceInfo();
 }
