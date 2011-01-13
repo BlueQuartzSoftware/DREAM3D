@@ -46,6 +46,11 @@
     return -1; }
 
 
+#define H5RSW_ERROR_CHECK(name)\
+    std::cout << "Error writing HDF5 data to " << name << std::endl;\
+    std::cout << "  File: " << __FILE__ << std::endl;\
+    std::cout << "  Line: " << __LINE__ << std::endl;
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -200,7 +205,7 @@ int H5ReconStatsWriter::writePowerDistribution(const std::string &hdf5GroupName,
   headers.push_back(AIM::HDF5::Exp_k);
   headers.push_back(AIM::HDF5::Beta);
 
-  std::vector<std::vector<double> > data(3);
+  std::vector<std::vector<double> > data(4);
   size_t i = 0;
   data[i++] = bins;
   data[i++] = alpha;
@@ -229,8 +234,8 @@ int H5ReconStatsWriter::writeDistributionData(const std::string &disType,
   hid_t disId = H5Utilities::createGroup(gid, hdf5GroupName);
   if (disId > 0)
   {
-    err = H5Lite::writeStringAttribute(fileId, hdf5GroupName, AIM::HDF5::DistributionType, disType);
-    if (err > 0)
+    err = H5Lite::writeStringAttribute(gid, hdf5GroupName, AIM::HDF5::DistributionType, disType);
+    if (err >= 0)
     {
       dims.resize(1); // Single Dimension
       dims[0] = colData[0].size(); // How many elements in each column
@@ -239,9 +244,14 @@ int H5ReconStatsWriter::writeDistributionData(const std::string &disType,
       size_t numColumns = colData.size();
       for (size_t c = 0; c < numColumns; ++c)
       {
+        //std::cout << "Writing Dataset:" << hdf5GroupName << "/" << columnHeaders[c] << std::endl;
         err = H5Lite::writeVectorDataset(disId, columnHeaders[c], dims, colData[c]);
-        if (err < 0) { retErr = err;}
-        break;
+        if (err < 0)
+        {
+          H5RSW_ERROR_CHECK(columnHeaders[c])
+          retErr = err;
+          break;
+        }
       }
     }
     else
@@ -292,7 +302,11 @@ int H5ReconStatsWriter::writeVolumeStats(double maxdiameter, double mindiameter,
       beta[temp7] = svbovera[temp7 + mindiameter][4];
     }
     err = writeBetaDistribution(AIM::HDF5::Grain_SizeVBoverA_Distributions, binNum, alpha, beta);
-    if (err < 0) { retErr = err; }
+    if (err < 0)
+    {
+      H5RSW_ERROR_CHECK(AIM::HDF5::Grain_SizeVBoverA_Distributions)
+      retErr = err;
+    }
   }
 
   /* Write the Grain_SizeVCoverA_Distributions Shape Statistics which are a Beta Distribution */
@@ -306,7 +320,11 @@ int H5ReconStatsWriter::writeVolumeStats(double maxdiameter, double mindiameter,
       beta[temp7] = svcovera[temp7 + mindiameter][4];
     }
     err = writeBetaDistribution(AIM::HDF5::Grain_SizeVCoverA_Distributions, binNum, alpha, beta);
-    if (err < 0) { retErr = err; }
+    if (err < 0)
+    {
+      H5RSW_ERROR_CHECK(AIM::HDF5::Grain_SizeVCoverA_Distributions)
+      retErr = err;
+    }
   }
 
   /* Write the Grain_SizeVCoverB_Distributions Shape Statistics which are a Beta Distribution */
@@ -320,7 +338,11 @@ int H5ReconStatsWriter::writeVolumeStats(double maxdiameter, double mindiameter,
       beta[temp7] = svcoverb[temp7 + mindiameter][4];
     }
     err = writeBetaDistribution(AIM::HDF5::Grain_SizeVCoverB_Distributions, binNum, alpha, beta);
-    if (err < 0) { retErr = err; }
+    if (err < 0)
+    {
+      H5RSW_ERROR_CHECK(AIM::HDF5::Grain_SizeVCoverB_Distributions)
+      retErr = err;
+    }
   }
 
   /* Write the Grain_SizeVNeighbors_Distributions Neighbor Statistics which is a Power Law Distribution */
@@ -336,7 +358,11 @@ int H5ReconStatsWriter::writeVolumeStats(double maxdiameter, double mindiameter,
       k[temp7] = neighborhoodfit[temp7 + mindiameter][3];
     }
     err = writePowerDistribution(AIM::HDF5::Grain_SizeVNeighbors_Distributions, binNum, alpha, k, beta);
-    if (err < 0) { retErr = err; }
+    if (err < 0)
+    {
+      H5RSW_ERROR_CHECK(AIM::HDF5::Grain_SizeVNeighbors_Distributions)
+      retErr = err;
+    }
   }
 
   /* Write the Grain_SizeVOmega3_Distributions Shape Statistics which is a LogNormal Distribution */
@@ -350,8 +376,13 @@ int H5ReconStatsWriter::writeVolumeStats(double maxdiameter, double mindiameter,
       stdDev[temp7] = svomega3[temp7 + mindiameter][4];
     }
     err = writeLogNormalDistribution(AIM::HDF5::Grain_SizeVOmega3_Distributions, binNum, average, stdDev);
-    if (err < 0) { retErr = err; }
+    if (err < 0)
+    {
+      H5RSW_ERROR_CHECK(AIM::HDF5::Grain_SizeVOmega3_Distributions)
+      retErr = err;
+    }
   }
+  return err;
 }
 
 
