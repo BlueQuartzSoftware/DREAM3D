@@ -116,11 +116,11 @@ namespace AIM
   {
     /*  Grain Generator Related */
     const std::string CubeFile("Synthetic_Vis.vtk");
-    const std::string MoDFFile("Synthetic_MoDF.txt");
     const std::string CrystallographicErrorFile("Synthetic_CrystallographicError.txt");
     const std::string AnalysisFile("Synthetic_Stats.txt");
     const std::string EulerFile("Synthetic_GrainAngles.txt");
-    const std::string GrainDataFile("Synthetic_GrainData.txt");//14
+    const std::string GrainDataFile("Synthetic_GrainData.txt");
+    const std::string H5StatisticsFile("Synthetic_Results.h5");
 
     enum Overlap {
         UnknownOverlap = 0,
