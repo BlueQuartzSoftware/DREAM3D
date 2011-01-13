@@ -55,13 +55,26 @@ class StatsGenPlotWidget : public QWidget, private Ui::StatsGenPlotWidget
   Q_OBJECT
 
   public:
+    enum DistributionType
+    {
+      Grain_SizeVBoverA_Distributions = 0,
+      Grain_SizeVCoverA_Distributions,
+      Grain_SizeVCoverB_Distributions,
+      Grain_SizeVNeighbors_Distributions,
+      Grain_SizeVOmega3_Distributions,
+      UnknownDistribution = 999
+    };
+
     StatsGenPlotWidget(QWidget *parent = 0);
     virtual ~StatsGenPlotWidget();
+
+
 
     void setPlotTitle(QString title);
 
     int writeDataToHDF5(H5ReconStatsWriter::Pointer writer);
 
+    void setPlotDistributionType(DistributionType distributionType);
     void setCurveType(StatsGen::CurveType curveType);
     void setXAxisName(QString name);
     void setYAxisName(QString name);
@@ -95,6 +108,7 @@ class StatsGenPlotWidget : public QWidget, private Ui::StatsGenPlotWidget
 //    QwtPlotPanner* m_panner;
     QwtPlotGrid* m_grid;
     StatsGen::CurveType m_CurveType;
+    DistributionType    m_DistributionGroup;
 
     QVector<QwtPlotCurve* > m_PlotCurves;
 

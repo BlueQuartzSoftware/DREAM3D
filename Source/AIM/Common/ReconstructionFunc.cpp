@@ -3331,14 +3331,14 @@ void  ReconstructionFunc::measure_misorientations (H5ReconStatsWriter::Pointer h
 	        if (n1 > n3) { axis[1] = n1; axis[2] = n3; }
 	        else { axis[1] = n3; axis[2] = n1; }
 	      }
-	      else if ( n1 >= n2 )	
+	      else if ( n1 >= n2 )
 	      {
 	        axis[1] = n1; axis[2] = n2; axis[0] = n3;
 	      }
 	      else { axis[2] = n1; axis[1] = n2; axis[0] = n3;}
 		  misolist[3*j] = axis[0]*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
 	      misolist[3*j+1] = axis[1]*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
-	      misolist[3*j+2] = axis[2]*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));	  
+	      misolist[3*j+2] = axis[2]*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
 	    }
 	}
     m_Grains[i].misorientationlist = new std::vector<double >(misolist.size());
@@ -3978,9 +3978,13 @@ int ReconstructionFunc::volume_stats(H5ReconStatsWriter::Pointer h5io)
 
   err = h5io->writeSizeDistribution(maxdiameter, mindiameter, avglogdiam, sdlogdiam);
   if (err < 0) { retErr = err; }
-  err = h5io->writeShapeDistribution(maxdiameter, mindiameter, svbovera, svcovera, svcoverb);
+  err = h5io->writeShapeDistribution(AIM::HDF5::Grain_SizeVBoverA_Distributions, maxdiameter, mindiameter, svbovera);
   if (err < 0) { retErr = err; }
-  err = h5io->writeNeighborhoodDistribution(maxdiameter, mindiameter,neighborhoodfit);
+  err = h5io->writeShapeDistribution(AIM::HDF5::Grain_SizeVCoverA_Distributions, maxdiameter, mindiameter, svcovera);
+  if (err < 0) { retErr = err; }
+  err = h5io->writeShapeDistribution(AIM::HDF5::Grain_SizeVCoverB_Distributions, maxdiameter, mindiameter, svcoverb);
+  if (err < 0) { retErr = err; }
+  err = h5io->writeNeighborDistribution(maxdiameter, mindiameter,neighborhoodfit);
   if (err < 0) { retErr = err; }
   err = h5io->writeOmega3Distribution(maxdiameter, mindiameter,svomega3);
   if (err < 0) { retErr = err; }
@@ -4214,9 +4218,13 @@ int ReconstructionFunc::volume_stats2D(H5ReconStatsWriter::Pointer h5io)
 
   err = h5io->writeSizeDistribution(maxdiameter, mindiameter, avglogdiam, sdlogdiam);
   if (err < 0) { retErr = err; }
-  err = h5io->writeShapeDistribution(maxdiameter, mindiameter, svbovera, svcovera, svcoverb);
+  err = h5io->writeShapeDistribution(AIM::HDF5::Grain_SizeVBoverA_Distributions, maxdiameter, mindiameter, svbovera);
   if (err < 0) { retErr = err; }
-  err = h5io->writeNeighborhoodDistribution(maxdiameter, mindiameter,neighborhoodfit);
+  err = h5io->writeShapeDistribution(AIM::HDF5::Grain_SizeVCoverA_Distributions, maxdiameter, mindiameter, svcovera);
+  if (err < 0) { retErr = err; }
+  err = h5io->writeShapeDistribution(AIM::HDF5::Grain_SizeVCoverB_Distributions, maxdiameter, mindiameter, svcoverb);
+  if (err < 0) { retErr = err; }
+  err = h5io->writeNeighborDistribution(maxdiameter, mindiameter,neighborhoodfit);
   if (err < 0) { retErr = err; }
   err = h5io->writeOmega3Distribution(maxdiameter, mindiameter,svomega3);
   if (err < 0) { retErr = err; }

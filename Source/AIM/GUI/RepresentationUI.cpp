@@ -955,7 +955,7 @@ void RepresentationUI::gg_SetupGui()
     QR3DFileCompleter* com = new QR3DFileCompleter(this, false);
     gg_H5StatisticsFile->setCompleter(com);
     QObject::connect( com, SIGNAL(activated(const QString &)),
-             this, SLOT(on_gg_StatisticsFile_textChanged(const QString &)));
+             this, SLOT(on_gg_H5StatisticsFile_textChanged(const QString &)));
   }
 
   if (NULL == gg_OutputDir->completer()) {
