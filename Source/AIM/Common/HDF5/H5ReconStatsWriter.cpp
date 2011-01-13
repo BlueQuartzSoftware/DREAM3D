@@ -82,10 +82,11 @@ H5ReconStatsWriter::Pointer H5ReconStatsWriter::New(const std::string &filename)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5ReconStatsWriter::writeNeighborhoodDistribution(int maxdiameter, int mindiameter,
+int H5ReconStatsWriter::writeNeighborDistribution(int maxdiameter, int mindiameter,
                                               const std::vector<std::vector<double> > &neighborhoodfit)
 {
   herr_t err = 0;
+  herr_t retErr = 0;
   OPEN_HDF5_FILE(m_FileName)
   CREATE_RECONSTRUCTION_GROUP(AIM::HDF5::Reconstruction)
   std::vector<hsize_t> dims(1);
@@ -114,27 +115,29 @@ int H5ReconStatsWriter::writeNeighborhoodDistribution(int maxdiameter, int mindi
 
   /* Clean up the rest of the HDF5 structures and close the file */
   err = H5Gclose(gid);
+  if (err < 0) { retErr = err; }
   err = H5Utilities::closeFile(fileId);
-  return err;
+  if (err < 0) { retErr = err; }
+  return retErr;
 }
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5ReconStatsWriter::writeShapeDistribution(int maxdiameter, int mindiameter,
-                                               const std::vector<std::vector<double> > &svbovera,
-                                               const std::vector<std::vector<double> > &svcovera,
-                                               const std::vector<std::vector<double> > &svcoverb)
+int H5ReconStatsWriter::writeShapeDistribution(const std::string &name,
+                                               int maxdiameter, int mindiameter,
+                                               const std::vector<std::vector<double> > &data )
 {
   herr_t err = 0;
+  herr_t retErr = 0;
   OPEN_HDF5_FILE(m_FileName)
   CREATE_RECONSTRUCTION_GROUP(AIM::HDF5::Reconstruction)
   std::vector<hsize_t > dims(1);
   dims[0] = 3;
 
-  /* ************   Grain_SizeVBoverA_Distributions *************************** */
-  hid_t disId = H5Utilities::createGroup(gid, AIM::HDF5::Grain_SizeVBoverA_Distributions);
+  /* ************   Shape Distribution *************************** */
+  hid_t disId = H5Utilities::createGroup(gid, name);
   std::vector<int> binNum((maxdiameter) + 1);
   std::vector<double> average((maxdiameter) + 1, 0.0);
   std::vector<double> stdDev((maxdiameter) + 1, 0.0);
@@ -142,40 +145,8 @@ int H5ReconStatsWriter::writeShapeDistribution(int maxdiameter, int mindiameter,
   for (int temp7 = mindiameter; temp7 < (maxdiameter) + 1; temp7++)
   {
     binNum[temp7] = temp7;
-    average[temp7] = svbovera[temp7][3];
-    stdDev[temp7] = svbovera[temp7][4];
-  }
-  dims.resize(1); // Single Dimension
-  dims[0] = binNum.size();
-  err = H5Lite::writeVectorDataset(disId, AIM::HDF5::BinNumber, dims, binNum);
-  //TODO: Check Error
-  err = H5Lite::writeVectorDataset(disId, AIM::HDF5::Average, dims, average);
-  err = H5Lite::writeVectorDataset(disId, AIM::HDF5::StandardDeviation, dims, stdDev);
-  err = H5Gclose(disId);
-
-  /* ************   Grain_SizeVCoverA_Distributions *************************** */
-  disId = H5Utilities::createGroup(gid, AIM::HDF5::Grain_SizeVCoverA_Distributions);
-  for (int temp7 = mindiameter; temp7 < (maxdiameter) + 1; temp7++)
-  {
-    binNum[temp7] = temp7;
-    average[temp7] = svcovera[temp7][3];
-    stdDev[temp7] = svcovera[temp7][4];
-  }
-  dims.resize(1); // Single Dimension
-  dims[0] = binNum.size();
-  err = H5Lite::writeVectorDataset(disId, AIM::HDF5::BinNumber, dims, binNum);
-  //TODO: Check Error
-  err = H5Lite::writeVectorDataset(disId, AIM::HDF5::Average, dims, average);
-  err = H5Lite::writeVectorDataset(disId, AIM::HDF5::StandardDeviation, dims, stdDev);
-  err = H5Gclose(disId);
-
-  /* ************   Grain_SizeVCoverB_Distributions *************************** */
-  disId = H5Utilities::createGroup(gid, AIM::HDF5::Grain_SizeVCoverB_Distributions);
-  for (int temp7 = mindiameter; temp7 < (maxdiameter) + 1; temp7++)
-  {
-    binNum[temp7] = temp7;
-    average[temp7] = svcoverb[temp7][3];
-    stdDev[temp7] = svcoverb[temp7][4];
+    average[temp7] = data[temp7][3];
+    stdDev[temp7] = data[temp7][4];
   }
   dims.resize(1); // Single Dimension
   dims[0] = binNum.size();
@@ -187,8 +158,10 @@ int H5ReconStatsWriter::writeShapeDistribution(int maxdiameter, int mindiameter,
 
   /* Clean up the rest of the HDF5 structures and close the file */
   err = H5Gclose(gid);
+  if (err < 0) { retErr = err; }
   err = H5Utilities::closeFile(fileId);
-  return err;
+  if (err < 0) { retErr = err; }
+  return retErr;
 }
 
 // -----------------------------------------------------------------------------
@@ -198,6 +171,7 @@ int H5ReconStatsWriter::writeOmega3Distribution(int maxdiameter, int mindiameter
                             const std::vector<std::vector<double> > &svomega3)
 {
   herr_t err = 0;
+  herr_t retErr = 0;
   OPEN_HDF5_FILE(m_FileName)
   CREATE_RECONSTRUCTION_GROUP(AIM::HDF5::Reconstruction)
   std::vector<hsize_t> dims(1);
@@ -223,8 +197,10 @@ int H5ReconStatsWriter::writeOmega3Distribution(int maxdiameter, int mindiameter
 
   /* Clean up the rest of the HDF5 structures and close the file */
   err = H5Gclose(gid);
+  if (err < 0) { retErr = err; }
   err = H5Utilities::closeFile(fileId);
-  return err;
+  if (err < 0) { retErr = err; }
+  return retErr;
 }
 
 // -----------------------------------------------------------------------------
@@ -234,6 +210,7 @@ int H5ReconStatsWriter::writeSizeDistribution(int maxdiameter, int mindiameter,
                        double avglogdiam, double sdlogdiam)
 {
   herr_t err = 0;
+  herr_t retErr = 0;
   OPEN_HDF5_FILE(m_FileName)
   CREATE_RECONSTRUCTION_GROUP(AIM::HDF5::Reconstruction)
 
@@ -245,18 +222,22 @@ int H5ReconStatsWriter::writeSizeDistribution(int maxdiameter, int mindiameter,
   int_data[1] = maxdiameter;
   int_data[2] = mindiameter;
   err = H5Lite::writeVectorDataset(gid, AIM::HDF5::Grain_Diameter_Info, dims, int_data);
-  //TODO: Check for error
+  if (err < 0) { retErr = err; }
+
 
   std::vector<double> double_data(2);
   double_data[0] = avglogdiam;
   double_data[1] = sdlogdiam;
+  dims[0] = 2;
   err = H5Lite::writeVectorDataset(gid, AIM::HDF5::Grain_Size_Distribution, dims, double_data);
-  //TODO: Check for error
+  if (err < 0) { retErr = err; }
 
   /* Clean up the rest of the HDF5 structures and close the file */
   err = H5Gclose(gid);
+  if (err < 0) { retErr = err; }
   err = H5Utilities::closeFile(fileId);
-  return err;
+  if (err < 0) { retErr = err; }
+  return retErr;
 }
 
 // -----------------------------------------------------------------------------
@@ -274,9 +255,13 @@ int H5ReconStatsWriter::writeStatsData(int maxdiameter, int mindiameter,
   herr_t retErr = 0;
   err = writeSizeDistribution(maxdiameter, mindiameter, avglogdiam, sdlogdiam);
   if (err < 0) { retErr = err; }
-  err = writeShapeDistribution(maxdiameter, mindiameter, svbovera, svcovera, svcoverb);
+  err = writeShapeDistribution(AIM::HDF5::Grain_SizeVBoverA_Distributions, maxdiameter, mindiameter, svbovera);
   if (err < 0) { retErr = err; }
-  err = writeNeighborhoodDistribution(maxdiameter, mindiameter,neighborhoodfit);
+  err = writeShapeDistribution(AIM::HDF5::Grain_SizeVCoverA_Distributions, maxdiameter, mindiameter, svcovera);
+  if (err < 0) { retErr = err; }
+  err = writeShapeDistribution(AIM::HDF5::Grain_SizeVCoverB_Distributions, maxdiameter, mindiameter, svcoverb);
+  if (err < 0) { retErr = err; }
+  err = writeNeighborDistribution(maxdiameter, mindiameter,neighborhoodfit);
   if (err < 0) { retErr = err; }
   err = writeOmega3Distribution(maxdiameter, mindiameter,svomega3);
   if (err < 0) { retErr = err; }
@@ -328,9 +313,12 @@ int H5ReconStatsWriter::writeMicroTextureData(double* microbin, size_t nElements
   {
     retErr = err;
   }
+  /* Clean up the rest of the HDF5 structures and close the file */
   err = H5Gclose(gid);
+  if (err < 0) { retErr = err; }
   err = H5Utilities::closeFile(fileId);
-  return err;
+  if (err < 0) { retErr = err; }
+  return retErr;
 }
 
 
@@ -360,10 +348,12 @@ int H5ReconStatsWriter::writeAxisOrientationData(double* axisodf, double totalax
     retErr = err;
   }
 
+  /* Clean up the rest of the HDF5 structures and close the file */
   err = H5Gclose(gid);
+  if (err < 0) { retErr = err; }
   err = H5Utilities::closeFile(fileId);
-
-  return err;
+  if (err < 0) { retErr = err; }
+  return retErr;
 }
 
 // -----------------------------------------------------------------------------
@@ -394,8 +384,10 @@ int H5ReconStatsWriter::writeODFData(AIM::Reconstruction::CrystalStructure cryst
    retErr = err;
   }
 
+  /* Clean up the rest of the HDF5 structures and close the file */
   err = H5Gclose(gid);
+  if (err < 0) { retErr = err; }
   err = H5Utilities::closeFile(fileId);
-
+  if (err < 0) { retErr = err; }
   return retErr;
 }

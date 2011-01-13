@@ -59,6 +59,17 @@
 #include "AIM/Common/HDF5/H5ReconStatsWriter.h"
 #include "StatsGen.h"
 
+
+#define CHECK_ERROR_ON_WRITE(var, msg)\
+    if (err < 0) {\
+      QMessageBox::critical(this, tr("AIM Representation"),\
+      tr("There was an error writing the " msg " to the HDF5 file"),\
+      QMessageBox::Ok,\
+      QMessageBox::Ok);\
+      return;\
+      }
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -202,27 +213,35 @@ void StatsGeneratorUI::setupGui()
   m_Omega3Plot->setXAxisName(QString("Omega 3"));
   m_Omega3Plot->setYAxisName(QString("Frequency"));
   m_Omega3Plot->setCurveType(StatsGen::LogNormal);
+  m_Omega3Plot->setPlotDistributionType(StatsGenPlotWidget::Grain_SizeVOmega3_Distributions);
 
   m_BOverAPlot->setPlotTitle(QString("B/A Shape Distribution"));
   m_BOverAPlot->setXAxisName(QString("B/A"));
   m_BOverAPlot->setYAxisName(QString("Frequency"));
   m_BOverAPlot->setCurveType(StatsGen::Beta);
+  m_BOverAPlot->setPlotDistributionType(StatsGenPlotWidget::Grain_SizeVBoverA_Distributions);
+
 
   m_COverAPlot->setPlotTitle(QString("C/A Shape Distribution"));
   m_COverAPlot->setXAxisName(QString("C/A"));
   m_COverAPlot->setYAxisName(QString("Frequency"));
   m_COverAPlot->setCurveType(StatsGen::Beta);
+  m_COverAPlot->setPlotDistributionType(StatsGenPlotWidget::Grain_SizeVCoverA_Distributions);
+
 
   m_COverBPlot->setPlotTitle(QString("C/B Shape Distribution"));
   m_COverBPlot->setXAxisName(QString("C/B"));
   m_COverBPlot->setYAxisName(QString("Frequency"));
   m_COverBPlot->setCurveType(StatsGen::Beta);
   m_COverBPlot->setRowOperationEnabled(false);
+  m_COverBPlot->setPlotDistributionType(StatsGenPlotWidget::Grain_SizeVCoverB_Distributions);
+
 
   m_NeighborPlot->setPlotTitle(QString("Neighbors Distributions"));
   m_NeighborPlot->setXAxisName(QString("Distance (Multiples of Diameter)"));
   m_NeighborPlot->setYAxisName(QString("Number of Grains"));
   m_NeighborPlot->setCurveType(StatsGen::Power);
+  m_NeighborPlot->setPlotDistributionType(StatsGenPlotWidget::Grain_SizeVNeighbors_Distributions);
 
   plotSizeDistribution();
 }
@@ -405,12 +424,51 @@ void StatsGeneratorUI::on_actionSave_triggered()
 
   H5ReconStatsWriter::Pointer writer = H5ReconStatsWriter::New(h5file.toStdString());
 
+  QwtArray<double > xCo;
+  QwtArray<double > yCo;
+  QwtArray<int > binsizes;
+  double xMax = std::numeric_limits<double >::min();
+  double yMax = std::numeric_limits<double >::min();
+  QwtArray<double> x;
+  QwtArray<double> y;
+  int err = computeBinsAndCutOffs(binsizes, xCo, yCo, xMax, yMax, x, y);
+  if (err < 0) { return; }
 
 
+  int mindiameter = std::numeric_limits<int >::max();
+  int maxdiameter = std::numeric_limits<int >::min();
+ // std::cout << "Bin#" << std::endl;
+  size_t numsizebins = binsizes.size();
+  for (size_t i = 0; i < numsizebins; ++i)
+  {
+    if (binsizes[i] < mindiameter) { mindiameter = binsizes[i]; }
+    if (binsizes[i] > maxdiameter) { maxdiameter = binsizes[i]; }
+  }
+
+  std::cout << "maxdiameter: " << maxdiameter << std::endl;
+  std::cout << "mindiameter: " << mindiameter << std::endl;
+  bool ok = false;
+  double avglogdiam = m_Mu_SizeDistribution->text().toDouble(&ok);
+  double sdlogdiam = m_Sigma_SizeDistribution->text().toDouble(&ok);
+
+  err = writer->writeSizeDistribution(maxdiameter, mindiameter, avglogdiam, sdlogdiam);
+  CHECK_ERROR_ON_WRITE(err, "Size Distribution")
 
 
+  // Now that we have bins and grain sizes, push those to the other plot widgets
+  // Setup Each Plot Widget
+  m_Omega3Plot->writeDataToHDF5(writer);
 
+  m_BOverAPlot->writeDataToHDF5(writer);
 
+  m_COverAPlot->writeDataToHDF5(writer);
+
+  m_COverBPlot->writeDataToHDF5(writer);
+
+  m_NeighborPlot->writeDataToHDF5(writer);
+
+  // Force the clean up of the writer by assigning a NULL pointer which will
+  // have the effect of executing the destructor of the H5ReconStatsWriter Class
   writer = H5ReconStatsWriter::NullPointer();
 }
 
@@ -443,7 +501,9 @@ void StatsGeneratorUI::on_m_SigmaCutOff_SizeDistribution_textChanged(const QStri
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void StatsGeneratorUI::plotSizeDistribution()
+int StatsGeneratorUI::computeBinsAndCutOffs( QwtArray<int> &binsizes, QwtArray<double> &xCo, QwtArray<double> &yCo,
+                                             double &xMax, double &yMax,
+                                             QwtArray<double> &x, QwtArray<double> &y)
 {
   bool ok = false;
   double mu = 1.0;
@@ -454,37 +514,33 @@ void StatsGeneratorUI::plotSizeDistribution()
   if (ok == false)
   {
     //TODO: Present Error Message
-    return;
+    return -1;
   }
   sigma = m_Sigma_SizeDistribution->text().toDouble(&ok);
   if (ok == false)
   {
     //TODO: Present Error Message
-    return;
+    return -1;
   }
   cutOff = m_SigmaCutOff_SizeDistribution->text().toDouble(&ok);
   if (ok == false)
   {
     //TODO: Present Error Message
-    return;
+    return -1;
   }
 
   int size = 100;
-  QwtArray<double > x;
-  QwtArray<double > y;
+
   StatsGen sg;
   err = sg.GenLogNormal<QwtArray<double > > (mu, sigma, x, y, size);
   if (err == 1)
   {
     //TODO: Present Error Message
-    return;
+    return -1;
   }
 
-  // We have valid data so enable the other plot tabs
-  setTabsPlotTabsEnabled(true);
-
-  double xMax = std::numeric_limits<double >::min();
-  double yMax = std::numeric_limits<double >::min();
+//  double xMax = std::numeric_limits<double >::min();
+//  double yMax = std::numeric_limits<double >::min();
   for (int i = 0; i < size; ++i)
   {
     //   std::cout << x[i] << "  " << y[i] << std::endl;
@@ -498,10 +554,10 @@ void StatsGeneratorUI::plotSizeDistribution()
     }
   }
 
-  QwtArray<double > xCo;
-  QwtArray<double > yCo;
+  xCo.clear();
+  yCo.clear();
   int numsizebins = 1;
-  QwtArray<int > binsizes;
+  binsizes.clear();
   // QwtArray<int> numgrains;
   err = sg.GenCutOff<double, QwtArray<double> , QwtArray<int> > (mu, sigma, cutOff, xCo, yCo, yMax, numsizebins, binsizes);
 
@@ -511,13 +567,36 @@ void StatsGeneratorUI::plotSizeDistribution()
   {
     std::cout << "xCo[" << i << "]: " << xCo[i] << "  yCo[" << i << "]: " << yCo[i] << std::endl;
   }
-#endif
+
   std::cout << "Bin#" << std::endl;
   for (int i = 0; i < numsizebins; ++i)
   {
     std::cout << binsizes[i] << std::endl;
   }
+#endif
+  return 0;
+}
 
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void StatsGeneratorUI::plotSizeDistribution()
+{
+
+  QwtArray<double > xCo;
+  QwtArray<double > yCo;
+  QwtArray<int > binsizes;
+  double xMax = std::numeric_limits<double >::min();
+  double yMax = std::numeric_limits<double >::min();
+  QwtArray<double> x;
+  QwtArray<double> y;
+  int err = computeBinsAndCutOffs(binsizes, xCo, yCo, xMax, yMax, x, y);
+  if (err < 0) { return; }
+
+
+  // We have valid data so enable the other plot tabs
+  setTabsPlotTabsEnabled(true);
 
   if (NULL == m_SizeDistributionCurve)
   {

@@ -58,6 +58,10 @@ Q_OBJECT    ;
     virtual ~StatsGeneratorUI();
 
     void plotSizeDistribution();
+    int computeBinsAndCutOffs( QwtArray<int> &binsizes, QwtArray<double> &xCo, QwtArray<double> &yCo,
+                               double &xMax, double &yMax,
+                               QwtArray<double> &x, QwtArray<double> &y);
+
 
     protected slots:
 

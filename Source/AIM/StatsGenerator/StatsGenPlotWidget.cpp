@@ -33,6 +33,9 @@
 //-- C++ Includes
 #include <iostream>
 
+//-- Qt Includes
+#include <QtGui/QMessageBox>
+
 //-- Qwt Includes
 #include <qwt.h>
 #include <qwt_plot.h>
@@ -52,9 +55,11 @@
 //
 // -----------------------------------------------------------------------------
 StatsGenPlotWidget::StatsGenPlotWidget(QWidget *parent) :
-  QWidget(parent), m_TableModel(NULL),
-    //m_zoomer(NULL), m_picker(NULL), m_panner(NULL),
-    m_grid(NULL), m_CurveType(StatsGen::LogNormal)
+QWidget(parent), m_TableModel(NULL),
+//m_zoomer(NULL), m_picker(NULL), m_panner(NULL),
+m_grid(NULL),
+m_CurveType(StatsGen::LogNormal),
+m_DistributionGroup(UnknownDistribution)
 {
   this->setupUi(this);
   this->setupGui();
@@ -71,6 +76,15 @@ StatsGenPlotWidget::~StatsGenPlotWidget()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void StatsGenPlotWidget::setPlotDistributionType(DistributionType distributionType)
+{
+  m_DistributionGroup = distributionType;
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void StatsGenPlotWidget::setPlotTitle(QString title)
 {
   // this->m_PlotTitle->setText(title);
@@ -82,6 +96,52 @@ void StatsGenPlotWidget::setPlotTitle(QString title)
 int StatsGenPlotWidget::writeDataToHDF5(H5ReconStatsWriter::Pointer writer)
 {
   int err = 0;
+  if (m_DistributionGroup == UnknownDistribution)
+  {
+    QMessageBox::critical(this, tr("AIM Representation"),
+    tr("This Plot has not been assigned to a Distribution Group. This should be happening from within the program. Contact the developer."),
+    QMessageBox::Ok,
+    QMessageBox::Ok);
+    return -1;
+  }
+
+
+  QVector<int> binNumbers = m_TableModel->getBinNumbers();
+  int mindiameter = std::numeric_limits<int >::max();
+  int maxdiameter = std::numeric_limits<int >::min();
+ // std::cout << "Bin#" << std::endl;
+  size_t numsizebins = binNumbers.size();
+  for (size_t i = 0; i < numsizebins; ++i)
+  {
+    if (binNumbers[i] < mindiameter) { mindiameter = binNumbers[i]; }
+    if (binNumbers[i] > maxdiameter) { maxdiameter = binNumbers[i]; }
+  }
+
+  switch(m_DistributionGroup)
+  {
+
+    case Grain_SizeVBoverA_Distributions:
+    //  writer->writeShapeDistribution(AIM::HDF5::Grain_SizeVBoverA_Distributions, maxdiameter, mindiameter)
+      break;
+    case Grain_SizeVCoverA_Distributions:
+
+      break;
+    case Grain_SizeVCoverB_Distributions:
+
+      break;
+    case Grain_SizeVNeighbors_Distributions:
+
+      break;
+    case Grain_SizeVOmega3_Distributions:
+
+      break;
+    default:
+      Q_ASSERT(false);
+
+
+
+  }
+
 
 
   return err;
