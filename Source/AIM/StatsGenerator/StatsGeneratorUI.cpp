@@ -212,36 +212,38 @@ void StatsGeneratorUI::setupGui()
   m_Omega3Plot->setPlotTitle(QString("Size Vs. Omega 3"));
   m_Omega3Plot->setXAxisName(QString("Omega 3"));
   m_Omega3Plot->setYAxisName(QString("Frequency"));
-  m_Omega3Plot->setCurveType(AIM::Reconstruction::LogNormal);
+  m_Omega3Plot->setDistributionType(AIM::Reconstruction::LogNormal);
   m_Omega3Plot->setStatisticsType(AIM::Reconstruction::Grain_SizeVOmega3);
+  m_Omega3Plot->blockDistributionTypeChanges(true);
 
   m_BOverAPlot->setPlotTitle(QString("B/A Shape Distribution"));
   m_BOverAPlot->setXAxisName(QString("B/A"));
   m_BOverAPlot->setYAxisName(QString("Frequency"));
-  m_BOverAPlot->setCurveType(AIM::Reconstruction::Beta);
+  m_BOverAPlot->setDistributionType(AIM::Reconstruction::Beta);
   m_BOverAPlot->setStatisticsType(AIM::Reconstruction::Grain_SizeVBoverA);
-
+  m_BOverAPlot->blockDistributionTypeChanges(true);
 
   m_COverAPlot->setPlotTitle(QString("C/A Shape Distribution"));
   m_COverAPlot->setXAxisName(QString("C/A"));
   m_COverAPlot->setYAxisName(QString("Frequency"));
-  m_COverAPlot->setCurveType(AIM::Reconstruction::Beta);
+  m_COverAPlot->setDistributionType(AIM::Reconstruction::Beta);
   m_COverAPlot->setStatisticsType(AIM::Reconstruction::Grain_SizeVCoverA);
-
+  m_COverAPlot->blockDistributionTypeChanges(true);
 
   m_COverBPlot->setPlotTitle(QString("C/B Shape Distribution"));
   m_COverBPlot->setXAxisName(QString("C/B"));
   m_COverBPlot->setYAxisName(QString("Frequency"));
-  m_COverBPlot->setCurveType(AIM::Reconstruction::Beta);
+  m_COverBPlot->setDistributionType(AIM::Reconstruction::Beta);
   m_COverBPlot->setRowOperationEnabled(false);
   m_COverBPlot->setStatisticsType(AIM::Reconstruction::Grain_SizeVCoverB);
-
+  m_COverBPlot->blockDistributionTypeChanges(true);
 
   m_NeighborPlot->setPlotTitle(QString("Neighbors Distributions"));
   m_NeighborPlot->setXAxisName(QString("Distance (Multiples of Diameter)"));
   m_NeighborPlot->setYAxisName(QString("Number of Grains"));
-  m_NeighborPlot->setCurveType(AIM::Reconstruction::Power);
+  m_NeighborPlot->setDistributionType(AIM::Reconstruction::Power);
   m_NeighborPlot->setStatisticsType(AIM::Reconstruction::Grain_SizeVNeighbors);
+  m_NeighborPlot->blockDistributionTypeChanges(true);
 
   plotSizeDistribution();
 }
@@ -451,7 +453,8 @@ void StatsGeneratorUI::on_actionSave_triggered()
   double avglogdiam = m_Mu_SizeDistribution->text().toDouble(&ok);
   double sdlogdiam = m_Sigma_SizeDistribution->text().toDouble(&ok);
 
-  err = writer->writeSizeDistribution(maxdiameter, mindiameter, 1.0, avglogdiam, sdlogdiam);
+  size_t nBins = 0;
+  err = writer->writeSizeDistribution(maxdiameter, mindiameter, 1.0, avglogdiam, sdlogdiam, nBins);
   CHECK_ERROR_ON_WRITE(err, "Size Distribution")
 
 
