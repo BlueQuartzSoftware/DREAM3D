@@ -86,7 +86,7 @@ endfunction(gp_item_default_embedded_path_override)
 
 
 #-- Be sure all the internal directories are created first before calling the 'fixup_bundle'
-file(MAKE_DIRECTORY "${CMAKE_INSTALL_PREFIX}/@target@.app/Contents/Libraries")
+file(MAKE_DIRECTORY "${CMAKE_INSTALL_PREFIX}/@target@.app/Contents/lib")
 file(MAKE_DIRECTORY "${CMAKE_INSTALL_PREFIX}/@target@.app/Contents/Plugins")
 file(MAKE_DIRECTORY "${CMAKE_INSTALL_PREFIX}/@target@.app/Contents/Frameworks")
 file(MAKE_DIRECTORY "${CMAKE_INSTALL_PREFIX}/@target@.app/Contents/Support")
@@ -106,4 +106,10 @@ endif()
 
 # -- Run the BundleUtilities cmake code
 include(BundleUtilities)
-fixup_bundle("${CMAKE_INSTALL_PREFIX}/@target@.app" "@COMPLETE_PLUGIN_LIST@" "@PLUGIN_SEARCH_DIRS@")
+if (1)
+fixup_bundle("${CMAKE_INSTALL_PREFIX}/@target@.app" 
+             # Plugins to Install
+             "@COMPLETE_PLUGIN_LIST@"
+             # Directories to Search for Libraries
+             "@PLUGIN_SEARCH_DIRS@")
+endif()
