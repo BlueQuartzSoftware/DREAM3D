@@ -72,7 +72,7 @@ GrainGeneratorFunc::~GrainGeneratorFunc()
 
 }
 
-void GrainGeneratorFunc::initialize(int32_t m_NumGrains, int32_t m_ShapeClass, double m_XResolution, double m_YResolution, double m_ZResolution, 
+void GrainGeneratorFunc::initialize(int32_t m_NumGrains, int32_t m_ShapeClass, double m_XResolution, double m_YResolution, double m_ZResolution,
 			  double m_fillingerrorweight, double m_neighborhooderrorweight, double m_sizedisterrorweight, int32_t m_Precipitates,
               AIM::Reconstruction::CrystalStructure m_CrystalStructure, double m_FractionPrecipitates)
 {
@@ -95,12 +95,12 @@ void GrainGeneratorFunc::initialize(int32_t m_NumGrains, int32_t m_ShapeClass, d
   sizedisterrorweight = m_sizedisterrorweight;
 
   grains.resize((numextragrains+1), Grain());
-  if(crystruct == 1)
+  if(crystruct == AIM::Reconstruction::Hexagonal)
   {
 	  actualodf = new double [36*36*12];
 	  simodf = new double [36*36*12];
   }
-  if(crystruct == 2)
+  if(crystruct == AIM::Reconstruction::Cubic)
   {
 	  actualodf = new  double [18*18*18];
 	  simodf = new double [18*18*18];
@@ -1600,7 +1600,7 @@ int GrainGeneratorFunc::create_precipitates()
     totalprecipvol = totalprecipvol + vol;
   }
   precipitates = new Grain[count];
-  for(int a=1;a<count+1;a++)
+  for(size_t a=1;a<count+1;a++)
   {
     vol = vollist[a];
 	diam = (3.0/4.0)*(1.0/m_pi)*vol;
@@ -1663,11 +1663,11 @@ int GrainGeneratorFunc::create_precipitates()
   zpoints = int((sizez/resz)+1);
   precipitateorder.resize(count);
   takencheck.resize(count);
-  for(int i=1;i<count+1;i++)
+  for(size_t i=1;i<count+1;i++)
   {
     int maxprecipitate = 0;
     double maxvol = 0;
-    for(int j=1;j<count+1;j++)
+    for(size_t j=1;j<count+1;j++)
     {
       double vol = precipitates[j].volume;
       if(vol > maxvol && takencheck[j] != 1)

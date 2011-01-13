@@ -28,8 +28,6 @@ MXACompileDir(Utilities)
 set (MXA_HDF5_SUPPORT "1")
 MXACompileDir(HDF5)
 
-
-
 set (Project_SRCS 
     ${Project_SRCS} 
     )
