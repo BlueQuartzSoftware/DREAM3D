@@ -213,10 +213,10 @@ int GrainGeneratorFunc::readReconStatsData(H5ReconStatsReader::Pointer h5io)
   err = h5io->readStatsDataset(path, binNumbers);
   CHECK_STATS_READ_ERROR(err, path)
 
-  path = AIM::HDF5::Grain_SizeVNeighbors_Distributions + ("/") + AIM::HDF5::alpha;
+  path = AIM::HDF5::Grain_SizeVNeighbors_Distributions + ("/") + AIM::HDF5::Alpha;
   err = h5io->readStatsDataset(path, a);
   CHECK_STATS_READ_ERROR(err, path)
-  path = AIM::HDF5::Grain_SizeVNeighbors_Distributions + ("/") + AIM::HDF5::beta;
+  path = AIM::HDF5::Grain_SizeVNeighbors_Distributions + ("/") + AIM::HDF5::Beta;
   err = h5io->readStatsDataset(path, b);
   CHECK_STATS_READ_ERROR(err, path)
   path = AIM::HDF5::Grain_SizeVNeighbors_Distributions + ("/") + AIM::HDF5::Exp_k;
@@ -818,7 +818,7 @@ double GrainGeneratorFunc::costcheck_add(size_t gnum)
 double GrainGeneratorFunc::check_sizedisterror(int gadd, int gremove)
 {
 //	double p, df;
-	double avgdia=0, stddia=0;
+//	double avgdia=0, stddia=0;
 //	double uvar;
 	double dia;
 //	double tvalue;
@@ -1417,7 +1417,7 @@ void  GrainGeneratorFunc::fill_gaps(int numgrains)
   int current = 0;
   int most = 0;
   int curgrain = 0;
-  int checkcount = 0;
+ // int checkcount = 0;
   while(count != 0)
   {
     count = 0;
@@ -2327,7 +2327,7 @@ void GrainGeneratorFunc::matchCrystallography(const std::string &ErrorFile, H5Re
 						if (n1 > n3) { axis[1] = n1; axis[2] = n3; }
 						else { axis[1] = n3; axis[2] = n1; }
 					}
-					else if ( n1 >= n2 )	
+					else if ( n1 >= n2 )
 					{
 						axis[1] = n1; axis[2] = n2; axis[0] = n3;
 					}
@@ -2340,7 +2340,7 @@ void GrainGeneratorFunc::matchCrystallography(const std::string &ErrorFile, H5Re
 					miso2bin = int(axis[1]*18.0/dim);
 					miso3bin = int(axis[2]*18.0/dim);
 			    }
-				if(crystruct == AIM::Reconstruction::Cubic) 
+				if(crystruct == AIM::Reconstruction::Cubic)
 				{
 					w = MisorientationCalculations::getMisoQuatCubic(q1,q2,n1,n2,n3);
 					w = w*degtorad;
@@ -2361,7 +2361,7 @@ void GrainGeneratorFunc::matchCrystallography(const std::string &ErrorFile, H5Re
 						if (n1 > n3) { axis[1] = n1; axis[2] = n3; }
 						else { axis[1] = n3; axis[2] = n1; }
 					}
-					else if ( n1 >= n2 )	
+					else if ( n1 >= n2 )
 					{
 						axis[1] = n1; axis[2] = n2; axis[0] = n3;
 					}
@@ -2423,20 +2423,20 @@ void GrainGeneratorFunc::matchCrystallography(const std::string &ErrorFile, H5Re
 							if (n1 > n3) { axis[1] = n1; axis[2] = n3; }
 							else { axis[1] = n3; axis[2] = n1; }
 						}
-						else if ( n1 >= n2 )	
+						else if ( n1 >= n2 )
 						{
 							axis[1] = n1; axis[2] = n2; axis[0] = n3;
 						}
 						else { axis[2] = n1; axis[1] = n2; axis[0] = n3;}
 						axis[0] = axis[0]*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
 						axis[1] = axis[1]*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
-						axis[2] = axis[2]*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));	  
+						axis[2] = axis[2]*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
 						if(w == 0) axis[0] = 0.0, axis[1] = 0.0, axis[2] = 0.0;
 						miso1bin = int(axis[0]*18.0/dim);
 						miso2bin = int(axis[1]*18.0/dim);
 						miso3bin = int(axis[2]*18.0/dim);
 					}
-					if(crystruct == AIM::Reconstruction::Cubic) 
+					if(crystruct == AIM::Reconstruction::Cubic)
 					{
 						w = MisorientationCalculations::getMisoQuatCubic(q1,q2,n1,n2,n3);
 						w = w*degtorad;
@@ -2457,14 +2457,14 @@ void GrainGeneratorFunc::matchCrystallography(const std::string &ErrorFile, H5Re
 							if (n1 > n3) { axis[1] = n1; axis[2] = n3; }
 							else { axis[1] = n3; axis[2] = n1; }
 						}
-						else if ( n1 >= n2 )	
+						else if ( n1 >= n2 )
 						{
 							axis[1] = n1; axis[2] = n2; axis[0] = n3;
 						}
 						else { axis[2] = n1; axis[1] = n2; axis[0] = n3;}
 						axis[0] = axis[0]*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
 						axis[1] = axis[1]*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
-						axis[2] = axis[2]*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));	  
+						axis[2] = axis[2]*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
 						if(w == 0) axis[0] = 0.0, axis[1] = 0.0, axis[2] = 0.0;
 						miso1bin = int(axis[0]*18.0/dim);
 						miso2bin = int(axis[1]*18.0/dim);
@@ -2561,20 +2561,20 @@ void GrainGeneratorFunc::matchCrystallography(const std::string &ErrorFile, H5Re
 							if (n1 > n3) { axis[1] = n1; axis[2] = n3; }
 							else { axis[1] = n3; axis[2] = n1; }
 						}
-						else if ( n1 >= n2 )	
+						else if ( n1 >= n2 )
 						{
 							axis[1] = n1; axis[2] = n2; axis[0] = n3;
 						}
 						else { axis[2] = n1; axis[1] = n2; axis[0] = n3;}
 						axis[0] = axis[0]*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
 						axis[1] = axis[1]*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
-						axis[2] = axis[2]*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));	  
+						axis[2] = axis[2]*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
 						if(w == 0) axis[0] = 0.0, axis[1] = 0.0, axis[2] = 0.0;
 						miso1bin = int(axis[0]*18.0/dim);
 						miso2bin = int(axis[1]*18.0/dim);
 						miso3bin = int(axis[2]*18.0/dim);
 				    }
-					if(crystruct == AIM::Reconstruction::Cubic) 
+					if(crystruct == AIM::Reconstruction::Cubic)
 					{
 						w = MisorientationCalculations::getMisoQuatCubic(q1,q2,n1,n2,n3);
 						w = w*degtorad;
@@ -2595,14 +2595,14 @@ void GrainGeneratorFunc::matchCrystallography(const std::string &ErrorFile, H5Re
 							if (n1 > n3) { axis[1] = n1; axis[2] = n3; }
 							else { axis[1] = n3; axis[2] = n1; }
 						}
-						else if ( n1 >= n2 )	
+						else if ( n1 >= n2 )
 						{
 							axis[1] = n1; axis[2] = n2; axis[0] = n3;
 						}
 						else { axis[2] = n1; axis[1] = n2; axis[0] = n3;}
 						axis[0] = axis[0]*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
 						axis[1] = axis[1]*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
-						axis[2] = axis[2]*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));	  
+						axis[2] = axis[2]*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
 						if(w == 0) axis[0] = 0.0, axis[1] = 0.0, axis[2] = 0.0;
 						miso1bin = int(axis[0]*18.0/dim);
 						miso2bin = int(axis[1]*18.0/dim);
@@ -2664,20 +2664,20 @@ void GrainGeneratorFunc::matchCrystallography(const std::string &ErrorFile, H5Re
 							if (n1 > n3) { axis[1] = n1; axis[2] = n3; }
 							else { axis[1] = n3; axis[2] = n1; }
 						}
-						else if ( n1 >= n2 )	
+						else if ( n1 >= n2 )
 						{
 							axis[1] = n1; axis[2] = n2; axis[0] = n3;
 						}
 						else { axis[2] = n1; axis[1] = n2; axis[0] = n3;}
 						axis[0] = axis[0]*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
 						axis[1] = axis[1]*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
-						axis[2] = axis[2]*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));	  
+						axis[2] = axis[2]*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
 						if(w == 0) axis[0] = 0.0, axis[1] = 0.0, axis[2] = 0.0;
 						miso1bin = int(axis[0]*18.0/dim);
 						miso2bin = int(axis[1]*18.0/dim);
 						miso3bin = int(axis[2]*18.0/dim);
 				    }
-					if(crystruct == AIM::Reconstruction::Cubic) 
+					if(crystruct == AIM::Reconstruction::Cubic)
 					{
 						w = MisorientationCalculations::getMisoQuatCubic(q1,q2,n1,n2,n3);
 						w = w*degtorad;
@@ -2698,14 +2698,14 @@ void GrainGeneratorFunc::matchCrystallography(const std::string &ErrorFile, H5Re
 							if (n1 > n3) { axis[1] = n1; axis[2] = n3; }
 							else { axis[1] = n3; axis[2] = n1; }
 						}
-						else if ( n1 >= n2 )	
+						else if ( n1 >= n2 )
 						{
 							axis[1] = n1; axis[2] = n2; axis[0] = n3;
 						}
 						else { axis[2] = n1; axis[1] = n2; axis[0] = n3;}
 						axis[0] = axis[0]*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
 						axis[1] = axis[1]*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
-						axis[2] = axis[2]*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));	  
+						axis[2] = axis[2]*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
 						if(w == 0) axis[0] = 0.0, axis[1] = 0.0, axis[2] = 0.0;
 						miso1bin = int(axis[0]*18.0/dim);
 						miso2bin = int(axis[1]*18.0/dim);
@@ -2779,20 +2779,20 @@ void GrainGeneratorFunc::matchCrystallography(const std::string &ErrorFile, H5Re
 								if (n1 > n3) { axis[1] = n1; axis[2] = n3; }
 								else { axis[1] = n3; axis[2] = n1; }
 							}
-							else if ( n1 >= n2 )	
+							else if ( n1 >= n2 )
 							{
 								axis[1] = n1; axis[2] = n2; axis[0] = n3;
 							}
 							else { axis[2] = n1; axis[1] = n2; axis[0] = n3;}
 							axis[0] = axis[0]*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
 							axis[1] = axis[1]*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
-							axis[2] = axis[2]*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));	  
+							axis[2] = axis[2]*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
 							if(w == 0) axis[0] = 0.0, axis[1] = 0.0, axis[2] = 0.0;
 							miso1bin = int(axis[0]*18.0/dim);
 							miso2bin = int(axis[1]*18.0/dim);
 							miso3bin = int(axis[2]*18.0/dim);
 						}
-						if(crystruct == AIM::Reconstruction::Cubic) 
+						if(crystruct == AIM::Reconstruction::Cubic)
 						{
 							w = MisorientationCalculations::getMisoQuatCubic(q1,q2,n1,n2,n3);
 							w = w*degtorad;
@@ -2813,14 +2813,14 @@ void GrainGeneratorFunc::matchCrystallography(const std::string &ErrorFile, H5Re
 								if (n1 > n3) { axis[1] = n1; axis[2] = n3; }
 								else { axis[1] = n3; axis[2] = n1; }
 							}
-							else if ( n1 >= n2 )	
+							else if ( n1 >= n2 )
 							{
 								axis[1] = n1; axis[2] = n2; axis[0] = n3;
 							}
 							else { axis[2] = n1; axis[1] = n2; axis[0] = n3;}
 							axis[0] = axis[0]*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
 							axis[1] = axis[1]*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
-							axis[2] = axis[2]*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));	  
+							axis[2] = axis[2]*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
 							if(w == 0) axis[0] = 0.0, axis[1] = 0.0, axis[2] = 0.0;
 							miso1bin = int(axis[0]*18.0/dim);
 							miso2bin = int(axis[1]*18.0/dim);
@@ -2885,20 +2885,20 @@ void GrainGeneratorFunc::matchCrystallography(const std::string &ErrorFile, H5Re
 								if (n1 > n3) { axis[1] = n1; axis[2] = n3; }
 								else { axis[1] = n3; axis[2] = n1; }
 							}
-							else if ( n1 >= n2 )	
+							else if ( n1 >= n2 )
 							{
 								axis[1] = n1; axis[2] = n2; axis[0] = n3;
 							}
 							else { axis[2] = n1; axis[1] = n2; axis[0] = n3;}
 							axis[0] = axis[0]*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
 							axis[1] = axis[1]*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
-							axis[2] = axis[2]*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));	  
+							axis[2] = axis[2]*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
 							if(w == 0) axis[0] = 0.0, axis[1] = 0.0, axis[2] = 0.0;
 							miso1bin = int(axis[0]*18.0/dim);
 							miso2bin = int(axis[1]*18.0/dim);
 							miso3bin = int(axis[2]*18.0/dim);
 						}
-						if(crystruct == AIM::Reconstruction::Cubic) 
+						if(crystruct == AIM::Reconstruction::Cubic)
 						{
 							w = MisorientationCalculations::getMisoQuatCubic(q1,q2,n1,n2,n3);
 							w = w*degtorad;
@@ -2919,14 +2919,14 @@ void GrainGeneratorFunc::matchCrystallography(const std::string &ErrorFile, H5Re
 								if (n1 > n3) { axis[1] = n1; axis[2] = n3; }
 								else { axis[1] = n3; axis[2] = n1; }
 							}
-							else if ( n1 >= n2 )	
+							else if ( n1 >= n2 )
 							{
 								axis[1] = n1; axis[2] = n2; axis[0] = n3;
 							}
 							else { axis[2] = n1; axis[1] = n2; axis[0] = n3;}
 							axis[0] = axis[0]*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
 							axis[1] = axis[1]*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
-							axis[2] = axis[2]*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));	  
+							axis[2] = axis[2]*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
 							if(w == 0) axis[0] = 0.0, axis[1] = 0.0, axis[2] = 0.0;
 							miso1bin = int(axis[0]*18.0/dim);
 							miso2bin = int(axis[1]*18.0/dim);
@@ -2991,7 +2991,7 @@ void  GrainGeneratorFunc::measure_misorientations ()
 	  {
         w = MisorientationCalculations::getMisoQuatHexagonal(q1,q2,n1,n2,n3);
       }
-      if(crystruct == AIM::Reconstruction::Cubic) 
+      if(crystruct == AIM::Reconstruction::Cubic)
 	  {
         w = MisorientationCalculations::getMisoQuatCubic(q1,q2,n1,n2,n3);
       }
@@ -3013,14 +3013,14 @@ void  GrainGeneratorFunc::measure_misorientations ()
         if (n1 > n3) { axis[1] = n1; axis[2] = n3; }
         else { axis[1] = n3; axis[2] = n1; }
       }
-      else if ( n1 >= n2 )	
+      else if ( n1 >= n2 )
       {
         axis[1] = n1; axis[2] = n2; axis[0] = n3;
       }
       else { axis[2] = n1; axis[1] = n2; axis[0] = n3;}
 	  misolist[3*j] = axis[0]*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
       misolist[3*j+1] = axis[1]*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
-      misolist[3*j+2] = axis[2]*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));	  
+      misolist[3*j+2] = axis[2]*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
 	  if(w == 0) axis[0] = 0.0, axis[1] = 0.0, axis[2] = 0.0;
 	  miso1bin = int(misolist[3*j]*18.0/dim);
 	  miso2bin = int(misolist[3*j+1]*18.0/dim);
@@ -3036,8 +3036,12 @@ void  GrainGeneratorFunc::measure_misorientations ()
   }
 }
 
-void GrainGeneratorFunc::volume_stats(H5ReconStatsWriter::Pointer h5io)
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int GrainGeneratorFunc::volume_stats(H5ReconStatsWriter::Pointer h5io)
 {
+  int retErr = 0;
   double actualgrains = 0;
   double avgvol = 0;
   double avglnvol = 0;
@@ -3328,11 +3332,10 @@ void GrainGeneratorFunc::volume_stats(H5ReconStatsWriter::Pointer h5io)
   svomega3cr = svomega3cr / (actualgrains * omega3var);
 
 
-  h5io->writeStatsData(maxdiameter, mindiameter,
-                       avglogdiam, sdlogdiam,
-                       neighborhoodfit, svbovera, svcovera, svcoverb,
-                       svomega3);
+  retErr = h5io->writeVolumeStats(maxdiameter, mindiameter, 1.0, avglogdiam, sdlogdiam,
+                                  svbovera, svcovera, svcoverb, neighborhoodfit, svomega3);
 
+  return retErr;
 }
 
 

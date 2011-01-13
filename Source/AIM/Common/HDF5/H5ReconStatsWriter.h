@@ -43,7 +43,6 @@
 #include "AIM/Common/AIMCommonConfiguration.h"
 #include "AIM/Common/Constants.h"
 
-class Bin;
 
 
 
@@ -67,6 +66,44 @@ class AIMCOMMON_EXPORT H5ReconStatsWriter
     int writeODFData(AIM::Reconstruction::CrystalStructure crystruct,
                      double* eulerodf, double totalvol);
 
+
+    std::vector<double> generateBins( double maxDiameter, double minDiameter, double diameterStep);
+
+    int writeBetaDistribution(const std::string &hdf5GroupName,
+                               std::vector<double> &bins,
+                               std::vector<double> &alpha,
+                               std::vector<double> &beta);
+
+    int writeLogNormalDistribution(const std::string &hdf5GroupName,
+                               std::vector<double> &bins,
+                               std::vector<double> &average,
+                               std::vector<double> &stdDev );
+
+
+    int writePowerDistribution(const std::string &hdf5GroupName,
+                               std::vector<double> &bins,
+                               std::vector<double> &alpha,
+                               std::vector<double> &k,
+                               std::vector<double> &beta);
+
+
+    int writeDistributionData(const std::string &disType,
+                              const std::string &hdf5GroupName,
+                              std::vector<std::string> &columnHeaders,
+                              std::vector<std::vector<double> > &colData);
+
+    int writeSizeDistribution(double maxdiameter, double mindiameter, double binStepSize,
+                       double avglogdiam, double sdlogdiam);
+
+    int writeVolumeStats(double maxdiameter, double mindiameter, double diamStepSize,
+                         double avglogdiam, double sdlogdiam,
+                         std::vector<std::vector<double> > &svbovera,
+                         std::vector<std::vector<double> > &svcovera,
+                         std::vector<std::vector<double> > &svcoverb,
+                         std::vector<std::vector<double> > &neighborhoodfit,
+                         std::vector<std::vector<double> > &svomega3);
+
+#if 0
     int writeStatsData(int maxdiameter, int mindiameter,
                        double avglogdiam, double sdlogdiam,
                        const std::vector<std::vector<double> > &neighborhood,
@@ -75,8 +112,7 @@ class AIMCOMMON_EXPORT H5ReconStatsWriter
                        const std::vector<std::vector<double> > &svcoverb,
                        const std::vector<std::vector<double> > &svomega3);
 
-    int writeSizeDistribution(int maxdiameter, int mindiameter,
-                       double avglogdiam, double sdlogdiam);
+
 
     int writeNeighborDistribution(int maxdiameter, int mindiameter,
                               const std::vector<std::vector<double> > &neighborhoodfit);
@@ -87,6 +123,9 @@ class AIMCOMMON_EXPORT H5ReconStatsWriter
 
     int writeOmega3Distribution(int maxdiameter, int mindiameter,
                                 const std::vector<std::vector<double> > &svomega3);
+
+#endif
+
   protected:
     H5ReconStatsWriter();
   private:
