@@ -33,7 +33,7 @@
        <item>
         <layout class="QHBoxLayout" name="horizontalLayout">
          <item>
-          <widget class="QComboBox" name="curveTypeCombo"/>
+          <widget class="QComboBox" name="distributionTypeCombo"/>
          </item>
          <item>
           <spacer name="horizontalSpacer">

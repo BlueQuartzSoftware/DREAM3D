@@ -194,10 +194,10 @@ void StatsGenPlotWidget::resetTableModel()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void StatsGenPlotWidget::setCurveType(AIM::Reconstruction::DistributionType curveType)
+void StatsGenPlotWidget::setDistributionType(AIM::Reconstruction::DistributionType curveType)
 {
   m_DistributionType = curveType;
-  curveTypeCombo->setCurrentIndex(m_DistributionType);
+  distributionTypeCombo->setCurrentIndex(m_DistributionType);
 }
 
 // -----------------------------------------------------------------------------
@@ -205,8 +205,16 @@ void StatsGenPlotWidget::setCurveType(AIM::Reconstruction::DistributionType curv
 // -----------------------------------------------------------------------------
 void StatsGenPlotWidget::on_curveTypeCombo_currentIndexChanged(int index)
 {
-  m_DistributionType = static_cast<AIM::Reconstruction::DistributionType>(curveTypeCombo->currentIndex());
+  m_DistributionType = static_cast<AIM::Reconstruction::DistributionType>(distributionTypeCombo->currentIndex());
   resetTableModel();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void StatsGenPlotWidget::blockDistributionTypeChanges(bool block)
+{
+  distributionTypeCombo->setEnabled(!block);
 }
 
 // -----------------------------------------------------------------------------
@@ -231,9 +239,9 @@ void StatsGenPlotWidget::setYAxisName(QString name)
 void StatsGenPlotWidget::setupGui()
 {
 
-  curveTypeCombo->addItem(QString("Beta"));
-  curveTypeCombo->addItem(QString("Log Normal"));
-  curveTypeCombo->addItem(QString("Power Law"));
+  distributionTypeCombo->addItem(QString("Beta"));
+  distributionTypeCombo->addItem(QString("Log Normal"));
+  distributionTypeCombo->addItem(QString("Power Law"));
 
   // Setup the TableView and Table Models
   QHeaderView* headerView = new QHeaderView(Qt::Horizontal, m_TableView);
