@@ -3336,6 +3336,7 @@ void  ReconstructionFunc::measure_misorientations (H5ReconStatsWriter::Pointer h
 	        axis[1] = n1; axis[2] = n2; axis[0] = n3;
 	      }
 	      else { axis[2] = n1; axis[1] = n2; axis[0] = n3;}
+		  if(w == 0) axis[0] = 0.0, axis[1] = 0.0, axis[2] = 0.0;
 		  misolist[3*j] = axis[0]*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
 	      misolist[3*j+1] = axis[1]*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
 	      misolist[3*j+2] = axis[2]*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));

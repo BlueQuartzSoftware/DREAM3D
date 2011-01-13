@@ -38,7 +38,9 @@
 #include "AIM/Common/Grain.h"
 #include "AIM/Common/Voxel.h"
 #include "AIM/Common/AIMRandomNG.h"
-#include "AIM/Common/HDF5/H5ReconStatsReader.h"
+#include "AIM/Reconstruction/H5ReconStatsWriter.h"
+#include "AIM/Reconstruction/H5ReconStatsReader.h"
+
 
 
 using namespace std;
@@ -100,9 +102,15 @@ public:
 	vector<vector<double> > precipcovera;
 	vector<vector<double> > precipcoverb;
 	vector<vector<double> > neighborhood;
-	vector<vector<double> > svomega3;
+	vector<vector<double> > omega3;
 	vector<vector<double> > precipsvomega3;
 	vector<vector<double> > neighbordist;
+	vector<vector<double> > neighborhoodfit;
+	vector<vector<double> > svbovera;
+	vector<vector<double> > svcovera;
+	vector<vector<double> > svcoverb;
+	vector<vector<double> > svschmid;
+	vector<vector<double> > svomega3;
 
 	void initialize(int32_t m_NumGrains, int32_t m_ShapeClass, double m_XResolution, double m_YResolution, double m_ZResolution,
 					double m_fillingerrorweight, double m_neighborhooderrorweight, double m_sizedisterrorweight, int32_t m_Precipitates,
@@ -143,6 +151,7 @@ public:
 	double volcheck;
 	int ownercheck;
 
+
 	double currentfillingerror,oldfillingerror;
 	double currentneighborhooderror,oldneighborhooderror;
 	double currentsizedisterror,oldsizedisterror;
@@ -180,8 +189,9 @@ public:
 	void find_neighbors();
 	void writeCube(string, int);
 
-	void matchCrystallography(const std::string &ErrorFile);
+	void matchCrystallography(const std::string &ErrorFile, H5ReconStatsWriter::Pointer h5io);
 	void measure_misorientations();
+	void volume_stats(H5ReconStatsWriter::Pointer h5io);
 
 	double gamma(double);
 	double erf(double);
@@ -192,7 +202,7 @@ public:
 	double incompletebetafe(double, double, double, double, double);
 	double incompletebetafe2(double, double, double, double, double);
 	double incompletebetaps(double, double, double, double);
-	void write_graindata(string, string);
+	void write_graindata(string);
 	double find_xcoord(long);
 	double find_ycoord(long);
 	double find_zcoord(long);
