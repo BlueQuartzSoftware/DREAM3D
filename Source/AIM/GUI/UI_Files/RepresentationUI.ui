@@ -36,7 +36,7 @@
        </size>
       </property>
       <property name="currentIndex">
-       <number>2</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="oimImportTab">
        <attribute name="title">
@@ -236,17 +236,17 @@
         </property>
         <item>
          <layout class="QGridLayout" name="gridLayout_2">
-          <item row="1" column="0">
+          <item row="0" column="1">
            <widget class="QLabel" name="label">
             <property name="text">
              <string>OIM HDF5 File</string>
             </property>
            </widget>
           </item>
-          <item row="1" column="1" colspan="2">
+          <item row="0" column="2">
            <widget class="QLineEdit" name="rec_H5InputFile"/>
           </item>
-          <item row="1" column="3">
+          <item row="0" column="3">
            <widget class="QPushButton" name="rec_OIMH5Btn">
             <property name="text">
              <string>Select</string>
@@ -2205,7 +2205,7 @@
      <x>0</x>
      <y>0</y>
      <width>658</width>
-     <height>21</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -2251,8 +2251,6 @@
   </action>
  </widget>
  <tabstops>
-  <tabstop>rec_H5InputFile</tabstop>
-  <tabstop>rec_OIMH5Btn</tabstop>
   <tabstop>rec_OutputDir</tabstop>
   <tabstop>rec_OutputDirBtn</tabstop>
   <tabstop>rec_mergeTwins</tabstop>
