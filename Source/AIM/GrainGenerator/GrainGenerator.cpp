@@ -119,6 +119,8 @@ void GrainGenerator::compute()
     return;
   }
 
+  std::string hdf5ResultsFile = m_OutputDirectory + MXADir::Separator + AIM::SyntheticBuilder::H5StatisticsFile;
+  H5ReconStatsWriter::Pointer h5io = H5ReconStatsWriter::New(hdf5ResultsFile);
   std::string CubeFile = m_OutputDirectory + MXADir::Separator + AIM::SyntheticBuilder::CubeFile;
   std::string EulerFile = m_OutputDirectory + MXADir::Separator + AIM::SyntheticBuilder::EulerFile;
   std::string AnalysisFile = m_OutputDirectory + MXADir::Separator + AIM::SyntheticBuilder::AnalysisFile;
@@ -208,7 +210,11 @@ void GrainGenerator::compute()
 
    CHECK_FOR_CANCELED(GrainGeneratorFunc)
    progressMessage(AIM_STRING("Matching Crystallography"), 65 );
-   m->matchCrystallography(CrystallographicErrorFile);
+   m->matchCrystallography(CrystallographicErrorFile, h5io);
+
+   CHECK_FOR_CANCELED(GrainGeneratorFunc)
+   progressMessage(AIM_STRING("Writing Stats"), 65 );
+   m->volume_stats(h5io);
 
    CHECK_FOR_CANCELED(GrainGeneratorFunc)
    progressMessage(AIM_STRING("writing Cube"), 90 );
