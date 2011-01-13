@@ -100,6 +100,14 @@ class AIMCOMMON_EXPORT H5ReconStatsReader
       return retErr;
     }
 
+    /**
+     * @brief
+     * @param group
+     */
+    std::string getDistributionType(const std::string &group);
+
+
+
   protected:
     H5ReconStatsReader();
   private:
