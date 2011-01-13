@@ -37,6 +37,8 @@
 
 #include <math.h>
 
+#include "AIM/Common/Constants.h"
+
 /**
  * @class StatsGen StatsGen.h AIM/StatsGenerator/StatsGen.h
  * @author Michael A. Groeber US Air Force Research Laboratory
@@ -48,14 +50,6 @@ class StatsGen
   public:
     StatsGen();
     virtual ~StatsGen();
-
-    enum CurveType
-    {
-      Beta = 0,
-      LogNormal = 1,
-      Power = 2,
-      Unknown = 999
-    };
 
 
     template<typename T>

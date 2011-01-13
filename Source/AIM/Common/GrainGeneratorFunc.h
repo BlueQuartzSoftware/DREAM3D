@@ -38,8 +38,8 @@
 #include "AIM/Common/Grain.h"
 #include "AIM/Common/Voxel.h"
 #include "AIM/Common/AIMRandomNG.h"
-#include "AIM/Reconstruction/H5ReconStatsWriter.h"
-#include "AIM/Reconstruction/H5ReconStatsReader.h"
+#include "AIM/Common/HDF5/H5ReconStatsWriter.h"
+#include "AIM/Common/HDF5/H5ReconStatsReader.h"
 
 
 
@@ -191,7 +191,7 @@ public:
 
 	void matchCrystallography(const std::string &ErrorFile, H5ReconStatsWriter::Pointer h5io);
 	void measure_misorientations();
-	void volume_stats(H5ReconStatsWriter::Pointer h5io);
+	int volume_stats(H5ReconStatsWriter::Pointer h5io);
 
 	double gamma(double);
 	double erf(double);

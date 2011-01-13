@@ -77,9 +77,14 @@ namespace AIM
     const std::string Average("Average");
     const std::string StandardDeviation("Standard Deviation");
 
-    const std::string alpha("Alpha");
-    const std::string beta("Beta");
+    const std::string Alpha("Alpha");
+    const std::string Beta("Beta");
     const std::string Exp_k("Exponent K");
+
+    const std::string DistributionType("Distribution Type");
+    const std::string BetaDistribution("Beta Distribution");
+    const std::string LogNormalDistribution("Log Normal Distribution");
+    const std::string PowerLawDistribution("Power Law Distribution");
   }
 
   namespace Reconstruction
@@ -110,7 +115,28 @@ namespace AIM
         MutualInformation = 2
     };
 
+    enum StatisticsType
+    {
+      Grain_SizeVBoverA = 0,
+      Grain_SizeVCoverA,
+      Grain_SizeVCoverB,
+      Grain_SizeVNeighbors,
+      Grain_SizeVOmega3,
+      UnknownType = 999
+    };
+
+    enum DistributionType
+    {
+      Beta = 0,
+      LogNormal = 1,
+      Power = 2,
+      Unknown = 999
+    };
+
   }
+
+
+
 
   namespace SyntheticBuilder
   {

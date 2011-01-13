@@ -47,6 +47,7 @@
 #include <qwt_plot_panner.h>
 #include <qwt_plot_curve.h>
 
+#include "AIM/Common/Constants.h"
 #include "SGBetaTableModel.h"
 #include "SGLogNormalTableModel.h"
 #include "SGPowerLawTableModel.h"
@@ -58,8 +59,8 @@ StatsGenPlotWidget::StatsGenPlotWidget(QWidget *parent) :
 QWidget(parent), m_TableModel(NULL),
 //m_zoomer(NULL), m_picker(NULL), m_panner(NULL),
 m_grid(NULL),
-m_CurveType(StatsGen::LogNormal),
-m_DistributionGroup(UnknownDistribution)
+m_DistributionType(AIM::Reconstruction::LogNormal),
+m_StatsType(AIM::Reconstruction::UnknownType)
 {
   this->setupUi(this);
   this->setupGui();
@@ -76,9 +77,9 @@ StatsGenPlotWidget::~StatsGenPlotWidget()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void StatsGenPlotWidget::setPlotDistributionType(DistributionType distributionType)
+void StatsGenPlotWidget::setStatisticsType(AIM::Reconstruction::StatisticsType distributionType)
 {
-  m_DistributionGroup = distributionType;
+  m_StatsType = distributionType;
 }
 
 
@@ -96,10 +97,10 @@ void StatsGenPlotWidget::setPlotTitle(QString title)
 int StatsGenPlotWidget::writeDataToHDF5(H5ReconStatsWriter::Pointer writer)
 {
   int err = 0;
-  if (m_DistributionGroup == UnknownDistribution)
+  if (m_StatsType == AIM::Reconstruction::UnknownType)
   {
     QMessageBox::critical(this, tr("AIM Representation"),
-    tr("This Plot has not been assigned to a Distribution Group. This should be happening from within the program. Contact the developer."),
+    tr("This Plot has not been assigned to a Type of Statistics Data. This should be happening from within the program. Contact the developer."),
     QMessageBox::Ok,
     QMessageBox::Ok);
     return -1;
@@ -117,22 +118,22 @@ int StatsGenPlotWidget::writeDataToHDF5(H5ReconStatsWriter::Pointer writer)
     if (binNumbers[i] > maxdiameter) { maxdiameter = binNumbers[i]; }
   }
 
-  switch(m_DistributionGroup)
+  switch(m_StatsType)
   {
 
-    case Grain_SizeVBoverA_Distributions:
-    //  writer->writeShapeDistribution(AIM::HDF5::Grain_SizeVBoverA_Distributions, maxdiameter, mindiameter)
+    case AIM::Reconstruction::Grain_SizeVBoverA:
+    //  writer->writeShapeDistribution(AIM::HDF5::Grain_SizeVBoverA, maxdiameter, mindiameter)
       break;
-    case Grain_SizeVCoverA_Distributions:
+    case AIM::Reconstruction::Grain_SizeVCoverA:
 
       break;
-    case Grain_SizeVCoverB_Distributions:
+    case AIM::Reconstruction::Grain_SizeVCoverB:
 
       break;
-    case Grain_SizeVNeighbors_Distributions:
+    case AIM::Reconstruction::Grain_SizeVNeighbors:
 
       break;
-    case Grain_SizeVOmega3_Distributions:
+    case AIM::Reconstruction::Grain_SizeVOmega3:
 
       break;
     default:
@@ -160,15 +161,15 @@ void StatsGenPlotWidget::resetTableModel()
   }
 
   // Create a new Table Model
-  switch(m_CurveType)
+  switch(m_DistributionType)
   {
-  case StatsGen::Beta:
+  case AIM::Reconstruction::Beta:
     m_TableModel = new SGBetaTableModel;
     break;
-  case StatsGen::LogNormal:
+  case AIM::Reconstruction::LogNormal:
     m_TableModel = new SGLogNormalTableModel;
     break;
-  case StatsGen::Power:
+  case AIM::Reconstruction::Power:
     m_TableModel = new SGPowerLawTableModel;
     break;
 
@@ -193,10 +194,10 @@ void StatsGenPlotWidget::resetTableModel()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void StatsGenPlotWidget::setCurveType(StatsGen::CurveType curveType)
+void StatsGenPlotWidget::setCurveType(AIM::Reconstruction::DistributionType curveType)
 {
-  m_CurveType = curveType;
-  curveTypeCombo->setCurrentIndex(m_CurveType);
+  m_DistributionType = curveType;
+  curveTypeCombo->setCurrentIndex(m_DistributionType);
 }
 
 // -----------------------------------------------------------------------------
@@ -204,7 +205,7 @@ void StatsGenPlotWidget::setCurveType(StatsGen::CurveType curveType)
 // -----------------------------------------------------------------------------
 void StatsGenPlotWidget::on_curveTypeCombo_currentIndexChanged(int index)
 {
-  m_CurveType = static_cast<StatsGen::CurveType>(curveTypeCombo->currentIndex());
+  m_DistributionType = static_cast<AIM::Reconstruction::DistributionType>(curveTypeCombo->currentIndex());
   resetTableModel();
 }
 
@@ -301,15 +302,15 @@ void StatsGenPlotWidget::updatePlotCurves()
       curve->setPen(QPen(c));
     }
 
-    switch(m_CurveType)
+    switch(m_DistributionType)
     {
-      case StatsGen::Beta:
+      case AIM::Reconstruction::Beta:
         createBetaCurve(r, xMax, yMax);
         break;
-      case StatsGen::LogNormal:
+      case AIM::Reconstruction::LogNormal:
         createLogNormalCurve(r, xMax, yMax);
         break;
-      case StatsGen::Power:
+      case AIM::Reconstruction::Power:
         createPowerCurve(r, xMax, yMax);
         break;
       default:

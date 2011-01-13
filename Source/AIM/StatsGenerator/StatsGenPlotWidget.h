@@ -34,8 +34,10 @@
 #include <QtGui/QWidget>
 #include "ui_StatsGenPlotWidget.h"
 
-#include "StatsGen.h"
+#include "AIM/Common/Constants.h"
 #include "AIM/Common/HDF5/H5ReconStatsWriter.h"
+#include "StatsGen.h"
+
 
 class SGAbstractTableModel;
 class QwtPlotZoomer;
@@ -55,27 +57,17 @@ class StatsGenPlotWidget : public QWidget, private Ui::StatsGenPlotWidget
   Q_OBJECT
 
   public:
-    enum DistributionType
-    {
-      Grain_SizeVBoverA_Distributions = 0,
-      Grain_SizeVCoverA_Distributions,
-      Grain_SizeVCoverB_Distributions,
-      Grain_SizeVNeighbors_Distributions,
-      Grain_SizeVOmega3_Distributions,
-      UnknownDistribution = 999
-    };
+
 
     StatsGenPlotWidget(QWidget *parent = 0);
     virtual ~StatsGenPlotWidget();
-
-
 
     void setPlotTitle(QString title);
 
     int writeDataToHDF5(H5ReconStatsWriter::Pointer writer);
 
-    void setPlotDistributionType(DistributionType distributionType);
-    void setCurveType(StatsGen::CurveType curveType);
+    void setStatisticsType(AIM::Reconstruction::StatisticsType statsType);
+    void setCurveType(AIM::Reconstruction::DistributionType distributionType);
     void setXAxisName(QString name);
     void setYAxisName(QString name);
 
@@ -107,8 +99,8 @@ class StatsGenPlotWidget : public QWidget, private Ui::StatsGenPlotWidget
 //    QwtPlotPicker* m_picker;
 //    QwtPlotPanner* m_panner;
     QwtPlotGrid* m_grid;
-    StatsGen::CurveType m_CurveType;
-    DistributionType    m_DistributionGroup;
+    AIM::Reconstruction::DistributionType m_DistributionType;
+    AIM::Reconstruction::StatisticsType    m_StatsType;
 
     QVector<QwtPlotCurve* > m_PlotCurves;
 

@@ -125,7 +125,7 @@ public:
 	double totalvol;
 	double totalaxes;
 
-#if 1
+
   void initialize(int nX, int nY, int nZ,
                   double xRes, double yRes, double zRes,
                   bool v_mergetwinsoption,
@@ -135,11 +135,6 @@ public:
                   AIM::Reconstruction::CrystalStructure v_crystruct,
                   int v_alignmeth, bool v_alreadyformed);
 
-#else
-  void initialize(int m_ZStartSlice, int m_ZEndSlice, double m_ZResolution, bool v_mergetwinsoption,
-                  bool v_mergecoloniesoption, int v_minallowedgrainsize, double v_minseedconfidence, double v_downsamplefactor,
-                  double v_minseedimagequality, double v_misorientationtolerance, AIM::Reconstruction::CrystalStructure v_crystruct, int v_alignmeth, bool v_alreadyformed);
-#endif
 
 
 //  void loadSlices(AbstractAngDataLoader::Pointer dataLoader);

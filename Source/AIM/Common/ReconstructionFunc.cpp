@@ -840,7 +840,7 @@ int  ReconstructionFunc::form_grains()
       }
       if (size < minallowedgrainsize)
       {
-        for (int b = 0; b < size; b++)
+        for (size_t b = 0; b < size; b++)
         {
           int index = voxelslist[b];
           voxels[index].grainname = -2;
@@ -3685,7 +3685,6 @@ void ReconstructionFunc::find_schmids()
 // -----------------------------------------------------------------------------
 int ReconstructionFunc::volume_stats(H5ReconStatsWriter::Pointer h5io)
 {
-  int err = 0;
   int retErr = 0;
   double actualgrains = 0;
   double avgvol = 0;
@@ -3976,19 +3975,8 @@ int ReconstructionFunc::volume_stats(H5ReconStatsWriter::Pointer h5io)
   svschmidcr = svschmidcr / (actualgrains * schmidvar);
   svomega3cr = svomega3cr / (actualgrains * omega3var);
 
-
-  err = h5io->writeSizeDistribution(maxdiameter, mindiameter, avglogdiam, sdlogdiam);
-  if (err < 0) { retErr = err; }
-  err = h5io->writeShapeDistribution(AIM::HDF5::Grain_SizeVBoverA_Distributions, maxdiameter, mindiameter, svbovera);
-  if (err < 0) { retErr = err; }
-  err = h5io->writeShapeDistribution(AIM::HDF5::Grain_SizeVCoverA_Distributions, maxdiameter, mindiameter, svcovera);
-  if (err < 0) { retErr = err; }
-  err = h5io->writeShapeDistribution(AIM::HDF5::Grain_SizeVCoverB_Distributions, maxdiameter, mindiameter, svcoverb);
-  if (err < 0) { retErr = err; }
-  err = h5io->writeNeighborDistribution(maxdiameter, mindiameter,neighborhoodfit);
-  if (err < 0) { retErr = err; }
-  err = h5io->writeOmega3Distribution(maxdiameter, mindiameter,svomega3);
-  if (err < 0) { retErr = err; }
+  retErr = h5io->writeVolumeStats(maxdiameter, mindiameter, 1.0, avglogdiam, sdlogdiam,
+                                  svbovera, svcovera, svcoverb, neighborhoodfit, svomega3);
 
   return retErr;
 }
@@ -3998,7 +3986,6 @@ int ReconstructionFunc::volume_stats(H5ReconStatsWriter::Pointer h5io)
 // -----------------------------------------------------------------------------
 int ReconstructionFunc::volume_stats2D(H5ReconStatsWriter::Pointer h5io)
 {
-  int err = 0;
   int retErr = 0;
   double actualgrains = 0;
   double avgvol = 0;
@@ -4217,21 +4204,19 @@ int ReconstructionFunc::volume_stats2D(H5ReconStatsWriter::Pointer h5io)
   svschmidcr = svschmidcr/(actualgrains*schmidvar);
 //  svomega3cr = svomega3cr/(actualgrains*omega3var);
 
-  err = h5io->writeSizeDistribution(maxdiameter, mindiameter, avglogdiam, sdlogdiam);
-  if (err < 0) { retErr = err; }
-  err = h5io->writeShapeDistribution(AIM::HDF5::Grain_SizeVBoverA_Distributions, maxdiameter, mindiameter, svbovera);
-  if (err < 0) { retErr = err; }
-  err = h5io->writeShapeDistribution(AIM::HDF5::Grain_SizeVCoverA_Distributions, maxdiameter, mindiameter, svcovera);
-  if (err < 0) { retErr = err; }
-  err = h5io->writeShapeDistribution(AIM::HDF5::Grain_SizeVCoverB_Distributions, maxdiameter, mindiameter, svcoverb);
-  if (err < 0) { retErr = err; }
-  err = h5io->writeNeighborDistribution(maxdiameter, mindiameter,neighborhoodfit);
-  if (err < 0) { retErr = err; }
-  err = h5io->writeOmega3Distribution(maxdiameter, mindiameter,svomega3);
-  if (err < 0) { retErr = err; }
+
+  retErr = h5io->writeVolumeStats(maxdiameter, mindiameter, 1.0, avglogdiam, sdlogdiam,
+                                  svbovera, svcovera, svcoverb, neighborhoodfit, svomega3);
+
 
   return retErr;
 }
+
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 
 #define WRITE_VTK_GRAIN_HEADER()\
   fprintf(f, "# vtk DataFile Version 2.0\n");\
