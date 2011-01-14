@@ -221,7 +221,7 @@ int GrainGeneratorFunc::readReconStatsData(H5ReconStatsReader::Pointer h5io)
   CHECK_STATS_READ_ERROR(err,  AIM::HDF5::Reconstruction, AIM::HDF5::Grain_Diameter_Info)
 
   //TODO: Do we actually need this (binStepSize) variable?
-  double binStepSize = grainDiamInfo[0];
+  //double binStepSize = grainDiamInfo[0];
 
   maxdiameter  = grainDiamInfo[1];
   mindiameter = grainDiamInfo[2];

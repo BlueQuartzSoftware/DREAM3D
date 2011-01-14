@@ -30,7 +30,7 @@
 */
 class AIMCOMMON_EXPORT Voxel
 {
-public:
+  public:
     Voxel();
     virtual ~Voxel();
 
@@ -38,22 +38,22 @@ public:
     double confidence;
     double imagequality;
     double imagequality2;
-	double ellipfunc;
+   	double ellipfunc;
     int alreadychecked;
-	int nearestneighbor;
-	double nearestneighbordistance;
+    int nearestneighbor;
+    double nearestneighbordistance;
     double euler1;
     double euler2;
     double euler3;
     int neighbor;
-	int numowners;
+    int numowners;
     double misorientation;
-	double kernelmisorientation;
+    double kernelmisorientation;
     int surfacevoxel;
-	int unassigned;
-	double quat[5];
-    std::vector<int>* grainlist;
-    std::vector<double>* ellipfunclist;
+    int unassigned;
+    double quat[5];
+    std::vector<int >* grainlist;
+    std::vector<double >* ellipfunclist;
 
 };
 
