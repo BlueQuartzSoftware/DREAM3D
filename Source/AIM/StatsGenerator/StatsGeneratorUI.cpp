@@ -215,6 +215,7 @@ void StatsGeneratorUI::setupGui()
   m_Omega3Plot->setDistributionType(AIM::Reconstruction::LogNormal);
   m_Omega3Plot->setStatisticsType(AIM::Reconstruction::Grain_SizeVOmega3);
   m_Omega3Plot->blockDistributionTypeChanges(true);
+  m_Omega3Plot->setRowOperationEnabled(false);
 
   m_BOverAPlot->setPlotTitle(QString("B/A Shape Distribution"));
   m_BOverAPlot->setXAxisName(QString("B/A"));
@@ -222,6 +223,7 @@ void StatsGeneratorUI::setupGui()
   m_BOverAPlot->setDistributionType(AIM::Reconstruction::Beta);
   m_BOverAPlot->setStatisticsType(AIM::Reconstruction::Grain_SizeVBoverA);
   m_BOverAPlot->blockDistributionTypeChanges(true);
+  m_BOverAPlot->setRowOperationEnabled(false);
 
   m_COverAPlot->setPlotTitle(QString("C/A Shape Distribution"));
   m_COverAPlot->setXAxisName(QString("C/A"));
@@ -229,14 +231,15 @@ void StatsGeneratorUI::setupGui()
   m_COverAPlot->setDistributionType(AIM::Reconstruction::Beta);
   m_COverAPlot->setStatisticsType(AIM::Reconstruction::Grain_SizeVCoverA);
   m_COverAPlot->blockDistributionTypeChanges(true);
+  m_COverAPlot->setRowOperationEnabled(false);
 
   m_COverBPlot->setPlotTitle(QString("C/B Shape Distribution"));
   m_COverBPlot->setXAxisName(QString("C/B"));
   m_COverBPlot->setYAxisName(QString("Frequency"));
   m_COverBPlot->setDistributionType(AIM::Reconstruction::Beta);
-  m_COverBPlot->setRowOperationEnabled(false);
   m_COverBPlot->setStatisticsType(AIM::Reconstruction::Grain_SizeVCoverB);
   m_COverBPlot->blockDistributionTypeChanges(true);
+  m_COverBPlot->setRowOperationEnabled(false);
 
   m_NeighborPlot->setPlotTitle(QString("Neighbors Distributions"));
   m_NeighborPlot->setXAxisName(QString("Distance (Multiples of Diameter)"));
@@ -244,6 +247,7 @@ void StatsGeneratorUI::setupGui()
   m_NeighborPlot->setDistributionType(AIM::Reconstruction::Power);
   m_NeighborPlot->setStatisticsType(AIM::Reconstruction::Grain_SizeVNeighbors);
   m_NeighborPlot->blockDistributionTypeChanges(true);
+  m_NeighborPlot->setRowOperationEnabled(false);
 
   plotSizeDistribution();
 }
