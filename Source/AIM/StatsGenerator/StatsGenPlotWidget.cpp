@@ -60,7 +60,7 @@ StatsGenPlotWidget::StatsGenPlotWidget(QWidget *parent) :
 QWidget(parent), m_TableModel(NULL),
 //m_zoomer(NULL), m_picker(NULL), m_panner(NULL),
 m_grid(NULL),
-m_DistributionType(AIM::Reconstruction::LogNormal),
+m_DistributionType(AIM::Reconstruction::Unknown),
 m_StatsType(AIM::Reconstruction::UnknownType)
 {
   this->setupUi(this);
@@ -139,13 +139,7 @@ int StatsGenPlotWidget::writeDataToHDF5(H5ReconStatsWriter::Pointer writer)
       break;
     default:
       Q_ASSERT(false);
-
-
-
   }
-
-
-
   return err;
 }
 
@@ -161,6 +155,7 @@ void StatsGenPlotWidget::resetTableModel()
     bins = m_TableModel->getBinNumbers();
   }
 
+
   // Create a new Table Model
   switch(m_DistributionType)
   {
@@ -175,7 +170,7 @@ void StatsGenPlotWidget::resetTableModel()
     break;
 
   default:
-    Q_ASSERT(false);
+    return;
   }
 
 
@@ -199,12 +194,13 @@ void StatsGenPlotWidget::setDistributionType(AIM::Reconstruction::DistributionTy
 {
   m_DistributionType = curveType;
   distributionTypeCombo->setCurrentIndex(m_DistributionType);
+  resetTableModel();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void StatsGenPlotWidget::on_curveTypeCombo_currentIndexChanged(int index)
+void StatsGenPlotWidget::on_distributionTypeCombo_currentIndexChanged(int index)
 {
   m_DistributionType = static_cast<AIM::Reconstruction::DistributionType>(distributionTypeCombo->currentIndex());
   resetTableModel();
@@ -248,7 +244,6 @@ void StatsGenPlotWidget::setupGui()
   QHeaderView* headerView = new QHeaderView(Qt::Horizontal, m_TableView);
   headerView->setResizeMode(QHeaderView::Interactive);
   m_TableView->setHorizontalHeader(headerView);
-
   headerView->show();
 
   // Setup the Qwt Plot Wigets
@@ -267,6 +262,7 @@ void StatsGenPlotWidget::setupGui()
 //  m_panner = new QwtPlotPanner(m_PlotView->canvas());
 //  m_panner->setMouseButton(Qt::MidButton);
 
+  resetTableModel();
 }
 
 // -----------------------------------------------------------------------------

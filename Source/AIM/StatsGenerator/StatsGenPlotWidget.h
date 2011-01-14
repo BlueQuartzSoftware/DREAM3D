@@ -88,7 +88,7 @@ class StatsGenPlotWidget : public QWidget, private Ui::StatsGenPlotWidget
 
     void on_addRowBtn_clicked();
     void on_deleteRowBtn_clicked();
-    void on_curveTypeCombo_currentIndexChanged(int index);
+    void on_distributionTypeCombo_currentIndexChanged(int index);
 
   protected:
     void resetTableModel();
