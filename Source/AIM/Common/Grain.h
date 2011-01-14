@@ -60,7 +60,7 @@ class AIMCOMMON_EXPORT Grain
     double Iyz;
     double Ixz;
     double omega3;
-	double averageimagequality;
+  	double averageimagequality;
     double averagemisorientation;
     double kernelmisorientation;
     double red;

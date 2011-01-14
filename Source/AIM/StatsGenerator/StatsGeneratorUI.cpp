@@ -418,9 +418,10 @@ void StatsGeneratorUI::openFile(QString imageFile)
 // -----------------------------------------------------------------------------
 void StatsGeneratorUI::on_actionSave_triggered()
 {
-  std::cout << "StatsGeneratorUI::on_actionSave_triggered()" << std::endl;
-  QString h5file = QFileDialog::getSaveFileName(this, tr("Save HDF5 File"),
-                                                 m_OpenDialogLastDirectory,
+  //std::cout << "StatsGeneratorUI::on_actionSave_triggered()" << std::endl;
+  QString proposedFile = m_OpenDialogLastDirectory + QDir::separator() + "Statistics.h5";
+  QString h5file = QFileDialog::getSaveFileName(this, tr("Save HDF5 Statistics File"),
+                                                proposedFile,
                                                  tr("HDF5 Files (*.h5)") );
   if ( true == h5file.isEmpty() ){ return;  }
   QFileInfo fi (h5file);
@@ -441,6 +442,7 @@ void StatsGeneratorUI::on_actionSave_triggered()
   if (err < 0) { return; }
 
 
+  // We need to compute the Max and Min Diameter Bin Values
   int mindiameter = std::numeric_limits<int >::max();
   int maxdiameter = std::numeric_limits<int >::min();
  // std::cout << "Bin#" << std::endl;
@@ -451,8 +453,8 @@ void StatsGeneratorUI::on_actionSave_triggered()
     if (binsizes[i] > maxdiameter) { maxdiameter = binsizes[i]; }
   }
 
-  std::cout << "maxdiameter: " << maxdiameter << std::endl;
-  std::cout << "mindiameter: " << mindiameter << std::endl;
+ // std::cout << "maxdiameter: " << maxdiameter << std::endl;
+ // std::cout << "mindiameter: " << mindiameter << std::endl;
   bool ok = false;
   double avglogdiam = m_Mu_SizeDistribution->text().toDouble(&ok);
   double sdlogdiam = m_Sigma_SizeDistribution->text().toDouble(&ok);
@@ -461,18 +463,17 @@ void StatsGeneratorUI::on_actionSave_triggered()
   err = writer->writeSizeDistribution(maxdiameter, mindiameter, 1.0, avglogdiam, sdlogdiam, nBins);
   CHECK_ERROR_ON_WRITE(err, "Size Distribution")
 
-
   // Now that we have bins and grain sizes, push those to the other plot widgets
   // Setup Each Plot Widget
-  m_Omega3Plot->writeDataToHDF5(writer);
+  m_Omega3Plot->writeDataToHDF5(writer, AIM::HDF5::Grain_SizeVOmega3_Distributions);
 
-  m_BOverAPlot->writeDataToHDF5(writer);
+  m_BOverAPlot->writeDataToHDF5(writer, AIM::HDF5::Grain_SizeVBoverA_Distributions);
 
-  m_COverAPlot->writeDataToHDF5(writer);
+  m_COverAPlot->writeDataToHDF5(writer, AIM::HDF5::Grain_SizeVCoverA_Distributions);
 
-  m_COverBPlot->writeDataToHDF5(writer);
+  m_COverBPlot->writeDataToHDF5(writer, AIM::HDF5::Grain_SizeVCoverB_Distributions);
 
-  m_NeighborPlot->writeDataToHDF5(writer);
+  m_NeighborPlot->writeDataToHDF5(writer, AIM::HDF5::Grain_SizeVNeighbors_Distributions);
 
   // Force the clean up of the writer by assigning a NULL pointer which will
   // have the effect of executing the destructor of the H5ReconStatsWriter Class

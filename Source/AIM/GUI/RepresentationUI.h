@@ -68,10 +68,12 @@ class RepresentationUI : public QMainWindow, private Ui::RepresentationUI
     void on_rec_LoadSettingsBtn_clicked();
 
     /* Grain Generator Slots*/
-    void on_gg_H5StatsFileBtn_clicked();
+    void on_gg_InputH5StatisticsFileBtn_clicked();
     void on_gg_OutputDirBtn_clicked();
     void on_gg_AlreadyFormed_stateChanged(int);
     void on_gg_GoBtn_clicked();
+    void on_gg_SaveSettingsBtn_clicked();
+    void on_gg_LoadSettingsBtn_clicked();
 
     /* Surface Meshing Slots */
     void on_sm_InputFileBtn_clicked();
@@ -126,8 +128,8 @@ class RepresentationUI : public QMainWindow, private Ui::RepresentationUI
 
     void on_rec_OutputDir_textChanged(const QString & text);
     void on_rec_H5InputFile_textChanged(const QString &text);
-    
-    void on_gg_H5StatisticsFile_textChanged(const QString & text);
+
+    void on_gg_InputH5StatisticsFile_textChanged(const QString & text);
     void on_gg_OutputDir_textChanged(const QString & text);
 
     void on_sm_InputFile_textChanged(const QString & text);

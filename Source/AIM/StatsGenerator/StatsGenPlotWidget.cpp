@@ -53,6 +53,11 @@
 #include "SGLogNormalTableModel.h"
 #include "SGPowerLawTableModel.h"
 
+#define SG_ERROR_CHECK(name)\
+    std::cout << "Error writing HDF5 data to " << name << std::endl;\
+    std::cout << "  File: " << __FILE__ << std::endl;\
+    std::cout << "  Line: " << __LINE__ << std::endl;
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -60,8 +65,8 @@ StatsGenPlotWidget::StatsGenPlotWidget(QWidget *parent) :
 QWidget(parent), m_TableModel(NULL),
 //m_zoomer(NULL), m_picker(NULL), m_panner(NULL),
 m_grid(NULL),
-m_DistributionType(AIM::Reconstruction::Unknown),
-m_StatsType(AIM::Reconstruction::UnknownType)
+m_DistributionType(AIM::Reconstruction::UnknownDistributionType),
+m_StatsType(AIM::Reconstruction::UnknownStatisticsGroup)
 {
   this->setupUi(this);
   this->setupGui();
@@ -95,50 +100,71 @@ void StatsGenPlotWidget::setPlotTitle(QString title)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int StatsGenPlotWidget::writeDataToHDF5(H5ReconStatsWriter::Pointer writer)
+int StatsGenPlotWidget::writeDataToHDF5(H5ReconStatsWriter::Pointer writer, const std::string &hdf5GroupName)
 {
   int err = 0;
-  if (m_StatsType == AIM::Reconstruction::UnknownType)
+  if (m_StatsType == AIM::Reconstruction::UnknownStatisticsGroup)
   {
     QMessageBox::critical(this, tr("AIM Representation"),
-    tr("This Plot has not been assigned to a Type of Statistics Data. This should be happening from within the program. Contact the developer."),
+    tr("This Plot has not been assigned a Statistics Group. This should be happening from within the program. Contact the developer."),
+    QMessageBox::Ok,
+    QMessageBox::Ok);
+    return -1;
+  }
+
+  if (m_DistributionType == AIM::Reconstruction::UnknownDistributionType)
+  {
+    QMessageBox::critical(this, tr("AIM Representation"),
+    tr("This Plot has not been assigned a known Distribution Type. This should be happening from within the program. Contact the developer."),
     QMessageBox::Ok,
     QMessageBox::Ok);
     return -1;
   }
 
 
-  QVector<int> binNumbers = m_TableModel->getBinNumbers();
-  int mindiameter = std::numeric_limits<int >::max();
-  int maxdiameter = std::numeric_limits<int >::min();
- // std::cout << "Bin#" << std::endl;
-  size_t numsizebins = binNumbers.size();
-  for (size_t i = 0; i < numsizebins; ++i)
+//  QVector<int> binNumbers = m_TableModel->getBinNumbers();
+//  int mindiameter = std::numeric_limits<int >::max();
+//  int maxdiameter = std::numeric_limits<int >::min();
+// // std::cout << "Bin#" << std::endl;
+//  size_t numsizebins = binNumbers.size();
+//  for (size_t i = 0; i < numsizebins; ++i)
+//  {
+//    if (binNumbers[i] < mindiameter) { mindiameter = binNumbers[i]; }
+//    if (binNumbers[i] > maxdiameter) { maxdiameter = binNumbers[i]; }
+//  }
+  std::vector<double> col0;
+  std::vector<double> col1;
+  std::vector<double> col2;
+
+  QVector<double> qcol0;
+  QVector<double> qcol1;
+  QVector<double> qcol2;
+
+  // Create a new Table Model
+  switch(m_DistributionType)
   {
-    if (binNumbers[i] < mindiameter) { mindiameter = binNumbers[i]; }
-    if (binNumbers[i] > maxdiameter) { maxdiameter = binNumbers[i]; }
-  }
+  case AIM::Reconstruction::Beta:
+    col0 = m_TableModel->getData(SGBetaTableModel::Alpha).toStdVector();
+    col1 = m_TableModel->getData(SGBetaTableModel::Beta).toStdVector();
+    err = writer->writeBetaDistribution(hdf5GroupName, col0, col1);
+    if (err < 0) { SG_ERROR_CHECK(hdf5GroupName) }
+    break;
+  case AIM::Reconstruction::LogNormal:
+    col0 = m_TableModel->getData(SGLogNormalTableModel::Average).toStdVector();
+    col1 = m_TableModel->getData(SGLogNormalTableModel::StdDev).toStdVector();
+    err = writer->writeLogNormalDistribution(hdf5GroupName, col0, col1);
+    if (err < 0) { SG_ERROR_CHECK(hdf5GroupName) }
+    break;
+  case AIM::Reconstruction::Power:
+    col0 = m_TableModel->getData(SGPowerLawTableModel::Alpha).toStdVector();
+    col1 = m_TableModel->getData(SGPowerLawTableModel::K).toStdVector();
+    col2 = m_TableModel->getData(SGPowerLawTableModel::Beta).toStdVector();
+    err = writer->writePowerDistribution(hdf5GroupName, col0, col1, col2);
+    if (err < 0) { SG_ERROR_CHECK(hdf5GroupName) }
+    break;
 
-  switch(m_StatsType)
-  {
-
-    case AIM::Reconstruction::Grain_SizeVBoverA:
-    //  writer->writeShapeDistribution(AIM::HDF5::Grain_SizeVBoverA, maxdiameter, mindiameter)
-      break;
-    case AIM::Reconstruction::Grain_SizeVCoverA:
-
-      break;
-    case AIM::Reconstruction::Grain_SizeVCoverB:
-
-      break;
-    case AIM::Reconstruction::Grain_SizeVNeighbors:
-
-      break;
-    case AIM::Reconstruction::Grain_SizeVOmega3:
-
-      break;
-    default:
-      Q_ASSERT(false);
+  default:
+    return -1;
   }
   return err;
 }
