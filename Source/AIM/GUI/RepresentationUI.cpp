@@ -640,7 +640,7 @@ void RepresentationUI::rec_CheckIOFiles()
 // -----------------------------------------------------------------------------
 void RepresentationUI::on_rec_SaveSettingsBtn_clicked()
 {
-  QString proposedFile = m_OpenDialogLastDirectory + QDir::separator() + "Settings.txt";
+  QString proposedFile = m_OpenDialogLastDirectory + QDir::separator() + "ReconstructionSettings.txt";
   QString file = QFileDialog::getSaveFileName(this, tr("Save Reconstruction Settings"),
                                               proposedFile,
                                               tr("*.txt") );
@@ -681,6 +681,7 @@ void RepresentationUI::rec_SaveSettings(QSettings &prefs)
   WRITE_BOOL_SETTING(prefs, HDF5GrainFile, rec_HDF5GrainFile->isChecked())
   prefs.endGroup();
 }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -968,11 +969,11 @@ void RepresentationUI::gg_SetupGui()
 {
   gg_outputfile_msg->setText("");
 
-  if (NULL == gg_H5StatisticsFile->completer()) {
+  if (NULL == gg_InputH5StatisticsFile->completer()) {
     QR3DFileCompleter* com = new QR3DFileCompleter(this, false);
-    gg_H5StatisticsFile->setCompleter(com);
+    gg_InputH5StatisticsFile->setCompleter(com);
     QObject::connect( com, SIGNAL(activated(const QString &)),
-             this, SLOT(on_gg_H5StatisticsFile_textChanged(const QString &)));
+             this, SLOT(on_gg_InputH5StatisticsFile_textChanged(const QString &)));
   }
 
   if (NULL == gg_OutputDir->completer()) {
@@ -983,7 +984,7 @@ void RepresentationUI::gg_SetupGui()
   }
   QString msg ("All files will be over written that appear in the output directory.");
 
-  QFileInfo fi (gg_OutputDir->text() + QDir::separator() +  AIM::SyntheticBuilder::CubeFile.c_str() );
+  QFileInfo fi (gg_OutputDir->text() + QDir::separator() +  AIM::SyntheticBuilder::VisualizationFile.c_str() );
   if (gg_AlreadyFormed->isChecked() == true && fi.exists() == false)
   {
     gg_AlreadyFormed->setChecked(false);
@@ -995,7 +996,7 @@ void RepresentationUI::gg_SetupGui()
   }
   messageLabel->setText(msg);
 
-  m_WidgetList << gg_H5StatisticsFile << gg_H5StatsFileBtn << gg_OutputDir << gg_OutputDirBtn;
+  m_WidgetList << gg_H5StatisticsFile << gg_InputH5StatisticsFileBtn << gg_OutputDir << gg_OutputDirBtn;
   m_WidgetList << gg_CrystalStructure << gg_NumGrains << gg_XResolution << gg_YResolution << gg_ZResolution << gg_FillingErrorWeight;
   m_WidgetList << gg_NeighborhoodErrorWeight << gg_SizeDistErrorWeight << gg_FractionPrecipitates;
   m_WidgetList << gg_ShapeClass << gg_Precipitates << gg_AlreadyFormed;
@@ -1005,10 +1006,37 @@ void RepresentationUI::gg_SetupGui()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void RepresentationUI::on_gg_LoadSettingsBtn_clicked()
+{
+  QString file = QFileDialog::getOpenFileName(this, tr("Select Settings File"),
+                                                 m_OpenDialogLastDirectory,
+                                                 tr("Settings File (*.txt)") );
+  if ( true == file.isEmpty() ){return;  }
+  QSettings prefs(file, QSettings::IniFormat, this);
+  gg_LoadSettings(prefs);
+}
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void RepresentationUI::on_gg_SaveSettingsBtn_clicked()
+{
+  QString proposedFile = m_OpenDialogLastDirectory + QDir::separator() + "GrainGeneratorSettings.txt";
+  QString file = QFileDialog::getSaveFileName(this, tr("Save Grain Generator Settings"),
+                                              proposedFile,
+                                              tr("*.txt") );
+  if ( true == file.isEmpty() ){ return;  }
+
+  QSettings prefs(file, QSettings::IniFormat, this);
+  gg_SaveSettings(prefs);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void RepresentationUI::gg_SaveSettings(QSettings &prefs)
 {
   prefs.beginGroup("GrainGenerator");
-  WRITE_STRING_SETTING(prefs, gg_H5StatisticsFile)
+  WRITE_STRING_SETTING(prefs, gg_InputH5StatisticsFile)
   WRITE_STRING_SETTING(prefs, gg_OutputDir)
   WRITE_SETTING(prefs, gg_XResolution )
   WRITE_SETTING(prefs, gg_YResolution )
@@ -1037,7 +1065,7 @@ void RepresentationUI::gg_LoadSettings(QSettings &prefs)
   double d;
 
   prefs.beginGroup("GrainGenerator");
-  READ_FILEPATH_SETTING(prefs, gg_H5StatisticsFile, "");
+  READ_FILEPATH_SETTING(prefs, gg_InputH5StatisticsFile, "");
   READ_FILEPATH_SETTING(prefs, gg_OutputDir, "");
   READ_SETTING(prefs, gg_XResolution, ok, d, 0.25 , Double);
   READ_SETTING(prefs, gg_YResolution, ok, d, 0.25 , Double);
@@ -1063,11 +1091,11 @@ void RepresentationUI::gg_CheckIOFiles()
 {
 
  // CHECK_QLABEL_INPUT_FILE_EXISTS(AIM::Reconstruction, gg_, H5StatisticsFile)
-
-
-  CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::SyntheticBuilder, gg_, CubeFile)
-  CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::SyntheticBuilder, gg_, AnalysisFile)
+  CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::SyntheticBuilder, gg_, CrystallographicErrorFile)
   CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::SyntheticBuilder, gg_, EulerFile)
+  CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::SyntheticBuilder, gg_, GrainDataFile)
+  CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::SyntheticBuilder, gg_, H5StatisticsFile)
+  CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::SyntheticBuilder, gg_, VisualizationFile)
 }
 
 
@@ -1077,7 +1105,7 @@ void RepresentationUI::gg_CheckIOFiles()
 void RepresentationUI::on_gg_AlreadyFormed_stateChanged(int currentState)
 {
 
-  QString absPath = gg_OutputDir->text() + QDir::separator() + AIM::SyntheticBuilder::CubeFile.c_str();
+  QString absPath = gg_OutputDir->text() + QDir::separator() + AIM::SyntheticBuilder::VisualizationFile.c_str();
   absPath = QDir::toNativeSeparators(absPath);
   QFileInfo fi (absPath);
   QString msg ("All files will be over written that appear in the output directory.");
@@ -1089,7 +1117,7 @@ void RepresentationUI::on_gg_AlreadyFormed_stateChanged(int currentState)
       QMessageBox::Ok,
       QMessageBox::Ok);
       gg_AlreadyFormed->setChecked(false);
-      CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::SyntheticBuilder, gg_, CubeFile)
+      CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::SyntheticBuilder, gg_, VisualizationFile)
   }
 
   if (gg_AlreadyFormed->isChecked())
@@ -1102,7 +1130,7 @@ void RepresentationUI::on_gg_AlreadyFormed_stateChanged(int currentState)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RepresentationUI::on_gg_H5StatsFileBtn_clicked()
+void RepresentationUI::on_gg_InputH5StatisticsFileBtn_clicked()
 {
   QString file = QFileDialog::getOpenFileName(this, tr("Select Input File"),
                                                  m_OpenDialogLastDirectory,
@@ -1126,7 +1154,7 @@ void RepresentationUI::on_gg_OutputDirBtn_clicked()
     if (_verifyPathExists(outputFile, gg_OutputDir) == true )
     {
       gg_CheckIOFiles();
-      QFileInfo fi (gg_OutputDir->text() + QDir::separator() +  AIM::SyntheticBuilder::CubeFile.c_str() );
+      QFileInfo fi (gg_OutputDir->text() + QDir::separator() +  AIM::SyntheticBuilder::VisualizationFile.c_str() );
       if (gg_AlreadyFormed->isChecked() == true && fi.exists() == false)
       {
         gg_AlreadyFormed->setChecked(false);
@@ -1149,7 +1177,7 @@ void RepresentationUI::on_gg_OutputDir_textChanged(const QString & text)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RepresentationUI::on_gg_H5StatisticsFile_textChanged(const QString & text)
+void RepresentationUI::on_gg_InputH5StatisticsFile_textChanged(const QString & text)
 {
 
 
