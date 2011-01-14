@@ -129,7 +129,7 @@ namespace AIM
       Grain_SizeVCoverB,
       Grain_SizeVNeighbors,
       Grain_SizeVOmega3,
-      UnknownType = 999
+      UnknownStatisticsGroup = 999
     };
 
     enum DistributionType
@@ -137,7 +137,7 @@ namespace AIM
       Beta = 0,
       LogNormal = 1,
       Power = 2,
-      Unknown = 999
+      UnknownDistributionType = 999
     };
 
   }
@@ -148,12 +148,15 @@ namespace AIM
   namespace SyntheticBuilder
   {
     /*  Grain Generator Related */
-    const std::string CubeFile("Synthetic_Vis.vtk");
+
     const std::string CrystallographicErrorFile("Synthetic_CrystallographicError.txt");
-    const std::string AnalysisFile("Synthetic_Stats.txt");
     const std::string EulerFile("Synthetic_GrainAngles.txt");
     const std::string GrainDataFile("Synthetic_GrainData.txt");
     const std::string H5StatisticsFile("Synthetic_Results.h5");
+    const std::string VisualizationFile("Synthetic_Vis.vtk");
+//   const std::string AnalysisFile("Synthetic_Stats.txt");
+
+
 
     enum Overlap {
         UnknownOverlap = 0,
