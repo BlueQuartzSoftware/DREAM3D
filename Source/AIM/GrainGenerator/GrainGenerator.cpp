@@ -213,7 +213,23 @@ void GrainGenerator::compute()
    m->matchCrystallography(CrystallographicErrorFile, h5io);
 
    CHECK_FOR_CANCELED(GrainGeneratorFunc)
-   progressMessage(AIM_STRING("Writing Stats"), 65 );
+   progressMessage(AIM_STRING("Finding Grain Centroids"), 68 );
+   m->find_centroids();
+
+   CHECK_FOR_CANCELED(GrainGeneratorFunc)
+   progressMessage(AIM_STRING("Finding Grain Moments"), 71 );
+   m->find_moments();
+
+   CHECK_FOR_CANCELED(GrainGeneratorFunc)
+   progressMessage(AIM_STRING("Finding Grain Principal Axis Lengths"), 74 );
+   m->find_axes();
+
+   CHECK_FOR_CANCELED(GrainGeneratorFunc)
+   progressMessage(AIM_STRING("Finding Grain Principal Axis Directions"), 77 );
+   m->find_vectors(h5io);
+
+   CHECK_FOR_CANCELED(GrainGeneratorFunc)
+   progressMessage(AIM_STRING("Writing Stats"), 87 );
    m->volume_stats(h5io);
 
    CHECK_FOR_CANCELED(GrainGeneratorFunc)

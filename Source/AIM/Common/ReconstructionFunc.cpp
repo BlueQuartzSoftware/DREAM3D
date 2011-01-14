@@ -3680,9 +3680,6 @@ void ReconstructionFunc::find_schmids()
   }
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 int ReconstructionFunc::volume_stats(H5ReconStatsWriter::Pointer h5io)
 {
   int retErr = 0;
@@ -3981,9 +3978,6 @@ int ReconstructionFunc::volume_stats(H5ReconStatsWriter::Pointer h5io)
   return retErr;
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 int ReconstructionFunc::volume_stats2D(H5ReconStatsWriter::Pointer h5io)
 {
   int retErr = 0;
@@ -4214,9 +4208,6 @@ int ReconstructionFunc::volume_stats2D(H5ReconStatsWriter::Pointer h5io)
 
 
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 
 #define WRITE_VTK_GRAIN_HEADER()\
   fprintf(f, "# vtk DataFile Version 2.0\n");\

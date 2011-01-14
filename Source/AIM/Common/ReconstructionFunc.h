@@ -174,8 +174,6 @@ public:
 	void find_convexities();
 	void find_schmids();
 
-  void write_axisodf(const std::string &axisFile);
-  void write_eulerodf(const std::string &eulerFile);
   void write_graindata(const std::string &graindataFile);
 	void align_sections(const std::string &filename );
 

@@ -32,6 +32,7 @@
 
 //-- C++ Includes
 #include <iostream>
+#include <limits>
 
 //-- Qt Includes
 #include <QtGui/QMessageBox>
