@@ -83,6 +83,9 @@ public:
 	double* simmdf;
 	double* actualmicrotex;
 	double* simmicrotex;
+	int *graincounts;
+	double **graincenters;
+	double **grainmoments;
 
   Grain* precipitates;
   int* psizes;
@@ -140,6 +143,7 @@ public:
 	int numdiameters;
 	int worstgrain;
 	int numprecipdiameters;
+	double totalaxes;
 
 	int32_t xpoints;
 	int32_t ypoints;
@@ -191,6 +195,10 @@ public:
 
 	void matchCrystallography(const std::string &ErrorFile, H5ReconStatsWriter::Pointer h5io);
 	void measure_misorientations();
+	void find_centroids ();
+	void find_moments();
+	void find_axes();
+	void find_vectors(H5ReconStatsWriter::Pointer h5io);
 	int volume_stats(H5ReconStatsWriter::Pointer h5io);
 
 	double gamma(double);
