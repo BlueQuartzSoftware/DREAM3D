@@ -14,7 +14,7 @@
 #include <AIM/Common/Qt/AIMAboutBox.h>
 #include <AIM/Common/Qt/QRecentFileList.h>
 #include <AIM/Common/Qt/QR3DFileCompleter.h>
-#include <AIM/Threads/AIMThread.h>
+//#include <AIM/Threads/AIMThread.h>
 #include "AIM/ANG/H5AngDataLoader.h"
 
 
