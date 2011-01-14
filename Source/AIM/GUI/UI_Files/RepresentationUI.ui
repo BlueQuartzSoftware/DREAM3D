@@ -1060,10 +1060,10 @@
            </widget>
           </item>
           <item row="0" column="1">
-           <widget class="QLineEdit" name="gg_H5StatisticsFile"/>
+           <widget class="QLineEdit" name="gg_InputH5StatisticsFile"/>
           </item>
           <item row="0" column="2">
-           <widget class="QPushButton" name="gg_H5StatsFileBtn">
+           <widget class="QPushButton" name="gg_InputH5StatisticsFileBtn">
             <property name="text">
              <string>Select</string>
             </property>
@@ -1090,14 +1090,14 @@
         </item>
         <item>
          <layout class="QGridLayout" name="gridLayout_7">
-          <item row="1" column="2">
+          <item row="1" column="3">
            <widget class="QLabel" name="label_19">
             <property name="text">
              <string>Crystal Structure</string>
             </property>
            </widget>
           </item>
-          <item row="1" column="3">
+          <item row="1" column="4">
            <widget class="QComboBox" name="gg_CrystalStructure">
             <item>
              <property name="text">
@@ -1111,14 +1111,14 @@
             </item>
            </widget>
           </item>
-          <item row="0" column="2">
+          <item row="0" column="3">
            <widget class="QLabel" name="label_20">
             <property name="text">
              <string>Shape Class</string>
             </property>
            </widget>
           </item>
-          <item row="0" column="3">
+          <item row="0" column="4">
            <widget class="QComboBox" name="gg_ShapeClass">
             <item>
              <property name="text">
@@ -1208,14 +1208,14 @@
             </property>
            </widget>
           </item>
-          <item row="2" column="2">
+          <item row="2" column="3">
            <widget class="QLabel" name="label_48">
             <property name="text">
              <string>Precipitate Structure</string>
             </property>
            </widget>
           </item>
-          <item row="2" column="3">
+          <item row="2" column="4">
            <widget class="QComboBox" name="gg_Precipitates">
             <item>
              <property name="text">
@@ -1234,17 +1234,17 @@
             </item>
            </widget>
           </item>
-          <item row="3" column="2">
+          <item row="3" column="3">
            <widget class="QLabel" name="label_49">
             <property name="text">
              <string>Volume Fraction Precipitates</string>
             </property>
            </widget>
           </item>
-          <item row="3" column="3">
+          <item row="3" column="4">
            <widget class="QDoubleSpinBox" name="gg_FractionPrecipitates"/>
           </item>
-          <item row="0" column="4" rowspan="4">
+          <item row="0" column="5" rowspan="4">
            <spacer name="horizontalSpacer_17">
             <property name="orientation">
              <enum>Qt::Horizontal</enum>
@@ -1257,18 +1257,34 @@
             </property>
            </spacer>
           </item>
+          <item row="0" column="2" rowspan="4">
+           <spacer name="horizontalSpacer_23">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeType">
+             <enum>QSizePolicy::Fixed</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>12</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
          </layout>
         </item>
         <item>
          <layout class="QGridLayout" name="gridLayout_25">
-          <item row="0" column="2">
+          <item row="0" column="3">
            <widget class="QLabel" name="label_55">
             <property name="text">
              <string>Space Filling Error Weight</string>
             </property>
            </widget>
           </item>
-          <item row="0" column="3">
+          <item row="0" column="4">
            <widget class="QDoubleSpinBox" name="gg_FillingErrorWeight">
             <property name="minimumSize">
              <size>
@@ -1287,14 +1303,14 @@
             </property>
            </widget>
           </item>
-          <item row="1" column="2">
+          <item row="1" column="3">
            <widget class="QLabel" name="label_3">
             <property name="text">
              <string>Neighborhood Error Weight</string>
             </property>
            </widget>
           </item>
-          <item row="1" column="3">
+          <item row="1" column="4">
            <widget class="QDoubleSpinBox" name="gg_NeighborhoodErrorWeight">
             <property name="minimumSize">
              <size>
@@ -1346,7 +1362,7 @@
             </property>
            </widget>
           </item>
-          <item row="0" column="4" rowspan="2">
+          <item row="0" column="5" rowspan="2">
            <spacer name="horizontalSpacer_16">
             <property name="orientation">
              <enum>Qt::Horizontal</enum>
@@ -1354,6 +1370,22 @@
             <property name="sizeHint" stdset="0">
              <size>
               <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item row="0" column="2" rowspan="2">
+           <spacer name="horizontalSpacer_22">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeType">
+             <enum>QSizePolicy::Fixed</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>12</width>
               <height>20</height>
              </size>
             </property>
@@ -1397,8 +1429,32 @@
             <property name="verticalSpacing">
              <number>4</number>
             </property>
-            <item row="1" column="0">
-             <widget class="QLabel" name="gg_EulerFileIcon">
+            <item row="4" column="1">
+             <widget class="QLabel" name="gg_VisualizationFile">
+              <property name="text">
+               <string>Synthetic_Vis.vtk</string>
+              </property>
+             </widget>
+            </item>
+            <item row="4" column="0">
+             <widget class="QLabel" name="gg_VisualizationFileIcon">
+              <property name="text">
+               <string/>
+              </property>
+              <property name="pixmap">
+               <pixmap resource="../../../../Resources/icons/images/Icons.qrc">:/Delete-16x16.png</pixmap>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="1">
+             <widget class="QLabel" name="gg_CrystallographicErrorFile">
+              <property name="text">
+               <string>Synthetic_CrystallographicError.txt</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="0">
+             <widget class="QLabel" name="gg_CrystallographicErrorFileIcon">
               <property name="text">
                <string/>
               </property>
@@ -1410,12 +1466,12 @@
             <item row="1" column="1">
              <widget class="QLabel" name="gg_EulerFile">
               <property name="text">
-               <string>Euler Angles</string>
+               <string>Synthetic_GrainAngles.txt</string>
               </property>
              </widget>
             </item>
-            <item row="2" column="0">
-             <widget class="QLabel" name="gg_AnalysisFileIcon">
+            <item row="1" column="0">
+             <widget class="QLabel" name="gg_EulerFileIcon">
               <property name="text">
                <string/>
               </property>
@@ -1425,21 +1481,20 @@
              </widget>
             </item>
             <item row="2" column="1">
-             <widget class="QLabel" name="gg_AnalysisFile">
+             <widget class="QLabel" name="gg_GrainDataFile">
+              <property name="minimumSize">
+               <size>
+                <width>300</width>
+                <height>0</height>
+               </size>
+              </property>
               <property name="text">
-               <string>Analysis</string>
+               <string>Synthetic_GrainData.txt</string>
               </property>
              </widget>
             </item>
-            <item row="0" column="1">
-             <widget class="QLabel" name="gg_CubeFile">
-              <property name="text">
-               <string>cube.vtk</string>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="0">
-             <widget class="QLabel" name="gg_CubeFileIcon">
+            <item row="2" column="0">
+             <widget class="QLabel" name="gg_GrainDataFileIcon">
               <property name="text">
                <string/>
               </property>
@@ -1449,7 +1504,7 @@
              </widget>
             </item>
             <item row="3" column="1">
-             <widget class="QLabel" name="gg_H5StatisticsFile_2">
+             <widget class="QLabel" name="gg_H5StatisticsFile">
               <property name="minimumSize">
                <size>
                 <width>300</width>
@@ -1457,7 +1512,7 @@
                </size>
               </property>
               <property name="text">
-               <string>HDF5 Statistics File</string>
+               <string>Synthetic_Results.h5</string>
               </property>
              </widget>
             </item>
@@ -2389,7 +2444,7 @@
   <tabstop>sm_GoBtn</tabstop>
   <tabstop>sm_OutputDirBtn</tabstop>
   <tabstop>sm_InputFile</tabstop>
-  <tabstop>gg_H5StatisticsFile</tabstop>
+  <tabstop>gg_InputH5StatisticsFile</tabstop>
   <tabstop>gg_OutputDir</tabstop>
   <tabstop>gg_NumGrains</tabstop>
   <tabstop>gg_XResolution</tabstop>
@@ -2397,7 +2452,7 @@
   <tabstop>gg_ZResolution</tabstop>
   <tabstop>gg_ShapeClass</tabstop>
   <tabstop>gg_CrystalStructure</tabstop>
-  <tabstop>gg_H5StatsFileBtn</tabstop>
+  <tabstop>gg_InputH5StatisticsFileBtn</tabstop>
   <tabstop>gg_OutputDirBtn</tabstop>
   <tabstop>gg_GoBtn</tabstop>
   <tabstop>sm_InputFileBtn</tabstop>
