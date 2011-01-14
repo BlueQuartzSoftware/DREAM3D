@@ -85,6 +85,13 @@ namespace AIM
     const std::string BetaDistribution("Beta Distribution");
     const std::string LogNormalDistribution("Log Normal Distribution");
     const std::string PowerLawDistribution("Power Law Distribution");
+
+    enum ColumnCount
+    {
+      BetaColumnCount = 2,
+      LogNormalColumnCount = 2,
+      PowerLawColumnCount = 3
+    };
   }
 
   namespace Reconstruction

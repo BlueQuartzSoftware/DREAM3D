@@ -30,7 +30,12 @@
 
 #include "H5ReconStatsReader.h"
 
-
+#define CHECK_STATS_READ_ERROR(err, name)\
+if (err < 0) {\
+  std::cout << "H5ReconStatsReader Error: Could not read the " << name << " Group Data" << std::endl;\
+    std::cout << "  File: " << __FILE__ << std::endl;\
+    std::cout << "  Line: " << __LINE__ << std::endl;\
+return err; }
 
 // -----------------------------------------------------------------------------
 //
@@ -65,42 +70,27 @@ H5ReconStatsReader::Pointer H5ReconStatsReader::New(const std::string &filename)
   return sharedPtr;
 }
 
-#if 0
 // -----------------------------------------------------------------------------
-//  AIM::HDF5::ODF
+//
 // -----------------------------------------------------------------------------
-int H5ReconStatsReader::readODFData(std::vector<double> &data)
+std::string H5ReconStatsReader::getDistributionType(const std::string &group)
 {
-  herr_t retErr = -1;
-  return retErr;
+  herr_t err = 0;
+
+  std::string path = AIM::HDF5::Reconstruction + "/" + group;
+  hid_t fileId = H5Utilities::openFile(m_FileName, false);\
+
+  if (fileId < 0)
+  {
+    return std::string();
+  }
+  std::string data;
+  err = H5Lite::readStringAttribute(fileId, path, AIM::HDF5::DistributionType, data);
+
+  err = H5Utilities::closeFile(fileId);
+  if (err < 0)
+  {
+    data.clear();
+  }
+  return data;
 }
-
-// -----------------------------------------------------------------------------
-//  AIM::HDF5::AxisOrientation
-// -----------------------------------------------------------------------------
-int H5ReconStatsReader::readAxisOrientationData(std::vector<double> &data)
-{
-  herr_t retErr = -1;
-  return retErr;
-}
-
-// -----------------------------------------------------------------------------
-// AIM::HDF5::MisorientationBins
-// -----------------------------------------------------------------------------
-int H5ReconStatsReader::readMisorientationData(std::vector<double> &data)
-{
-  herr_t retErr = -1;
-  return retErr;
-}
-
-// -----------------------------------------------------------------------------
-//  AIM::HDF5::MicroTextureBins
-// -----------------------------------------------------------------------------
-int H5ReconStatsReader::readODFData(std::vector<double> &data)
-{
-  herr_t retErr = -1;
-  return retErr;
-}
-
-
-#endif

@@ -10,11 +10,8 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 #include "GrainGenerator.h"
-//#include "AIM/ANG/AngDirectoryPatterns.h"
-//#include "AIM/ANG/AngReader.h"
-//#include "AIM/ANG/AngDataLoader.h"
 #include "AIM/Common/HDF5/H5ReconStatsReader.h"
-#include <MXA/Utilities/MXADir.h>
+#include "MXA/Utilities/MXADir.h"
 
 
 #define CREATE_INPUT_FILENAME(f, n)\
