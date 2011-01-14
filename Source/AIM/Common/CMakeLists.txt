@@ -57,9 +57,6 @@ SET (AIMCommon_SRCS
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Quaternions.cpp
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/VTKFileUtils.cpp
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/MisorientationCalculations.cpp
-    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/HDF5/AIM_H5VtkDataWriter.cpp
-    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/HDF5/H5ReconStatsWriter.cpp
-    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/HDF5/H5ReconStatsReader.cpp
     )
 
 SET (AIMCommon_HDRS
@@ -80,13 +77,23 @@ SET (AIMCommon_HDRS
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Quaternions.h
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/MisorientationCalculations.h
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/OIMColoring.hpp
+    )
+cmp_IDE_SOURCE_PROPERTIES( "AIM/Common" "${AIMCommon_HDRS}" "${AIMCommon_SRCS}" ${PROJECT_INSTALL_HEADERS})
+
+    
+set (AIMCommon_HDF5_SRCS
+    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/HDF5/AIM_H5VtkDataWriter.cpp
+    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/HDF5/H5ReconStatsWriter.cpp
+    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/HDF5/H5ReconStatsReader.cpp
+    )
+set (AIMCommon_HDF5_HDRS
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/HDF5/AIM_H5VtkDataWriter.h
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/HDF5/VTKH5Constants.h
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/HDF5/H5ReconStatsWriter.h
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/HDF5/H5ReconStatsReader.h
 )
+cmp_IDE_SOURCE_PROPERTIES( "AIM/Common/HDF5" "${AIMCommon_HDF5_HDRS}" "${AIMCommon_HDF5_SRCS}" ${PROJECT_INSTALL_HEADERS})
 
-cmp_IDE_SOURCE_PROPERTIES( "AIM/Common" "${AIMCommon_HDRS}" "${AIMCommon_SRCS}" ${PROJECT_INSTALL_HEADERS})
 
 # --------------------------------------------------------------------
 include_directories(${HDF5_INCLUDE_DIR})
@@ -100,6 +107,8 @@ set (AIMCommon_SRCS
     ${AIMCommon_HDRS}
     ${ANG_SRCS}
     ${ANG_HDRS}
+    ${AIMCommon_HDF5_SRCS}
+    ${AIMCommon_HDF5_HDRS}
     )
 
 configure_file(${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/AIMCommonConfiguration.h.in

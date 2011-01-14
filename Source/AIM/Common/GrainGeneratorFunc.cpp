@@ -132,13 +132,15 @@ void GrainGeneratorFunc::initialize2()
   voxels = new Voxel[totalpoints];
 }
 
-#define CHECK_STATS_READ_ERROR(err, name)\
+#define CHECK_STATS_READ_ERROR(err, group, dataset)\
 if (err < 0) {\
-  std::cout << "GrainGeneratorFunc::readReconStatsData Error: Could not read the " << name << " Group Data" << std::endl;\
-  return err; }
+  std::cout << "GrainGeneratorFunc::readReconStatsData Error: Could not read '" << group << "' data set '" << dataset << "'" << std::endl;\
+  std::cout << "  File: " << __FILE__ << std::endl;\
+  std::cout << "  Line: " << __LINE__ << std::endl;\
+return err; }
 
 
-#define READ_STATS_DATA_DISTRIBUTION(err, group, var)\
+#define READ_STATS_DATA_DISTRIBUTION_OLD(err, group, var)\
     path = group + ("/") + AIM::HDF5::BinNumber;\
     err = h5io->readStatsDataset(path, binNumbers);\
     CHECK_STATS_READ_ERROR(err, path)\
@@ -161,53 +163,182 @@ if (err < 0) {\
     }
 
 
+#define READ_2_COLUMN_STATS_DATA(err, group, var, distribution, Col0Hdr, Col1Hdr, ColCount)\
+    {\
+    std::string disType = h5io->getDistributionType(group);\
+    var.resize(numdiameters);\
+    if (disType.compare(distribution) != 0)\
+    {\
+      std::cout << "Error Reading " << group <<\
+          " the distribution must be of type '" << distribution << "' but is of type '"\
+          << disType << "'" << std::endl;\
+      return -1;\
+    }\
+    std::vector<double> col0;\
+    std::vector<double> col1;\
+    path = group + ("/") + Col0Hdr;\
+    err = h5io->readStatsDataset(path, col0);\
+    CHECK_STATS_READ_ERROR(err, group, Col0Hdr)\
+    path = group + ("/") + Col1Hdr;\
+    err = h5io->readStatsDataset(path, col1);\
+    CHECK_STATS_READ_ERROR(err, group, Col1Hdr)\
+    for (size_t temp7 = 0; temp7 < nBins; temp7++)\
+    {\
+      var[temp7].resize(ColCount);\
+      var[temp7][0] = col0[temp7];\
+      var[temp7][1] = col1[temp7];\
+    }\
+    }
+
+
+
+#define READ_3_COLUMN_STATS_DATA(err, group, var, distribution, Col0Hdr, Col1Hdr, Col2Hdr, ColCount)\
+    {\
+    std::string disType = h5io->getDistributionType(group);\
+    var.resize(numdiameters);\
+    if (disType.compare(distribution) != 0)\
+    {\
+      std::cout << "Error Reading " << group <<\
+          " the distribution must be of type '" << distribution << "' but is of type '"\
+          << disType << "'" << std::endl;\
+      return -1;\
+    }\
+    std::vector<double> col0;\
+    std::vector<double> col1;\
+    std::vector<double> col2;\
+    path = group + ("/") + Col0Hdr;\
+    err = h5io->readStatsDataset(path, col0);\
+    CHECK_STATS_READ_ERROR(err, group, Col0Hdr)\
+    path = group + ("/") + Col1Hdr;\
+    err = h5io->readStatsDataset(path, col1);\
+    CHECK_STATS_READ_ERROR(err, group, Col1Hdr)\
+    path = group + ("/") + Col2Hdr;\
+    err = h5io->readStatsDataset(path, col2);\
+    CHECK_STATS_READ_ERROR(err, group, Col2Hdr)\
+    for (size_t temp7 = 0; temp7 < nBins; temp7++)\
+    {\
+      var[temp7].resize(ColCount);\
+      var[temp7][0] = col0[temp7];\
+      var[temp7][1] = col1[temp7];\
+      var[temp7][2] = col2[temp7];\
+    }\
+    }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 int GrainGeneratorFunc::readReconStatsData(H5ReconStatsReader::Pointer h5io)
 {
   int err = -1;
-  std::vector<int> int_data;
+  std::vector<double> grainDiamInfo;
   std::vector<double> double_data;
   std::string path;
+
+  /* Read the BinNumbers data set */
+  std::vector<double> bins;
+  err = h5io->readStatsDataset(AIM::HDF5::BinNumber, bins);
+  CHECK_STATS_READ_ERROR(err, AIM::HDF5::Reconstruction, AIM::HDF5::BinNumber)
+  numdiameters = bins.size();
+  size_t nBins = bins.size();
+
   /* Read the Grain_Diameter_Info Data */
-  err = h5io->readStatsDataset(AIM::HDF5::Grain_Diameter_Info, int_data);
-  CHECK_STATS_READ_ERROR(err, AIM::HDF5::Grain_Diameter_Info)
-  numdiameters = int_data[0];
-  maxdiameter  = int_data[1];
-  mindiameter = int_data[2];
+  err = h5io->readStatsDataset(AIM::HDF5::Grain_Diameter_Info, grainDiamInfo);
+  CHECK_STATS_READ_ERROR(err,  AIM::HDF5::Reconstruction, AIM::HDF5::Grain_Diameter_Info)
+
+  //TODO: Do we actually need this (binStepSize) variable?
+  double binStepSize = grainDiamInfo[0];
+
+  maxdiameter  = grainDiamInfo[1];
+  mindiameter = grainDiamInfo[2];
 
   /* Read the Grain_Size_Distribution Data */
   err = h5io->readStatsDataset(AIM::HDF5::Grain_Size_Distribution, double_data);
-  CHECK_STATS_READ_ERROR(err, AIM::HDF5::Grain_Size_Distribution)
+  CHECK_STATS_READ_ERROR(err,  AIM::HDF5::Reconstruction, AIM::HDF5::Grain_Size_Distribution)
   avgdiam = double_data[0];
   sddiam = double_data[1];
-  grainsizedist.resize(maxdiameter+1);
-  simgrainsizedist.resize(maxdiameter+1);
+  grainsizedist.resize(numdiameters);
+  simgrainsizedist.resize(numdiameters);
   double root2pi = pow((2.0 * 3.1415926535897), 0.5);
-  for(int i=0;i<maxdiameter+1;i++)
+  for (int i = 0; i < numdiameters; i++)
   {
-	if(i < mindiameter) grainsizedist[i] = 0;
-	if(i >= mindiameter)
-	{
-		grainsizedist[i] = (1.0 / (double(i+0.5) * double_data[1] * root2pi)) * exp(-((log(double(i+0.5)) - double_data[0]) * (log(double(i+0.5)) - double_data[0])) / (2 * double_data[1 * double_data[1]]));
-	}
+    if (i < mindiameter)
+    {
+      grainsizedist[i] = 0;
+    }
+    if (i >= mindiameter)
+    {
+      grainsizedist[i] = (1.0 / (double(i + 0.5) * double_data[1] * root2pi)) * exp(-((log(double(i + 0.5)) - double_data[0]) * (log(double(i + 0.5))
+          - double_data[0])) / (2 * double_data[1 * double_data[1]]));
+    }
+  }
+
+  /* MIKE GROEBER--- PLEASE READ -------
+   *
+   *   I was not sure how to handle a different distribution than what is wanted for
+   * each statistics group so I put in code to throw an error and return if the
+   * distribution type encoded on the Statistics group in the HDF5 file is NOT
+   * the proper type. If you want to get the distribution type for a given
+   * statistics group then use the H5ReconStatsReader::getDistributionType(string)
+   * method. This will retrieve the Attribute from the group as a string then you
+   * can compare it to what you are wanting it to be. For example this code:
+   *
+   * std::string disType = h5io->getDistributionType(AIM::HDF5::Grain_SizeVBoverA_Distributions);\
+   *
+   * and then you can compare it with the constants in the Constants.h file like so:
+   *
+   * if (disType.compare(AIM::HDF5::BetaDistribution) == 0) {....}
+   *
+   * else if (disType.compare(AIM::HDF5::LogNormalDistribution) == 0) {....}
+   *
+   * This basic code should work although I have not tried very much of it
+   */
+
+
+  /* Read the Shape Data */
+  READ_2_COLUMN_STATS_DATA(err, AIM::HDF5::Grain_SizeVBoverA_Distributions, bovera, AIM::HDF5::BetaDistribution, AIM::HDF5::Alpha, AIM::HDF5::Beta, AIM::HDF5::BetaColumnCount);
+  READ_2_COLUMN_STATS_DATA(err, AIM::HDF5::Grain_SizeVCoverA_Distributions, covera, AIM::HDF5::BetaDistribution, AIM::HDF5::Alpha, AIM::HDF5::Beta, AIM::HDF5::BetaColumnCount);
+  READ_2_COLUMN_STATS_DATA(err, AIM::HDF5::Grain_SizeVCoverB_Distributions, coverb, AIM::HDF5::BetaDistribution, AIM::HDF5::Alpha, AIM::HDF5::Beta, AIM::HDF5::BetaColumnCount);
+
+  /* Read the Omega3 Data */
+  READ_2_COLUMN_STATS_DATA(err, AIM::HDF5::Grain_SizeVOmega3_Distributions, omega3,
+                           AIM::HDF5::LogNormalDistribution,
+                           AIM::HDF5::Average, AIM::HDF5::StandardDeviation,
+                           AIM::HDF5::LogNormalColumnCount);
+
+  /* Read the Neighbor Data */
+  READ_3_COLUMN_STATS_DATA(err, AIM::HDF5::Grain_SizeVNeighbors_Distributions, neighborhood,
+                           AIM::HDF5::PowerLawDistribution,
+                           AIM::HDF5::Alpha, AIM::HDF5::Beta, AIM::HDF5::Exp_k,
+                           AIM::HDF5::PowerLawColumnCount);
+
+
+  /* Convert the data into the various "shell" data which is the data that is actually needed.
+   * The conversion is done "in place" by extracting out the alpha, beta, and K values then
+   * using those values to calculate the 3 values that get put back into the row.
+   */
+  double a, b, k;
+  for (size_t temp7 = 0; temp7 < nBins; temp7++)
+  {
+    a = neighborhood[temp7][0];
+    b = neighborhood[temp7][1];
+    k = neighborhood[temp7][2];
+    neighborhood[temp7][0] = a*pow(1,k)+b;
+    neighborhood[temp7][1] = a*pow(2,k)+b;
+    neighborhood[temp7][2] = a*pow(3,k)+b;
   }
 
 
-  /* Read the Grain_SizeVBoverA_Distributions Data */
-  std::vector<int> binNumbers;
-  std::vector<double> averages;
-  std::vector<double>  stdDevs;
 
+#if 0
   READ_STATS_DATA_DISTRIBUTION(err, AIM::HDF5::Grain_SizeVBoverA_Distributions, bovera)
   READ_STATS_DATA_DISTRIBUTION(err, AIM::HDF5::Grain_SizeVCoverA_Distributions, covera)
   READ_STATS_DATA_DISTRIBUTION(err, AIM::HDF5::Grain_SizeVCoverB_Distributions, coverb)
+
   READ_STATS_DATA_DISTRIBUTION(err, AIM::HDF5::Grain_SizeVOmega3_Distributions, omega3)
+
   std::vector<double> a;
   std::vector<double> b;
   std::vector<double> k;
-
 
   path = AIM::HDF5::Grain_SizeVNeighbors_Distributions + ("/") + AIM::HDF5::BinNumber;
   err = h5io->readStatsDataset(path, binNumbers);
@@ -235,8 +366,11 @@ int GrainGeneratorFunc::readReconStatsData(H5ReconStatsReader::Pointer h5io)
       neighborhood[binNumbers[temp7]][2] = a[temp7]*pow(3,k[temp7])+b[temp7];
     }
   }
-  neighbordist.resize(maxdiameter + 1);
-  for (int i = 0; i < maxdiameter + 1; i++)
+
+#endif
+
+  neighbordist.resize(nBins);
+  for (size_t i = 0; i < nBins; i++)
   {
     neighbordist[i].resize(3, 0.0);
   }
@@ -244,6 +378,9 @@ int GrainGeneratorFunc::readReconStatsData(H5ReconStatsReader::Pointer h5io)
   return err;
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 int  GrainGeneratorFunc::readAxisOrientationData(H5ReconStatsReader::Pointer h5io)
 {
   std::vector<double> density;
