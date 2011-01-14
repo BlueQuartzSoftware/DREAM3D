@@ -95,22 +95,34 @@ void GrainGeneratorFunc::initialize(int32_t m_NumGrains, int32_t m_ShapeClass, d
   sizedisterrorweight = m_sizedisterrorweight;
 
   grains.resize((numextragrains+1), Grain());
+  size_t nElements = 0;
   if(crystruct == AIM::Reconstruction::Hexagonal)
   {
-	  actualodf = new double [36*36*12];
-	  simodf = new double [36*36*12];
+    nElements = 36*36*12;
   }
   if(crystruct == AIM::Reconstruction::Cubic)
   {
-	  actualodf = new  double [18*18*18];
-	  simodf = new double [18*18*18];
+    nElements = 18*18*18;
   }
-  axisodf = new double [18*18*18];
-  precipaxisodf = new double [18*18*18];
-  actualmdf = new double [18*18*18];
-  simmdf = new double [18*18*18];
-  actualmicrotex = new double [10];
-  simmicrotex = new double [10];
+  actualodf = new double [nElements];
+  ::memset(actualodf, 0, nElements*sizeof(double) );
+  simodf = new double [nElements];
+  ::memset(simodf, 0, nElements*sizeof(double) );
+
+  nElements = 18*18*18;
+  axisodf = new double [nElements];
+  ::memset(axisodf, 0, nElements*sizeof(double) );
+  precipaxisodf = new double [nElements];
+  ::memset(precipaxisodf, 0, nElements*sizeof(double) );
+  actualmdf = new double [nElements];
+  ::memset(actualmdf, 0, nElements*sizeof(double) );
+  simmdf = new double [nElements];
+  ::memset(simmdf, 0, nElements*sizeof(double) );
+  nElements = 10;
+  actualmicrotex = new double [nElements];
+  ::memset(actualmicrotex, 0, nElements*sizeof(double) );
+  simmicrotex = new double [nElements];
+  ::memset(simmicrotex, 0, nElements*sizeof(double) );
 }
 void GrainGeneratorFunc::initialize2()
 {
@@ -303,15 +315,31 @@ int GrainGeneratorFunc::readReconStatsData(H5ReconStatsReader::Pointer h5io)
   return err;
 }
 
+
+#define GGF_CHECK_READ_ERROR(func, name)\
+    std::cout << "GrainGeneratorFunc::" << #func << " Error: There was an error trying to read the data set '"\
+      << name << "' from the HDF5 file." << std::endl;\
+      std::cout << "  File: " << __FILE__ << std::endl;\
+      std::cout << "  Line: " << __LINE__ << std::endl;\
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 int  GrainGeneratorFunc::readAxisOrientationData(H5ReconStatsReader::Pointer h5io)
 {
   std::vector<double> density;
   int err = 0;
   double totaldensity = 0;
+  size_t size = 0;
 //FIXME: Where is the reading of the Precipiate Data?
   err = h5io->readStatsDataset(AIM::HDF5::AxisOrientation, density);
-//FIXME: This seems to be forcing FCC. What if the reconstruction was Hexagonal?
-  size_t size = 18 * 18 * 18;
+  if (err < 0)
+  {
+    GGF_CHECK_READ_ERROR(readAxisOrientationData, AIM::HDF5::AxisOrientation)
+    //FIXME: This should probably return an ERROR because nothing was read
+    return 10;
+  }
+//FIXME: This seems to be forcing Cubic. What if the reconstruction was Hexagonal?
+  size = 18 * 18 * 18;
 
   if (size != density.size() )
   {
@@ -334,6 +362,12 @@ int GrainGeneratorFunc::readODFData(H5ReconStatsReader::Pointer h5io)
   std::vector<double> density;
   int err = 0;
   err = h5io->readStatsDataset(AIM::HDF5::ODF, density);
+  if (err < 0)
+  {
+    GGF_CHECK_READ_ERROR(readODFData, AIM::HDF5::ODF)
+    //FIXME: This should probably return an ERROR because nothing was read
+    return 10;
+  }
   size_t numbins = 0;
   if(crystruct == AIM::Reconstruction::Hexagonal) numbins = 36*36*12;
   if(crystruct == AIM::Reconstruction::Cubic) numbins = 18*18*18;
@@ -348,7 +382,7 @@ int GrainGeneratorFunc::readODFData(H5ReconStatsReader::Pointer h5io)
   for (size_t i = 0; i < numbins; i++)
   {
     actualodf[i] = density[i];
-	simodf[i] = 0.0;
+    simodf[i] = 0.0;
   }
   return err;
 }
@@ -358,6 +392,12 @@ int GrainGeneratorFunc::readMisorientationData(H5ReconStatsReader::Pointer h5io)
   std::vector<double> density;
   int err = 0;
   err = h5io->readStatsDataset(AIM::HDF5::MisorientationBins, density);
+  if (err < 0)
+  {
+    GGF_CHECK_READ_ERROR(readMisorientationData, AIM::HDF5::MisorientationBins)
+   //FIXME: This should probably return an ERROR because nothing was read
+    return 10;
+  }
   size_t numbins = 18*18*18;
 
   if (numbins != density.size() )
@@ -371,7 +411,7 @@ int GrainGeneratorFunc::readMisorientationData(H5ReconStatsReader::Pointer h5io)
   for (size_t k = 0; k < numbins; k++)
   {
     actualmdf[k] = density[k];
-	simmdf[k] = 0.0;
+    simmdf[k] = 0.0;
   }
   return err;
 }
@@ -382,6 +422,12 @@ int GrainGeneratorFunc::readMicroTextureData(H5ReconStatsReader::Pointer h5io)
   std::vector<double> density;
   int err = 0;
   err = h5io->readStatsDataset(AIM::HDF5::MicroTextureBins, density);
+  if (err < 0)
+  {
+    GGF_CHECK_READ_ERROR(readStatsDataset, AIM::HDF5::MicroTextureBins)
+    //FIXME: This should probably return an ERROR because nothing was read
+    return 10;
+  }
   size_t numbins = 10;
 
   if (numbins != density.size() )
@@ -914,12 +960,17 @@ double GrainGeneratorFunc::check_sizedisterror(int gadd, int gremove)
 	}
 	return sizedisterror;
 }
-int  GrainGeneratorFunc::pack_grains(int numgrains)
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int  GrainGeneratorFunc::pack_grains(const std::string &filename, int numgrains)
 {
   totalvol = 0;
   double change1, change2, change3;
-  ofstream outFile;
-  string filename = "test.txt";
+
+  std::ofstream outFile;
+//  string filename = "test.txt";
   outFile.open(filename.c_str());
   size_t index;
   double xc, yc, zc;

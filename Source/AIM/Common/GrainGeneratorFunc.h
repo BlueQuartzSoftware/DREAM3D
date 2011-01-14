@@ -184,7 +184,7 @@ public:
 	void determine_neighbors();
 	double check_neighborhooderror(int gadd, int gremove);
 	double check_sizedisterror(int gadd, int gremove);
-	int pack_grains(int);
+	int pack_grains(const std::string &filename, int numgrains);
 	void assign_voxels(int);
 	void fill_gaps(int);
 	int create_precipitates();
