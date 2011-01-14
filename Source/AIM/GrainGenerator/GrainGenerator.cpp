@@ -151,7 +151,7 @@ void GrainGenerator::compute()
 
 	   CHECK_FOR_CANCELED(GrainGeneratorFunc)
 	   progressMessage(AIM_STRING("Assigning Voxels"), 30 );
-	   m->numgrains = m->assign_voxels(m->numgrains);
+	   m->assign_voxels(m->numgrains);
 
 	   CHECK_FOR_CANCELED(GrainGeneratorFunc)
 	   progressMessage(AIM_STRING("Filling Gaps"), 40 );
