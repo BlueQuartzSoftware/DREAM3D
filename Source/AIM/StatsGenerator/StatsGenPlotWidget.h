@@ -64,7 +64,7 @@ class StatsGenPlotWidget : public QWidget, private Ui::StatsGenPlotWidget
 
     void setPlotTitle(QString title);
 
-    int writeDataToHDF5(H5ReconStatsWriter::Pointer writer);
+    int writeDataToHDF5(H5ReconStatsWriter::Pointer writer, const std::string &hdf5GroupName);
 
     void setStatisticsType(AIM::Reconstruction::StatisticsType statsType);
     void setDistributionType(AIM::Reconstruction::DistributionType distributionType);
