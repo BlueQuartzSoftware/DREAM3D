@@ -3704,14 +3704,14 @@ int ReconstructionFunc::volume_stats(H5ReconStatsWriter::Pointer h5io)
   double maxschmid = 0;
   double maxomega3 = 0;
   vector<int > neighdistfunc;
-  neighborhood.resize(maxdiameter + 1);
-  neighborhoodfit.resize(maxdiameter + 1);
-  svbovera.resize(maxdiameter + 1);
-  svcovera.resize(maxdiameter + 1);
-  svcoverb.resize(maxdiameter + 1);
-  svschmid.resize(maxdiameter + 1);
-  svomega3.resize(maxdiameter + 1);
-  for (int temp = 0; temp < (maxdiameter + 1); temp++)
+  neighborhood.resize((maxdiameter-mindiameter)+1);
+  neighborhoodfit.resize((maxdiameter-mindiameter)+1);
+  svbovera.resize((maxdiameter-mindiameter)+1);
+  svcovera.resize((maxdiameter-mindiameter)+1);
+  svcoverb.resize((maxdiameter-mindiameter)+1);
+  svschmid.resize((maxdiameter-mindiameter)+1);
+  svomega3.resize((maxdiameter-mindiameter)+1);
+  for (int temp = 0; temp < ((maxdiameter-mindiameter)+1); temp++)
   {
     neighborhood[temp].resize(7, 0);
     neighborhoodfit[temp].resize(4, 0);
@@ -3731,7 +3731,6 @@ int ReconstructionFunc::volume_stats(H5ReconStatsWriter::Pointer h5io)
       double voxvol = vol * resx * resy * resz;
       double logvol = log(voxvol);
       double diam = m_Grains[i].equivdiameter;
-      int diamint = int(diam);
       double logdiam = log(diam);
       double I1 = m_Grains[i].radius1;
       double I2 = m_Grains[i].radius2;
@@ -3762,6 +3761,7 @@ int ReconstructionFunc::volume_stats(H5ReconStatsWriter::Pointer h5io)
       avglogdiam = avglogdiam + logdiam;
       avgschmid = avgschmid + schmid;
       avgomega3 = avgomega3 + omega3;
+      int diamint = int(diam)-mindiameter;
       neighborhood[diamint][0]++;
       svbovera[diamint][0]++;
       svcovera[diamint][0]++;
@@ -3791,8 +3791,7 @@ int ReconstructionFunc::volume_stats(H5ReconStatsWriter::Pointer h5io)
       if (omega3 > maxomega3) maxomega3 = omega3;
     }
   }
-  int maxdiamint = int(maxdiam);
-  for (int temp3 = 0; temp3 < (maxdiamint + 1); temp3++)
+  for (int temp3 = 0; temp3 < ((maxdiameter-mindiameter)+1); temp3++)
   {
     if (svbovera[temp3][0] != 0)
     {
@@ -3841,7 +3840,6 @@ int ReconstructionFunc::volume_stats(H5ReconStatsWriter::Pointer h5io)
       double logvol = log(voxvol);
       double rad_3 = 0.75 * (1 / m_pi) * voxvol;
       double diam = 2 * pow(rad_3, 0.333333333);
-      int diamint = int(diam);
       double logdiam = log(diam);
       double I1 = m_Grains[j].radius1;
       double I2 = m_Grains[j].radius2;
@@ -3872,6 +3870,7 @@ int ReconstructionFunc::volume_stats(H5ReconStatsWriter::Pointer h5io)
       sdlogdiam = sdlogdiam + ((logdiam - avglogdiam) * (logdiam - avglogdiam));
       sdschmid = sdschmid + ((schmid - avgschmid) * (schmid - avgschmid));
       sdomega3 = sdomega3 + ((omega3 - avgomega3) * (omega3 - avgomega3));
+      int diamint = int(diam)-mindiameter;
       svbovera[diamint][2] = svbovera[diamint][2] + ((bovera - svbovera[diamint][1]) * (bovera - svbovera[diamint][1]));
       svcovera[diamint][2] = svcovera[diamint][2] + ((covera - svcovera[diamint][1]) * (covera - svcovera[diamint][1]));
       svcoverb[diamint][2] = svcoverb[diamint][2] + ((coverb - svcoverb[diamint][1]) * (coverb - svcoverb[diamint][1]));
@@ -3887,7 +3886,7 @@ int ReconstructionFunc::volume_stats(H5ReconStatsWriter::Pointer h5io)
       }
     }
   }
-  for (int temp4 = 0; temp4 < (maxdiamint + 1); temp4++)
+  for (int temp4 = 0; temp4 < ((maxdiameter-mindiameter)+1); temp4++)
   {
     if (svbovera[temp4][0] != 0)
     {
@@ -3958,7 +3957,7 @@ int ReconstructionFunc::volume_stats(H5ReconStatsWriter::Pointer h5io)
   double svcoverbcr = 0;
   double svschmidcr = 0;
   double svomega3cr = 0;
-  for (int temp5 = 0; temp5 < (maxdiamint + 1); temp5++)
+  for (int temp5 = 0; temp5 < ((maxdiameter-mindiameter)+1); temp5++)
   {
     svboveracr = svboveracr + (svbovera[temp5][0] * ((svbovera[temp5][1] - avgbovera) * (svbovera[temp5][1] - avgbovera)));
     svcoveracr = svcoveracr + (svcovera[temp5][0] * ((svcovera[temp5][1] - avgcovera) * (svcovera[temp5][1] - avgcovera)));
@@ -4002,14 +4001,14 @@ int ReconstructionFunc::volume_stats2D(H5ReconStatsWriter::Pointer h5io)
   double maxschmid = 0;
 //  double maxomega3 = 0;
   vector<int> neighdistfunc;
-  neighborhood.resize(maxdiameter+1);
-  neighborhoodfit.resize(maxdiameter+1);
-  svbovera.resize(maxdiameter+1);
-  svcovera.resize(maxdiameter+1);
-  svcoverb.resize(maxdiameter+1);
-  svschmid.resize(maxdiameter+1);
-  svomega3.resize(maxdiameter+1);
-  for(int temp = 0; temp < (maxdiameter+1); temp++)
+  neighborhood.resize((maxdiameter-mindiameter)+1);
+  neighborhoodfit.resize((maxdiameter-mindiameter)+1);
+  svbovera.resize((maxdiameter-mindiameter)+1);
+  svcovera.resize((maxdiameter-mindiameter)+1);
+  svcoverb.resize((maxdiameter-mindiameter)+1);
+  svschmid.resize((maxdiameter-mindiameter)+1);
+  svomega3.resize((maxdiameter-mindiameter)+1);
+  for(int temp = 0; temp < ((maxdiameter-mindiameter)+1); temp++)
   {
 	neighborhood[temp].resize(7,0);
 	neighborhoodfit[temp].resize(4,0);
@@ -4029,7 +4028,6 @@ int ReconstructionFunc::volume_stats2D(H5ReconStatsWriter::Pointer h5io)
       double voxvol = vol*resx*resy;
       double logvol = log(voxvol);
 	  double diam = m_Grains[i].equivdiameter;
-      int diamint = int(diam);
       double logdiam = log(diam);
       double rad1 = m_Grains[i].radius1;
       double rad2 = m_Grains[i].radius2;
@@ -4044,6 +4042,7 @@ int ReconstructionFunc::volume_stats2D(H5ReconStatsWriter::Pointer h5io)
       avglogdiam = avglogdiam+logdiam;
       avgschmid = avgschmid+schmid;
 //      avgomega3 = avgomega3+omega3;
+      int diamint = int(diam)-mindiameter;
       neighborhood[diamint][0]++;
       svbovera[diamint][0]++;
       svschmid[diamint][0]++;
@@ -4067,8 +4066,7 @@ int ReconstructionFunc::volume_stats2D(H5ReconStatsWriter::Pointer h5io)
 //      if(omega3 > maxomega3) maxomega3 = omega3;
     }
   }
-  int maxdiamint = int(maxdiam);
-  for(int temp3 = 0; temp3 < (maxdiamint+1); temp3++)
+  for(int temp3 = 0; temp3 < ((maxdiameter-mindiameter)+1); temp3++)
   {
     if(svbovera[temp3][0] != 0)
     {
@@ -4110,7 +4108,6 @@ int ReconstructionFunc::volume_stats2D(H5ReconStatsWriter::Pointer h5io)
       double voxvol = vol*resx*resy*resz;
       double logvol = log(voxvol);
 	  double diam = m_Grains[j].equivdiameter;
-      int diamint = int(diam);
       double logdiam = log(diam);
       double rad1 = m_Grains[j].radius1;
       double rad2 = m_Grains[j].radius2;
@@ -4125,6 +4122,7 @@ int ReconstructionFunc::volume_stats2D(H5ReconStatsWriter::Pointer h5io)
       sdlogdiam = sdlogdiam + ((logdiam-avglogdiam)*(logdiam-avglogdiam));
       sdschmid = sdschmid + ((schmid-avgschmid)*(schmid-avgschmid));
 //      sdomega3 = sdomega3 + ((omega3-avgomega3)*(omega3-avgomega3));
+      int diamint = int(diam)-mindiameter;
       svbovera[diamint][2] = svbovera[diamint][2] + ((bovera-svbovera[diamint][1])*(bovera-svbovera[diamint][1]));
       svschmid[diamint][2] = svschmid[diamint][2] + ((schmid-svschmid[diamint][1])*(schmid-svschmid[diamint][1]));
 //      svomega3[diamint][2] = svomega3[diamint][2] + ((omega3-svomega3[diamint][1])*(omega3-svomega3[diamint][1]));
@@ -4137,7 +4135,7 @@ int ReconstructionFunc::volume_stats2D(H5ReconStatsWriter::Pointer h5io)
 	  }
     }
   }
-  for(int temp4 = 0; temp4 < (maxdiamint+1); temp4++)
+  for(int temp4 = 0; temp4 < ((maxdiameter-mindiameter)+1); temp4++)
   {
     if(svbovera[temp4][0] != 0)
     {
@@ -4188,7 +4186,7 @@ int ReconstructionFunc::volume_stats2D(H5ReconStatsWriter::Pointer h5io)
   double svboveracr = 0;
   double svschmidcr = 0;
 //  double svomega3cr = 0;
-  for(int temp5 = 0; temp5 < (maxdiamint+1); temp5++)
+  for(int temp5 = 0; temp5 < ((maxdiameter-mindiameter)+1); temp5++)
   {
     svboveracr = svboveracr + (svbovera[temp5][0]*((svbovera[temp5][1]-avgbovera)*(svbovera[temp5][1]-avgbovera)));
     svschmidcr = svschmidcr + (svschmid[temp5][0]*((svschmid[temp5][1]-avgschmid)*(svschmid[temp5][1]-avgschmid)));
