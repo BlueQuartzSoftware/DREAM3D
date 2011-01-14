@@ -1302,7 +1302,7 @@ void RepresentationUI::sm_LoadSettings(QSettings &prefs)
   QString val;
   bool ok;
   qint32 i;
-  double d;
+  //double d;
 
   prefs.beginGroup("SurfaceMesh");
   READ_FILEPATH_SETTING(prefs, sm_InputFile, "");
@@ -1738,7 +1738,7 @@ void RepresentationUI::oim_LoadSettings(QSettings &prefs)
   QString val;
   bool ok;
   qint32 i;
-  double d;
+  //double d;
 
   prefs.beginGroup("OIMImport");
   READ_FILEPATH_SETTING(prefs, oim_InputDir, "");
