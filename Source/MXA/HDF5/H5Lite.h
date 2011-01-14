@@ -1026,7 +1026,7 @@ static herr_t readVectorDataset(hid_t loc_id,
 // std::cout << "  Opening " << dsetName << " for data Retrieval.  " << std::endl;
   did = H5Dopen( loc_id, dsetName.c_str() );
   if ( did < 0 ) {
-    std::cout << " Error opening Dataset: " << did << std::endl;
+    std::cout << " Error opening Dataset: " << dsetName << std::endl;
     return -1;
   }
   if ( did >= 0 ) {
@@ -1047,7 +1047,7 @@ static herr_t readVectorDataset(hid_t loc_id,
        // for (uint32_t i = 0; i<numElements; ++i) { data[i] = 55555555;  }
         err = H5Dread(did, dataType, H5S_ALL, H5S_ALL, H5P_DEFAULT, &( data.front() ) );
         if (err < 0) {
-          std::cout << "Error Reading Data." << std::endl;
+          std::cout << "Error Reading Data.'" << dsetName << "'" << std::endl;
           retErr = err;
         }
       }
