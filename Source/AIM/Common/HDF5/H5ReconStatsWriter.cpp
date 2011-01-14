@@ -315,8 +315,8 @@ int H5ReconStatsWriter::writeVolumeStats(double maxdiameter, double mindiameter,
     // Convert from Row Major to Column Major
     for (size_t temp7 = 0; temp7 < nBins; ++temp7)
     {
-      alpha[temp7] = svbovera[temp7 + mindiameter][3];
-      beta[temp7] = svbovera[temp7 + mindiameter][4];
+      alpha[temp7] = svbovera[temp7][3];
+      beta[temp7] = svbovera[temp7][4];
     }
     err = writeBetaDistribution(AIM::HDF5::Grain_SizeVBoverA_Distributions, alpha, beta);
     if (err < 0)
@@ -333,8 +333,8 @@ int H5ReconStatsWriter::writeVolumeStats(double maxdiameter, double mindiameter,
     // Convert from Row Major to Column Major
     for (size_t temp7 = 0; temp7 < nBins; ++temp7)
     {
-      alpha[temp7] = svcovera[temp7 + mindiameter][3];
-      beta[temp7] = svcovera[temp7 + mindiameter][4];
+      alpha[temp7] = svcovera[temp7][3];
+      beta[temp7] = svcovera[temp7][4];
     }
     err = writeBetaDistribution(AIM::HDF5::Grain_SizeVCoverA_Distributions, alpha, beta);
     if (err < 0)
@@ -351,8 +351,8 @@ int H5ReconStatsWriter::writeVolumeStats(double maxdiameter, double mindiameter,
     // Convert from Row Major to Column Major
     for (size_t temp7 = 0; temp7 < nBins; ++temp7)
     {
-      alpha[temp7] = svcoverb[temp7 + mindiameter][3];
-      beta[temp7] = svcoverb[temp7 + mindiameter][4];
+      alpha[temp7] = svcoverb[temp7][3];
+      beta[temp7] = svcoverb[temp7][4];
     }
     err = writeBetaDistribution(AIM::HDF5::Grain_SizeVCoverB_Distributions, alpha, beta);
     if (err < 0)
@@ -370,9 +370,9 @@ int H5ReconStatsWriter::writeVolumeStats(double maxdiameter, double mindiameter,
     // Convert from Row Major to Column Major
     for (size_t temp7 = 0; temp7 < nBins; ++temp7)
     {
-      alpha[temp7] = neighborhoodfit[temp7 + mindiameter][1];
-      beta[temp7] = neighborhoodfit[temp7 + mindiameter][2];
-      k[temp7] = neighborhoodfit[temp7 + mindiameter][3];
+      alpha[temp7] = neighborhoodfit[temp7][1];
+      beta[temp7] = neighborhoodfit[temp7][2];
+      k[temp7] = neighborhoodfit[temp7][3];
     }
     err = writePowerDistribution(AIM::HDF5::Grain_SizeVNeighbors_Distributions, alpha, k, beta);
     if (err < 0)
@@ -389,8 +389,8 @@ int H5ReconStatsWriter::writeVolumeStats(double maxdiameter, double mindiameter,
     // Convert from Row Major to Column Major
     for (size_t temp7 = 0; temp7 < nBins; ++temp7)
     {
-      average[temp7] = svomega3[temp7 + mindiameter][3];
-      stdDev[temp7] = svomega3[temp7 + mindiameter][4];
+      average[temp7] = svomega3[temp7][3];
+      stdDev[temp7] = svomega3[temp7][4];
     }
     err = writeLogNormalDistribution(AIM::HDF5::Grain_SizeVOmega3_Distributions, average, stdDev);
     if (err < 0)
@@ -403,167 +403,6 @@ int H5ReconStatsWriter::writeVolumeStats(double maxdiameter, double mindiameter,
 }
 
 
-
-#if 0
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int H5ReconStatsWriter::writeNeighborDistribution(int maxdiameter, int mindiameter,
-                                              const std::vector<std::vector<double> > &neighborhoodfit)
-{
-  herr_t err = 0;
-  herr_t retErr = 0;
-  OPEN_HDF5_FILE(m_FileName)
-  CREATE_RECONSTRUCTION_GROUP(AIM::HDF5::Reconstruction)
-  std::vector<hsize_t> dims(1);
-  dims[0] = 3;
-  std::vector<int> binNum((maxdiameter) + 1);
-
-  /* ************   Grain_SizeVNeighbors_Distributions *************************** */
-  hid_t disId = H5Utilities::createGroup(gid, AIM::HDF5::Grain_SizeVNeighbors_Distributions);
-  std::vector<double> a((maxdiameter) + 1, 0.0);
-  std::vector<double> b((maxdiameter) + 1, 0.0);
-  std::vector<double> k((maxdiameter) + 1, 0.0);
-  for (int temp7 = mindiameter; temp7 < (maxdiameter) + 1; temp7++)
-  {
-    binNum[temp7] = temp7;
-    a[temp7] = neighborhoodfit[temp7][1];
-    b[temp7] =  neighborhoodfit[temp7][2];
-    k[temp7] =  neighborhoodfit[temp7][3];
-  }
-  dims.resize(1); // Single Dimension
-  dims[0] = binNum.size();
-  err = H5Lite::writeVectorDataset(disId, AIM::HDF5::BinNumber, dims, binNum);
-  err = H5Lite::writeVectorDataset(disId, AIM::HDF5::alpha, dims, a);
-  err = H5Lite::writeVectorDataset(disId, AIM::HDF5::beta, dims, b);
-  err = H5Lite::writeVectorDataset(disId, AIM::HDF5::Exp_k, dims, k);
-  err = H5Gclose(disId);
-
-  /* Clean up the rest of the HDF5 structures and close the file */
-  err = H5Gclose(gid);
-  if (err < 0) { retErr = err; }
-  err = H5Utilities::closeFile(fileId);
-  if (err < 0) { retErr = err; }
-  return retErr;
-}
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int H5ReconStatsWriter::writeShapeDistribution(const std::string &name,
-                                               int maxdiameter, int mindiameter,
-                                               const std::vector<std::vector<double> > &data )
-{
-  herr_t err = 0;
-  herr_t retErr = 0;
-  OPEN_HDF5_FILE(m_FileName)
-  CREATE_RECONSTRUCTION_GROUP(AIM::HDF5::Reconstruction)
-  std::vector<hsize_t > dims(1);
-  dims[0] = 3;
-
-  /* ************   Shape Distribution *************************** */
-  hid_t disId = H5Utilities::createGroup(gid, name);
-  std::vector<int> binNum((maxdiameter) + 1);
-  std::vector<double> average((maxdiameter) + 1, 0.0);
-  std::vector<double> stdDev((maxdiameter) + 1, 0.0);
-  // Convert from Row Major to Column Major
-  for (int temp7 = mindiameter; temp7 < (maxdiameter) + 1; temp7++)
-  {
-    binNum[temp7] = temp7;
-    average[temp7] = data[temp7][3];
-    stdDev[temp7] = data[temp7][4];
-  }
-  dims.resize(1); // Single Dimension
-  dims[0] = binNum.size();
-  err = H5Lite::writeVectorDataset(disId, AIM::HDF5::BinNumber, dims, binNum);
-  //TODO: Check Error
-  err = H5Lite::writeVectorDataset(disId, AIM::HDF5::Average, dims, average);
-  err = H5Lite::writeVectorDataset(disId, AIM::HDF5::StandardDeviation, dims, stdDev);
-  err = H5Gclose(disId);
-
-  /* Clean up the rest of the HDF5 structures and close the file */
-  err = H5Gclose(gid);
-  if (err < 0) { retErr = err; }
-  err = H5Utilities::closeFile(fileId);
-  if (err < 0) { retErr = err; }
-  return retErr;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int H5ReconStatsWriter::writeOmega3Distribution(int maxdiameter, int mindiameter,
-                            const std::vector<std::vector<double> > &svomega3)
-{
-  herr_t err = 0;
-  herr_t retErr = 0;
-  OPEN_HDF5_FILE(m_FileName)
-  CREATE_RECONSTRUCTION_GROUP(AIM::HDF5::Reconstruction)
-  std::vector<hsize_t> dims(1);
-  dims[0] = 3;
-  std::vector<int> binNum((maxdiameter) + 1);
-  std::vector<double> average((maxdiameter) + 1, 0.0);
-  std::vector<double> stdDev((maxdiameter) + 1, 0.0);
-
-  /* ************   Grain_SizeVOmega3_Distributions *************************** */
-  hid_t disId = H5Utilities::createGroup(gid, AIM::HDF5::Grain_SizeVOmega3_Distributions);
-  for (int temp7 = mindiameter; temp7 < (maxdiameter) + 1; temp7++)
-  {
-    binNum[temp7] = temp7;
-    average[temp7] = svomega3[temp7][3];
-    stdDev[temp7] = svomega3[temp7][4];
-  }
-  dims.resize(1); // Single Dimension
-  dims[0] = binNum.size();
-  err = H5Lite::writeVectorDataset(disId, AIM::HDF5::BinNumber, dims, binNum);
-  err = H5Lite::writeVectorDataset(disId, AIM::HDF5::Average, dims, average);
-  err = H5Lite::writeVectorDataset(disId, AIM::HDF5::StandardDeviation, dims, stdDev);
-  err = H5Gclose(disId);
-
-  /* Clean up the rest of the HDF5 structures and close the file */
-  err = H5Gclose(gid);
-  if (err < 0) { retErr = err; }
-  err = H5Utilities::closeFile(fileId);
-  if (err < 0) { retErr = err; }
-  return retErr;
-}
-
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int H5ReconStatsWriter::writeStatsData(int maxdiameter, int mindiameter,
-                                       double avglogdiam, double sdlogdiam,
-                                       const std::vector<std::vector<double> > &neighborhoodfit,
-                                       const std::vector<std::vector<double> > &svbovera,
-                                       const std::vector<std::vector<double> > &svcovera,
-                                       const std::vector<std::vector<double> > &svcoverb,
-                                       const std::vector<std::vector<double> > &svomega3)
-{
-  herr_t err = 0;
-  herr_t retErr = 0;
-  err = writeSizeDistribution(maxdiameter, mindiameter, avglogdiam, sdlogdiam);
-  if (err < 0) { retErr = err; }
-  err = writeShapeDistribution(AIM::HDF5::Grain_SizeVBoverA_Distributions, maxdiameter, mindiameter, svbovera);
-  if (err < 0) { retErr = err; }
-  err = writeShapeDistribution(AIM::HDF5::Grain_SizeVCoverA_Distributions, maxdiameter, mindiameter, svcovera);
-  if (err < 0) { retErr = err; }
-  err = writeShapeDistribution(AIM::HDF5::Grain_SizeVCoverB_Distributions, maxdiameter, mindiameter, svcoverb);
-  if (err < 0) { retErr = err; }
-  err = writeNeighborDistribution(maxdiameter, mindiameter,neighborhoodfit);
-  if (err < 0) { retErr = err; }
-  err = writeOmega3Distribution(maxdiameter, mindiameter,svomega3);
-  if (err < 0) { retErr = err; }
-
-  return retErr;
-}
-#endif
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 int H5ReconStatsWriter::writeMisorientationBinsData(double* misobins, size_t nElements)
 {
   herr_t err = 0;
