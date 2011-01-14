@@ -2192,12 +2192,14 @@ void  GrainGeneratorFunc::find_neighbors()
   neighbors[3] = 1;
   neighbors[4] = xpoints;
   neighbors[5] = (xpoints*ypoints);
-  double column = 0;
-  double row = 0;
-  double plane = 0;
+  double column, row, plane;
+  double x, y, z;
+  double xn, yn, zn;
+  double xdist, ydist, zdist;
   int grain;
   int nnum;
   int onsurf = 0;
+  double dist, dist2, diam, diam2;
   int good = 0;
   int neighbor = 0;
   totalsurfacearea=0;
@@ -2205,7 +2207,7 @@ void  GrainGeneratorFunc::find_neighbors()
   int nListSize = 1000;
   std::vector<int> nlist(nListSize, -1);
   std::vector<double> nsalist(nListSize, -1);
-  for(int i=1;i<numgrains;i++)
+  for(int i=0;i<numgrains;i++)
   {
     int numneighs = int(nlist.size());
 	grains[i].numneighbors = 0;
@@ -2213,6 +2215,7 @@ void  GrainGeneratorFunc::find_neighbors()
     grains[i].neighborlist->swap(nlist);
     grains[i].neighborsurfarealist = new std::vector<double>(numneighs);
     grains[i].neighborsurfarealist->swap(nsalist);
+	grains[i].neighbordistfunc.resize(3,0);
   }
   for(int j = 0; j < (xpoints*ypoints*zpoints); j++)
   {
@@ -2223,7 +2226,8 @@ void  GrainGeneratorFunc::find_neighbors()
 		column = j%xpoints;
 		row = (j/xpoints)%ypoints;
 		plane = j/(xpoints*ypoints);
-		if(column == 0 || column == (xpoints-1) || row == 0 || row == (ypoints-1) || plane == 0 || plane == (zpoints-1)) grains[grain].surfacegrain = surfacegrain;
+		if((column == 0 || column == (xpoints-1) || row == 0 || row == (ypoints-1) || plane == 0 || plane == (zpoints-1)) && zpoints != 1) grains[grain].surfacegrain = surfacegrain;
+		if((column == 0 || column == (xpoints-1) || row == 0 || row == (ypoints-1)) && zpoints == 1) grains[grain].surfacegrain = surfacegrain;
         for(int k=0;k<6;k++)
         {
 		  good = 1;
@@ -2234,12 +2238,12 @@ void  GrainGeneratorFunc::find_neighbors()
           if(k == 4 && row == (ypoints-1)) good = 0;
           if(k == 2 && column == 0) good = 0;
           if(k == 3 && column == (xpoints-1)) good = 0;
-		  if(good == 1 && voxels[neighbor].grainname != grain && voxels[neighbor].grainname >= 0)
+		  if(good == 1 && voxels[neighbor].grainname != grain && voxels[neighbor].grainname > 0)
           {
 			  onsurf++;
 			  nnum = grains[grain].numneighbors;
 			  vector<int>* nlist = grains[grain].neighborlist;
-			  if (nnum >= (0.9*nlist->size()))
+			  if (nnum >= (nlist->size()))
 			  {
 				 nlist->resize(nnum + nListSize);
 			  }
@@ -2284,8 +2288,37 @@ void  GrainGeneratorFunc::find_neighbors()
     grains[i].neighborsurfarealist = new std::vector<double>(numneighs);
     grains[i].neighborsurfarealist = nsalist;
   }
+  for(int i=1;i<numgrains;i++)
+  {
+	x = grains[i].centroidx;
+	y = grains[i].centroidy;
+	z = grains[i].centroidz;
+	diam = grains[i].equivdiameter;
+	for(int j=i;j<numgrains;j++)
+	{
+		xn = grains[j].centroidx;
+		yn = grains[j].centroidy;
+		zn = grains[j].centroidz;
+		diam2 = grains[j].equivdiameter;
+		xdist = fabs(x-xn);
+		ydist = fabs(y-yn);
+		zdist = fabs(z-zn);
+		dist = (xdist*xdist)+(ydist*ydist)+(zdist*zdist);
+		dist = pow(dist,0.5);
+		dist2 = dist;
+		dist = int(dist/diam);
+		dist2 = int(dist2/diam2);
+		if(dist < 3)
+		{
+			grains[i].neighbordistfunc[dist]++;
+		}
+		if(dist2 < 3)
+		{
+			grains[j].neighbordistfunc[dist2]++;
+		}
+	}
+  }
 }
-
 
 void GrainGeneratorFunc::matchCrystallography(const std::string &ErrorFile, H5ReconStatsWriter::Pointer h5io)
 {
