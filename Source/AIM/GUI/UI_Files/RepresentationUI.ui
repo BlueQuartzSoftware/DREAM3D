@@ -1060,7 +1060,7 @@
            </widget>
           </item>
           <item row="0" column="1">
-           <widget class="QLineEdit" name="gg_InputH5StatisticsFile"/>
+           <widget class="QLineEdit" name="gg_H5InputStatisticsFile"/>
           </item>
           <item row="0" column="2">
            <widget class="QPushButton" name="gg_InputH5StatisticsFileBtn">
@@ -2444,7 +2444,7 @@
   <tabstop>sm_GoBtn</tabstop>
   <tabstop>sm_OutputDirBtn</tabstop>
   <tabstop>sm_InputFile</tabstop>
-  <tabstop>gg_InputH5StatisticsFile</tabstop>
+  <tabstop>gg_H5InputStatisticsFile</tabstop>
   <tabstop>gg_OutputDir</tabstop>
   <tabstop>gg_NumGrains</tabstop>
   <tabstop>gg_XResolution</tabstop>
