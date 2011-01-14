@@ -1205,7 +1205,7 @@ void RepresentationUI::on_gg_GoBtn_clicked()
 
 
   m_GrainGenerator = GrainGenerator::New(NULL);
-  m_GrainGenerator->setH5StatsFile(gg_H5StatisticsFile->text().toStdString() );
+  m_GrainGenerator->setH5StatsFile(gg_InputH5StatisticsFile->text().toStdString() );
   m_GrainGenerator->setOutputDirectory(gg_OutputDir->text().toStdString());
   m_GrainGenerator->setNumGrains(gg_NumGrains->value());
 
