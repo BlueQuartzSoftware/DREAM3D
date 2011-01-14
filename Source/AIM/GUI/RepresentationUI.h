@@ -129,7 +129,7 @@ class RepresentationUI : public QMainWindow, private Ui::RepresentationUI
     void on_rec_OutputDir_textChanged(const QString & text);
     void on_rec_H5InputFile_textChanged(const QString &text);
 
-    void on_gg_InputH5StatisticsFile_textChanged(const QString & text);
+    void on_gg_H5InputStatisticsFile_textChanged(const QString & text);
     void on_gg_OutputDir_textChanged(const QString & text);
 
     void on_sm_InputFile_textChanged(const QString & text);

@@ -590,18 +590,6 @@ void RepresentationUI::rec_SetupGui()
   }
   messageLabel->setText(msg);
 
-
-//  rec_StatsFile->setVisible(false);
-//  rec_MisorientationBinsFile->setVisible(false);
-//  rec_MicroTextureFile->setVisible(false);
-//  rec_AxisOrientationsFile->setVisible(false);
-//  rec_ODFFile->setVisible(false);
-//  rec_StatsFileIcon->setVisible(false);
-//  rec_MisorientationBinsFileIcon->setVisible(false);
-//  rec_MicroTextureFileIcon->setVisible(false);
-//  rec_AxisOrientationsFileIcon->setVisible(false);
-//  rec_ODFFileIcon->setVisible(false);
-
   m_WidgetList << rec_OutputDir << rec_OutputDirBtn;
   m_WidgetList << rec_ZStartIndex << rec_ZEndIndex;
   m_WidgetList << rec_mergeTwins << rec_mergeColonies << rec_alreadyFormed << alignMeth << minAllowedGrainSize << minConfidence << downsampleFactor << misOrientationTolerance;
@@ -969,11 +957,11 @@ void RepresentationUI::gg_SetupGui()
 {
   gg_outputfile_msg->setText("");
 
-  if (NULL == gg_InputH5StatisticsFile->completer()) {
+  if (NULL == gg_H5InputStatisticsFile->completer()) {
     QR3DFileCompleter* com = new QR3DFileCompleter(this, false);
-    gg_InputH5StatisticsFile->setCompleter(com);
+    gg_H5InputStatisticsFile->setCompleter(com);
     QObject::connect( com, SIGNAL(activated(const QString &)),
-             this, SLOT(on_gg_InputH5StatisticsFile_textChanged(const QString &)));
+             this, SLOT(on_gg_H5InputStatisticsFile_textChanged(const QString &)));
   }
 
   if (NULL == gg_OutputDir->completer()) {
@@ -1036,7 +1024,7 @@ void RepresentationUI::on_gg_SaveSettingsBtn_clicked()
 void RepresentationUI::gg_SaveSettings(QSettings &prefs)
 {
   prefs.beginGroup("GrainGenerator");
-  WRITE_STRING_SETTING(prefs, gg_InputH5StatisticsFile)
+  WRITE_STRING_SETTING(prefs, gg_H5InputStatisticsFile)
   WRITE_STRING_SETTING(prefs, gg_OutputDir)
   WRITE_SETTING(prefs, gg_XResolution )
   WRITE_SETTING(prefs, gg_YResolution )
@@ -1065,7 +1053,7 @@ void RepresentationUI::gg_LoadSettings(QSettings &prefs)
   double d;
 
   prefs.beginGroup("GrainGenerator");
-  READ_FILEPATH_SETTING(prefs, gg_InputH5StatisticsFile, "");
+  READ_FILEPATH_SETTING(prefs, gg_H5InputStatisticsFile, "");
   READ_FILEPATH_SETTING(prefs, gg_OutputDir, "");
   READ_SETTING(prefs, gg_XResolution, ok, d, 0.25 , Double);
   READ_SETTING(prefs, gg_YResolution, ok, d, 0.25 , Double);
@@ -1089,8 +1077,6 @@ void RepresentationUI::gg_LoadSettings(QSettings &prefs)
 // -----------------------------------------------------------------------------
 void RepresentationUI::gg_CheckIOFiles()
 {
-
- // CHECK_QLABEL_INPUT_FILE_EXISTS(AIM::Reconstruction, gg_, H5StatisticsFile)
   CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::SyntheticBuilder, gg_, CrystallographicErrorFile)
   CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::SyntheticBuilder, gg_, EulerFile)
   CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::SyntheticBuilder, gg_, GrainDataFile)
@@ -1138,7 +1124,7 @@ void RepresentationUI::on_gg_InputH5StatisticsFileBtn_clicked()
   if ( true == file.isEmpty() ){return;  }
   QFileInfo fi (file);
   QString ext = fi.suffix();
-  gg_H5StatisticsFile->setText(fi.absoluteFilePath());
+  gg_H5InputStatisticsFile->setText(fi.absoluteFilePath());
 }
 
 // -----------------------------------------------------------------------------
@@ -1177,7 +1163,7 @@ void RepresentationUI::on_gg_OutputDir_textChanged(const QString & text)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RepresentationUI::on_gg_InputH5StatisticsFile_textChanged(const QString & text)
+void RepresentationUI::on_gg_H5InputStatisticsFile_textChanged(const QString & text)
 {
 
 
@@ -1201,11 +1187,8 @@ void RepresentationUI::on_gg_GoBtn_clicked()
 
   SANITY_CHECK_INPUT(gg_, OutputDir)
 
-//  SANITY_CHECK_QLABEL_FILE(AIM::Reconstruction, gg_, H5StatisticsFile)
-
-
   m_GrainGenerator = GrainGenerator::New(NULL);
-  m_GrainGenerator->setH5StatsFile(gg_InputH5StatisticsFile->text().toStdString() );
+  m_GrainGenerator->setH5StatsFile(gg_H5InputStatisticsFile->text().toStdString() );
   m_GrainGenerator->setOutputDirectory(gg_OutputDir->text().toStdString());
   m_GrainGenerator->setNumGrains(gg_NumGrains->value());
 
