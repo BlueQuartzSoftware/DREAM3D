@@ -121,7 +121,7 @@ void GrainGenerator::compute()
   std::string hdf5ResultsFile = m_OutputDirectory + MXADir::Separator + AIM::SyntheticBuilder::H5StatisticsFile;
   H5ReconStatsWriter::Pointer h5io = H5ReconStatsWriter::New(hdf5ResultsFile);
   std::string visFile = m_OutputDirectory + MXADir::Separator + AIM::SyntheticBuilder::VisualizationFile;
-
+  std::string packGrainsFile = m_OutputDirectory + MXADir::Separator + AIM::SyntheticBuilder::PackGrainsFile;
   m = GrainGeneratorFunc::New();
   m->initialize(m_NumGrains, m_ShapeClass, m_XResolution, m_YResolution, m_ZResolution, m_FillingErrorWeight, m_NeighborhoodErrorWeight, m_SizeDistErrorWeight, m_Precipitates, m_CrystalStructure, m_FractionPrecipitates);
 
@@ -147,7 +147,7 @@ void GrainGenerator::compute()
 
     CHECK_FOR_CANCELED(GrainGeneratorFunc)
     progressMessage(AIM_STRING("Packing Grains"), 25);
-    m->numgrains = m->pack_grains(m->numgrains);
+    m->numgrains = m->pack_grains(packGrainsFile, m->numgrains);
 
     CHECK_FOR_CANCELED(GrainGeneratorFunc)
     progressMessage(AIM_STRING("Assigning Voxels"), 30);

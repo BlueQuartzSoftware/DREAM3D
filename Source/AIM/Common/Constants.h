@@ -154,6 +154,7 @@ namespace AIM
     const std::string GrainDataFile("Synthetic_GrainData.txt");
     const std::string H5StatisticsFile("Synthetic_Results.h5");
     const std::string VisualizationFile("Synthetic_Vis.vtk");
+    const std::string PackGrainsFile("PackGrains.txt");
 //   const std::string AnalysisFile("Synthetic_Stats.txt");
 
 
