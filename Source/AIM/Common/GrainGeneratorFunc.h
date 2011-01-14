@@ -185,7 +185,7 @@ public:
 	double check_neighborhooderror(int gadd, int gremove);
 	double check_sizedisterror(int gadd, int gremove);
 	int pack_grains(int);
-	int assign_voxels(int);
+	void assign_voxels(int);
 	void fill_gaps(int);
 	int create_precipitates();
 	void insert_precipitates(int);

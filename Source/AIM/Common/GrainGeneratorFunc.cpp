@@ -1129,12 +1129,11 @@ int  GrainGeneratorFunc::pack_grains(int numgrains)
     grains[i + 1] = grains[activegrainlist[i]];
   }
   grains.resize(activegrainlist.size() + 1);
-  return (activegrainlist.size());
+  return (grains.size());
 }
 
-int GrainGeneratorFunc::assign_voxels(int numgrains)
+void GrainGeneratorFunc::assign_voxels(int numgrains)
 {
-  int count = 0;
   int index;
   int column, row, plane;
   double inside;
@@ -1154,9 +1153,8 @@ int GrainGeneratorFunc::assign_voxels(int numgrains)
   totalpoints = xpoints * ypoints * zpoints;
   delete [] voxels;
   voxels = new Voxel[totalpoints];
-  for(int i=1;i<numgrains+1;i++)
+  for(int i=1;i<numgrains;i++)
   {
-	  count++;
 	  double volcur = grains[i].volume;
 	  double bovera = grains[i].radius2;
 	  double covera = grains[i].radius3;
@@ -1312,7 +1310,6 @@ int GrainGeneratorFunc::assign_voxels(int numgrains)
 	  grains[i].centroidy = yc;
 	  grains[i].centroidz = zc;
   }
-  return(count);
 }
 void  GrainGeneratorFunc::assign_eulers(int numgrains)
 {
@@ -1325,7 +1322,7 @@ void  GrainGeneratorFunc::assign_eulers(int numgrains)
   double totaldensity = 0;
   double synea1=0,synea2=0,synea3=0;
   rg.RandomInit((static_cast<unsigned int>(time(NULL))));
-  for(int i=1;i<numgrains+1;i++)
+  for(int i=1;i<numgrains;i++)
   {
 	  double random = rg.Random();
 	  int choose = 0;
@@ -1389,7 +1386,7 @@ void  GrainGeneratorFunc::fill_gaps(int numgrains)
   gsizes.resize(numgrains,0);
   int neighpoint;
   int neighbors[6];
-  std::vector<int> n(numgrains+1);
+  std::vector<int> n(numgrains);
   neighbors[0] = -xpoints*ypoints;
   neighbors[1] = -xpoints;
   neighbors[2] = -1;
@@ -1464,7 +1461,7 @@ void  GrainGeneratorFunc::fill_gaps(int numgrains)
       }
     }
   }
-  gsizes.resize(numgrains+1,0);
+  gsizes.resize(numgrains,0);
   for (int i = 0; i < (xpoints*ypoints*zpoints); i++)
   {
     int name = voxels[i].grainname;
@@ -1617,7 +1614,7 @@ void  GrainGeneratorFunc::fill_gaps(int numgrains)
       }
     }
   }
-  for (int i = 1; i < numgrains+1; i++)
+  for (int i = 1; i < numgrains; i++)
   {
 	  grains[i].numvoxels = gsizes[i];
   }
@@ -2157,7 +2154,7 @@ void  GrainGeneratorFunc::find_neighbors()
   int nListSize = 1000;
   std::vector<int> nlist(nListSize, -1);
   std::vector<double> nsalist(nListSize, -1);
-  for(int i=1;i<numgrains+1;i++)
+  for(int i=1;i<numgrains;i++)
   {
     int numneighs = int(nlist.size());
 	grains[i].numneighbors = 0;
@@ -2207,7 +2204,7 @@ void  GrainGeneratorFunc::find_neighbors()
 	if(onsurf == 0) voxels[j].nearestneighbordistance = -1, voxels[j].nearestneighbor = -1;
   }
   vector<int>* nlistcopy;
-  for(int i=1;i<numgrains+1;i++)
+  for(int i=1;i<numgrains;i++)
   {
 	vector<int>* nlist = grains[i].neighborlist;
 	vector<double>* nsalist = grains[i].neighborsurfarealist;
@@ -2292,9 +2289,9 @@ void GrainGeneratorFunc::matchCrystallography(const std::string &ErrorFile, H5Re
 			good = 0;
 			while(good == 0)
 			{
-				selectedgrain = int(rg.Random()*numgrains)+1;
+				selectedgrain = int(rg.Random()*numgrains);
 				if(selectedgrain == 0) selectedgrain = 1;
-				if(selectedgrain == numgrains+1) selectedgrain = numgrains;
+				if(selectedgrain == numgrains) selectedgrain = numgrains-1;
 				if(grains[selectedgrain].surfacegrain >= 0) good = 1;
 			}
 			double curea1 = grains[selectedgrain].euler1;
@@ -2544,12 +2541,12 @@ void GrainGeneratorFunc::matchCrystallography(const std::string &ErrorFile, H5Re
 			good = 0;
 			while(good == 0)
 			{
-				selectedgrain1 = int(rg.Random()*numgrains)+1;
+				selectedgrain1 = int(rg.Random()*numgrains);
 				if(selectedgrain1 == 0) selectedgrain1 = 1;
-				if(selectedgrain1 == numgrains+1) selectedgrain1 = numgrains;
-				selectedgrain2 = int(rg.Random()*numgrains)+1;
+				if(selectedgrain1 == numgrains) selectedgrain1 = numgrains-1;
+				selectedgrain2 = int(rg.Random()*numgrains);
 				if(selectedgrain2 == 0) selectedgrain2 = 1;
-				if(selectedgrain2 == numgrains+1) selectedgrain2 = numgrains;
+				if(selectedgrain2 == numgrains) selectedgrain2 = numgrains-1;
 				if(grains[selectedgrain1].surfacegrain == 0 && grains[selectedgrain2].surfacegrain == 0) good = 1;
 			}
 			double g1ea1 = grains[selectedgrain1].euler1;
@@ -3024,7 +3021,7 @@ void  GrainGeneratorFunc::measure_misorientations ()
   double dim = pow((0.75*((m_pi/4.0)-sin((m_pi/4.0)))),(1.0/3.0));
   vector<int >* nlist ;
   vector<double >* neighsurfarealist;
-  for (int i = 1; i < numgrains + 1; i++)
+  for (int i = 1; i < numgrains; i++)
   {
     nlist = grains[i].neighborlist;
     neighsurfarealist = grains[i].neighborsurfarealist;
@@ -3848,7 +3845,7 @@ void GrainGeneratorFunc::write_eulerangles(string writename10)
   ofstream outFile;
   outFile.open(writename10.c_str());
   outFile << numgrains << endl;
-  for (int i = 1; i < numgrains+1; i++)
+  for (int i = 1; i < numgrains; i++)
   {
     double ea1 = grains[i].euler1;
     double ea2 = grains[i].euler2;
