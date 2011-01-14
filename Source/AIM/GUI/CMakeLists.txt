@@ -72,14 +72,14 @@ set (AIM_COMMON_QT_HDRS
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Qt/QR3DFileCompleter.h     )
 cmp_IDE_SOURCE_PROPERTIES("AIM/Common/Qt" "${AIM_COMMON_QT_HDRS}" "${AIM_COMMON_QT_SRCS}" ${PROJECT_INSTALL_HEADERS})
 
-set (AIM_Threads_SRCS 
-    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Threads/AIMThread.cpp
-    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Threads/AIMThreadGroup.cpp
-)                       
-set (AIM_Threads_HDRS
-    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Threads/AIMThread.h
-    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Threads/AIMThreadGroup.h   )
-cmp_IDE_SOURCE_PROPERTIES("AIM/Threads" "${AIM_Threads_HDRS}" "${AIM_Threads_SRCS}" ${PROJECT_INSTALL_HEADERS})
+#set (AIM_Threads_SRCS 
+#    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Threads/AIMThread.cpp
+#    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Threads/AIMThreadGroup.cpp
+#)                       
+#set (AIM_Threads_HDRS
+#    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Threads/AIMThread.h
+#    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Threads/AIMThreadGroup.h   )
+#cmp_IDE_SOURCE_PROPERTIES("AIM/Threads" "${AIM_Threads_HDRS}" "${AIM_Threads_SRCS}" ${PROJECT_INSTALL_HEADERS})
 
 set (ANG_IMPORTER_SRCS
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/ANG/H5AngImporter.cpp

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>658</width>
-    <height>657</height>
+    <width>693</width>
+    <height>684</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -36,7 +36,7 @@
        </size>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>2</number>
       </property>
       <widget class="QWidget" name="oimImportTab">
        <attribute name="title">
@@ -657,63 +657,6 @@
          </widget>
         </item>
         <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_16">
-          <item>
-           <spacer name="horizontalSpacer_5">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>40</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-          <item>
-           <widget class="QPushButton" name="rec_LoadSettingsBtn">
-            <property name="text">
-             <string>Load Settings ...</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <spacer name="horizontalSpacer_14">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>40</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-          <item>
-           <widget class="QPushButton" name="rec_SaveSettingsBtn">
-            <property name="text">
-             <string>Save Settings ...</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <spacer name="horizontalSpacer_15">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>40</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-         </layout>
-        </item>
-        <item>
          <layout class="QHBoxLayout" name="horizontalLayout_2">
           <item>
            <widget class="QCheckBox" name="rec_mergeTwins">
@@ -1007,6 +950,63 @@
          </widget>
         </item>
         <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_16">
+          <item>
+           <spacer name="horizontalSpacer_5">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item>
+           <widget class="QPushButton" name="rec_LoadSettingsBtn">
+            <property name="text">
+             <string>Load Preset ...</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="horizontalSpacer_14">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item>
+           <widget class="QPushButton" name="rec_SaveSettingsBtn">
+            <property name="text">
+             <string>Save Preset ...</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="horizontalSpacer_15">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+         </layout>
+        </item>
+        <item>
          <spacer name="verticalSpacer">
           <property name="orientation">
            <enum>Qt::Vertical</enum>
@@ -1244,19 +1244,38 @@
           <item row="3" column="3">
            <widget class="QDoubleSpinBox" name="gg_FractionPrecipitates"/>
           </item>
+          <item row="0" column="4" rowspan="4">
+           <spacer name="horizontalSpacer_17">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
          </layout>
         </item>
         <item>
          <layout class="QGridLayout" name="gridLayout_25">
-          <item row="0" column="0">
+          <item row="0" column="2">
            <widget class="QLabel" name="label_55">
             <property name="text">
-             <string>Filling Error Weight</string>
+             <string>Space Filling Error Weight</string>
             </property>
            </widget>
           </item>
-          <item row="0" column="1">
+          <item row="0" column="3">
            <widget class="QDoubleSpinBox" name="gg_FillingErrorWeight">
+            <property name="minimumSize">
+             <size>
+              <width>100</width>
+              <height>0</height>
+             </size>
+            </property>
             <property name="maximum">
              <double>1.000000000000000</double>
             </property>
@@ -1268,15 +1287,21 @@
             </property>
            </widget>
           </item>
-          <item row="0" column="2">
+          <item row="1" column="2">
            <widget class="QLabel" name="label_3">
             <property name="text">
              <string>Neighborhood Error Weight</string>
             </property>
            </widget>
           </item>
-          <item row="0" column="3">
+          <item row="1" column="3">
            <widget class="QDoubleSpinBox" name="gg_NeighborhoodErrorWeight">
+            <property name="minimumSize">
+             <size>
+              <width>100</width>
+              <height>0</height>
+             </size>
+            </property>
             <property name="maximum">
              <double>1.000000000000000</double>
             </property>
@@ -1288,15 +1313,28 @@
             </property>
            </widget>
           </item>
-          <item row="0" column="4">
+          <item row="0" column="0" colspan="2">
+           <widget class="QCheckBox" name="gg_AlreadyFormed">
+            <property name="text">
+             <string>Structure Already Formed</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
            <widget class="QLabel" name="label_4">
             <property name="text">
              <string>Size Distribution Error Weight</string>
             </property>
            </widget>
           </item>
-          <item row="0" column="5">
+          <item row="1" column="1">
            <widget class="QDoubleSpinBox" name="gg_SizeDistErrorWeight">
+            <property name="minimumSize">
+             <size>
+              <width>100</width>
+              <height>0</height>
+             </size>
+            </property>
             <property name="maximum">
              <double>1.000000000000000</double>
             </property>
@@ -1308,12 +1346,25 @@
             </property>
            </widget>
           </item>
+          <item row="0" column="4" rowspan="2">
+           <spacer name="horizontalSpacer_16">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
          </layout>
         </item>
         <item>
-         <widget class="QCheckBox" name="gg_AlreadyFormed">
-          <property name="text">
-           <string>Structure Already Formed</string>
+         <widget class="Line" name="line_7">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
           </property>
          </widget>
         </item>
@@ -1322,48 +1373,12 @@
           <property name="spacing">
            <number>4</number>
           </property>
-          <item row="0" column="0" colspan="2">
+          <item row="0" column="1">
            <widget class="QLabel" name="label_23">
             <property name="text">
              <string>Existing Output Files</string>
             </property>
            </widget>
-          </item>
-          <item row="1" column="0">
-           <layout class="QFormLayout" name="formLayout_5">
-            <property name="fieldGrowthPolicy">
-             <enum>QFormLayout::FieldsStayAtSizeHint</enum>
-            </property>
-            <property name="labelAlignment">
-             <set>Qt::AlignCenter</set>
-            </property>
-            <property name="formAlignment">
-             <set>Qt::AlignHCenter|Qt::AlignTop</set>
-            </property>
-            <property name="horizontalSpacing">
-             <number>12</number>
-            </property>
-            <property name="verticalSpacing">
-             <number>4</number>
-            </property>
-            <item row="0" column="0">
-             <widget class="QLabel" name="gg_CubeFileIcon">
-              <property name="text">
-               <string/>
-              </property>
-              <property name="pixmap">
-               <pixmap resource="../../../../Resources/icons/images/Icons.qrc">:/Delete-16x16.png</pixmap>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="1">
-             <widget class="QLabel" name="gg_CubeFile">
-              <property name="text">
-               <string>cube.vtk</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
           </item>
           <item row="1" column="1">
            <layout class="QFormLayout" name="formLayout_6">
@@ -1382,7 +1397,7 @@
             <property name="verticalSpacing">
              <number>4</number>
             </property>
-            <item row="0" column="0">
+            <item row="1" column="0">
              <widget class="QLabel" name="gg_EulerFileIcon">
               <property name="text">
                <string/>
@@ -1392,14 +1407,14 @@
               </property>
              </widget>
             </item>
-            <item row="0" column="1">
+            <item row="1" column="1">
              <widget class="QLabel" name="gg_EulerFile">
               <property name="text">
                <string>Euler Angles</string>
               </property>
              </widget>
             </item>
-            <item row="1" column="0">
+            <item row="2" column="0">
              <widget class="QLabel" name="gg_AnalysisFileIcon">
               <property name="text">
                <string/>
@@ -1409,16 +1424,56 @@
               </property>
              </widget>
             </item>
-            <item row="1" column="1">
+            <item row="2" column="1">
              <widget class="QLabel" name="gg_AnalysisFile">
               <property name="text">
                <string>Analysis</string>
               </property>
              </widget>
             </item>
+            <item row="0" column="1">
+             <widget class="QLabel" name="gg_CubeFile">
+              <property name="text">
+               <string>cube.vtk</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="0">
+             <widget class="QLabel" name="gg_CubeFileIcon">
+              <property name="text">
+               <string/>
+              </property>
+              <property name="pixmap">
+               <pixmap resource="../../../../Resources/icons/images/Icons.qrc">:/Delete-16x16.png</pixmap>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="1">
+             <widget class="QLabel" name="gg_H5StatisticsFile_2">
+              <property name="minimumSize">
+               <size>
+                <width>300</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="text">
+               <string>HDF5 Statistics File</string>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="0">
+             <widget class="QLabel" name="gg_H5StatisticsFileIcon">
+              <property name="text">
+               <string/>
+              </property>
+              <property name="pixmap">
+               <pixmap resource="../../../../Resources/icons/images/Icons.qrc">:/Delete-16x16.png</pixmap>
+              </property>
+             </widget>
+            </item>
            </layout>
           </item>
-          <item row="2" column="0" colspan="2">
+          <item row="2" column="1">
            <widget class="QLabel" name="gg_outputfile_msg">
             <property name="font">
              <font>
@@ -1435,6 +1490,76 @@
              <number>3</number>
             </property>
            </widget>
+          </item>
+          <item row="0" column="2" rowspan="3">
+           <spacer name="horizontalSpacer_18">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="BIG_LAYOUT">
+          <item>
+           <spacer name="horizontalSpacer_21">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item>
+           <widget class="QPushButton" name="gg_LoadSettingsBtn">
+            <property name="text">
+             <string>Load Preset ...</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="horizontalSpacer_19">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item>
+           <widget class="QPushButton" name="gg_SaveSettingsBtn">
+            <property name="text">
+             <string>Save Preset ...</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="horizontalSpacer_20">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
           </item>
          </layout>
         </item>
@@ -2204,7 +2329,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>658</width>
+     <width>693</width>
      <height>22</height>
     </rect>
    </property>
