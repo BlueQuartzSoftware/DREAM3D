@@ -5,8 +5,6 @@
 #--////////////////////////////////////////////////////////////////////////////
 
 include (CMakeParseArguments)
-# include(${CMP_OSX_TOOLS_SOURCE_DIR}/OSX_BundleTools.cmake)
-# include(${CMP_OSX_TOOLS_SOURCE_DIR}/ToolUtilities.cmake)
 
 #-------------------------------------------------------------------------------
 MACRO (cmp_IDE_GENERATED_PROPERTIES SOURCE_PATH HEADERS SOURCES)
