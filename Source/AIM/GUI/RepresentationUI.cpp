@@ -890,8 +890,8 @@ void RepresentationUI::on_rec_GoBtn_clicked()
   m_Reconstruction->setMinSeedImageQuality(minImageQuality->value());
   m_Reconstruction->setMisorientationTolerance(misOrientationTolerance->value());
 
-  AIM::Reconstruction::CrystalStructure crystruct = static_cast<AIM::Reconstruction::CrystalStructure>(crystalStructure->currentIndex() + 1);
-  AIM::Reconstruction::AlignmentMethod alignmeth = static_cast<AIM::Reconstruction::AlignmentMethod>(alignMeth->currentIndex() + 1);
+  AIM::Reconstruction::CrystalStructure crystruct = static_cast<AIM::Reconstruction::CrystalStructure>(crystalStructure->currentIndex());
+  AIM::Reconstruction::AlignmentMethod alignmeth = static_cast<AIM::Reconstruction::AlignmentMethod>(alignMeth->currentIndex() );
 
   m_Reconstruction->setCrystalStructure(crystruct);
   m_Reconstruction->setAlignmentMethod(alignmeth);
@@ -980,7 +980,6 @@ void RepresentationUI::rec_ThreadProgressed(int val)
 }
 
 
-//TODO: Grain Generator Methods
 /* *****************************************************************************
  *
  * Grain Generator Methods
@@ -1324,7 +1323,6 @@ void RepresentationUI::gg_ThreadProgressed(int val)
   this->gg_progressBar->setValue( val );
 }
 
-//TODO: Surface Meshing Methods
 /* *****************************************************************************
  *
  * Surface Meshing Methods
@@ -1573,7 +1571,7 @@ void RepresentationUI::sm_ThreadProgressed(int value)
 }
 
 
-//TODO: Volume Meshing Methods
+
 /* *****************************************************************************
  *
  * Volume Meshing Methods

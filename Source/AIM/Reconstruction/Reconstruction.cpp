@@ -184,7 +184,7 @@ void Reconstruction::compute()
     progressMessage(AIM_STRING("Cleaning Data"), 9);
     m->cleanup_data();
 
-    if (m_AlignmentMethod == 3)
+    if (m_AlignmentMethod == AIM::Reconstruction::MutualInformation)
     {
       CHECK_FOR_CANCELED(ReconstructionFunc)
       progressMessage(AIM_STRING("Identifying Grains on Sections"), 11);
@@ -195,7 +195,7 @@ void Reconstruction::compute()
     progressMessage(AIM_STRING("Aligning Slices"), 14);
     m->align_sections(alignmentFile);
 
-    if (m_AlignmentMethod == 3)
+    if (m_AlignmentMethod == AIM::Reconstruction::MutualInformation)
     {
       CHECK_FOR_CANCELED(ReconstructionFunc)
       progressMessage(AIM_STRING("Redefining Border"), 16);
