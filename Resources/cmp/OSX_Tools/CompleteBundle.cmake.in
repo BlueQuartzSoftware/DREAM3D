@@ -45,6 +45,8 @@ function(gp_item_default_embedded_path_override item default_embedded_path_var)
   # By default, embed things right next to the main bundle executable:
   #
   set(path "@executable_path/../../Contents/MacOS")
+  #message(STATUS "%%%=> item: ${item}")
+  #message(STATUS "%%%=> default_embedded_path_var: ${default_embedded_path_var}")
 
   set(overridden 0)
   # For Qt Based Plugins for the image formats, the plugins MUST reside in
@@ -58,19 +60,22 @@ function(gp_item_default_embedded_path_override item default_embedded_path_var)
   
   # First look for plugins that have a ".plugin" extension
   if(item MATCHES "\\.plugin$")
-    set(path "@executable_path/../Plugins")
+    #message(STATUS "Just a Plugin")
+    set(path "@executable_path/../plugins")
     set(overridden 1)
   endif(item MATCHES "\\.plugin$")
   
   # Next look for the Qt Image Format Plugins in case those are needed
   if ( item MATCHES "imageformats/libq?")
-    set(path "@executable_path/../Plugins/imageformats")
+    #message(STATUS "^^^^^^==> Qt Image Format Plugin Found")
+    set(path "@executable_path/../plugins/imageformats")
     set(overridden 1)
-  # Lastly ick up any plugins that simply have the ".dylib" extension
+  # Lastly pick up any plugins that simply have the ".dylib" extension
   elseif(item MATCHES "\\.dylib$")
+    #message(STATUS "Dylib that needs fixing")
     set(path "@executable_path/../lib")
     set(overridden 1)
-  endif(item MATCHES "imageformats/libq?")
+  endif()
   
   # Embed frameworks in the embedded "Frameworks" directory (sibling of MacOS):
   #
@@ -82,34 +87,13 @@ function(gp_item_default_embedded_path_override item default_embedded_path_var)
   endif(NOT overridden)
 
   set(${default_embedded_path_var} "${path}" PARENT_SCOPE)
-endfunction(gp_item_default_embedded_path_override)
+endfunction()
 
-
-#-- Be sure all the internal directories are created first before calling the 'fixup_bundle'
-file(MAKE_DIRECTORY "${CMAKE_INSTALL_PREFIX}/@target@.app/Contents/lib")
-file(MAKE_DIRECTORY "${CMAKE_INSTALL_PREFIX}/@target@.app/Contents/Plugins")
-file(MAKE_DIRECTORY "${CMAKE_INSTALL_PREFIX}/@target@.app/Contents/Frameworks")
-file(MAKE_DIRECTORY "${CMAKE_INSTALL_PREFIX}/@target@.app/Contents/Support")
-
-#--------------------------------------------------------------------------------
-# Check for Qt4 stuff
-if ("@Q_WS_MAC@" STREQUAL "1")
-# install a qt.conf file
-  file(WRITE "${CMAKE_INSTALL_PREFIX}/@target@.app/Contents/Resources/qt.conf" "")
-# Check if we are using Qt Cocoa in which case we need to copy some additional resources
-  if ("@QT_MAC_USE_COCOA@" STREQUAL "1")
-    message(STATUS "Copying qt_menu.nib into @target@.app/Contents/Resources")
-    file(MAKE_DIRECTORY "${CMAKE_INSTALL_PREFIX}/@target@.app/Contents/Resources/qt_menu.nib")
-    execute_process(COMMAND ${CMAKE_COMMAND} -E copy_directory "@QT_LIBRARY_DIR@/QtGui.framework/Resources/qt_menu.nib" "${CMAKE_INSTALL_PREFIX}/@target@.app/Contents/Resources/qt_menu.nib")
-  endif()
-endif()
 
 # -- Run the BundleUtilities cmake code
 include(BundleUtilities)
-if (1)
-fixup_bundle("${CMAKE_INSTALL_PREFIX}/@target@.app" 
+fixup_bundle("${CMAKE_INSTALL_PREFIX}/@osx_app_name@.app" 
              # Plugins to Install
-             "@COMPLETE_PLUGIN_LIST@"
+             "@app_plugin_list@"
              # Directories to Search for Libraries
-             "@PLUGIN_SEARCH_DIRS@")
-endif()
+             "@lib_search_dirs@")
