@@ -59,7 +59,7 @@ QObject* parent
 #endif
 ) :
 #if AIM_USE_QT
-QThread(parent),
+QObject(parent),
 #endif
 m_H5StatsFile(""),
 m_OutputDirectory("."),
@@ -82,24 +82,12 @@ m_ErrorCondition(0)
 
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 GrainGenerator::~GrainGenerator()
 {
 }
-
-#if AIM_USE_QT
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void GrainGenerator::run()
-{
-  compute();
-  m = GrainGeneratorFunc::NullPointer();  // Clean up the memory
-}
-#endif
 
 // -----------------------------------------------------------------------------
 //
@@ -252,6 +240,12 @@ void GrainGenerator::compute()
   m->write_eulerangles(eulerFile);
 
   progressMessage(AIM_STRING("Generation Completed"), 100);
+
+  // Clean up all the memory
+  m = GrainGeneratorFunc::NullPointer();
+#if AIM_USE_QT
+  emit finished();
+#endif
 }
 
 // -----------------------------------------------------------------------------

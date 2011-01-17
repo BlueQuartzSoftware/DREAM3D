@@ -20,7 +20,7 @@
 
 #ifdef AIM_USE_QT
 #include <QtCore/QObject>
-#include <QtCore/QThread>
+
 #define AIM_STRING QString
 #else
 #define AIM_STRING std::string
@@ -43,7 +43,7 @@
 */
 class GrainGenerator
 #ifdef AIM_USE_QT
- : public QThread
+ : public QObject
 #endif
 {
 #ifdef AIM_USE_QT
@@ -80,6 +80,11 @@ Q_OBJECT
     MXA_INSTANCE_PROPERTY(int, ErrorCondition);
 
     /**
+     * @brief Cancel the operation
+     */
+    MXA_INSTANCE_PROPERTY(bool, Cancel);
+
+    /**
      * @brief Either prints a message or sends the message to the User Interface
      * @param message The message to print
      * @param progress The progress of the GrainGenerator normalized to a value between 0 and 100
@@ -89,17 +94,12 @@ Q_OBJECT
 #ifdef AIM_USE_QT
 
     /**
-     * @brief Cancel the operation
-     */
-    MXA_INSTANCE_PROPERTY(bool, Cancel);
-
-    /**
      * Qt Signals for connections
      */
     signals:
-    //  void workerComplete();
       void updateMessage(QString message);
       void updateProgress(int value);
+      void finished();
 
     public slots:
     /**
@@ -114,13 +114,13 @@ Q_OBJECT
       void compute();
 
   protected:
-#ifdef AIM_USE_QT
-    GrainGenerator(QObject* parent = 0);
-    virtual void run();
-#else
 
-    GrainGenerator();
+    GrainGenerator(
+#ifdef AIM_USE_QT
+        QObject* parent = 0
 #endif
+    );
+
 
   private:
     GrainGeneratorFunc::Pointer m;

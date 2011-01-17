@@ -64,7 +64,7 @@ Reconstruction::Pointer Reconstruction::New( QObject* parent)
 // -----------------------------------------------------------------------------
 #if AIM_USE_QT
 Reconstruction::Reconstruction(QObject* parent) :
-QThread(parent),
+QObject(parent),
 #else
 Reconstruction::Reconstruction() :
 #endif
@@ -105,29 +105,9 @@ Reconstruction::~Reconstruction()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void Reconstruction::parseAngFile()
-{
-
-}
-
-#if AIM_USE_QT
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void Reconstruction::run()
-{
-  compute();
-  m = ReconstructionFunc::NullPointer();  // Clean up the memory
-}
-#endif
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void Reconstruction::compute()
 {
-//  std::cout << "Reconstruction::compute" << std::endl;
+  //std::cout << "Reconstruction::compute Start" << std::endl;
   int err = -1;
 
   AbstractAngDataLoader::Pointer oimDataLoader = H5AngDataLoader::New();
@@ -359,6 +339,13 @@ void Reconstruction::compute()
 
   progressMessage(AIM_STRING("Reconstruction Complete"), 100);
 
+  // Clean up all the memory by forcibly setting a NULL pointer to the Shared
+  // pointer object.
+  m = ReconstructionFunc::NullPointer();  // Clean up the memory
+  //std::cout << "Reconstruction::compute Complete" << std::endl;
+#if AIM_USE_QT
+  emit finished();
+#endif
 }
 
 // -----------------------------------------------------------------------------
@@ -381,12 +368,8 @@ void Reconstruction::progressMessage(AIM_STRING message, int progress)
 // -----------------------------------------------------------------------------
 void Reconstruction::on_CancelWorker()
 {
- // std::cout << "Reconstruction::cancelWorker()" << std::endl;
+//  std::cout << "Reconstruction::cancelWorker()" << std::endl;
   this->m_Cancel = true;
-  if (m.get() != NULL)
-  {
-
-  }
 }
 #endif
 

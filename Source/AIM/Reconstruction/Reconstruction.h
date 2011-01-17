@@ -24,7 +24,7 @@
 
 #ifdef AIM_USE_QT
 #include <QtCore/QObject>
-#include <QtCore/QThread>
+
 #define AIM_STRING QString
 #else
 #define AIM_STRING std::string
@@ -44,7 +44,7 @@
 */
 class Reconstruction
 #ifdef AIM_USE_QT
- : public QThread
+ : public QObject
 #endif
 {
 #ifdef AIM_USE_QT
@@ -78,19 +78,21 @@ Q_OBJECT
     MXA_INSTANCE_PROPERTY(AIM::Reconstruction::AlignmentMethod, AlignmentMethod)
     MXA_INSTANCE_PROPERTY(bool, AlreadyFormed)
 
-
     MXA_INSTANCE_PROPERTY(bool, WriteVisualizationFile)
     MXA_INSTANCE_PROPERTY(bool, WriteIPFFile)
     MXA_INSTANCE_PROPERTY(bool, WriteDisorientationFile)
     MXA_INSTANCE_PROPERTY(bool, WriteImageQualityFile)
     MXA_INSTANCE_PROPERTY(bool, WriteSchmidFactorFile)
     MXA_INSTANCE_PROPERTY(bool, WriteDownSampledFile)
-
     MXA_INSTANCE_PROPERTY(bool, WriteHDF5GrainFile)
 
     MXA_INSTANCE_PROPERTY(int, ErrorCondition)
 
-    void parseAngFile();
+    /**
+     * @brief Cancel the operation
+     */
+    MXA_INSTANCE_PROPERTY(bool, Cancel);
+
 
     /**
      * @brief Either prints a message or sends the message to the User Interface
@@ -101,10 +103,7 @@ Q_OBJECT
 
 #ifdef AIM_USE_QT
 
-    /**
-     * @brief Cancel the operation
-     */
-    MXA_INSTANCE_PROPERTY(bool, Cancel);
+
 
     /**
      * Qt Signals for connections
@@ -112,13 +111,13 @@ Q_OBJECT
     signals:
       void updateMessage(QString message);
       void updateProgress(int value);
+      void finished();
 
     public slots:
     /**
      * @brief Slot to receive a signal to cancel the operation
      */
       void on_CancelWorker();
-
 
 #endif
       /**
@@ -130,7 +129,7 @@ Q_OBJECT
   protected:
 #ifdef AIM_USE_QT
     Reconstruction(QObject* parent = 0);
-    virtual void run();
+
 
 #else
     Reconstruction();
