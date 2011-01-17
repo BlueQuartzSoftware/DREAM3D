@@ -111,15 +111,16 @@ namespace AIM
     const std::string H5StatisticsFile("Reconstruction_Results.h5");
 
     enum CrystalStructure {
-        UnknownCrystalStructure = 0,
-        Hexagonal = 1,
-        Cubic = 2
+        Hexagonal = 0,
+        Cubic = 1,
+        UnknownCrystalStructure = 999
     };
 
     enum AlignmentMethod {
         OuterBoundary = 0,
         Misorientation = 1,
-        MutualInformation = 2
+        MutualInformation = 2,
+        UnknownAlignmentMethod = 999
     };
 
     enum StatisticsType
