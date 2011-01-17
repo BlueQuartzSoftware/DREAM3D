@@ -125,24 +125,13 @@ Q_OBJECT
        */
       void compute();
 
-
   protected:
+
+    Reconstruction(
 #ifdef AIM_USE_QT
-    Reconstruction(QObject* parent = 0);
-
-
-#else
-    Reconstruction();
+        QObject* parent = 0
 #endif
-
-    /**
-     * @brief
-     * @param hdfFile
-     * @param r
-     * @return
-     */
-    int writeHDF5GrainsFile(const std::string &hdfFile,
-                                              ReconstructionFunc::Pointer r);
+        );
 
 
   private:
