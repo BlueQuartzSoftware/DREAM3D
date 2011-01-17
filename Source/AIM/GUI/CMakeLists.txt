@@ -188,42 +188,30 @@ include_directories(${PROJECT_CODE_DIR})
 include_directories(${HDF5_INCLUDE_DIR})
 include_directories( ${Representation_BINARY_DIR} )
 
-#-- Set up OS X Application Bundle properties
-#-- This file has tools for OS X Bunlde creation and configuration
-INCLUDE (${CMP_OSX_TOOLS_SOURCE_DIR}/OSX_BundleTools.cmake)
-SET (EXE_DEBUG_EXTENSION "_debug")
+
 IF(APPLE)
- SET(GUI_TYPE MACOSX_BUNDLE)
- ConfigureMacOSXBundlePlist(${PROJECT_NAME} ${EXE_DEBUG_EXTENSION} 
-                            ${PROJECT_RESOURCES_DIR}/icons/icns/${PROJECT_NAME}.icns
-                            ${AIMRepresentation_VERSION} )
+    set(APPLICATION_ICON ${PROJECT_RESOURCES_DIR}/icons/icns/${PROJECT_NAME}.icns)
 ENDIF (APPLE)
 
 IF(Q_WS_WIN)
-    include_directories(${PROJECT_RESOURCES_DIR}/icons/ico)
-    configure_file(${PROJECT_RESOURCES_DIR}/icons/ico/IconResource.rc.in 
-                    ${${PROJECT_NAME}_BINARY_DIR}/${PROJECT_NAME}.rc)
-    SET (${PROJECT_NAME}_PROJECT_SRCS ${${PROJECT_NAME}_PROJECT_SRCS} 
-            ${${PROJECT_NAME}_BINARY_DIR}/${PROJECT_NAME}.rc) 
-    cmp_IDE_SOURCE_PROPERTIES ("ConfiguredFiles" "${${PROJECT_NAME}_BINARY_DIR}/${PROJECT_NAME}.rc" ""  ${PROJECT_INSTALL_HEADERS})
+    set(APPLICATION_ICON ${PROJECT_RESOURCES_DIR}/icons/ico/${PROJECT_NAME}.ico)
 ENDIF(Q_WS_WIN)
 
-# ---------- Build the Viewer Application  ----------------------
-ADD_EXECUTABLE( ${PROJECT_NAME} ${GUI_TYPE} ${Representation_PROJECT_SRCS} )
-TARGET_LINK_LIBRARIES( ${PROJECT_NAME}
-                        MXADataModel
-                        AIMCommon
-                        ${QT_LIBRARIES}  )
-                        
-# --------------------------------------------------------------------
-# Setup our installation rules
-set(AppNeedsPlugins "0")
-cmp_InstallationSupport(${PROJECT_NAME} 
-                        ${EXE_DEBUG_EXTENSION} 
-                        ${Representation_BINARY_DIR} 
-                        "${AppNeedsPlugins}" 
-                        "${PROJECT_INSTALL_EXECUTABLES}"
-                        "Applications"
-                        "."
-                        "${CMP_LIB_SEARCH_DIRS}"
-                        )
+                       
+# file(READ ${PROJECT_BINARY_DIR}/Qt_Plugins.txt QT_PLUGINS)
+BuildQtAppBundle(
+    TARGET ${PROJECT_NAME}
+    SOURCES ${${PROJECT_NAME}_PROJECT_SRCS}
+    DEBUG_EXTENSION ${EXE_DEBUG_EXTENSION}
+    ICON_FILE  ${APPLICATION_ICON}
+    VERSION_MAJOR ${AIMRepresentation_VER_MAJOR}
+    VERSION_MINOR ${AIMRepresentation_VER_MINOR}
+    VERSION_PATCH ${AIMRepresentation_VER_PATCH}
+    BINARY_DIR    ${${PROJECT_NAME}_BINARY_DIR}
+    LINK_LIBRARIES ${QT_LIBRARIES} MXADataModel AIMCommon
+    LIB_SEARCH_DIRS ${CMAKE_LIBRARY_OUTPUT_DIRECTORY} ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
+#    QT_PLUGINS    ${QT_PLUGINS}
+#    OTHER_PLUGINS ${OTHER_PLUGINS}
+    COMPONENT     Applications
+    INSTALL_DEST  "."
+)   
