@@ -712,6 +712,10 @@ void  ReconstructionFunc::form_grains_sections()
   }
 }
 
+#define GRAIN_NAME_EXTRACT 1
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 int  ReconstructionFunc::form_grains()
 {
   int point = 0;
@@ -748,6 +752,22 @@ int  ReconstructionFunc::form_grains()
   neighbors[4] = xpoints;
   neighbors[5] = (xpoints * ypoints);
   rg.RandomInit((static_cast<unsigned int > (time(NULL))));
+
+  // Precalculate some constants
+  int xTimesY = xpoints * ypoints;
+  int xPMinus1 = xpoints - 1;
+  int yPMinus1 = ypoints - 1;
+  int zPMinus1 = zpoints - 1;
+
+#if GRAIN_NAME_EXTRACT
+  // Copy all the grain names into a densly packed array
+  int* gnames = new int[totalpoints];
+  for (int i = 0; i < totalpoints; ++i)
+  {
+    gnames[i] = voxels[i].grainname;
+  }
+#endif
+
   while (noseeds == 0)
   {
     seed = -1;
@@ -763,11 +783,15 @@ int  ReconstructionFunc::form_grains()
           x = randx + i;
           y = randy + j;
           z = randz + k;
-          if (x > xpoints - 1) x = x - xpoints;
-          if (y > ypoints - 1) y = y - ypoints;
-          if (z > zpoints - 1) z = z - zpoints;
-          point = (z * xpoints * ypoints) + (y * xpoints) + x;
-          gname = voxels[point].grainname;
+          if (x > xPMinus1) x = x - xpoints;
+          if (y > yPMinus1) y = y - ypoints;
+          if (z > zPMinus1) z = z - zpoints;
+          point = (z * xTimesY) + (y * xpoints) + x;
+#if GRAIN_NAME_EXTRACT
+          gname = gnames[point];
+#else
+         gname = voxels[point].grainname;
+#endif
           if (gname == -1)
           {
           if (voxels[point].confidence > minseedconfidence
@@ -789,7 +813,12 @@ int  ReconstructionFunc::form_grains()
     if (seed >= 0)
     {
       size = 0;
+#if GRAIN_NAME_EXTRACT
+      gnames[seed] = graincount;
+#else
       voxels[seed].grainname = graincount;
+#endif
+
       voxelslist[size] = seed;
       size++;
       for (size_t j = 0; j < size; ++j)
@@ -813,7 +842,11 @@ int  ReconstructionFunc::form_grains()
           if (i == 4 && row == (ypoints - 1)) good = 0;
           if (i == 2 && col == 0) good = 0;
           if (i == 3 && col == (xpoints - 1)) good = 0;
+#if GRAIN_NAME_EXTRACT
+          if (good == 1 && gnames[neighbor] == -1)
+#else
           if (good == 1 && voxels[neighbor].grainname == -1)
+#endif
           {
             q2[0] = 0;
             q2[1] = voxels[neighbor].quat[1];
@@ -829,7 +862,11 @@ int  ReconstructionFunc::form_grains()
             }
             if (w < misorientationtolerance)
             {
+#if GRAIN_NAME_EXTRACT
+              gnames[neighbor] = graincount;
+#else
               voxels[neighbor].grainname = graincount;
+#endif
               voxelslist[size] = neighbor;
               size++;
               if (size >= voxelslist.size()) voxelslist.resize(size + initialVoxelsListSize, -1);
@@ -850,7 +887,11 @@ int  ReconstructionFunc::form_grains()
         for (size_t b = 0; b < size; b++)
         {
           int index = voxelslist[b];
+#if GRAIN_NAME_EXTRACT
+          gnames[index] = -2;
+#else
           voxels[index].grainname = -2;
+#endif
         }
         voxelslist.clear();
         voxelslist.resize(initialVoxelsListSize, -1);
@@ -858,6 +899,14 @@ int  ReconstructionFunc::form_grains()
     }
   }
   m_Grains.resize(graincount);
+#if GRAIN_NAME_EXTRACT
+  // Copy the grain names back into the Voxel objects
+  for (int i = 0; i < totalpoints; ++i)
+  {
+    voxels[i].grainname = gnames[i];
+  }
+  delete [] gnames;
+#endif
   return graincount;
 }
 
@@ -1376,6 +1425,10 @@ int ReconstructionFunc::reburn_grains()
 	}
 	return graincount;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void  ReconstructionFunc::find_kernels()
 {
   double q1[5];
