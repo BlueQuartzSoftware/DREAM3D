@@ -960,7 +960,7 @@ void RepresentationUI::threadHasMessage(QString message)
 // -----------------------------------------------------------------------------
 void RepresentationUI::rec_ThreadFinished()
 {
-  //std::cout << "RepresentationUI::reconstruction_Finished()" << std::endl;
+  std::cout << "RepresentationUI::reconstruction_Finished()" << std::endl;
   rec_GoBtn->setText("Go");
   setWidgetListEnabled(true);
   this->rec_progressBar->setValue(0);

@@ -38,6 +38,7 @@
               msg += " was Canceled"; \
               emit updateMessage(msg);\
               emit updateProgress(0);\
+              emit finished();\
       return;}\
     std::cout << #name << " Finish Time(ms): " << (MXA::getMilliSeconds() - millis) << std::endl;\
     millis = MXA::getMilliSeconds();
@@ -346,10 +347,12 @@ void Reconstruction::compute()
 
   /** ******* End VTK Visualization File Writing Section ****** */
 
-  CHECK_FOR_CANCELED(ReconstructionFunc, )
+  CHECK_FOR_CANCELED(ReconstructionFunc, vtk_viz_files)
   progressMessage(AIM_STRING("Writing Out HDF5 Grain File. This may take a few minutes to complete."), 95);
   if (m_WriteHDF5GrainFile) { m->writeHDF5GrainsFile(hdf5GrainFile); }
 
+
+  CHECK_FOR_CANCELED(ReconstructionFunc, writeHDF5GrainsFile)
   progressMessage(AIM_STRING("Reconstruction Complete"), 100);
 
   // Clean up all the memory by forcibly setting a NULL pointer to the Shared
