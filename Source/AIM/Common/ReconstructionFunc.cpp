@@ -11,6 +11,7 @@
 
 #include "ReconstructionFunc.h"
 
+#include <math.h>
 #include <stdio.h>
 
 #include <iomanip>
@@ -30,13 +31,21 @@
 #define FIND_EUCLIDEAN_FAST 1
 
 
+const static double m_pi = 3.1415926535897;
+const static double m_OnePointThree = 1.33333333333;
+
+const double threesixty_over_pi = 360.0/m_pi;
+const double sqrt_two = pow(2.0, 0.5);
+
+const double acos_neg_one = acos(-1.0);
+const double acos_pos_one = acos(1.0);
+const double sin_wmin_neg_1_over_2 = sin(acos_neg_one/2.0);
+const double sin_wmin_pos_1_over_2 = sin(acos_pos_one/2.0);
+
 #if 0
 // -i C:\Users\GroebeMA\Desktop\NewFolder --outputDir C:\Users\GroebeMA\Desktop\NewFolder -f Slice_ --angMaxSlice 400 -s 1 -e 30 -z 0.25 -t -g 10 -c 0.1 -o 5.0 -x 2
 #endif
 
-
-const static double m_pi = 3.1415926535897;
-const static double m_OnePointThree = 1.33333333333;
 
 using namespace std;
 
@@ -1447,6 +1456,14 @@ void  ReconstructionFunc::find_kernels()
   double n1, n2, n3;
   m_Grains[0].averagemisorientation = 0.0;
   int steps = 1;
+  int jStride;
+  int kStride;
+  double _1, _2,  _6;
+  double wmin=9999999.0; //,na,nb,nc;
+  double qc[4];
+  double qco[4];
+  double sin_wmin_over_2 = 0.0;
+
   for (int i = 0; i < (xpoints * ypoints * zpoints); i++)
   {
     if (voxels[i].grainname > 0 && voxels[i].unassigned != 1)
@@ -1462,12 +1479,14 @@ void  ReconstructionFunc::find_kernels()
       plane = i / (xpoints * ypoints);
       for (int j = -steps; j < steps + 1; j++)
       {
+        jStride = j * xpoints * ypoints;
         for (int k = -steps; k < steps + 1; k++)
         {
+          kStride = k * xpoints;
           for (int l = -steps; l < steps + 1; l++)
           {
             good = 1;
-            neighbor = i + (j * xpoints * ypoints) + (k * xpoints) + (l);
+            neighbor = i + (jStride) + (kStride) + (l);
             if (plane + j < 0) good = 0;
             if (plane + j > zpoints - 1) good = 0;
             if (row + k < 0) good = 0;
@@ -1502,6 +1521,8 @@ void  ReconstructionFunc::find_kernels()
     }
   }
 }
+
+
 void  ReconstructionFunc::homogenize_grains()
 {
   int i, j, ii, jj, kk, p, pp;
