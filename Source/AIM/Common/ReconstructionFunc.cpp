@@ -738,6 +738,7 @@ int  ReconstructionFunc::form_grains()
   int col, row, plane;
   size_t size = 0;
   size_t initialVoxelsListSize = 1000;
+  int gname = -1;
   std::vector<int > voxelslist(initialVoxelsListSize, -1);
   int neighbors[6];
   neighbors[0] = -(xpoints * ypoints);
@@ -766,9 +767,14 @@ int  ReconstructionFunc::form_grains()
           if (y > ypoints - 1) y = y - ypoints;
           if (z > zpoints - 1) z = z - zpoints;
           point = (z * xpoints * ypoints) + (y * xpoints) + x;
-          if (voxels[point].confidence > minseedconfidence && voxels[point].imagequality > minseedimagequality && voxels[point].grainname == -1)
+          gname = voxels[point].grainname;
+          if (gname == -1)
+          {
+          if (voxels[point].confidence > minseedconfidence
+              && voxels[point].imagequality > minseedimagequality)
           {
             seed = point;
+          }
           }
           if (seed > -1) break;
         }
