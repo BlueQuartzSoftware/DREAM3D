@@ -43,27 +43,28 @@ set (SurfaceMesh_HDRS
 )
 cmp_IDE_SOURCE_PROPERTIES( "AIM/SurfaceMesh" "${SurfaceMesh_HDRS}" "${SurfaceMesh_SRCS}" ${PROJECT_INSTALL_HEADERS})
                       
-set (Project_SRCS
+set (${PROJECT_NAME}_PROJECT_SRCS
     ${SurfaceMesh_SRCS}
     ${SurfaceMesh_HDRS}
     )
 
-
-add_executable(${PROJECT_NAME}  ${Project_SRCS} )
-target_link_libraries(${PROJECT_NAME}  
-                     #   MXADataModel
-                        AIMCommon)
 # --------------------------------------------------------------------
 # Setup the install rules for the various platforms
 set(install_dir "tools")
 if (WIN32)
     set (install_dir ".")
 endif()
-cmp_ToolInstallationSupport(${PROJECT_NAME} 
-                        "${EXE_DEBUG_EXTENSION}" 
-                        ${${PROJECT_NAME}_BINARY_DIR} 
-                        "${PROJECT_INSTALL_EXECUTABLES}"
-                        "Applications"
-                        "${install_dir}"
-                        "${CMP_LIB_SEARCH_DIRS}"
-                        )
+
+BuildToolBundle(
+    TARGET ${PROJECT_NAME}
+    SOURCES ${${PROJECT_NAME}_PROJECT_SRCS}
+    DEBUG_EXTENSION ${EXE_DEBUG_EXTENSION}
+    VERSION_MAJOR ${AIMRepresentation_VER_MAJOR}
+    VERSION_MINOR ${AIMRepresentation_VER_MINOR}
+    VERSION_PATCH ${AIMRepresentation_VER_PATCH}
+    BINARY_DIR    ${${PROJECT_NAME}_BINARY_DIR}
+    LINK_LIBRARIES AIMCommon
+    LIB_SEARCH_DIRS ${CMAKE_LIBRARY_OUTPUT_DIRECTORY} ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
+    COMPONENT     Applications
+    INSTALL_DEST  "${install_dir}"
+)   

@@ -182,7 +182,13 @@ public:
   int volume_stats2D(H5ReconStatsWriter::Pointer h5io);
 
 
-
+  /**
+   * @brief
+   * @param hdfFile
+   * @param r
+   * @return
+   */
+  int writeHDF5GrainsFile(const std::string &hdfFile);
 
 
 	int writeVisualizationFile(const std::string &file); // DONE

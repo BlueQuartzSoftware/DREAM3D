@@ -24,7 +24,7 @@
 
 #ifdef AIM_USE_QT
 #include <QtCore/QObject>
-#include <QtCore/QThread>
+
 #define AIM_STRING QString
 #else
 #define AIM_STRING std::string
@@ -44,7 +44,7 @@
 */
 class VolumeMesh
 #ifdef AIM_USE_QT
- : public QThread
+ : public QObject
 #endif
 {
 #ifdef AIM_USE_QT
@@ -80,6 +80,11 @@ Q_OBJECT
     MXA_INSTANCE_PROPERTY(int, ErrorCondition)
 
     /**
+     * @brief Cancel the operation
+     */
+    MXA_INSTANCE_PROPERTY(bool, Cancel);
+
+    /**
      * @brief Either prints a message or sends the message to the User Interface
      * @param message The message to print
      * @param progress The progress of the VolumeMesh normalized to a value between 0 and 100
@@ -87,26 +92,19 @@ Q_OBJECT
     void progressMessage(AIM_STRING message, int progress);
 
 #ifdef AIM_USE_QT
-
-    /**
-     * @brief Cancel the operation
-     */
-    MXA_INSTANCE_PROPERTY(bool, Cancel);
-
     /**
      * Qt Signals for connections
      */
     signals:
       void updateMessage(QString message);
       void updateProgress(int value);
+      void finished();
 
     public slots:
     /**
      * @brief Slot to receive a signal to cancel the operation
      */
       void on_CancelWorker();
-
-
 #endif
       /**
        * @brief Main method to run the operation
@@ -115,13 +113,12 @@ Q_OBJECT
 
 
   protected:
-#ifdef AIM_USE_QT
-    VolumeMesh(QObject* parent = 0);
-    virtual void run();
 
-#else
-    VolumeMesh();
+    VolumeMesh(
+#ifdef AIM_USE_QT
+        QObject* parent = 0
 #endif
+        );
 
   private:
 

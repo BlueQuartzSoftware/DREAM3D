@@ -24,7 +24,7 @@
 
 
 #include "AIM/ANG/H5AngDataLoader.h"
-#include "AIM/Common/HDF5/AIM_H5VtkDataWriter.h"
+
 #include "AIM/Common/HDF5/H5ReconStatsWriter.h"
 
 
@@ -64,7 +64,7 @@ Reconstruction::Pointer Reconstruction::New( QObject* parent)
 // -----------------------------------------------------------------------------
 #if AIM_USE_QT
 Reconstruction::Reconstruction(QObject* parent) :
-QThread(parent),
+QObject(parent),
 #else
 Reconstruction::Reconstruction() :
 #endif
@@ -105,29 +105,9 @@ Reconstruction::~Reconstruction()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void Reconstruction::parseAngFile()
-{
-
-}
-
-#if AIM_USE_QT
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void Reconstruction::run()
-{
-  compute();
-  m = ReconstructionFunc::NullPointer();  // Clean up the memory
-}
-#endif
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void Reconstruction::compute()
 {
-//  std::cout << "Reconstruction::compute" << std::endl;
+  //std::cout << "Reconstruction::compute Start" << std::endl;
   int err = -1;
 
   AbstractAngDataLoader::Pointer oimDataLoader = H5AngDataLoader::New();
@@ -204,7 +184,7 @@ void Reconstruction::compute()
     progressMessage(AIM_STRING("Cleaning Data"), 9);
     m->cleanup_data();
 
-    if (m_AlignmentMethod == 3)
+    if (m_AlignmentMethod == AIM::Reconstruction::MutualInformation)
     {
       CHECK_FOR_CANCELED(ReconstructionFunc)
       progressMessage(AIM_STRING("Identifying Grains on Sections"), 11);
@@ -215,7 +195,7 @@ void Reconstruction::compute()
     progressMessage(AIM_STRING("Aligning Slices"), 14);
     m->align_sections(alignmentFile);
 
-    if (m_AlignmentMethod == 3)
+    if (m_AlignmentMethod == AIM::Reconstruction::MutualInformation)
     {
       CHECK_FOR_CANCELED(ReconstructionFunc)
       progressMessage(AIM_STRING("Redefining Border"), 16);
@@ -355,10 +335,17 @@ void Reconstruction::compute()
 
   CHECK_FOR_CANCELED(ReconstructionFunc)
   progressMessage(AIM_STRING("Writing Out HDF5 Grain File. This may take a few minutes to complete."), 95);
-  if (m_WriteHDF5GrainFile) { writeHDF5GrainsFile(hdf5GrainFile, m); }
+  if (m_WriteHDF5GrainFile) { m->writeHDF5GrainsFile(hdf5GrainFile); }
 
   progressMessage(AIM_STRING("Reconstruction Complete"), 100);
 
+  // Clean up all the memory by forcibly setting a NULL pointer to the Shared
+  // pointer object.
+  m = ReconstructionFunc::NullPointer();  // Clean up the memory
+  //std::cout << "Reconstruction::compute Complete" << std::endl;
+#if AIM_USE_QT
+  emit finished();
+#endif
 }
 
 // -----------------------------------------------------------------------------
@@ -381,144 +368,8 @@ void Reconstruction::progressMessage(AIM_STRING message, int progress)
 // -----------------------------------------------------------------------------
 void Reconstruction::on_CancelWorker()
 {
- // std::cout << "Reconstruction::cancelWorker()" << std::endl;
+//  std::cout << "Reconstruction::cancelWorker()" << std::endl;
   this->m_Cancel = true;
-  if (m.get() != NULL)
-  {
-
-  }
 }
 #endif
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int Reconstruction::writeHDF5GrainsFile(const std::string &hdfFile,
-                                          ReconstructionFunc::Pointer r)
-{
-  int err = -1;
-  AIM_H5VtkDataWriter::Pointer h5writer = AIM_H5VtkDataWriter::New();
-  h5writer->setFileName(hdfFile);
-  err = h5writer->openFile(false); // Open a new file over writing any other file
-
-  std::stringstream ss;
-  std::string hdfPath;
-  std::vector<std::string > hdfPaths;
- // std::cout << "Writing out " << r->numgrains << " to an HDF5 Grain File..." << std::endl;
-  for (int i = 1; i < r->numgrains; i++)
-  {
- //   std::cout << " Grain: " << i << " Gathering Data" << std::endl;
-    vector<int >* vlist = r->m_Grains[i].voxellist;
-    int vid = vlist->at(0);
-    ss.str("");
-    ss << "/" << i;
-    hdfPath = ss.str();
-    hdfPaths.push_back(hdfPath);
-
-    vector<int > plist(((r->xpoints + 1) * (r->ypoints + 1) * (r->zpoints + 1)), 0);
-    int pcount = 0;
-	  double q1[5];
-	  unsigned char rgb[3] = {0, 0, 0};
-	  double RefDirection[3] = {0.0, 0.0, 1.0};
-    int ocol, orow, oplane;
-    int col, row, plane;
-    int pid;
-    int err = 0;
-    // outFile << "POINTS " << pcount << " float" << endl;
-    std::vector<float > points;
-    std::vector<int32_t > cells;
-    std::vector<int32_t > cell_types(vlist->size(), VTK_CELLTYPE_VOXEL);
-
-    std::vector<float > kernelAvgDisorientation(vlist->size());
-    std::vector<float > grainAvgDisorientation(vlist->size());
-    std::vector<float > imageQuality(vlist->size());
-    std::vector<unsigned char > ipfColor(vlist->size() * 3);
-    std::vector<float > schmidFactor(1);
-
-    std::vector<int32_t > grainName(1);
-
-    pcount = 0;
-    plist.clear();
-    plist.resize(((r->xpoints + 1) * (r->ypoints + 1) * (r->zpoints + 1)), 0);
-    for (std::vector<int >::size_type j = 0; j < vlist->size(); j++)
-    {
-      vid = vlist->at(j);
-      ocol = vid % r->xpoints;
-      orow = (vid / r->xpoints) % r->ypoints;
-      oplane = vid / (r->xpoints * r->ypoints);
-      cells.push_back(8);
-      for (int k = 0; k < 8; k++)
-      {
-        if (k == 0) col = ocol, row = orow, plane = oplane;
-        if (k == 1) col = ocol + 1, row = orow, plane = oplane;
-        if (k == 2) col = ocol, row = orow + 1, plane = oplane;
-        if (k == 3) col = ocol + 1, row = orow + 1, plane = oplane;
-        if (k == 4) col = ocol, row = orow, plane = oplane + 1;
-        if (k == 5) col = ocol + 1, row = orow, plane = oplane + 1;
-        if (k == 6) col = ocol, row = orow + 1, plane = oplane + 1;
-        if (k == 7) col = ocol + 1, row = orow + 1, plane = oplane + 1;
-        pid = (plane * (r->xpoints + 1) * (r->ypoints + 1)) + (row * (r->xpoints + 1)) + col;
-        if (plist[pid] == 0)
-        {
-          plist[pid] = pcount;
-          pcount++;
-          //     outFile << (col * r->resx) << "  " << (row * r->resy) << "  " << (plane * r->resz) << endl;
-          points.push_back((col * r->resx));
-          points.push_back((row * r->resy));
-          points.push_back((plane * r->resz));
-        }
-        // Add onto our cells vector
-        cells.push_back(plist[pid]);
-      }
-      // Append a grainId to the grainIds vector
-      kernelAvgDisorientation[j] = r->voxels[vid].kernelmisorientation;
-      grainAvgDisorientation[j] = r->voxels[vid].misorientation;
-      imageQuality[j] = r->voxels[vid].imagequality;
-	  if(m_CrystalStructure == AIM::Reconstruction::Cubic)
-      {
-        OIMColoring::GenerateIPFColor(r->voxels[vid].euler1, r->voxels[vid].euler2, r->voxels[vid].euler3,
-                                      RefDirection[0], RefDirection[1], RefDirection[2],
-                                      rgb);
-      }
-      if(m_CrystalStructure == AIM::Reconstruction::Hexagonal)
-      {
-        q1[0]=r->voxels[i].quat[1];
-        q1[1]=r->voxels[i].quat[2];
-        q1[2]=r->voxels[i].quat[3];
-        q1[3]=r->voxels[i].quat[4];
-        OIMColoring::CalculateHexIPFColor(q1, rgb);
-      }
-      ipfColor[j * 3] = rgb[0];
-      ipfColor[j * 3 + 1] = rgb[1];
-      ipfColor[j * 3 + 2] = rgb[2];
-      grainName[0] = r->voxels[vid].grainname;
-    }
- //   std::cout << " Grain: " << i << " Writing HDF5 File" << std::endl;
-    err = h5writer->writeUnstructuredGrid(hdfPath, points, cells, cell_types);
-    points.resize(0);
-    cells.resize(0);
-    cell_types.resize(0);
-
-    //Write the Field Data
-    err = h5writer->writeFieldData<int > (hdfPath, grainName, AIM::Representation::Grain_ID.c_str(), 1);
-
-    schmidFactor[0] = r->m_Grains[i].schmidfactor;
-    err = h5writer->writeFieldData<float > (hdfPath, schmidFactor, AIM::Representation::SchmidFactor.c_str(), 1);
-
-    // Write the Neighbor list
-    err = h5writer->writeFieldData<int > (hdfPath, *(r->m_Grains[i].neighborlist), AIM::Representation::Neighbor_Grain_ID_List.c_str(), 1);
-
-    // Write CELL_DATA
-    err = h5writer->writeCellData<float > (hdfPath, kernelAvgDisorientation, AIM::Representation::KernelAvgDisorientation.c_str(), 1);
-    err = h5writer->writeCellData<float > (hdfPath, grainAvgDisorientation, AIM::Representation::GrainAvgDisorientation.c_str(), 1);
-    err = h5writer->writeCellData<float > (hdfPath, imageQuality, AIM::Representation::ImageQuality.c_str(), 1);
-    err = h5writer->writeCellData<unsigned char > (hdfPath, ipfColor, AIM::Representation::IPFColor.c_str(), 3);
-
-  }
-
-  err = h5writer->writeObjectIndex(hdfPaths);
-  err = h5writer->closeFile();
-  return err;
-}
 

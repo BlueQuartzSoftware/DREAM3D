@@ -1,7 +1,4 @@
-# --------------------------------------------------------------------
-# This CMake file will get called from a CMake script that is generated
-# during CMake time and run during the installation process.
-
+message(FATAL_ERROR "THIS IS NOT USED ANYMORE")
 include(GetPrerequisites)
 
 

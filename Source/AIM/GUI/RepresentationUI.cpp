@@ -181,6 +181,7 @@
 // -----------------------------------------------------------------------------
 RepresentationUI::RepresentationUI(QWidget *parent) :
   QMainWindow(parent),
+  m_WorkerThread(NULL),
 #if defined(Q_WS_WIN)
 m_OpenDialogLastDirectory("C:\\")
 #else
@@ -204,6 +205,9 @@ m_OpenDialogLastDirectory("~/")
 // -----------------------------------------------------------------------------
 RepresentationUI::~RepresentationUI()
 {
+  if (m_WorkerThread != NULL) {
+    delete m_WorkerThread;
+  }
 }
 
 
@@ -858,8 +862,19 @@ void RepresentationUI::on_rec_GoBtn_clicked()
   }
 
   SANITY_CHECK_INPUT(rec_ , OutputDir)
+  if (m_WorkerThread != NULL)
+  {
+    m_WorkerThread->wait(); // Wait until the thread is complete
+    delete m_WorkerThread; // Kill the thread
+    m_WorkerThread = NULL;
+  }
+  m_WorkerThread = new QThread(); // Create a new Thread Resource
 
   m_Reconstruction = Reconstruction::New();
+
+  // Move the Reconstruction object into the thread that we just created.
+  m_Reconstruction->moveToThread(m_WorkerThread);
+
 
   m_Reconstruction->setH5AngFile(rec_H5InputFile->text().toStdString());
 
@@ -875,8 +890,8 @@ void RepresentationUI::on_rec_GoBtn_clicked()
   m_Reconstruction->setMinSeedImageQuality(minImageQuality->value());
   m_Reconstruction->setMisorientationTolerance(misOrientationTolerance->value());
 
-  AIM::Reconstruction::CrystalStructure crystruct = static_cast<AIM::Reconstruction::CrystalStructure>(crystalStructure->currentIndex() + 1);
-  AIM::Reconstruction::AlignmentMethod alignmeth = static_cast<AIM::Reconstruction::AlignmentMethod>(alignMeth->currentIndex() + 1);
+  AIM::Reconstruction::CrystalStructure crystruct = static_cast<AIM::Reconstruction::CrystalStructure>(crystalStructure->currentIndex());
+  AIM::Reconstruction::AlignmentMethod alignmeth = static_cast<AIM::Reconstruction::AlignmentMethod>(alignMeth->currentIndex() );
 
   m_Reconstruction->setCrystalStructure(crystruct);
   m_Reconstruction->setAlignmentMethod(alignmeth);
@@ -891,22 +906,43 @@ void RepresentationUI::on_rec_GoBtn_clicked()
   m_Reconstruction->setWriteHDF5GrainFile(rec_HDF5GrainFile->isChecked());
 
 
-  connect(m_Reconstruction.get(), SIGNAL(finished()),
+  /* Connect the signal 'started()' from the QThread to the 'run' slot of the
+   * Reconstruction object. Since the Reconstruction object has been moved to another
+   * thread of execution and the actual QThread lives in *this* thread then the
+   * type of connection will be a Queued connection.
+   */
+  // When the thread starts its event loop, start the Reconstruction going
+  connect(m_WorkerThread, SIGNAL(started()),
+          m_Reconstruction.get(), SLOT(compute()));
+
+  // When the Reconstruction ends then tell the QThread to stop its event loop
+  connect(m_Reconstruction.get(), SIGNAL(finished() ),
+          m_WorkerThread, SLOT(quit()) );
+
+  // When the QThread finishes, tell this object that it has finished.
+  connect(m_WorkerThread, SIGNAL(finished()),
           this, SLOT( rec_ThreadFinished() ) );
+
+  // Send Progress from the Reconstruction to this object for display
   connect(m_Reconstruction.get(), SIGNAL (updateProgress(int)),
     this, SLOT(rec_ThreadProgressed(int) ) );
+
+  // Send progress messages from Reconstruction to this object for display
   connect(m_Reconstruction.get(), SIGNAL (updateMessage(QString)),
           this, SLOT(threadHasMessage(QString) ) );
+
+  // If the use clicks on the "Cancel" button send a message to the Reconstruction object
+  // We need a Direct Connection so the
   connect(this, SIGNAL(sig_CancelWorker() ),
-          m_Reconstruction.get(), SLOT (on_CancelWorker() ) );
+          m_Reconstruction.get(), SLOT (on_CancelWorker() ) , Qt::DirectConnection);
+
 
   setWidgetListEnabled(false);
-  m_Reconstruction->start();
-  rec_GoBtn->setText("Cancel");
   grainGeneratorTab->setEnabled(false);
   surfaceMeshingTab->setEnabled(false);
   volumeMeshingTab->setEnabled(false);
-
+  m_WorkerThread->start();
+  rec_GoBtn->setText("Cancel");
 }
 
 // -----------------------------------------------------------------------------
@@ -944,7 +980,6 @@ void RepresentationUI::rec_ThreadProgressed(int val)
 }
 
 
-//TODO: Grain Generator Methods
 /* *****************************************************************************
  *
  * Grain Generator Methods
@@ -1186,8 +1221,20 @@ void RepresentationUI::on_gg_GoBtn_clicked()
   }
 
   SANITY_CHECK_INPUT(gg_, OutputDir)
+  if (m_WorkerThread != NULL)
+  {
+    m_WorkerThread->wait(); // Wait until the thread is complete
+    delete m_WorkerThread; // Kill the thread
+    m_WorkerThread = NULL;
+  }
+  m_WorkerThread = new QThread(); // Create a new Thread Resource
 
   m_GrainGenerator = GrainGenerator::New(NULL);
+
+  // Move the Reconstruction object into the thread that we just created.
+  m_GrainGenerator->moveToThread(m_WorkerThread);
+
+
   m_GrainGenerator->setH5StatsFile(gg_H5InputStatisticsFile->text().toStdString() );
   m_GrainGenerator->setOutputDirectory(gg_OutputDir->text().toStdString());
   m_GrainGenerator->setNumGrains(gg_NumGrains->value());
@@ -1214,21 +1261,42 @@ void RepresentationUI::on_gg_GoBtn_clicked()
   m_GrainGenerator->setCrystalStructure(crystruct);
 
 
-  connect(m_GrainGenerator.get(), SIGNAL(finished()),
+  /* Connect the signal 'started()' from the QThread to the 'run' slot of the
+   * Reconstruction object. Since the Reconstruction object has been moved to another
+   * thread of execution and the actual QThread lives in *this* thread then the
+   * type of connection will be a Queued connection.
+   */
+  // When the thread starts its event loop, start the Reconstruction going
+  connect(m_WorkerThread, SIGNAL(started()),
+          m_GrainGenerator.get(), SLOT(compute()));
+
+  // When the Reconstruction ends then tell the QThread to stop its event loop
+  connect(m_GrainGenerator.get(), SIGNAL(finished() ),
+          m_WorkerThread, SLOT(quit()) );
+
+  // When the QThread finishes, tell this object that it has finished.
+  connect(m_WorkerThread, SIGNAL(finished()),
           this, SLOT( gg_ThreadFinished() ) );
+
+  // Send Progress from the Reconstruction to this object for display
   connect(m_GrainGenerator.get(), SIGNAL (updateProgress(int)),
     this, SLOT(gg_ThreadProgressed(int) ) );
+
+  // Send progress messages from Reconstruction to this object for display
   connect(m_GrainGenerator.get(), SIGNAL (updateMessage(QString)),
           this, SLOT(threadHasMessage(QString) ) );
+
+  // If the use clicks on the "Cancel" button send a message to the Reconstruction object
+  // We need a Direct Connection so the
   connect(this, SIGNAL(sig_CancelWorker() ),
-          m_GrainGenerator.get(), SLOT (on_CancelWorker() ) );
+          m_GrainGenerator.get(), SLOT (on_CancelWorker() ) , Qt::DirectConnection);
 
 
   setWidgetListEnabled(false);
   reconstructionTab->setEnabled(false);
   surfaceMeshingTab->setEnabled(false);
   volumeMeshingTab->setEnabled(false);
-  m_GrainGenerator->start();
+  m_WorkerThread->start();
   gg_GoBtn->setText("Cancel");
 }
 
@@ -1255,7 +1323,6 @@ void RepresentationUI::gg_ThreadProgressed(int val)
   this->gg_progressBar->setValue( val );
 }
 
-//TODO: Surface Meshing Methods
 /* *****************************************************************************
  *
  * Surface Meshing Methods
@@ -1414,7 +1481,19 @@ void RepresentationUI::on_sm_GoBtn_clicked()
   SANITY_CHECK_INPUT(sm_, InputFile)
   SANITY_CHECK_INPUT(sm_, OutputDir)
 
+  if (m_WorkerThread != NULL)
+  {
+    m_WorkerThread->wait(); // Wait until the thread is complete
+    delete m_WorkerThread; // Kill the thread
+    m_WorkerThread = NULL;
+  }
+  m_WorkerThread = new QThread(); // Create a new Thread Resource
+
+
   m_SurfaceMesh = SurfaceMesh::New(NULL);
+  // Move the Reconstruction object into the thread that we just created.
+  m_SurfaceMesh->moveToThread(m_WorkerThread);
+
   m_SurfaceMesh->setInputFile(sm_InputFile->text().toStdString() );
 
   QString od = sm_OutputDir->text();
@@ -1430,20 +1509,41 @@ void RepresentationUI::on_sm_GoBtn_clicked()
   m_SurfaceMesh->setSmoothLockQuadPoints(sm_LockQuadPoints->isChecked());
 
 
-  connect(m_SurfaceMesh.get(), SIGNAL(finished()),
+  /* Connect the signal 'started()' from the QThread to the 'run' slot of the
+   * Reconstruction object. Since the Reconstruction object has been moved to another
+   * thread of execution and the actual QThread lives in *this* thread then the
+   * type of connection will be a Queued connection.
+   */
+  // When the thread starts its event loop, start the Reconstruction going
+  connect(m_WorkerThread, SIGNAL(started()),
+          m_SurfaceMesh.get(), SLOT(compute()));
+
+  // When the Reconstruction ends then tell the QThread to stop its event loop
+  connect(m_SurfaceMesh.get(), SIGNAL(finished() ),
+          m_WorkerThread, SLOT(quit()) );
+
+  // When the QThread finishes, tell this object that it has finished.
+  connect(m_WorkerThread, SIGNAL(finished()),
           this, SLOT( sm_ThreadFinished() ) );
+
+  // Send Progress from the Reconstruction to this object for display
   connect(m_SurfaceMesh.get(), SIGNAL (updateProgress(int)),
     this, SLOT(sm_ThreadProgressed(int) ) );
+
+  // Send progress messages from Reconstruction to this object for display
   connect(m_SurfaceMesh.get(), SIGNAL (updateMessage(QString)),
           this, SLOT(threadHasMessage(QString) ) );
+
+  // If the use clicks on the "Cancel" button send a message to the Reconstruction object
+  // We need a Direct Connection so the
   connect(this, SIGNAL(sig_CancelWorker() ),
-      m_SurfaceMesh.get(), SLOT (on_CancelWorker() ) );
+          m_SurfaceMesh.get(), SLOT (on_CancelWorker() ) , Qt::DirectConnection);
 
   setWidgetListEnabled(false);
   reconstructionTab->setEnabled(false);
   grainGeneratorTab->setEnabled(false);
   volumeMeshingTab->setEnabled(false);
-  m_SurfaceMesh->start();
+  m_WorkerThread->start();
   sm_GoBtn->setText("Cancel");
 }
 
@@ -1471,7 +1571,7 @@ void RepresentationUI::sm_ThreadProgressed(int value)
 }
 
 
-//TODO: Volume Meshing Methods
+
 /* *****************************************************************************
  *
  * Volume Meshing Methods
@@ -1596,6 +1696,16 @@ void RepresentationUI::on_vm_GoBtn_clicked()
   SANITY_CHECK_INPUT(vm_, TrianglesFile);
   SANITY_CHECK_INPUT(vm_, OutputDir);
 
+  if (m_WorkerThread != NULL)
+  {
+    m_WorkerThread->wait(); // Wait until the thread is complete
+    delete m_WorkerThread; // Kill the thread
+    m_WorkerThread = NULL;
+  }
+  m_WorkerThread = new QThread(); // Create a new Thread Resource
+  // Move the Reconstruction object into the thread that we just created.
+  m_VolumeMesh->moveToThread(m_WorkerThread);
+
   m_VolumeMesh = VolumeMesh::New(NULL);
   m_VolumeMesh->setNodesFile(vm_NodesFile->text().toStdString() );
   m_VolumeMesh->setTrianglesFile(vm_TrianglesFile->text().toStdString() );
@@ -1609,20 +1719,41 @@ void RepresentationUI::on_vm_GoBtn_clicked()
   m_VolumeMesh->setZRes(vm_ZRes->value());
   m_VolumeMesh->setNumGrains(vm_NumGrains->value());
 
-  connect(m_VolumeMesh.get(), SIGNAL(finished()),
-    this, SLOT( sm_ThreadFinished() ) );
+  /* Connect the signal 'started()' from the QThread to the 'run' slot of the
+   * Reconstruction object. Since the Reconstruction object has been moved to another
+   * thread of execution and the actual QThread lives in *this* thread then the
+   * type of connection will be a Queued connection.
+   */
+  // When the thread starts its event loop, start the Reconstruction going
+  connect(m_WorkerThread, SIGNAL(started()),
+          m_VolumeMesh.get(), SLOT(compute()));
+
+  // When the Reconstruction ends then tell the QThread to stop its event loop
+  connect(m_VolumeMesh.get(), SIGNAL(finished() ),
+          m_WorkerThread, SLOT(quit()) );
+
+  // When the QThread finishes, tell this object that it has finished.
+  connect(m_WorkerThread, SIGNAL(finished()),
+          this, SLOT( vm_ThreadFinished() ) );
+
+  // Send Progress from the Reconstruction to this object for display
   connect(m_VolumeMesh.get(), SIGNAL (updateProgress(int)),
-    this, SLOT(sm_ThreadProgressed(int) ));
+    this, SLOT(vm_ThreadProgressed(int) ) );
+
+  // Send progress messages from Reconstruction to this object for display
   connect(m_VolumeMesh.get(), SIGNAL (updateMessage(QString)),
-    this, SLOT(threadHasMessage(QString) ) );
+          this, SLOT(threadHasMessage(QString) ) );
+
+  // If the use clicks on the "Cancel" button send a message to the Reconstruction object
+  // We need a Direct Connection so the
   connect(this, SIGNAL(sig_CancelWorker() ),
-    m_VolumeMesh.get(), SLOT (on_CancelWorker() ) );
+          m_VolumeMesh.get(), SLOT (on_CancelWorker() ) , Qt::DirectConnection);
 
   setWidgetListEnabled(false);
   reconstructionTab->setEnabled(false);
   grainGeneratorTab->setEnabled(false);
   volumeMeshingTab->setEnabled(false);
-  m_VolumeMesh->start();
+  m_WorkerThread->start();
   sm_GoBtn->setText("Cancel");
 
 }

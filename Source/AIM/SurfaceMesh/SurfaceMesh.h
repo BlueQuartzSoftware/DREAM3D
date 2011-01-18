@@ -24,7 +24,7 @@
 
 #ifdef AIM_USE_QT
 #include <QtCore/QObject>
-#include <QtCore/QThread>
+
 #define AIM_STRING QString
 #else
 #define AIM_STRING std::string
@@ -44,7 +44,7 @@
 */
 class SurfaceMesh
 #ifdef AIM_USE_QT
- : public QThread
+ : public QObject
 #endif
 {
 #ifdef AIM_USE_QT
@@ -80,6 +80,10 @@ Q_OBJECT
     MXA_INSTANCE_PROPERTY(bool, ConformalMesh)
 
 
+    /**
+     * @brief Cancel the operation
+     */
+    MXA_INSTANCE_PROPERTY(bool, Cancel);
 
     /**
      * @brief Either prints a message or sends the message to the User Interface
@@ -90,10 +94,6 @@ Q_OBJECT
 
 #ifdef AIM_USE_QT
 
-    /**
-     * @brief Cancel the operation
-     */
-    MXA_INSTANCE_PROPERTY(bool, Cancel);
 
     /**
      * Qt Signals for connections
@@ -101,6 +101,7 @@ Q_OBJECT
     signals:
       void updateMessage(QString message);
       void updateProgress(int value);
+      void finished();
 
     public slots:
     /**
@@ -117,13 +118,12 @@ Q_OBJECT
 
 
   protected:
-#ifdef AIM_USE_QT
-    SurfaceMesh(QObject* parent = 0);
-    virtual void run();
 
-#else
-    SurfaceMesh();
+    SurfaceMesh(
+#ifdef AIM_USE_QT
+        QObject* parent = 0
 #endif
+        );
 
   private:
 	  SurfaceMeshFunc::Pointer m;
