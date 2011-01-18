@@ -464,7 +464,7 @@ void  GrainGeneratorFunc::generate_grain(int gnum)
 	u = rg.Random();
 	diam = rg.RandNorm(avgdiam,sddiam);
 	diam = exp(diam);
-	if(diam >= (maxdiameter)) volgood = 0;
+	if(diam >= (maxdiameter+1)) volgood = 0;
 	if(diam < mindiameter) volgood = 0;
 	vol = (4.0/3.0)*(m_pi)*((diam/2.0)*(diam/2.0)*(diam/2.0));
   }
@@ -961,9 +961,6 @@ double GrainGeneratorFunc::check_sizedisterror(int gadd, int gremove)
 	return sizedisterror;
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 int  GrainGeneratorFunc::pack_grains(const std::string &filename, int numgrains)
 {
   totalvol = 0;
@@ -1183,9 +1180,14 @@ int  GrainGeneratorFunc::pack_grains(const std::string &filename, int numgrains)
   return (grains.size());
 }
 
-void GrainGeneratorFunc::assign_voxels(int numgrains)
+int GrainGeneratorFunc::assign_voxels(int numgrains)
 {
   int index;
+  int *gsizes;
+  gsizes = new int[numgrains];
+  int oldname;
+  int actualid;
+  int size;
   int column, row, plane;
   double inside;
   double Nvalue = 0;
@@ -1206,6 +1208,19 @@ void GrainGeneratorFunc::assign_voxels(int numgrains)
   voxels = new Voxel[totalpoints];
   for(int i=1;i<numgrains;i++)
   {
+	gsizes[i] = 0;
+  }
+  for(int i=1;i<numgrains;i++)
+  {
+	  for(int j=1;j<i+1;j++)
+	  {
+		size = gsizes[j];
+		if(size == 0) 
+		{
+			actualid = j;
+			break;
+		}
+	  }
 	  double volcur = grains[i].volume;
 	  double bovera = grains[i].radius2;
 	  double covera = grains[i].radius3;
@@ -1345,12 +1360,15 @@ void GrainGeneratorFunc::assign_voxels(int numgrains)
 					int currentpoint = index;
 					if(voxels[currentpoint].grainname > 0)
 					{
+						oldname = voxels[currentpoint].grainname;
+						gsizes[oldname] = gsizes[oldname]-1;
 						voxels[currentpoint].grainname = -1;
 						voxels[currentpoint].unassigned = 1;
 					}
 					if(voxels[currentpoint].grainname == 0 && voxels[currentpoint].unassigned == 0)
 					{
-						voxels[currentpoint].grainname = i;
+						voxels[currentpoint].grainname = actualid;
+						gsizes[actualid]++;
 					}
 				  }
 			  }
@@ -1360,7 +1378,18 @@ void GrainGeneratorFunc::assign_voxels(int numgrains)
 	  grains[i].centroidx = xc;
 	  grains[i].centroidy = yc;
 	  grains[i].centroidz = zc;
+	  grains[actualid] = grains[i];
+	  grains[actualid].numvoxels = gsizes[actualid];
   }
+  int goodcount = 1;
+  for(int i=1;i<numgrains;i++)
+  {
+	  if(gsizes[i] > 0)
+	  {
+		  goodcount++;
+	  }
+  }
+  return goodcount;
 }
 void  GrainGeneratorFunc::assign_eulers(int numgrains)
 {
@@ -1667,7 +1696,7 @@ void  GrainGeneratorFunc::fill_gaps(int numgrains)
   }
   for (int i = 1; i < numgrains; i++)
   {
-	  grains[i].numvoxels = gsizes[i];
+	grains[i].numvoxels = gsizes[i];
   }
   gsizes.clear();
 }
@@ -3927,7 +3956,6 @@ void GrainGeneratorFunc::write_eulerangles(string writename10)
   //std::cout << "GrainGeneratorFunc::write_volume1: '" << writename10 << "'" << std::endl;
   ofstream outFile;
   outFile.open(writename10.c_str());
-  outFile << numgrains << endl;
   for (int i = 1; i < numgrains; i++)
   {
     double ea1 = grains[i].euler1;
