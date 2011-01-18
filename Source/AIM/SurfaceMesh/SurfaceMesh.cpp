@@ -54,7 +54,7 @@ QObject* parent
 #endif
 ) :
 #if AIM_USE_QT
-QThread(parent),
+QObject(parent),
 #endif
 m_InputDirectory("."),
 m_InputFile(""),
@@ -80,16 +80,6 @@ SurfaceMesh::~SurfaceMesh()
 {
 }
 
-#if AIM_USE_QT
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void SurfaceMesh::run()
-{
-  compute();
-  m = SurfaceMeshFunc::NullPointer();  // Clean up the memory
-}
-#endif
 
 #define USE_VTK_FILE_UTILS 1
 
@@ -254,6 +244,12 @@ void SurfaceMesh::compute()
   m->writeVTKOutputFile(nNodes, cTriID, VisualizationFile, NodesFile, TrianglesFile, m_BinaryVTKFile, m_ConformalMesh);
 
   progressMessage(AIM_STRING("Surface Meshing Complete"), 100 );
+
+  m = SurfaceMeshFunc::NullPointer();  // Clean up the memory
+
+#if AIM_USE_QT
+  emit finished();
+#endif
 }
 
 // -----------------------------------------------------------------------------

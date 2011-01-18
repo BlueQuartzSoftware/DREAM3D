@@ -4,8 +4,7 @@
 #--  BSD License: http://www.opensource.org/licenses/bsd-license.html
 #--////////////////////////////////////////////////////////////////////////////
 
-include(${CMP_OSX_TOOLS_SOURCE_DIR}/OSX_BundleTools.cmake)
-include(${CMP_OSX_TOOLS_SOURCE_DIR}/ToolUtilities.cmake)
+include (CMakeParseArguments)
 
 #-------------------------------------------------------------------------------
 MACRO (cmp_IDE_GENERATED_PROPERTIES SOURCE_PATH HEADERS SOURCES)
@@ -40,72 +39,297 @@ MACRO (cmp_IDE_SOURCE_PROPERTIES SOURCE_PATH HEADERS SOURCES INSTALL_FILES)
 
 ENDMACRO (cmp_IDE_SOURCE_PROPERTIES NAME HEADERS SOURCES INSTALL_FILES)
 
-# ------------------------------------------------------------------------------ 
-# This CMake code installs the needed support libraries
-# ------------------------------------------------------------------------------ 
-macro(cmp_InstallationSupport EXE_NAME EXE_DEBUG_EXTENSION EXE_BINARY_DIR 
-                                appNeedsPlugins installFiles comp dest lib_search_dirs)
-
-if (1)
-    message(STATUS "EXE_NAME: ${EXE_NAME}")
-    message(STATUS "EXE_DEBUG_EXTENSION: ${EXE_DEBUG_EXTENSION}")
-    message(STATUS "EXE_BINARY_DIR: ${EXE_BINARY_DIR}")
-    message(STATUS "appNeedsPlugins: ${appNeedsPlugins}")
-    message(STATUS "installFiles: ${installFiles}")
-    message(STATUS "comp: ${comp}")
-    message(STATUS "dest: ${dest}")
-    message(STATUS "lib_search_dirs: ${lib_search_dirs}")
-endif()
-
-
-    SET_TARGET_PROPERTIES( ${EXE_NAME} 
-                PROPERTIES
-                DEBUG_OUTPUT_NAME ${EXE_NAME}${EXE_DEBUG_EXTENSION}
-                RELEASE_OUTPUT_NAME ${EXE_NAME}
-    )
-    if ( ${installFiles} EQUAL 1 )
-        INSTALL(TARGETS ${EXE_NAME} 
-            COMPONENT ${comp}
-            RUNTIME DESTINATION ${dest}
-            LIBRARY DESTINATION ${dest} 
-            ARCHIVE DESTINATION ${dest}        
-            BUNDLE DESTINATION ${dest}
-        )   
-        
-        
-        # --------------------------------------------------------------------
-        # Get the plugin list from the plugin file
-        if ( ${appNeedsPlugins})
-          file(READ ${CMP_PLUGIN_LIST_FILE} CMP_COMPLETE_PLUGIN_LIST)
-          file(READ ${CMP_PLUGIN_SEARCHDIR_FILE} CMP_PLUGIN_SEARCH_DIRS)
-        endif()
-        
-        if (APPLE)
-            # --- If we are on OS X copy all the embedded libraries to the app bundle
-            # message(STATUS "Creating Install CMake file for GUI application ${EXE_NAME}")
-            set (PLUGIN_SEARCH_DIRS "${lib_search_dirs}")
-            if(${GUI_TYPE} STREQUAL "MACOSX_BUNDLE")
-                include (${CMP_OSX_TOOLS_SOURCE_DIR}/OSX_BundleTools.cmake)
-                if(CMAKE_BUILD_TYPE MATCHES "Debug")
-                    MakeOSXBundleApp( "${EXE_NAME}${EXE_DEBUG_EXTENSION}" 
-                                ${EXE_BINARY_DIR}
-                                ${CMP_OSX_TOOLS_SOURCE_DIR} )
-                else (CMAKE_BUILD_TYPE MATCHES "Debug")
-                    MakeOSXBundleApp(${EXE_NAME} 
-                             ${EXE_BINARY_DIR}
-                             ${CMP_OSX_TOOLS_SOURCE_DIR} )
-                endif()
-            endif()
-        endif(APPLE)
-    endif()
+#-------------------------------------------------------------------------------
+# This macro will set all the variables necessary to have a "good" OS X Application
+# bundle. The variables are as follows:
+#  PROJECT_NAME - which can be taken from the ${PROJECT_NAME} variable is needed
+#  DEBUG_EXTENSION - The extension used to denote a debug built Application. Typically
+#   this is '_debug'
+#  ICON_FILE_PATH - The complete path to the bundle icon file
+#  VERSION_STRING - The version string that you wish to use for the bundle. For OS X
+#   this string is usually XXXX.YY.ZZ in type. Look at the Apple docs for more info
+#-------------------------------------------------------------------------------
+macro(ConfigureMacOSXBundlePlist PROJECT_NAME DEBUG_EXTENSION ICON_FILE_PATH VERSION_STRING)
+  # message(STATUS "ConfigureMacOSXBundlePlist for ${PROJECT_NAME} ")
+  IF(CMAKE_BUILD_TYPE MATCHES "Release")
+    SET(DBG_EXTENSION "")
+  else()
+    set(DBG_EXTENSION ${DEBUG_EXTENSION})
+  endif()
+  get_filename_component(ICON_FILE_NAME "${ICON_FILE_PATH}" NAME)
+    
+ #CFBundleGetInfoString
+ SET(MACOSX_BUNDLE_INFO_STRING "${PROJECT_NAME}${DBG_EXTENSION} Version ${VERSION_STRING}, Copyright 2009 BlueQuartz Software.")
+ SET(MACOSX_BUNDLE_ICON_FILE ${ICON_FILE_NAME})
+ SET(MACOSX_BUNDLE_GUI_IDENTIFIER "${PROJECT_NAME}${DBG_EXTENSION}")
+ #CFBundleLongVersionString
+ SET(MACOSX_BUNDLE_LONG_VERSION_STRING "${PROJECT_NAME}${DBG_EXTENSION} Version ${VERSION_STRING}")
+ SET(MACOSX_BUNDLE_BUNDLE_NAME ${PROJECT_NAME}${DBG_EXTENSION})
+ SET(MACOSX_BUNDLE_SHORT_VERSION_STRING ${VERSION_STRING})
+ SET(MACOSX_BUNDLE_BUNDLE_VERSION ${VERSION_STRING})
+ SET(MACOSX_BUNDLE_COPYRIGHT "Copyright 2010, BlueQuartz Software. All Rights Reserved.")
+ 
+ SET(${PROJECT_NAME}_PROJECT_SRCS ${${PROJECT_NAME}_PROJECT_SRCS} ${ICON_FILE_PATH})
+ SET_SOURCE_FILES_PROPERTIES(${ICON_FILE_PATH} PROPERTIES
+                             MACOSX_PACKAGE_LOCATION Resources)
+                             
 endmacro()
+
+# --------------------------------------------------------------------
+# This function should be able to correctly create an Application bundle
+# based on the Qt Frameworks for any platform. There are specific
+# sections to ensure that plugins and other libraries and resources are
+# correctly copied into the Application Bundle. On other platforms these
+# items are copied into the installation directory.
+# Arguments:
+#  TARGET The name of the Target to use in the Add_Executable() commnad
+#  DEBUG_EXTENSION The file name suffix extension that Debug builds will have
+#  ICON_FILE The path to the proper icon file for this platform (icns for OS X, ico for windows)
+#  VERSION_MAJOR The Major version
+#  VERSION_MINOR The Minor version
+#  VERSION_PATCH The Patch version
+#  BINARY_DIR    The binary directory where some files are created for this application
+#  COMPONENT     The name of the component that is used during the packaging
+#  INSTALL_DEST  The destination directory inside of the CMAKE_INSTALL_PREFIX to install everything
+#
+#  SOURCES   All the source files that are needed to compile the code
+#  LINK_LIBRARIES Dependent libraries that are needed to properly link the executable
+#  LIB_SEARCH_DIRS  A list of directories where certain dependent libraries or plugins can be found
+#  QT_PLUGINS A List of Qt Plugins that this project needs
+#  OTHER_PLUGINS A list of other plugins that are needed by this Application. These can be those built
+#     by this project or located somewhere else.
+function(BuildQtAppBundle)
+    set(options )
+    set(oneValueArgs TARGET DEBUG_EXTENSION ICON_FILE VERSION_MAJOR VERSION_MINOR VERSION_PATCH 
+                     BINARY_DIR COMPONENT INSTALL_DEST )
+    set(multiValueArgs SOURCES LINK_LIBRARIES LIB_SEARCH_DIRS QT_PLUGINS OTHER_PLUGINS)
+    cmake_parse_arguments(QAB "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN} )
+       
+    # Default GUI type is blank
+    set(GUI_TYPE "")
+    
+    #-- Configure the OS X Bundle Plist
+    if (APPLE)
+        SET(GUI_TYPE MACOSX_BUNDLE)
+        ConfigureMacOSXBundlePlist( ${QAB_TARGET} ${QAB_DEBUG_EXTENSION} ${QAB_ICON_FILE} 
+                                "${QAB_VERSION_MAJOR}.${QAB_VERSION_MINOR}.${QAB_VERSION_PATCH}" )
+    
+                              
+#-- Make sure the qt_menu.nib is copied if we are using Qt Cocoa by setting the
+# source files properties of the qt_menu.nib package
+        IF(QT_MAC_USE_COCOA)
+            GET_FILENAME_COMPONENT(qt_menu_nib
+              "${QT_QTGUI_LIBRARY_RELEASE}/Resources/qt_menu.nib"
+              REALPATH)
+            set(qt_menu_nib_sources
+              "${qt_menu_nib}/classes.nib"
+              "${qt_menu_nib}/info.nib"
+              "${qt_menu_nib}/keyedobjects.nib"
+              )
+            SET_SOURCE_FILES_PROPERTIES(
+              ${qt_menu_nib_sources}
+              PROPERTIES
+              MACOSX_PACKAGE_LOCATION Resources/qt_menu.nib
+            )
+        ELSE(QT_MAC_USE_COCOA)
+            set(qt_menu_nib_sources)
+        ENDIF(QT_MAC_USE_COCOA)
+        
+#-- Write out a qt.conf file to place in our App bundle
+        set(qt_conf_file ${${QAB_TARGET}_BINARY_DIR}/qt.conf)
+        file(WRITE ${qt_conf_file})
+        set_source_files_properties(${qt_conf_file}
+                                PROPERTIES
+                                MACOSX_PACKAGE_LOCATION Resources)        
+
+        list(APPEND QAB_SOURCES ${qt_menu_nib_sources} ${qt_conf_file})
+    elseif(WIN32)
+        SET(GUI_TYPE WIN32)
+        FILE (WRITE "${CMAKE_CURRENT_BINARY_DIR}/Icon.rc"
+          "// Icon with lowest ID value placed first to ensure application icon\n"
+          "// remains consistent on all systems.\n"
+          "IDI_ICON1 ICON \"${QAB_ICON_FILE}\"")
+        SET(QAB_ICON_FILE "${CMAKE_CURRENT_BINARY_DIR}/Icon.rc")
+    endif(APPLE)
+    
+#-- Append the Icon file/Image/Resource file to the list of Sources to compile
+    list(APPEND QAB_SOURCES ${QAB_ICON_FILE})
+
+#-- Add and Link our executable    
+    ADD_EXECUTABLE( ${QAB_TARGET} ${GUI_TYPE} ${QAB_SOURCES} )
+    TARGET_LINK_LIBRARIES( ${QAB_TARGET}
+                        ${QAB_LINK_LIBRARIES} )
+                        
+#-- Make sure we have a proper bundle icon. This must occur AFTER the ADD_EXECUTABLE command
+    if (APPLE)
+        get_filename_component(ICON_FILE_NAME "${QAB_ICON_FILE}" NAME)
+        SET_TARGET_PROPERTIES(${QAB_TARGET} PROPERTIES
+                              MACOSX_BUNDLE_ICON_FILE ${ICON_FILE_NAME})     
+    endif(APPLE)
+    
+#-- Set the Debug Suffix for the application
+    SET_TARGET_PROPERTIES( ${QAB_TARGET} 
+                PROPERTIES
+                DEBUG_OUTPUT_NAME ${QAB_TARGET}${QAB_DEBUG_EXTENSION}
+                RELEASE_OUTPUT_NAME ${QAB_TARGET}
+    )
+
+#-- Create an Install Rule for the main app bundle target
+    INSTALL(TARGETS ${QAB_TARGET}
+        COMPONENT ${QAB_COMPONENT}
+        RUNTIME DESTINATION ${QAB_INSTALL_DEST}
+        LIBRARY DESTINATION ${QAB_INSTALL_DEST} 
+        ARCHIVE DESTINATION ${QAB_INSTALL_DEST}        
+        BUNDLE DESTINATION ${QAB_INSTALL_DEST}
+    )
+
+#-- Create install rules for any Qt Plugins that are needed
+    set(pi_dest ${QAB_INSTALL_DEST}/plugins)
+    # if we are on OS X then we set the plugin installation location to inside the App bundle
+    if (APPLE)
+        set(pi_dest ${QAB_TARGET}.app/Contents/plugins)
+        set (osx_app_name ${QAB_TARGET})
+        if(CMAKE_BUILD_TYPE MATCHES "Debug")
+            set(pi_dest ${QAB_TARGET}${QAB_DEBUG_EXTENSION}.app/Contents/plugins)
+            set(osx_app_name ${QAB_TARGET}${QAB_DEBUG_EXTENSION})
+        endif()
+    endif()
+
+    
+    set(app_plugin_list "")
+    set(lib_search_dirs "")
+#-- It is important as you build up the list to modify the path to the Qt Plugin
+#-- to point to the plugin that will appear in the Application bundle and NOT
+#-- the path to your Qt installation. If you do NOT do this step properly AND you
+#-- have write privs on your Qt Installation CMake will most likely "fixup" your
+#-- Qt installation files which really isn't good at all. Also when generating the
+#-- list it is important to have Absolute Paths to these plugins otherwise
+#-- fixup_bundle() can not find the libraries.
+    foreach(pi ${QAB_QT_PLUGINS})
+        get_filename_component(qt_plugin_name "${pi}" NAME)
+        get_filename_component(qt_plugin_type_path "${pi}" PATH)
+        get_filename_component(qt_plugin_type "${qt_plugin_type_path}" NAME)
+        install(PROGRAMS ${pi}
+                DESTINATION "${pi_dest}/${qt_plugin_type}"
+                COMPONENT ${QAB_COMPONENT} 
+        )
+        list(APPEND app_plugin_list "\${CMAKE_INSTALL_PREFIX}/${pi_dest}/${qt_plugin_type}/${qt_plugin_name}")
+    endforeach()
+    list(REMOVE_DUPLICATES lib_search_dirs)
+    
+# 
+#-- Create install rules for our own plugins that are targets in the build system which
+#-- is only needed on Apple systems to make sure we get them installed into the bundle.
+#-- On other platforms the standard installation rules are used instead.
+    if (APPLE)
+        foreach(pi ${QAB_OTHER_PLUGINS})
+            get_filename_component(plugin_name "${pi}" NAME)
+            install(PROGRAMS ${pi}
+                    DESTINATION "${pi_dest}"
+                    COMPONENT ${QAB_COMPONENT}
+            )
+            list(APPEND app_plugin_list "\${CMAKE_INSTALL_PREFIX}/${pi_dest}/${plugin_name}")
+        endforeach()
+    endif(APPLE)
+    
+#-- Create last install rule that will run fixup_bundle() on OS X Machines. Other platforms we
+#-- are going to create the install rules elsewhere
+    if(APPLE)
+        list(APPEND lib_search_dirs "${QAB_LIB_SEARCH_DIRS}")
+        
+        set (OSX_MAKE_STANDALONE_BUNDLE_CMAKE_SCRIPT 
+                    "${QAB_BINARY_DIR}/OSX_Scripts/${QAB_TARGET}_CompleteBundle.cmake")
+        
+        CONFIGURE_FILE("${CMP_OSX_TOOLS_SOURCE_DIR}/CompleteBundle.cmake.in"
+                "${OSX_MAKE_STANDALONE_BUNDLE_CMAKE_SCRIPT}" @ONLY IMMEDIATE)
+         
+        install(SCRIPT "${OSX_MAKE_STANDALONE_BUNDLE_CMAKE_SCRIPT}" COMPONENT ${QAB_COMPONENT})
+    endif(APPLE)
+endfunction()
+
+# --------------------------------------------------------------------
+# This function should be able to correctly create an Application bundle
+# based on the Qt Frameworks for any platform. There are specific
+# sections to ensure that plugins and other libraries and resources are
+# correctly copied into the Application Bundle. On other platforms these
+# items are copied into the installation directory.
+# Arguments:
+#  TARGET The name of the Target to use in the Add_Executable() commnad
+#  DEBUG_EXTENSION The file name suffix extension that Debug builds will have
+#  VERSION_MAJOR The Major version
+#  VERSION_MINOR The Minor version
+#  VERSION_PATCH The Patch version
+#  BINARY_DIR    The binary directory where some files are created for this application
+#  COMPONENT     The name of the component that is used during the packaging
+#  INSTALL_DEST  The destination directory inside of the CMAKE_INSTALL_PREFIX to install everything
+#  SOURCES   All the source files that are needed to compile the code
+#  LINK_LIBRARIES Dependent libraries that are needed to properly link the executable
+#  LIB_SEARCH_DIRS  A list of directories where certain dependent libraries or plugins can be found
+#
+# Notes: If we were to base a tool off of Qt and NOT just system/3rd party libraries
+#  then we would probably have to get some of the features of the "BuildQtAppBunlde"
+#  back in this function in order to copy in the Qt frameworks, plugins and other
+#  stuff like that. For now none of our 'tools' require Qt.
+function(BuildToolBundle)
+    set(options )
+    set(oneValueArgs TARGET DEBUG_EXTENSION VERSION_MAJOR VERSION_MINOR VERSION_PATCH 
+                     BINARY_DIR COMPONENT INSTALL_DEST )
+    set(multiValueArgs SOURCES LINK_LIBRARIES LIB_SEARCH_DIRS)
+    cmake_parse_arguments(QAB "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN} )
+       
+    # Default GUI type is blank
+    set(GUI_TYPE "")
+    
+    if (APPLE)
+        set (osx_app_name ${QAB_TARGET})
+        if(CMAKE_BUILD_TYPE MATCHES "Debug")
+            set(osx_app_name ${QAB_TARGET}${QAB_DEBUG_EXTENSION})
+        endif()
+    endif()
+
+#-- Add and Link our executable    
+    ADD_EXECUTABLE( ${QAB_TARGET} ${GUI_TYPE} ${QAB_SOURCES} )
+    TARGET_LINK_LIBRARIES( ${QAB_TARGET}
+                            ${QAB_LINK_LIBRARIES} )
+    
+#-- Set the Debug Suffix for the application
+    SET_TARGET_PROPERTIES( ${QAB_TARGET} 
+                PROPERTIES
+                DEBUG_OUTPUT_NAME ${QAB_TARGET}${QAB_DEBUG_EXTENSION}
+                RELEASE_OUTPUT_NAME ${QAB_TARGET}
+    )
+
+#-- Create an Install Rule for the main app bundle target
+    INSTALL(TARGETS ${QAB_TARGET}
+        COMPONENT ${QAB_COMPONENT}
+        RUNTIME DESTINATION ${QAB_INSTALL_DEST}
+        LIBRARY DESTINATION ${QAB_INSTALL_DEST} 
+        ARCHIVE DESTINATION ${QAB_INSTALL_DEST}        
+        BUNDLE DESTINATION ${QAB_INSTALL_DEST}
+    )
+   
+
+#-- Create last install rule that will run fixup_bundle() on OS X Machines. Other platforms we
+#-- are going to create the install rules elsewhere
+    if(APPLE)
+        list(APPEND lib_search_dirs "${QAB_LIB_SEARCH_DIRS}")
+        
+        set (OSX_MAKE_STANDALONE_BUNDLE_CMAKE_SCRIPT 
+                    "${QAB_BINARY_DIR}/OSX_Scripts/${QAB_TARGET}_CompleteBundle.cmake")
+        
+        CONFIGURE_FILE("${CMP_OSX_TOOLS_SOURCE_DIR}/CompleteTool.cmake.in"
+                "${OSX_MAKE_STANDALONE_BUNDLE_CMAKE_SCRIPT}" @ONLY IMMEDIATE)
+         
+        install(SCRIPT "${OSX_MAKE_STANDALONE_BUNDLE_CMAKE_SCRIPT}" COMPONENT ${QAB_COMPONENT})
+    endif(APPLE)
+endfunction()
 
 # --------------------------------------------------------------------
 #
 # --------------------------------------------------------------------
-macro(cmp_ToolInstallationSupport EXE_NAME EXE_DEBUG_EXTENSION EXE_BINARY_DIR installFiles 
+macro(cmp_ToolInstallationSupport_old EXE_NAME EXE_DEBUG_EXTENSION EXE_BINARY_DIR installFiles 
                                   comp dest lib_search_dirs)
-if (false)
+if (0)
     message(STATUS "EXE_NAME: ${EXE_NAME}")
     message(STATUS "EXE_DEBUG_EXTENSION: ${EXE_DEBUG_EXTENSION}")
     message(STATUS "EXE_BINARY_DIR: ${EXE_BINARY_DIR}")
@@ -208,10 +432,10 @@ macro(StaticLibraryProperties targetName )
 
 endmacro(StaticLibraryProperties)
 
-# --------------------------------------------------------------------
-#
-# --------------------------------------------------------------------
-macro(PluginProperties targetName DEBUG_EXTENSION projectVersion binaryDir)
+#-------------------------------------------------------------------------------
+# This is used if you are creating a plugin that needs to be installed
+#-------------------------------------------------------------------------------
+macro(PluginProperties targetName DEBUG_EXTENSION projectVersion binaryDir pluginfile)
     if ( NOT BUILD_SHARED_LIBS AND MSVC)
       SET_TARGET_PROPERTIES( ${targetName} 
         PROPERTIES
@@ -226,10 +450,10 @@ macro(PluginProperties targetName DEBUG_EXTENSION projectVersion binaryDir)
         SUFFIX ".plugin" )
     
     # Add the plugin to our list of plugins that will need to be installed
-    if (CMAKE_BUILD_TYPE STREQUAL "Debug")
-        file(APPEND ${binaryDir}/plugins.txt "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/lib${targetName}${DEBUG_EXTENSION}.plugin;")
+    if (CMAKE_BUILD_TYPE STREQUAL "Debug" AND NOT MSVC)
+        file(APPEND ${binaryDir}/${pluginfile} "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/lib${targetName}${DEBUG_EXTENSION}.plugin;")
     else()
-        file(APPEND ${binaryDir}/plugins.txt "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/lib${targetName}.plugin;")
+        file(APPEND ${binaryDir}/${pluginfile} "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/lib${targetName}.plugin;")
     endif()
     
     if (NOT APPLE)
@@ -241,7 +465,7 @@ macro(PluginProperties targetName DEBUG_EXTENSION projectVersion binaryDir)
                     COMPONENT Applications)
         endforeach()
     endif()
-endmacro(PluginProperties DEBUG_EXTENSION)
+endmacro()
 
 #-------------------------------------------------------------------------------
 # Finds plugins from the Qt installation. The pluginlist argument should be
@@ -303,11 +527,8 @@ macro (FindQt4Plugins pluginlist pluginfile libdirsearchfile plugintype)
                 DESTINATION ./plugins/${plugintype} 
                 CONFIGURATIONS ${BTYPE} 
                 COMPONENT Applications)
-
-        endif()             
-                      
-                      
-                      
+        endif()
+        
         mark_as_advanced(QT_IMAGEFORMAT_PLUGIN_${PLUGIN}_${BTYPE})
         # message(STATUS "|--  QT_IMAGEFORMAT_PLUGIN_${PLUGIN}_${BTYPE}: ${QT_IMAGEFORMAT_PLUGIN_${PLUGIN}_${BTYPE}}")
         LIST(APPEND QTPLUGINS_${BTYPE} ${QT_IMAGEFORMAT_PLUGIN_${PLUGIN}_${BTYPE}})
@@ -333,7 +554,7 @@ macro (FindQt4Plugins pluginlist pluginfile libdirsearchfile plugintype)
                 COMPONENT Applications)
     endif()
     file(APPEND ${pluginfile} "${QTPLUGINS};")
-    file(APPEND ${libdirsearchfile} "${QT_PLUGINS_DIR}/imageformats;")
+    file(APPEND ${libdirsearchfile} "${QT_PLUGINS_DIR}/${plugintype};")
     
 endmacro(FindQt4Plugins pluginlist)
 

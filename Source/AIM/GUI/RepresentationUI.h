@@ -112,12 +112,15 @@ class RepresentationUI : public QMainWindow, private Ui::RepresentationUI
     /* Reconstruction Thread communicates throught these methods */
     void rec_ThreadFinished();
     void rec_ThreadProgressed(int value);
+
     /* Synthetic Builder Thread communicates throught these methods */
     void gg_ThreadFinished();
     void gg_ThreadProgressed(int value);
+
     /* Surface Mesh Thread communicates throught these methods */
     void sm_ThreadFinished();
     void sm_ThreadProgressed(int value);
+
     /* Volume Mesh Thread communicates throught these methods */
     void vm_ThreadFinished();
     void vm_ThreadProgressed(int value);
@@ -252,9 +255,8 @@ class RepresentationUI : public QMainWindow, private Ui::RepresentationUI
     void rec_SetSliceInfo();
 
   private:
-    QString                     m_OpenDialogLastDirectory;
     QList<QWidget*>             m_WidgetList;
-
+    QThread*                    m_WorkerThread;
     /*
      * We keep a shared_pointer to the four types of processing that we do.
      */
@@ -263,6 +265,8 @@ class RepresentationUI : public QMainWindow, private Ui::RepresentationUI
     GrainGenerator::Pointer     m_GrainGenerator;
     SurfaceMesh::Pointer        m_SurfaceMesh;
     VolumeMesh::Pointer         m_VolumeMesh;
+
+    QString                     m_OpenDialogLastDirectory;
 
     RepresentationUI(const RepresentationUI&);    // Copy Constructor Not Implemented
     void operator=(const RepresentationUI&);  // Operator '=' Not Implemented

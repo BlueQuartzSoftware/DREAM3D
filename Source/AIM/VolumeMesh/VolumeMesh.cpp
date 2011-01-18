@@ -52,7 +52,7 @@ QObject* parent
 #endif
 ) :
 #if AIM_USE_QT
-QThread(parent),
+QObject(parent),
 #endif
 m_NodesFile(""),
 m_TrianglesFile(""),
@@ -80,16 +80,6 @@ m_Cancel(false)
 VolumeMesh::~VolumeMesh()
 {
 }
-
-#if AIM_USE_QT
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void VolumeMesh::run()
-{
-  compute();
-}
-#endif
 
 // -----------------------------------------------------------------------------
 //
@@ -123,6 +113,10 @@ void VolumeMesh::compute()
                                      m_XRes, m_YRes, m_ZRes, m_NumGrains);
 
   progressMessage(AIM_STRING("Surface Volume Complete"), 100 );
+#if AIM_USE_QT
+  emit finished();
+#endif
+
 }
 
 // -----------------------------------------------------------------------------
