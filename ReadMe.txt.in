@@ -15,10 +15,31 @@ mike.jackson@bluequartz.net
 
 The software contained in this project requires the following third party libraries:
 <ul>
-<li>Boost (www.boost.org)</li>
-<li>Qt (www.qtsoftware.com)</li>
-<li>Qwt (qwt.sourceforge.net)</li>
+  <li>CMake (www.cmake.org) Version 2.8.3 or greater</li>
+<li>Boost (www.boost.org) Version 1.44 or greater</li>
+<li>Qt (www.qtsoftware.com) Version 4.6.x or greater</li>
+<li>Qwt (qwt.sourceforge.net) Version 5.2.2 ONLY</li>
+<li>HDF5 (www.hdfgroup.org) Version 1.6.9 ONLY</li>
 </ul>
+<hr/>
+<h3>CMake</h3>
+   You will need to install CMake from <a href="http://www.cmake.org">www.cmake.org<a> in 
+order to configure the source codes for your operating system and compiler tools. Simply 
+download CMake from the website and use the installer to install CMake onto your system.
+The minimum version of CMake that is needed is <b>Version 2.8.3</b>.
+
+<hr/>
+<h3>HDF5</h3>
+The minimal version needed is HDF5 Version 1.6.9. You can also use HDF5 version 1.6.10 without
+any complications. Currently HDF5 Version 1.8.x is NOT supported due to API changes at the HDF5
+level. This will hopefully be rectified soon.<p>
+  Download and compile HDF5 and install on your system somewhere. If you would like to work with
+a cmake version of HDF5 version 1.6.9 then you can use git to clone from the following location:<br />
+<pre>
+git clone git://scm.bluequartz.net/support-libraries/hdf5-v1-6.git
+  </pre>
+  You can then use CMake to configure HDF5 more easily than the process provided by The HDF Group.
+<hr/>
 
 <h3>Boost</h3>
 One should use a minimum version of 1.36 in order to compile the source
@@ -58,6 +79,13 @@ bjam toolset=darwin --with-program_options --with-thread variant=release,debug t
  architecture=combined address-model=32_64 install
 </pre>
 
+<h4>CMake Version of Boost</h4>
+There is a subset of Boost version 1.44 located at http://scm.bluequartz.net/support-libraries/MXABoost
+that can be used to build AIMRepresentation programs. This version uses CMake instead of BJam to
+configure itself.
+
+
+<hr/>
 <h3>Qt</h3>
 Typically the latest version of Qt is compatible with the code although for reference the
 development code was written using Qt version 4.6.3 where Qt Version 4.7.1 is current
@@ -99,57 +127,69 @@ configure -nomake demos -nomake examples -debug-and-release -shared -fast -excep
 <pre>
 ./configure  -nomake demos -nomake examples -debug-and-release -shared -fast -exceptions -stl -no-qt3support -no-webkit -prefix /Users/Shared/Toolkits/Qt-4.6.1-UBFramework -universal -cocoa -arch x86 -arch x86_64 -largefile
 </pre>
+<hr/>
+<h3>Qwt Version 5.2.2</h3>
+  The StatsGenerator program uses the Qwt libraries in order to display 2D scatter plots. One can
+download a CMake version of Qwt from <a href="http://scm.bluequartz.net/support-libraries/qwt">http://scm.bluequartz.net/support-libraries/qwt</a>
+and then use CMake to configure it for building. Qwt requires Qt in order to build so build Qt <b>FIRST</b> then
+build Qwt.
+<hr/>
 
-<h3>CMake</h3>
-   You will need to install CMake from <a href="http://www.cmake.org">www.cmake.org<a> in order to configure the
-source codes for your operating system and compiler tools. Simply download CMake
-from the website and use the installer to install CMake onto your system.
-
-
-#-------------------------------------------------------------------------------
-Compiling AIMRepresentation Sources
-    You can use "git" to clone the repository onto your local system. Use the following
-command:
- git clone git://echo1.bluequartz.net/AIMRepresentation.git
- 
-or go to www.bluequartz.net/Downloads and look for the link to the Git Repository.
+<h3>Compiling AIMRepresentation Sources</h3>
+When the sources become public it is expected that you will be able to download the sources
+from the following web site: <a href="http://scm.bluequartz.net/AIM/AIMRepresentation">
+http://scm.bluequartz.net/AIM/AIMRepresentation</a>. You can use "git" to clone the repository onto your local system. Use the following command:
+<pre>
+ git clone git://git@scm.bluequartz.net/AIM/AIMRepresentation.git
+</pre>
+</p>
 Browse to the AIMRepresentation project and find the link to download a tar archive
 of the source codes.
-
-Once the source codes are downloaded onto your system launch "CMake-Gui.exe" or 
-CMake-Gui.app depending on your system. This will present a Window to the user
+<p>
+Once the source codes are downloaded onto your system launch "CMake-Gui.exe" (Windows) or 
+CMake-Gui.app (OS X) depending on your system. This will present a Window to the user
 with 2 text fields that need to be filled out:
-"Where is the source code" should point to the AIMRepresentation directory:
-"Where to build the binaries" should point to a DIFFERENT directory. Some developers
+<p>
+<i>"Where is the source code"</i> should point to the AIMRepresentation directory:<br />
+<i>"Where to build the binaries"</i> should point to a DIFFERENT directory. 
+<p>
+Some developers
 prefer to have CMake create a new directory located inside the AIMRepresentation
 directory called "Build" or "i386" or something like that. DO NOT name it "CMake".
-Trust me on that. 
+Trust me on that.<p>
+  There are a few CMake variables that you will need to fill out in order for CMake to
+more easily find all the dependent libraries. Each of the variables points to the top
+most directory of that particular installation or to a particular executable.
+<ul>
+<li><b>HDF5_INSTALL</b>:<i>/Users/Shared/Toolkits/hdf5-169</i></li>
+<li><b>BOOST_ROOT</b>:<i>/Users/Shared/Toolkits/MXABoost-1.44</i></li>
+<li><b>QWT_INSTALL</b>:<i>/Users/Shared/Toolkits/Qwt-5.2.2</i></li>
+<li><b>QT_QMAKE_EXECUTABLE</b>:<i>/Users/Shared/Toolkits/Qt-4.6.2-Cocoa/bin/qmake</i></li>
+</ul>  
+  
   After those are filled out click the "Configure" button. A new window will appear
 asking you to select the type of generator you want to run. Simply select the type
 that matches the type of compile tools that you have installed. On Windows systems
 for the Visual Studio choices there are both 32 and 64 bit selections. On OS X you
-can have CMake generate Xcode projects in addition to plain makefiles. 
+can have CMake generate Xcode projects in addition to plain makefiles.<p>
   After you have made your selection for a generator and told CMake-Gui to proceed
 there will be some output printed and after a little bit the "Generate" button
-will be enabled. Click the "Generate" button and wait for the process to complete.
+will be enabled. Click the "Generate" button and wait for the process to complete.<p>
 
-  Notes: If the "Generate" button did NOT become enabled then there was an error
+  <b>Notes:</b> If the "Generate" button did NOT become enabled then there was an error
 occured during the configuration step. Most likely CMake could not located either
 Boost or Qt. In order to help CMake find boost you can click the "Add Entry" button
 and add a new CMake variable "Boost_ROOT" with a value that points to the location
 of the boost installation. To help CMake find Qt you need to manually set the 
 QT_QMAKE_EXECUTABLE to the qmake executable program located in the bin directory
-of the Qt installation.
+of the Qt installation.<p>
 
   After successfully generating your project files one can open the AIMRepresentation.sln
 file on Windows, AIMRepresentation.xcodeproj on OS X or if you selected to generate
 makefiles you would open a terminal, navigate to the build directory and execute the
-"make" command.
+"make" command.<p>
 
-#-------------------------------------------------------------------------------
   After the successful compilation of AIMRepresentation there will be several 
-executables available to run. Double click them to explore the code.
-
-
+executables available to run.
 </body>
 </html>
