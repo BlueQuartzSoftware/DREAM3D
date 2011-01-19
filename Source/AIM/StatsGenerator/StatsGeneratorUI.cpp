@@ -79,12 +79,14 @@ StatsGeneratorUI::StatsGeneratorUI(QWidget *parent) :
       //  m_picker(NULL),
       //  m_panner(NULL),
       m_grid(NULL),
+      m_FileSelected(false),
 #if defined(Q_WS_WIN)
-      m_OpenDialogLastDirectory("C:\\")
+      m_OpenDialogLastDirectory("C:")
 #else
-      m_OpenDialogLastDirectory("~/")
+      m_OpenDialogLastDirectory("~/Desktop")
 #endif
 {
+  m_FilePath = m_OpenDialogLastDirectory + QDir::separator() + "Untitled.h5";
   setupUi(this);
   readSettings();
   setupGui();
@@ -161,6 +163,10 @@ void StatsGeneratorUI::setupGui()
 {
   // Turn off all the plot widgets
   setTabsPlotTabsEnabled(false);
+
+  // Place the name of the file in the window title
+  dataChanged();
+
 
   // LeftButton for the zooming
   // MidButton for the panning
@@ -259,13 +265,14 @@ qint32 StatsGeneratorUI::checkDirtyDocument()
 {
   qint32 err = -1;
 
-  if (this->isWindowModified() == true)
+  if (isWindowModified() == true)
   {
-    int r = QMessageBox::warning(this, tr("AIM Mount Maker"), tr("The Image has been modified.\nDo you want to save your changes?"), QMessageBox::Save
+    int r = QMessageBox::warning(this, tr("StatsGenerator"), tr("The Data has been modified.\nDo you want to save your changes?"), QMessageBox::Save
         | QMessageBox::Default, QMessageBox::Discard, QMessageBox::Cancel | QMessageBox::Escape);
     if (r == QMessageBox::Save)
     {
-      //TODO: Save the current document or otherwise save the state.
+      on_actionSave_triggered(); // Save the hdf5 file
+      err = 1;
     }
     else if (r == QMessageBox::Discard)
     {
@@ -412,6 +419,23 @@ void StatsGeneratorUI::openFile(QString imageFile)
   updateRecentFileList(imageFile);
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void StatsGeneratorUI::on_actionSaveAs_triggered()
+{
+  QString proposedFile = m_OpenDialogLastDirectory + QDir::separator() + "Untitled.h5";
+  QString h5file = QFileDialog::getSaveFileName(this, tr("Save HDF5 Statistics File"),
+    proposedFile,
+    tr("HDF5 Files (*.h5)") );
+  if ( true == h5file.isEmpty() ){ return;  }
+  m_FilePath = h5file;
+  QFileInfo fi (m_FilePath);
+  QString ext = fi.suffix();
+  m_OpenDialogLastDirectory = fi.path();
+  m_FileSelected = true;
+  on_actionSave_triggered();
+}
 
 // -----------------------------------------------------------------------------
 //
@@ -419,17 +443,25 @@ void StatsGeneratorUI::openFile(QString imageFile)
 void StatsGeneratorUI::on_actionSave_triggered()
 {
   //std::cout << "StatsGeneratorUI::on_actionSave_triggered()" << std::endl;
-  QString proposedFile = m_OpenDialogLastDirectory + QDir::separator() + "Statistics.h5";
-  QString h5file = QFileDialog::getSaveFileName(this, tr("Save HDF5 Statistics File"),
-                                                proposedFile,
-                                                 tr("HDF5 Files (*.h5)") );
-  if ( true == h5file.isEmpty() ){ return;  }
-  QFileInfo fi (h5file);
-  QString ext = fi.suffix();
-  m_OpenDialogLastDirectory = fi.path();
+  if (m_FileSelected == false) 
+  {
+    //QString proposedFile = m_OpenDialogLastDirectory + QDir::separator() + m_FileName;
+    QString h5file = QFileDialog::getSaveFileName(this, tr("Save HDF5 Statistics File"),
+                                                  m_FilePath,
+                                                   tr("HDF5 Files (*.h5)") );
+    if ( true == h5file.isEmpty() ){ return;  }
+    m_FilePath = h5file;
+    QFileInfo fi (m_FilePath);
+    QString ext = fi.suffix();
+    m_OpenDialogLastDirectory = fi.path();
+    m_FileSelected = true;
+  }
 
+  setWindowTitle(m_FilePath + " - StatsGenerator");
+  setWindowModified(false);
+  
 
-  H5ReconStatsWriter::Pointer writer = H5ReconStatsWriter::New(h5file.toStdString());
+  H5ReconStatsWriter::Pointer writer = H5ReconStatsWriter::New(m_FilePath.toStdString());
 
   QwtArray<double > xCo;
   QwtArray<double > yCo;
@@ -585,13 +617,28 @@ int StatsGeneratorUI::computeBinsAndCutOffs( QwtArray<int> &binsizes, QwtArray<d
   return 0;
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void StatsGeneratorUI::dataChanged()
+{
+  setWindowModified(true);
+
+  QString windowTitle("*");
+#ifdef Q_WS_MAC
+  windowTitle = QString("");
+#endif
+  windowTitle = windowTitle +  m_FilePath + QString(" - StatsGenerator");
+  setWindowTitle(windowTitle);
+  setWindowModified(true);
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void StatsGeneratorUI::plotSizeDistribution()
 {
-
+  dataChanged();
   QwtArray<double > xCo;
   QwtArray<double > yCo;
   QwtArray<int > binsizes;
