@@ -3794,7 +3794,7 @@ int ReconstructionFunc::volume_stats(H5ReconStatsWriter::Pointer h5io)
   }
   for (int temp3 = 0; temp3 < ((maxdiameter-mindiameter)+1); temp3++)
   {
-    if (svbovera[temp3][0] != 0)
+    if (svbovera[temp3][0] > 1)
     {
       neighborhood[temp3][1] = neighborhood[temp3][1] / neighborhood[temp3][0];
       neighborhood[temp3][3] = neighborhood[temp3][3] / neighborhood[temp3][0];
@@ -3889,7 +3889,7 @@ int ReconstructionFunc::volume_stats(H5ReconStatsWriter::Pointer h5io)
   }
   for (int temp4 = 0; temp4 < ((maxdiameter-mindiameter)+1); temp4++)
   {
-    if (svbovera[temp4][0] != 0)
+    if (svbovera[temp4][0] > 1)
     {
       neighborhood[temp4][2] = neighborhood[temp4][2] / neighborhood[temp4][0];
       neighborhood[temp4][4] = neighborhood[temp4][4] / neighborhood[temp4][0];
@@ -4663,9 +4663,6 @@ double ReconstructionFunc::find_zcoord(long index)
 }
 
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 int ReconstructionFunc::writeHDF5GrainsFile(const std::string &hdfFile )
 {
   int err = -1;
