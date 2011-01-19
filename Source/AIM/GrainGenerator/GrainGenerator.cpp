@@ -32,6 +32,16 @@
   emit updateProgress(0);\
   return;}
 
+#define CHECK_ERROR(name)\
+    if(err < 0) {\
+      setErrorCondition(err);\
+      QString msg = #name;\
+      msg += " Returned an error condition. Grain Generator has stopped.";\
+      emit updateMessage(msg);\
+      emit updateProgress(0);\
+      emit finished();\
+      return;   }
+
 #else
 #define CHECK_FOR_CANCELED(AClass)\
   ;
@@ -118,20 +128,13 @@ void GrainGenerator::compute()
     CHECK_FOR_CANCELED(GrainGeneratorFunc)
     progressMessage(AIM_STRING("Loading Stats Data"), 5);
     err = m->readReconStatsData(h5reader);
-    if (err < 0)
-    {
-      setErrorCondition(err);
-      return;
-    }
+    CHECK_ERROR(readReconStatsData)
 
     CHECK_FOR_CANCELED(GrainGeneratorFunc)
     progressMessage(AIM_STRING("Loading Axis Orientation Data"), 10);
     err = m->readAxisOrientationData(h5reader);
-    if (err < 0)
-    {
-      setErrorCondition(err);
-      return;
-    }
+    CHECK_ERROR(readAxisOrientationData);
+
 
     CHECK_FOR_CANCELED(GrainGeneratorFunc)
     progressMessage(AIM_STRING("Packing Grains"), 25);
@@ -171,29 +174,18 @@ void GrainGenerator::compute()
   CHECK_FOR_CANCELED(GrainGeneratorFunc)
   progressMessage(AIM_STRING("Loading ODF Data"), 15);
   err = m->readODFData(h5reader);
-  if (err < 0)
-  {
-    setErrorCondition(err);
-    return;
-  }
+  CHECK_ERROR(readODFData)
 
   CHECK_FOR_CANCELED(GrainGeneratorFunc)
   progressMessage(AIM_STRING("Loading Misorientation Data"), 50);
   err = m->readMisorientationData(h5reader);
-  if (err < 0)
-  {
-    setErrorCondition(err);
-    return;
-  }
+  CHECK_ERROR(readMisorientationData)
 
   CHECK_FOR_CANCELED(GrainGeneratorFunc)
   progressMessage(AIM_STRING("Loading Microtexture Data "), 55);
   err = m->readMicroTextureData(h5reader);
-  if (err < 0)
-  {
-    setErrorCondition(err);
-    return;
-  }
+  CHECK_ERROR(readMicroTextureData)
+
 
   CHECK_FOR_CANCELED(GrainGeneratorFunc)
   progressMessage(AIM_STRING("Assigning Eulers"), 60);
