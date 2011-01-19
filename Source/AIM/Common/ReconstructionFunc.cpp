@@ -11,6 +11,7 @@
 
 #include "ReconstructionFunc.h"
 
+#include <math.h>
 #include <stdio.h>
 
 #include <iomanip>
@@ -26,13 +27,25 @@
 #include "AIM/Common/MisorientationCalculations.h"
 #include "AIM/Common/HDF5/AIM_H5VtkDataWriter.h"
 
-#if 0
-// -i C:\Users\GroebeMA\Desktop\NewFolder --outputDir C:\Users\GroebeMA\Desktop\NewFolder -f Slice_ --angMaxSlice 400 -s 1 -e 30 -z 0.25 -t -g 10 -c 0.1 -o 5.0 -x 2
-#endif
+#define GRAIN_NAME_EXTRACT 1
+#define FIND_EUCLIDEAN_FAST 1
 
 
 const static double m_pi = 3.1415926535897;
 const static double m_OnePointThree = 1.33333333333;
+
+const double threesixty_over_pi = 360.0/m_pi;
+const double sqrt_two = pow(2.0, 0.5);
+
+const double acos_neg_one = acos(-1.0);
+const double acos_pos_one = acos(1.0);
+const double sin_wmin_neg_1_over_2 = sin(acos_neg_one/2.0);
+const double sin_wmin_pos_1_over_2 = sin(acos_pos_one/2.0);
+
+#if 0
+// -i C:\Users\GroebeMA\Desktop\NewFolder --outputDir C:\Users\GroebeMA\Desktop\NewFolder -f Slice_ --angMaxSlice 400 -s 1 -e 30 -z 0.25 -t -g 10 -c 0.1 -o 5.0 -x 2
+#endif
+
 
 using namespace std;
 
@@ -712,6 +725,10 @@ void  ReconstructionFunc::form_grains_sections()
   }
 }
 
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 int  ReconstructionFunc::form_grains()
 {
   int point = 0;
@@ -738,6 +755,7 @@ int  ReconstructionFunc::form_grains()
   int col, row, plane;
   size_t size = 0;
   size_t initialVoxelsListSize = 1000;
+  int gname = -1;
   std::vector<int > voxelslist(initialVoxelsListSize, -1);
   int neighbors[6];
   neighbors[0] = -(xpoints * ypoints);
@@ -747,6 +765,22 @@ int  ReconstructionFunc::form_grains()
   neighbors[4] = xpoints;
   neighbors[5] = (xpoints * ypoints);
   rg.RandomInit((static_cast<unsigned int > (time(NULL))));
+
+  // Precalculate some constants
+  int xTimesY = xpoints * ypoints;
+  int xPMinus1 = xpoints - 1;
+  int yPMinus1 = ypoints - 1;
+  int zPMinus1 = zpoints - 1;
+
+#if GRAIN_NAME_EXTRACT
+  // Copy all the grain names into a densly packed array
+  int* gnames = new int[totalpoints];
+  for (int i = 0; i < totalpoints; ++i)
+  {
+    gnames[i] = voxels[i].grainname;
+  }
+#endif
+
   while (noseeds == 0)
   {
     seed = -1;
@@ -762,13 +796,22 @@ int  ReconstructionFunc::form_grains()
           x = randx + i;
           y = randy + j;
           z = randz + k;
-          if (x > xpoints - 1) x = x - xpoints;
-          if (y > ypoints - 1) y = y - ypoints;
-          if (z > zpoints - 1) z = z - zpoints;
-          point = (z * xpoints * ypoints) + (y * xpoints) + x;
-          if (voxels[point].confidence > minseedconfidence && voxels[point].imagequality > minseedimagequality && voxels[point].grainname == -1)
+          if (x > xPMinus1) x = x - xpoints;
+          if (y > yPMinus1) y = y - ypoints;
+          if (z > zPMinus1) z = z - zpoints;
+          point = (z * xTimesY) + (y * xpoints) + x;
+#if GRAIN_NAME_EXTRACT
+          gname = gnames[point];
+#else
+         gname = voxels[point].grainname;
+#endif
+          if (gname == -1)
+          {
+          if (voxels[point].confidence > minseedconfidence
+              && voxels[point].imagequality > minseedimagequality)
           {
             seed = point;
+          }
           }
           if (seed > -1) break;
         }
@@ -783,7 +826,12 @@ int  ReconstructionFunc::form_grains()
     if (seed >= 0)
     {
       size = 0;
+#if GRAIN_NAME_EXTRACT
+      gnames[seed] = graincount;
+#else
       voxels[seed].grainname = graincount;
+#endif
+
       voxelslist[size] = seed;
       size++;
       for (size_t j = 0; j < size; ++j)
@@ -807,7 +855,11 @@ int  ReconstructionFunc::form_grains()
           if (i == 4 && row == (ypoints - 1)) good = 0;
           if (i == 2 && col == 0) good = 0;
           if (i == 3 && col == (xpoints - 1)) good = 0;
+#if GRAIN_NAME_EXTRACT
+          if (good == 1 && gnames[neighbor] == -1)
+#else
           if (good == 1 && voxels[neighbor].grainname == -1)
+#endif
           {
             q2[0] = 0;
             q2[1] = voxels[neighbor].quat[1];
@@ -823,7 +875,11 @@ int  ReconstructionFunc::form_grains()
             }
             if (w < misorientationtolerance)
             {
+#if GRAIN_NAME_EXTRACT
+              gnames[neighbor] = graincount;
+#else
               voxels[neighbor].grainname = graincount;
+#endif
               voxelslist[size] = neighbor;
               size++;
               if (size >= voxelslist.size()) voxelslist.resize(size + initialVoxelsListSize, -1);
@@ -844,7 +900,11 @@ int  ReconstructionFunc::form_grains()
         for (size_t b = 0; b < size; b++)
         {
           int index = voxelslist[b];
+#if GRAIN_NAME_EXTRACT
+          gnames[index] = -2;
+#else
           voxels[index].grainname = -2;
+#endif
         }
         voxelslist.clear();
         voxelslist.resize(initialVoxelsListSize, -1);
@@ -852,6 +912,14 @@ int  ReconstructionFunc::form_grains()
     }
   }
   m_Grains.resize(graincount);
+#if GRAIN_NAME_EXTRACT
+  // Copy the grain names back into the Voxel objects
+  for (int i = 0; i < totalpoints; ++i)
+  {
+    voxels[i].grainname = gnames[i];
+  }
+  delete [] gnames;
+#endif
   return graincount;
 }
 
@@ -1370,73 +1438,91 @@ int ReconstructionFunc::reburn_grains()
 	}
 	return graincount;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void  ReconstructionFunc::find_kernels()
 {
   double q1[5];
   double q2[5];
-  int numVoxel;                 // number of voxels in the grain...
-//  int index;
-//  int gnum;
+  int numVoxel; // number of voxels in the grain...
+  //  int index;
+  //  int gnum;
   int good = 0;
   int neighbor;
   int col, row, plane;
   double w, totalmisorientation;
-  double n1,n2,n3;
+  double n1, n2, n3;
   m_Grains[0].averagemisorientation = 0.0;
   int steps = 1;
-  for(int i=0;i<(xpoints*ypoints*zpoints);i++)
+  int jStride;
+  int kStride;
+  double _1, _2,  _6;
+  double wmin=9999999.0; //,na,nb,nc;
+  double qc[4];
+  double qco[4];
+  double sin_wmin_over_2 = 0.0;
+
+  for (int i = 0; i < (xpoints * ypoints * zpoints); i++)
   {
-	  if(voxels[i].grainname > 0 && voxels[i].unassigned != 1)
-	  {
-		totalmisorientation = 0.0;
-		numVoxel = 0;
-	    q1[1] = voxels[i].quat[1];
-	    q1[2] = voxels[i].quat[2];
-	    q1[3] = voxels[i].quat[3];
-	    q1[4] = voxels[i].quat[4];
-		col = i%xpoints;
-		row = (i/xpoints)%ypoints;
-		plane = i/(xpoints*ypoints);
-		for(int j=-steps;j<steps+1;j++)
-	    {
-		    for(int k=-steps;k<steps+1;k++)
-			{
-			    for(int l=-steps;l<steps+1;l++)
-			    {
-				  good = 1;
-				  neighbor = i+(j*xpoints*ypoints)+(k*xpoints)+(l);
-			      if(plane+j < 0) good = 0;
-			      if(plane+j > zpoints-1) good = 0;
-			      if(row+k < 0) good = 0;
-			      if(row+k > ypoints-1) good = 0;
-			      if(col+l < 0) good = 0;
-			      if(col+l > xpoints-1) good = 0;
-				  if(good == 1 && voxels[i].grainname == voxels[neighbor].grainname && voxels[neighbor].unassigned != 1)
-				  {
-					  numVoxel++;
-				      q2[1] = voxels[neighbor].quat[1];
-					  q2[2] = voxels[neighbor].quat[2];
-					  q2[3] = voxels[neighbor].quat[3];
-					  q2[4] = voxels[neighbor].quat[4];
-		         if(crystruct == AIM::Reconstruction::Hexagonal){
-		           w = MisorientationCalculations::getMisoQuatHexagonal(q1,q2,n1,n2,n3);
-		         }
-		         if(crystruct == AIM::Reconstruction::Cubic) {
-		           w = MisorientationCalculations::getMisoQuatCubic(q1,q2,n1,n2,n3);
-		         }
-					  totalmisorientation = totalmisorientation + w;
-				  }
-				}
-			}
-		}
-		voxels[i].kernelmisorientation = totalmisorientation/(float)numVoxel;
-	  }
-	  if(voxels[i].grainname == 0 || voxels[i].unassigned == 1)
-	  {
-		  voxels[i].kernelmisorientation = 0;
-	  }
+    if (voxels[i].grainname > 0 && voxels[i].unassigned != 1)
+    {
+      totalmisorientation = 0.0;
+      numVoxel = 0;
+      q1[1] = voxels[i].quat[1];
+      q1[2] = voxels[i].quat[2];
+      q1[3] = voxels[i].quat[3];
+      q1[4] = voxels[i].quat[4];
+      col = i % xpoints;
+      row = (i / xpoints) % ypoints;
+      plane = i / (xpoints * ypoints);
+      for (int j = -steps; j < steps + 1; j++)
+      {
+        jStride = j * xpoints * ypoints;
+        for (int k = -steps; k < steps + 1; k++)
+        {
+          kStride = k * xpoints;
+          for (int l = -steps; l < steps + 1; l++)
+          {
+            good = 1;
+            neighbor = i + (jStride) + (kStride) + (l);
+            if (plane + j < 0) good = 0;
+            if (plane + j > zpoints - 1) good = 0;
+            if (row + k < 0) good = 0;
+            if (row + k > ypoints - 1) good = 0;
+            if (col + l < 0) good = 0;
+            if (col + l > xpoints - 1) good = 0;
+            if (good == 1 && voxels[i].grainname == voxels[neighbor].grainname && voxels[neighbor].unassigned != 1)
+            {
+              numVoxel++;
+              q2[1] = voxels[neighbor].quat[1];
+              q2[2] = voxels[neighbor].quat[2];
+              q2[3] = voxels[neighbor].quat[3];
+              q2[4] = voxels[neighbor].quat[4];
+              if (crystruct == AIM::Reconstruction::Hexagonal)
+              {
+                w = MisorientationCalculations::getMisoQuatHexagonal(q1, q2, n1, n2, n3);
+              }
+              if (crystruct == AIM::Reconstruction::Cubic)
+              {
+                w = MisorientationCalculations::getMisoQuatCubic(q1, q2, n1, n2, n3);
+              }
+              totalmisorientation = totalmisorientation + w;
+            }
+          }
+        }
+      }
+      voxels[i].kernelmisorientation = totalmisorientation / (float)numVoxel;
+    }
+    if (voxels[i].grainname == 0 || voxels[i].unassigned == 1)
+    {
+      voxels[i].kernelmisorientation = 0;
+    }
   }
 }
+
+
 void  ReconstructionFunc::homogenize_grains()
 {
   int i, j, ii, jj, kk, p, pp;
@@ -2288,94 +2374,189 @@ void  ReconstructionFunc::find_centroids2D()
 	if(diameter < mindiameter) mindiameter = diameter;
   }
 }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void  ReconstructionFunc::find_euclidean_map()
 {
   int nearestneighbordistance = 0;
-//  int checked = 1;
+  //  int checked = 1;
   int count = 1;
   int good = 1;
   double x, y, z;
   int neighpoint;
+  int nearestneighbor;
+  int nndist;
   int neighbors[6];
-  neighbors[0] = -xpoints*ypoints;
+  neighbors[0] = -xpoints * ypoints;
   neighbors[1] = -xpoints;
   neighbors[2] = -1;
   neighbors[3] = 1;
   neighbors[4] = xpoints;
-  neighbors[5] = xpoints*ypoints;
-  for(int a=0;a<(xpoints*ypoints*zpoints);a++)
+  neighbors[5] = xpoints * ypoints;
+  int nn;
+  int nearest_neighbor;
+#if FIND_EUCLIDEAN_FAST
+  int* voxel_Neighbor = new int[totalpoints];
+  int* voxel_NearestNeighbor = new int[totalpoints];
+  double* voxel_NearestNeighborDistance = new double[totalpoints];
+#endif
+
+  for (int a = 0; a < (totalpoints); ++a)
   {
-	  if(voxels[a].surfacevoxel == 0)
-	  {
-		voxels[a].neighbor = -1;
-		voxels[a].nearestneighbor = -1;
-		voxels[a].nearestneighbordistance = -1;
-	  }
+    if (voxels[a].surfacevoxel == 0)
+    {
+#if FIND_EUCLIDEAN_FAST
+      voxel_Neighbor[a] = -1;
+      voxel_NearestNeighbor[a] = -1;
+      voxel_NearestNeighborDistance[a] = -1;
+#else
+      voxels[a].neighbor = -1;
+      voxels[a].nearestneighbor = -1;
+      voxels[a].nearestneighbordistance = -1;
+#endif
+    }
+#if FIND_EUCLIDEAN_FAST
+    else {
+      voxel_Neighbor[a] = voxels[a].neighbor;
+      voxel_NearestNeighbor[a] = voxels[a].nearestneighbor;
+      voxel_NearestNeighborDistance[a] = voxels[a].nearestneighbordistance;
+    }
+#endif
   }
-  while(count != 0)
+  while (count != 0)
   {
     count = 0;
-	nearestneighbordistance++;
-	for(int i = 0; i < (xpoints*ypoints*zpoints); i++)
-	{
-	  int nearestneighbor = voxels[i].nearestneighbor;
-      if(nearestneighbor == -1)
-      {
-	    x = i%xpoints;
-		y = (i/xpoints)%ypoints;
-	    z = i/(xpoints*ypoints);
-		for(int j=0;j<6;j++)
-		{
-			good = 1;
-			neighpoint = i+neighbors[j];
-		    if(j == 0 && z == 0) good = 0;
-		    if(j == 5 && z == (zpoints-1)) good = 0;
-		    if(j == 1 && y == 0) good = 0;
-		    if(j == 4 && y == (ypoints-1)) good = 0;
-		    if(j == 2 && x == 0) good = 0;
-		    if(j == 3 && x == (xpoints-1)) good = 0;
-			if(good == 1)
-	        {
-		        count++;
-			    int nearestneighbor = voxels[neighpoint].nearestneighbor;
-			    int nearestneighbordistance = voxels[neighpoint].nearestneighbordistance;
-			    if(nearestneighbordistance != -1)
-				{
-					voxels[i].nearestneighbor = nearestneighbor;
-					voxels[i].neighbor = voxels[neighpoint].neighbor;
-				}
-			}
-		}
-	  }
-	}
-    for(int j = 0; j < (xpoints*ypoints*zpoints); j++)
+    nearestneighbordistance++;
+    for (int i = 0; i < (totalpoints); ++i)
     {
-      if(voxels[j].neighbor != -1)
+#if FIND_EUCLIDEAN_FAST
+      nearest_neighbor = voxel_NearestNeighbor[i];
+#else
+      nearest_neighbor = voxels[i].nearestneighbor;
+#endif
+      if (nearest_neighbor == -1)
       {
-		  voxels[j].nearestneighbordistance = nearestneighbordistance;
+        x = i % xpoints;
+        y = (i / xpoints) % ypoints;
+        z = i / (xpoints * ypoints);
+        for (int j = 0; j < 6; j++)
+        {
+          good = 1;
+          neighpoint = i + neighbors[j];
+          if (j == 0 && z == 0) good = 0;
+          else if (j == 5 && z == (zpoints - 1)) good = 0;
+          else if (j == 1 && y == 0) good = 0;
+          else if (j == 4 && y == (ypoints - 1)) good = 0;
+          else if (j == 2 && x == 0) good = 0;
+          else if (j == 3 && x == (xpoints - 1)) good = 0;
+          if (good == 1)
+          {
+            count++;
+#if FIND_EUCLIDEAN_FAST
+            nn = voxel_NearestNeighbor[neighpoint];
+            nndist = voxel_NearestNeighborDistance[neighpoint];
+#else
+            nn = voxels[neighpoint].nearestneighbor;
+            nndist = voxels[neighpoint].nearestneighbordistance;
+#endif
+            if (nndist != -1)
+            {
+#if FIND_EUCLIDEAN_FAST
+              voxel_NearestNeighbor[i] = nn;
+              voxel_Neighbor[i] = voxel_Neighbor[neighpoint];
+#else
+              voxels[i].nearestneighbor = nn;
+              voxels[i].neighbor = voxels[neighpoint].neighbor;
+#endif
+            }
+          }
+        }
       }
     }
+    for (int j = 0; j < (totalpoints); ++j)
+    {
+
+
+#if FIND_EUCLIDEAN_FAST
+      if (voxel_Neighbor[j] != -1)
+      {
+        voxel_NearestNeighborDistance[j] = nearestneighbordistance;
+      }
+#else
+      if (voxels[j].neighbor != -1)
+      {
+        voxels[j].nearestneighbordistance = nearestneighbordistance;
+      }
+#endif
+    }
   }
-  double x1,x2,y1,y2,z1,z2;
+  double x1, x2, y1, y2, z1, z2;
   double dist;
-  for(int j = 0; j < (xpoints*ypoints*zpoints); j++)
+  for (int j = 0; j < (totalpoints); j++)
   {
-	  int nearestneighbor = voxels[j].neighbor;
-	  x1 = find_xcoord(j);
-	  y1 = find_ycoord(j);
-	  z1 = find_zcoord(j);
-	  x2 = find_xcoord(nearestneighbor);
-	  y2 = find_ycoord(nearestneighbor);
-	  z2 = find_zcoord(nearestneighbor);
-	  dist = ((x1-x2)*(x1-x2))+((y1-y2)*(y1-y2))+((z1-z2)*(z1-z2));
-	  dist = pow(dist,0.5);
-	  if(dist > 30)
-	  {
-	//	int stop = 0;
-	  }
-	  voxels[j].nearestneighbordistance = dist;
+#if FIND_EUCLIDEAN_FAST
+    nearestneighbor = voxel_Neighbor[j];
+#else
+    nearestneighbor = voxels[j].neighbor;
+#endif
+    x1 = resx*double(j%xpoints); // find_xcoord(j);
+    y1 = resy*double((j/xpoints)%ypoints);// find_ycoord(j);
+    z1 = resz*double(j/(xpoints*ypoints)); // find_zcoord(j);
+    x2 = resx*double(nearestneighbor%xpoints); // find_xcoord(nearestneighbor);
+    y2 = resy*double((nearestneighbor/xpoints)%ypoints); // find_ycoord(nearestneighbor);
+    z2 = resz*double(nearestneighbor/(xpoints*ypoints)); // find_zcoord(nearestneighbor);
+    dist = ((x1 - x2) * (x1 - x2)) + ((y1 - y2) * (y1 - y2)) + ((z1 - z2) * (z1 - z2));
+    dist = pow(dist, 0.5);
+//    if (dist > 30)
+//    {
+//      //	int stop = 0;
+//    }
+#if FIND_EUCLIDEAN_FAST
+    voxel_NearestNeighborDistance[j] = dist;
+#else
+    voxels[j].nearestneighbordistance = dist;
+#endif
   }
+
+#if FIND_EUCLIDEAN_FAST
+  for (int a = 0; a < (totalpoints); ++a)
+    {
+        voxels[a].neighbor = voxel_Neighbor[a];
+        voxels[a].nearestneighbor = voxel_NearestNeighbor[a];
+        voxels[a].nearestneighbordistance = voxel_NearestNeighborDistance[a];
+      }
+  delete [] voxel_Neighbor;
+  delete [] voxel_NearestNeighbor;
+  delete [] voxel_NearestNeighborDistance;
+
+  #endif
 }
+
+
+
+double ReconstructionFunc::find_xcoord(long index)
+{
+  double x = resx*double(index%xpoints);
+  return x;
+}
+double ReconstructionFunc::find_ycoord(long index)
+{
+  double y = resy*double((index/xpoints)%ypoints);
+  return y;
+}
+double ReconstructionFunc::find_zcoord(long index)
+{
+  double z = resz*double(index/(xpoints*ypoints));
+  return z;
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void  ReconstructionFunc::find_moments ()
 {
 //  int count = 0;

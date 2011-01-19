@@ -12,6 +12,7 @@
 #include "Reconstruction.h"
 
 #include "MXA/MXATypes.h"
+#include "MXA/Common/LogTime.h"
 #include "MXA/Utilities/MXADir.h"
 
 #include "AIM/Common/Constants.h"
@@ -27,19 +28,24 @@
 
 #include "AIM/Common/HDF5/H5ReconStatsWriter.h"
 
-
+#define START_CLOCK()\
+  unsigned long long int millis = MXA::getMilliSeconds();
 
 #ifdef AIM_USE_QT
-#define CHECK_FOR_CANCELED(AClass)\
+#define CHECK_FOR_CANCELED(AClass, name)\
     if (this->m_Cancel) { \
       QString msg = #AClass; \
               msg += " was Canceled"; \
               emit updateMessage(msg);\
               emit updateProgress(0);\
-      return;}
+              emit finished();\
+      return;}\
+    std::cout << #name << " Finish Time(ms): " << (MXA::getMilliSeconds() - millis) << std::endl;\
+    millis = MXA::getMilliSeconds();
+
 
 #else
-#define CHECK_FOR_CANCELED(AClass)\
+#define CHECK_FOR_CANCELED(AClass, name)\
     ;
 #endif
 
@@ -102,6 +108,8 @@ Reconstruction::~Reconstruction()
   std::cout << "~Reconstruction()" << std::endl;
 }
 
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -148,12 +156,14 @@ void Reconstruction::compute()
 
   std::string hdf5GrainFile = m_OutputDirectory + MXADir::Separator + AIM::Reconstruction::HDF5GrainFile;
 
+  START_CLOCK()
+
   if (m_AlreadyFormed == true)
   {
     // Sanity Check the the Reconstruction File does exist in the output directory
     if (MXADir::exists(reconVisFile) == true)
     {
-      CHECK_FOR_CANCELED(ReconstructionFunc)
+      CHECK_FOR_CANCELED(ReconstructionFunc, )
       progressMessage(AIM_STRING("Loading Existing Data"), 31);
       m->numgrains = m->load_data(reconVisFile);
     }
@@ -171,143 +181,147 @@ void Reconstruction::compute()
   }
   if (m_AlreadyFormed == false)
   {
-    CHECK_FOR_CANCELED(ReconstructionFunc)
+    CHECK_FOR_CANCELED(ReconstructionFunc, start)
     progressMessage(AIM_STRING("Loading Slices"), 3);
     oimDataLoader->loadData(m->voxels, m->xpoints, m->ypoints, m->zpoints);
 
 
-    CHECK_FOR_CANCELED(ReconstructionFunc)
+    CHECK_FOR_CANCELED(ReconstructionFunc, loadData)
     progressMessage(AIM_STRING("Finding Border"), 6);
     m->find_border();
 
-    CHECK_FOR_CANCELED(ReconstructionFunc)
+    CHECK_FOR_CANCELED(ReconstructionFunc, find_border)
     progressMessage(AIM_STRING("Cleaning Data"), 9);
     m->cleanup_data();
 
     if (m_AlignmentMethod == AIM::Reconstruction::MutualInformation)
     {
-      CHECK_FOR_CANCELED(ReconstructionFunc)
+      CHECK_FOR_CANCELED(ReconstructionFunc, cleanup_data)
       progressMessage(AIM_STRING("Identifying Grains on Sections"), 11);
       m->form_grains_sections();
     }
 
-    CHECK_FOR_CANCELED(ReconstructionFunc)
+    CHECK_FOR_CANCELED(ReconstructionFunc, form_grains_sections)
     progressMessage(AIM_STRING("Aligning Slices"), 14);
     m->align_sections(alignmentFile);
 
     if (m_AlignmentMethod == AIM::Reconstruction::MutualInformation)
     {
-      CHECK_FOR_CANCELED(ReconstructionFunc)
+      CHECK_FOR_CANCELED(ReconstructionFunc, align_sections)
       progressMessage(AIM_STRING("Redefining Border"), 16);
       m->find_border();
     }
 
-    CHECK_FOR_CANCELED(ReconstructionFunc)
+    CHECK_FOR_CANCELED(ReconstructionFunc, find_border)
     progressMessage(AIM_STRING("Forming Macro-Grains"), 19);
     m->numgrains = m->form_grains();
 
-    CHECK_FOR_CANCELED(ReconstructionFunc)
+    CHECK_FOR_CANCELED(ReconstructionFunc, form_grains)
     progressMessage(AIM_STRING("Assigning Bad Points"), 28);
     m->assign_badpoints();
   }
 
-  CHECK_FOR_CANCELED(ReconstructionFunc)
+  CHECK_FOR_CANCELED(ReconstructionFunc, assign_badpoints)
   progressMessage(AIM_STRING("Finding Neighbors"), 31);
   m->find_neighbors();
 
-  CHECK_FOR_CANCELED(ReconstructionFunc)
+  CHECK_FOR_CANCELED(ReconstructionFunc, find_neighbors)
   progressMessage(AIM_STRING("Merging Contained Grains"), 34);
   m->merge_containedgrains();
 
-  CHECK_FOR_CANCELED(ReconstructionFunc)
+  CHECK_FOR_CANCELED(ReconstructionFunc, merge_containedgrains)
   progressMessage(AIM_STRING("Renumbering Grains"), 37);
   m->numgrains = m->renumber_grains();
 
-  CHECK_FOR_CANCELED(ReconstructionFunc)
+  CHECK_FOR_CANCELED(ReconstructionFunc, renumber_grains)
   progressMessage(AIM_STRING("Updating Reference Orientations For Grains"), 40);
   m->find_kernels();
 
-  CHECK_FOR_CANCELED(ReconstructionFunc)
+  CHECK_FOR_CANCELED(ReconstructionFunc, find_kernels)
   progressMessage(AIM_STRING("Updating Voxel Lists For Grains"), 43);
   m->numgrains = m->reburn_grains();
 
-  CHECK_FOR_CANCELED(ReconstructionFunc)
+  CHECK_FOR_CANCELED(ReconstructionFunc, reburn_grains)
   progressMessage(AIM_STRING("Finding Average Orientations For Grains"), 49);
   m->homogenize_grains();
 
   if (m_MergeTwins == true)
   {
+    CHECK_FOR_CANCELED(ReconstructionFunc, homogenize_grains)
     m->merge_twins();
+    CHECK_FOR_CANCELED(ReconstructionFunc, merge_twins)
     progressMessage(AIM_STRING("Merging Twins"), 51);
     m->characterize_twins();
-	  CHECK_FOR_CANCELED(ReconstructionFunc)
+	  CHECK_FOR_CANCELED(ReconstructionFunc, characterize_twins)
     progressMessage(AIM_STRING("Renumbering Grains"), 53);
     m->numgrains = m->renumber_grains3();
   }
 
   if (m_MergeColonies == true)
   {
+    CHECK_FOR_CANCELED(ReconstructionFunc, renumber_grains3)
     progressMessage(AIM_STRING("Merging Colonies"), 51);
     m->merge_colonies();
+    CHECK_FOR_CANCELED(ReconstructionFunc, merge_colonies)
     progressMessage(AIM_STRING("Renumbering Grains"), 53);
     m->characterize_colonies();
   }
 
-  CHECK_FOR_CANCELED(ReconstructionFunc)
+  CHECK_FOR_CANCELED(ReconstructionFunc, characterize_colonies)
   progressMessage(AIM_STRING("Finding Grain Centroids"), 55);
   if(m_ZEndIndex-m_ZStartIndex > 1) m->find_centroids();
   if(m_ZEndIndex-m_ZStartIndex == 1)m->find_centroids2D();
 
-  CHECK_FOR_CANCELED(ReconstructionFunc)
+  CHECK_FOR_CANCELED(ReconstructionFunc, find_centroids2D)
   progressMessage(AIM_STRING("Finding Grain Moments"), 57);
   if(m_ZEndIndex-m_ZStartIndex > 1) m->find_moments();
   if(m_ZEndIndex-m_ZStartIndex == 1) m->find_moments2D();
 
-  CHECK_FOR_CANCELED(ReconstructionFunc)
+  CHECK_FOR_CANCELED(ReconstructionFunc, find_moments2D)
   progressMessage(AIM_STRING("Finding Grain Principal Axes Lengths"), 59);
   if(m_ZEndIndex-m_ZStartIndex > 1) m->find_axes();
   if(m_ZEndIndex-m_ZStartIndex == 1) m->find_axes2D();
 
-  CHECK_FOR_CANCELED(ReconstructionFunc)
+  CHECK_FOR_CANCELED(ReconstructionFunc, find_axes2D)
   progressMessage(AIM_STRING("Finding Grain Pricipal Axes Vectors"), 61);
   if(m_ZEndIndex-m_ZStartIndex > 1) m->find_vectors(h5io);
   if(m_ZEndIndex-m_ZStartIndex == 1) m->find_vectors2D(h5io);
 
-  CHECK_FOR_CANCELED(ReconstructionFunc)
+  CHECK_FOR_CANCELED(ReconstructionFunc, find_vectors2D)
   progressMessage(AIM_STRING("Refinding Neighbors"), 63);
   m->find_neighbors();
 
-  CHECK_FOR_CANCELED(ReconstructionFunc)
+  CHECK_FOR_CANCELED(ReconstructionFunc, find_neighbors)
   progressMessage(AIM_STRING("Finding Euclidean Distance Maps"), 65);
   m->find_euclidean_map();
 
-  CHECK_FOR_CANCELED(ReconstructionFunc)
+  CHECK_FOR_CANCELED(ReconstructionFunc, find_euclidean_map)
   progressMessage(AIM_STRING("Finding Euler ODF"), 66);
   m->find_eulerodf(h5io);
 
-  CHECK_FOR_CANCELED(ReconstructionFunc)
+  CHECK_FOR_CANCELED(ReconstructionFunc, find_eulerodf)
   progressMessage(AIM_STRING("Measuring Misorientations"), 67);
   m->measure_misorientations(h5io);
 
-  CHECK_FOR_CANCELED(ReconstructionFunc)
+  CHECK_FOR_CANCELED(ReconstructionFunc, measure_misorientations)
   progressMessage(AIM_STRING("Finding Grain IPF Colors"), 69);
   m->find_colors();
 
-  CHECK_FOR_CANCELED(ReconstructionFunc)
+  CHECK_FOR_CANCELED(ReconstructionFunc, find_colors)
   progressMessage(AIM_STRING("Finding Grain Convexities"), 70);
   m->find_convexities();
 
-  CHECK_FOR_CANCELED(ReconstructionFunc)
+  CHECK_FOR_CANCELED(ReconstructionFunc, find_convexities)
   progressMessage(AIM_STRING("Finding Grain Schmid Factors"), 71);
   m->find_schmids();
 
-  CHECK_FOR_CANCELED(ReconstructionFunc)
+  CHECK_FOR_CANCELED(ReconstructionFunc, find_schmids)
   progressMessage(AIM_STRING("Writing Statistics"), 80);
   if(m_ZEndIndex-m_ZStartIndex > 1) m->volume_stats(h5io);
   if(m_ZEndIndex-m_ZStartIndex == 1) m->volume_stats2D(h5io);
 
 
-  CHECK_FOR_CANCELED(ReconstructionFunc)
+  CHECK_FOR_CANCELED(ReconstructionFunc, volume_stats)
   progressMessage(AIM_STRING("Writing Grain Data"), 82);
   m->write_graindata(graindataFile);
 
@@ -333,10 +347,12 @@ void Reconstruction::compute()
 
   /** ******* End VTK Visualization File Writing Section ****** */
 
-  CHECK_FOR_CANCELED(ReconstructionFunc)
+  CHECK_FOR_CANCELED(ReconstructionFunc, vtk_viz_files)
   progressMessage(AIM_STRING("Writing Out HDF5 Grain File. This may take a few minutes to complete."), 95);
   if (m_WriteHDF5GrainFile) { m->writeHDF5GrainsFile(hdf5GrainFile); }
 
+
+  CHECK_FOR_CANCELED(ReconstructionFunc, writeHDF5GrainsFile)
   progressMessage(AIM_STRING("Reconstruction Complete"), 100);
 
   // Clean up all the memory by forcibly setting a NULL pointer to the Shared

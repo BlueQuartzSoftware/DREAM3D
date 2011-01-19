@@ -68,6 +68,7 @@ double MisorientationCalculations::getMisoQuatCubic(double q1[5],double q2[5],do
   double qc[4];
   double qco[4];
   double sin_wmin_over_2 = 0.0;
+  double _1, _2,  _6;
 
   qc[0]=-q1[1]*q2[4]+q1[4]*q2[1]-q1[2]*q2[3]+q1[3]*q2[2];
   qc[1]=-q1[2]*q2[4]+q1[4]*q2[2]-q1[3]*q2[1]+q1[1]*q2[3];
@@ -82,9 +83,13 @@ double MisorientationCalculations::getMisoQuatCubic(double q1[5],double q2[5],do
     qco[i]=100000;
     for(int j=0;j<4;j++)
     {
-      if((qc[j] < qco[i] && i == 0) || (qc[j] < qco[i] && qc[j] > qco[i-1]))
+      _1 = qc[j];  _2 = qco[i]; _6 = qco[i-1];
+      if (_1 < _2)
       {
-        qco[i] = qc[j];
+        if (i == 0 || _1 > _6)
+        {
+          qco[i] = qc[j];
+        }
       }
     }
   }
