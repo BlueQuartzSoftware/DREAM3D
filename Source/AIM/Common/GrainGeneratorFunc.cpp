@@ -474,13 +474,28 @@ void  GrainGeneratorFunc::generate_grain(int gnum)
   {
 	  a1 = bovera[diameter][0];
 	  b1 = bovera[diameter][1];
+	  if(a1 == 0)
+	  {
+		  a1 = bovera[diameter-1][0];
+		  b1 = bovera[diameter-1][1];
+	  }
 	  r2 = rg.RandBeta(a1,b1);
 	  a2 = covera[diameter][0];
 	  b2 = covera[diameter][1];
+	  if(a2 == 0)
+	  {
+		  a2 = covera[diameter-1][0];
+		  b2 = covera[diameter-1][1];
+	  }
 	  r3 = rg.RandBeta(a2,b2);
       double cob = r3/r2;
 	  a3 = coverb[diameter][0];
 	  b3 = coverb[diameter][1];
+	  if(a3 == 0)
+	  {
+		  a3 = coverb[diameter-1][0];
+		  b3 = coverb[diameter-1][1];
+	  }
 	  double prob = ((gamma((a3+b3))/(gamma(a3)*gamma(b3)))*(pow(cob,(a3-1)))*(pow((1-cob),(b3-1))));
 	  double check = rg.Random();
       if(prob > check) good = 1;
