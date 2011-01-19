@@ -162,17 +162,6 @@ void StatsGeneratorUI::setupGui()
   // Turn off all the plot widgets
   setTabsPlotTabsEnabled(false);
 
-  // Configure the Histogram Plot
-  m_SizeDistributionPlot->setCanvasBackground(QColor(Qt::white));
-  m_SizeDistributionPlot->setTitle("Size Distribution");
-  //  m_HistogramPlot->setAxisTitle(QwtPlot::xBottom, "Gray Scale Value");
-  m_grid = new QwtPlotGrid;
-  m_grid->enableXMin(true);
-  m_grid->enableYMin(true);
-  m_grid->setMajPen(QPen(Qt::gray, 0, Qt::SolidLine));
-  m_grid->setMinPen(QPen(Qt::lightGray, 0, Qt::DotLine));
-  m_grid->attach(m_SizeDistributionPlot);
-
   // LeftButton for the zooming
   // MidButton for the panning
   // RightButton: zoom out by 1
@@ -248,6 +237,17 @@ void StatsGeneratorUI::setupGui()
   m_NeighborPlot->setStatisticsType(AIM::Reconstruction::Grain_SizeVNeighbors);
   m_NeighborPlot->blockDistributionTypeChanges(true);
   m_NeighborPlot->setRowOperationEnabled(false);
+
+
+  m_SizeDistributionPlot->setCanvasBackground(QColor(Qt::white));
+  m_SizeDistributionPlot->setTitle("Size Distribution");
+
+  m_grid = new QwtPlotGrid;
+  m_grid->enableXMin(true);
+  m_grid->enableYMin(true);
+  m_grid->setMajPen(QPen(Qt::gray, 0, Qt::SolidLine));
+  m_grid->setMinPen(QPen(Qt::lightGray, 0, Qt::DotLine));
+  m_grid->attach(m_SizeDistributionPlot);
 
   plotSizeDistribution();
 }
@@ -643,8 +643,10 @@ void StatsGeneratorUI::plotSizeDistribution()
 //  std::cout << "----------------" << std::endl;
 //  std::cout << "yMax: " << yMax << std::endl;
 //  std::cout << "xMax: " << xMax << std::endl;
+
+  m_SizeDistributionPlot->setAxisScale(QwtPlot::xBottom, xCo[0] - (xCo[0] * 0.1), xMax * 1.10);
   m_SizeDistributionPlot->setAxisScale(QwtPlot::yLeft, 0.0, yMax);
-  m_SizeDistributionPlot->setAxisScale(QwtPlot::xBottom, 0.0, xMax * 1.10);
+
   m_SizeDistributionPlot->replot();
 
   // Now that we have bins and grain sizes, push those to the other plot widgets
@@ -658,5 +660,4 @@ void StatsGeneratorUI::plotSizeDistribution()
   m_COverBPlot->setBins(binsizes);
 
   m_NeighborPlot->setBins(binsizes);
-
 }
