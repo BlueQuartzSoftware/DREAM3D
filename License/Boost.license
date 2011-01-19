@@ -1,6 +1,10 @@
-Boost from http://www.boost.org/ - A subset of the complete boost open-source
+<html>
+<body>
+<pre>
+Boost from http://www.boost.org - A subset of the complete boost open-source
 project is being used by the project. The license to use and distribute boost
 related source and binaries is as follows:
+
   Boost Software License - Version 1.0 - August 17th, 2003
 
   Permission is hereby granted, free of charge, to any person or organization
@@ -24,6 +28,10 @@ related source and binaries is as follows:
   FOR ANY DAMAGES OR OTHER LIABILITY, WHETHER IN CONTRACT, TORT OR OTHERWISE,
   ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
   DEALINGS IN THE SOFTWARE.
-  
+
 The complete sub-set of boost is included in this release of the project. The source
 is compressed as a GZip file and can be found as the file "MXABoost.tar.gz".
+
+</pre>
+</body>
+</html>
