@@ -4826,24 +4826,6 @@ double ReconstructionFunc::gamma(double x)
     return ga;
 }
 
-
-double ReconstructionFunc::find_xcoord(long index)
-{
-	double x = resx*double(index%xpoints);
-	return x;
-}
-double ReconstructionFunc::find_ycoord(long index)
-{
-	double y = resy*double((index/xpoints)%ypoints);
-	return y;
-}
-double ReconstructionFunc::find_zcoord(long index)
-{
-	double z = resz*double(index/(xpoints*ypoints));
-	return z;
-}
-
-
 int ReconstructionFunc::writeHDF5GrainsFile(const std::string &hdfFile )
 {
   int err = -1;
