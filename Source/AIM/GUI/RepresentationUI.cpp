@@ -1255,7 +1255,7 @@ void RepresentationUI::on_gg_GoBtn_clicked()
 
   m_GrainGenerator->setAlreadyFormed(gg_AlreadyFormed->isChecked() );
 
-  AIM::Reconstruction::CrystalStructure crystruct = static_cast<AIM::Reconstruction::CrystalStructure>(gg_CrystalStructure->currentIndex() + 1);
+  AIM::Reconstruction::CrystalStructure crystruct = static_cast<AIM::Reconstruction::CrystalStructure>(gg_CrystalStructure->currentIndex());
 
   m_GrainGenerator->setCrystalStructure(crystruct);
 
