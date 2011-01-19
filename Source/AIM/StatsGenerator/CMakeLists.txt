@@ -46,11 +46,9 @@ add_definitions(-DAIM_USE_QT)
                 
 set (StatsGenerator_SRCS 
     ${StatsGenerator_SOURCE_DIR}/main.cpp
-#    ${StatsGenerator_SOURCE_DIR}/SGItemDelegate.cpp
     ${StatsGenerator_SOURCE_DIR}/StatsGen.cpp
     ${StatsGenerator_SOURCE_DIR}/StatsGeneratorUI.cpp
     ${StatsGenerator_SOURCE_DIR}/StatsGenPlotWidget.cpp
-#    ${StatsGenerator_SOURCE_DIR}/StatsGenTableModel.cpp
     ${StatsGenerator_SOURCE_DIR}/SGAbstractTableModel.cpp
     ${StatsGenerator_SOURCE_DIR}/SGBetaTableModel.cpp
     ${StatsGenerator_SOURCE_DIR}/SGPowerLawTableModel.cpp
@@ -61,10 +59,8 @@ set (StatsGenerator_HDRS
 )
                    
 SET( StatsGenerator_MOC_HDRS
-#    ${StatsGenerator_SOURCE_DIR}/SGItemDelegate.h
     ${StatsGenerator_SOURCE_DIR}/StatsGeneratorUI.h
     ${StatsGenerator_SOURCE_DIR}/StatsGenPlotWidget.h
-#    ${StatsGenerator_SOURCE_DIR}/StatsGenTableModel.h
     ${StatsGenerator_SOURCE_DIR}/SGAbstractTableModel.h
     ${StatsGenerator_SOURCE_DIR}/SGBetaTableModel.h  
     ${StatsGenerator_SOURCE_DIR}/SGPowerLawTableModel.h
@@ -76,13 +72,13 @@ SET( StatsGenerator_MOC_HDRS
 cmp_IDE_SOURCE_PROPERTIES( "AIM/StatsGenerator" "${StatsGenerator_HDRS};${StatsGenerator_MOC_HDRS}" "${StatsGenerator_SRCS}" ${PROJECT_INSTALL_HEADERS})
 
 set (AIM_COMMON_QT_SRCS
-    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Qt/AIMAboutBox.cpp
+    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Qt/ApplicationAboutBoxDialog.cpp
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Qt/QRecentFileList.cpp
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Qt/QR3DFileCompleter.cpp
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Qt/ColorComboPicker.cpp
 )
 set (AIM_COMMON_QT_HDRS
-    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Qt/AIMAboutBox.h
+    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Qt/ApplicationAboutBoxDialog.h
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Qt/QRecentFileList.h
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Qt/QR3DFileCompleter.h
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Qt/ColorComboPicker.h     
@@ -95,7 +91,7 @@ cmp_IDE_SOURCE_PROPERTIES("AIM/Common/Qt" "${AIM_COMMON_QT_HDRS}" "${AIM_COMMON_
 SET( StatsGenerator_UIS
   ${StatsGenerator_SOURCE_DIR}/UI_Files/StatsGeneratorUI.ui
   ${StatsGenerator_SOURCE_DIR}/UI_Files/StatsGenPlotWidget.ui
-  ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Qt/UI_Files/AIMAboutBox.ui
+  ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Qt/UI_Files/ApplicationAboutBoxDialog.ui
 )
 
 # and finally any resource files
@@ -103,7 +99,7 @@ SET( StatsGenerator_RCS ${PROJECT_RESOURCES_DIR}/icons/images/Icons.qrc)
 
 
 # -- Run MOC and UIC on the necessary files   
-QT4_ADD_RESOURCES( Generated_RC_SRCS ${StatsGenerator_RCS} )
+QT4_ADD_RESOURCES( Generated_RC_SRCS ${StatsGenerator_RCS} ${QRC_LICENSE_FILES})
 
 # this will run uic on .ui files:
 QT4_WRAP_UI( Generated_UI_HDRS ${StatsGenerator_UIS} )

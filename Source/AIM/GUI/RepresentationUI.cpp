@@ -10,15 +10,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 #include "RepresentationUI.h"
 
-#include <AIM/Common/Constants.h>
-#include <AIM/Common/Qt/AIMAboutBox.h>
-#include <AIM/Common/Qt/QRecentFileList.h>
-#include <AIM/Common/Qt/QR3DFileCompleter.h>
-//#include <AIM/Threads/AIMThread.h>
-#include "AIM/ANG/H5AngDataLoader.h"
-
-
-
 //-- Qt Includes
 #include <QtCore/QFileInfo>
 #include <QtCore/QFile>
@@ -32,6 +23,14 @@
 #include <QtGui/QMessageBox>
 #include <QtGui/QListWidget>
 
+
+//-- AIMRep Includes
+#include "AIM/Common/Constants.h"
+#include "AIM/Common/AIMRepresentationVersion.h"
+#include "AIM/Common/Qt/ApplicationAboutBoxDialog.h"
+#include "AIM/Common/Qt/QRecentFileList.h"
+#include "AIM/Common/Qt/QR3DFileCompleter.h"
+#include "AIM/ANG/H5AngDataLoader.h"
 
 
 #define READ_STRING_SETTING(prefs, var, emptyValue)\
