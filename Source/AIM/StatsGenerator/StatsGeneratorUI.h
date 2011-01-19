@@ -62,6 +62,7 @@ Q_OBJECT    ;
                                double &xMax, double &yMax,
                                QwtArray<double> &x, QwtArray<double> &y);
 
+    void dataChanged();
 
     protected slots:
 
@@ -69,6 +70,7 @@ Q_OBJECT    ;
     void on_actionClose_triggered();
     void on_actionExit_triggered();
     void on_actionSave_triggered();
+    void on_actionSaveAs_triggered();
 
     void on_m_Mu_SizeDistribution_textChanged(const QString &text);
     void on_m_Sigma_SizeDistribution_textChanged(const QString &text);
@@ -160,6 +162,8 @@ Q_OBJECT    ;
     //    QwtPlotPicker* m_picker;
     //    QwtPlotPanner* m_panner;
     QwtPlotGrid* m_grid;
+    QString m_FilePath;
+    bool    m_FileSelected;
 
     QString m_OpenDialogLastDirectory; // Must be last in the list
     StatsGeneratorUI(const StatsGeneratorUI&); // Copy Constructor Not Implemented
