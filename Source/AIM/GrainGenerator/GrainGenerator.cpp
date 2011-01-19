@@ -45,6 +45,8 @@
 #else
 #define CHECK_FOR_CANCELED(AClass)\
   ;
+#define CHECK_ERROR(name)\
+    ;
 #endif
 
 
