@@ -55,8 +55,11 @@
 #include <qwt_plot_curve.h>
 #include <qwt_plot_marker.h>
 
+#include "AIM/Common/AIMRepresentationVersion.h"
+#include "AIM/Common/Qt/ApplicationAboutBoxDialog.h"
 #include "AIM/Common/Qt/QRecentFileList.h"
 #include "AIM/Common/HDF5/H5ReconStatsWriter.h"
+#include "AIM/License/AIMRepresentationLicenseFiles.h"
 #include "StatsGen.h"
 
 
@@ -443,7 +446,7 @@ void StatsGeneratorUI::on_actionSaveAs_triggered()
 void StatsGeneratorUI::on_actionSave_triggered()
 {
   //std::cout << "StatsGeneratorUI::on_actionSave_triggered()" << std::endl;
-  if (m_FileSelected == false) 
+  if (m_FileSelected == false)
   {
     //QString proposedFile = m_OpenDialogLastDirectory + QDir::separator() + m_FileName;
     QString h5file = QFileDialog::getSaveFileName(this, tr("Save HDF5 Statistics File"),
@@ -459,7 +462,7 @@ void StatsGeneratorUI::on_actionSave_triggered()
 
   setWindowTitle(m_FilePath + " - StatsGenerator");
   setWindowModified(false);
-  
+
 
   H5ReconStatsWriter::Pointer writer = H5ReconStatsWriter::New(m_FilePath.toStdString());
 
@@ -707,4 +710,17 @@ void StatsGeneratorUI::plotSizeDistribution()
   m_COverBPlot->setBins(binsizes);
 
   m_NeighborPlot->setBins(binsizes);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void StatsGeneratorUI::on_actionAbout_triggered()
+{
+  ApplicationAboutBoxDialog about(AIMRepresentation::LicenseList, this);
+  QString an = QCoreApplication::applicationName();
+  QString version("");
+  version.append(AIMRepresentation::Version::PackageComplete.c_str());
+  about.setApplicationInfo(an, version);
+  about.exec();
 }

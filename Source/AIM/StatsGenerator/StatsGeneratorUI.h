@@ -71,6 +71,7 @@ Q_OBJECT    ;
     void on_actionExit_triggered();
     void on_actionSave_triggered();
     void on_actionSaveAs_triggered();
+    void on_actionAbout_triggered();
 
     void on_m_Mu_SizeDistribution_textChanged(const QString &text);
     void on_m_Sigma_SizeDistribution_textChanged(const QString &text);
