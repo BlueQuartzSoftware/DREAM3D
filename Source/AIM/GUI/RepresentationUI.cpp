@@ -1821,8 +1821,9 @@ void RepresentationUI::oim_SetupGui()
            this, SLOT(on_oim_OutputFile_textChanged(const QString &)));
 
   m_WidgetList << oim_InputDir << oim_InputDirBtn << oim_OutputFile << oim_OutputFileBtn;
-  m_WidgetList << oim_FileExt;
+  m_WidgetList << oim_FileExt << oim_ErrorMessage;
   m_WidgetList << oim_FilePrefix << oim_TotalSlices << oim_ZStartIndex << oim_ZEndIndex << oim_zSpacing;
+  oim_ErrorMessage->setVisible(false);
 }
 
 
@@ -1859,7 +1860,7 @@ void RepresentationUI::oim_LoadSettings(QSettings &prefs)
   READ_FILEPATH_SETTING(prefs, oim_InputDir, "");
   READ_STRING_SETTING(prefs, oim_FilePrefix, "");
   READ_STRING_SETTING(prefs, oim_FileSuffix, "");
-  READ_STRING_SETTING(prefs, oim_FileExt, "");
+  READ_STRING_SETTING(prefs, oim_FileExt, ".ang");
 //  READ_STRING_SETTING(prefs, oim_TotalSlices, "");
   READ_SETTING(prefs, oim_ZStartIndex, ok, i, 1 , Int);
   READ_SETTING(prefs, oim_ZEndIndex, ok, i, 10 , Int);
@@ -1929,6 +1930,10 @@ void RepresentationUI::on_oim_InputDir_textChanged(const QString & text)
   if (_verifyPathExists(oim_InputDir->text(), oim_InputDir) )
   {
     oim_findAngMaxSliceAndPrefix();
+  }
+  else
+  {
+    oim_FileListView->clear();
   }
 }
 
@@ -2051,6 +2056,7 @@ void RepresentationUI::oim_generateExampleOimInputFile()
   int end = oim_ZEndIndex->value();
   QIcon greenDot = QIcon(QString(":/green-dot.png"));
   QIcon redDot = QIcon(QString(":/red-dot.png"));
+  bool hasMissingFiles = false;
   for (int i = start; i <= end; ++i)
   {
     filename = QString("%1%2%3.%4").arg(oim_FilePrefix->text())
@@ -2065,9 +2071,18 @@ void RepresentationUI::oim_generateExampleOimInputFile()
     }
     else
     {
+      hasMissingFiles = true;
       item->setIcon(redDot);
     }
-
+  }
+  if (hasMissingFiles == true)
+  {
+    oim_ErrorMessage->setVisible(true);
+    oim_ErrorMessage->setText("Alert: File(s) on the list do NOT exist on the filesystem. Please make sure all files exist");
+  }
+  else
+  {
+    oim_ErrorMessage->setVisible(false);
   }
 }
 
