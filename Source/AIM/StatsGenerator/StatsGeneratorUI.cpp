@@ -168,7 +168,7 @@ void StatsGeneratorUI::setupGui()
   setTabsPlotTabsEnabled(false);
 
   // Place the name of the file in the window title
-  dataChanged();
+  adjustWindowTitle();
 
 
   // LeftButton for the zooming
@@ -259,6 +259,7 @@ void StatsGeneratorUI::setupGui()
   m_grid->attach(m_SizeDistributionPlot);
 
   plotSizeDistribution();
+  calculateNumberOfBins();
 }
 
 // -----------------------------------------------------------------------------
@@ -515,21 +516,33 @@ void StatsGeneratorUI::on_actionSave_triggered()
   writer = H5ReconStatsWriter::NullPointer();
 }
 
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void StatsGeneratorUI::on_m_UpdateSizeDistribution_clicked()
+{
+  plotSizeDistribution();
+}
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void StatsGeneratorUI::on_m_Mu_SizeDistribution_textChanged(const QString &text)
 {
-  plotSizeDistribution();
-  m_Mu_SizeDistribution->setFocus();
+ // plotSizeDistribution();
+ // m_Mu_SizeDistribution->setFocus();
+  calculateNumberOfBins();
 }
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void StatsGeneratorUI::on_m_Sigma_SizeDistribution_textChanged(const QString &text)
 {
-  plotSizeDistribution();
-  m_Sigma_SizeDistribution->setFocus();
+ // plotSizeDistribution();
+ // m_Sigma_SizeDistribution->setFocus();
+  calculateNumberOfBins();
 }
 
 // -----------------------------------------------------------------------------
@@ -537,8 +550,36 @@ void StatsGeneratorUI::on_m_Sigma_SizeDistribution_textChanged(const QString &te
 // -----------------------------------------------------------------------------
 void StatsGeneratorUI::on_m_SigmaCutOff_SizeDistribution_textChanged(const QString &text)
 {
-  plotSizeDistribution();
-  m_SigmaCutOff_SizeDistribution->setFocus();
+  calculateNumberOfBins();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void StatsGeneratorUI::calculateNumberOfBins()
+{
+  bool ok = false;
+  double mu = 1.0;
+  double sigma = 1.0;
+  double cutOff = 1.0;
+  mu = m_Mu_SizeDistribution->text().toDouble(&ok);
+  if (ok == false)
+  {
+    return;
+  }
+  sigma = m_Sigma_SizeDistribution->text().toDouble(&ok);
+  if (ok == false)
+  {
+    return;
+  }
+  cutOff = m_SigmaCutOff_SizeDistribution->text().toDouble(&ok);
+  if (ok == false)
+  {
+    return;
+  }
+  StatsGen sg;
+  int n = sg.computeNumberOfBins(mu, sigma, cutOff);
+  m_NumberBinsGenerated->setText(QString::number(n));
 }
 
 // -----------------------------------------------------------------------------
@@ -623,7 +664,7 @@ int StatsGeneratorUI::computeBinsAndCutOffs( QwtArray<int> &binsizes, QwtArray<d
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void StatsGeneratorUI::dataChanged()
+void StatsGeneratorUI::adjustWindowTitle()
 {
   setWindowModified(true);
 
@@ -641,7 +682,7 @@ void StatsGeneratorUI::dataChanged()
 // -----------------------------------------------------------------------------
 void StatsGeneratorUI::plotSizeDistribution()
 {
-  dataChanged();
+  adjustWindowTitle();
   QwtArray<double > xCo;
   QwtArray<double > yCo;
   QwtArray<int > binsizes;
