@@ -726,9 +726,6 @@ void  ReconstructionFunc::form_grains_sections()
 }
 
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 int  ReconstructionFunc::form_grains()
 {
   int point = 0;
@@ -1439,9 +1436,6 @@ int ReconstructionFunc::reburn_grains()
 	return graincount;
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void  ReconstructionFunc::find_kernels()
 {
   double q1[5];
@@ -2376,9 +2370,6 @@ void  ReconstructionFunc::find_centroids2D()
 }
 
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void  ReconstructionFunc::find_euclidean_map()
 {
   int nearestneighbordistance = 0;
@@ -2554,9 +2545,6 @@ double ReconstructionFunc::find_zcoord(long index)
 }
 
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void  ReconstructionFunc::find_moments ()
 {
 //  int count = 0;
@@ -3626,171 +3614,6 @@ void  ReconstructionFunc::find_colors()
     }
   }
 }
-void  ReconstructionFunc::find_convexities()
-{
-//  double convexity = 1;
-  for(int i = 1; i < numgrains; i++)
-  {
-    int size = m_Grains[i].numvoxels;
-    if(size > 1)
-    {
-      double insidecount = 0;
-      int vol = m_Grains[i].numvoxels;
-      double voxvol = vol*resx*resy*resz;
-      double xc = m_Grains[i].centroidx;
-      double yc = m_Grains[i].centroidy;
-      double zc = m_Grains[i].centroidz;
-	  double phi1 = m_Grains[i].axiseuler1;
-	  double PHI = m_Grains[i].axiseuler2;
-	  double phi2 = m_Grains[i].axiseuler3;
-	  double ga[3][3];
-	  ga[0][0] = cos(phi1)*cos(phi2)-sin(phi1)*sin(phi2)*cos(PHI);
-	  ga[0][1] = sin(phi1)*cos(phi2)+cos(phi1)*sin(phi2)*cos(PHI);
-	  ga[0][2] = sin(phi2)*sin(PHI);
-	  ga[1][0] = -cos(phi1)*sin(phi2)-sin(phi1)*cos(phi2)*cos(PHI);
-	  ga[1][1] = -sin(phi1)*sin(phi2)+cos(phi1)*cos(phi2)*cos(PHI);
-	  ga[1][2] =  cos(phi2)*sin(PHI);
-	  ga[2][0] =  sin(phi1)*sin(PHI);
-	  ga[2][1] = -cos(phi1)*sin(PHI);
-	  ga[2][2] =  cos(PHI);
-      double rad1x = ga[0][0];
-      double rad1y = ga[1][0];
-      double rad1z = ga[2][0];
-      double rad2x = ga[0][1];
-      double rad2y = ga[1][1];
-      double rad2z = ga[2][1];
-      double rad3x = ga[0][2];
-      double rad3y = ga[1][2];
-      double rad3z = ga[2][2];
-      double mag1 = (rad1x*rad1x)+(rad1y*rad1y)+(rad1z*rad1z);
-      mag1 = pow(mag1,0.5);
-      double mag2 = (rad2x*rad2x)+(rad2y*rad2y)+(rad2z*rad2z);
-      mag2 = pow(mag2,0.5);
-      double mag3 = (rad3x*rad3x)+(rad3y*rad3y)+(rad3z*rad3z);
-      mag3 = pow(mag3,0.5);
-      rad1x = rad1x/mag1;
-      rad1y = rad1y/mag1;
-      rad1z = rad1z/mag1;
-      rad2x = rad2x/mag2;
-      rad2y = rad2y/mag2;
-      rad2z = rad2z/mag2;
-      rad3x = rad3x/mag3;
-      rad3y = rad3y/mag3;
-      rad3z = rad3z/mag3;
-      double I1 = m_Grains[i].radius1;
-      double I2 = m_Grains[i].radius2;
-      double I3 = m_Grains[i].radius3;
-      I1 = (15*I1)/(4*m_pi);
-      I2 = (15*I2)/(4*m_pi);
-      I3 = (15*I3)/(4*m_pi);
-      double A = (I1+I2-I3)/2;
-      double B = (I1+I3-I2)/2;
-      double C = (I2+I3-I1)/2;
-      double a = (A*A*A*A)/(B*C);
-      a = pow(a,0.1);
-      double b = B/A;
-      b = pow(b,0.5)*a;
-      double c = A/(a*a*a*b);
-      double bovera = b/a;
-      double covera = c/a;
-      double rad_1 = voxvol/(m_OnePointThree * m_pi * bovera * covera );
-      //double rad_1 = voxvol/(m_OnePointThree*m_pi*bovera*covera);
-      rad_1 = pow(rad_1,0.3333333);
-      double rad_2 = rad_1*bovera;
-      double rad_3 = rad_1*covera;
-      if (NULL == m_Grains[i].voxellist)
-      {
-        m_Grains[i].voxellist = new std::vector<int>;
-      }
-	  vector<int>* voxellist = m_Grains[i].voxellist;
-	  int size = voxellist->size();
-	  for(int j=0;j<size;j++)
-	  {
-		  int point = voxellist->at(j);
-          double x = find_xcoord(point);
-	      double y = find_ycoord(point);
-	      double z = find_zcoord(point);
-          double axis[3][3];
-          double diff[3][1];
-          double axiselim[3][3];
-          double diffelim[3][1];
-          double constmat[3][1];
-          axis[0][0] = rad1x;
-          axis[0][1] = rad2x;
-          axis[0][2] = rad3x;
-          axis[1][0] = rad1y;
-          axis[1][1] = rad2y;
-          axis[1][2] = rad3y;
-          axis[2][0] = rad1z;
-          axis[2][1] = rad2z;
-          axis[2][2] = rad3z;
-          diff[0][0] = x-xc;
-          diff[1][0] = y-yc;
-          diff[2][0] = z-zc;
-          int elimcount = 0;
-          int elimcount1 = 0;
-          double q = 0;
-          double sum = 0;
-          double c = 0;
-          for(int a = 0; a < 3; a++)
-          {
-            elimcount1 = 0;
-            for(int b = 0; b < 3; b++)
-            {
-              axiselim[elimcount][elimcount1] = axis[a][b];
-              if(axiselim[elimcount][elimcount1] == 0)
-              {
-                axiselim[elimcount][elimcount1] = 0.000001;
-              }
-              elimcount1++;
-            }
-            diffelim[elimcount][0] = diff[a][0];
-            elimcount++;
-          }
-          for(int k = 0; k < elimcount-1; k++)
-          {
-            for(int l = k+1; l < elimcount; l++)
-            {
-              c = axiselim[l][k]/axiselim[k][k];
-              for(int m = k+1; m < elimcount; m++)
-              {
-                axiselim[l][m] = axiselim[l][m] - c*axiselim[k][m];
-              }
-              diffelim[l][0] = diffelim[l][0] - c*diffelim[k][0];
-            }
-          }
-          diffelim[elimcount-1][0] = diffelim[elimcount-1][0]/axiselim[elimcount-1][elimcount-1];
-          for(int l = 1; l < elimcount; l++)
-          {
-            int m = (elimcount-1)-l;
-            sum = 0;
-            for(int n = m+1; n < elimcount; n++)
-            {
-              sum = sum + (axiselim[m][n]*diffelim[n][0]);
-            }
-            diffelim[m][0] = (diffelim[m][0]-sum)/axiselim[m][m];
-          }
-          for(int p = 0; p < elimcount; p++)
-          {
-            q = diffelim[p][0];
-            constmat[p][0] = q;
-          }
-          double inside = 1-(((constmat[0][0])/rad_3)*((constmat[0][0])/rad_3))-(((constmat[1][0])/rad_2)*((constmat[1][0])/rad_2))-(((constmat[2][0])/rad_1)*((constmat[2][0])/rad_1));
-          if(inside >= 0)
-          {
-            insidecount++;
-          }
-      }
-      double convex = insidecount/size;
-      m_Grains[i].convexity = convex;
-    }
-    if(size == 1)
-    {
-      double convex = 1;
-      m_Grains[i].convexity = convex;
-    }
-  }
-}
 void ReconstructionFunc::find_schmids()
 {
   double schmid=0;
@@ -4824,23 +4647,6 @@ double ReconstructionFunc::gamma(double x)
         }
     }
     return ga;
-}
-
-
-double ReconstructionFunc::find_xcoord(long index)
-{
-	double x = resx*double(index%xpoints);
-	return x;
-}
-double ReconstructionFunc::find_ycoord(long index)
-{
-	double y = resy*double((index/xpoints)%ypoints);
-	return y;
-}
-double ReconstructionFunc::find_zcoord(long index)
-{
-	double z = resz*double(index/(xpoints*ypoints));
-	return z;
 }
 
 

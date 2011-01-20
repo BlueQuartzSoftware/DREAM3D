@@ -169,7 +169,7 @@ void GrainGenerator::compute()
   m->find_neighbors();
 
   CHECK_FOR_CANCELED(GrainGeneratorFunc)
-  progressMessage(AIM_STRING("Loading ODF Data"), 15);
+  progressMessage(AIM_STRING("Loading ODF Data"), 45);
   err = m->readODFData(h5reader);
   if (err < 0)
   {

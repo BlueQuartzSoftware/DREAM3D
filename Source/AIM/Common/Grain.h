@@ -39,7 +39,6 @@ class AIMCOMMON_EXPORT Grain
 
 
     int nucleus;
-    double packquality;
     int active;
     int numvoxels;
     int numneighbors;
@@ -50,6 +49,7 @@ class AIMCOMMON_EXPORT Grain
     int surfacegrain;
     int twinnewnumber;
     int colonynewnumber;
+	double packquality;
     double centroidx;
     double centroidy;
     double centroidz;
@@ -67,7 +67,6 @@ class AIMCOMMON_EXPORT Grain
     double green;
     double blue;
     double schmidfactor;
-    double convexity;
     double euler1;
     double euler2;
     double euler3;

@@ -688,7 +688,11 @@ void  GrainGeneratorFunc::insert_grain(size_t gnum)
 			  if(inside >= 0)
 			  {
 				int currentpoint = index;
-				ellipfunc = (-0.1/((pow((axis1comp+axis2comp+axis3comp),1)*(1.0-(1.0/(0.80*0.80))))))*(1.0-(((axis1comp+axis2comp+axis3comp)*(axis1comp+axis2comp+axis3comp))/(0.80*0.80)));
+				if(index >= totalpoints)
+				{
+					int stop = 0;
+				}
+				ellipfunc = (-0.1/((pow((axis1comp+axis2comp+axis3comp),1)*(1.0-(1.0/(0.90*0.90))))))*(1.0-(((axis1comp+axis2comp+axis3comp)*(axis1comp+axis2comp+axis3comp))/(0.90*0.90)));
 				insidelist[insidecount] = currentpoint;
 				ellipfunclist[insidecount] = ellipfunc;
 				insidecount++;
@@ -3227,8 +3231,8 @@ void  GrainGeneratorFunc::find_centroids()
   maxdiameter=0;
   mindiameter=100000;
   double x, y, z;
-  double radcubed;
-  double diameter;
+  double radcubed, diameter, packquality;
+  int col, row, plane;
   graincenters = new double *[numgrains];
   for(int i = 0; i < numgrains; i++)
   {
@@ -3246,9 +3250,9 @@ void  GrainGeneratorFunc::find_centroids()
         x = find_xcoord(j);
         y = find_ycoord(j);
         z = find_zcoord(j);
-	    int col = j%xpoints;
-	    int row = (j/xpoints)%ypoints;
-		int plane = j/(xpoints*ypoints);
+	    col = j%xpoints;
+	    row = (j/xpoints)%ypoints;
+		plane = j/(xpoints*ypoints);
         if(col <= 0) onedge = 1;
         if(col >= xpoints-1) onedge = 1;
         if(row <= 0) onedge = 1;
@@ -3273,7 +3277,9 @@ void  GrainGeneratorFunc::find_centroids()
     grains[i].surfacegrain = graincenters[i][4];
 	radcubed = (0.75*grains[i].volume)/m_pi;
 	diameter = (2*pow(radcubed,0.3333333333));
+	packquality = (diameter-grains[i].equivdiameter)/grains[i].equivdiameter;
 	grains[i].equivdiameter = diameter;
+	grains[i].packquality = packquality;
 	if(int(diameter) > maxdiameter)
 	{
 		maxdiameter = int(diameter);
@@ -3725,7 +3731,7 @@ int GrainGeneratorFunc::volume_stats(H5ReconStatsWriter::Pointer h5io)
   }
   for (int temp3 = 0; temp3 < ((maxdiameter-mindiameter)+1); temp3++)
   {
-    if (svbovera[temp3][0] != 0)
+    if (svbovera[temp3][0] > 1)
     {
       neighborhood[temp3][1] = neighborhood[temp3][1] / neighborhood[temp3][0];
       neighborhood[temp3][3] = neighborhood[temp3][3] / neighborhood[temp3][0];
@@ -3820,7 +3826,7 @@ int GrainGeneratorFunc::volume_stats(H5ReconStatsWriter::Pointer h5io)
   }
   for (int temp4 = 0; temp4 < ((maxdiameter-mindiameter)+1); temp4++)
   {
-    if (svbovera[temp4][0] != 0)
+    if (svbovera[temp4][0] > 1)
     {
       neighborhood[temp4][2] = neighborhood[temp4][2] / neighborhood[temp4][0];
       neighborhood[temp4][4] = neighborhood[temp4][4] / neighborhood[temp4][0];
@@ -3985,6 +3991,9 @@ void GrainGeneratorFunc::write_graindata(string gdata)
 {
   double misobin[36];
   double microbin[10];
+  double ea1, ea2, ea3;
+  double packquality, equivdiam;
+  int onsurface, numneighbors;
   for(int e = 0; e < 36; e++)
   {
     misobin[e] = 0;
@@ -3995,15 +4004,14 @@ void GrainGeneratorFunc::write_graindata(string gdata)
   outFile << numgrains << endl;
   for(int i = 1; i < numgrains; i++)
   {
-	double volume = grains[i].numvoxels*resx*resy*resz;
-	double equivdiam = grains[i].equivdiameter;
-	double diam = 2*pow(((0.75)*(1.0/m_pi)*volume),0.3333333333);
-	int onsurface = grains[i].surfacegrain;
-	double ea1 = grains[i].euler1;
-	double ea2 = grains[i].euler2;
-	double ea3 = grains[i].euler3;
-	int numneighbors = grains[i].numneighbors;
-	outFile << i << "	" << diam << "	" << equivdiam << "	" << numneighbors << "	" << onsurface << "	" << ea1 << "	" << ea2 << "	" << ea3 << endl;
+	equivdiam = grains[i].equivdiameter;
+	packquality = grains[i].packquality;
+	onsurface = grains[i].surfacegrain;
+	ea1 = grains[i].euler1;
+	ea2 = grains[i].euler2;
+	ea3 = grains[i].euler3;
+	numneighbors = grains[i].numneighbors;
+	outFile << i << "	" << equivdiam << "	" << packquality << "	" << numneighbors << "	" << onsurface << "	" << ea1 << "	" << ea2 << "	" << ea3 << endl;
   }
   outFile.close();
   for(int i = 0; i < 36; i++)

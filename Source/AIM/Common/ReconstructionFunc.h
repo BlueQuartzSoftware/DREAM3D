@@ -171,7 +171,6 @@ public:
 	void find_eulerodf(H5ReconStatsWriter::Pointer h5io);
 	void measure_misorientations(H5ReconStatsWriter::Pointer h5io);
 	void find_colors();
-	void find_convexities();
 	void find_schmids();
 
   void write_graindata(const std::string &graindataFile);
