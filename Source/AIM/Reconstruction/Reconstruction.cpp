@@ -307,10 +307,6 @@ void Reconstruction::compute()
   progressMessage(AIM_STRING("Finding Grain IPF Colors"), 69);
   m->find_colors();
 
-  CHECK_FOR_CANCELED(ReconstructionFunc, find_colors)
-  progressMessage(AIM_STRING("Finding Grain Convexities"), 70);
-  m->find_convexities();
-
   CHECK_FOR_CANCELED(ReconstructionFunc, find_convexities)
   progressMessage(AIM_STRING("Finding Grain Schmid Factors"), 71);
   m->find_schmids();

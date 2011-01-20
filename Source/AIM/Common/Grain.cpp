@@ -46,7 +46,6 @@ red(0.0),
 green(0.0),
 blue(0.0),
 schmidfactor(0.0),
-convexity(0.0),
 euler1(0.0),
 euler2(0.0),
 euler3(0.0),
@@ -101,7 +100,6 @@ Grain::Grain(const Grain& grain)
   green = grain.green ;
   blue = grain.blue ;
   schmidfactor = grain.schmidfactor ;
-  convexity = grain.convexity ;
   euler1 = grain.euler1 ;
   euler2 = grain.euler2 ;
   euler3 = grain.euler3 ;
@@ -273,7 +271,6 @@ Grain& Grain::operator=(const Grain& grain)
   green = grain.green ;
   blue = grain.blue ;
   schmidfactor = grain.schmidfactor ;
-  convexity = grain.convexity ;
   euler1 = grain.euler1 ;
   euler2 = grain.euler2 ;
   euler3 = grain.euler3 ;
