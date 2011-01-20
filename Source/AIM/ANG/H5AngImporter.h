@@ -38,6 +38,9 @@
 
 #include "hdf5.h"
 
+#include <vector>
+#include <string>
+
 #include <MXA/Common/MXASetGetMacros.h>
 #include <MXA/MXATypes.h>
 #include <AIM/Common/Constants.h>
@@ -79,12 +82,14 @@ Q_OBJECT
     virtual ~H5AngImporter();
 
     MXA_INSTANCE_STRING_PROPERTY(OutputFile)
-    MXA_INSTANCE_STRING_PROPERTY(InputDirectory)
-    MXA_INSTANCE_STRING_PROPERTY(AngFilePrefix)
-    MXA_INSTANCE_PROPERTY(int, AngSeriesMaxSlice)
+//    MXA_INSTANCE_STRING_PROPERTY(InputDirectory)
+//    MXA_INSTANCE_STRING_PROPERTY(AngFilePrefix)
+//    MXA_INSTANCE_PROPERTY(int, AngSeriesMaxSlice)
     MXA_INSTANCE_PROPERTY(int, ZStartIndex)
     MXA_INSTANCE_PROPERTY(int, ZEndIndex)
     MXA_INSTANCE_PROPERTY(float, ZResolution)
+
+    MXA_INSTANCE_PROPERTY(std::vector<std::string>, AngFileList);
 
     /**
      * @brief Cancel the operation
