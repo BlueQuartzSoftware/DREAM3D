@@ -36,22 +36,34 @@
        </size>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="oimImportTab">
        <attribute name="title">
         <string>OIM Data Import</string>
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout_5">
-        <property name="margin">
+        <property name="spacing">
          <number>4</number>
+        </property>
+        <property name="leftMargin">
+         <number>6</number>
+        </property>
+        <property name="topMargin">
+         <number>12</number>
+        </property>
+        <property name="rightMargin">
+         <number>6</number>
+        </property>
+        <property name="bottomMargin">
+         <number>6</number>
         </property>
         <item>
          <layout class="QGridLayout" name="gridLayout_19">
           <item row="0" column="0">
            <widget class="QLabel" name="label_29">
             <property name="text">
-             <string>Ang Directory</string>
+             <string>Input Directory</string>
             </property>
            </widget>
           </item>
@@ -68,11 +80,127 @@
          </layout>
         </item>
         <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_17">
+          <item>
+           <widget class="QLabel" name="label_47">
+            <property name="text">
+             <string>Total Ang Files Found:</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="oim_TotalSlices">
+            <property name="text">
+             <string>0</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="horizontalSpacer_26">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <widget class="Line" name="line_8">
+          <property name="frameShadow">
+           <enum>QFrame::Plain</enum>
+          </property>
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_14">
+          <item>
+           <widget class="QLabel" name="label_53">
+            <property name="text">
+             <string>Output File</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLineEdit" name="oim_OutputFile"/>
+          </item>
+          <item>
+           <widget class="QPushButton" name="oim_OutputFileBtn">
+            <property name="text">
+             <string>Select</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout">
+          <item>
+           <widget class="QLabel" name="label_52">
+            <property name="text">
+             <string>Z Spacing</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLineEdit" name="oim_zSpacing">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>0.25</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="horizontalSpacer_27">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <widget class="Line" name="line_9">
+          <property name="frameShadow">
+           <enum>QFrame::Plain</enum>
+          </property>
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_58">
+          <property name="text">
+           <string>Advanced File Name Options (You generally should NOT have to change these values)</string>
+          </property>
+         </widget>
+        </item>
+        <item>
          <layout class="QHBoxLayout" name="horizontalLayout_11">
           <item>
            <widget class="QLabel" name="label_32">
             <property name="text">
-             <string>Ang File Prefix</string>
+             <string>File Prefix</string>
             </property>
            </widget>
           </item>
@@ -84,16 +212,26 @@
            </widget>
           </item>
           <item>
-           <widget class="QLabel" name="label_47">
+           <widget class="QLabel" name="label_13">
             <property name="text">
-             <string>Max Slice</string>
+             <string>File Suffix</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QSpinBox" name="oim_ZMaxSlice">
-            <property name="maximum">
-             <number>100000000</number>
+           <widget class="QLineEdit" name="oim_FileSuffix"/>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_56">
+            <property name="text">
+             <string>File Extension</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLineEdit" name="oim_FileExt">
+            <property name="text">
+             <string>ang</string>
             </property>
            </widget>
           </item>
@@ -148,60 +286,89 @@
            </widget>
           </item>
           <item row="0" column="4">
-           <widget class="QLabel" name="label_52">
+           <widget class="QLabel" name="label_21">
             <property name="text">
-             <string>Z Spacing</string>
+             <string>Total Digits</string>
             </property>
            </widget>
           </item>
           <item row="0" column="5">
-           <widget class="QLineEdit" name="oim_zSpacing">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="text">
-             <string>0.25</string>
+           <widget class="QSpinBox" name="oim_TotalDigits">
+            <property name="value">
+             <number>4</number>
             </property>
            </widget>
           </item>
          </layout>
         </item>
         <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_14">
+         <layout class="QHBoxLayout" name="_6">
           <item>
-           <widget class="QLabel" name="label_53">
+           <widget class="QLabel" name="label_17">
             <property name="text">
-             <string>Output File</string>
+             <string>Generated Input Filename:</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QLineEdit" name="oim_OutputFile"/>
+           <spacer name="horizontalSpacer_24">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeType">
+             <enum>QSizePolicy::Fixed</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>12</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
           </item>
           <item>
-           <widget class="QPushButton" name="oim_OutputFileBtn">
+           <widget class="QLabel" name="oim_GeneratedFileNameExample">
+            <property name="font">
+             <font>
+              <italic>true</italic>
+             </font>
+            </property>
             <property name="text">
-             <string>Select</string>
+             <string>[Prefix][Zero Padding][Slice Value][Suffix].[extension]</string>
             </property>
            </widget>
+          </item>
+          <item>
+           <spacer name="horizontalSpacer_25">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
           </item>
          </layout>
         </item>
         <item>
-         <spacer name="verticalSpacer_5">
-          <property name="orientation">
-           <enum>Qt::Vertical</enum>
+         <widget class="QLabel" name="label_57">
+          <property name="font">
+           <font>
+            <weight>75</weight>
+            <italic>false</italic>
+            <bold>true</bold>
+           </font>
           </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>20</width>
-            <height>380</height>
-           </size>
+          <property name="text">
+           <string>File List (Green=File Exists  Red=File Does NOT Exist)</string>
           </property>
-         </spacer>
+         </widget>
+        </item>
+        <item>
+         <widget class="QListWidget" name="oim_FileListView"/>
         </item>
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout_15">
@@ -1701,9 +1868,6 @@
          </layout>
         </item>
         <item>
-         <layout class="QGridLayout" name="gridLayout_12"/>
-        </item>
-        <item>
          <widget class="Line" name="line_4">
           <property name="minimumSize">
            <size>
@@ -1739,17 +1903,10 @@
         </item>
         <item>
          <layout class="QGridLayout" name="gridLayout_18">
-          <item row="1" column="0" colspan="4">
+          <item row="1" column="0">
            <widget class="QLabel" name="label_30">
             <property name="text">
              <string>Existing Output Files</string>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="3">
-           <widget class="QLabel" name="sm_TrianglesFile">
-            <property name="text">
-             <string>triangles.txt</string>
             </property>
            </widget>
           </item>
@@ -1773,19 +1930,6 @@
             </property>
            </widget>
           </item>
-          <item row="2" column="2">
-           <widget class="QLabel" name="sm_TrianglesFileIcon">
-            <property name="text">
-             <string/>
-            </property>
-            <property name="pixmap">
-             <pixmap resource="../../../../Resources/icons/images/Icons.qrc">:/Delete-16x16.png</pixmap>
-            </property>
-            <property name="alignment">
-             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-            </property>
-           </widget>
-          </item>
           <item row="3" column="1">
            <widget class="QLabel" name="sm_NodesRawFile">
             <property name="text">
@@ -1805,6 +1949,39 @@
              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
             </property>
            </widget>
+          </item>
+          <item row="4" column="0">
+           <widget class="QLabel" name="sm_TrianglesFileIcon">
+            <property name="text">
+             <string/>
+            </property>
+            <property name="pixmap">
+             <pixmap resource="../../../../Resources/icons/images/Icons.qrc">:/Delete-16x16.png</pixmap>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="1">
+           <widget class="QLabel" name="sm_TrianglesFile">
+            <property name="text">
+             <string>triangles.txt</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="2" rowspan="4">
+           <spacer name="horizontalSpacer_28">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
           </item>
          </layout>
         </item>
