@@ -338,11 +338,11 @@ QVector<double > SGPowerLawTableModel::getData(int col)
   switch(col)
   {
     case Alpha:
-      return m_Alpha;
+      return m_Alpha;break;
     case K:
-      return m_K;
+      return m_K;break;
     case Beta:
-      return m_Beta;
+      return m_Beta;break;
     default:
       Q_ASSERT(false);
   }
@@ -357,15 +357,33 @@ double SGPowerLawTableModel::getDataValue(int col, int row)
   switch(col)
   {
     case Alpha:
-      return m_Alpha[row];
+      return m_Alpha[row];break;
     case K:
-      return m_K[row];
+      return m_K[row];break;
     case Beta:
-      return m_Beta[row];
+      return m_Beta[row];break;
     default:
       Q_ASSERT(false);
   }
   return 0.0f;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void SGPowerLawTableModel::setColumnData(int col, QVector<double> &data)
+{
+  switch(col)
+  {
+    case Alpha:
+      m_Alpha = data;break;
+    case K:
+      m_K = data;break;
+    case Beta:
+      m_Beta = data;break;
+    default:
+      Q_ASSERT(false);
+  }
 }
 
 // -----------------------------------------------------------------------------

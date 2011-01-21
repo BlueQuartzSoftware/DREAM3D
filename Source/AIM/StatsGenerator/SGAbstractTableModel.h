@@ -208,6 +208,10 @@ Q_OBJECT    ;
      */
     virtual double getDataValue(int col, int row) = 0;
 
+
+    virtual void setColumnData(int col, QVector<double> &data) = 0;
+
+
     private:
 
     SGAbstractTableModel(const SGAbstractTableModel&); // Copy Constructor Not Implemented

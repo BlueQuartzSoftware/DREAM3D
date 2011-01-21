@@ -154,65 +154,71 @@ return err; }
 
 
 #define READ_2_COLUMN_STATS_DATA(err, group, var, distribution, Col0Hdr, Col1Hdr, ColCount)\
-    {\
-    std::string disType = h5io->getDistributionType(group);\
-    var.resize(numdiameters);\
-    if (disType.compare(distribution) != 0)\
-    {\
+{\
+  disType = h5io->getDistributionType(group, dt);\
+  var.resize(numdiameters);\
+  std::vector<double> col0;\
+  std::vector<double> col1;\
+  switch(dt)\
+  {\
+    case distribution:\
+      path = group + ("/") + Col0Hdr;\
+      err = h5io->readStatsDataset(path, col0);\
+      CHECK_STATS_READ_ERROR(err, group, Col0Hdr)\
+      path = group + ("/") + Col1Hdr;\
+      err = h5io->readStatsDataset(path, col1);\
+      CHECK_STATS_READ_ERROR(err, group, Col1Hdr)\
+      for (size_t temp7 = 0; temp7 < nBins; temp7++)\
+      {\
+        var[temp7].resize(ColCount);\
+        var[temp7][0] = col0[temp7];\
+        var[temp7][1] = col1[temp7];\
+      }\
+    default:\
       std::cout << "Error Reading " << group <<\
-          " the distribution must be of type '" << distribution << "' but is of type '"\
-          << disType << "'" << std::endl;\
+                " the distribution must be of type '" << distribution << "' but is of type '"\
+                << disType << "'" << std::endl;\
       return -1;\
-    }\
-    std::vector<double> col0;\
-    std::vector<double> col1;\
-    path = group + ("/") + Col0Hdr;\
-    err = h5io->readStatsDataset(path, col0);\
-    CHECK_STATS_READ_ERROR(err, group, Col0Hdr)\
-    path = group + ("/") + Col1Hdr;\
-    err = h5io->readStatsDataset(path, col1);\
-    CHECK_STATS_READ_ERROR(err, group, Col1Hdr)\
-    for (size_t temp7 = 0; temp7 < nBins; temp7++)\
-    {\
-      var[temp7].resize(ColCount);\
-      var[temp7][0] = col0[temp7];\
-      var[temp7][1] = col1[temp7];\
-    }\
-    }
+      break;\
+  }\
+}
 
 
 
 #define READ_3_COLUMN_STATS_DATA(err, group, var, distribution, Col0Hdr, Col1Hdr, Col2Hdr, ColCount)\
-    {\
-    std::string disType = h5io->getDistributionType(group);\
-    var.resize(numdiameters);\
-    if (disType.compare(distribution) != 0)\
-    {\
-      std::cout << "Error Reading " << group <<\
-          " the distribution must be of type '" << distribution << "' but is of type '"\
-          << disType << "'" << std::endl;\
-      return -1;\
-    }\
-    std::vector<double> col0;\
-    std::vector<double> col1;\
-    std::vector<double> col2;\
-    path = group + ("/") + Col0Hdr;\
-    err = h5io->readStatsDataset(path, col0);\
-    CHECK_STATS_READ_ERROR(err, group, Col0Hdr)\
-    path = group + ("/") + Col1Hdr;\
-    err = h5io->readStatsDataset(path, col1);\
-    CHECK_STATS_READ_ERROR(err, group, Col1Hdr)\
-    path = group + ("/") + Col2Hdr;\
-    err = h5io->readStatsDataset(path, col2);\
-    CHECK_STATS_READ_ERROR(err, group, Col2Hdr)\
-    for (size_t temp7 = 0; temp7 < nBins; temp7++)\
-    {\
-      var[temp7].resize(ColCount);\
-      var[temp7][0] = col0[temp7];\
-      var[temp7][1] = col1[temp7];\
-      var[temp7][2] = col2[temp7];\
-    }\
-    }
+{\
+  disType = h5io->getDistributionType(group, dt);\
+  var.resize(numdiameters);\
+  std::vector<double> col0;\
+  std::vector<double> col1;\
+  std::vector<double> col2;\
+  switch(dt)\
+  {\
+    case distribution:\
+      path = group + ("/") + Col0Hdr;\
+      err = h5io->readStatsDataset(path, col0);\
+      CHECK_STATS_READ_ERROR(err, group, Col0Hdr)\
+      path = group + ("/") + Col1Hdr;\
+      err = h5io->readStatsDataset(path, col1);\
+      CHECK_STATS_READ_ERROR(err, group, Col1Hdr)\
+      path = group + ("/") + Col2Hdr;\
+      err = h5io->readStatsDataset(path, col2);\
+      CHECK_STATS_READ_ERROR(err, group, Col2Hdr)\
+      for (size_t temp7 = 0; temp7 < nBins; temp7++)\
+      {\
+        var[temp7].resize(ColCount);\
+        var[temp7][0] = col0[temp7];\
+        var[temp7][1] = col1[temp7];\
+        var[temp7][2] = col2[temp7];\
+      }\
+  default:\
+    std::cout << "Error Reading " << group <<\
+              " the distribution must be of type '" << distribution << "' but is of type '"\
+              << disType << "'" << std::endl;\
+    return -1;\
+    break;\
+  }\
+}
 
 int GrainGeneratorFunc::readReconStatsData(H5ReconStatsReader::Pointer h5io)
 {
@@ -260,11 +266,17 @@ int GrainGeneratorFunc::readReconStatsData(H5ReconStatsReader::Pointer h5io)
   }
 
 
-  /* Read the Shape Data */
-  std::string disType = h5io->getDistributionType(AIM::HDF5::Grain_SizeVBoverA_Distributions);
-  if(disType.compare(AIM::HDF5::BetaDistribution) == 0) READ_2_COLUMN_STATS_DATA(err, AIM::HDF5::Grain_SizeVBoverA_Distributions, bovera, AIM::HDF5::BetaDistribution, AIM::HDF5::Alpha, AIM::HDF5::Beta, AIM::HDF5::BetaColumnCount);
-  if(disType.compare(AIM::HDF5::LogNormalDistribution) == 0) READ_2_COLUMN_STATS_DATA(err, AIM::HDF5::Grain_SizeVBoverA_Distributions, bovera, AIM::HDF5::LogNormalDistribution, AIM::HDF5::Average, AIM::HDF5::StandardDeviation, AIM::HDF5::LogNormalColumnCount);
-  if(disType.compare(AIM::HDF5::PowerLawDistribution) == 0) READ_3_COLUMN_STATS_DATA(err, AIM::HDF5::Grain_SizeVBoverA_Distributions, bovera, AIM::HDF5::PowerLawDistribution, AIM::HDF5::Alpha, AIM::HDF5::Beta, AIM::HDF5::Exp_k, AIM::HDF5::PowerLawColumnCount);
+#if 0
+
+
+  if(disType.compare(AIM::HDF5::BetaDistribution) == 0)
+    READ_2_COLUMN_STATS_DATA(err, AIM::HDF5::Grain_SizeVBoverA_Distributions, bovera, AIM::Reconstruction::Beta, AIM::HDF5::Alpha, AIM::HDF5::Beta, AIM::HDF5::BetaColumnCount);
+  if(disType.compare(AIM::HDF5::LogNormalDistribution) == 0)
+    READ_2_COLUMN_STATS_DATA(err, AIM::HDF5::Grain_SizeVBoverA_Distributions, bovera, AIM::HDF5::LogNormalDistribution, AIM::HDF5::Average, AIM::HDF5::StandardDeviation, AIM::HDF5::LogNormalColumnCount);
+  if(disType.compare(AIM::HDF5::PowerLawDistribution) == 0)
+    READ_3_COLUMN_STATS_DATA(err, AIM::HDF5::Grain_SizeVBoverA_Distributions, bovera, AIM::HDF5::PowerLawDistribution, AIM::HDF5::Alpha, AIM::HDF5::Beta, AIM::HDF5::Exp_k, AIM::HDF5::PowerLawColumnCount);
+
+
   disType = h5io->getDistributionType(AIM::HDF5::Grain_SizeVCoverA_Distributions);
   if(disType.compare(AIM::HDF5::BetaDistribution) == 0) READ_2_COLUMN_STATS_DATA(err, AIM::HDF5::Grain_SizeVCoverA_Distributions, covera, AIM::HDF5::BetaDistribution, AIM::HDF5::Alpha, AIM::HDF5::Beta, AIM::HDF5::BetaColumnCount);
   if(disType.compare(AIM::HDF5::LogNormalDistribution) == 0) READ_2_COLUMN_STATS_DATA(err, AIM::HDF5::Grain_SizeVCoverA_Distributions, covera, AIM::HDF5::LogNormalDistribution, AIM::HDF5::Average, AIM::HDF5::StandardDeviation, AIM::HDF5::LogNormalColumnCount);
@@ -285,14 +297,29 @@ int GrainGeneratorFunc::readReconStatsData(H5ReconStatsReader::Pointer h5io)
   if(disType.compare(AIM::HDF5::BetaDistribution) == 0) READ_2_COLUMN_STATS_DATA(err, AIM::HDF5::Grain_SizeVNeighbors_Distributions, neighborhood, AIM::HDF5::BetaDistribution, AIM::HDF5::Alpha, AIM::HDF5::Beta, AIM::HDF5::BetaColumnCount);
   if(disType.compare(AIM::HDF5::LogNormalDistribution) == 0) READ_2_COLUMN_STATS_DATA(err, AIM::HDF5::Grain_SizeVNeighbors_Distributions, neighborhood, AIM::HDF5::LogNormalDistribution, AIM::HDF5::Average, AIM::HDF5::StandardDeviation, AIM::HDF5::LogNormalColumnCount);
   if(disType.compare(AIM::HDF5::PowerLawDistribution) == 0) READ_3_COLUMN_STATS_DATA(err, AIM::HDF5::Grain_SizeVNeighbors_Distributions, neighborhood, AIM::HDF5::PowerLawDistribution, AIM::HDF5::Alpha, AIM::HDF5::Beta, AIM::HDF5::Exp_k, AIM::HDF5::PowerLawColumnCount);
+#endif
 
+
+  AIM::Reconstruction::DistributionType dt;
+  std::string disType;
+
+  /* Read the Shape Data */
+  READ_2_COLUMN_STATS_DATA(err, AIM::HDF5::Grain_SizeVBoverA_Distributions, bovera, AIM::Reconstruction::Beta, AIM::HDF5::Alpha, AIM::HDF5::Beta, AIM::HDF5::BetaColumnCount);
+  READ_2_COLUMN_STATS_DATA(err, AIM::HDF5::Grain_SizeVCoverA_Distributions, covera, AIM::Reconstruction::Beta, AIM::HDF5::Alpha, AIM::HDF5::Beta, AIM::HDF5::BetaColumnCount);
+  READ_2_COLUMN_STATS_DATA(err, AIM::HDF5::Grain_SizeVCoverB_Distributions, coverb, AIM::Reconstruction::Beta, AIM::HDF5::Alpha, AIM::HDF5::Beta, AIM::HDF5::BetaColumnCount);
+
+  /* Read the Omega3 Data */
+  READ_2_COLUMN_STATS_DATA(err, AIM::HDF5::Grain_SizeVOmega3_Distributions, omega3, AIM::Reconstruction::LogNormal, AIM::HDF5::Average, AIM::HDF5::StandardDeviation, AIM::HDF5::LogNormalColumnCount);
+
+  /* Read the Neighbor Data - This MUST be the last one because of how variables are assigned bvalues and used in the next section */
+  READ_3_COLUMN_STATS_DATA(err, AIM::HDF5::Grain_SizeVNeighbors_Distributions, neighborhood, AIM::Reconstruction::Power, AIM::HDF5::Alpha, AIM::HDF5::Beta, AIM::HDF5::Exp_k, AIM::HDF5::PowerLawColumnCount);
 
   /* Convert the data into the various "shell" data which is the data that is actually needed.
    * The conversion is done "in place" by extracting out the alpha, beta, and K values then
    * using those values to calculate the 3 values that get put back into the row.
    */
-  disType = h5io->getDistributionType(AIM::HDF5::Grain_SizeVNeighbors_Distributions);
-  if(disType.compare(AIM::HDF5::PowerLawDistribution) == 0)
+  disType = h5io->getDistributionType(AIM::HDF5::Grain_SizeVNeighbors_Distributions, dt);
+  if(dt == AIM::Reconstruction::Power)
   {
 	  double a, b, k;
 	  for (size_t temp7 = 0; temp7 < nBins; temp7++)
@@ -1242,7 +1269,7 @@ int GrainGeneratorFunc::assign_voxels(int numgrains)
 	  for(int j=1;j<i+1;j++)
 	  {
 		size = gsizes[j];
-		if(size == 0) 
+		if(size == 0)
 		{
 			actualid = j;
 			break;
