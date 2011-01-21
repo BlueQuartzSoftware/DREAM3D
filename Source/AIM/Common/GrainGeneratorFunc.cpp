@@ -608,6 +608,12 @@ void  GrainGeneratorFunc::insert_grain(size_t gnum)
   ymax = int(row+((radcur1/resy)+1));
   zmin = int(plane-((radcur1/resz)+1));
   zmax = int(plane+((radcur1/resz)+1));
+  if(xmin < -xpoints) xmin = -xpoints;
+  if(xmax > (2*xpoints-1)) xmax = (2*xpoints-1);
+  if(ymin < -ypoints) ymin = -ypoints;
+  if(ymax > (2*ypoints-1)) ymax = (2*ypoints-1);
+  if(zmin < -zpoints) zmin = -zpoints;
+  if(zmax > (2*zpoints-1)) zmax = (2*zpoints-1);
   for(int iter1 = xmin; iter1 < xmax+1; iter1++)
   {
 	  for(int iter2 = ymin; iter2 < ymax+1; iter2++)
@@ -995,6 +1001,7 @@ int  GrainGeneratorFunc::pack_grains(const std::string &filename, int numgrains)
   currentsizedisterror = 0, oldsizedisterror = 0;
   double addcost, removecost;
   int acceptedmoves = 0;
+  double acceptableerror = 0.0;
   rg.RandomInit((static_cast<unsigned int > (time(NULL))));
   // std::vector<int>* nlist;
   activegrainlist.resize(numgrains + 1);
@@ -1047,7 +1054,8 @@ int  GrainGeneratorFunc::pack_grains(const std::string &filename, int numgrains)
 	change1 = 0;
 	change2 = 0;
 	change3 = 0;
-    int option = iteration % 4;
+	acceptableerror = 15*exp(-0.03/((2.6*pow(10,-8.0))*(250000-iteration)));
+	int option = iteration % 4;
 	if(iteration%50 == 0) outFile << oldfillingerror << "	" << oldsizedisterror << "	" << oldneighborhooderror << "	" << acceptedmoves << endl;
     if (option == 0)
     {
@@ -1068,7 +1076,7 @@ int  GrainGeneratorFunc::pack_grains(const std::string &filename, int numgrains)
       if(fillingerrorweight > 0 && oldfillingerror < 0) change1 = -change1;
       if(sizedisterrorweight > 0) change2 = (currentsizedisterror - oldsizedisterror) / oldsizedisterror;
       if(neighborhooderrorweight > 0) change3 = (currentneighborhooderror - oldneighborhooderror) / oldneighborhooderror;
-      if (fillingerrorweight*change1 + sizedisterrorweight*change2 + neighborhooderrorweight*change3 <= 0.0)
+      if (fillingerrorweight*change1 + sizedisterrorweight*change2 + neighborhooderrorweight*change3 <= acceptableerror)
       {
         grains[random].active = 1;
         add_grain(random);
@@ -1094,7 +1102,7 @@ int  GrainGeneratorFunc::pack_grains(const std::string &filename, int numgrains)
       if(fillingerrorweight > 0 && oldfillingerror < 0) change1 = -change1;
       if(sizedisterrorweight > 0) change2 = (currentsizedisterror - oldsizedisterror) / oldsizedisterror;
       if(neighborhooderrorweight > 0) change3 = (currentneighborhooderror - oldneighborhooderror) / oldneighborhooderror;
-      if (fillingerrorweight*change1 + sizedisterrorweight*change2 + neighborhooderrorweight*change3 <= 0.0)
+      if (fillingerrorweight*change1 + sizedisterrorweight*change2 + neighborhooderrorweight*change3 <= acceptableerror)
       {
         grains[random].active = 0;
         remove_grain(random);
@@ -1129,7 +1137,7 @@ int  GrainGeneratorFunc::pack_grains(const std::string &filename, int numgrains)
       if(fillingerrorweight > 0 && oldfillingerror < 0) change1 = -change1;
       if(sizedisterrorweight > 0) change2 = (currentsizedisterror - oldsizedisterror) / oldsizedisterror;
       if(neighborhooderrorweight > 0) change3 = (currentneighborhooderror - oldneighborhooderror) / oldneighborhooderror;
-      if (fillingerrorweight*change1 + sizedisterrorweight*change2 + neighborhooderrorweight*change3 <= 0.0)
+      if (fillingerrorweight*change1 + sizedisterrorweight*change2 + neighborhooderrorweight*change3 <= acceptableerror)
       {
         grains[random].active = 1;
         grains[random1].active = 0;
@@ -1172,7 +1180,7 @@ int  GrainGeneratorFunc::pack_grains(const std::string &filename, int numgrains)
         if(fillingerrorweight > 0 && oldfillingerror < 0) change1 = -change1;
         if(sizedisterrorweight > 0) change2 = (currentsizedisterror - oldsizedisterror) / oldsizedisterror;
         if(neighborhooderrorweight > 0) change3 = (currentneighborhooderror - oldneighborhooderror) / oldneighborhooderror;
-        if (fillingerrorweight*change1 + sizedisterrorweight*change2 + neighborhooderrorweight*change3 <= 0.0)
+        if (fillingerrorweight*change1 + sizedisterrorweight*change2 + neighborhooderrorweight*change3 <= acceptableerror)
         {
           grains[random].active = 1;
           grains[random1].active = 0;
@@ -1478,10 +1486,12 @@ void  GrainGeneratorFunc::fill_gaps(int numgrains)
   vector<int> neighs;
   vector<int> remove;
   vector<int> gsizes;
+  vector<int> accept;
 //  vector<int>* voxellist;
   int count = 1;
   int good = 1;
   double x, y, z;
+  accept.resize(numgrains,1);
   gsizes.resize(numgrains,0);
   int neighpoint;
   int neighbors[6];
@@ -1572,78 +1582,6 @@ void  GrainGeneratorFunc::fill_gaps(int numgrains)
   int current = 0;
   int most = 0;
   int curgrain = 0;
- // int checkcount = 0;
-  while(count != 0)
-  {
-    count = 0;
-    for(int i = 0; i < (xpoints*ypoints*zpoints); i++)
-    {
-      int grainname = voxels[i].grainname;
-      if(grainname == 0)
-      {
-	    testcount++;
-		voxels[i].unassigned = 1;
-        for(int c = 1; c < numgrains; c++)
-        {
-          n[c] = 0;
-        }
-	    x = i%xpoints;
-		y = (i/xpoints)%ypoints;
-	    z = i/(xpoints*ypoints);
-		for(int j=0;j<6;j++)
-		{
-			good = 1;
-			neighpoint = i+neighbors[j];
-		    if(j == 0 && z == 0) good = 0;
-		    if(j == 5 && z == (zpoints-1)) good = 0;
-		    if(j == 1 && y == 0) good = 0;
-		    if(j == 4 && y == (ypoints-1)) good = 0;
-		    if(j == 2 && x == 0) good = 0;
-		    if(j == 3 && x == (xpoints-1)) good = 0;
-			if(good == 1)
-	        {
-				int grain = voxels[neighpoint].grainname;
-				if(grain > 0)
-				{
-					neighs.push_back(grain);
-				}
-			}
-        }
-        size = int(neighs.size());
-		current = 0;
-		most = 0;
-		curgrain = -1;
-        for(int k=0;k<size;k++)
-        {
-          int neighbor = neighs[k];
-          n[neighbor]++;
-          current = n[neighbor];
-		  if(current > most && (gsizes[neighbor]*resx*resy*resz) < (1.3333*m_pi*pow((grains[neighbor].equivdiameter/2.0),3)))
-          {
-			most = current;
-	        curgrain = neighbor;
-          }
-        }
-        if(size > 0 && curgrain > 0)
-        {
-          voxels[i].neighbor = curgrain;
-          neighs.clear();
-        }
-      }
-    }
-    for(int j = 0; j < (xpoints*ypoints*zpoints); j++)
-    {
-      int grainname = voxels[j].grainname;
-      int neighbor = voxels[j].neighbor;
-      if(grainname == 0 && neighbor > 0)
-      {
-		count++;
-        voxels[j].grainname = neighbor;
-		gsizes[neighbor]++;
-      }
-    }
-  }
-  count = 1;
   while(count != 0)
   {
     count = 0;
