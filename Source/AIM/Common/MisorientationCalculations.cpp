@@ -67,6 +67,7 @@ double MisorientationCalculations::getMisoQuatCubic(double q1[5],double q2[5],do
   double wmin=9999999.0; //,na,nb,nc;
   double qc[4];
   double qco[4];
+  double axis[3];
   double sin_wmin_over_2 = 0.0;
   double _1, _2,  _6;
 
@@ -123,6 +124,24 @@ double MisorientationCalculations::getMisoQuatCubic(double q1[5],double q2[5],do
   n1 = qco[0] / sin_wmin_over_2;
   n2 = qco[1] / sin_wmin_over_2;
   n3 = qco[2] / sin_wmin_over_2;
+  if ( n1 >= n2 && n1 >= n3)
+  {
+     axis[0] = n1;
+     if (n2 > n3) { axis[1] = n2; axis[2] = n3; }
+     else { axis[1] = n3; axis[2] = n2; }
+  }
+  else if ( n2 >= n1 && n2 >= n3)
+  {
+     axis[0] = n2;
+     if (n1 > n3) { axis[1] = n1; axis[2] = n3; }
+     else { axis[1] = n3; axis[2] = n1; }
+  }
+  else if ( n1 >= n2 )
+  {
+     axis[1] = n1; axis[2] = n2; axis[0] = n3;
+  }
+  else { axis[2] = n1; axis[1] = n2; axis[0] = n3;}
+  if(wmin == 0) axis[0] = 0.0, axis[1] = 0.0, axis[2] = 0.0;
   wmin = (threesixty_over_pi) * wmin;
   return wmin;
 }
@@ -157,6 +176,29 @@ double MisorientationCalculations::getMisoQuatHexagonal(double q1[5],double q2[5
       n2min = n2;
       n3min = n3;
     }
+  }
+  n1 = fabs(n1min);
+  n2 = fabs(n2min);
+  n3 = fabs(n3min);
+  double newangle = 0;
+  double angle = 180*atan(n2/n1)/m_pi;
+  if(angle > 30.0)
+  {
+	if(int(angle/30)%2 == 0)
+	{
+		newangle = angle - (30*int(angle/30));
+		newangle = newangle*m_pi/180.0;
+		n1 = cos(newangle);
+		n2 = sin(newangle);
+	}
+	if(int(angle/30)%2 == 1)
+	{
+		newangle = angle - (30*int(angle/30));
+		newangle = 30 - newangle;
+		newangle = newangle*m_pi/180.0;
+		n1 = cos(newangle);
+		n2 = sin(newangle);
+	}
   }
   wmin = (180.0 / m_pi) * wmin;
   return wmin;

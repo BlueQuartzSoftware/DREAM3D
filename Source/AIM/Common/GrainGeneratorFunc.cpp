@@ -3084,7 +3084,6 @@ void  GrainGeneratorFunc::measure_misorientations ()
   double n3;
   double q1[5];
   double q2[5];
-  double axis[3];
   double denom;
   double degtorad = m_pi/180.0;
   int miso1bin, miso2bin, miso3bin;
@@ -3127,27 +3126,9 @@ void  GrainGeneratorFunc::measure_misorientations ()
 	  n1 = n1/denom;
 	  n2 = n2/denom;
 	  n3 = n3/denom;
-      if ( n1 >= n2 && n1 >= n3)
-      {
-        axis[0] = n1;
-        if (n2 > n3) { axis[1] = n2; axis[2] = n3; }
-        else { axis[1] = n3; axis[2] = n2; }
-      }
-      else if ( n2 >= n1 && n2 >= n3)
-      {
-        axis[0] = n2;
-        if (n1 > n3) { axis[1] = n1; axis[2] = n3; }
-        else { axis[1] = n3; axis[2] = n1; }
-      }
-      else if ( n1 >= n2 )
-      {
-        axis[1] = n1; axis[2] = n2; axis[0] = n3;
-      }
-      else { axis[2] = n1; axis[1] = n2; axis[0] = n3;}
-	  misolist[3*j] = axis[0]*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
-      misolist[3*j+1] = axis[1]*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
-      misolist[3*j+2] = axis[2]*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
-	  if(w == 0) axis[0] = 0.0, axis[1] = 0.0, axis[2] = 0.0;
+	  misolist[3*j] = n1*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
+      misolist[3*j+1] = n2*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
+      misolist[3*j+2] = n3*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
 	  miso1bin = int(misolist[3*j]*18.0/dim);
 	  miso2bin = int(misolist[3*j+1]*18.0/dim);
 	  miso3bin = int(misolist[3*j+2]*18.0/dim);
