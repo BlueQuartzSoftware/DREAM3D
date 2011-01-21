@@ -81,11 +81,13 @@ class StatsGenPlotWidget : public QWidget, private Ui::StatsGenPlotWidget
     void createLogNormalCurve(int tableRow, double &xMax, double &yMax);
     void createPowerCurve(int tableRow, double &xMax, double &yMax);
 
-    void setBins(QVector<int > &binNumbers);
+    void setBins(QVector<double> &binNumbers);
+    bool userUpdatedData();
 
   protected slots:
     void updatePlotCurves();
-
+    void userCommittedData(QWidget* w);
+    // Auto Hook up Slots
     void on_addRowBtn_clicked();
     void on_deleteRowBtn_clicked();
     void on_distributionTypeCombo_currentIndexChanged(int index);
@@ -103,6 +105,7 @@ class StatsGenPlotWidget : public QWidget, private Ui::StatsGenPlotWidget
     QwtPlotGrid* m_grid;
     AIM::Reconstruction::DistributionType m_DistributionType;
     AIM::Reconstruction::StatisticsType    m_StatsType;
+    bool m_UserUpdatedData;
 
     QVector<QwtPlotCurve* > m_PlotCurves;
 

@@ -85,11 +85,11 @@ Q_OBJECT    ;
 
     QAbstractItemDelegate* getItemDelegate();
 
-    void setBinNumbers(QVector<int> binNumbers);
+    void setBinNumbers(QVector<double> binNumbers);
 
-    QVector<qint32>& getBinNumbers()
+    QVector<double>& getBinNumbers()
     { return m_BinNumbers;}
-    qint32 getBinNumber(qint32 row)
+    double getBinNumber(qint32 row)
     { return m_BinNumbers[row];}
 
     QVector<QString>& getColors()
@@ -114,7 +114,7 @@ Q_OBJECT    ;
     int m_ColumnCount;
     int m_RowCount;
 
-    QVector<qint32> m_BinNumbers;
+    QVector<double> m_BinNumbers;
     QVector<double> m_Alpha;
     QVector<double> m_Beta;
     QVector<QString> m_Colors;

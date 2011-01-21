@@ -253,7 +253,7 @@ bool SGPowerLawTableModel::setData(const QModelIndex & index, const QVariant & v
   switch(col)
   {
     case BinNumber:
-      m_BinNumbers[row] = value.toInt(&ok);
+      m_BinNumbers[row] = value.toDouble(&ok);
       break;
     case Alpha:
       m_Alpha[row] = value.toDouble(&ok);
@@ -371,7 +371,7 @@ double SGPowerLawTableModel::getDataValue(int col, int row)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SGPowerLawTableModel::setBinNumbers(QVector<int > binNumbers)
+void SGPowerLawTableModel::setBinNumbers(QVector<double> binNumbers)
 {
 
   qint32 count = binNumbers.count();
