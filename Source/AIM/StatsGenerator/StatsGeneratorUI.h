@@ -58,7 +58,9 @@ Q_OBJECT    ;
     virtual ~StatsGeneratorUI();
 
     void plotSizeDistribution();
-    int computeBinsAndCutOffs( QwtArray<int> &binsizes, QwtArray<double> &xCo, QwtArray<double> &yCo,
+    void updateSizeDistributionPlot();
+    int computeBinsAndCutOffs( QwtArray<double> &binsizes,
+                               QwtArray<double> &xCo, QwtArray<double> &yCo,
                                double &xMax, double &yMax,
                                QwtArray<double> &x, QwtArray<double> &y);
 
@@ -79,8 +81,9 @@ Q_OBJECT    ;
     void on_m_Mu_SizeDistribution_textChanged(const QString &text);
     void on_m_Sigma_SizeDistribution_textChanged(const QString &text);
     void on_m_SigmaCutOff_SizeDistribution_textChanged(const QString &text);
+    void on_m_BinStepSize_valueChanged(double v);
 
-    void on_m_UpdateSizeDistribution_clicked();
+    void on_m_GenerateDefaultData_clicked();
 
 
 

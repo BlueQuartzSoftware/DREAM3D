@@ -165,20 +165,20 @@ Q_OBJECT    ;
      *
      * @param binNumbers
      */
-    virtual void setBinNumbers(QVector<int> binNumbers) = 0;
+    virtual void setBinNumbers(QVector<double> binNumbers) = 0;
 
     /**
      *
      * @return
      */
-    virtual QVector<qint32>& getBinNumbers() = 0;
+    virtual QVector<double>& getBinNumbers() = 0;
 
     /**
      *
      * @param row
      * @return
      */
-    virtual qint32 getBinNumber(qint32 row) = 0;
+    virtual double getBinNumber(qint32 row) = 0;
 
     /**
      *

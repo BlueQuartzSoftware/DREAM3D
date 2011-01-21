@@ -235,7 +235,7 @@ bool SGBetaTableModel::setData(const QModelIndex & index, const QVariant & value
   switch(col)
   {
     case BinNumber:
-      m_BinNumbers[row] = value.toInt(&ok);
+      m_BinNumbers[row] = value.toDouble(&ok);
       break;
     case Alpha:
       m_Alpha[row] = value.toDouble(&ok);
@@ -344,11 +344,11 @@ double SGBetaTableModel::getDataValue(int col, int row)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SGBetaTableModel::setBinNumbers(QVector<int > binNumbers)
+void SGBetaTableModel::setBinNumbers(QVector<double> binNumbers)
 {
 
   qint32 count = binNumbers.count();
-  
+
   // Remove all the current rows in the table model
   removeRows(0, rowCount());
 
