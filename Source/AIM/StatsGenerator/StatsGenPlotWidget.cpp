@@ -36,6 +36,7 @@
 
 //-- Qt Includes
 #include <QtGui/QMessageBox>
+#include <QtGui/QAbstractItemDelegate>
 
 //-- Qwt Includes
 #include <qwt.h>
@@ -66,7 +67,8 @@ QWidget(parent), m_TableModel(NULL),
 //m_zoomer(NULL), m_picker(NULL), m_panner(NULL),
 m_grid(NULL),
 m_DistributionType(AIM::Reconstruction::UnknownDistributionType),
-m_StatsType(AIM::Reconstruction::UnknownStatisticsGroup)
+m_StatsType(AIM::Reconstruction::UnknownStatisticsGroup),
+m_UserUpdatedData(false)
 {
   this->setupUi(this);
   this->setupGui();
@@ -121,17 +123,6 @@ int StatsGenPlotWidget::writeDataToHDF5(H5ReconStatsWriter::Pointer writer, cons
     return -1;
   }
 
-
-//  QVector<int> binNumbers = m_TableModel->getBinNumbers();
-//  int mindiameter = std::numeric_limits<int >::max();
-//  int maxdiameter = std::numeric_limits<int >::min();
-// // std::cout << "Bin#" << std::endl;
-//  size_t numsizebins = binNumbers.size();
-//  for (size_t i = 0; i < numsizebins; ++i)
-//  {
-//    if (binNumbers[i] < mindiameter) { mindiameter = binNumbers[i]; }
-//    if (binNumbers[i] > maxdiameter) { maxdiameter = binNumbers[i]; }
-//  }
   std::vector<double> col0;
   std::vector<double> col1;
   std::vector<double> col2;
@@ -174,7 +165,7 @@ int StatsGenPlotWidget::writeDataToHDF5(H5ReconStatsWriter::Pointer writer, cons
 // -----------------------------------------------------------------------------
 void StatsGenPlotWidget::resetTableModel()
 {
-  QVector<qint32> bins;
+  QVector<double> bins;
   // Get a copy of the bins from the current TableModel if available
   if (NULL != m_TableModel)
   {
@@ -185,23 +176,25 @@ void StatsGenPlotWidget::resetTableModel()
   // Create a new Table Model
   switch(m_DistributionType)
   {
-  case AIM::Reconstruction::Beta:
-    m_TableModel = new SGBetaTableModel;
-    break;
-  case AIM::Reconstruction::LogNormal:
-    m_TableModel = new SGLogNormalTableModel;
-    break;
-  case AIM::Reconstruction::Power:
-    m_TableModel = new SGPowerLawTableModel;
-    break;
+    case AIM::Reconstruction::Beta:
+      m_TableModel = new SGBetaTableModel;
+      break;
+    case AIM::Reconstruction::LogNormal:
+      m_TableModel = new SGLogNormalTableModel;
+      break;
+    case AIM::Reconstruction::Power:
+      m_TableModel = new SGPowerLawTableModel;
+      break;
 
-  default:
-    return;
+    default:
+      return;
   }
 
 
   m_TableView->setModel(m_TableModel);
-  m_TableView->setItemDelegate(m_TableModel->getItemDelegate());
+  QAbstractItemDelegate* aid = m_TableModel->getItemDelegate();
+
+  m_TableView->setItemDelegate(aid);
   setBins(bins);
 
   connect(m_TableModel, SIGNAL(layoutChanged()),
@@ -209,8 +202,19 @@ void StatsGenPlotWidget::resetTableModel()
   connect(m_TableModel, SIGNAL(dataChanged(const QModelIndex &, const QModelIndex &)),
     this, SLOT(updatePlotCurves()));
 
+  connect(aid, SIGNAL(commitData(QWidget*)),
+          this, SLOT(userCommittedData(QWidget*)));
+
   // Update the plots
   updatePlotCurves();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void StatsGenPlotWidget::userCommittedData(QWidget* w)
+{
+  m_UserUpdatedData = true;
 }
 
 // -----------------------------------------------------------------------------
@@ -262,9 +266,9 @@ void StatsGenPlotWidget::setYAxisName(QString name)
 void StatsGenPlotWidget::setupGui()
 {
 
-  distributionTypeCombo->addItem(QString("Beta"));
-  distributionTypeCombo->addItem(QString("Log Normal"));
-  distributionTypeCombo->addItem(QString("Power Law"));
+  distributionTypeCombo->addItem(AIM::HDF5::BetaDistribution.c_str());
+  distributionTypeCombo->addItem(AIM::HDF5::LogNormalDistribution.c_str());
+  distributionTypeCombo->addItem(AIM::HDF5::PowerLawDistribution.c_str());
 
   // Setup the TableView and Table Models
   QHeaderView* headerView = new QHeaderView(Qt::Horizontal, m_TableView);
@@ -349,6 +353,15 @@ void StatsGenPlotWidget::updatePlotCurves()
     }
   }
   m_PlotView->replot();
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+bool StatsGenPlotWidget::userUpdatedData()
+{
+  return m_UserUpdatedData;
 }
 
 // -----------------------------------------------------------------------------
@@ -479,8 +492,45 @@ void StatsGenPlotWidget::setRowOperationEnabled(bool b)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void StatsGenPlotWidget::setBins(QVector<int > &binNumbers)
+void StatsGenPlotWidget::setBins(QVector<double> &binNumbers)
 {
+#if 1
+  if (m_UserUpdatedData == true)
+  {
+    QString msg = "The Statistics Group '";
+
+    switch(m_StatsType)
+    {
+      case AIM::Reconstruction::Grain_SizeVBoverA:
+        msg.append(AIM::HDF5::Grain_SizeVBoverA_Distributions.c_str());
+        break;
+      case AIM::Reconstruction::Grain_SizeVCoverA:
+        msg.append(AIM::HDF5::Grain_SizeVCoverA_Distributions.c_str());
+        break;
+      case AIM::Reconstruction::Grain_SizeVCoverB:
+        msg.append(AIM::HDF5::Grain_SizeVCoverB_Distributions.c_str());
+          break;
+      case AIM::Reconstruction::Grain_SizeVNeighbors:
+        msg.append(AIM::HDF5::Grain_SizeVNeighbors_Distributions.c_str());
+        break;
+      case AIM::Reconstruction::Grain_SizeVOmega3:
+        msg.append(AIM::HDF5::Grain_SizeVOmega3_Distributions.c_str());
+        break;
+      default:
+        msg.append("Unknown");
+    }
+    msg.append("' has user modified data. Do you want to over write the data with the new bins?");
+
+
+
+    QMessageBox::critical(this,
+                          tr("Stats Generator"),
+                          msg, QMessageBox::Ok
+        | QMessageBox::Cancel, QMessageBox::Ok);
+    return;
+  }
+#endif
+  m_UserUpdatedData = false;
   m_TableModel->setBinNumbers(binNumbers);
   m_TableView->resizeColumnsToContents();
   m_TableView->scrollToBottom();
