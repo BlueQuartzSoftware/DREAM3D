@@ -46,101 +46,26 @@ StatsGen::~StatsGen()
 {
 }
 
-#if 0
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int StatsGen::GenBeta(double p, double q, std::vector<float> &x, std::vector<float> &y, int size)
+int StatsGen::computeNumberOfBins(double mu, double sigma, double cutoff,
+                                  double binstep, double &max, double &min)
 {
-	int err=0;
-	double value, gammapq, gammap, gammaq, betain, betaout;
-	x.resize(size);
-	y.resize(size);
-	value = p;
-	gammap = gamma(value);
-	value = q;
-	gammaq = gamma(value);
-	value = p+q;
-	gammapq = gamma(value);
-	for(int i=0;i<size;i++)
-	{
-		betain = (i*(1.0/double(size)))+((1.0/double(size))/2.0);
-		betaout = (gammapq/(gammap*gammaq))*pow(betain,(p-1))*pow((1-betain),(q-1));
-		x[i] = betain;
-		y[i] = betaout*(1.0/double(size));
-		if(betaout < 0) err = 1;
-	}
-	return err;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int StatsGen::GenLogNormal(double m, double s, std::vector<float> &x, std::vector<float> &y, int size)
-{
-	int err=0;
-	double lognormin, lognormout, max, min;
-	double s2 = pow(s,2);
-	double root2pi = pow((2.0*3.1415926535897),0.5);
-	x.resize(size);
-	y.resize(size);
-	min = exp(m - (10*s));
-	max = exp(m + (10*s));
-	for(int i=0;i<size;i++)
-	{
-		lognormin = (i*((max-min)/double(size)))+(((max-min)/double(size))/2.0);
-		lognormout = (1.0/(lognormin*s*root2pi))*exp(-((log(lognormin)-m)*(log(lognormin)-m))/(2*s2));
-		x[i] = lognormin;
-		y[i] = lognormout*((max-min)/double(size));
-		if(lognormout < 0) err = 1;
-	}
-	return err;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int StatsGen::GenCutOff(double m, double s, double value, std::vector<int> &cutoffs)
-{
-	int err=0;
-	double max, min;
-	cutoffs.resize(2);
-	min = exp(m - (value*s));
-	max = exp(m + (value*s));
-	cutoffs[0] = min;
-	cutoffs[1] = max;
-	return err;
-}
-#endif
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int StatsGen::computeNumberOfBins(double mu, double sigma, double cutoff)
-{
-  int numsizebins = 0;
-  double  max, min;
-
   min = exp(mu - (cutoff * sigma));
   max = exp(mu + (cutoff * sigma));
-
-
-  numsizebins = int(max) - int(min) + 1;
-  return numsizebins;
+  return static_cast<int>((max -min)/binstep + 1.0);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int StatsGen::computeNumberOfBins(float mu, float sigma, float cutoff)
+int StatsGen::computeNumberOfBins(float mu, float sigma, float cutoff,
+                                  float binstep, float &max, float &min)
 {
-  int numsizebins = 0;
-  double  max, min;
   min = expf(mu - (cutoff * sigma));
   max = expf(mu + (cutoff * sigma));
-  numsizebins = int(max) - int(min) + 1;
-  return numsizebins;
+  return static_cast<int>((max -min)/binstep + 1.0);
 }
 
 // -----------------------------------------------------------------------------
