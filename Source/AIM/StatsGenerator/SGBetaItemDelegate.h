@@ -157,6 +157,7 @@ class SGBetaItemDelegate : public QStyledItemDelegate
         model->setData(index, comboBox->currentText());
       }
       else QStyledItemDelegate::setModelData(editor, model, index);
+
     }
 
   private:

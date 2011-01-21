@@ -121,35 +121,60 @@ class StatsGen
     }
 
 
-    int computeNumberOfBins(double mu, double sigma, double cutoff);
-    int computeNumberOfBins(float mu, float sigma, float cutoff);
+    /**
+     * @brief Calculates the number of bins using 64 bit floating point values
+     * @param mu
+     * @param sigma
+     * @param cutoff
+     * @param binstep
+     * @return
+     */
+    int computeNumberOfBins(double mu, double sigma, double cutoff, double binstep, double &max, double &min);
 
-    template<typename J, typename T, typename K>
-    int GenCutOff(J mu, J sigma, J cutoff,
+    /**
+     * @brief Calculates the number of bins using 32 bit floating point values
+     * @param mu
+     * @param sigma
+     * @param cutoff
+     * @param binstep
+     * @return
+     */
+    int computeNumberOfBins(float mu, float sigma, float cutoff, float binstep, float &max, float &min);
+
+
+    /**
+     * @brief Generates the CutOff values
+     * @param mu
+     * @param sigma
+     * @param cutoff
+     * @param x
+     * @param y
+     * @param yMax
+     * @param numsizebins
+     * @param binsizes
+     * @return
+     */
+    template<typename J, typename T>
+    int GenCutOff(J mu, J sigma, J cutoff, J binstep,
                   T &x, T &y, J yMax,
-                  int &numsizebins, K &binsizes)
+                  int &numsizebins, T &binsizes)
     {
-      int err = 0;
       J max, min;
-      J s2 = pow(sigma, 2);
-      J root2pi = pow((2.0 * 3.1415926535897), 0.5);
+      numsizebins = computeNumberOfBins(mu, sigma, cutoff, binstep, max, min);
+      int err = 0;
       x.resize(2);
       y.resize(2);
-      min = exp(mu - (cutoff * sigma));
-      max = exp(mu + (cutoff * sigma));
+
       x[0] = min;
       x[1] = max;
 
       y[0] = 0.0;
       y[1] = yMax;
 
-      numsizebins = int(max) - int(min) + 1;
       binsizes.resize(numsizebins);
       for (int i = 0; i < numsizebins; i++)
       {
-        binsizes[i] = int(min) + i;
-        //lognormin = (int(min) + i) + (1.0 / 2.0);
-        //lognormout = (1.0 / (lognormin * sigma * root2pi)) * exp(-((log(lognormin) - mu) * (log(lognormin) - mu)) / (2 * s2));
+        binsizes[i] = min + (i*binstep);
       }
       return err;
     }

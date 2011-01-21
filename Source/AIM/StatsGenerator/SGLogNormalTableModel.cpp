@@ -235,7 +235,7 @@ bool SGLogNormalTableModel::setData(const QModelIndex & index, const QVariant & 
   switch(col)
   {
     case BinNumber:
-      m_BinNumbers[row] = value.toInt(&ok);
+      m_BinNumbers[row] = value.toDouble(&ok);
       break;
     case Average:
       m_Average[row] = value.toDouble(&ok);
@@ -343,7 +343,7 @@ double SGLogNormalTableModel::getDataValue(int col, int row)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SGLogNormalTableModel::setBinNumbers(QVector<int > binNumbers)
+void SGLogNormalTableModel::setBinNumbers(QVector<double> binNumbers)
 {
 
   qint32 count = binNumbers.count();

@@ -164,6 +164,10 @@ void StatsGeneratorUI::writeSettings()
 // -----------------------------------------------------------------------------
 void StatsGeneratorUI::setupGui()
 {
+  distributionTypeCombo->addItem(AIM::HDF5::BetaDistribution.c_str());
+  distributionTypeCombo->addItem(AIM::HDF5::LogNormalDistribution.c_str());
+  distributionTypeCombo->addItem(AIM::HDF5::PowerLawDistribution.c_str());
+  distributionTypeCombo->setCurrentIndex(AIM::Reconstruction::LogNormal);
   // Turn off all the plot widgets
   setTabsPlotTabsEnabled(false);
 
@@ -258,7 +262,7 @@ void StatsGeneratorUI::setupGui()
   m_grid->setMinPen(QPen(Qt::lightGray, 0, Qt::DotLine));
   m_grid->attach(m_SizeDistributionPlot);
 
-  plotSizeDistribution();
+  updateSizeDistributionPlot();
   calculateNumberOfBins();
 }
 
@@ -467,9 +471,9 @@ void StatsGeneratorUI::on_actionSave_triggered()
 
   H5ReconStatsWriter::Pointer writer = H5ReconStatsWriter::New(m_FilePath.toStdString());
 
-  QwtArray<double > xCo;
-  QwtArray<double > yCo;
-  QwtArray<int > binsizes;
+  QwtArray<double> xCo;
+  QwtArray<double> yCo;
+  QwtArray<double> binsizes;
   double xMax = std::numeric_limits<double >::min();
   double yMax = std::numeric_limits<double >::min();
   QwtArray<double> x;
@@ -479,8 +483,8 @@ void StatsGeneratorUI::on_actionSave_triggered()
 
 
   // We need to compute the Max and Min Diameter Bin Values
-  int mindiameter = std::numeric_limits<int >::max();
-  int maxdiameter = std::numeric_limits<int >::min();
+  double mindiameter = std::numeric_limits<double>::max();
+  double maxdiameter = std::numeric_limits<double>::min();
  // std::cout << "Bin#" << std::endl;
   size_t numsizebins = binsizes.size();
   for (size_t i = 0; i < numsizebins; ++i)
@@ -494,9 +498,10 @@ void StatsGeneratorUI::on_actionSave_triggered()
   bool ok = false;
   double avglogdiam = m_Mu_SizeDistribution->text().toDouble(&ok);
   double sdlogdiam = m_Sigma_SizeDistribution->text().toDouble(&ok);
+  double stepSize = m_BinStepSize->value();
 
   size_t nBins = 0;
-  err = writer->writeSizeDistribution(maxdiameter, mindiameter, 1.0, avglogdiam, sdlogdiam, nBins);
+  err = writer->writeSizeDistribution(maxdiameter, mindiameter, stepSize, avglogdiam, sdlogdiam, nBins);
   CHECK_ERROR_ON_WRITE(err, "Size Distribution")
 
   // Now that we have bins and grain sizes, push those to the other plot widgets
@@ -520,19 +525,18 @@ void StatsGeneratorUI::on_actionSave_triggered()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void StatsGeneratorUI::on_m_UpdateSizeDistribution_clicked()
+void StatsGeneratorUI::on_m_GenerateDefaultData_clicked()
 {
   plotSizeDistribution();
 }
-
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void StatsGeneratorUI::on_m_Mu_SizeDistribution_textChanged(const QString &text)
 {
- // plotSizeDistribution();
- // m_Mu_SizeDistribution->setFocus();
+  updateSizeDistributionPlot();
+  m_Mu_SizeDistribution->setFocus();
   calculateNumberOfBins();
 }
 // -----------------------------------------------------------------------------
@@ -540,8 +544,8 @@ void StatsGeneratorUI::on_m_Mu_SizeDistribution_textChanged(const QString &text)
 // -----------------------------------------------------------------------------
 void StatsGeneratorUI::on_m_Sigma_SizeDistribution_textChanged(const QString &text)
 {
- // plotSizeDistribution();
- // m_Sigma_SizeDistribution->setFocus();
+  updateSizeDistributionPlot();
+  m_Sigma_SizeDistribution->setFocus();
   calculateNumberOfBins();
 }
 
@@ -550,8 +554,19 @@ void StatsGeneratorUI::on_m_Sigma_SizeDistribution_textChanged(const QString &te
 // -----------------------------------------------------------------------------
 void StatsGeneratorUI::on_m_SigmaCutOff_SizeDistribution_textChanged(const QString &text)
 {
+  updateSizeDistributionPlot();
+  m_SigmaCutOff_SizeDistribution->setFocus();
   calculateNumberOfBins();
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void StatsGeneratorUI::on_m_BinStepSize_valueChanged(double v)
+{
+  calculateNumberOfBins();
+}
+
 
 // -----------------------------------------------------------------------------
 //
@@ -562,6 +577,8 @@ void StatsGeneratorUI::calculateNumberOfBins()
   double mu = 1.0;
   double sigma = 1.0;
   double cutOff = 1.0;
+  double stepSize = 1.0;
+  double max, min; // Only needed for the method. Not used otherwise.
   mu = m_Mu_SizeDistribution->text().toDouble(&ok);
   if (ok == false)
   {
@@ -577,15 +594,20 @@ void StatsGeneratorUI::calculateNumberOfBins()
   {
     return;
   }
+  stepSize = m_BinStepSize->text().toDouble(&ok);
+  if (ok == false)
+  {
+    return;
+  }
   StatsGen sg;
-  int n = sg.computeNumberOfBins(mu, sigma, cutOff);
+  int n = sg.computeNumberOfBins(mu, sigma, cutOff, stepSize, max, min);
   m_NumberBinsGenerated->setText(QString::number(n));
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int StatsGeneratorUI::computeBinsAndCutOffs( QwtArray<int> &binsizes, QwtArray<double> &xCo, QwtArray<double> &yCo,
+int StatsGeneratorUI::computeBinsAndCutOffs( QwtArray<double> &binsizes, QwtArray<double> &xCo, QwtArray<double> &yCo,
                                              double &xMax, double &yMax,
                                              QwtArray<double> &x, QwtArray<double> &y)
 {
@@ -593,30 +615,33 @@ int StatsGeneratorUI::computeBinsAndCutOffs( QwtArray<int> &binsizes, QwtArray<d
   double mu = 1.0;
   double sigma = 1.0;
   double cutOff = 1.0;
+  double binStepSize = 1.0;
   int err = 0;
   mu = m_Mu_SizeDistribution->text().toDouble(&ok);
   if (ok == false)
   {
-    //TODO: Present Error Message
     return -1;
   }
   sigma = m_Sigma_SizeDistribution->text().toDouble(&ok);
   if (ok == false)
   {
-    //TODO: Present Error Message
     return -1;
   }
   cutOff = m_SigmaCutOff_SizeDistribution->text().toDouble(&ok);
   if (ok == false)
   {
-    //TODO: Present Error Message
+    return -1;
+  }
+  binStepSize = m_BinStepSize->value();
+  if (ok == false)
+  {
     return -1;
   }
 
   int size = 100;
 
   StatsGen sg;
-  err = sg.GenLogNormal<QwtArray<double > > (mu, sigma, x, y, size);
+  err = sg.GenLogNormal<QwtArray<double> > (mu, sigma, x, y, size);
   if (err == 1)
   {
     //TODO: Present Error Message
@@ -643,7 +668,7 @@ int StatsGeneratorUI::computeBinsAndCutOffs( QwtArray<int> &binsizes, QwtArray<d
   int numsizebins = 1;
   binsizes.clear();
   // QwtArray<int> numgrains;
-  err = sg.GenCutOff<double, QwtArray<double> , QwtArray<int> > (mu, sigma, cutOff, xCo, yCo, yMax, numsizebins, binsizes);
+  err = sg.GenCutOff<double, QwtArray<double> > (mu, sigma, cutOff, binStepSize, xCo, yCo, yMax, numsizebins, binsizes);
 
 #if 0
   std::cout << "Cut Off Values" << std::endl;
@@ -680,22 +705,18 @@ void StatsGeneratorUI::adjustWindowTitle()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void StatsGeneratorUI::plotSizeDistribution()
+void StatsGeneratorUI::updateSizeDistributionPlot()
 {
   adjustWindowTitle();
-  QwtArray<double > xCo;
-  QwtArray<double > yCo;
-  QwtArray<int > binsizes;
+  QwtArray<double> xCo;
+  QwtArray<double> yCo;
+  QwtArray<double> binsizes;
   double xMax = std::numeric_limits<double >::min();
   double yMax = std::numeric_limits<double >::min();
   QwtArray<double> x;
   QwtArray<double> y;
   int err = computeBinsAndCutOffs(binsizes, xCo, yCo, xMax, yMax, x, y);
   if (err < 0) { return; }
-
-
-  // We have valid data so enable the other plot tabs
-  setTabsPlotTabsEnabled(true);
 
   if (NULL == m_SizeDistributionCurve)
   {
@@ -739,6 +760,26 @@ void StatsGeneratorUI::plotSizeDistribution()
   m_SizeDistributionPlot->setAxisScale(QwtPlot::yLeft, 0.0, yMax);
 
   m_SizeDistributionPlot->replot();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void StatsGeneratorUI::plotSizeDistribution()
+{
+  // We have valid data so enable the other plot tabs
+  setTabsPlotTabsEnabled(true);
+
+  adjustWindowTitle();
+  QwtArray<double> xCo;
+  QwtArray<double> yCo;
+  QwtArray<double> binsizes;
+  double xMax = std::numeric_limits<double >::min();
+  double yMax = std::numeric_limits<double >::min();
+  QwtArray<double> x;
+  QwtArray<double> y;
+  int err = computeBinsAndCutOffs(binsizes, xCo, yCo, xMax, yMax, x, y);
+  if (err < 0) { return; }
 
   // Now that we have bins and grain sizes, push those to the other plot widgets
   // Setup Each Plot Widget
