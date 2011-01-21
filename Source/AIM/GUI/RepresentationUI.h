@@ -59,6 +59,16 @@ class RepresentationUI : public QMainWindow, private Ui::RepresentationUI
     void on_oim_OutputFileBtn_clicked();
     void on_oim_GoBtn_clicked();
 
+    void on_oim_FilePrefix_textChanged(const QString &string);
+    void on_oim_FileSuffix_textChanged(const QString &string);
+    void on_oim_FileExt_textChanged(const QString &string);
+    void on_oim_TotalDigits_valueChanged(int value);
+    void on_oim_ZStartIndex_valueChanged(int value);
+    void on_oim_ZEndIndex_valueChanged(int value);
+
+
+
+
     /* Reconstruction Slots */
     void on_rec_OIMH5Btn_clicked();
     void on_rec_OutputDirBtn_clicked();
@@ -248,6 +258,7 @@ class RepresentationUI : public QMainWindow, private Ui::RepresentationUI
      * @brief Method to attempt the extraction of the .ang max slice value and prefix
      */
     void oim_findAngMaxSliceAndPrefix();
+    void oim_generateExampleOimInputFile();
 
     /**
      *

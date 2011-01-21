@@ -105,7 +105,7 @@ void ApplicationAboutBoxDialog::loadResourceFile(const QString qresourceFile)
   inputFile.close();
 
 //  appHelpText->append(line);
-  appHelpText->setPlainText(line);
+  appHelpText->setHtml(line);
   appHelpText->setUndoRedoEnabled(false);
   appHelpText->setUndoRedoEnabled(true);
 }

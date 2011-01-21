@@ -62,7 +62,10 @@ Q_OBJECT    ;
                                double &xMax, double &yMax,
                                QwtArray<double> &x, QwtArray<double> &y);
 
-    void dataChanged();
+    void adjustWindowTitle();
+
+    void calculateNumberOfBins();
+
 
     protected slots:
 
@@ -76,6 +79,10 @@ Q_OBJECT    ;
     void on_m_Mu_SizeDistribution_textChanged(const QString &text);
     void on_m_Sigma_SizeDistribution_textChanged(const QString &text);
     void on_m_SigmaCutOff_SizeDistribution_textChanged(const QString &text);
+
+    void on_m_UpdateSizeDistribution_clicked();
+
+
 
     protected:
 
