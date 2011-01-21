@@ -41,7 +41,7 @@
 
 #include "AIM/ANG/AngReader.h"
 #include "AIM/Common/Constants.h"
-#include "AIM/ANG/AngDirectoryPatterns.h"
+// #include "AIM/ANG/AngDirectoryPatterns.h"
 
 
 #ifdef AIM_USE_QT
@@ -86,6 +86,7 @@ H5AngImporter::H5AngImporter(
 QObject* parent
 #endif
 ) :
+//m_AngSeriesMaxSlice(0),
 m_ZStartIndex(0),
 m_ZEndIndex(0),
 m_ZResolution(1.0),
@@ -116,6 +117,7 @@ void H5AngImporter::run()
 void H5AngImporter::compute()
 {
   herr_t err = 0;
+#if 0
   int32_t sliceCount = 1;
   int32_t width = 0;
   int32_t totalSlices = m_AngSeriesMaxSlice;
@@ -127,8 +129,7 @@ void H5AngImporter::compute()
 
   m_InputDirectory = MXADir::toNativeSeparators(m_InputDirectory);
   AngDirectoryPatterns::Pointer p
-          = AngDirectoryPatterns::New(m_InputDirectory, m_AngFilePrefix, width);
-
+  = AngDirectoryPatterns::New(m_InputDirectory, m_AngFilePrefix, width);
 
   if (p.get() == NULL)
   {
@@ -138,6 +139,10 @@ void H5AngImporter::compute()
     progressMessage(s, 100);
     return;
   }
+#endif
+
+
+
   if (m_OutputFile.empty() == true)
   {
     std::string s("H5AngImport Error: The output file was not set correctly or is empty. The current value is '");
@@ -164,9 +169,34 @@ void H5AngImporter::compute()
   // Loop on Each Ang File
   float total = m_ZEndIndex - m_ZStartIndex;
   int progress = 0;
-  for (int z = m_ZStartIndex; z <= m_ZEndIndex; z++)
+  int z = m_ZStartIndex;
+
+  /* There is a fragilness about the z index and the file list. The programmer
+   * using this code MUST ensure that the list of files that is sent into this
+   * class is in the appropriate order to match up with the z index (slice index)
+   * otherwise the import will have subtle errors. The programmer is urged NOT to
+   * simply gather a list from the file system as those lists are sorted in such
+   * a way that if the number of digits appearing in the filename are NOT the same
+   * then the list will be wrong, ie, this example:
+   *
+   * slice_1.ang
+   * slice_2.ang
+   * ....
+   * slice_10.ang
+   *
+   * Most, if not ALL C++ libraries when asked for that list will return the list
+   * sorted like the folowing:
+   *
+   * slice_1.ang
+   * slice_10.ang
+   * slice_2.ang
+   *
+   * which is going to cause problems because the data is going to be placed
+   * into the HDF5 file at the wrong index. YOU HAVE BEEN WARNED.
+   */
+  for (std::vector<std::string>::iterator filepath = m_AngFileList.begin(); filepath != m_AngFileList.end(); ++filepath )
   {
-    std::string angFName = p->generateFullPathAngFileName(z);
+    std::string angFName = *filepath;
 
     CHECK_FOR_CANCELED(H5AngImporter)
     progress = z - m_ZStartIndex;
@@ -180,6 +210,7 @@ void H5AngImporter::compute()
       setCancel(true);
     }
     indices.push_back(z);
+    ++z;
   }
 
   if (false == m_Cancel) {

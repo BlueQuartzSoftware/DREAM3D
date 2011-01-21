@@ -4649,7 +4649,6 @@ double ReconstructionFunc::gamma(double x)
     return ga;
 }
 
-
 int ReconstructionFunc::writeHDF5GrainsFile(const std::string &hdfFile )
 {
   int err = -1;

@@ -120,13 +120,17 @@ class StatsGen
       return err;
     }
 
+
+    int computeNumberOfBins(double mu, double sigma, double cutoff);
+    int computeNumberOfBins(float mu, float sigma, float cutoff);
+
     template<typename J, typename T, typename K>
     int GenCutOff(J mu, J sigma, J cutoff,
                   T &x, T &y, J yMax,
                   int &numsizebins, K &binsizes)
     {
       int err = 0;
-      J lognormin, lognormout, max, min;
+      J max, min;
       J s2 = pow(sigma, 2);
       J root2pi = pow((2.0 * 3.1415926535897), 0.5);
       x.resize(2);
@@ -144,9 +148,8 @@ class StatsGen
       for (int i = 0; i < numsizebins; i++)
       {
         binsizes[i] = int(min) + i;
-        lognormin = (int(min) + i) + (1.0 / 2.0);
-        lognormout = (1.0 / (lognormin * sigma * root2pi)) * exp(-((log(lognormin) - mu) * (log(lognormin) - mu)) / (2 * s2));
-
+        //lognormin = (int(min) + i) + (1.0 / 2.0);
+        //lognormout = (1.0 / (lognormin * sigma * root2pi)) * exp(-((log(lognormin) - mu) * (log(lognormin) - mu)) / (2 * s2));
       }
       return err;
     }

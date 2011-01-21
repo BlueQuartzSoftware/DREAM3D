@@ -1,4 +1,6 @@
-
+<html>
+<body>
+<pre>
 Copyright Notice and License Terms for 
 HDF5 (Hierarchical Data Format 5) Software Library and Utilities
 -----------------------------------------------------------------------------
@@ -82,5 +84,8 @@ and/or accompanying materials:
    those of the United States Government or the University of California, 
    and shall not be used for advertising or product endorsement purposes.
 -----------------------------------------------------------------------------
+</pre>
 
 
+</body>
+</html>

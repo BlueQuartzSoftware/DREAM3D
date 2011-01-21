@@ -1821,8 +1821,9 @@ void RepresentationUI::oim_SetupGui()
            this, SLOT(on_oim_OutputFile_textChanged(const QString &)));
 
   m_WidgetList << oim_InputDir << oim_InputDirBtn << oim_OutputFile << oim_OutputFileBtn;
-  m_WidgetList << oim_FilePrefix << oim_ZMaxSlice << oim_ZStartIndex << oim_ZEndIndex << oim_zSpacing;
-
+  m_WidgetList << oim_FileExt << oim_ErrorMessage;
+  m_WidgetList << oim_FilePrefix << oim_TotalSlices << oim_ZStartIndex << oim_ZEndIndex << oim_zSpacing;
+  oim_ErrorMessage->setVisible(false);
 }
 
 
@@ -1834,7 +1835,9 @@ void RepresentationUI::oim_SaveSettings(QSettings &prefs)
   prefs.beginGroup("OIMImport");
   WRITE_STRING_SETTING(prefs, oim_InputDir)
   WRITE_STRING_SETTING(prefs, oim_FilePrefix)
-  WRITE_STRING_SETTING(prefs, oim_ZMaxSlice)
+  WRITE_STRING_SETTING(prefs, oim_FileSuffix)
+  WRITE_STRING_SETTING(prefs, oim_FileExt)
+//  WRITE_STRING_SETTING(prefs, oim_TotalSlices)
   WRITE_STRING_SETTING(prefs, oim_ZStartIndex)
   WRITE_STRING_SETTING(prefs, oim_ZEndIndex)
   WRITE_STRING_SETTING(prefs, oim_zSpacing)
@@ -1856,7 +1859,9 @@ void RepresentationUI::oim_LoadSettings(QSettings &prefs)
   prefs.beginGroup("OIMImport");
   READ_FILEPATH_SETTING(prefs, oim_InputDir, "");
   READ_STRING_SETTING(prefs, oim_FilePrefix, "");
-  READ_SETTING(prefs, oim_ZMaxSlice, ok, i, 300 , Int);
+  READ_STRING_SETTING(prefs, oim_FileSuffix, "");
+  READ_STRING_SETTING(prefs, oim_FileExt, ".ang");
+//  READ_STRING_SETTING(prefs, oim_TotalSlices, "");
   READ_SETTING(prefs, oim_ZStartIndex, ok, i, 1 , Int);
   READ_SETTING(prefs, oim_ZEndIndex, ok, i, 10 , Int);
   READ_STRING_SETTING(prefs, oim_zSpacing, "0.25");
@@ -1926,6 +1931,10 @@ void RepresentationUI::on_oim_InputDir_textChanged(const QString & text)
   {
     oim_findAngMaxSliceAndPrefix();
   }
+  else
+  {
+    oim_FileListView->clear();
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -1946,14 +1955,23 @@ void RepresentationUI::on_oim_GoBtn_clicked()
 
   SANITY_CHECK_INPUT( , oim_InputDir)
   m_H5AngImporter = H5AngImporter::New();
-  m_H5AngImporter->setInputDirectory(oim_InputDir->text().toStdString() );
-  m_H5AngImporter->setAngFilePrefix(oim_FilePrefix->text().toStdString());
-  m_H5AngImporter->setAngSeriesMaxSlice(oim_ZMaxSlice->value());
+  m_H5AngImporter->setOutputFile(oim_OutputFile->text().toStdString() );
   m_H5AngImporter->setZStartIndex(oim_ZStartIndex->value());
   m_H5AngImporter->setZEndIndex(oim_ZEndIndex->value());
   m_H5AngImporter->setZResolution(oim_zSpacing->text().toDouble(&ok));
-  m_H5AngImporter->setOutputFile(oim_OutputFile->text().toStdString() );
 
+//  m_H5AngImporter->setInputDirectory(oim_InputDir->text().toStdString() );
+//  m_H5AngImporter->setAngFilePrefix(oim_FilePrefix->text().toStdString());
+//  m_H5AngImporter->setAngSeriesMaxSlice(oim_TotalSlices->text().toInt(&ok));
+
+  int fileCount = oim_FileListView->count();
+  std::vector<std::string> fileList;
+  for (int f = 0; f < fileCount; ++f)
+  {
+    fileList.push_back(oim_FileListView->item(f)->text().toStdString() );
+  }
+
+  m_H5AngImporter->setAngFileList(fileList);
 
   connect(m_H5AngImporter.get(), SIGNAL(finished()),
           this, SLOT( oim_ThreadFinished() ) );
@@ -1976,12 +1994,109 @@ void RepresentationUI::on_oim_GoBtn_clicked()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void RepresentationUI::on_oim_ZEndIndex_valueChanged(int value)
+{
+  oim_generateExampleOimInputFile();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void RepresentationUI::on_oim_ZStartIndex_valueChanged(int value)
+{
+  oim_generateExampleOimInputFile();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void RepresentationUI::on_oim_TotalDigits_valueChanged(int value)
+{
+    oim_generateExampleOimInputFile();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void RepresentationUI::on_oim_FileExt_textChanged(const QString &string)
+{
+  oim_generateExampleOimInputFile();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void RepresentationUI::on_oim_FileSuffix_textChanged(const QString &string)
+{
+  oim_generateExampleOimInputFile();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void RepresentationUI::on_oim_FilePrefix_textChanged(const QString &string)
+{
+  oim_generateExampleOimInputFile();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void RepresentationUI::oim_generateExampleOimInputFile()
+{
+
+  QString filename = QString("%1%2%3.%4").arg(oim_FilePrefix->text())
+      .arg(oim_ZStartIndex->text(), oim_TotalDigits->value(), '0')
+      .arg(oim_FileSuffix->text()).arg(oim_FileExt->text());
+  oim_GeneratedFileNameExample->setText(filename);
+
+  // Now generate all the file names the user is asking for and populate the table
+  oim_FileListView->clear();
+  int start = oim_ZStartIndex->value();
+  int end = oim_ZEndIndex->value();
+  QIcon greenDot = QIcon(QString(":/green-dot.png"));
+  QIcon redDot = QIcon(QString(":/red-dot.png"));
+  bool hasMissingFiles = false;
+  for (int i = start; i <= end; ++i)
+  {
+    filename = QString("%1%2%3.%4").arg(oim_FilePrefix->text())
+        .arg(QString::number(i), oim_TotalDigits->value(), '0')
+        .arg(oim_FileSuffix->text()).arg(oim_FileExt->text());
+    QString filePath = oim_InputDir->text() + QDir::separator() + filename;
+    QFileInfo fi(filePath);
+    QListWidgetItem* item = new QListWidgetItem(filePath, oim_FileListView);
+    if (fi.exists() == true)
+    {
+      item->setIcon(greenDot);
+    }
+    else
+    {
+      hasMissingFiles = true;
+      item->setIcon(redDot);
+    }
+  }
+  if (hasMissingFiles == true)
+  {
+    oim_ErrorMessage->setVisible(true);
+    oim_ErrorMessage->setText("Alert: File(s) on the list do NOT exist on the filesystem. Please make sure all files exist");
+  }
+  else
+  {
+    oim_ErrorMessage->setVisible(false);
+  }
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void RepresentationUI::oim_findAngMaxSliceAndPrefix()
 {
   if (oim_InputDir->text().length() == 0) { return; }
   QDir dir(oim_InputDir->text());
   QStringList filters;
-  filters << "*.ang";
+  QString ext = "." + oim_FileExt->text();
+  filters << "*"+ext;
   dir.setNameFilters(filters);
   QFileInfoList angList = dir.entryInfoList();
   int minSlice = 0;
@@ -1993,28 +2108,39 @@ void RepresentationUI::oim_findAngMaxSliceAndPrefix()
   QRegExp rx("(\\d+)");
   QStringList list;
   int pos = 0;
+  int digitStart = 0;
+  int digitEnd = 0;
+  int totalOimFilesFound = 0;
   foreach(QFileInfo fi, angList)
   {
-    if (fi.suffix().compare(".ang") && fi.isFile() == true)
+    if (fi.suffix().compare(ext) && fi.isFile() == true)
     {
       pos = 0;
       list.clear();
       QString fn = fi.baseName();
+      digitStart = pos = rx.indexIn(fn, pos);
+      digitEnd = digitStart;
       while ((pos = rx.indexIn(fn, pos)) != -1)
       {
         list << rx.cap(0);
         fPrefix = fn.left(pos);
         pos += rx.matchedLength();
       }
+      while(digitEnd >= 0 && fn[digitEnd] >= '0' && fn[digitEnd]<='9')
+      {
+        ++digitEnd;
+      }
+      oim_TotalDigits->setValue(digitEnd - digitStart);
       if (list.size() > 0) {
         currValue = list.front().toInt(&ok);
         if (false == flag) { minSlice = currValue; flag = true;}
         if (currValue > maxSlice) { maxSlice = currValue; }
         if (currValue < minSlice) { minSlice = currValue; }
       }
+      ++totalOimFilesFound;
     }
   }
-  this->oim_ZMaxSlice->setValue(maxSlice);
+  this->oim_TotalSlices->setText(QString::number(totalOimFilesFound));
   this->oim_FilePrefix->setText(fPrefix);
   this->oim_ZStartIndex->setValue(minSlice);
   this->oim_ZEndIndex->setValue(maxSlice);
