@@ -100,6 +100,7 @@ Q_OBJECT    ;
 
     virtual QVector<double> getData(int col);
     virtual double getDataValue(int col, int row);
+    virtual void setColumnData(int col, QVector<double> &data);
 
     QVector<double>& getAlphas()
     { return m_Alpha;}

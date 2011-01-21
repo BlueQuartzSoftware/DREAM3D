@@ -315,9 +315,9 @@ QVector<double > SGBetaTableModel::getData(int col)
   switch(col)
   {
     case Alpha:
-      return m_Alpha;
+      return m_Alpha;break;
     case Beta:
-      return m_Beta;
+      return m_Beta;break;
     default:
       Q_ASSERT(false);
   }
@@ -332,13 +332,29 @@ double SGBetaTableModel::getDataValue(int col, int row)
   switch(col)
   {
     case Alpha:
-      return m_Alpha[row];
+      return m_Alpha[row];break;
     case Beta:
-      return m_Beta[row];
+      return m_Beta[row];break;
     default:
       Q_ASSERT(false);
   }
   return 0.0;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void SGBetaTableModel::setColumnData(int col, QVector<double> &data)
+{
+  switch(col)
+  {
+    case Alpha:
+      m_Alpha = data;break;
+    case Beta:
+     m_Beta = data;break;
+    default:
+      Q_ASSERT(false);
+  }
 }
 
 // -----------------------------------------------------------------------------

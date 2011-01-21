@@ -72,6 +72,7 @@ Q_OBJECT    ;
     protected slots:
 
     /* Menu Slots */
+    void on_actionOpen_triggered();
     void on_actionClose_triggered();
     void on_actionExit_triggered();
     void on_actionSave_triggered();

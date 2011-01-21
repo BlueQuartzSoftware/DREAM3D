@@ -314,9 +314,9 @@ QVector<double > SGLogNormalTableModel::getData(int col)
   switch(col)
   {
     case Average:
-      return m_Average;
+      return m_Average;break;
     case StdDev:
-      return m_StdDev;
+      return m_StdDev;break;
     default:
       Q_ASSERT(false);
   }
@@ -331,13 +331,30 @@ double SGLogNormalTableModel::getDataValue(int col, int row)
   switch(col)
   {
     case Average:
-      return m_Average[row];
+      return m_Average[row];break;
     case StdDev:
-      return m_StdDev[row];
+      return m_StdDev[row];break;
     default:
       Q_ASSERT(false);
   }
   return 0.0;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void SGLogNormalTableModel::setColumnData(int col, QVector<double> &data)
+{
+  switch(col)
+  {
+    case Average:
+      m_Average = data;
+      break;
+    case StdDev:
+      m_StdDev = data;break;
+    default:
+      Q_ASSERT(false);
+  }
 }
 
 // -----------------------------------------------------------------------------

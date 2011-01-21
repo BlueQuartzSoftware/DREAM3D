@@ -102,7 +102,107 @@ void StatsGenPlotWidget::setPlotTitle(QString title)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int StatsGenPlotWidget::writeDataToHDF5(H5ReconStatsWriter::Pointer writer, const std::string &hdf5GroupName)
+int StatsGenPlotWidget::readDataFromHDF5(H5ReconStatsReader::Pointer reader,
+                                         QVector<double>  &bins,
+                                         const std::string &hdf5GroupName)
+{
+  int err = 0;
+  if (m_StatsType == AIM::Reconstruction::UnknownStatisticsGroup)
+  {
+    QMessageBox::critical(this, tr("AIM Representation"),
+    tr("This Plot has not been assigned a Statistics Group. This should be happening from within the program. Contact the developer."),
+    QMessageBox::Ok,
+    QMessageBox::Ok);
+    return -1;
+  }
+
+  AIM::Reconstruction::DistributionType dt;
+  std::string disType = reader->getDistributionType(hdf5GroupName, dt);
+  if (dt == AIM::Reconstruction::UnknownDistributionType)
+  {
+    QMessageBox::critical(this, tr("AIM Representation"),
+    tr("The 'Distribution Type' attribute was either not found on the HDF5 Group or it was of an unknown type. Please verify your HDF5 file has been written correctly"),
+    QMessageBox::Ok,
+    QMessageBox::Ok);
+    return -1;
+  }
+  setDistributionType(dt); // This makes sure the combo box is set correctly
+
+  m_TableModel->setBinNumbers(bins);
+
+  AIM::HDF5::ColumnCount colCount = AIM::HDF5::UnknownColumCount;
+  std::vector<double> col0;
+  std::vector<double> col1;
+  std::vector<double> col2;
+
+  std::vector<std::vector<double> > columnsData;
+
+  std::string datasetName;
+  // Create a new Table Model
+  switch(m_DistributionType)
+  {
+  case AIM::Reconstruction::Beta:
+    datasetName = hdf5GroupName + "/" + AIM::HDF5::Alpha;
+    err = reader->readStatsDataset(datasetName, col0);
+    datasetName = hdf5GroupName + "/" + AIM::HDF5::Beta;
+    err = reader->readStatsDataset(datasetName, col1);
+    colCount = AIM::HDF5::BetaColumnCount;
+    columnsData.push_back(col0);
+    columnsData.push_back(col1);
+    if (err < 0) { SG_ERROR_CHECK(hdf5GroupName) }
+    break;
+  case AIM::Reconstruction::LogNormal:
+    datasetName = hdf5GroupName + "/" + AIM::HDF5::Average;
+    err = reader->readStatsDataset(datasetName, col0);
+    datasetName = hdf5GroupName + "/" + AIM::HDF5::StandardDeviation;
+    err = reader->readStatsDataset(datasetName, col1);
+    colCount = AIM::HDF5::LogNormalColumnCount;
+    columnsData.push_back(col0);
+    columnsData.push_back(col1);
+    if (err < 0) { SG_ERROR_CHECK(hdf5GroupName) }
+    break;
+  case AIM::Reconstruction::Power:
+    datasetName = hdf5GroupName + "/" + AIM::HDF5::Alpha;
+    err = reader->readStatsDataset(datasetName, col0);
+    datasetName = hdf5GroupName + "/" + AIM::HDF5::Exp_k;
+    err = reader->readStatsDataset(datasetName, col1);
+    datasetName = hdf5GroupName + "/" + AIM::HDF5::Beta;
+    err = reader->readStatsDataset(datasetName, col2);
+    columnsData.push_back(col0);
+    columnsData.push_back(col1);
+    columnsData.push_back(col2);
+    colCount = AIM::HDF5::PowerLawColumnCount;
+    if (err < 0) { SG_ERROR_CHECK(hdf5GroupName) }
+    break;
+
+  default:
+    return -1;
+  }
+
+// Now set all the data into the various columns of data
+  for (int column = 0; column < colCount; ++column)
+  {
+    QVector<double> colData = QVector<double>::fromStdVector(columnsData[column]);
+    /* we are adding 1 to the column value because by convention Column 0 is the
+     * 'bin' column.
+     */
+    m_TableModel->setColumnData(column + 1, colData);
+  }
+
+  m_TableView->resizeColumnsToContents();
+  m_TableView->scrollToBottom();
+  m_TableView->setFocus();
+  updatePlotCurves();
+
+  m_UserUpdatedData = true;
+  return err;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int StatsGenPlotWidget::writeDataToHDF5(H5ReconStatsWriter::Pointer writer,
+                                        const std::string &hdf5GroupName)
 {
   int err = 0;
   if (m_StatsType == AIM::Reconstruction::UnknownStatisticsGroup)
@@ -127,9 +227,9 @@ int StatsGenPlotWidget::writeDataToHDF5(H5ReconStatsWriter::Pointer writer, cons
   std::vector<double> col1;
   std::vector<double> col2;
 
-  QVector<double> qcol0;
-  QVector<double> qcol1;
-  QVector<double> qcol2;
+//  QVector<double> qcol0;
+//  QVector<double> qcol1;
+//  QVector<double> qcol2;
 
   // Create a new Table Model
   switch(m_DistributionType)
@@ -519,15 +619,17 @@ void StatsGenPlotWidget::setBins(QVector<double> &binNumbers)
       default:
         msg.append("Unknown");
     }
-    msg.append("' has user modified data. Do you want to over write the data with the new bins?");
+    msg.append("' has user modified data. Do you want to over write the data with the new bin values?");
 
 
 
-    QMessageBox::critical(this,
+    int r = QMessageBox::critical(this,
                           tr("Stats Generator"),
                           msg, QMessageBox::Ok
         | QMessageBox::Cancel, QMessageBox::Ok);
-    return;
+    if (r != QMessageBox::Ok) {
+      return;
+    }
   }
 #endif
   m_UserUpdatedData = false;

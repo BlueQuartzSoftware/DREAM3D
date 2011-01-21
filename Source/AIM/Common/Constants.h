@@ -90,7 +90,8 @@ namespace AIM
     {
       BetaColumnCount = 2,
       LogNormalColumnCount = 2,
-      PowerLawColumnCount = 3
+      PowerLawColumnCount = 3,
+      UnknownColumCount = 0
     };
   }
 
