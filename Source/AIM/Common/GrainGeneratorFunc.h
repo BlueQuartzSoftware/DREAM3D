@@ -131,6 +131,7 @@ public:
 	int numprecipitates;
 	int shapeclass;
 	int preciptype;
+	double binstepsize;
 	int maxdiameter;
 	int mindiameter;
 	int maxprecipdiameter;
