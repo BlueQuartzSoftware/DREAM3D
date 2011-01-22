@@ -99,6 +99,7 @@ Q_OBJECT    ;
 
     virtual QVector<double> getData(int col);
     virtual double getDataValue(int col, int row);
+    void setColumnData(int col, QVector<double> &data);
 
     QVector<double>& getAlphas()
     { return m_Alpha;}
@@ -110,7 +111,7 @@ Q_OBJECT    ;
     double getBeta(qint32 row)
     { return m_Beta[row];}
 
-    private:
+  private:
     int m_ColumnCount;
     int m_RowCount;
 

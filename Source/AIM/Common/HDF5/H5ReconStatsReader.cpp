@@ -73,7 +73,8 @@ H5ReconStatsReader::Pointer H5ReconStatsReader::New(const std::string &filename)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::string H5ReconStatsReader::getDistributionType(const std::string &group)
+std::string H5ReconStatsReader::getDistributionType(const std::string &group,
+                                                    AIM::Reconstruction::DistributionType &dt)
 {
   herr_t err = 0;
 
@@ -91,6 +92,23 @@ std::string H5ReconStatsReader::getDistributionType(const std::string &group)
   if (err < 0)
   {
     data.clear();
+  }
+
+  if (data.compare(AIM::HDF5::BetaDistribution) == 0)
+  {
+    dt = AIM::Reconstruction::Beta;
+  }
+  else if (data.compare(AIM::HDF5::LogNormalDistribution) == 0)
+  {
+    dt = AIM::Reconstruction::LogNormal;
+  }
+  else if (data.compare(AIM::HDF5::PowerLawDistribution) == 0)
+  {
+    dt = AIM::Reconstruction::Power;
+  }
+  else
+  {
+    dt = AIM::Reconstruction::UnknownDistributionType;
   }
   return data;
 }

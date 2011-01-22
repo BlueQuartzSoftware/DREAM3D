@@ -103,8 +103,9 @@ class AIMCOMMON_EXPORT H5ReconStatsReader
     /**
      * @brief
      * @param group
+     * @param dt (out) Enumerated value for the distribution type
      */
-    std::string getDistributionType(const std::string &group);
+    std::string getDistributionType(const std::string &group, AIM::Reconstruction::DistributionType &dt);
 
 
 
