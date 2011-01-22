@@ -235,6 +235,7 @@ int GrainGeneratorFunc::readReconStatsData(H5ReconStatsReader::Pointer h5io)
   //TODO: Do we actually need this (binStepSize) variable?
   //double binStepSize = grainDiamInfo[0];
 
+  binstepsize = grainDiamInfo[0];
   maxdiameter  = grainDiamInfo[1];
   mindiameter = grainDiamInfo[2];
 
@@ -468,7 +469,7 @@ void  GrainGeneratorFunc::generate_grain(int gnum)
 	if(diam < mindiameter) volgood = 0;
 	vol = (4.0/3.0)*(m_pi)*((diam/2.0)*(diam/2.0)*(diam/2.0));
   }
-  int diameter = int(diam);
+  int diameter = int(diam/binstepsize);
   good = 0;
   while(good == 0)
   {
@@ -861,6 +862,7 @@ double GrainGeneratorFunc::check_neighborhooderror(int gadd, int gremove)
 				dia = grains[index].equivdiameter;
 				if(dia > maxdiameter) dia = maxdiameter;
 				if(dia < mindiameter) dia = mindiameter;
+				dia = int(dia/binstepsize);
 				if(nnum > 0)
 				{
 					neighbordist[dia][j] = neighbordist[dia][j]+nnum;
@@ -876,6 +878,7 @@ double GrainGeneratorFunc::check_neighborhooderror(int gadd, int gremove)
 			dia = grains[index].equivdiameter;
 			if(dia > maxdiameter) dia = maxdiameter;
 			if(dia < mindiameter) dia = mindiameter;
+			dia = int(dia/binstepsize);
 			if(nnum > 0)
 			{
 				neighbordist[dia][j] = neighbordist[dia][j]+nnum;
