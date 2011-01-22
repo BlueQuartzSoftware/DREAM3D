@@ -174,6 +174,7 @@ return err; }
         var[temp7][0] = col0[temp7];\
         var[temp7][1] = col1[temp7];\
       }\
+      break;\
     default:\
       std::cout << "Error Reading " << group <<\
                 " the distribution must be of type '" << distribution << "' but is of type '"\
@@ -211,6 +212,7 @@ return err; }
         var[temp7][1] = col1[temp7];\
         var[temp7][2] = col2[temp7];\
       }\
+      break;\
   default:\
     std::cout << "Error Reading " << group <<\
               " the distribution must be of type '" << distribution << "' but is of type '"\
