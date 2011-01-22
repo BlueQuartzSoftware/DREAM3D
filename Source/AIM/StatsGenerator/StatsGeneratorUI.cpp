@@ -465,10 +465,6 @@ void StatsGeneratorUI::on_actionSave_triggered()
     m_FileSelected = true;
   }
 
-  setWindowTitle(m_FilePath + " - StatsGenerator");
-  setWindowModified(false);
-
-
   H5ReconStatsWriter::Pointer writer = H5ReconStatsWriter::New(m_FilePath.toStdString());
 
   QwtArray<double> xCo;
@@ -519,8 +515,106 @@ void StatsGeneratorUI::on_actionSave_triggered()
   // Force the clean up of the writer by assigning a NULL pointer which will
   // have the effect of executing the destructor of the H5ReconStatsWriter Class
   writer = H5ReconStatsWriter::NullPointer();
+
+  setWindowTitle(m_FilePath + " - StatsGenerator");
+  setWindowModified(false);
+
 }
 
+
+#define CHECK_STATS_READ_ERROR(err, group, dataset)\
+if (err < 0) {\
+  std::cout << "StatsGeneratorUI::on_actionOpen_triggered Error: Could not read '" << group << "' data set '" << dataset << "'" << std::endl;\
+  std::cout << "  File: " << __FILE__ << std::endl;\
+  std::cout << "  Line: " << __LINE__ << std::endl;\
+return;}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void StatsGeneratorUI::on_actionOpen_triggered()
+{
+  QString proposedFile = m_OpenDialogLastDirectory + QDir::separator() + "Untitled.h5";
+  QString h5file = QFileDialog::getOpenFileName(this, tr("Open HDF5 Statistics File"),
+    proposedFile,
+    tr("HDF5 Files (*.h5)") );
+  if ( true == h5file.isEmpty() ){ return;  }
+  m_FilePath = h5file;
+  QFileInfo fi (m_FilePath);
+  QString ext = fi.suffix();
+  m_OpenDialogLastDirectory = fi.path();
+  m_FileSelected = true;
+
+  std::vector<double> grainDiamInfo;
+  std::vector<double> double_data;
+  std::string path;
+  double mu, sigma, binStepSize, xMax, yMax, cutoff;
+
+
+  int err = 0;
+
+  H5ReconStatsReader::Pointer reader = H5ReconStatsReader::New(m_FilePath.toStdString());
+
+  /* Read the BinNumbers data set */
+  std::vector<double> bins;
+  err = reader->readStatsDataset(AIM::HDF5::BinNumber, bins);
+  CHECK_STATS_READ_ERROR(err, AIM::HDF5::Reconstruction, AIM::HDF5::BinNumber)
+
+  /* Read the Grain_Diameter_Info Data */
+  err = reader->readStatsDataset(AIM::HDF5::Grain_Diameter_Info, grainDiamInfo);
+  CHECK_STATS_READ_ERROR(err,  AIM::HDF5::Reconstruction, AIM::HDF5::Grain_Diameter_Info)
+
+  binStepSize = grainDiamInfo[0];
+  m_BinStepSize->setValue(grainDiamInfo[0]);
+
+  /* Read the Grain_Size_Distribution Data */
+  err = reader->readStatsDataset(AIM::HDF5::Grain_Size_Distribution, double_data);
+  CHECK_STATS_READ_ERROR(err,  AIM::HDF5::Reconstruction, AIM::HDF5::Grain_Size_Distribution)
+  m_Mu_SizeDistribution->setText(QString::number(double_data[0]));
+  m_Sigma_SizeDistribution->setText(QString::number(double_data[1]));
+  mu = double_data[0];
+  sigma = double_data[1];
+
+  int nBins = (int)(bins.size());
+
+  StatsGen sg;
+  int computedNBins = 0;
+  cutoff = 0.0;
+  while (computedNBins != nBins)
+  {
+    computedNBins = sg.computeNumberOfBins(mu, sigma, cutoff, binStepSize, xMax, yMax);
+//    std::cout << "nBins: " << nBins << std::endl;
+//    std::cout << "computedNBins: " << computedNBins << std::endl;
+//    std::cout << "cutoff: " << cutoff << std::endl;
+    cutoff++;
+  }
+  m_SigmaCutOff_SizeDistribution->setText(QString::number(cutoff-1.0));
+
+
+  QVector<double> qbins = QVector<double>::fromStdVector(bins);
+
+  m_Omega3Plot->readDataFromHDF5(reader, qbins, AIM::HDF5::Grain_SizeVOmega3_Distributions);
+
+  m_BOverAPlot->readDataFromHDF5(reader, qbins, AIM::HDF5::Grain_SizeVBoverA_Distributions);
+
+  m_COverAPlot->readDataFromHDF5(reader, qbins, AIM::HDF5::Grain_SizeVCoverA_Distributions);
+
+  m_COverBPlot->readDataFromHDF5(reader, qbins, AIM::HDF5::Grain_SizeVCoverB_Distributions);
+
+  m_NeighborPlot->readDataFromHDF5(reader, qbins, AIM::HDF5::Grain_SizeVNeighbors_Distributions);
+
+  // Enable all the tabs
+  setTabsPlotTabsEnabled(true);
+
+  // Set the window title correctly
+  setWindowModified(false);
+  QString windowTitle = QString("");
+  windowTitle = windowTitle +  m_FilePath + QString(" - StatsGenerator");
+  setWindowTitle(windowTitle);
+
+
+
+}
 
 // -----------------------------------------------------------------------------
 //

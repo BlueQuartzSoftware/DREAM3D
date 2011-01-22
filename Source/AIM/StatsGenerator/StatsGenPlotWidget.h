@@ -36,6 +36,7 @@
 
 #include "AIM/Common/Constants.h"
 #include "AIM/Common/HDF5/H5ReconStatsWriter.h"
+#include "AIM/Common/HDF5/H5ReconStatsReader.h"
 #include "StatsGen.h"
 
 
@@ -65,6 +66,9 @@ class StatsGenPlotWidget : public QWidget, private Ui::StatsGenPlotWidget
     void setPlotTitle(QString title);
 
     int writeDataToHDF5(H5ReconStatsWriter::Pointer writer, const std::string &hdf5GroupName);
+    int readDataFromHDF5(H5ReconStatsReader::Pointer reader,
+                         QVector<double>  &bins,
+                         const std::string &hdf5GroupName);
 
     void setStatisticsType(AIM::Reconstruction::StatisticsType statsType);
     void setDistributionType(AIM::Reconstruction::DistributionType distributionType);
@@ -81,7 +85,7 @@ class StatsGenPlotWidget : public QWidget, private Ui::StatsGenPlotWidget
     void createLogNormalCurve(int tableRow, double &xMax, double &yMax);
     void createPowerCurve(int tableRow, double &xMax, double &yMax);
 
-    void setBins(QVector<double> &binNumbers);
+    void setBins(QVector<double> &binValues);
     bool userUpdatedData();
 
   protected slots:
