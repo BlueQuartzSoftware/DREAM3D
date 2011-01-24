@@ -31,6 +31,7 @@
 #include "StatsGeneratorUI.h"
 
 #include <AIM/Common/Qt/QRecentFileList.h>
+#include "SGApplication.h"
 
 //-- Qt Headers
 #include <QtGui/QApplication>
@@ -40,7 +41,7 @@
  */
 int main (int argc, char *argv[])
 {
-  QApplication app(argc, argv);
+  SGApplication app(argc, argv);
   QCoreApplication::setOrganizationName("BlueQuartz Software");
   QCoreApplication::setOrganizationDomain("bluequartz.net");
   QCoreApplication::setApplicationName("StatsGeneratorUI");
@@ -57,7 +58,7 @@ int main (int argc, char *argv[])
   QRecentFileList::instance()->readList(prefs);
 
 
-  StatsGeneratorUI *viewer = new StatsGeneratorUI;
+  StatsGeneratorUI *viewer = app.createNewStatsGenerator();
   viewer->show();
   int app_return = app.exec();
 

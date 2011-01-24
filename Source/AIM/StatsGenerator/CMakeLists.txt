@@ -46,6 +46,7 @@ add_definitions(-DAIM_USE_QT)
                 
 set (StatsGenerator_SRCS 
     ${StatsGenerator_SOURCE_DIR}/main.cpp
+    ${StatsGenerator_SOURCE_DIR}/SGApplication.cpp
     ${StatsGenerator_SOURCE_DIR}/StatsGen.cpp
     ${StatsGenerator_SOURCE_DIR}/StatsGeneratorUI.cpp
     ${StatsGenerator_SOURCE_DIR}/StatsGenPlotWidget.cpp
@@ -59,6 +60,7 @@ set (StatsGenerator_HDRS
 )
                    
 SET( StatsGenerator_MOC_HDRS
+    ${StatsGenerator_SOURCE_DIR}/SGApplication.h
     ${StatsGenerator_SOURCE_DIR}/StatsGeneratorUI.h
     ${StatsGenerator_SOURCE_DIR}/StatsGenPlotWidget.h
     ${StatsGenerator_SOURCE_DIR}/SGAbstractTableModel.h
