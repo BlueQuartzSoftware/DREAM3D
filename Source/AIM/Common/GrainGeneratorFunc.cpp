@@ -2349,7 +2349,7 @@ void GrainGeneratorFunc::matchCrystallography(const std::string &ErrorFile, H5Re
 	  numbins = 18*18*18;
 	}
     rg.RandomInit((static_cast<unsigned int>(time(NULL))));
-	while(badtrycount < 5000 && iterations < 1000000)
+	while(badtrycount < 5000 && iterations < 10000)
 	{
 		currentodferror = 0;
 		currentmdferror = 0;
@@ -3459,14 +3459,15 @@ int GrainGeneratorFunc::volume_stats(H5ReconStatsWriter::Pointer h5io)
   double maxschmid = 0;
   double maxomega3 = 0;
   vector<int > neighdistfunc;
-  neighborhood.resize((maxdiameter-mindiameter)/binstepsize);
-  neighborhoodfit.resize((maxdiameter-mindiameter)/binstepsize);
-  svbovera.resize((maxdiameter-mindiameter)/binstepsize);
-  svcovera.resize((maxdiameter-mindiameter)/binstepsize);
-  svcoverb.resize((maxdiameter-mindiameter)/binstepsize);
-  svschmid.resize((maxdiameter-mindiameter)/binstepsize);
-  svomega3.resize((maxdiameter-mindiameter)/binstepsize);
-  for (int temp = 0; temp < int((maxdiameter-mindiameter)/binstepsize); temp++)
+  int numbins = ((maxdiameter-mindiameter)/binstepsize)+1;
+  neighborhood.resize(numbins);
+  neighborhoodfit.resize(numbins);
+  svbovera.resize(numbins);
+  svcovera.resize(numbins);
+  svcoverb.resize(numbins);
+  svschmid.resize(numbins);
+  svomega3.resize(numbins);
+  for (int temp = 0; temp < numbins; temp++)
   {
     neighborhood[temp].resize(7, 0);
     neighborhoodfit[temp].resize(4, 0);
@@ -3546,7 +3547,7 @@ int GrainGeneratorFunc::volume_stats(H5ReconStatsWriter::Pointer h5io)
       if (omega3 > maxomega3) maxomega3 = omega3;
     }
   }
-  for (int temp3 = 0; temp3 < int((maxdiameter-mindiameter)/binstepsize); temp3++)
+  for (int temp3 = 0; temp3 < numbins; temp3++)
   {
     if (svbovera[temp3][0] > 1)
     {
@@ -3641,7 +3642,7 @@ int GrainGeneratorFunc::volume_stats(H5ReconStatsWriter::Pointer h5io)
       }
     }
   }
-  for (int temp4 = 0; temp4 < int((maxdiameter-mindiameter)/binstepsize); temp4++)
+  for (int temp4 = 0; temp4 < numbins; temp4++)
   {
     if (svbovera[temp4][0] > 1)
     {
@@ -3712,7 +3713,7 @@ int GrainGeneratorFunc::volume_stats(H5ReconStatsWriter::Pointer h5io)
   double svcoverbcr = 0;
   double svschmidcr = 0;
   double svomega3cr = 0;
-  for (int temp5 = 0; temp5 < int((maxdiameter-mindiameter)/binstepsize); temp5++)
+  for (int temp5 = 0; temp5 < numbins; temp5++)
   {
     svboveracr = svboveracr + (svbovera[temp5][0] * ((svbovera[temp5][1] - avgbovera) * (svbovera[temp5][1] - avgbovera)));
     svcoveracr = svcoveracr + (svcovera[temp5][0] * ((svcovera[temp5][1] - avgcovera) * (svcovera[temp5][1] - avgcovera)));

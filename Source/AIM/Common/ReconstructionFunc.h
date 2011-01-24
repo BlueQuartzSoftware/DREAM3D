@@ -73,6 +73,7 @@ public:
   double minseedconfidence;
   double minseedimagequality;
   double downsamplefactor;
+  double sizebinstepsize;
   int minallowedgrainsize;
   int mergetwinsoption;
   int mergecoloniesoption;
@@ -132,7 +133,7 @@ public:
                   bool v_mergecoloniesoption, int v_minallowedgrainsize,
                   double v_minseedconfidence, double v_downsamplefactor,
                   double v_minseedimagequality, double v_misorientationtolerance,
-                  AIM::Reconstruction::CrystalStructure v_crystruct,
+                  double v_sizebinstepsize, AIM::Reconstruction::CrystalStructure v_crystruct,
                   int v_alignmeth, bool v_alreadyformed);
 
 

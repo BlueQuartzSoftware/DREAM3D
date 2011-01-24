@@ -80,6 +80,7 @@ m_MergeTwins(false),
 m_MergeColonies(false),
 m_MinAllowedGrainSize(0),
 m_MinSeedConfidence(0.0),
+m_SizeBinStepSize(0.0),
 m_MinSeedImageQuality(0.0),
 m_MisorientationTolerance(0.0),
 m_CrystalStructure(AIM::Reconstruction::Cubic),
@@ -137,7 +138,7 @@ void Reconstruction::compute()
                 m->resx, m->resy, m->resz,
                 m_MergeTwins, m_MergeColonies, m_MinAllowedGrainSize,
 	              m_MinSeedConfidence, m_DownSampleFactor, m_MinSeedImageQuality,
-	              m_MisorientationTolerance, m_CrystalStructure, m_AlignmentMethod,
+	              m_MisorientationTolerance, m_SizeBinStepSize, m_CrystalStructure, m_AlignmentMethod,
 	              m_AlreadyFormed);
   m_OutputDirectory = MXADir::toNativeSeparators(m_OutputDirectory);
 
