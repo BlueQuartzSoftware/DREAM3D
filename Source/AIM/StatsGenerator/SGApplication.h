@@ -52,6 +52,7 @@ class SGApplication  : public QApplication
 
     StatsGeneratorUI* createNewStatsGenerator();
     QString newTempFile(QString directory);
+    void checkWindowPosition(StatsGeneratorUI* win);
 
   public slots:
     void windowClosed(StatsGeneratorUI* window);
