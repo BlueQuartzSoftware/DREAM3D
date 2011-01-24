@@ -68,10 +68,16 @@ Q_OBJECT    ;
 
     void calculateNumberOfBins();
 
+    void setFilePath(QString filePath);
+    QString getFilePath();
+
+    signals:
+      void windowIsClosing(StatsGeneratorUI*);
 
     protected slots:
 
     /* Menu Slots */
+    void on_actionNew_triggered();
     void on_actionOpen_triggered();
     void on_actionClose_triggered();
     void on_actionExit_triggered();

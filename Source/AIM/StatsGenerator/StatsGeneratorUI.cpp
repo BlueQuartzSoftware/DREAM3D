@@ -61,6 +61,7 @@
 #include "AIM/Common/HDF5/H5ReconStatsWriter.h"
 #include "AIM/License/AIMRepresentationLicenseFiles.h"
 #include "StatsGen.h"
+#include "SGApplication.h"
 
 
 #define CHECK_ERROR_ON_WRITE(var, msg)\
@@ -71,6 +72,15 @@
       QMessageBox::Ok);\
       return;\
       }
+
+
+#define CHECK_STATS_READ_ERROR(err, group, dataset)\
+if (err < 0) {\
+  std::cout << "StatsGeneratorUI::on_actionOpen_triggered Error: Could not read '" << group << "' data set '" << dataset << "'" << std::endl;\
+  std::cout << "  File: " << __FILE__ << std::endl;\
+  std::cout << "  Line: " << __LINE__ << std::endl;\
+  return;\
+}
 
 
 // -----------------------------------------------------------------------------
@@ -105,7 +115,6 @@ StatsGeneratorUI::StatsGeneratorUI(QWidget *parent) :
 // -----------------------------------------------------------------------------
 StatsGeneratorUI::~StatsGeneratorUI()
 {
-  // TODO Auto-generated destructor stub
 }
 
 // -----------------------------------------------------------------------------
@@ -130,6 +139,7 @@ void StatsGeneratorUI::closeEvent(QCloseEvent *event)
   {
     writeSettings();
     event->accept();
+    emit windowIsClosing(this);
   }
 }
 
@@ -521,13 +531,30 @@ void StatsGeneratorUI::on_actionSave_triggered()
 
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void StatsGeneratorUI::on_actionNew_triggered()
+{
 
-#define CHECK_STATS_READ_ERROR(err, group, dataset)\
-if (err < 0) {\
-  std::cout << "StatsGeneratorUI::on_actionOpen_triggered Error: Could not read '" << group << "' data set '" << dataset << "'" << std::endl;\
-  std::cout << "  File: " << __FILE__ << std::endl;\
-  std::cout << "  Line: " << __LINE__ << std::endl;\
-return;}
+  SGApplication* app = qobject_cast<SGApplication*>(SGApplication::instance());
+  // Create a new Window
+  StatsGeneratorUI* window = app->createNewStatsGenerator();
+
+  // Get a unique File name
+  QString filePath = app->newTempFile(m_OpenDialogLastDirectory);
+  window->setFilePath(filePath);
+
+  // Offset the window a bit from the current window
+  QRect geometry = this->geometry();
+  geometry.setX(geometry.x() + 25);
+  geometry.setY(geometry.y() + 25);
+  window->setGeometry(geometry);
+
+  // Show the window
+  window->show();
+}
+
 
 // -----------------------------------------------------------------------------
 //
@@ -899,4 +926,21 @@ void StatsGeneratorUI::on_actionAbout_triggered()
   version.append(AIMRepresentation::Version::PackageComplete.c_str());
   about.setApplicationInfo(an, version);
   about.exec();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void StatsGeneratorUI::setFilePath(QString filePath)
+{
+  this->m_FilePath = filePath;
+  adjustWindowTitle();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString StatsGeneratorUI::getFilePath()
+{
+  return m_FilePath;
 }
