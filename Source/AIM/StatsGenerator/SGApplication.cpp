@@ -32,6 +32,7 @@
 
 #include <QtCore/QDir>
 #include <QtCore/QFileInfo>
+#include <QtGui/QDesktopWidget>
 
 // -----------------------------------------------------------------------------
 //
@@ -60,6 +61,34 @@ StatsGeneratorUI* SGApplication::createNewStatsGenerator()
           this, SLOT(windowClosed(StatsGeneratorUI*)));
   return sg;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void SGApplication::checkWindowPosition(StatsGeneratorUI* win)
+{
+  QRect geometry = win->geometry();
+
+  QPoint windowTopLeft = geometry.topLeft();
+  QRect mwRect(windowTopLeft, win->size());
+
+  QDesktopWidget desktop;
+  QRect desktopRect = desktop.availableGeometry(desktop.primaryScreen());
+  // try moving it to keep size
+  if (!desktopRect.contains(mwRect))
+  {
+    mwRect = QRect(desktopRect.topLeft(), win->size());
+  }
+  // still doesn't fit, resize it
+  if (!desktopRect.contains(mwRect))
+  {
+    mwRect = QRect(desktopRect.topLeft(), win->size());
+    win->resize(desktopRect.size());
+  }
+  win->move(mwRect.topLeft());
+}
+
+
 
 // -----------------------------------------------------------------------------
 //
