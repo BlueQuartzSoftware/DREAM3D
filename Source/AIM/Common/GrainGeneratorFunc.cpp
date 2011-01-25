@@ -1088,7 +1088,7 @@ int  GrainGeneratorFunc::pack_grains(const std::string &filename, int numgrains)
 	change3 = 0;
 	acceptableerror = 15*exp(-0.03/((2.6*pow(10,-8.0))*(250000-iteration)));
 	int option = iteration % 4;
-	if(iteration%50 == 0) outFile << oldfillingerror << "	" << oldsizedisterror << "	" << oldneighborhooderror << "	" << acceptedmoves << endl;
+	if(iteration%50 == 0) outFile << oldfillingerror << "	" << oldsizedisterror << "	" << oldneighborhooderror << "	" << acceptedmoves << std::endl;
     if (option == 0)
     {
       int random = int(rg.Random() * (numextragrains));
@@ -2160,11 +2160,11 @@ void GrainGeneratorFunc::insert_precipitates(int numprecipitates)
 	precipitates[v].numvoxels = cursize;
   }
 }
-void GrainGeneratorFunc::read_structure(string inname8)
+void GrainGeneratorFunc::read_structure(const std::string &filename)
 {
 	const unsigned int size ( 1024 );
 	char buf [ size ];
-	std::ifstream in ( inname8.c_str() );
+	std::ifstream in ( filename.c_str() );
 	std::string word;
 	bool headerdone = false;
 	while(headerdone == false)
@@ -2594,7 +2594,7 @@ void GrainGeneratorFunc::matchCrystallography(const std::string &ErrorFile, H5Re
 						miso2 = n2*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
 						miso3 = n3*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
 						miso1bin = int(miso1*18.0/dim1);
-						miso2bin = int(miso2*18.0/dim2);	
+						miso2bin = int(miso2*18.0/dim2);
 						miso3bin = int(miso3*18.0/dim3);
 						newmisobin = (18*18*miso3bin)+(18*miso2bin)+miso1bin;
 				    }
@@ -2973,7 +2973,7 @@ void GrainGeneratorFunc::matchCrystallography(const std::string &ErrorFile, H5Re
 	outFile.close();
 	int err;
 	err = h5io->writeODFData(crystruct, simodf, totalvol);
-	h5io->writeMisorientationBinsData(simmdf, 18*18*18);
+	err = h5io->writeMisorientationBinsData(simmdf, 18*18*18);
 }
 void  GrainGeneratorFunc::measure_misorientations ()
 {
@@ -3051,7 +3051,7 @@ void  GrainGeneratorFunc::measure_misorientations ()
 		mbin = (18*18*miso3bin)+(18*miso2bin)+miso1bin;
 	  }
 	  if(crystruct == AIM::Reconstruction::Hexagonal)
-	  { 
+	  {
 		miso1bin = int(misolist[3*j]*36.0/dim1);
 		miso2bin = int(misolist[3*j+1]*36.0/dim2);
 		miso3bin = int(misolist[3*j+2]*12.0/dim3);
@@ -3761,10 +3761,10 @@ int GrainGeneratorFunc::volume_stats(H5ReconStatsWriter::Pointer h5io)
 }
 
 
-void  GrainGeneratorFunc::writeCube(string outname1, int numgrains)
+void  GrainGeneratorFunc::writeCube(const std::string &filename, int numgrains)
 {
   ofstream outFile;
-  outFile.open(outname1.c_str());
+  outFile.open(filename.c_str());
   outFile << "# vtk DataFile Version 2.0" << endl;
   outFile << "data set from FFT2dx_GB" << endl;
   outFile << "ASCII" << endl;
@@ -3816,11 +3816,11 @@ void  GrainGeneratorFunc::writeCube(string outname1, int numgrains)
   outFile.close();
 }
 
-void GrainGeneratorFunc::write_eulerangles(string writename10)
+void GrainGeneratorFunc::write_eulerangles(const std::string &filename)
 {
   //std::cout << "GrainGeneratorFunc::write_volume1: '" << writename10 << "'" << std::endl;
   ofstream outFile;
-  outFile.open(writename10.c_str());
+  outFile.open(filename.c_str());
   for (int i = 1; i < numgrains; i++)
   {
     double ea1 = grains[i].euler1;
@@ -3831,7 +3831,7 @@ void GrainGeneratorFunc::write_eulerangles(string writename10)
   outFile.close();
 }
 
-void GrainGeneratorFunc::write_graindata(string gdata)
+void GrainGeneratorFunc::write_graindata(const std::string &filename)
 {
   double misobin[36];
   double microbin[10];
@@ -3844,7 +3844,7 @@ void GrainGeneratorFunc::write_graindata(string gdata)
 	if(e < 10) microbin[e] = 0;
   }
   ofstream outFile;
-  outFile.open(gdata.c_str());
+  outFile.open(filename.c_str());
   outFile << numgrains << endl;
   for(int i = 1; i < numgrains; i++)
   {
