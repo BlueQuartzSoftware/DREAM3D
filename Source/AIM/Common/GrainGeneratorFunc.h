@@ -165,7 +165,9 @@ public:
 	double neighborhooderrorweight;
 	double sizedisterrorweight;
 
-	void write_eulerangles(string);
+	void write_eulerangles(const std::string &filename);
+  void write_graindata(const std::string &filename);
+  void writeCube(const std::string &filename, int numgrains);
 
 
 	int readReconStatsData(H5ReconStatsReader::Pointer h5io);
@@ -174,6 +176,8 @@ public:
   int readMisorientationData(H5ReconStatsReader::Pointer h5io);
   int readMicroTextureData(H5ReconStatsReader::Pointer h5io);
 
+  void read_structure(const std::string &filename);
+  int pack_grains(const std::string &filename, int numgrains);
 
 	void generate_grain(int);
 	void assign_eulers(int);
@@ -185,14 +189,12 @@ public:
 	void determine_neighbors();
 	double check_neighborhooderror(int gadd, int gremove);
 	double check_sizedisterror(int gadd, int gremove);
-	int pack_grains(const std::string &filename, int numgrains);
-	int assign_voxels(int);
-	void fill_gaps(int);
+	int assign_voxels(int numgrains);
+	void fill_gaps(int numgrains);
 	int create_precipitates();
-	void insert_precipitates(int);
-	void read_structure(string);
+	void insert_precipitates(int numprecipitates);
+
 	void find_neighbors();
-	void writeCube(string, int);
 
 	void matchCrystallography(const std::string &ErrorFile, H5ReconStatsWriter::Pointer h5io);
 	void measure_misorientations();
@@ -211,7 +213,7 @@ public:
 	double incompletebetafe(double, double, double, double, double);
 	double incompletebetafe2(double, double, double, double, double);
 	double incompletebetaps(double, double, double, double);
-	void write_graindata(string);
+
 	double find_xcoord(long);
 	double find_ycoord(long);
 	double find_zcoord(long);
