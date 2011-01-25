@@ -596,7 +596,7 @@ void RepresentationUI::rec_SetupGui()
   m_WidgetList << rec_OutputDir << rec_OutputDirBtn;
   m_WidgetList << rec_ZStartIndex << rec_ZEndIndex;
   m_WidgetList << rec_mergeTwins << rec_mergeColonies << rec_alreadyFormed << alignMeth << minAllowedGrainSize << minConfidence << downsampleFactor << misOrientationTolerance;
-  m_WidgetList << crystalStructure;
+  m_WidgetList << crystalStructure << SizeBinStepSize;
   m_WidgetList << rec_DisorientationVizFile << rec_ImageQualityVizFile << rec_IPFVizFile << rec_SchmidFactorVizFile << rec_VisualizationVizFile << rec_DownSampledVizFile;
   m_WidgetList << minImageQuality;
   m_WidgetList << rec_HDF5GrainFile << rec_H5StatisticsFile << rec_AlignmentFile << rec_GrainDataFile;
@@ -657,6 +657,7 @@ void RepresentationUI::rec_SaveSettings(QSettings &prefs)
 
   WRITE_SETTING(prefs, minAllowedGrainSize)
   WRITE_SETTING(prefs, minConfidence)
+  WRITE_SETTING(prefs, SizeBinStepSize)
   WRITE_SETTING(prefs, downsampleFactor)
   WRITE_SETTING(prefs, minImageQuality)
   WRITE_SETTING(prefs, misOrientationTolerance)
@@ -714,6 +715,7 @@ void RepresentationUI::rec_LoadSettings(QSettings &prefs)
   READ_SETTING(prefs, downsampleFactor, ok, d, 1.0 , Double);
   READ_SETTING(prefs, minImageQuality, ok, d, 50.0 , Double);
   READ_SETTING(prefs, misOrientationTolerance, ok, d, 5.0 , Double);
+  READ_SETTING(prefs, SizeBinStepSize, ok, d, 1.0 , Double);
   READ_COMBO_BOX(prefs, crystalStructure)
   READ_COMBO_BOX(prefs, alignMeth)
 
@@ -885,6 +887,7 @@ void RepresentationUI::on_rec_GoBtn_clicked()
   m_Reconstruction->setMergeColonies(rec_mergeColonies->isChecked() );
   m_Reconstruction->setMinAllowedGrainSize(minAllowedGrainSize->value());
   m_Reconstruction->setMinSeedConfidence(minConfidence->value());
+  m_Reconstruction->setSizeBinStepSize(SizeBinStepSize->value());
   m_Reconstruction->setDownSampleFactor(downsampleFactor->value());
   m_Reconstruction->setMinSeedImageQuality(minImageQuality->value());
   m_Reconstruction->setMisorientationTolerance(misOrientationTolerance->value());
