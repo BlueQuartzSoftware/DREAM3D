@@ -19,7 +19,9 @@
 #include <string>
 #include <sstream>
 
+#include "MXA/Common/MXAEndian.h"
 #include "MXA/Utilities/MXADir.h"
+
 #include "AIM/ANG/AngReader.h"
 #include "AIM/Common/Constants.h"
 #include "AIM/Common/OIMColoring.hpp"
@@ -46,6 +48,7 @@ const double sin_wmin_pos_1_over_2 = sin(acos_pos_one/2.0);
 // -i C:\Users\GroebeMA\Desktop\NewFolder --outputDir C:\Users\GroebeMA\Desktop\NewFolder -f Slice_ --angMaxSlice 400 -s 1 -e 30 -z 0.25 -t -g 10 -c 0.1 -o 5.0 -x 2
 #endif
 
+#define WRITE_ASCII_VTK_FILE 1
 
 using namespace std;
 
@@ -80,7 +83,7 @@ void ReconstructionFunc::initialize(int nX, int nY, int nZ,
                                     bool v_mergetwinsoption, bool v_mergecoloniesoption,
                                     int v_minallowedgrainsize, double v_minseedconfidence,
                                     double v_downsamplefactor, double v_minseedimagequality,
-                                    double v_misorientationtolerance, double v_sizebinstepsize, 
+                                    double v_misorientationtolerance, double v_sizebinstepsize,
                                     AIM::Reconstruction::CrystalStructure v_crystruct,
                                     int v_alignmeth, bool v_alreadyformed)
 {
@@ -1453,11 +1456,7 @@ void  ReconstructionFunc::find_kernels()
   int steps = 1;
   int jStride;
   int kStride;
-  double _1, _2,  _6;
-  double wmin=9999999.0; //,na,nb,nc;
-  double qc[4];
-  double qco[4];
-  double sin_wmin_over_2 = 0.0;
+
 
   for (int i = 0; i < (xpoints * ypoints * zpoints); i++)
   {
@@ -4223,10 +4222,10 @@ int ReconstructionFunc::volume_stats2D(H5ReconStatsWriter::Pointer h5io)
 
 
 
-#define WRITE_VTK_GRAIN_HEADER()\
+#define WRITE_VTK_GRAIN_HEADER(FILE_TYPE)\
   fprintf(f, "# vtk DataFile Version 2.0\n");\
   fprintf(f, "data set from AIMReconstruction\n");\
-  fprintf(f, "ASCII\n");\
+  fprintf(f, FILE_TYPE); fprintf(f, "\n");\
   fprintf(f, "DATASET STRUCTURED_POINTS\n");\
   fprintf(f, "DIMENSIONS %d %d %d\n", xpoints, ypoints, zpoints);\
   fprintf(f, "ORIGIN 0.0 0.0 0.0\n");\
@@ -4260,7 +4259,7 @@ int ReconstructionFunc::write##name##VizFile(const std::string &file)\
   FILE* f = NULL;\
   f = fopen(file.c_str(), "w");\
   if (NULL == f) {return 1;}\
-  WRITE_VTK_GRAIN_HEADER()\
+  WRITE_VTK_GRAIN_HEADER("ASCII")\
   size_t total = xpoints*ypoints*zpoints;\
   WRITE_VTK_GRAIN_IDS()\
   WRITE_VTK_SCALARS_FROM_VOXEL(name, float, var)\
@@ -4275,7 +4274,7 @@ int ReconstructionFunc::write##name##VizFile(const std::string &file)\
   FILE* f = NULL;\
   f = fopen(file.c_str(), "w");\
   if (NULL == f) {return 1;}\
-  WRITE_VTK_GRAIN_HEADER()\
+  WRITE_VTK_GRAIN_HEADER("ASCII")\
   size_t total = xpoints*ypoints*zpoints;\
   WRITE_VTK_GRAIN_IDS()\
   fprintf(f, "SCALARS SchmidFactor float\n");\
@@ -4297,7 +4296,7 @@ int ReconstructionFunc::writeVisualizationFile(const std::string &file)
   FILE* f = NULL;
   f = fopen(file.c_str(), "w");
   if (NULL == f) {return 1;}
-  WRITE_VTK_GRAIN_HEADER()
+  WRITE_VTK_GRAIN_HEADER("ASCII")
   size_t total = xpoints*ypoints*zpoints;
   WRITE_VTK_GRAIN_IDS()
 
@@ -4319,16 +4318,50 @@ int ReconstructionFunc::writeVisualizationFile(const std::string &file)
   return 0;
 }
 
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 int ReconstructionFunc::writeIPFVizFile(const std::string &file)
 {
   FILE* f = NULL;
   f = fopen(file.c_str(), "w");
   if (NULL == f) {return 1;}
-  WRITE_VTK_GRAIN_HEADER()
-  size_t total = xpoints*ypoints*zpoints;
-  WRITE_VTK_GRAIN_IDS()
+#if WRITE_ASCII_VTK_FILE
+  WRITE_VTK_GRAIN_HEADER("ASCII")
+#else
+  WRITE_VTK_GRAIN_HEADER("BINARY")
+#endif
 
-  fprintf(f, "COLOR_SCALARS colors 3\n");
+  size_t total = xpoints*ypoints*zpoints;
+#if WRITE_ASCII_VTK_FILE
+  WRITE_VTK_GRAIN_IDS()
+#else
+  fprintf(f, "SCALARS GrainID int  1\n");
+  fprintf(f, "LOOKUP_TABLE default\n");
+  int* gn = new int[total];
+  int t;
+  for (size_t i = 0; i < total; i++)
+  {
+    t = voxels[i].grainname;
+    #ifdef MXA_LITTLE_ENDIAN
+    MXA::Endian::reverseBytes<int>( t );
+    #endif
+    gn[i] = t;
+  }
+  size_t totalWritten = fwrite(gn, sizeof(int), total, f);
+
+  delete [] gn;
+  if (totalWritten != total)
+  {
+    std::cout << "Error Writing Binary VTK Data into file " << file << std::endl;
+    fclose(f);
+    return -1;
+  }
+#endif
+
+#if WRITE_ASCII_VTK_FILE
+  fprintf(f, "COLOR_SCALARS IPF_Colors 3\n");
   double red,green,blue;
   double q1[4];
   unsigned char rgb[3] = {0, 0, 0};
@@ -4355,6 +4388,41 @@ int ReconstructionFunc::writeIPFVizFile(const std::string &file)
     }
     fprintf(f, "%f %f %f\n",red, green, blue);
   }
+#else
+  fprintf(f, "COLOR_SCALARS IPF_Colors 4\n");
+  // Allocate our RGBA array
+  unsigned char* rgba = new unsigned char[total * 4];
+  //double red,green,blue;
+  double q1[4];
+  //unsigned char rgb[3] = {0, 0, 0};
+
+  double RefDirection[3] = {0.0, 0.0, 1.0};
+  for (size_t i = 0; i < total; i++)
+  {
+    if(crystruct == AIM::Reconstruction::Cubic)
+    {
+      OIMColoring::GenerateIPFColor(voxels[i].euler1, voxels[i].euler2, voxels[i].euler3,
+                                    RefDirection[0], RefDirection[1], RefDirection[2], &rgba[i * 4]);
+    }
+    if(crystruct == AIM::Reconstruction::Hexagonal)
+    {
+      q1[0]=voxels[i].quat[1];
+      q1[1]=voxels[i].quat[2];
+      q1[2]=voxels[i].quat[3];
+      q1[3]=voxels[i].quat[4];
+      OIMColoring::CalculateHexIPFColor(q1, &rgba[i]);
+    }
+    rgba[i*4 + 3] = 255;
+  }
+  totalWritten = fwrite(rgba, sizeof(char), total * 4, f);
+  delete [] rgba;
+  if (totalWritten != total * 4)
+  {
+    std::cout << "Error Writing Binary Data for IPF Colors to file " << file << std::endl;
+    fclose(f);
+    return -1;
+  }
+#endif
 
   fclose(f);
   return 0;
