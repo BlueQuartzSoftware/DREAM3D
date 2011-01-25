@@ -88,6 +88,14 @@ class StatsGenPlotWidget : public QWidget, private Ui::StatsGenPlotWidget
     void setBins(QVector<double> &binValues);
     bool userUpdatedData();
 
+    MXA_INSTANCE_PROPERTY(double, Mu);
+    MXA_INSTANCE_PROPERTY(double, Sigma);
+    MXA_INSTANCE_PROPERTY(double, Cutoff);
+    MXA_INSTANCE_PROPERTY(double, BinStep);
+
+  signals:
+    void userEditedData();
+
   protected slots:
     void updatePlotCurves();
     void userCommittedData(QWidget* w);

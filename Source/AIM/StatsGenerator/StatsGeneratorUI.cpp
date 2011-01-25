@@ -61,6 +61,7 @@
 #include "AIM/Common/HDF5/H5ReconStatsWriter.h"
 #include "AIM/License/AIMRepresentationLicenseFiles.h"
 #include "StatsGen.h"
+#include "SGApplication.h"
 
 
 #define CHECK_ERROR_ON_WRITE(var, msg)\
@@ -71,6 +72,15 @@
       QMessageBox::Ok);\
       return;\
       }
+
+
+#define CHECK_STATS_READ_ERROR(err, group, dataset)\
+if (err < 0) {\
+  std::cout << "StatsGeneratorUI::on_actionOpen_triggered Error: Could not read '" << group << "' data set '" << dataset << "'" << std::endl;\
+  std::cout << "  File: " << __FILE__ << std::endl;\
+  std::cout << "  Line: " << __LINE__ << std::endl;\
+  return;\
+}
 
 
 // -----------------------------------------------------------------------------
@@ -105,7 +115,6 @@ StatsGeneratorUI::StatsGeneratorUI(QWidget *parent) :
 // -----------------------------------------------------------------------------
 StatsGeneratorUI::~StatsGeneratorUI()
 {
-  // TODO Auto-generated destructor stub
 }
 
 // -----------------------------------------------------------------------------
@@ -130,6 +139,7 @@ void StatsGeneratorUI::closeEvent(QCloseEvent *event)
   {
     writeSettings();
     event->accept();
+    emit windowIsClosing(this);
   }
 }
 
@@ -210,6 +220,7 @@ void StatsGeneratorUI::setupGui()
   m_picker->setTrackerPen(QColor(Qt::blue));
 #endif
 
+
   // Setup Each Plot Widget
   m_Omega3Plot->setPlotTitle(QString("Size Vs. Omega 3"));
   m_Omega3Plot->setXAxisName(QString("Omega 3"));
@@ -218,6 +229,9 @@ void StatsGeneratorUI::setupGui()
   m_Omega3Plot->setStatisticsType(AIM::Reconstruction::Grain_SizeVOmega3);
   m_Omega3Plot->blockDistributionTypeChanges(true);
   m_Omega3Plot->setRowOperationEnabled(false);
+  setSizeDistributionValues(m_Omega3Plot);
+  connect(m_Omega3Plot, SIGNAL(userEditedData()),
+          this, SLOT(dataWasEdited()));
 
   m_BOverAPlot->setPlotTitle(QString("B/A Shape Distribution"));
   m_BOverAPlot->setXAxisName(QString("B/A"));
@@ -226,6 +240,10 @@ void StatsGeneratorUI::setupGui()
   m_BOverAPlot->setStatisticsType(AIM::Reconstruction::Grain_SizeVBoverA);
   m_BOverAPlot->blockDistributionTypeChanges(true);
   m_BOverAPlot->setRowOperationEnabled(false);
+  setSizeDistributionValues(m_BOverAPlot);
+  connect(m_BOverAPlot, SIGNAL(userEditedData()),
+          this, SLOT(dataWasEdited()));
+
 
   m_COverAPlot->setPlotTitle(QString("C/A Shape Distribution"));
   m_COverAPlot->setXAxisName(QString("C/A"));
@@ -234,6 +252,9 @@ void StatsGeneratorUI::setupGui()
   m_COverAPlot->setStatisticsType(AIM::Reconstruction::Grain_SizeVCoverA);
   m_COverAPlot->blockDistributionTypeChanges(true);
   m_COverAPlot->setRowOperationEnabled(false);
+  setSizeDistributionValues(m_COverAPlot);
+  connect(m_COverAPlot, SIGNAL(userEditedData()),
+          this, SLOT(dataWasEdited()));
 
   m_COverBPlot->setPlotTitle(QString("C/B Shape Distribution"));
   m_COverBPlot->setXAxisName(QString("C/B"));
@@ -242,6 +263,9 @@ void StatsGeneratorUI::setupGui()
   m_COverBPlot->setStatisticsType(AIM::Reconstruction::Grain_SizeVCoverB);
   m_COverBPlot->blockDistributionTypeChanges(true);
   m_COverBPlot->setRowOperationEnabled(false);
+  setSizeDistributionValues(m_COverBPlot);
+  connect(m_COverBPlot, SIGNAL(userEditedData()),
+          this, SLOT(dataWasEdited()));
 
   m_NeighborPlot->setPlotTitle(QString("Neighbors Distributions"));
   m_NeighborPlot->setXAxisName(QString("Distance (Multiples of Diameter)"));
@@ -250,7 +274,9 @@ void StatsGeneratorUI::setupGui()
   m_NeighborPlot->setStatisticsType(AIM::Reconstruction::Grain_SizeVNeighbors);
   m_NeighborPlot->blockDistributionTypeChanges(true);
   m_NeighborPlot->setRowOperationEnabled(false);
-
+  setSizeDistributionValues(m_NeighborPlot);
+  connect(m_NeighborPlot, SIGNAL(userEditedData()),
+          this, SLOT(dataWasEdited()));
 
   m_SizeDistributionPlot->setCanvasBackground(QColor(Qt::white));
   m_SizeDistributionPlot->setTitle("Size Distribution");
@@ -265,6 +291,44 @@ void StatsGeneratorUI::setupGui()
   updateSizeDistributionPlot();
   calculateNumberOfBins();
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void StatsGeneratorUI::setSizeDistributionValues(StatsGenPlotWidget* w)
+{
+  bool ok = false;
+  double mu = 1.0;
+  double sigma = 1.0;
+  double cutOff = 1.0;
+  double stepSize = 1.0;
+  mu = m_Mu_SizeDistribution->text().toDouble(&ok);
+  if (ok == false)
+  {
+    return;
+  }
+  sigma = m_Sigma_SizeDistribution->text().toDouble(&ok);
+  if (ok == false)
+  {
+    return;
+  }
+  cutOff = m_SigmaCutOff_SizeDistribution->text().toDouble(&ok);
+  if (ok == false)
+  {
+    return;
+  }
+  stepSize = m_BinStepSize->text().toDouble(&ok);
+  if (ok == false)
+  {
+    return;
+  }
+  w->setMu(mu);
+  w->setSigma(sigma);
+  w->setCutoff(cutOff);
+  w->setBinStep(stepSize);
+}
+
+
 
 // -----------------------------------------------------------------------------
 //
@@ -336,6 +400,15 @@ void StatsGeneratorUI::setTabsPlotTabsEnabled(bool b)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void StatsGeneratorUI::dataWasEdited()
+{
+  setTabsPlotTabsEnabled(true);
+  this->tabWidget->setTabEnabled(0, false);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void StatsGeneratorUI::setWidgetListEnabled(bool b)
 {
   foreach (QWidget* w, m_WidgetList)
@@ -390,7 +463,7 @@ void StatsGeneratorUI::updateRecentFileList(const QString &file)
       action->setData(file);
       action->setVisible(true);
       this->menu_RecentFiles->addAction(action);
-      connect(action, SIGNAL(triggered()), this, SLOT(openRecentBaseImageFile()));
+      connect(action, SIGNAL(triggered()), this, SLOT(openRecentFile()));
     }
 }
 
@@ -408,23 +481,6 @@ void StatsGeneratorUI::openRecentFile()
     QString file = action->data().toString();
     openFile(file);
   }
-
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void StatsGeneratorUI::openFile(QString imageFile)
-{
-  if (true == imageFile.isEmpty()) // User cancelled the operation
-  {
-    return;
-  }
-
-  // Tell the RecentFileList to update itself then broadcast those changes.
-  QRecentFileList::instance()->addFile(imageFile);
-  setWidgetListEnabled(true);
-  updateRecentFileList(imageFile);
 }
 
 // -----------------------------------------------------------------------------
@@ -464,6 +520,21 @@ void StatsGeneratorUI::on_actionSave_triggered()
     m_OpenDialogLastDirectory = fi.path();
     m_FileSelected = true;
   }
+
+
+  // Verify that the Mu, Sigma, Cutoff, BinStep are all set correctly by getting the
+  // values from one of the PlotWidgets
+  double mu, sigma, cutOff, binStep;
+  mu = m_Omega3Plot->getMu();
+  sigma = m_Omega3Plot->getSigma();
+  cutOff = m_Omega3Plot->getCutoff();
+  binStep = m_Omega3Plot->getBinStep();
+  m_Sigma_SizeDistribution->setText(QString::number(mu));
+  m_Mu_SizeDistribution->setText(QString::number(sigma));
+  m_SigmaCutOff_SizeDistribution->setText(QString::number(cutOff));
+  m_BinStepSize->setValue(binStep);
+
+
 
   H5ReconStatsWriter::Pointer writer = H5ReconStatsWriter::New(m_FilePath.toStdString());
 
@@ -521,13 +592,29 @@ void StatsGeneratorUI::on_actionSave_triggered()
 
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void StatsGeneratorUI::on_actionNew_triggered()
+{
 
-#define CHECK_STATS_READ_ERROR(err, group, dataset)\
-if (err < 0) {\
-  std::cout << "StatsGeneratorUI::on_actionOpen_triggered Error: Could not read '" << group << "' data set '" << dataset << "'" << std::endl;\
-  std::cout << "  File: " << __FILE__ << std::endl;\
-  std::cout << "  Line: " << __LINE__ << std::endl;\
-return;}
+  SGApplication* app = qobject_cast<SGApplication*>(SGApplication::instance());
+  // Create a new Window
+  StatsGeneratorUI* window = app->createNewStatsGenerator();
+
+  // Get a unique File name
+  QString filePath = app->newTempFile(m_OpenDialogLastDirectory);
+  window->setFilePath(filePath);
+
+  // Offset the window a bit from the current window
+  QRect geometry = this->geometry();
+  geometry.setX(geometry.x() + 25);
+  geometry.setY(geometry.y() + 25);
+  window->setGeometry(geometry);
+
+  // Show the window
+  window->show();
+}
 
 // -----------------------------------------------------------------------------
 //
@@ -539,6 +626,42 @@ void StatsGeneratorUI::on_actionOpen_triggered()
     proposedFile,
     tr("HDF5 Files (*.h5)") );
   if ( true == h5file.isEmpty() ){ return;  }
+
+  SGApplication* app = qobject_cast<SGApplication*>(SGApplication::instance());
+  // Create a new Window
+  StatsGeneratorUI* window = app->createNewStatsGenerator();
+  window->openFile(h5file);
+
+  // Offset the window a bit from the current window
+  QRect geometry = this->geometry();
+  geometry.setX(geometry.x() + 25);
+  geometry.setY(geometry.y() + 25);
+  window->setGeometry(geometry);
+
+  app->checkWindowPosition(window);
+
+  // Show the window
+  window->show();
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void StatsGeneratorUI::openFile(QString h5file)
+{
+
+  if (true == h5file.isEmpty()) // User cancelled the operation
+  {
+    return;
+  }
+
+  // Tell the RecentFileList to update itself then broadcast those changes.
+  QRecentFileList::instance()->addFile(h5file);
+  setWidgetListEnabled(true);
+  updateRecentFileList(h5file);
+
+
   m_FilePath = h5file;
   QFileInfo fi (m_FilePath);
   QString ext = fi.suffix();
@@ -594,14 +717,19 @@ void StatsGeneratorUI::on_actionOpen_triggered()
   QVector<double> qbins = QVector<double>::fromStdVector(bins);
 
   m_Omega3Plot->readDataFromHDF5(reader, qbins, AIM::HDF5::Grain_SizeVOmega3_Distributions);
+  setSizeDistributionValues(m_Omega3Plot);
 
   m_BOverAPlot->readDataFromHDF5(reader, qbins, AIM::HDF5::Grain_SizeVBoverA_Distributions);
+  setSizeDistributionValues(m_BOverAPlot);
 
   m_COverAPlot->readDataFromHDF5(reader, qbins, AIM::HDF5::Grain_SizeVCoverA_Distributions);
+  setSizeDistributionValues(m_COverAPlot);
 
   m_COverBPlot->readDataFromHDF5(reader, qbins, AIM::HDF5::Grain_SizeVCoverB_Distributions);
+  setSizeDistributionValues(m_COverBPlot);
 
   m_NeighborPlot->readDataFromHDF5(reader, qbins, AIM::HDF5::Grain_SizeVNeighbors_Distributions);
+  setSizeDistributionValues(m_NeighborPlot);
 
   // Enable all the tabs
   setTabsPlotTabsEnabled(true);
@@ -612,8 +740,7 @@ void StatsGeneratorUI::on_actionOpen_triggered()
   windowTitle = windowTitle +  m_FilePath + QString(" - StatsGenerator");
   setWindowTitle(windowTitle);
 
-
-
+  dataWasEdited();
 }
 
 // -----------------------------------------------------------------------------
@@ -764,19 +891,6 @@ int StatsGeneratorUI::computeBinsAndCutOffs( QwtArray<double> &binsizes, QwtArra
   // QwtArray<int> numgrains;
   err = sg.GenCutOff<double, QwtArray<double> > (mu, sigma, cutOff, binStepSize, xCo, yCo, yMax, numsizebins, binsizes);
 
-#if 0
-  std::cout << "Cut Off Values" << std::endl;
-  for (int i = 0; i < 2; ++i)
-  {
-    std::cout << "xCo[" << i << "]: " << xCo[i] << "  yCo[" << i << "]: " << yCo[i] << std::endl;
-  }
-
-  std::cout << "Bin#" << std::endl;
-  for (int i = 0; i < numsizebins; ++i)
-  {
-    std::cout << binsizes[i] << std::endl;
-  }
-#endif
   return 0;
 }
 
@@ -875,16 +989,22 @@ void StatsGeneratorUI::plotSizeDistribution()
   int err = computeBinsAndCutOffs(binsizes, xCo, yCo, xMax, yMax, x, y);
   if (err < 0) { return; }
 
+
   // Now that we have bins and grain sizes, push those to the other plot widgets
   // Setup Each Plot Widget
+  setSizeDistributionValues(m_Omega3Plot);
   m_Omega3Plot->setBins(binsizes);
 
+  setSizeDistributionValues(m_BOverAPlot);
   m_BOverAPlot->setBins(binsizes);
 
+  setSizeDistributionValues(m_COverAPlot);
   m_COverAPlot->setBins(binsizes);
 
+  setSizeDistributionValues(m_COverBPlot);
   m_COverBPlot->setBins(binsizes);
 
+  setSizeDistributionValues(m_NeighborPlot);
   m_NeighborPlot->setBins(binsizes);
 }
 
@@ -899,4 +1019,21 @@ void StatsGeneratorUI::on_actionAbout_triggered()
   version.append(AIMRepresentation::Version::PackageComplete.c_str());
   about.setApplicationInfo(an, version);
   about.exec();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void StatsGeneratorUI::setFilePath(QString filePath)
+{
+  this->m_FilePath = filePath;
+  adjustWindowTitle();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString StatsGeneratorUI::getFilePath()
+{
+  return m_FilePath;
 }

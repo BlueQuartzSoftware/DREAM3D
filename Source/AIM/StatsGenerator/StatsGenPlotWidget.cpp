@@ -63,7 +63,12 @@
 //
 // -----------------------------------------------------------------------------
 StatsGenPlotWidget::StatsGenPlotWidget(QWidget *parent) :
-QWidget(parent), m_TableModel(NULL),
+QWidget(parent),
+m_Mu(1.0),
+m_Sigma(0.1),
+m_Cutoff(3),
+m_BinStep(1.0),
+m_TableModel(NULL),
 //m_zoomer(NULL), m_picker(NULL), m_panner(NULL),
 m_grid(NULL),
 m_DistributionType(AIM::Reconstruction::UnknownDistributionType),
@@ -315,6 +320,7 @@ void StatsGenPlotWidget::resetTableModel()
 void StatsGenPlotWidget::userCommittedData(QWidget* w)
 {
   m_UserUpdatedData = true;
+  emit userEditedData();
 }
 
 // -----------------------------------------------------------------------------
