@@ -1821,7 +1821,7 @@ void RepresentationUI::oim_SetupGui()
            this, SLOT(on_oim_OutputFile_textChanged(const QString &)));
 
   m_WidgetList << oim_InputDir << oim_InputDirBtn << oim_OutputFile << oim_OutputFileBtn;
-  m_WidgetList << oim_FileExt << oim_ErrorMessage;
+  m_WidgetList << oim_FileExt << oim_ErrorMessage << oim_TotalDigits;
   m_WidgetList << oim_FilePrefix << oim_TotalSlices << oim_ZStartIndex << oim_ZEndIndex << oim_zSpacing;
   oim_ErrorMessage->setVisible(false);
 }
@@ -1860,12 +1860,12 @@ void RepresentationUI::oim_LoadSettings(QSettings &prefs)
   READ_FILEPATH_SETTING(prefs, oim_InputDir, "");
   READ_STRING_SETTING(prefs, oim_FilePrefix, "");
   READ_STRING_SETTING(prefs, oim_FileSuffix, "");
-  READ_STRING_SETTING(prefs, oim_FileExt, ".ang");
+  READ_STRING_SETTING(prefs, oim_FileExt, "ang");
 //  READ_STRING_SETTING(prefs, oim_TotalSlices, "");
   READ_SETTING(prefs, oim_ZStartIndex, ok, i, 1 , Int);
   READ_SETTING(prefs, oim_ZEndIndex, ok, i, 10 , Int);
   READ_STRING_SETTING(prefs, oim_zSpacing, "0.25");
-  READ_STRING_SETTING(prefs, oim_OutputFile, "*.h5ang");
+  READ_STRING_SETTING(prefs, oim_OutputFile, "Untitled.h5ang");
   prefs.endGroup();
 }
 

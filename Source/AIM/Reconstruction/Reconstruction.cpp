@@ -28,8 +28,14 @@
 
 #include "AIM/Common/HDF5/H5ReconStatsWriter.h"
 
+#define RECON_TIMINGS 0
+
+#if RECON_TIMINGS
 #define START_CLOCK()\
   unsigned long long int millis = MXA::getMilliSeconds();
+#else
+#define START_CLOCK() unsigned long long int millis = 0;
+#endif
 
 #ifdef AIM_USE_QT
 #define CHECK_FOR_CANCELED(AClass, name)\
@@ -40,8 +46,9 @@
               emit updateProgress(0);\
               emit finished();\
       return;}\
+      if(RECON_TIMINGS) {\
     std::cout << #name << " Finish Time(ms): " << (MXA::getMilliSeconds() - millis) << std::endl;\
-    millis = MXA::getMilliSeconds();
+    millis = MXA::getMilliSeconds(); }
 
 
 #else
