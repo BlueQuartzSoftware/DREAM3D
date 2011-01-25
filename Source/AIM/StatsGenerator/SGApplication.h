@@ -28,42 +28,40 @@
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "StatsGeneratorUI.h"
+#ifndef SGAPPLICATION_H_
+#define SGAPPLICATION_H_
 
-#include <AIM/Common/Qt/QRecentFileList.h>
-#include "SGApplication.h"
 
 //-- Qt Headers
+#include <QtCore/QObject>
+#include <QtCore/QList>
+#include <QtCore/QString>
 #include <QtGui/QApplication>
 
+class StatsGeneratorUI;
+
 /**
- * @brief The Main entry point for the application
+ *
  */
-int main (int argc, char *argv[])
+class SGApplication  : public QApplication
 {
-  SGApplication app(argc, argv);
-  QCoreApplication::setOrganizationName("BlueQuartz Software");
-  QCoreApplication::setOrganizationDomain("bluequartz.net");
-  QCoreApplication::setApplicationName("StatsGeneratorUI");
-#if defined( Q_WS_MAC )
-  //Needed for typical Mac program behavior.
-  app.setQuitOnLastWindowClosed( true );
-#endif //APPLE
+    Q_OBJECT
+  public:
+    SGApplication(int &argc, char **argv);
+    virtual ~SGApplication();
 
-#if defined (Q_OS_MAC)
-  QSettings prefs(QSettings::NativeFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
-#else
-  QSettings prefs(QSettings::IniFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
-#endif
-  QRecentFileList::instance()->readList(prefs);
+    StatsGeneratorUI* createNewStatsGenerator();
+    QString newTempFile(QString directory);
+    void checkWindowPosition(StatsGeneratorUI* win);
+
+  public slots:
+    void windowClosed(StatsGeneratorUI* window);
 
 
-  StatsGeneratorUI *viewer = app.createNewStatsGenerator();
-  viewer->show();
-  int app_return = app.exec();
 
-  QRecentFileList::instance()->writeList(prefs);
 
-  return app_return;
-}
+private:
+    QList<StatsGeneratorUI*>  m_Windows;
+};
 
+#endif /* SGAPPLICATION_H_ */

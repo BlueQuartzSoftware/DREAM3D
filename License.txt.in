@@ -1,18 +1,52 @@
 <html>
 <body>
-<pre>
 
-Copyright (c) <2009, 2010> <Michael A. Jackson>
-All rights reserved.
+
+<h2>Distribution authorized to DoD components and DoD contractors only</h2>
+<pre>         
+Administrative or Operational Use;                                          
+February 2009.                                                              
+Other requests for this document shall be referred to                       
+U.S. Air Force Research Laboratory                                          
+2230 Tenth St., Ste. 1                                                      
+Wright-Patterson AFB, OH 45433-7817                                         
+                                                                            
+Destroy by contents or reconstruction of the document.                      
+                                                                            
+Portions of the software were written under U.S. Air Force contrct FA8650-07-D-5800     
+</pre>
+
+<hr/>
+<h2>AIMRepresentation License Version 1.0</h2>
+
+<pre>
+Copyright (c) 2009-2011 Michael A. Jackson, All rights reserved.
+BlueQuartz Software
+400 South Pioneer Blvd.
+Springboro, Ohio 45066
+
+Copyright (c) 2009-2011 Michael A. Groeber, All rights reserved.
+U.S. Air Force Research Laboratory                                          
+2230 Tenth St., Ste. 1                                                      
+Wright-Patterson AFB, OH 45433-7817
+</pre>
+
+<pre>
+Under the terms of Contract FA8650-07-D-5800, there is a
+non-exclusive license for use of this work by or on behalf of the
+U.S. Government.
+
 
 Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
 
 1) Redistributions of source code must retain the above copyright notice, this 
 list of conditions and the following disclaimer.
+
 2) Redistributions in binary form must reproduce the above copyright notice, 
 this list of conditions and the following disclaimer in the documentation 
 and/or other materials provided with the distribution.
+
 3) Neither the name of Michael A. Jackson nor BlueQuartz Software nor the names 
 of its contributors may be used to endorse or promote products derived from this
 software without specific prior written permission.
@@ -27,8 +61,50 @@ DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
 LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
 OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
 OF THE POSSIBILITY OF SUCH DAMAGE.
+</pre>
+
+<h2>PUBLIC RELEASE INFORMATION</h2>
+Upon public release the following license information will pertain to this work:
+
+<pre>
+  ========================================================================
+
+  Copyright (c) 2009-2011 U.S. Air Force Research Laboratory
+
+  This software and ancillary information known as AIMRepresentation (and herein
+  called "SOFTWARE") is made available under the terms described below.
+  
+  The SOFTWARE has NOT been approved for release with associated Case Number 
+  XXXXXXXXX, granted by US Air ForcePublic Affairs.
+
+  Unless otherwise indicated, this SOFTWARE has been authored by an
+  employee or employees of the U.S. Air Force Research Laboratory or one of
+  its contractors or subcontractors under Contract No. FA8650-07-D-5800 with
+  the United States Air Force.
+
+  The United States Government has rights to use, reproduce, and
+  distribute this SOFTWARE.  The public may copy, distribute, prepare
+  derivative works and publicly display this SOFTWARE without charge,
+  provided that this Notice and any statement of authorship are
+  reproduced on all copies.
+
+  Neither the U. S. Government, Universal Technology Corporation or BlueQuartz
+  Software makes any warranty, either express or
+  implied, nor assumes any liability or responsibility for the use of
+  this SOFTWARE.
+
+  If SOFTWARE is modified to produce derivative works, such modified
+  SOFTWARE should be clearly marked, so as not to confuse it with the
+  version available from Los Alamos National Laboratory.
+</pre>
 
 
+
+
+
+<hr/>
+<h2>Other Licenses</h2>
+<pre>
 Other Licenses apply to third party software frameworks that are used to create
 this software product. Each of those license files can be found included with
 this software product.

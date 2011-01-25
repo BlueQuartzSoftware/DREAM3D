@@ -68,10 +68,20 @@ Q_OBJECT    ;
 
     void calculateNumberOfBins();
 
+    void setFilePath(QString filePath);
+    QString getFilePath();
 
-    protected slots:
+    void openFile(QString h5file);
+    void setSizeDistributionValues(StatsGenPlotWidget* w);
+
+
+  signals:
+      void windowIsClosing(StatsGeneratorUI*);
+
+  protected slots:
 
     /* Menu Slots */
+    void on_actionNew_triggered();
     void on_actionOpen_triggered();
     void on_actionClose_triggered();
     void on_actionExit_triggered();
@@ -86,9 +96,9 @@ Q_OBJECT    ;
 
     void on_m_GenerateDefaultData_clicked();
 
+    void dataWasEdited();
 
-
-    protected:
+  protected:
 
     /**
      * @brief Implements the CloseEvent to Quit the application and write settings
@@ -138,18 +148,12 @@ Q_OBJECT    ;
     bool verifyOutputPathParentExists(QString outFilePath, QLineEdit* lineEdit);
 
     /**
-     * @brief Opens an Image file
-     * @param imageFile The path to the image file to open.
-     */
-    void openFile(QString imageFile);
-
-    /**
      * @brief Enables or disables the various PlotWidgetTabs
      * @param b Enable or disable the plotwidgets
      */
     void setTabsPlotTabsEnabled(bool b);
 
-    private slots:
+  private slots:
 
     /**
      * @brief Updates the QMenu 'Recent Files' with the latest list of files. This
