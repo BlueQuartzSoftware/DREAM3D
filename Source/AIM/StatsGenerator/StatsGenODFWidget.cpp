@@ -149,6 +149,7 @@ void StatsGenODFWidget::resetTableModel()
   }
 
   m_TableModel = new SGODFTableModel;
+  m_TableModel->setInitialValues();
 
   m_TableView->setModel(m_TableModel);
   QAbstractItemDelegate* aid = m_TableModel->getItemDelegate();

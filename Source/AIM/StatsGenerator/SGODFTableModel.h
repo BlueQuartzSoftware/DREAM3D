@@ -49,6 +49,7 @@ class SGODFTableModel : public QAbstractTableModel
     {
       Texture = 0,
       Weight,
+      Sigma,
       ColumnCount
     };
 
@@ -153,6 +154,7 @@ class SGODFTableModel : public QAbstractTableModel
 
      virtual void setColumnData(int col, QVector<double> &data);
 
+     virtual void setInitialValues();
 
 
   private:
@@ -161,6 +163,7 @@ class SGODFTableModel : public QAbstractTableModel
 
     QVector<QString> m_Textures;
     QVector<double> m_Weights;
+    QVector<double> m_Sigmas;
 
      SGODFTableModel(const SGODFTableModel&); // Copy Constructor Not Implemented
     void operator=(const SGODFTableModel&); // Operator '=' Not Implemented
