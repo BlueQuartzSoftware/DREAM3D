@@ -127,6 +127,7 @@ void StatsGenODFWidget::initQwtPlot(QString xAxisName, QString yAxisName, QwtPlo
   plot->setAxisTitle(QwtPlot::yLeft, yAxisName);
   plot->setCanvasBackground(QColor(Qt::white));
 
+
 #if 0
   m_grid = new QwtPlotGrid;
   m_grid->enableXMin(true);
@@ -230,21 +231,26 @@ void StatsGenODFWidget::on_m_CalculateODFBtn_clicked()
   }
   QwtPlotCurve* curve = m_PlotCurves[0];
   curve->setData(x001, y001);
+  curve->setStyle(QwtPlotCurve::Dots);
   curve->attach(m_Plot1);
-  m_Plot1->setAxisScale(QwtPlot::yLeft, 0.0, 1.0);
-  m_Plot1->setAxisScale(QwtPlot::xBottom, 0.0, 1.0);
+//  m_Plot1->setAxisScale(QwtPlot::yLeft, 0.0, 1.0);
+//  m_Plot1->setAxisScale(QwtPlot::xBottom, 0.0, 1.0);
+  m_Plot1->replot();
 
   curve = m_PlotCurves[1];
   curve->setData(x011, y011);
+  curve->setStyle(QwtPlotCurve::Dots);
   curve->attach(m_Plot2);
-  m_Plot2->setAxisScale(QwtPlot::yLeft, 0.0, 1.0);
-  m_Plot2->setAxisScale(QwtPlot::xBottom, 0.0, 1.0);
+//  m_Plot2->setAxisScale(QwtPlot::yLeft, 0.0, 1.0);
+//  m_Plot2->setAxisScale(QwtPlot::xBottom, 0.0, 1.0);
+  m_Plot2->replot();
 
   curve = m_PlotCurves[2];
   curve->setData(x111, y111);
+  curve->setStyle(QwtPlotCurve::Dots);
   curve->attach(m_Plot3);
-  m_Plot3->setAxisScale(QwtPlot::yLeft, 0.0, 1.0);
-  m_Plot3->setAxisScale(QwtPlot::xBottom, 0.0, 1.0);
-
+//  m_Plot3->setAxisScale(QwtPlot::yLeft, 0.0, 1.0);
+//  m_Plot3->setAxisScale(QwtPlot::xBottom, 0.0, 1.0);
+  m_Plot3->replot();
 
 }
