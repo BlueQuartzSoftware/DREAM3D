@@ -142,6 +142,37 @@ namespace AIM
       UnknownDistributionType = 999
     };
 
+	const double Brass[3] = {0.610865,0.785398,0.0};
+	const double S[3] = {0.959931,0.610865,1.134464};
+	const double Copper[3] = {1.570796,0.523599,0.785398};
+	const double Shear1[3] = {0.0,0.0,0.785398};
+	const double Shear2[3] = {0.0,0.959931,0.785398};
+	const double Shear3[3] = {0.0,0.610865,0.785398};
+	const double Goss[3] = {0.0,0.785398,0.0};
+	const double Cube[3] = {0.0,0.0,0.0};
+	const double RC1[3] = {0.0,0.349066,0.0};
+	const double RC2[3] = {0.0,0.610865,0.0};
+	const double RC3[3] = {0.349066,0.0,0.0};
+	const double RC4[3] = {0.610865,0.0,0.0};
+	const double P[3] = {1.22173,0.785398,0.0};
+	const double Q[3] = {0.959931,0.349066,0.0};
+	const double R[3] = {0.959931,1.308997,0.436332};
+
+//	const int Brassbin = {0.610865,0.785398,0.0};
+//	const int Sbin = {0.959931,0.610865,1.134464};
+//	const int Copperbin = {1.570796,0.523599,0.785398};
+//	const int Shear1bin = {0.0,0.0,0.785398};
+//	const int Shear2bin = {0.0,0.959931,0.785398};
+//	const int Shear3bin = {0.0,0.610865,0.785398};
+//	const int Gossbin = {0.0,0.785398,0.0};
+//	const int Cubebin = {0.0,0.0,0.0};
+//	const int RC1bin = {0.0,0.349066,0.0};
+//	const int RC2bin = {0.0,0.610865,0.0};
+//	const int RC3bin = {0.349066,0.0,0.0};
+//	const int RC4bin = {0.610865,0.0,0.0};
+//	const int Pbin = {1.22173,0.785398,0.0};
+//	const int Qbin = {0.959931,0.349066,0.0};
+//	const int Rbin = {0.959931,1.308997,0.436332};
   }
 
 

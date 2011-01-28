@@ -2997,7 +2997,31 @@ void  ReconstructionFunc::find_vectors2D(H5ReconStatsWriter::Pointer h5io)
 void  ReconstructionFunc::find_eulerodf (H5ReconStatsWriter::Pointer h5io)
 {
 	totalvol = 0;
+	double w, denom, n1, n2, n3;
+	int ea1bin, ea2bin, ea3bin, bin;
+	double dim1 = 0;
+	double dim2 = 0;
+	double dim3 = 0;
+	if(crystruct == AIM::Reconstruction::Cubic)
+	{
+	  dim1 = pow((0.75*((m_pi/4.0)-sin((m_pi/4.0)))),(1.0/3.0));
+	  dim2 = pow((0.75*((m_pi/4.0)-sin((m_pi/4.0)))),(1.0/3.0));
+	  dim3 = pow((0.75*((m_pi/4.0)-sin((m_pi/4.0)))),(1.0/3.0));
+	}
+	if(crystruct == AIM::Reconstruction::Hexagonal)
+	{
+	  dim1 = pow((0.75*((m_pi/2.0)-sin((m_pi/2.0)))),(1.0/3.0));
+	  dim2 = pow((0.75*((m_pi/2.0)-sin((m_pi/2.0)))),(1.0/3.0));
+	  dim3 = pow((0.75*((m_pi/6.0)-sin((m_pi/6.0)))),(1.0/3.0));
+	}
+	double degtorad = m_pi/180.0;
+	double q1[5];
+	double qref[5];
 	double *eulerodf;
+	qref[1] = sin(0.5*0.0)*cos(0.5*(0.0-0.0));
+	qref[2] = sin(0.5*0.0)*sin(0.5*(0.0-0.0));
+	qref[3] = cos(0.5*0.0)*sin(0.5*(0.0+0.0));
+	qref[4] = cos(0.5*0.0)*cos(0.5*(0.0+0.0));
 	if(crystruct == AIM::Reconstruction::Hexagonal)
 	{
 		eulerodf = new double [36*36*12];
@@ -3014,402 +3038,60 @@ void  ReconstructionFunc::find_eulerodf (H5ReconStatsWriter::Pointer h5io)
 			eulerodf[i] = 0.0;
 		}
 	}
-	double a = sqrt(3.0)/2.0;
-	double Oc[3][3];
-	double Os[3][3];
-	double ga[3][3];
-	double m1[3][3];
-	double m2[3][3];
 	for(int i=1;i<numgrains;i++)
 	{
 		if(m_Grains[i].surfacegrain == 0)
 		{
 			double vol = m_Grains[i].volume;
-			double ea1good = m_Grains[i].euler1;
-			double ea2good = m_Grains[i].euler2;
-			double ea3good = m_Grains[i].euler3;
+			q1[1] = m_Grains[i].avg_quat[1];
+			q1[2] = m_Grains[i].avg_quat[2];
+			q1[3] = m_Grains[i].avg_quat[3];
+			q1[4] = m_Grains[i].avg_quat[4];
 			if(crystruct == AIM::Reconstruction::Hexagonal)
 			{
-				for(int k = 0; k < 12; k++)
-				{
-					if (k == 0)
-					{
-						Oc[0][0] = 1.0; Oc[0][1] = 0.0; Oc[0][2] = 0.0;
-						Oc[1][0] = 0.0; Oc[1][1] = 1.0; Oc[1][2] = 0.0;
-						Oc[2][0] = 0.0; Oc[2][1] = 0.0; Oc[2][2] = 1.0;
-					}
-					else if (k == 1)
-					{
-						Oc[0][0] = -0.5; Oc[0][1] = a; Oc[0][2] =  0.0;
-						Oc[1][0] = -a; Oc[1][1] = -0.5; Oc[1][2] = 0.0;
-						Oc[2][0] = 0.0; Oc[2][1] = 0.0; Oc[2][2] = 1.0;
-					}
-					else if (k == 2)
-					{
-						Oc[0][0] = -0.5; Oc[0][1] =  -a; Oc[0][2] =  0.0;
-						Oc[1][0] = a; Oc[1][1] = -0.5; Oc[1][2] =  0.0;
-						Oc[2][0] = 0.0; Oc[2][1] =  0.0; Oc[2][2] = 1.0;
-					}
-					else if (k == 3)
-					{
-						Oc[0][0] = 0.5; Oc[0][1] =  a; Oc[0][2] = 0.0;
-						Oc[1][0] = -a; Oc[1][1] =  0.5; Oc[1][2] = 0.0;
-						Oc[2][0] = 0.0; Oc[2][1] = 0.0; Oc[2][2] = 1.0;
-					}
-					else if (k == 4)
-					{
-						Oc[0][0] = -1.0; Oc[0][1] = 0.0; Oc[0][2] = 0.0;
-						Oc[1][0] = 0.0; Oc[1][1] = -1.0; Oc[1][2] =  0.0;
-						Oc[2][0] = 0.0; Oc[2][1] = 0.0; Oc[2][2] =  1.0;
-					}
-					else if (k == 5)
-					{
-						Oc[0][0] =  0.5; Oc[0][1] = -a; Oc[0][2] = 0.0;
-						Oc[1][0] =  a; Oc[1][1] = 0.5; Oc[1][2] = 0.0;
-						Oc[2][0] = 0.0; Oc[2][1] = 0.0; Oc[2][2] = 1.0;
-					}
-					else if (k == 6)
-					{
-						Oc[0][0] = -0.5; Oc[0][1] = -a; Oc[0][2] =  0.0;
-						Oc[1][0] =  -a; Oc[1][1] = 0.5; Oc[1][2] =  0.0;
-						Oc[2][0] =  0.0; Oc[2][1] = 0.0; Oc[2][2] = -1.0;
-					}
-					else if (k == 7)
-					{
-						Oc[0][0] = 1.0; Oc[0][1] =  0.0; Oc[0][2] = 0.0;
-						Oc[1][0] =  0.0; Oc[1][1] = -1.0; Oc[1][2] = 0.0;
-						Oc[2][0] =  0.0; Oc[2][1] =  0.0; Oc[2][2] = -1.0;
-					}
-					else if (k == 8)
-					{
-						Oc[0][0] =  -0.5; Oc[0][1] = a; Oc[0][2] = 0.0;
-						Oc[1][0] = a; Oc[1][1] = 0.5; Oc[1][2] = 0.0;
-						Oc[2][0] =  0.0; Oc[2][1] = 0.0; Oc[2][2] = -1.0;
-					}
-					else if (k == 9)
-					{
-						Oc[0][0] = 0.5; Oc[0][1] = a; Oc[0][2] = 0.0;
-						Oc[1][0] = a; Oc[1][1] =  -0.5; Oc[1][2] = 0.0;
-						Oc[2][0] = 0.0; Oc[2][1] =  0.0; Oc[2][2] = -1.0;
-					}
-					else if (k == 10)
-					{
-						Oc[0][0] =  -1.0; Oc[0][1] = 0.0; Oc[0][2] = 0.0;
-						Oc[1][0] =  0.0; Oc[1][1] =  1.0; Oc[1][2] = 0.0;
-						Oc[2][0] = 0.0; Oc[2][1] =  0.0; Oc[2][2] = -1.0;
-					}
-					else
-					{
-						Oc[0][0] =  0.5; Oc[0][1] =  -a; Oc[0][2] = 0.0;
-						Oc[1][0] = -a; Oc[1][1] =  -0.5; Oc[1][2] = 0.0;
-						Oc[2][0] =  0.0; Oc[2][1] = 0.0; Oc[2][2] = -1.0;
-					}
-					ga[0][0] = cos(ea1good)*cos(ea3good)-sin(ea1good)*sin(ea3good)*cos(ea2good);
-					ga[0][1] = sin(ea1good)*cos(ea3good)+cos(ea1good)*sin(ea3good)*cos(ea2good);
-					ga[0][2] = sin(ea3good)*sin(ea2good);
-					ga[1][0] = -cos(ea1good)*sin(ea3good)-sin(ea1good)*cos(ea3good)*cos(ea2good);
-					ga[1][1] = -sin(ea1good)*sin(ea3good)+cos(ea1good)*cos(ea3good)*cos(ea2good);
-					ga[1][2] =  cos(ea3good)*sin(ea2good);
-					ga[2][0] =  sin(ea1good)*sin(ea2good);
-					ga[2][1] = -cos(ea1good)*sin(ea2good);
-					ga[2][2] =  cos(ea2good);
-					m1[0][0] = Oc[0][0]*ga[0][0] + Oc[0][1]*ga[1][0] + Oc[0][2]*ga[2][0];
-					m1[0][1] = Oc[0][0]*ga[0][1] + Oc[0][1]*ga[1][1] + Oc[0][2]*ga[2][1];
-					m1[0][2] = Oc[0][0]*ga[0][2] + Oc[0][1]*ga[1][2] + Oc[0][2]*ga[2][2];
-					m1[1][0] = Oc[1][0]*ga[0][0] + Oc[1][1]*ga[1][0] + Oc[1][2]*ga[2][0];
-					m1[1][1] = Oc[1][0]*ga[0][1] + Oc[1][1]*ga[1][1] + Oc[1][2]*ga[2][1];
-					m1[1][2] = Oc[1][0]*ga[0][2] + Oc[1][1]*ga[1][2] + Oc[1][2]*ga[2][2];
-					m1[2][0] = Oc[2][0]*ga[0][0] + Oc[2][1]*ga[1][0] + Oc[2][2]*ga[2][0];
-					m1[2][1] = Oc[2][0]*ga[0][1] + Oc[2][1]*ga[1][1] + Oc[2][2]*ga[2][1];
-					m1[2][2] = Oc[2][0]*ga[0][2] + Oc[2][1]*ga[1][2] + Oc[2][2]*ga[2][2];
-					for(int l=0;l<4;l++)
-					{
-						if (l == 0)
-						{
-						  Os[0][0] = 1.0; Os[0][1] = 0.0; Os[0][2] = 0.0;
-						  Os[1][0] = 0.0; Os[1][1] = 1.0; Os[1][2] = 0.0;
-						  Os[2][0] = 0.0; Os[2][1] = 0.0; Os[2][2] = 1.0;
-						}
-						else if (l == 1)
-						{
-						  Os[0][0] = -1.0; Os[0][1] = 0.0; Os[0][2] = 0.0;
-						  Os[1][0] = 0.0; Os[1][1] = 1.0; Os[1][2] = 0.0;
-						  Os[2][0] = 0.0; Os[2][1] = 0.0; Os[2][2] = -1.0;
-						}
-						else if (l == 2)
-						{
-						  Os[0][0] = 1.0; Os[0][1] = 0.0; Os[0][2] = 0.0;
-						  Os[1][0] = 0.0; Os[1][1] = -1.0; Os[1][2] = 0.0;
-						  Os[2][0] = 0.0; Os[2][1] = 0.0; Os[2][2] = -1.0;
-						}
-						else if (l == 3)
-						{
-						  Os[0][0] = -1.0; Os[0][1] = 0.0; Os[0][2] = 0.0;
-						  Os[1][0] = 0.0; Os[1][1] = -1.0; Os[1][2] = 0.0;
-						  Os[2][0] = 0.0; Os[2][1] = 0.0; Os[2][2] = 1.0;
-						}
-						m2[0][0] = Os[0][0]*m1[0][0] + Os[1][0]*m1[0][1] + Os[2][0]*m1[0][2];
-						m2[0][1] = Os[0][1]*m1[0][0] + Os[1][1]*m1[0][1] + Os[2][1]*m1[0][2];
-						m2[0][2] = Os[0][2]*m1[0][0] + Os[1][2]*m1[0][1] + Os[2][2]*m1[0][2];
-						m2[1][0] = Os[0][0]*m1[1][0] + Os[1][0]*m1[1][1] + Os[2][0]*m1[1][2];
-						m2[1][1] = Os[0][1]*m1[1][0] + Os[1][1]*m1[1][1] + Os[2][1]*m1[1][2];
-						m2[1][2] = Os[0][2]*m1[1][0] + Os[1][2]*m1[1][1] + Os[2][2]*m1[1][2];
-						m2[2][0] = Os[0][0]*m1[2][0] + Os[1][0]*m1[2][1] + Os[2][0]*m1[2][2];
-						m2[2][1] = Os[0][1]*m1[2][0] + Os[1][1]*m1[2][1] + Os[2][1]*m1[2][2];
-						m2[2][2] = Os[0][2]*m1[2][0] + Os[1][2]*m1[2][1] + Os[2][2]*m1[2][2];
-						double ea2 = acos(m2[2][2]);
-						double cosine3 = (m2[1][2]/sin(ea2));
-						double sine3 = (m2[0][2]/sin(ea2));
-						double cosine1 = (-m2[2][1]/sin(ea2));
-						double sine1 = (m2[2][0]/sin(ea2));
-						double ea3 = acos(cosine3);
-						double ea1 = acos(cosine1);
-						if(sine3 < 0) ea3 = (2*m_pi)-ea3;
-						if(sine1 < 0) ea1 = (2*m_pi)-ea1;
-						int ea1bin = int(ea1/(m_pi/36));
-						int ea2bin = int(ea2/(m_pi/36));
-						int ea3bin = int(ea3/(m_pi/36));
-						int bin=0;
-						if(ea1 >= 0.0 && ea2 >= 0.0 && ea3 >= 0.0 && ea1 <= (m_pi) && ea2 <= (m_pi) && ea3 <= (m_pi/3.0))
-						{
-						  bin = (ea3bin*36*36)+(ea2bin*36)+(ea1bin);
-						  eulerodf[bin] = eulerodf[bin] + vol;
-						  totalvol = totalvol + vol;
-						}
-					}
-				}
+				w = MisorientationCalculations::getMisoQuatHexagonal(q1, qref, n1, n2, n3);
+				w = w*degtorad;
+				denom = (n1*n1)+(n2*n2)+(n3*n3);
+				denom = pow(denom,0.5);
+				n1 = n1/denom;
+				n2 = n2/denom;
+				n3 = n3/denom;
+				n1 = n1*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
+				n2 = n2*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
+				n3 = n3*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
+				ea1bin = int(n1*36.0/dim1);
+				ea2bin = int(n2*36.0/dim2);
+				ea3bin = int(n3*12.0/dim3);
+				bin = (ea3bin*36*36)+(ea2bin*36)+(ea1bin);
+				eulerodf[bin] = eulerodf[bin] + vol;
+				totalvol = totalvol + vol;
 			}
 			if(crystruct == AIM::Reconstruction::Cubic)
 			{
-				for(int k = 0; k < 24; k++)
-				{
-					if (k == 0)
-					{
-					  Oc[0][0] = 1.0; Oc[0][1] = 0.0; Oc[0][2] = 0.0;
-					  Oc[1][0] = 0.0; Oc[1][1] = 1.0; Oc[1][2] = 0.0;
-					  Oc[2][0] = 0.0; Oc[2][1] = 0.0; Oc[2][2] = 1.0;
-					}
-					else if (k == 1)
-					{
-					  Oc[0][0] = 1.0; Oc[0][1] = 0.0; Oc[0][2] =  0.0;
-					  Oc[1][0] = 0.0; Oc[1][1] = 0.0; Oc[1][2] = -1.0;
-					  Oc[2][0] = 0.0; Oc[2][1] = 1.0; Oc[2][2] =  0.0;
-					}
-					else if (k == 2)
-					{
-					  Oc[0][0] = 1.0; Oc[0][1] =  0.0; Oc[0][2] =  0.0;
-					  Oc[1][0] = 0.0; Oc[1][1] = -1.0; Oc[1][2] =  0.0;
-					  Oc[2][0] = 0.0; Oc[2][1] =  0.0; Oc[2][2] = -1.0;
-					}
-					else if (k == 3)
-					{
-					  Oc[0][0] = 1.0; Oc[0][1] =  0.0; Oc[0][2] = 0.0;
-					  Oc[1][0] = 0.0; Oc[1][1] =  0.0; Oc[1][2] = 1.0;
-					  Oc[2][0] = 0.0; Oc[2][1] = -1.0; Oc[2][2] = 0.0;
-					}
-					else if (k == 4)
-					{
-					  Oc[0][0] = 0.0; Oc[0][1] = 0.0; Oc[0][2] = -1.0;
-					  Oc[1][0] = 0.0; Oc[1][1] = 1.0; Oc[1][2] =  0.0;
-					  Oc[2][0] = 1.0; Oc[2][1] = 0.0; Oc[2][2] =  0.0;
-					}
-					else if (k == 5)
-					{
-					  Oc[0][0] =  0.0; Oc[0][1] = 0.0; Oc[0][2] = 1.0;
-					  Oc[1][0] =  0.0; Oc[1][1] = 1.0; Oc[1][2] = 0.0;
-					  Oc[2][0] = -1.0; Oc[2][1] = 0.0; Oc[2][2] = 0.0;
-					}
-					else if (k == 6)
-					{
-					  Oc[0][0] = -1.0; Oc[0][1] = 0.0; Oc[0][2] =  0.0;
-					  Oc[1][0] =  0.0; Oc[1][1] = 1.0; Oc[1][2] =  0.0;
-					  Oc[2][0] =  0.0; Oc[2][1] = 0.0; Oc[2][2] = -1.0;
-					}
-					else if (k == 7)
-					{
-					  Oc[0][0] = -1.0; Oc[0][1] =  0.0; Oc[0][2] = 0.0;
-					  Oc[1][0] =  0.0; Oc[1][1] = -1.0; Oc[1][2] = 0.0;
-					  Oc[2][0] =  0.0; Oc[2][1] =  0.0; Oc[2][2] = 1.0;
-					}
-					else if (k == 8)
-					{
-					  Oc[0][0] =  0.0; Oc[0][1] = 1.0; Oc[0][2] = 0.0;
-					  Oc[1][0] = -1.0; Oc[1][1] = 0.0; Oc[1][2] = 0.0;
-					  Oc[2][0] =  0.0; Oc[2][1] = 0.0; Oc[2][2] = 1.0;
-					}
-					else if (k == 9)
-					{
-					  Oc[0][0] = 0.0; Oc[0][1] = -1.0; Oc[0][2] = 0.0;
-					  Oc[1][0] = 1.0; Oc[1][1] =  0.0; Oc[1][2] = 0.0;
-					  Oc[2][0] = 0.0; Oc[2][1] =  0.0; Oc[2][2] = 1.0;
-					}
-					else if (k == 10)
-					{
-					  Oc[0][0] =  0.0; Oc[0][1] = -1.0; Oc[0][2] = 0.0;
-					  Oc[1][0] =  0.0; Oc[1][1] =  0.0; Oc[1][2] = 1.0;
-					  Oc[2][0] = -1.0; Oc[2][1] =  0.0; Oc[2][2] = 0.0;
-					}
-					else if (k == 11)
-					{
-					  Oc[0][0] =  0.0; Oc[0][1] =  0.0; Oc[0][2] = 1.0;
-					  Oc[1][0] = -1.0; Oc[1][1] =  0.0; Oc[1][2] = 0.0;
-					  Oc[2][0] =  0.0; Oc[2][1] = -1.0; Oc[2][2] = 0.0;
-					}
-					else if (k == 12)
-					{
-					  Oc[0][0] = 0.0; Oc[0][1] = -1.0; Oc[0][2] =  0.0;
-					  Oc[1][0] = 0.0; Oc[1][1] =  0.0; Oc[1][2] = -1.0;
-					  Oc[2][0] = 1.0; Oc[2][1] =  0.0; Oc[2][2] =  0.0;
-					}
-					else if (k == 13)
-					{
-					  Oc[0][0] = 0.0; Oc[0][1] =  0.0; Oc[0][2] = -1.0;
-					  Oc[1][0] = 1.0; Oc[1][1] =  0.0; Oc[1][2] =  0.0;
-					  Oc[2][0] = 0.0; Oc[2][1] = -1.0; Oc[2][2] =  0.0;
-					}
-					else if (k == 14)
-					{
-					  Oc[0][0] =  0.0; Oc[0][1] = 1.0; Oc[0][2] =  0.0;
-					  Oc[1][0] =  0.0; Oc[1][1] = 0.0; Oc[1][2] = -1.0;
-					  Oc[2][0] = -1.0; Oc[2][1] = 0.0; Oc[2][2] =  0.0;
-					}
-					else if (k == 15)
-					{
-					  Oc[0][0] =  0.0; Oc[0][1] = 0.0; Oc[0][2] = -1.0;
-					  Oc[1][0] = -1.0; Oc[1][1] = 0.0; Oc[1][2] =  0.0;
-					  Oc[2][0] =  0.0; Oc[2][1] = 1.0; Oc[2][2] =  0.0;
-					}
-					else if (k == 16)
-					{
-					  Oc[0][0] = 0.0; Oc[0][1] = 1.0; Oc[0][2] = 0.0;
-					  Oc[1][0] = 0.0; Oc[1][1] = 0.0; Oc[1][2] = 1.0;
-					  Oc[2][0] = 1.0; Oc[2][1] = 0.0; Oc[2][2] = 0.0;
-					}
-					else if (k == 17)
-					{
-					  Oc[0][0] = 0.0; Oc[0][1] = 0.0; Oc[0][2] = 1.0;
-					  Oc[1][0] = 1.0; Oc[1][1] = 0.0; Oc[1][2] = 0.0;
-					  Oc[2][0] = 0.0; Oc[2][1] = 1.0; Oc[2][2] = 0.0;
-					}
-					else if (k == 18)
-					{
-					  Oc[0][0] = 0.0; Oc[0][1] = 1.0; Oc[0][2] =  0.0;
-					  Oc[1][0] = 1.0; Oc[1][1] = 0.0; Oc[1][2] =  0.0;
-					  Oc[2][0] = 0.0; Oc[2][1] = 0.0; Oc[2][2] = -1.0;
-					}
-					else if (k == 19)
-					{
-					  Oc[0][0] = -1.0; Oc[0][1] = 0.0; Oc[0][2] = 0.0;
-					  Oc[1][0] =  0.0; Oc[1][1] = 0.0; Oc[1][2] = 1.0;
-					  Oc[2][0] =  0.0; Oc[2][1] = 1.0; Oc[2][2] = 0.0;
-					}
-					else if (k == 20)
-					{
-					  Oc[0][0] = 0.0; Oc[0][1] =  0.0; Oc[0][2] = 1.0;
-					  Oc[1][0] = 0.0; Oc[1][1] = -1.0; Oc[1][2] = 0.0;
-					  Oc[2][0] = 1.0; Oc[2][1] =  0.0; Oc[2][2] = 0.0;
-					}
-					else if (k == 21)
-					{
-					  Oc[0][0] = -1.0; Oc[0][1] =  0.0; Oc[0][2] =  0.0;
-					  Oc[1][0] =  0.0; Oc[1][1] =  0.0; Oc[1][2] = -1.0;
-					  Oc[2][0] =  0.0; Oc[2][1] = -1.0; Oc[2][2] =  0.0;
-					}
-					else if (k == 22)
-					{
-					  Oc[0][0] =  0.0; Oc[0][1] =  0.0; Oc[0][2] = -1.0;
-					  Oc[1][0] =  0.0; Oc[1][1] = -1.0; Oc[1][2] =  0.0;
-					  Oc[2][0] = -1.0; Oc[2][1] =  0.0; Oc[2][2] =  0.0;
-					}
-					else if (k == 23)
-					{
-					  Oc[0][0] =  0.0; Oc[0][1] = -1.0; Oc[0][2] =  0.0;
-					  Oc[1][0] = -1.0; Oc[1][1] =  0.0; Oc[1][2] =  0.0;
-					  Oc[2][0] =  0.0; Oc[2][1] =  0.0; Oc[2][2] = -1.0;
-					}
-					ga[0][0] = cos(ea1good)*cos(ea3good)-sin(ea1good)*sin(ea3good)*cos(ea2good);
-					ga[0][1] = sin(ea1good)*cos(ea3good)+cos(ea1good)*sin(ea3good)*cos(ea2good);
-					ga[0][2] = sin(ea3good)*sin(ea2good);
-					ga[1][0] = -cos(ea1good)*sin(ea3good)-sin(ea1good)*cos(ea3good)*cos(ea2good);
-					ga[1][1] = -sin(ea1good)*sin(ea3good)+cos(ea1good)*cos(ea3good)*cos(ea2good);
-					ga[1][2] =  cos(ea3good)*sin(ea2good);
-					ga[2][0] =  sin(ea1good)*sin(ea2good);
-					ga[2][1] = -cos(ea1good)*sin(ea2good);
-					ga[2][2] =  cos(ea2good);
-					m1[0][0] = Oc[0][0]*ga[0][0] + Oc[0][1]*ga[1][0] + Oc[0][2]*ga[2][0];
-					m1[0][1] = Oc[0][0]*ga[0][1] + Oc[0][1]*ga[1][1] + Oc[0][2]*ga[2][1];
-					m1[0][2] = Oc[0][0]*ga[0][2] + Oc[0][1]*ga[1][2] + Oc[0][2]*ga[2][2];
-					m1[1][0] = Oc[1][0]*ga[0][0] + Oc[1][1]*ga[1][0] + Oc[1][2]*ga[2][0];
-					m1[1][1] = Oc[1][0]*ga[0][1] + Oc[1][1]*ga[1][1] + Oc[1][2]*ga[2][1];
-					m1[1][2] = Oc[1][0]*ga[0][2] + Oc[1][1]*ga[1][2] + Oc[1][2]*ga[2][2];
-					m1[2][0] = Oc[2][0]*ga[0][0] + Oc[2][1]*ga[1][0] + Oc[2][2]*ga[2][0];
-					m1[2][1] = Oc[2][0]*ga[0][1] + Oc[2][1]*ga[1][1] + Oc[2][2]*ga[2][1];
-					m1[2][2] = Oc[2][0]*ga[0][2] + Oc[2][1]*ga[1][2] + Oc[2][2]*ga[2][2];
-					for(int l=0;l<4;l++)
-					{
-						if (l == 0)
-						{
-						  Os[0][0] = 1.0; Os[0][1] = 0.0; Os[0][2] = 0.0;
-						  Os[1][0] = 0.0; Os[1][1] = 1.0; Os[1][2] = 0.0;
-						  Os[2][0] = 0.0; Os[2][1] = 0.0; Os[2][2] = 1.0;
-						}
-						else if (l == 1)
-						{
-						  Os[0][0] = -1.0; Os[0][1] = 0.0; Os[0][2] = 0.0;
-						  Os[1][0] = 0.0; Os[1][1] = 1.0; Os[1][2] = 0.0;
-						  Os[2][0] = 0.0; Os[2][1] = 0.0; Os[2][2] = -1.0;
-						}
-						else if (l == 2)
-						{
-						  Os[0][0] = 1.0; Os[0][1] = 0.0; Os[0][2] = 0.0;
-						  Os[1][0] = 0.0; Os[1][1] = -1.0; Os[1][2] = 0.0;
-						  Os[2][0] = 0.0; Os[2][1] = 0.0; Os[2][2] = -1.0;
-						}
-						else if (l == 3)
-						{
-						  Os[0][0] = -1.0; Os[0][1] = 0.0; Os[0][2] = 0.0;
-						  Os[1][0] = 0.0; Os[1][1] = -1.0; Os[1][2] = 0.0;
-						  Os[2][0] = 0.0; Os[2][1] = 0.0; Os[2][2] = 1.0;
-						}
-						m2[0][0] = Os[0][0]*m1[0][0] + Os[1][0]*m1[0][1] + Os[2][0]*m1[0][2];
-						m2[0][1] = Os[0][1]*m1[0][0] + Os[1][1]*m1[0][1] + Os[2][1]*m1[0][2];
-						m2[0][2] = Os[0][2]*m1[0][0] + Os[1][2]*m1[0][1] + Os[2][2]*m1[0][2];
-						m2[1][0] = Os[0][0]*m1[1][0] + Os[1][0]*m1[1][1] + Os[2][0]*m1[1][2];
-						m2[1][1] = Os[0][1]*m1[1][0] + Os[1][1]*m1[1][1] + Os[2][1]*m1[1][2];
-						m2[1][2] = Os[0][2]*m1[1][0] + Os[1][2]*m1[1][1] + Os[2][2]*m1[1][2];
-						m2[2][0] = Os[0][0]*m1[2][0] + Os[1][0]*m1[2][1] + Os[2][0]*m1[2][2];
-						m2[2][1] = Os[0][1]*m1[2][0] + Os[1][1]*m1[2][1] + Os[2][1]*m1[2][2];
-						m2[2][2] = Os[0][2]*m1[2][0] + Os[1][2]*m1[2][1] + Os[2][2]*m1[2][2];
-						double ea2 = acos(m2[2][2]);
-						double cosine3 = (m2[1][2]/sin(ea2));
-						double sine3 = (m2[0][2]/sin(ea2));
-						double cosine1 = (-m2[2][1]/sin(ea2));
-						double sine1 = (m2[2][0]/sin(ea2));
-						double ea3 = acos(cosine3);
-						double ea1 = acos(cosine1);
-						if(sine3 < 0) ea3 = (2*m_pi)-ea3;
-						if(sine1 < 0) ea1 = (2*m_pi)-ea1;
-						int ea1bin = int(ea1/(m_pi/36));
-						int ea2bin = int(ea2/(m_pi/36));
-						int ea3bin = int(ea3/(m_pi/36));
-						int bin=0;
-						if(ea1 >= 0.0 && ea2 >= 0.0 && ea3 >= 0.0 && ea1 <= (m_pi/2.0) && ea2 <= (m_pi/2.0) && ea3 <= (m_pi/2.0))
-						{
-						  bin = (ea3bin*18*18)+(ea2bin*18)+(ea1bin);
-						  eulerodf[bin] = eulerodf[bin] + vol;
-						  totalvol = totalvol + vol;
-						}
-					}
-				}
+				w = MisorientationCalculations::getMisoQuatCubic(q1, qref, n1, n2, n3);
+				w = w*degtorad;
+				denom = (n1*n1)+(n2*n2)+(n3*n3);
+				denom = pow(denom,0.5);
+				n1 = n1/denom;
+				n2 = n2/denom;
+				n3 = n3/denom;
+				n1 = n1*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
+				n2 = n2*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
+				n3 = n3*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
+				ea1bin = int(n1*18.0/dim1);
+				ea2bin = int(n2*18.0/dim2);
+				ea3bin = int(n3*18.0/dim3);
+				bin = (ea3bin*18*18)+(ea2bin*18)+(ea1bin);
+				eulerodf[bin] = eulerodf[bin] + vol;
+				totalvol = totalvol + vol;
 			}
 		}
 	}
 	int err;
 	err = h5io->writeODFData(crystruct, eulerodf, totalvol);
-	double delta = m_pi / 18;
+/*	double delta = m_pi / 18;
 	double texindex = 0;
 	double texstrength = 0;
-	int bin = 0;
 	for (int iter51 = 0; iter51 < 18; iter51++)
 	{
 		for (int iter52 = 0; iter52 < 18; iter52++)
@@ -3437,7 +3119,7 @@ void  ReconstructionFunc::find_eulerodf (H5ReconStatsWriter::Pointer h5io)
 	}
 	texindex = texindex / (18 * 18 * 18);
 	texstrength = pow(texindex, 0.5);
-	delete [] eulerodf;
+*/	delete [] eulerodf;
 }
 void  ReconstructionFunc::measure_misorientations (H5ReconStatsWriter::Pointer h5io)
 {
@@ -4319,9 +4001,6 @@ int ReconstructionFunc::writeVisualizationFile(const std::string &file)
 }
 
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 int ReconstructionFunc::writeIPFVizFile(const std::string &file)
 {
   FILE* f = NULL;
