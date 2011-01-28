@@ -50,10 +50,12 @@ set (StatsGenerator_SRCS
     ${StatsGenerator_SOURCE_DIR}/StatsGen.cpp
     ${StatsGenerator_SOURCE_DIR}/StatsGeneratorUI.cpp
     ${StatsGenerator_SOURCE_DIR}/StatsGenPlotWidget.cpp
+    ${StatsGenerator_SOURCE_DIR}/StatsGenODFWidget.cpp
     ${StatsGenerator_SOURCE_DIR}/SGAbstractTableModel.cpp
     ${StatsGenerator_SOURCE_DIR}/SGBetaTableModel.cpp
     ${StatsGenerator_SOURCE_DIR}/SGPowerLawTableModel.cpp
     ${StatsGenerator_SOURCE_DIR}/SGLogNormalTableModel.cpp
+    ${StatsGenerator_SOURCE_DIR}/SGODFTableModel.cpp
 )
 set (StatsGenerator_HDRS 
     ${StatsGenerator_SOURCE_DIR}/StatsGen.h
@@ -63,6 +65,7 @@ SET( StatsGenerator_MOC_HDRS
     ${StatsGenerator_SOURCE_DIR}/SGApplication.h
     ${StatsGenerator_SOURCE_DIR}/StatsGeneratorUI.h
     ${StatsGenerator_SOURCE_DIR}/StatsGenPlotWidget.h
+    ${StatsGenerator_SOURCE_DIR}/StatsGenODFWidget.h
     ${StatsGenerator_SOURCE_DIR}/SGAbstractTableModel.h
     ${StatsGenerator_SOURCE_DIR}/SGBetaTableModel.h  
     ${StatsGenerator_SOURCE_DIR}/SGPowerLawTableModel.h
@@ -70,7 +73,9 @@ SET( StatsGenerator_MOC_HDRS
     ${StatsGenerator_SOURCE_DIR}/SGBetaItemDelegate.h
     ${StatsGenerator_SOURCE_DIR}/SGLogNormalItemDelegate.h
     ${StatsGenerator_SOURCE_DIR}/SGPowerLawItemDelegate.h
-)
+    ${StatsGenerator_SOURCE_DIR}/SGODFTableModel.h
+    ${StatsGenerator_SOURCE_DIR}/SGODFItemDelegate.h
+    )
 cmp_IDE_SOURCE_PROPERTIES( "AIM/StatsGenerator" "${StatsGenerator_HDRS};${StatsGenerator_MOC_HDRS}" "${StatsGenerator_SRCS}" ${PROJECT_INSTALL_HEADERS})
 
 set (AIM_COMMON_QT_SRCS
@@ -93,6 +98,7 @@ cmp_IDE_SOURCE_PROPERTIES("AIM/Common/Qt" "${AIM_COMMON_QT_HDRS}" "${AIM_COMMON_
 SET( StatsGenerator_UIS
   ${StatsGenerator_SOURCE_DIR}/UI_Files/StatsGeneratorUI.ui
   ${StatsGenerator_SOURCE_DIR}/UI_Files/StatsGenPlotWidget.ui
+  ${StatsGenerator_SOURCE_DIR}/UI_Files/StatsGenODFWidget.ui
   ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Qt/UI_Files/ApplicationAboutBoxDialog.ui
 )
 
