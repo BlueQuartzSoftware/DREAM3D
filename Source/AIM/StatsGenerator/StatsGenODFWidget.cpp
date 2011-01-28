@@ -111,6 +111,9 @@ void StatsGenODFWidget::setupGui()
   initQwtPlot("Plot 2", "y axis", m_Plot2);
   initQwtPlot("Plot 3", "y axis", m_Plot3);
 
+  m_PlotCurves.push_back(new QwtPlotCurve);
+  m_PlotCurves.push_back(new QwtPlotCurve);
+  m_PlotCurves.push_back(new QwtPlotCurve);
 
 
 }
@@ -182,18 +185,24 @@ void StatsGenODFWidget::setYAxisName(QString name)
 // -----------------------------------------------------------------------------
 void StatsGenODFWidget::on_m_CalculateODFBtn_clicked()
 {
-  QwtPlotCurve* curve = m_PlotCurves[0];
+  QwtPlotCurve* curve1 = m_PlotCurves[0];
   int err = 0;
 
   int size = 256;
-  QwtArray<double > x;
-  QwtArray<double > y;
+  QwtArray<double > x001;
+  QwtArray<double > y001;
+  QwtArray<double > x011;
+  QwtArray<double > y011;
+  QwtArray<double > x111;
+  QwtArray<double > y111;
+  QwtArray<double > weights;
+  QwtArray<double > sigmas;
   StatsGen sg;
   double xMax, yMax;
 
   // Initialize xMax and yMax....
 
-  // err = sg.CalculateODF(inputs, x, y);
+  err = sg.GenCubicODF(weights, sigmas, x001, y001, x011, y011, x111, y111, size);
 
 
   if (err == 1)
@@ -205,6 +214,7 @@ void StatsGenODFWidget::on_m_CalculateODFBtn_clicked()
   for (int i = 0; i < size; ++i)
   {
     //   std::cout << x[i] << "  " << y[i] << std::endl;
+#if 0
     if (x[i] > xMax)
     {
       xMax = x[i];
@@ -213,10 +223,11 @@ void StatsGenODFWidget::on_m_CalculateODFBtn_clicked()
     {
       yMax = y[i];
     }
+#endif
   }
-  curve->setData(x, y);
+  curve1->setData(x001, y001);
 
-  m_Plot1->setAxisScale(QwtPlot::yLeft, 0.0, yMax);
-  m_Plot1->setAxisScale(QwtPlot::xBottom, 0.0, xMax);
+  m_Plot1->setAxisScale(QwtPlot::yLeft, 0.0, 1.0);
+  m_Plot1->setAxisScale(QwtPlot::xBottom, 0.0, 1.0);
 
 }

@@ -109,14 +109,19 @@ SET( StatsGenerator_RCS ${PROJECT_RESOURCES_DIR}/icons/images/Icons.qrc)
 # -- Run MOC and UIC on the necessary files   
 QT4_ADD_RESOURCES( Generated_RC_SRCS ${StatsGenerator_RCS} ${QRC_LICENSE_FILES})
 
+
 # this will run uic on .ui files:
 QT4_WRAP_UI( Generated_UI_HDRS ${StatsGenerator_UIS} )
+
 
 # and finally this will run moc:
 QT4_WRAP_CPP( Generated_MOC_SRCS ${StatsGenerator_MOC_HDRS} ${AIM_COMMON_QT_HDRS} )
 
 #-- Put the generated files into their own group for IDEs
-cmp_IDE_SOURCE_PROPERTIES( "Generated" "${Generated_UI_HDRS}" "${Generated_MOC_SRCS};${Generated_RC_SRCS}" ${PROJECT_INSTALL_HEADERS})
+cmp_IDE_GENERATED_PROPERTIES("AIM/StatsGenerator/UI_Files" "${StatsGenerator_UIS}" "")
+cmp_IDE_GENERATED_PROPERTIES("Generated_ui" "${Generated_UI_HDRS}" "")
+cmp_IDE_GENERATED_PROPERTIES("Generated_moc" "${Generated_MOC_SRCS}" "")
+cmp_IDE_GENERATED_PROPERTIES("Generated_qrc" "${QRC_LICENSE_FILES}" "${Generated_RC_SRCS};${PROJECT_RESOURCES_DIR}/icons/images/Icons.qrc")
 
 # -- Finally set the Project Sources to include all the sources
 SET (StatsGenerator_PROJECT_SRCS 

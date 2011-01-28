@@ -33,6 +33,8 @@ foreach(lf ${LICENSE_FILES})
     file(APPEND ${LICENSE_HEADER_FILE} " << \":/${lf_fn}.license\"")
     
 endforeach(lf ${LICENSE_FILES})
+cmp_IDE_GENERATED_PROPERTIES("Generated/qrc" "${QRC_LICENSE_FILES}" "")
+
 file(APPEND ${LICENSE_HEADER_FILE}  ");\n")
 file(APPEND ${LICENSE_HEADER_FILE}  "}\n#endif /* _LICENSE_FILES_H_ */ \n")
 
