@@ -158,6 +158,7 @@ namespace AIM
 	{0.959931,0.349066,0.0},
 	{0.959931,1.308997,0.436332}};
 
+// Keep these to remember the names of the texture components in order
 //	const int Brassbin = {0.610865,0.785398,0.0};
 //	const int Sbin = {0.959931,0.610865,1.134464};
 //	const int Copperbin = {1.570796,0.523599,0.785398};

@@ -71,6 +71,7 @@ double MisorientationCalculations::getMisoQuatCubic(double q1[5],double q2[5],do
   double sin_wmin_over_2 = 0.0;
   double _1, _2,  _6;
 
+
   qc[0]=-q1[1]*q2[4]+q1[4]*q2[1]-q1[2]*q2[3]+q1[3]*q2[2];
   qc[1]=-q1[2]*q2[4]+q1[4]*q2[2]-q1[3]*q2[1]+q1[1]*q2[3];
   qc[2]=-q1[3]*q2[4]+q1[4]*q2[3]-q1[1]*q2[2]+q1[2]*q2[1];
