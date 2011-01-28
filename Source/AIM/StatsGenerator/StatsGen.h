@@ -86,7 +86,7 @@ class StatsGen
       int TextureBins[15];
       double odf[18 * 18 * 18];
       int err = 0;
-      int bin, ea1bin, ea2bin, ea3bin;
+      size_t bin, ea1bin, ea2bin, ea3bin;
       double w, denom, n1, n2, n3;
       double phi1, PHI, phi2;
       double ea1, ea2, ea3;
