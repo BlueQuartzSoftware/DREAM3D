@@ -93,7 +93,7 @@ class StatsGen
       double r1, r2, r3;
       double h1, h2, h3;
       double sum, diff;
-      double random, hmag, angle;
+      double hmag, angle;
       double g[3][3];
       double x, y, z;
       double xpf, ypf;
@@ -109,7 +109,7 @@ class StatsGen
 
 
       AIMRandomNG rg;
-      rg.RandomInit(29023840239);
+      rg.RandomInit(2902239);
       x001.resize(size * 3);
       y001.resize(size * 3);
       x011.resize(size * 6);
