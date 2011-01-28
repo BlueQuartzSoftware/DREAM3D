@@ -60,6 +60,17 @@ int StatsGen::computeNumberOfBins(double mu, double sigma, double cutoff,
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int StatsGen::computeNumberOfBins(float mu, float sigma, float cutoff,
+                                  float binstep, float &max, float &min)
+{
+  min = expf(mu - (cutoff * sigma));
+  max = expf(mu + (cutoff * sigma));
+  return static_cast<int>((max -min)/binstep);
+}
+
 
 // -----------------------------------------------------------------------------
 //
