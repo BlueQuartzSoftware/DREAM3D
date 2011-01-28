@@ -186,10 +186,10 @@ void StatsGenODFWidget::setYAxisName(QString name)
 // -----------------------------------------------------------------------------
 void StatsGenODFWidget::on_m_CalculateODFBtn_clicked()
 {
-  QwtPlotCurve* curve1 = m_PlotCurves[0];
+
   int err = 0;
 
-  int size = 256;
+  int size = 500;
   QwtArray<double > x001;
   QwtArray<double > y001;
   QwtArray<double > x011;
@@ -202,6 +202,8 @@ void StatsGenODFWidget::on_m_CalculateODFBtn_clicked()
   double xMax, yMax;
 
   // Initialize xMax and yMax....
+  weights = m_TableModel->getData(SGODFTableModel::Weight);
+  sigmas = m_TableModel->getData(SGODFTableModel::Sigma);
 
   err = sg.GenCubicODF(weights, sigmas, x001, y001, x011, y011, x111, y111, size);
 
@@ -226,9 +228,23 @@ void StatsGenODFWidget::on_m_CalculateODFBtn_clicked()
     }
 #endif
   }
-  curve1->setData(x001, y001);
-
+  QwtPlotCurve* curve = m_PlotCurves[0];
+  curve->setData(x001, y001);
+  curve->attach(m_Plot1);
   m_Plot1->setAxisScale(QwtPlot::yLeft, 0.0, 1.0);
   m_Plot1->setAxisScale(QwtPlot::xBottom, 0.0, 1.0);
+
+  curve = m_PlotCurves[1];
+  curve->setData(x011, y011);
+  curve->attach(m_Plot2);
+  m_Plot2->setAxisScale(QwtPlot::yLeft, 0.0, 1.0);
+  m_Plot2->setAxisScale(QwtPlot::xBottom, 0.0, 1.0);
+
+  curve = m_PlotCurves[2];
+  curve->setData(x111, y111);
+  curve->attach(m_Plot3);
+  m_Plot3->setAxisScale(QwtPlot::yLeft, 0.0, 1.0);
+  m_Plot3->setAxisScale(QwtPlot::xBottom, 0.0, 1.0);
+
 
 }
