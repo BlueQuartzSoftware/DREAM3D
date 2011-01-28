@@ -1417,9 +1417,28 @@ void  GrainGeneratorFunc::assign_eulers(int numgrains)
   int gnum = 0;
   int phi1, PHI, phi2;
   int numbins = 0;
-  if(crystruct == AIM::Reconstruction::Hexagonal) numbins = 36*36*12;
-  if(crystruct == AIM::Reconstruction::Cubic) numbins = 18*18*18;
+  double dim1 = 0;
+  double dim2 = 0;
+  double dim3 = 0;
+  if(crystruct == AIM::Reconstruction::Cubic)
+  {
+	  dim1 = pow((0.75*((m_pi/4.0)-sin((m_pi/4.0)))),(1.0/3.0));
+	  dim2 = pow((0.75*((m_pi/4.0)-sin((m_pi/4.0)))),(1.0/3.0));
+	  dim3 = pow((0.75*((m_pi/4.0)-sin((m_pi/4.0)))),(1.0/3.0));
+	  numbins = 18*18*18;
+  }
+  if(crystruct == AIM::Reconstruction::Hexagonal)
+  {
+	  dim1 = pow((0.75*((m_pi/2.0)-sin((m_pi/2.0)))),(1.0/3.0));
+	  dim2 = pow((0.75*((m_pi/2.0)-sin((m_pi/2.0)))),(1.0/3.0));
+	  dim3 = pow((0.75*((m_pi/6.0)-sin((m_pi/6.0)))),(1.0/3.0));
+	  numbins = 36*36*12;
+  }
   double totaldensity = 0;
+  double random, diff, sum;
+  double hmag, angle;
+  double synh1=0,synh2=0,synh3=0;
+  double synr1=0,synr2=0,synr3=0;
   double synea1=0,synea2=0,synea3=0;
   rg.RandomInit((static_cast<unsigned int>(time(NULL))));
   for(int i=1;i<numgrains;i++)
@@ -1445,15 +1464,22 @@ void  GrainGeneratorFunc::assign_eulers(int numgrains)
 		  PHI = (choose/18)%18;
 		  phi2 = choose/(18*18);
 	  }
-	  double random1 = rg.Random();
-	  double random2 = rg.Random();
-	  double random3 = rg.Random();
-	  synea1 = (5*phi1)+(5*random1);
-	  synea2 = (5*PHI)+(5*random2);
-	  synea3 = (5*phi2)+(5*random3);
-	  synea1 = synea1*(m_pi/180.0);
-	  synea2 = synea2*(m_pi/180.0);
-	  synea3 = synea3*(m_pi/180.0);
+	  random = rg.Random();
+	  synh1 = (dim1*phi1)+(dim1*random);
+	  random = rg.Random();
+	  synh2 = (dim2*PHI)+(dim2*random);
+	  random = rg.Random();
+	  synh3 = (dim3*phi2)+(dim3*random);
+	  hmag = pow((synh1*synh1+synh2*synh2+synh3*synh3),0.5);
+	  angle = pow((8*hmag*hmag*hmag),(1.0/3.0));
+	  synr1 = tan(angle/2.0)*(synh1/hmag);
+	  synr2 = tan(angle/2.0)*(synh2/hmag);
+	  synr3 = tan(angle/2.0)*(synh3/hmag);
+	  sum=atan(synr3);
+	  diff=atan(synr2/synr1);
+	  synea1=sum+diff;
+	  synea2=2.*atan(synr1*cos(sum)/cos(diff));
+	  synea3=sum-diff;
 	  grains[i].euler1 = synea1;
 	  grains[i].euler2 = synea2;
 	  grains[i].euler3 = synea3;
@@ -2312,7 +2338,7 @@ void GrainGeneratorFunc::matchCrystallography(const std::string &ErrorFile, H5Re
 	double axis[3];
 	double denom = 0;
 	double n1,n2,n3;
-	double q1[5], q2[5];
+	double q1[5], q2[5], qref[5];
 	int good = 0;
 	int selectedgrain, selectedgrain1, selectedgrain2;
 	double totaldensity = 0;
@@ -2321,10 +2347,17 @@ void GrainGeneratorFunc::matchCrystallography(const std::string &ErrorFile, H5Re
 	int phi1, PHI, phi2;
 	int curodfbin;
 	double miso1, miso2, miso3;
-	double random, random1, random2, random3;
+	double random;
+	double g1ea1, g1ea2, g1ea3, g2ea1, g2ea2, g2ea3;
 	double curea1, curea2, curea3;
+	double hmag, angle;
+	double chooseh1, chooseh2, chooseh3;
+	double chooser1, chooser2, chooser3;
 	double chooseea1, chooseea2, chooseea3;
+	double sum, diff;
 	int cureuler1bin, cureuler2bin, cureuler3bin;
+	int g1euler1bin, g1euler2bin, g1euler3bin;
+	int g2euler1bin, g2euler2bin, g2euler3bin;
 	int miso1bin, miso2bin, miso3bin;
 	int curmiso1, curmiso2, curmiso3, neighsurfarea;
 	int curmisobin, newmisobin;
@@ -2348,6 +2381,10 @@ void GrainGeneratorFunc::matchCrystallography(const std::string &ErrorFile, H5Re
 	  dim3 = pow((0.75*((m_pi/6.0)-sin((m_pi/6.0)))),(1.0/3.0));
 	  numbins = 18*18*18;
 	}
+	qref[1] = sin(0.5*0.0)*cos(0.5*(0.0-0.0));
+	qref[2] = sin(0.5*0.0)*sin(0.5*(0.0-0.0));
+	qref[3] = cos(0.5*0.0)*sin(0.5*(0.0+0.0));
+	qref[4] = cos(0.5*0.0)*cos(0.5*(0.0+0.0));
     rg.RandomInit((static_cast<unsigned int>(time(NULL))));
 	while(badtrycount < 5000 && iterations < 10000)
 	{
@@ -2375,14 +2412,44 @@ void GrainGeneratorFunc::matchCrystallography(const std::string &ErrorFile, H5Re
 				if(selectedgrain == numgrains) selectedgrain = numgrains-1;
 				if(grains[selectedgrain].surfacegrain >= 0) good = 1;
 			}
-			curea1 = grains[selectedgrain].euler1;
-			curea2 = grains[selectedgrain].euler2;
-			curea3 = grains[selectedgrain].euler3;
-			cureuler1bin = int(curea1/(5.0*m_pi/180.0));
-			cureuler2bin = int(curea2/(5.0*m_pi/180.0));
-			cureuler3bin = int(curea3/(5.0*m_pi/180.0));
-			if(crystruct == AIM::Reconstruction::Hexagonal) curodfbin = (cureuler3bin*36*36)+(cureuler2bin*36)+cureuler1bin;
-			if(crystruct == AIM::Reconstruction::Cubic) curodfbin = (cureuler3bin*18*18)+(cureuler2bin*18)+cureuler1bin;
+			q1[1] = grains[selectedgrain].avg_quat[1];
+			q1[2] = grains[selectedgrain].avg_quat[2];
+			q1[3] = grains[selectedgrain].avg_quat[3];
+			q1[4] = grains[selectedgrain].avg_quat[4];
+			if(crystruct == AIM::Reconstruction::Hexagonal)
+			{
+				w = MisorientationCalculations::getMisoQuatHexagonal(q1, qref, n1, n2, n3);
+				w = w*degtorad;
+				denom = (n1*n1)+(n2*n2)+(n3*n3);
+				denom = pow(denom,0.5);
+				n1 = n1/denom;
+				n2 = n2/denom;
+				n3 = n3/denom;
+				n1 = n1*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
+				n2 = n2*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
+				n3 = n3*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
+				cureuler1bin = int(n1*36.0/dim1);
+				cureuler2bin = int(n2*36.0/dim2);
+				cureuler3bin = int(n3*12.0/dim3);
+				curodfbin = (cureuler3bin*36*36)+(cureuler2bin*36)+(cureuler1bin);
+			}
+			if(crystruct == AIM::Reconstruction::Cubic)
+			{
+				w = MisorientationCalculations::getMisoQuatCubic(q1, qref, n1, n2, n3);
+				w = w*degtorad;
+				denom = (n1*n1)+(n2*n2)+(n3*n3);
+				denom = pow(denom,0.5);
+				n1 = n1/denom;
+				n2 = n2/denom;
+				n3 = n3/denom;
+				n1 = n1*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
+				n2 = n2*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
+				n3 = n3*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
+				cureuler1bin = int(n1*18.0/dim1);
+				cureuler2bin = int(n2*18.0/dim2);
+				cureuler3bin = int(n3*18.0/dim3);
+				curodfbin = (cureuler3bin*18*18)+(cureuler2bin*18)+(cureuler1bin);
+			}
 			random = rg.Random();
 			int choose = 0;
 			totaldensity = 0;
@@ -2404,15 +2471,22 @@ void GrainGeneratorFunc::matchCrystallography(const std::string &ErrorFile, H5Re
 				  PHI = (choose/18)%18;
 				  phi2 = choose/(18*18);
 		    }
-			random1 = rg.Random();
-			random2 = rg.Random();
-			random3 = rg.Random();
-			chooseea1 = (5*phi1)+(5*random1);
-			chooseea2 = (5*PHI)+(5*random2);
-			chooseea3 = (5*phi2)+(5*random3);
-			chooseea1 = chooseea1*(m_pi/180.0);
-			chooseea2 = chooseea2*(m_pi/180.0);
-			chooseea3 = chooseea3*(m_pi/180.0);
+			random = rg.Random();
+			chooseh1 = (dim1*phi1)+(dim1*random);
+			random = rg.Random();
+			chooseh2 = (dim2*PHI)+(dim2*random);
+			random = rg.Random();
+			chooseh3 = (dim3*phi2)+(dim3*random);
+			hmag = pow((chooseh1*chooseh1+chooseh2*chooseh2+chooseh3*chooseh3),0.5);
+			angle = pow((8*hmag*hmag*hmag),(1.0/3.0));
+			chooser1 = tan(angle/2.0)*(chooseh1/hmag);
+			chooser2 = tan(angle/2.0)*(chooseh2/hmag);
+			chooser3 = tan(angle/2.0)*(chooseh3/hmag);
+			sum=atan(chooser3);
+			diff=atan(chooser2/chooser1);
+			chooseea1=sum+diff;
+			chooseea2=2.*atan(chooser1*cos(sum)/cos(diff));
+			chooseea3=sum-diff;
 	        s=sin(0.5*chooseea2);
 		    c=cos(0.5*chooseea2);
 		    s1=sin(0.5*(chooseea1-chooseea3));
@@ -2584,20 +2658,88 @@ void GrainGeneratorFunc::matchCrystallography(const std::string &ErrorFile, H5Re
 				if(selectedgrain2 == numgrains) selectedgrain2 = numgrains-1;
 				if(grains[selectedgrain1].surfacegrain == 0 && grains[selectedgrain2].surfacegrain == 0) good = 1;
 			}
-			double g1ea1 = grains[selectedgrain1].euler1;
-			double g1ea2 = grains[selectedgrain1].euler2;
-			double g1ea3 = grains[selectedgrain1].euler3;
-			double g2ea1 = grains[selectedgrain2].euler1;
-			double g2ea2 = grains[selectedgrain2].euler2;
-			double g2ea3 = grains[selectedgrain2].euler3;
-			int g1euler1bin = int(g1ea1/(5.0*m_pi/180.0));
-			int g1euler2bin = int(g1ea2/(5.0*m_pi/180.0));
-			int g1euler3bin = int(g1ea3/(5.0*m_pi/180.0));
-			int g2euler1bin = int(g2ea1/(5.0*m_pi/180.0));
-			int g2euler2bin = int(g2ea2/(5.0*m_pi/180.0));
-			int g2euler3bin = int(g2ea3/(5.0*m_pi/180.0));
-			if(crystruct == 1) g1odfbin = (g1euler3bin*36*36)+(g1euler2bin*36)+g1euler1bin, g2odfbin = (g2euler3bin*36*36)+(g2euler2bin*36)+g2euler1bin;
-			if(crystruct == 2) g1odfbin = (g1euler3bin*18*18)+(g1euler2bin*18)+g1euler1bin, g2odfbin = (g2euler3bin*18*18)+(g2euler2bin*18)+g2euler1bin;
+			g1ea1 = grains[selectedgrain1].euler1;
+			g1ea2 = grains[selectedgrain1].euler2;
+			g1ea3 = grains[selectedgrain1].euler3;
+			g2ea1 = grains[selectedgrain2].euler1;
+			g2ea2 = grains[selectedgrain2].euler2;
+			g2ea3 = grains[selectedgrain2].euler3;
+			q1[1] = grains[selectedgrain1].avg_quat[1];
+			q1[2] = grains[selectedgrain1].avg_quat[2];
+			q1[3] = grains[selectedgrain1].avg_quat[3];
+			q1[4] = grains[selectedgrain1].avg_quat[4];
+			if(crystruct == AIM::Reconstruction::Hexagonal)
+			{
+				w = MisorientationCalculations::getMisoQuatHexagonal(q1, qref, n1, n2, n3);
+				w = w*degtorad;
+				denom = (n1*n1)+(n2*n2)+(n3*n3);
+				denom = pow(denom,0.5);
+				n1 = n1/denom;
+				n2 = n2/denom;
+				n3 = n3/denom;
+				n1 = n1*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
+				n2 = n2*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
+				n3 = n3*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
+				g1euler1bin = int(n1*36.0/dim1);
+				g1euler2bin = int(n2*36.0/dim2);
+				g1euler3bin = int(n3*12.0/dim3);
+				g1odfbin = (g1euler3bin*36*36)+(g1euler2bin*36)+(g1euler1bin);
+			}
+			if(crystruct == AIM::Reconstruction::Cubic)
+			{
+				w = MisorientationCalculations::getMisoQuatCubic(q1, qref, n1, n2, n3);
+				w = w*degtorad;
+				denom = (n1*n1)+(n2*n2)+(n3*n3);
+				denom = pow(denom,0.5);
+				n1 = n1/denom;
+				n2 = n2/denom;
+				n3 = n3/denom;
+				n1 = n1*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
+				n2 = n2*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
+				n3 = n3*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
+				g1euler1bin = int(n1*18.0/dim1);
+				g1euler2bin = int(n2*18.0/dim2);
+				g1euler3bin = int(n3*18.0/dim3);
+				g1odfbin = (g1euler3bin*18*18)+(g1euler2bin*18)+(g1euler1bin);
+			}
+			q1[1] = grains[selectedgrain2].avg_quat[1];
+			q1[2] = grains[selectedgrain2].avg_quat[2];
+			q1[3] = grains[selectedgrain2].avg_quat[3];
+			q1[4] = grains[selectedgrain2].avg_quat[4];
+			if(crystruct == AIM::Reconstruction::Hexagonal)
+			{
+				w = MisorientationCalculations::getMisoQuatHexagonal(q1, qref, n1, n2, n3);
+				w = w*degtorad;
+				denom = (n1*n1)+(n2*n2)+(n3*n3);
+				denom = pow(denom,0.5);
+				n1 = n1/denom;
+				n2 = n2/denom;
+				n3 = n3/denom;
+				n1 = n1*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
+				n2 = n2*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
+				n3 = n3*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
+				g2euler1bin = int(n1*36.0/dim1);
+				g2euler2bin = int(n2*36.0/dim2);
+				g2euler3bin = int(n3*12.0/dim3);
+				g2odfbin = (g2euler3bin*36*36)+(g2euler2bin*36)+(g2euler1bin);
+			}
+			if(crystruct == AIM::Reconstruction::Cubic)
+			{
+				w = MisorientationCalculations::getMisoQuatCubic(q1, qref, n1, n2, n3);
+				w = w*degtorad;
+				denom = (n1*n1)+(n2*n2)+(n3*n3);
+				denom = pow(denom,0.5);
+				n1 = n1/denom;
+				n2 = n2/denom;
+				n3 = n3/denom;
+				n1 = n1*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
+				n2 = n2*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
+				n3 = n3*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
+				g2euler1bin = int(n1*18.0/dim1);
+				g2euler2bin = int(n2*18.0/dim2);
+				g2euler3bin = int(n3*18.0/dim3);
+				g2odfbin = (g2euler3bin*18*18)+(g2euler2bin*18)+(g2euler1bin);
+			}
 			double random = rg.Random();
 			double odfchange = ((actualodf[g1odfbin] - simodf[g1odfbin])*(actualodf[g1odfbin] - simodf[g1odfbin])) - ((actualodf[g1odfbin] - (simodf[g1odfbin]-(double(grains[selectedgrain1].numvoxels)*resx*resy*resz/totalvol)+(double(grains[selectedgrain2].numvoxels)*resx*resy*resz/totalvol)))*(actualodf[g1odfbin] - (simodf[g1odfbin]-(double(grains[selectedgrain1].numvoxels)*resx*resy*resz/totalvol)+(double(grains[selectedgrain2].numvoxels)*resx*resy*resz/totalvol))));
 			odfchange = odfchange + (((actualodf[g2odfbin] - simodf[g2odfbin])*(actualodf[g2odfbin] - simodf[g2odfbin])) - ((actualodf[g2odfbin] - (simodf[g2odfbin]-(double(grains[selectedgrain2].numvoxels)*resx*resy*resz/totalvol)+(double(grains[selectedgrain1].numvoxels)*resx*resy*resz/totalvol)))*(actualodf[g2odfbin] - (simodf[g2odfbin]-(double(grains[selectedgrain2].numvoxels)*resx*resy*resz/totalvol)+(double(grains[selectedgrain1].numvoxels)*resx*resy*resz/totalvol)))));

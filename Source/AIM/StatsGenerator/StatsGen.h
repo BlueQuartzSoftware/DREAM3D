@@ -78,6 +78,35 @@ class StatsGen
 
 
     template<typename T>
+    int GenODF(T weights, T sigmas, T &x001, T &y001,  T &x011, T &y011, T &x111, T &y111, int size)
+    {
+      int err=0;
+      double value, gammapq, gammap, gammaq, betain, betaout;
+      x001.resize(size*3);
+      y001.resize(size*3);
+      x011.resize(size*6);
+      y011.resize(size*6);
+      x111.resize(size*4);
+      y111.resize(size*4);
+      value = alpha;
+      gammap = gamma(value);
+      value = beta;
+      gammaq = gamma(value);
+      value = alpha+beta;
+      gammapq = gamma(value);
+      for(int i=0;i<size;i++)
+      {
+        betain = (i*(1.0/double(size)))+((1.0/double(size))/2.0);
+        betaout = (gammapq/(gammap*gammaq))*pow(betain,(alpha-1))*pow((1-betain),(beta-1));
+        x[i] = betain;
+        y[i] = betaout*(1.0/double(size));
+        if(betaout < 0) err = 1;
+      }
+      return err;
+    }
+
+
+	template<typename T>
     int GenLogNormal(double avg, double stdDev, T &x, T &y, int size)
     {
       int err = 0;
