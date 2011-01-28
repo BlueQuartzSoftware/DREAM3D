@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>992</width>
-    <height>512</height>
+    <height>542</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -31,7 +31,7 @@
         <widget class="QTableView" name="m_TableView">
          <property name="minimumSize">
           <size>
-           <width>425</width>
+           <width>375</width>
            <height>0</height>
           </size>
          </property>
@@ -79,7 +79,7 @@
          <x>0</x>
          <y>0</y>
          <width>546</width>
-         <height>500</height>
+         <height>530</height>
         </rect>
        </property>
        <layout class="QVBoxLayout" name="verticalLayout_2">
