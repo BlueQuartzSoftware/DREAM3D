@@ -150,6 +150,7 @@ function(BuildQtAppBundle)
           "// remains consistent on all systems.\n"
           "IDI_ICON1 ICON \"${QAB_ICON_FILE}\"")
         SET(QAB_ICON_FILE "${CMAKE_CURRENT_BINARY_DIR}/Icon.rc")
+        cmp_IDE_GENERATED_PROPERTIES("Generated_qrc" "${QAB_ICON_FILE}" "")
     endif(APPLE)
     
 #-- Append the Icon file/Image/Resource file to the list of Sources to compile
