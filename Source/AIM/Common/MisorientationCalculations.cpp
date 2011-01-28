@@ -203,3 +203,30 @@ double MisorientationCalculations::getMisoQuatHexagonal(double q1[5],double q2[5
   wmin = (180.0 / m_pi) * wmin;
   return wmin;
 }
+
+int MisorientationCalculations::getMisoBinCubic(double n1, double n2, double n3)
+{
+	double dim1 = pow((0.75*((m_pi/4.0)-sin((m_pi/4.0)))),(1.0/3.0));
+	double dim2 = pow((0.75*((m_pi/4.0)-sin((m_pi/4.0)))),(1.0/3.0));
+	double dim3 = pow((0.75*((m_pi/4.0)-sin((m_pi/4.0)))),(1.0/3.0));
+	int miso1bin = int(n1*18.0/dim1);
+	int miso2bin = int(n2*18.0/dim2);
+	int miso3bin = int(n3*18.0/dim3);
+	if(miso1bin >= 18) miso1bin = 17;
+	if(miso2bin >= 18) miso2bin = 17;
+	if(miso3bin >= 18) miso3bin = 17;
+	return ((18*18*miso3bin)+(18*miso2bin)+miso1bin);
+}
+int MisorientationCalculations::getMisoBinHexagonal(double n1, double n2, double n3)
+{
+	double dim1 = pow((0.75*((m_pi/2.0)-sin((m_pi/2.0)))),(1.0/3.0));
+	double dim2 = pow((0.75*((m_pi/2.0)-sin((m_pi/2.0)))),(1.0/3.0));
+	double dim3 = pow((0.75*((m_pi/6.0)-sin((m_pi/6.0)))),(1.0/3.0));
+	int miso1bin = int(n1*36.0/dim1);
+	int miso2bin = int(n2*36.0/dim2);
+	int miso3bin = int(n3*12.0/dim3);
+	if(miso1bin >= 36) miso1bin = 35;
+	if(miso2bin >= 36) miso2bin = 35;
+	if(miso3bin >= 12) miso3bin = 11;
+	return ((36*36*miso3bin)+(36*miso2bin)+miso1bin);
+}

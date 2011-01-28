@@ -3062,6 +3062,9 @@ void  ReconstructionFunc::find_eulerodf (H5ReconStatsWriter::Pointer h5io)
 				ea1bin = int(n1*36.0/dim1);
 				ea2bin = int(n2*36.0/dim2);
 				ea3bin = int(n3*12.0/dim3);
+				if(ea1bin >= 36) ea1bin = 35;
+				if(ea2bin >= 36) ea2bin = 35;
+				if(ea3bin >= 12) ea3bin = 11;
 				bin = (ea3bin*36*36)+(ea2bin*36)+(ea1bin);
 				eulerodf[bin] = eulerodf[bin] + vol;
 				totalvol = totalvol + vol;
@@ -3081,6 +3084,9 @@ void  ReconstructionFunc::find_eulerodf (H5ReconStatsWriter::Pointer h5io)
 				ea1bin = int(n1*18.0/dim1);
 				ea2bin = int(n2*18.0/dim2);
 				ea3bin = int(n3*18.0/dim3);
+				if(ea1bin >= 18) ea1bin = 17;
+				if(ea2bin >= 18) ea2bin = 17;
+				if(ea3bin >= 18) ea3bin = 17;
 				bin = (ea3bin*18*18)+(ea2bin*18)+(ea1bin);
 				eulerodf[bin] = eulerodf[bin] + vol;
 				totalvol = totalvol + vol;
@@ -3133,9 +3139,28 @@ void  ReconstructionFunc::measure_misorientations (H5ReconStatsWriter::Pointer h
   double q2[5];
   double denom = 0;
   vector<int >* nlist;
+  double actualgrains = 0;
+  double misocount = 0;
+  double *misobin;
+  int nummisobins = 0;
+  if(crystruct == AIM::Reconstruction::Cubic) nummisobins = 18*18*18;
+  if(crystruct == AIM::Reconstruction::Hexagonal) nummisobins = 36*36*12;
+  misobin = new double [nummisobins];
+  double microbin[10];
+  for (int e = 0; e < nummisobins; e++)
+  {
+    misobin[e] = 0;
+    if (e < 10) microbin[e] = 0;
+  }
+  int nname, neigh, size;
+  double microcount = 0;
+  double nsa, miso1, miso2, miso3;
+  vector<double >* mlist;
+  vector<double >* neighborsurfarealist;
   for (int i = 1; i < numgrains; i++)
   {
     nlist = m_Grains[i].neighborlist;
+	neighborsurfarealist = m_Grains[i].neighborsurfarealist;
     q1[1] = m_Grains[i].avg_quat[1];
     q1[2] = m_Grains[i].avg_quat[2];
     q1[3] = m_Grains[i].avg_quat[3];
@@ -3148,7 +3173,8 @@ void  ReconstructionFunc::measure_misorientations (H5ReconStatsWriter::Pointer h
     misolist.resize(size*3, -1);
     for (int j = 0; j < size; j++)
     {
-      int nname = nlist->at(j);
+      nname = nlist->at(j);
+      nsa = neighborsurfarealist->at(j);
 	  if(nname > 0)
 	  {
 	      q2[1] = m_Grains[nname].avg_quat[1];
@@ -3172,99 +3198,28 @@ void  ReconstructionFunc::measure_misorientations (H5ReconStatsWriter::Pointer h
 		  misolist[3*j] = n1*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
 	      misolist[3*j+1] = n2*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
 	      misolist[3*j+2] = n3*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
-	    }
+		  if (crystruct == AIM::Reconstruction::Cubic)
+	      {
+			  mbin = MisorientationCalculations::getMisoBinHexagonal(misolist[3*j],misolist[3*j+1],misolist[3*j+2]);
+		  }
+	      if (crystruct == AIM::Reconstruction::Hexagonal)
+	      {
+			  mbin = MisorientationCalculations::getMisoBinHexagonal(misolist[3*j],misolist[3*j+1],misolist[3*j+2]);
+		  }
+	      if (nname > i || m_Grains[nname].surfacegrain == 1)
+          {
+			  misobin[mbin] = misobin[mbin] + (nsa / totalsurfacearea);
+			  misocount++;
+          }
+	  }
 	}
     m_Grains[i].misorientationlist = new std::vector<double >(misolist.size());
     m_Grains[i].misorientationlist->swap(misolist);
     misolist.clear();
   }
-  double actualgrains = 0;
-  double misocount = 0;
-  double *misobin;
-  int nummisobins = 0;
-  if(crystruct == AIM::Reconstruction::Cubic) nummisobins = 18*18*18;
-  if(crystruct == AIM::Reconstruction::Hexagonal) nummisobins = 36*36*12;
-  misobin = new double [nummisobins];
-  double dim1 = 0;
-  double dim2 = 0;
-  double dim3 = 0;
-  if(crystruct == AIM::Reconstruction::Cubic)
-  {
-	  dim1 = pow((0.75*((m_pi/4.0)-sin((m_pi/4.0)))),(1.0/3.0));
-	  dim2 = pow((0.75*((m_pi/4.0)-sin((m_pi/4.0)))),(1.0/3.0));
-	  dim3 = pow((0.75*((m_pi/4.0)-sin((m_pi/4.0)))),(1.0/3.0));
-  }
-  if(crystruct == AIM::Reconstruction::Hexagonal)
-  {
-	  dim1 = pow((0.75*((m_pi/2.0)-sin((m_pi/2.0)))),(1.0/3.0));
-	  dim2 = pow((0.75*((m_pi/2.0)-sin((m_pi/2.0)))),(1.0/3.0));
-	  dim3 = pow((0.75*((m_pi/6.0)-sin((m_pi/6.0)))),(1.0/3.0));
-  }
-  double microbin[10];
-  for (int e = 0; e < nummisobins; e++)
-  {
-    misobin[e] = 0;
-    if (e < 10) microbin[e] = 0;
-  }
-  int neigh, size;
-  double microcount = 0;
-  double nsa, miso1, miso2, miso3;
-  vector<double >* mlist;
-  vector<double >* neighborsurfarealist;
-  for (int l = 1; l < numgrains; l++)
-  {
-    if (m_Grains[l].surfacegrain == 0)
-    {
-      microcount = 0;
-      nlist = m_Grains[l].neighborlist;
-      mlist = m_Grains[l].misorientationlist;
-      neighborsurfarealist = m_Grains[l].neighborsurfarealist;
-      size = int(nlist->size());
-      for (int k = 0; k < size; k++)
-      {
-        neigh = nlist->at(k);
-        miso1 = mlist->at(3*k);
-        miso2 = mlist->at(3*k+1);
-        miso3 = mlist->at(3*k+2);
-        nsa = neighborsurfarealist->at(k);
-		if(crystruct == AIM::Reconstruction::Cubic)
-		{
-			miso1bin = int(miso1*18.0/dim1);
-			miso2bin = int(miso2*18.0/dim2);
-			miso3bin = int(miso3*18.0/dim3);
-			mbin = (18*18*miso3bin)+(18*miso2bin)+miso1bin;
-		}
-		if(crystruct == AIM::Reconstruction::Hexagonal)
-		{
-			miso1bin = int(miso1*36.0/dim1);
-			miso2bin = int(miso2*36.0/dim2);
-			miso3bin = int(miso3*12.0/dim3);
-			mbin = (36*36*miso3bin)+(36*miso2bin)+miso1bin;
-		}
-        if (miso1 < 15) microcount++;
-        if (neigh > l || m_Grains[neigh].surfacegrain == 1)
-        {
-          misobin[mbin] = misobin[mbin] + (nsa / totalsurfacearea);
-          misocount++;
-        }
-      }
-      if (size != 0)
-      {
-        microcount = microcount / size;
-      }
-      else
-      {
-        microcount = 0;
-      }
-      int microcur = int(microcount / 0.1);
-      if (microcur == 10) microcur = 9;
-      microbin[microcur]++;
-    }
-  }
   h5io->writeMisorientationBinsData(misobin, nummisobins);
   h5io->writeMicroTextureData(microbin, 10, actualgrains);
 }
-
 
 void  ReconstructionFunc::find_colors()
 {
