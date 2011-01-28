@@ -67,7 +67,7 @@ Qt::ItemFlags SGODFTableModel::flags(const QModelIndex &index) const
   Qt::ItemFlags theFlags = QAbstractTableModel::flags(index);
   if (index.isValid())
   {
-    theFlags |= Qt::ItemIsEditable | Qt::ItemIsSelectable | Qt::ItemIsEnabled;
+  //  theFlags |= Qt::ItemIsEditable | Qt::ItemIsSelectable | Qt::ItemIsEnabled;
 
     int col = index.column();
     if (col == Texture)
@@ -75,6 +75,10 @@ Qt::ItemFlags SGODFTableModel::flags(const QModelIndex &index) const
       theFlags = Qt::ItemIsEnabled;
     }
     else if (col == Weight)
+    {
+      theFlags = Qt::ItemIsEditable | Qt::ItemIsSelectable | Qt::ItemIsEnabled;
+    }
+    else if (col == Sigma)
     {
       theFlags = Qt::ItemIsEditable | Qt::ItemIsSelectable | Qt::ItemIsEnabled;
     }
@@ -110,11 +114,17 @@ QVariant SGODFTableModel::data(const QModelIndex &index, qint32 role) const
       case Weight:
       {
         comboBox.currentText = QString("10001");
-        const QString header = headerData(Texture, Qt::Horizontal, Qt::DisplayRole).toString();
+        const QString header = headerData(Weight, Qt::Horizontal, Qt::DisplayRole).toString();
         if (header.length() > comboBox.currentText.length()) comboBox.currentText = header;
         break;
       }
-
+      case Sigma:
+      {
+        comboBox.currentText = QString("10001");
+        const QString header = headerData(Sigma, Qt::Horizontal, Qt::DisplayRole).toString();
+        if (header.length() > comboBox.currentText.length()) comboBox.currentText = header;
+        break;
+      }
       default:
         Q_ASSERT(false);
     }
@@ -138,7 +148,10 @@ QVariant SGODFTableModel::data(const QModelIndex &index, qint32 role) const
     {
       return QVariant(m_Weights[index.row()]);
     }
-
+    else if (col == Sigma)
+    {
+      return QVariant(m_Sigmas[index.row()]);
+    }
   }
 
   return QVariant();
@@ -159,7 +172,9 @@ QVariant SGODFTableModel::headerData(int section, Qt::Orientation orientation, i
       case Weight:
         return QVariant(QString("Weight"));
         break;
-
+      case Sigma:
+        return QVariant(QString("Sigma"));
+        break;
       default:
         break;
     }
@@ -210,12 +225,14 @@ bool SGODFTableModel::setData(const QModelIndex & index, const QVariant & value,
   switch(col)
   {
     case Texture:
-      m_Textures[row] = value.toDouble(&ok);
+      m_Textures[row] = value.toString();
       break;
     case Weight:
       m_Weights[row] = value.toDouble(&ok);
       break;
-
+    case Sigma:
+      m_Sigmas[row] = value.toDouble(&ok);
+      break;
     default:
       Q_ASSERT(false);
 
@@ -232,7 +249,7 @@ bool SGODFTableModel::insertRows(int row, int count, const QModelIndex& index)
 {
   QString texture("Unknown");
   double weight = 5.0;
-
+  double sigma = 0.0;
 
   QString c("blue");
 
@@ -241,6 +258,7 @@ bool SGODFTableModel::insertRows(int row, int count, const QModelIndex& index)
   {
     m_Textures.append(texture);
     m_Weights.append(weight);
+    m_Sigmas.append(sigma);
     m_RowCount = m_Textures.count();
   }
   endInsertRows();
@@ -262,6 +280,7 @@ bool SGODFTableModel::removeRows(int row, int count, const QModelIndex& index)
   {
     m_Textures.remove(row);
     m_Weights.remove(row);
+    m_Sigmas.remove(row);
     m_RowCount = m_Textures.count();
   }
   endRemoveRows();
@@ -279,7 +298,8 @@ QVector<double > SGODFTableModel::getData(int col)
   {
     case Weight:
       return m_Weights;break;
-
+    case Sigma:
+      return m_Sigmas;break;
     default:
       Q_ASSERT(false);
   }
@@ -295,7 +315,8 @@ double SGODFTableModel::getDataValue(int col, int row)
   {
     case Weight:
       return m_Weights[row];break;
-
+    case Sigma:
+      return m_Sigmas[row]; break;
     default:
       Q_ASSERT(false);
   }
@@ -311,6 +332,8 @@ void SGODFTableModel::setColumnData(int col, QVector<double> &data)
   {
     case Weight:
       m_Weights = data;break;
+    case Sigma:
+      m_Sigmas = data; break;
     default:
       Q_ASSERT(false);
   }
@@ -322,4 +345,37 @@ void SGODFTableModel::setColumnData(int col, QVector<double> &data)
 QAbstractItemDelegate* SGODFTableModel::getItemDelegate()
 {
   return new SGODFItemDelegate;
+}
+
+#define ADD_INITIAL_ROW_VALUE(texture, weight, sigma)\
+    {insertRow(rowCount());\
+    QModelIndex textureIndex = index(rowCount() - 1, SGODFTableModel::Texture);\
+    setData(textureIndex, QVariant(QString(#texture)), Qt::EditRole);\
+    QModelIndex weightIndex = index(rowCount() - 1, SGODFTableModel::Weight);\
+    setData(weightIndex, QVariant(weight), Qt::EditRole);\
+    QModelIndex sigmaIndex = index(rowCount() - 1, SGODFTableModel::Sigma);\
+    setData(sigmaIndex, QVariant(sigma), Qt::EditRole);}\
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void SGODFTableModel::setInitialValues()
+{
+  ADD_INITIAL_ROW_VALUE(Random, 1.0, 0.0)
+  ADD_INITIAL_ROW_VALUE(Brass, 0.0, 1.0)
+  ADD_INITIAL_ROW_VALUE(S, 0.0, 1.0)
+  ADD_INITIAL_ROW_VALUE(Copper, 0.0, 1.0)
+  ADD_INITIAL_ROW_VALUE(Shear1, 0.0, 1.0)
+  ADD_INITIAL_ROW_VALUE(Shear2, 0.0, 1.0)
+  ADD_INITIAL_ROW_VALUE(Shear3, 0.0, 1.0)
+  ADD_INITIAL_ROW_VALUE(Goss, 0.0, 1.0)
+  ADD_INITIAL_ROW_VALUE(Cube, 0.0, 1.0)
+  ADD_INITIAL_ROW_VALUE(RC(rd1), 0.0, 1.0)
+  ADD_INITIAL_ROW_VALUE(RC(rd2), 0.0, 1.0)
+  ADD_INITIAL_ROW_VALUE(RC(nd1), 0.0, 1.0)
+  ADD_INITIAL_ROW_VALUE(RC(nd2), 0.0, 1.0)
+  ADD_INITIAL_ROW_VALUE(P, 0.0, 1.0)
+  ADD_INITIAL_ROW_VALUE(Q, 0.0, 1.0)
+  ADD_INITIAL_ROW_VALUE(R, 0.0, 1.0)
+
 }
