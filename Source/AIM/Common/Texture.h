@@ -48,8 +48,8 @@ class AIMCOMMON_EXPORT Texture
     const static size_t Count;
     const static double Values[AIM_TEXTURE_COUNT][3];
     const static char*  Names[AIM_TEXTURE_COUNT];
-    const static double    Weights[AIM_TEXTURE_COUNT];
-    const static double    Sigmas[AIM_TEXTURE_COUNT];
+    const static double Weights[AIM_TEXTURE_COUNT];
+    const static double Sigmas[AIM_TEXTURE_COUNT];
 protected:
     Texture();
 
