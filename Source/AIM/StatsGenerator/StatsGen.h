@@ -40,6 +40,7 @@
 #include "AIM/Common/Constants.h"
 #include "AIM/Common/AIMRandomNG.h"
 #include "AIM/Common/MisorientationCalculations.h"
+#include "AIM/Common/Texture.h"
 
 /**
  * @class StatsGen StatsGen.h AIM/StatsGenerator/StatsGen.h
@@ -81,7 +82,7 @@ class StatsGen
     template<typename T>
     int GenCubicODF(T weights, T sigmas, T &x001, T &y001, T &x011, T &y011, T &x111, T &y111, int size)
     {
-      int TextureBins[15];
+      int TextureBins[AIM_TEXTURE_COUNT + 1];
       double odf[18 * 18 * 18];
       int err = 0;
       size_t bin, ea1bin, ea2bin, ea3bin;
@@ -135,17 +136,17 @@ class StatsGen
       double totalweight = 0;
       for (int i = 0; i < 18 * 18 * 18; i++)
       {
-		  if(weights[0] > 0)
-		  {
-	          odf[i] = weights[0] / (18 * 18 * 18);
-	          totalweight = totalweight + weights[0] / (18 * 18 * 18);
-		  }
-		  if(weights[0] == 0)
-		  {
-	          odf[i] = 0.0;
-		  }
+        if (weights[0] > 0)
+        {
+          odf[i] = weights[0] / (18 * 18 * 18);
+          totalweight = totalweight + weights[0] / (18 * 18 * 18);
+        }
+        if (weights[0] == 0)
+        {
+          odf[i] = 0.0;
+        }
       }
-      for(int i=0;i<15;i++)
+      for(int i=0;i<AIM_TEXTURE_COUNT + 1;i++)
       {
         bin = TextureBins[i];
         odf[bin] = odf[bin] + (weights[i+1]);

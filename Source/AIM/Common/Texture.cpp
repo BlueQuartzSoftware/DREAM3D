@@ -28,32 +28,98 @@
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _MISORIENTATIONCALCULATIONS_H_
-#define _MISORIENTATIONCALCULATIONS_H_
+#include "Texture.h"
 
-#include "AIM/Common/AIMCommonConfiguration.h"
+const size_t Texture::Count = AIM_TEXTURE_COUNT;
 
-
-/**
- *
- */
-class AIMCOMMON_EXPORT MisorientationCalculations
+const double Texture::Values[AIM_TEXTURE_COUNT][3] =
 {
-  public:
+  { 0.610865,0.785398,0.0},
+  { 1.029744,0.645772,1.099557},
+  { 1.570796,0.610865,0.785398},
+  { 1.029744,0.506145,1.099557},
+ // { 0.820305,0.645772,1.099557},
+  { 0.0,0.610865,0.785398},
+  { 0.0,0.785398,0.0},
+  { 0.0,0.0,0.0},
+  { 0.0,0.349066,0.0},
+  { 0.0,0.610865,0.0},
+  { 0.349066,0.0,0.0},
+  { 0.610865,0.0,0.0},
+  { 1.22173,0.785398,0.0},
+  { 0.959931,0.349066,0.0},
+  { 0.959931,1.308997,0.436332}};
 
-    virtual ~MisorientationCalculations();
+const char* Texture::Names[AIM_TEXTURE_COUNT] =
+{
+  "Brass",
+  "S",
+  "Copper",
+  "S1",
+  "S2",
+ // "S3",
+  "Goss",
+  "Cube",
+  "RC(rd1)",
+  "RC(rd2)",
+  "RC(nd1)",
+  "RC(nd2)",
+  "P",
+  "Q",
+  "R"};
 
-    static double getMisoQuatCubic(double q1[5],double q2[5],double &n1,double &n2,double &n3);
-    static double getMisoQuatHexagonal(double q1[5],double q2[5],double &n1,double &n2,double &n3);
-    static int getMisoBinCubic(double n1, double n2, double n3);
-    static int getMisoBinHexagonal(double n1, double n2, double n3);
-
-  protected:
-    MisorientationCalculations();
-
-  private:
-    MisorientationCalculations(const MisorientationCalculations&); // Copy Constructor Not Implemented
-    void operator=(const MisorientationCalculations&); // Operator '=' Not Implemented
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const double Texture::Weights[AIM_TEXTURE_COUNT] =
+{
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
 };
 
-#endif /* _MISORIENTATIONCALCULATIONS_H_ */
+const double Texture::Sigmas[AIM_TEXTURE_COUNT] =
+{
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0
+};
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+Texture::Texture()
+{
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+Texture::~Texture()
+{
+  // TODO Auto-generated destructor stub
+}
