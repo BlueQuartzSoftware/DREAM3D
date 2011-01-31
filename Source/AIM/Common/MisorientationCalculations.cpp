@@ -67,7 +67,6 @@ double MisorientationCalculations::getMisoQuatCubic(double q1[5],double q2[5],do
   double wmin=9999999.0; //,na,nb,nc;
   double qc[4];
   double qco[4];
-  double axis[3];
   double sin_wmin_over_2 = 0.0;
   double _1, _2,  _6;
 
@@ -214,24 +213,7 @@ double MisorientationCalculations::getMisoQuatCubic(double q1[5],double q2[5],do
   n1 = qco[0] / sin_wmin_over_2;
   n2 = qco[1] / sin_wmin_over_2;
   n3 = qco[2] / sin_wmin_over_2;
-  if ( n1 >= n2 && n1 >= n3)
-  {
-     axis[0] = n1;
-     if (n2 > n3) { axis[1] = n2; axis[2] = n3; }
-     else { axis[1] = n3; axis[2] = n2; }
-  }
-  else if ( n2 >= n1 && n2 >= n3)
-  {
-     axis[0] = n2;
-     if (n1 > n3) { axis[1] = n1; axis[2] = n3; }
-     else { axis[1] = n3; axis[2] = n1; }
-  }
-  else if ( n1 >= n2 )
-  {
-     axis[1] = n1; axis[2] = n2; axis[0] = n3;
-  }
-  else { axis[2] = n1; axis[1] = n2; axis[0] = n3;}
-  if(wmin == 0) axis[0] = 0.0, axis[1] = 0.0, axis[2] = 0.0;
+  if(wmin == 0) n1 = 0.0, n2 = 0.0, n3 = 1.0;
   wmin = (threesixty_over_pi) * wmin;
   return wmin;
 }
