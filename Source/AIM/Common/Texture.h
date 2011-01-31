@@ -28,32 +28,35 @@
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _MISORIENTATIONCALCULATIONS_H_
-#define _MISORIENTATIONCALCULATIONS_H_
+#ifndef TEXTURE_H_
+#define TEXTURE_H_
 
+#include "MXA/MXATypes.h"
 #include "AIM/Common/AIMCommonConfiguration.h"
 
+#define AIM_TEXTURE_COUNT 14
 
-/**
- *
- */
-class AIMCOMMON_EXPORT MisorientationCalculations
+
+
+
+class AIMCOMMON_EXPORT Texture
 {
   public:
 
-    virtual ~MisorientationCalculations();
+    virtual ~Texture();
 
-    static double getMisoQuatCubic(double q1[5],double q2[5],double &n1,double &n2,double &n3);
-    static double getMisoQuatHexagonal(double q1[5],double q2[5],double &n1,double &n2,double &n3);
-    static int getMisoBinCubic(double n1, double n2, double n3);
-    static int getMisoBinHexagonal(double n1, double n2, double n3);
+    const static size_t Count;
+    const static double Values[AIM_TEXTURE_COUNT][3];
+    const static char*  Names[AIM_TEXTURE_COUNT];
+    const static double    Weights[AIM_TEXTURE_COUNT];
+    const static double    Sigmas[AIM_TEXTURE_COUNT];
+protected:
+    Texture();
 
-  protected:
-    MisorientationCalculations();
+private:
+    Texture(const Texture&); // Copy Constructor Not Implemented
+    void operator=(const Texture&); // Operator '=' Not Implemented
 
-  private:
-    MisorientationCalculations(const MisorientationCalculations&); // Copy Constructor Not Implemented
-    void operator=(const MisorientationCalculations&); // Operator '=' Not Implemented
 };
 
-#endif /* _MISORIENTATIONCALCULATIONS_H_ */
+#endif /* TEXTURE_H_ */
