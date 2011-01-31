@@ -156,15 +156,15 @@ class StatsGen
       double totalweight = 0;
       for (int i = 0; i < 18 * 18 * 18; i++)
       {
-		  if(weights[0] > 0)
-		  {
-	          odf[i] = weights[0] / (18 * 18 * 18);
-	          totalweight = totalweight + weights[0] / (18 * 18 * 18);
-		  }
-		  if(weights[0] == 0)
-		  {
-	          odf[i] = 0.0;
-		  }
+        if (weights[0] > 0)
+        {
+          odf[i] = weights[0] / (18 * 18 * 18);
+          totalweight = totalweight + weights[0] / (18 * 18 * 18);
+        }
+        if (weights[0] == 0)
+        {
+          odf[i] = 0.0;
+        }
       }
       for(int i=0;i<AIM_TEXTURE_COUNT + 1;i++)
       {
