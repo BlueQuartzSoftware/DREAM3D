@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>843</width>
-    <height>701</height>
+    <width>813</width>
+    <height>622</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -15,23 +15,30 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_2">
    <item>
-    <widget class="QToolBox" name="toolBox">
+    <widget class="QTabWidget" name="tabWidget">
+     <property name="tabPosition">
+      <enum>QTabWidget::South</enum>
+     </property>
      <property name="currentIndex">
       <number>0</number>
      </property>
-     <widget class="QWidget" name="page">
-      <property name="geometry">
-       <rect>
-        <x>0</x>
-        <y>0</y>
-        <width>819</width>
-        <height>541</height>
-       </rect>
-      </property>
-      <attribute name="label">
+     <widget class="QWidget" name="tab">
+      <attribute name="title">
        <string>Weights and Spreads</string>
       </attribute>
-      <layout class="QVBoxLayout" name="verticalLayout">
+      <layout class="QVBoxLayout" name="verticalLayout_5">
+       <property name="spacing">
+        <number>4</number>
+       </property>
+       <property name="topMargin">
+        <number>4</number>
+       </property>
+       <property name="rightMargin">
+        <number>4</number>
+       </property>
+       <property name="bottomMargin">
+        <number>4</number>
+       </property>
        <item>
         <widget class="QTableView" name="m_TableView">
          <property name="minimumSize">
@@ -68,16 +75,8 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="page_2">
-      <property name="geometry">
-       <rect>
-        <x>0</x>
-        <y>0</y>
-        <width>819</width>
-        <height>541</height>
-       </rect>
-      </property>
-      <attribute name="label">
+     <widget class="QWidget" name="tab_2">
+      <attribute name="title">
        <string>001 Plot</string>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_3">
@@ -91,8 +90,8 @@
          </property>
          <property name="minimumSize">
           <size>
-           <width>500</width>
-           <height>500</height>
+           <width>450</width>
+           <height>450</height>
           </size>
          </property>
          <property name="sizeIncrement">
@@ -105,23 +104,29 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="page_3">
-      <attribute name="label">
+     <widget class="QWidget" name="tab_3">
+      <attribute name="title">
        <string>011 Plot</string>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_4">
        <item>
         <widget class="QwtPlot" name="m_Plot2">
          <property name="sizePolicy">
-          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
          <property name="minimumSize">
           <size>
-           <width>500</width>
-           <height>500</height>
+           <width>450</width>
+           <height>450</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>450</width>
+           <height>450</height>
           </size>
          </property>
          <property name="sizeIncrement">
@@ -134,23 +139,23 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="page_4">
-      <attribute name="label">
+     <widget class="QWidget" name="tab_4">
+      <attribute name="title">
        <string>111 Plot</string>
       </attribute>
-      <layout class="QVBoxLayout" name="verticalLayout_5">
+      <layout class="QVBoxLayout" name="verticalLayout">
        <item>
         <widget class="QwtPlot" name="m_Plot3">
          <property name="sizePolicy">
-          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
          <property name="minimumSize">
           <size>
-           <width>500</width>
-           <height>500</height>
+           <width>450</width>
+           <height>450</height>
           </size>
          </property>
          <property name="sizeIncrement">
