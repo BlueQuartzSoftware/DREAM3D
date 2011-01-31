@@ -81,24 +81,17 @@ class StatsGen
     template<typename T>
     int GenCubicODF(T weights, T sigmas, T &x001, T &y001, T &x011, T &y011, T &x111, T &y111, int size)
     {
-      double q1[5];
-      double qref[5];
       int TextureBins[15];
       double odf[18 * 18 * 18];
       int err = 0;
       size_t bin, ea1bin, ea2bin, ea3bin;
-      double w, denom, n1, n2, n3;
-      double phi1, PHI, phi2;
       double ea1, ea2, ea3;
       double r1, r2, r3;
       double h1, h2, h3;
       double sum, diff;
-      double hmag, angle;
+      double hmag, rmag, angle;
       double g[3][3];
       double x, y, z;
-	  const double sqrt_two = pow(2.0, 0.5);
-	  double sin_w_over_2 = 0.0;
-	  const double threesixty_over_pi = 360.0/M_PI;
       double xpf, ypf;
       double degtorad = M_PI / 180.0;
       double totaldensity;
@@ -106,9 +99,9 @@ class StatsGen
       double dim2 = 0;
       double dim3 = 0;
       const double m_pi = 3.1415926535897;
-      dim1 = pow((0.75*((m_pi/4.0)-sin((m_pi/4.0)))),(1.0/3.0));
-      dim2 = pow((0.75*((m_pi/4.0)-sin((m_pi/4.0)))),(1.0/3.0));
-      dim3 = pow((0.75*((m_pi/4.0)-sin((m_pi/4.0)))),(1.0/3.0));
+      dim1 = pow((0.75*((m_pi/2.0)-sin((m_pi/2.0)))),(1.0/3.0));
+      dim2 = pow((0.75*((m_pi/2.0)-sin((m_pi/2.0)))),(1.0/3.0));
+      dim3 = pow((0.75*((m_pi/2.0)-sin((m_pi/2.0)))),(1.0/3.0));
 
 
       AIMRandomNG rg;
@@ -119,51 +112,23 @@ class StatsGen
       y011.resize(size * 6);
       x111.resize(size * 4);
       y111.resize(size * 4);
-      qref[1] = sin(0.5 * 0.0) * cos(0.5 * (0.0 - 0.0));
-      qref[2] = sin(0.5 * 0.0) * sin(0.5 * (0.0 - 0.0));
-      qref[3] = cos(0.5 * 0.0) * sin(0.5 * (0.0 + 0.0));
-      qref[4] = cos(0.5 * 0.0) * cos(0.5 * (0.0 + 0.0));
       for (int i = 0; i < 15; i++)
       {
-        q1[1] = sin(0.5 * AIM::Reconstruction::Textures[i][1]) * cos(0.5 * (AIM::Reconstruction::Textures[i][0] - AIM::Reconstruction::Textures[i][2]));
-        q1[2] = sin(0.5 * AIM::Reconstruction::Textures[i][1]) * sin(0.5 * (AIM::Reconstruction::Textures[i][0] - AIM::Reconstruction::Textures[i][2]));
-        q1[3] = cos(0.5 * AIM::Reconstruction::Textures[i][1]) * sin(0.5 * (AIM::Reconstruction::Textures[i][0] + AIM::Reconstruction::Textures[i][2]));
-        q1[4] = cos(0.5 * AIM::Reconstruction::Textures[i][1]) * cos(0.5 * (AIM::Reconstruction::Textures[i][0] + AIM::Reconstruction::Textures[i][2]));
-        w = MisorientationCalculations::getMisoQuatCubic(q1, qref, n1, n2, n3);
-//		w = q1[4];
-//		if (((q1[3] + q1[4]) / (sqrt_two)) > w)
-//		{
-//			w = ((q1[3] + q1[4]) / (sqrt_two));
-//		}
-//		if (((q1[1] + q1[2] + q1[3] + q1[4]) / 2) > w)
-//		{
-//			w = ((q1[1] + q1[2] + q1[3] + q1[4]) / 2);
-//		}
-//		w = acos(w);
-//		sin_w_over_2 = sin(w / 2.0);
-//		n1 = q1[1] / sin_w_over_2;
-//		n2 = q1[2] / sin_w_over_2;
-//		n3 = q1[3] / sin_w_over_2;
-//		if(w == 0) n1 = 0.0, n2 = 0.0, n3 = 1.0;
-//		w = (threesixty_over_pi) * w;
-        w = w * degtorad;
-        denom = (n1 * n1) + (n2 * n2) + (n3 * n3);
-        denom = pow(denom, 0.5);
-        n1 = n1 / denom;
-        n2 = n2 / denom;
-        n3 = n3 / denom;
-        n1 = n1 * pow(((3.0 / 4.0) * (w - sin(w))), (1.0 / 3.0));
-        n2 = n2 * pow(((3.0 / 4.0) * (w - sin(w))), (1.0 / 3.0));
-        n3 = n3 * pow(((3.0 / 4.0) * (w - sin(w))), (1.0 / 3.0));
-        ea1bin = int(n1 * 18.0 / dim1);
-        ea2bin = int(n2 * 18.0 / dim2);
-        ea3bin = int(n3 * 18.0 / dim3);
-        if (ea1bin >= 18)
-          ea1bin = 17;
-        if (ea2bin >= 18)
-          ea2bin = 17;
-        if (ea3bin >= 18)
-          ea3bin = 17;
+		r1 = tan(AIM::Reconstruction::Textures[i][1]/2)*sin((AIM::Reconstruction::Textures[i][0]-AIM::Reconstruction::Textures[i][2])/2)/cos((AIM::Reconstruction::Textures[i][0]+AIM::Reconstruction::Textures[i][2])/2);
+		r2 = tan(AIM::Reconstruction::Textures[i][1]/2)*cos((AIM::Reconstruction::Textures[i][0]-AIM::Reconstruction::Textures[i][2])/2)/cos((AIM::Reconstruction::Textures[i][0]+AIM::Reconstruction::Textures[i][2])/2);
+		r3 = tan((AIM::Reconstruction::Textures[i][0]-AIM::Reconstruction::Textures[i][2])/2);
+        rmag = pow((r1 * r1 + r2 * r2 + r3 * r3), 0.5);
+        angle = 2.0*atan(rmag/2);
+        h1 = pow(((3.0 / 4.0) * (angle - sin(angle))), (1.0 / 3.0)) * (r1 / rmag);
+        h2 = pow(((3.0 / 4.0) * (angle - sin(angle))), (1.0 / 3.0)) * (r2 / rmag);
+        h3 = pow(((3.0 / 4.0) * (angle - sin(angle))), (1.0 / 3.0)) * (r3 / rmag);
+		if(angle == 0) h1 = 0.0, h2 = 0.0, h3 = 0.0;
+        ea1bin = int((h1+(dim1/2.0)) * 18.0 / dim1);
+        ea2bin = int((h2+(dim1/2.0)) * 18.0 / dim2);
+        ea3bin = int((h3+(dim1/2.0)) * 18.0 / dim3);
+        if (ea1bin >= 18) ea1bin = 17;
+        if (ea2bin >= 18) ea2bin = 17;
+        if (ea3bin >= 18) ea3bin = 17;
         bin = (ea3bin * 18 * 18) + (ea2bin * 18) + (ea1bin);
         TextureBins[i] = bin;
       }
@@ -201,32 +166,25 @@ class StatsGen
           totaldensity = totaldensity + density;
           if (random < totaldensity && random >= (totaldensity-density)) choose = j;
         }
-        phi1 = choose % 18;
-        PHI = (choose / 18) % 18;
-        phi2 = choose / (18 * 18);
+        h1 = choose % 18;
+        h2 = (choose / 18) % 18;
+        h3 = choose / (18 * 18);
         random = rg.Random();
-        h1 = ((dim1/18.0) * phi1) + ((dim1/18.0) * random);
+        h1 = ((dim1/18.0) * h1) + ((dim1/18.0) * random) - (dim1/2.0);
         random = rg.Random();
-        h2 = ((dim2/18.0) * PHI) + ((dim2/18.0) * random);
+        h2 = ((dim2/18.0) * h2) + ((dim2/18.0) * random) - (dim2/2.0);
         random = rg.Random();
-        h3 = ((dim3/18.0) * phi2) + ((dim3/18.0) * random);
+        h3 = ((dim3/18.0) * h3) + ((dim3/18.0) * random) - (dim3/2.0);
         hmag = pow((h1 * h1 + h2 * h2 + h3 * h3), 0.5);
         angle = pow((8 * hmag * hmag * hmag), (1.0 / 3.0));
-        r1 = tan(angle / 2.0) * (h1 / hmag);
-        r2 = tan(angle / 2.0) * (h2 / hmag);
-        r3 = tan(angle / 2.0) * (h3 / hmag);
+        r1 = tan(angle) * (h1 / hmag);
+        r2 = tan(angle) * (h2 / hmag);
+        r3 = tan(angle) * (h3 / hmag);
         sum = atan(r3);
         diff = atan(r2 / r1);
         ea1 = sum + diff;
         ea2 = 2. * atan(r1 * cos(sum) / cos(diff));
         ea3 = sum - diff;
-		random = rg.Random();
-		if(random < 0.166) ea1 = 0.610865, ea2 = 0.785398, ea3 = 0.0;
-		if(random >= 0.166 && random < 0.333) ea1 = 1.029744, ea2 = 0.645772, ea3 = 1.099557;
-		if(random >= 0.333 && random < 0.500) ea1 = 1.570796, ea2 = 0.610865, ea3 = 0.785398;
-		if(random >= 0.500 && random < 0.666) ea1 = 1.029744, ea2 = 0.506145, ea3 = 1.099557;
-		if(random >= 0.666 && random < 0.833) ea1 = 0.820305, ea2 = 0.645772, ea3 = 1.099557;
-		if(random >= 0.833 && random <= 1.000) ea1 = 0.0, ea2 = 0.785398, ea3 = 0.0;
         g[0][0] = cos(ea1) * cos(ea3) - sin(ea1) * sin(ea3) * cos(ea2);
         g[1][0] = sin(ea1) * cos(ea3) + cos(ea1) * sin(ea3) * cos(ea2);
         g[2][0] = sin(ea3) * sin(ea2);
@@ -241,8 +199,8 @@ class StatsGen
         z = g[2][0];
 		if(random > 0.5) x = -x, y = -y, z = -z;
 		if(z < 0) z = -z;
-        ypf = x - (x * (z/(z + 1)));
-        xpf = y - (y * (z/(z + 1)));
+        xpf = x - (x * (z/(z + 1)));
+        ypf = y - (y * (z/(z + 1)));
 		random = rg.Random();
         x001[3 * i] = xpf;
         y001[3 * i] = ypf;
@@ -251,8 +209,8 @@ class StatsGen
         z = g[2][1];
 		if(random > 0.5) x = -x, y = -y, z = -z;
 		if(z < 0) z = -z;
-        ypf = x - (x * (z/(z + 1)));
-        xpf = y - (y * (z/(z + 1)));
+        xpf = x - (x * (z/(z + 1)));
+        ypf = y - (y * (z/(z + 1)));
         x001[3 * i + 1] = xpf;
         y001[3 * i + 1] = ypf;
         x = g[0][2];
@@ -260,8 +218,8 @@ class StatsGen
         z = g[2][2];
 		if(random > 0.5) x = -x, y = -y, z = -z;
 		if(z < 0) z = -z;
-        ypf = x - (x * (z/(z + 1)));
-        xpf = y - (y * (z/(z + 1)));
+        xpf = x - (x * (z/(z + 1)));
+        ypf = y - (y * (z/(z + 1)));
         x001[3 * i + 2] = xpf;
         y001[3 * i + 2] = ypf;
         x = 0.707107*(g[0][0] + g[0][1]);
@@ -269,8 +227,8 @@ class StatsGen
         z = 0.707107*(g[2][0] + g[2][1]);
 		if(random > 0.5) x = -x, y = -y, z = -z;
 		if(z < 0) z = -z;
-        ypf = x - (x * (z/(z + 1)));
-        xpf = y - (y * (z/(z + 1)));
+        xpf = x - (x * (z/(z + 1)));
+        ypf = y - (y * (z/(z + 1)));
         x011[6 * i] = xpf;
         y011[6 * i] = ypf;
         x = 0.707107*(g[0][1] + g[0][2]);
@@ -278,8 +236,8 @@ class StatsGen
         z = 0.707107*(g[2][1] + g[2][2]);
 		if(random > 0.5) x = -x, y = -y, z = -z;
 		if(z < 0) z = -z;
-        ypf = x - (x * (z/(z + 1)));
-        xpf = y - (y * (z/(z + 1)));
+        xpf = x - (x * (z/(z + 1)));
+        ypf = y - (y * (z/(z + 1)));
         x011[6 * i + 1] = xpf;
         y011[6 * i + 1] = ypf;
         x = 0.707107*(g[0][2] + g[0][0]);
@@ -287,8 +245,8 @@ class StatsGen
         z = 0.707107*(g[2][2] + g[2][0]);
 		if(random > 0.5) x = -x, y = -y, z = -z;
 		if(z < 0) z = -z;
-        ypf = x - (x * (z/(z + 1)));
-        xpf = y - (y * (z/(z + 1)));
+        xpf = x - (x * (z/(z + 1)));
+        ypf = y - (y * (z/(z + 1)));
         x011[6 * i + 2] = xpf;
         y011[6 * i + 2] = ypf;
         x = 0.707107*(g[0][0] - g[0][1]);
@@ -296,8 +254,8 @@ class StatsGen
         z = 0.707107*(g[2][0] - g[2][1]);
 		if(random > 0.5) x = -x, y = -y, z = -z;
 		if(z < 0) z = -z;
-        ypf = x - (x * (z/(z + 1)));
-        xpf = y - (y * (z/(z + 1)));
+        xpf = x - (x * (z/(z + 1)));
+        ypf = y - (y * (z/(z + 1)));
         x011[6 * i + 3] = xpf;
         y011[6 * i + 3] = ypf;
         x = 0.707107*(g[0][1] - g[0][2]);
@@ -305,8 +263,8 @@ class StatsGen
         z = 0.707107*(g[2][1] - g[2][2]);
 		if(random > 0.5) x = -x, y = -y, z = -z;
 		if(z < 0) z = -z;
-        ypf = x - (x * (z/(z + 1)));
-        xpf = y - (y * (z/(z + 1)));
+        xpf = x - (x * (z/(z + 1)));
+        ypf = y - (y * (z/(z + 1)));
         x011[6 * i + 4] = xpf;
         y011[6 * i + 4] = ypf;
         x = 0.707107*(g[0][2] - g[0][0]);
@@ -314,8 +272,8 @@ class StatsGen
         z = 0.707107*(g[2][2] - g[2][0]);
 		if(random > 0.5) x = -x, y = -y, z = -z;
 		if(z < 0) z = -z;
-        ypf = x - (x * (z/(z + 1)));
-        xpf = y - (y * (z/(z + 1)));
+        xpf = x - (x * (z/(z + 1)));
+        ypf = y - (y * (z/(z + 1)));
         x011[6 * i + 5] = xpf;
         y011[6 * i + 5] = ypf;
         x = 0.57735*(g[0][0] + g[0][1] + g[0][2]);
@@ -323,8 +281,8 @@ class StatsGen
         z = 0.57735*(g[2][0] + g[2][1] + g[2][2]);
 		if(random > 0.5) x = -x, y = -y, z = -z;
 		if(z < 0) z = -z;
-        ypf = x - (x * (z/(z + 1)));
-        xpf = y - (y * (z/(z + 1)));
+        xpf = x - (x * (z/(z + 1)));
+        ypf = y - (y * (z/(z + 1)));
         x111[4 * i] = xpf;
         y111[4 * i] = ypf;
         x = 0.57735*(g[0][0] + g[0][1] - g[0][2]);
@@ -332,8 +290,8 @@ class StatsGen
         z = 0.57735*(g[2][0] + g[2][1] - g[2][2]);
 		if(random > 0.5) x = -x, y = -y, z = -z;
 		if(z < 0) z = -z;
-        ypf = x - (x * (z/(z + 1)));
-        xpf = y - (y * (z/(z + 1)));
+        xpf = x - (x * (z/(z + 1)));
+        ypf = y - (y * (z/(z + 1)));
         x111[4 * i + 1] = xpf;
         y111[4 * i + 1] = ypf;
         x = 0.57735*(g[0][0] - g[0][1] + g[0][2]);
@@ -341,8 +299,8 @@ class StatsGen
         z = 0.57735*(g[2][0] - g[2][1] + g[2][2]);
 		if(random > 0.5) x = -x, y = -y, z = -z;
 		if(z < 0) z = -z;
-        ypf = x - (x * (z/(z + 1)));
-        xpf = y - (y * (z/(z + 1)));
+        xpf = x - (x * (z/(z + 1)));
+        ypf = y - (y * (z/(z + 1)));
         x111[4 * i + 2] = xpf;
         y111[4 * i + 2] = ypf;
         x = 0.57735*(-g[0][0] + g[0][1] + g[0][2]);
@@ -350,8 +308,8 @@ class StatsGen
         z = 0.57735*(-g[2][0] + g[2][1] + g[2][2]);
 		if(random > 0.5) x = -x, y = -y, z = -z;
 		if(z < 0) z = -z;
-        ypf = x - (x * (z/(z + 1)));
-        xpf = y - (y * (z/(z + 1)));
+        xpf = x - (x * (z/(z + 1)));
+        ypf = y - (y * (z/(z + 1)));
         x111[4 * i + 3] = xpf;
         y111[4 * i + 3] = ypf;
       }
