@@ -207,7 +207,12 @@ void StatsGenODFWidget::on_m_CalculateODFBtn_clicked()
   sigmas = m_TableModel->getData(SGODFTableModel::Sigma);
 
   size_t wSize = weights.count();
-  err = sg.GenCubicODF(weights, sigmas, x001, y001, x011, y011, x111, y111, size);
+
+  double randomWeight = weights.front();
+  weights.pop_front();
+  sigmas.pop_front();
+  //pop off the random number
+  err = sg.GenCubicODF(weights, sigmas, x001, y001, x011, y011, x111, y111, size, randomWeight);
 
 
   if (err == 1)
