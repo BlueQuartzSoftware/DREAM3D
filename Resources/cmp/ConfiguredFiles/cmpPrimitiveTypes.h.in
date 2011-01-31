@@ -20,6 +20,10 @@
 #include <stdint.h>
 #endif
 
+#if CMP_HAVE_SYS_TYPES_H
+#include <sys/types.h>
+#endif
+
 /*--------------------------------------------------------------------------*/
 /* Define named types and constants corresponding to specific integer
  * and floating-point sizes and signedness.  */

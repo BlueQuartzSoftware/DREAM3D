@@ -57,6 +57,7 @@ SET (AIMCommon_SRCS
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Quaternions.cpp
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/VTKFileUtils.cpp
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/MisorientationCalculations.cpp
+    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Texture.cpp
     )
 
 SET (AIMCommon_HDRS
@@ -77,6 +78,7 @@ SET (AIMCommon_HDRS
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Quaternions.h
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/MisorientationCalculations.h
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/OIMColoring.hpp
+    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Texture.h
     )
 cmp_IDE_SOURCE_PROPERTIES( "AIM/Common" "${AIMCommon_HDRS}" "${AIMCommon_SRCS}" ${PROJECT_INSTALL_HEADERS})
 

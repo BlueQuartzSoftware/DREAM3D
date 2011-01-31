@@ -68,7 +68,7 @@ double MisorientationCalculations::getMisoQuatCubic(double q1[5],double q2[5],do
   double qc[4];
   double qco[4];
   double sin_wmin_over_2 = 0.0;
-  double _1, _2,  _6;
+//  double _1, _2,  _6;
 
 
   qc[0]=-q1[1]*q2[4]+q1[4]*q2[1]-q1[2]*q2[3]+q1[3]*q2[2];
@@ -87,22 +87,22 @@ double MisorientationCalculations::getMisoQuatCubic(double q1[5],double q2[5],do
      if (qc[1] <= qc[2] && qc[1] <= qc[3])
 	 {
 	    qco[1] = qc[1];
-		if(qc[2] <= qc[3]) qco[2] = qc[2], qco[3] = qc[3]; 
-		else qco[2] = qc[3], qco[3] = qc[2]; 
+		if(qc[2] <= qc[3]) qco[2] = qc[2], qco[3] = qc[3];
+		else qco[2] = qc[3], qco[3] = qc[2];
 	 }
 	 //if qc[2] is next smallest
      else if (qc[2] <= qc[1] && qc[2] <= qc[3])
 	 {
 	    qco[1] = qc[2];
-		if(qc[1] <= qc[3]) qco[2] = qc[1], qco[3] = qc[3]; 
-		else qco[2] = qc[3], qco[3] = qc[1]; 
+		if(qc[1] <= qc[3]) qco[2] = qc[1], qco[3] = qc[3];
+		else qco[2] = qc[3], qco[3] = qc[1];
 	 }
 	 //if qc[3] is next smallest
 	 else
 	 {
 	    qco[1] = qc[3];
-		if(qc[1] <= qc[2]) qco[2] = qc[1], qco[3] = qc[2]; 
-		else qco[2] = qc[2], qco[3] = qc[1]; 
+		if(qc[1] <= qc[2]) qco[2] = qc[1], qco[3] = qc[2];
+		else qco[2] = qc[2], qco[3] = qc[1];
 	 }
   }
 //if qc[1] is smallest
@@ -113,22 +113,22 @@ double MisorientationCalculations::getMisoQuatCubic(double q1[5],double q2[5],do
      if (qc[0] <= qc[2] && qc[0] <= qc[3])
 	 {
 	    qco[1] = qc[0];
-		if(qc[2] <= qc[3]) qco[2] = qc[2], qco[3] = qc[3]; 
-		else qco[2] = qc[3], qco[3] = qc[2]; 
+		if(qc[2] <= qc[3]) qco[2] = qc[2], qco[3] = qc[3];
+		else qco[2] = qc[3], qco[3] = qc[2];
 	 }
 	 //if qc[2] is next smallest
      else if (qc[2] <= qc[0] && qc[2] <= qc[3])
 	 {
 	    qco[1] = qc[2];
-		if(qc[0] <= qc[3]) qco[2] = qc[0], qco[3] = qc[3]; 
-		else qco[2] = qc[3], qco[3] = qc[0]; 
+		if(qc[0] <= qc[3]) qco[2] = qc[0], qco[3] = qc[3];
+		else qco[2] = qc[3], qco[3] = qc[0];
 	 }
 	 //if qc[3] is next smallest
 	 else
 	 {
 	    qco[1] = qc[3];
-		if(qc[0] <= qc[2]) qco[2] = qc[0], qco[3] = qc[2]; 
-		else qco[2] = qc[2], qco[3] = qc[0]; 
+		if(qc[0] <= qc[2]) qco[2] = qc[0], qco[3] = qc[2];
+		else qco[2] = qc[2], qco[3] = qc[0];
 	 }
   }
 //if qc[2] is smallest
@@ -139,22 +139,22 @@ double MisorientationCalculations::getMisoQuatCubic(double q1[5],double q2[5],do
      if (qc[0] <= qc[1] && qc[0] <= qc[3])
 	 {
 	    qco[1] = qc[0];
-		if(qc[1] <= qc[3]) qco[2] = qc[1], qco[3] = qc[3]; 
-		else qco[2] = qc[3], qco[3] = qc[1]; 
+		if(qc[1] <= qc[3]) qco[2] = qc[1], qco[3] = qc[3];
+		else qco[2] = qc[3], qco[3] = qc[1];
 	 }
 	 //if qc[1] is next smallest
      else if (qc[1] <= qc[0] && qc[1] <= qc[3])
 	 {
 	    qco[1] = qc[1];
-		if(qc[0] <= qc[3]) qco[2] = qc[0], qco[3] = qc[3]; 
-		else qco[2] = qc[3], qco[3] = qc[0]; 
+		if(qc[0] <= qc[3]) qco[2] = qc[0], qco[3] = qc[3];
+		else qco[2] = qc[3], qco[3] = qc[0];
 	 }
 	 //if qc[3] is next smallest
 	 else
 	 {
 	    qco[1] = qc[3];
-		if(qc[0] <= qc[1]) qco[2] = qc[0], qco[3] = qc[1]; 
-		else qco[2] = qc[1], qco[3] = qc[0]; 
+		if(qc[0] <= qc[1]) qco[2] = qc[0], qco[3] = qc[1];
+		else qco[2] = qc[1], qco[3] = qc[0];
 	 }
   }
 //if qc[3] is smallest
@@ -165,22 +165,22 @@ double MisorientationCalculations::getMisoQuatCubic(double q1[5],double q2[5],do
      if (qc[0] <= qc[1] && qc[0] <= qc[2])
 	 {
 	    qco[1] = qc[0];
-		if(qc[1] <= qc[2]) qco[2] = qc[1], qco[3] = qc[2]; 
-		else qco[2] = qc[2], qco[3] = qc[1]; 
+		if(qc[1] <= qc[2]) qco[2] = qc[1], qco[3] = qc[2];
+		else qco[2] = qc[2], qco[3] = qc[1];
 	 }
 	 //if qc[1] is next smallest
      else if (qc[1] <= qc[0] && qc[1] <= qc[2])
 	 {
 	    qco[1] = qc[1];
-		if(qc[0] <= qc[2]) qco[2] = qc[0], qco[3] = qc[2]; 
-		else qco[2] = qc[2], qco[3] = qc[0]; 
+		if(qc[0] <= qc[2]) qco[2] = qc[0], qco[3] = qc[2];
+		else qco[2] = qc[2], qco[3] = qc[0];
 	 }
 	 //if qc[2] is next smallest
 	 else
 	 {
 	    qco[1] = qc[2];
-		if(qc[0] <= qc[1]) qco[2] = qc[0], qco[3] = qc[1]; 
-		else qco[2] = qc[1], qco[3] = qc[0]; 
+		if(qc[0] <= qc[1]) qco[2] = qc[0], qco[3] = qc[1];
+		else qco[2] = qc[1], qco[3] = qc[0];
 	 }
   }
   wmin = qco[3];

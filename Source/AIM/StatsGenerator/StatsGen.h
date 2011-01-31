@@ -40,6 +40,7 @@
 #include "AIM/Common/Constants.h"
 #include "AIM/Common/AIMRandomNG.h"
 #include "AIM/Common/MisorientationCalculations.h"
+#include "AIM/Common/Texture.h"
 
 /**
  * @class StatsGen StatsGen.h AIM/StatsGenerator/StatsGen.h
@@ -83,7 +84,7 @@ class StatsGen
     {
       double q1[5];
       double qref[5];
-      int TextureBins[15];
+      int TextureBins[AIM_TEXTURE_COUNT + 1];
       double odf[18 * 18 * 18];
       int err = 0;
       size_t bin, ea1bin, ea2bin, ea3bin;
@@ -96,9 +97,9 @@ class StatsGen
       double hmag, angle;
       double g[3][3];
       double x, y, z;
-	  const double sqrt_two = pow(2.0, 0.5);
-	  double sin_w_over_2 = 0.0;
-	  const double threesixty_over_pi = 360.0/M_PI;
+//	  const double sqrt_two = pow(2.0, 0.5);
+//	  double sin_w_over_2 = 0.0;
+//	  const double threesixty_over_pi = 360.0/M_PI;
       double xpf, ypf;
       double degtorad = M_PI / 180.0;
       double totaldensity;
@@ -125,27 +126,12 @@ class StatsGen
       qref[4] = cos(0.5 * 0.0) * cos(0.5 * (0.0 + 0.0));
       for (int i = 0; i < 15; i++)
       {
-        q1[1] = sin(0.5 * AIM::Reconstruction::Textures[i][1]) * cos(0.5 * (AIM::Reconstruction::Textures[i][0] - AIM::Reconstruction::Textures[i][2]));
-        q1[2] = sin(0.5 * AIM::Reconstruction::Textures[i][1]) * sin(0.5 * (AIM::Reconstruction::Textures[i][0] - AIM::Reconstruction::Textures[i][2]));
-        q1[3] = cos(0.5 * AIM::Reconstruction::Textures[i][1]) * sin(0.5 * (AIM::Reconstruction::Textures[i][0] + AIM::Reconstruction::Textures[i][2]));
-        q1[4] = cos(0.5 * AIM::Reconstruction::Textures[i][1]) * cos(0.5 * (AIM::Reconstruction::Textures[i][0] + AIM::Reconstruction::Textures[i][2]));
+        q1[1] = sin(0.5 * Texture::Values[i][1]) * cos(0.5 * (Texture::Values[i][0] - Texture::Values[i][2]));
+        q1[2] = sin(0.5 * Texture::Values[i][1]) * sin(0.5 * (Texture::Values[i][0] - Texture::Values[i][2]));
+        q1[3] = cos(0.5 * Texture::Values[i][1]) * sin(0.5 * (Texture::Values[i][0] + Texture::Values[i][2]));
+        q1[4] = cos(0.5 * Texture::Values[i][1]) * cos(0.5 * (Texture::Values[i][0] + Texture::Values[i][2]));
         w = MisorientationCalculations::getMisoQuatCubic(q1, qref, n1, n2, n3);
-//		w = q1[4];
-//		if (((q1[3] + q1[4]) / (sqrt_two)) > w)
-//		{
-//			w = ((q1[3] + q1[4]) / (sqrt_two));
-//		}
-//		if (((q1[1] + q1[2] + q1[3] + q1[4]) / 2) > w)
-//		{
-//			w = ((q1[1] + q1[2] + q1[3] + q1[4]) / 2);
-//		}
-//		w = acos(w);
-//		sin_w_over_2 = sin(w / 2.0);
-//		n1 = q1[1] / sin_w_over_2;
-//		n2 = q1[2] / sin_w_over_2;
-//		n3 = q1[3] / sin_w_over_2;
-//		if(w == 0) n1 = 0.0, n2 = 0.0, n3 = 1.0;
-//		w = (threesixty_over_pi) * w;
+
         w = w * degtorad;
         denom = (n1 * n1) + (n2 * n2) + (n3 * n3);
         denom = pow(denom, 0.5);
@@ -180,7 +166,7 @@ class StatsGen
 	          odf[i] = 0.0;
 		  }
       }
-      for(int i=0;i<15;i++)
+      for(int i=0;i<AIM_TEXTURE_COUNT + 1;i++)
       {
         bin = TextureBins[i];
         odf[bin] = odf[bin] + (weights[i+1]);
