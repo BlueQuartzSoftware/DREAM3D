@@ -107,9 +107,9 @@ void StatsGenODFWidget::setupGui()
 
   resetTableModel();
 
-  initQwtPlot("Plot 1", "y axis", m_Plot1);
-  initQwtPlot("Plot 2", "y axis", m_Plot2);
-  initQwtPlot("Plot 3", "y axis", m_Plot3);
+  initQwtPlot("x axis", "y axis", m_Plot1);
+  initQwtPlot("x axis", "y axis", m_Plot2);
+  initQwtPlot("x axis", "y axis", m_Plot3);
 
   m_PlotCurves.push_back(new QwtPlotCurve);
   m_PlotCurves.push_back(new QwtPlotCurve);
