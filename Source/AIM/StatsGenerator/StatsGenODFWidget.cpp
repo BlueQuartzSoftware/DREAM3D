@@ -190,7 +190,7 @@ void StatsGenODFWidget::on_m_CalculateODFBtn_clicked()
 
   int err = 0;
 
-  int size = 500;
+  int size = 1000;
   QwtArray<double > x001;
   QwtArray<double > y001;
   QwtArray<double > x011;
