@@ -31,10 +31,13 @@
 #ifndef _MISORIENTATIONCALCULATIONS_H_
 #define _MISORIENTATIONCALCULATIONS_H_
 
+#include "AIM/Common/AIMCommonConfiguration.h"
+
+
 /**
  *
  */
-class MisorientationCalculations
+class AIMCOMMON_EXPORT MisorientationCalculations
 {
   public:
 
