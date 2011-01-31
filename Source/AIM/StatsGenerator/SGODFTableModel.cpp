@@ -347,35 +347,25 @@ QAbstractItemDelegate* SGODFTableModel::getItemDelegate()
   return new SGODFItemDelegate;
 }
 
-#define ADD_INITIAL_ROW_VALUE(texture, weight, sigma)\
-    {insertRow(rowCount());\
+#define ADD_INITIAL_ROW_VALUE(name, weight, sigma)\
+    insertRow(rowCount());\
     QModelIndex textureIndex = index(rowCount() - 1, SGODFTableModel::Texture);\
-    setData(textureIndex, QVariant(QString(#texture)), Qt::EditRole);\
+    setData(textureIndex, QVariant(QString(name)), Qt::EditRole);\
     QModelIndex weightIndex = index(rowCount() - 1, SGODFTableModel::Weight);\
     setData(weightIndex, QVariant(weight), Qt::EditRole);\
     QModelIndex sigmaIndex = index(rowCount() - 1, SGODFTableModel::Sigma);\
-    setData(sigmaIndex, QVariant(sigma), Qt::EditRole);}\
+    setData(sigmaIndex, QVariant(sigma), Qt::EditRole);\
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void SGODFTableModel::setInitialValues()
 {
-  ADD_INITIAL_ROW_VALUE(Random, 1.0, 0.0)
-  ADD_INITIAL_ROW_VALUE(Brass, 0.0, 1.0)
-  ADD_INITIAL_ROW_VALUE(S, 0.0, 1.0)
-  ADD_INITIAL_ROW_VALUE(Copper, 0.0, 1.0)
-  ADD_INITIAL_ROW_VALUE(Shear1, 0.0, 1.0)
-  ADD_INITIAL_ROW_VALUE(Shear2, 0.0, 1.0)
-  ADD_INITIAL_ROW_VALUE(Shear3, 0.0, 1.0)
-  ADD_INITIAL_ROW_VALUE(Goss, 0.0, 1.0)
-  ADD_INITIAL_ROW_VALUE(Cube, 0.0, 1.0)
-  ADD_INITIAL_ROW_VALUE(RC(rd1), 0.0, 1.0)
-  ADD_INITIAL_ROW_VALUE(RC(rd2), 0.0, 1.0)
-  ADD_INITIAL_ROW_VALUE(RC(nd1), 0.0, 1.0)
-  ADD_INITIAL_ROW_VALUE(RC(nd2), 0.0, 1.0)
-  ADD_INITIAL_ROW_VALUE(P, 0.0, 1.0)
-  ADD_INITIAL_ROW_VALUE(Q, 0.0, 1.0)
-  ADD_INITIAL_ROW_VALUE(R, 0.0, 1.0)
+  size_t size = Texture::Count;
 
+  ADD_INITIAL_ROW_VALUE("Random", 1.0, 0.0);
+
+  for (size_t i = 0; i < size; ++i) {
+    ADD_INITIAL_ROW_VALUE(Texture::Names[i], Texture::Weights[i], Texture::Sigmas[i]);
+  }
 }

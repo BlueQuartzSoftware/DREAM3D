@@ -1596,11 +1596,11 @@ void  GrainGeneratorFunc::fill_gaps(int numgrains)
 	gsizes[name]++;
   }
   count = 1;
-  int testcount = 0;
-  int size = 0;
-  int current = 0;
-  int most = 0;
-  int curgrain = 0;
+//  int testcount = 0;
+//  int size = 0;
+//  int current = 0;
+//  int most = 0;
+//  int curgrain = 0;
   while(count != 0)
   {
     count = 0;
@@ -2335,7 +2335,7 @@ void GrainGeneratorFunc::matchCrystallography(const std::string &ErrorFile, H5Re
 	double currentmdferror = 0;
 	double degtorad = m_pi/180.0;
 	double w;
-	double axis[3];
+//	double axis[3];
 	double denom = 0;
 	double n1,n2,n3;
 	double q1[5], q2[5], qref[5];
@@ -2347,9 +2347,9 @@ void GrainGeneratorFunc::matchCrystallography(const std::string &ErrorFile, H5Re
 	int phi1, PHI, phi2;
 	int curodfbin;
 	double miso1, miso2, miso3;
-	double random;
+//	double random;
 	double g1ea1, g1ea2, g1ea3, g2ea1, g2ea2, g2ea3;
-	double curea1, curea2, curea3;
+//	double curea1, curea2, curea3;
 	double hmag, angle;
 	double chooseh1, chooseh2, chooseh3;
 	double chooser1, chooser2, chooser3;
@@ -2358,7 +2358,7 @@ void GrainGeneratorFunc::matchCrystallography(const std::string &ErrorFile, H5Re
 	int cureuler1bin, cureuler2bin, cureuler3bin;
 	int g1euler1bin, g1euler2bin, g1euler3bin;
 	int g2euler1bin, g2euler2bin, g2euler3bin;
-	int miso1bin, miso2bin, miso3bin;
+//	int miso1bin, miso2bin, miso3bin;
 	int curmiso1, curmiso2, curmiso3, neighsurfarea;
 	int curmisobin, newmisobin;
 	int g1odfbin, g2odfbin;
@@ -2593,7 +2593,7 @@ void GrainGeneratorFunc::matchCrystallography(const std::string &ErrorFile, H5Re
 				        w = MisorientationCalculations::getMisoQuatHexagonal(q1,q2,n1,n2,n3);
 						w = w*degtorad;
 						denom = (n1*n1)+(n2*n2)+(n3*n3);
-						denom = pow(denom,0.5);	
+						denom = pow(denom,0.5);
 						n1 = n1/denom;
 						n2 = n2/denom;
 						n3 = n3/denom;
@@ -2781,7 +2781,7 @@ void GrainGeneratorFunc::matchCrystallography(const std::string &ErrorFile, H5Re
 						miso1 = n1*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
 						miso2 = n2*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
 						miso3 = n3*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
-						newmisobin = MisorientationCalculations::getMisoBinCubic(miso1, miso2, miso3);	
+						newmisobin = MisorientationCalculations::getMisoBinCubic(miso1, miso2, miso3);
 				    }
 					if(crystruct == AIM::Reconstruction::Cubic)
 					{
@@ -2847,7 +2847,7 @@ void GrainGeneratorFunc::matchCrystallography(const std::string &ErrorFile, H5Re
 						miso1 = n1*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
 						miso2 = n2*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
 						miso3 = n3*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
-						newmisobin = MisorientationCalculations::getMisoBinCubic(miso1, miso2, miso3);	
+						newmisobin = MisorientationCalculations::getMisoBinCubic(miso1, miso2, miso3);
 				    }
 					if(crystruct == AIM::Reconstruction::Cubic)
 					{
@@ -2929,7 +2929,7 @@ void GrainGeneratorFunc::matchCrystallography(const std::string &ErrorFile, H5Re
 							miso1 = n1*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
 							miso2 = n2*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
 							miso3 = n3*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
-							newmisobin = MisorientationCalculations::getMisoBinCubic(miso1, miso2, miso3);	
+							newmisobin = MisorientationCalculations::getMisoBinCubic(miso1, miso2, miso3);
 					    }
 						if(crystruct == AIM::Reconstruction::Cubic)
 						{
@@ -3002,7 +3002,7 @@ void GrainGeneratorFunc::matchCrystallography(const std::string &ErrorFile, H5Re
 							miso1 = n1*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
 							miso2 = n2*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
 							miso3 = n3*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
-							newmisobin = MisorientationCalculations::getMisoBinCubic(miso1, miso2, miso3);	
+							newmisobin = MisorientationCalculations::getMisoBinCubic(miso1, miso2, miso3);
 					    }
 						if(crystruct == AIM::Reconstruction::Cubic)
 						{
@@ -3044,7 +3044,9 @@ void  GrainGeneratorFunc::measure_misorientations ()
   double q2[5];
   double denom;
   double degtorad = m_pi/180.0;
-  int miso1bin, miso2bin, miso3bin, mbin;
+//  int miso1bin, miso2bin, miso3bin;
+  int mbin;
+
   vector<int >* nlist ;
   vector<double >* neighsurfarealist;
   for (int i = 1; i < numgrains; i++)
