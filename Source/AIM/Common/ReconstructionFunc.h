@@ -50,84 +50,80 @@ using namespace std;
 class AIMCOMMON_EXPORT ReconstructionFunc
 {
 
-public:
+  public:
 
     MXA_SHARED_POINTERS(ReconstructionFunc)
     MXA_STATIC_NEW_MACRO(ReconstructionFunc)
-//    MXA_INSTANCE_PROPERTY(AngDirectoryPatterns::Pointer, DirectoryPattern);
+
+    virtual ~ReconstructionFunc();
+
+    double sizex;
+    double sizey;
+    double sizez;
+
+    double resx;
+    double resy;
+    double resz;
+
+    double misorientationtolerance;
+    double minseedconfidence;
+    double minseedimagequality;
+    double downsamplefactor;
+    double sizebinstepsize;
+    int minallowedgrainsize;
+    int mergetwinsoption;
+    int mergecoloniesoption;
+    AIM::Reconstruction::CrystalStructure crystruct;
+    int alignmeth;
+    int alreadyformed;
 
 
-  virtual ~ReconstructionFunc();
+    AIMRandomNG rg;
+    Voxel* voxels;
+    Voxel* voxelstemp;
+    vector<Grain> m_Grains;
 
-  // AngFileHelper::Pointer m_angFileHelper;
+    int **shifts;
+    int **arr;
+    int *graincounts;
+    double **graincenters;
+    double **grainmoments;
+    double **quat_symm;
 
-  double sizex;
-  double sizey;
-  double sizez;
+    vector<vector<double> > neighborhood;
+    vector<vector<double> > neighborhoodfit;
+    vector<vector<double> > svbovera;
+    vector<vector<double> > svcovera;
+    vector<vector<double> > svcoverb;
+    vector<vector<double> > svschmid;
+    vector<vector<double> > svomega3;
 
-  double resx;
-  double resy;
-  double resz;
-
-  double misorientationtolerance;
-  double minseedconfidence;
-  double minseedimagequality;
-  double downsamplefactor;
-  double sizebinstepsize;
-  int minallowedgrainsize;
-  int mergetwinsoption;
-  int mergecoloniesoption;
-  AIM::Reconstruction::CrystalStructure crystruct;
-  int alignmeth;
-  int alreadyformed;
-
-
-	AIMRandomNG rg;
-	Voxel* voxels;
-	Voxel* voxelstemp;
-	vector<Grain> m_Grains;
-
-	int **shifts;
-	int **arr;
-	int *graincounts;
-	double **graincenters;
-	double **grainmoments;
-	double **quat_symm;
-
-	vector<vector<double> > neighborhood;
-	vector<vector<double> > neighborhoodfit;
-	vector<vector<double> > svbovera;
-	vector<vector<double> > svcovera;
-	vector<vector<double> > svcoverb;
-	vector<vector<double> > svschmid;
-	vector<vector<double> > svomega3;
-
-	int numseNbins;
-	int numorients;
-	int numeulers;
-	int numgrains;
-	double totalsurfacearea;
-	int maxdiameter;
-	int mindiameter;
-	int cutoutxsize;
-	int cutoutysize;
-	int cmaxx;
-	int cminx;
-	int cmaxy;
-	int cminy;
-	int xpoints;
-	int ypoints;
-	int tempxpoints;
-	int tempypoints;
-	int zpoints;
-	int totalpoints;
-	int totaltemppoints;
-	int numneighbins;
-	double totalvol;
-	double totalaxes;
+    int numseNbins;
+    int numorients;
+    int numeulers;
+    int numgrains;
+    double totalsurfacearea;
+    int maxdiameter;
+    int mindiameter;
+    int cutoutxsize;
+    int cutoutysize;
+    int cmaxx;
+    int cminx;
+    int cmaxy;
+    int cminy;
+    int xpoints;
+    int ypoints;
+    int tempxpoints;
+    int tempypoints;
+    int zpoints;
+    int totalpoints;
+    int totaltemppoints;
+    int numneighbins;
+    double totalvol;
+    double totalaxes;
 
 
-  void initialize(int nX, int nY, int nZ,
+    void initialize(int nX, int nY, int nZ,
                   double xRes, double yRes, double zRes,
                   bool v_mergetwinsoption,
                   bool v_mergecoloniesoption, int v_minallowedgrainsize,
@@ -137,82 +133,78 @@ public:
                   int v_alignmeth, bool v_alreadyformed);
 
 
+    void find_border();
+    int form_grains();
+    void form_grains_sections();
+    void remove_smallgrains();
+    int renumber_grains1();
+    int load_data(string);
+    void assign_badpoints();
+    void find_neighbors();
+    void merge_containedgrains();
+    int renumber_grains();
+    int define_subgrains();
+    int reburn_grains();
+    void cleanup_data();
+    void find_kernels();
+    void homogenize_grains();
+    void merge_twins();
+    void merge_colonies();
+    void characterize_twins();
+    void characterize_colonies();
+    int renumber_grains3();
+    void find_euclidean_map ();
+    void find_centroids ();
+    void find_moments();
+    void find_axes();
+    void find_vectors(H5ReconStatsWriter::Pointer h5io);
+    void find_centroids2D();
+    void find_moments2D();
+    void find_axes2D();
+    void find_vectors2D(H5ReconStatsWriter::Pointer h5io);
+    void find_eulerodf(H5ReconStatsWriter::Pointer h5io);
+    void measure_misorientations(H5ReconStatsWriter::Pointer h5io);
+    void find_colors();
+    void find_schmids();
 
-//  void loadSlices(AbstractAngDataLoader::Pointer dataLoader);
-
-	void find_border();
-	int form_grains();
-	void form_grains_sections();
-	void remove_smallgrains();
-	int renumber_grains1();
-	int load_data(string);
-	void assign_badpoints();
-	void find_neighbors();
-	void merge_containedgrains();
-	int renumber_grains();
-	int define_subgrains();
-	int reburn_grains();
-	void cleanup_data();
-	void find_kernels();
-	void homogenize_grains();
-	void merge_twins();
-	void merge_colonies();
-	void characterize_twins();
-	void characterize_colonies();
-	int renumber_grains3();
-	void find_euclidean_map ();
-	void find_centroids ();
-	void find_moments();
-	void find_axes();
-	void find_vectors(H5ReconStatsWriter::Pointer h5io);
-	void find_centroids2D();
-	void find_moments2D();
-	void find_axes2D();
-	void find_vectors2D(H5ReconStatsWriter::Pointer h5io);
-	void find_eulerodf(H5ReconStatsWriter::Pointer h5io);
-	void measure_misorientations(H5ReconStatsWriter::Pointer h5io);
-	void find_colors();
-	void find_schmids();
-
-  void write_graindata(const std::string &graindataFile);
-	void align_sections(const std::string &filename );
+    void write_graindata(const std::string &graindataFile);
+    void align_sections(const std::string &filename );
 
 
-  int volume_stats(H5ReconStatsWriter::Pointer h5io);
-  int volume_stats2D(H5ReconStatsWriter::Pointer h5io);
+    int volume_stats(H5ReconStatsWriter::Pointer h5io);
+    int volume_stats2D(H5ReconStatsWriter::Pointer h5io);
 
 
-  /**
-   * @brief
-   * @param hdfFile
-   * @param r
-   * @return
-   */
-  int writeHDF5GrainsFile(const std::string &hdfFile);
+    /**
+     * @brief
+     * @param hdfFile
+     * @return
+     */
+    int writeHDF5GrainsFile(const std::string &hdfFile);
 
 
-	int writeVisualizationFile(const std::string &file); // DONE
-  int writeIPFVizFile(const std::string &file);
-  int writeDisorientationVizFile(const std::string &file); // DONE
-  int writeImageQualityVizFile(const std::string &file); // DONE
-  int writeSchmidFactorVizFile(const std::string &file); // DONE
-  int writeDownSampledVizFile(const std::string &file);
+    int writeVisualizationFile(const std::string &file); // DONE
+    int writeIPFVizFile(const std::string &file);
+    int writeDisorientationVizFile(const std::string &file); // DONE
+    int writeImageQualityVizFile(const std::string &file); // DONE
+    int writeSchmidFactorVizFile(const std::string &file); // DONE
+    int writeDownSampledVizFile(const std::string &file);
 
 
-	double gamma(double);
-	double find_xcoord(long);
-	double find_ycoord(long);
-	double find_zcoord(long);
+    double gamma(double);
+    double find_xcoord(long);
+    double find_ycoord(long);
+    double find_zcoord(long);
 
 
-  /* This is deprecated in favor of the HDF5 output file */
-  void write_grains(const std::string &outputdir);
+    /* This is deprecated in favor of the HDF5 output file */
+    void write_grains(const std::string &outputdir);
 
-protected:
-  ReconstructionFunc();
+  protected:
+    ReconstructionFunc();
 
-private:
-	ReconstructionFunc(const ReconstructionFunc&);    // Copy Constructor Not Implemented
+  private:
+    ReconstructionFunc(const ReconstructionFunc&);    // Copy Constructor Not Implemented
     void operator=(const ReconstructionFunc&);  // Operator '=' Not Implemented
 };
 

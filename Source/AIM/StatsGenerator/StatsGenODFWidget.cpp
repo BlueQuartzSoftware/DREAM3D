@@ -107,9 +107,9 @@ void StatsGenODFWidget::setupGui()
 
   resetTableModel();
 
-  initQwtPlot("Plot 1", "y axis", m_Plot1);
-  initQwtPlot("Plot 2", "y axis", m_Plot2);
-  initQwtPlot("Plot 3", "y axis", m_Plot3);
+  initQwtPlot("x axis", "y axis", m_Plot1);
+  initQwtPlot("x axis", "y axis", m_Plot2);
+  initQwtPlot("x axis", "y axis", m_Plot3);
 
   m_PlotCurves.push_back(new QwtPlotCurve);
   m_PlotCurves.push_back(new QwtPlotCurve);
@@ -190,7 +190,7 @@ void StatsGenODFWidget::on_m_CalculateODFBtn_clicked()
 
   int err = 0;
 
-  int size = 1000;
+
   QwtArray<double > x001;
   QwtArray<double > y001;
   QwtArray<double > x011;
@@ -200,7 +200,8 @@ void StatsGenODFWidget::on_m_CalculateODFBtn_clicked()
   QwtArray<double > weights;
   QwtArray<double > sigmas;
   StatsGen sg;
-  double xMax, yMax;
+  int size = 1000;
+//  double xMax, yMax;
 
   // Initialize xMax and yMax....
   weights = m_TableModel->getData(SGODFTableModel::Weight);
@@ -213,28 +214,12 @@ void StatsGenODFWidget::on_m_CalculateODFBtn_clicked()
   sigmas.pop_front();
   //pop off the random number
   err = sg.GenCubicODF(weights, sigmas, x001, y001, x011, y011, x111, y111, size, randomWeight);
-
-
   if (err == 1)
   {
     //TODO: Present Error Message
     return;
   }
 
-  for (int i = 0; i < size; ++i)
-  {
-    //   std::cout << x[i] << "  " << y[i] << std::endl;
-#if 0
-    if (x[i] > xMax)
-    {
-      xMax = x[i];
-    }
-    if (y[i] > yMax)
-    {
-      yMax = y[i];
-    }
-#endif
-  }
   QwtPlotCurve* curve = m_PlotCurves[0];
   curve->setData(x001, y001);
   curve->setStyle(QwtPlotCurve::Dots);

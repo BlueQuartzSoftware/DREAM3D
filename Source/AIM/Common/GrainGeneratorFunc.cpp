@@ -11,6 +11,10 @@
 
 #include "GrainGeneratorFunc.h"
 
+// Include this FIRST because there is a needed define for some compiles
+// to expose some of the constants needed below
+#include "AIM/Common/AIMMath.h"
+
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -22,7 +26,7 @@
 
 
 const static double m_onepointthree = 1.33333333333;
-const static double m_pi = 3.1415926535897;
+const static double m_pi = M_PI;
 
 #define DIMS "DIMENSIONS"
 #define LOOKUP "LOOKUP_TABLE"

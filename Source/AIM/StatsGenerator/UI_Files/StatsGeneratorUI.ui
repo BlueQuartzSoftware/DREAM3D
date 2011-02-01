@@ -268,8 +268,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>774</width>
-             <height>520</height>
+             <width>96</width>
+             <height>58</height>
             </rect>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout">
@@ -309,9 +309,6 @@
         <string>ODF</string>
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout_6">
-        <property name="spacing">
-         <number>6</number>
-        </property>
         <property name="margin">
          <number>4</number>
         </property>

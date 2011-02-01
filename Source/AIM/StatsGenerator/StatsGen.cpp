@@ -79,7 +79,7 @@ double StatsGen::gamma(double value)
 {
   int i, k, m;
   double ga, gr, r, z;
-  double m_pi = 3.1415926535897;
+  double m_pi = M_PI;
 
   static double g[] =
   {

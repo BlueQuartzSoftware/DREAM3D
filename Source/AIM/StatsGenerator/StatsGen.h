@@ -35,12 +35,12 @@
 #define WIN32_LEAN_AND_MEAN		// Exclude rarely-used stuff from Windows headers
 #endif
 
-#include <math.h>
-
+#include "AIM/Common/AIMMath.h"
 #include "AIM/Common/Constants.h"
 #include "AIM/Common/AIMRandomNG.h"
 #include "AIM/Common/MisorientationCalculations.h"
 #include "AIM/Common/Texture.h"
+#include "MXA/Common/LogTime.h"
 
 /**
  * @class StatsGen StatsGen.h AIM/StatsGenerator/StatsGen.h
@@ -79,6 +79,14 @@ class StatsGen
       return err;
     }
 
+#define GenCubicODF_CALC_EULER_TRIG()\
+        sin_ea1 = sin(ea1);\
+        sin_ea2 = sin(ea2);\
+        sin_ea3 = sin(ea3);\
+        cos_ea1 = cos(ea1);\
+        cos_ea2 = cos(ea2);\
+        cos_ea3 = cos(ea3);
+
     template<typename T>
     int GenCubicODF(T weights, T sigmas,
                     T &x001, T &y001, T &x011, T &y011, T &x111, T &y111,
@@ -99,18 +107,36 @@ class StatsGen
       double g[3][3];
       double x, y, z;
       double xpf, ypf;
-      double degtorad = M_PI / 180.0;
+    //  double degtorad = M_PI / 180.0;
       double totaldensity;
       double dim1 = 0;
       double dim2 = 0;
       double dim3 = 0;
-      const double m_pi = 3.1415926535897;
       dim1 = 2*pow((0.75 * ((m_pi / 4.0) - sin((m_pi / 4.0)))), (1.0 / 3.0));
       dim2 = 2*pow((0.75 * ((m_pi / 4.0) - sin((m_pi / 4.0)))), (1.0 / 3.0));
       dim3 = 2*pow((0.75 * ((m_pi / 4.0) - sin((m_pi / 4.0)))), (1.0 / 3.0));
+      const double m_pi = M_PI;
+      double sin_ea1, sin_ea2, sin_ea3;
+      double cos_ea1, cos_ea2, cos_ea3;
 
       AIMRandomNG rg;
-      rg.RandomInit(2902239);
+      /* Get a seed value based off the system clock. The issue is that this will
+       * be a 64 bit unsigned integer where the high 32 bits will basically not
+       * change where as the lower 32 bits will. The following lines of code will
+       * pull off the low 32 bits from the number. This operation depends on most
+       * significant byte ordering which is different between Big Endian and
+       * Little Endian machines. For Big endian machines the Most Significant Byte
+       * (MSB) is the first 32 bits. For Little Endian machines the MSB is the
+       * second 32 bits.
+       */
+      unsigned long long int seed = MXA::getMilliSeconds();
+      unsigned int* seedPtr = reinterpret_cast<unsigned int*>(&seed);
+#if CMP_WORDS_BIGENDIAN
+      rg.RandomInit(seedPtr[1]);
+#else
+      rg.RandomInit(seedPtr[0]);
+#endif
+
       x001.resize(size * 3);
       y001.resize(size * 3);
       x011.resize(size * 6);
@@ -125,9 +151,10 @@ class StatsGen
 		MisorientationCalculations::getFZQuatCubic(r1, r2, r3);
         rmag = pow((r1 * r1 + r2 * r2 + r3 * r3), 0.5);
         angle = 2.0 * atan(rmag);
-        h1 = pow(((3.0 / 4.0) * (angle - sin(angle))), (1.0 / 3.0)) * (r1 / rmag);
-        h2 = pow(((3.0 / 4.0) * (angle - sin(angle))), (1.0 / 3.0)) * (r2 / rmag);
-        h3 = pow(((3.0 / 4.0) * (angle - sin(angle))), (1.0 / 3.0)) * (r3 / rmag);
+        double hTmp = pow(((3.0 / 4.0) * (angle - sin(angle))), (1.0 / 3.0));
+        h1 = hTmp * (r1 / rmag);
+        h2 = hTmp * (r2 / rmag);
+        h3 = hTmp * (r3 / rmag);
         if (angle == 0) h1 = 0.0, h2 = 0.0, h3 = 0.0;
         ea1bin = int((h1 + (dim1 / 2.0)) * 18.0 / dim1);
         ea2bin = int((h2 + (dim1 / 2.0)) * 18.0 / dim2);
@@ -139,18 +166,18 @@ class StatsGen
         TextureBins[i] = bin;
       }
       double totalweight = 0;
-      for (int i = 0; i < eighteenCubed; i++)
+      for (size_t i = 0; i < eighteenCubed; i++)
       {
         odf[i] = randomWeight / (eighteenCubed);
         totalweight = totalweight + randomWeight / (eighteenCubed);
       }
-      for (int i = 0; i < Texture::Count; i++)
+      for (size_t i = 0; i < Texture::Count; i++)
       {
         bin = TextureBins[i];
         odf[bin] = odf[bin] + (weights[i]);
         totalweight = totalweight + weights[i];
       }
-      for (int i = 0; i < eighteenCubed; i++)
+      for (size_t i = 0; i < eighteenCubed; i++)
       {
         odf[i] = odf[i] / totalweight;
       }
@@ -158,8 +185,9 @@ class StatsGen
       {
         double random = rg.Random();
         int choose = 0;
+        double tan_angle;
         totaldensity = 0;
-        for (int j = 0; j < eighteenCubed; j++)
+        for (size_t j = 0; j < eighteenCubed; j++)
         {
           double density = odf[j];
           totaldensity = totaldensity + density;
@@ -176,9 +204,10 @@ class StatsGen
         h3 = ((dim3 / 18.0) * h3) + ((dim3 / 18.0) * random) - (dim3 / 2.0);
         hmag = pow((h1 * h1 + h2 * h2 + h3 * h3), 0.5);
         angle = pow((8 * hmag * hmag * hmag), (1.0 / 3.0));
-        r1 = tan(angle/2.0) * (h1 / hmag);
-        r2 = tan(angle/2.0) * (h2 / hmag);
-        r3 = tan(angle/2.0) * (h3 / hmag);
+        tan_angle = tan(angle/2.0);
+        r1 = tan_angle * (h1 / hmag);
+        r2 = tan_angle * (h2 / hmag);
+        r3 = tan_angle * (h3 / hmag);
         sum = atan(r3);
         diff = atan2(r2,r1);
         ea1 = sum + diff;
@@ -187,15 +216,18 @@ class StatsGen
         r1test = tan(ea2/2)*sin((ea1-ea3)/2)/cos((ea1+ea3)/ 2);
         r2test = tan(ea2/2)*cos((ea1-ea3)/2)/cos((ea1+ea3)/ 2);
         r3test = tan((ea1+ea3)/2);
-        g[0][0] = cos(ea1) * cos(ea3) - sin(ea1) * sin(ea3) * cos(ea2);
-        g[1][0] = sin(ea1) * cos(ea3) + cos(ea1) * sin(ea3) * cos(ea2);
-        g[2][0] = sin(ea3) * sin(ea2);
-        g[0][1] = -cos(ea1) * sin(ea3) - sin(ea1) * cos(ea3) * cos(ea2);
-        g[1][1] = -sin(ea1) * sin(ea3) + cos(ea1) * cos(ea3) * cos(ea2);
-        g[2][1] = cos(ea3) * sin(ea2);
-        g[0][2] = sin(ea1) * sin(ea2);
-        g[1][2] = -cos(ea1) * sin(ea2);
-        g[2][2] = cos(ea2);
+        // Calculate the Sin and Cos of ea1, ea2 and ea3 and then use those
+        // values in the following calculations
+        GenCubicODF_CALC_EULER_TRIG();
+        g[0][0] = cos_ea1 * cos_ea3 - sin_ea1 * sin_ea3 * cos_ea2;
+        g[1][0] = sin_ea1 * cos_ea3 + cos_ea1 * sin_ea3 * cos_ea2;
+        g[2][0] = sin_ea3 * sin_ea2;
+        g[0][1] = -cos_ea1 * sin_ea3 - sin_ea1 * cos_ea3 * cos_ea2;
+        g[1][1] = -sin_ea1 * sin_ea3 + cos_ea1 * cos_ea3 * cos_ea2;
+        g[2][1] = cos_ea3 * sin_ea2;
+        g[0][2] = sin_ea1 * sin_ea2;
+        g[1][2] = -cos_ea1 * sin_ea2;
+        g[2][2] = cos_ea2;
         x = g[0][0];
         y = g[1][0];
         z = g[2][0];
