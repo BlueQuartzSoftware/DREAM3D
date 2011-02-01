@@ -60,7 +60,8 @@ class StatsGenODFWidget : public QWidget, private Ui::StatsGenODFWidget
 
     void setPlotTitle(QString title);
 
-    int writeDataToHDF5(H5ReconStatsWriter::Pointer writer, const std::string &hdf5GroupName);
+    int writeDataToHDF5(AIM::Reconstruction::CrystalStructure crystruct,
+                        H5ReconStatsWriter::Pointer writer);
     int readDataFromHDF5(H5ReconStatsReader::Pointer reader,
                         QVector<double>  &bins,
                         const std::string &hdf5GroupName);
