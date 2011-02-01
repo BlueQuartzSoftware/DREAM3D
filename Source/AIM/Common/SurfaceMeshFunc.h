@@ -47,9 +47,7 @@
 
 using namespace std;
 
-#ifndef M_PI
-#define M_PI 3.14159265358979323846264338327950288
-#endif
+#if 0
 
 // constants for procedure ran3
 #define MBIG 1000000000
@@ -72,7 +70,7 @@ using namespace std;
 #define NODES_RAW_FILE     "nodes_raw.txt"
 #define MESH_STAT_FILE     "mesh_stat.txt"
 
-
+#endif
 
 class AIMCOMMON_EXPORT SurfaceMeshFunc
 {

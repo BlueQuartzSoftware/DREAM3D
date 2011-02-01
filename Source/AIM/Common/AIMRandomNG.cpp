@@ -53,10 +53,10 @@ double AIMRandomNG::Random()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AIMRandomNG::RandomInit (uint32_t seed)
+void AIMRandomNG::RandomInit (uint32_t s)
 {
   int i;
-  uint32_t s = seed;
+  //uint32_t s = seed;
   // make random numbers and put them into the buffer
   for (i=0; i<5; i++) {
     s = s * 29943829 - 1;
