@@ -29,12 +29,14 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "MisorientationCalculations.h"
 
-#include <math.h>
+// Include this FIRST because there is a needed define for some compiles
+// to expose some of the constants needed below
+#include "AIM/Common/AIMMath.h"
 
 #include "AIM/Common/Quaternions.h"
 
 
-const static double m_pi = 3.1415926535897;
+const static double m_pi = M_PI;
 const static double m_OnePointThree = 1.33333333333;
 
 const double threesixty_over_pi = 360.0/m_pi;

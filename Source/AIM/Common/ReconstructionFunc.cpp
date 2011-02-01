@@ -11,7 +11,10 @@
 
 #include "ReconstructionFunc.h"
 
-#include <math.h>
+// Include this FIRST because there is a needed define for some compiles
+// to expose some of the constants needed below
+#include "AIM/Common/AIMMath.h"
+
 #include <stdio.h>
 
 #include <iomanip>
@@ -33,7 +36,7 @@
 #define FIND_EUCLIDEAN_FAST 1
 
 
-const static double m_pi = 3.1415926535897;
+const static double m_pi = M_PI;
 const static double m_OnePointThree = 1.33333333333;
 
 const double threesixty_over_pi = 360.0/m_pi;
@@ -3628,6 +3631,9 @@ int ReconstructionFunc::volume_stats(H5ReconStatsWriter::Pointer h5io)
   return retErr;
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 int ReconstructionFunc::volume_stats2D(H5ReconStatsWriter::Pointer h5io)
 {
   int retErr = 0;
@@ -3635,24 +3641,24 @@ int ReconstructionFunc::volume_stats2D(H5ReconStatsWriter::Pointer h5io)
   double avgvol = 0;
   double avglnvol = 0;
   double avgbovera = 0;
-//  double avgcovera = 0;
-//  double avgcoverb = 0;
+  //  double avgcovera = 0;
+  //  double avgcoverb = 0;
   double avgdiam = 0;
   double avglogdiam = 0;
   double avgdiam2 = 0;
   double avgschmid = 0;
-//  double avgomega3 = 0;
+  //  double avgomega3 = 0;
   double neighcount = 0;
   double maxvol = 0;
   double maxdiam = 0;
   double maxlogdiam = 0;
   double maxbovera = 0;
-//  double maxcovera = 0;
-//  double maxcoverb = 0;
+  //  double maxcovera = 0;
+  //  double maxcoverb = 0;
   double maxschmid = 0;
-//  double maxomega3 = 0;
-  vector<int> neighdistfunc;
-  int numbins = int((maxdiameter-mindiameter)/sizebinstepsize)+1;
+  //  double maxomega3 = 0;
+  vector<int > neighdistfunc;
+  int numbins = int((maxdiameter - mindiameter) / sizebinstepsize) + 1;
   neighborhood.resize(numbins);
   neighborhoodfit.resize(numbins);
   svbovera.resize(numbins);
@@ -3660,89 +3666,89 @@ int ReconstructionFunc::volume_stats2D(H5ReconStatsWriter::Pointer h5io)
   svcoverb.resize(numbins);
   svschmid.resize(numbins);
   svomega3.resize(numbins);
-  for(int temp = 0; temp < numbins; temp++)
+  for (int temp = 0; temp < numbins; temp++)
   {
-	neighborhood[temp].resize(7,0);
-	neighborhoodfit[temp].resize(4,0);
-    svbovera[temp].resize(5,0);
-    svcovera[temp].resize(5,0);
-    svcoverb[temp].resize(5,0);
-    svschmid[temp].resize(5,0);
-    svomega3[temp].resize(5,0);
+    neighborhood[temp].resize(7, 0);
+    neighborhoodfit[temp].resize(4, 0);
+    svbovera[temp].resize(5, 0);
+    svcovera[temp].resize(5, 0);
+    svcoverb[temp].resize(5, 0);
+    svschmid[temp].resize(5, 0);
+    svomega3[temp].resize(5, 0);
   }
-  for(int i = 1; i < numgrains; i++)
+  for (int i = 1; i < numgrains; i++)
   {
     int onedge = m_Grains[i].surfacegrain;
-    if(onedge == 0)
+    if (onedge == 0)
     {
       actualgrains++;
       int vol = m_Grains[i].numvoxels;
-      double voxvol = vol*resx*resy;
+      double voxvol = vol * resx * resy;
       double logvol = log(voxvol);
-	  double diam = m_Grains[i].equivdiameter;
+      double diam = m_Grains[i].equivdiameter;
       double logdiam = log(diam);
       double rad1 = m_Grains[i].radius1;
       double rad2 = m_Grains[i].radius2;
-	  double bovera = rad2/rad1;
+      double bovera = rad2 / rad1;
       double schmid = m_Grains[i].schmidfactor;
-//	  double omega3 = m_Grains[i].omega3;
+      //	  double omega3 = m_Grains[i].omega3;
       neighdistfunc = m_Grains[i].neighbordistfunc;
-      avgvol = avgvol+voxvol;
-      avglnvol = avglnvol+logvol;
-      avgbovera = avgbovera+bovera;
+      avgvol = avgvol + voxvol;
+      avglnvol = avglnvol + logvol;
+      avgbovera = avgbovera + bovera;
       avgdiam = avgdiam + diam;
-      avglogdiam = avglogdiam+logdiam;
-      avgschmid = avgschmid+schmid;
-//      avgomega3 = avgomega3+omega3;
-      int diamint = int((diam-mindiameter)/sizebinstepsize);
+      avglogdiam = avglogdiam + logdiam;
+      avgschmid = avgschmid + schmid;
+      //      avgomega3 = avgomega3+omega3;
+      int diamint = int((diam - mindiameter) / sizebinstepsize);
       neighborhood[diamint][0]++;
       svbovera[diamint][0]++;
       svschmid[diamint][0]++;
       svomega3[diamint][0]++;
       svbovera[diamint][1] = svbovera[diamint][1] + bovera;
       svschmid[diamint][1] = svschmid[diamint][1] + schmid;
-//      svomega3[diamint][1] = svomega3[diamint][1] + omega3;
+      //      svomega3[diamint][1] = svomega3[diamint][1] + omega3;
       int size = 0;
       size = neighdistfunc.size();
-	  neighborhood[diamint][0]++;
-      for(int k=0;k<size;k++)
+      neighborhood[diamint][0]++;
+      for (int k = 0; k < size; k++)
       {
         int nnum = neighdistfunc[k];
-		neighborhood[diamint][((2*k)+1)] = neighborhood[diamint][((2*k)+1)] + nnum;
-	  }
-      if(voxvol > maxvol) maxvol = voxvol;
-      if(bovera > maxbovera) maxbovera = bovera;
-      if(diam > maxdiam) maxdiam = diam;
-      if(logdiam > maxlogdiam) maxlogdiam = logdiam;
-      if(schmid > maxschmid) maxschmid = schmid;
-//      if(omega3 > maxomega3) maxomega3 = omega3;
+        neighborhood[diamint][((2 * k) + 1)] = neighborhood[diamint][((2 * k) + 1)] + nnum;
+      }
+      if (voxvol > maxvol) maxvol = voxvol;
+      if (bovera > maxbovera) maxbovera = bovera;
+      if (diam > maxdiam) maxdiam = diam;
+      if (logdiam > maxlogdiam) maxlogdiam = logdiam;
+      if (schmid > maxschmid) maxschmid = schmid;
+      //      if(omega3 > maxomega3) maxomega3 = omega3;
     }
   }
-  for(int temp3 = 0; temp3 < numbins; temp3++)
+  for (int temp3 = 0; temp3 < numbins; temp3++)
   {
-    if(svbovera[temp3][0] != 0)
+    if (svbovera[temp3][0] != 0)
     {
-      neighborhood[temp3][1] = neighborhood[temp3][1]/neighborhood[temp3][0];
-      neighborhood[temp3][3] = neighborhood[temp3][3]/neighborhood[temp3][0];
-      neighborhood[temp3][5] = neighborhood[temp3][5]/neighborhood[temp3][0];
-      svbovera[temp3][1] = svbovera[temp3][1]/svbovera[temp3][0];
-      svschmid[temp3][1] = svschmid[temp3][1]/svschmid[temp3][0];
-//      svomega3[temp3][1] = svomega3[temp3][1]/svomega3[temp3][0];
+      neighborhood[temp3][1] = neighborhood[temp3][1] / neighborhood[temp3][0];
+      neighborhood[temp3][3] = neighborhood[temp3][3] / neighborhood[temp3][0];
+      neighborhood[temp3][5] = neighborhood[temp3][5] / neighborhood[temp3][0];
+      svbovera[temp3][1] = svbovera[temp3][1] / svbovera[temp3][0];
+      svschmid[temp3][1] = svschmid[temp3][1] / svschmid[temp3][0];
+      //      svomega3[temp3][1] = svomega3[temp3][1]/svomega3[temp3][0];
       neighborhoodfit[temp3][0] = neighborhood[temp3][0];
       neighborhoodfit[temp3][1] = neighborhood[temp3][3] - neighborhood[temp3][1];
       neighborhoodfit[temp3][2] = neighborhood[temp3][1];
-      neighborhoodfit[temp3][3] = log((neighborhood[temp3][5]-neighborhoodfit[temp3][2])/neighborhoodfit[temp3][1])/log(2.0);
+      neighborhoodfit[temp3][3] = log((neighborhood[temp3][5] - neighborhoodfit[temp3][2]) / neighborhoodfit[temp3][1]) / log(2.0);
     }
   }
-  avgvol = avgvol/actualgrains;
-  avglnvol = avglnvol/actualgrains;
-  avgbovera = avgbovera/actualgrains;
-  avgdiam = avgdiam/actualgrains;
-  avglogdiam = avglogdiam/actualgrains;
-  avgdiam2 = avgdiam2/neighcount;
-  avgschmid = avgschmid/actualgrains;
-//  avgomega3 = avgomega3/actualgrains;
-  maxvol = maxvol/avgvol;
+  avgvol = avgvol / actualgrains;
+  avglnvol = avglnvol / actualgrains;
+  avgbovera = avgbovera / actualgrains;
+  avgdiam = avgdiam / actualgrains;
+  avglogdiam = avglogdiam / actualgrains;
+  avgdiam2 = avgdiam2 / neighcount;
+  avgschmid = avgschmid / actualgrains;
+  //  avgomega3 = avgomega3/actualgrains;
+  maxvol = maxvol / avgvol;
   double sdvol = 0;
   double sdlnvol = 0;
   double sdbovera = 0;
@@ -3750,108 +3756,107 @@ int ReconstructionFunc::volume_stats2D(H5ReconStatsWriter::Pointer h5io)
   double sdlogdiam = 0;
   double sddiam2 = 0;
   double sdschmid = 0;
-//  double sdomega3 = 0;
-  for(int j = 1; j < numgrains; j++)
+  //  double sdomega3 = 0;
+  for (int j = 1; j < numgrains; j++)
   {
     int onedge = m_Grains[j].surfacegrain;
-    if(onedge == 0)
+    if (onedge == 0)
     {
       int vol = m_Grains[j].numvoxels;
-      double voxvol = vol*resx*resy*resz;
+      double voxvol = vol * resx * resy * resz;
       double logvol = log(voxvol);
-	  double diam = m_Grains[j].equivdiameter;
+      double diam = m_Grains[j].equivdiameter;
       double logdiam = log(diam);
       double rad1 = m_Grains[j].radius1;
       double rad2 = m_Grains[j].radius2;
-	  double bovera = rad2/rad1;
+      double bovera = rad2 / rad1;
       double schmid = m_Grains[j].schmidfactor;
-//	  double omega3 = m_Grains[j].omega3;
+      //	  double omega3 = m_Grains[j].omega3;
       neighdistfunc = m_Grains[j].neighbordistfunc;
-      sdvol = sdvol + ((voxvol-avgvol)*(voxvol-avgvol));
-      sdlnvol = sdlnvol + ((logvol-avglnvol)*(logvol-avglnvol));
-      sdbovera = sdbovera + ((bovera-avgbovera)*(bovera-avgbovera));
-      sddiam = sddiam + ((diam-avgdiam)*(diam-avgdiam));
-      sdlogdiam = sdlogdiam + ((logdiam-avglogdiam)*(logdiam-avglogdiam));
-      sdschmid = sdschmid + ((schmid-avgschmid)*(schmid-avgschmid));
-//      sdomega3 = sdomega3 + ((omega3-avgomega3)*(omega3-avgomega3));
-      int diamint = int((diam-mindiameter)/sizebinstepsize);
-      svbovera[diamint][2] = svbovera[diamint][2] + ((bovera-svbovera[diamint][1])*(bovera-svbovera[diamint][1]));
-      svschmid[diamint][2] = svschmid[diamint][2] + ((schmid-svschmid[diamint][1])*(schmid-svschmid[diamint][1]));
-//      svomega3[diamint][2] = svomega3[diamint][2] + ((omega3-svomega3[diamint][1])*(omega3-svomega3[diamint][1]));
+      sdvol = sdvol + ((voxvol - avgvol) * (voxvol - avgvol));
+      sdlnvol = sdlnvol + ((logvol - avglnvol) * (logvol - avglnvol));
+      sdbovera = sdbovera + ((bovera - avgbovera) * (bovera - avgbovera));
+      sddiam = sddiam + ((diam - avgdiam) * (diam - avgdiam));
+      sdlogdiam = sdlogdiam + ((logdiam - avglogdiam) * (logdiam - avglogdiam));
+      sdschmid = sdschmid + ((schmid - avgschmid) * (schmid - avgschmid));
+      //      sdomega3 = sdomega3 + ((omega3-avgomega3)*(omega3-avgomega3));
+      int diamint = int((diam - mindiameter) / sizebinstepsize);
+      svbovera[diamint][2] = svbovera[diamint][2] + ((bovera - svbovera[diamint][1]) * (bovera - svbovera[diamint][1]));
+      svschmid[diamint][2] = svschmid[diamint][2] + ((schmid - svschmid[diamint][1]) * (schmid - svschmid[diamint][1]));
+      //      svomega3[diamint][2] = svomega3[diamint][2] + ((omega3-svomega3[diamint][1])*(omega3-svomega3[diamint][1]));
       int size = 0;
       size = neighdistfunc.size();
-      for(int k=0;k<size;k++)
+      for (int k = 0; k < size; k++)
       {
         int nnum = neighdistfunc[k];
-		neighborhood[diamint][((2*k)+2)] = neighborhood[diamint][((2*k)+2)] + ((neighborhood[diamint][((2*k)+1)]-nnum)*(neighborhood[diamint][((2*k)+1)]-nnum));
-	  }
+        neighborhood[diamint][((2 * k) + 2)] = neighborhood[diamint][((2 * k) + 2)] + ((neighborhood[diamint][((2 * k) + 1)] - nnum)
+            * (neighborhood[diamint][((2 * k) + 1)] - nnum));
+      }
     }
   }
-  for(int temp4 = 0; temp4 < numbins; temp4++)
+  for (int temp4 = 0; temp4 < numbins; temp4++)
   {
-    if(svbovera[temp4][0] != 0)
+    if (svbovera[temp4][0] != 0)
     {
-      neighborhood[temp4][2] = neighborhood[temp4][2]/neighborhood[temp4][0];
-      neighborhood[temp4][4] = neighborhood[temp4][4]/neighborhood[temp4][0];
-      neighborhood[temp4][6] = neighborhood[temp4][6]/neighborhood[temp4][0];
-      svbovera[temp4][2] = svbovera[temp4][2]/svbovera[temp4][0];
-      svschmid[temp4][2] = svschmid[temp4][2]/svschmid[temp4][0];
-//      svomega3[temp4][2] = svomega3[temp4][2]/svomega3[temp4][0];
-      svbovera[temp4][3] = svbovera[temp4][1]*(((svbovera[temp4][1]*(1-svbovera[temp4][1]))/svbovera[temp4][2])-1);
-      svbovera[temp4][4] = (1-svbovera[temp4][1])*(((svbovera[temp4][1]*(1-svbovera[temp4][1]))/svbovera[temp4][2])-1);
-//      svomega3[temp4][3] = svomega3[temp4][1]*(((svomega3[temp4][1]*(1-svomega3[temp4][1]))/svomega3[temp4][2])-1);
-//      svomega3[temp4][4] = (1-svomega3[temp4][1])*(((svomega3[temp4][1]*(1-svomega3[temp4][1]))/svomega3[temp4][2])-1);
-      neighborhood[temp4][2] = pow(neighborhood[temp4][2],0.5);
-      neighborhood[temp4][4] = pow(neighborhood[temp4][4],0.5);
-      neighborhood[temp4][6] = pow(neighborhood[temp4][6],0.5);
-      svbovera[temp4][2] = pow(svbovera[temp4][2],0.5);
-      svschmid[temp4][2] = pow(svschmid[temp4][2],0.5);
-//      svomega3[temp4][2] = pow(svomega3[temp4][2],0.5);
+      neighborhood[temp4][2] = neighborhood[temp4][2] / neighborhood[temp4][0];
+      neighborhood[temp4][4] = neighborhood[temp4][4] / neighborhood[temp4][0];
+      neighborhood[temp4][6] = neighborhood[temp4][6] / neighborhood[temp4][0];
+      svbovera[temp4][2] = svbovera[temp4][2] / svbovera[temp4][0];
+      svschmid[temp4][2] = svschmid[temp4][2] / svschmid[temp4][0];
+      //      svomega3[temp4][2] = svomega3[temp4][2]/svomega3[temp4][0];
+      svbovera[temp4][3] = svbovera[temp4][1] * (((svbovera[temp4][1] * (1 - svbovera[temp4][1])) / svbovera[temp4][2]) - 1);
+      svbovera[temp4][4] = (1 - svbovera[temp4][1]) * (((svbovera[temp4][1] * (1 - svbovera[temp4][1])) / svbovera[temp4][2]) - 1);
+      //      svomega3[temp4][3] = svomega3[temp4][1]*(((svomega3[temp4][1]*(1-svomega3[temp4][1]))/svomega3[temp4][2])-1);
+      //      svomega3[temp4][4] = (1-svomega3[temp4][1])*(((svomega3[temp4][1]*(1-svomega3[temp4][1]))/svomega3[temp4][2])-1);
+      neighborhood[temp4][2] = pow(neighborhood[temp4][2], 0.5);
+      neighborhood[temp4][4] = pow(neighborhood[temp4][4], 0.5);
+      neighborhood[temp4][6] = pow(neighborhood[temp4][6], 0.5);
+      svbovera[temp4][2] = pow(svbovera[temp4][2], 0.5);
+      svschmid[temp4][2] = pow(svschmid[temp4][2], 0.5);
+      //      svomega3[temp4][2] = pow(svomega3[temp4][2],0.5);
     }
   }
-  sdvol = sdvol/actualgrains;
-  sdlnvol = sdlnvol/actualgrains;
-  sdbovera = sdbovera/actualgrains;
-  sddiam = sddiam/actualgrains;
-  sdlogdiam = sdlogdiam/actualgrains;
-  sddiam2 = sddiam2/neighcount;
-  sdschmid = sdschmid/actualgrains;
-//  sdomega3 = sdomega3/actualgrains;
-//  double volvar = sdvol;
-//  double vollnvar = sdlnvol;
+  sdvol = sdvol / actualgrains;
+  sdlnvol = sdlnvol / actualgrains;
+  sdbovera = sdbovera / actualgrains;
+  sddiam = sddiam / actualgrains;
+  sdlogdiam = sdlogdiam / actualgrains;
+  sddiam2 = sddiam2 / neighcount;
+  sdschmid = sdschmid / actualgrains;
+  //  sdomega3 = sdomega3/actualgrains;
+  //  double volvar = sdvol;
+  //  double vollnvar = sdlnvol;
   double boveravar = sdbovera;
-//  double diamvar = sddiam;
-//  double logdiamvar = sdlogdiam;
-//  double diamvar2 = sddiam2;
+  //  double diamvar = sddiam;
+  //  double logdiamvar = sdlogdiam;
+  //  double diamvar2 = sddiam2;
   double schmidvar = sdschmid;
-//  double omega3var = sdomega3;
-//  double pbovera = avgbovera*(((avgbovera*(1-avgbovera))/boveravar)-1);
-//  double qbovera = (1-avgbovera)*(((avgbovera*(1-avgbovera))/boveravar)-1);
-  sdvol = pow(sdvol,0.5);
-  sdlnvol = pow(sdlnvol,0.5);
-  sdbovera = pow(sdbovera,0.5);
-  sddiam = pow(sddiam,0.5);
-  sdlogdiam = pow(sdlogdiam,0.5);
-  sddiam2 = pow(sddiam2,0.5);
-  sdschmid = pow(sdschmid,0.5);
-//  sdomega3 = pow(sdomega3,0.5);
+  //  double omega3var = sdomega3;
+  //  double pbovera = avgbovera*(((avgbovera*(1-avgbovera))/boveravar)-1);
+  //  double qbovera = (1-avgbovera)*(((avgbovera*(1-avgbovera))/boveravar)-1);
+  sdvol = pow(sdvol, 0.5);
+  sdlnvol = pow(sdlnvol, 0.5);
+  sdbovera = pow(sdbovera, 0.5);
+  sddiam = pow(sddiam, 0.5);
+  sdlogdiam = pow(sdlogdiam, 0.5);
+  sddiam2 = pow(sddiam2, 0.5);
+  sdschmid = pow(sdschmid, 0.5);
+  //  sdomega3 = pow(sdomega3,0.5);
   double svboveracr = 0;
   double svschmidcr = 0;
-//  double svomega3cr = 0;
-  for(int temp5 = 0; temp5 < numbins; temp5++)
+  //  double svomega3cr = 0;
+  for (int temp5 = 0; temp5 < numbins; temp5++)
   {
-    svboveracr = svboveracr + (svbovera[temp5][0]*((svbovera[temp5][1]-avgbovera)*(svbovera[temp5][1]-avgbovera)));
-    svschmidcr = svschmidcr + (svschmid[temp5][0]*((svschmid[temp5][1]-avgschmid)*(svschmid[temp5][1]-avgschmid)));
-//    svomega3cr = svomega3cr + (svomega3[temp5][0]*((svomega3[temp5][1]-avgomega3)*(svomega3[temp5][1]-avgomega3)));
+    svboveracr = svboveracr + (svbovera[temp5][0] * ((svbovera[temp5][1] - avgbovera) * (svbovera[temp5][1] - avgbovera)));
+    svschmidcr = svschmidcr + (svschmid[temp5][0] * ((svschmid[temp5][1] - avgschmid) * (svschmid[temp5][1] - avgschmid)));
+    //    svomega3cr = svomega3cr + (svomega3[temp5][0]*((svomega3[temp5][1]-avgomega3)*(svomega3[temp5][1]-avgomega3)));
   }
-  svboveracr = svboveracr/(actualgrains*boveravar);
-  svschmidcr = svschmidcr/(actualgrains*schmidvar);
-//  svomega3cr = svomega3cr/(actualgrains*omega3var);
+  svboveracr = svboveracr / (actualgrains * boveravar);
+  svschmidcr = svschmidcr / (actualgrains * schmidvar);
+  //  svomega3cr = svomega3cr/(actualgrains*omega3var);
 
 
-  retErr = h5io->writeVolumeStats(maxdiameter, mindiameter, 1.0, avglogdiam, sdlogdiam,
-                                  svbovera, svcovera, svcoverb, neighborhoodfit, svomega3);
-
+  retErr = h5io->writeVolumeStats(maxdiameter, mindiameter, 1.0, avglogdiam, sdlogdiam, svbovera, svcovera, svcoverb, neighborhoodfit, svomega3);
 
   return retErr;
 }
