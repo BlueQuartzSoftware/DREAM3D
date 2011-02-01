@@ -211,7 +211,22 @@ if (AIM_BUILD_TOOL_VOLUME_MESHING)
     add_subdirectory(${AIMRepresentation_SOURCE_DIR}/Source/AIM/VolumeMesh ${AIMRepresentation_BINARY_DIR}/AIM/VolumeMesh)
 endif()
 
+OPTION(AIM_BUILD_TESTING "Compile the test programs" ON)
+if (AIM_BUILD_TESTING)
+    add_subdirectory(${AIMRepresentation_SOURCE_DIR}/Source/Test ${AIMRepresentation_BINARY_DIR}/AIM/Test)
+endif()
 
+# Should we build the HTML documentation
+option(AIM_BUILD_API_DOCS "Use Doxygen to create the HTML based API documentation" OFF)
+if(AIM_BUILD_API_DOCS)
+  FIND_PACKAGE(Doxygen)
+  if (NOT DOXYGEN_FOUND)
+    message(FATAL_ERROR "Doxygen is needed to build the documentation. Please install it correctly")
+  endif()
+  configure_file(${PROJECT_RESOURCES_DIR}/AIM.doxyfile.in 
+                 ${PROJECT_BINARY_DIR}/Doxyfile  @ONLY IMMEDIATE)
+  add_custom_target(docs COMMAND ${DOXYGEN_EXECUTABLE} ${PROJECT_BINARY_DIR}/Doxyfile)
+endif()
 
 include(${PROJECT_RESOURCES_DIR}/CPack/PackageProject.cmake)
 
