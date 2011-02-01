@@ -61,7 +61,7 @@ int main(int argc, char **argv)
   odf.resize(eighteenCubed);
 
   // Calculate the ODF Data
-  Texture::calculateCubicODFData(weights, randomWeight, true, odf, totalweight);
+  Texture::calculateCubicODFData(weights, sigmas, randomWeight, true, odf, totalweight);
 
 
   std::vector<double > x001;

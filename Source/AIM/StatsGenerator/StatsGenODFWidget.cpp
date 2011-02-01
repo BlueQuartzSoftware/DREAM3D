@@ -93,16 +93,18 @@ int StatsGenODFWidget::writeDataToHDF5(AIM::Reconstruction::CrystalStructure cry
   double totalWeight = 0.0;
 
   QwtArray<double> weights;
+  QwtArray<double> sigmas;
   QwtArray<double> odf;
 
   // Initialize xMax and yMax....
   weights = m_TableModel->getData(SGODFTableModel::Weight);
+  sigmas = m_TableModel->getData(SGODFTableModel::Sigma);
 
   double randomWeight = weights.front();
   //pop off the random number
   weights.pop_front();
 
-  Texture::calculateCubicODFData(weights, randomWeight, false, odf, totalWeight);
+  Texture::calculateCubicODFData(weights, sigmas, randomWeight, false, odf, totalWeight);
   double* odfPtr = &(odf.front());
   err = writer->writeODFData(crystruct, odfPtr, totalWeight);
 
