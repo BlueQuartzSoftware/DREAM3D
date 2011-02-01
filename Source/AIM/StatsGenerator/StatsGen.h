@@ -96,7 +96,7 @@ class StatsGen
       static const size_t eighteenCubed = 5832;
       double odf[eighteenCubed];
       int err = 0;
-	  double q1[5], qref[5];
+  //	  double q1[5], qref[5];
       size_t bin, ea1bin, ea2bin, ea3bin;
       double ea1, ea2, ea3;
       double r1, r2, r3;
@@ -112,10 +112,11 @@ class StatsGen
       double dim1 = 0;
       double dim2 = 0;
       double dim3 = 0;
+      const double m_pi = M_PI;
+
       dim1 = 2*pow((0.75 * ((m_pi / 4.0) - sin((m_pi / 4.0)))), (1.0 / 3.0));
       dim2 = 2*pow((0.75 * ((m_pi / 4.0) - sin((m_pi / 4.0)))), (1.0 / 3.0));
       dim3 = 2*pow((0.75 * ((m_pi / 4.0) - sin((m_pi / 4.0)))), (1.0 / 3.0));
-      const double m_pi = M_PI;
       double sin_ea1, sin_ea2, sin_ea3;
       double cos_ea1, cos_ea2, cos_ea3;
 
