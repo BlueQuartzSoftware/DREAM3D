@@ -38,7 +38,7 @@
 #include "AIM/Common/AIMMath.h"
 #include "AIM/Common/Constants.h"
 #include "AIM/Common/AIMRandomNG.h"
-#include "AIM/Common/MisorientationCalculations.h"
+
 #include "AIM/Common/Texture.h"
 #include "MXA/Common/LogTime.h"
 
@@ -88,37 +88,15 @@ class StatsGen
         cos_ea3 = cos(ea3);
 
     template<typename T>
-    int GenCubicODF(T weights, T sigmas,
+    int GenCubicODFPlotData(T weights, T sigmas,
                     T &x001, T &y001, T &x011, T &y011, T &x111, T &y111,
                     int size, double randomWeight)
     {
-      int TextureBins[AIM_TEXTURE_COUNT];
       static const size_t eighteenCubed = 5832;
-      double odf[eighteenCubed];
-      int err = 0;
-  //	  double q1[5], qref[5];
-      size_t bin, ea1bin, ea2bin, ea3bin;
-      double ea1, ea2, ea3;
-      double r1, r2, r3;
-      double r1test, r2test, r3test;
-      double h1, h2, h3;
-      double sum, diff;
-      double hmag, rmag, angle;
-      double g[3][3];
-      double x, y, z;
-      double xpf, ypf;
-    //  double degtorad = M_PI / 180.0;
-      double totaldensity;
-      double dim1 = 0;
-      double dim2 = 0;
-      double dim3 = 0;
-      const double m_pi = M_PI;
-
-      dim1 = 2*pow((0.75 * ((m_pi / 4.0) - sin((m_pi / 4.0)))), (1.0 / 3.0));
-      dim2 = 2*pow((0.75 * ((m_pi / 4.0) - sin((m_pi / 4.0)))), (1.0 / 3.0));
-      dim3 = 2*pow((0.75 * ((m_pi / 4.0) - sin((m_pi / 4.0)))), (1.0 / 3.0));
-      double sin_ea1, sin_ea2, sin_ea3;
-      double cos_ea1, cos_ea2, cos_ea3;
+      double totalweight = 0;
+      T odf;
+      odf.resize(eighteenCubed);
+      Texture::calculateCubicODFData(weights, randomWeight, true, odf, totalweight);
 
       AIMRandomNG rg;
       /* Get a seed value based off the system clock. The issue is that this will
@@ -137,6 +115,27 @@ class StatsGen
 #else
       rg.RandomInit(seedPtr[0]);
 #endif
+      int err = 0;
+      int choose;
+      double g[3][3];
+      double x, y, z;
+      double xpf, ypf;
+    //  double degtorad = M_PI / 180.0;
+      double totaldensity;
+      double sum, diff;
+      double ea1, ea2, ea3;
+//      double r1test, r2test, r3test;
+      double sin_ea1, sin_ea2, sin_ea3;
+      double cos_ea1, cos_ea2, cos_ea3;
+      double hmag;
+      double angle;
+      double r1, r2, r3;
+      double h1, h2, h3;
+      double random, tan_angle, density;
+
+      double dim1 = 2*pow((0.75 * ((M_PI / 4.0) - sin((M_PI / 4.0)))), (1.0 / 3.0));
+      double dim2 = 2*pow((0.75 * ((M_PI / 4.0) - sin((M_PI / 4.0)))), (1.0 / 3.0));
+      double dim3 = 2*pow((0.75 * ((M_PI / 4.0) - sin((M_PI / 4.0)))), (1.0 / 3.0));
 
       x001.resize(size * 3);
       y001.resize(size * 3);
@@ -144,53 +143,16 @@ class StatsGen
       y011.resize(size * 6);
       x111.resize(size * 4);
       y111.resize(size * 4);
-      for (int i = 0; i < 15; i++)
-      {
-        r1 = tan(Texture::Values[i][1]/2)*sin((Texture::Values[i][0]-Texture::Values[i][2])/2)/cos((Texture::Values[i][0]+Texture::Values[i][2])/ 2);
-        r2 = tan(Texture::Values[i][1]/2)*cos((Texture::Values[i][0]-Texture::Values[i][2])/2)/cos((Texture::Values[i][0]+Texture::Values[i][2])/ 2);
-        r3 = tan((Texture::Values[i][0]+Texture::Values[i][2])/2);
-		MisorientationCalculations::getFZQuatCubic(r1, r2, r3);
-        rmag = pow((r1 * r1 + r2 * r2 + r3 * r3), 0.5);
-        angle = 2.0 * atan(rmag);
-        double hTmp = pow(((3.0 / 4.0) * (angle - sin(angle))), (1.0 / 3.0));
-        h1 = hTmp * (r1 / rmag);
-        h2 = hTmp * (r2 / rmag);
-        h3 = hTmp * (r3 / rmag);
-        if (angle == 0) h1 = 0.0, h2 = 0.0, h3 = 0.0;
-        ea1bin = int((h1 + (dim1 / 2.0)) * 18.0 / dim1);
-        ea2bin = int((h2 + (dim1 / 2.0)) * 18.0 / dim2);
-        ea3bin = int((h3 + (dim1 / 2.0)) * 18.0 / dim3);
-        if (ea1bin >= 18) ea1bin = 17;
-        if (ea2bin >= 18) ea2bin = 17;
-        if (ea3bin >= 18) ea3bin = 17;
-        bin = (ea3bin * 18 * 18) + (ea2bin * 18) + (ea1bin);
-        TextureBins[i] = bin;
-      }
-      double totalweight = 0;
-      for (size_t i = 0; i < eighteenCubed; i++)
-      {
-        odf[i] = randomWeight / (eighteenCubed);
-        totalweight = totalweight + randomWeight / (eighteenCubed);
-      }
-      for (size_t i = 0; i < Texture::Count; i++)
-      {
-        bin = TextureBins[i];
-        odf[bin] = odf[bin] + (weights[i]);
-        totalweight = totalweight + weights[i];
-      }
-      for (size_t i = 0; i < eighteenCubed; i++)
-      {
-        odf[i] = odf[i] / totalweight;
-      }
+
       for (int i = 0; i < size; i++)
       {
-        double random = rg.Random();
-        int choose = 0;
-        double tan_angle;
+        random = rg.Random();
+        choose = 0;
+
         totaldensity = 0;
         for (size_t j = 0; j < eighteenCubed; j++)
         {
-          double density = odf[j];
+          density = odf[j];
           totaldensity = totaldensity + density;
           if (random < totaldensity && random >= (totaldensity - density)) choose = j;
         }
@@ -214,9 +176,9 @@ class StatsGen
         ea1 = sum + diff;
         ea2 = 2. * atan2((r1 * cos(sum)),cos(diff));
         ea3 = sum - diff;
-        r1test = tan(ea2/2)*sin((ea1-ea3)/2)/cos((ea1+ea3)/ 2);
-        r2test = tan(ea2/2)*cos((ea1-ea3)/2)/cos((ea1+ea3)/ 2);
-        r3test = tan((ea1+ea3)/2);
+//        r1test = tan(ea2/2)*sin((ea1-ea3)/2)/cos((ea1+ea3)/ 2);
+//        r2test = tan(ea2/2)*cos((ea1-ea3)/2)/cos((ea1+ea3)/ 2);
+//        r3test = tan((ea1+ea3)/2);
         // Calculate the Sin and Cos of ea1, ea2 and ea3 and then use those
         // values in the following calculations
         GenCubicODF_CALC_EULER_TRIG();
@@ -388,6 +350,8 @@ class StatsGen
      * @param sigma
      * @param cutoff
      * @param binstep
+     * @param max (out)
+     * @param min (out)
      * @return
      */
     int computeNumberOfBins(double mu, double sigma, double cutoff, double binstep, double &max, double &min);
@@ -398,6 +362,8 @@ class StatsGen
      * @param sigma
      * @param cutoff
      * @param binstep
+     * @param max (out)
+     * @param min (out)
      * @return
      */
     int computeNumberOfBins(float mu, float sigma, float cutoff, float binstep, float &max, float &min);
@@ -407,6 +373,7 @@ class StatsGen
      * @param mu
      * @param sigma
      * @param cutoff
+     * @param binstep
      * @param x
      * @param y
      * @param yMax

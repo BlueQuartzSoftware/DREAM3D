@@ -583,6 +583,8 @@ void StatsGeneratorUI::on_actionSave_triggered()
 
   m_NeighborPlot->writeDataToHDF5(writer, AIM::HDF5::Grain_SizeVNeighbors_Distributions);
 
+  m_ODFWidget->writeDataToHDF5(AIM::Reconstruction::Cubic, writer);
+
   // Force the clean up of the writer by assigning a NULL pointer which will
   // have the effect of executing the destructor of the H5ReconStatsWriter Class
   writer = H5ReconStatsWriter::NullPointer();

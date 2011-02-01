@@ -41,6 +41,7 @@
 
 
 #include "SGODFTableModel.h"
+#include "AIM/Common/Texture.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -85,10 +86,25 @@ int StatsGenODFWidget::readDataFromHDF5(H5ReconStatsReader::Pointer reader,
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int StatsGenODFWidget::writeDataToHDF5(H5ReconStatsWriter::Pointer writer,
-                                        const std::string &hdf5GroupName)
+int StatsGenODFWidget::writeDataToHDF5(AIM::Reconstruction::CrystalStructure crystruct,
+                                       H5ReconStatsWriter::Pointer writer)
 {
   int err = 0;
+  double totalWeight = 0.0;
+
+  QwtArray<double> weights;
+  QwtArray<double> odf;
+
+  // Initialize xMax and yMax....
+  weights = m_TableModel->getData(SGODFTableModel::Weight);
+
+  double randomWeight = weights.front();
+  //pop off the random number
+  weights.pop_front();
+
+  Texture::calculateCubicODFData(weights, randomWeight, false, odf, totalWeight);
+  double* odfPtr = &(odf.front());
+  err = writer->writeODFData(crystruct, odfPtr, totalWeight);
 
   return err;
 }
@@ -201,19 +217,16 @@ void StatsGenODFWidget::on_m_CalculateODFBtn_clicked()
   QwtArray<double > sigmas;
   StatsGen sg;
   int size = 1000;
-//  double xMax, yMax;
 
   // Initialize xMax and yMax....
   weights = m_TableModel->getData(SGODFTableModel::Weight);
   sigmas = m_TableModel->getData(SGODFTableModel::Sigma);
 
-  size_t wSize = weights.count();
-
   double randomWeight = weights.front();
   weights.pop_front();
   sigmas.pop_front();
   //pop off the random number
-  err = sg.GenCubicODF(weights, sigmas, x001, y001, x011, y011, x111, y111, size, randomWeight);
+  err = sg.GenCubicODFPlotData(weights, sigmas, x001, y001, x011, y011, x111, y111, size, randomWeight);
   if (err == 1)
   {
     //TODO: Present Error Message
