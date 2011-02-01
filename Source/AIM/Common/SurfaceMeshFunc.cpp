@@ -15,26 +15,31 @@
 #define WIN32_LEAN_AND_MEAN		// Exclude rarely-used stuff from Windows headers
 #endif
 
+// Include this FIRST because there is a needed define for some compiles
+// to expose some of the constants needed below
+#include "AIM/Common/AIMMath.h"
+
+// C Includes
 #include <stdio.h>
 #include <stdlib.h>
-#include <math.h>
 #include <string.h>
+
+//-- C++ STL
 #include <vector>
-
-
-const static double m_pi = 3.1415926535897;
-const static double m_OnePointThree = 1.33333333333;
-
 #include <sstream>
 
+
 #include <MXA/Utilities/StringUtils.h>
+
+using namespace std;
+
+
+const static double m_pi = M_PI;
+const static double m_OnePointThree = 1.33333333333;
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-
-using namespace std;
-
 SurfaceMeshFunc::SurfaceMeshFunc() :
   neigh(NULL),
   point(NULL),
