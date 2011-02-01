@@ -45,6 +45,7 @@ class AIMCOMMON_EXPORT MisorientationCalculations
 
     static double getMisoQuatCubic(double q1[5],double q2[5],double &n1,double &n2,double &n3);
     static double getMisoQuatHexagonal(double q1[5],double q2[5],double &n1,double &n2,double &n3);
+    static void getFZQuatCubic(double &r1,double &r2, double &r3);
     static int getMisoBinCubic(double n1, double n2, double n3);
     static int getMisoBinHexagonal(double n1, double n2, double n3);
 

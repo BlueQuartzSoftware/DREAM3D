@@ -276,6 +276,53 @@ double MisorientationCalculations::getMisoQuatHexagonal(double q1[5],double q2[5
   return wmin;
 }
 
+void MisorientationCalculations::getFZQuatCubic(double &r1,double &r2, double &r3)
+{
+	double rodsym[24][3] = {{0,0,0},
+	{10000000.0, 0, 0},
+	{0, 10000000.0, 0},
+	{0, 0, 10000000.0},
+	{1.0, 0, 0},
+	{0, 1.0, 0},
+	{0, 0, 1.0},
+	{-1.0, 0, 0},
+	{0, -1.0, 0},
+	{0, 0, -1.0},
+	{10000000.0, 10000000.0, 0},
+	{-10000000.0, 10000000.0, 0},
+	{0, 10000000.0, 10000000.0},
+	{0, -10000000.0, 10000000.0},
+	{10000000.0, 0, 10000000.0},
+	{-10000000.0, 0, 10000000.0},
+	{1.0, 1.0, 1.0},
+	{-1.0, -1.0, -1.0},
+	{1.0, -1.0, 1.0},
+	{-1.0, 1.0, -1.0},
+	{-1.0, 1.0, 1.0},
+	{1.0, -1.0, -1.0},
+	{-1.0, -1.0, 1.0},
+	{1.0, 1.0, -1.0}};
+	double denom, dist;
+	int index;
+	double smallestdist = 100000000;
+	double rc1, rc2, rc3;
+	for(int i=0;i<24;i++)
+	{
+		denom = 1-(r1*rodsym[i][0]+r2*rodsym[i][1]+r3*rodsym[i][2]);
+		rc1 = (r1+rodsym[i][0]-(r2*rodsym[i][2]-r3*rodsym[i][1]))/denom;
+		rc2 = (r2+rodsym[i][1]-(r3*rodsym[i][0]-r1*rodsym[i][2]))/denom;
+		rc3 = (r3+rodsym[i][2]-(r1*rodsym[i][1]-r2*rodsym[i][0]))/denom;
+		dist = rc1*rc1+rc2*rc2+rc3*rc3;
+		if(dist < smallestdist) smallestdist = dist, index = i;
+	}
+	denom = 1-(r1*rodsym[index][0]+r2*rodsym[index][1]+r3*rodsym[index][2]);
+	rc1 = (r1+rodsym[index][0]-(r2*rodsym[index][2]-r3*rodsym[index][1]))/denom;
+	rc2 = (r2+rodsym[index][1]-(r3*rodsym[index][0]-r1*rodsym[index][2]))/denom;
+	rc3 = (r3+rodsym[index][2]-(r1*rodsym[index][1]-r2*rodsym[index][0]))/denom;
+	r1 = rc1;
+	r2 = rc2;
+	r3 = rc3;
+}
 int MisorientationCalculations::getMisoBinCubic(double n1, double n2, double n3)
 {
 	double dim1 = pow((0.75*((m_pi/4.0)-sin((m_pi/4.0)))),(1.0/3.0));
