@@ -114,13 +114,7 @@ class StatsGen
       double x, y, z;
       double xpf, ypf;
       double xpfa, ypfa;
-    //  double degtorad = M_PI / 180.0;
       double totaldensity;
-      double sum, diff;
-      double ea1, ea2, ea3;
-//      double r1test, r2test, r3test;
-      double sin_ea1, sin_ea2, sin_ea3;
-      double cos_ea1, cos_ea2, cos_ea3;
       double hmag;
       double angle;
       double r1, r2, r3;
