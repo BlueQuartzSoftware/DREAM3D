@@ -12,11 +12,11 @@
 #define __FeiConstants_H
 
 /**
- *  @file FEI/FeiConstants.h
+ *  @file FeiConstants.h
  *  @brief This file contains string constants for use with Fei instrument code
  *
  *  @author by Michael A Jackson on 4/11/06.
- *  Copyright 2006 IMTS. All rights reserved.
+ *  Copyright 2006, 2010, 2011 BlueQuartz Software. All rights reserved.
  *  @version $Revision: 1.2 $
  */
 
