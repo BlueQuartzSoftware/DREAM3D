@@ -69,9 +69,9 @@ class OIMColoring
 
 /**
  * @brief Returns the maximum value of the three values
- * @param rgb[0]
- * @param rgb[1]
- * @param rgb[2]
+ * @param red
+ * @param green
+ * @param blue
  * @return
  */
     template<typename T>
