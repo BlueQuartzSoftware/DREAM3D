@@ -529,8 +529,8 @@ void StatsGeneratorUI::on_actionSave_triggered()
   sigma = m_Omega3Plot->getSigma();
   cutOff = m_Omega3Plot->getCutoff();
   binStep = m_Omega3Plot->getBinStep();
-  m_Sigma_SizeDistribution->setText(QString::number(mu));
-  m_Mu_SizeDistribution->setText(QString::number(sigma));
+  m_Sigma_SizeDistribution->setText(QString::number(sigma));
+  m_Mu_SizeDistribution->setText(QString::number(mu));
   m_SigmaCutOff_SizeDistribution->setText(QString::number(cutOff));
   m_BinStepSize->setValue(binStep);
 

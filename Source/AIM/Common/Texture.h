@@ -86,7 +86,7 @@ class AIMCOMMON_EXPORT Texture
     {
       int TextureBins[AIM_TEXTURE_COUNT];
       static const size_t eighteenCubed = 5832;
-      // double odf[eighteenCubed];
+	  odf.resize(eighteenCubed);
       size_t ea1bin, ea2bin, ea3bin;
       size_t bin, addbin;
       size_t bin1, bin2, bin3;
@@ -111,8 +111,8 @@ class AIMCOMMON_EXPORT Texture
         cos_term1 = cos((Texture::Values[i][0]+Texture::Values[i][2])/2);
         cos_term2 = cos((Texture::Values[i][0]-Texture::Values[i][2])/2);
 
-        r1 = tan_term * sin_term / cos_term1;
-        r2 = tan_term * cos_term2 / cos_term1;
+        r1 = tan_term * cos_term2 / cos_term1;
+        r2 = tan_term * sin_term / cos_term1;
         r3 = tan((Texture::Values[i][0]+Texture::Values[i][2])/2);
         MisorientationCalculations::getFZQuatCubic(r1, r2, r3);
         rmag = pow((r1 * r1 + r2 * r2 + r3 * r3), 0.5);
