@@ -102,15 +102,15 @@ class SGODFTableModel : public QAbstractTableModel
       */
      virtual bool setData(const QModelIndex &index, const QVariant &value, int role=Qt::EditRole);
 
-     /**
-      *
-      * @param
-      * @param
-      * @param
-      * @param
-      * @return
-      */
-     virtual bool setHeaderData(int, Qt::Orientation, const QVariant&, int=Qt::EditRole);
+/**
+ *
+ * @param col
+ * @param orientation
+ * @param data
+ * @param role
+ * @return
+ */
+     virtual bool setHeaderData(int col, Qt::Orientation orientation, const QVariant& data, int role=Qt::EditRole);
 
      /**
       *

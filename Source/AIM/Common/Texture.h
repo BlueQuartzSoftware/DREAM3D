@@ -91,7 +91,7 @@ class AIMCOMMON_EXPORT Texture
       size_t bin, addbin;
       size_t bin1, bin2, bin3;
       size_t addbin1, addbin2, addbin3;
-	  double dist, fraction;
+	    double dist, fraction;
       double rmag, angle;
       double r1, r2, r3;
       double h1, h2, h3;

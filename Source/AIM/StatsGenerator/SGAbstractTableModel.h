@@ -129,13 +129,13 @@ Q_OBJECT    ;
 
     /**
      *
-     * @param
-     * @param
-     * @param
-     * @param
+     * @param col
+     * @param orientation
+     * @param data
+     * @param role
      * @return
      */
-    virtual bool setHeaderData(int, Qt::Orientation, const QVariant&, int=Qt::EditRole) = 0;
+    virtual bool setHeaderData(int col, Qt::Orientation orientation, const QVariant& data, int role=Qt::EditRole) = 0;
 
     /**
      *

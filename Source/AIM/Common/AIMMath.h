@@ -31,7 +31,7 @@
 #define _AIMMATH_H_
 /** @file AIMMath.h
  * @brief This file performs the necessary including of <math.h> with certain
- * #define constants (like M_PI) defined on all platforms.
+ * define constants (like M_PI) defined on all platforms.
  */
 
 #if defined(_MSC_VER)
