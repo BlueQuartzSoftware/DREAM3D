@@ -35,7 +35,7 @@ const size_t Texture::Count = AIM_TEXTURE_COUNT;
 const double Texture::Values[AIM_TEXTURE_COUNT][3] =
 {
   { 35*M_PI/180.0,45*M_PI/180.0,0*M_PI/180.0},
-  { 55*M_PI/180.0,35*M_PI/180.0,65*M_PI/180.0},
+  { 59*M_PI/180.0,37*M_PI/180.0,63*M_PI/180.0},
   { 90*M_PI/180.0,35*M_PI/180.0,45*M_PI/180.0},
   { 55*M_PI/180.0,30*M_PI/180.0,65*M_PI/180.0},
   { 45*M_PI/180.0,35*M_PI/180.0,65*M_PI/180.0},
