@@ -145,6 +145,7 @@ class AIMCOMMON_EXPORT ReconstructionFunc
     int renumber_grains();
     int define_subgrains();
     int reburn_grains();
+	void fillin_sample();
     void cleanup_data();
     void find_kernels();
     void homogenize_grains();

@@ -887,6 +887,26 @@
            </spacer>
           </item>
           <item>
+           <widget class="QCheckBox" name="rec_fillinSample">
+            <property name="text">
+             <string>Rectangularized Sample</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="horizontalSpacer_30">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item>
            <widget class="QCheckBox" name="rec_alreadyFormed">
             <property name="text">
              <string>Grains Formed</string>
@@ -2683,6 +2703,7 @@
   <tabstop>sm_InputFileBtn</tabstop>
  </tabstops>
  <resources>
+  <include location="../../../../Resources/icons/images/Icons.qrc"/>
   <include location="../../../../Resources/icons/images/Icons.qrc"/>
   <include location="../../../../Resources/icons/images/Icons.qrc"/>
   <include location="../../../../Resources/icons/images/Icons.qrc"/>

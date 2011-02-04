@@ -69,6 +69,7 @@ Q_OBJECT
     MXA_INSTANCE_STRING_PROPERTY(OutputDirectory)
     MXA_INSTANCE_PROPERTY(bool, MergeTwins)
     MXA_INSTANCE_PROPERTY(bool, MergeColonies)
+    MXA_INSTANCE_PROPERTY(bool, FillinSample)
     MXA_INSTANCE_PROPERTY(int32_t, MinAllowedGrainSize)
     MXA_INSTANCE_PROPERTY(double, MinSeedConfidence)
     MXA_INSTANCE_PROPERTY(double, SizeBinStepSize)
