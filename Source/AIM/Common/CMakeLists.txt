@@ -79,6 +79,9 @@ SET (AIMCommon_HDRS
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/MisorientationCalculations.h
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/OIMColoring.hpp
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Texture.h
+    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/AIMMath.h
+    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/AIMArray.hpp
+    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/AIMDLLExport.h
     )
 cmp_IDE_SOURCE_PROPERTIES( "AIM/Common" "${AIMCommon_HDRS}" "${AIMCommon_SRCS}" ${PROJECT_INSTALL_HEADERS})
 
