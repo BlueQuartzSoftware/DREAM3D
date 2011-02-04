@@ -85,6 +85,7 @@ m_H5AngFile(""),
 m_OutputDirectory("."),
 m_MergeTwins(false),
 m_MergeColonies(false),
+m_FillinSample(false),
 m_MinAllowedGrainSize(0),
 m_MinSeedConfidence(0.0),
 m_SizeBinStepSize(0.0),
@@ -193,7 +194,6 @@ void Reconstruction::compute()
     progressMessage(AIM_STRING("Loading Slices"), 3);
     oimDataLoader->loadData(m->voxels, m->xpoints, m->ypoints, m->zpoints);
 
-
     CHECK_FOR_CANCELED(ReconstructionFunc, loadData)
     progressMessage(AIM_STRING("Finding Border"), 6);
     m->find_border();
@@ -242,11 +242,18 @@ void Reconstruction::compute()
   m->numgrains = m->renumber_grains();
 
   CHECK_FOR_CANCELED(ReconstructionFunc, renumber_grains)
-  progressMessage(AIM_STRING("Updating Reference Orientations For Grains"), 40);
+  progressMessage(AIM_STRING("Finding Reference Orientations For Grains"), 40);
   m->find_kernels();
 
+  if(m_FillinSample == true)
+  {
+	  CHECK_FOR_CANCELED(ReconstructionFunc, fillin_sample)
+	  progressMessage(AIM_STRING("Creating Smooth Rectangular Sample"), 49);
+	  m->fillin_sample();
+  }
+
   CHECK_FOR_CANCELED(ReconstructionFunc, find_kernels)
-  progressMessage(AIM_STRING("Updating Voxel Lists For Grains"), 43);
+  progressMessage(AIM_STRING("Finding Voxel Lists For Grains"), 43);
   m->numgrains = m->reburn_grains();
 
   CHECK_FOR_CANCELED(ReconstructionFunc, reburn_grains)
@@ -260,7 +267,7 @@ void Reconstruction::compute()
     CHECK_FOR_CANCELED(ReconstructionFunc, merge_twins)
     progressMessage(AIM_STRING("Merging Twins"), 51);
     m->characterize_twins();
-	  CHECK_FOR_CANCELED(ReconstructionFunc, characterize_twins)
+	CHECK_FOR_CANCELED(ReconstructionFunc, characterize_twins)
     progressMessage(AIM_STRING("Renumbering Grains"), 53);
     m->numgrains = m->renumber_grains3();
   }
@@ -324,7 +331,6 @@ void Reconstruction::compute()
   if(m_ZEndIndex-m_ZStartIndex > 1) m->volume_stats(h5io);
   if(m_ZEndIndex-m_ZStartIndex == 1) m->volume_stats2D(h5io);
 
-
   CHECK_FOR_CANCELED(ReconstructionFunc, volume_stats)
   progressMessage(AIM_STRING("Writing Grain Data"), 82);
   m->write_graindata(graindataFile);
@@ -354,7 +360,6 @@ void Reconstruction::compute()
   CHECK_FOR_CANCELED(ReconstructionFunc, vtk_viz_files)
   progressMessage(AIM_STRING("Writing Out HDF5 Grain File. This may take a few minutes to complete."), 95);
   if (m_WriteHDF5GrainFile) { m->writeHDF5GrainsFile(hdf5GrainFile); }
-
 
   CHECK_FOR_CANCELED(ReconstructionFunc, writeHDF5GrainsFile)
   progressMessage(AIM_STRING("Reconstruction Complete"), 100);

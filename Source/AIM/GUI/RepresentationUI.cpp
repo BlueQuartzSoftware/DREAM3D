@@ -595,7 +595,7 @@ void RepresentationUI::rec_SetupGui()
 
   m_WidgetList << rec_OutputDir << rec_OutputDirBtn;
   m_WidgetList << rec_ZStartIndex << rec_ZEndIndex;
-  m_WidgetList << rec_mergeTwins << rec_mergeColonies << rec_alreadyFormed << alignMeth << minAllowedGrainSize << minConfidence << downsampleFactor << misOrientationTolerance;
+  m_WidgetList << rec_mergeTwins << rec_mergeColonies << rec_fillinSample << rec_alreadyFormed << alignMeth << minAllowedGrainSize << minConfidence << downsampleFactor << misOrientationTolerance;
   m_WidgetList << crystalStructure << SizeBinStepSize;
   m_WidgetList << rec_DisorientationVizFile << rec_ImageQualityVizFile << rec_IPFVizFile << rec_SchmidFactorVizFile << rec_VisualizationVizFile << rec_DownSampledVizFile;
   m_WidgetList << minImageQuality;
@@ -653,6 +653,7 @@ void RepresentationUI::rec_SaveSettings(QSettings &prefs)
   WRITE_SETTING(prefs, rec_ZEndIndex)
   WRITE_BOOL_SETTING(prefs, mergeTwins, rec_mergeTwins->isChecked())
   WRITE_BOOL_SETTING(prefs, mergeColonies, rec_mergeColonies->isChecked())
+  WRITE_BOOL_SETTING(prefs, fillinSample, rec_fillinSample->isChecked())
   WRITE_BOOL_SETTING(prefs, alreadyFormed, rec_alreadyFormed->isChecked())
 
   WRITE_SETTING(prefs, minAllowedGrainSize)
@@ -709,6 +710,7 @@ void RepresentationUI::rec_LoadSettings(QSettings &prefs)
 
   READ_BOOL_SETTING(prefs, rec_, mergeTwins, false);
   READ_BOOL_SETTING(prefs, rec_, mergeColonies, false);
+  READ_BOOL_SETTING(prefs, rec_, fillinSample, false);
   READ_BOOL_SETTING(prefs, rec_, alreadyFormed, false);
   READ_SETTING(prefs, minAllowedGrainSize, ok, i, 8 , Int);
   READ_SETTING(prefs, minConfidence, ok, d, 0.1 , Double);
@@ -885,6 +887,7 @@ void RepresentationUI::on_rec_GoBtn_clicked()
 
   m_Reconstruction->setMergeTwins(rec_mergeTwins->isChecked() );
   m_Reconstruction->setMergeColonies(rec_mergeColonies->isChecked() );
+  m_Reconstruction->setFillinSample(rec_fillinSample->isChecked() );
   m_Reconstruction->setMinAllowedGrainSize(minAllowedGrainSize->value());
   m_Reconstruction->setMinSeedConfidence(minConfidence->value());
   m_Reconstruction->setSizeBinStepSize(SizeBinStepSize->value());

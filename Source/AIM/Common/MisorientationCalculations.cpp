@@ -304,41 +304,26 @@ void MisorientationCalculations::getFZQuatCubic(double &r1,double &r2, double &r
 	{1.0, -1.0, -1.0},
 	{-1.0, -1.0, 1.0},
 	{1.0, 1.0, -1.0}};
-	double rodsamsym[4][3] = {{0,0,0},
-	{10000000.0, 0, 0},
-	{0, 10000000.0, 0},
-	{0, 0, 10000000.0}};
 	double denom, dist;
 	int index;
 	double smallestdist = 100000000;
 	double rc1, rc2, rc3;
-	double rd1, rd2, rd3;
 	double r1min, r2min, r3min;
-//	for(int j=0;j<4;j++)
-//	{
-//		denom = 1-(r1*rodsamsym[j][0]+r2*rodsamsym[j][1]+r3*rodsamsym[j][2]);
-//		rd1 = (r1+rodsamsym[j][0]-(r2*rodsamsym[j][2]-r3*rodsamsym[j][1]))/denom;
-//		rd2 = (r2+rodsamsym[j][1]-(r3*rodsamsym[j][0]-r1*rodsamsym[j][2]))/denom;
-//		rd3 = (r3+rodsamsym[j][2]-(r1*rodsamsym[j][1]-r2*rodsamsym[j][0]))/denom;
-		rd1 = r1;
-		rd2 = r2;
-		rd3 = r3;
-		for(int i=0;i<24;i++)
+	for(int i=0;i<24;i++)
+	{
+		denom = 1-(r1*rodsym[i][0]+r2*rodsym[i][1]+r3*rodsym[i][2]);
+		rc1 = (r1+rodsym[i][0]-(r3*rodsym[i][1]-r2*rodsym[i][2]))/denom;
+		rc2 = (r2+rodsym[i][1]-(r1*rodsym[i][2]-r3*rodsym[i][0]))/denom;
+		rc3 = (r3+rodsym[i][2]-(r2*rodsym[i][0]-r1*rodsym[i][1]))/denom;
+		dist = rc1*rc1+rc2*rc2+rc3*rc3;
+		if(dist < smallestdist)
 		{
-			denom = 1-(rd1*rodsym[i][0]+rd2*rodsym[i][1]+rd3*rodsym[i][2]);
-			rc1 = (rd1+rodsym[i][0]-(rd3*rodsym[i][1]-rd2*rodsym[i][2]))/denom;
-			rc2 = (rd2+rodsym[i][1]-(rd1*rodsym[i][2]-rd3*rodsym[i][0]))/denom;
-			rc3 = (rd3+rodsym[i][2]-(rd2*rodsym[i][0]-rd1*rodsym[i][1]))/denom;
-			dist = rc1*rc1+rc2*rc2+rc3*rc3;
-			if(dist < smallestdist)
-			{
-				smallestdist = dist;
-				r1min = rc1;
-				r2min = rc2;
-				r3min = rc3;
-			}
+			smallestdist = dist;
+			r1min = rc1;
+			r2min = rc2;
+			r3min = rc3;
 		}
-//	}
+	}
 	r1 = r1min;
 	r2 = r2min;
 	r3 = r3min;
