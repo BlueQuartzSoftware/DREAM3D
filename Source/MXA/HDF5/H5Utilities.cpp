@@ -29,6 +29,9 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include <MXA/HDF5/H5Utilities.h>
 
+// C Includes
+#include <string.h>
+
 // C++ Includes
 #include <iostream>
 
