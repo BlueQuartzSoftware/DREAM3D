@@ -134,7 +134,7 @@ int AIM_H5VtkDataWriter::writeUnstructuredGrid(const std::string &hdfPath,
   // Write the CELL array
   int32_t* tempArray = const_cast<int32_t*>(&(cells.front()));
   int32_t rank =1;
-  uint64_t dims[1] = {cells.size()};
+  hsize_t dims[1] = {cells.size()};
   err = H5Lite::writePointerDataset(gid, H5_CELLS, rank, dims, tempArray);
   if (err < 0)
   {
