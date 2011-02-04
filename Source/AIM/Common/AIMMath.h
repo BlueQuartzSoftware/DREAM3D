@@ -55,7 +55,7 @@
    too, hence the sequence as it is: load math.h, then see what's
 lacking still.
 */
-#define _USE_MATH_DEFINES 1
+//#define _USE_MATH_DEFINES 1
 #endif
 
 
@@ -111,6 +111,12 @@ lacking still.
 
 #ifndef M_2PI
 #define M_2PI           6.283185307179586232    /* 2*pi  */
+
+
+#ifndef M_PI
+#define M_PI        3.14159265358979323846  /* pi */
+#endif
+
 #endif
 
 
