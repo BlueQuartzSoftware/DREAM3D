@@ -25,7 +25,6 @@
 //-- Boost Includes
 #include <boost/shared_ptr.hpp>
 #include <boost/weak_ptr.hpp>
-//#define RAW_PTR  get
 
 
 #define SHARED_IS_NULL(ptr)\
@@ -271,14 +270,14 @@ namespace MXA
 * @param value The value of the property
 */
 
-#define GET_PROPERTY_BODY(name_space, type, prpty, varname, key, value)\
-  if (name_space::prpty.compare(key) == 0) {  \
-  try { value = *(reinterpret_cast<T*>( &(varname))); return 1;} \
+#define GET_PROPERTY_BODY(name_space, type, prpty, key, value)\
+    if (name_space::prpty.compare(key) == 0) {  \
+      try { value = *(reinterpret_cast<T*>( &(m_##prpty))); return 1;} \
   catch(MXA::bad_any_cast &) { std::cout << "Could not cast value '" << value << "' to type '" << #type << "' for property '" << #prpty << "'" << std::endl; } }
 
-#define GET_STRING_PROPERTY_BODY2(name_space, type, prpty, varname, key, value)\
+#define GET_STRING_PROPERTY_BODY2(name_space, type, prpty, key, value)\
   if (name_space::prpty.compare(key) == 0) {  \
-  try { value = varname; return 1;} \
+    try { value = m_##prpty; return 1;} \
   catch(MXA::bad_any_cast &) { std::cout << "Could not cast value '" << value << "' to type '" << #type << "' for property '" << #prpty << "'" << std::endl; } }
 
 

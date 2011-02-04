@@ -607,7 +607,7 @@ static herr_t writePointerAttribute(hid_t loc_id,
                              const std::string& objName,
                              const std::string& attrName,
                              int32_t   rank,
-                             uint64_t* dims,
+                             hsize_t* dims,
                              T* data)
 {
   hid_t      obj_id, sid, attr_id;
@@ -711,7 +711,7 @@ template <typename T>
 static herr_t writeVectorAttribute(hid_t loc_id,
                              const std::string& objName,
                              const std::string& attrName,
-                             std::vector<uint64_t> &dims,
+                             std::vector<hsize_t> &dims,
                              std::vector<T> &data )
 {
   hid_t      obj_id, sid, attr_id;
@@ -1208,10 +1208,10 @@ static herr_t readVectorAttribute(hid_t loc_id,
       //Need to allocate the array size
       H5T_class_t type_class;
       size_t type_size;
-      std::vector<uint64_t> dims;
+      std::vector<hsize_t> dims;
       err = H5Lite::getAttributeInfo(loc_id, objName, attrName, dims, type_class, type_size, tid);
       hsize_t numElements = 1;
-      for (std::vector<uint64_t>::iterator iter = dims.begin(); iter < dims.end(); ++iter )
+      for (std::vector<hsize_t>::iterator iter = dims.begin(); iter < dims.end(); ++iter )
       {
         numElements *= *(iter);
       }
@@ -1452,7 +1452,7 @@ static MXA_EXPORT herr_t getDatasetInfo( hid_t loc_id,
 static MXA_EXPORT herr_t getAttributeInfo(hid_t loc_id,
                                const std::string& objName,
                                const std::string& attr_name,
-                               std::vector<uint64_t> &dims,
+                               std::vector<hsize_t> &dims,
                                H5T_class_t &type_class,
                                size_t &type_size,
                                hid_t &attr_type);

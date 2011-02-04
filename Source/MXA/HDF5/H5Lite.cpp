@@ -801,7 +801,7 @@ herr_t H5Lite::getDatasetInfo( hid_t loc_id,
 herr_t H5Lite::getAttributeInfo(hid_t loc_id,
                                 const std::string& objName,
                                 const std::string& attrName,
-                                std::vector<uint64_t> &dims,
+                                std::vector<hsize_t> &dims,
                                 H5T_class_t &type_class,
                                 size_t &type_size,
                                 hid_t &tid)
@@ -894,7 +894,7 @@ herr_t H5Lite::writeMXAArray(hid_t loc_id,
 
   void* data = array->getVoidPointer(0);
   int32_t rank = array->getNumberOfDimensions();
-  std::vector<uint64_t> dims(rank, 0);
+  std::vector<size_t> dims(rank, 0);
   array->getDimensions( &(dims.front() )  );
 
   hid_t dataType = array->getDataType();
@@ -962,7 +962,7 @@ herr_t H5Lite::writeMXAAttribute(hid_t loc_id,
 
    void* data = array->getVoidPointer(0);
    int32_t rank = array->getNumberOfDimensions();
-   std::vector<uint64_t> dims(rank, 0);
+   std::vector<size_t> dims(rank, 0);
    array->getDimensions( &(dims.front() )  );
 
    hid_t dataType = array->getDataType();
@@ -1079,7 +1079,7 @@ IMXAArray* H5Lite::readMXAArray(hid_t loc_id,
         err = H5Lite::getDatasetInfo(loc_id, dsetName, dims, attr_type, attr_size);
         if (err < 0 ) {  }
         typeId = H5Lite::getDatasetType(loc_id, dsetName);
-        std::vector<uint64_t> _dims(dims.size(), 0);
+        std::vector<size_t> _dims(dims.size(), 0);
         for (unsigned int i = 0; i<dims.size(); ++i)
         {
           _dims[i] = static_cast<uint64_t>(dims[i]);
@@ -1203,10 +1203,10 @@ IMXAArray* H5Lite::readMXAAttribute(hid_t loc_id,
       std::vector<hsize_t> dims;
       err = H5Lite::getAttributeInfo(loc_id, dsetName, attributeKey, dims, type_class, attr_size, typeId);
       if (err < 0){  }
-      std::vector<uint64_t> _dims(dims.size(), 0);
+      std::vector<size_t> _dims(dims.size(), 0);
       for (unsigned int i = 0; i<dims.size(); ++i)
       {
-        _dims[i] = static_cast<uint64_t>(dims[i]);
+        _dims[i] = static_cast<size_t>(dims[i]);
       }
       switch(type_class)
       {
