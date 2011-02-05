@@ -1,10 +1,15 @@
 /*!
 
-\mainpage AIMRepresentation Project Documentation
+@mainpage AIMRepresentation Project Documentation
 
-\subpage aimrep "AIMRepresentation"
+@subpage aimrep "AIMRepresentation"
 
-\subpage statsgenerator "StatsGenerator"
+@subpage angfileimport "OIM Data Import"
+
+@subpage reconstruction "Reconstruction"
+
+@subpage statsgenerator "StatsGenerator"
+
 
 
 
