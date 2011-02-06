@@ -28,11 +28,14 @@
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "VTKFileUtils.h"
-#include "SurfaceMeshFunc.h"
+
+#include <string.h>
 
 #include <sstream>
 
 #include "MXA/Common/LogTime.h"
+
+#include "SurfaceMeshFunc.h"
 
 // -----------------------------------------------------------------------------
 //

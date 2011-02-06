@@ -1,0 +1,56 @@
+/*!
+
+@page angfileimport OIM Data Import
+
+This module allows the conversion of OIM Scans from TSL in the form of text files
+with a file name extension of ".ang" to HDF5 file which contains all the data.
+
+@image html oimFileImport.png "The OIM Data Import User Interface"
+
+@section overview Overview of Features
+ The user simply selects the directory containing all the .ang files. The File
+List should populate with all the files and each file should have a green dot
+next to its entry indicating that the correct file path has been determined. If
+the user needs more control over the how the file names are determined then the
+various text fields can be used to finally allow the file list to show all existing
+files. Once the file list has been determined the beginning and ending slice number
+can be set to import all the slices or just a subset of the data. The desired
+spacing between the slices should also be set. Finally the output file should also
+be selected correctly.
+
+@section importdetails Notes concerning the importing of the data
+<b>NO</b> attempt is made to manipulate the data by rotations, transformation,
+sorting or any other changes. The data is simply read by the program, translated
+into its binary representation and stored in the hdf5 file. The complete header
+of the .ang file is also stored into the HDF5 file in order to preserve as much
+of the data as possible.
+
+@section hdf5layout Layout of Data in the HDF5 File.
+Each file is considered a slice of the data volume as is stored as an HDF Group
+in the HDF5 file. This group itself has 2 more groups: <tt>Data</tt> and <tt>Header</tt>.
+
+@code
+Data
+  Confidence Index
+  D1
+  D1
+  Image Quality
+  PhaseData
+  Phi
+  Phi1
+  Phi2
+  X Position
+  Y Position
+@endcode
+  Each of the HDF data sets is a 1D array of 32 bit floating point <tt>H5T_NATIVE_FLOAT</tt>
+values.
+
+In addition several additional data sets are also stored into the HDF5 file including
+and <tt>Index</tt> data set which is a 32 bit integer array of all the slice numbers
+that are stored in the file. This allows for readers to quickly ascertain how many
+slices are in the file without having to interrogate each group in the HDF5 file
+which takes too much time. The starting index value and terminating index value are
+also stored in addition to the interslice resolution value as a 32 bit floating
+point value.
+
+ */
