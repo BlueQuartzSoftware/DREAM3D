@@ -3132,6 +3132,7 @@ void  ReconstructionFunc::measure_misorientations (H5ReconStatsWriter::Pointer h
   vector<double >* neighborsurfarealist;
   for (int i = 1; i < numgrains; i++)
   {
+    microcount = 0;
     nlist = m_Grains[i].neighborlist;
 	neighborsurfarealist = m_Grains[i].neighborsurfarealist;
     q1[1] = m_Grains[i].avg_quat[1];
