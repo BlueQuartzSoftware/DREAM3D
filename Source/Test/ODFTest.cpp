@@ -78,7 +78,7 @@ int main(int argc, char **argv)
   if (err == 1)
   {
     //TODO: Present Error Message
-    return EXIT_FAILURE;
+    return 1;
   }
 
 

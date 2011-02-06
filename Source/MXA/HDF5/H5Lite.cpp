@@ -1,4 +1,35 @@
+/* ============================================================================
+ * Copyright (c) 2010, Michael A. Jackson (BlueQuartz Software)
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without modification,
+ * are permitted provided that the following conditions are met:
+ *
+ * Redistributions of source code must retain the above copyright notice, this
+ * list of conditions and the following disclaimer.
+ *
+ * Redistributions in binary form must reproduce the above copyright notice, this
+ * list of conditions and the following disclaimer in the documentation and/or
+ * other materials provided with the distribution.
+ *
+ * Neither the name of Michael A. Jackson nor the names of its contributors may
+ * be used to endorse or promote products derived from this software without
+ * specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+ * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include <MXA/HDF5/H5Lite.h>
+
+#include <string.h>
 
 #ifdef H5LITE_USE_MXA_CONSTRUCTS
 #include <MXA/Base/IMXAArray.h>
@@ -801,7 +832,7 @@ herr_t H5Lite::getDatasetInfo( hid_t loc_id,
 herr_t H5Lite::getAttributeInfo(hid_t loc_id,
                                 const std::string& objName,
                                 const std::string& attrName,
-                                std::vector<uint64_t> &dims,
+                                std::vector<hsize_t> &dims,
                                 H5T_class_t &type_class,
                                 size_t &type_size,
                                 hid_t &tid)
@@ -894,7 +925,7 @@ herr_t H5Lite::writeMXAArray(hid_t loc_id,
 
   void* data = array->getVoidPointer(0);
   int32_t rank = array->getNumberOfDimensions();
-  std::vector<uint64_t> dims(rank, 0);
+  std::vector<size_t> dims(rank, 0);
   array->getDimensions( &(dims.front() )  );
 
   hid_t dataType = array->getDataType();
@@ -962,7 +993,7 @@ herr_t H5Lite::writeMXAAttribute(hid_t loc_id,
 
    void* data = array->getVoidPointer(0);
    int32_t rank = array->getNumberOfDimensions();
-   std::vector<uint64_t> dims(rank, 0);
+   std::vector<size_t> dims(rank, 0);
    array->getDimensions( &(dims.front() )  );
 
    hid_t dataType = array->getDataType();
@@ -1079,7 +1110,7 @@ IMXAArray* H5Lite::readMXAArray(hid_t loc_id,
         err = H5Lite::getDatasetInfo(loc_id, dsetName, dims, attr_type, attr_size);
         if (err < 0 ) {  }
         typeId = H5Lite::getDatasetType(loc_id, dsetName);
-        std::vector<uint64_t> _dims(dims.size(), 0);
+        std::vector<size_t> _dims(dims.size(), 0);
         for (unsigned int i = 0; i<dims.size(); ++i)
         {
           _dims[i] = static_cast<uint64_t>(dims[i]);
@@ -1203,10 +1234,10 @@ IMXAArray* H5Lite::readMXAAttribute(hid_t loc_id,
       std::vector<hsize_t> dims;
       err = H5Lite::getAttributeInfo(loc_id, dsetName, attributeKey, dims, type_class, attr_size, typeId);
       if (err < 0){  }
-      std::vector<uint64_t> _dims(dims.size(), 0);
+      std::vector<size_t> _dims(dims.size(), 0);
       for (unsigned int i = 0; i<dims.size(); ++i)
       {
-        _dims[i] = static_cast<uint64_t>(dims[i]);
+        _dims[i] = static_cast<size_t>(dims[i]);
       }
       switch(type_class)
       {

@@ -144,7 +144,7 @@ class AIMCOMMON_EXPORT AIM_H5VtkDataWriter
     {
       // std::cout << "      vtkH5DataWriter::vtkWriteDataArray<T>()" << std::endl;
       int32_t rank = 1;
-      uint64_t dims[1] = { (uint64_t)num * (uint64_t)numComp};
+      hsize_t dims[1] = { (hsize_t)num * (hsize_t)numComp};
       std::string name (dsetName);
       herr_t err = H5Lite::writePointerDataset(fp, name, rank, dims, data);
       if (err < 0)

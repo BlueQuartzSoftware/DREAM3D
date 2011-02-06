@@ -1,0 +1,107 @@
+
+/*!
+
+@page reconstruction AIMReconstruction Documentation
+
+
+@section gui AIMReconstruction Gui
+
+@section features Features Overview
+
+@li Uses HDF5 Based input files
+@li Allows user to select full volume or subvolume to reconstruct
+@li Allows user to select which output files to write
+@li User can select from many different options
+@li Several types of slice registration available
+@li Save all input settings to a simple text file for later loading or sharing
+with others.
+@li Output files are written in VTK file format or HDF5 which can be viewed in
+ParaView with a custom plugin
+
+
+@image html reconstruction_gui.png "The Reconstruction User Interface"
+
+
+@section inputparamerters Determining Input Parameters
+
+One of the most important input parameters is the <b>Min. Image Quality</b> which
+helps determines the actual grains versus the noise of the background. For our
+example we used ParaView to view the ImageQuality data from an TSL OIM scan .ang
+data file. Displaying the raw data shows the following image with an arbitrary
+coloring scheme.
+@image html imagequality.png "Raw Image Quality Data displayed with ParaView"
+
+The object is to find a minimum value where every piece of data below the value
+is considered noise and values above are considered good data. Experimentation
+with your data is the only way to reveal what this minimum value is. For our
+example data set we used a value of 600 and the resulting thresholded image is
+shown below.
+
+@image html minimagequality.png "Image Quality Data Thresholded at a value of 600"
+
+@section cli  Command Line Program
+
+@section settingsfile Using a Settings File
+
+  The main AIMRepresentation GUI Reconstruction tab has an available button to
+allow the user to save all the settings on the Reconstruction Tab. These settings
+are saved to a simple text file with the following format:
+
+@code
+[Reconstruction]
+rec_OutputDir=/tmp
+rec_H5InputFile=/Users/Shared/Data/Ang_Data/12_strain/12_strain.h5ang
+rec_ZStartIndex=10074
+rec_ZEndIndex=10175
+rec_mergeTwins=false
+rec_mergeColonies=false
+rec_fillinSample=false
+rec_alreadyFormed=false
+rec_MinAllowedGrainSize=8
+rec_MinConfidence=0.1
+rec_BinStepSize=1
+rec_DownSampleFactor=1
+rec_MinImageQuality=50
+rec_MisOrientationTolerance=5
+rec_CrystalStructure=0
+rec_AlignMeth=0
+rec_DisorientationVizFile=true
+rec_ImageQualityVizFile=true
+rec_IPFVizFile=true
+rec_SchmidFactorVizFile=true
+rec_VisualizationVizFile=true
+rec_DownSampledVizFile=true
+rec_HDF5GrainFile=true
+@endcode
+
+Some of the values have special values:\n
+<b>rec_CrystalStructure</b>
+@li 0 = Hexagonal
+@li 1 = Cubic
+
+<b>rec_AlignMeth</b>\n
+@li Outer Boundary
+@li Misorientation
+@li Mutual Information
+
+The following values are considered boolean values and either have a "false"
+or "true" value.\n
+
+@li rec_mergeTwins
+@li rec_mergeColonies
+@li rec_fillinSample
+@li rec_alreadyFormed
+@li rec_DisorientationVizFile
+@li rec_ImageQualityVizFile
+@li rec_IPFVizFile
+@li rec_SchmidFactorVizFile
+@li rec_VisualizationVizFile
+@li rec_DownSampledVizFile
+@li rec_HDF5GrainFile
+
+
+
+
+
+
+ */

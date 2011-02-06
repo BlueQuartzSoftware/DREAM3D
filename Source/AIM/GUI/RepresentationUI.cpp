@@ -595,10 +595,10 @@ void RepresentationUI::rec_SetupGui()
 
   m_WidgetList << rec_OutputDir << rec_OutputDirBtn;
   m_WidgetList << rec_ZStartIndex << rec_ZEndIndex;
-  m_WidgetList << rec_mergeTwins << rec_mergeColonies << rec_fillinSample << rec_alreadyFormed << alignMeth << minAllowedGrainSize << minConfidence << downsampleFactor << misOrientationTolerance;
-  m_WidgetList << crystalStructure << SizeBinStepSize;
+  m_WidgetList << rec_mergeTwins << rec_mergeColonies << rec_fillinSample << rec_alreadyFormed << rec_AlignMeth << rec_MinAllowedGrainSize << rec_MinConfidence << rec_DownSampleFactor << rec_MisOrientationTolerance;
+  m_WidgetList << rec_CrystalStructure << rec_BinStepSize;
   m_WidgetList << rec_DisorientationVizFile << rec_ImageQualityVizFile << rec_IPFVizFile << rec_SchmidFactorVizFile << rec_VisualizationVizFile << rec_DownSampledVizFile;
-  m_WidgetList << minImageQuality;
+  m_WidgetList << rec_MinImageQuality;
   m_WidgetList << rec_HDF5GrainFile << rec_H5StatisticsFile << rec_AlignmentFile << rec_GrainDataFile;
   m_WidgetList << rec_LoadSettingsBtn << rec_SaveSettingsBtn;
 
@@ -641,6 +641,11 @@ void RepresentationUI::on_rec_SaveSettingsBtn_clicked()
   rec_SaveSettings(prefs);
 }
 
+
+#define WRITE_CHECKBOX_SETTING(prefs, o)\
+    prefs.setValue( o->objectName(), o->isChecked() );
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -651,27 +656,32 @@ void RepresentationUI::rec_SaveSettings(QSettings &prefs)
   WRITE_STRING_SETTING(prefs, rec_H5InputFile)
   WRITE_SETTING(prefs, rec_ZStartIndex)
   WRITE_SETTING(prefs, rec_ZEndIndex)
-  WRITE_BOOL_SETTING(prefs, mergeTwins, rec_mergeTwins->isChecked())
-  WRITE_BOOL_SETTING(prefs, mergeColonies, rec_mergeColonies->isChecked())
-  WRITE_BOOL_SETTING(prefs, fillinSample, rec_fillinSample->isChecked())
-  WRITE_BOOL_SETTING(prefs, alreadyFormed, rec_alreadyFormed->isChecked())
 
-  WRITE_SETTING(prefs, minAllowedGrainSize)
-  WRITE_SETTING(prefs, minConfidence)
-  WRITE_SETTING(prefs, SizeBinStepSize)
-  WRITE_SETTING(prefs, downsampleFactor)
-  WRITE_SETTING(prefs, minImageQuality)
-  WRITE_SETTING(prefs, misOrientationTolerance)
-  WRITE_COMBO_BOX(prefs, crystalStructure)
-  WRITE_COMBO_BOX(prefs, alignMeth)
+  rec_mergeTwins->objectName();
+  prefs.setValue(rec_mergeTwins->objectName(), rec_mergeTwins->isChecked() );
 
-  WRITE_BOOL_SETTING(prefs, DisorientationVizFile, rec_DisorientationVizFile->isChecked())
-  WRITE_BOOL_SETTING(prefs, ImageQualityVizFile, rec_ImageQualityVizFile->isChecked())
-  WRITE_BOOL_SETTING(prefs, IPFVizFile, rec_IPFVizFile->isChecked())
-  WRITE_BOOL_SETTING(prefs, SchmidFactorVizFile, rec_SchmidFactorVizFile->isChecked())
-  WRITE_BOOL_SETTING(prefs, VisualizationVizFile, rec_VisualizationVizFile->isChecked())
-  WRITE_BOOL_SETTING(prefs, DownSampledVizFile, rec_DownSampledVizFile->isChecked())
-  WRITE_BOOL_SETTING(prefs, HDF5GrainFile, rec_HDF5GrainFile->isChecked())
+
+  WRITE_CHECKBOX_SETTING(prefs, rec_mergeTwins)
+  WRITE_CHECKBOX_SETTING(prefs, rec_mergeColonies)
+  WRITE_CHECKBOX_SETTING(prefs, rec_fillinSample)
+  WRITE_CHECKBOX_SETTING(prefs, rec_alreadyFormed)
+
+  WRITE_SETTING(prefs, rec_MinAllowedGrainSize)
+  WRITE_SETTING(prefs, rec_MinConfidence)
+  WRITE_SETTING(prefs, rec_BinStepSize)
+  WRITE_SETTING(prefs, rec_DownSampleFactor)
+  WRITE_SETTING(prefs, rec_MinImageQuality)
+  WRITE_SETTING(prefs, rec_MisOrientationTolerance)
+  WRITE_COMBO_BOX(prefs, rec_CrystalStructure)
+  WRITE_COMBO_BOX(prefs, rec_AlignMeth)
+
+  WRITE_CHECKBOX_SETTING(prefs, rec_DisorientationVizFile)
+  WRITE_CHECKBOX_SETTING(prefs, rec_ImageQualityVizFile)
+  WRITE_CHECKBOX_SETTING(prefs, rec_IPFVizFile)
+  WRITE_CHECKBOX_SETTING(prefs, rec_SchmidFactorVizFile)
+  WRITE_CHECKBOX_SETTING(prefs, rec_VisualizationVizFile)
+  WRITE_CHECKBOX_SETTING(prefs, rec_DownSampledVizFile)
+  WRITE_CHECKBOX_SETTING(prefs, rec_HDF5GrainFile)
   prefs.endGroup();
 }
 
@@ -687,6 +697,12 @@ void RepresentationUI::on_rec_LoadSettingsBtn_clicked()
   QSettings prefs(file, QSettings::IniFormat, this);
   rec_LoadSettings(prefs);
 }
+
+#define READ_CHECKBOX_SETTING(prefs, tag, emptyValue)\
+  { QString s = prefs.value(#tag).toString();\
+  if (s.isEmpty() == false) {\
+    bool bb = prefs.value(#tag).toBool();\
+  tag->setChecked(bb); } else { tag->setChecked(emptyValue); } }
 
 // -----------------------------------------------------------------------------
 //
@@ -708,29 +724,27 @@ void RepresentationUI::rec_LoadSettings(QSettings &prefs)
   READ_SETTING(prefs, rec_ZStartIndex, ok, i, 0, Int)
   READ_SETTING(prefs, rec_ZEndIndex, ok, i, 0, Int)
 
-  READ_BOOL_SETTING(prefs, rec_, mergeTwins, false);
-  READ_BOOL_SETTING(prefs, rec_, mergeColonies, false);
-  READ_BOOL_SETTING(prefs, rec_, fillinSample, false);
-  READ_BOOL_SETTING(prefs, rec_, alreadyFormed, false);
-  READ_SETTING(prefs, minAllowedGrainSize, ok, i, 8 , Int);
-  READ_SETTING(prefs, minConfidence, ok, d, 0.1 , Double);
-  READ_SETTING(prefs, downsampleFactor, ok, d, 1.0 , Double);
-  READ_SETTING(prefs, minImageQuality, ok, d, 50.0 , Double);
-  READ_SETTING(prefs, misOrientationTolerance, ok, d, 5.0 , Double);
-  READ_SETTING(prefs, SizeBinStepSize, ok, d, 1.0 , Double);
-  READ_COMBO_BOX(prefs, crystalStructure)
-  READ_COMBO_BOX(prefs, alignMeth)
+  READ_CHECKBOX_SETTING(prefs, rec_mergeTwins, false);
+  READ_CHECKBOX_SETTING(prefs, rec_mergeColonies, false);
+  READ_CHECKBOX_SETTING(prefs, rec_fillinSample, false);
+  READ_CHECKBOX_SETTING(prefs, rec_alreadyFormed, false);
+  READ_SETTING(prefs, rec_MinAllowedGrainSize, ok, i, 8 , Int);
+  READ_SETTING(prefs, rec_MinConfidence, ok, d, 0.1 , Double);
+  READ_SETTING(prefs, rec_DownSampleFactor, ok, d, 1.0 , Double);
+  READ_SETTING(prefs, rec_MinImageQuality, ok, d, 50.0 , Double);
+  READ_SETTING(prefs, rec_MisOrientationTolerance, ok, d, 5.0 , Double);
+  READ_SETTING(prefs, rec_BinStepSize, ok, d, 1.0 , Double);
+  READ_COMBO_BOX(prefs, rec_CrystalStructure)
+  READ_COMBO_BOX(prefs, rec_AlignMeth)
 
-  READ_BOOL_SETTING(prefs, rec_, DisorientationVizFile, true);
-  READ_BOOL_SETTING(prefs, rec_, ImageQualityVizFile, true);
-  READ_BOOL_SETTING(prefs, rec_, IPFVizFile, true);
-  READ_BOOL_SETTING(prefs, rec_, SchmidFactorVizFile, true);
-  READ_BOOL_SETTING(prefs, rec_, VisualizationVizFile, true);
-  READ_BOOL_SETTING(prefs, rec_, DownSampledVizFile, true);
-  READ_BOOL_SETTING(prefs, rec_, HDF5GrainFile, true);
+  READ_CHECKBOX_SETTING(prefs, rec_DisorientationVizFile, true);
+  READ_CHECKBOX_SETTING(prefs, rec_ImageQualityVizFile, true);
+  READ_CHECKBOX_SETTING(prefs, rec_IPFVizFile, true);
+  READ_CHECKBOX_SETTING(prefs, rec_SchmidFactorVizFile, true);
+  READ_CHECKBOX_SETTING(prefs, rec_VisualizationVizFile, true);
+  READ_CHECKBOX_SETTING(prefs, rec_DownSampledVizFile, true);
+  READ_CHECKBOX_SETTING(prefs, rec_HDF5GrainFile, true);
   prefs.endGroup();
-
-
 }
 
 // -----------------------------------------------------------------------------
@@ -888,15 +902,15 @@ void RepresentationUI::on_rec_GoBtn_clicked()
   m_Reconstruction->setMergeTwins(rec_mergeTwins->isChecked() );
   m_Reconstruction->setMergeColonies(rec_mergeColonies->isChecked() );
   m_Reconstruction->setFillinSample(rec_fillinSample->isChecked() );
-  m_Reconstruction->setMinAllowedGrainSize(minAllowedGrainSize->value());
-  m_Reconstruction->setMinSeedConfidence(minConfidence->value());
-  m_Reconstruction->setSizeBinStepSize(SizeBinStepSize->value());
-  m_Reconstruction->setDownSampleFactor(downsampleFactor->value());
-  m_Reconstruction->setMinSeedImageQuality(minImageQuality->value());
-  m_Reconstruction->setMisorientationTolerance(misOrientationTolerance->value());
+  m_Reconstruction->setMinAllowedGrainSize(rec_MinAllowedGrainSize->value());
+  m_Reconstruction->setMinSeedConfidence(rec_MinConfidence->value());
+  m_Reconstruction->setSizeBinStepSize(rec_BinStepSize->value());
+  m_Reconstruction->setDownSampleFactor(rec_DownSampleFactor->value());
+  m_Reconstruction->setMinSeedImageQuality(rec_MinImageQuality->value());
+  m_Reconstruction->setMisorientationTolerance(rec_MisOrientationTolerance->value());
 
-  AIM::Reconstruction::CrystalStructure crystruct = static_cast<AIM::Reconstruction::CrystalStructure>(crystalStructure->currentIndex());
-  AIM::Reconstruction::AlignmentMethod alignmeth = static_cast<AIM::Reconstruction::AlignmentMethod>(alignMeth->currentIndex() );
+  AIM::Reconstruction::CrystalStructure crystruct = static_cast<AIM::Reconstruction::CrystalStructure>(rec_CrystalStructure->currentIndex());
+  AIM::Reconstruction::AlignmentMethod alignmeth = static_cast<AIM::Reconstruction::AlignmentMethod>(rec_AlignMeth->currentIndex() );
 
   m_Reconstruction->setCrystalStructure(crystruct);
   m_Reconstruction->setAlignmentMethod(alignmeth);

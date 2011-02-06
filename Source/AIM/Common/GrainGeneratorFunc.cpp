@@ -11,10 +11,10 @@
 
 #include "GrainGeneratorFunc.h"
 
-// Include this FIRST because there is a needed define for some compiles
-// to expose some of the constants needed below
-#include "AIM/Common/AIMMath.h"
+// C Includes
+#include <string.h>
 
+// C++ Includes
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -22,6 +22,8 @@
 #include <functional>
 #include <cmath>
 
+// AIM Includes
+#include "AIM/Common/AIMMath.h"
 #include "AIM/Common/MisorientationCalculations.h"
 
 

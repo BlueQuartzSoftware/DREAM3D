@@ -27,18 +27,21 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#include "H5Utilities.h"
+#include <MXA/HDF5/H5Utilities.h>
+
+// C Includes
+#include <string.h>
 
 // C++ Includes
 #include <iostream>
 
-
-
 #include <MXA/Common/LogTime.h>
+#include <MXA/HDF5/H5Lite.h>
 #include <MXA/Utilities/StringUtils.h>
 
-
-
+#ifdef H5LITE_USE_MXA_CONSTRUCTS
+#include <MXA/DataWrappers/MXAAsciiStringData.h>
+#endif
 
 #define CheckValidLocId(locId)\
   if (locId < 0 ) {std::cout << "Invalid HDF Location ID: " << locId << std::endl;return -1;}
@@ -267,7 +270,7 @@ herr_t H5Utilities::getGroupObjects(hid_t loc_id, int32_t typeFilter, std::list<
   err = H5Gget_num_objs(loc_id, &numObjs);
   if (err < 0) {
     std::cout << "Error getting number of objects for group: "
-	      << loc_id << std::endl;
+        << loc_id << std::endl;
     return err;
   }
 
@@ -576,14 +579,13 @@ herr_t H5Utilities::getAllAttributeNames(hid_t obj_id,
  }
 #endif
 
-
+#if H5LITE_USE_MXA_CONSTRUCTS
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-#if 0
 herr_t H5Utilities::readAllAttributes(hid_t fileId,
-    const std::string &datasetPath,
-    MXAAbstractAttributes &attributes)
+                                      const std::string &datasetPath,
+                                      MXAAbstractAttributes &attributes)
 {
   CheckValidLocId(fileId);
   herr_t err = -1;
@@ -593,113 +595,97 @@ herr_t H5Utilities::readAllAttributes(hid_t fileId,
   size_t attr_size;
   std::string res;
 
-  std::vector<uint64_t> dims; //Reusable for the loop
+  std::vector<hsize_t> dims;  //Reusable for the loop
   std::list<std::string> names;
   err = H5Utilities::getAllAttributeNames(fileId, datasetPath, names );
-
   for (std::list<std::string>::iterator iter=names.begin(); iter != names.end(); iter++)
   {
+    //std::cout << "Reading Attribute " << *iter << std::endl;
     err = H5Lite::getAttributeInfo(fileId, datasetPath, (*iter), dims, attr_type, attr_size, typeId);
-    if (err < 0)
-    {
+    if (err < 0) {
       std::cout << "Error in getAttributeInfo method in readUserMetaData." << std::endl;
-    }
-    else
-    {
+    } else {
       switch(attr_type)
       {
-        case H5T_STRING:
+      case H5T_STRING:
         res.clear(); //Clear the string out first
         err = H5Lite::readStringAttribute(fileId, datasetPath, (*iter), res );
-        if (err >= 0)
-        {
+        if (err >= 0) {
           IMXAArray::Pointer attr = MXAAsciiStringData::Create( res );
+          attr->setName(*iter);
           attributes[*iter] = attr;
         }
         break;
-        case H5T_INTEGER:
+      case H5T_INTEGER:
         //std::cout << "User Meta Data Type is Integer" << std::endl;
-        if ( H5Tequal(typeId, H5T_STD_U8BE) || H5Tequal(typeId,H5T_STD_U8LE) )
-        {
+        if ( H5Tequal(typeId, H5T_STD_U8BE) || H5Tequal(typeId,H5T_STD_U8LE) ) {
           IMXAArray::Pointer ptr = H5Utilities::readH5Attribute<uint8_t>(fileId, const_cast<std::string&>(datasetPath), (*iter), dims);
           attributes[*iter] = ptr;
-        }
-        else if ( H5Tequal(typeId, H5T_STD_U16BE) || H5Tequal(typeId,H5T_STD_U16LE) )
-        {
+          ptr->setName(*iter);
+        } else if ( H5Tequal(typeId, H5T_STD_U16BE) || H5Tequal(typeId,H5T_STD_U16LE) ) {
           IMXAArray::Pointer ptr = H5Utilities::readH5Attribute<uint16_t>(fileId, const_cast<std::string&>(datasetPath), (*iter), dims);
           attributes[*iter] = ptr;
-        }
-        else if ( H5Tequal(typeId, H5T_STD_U32BE) || H5Tequal(typeId,H5T_STD_U32LE) )
-        {
+          ptr->setName(*iter);
+        } else if ( H5Tequal(typeId, H5T_STD_U32BE) || H5Tequal(typeId,H5T_STD_U32LE) ) {
           IMXAArray::Pointer ptr = H5Utilities::readH5Attribute<uint32_t>(fileId, const_cast<std::string&>(datasetPath), (*iter), dims);
           attributes[*iter] = ptr;
-        }
-        else if ( H5Tequal(typeId, H5T_STD_U64BE) || H5Tequal(typeId,H5T_STD_U64LE) )
-        {
+          ptr->setName(*iter);
+        } else if ( H5Tequal(typeId, H5T_STD_U64BE) || H5Tequal(typeId,H5T_STD_U64LE) ) {
           IMXAArray::Pointer ptr = H5Utilities::readH5Attribute<uint64_t>(fileId, const_cast<std::string&>(datasetPath), (*iter), dims);
           attributes[*iter] = ptr;
-        }
-        else if ( H5Tequal(typeId, H5T_STD_I8BE) || H5Tequal(typeId,H5T_STD_I8LE) )
-        {
+          ptr->setName(*iter);
+        } else if ( H5Tequal(typeId, H5T_STD_I8BE) || H5Tequal(typeId,H5T_STD_I8LE) ) {
           IMXAArray::Pointer ptr = H5Utilities::readH5Attribute<int8_t>(fileId, const_cast<std::string&>(datasetPath), (*iter), dims);
           attributes[*iter] = ptr;
-        }
-        else if ( H5Tequal(typeId, H5T_STD_I16BE) || H5Tequal(typeId,H5T_STD_I16LE) )
-        {
+          ptr->setName(*iter);
+        } else if ( H5Tequal(typeId, H5T_STD_I16BE) || H5Tequal(typeId,H5T_STD_I16LE) ) {
           IMXAArray::Pointer ptr = H5Utilities::readH5Attribute<int16_t>(fileId, const_cast<std::string&>(datasetPath), (*iter), dims);
           attributes[*iter] = ptr;
-        }
-        else if ( H5Tequal(typeId, H5T_STD_I32BE) || H5Tequal(typeId,H5T_STD_I32LE) )
-        {
+          ptr->setName(*iter);
+        } else if ( H5Tequal(typeId, H5T_STD_I32BE) || H5Tequal(typeId,H5T_STD_I32LE) ) {
           IMXAArray::Pointer ptr = H5Utilities::readH5Attribute<int32_t>(fileId, const_cast<std::string&>(datasetPath), (*iter), dims);
           attributes[*iter] = ptr;
-        }
-        else if ( H5Tequal(typeId, H5T_STD_I64BE) || H5Tequal(typeId,H5T_STD_I64LE) )
-        {
+          ptr->setName(*iter);
+        } else if ( H5Tequal(typeId, H5T_STD_I64BE) || H5Tequal(typeId,H5T_STD_I64LE) ) {
           IMXAArray::Pointer ptr = H5Utilities::readH5Attribute<int64_t>(fileId, const_cast<std::string&>(datasetPath), (*iter), dims);
           attributes[*iter] = ptr;
-        }
-        else
-        {
-          std::cout << "Unknown Type: " << typeId << " at " << datasetPath << std::endl;
+          ptr->setName(*iter);
+        } else {
+          std::cout << "Unknown Type: " << typeId << " at " <<  datasetPath << std::endl;
           err = -1;
           retErr = -1;
         }
         break;
-        case H5T_FLOAT:
-        if (attr_size == 4)
-        {
+      case H5T_FLOAT:
+        if (attr_size == 4) {
           IMXAArray::Pointer ptr = H5Utilities::readH5Attribute<float32>(fileId, const_cast<std::string&>(datasetPath), (*iter), dims);
           attributes[*iter] = ptr;
-        }
-        else if (attr_size == 8 )
-        {
+          ptr->setName(*iter);
+        } else if (attr_size == 8 ) {
           IMXAArray::Pointer ptr = H5Utilities::readH5Attribute<float64>(fileId, const_cast<std::string&>(datasetPath), (*iter), dims);
           attributes[*iter] = ptr;
-        }
-        else
-        {
+          ptr->setName(*iter);
+        } else {
           std::cout << "Unknown Floating point type" << std::endl;
           err = -1;
           retErr = -1;
         }
         break;
-        default:
+      default:
         std::cout << "Error: readUserMetaData() Unknown attribute type: " << attr_type << std::endl;
         H5Utilities::printHDFClassType(attr_type);
       }
       CloseH5T(typeId, err, retErr); //Close the H5A type Id that was retrieved during the loop
     }
-    if (retErr < 0)
-    {
-      break;
-    }
+   if (retErr < 0)
+   {
+     break;
+   }
   }
 
   return retErr;
 }
 #endif
-
 
 // -----------------------------------------------------------------------------
 //
@@ -800,7 +786,7 @@ herr_t H5Utilities::objectNameAtIndex(hid_t fileId, int32_t idx, std::string &na
   // call H5Gget_objname_by_idx with name as NULL to get its length
   ssize_t name_len = H5Gget_objname_by_idx(fileId, idx, NULL, 0);
   if(name_len < 0) {
-  	name.clear();
+    name.clear();
     return -1;
   }
 
