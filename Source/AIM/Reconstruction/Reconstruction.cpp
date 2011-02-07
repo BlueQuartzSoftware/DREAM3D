@@ -114,7 +114,7 @@ m_ErrorCondition(0)
 // -----------------------------------------------------------------------------
 Reconstruction::~Reconstruction()
 {
-  std::cout << "~Reconstruction()" << std::endl;
+ // std::cout << "~Reconstruction()" << std::endl;
 }
 
 
