@@ -330,6 +330,7 @@ void Reconstruction::compute()
   progressMessage(AIM_STRING("Writing Statistics"), 80);
   if(m_ZEndIndex-m_ZStartIndex > 1) m->volume_stats(h5io);
   if(m_ZEndIndex-m_ZStartIndex == 1) m->volume_stats2D(h5io);
+  m->deformation_stats();
 
   CHECK_FOR_CANCELED(ReconstructionFunc, volume_stats)
   progressMessage(AIM_STRING("Writing Grain Data"), 82);

@@ -2261,13 +2261,10 @@ void  GrainGeneratorFunc::find_neighbors()
 			  nlist->at(nnum) = voxels[neighbor].grainname;
 			  nnum++;
 			  grains[grain].numneighbors = nnum;
-			  voxels[j].nearestneighbor = voxels[neighbor].grainname;
 		  }
 		}
 	}
 	voxels[j].surfacevoxel = onsurf;
-	if(onsurf > 0) voxels[j].nearestneighbordistance = 0, voxels[j].neighbor = j;
-	if(onsurf == 0) voxels[j].nearestneighbordistance = -1, voxels[j].nearestneighbor = -1;
   }
   vector<int>* nlistcopy;
   for(int i=1;i<numgrains;i++)

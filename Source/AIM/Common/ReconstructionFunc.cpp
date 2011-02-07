@@ -32,15 +32,11 @@
 #include "AIM/Common/MisorientationCalculations.h"
 #include "AIM/Common/HDF5/AIM_H5VtkDataWriter.h"
 
-#define FIND_EUCLIDEAN_FAST 1
-
 
 const static double m_pi = M_PI;
 const static double m_OnePointThree = 1.33333333333;
-
 const double threesixty_over_pi = 360.0/m_pi;
 const double sqrt_two = pow(2.0, 0.5);
-
 const double acos_neg_one = acos(-1.0);
 const double acos_pos_one = acos(1.0);
 const double sin_wmin_neg_1_over_2 = sin(acos_neg_one/2.0);
@@ -1436,11 +1432,17 @@ void  ReconstructionFunc::find_kernels()
   int steps = 1;
   int jStride;
   int kStride;
-
+  int* gnames = new int[totalpoints];
+  int* unassigned = new int[totalpoints];
+  for (int i = 0; i < totalpoints; ++i)
+  {
+    gnames[i] = voxels[i].grainname;
+	unassigned[i] = voxels[i].unassigned;
+  }
 
   for (int i = 0; i < (xpoints * ypoints * zpoints); i++)
   {
-    if (voxels[i].grainname > 0 && voxels[i].unassigned != 1)
+    if (gnames[i] > 0 && unassigned[i] != 1)
     {
       totalmisorientation = 0.0;
       numVoxel = 0;
@@ -1467,7 +1469,7 @@ void  ReconstructionFunc::find_kernels()
             if (row + k > ypoints - 1) good = 0;
             if (col + l < 0) good = 0;
             if (col + l > xpoints - 1) good = 0;
-            if (good == 1 && voxels[i].grainname == voxels[neighbor].grainname && voxels[neighbor].unassigned != 1)
+            if (good == 1 && gnames[i] == gnames[neighbor] && unassigned[neighbor] != 1)
             {
               numVoxel++;
               q2[1] = voxels[neighbor].quat[1];
@@ -1489,11 +1491,13 @@ void  ReconstructionFunc::find_kernels()
       }
       voxels[i].kernelmisorientation = totalmisorientation / (float)numVoxel;
     }
-    if (voxels[i].grainname == 0 || voxels[i].unassigned == 1)
+    if (gnames[i] == 0 || unassigned[i] == 1)
     {
       voxels[i].kernelmisorientation = 0;
     }
   }
+  delete [] gnames;
+  delete [] unassigned;
 }
 
 
@@ -2109,8 +2113,15 @@ void  ReconstructionFunc::find_neighbors()
   totalsurfacearea=0;
   int surfacegrain = 1;
   int nListSize = 1000;
+  std::vector<int> vnlist(6, -1);
   std::vector<int> nlist(nListSize, -1);
   std::vector<double> nsalist(nListSize, -1);
+  // Copy all the grain names into a densly packed array
+  int* gnames = new int[totalpoints];
+  for (int i = 0; i < totalpoints; ++i)
+  {
+    gnames[i] = voxels[i].grainname;
+  }
   for(int i=0;i<numgrains;i++)
   {
     int numneighs = int(nlist.size());
@@ -2124,7 +2135,7 @@ void  ReconstructionFunc::find_neighbors()
   for(int j = 0; j < (xpoints*ypoints*zpoints); j++)
   {
     onsurf = 0;
-    grain = voxels[j].grainname;
+    grain = gnames[j];
 	if(grain > 0)
 	{
 		column = j%xpoints;
@@ -2142,26 +2153,36 @@ void  ReconstructionFunc::find_neighbors()
           if(k == 4 && row == (ypoints-1)) good = 0;
           if(k == 2 && column == 0) good = 0;
           if(k == 3 && column == (xpoints-1)) good = 0;
-		  if(good == 1 && voxels[neighbor].grainname != grain && voxels[neighbor].grainname >= 0)
+		  if(good == 1 && gnames[neighbor] != grain && gnames[neighbor] >= 0)
           {
-			  onsurf++;
+			  vnlist[onsurf] = gnames[neighbor];
 			  nnum = m_Grains[grain].numneighbors;
 			  vector<int>* nlist = m_Grains[grain].neighborlist;
 			  if (nnum >= (0.9*nlist->size()))
 			  {
 				 nlist->resize(nnum + nListSize);
 			  }
-			  nlist->at(nnum) = voxels[neighbor].grainname;
+			  nlist->at(nnum) = gnames[neighbor];
 			  nnum++;
 			  m_Grains[grain].numneighbors = nnum;
-			  voxels[j].nearestneighbor = voxels[neighbor].grainname;
+			  onsurf++;
 		  }
 		}
 	}
+	vector<int>::iterator newend;
+	sort(vnlist.begin(),vnlist.end());
+    newend = unique(vnlist.begin(),vnlist.end());
+    vnlist.erase(newend,vnlist.end());
+	vnlist.erase(std::remove(nlist.begin(),nlist.end(),-1),nlist.end());
 	voxels[j].surfacevoxel = onsurf;
-	if(onsurf > 0) voxels[j].nearestneighbordistance = 0, voxels[j].neighbor = j;
-	if(onsurf == 0) voxels[j].nearestneighbordistance = -1, voxels[j].nearestneighbor = -1;
+	voxels[j].neighborlist->swap(vnlist);
+	if(vnlist.size() >= 3) voxels[j].nearestneighbordistance[0] = 0, voxels[j].nearestneighbordistance[1] = 0, voxels[j].nearestneighbordistance[2] = 0, voxels[j].nearestneighbor[2] = j, voxels[j].nearestneighbor[1] = j, voxels[j].nearestneighbor[2] = j;
+	if(vnlist.size() == 2) voxels[j].nearestneighbordistance[0] = 0, voxels[j].nearestneighbordistance[1] = 0, voxels[j].nearestneighbordistance[2] = -1, voxels[j].nearestneighbor[1] = j, voxels[j].nearestneighbor[1] = j, voxels[j].nearestneighbor[2] = -1;
+	if(vnlist.size() == 1) voxels[j].nearestneighbordistance[0] = 0, voxels[j].nearestneighbordistance[1] = -1, voxels[j].nearestneighbordistance[2] = -1, voxels[j].nearestneighbor[0] = j, voxels[j].nearestneighbor[1] = -1, voxels[j].nearestneighbor[2] = -1;
+	if(vnlist.size() == 0) voxels[j].nearestneighbordistance[0] = -1, voxels[j].nearestneighbordistance[1] = -1, voxels[j].nearestneighbordistance[2] = -1, voxels[j].nearestneighbor[0] = -1, voxels[j].nearestneighbor[1] = -1, voxels[j].nearestneighbor[2] = -1;
+	vnlist.resize(6,-1);
   }
+  delete [] gnames;
   vector<int>* nlistcopy;
   for(int i=1;i<numgrains;i++)
   {
@@ -2346,13 +2367,11 @@ void  ReconstructionFunc::find_centroids2D()
 void  ReconstructionFunc::find_euclidean_map()
 {
   int nearestneighbordistance = 0;
-  //  int checked = 1;
   int count = 1;
   int good = 1;
   double x, y, z;
   int neighpoint;
   int nearestneighbor;
-  int nndist;
   int neighbors[6];
   neighbors[0] = -xpoints * ypoints;
   neighbors[1] = -xpoints;
@@ -2360,147 +2379,80 @@ void  ReconstructionFunc::find_euclidean_map()
   neighbors[3] = 1;
   neighbors[4] = xpoints;
   neighbors[5] = xpoints * ypoints;
-  int nn;
-  int nearest_neighbor;
-#if FIND_EUCLIDEAN_FAST
-  int* voxel_Neighbor = new int[totalpoints];
   int* voxel_NearestNeighbor = new int[totalpoints];
   double* voxel_NearestNeighborDistance = new double[totalpoints];
-#endif
 
-  for (int a = 0; a < (totalpoints); ++a)
+  for(int loop=0;loop<3;loop++)
   {
-    if (voxels[a].surfacevoxel == 0)
-    {
-#if FIND_EUCLIDEAN_FAST
-      voxel_Neighbor[a] = -1;
-      voxel_NearestNeighbor[a] = -1;
-      voxel_NearestNeighborDistance[a] = -1;
-#else
-      voxels[a].neighbor = -1;
-      voxels[a].nearestneighbor = -1;
-      voxels[a].nearestneighbordistance = -1;
-#endif
-    }
-#if FIND_EUCLIDEAN_FAST
-    else {
-      voxel_Neighbor[a] = voxels[a].neighbor;
-      voxel_NearestNeighbor[a] = voxels[a].nearestneighbor;
-      voxel_NearestNeighborDistance[a] = voxels[a].nearestneighbordistance;
-    }
-#endif
+	  for (int a = 0; a < (totalpoints); ++a)
+	  {
+		  voxel_NearestNeighbor[a] = voxels[a].nearestneighbor[loop];
+		  voxel_NearestNeighborDistance[a] = voxels[a].nearestneighbordistance[loop];
+	  }
+	  while (count != 0)
+	  {
+		count = 0;
+		nearestneighbordistance++;
+		for (int i = 0; i < (totalpoints); ++i)
+		{
+		  if (voxel_NearestNeighbor[i] == -1)
+		  {
+			x = i % xpoints;
+			y = (i / xpoints) % ypoints;
+			z = i / (xpoints * ypoints);
+			for (int j = 0; j < 6; j++)
+			{
+			  good = 1;
+			  neighpoint = i + neighbors[j];
+			  if (j == 0 && z == 0) good = 0;
+			  else if (j == 5 && z == (zpoints - 1)) good = 0;
+			  else if (j == 1 && y == 0) good = 0;
+			  else if (j == 4 && y == (ypoints - 1)) good = 0;
+			  else if (j == 2 && x == 0) good = 0;
+			  else if (j == 3 && x == (xpoints - 1)) good = 0;
+			  if (good == 1)
+			  {
+				count++;
+				if (voxel_NearestNeighborDistance[neighpoint] != -1)
+				{
+				  voxel_NearestNeighbor[i] = voxel_NearestNeighbor[neighpoint];
+				}
+			  }
+			}
+		  }
+		}
+		for (int j = 0; j < (totalpoints); ++j)
+		{
+		  if (voxel_NearestNeighbor[j] != -1 && voxel_NearestNeighborDistance[j] == -1)
+		  {
+			voxel_NearestNeighborDistance[j] = nearestneighbordistance;
+		  }
+		}
+	  }
+	  double x1, x2, y1, y2, z1, z2;
+	  double dist;
+	  for (int j = 0; j < (totalpoints); j++)
+	  {
+		nearestneighbor = voxel_NearestNeighbor[j];
+		x1 = resx*double(j%xpoints); // find_xcoord(j);
+		y1 = resy*double((j/xpoints)%ypoints);// find_ycoord(j);
+		z1 = resz*double(j/(xpoints*ypoints)); // find_zcoord(j);
+		x2 = resx*double(nearestneighbor%xpoints); // find_xcoord(nearestneighbor);
+		y2 = resy*double((nearestneighbor/xpoints)%ypoints); // find_ycoord(nearestneighbor);
+		z2 = resz*double(nearestneighbor/(xpoints*ypoints)); // find_zcoord(nearestneighbor);
+		dist = ((x1 - x2) * (x1 - x2)) + ((y1 - y2) * (y1 - y2)) + ((z1 - z2) * (z1 - z2));
+		dist = pow(dist, 0.5);
+		voxel_NearestNeighborDistance[j] = dist;
+	  }
+	  for (int a = 0; a < (totalpoints); ++a)
+	  {
+		 voxels[a].nearestneighbor[loop] = voxel_NearestNeighbor[a];
+		 voxels[a].nearestneighbordistance[loop] = voxel_NearestNeighborDistance[a];
+	  }
   }
-  while (count != 0)
-  {
-    count = 0;
-    nearestneighbordistance++;
-    for (int i = 0; i < (totalpoints); ++i)
-    {
-#if FIND_EUCLIDEAN_FAST
-      nearest_neighbor = voxel_NearestNeighbor[i];
-#else
-      nearest_neighbor = voxels[i].nearestneighbor;
-#endif
-      if (nearest_neighbor == -1)
-      {
-        x = i % xpoints;
-        y = (i / xpoints) % ypoints;
-        z = i / (xpoints * ypoints);
-        for (int j = 0; j < 6; j++)
-        {
-          good = 1;
-          neighpoint = i + neighbors[j];
-          if (j == 0 && z == 0) good = 0;
-          else if (j == 5 && z == (zpoints - 1)) good = 0;
-          else if (j == 1 && y == 0) good = 0;
-          else if (j == 4 && y == (ypoints - 1)) good = 0;
-          else if (j == 2 && x == 0) good = 0;
-          else if (j == 3 && x == (xpoints - 1)) good = 0;
-          if (good == 1)
-          {
-            count++;
-#if FIND_EUCLIDEAN_FAST
-            nn = voxel_NearestNeighbor[neighpoint];
-            nndist = voxel_NearestNeighborDistance[neighpoint];
-#else
-            nn = voxels[neighpoint].nearestneighbor;
-            nndist = voxels[neighpoint].nearestneighbordistance;
-#endif
-            if (nndist != -1)
-            {
-#if FIND_EUCLIDEAN_FAST
-              voxel_NearestNeighbor[i] = nn;
-              voxel_Neighbor[i] = voxel_Neighbor[neighpoint];
-#else
-              voxels[i].nearestneighbor = nn;
-              voxels[i].neighbor = voxels[neighpoint].neighbor;
-#endif
-            }
-          }
-        }
-      }
-    }
-    for (int j = 0; j < (totalpoints); ++j)
-    {
-
-
-#if FIND_EUCLIDEAN_FAST
-      if (voxel_Neighbor[j] != -1)
-      {
-        voxel_NearestNeighborDistance[j] = nearestneighbordistance;
-      }
-#else
-      if (voxels[j].neighbor != -1)
-      {
-        voxels[j].nearestneighbordistance = nearestneighbordistance;
-      }
-#endif
-    }
-  }
-  double x1, x2, y1, y2, z1, z2;
-  double dist;
-  for (int j = 0; j < (totalpoints); j++)
-  {
-#if FIND_EUCLIDEAN_FAST
-    nearestneighbor = voxel_Neighbor[j];
-#else
-    nearestneighbor = voxels[j].neighbor;
-#endif
-    x1 = resx*double(j%xpoints); // find_xcoord(j);
-    y1 = resy*double((j/xpoints)%ypoints);// find_ycoord(j);
-    z1 = resz*double(j/(xpoints*ypoints)); // find_zcoord(j);
-    x2 = resx*double(nearestneighbor%xpoints); // find_xcoord(nearestneighbor);
-    y2 = resy*double((nearestneighbor/xpoints)%ypoints); // find_ycoord(nearestneighbor);
-    z2 = resz*double(nearestneighbor/(xpoints*ypoints)); // find_zcoord(nearestneighbor);
-    dist = ((x1 - x2) * (x1 - x2)) + ((y1 - y2) * (y1 - y2)) + ((z1 - z2) * (z1 - z2));
-    dist = pow(dist, 0.5);
-//    if (dist > 30)
-//    {
-//      //	int stop = 0;
-//    }
-#if FIND_EUCLIDEAN_FAST
-    voxel_NearestNeighborDistance[j] = dist;
-#else
-    voxels[j].nearestneighbordistance = dist;
-#endif
-  }
-
-#if FIND_EUCLIDEAN_FAST
-  for (int a = 0; a < (totalpoints); ++a)
-    {
-        voxels[a].neighbor = voxel_Neighbor[a];
-        voxels[a].nearestneighbor = voxel_NearestNeighbor[a];
-        voxels[a].nearestneighbordistance = voxel_NearestNeighborDistance[a];
-      }
-  delete [] voxel_Neighbor;
   delete [] voxel_NearestNeighbor;
   delete [] voxel_NearestNeighborDistance;
-
-  #endif
 }
-
-
-
 double ReconstructionFunc::find_xcoord(long index)
 {
   double x = resx*double(index%xpoints);
@@ -3174,7 +3126,7 @@ void  ReconstructionFunc::measure_misorientations (H5ReconStatsWriter::Pointer h
 	      misolist[3*j+2] = n3*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
 		  if (crystruct == AIM::Reconstruction::Cubic)
 	      {
-			  mbin = MisorientationCalculations::getMisoBinHexagonal(misolist[3*j],misolist[3*j+1],misolist[3*j+2]);
+			  mbin = MisorientationCalculations::getMisoBinCubic(misolist[3*j],misolist[3*j+1],misolist[3*j+2]);
 		  }
 	      if (crystruct == AIM::Reconstruction::Hexagonal)
 	      {
@@ -3198,6 +3150,7 @@ void  ReconstructionFunc::measure_misorientations (H5ReconStatsWriter::Pointer h
   }
   h5io->writeMisorientationBinsData(misobin, nummisobins);
   h5io->writeMicroTextureData(microbin, 10, numgrains);
+  delete [] misobin;
 }
 
 void  ReconstructionFunc::find_colors()
@@ -3832,6 +3785,91 @@ int ReconstructionFunc::volume_stats2D(H5ReconStatsWriter::Pointer h5io)
 
 
 
+void ReconstructionFunc::deformation_stats()
+{
+	ofstream outFile;
+	string filename = "Deformation_Stats.txt";
+	double avgkm = 0;
+	double avgiq = 0;
+	double avggbdist = 0;
+	double avgtjdist = 0;
+	double avgqpdist = 0;
+	double km, iq, gbdist, tjdist, qpdist, sf;
+	int gname;
+	double kmv[25][6];
+	int kmvbin;
+	int actualpoints = 0;
+	for(int i=0;i<25;i++)
+	{
+		kmv[i][0] = 0;
+		kmv[i][1] = 0;
+		kmv[i][2] = 0;
+		kmv[i][3] = 0;
+		kmv[i][4] = 0;
+		kmv[i][5] = 0;
+	}
+	for(int i=0;i<totalpoints;i++)
+	{
+		km = voxels[i].kernelmisorientation;
+		iq = voxels[i].imagequality;
+		if(km != 0.0)
+		{
+			gbdist = voxels[i].nearestneighbordistance[0];
+			tjdist = voxels[i].nearestneighbordistance[1];
+			qpdist = voxels[i].nearestneighbordistance[2];
+			avgkm = avgkm + km;
+			avgiq = avgiq + iq;
+			avggbdist = avggbdist + gbdist;
+			avggbdist = avgtjdist + tjdist;
+			avggbdist = avgqpdist + qpdist;
+			actualpoints++;
+		}
+	}
+	avgkm = avgkm/double(actualpoints);
+	avgiq = avgiq/double(actualpoints);
+	avggbdist = avggbdist/double(actualpoints);
+	avgtjdist = avgtjdist/double(actualpoints);
+	avgqpdist = avgqpdist/double(actualpoints);
+	for(int i=0;i<totalpoints;i++)
+	{
+		km = voxels[i].kernelmisorientation;
+		iq = voxels[i].imagequality;
+		gbdist = voxels[i].nearestneighbordistance[0];
+		tjdist = voxels[i].nearestneighbordistance[1];
+		qpdist = voxels[i].nearestneighbordistance[2];
+		gname = voxels[i].grainname;
+		sf = m_Grains[gname].schmidfactor;
+		if(km != 0.0)
+		{
+			kmvbin = int((km/avgkm)/0.25);
+			if(kmvbin > 24) kmvbin = 24;
+			kmv[kmvbin][0]++;
+			kmv[kmvbin][1] = kmv[kmvbin][1] + gbdist;
+			kmv[kmvbin][2] = kmv[kmvbin][2] + tjdist;
+			kmv[kmvbin][3] = kmv[kmvbin][3] + qpdist;
+			kmv[kmvbin][4] = kmv[kmvbin][4] + iq;
+			kmv[kmvbin][5] = kmv[kmvbin][5] + sf;
+		}
+	}
+	outFile.open(filename.c_str());
+	for(int i=0;i<25;i++)
+	{
+		if(kmv[i][0] > 0)
+		{
+			kmv[i][1] = kmv[i][1]/kmv[i][0];
+			kmv[i][2] = kmv[i][2]/kmv[i][0];
+			kmv[i][3] = kmv[i][3]/kmv[i][0];
+			kmv[i][3] = kmv[i][4]/kmv[i][0];
+			kmv[i][3] = kmv[i][5]/kmv[i][0];
+			outFile << i << "	" << kmv[i][1]/avggbdist << "	" << kmv[i][2]/avgtjdist << "	" <<kmv[i][3]/avgqpdist << "	" << kmv[i][4]/avgiq << "	" << kmv[i][5] << endl;
+		}
+		else
+		{
+			outFile << i << "	" << 0.0 << "	" << 0.0 << "	" << 0.0 <<  "	" << 0.0 << "	" << 0.0 << endl;
+		}
+	}
+	outFile.close();
+}
 #define WRITE_VTK_GRAIN_HEADER(FILE_TYPE)\
   fprintf(f, "# vtk DataFile Version 2.0\n");\
   fprintf(f, "data set from AIMReconstruction\n");\

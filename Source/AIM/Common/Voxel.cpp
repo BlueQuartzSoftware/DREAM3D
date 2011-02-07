@@ -21,8 +21,6 @@ imagequality(0.0),
 imagequality2(0.0),
 ellipfunc(0.0),
 alreadychecked(0),
-nearestneighbor(-1),
-nearestneighbordistance(-1),
 euler1(-1.0),
 euler2(-1.0),
 euler3(-1.0),
@@ -35,6 +33,7 @@ unassigned(0)
 {
 	grainlist = new std::vector<int>;
 	ellipfunclist = new std::vector<double>;
+	neighborlist = new std::vector<int>;
 }
 
 // -----------------------------------------------------------------------------
