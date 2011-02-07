@@ -290,7 +290,7 @@ void ReconstructionFunc::find_border()
 	   {
 	     w = MisorientationCalculations::getMisoQuatHexagonal(q1,q2,n1,n2,n3);
 	   }
-	   if(crystruct == AIM::Reconstruction::Cubic) 
+	   if(crystruct == AIM::Reconstruction::Cubic)
 	   {
 	     w = MisorientationCalculations::getMisoQuatCubic(q1,q2,n1,n2,n3);
 	   }
@@ -854,7 +854,7 @@ int  ReconstructionFunc::form_grains()
 			{
               w = MisorientationCalculations::getMisoQuatHexagonal(q1,q2,n1,n2,n3);
             }
-            if(crystruct == AIM::Reconstruction::Cubic) 
+            if(crystruct == AIM::Reconstruction::Cubic)
 			{
               w = MisorientationCalculations::getMisoQuatCubic(q1,q2,n1,n2,n3);
             }
@@ -1721,7 +1721,7 @@ void  ReconstructionFunc::homogenize_grains()
 	       {
 			  wmin = MisorientationCalculations::getMisoQuatHexagonal(q1,q2,n1,n2,n3);
 		   }
-           if(crystruct == AIM::Reconstruction::Cubic) 
+           if(crystruct == AIM::Reconstruction::Cubic)
 	       {
 		      wmin = MisorientationCalculations::getMisoQuatCubic(q1,q2,n1,n2,n3);
            }
@@ -3103,38 +3103,42 @@ void  ReconstructionFunc::find_eulerodf (H5ReconStatsWriter::Pointer h5io)
 void  ReconstructionFunc::measure_misorientations (H5ReconStatsWriter::Pointer h5io)
 {
   size_t initialsize = 10;
-  vector<double > misolist(initialsize, -1);
-  double degtorad = m_pi/180.0;
+
+  double degtorad = m_pi / 180.0;
   double n1, n2, n3;
-  int miso1bin, miso2bin, miso3bin, mbin;
+  int mbin;
   double w;
   double q1[5];
   double q2[5];
   double denom = 0;
   vector<int >* nlist;
-  double actualgrains = 0;
-  double misocount = 0;
-  double *misobin;
+
   int nummisobins = 0;
-  if(crystruct == AIM::Reconstruction::Cubic) nummisobins = 18*18*18;
-  if(crystruct == AIM::Reconstruction::Hexagonal) nummisobins = 36*36*12;
-  misobin = new double [nummisobins];
+  if (crystruct == AIM::Reconstruction::Cubic) nummisobins = 18 * 18 * 18;
+  if (crystruct == AIM::Reconstruction::Hexagonal) nummisobins = 36 * 36 * 12;
+  double* misobin = new double[nummisobins];
   double microbin[10];
   for (int e = 0; e < nummisobins; e++)
   {
     misobin[e] = 0;
     if (e < 10) microbin[e] = 0;
   }
-  int nname, neigh, size;
-  double microcount = 0;
-  double nsa, miso1, miso2, miso3;
-  vector<double >* mlist;
-  vector<double >* neighborsurfarealist;
+  int nname;
+  double microcount = 0.0;
+  double nsa;
+
+  std::vector<double >* neighborsurfarealist = NULL;
   for (int i = 1; i < numgrains; i++)
   {
+
     microcount = 0;
+
+    std::vector<double >* misolistPtr = new std::vector<double >(initialsize, -1);
+    std::vector<double >& misolist = *misolistPtr;
+    microcount = 0.0;
+
     nlist = m_Grains[i].neighborlist;
-	neighborsurfarealist = m_Grains[i].neighborsurfarealist;
+    neighborsurfarealist = m_Grains[i].neighborsurfarealist;
     q1[1] = m_Grains[i].avg_quat[1];
     q1[2] = m_Grains[i].avg_quat[2];
     q1[3] = m_Grains[i].avg_quat[3];
@@ -3144,60 +3148,59 @@ void  ReconstructionFunc::measure_misorientations (H5ReconStatsWriter::Pointer h
     {
       size = nlist->size();
     }
-    misolist.resize(size*3, -1);
+    misolist.resize(size * 3, -1);
     for (int j = 0; j < size; j++)
     {
       nname = nlist->at(j);
       nsa = neighborsurfarealist->at(j);
-	  if(nname > 0)
-	  {
-	      q2[1] = m_Grains[nname].avg_quat[1];
-	      q2[2] = m_Grains[nname].avg_quat[2];
-	      q2[3] = m_Grains[nname].avg_quat[3];
-	      q2[4] = m_Grains[nname].avg_quat[4];
-	      if (crystruct == AIM::Reconstruction::Hexagonal)
-	      {
-	        w = MisorientationCalculations::getMisoQuatHexagonal(q1, q2, n1, n2, n3);
-	      }
-	      if (crystruct == AIM::Reconstruction::Cubic)
-	      {
-	        w = MisorientationCalculations::getMisoQuatCubic(q1, q2, n1, n2, n3);
-	      }
-		  w = w*degtorad;
-		  denom = (n1*n1)+(n2*n2)+(n3*n3);
-		  denom = pow(denom,0.5);
-		  n1 = n1/denom;
-		  n2 = n2/denom;
-		  n3 = n3/denom;
-		  misolist[3*j] = n1*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
-	      misolist[3*j+1] = n2*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
-	      misolist[3*j+2] = n3*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
-		  if (crystruct == AIM::Reconstruction::Cubic)
-	      {
-			  mbin = MisorientationCalculations::getMisoBinHexagonal(misolist[3*j],misolist[3*j+1],misolist[3*j+2]);
-		  }
-	      if (crystruct == AIM::Reconstruction::Hexagonal)
-	      {
-			  mbin = MisorientationCalculations::getMisoBinHexagonal(misolist[3*j],misolist[3*j+1],misolist[3*j+2]);
-		  }
-		  if(w < 0.261799)
-		  {
-			microcount++;
-		  }
-	      if (nname > i || m_Grains[nname].surfacegrain == 1)
-          {
-			  misobin[mbin] = misobin[mbin] + (nsa / totalsurfacearea);
-          }
-	  }
-	}
-	int micbin = int((double(microcount)/double(size))/0.1);
-	microbin[micbin]++;
-    m_Grains[i].misorientationlist = new std::vector<double >(misolist.size());
-    m_Grains[i].misorientationlist->swap(misolist);
-    misolist.clear();
+      if (nname > 0)
+      {
+        q2[1] = m_Grains[nname].avg_quat[1];
+        q2[2] = m_Grains[nname].avg_quat[2];
+        q2[3] = m_Grains[nname].avg_quat[3];
+        q2[4] = m_Grains[nname].avg_quat[4];
+        if (crystruct == AIM::Reconstruction::Hexagonal)
+        {
+          w = MisorientationCalculations::getMisoQuatHexagonal(q1, q2, n1, n2, n3);
+        }
+        if (crystruct == AIM::Reconstruction::Cubic)
+        {
+          w = MisorientationCalculations::getMisoQuatCubic(q1, q2, n1, n2, n3);
+        }
+        w = w * degtorad;
+        denom = (n1 * n1) + (n2 * n2) + (n3 * n3);
+        denom = pow(denom, 0.5);
+        n1 = n1 / denom;
+        n2 = n2 / denom;
+        n3 = n3 / denom;
+        misolist[3 * j] = n1 * pow(((3.0 / 4.0) * (w - sin(w))), (1.0 / 3.0));
+        misolist[3 * j + 1] = n2 * pow(((3.0 / 4.0) * (w - sin(w))), (1.0 / 3.0));
+        misolist[3 * j + 2] = n3 * pow(((3.0 / 4.0) * (w - sin(w))), (1.0 / 3.0));
+        if (crystruct == AIM::Reconstruction::Cubic)
+        {
+          mbin = MisorientationCalculations::getMisoBinHexagonal(misolist[3 * j], misolist[3 * j + 1], misolist[3 * j + 2]);
+        }
+        if (crystruct == AIM::Reconstruction::Hexagonal)
+        {
+          mbin = MisorientationCalculations::getMisoBinHexagonal(misolist[3 * j], misolist[3 * j + 1], misolist[3 * j + 2]);
+        }
+        if (w < 0.261799)
+        {
+          microcount++;
+        }
+        if (nname > i || m_Grains[nname].surfacegrain == 1)
+        {
+          misobin[mbin] = misobin[mbin] + (nsa / totalsurfacearea);
+        }
+      }
+    }
+    int micbin = int((double(microcount) / double(size)) / 0.1);
+    microbin[micbin]++;
+    m_Grains[i].misorientationlist = misolistPtr;
   }
   h5io->writeMisorientationBinsData(misobin, nummisobins);
   h5io->writeMicroTextureData(microbin, 10, numgrains);
+  delete[] misobin;
 }
 
 void  ReconstructionFunc::find_colors()
