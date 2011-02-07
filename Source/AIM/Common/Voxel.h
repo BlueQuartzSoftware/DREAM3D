@@ -40,8 +40,8 @@ class AIMCOMMON_EXPORT Voxel
     double imagequality2;
    	double ellipfunc;
     int alreadychecked;
-    int nearestneighbor;
-    double nearestneighbordistance;
+    int nearestneighbor[3];
+    double nearestneighbordistance[3];
     double euler1;
     double euler2;
     double euler3;
@@ -54,6 +54,7 @@ class AIMCOMMON_EXPORT Voxel
     double quat[5];
     std::vector<int >* grainlist;
     std::vector<double >* ellipfunclist;
+    std::vector<int >* neighborlist;
 
 };
 

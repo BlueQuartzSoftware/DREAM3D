@@ -167,13 +167,11 @@ class AIMCOMMON_EXPORT ReconstructionFunc
     void measure_misorientations(H5ReconStatsWriter::Pointer h5io);
     void find_colors();
     void find_schmids();
-
     void write_graindata(const std::string &graindataFile);
     void align_sections(const std::string &filename );
-
-
     int volume_stats(H5ReconStatsWriter::Pointer h5io);
     int volume_stats2D(H5ReconStatsWriter::Pointer h5io);
+	void deformation_stats();
 
 
     /**

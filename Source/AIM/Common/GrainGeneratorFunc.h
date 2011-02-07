@@ -169,17 +169,13 @@ public:
 	void write_eulerangles(const std::string &filename);
   void write_graindata(const std::string &filename);
   void writeCube(const std::string &filename, int numgrains);
-
-
 	int readReconStatsData(H5ReconStatsReader::Pointer h5io);
   int readAxisOrientationData(H5ReconStatsReader::Pointer h5io);
   int readODFData(H5ReconStatsReader::Pointer h5io);
   int readMisorientationData(H5ReconStatsReader::Pointer h5io);
   int readMicroTextureData(H5ReconStatsReader::Pointer h5io);
-
   void read_structure(const std::string &filename);
   int pack_grains(const std::string &filename, int numgrains);
-
 	void generate_grain(int);
 	void assign_eulers(int);
 	void insert_grain(size_t grainNum);

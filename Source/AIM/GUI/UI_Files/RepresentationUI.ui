@@ -846,59 +846,31 @@
         </item>
         <item>
          <layout class="QGridLayout" name="gridLayout_12">
-          <item row="0" column="1" rowspan="6">
+          <item row="0" column="1" rowspan="5">
            <layout class="QFormLayout" name="formLayout_5">
             <property name="fieldGrowthPolicy">
-             <enum>QFormLayout::FieldsStayAtSizeHint</enum>
+             <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
             </property>
             <property name="labelAlignment">
              <set>Qt::AlignCenter</set>
             </property>
             <property name="horizontalSpacing">
-             <number>6</number>
+             <number>3</number>
             </property>
             <property name="verticalSpacing">
-             <number>6</number>
+             <number>4</number>
             </property>
             <property name="rightMargin">
-             <number>10</number>
+             <number>0</number>
             </property>
-            <item row="2" column="1">
-             <widget class="QCheckBox" name="rec_mergeTwins">
-              <property name="text">
-               <string>Merge Twins</string>
-              </property>
-             </widget>
-            </item>
-            <item row="3" column="1">
-             <widget class="QCheckBox" name="rec_fillinSample">
-              <property name="text">
-               <string>Rectangularized Sample</string>
-              </property>
-             </widget>
-            </item>
-            <item row="4" column="1">
-             <widget class="QCheckBox" name="rec_alreadyFormed">
-              <property name="text">
-               <string>Grains Formed</string>
-              </property>
-             </widget>
-            </item>
-            <item row="5" column="1">
-             <widget class="QCheckBox" name="rec_mergeColonies">
-              <property name="text">
-               <string>Merge Colonies</string>
-              </property>
-             </widget>
-            </item>
-            <item row="6" column="0">
+            <item row="8" column="0">
              <widget class="QLabel" name="label_33">
               <property name="text">
-               <string>Cryst. Struct.</string>
+               <string>Crystal Structure</string>
               </property>
              </widget>
             </item>
-            <item row="6" column="1">
+            <item row="8" column="1">
              <widget class="QComboBox" name="rec_CrystalStructure">
               <item>
                <property name="text">
@@ -912,14 +884,14 @@
               </item>
              </widget>
             </item>
-            <item row="7" column="0">
+            <item row="10" column="0">
              <widget class="QLabel" name="label_34">
               <property name="text">
                <string>Alignment Method</string>
               </property>
              </widget>
             </item>
-            <item row="7" column="1">
+            <item row="10" column="1">
              <widget class="QComboBox" name="rec_AlignMeth">
               <item>
                <property name="text">
@@ -938,29 +910,75 @@
               </item>
              </widget>
             </item>
+            <item row="6" column="0" colspan="2">
+             <widget class="QCheckBox" name="rec_alreadyFormed">
+              <property name="layoutDirection">
+               <enum>Qt::RightToLeft</enum>
+              </property>
+              <property name="text">
+               <string>Grains Formed</string>
+              </property>
+             </widget>
+            </item>
+            <item row="5" column="0" colspan="2">
+             <widget class="QCheckBox" name="rec_fillinSample">
+              <property name="layoutDirection">
+               <enum>Qt::RightToLeft</enum>
+              </property>
+              <property name="text">
+               <string>Rectangularize Sample</string>
+              </property>
+             </widget>
+            </item>
+            <item row="4" column="0" colspan="2">
+             <widget class="QCheckBox" name="rec_mergeTwins">
+              <property name="layoutDirection">
+               <enum>Qt::RightToLeft</enum>
+              </property>
+              <property name="text">
+               <string>Merge Twins</string>
+              </property>
+             </widget>
+            </item>
+            <item row="7" column="0" colspan="2">
+             <widget class="QCheckBox" name="rec_mergeColonies">
+              <property name="layoutDirection">
+               <enum>Qt::RightToLeft</enum>
+              </property>
+              <property name="text">
+               <string>Merge Colonies</string>
+              </property>
+             </widget>
+            </item>
            </layout>
           </item>
-          <item row="0" column="2" rowspan="6">
+          <item row="0" column="3" rowspan="5">
            <layout class="QFormLayout" name="formLayout_3">
             <property name="fieldGrowthPolicy">
-             <enum>QFormLayout::FieldsStayAtSizeHint</enum>
+             <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
             </property>
             <property name="labelAlignment">
              <set>Qt::AlignCenter</set>
             </property>
             <property name="horizontalSpacing">
-             <number>6</number>
+             <number>5</number>
             </property>
             <property name="verticalSpacing">
-             <number>6</number>
+             <number>4</number>
             </property>
             <property name="rightMargin">
-             <number>10</number>
+             <number>5</number>
             </property>
             <item row="3" column="0">
              <widget class="QLabel" name="label_31">
+              <property name="layoutDirection">
+               <enum>Qt::LeftToRight</enum>
+              </property>
               <property name="text">
-               <string>Min. Image Quality</string>
+               <string>Minimum Image Quality</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignCenter</set>
               </property>
              </widget>
             </item>
@@ -980,7 +998,7 @@
             <item row="4" column="0">
              <widget class="QLabel" name="label_10">
               <property name="text">
-               <string>Disorient. Tol.</string>
+               <string>Disorientation Tolerance</string>
               </property>
              </widget>
             </item>
@@ -1012,7 +1030,7 @@
             <item row="5" column="0">
              <widget class="QLabel" name="label_8">
               <property name="text">
-               <string>Min. Grain Size</string>
+               <string>Minimum Grain Size</string>
               </property>
              </widget>
             </item>
@@ -1032,7 +1050,7 @@
             <item row="6" column="0">
              <widget class="QLabel" name="label_9">
               <property name="text">
-               <string>Min. Confidence Index</string>
+               <string>Minimum Confidence Index</string>
               </property>
              </widget>
             </item>
@@ -1055,7 +1073,7 @@
             <item row="7" column="0">
              <widget class="QLabel" name="label_46">
               <property name="text">
-               <string>Down-sample Res.</string>
+               <string>Down-sample Resolution</string>
               </property>
              </widget>
             </item>
@@ -1069,7 +1087,7 @@
             <item row="8" column="0">
              <widget class="QLabel" name="label_59">
               <property name="text">
-               <string>Bin Step Size</string>
+               <string>Grain Size Bin Step-Size</string>
               </property>
              </widget>
             </item>
@@ -1082,8 +1100,21 @@
             </item>
            </layout>
           </item>
-          <item row="0" column="3" rowspan="6">
+          <item row="0" column="4" rowspan="5">
            <spacer name="horizontalSpacer">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item row="0" column="2">
+           <spacer name="horizontalSpacer_3">
             <property name="orientation">
              <enum>Qt::Horizontal</enum>
             </property>
@@ -2556,7 +2587,7 @@
      <x>0</x>
      <y>0</y>
      <width>683</width>
-     <height>22</height>
+     <height>18</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -2627,6 +2658,9 @@
   <tabstop>sm_InputFileBtn</tabstop>
  </tabstops>
  <resources>
+  <include location="../../../../Resources/icons/images/Icons.qrc"/>
+  <include location="../../../../Resources/icons/images/Icons.qrc"/>
+  <include location="../../../../Resources/icons/images/Icons.qrc"/>
   <include location="../../../../Resources/icons/images/Icons.qrc"/>
   <include location="../../../../Resources/icons/images/Icons.qrc"/>
   <include location="../../../../Resources/icons/images/Icons.qrc"/>
