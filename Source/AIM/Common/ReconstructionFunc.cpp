@@ -2152,7 +2152,7 @@ void  ReconstructionFunc::find_neighbors()
           if(k == 4 && row == (ypoints-1)) good = 0;
           if(k == 2 && column == 0) good = 0;
           if(k == 3 && column == (xpoints-1)) good = 0;
-		  if(good == 1 && gnames[neighbor] != grain && gnames[neighbor] >= 0)
+		  if(good == 1 && gnames[neighbor] != grain && gnames[neighbor] > 0)
           {
 			  vnlist[onsurf] = gnames[neighbor];
 			  nnum = m_Grains[grain].numneighbors;
@@ -2168,17 +2168,21 @@ void  ReconstructionFunc::find_neighbors()
 		  }
 		}
 	}
-	vector<int>::iterator newend;
-	sort(vnlist.begin(),vnlist.end());
-    newend = unique(vnlist.begin(),vnlist.end());
-    vnlist.erase(newend,vnlist.end());
-	vnlist.erase(std::remove(nlist.begin(),nlist.end(),-1),nlist.end());
-	voxels[j].surfacevoxel = onsurf;
-	voxels[j].neighborlist->swap(vnlist);
-	if(vnlist.size() >= 3) voxels[j].nearestneighbordistance[0] = 0, voxels[j].nearestneighbordistance[1] = 0, voxels[j].nearestneighbordistance[2] = 0, voxels[j].nearestneighbor[2] = j, voxels[j].nearestneighbor[1] = j, voxels[j].nearestneighbor[2] = j;
-	if(vnlist.size() == 2) voxels[j].nearestneighbordistance[0] = 0, voxels[j].nearestneighbordistance[1] = 0, voxels[j].nearestneighbordistance[2] = -1, voxels[j].nearestneighbor[1] = j, voxels[j].nearestneighbor[1] = j, voxels[j].nearestneighbor[2] = -1;
-	if(vnlist.size() == 1) voxels[j].nearestneighbordistance[0] = 0, voxels[j].nearestneighbordistance[1] = -1, voxels[j].nearestneighbordistance[2] = -1, voxels[j].nearestneighbor[0] = j, voxels[j].nearestneighbor[1] = -1, voxels[j].nearestneighbor[2] = -1;
-	if(vnlist.size() == 0) voxels[j].nearestneighbordistance[0] = -1, voxels[j].nearestneighbordistance[1] = -1, voxels[j].nearestneighbordistance[2] = -1, voxels[j].nearestneighbor[0] = -1, voxels[j].nearestneighbor[1] = -1, voxels[j].nearestneighbor[2] = -1;
+	if(onsurf > 0)
+	{
+		vector<int>::iterator newend;
+		sort(vnlist.begin(),vnlist.end());
+	    newend = unique(vnlist.begin(),vnlist.end());
+	    vnlist.erase(newend,vnlist.end());
+		vnlist.erase(std::remove(vnlist.begin(),vnlist.end(),-1),vnlist.end());
+		voxels[j].surfacevoxel = onsurf;
+		voxels[j].neighborlist = new std::vector<int>(6);
+		voxels[j].neighborlist->swap(vnlist);
+	}
+	if(onsurf >= 3) voxels[j].nearestneighbordistance[0] = 0, voxels[j].nearestneighbordistance[1] = 0, voxels[j].nearestneighbordistance[2] = 0, voxels[j].nearestneighbor[0] = j, voxels[j].nearestneighbor[1] = j, voxels[j].nearestneighbor[2] = j;
+	if(onsurf == 2) voxels[j].nearestneighbordistance[0] = 0, voxels[j].nearestneighbordistance[1] = 0, voxels[j].nearestneighbordistance[2] = -1, voxels[j].nearestneighbor[0] = j, voxels[j].nearestneighbor[1] = j, voxels[j].nearestneighbor[2] = -1;
+	if(onsurf == 1) voxels[j].nearestneighbordistance[0] = 0, voxels[j].nearestneighbordistance[1] = -1, voxels[j].nearestneighbordistance[2] = -1, voxels[j].nearestneighbor[0] = j, voxels[j].nearestneighbor[1] = -1, voxels[j].nearestneighbor[2] = -1;
+	if(onsurf == 0) voxels[j].nearestneighbordistance[0] = -1, voxels[j].nearestneighbordistance[1] = -1, voxels[j].nearestneighbordistance[2] = -1, voxels[j].nearestneighbor[0] = -1, voxels[j].nearestneighbor[1] = -1, voxels[j].nearestneighbor[2] = -1;
 	vnlist.resize(6,-1);
   }
   delete [] gnames;
@@ -3823,8 +3827,8 @@ void ReconstructionFunc::deformation_stats()
 			avgkm = avgkm + km;
 			avgiq = avgiq + iq;
 			avggbdist = avggbdist + gbdist;
-			avggbdist = avgtjdist + tjdist;
-			avggbdist = avgqpdist + qpdist;
+			avgtjdist = avgtjdist + tjdist;
+			avgqpdist = avgqpdist + qpdist;
 			actualpoints++;
 		}
 	}
@@ -3862,8 +3866,8 @@ void ReconstructionFunc::deformation_stats()
 			kmv[i][1] = kmv[i][1]/kmv[i][0];
 			kmv[i][2] = kmv[i][2]/kmv[i][0];
 			kmv[i][3] = kmv[i][3]/kmv[i][0];
-			kmv[i][3] = kmv[i][4]/kmv[i][0];
-			kmv[i][3] = kmv[i][5]/kmv[i][0];
+			kmv[i][4] = kmv[i][4]/kmv[i][0];
+			kmv[i][5] = kmv[i][5]/kmv[i][0];
 			outFile << i << "	" << kmv[i][1]/avggbdist << "	" << kmv[i][2]/avgtjdist << "	" <<kmv[i][3]/avgqpdist << "	" << kmv[i][4]/avgiq << "	" << kmv[i][5] << endl;
 		}
 		else
