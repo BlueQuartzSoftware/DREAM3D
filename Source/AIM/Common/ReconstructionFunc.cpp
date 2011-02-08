@@ -46,7 +46,6 @@ const double sin_wmin_pos_1_over_2 = sin(acos_pos_one/2.0);
 // -i C:\Users\GroebeMA\Desktop\NewFolder --outputDir C:\Users\GroebeMA\Desktop\NewFolder -f Slice_ --angMaxSlice 400 -s 1 -e 30 -z 0.25 -t -g 10 -c 0.1 -o 5.0 -x 2
 #endif
 
-#define WRITE_ASCII_VTK_FILE 1
 
 using namespace std;
 
@@ -3159,7 +3158,7 @@ void  ReconstructionFunc::measure_misorientations (H5ReconStatsWriter::Pointer h
 
 void  ReconstructionFunc::find_colors()
 {
-  double red, green, blue;
+//  double red, green, blue;
   unsigned char rgb[3] = {0, 0, 0};
   double RefDirection[3] = {0.0, 0.0, 1.0};
   for (int i = 1; i < numgrains; i++)
@@ -3976,16 +3975,14 @@ int ReconstructionFunc::writeIPFVizFile(const std::string &file)
   FILE* f = NULL;
   f = fopen(file.c_str(), "w");
   if (NULL == f) {return 1;}
-#if WRITE_ASCII_VTK_FILE
-  WRITE_VTK_GRAIN_HEADER("ASCII")
-#else
+#if AIM_WRITE_BINARY_VTK_FILE
   WRITE_VTK_GRAIN_HEADER("BINARY")
+#else
+  WRITE_VTK_GRAIN_HEADER("ASCII")
 #endif
 
   size_t total = xpoints*ypoints*zpoints;
-#if WRITE_ASCII_VTK_FILE
-  WRITE_VTK_GRAIN_IDS()
-#else
+#if AIM_WRITE_BINARY_VTK_FILE
   fprintf(f, "SCALARS GrainID int  1\n");
   fprintf(f, "LOOKUP_TABLE default\n");
   int* gn = new int[total];
@@ -4007,37 +4004,11 @@ int ReconstructionFunc::writeIPFVizFile(const std::string &file)
     fclose(f);
     return -1;
   }
+#else
+  WRITE_VTK_GRAIN_IDS()
 #endif
 
-#if WRITE_ASCII_VTK_FILE
-  fprintf(f, "COLOR_SCALARS IPF_Colors 3\n");
-  double red,green,blue;
-  double q1[4];
-  unsigned char rgb[3] = {0, 0, 0};
-  double RefDirection[3] = {0.0, 0.0, 1.0};
-  for (size_t i = 0; i < total; i++)
-  {
-    if(crystruct == AIM::Reconstruction::Cubic)
-    {
-      OIMColoring::GenerateIPFColor(voxels[i].euler1, voxels[i].euler2, voxels[i].euler3, RefDirection[0], RefDirection[1], RefDirection[2], rgb);
-      red = static_cast<double>(double(rgb[0])/255.0);
-      green = static_cast<double>(double(rgb[1])/255.0);
-      blue = static_cast<double>(double(rgb[2])/255.0);
-    }
-    if(crystruct == AIM::Reconstruction::Hexagonal)
-    {
-      q1[0]=voxels[i].quat[1];
-      q1[1]=voxels[i].quat[2];
-      q1[2]=voxels[i].quat[3];
-      q1[3]=voxels[i].quat[4];
-      OIMColoring::CalculateHexIPFColor(q1, rgb);
-      red = static_cast<double>(double(rgb[0])/255.0);
-      green = static_cast<double>(double(rgb[1])/255.0);
-      blue = static_cast<double>(double(rgb[2])/255.0);
-    }
-    fprintf(f, "%f %f %f\n",red, green, blue);
-  }
-#else
+#if AIM_WRITE_BINARY_VTK_FILE
   fprintf(f, "COLOR_SCALARS IPF_Colors 4\n");
   // Allocate our RGBA array
   unsigned char* rgba = new unsigned char[total * 4];
@@ -4071,11 +4042,41 @@ int ReconstructionFunc::writeIPFVizFile(const std::string &file)
     fclose(f);
     return -1;
   }
+#else
+
+  fprintf(f, "COLOR_SCALARS IPF_Colors 3\n");
+  double red,green,blue;
+  double q1[4];
+  unsigned char rgb[3] = {0, 0, 0};
+  double RefDirection[3] = {0.0, 0.0, 1.0};
+  for (size_t i = 0; i < total; i++)
+  {
+    if(crystruct == AIM::Reconstruction::Cubic)
+    {
+      OIMColoring::GenerateIPFColor(voxels[i].euler1, voxels[i].euler2, voxels[i].euler3, RefDirection[0], RefDirection[1], RefDirection[2], rgb);
+      red = static_cast<double>(double(rgb[0])/255.0);
+      green = static_cast<double>(double(rgb[1])/255.0);
+      blue = static_cast<double>(double(rgb[2])/255.0);
+    }
+    if(crystruct == AIM::Reconstruction::Hexagonal)
+    {
+      q1[0]=voxels[i].quat[1];
+      q1[1]=voxels[i].quat[2];
+      q1[2]=voxels[i].quat[3];
+      q1[3]=voxels[i].quat[4];
+      OIMColoring::CalculateHexIPFColor(q1, rgb);
+      red = static_cast<double>(double(rgb[0])/255.0);
+      green = static_cast<double>(double(rgb[1])/255.0);
+      blue = static_cast<double>(double(rgb[2])/255.0);
+    }
+    fprintf(f, "%f %f %f\n",red, green, blue);
+  }
 #endif
 
   fclose(f);
   return 0;
 }
+
 int  ReconstructionFunc::writeDownSampledVizFile(const std::string &file )
 {
   FILE* f = NULL;

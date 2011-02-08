@@ -126,6 +126,13 @@ IF ( CMAKE_BUILD_TYPE MATCHES Debug )
   ADD_DEFINITIONS(-Wall)
 ENDIF ( CMAKE_BUILD_TYPE MATCHES Debug )
 
+set(AIM_WRITE_BINARY_VTK_FILE)
+option(AIM_WRITE_BINARY_VTK_FILES "Write Binary VTK Files instead of ASCII files" OFF)
+if (AIM_WRITE_BINARY_VTK_FILES)
+ set(AIM_WRITE_BINARY_VTK_FILE 1)
+endif()
+
+
 # --------------------------------------------------------------------
 # If was are using GCC, make the compiler messages on a single line
 IF(CMAKE_COMPILER_IS_GNUCC)
