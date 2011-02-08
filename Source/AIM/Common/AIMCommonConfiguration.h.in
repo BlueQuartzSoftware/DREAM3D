@@ -15,3 +15,6 @@
 
 /* Define to 1 or 0 if you want to write ASCII or Binary VTK Files */
 #cmakedefine AIM_WRITE_BINARY_VTK_FILE @AIM_WRITE_BINARY_VTK_FILE@
+
+/* define to 1 if we are using parallel algorithms */
+#cmakedefine AIM_USE_PARALLEL_ALGORITHMS @AIM_USE_PARALLEL_ALGORITHMS@

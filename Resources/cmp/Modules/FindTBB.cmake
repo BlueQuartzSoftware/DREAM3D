@@ -87,7 +87,7 @@ endif (CMAKE_SYSTEM MATCHES "SunOS.*")
 #-- Clear the public variables
 set (TBB_FOUND "NO")
 
-
+message(STATUS "TBB_INSTALL_DIR: ${TBB_INSTALL_DIR}")
 #-- Find TBB install dir and set ${_TBB_INSTALL_DIR} and cached ${TBB_INSTALL_DIR}
 # first: use CMake variable TBB_INSTALL_DIR
 if (TBB_INSTALL_DIR)
@@ -147,47 +147,62 @@ find_path(TBB_INCLUDE_DIR
     NO_DEFAULT_PATH
 )
 mark_as_advanced(TBB_INCLUDE_DIR)
+message(STATUS "TBB_INCLUDE_DIR: ${TBB_INCLUDE_DIR}")
 
 
 #-- Look for libraries
 # GvdB: $ENV{TBB_ARCH_PLATFORM} is set by the build script tbbvars[.bat|.sh|.csh]
-if (NOT $ENV{TBB_ARCH_PLATFORM} STREQUAL "")
+message(STATUS "ENV{TBB_ARCH_PLATFORM}: $ENV{TBB_ARCH_PLATFORM}")
+# if (NOT $ENV{TBB_ARCH_PLATFORM} STREQUAL "")
     set (_TBB_LIBRARY_DIR 
          ${_TBB_INSTALL_DIR}/lib/$ENV{TBB_ARCH_PLATFORM}
          ${_TBB_INSTALL_DIR}/$ENV{TBB_ARCH_PLATFORM}/lib
         )
-else (NOT $ENV{TBB_ARCH_PLATFORM} STREQUAL "")
+#else (NOT $ENV{TBB_ARCH_PLATFORM} STREQUAL "")
     # HH: deprecated
-    message(STATUS "[Warning] FindTBB.cmake: The use of TBB_ARCHITECTURE and TBB_COMPILER is deprecated and may not be supported in future versions. Please set $ENV{TBB_ARCH_PLATFORM} (using tbbvars.[bat|csh|sh]).")
-    set (TBB_LIBRARY_DIR "${_TBB_INSTALL_DIR}/${_TBB_ARCHITECTURE}/${_TBB_COMPILER}/lib")
-endif (NOT $ENV{TBB_ARCH_PLATFORM} STREQUAL "")
+#    message(STATUS "[Warning] FindTBB.cmake: The use of TBB_ARCHITECTURE and TBB_COMPILER is deprecated and may not be supported in future versions. Please set $ENV{TBB_ARCH_PLATFORM} (using tbbvars.[bat|csh|sh]).")
+#    set (TBB_LIBRARY_DIR "${_TBB_INSTALL_DIR}/${_TBB_ARCHITECTURE}/${_TBB_COMPILER}/lib")
+#endif (NOT $ENV{TBB_ARCH_PLATFORM} STREQUAL "")
 
-find_library(TBB_LIBRARY        ${_TBB_LIB_NAME}        ${_TBB_LIBRARY_DIR} NO_DEFAULT_PATH)
-find_library(TBB_MALLOC_LIBRARY ${_TBB_LIB_MALLOC_NAME} ${_TBB_LIBRARY_DIR} NO_DEFAULT_PATH)
+message(STATUS "_TBB_LIB_NAME: ${_TBB_LIB_NAME}")
+message(STATUS "_TBB_LIBRARY_DIR: ${_TBB_LIBRARY_DIR}")
 
-#Extract path from TBB_LIBRARY name
-get_filename_component(TBB_LIBRARY_DIR ${TBB_LIBRARY} PATH)
+
+find_library(TBB_LIBRARY_RELEASE        ${_TBB_LIB_NAME}        ${_TBB_LIBRARY_DIR} NO_DEFAULT_PATH)
+find_library(TBB_MALLOC_LIBRARY_RELEASE ${_TBB_LIB_MALLOC_NAME} ${_TBB_LIBRARY_DIR} NO_DEFAULT_PATH)
+
+
 
 #TBB_CORRECT_LIB_DIR(TBB_LIBRARY)
 #TBB_CORRECT_LIB_DIR(TBB_MALLOC_LIBRARY)
-mark_as_advanced(TBB_LIBRARY TBB_MALLOC_LIBRARY)
+#mark_as_advanced(TBB_LIBRARY TBB_MALLOC_LIBRARY)
 
 #-- Look for debug libraries
 find_library(TBB_LIBRARY_DEBUG        ${_TBB_LIB_DEBUG_NAME}        ${_TBB_LIBRARY_DIR} NO_DEFAULT_PATH)
 find_library(TBB_MALLOC_LIBRARY_DEBUG ${_TBB_LIB_MALLOC_DEBUG_NAME} ${_TBB_LIBRARY_DIR} NO_DEFAULT_PATH)
 #TBB_CORRECT_LIB_DIR(TBB_LIBRARY_DEBUG)
 #TBB_CORRECT_LIB_DIR(TBB_MALLOC_LIBRARY_DEBUG)
-mark_as_advanced(TBB_LIBRARY_DEBUG TBB_MALLOC_LIBRARY_DEBUG)
+#mark_as_advanced(TBB_LIBRARY_DEBUG TBB_MALLOC_LIBRARY_DEBUG)
 
+
+# include the macro to adjust libraries
+INCLUDE (${CMP_MODULES_SOURCE_DIR}/cmpAdjustLibVars.cmake)
+cmp_ADJUST_LIB_VARS(TBB)
+cmp_ADJUST_LIB_VARS(TBB_MALLOC)
 
 if (TBB_INCLUDE_DIR)
     if (TBB_LIBRARY)
-        set (TBB_FOUND "YES")
-        set (TBB_LIBRARIES ${TBB_LIBRARY} ${TBB_MALLOC_LIBRARY} ${TBB_LIBRARIES})
-        set (TBB_DEBUG_LIBRARIES ${TBB_LIBRARY_DEBUG} ${TBB_MALLOC_LIBRARY_DEBUG} ${TBB_DEBUG_LIBRARIES})
-        set (TBB_INCLUDE_DIRS ${TBB_INCLUDE_DIR} CACHE PATH "TBB include directory" FORCE)
-        set (TBB_LIBRARY_DIRS ${TBB_LIBRARY_DIR} CACHE PATH "TBB library directory" FORCE)
-        mark_as_advanced(TBB_INCLUDE_DIRS TBB_LIBRARY_DIRS TBB_LIBRARIES TBB_DEBUG_LIBRARIES)
+        set (TBB_FOUND 1)
+        set (TBB_LIBRARIES ${TBB_LIBRARY} )
+        set (TBB_MALLOC_LIBRARIES ${TBB_MALLOC_LIBRARY})
+        set (TBB_INCLUDE_DIRS ${TBB_INCLUDE_DIR} CACHE PATH "TBB include directory")
+        IF (TBB_LIBRARY_DEBUG)
+            GET_FILENAME_COMPONENT(TBB_LIBRARY_PATH ${TBB_LIBRARY_DEBUG} PATH)
+            SET(TBB_LIBRARY_DIR  ${TBB_LIBRARY_PATH} CACHE FILEPATH "Path to tbb Library Directory")
+        ELSEIF(TBB_LIBRARY_RELEASE)
+            GET_FILENAME_COMPONENT(TBB_LIBRARY_PATH ${TBB_LIBRARY_RELEASE} PATH)
+            SET(TBB_LIBRARY_DIR  ${TBB_LIBRARY_PATH} CACHE FILEPATH "Path to tbb Library Directory")
+        ENDIF(TBB_LIBRARY_DEBUG)
         message(STATUS "Found Intel TBB")
     endif (TBB_LIBRARY)
 endif (TBB_INCLUDE_DIR)
