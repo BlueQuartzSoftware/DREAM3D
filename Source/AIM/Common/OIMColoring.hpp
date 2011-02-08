@@ -120,8 +120,8 @@ class OIMColoring
      * @param refDir The Reference direction. Usually either the ND (001), RD(100), or TD(010)
      * @param rgb A pointer to store the RGB value into
      */
-    template<typename T>
-    static void GenerateIPFColor(T* eulers, T* refDir, unsigned char* rgb)
+    template<typename T, typename K>
+    static void GenerateIPFColor(T* eulers, K* refDir, unsigned char* rgb)
     {
       OIMColoring::GenerateIPFColor<T>(eulers[0], eulers[1], eulers[2],
                                        refDir[0], refDir[1], refDir[2],rgb);
@@ -138,9 +138,9 @@ class OIMColoring
      * @param refDir2 The third component of the Reference direction vector
      * @param rgb Output - A pointer to store the RGB value into a unsigned char[3] array.
      */
-    template <typename T>
+    template <typename T, typename K>
     static void GenerateIPFColor(T phi1, T phi, T phi2,
-                                 T refDir0, T refDir1, T refDir2,
+                                 K refDir0, K refDir1, K refDir2,
                                  unsigned char* rgb)
     {
 

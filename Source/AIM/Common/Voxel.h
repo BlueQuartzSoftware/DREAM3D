@@ -52,9 +52,9 @@ class AIMCOMMON_EXPORT Voxel
     int surfacevoxel;
     int unassigned;
     double quat[5];
-    std::vector<int >* grainlist;
-    std::vector<double >* ellipfunclist;
-    std::vector<int >* neighborlist;
+    std::vector<int>* grainlist;
+    std::vector<double>* ellipfunclist;
+    std::vector<int>* neighborlist;
 
 };
 
