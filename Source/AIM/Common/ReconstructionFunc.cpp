@@ -40,12 +40,14 @@
 
 const static double m_pi = M_PI;
 const static double m_OnePointThree = 1.33333333333;
-const double threesixty_over_pi = 360.0/m_pi;
-const double sqrt_two = pow(2.0, 0.5);
-const double acos_neg_one = acos(-1.0);
-const double acos_pos_one = acos(1.0);
-const double sin_wmin_neg_1_over_2 = sin(acos_neg_one/2.0);
-const double sin_wmin_pos_1_over_2 = sin(acos_pos_one/2.0);
+const static double threesixty_over_pi = 360.0/m_pi;
+const static double m_pi_over_180 = M_PI/180.0;
+const static double sqrt_two = pow(2.0, 0.5);
+const static double acos_neg_one = acos(-1.0);
+const static double acos_pos_one = acos(1.0);
+const static double sin_wmin_neg_1_over_2 = sin(acos_neg_one/2.0);
+const static double sin_wmin_pos_1_over_2 = sin(acos_pos_one/2.0);
+
 
 #define DIMS "DIMENSIONS"
 #define LOOKUP "LOOKUP_TABLE"
@@ -1777,183 +1779,185 @@ int  ReconstructionFunc::load_data(string readname)
   int bensdata = 0;
   int yoonsdata = 1;
   double **mat;
-  if(yoonsdata == 1)
+  if (yoonsdata == 1)
   {
-	const unsigned int size ( 1024 );
-	char buf [ size ];
-	std::ifstream in ( readname.c_str() );
-	std::string word;
-	bool headerdone = false;
-	while(headerdone == false)
-	{
-		in.getline( buf, size );
-		std::string line = buf;
-		in >> word;
-		if (DIMS == word )
-		{
-		    in >> xpoints >> ypoints >> zpoints;
-			totalpoints = xpoints * ypoints * zpoints;
-			delete [] voxels;
-			voxels = new Voxel[totalpoints];
-			mat = new double *[totalpoints];
-			totalvol = double(totalpoints)*resx*resy*resz;
-		}
-		if(LOOKUP == word)
-		{
-			headerdone = true;
-			in >> word;
-		}
-	}
-	int gnum=0;
-	int onedge = 0;
-	int col, row, plane;
-	double value;
-	for(int i=0;i<(xpoints*ypoints*zpoints);i++)
-	{
-		mat[i] = new double [9];
-		onedge = 0;
-		in >> gnum;
-		col = i%xpoints;
-		row = (i/xpoints)%ypoints;
-		plane = i/(xpoints*ypoints);
-		if(col == 0 || col == (xpoints-1) || row == 0 || row == (ypoints-1) || plane == 0 || plane == (zpoints-1)) onedge = 1;
-		voxels[i].grainname = gnum;
-		if(gnum >= numgrains)
-		{
-			numgrains = gnum+1;
-			m_Grains.resize(numgrains);
-		}
-		m_Grains[gnum].surfacegrain = onedge;
-	}
-	for(int iter=0;iter<9;iter++)
-	{
-		headerdone = false;
-		while(headerdone == false)
-		{
-			in.getline( buf, size );
-			std::string line = buf;
-			in >> word;
-			if(LOOKUP == word)
-			{
-				headerdone = true;
-				in >> word;
-			}
-		}
-		for(int i=0;i<(xpoints*ypoints*zpoints);i++)
-		{
-			onedge = 0;
-			in >> value;
-			mat[i][iter] = value;
-		}
-	}
-	double s, c, s1, c1, s2, c2;
-	for(int i=0;i<(xpoints*ypoints*zpoints);i++)
-	{
-		double ea2 = acos(mat[i][8]);
-		double cosine3 = (mat[i][5]/sin(ea2));
-		double sine3 = (mat[i][2]/sin(ea2));
-		double cosine1 = (-mat[i][7]/sin(ea2));
-		double sine1 = (mat[i][6]/sin(ea2));
-		double ea3 = acos(cosine3);
-		double ea1 = acos(cosine1);
-		if(sine3 < 0) ea3 = (2*3.1415926535897)-ea3;
-		if(sine1 < 0) ea1 = (2*3.1415926535897)-ea1;
-		voxels[i].euler1 = ea1;
-		voxels[i].euler2 = ea2;
-		voxels[i].euler3 = ea3;
-        s=sin(0.5*ea2);
-	    c=cos(0.5*ea2);
-	    s1=sin(0.5*(ea1-ea3));
-		c1=cos(0.5*(ea1-ea3));
-		s2=sin(0.5*(ea1+ea3));
-	    c2=cos(0.5*(ea1+ea3));
-		voxels[i].quat[1] = s*c1;
-		voxels[i].quat[2] = s*s1;
-		voxels[i].quat[3] = c*s2;
-		voxels[i].quat[4] = c*c2;
-	}
-	delete [] mat;
+    const unsigned int size(1024);
+    char buf[size];
+    std::ifstream in(readname.c_str());
+    std::string word;
+    bool headerdone = false;
+    while (headerdone == false)
+    {
+      in.getline(buf, size);
+      std::string line = buf;
+      in >> word;
+      if (DIMS == word)
+      {
+        in >> xpoints >> ypoints >> zpoints;
+        totalpoints = xpoints * ypoints * zpoints;
+        delete[] voxels;
+        voxels = new Voxel[totalpoints];
+        mat = new double *[totalpoints];
+        totalvol = double(totalpoints) * resx * resy * resz;
+      }
+      if (LOOKUP == word)
+      {
+        headerdone = true;
+        in >> word;
+      }
+    }
+    int gnum = 0;
+    int onedge = 0;
+    int col, row, plane;
+    double value;
+    for (int i = 0; i < totalpoints; i++)
+    {
+      mat[i] = new double[9];
+      onedge = 0;
+      in >> gnum;
+      col = i % xpoints;
+      row = (i / xpoints) % ypoints;
+      plane = i / (xpoints * ypoints);
+      if (col == 0 || col == (xpoints - 1) || row == 0 || row == (ypoints - 1) || plane == 0 || plane == (zpoints - 1)) onedge = 1;
+      voxels[i].grainname = gnum;
+      if (gnum >= numgrains)
+      {
+        numgrains = gnum + 1;
+        m_Grains.resize(numgrains);
+      }
+      m_Grains[gnum].surfacegrain = onedge;
+    }
+    for (int iter = 0; iter < 9; iter++)
+    {
+      headerdone = false;
+      while (headerdone == false)
+      {
+        in.getline(buf, size);
+        std::string line = buf;
+        in >> word;
+        if (LOOKUP == word)
+        {
+          headerdone = true;
+          in >> word;
+        }
+      }
+      for (int i = 0; i < totalpoints; i++)
+      {
+        onedge = 0;
+        in >> value;
+        mat[i][iter] = value;
+      }
+    }
+    double s, c, s1, c1, s2, c2;
+    for (size_t i = 0; i < totalpoints; i++)
+    {
+      double ea2 = acos(mat[i][8]);
+      double cosine3 = (mat[i][5] / sin(ea2));
+      double sine3 = (mat[i][2] / sin(ea2));
+      double cosine1 = (-mat[i][7] / sin(ea2));
+      double sine1 = (mat[i][6] / sin(ea2));
+      double ea3 = acos(cosine3);
+      double ea1 = acos(cosine1);
+      if (sine3 < 0) ea3 = M_2PI - ea3;
+      if (sine1 < 0) ea1 = M_2PI - ea1;
+      voxels[i].euler1 = ea1;
+      voxels[i].euler2 = ea2;
+      voxels[i].euler3 = ea3;
+      s = sin(0.5 * ea2);
+      c = cos(0.5 * ea2);
+      s1 = sin(0.5 * (ea1 - ea3));
+      c1 = cos(0.5 * (ea1 - ea3));
+      s2 = sin(0.5 * (ea1 + ea3));
+      c2 = cos(0.5 * (ea1 + ea3));
+      voxels[i].quat[1] = s * c1;
+      voxels[i].quat[2] = s * s1;
+      voxels[i].quat[3] = c * s2;
+      voxels[i].quat[4] = c * c2;
+      delete[] mat[i];
+    }
+    delete[] mat;
   }
-  if(bensdata == 1)
+  if (bensdata == 1)
   {
-	  ifstream inputFile;
-	  inputFile.open(readname.c_str());
-	  double s, c, s1, c1, s2, c2;
-	  double q1, q2, q3, q4;
-	  int gnum, phase;
-	  double ea1, ea2, ea3;
-	  int x, y, z;
-	  double stress, strain, weight;
-	  string dummy;
-	  numgrains = 0;
-	  int active = 1;
-	  size_t vnum;
-	  int vListSize = 1000;
-	  for(int i = 0; i < 1; i++)
-	  {
-		inputFile >> xpoints >> ypoints >> zpoints;
-		inputFile >> resx >> resy >> resz;
-	  }
-	  delete [] voxels;
-	  voxels = new Voxel[(xpoints*ypoints*zpoints)];
-	  for(int i = 0; i < (xpoints*ypoints*zpoints); i++)
-	  {
-		inputFile >> ea1 >> ea2 >> ea3 >> weight >> strain >> stress >> x >> y >> z >> gnum >> phase;
-		ea1 = ea1*3.1415926535897/180.0;
-		ea2 = ea2*3.1415926535897/180.0;
-		ea3 = ea3*3.1415926535897/180.0;
-		voxels[i].grainname = gnum;
-		voxels[i].euler1 = ea1;
-		voxels[i].euler2 = ea2;
-		voxels[i].euler3 = ea3;
-		s=sin(0.5*ea2);
-		c=cos(0.5*ea2);
-		s1=sin(0.5*(ea1-ea3));
-		c1=cos(0.5*(ea1-ea3));
-		s2=sin(0.5*(ea1+ea3));
-		c2=cos(0.5*(ea1+ea3));
-		q1 = s*c1;
-		q2 = s*s1;
-		q3 = c*s2;
-		q4 = c*c2;
-		voxels[i].quat[0] = 0;
-		voxels[i].quat[1] = q1;
-		voxels[i].quat[2] = q2;
-		voxels[i].quat[3] = q3;
-		voxels[i].quat[4] = q4;
-		if(gnum > numgrains)
-		{
-			numgrains = gnum;
-			m_Grains.resize(numgrains+1);
-		}
- 		vnum = m_Grains[gnum].numvoxels;
-	  if (m_Grains[gnum].voxellist == NULL)
-	  {
-		m_Grains[gnum].voxellist = new std::vector<int>(vListSize,-1);
-	  }
-		if(vnum >= m_Grains[gnum].voxellist->size())
-		{
-			m_Grains[gnum].voxellist->resize(m_Grains[gnum].voxellist->size()+vListSize,-1);
-		}
-		m_Grains[gnum].voxellist->at(vnum) = i;
-		vnum++;
-		m_Grains[gnum].numvoxels = vnum;
-	  }
-	  numgrains = numgrains+1;
-	  for(int i=1;i<numgrains;i++)
-	  {
-		if(m_Grains[i].numvoxels > 0)
-		{
-			m_Grains[i].voxellist->erase(std::remove(m_Grains[i].voxellist->begin(),m_Grains[i].voxellist->end(),-1),m_Grains[i].voxellist->end());
-			int numvoxels = int(m_Grains[i].voxellist->size());
-			m_Grains[i].numvoxels = numvoxels;
-			m_Grains[i].nucleus = m_Grains[i].voxellist->at(0);
-			m_Grains[i].active = active;
-		}
-	  }
-	  inputFile.close();
+    ifstream inputFile;
+    inputFile.open(readname.c_str());
+    double s, c, s1, c1, s2, c2;
+    double q1, q2, q3, q4;
+    int gnum, phase;
+    double ea1, ea2, ea3;
+    int x, y, z;
+    double stress, strain, weight;
+    string dummy;
+    numgrains = 0;
+    int active = 1;
+    size_t vnum;
+    int vListSize = 1000;
+    for (int i = 0; i < 1; i++)
+    {
+      inputFile >> xpoints >> ypoints >> zpoints;
+      inputFile >> resx >> resy >> resz;
+    }
+    totalpoints = (xpoints * ypoints * zpoints);
+    delete[] voxels;
+    voxels = new Voxel[totalpoints];
+    for (int i = 0; i < totalpoints; i++)
+    {
+      inputFile >> ea1 >> ea2 >> ea3 >> weight >> strain >> stress >> x >> y >> z >> gnum >> phase;
+      ea1 = ea1 * m_pi_over_180;
+      ea2 = ea2 * m_pi_over_180;
+      ea3 = ea3 * m_pi_over_180;
+      voxels[i].grainname = gnum;
+      voxels[i].euler1 = ea1;
+      voxels[i].euler2 = ea2;
+      voxels[i].euler3 = ea3;
+      s = sin(0.5 * ea2);
+      c = cos(0.5 * ea2);
+      s1 = sin(0.5 * (ea1 - ea3));
+      c1 = cos(0.5 * (ea1 - ea3));
+      s2 = sin(0.5 * (ea1 + ea3));
+      c2 = cos(0.5 * (ea1 + ea3));
+      q1 = s * c1;
+      q2 = s * s1;
+      q3 = c * s2;
+      q4 = c * c2;
+      voxels[i].quat[0] = 0;
+      voxels[i].quat[1] = q1;
+      voxels[i].quat[2] = q2;
+      voxels[i].quat[3] = q3;
+      voxels[i].quat[4] = q4;
+      if (gnum > numgrains)
+      {
+        numgrains = gnum;
+        m_Grains.resize(numgrains + 1);
+      }
+      vnum = m_Grains[gnum].numvoxels;
+      if (m_Grains[gnum].voxellist == NULL)
+      {
+        m_Grains[gnum].voxellist = new std::vector<int >(vListSize, -1);
+      }
+      if (vnum >= m_Grains[gnum].voxellist->size())
+      {
+        m_Grains[gnum].voxellist->resize(m_Grains[gnum].voxellist->size() + vListSize, -1);
+      }
+      m_Grains[gnum].voxellist->at(vnum) = i;
+      vnum++;
+      m_Grains[gnum].numvoxels = vnum;
+    }
+    numgrains = numgrains + 1;
+    for (int i = 1; i < numgrains; i++)
+    {
+      if (m_Grains[i].numvoxels > 0)
+      {
+        m_Grains[i].voxellist->erase(std::remove(m_Grains[i].voxellist->begin(), m_Grains[i].voxellist->end(), -1), m_Grains[i].voxellist->end());
+        int numvoxels = int(m_Grains[i].voxellist->size());
+        m_Grains[i].numvoxels = numvoxels;
+        m_Grains[i].nucleus = m_Grains[i].voxellist->at(0);
+        m_Grains[i].active = active;
+      }
+    }
+    inputFile.close();
   }
-return numgrains;
+  return numgrains;
 }
 void  ReconstructionFunc::merge_twins ()
 {
