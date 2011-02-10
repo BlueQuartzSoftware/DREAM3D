@@ -41,6 +41,7 @@
 
 
 #include "SGODFTableModel.h"
+#include "SGMDFTableModel.h"
 #include "AIM/Common/Texture.h"
 
 // -----------------------------------------------------------------------------
@@ -48,7 +49,8 @@
 // -----------------------------------------------------------------------------
 StatsGenODFWidget::StatsGenODFWidget(QWidget *parent) :
 QWidget(parent),
-m_TableModel(NULL)
+m_TableModel(NULL),
+m_MdfTableModel(NULL)
 {
   this->setupUi(this);
   this->setupGui();
@@ -125,14 +127,21 @@ void StatsGenODFWidget::setupGui()
 
   resetTableModel();
 
-  initQwtPlot("x axis", "y axis", m_Plot1);
-  initQwtPlot("x axis", "y axis", m_Plot2);
-  initQwtPlot("x axis", "y axis", m_Plot3);
+  initQwtPlot("x axis", "y axis", m_ODF_001Plot);
+  initQwtPlot("x axis", "y axis", m_ODF_011Plot);
+  initQwtPlot("x axis", "y axis", m_ODF_111Plot);
 
   m_PlotCurves.push_back(new QwtPlotCurve);
   m_PlotCurves.push_back(new QwtPlotCurve);
   m_PlotCurves.push_back(new QwtPlotCurve);
 
+  initQwtPlot("Misorientation Angle(w)", "Freq", m_MDFPlot);
+  tabWidget->setTabEnabled(MDF_Tab, false);
+  m_MdfTableModel = new SGMDFTableModel;
+  m_MdfTableModel->setInitialValues();
+  m_MDFTableView->setModel(m_MdfTableModel);
+  QAbstractItemDelegate* aid = m_MdfTableModel->getItemDelegate();
+  m_MDFTableView->setItemDelegate(aid);
 
 }
 
@@ -161,26 +170,20 @@ void StatsGenODFWidget::initQwtPlot(QString xAxisName, QString yAxisName, QwtPlo
 // -----------------------------------------------------------------------------
 void StatsGenODFWidget::resetTableModel()
 {
-
   if (NULL != m_TableModel)
   {
     m_TableModel->deleteLater();
   }
-
   m_TableModel = new SGODFTableModel;
   m_TableModel->setInitialValues();
-
   m_TableView->setModel(m_TableModel);
   QAbstractItemDelegate* aid = m_TableModel->getItemDelegate();
-
   m_TableView->setItemDelegate(aid);
-
 //
 //  connect(m_TableModel, SIGNAL(layoutChanged()),
 //    this, SLOT(updatePlotCurves()));
 //  connect(m_TableModel, SIGNAL(dataChanged(const QModelIndex &, const QModelIndex &)),
 //    this, SLOT(updatePlotCurves()));
-
 }
 
 
@@ -238,25 +241,67 @@ void StatsGenODFWidget::on_m_CalculateODFBtn_clicked()
   QwtPlotCurve* curve = m_PlotCurves[0];
   curve->setData(x001, y001);
   curve->setStyle(QwtPlotCurve::Dots);
-  curve->attach(m_Plot1);
-  m_Plot1->setAxisScale(QwtPlot::yLeft, -1.0, 1.0);
-  m_Plot1->setAxisScale(QwtPlot::xBottom, -1.0, 1.0);
-  m_Plot1->replot();
+  curve->attach(m_ODF_001Plot);
+  m_ODF_001Plot->setAxisScale(QwtPlot::yLeft, -1.0, 1.0);
+  m_ODF_001Plot->setAxisScale(QwtPlot::xBottom, -1.0, 1.0);
+  m_ODF_001Plot->replot();
 
   curve = m_PlotCurves[1];
   curve->setData(x011, y011);
   curve->setStyle(QwtPlotCurve::Dots);
-  curve->attach(m_Plot2);
-  m_Plot2->setAxisScale(QwtPlot::yLeft, -1.0, 1.0);
-  m_Plot2->setAxisScale(QwtPlot::xBottom, -1.0, 1.0);
-  m_Plot2->replot();
+  curve->attach(m_ODF_011Plot);
+  m_ODF_011Plot->setAxisScale(QwtPlot::yLeft, -1.0, 1.0);
+  m_ODF_011Plot->setAxisScale(QwtPlot::xBottom, -1.0, 1.0);
+  m_ODF_011Plot->replot();
 
   curve = m_PlotCurves[2];
   curve->setData(x111, y111);
   curve->setStyle(QwtPlotCurve::Dots);
-  curve->attach(m_Plot3);
-  m_Plot3->setAxisScale(QwtPlot::yLeft, -1.0, 1.0);
-  m_Plot3->setAxisScale(QwtPlot::xBottom, -1.0, 1.0);
-  m_Plot3->replot();
+  curve->attach(m_ODF_111Plot);
+  m_ODF_111Plot->setAxisScale(QwtPlot::yLeft, -1.0, 1.0);
+  m_ODF_111Plot->setAxisScale(QwtPlot::xBottom, -1.0, 1.0);
+  m_ODF_111Plot->replot();
+
+  // Enable the MDF tab
+  tabWidget->setTabEnabled(MDF_Tab, true);
+  // calculate MDF Based on the ODF calculation
+
 
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void StatsGenODFWidget::on_m_MDFUpdateBtn_clicked()
+{
+  std::cout << "on_m_MDFUpdateBtn_clicked" << std::endl;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void StatsGenODFWidget::on_addMDFRowBtn_clicked()
+{
+  if (!m_MdfTableModel->insertRow(m_MdfTableModel->rowCount())) return;
+  m_MDFTableView->resizeColumnsToContents();
+  m_MDFTableView->scrollToBottom();
+  m_MDFTableView->setFocus();
+  QModelIndex index = m_MdfTableModel->index(m_MdfTableModel->rowCount() - 1, 0);
+  m_MDFTableView->setCurrentIndex(index);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void StatsGenODFWidget::on_deleteMDFRowBtn_clicked()
+{
+  QItemSelectionModel *selectionModel = m_MDFTableView->selectionModel();
+  if (!selectionModel->hasSelection()) return;
+  QModelIndex index = selectionModel->currentIndex();
+  if (!index.isValid()) return;
+  m_MdfTableModel->removeRow(index.row(), index.parent());
+  if (m_MdfTableModel->rowCount() > 0)
+  {
+    m_MDFTableView->resizeColumnsToContents();
+  }}
+

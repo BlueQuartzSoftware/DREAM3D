@@ -27,8 +27,9 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _SGODFTABLEMODEL_H_
-#define _SGODFTABLEMODEL_H_
+
+#ifndef SGMDFTABLEMODEL_H_
+#define SGMDFTABLEMODEL_H_
 
 #include <QtCore/QAbstractTableModel>
 #include <QtCore/QVector>
@@ -38,23 +39,27 @@
 
 class QAbstractItemDelegate;
 
-
-
-class SGODFTableModel : public QAbstractTableModel
+/*
+ *
+ */
+class SGMDFTableModel : public QAbstractTableModel
 {
     Q_OBJECT
 
+
   public:
+
     enum ColumnIndexes
     {
-      Texture = 0,
+      Angle = 0,
+      Axis,
       Weight,
-      Sigma,
       ColumnCount
     };
 
-    SGODFTableModel(QObject* parent = 0);
-    virtual ~SGODFTableModel();
+
+    SGMDFTableModel(QObject* parent = 0);
+    virtual ~SGMDFTableModel();
 
     /**
       *
@@ -142,7 +147,7 @@ class SGODFTableModel : public QAbstractTableModel
       * @param col
       * @return
       */
-     virtual QVector<double> getData(int col);
+     //virtual QVector<double> getData(int col);
 
      /**
       *
@@ -150,24 +155,24 @@ class SGODFTableModel : public QAbstractTableModel
       * @param row
       * @return
       */
-     virtual double getDataValue(int col, int row);
+    // virtual double getDataValue(int col, int row);
 
 
-     virtual void setColumnData(int col, QVector<double> &data);
+    // virtual void setColumnData(int col, QVector<double> &data);
 
      virtual void setInitialValues();
 
-
   private:
-    int m_ColumnCount;
-    int m_RowCount;
+     int m_ColumnCount;
+     int m_RowCount;
 
-    QVector<QString> m_Textures;
-    QVector<double> m_Weights;
-    QVector<double> m_Sigmas;
+     QVector<double> m_Angles;
+     QVector<QString> m_Axis;
+     QVector<double> m_Weights;
 
-    SGODFTableModel(const SGODFTableModel&); // Copy Constructor Not Implemented
-    void operator=(const SGODFTableModel&); // Operator '=' Not Implemented
+
+     SGMDFTableModel(const SGMDFTableModel&); // Copy Constructor Not Implemented
+     void operator=(const SGMDFTableModel&); // Operator '=' Not Implemented
 };
 
-#endif /* _SGODFTABLEMODEL_H_ */
+#endif /* SGMDFTABLEMODEL_H_ */

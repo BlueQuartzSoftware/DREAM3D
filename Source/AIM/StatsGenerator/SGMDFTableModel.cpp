@@ -27,19 +27,21 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#include "SGODFTableModel.h"
+
+#include "SGMDFTableModel.h"
+
 #include <iostream>
 
 #include <QApplication>
 #include <QtGui/QStyleOptionComboBox>
 #include <QtGui/QAbstractItemDelegate>
 
-#include "SGODFItemDelegate.h"
+#include "SGMDFItemDelegate.h"
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-SGODFTableModel::SGODFTableModel(QObject* parent) :
+SGMDFTableModel::SGMDFTableModel(QObject* parent) :
 QAbstractTableModel(parent),
 m_RowCount(0)
 {
@@ -49,16 +51,17 @@ m_RowCount(0)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-SGODFTableModel::~SGODFTableModel()
+SGMDFTableModel::~SGMDFTableModel()
 {
 }
+
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-Qt::ItemFlags SGODFTableModel::flags(const QModelIndex &index) const
+Qt::ItemFlags SGMDFTableModel::flags(const QModelIndex &index) const
 {
-  //  std::cout << "SGODFTableModel::flags" << std::endl;
+  //  std::cout << "SGMDFTableModel::flags" << std::endl;
   if (!index.isValid())
   {
     return Qt::NoItemFlags;
@@ -69,15 +72,15 @@ Qt::ItemFlags SGODFTableModel::flags(const QModelIndex &index) const
   //  theFlags |= Qt::ItemIsEditable | Qt::ItemIsSelectable | Qt::ItemIsEnabled;
 
     int col = index.column();
-    if (col == Texture)
+    if (col == Angle)
     {
-      theFlags = Qt::ItemIsEnabled;
+      theFlags = Qt::ItemIsEditable | Qt::ItemIsSelectable | Qt::ItemIsEnabled;
     }
     else if (col == Weight)
     {
       theFlags = Qt::ItemIsEditable | Qt::ItemIsSelectable | Qt::ItemIsEnabled;
     }
-    else if (col == Sigma)
+    else if (col == Axis)
     {
       theFlags = Qt::ItemIsEditable | Qt::ItemIsSelectable | Qt::ItemIsEnabled;
     }
@@ -89,7 +92,7 @@ Qt::ItemFlags SGODFTableModel::flags(const QModelIndex &index) const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QVariant SGODFTableModel::data(const QModelIndex &index, qint32 role) const
+QVariant SGMDFTableModel::data(const QModelIndex &index, qint32 role) const
 {
 
   if (!index.isValid())
@@ -103,10 +106,10 @@ QVariant SGODFTableModel::data(const QModelIndex &index, qint32 role) const
 
     switch(index.column())
     {
-      case Texture:
+      case Angle:
       {
         comboBox.currentText = QString("101");
-        const QString header = headerData(Texture, Qt::Horizontal, Qt::DisplayRole).toString();
+        const QString header = headerData(Angle, Qt::Horizontal, Qt::DisplayRole).toString();
         if (header.length() > comboBox.currentText.length()) comboBox.currentText = header;
         break;
       }
@@ -117,10 +120,10 @@ QVariant SGODFTableModel::data(const QModelIndex &index, qint32 role) const
         if (header.length() > comboBox.currentText.length()) comboBox.currentText = header;
         break;
       }
-      case Sigma:
+      case Axis:
       {
         comboBox.currentText = QString("10001");
-        const QString header = headerData(Sigma, Qt::Horizontal, Qt::DisplayRole).toString();
+        const QString header = headerData(Axis, Qt::Horizontal, Qt::DisplayRole).toString();
         if (header.length() > comboBox.currentText.length()) comboBox.currentText = header;
         break;
       }
@@ -139,17 +142,17 @@ QVariant SGODFTableModel::data(const QModelIndex &index, qint32 role) const
   else if (role == Qt::DisplayRole || role == Qt::EditRole)
   {
     int col = index.column();
-    if (col == Texture)
+    if (col == Angle)
     {
-      return QVariant(m_Textures[index.row()]);
+      return QVariant(m_Angles[index.row()]);
     }
     else if (col == Weight)
     {
       return QVariant(m_Weights[index.row()]);
     }
-    else if (col == Sigma)
+    else if (col == Axis)
     {
-      return QVariant(m_Sigmas[index.row()]);
+      return QVariant(m_Axis[index.row()]);
     }
   }
 
@@ -159,20 +162,20 @@ QVariant SGODFTableModel::data(const QModelIndex &index, qint32 role) const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QVariant SGODFTableModel::headerData(int section, Qt::Orientation orientation, int role) const
+QVariant SGMDFTableModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
   if (orientation == Qt::Horizontal && role == Qt::DisplayRole)
   {
     switch(section)
     {
-      case Texture:
-        return QVariant(QString("Texture"));
+      case Angle:
+        return QVariant(QString("Angle\n(w)"));
         break;
       case Weight:
-        return QVariant(QString("Weight"));
+        return QVariant(QString("Weight\n(MRD)"));
         break;
-      case Sigma:
-        return QVariant(QString("Sigma"));
+      case Axis:
+        return QVariant(QString("Axis\n(<h,k,l>)"));
         break;
       default:
         break;
@@ -185,7 +188,7 @@ QVariant SGODFTableModel::headerData(int section, Qt::Orientation orientation, i
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int SGODFTableModel::rowCount(const QModelIndex &index) const
+int SGMDFTableModel::rowCount(const QModelIndex &index) const
 {
   return index.isValid() ? 0 : m_RowCount;
 }
@@ -193,7 +196,7 @@ int SGODFTableModel::rowCount(const QModelIndex &index) const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int SGODFTableModel::columnCount(const QModelIndex &index) const
+int SGMDFTableModel::columnCount(const QModelIndex &index) const
 {
   return index.isValid() ? 0 : m_ColumnCount;
 }
@@ -201,7 +204,7 @@ int SGODFTableModel::columnCount(const QModelIndex &index) const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool SGODFTableModel::setHeaderData(int col, Qt::Orientation o, const QVariant& var, int role)
+bool SGMDFTableModel::setHeaderData(int col, Qt::Orientation o, const QVariant& var, int role)
 {
   return false;
 }
@@ -210,10 +213,10 @@ bool SGODFTableModel::setHeaderData(int col, Qt::Orientation o, const QVariant& 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool SGODFTableModel::setData(const QModelIndex & index, const QVariant & value, int role)
+bool SGMDFTableModel::setData(const QModelIndex & index, const QVariant & value, int role)
 {
-  // std::cout << "SGODFTableModel::setData " << value.toString().toStdString() << std::endl;
-  if (!index.isValid() || role != Qt::EditRole || index.row() < 0 || index.row() >= m_Textures.count() || index.column() < 0 || index.column()
+  // std::cout << "SGMDFTableModel::setData " << value.toString().toStdString() << std::endl;
+  if (!index.isValid() || role != Qt::EditRole || index.row() < 0 || index.row() >= m_Angles.count() || index.column() < 0 || index.column()
       >= m_ColumnCount)
   {
     return false;
@@ -223,15 +226,16 @@ bool SGODFTableModel::setData(const QModelIndex & index, const QVariant & value,
   qint32 col = index.column();
   switch(col)
   {
-    case Texture:
-      m_Textures[row] = value.toString();
+    case Angle:
+      m_Angles[row] = value.toDouble(&ok);
+      break;
+    case Axis:
+      m_Axis[row] = value.toString();
       break;
     case Weight:
       m_Weights[row] = value.toDouble(&ok);
       break;
-    case Sigma:
-      m_Sigmas[row] = value.toDouble(&ok);
-      break;
+
     default:
       Q_ASSERT(false);
 
@@ -244,21 +248,19 @@ bool SGODFTableModel::setData(const QModelIndex & index, const QVariant & value,
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool SGODFTableModel::insertRows(int row, int count, const QModelIndex& index)
+bool SGMDFTableModel::insertRows(int row, int count, const QModelIndex& index)
 {
-  QString texture("Unknown");
-  double weight = 5.0;
-  double sigma = 0.0;
-
-  QString c("blue");
+  QString axis("<0,0,1>");
+  double weight = 0.0;
+  double angle = 0.0;
 
   beginInsertRows(QModelIndex(), row, row + count - 1);
   for (int i = 0; i < count; ++i)
   {
-    m_Textures.append(texture);
+    m_Angles.append(angle);
     m_Weights.append(weight);
-    m_Sigmas.append(sigma);
-    m_RowCount = m_Textures.count();
+    m_Axis.append(axis);
+    m_RowCount = m_Angles.count();
   }
   endInsertRows();
   emit dataChanged(index, index);
@@ -268,7 +270,7 @@ bool SGODFTableModel::insertRows(int row, int count, const QModelIndex& index)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool SGODFTableModel::removeRows(int row, int count, const QModelIndex& index)
+bool SGMDFTableModel::removeRows(int row, int count, const QModelIndex& index)
 {
   if (count < 1)
   {
@@ -277,28 +279,31 @@ bool SGODFTableModel::removeRows(int row, int count, const QModelIndex& index)
   beginRemoveRows(QModelIndex(), row, row + count - 1);
   for (int i = 0; i < count; ++i)
   {
-    m_Textures.remove(row);
+    m_Angles.remove(row);
     m_Weights.remove(row);
-    m_Sigmas.remove(row);
-    m_RowCount = m_Textures.count();
+    m_Axis.remove(row);
+    m_RowCount = m_Angles.count();
   }
   endRemoveRows();
   emit dataChanged(index, index);
   return true;
 }
 
+#if 0
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QVector<double > SGODFTableModel::getData(int col)
+QVector<double > SGMDFTableModel::getData(int col)
 {
 
   switch(col)
   {
+    case Angle:
+      return m_Angles;
     case Weight:
-      return m_Weights;break;
-    case Sigma:
-      return m_Sigmas;break;
+      return m_Weights;
+    case Axis:
+      return m_Axis;
     default:
       Q_ASSERT(false);
   }
@@ -308,14 +313,16 @@ QVector<double > SGODFTableModel::getData(int col)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-double SGODFTableModel::getDataValue(int col, int row)
+double SGMDFTableModel::getDataValue(int col, int row)
 {
   switch(col)
   {
+    case Angle:
+      return m_Angles[row];
     case Weight:
-      return m_Weights[row];break;
-    case Sigma:
-      return m_Sigmas[row]; break;
+      return m_Weights[row];
+    case Axis:
+      return m_Axis[row];
     default:
       Q_ASSERT(false);
   }
@@ -325,46 +332,35 @@ double SGODFTableModel::getDataValue(int col, int row)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SGODFTableModel::setColumnData(int col, QVector<double> &data)
+void SGMDFTableModel::setColumnData(int col, QVector<double> &data)
 {
   switch(col)
   {
+    case Angle:
+      m_Angles = data; break;
     case Weight:
       m_Weights = data;break;
-    case Sigma:
-      m_Sigmas = data; break;
+    case Axis:
+      m_Axis = data; break;
     default:
       Q_ASSERT(false);
   }
 }
+#endif
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QAbstractItemDelegate* SGMDFTableModel::getItemDelegate()
+{
+  return new SGMDFItemDelegate;
+}
+
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QAbstractItemDelegate* SGODFTableModel::getItemDelegate()
+void SGMDFTableModel::setInitialValues()
 {
-  return new SGODFItemDelegate;
+
 }
 
-#define ADD_INITIAL_ROW_VALUE(name, weight, sigma)\
-    insertRow(rowCount());\
-    QModelIndex textureIndex = index(rowCount() - 1, SGODFTableModel::Texture);\
-    setData(textureIndex, QVariant(QString(name)), Qt::EditRole);\
-    QModelIndex weightIndex = index(rowCount() - 1, SGODFTableModel::Weight);\
-    setData(weightIndex, QVariant(weight), Qt::EditRole);\
-    QModelIndex sigmaIndex = index(rowCount() - 1, SGODFTableModel::Sigma);\
-    setData(sigmaIndex, QVariant(sigma), Qt::EditRole);\
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void SGODFTableModel::setInitialValues()
-{
-  size_t size = Texture::Count;
-
-  ADD_INITIAL_ROW_VALUE("Random", 1.0, 0.0);
-
-  for (size_t i = 0; i < size; ++i) {
-    ADD_INITIAL_ROW_VALUE(Texture::Names[i], Texture::Weights[i], Texture::Sigmas[i]);
-  }
-}

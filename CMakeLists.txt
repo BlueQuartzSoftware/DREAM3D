@@ -126,10 +126,33 @@ IF ( CMAKE_BUILD_TYPE MATCHES Debug )
   ADD_DEFINITIONS(-Wall)
 ENDIF ( CMAKE_BUILD_TYPE MATCHES Debug )
 
+# --------------------------------------------------------------------
+# Should we write Binary or ASCII VTK output files
+# --------------------------------------------------------------------
 set(AIM_WRITE_BINARY_VTK_FILE)
 option(AIM_WRITE_BINARY_VTK_FILES "Write Binary VTK Files instead of ASCII files" OFF)
 if (AIM_WRITE_BINARY_VTK_FILES)
  set(AIM_WRITE_BINARY_VTK_FILE 1)
+endif()
+
+# --------------------------------------------------------------------
+# Should we use Threading Building Blocks
+# --------------------------------------------------------------------
+set (AIM_USE_PARALLEL_ALGORITHMS "")
+option(AIM_USE_MULTITHREADED_ALGOS "Use MultiThreaded Algorithms where possible" OFF)
+if (AIM_USE_MULTITHREADED_ALGOS)
+    find_package(TBB)
+    if (TBB_FOUND)
+        include_directories(${TBB_INCLUDE_DIRS} )
+        CMP_COPY_DEPENDENT_LIBRARIES("tbb")
+        # Append the locations of the HDF5 libraries to our Library Search Paths
+        list(APPEND CMP_LIB_SEARCH_DIRS ${TBB_BINARY_DIR} ${TBBG_LIBRARY_DIR} )
+        # Create an install rule to copy the dependent shared library over to the installed location
+        CMP_LIBRARIES_INSTALL_RULES("tbb" ".")
+    else()
+        message(FATAL_ERROR "The Intel Threading Building Blocks library is needed to enable the multithreaded algorithms. Please make sure it is installed properly")
+    endif()
+    set (AIM_USE_PARALLEL_ALGORITHMS "1")
 endif()
 
 
