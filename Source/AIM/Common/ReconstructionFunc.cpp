@@ -1371,7 +1371,7 @@ int ReconstructionFunc::reburn_grains()
 	{
 		voxels[i].alreadychecked = 0;
 		gnum = voxels[i].grainname;
-		if(gnum > 0 && m_Grains[gnum].kernelmisorientation > voxels[i].kernelmisorientation)
+		if(gnum > 0 && m_Grains[gnum].kernelmisorientation > voxels[i].kernelmisorientation && voxels[i].unassigned != 1)
 		{
 			m_Grains[gnum].active = 1;
 			m_Grains[gnum].nucleus = i;
@@ -1847,15 +1847,33 @@ int  ReconstructionFunc::load_data(string readname)
 		}
 	}
 	double s, c, s1, c1, s2, c2;
+	double ea1, ea2, ea3;
+	double cosine1, cosine3, sine1, sine3;
+	double denom;
 	for(int i=0;i<(xpoints*ypoints*zpoints);i++)
 	{
-		double ea2 = acos(mat[i][8]);
-		double cosine3 = (mat[i][5]/sin(ea2));
-		double sine3 = (mat[i][2]/sin(ea2));
-		double cosine1 = (-mat[i][7]/sin(ea2));
-		double sine1 = (mat[i][6]/sin(ea2));
-		double ea3 = acos(cosine3);
-		double ea1 = acos(cosine1);
+		denom = mat[i][0]*mat[i][0]+mat[i][1]*mat[i][1]+mat[i][2]*mat[i][2];
+		denom = pow(denom,0.5);
+		mat[i][0] = mat[i][0]/denom;
+		mat[i][1] = mat[i][1]/denom;
+		mat[i][2] = mat[i][2]/denom;
+		denom = mat[i][3]*mat[i][3]+mat[i][4]*mat[i][4]+mat[i][5]*mat[i][5];
+		denom = pow(denom,0.5);
+		mat[i][3] = mat[i][3]/denom;
+		mat[i][4] = mat[i][4]/denom;
+		mat[i][5] = mat[i][5]/denom;
+		denom = mat[i][6]*mat[i][6]+mat[i][7]*mat[i][7]+mat[i][8]*mat[i][8];
+		denom = pow(denom,0.5);
+		mat[i][6] = mat[i][6]/denom;
+		mat[i][7] = mat[i][7]/denom;
+		mat[i][8] = mat[i][8]/denom;
+		ea2 = acos(mat[i][8]);
+		cosine3 = (mat[i][5]/sin(ea2));
+		sine3 = (mat[i][2]/sin(ea2));
+		cosine1 = (-mat[i][7]/sin(ea2));
+		sine1 = (mat[i][6]/sin(ea2));
+		ea3 = acos(cosine3);
+		ea1 = acos(cosine1);
 		if(sine3 < 0) ea3 = (2*3.1415926535897)-ea3;
 		if(sine1 < 0) ea1 = (2*3.1415926535897)-ea1;
 		voxels[i].euler1 = ea1;
@@ -4109,7 +4127,7 @@ int ReconstructionFunc::write##name##VizFile(const std::string &file)\
   return 0;\
 }
 
-WRITE_VTK_GRAIN_WITH_VOXEL_SCALAR_VALUE(Disorientation, kernelmisorientation);
+WRITE_VTK_GRAIN_WITH_VOXEL_SCALAR_VALUE(Disorientation, misorientation);
 WRITE_VTK_GRAIN_WITH_VOXEL_SCALAR_VALUE(ImageQuality, imagequality);
 WRITE_VTK_GRAIN_WITH_GRAIN_SCALAR_VALUE(SchmidFactor, schmidfactor);
 
