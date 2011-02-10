@@ -56,6 +56,7 @@ set (StatsGenerator_SRCS
     ${StatsGenerator_SOURCE_DIR}/SGPowerLawTableModel.cpp
     ${StatsGenerator_SOURCE_DIR}/SGLogNormalTableModel.cpp
     ${StatsGenerator_SOURCE_DIR}/SGODFTableModel.cpp
+    ${StatsGenerator_SOURCE_DIR}/SGMDFTableModel.cpp
 )
 set (StatsGenerator_HDRS 
     ${StatsGenerator_SOURCE_DIR}/StatsGen.h
@@ -75,6 +76,8 @@ SET( StatsGenerator_MOC_HDRS
     ${StatsGenerator_SOURCE_DIR}/SGPowerLawItemDelegate.h
     ${StatsGenerator_SOURCE_DIR}/SGODFTableModel.h
     ${StatsGenerator_SOURCE_DIR}/SGODFItemDelegate.h
+    ${StatsGenerator_SOURCE_DIR}/SGMDFTableModel.h
+    ${StatsGenerator_SOURCE_DIR}/SGMDFItemDelegate.h
     )
 cmp_IDE_SOURCE_PROPERTIES( "AIM/StatsGenerator" "${StatsGenerator_HDRS};${StatsGenerator_MOC_HDRS}" "${StatsGenerator_SRCS}" ${PROJECT_INSTALL_HEADERS})
 
