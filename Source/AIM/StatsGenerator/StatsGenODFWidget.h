@@ -40,6 +40,7 @@
 #include "StatsGen.h"
 
 class SGODFTableModel;
+class SGMDFTableModel;
 class QwtPlot;
 class QwtPlotCurve;
 
@@ -54,6 +55,15 @@ class StatsGenODFWidget : public QWidget, private Ui::StatsGenODFWidget
 {
   Q_OBJECT
   public:
+    enum Tabs
+    {
+      Weights_Spreads = 0,
+      ODF_001,
+      ODF_011,
+      ODF_111,
+      MDF_Tab
+    };
+
     StatsGenODFWidget(QWidget *parent = 0);
     virtual ~StatsGenODFWidget();
 
@@ -74,12 +84,20 @@ class StatsGenODFWidget : public QWidget, private Ui::StatsGenODFWidget
     protected slots:
       void on_m_CalculateODFBtn_clicked();
 
+      void on_addMDFRowBtn_clicked();
+      void on_deleteMDFRowBtn_clicked();
+      void on_m_MDFUpdateBtn_clicked();
+
+
+
     protected:
       void resetTableModel();
 
     private:
       SGODFTableModel* m_TableModel;
-      QVector<QwtPlotCurve* > m_PlotCurves;
+      SGMDFTableModel* m_MdfTableModel;
+
+      QVector<QwtPlotCurve*> m_PlotCurves;
 
       StatsGenODFWidget(const StatsGenODFWidget&); // Copy Constructor Not Implemented
       void operator=(const StatsGenODFWidget&); // Operator '=' Not Implemented

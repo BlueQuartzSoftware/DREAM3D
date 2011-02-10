@@ -27,8 +27,8 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _SGODFITEMDELEGATE_H_
-#define _SGODFITEMDELEGATE_H_
+#ifndef SGMDFITEMDELEGATE_H_
+#define SGMDFITEMDELEGATE_H_
 
 #include <iostream>
 
@@ -41,21 +41,21 @@
 #include <QtGui/QStyledItemDelegate>
 
 #include "StatsGen.h"
-#include "SGODFTableModel.h"
+#include "SGMDFTableModel.h"
 
 /**
- * @class SGODFItemDelegate SGODFItemDelegate.h AIM/StatsGenerator/SGODFItemDelegate.h
+ * @class SGMDFItemDelegate SGMDFItemDelegate.h AIM/StatsGenerator/SGMDFItemDelegate.h
  * @brief This class creates the appropriate Editor Widget for the Tables
  * @author Michael A. Jackson for BlueQuartz Software
  * @date Dec 28, 2010
  * @version 1.0
  */
-class SGODFItemDelegate : public QStyledItemDelegate
+class SGMDFItemDelegate : public QStyledItemDelegate
 {
   Q_OBJECT
 
   public:
-    explicit SGODFItemDelegate(QObject *parent = 0) :
+    explicit SGMDFItemDelegate(QObject *parent = 0) :
       QStyledItemDelegate(parent)
     {
     }
@@ -73,25 +73,25 @@ class SGODFItemDelegate : public QStyledItemDelegate
     // -----------------------------------------------------------------------------
     QWidget* createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const
     {
-      QLineEdit* weight;
+      QLineEdit* editor;
+      editor = new QLineEdit(parent);
+      editor->setFrame(false);
 
       QDoubleValidator* weightValidator;
-
+      weightValidator = new QDoubleValidator(editor);
+      weightValidator->setDecimals(4);
 
       qint32 col = index.column();
       switch(col)
       {
-        case SGODFTableModel::Texture:
-          return NULL;
-          break;
-
-        case SGODFTableModel::Weight:
-          weight = new QLineEdit(parent);
-          weight->setFrame(false);
-          weightValidator = new QDoubleValidator(weight);
-          weightValidator->setDecimals(6);
-          weight->setValidator(weightValidator);
-          return weight;
+        case SGMDFTableModel::Angle:
+          editor->setValidator(weightValidator);
+          return editor;
+        case SGMDFTableModel::Axis:
+          return editor;
+        case SGMDFTableModel::Weight:
+          editor->setValidator(weightValidator);
+          return editor;
 
         default:
           break;
@@ -105,10 +105,14 @@ class SGODFItemDelegate : public QStyledItemDelegate
     void setEditorData(QWidget *editor, const QModelIndex &index) const
     {
       qint32 col = index.column();
-   //   bool ok = false;
-      if (col == SGODFTableModel::Weight )
+      if (col == SGMDFTableModel::Angle || col == SGMDFTableModel::Weight )
       {
-   //     double value = index.model()->data(index).toDouble(&ok);
+        QLineEdit* lineEdit = qobject_cast<QLineEdit* > (editor);
+        Q_ASSERT(lineEdit);
+        lineEdit->setText(index.model()->data(index).toString());
+      }
+      else if (col == SGMDFTableModel::Axis)
+      {
         QLineEdit* lineEdit = qobject_cast<QLineEdit* > (editor);
         Q_ASSERT(lineEdit);
         lineEdit->setText(index.model()->data(index).toString());
@@ -122,16 +126,22 @@ class SGODFItemDelegate : public QStyledItemDelegate
     // -----------------------------------------------------------------------------
     void setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const
     {
-      //  std::cout << "SGODFItemDelegate::setModelData" << std::endl;
+      //  std::cout << "SGMDFItemDelegate::setModelData" << std::endl;
       qint32 col = index.column();
       //  bool ok = false;
-      if (col == SGODFTableModel::Weight)
+      if (col == SGMDFTableModel::Angle || col == SGMDFTableModel::Weight)
       {
         QLineEdit* lineEdit = qobject_cast<QLineEdit* > (editor);
         Q_ASSERT(lineEdit);
         bool ok = false;
         double v = lineEdit->text().toDouble(&ok);
         model->setData(index, v);
+      }
+      else if (col == SGMDFTableModel::Axis)
+      {
+        QLineEdit* lineEdit = qobject_cast<QLineEdit* > (editor);
+        Q_ASSERT(lineEdit);
+        model->setData(index, lineEdit->text());
       }
 
       else QStyledItemDelegate::setModelData(editor, model, index);
@@ -145,4 +155,5 @@ class SGODFItemDelegate : public QStyledItemDelegate
 
 };
 
-#endif /* _SGODFITEMDELEGATE_H_ */
+
+#endif /* SGMDFITEMDELEGATE_H_ */
