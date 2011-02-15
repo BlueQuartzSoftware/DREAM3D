@@ -3150,6 +3150,8 @@ void  GrainGeneratorFunc::find_centroids()
         graincenters[gnum][3] = graincenters[gnum][3] + z;
 		if(onedge == 1) graincenters[gnum][4] = 1;
   }
+  mindiameter = 1000000;
+  maxdiameter = 0;
   for(int i=1;i<numgrains;i++)
   {
     graincenters[i][1] = graincenters[i][1]/graincenters[i][0];
@@ -3166,9 +3168,9 @@ void  GrainGeneratorFunc::find_centroids()
 	packquality = (diameter-grains[i].equivdiameter)/grains[i].equivdiameter;
 	grains[i].equivdiameter = diameter;
 	grains[i].packquality = packquality;
-	if(int(diameter) > maxdiameter)
+	if((diameter) > maxdiameter)
 	{
-		maxdiameter = int(diameter);
+		maxdiameter = (diameter);
 	}
 	if(diameter < mindiameter) mindiameter = diameter;
   }
