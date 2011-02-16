@@ -3024,7 +3024,7 @@ void SurfaceMeshFunc::smooth_boundaries (int nNodes, int nTriangles, string Node
 	}
 	fclose(tris);
 	tris = NULL;
-	for(int i=1;i<numgrains+1;i++)
+/*	for(int i=1;i<numgrains+1;i++)
 	{
 		for(int j=i+1;j<numgrains+1;j++)
 		{
@@ -3109,7 +3109,7 @@ void SurfaceMeshFunc::smooth_boundaries (int nNodes, int nTriangles, string Node
 					xts3 = find_xcoord(tsite3);
 					yts3 = find_ycoord(tsite3);
 					zts3 = find_zcoord(tsite3);
-/*					ax = (x1+x2+x3)/3.0;
+					ax = (x1+x2+x3)/3.0;
 					ay = (y1+y2+y3)/3.0;
 					az = (z1+z2+z3)/3.0;
 					x1 = x1-ax;
@@ -3156,7 +3156,7 @@ void SurfaceMeshFunc::smooth_boundaries (int nNodes, int nTriangles, string Node
 					z2 = z2+az;
 					x3 = x3+ax;
 					y3 = y3+ay;
-					z3 = z3+az;*/
+					z3 = z3+az;
 					t1 = ((Nx*(BCx-x1))+(Ny*(BCy-y1))+(Nz*(BCz-z1)))/(Nx*Nx+Ny*Ny+Nz*Nz);
 					t2 = ((Nx*(BCx-x2))+(Ny*(BCy-y2))+(Nz*(BCz-z2)))/(Nx*Nx+Ny*Ny+Nz*Nz);
 					t3 = ((Nx*(BCx-x3))+(Ny*(BCy-y3))+(Nz*(BCz-z3)))/(Nx*Nx+Ny*Ny+Nz*Nz);
@@ -3191,7 +3191,7 @@ void SurfaceMeshFunc::smooth_boundaries (int nNodes, int nTriangles, string Node
 					x3 = x3 + Nx*t3;
 					y3 = y3 + Ny*t3;
 					z3 = z3 + Nz*t3;
-/*					if(ntype1 == 0 || ntype1 == 1 || ntype1 == 3)
+					if(ntype1 == 0 || ntype1 == 1 || ntype1 == 3)
 					{
 						z1 = cVertex[cTriangle[trianglenum].node_id[0]].zc;
 						if(ntype1 == 0)
@@ -3364,7 +3364,7 @@ void SurfaceMeshFunc::smooth_boundaries (int nNodes, int nTriangles, string Node
 							if(z3 <= zts3) z3 = zts3+(zRes/10);
 							if(z3 >= zts3+zRes) z3 = zts3+zRes-(zRes/10);
 						}
-					}*/
+					}
 					cVertex[cTriangle[trianglenum].node_id[0]].xc = x1;
 					cVertex[cTriangle[trianglenum].node_id[0]].yc = y1;
 					cVertex[cTriangle[trianglenum].node_id[0]].zc = z1;
@@ -3377,7 +3377,7 @@ void SurfaceMeshFunc::smooth_boundaries (int nNodes, int nTriangles, string Node
 				}
 			}
 		}
-	}
+	}*/
 }
 
 void SurfaceMeshFunc::writeVTKOutputFile (int nNodes, int nTriangles, const std::string &VisualizationFile, const std::string &NodesFile, const std::string &TrianglesFile, bool binaryFile, bool conformalMesh)

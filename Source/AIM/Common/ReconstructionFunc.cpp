@@ -959,7 +959,7 @@ int  ReconstructionFunc::form_grains()
 				{
 				  w = MisorientationCalculations::getMisoQuatCubic(q1,q2,n1,n2,n3);
 				}
-				if (w > misorientationtolerance)
+				if (w < misorientationtolerance)
 				{
 				  gnames[i] = gnames[neighbor];
 				  count++;
@@ -1537,7 +1537,7 @@ void  ReconstructionFunc::find_kernels()
   double w, totalmisorientation;
   double n1, n2, n3;
 
-  int steps = 3;
+  int steps = 1;
   int jStride;
   int kStride;
 
@@ -2415,11 +2415,11 @@ void  ReconstructionFunc::find_neighbors()
 	  voxels[j].neighborlist = new std::vector<int >(vnlist.size());
       voxels[j].neighborlist->swap(vnlist);
     }
-    if (onsurf >= 3) voxels[j].nearestneighbordistance[0] = 0, voxels[j].nearestneighbordistance[1] = 0, voxels[j].nearestneighbordistance[2] = 0, voxels[j].nearestneighbor[0]
+	if (vnlist.size() >= 3) voxels[j].nearestneighbordistance[0] = 0.5*resx, voxels[j].nearestneighbordistance[1] = 0.5*resx, voxels[j].nearestneighbordistance[2] = 0.5*resx, voxels[j].nearestneighbor[0]
         = j, voxels[j].nearestneighbor[1] = j, voxels[j].nearestneighbor[2] = j;
-    if (onsurf == 2) voxels[j].nearestneighbordistance[0] = 0, voxels[j].nearestneighbordistance[1] = 0, voxels[j].nearestneighbordistance[2] = -1, voxels[j].nearestneighbor[0]
+    if (vnlist.size() == 2) voxels[j].nearestneighbordistance[0] = 0.5*resx, voxels[j].nearestneighbordistance[1] = 0.5*resx, voxels[j].nearestneighbordistance[2] = -1, voxels[j].nearestneighbor[0]
         = j, voxels[j].nearestneighbor[1] = j, voxels[j].nearestneighbor[2] = -1;
-    if (onsurf == 1) voxels[j].nearestneighbordistance[0] = 0, voxels[j].nearestneighbordistance[1] = -1, voxels[j].nearestneighbordistance[2] = -1, voxels[j].nearestneighbor[0]
+    if (vnlist.size() == 1) voxels[j].nearestneighbordistance[0] = 0.5*resx, voxels[j].nearestneighbordistance[1] = -1, voxels[j].nearestneighbordistance[2] = -1, voxels[j].nearestneighbor[0]
         = j, voxels[j].nearestneighbor[1] = -1, voxels[j].nearestneighbor[2] = -1;
     if (onsurf == 0) voxels[j].nearestneighbordistance[0] = -1, voxels[j].nearestneighbordistance[1] = -1, voxels[j].nearestneighbordistance[2] = -1, voxels[j].nearestneighbor[0]
         = -1, voxels[j].nearestneighbor[1] = -1, voxels[j].nearestneighbor[2] = -1;
@@ -2634,11 +2634,13 @@ void  ReconstructionFunc::find_euclidean_map()
 
   for(int loop=0;loop<3;loop++)
   {
+	  nearestneighbordistance = 0;
 	  for (int a = 0; a < (totalpoints); ++a)
 	  {
 		  voxel_NearestNeighbor[a] = voxels[a].nearestneighbor[loop];
 		  voxel_NearestNeighborDistance[a] = voxels[a].nearestneighbordistance[loop];
 	  }
+	  count = 1;
 	  while (count != 0)
 	  {
 		count = 0;
@@ -2692,7 +2694,7 @@ void  ReconstructionFunc::find_euclidean_map()
 		z2 = resz*double(nearestneighbor/(xpoints*ypoints)); // find_zcoord(nearestneighbor);
 		dist = ((x1 - x2) * (x1 - x2)) + ((y1 - y2) * (y1 - y2)) + ((z1 - z2) * (z1 - z2));
 		dist = pow(dist, 0.5);
-		voxel_NearestNeighborDistance[j] = dist;
+		voxel_NearestNeighborDistance[j] = dist+(0.5*resx);
 	  }
 	  for (int a = 0; a < (totalpoints); ++a)
 	  {
@@ -4142,10 +4144,8 @@ void ReconstructionFunc::deformation_stats()
 			sf = m_Grains[gname].schmidfactor;
 			sf2 = m_Grains[gname2].schmidfactor;
 			sfmm = sf/sf2;
-			if((km/avgkm) < 1) kmbin = int(((km/avgkm))/0.2);
-			if((km/avgkm) >= 1) kmbin = int(((km/avgkm)-1)/0.4)+5;
-			if((gam/avggam) < 1) gambin = int(((gam/avggam))/0.2);
-			if((gam/avggam) >= 1) gambin = int(((gam/avggam)-1)/0.4)+5;
+			kmbin = int(((km/avgkm))/0.2);
+			gambin = int(((gam/avggam))/0.2);
 			if(kmbin < 0) kmbin = 0;
 			if(kmbin > 19) kmbin = 19;
 			if(gambin < 0) gambin = 0;
@@ -4187,7 +4187,7 @@ void ReconstructionFunc::deformation_stats()
 		if(iqvkm[i][0] > 0) iqvkm[i][1] = iqvkm[i][1]/iqvkm[i][0];
 		if(sfvkm[i][0] > 0) sfvkm[i][1] = sfvkm[i][1]/sfvkm[i][0];
 		if(sfmmvkm[i][0] > 0) sfmmvkm[i][1] = sfmmvkm[i][1]/sfmmvkm[i][0];
-		outFile << gbvkm[i][0] << "	" << gbvkm[i][1]/avggbdist << "	" << tjvkm[i][0] << "	" << tjvkm[i][1]/avgtjdist << "	" << qpvkm[i][0] << "	" << qpvkm[i][1]/avgqpdist << "	" << iqvkm[i][0] << "	" << iqvkm[i][1]/avgiq << "	" << sfvkm[i][0] << "	" << sfvkm[i][1]/avgsf << "	" << sfmmvkm[i][0] <<  "	" << sfmmvkm[i][1]/avgsfmm << endl;
+		outFile << gbvkm[i][0] << "	" << gbvkm[i][1]/avggbdist << "	" << tjvkm[i][0] << "	" << tjvkm[i][1]/avgtjdist << "	" << qpvkm[i][0] << "	" << qpvkm[i][1]/avgqpdist << "	" << iqvkm[i][0] << "	" << iqvkm[i][1]/avgiq << "	" << sfvkm[i][0] << "	" << sfvkm[i][1] << "	" << sfmmvkm[i][0] <<  "	" << sfmmvkm[i][1] << endl;
 	}
 	outFile << "Grain Average Misorientation Data" << endl;
 	outFile << "GB		TJ		QP		IQ		SF		SF" << endl;
@@ -4199,7 +4199,7 @@ void ReconstructionFunc::deformation_stats()
 		if(iqvgam[i][0] > 0) iqvgam[i][1] = iqvgam[i][1]/iqvgam[i][0];
 		if(sfvgam[i][0] > 0) sfvgam[i][1] = sfvgam[i][1]/sfvgam[i][0];
 		if(sfmmvgam[i][0] > 0) sfmmvgam[i][1] = sfmmvgam[i][1]/sfmmvgam[i][0];
-		outFile << gbvgam[i][0] << "	" << gbvgam[i][1]/avggbdist << "	" << tjvgam[i][0] << "	" << tjvgam[i][1]/avgtjdist << "	" << qpvgam[i][0] << "	" << qpvgam[i][1]/avgqpdist << "	" << iqvgam[i][0] << "	" << iqvgam[i][1]/avgiq << "	" << sfvgam[i][0] << "	" << sfvgam[i][1]/avgsf << "	" << sfmmvgam[i][0] <<  "	" << sfmmvgam[i][1]/avgsfmm << endl;
+		outFile << gbvgam[i][0] << "	" << gbvgam[i][1]/avggbdist << "	" << tjvgam[i][0] << "	" << tjvgam[i][1]/avgtjdist << "	" << qpvgam[i][0] << "	" << qpvgam[i][1]/avgqpdist << "	" << iqvgam[i][0] << "	" << iqvgam[i][1]/avgiq << "	" << sfvgam[i][0] << "	" << sfvgam[i][1] << "	" << sfmmvgam[i][0] <<  "	" << sfmmvgam[i][1] << endl;
 	}
 	outFile.close();
 }
@@ -4281,7 +4281,8 @@ int ReconstructionFunc::writeVisualizationFile(const std::string &file)
   size_t total = xpoints*ypoints*zpoints;
   WRITE_VTK_GRAIN_IDS()
 
-  WRITE_VTK_SCALARS_FROM_VOXEL(SurfaceVoxel, float, nearestneighbordistance)
+  WRITE_VTK_SCALARS_FROM_VOXEL(SurfaceVoxel, float, nearestneighbordistance[0])
+  WRITE_VTK_SCALARS_FROM_VOXEL(SurfaceVoxel2, float, nearestneighbordistance[1])
 
   if (mergetwinsoption == 1)
   {
