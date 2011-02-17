@@ -21,6 +21,7 @@
 #include <algorithm>
 #include <functional>
 #include <cmath>
+#include <limits>
 
 // AIM Includes
 #include "AIM/Common/AIMMath.h"
