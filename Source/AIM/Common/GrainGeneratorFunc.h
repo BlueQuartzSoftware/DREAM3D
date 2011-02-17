@@ -52,175 +52,152 @@ using namespace std;
  * @date
  * @version 1.0
  */
-class AIMCOMMON_EXPORT GrainGeneratorFunc
+class GrainGeneratorFunc
 {
-
-public:
-
+  public:
     MXA_SHARED_POINTERS(GrainGeneratorFunc)
     MXA_STATIC_NEW_MACRO(GrainGeneratorFunc)
+    virtual ~GrainGeneratorFunc();
 
-  virtual ~GrainGeneratorFunc();
-
-  double resx;
-  double resy;
-  double resz;
-  double sizex;
-  double sizey;
-  double sizez;
-
-  double misorientationtolerance;
-  AIM::Reconstruction::CrystalStructure crystruct;
-
-	AIMRandomNG rg;
-
-	double* actualodf;
-	double* simodf;
-	double* axisodf;
-	double* precipaxisodf;
-	Voxel* voxels;
-	double* actualmdf;
-	double* simmdf;
-	double* actualmicrotex;
-	double* simmicrotex;
-	int *graincounts;
-	double **graincenters;
-	double **grainmoments;
-
-  Grain* precipitates;
-  int* psizes;
-  vector<Grain> grains;
-
-	vector<int> activegrainlist;
-	vector<int> precipitateorder;
-	vector<int> takencheck;
-	vector<double> grainsizedist;
-	vector<double> simgrainsizedist;
-	vector<double> precipsizedist;
-	vector<double> simprecipsizedist;
-	vector<vector<double> > bovera;
-	vector<vector<double> > covera;
-	vector<vector<double> > coverb;
-	vector<vector<double> > precipbovera;
-	vector<vector<double> > precipcovera;
-	vector<vector<double> > precipcoverb;
-	vector<vector<double> > neighborhood;
-	vector<vector<double> > omega3;
-	vector<vector<double> > precipsvomega3;
-	vector<vector<double> > neighbordist;
-	vector<vector<double> > neighborhoodfit;
-	vector<vector<double> > svbovera;
-	vector<vector<double> > svcovera;
-	vector<vector<double> > svcoverb;
-	vector<vector<double> > svschmid;
-	vector<vector<double> > svomega3;
-
-	void initialize(int32_t m_NumGrains, int32_t m_ShapeClass, double m_XResolution, double m_YResolution, double m_ZResolution,
-					double m_fillingerrorweight, double m_neighborhooderrorweight, double m_sizedisterrorweight, int32_t m_Precipitates,
-	                AIM::Reconstruction::CrystalStructure m_CrystalStructure, double m_FractionPrecipitates);
-	void initialize2();
-	double machineepsilon;
-	double maxrealnumber;
-	double minrealnumber;
-	int numorients;
-	int numeulers;
-	int resdiff;
-	double totalsurfacearea;
-	int numgrains;
-	int numextragrains;
-	int numprecipitates;
-	int shapeclass;
-	int preciptype;
-	double binstepsize;
-	double grainsizediststep;
-	double maxdiameter;
-	double mindiameter;
-	double maxprecipdiameter;
-	double minprecipdiameter;
-	double fractionprecip;
-	double avgdiam;
-	double sddiam;
-	double avgprecipdiam;
-	double sdprecipdiam;
-	int numdiameterbins;
-	int worstgrain;
-	int numprecipdiameters;
-	double totalaxes;
-
-	int32_t xpoints;
-	int32_t ypoints;
-	int32_t zpoints;
-	int totalpoints;
-	double totalvol;
-
-	int numneighbins;
-	double volcheck;
-	int ownercheck;
-
-
-	double currentfillingerror,oldfillingerror;
-	double currentneighborhooderror,oldneighborhooderror;
-	double currentsizedisterror,oldsizedisterror;
-
-	double fillingerrorweight;
-	double neighborhooderrorweight;
-	double sizedisterrorweight;
-
-	void write_eulerangles(const std::string &filename);
-  void write_graindata(const std::string &filename);
-  void writeCube(const std::string &filename, int numgrains);
-	int readReconStatsData(H5ReconStatsReader::Pointer h5io);
-  int readAxisOrientationData(H5ReconStatsReader::Pointer h5io);
-  int readODFData(H5ReconStatsReader::Pointer h5io);
-  int readMisorientationData(H5ReconStatsReader::Pointer h5io);
-  int readMicroTextureData(H5ReconStatsReader::Pointer h5io);
-  void read_structure(const std::string &filename);
-  int pack_grains(const std::string &filename, int numgrains);
-	void generate_grain(int);
-	void assign_eulers(int);
-	void insert_grain(size_t grainNum);
-	void add_grain(size_t grainNum);
-	void remove_grain(size_t grainNum);
-	double costcheck_remove(size_t grainNum);
-	double costcheck_add(size_t grainNum);
-	void determine_neighbors();
-	double check_neighborhooderror(int gadd, int gremove);
-	double check_sizedisterror(int gadd, int gremove);
-	int assign_voxels(int numgrains);
-	void fill_gaps(int numgrains);
-	int create_precipitates();
-	void insert_precipitates(int numprecipitates);
-
-	void find_neighbors();
-
-	void matchCrystallography(const std::string &ErrorFile, H5ReconStatsWriter::Pointer h5io);
-	void measure_misorientations();
-	void find_centroids ();
-	void find_moments();
-	void find_axes();
-	void find_vectors(H5ReconStatsWriter::Pointer h5io);
-	int volume_stats(H5ReconStatsWriter::Pointer h5io);
-
-	double gamma(double);
-	double erf(double);
-	double erfc(double);
-	double gammastirf(double);
-	double lngamma(double, double&);
-	double incompletebeta(double, double, double);
-	double incompletebetafe(double, double, double, double, double);
-	double incompletebetafe2(double, double, double, double, double);
-	double incompletebetaps(double, double, double, double);
-
-	double find_xcoord(long);
-	double find_ycoord(long);
-	double find_zcoord(long);
-
+    double resx;
+    double resy;
+    double resz;
+    double sizex;
+    double sizey;
+    double sizez;
+    double misorientationtolerance;
+    AIM::Reconstruction::CrystalStructure crystruct;
+    AIMRandomNG rg;
+    double *actualodf;
+    double *simodf;
+    double *axisodf;
+    double *precipaxisodf;
+    Voxel *voxels;
+    double *actualmdf;
+    double *simmdf;
+    double *actualmicrotex;
+    double *simmicrotex;
+    int *graincounts;
+    double **graincenters;
+    double **grainmoments;
+    Grain *precipitates;
+    int *psizes;
+    vector<Grain> grains;
+    vector<int> activegrainlist;
+    vector<int> precipitateorder;
+    vector<int> takencheck;
+    vector<double> grainsizedist;
+    vector<double> simgrainsizedist;
+    vector<double> precipsizedist;
+    vector<double> simprecipsizedist;
+    vector<vector<double> > bovera;
+    vector<vector<double> > covera;
+    vector<vector<double> > coverb;
+    vector<vector<double> > precipbovera;
+    vector<vector<double> > precipcovera;
+    vector<vector<double> > precipcoverb;
+    vector<vector<double> > neighborhood;
+    vector<vector<double> > omega3;
+    vector<vector<double> > precipsvomega3;
+    vector<vector<double> > neighbordist;
+    vector<vector<double> > neighborhoodfit;
+    vector<vector<double> > svbovera;
+    vector<vector<double> > svcovera;
+    vector<vector<double> > svcoverb;
+    vector<vector<double> > svschmid;
+    vector<vector<double> > svomega3;
+    void initialize(int32_t m_NumGrains, int32_t m_ShapeClass, double m_XResolution, double m_YResolution, double m_ZResolution, double m_fillingerrorweight, double m_neighborhooderrorweight, double m_sizedisterrorweight, int32_t m_Precipitates, AIM::Reconstruction::CrystalStructure m_CrystalStructure, double m_FractionPrecipitates);
+    void initialize2();
+    double machineepsilon;
+    double maxrealnumber;
+    double minrealnumber;
+    int numorients;
+    int numeulers;
+    int resdiff;
+    double totalsurfacearea;
+    int numgrains;
+    int numextragrains;
+    int numprecipitates;
+    int shapeclass;
+    int preciptype;
+    double binstepsize;
+    double grainsizediststep;
+    double maxdiameter;
+    double mindiameter;
+    double maxprecipdiameter;
+    double minprecipdiameter;
+    double fractionprecip;
+    double avgdiam;
+    double sddiam;
+    double avgprecipdiam;
+    double sdprecipdiam;
+    int numdiameterbins;
+    int worstgrain;
+    int numprecipdiameters;
+    double totalaxes;
+    int32_t xpoints;
+    int32_t ypoints;
+    int32_t zpoints;
+    int totalpoints;
+    double totalvol;
+    int numneighbins;
+    double volcheck;
+    int ownercheck;
+    double currentfillingerror, oldfillingerror;
+    double currentneighborhooderror, oldneighborhooderror;
+    double currentsizedisterror, oldsizedisterror;
+    double fillingerrorweight;
+    double neighborhooderrorweight;
+    double sizedisterrorweight;
+    void write_eulerangles(const std::string & filename);
+    void write_graindata(const std::string & filename);
+    void writeCube(const std::string & filename, int numgrains);
+    int readReconStatsData(H5ReconStatsReader::Pointer h5io);
+    int readAxisOrientationData(H5ReconStatsReader::Pointer h5io);
+    int readODFData(H5ReconStatsReader::Pointer h5io);
+    int readMisorientationData(H5ReconStatsReader::Pointer h5io);
+    int readMicroTextureData(H5ReconStatsReader::Pointer h5io);
+    void read_structure(const std::string & filename);
+    int pack_grains(const std::string & filename, int numgrains);
+    void generate_grain(int);
+    void assign_eulers(int);
+    void insert_grain(size_t grainNum);
+    void add_grain(size_t grainNum);
+    void remove_grain(size_t grainNum);
+    double costcheck_remove(size_t grainNum);
+    double costcheck_add(size_t grainNum);
+    void determine_neighbors();
+    double check_neighborhooderror(int gadd, int gremove);
+    double check_sizedisterror(int gadd, int gremove);
+    int assign_voxels(int numgrains);
+    void fill_gaps(int numgrains);
+    int create_precipitates();
+    void insert_precipitates(int numprecipitates);
+    void find_neighbors();
+    void matchCrystallography(const std::string & ErrorFile, H5ReconStatsWriter::Pointer h5io);
+    void measure_misorientations();
+    void find_centroids();
+    void find_moments();
+    void find_axes();
+    void find_vectors(H5ReconStatsWriter::Pointer h5io);
+    int volume_stats(H5ReconStatsWriter::Pointer h5io);
+    double gamma(double);
+    double erf(double);
+    double erfc(double);
+    double gammastirf(double);
+    double lngamma(double, double& );
+    double incompletebeta(double, double, double);
+    double incompletebetafe(double, double, double, double, double);
+    double incompletebetafe2(double, double, double, double, double);
+    double incompletebetaps(double, double, double, double);
+    double find_xcoord(long );
+    double find_ycoord(long );
+    double find_zcoord(long );
 protected:
-  GrainGeneratorFunc();
-
+    GrainGeneratorFunc();
 private:
-	GrainGeneratorFunc(const GrainGeneratorFunc&);    // Copy Constructor Not Implemented
-    void operator=(const GrainGeneratorFunc&);  // Operator '=' Not Implemented
+    GrainGeneratorFunc(const GrainGeneratorFunc& );
+    void operator =(const GrainGeneratorFunc& );
 };
 
 
