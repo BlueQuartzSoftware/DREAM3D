@@ -38,6 +38,7 @@
 #include "MXA/Utilities/StringUtils.h"
 #include "AIM/ANG/H5AngReader.h"
 #include "AIM/Common/Constants.h"
+#include "AIM/Common/MisorientationCalculations.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -168,10 +169,7 @@ int H5AngDataLoader::loadData(Voxel voxels[], int xpoints, int ypoints, int zpoi
   double c1;
   double s2;
   double c2;
-  double q1;
-  double q2;
-  double q3;
-  double q4;
+  double qr[5];
 
   for (int slice = 0; slice < zpoints; ++slice)
   {
@@ -214,15 +212,17 @@ int H5AngDataLoader::loadData(Voxel voxels[], int xpoints, int ypoints, int zpoi
         c1 = cos(0.5 * (euler1Ptr[readerIndex] - euler3Ptr[readerIndex]));
         s2 = sin(0.5 * (euler1Ptr[readerIndex] + euler3Ptr[readerIndex]));
         c2 = cos(0.5 * (euler1Ptr[readerIndex] + euler3Ptr[readerIndex]));
-        q1 = s * c1;
-        q2 = s * s1;
-        q3 = c * s2;
-        q4 = c * c2;
-        voxels[index].quat[0] = 0;
-        voxels[index].quat[1] = q1;
-        voxels[index].quat[2] = q2;
-        voxels[index].quat[3] = q3;
-        voxels[index].quat[4] = q4;
+        qr[0] = 1.0;
+        qr[1] = s * c1;
+        qr[2] = s * s1;
+        qr[3] = c * s2;
+        qr[4] = c * c2;
+		MisorientationCalculations::getFZQuatCubic(qr);
+        voxels[index].quat[0] = qr[0];
+        voxels[index].quat[1] = qr[1];
+        voxels[index].quat[2] = qr[2];
+        voxels[index].quat[3] = qr[3];
+        voxels[index].quat[4] = qr[4];
         ++readerIndex;
       }
     }

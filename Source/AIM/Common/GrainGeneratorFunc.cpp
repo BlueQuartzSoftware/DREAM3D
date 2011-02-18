@@ -100,6 +100,7 @@ void GrainGeneratorFunc::initialize(int32_t m_NumGrains, int32_t m_ShapeClass, d
   neighborhooderrorweight = m_neighborhooderrorweight;
   sizedisterrorweight = m_sizedisterrorweight;
 
+  double initializer;
   grains.resize((numextragrains+1), Grain());
   size_t nElements = 0;
   if(crystruct == AIM::Reconstruction::Hexagonal)
@@ -110,23 +111,26 @@ void GrainGeneratorFunc::initialize(int32_t m_NumGrains, int32_t m_ShapeClass, d
   {
     nElements = 18*18*18;
   }
+  initializer = (1.0/double(nElements));
   actualodf = new double [nElements];
-  ::memset(actualodf, (1.0/nElements), nElements*sizeof(double) );
+  ::memset(actualodf, initializer, nElements*sizeof(double) );
   simodf = new double [nElements];
   ::memset(simodf, 0.0, nElements*sizeof(double) );
   actualmdf = new double [nElements];
-  ::memset(actualmdf, (1.0/nElements), nElements*sizeof(double) );
+  ::memset(actualmdf, initializer, nElements*sizeof(double) );
   simmdf = new double [nElements];
   ::memset(simmdf, 0.0, nElements*sizeof(double) );
 
   nElements = 18*18*18;
+  initializer = (1.0/double(nElements));
   axisodf = new double [nElements];
-  ::memset(axisodf, (1.0/nElements), nElements*sizeof(double) );
+  ::memset(axisodf, initializer, nElements*sizeof(double) );
   precipaxisodf = new double [nElements];
   ::memset(precipaxisodf, 0, nElements*sizeof(double) );
   nElements = 10;
+  initializer = (1.0/double(nElements));
   actualmicrotex = new double [nElements];
-  ::memset(actualmicrotex, (1.0/nElements), nElements*sizeof(double) );
+  ::memset(actualmicrotex, initializer, nElements*sizeof(double) );
   simmicrotex = new double [nElements];
   ::memset(simmicrotex, 0.0, nElements*sizeof(double) );
 }

@@ -225,6 +225,9 @@ void Reconstruction::compute()
     m->numgrains = m->form_grains();
 	CHECK_FOR_CANCELED(ReconstructionFunc, form_grains)
 
+  progressMessage(AIM_STRING("Writing VTK Visualization File"), 88);
+  if (m_WriteVisualizationFile) {m->writeVisualizationFile(reconVisFile);}
+
 	progressMessage(AIM_STRING("Assigning Bad Points"), 28);
     m->assign_badpoints();
     CHECK_FOR_CANCELED(ReconstructionFunc, assign_badpoints)
