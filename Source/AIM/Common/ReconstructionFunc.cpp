@@ -80,7 +80,7 @@ ReconstructionFunc::~ReconstructionFunc()
   m_Grains.clear();
   graincenters.clear();
   grainmoments.clear();
-  m_grainQuats = DoubleArray::NullPointer();
+  m_grainQuats = DoubleArrayType::NullPointer();
 
 }
 
@@ -127,7 +127,7 @@ void ReconstructionFunc::initialize(int nX, int nY, int nZ,
   m_Grains.resize(101, Grain());
   voxels = new Voxel[totalpoints];
 
-  m_grainQuats = DoubleArray::NullPointer();
+  m_grainQuats = DoubleArrayType::NullPointer();
 }
 
 void ReconstructionFunc::cleanup_data()
@@ -784,14 +784,16 @@ int  ReconstructionFunc::form_grains()
   int zPMinus1 = zpoints - 1;
 
   // Copy all the grain names into a densly packed array
-  int* gnames = new int[totalpoints];
+
+  IntArrayType::Pointer grainNames = IntArrayType::CreateArray(totalpoints);
+  int* gnames = grainNames->getPointer(0);
   for (int i = 0; i < totalpoints; ++i)
   {
     gnames[i] = voxels[i].grainname;
   }
 
   // Create initial set of grain average quaternions
-  m_grainQuats = DoubleArray::CreateArray(1000 * 5);
+  m_grainQuats = DoubleArrayType::CreateArray(1000 * 5);
   m_grainQuats->initializeWithZeros();
   double* grainquats = m_grainQuats->getPointer(0);
 
@@ -961,7 +963,7 @@ int  ReconstructionFunc::form_grains()
   {
     voxels[i].grainname = gnames[i];
   }
-  delete [] gnames;
+//  delete [] gnames;
   m_grainQuats = AIMArray<double>::NullPointer(); // Clean up the array to release some memory
   return graincount;
 }
@@ -1602,7 +1604,7 @@ void  ReconstructionFunc::homogenize_grains()
   float q4Temp;
 
 
-  m_grainQuats = DoubleArray::CreateArray(numgrains * 5);
+  m_grainQuats = DoubleArrayType::CreateArray(numgrains * 5);
   m_grainQuats->initializeWithZeros();
   double* grainquats = m_grainQuats->getPointer(0);
 //  grainquats.resize(numgrains);
