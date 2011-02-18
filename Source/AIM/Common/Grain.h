@@ -81,7 +81,7 @@ class AIMCOMMON_EXPORT Grain
     double radius3;
     double lowanglefraction;
     double avg_quat[5];
-    std::vector<int> neighbordistfunc;
+    int neighbordistfunc[3];
     std::vector<int>* neighborlist;
     std::vector<int>* voxellist;
     std::vector<double>* ellipfunclist;
