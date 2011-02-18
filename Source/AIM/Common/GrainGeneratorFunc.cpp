@@ -21,6 +21,7 @@
 #include <algorithm>
 #include <functional>
 #include <cmath>
+#include <limits>
 
 // AIM Includes
 #include "AIM/Common/AIMMath.h"
@@ -78,6 +79,10 @@ GrainGeneratorFunc::~GrainGeneratorFunc()
 
 }
 
+#define GG_INIT_DOUBLE_ARRAY(array, value, size)\
+    for(size_t n = 0; n < size; ++n) { array[n] = (value); }
+
+
 void GrainGeneratorFunc::initialize(int32_t m_NumGrains, int32_t m_ShapeClass, double m_XResolution, double m_YResolution, double m_ZResolution,
 			  double m_fillingerrorweight, double m_neighborhooderrorweight, double m_sizedisterrorweight, int32_t m_Precipitates,
               AIM::Reconstruction::CrystalStructure m_CrystalStructure, double m_FractionPrecipitates)
@@ -100,6 +105,7 @@ void GrainGeneratorFunc::initialize(int32_t m_NumGrains, int32_t m_ShapeClass, d
   neighborhooderrorweight = m_neighborhooderrorweight;
   sizedisterrorweight = m_sizedisterrorweight;
 
+  double initializer;
   grains.resize((numextragrains+1), Grain());
   size_t nElements = 0;
   if(crystruct == AIM::Reconstruction::Hexagonal)
@@ -110,25 +116,29 @@ void GrainGeneratorFunc::initialize(int32_t m_NumGrains, int32_t m_ShapeClass, d
   {
     nElements = 18*18*18;
   }
+
+  double initValue = 1.0/(double)(nElements);
   actualodf = new double [nElements];
-  ::memset(actualodf, (1.0/nElements), nElements*sizeof(double) );
+  GG_INIT_DOUBLE_ARRAY(actualodf, initValue, nElements);
   simodf = new double [nElements];
-  ::memset(simodf, (1.0/nElements), nElements*sizeof(double) );
+  GG_INIT_DOUBLE_ARRAY(simodf, 0.0, nElements);
   actualmdf = new double [nElements];
-  ::memset(actualmdf, (1.0/nElements), nElements*sizeof(double) );
+  GG_INIT_DOUBLE_ARRAY(actualmdf, initValue, nElements);
   simmdf = new double [nElements];
-  ::memset(simmdf, (1.0/nElements), nElements*sizeof(double) );
+  GG_INIT_DOUBLE_ARRAY(simmdf, 0.0, nElements);
 
   nElements = 18*18*18;
+  initValue = (1.0/double(nElements));
   axisodf = new double [nElements];
-  ::memset(axisodf, (1.0/nElements), nElements*sizeof(double) );
+  GG_INIT_DOUBLE_ARRAY(axisodf, initValue, nElements);
   precipaxisodf = new double [nElements];
-  ::memset(precipaxisodf, 0, nElements*sizeof(double) );
+  GG_INIT_DOUBLE_ARRAY(precipaxisodf, initValue, nElements);
   nElements = 10;
+  initValue = (1.0/double(nElements));
   actualmicrotex = new double [nElements];
-  ::memset(actualmicrotex, 0, nElements*sizeof(double) );
+  GG_INIT_DOUBLE_ARRAY(axisodf, initValue, nElements);
   simmicrotex = new double [nElements];
-  ::memset(simmicrotex, 0, nElements*sizeof(double) );
+  GG_INIT_DOUBLE_ARRAY(axisodf, 0.0, nElements);
 }
 void GrainGeneratorFunc::initialize2()
 {
@@ -379,7 +389,6 @@ int GrainGeneratorFunc::readODFData(H5ReconStatsReader::Pointer h5io)
   for (size_t i = 0; i < numbins; i++)
   {
     actualodf[i] = density[i];
-    simodf[i] = 0.0;
   }
   return err;
 }
@@ -408,7 +417,6 @@ int GrainGeneratorFunc::readMisorientationData(H5ReconStatsReader::Pointer h5io)
   for (size_t k = 0; k < numbins; k++)
   {
     actualmdf[k] = density[k];
-    simmdf[k] = 0.0;
   }
   return err;
 }
@@ -438,7 +446,6 @@ int GrainGeneratorFunc::readMicroTextureData(H5ReconStatsReader::Pointer h5io)
   for (size_t k = 0; k < numbins; k++)
   {
     actualmicrotex[k] = density[k];
-    simmicrotex[k] = 0.0;
   }
   return err;
 }
@@ -714,7 +721,6 @@ void  GrainGeneratorFunc::insert_grain(size_t gnum)
   grains[gnum].ellipfunclist = new std::vector<double>(insidecount);
   grains[gnum].voxellist->swap(insidelist);
   grains[gnum].ellipfunclist->swap(ellipfunclist);
-  grains[gnum].neighbordistfunc.resize(3,0);
   grains[gnum].neighbordistfunclist.resize(3);
   insidelist.clear();
 }
@@ -2211,6 +2217,7 @@ void  GrainGeneratorFunc::find_neighbors()
   int nnum;
   int onsurf = 0;
   double dist, dist2, diam, diam2;
+  int dist_int, dist2_int;
   int good = 0;
   int neighbor = 0;
   totalsurfacearea=0;
@@ -2226,7 +2233,10 @@ void  GrainGeneratorFunc::find_neighbors()
     grains[i].neighborlist->swap(nlist);
     grains[i].neighborsurfarealist = new std::vector<double>(numneighs);
     grains[i].neighborsurfarealist->swap(nsalist);
-	grains[i].neighbordistfunc.resize(3,0);
+	for(int j=0;j<3;j++)
+	{
+		grains[i].neighbordistfunc[j] = 0;
+	}
   }
   for(int j = 0; j < (xpoints*ypoints*zpoints); j++)
   {
@@ -2314,15 +2324,15 @@ void  GrainGeneratorFunc::find_neighbors()
 		dist = (xdist*xdist)+(ydist*ydist)+(zdist*zdist);
 		dist = pow(dist,0.5);
 		dist2 = dist;
-		dist = int(dist/diam);
-		dist2 = int(dist2/diam2);
+		dist_int = int(dist/diam);
+		dist2_int = int(dist2/diam2);
 		if(dist < 3)
 		{
-			grains[i].neighbordistfunc[dist]++;
+			grains[i].neighbordistfunc[dist_int]++;
 		}
 		if(dist2 < 3)
 		{
-			grains[j].neighbordistfunc[dist2]++;
+			grains[j].neighbordistfunc[dist2_int]++;
 		}
 	}
   }
@@ -2330,56 +2340,62 @@ void  GrainGeneratorFunc::find_neighbors()
 
 void GrainGeneratorFunc::matchCrystallography(const std::string &ErrorFile, H5ReconStatsWriter::Pointer h5io)
 {
-	ofstream outFile;
-    outFile.open(ErrorFile.c_str());
-	double deltaerror = 1.0;
-	int iterations = 0;
-	double currentodferror = 0;
-	double currentmdferror = 0;
-	double degtorad = m_pi/180.0;
-	double w;
-//	double axis[3];
-	double denom = 0;
-	double n1,n2,n3;
-	double q1[5], q2[5], qref[5];
-	int good = 0;
-	int selectedgrain, selectedgrain1, selectedgrain2;
-	double totaldensity = 0;
-	int badtrycount = 0;
-	double s,c,s1,c1,s2,c2;
-	int phi1, PHI, phi2;
-	int curodfbin;
-	double miso1, miso2, miso3;
-//	double random;
-	double g1ea1, g1ea2, g1ea3, g2ea1, g2ea2, g2ea3;
-//	double curea1, curea2, curea3;
-	double hmag, angle;
-	double chooseh1, chooseh2, chooseh3;
-	double chooser1, chooser2, chooser3;
-	double chooseea1, chooseea2, chooseea3;
-	double sum, diff;
-	int cureuler1bin, cureuler2bin, cureuler3bin;
-	int g1euler1bin, g1euler2bin, g1euler3bin;
-	int g2euler1bin, g2euler2bin, g2euler3bin;
-//	int miso1bin, miso2bin, miso3bin;
-	int curmiso1, curmiso2, curmiso3, neighsurfarea;
-	int curmisobin, newmisobin;
-	int g1odfbin, g2odfbin;
-	int numbins = 0;
-	vector<int>* nlist;
-	vector<double>* misolist;
-	vector<double>* neighborsurfarealist;
-	double dim1, dim2, dim3;
+  ofstream outFile;
+  outFile.open(ErrorFile.c_str());
+  double deltaerror = 1.0;
+  int iterations = 0;
+  double currentodferror = 0;
+  double currentmdferror = 0;
+  double degtorad = m_pi / 180.0;
+  double w = std::numeric_limits<double >::max();
+  //	double axis[3];
+  double denom = 0;
+  double n1 = std::numeric_limits<double >::max(), n2 = std::numeric_limits<double >::max(), n3 = std::numeric_limits<double >::max();
+  double q1[5], q2[5], qref[5];
+  int good = 0;
+  int selectedgrain, selectedgrain1, selectedgrain2;
+  double totaldensity = 0;
+  int badtrycount = 0;
+  double s = std::numeric_limits<double >::max(), c = std::numeric_limits<double >::max(), s1 = std::numeric_limits<double >::max(), c1 = std::numeric_limits<
+      double >::max(), s2 = std::numeric_limits<double >::max(), c2 = std::numeric_limits<double >::max();
+  int phi1 = std::numeric_limits<int >::max(), PHI = std::numeric_limits<int >::max(), phi2 = std::numeric_limits<int >::max();
+  int curodfbin = std::numeric_limits<int >::max();
+  double miso1 = std::numeric_limits<double >::max(), miso2 = std::numeric_limits<double >::max(), miso3 = std::numeric_limits<double >::max();
+  //	double random;
+  double g1ea1 = std::numeric_limits<double >::max(), g1ea2 = std::numeric_limits<double >::max(), g1ea3 = std::numeric_limits<double >::max(), g2ea1 =
+      std::numeric_limits<double >::max(), g2ea2 = std::numeric_limits<double >::max(), g2ea3 = std::numeric_limits<double >::max();
+  //	double curea1, curea2, curea3;
+  double hmag = std::numeric_limits<double >::max(), angle = std::numeric_limits<double >::max();
+  double chooseh1 = std::numeric_limits<double >::max(), chooseh2 = std::numeric_limits<double >::max(), chooseh3 = std::numeric_limits<double >::max();
+  double chooser1 = std::numeric_limits<double >::max(), chooser2 = std::numeric_limits<double >::max(), chooser3 = std::numeric_limits<double >::max();
+  double chooseea1 = std::numeric_limits<double >::max(), chooseea2 = std::numeric_limits<double >::max(), chooseea3 = std::numeric_limits<double >::max();
+  double sum = std::numeric_limits<double >::max(), diff = std::numeric_limits<double >::max();
+  int cureuler1bin = std::numeric_limits<int >::max(), cureuler2bin = std::numeric_limits<int >::max(), cureuler3bin = std::numeric_limits<int >::max();
+  int g1euler1bin = std::numeric_limits<int >::max(), g1euler2bin = std::numeric_limits<int >::max(), g1euler3bin = std::numeric_limits<int >::max();
+  int g2euler1bin = std::numeric_limits<int >::max(), g2euler2bin = std::numeric_limits<int >::max(), g2euler3bin = std::numeric_limits<int >::max();
+  //	int miso1bin, miso2bin, miso3bin;
+  int curmiso1 = std::numeric_limits<int >::max(), curmiso2 = std::numeric_limits<int >::max(), curmiso3 = std::numeric_limits<int >::max(), neighsurfarea =
+      std::numeric_limits<int >::max();
+  int curmisobin = std::numeric_limits<int >::max(), newmisobin = std::numeric_limits<int >::max();
+  int g1odfbin = std::numeric_limits<int >::max(), g2odfbin = std::numeric_limits<int >::max();
+  int numbins = 0;
+  vector<int >* nlist;
+  vector<double >* misolist;
+  vector<double >* neighborsurfarealist;
+  double dim1 = std::numeric_limits<double >::max(), dim2 = std::numeric_limits<double >::max(), dim3 = std::numeric_limits<double >::max();
 	if(crystruct == AIM::Reconstruction::Cubic)
 	{
-	  numbins = 36*36*12;
+	  dim1 = pow((0.75*((m_pi/4.0)-sin((m_pi/4.0)))),(1.0/3.0));
+	  dim2 = pow((0.75*((m_pi/4.0)-sin((m_pi/4.0)))),(1.0/3.0));
+	  dim3 = pow((0.75*((m_pi/4.0)-sin((m_pi/4.0)))),(1.0/3.0));
+	  numbins = 18*18*18;
 	}
 	if(crystruct == AIM::Reconstruction::Hexagonal)
 	{
 	  dim1 = pow((0.75*((m_pi/2.0)-sin((m_pi/2.0)))),(1.0/3.0));
 	  dim2 = pow((0.75*((m_pi/2.0)-sin((m_pi/2.0)))),(1.0/3.0));
 	  dim3 = pow((0.75*((m_pi/6.0)-sin((m_pi/6.0)))),(1.0/3.0));
-	  numbins = 18*18*18;
+	  numbins = 36*36*12;
 	}
 	qref[1] = sin(0.5*0.0)*cos(0.5*(0.0-0.0));
 	qref[2] = sin(0.5*0.0)*sin(0.5*(0.0-0.0));
@@ -2540,7 +2556,7 @@ void GrainGeneratorFunc::matchCrystallography(const std::string &ErrorFile, H5Re
 					miso1 = n1*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
 					miso2 = n2*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
 					miso3 = n3*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
-					newmisobin = MisorientationCalculations::getMisoBinCubic(miso1, miso2, miso3);
+					newmisobin = MisorientationCalculations::getMisoBinHexagonal(miso1, miso2, miso3);
 			    }
 				if(crystruct == AIM::Reconstruction::Cubic)
 				{
@@ -2554,7 +2570,7 @@ void GrainGeneratorFunc::matchCrystallography(const std::string &ErrorFile, H5Re
 					miso1 = n1*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
 					miso2 = n2*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
 					miso3 = n3*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
-					newmisobin = MisorientationCalculations::getMisoBinHexagonal(miso1, miso2, miso3);
+					newmisobin = MisorientationCalculations::getMisoBinCubic(miso1, miso2, miso3);
 			    }
 				mdfchange = mdfchange + (((actualmdf[curmisobin]-simmdf[curmisobin])*(actualmdf[curmisobin]-simmdf[curmisobin])) - ((actualmdf[curmisobin]-(simmdf[curmisobin]-(neighsurfarea/totalsurfacearea)))*(actualmdf[curmisobin]-(simmdf[curmisobin]-(neighsurfarea/totalsurfacearea)))));
 				mdfchange = mdfchange + (((actualmdf[newmisobin]-simmdf[newmisobin])*(actualmdf[newmisobin]-simmdf[newmisobin])) - ((actualmdf[newmisobin]-(simmdf[newmisobin]+(neighsurfarea/totalsurfacearea)))*(actualmdf[newmisobin]-(simmdf[newmisobin]+(neighsurfarea/totalsurfacearea)))));
@@ -2603,7 +2619,7 @@ void GrainGeneratorFunc::matchCrystallography(const std::string &ErrorFile, H5Re
 						miso1 = n1*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
 						miso2 = n2*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
 						miso3 = n3*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
-						newmisobin = MisorientationCalculations::getMisoBinCubic(miso1, miso2, miso3);
+						newmisobin = MisorientationCalculations::getMisoBinHexagonal(miso1, miso2, miso3);
 				    }
 					if(crystruct == AIM::Reconstruction::Cubic)
 					{
@@ -2617,7 +2633,7 @@ void GrainGeneratorFunc::matchCrystallography(const std::string &ErrorFile, H5Re
 						miso1 = n1*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
 						miso2 = n2*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
 						miso3 = n3*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
-						newmisobin = MisorientationCalculations::getMisoBinHexagonal(miso1, miso2, miso3);
+						newmisobin = MisorientationCalculations::getMisoBinCubic(miso1, miso2, miso3);
 				    }
 					misolist->at(3*j) = miso1;
 					misolist->at(3*j+1) = miso2;
@@ -2784,7 +2800,7 @@ void GrainGeneratorFunc::matchCrystallography(const std::string &ErrorFile, H5Re
 						miso1 = n1*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
 						miso2 = n2*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
 						miso3 = n3*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
-						newmisobin = MisorientationCalculations::getMisoBinCubic(miso1, miso2, miso3);
+						newmisobin = MisorientationCalculations::getMisoBinHexagonal(miso1, miso2, miso3);
 				    }
 					if(crystruct == AIM::Reconstruction::Cubic)
 					{
@@ -2798,7 +2814,7 @@ void GrainGeneratorFunc::matchCrystallography(const std::string &ErrorFile, H5Re
 						miso1 = n1*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
 						miso2 = n2*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
 						miso3 = n3*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
-						newmisobin = MisorientationCalculations::getMisoBinHexagonal(miso1, miso2, miso3);
+						newmisobin = MisorientationCalculations::getMisoBinCubic(miso1, miso2, miso3);
 				    }
 					mdfchange = mdfchange + (((actualmdf[curmisobin]-simmdf[curmisobin])*(actualmdf[curmisobin]-simmdf[curmisobin])) - ((actualmdf[curmisobin]-(simmdf[curmisobin]-(neighsurfarea/totalsurfacearea)))*(actualmdf[curmisobin]-(simmdf[curmisobin]-(neighsurfarea/totalsurfacearea)))));
 					mdfchange = mdfchange + (((actualmdf[newmisobin]-simmdf[newmisobin])*(actualmdf[newmisobin]-simmdf[newmisobin])) - ((actualmdf[newmisobin]-(simmdf[newmisobin]+(neighsurfarea/totalsurfacearea)))*(actualmdf[newmisobin]-(simmdf[newmisobin]+(neighsurfarea/totalsurfacearea)))));
@@ -2850,7 +2866,7 @@ void GrainGeneratorFunc::matchCrystallography(const std::string &ErrorFile, H5Re
 						miso1 = n1*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
 						miso2 = n2*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
 						miso3 = n3*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
-						newmisobin = MisorientationCalculations::getMisoBinCubic(miso1, miso2, miso3);
+						newmisobin = MisorientationCalculations::getMisoBinHexagonal(miso1, miso2, miso3);
 				    }
 					if(crystruct == AIM::Reconstruction::Cubic)
 					{
@@ -2864,7 +2880,7 @@ void GrainGeneratorFunc::matchCrystallography(const std::string &ErrorFile, H5Re
 						miso1 = n1*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
 						miso2 = n2*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
 						miso3 = n3*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
-						newmisobin = MisorientationCalculations::getMisoBinHexagonal(miso1, miso2, miso3);
+						newmisobin = MisorientationCalculations::getMisoBinCubic(miso1, miso2, miso3);
 				    }
 					mdfchange = mdfchange + (((actualmdf[curmisobin]-simmdf[curmisobin])*(actualmdf[curmisobin]-simmdf[curmisobin])) - ((actualmdf[curmisobin]-(simmdf[curmisobin]-(neighsurfarea/totalsurfacearea)))*(actualmdf[curmisobin]-(simmdf[curmisobin]-(neighsurfarea/totalsurfacearea)))));
 					mdfchange = mdfchange + (((actualmdf[newmisobin]-simmdf[newmisobin])*(actualmdf[newmisobin]-simmdf[newmisobin])) - ((actualmdf[newmisobin]-(simmdf[newmisobin]+(neighsurfarea/totalsurfacearea)))*(actualmdf[newmisobin]-(simmdf[newmisobin]+(neighsurfarea/totalsurfacearea)))));
@@ -2932,7 +2948,7 @@ void GrainGeneratorFunc::matchCrystallography(const std::string &ErrorFile, H5Re
 							miso1 = n1*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
 							miso2 = n2*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
 							miso3 = n3*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
-							newmisobin = MisorientationCalculations::getMisoBinCubic(miso1, miso2, miso3);
+							newmisobin = MisorientationCalculations::getMisoBinHexagonal(miso1, miso2, miso3);
 					    }
 						if(crystruct == AIM::Reconstruction::Cubic)
 						{
@@ -2946,7 +2962,7 @@ void GrainGeneratorFunc::matchCrystallography(const std::string &ErrorFile, H5Re
 							miso1 = n1*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
 							miso2 = n2*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
 							miso3 = n3*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
-							newmisobin = MisorientationCalculations::getMisoBinHexagonal(miso1, miso2, miso3);
+							newmisobin = MisorientationCalculations::getMisoBinCubic(miso1, miso2, miso3);
 					    }
 						misolist->at(3*j) = miso1;
 						misolist->at(3*j+1) = miso2;
@@ -3005,7 +3021,7 @@ void GrainGeneratorFunc::matchCrystallography(const std::string &ErrorFile, H5Re
 							miso1 = n1*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
 							miso2 = n2*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
 							miso3 = n3*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
-							newmisobin = MisorientationCalculations::getMisoBinCubic(miso1, miso2, miso3);
+							newmisobin = MisorientationCalculations::getMisoBinHexagonal(miso1, miso2, miso3);
 					    }
 						if(crystruct == AIM::Reconstruction::Cubic)
 						{
@@ -3019,7 +3035,7 @@ void GrainGeneratorFunc::matchCrystallography(const std::string &ErrorFile, H5Re
 							miso1 = n1*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
 							miso2 = n2*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
 							miso3 = n3*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
-							newmisobin = MisorientationCalculations::getMisoBinHexagonal(miso1, miso2, miso3);
+							newmisobin = MisorientationCalculations::getMisoBinCubic(miso1, miso2, miso3);
 					    }
 						misolist->at(3*j) = miso1;
 						misolist->at(3*j+1) = miso2;
@@ -3034,7 +3050,7 @@ void GrainGeneratorFunc::matchCrystallography(const std::string &ErrorFile, H5Re
 	outFile.close();
 	int err;
 	err = h5io->writeODFData(crystruct, simodf, totalvol);
-	err = h5io->writeMisorientationBinsData(simmdf, 18*18*18);
+	err = h5io->writeMisorientationBinsData(simmdf, numbins);
 }
 void  GrainGeneratorFunc::measure_misorientations ()
 {
@@ -3093,7 +3109,7 @@ void  GrainGeneratorFunc::measure_misorientations ()
       misolist[3*j+2] = n3*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
 	  if (crystruct == AIM::Reconstruction::Cubic)
       {
-		  mbin = MisorientationCalculations::getMisoBinHexagonal(misolist[3*j],misolist[3*j+1],misolist[3*j+2]);
+		  mbin = MisorientationCalculations::getMisoBinCubic(misolist[3*j],misolist[3*j+1],misolist[3*j+2]);
 	  }
       if (crystruct == AIM::Reconstruction::Hexagonal)
       {
@@ -3150,6 +3166,8 @@ void  GrainGeneratorFunc::find_centroids()
         graincenters[gnum][3] = graincenters[gnum][3] + z;
 		if(onedge == 1) graincenters[gnum][4] = 1;
   }
+  mindiameter = 1000000;
+  maxdiameter = 0;
   for(int i=1;i<numgrains;i++)
   {
     graincenters[i][1] = graincenters[i][1]/graincenters[i][0];
@@ -3166,9 +3184,9 @@ void  GrainGeneratorFunc::find_centroids()
 	packquality = (diameter-grains[i].equivdiameter)/grains[i].equivdiameter;
 	grains[i].equivdiameter = diameter;
 	grains[i].packquality = packquality;
-	if(int(diameter) > maxdiameter)
+	if((diameter) > maxdiameter)
 	{
-		maxdiameter = int(diameter);
+		maxdiameter = (diameter);
 	}
 	if(diameter < mindiameter) mindiameter = diameter;
   }
@@ -3527,7 +3545,6 @@ int GrainGeneratorFunc::volume_stats(H5ReconStatsWriter::Pointer h5io)
   double maxcoverb = 0;
   double maxschmid = 0;
   double maxomega3 = 0;
-  vector<int > neighdistfunc;
   int numbins = ((maxdiameter-mindiameter)/binstepsize)+1;
   neighborhood.resize(numbins);
   neighborhoodfit.resize(numbins);
@@ -3576,7 +3593,6 @@ int GrainGeneratorFunc::volume_stats(H5ReconStatsWriter::Pointer h5io)
       double coverb = c / b;
       double schmid = grains[i].schmidfactor;
       double omega3 = grains[i].omega3;
-      neighdistfunc = grains[i].neighbordistfunc;
       avgvol = avgvol + voxvol;
       avglnvol = avglnvol + logvol;
       avgbovera = avgbovera + bovera;
@@ -3598,12 +3614,10 @@ int GrainGeneratorFunc::volume_stats(H5ReconStatsWriter::Pointer h5io)
       svcoverb[diamint][1] = svcoverb[diamint][1] + coverb;
       svschmid[diamint][1] = svschmid[diamint][1] + schmid;
       svomega3[diamint][1] = svomega3[diamint][1] + omega3;
-      int size = 0;
-      size = neighdistfunc.size();
       neighborhood[diamint][0]++;
-      for (int k = 0; k < size; k++)
+      for (int k = 0; k < 3; k++)
       {
-        int nnum = neighdistfunc[k];
+        int nnum = grains[i].neighbordistfunc[k];
         neighborhood[diamint][((2 * k) + 1)] = neighborhood[diamint][((2 * k) + 1)] + nnum;
       }
       if (voxvol > maxvol) maxvol = voxvol;
@@ -3685,7 +3699,6 @@ int GrainGeneratorFunc::volume_stats(H5ReconStatsWriter::Pointer h5io)
       double coverb = c / b;
       double schmid = grains[j].schmidfactor;
       double omega3 = grains[j].omega3;
-      neighdistfunc = grains[j].neighbordistfunc;
       sdvol = sdvol + ((voxvol - avgvol) * (voxvol - avgvol));
       sdlnvol = sdlnvol + ((logvol - avglnvol) * (logvol - avglnvol));
       sdbovera = sdbovera + ((bovera - avgbovera) * (bovera - avgbovera));
@@ -3701,11 +3714,9 @@ int GrainGeneratorFunc::volume_stats(H5ReconStatsWriter::Pointer h5io)
       svcoverb[diamint][2] = svcoverb[diamint][2] + ((coverb - svcoverb[diamint][1]) * (coverb - svcoverb[diamint][1]));
       svschmid[diamint][2] = svschmid[diamint][2] + ((schmid - svschmid[diamint][1]) * (schmid - svschmid[diamint][1]));
       svomega3[diamint][2] = svomega3[diamint][2] + ((omega3 - svomega3[diamint][1]) * (omega3 - svomega3[diamint][1]));
-      int size = 0;
-      size = neighdistfunc.size();
-      for (int k = 0; k < size; k++)
+      for (int k = 0; k < 3; k++)
       {
-        int nnum = neighdistfunc[k];
+        int nnum = grains[j].neighbordistfunc[k];
         neighborhood[diamint][((2 * k) + 2)] = neighborhood[diamint][((2 * k) + 2)] + ((neighborhood[diamint][((2 * k) + 1)] - nnum)
             * (neighborhood[diamint][((2 * k) + 1)] - nnum));
       }

@@ -199,10 +199,6 @@ void Reconstruction::compute()
     m->find_border();
     CHECK_FOR_CANCELED(ReconstructionFunc, find_border)
 
-    progressMessage(AIM_STRING("Cleaning Data"), 9);
-    m->cleanup_data();
-    CHECK_FOR_CANCELED(ReconstructionFunc, cleanup_data)
-
     if (m_AlignmentMethod == AIM::Reconstruction::MutualInformation)
     {
       progressMessage(AIM_STRING("Identifying Grains on Sections"), 11);
@@ -210,9 +206,13 @@ void Reconstruction::compute()
       CHECK_FOR_CANCELED(ReconstructionFunc, form_grains_sections)
     }
 
-    progressMessage(AIM_STRING("Aligning Slices"), 14);
+    progressMessage(AIM_STRING("Aligning Slices"), 9);
     m->align_sections(alignmentFile);
     CHECK_FOR_CANCELED(ReconstructionFunc, align_sections)
+
+    progressMessage(AIM_STRING("Cleaning Data"), 12);
+    m->cleanup_data();
+    CHECK_FOR_CANCELED(ReconstructionFunc, cleanup_data)
 
     if (m_AlignmentMethod == AIM::Reconstruction::MutualInformation)
     {
@@ -221,12 +221,14 @@ void Reconstruction::compute()
       CHECK_FOR_CANCELED(ReconstructionFunc, find_border)
     }
 
-
     progressMessage(AIM_STRING("Forming Macro-Grains"), 19);
     m->numgrains = m->form_grains();
+	CHECK_FOR_CANCELED(ReconstructionFunc, form_grains)
 
-    CHECK_FOR_CANCELED(ReconstructionFunc, form_grains)
-    progressMessage(AIM_STRING("Assigning Bad Points"), 28);
+  progressMessage(AIM_STRING("Writing VTK Visualization File"), 88);
+  if (m_WriteVisualizationFile) {m->writeVisualizationFile(reconVisFile);}
+
+	progressMessage(AIM_STRING("Assigning Bad Points"), 28);
     m->assign_badpoints();
     CHECK_FOR_CANCELED(ReconstructionFunc, assign_badpoints)
   }
@@ -280,11 +282,11 @@ void Reconstruction::compute()
     progressMessage(AIM_STRING("Merging Colonies"), 51);
     m->merge_colonies();
     CHECK_FOR_CANCELED(ReconstructionFunc, merge_colonies)
-    progressMessage(AIM_STRING("Renumbering Grains"), 53);
+
+	progressMessage(AIM_STRING("Renumbering Grains"), 53);
     m->characterize_colonies();
     CHECK_FOR_CANCELED(ReconstructionFunc, characterize_colonies)
   }
-
 
   progressMessage(AIM_STRING("Finding Grain Centroids"), 55);
   if(m_ZEndIndex-m_ZStartIndex > 1) m->find_centroids();
