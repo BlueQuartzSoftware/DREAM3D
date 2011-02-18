@@ -885,7 +885,7 @@ int  ReconstructionFunc::form_grains()
             {
               w = MisorientationCalculations::getMisoQuatCubic(q1, q2, n1, n2, n3);
             }
-            if (w < 0.5)
+            if (w < 1)
             {
               gnames[neighbor] = graincount;
               for (int k = 0; k < 5; k++)
@@ -919,7 +919,7 @@ int  ReconstructionFunc::form_grains()
             {
               w = MisorientationCalculations::getMisoQuatCubic(q1, q2, n1, n2, n3);
             }
-            if (w < misorientationtolerance * 0)
+            if (w < misorientationtolerance)
             {
               gname = gnames[neighbor];
               for (int k = 0; k < totalpoints; k++)
@@ -957,6 +957,14 @@ int  ReconstructionFunc::form_grains()
   }
 
   numgrains = graincount;
+  m_Grains.resize(numgrains);
+  for(int i = 0; i < numgrains; ++i)
+  {
+	  for(int k=0;k<5;k++)
+	  {
+		  m_Grains[i].avg_quat[k] = grainquats[i*5+k];
+	  }
+  }
 
   // Copy the grain names back into the Voxel objects
   for (int i = 0; i < totalpoints; ++i)
@@ -2185,10 +2193,10 @@ void  ReconstructionFunc::find_neighbors()
   int neighbor = 0;
   totalsurfacearea = 0;
   int surfacegrain = 1;
-  int nListSize = 1000;
+  int nListSize = 100;
   std::vector<int > vnlist(6, -1);
-  std::vector<int > nlist(nListSize, -1);
-  std::vector<double > nsalist(nListSize, -1);
+  std::vector<int >* nlist;
+  std::vector<double >* nsalist;
   // Copy all the grain names into a densly packed array
   int* gnames = new int[totalpoints];
   for (int i = 0; i < totalpoints; ++i)
@@ -2197,12 +2205,9 @@ void  ReconstructionFunc::find_neighbors()
   }
   for (int i = 0; i < numgrains; i++)
   {
-    int numneighs = int(nlist.size());
     m_Grains[i].numneighbors = 0;
-    m_Grains[i].neighborlist = new std::vector<int >(numneighs);
-    m_Grains[i].neighborlist->swap(nlist);
-    m_Grains[i].neighborsurfarealist = new std::vector<double >(numneighs);
-    m_Grains[i].neighborsurfarealist->swap(nsalist);
+    m_Grains[i].neighborlist = new std::vector<int >(nListSize,-1);
+    m_Grains[i].neighborsurfarealist = new std::vector<double >(nListSize,1);
     for(int j=0;j<3;j++)
 	{
 		m_Grains[i].neighbordistfunc[j] = 0;
@@ -2234,8 +2239,8 @@ void  ReconstructionFunc::find_neighbors()
         {
           vnlist[onsurf] = gnames[neighbor];
           nnum = m_Grains[grain].numneighbors;
-          vector<int >* nlist = m_Grains[grain].neighborlist;
-          if (nnum >= (0.9 * nlist->size()))
+          nlist = m_Grains[grain].neighborlist;
+          if (nnum >= (nlist->size()))
           {
             nlist->resize(nnum + nListSize);
           }
