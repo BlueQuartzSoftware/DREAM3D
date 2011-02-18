@@ -939,7 +939,7 @@ int  ReconstructionFunc::form_grains()
 	  if(totalgrains >= grainquats.size())
 	  {
 		  grainquats.resize(totalgrains+1000);
-		  for (int i = graincount; i < totalgrains+1000; i++)
+		  for (int i = graincount; i < totalgrains	+1000; i++)
 		  {
 			grainquats[i].resize(5);
 			for (int j = 0; j < 5; j++)
@@ -2171,6 +2171,7 @@ void  ReconstructionFunc::find_neighbors()
   int nnum;
   int onsurf = 0;
   double dist, dist2, diam, diam2;
+  int dist_int, dist2_int;
   int good = 0;
   int neighbor = 0;
   totalsurfacearea = 0;
@@ -2193,7 +2194,10 @@ void  ReconstructionFunc::find_neighbors()
     m_Grains[i].neighborlist->swap(nlist);
     m_Grains[i].neighborsurfarealist = new std::vector<double >(numneighs);
     m_Grains[i].neighborsurfarealist->swap(nsalist);
-    m_Grains[i].neighbordistfunc.resize(3, 0);
+    for(int j=0;j<3;j++)
+	{
+		m_Grains[i].neighbordistfunc[j] = 0;
+	}
   }
   for (int j = 0; j < (xpoints * ypoints * zpoints); j++)
   {
@@ -2310,15 +2314,15 @@ void  ReconstructionFunc::find_neighbors()
 		        dist = (xdist * xdist) + (ydist * ydist) + (zdist * zdist);
 		        dist = pow(dist, 0.5);
 		        dist2 = dist;
-		        dist = int(dist / diam);
-		        dist2 = int(dist2 / diam2);
+		        dist_int = int(dist / diam);
+		        dist2_int = int(dist2 / diam2);
 		        if (dist < 3)
 		        {
-		          m_Grains[i].neighbordistfunc[dist]++;
+		          m_Grains[i].neighbordistfunc[dist_int]++;
 		        }
 		        if (dist2 < 3)
 		        {
-		          m_Grains[j].neighbordistfunc[dist2]++;
+		          m_Grains[j].neighbordistfunc[dist2_int]++;
 		        }
 			}
 		  }
@@ -3371,7 +3375,6 @@ int ReconstructionFunc::volume_stats(H5ReconStatsWriter::Pointer h5io)
   double maxcoverb = 0;
   double maxschmid = 0;
   double maxomega3 = 0;
-  vector<int > neighdistfunc;
   int numbins = int((maxdiameter-mindiameter)/sizebinstepsize)+1;
   neighborhood.resize(numbins);
   neighborhoodfit.resize(numbins);
@@ -3420,7 +3423,6 @@ int ReconstructionFunc::volume_stats(H5ReconStatsWriter::Pointer h5io)
       double coverb = c / b;
       double schmid = m_Grains[i].schmidfactor;
       double omega3 = m_Grains[i].omega3;
-      neighdistfunc = m_Grains[i].neighbordistfunc;
       avgvol = avgvol + voxvol;
       avglnvol = avglnvol + logvol;
       avgbovera = avgbovera + bovera;
@@ -3442,12 +3444,10 @@ int ReconstructionFunc::volume_stats(H5ReconStatsWriter::Pointer h5io)
       svcoverb[diamint][1] = svcoverb[diamint][1] + coverb;
       svschmid[diamint][1] = svschmid[diamint][1] + schmid;
       svomega3[diamint][1] = svomega3[diamint][1] + omega3;
-      int size = 0;
-      size = neighdistfunc.size();
       neighborhood[diamint][0]++;
-      for (int k = 0; k < size; k++)
+      for (int k = 0; k < 3; k++)
       {
-        int nnum = neighdistfunc[k];
+        int nnum = m_Grains[i].neighbordistfunc[k];
         neighborhood[diamint][((2 * k) + 1)] = neighborhood[diamint][((2 * k) + 1)] + nnum;
       }
       if (voxvol > maxvol) maxvol = voxvol;
@@ -3529,7 +3529,6 @@ int ReconstructionFunc::volume_stats(H5ReconStatsWriter::Pointer h5io)
       double coverb = c / b;
       double schmid = m_Grains[j].schmidfactor;
       double omega3 = m_Grains[j].omega3;
-      neighdistfunc = m_Grains[j].neighbordistfunc;
       sdvol = sdvol + ((voxvol - avgvol) * (voxvol - avgvol));
       sdlnvol = sdlnvol + ((logvol - avglnvol) * (logvol - avglnvol));
       sdbovera = sdbovera + ((bovera - avgbovera) * (bovera - avgbovera));
@@ -3545,11 +3544,9 @@ int ReconstructionFunc::volume_stats(H5ReconStatsWriter::Pointer h5io)
       svcoverb[diamint][2] = svcoverb[diamint][2] + ((coverb - svcoverb[diamint][1]) * (coverb - svcoverb[diamint][1]));
       svschmid[diamint][2] = svschmid[diamint][2] + ((schmid - svschmid[diamint][1]) * (schmid - svschmid[diamint][1]));
       svomega3[diamint][2] = svomega3[diamint][2] + ((omega3 - svomega3[diamint][1]) * (omega3 - svomega3[diamint][1]));
-      int size = 0;
-      size = neighdistfunc.size();
-      for (int k = 0; k < size; k++)
+      for (int k = 0; k < 3; k++)
       {
-        int nnum = neighdistfunc[k];
+        int nnum = m_Grains[j].neighbordistfunc[k];
         neighborhood[diamint][((2 * k) + 2)] = neighborhood[diamint][((2 * k) + 2)] + ((neighborhood[diamint][((2 * k) + 1)] - nnum)
             * (neighborhood[diamint][((2 * k) + 1)] - nnum));
       }
@@ -3669,7 +3666,7 @@ int ReconstructionFunc::volume_stats2D(H5ReconStatsWriter::Pointer h5io)
   //  double maxcoverb = 0;
   double maxschmid = 0;
   //  double maxomega3 = 0;
-  vector<int > neighdistfunc;
+  int neighdistfunc[3];
   int numbins = int((maxdiameter - mindiameter) / sizebinstepsize) + 1;
   neighborhood.resize(numbins);
   neighborhoodfit.resize(numbins);
@@ -3704,7 +3701,6 @@ int ReconstructionFunc::volume_stats2D(H5ReconStatsWriter::Pointer h5io)
       double bovera = rad2 / rad1;
       double schmid = m_Grains[i].schmidfactor;
       //	  double omega3 = m_Grains[i].omega3;
-      neighdistfunc = m_Grains[i].neighbordistfunc;
       avgvol = avgvol + voxvol;
       avglnvol = avglnvol + logvol;
       avgbovera = avgbovera + bovera;
@@ -3720,10 +3716,8 @@ int ReconstructionFunc::volume_stats2D(H5ReconStatsWriter::Pointer h5io)
       svbovera[diamint][1] = svbovera[diamint][1] + bovera;
       svschmid[diamint][1] = svschmid[diamint][1] + schmid;
       //      svomega3[diamint][1] = svomega3[diamint][1] + omega3;
-      int size = 0;
-      size = neighdistfunc.size();
       neighborhood[diamint][0]++;
-      for (int k = 0; k < size; k++)
+      for (int k = 0; k < 3; k++)
       {
         int nnum = neighdistfunc[k];
         neighborhood[diamint][((2 * k) + 1)] = neighborhood[diamint][((2 * k) + 1)] + nnum;
@@ -3784,7 +3778,6 @@ int ReconstructionFunc::volume_stats2D(H5ReconStatsWriter::Pointer h5io)
       double bovera = rad2 / rad1;
       double schmid = m_Grains[j].schmidfactor;
       //	  double omega3 = m_Grains[j].omega3;
-      neighdistfunc = m_Grains[j].neighbordistfunc;
       sdvol = sdvol + ((voxvol - avgvol) * (voxvol - avgvol));
       sdlnvol = sdlnvol + ((logvol - avglnvol) * (logvol - avglnvol));
       sdbovera = sdbovera + ((bovera - avgbovera) * (bovera - avgbovera));
@@ -3796,9 +3789,7 @@ int ReconstructionFunc::volume_stats2D(H5ReconStatsWriter::Pointer h5io)
       svbovera[diamint][2] = svbovera[diamint][2] + ((bovera - svbovera[diamint][1]) * (bovera - svbovera[diamint][1]));
       svschmid[diamint][2] = svschmid[diamint][2] + ((schmid - svschmid[diamint][1]) * (schmid - svschmid[diamint][1]));
       //      svomega3[diamint][2] = svomega3[diamint][2] + ((omega3-svomega3[diamint][1])*(omega3-svomega3[diamint][1]));
-      int size = 0;
-      size = neighdistfunc.size();
-      for (int k = 0; k < size; k++)
+      for (int k = 0; k < 3; k++)
       {
         int nnum = neighdistfunc[k];
         neighborhood[diamint][((2 * k) + 2)] = neighborhood[diamint][((2 * k) + 2)] + ((neighborhood[diamint][((2 * k) + 1)] - nnum)

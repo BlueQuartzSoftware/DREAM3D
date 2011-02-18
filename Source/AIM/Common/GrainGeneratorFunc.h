@@ -149,6 +149,7 @@ class GrainGeneratorFunc
     double fillingerrorweight;
     double neighborhooderrorweight;
     double sizedisterrorweight;
+
     void write_eulerangles(const std::string & filename);
     void write_graindata(const std::string & filename);
     void writeCube(const std::string & filename, int numgrains);

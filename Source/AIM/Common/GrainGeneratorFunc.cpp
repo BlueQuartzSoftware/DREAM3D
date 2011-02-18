@@ -721,7 +721,6 @@ void  GrainGeneratorFunc::insert_grain(size_t gnum)
   grains[gnum].ellipfunclist = new std::vector<double>(insidecount);
   grains[gnum].voxellist->swap(insidelist);
   grains[gnum].ellipfunclist->swap(ellipfunclist);
-  grains[gnum].neighbordistfunc.resize(3,0);
   grains[gnum].neighbordistfunclist.resize(3);
   insidelist.clear();
 }
@@ -2218,6 +2217,7 @@ void  GrainGeneratorFunc::find_neighbors()
   int nnum;
   int onsurf = 0;
   double dist, dist2, diam, diam2;
+  int dist_int, dist2_int;
   int good = 0;
   int neighbor = 0;
   totalsurfacearea=0;
@@ -2233,7 +2233,10 @@ void  GrainGeneratorFunc::find_neighbors()
     grains[i].neighborlist->swap(nlist);
     grains[i].neighborsurfarealist = new std::vector<double>(numneighs);
     grains[i].neighborsurfarealist->swap(nsalist);
-	grains[i].neighbordistfunc.resize(3,0);
+	for(int j=0;j<3;j++)
+	{
+		grains[i].neighbordistfunc[j] = 0;
+	}
   }
   for(int j = 0; j < (xpoints*ypoints*zpoints); j++)
   {
@@ -2321,15 +2324,15 @@ void  GrainGeneratorFunc::find_neighbors()
 		dist = (xdist*xdist)+(ydist*ydist)+(zdist*zdist);
 		dist = pow(dist,0.5);
 		dist2 = dist;
-		dist = int(dist/diam);
-		dist2 = int(dist2/diam2);
+		dist_int = int(dist/diam);
+		dist2_int = int(dist2/diam2);
 		if(dist < 3)
 		{
-			grains[i].neighbordistfunc[dist]++;
+			grains[i].neighbordistfunc[dist_int]++;
 		}
 		if(dist2 < 3)
 		{
-			grains[j].neighbordistfunc[dist2]++;
+			grains[j].neighbordistfunc[dist2_int]++;
 		}
 	}
   }
@@ -3542,7 +3545,6 @@ int GrainGeneratorFunc::volume_stats(H5ReconStatsWriter::Pointer h5io)
   double maxcoverb = 0;
   double maxschmid = 0;
   double maxomega3 = 0;
-  vector<int > neighdistfunc;
   int numbins = ((maxdiameter-mindiameter)/binstepsize)+1;
   neighborhood.resize(numbins);
   neighborhoodfit.resize(numbins);
@@ -3591,7 +3593,6 @@ int GrainGeneratorFunc::volume_stats(H5ReconStatsWriter::Pointer h5io)
       double coverb = c / b;
       double schmid = grains[i].schmidfactor;
       double omega3 = grains[i].omega3;
-      neighdistfunc = grains[i].neighbordistfunc;
       avgvol = avgvol + voxvol;
       avglnvol = avglnvol + logvol;
       avgbovera = avgbovera + bovera;
@@ -3613,12 +3614,10 @@ int GrainGeneratorFunc::volume_stats(H5ReconStatsWriter::Pointer h5io)
       svcoverb[diamint][1] = svcoverb[diamint][1] + coverb;
       svschmid[diamint][1] = svschmid[diamint][1] + schmid;
       svomega3[diamint][1] = svomega3[diamint][1] + omega3;
-      int size = 0;
-      size = neighdistfunc.size();
       neighborhood[diamint][0]++;
-      for (int k = 0; k < size; k++)
+      for (int k = 0; k < 3; k++)
       {
-        int nnum = neighdistfunc[k];
+        int nnum = grains[i].neighbordistfunc[k];
         neighborhood[diamint][((2 * k) + 1)] = neighborhood[diamint][((2 * k) + 1)] + nnum;
       }
       if (voxvol > maxvol) maxvol = voxvol;
@@ -3700,7 +3699,6 @@ int GrainGeneratorFunc::volume_stats(H5ReconStatsWriter::Pointer h5io)
       double coverb = c / b;
       double schmid = grains[j].schmidfactor;
       double omega3 = grains[j].omega3;
-      neighdistfunc = grains[j].neighbordistfunc;
       sdvol = sdvol + ((voxvol - avgvol) * (voxvol - avgvol));
       sdlnvol = sdlnvol + ((logvol - avglnvol) * (logvol - avglnvol));
       sdbovera = sdbovera + ((bovera - avgbovera) * (bovera - avgbovera));
@@ -3716,11 +3714,9 @@ int GrainGeneratorFunc::volume_stats(H5ReconStatsWriter::Pointer h5io)
       svcoverb[diamint][2] = svcoverb[diamint][2] + ((coverb - svcoverb[diamint][1]) * (coverb - svcoverb[diamint][1]));
       svschmid[diamint][2] = svschmid[diamint][2] + ((schmid - svschmid[diamint][1]) * (schmid - svschmid[diamint][1]));
       svomega3[diamint][2] = svomega3[diamint][2] + ((omega3 - svomega3[diamint][1]) * (omega3 - svomega3[diamint][1]));
-      int size = 0;
-      size = neighdistfunc.size();
-      for (int k = 0; k < size; k++)
+      for (int k = 0; k < 3; k++)
       {
-        int nnum = neighdistfunc[k];
+        int nnum = grains[j].neighbordistfunc[k];
         neighborhood[diamint][((2 * k) + 2)] = neighborhood[diamint][((2 * k) + 2)] + ((neighborhood[diamint][((2 * k) + 1)] - nnum)
             * (neighborhood[diamint][((2 * k) + 1)] - nnum));
       }
