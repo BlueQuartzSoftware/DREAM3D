@@ -58,7 +58,7 @@ lacking still.
 //#define _USE_MATH_DEFINES 1
 #endif
 
-
+#include <math.h>
 
 
 #ifndef M_E
