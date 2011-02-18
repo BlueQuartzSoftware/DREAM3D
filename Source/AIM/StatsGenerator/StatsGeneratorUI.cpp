@@ -550,15 +550,8 @@ void StatsGeneratorUI::on_actionSave_triggered()
 
 
   // We need to compute the Max and Min Diameter Bin Values
-  double mindiameter = std::numeric_limits<double>::max();
-  double maxdiameter = std::numeric_limits<double>::min();
- // std::cout << "Bin#" << std::endl;
-  size_t numsizebins = binsizes.size();
-  for (size_t i = 0; i < numsizebins; ++i)
-  {
-    if (binsizes[i] < mindiameter) { mindiameter = binsizes[i]; }
-    if (binsizes[i] > maxdiameter) { maxdiameter = binsizes[i]; }
-  }
+  double mindiameter = xCo[0];
+  double maxdiameter = xCo[1];
 
  // std::cout << "maxdiameter: " << maxdiameter << std::endl;
  // std::cout << "mindiameter: " << mindiameter << std::endl;

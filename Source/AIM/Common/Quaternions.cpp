@@ -93,63 +93,26 @@ void Quaternions::Hex_MultiplyByUnitQuaterion(double* unitQuat, size_t i, double
 //    Quaternions::initialize();
 //    // This will make sure things are initialized
 //  }
-  outQuat[0]=QUAT_SYMMHEX[i][1]*unitQuat[3]+QUAT_SYMMHEX[i][4]*unitQuat[0]-QUAT_SYMMHEX[i][2]*unitQuat[2]+QUAT_SYMMHEX[i][3]*unitQuat[1];
-  outQuat[1]=QUAT_SYMMHEX[i][2]*unitQuat[3]+QUAT_SYMMHEX[i][4]*unitQuat[1]-QUAT_SYMMHEX[i][3]*unitQuat[0]+QUAT_SYMMHEX[i][1]*unitQuat[2];
-  outQuat[2]=QUAT_SYMMHEX[i][3]*unitQuat[3]+QUAT_SYMMHEX[i][4]*unitQuat[2]-QUAT_SYMMHEX[i][1]*unitQuat[1]+QUAT_SYMMHEX[i][2]*unitQuat[0];
-  outQuat[3]=QUAT_SYMMHEX[i][4]*unitQuat[3]-QUAT_SYMMHEX[i][1]*unitQuat[0]-QUAT_SYMMHEX[i][2]*unitQuat[1]-QUAT_SYMMHEX[i][3]*unitQuat[2];
+  outQuat[1]=QUAT_SYMMHEX[i][1]*unitQuat[4]+QUAT_SYMMHEX[i][4]*unitQuat[1]-QUAT_SYMMHEX[i][2]*unitQuat[3]+QUAT_SYMMHEX[i][3]*unitQuat[2];
+  outQuat[2]=QUAT_SYMMHEX[i][2]*unitQuat[4]+QUAT_SYMMHEX[i][4]*unitQuat[2]-QUAT_SYMMHEX[i][3]*unitQuat[1]+QUAT_SYMMHEX[i][1]*unitQuat[3];
+  outQuat[3]=QUAT_SYMMHEX[i][3]*unitQuat[4]+QUAT_SYMMHEX[i][4]*unitQuat[3]-QUAT_SYMMHEX[i][1]*unitQuat[2]+QUAT_SYMMHEX[i][2]*unitQuat[1];
+  outQuat[4]=QUAT_SYMMHEX[i][4]*unitQuat[4]-QUAT_SYMMHEX[i][1]*unitQuat[1]-QUAT_SYMMHEX[i][2]*unitQuat[2]-QUAT_SYMMHEX[i][3]*unitQuat[3];
 }
 
+#define QUAT_SYMMCUBIC AIM::Quaternions::quat_symmcubic
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void Quaternions::Cubic_MultiplyByUnitQuaterion(double* unitQuat, size_t i, double* outQuat)
+{
 
-#if 0
-  This code was taken from a paper on Quaterions. Just used as reference.
-typedef struct
-{
-    float x, y, z, w;
-} Quat;
-typedef float HMatrix[4][4];
-#define X 0
-#define Y 1
-#define Z 2
-#define W 3
-/* Return quaternion product qL * qR. */
-Quat Qt_Mul(Quat qL, Quat qR)
-{
-  Quat qq;
-  qq.w = qL.w * qR.w - qL.x * qR.x - qL.y * qR.y - qL.z * qR.z;
-  qq.x = qL.w * qR.x + qL.x * qR.w + qL.y * qR.z - qL.z * qR.y;
-  qq.y = qL.w * qR.y + qL.y * qR.w + qL.z * qR.x - qL.x * qR.z;
-  qq.z = qL.w * qR.z + qL.z * qR.w + qL.x * qR.y - qL.y * qR.x;
-  return (qq);
+//  if (Quaternions::isInitialized == false)
+//  {
+//    Quaternions::initialize();
+//    // This will make sure things are initialized
+//  }
+  outQuat[1]=QUAT_SYMMCUBIC[i][1]*unitQuat[4]+QUAT_SYMMCUBIC[i][4]*unitQuat[1]-QUAT_SYMMCUBIC[i][2]*unitQuat[3]+QUAT_SYMMCUBIC[i][3]*unitQuat[2];
+  outQuat[2]=QUAT_SYMMCUBIC[i][2]*unitQuat[4]+QUAT_SYMMCUBIC[i][4]*unitQuat[2]-QUAT_SYMMCUBIC[i][3]*unitQuat[1]+QUAT_SYMMCUBIC[i][1]*unitQuat[3];
+  outQuat[3]=QUAT_SYMMCUBIC[i][3]*unitQuat[4]+QUAT_SYMMCUBIC[i][4]*unitQuat[3]-QUAT_SYMMCUBIC[i][1]*unitQuat[2]+QUAT_SYMMCUBIC[i][2]*unitQuat[1];
+  outQuat[4]=QUAT_SYMMCUBIC[i][4]*unitQuat[4]-QUAT_SYMMCUBIC[i][1]*unitQuat[1]-QUAT_SYMMCUBIC[i][2]*unitQuat[2]-QUAT_SYMMCUBIC[i][3]*unitQuat[3];
 }
-
-
-
-/* Return norm of quaternion, the sum of the squares of the components. */
-#define Qt_Norm(q) ((q).x*(q).x + (q).y*(q).y + (q).z*(q).z + (q).w*(q).w)
-/* Construct rotation matrix from (possibly non-unit) quaternion.
- * Assumes matrix is used to multiply column vector on the left:
- * vnew = mat vold.  Works correctly for right-handed coordinate system
- * and right-handed rotations. */
-void Qt_ToMatrix(Quat q, HMatrix mat)
-{
-  double Nq = Qt_Norm(q);
-  double s = (Nq > 0.0) ? (2.0 / Nq) : 0.0;
-  double xs = q.x * s, ys = q.y * s, zs = q.z * s;
-  double wx = q.w * xs, wy = q.w * ys, wz = q.w * zs;
-  double xx = q.x * xs, xy = q.x * ys, xz = q.x * zs;
-  double yy = q.y * ys, yz = q.y * zs, zz = q.z * zs;
-  mat[X][X] = 1.0 - (yy + zz);
-  mat[Y][X] = xy + wz;
-  mat[Z][X] = xz - wy;
-  mat[X][Y] = xy - wz;
-  mat[Y][Y] = 1.0 - (xx + zz);
-  mat[Z][Y] = yz + wx;
-  mat[X][Z] = xz + wy;
-  mat[Y][Z] = yz - wx;
-  mat[Z][Z] = 1.0 - (xx + yy);
-  mat[X][W] = mat[Y][W] = mat[Z][W] = 0.0;
-  mat[W][X] = mat[W][Y] = mat[W][Z] = 0.0;
-  mat[W][W] = 1.0;
-}
-#endif
-
