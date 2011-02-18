@@ -34,6 +34,7 @@
 #include "MXA/Common/MXASetGetMacros.h"
 
 #include "AIM/Common/AIMCommonConfiguration.h"
+#include "AIM/Common/AIMArray.hpp"
 #include "AIM/Common/Constants.h"
 #include "AIM/Common/Grain.h"
 #include "AIM/Common/Voxel.h"
@@ -44,9 +45,6 @@
 
 using namespace std;
 
-
-
-
 class AIMCOMMON_EXPORT ReconstructionFunc
 {
 
@@ -56,6 +54,8 @@ class AIMCOMMON_EXPORT ReconstructionFunc
     MXA_STATIC_NEW_MACRO(ReconstructionFunc)
 
     virtual ~ReconstructionFunc();
+
+    typedef AIMArray<double> DoubleArray;
 
     double sizex;
     double sizey;
@@ -90,9 +90,10 @@ class AIMCOMMON_EXPORT ReconstructionFunc
 
     vector<vector<double> > graincenters;
     vector<vector<double> > grainmoments;
-    vector<vector<double> > grainquats;
+    // vector<vector<double> > grainquats;
+    DoubleArray::Pointer m_grainQuats;
 
-	vector<vector<double> > neighborhood;
+	  vector<vector<double> > neighborhood;
     vector<vector<double> > neighborhoodfit;
     vector<vector<double> > svbovera;
     vector<vector<double> > svcovera;
