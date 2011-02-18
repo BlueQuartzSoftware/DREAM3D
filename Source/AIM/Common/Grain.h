@@ -49,7 +49,7 @@ class AIMCOMMON_EXPORT Grain
     int surfacegrain;
     int twinnewnumber;
     int colonynewnumber;
-	double packquality;
+	  double packquality;
     double centroidx;
     double centroidy;
     double centroidz;
