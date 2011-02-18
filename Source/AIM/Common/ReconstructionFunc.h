@@ -55,7 +55,8 @@ class AIMCOMMON_EXPORT ReconstructionFunc
 
     virtual ~ReconstructionFunc();
 
-    typedef AIMArray<double> DoubleArray;
+    typedef AIMArray<double> DoubleArrayType;
+    typedef AIMArray<int>    IntArrayType;
 
     double sizex;
     double sizey;
@@ -91,7 +92,7 @@ class AIMCOMMON_EXPORT ReconstructionFunc
     vector<vector<double> > graincenters;
     vector<vector<double> > grainmoments;
     // vector<vector<double> > grainquats;
-    DoubleArray::Pointer m_grainQuats;
+    DoubleArrayType::Pointer m_grainQuats;
 
 	  vector<vector<double> > neighborhood;
     vector<vector<double> > neighborhoodfit;
