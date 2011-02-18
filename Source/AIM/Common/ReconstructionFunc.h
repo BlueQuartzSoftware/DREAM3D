@@ -86,11 +86,13 @@ class AIMCOMMON_EXPORT ReconstructionFunc
     int **shifts;
     int **arr;
     int *graincounts;
-    double **graincenters;
-    double **grainmoments;
     double **quat_symm;
 
-    vector<vector<double> > neighborhood;
+    vector<vector<double> > graincenters;
+    vector<vector<double> > grainmoments;
+    vector<vector<double> > grainquats;
+
+	vector<vector<double> > neighborhood;
     vector<vector<double> > neighborhoodfit;
     vector<vector<double> > svbovera;
     vector<vector<double> > svcovera;
