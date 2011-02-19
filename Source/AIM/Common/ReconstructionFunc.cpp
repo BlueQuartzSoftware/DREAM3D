@@ -1631,12 +1631,12 @@ void ReconstructionFunc::find_kernels()
 
 void ReconstructionFunc::homogenize_grains()
 {
-  int i, j, ii, jj, kk, p, pp;
+  int i, j, ii, jj;
   float qT[5]; // Temporary quaternions...
   float qC[5]; // Temporary quaternions...
   int numsymm = 0;
-  float max, min;
-  int maxid, minid, sign;
+  float max;
+  int maxid, sign;
   int gname;
   float q4Temp;
 
@@ -3971,7 +3971,7 @@ void ReconstructionFunc::deformation_stats()
   double sfvgam[20][2];
   double sfmmvkm[20][2];
   double sfmmvgam[20][2];
-  int gbbin, tjbin, qpbin, iqbin, sfbin, sfmmbin, kmbin, gambin;
+  int kmbin, gambin;
   int actualpoints = 0;
   for (int i = 0; i < 20; i++)
   {

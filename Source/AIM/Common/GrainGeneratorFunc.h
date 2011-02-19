@@ -52,7 +52,7 @@ using namespace std;
  * @date
  * @version 1.0
  */
-class GrainGeneratorFunc
+class AIMCOMMON_EXPORT GrainGeneratorFunc
 {
 public:
     MXA_SHARED_POINTERS(GrainGeneratorFunc)MXA_STATIC_NEW_MACRO(GrainGeneratorFunc)virtual ~GrainGeneratorFunc();
