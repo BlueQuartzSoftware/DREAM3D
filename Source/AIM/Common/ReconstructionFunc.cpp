@@ -774,15 +774,15 @@ int ReconstructionFunc::form_grains()
   int seed = -1;
   int randpoint = 0;
   int good = 0;
-  int x, y, z;
+//  int x, y, z;
   int col, row, plane;
   size_t size = 0;
-  int totalsize = 0;
+ // int totalsize = 0;
   size_t initialVoxelsListSize = 1000;
-  int gname = -1;
-  int vid, start;
+//  int gname = -1;
+//  int vid, start;
   std::vector<int > voxelslist(initialVoxelsListSize, -1);
-  std::vector<int >* voxelslistold;
+//  std::vector<int >* voxelslistold;
   int neighbors[6];
   neighbors[0] = -(xpoints * ypoints);
   neighbors[1] = -xpoints;
@@ -793,10 +793,10 @@ int ReconstructionFunc::form_grains()
   rg.RandomInit((static_cast<unsigned int > (time(NULL))));
 
   // Precalculate some constants
-  int xTimesY = xpoints * ypoints;
-  int xPMinus1 = xpoints - 1;
-  int yPMinus1 = ypoints - 1;
-  int zPMinus1 = zpoints - 1;
+//  int xTimesY = xpoints * ypoints;
+//  int xPMinus1 = xpoints - 1;
+//  int yPMinus1 = ypoints - 1;
+//  int zPMinus1 = zpoints - 1;
 
   // Initialize set of grains
   m_Grains.resize(100);
@@ -1628,12 +1628,12 @@ void ReconstructionFunc::find_kernels()
 
 void ReconstructionFunc::homogenize_grains()
 {
-  int i, j, ii, jj;
+  int i, j, ii;
   float qT[5]; // Temporary quaternions...
   float qC[5]; // Temporary quaternions...
   int numsymm = 0;
   float max;
-  int maxid, sign;
+  int maxid;
   int gname;
   float q4Temp;
 
@@ -2221,7 +2221,7 @@ void ReconstructionFunc::find_neighbors()
   int nListSize = 100;
   std::vector<int > vnlist(6, -1);
   std::vector<int >* nlist;
-  std::vector<double >* nsalist;
+//  std::vector<double >* nsalist;
   // Copy all the grain names into a densly packed array
   int* gnames = new int[totalpoints];
   for (int i = 0; i < totalpoints; ++i)
