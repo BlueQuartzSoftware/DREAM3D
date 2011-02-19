@@ -320,26 +320,6 @@
           <property name="rightMargin">
            <number>10</number>
           </property>
-          <item row="1" column="0">
-           <widget class="QLabel" name="label_31">
-            <property name="text">
-             <string>Min. Image Quality</string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="1">
-           <widget class="QDoubleSpinBox" name="rec_MinImageQuality">
-            <property name="maximum">
-             <double>5000.000000000000000</double>
-            </property>
-            <property name="singleStep">
-             <double>10.000000000000000</double>
-            </property>
-            <property name="value">
-             <double>50.000000000000000</double>
-            </property>
-           </widget>
-          </item>
           <item row="2" column="1">
            <widget class="QDoubleSpinBox" name="rec_MisOrientationTolerance">
             <property name="minimumSize">
@@ -362,19 +342,6 @@
             </property>
             <property name="value">
              <double>5.000000000000000</double>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="1">
-           <widget class="QSpinBox" name="rec_MinAllowedGrainSize">
-            <property name="minimum">
-             <number>1</number>
-            </property>
-            <property name="maximum">
-             <number>1000</number>
-            </property>
-            <property name="value">
-             <number>8</number>
             </property>
            </widget>
           </item>
@@ -415,13 +382,6 @@
             </property>
            </widget>
           </item>
-          <item row="3" column="0">
-           <widget class="QLabel" name="label_8">
-            <property name="text">
-             <string>Min. Grain Size</string>
-            </property>
-           </widget>
-          </item>
           <item row="4" column="0">
            <widget class="QLabel" name="label_9">
             <property name="text">
@@ -440,6 +400,46 @@
            <widget class="QLabel" name="label_59">
             <property name="text">
              <string>Bin Step Size</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="0">
+           <widget class="QLabel" name="label_31">
+            <property name="text">
+             <string>Min. Image Quality</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="label_8">
+            <property name="text">
+             <string>Min. Grain Size</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="1">
+           <widget class="QDoubleSpinBox" name="rec_MinImageQuality">
+            <property name="maximum">
+             <double>5000.000000000000000</double>
+            </property>
+            <property name="singleStep">
+             <double>10.000000000000000</double>
+            </property>
+            <property name="value">
+             <double>50.000000000000000</double>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QSpinBox" name="rec_MinAllowedGrainSize">
+            <property name="minimum">
+             <number>1</number>
+            </property>
+            <property name="maximum">
+             <number>1000</number>
+            </property>
+            <property name="value">
+             <number>8</number>
             </property>
            </widget>
           </item>
