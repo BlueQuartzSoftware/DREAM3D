@@ -58,10 +58,8 @@ SurfaceMeshFunc::~SurfaceMeshFunc()
 int SurfaceMeshFunc::initialize_micro(string filename, int zID)
 {
 	int i, j, k, l;
-	int id;
 	int tgrainname;
 	int surfacevoxel;
-	double tempx, tempy, tempz;
 	int xnum, ynum, znum;
 	double xres, yres, zres;
 	int col, row, plane;
@@ -2980,8 +2978,8 @@ void SurfaceMeshFunc::smooth_boundaries (int nNodes, int nTriangles, string Node
 	int node1, node2, node3;
 	int grain1, grain2;
 	double Nx, Ny, Nz;
-	double tNx, tNy, tNz;
-	double BCx, BCy, BCz;
+	double tNx, tNy;
+	double BCx, BCy;
 	double t1, t2, t3;
 //	double Rx, Ry, Rz;
 //	double theta, costheta, sintheta;

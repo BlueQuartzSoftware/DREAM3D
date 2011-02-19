@@ -11,7 +11,7 @@
 #define OIMCOLORING_HPP_
 
 
-#include <math.h>
+
 #include <string>
 #include "AIM/Common/Quaternions.h"
 

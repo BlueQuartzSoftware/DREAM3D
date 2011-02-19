@@ -17,7 +17,8 @@
 * © 2002 A. Fog. GNU General Public License www.gnu.org/copyleft/gpl.html*
 *************************************************************************/
 #include "AIMRandomNG.h"
-#include <math.h>
+#include "AIM/Common/AIMMath.h"
+
 
 // -----------------------------------------------------------------------------
 //

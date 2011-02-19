@@ -16,9 +16,7 @@
 //
 // -----------------------------------------------------------------------------
 Grain::Grain() :
-
 nucleus(0),
-packquality(0.0),
 active(0),
 numvoxels(0),
 numneighbors(0),
@@ -29,6 +27,7 @@ gotcolonymerged(0),
 surfacegrain(0),
 twinnewnumber(0),
 colonynewnumber(-1),
+packquality(0.0),
 centroidx(0.0),
 centroidy(0.0),
 centroidz(0.0),
@@ -75,7 +74,6 @@ Grain::Grain(const Grain& grain)
 {
   numvoxels = grain.numvoxels ;
   active = grain.active ;
-  packquality = grain.packquality ;
   numneighbors = grain.numneighbors ;
   newgrainname = grain.newgrainname ;
   gotcontainedmerged = grain.gotcontainedmerged ;
@@ -96,6 +94,7 @@ Grain::Grain(const Grain& grain)
   kernelmisorientation = grain.kernelmisorientation;
   twinnewnumber = grain.twinnewnumber;
   colonynewnumber = grain.colonynewnumber;
+  packquality = grain.packquality;
   red = grain.red ;
   green = grain.green ;
   blue = grain.blue ;
@@ -246,7 +245,6 @@ Grain& Grain::operator=(const Grain& grain)
   {
   numvoxels = grain.numvoxels ;
   active = grain.active ;
-  packquality = grain.packquality ;
   numneighbors = grain.numneighbors ;
   newgrainname = grain.newgrainname ;
   gotcontainedmerged = grain.gotcontainedmerged ;
@@ -267,6 +265,7 @@ Grain& Grain::operator=(const Grain& grain)
   kernelmisorientation = grain.kernelmisorientation;
   twinnewnumber = grain.twinnewnumber;
   colonynewnumber = grain.colonynewnumber;
+  packquality = grain.packquality ;
   red = grain.red ;
   green = grain.green ;
   blue = grain.blue ;
