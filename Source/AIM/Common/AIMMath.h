@@ -58,8 +58,8 @@ lacking still.
 //#define _USE_MATH_DEFINES 1
 #endif
 
-
 #include <math.h>
+
 
 #ifndef M_E
 #define M_E            2.7182818284590452354   /* e */
