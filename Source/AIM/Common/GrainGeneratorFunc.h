@@ -52,12 +52,23 @@ using namespace std;
  * @date
  * @version 1.0
  */
-class AIMCOMMON_EXPORT GrainGeneratorFunc
+class GrainGeneratorFunc
 {
-  public:
-    MXA_SHARED_POINTERS(GrainGeneratorFunc)
-    MXA_STATIC_NEW_MACRO(GrainGeneratorFunc)
-    virtual ~GrainGeneratorFunc();
+public:
+    MXA_SHARED_POINTERS(GrainGeneratorFunc)MXA_STATIC_NEW_MACRO(GrainGeneratorFunc)virtual ~GrainGeneratorFunc();
+    void swapOutOrientation(int & badtrycount, int & numbins);
+    void switchOrientations(int & badtrycount, int & numbins);
+    int calculateHexOdfBin(double q1[5], double qref[5], double dim1, double dim2, double dim3);
+    int calculateCubicOdfBin(double q1[5], double qref[5], double dim1, double dim2, double dim3);
+    void MC_LoopBody1(size_t neighbor, int j,
+                                          vector<double>* misolist,
+                                          vector<double>* neighborsurfarealist,
+                                          double &mdfchange);
+    void MC_LoopBody2(size_t neighbor, int j,
+                                      vector<double>* misolist,
+                                      vector<double>* neighborsurfarealist);
+    void initializeQ(double* q, double e1, double e2, double e3);
+    void initializeDims(double &dim1, double &dim2, double &dim3, int &numbins);
 
     double resx;
     double resy;
@@ -149,7 +160,6 @@ class AIMCOMMON_EXPORT GrainGeneratorFunc
     double fillingerrorweight;
     double neighborhooderrorweight;
     double sizedisterrorweight;
-
     void write_eulerangles(const std::string & filename);
     void write_graindata(const std::string & filename);
     void writeCube(const std::string & filename, int numgrains);
