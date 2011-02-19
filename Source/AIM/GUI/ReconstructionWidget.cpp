@@ -95,18 +95,20 @@ void ReconstructionWidget::readSettings(QSettings &prefs)
   READ_SETTING(prefs, rec_ZStartIndex, ok, i, 0, Int)
   READ_SETTING(prefs, rec_ZEndIndex, ok, i, 0, Int)
 
-  READ_CHECKBOX_SETTING(prefs, rec_mergeTwins, false);
   READ_CHECKBOX_SETTING(prefs, rec_mergeColonies, false);
-  READ_CHECKBOX_SETTING(prefs, rec_fillinSample, false);
   READ_CHECKBOX_SETTING(prefs, rec_alreadyFormed, false);
+  READ_CHECKBOX_SETTING(prefs, rec_mergeTwins, false);
+  READ_CHECKBOX_SETTING(prefs, rec_fillinSample, false);
+  READ_COMBO_BOX(prefs, rec_CrystalStructure)
+  READ_COMBO_BOX(prefs, rec_AlignMeth)
+
+  READ_SETTING(prefs, rec_MinImageQuality, ok, d, 50.0 , Double);
+  READ_SETTING(prefs, rec_MisOrientationTolerance, ok, d, 5.0 , Double);
   READ_SETTING(prefs, rec_MinAllowedGrainSize, ok, i, 8 , Int);
   READ_SETTING(prefs, rec_MinConfidence, ok, d, 0.1 , Double);
   READ_SETTING(prefs, rec_DownSampleFactor, ok, d, 1.0 , Double);
-  READ_SETTING(prefs, rec_MinImageQuality, ok, d, 50.0 , Double);
-  READ_SETTING(prefs, rec_MisOrientationTolerance, ok, d, 5.0 , Double);
   READ_SETTING(prefs, rec_BinStepSize, ok, d, 1.0 , Double);
-  READ_COMBO_BOX(prefs, rec_CrystalStructure)
-  READ_COMBO_BOX(prefs, rec_AlignMeth)
+
 
   READ_CHECKBOX_SETTING(prefs, rec_DisorientationVizFile, true);
   READ_CHECKBOX_SETTING(prefs, rec_ImageQualityVizFile, true);
@@ -419,25 +421,25 @@ void ReconstructionWidget::on_rec_GoBtn_clicked()
 
   m_Reconstruction->setZStartIndex(rec_ZStartIndex->value());
   m_Reconstruction->setZEndIndex(rec_ZEndIndex->value() + 1);
-  m_Reconstruction->setOutputDirectory(rec_OutputDir->text().toStdString());
 
-  m_Reconstruction->setMergeTwins(rec_mergeTwins->isChecked() );
   m_Reconstruction->setMergeColonies(rec_mergeColonies->isChecked() );
+  m_Reconstruction->setAlreadyFormed(rec_alreadyFormed->isChecked());
+  m_Reconstruction->setMergeTwins(rec_mergeTwins->isChecked() );
   m_Reconstruction->setFillinSample(rec_fillinSample->isChecked() );
-  m_Reconstruction->setMinAllowedGrainSize(rec_MinAllowedGrainSize->value());
-  m_Reconstruction->setMinSeedConfidence(rec_MinConfidence->value());
-  m_Reconstruction->setSizeBinStepSize(rec_BinStepSize->value());
-  m_Reconstruction->setDownSampleFactor(rec_DownSampleFactor->value());
-  m_Reconstruction->setMinSeedImageQuality(rec_MinImageQuality->value());
-  m_Reconstruction->setMisorientationTolerance(rec_MisOrientationTolerance->value());
 
   AIM::Reconstruction::CrystalStructure crystruct = static_cast<AIM::Reconstruction::CrystalStructure>(rec_CrystalStructure->currentIndex());
   AIM::Reconstruction::AlignmentMethod alignmeth = static_cast<AIM::Reconstruction::AlignmentMethod>(rec_AlignMeth->currentIndex() );
-
   m_Reconstruction->setCrystalStructure(crystruct);
   m_Reconstruction->setAlignmentMethod(alignmeth);
-  m_Reconstruction->setAlreadyFormed(rec_alreadyFormed->isChecked());
 
+  m_Reconstruction->setMinAllowedGrainSize(rec_MinAllowedGrainSize->value());
+  m_Reconstruction->setMisorientationTolerance(rec_MisOrientationTolerance->value());
+  m_Reconstruction->setMinSeedImageQuality(rec_MinImageQuality->value());
+  m_Reconstruction->setMinSeedConfidence(rec_MinConfidence->value());
+  m_Reconstruction->setDownSampleFactor(rec_DownSampleFactor->value());
+  m_Reconstruction->setSizeBinStepSize(rec_BinStepSize->value());
+
+  m_Reconstruction->setOutputDirectory(rec_OutputDir->text().toStdString());
   m_Reconstruction->setWriteVisualizationFile(rec_VisualizationVizFile->isChecked());
   m_Reconstruction->setWriteIPFFile(rec_IPFVizFile->isChecked());
   m_Reconstruction->setWriteDisorientationFile(rec_DisorientationVizFile->isChecked());

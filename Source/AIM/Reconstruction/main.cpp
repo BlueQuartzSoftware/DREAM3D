@@ -59,47 +59,47 @@ int main(int argc, char **argv)
     // Handle program options passed on command line.
     TCLAP::CmdLine cmd("AIMRepresentation Reconstruction", ' ', AIMRepresentation::Version::Complete);
 
-    TCLAP::ValueArg<std::string>   h5OIMFile( "i", "input", "HDF5 Input File", false, "", "HDF5 Input File");
-    cmd.add(h5OIMFile);
+    TCLAP::ValueArg<std::string> h5InputFile( "i", "input", "HDF5 Input File", false, "", "HDF5 Input File");
+    cmd.add(h5InputFile);
 
-    TCLAP::ValueArg<std::string> outputDir("", "outputDir", "Output Directory", false, "", "Output Directory");
-    cmd.add(outputDir);
-
-    TCLAP::SwitchArg h5GrainFile("", "h5grain", "Write the HDF5 Grain Visualization File", false);
-    cmd.add(h5GrainFile);
-
-//    TCLAP::ValueArg<std::string>  angFilePrefix( "f", "angFilePrefix", "Ang File Prefix", false, "", "Ang File Prefix");
-//    cmd.add(angFilePrefix);
-//
-//    TCLAP::ValueArg<int>  angMaxSlice( "", "angMaxSlice", "Ang Max Slice Number", false, 0, "Ang Max Slice Number");
-//    cmd.add(angMaxSlice);
-
-    TCLAP::ValueArg<int>  zStartIndex( "s", "zStartIndex", "Starting Slice", false, 0, "Starting Slice");
+    TCLAP::ValueArg<int>  zStartIndex( "", "zStartIndex", "Starting Slice", false, 0, "Starting Slice");
     cmd.add(zStartIndex);
-    TCLAP::ValueArg<int>  zEndIndex( "e", "zEndIndex", "Ending Slice", false, 0, "Ending Slice");
+    TCLAP::ValueArg<int>  zEndIndex( "", "zEndIndex", "Ending Slice", false, 0, "Ending Slice");
     cmd.add(zEndIndex);
-//    TCLAP::ValueArg<double>  resz( "z", "resz", "z resolution of your volume", false, 0.25, "z resolution of your volume");
-//    cmd.add(resz);
-
-    TCLAP::SwitchArg mergetwinsoption("t", "merge-twins", "Do you want to merge twins", false);
-    cmd.add(mergetwinsoption);
-
-    TCLAP::ValueArg<int>  minallowedgrainsize( "g", "minallowedgrainsize", "What is the minimum allowed grain size", false, 50, "What is the minimum allowed grain size");
-    cmd.add(minallowedgrainsize);
 
 
-    TCLAP::ValueArg<double>  minseedconfidence( "c", "minseedconfidence", "What is the minimum allowed confidence", false, 0.1, "What is the minimum allowed confidence");
-    cmd.add(minseedconfidence);
+    TCLAP::SwitchArg mergeColonies("", "mergeColonies", "Do you want to merge colonies", false);
+    cmd.add(mergeColonies);
+    TCLAP::SwitchArg alreadyFormed("", "alreadyFormed", "Have you already formed grains", false);
+    cmd.add(alreadyFormed);
+    TCLAP::SwitchArg mergeTwins("", "mergeTwins", "Do you want to merge twins", false);
+    cmd.add(mergeTwins);
+    TCLAP::SwitchArg fillinSample("", "rectangularize", "Rectangularize Sample", false);
+    cmd.add(fillinSample);
 
-    TCLAP::ValueArg<double>  misorientationtolerance( "o", "misorientationtolerance", "What is the misorientation tolerance (degrees)", false, 4.0, "What is the misorientation tolerance (degrees)");
-    cmd.add(misorientationtolerance);
-    TCLAP::ValueArg<int>  crystruct( "x", "crystruct", "Do you have a HCP (1) or FCC (2) material", false, 2, "Do you have a HCP (1) or FCC (2) material");
-    cmd.add(crystruct);
+    TCLAP::ValueArg<int>  CrystalStructure( "", "crystruct", "Do you have a HCP (0) or FCC (1) material", false, 1, "Default=1");
+    cmd.add(CrystalStructure);
+    TCLAP::ValueArg<int>  AlignMeth( "", "alignment", "Alignment Method [0] OuterBoundary [1] Misorientation [2] Mutual Information", false, 0, "Default=0");
+    cmd.add(AlignMeth);
 
-    TCLAP::SwitchArg alreadyformed("a", "alreadyformed", "Have you already formed grains", false);
-    cmd.add(alreadyformed);
+    TCLAP::ValueArg<int>  MinAllowedGrainSize( "", "minGrainSize", "What is the minimum allowed grain size", false, 50, "Default=50");
+    cmd.add(MinAllowedGrainSize);
+    TCLAP::ValueArg<double>  MisOrientationTolerance( "", "misorientationTolerance", "What is the misorientation tolerance (degrees)", false, 4.0, "Default=4.0");
+    cmd.add(MisOrientationTolerance);
+    TCLAP::ValueArg<double>  MinImageQuality( "", "minImageQuality", "What is the minimum Image Quality Value", false, 50, "Default=50");
+    cmd.add(MinImageQuality);
+    TCLAP::ValueArg<double>  MinConfidence( "", "minConfidenceIndex", "What is the minimum allowed confidence index", false, 0.1, "Default=0.1");
+    cmd.add(MinConfidence);
+    TCLAP::ValueArg<double>  DownSampleFactor( "", "downSampleRes", "Down Sampling Resolution", false, 1.0, "Default=1.0");
+    cmd.add(DownSampleFactor);
+    TCLAP::ValueArg<double>  BinStepSize( "", "binStepSize", "Width of each Bin in the Reconstruction Stats", false, 1.0, "Default=1.0");
+    cmd.add(BinStepSize);
 
-    TCLAP::ValueArg<std::string > logfile("l", "logfile", "Name of the Log file to store any output into", false, "", "Name of the Log file to store any output into");
+    TCLAP::ValueArg<std::string> OutputDir("", "outputDir", "Where to write all the output files. If it does not exist it will be created.", false, "", "/Path/To/Output");
+    cmd.add(OutputDir);
+
+
+    TCLAP::ValueArg<std::string > logfile("l", "logfile", "Name of the Log file to store any output into", false, "", "/Path/To/LogFile.log");
     cmd.add(logfile);
 
     // Parse the argv array.
@@ -111,47 +111,48 @@ int main(int argc, char **argv)
     }
 
 
-    Reconstruction::Pointer r = Reconstruction::New();
-#if 1
-    r->setH5AngFile(h5OIMFile.getValue());
-#else
-    r->setInputDirectory(inputDir.getValue());
-    r->setAngFilePrefix(angFilePrefix.getValue());
-    r->setAngSeriesMaxSlice(angMaxSlice.getValue());
-    r->setZResolution(resz.getValue());
-#endif
-    r->setOutputDirectory(outputDir.getValue());
-    r->setZStartIndex(zStartIndex.getValue());
-    r->setZEndIndex(zEndIndex.getValue());
-    r->setMergeTwins(mergetwinsoption.getValue());
-    r->setMergeColonies(false);
-    r->setMinAllowedGrainSize(minallowedgrainsize.getValue());
-    r->setMinSeedConfidence(minseedconfidence.getValue());
-    r->setDownSampleFactor(1.0);
-    r->setMinSeedImageQuality(50.0);
-    r->setMisorientationTolerance(misorientationtolerance.getValue());
+    Reconstruction::Pointer m_Reconstruction = Reconstruction::New();
 
-    r->setCrystalStructure(static_cast<AIM::Reconstruction::CrystalStructure> (crystruct.getValue()));
-    r->setAlignmentMethod(AIM::Reconstruction::Misorientation);
-    r->setAlreadyFormed(alreadyformed.getValue());
+    m_Reconstruction->setH5AngFile(h5InputFile.getValue());
 
-    r->setWriteVisualizationFile(true);
-    r->setWriteIPFFile(true);
-    r->setWriteDisorientationFile(true);
-    r->setWriteImageQualityFile(true);
-    r->setWriteSchmidFactorFile(true);
-    r->setWriteDownSampledFile(true);
-    r->setWriteHDF5GrainFile(h5GrainFile.getValue());
+    m_Reconstruction->setZStartIndex(zStartIndex.getValue());
+    m_Reconstruction->setZEndIndex(zEndIndex.getValue() + 1);
 
-    r->compute();
-    err = r->getErrorCondition();
+    m_Reconstruction->setMergeColonies(mergeColonies.getValue() );
+    m_Reconstruction->setAlreadyFormed(alreadyFormed.getValue());
+    m_Reconstruction->setMergeTwins(mergeTwins.getValue() );
+    m_Reconstruction->setFillinSample(fillinSample.getValue() );
+
+    AIM::Reconstruction::CrystalStructure crystruct = static_cast<AIM::Reconstruction::CrystalStructure>(CrystalStructure.getValue());
+    AIM::Reconstruction::AlignmentMethod alignmeth = static_cast<AIM::Reconstruction::AlignmentMethod>(AlignMeth.getValue() );
+    m_Reconstruction->setCrystalStructure(crystruct);
+    m_Reconstruction->setAlignmentMethod(alignmeth);
+
+    m_Reconstruction->setMinAllowedGrainSize(MinAllowedGrainSize.getValue());
+    m_Reconstruction->setMisorientationTolerance(MisOrientationTolerance.getValue());
+    m_Reconstruction->setMinSeedImageQuality(MinImageQuality.getValue());
+    m_Reconstruction->setMinSeedConfidence(MinConfidence.getValue());
+    m_Reconstruction->setDownSampleFactor(DownSampleFactor.getValue());
+    m_Reconstruction->setSizeBinStepSize(BinStepSize.getValue());
+
+    m_Reconstruction->setOutputDirectory(OutputDir.getValue());
+    m_Reconstruction->setWriteVisualizationFile(true);
+    m_Reconstruction->setWriteIPFFile(true);
+    m_Reconstruction->setWriteDisorientationFile(true);
+    m_Reconstruction->setWriteImageQualityFile(true);
+    m_Reconstruction->setWriteSchmidFactorFile(true);
+    m_Reconstruction->setWriteDownSampledFile(true);
+    m_Reconstruction->setWriteHDF5GrainFile(true);
+
+    m_Reconstruction->compute();
+    err = m_Reconstruction->getErrorCondition();
   }
   catch (TCLAP::ArgException &e) // catch any exceptions
   {
     std::cerr << logTime() << " error: " << e.error() << " for arg " << e.argId() << std::endl;
     return EXIT_FAILURE;
   }
-  std::cout << "++++++++++++ Reconstruction Complete ++++++++++++" << std::endl;
+  std::cout << "Reconstruction Complete" << std::endl;
   return err;
 }
 
