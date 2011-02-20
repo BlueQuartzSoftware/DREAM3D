@@ -150,7 +150,7 @@ class AIMCOMMON_EXPORT ReconstructionFunc
     void form_grains_sections();
     void remove_smallgrains();
     int renumber_grains1();
-    int load_data(string);
+    int load_data(const std::string &filename);
     void assign_badpoints();
     void find_neighbors();
     void merge_containedgrains();
@@ -180,74 +180,22 @@ class AIMCOMMON_EXPORT ReconstructionFunc
     void find_moments2D();
     void find_axes2D();
 
-    void find_eulerodf(H5ReconStatsWriter::Pointer h5io);
-    void measure_misorientations(H5ReconStatsWriter::Pointer h5io);
-
+    void deformation_stats(const std::string &graindataFile);
     void write_graindata(const std::string &graindataFile);
-    void align_sections(const std::string &filename );
-    int volume_stats(H5ReconStatsWriter::Pointer h5io);
-    int volume_stats2D(H5ReconStatsWriter::Pointer h5io);
-    void deformation_stats();
-
-    /**
-     * @brief
-     * @param hdfFile
-     * @return
-     */
-    int writeHDF5GrainsFile(const std::string &hdfFile);
-
-    /**
-     * @brief Writes a VTK visualization file
-     * @param Output file name
-     * @return 0 on Success
-     */
-    int writeVisualizationFile(const std::string &file); // DONE
-
-    /**
-     * @brief Writes a VTK visualization file with vector arrays for the Inverse
-     * pole figure colors and grain ID.
-     * @param Output file name
-     * @return 0 on Success
-     */
-    int writeIPFVizFile(const std::string &file);
-
-    /**
-     * @brief Writes a VTK visualization file with vector arrays for the disorientation colors and grain ID.
-     * @param Output file name
-     * @return 0 on Success
-     */
-    int writeDisorientationVizFile(const std::string &file); // DONE
-
-    /**
-     * @brief Writes a VTK visualization file with vector arrays for the Image Quality and grain ID.
-     * @param Output file name
-     * @return 0 on Success
-     */
-    int writeImageQualityVizFile(const std::string &file); // DONE
-
-    /**
-      * @brief Writes a VTK visualization file with vector arrays for the Schmid Factor and grain ID.
-      * @param Output file name
-      * @return 0 on Success
-      */
-    int writeSchmidFactorVizFile(const std::string &file); // DONE
-
-    /**
-      * @brief Writes a low resolution VTK visualization file.
-      * @param Output file name
-      * @return 0 on Success
-      */
-    int writeDownSampledVizFile(const std::string &file);
-
-
-    double gamma(double);
-    double find_xcoord(long);
-    double find_ycoord(long);
-    double find_zcoord(long);
-
-
+    void align_sections(const std::string &filename);
     /* This is deprecated in favor of the HDF5 output file */
     void write_grains(const std::string &outputdir);
+
+
+    void find_eulerodf(H5ReconStatsWriter::Pointer h5io);
+    void measure_misorientations(H5ReconStatsWriter::Pointer h5io);
+    int volume_stats(H5ReconStatsWriter::Pointer h5io);
+    int volume_stats2D(H5ReconStatsWriter::Pointer h5io);
+
+    double gamma(double x);
+    double find_xcoord(size_t index);
+    double find_ycoord(size_t index);
+    double find_zcoord(size_t index);
 
   protected:
     ReconstructionFunc();

@@ -17,24 +17,26 @@
 
 #include "AIM/Common/Constants.h"
 #include "AIM/Common/AIMCommonConfiguration.h"
+#include "AIM/Common/OIMColoring.hpp"
+#include "AIM/Common/ReconstructionVTKWriter.h"
+#include "AIM/Common/HDF5/H5ReconStatsWriter.h"
+#include "AIM/Common/HDF5/H5GrainWriter.h"
 #include "AIM/ANG/AngDirectoryPatterns.h"
 #include "AIM/ANG/AngReader.h"
 #include "AIM/ANG/AbstractAngDataLoader.h"
 #include "AIM/ANG/AngDataLoader.h"
-#include "AIM/Common/OIMColoring.hpp"
-
-
 #include "AIM/ANG/H5AngDataLoader.h"
 
-#include "AIM/Common/HDF5/H5ReconStatsWriter.h"
 
 #define AIM_RECONSTRUCTION_BENCHMARKS 1
 
 #if AIM_RECONSTRUCTION_BENCHMARKS
 #define START_CLOCK()\
-  unsigned long long int millis = MXA::getMilliSeconds();
+  unsigned long long int millis;\
+  millis = MXA::getMilliSeconds();
 #else
-#define START_CLOCK() unsigned long long int millis = 0;
+#define START_CLOCK() unsigned long long int millis = 0;\
+  millis = 0;
 #endif
 
 #ifdef AIM_USE_QT
@@ -133,6 +135,9 @@ void Reconstruction::compute()
   ptr->setZStartIndex(m_ZStartIndex);
   ptr->setZEndIndex(m_ZEndIndex);
 
+  // Create our File Output Writer Object. This will handle all the File Output duties
+  ReconstructionVTKWriter::Pointer outWriter = ReconstructionVTKWriter::New();
+  H5GrainWriter::Pointer h5GrainWriter = H5GrainWriter::New();
 
   m = ReconstructionFunc::New();
   progressMessage(AIM_STRING("Gathering Size and Resolution Information from OIM Data"), 1);
@@ -153,6 +158,7 @@ void Reconstruction::compute()
   // Create a new HDF5 Results file by overwriting any HDF5 file that may be in the way
   std::string hdf5ResultsFile = m_OutputDirectory + MXADir::Separator + AIM::Reconstruction::H5StatisticsFile;
   H5ReconStatsWriter::Pointer h5io = H5ReconStatsWriter::New(hdf5ResultsFile);
+
   std::string graindataFile = m_OutputDirectory + MXADir::Separator + AIM::Reconstruction::GrainDataFile;
   std::string alignmentFile = m_OutputDirectory + MXADir::Separator + AIM::Reconstruction::AlignmentFile;
 
@@ -162,6 +168,7 @@ void Reconstruction::compute()
   std::string reconIQVisFile = m_OutputDirectory + MXADir::Separator + AIM::Reconstruction::ImageQualityVizFile;
   std::string reconSFVisFile = m_OutputDirectory + MXADir::Separator + AIM::Reconstruction::SchmidFactorVizFile;
   std::string reconDSVisFile = m_OutputDirectory + MXADir::Separator + AIM::Reconstruction::DownSampledVizFile;
+  std::string reconDeformStatsFile = m_OutputDirectory + MXADir::Separator + AIM::Reconstruction::DeformationStatsFile;
 
   std::string hdf5GrainFile = m_OutputDirectory + MXADir::Separator + AIM::Reconstruction::HDF5GrainFile;
 
@@ -225,8 +232,8 @@ void Reconstruction::compute()
     m->numgrains = m->form_grains();
 	CHECK_FOR_CANCELED(ReconstructionFunc, form_grains)
 
-  progressMessage(AIM_STRING("Writing VTK Visualization File"), 88);
-  if (m_WriteVisualizationFile) {m->writeVisualizationFile(reconVisFile);}
+  progressMessage(AIM_STRING("Writing VTK Visualization File"), 22);
+  if (m_WriteVisualizationFile) {outWriter->writeVisualizationFile(m.get(), reconVisFile);}
 
 	progressMessage(AIM_STRING("Assigning Bad Points"), 28);
     m->assign_badpoints();
@@ -333,9 +340,9 @@ void Reconstruction::compute()
   CHECK_FOR_CANCELED(ReconstructionFunc, find_schmids)
 
   progressMessage(AIM_STRING("Writing Statistics"), 80);
-  if(m_ZEndIndex-m_ZStartIndex > 1) m->volume_stats(h5io);
-  if(m_ZEndIndex-m_ZStartIndex == 1) m->volume_stats2D(h5io);
-  m->deformation_stats();
+  if(m_ZEndIndex-m_ZStartIndex > 1) { m->volume_stats(h5io); }
+  if(m_ZEndIndex-m_ZStartIndex == 1) { m->volume_stats2D(h5io); }
+  m->deformation_stats(reconDeformStatsFile);
   CHECK_FOR_CANCELED(ReconstructionFunc, volume_stats)
 
   progressMessage(AIM_STRING("Writing Grain Data"), 82);
@@ -344,27 +351,27 @@ void Reconstruction::compute()
   /** ********** This section writes the ASCII based vtk files for visualization *** */
 
   progressMessage(AIM_STRING("Writing VTK Visualization File"), 88);
-  if (m_WriteVisualizationFile) {m->writeVisualizationFile(reconVisFile);}
+  if (m_WriteVisualizationFile) {outWriter->writeVisualizationFile(m.get(), reconVisFile);}
 
   progressMessage(AIM_STRING("Writing VTK Inverse Pole Figure File"), 89);
-  if (m_WriteIPFFile) {m->writeIPFVizFile(reconIPFVisFile);}
+  if (m_WriteIPFFile) {outWriter->writeIPFVizFile(m.get(), reconIPFVisFile);}
 
   progressMessage(AIM_STRING("Writing VTK Disorientation File"), 90);
-  if (m_WriteDisorientationFile) {m->writeDisorientationVizFile(reconDisVisFile);}
+  if (m_WriteDisorientationFile) {outWriter->writeDisorientationVizFile(m.get(), reconDisVisFile);}
 
   progressMessage(AIM_STRING("Writing VTK Image Quality File"), 91);
-  if (m_WriteImageQualityFile) {m->writeImageQualityVizFile(reconIQVisFile);}
+  if (m_WriteImageQualityFile) {outWriter->writeImageQualityVizFile(m.get(), reconIQVisFile);}
 
   progressMessage(AIM_STRING("Writing VTK Schmid Factor File"), 92);
-  if (m_WriteSchmidFactorFile) {m->writeSchmidFactorVizFile(reconSFVisFile);}
+  if (m_WriteSchmidFactorFile) {outWriter->writeSchmidFactorVizFile(m.get(), reconSFVisFile);}
 
   progressMessage(AIM_STRING("Writing VTK Down Sampled File"), 93);
-  if (m_WriteDownSampledFile) {m->writeDownSampledVizFile(reconDSVisFile);}
+  if (m_WriteDownSampledFile) {outWriter->writeDownSampledVizFile(m.get(), reconDSVisFile);}
 
   /** ******* End VTK Visualization File Writing Section ****** */
   CHECK_FOR_CANCELED(ReconstructionFunc, vtk_viz_files)
   progressMessage(AIM_STRING("Writing Out HDF5 Grain File. This may take a few minutes to complete."), 95);
-  if (m_WriteHDF5GrainFile) { m->writeHDF5GrainsFile(hdf5GrainFile); }
+  if (m_WriteHDF5GrainFile) { h5GrainWriter->writeHDF5GrainsFile(m.get(), hdf5GrainFile); }
   CHECK_FOR_CANCELED(ReconstructionFunc, writeHDF5GrainsFile)
 
 
