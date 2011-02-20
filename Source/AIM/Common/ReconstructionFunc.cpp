@@ -1028,7 +1028,7 @@ int ReconstructionFunc::form_grains()
   m_Grains.resize(goodgraincount);
   goodgraincount = remove_smallgrains(goodgraincount);
   m_Grains.resize(goodgraincount);
-  m_grainQuats = AIMArray<double >::NullPointer(); // Clean up the array to release some memory
+//  m_grainQuats = AIMArray<double >::NullPointer(); // Clean up the array to release some memory
   return goodgraincount;
 }
 
@@ -1186,8 +1186,19 @@ int ReconstructionFunc::renumber_grains()
     if (gotcontainedmerged != 1)
     {
       m_Grains[i].newgrainname = graincount;
-      int onedge = m_Grains[i].surfacegrain;
-      m_Grains[graincount].surfacegrain = onedge;
+	  m_Grains[graincount].surfacegrain = m_Grains[i].surfacegrain;
+	  m_Grains[graincount].numvoxels = m_Grains[i].numvoxels;
+	  m_Grains[graincount].voxellist = new std::vector<int >(m_Grains[i].voxellist->size());
+	  m_Grains[graincount].voxellist = m_Grains[i].voxellist;
+	  m_Grains[graincount].active = 1;
+	  m_Grains[graincount].nucleus = m_Grains[i].nucleus;
+	  for(int k=0;k<5;k++)
+      {
+		m_Grains[graincount].avg_quat[k] = m_Grains[i].avg_quat[k];
+	  }
+	  m_Grains[graincount].euler1 = m_Grains[i].euler1;
+	  m_Grains[graincount].euler2 = m_Grains[i].euler2;
+	  m_Grains[graincount].euler3 = m_Grains[i].euler3;
       graincount++;
     }
   }
@@ -1375,6 +1386,7 @@ int ReconstructionFunc::remove_smallgrains(int numgrains)
 	      m_Grains[currentgrain].numvoxels = voxelslist.size();
 	      m_Grains[currentgrain].voxellist->swap(voxelslist);
 		  m_Grains[currentgrain].active = 1;
+		  m_Grains[currentgrain].nucleus = m_Grains[i].nucleus;
 		  for(int k=0;k<5;k++)
 	      {
 			m_Grains[currentgrain].avg_quat[k] = m_Grains[i].avg_quat[k];
@@ -1391,9 +1403,9 @@ int ReconstructionFunc::remove_smallgrains(int numgrains)
 		  tmp = pow(tmp,0.5);
 		  if(tmp > 1.0) tmp=1.0;
 		  ea2good=2*acos(tmp);
-		  m_Grains[i].euler1 = ea1good;
-		  m_Grains[i].euler2 = ea2good;
-		  m_Grains[i].euler3 = ea3good;
+		  m_Grains[currentgrain].euler1 = ea1good;
+		  m_Grains[currentgrain].euler2 = ea2good;
+		  m_Grains[currentgrain].euler3 = ea3good;
 	      voxelslist.clear();
 	      voxelslist.resize(initialVoxelsListSize, -1);
 		  currentgrain++;
@@ -3769,9 +3781,6 @@ int ReconstructionFunc::volume_stats2D(H5ReconStatsWriter::Pointer h5io)
   return retErr;
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void ReconstructionFunc::deformation_stats(const std::string &filename)
 {
   ofstream outFile;
