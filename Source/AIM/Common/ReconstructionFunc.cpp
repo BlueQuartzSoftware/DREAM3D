@@ -1518,7 +1518,7 @@ void ReconstructionFunc::find_grain_and_kernel_misorientations()
   delete[] unassigned;
 }
 
-int ReconstructionFunc::load_data(string readname)
+int ReconstructionFunc::load_data(const std::string &readname)
 {
   int bensdata = 0;
   int yoonsdata = 1;
@@ -2016,7 +2016,7 @@ void ReconstructionFunc::find_neighbors()
   int nListSize = 100;
   std::vector<int > vnlist(6, -1);
   std::vector<int >* nlist;
-//  std::vector<double >* nsalist;
+  std::vector<double >* nsalist;
   // Copy all the grain names into a densly packed array
   int* gnames = new int[totalpoints];
   for (int i = 0; i < totalpoints; ++i)
