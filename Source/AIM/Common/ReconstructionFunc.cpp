@@ -1149,20 +1149,23 @@ void ReconstructionFunc::merge_containedgrains()
       m_Grains[grainname].gotcontainedmerged = containedmerged;
     }
   }
+  int count=0;
   for (int j = 1; j < numgrains; j++)
   {
     if (m_Grains[j].gotcontainedmerged != 1)
     {
+	  count = 0;
 	  for (int k = 0; k < m_Grains[j].neighborlist->size(); k++)
       {
         int firstneighbor = m_Grains[j].neighborlist->at(k);
         int gotcontainedmerged = m_Grains[firstneighbor].gotcontainedmerged;
         if (gotcontainedmerged != 1)
 		{
-			m_Grains[j].neighborlist->resize(m_Grains[j].neighborlist->size()+1);
-			m_Grains[j].neighborlist->at(m_Grains[j].neighborlist->size()-1) = firstneighbor;
+			m_Grains[j].neighborlist->at(count) = firstneighbor;
+			count++;
 		}
       }
+	  m_Grains[j].neighborlist->resize(count);
 	  m_Grains[j].numneighbors = m_Grains[j].neighborlist->size();
     }
   }
