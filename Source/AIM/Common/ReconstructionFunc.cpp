@@ -2027,8 +2027,6 @@ void ReconstructionFunc::find_neighbors()
   int surfacegrain = 1;
   int nListSize = 100;
   std::vector<int > vnlist(6, -1);
-  std::vector<int >* nlist;
-  std::vector<double >* nsalist;
   // Copy all the grain names into a densly packed array
   int* gnames = new int[totalpoints];
   for (int i = 0; i < totalpoints; ++i)
@@ -2071,7 +2069,7 @@ void ReconstructionFunc::find_neighbors()
         {
           vnlist[onsurf] = gnames[neighbor];
           nnum = m_Grains[grain].numneighbors;
-          if (nnum >= (nlist->size()))
+          if (nnum >= (m_Grains[grain].neighborlist->size()))
           {
 			m_Grains[grain].neighborlist->resize(nnum + nListSize);
 			m_Grains[grain].neighborsurfarealist->resize(nnum + nListSize);
@@ -3010,7 +3008,6 @@ void ReconstructionFunc::find_eulerodf(H5ReconStatsWriter::Pointer h5io)
 void ReconstructionFunc::measure_misorientations(H5ReconStatsWriter::Pointer h5io)
 {
   size_t initialsize = 10;
-
   double degtorad = m_pi / 180.0;
   double n1, n2, n3;
   int mbin;
