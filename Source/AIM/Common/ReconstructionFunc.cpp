@@ -1723,7 +1723,7 @@ void ReconstructionFunc::homogenize_grains()
   }
 }
 
-int ReconstructionFunc::load_data(string readname)
+int ReconstructionFunc::load_data(const std::string &readname)
 {
   int bensdata = 0;
   int yoonsdata = 1;
@@ -2576,17 +2576,17 @@ void ReconstructionFunc::find_euclidean_map()
   delete[] voxel_NearestNeighbor;
   delete[] voxel_NearestNeighborDistance;
 }
-double ReconstructionFunc::find_xcoord(long index)
+double ReconstructionFunc::find_xcoord(size_t index)
 {
   double x = resx * double(index % xpoints);
   return x;
 }
-double ReconstructionFunc::find_ycoord(long index)
+double ReconstructionFunc::find_ycoord(size_t index)
 {
   double y = resy * double((index / xpoints) % ypoints);
   return y;
 }
-double ReconstructionFunc::find_zcoord(long index)
+double ReconstructionFunc::find_zcoord(size_t index)
 {
   double z = resz * double(index / (xpoints * ypoints));
   return z;
@@ -3939,10 +3939,12 @@ int ReconstructionFunc::volume_stats2D(H5ReconStatsWriter::Pointer h5io)
   return retErr;
 }
 
-void ReconstructionFunc::deformation_stats()
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ReconstructionFunc::deformation_stats(const std::string &filename)
 {
   ofstream outFile;
-  string filename = "Deformation_Stats.txt";
   double avgkm = 0;
   double avggam = 0;
   double avgiq = 0;
@@ -4099,289 +4101,8 @@ void ReconstructionFunc::deformation_stats()
   }
   outFile.close();
 }
-#define WRITE_VTK_GRAIN_HEADER(FILE_TYPE)\
-  fprintf(f, "# vtk DataFile Version 2.0\n");\
-  fprintf(f, "data set from AIMReconstruction\n");\
-  fprintf(f, FILE_TYPE); fprintf(f, "\n");\
-  fprintf(f, "DATASET STRUCTURED_POINTS\n");\
-  fprintf(f, "DIMENSIONS %d %d %d\n", xpoints, ypoints, zpoints);\
-  fprintf(f, "ORIGIN 0.0 0.0 0.0\n");\
-  fprintf(f, "SPACING %f %f %f\n", resx, resy, resz);\
-  fprintf(f, "POINT_DATA %d\n\n", xpoints*ypoints*zpoints );\
 
 
-#define WRITE_VTK_GRAIN_IDS()\
-  fprintf(f, "SCALARS GrainID int  1\n");\
-  fprintf(f, "LOOKUP_TABLE default\n");\
-  for (size_t i = 0; i < total; i++) {\
-    if(i%20 == 0 && i > 0) { fprintf(f, "\n"); }\
-    fprintf(f, "%d ", voxels[i].grainname);\
-  }\
-  fprintf(f, "\n");\
-
-
-#define WRITE_VTK_SCALARS_FROM_VOXEL(name, type, var)\
-  fprintf(f, "SCALARS %s %s\n", #name, #type);\
-  fprintf(f, "LOOKUP_TABLE default\n");\
-  for (size_t i = 0; i < total; i++) {\
-    if(i%20 == 0 && i > 0) { fprintf(f, "\n");}\
-    fprintf(f, "%f ", voxels[i].var);\
-  }\
-
-
-#define WRITE_VTK_GRAIN_WITH_VOXEL_SCALAR_VALUE(name, var)\
-int ReconstructionFunc::write##name##VizFile(const std::string &file)\
-{\
-  FILE* f = NULL;\
-  f = fopen(file.c_str(), "w");\
-  if (NULL == f) {return 1;}\
-  WRITE_VTK_GRAIN_HEADER("ASCII")\
-  size_t total = xpoints*ypoints*zpoints;\
-  WRITE_VTK_GRAIN_IDS()\
-  WRITE_VTK_SCALARS_FROM_VOXEL(name, float, var)\
-  fclose(f);\
-  return 0;\
-}
-
-#define WRITE_VTK_GRAIN_WITH_GRAIN_SCALAR_VALUE(name, var)\
-int ReconstructionFunc::write##name##VizFile(const std::string &file)\
-{\
-  FILE* f = NULL;\
-  f = fopen(file.c_str(), "w");\
-  if (NULL == f) {return 1;}\
-  WRITE_VTK_GRAIN_HEADER("ASCII")\
-  size_t total = xpoints*ypoints*zpoints;\
-  WRITE_VTK_GRAIN_IDS()\
-  fprintf(f, "SCALARS SchmidFactor float\n");\
-  fprintf(f, "LOOKUP_TABLE default\n");\
-  for (size_t i = 0; i < total; i++) {\
-    if(i%20 == 0 && i > 0) { fprintf(f, "\n");}\
-    fprintf(f, "%f ", m_Grains[voxels[i].grainname].schmidfactor);\
-  }\
-  fclose(f);\
-  return 0;\
-}
-
-WRITE_VTK_GRAIN_WITH_VOXEL_SCALAR_VALUE(Disorientation, misorientation)
-;
-WRITE_VTK_GRAIN_WITH_VOXEL_SCALAR_VALUE(ImageQuality, imagequality)
-;
-WRITE_VTK_GRAIN_WITH_GRAIN_SCALAR_VALUE(SchmidFactor, schmidfactor)
-;
-
-int ReconstructionFunc::writeVisualizationFile(const std::string &file)
-{
-  FILE* f = NULL;
-  f = fopen(file.c_str(), "w");
-  if (NULL == f)
-  {
-    return 1;
-  }
-  WRITE_VTK_GRAIN_HEADER("ASCII")
-  size_t total = xpoints * ypoints * zpoints;
-  WRITE_VTK_GRAIN_IDS()
-
-  WRITE_VTK_SCALARS_FROM_VOXEL(SurfaceVoxel, float, nearestneighbordistance[0])
-
-  if (mergetwinsoption == 1)
-  {
-    fprintf(f, "SCALARS WasTwin int 1");
-    fprintf(f, "LOOKUP_TABLE default\n");
-    size_t grainname = 0;
-    for (size_t i = 0; i < total; i++)
-    {
-      if (i % 20 == 0 && i > 0)
-      {
-        fprintf(f, "\n");
-      }
-      grainname = voxels[i].grainname;
-      fprintf(f, "%d ", m_Grains[grainname].gottwinmerged);
-    }
-  }
-
-  fclose(f);
-  return 0;
-}
-
-int ReconstructionFunc::writeIPFVizFile(const std::string &file)
-{
-  FILE* f = NULL;
-  f = fopen(file.c_str(), "w");
-  if (NULL == f)
-  {
-    return 1;
-  }
-#if AIM_WRITE_BINARY_VTK_FILE
-  WRITE_VTK_GRAIN_HEADER("BINARY")
-#else
-  WRITE_VTK_GRAIN_HEADER("ASCII")
-#endif
-
-  size_t total = xpoints * ypoints * zpoints;
-#if AIM_WRITE_BINARY_VTK_FILE
-  fprintf(f, "SCALARS GrainID int  1\n");
-  fprintf(f, "LOOKUP_TABLE default\n");
-  int* gn = new int[total];
-  int t;
-  for (size_t i = 0; i < total; i++)
-  {
-    t = voxels[i].grainname;
-#ifdef MXA_LITTLE_ENDIAN
-    MXA::Endian::reverseBytes<int >(t);
-#endif
-    gn[i] = t;
-  }
-  size_t totalWritten = fwrite(gn, sizeof(int), total, f);
-
-  delete[] gn;
-  if (totalWritten != total)
-  {
-    std::cout << "Error Writing Binary VTK Data into file " << file << std::endl;
-    fclose(f);
-    return -1;
-  }
-#else
-  WRITE_VTK_GRAIN_IDS()
-#endif
-
-#if AIM_WRITE_BINARY_VTK_FILE
-  fprintf(f, "COLOR_SCALARS IPF_Colors 4\n");
-  // Allocate our RGBA array
-  unsigned char* rgba = new unsigned char[total * 4];
-  //double red,green,blue;
-  double q1[4];
-  //unsigned char rgb[3] = {0, 0, 0};
-
-  double RefDirection[3] =
-  { 0.0, 0.0, 1.0 };
-  for (size_t i = 0; i < total; i++)
-  {
-    if (crystruct == AIM::Reconstruction::Cubic)
-    {
-      OIMColoring::GenerateIPFColor(voxels[i].euler1, voxels[i].euler2, voxels[i].euler3, RefDirection[0], RefDirection[1], RefDirection[2], &rgba[i * 4]);
-    }
-    if (crystruct == AIM::Reconstruction::Hexagonal)
-    {
-      q1[0] = voxels[i].quat[1];
-      q1[1] = voxels[i].quat[2];
-      q1[2] = voxels[i].quat[3];
-      q1[3] = voxels[i].quat[4];
-      OIMColoring::CalculateHexIPFColor(q1, &rgba[i]);
-    }
-    rgba[i * 4 + 3] = 255;
-  }
-  totalWritten = fwrite(rgba, sizeof(char), total * 4, f);
-  delete[] rgba;
-  if (totalWritten != total * 4)
-  {
-    std::cout << "Error Writing Binary Data for IPF Colors to file " << file << std::endl;
-    fclose(f);
-    return -1;
-  }
-#else
-
-  fprintf(f, "COLOR_SCALARS IPF_Colors 3\n");
-  double red,green,blue;
-  double q1[4];
-  unsigned char rgb[3] =
-  { 0, 0, 0};
-  double RefDirection[3] =
-  { 0.0, 0.0, 1.0};
-  for (size_t i = 0; i < total; i++)
-  {
-    if(crystruct == AIM::Reconstruction::Cubic)
-    {
-      OIMColoring::GenerateIPFColor(voxels[i].euler1, voxels[i].euler2, voxels[i].euler3, RefDirection[0], RefDirection[1], RefDirection[2], rgb);
-      red = static_cast<double>(double(rgb[0])/255.0);
-      green = static_cast<double>(double(rgb[1])/255.0);
-      blue = static_cast<double>(double(rgb[2])/255.0);
-    }
-    if(crystruct == AIM::Reconstruction::Hexagonal)
-    {
-      q1[0]=voxels[i].quat[1];
-      q1[1]=voxels[i].quat[2];
-      q1[2]=voxels[i].quat[3];
-      q1[3]=voxels[i].quat[4];
-      OIMColoring::CalculateHexIPFColor(q1, rgb);
-      red = static_cast<double>(double(rgb[0])/255.0);
-      green = static_cast<double>(double(rgb[1])/255.0);
-      blue = static_cast<double>(double(rgb[2])/255.0);
-    }
-    fprintf(f, "%f %f %f\n",red, green, blue);
-  }
-#endif
-
-  fclose(f);
-  return 0;
-}
-
-int ReconstructionFunc::writeDownSampledVizFile(const std::string &file)
-{
-  FILE* f = NULL;
-  f = fopen(file.c_str(), "w");
-  if (NULL == f)
-  {
-    return 1;
-  }
-  int counter = 0;
-  double x, y, z;
-  double dsresx, dsresy, dsresz;
-  int col, row, plane;
-  int index;
-  int *gnames;
-  gnames = new int[numgrains];
-  for (int i = 0; i < numgrains; i++)
-  {
-    gnames[i] = 0;
-  }
-  int dsxpoints = int(sizex / (resx * downsamplefactor));
-  int dsypoints = int(sizey / (resy * downsamplefactor));
-  int dszpoints = int(sizez / (resz * downsamplefactor));
-  dsresx = resx * downsamplefactor;
-  dsresy = resy * downsamplefactor;
-  dsresz = resz * downsamplefactor;
-  fprintf(f, "# vtk DataFile Version 2.0\n");
-  fprintf(f, "Down Sampled from AIMReconstruction\n");
-  fprintf(f, "ASCII\n");
-  fprintf(f, "DATASET STRUCTURED_POINTS\n");
-  fprintf(f, "DIMENSIONS %d %d %d\n", dsxpoints, dsypoints, dszpoints);
-  fprintf(f, "ORIGIN 0.0 0.0 0.0\n");
-  fprintf(f, "SPACING %f %f %f\n", dsresx, dsresy, dsresz);
-  fprintf(f, "POINT_DATA %d\n\n", dsxpoints * dsypoints * dszpoints);
-  fprintf(f, "SCALARS GrainID int  1\n");
-  fprintf(f, "LOOKUP_TABLE default\n");
-  for (int i = 0; i < dszpoints; i++)
-  {
-    for (int j = 0; j < dsypoints; j++)
-    {
-      for (int k = 0; k < dsxpoints; k++)
-      {
-        x = (k * dsresx) + (dsresx / 2.0);
-        y = (j * dsresy) + (dsresy / 2.0);
-        z = (i * dsresz) + (dsresz / 2.0);
-        col = int(x / resx);
-        row = int(y / resy);
-        plane = int(z / resz);
-        index = (plane * xpoints * ypoints) + (row * xpoints) + col;
-        if (counter % 20 == 0 && counter > 0)
-        {
-          fprintf(f, "\n");
-        }
-        fprintf(f, "%d ", voxels[index].grainname);
-        gnames[voxels[index].grainname]++;
-        counter++;
-      }
-    }
-  }
-  for (int i = 0; i < numgrains; i++)
-  {
-    fprintf(f, "%d ", i);
-    fprintf(f, "%d ", gnames[i]);
-    fprintf(f, "\n");
-  }
-  fclose(f);
-  return 0;
-}
 
 void ReconstructionFunc::write_graindata(const std::string &graindataFile)
 {
@@ -4642,130 +4363,4 @@ double ReconstructionFunc::gamma(double x)
   return ga;
 }
 
-int ReconstructionFunc::writeHDF5GrainsFile(const std::string &hdfFile)
-{
-  int err = -1;
-  AIM_H5VtkDataWriter::Pointer h5writer = AIM_H5VtkDataWriter::New();
-  h5writer->setFileName(hdfFile);
-  err = h5writer->openFile(false); // Open a new file over writing any other file
-
-  std::stringstream ss;
-  std::string hdfPath;
-  std::vector<std::string > hdfPaths;
-  // std::cout << "Writing out " << numgrains << " to an HDF5 Grain File..." << std::endl;
-  for (int i = 1; i < numgrains; i++)
-  {
-    //   std::cout << " Grain: " << i << " Gathering Data" << std::endl;
-    vector<int >* vlist = m_Grains[i].voxellist;
-    int vid = vlist->at(0);
-    ss.str("");
-    ss << "/" << i;
-    hdfPath = ss.str();
-    hdfPaths.push_back(hdfPath);
-
-    vector<int > plist(((xpoints + 1) * (ypoints + 1) * (zpoints + 1)), 0);
-    int pcount = 0;
-    double q1[5];
-    unsigned char rgb[3] =
-    { 0, 0, 0 };
-    double RefDirection[3] =
-    { 0.0, 0.0, 1.0 };
-    int ocol, orow, oplane;
-    int col, row, plane;
-    int pid;
-    int err = 0;
-    // outFile << "POINTS " << pcount << " float" << endl;
-    std::vector<float > points;
-    std::vector<int32_t > cells;
-    std::vector<int32_t > cell_types(vlist->size(), VTK_CELLTYPE_VOXEL);
-
-    std::vector<float > kernelAvgDisorientation(vlist->size());
-    std::vector<float > grainAvgDisorientation(vlist->size());
-    std::vector<float > imageQuality(vlist->size());
-    std::vector<unsigned char > ipfColor(vlist->size() * 3);
-    std::vector<float > schmidFactor(1);
-
-    std::vector<int32_t > grainName(1);
-
-    pcount = 0;
-    plist.clear();
-    plist.resize(((xpoints + 1) * (ypoints + 1) * (zpoints + 1)), 0);
-    for (std::vector<int >::size_type j = 0; j < vlist->size(); j++)
-    {
-      vid = vlist->at(j);
-      ocol = vid % xpoints;
-      orow = (vid / xpoints) % ypoints;
-      oplane = vid / (xpoints * ypoints);
-      cells.push_back(8);
-      for (int k = 0; k < 8; k++)
-      {
-        if (k == 0) col = ocol, row = orow, plane = oplane;
-        if (k == 1) col = ocol + 1, row = orow, plane = oplane;
-        if (k == 2) col = ocol, row = orow + 1, plane = oplane;
-        if (k == 3) col = ocol + 1, row = orow + 1, plane = oplane;
-        if (k == 4) col = ocol, row = orow, plane = oplane + 1;
-        if (k == 5) col = ocol + 1, row = orow, plane = oplane + 1;
-        if (k == 6) col = ocol, row = orow + 1, plane = oplane + 1;
-        if (k == 7) col = ocol + 1, row = orow + 1, plane = oplane + 1;
-        pid = (plane * (xpoints + 1) * (ypoints + 1)) + (row * (xpoints + 1)) + col;
-        if (plist[pid] == 0)
-        {
-          plist[pid] = pcount;
-          pcount++;
-          //     outFile << (col * resx) << "  " << (row * resy) << "  " << (plane * resz) << endl;
-          points.push_back((col * resx));
-          points.push_back((row * resy));
-          points.push_back((plane * resz));
-        }
-        // Add onto our cells vector
-        cells.push_back(plist[pid]);
-      }
-      // Append a grainId to the grainIds vector
-      kernelAvgDisorientation[j] = voxels[vid].kernelmisorientation;
-      grainAvgDisorientation[j] = voxels[vid].misorientation;
-      imageQuality[j] = voxels[vid].imagequality;
-      if (crystruct == AIM::Reconstruction::Cubic)
-      {
-        OIMColoring::GenerateIPFColor(voxels[vid].euler1, voxels[vid].euler2, voxels[vid].euler3, RefDirection[0], RefDirection[1], RefDirection[2], rgb);
-      }
-      if (crystruct == AIM::Reconstruction::Hexagonal)
-      {
-        q1[0] = voxels[i].quat[1];
-        q1[1] = voxels[i].quat[2];
-        q1[2] = voxels[i].quat[3];
-        q1[3] = voxels[i].quat[4];
-        OIMColoring::CalculateHexIPFColor(q1, rgb);
-      }
-      ipfColor[j * 3] = rgb[0];
-      ipfColor[j * 3 + 1] = rgb[1];
-      ipfColor[j * 3 + 2] = rgb[2];
-      grainName[0] = voxels[vid].grainname;
-    }
-    //   std::cout << " Grain: " << i << " Writing HDF5 File" << std::endl;
-    err = h5writer->writeUnstructuredGrid(hdfPath, points, cells, cell_types);
-    points.resize(0);
-    cells.resize(0);
-    cell_types.resize(0);
-
-    //Write the Field Data
-    err = h5writer->writeFieldData<int > (hdfPath, grainName, AIM::Representation::Grain_ID.c_str(), 1);
-
-    schmidFactor[0] = m_Grains[i].schmidfactor;
-    err = h5writer->writeFieldData<float > (hdfPath, schmidFactor, AIM::Representation::SchmidFactor.c_str(), 1);
-
-    // Write the Neighbor list
-    err = h5writer->writeFieldData<int > (hdfPath, *(m_Grains[i].neighborlist), AIM::Representation::Neighbor_Grain_ID_List.c_str(), 1);
-
-    // Write CELL_DATA
-    err = h5writer->writeCellData<float > (hdfPath, kernelAvgDisorientation, AIM::Representation::KernelAvgDisorientation.c_str(), 1);
-    err = h5writer->writeCellData<float > (hdfPath, grainAvgDisorientation, AIM::Representation::GrainAvgDisorientation.c_str(), 1);
-    err = h5writer->writeCellData<float > (hdfPath, imageQuality, AIM::Representation::ImageQuality.c_str(), 1);
-    err = h5writer->writeCellData<unsigned char > (hdfPath, ipfColor, AIM::Representation::IPFColor.c_str(), 3);
-
-  }
-
-  err = h5writer->writeObjectIndex(hdfPaths);
-  err = h5writer->closeFile();
-  return err;
-}
 

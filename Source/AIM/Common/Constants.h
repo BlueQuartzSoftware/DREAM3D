@@ -108,6 +108,7 @@ namespace AIM
     const std::string VisualizationVizFile("Reconstruction_Visualization.vtk");//11
     const std::string DownSampledVizFile("Reconstruction_DownSampled_Visualization.vtk");//11
 
+    const std::string DeformationStatsFile("Reconstruction_Deformation_Stats.txt");
     const std::string HDF5GrainFile("Reconstruction_Grains.h5grain");
     const std::string H5StatisticsFile("Reconstruction_Results.h5");
 
