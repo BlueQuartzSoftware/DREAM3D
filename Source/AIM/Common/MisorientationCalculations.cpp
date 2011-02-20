@@ -489,7 +489,9 @@ void MisorientationCalculations::calculateMisorientationAngles(double &w,
 {
   double degtorad = m_pi / 180.0;
   double denom;
-  double n1, n2, n3;
+  double n1 = miso1;
+  double n2 = miso2;
+  double n3 = miso3;
 
   w = w * degtorad;
   denom = (n1 * n1) + (n2 * n2) + (n3 * n3);
@@ -497,9 +499,12 @@ void MisorientationCalculations::calculateMisorientationAngles(double &w,
   n1 = n1 / denom;
   n2 = n2 / denom;
   n3 = n3 / denom;
-  miso1 = n1 * pow(((3.0 / 4.0) * (w - sin(w))), (1.0 / 3.0));
-  miso2 = n2 * pow(((3.0 / 4.0) * (w - sin(w))), (1.0 / 3.0));
-  miso3 = n3 * pow(((3.0 / 4.0) * (w - sin(w))), (1.0 / 3.0));
+  n1 = n1 * pow(((3.0 / 4.0) * (w - sin(w))), (1.0 / 3.0));
+  n2 = n2 * pow(((3.0 / 4.0) * (w - sin(w))), (1.0 / 3.0));
+  n3 = n3 * pow(((3.0 / 4.0) * (w - sin(w))), (1.0 / 3.0));
+  miso1 = n1;
+  miso2 = n2;
+  miso3 = n3;
 }
 
 
