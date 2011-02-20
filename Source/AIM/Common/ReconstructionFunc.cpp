@@ -2067,19 +2067,16 @@ void ReconstructionFunc::find_neighbors()
         if (k == 4 && row == (ypoints - 1)) good = 0;
         if (k == 2 && column == 0) good = 0;
         if (k == 3 && column == (xpoints - 1)) good = 0;
-        //CHECKME: Mike G - it seems the neighbor index could be outside the range so I put in this check.
-        if (neighbor >= totalpoints) good = 0;
         if (good == 1 && gnames[neighbor] != grain && gnames[neighbor] > 0)
         {
           vnlist[onsurf] = gnames[neighbor];
           nnum = m_Grains[grain].numneighbors;
-          nlist = m_Grains[grain].neighborlist;
           if (nnum >= (nlist->size()))
           {
-            nlist->resize(nnum + nListSize);
+			m_Grains[grain].neighborlist->resize(nnum + nListSize);
+			m_Grains[grain].neighborsurfarealist->resize(nnum + nListSize);
           }
-          nlist->at(nnum) = gnames[neighbor];
-          nnum++;
+          m_Grains[grain].neighborlist->at(nnum) = gnames[neighbor];
           m_Grains[grain].numneighbors = nnum;
           onsurf++;
         }
@@ -2111,49 +2108,26 @@ void ReconstructionFunc::find_neighbors()
   vector<int >* nlistcopy;
   for (int i = 1; i < numgrains; i++)
   {
-    nlist = m_Grains[i].neighborlist;
-    nsalist = m_Grains[i].neighborsurfarealist;
     vector<int >::iterator newend;
-    sort(nlist->begin(), nlist->end());
-    nlistcopy = nlist;
-    newend = unique(nlist->begin(), nlist->end());
-    nlist->erase(newend, nlist->end());
-    nlist->erase(std::remove(nlist->begin(), nlist->end(), -1), nlist->end());
+    sort(m_Grains[i].neighborlist->begin(), m_Grains[i].neighborlist->end());
+    nlistcopy = m_Grains[i].neighborlist;
+    newend = unique(m_Grains[i].neighborlist->begin(), m_Grains[i].neighborlist->end());
+    m_Grains[i].neighborlist->erase(newend, m_Grains[i].neighborlist->end());
+    m_Grains[i].neighborlist->erase(std::remove(m_Grains[i].neighborlist->begin(), m_Grains[i].neighborlist->end(), -1), m_Grains[i].neighborlist->end());
     //	nlist->erase(std::remove(nlist->begin(),nlist->end(),0),nlist->end());
-    int numneighs = int(nlist->size());
+    int numneighs = int(m_Grains[i].neighborlist->size());
     for (int j = 0; j < numneighs; j++)
     {
-      int neigh = nlist->at(j);
+      int neigh = m_Grains[i].neighborlist->at(j);
       int number = std::count(nlistcopy->begin(), nlistcopy->end(), neigh);
       double area = number * resx * resx;
-
-      //CHECKME: Mike G - the 'j' index can be outside the range for the nsalist
-      // vector so I put in this check but not sure what should be included in
-      // if statement?
-      if (j < nsalist->size())
-      {
-        nsalist->at(j) = area;
-      }
+      m_Grains[i].neighborsurfarealist->at(j) = area;
       if (m_Grains[i].surfacegrain == 0 && (neigh > i || m_Grains[neigh].surfacegrain == 1))
       {
         totalsurfacearea = totalsurfacearea + area;
       }
     }
-//CHECKME: Mike G - None of this is needed as we are dealing with pointers so
-// above when you do 'vector<int >* nlist = m_Grains[i].neighborlist;' you are
-// getting the direct pointer to the vector and storing it in the local pointer
-// 'nlist'. Then anything you do to 'nlist' if effectively doing the same thing
-    // to m_Grains[i].neighborlist. You are also creating a memory leak because
-    // you use the 'new' operator to create a new vector object and then replace
-    // it with the original pointer without cleaning up the pointer you just created
-    // None of the code between the #if 0 / #endif _should_ be needed.
     m_Grains[i].numneighbors = numneighs;
-#if 0
-    m_Grains[i].neighborlist = new std::vector<int >(numneighs);
-    m_Grains[i].neighborlist = nlist;
-    m_Grains[i].neighborsurfarealist = new std::vector<double >(numneighs);
-    m_Grains[i].neighborsurfarealist = nsalist;
-#endif
   }
   if (m_Grains[1].equivdiameter != 0)
   {
