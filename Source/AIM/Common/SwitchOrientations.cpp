@@ -54,7 +54,7 @@ void GrainGeneratorFunc::switchOrientations( int &badtrycount, int &numbins)
   {
     g1odfbin = calculateHexOdfBin(q1, qref, dim1, dim2, dim3);
   }
-  if (crystruct == AIM::Reconstruction::Cubic)
+  else if (crystruct == AIM::Reconstruction::Cubic)
   {
     g1odfbin = calculateCubicOdfBin(q1, qref, dim1, dim2, dim3);
   }
@@ -66,7 +66,7 @@ void GrainGeneratorFunc::switchOrientations( int &badtrycount, int &numbins)
   {
     g2odfbin = calculateHexOdfBin(q1, qref, dim1, dim2, dim3);
   }
-  if (crystruct == AIM::Reconstruction::Cubic)
+  else if (crystruct == AIM::Reconstruction::Cubic)
   {
     g2odfbin = calculateCubicOdfBin(q1, qref, dim1, dim2, dim3);
   }
@@ -82,16 +82,6 @@ void GrainGeneratorFunc::switchOrientations( int &badtrycount, int &numbins)
   misolist = grains[selectedgrain1].misorientationlist;
   neighborsurfarealist = grains[selectedgrain1].neighborsurfarealist;
   double mdfchange = 0;
-  //  s = sin(0.5 * g2ea2);
-  //  c = cos(0.5 * g2ea2);
-  //  s1 = sin(0.5 * (g2ea1 - g2ea3));
-  //  c1 = cos(0.5 * (g2ea1 - g2ea3));
-  //  s2 = sin(0.5 * (g2ea1 + g2ea3));
-  //  c2 = cos(0.5 * (g2ea1 + g2ea3));
-  //  q1[1] = s*c1;
-  //  q1[2] = s*s1;
-  //  q1[3] = c*s2;
-  //  q1[4] = c*c2;
   initializeQ(q1, g2ea1, g2ea2, g2ea3);
 
   // -----------------------------------------------------------------------------
@@ -108,16 +98,7 @@ void GrainGeneratorFunc::switchOrientations( int &badtrycount, int &numbins)
   nlist = grains[selectedgrain2].neighborlist;
   misolist = grains[selectedgrain2].misorientationlist;
   neighborsurfarealist = grains[selectedgrain2].neighborsurfarealist;
-  //  s = sin(0.5 * g1ea2);
-  //  c = cos(0.5 * g1ea2);
-  //  s1 = sin(0.5 * (g1ea1 - g1ea3));
-  //  c1 = cos(0.5 * (g1ea1 - g1ea3));
-  //  s2 = sin(0.5 * (g1ea1 + g1ea3));
-  //  c2 = cos(0.5 * (g1ea1 + g1ea3));
-  //  q1[1] = s*c1;
-  //  q1[2] = s*s1;
-  //  q1[3] = c*s2;
-  //  q1[4] = c*c2;
+
   initializeQ(q1, g1ea1, g1ea2, g1ea3);
 
   // -----------------------------------------------------------------------------
@@ -148,16 +129,7 @@ void GrainGeneratorFunc::switchOrientations( int &badtrycount, int &numbins)
     nlist = grains[selectedgrain1].neighborlist;
     misolist = grains[selectedgrain1].misorientationlist;
     neighborsurfarealist = grains[selectedgrain1].neighborsurfarealist;
-    //    s = sin(0.5 * g2ea2);
-    //    c = cos(0.5 * g2ea2);
-    //    s1 = sin(0.5 * (g2ea1 - g2ea3));
-    //    c1 = cos(0.5 * (g2ea1 - g2ea3));
-    //    s2 = sin(0.5 * (g2ea1 + g2ea3));
-    //    c2 = cos(0.5 * (g2ea1 + g2ea3));
-    //    q1[1] = s*c1;
-    //    q1[2] = s*s1;
-    //    q1[3] = c*s2;
-    //    q1[4] = c*c2;
+
     initializeQ(q1, g2ea1, g2ea2, g2ea3);
     grains[selectedgrain1].avg_quat[1] = q1[1];
     grains[selectedgrain1].avg_quat[2] = q1[2];
@@ -177,16 +149,7 @@ void GrainGeneratorFunc::switchOrientations( int &badtrycount, int &numbins)
     nlist = grains[selectedgrain2].neighborlist;
     misolist = grains[selectedgrain2].misorientationlist;
     neighborsurfarealist = grains[selectedgrain2].neighborsurfarealist;
-    //    s = sin(0.5 * g1ea2);
-    //    c = cos(0.5 * g1ea2);
-    //    s1 = sin(0.5 * (g1ea1 - g1ea3));
-    //    c1 = cos(0.5 * (g1ea1 - g1ea3));
-    //    s2 = sin(0.5 * (g1ea1 + g1ea3));
-    //    c2 = cos(0.5 * (g1ea1 + g1ea3));
-    //    q1[1] = s*c1;
-    //    q1[2] = s*s1;
-    //    q1[3] = c*s2;
-    //    q1[4] = c*c2;
+
     initializeQ(q1, g1ea1, g1ea2, g1ea3);
     grains[selectedgrain2].avg_quat[1] = q1[1];
     grains[selectedgrain2].avg_quat[2] = q1[2];

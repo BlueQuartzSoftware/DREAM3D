@@ -22,7 +22,7 @@
 * @class OIMColoring OIMColoring.hpp Server/IPFFilter/OIMColoring.hpp
 * @brief This class helps generate an RGB color based on a Euler Angle and a
 * Reference Direction.
-* @author Michael A. Jackson for rgb[2]Quartz Software
+* @author Michael A. Jackson for BlueQuartz Software
 * @author Michael Groeber for the US Air Force
 * @date Feb 24, 2010
 * @version 1.0
@@ -67,13 +67,13 @@ class OIMColoring
       { sorted[0] = a; sorted[1] = b; sorted[2] = c;}
     }
 
-/**
- * @brief Returns the maximum value of the three values
- * @param red
- * @param green
- * @param blue
- * @return
- */
+  /**
+   * @brief Returns the maximum value of the three values
+   * @param red
+   * @param green
+   * @param blue
+   * @return
+   */
     template<typename T>
     static T TripletMax(T red, T green, T blue)
     {

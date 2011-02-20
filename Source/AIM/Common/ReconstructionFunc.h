@@ -45,6 +45,14 @@
 
 using namespace std;
 
+/**
+ * @class ReconstructionFunc ReconstructionFunc.h AIM/Common/ReconstructionFunc.h
+ * @brief This class holds all the various functions that are needed to reconstruct
+ * a 3D representation from a stack of OIM Data.
+ * @author Michael A. Jackson for BlueQuartz Software
+ * @author Micharl A. Groeber (US Air Force Research Laboratory)
+ * @version 2.0
+ */
 class AIMCOMMON_EXPORT ReconstructionFunc
 {
 
@@ -149,7 +157,7 @@ class AIMCOMMON_EXPORT ReconstructionFunc
     int renumber_grains();
     int define_subgrains();
     int reburn_grains();
-	void fillin_sample();
+    void fillin_sample();
     void cleanup_data();
     void find_kernels();
     void homogenize_grains();
@@ -158,25 +166,28 @@ class AIMCOMMON_EXPORT ReconstructionFunc
     void characterize_twins();
     void characterize_colonies();
     int renumber_grains3();
-    void find_euclidean_map ();
-    void find_centroids ();
+    void find_euclidean_map();
+
+    void find_vectors(H5ReconStatsWriter::Pointer h5io);
+    void find_centroids();
     void find_moments();
     void find_axes();
-    void find_vectors(H5ReconStatsWriter::Pointer h5io);
+    void find_colors();
+    void find_schmids();
+
+    void find_vectors2D(H5ReconStatsWriter::Pointer h5io);
     void find_centroids2D();
     void find_moments2D();
     void find_axes2D();
-    void find_vectors2D(H5ReconStatsWriter::Pointer h5io);
+
     void find_eulerodf(H5ReconStatsWriter::Pointer h5io);
     void measure_misorientations(H5ReconStatsWriter::Pointer h5io);
-    void find_colors();
-    void find_schmids();
+
     void write_graindata(const std::string &graindataFile);
     void align_sections(const std::string &filename );
     int volume_stats(H5ReconStatsWriter::Pointer h5io);
     int volume_stats2D(H5ReconStatsWriter::Pointer h5io);
-	void deformation_stats();
-
+    void deformation_stats();
 
     /**
      * @brief
@@ -185,12 +196,47 @@ class AIMCOMMON_EXPORT ReconstructionFunc
      */
     int writeHDF5GrainsFile(const std::string &hdfFile);
 
-
+    /**
+     * @brief Writes a VTK visualization file
+     * @param Output file name
+     * @return 0 on Success
+     */
     int writeVisualizationFile(const std::string &file); // DONE
+
+    /**
+     * @brief Writes a VTK visualization file with vector arrays for the Inverse
+     * pole figure colors and grain ID.
+     * @param Output file name
+     * @return 0 on Success
+     */
     int writeIPFVizFile(const std::string &file);
+
+    /**
+     * @brief Writes a VTK visualization file with vector arrays for the disorientation colors and grain ID.
+     * @param Output file name
+     * @return 0 on Success
+     */
     int writeDisorientationVizFile(const std::string &file); // DONE
+
+    /**
+     * @brief Writes a VTK visualization file with vector arrays for the Image Quality and grain ID.
+     * @param Output file name
+     * @return 0 on Success
+     */
     int writeImageQualityVizFile(const std::string &file); // DONE
+
+    /**
+      * @brief Writes a VTK visualization file with vector arrays for the Schmid Factor and grain ID.
+      * @param Output file name
+      * @return 0 on Success
+      */
     int writeSchmidFactorVizFile(const std::string &file); // DONE
+
+    /**
+      * @brief Writes a low resolution VTK visualization file.
+      * @param Output file name
+      * @return 0 on Success
+      */
     int writeDownSampledVizFile(const std::string &file);
 
 
