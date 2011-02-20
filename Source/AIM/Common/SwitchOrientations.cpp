@@ -27,7 +27,7 @@ void GrainGeneratorFunc::switchOrientations( int &badtrycount, int &numbins)
   vector<double>* misolist;
   vector<double>* neighborsurfarealist;
 
-  initializeDims(dim1, dim2, dim3, numbins);
+  MisorientationCalculations::initializeDims(crystruct, dim1, dim2, dim3, numbins);
 
   good = 0;
   while (good == 0)
@@ -52,11 +52,11 @@ void GrainGeneratorFunc::switchOrientations( int &badtrycount, int &numbins)
   q1[4] = grains[selectedgrain1].avg_quat[4];
   if (crystruct == AIM::Reconstruction::Hexagonal)
   {
-    g1odfbin = calculateHexOdfBin(q1, qref, dim1, dim2, dim3);
+    g1odfbin = MisorientationCalculations::calculateHexOdfBin(q1, qref, dim1, dim2, dim3);
   }
   else if (crystruct == AIM::Reconstruction::Cubic)
   {
-    g1odfbin = calculateCubicOdfBin(q1, qref, dim1, dim2, dim3);
+    g1odfbin = MisorientationCalculations::calculateCubicOdfBin(q1, qref, dim1, dim2, dim3);
   }
   q1[1] = grains[selectedgrain2].avg_quat[1];
   q1[2] = grains[selectedgrain2].avg_quat[2];
@@ -64,11 +64,11 @@ void GrainGeneratorFunc::switchOrientations( int &badtrycount, int &numbins)
   q1[4] = grains[selectedgrain2].avg_quat[4];
   if (crystruct == AIM::Reconstruction::Hexagonal)
   {
-    g2odfbin = calculateHexOdfBin(q1, qref, dim1, dim2, dim3);
+    g2odfbin = MisorientationCalculations::calculateHexOdfBin(q1, qref, dim1, dim2, dim3);
   }
   else if (crystruct == AIM::Reconstruction::Cubic)
   {
-    g2odfbin = calculateCubicOdfBin(q1, qref, dim1, dim2, dim3);
+    g2odfbin = MisorientationCalculations::calculateCubicOdfBin(q1, qref, dim1, dim2, dim3);
   }
   double odfchange = ((actualodf[g1odfbin] - simodf[g1odfbin]) * (actualodf[g1odfbin] - simodf[g1odfbin])) - ((actualodf[g1odfbin]
       - (simodf[g1odfbin] - (double(grains[selectedgrain1].numvoxels) * resx * resy * resz / totalvol) + (double(grains[selectedgrain2].numvoxels) * resx

@@ -33,6 +33,7 @@
 #define _MISORIENTATIONCALCULATIONS_H_
 
 #include "AIM/Common/AIMCommonConfiguration.h"
+#include "AIM/Common/Constants.h"
 
 
 /**
@@ -109,6 +110,29 @@ class AIMCOMMON_EXPORT MisorientationCalculations
      * @return
      */
     static int getMisoBinHexagonal(double n1, double n2, double n3);
+
+    static void calculateMisorientationAngles(double &w,
+                                               double &miso1,
+                                               double &miso2,
+                                               double &miso3);
+
+    static void initializeDims( AIM::Reconstruction::CrystalStructure crystruct,
+                                double &dim1,
+                                double &dim2,
+                                double &dim3,
+                                int &numbins);
+
+    static size_t calculateHexOdfBin( double q1[5],
+                                       double qref[5],
+                                       double dim1,
+                                       double dim2,
+                                       double dim3);
+
+    static size_t calculateCubicOdfBin( double q1[5],
+                                                   double qref[5],
+                                                   double dim1,
+                                                   double dim2,
+                                                   double dim3);
 
   protected:
     MisorientationCalculations();
