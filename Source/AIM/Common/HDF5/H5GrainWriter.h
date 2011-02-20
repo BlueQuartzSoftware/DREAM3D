@@ -1,5 +1,6 @@
 /* ============================================================================
  * Copyright (c) 2010, Michael A. Jackson (BlueQuartz Software)
+ * Copyright (c) 2010, Michael A. Groeber (US Air Force Research Laboratory)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -28,67 +29,43 @@
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef QUATERNIONS_H_
-#define QUATERNIONS_H_
+#ifndef _H5GRAINWRITER_H_
+#define _H5GRAINWRITER_H_
 
-#if defined (_MSC_VER)
-#define WIN32_LEAN_AND_MEAN   // Exclude rarely-used stuff from Windows headers
-#endif
+#include "MXA/Common/MXASetGetMacros.h"
 
+#include "AIM/Common/ReconstructionFunc.h"
 
-#include "AIM/Common/AIMCommonConfiguration.h"
-
-#include <string>
-
-namespace AIM
+/**
+ * @class H5GrainWriter H5GrainWriter.h AIM/Common/HDF5/H5GrainWriter.h
+ * @brief This class will write a .h5grain file from data provided by the
+ * ReconstructionFunc class
+ * @author Michael A. Jackson for BlueQuartz Software
+ * @date Jan 19, 2011
+ * @version 1.0
+ */
+class AIMCOMMON_EXPORT H5GrainWriter
 {
-  /**
-   * @class QUaternions QUaternions.h AIM/Common/QUaternions.h
-   * @brief This class is just designed to hold the Quarterions for the Cubic and
-   * Hexagonal crystal structures.
-   * @author Michael A. Jackson for BlueQuartz Software
-   * @date Jan 19, 2011
-   * @version 1.0
-   */
-  class Quaternions
-  {
-    public:
-      ~Quaternions() { }
+  public:
+    MXA_SHARED_POINTERS(H5GrainWriter)
+    MXA_STATIC_NEW_MACRO(H5GrainWriter)
+    MXA_TYPE_MACRO(H5GrainWriter)
 
-      /**
-       * @brief Multiply by a unit quaterion for Hexagonal
-       * @param unitQuat
-       * @param i
-       * @param outQuat
-       */
-      static AIMCOMMON_EXPORT void Hex_MultiplyByUnitQuaterion(double* unitQuat, size_t i, double* outQuat);
+    virtual ~H5GrainWriter();
 
-      /**
-       * @brief Multiply by a unit quaterion for Cubic
-       * @param unitQuat
-       * @param i
-       * @param outQuat
-       */
-      static AIMCOMMON_EXPORT void Cubic_MultiplyByUnitQuaterion(double* unitQuat, size_t i, double* outQuat);
+    /**
+     * @brief
+     * @param hdfFile
+     * @return
+     */
+    int writeHDF5GrainsFile(ReconstructionFunc* r, const std::string &hdfFile);
 
-      /**
-       * @brief Symmetry values for Cubic
-       */
-      static AIMCOMMON_EXPORT double quat_symmcubic[24][5];
+  protected:
+    H5GrainWriter();
 
-      /**
-       * @brief Symmetry values for Hexagonal
-       */
-      static AIMCOMMON_EXPORT double quat_symmhex[12][5];
+  private:
+    H5GrainWriter(const H5GrainWriter&); // Copy Constructor Not Implemented
+    void operator=(const H5GrainWriter&); // Operator '=' Not Implemented
+};
 
-
-    protected:
-      Quaternions(){};
-
-    private:
-      Quaternions(const Quaternions&); // Copy Constructor Not Implemented
-      void operator=(const Quaternions&); // Operator '=' Not Implemented
-  };
-
-} // End AIM Namespace
-#endif /* QUATERNIONS_H_ */
+#endif /* _H5GRAINWRITER_H_ */

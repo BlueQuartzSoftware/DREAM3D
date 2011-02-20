@@ -82,17 +82,12 @@ double Quaternions::quat_symmhex[12][5] = {
 
 
 #define QUAT_SYMMHEX AIM::Quaternions::quat_symmhex
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void Quaternions::Hex_MultiplyByUnitQuaterion(double* unitQuat, size_t i, double* outQuat)
 {
-
-//  if (Quaternions::isInitialized == false)
-//  {
-//    Quaternions::initialize();
-//    // This will make sure things are initialized
-//  }
   outQuat[1]=QUAT_SYMMHEX[i][1]*unitQuat[4]+QUAT_SYMMHEX[i][4]*unitQuat[1]-QUAT_SYMMHEX[i][2]*unitQuat[3]+QUAT_SYMMHEX[i][3]*unitQuat[2];
   outQuat[2]=QUAT_SYMMHEX[i][2]*unitQuat[4]+QUAT_SYMMHEX[i][4]*unitQuat[2]-QUAT_SYMMHEX[i][3]*unitQuat[1]+QUAT_SYMMHEX[i][1]*unitQuat[3];
   outQuat[3]=QUAT_SYMMHEX[i][3]*unitQuat[4]+QUAT_SYMMHEX[i][4]*unitQuat[3]-QUAT_SYMMHEX[i][1]*unitQuat[2]+QUAT_SYMMHEX[i][2]*unitQuat[1];
@@ -105,12 +100,6 @@ void Quaternions::Hex_MultiplyByUnitQuaterion(double* unitQuat, size_t i, double
 // -----------------------------------------------------------------------------
 void Quaternions::Cubic_MultiplyByUnitQuaterion(double* unitQuat, size_t i, double* outQuat)
 {
-
-//  if (Quaternions::isInitialized == false)
-//  {
-//    Quaternions::initialize();
-//    // This will make sure things are initialized
-//  }
   outQuat[1]=QUAT_SYMMCUBIC[i][1]*unitQuat[4]+QUAT_SYMMCUBIC[i][4]*unitQuat[1]-QUAT_SYMMCUBIC[i][2]*unitQuat[3]+QUAT_SYMMCUBIC[i][3]*unitQuat[2];
   outQuat[2]=QUAT_SYMMCUBIC[i][2]*unitQuat[4]+QUAT_SYMMCUBIC[i][4]*unitQuat[2]-QUAT_SYMMCUBIC[i][3]*unitQuat[1]+QUAT_SYMMCUBIC[i][1]*unitQuat[3];
   outQuat[3]=QUAT_SYMMCUBIC[i][3]*unitQuat[4]+QUAT_SYMMCUBIC[i][4]*unitQuat[3]-QUAT_SYMMCUBIC[i][1]*unitQuat[2]+QUAT_SYMMCUBIC[i][2]*unitQuat[1];

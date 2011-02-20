@@ -1,7 +1,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2009, Michael A. Jackson. BlueQuartz Software
-//  Copyright (c) 2009, Michael Groeber, US Air Force Research Laboratory
+//  Copyright (c) 2009, 2010 Michael A. Jackson. BlueQuartz Software
+//  Copyright (c) 2009, 2010 Michael Groeber, US Air Force Research Laboratory
 //  All rights reserved.
 //  BSD License: http://www.opensource.org/licenses/bsd-license.html
 //
@@ -58,8 +58,7 @@ public:
     MXA_SHARED_POINTERS(GrainGeneratorFunc)MXA_STATIC_NEW_MACRO(GrainGeneratorFunc)virtual ~GrainGeneratorFunc();
     void swapOutOrientation(int & badtrycount, int & numbins);
     void switchOrientations(int & badtrycount, int & numbins);
-    int calculateHexOdfBin(double q1[5], double qref[5], double dim1, double dim2, double dim3);
-    int calculateCubicOdfBin(double q1[5], double qref[5], double dim1, double dim2, double dim3);
+
     void MC_LoopBody1(size_t neighbor, int j,
                                           vector<double>* misolist,
                                           vector<double>* neighborsurfarealist,
@@ -68,7 +67,6 @@ public:
                                       vector<double>* misolist,
                                       vector<double>* neighborsurfarealist);
     void initializeQ(double* q, double e1, double e2, double e3);
-    void initializeDims(double &dim1, double &dim2, double &dim3, int &numbins);
 
     double resx;
     double resy;

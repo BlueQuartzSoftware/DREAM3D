@@ -775,10 +775,10 @@ int ReconstructionFunc::form_grains()
   int point = 0;
   int randpoint = 0;
   int good = 0;
-  int x, y, z;
+//  int x, y, z;
   int col, row, plane;
   size_t size = 0;
-  int totalsize = 0;
+ // int totalsize = 0;
   size_t initialVoxelsListSize = 1000;
   size_t initialMergeListSize = 10;
   int gname = -1;
@@ -796,10 +796,6 @@ int ReconstructionFunc::form_grains()
   rg.RandomInit((static_cast<unsigned int > (time(NULL))));
 
   // Precalculate some constants
-  int xTimesY = xpoints * ypoints;
-  int xPMinus1 = xpoints - 1;
-  int yPMinus1 = ypoints - 1;
-  int zPMinus1 = zpoints - 1;
   int totalPMinus1 = totalpoints - 1;
 
   // Initialize set of grains
@@ -870,6 +866,8 @@ int ReconstructionFunc::form_grains()
           if (i == 4 && row == (ypoints - 1)) good = 0;
           if (i == 2 && col == 0) good = 0;
           if (i == 3 && col == (xpoints - 1)) good = 0;
+          //CHECKME: Mike G - Validate this fix to make sure it is needed.
+          if (neighbor >= totalpoints) good = 0;
           if (good == 1 && gnames[neighbor] == -1)
           {
             q2[0] = 1;
@@ -2018,7 +2016,7 @@ void ReconstructionFunc::find_neighbors()
   int nListSize = 100;
   std::vector<int > vnlist(6, -1);
   std::vector<int >* nlist;
-  std::vector<double >* nsalist;
+//  std::vector<double >* nsalist;
   // Copy all the grain names into a densly packed array
   int* gnames = new int[totalpoints];
   for (int i = 0; i < totalpoints; ++i)
@@ -2057,6 +2055,8 @@ void ReconstructionFunc::find_neighbors()
         if (k == 4 && row == (ypoints - 1)) good = 0;
         if (k == 2 && column == 0) good = 0;
         if (k == 3 && column == (xpoints - 1)) good = 0;
+        //CHECKME: Mike G - it seems the neighbor index could be outside the range so I put in this check.
+        if (neighbor >= totalpoints) good = 0;
         if (good == 1 && gnames[neighbor] != grain && gnames[neighbor] > 0)
         {
           vnlist[onsurf] = gnames[neighbor];
@@ -2114,17 +2114,34 @@ void ReconstructionFunc::find_neighbors()
       int neigh = nlist->at(j);
       int number = std::count(nlistcopy->begin(), nlistcopy->end(), neigh);
       double area = number * resx * resx;
-      nsalist->at(j) = area;
+
+      //CHECKME: Mike G - the 'j' index can be outside the range for the nsalist
+      // vector so I put in this check but not sure what should be included in
+      // if statement?
+      if (j < nsalist->size())
+      {
+        nsalist->at(j) = area;
+      }
       if (m_Grains[i].surfacegrain == 0 && (neigh > i || m_Grains[neigh].surfacegrain == 1))
       {
         totalsurfacearea = totalsurfacearea + area;
       }
     }
+//CHECKME: Mike G - None of this is needed as we are dealing with pointers so
+// above when you do 'vector<int >* nlist = m_Grains[i].neighborlist;' you are
+// getting the direct pointer to the vector and storing it in the local pointer
+// 'nlist'. Then anything you do to 'nlist' if effectively doing the same thing
+    // to m_Grains[i].neighborlist. You are also creating a memory leak because
+    // you use the 'new' operator to create a new vector object and then replace
+    // it with the original pointer without cleaning up the pointer you just created
+    // None of the code between the #if 0 / #endif _should_ be needed.
     m_Grains[i].numneighbors = numneighs;
+#if 0
     m_Grains[i].neighborlist = new std::vector<int >(numneighs);
     m_Grains[i].neighborlist = nlist;
     m_Grains[i].neighborsurfarealist = new std::vector<double >(numneighs);
     m_Grains[i].neighborsurfarealist = nsalist;
+#endif
   }
   if (m_Grains[1].equivdiameter != 0)
   {
@@ -2373,17 +2390,17 @@ void ReconstructionFunc::find_euclidean_map()
   delete[] voxel_NearestNeighbor;
   delete[] voxel_NearestNeighborDistance;
 }
-double ReconstructionFunc::find_xcoord(long index)
+double ReconstructionFunc::find_xcoord(size_t index)
 {
   double x = resx * double(index % xpoints);
   return x;
 }
-double ReconstructionFunc::find_ycoord(long index)
+double ReconstructionFunc::find_ycoord(size_t index)
 {
   double y = resy * double((index / xpoints) % ypoints);
   return y;
 }
-double ReconstructionFunc::find_zcoord(long index)
+double ReconstructionFunc::find_zcoord(size_t index)
 {
   double z = resz * double(index / (xpoints * ypoints));
   return z;
@@ -2876,24 +2893,16 @@ void ReconstructionFunc::find_vectors2D(H5ReconStatsWriter::Pointer h5io)
 void ReconstructionFunc::find_eulerodf(H5ReconStatsWriter::Pointer h5io)
 {
   totalvol = 0;
-  double w, denom, n1, n2, n3;
-  int ea1bin, ea2bin, ea3bin, bin;
-  double dim1 = 0;
-  double dim2 = 0;
-  double dim3 = 0;
-  if (crystruct == AIM::Reconstruction::Cubic)
-  {
-    dim1 = pow((0.75 * ((m_pi / 4.0) - sin((m_pi / 4.0)))), (1.0 / 3.0));
-    dim2 = pow((0.75 * ((m_pi / 4.0) - sin((m_pi / 4.0)))), (1.0 / 3.0));
-    dim3 = pow((0.75 * ((m_pi / 4.0) - sin((m_pi / 4.0)))), (1.0 / 3.0));
-  }
-  if (crystruct == AIM::Reconstruction::Hexagonal)
-  {
-    dim1 = pow((0.75 * ((m_pi / 2.0) - sin((m_pi / 2.0)))), (1.0 / 3.0));
-    dim2 = pow((0.75 * ((m_pi / 2.0) - sin((m_pi / 2.0)))), (1.0 / 3.0));
-    dim3 = pow((0.75 * ((m_pi / 6.0) - sin((m_pi / 6.0)))), (1.0 / 3.0));
-  }
-  double degtorad = m_pi / 180.0;
+  //double w, denom, n1, n2, n3;
+  size_t bin;
+  double dim1 = 0.0;
+  double dim2 = 0.0;
+  double dim3 = 0.0;
+  int numbins = 0;
+
+  MisorientationCalculations::initializeDims(crystruct, dim1, dim2, dim3, numbins);
+
+  //double degtorad = m_pi / 180.0;
   double q1[5];
   double qref[5];
   double *eulerodf;
@@ -2928,45 +2937,48 @@ void ReconstructionFunc::find_eulerodf(H5ReconStatsWriter::Pointer h5io)
       q1[4] = m_Grains[i].avg_quat[4];
       if (crystruct == AIM::Reconstruction::Hexagonal)
       {
-        w = MisorientationCalculations::getMisoQuatHexagonal(q1, qref, n1, n2, n3);
-        w = w * degtorad;
-        denom = (n1 * n1) + (n2 * n2) + (n3 * n3);
-        denom = pow(denom, 0.5);
-        n1 = n1 / denom;
-        n2 = n2 / denom;
-        n3 = n3 / denom;
-        n1 = n1 * pow(((3.0 / 4.0) * (w - sin(w))), (1.0 / 3.0));
-        n2 = n2 * pow(((3.0 / 4.0) * (w - sin(w))), (1.0 / 3.0));
-        n3 = n3 * pow(((3.0 / 4.0) * (w - sin(w))), (1.0 / 3.0));
-        ea1bin = int(n1 * 36.0 / dim1);
-        ea2bin = int(n2 * 36.0 / dim2);
-        ea3bin = int(n3 * 12.0 / dim3);
-        if (ea1bin >= 36) ea1bin = 35;
-        if (ea2bin >= 36) ea2bin = 35;
-        if (ea3bin >= 12) ea3bin = 11;
-        bin = (ea3bin * 36 * 36) + (ea2bin * 36) + (ea1bin);
+        bin = MisorientationCalculations::calculateHexOdfBin(q1, qref, dim1, dim2, dim3);
+
+//        w = MisorientationCalculations::getMisoQuatHexagonal(q1, qref, n1, n2, n3);
+//        w = w * degtorad;
+//        denom = (n1 * n1) + (n2 * n2) + (n3 * n3);
+//        denom = pow(denom, 0.5);
+//        n1 = n1 / denom;
+//        n2 = n2 / denom;
+//        n3 = n3 / denom;
+//        n1 = n1 * pow(((3.0 / 4.0) * (w - sin(w))), (1.0 / 3.0));
+//        n2 = n2 * pow(((3.0 / 4.0) * (w - sin(w))), (1.0 / 3.0));
+//        n3 = n3 * pow(((3.0 / 4.0) * (w - sin(w))), (1.0 / 3.0));
+//        ea1bin = size_t(n1 * 36.0 / dim1);
+//        ea2bin = size_t(n2 * 36.0 / dim2);
+//        ea3bin = size_t(n3 * 12.0 / dim3);
+//        if (ea1bin >= 36) ea1bin = 35;
+//        if (ea2bin >= 36) ea2bin = 35;
+//        if (ea3bin >= 12) ea3bin = 11;
+//        bin = (ea3bin * 36 * 36) + (ea2bin * 36) + (ea1bin);
         eulerodf[bin] = eulerodf[bin] + vol;
         totalvol = totalvol + vol;
       }
-      if (crystruct == AIM::Reconstruction::Cubic)
+      else if (crystruct == AIM::Reconstruction::Cubic)
       {
-        w = MisorientationCalculations::getMisoQuatCubic(q1, qref, n1, n2, n3);
-        w = w * degtorad;
-        denom = (n1 * n1) + (n2 * n2) + (n3 * n3);
-        denom = pow(denom, 0.5);
-        n1 = n1 / denom;
-        n2 = n2 / denom;
-        n3 = n3 / denom;
-        n1 = n1 * pow(((3.0 / 4.0) * (w - sin(w))), (1.0 / 3.0));
-        n2 = n2 * pow(((3.0 / 4.0) * (w - sin(w))), (1.0 / 3.0));
-        n3 = n3 * pow(((3.0 / 4.0) * (w - sin(w))), (1.0 / 3.0));
-        ea1bin = int(n1 * 18.0 / dim1);
-        ea2bin = int(n2 * 18.0 / dim2);
-        ea3bin = int(n3 * 18.0 / dim3);
-        if (ea1bin >= 18) ea1bin = 17;
-        if (ea2bin >= 18) ea2bin = 17;
-        if (ea3bin >= 18) ea3bin = 17;
-        bin = (ea3bin * 18 * 18) + (ea2bin * 18) + (ea1bin);
+        bin = MisorientationCalculations::calculateCubicOdfBin(q1, qref, dim1, dim2, dim3);
+//        w = MisorientationCalculations::getMisoQuatCubic(q1, qref, n1, n2, n3);
+//        w = w * degtorad;
+//        denom = (n1 * n1) + (n2 * n2) + (n3 * n3);
+//        denom = pow(denom, 0.5);
+//        n1 = n1 / denom;
+//        n2 = n2 / denom;
+//        n3 = n3 / denom;
+//        n1 = n1 * pow(((3.0 / 4.0) * (w - sin(w))), (1.0 / 3.0));
+//        n2 = n2 * pow(((3.0 / 4.0) * (w - sin(w))), (1.0 / 3.0));
+//        n3 = n3 * pow(((3.0 / 4.0) * (w - sin(w))), (1.0 / 3.0));
+//        ea1bin = size_t(n1 * 18.0 / dim1);
+//        ea2bin = size_t(n2 * 18.0 / dim2);
+//        ea3bin = size_t(n3 * 18.0 / dim3);
+//        if (ea1bin >= 18) ea1bin = 17;
+//        if (ea2bin >= 18) ea2bin = 17;
+//        if (ea3bin >= 18) ea3bin = 17;
+//        bin = (ea3bin * 18 * 18) + (ea2bin * 18) + (ea1bin);
         eulerodf[bin] = eulerodf[bin] + vol;
         totalvol = totalvol + vol;
       }
@@ -3004,8 +3016,11 @@ void ReconstructionFunc::find_eulerodf(H5ReconStatsWriter::Pointer h5io)
    }
    texindex = texindex / (18 * 18 * 18);
    texstrength = pow(texindex, 0.5);
-   */delete[] eulerodf;
+   */
+  delete[] eulerodf;
 }
+
+
 void ReconstructionFunc::measure_misorientations(H5ReconStatsWriter::Pointer h5io)
 {
   size_t initialsize = 10;
@@ -3033,15 +3048,16 @@ void ReconstructionFunc::measure_misorientations(H5ReconStatsWriter::Pointer h5i
   double microcount = 0.0;
   double nsa;
 
-  std::vector<double >* neighborsurfarealist = NULL;
+  std::vector<double>* neighborsurfarealist = NULL;
   for (int i = 1; i < numgrains; i++)
   {
-
     microcount = 0;
-
-    std::vector<double >* misolistPtr = new std::vector<double >(initialsize, -1);
-    std::vector<double >& misolist = *misolistPtr;
+    // this will eventually be assigned to the m_Grains[i].misorientationlist
+    std::vector<double>* misolistPtr = new std::vector<double >(initialsize, -1);
+    std::vector<double>& misolist = *misolistPtr;
     microcount = 0.0;
+
+    Grain& grain = m_Grains[i];
 
     nlist = m_Grains[i].neighborlist;
     neighborsurfarealist = m_Grains[i].neighborsurfarealist;
@@ -3058,7 +3074,13 @@ void ReconstructionFunc::measure_misorientations(H5ReconStatsWriter::Pointer h5i
     for (int j = 0; j < size; j++)
     {
       nname = nlist->at(j);
-      nsa = neighborsurfarealist->at(j);
+      if (j >= neighborsurfarealist->size() )
+      {
+    //    std::cout << "j: " << j << std::endl;
+    //    std::cout << "neighborsurfarealist->size(): " << neighborsurfarealist->size() << std::endl;
+        nname = -1;
+      }
+
       if (nname > 0)
       {
         q2[1] = m_Grains[nname].avg_quat[1];
@@ -3069,7 +3091,7 @@ void ReconstructionFunc::measure_misorientations(H5ReconStatsWriter::Pointer h5i
         {
           w = MisorientationCalculations::getMisoQuatHexagonal(q1, q2, n1, n2, n3);
         }
-        if (crystruct == AIM::Reconstruction::Cubic)
+        else if (crystruct == AIM::Reconstruction::Cubic)
         {
           w = MisorientationCalculations::getMisoQuatCubic(q1, q2, n1, n2, n3);
         }
@@ -3086,7 +3108,7 @@ void ReconstructionFunc::measure_misorientations(H5ReconStatsWriter::Pointer h5i
         {
           mbin = MisorientationCalculations::getMisoBinCubic(misolist[3 * j], misolist[3 * j + 1], misolist[3 * j + 2]);
         }
-        if (crystruct == AIM::Reconstruction::Hexagonal)
+        else if (crystruct == AIM::Reconstruction::Hexagonal)
         {
           mbin = MisorientationCalculations::getMisoBinHexagonal(misolist[3 * j], misolist[3 * j + 1], misolist[3 * j + 2]);
         }
@@ -3096,15 +3118,26 @@ void ReconstructionFunc::measure_misorientations(H5ReconStatsWriter::Pointer h5i
         }
         if (nname > i || m_Grains[nname].surfacegrain == 1)
         {
+          nsa = neighborsurfarealist->at(j);
           misobin[mbin] = misobin[mbin] + (nsa / totalsurfacearea);
         }
       }
     }
-    int micbin = int((double(microcount) / double(size)) / 0.1);
-    microbin[micbin]++;
-    m_Grains[i].misorientationlist = new std::vector<double >(misolist.size());
-    m_Grains[i].misorientationlist->swap(misolist);
-    misolist.clear();
+    //CHECKME: Mike G - It is possible for size and/or microcount to be Zero
+    // which causes 'micbin' to be the maximum integer which is probably not
+    // what you want. Please check the if statement to make sure you agree
+    // with the code that I have inserted.
+    if (microcount != 0 && size != 0) {
+      int micbin = int((double(microcount) / double(size)) / 0.1);
+      microbin[micbin]++;
+    }
+    //Delete any existing m_Grains[i].misorientationlist pointer to prepare
+    // for the new one
+    if (m_Grains[i].misorientationlist != NULL)
+    {
+      delete m_Grains[i].misorientationlist;
+    }
+    m_Grains[i].misorientationlist = misolistPtr;
   }
   h5io->writeMisorientationBinsData(misobin, nummisobins);
   h5io->writeMicroTextureData(microbin, 10, numgrains);
@@ -3736,10 +3769,12 @@ int ReconstructionFunc::volume_stats2D(H5ReconStatsWriter::Pointer h5io)
   return retErr;
 }
 
-void ReconstructionFunc::deformation_stats()
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ReconstructionFunc::deformation_stats(const std::string &filename)
 {
   ofstream outFile;
-  string filename = "Deformation_Stats.txt";
   double avgkm = 0;
   double avggam = 0;
   double avgiq = 0;
@@ -3896,289 +3931,8 @@ void ReconstructionFunc::deformation_stats()
   }
   outFile.close();
 }
-#define WRITE_VTK_GRAIN_HEADER(FILE_TYPE)\
-  fprintf(f, "# vtk DataFile Version 2.0\n");\
-  fprintf(f, "data set from AIMReconstruction\n");\
-  fprintf(f, FILE_TYPE); fprintf(f, "\n");\
-  fprintf(f, "DATASET STRUCTURED_POINTS\n");\
-  fprintf(f, "DIMENSIONS %d %d %d\n", xpoints, ypoints, zpoints);\
-  fprintf(f, "ORIGIN 0.0 0.0 0.0\n");\
-  fprintf(f, "SPACING %f %f %f\n", resx, resy, resz);\
-  fprintf(f, "POINT_DATA %d\n\n", xpoints*ypoints*zpoints );\
 
 
-#define WRITE_VTK_GRAIN_IDS()\
-  fprintf(f, "SCALARS GrainID int  1\n");\
-  fprintf(f, "LOOKUP_TABLE default\n");\
-  for (size_t i = 0; i < total; i++) {\
-    if(i%20 == 0 && i > 0) { fprintf(f, "\n"); }\
-    fprintf(f, "%d ", voxels[i].grainname);\
-  }\
-  fprintf(f, "\n");\
-
-
-#define WRITE_VTK_SCALARS_FROM_VOXEL(name, type, var)\
-  fprintf(f, "SCALARS %s %s\n", #name, #type);\
-  fprintf(f, "LOOKUP_TABLE default\n");\
-  for (size_t i = 0; i < total; i++) {\
-    if(i%20 == 0 && i > 0) { fprintf(f, "\n");}\
-    fprintf(f, "%f ", voxels[i].var);\
-  }\
-
-
-#define WRITE_VTK_GRAIN_WITH_VOXEL_SCALAR_VALUE(name, var)\
-int ReconstructionFunc::write##name##VizFile(const std::string &file)\
-{\
-  FILE* f = NULL;\
-  f = fopen(file.c_str(), "w");\
-  if (NULL == f) {return 1;}\
-  WRITE_VTK_GRAIN_HEADER("ASCII")\
-  size_t total = xpoints*ypoints*zpoints;\
-  WRITE_VTK_GRAIN_IDS()\
-  WRITE_VTK_SCALARS_FROM_VOXEL(name, float, var)\
-  fclose(f);\
-  return 0;\
-}
-
-#define WRITE_VTK_GRAIN_WITH_GRAIN_SCALAR_VALUE(name, var)\
-int ReconstructionFunc::write##name##VizFile(const std::string &file)\
-{\
-  FILE* f = NULL;\
-  f = fopen(file.c_str(), "w");\
-  if (NULL == f) {return 1;}\
-  WRITE_VTK_GRAIN_HEADER("ASCII")\
-  size_t total = xpoints*ypoints*zpoints;\
-  WRITE_VTK_GRAIN_IDS()\
-  fprintf(f, "SCALARS SchmidFactor float\n");\
-  fprintf(f, "LOOKUP_TABLE default\n");\
-  for (size_t i = 0; i < total; i++) {\
-    if(i%20 == 0 && i > 0) { fprintf(f, "\n");}\
-    fprintf(f, "%f ", m_Grains[voxels[i].grainname].schmidfactor);\
-  }\
-  fclose(f);\
-  return 0;\
-}
-
-WRITE_VTK_GRAIN_WITH_VOXEL_SCALAR_VALUE(Disorientation, grainmisorientation)
-;
-WRITE_VTK_GRAIN_WITH_VOXEL_SCALAR_VALUE(ImageQuality, imagequality)
-;
-WRITE_VTK_GRAIN_WITH_GRAIN_SCALAR_VALUE(SchmidFactor, schmidfactor)
-;
-
-int ReconstructionFunc::writeVisualizationFile(const std::string &file)
-{
-  FILE* f = NULL;
-  f = fopen(file.c_str(), "w");
-  if (NULL == f)
-  {
-    return 1;
-  }
-  WRITE_VTK_GRAIN_HEADER("ASCII")
-  size_t total = xpoints * ypoints * zpoints;
-  WRITE_VTK_GRAIN_IDS()
-
-  WRITE_VTK_SCALARS_FROM_VOXEL(SurfaceVoxel, float, nearestneighbordistance[0])
-
-  if (mergetwinsoption == 1)
-  {
-    fprintf(f, "SCALARS WasTwin int 1");
-    fprintf(f, "LOOKUP_TABLE default\n");
-    size_t grainname = 0;
-    for (size_t i = 0; i < total; i++)
-    {
-      if (i % 20 == 0 && i > 0)
-      {
-        fprintf(f, "\n");
-      }
-      grainname = voxels[i].grainname;
-      fprintf(f, "%d ", m_Grains[grainname].gottwinmerged);
-    }
-  }
-
-  fclose(f);
-  return 0;
-}
-
-int ReconstructionFunc::writeIPFVizFile(const std::string &file)
-{
-  FILE* f = NULL;
-  f = fopen(file.c_str(), "w");
-  if (NULL == f)
-  {
-    return 1;
-  }
-#if AIM_WRITE_BINARY_VTK_FILE
-  WRITE_VTK_GRAIN_HEADER("BINARY")
-#else
-  WRITE_VTK_GRAIN_HEADER("ASCII")
-#endif
-
-  size_t total = xpoints * ypoints * zpoints;
-#if AIM_WRITE_BINARY_VTK_FILE
-  fprintf(f, "SCALARS GrainID int  1\n");
-  fprintf(f, "LOOKUP_TABLE default\n");
-  int* gn = new int[total];
-  int t;
-  for (size_t i = 0; i < total; i++)
-  {
-    t = voxels[i].grainname;
-#ifdef MXA_LITTLE_ENDIAN
-    MXA::Endian::reverseBytes<int >(t);
-#endif
-    gn[i] = t;
-  }
-  size_t totalWritten = fwrite(gn, sizeof(int), total, f);
-
-  delete[] gn;
-  if (totalWritten != total)
-  {
-    std::cout << "Error Writing Binary VTK Data into file " << file << std::endl;
-    fclose(f);
-    return -1;
-  }
-#else
-  WRITE_VTK_GRAIN_IDS()
-#endif
-
-#if AIM_WRITE_BINARY_VTK_FILE
-  fprintf(f, "COLOR_SCALARS IPF_Colors 4\n");
-  // Allocate our RGBA array
-  unsigned char* rgba = new unsigned char[total * 4];
-  //double red,green,blue;
-  double q1[4];
-  //unsigned char rgb[3] = {0, 0, 0};
-
-  double RefDirection[3] =
-  { 0.0, 0.0, 1.0 };
-  for (size_t i = 0; i < total; i++)
-  {
-    if (crystruct == AIM::Reconstruction::Cubic)
-    {
-      OIMColoring::GenerateIPFColor(voxels[i].euler1, voxels[i].euler2, voxels[i].euler3, RefDirection[0], RefDirection[1], RefDirection[2], &rgba[i * 4]);
-    }
-    if (crystruct == AIM::Reconstruction::Hexagonal)
-    {
-      q1[0] = voxels[i].quat[1];
-      q1[1] = voxels[i].quat[2];
-      q1[2] = voxels[i].quat[3];
-      q1[3] = voxels[i].quat[4];
-      OIMColoring::CalculateHexIPFColor(q1, &rgba[i]);
-    }
-    rgba[i * 4 + 3] = 255;
-  }
-  totalWritten = fwrite(rgba, sizeof(char), total * 4, f);
-  delete[] rgba;
-  if (totalWritten != total * 4)
-  {
-    std::cout << "Error Writing Binary Data for IPF Colors to file " << file << std::endl;
-    fclose(f);
-    return -1;
-  }
-#else
-
-  fprintf(f, "COLOR_SCALARS IPF_Colors 3\n");
-  double red,green,blue;
-  double q1[4];
-  unsigned char rgb[3] =
-  { 0, 0, 0};
-  double RefDirection[3] =
-  { 0.0, 0.0, 1.0};
-  for (size_t i = 0; i < total; i++)
-  {
-    if(crystruct == AIM::Reconstruction::Cubic)
-    {
-      OIMColoring::GenerateIPFColor(voxels[i].euler1, voxels[i].euler2, voxels[i].euler3, RefDirection[0], RefDirection[1], RefDirection[2], rgb);
-      red = static_cast<double>(double(rgb[0])/255.0);
-      green = static_cast<double>(double(rgb[1])/255.0);
-      blue = static_cast<double>(double(rgb[2])/255.0);
-    }
-    if(crystruct == AIM::Reconstruction::Hexagonal)
-    {
-      q1[0]=voxels[i].quat[1];
-      q1[1]=voxels[i].quat[2];
-      q1[2]=voxels[i].quat[3];
-      q1[3]=voxels[i].quat[4];
-      OIMColoring::CalculateHexIPFColor(q1, rgb);
-      red = static_cast<double>(double(rgb[0])/255.0);
-      green = static_cast<double>(double(rgb[1])/255.0);
-      blue = static_cast<double>(double(rgb[2])/255.0);
-    }
-    fprintf(f, "%f %f %f\n",red, green, blue);
-  }
-#endif
-
-  fclose(f);
-  return 0;
-}
-
-int ReconstructionFunc::writeDownSampledVizFile(const std::string &file)
-{
-  FILE* f = NULL;
-  f = fopen(file.c_str(), "w");
-  if (NULL == f)
-  {
-    return 1;
-  }
-  int counter = 0;
-  double x, y, z;
-  double dsresx, dsresy, dsresz;
-  int col, row, plane;
-  int index;
-  int *gnames;
-  gnames = new int[numgrains];
-  for (int i = 0; i < numgrains; i++)
-  {
-    gnames[i] = 0;
-  }
-  int dsxpoints = int(sizex / (resx * downsamplefactor));
-  int dsypoints = int(sizey / (resy * downsamplefactor));
-  int dszpoints = int(sizez / (resz * downsamplefactor));
-  dsresx = resx * downsamplefactor;
-  dsresy = resy * downsamplefactor;
-  dsresz = resz * downsamplefactor;
-  fprintf(f, "# vtk DataFile Version 2.0\n");
-  fprintf(f, "Down Sampled from AIMReconstruction\n");
-  fprintf(f, "ASCII\n");
-  fprintf(f, "DATASET STRUCTURED_POINTS\n");
-  fprintf(f, "DIMENSIONS %d %d %d\n", dsxpoints, dsypoints, dszpoints);
-  fprintf(f, "ORIGIN 0.0 0.0 0.0\n");
-  fprintf(f, "SPACING %f %f %f\n", dsresx, dsresy, dsresz);
-  fprintf(f, "POINT_DATA %d\n\n", dsxpoints * dsypoints * dszpoints);
-  fprintf(f, "SCALARS GrainID int  1\n");
-  fprintf(f, "LOOKUP_TABLE default\n");
-  for (int i = 0; i < dszpoints; i++)
-  {
-    for (int j = 0; j < dsypoints; j++)
-    {
-      for (int k = 0; k < dsxpoints; k++)
-      {
-        x = (k * dsresx) + (dsresx / 2.0);
-        y = (j * dsresy) + (dsresy / 2.0);
-        z = (i * dsresz) + (dsresz / 2.0);
-        col = int(x / resx);
-        row = int(y / resy);
-        plane = int(z / resz);
-        index = (plane * xpoints * ypoints) + (row * xpoints) + col;
-        if (counter % 20 == 0 && counter > 0)
-        {
-          fprintf(f, "\n");
-        }
-        fprintf(f, "%d ", voxels[index].grainname);
-        gnames[voxels[index].grainname]++;
-        counter++;
-      }
-    }
-  }
-  for (int i = 0; i < numgrains; i++)
-  {
-    fprintf(f, "%d ", i);
-    fprintf(f, "%d ", gnames[i]);
-    fprintf(f, "\n");
-  }
-  fclose(f);
-  return 0;
-}
 
 void ReconstructionFunc::write_graindata(const std::string &graindataFile)
 {
@@ -4438,131 +4192,3 @@ double ReconstructionFunc::gamma(double x)
   }
   return ga;
 }
-
-int ReconstructionFunc::writeHDF5GrainsFile(const std::string &hdfFile)
-{
-  int err = -1;
-  AIM_H5VtkDataWriter::Pointer h5writer = AIM_H5VtkDataWriter::New();
-  h5writer->setFileName(hdfFile);
-  err = h5writer->openFile(false); // Open a new file over writing any other file
-
-  std::stringstream ss;
-  std::string hdfPath;
-  std::vector<std::string > hdfPaths;
-  // std::cout << "Writing out " << numgrains << " to an HDF5 Grain File..." << std::endl;
-  for (int i = 1; i < numgrains; i++)
-  {
-    //   std::cout << " Grain: " << i << " Gathering Data" << std::endl;
-    vector<int >* vlist = m_Grains[i].voxellist;
-    int vid = vlist->at(0);
-    ss.str("");
-    ss << "/" << i;
-    hdfPath = ss.str();
-    hdfPaths.push_back(hdfPath);
-
-    vector<int > plist(((xpoints + 1) * (ypoints + 1) * (zpoints + 1)), 0);
-    int pcount = 0;
-    double q1[5];
-    unsigned char rgb[3] =
-    { 0, 0, 0 };
-    double RefDirection[3] =
-    { 0.0, 0.0, 1.0 };
-    int ocol, orow, oplane;
-    int col, row, plane;
-    int pid;
-    int err = 0;
-    // outFile << "POINTS " << pcount << " float" << endl;
-    std::vector<float > points;
-    std::vector<int32_t > cells;
-    std::vector<int32_t > cell_types(vlist->size(), VTK_CELLTYPE_VOXEL);
-
-    std::vector<float > kernelAvgDisorientation(vlist->size());
-    std::vector<float > grainAvgDisorientation(vlist->size());
-    std::vector<float > imageQuality(vlist->size());
-    std::vector<unsigned char > ipfColor(vlist->size() * 3);
-    std::vector<float > schmidFactor(1);
-
-    std::vector<int32_t > grainName(1);
-
-    pcount = 0;
-    plist.clear();
-    plist.resize(((xpoints + 1) * (ypoints + 1) * (zpoints + 1)), 0);
-    for (std::vector<int >::size_type j = 0; j < vlist->size(); j++)
-    {
-      vid = vlist->at(j);
-      ocol = vid % xpoints;
-      orow = (vid / xpoints) % ypoints;
-      oplane = vid / (xpoints * ypoints);
-      cells.push_back(8);
-      for (int k = 0; k < 8; k++)
-      {
-        if (k == 0) col = ocol, row = orow, plane = oplane;
-        if (k == 1) col = ocol + 1, row = orow, plane = oplane;
-        if (k == 2) col = ocol, row = orow + 1, plane = oplane;
-        if (k == 3) col = ocol + 1, row = orow + 1, plane = oplane;
-        if (k == 4) col = ocol, row = orow, plane = oplane + 1;
-        if (k == 5) col = ocol + 1, row = orow, plane = oplane + 1;
-        if (k == 6) col = ocol, row = orow + 1, plane = oplane + 1;
-        if (k == 7) col = ocol + 1, row = orow + 1, plane = oplane + 1;
-        pid = (plane * (xpoints + 1) * (ypoints + 1)) + (row * (xpoints + 1)) + col;
-        if (plist[pid] == 0)
-        {
-          plist[pid] = pcount;
-          pcount++;
-          //     outFile << (col * resx) << "  " << (row * resy) << "  " << (plane * resz) << endl;
-          points.push_back((col * resx));
-          points.push_back((row * resy));
-          points.push_back((plane * resz));
-        }
-        // Add onto our cells vector
-        cells.push_back(plist[pid]);
-      }
-      // Append a grainId to the grainIds vector
-      kernelAvgDisorientation[j] = voxels[vid].kernelmisorientation;
-      grainAvgDisorientation[j] = voxels[vid].grainmisorientation;
-      imageQuality[j] = voxels[vid].imagequality;
-      if (crystruct == AIM::Reconstruction::Cubic)
-      {
-        OIMColoring::GenerateIPFColor(voxels[vid].euler1, voxels[vid].euler2, voxels[vid].euler3, RefDirection[0], RefDirection[1], RefDirection[2], rgb);
-      }
-      if (crystruct == AIM::Reconstruction::Hexagonal)
-      {
-        q1[0] = voxels[i].quat[1];
-        q1[1] = voxels[i].quat[2];
-        q1[2] = voxels[i].quat[3];
-        q1[3] = voxels[i].quat[4];
-        OIMColoring::CalculateHexIPFColor(q1, rgb);
-      }
-      ipfColor[j * 3] = rgb[0];
-      ipfColor[j * 3 + 1] = rgb[1];
-      ipfColor[j * 3 + 2] = rgb[2];
-      grainName[0] = voxels[vid].grainname;
-    }
-    //   std::cout << " Grain: " << i << " Writing HDF5 File" << std::endl;
-    err = h5writer->writeUnstructuredGrid(hdfPath, points, cells, cell_types);
-    points.resize(0);
-    cells.resize(0);
-    cell_types.resize(0);
-
-    //Write the Field Data
-    err = h5writer->writeFieldData<int > (hdfPath, grainName, AIM::Representation::Grain_ID.c_str(), 1);
-
-    schmidFactor[0] = m_Grains[i].schmidfactor;
-    err = h5writer->writeFieldData<float > (hdfPath, schmidFactor, AIM::Representation::SchmidFactor.c_str(), 1);
-
-    // Write the Neighbor list
-    err = h5writer->writeFieldData<int > (hdfPath, *(m_Grains[i].neighborlist), AIM::Representation::Neighbor_Grain_ID_List.c_str(), 1);
-
-    // Write CELL_DATA
-    err = h5writer->writeCellData<float > (hdfPath, kernelAvgDisorientation, AIM::Representation::KernelAvgDisorientation.c_str(), 1);
-    err = h5writer->writeCellData<float > (hdfPath, grainAvgDisorientation, AIM::Representation::GrainAvgDisorientation.c_str(), 1);
-    err = h5writer->writeCellData<float > (hdfPath, imageQuality, AIM::Representation::ImageQuality.c_str(), 1);
-    err = h5writer->writeCellData<unsigned char > (hdfPath, ipfColor, AIM::Representation::IPFColor.c_str(), 3);
-
-  }
-
-  err = h5writer->writeObjectIndex(hdfPaths);
-  err = h5writer->closeFile();
-  return err;
-}
-
