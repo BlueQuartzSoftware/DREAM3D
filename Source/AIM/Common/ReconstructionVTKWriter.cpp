@@ -97,7 +97,7 @@ int ReconstructionVTKWriter::write##name##VizFile(ReconstructionFunc* r, const s
   return 0;\
 }
 
-WRITE_VTK_GRAIN_WITH_VOXEL_SCALAR_VALUE(Disorientation, misorientation)
+WRITE_VTK_GRAIN_WITH_VOXEL_SCALAR_VALUE(Disorientation, grainmisorientation)
 
 WRITE_VTK_GRAIN_WITH_VOXEL_SCALAR_VALUE(ImageQuality, imagequality)
 
