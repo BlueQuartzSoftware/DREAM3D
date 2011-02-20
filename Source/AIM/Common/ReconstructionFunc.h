@@ -94,7 +94,7 @@ class AIMCOMMON_EXPORT ReconstructionFunc
     // vector<vector<double> > grainquats;
     DoubleArrayType::Pointer m_grainQuats;
 
-	  vector<vector<double> > neighborhood;
+	vector<vector<double> > neighborhood;
     vector<vector<double> > neighborhoodfit;
     vector<vector<double> > svbovera;
     vector<vector<double> > svcovera;
@@ -147,12 +147,10 @@ class AIMCOMMON_EXPORT ReconstructionFunc
     void find_neighbors();
     void merge_containedgrains();
     int renumber_grains();
-    int define_subgrains();
-    int reburn_grains();
+    int remove_smallgrains(int numgrains);
 	void fillin_sample();
     void cleanup_data();
-    void find_kernels();
-    void homogenize_grains();
+    void find_grain_and_kernel_misorientations();
     void merge_twins();
     void merge_colonies();
     void characterize_twins();
