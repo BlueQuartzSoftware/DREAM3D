@@ -1,5 +1,6 @@
 /* ============================================================================
  * Copyright (c) 2010, Michael A. Jackson (BlueQuartz Software)
+ * Copyright (c) 2010, Michael A. Groeber (US Air Force Research Laboratory)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -35,7 +36,12 @@
 
 
 /**
- *
+ * @class MisorientationCalculations MisorientationCalculations.h AIM/Common/MisorientationCalculations.h
+ * @brief This class performs Crystallographic Misorientation Calculations
+ * @author Michael A. Jackson (BlueQuartz Software)
+ * @author Michael A. Groeber (US Air Force Research Laboratory)
+ * @date Feb 19, 2011
+ * @version 1.0
  */
 class AIMCOMMON_EXPORT MisorientationCalculations
 {
@@ -43,12 +49,65 @@ class AIMCOMMON_EXPORT MisorientationCalculations
 
     virtual ~MisorientationCalculations();
 
+    /**
+     * @brief
+     * @param q1
+     * @param q2
+     * @param n1
+     * @param n2
+     * @param n3
+     * @return
+     */
     static double getMisoQuatCubic(double q1[5],double q2[5],double &n1,double &n2,double &n3);
+
+    /**
+     * @brief
+     * @param q1
+     * @param q2
+     * @param n1
+     * @param n2
+     * @param n3
+     * @return
+     */
     static double getMisoQuatHexagonal(double q1[5],double q2[5],double &n1,double &n2,double &n3);
+
+    /**
+     * @brief
+     * @param r1
+     * @param r2
+     * @param r3
+     * @return
+     */
     static void getFZRodCubic(double &r1,double &r2, double &r3);
+
+    /**
+     * @brief
+     * @param qr
+     */
     static void getFZQuatCubic(double *qr);
+
+    /**
+     * @brief
+     * @param qr
+     */
     static void getFZQuatHexagonal(double *qr);
+
+    /**
+     * @brief
+     * @param n1
+     * @param n2
+     * @param n3
+     * @return
+     */
     static int getMisoBinCubic(double n1, double n2, double n3);
+
+    /**
+     * @brief
+     * @param n1
+     * @param n2
+     * @param n3
+     * @return
+     */
     static int getMisoBinHexagonal(double n1, double n2, double n3);
 
   protected:

@@ -1,7 +1,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2009, Michael A. Jackson. BlueQuartz Software
-//  Copyright (c) 2009, Michael Groeber, US Air Force Research Laboratory
+//  Copyright (c) 2009, 2010 Michael A. Jackson. BlueQuartz Software
+//  Copyright (c) 2009, 2010 Michael Groeber, US Air Force Research Laboratory
 //  All rights reserved.
 //  BSD License: http://www.opensource.org/licenses/bsd-license.html
 //
@@ -69,6 +69,7 @@ public:
                                       vector<double>* neighborsurfarealist);
     void initializeQ(double* q, double e1, double e2, double e3);
     void initializeDims(double &dim1, double &dim2, double &dim3, int &numbins);
+    void calculateMisorientationAngles(double &w, double &miso1, double &miso2, double &miso3);
 
     double resx;
     double resy;

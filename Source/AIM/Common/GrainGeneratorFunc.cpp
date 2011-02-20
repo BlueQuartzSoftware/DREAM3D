@@ -2368,7 +2368,7 @@ void GrainGeneratorFunc::matchCrystallography(const std::string &ErrorFile, H5Re
 
   int iterations = 0;
   int badtrycount = 0;
-
+  double random;
   double currentodferror = 0;
   double currentmdferror = 0;
 
@@ -2388,18 +2388,12 @@ void GrainGeneratorFunc::matchCrystallography(const std::string &ErrorFile, H5Re
 		if(iterations%100 == 0) outFile << iterations << "	" << currentodferror << "	" << currentmdferror << endl;
 		iterations++;
 		badtrycount++;
-		double random = rg.Random();
+		random = rg.Random();
 
-		// -----------------------------------------------------------------------------
-    //
-    // -----------------------------------------------------------------------------
 		if(random < 0.5)  // SwapOutOrientation
 		{
 		  swapOutOrientation(badtrycount, numbins);
 		}
-		// -----------------------------------------------------------------------------
-    //
-    // -----------------------------------------------------------------------------
 		else if(random > 0.5) // SwitchOrientation
 		{
 		  switchOrientations(badtrycount, numbins);

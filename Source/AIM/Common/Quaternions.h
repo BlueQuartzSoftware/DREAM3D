@@ -43,17 +43,45 @@
 namespace AIM
 {
   /**
+   * @class QUaternions QUaternions.h AIM/Common/QUaternions.h
    * @brief This class is just designed to hold the Quarterions for the Cubic and
-   * hexagonal crystal structures.
+   * Hexagonal crystal structures.
+   * @author Michael A. Jackson for BlueQuartz Software
+   * @date Jan 19, 2011
+   * @version 1.0
    */
   class Quaternions
   {
     public:
       ~Quaternions() { }
+
+      /**
+       * @brief Multiply by a unit quaterion for Hexagonal
+       * @param unitQuat
+       * @param i
+       * @param outQuat
+       */
       static AIMCOMMON_EXPORT void Hex_MultiplyByUnitQuaterion(double* unitQuat, size_t i, double* outQuat);
+
+      /**
+       * @brief Multiply by a unit quaterion for Cubic
+       * @param unitQuat
+       * @param i
+       * @param outQuat
+       */
       static AIMCOMMON_EXPORT void Cubic_MultiplyByUnitQuaterion(double* unitQuat, size_t i, double* outQuat);
+
+      /**
+       * @brief Symmetry values for Cubic
+       */
       static AIMCOMMON_EXPORT double quat_symmcubic[24][5];
+
+      /**
+       * @brief Symmetry values for Hexagonal
+       */
       static AIMCOMMON_EXPORT double quat_symmhex[12][5];
+
+
     protected:
       Quaternions(){};
 

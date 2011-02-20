@@ -1,5 +1,6 @@
 /* ============================================================================
  * Copyright (c) 2010, Michael A. Jackson (BlueQuartz Software)
+ * Copyright (c) 2010, Michael A. Groeber (US Air Force Research Laboratory)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -220,6 +221,9 @@ double MisorientationCalculations::getMisoQuatCubic(double q1[5],double q2[5],do
   return wmin;
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 double MisorientationCalculations::getMisoQuatHexagonal(double q1[5],double q2[5],double &n1,double &n2,double &n3)
 {
   double wmin = 9999999; //,na,nb,nc;
@@ -278,6 +282,9 @@ double MisorientationCalculations::getMisoQuatHexagonal(double q1[5],double q2[5
   return wmin;
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void MisorientationCalculations::getFZRodCubic(double &r1,double &r2, double &r3)
 {
 	double rodsym[24][3] = {{0,0,0},
@@ -328,6 +335,10 @@ void MisorientationCalculations::getFZRodCubic(double &r1,double &r2, double &r3
 	r2 = r2min;
 	r3 = r3min;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void MisorientationCalculations::getFZQuatCubic(double *qr)
 {
 	double max = 0;
@@ -339,11 +350,11 @@ void MisorientationCalculations::getFZQuatCubic(double *qr)
 		if(fabs(qc[4]) > max)
 		{
 			max = fabs(qc[4]);
-			qmax[0] = 1.0;	
-			qmax[1] = qc[1];	
-			qmax[2] = qc[2];	
-			qmax[3] = qc[3];	
-			qmax[4] = qc[4];	
+			qmax[0] = 1.0;
+			qmax[1] = qc[1];
+			qmax[2] = qc[2];
+			qmax[3] = qc[3];
+			qmax[4] = qc[4];
 		}
 	}
 	qr[0] = 1.0;
@@ -360,6 +371,10 @@ void MisorientationCalculations::getFZQuatCubic(double *qr)
 		qr[4] = -qr[4];
 	}
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void MisorientationCalculations::getFZQuatHexagonal(double *qr)
 {
 	double max = 0;
@@ -370,11 +385,11 @@ void MisorientationCalculations::getFZQuatHexagonal(double *qr)
 	    AIM::Quaternions::Hex_MultiplyByUnitQuaterion(qr, i, qc);
 		if(fabs(qc[4]) > max)
 		{
-			qmax[0] = 1.0;	
-			qmax[1] = qc[1];	
-			qmax[2] = qc[2];	
-			qmax[3] = qc[3];	
-			qmax[4] = qc[4];	
+			qmax[0] = 1.0;
+			qmax[1] = qc[1];
+			qmax[2] = qc[2];
+			qmax[3] = qc[3];
+			qmax[4] = qc[4];
 		}
 	}
 	qr[0] = 1.0;
@@ -391,6 +406,10 @@ void MisorientationCalculations::getFZQuatHexagonal(double *qr)
 		qr[4] = -qr[4];
 	}
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 int MisorientationCalculations::getMisoBinCubic(double n1, double n2, double n3)
 {
 	double dim1 = pow((0.75*((m_pi/4.0)-sin((m_pi/4.0)))),(1.0/3.0));
@@ -404,6 +423,10 @@ int MisorientationCalculations::getMisoBinCubic(double n1, double n2, double n3)
 	if(miso3bin >= 18) miso3bin = 17;
 	return ((18*18*miso3bin)+(18*miso2bin)+miso1bin);
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 int MisorientationCalculations::getMisoBinHexagonal(double n1, double n2, double n3)
 {
 	double dim1 = pow((0.75*((m_pi/2.0)-sin((m_pi/2.0)))),(1.0/3.0));
