@@ -26,7 +26,7 @@ euler2(-1.0),
 euler3(-1.0),
 neighbor(-1),
 numowners(0),
-misorientation(0.0),
+grainmisorientation(0.0),
 kernelmisorientation(0.0),
 surfacevoxel(0),
 unassigned(0)

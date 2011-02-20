@@ -47,7 +47,7 @@ class AIMCOMMON_EXPORT Voxel
     double euler3;
     int neighbor;
     int numowners;
-    double misorientation;
+    double grainmisorientation;
     double kernelmisorientation;
     int surfacevoxel;
     int unassigned;
