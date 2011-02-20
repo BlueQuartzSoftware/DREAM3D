@@ -133,7 +133,7 @@ int H5GrainWriter::writeHDF5GrainsFile(ReconstructionFunc* r, const std::string 
       }
       // Append a grainId to the grainIds vector
       kernelAvgDisorientation[j] = r->voxels[vid].kernelmisorientation;
-      grainAvgDisorientation[j] = r->voxels[vid].misorientation;
+      grainAvgDisorientation[j] = r->voxels[vid].grainmisorientation;
       imageQuality[j] = r->voxels[vid].imagequality;
       if (r->crystruct == AIM::Reconstruction::Cubic)
       {
