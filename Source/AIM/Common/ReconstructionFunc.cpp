@@ -1296,6 +1296,7 @@ int ReconstructionFunc::remove_smallgrains(int numgrains)
   int neighbor = 0;
   int col, row, plane;
   int gnum;
+  double q1, q2, q3, q4;
   double diff, sum, tmp;
   double ea1good, ea2good, ea3good;
   int currentgrain = 1;
@@ -1380,11 +1381,15 @@ int ReconstructionFunc::remove_smallgrains(int numgrains)
 	      {
 			m_Grains[currentgrain].avg_quat[k] = m_Grains[i].avg_quat[k];
 		  }
-		  diff=atan2(m_Grains[currentgrain].avg_quat[2],m_Grains[currentgrain].avg_quat[1]);
-		  sum=atan2(m_Grains[currentgrain].avg_quat[3],m_Grains[currentgrain].avg_quat[4]);
+		  q1 = m_Grains[currentgrain].avg_quat[1]/m_Grains[currentgrain].avg_quat[0];
+		  q2 = m_Grains[currentgrain].avg_quat[2]/m_Grains[currentgrain].avg_quat[0];
+		  q3 = m_Grains[currentgrain].avg_quat[3]/m_Grains[currentgrain].avg_quat[0];
+		  q4 = m_Grains[currentgrain].avg_quat[4]/m_Grains[currentgrain].avg_quat[0];
+		  diff=atan2(q2,q1);
+		  sum=atan2(q3,q4);
 		  ea1good=(diff+sum);
 		  ea3good=(sum-diff);
-		  tmp=(m_Grains[currentgrain].avg_quat[3]*m_Grains[currentgrain].avg_quat[3])+(m_Grains[currentgrain].avg_quat[4]*m_Grains[currentgrain].avg_quat[4]);
+		  tmp=(q3*q3)+(q4*q4);
 		  tmp = pow(tmp,0.5);
 		  if(tmp > 1.0) tmp=1.0;
 		  ea2good=2*acos(tmp);
