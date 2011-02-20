@@ -129,7 +129,7 @@ class AIMCOMMON_EXPORT Texture
         if (ea2bin >= 18) ea2bin = 17;
         if (ea3bin >= 18) ea3bin = 17;
         bin = (ea3bin * 18 * 18) + (ea2bin * 18) + (ea1bin);
-        TextureBins[i] = bin;
+        TextureBins[i] = static_cast<int>(bin);
       }
 
       for (size_t i = 0; i < eighteenCubed; i++)
