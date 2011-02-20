@@ -235,9 +235,6 @@ void Reconstruction::compute()
     m->numgrains = m->form_grains();
 	CHECK_FOR_CANCELED(ReconstructionFunc, form_grains)
 
-  progressMessage(AIM_STRING("Writing VTK Visualization File"), 22);
-  if (m_WriteVisualizationFile) {outWriter->writeVisualizationFile(m.get(), reconVisFile);}
-
 	progressMessage(AIM_STRING("Assigning Bad Points"), 28);
     m->assign_badpoints();
     CHECK_FOR_CANCELED(ReconstructionFunc, assign_badpoints)
@@ -257,8 +254,8 @@ void Reconstruction::compute()
   CHECK_FOR_CANCELED(ReconstructionFunc, renumber_grains)
 
   progressMessage(AIM_STRING("Finding Reference Orientations For Grains"), 40);
-  m->find_kernels();
-  CHECK_FOR_CANCELED(ReconstructionFunc, find_kernels)
+  m->find_grain_and_kernel_misorientations();
+  CHECK_FOR_CANCELED(ReconstructionFunc, find_grain_and_kernel_misorientations)
 
   if(m_FillinSample == true)
   {
@@ -266,14 +263,6 @@ void Reconstruction::compute()
 	  m->fillin_sample();
     CHECK_FOR_CANCELED(ReconstructionFunc, fillin_sample)
   }
-
-  progressMessage(AIM_STRING("Finding Voxel Lists For Grains"), 43);
-  m->numgrains = m->reburn_grains();
-  CHECK_FOR_CANCELED(ReconstructionFunc, reburn_grains)
-
-  progressMessage(AIM_STRING("Finding Average Orientations For Grains"), 49);
-  m->homogenize_grains();
-  CHECK_FOR_CANCELED(ReconstructionFunc, homogenize_grains)
 
   if (m_MergeTwins == true)
   {
