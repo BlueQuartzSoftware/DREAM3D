@@ -44,7 +44,7 @@
  * @date Jan 19, 2011
  * @version 1.0
  */
-class H5GrainWriter
+class AIMCOMMON_EXPORT H5GrainWriter
 {
   public:
     MXA_SHARED_POINTERS(H5GrainWriter)

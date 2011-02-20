@@ -47,7 +47,7 @@
  * @date Feb 19, 2011
  * @version 1.0
  */
-class ReconstructionVTKWriter
+class AIMCOMMON_EXPORT ReconstructionVTKWriter
 {
   public:
     MXA_SHARED_POINTERS(ReconstructionVTKWriter)
