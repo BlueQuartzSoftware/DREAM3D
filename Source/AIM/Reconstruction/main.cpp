@@ -25,7 +25,9 @@
 
 #include <AIM/Reconstruction/Reconstruction.h>
 
-
+#if 0
+./Bin/Reconstruction_debug -i /Users/Shared/Data/12_strain/12_strain.h5ang --zStartIndex 10074 --zEndIndex 10099 --crystruct 1 --alignment 0 --minGrainSize 8 --misorientationTolerance 5.0 --minImageQuality 50 --minConfidenceIndex 0.1 --outputDir /tmp/12Strain
+#endif
 
 
 

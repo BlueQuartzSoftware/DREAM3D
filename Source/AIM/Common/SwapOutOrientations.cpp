@@ -1,103 +1,4 @@
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int GrainGeneratorFunc::calculateHexOdfBin( double q1[5],
-                                           double qref[5],
-                                           double dim1,
-                                           double dim2,
-                                           double dim3)
-{
-  double w;
-  double n1;
-  double n2;
-  double n3;
-  double degtorad = m_pi / 180.0;
-  double denom;
-  int g1euler1bin;
-  int g1euler2bin;
-  int g1euler3bin;
-  int g1odfbin;
-
-  w = MisorientationCalculations::getMisoQuatHexagonal(q1, qref, n1, n2, n3);
-  w = w * degtorad;
-  denom = (n1 * n1) + (n2 * n2) + (n3 * n3);
-  denom = pow(denom, 0.5);
-  n1 = n1 / denom;
-  n2 = n2 / denom;
-  n3 = n3 / denom;
-  n1 = n1 * pow(((3.0 / 4.0) * (w - sin(w))), (1.0 / 3.0));
-  n2 = n2 * pow(((3.0 / 4.0) * (w - sin(w))), (1.0 / 3.0));
-  n3 = n3 * pow(((3.0 / 4.0) * (w - sin(w))), (1.0 / 3.0));
-  g1euler1bin = int(n1 * 36.0 / dim1);
-  g1euler2bin = int(n2 * 36.0 / dim2);
-  g1euler3bin = int(n3 * 12.0 / dim3);
-  if (g1euler1bin >= 36) g1euler1bin = 35;
-  if (g1euler2bin >= 36) g1euler2bin = 35;
-  if (g1euler3bin >= 12) g1euler3bin = 11;
-  g1odfbin = (g1euler3bin * 36 * 36) + (g1euler2bin * 36) + (g1euler1bin);
-  return g1odfbin;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int GrainGeneratorFunc::calculateCubicOdfBin( double q1[5],
-                                               double qref[5],
-                                               double dim1,
-                                               double dim2,
-                                               double dim3)
-{
-  double w;
-  double n1;
-  double n2;
-  double n3;
-  double degtorad = m_pi / 180.0;
-  double denom;
-  int g1euler1bin;
-  int g1euler2bin;
-  int g1euler3bin;
-  int g1odfbin;
-  w = MisorientationCalculations::getMisoQuatCubic(q1, qref, n1, n2, n3);
-  w = w*degtorad;
-  denom = (n1*n1)+(n2*n2)+(n3*n3);
-  denom = pow(denom,0.5);
-  n1 = n1/denom;
-  n2 = n2/denom;
-  n3 = n3/denom;
-  n1 = n1*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
-  n2 = n2*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
-  n3 = n3*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
-  g1euler1bin = int(n1*18.0/dim1);
-  g1euler2bin = int(n2*18.0/dim2);
-  g1euler3bin = int(n3*18.0/dim3);
-  if(g1euler1bin >= 18) g1euler1bin = 17;
-  if(g1euler2bin >= 18) g1euler2bin = 17;
-  if(g1euler3bin >= 18) g1euler3bin = 17;
-  g1odfbin = (g1euler3bin*18*18)+(g1euler2bin*18)+(g1euler1bin);
-  return g1odfbin;
-}
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void GrainGeneratorFunc::calculateMisorientationAngles(double &w, double &miso1, double &miso2, double &miso3)
-{
-  double degtorad = m_pi / 180.0;
-  double denom;
-  double n1, n2, n3;
-
-  w = w * degtorad;
-  denom = (n1 * n1) + (n2 * n2) + (n3 * n3);
-  denom = pow(denom, 0.5);
-  n1 = n1 / denom;
-  n2 = n2 / denom;
-  n3 = n3 / denom;
-  miso1 = n1 * pow(((3.0 / 4.0) * (w - sin(w))), (1.0 / 3.0));
-  miso2 = n2 * pow(((3.0 / 4.0) * (w - sin(w))), (1.0 / 3.0));
-  miso3 = n3 * pow(((3.0 / 4.0) * (w - sin(w))), (1.0 / 3.0));
-}
 
 
 // -----------------------------------------------------------------------------
@@ -112,8 +13,8 @@ void GrainGeneratorFunc::MC_LoopBody1(size_t neighbor, int j,
   double n1;
   double n2;
   double n3;
-  double degtorad = m_pi / 180.0;
-  double denom;
+//  double degtorad = m_pi / 180.0;
+//  double denom;
 
   int curmiso1 = std::numeric_limits<int >::max();
   int curmiso2 = std::numeric_limits<int >::max();
@@ -146,13 +47,13 @@ void GrainGeneratorFunc::MC_LoopBody1(size_t neighbor, int j,
   if(crystruct == AIM::Reconstruction::Hexagonal)
   {
     w = MisorientationCalculations::getMisoQuatHexagonal(q1,q2,n1,n2,n3);
-    calculateMisorientationAngles(w, miso1, miso2, miso3);
+    MisorientationCalculations::calculateMisorientationAngles(w, miso1, miso2, miso3);
     newmisobin = MisorientationCalculations::getMisoBinHexagonal(miso1, miso2, miso3);
   }
   else if(crystruct == AIM::Reconstruction::Cubic)
   {
     w = MisorientationCalculations::getMisoQuatCubic(q1,q2,n1,n2,n3);
-    calculateMisorientationAngles(w, miso1, miso2, miso3);
+    MisorientationCalculations::calculateMisorientationAngles(w, miso1, miso2, miso3);
     newmisobin = MisorientationCalculations::getMisoBinCubic(miso1, miso2, miso3);
   }
   mdfchange = mdfchange + (((actualmdf[curmisobin]-simmdf[curmisobin])*(actualmdf[curmisobin]-simmdf[curmisobin])) - ((actualmdf[curmisobin]-(simmdf[curmisobin]-(neighsurfarea/totalsurfacearea)))*(actualmdf[curmisobin]-(simmdf[curmisobin]-(neighsurfarea/totalsurfacearea)))));
@@ -170,8 +71,8 @@ void GrainGeneratorFunc::MC_LoopBody2(size_t neighbor, int j,
   double n1;
   double n2;
   double n3;
-  double degtorad = m_pi / 180.0;
-  double denom;
+//  double degtorad = m_pi / 180.0;
+//  double denom;
 
   int curmiso1 = std::numeric_limits<int >::max();
   int curmiso2 = std::numeric_limits<int >::max();
@@ -203,13 +104,13 @@ void GrainGeneratorFunc::MC_LoopBody2(size_t neighbor, int j,
   if (crystruct == AIM::Reconstruction::Hexagonal)
   {
     w = MisorientationCalculations::getMisoQuatHexagonal(q1, q2, n1, n2, n3);
-    calculateMisorientationAngles(w, miso1, miso2, miso3);
+    MisorientationCalculations::calculateMisorientationAngles(w, miso1, miso2, miso3);
     newmisobin = MisorientationCalculations::getMisoBinHexagonal(miso1, miso2, miso3);
   }
   else if (crystruct == AIM::Reconstruction::Cubic)
   {
     w = MisorientationCalculations::getMisoQuatCubic(q1, q2, n1, n2, n3);
-    calculateMisorientationAngles(w, miso1, miso2, miso3);
+    MisorientationCalculations::calculateMisorientationAngles(w, miso1, miso2, miso3);
     newmisobin = MisorientationCalculations::getMisoBinCubic(miso1, miso2, miso3);
   }
   misolist->at(3 * j) = miso1;
@@ -237,27 +138,6 @@ void GrainGeneratorFunc::initializeQ(double* q, double e1, double e2, double e3)
   q[4] = c*c2;
 }
 
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void GrainGeneratorFunc::initializeDims(double &dim1, double &dim2, double &dim3, int &numbins)
-{
-  if(crystruct == AIM::Reconstruction::Cubic)
-    {
-      dim1 = CubicDim1InitValue;
-      dim2 = CubicDim2InitValue;
-      dim3 = CubicDim3InitValue;
-      numbins = 18*18*18;
-    }
-    if(crystruct == AIM::Reconstruction::Hexagonal)
-    {
-      dim1 = HexDim1InitValue;
-      dim2 = HexDim2InitValue;
-      dim3 = HexDim3InitValue;
-      numbins = 36*36*12;
-    }
-}
 
 // -----------------------------------------------------------------------------
 //
@@ -294,7 +174,7 @@ void GrainGeneratorFunc::swapOutOrientation( int &badtrycount, int &numbins)
 
   double totaldensity = 0;
 
-  initializeDims(dim1, dim2, dim3, numbins);
+  MisorientationCalculations::initializeDims(crystruct, dim1, dim2, dim3, numbins);
   good = 0;
   while (good == 0)
   {
@@ -309,11 +189,11 @@ void GrainGeneratorFunc::swapOutOrientation( int &badtrycount, int &numbins)
   q1[4] = grains[selectedgrain1].avg_quat[4];
   if (crystruct == AIM::Reconstruction::Hexagonal)
   {
-    g1odfbin = calculateHexOdfBin(q1, qref, dim1, dim2, dim3);
+    g1odfbin = MisorientationCalculations::calculateHexOdfBin(q1, qref, dim1, dim2, dim3);
   }
   if (crystruct == AIM::Reconstruction::Cubic)
   {
-    g1odfbin = calculateCubicOdfBin(q1, qref, dim1, dim2, dim3);
+    g1odfbin = MisorientationCalculations::calculateCubicOdfBin(q1, qref, dim1, dim2, dim3);
   }
   random = rg.Random();
   int choose = 0;

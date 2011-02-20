@@ -869,6 +869,8 @@ int ReconstructionFunc::form_grains()
           if (i == 4 && row == (ypoints - 1)) good = 0;
           if (i == 2 && col == 0) good = 0;
           if (i == 3 && col == (xpoints - 1)) good = 0;
+          //CHECKME: Mike G - Validate this fix to make sure it is needed.
+          if (neighbor >= totalpoints) good = 0;
           if (good == 1 && gnames[neighbor] == -1)
           {
             q2[0] = 1;
@@ -2260,6 +2262,8 @@ void ReconstructionFunc::find_neighbors()
         if (k == 4 && row == (ypoints - 1)) good = 0;
         if (k == 2 && column == 0) good = 0;
         if (k == 3 && column == (xpoints - 1)) good = 0;
+        //CHECKME: Mike G - it seems the neighbor index could be outside the range so I put in this check.
+        if (neighbor >= totalpoints) good = 0;
         if (good == 1 && gnames[neighbor] != grain && gnames[neighbor] > 0)
         {
           vnlist[onsurf] = gnames[neighbor];
@@ -2317,17 +2321,34 @@ void ReconstructionFunc::find_neighbors()
       int neigh = nlist->at(j);
       int number = std::count(nlistcopy->begin(), nlistcopy->end(), neigh);
       double area = number * resx * resx;
-      nsalist->at(j) = area;
+
+      //CHECKME: Mike G - the 'j' index can be outside the range for the nsalist
+      // vector so I put in this check but not sure what should be included in
+      // if statement?
+      if (j < nsalist->size())
+      {
+        nsalist->at(j) = area;
+      }
       if (m_Grains[i].surfacegrain == 0 && (neigh > i || m_Grains[neigh].surfacegrain == 1))
       {
         totalsurfacearea = totalsurfacearea + area;
       }
     }
+//CHECKME: Mike G - None of this is needed as we are dealing with pointers so
+// above when you do 'vector<int >* nlist = m_Grains[i].neighborlist;' you are
+// getting the direct pointer to the vector and storing it in the local pointer
+// 'nlist'. Then anything you do to 'nlist' if effectively doing the same thing
+    // to m_Grains[i].neighborlist. You are also creating a memory leak because
+    // you use the 'new' operator to create a new vector object and then replace
+    // it with the original pointer without cleaning up the pointer you just created
+    // None of the code between the #if 0 / #endif _should_ be needed.
     m_Grains[i].numneighbors = numneighs;
+#if 0
     m_Grains[i].neighborlist = new std::vector<int >(numneighs);
     m_Grains[i].neighborlist = nlist;
     m_Grains[i].neighborsurfarealist = new std::vector<double >(numneighs);
     m_Grains[i].neighborsurfarealist = nsalist;
+#endif
   }
   if (m_Grains[1].equivdiameter != 0)
   {
@@ -3079,24 +3100,16 @@ void ReconstructionFunc::find_vectors2D(H5ReconStatsWriter::Pointer h5io)
 void ReconstructionFunc::find_eulerodf(H5ReconStatsWriter::Pointer h5io)
 {
   totalvol = 0;
-  double w, denom, n1, n2, n3;
-  int ea1bin, ea2bin, ea3bin, bin;
-  double dim1 = 0;
-  double dim2 = 0;
-  double dim3 = 0;
-  if (crystruct == AIM::Reconstruction::Cubic)
-  {
-    dim1 = pow((0.75 * ((m_pi / 4.0) - sin((m_pi / 4.0)))), (1.0 / 3.0));
-    dim2 = pow((0.75 * ((m_pi / 4.0) - sin((m_pi / 4.0)))), (1.0 / 3.0));
-    dim3 = pow((0.75 * ((m_pi / 4.0) - sin((m_pi / 4.0)))), (1.0 / 3.0));
-  }
-  if (crystruct == AIM::Reconstruction::Hexagonal)
-  {
-    dim1 = pow((0.75 * ((m_pi / 2.0) - sin((m_pi / 2.0)))), (1.0 / 3.0));
-    dim2 = pow((0.75 * ((m_pi / 2.0) - sin((m_pi / 2.0)))), (1.0 / 3.0));
-    dim3 = pow((0.75 * ((m_pi / 6.0) - sin((m_pi / 6.0)))), (1.0 / 3.0));
-  }
-  double degtorad = m_pi / 180.0;
+  //double w, denom, n1, n2, n3;
+  size_t bin;
+  double dim1 = 0.0;
+  double dim2 = 0.0;
+  double dim3 = 0.0;
+  int numbins = 0;
+
+  MisorientationCalculations::initializeDims(crystruct, dim1, dim2, dim3, numbins);
+
+  //double degtorad = m_pi / 180.0;
   double q1[5];
   double qref[5];
   double *eulerodf;
@@ -3131,45 +3144,48 @@ void ReconstructionFunc::find_eulerodf(H5ReconStatsWriter::Pointer h5io)
       q1[4] = m_Grains[i].avg_quat[4];
       if (crystruct == AIM::Reconstruction::Hexagonal)
       {
-        w = MisorientationCalculations::getMisoQuatHexagonal(q1, qref, n1, n2, n3);
-        w = w * degtorad;
-        denom = (n1 * n1) + (n2 * n2) + (n3 * n3);
-        denom = pow(denom, 0.5);
-        n1 = n1 / denom;
-        n2 = n2 / denom;
-        n3 = n3 / denom;
-        n1 = n1 * pow(((3.0 / 4.0) * (w - sin(w))), (1.0 / 3.0));
-        n2 = n2 * pow(((3.0 / 4.0) * (w - sin(w))), (1.0 / 3.0));
-        n3 = n3 * pow(((3.0 / 4.0) * (w - sin(w))), (1.0 / 3.0));
-        ea1bin = int(n1 * 36.0 / dim1);
-        ea2bin = int(n2 * 36.0 / dim2);
-        ea3bin = int(n3 * 12.0 / dim3);
-        if (ea1bin >= 36) ea1bin = 35;
-        if (ea2bin >= 36) ea2bin = 35;
-        if (ea3bin >= 12) ea3bin = 11;
-        bin = (ea3bin * 36 * 36) + (ea2bin * 36) + (ea1bin);
+        bin = MisorientationCalculations::calculateHexOdfBin(q1, qref, dim1, dim2, dim3);
+
+//        w = MisorientationCalculations::getMisoQuatHexagonal(q1, qref, n1, n2, n3);
+//        w = w * degtorad;
+//        denom = (n1 * n1) + (n2 * n2) + (n3 * n3);
+//        denom = pow(denom, 0.5);
+//        n1 = n1 / denom;
+//        n2 = n2 / denom;
+//        n3 = n3 / denom;
+//        n1 = n1 * pow(((3.0 / 4.0) * (w - sin(w))), (1.0 / 3.0));
+//        n2 = n2 * pow(((3.0 / 4.0) * (w - sin(w))), (1.0 / 3.0));
+//        n3 = n3 * pow(((3.0 / 4.0) * (w - sin(w))), (1.0 / 3.0));
+//        ea1bin = size_t(n1 * 36.0 / dim1);
+//        ea2bin = size_t(n2 * 36.0 / dim2);
+//        ea3bin = size_t(n3 * 12.0 / dim3);
+//        if (ea1bin >= 36) ea1bin = 35;
+//        if (ea2bin >= 36) ea2bin = 35;
+//        if (ea3bin >= 12) ea3bin = 11;
+//        bin = (ea3bin * 36 * 36) + (ea2bin * 36) + (ea1bin);
         eulerodf[bin] = eulerodf[bin] + vol;
         totalvol = totalvol + vol;
       }
-      if (crystruct == AIM::Reconstruction::Cubic)
+      else if (crystruct == AIM::Reconstruction::Cubic)
       {
-        w = MisorientationCalculations::getMisoQuatCubic(q1, qref, n1, n2, n3);
-        w = w * degtorad;
-        denom = (n1 * n1) + (n2 * n2) + (n3 * n3);
-        denom = pow(denom, 0.5);
-        n1 = n1 / denom;
-        n2 = n2 / denom;
-        n3 = n3 / denom;
-        n1 = n1 * pow(((3.0 / 4.0) * (w - sin(w))), (1.0 / 3.0));
-        n2 = n2 * pow(((3.0 / 4.0) * (w - sin(w))), (1.0 / 3.0));
-        n3 = n3 * pow(((3.0 / 4.0) * (w - sin(w))), (1.0 / 3.0));
-        ea1bin = int(n1 * 18.0 / dim1);
-        ea2bin = int(n2 * 18.0 / dim2);
-        ea3bin = int(n3 * 18.0 / dim3);
-        if (ea1bin >= 18) ea1bin = 17;
-        if (ea2bin >= 18) ea2bin = 17;
-        if (ea3bin >= 18) ea3bin = 17;
-        bin = (ea3bin * 18 * 18) + (ea2bin * 18) + (ea1bin);
+        bin = MisorientationCalculations::calculateCubicOdfBin(q1, qref, dim1, dim2, dim3);
+//        w = MisorientationCalculations::getMisoQuatCubic(q1, qref, n1, n2, n3);
+//        w = w * degtorad;
+//        denom = (n1 * n1) + (n2 * n2) + (n3 * n3);
+//        denom = pow(denom, 0.5);
+//        n1 = n1 / denom;
+//        n2 = n2 / denom;
+//        n3 = n3 / denom;
+//        n1 = n1 * pow(((3.0 / 4.0) * (w - sin(w))), (1.0 / 3.0));
+//        n2 = n2 * pow(((3.0 / 4.0) * (w - sin(w))), (1.0 / 3.0));
+//        n3 = n3 * pow(((3.0 / 4.0) * (w - sin(w))), (1.0 / 3.0));
+//        ea1bin = size_t(n1 * 18.0 / dim1);
+//        ea2bin = size_t(n2 * 18.0 / dim2);
+//        ea3bin = size_t(n3 * 18.0 / dim3);
+//        if (ea1bin >= 18) ea1bin = 17;
+//        if (ea2bin >= 18) ea2bin = 17;
+//        if (ea3bin >= 18) ea3bin = 17;
+//        bin = (ea3bin * 18 * 18) + (ea2bin * 18) + (ea1bin);
         eulerodf[bin] = eulerodf[bin] + vol;
         totalvol = totalvol + vol;
       }
@@ -3207,8 +3223,11 @@ void ReconstructionFunc::find_eulerodf(H5ReconStatsWriter::Pointer h5io)
    }
    texindex = texindex / (18 * 18 * 18);
    texstrength = pow(texindex, 0.5);
-   */delete[] eulerodf;
+   */
+  delete[] eulerodf;
 }
+
+
 void ReconstructionFunc::measure_misorientations(H5ReconStatsWriter::Pointer h5io)
 {
   size_t initialsize = 10;
@@ -3236,15 +3255,16 @@ void ReconstructionFunc::measure_misorientations(H5ReconStatsWriter::Pointer h5i
   double microcount = 0.0;
   double nsa;
 
-  std::vector<double >* neighborsurfarealist = NULL;
+  std::vector<double>* neighborsurfarealist = NULL;
   for (int i = 1; i < numgrains; i++)
   {
-
     microcount = 0;
-
-    std::vector<double >* misolistPtr = new std::vector<double >(initialsize, -1);
-    std::vector<double >& misolist = *misolistPtr;
+    // this will eventually be assigned to the m_Grains[i].misorientationlist
+    std::vector<double>* misolistPtr = new std::vector<double >(initialsize, -1);
+    std::vector<double>& misolist = *misolistPtr;
     microcount = 0.0;
+
+    Grain& grain = m_Grains[i];
 
     nlist = m_Grains[i].neighborlist;
     neighborsurfarealist = m_Grains[i].neighborsurfarealist;
@@ -3261,7 +3281,13 @@ void ReconstructionFunc::measure_misorientations(H5ReconStatsWriter::Pointer h5i
     for (int j = 0; j < size; j++)
     {
       nname = nlist->at(j);
-      nsa = neighborsurfarealist->at(j);
+      if (j >= neighborsurfarealist->size() )
+      {
+    //    std::cout << "j: " << j << std::endl;
+    //    std::cout << "neighborsurfarealist->size(): " << neighborsurfarealist->size() << std::endl;
+        nname = -1;
+      }
+
       if (nname > 0)
       {
         q2[1] = m_Grains[nname].avg_quat[1];
@@ -3272,7 +3298,7 @@ void ReconstructionFunc::measure_misorientations(H5ReconStatsWriter::Pointer h5i
         {
           w = MisorientationCalculations::getMisoQuatHexagonal(q1, q2, n1, n2, n3);
         }
-        if (crystruct == AIM::Reconstruction::Cubic)
+        else if (crystruct == AIM::Reconstruction::Cubic)
         {
           w = MisorientationCalculations::getMisoQuatCubic(q1, q2, n1, n2, n3);
         }
@@ -3289,7 +3315,7 @@ void ReconstructionFunc::measure_misorientations(H5ReconStatsWriter::Pointer h5i
         {
           mbin = MisorientationCalculations::getMisoBinCubic(misolist[3 * j], misolist[3 * j + 1], misolist[3 * j + 2]);
         }
-        if (crystruct == AIM::Reconstruction::Hexagonal)
+        else if (crystruct == AIM::Reconstruction::Hexagonal)
         {
           mbin = MisorientationCalculations::getMisoBinHexagonal(misolist[3 * j], misolist[3 * j + 1], misolist[3 * j + 2]);
         }
@@ -3299,15 +3325,26 @@ void ReconstructionFunc::measure_misorientations(H5ReconStatsWriter::Pointer h5i
         }
         if (nname > i || m_Grains[nname].surfacegrain == 1)
         {
+          nsa = neighborsurfarealist->at(j);
           misobin[mbin] = misobin[mbin] + (nsa / totalsurfacearea);
         }
       }
     }
-    int micbin = int((double(microcount) / double(size)) / 0.1);
-    microbin[micbin]++;
-    m_Grains[i].misorientationlist = new std::vector<double >(misolist.size());
-    m_Grains[i].misorientationlist->swap(misolist);
-    misolist.clear();
+    //CHECKME: Mike G - It is possible for size and/or microcount to be Zero
+    // which causes 'micbin' to be the maximum integer which is probably not
+    // what you want. Please check the if statement to make sure you agree
+    // with the code that I have inserted.
+    if (microcount != 0 && size != 0) {
+      int micbin = int((double(microcount) / double(size)) / 0.1);
+      microbin[micbin]++;
+    }
+    //Delete any existing m_Grains[i].misorientationlist pointer to prepare
+    // for the new one
+    if (m_Grains[i].misorientationlist != NULL)
+    {
+      delete m_Grains[i].misorientationlist;
+    }
+    m_Grains[i].misorientationlist = misolistPtr;
   }
   h5io->writeMisorientationBinsData(misobin, nummisobins);
   h5io->writeMicroTextureData(microbin, 10, numgrains);

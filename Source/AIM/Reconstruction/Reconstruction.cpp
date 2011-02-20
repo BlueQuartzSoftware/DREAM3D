@@ -54,8 +54,11 @@
 
 
 #else
+
 #define CHECK_FOR_CANCELED(AClass, name)\
-    ;
+  if(AIM_RECONSTRUCTION_BENCHMARKS) {\
+    std::cout << #name << " Finish Time(ms): " << (MXA::getMilliSeconds() - millis) << std::endl;\
+    millis = MXA::getMilliSeconds(); }
 #endif
 
 
