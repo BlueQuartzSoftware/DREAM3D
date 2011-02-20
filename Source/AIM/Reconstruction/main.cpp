@@ -11,6 +11,7 @@
 
 #include <string>
 #include <iostream>
+#include <vector>
 
 #include <tclap/CmdLine.h>
 #include <tclap/ValueArg.h>
@@ -22,23 +23,20 @@
 #include <AIM/Common/Constants.h>
 #include <AIM/Common/AIMRepresentationVersion.h>
 #include <AIM/Common/AIMArray.hpp>
-
+#include <AIM/Common/Grain.h>
 #include <AIM/Reconstruction/Reconstruction.h>
 
-#if 0
-./Bin/Reconstruction_debug -i /Users/Shared/Data/12_strain/12_strain.h5ang --zStartIndex 10074 --zEndIndex 10099 --crystruct 1 --alignment 0 --minGrainSize 8 --misorientationTolerance 5.0 --minImageQuality 50 --minConfidenceIndex 0.1 --outputDir /tmp/12Strain
-#endif
 
 
 
 #define CHECK_ARG(var, mandatory)\
-    if (vm.count(#var) > 1) { mxa_log << logTime() << "Multiple Occurances for Parameter " << #var << std::endl; }\
-    if (vm.count(#var) == 0 && mandatory == true) { \
-    mxa_log << "Parameter --" << #var << " ==> Required. Program will Terminate." << std::endl; }\
-    if (vm.count(#var) == 0 && mandatory == false) { \
-    mxa_log << "--" << #var << " Using Default: '"  << var << "'" << std::endl; }\
-    if (vm.count(#var) == 1 && mandatory == true) { \
-    mxa_log << "--" << #var << " Value: '"  << var << "'" << std::endl; }
+  if (vm.count(#var) > 1) { mxa_log << logTime() << "Multiple Occurances for Parameter " << #var << std::endl; }\
+  if (vm.count(#var) == 0 && mandatory == true) { \
+  mxa_log << "Parameter --" << #var << " ==> Required. Program will Terminate." << std::endl; }\
+  if (vm.count(#var) == 0 && mandatory == false) { \
+  mxa_log << "--" << #var << " Using Default: '"  << var << "'" << std::endl; }\
+  if (vm.count(#var) == 1 && mandatory == true) { \
+  mxa_log << "--" << #var << " Value: '"  << var << "'" << std::endl; }
 
 #define CHECK_BOOL_ARG(var)\
   mxa_log << "--" << #var << " is ";\
@@ -51,10 +49,27 @@
 // -----------------------------------------------------------------------------
 int main(int argc, char **argv)
 {
+#if 0
+  std::vector<int>* v;
+  v = new std::vector<int>(0);
+  std::vector<int>::size_type s = v->size();
+  size_t c = v->capacity();
+  bool empty = v->empty();
+
+  Grain g;
+  {
+    Grain g1(g);
+    g.setneighborlist(g1.getneighborlist());
+    std::cout << "here" << std::endl;
+  }
+  v = g.getneighborlist();
+  s = v->size();
+  g.setneighborlist(NULL);
+#endif
 
   std::cout << logTime() << "Starting Reconstruction ... " << std::endl;
   MXALOGGER_METHOD_VARIABLE_INSTANCE
-  int err = EXIT_FAILURE;
+    int err = EXIT_FAILURE;
 
   try
   {
@@ -106,13 +121,13 @@ int main(int argc, char **argv)
 
     // Parse the argv array.
     cmd.parse(argc, argv);
+#if 0
     if (argc == 1)
     {
       std::cout << "AIM Reconstruction program was not provided any arguments. Use the --help argument to show the help listing." << std::endl;
       return EXIT_FAILURE;
     }
-
-
+#endif
     Reconstruction::Pointer m_Reconstruction = Reconstruction::New();
 
     m_Reconstruction->setH5AngFile(h5InputFile.getValue());
@@ -146,7 +161,33 @@ int main(int argc, char **argv)
     m_Reconstruction->setWriteDownSampledFile(true);
     m_Reconstruction->setWriteHDF5GrainFile(true);
 
-    m_Reconstruction->compute();
+
+    m_Reconstruction->setH5AngFile("C:\\Data\\12_strain.h5ang");
+    m_Reconstruction->setZStartIndex(10074);
+    m_Reconstruction->setZEndIndex(10099);
+    m_Reconstruction->setCrystalStructure(AIM::Reconstruction::Cubic);
+    m_Reconstruction->setAlignmentMethod(AIM::Reconstruction::OuterBoundary);
+    m_Reconstruction->setMinAllowedGrainSize(8);
+    m_Reconstruction->setMisorientationTolerance(5.0);
+    m_Reconstruction->setMinSeedImageQuality(50);
+    m_Reconstruction->setMinSeedConfidence(0.1);
+    m_Reconstruction->setOutputDirectory("C:\\Data\\ReconstructionOutput");
+
+#if 0
+    ./Bin/Reconstruction_debug 
+      -i /Users/Shared/Data/12_strain/12_strain.h5ang 
+      --zStartIndex 10074 
+      --zEndIndex 10099 
+      --crystruct 1 
+      --alignment 0 
+      --minGrainSize 8 
+      --misorientationTolerance 5.0 
+      --minImageQuality 50 
+      --minConfidenceIndex 0.1 
+      --outputDir /tmp/12Strain
+#endif
+
+      m_Reconstruction->compute();
     err = m_Reconstruction->getErrorCondition();
   }
   catch (TCLAP::ArgException &e) // catch any exceptions

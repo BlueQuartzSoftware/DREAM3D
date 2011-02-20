@@ -328,6 +328,7 @@ Grain& Grain::operator=(const Grain& grain)
 Grain::~Grain()
 {
 //  std::cout << "Grain::~Grain() Starting" << std::endl;
+#if 0
   if (NULL != neighborlist)
   {
     delete neighborlist;
@@ -348,6 +349,7 @@ Grain::~Grain()
   {
     delete neighborsurfarealist;
   }
+#endif
 
 //  std::cout << "Grain::~Grain() Ending" << std::endl;
 }
