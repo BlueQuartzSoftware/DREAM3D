@@ -45,6 +45,14 @@
 
 using namespace std;
 
+/**
+ * @class ReconstructionFunc ReconstructionFunc.h AIM/Common/ReconstructionFunc.h
+ * @brief This class holds all the various functions that are needed to reconstruct
+ * a 3D representation from a stack of OIM Data.
+ * @author Michael A. Jackson for BlueQuartz Software
+ * @author Micharl A. Groeber (US Air Force Research Laboratory)
+ * @version 2.0
+ */
 class AIMCOMMON_EXPORT ReconstructionFunc
 {
 
@@ -142,7 +150,7 @@ class AIMCOMMON_EXPORT ReconstructionFunc
     void form_grains_sections();
     void remove_smallgrains();
     int renumber_grains1();
-    int load_data(string);
+    int load_data(const std::string &filename);
     void assign_badpoints();
     void find_neighbors();
     void merge_containedgrains();
@@ -156,50 +164,36 @@ class AIMCOMMON_EXPORT ReconstructionFunc
     void characterize_twins();
     void characterize_colonies();
     int renumber_grains3();
-    void find_euclidean_map ();
-    void find_centroids ();
+    void find_euclidean_map();
+
+    void find_vectors(H5ReconStatsWriter::Pointer h5io);
+    void find_centroids();
     void find_moments();
     void find_axes();
-    void find_vectors(H5ReconStatsWriter::Pointer h5io);
+    void find_colors();
+    void find_schmids();
+
+    void find_vectors2D(H5ReconStatsWriter::Pointer h5io);
     void find_centroids2D();
     void find_moments2D();
     void find_axes2D();
-    void find_vectors2D(H5ReconStatsWriter::Pointer h5io);
-    void find_eulerodf(H5ReconStatsWriter::Pointer h5io);
-    void measure_misorientations(H5ReconStatsWriter::Pointer h5io);
-    void find_colors();
-    void find_schmids();
+
+    void deformation_stats(const std::string &graindataFile);
     void write_graindata(const std::string &graindataFile);
-    void align_sections(const std::string &filename );
-    int volume_stats(H5ReconStatsWriter::Pointer h5io);
-    int volume_stats2D(H5ReconStatsWriter::Pointer h5io);
-	void deformation_stats();
-
-
-    /**
-     * @brief
-     * @param hdfFile
-     * @return
-     */
-    int writeHDF5GrainsFile(const std::string &hdfFile);
-
-
-    int writeVisualizationFile(const std::string &file); // DONE
-    int writeIPFVizFile(const std::string &file);
-    int writeDisorientationVizFile(const std::string &file); // DONE
-    int writeImageQualityVizFile(const std::string &file); // DONE
-    int writeSchmidFactorVizFile(const std::string &file); // DONE
-    int writeDownSampledVizFile(const std::string &file);
-
-
-    double gamma(double);
-    double find_xcoord(long);
-    double find_ycoord(long);
-    double find_zcoord(long);
-
-
+    void align_sections(const std::string &filename);
     /* This is deprecated in favor of the HDF5 output file */
     void write_grains(const std::string &outputdir);
+
+
+    void find_eulerodf(H5ReconStatsWriter::Pointer h5io);
+    void measure_misorientations(H5ReconStatsWriter::Pointer h5io);
+    int volume_stats(H5ReconStatsWriter::Pointer h5io);
+    int volume_stats2D(H5ReconStatsWriter::Pointer h5io);
+
+    double gamma(double x);
+    double find_xcoord(size_t index);
+    double find_ycoord(size_t index);
+    double find_zcoord(size_t index);
 
   protected:
     ReconstructionFunc();

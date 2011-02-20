@@ -36,12 +36,13 @@ public:
     virtual ~Neighbor();
 
     int csiteid;
+
     int neigh_id[num_neigh + 1];
 
   private:
 
     Neighbor(const Neighbor&);    // Copy Constructor Not Implemented
-      void operator=(const Neighbor&);  // Operator '=' Not Implemented
+    void operator=(const Neighbor&);  // Operator '=' Not Implemented
 };
 
 #endif /* Neighbor_H_ */

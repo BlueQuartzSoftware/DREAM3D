@@ -143,7 +143,7 @@ class StatsGen
         {
           density = odf[j];
           totaldensity = totaldensity + density;
-          if (random < totaldensity && random >= (totaldensity - density)) choose = j;
+          if (random < totaldensity && random >= (totaldensity - density)) choose = static_cast<int>(j);
         }
         h1 = choose % 18;
         h2 = (choose / 18) % 18;

@@ -38,9 +38,8 @@ public:
     double xc;
     double yc;
     double zc;
-	int point;
+    int point;
     int NodeID; // newID for used nodes; if not used, it's -1...
-
 };
 
 #endif /* Node_H_ */

@@ -46,6 +46,7 @@ SET (AIMCommon_SRCS
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/GrainGeneratorFunc.cpp
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/SurfaceMeshFunc.cpp
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/ReconstructionFunc.cpp
+    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/ReconstructionVTKWriter.cpp
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Grain.cpp
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Voxel.cpp
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Patch.cpp
@@ -64,6 +65,7 @@ SET (AIMCommon_HDRS
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/GrainGeneratorFunc.h
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/SurfaceMeshFunc.h
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/ReconstructionFunc.h
+    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/ReconstructionVTKWriter.h
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Grain.h
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Voxel.h
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Patch.h
@@ -90,12 +92,14 @@ set (AIMCommon_HDF5_SRCS
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/HDF5/AIM_H5VtkDataWriter.cpp
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/HDF5/H5ReconStatsWriter.cpp
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/HDF5/H5ReconStatsReader.cpp
+    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/HDF5/H5GrainWriter.cpp
     )
 set (AIMCommon_HDF5_HDRS
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/HDF5/AIM_H5VtkDataWriter.h
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/HDF5/VTKH5Constants.h
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/HDF5/H5ReconStatsWriter.h
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/HDF5/H5ReconStatsReader.h
+    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/HDF5/H5GrainWriter.h
 )
 cmp_IDE_SOURCE_PROPERTIES( "AIM/Common/HDF5" "${AIMCommon_HDF5_HDRS}" "${AIMCommon_HDF5_SRCS}" ${PROJECT_INSTALL_HEADERS})
 
