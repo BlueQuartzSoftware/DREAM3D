@@ -244,19 +244,19 @@ int ReconstructionVTKWriter::writeIPFVizFile(ReconstructionFunc* r, const std::s
   { 0.0, 0.0, 1.0};
   for (size_t i = 0; i < total; i++)
   {
-    if(crystruct == AIM::Reconstruction::Cubic)
+    if(r->crystruct == AIM::Reconstruction::Cubic)
     {
-      OIMColoring::GenerateIPFColor(voxels[i].euler1, voxels[i].euler2, voxels[i].euler3, RefDirection[0], RefDirection[1], RefDirection[2], rgb);
+      OIMColoring::GenerateIPFColor(r->voxels[i].euler1, r->voxels[i].euler2, r->voxels[i].euler3, RefDirection[0], RefDirection[1], RefDirection[2], rgb);
       red = static_cast<double>(double(rgb[0])/255.0);
       green = static_cast<double>(double(rgb[1])/255.0);
       blue = static_cast<double>(double(rgb[2])/255.0);
     }
-    if(crystruct == AIM::Reconstruction::Hexagonal)
+    if(r->crystruct == AIM::Reconstruction::Hexagonal)
     {
-      q1[0]=voxels[i].quat[1];
-      q1[1]=voxels[i].quat[2];
-      q1[2]=voxels[i].quat[3];
-      q1[3]=voxels[i].quat[4];
+      q1[0]=r->voxels[i].quat[1];
+      q1[1]=r->voxels[i].quat[2];
+      q1[2]=r->voxels[i].quat[3];
+      q1[3]=r->voxels[i].quat[4];
       OIMColoring::CalculateHexIPFColor(q1, rgb);
       red = static_cast<double>(double(rgb[0])/255.0);
       green = static_cast<double>(double(rgb[1])/255.0);
