@@ -218,7 +218,7 @@ int H5AngDataLoader::loadData(Voxel voxels[], int xpoints, int ypoints, int zpoi
         qr[3] = c * s2;
         qr[4] = c * c2;
 		MisorientationCalculations::getFZQuatCubic(qr);
-        voxels[index].quat[0] = qr[0];
+        voxels[index].quat[0] = 1.0;
         voxels[index].quat[1] = qr[1];
         voxels[index].quat[2] = qr[2];
         voxels[index].quat[3] = qr[3];
