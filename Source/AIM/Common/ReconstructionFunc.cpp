@@ -1153,26 +1153,17 @@ void ReconstructionFunc::merge_containedgrains()
   {
     if (m_Grains[j].gotcontainedmerged != 1)
     {
-      vector<int >* neighborlist = m_Grains[j].neighborlist;
-      int size = 0;
-      if (NULL != neighborlist)
+	  for (int k = 0; k < m_Grains[j].neighborlist->size(); k++)
       {
-        size = neighborlist->size();
-      }
-      for (int k = 0; k < size; k++)
-      {
-        int firstneighbor = neighborlist->at(k);
+        int firstneighbor = m_Grains[j].neighborlist->at(k);
         int gotcontainedmerged = m_Grains[firstneighbor].gotcontainedmerged;
-        if (gotcontainedmerged != 1) nlistgood.push_back(firstneighbor);
+        if (gotcontainedmerged != 1)
+		{
+			m_Grains[j].neighborlist->resize(m_Grains[j].neighborlist->size()+1);
+			m_Grains[j].neighborlist->at(m_Grains[j].neighborlist->size()-1) = firstneighbor;
+		}
       }
-      int neighcount = int(nlistgood.size());
-      m_Grains[j].numneighbors = neighcount;
-      if (m_Grains[j].neighborlist == NULL)
-      {
-        m_Grains[j].neighborlist = new std::vector<int >(nlistgood.size());
-      }
-      m_Grains[j].neighborlist->swap(nlistgood);
-      nlistgood.clear();
+	  m_Grains[j].numneighbors = m_Grains[j].neighborlist->size();
     }
   }
 }
@@ -2026,12 +2017,12 @@ void ReconstructionFunc::find_neighbors()
   totalsurfacearea = 0;
   int surfacegrain = 1;
   int nListSize = 100;
-  std::vector<int > vnlist(6, -1);
   // Copy all the grain names into a densly packed array
   int* gnames = new int[totalpoints];
   for (int i = 0; i < totalpoints; ++i)
   {
     gnames[i] = voxels[i].grainname;
+	voxels[i].neighborlist->resize(6,-1);
   }
   for (int i = 0; i < numgrains; i++)
   {
@@ -2067,7 +2058,7 @@ void ReconstructionFunc::find_neighbors()
         if (k == 3 && column == (xpoints - 1)) good = 0;
         if (good == 1 && gnames[neighbor] != grain && gnames[neighbor] > 0)
         {
-          vnlist[onsurf] = gnames[neighbor];
+		  voxels[j].neighborlist->at(onsurf) = gnames[neighbor];
           nnum = m_Grains[grain].numneighbors;
           if (nnum >= (m_Grains[grain].neighborlist->size()))
           {
@@ -2075,6 +2066,7 @@ void ReconstructionFunc::find_neighbors()
 			m_Grains[grain].neighborsurfarealist->resize(nnum + nListSize);
           }
           m_Grains[grain].neighborlist->at(nnum) = gnames[neighbor];
+		  nnum++;
           m_Grains[grain].numneighbors = nnum;
           onsurf++;
         }
@@ -2083,24 +2075,20 @@ void ReconstructionFunc::find_neighbors()
     if (onsurf > 0)
     {
       vector<int >::iterator newend;
-      sort(vnlist.begin(), vnlist.end());
-      newend = unique(vnlist.begin(), vnlist.end());
-      vnlist.erase(newend, vnlist.end());
-      vnlist.erase(std::remove(vnlist.begin(), vnlist.end(), -1), vnlist.end());
+      sort(voxels[j].neighborlist->begin(), voxels[j].neighborlist->end());
+      newend = unique(voxels[j].neighborlist->begin(), voxels[j].neighborlist->end());
+      voxels[j].neighborlist->erase(newend, voxels[j].neighborlist->end());
+      voxels[j].neighborlist->erase(std::remove(voxels[j].neighborlist->begin(), voxels[j].neighborlist->end(), -1), voxels[j].neighborlist->end());
       voxels[j].surfacevoxel = onsurf;
-      voxels[j].neighborlist = new std::vector<int >(vnlist.size());
-      voxels[j].neighborlist->swap(vnlist);
     }
-    if (vnlist.size() >= 3) voxels[j].nearestneighbordistance[0] = 0.5 * resx, voxels[j].nearestneighbordistance[1] = 0.5 * resx, voxels[j].nearestneighbordistance[2]
+    if (voxels[j].neighborlist->size() >= 3) voxels[j].nearestneighbordistance[0] = 0.5 * resx, voxels[j].nearestneighbordistance[1] = 0.5 * resx, voxels[j].nearestneighbordistance[2]
         = 0.5 * resx, voxels[j].nearestneighbor[0] = j, voxels[j].nearestneighbor[1] = j, voxels[j].nearestneighbor[2] = j;
-    if (vnlist.size() == 2) voxels[j].nearestneighbordistance[0] = 0.5 * resx, voxels[j].nearestneighbordistance[1] = 0.5 * resx, voxels[j].nearestneighbordistance[2]
+    if (voxels[j].neighborlist->size() == 2) voxels[j].nearestneighbordistance[0] = 0.5 * resx, voxels[j].nearestneighbordistance[1] = 0.5 * resx, voxels[j].nearestneighbordistance[2]
         = -1, voxels[j].nearestneighbor[0] = j, voxels[j].nearestneighbor[1] = j, voxels[j].nearestneighbor[2] = -1;
-    if (vnlist.size() == 1) voxels[j].nearestneighbordistance[0] = 0.5 * resx, voxels[j].nearestneighbordistance[1] = -1, voxels[j].nearestneighbordistance[2]
+    if (voxels[j].neighborlist->size() == 1) voxels[j].nearestneighbordistance[0] = 0.5 * resx, voxels[j].nearestneighbordistance[1] = -1, voxels[j].nearestneighbordistance[2]
         = -1, voxels[j].nearestneighbor[0] = j, voxels[j].nearestneighbor[1] = -1, voxels[j].nearestneighbor[2] = -1;
     if (onsurf == 0) voxels[j].nearestneighbordistance[0] = -1, voxels[j].nearestneighbordistance[1] = -1, voxels[j].nearestneighbordistance[2] = -1, voxels[j].nearestneighbor[0]
         = -1, voxels[j].nearestneighbor[1] = -1, voxels[j].nearestneighbor[2] = -1;
-    vnlist.clear();
-    vnlist.resize(6, -1);
   }
   delete[] gnames;
   vector<int >* nlistcopy;
@@ -3015,8 +3003,6 @@ void ReconstructionFunc::measure_misorientations(H5ReconStatsWriter::Pointer h5i
   double q1[5];
   double q2[5];
   double denom = 0;
-  vector<int >* nlist;
-
   int nummisobins = 0;
   if (crystruct == AIM::Reconstruction::Cubic) nummisobins = 18 * 18 * 18;
   if (crystruct == AIM::Reconstruction::Hexagonal) nummisobins = 36 * 36 * 12;
@@ -3035,92 +3021,61 @@ void ReconstructionFunc::measure_misorientations(H5ReconStatsWriter::Pointer h5i
   for (int i = 1; i < numgrains; i++)
   {
     microcount = 0;
-    // this will eventually be assigned to the m_Grains[i].misorientationlist
-    std::vector<double>* misolistPtr = new std::vector<double >(initialsize, -1);
-    std::vector<double>& misolist = *misolistPtr;
+	m_Grains[i].misorientationlist->resize(initialsize,-1);
     microcount = 0.0;
-
-    Grain& grain = m_Grains[i];
-
-    nlist = m_Grains[i].neighborlist;
-    neighborsurfarealist = m_Grains[i].neighborsurfarealist;
     q1[1] = m_Grains[i].avg_quat[1];
     q1[2] = m_Grains[i].avg_quat[2];
     q1[3] = m_Grains[i].avg_quat[3];
     q1[4] = m_Grains[i].avg_quat[4];
     int size = 0;
-    if (NULL != nlist)
+	m_Grains[i].misorientationlist->resize(m_Grains[i].neighborlist->size()*3, -1);
+	for (int j = 0; j < m_Grains[i].neighborlist->size(); j++)
     {
-      size = nlist->size();
-    }
-    misolist.resize(size * 3, -1);
-    for (int j = 0; j < size; j++)
-    {
-      nname = nlist->at(j);
-      if (j >= neighborsurfarealist->size() )
+      nname = m_Grains[i].neighborlist->at(j);
+      q2[1] = m_Grains[nname].avg_quat[1];
+      q2[2] = m_Grains[nname].avg_quat[2];
+      q2[3] = m_Grains[nname].avg_quat[3];
+      q2[4] = m_Grains[nname].avg_quat[4];
+      if (crystruct == AIM::Reconstruction::Hexagonal)
       {
-    //    std::cout << "j: " << j << std::endl;
-    //    std::cout << "neighborsurfarealist->size(): " << neighborsurfarealist->size() << std::endl;
-        nname = -1;
-      }
-
-      if (nname > 0)
-      {
-        q2[1] = m_Grains[nname].avg_quat[1];
-        q2[2] = m_Grains[nname].avg_quat[2];
-        q2[3] = m_Grains[nname].avg_quat[3];
-        q2[4] = m_Grains[nname].avg_quat[4];
-        if (crystruct == AIM::Reconstruction::Hexagonal)
-        {
           w = MisorientationCalculations::getMisoQuatHexagonal(q1, q2, n1, n2, n3);
-        }
-        else if (crystruct == AIM::Reconstruction::Cubic)
-        {
+      }
+      else if (crystruct == AIM::Reconstruction::Cubic)
+      {
           w = MisorientationCalculations::getMisoQuatCubic(q1, q2, n1, n2, n3);
-        }
-        w = w * degtorad;
-        denom = (n1 * n1) + (n2 * n2) + (n3 * n3);
-        denom = pow(denom, 0.5);
-        n1 = n1 / denom;
-        n2 = n2 / denom;
-        n3 = n3 / denom;
-        misolist[3 * j] = n1 * pow(((3.0 / 4.0) * (w - sin(w))), (1.0 / 3.0));
-        misolist[3 * j + 1] = n2 * pow(((3.0 / 4.0) * (w - sin(w))), (1.0 / 3.0));
-        misolist[3 * j + 2] = n3 * pow(((3.0 / 4.0) * (w - sin(w))), (1.0 / 3.0));
-        if (crystruct == AIM::Reconstruction::Cubic)
-        {
-          mbin = MisorientationCalculations::getMisoBinCubic(misolist[3 * j], misolist[3 * j + 1], misolist[3 * j + 2]);
-        }
-        else if (crystruct == AIM::Reconstruction::Hexagonal)
-        {
-          mbin = MisorientationCalculations::getMisoBinHexagonal(misolist[3 * j], misolist[3 * j + 1], misolist[3 * j + 2]);
-        }
-        if (w < 0.261799)
-        {
+      }
+      w = w * degtorad;
+      denom = (n1 * n1) + (n2 * n2) + (n3 * n3);
+      denom = pow(denom, 0.5);
+      n1 = n1 / denom;
+      n2 = n2 / denom;
+      n3 = n3 / denom;
+	  m_Grains[i].misorientationlist->at(3 * j) = n1 * pow(((3.0 / 4.0) * (w - sin(w))), (1.0 / 3.0));
+      m_Grains[i].misorientationlist->at(3 * j + 1) = n2 * pow(((3.0 / 4.0) * (w - sin(w))), (1.0 / 3.0));
+      m_Grains[i].misorientationlist->at(3 * j + 2) = n3 * pow(((3.0 / 4.0) * (w - sin(w))), (1.0 / 3.0));
+      if (crystruct == AIM::Reconstruction::Cubic)
+      {
+          mbin = MisorientationCalculations::getMisoBinCubic(m_Grains[i].misorientationlist->at(3*j), m_Grains[i].misorientationlist->at(3*j+1), m_Grains[i].misorientationlist->at(3*j+2));
+      }
+      else if (crystruct == AIM::Reconstruction::Hexagonal)
+      {
+          mbin = MisorientationCalculations::getMisoBinHexagonal(m_Grains[i].misorientationlist->at(3*j), m_Grains[i].misorientationlist->at(3*j+1), m_Grains[i].misorientationlist->at(3*j+2));
+      }
+      if (w < 0.261799)
+      {
           microcount++;
-        }
-        if (nname > i || m_Grains[nname].surfacegrain == 1)
-        {
-          nsa = neighborsurfarealist->at(j);
+      }
+      if (nname > i || m_Grains[nname].surfacegrain == 1)
+      {
+		  nsa = m_Grains[i].neighborsurfarealist->at(j);
           misobin[mbin] = misobin[mbin] + (nsa / totalsurfacearea);
-        }
       }
     }
-    //CHECKME: Mike G - It is possible for size and/or microcount to be Zero
-    // which causes 'micbin' to be the maximum integer which is probably not
-    // what you want. Please check the if statement to make sure you agree
-    // with the code that I have inserted.
-    if (microcount != 0 && size != 0) {
-      int micbin = int((double(microcount) / double(size)) / 0.1);
+	if (m_Grains[i].neighborlist->size() > 0)
+	{
+      int micbin = int((double(microcount) / double(m_Grains[i].neighborlist->size())) / 0.1);
       microbin[micbin]++;
     }
-    //Delete any existing m_Grains[i].misorientationlist pointer to prepare
-    // for the new one
-    if (m_Grains[i].misorientationlist != NULL)
-    {
-      delete m_Grains[i].misorientationlist;
-    }
-    m_Grains[i].misorientationlist = misolistPtr;
   }
   h5io->writeMisorientationBinsData(misobin, nummisobins);
   h5io->writeMicroTextureData(microbin, 10, numgrains);
