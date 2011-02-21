@@ -1289,6 +1289,7 @@ int ReconstructionFunc::reorder_grains()
 	  }
   }
   m_Grains.resize(currentgrain);
+  numgrains = m_Grains.size();
   find_neighbors();
   return currentgrain;
 }
@@ -2096,9 +2097,9 @@ void ReconstructionFunc::find_neighbors()
     if (m_Grains[i].neighborsurfarealist != NULL) { delete m_Grains[i].neighborsurfarealist; }
     m_Grains[i].neighborsurfarealist = new std::vector<double>(nListSize,-1);
     for(int j=0;j<3;j++)
-	{
-		  m_Grains[i].neighbordistfunc[j] = 0;
-	}
+	  {
+		    m_Grains[i].neighbordistfunc[j] = 0;
+	  }
   }
   for (int j = 0; j < (xpoints * ypoints * zpoints); j++)
   {
@@ -2124,15 +2125,15 @@ void ReconstructionFunc::find_neighbors()
         if (k == 3 && column == (xpoints - 1)) good = 0;
         if (good == 1 && gnames[neighbor] != grain && gnames[neighbor] > 0)
         {
-		  voxels[j].neighborlist->at(onsurf) = gnames[neighbor];
+		      voxels[j].neighborlist->at(onsurf) = gnames[neighbor];
           nnum = m_Grains[grain].numneighbors;
           if (nnum >= (m_Grains[grain].neighborlist->size()))
           {
-			m_Grains[grain].neighborlist->resize(nnum + nListSize);
-			m_Grains[grain].neighborsurfarealist->resize(nnum + nListSize);
+			      m_Grains[grain].neighborlist->resize(nnum + nListSize);
+			      m_Grains[grain].neighborsurfarealist->resize(nnum + nListSize);
           }
           m_Grains[grain].neighborlist->at(nnum) = gnames[neighbor];
-		  nnum++;
+		      nnum++;
           m_Grains[grain].numneighbors = nnum;
           onsurf++;
         }
@@ -2157,12 +2158,12 @@ void ReconstructionFunc::find_neighbors()
         = -1, voxels[j].nearestneighbor[1] = -1, voxels[j].nearestneighbor[2] = -1;
   }
   delete[] gnames;
-  vector<int>* nlistcopy;
+  vector<int> nlistcopy; 
   for (int i = 1; i < numgrains; i++)
   {
     vector<int >::iterator newend;
     sort(m_Grains[i].neighborlist->begin(), m_Grains[i].neighborlist->end());
-    nlistcopy->assign(m_Grains[i].neighborlist->begin(), m_Grains[i].neighborlist->end() );
+    nlistcopy.assign(m_Grains[i].neighborlist->begin(), m_Grains[i].neighborlist->end() );
     newend = unique(m_Grains[i].neighborlist->begin(), m_Grains[i].neighborlist->end());
     m_Grains[i].neighborlist->erase(newend, m_Grains[i].neighborlist->end());
     m_Grains[i].neighborlist->erase(std::remove(m_Grains[i].neighborlist->begin(), m_Grains[i].neighborlist->end(), -1), m_Grains[i].neighborlist->end());
@@ -2171,7 +2172,7 @@ void ReconstructionFunc::find_neighbors()
     for (int j = 0; j < numneighs; j++)
     {
       int neigh = m_Grains[i].neighborlist->at(j);
-      int number = std::count(nlistcopy->begin(), nlistcopy->end(), neigh);
+      int number = std::count(nlistcopy.begin(), nlistcopy.end(), neigh);
       double area = number * resx * resx;
       m_Grains[i].neighborsurfarealist->at(j) = area;
       if (m_Grains[i].surfacegrain == 0 && (neigh > i || m_Grains[neigh].surfacegrain == 1))
