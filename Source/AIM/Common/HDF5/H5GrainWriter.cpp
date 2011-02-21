@@ -165,8 +165,10 @@ int H5GrainWriter::writeHDF5GrainsFile(ReconstructionFunc* r, const std::string 
     err = h5writer->writeFieldData<float > (hdfPath, schmidFactor, AIM::Representation::SchmidFactor.c_str(), 1);
 
     // Write the Neighbor list
-    err = h5writer->writeFieldData<int > (hdfPath, *(r->m_Grains[i].neighborlist), AIM::Representation::Neighbor_Grain_ID_List.c_str(), 1);
-
+    size_t size = r->m_Grains[i].neighborlist->size();
+    if (size > 0) {
+      err = h5writer->writeFieldData<int > (hdfPath, *(r->m_Grains[i].neighborlist), AIM::Representation::Neighbor_Grain_ID_List.c_str(), 1);
+    }
     // Write CELL_DATA
     err = h5writer->writeCellData<float > (hdfPath, kernelAvgDisorientation, AIM::Representation::KernelAvgDisorientation.c_str(), 1);
     err = h5writer->writeCellData<float > (hdfPath, grainAvgDisorientation, AIM::Representation::GrainAvgDisorientation.c_str(), 1);
