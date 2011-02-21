@@ -27,7 +27,7 @@
 #include <AIM/Reconstruction/Reconstruction.h>
 
 
-
+#define RECONSTRUCTION_MANUAL_DEBUG 0
 
 #define CHECK_ARG(var, mandatory)\
   if (vm.count(#var) > 1) { mxa_log << logTime() << "Multiple Occurances for Parameter " << #var << std::endl; }\
@@ -49,24 +49,6 @@
 // -----------------------------------------------------------------------------
 int main(int argc, char **argv)
 {
-#if 0
-  std::vector<int>* v;
-  v = new std::vector<int>(0);
-  std::vector<int>::size_type s = v->size();
-  size_t c = v->capacity();
-  bool empty = v->empty();
-
-  Grain g;
-  {
-    Grain g1(g);
-    g.setneighborlist(g1.getneighborlist());
-    std::cout << "here" << std::endl;
-  }
-  v = g.getneighborlist();
-  s = v->size();
-  g.setneighborlist(NULL);
-#endif
-
   std::cout << logTime() << "Starting Reconstruction ... " << std::endl;
   MXALOGGER_METHOD_VARIABLE_INSTANCE
     int err = EXIT_FAILURE;
@@ -121,7 +103,7 @@ int main(int argc, char **argv)
 
     // Parse the argv array.
     cmd.parse(argc, argv);
-#if 0
+#if (RECONSTRUCTION_MANUAL_DEBUG == 0)
     if (argc == 1)
     {
       std::cout << "AIM Reconstruction program was not provided any arguments. Use the --help argument to show the help listing." << std::endl;
@@ -161,8 +143,22 @@ int main(int argc, char **argv)
     m_Reconstruction->setWriteDownSampledFile(true);
     m_Reconstruction->setWriteHDF5GrainFile(true);
 
-
-    m_Reconstruction->setH5AngFile("C:\\Data\\2PercentStrain.h5ang");
+#if RECONSTRUCTION_MANUAL_DEBUG
+#if (_WIN32)
+    m_Reconstruction->setH5AngFile("C:\\Data\\Ang_Data\\2PercentStrain.h5ang");
+    m_Reconstruction->setOutputDirectory("C:\\Data\\ReconstructionOutput");
+    if (MXADir::exists("C:\\Data\\ReconstructionOutput") == false )
+    {
+      MXADir::mkdir("C:\\Data\\ReconstructionOutput", true);
+    }
+#else
+    m_Reconstruction->setH5AngFile("/Users/Shared/Data/Ang_Data/2PercentStrain.h5ang");
+    m_Reconstruction->setOutputDirectory("/tmp/2PercentStrain");
+    if (MXADir::exists("/tmp/2PercentStrain") == false )
+    {
+      MXADir::mkdir("/tmp/2PercentStrain", true);
+    }
+#endif
     m_Reconstruction->setZStartIndex(10175);
     m_Reconstruction->setZEndIndex(10225);
     m_Reconstruction->setCrystalStructure(AIM::Reconstruction::Cubic);
@@ -171,23 +167,10 @@ int main(int argc, char **argv)
     m_Reconstruction->setMisorientationTolerance(5.0);
     m_Reconstruction->setMinSeedImageQuality(900);
     m_Reconstruction->setMinSeedConfidence(0.1);
-    m_Reconstruction->setOutputDirectory("C:\\Data\\ReconstructionOutput");
 
-#if 0
-    ./Bin/Reconstruction_debug 
-      -i /Users/Shared/Data/12_strain/12_strain.h5ang 
-      --zStartIndex 10074 
-      --zEndIndex 10099 
-      --crystruct 1 
-      --alignment 0 
-      --minGrainSize 8 
-      --misorientationTolerance 5.0 
-      --minImageQuality 50 
-      --minConfidenceIndex 0.1 
-      --outputDir /tmp/12Strain
+
 #endif
-
-      m_Reconstruction->compute();
+    m_Reconstruction->compute();
     err = m_Reconstruction->getErrorCondition();
   }
   catch (TCLAP::ArgException &e) // catch any exceptions

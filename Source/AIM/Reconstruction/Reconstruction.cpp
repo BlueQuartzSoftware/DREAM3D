@@ -161,6 +161,16 @@ void Reconstruction::compute()
   // Create a new HDF5 Results file by overwriting any HDF5 file that may be in the way
   std::string hdf5ResultsFile = m_OutputDirectory + MXADir::Separator + AIM::Reconstruction::H5StatisticsFile;
   H5ReconStatsWriter::Pointer h5io = H5ReconStatsWriter::New(hdf5ResultsFile);
+  if (h5io.get() == NULL)
+  {
+    progressMessage("The HDF5 Statistics file could not be created. Does the path exist and do you have write access to the output directory.", 100);
+    m = ReconstructionFunc::NullPointer();  // Clean up the memory
+    //std::cout << "Reconstruction::compute Complete" << std::endl;
+  #if AIM_USE_QT
+    emit finished();
+  #endif
+    return;
+  }
 
   std::string graindataFile = m_OutputDirectory + MXADir::Separator + AIM::Reconstruction::GrainDataFile;
   std::string alignmentFile = m_OutputDirectory + MXADir::Separator + AIM::Reconstruction::AlignmentFile;
