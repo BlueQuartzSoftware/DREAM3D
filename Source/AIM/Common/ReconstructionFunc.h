@@ -90,7 +90,7 @@ class AIMCOMMON_EXPORT ReconstructionFunc
     AIMRandomNG rg;
     Voxel* voxels;
     Voxel* voxelstemp;
-    std::vector<Grain> m_Grains;
+    std::vector<Grain::Pointer> m_Grains;
 
     int **shifts;
     int **arr;

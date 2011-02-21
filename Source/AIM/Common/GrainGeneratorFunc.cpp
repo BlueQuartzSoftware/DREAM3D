@@ -78,8 +78,8 @@ psizes(NULL)
 GrainGeneratorFunc::~GrainGeneratorFunc()
 {
 
-  grains.clear();
-  delete [] precipitates;
+ // m_Grains.clear();
+ // delete [] precipitates;
   delete [] actualodf;
   delete [] simodf;
   delete [] axisodf;
@@ -117,8 +117,8 @@ void GrainGeneratorFunc::initialize(int32_t m_NumGrains, int32_t m_ShapeClass, d
   neighborhooderrorweight = m_neighborhooderrorweight;
   sizedisterrorweight = m_sizedisterrorweight;
 
-  double initializer;
-  grains.resize((numextragrains+1), Grain());
+ // double initializer;
+  m_Grains.resize(numextragrains+1);
   size_t nElements = 0;
   if(crystruct == AIM::Reconstruction::Hexagonal)
   {
@@ -536,15 +536,15 @@ void  GrainGeneratorFunc::generate_grain(int gnum)
   double m = omega3[diameter][0];
   double s = omega3[diameter][1];
   double omega3 = rg.RandBeta(m,s);
-  grains[gnum].volume = vol;
-  grains[gnum].equivdiameter = diam;
-  grains[gnum].radius1 = r1;
-  grains[gnum].radius2 = r2;
-  grains[gnum].radius3 = r3;
-  grains[gnum].axiseuler1 = phi1;
-  grains[gnum].axiseuler2 = PHI;
-  grains[gnum].axiseuler3 = phi2;
-  grains[gnum].omega3 = omega3;
+  m_Grains[gnum]->volume = vol;
+  m_Grains[gnum]->equivdiameter = diam;
+  m_Grains[gnum]->radius1 = r1;
+  m_Grains[gnum]->radius2 = r2;
+  m_Grains[gnum]->radius3 = r3;
+  m_Grains[gnum]->axiseuler1 = phi1;
+  m_Grains[gnum]->axiseuler2 = PHI;
+  m_Grains[gnum]->axiseuler3 = phi2;
+  m_Grains[gnum]->omega3 = omega3;
 }
 
 void  GrainGeneratorFunc::insert_grain(size_t gnum)
@@ -566,10 +566,10 @@ void  GrainGeneratorFunc::insert_grain(size_t gnum)
   rg.RandomInit((static_cast<unsigned int>(time(NULL))));
   std::vector<int> insidelist(1000,-1);
   std::vector<double> ellipfunclist(1000,-1);
-  double volcur = grains[gnum].volume;
-  double bovera = grains[gnum].radius2;
-  double covera = grains[gnum].radius3;
-  double omega3 = grains[gnum].omega3;
+  double volcur = m_Grains[gnum]->volume;
+  double bovera = m_Grains[gnum]->radius2;
+  double covera = m_Grains[gnum]->radius3;
+  double omega3 = m_Grains[gnum]->omega3;
   double radcur1 = 1;
   if(shapeclass == 3)
   {
@@ -598,9 +598,9 @@ void  GrainGeneratorFunc::insert_grain(size_t gnum)
   if(shapeclass == 3) radcur1 = radcur1/2.0;
   double radcur2 = (radcur1*bovera);
   double radcur3 = (radcur1*covera);
-  double phi1 = grains[gnum].axiseuler1;
-  double PHI = grains[gnum].axiseuler2;
-  double phi2 = grains[gnum].axiseuler3;
+  double phi1 = m_Grains[gnum]->axiseuler1;
+  double PHI = m_Grains[gnum]->axiseuler2;
+  double phi2 = m_Grains[gnum]->axiseuler3;
   double ga[3][3];
   ga[0][0] = cos(phi1)*cos(phi2)-sin(phi1)*sin(phi2)*cos(PHI);
   ga[0][1] = sin(phi1)*cos(phi2)+cos(phi1)*sin(phi2)*cos(PHI);
@@ -611,9 +611,9 @@ void  GrainGeneratorFunc::insert_grain(size_t gnum)
   ga[2][0] =  sin(phi1)*sin(PHI);
   ga[2][1] = -cos(phi1)*sin(PHI);
   ga[2][2] =  cos(PHI);
-  xc = grains[gnum].centroidx;
-  yc = grains[gnum].centroidy;
-  zc = grains[gnum].centroidz;
+  xc = m_Grains[gnum]->centroidx;
+  yc = m_Grains[gnum]->centroidy;
+  zc = m_Grains[gnum]->centroidz;
   column = (xc-(resx/2))/resx;
   row = (yc-(resy/2))/resy;
   plane = (zc-(resz/2))/resz;
@@ -729,11 +729,11 @@ void  GrainGeneratorFunc::insert_grain(size_t gnum)
   }
   insidelist.erase(std::remove(insidelist.begin(),insidelist.end(),-1),insidelist.end());
   ellipfunclist.erase(std::remove(ellipfunclist.begin(),ellipfunclist.end(),-1),ellipfunclist.end());
-  grains[gnum].voxellist = new std::vector<int>(insidecount);
-  grains[gnum].ellipfunclist = new std::vector<double>(insidecount);
-  grains[gnum].voxellist->swap(insidelist);
-  grains[gnum].ellipfunclist->swap(ellipfunclist);
-  grains[gnum].neighbordistfunclist.resize(3);
+  m_Grains[gnum]->voxellist = new std::vector<int>(insidecount);
+  m_Grains[gnum]->ellipfunclist = new std::vector<double>(insidecount);
+  m_Grains[gnum]->voxellist->swap(insidelist);
+  m_Grains[gnum]->ellipfunclist->swap(ellipfunclist);
+  m_Grains[gnum]->neighbordistfunclist.resize(3);
   insidelist.clear();
 }
 
@@ -742,19 +742,19 @@ void  GrainGeneratorFunc::remove_grain(size_t gnum)
   int index;
   double ellipfunc;
 //  int neigh;
-  for(size_t i=0;i<grains[gnum].voxellist->size();i++)
+  for(size_t i=0;i<m_Grains[gnum]->voxellist->size();i++)
   {
-	index = grains[gnum].voxellist->at(i);
-	ellipfunc = grains[gnum].ellipfunclist->at(i);
+	index = m_Grains[gnum]->voxellist->at(i);
+	ellipfunc = m_Grains[gnum]->ellipfunclist->at(i);
 	voxels[index].grainlist->erase(std::remove(voxels[index].grainlist->begin(),voxels[index].grainlist->end(),gnum),voxels[index].grainlist->end());
 	voxels[index].ellipfunclist->erase(std::remove(voxels[index].ellipfunclist->begin(),voxels[index].ellipfunclist->end(),ellipfunc),voxels[index].ellipfunclist->end());
   }
   for(int i=0;i<3;i++)
   {
-	  for(size_t j=0;j<grains[gnum].neighbordistfunclist[i].size();j++)
+	  for(size_t j=0;j<m_Grains[gnum]->neighbordistfunclist[i].size();j++)
 	  {
-		index = grains[gnum].neighbordistfunclist[i][j];
-		grains[index].neighbordistfunc[i] = grains[index].neighbordistfunc[i]-1;
+		index = m_Grains[gnum]->neighbordistfunclist[i][j];
+		m_Grains[index]->neighbordistfunc[i] = m_Grains[index]->neighbordistfunc[i]-1;
 	  }
   }
 }
@@ -765,10 +765,10 @@ void  GrainGeneratorFunc::add_grain(size_t gnum)
   int index;
   double ellipfunc;
 //  int neigh;
-  for(size_t i=0;i<grains[gnum].voxellist->size();i++)
+  for(size_t i=0;i<m_Grains[gnum]->voxellist->size();i++)
   {
-	index = grains[gnum].voxellist->at(i);
-	ellipfunc = grains[gnum].ellipfunclist->at(i);
+	index = m_Grains[gnum]->voxellist->at(i);
+	ellipfunc = m_Grains[gnum]->ellipfunclist->at(i);
 	voxels[index].grainlist->resize(voxels[index].grainlist->size()+1);
 	voxels[index].ellipfunclist->resize(voxels[index].ellipfunclist->size()+1);
 	voxels[index].grainlist->at(voxels[index].grainlist->size()-1) = gnum;
@@ -776,10 +776,10 @@ void  GrainGeneratorFunc::add_grain(size_t gnum)
   }
   for(int i=0;i<3;i++)
   {
-	  for(size_t j=0;j<grains[gnum].neighbordistfunclist[i].size();j++)
+	  for(size_t j=0;j<m_Grains[gnum]->neighbordistfunclist[i].size();j++)
 	  {
-		index = grains[gnum].neighbordistfunclist[i][j];
-		grains[index].neighbordistfunc[i]++;
+		index = m_Grains[gnum]->neighbordistfunclist[i][j];
+		m_Grains[index]->neighbordistfunc[i]++;
 	  }
   }
 }
@@ -796,16 +796,16 @@ void GrainGeneratorFunc::determine_neighbors()
   for(int gnum=1;gnum<(numextragrains+1);gnum++)
   {
 	    nnum = 0;
-		x = grains[gnum].centroidx;
-		y = grains[gnum].centroidy;
-		z = grains[gnum].centroidz;
-		dia = grains[gnum].equivdiameter;
+		x = m_Grains[gnum]->centroidx;
+		y = m_Grains[gnum]->centroidy;
+		z = m_Grains[gnum]->centroidz;
+		dia = m_Grains[gnum]->equivdiameter;
 		for(int n=gnum;n<(numextragrains+1);n++)
 		{
-			xn = grains[n].centroidx;
-			yn = grains[n].centroidy;
-			zn = grains[n].centroidz;
-			dia2 = grains[n].equivdiameter;
+			xn = m_Grains[n]->centroidx;
+			yn = m_Grains[n]->centroidy;
+			zn = m_Grains[n]->centroidz;
+			dia2 = m_Grains[n]->equivdiameter;
 			xdist = fabs(x-xn);
 			ydist = fabs(y-yn);
 			zdist = fabs(z-zn);
@@ -814,14 +814,14 @@ void GrainGeneratorFunc::determine_neighbors()
 			if(totdist < (3*dia))
 			{
 				DoverR = int(totdist/dia);
-				grains[n].neighbordistfunclist[int(DoverR)].resize(grains[n].neighbordistfunclist[int(DoverR)].size()+1);
-				grains[n].neighbordistfunclist[int(DoverR)][(grains[n].neighbordistfunclist[int(DoverR)].size()-1)] = gnum;
+				m_Grains[n]->neighbordistfunclist[int(DoverR)].resize(m_Grains[n]->neighbordistfunclist[int(DoverR)].size()+1);
+				m_Grains[n]->neighbordistfunclist[int(DoverR)][(m_Grains[n]->neighbordistfunclist[int(DoverR)].size()-1)] = gnum;
 			}
 			if(totdist < (3*dia2))
 			{
 				DoverR = int(totdist/dia2);
-				grains[gnum].neighbordistfunclist[int(DoverR)].resize(grains[gnum].neighbordistfunclist[int(DoverR)].size()+1);
-				grains[gnum].neighbordistfunclist[int(DoverR)][(grains[gnum].neighbordistfunclist[int(DoverR)].size()-1)] = n;
+				m_Grains[gnum]->neighbordistfunclist[int(DoverR)].resize(m_Grains[gnum]->neighbordistfunclist[int(DoverR)].size()+1);
+				m_Grains[gnum]->neighbordistfunclist[int(DoverR)][(m_Grains[gnum]->neighbordistfunclist[int(DoverR)].size()-1)] = n;
 			}
 		}
   }
@@ -845,10 +845,10 @@ double GrainGeneratorFunc::check_neighborhooderror(int gadd, int gremove)
 	{
 	  for(int i=0;i<3;i++)
 	  {
-		  for(size_t j=0;j<grains[gadd].neighbordistfunclist[i].size();j++)
+		  for(size_t j=0;j<m_Grains[gadd]->neighbordistfunclist[i].size();j++)
 		  {
-			index = grains[gadd].neighbordistfunclist[i][j];
-			grains[index].neighbordistfunc[i]++;
+			index = m_Grains[gadd]->neighbordistfunclist[i][j];
+			m_Grains[index]->neighbordistfunc[i]++;
 		  }
 	  }
 	}
@@ -856,10 +856,10 @@ double GrainGeneratorFunc::check_neighborhooderror(int gadd, int gremove)
 	{
 	  for(int i=0;i<3;i++)
 	  {
-		  for(size_t j=0;j<grains[gremove].neighbordistfunclist[i].size();j++)
+		  for(size_t j=0;j<m_Grains[gremove]->neighbordistfunclist[i].size();j++)
 		  {
-			index = grains[gremove].neighbordistfunclist[i][j];
-			grains[index].neighbordistfunc[i] = grains[index].neighbordistfunc[i]-1;
+			index = m_Grains[gremove]->neighbordistfunclist[i][j];
+			m_Grains[index]->neighbordistfunc[i] = m_Grains[index]->neighbordistfunc[i]-1;
 		  }
 	  }
 	}
@@ -871,8 +871,8 @@ double GrainGeneratorFunc::check_neighborhooderror(int gadd, int gremove)
 		{
 			for(int j=0;j<3;j++)
 			{
-				nnum = grains[index].neighbordistfunc[j];
-				dia = grains[index].equivdiameter;
+				nnum = m_Grains[index]->neighbordistfunc[j];
+				dia = m_Grains[index]->equivdiameter;
 				if(dia > maxdiameter) dia = maxdiameter;
 				if(dia < mindiameter) dia = mindiameter;
 				dia = int((dia-mindiameter)/binstepsize);
@@ -887,8 +887,8 @@ double GrainGeneratorFunc::check_neighborhooderror(int gadd, int gremove)
 	{
 		for(int j=0;j<3;j++)
 		{
-			nnum = grains[index].neighbordistfunc[j];
-			dia = grains[index].equivdiameter;
+			nnum = m_Grains[index]->neighbordistfunc[j];
+			dia = m_Grains[index]->equivdiameter;
 			if(dia > maxdiameter) dia = maxdiameter;
 			if(dia < mindiameter) dia = mindiameter;
 			dia = int((dia-mindiameter)/binstepsize);
@@ -909,10 +909,10 @@ double GrainGeneratorFunc::check_neighborhooderror(int gadd, int gremove)
 	{
 	  for(int i=0;i<3;i++)
 	  {
-		  for(size_t j=0;j<grains[gadd].neighbordistfunclist[i].size();j++)
+		  for(size_t j=0;j<m_Grains[gadd]->neighbordistfunclist[i].size();j++)
 		  {
-			index = grains[gadd].neighbordistfunclist[i][j];
-			grains[index].neighbordistfunc[i] = grains[index].neighbordistfunc[i]-1;
+			index = m_Grains[gadd]->neighbordistfunclist[i][j];
+			m_Grains[index]->neighbordistfunc[i] = m_Grains[index]->neighbordistfunc[i]-1;
 		  }
 	  }
 	}
@@ -920,10 +920,10 @@ double GrainGeneratorFunc::check_neighborhooderror(int gadd, int gremove)
 	{
 	  for(int i=0;i<3;i++)
 	  {
-		  for(size_t j=0;j<grains[gremove].neighbordistfunclist[i].size();j++)
+		  for(size_t j=0;j<m_Grains[gremove]->neighbordistfunclist[i].size();j++)
 		  {
-			index = grains[gremove].neighbordistfunclist[i][j];
-			grains[index].neighbordistfunc[i]++;
+			index = m_Grains[gremove]->neighbordistfunclist[i][j];
+			m_Grains[index]->neighbordistfunc[i]++;
 		  }
 	  }
 	}
@@ -933,14 +933,14 @@ double GrainGeneratorFunc::costcheck_remove(size_t gnum)
 {
   int index;
   double removecost = 0;
-  for(size_t i=0;i<grains[gnum].voxellist->size();i++)
+  for(size_t i=0;i<m_Grains[gnum]->voxellist->size();i++)
   {
-	index = grains[gnum].voxellist->at(i);
+	index = m_Grains[gnum]->voxellist->at(i);
 	if(voxels[index].grainlist->size() == 1) removecost = removecost+1.0;
 	if(voxels[index].grainlist->size() > 1)
 	{
 		if(voxels[index].grainlist->size() == 2) removecost = removecost - voxels[index].ellipfunclist->at(0);
-		removecost = removecost - grains[gnum].ellipfunclist->at(i);
+		removecost = removecost - m_Grains[gnum]->ellipfunclist->at(i);
 	}
   }
   return removecost;
@@ -949,14 +949,14 @@ double GrainGeneratorFunc::costcheck_add(size_t gnum)
 {
   int index;
   double addcost = 0;
-  for(size_t i=0;i<grains[gnum].voxellist->size();i++)
+  for(size_t i=0;i<m_Grains[gnum]->voxellist->size();i++)
   {
-	index = grains[gnum].voxellist->at(i);
+	index = m_Grains[gnum]->voxellist->at(i);
 	if(voxels[index].grainlist->size() == 0) addcost = addcost-1.0;
 	if(voxels[index].grainlist->size() >= 1)
 	{
 		if(voxels[index].grainlist->size() == 1) addcost = addcost + voxels[index].ellipfunclist->at(0);
-		addcost = addcost + grains[gnum].ellipfunclist->at(i);
+		addcost = addcost + m_Grains[gnum]->ellipfunclist->at(i);
 	}
   }
   return addcost;
@@ -980,7 +980,7 @@ double GrainGeneratorFunc::check_sizedisterror(int gadd, int gremove)
 		index = activegrainlist[b];
 		if(index != gremove)
 		{
-			dia = grains[index].equivdiameter;
+			dia = m_Grains[index]->equivdiameter;
 			dia = (dia-mindiameter)/grainsizediststep;
 			simgrainsizedist[int(dia)]++;
 			count++;
@@ -988,7 +988,7 @@ double GrainGeneratorFunc::check_sizedisterror(int gadd, int gremove)
 	}
 	if(gadd > 0)
 	{
-		dia = grains[gadd].equivdiameter;
+		dia = m_Grains[gadd]->equivdiameter;
 		dia = (dia-mindiameter)/grainsizediststep;
 		simgrainsizedist[int(dia)]++;
 		count++;
@@ -1026,7 +1026,7 @@ int  GrainGeneratorFunc::pack_grains(const std::string &filename, int numgrains)
   for (int i = 1; i < (numextragrains + 1); i++)
   {
     generate_grain(i);
-    totalvol = totalvol + grains[i].volume;
+    totalvol = totalvol + m_Grains[i]->volume;
   }
   totalvol = totalvol / (double(numextragrains) / double(numgrains));
   initialize2();
@@ -1035,9 +1035,9 @@ int  GrainGeneratorFunc::pack_grains(const std::string &filename, int numgrains)
     xc = rg.Random() * (xpoints * resx);
     yc = rg.Random() * (ypoints * resy);
     zc = rg.Random() * (zpoints * resz);
-    grains[i].centroidx = xc;
-    grains[i].centroidy = yc;
-    grains[i].centroidz = zc;
+    m_Grains[i]->centroidx = xc;
+    m_Grains[i]->centroidy = yc;
+    m_Grains[i]->centroidz = zc;
   }
   for (int i = 1; i < (numextragrains + 1); i++)
   {
@@ -1050,13 +1050,13 @@ int  GrainGeneratorFunc::pack_grains(const std::string &filename, int numgrains)
     int random = int(rg.Random() * (numextragrains));
     if (random == 0) random = 1;
     if (random > (numextragrains)) random = (numextragrains);
-    while (grains[random].active == 1)
+    while (m_Grains[random]->active == 1)
     {
       random++;
       if (random > (numextragrains)) random = random - (numextragrains);
       if (random == 0) random = 1;
     }
-    grains[random].active = 1;
+    m_Grains[random]->active = 1;
     addcost = costcheck_add(random);
     add_grain(random);
     activegrainlist[i] = random;
@@ -1080,7 +1080,7 @@ int  GrainGeneratorFunc::pack_grains(const std::string &filename, int numgrains)
       int random = int(rg.Random() * (numextragrains));
       if (random == 0) random = 1;
       if (random > (numextragrains)) random = (numextragrains);
-      while (grains[random].active == 1)
+      while (m_Grains[random]->active == 1)
       {
         random++;
         if (random > (numextragrains)) random = random - (numextragrains);
@@ -1096,7 +1096,7 @@ int  GrainGeneratorFunc::pack_grains(const std::string &filename, int numgrains)
       if(neighborhooderrorweight > 0) change3 = (currentneighborhooderror - oldneighborhooderror) / oldneighborhooderror;
       if (fillingerrorweight*change1 + sizedisterrorweight*change2 + neighborhooderrorweight*change3 <= acceptableerror)
       {
-        grains[random].active = 1;
+        m_Grains[random]->active = 1;
         add_grain(random);
         activegrainlist.resize(activegrainlist.size() + 1);
         activegrainlist[activegrainlist.size() - 1] = random;
@@ -1122,7 +1122,7 @@ int  GrainGeneratorFunc::pack_grains(const std::string &filename, int numgrains)
       if(neighborhooderrorweight > 0) change3 = (currentneighborhooderror - oldneighborhooderror) / oldneighborhooderror;
       if (fillingerrorweight*change1 + sizedisterrorweight*change2 + neighborhooderrorweight*change3 <= acceptableerror)
       {
-        grains[random].active = 0;
+        m_Grains[random]->active = 0;
         remove_grain(random);
         activegrainlist.erase(std::remove(activegrainlist.begin(), activegrainlist.end(), random), activegrainlist.end());
         oldfillingerror = currentfillingerror;
@@ -1140,7 +1140,7 @@ int  GrainGeneratorFunc::pack_grains(const std::string &filename, int numgrains)
       int random = int(rg.Random() * (numextragrains));
       if (random == 0) random = 1;
       if (random > (numextragrains)) random = (numextragrains);
-      while (grains[random].active == 1)
+      while (m_Grains[random]->active == 1)
       {
         random++;
         if (random > (numextragrains)) random = random - (numextragrains);
@@ -1157,8 +1157,8 @@ int  GrainGeneratorFunc::pack_grains(const std::string &filename, int numgrains)
       if(neighborhooderrorweight > 0) change3 = (currentneighborhooderror - oldneighborhooderror) / oldneighborhooderror;
       if (fillingerrorweight*change1 + sizedisterrorweight*change2 + neighborhooderrorweight*change3 <= acceptableerror)
       {
-        grains[random].active = 1;
-        grains[random1].active = 0;
+        m_Grains[random]->active = 1;
+        m_Grains[random1]->active = 0;
         add_grain(random);
         remove_grain(random1);
         activegrainlist.erase(std::remove(activegrainlist.begin(), activegrainlist.end(), random1), activegrainlist.end());
@@ -1178,13 +1178,13 @@ int  GrainGeneratorFunc::pack_grains(const std::string &filename, int numgrains)
       random1 = activegrainlist[random1];
       //		double mindist = 100000.0;
       size_t random = random1;
-      for (size_t i = 0; i < grains[random1].neighbordistfunclist[1].size(); i++)
+      for (size_t i = 0; i < m_Grains[random1]->neighbordistfunclist[1].size(); i++)
       {
-        index = grains[random1].neighbordistfunclist[1][i];
-        if (grains[index].active == 0 && index != random1)
+        index = m_Grains[random1]->neighbordistfunclist[1][i];
+        if (m_Grains[index]->active == 0 && index != random1)
         {
           random = index;
-          i = grains[random1].neighbordistfunclist[1].size();
+          i = m_Grains[random1]->neighbordistfunclist[1].size();
         }
       }
       if (random != random1)
@@ -1200,8 +1200,8 @@ int  GrainGeneratorFunc::pack_grains(const std::string &filename, int numgrains)
         if(neighborhooderrorweight > 0) change3 = (currentneighborhooderror - oldneighborhooderror) / oldneighborhooderror;
         if (fillingerrorweight*change1 + sizedisterrorweight*change2 + neighborhooderrorweight*change3 <= acceptableerror)
         {
-          grains[random].active = 1;
-          grains[random1].active = 0;
+          m_Grains[random]->active = 1;
+          m_Grains[random1]->active = 0;
           add_grain(random);
           remove_grain(random1);
           activegrainlist.erase(std::remove(activegrainlist.begin(), activegrainlist.end(), random1), activegrainlist.end());
@@ -1219,10 +1219,10 @@ int  GrainGeneratorFunc::pack_grains(const std::string &filename, int numgrains)
   activegrainlist.erase(std::remove(activegrainlist.begin(), activegrainlist.end(), 0), activegrainlist.end());
   for (size_t i = 0; i < activegrainlist.size(); i++)
   {
-    grains[i + 1] = grains[activegrainlist[i]];
+    m_Grains[i + 1] = m_Grains[activegrainlist[i]];
   }
-  grains.resize(activegrainlist.size() + 1);
-  return (grains.size());
+  m_Grains.resize(activegrainlist.size() + 1);
+  return (m_Grains.size());
 }
 
 int GrainGeneratorFunc::assign_voxels(int numgrains)
@@ -1266,13 +1266,13 @@ int GrainGeneratorFunc::assign_voxels(int numgrains)
 			break;
 		}
 	  }
-	  double volcur = grains[i].volume;
-	  double bovera = grains[i].radius2;
-	  double covera = grains[i].radius3;
-	  double omega3 = grains[i].omega3;
-	  xc = grains[i].centroidx;
-	  yc = grains[i].centroidy;
-	  zc = grains[i].centroidz;
+	  double volcur = m_Grains[i]->volume;
+	  double bovera = m_Grains[i]->radius2;
+	  double covera = m_Grains[i]->radius3;
+	  double omega3 = m_Grains[i]->omega3;
+	  xc = m_Grains[i]->centroidx;
+	  yc = m_Grains[i]->centroidy;
+	  zc = m_Grains[i]->centroidz;
 	  double radcur1 = 1;
 	  if(shapeclass == 3)
 	  {
@@ -1301,9 +1301,9 @@ int GrainGeneratorFunc::assign_voxels(int numgrains)
 	  if(shapeclass == 3) radcur1 = radcur1/2.0;
 	  double radcur2 = (radcur1*bovera);
 	  double radcur3 = (radcur1*covera);
-	  double phi1 = grains[i].axiseuler1;
-	  double PHI = grains[i].axiseuler2;
-	  double phi2 = grains[i].axiseuler3;
+	  double phi1 = m_Grains[i]->axiseuler1;
+	  double PHI = m_Grains[i]->axiseuler2;
+	  double phi2 = m_Grains[i]->axiseuler3;
 	  double ga[3][3];
 	  ga[0][0] = cos(phi1)*cos(phi2)-sin(phi1)*sin(phi2)*cos(PHI);
 	  ga[0][1] = sin(phi1)*cos(phi2)+cos(phi1)*sin(phi2)*cos(PHI);
@@ -1420,11 +1420,11 @@ int GrainGeneratorFunc::assign_voxels(int numgrains)
 			}
 		 }
 	  }
-	  grains[i].centroidx = xc;
-	  grains[i].centroidy = yc;
-	  grains[i].centroidz = zc;
-	  grains[actualid] = grains[i];
-	  grains[actualid].numvoxels = gsizes[actualid];
+	  m_Grains[i]->centroidx = xc;
+	  m_Grains[i]->centroidy = yc;
+	  m_Grains[i]->centroidz = zc;
+	  m_Grains[actualid] = m_Grains[i];
+	  m_Grains[actualid]->numvoxels = gsizes[actualid];
   }
   int goodcount = 1;
   for(int i=1;i<numgrains;i++)
@@ -1459,7 +1459,7 @@ void  GrainGeneratorFunc::assign_eulers(int numgrains)
 	  numbins = 36*36*12;
   }
   double totaldensity = 0;
-  double random, diff, sum;
+  double diff, sum;
   double hmag, angle;
   double synh1=0,synh2=0,synh3=0;
   double synr1=0,synr2=0,synr3=0;
@@ -1504,22 +1504,22 @@ void  GrainGeneratorFunc::assign_eulers(int numgrains)
 	  synea1=sum+diff;
 	  synea2=2.*atan(synr1*cos(sum)/cos(diff));
 	  synea3=sum-diff;
-	  grains[i].euler1 = synea1;
-	  grains[i].euler2 = synea2;
-	  grains[i].euler3 = synea3;
+	  m_Grains[i]->euler1 = synea1;
+	  m_Grains[i]->euler2 = synea2;
+	  m_Grains[i]->euler3 = synea3;
       double s=sin(0.5*synea2);
 	  double c=cos(0.5*synea2);
 	  double s1=sin(0.5*(synea1-synea3));
 	  double c1=cos(0.5*(synea1-synea3));
 	  double s2=sin(0.5*(synea1+synea3));
 	  double c2=cos(0.5*(synea1+synea3));
-	  grains[i].avg_quat[1] = s*c1;
-	  grains[i].avg_quat[2] = s*s1;
-	  grains[i].avg_quat[3] = c*s2;
-	  grains[i].avg_quat[4] = c*c2;
-	  if(grains[gnum].surfacegrain == 0)
+	  m_Grains[i]->avg_quat[1] = s*c1;
+	  m_Grains[i]->avg_quat[2] = s*s1;
+	  m_Grains[i]->avg_quat[3] = c*s2;
+	  m_Grains[i]->avg_quat[4] = c*c2;
+	  if(m_Grains[gnum]->surfacegrain == 0)
 	  {
-		  simodf[choose] = simodf[choose] + (double(grains[i].numvoxels)*resx*resy*resz/totalvol);
+		  simodf[choose] = simodf[choose] + (double(m_Grains[i]->numvoxels)*resx*resy*resz/totalvol);
 	  }
   }
 }
@@ -1696,7 +1696,7 @@ void  GrainGeneratorFunc::fill_gaps(int numgrains)
   }
   for (int i = 1; i < numgrains; i++)
   {
-	grains[i].numvoxels = gsizes[i];
+	m_Grains[i]->numvoxels = gsizes[i];
   }
   gsizes.clear();
 }
@@ -1735,13 +1735,14 @@ int GrainGeneratorFunc::create_precipitates()
 	if(size == count) vollist.resize(size+10);
     totalprecipvol = totalprecipvol + vol;
   }
-  precipitates = new Grain[count];
+//  precipitates = new Grain[count];
+  precipitates.resize(count);
   for(size_t a=1;a<count+1;a++)
   {
     vol = vollist[a];
-	diam = (3.0/4.0)*(1.0/m_pi)*vol;
-	diam = pow(diam,0.3333333);
-	diam = 2.0*diam;
+    diam = (3.0/4.0)*(1.0/m_pi)*vol;
+    diam = pow(diam,0.3333333);
+    diam = 2.0*diam;
     int diameter = int(diam);
     if(diameter >= maxprecipdiameter) diameter = maxprecipdiameter;
     if(diameter <= minprecipdiameter) diameter = minprecipdiameter;
@@ -1782,14 +1783,14 @@ int GrainGeneratorFunc::create_precipitates()
 	double m = precipsvomega3[diameter][0];
 	double s = precipsvomega3[diameter][1];
 	double omega3 = rg.RandBeta(m,s);
-    precipitates[a].volume = vol;
-	precipitates[a].radius1 = r1;
-	precipitates[a].radius2 = r2;
-	precipitates[a].radius3 = r3;
-    precipitates[a].axiseuler1 = phi1;
-    precipitates[a].axiseuler2 = PHI;
-    precipitates[a].axiseuler3 = phi2;
-	precipitates[a].omega3 = omega3;
+    precipitates[a]->volume = vol;
+	precipitates[a]->radius1 = r1;
+	precipitates[a]->radius2 = r2;
+	precipitates[a]->radius3 = r3;
+    precipitates[a]->axiseuler1 = phi1;
+    precipitates[a]->axiseuler2 = PHI;
+    precipitates[a]->axiseuler3 = phi2;
+	precipitates[a]->omega3 = omega3;
   }
   double sizex = int(pow((totalvol*1),0.33333));
   double sizey = int(pow((totalvol*1),0.33333));
@@ -1805,7 +1806,7 @@ int GrainGeneratorFunc::create_precipitates()
     double maxvol = 0;
     for(size_t j=1;j<count+1;j++)
     {
-      double vol = precipitates[j].volume;
+      double vol = precipitates[j]->volume;
       if(vol > maxvol && takencheck[j] != 1)
       {
         maxvol = vol;
@@ -1877,10 +1878,10 @@ void GrainGeneratorFunc::insert_precipitates(int numprecipitates)
   {
     good = 0;
 	int curprecip = precipitateorder[i];
-    double volcur = precipitates[curprecip].volume;
-	double bovera = precipitates[curprecip].radius2;
-	double covera = precipitates[curprecip].radius3;
-	double omega3 = precipitates[curprecip].omega3;
+    double volcur = precipitates[curprecip]->volume;
+	double bovera = precipitates[curprecip]->radius2;
+	double covera = precipitates[curprecip]->radius3;
+	double omega3 = precipitates[curprecip]->omega3;
     double radcur1 = 1;
     if(shapeclass == 3)
     {
@@ -1910,9 +1911,9 @@ void GrainGeneratorFunc::insert_precipitates(int numprecipitates)
     double radcur2 = (radcur1*bovera);
     double radcur3 = (radcur1*covera);
 	double ga[3][3];
-	double phi1 = precipitates[curprecip].axiseuler1;
-	double PHI = precipitates[curprecip].axiseuler2;
-	double phi2 = precipitates[curprecip].axiseuler3;
+	double phi1 = precipitates[curprecip]->axiseuler1;
+	double PHI = precipitates[curprecip]->axiseuler2;
+	double phi2 = precipitates[curprecip]->axiseuler3;
 	ga[0][0] = cos(phi1)*cos(phi2)-sin(phi1)*sin(phi2)*cos(PHI);
 	ga[0][1] = sin(phi1)*cos(phi2)+cos(phi1)*sin(phi2)*cos(PHI);
 	ga[0][2] = sin(phi2)*sin(PHI);
@@ -2142,13 +2143,13 @@ void GrainGeneratorFunc::insert_precipitates(int numprecipitates)
 		}
 	}
     uniquecursize = 0;
-    precipitates[curprecip].numvoxels = totalcursize;
-    precipitates[curprecip].centroidx = xc;
-    precipitates[curprecip].centroidy = yc;
-    precipitates[curprecip].centroidz = zc;
-    precipitates[curprecip].radius1 = radcur1;
-    precipitates[curprecip].radius2 = radcur2;
-    precipitates[curprecip].radius3 = radcur3;
+    precipitates[curprecip]->numvoxels = totalcursize;
+    precipitates[curprecip]->centroidx = xc;
+    precipitates[curprecip]->centroidy = yc;
+    precipitates[curprecip]->centroidz = zc;
+    precipitates[curprecip]->radius1 = radcur1;
+    precipitates[curprecip]->radius2 = radcur2;
+    precipitates[curprecip]->radius3 = radcur3;
     totalcursize = 0;
     count++;
   }
@@ -2168,7 +2169,7 @@ void GrainGeneratorFunc::insert_precipitates(int numprecipitates)
   for(int v=1;v<numprecipitates+1;v++)
   {
     int cursize = psizes[v];
-	precipitates[v].numvoxels = cursize;
+	precipitates[v]->numvoxels = cursize;
   }
 }
 void GrainGeneratorFunc::read_structure(const std::string &filename)
@@ -2209,7 +2210,7 @@ void GrainGeneratorFunc::read_structure(const std::string &filename)
 		plane = i/(xpoints*ypoints);
 		if(col == 0 || col == (xpoints-1) || row == 0 || row == (ypoints-1) || plane == 0 || plane == (zpoints-1)) onedge = 1;
 		voxels[i].grainname = gnum;
-		grains[gnum].surfacegrain = onedge;
+		m_Grains[gnum]->surfacegrain = onedge;
 	}
 }
 void  GrainGeneratorFunc::find_neighbors()
@@ -2236,19 +2237,16 @@ void  GrainGeneratorFunc::find_neighbors()
   int surfacegrain = 1;
   int nListSize = 1000;
   std::vector<int> nlist(nListSize, -1);
-  std::vector<double> nsalist(nListSize, -1);
+  std::vector<double> nsalist(nListSize, -1.0);
   for(int i=0;i<numgrains;i++)
   {
-    int numneighs = int(nlist.size());
-	grains[i].numneighbors = 0;
-    grains[i].neighborlist = new std::vector<int>(numneighs);
-    grains[i].neighborlist->swap(nlist);
-    grains[i].neighborsurfarealist = new std::vector<double>(numneighs);
-    grains[i].neighborsurfarealist->swap(nsalist);
-	for(int j=0;j<3;j++)
-	{
-		grains[i].neighbordistfunc[j] = 0;
-	}
+    m_Grains[i]->numneighbors = 0;
+    m_Grains[i]->neighborlist->assign(nListSize, -1);
+    m_Grains[i]->neighborsurfarealist->assign(nListSize, -1.0);
+    for(int j=0;j<3;j++)
+    {
+      m_Grains[i]->neighbordistfunc[j] = 0;
+    }
   }
   for(int j = 0; j < (xpoints*ypoints*zpoints); j++)
   {
@@ -2259,8 +2257,8 @@ void  GrainGeneratorFunc::find_neighbors()
 		column = j%xpoints;
 		row = (j/xpoints)%ypoints;
 		plane = j/(xpoints*ypoints);
-		if((column == 0 || column == (xpoints-1) || row == 0 || row == (ypoints-1) || plane == 0 || plane == (zpoints-1)) && zpoints != 1) grains[grain].surfacegrain = surfacegrain;
-		if((column == 0 || column == (xpoints-1) || row == 0 || row == (ypoints-1)) && zpoints == 1) grains[grain].surfacegrain = surfacegrain;
+		if((column == 0 || column == (xpoints-1) || row == 0 || row == (ypoints-1) || plane == 0 || plane == (zpoints-1)) && zpoints != 1) m_Grains[grain]->surfacegrain = surfacegrain;
+		if((column == 0 || column == (xpoints-1) || row == 0 || row == (ypoints-1)) && zpoints == 1) m_Grains[grain]->surfacegrain = surfacegrain;
         for(int k=0;k<6;k++)
         {
 		  good = 1;
@@ -2274,62 +2272,64 @@ void  GrainGeneratorFunc::find_neighbors()
 		  if(good == 1 && voxels[neighbor].grainname != grain && voxels[neighbor].grainname > 0)
           {
 			  onsurf++;
-			  nnum = grains[grain].numneighbors;
-			  vector<int>* nlist = grains[grain].neighborlist;
+			  nnum = m_Grains[grain]->numneighbors;
+			  IntVectorType nlist = m_Grains[grain]->neighborlist;
 			  if (nnum >= (nlist->size()))
 			  {
 				 nlist->resize(nnum + nListSize);
 			  }
 			  nlist->at(nnum) = voxels[neighbor].grainname;
 			  nnum++;
-			  grains[grain].numneighbors = nnum;
+			  m_Grains[grain]->numneighbors = nnum;
 		  }
 		}
 	}
 	voxels[j].surfacevoxel = onsurf;
   }
-  vector<int>* nlistcopy;
+  vector<int> nlistcopy;
   for(int i=1;i<numgrains;i++)
   {
-	vector<int>* nlist = grains[i].neighborlist;
-	vector<double>* nsalist = grains[i].neighborsurfarealist;
-	vector<int>::iterator newend;
-	sort(nlist->begin(),nlist->end());
-	nlistcopy = nlist;
-    newend = unique(nlist->begin(),nlist->end());
-    nlist->erase(newend,nlist->end());
-	nlist->erase(std::remove(nlist->begin(),nlist->end(),-1),nlist->end());
-	nlist->erase(std::remove(nlist->begin(),nlist->end(),0),nlist->end());
-	int numneighs = int(nlist->size());
-	for(int j=0;j<numneighs;j++)
-	{
-		int neigh = nlist->at(j);
-		int number = std::count(nlistcopy->begin(),nlistcopy->end(),neigh);
-		double area = number*resx*resx;
-		nsalist->at(j) = area;
-		if(grains[i].surfacegrain == 0 && (neigh > i || grains[neigh].surfacegrain == 1))
-		{
-			totalsurfacearea = totalsurfacearea + area;
-		}
-	}
-    grains[i].numneighbors = numneighs;
-    grains[i].neighborlist = new std::vector<int>(numneighs);
-    grains[i].neighborlist = nlist;
-    grains[i].neighborsurfarealist = new std::vector<double>(numneighs);
-    grains[i].neighborsurfarealist = nsalist;
+    IntVectorType nlist = m_Grains[i]->neighborlist;
+    DoubleVectorType nsalist = m_Grains[i]->neighborsurfarealist;
+    vector<int>::iterator newend;
+    sort(nlist->begin(), nlist->end());
+    // Make a copy of the contents of the neighborlist vector
+    nlistcopy.assign(nlist->begin(), nlist->end());
+
+    newend = unique(nlist->begin(), nlist->end());
+    nlist->erase(newend, nlist->end());
+    nlist->erase(std::remove(nlist->begin(), nlist->end(), -1), nlist->end());
+    nlist->erase(std::remove(nlist->begin(), nlist->end(), 0), nlist->end());
+    int numneighs = int(nlist->size());
+    for (int j = 0; j < numneighs; j++)
+    {
+      int neigh = nlist->at(j);
+      int number = std::count(nlistcopy.begin(), nlistcopy.end(), neigh);
+      double area = number * resx * resx;
+      nsalist->at(j) = area;
+      if (m_Grains[i]->surfacegrain == 0 && (neigh > i || m_Grains[neigh]->surfacegrain == 1))
+      {
+        totalsurfacearea = totalsurfacearea + area;
+      }
+    }
+    m_Grains[i]->numneighbors = numneighs;
+//    m_Grains[i]->neighborlist = new std::vector<int>(numneighs);
+//    m_Grains[i]->neighborlist = nlist;
+//    m_Grains[i]->neighborsurfarealist = new std::vector<double>(numneighs);
+//    m_Grains[i]->neighborsurfarealist = nsalist;
   }
   for(int i=1;i<numgrains;i++)
   {
-	x = grains[i].centroidx;
-	y = grains[i].centroidy;
-	z = grains[i].centroidz;
-	diam = grains[i].equivdiameter;
+	x = m_Grains[i]->centroidx;
+	y = m_Grains[i]->centroidy;
+	z = m_Grains[i]->centroidz;
+	diam = m_Grains[i]->equivdiameter;
 	for(int j=i;j<numgrains;j++)
 	{
-		xn = grains[j].centroidx;
-		yn = grains[j].centroidy;
-		zn = grains[j].centroidz;
-		diam2 = grains[j].equivdiameter;
+		xn = m_Grains[j]->centroidx;
+		yn = m_Grains[j]->centroidy;
+		zn = m_Grains[j]->centroidz;
+		diam2 = m_Grains[j]->equivdiameter;
 		xdist = fabs(x-xn);
 		ydist = fabs(y-yn);
 		zdist = fabs(z-zn);
@@ -2340,11 +2340,11 @@ void  GrainGeneratorFunc::find_neighbors()
 		dist2_int = int(dist2/diam2);
 		if(dist < 3)
 		{
-			grains[i].neighbordistfunc[dist_int]++;
+			m_Grains[i]->neighbordistfunc[dist_int]++;
 		}
 		if(dist2 < 3)
 		{
-			grains[j].neighbordistfunc[dist2_int]++;
+			m_Grains[j]->neighbordistfunc[dist2_int]++;
 		}
 	}
   }
@@ -2422,17 +2422,17 @@ void  GrainGeneratorFunc::measure_misorientations ()
 //  int miso1bin, miso2bin, miso3bin;
   int mbin;
 
-  vector<int >* nlist ;
-  vector<double >* neighsurfarealist;
+  IntVectorType nlist ;
+  DoubleVectorType neighsurfarealist;
   for (int i = 1; i < numgrains; i++)
   {
-    nlist = grains[i].neighborlist;
-    neighsurfarealist = grains[i].neighborsurfarealist;
+    nlist = m_Grains[i]->neighborlist;
+    neighsurfarealist = m_Grains[i]->neighborsurfarealist;
     misolist.resize(nlist->size()*3);
-    q1[1] = grains[i].avg_quat[1];
-    q1[2] = grains[i].avg_quat[2];
-    q1[3] = grains[i].avg_quat[3];
-    q1[4] = grains[i].avg_quat[4];
+    q1[1] = m_Grains[i]->avg_quat[1];
+    q1[2] = m_Grains[i]->avg_quat[2];
+    q1[3] = m_Grains[i]->avg_quat[3];
+    q1[4] = m_Grains[i]->avg_quat[4];
     size_t size = 0;
     if (NULL != nlist)
     {
@@ -2442,10 +2442,10 @@ void  GrainGeneratorFunc::measure_misorientations ()
     {
       int nname = nlist->at(j);
       double neighsurfarea = neighsurfarealist->at(j);
-      q2[1] = grains[nname].avg_quat[1];
-      q2[2] = grains[nname].avg_quat[2];
-      q2[3] = grains[nname].avg_quat[3];
-      q2[4] = grains[nname].avg_quat[4];
+      q2[1] = m_Grains[nname]->avg_quat[1];
+      q2[2] = m_Grains[nname]->avg_quat[2];
+      q2[3] = m_Grains[nname]->avg_quat[3];
+      q2[4] = m_Grains[nname]->avg_quat[4];
       if(crystruct == AIM::Reconstruction::Hexagonal)
 	  {
         w = MisorientationCalculations::getMisoQuatHexagonal(q1,q2,n1,n2,n3);
@@ -2471,13 +2471,13 @@ void  GrainGeneratorFunc::measure_misorientations ()
       {
 		  mbin = MisorientationCalculations::getMisoBinHexagonal(misolist[3*j],misolist[3*j+1],misolist[3*j+2]);
 	  }
-      if (grains[i].surfacegrain == 0 && (nname > i || grains[nname].surfacegrain == 1))
+      if (m_Grains[i]->surfacegrain == 0 && (nname > i || m_Grains[nname]->surfacegrain == 1))
       {
         simmdf[mbin] = simmdf[mbin] + (neighsurfarea / totalsurfacearea);
       }
     }
-    grains[i].misorientationlist = new std::vector<double >(misolist.size());
-    grains[i].misorientationlist->swap(misolist);
+    m_Grains[i]->misorientationlist = new std::vector<double >(misolist.size());
+    m_Grains[i]->misorientationlist->swap(misolist);
     misolist.clear();
   }
 }
@@ -2529,17 +2529,17 @@ void  GrainGeneratorFunc::find_centroids()
     graincenters[i][1] = graincenters[i][1]/graincenters[i][0];
     graincenters[i][2] = graincenters[i][2]/graincenters[i][0];
     graincenters[i][3] = graincenters[i][3]/graincenters[i][0];
-    grains[i].centroidx = graincenters[i][1];
-    grains[i].centroidy = graincenters[i][2];
-    grains[i].centroidz = graincenters[i][3];
-    grains[i].numvoxels = graincenters[i][0];
-	grains[i].volume = (graincenters[i][0]*resx*resy*resz);
-    grains[i].surfacegrain = graincenters[i][4];
-	radcubed = (0.75*grains[i].volume)/m_pi;
+    m_Grains[i]->centroidx = graincenters[i][1];
+    m_Grains[i]->centroidy = graincenters[i][2];
+    m_Grains[i]->centroidz = graincenters[i][3];
+    m_Grains[i]->numvoxels = graincenters[i][0];
+	m_Grains[i]->volume = (graincenters[i][0]*resx*resy*resz);
+    m_Grains[i]->surfacegrain = graincenters[i][4];
+	radcubed = (0.75*m_Grains[i]->volume)/m_pi;
 	diameter = (2*pow(radcubed,0.3333333333));
-	packquality = (diameter-grains[i].equivdiameter)/grains[i].equivdiameter;
-	grains[i].equivdiameter = diameter;
-	grains[i].packquality = packquality;
+	packquality = (diameter-m_Grains[i]->equivdiameter)/m_Grains[i]->equivdiameter;
+	m_Grains[i]->equivdiameter = diameter;
+	m_Grains[i]->packquality = packquality;
 	if((diameter) > maxdiameter)
 	{
 		maxdiameter = (diameter);
@@ -2629,28 +2629,28 @@ void  GrainGeneratorFunc::find_moments ()
 	grainmoments[i][4] = grainmoments[i][4]*(resx/2.0)*(resy/2.0)*(resz/2.0);
 	grainmoments[i][5] = grainmoments[i][5]*(resx/2.0)*(resy/2.0)*(resz/2.0);
 	double o3 = (grainmoments[i][0]*grainmoments[i][1]*grainmoments[i][2])+(2.0*grainmoments[i][3]*grainmoments[i][5]*grainmoments[i][4])-(grainmoments[i][0]*grainmoments[i][4]*grainmoments[i][4])-(grainmoments[i][1]*grainmoments[i][5]*grainmoments[i][5])-(grainmoments[i][2]*grainmoments[i][3]*grainmoments[i][3]);
-	double vol5 = grains[i].volume;
+	double vol5 = m_Grains[i]->volume;
 	vol5 = pow(vol5,5);
 	double omega3 = vol5/o3;
-	grains[i].Ixx = grainmoments[i][0];
-	grains[i].Iyy = grainmoments[i][1];
-	grains[i].Izz = grainmoments[i][2];
-	grains[i].Ixy = -grainmoments[i][3];
-	grains[i].Iyz = -grainmoments[i][4];
-	grains[i].Ixz = -grainmoments[i][5];
-	grains[i].omega3 = omega3;
+	m_Grains[i]->Ixx = grainmoments[i][0];
+	m_Grains[i]->Iyy = grainmoments[i][1];
+	m_Grains[i]->Izz = grainmoments[i][2];
+	m_Grains[i]->Ixy = -grainmoments[i][3];
+	m_Grains[i]->Iyz = -grainmoments[i][4];
+	m_Grains[i]->Ixz = -grainmoments[i][5];
+	m_Grains[i]->omega3 = omega3;
   }
 }
 void  GrainGeneratorFunc::find_axes ()
 {
   for (int i = 1; i < numgrains; i++)
   {
-    double Ixx = grains[i].Ixx;
-    double Iyy = grains[i].Iyy;
-    double Izz = grains[i].Izz;
-    double Ixy = grains[i].Ixy;
-    double Iyz = grains[i].Iyz;
-    double Ixz = grains[i].Ixz;
+    double Ixx = m_Grains[i]->Ixx;
+    double Iyy = m_Grains[i]->Iyy;
+    double Izz = m_Grains[i]->Izz;
+    double Ixy = m_Grains[i]->Ixy;
+    double Iyz = m_Grains[i]->Iyz;
+    double Ixz = m_Grains[i]->Ixz;
     double a = 1;
     double b = -Ixx-Iyy-Izz;
     double c = ((Ixx*Izz)+(Ixx*Iyy)+(Iyy*Izz)-(Ixz*Ixz)-(Ixy*Ixy)-(Iyz*Iyz));
@@ -2672,9 +2672,9 @@ void  GrainGeneratorFunc::find_axes ()
     double r1 = 2*pow(r,0.33333333333)*cos(theta/3)-(b/(3*a));
     double r2 = -pow(r,0.33333333333)*(cos(theta/3)-(1.7320508*sin(theta/3)))-(b/(3*a));
     double r3 = -pow(r,0.33333333333)*(cos(theta/3)+(1.7320508*sin(theta/3)))-(b/(3*a));
-	grains[i].radius1 = r1;
-	grains[i].radius2 = r2;
-	grains[i].radius3 = r3;
+	m_Grains[i]->radius1 = r1;
+	m_Grains[i]->radius2 = r2;
+	m_Grains[i]->radius3 = r3;
   }
 }
 void  GrainGeneratorFunc::find_vectors (H5ReconStatsWriter::Pointer h5io)
@@ -2685,15 +2685,15 @@ void  GrainGeneratorFunc::find_vectors (H5ReconStatsWriter::Pointer h5io)
   for(int i = 1; i < numgrains; i++)
   {
  //   int size = grains[i].numvoxels;
-    double Ixx = grains[i].Ixx;
-    double Iyy = grains[i].Iyy;
-    double Izz = grains[i].Izz;
-    double Ixy = grains[i].Ixy;
-    double Iyz = grains[i].Iyz;
-    double Ixz = grains[i].Ixz;
-	double radius1 = grains[i].radius1;
-	double radius2 = grains[i].radius2;
-	double radius3 = grains[i].radius3;
+    double Ixx = m_Grains[i]->Ixx;
+    double Iyy = m_Grains[i]->Iyy;
+    double Izz = m_Grains[i]->Izz;
+    double Ixy = m_Grains[i]->Ixy;
+    double Iyz = m_Grains[i]->Iyz;
+    double Ixz = m_Grains[i]->Ixz;
+	double radius1 = m_Grains[i]->radius1;
+	double radius2 = m_Grains[i]->radius2;
+	double radius3 = m_Grains[i]->radius3;
     double m[3][3];
     double e[3][1];
     double uber[3][3];
@@ -2791,7 +2791,7 @@ void  GrainGeneratorFunc::find_vectors (H5ReconStatsWriter::Pointer h5io)
 	double norm1 = pow(((n1x*n1x)+(n1y*n1y)+(n1z*n1z)),0.5);
 	double norm2 = pow(((n2x*n2x)+(n2y*n2y)+(n2z*n2z)),0.5);
 	double norm3 = pow(((n3x*n3x)+(n3y*n3y)+(n3z*n3z)),0.5);
-	if(grains[i].surfacegrain == 0)
+	if(m_Grains[i]->surfacegrain == 0)
 	{
 		n1x = n1x/norm1;
 		n1y = n1y/norm1;
@@ -2864,9 +2864,9 @@ void  GrainGeneratorFunc::find_vectors (H5ReconStatsWriter::Pointer h5io)
 			int bin=0;
 			if(ea1 >= 0.0 && ea2 >= 0.0 && ea3 >= 0.0 && ea1 <= (m_pi) && ea2 <= (m_pi) && ea3 <= (m_pi))
 			{
-				grains[i].axiseuler1 = ea1;
-				grains[i].axiseuler2 = ea2;
-				grains[i].axiseuler3 = ea3;
+				m_Grains[i]->axiseuler1 = ea1;
+				m_Grains[i]->axiseuler2 = ea2;
+				m_Grains[i]->axiseuler3 = ea3;
 				bin = (ea3bin*18*18)+(ea2bin*18)+(ea1bin);
 				axisodf[bin] = axisodf[bin] + 1.0;
 				totalaxes = totalaxes+1.0;
@@ -2921,18 +2921,18 @@ int GrainGeneratorFunc::volume_stats(H5ReconStatsWriter::Pointer h5io)
   }
   for (int i = 1; i < numgrains; i++)
   {
-    int onedge = grains[i].surfacegrain;
+    int onedge = m_Grains[i]->surfacegrain;
     if (onedge == 0)
     {
       actualgrains++;
-      int vol = grains[i].numvoxels;
+      int vol = m_Grains[i]->numvoxels;
       double voxvol = vol * resx * resy * resz;
       double logvol = log(voxvol);
-      double diam = grains[i].equivdiameter;
+      double diam = m_Grains[i]->equivdiameter;
       double logdiam = log(diam);
-      double I1 = grains[i].radius1;
-      double I2 = grains[i].radius2;
-      double I3 = grains[i].radius3;
+      double I1 = m_Grains[i]->radius1;
+      double I2 = m_Grains[i]->radius2;
+      double I3 = m_Grains[i]->radius3;
       I1 = (15 * I1) / (4 * m_pi);
       I2 = (15 * I2) / (4 * m_pi);
       I3 = (15 * I3) / (4 * m_pi);
@@ -2947,8 +2947,8 @@ int GrainGeneratorFunc::volume_stats(H5ReconStatsWriter::Pointer h5io)
       double bovera = b / a;
       double covera = c / a;
       double coverb = c / b;
-      double schmid = grains[i].schmidfactor;
-      double omega3 = grains[i].omega3;
+      double schmid = m_Grains[i]->schmidfactor;
+      double omega3 = m_Grains[i]->omega3;
       avgvol = avgvol + voxvol;
       avglnvol = avglnvol + logvol;
       avgbovera = avgbovera + bovera;
@@ -2973,7 +2973,7 @@ int GrainGeneratorFunc::volume_stats(H5ReconStatsWriter::Pointer h5io)
       neighborhood[diamint][0]++;
       for (int k = 0; k < 3; k++)
       {
-        int nnum = grains[i].neighbordistfunc[k];
+        int nnum = m_Grains[i]->neighbordistfunc[k];
         neighborhood[diamint][((2 * k) + 1)] = neighborhood[diamint][((2 * k) + 1)] + nnum;
       }
       if (voxvol > maxvol) maxvol = voxvol;
@@ -3027,18 +3027,18 @@ int GrainGeneratorFunc::volume_stats(H5ReconStatsWriter::Pointer h5io)
   double sdomega3 = 0;
   for (int j = 1; j < numgrains; j++)
   {
-    int onedge = grains[j].surfacegrain;
+    int onedge = m_Grains[j]->surfacegrain;
     if (onedge == 0)
     {
-      int vol = grains[j].numvoxels;
+      int vol = m_Grains[j]->numvoxels;
       double voxvol = vol * resx * resy * resz;
       double logvol = log(voxvol);
       double rad_3 = 0.75 * (1 / m_pi) * voxvol;
       double diam = 2 * pow(rad_3, 0.333333333);
       double logdiam = log(diam);
-      double I1 = grains[j].radius1;
-      double I2 = grains[j].radius2;
-      double I3 = grains[j].radius3;
+      double I1 = m_Grains[j]->radius1;
+      double I2 = m_Grains[j]->radius2;
+      double I3 = m_Grains[j]->radius3;
       I1 = (15 * I1) / (4 * m_pi);
       I2 = (15 * I2) / (4 * m_pi);
       I3 = (15 * I3) / (4 * m_pi);
@@ -3053,8 +3053,8 @@ int GrainGeneratorFunc::volume_stats(H5ReconStatsWriter::Pointer h5io)
       double bovera = b / a;
       double covera = c / a;
       double coverb = c / b;
-      double schmid = grains[j].schmidfactor;
-      double omega3 = grains[j].omega3;
+      double schmid = m_Grains[j]->schmidfactor;
+      double omega3 = m_Grains[j]->omega3;
       sdvol = sdvol + ((voxvol - avgvol) * (voxvol - avgvol));
       sdlnvol = sdlnvol + ((logvol - avglnvol) * (logvol - avglnvol));
       sdbovera = sdbovera + ((bovera - avgbovera) * (bovera - avgbovera));
@@ -3072,7 +3072,7 @@ int GrainGeneratorFunc::volume_stats(H5ReconStatsWriter::Pointer h5io)
       svomega3[diamint][2] = svomega3[diamint][2] + ((omega3 - svomega3[diamint][1]) * (omega3 - svomega3[diamint][1]));
       for (int k = 0; k < 3; k++)
       {
-        int nnum = grains[j].neighbordistfunc[k];
+        int nnum = m_Grains[j]->neighbordistfunc[k];
         neighborhood[diamint][((2 * k) + 2)] = neighborhood[diamint][((2 * k) + 2)] + ((neighborhood[diamint][((2 * k) + 1)] - nnum)
             * (neighborhood[diamint][((2 * k) + 1)] - nnum));
       }
@@ -3233,9 +3233,9 @@ void GrainGeneratorFunc::write_eulerangles(const std::string &filename)
   outFile.open(filename.c_str());
   for (int i = 1; i < numgrains; i++)
   {
-    double ea1 = grains[i].euler1;
-    double ea2 = grains[i].euler2;
-    double ea3 = grains[i].euler3;
+    double ea1 = m_Grains[i]->euler1;
+    double ea2 = m_Grains[i]->euler2;
+    double ea3 = m_Grains[i]->euler3;
     outFile << i << " " << ea1 << " " << ea2 << " " << ea3 << endl;
   }
   outFile.close();
@@ -3251,13 +3251,13 @@ void GrainGeneratorFunc::write_graindata(const std::string &filename)
   outFile << numgrains << endl;
   for(int i = 1; i < numgrains; i++)
   {
-	equivdiam = grains[i].equivdiameter;
-	packquality = grains[i].packquality;
-	onsurface = grains[i].surfacegrain;
-	ea1 = grains[i].euler1;
-	ea2 = grains[i].euler2;
-	ea3 = grains[i].euler3;
-	numneighbors = grains[i].numneighbors;
+	equivdiam = m_Grains[i]->equivdiameter;
+	packquality = m_Grains[i]->packquality;
+	onsurface = m_Grains[i]->surfacegrain;
+	ea1 = m_Grains[i]->euler1;
+	ea2 = m_Grains[i]->euler2;
+	ea3 = m_Grains[i]->euler3;
+	numneighbors = m_Grains[i]->numneighbors;
 	outFile << i << "	" << equivdiam << "	" << packquality << "	" << numneighbors << "	" << onsurface << "	" << ea1 << "	" << ea2 << "	" << ea3 << endl;
   }
   outFile.close();
