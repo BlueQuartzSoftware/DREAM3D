@@ -1288,6 +1288,7 @@ int ReconstructionFunc::reorder_grains()
 		  currentgrain++;
 	  }
   }
+  m_Grains.resize(currentgrain);
   find_neighbors();
   return currentgrain;
 }
@@ -3837,6 +3838,10 @@ void ReconstructionFunc::deformation_stats(const std::string &filename)
       sf = m_Grains[gname].schmidfactor;
       sf2 = m_Grains[gname2].schmidfactor;
       sfmm = sf / sf2;
+	  if(sfmm < 0.5 || sfmm > 2)
+	  {
+		int stop = 0;
+	  }	
       avgkm = avgkm + km;
       avggam = avggam + gam;
       avgiq = avgiq + iq;
