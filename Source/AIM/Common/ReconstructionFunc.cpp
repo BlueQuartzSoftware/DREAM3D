@@ -70,13 +70,11 @@ ReconstructionFunc::ReconstructionFunc() :
 // -----------------------------------------------------------------------------
 ReconstructionFunc::~ReconstructionFunc()
 {
-
   delete[] voxels;
   m_Grains.clear();
   graincenters.clear();
   grainmoments.clear();
   m_grainQuats = DoubleArrayType::NullPointer();
-
 }
 
 // -----------------------------------------------------------------------------
@@ -1038,7 +1036,7 @@ int ReconstructionFunc::form_grains()
   m_Grains.resize(goodgraincount);
   goodgraincount = remove_smallgrains(goodgraincount);
   m_Grains.resize(goodgraincount);
-//  m_grainQuats = AIMArray<double >::NullPointer(); // Clean up the array to release some memory
+  m_grainQuats = AIMArray<double >::NullPointer(); // Clean up the array to release some memory
   return goodgraincount;
 }
 
@@ -2092,13 +2090,13 @@ void ReconstructionFunc::find_neighbors()
   for (int i = 0; i < numgrains; i++)
   {
     m_Grains[i].numneighbors = 0;
-	if(m_Grains[i].neighborlist == NULL) m_Grains[i].neighborlist = new std::vector<int >(nListSize,-1);
-	else m_Grains[i].neighborlist->resize(nListSize,-1);
-	if(m_Grains[i].neighborsurfarealist == NULL) m_Grains[i].neighborsurfarealist = new std::vector<double >(nListSize,1);
-	else m_Grains[i].neighborsurfarealist->resize(nListSize,1);
+    if (m_Grains[i].neighborlist != NULL) { delete m_Grains[i].neighborlist; }
+    m_Grains[i].neighborlist = new std::vector<int>(nListSize,-1);
+    if (m_Grains[i].neighborsurfarealist != NULL) { delete m_Grains[i].neighborsurfarealist; }
+    m_Grains[i].neighborsurfarealist = new std::vector<double>(nListSize,-1);
     for(int j=0;j<3;j++)
 	{
-		m_Grains[i].neighbordistfunc[j] = 0;
+		  m_Grains[i].neighbordistfunc[j] = 0;
 	}
   }
   for (int j = 0; j < (xpoints * ypoints * zpoints); j++)
@@ -2158,7 +2156,7 @@ void ReconstructionFunc::find_neighbors()
         = -1, voxels[j].nearestneighbor[1] = -1, voxels[j].nearestneighbor[2] = -1;
   }
   delete[] gnames;
-  vector<int >* nlistcopy;
+  vector<int> nlistcopy;
   for (int i = 1; i < numgrains; i++)
   {
     vector<int >::iterator newend;
@@ -2182,24 +2180,27 @@ void ReconstructionFunc::find_neighbors()
     }
     m_Grains[i].numneighbors = numneighs;
   }
+
   if (m_Grains[1].equivdiameter != 0)
   {
     for (int i = 1; i < numgrains; i++)
     {
-      if (m_Grains[i].active == 1)
+      Grain& grain = m_Grains[i];
+      if (grain.active == 1)
       {
-        x = m_Grains[i].centroidx;
-        y = m_Grains[i].centroidy;
-        z = m_Grains[i].centroidz;
-        diam = m_Grains[i].equivdiameter;
+        x = grain.centroidx;
+        y = grain.centroidy;
+        z = grain.centroidz;
+        diam = grain.equivdiameter;
         for (int j = i; j < numgrains; j++)
         {
-          if (m_Grains[j].active == 1)
+          Grain& grain_j = m_Grains[j];
+          if (grain_j.active == 1)
           {
-            xn = m_Grains[j].centroidx;
-            yn = m_Grains[j].centroidy;
-            zn = m_Grains[j].centroidz;
-            diam2 = m_Grains[j].equivdiameter;
+            xn = grain_j.centroidx;
+            yn = grain_j.centroidy;
+            zn = grain_j.centroidz;
+            diam2 = grain_j.equivdiameter;
             xdist = fabs(x - xn);
             ydist = fabs(y - yn);
             zdist = fabs(z - zn);
@@ -2208,13 +2209,13 @@ void ReconstructionFunc::find_neighbors()
             dist2 = dist;
             dist_int = int(dist / diam);
             dist2_int = int(dist2 / diam2);
-            if (dist < 3)
+            if (dist_int < 3)
             {
-              m_Grains[i].neighbordistfunc[dist_int]++;
+              grain.neighbordistfunc[dist_int]++;
             }
-            if (dist2 < 3)
+            if (dist2_int < 3)
             {
-              m_Grains[j].neighbordistfunc[dist2_int]++;
+              grain_j.neighbordistfunc[dist2_int]++;
             }
           }
         }
@@ -3073,12 +3074,16 @@ void ReconstructionFunc::measure_misorientations(H5ReconStatsWriter::Pointer h5i
   int nummisobins = 0;
   if (crystruct == AIM::Reconstruction::Cubic) nummisobins = 18 * 18 * 18;
   if (crystruct == AIM::Reconstruction::Hexagonal) nummisobins = 36 * 36 * 12;
-  double* misobin = new double[nummisobins];
+  DoubleArrayType::Pointer misobinPtr = DoubleArrayType::CreateArray(nummisobins);
+  double* misobin = misobinPtr->getPointer(0);
   double microbin[10];
+  for(size_t e = 0; e < 10; ++e)
+  {
+    microbin[e] = 0.0;
+  }
   for (int e = 0; e < nummisobins; e++)
   {
-    misobin[e] = 0;
-    if (e < 10) microbin[e] = 0;
+    misobin[e] = 0.0;
   }
   int nname;
   double microcount = 0.0;

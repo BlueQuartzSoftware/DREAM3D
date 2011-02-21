@@ -37,6 +37,12 @@ class AIMCOMMON_EXPORT Grain
     virtual ~Grain();
     Grain& operator=(const Grain&);
 
+    std::vector<int>* neighborlist;
+    std::vector<int>* voxellist;
+    std::vector<double>* ellipfunclist;
+    std::vector<double>* misorientationlist;
+    std::vector<double>* neighborsurfarealist;
+    std::vector<std::vector<int> > neighbordistfunclist;
 
     int nucleus;
     int active;
@@ -82,12 +88,7 @@ class AIMCOMMON_EXPORT Grain
     double lowanglefraction;
     double avg_quat[5];
     int neighbordistfunc[3];
-    std::vector<int>* neighborlist;
-    std::vector<int>* voxellist;
-    std::vector<double>* ellipfunclist;
-    std::vector<double>* misorientationlist;
-    std::vector<double>* neighborsurfarealist;
-    std::vector<std::vector<int > > neighbordistfunclist;
+
 };
 
 #endif /* GRAINS_H_ */
