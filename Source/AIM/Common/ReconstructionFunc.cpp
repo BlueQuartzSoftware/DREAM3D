@@ -2176,6 +2176,9 @@ void ReconstructionFunc::find_neighbors()
         if (k == 4 && row == (ypoints - 1)) good = 0;
         if (k == 2 && column == 0) good = 0;
         if (k == 3 && column == (xpoints - 1)) good = 0;
+        //CHECKME: Mike is this the correct thing to do here or should there be a fix so the correct
+        // grain numbers are stored in the gnames array?
+        if (grain >= m_Grains.size() ) good = 0; // We may be stepping past our array size 
         if (good == 1 && gnames[neighbor] != grain && gnames[neighbor] > 0)
         {
 		      voxels[j].neighborlist->at(onsurf) = gnames[neighbor];
