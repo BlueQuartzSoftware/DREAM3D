@@ -235,7 +235,7 @@ void Reconstruction::compute()
     m->numgrains = m->form_grains();
 	CHECK_FOR_CANCELED(ReconstructionFunc, form_grains)
 
-	progressMessage(AIM_STRING("Assigning Bad Points"), 28);
+	  progressMessage(AIM_STRING("Assigning Bad Points"), 28);
     m->assign_badpoints();
     CHECK_FOR_CANCELED(ReconstructionFunc, assign_badpoints)
   }
@@ -252,6 +252,7 @@ void Reconstruction::compute()
   progressMessage(AIM_STRING("Reordering Grains"), 37);
   m->numgrains = m->reorder_grains();
   CHECK_FOR_CANCELED(ReconstructionFunc, renumber_grains)
+
 
   progressMessage(AIM_STRING("Finding Reference Orientations For Grains"), 40);
   m->find_grain_and_kernel_misorientations();
@@ -282,7 +283,7 @@ void Reconstruction::compute()
     m->merge_colonies();
     CHECK_FOR_CANCELED(ReconstructionFunc, merge_colonies)
 
-	progressMessage(AIM_STRING("Renumbering Grains"), 53);
+	  progressMessage(AIM_STRING("Renumbering Grains"), 53);
     m->characterize_colonies();
     CHECK_FOR_CANCELED(ReconstructionFunc, characterize_colonies)
   }
@@ -310,6 +311,7 @@ void Reconstruction::compute()
   progressMessage(AIM_STRING("Refinding Neighbors"), 63);
   m->find_neighbors();
   CHECK_FOR_CANCELED(ReconstructionFunc, find_neighbors)
+
 
   progressMessage(AIM_STRING("Finding Euclidean Distance Maps"), 65);
   m->find_euclidean_map();
@@ -359,6 +361,9 @@ void Reconstruction::compute()
 
   progressMessage(AIM_STRING("Writing VTK Down Sampled File"), 93);
   if (m_WriteDownSampledFile) {outWriter->writeDownSampledVizFile(m.get(), reconDSVisFile);}
+
+
+
 
   /** ******* End VTK Visualization File Writing Section ****** */
   CHECK_FOR_CANCELED(ReconstructionFunc, vtk_viz_files)
