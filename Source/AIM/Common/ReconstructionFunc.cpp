@@ -1228,17 +1228,20 @@ int ReconstructionFunc::reorder_grains()
         col = currentpoint % xpoints;
         row = (currentpoint / xpoints) % ypoints;
         plane = currentpoint / (xpoints * ypoints);
-		for (int k = 0; k < 5; k++)
+		if(voxels[currentpoint].unassigned == 0)
 		{
-			q1[k] = voxels[nucleus].quat[k];
-			q2[k] = voxels[currentpoint].quat[k];
-		}
-		if (crystruct == AIM::Reconstruction::Cubic) MisorientationCalculations::getNearestQuatCubic(q1,q2);
-		if (crystruct == AIM::Reconstruction::Hexagonal) MisorientationCalculations::getNearestQuatHexagonal(q1,q2);
-		for (int k = 0; k < 5; k++)
-		{
-			voxels[currentpoint].quat[k] = q2[k];
-			m_Grains[currentgrain].avg_quat[k] = m_Grains[currentgrain].avg_quat[k] + voxels[currentpoint].quat[k];
+			for (int k = 0; k < 5; k++)
+			{
+				q1[k] = voxels[nucleus].quat[k];
+				q2[k] = voxels[currentpoint].quat[k];
+			}
+			if (crystruct == AIM::Reconstruction::Cubic) MisorientationCalculations::getNearestQuatCubic(q1,q2);
+			if (crystruct == AIM::Reconstruction::Hexagonal) MisorientationCalculations::getNearestQuatHexagonal(q1,q2);
+			for (int k = 0; k < 5; k++)
+			{
+				voxels[currentpoint].quat[k] = q2[k];
+				m_Grains[currentgrain].avg_quat[k] = m_Grains[currentgrain].avg_quat[k] + voxels[currentpoint].quat[k];
+			}
 		}
         for (int k = 0; k < 26; k++)
         {
@@ -1560,6 +1563,10 @@ void ReconstructionFunc::find_grain_and_kernel_misorientations()
          w = MisorientationCalculations::getMisoQuatCubic(q1, q2, n1, n2, n3);
       }
       voxels[i].grainmisorientation = w;
+	  if(w > 20)
+	  {
+		int stop = 0;
+	  }
     }
     if (gnames[i] == 0 || unassigned[i] == 1)
     {
