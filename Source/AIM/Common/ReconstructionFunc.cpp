@@ -1022,15 +1022,15 @@ int ReconstructionFunc::form_grains()
   for (int i = 0; i < totalpoints; ++i)
   {
     mergedname = mergedgnames[gnames[i]];
-	while(mergedgnames[mergedname] != mergedname)
-	{
-		mergedname = mergedgnames[mergedname];
-	}
-	newname = newgnames[mergedname];
-	if(newname > goodgraincount)
-	{
-		int stop = 0;
-	}
+	  while(mergedgnames[mergedname] != mergedname)
+	  {
+		  mergedname = mergedgnames[mergedname];
+	  }
+	  newname = newgnames[mergedname];
+	  if(newname > goodgraincount)
+	  {
+		  int stop = 0;
+	  }
     voxels[i].grainname = newname;
   }
   m_Grains.resize(goodgraincount);
@@ -2162,7 +2162,7 @@ void ReconstructionFunc::find_neighbors()
   {
     vector<int >::iterator newend;
     sort(m_Grains[i].neighborlist->begin(), m_Grains[i].neighborlist->end());
-    nlistcopy.assign(m_Grains[i].neighborlist->begin(), m_Grains[i].neighborlist->end() );
+    nlistcopy->assign(m_Grains[i].neighborlist->begin(), m_Grains[i].neighborlist->end() );
     newend = unique(m_Grains[i].neighborlist->begin(), m_Grains[i].neighborlist->end());
     m_Grains[i].neighborlist->erase(newend, m_Grains[i].neighborlist->end());
     m_Grains[i].neighborlist->erase(std::remove(m_Grains[i].neighborlist->begin(), m_Grains[i].neighborlist->end(), -1), m_Grains[i].neighborlist->end());
@@ -2171,7 +2171,7 @@ void ReconstructionFunc::find_neighbors()
     for (int j = 0; j < numneighs; j++)
     {
       int neigh = m_Grains[i].neighborlist->at(j);
-      int number = std::count(nlistcopy.begin(), nlistcopy.end(), neigh);
+      int number = std::count(nlistcopy->begin(), nlistcopy->end(), neigh);
       double area = number * resx * resx;
       m_Grains[i].neighborsurfarealist->at(j) = area;
       if (m_Grains[i].surfacegrain == 0 && (neigh > i || m_Grains[neigh].surfacegrain == 1))
@@ -2224,6 +2224,7 @@ void ReconstructionFunc::find_neighbors()
     }
   }
 }
+
 void ReconstructionFunc::find_centroids()
 {
   //  int count = 0;
