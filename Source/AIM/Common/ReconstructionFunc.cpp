@@ -2156,7 +2156,7 @@ void ReconstructionFunc::find_neighbors()
         = -1, voxels[j].nearestneighbor[1] = -1, voxels[j].nearestneighbor[2] = -1;
   }
   delete[] gnames;
-  vector<int> nlistcopy;
+  vector<int>* nlistcopy;
   for (int i = 1; i < numgrains; i++)
   {
     vector<int >::iterator newend;
@@ -3093,19 +3093,19 @@ void ReconstructionFunc::measure_misorientations(H5ReconStatsWriter::Pointer h5i
   {
     microcount = 0;
     microcount = 0.0;
-    q1[1] = m_Grains[i].avg_quat[1];
-    q1[2] = m_Grains[i].avg_quat[2];
-    q1[3] = m_Grains[i].avg_quat[3];
-    q1[4] = m_Grains[i].avg_quat[4];
+	q1[1] = m_Grains[i].avg_quat[1]/m_Grains[i].avg_quat[0];
+    q1[2] = m_Grains[i].avg_quat[2]/m_Grains[i].avg_quat[0];
+    q1[3] = m_Grains[i].avg_quat[3]/m_Grains[i].avg_quat[0];
+    q1[4] = m_Grains[i].avg_quat[4]/m_Grains[i].avg_quat[0];
     int size = 0;
 	m_Grains[i].misorientationlist = new std::vector<double >(m_Grains[i].neighborlist->size()*3, -1.0);
 	for (int j = 0; j < m_Grains[i].neighborlist->size(); j++)
     {
       nname = m_Grains[i].neighborlist->at(j);
-      q2[1] = m_Grains[nname].avg_quat[1];
-      q2[2] = m_Grains[nname].avg_quat[2];
-      q2[3] = m_Grains[nname].avg_quat[3];
-      q2[4] = m_Grains[nname].avg_quat[4];
+      q2[1] = m_Grains[nname].avg_quat[1]/m_Grains[nname].avg_quat[0];
+      q2[2] = m_Grains[nname].avg_quat[2]/m_Grains[nname].avg_quat[0];
+      q2[3] = m_Grains[nname].avg_quat[3]/m_Grains[nname].avg_quat[0];
+      q2[4] = m_Grains[nname].avg_quat[4]/m_Grains[nname].avg_quat[0];
       if (crystruct == AIM::Reconstruction::Hexagonal)
       {
           w = MisorientationCalculations::getMisoQuatHexagonal(q1, q2, n1, n2, n3);
@@ -3149,7 +3149,6 @@ void ReconstructionFunc::measure_misorientations(H5ReconStatsWriter::Pointer h5i
   }
   h5io->writeMisorientationBinsData(misobin, nummisobins);
   h5io->writeMicroTextureData(microbin, 10, numgrains);
-  delete[] misobin;
 }
 
 void ReconstructionFunc::find_colors()
