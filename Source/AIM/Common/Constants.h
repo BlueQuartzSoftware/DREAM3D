@@ -18,7 +18,12 @@
 #include "AIM/Common/AIMCommonConfiguration.h"
 
 #include <string>
+#include <vector>
+#include <boost/shared_ptr.hpp>
 
+typedef boost::shared_ptr<std::vector<int> >    IntVectorType;
+typedef boost::shared_ptr<std::vector<double> > DoubleVectorType;
+typedef boost::shared_ptr<std::vector<size_t> > SizeTVectorType;
 
 
 

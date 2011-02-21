@@ -18,7 +18,12 @@
 
 #include <vector>
 
+#include "MXA/Common/MXASetGetMacros.h"
+
 #include "AIM/Common/AIMCommonConfiguration.h"
+#include "AIM/Common/Constants.h"
+
+
 
 /**
  * @class Grain Grain.h AIM/Common/Grain.h
@@ -31,17 +36,28 @@ class AIMCOMMON_EXPORT Grain
 {
 
   public:
-    Grain();
-    Grain(const Grain&);
- //   Grain(Grain& grain);
-    virtual ~Grain();
-    Grain& operator=(const Grain&);
+    MXA_SHARED_POINTERS(Grain);
+    MXA_STATIC_NEW_MACRO(Grain);
+    MXA_TYPE_MACRO(Grain);
 
-    std::vector<int>* neighborlist;
+  protected:
+    Grain();
+
+ //   Grain(const Grain&);
+ //   Grain(Grain& grain);
+  public:
+    virtual ~Grain();
+
+ //   Grain& operator=(const Grain&);
+
+    IntVectorType     neighborlist;
+    DoubleVectorType  neighborsurfarealist;
+
+   // std::vector<int>* neighborlist;
     std::vector<int>* voxellist;
     std::vector<double>* ellipfunclist;
     std::vector<double>* misorientationlist;
-    std::vector<double>* neighborsurfarealist;
+  //  std::vector<double>* neighborsurfarealist;
     std::vector<std::vector<int> > neighbordistfunclist;
 
     int nucleus;
@@ -89,6 +105,9 @@ class AIMCOMMON_EXPORT Grain
     double avg_quat[5];
     int neighbordistfunc[3];
 
+  private:
+    Grain(const Grain&); // Copy Constructor Not Implemented
+    void operator=(const Grain&); // Operator '=' Not Implemented
 };
 
 #endif /* GRAINS_H_ */

@@ -59,14 +59,16 @@ radius2(0.0),
 radius3(0.0),
 lowanglefraction(0.0)
 {
-  neighborlist = NULL; //new std::vector<int>;
+  neighborlist = IntVectorType(new std::vector<int>(0) );
+  neighborsurfarealist = DoubleVectorType(new std::vector<double>(0) );
+
   voxellist = NULL; //new std::vector<int>;
   ellipfunclist = NULL; //new std::vector<double>;
   misorientationlist = NULL; //new std::vector<double>;
-  neighborsurfarealist = NULL; //new std::vector<double>;
+
 }
 
-
+#if 0
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -256,6 +258,7 @@ Grain& Grain::operator=(const Grain& grain)
   }
   return *this;
 }
+#endif
 
 // -----------------------------------------------------------------------------
 //
@@ -263,6 +266,7 @@ Grain& Grain::operator=(const Grain& grain)
 Grain::~Grain()
 {
 
+#if 0
   if (NULL != neighborlist)
   {
     delete neighborlist;
@@ -283,6 +287,8 @@ Grain::~Grain()
   {
     delete neighborsurfarealist;
   }
+#endif
+
 }
 
 

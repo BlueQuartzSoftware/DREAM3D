@@ -91,7 +91,7 @@ int ReconstructionVTKWriter::write##name##VizFile(ReconstructionFunc* r, const s
   fprintf(f, "LOOKUP_TABLE default\n");\
   for (size_t i = 0; i < total; i++) {\
     if(i%20 == 0 && i > 0) { fprintf(f, "\n");}\
-    fprintf(f, "%f ", r->m_Grains[r->voxels[i].grainname].var);\
+    fprintf(f, "%f ", r->m_Grains[r->voxels[i].grainname]->var);\
   }\
   fclose(f);\
   return 0;\
@@ -148,7 +148,7 @@ int ReconstructionVTKWriter::writeVisualizationFile(ReconstructionFunc* r, const
         fprintf(f, "\n");
       }
       grainname = r->voxels[i].grainname;
-      fprintf(f, "%d ", r->m_Grains[grainname].gottwinmerged);
+      fprintf(f, "%d ", r->m_Grains[grainname]->gottwinmerged);
     }
   }
 

@@ -27,7 +27,7 @@
 #include <AIM/Reconstruction/Reconstruction.h>
 
 
-#define RECONSTRUCTION_MANUAL_DEBUG 0
+#define RECONSTRUCTION_MANUAL_DEBUG 1
 
 #define CHECK_ARG(var, mandatory)\
   if (vm.count(#var) > 1) { mxa_log << logTime() << "Multiple Occurances for Parameter " << #var << std::endl; }\
@@ -159,8 +159,8 @@ int main(int argc, char **argv)
       MXADir::mkdir("/tmp/2PercentStrain", true);
     }
 #endif
-    m_Reconstruction->setZStartIndex(10175);
-    m_Reconstruction->setZEndIndex(10225);
+    m_Reconstruction->setZStartIndex(10112);
+    m_Reconstruction->setZEndIndex(10315);
     m_Reconstruction->setCrystalStructure(AIM::Reconstruction::Cubic);
     m_Reconstruction->setAlignmentMethod(AIM::Reconstruction::OuterBoundary);
     m_Reconstruction->setMinAllowedGrainSize(10);
