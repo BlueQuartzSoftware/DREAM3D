@@ -77,9 +77,6 @@ MisorientationCalculations::~MisorientationCalculations()
 {
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 double MisorientationCalculations::getMisoQuatCubic(double q1[5],double q2[5],double &n1,double &n2,double &n3)
 {
   double wmin=9999999.0; //,na,nb,nc;
@@ -236,9 +233,6 @@ double MisorientationCalculations::getMisoQuatCubic(double q1[5],double q2[5],do
   return wmin;
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 double MisorientationCalculations::getMisoQuatHexagonal(double q1[5],double q2[5],double &n1,double &n2,double &n3)
 {
   double wmin = 9999999; //,na,nb,nc;
@@ -297,9 +291,6 @@ double MisorientationCalculations::getMisoQuatHexagonal(double q1[5],double q2[5
   return wmin;
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void MisorientationCalculations::getFZRodCubic(double &r1,double &r2, double &r3)
 {
 	double rodsym[24][3] = {{0,0,0},
@@ -351,20 +342,89 @@ void MisorientationCalculations::getFZRodCubic(double &r1,double &r2, double &r3
 	r3 = r3min;
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
+void MisorientationCalculations::getNearestQuatCubic(double *q1, double *q2)
+{
+	double dist = 0;
+	double smallestdist = 1000000;
+	double qc[5];
+	double qmax[5];
+	for(int i=0;i<24;i++)
+	{
+	    AIM::Quaternions::Cubic_MultiplyByUnitQuaterion(q2, i, qc);
+		dist = 2.0*(1-(qc[4]*q1[4]+qc[1]*q1[1]+qc[2]*q1[2]+qc[3]*q1[3]));
+		if(dist < smallestdist)
+		{
+			smallestdist = dist;
+			qmax[0] = 1.0;
+			qmax[1] = qc[1];
+			qmax[2] = qc[2];
+			qmax[3] = qc[3];
+			qmax[4] = qc[4];
+		}
+	}
+	q2[0] = 1.0;
+	q2[1] = qmax[1];
+	q2[2] = qmax[2];
+	q2[3] = qmax[3];
+	q2[4] = qmax[4];
+	if(q2[4] < 0)
+	{
+		q2[0] = 1.0;
+		q2[1] = -q2[1];
+		q2[2] = -q2[2];
+		q2[3] = -q2[3];
+		q2[4] = -q2[4];
+	}
+}
+
+void MisorientationCalculations::getNearestQuatHexagonal(double *q1, double *q2)
+{
+	double dist = 0;
+	double smallestdist = 1000000;
+	double qc[5];
+	double qmax[5];
+	for(int i=0;i<24;i++)
+	{
+	    AIM::Quaternions::Hex_MultiplyByUnitQuaterion(q2, i, qc);
+		dist = 2.0*(1-(qc[4]*q1[4]+qc[1]*q1[1]+qc[2]*q1[2]+qc[3]*q1[3]));
+		if(dist < smallestdist)
+		{
+			smallestdist = dist;
+			qmax[0] = 1.0;
+			qmax[1] = qc[1];
+			qmax[2] = qc[2];
+			qmax[3] = qc[3];
+			qmax[4] = qc[4];
+		}
+	}
+	q2[0] = 1.0;
+	q2[1] = qmax[1];
+	q2[2] = qmax[2];
+	q2[3] = qmax[3];
+	q2[4] = qmax[4];
+	if(q2[4] < 0)
+	{
+		q2[0] = 1.0;
+		q2[1] = -q2[1];
+		q2[2] = -q2[2];
+		q2[3] = -q2[3];
+		q2[4] = -q2[4];
+	}
+}
+
 void MisorientationCalculations::getFZQuatCubic(double *qr)
 {
-	double max = 0;
+	double dist = 0;
+	double smallestdist = 1000000;
 	double qc[5];
 	double qmax[5];
 	for(int i=0;i<24;i++)
 	{
 	    AIM::Quaternions::Cubic_MultiplyByUnitQuaterion(qr, i, qc);
-		if(fabs(qc[4]) > max)
+		dist = qc[1]*qc[1]+qc[2]*qc[2]+qc[3]*qc[3];
+		if(dist < smallestdist)
 		{
-			max = fabs(qc[4]);
+			smallestdist = dist;
 			qmax[0] = 1.0;
 			qmax[1] = qc[1];
 			qmax[2] = qc[2];
@@ -387,19 +447,19 @@ void MisorientationCalculations::getFZQuatCubic(double *qr)
 	}
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void MisorientationCalculations::getFZQuatHexagonal(double *qr)
 {
-	double max = 0;
+	double dist = 0;
+	double smallestdist = 1000000;
 	double qc[5];
 	double qmax[5];
 	for(int i=0;i<12;i++)
 	{
 	    AIM::Quaternions::Hex_MultiplyByUnitQuaterion(qr, i, qc);
-		if(fabs(qc[4]) > max)
+		dist = qc[1]*qc[1]+qc[2]*qc[2]+qc[3]*qc[3];
+		if(dist < smallestdist)
 		{
+			smallestdist = dist;
 			qmax[0] = 1.0;
 			qmax[1] = qc[1];
 			qmax[2] = qc[2];
@@ -422,11 +482,7 @@ void MisorientationCalculations::getFZQuatHexagonal(double *qr)
 	}
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void MisorientationCalculations::initializeDims( AIM::Reconstruction::CrystalStructure crystruct,
-    double &dim1, double &dim2, double &dim3, int &numbins)
+void MisorientationCalculations::initializeDims( AIM::Reconstruction::CrystalStructure crystruct, double &dim1, double &dim2, double &dim3, int &numbins)
 {
   if(crystruct == AIM::Reconstruction::Cubic)
     {
@@ -444,9 +500,6 @@ void MisorientationCalculations::initializeDims( AIM::Reconstruction::CrystalStr
     }
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 int MisorientationCalculations::getMisoBinCubic(double n1, double n2, double n3)
 {
 	double dim1 = CubicDim1InitValue;
@@ -461,9 +514,6 @@ int MisorientationCalculations::getMisoBinCubic(double n1, double n2, double n3)
 	return ((18*18*miso3bin)+(18*miso2bin)+miso1bin);
 }
 
-// -----------------------------------------------------------------------------
-// same as GrainGeneratorFunc::initializeDims
-// -----------------------------------------------------------------------------
 int MisorientationCalculations::getMisoBinHexagonal(double n1, double n2, double n3)
 {
 	double dim1 = HexDim1InitValue;
@@ -479,13 +529,7 @@ int MisorientationCalculations::getMisoBinHexagonal(double n1, double n2, double
 }
 
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void MisorientationCalculations::calculateMisorientationAngles(double &w,
-                                                       double &miso1,
-                                                       double &miso2,
-                                                       double &miso3)
+void MisorientationCalculations::calculateMisorientationAngles(double &w, double &miso1, double &miso2, double &miso3)
 {
   double degtorad = m_pi / 180.0;
   double denom;
@@ -509,14 +553,7 @@ void MisorientationCalculations::calculateMisorientationAngles(double &w,
 
 
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-size_t MisorientationCalculations::calculateHexOdfBin( double q1[5],
-                                           double qref[5],
-                                           double dim1,
-                                           double dim2,
-                                           double dim3)
+size_t MisorientationCalculations::calculateHexOdfBin( double q1[5], double qref[5], double dim1, double dim2, double dim3)
 {
   double w;
   double n1;
@@ -552,14 +589,7 @@ size_t MisorientationCalculations::calculateHexOdfBin( double q1[5],
   return g1odfbin;
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-size_t MisorientationCalculations::calculateCubicOdfBin( double q1[5],
-                                               double qref[5],
-                                               double dim1,
-                                               double dim2,
-                                               double dim3)
+size_t MisorientationCalculations::calculateCubicOdfBin( double q1[5], double qref[5], double dim1, double dim2, double dim3)
 {
   double w;
   double n1;

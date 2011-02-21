@@ -133,7 +133,8 @@ int ReconstructionVTKWriter::writeVisualizationFile(ReconstructionFunc* r, const
   size_t total = r->xpoints * r->ypoints * r->zpoints;
   WRITE_VTK_GRAIN_IDS(r)
 
-  WRITE_VTK_SCALARS_FROM_VOXEL(r, SurfaceVoxel, float, nearestneighbordistance[0])
+  WRITE_VTK_SCALARS_FROM_VOXEL(r, KAM, float, kernelmisorientation)
+  WRITE_VTK_SCALARS_FROM_VOXEL(r, GAM, float, grainmisorientation)
 
   if (r->mergetwinsoption == 1)
   {

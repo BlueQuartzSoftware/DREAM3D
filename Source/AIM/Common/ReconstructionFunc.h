@@ -154,7 +154,7 @@ class AIMCOMMON_EXPORT ReconstructionFunc
     void assign_badpoints();
     void find_neighbors();
     void merge_containedgrains();
-    int renumber_grains();
+    int reorder_grains();
     int remove_smallgrains(int numgrains);
 	void fillin_sample();
     void cleanup_data();

@@ -249,8 +249,8 @@ void Reconstruction::compute()
   m->merge_containedgrains();
   CHECK_FOR_CANCELED(ReconstructionFunc, merge_containedgrains)
 
-  progressMessage(AIM_STRING("Renumbering Grains"), 37);
-  m->numgrains = m->renumber_grains();
+  progressMessage(AIM_STRING("Reordering Grains"), 37);
+  m->numgrains = m->reorder_grains();
   CHECK_FOR_CANCELED(ReconstructionFunc, renumber_grains)
 
   progressMessage(AIM_STRING("Finding Reference Orientations For Grains"), 40);
