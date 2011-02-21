@@ -41,7 +41,7 @@ unassigned(0)
 // -----------------------------------------------------------------------------
 Voxel::~Voxel()
 {
-#if 0
+#if 1
   if (NULL != grainlist) { delete grainlist; grainlist = NULL;}
   if (NULL != ellipfunclist) { delete ellipfunclist; ellipfunclist = NULL;}
   if (NULL != neighborlist) { delete neighborlist; neighborlist = NULL;}

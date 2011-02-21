@@ -162,14 +162,14 @@ int main(int argc, char **argv)
     m_Reconstruction->setWriteHDF5GrainFile(true);
 
 
-    m_Reconstruction->setH5AngFile("C:\\Data\\12_strain.h5ang");
-    m_Reconstruction->setZStartIndex(10074);
-    m_Reconstruction->setZEndIndex(10099);
+    m_Reconstruction->setH5AngFile("C:\\Data\\2PercentStrain.h5ang");
+    m_Reconstruction->setZStartIndex(10175);
+    m_Reconstruction->setZEndIndex(10225);
     m_Reconstruction->setCrystalStructure(AIM::Reconstruction::Cubic);
     m_Reconstruction->setAlignmentMethod(AIM::Reconstruction::OuterBoundary);
-    m_Reconstruction->setMinAllowedGrainSize(8);
+    m_Reconstruction->setMinAllowedGrainSize(10);
     m_Reconstruction->setMisorientationTolerance(5.0);
-    m_Reconstruction->setMinSeedImageQuality(50);
+    m_Reconstruction->setMinSeedImageQuality(900);
     m_Reconstruction->setMinSeedConfidence(0.1);
     m_Reconstruction->setOutputDirectory("C:\\Data\\ReconstructionOutput");
 
