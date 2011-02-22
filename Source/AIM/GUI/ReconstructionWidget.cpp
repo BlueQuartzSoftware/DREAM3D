@@ -432,6 +432,9 @@ void ReconstructionWidget::on_rec_GoBtn_clicked()
   m_Reconstruction->setCrystalStructure(crystruct);
   m_Reconstruction->setAlignmentMethod(alignmeth);
 
+  Ang::Orientation orientation = static_cast<Ang::Orientation>(rec_Orientation->currentIndex());
+  m_Reconstruction->setOrientation(orientation);
+
   m_Reconstruction->setMinAllowedGrainSize(rec_MinAllowedGrainSize->value());
   m_Reconstruction->setMisorientationTolerance(rec_MisOrientationTolerance->value());
   m_Reconstruction->setMinSeedImageQuality(rec_MinImageQuality->value());
