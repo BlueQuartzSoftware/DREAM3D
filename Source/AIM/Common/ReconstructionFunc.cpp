@@ -1165,7 +1165,7 @@ void ReconstructionFunc::assign_badpoints()
       if (grainname <= -1 && neighbor >= 0)
       {
         gnames[j] = neighbor;
-		m_Grains[neighbor].numvoxels++;
+		m_Grains[neighbor]->numvoxels++;
       }
     }
   }
@@ -1185,9 +1185,9 @@ void ReconstructionFunc::merge_containedgrains()
     int grainname = voxels[i].grainname;
     if (m_Grains[grainname]->numneighbors == 1)
     {
-	  m_Grains[grainname].gotcontainedmerged = 1;
-      voxels[i].grainname = m_Grains[grainname].neighborlist->at(0);
-	  m_Grains[m_Grains[grainname].neighborlist->at(0)].numvoxels++;
+	  m_Grains[grainname]->gotcontainedmerged = 1;
+      voxels[i].grainname = m_Grains[grainname]->neighborlist->at(0);
+	  m_Grains[m_Grains[grainname]->neighborlist->at(0)]->numvoxels++;
       voxels[i].unassigned = 1;
     }
   }
@@ -1236,7 +1236,7 @@ int ReconstructionFunc::reorder_grains()
   neighbors[25] = (xpoints * ypoints) + xpoints + 1;
   for (int i = 1; i < numgrains; i++)
   {
-	  m_Grains[i].nucleus = -1;
+	  m_Grains[i]->nucleus = -1;
   }
   for (int i = 0; i < (xpoints * ypoints * zpoints); i++)
   {
@@ -1249,7 +1249,7 @@ int ReconstructionFunc::reorder_grains()
   }
   for (int i = 1; i < numgrains; i++)
   {
-	  if(m_Grains[i].nucleus != -1)
+	  if(m_Grains[i]->nucleus != -1)
 	  {
 	      size = 0;
 	      int nucleus = m_Grains[i]->nucleus;
@@ -1281,7 +1281,7 @@ int ReconstructionFunc::reorder_grains()
 				for (int k = 0; k < 5; k++)
 				{
 					voxels[currentpoint].quat[k] = q2[k];
-					m_Grains[currentgrain].avg_quat[k] = m_Grains[currentgrain].avg_quat[k] + voxels[currentpoint].quat[k];
+					m_Grains[currentgrain]->avg_quat[k] = m_Grains[currentgrain]->avg_quat[k] + voxels[currentpoint].quat[k];
 				}
 			}
 			for (int k = 0; k < 26; k++)
@@ -1331,7 +1331,7 @@ int ReconstructionFunc::reorder_grains()
 	  }
   }
   if (currentgrain <= m_Grains.size())
-  {  
+  {
 	  m_Grains.resize(currentgrain);
   }
   else
@@ -2178,7 +2178,7 @@ void ReconstructionFunc::find_neighbors()
         if (k == 3 && column == (xpoints - 1)) good = 0;
         //CHECKME: Mike is this the correct thing to do here or should there be a fix so the correct
         // grain numbers are stored in the gnames array?
-        if (grain >= m_Grains.size() ) good = 0; // We may be stepping past our array size 
+        if (grain >= m_Grains.size() ) good = 0; // We may be stepping past our array size
         if (good == 1 && gnames[neighbor] != grain && gnames[neighbor] > 0)
         {
 		      voxels[j].neighborlist->at(onsurf) = gnames[neighbor];
@@ -3270,10 +3270,10 @@ void ReconstructionFunc::find_schmids()
 //      q1[1] = sin((g1ea2 / 2.0)) * sin(((g1ea1 - g1ea3) / 2.0));
 //      q1[2] = cos((g1ea2 / 2.0)) * sin(((g1ea1 + g1ea3) / 2.0));
 //      q1[3] = cos((g1ea2 / 2.0)) * cos(((g1ea1 + g1ea3) / 2.0));
-	  q1[0] = m_Grains[i].avg_quat[1]/m_Grains[i].avg_quat[0];
-	  q1[1] = m_Grains[i].avg_quat[2]/m_Grains[i].avg_quat[0];
-	  q1[2] = m_Grains[i].avg_quat[3]/m_Grains[i].avg_quat[0];
-	  q1[3] = m_Grains[i].avg_quat[4]/m_Grains[i].avg_quat[0];
+	  q1[0] = m_Grains[i]->avg_quat[1]/m_Grains[i]->avg_quat[0];
+	  q1[1] = m_Grains[i]->avg_quat[2]/m_Grains[i]->avg_quat[0];
+	  q1[2] = m_Grains[i]->avg_quat[3]/m_Grains[i]->avg_quat[0];
+	  q1[3] = m_Grains[i]->avg_quat[4]/m_Grains[i]->avg_quat[0];
       loadx = (2 * q1[0] * q1[2] + 2 * q1[1] * q1[3]) * 1;
       loady = (2 * q1[1] * q1[2] + 2 * q1[0] * q1[3]) * 1;
       loadz = (1 - 2 * q1[0] * q1[0] - 2 * q1[1] * q1[1]) * 1;
