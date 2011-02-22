@@ -176,7 +176,7 @@ int H5AngDataLoader::loadData(Voxel voxels[], int xpoints, int ypoints, int zpoi
     H5AngReader::Pointer reader = H5AngReader::New();
     reader->setFileName(getFilename());
     reader->setHDF5Path(StringUtils::numToString(slice + m_ZStartIndex));
-    reader->setUserOrigin(AngReader::NoOrientation);
+	reader->setUserOrigin(AngReader::UpperRightOrigin);
 
     err = reader->readFile();
     if (err < 0)
