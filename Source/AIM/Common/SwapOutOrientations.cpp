@@ -40,10 +40,10 @@ void GrainGeneratorFunc::MC_LoopBody1(size_t neighbor, int j,
   {
     curmisobin = MisorientationCalculations::getMisoBinHexagonal(curmiso1, curmiso2, curmiso3);
   }
-  q2[1] = grains[neighbor].avg_quat[1];
-  q2[2] = grains[neighbor].avg_quat[2];
-  q2[3] = grains[neighbor].avg_quat[3];
-  q2[4] = grains[neighbor].avg_quat[4];
+  q2[1] = m_Grains[neighbor]->avg_quat[1];
+  q2[2] = m_Grains[neighbor]->avg_quat[2];
+  q2[3] = m_Grains[neighbor]->avg_quat[3];
+  q2[4] = m_Grains[neighbor]->avg_quat[4];
   if(crystruct == AIM::Reconstruction::Hexagonal)
   {
     w = MisorientationCalculations::getMisoQuatHexagonal(q1,q2,n1,n2,n3);
@@ -97,10 +97,10 @@ void GrainGeneratorFunc::MC_LoopBody2(size_t neighbor, int j,
   {
     curmisobin = MisorientationCalculations::getMisoBinHexagonal(curmiso1, curmiso2, curmiso3);
   }
-  q2[1] = grains[neighbor].avg_quat[1];
-  q2[2] = grains[neighbor].avg_quat[2];
-  q2[3] = grains[neighbor].avg_quat[3];
-  q2[4] = grains[neighbor].avg_quat[4];
+  q2[1] = m_Grains[neighbor]->avg_quat[1];
+  q2[2] = m_Grains[neighbor]->avg_quat[2];
+  q2[3] = m_Grains[neighbor]->avg_quat[3];
+  q2[4] = m_Grains[neighbor]->avg_quat[4];
   if (crystruct == AIM::Reconstruction::Hexagonal)
   {
     w = MisorientationCalculations::getMisoQuatHexagonal(q1, q2, n1, n2, n3);
@@ -168,9 +168,9 @@ void GrainGeneratorFunc::swapOutOrientation( int &badtrycount, int &numbins)
 
   double sum = std::numeric_limits<double >::max(), diff = std::numeric_limits<double >::max();
 
-  vector<int>* nlist;
+  IntVectorType nlist;
   vector<double>* misolist;
-  vector<double>* neighborsurfarealist;
+  DoubleVectorType neighborsurfarealist;
 
   double totaldensity = 0;
 
@@ -181,12 +181,12 @@ void GrainGeneratorFunc::swapOutOrientation( int &badtrycount, int &numbins)
     selectedgrain1 = int(rg.Random() * numgrains);
     if (selectedgrain1 == 0) selectedgrain1 = 1;
     if (selectedgrain1 == numgrains) selectedgrain1 = numgrains - 1;
-    if (grains[selectedgrain1].surfacegrain >= 0) good = 1;
+    if (m_Grains[selectedgrain1]->surfacegrain >= 0) good = 1;
   }
-  q1[1] = grains[selectedgrain1].avg_quat[1];
-  q1[2] = grains[selectedgrain1].avg_quat[2];
-  q1[3] = grains[selectedgrain1].avg_quat[3];
-  q1[4] = grains[selectedgrain1].avg_quat[4];
+  q1[1] = m_Grains[selectedgrain1]->avg_quat[1];
+  q1[2] = m_Grains[selectedgrain1]->avg_quat[2];
+  q1[3] = m_Grains[selectedgrain1]->avg_quat[3];
+  q1[4] = m_Grains[selectedgrain1]->avg_quat[4];
   if (crystruct == AIM::Reconstruction::Hexagonal)
   {
     g1odfbin = MisorientationCalculations::calculateHexOdfBin(q1, qref, dim1, dim2, dim3);
@@ -235,14 +235,14 @@ void GrainGeneratorFunc::swapOutOrientation( int &badtrycount, int &numbins)
 
   initializeQ(q1, g1ea1, g1ea2, g1ea3);
   double odfchange = ((actualodf[choose] - simodf[choose]) * (actualodf[choose] - simodf[choose])) - ((actualodf[choose] - (simodf[choose]
-      + (double(grains[selectedgrain1].numvoxels) * resx * resy * resz / totalvol))) * (actualodf[choose] - (simodf[choose]
-      + (double(grains[selectedgrain1].numvoxels) * resx * resy * resz / totalvol))));
+      + (double(m_Grains[selectedgrain1]->numvoxels) * resx * resy * resz / totalvol))) * (actualodf[choose] - (simodf[choose]
+      + (double(m_Grains[selectedgrain1]->numvoxels) * resx * resy * resz / totalvol))));
   odfchange = odfchange + (((actualodf[g1odfbin] - simodf[g1odfbin]) * (actualodf[g1odfbin] - simodf[g1odfbin])) - ((actualodf[g1odfbin] - (simodf[g1odfbin]
-      - (double(grains[selectedgrain1].numvoxels) * resx * resy * resz / totalvol))) * (actualodf[g1odfbin] - (simodf[g1odfbin]
-      - (double(grains[selectedgrain1].numvoxels) * resx * resy * resz / totalvol)))));
-  nlist = grains[selectedgrain1].neighborlist;
-  misolist = grains[selectedgrain1].misorientationlist;
-  neighborsurfarealist = grains[selectedgrain1].neighborsurfarealist;
+      - (double(m_Grains[selectedgrain1]->numvoxels) * resx * resy * resz / totalvol))) * (actualodf[g1odfbin] - (simodf[g1odfbin]
+      - (double(m_Grains[selectedgrain1]->numvoxels) * resx * resy * resz / totalvol)))));
+  nlist = m_Grains[selectedgrain1]->neighborlist;
+  misolist = m_Grains[selectedgrain1]->misorientationlist;
+  neighborsurfarealist = m_Grains[selectedgrain1]->neighborsurfarealist;
   double mdfchange = 0;
 
   // -----------------------------------------------------------------------------
@@ -251,28 +251,28 @@ void GrainGeneratorFunc::swapOutOrientation( int &badtrycount, int &numbins)
   for (size_t j = 0; j < nlist->size(); j++)
   {
     int neighbor = nlist->at(j);
-    MC_LoopBody1(neighbor, j, misolist, neighborsurfarealist, mdfchange);
+    MC_LoopBody1(neighbor, j, misolist, neighborsurfarealist.get(), mdfchange);
   }
   deltaerror = 1.0 * odfchange + 1.0 * mdfchange;
   if (deltaerror > 0)
   {
     badtrycount = 0;
-    grains[selectedgrain1].euler1 = g1ea1;
-    grains[selectedgrain1].euler2 = g1ea2;
-    grains[selectedgrain1].euler3 = g1ea3;
-    grains[selectedgrain1].avg_quat[1] = q1[1];
-    grains[selectedgrain1].avg_quat[2] = q1[2];
-    grains[selectedgrain1].avg_quat[3] = q1[3];
-    grains[selectedgrain1].avg_quat[4] = q1[4];
-    simodf[choose] = simodf[choose] + (double(grains[selectedgrain1].numvoxels) * resx * resy * resz / totalvol);
-    simodf[g1odfbin] = simodf[g1odfbin] - (double(grains[selectedgrain1].numvoxels) * resx * resy * resz / totalvol);
+    m_Grains[selectedgrain1]->euler1 = g1ea1;
+    m_Grains[selectedgrain1]->euler2 = g1ea2;
+    m_Grains[selectedgrain1]->euler3 = g1ea3;
+    m_Grains[selectedgrain1]->avg_quat[1] = q1[1];
+    m_Grains[selectedgrain1]->avg_quat[2] = q1[2];
+    m_Grains[selectedgrain1]->avg_quat[3] = q1[3];
+    m_Grains[selectedgrain1]->avg_quat[4] = q1[4];
+    simodf[choose] = simodf[choose] + (double(m_Grains[selectedgrain1]->numvoxels) * resx * resy * resz / totalvol);
+    simodf[g1odfbin] = simodf[g1odfbin] - (double(m_Grains[selectedgrain1]->numvoxels) * resx * resy * resz / totalvol);
     // -----------------------------------------------------------------------------
     //  Mark2
     // -----------------------------------------------------------------------------
     for (size_t j = 0; j < nlist->size(); j++)
     {
       int neighbor = nlist->at(j);
-      MC_LoopBody2(neighbor, j, misolist, neighborsurfarealist);
+      MC_LoopBody2(neighbor, j, misolist, neighborsurfarealist.get());
     }
   }
 
