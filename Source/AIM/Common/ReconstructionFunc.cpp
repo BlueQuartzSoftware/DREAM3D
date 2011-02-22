@@ -821,7 +821,7 @@ int ReconstructionFunc::form_grains()
   }
 
   // Create initial set of grain average quaternions
-  m_grainQuats = DoubleArrayType::CreateArray(1000 * 5);
+  DoubleArrayType::Pointer m_grainQuats = DoubleArrayType::CreateArray(1000*5);
   m_grainQuats->initializeWithZeros();
   double* grainquats = m_grainQuats->getPointer(0);
 
@@ -1012,7 +1012,7 @@ int ReconstructionFunc::form_grains()
 						mergedgnames[gnames[neighbor]] = i;
 						for(int m=0;m<5;m++)
 						{
-							grainquats[i*5+m] = grainquats[i*5+m] + grainquats[gnames[neighbor]*5+m];
+//							grainquats[i*5+m] = grainquats[i*5+m] + grainquats[gnames[neighbor]*5+m];
 						}
 		                if (size >= mergelist.size()) mergelist.resize(size + initialMergeListSize, -1);
 					}
@@ -1041,15 +1041,19 @@ int ReconstructionFunc::form_grains()
   for (int i = 0; i < totalpoints; ++i)
   {
     mergedname = mergedgnames[gnames[i]];
-	  while(mergedgnames[mergedname] != mergedname)
-	  {
-		  mergedname = mergedgnames[mergedname];
-	  }
-	  newname = newgnames[mergedname];
-	  if(newname > goodgraincount)
-	  {
-		  int stop = 0;
-	  }
+	while(mergedgnames[mergedname] != mergedname)
+	{
+	  mergedname = mergedgnames[mergedname];
+	}
+	newname = newgnames[mergedname];
+	if(newname > goodgraincount)
+	{
+		ofstream outFile;
+		string filename = "ERROR.txt";
+		outFile.open(filename.c_str());
+		outFile << newname << "	" << goodgraincount << endl;
+		outFile.close();
+	}
     voxels[i].grainname = newname;
   }
   size_t oldSize = m_Grains.size();
@@ -1178,8 +1182,7 @@ void ReconstructionFunc::merge_containedgrains()
     int grainname = voxels[i].grainname;
     if (m_Grains[grainname]->numneighbors == 1)
     {
-      int neighbor = m_Grains[grainname]->neighborlist->at(0);
-      voxels[i].grainname = neighbor;
+      voxels[i].grainname = m_Grains[grainname]->neighborlist->at(0);
       voxels[i].unassigned = 1;
     }
   }
@@ -1229,12 +1232,11 @@ int ReconstructionFunc::reorder_grains()
   for (int i = 0; i < (xpoints * ypoints * zpoints); i++)
   {
     voxels[i].alreadychecked = 0;
-	gnum = voxels[i].grainname;
-	m_Grains[gnum]->nucleus = i;
-	if(voxels[i].grainname == -2)
-	{
-		int stop = 0;
-	}
+  	if(voxels[i].unassigned == 0)
+  	{
+  		gnum = voxels[i].grainname;
+  		m_Grains[gnum]->nucleus = i;
+  	}
   }
   for (int i = 1; i < numgrains; i++)
   {
@@ -1295,9 +1297,8 @@ int ReconstructionFunc::reorder_grains()
           }
         }
       }
+
       m_Grains[currentgrain]->voxellist->erase(std::remove(m_Grains[currentgrain]->voxellist->begin(), m_Grains[currentgrain]->voxellist->end(), -1), m_Grains[currentgrain]->voxellist->end());
-	  if(m_Grains[currentgrain]->voxellist->size() >= minallowedgrainsize)
-	  {
 		  m_Grains[currentgrain]->active = 1;
 		  m_Grains[currentgrain]->nucleus = nucleus;
 		  q1avg = m_Grains[currentgrain]->avg_quat[1]/m_Grains[currentgrain]->avg_quat[0];
@@ -1316,7 +1317,6 @@ int ReconstructionFunc::reorder_grains()
 		  m_Grains[currentgrain]->euler2 = ea2good;
 		  m_Grains[currentgrain]->euler3 = ea3good;
 		  currentgrain++;
-	  }
   }
   if (currentgrain <= m_Grains.size())
   {  m_Grains.resize(currentgrain);}
@@ -1329,9 +1329,9 @@ int ReconstructionFunc::reorder_grains()
       m_Grains[g] = Grain::New();
     }
   }
-  numgrains = m_Grains.size();
+  numgrains = currentgrain;
   find_neighbors();
-  return currentgrain;
+  return numgrains;
 }
 
 void ReconstructionFunc::fillin_sample()
@@ -1541,7 +1541,7 @@ void ReconstructionFunc::find_grain_and_kernel_misorientations()
 
   for (int i = 0; i < totalpoints; i++)
   {
-    if (gnames[i] > 0 && unassigned[i] != 1)
+    if (gnames[i] > 0 && unassigned[i] == 0)
     {
       totalmisorientation = 0.0;
       numVoxel = 0;
@@ -1608,7 +1608,7 @@ void ReconstructionFunc::find_grain_and_kernel_misorientations()
 		int stop = 0;
 	  }
     }
-    if (gnames[i] == 0 || unassigned[i] == 1)
+    if (gnames[i] == 0 || unassigned[i] != 0)
     {
       voxels[i].kernelmisorientation = 0;
       voxels[i].grainmisorientation = 0;
@@ -2127,27 +2127,16 @@ void ReconstructionFunc::find_neighbors()
   int nListSize = 100;
   // Copy all the grain names into a densly packed array
   int* gnames = new int[totalpoints];
-  int* gcounts = new int[numgrains];
-  for (int i = 0; i < numgrains; i++)
-  {
-    gcounts[i] = 0;
-  }
   for (int i = 0; i < totalpoints; ++i)
   {
     gnames[i] = voxels[i].grainname;
-    gcounts[gnames[i]]++;
     if (voxels[i].neighborlist == NULL) voxels[i].neighborlist = new std::vector<int>(6, -1);
     else voxels[i].neighborlist->resize(6, -1);
   }
   for (int i = 0; i < numgrains; i++)
   {
     m_Grains[i]->numneighbors = 0;
-//    if (m_Grains[i]->neighborlist != NULL) { delete m_Grains[i]->neighborlist; }
-//    m_Grains[i]->neighborlist = new std::vector<int>(nListSize,-1);
     m_Grains[i]->neighborlist->assign(nListSize, -1);
-
-//    if (m_Grains[i]->neighborsurfarealist != NULL) { delete m_Grains[i]->neighborsurfarealist; }
-//    m_Grains[i]->neighborsurfarealist = new std::vector<double>(nListSize,-1);
     m_Grains[i]->neighborsurfarealist->assign(nListSize, -1.0);
     for(int j=0;j<3;j++)
 	  {
@@ -3134,6 +3123,7 @@ void ReconstructionFunc::measure_misorientations(H5ReconStatsWriter::Pointer h5i
   if (crystruct == AIM::Reconstruction::Cubic) nummisobins = 18 * 18 * 18;
   if (crystruct == AIM::Reconstruction::Hexagonal) nummisobins = 36 * 36 * 12;
   DoubleArrayType::Pointer misobinPtr = DoubleArrayType::CreateArray(nummisobins);
+  misobinPtr->initializeWithZeros();
   double* misobin = misobinPtr->getPointer(0);
   double microbin[10];
   for(size_t e = 0; e < 10; ++e)
@@ -3838,6 +3828,7 @@ int ReconstructionFunc::volume_stats2D(H5ReconStatsWriter::Pointer h5io)
 void ReconstructionFunc::deformation_stats(const std::string &filename)
 {
   ofstream outFile;
+  outFile.open(filename.c_str());
   double avgkm = 0;
   double avggam = 0;
   double avgiq = 0;
@@ -3898,8 +3889,8 @@ void ReconstructionFunc::deformation_stats(const std::string &filename)
       sfmm = sf / sf2;
 	  if(sfmm < 0.5 || sfmm > 2)
 	  {
-		int stop = 0;
-	  }
+		outFile << "Gname " << gname << "	Gname2 " << gname2 << "	SF " << sf << "	SF2 " << sf2 << endl;
+	  }	
       avgkm = avgkm + km;
       avggam = avggam + gam;
       avgiq = avgiq + iq;
@@ -3967,7 +3958,6 @@ void ReconstructionFunc::deformation_stats(const std::string &filename)
       sfmmvgam[gambin][1] = sfmmvgam[gambin][1] + sfmm;
     }
   }
-  outFile.open(filename.c_str());
   outFile << "Kernel Misorientation Data" << endl;
   outFile << "GB		TJ		QP		IQ		SF		SF" << endl;
   for (int i = 0; i < 20; i++)
