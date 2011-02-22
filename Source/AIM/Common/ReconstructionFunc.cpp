@@ -825,6 +825,11 @@ int ReconstructionFunc::form_grains()
   m_grainQuats->initializeWithZeros();
   double* grainquats = m_grainQuats->getPointer(0);
 
+  for(int i=0;i<1000*5;i++)
+  {
+	grainquats[i] = 0.0;
+  }
+
   // Burn volume with tight orientation tolerance to simulate simultaneous growth/aglomeration
   while (noseeds == 0)
   {
@@ -857,19 +862,18 @@ int ReconstructionFunc::form_grains()
         col = currentpoint % xpoints;
         row = (currentpoint / xpoints) % ypoints;
         plane = currentpoint / (xpoints * ypoints);
-#if 1
+
         q1[0] = 1;
         q1[1] = voxels[currentpoint].quat[1];
         q1[2] = voxels[currentpoint].quat[2];
         q1[3] = voxels[currentpoint].quat[3];
         q1[4] = voxels[currentpoint].quat[4];
-#else
-        q1[0] = 1;
-        q1[1] = grainquats[graincount*5 + 1] / grainquats[graincount*5];
-        q1[2] = grainquats[graincount*5 + 2] / grainquats[graincount*5];
-        q1[3] = grainquats[graincount*5 + 3] / grainquats[graincount*5];
-        q1[4] = grainquats[graincount*5 + 4] / grainquats[graincount*5];
-#endif
+//        q1[0] = 1;
+//        q1[1] = grainquats[graincount*5 + 1] / grainquats[graincount*5];
+//        q1[2] = grainquats[graincount*5 + 2] / grainquats[graincount*5];
+//        q1[3] = grainquats[graincount*5 + 3] / grainquats[graincount*5];
+//        q1[4] = grainquats[graincount*5 + 4] / grainquats[graincount*5];
+
         for (int i = 0; i < 6; i++)
         {
           good = 1;
@@ -2153,9 +2157,9 @@ void ReconstructionFunc::find_neighbors()
     m_Grains[i]->neighborlist->assign(nListSize, -1);
     m_Grains[i]->neighborsurfarealist->assign(nListSize, -1.0);
     for(int j=0;j<3;j++)
-	  {
-		    m_Grains[i]->neighbordistfunc[j] = 0;
-	  }
+	{
+		m_Grains[i]->neighbordistfunc[j] = 0;
+	}
   }
   for (int j = 0; j < (xpoints * ypoints * zpoints); j++)
   {
@@ -2179,20 +2183,17 @@ void ReconstructionFunc::find_neighbors()
         if (k == 4 && row == (ypoints - 1)) good = 0;
         if (k == 2 && column == 0) good = 0;
         if (k == 3 && column == (xpoints - 1)) good = 0;
-        //CHECKME: Mike is this the correct thing to do here or should there be a fix so the correct
-        // grain numbers are stored in the gnames array?
-        if (grain >= m_Grains.size() ) good = 0; // We may be stepping past our array size
         if (good == 1 && gnames[neighbor] != grain && gnames[neighbor] > 0)
         {
-		      voxels[j].neighborlist->at(onsurf) = gnames[neighbor];
+		  voxels[j].neighborlist->at(onsurf) = gnames[neighbor];
           nnum = m_Grains[grain]->numneighbors;
           if (nnum >= (m_Grains[grain]->neighborlist->size()))
           {
-			      m_Grains[grain]->neighborlist->resize(nnum + nListSize);
-			      m_Grains[grain]->neighborsurfarealist->resize(nnum + nListSize);
+		      m_Grains[grain]->neighborlist->resize(nnum + nListSize);
+		      m_Grains[grain]->neighborsurfarealist->resize(nnum + nListSize);
           }
           m_Grains[grain]->neighborlist->at(nnum) = gnames[neighbor];
-		      nnum++;
+		  nnum++;
           m_Grains[grain]->numneighbors = nnum;
           onsurf++;
         }

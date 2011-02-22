@@ -27,7 +27,7 @@
 #include <AIM/Reconstruction/Reconstruction.h>
 
 
-#define RECONSTRUCTION_MANUAL_DEBUG 0
+#define RECONSTRUCTION_MANUAL_DEBUG 1
 
 #define CHECK_ARG(var, mandatory)\
   if (vm.count(#var) > 1) { mxa_log << logTime() << "Multiple Occurances for Parameter " << #var << std::endl; }\
@@ -156,7 +156,7 @@ int main(int argc, char **argv)
       MXADir::mkdir("C:\\Data\\ReconstructionOutput", true);
     }
 #else
-    m_Reconstruction->setH5AngFile("/Users/Shared/Data/Ang_Data/2PercentStrain.h5ang");
+    m_Reconstruction->setH5AngFile("/Users/Shared/Data/Ang_Data/2PercentStrain/2PercentStrain.h5ang");
     m_Reconstruction->setOutputDirectory("/tmp/2PercentStrain");
     if (MXADir::exists("/tmp/2PercentStrain") == false )
     {

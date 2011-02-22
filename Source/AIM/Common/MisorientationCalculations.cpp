@@ -348,6 +348,10 @@ void MisorientationCalculations::getNearestQuatCubic(double *q1, double *q2)
 	double smallestdist = 1000000;
 	double qc[5];
 	double qmax[5];
+	for(int i=0;i<5;i++)
+	{
+		qc[i] = q2[i];
+	}
 	for(int i=0;i<24;i++)
 	{
 	    AIM::Quaternions::Cubic_MultiplyByUnitQuaterion(q2, i, qc);
@@ -383,7 +387,11 @@ void MisorientationCalculations::getNearestQuatHexagonal(double *q1, double *q2)
 	double smallestdist = 1000000;
 	double qc[5];
 	double qmax[5];
-	for(int i=0;i<24;i++)
+	for(int i=0;i<5;i++)
+	{
+		qc[i] = q2[i];
+	}
+	for(int i=0;i<12;i++)
 	{
 	    AIM::Quaternions::Hex_MultiplyByUnitQuaterion(q2, i, qc);
 		dist = 2.0*(1-(qc[4]*q1[4]+qc[1]*q1[1]+qc[2]*q1[2]+qc[3]*q1[3]));
@@ -418,6 +426,10 @@ void MisorientationCalculations::getFZQuatCubic(double *qr)
 	double smallestdist = 1000000;
 	double qc[5];
 	double qmax[5];
+	for(int i=0;i<5;i++)
+	{
+		qc[i] = qr[i];
+	}
 	for(int i=0;i<24;i++)
 	{
 	    AIM::Quaternions::Cubic_MultiplyByUnitQuaterion(qr, i, qc);
@@ -453,6 +465,10 @@ void MisorientationCalculations::getFZQuatHexagonal(double *qr)
 	double smallestdist = 1000000;
 	double qc[5];
 	double qmax[5];
+	for(int i=0;i<5;i++)
+	{
+		qc[i] = qr[i];
+	}
 	for(int i=0;i<12;i++)
 	{
 	    AIM::Quaternions::Hex_MultiplyByUnitQuaterion(qr, i, qc);
