@@ -857,16 +857,19 @@ int ReconstructionFunc::form_grains()
         col = currentpoint % xpoints;
         row = (currentpoint / xpoints) % ypoints;
         plane = currentpoint / (xpoints * ypoints);
-//        q1[0] = 1;
-//        q1[1] = voxels[currentpoint].quat[1];
-//        q1[2] = voxels[currentpoint].quat[2];
-//        q1[3] = voxels[currentpoint].quat[3];
-//        q1[4] = voxels[currentpoint].quat[4];
+#if 1
+        q1[0] = 1;
+        q1[1] = voxels[currentpoint].quat[1];
+        q1[2] = voxels[currentpoint].quat[2];
+        q1[3] = voxels[currentpoint].quat[3];
+        q1[4] = voxels[currentpoint].quat[4];
+#else
         q1[0] = 1;
         q1[1] = grainquats[graincount*5 + 1] / grainquats[graincount*5];
         q1[2] = grainquats[graincount*5 + 2] / grainquats[graincount*5];
         q1[3] = grainquats[graincount*5 + 3] / grainquats[graincount*5];
         q1[4] = grainquats[graincount*5 + 4] / grainquats[graincount*5];
+#endif
         for (int i = 0; i < 6; i++)
         {
           good = 1;
@@ -938,7 +941,7 @@ int ReconstructionFunc::form_grains()
         {
 		  for(size_t j=0;j<5;j++)
 		  {
-			  grainquats[i*5+j] = 0;
+			  grainquats[i*5+j] = 0.0;
 		  }
         }
       }

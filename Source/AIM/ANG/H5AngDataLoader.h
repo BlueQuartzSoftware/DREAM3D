@@ -32,10 +32,12 @@
 #define _H5ANGDATALOADER_H_
 
 #include <MXA/Common/MXASetGetMacros.h>
+
+#include "AIM/ANG/AngConstants.h"
 #include "AIM/ANG/AbstractAngDataLoader.h"
 #include "AIM/Common/AIMCommonConfiguration.h"
-#include <AIM/Common/Voxel.h>
-#include <AIM/ANG/AngDirectoryPatterns.h>
+#include "AIM/Common/Voxel.h"
+#include "AIM/ANG/AngDirectoryPatterns.h"
 
 class AIMCOMMON_EXPORT H5AngDataLoader : public AbstractAngDataLoader
 {
@@ -48,7 +50,8 @@ class AIMCOMMON_EXPORT H5AngDataLoader : public AbstractAngDataLoader
     MXA_INSTANCE_STRING_PROPERTY(Filename)
     MXA_INSTANCE_PROPERTY(int, ZStartIndex)
     MXA_INSTANCE_PROPERTY(int, ZEndIndex)
-    MXA_INSTANCE_PROPERTY(bool, Cancel);
+    MXA_INSTANCE_PROPERTY(bool, Cancel)
+    MXA_INSTANCE_PROPERTY(Ang::Orientation, Orientation)
 
     int loadData(Voxel voxels[], int xpoints, int ypoints, int zpoints);
     int getSizeAndResolution(int &xpoints, int &ypoints, int &zpoints,

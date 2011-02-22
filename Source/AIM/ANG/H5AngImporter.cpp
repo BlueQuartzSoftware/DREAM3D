@@ -287,7 +287,10 @@ int H5AngImporter::importAngFile(hid_t fileId, int z, const std::string &angFile
 //  std::cout << "H5AngImporter: Importing " << angFile << std::endl;
   AngReader reader;
   reader.setFileName(angFile);
-  reader.setUserOrigin(AngReader::NoOrientation);
+  // This is set to NoOrientation because we want to leave the data intact as it
+  // was received from the instrument. The user can choose to rotate the data as
+  // it is read from the resulting HDF5 data file.
+  reader.setUserOrigin(Ang::NoOrientation);
   err = reader.readFile();
 
   hid_t gid = H5Utilities::createGroup(angGroup, AIM::ANG::Header);

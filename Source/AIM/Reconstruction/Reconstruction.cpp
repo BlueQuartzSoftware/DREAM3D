@@ -98,6 +98,7 @@ m_MinSeedImageQuality(0.0),
 m_MisorientationTolerance(0.0),
 m_CrystalStructure(AIM::Reconstruction::Cubic),
 m_AlreadyFormed(false),
+m_Orientation(Ang::NoOrientation),
 m_WriteVisualizationFile(false),
 m_WriteIPFFile(false),
 m_WriteDisorientationFile(false),
@@ -137,6 +138,7 @@ void Reconstruction::compute()
   ptr->setFilename(m_H5AngFile);
   ptr->setZStartIndex(m_ZStartIndex);
   ptr->setZEndIndex(m_ZEndIndex);
+  ptr->setOrientation(m_Orientation);
 
   // Create our File Output Writer Object. This will handle all the File Output duties
   ReconstructionVTKWriter::Pointer outWriter = ReconstructionVTKWriter::New();

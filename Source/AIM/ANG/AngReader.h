@@ -119,13 +119,6 @@ class AIMCOMMON_EXPORT AngReader
     AngReader();
     virtual ~AngReader();
 
-    /** @brief Constants defined for the 5 orientation options */
-    const static int UpperRightOrigin = 0;
-    const static int UpperLeftOrigin = 1;
-    const static int LowerLeftOrigin = 2;
-    const static int LowerRightOrigin = 3;
-    const static int NoOrientation = 4;
-
     /** @brief Allow the user to set the origin of the scan */
     angInstanceProperty_old(int, UserOrigin)
 
@@ -279,8 +272,8 @@ private:
     /** @brief Parses the data from a line of data from the TSL .ang file
     * @param line The line of data to parse
     */
-    void readData(const std::string &line, 
-      float xMaxValue, float yMaxValue, int nCols, 
+    void readData(const std::string &line,
+      float xMaxValue, float yMaxValue, int nCols,
       float xstep, float ystep, size_t counter);
 
     AngReader(const AngReader&);    // Copy Constructor Not Implemented

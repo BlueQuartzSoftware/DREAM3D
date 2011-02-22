@@ -27,7 +27,7 @@
 #include <AIM/Reconstruction/Reconstruction.h>
 
 
-#define RECONSTRUCTION_MANUAL_DEBUG 1
+#define RECONSTRUCTION_MANUAL_DEBUG 0
 
 #define CHECK_ARG(var, mandatory)\
   if (vm.count(#var) > 1) { mxa_log << logTime() << "Multiple Occurances for Parameter " << #var << std::endl; }\
@@ -80,6 +80,8 @@ int main(int argc, char **argv)
     cmd.add(CrystalStructure);
     TCLAP::ValueArg<int>  AlignMeth( "", "alignment", "Alignment Method [0] OuterBoundary [1] Misorientation [2] Mutual Information", false, 0, "Default=0");
     cmd.add(AlignMeth);
+    TCLAP::ValueArg<int>  Orientation( "", "orientation", "OIM Data Orientation [0] Upper Right [1] Upper Left [2] Lower Left [3] Lower Right [4] None", false, 4, "Default=4");
+    cmd.add(Orientation);
 
     TCLAP::ValueArg<int>  MinAllowedGrainSize( "", "minGrainSize", "What is the minimum allowed grain size", false, 50, "Default=50");
     cmd.add(MinAllowedGrainSize);
@@ -126,6 +128,8 @@ int main(int argc, char **argv)
     AIM::Reconstruction::AlignmentMethod alignmeth = static_cast<AIM::Reconstruction::AlignmentMethod>(AlignMeth.getValue() );
     m_Reconstruction->setCrystalStructure(crystruct);
     m_Reconstruction->setAlignmentMethod(alignmeth);
+    Ang::Orientation orient = static_cast<Ang::Orientation>(Orientation.getValue());
+    m_Reconstruction->setOrientation(orient);
 
     m_Reconstruction->setMinAllowedGrainSize(MinAllowedGrainSize.getValue());
     m_Reconstruction->setMisorientationTolerance(MisOrientationTolerance.getValue());
