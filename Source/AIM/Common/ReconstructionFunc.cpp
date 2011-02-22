@@ -1029,7 +1029,11 @@ int ReconstructionFunc::form_grains()
 	newname = newgnames[mergedname];
 	if(newname > goodgraincount)
 	{
-	  int stop = 0;
+		ofstream outFile;
+		string filename = "ERROR.txt";
+		outFile.open(filename.c_str());
+		outFile << newname << "	" << goodgraincount << endl;
+		outFile.close();
 	}
     voxels[i].grainname = newname;
   }
@@ -1203,10 +1207,6 @@ int ReconstructionFunc::reorder_grains()
 		gnum = voxels[i].grainname;
 		m_Grains[gnum].nucleus = i;
 	}
-	if(voxels[i].grainname == -2)
-	{
-		int stop = 0;
-	}
   }
   for (int i = 1; i < numgrains; i++)
   {
@@ -1268,27 +1268,24 @@ int ReconstructionFunc::reorder_grains()
         }
       }
       m_Grains[currentgrain].voxellist->erase(std::remove(m_Grains[currentgrain].voxellist->begin(), m_Grains[currentgrain].voxellist->end(), -1), m_Grains[currentgrain].voxellist->end());
-	  if(m_Grains[currentgrain].voxellist->size() >= minallowedgrainsize)
-	  {
-		  m_Grains[currentgrain].active = 1;
-		  m_Grains[currentgrain].nucleus = nucleus;
-		  q1avg = m_Grains[currentgrain].avg_quat[1]/m_Grains[currentgrain].avg_quat[0];
-		  q2avg = m_Grains[currentgrain].avg_quat[2]/m_Grains[currentgrain].avg_quat[0];
-		  q3avg = m_Grains[currentgrain].avg_quat[3]/m_Grains[currentgrain].avg_quat[0];
-		  q4avg = m_Grains[currentgrain].avg_quat[4]/m_Grains[currentgrain].avg_quat[0];
-		  diff=atan2(q2avg,q1avg);
-		  sum=atan2(q3avg,q4avg);
-		  ea1good=(diff+sum);
-		  ea3good=(sum-diff);
-		  tmp=(q3avg*q3avg)+(q4avg*q4avg);
-		  tmp = pow(tmp,0.5);
-		  if(tmp > 1.0) tmp=1.0;
-		  ea2good=2*acos(tmp);
-		  m_Grains[currentgrain].euler1 = ea1good;
-		  m_Grains[currentgrain].euler2 = ea2good;
-		  m_Grains[currentgrain].euler3 = ea3good;
-		  currentgrain++;
-	  }
+	  m_Grains[currentgrain].active = 1;
+	  m_Grains[currentgrain].nucleus = nucleus;
+	  q1avg = m_Grains[currentgrain].avg_quat[1]/m_Grains[currentgrain].avg_quat[0];
+	  q2avg = m_Grains[currentgrain].avg_quat[2]/m_Grains[currentgrain].avg_quat[0];
+	  q3avg = m_Grains[currentgrain].avg_quat[3]/m_Grains[currentgrain].avg_quat[0];
+	  q4avg = m_Grains[currentgrain].avg_quat[4]/m_Grains[currentgrain].avg_quat[0];
+	  diff=atan2(q2avg,q1avg);
+	  sum=atan2(q3avg,q4avg);
+	  ea1good=(diff+sum);
+	  ea3good=(sum-diff);
+	  tmp=(q3avg*q3avg)+(q4avg*q4avg);
+	  tmp = pow(tmp,0.5);
+	  if(tmp > 1.0) tmp=1.0;
+	  ea2good=2*acos(tmp);
+	  m_Grains[currentgrain].euler1 = ea1good;
+	  m_Grains[currentgrain].euler2 = ea2good;
+	  m_Grains[currentgrain].euler3 = ea3good;
+	  currentgrain++;
   }
   numgrains = currentgrain;
   m_Grains.resize(numgrains);
@@ -2093,9 +2090,9 @@ void ReconstructionFunc::find_neighbors()
     if (m_Grains[i].neighborsurfarealist != NULL) { delete m_Grains[i].neighborsurfarealist; }
     m_Grains[i].neighborsurfarealist = new std::vector<double>(nListSize,-1);
     for(int j=0;j<3;j++)
-	  {
-		    m_Grains[i].neighbordistfunc[j] = 0;
-	  }
+	{
+	    m_Grains[i].neighbordistfunc[j] = 0;
+	}
   }
   for (int j = 0; j < (xpoints * ypoints * zpoints); j++)
   {
@@ -2121,17 +2118,17 @@ void ReconstructionFunc::find_neighbors()
         if (k == 3 && column == (xpoints - 1)) good = 0;
         if (good == 1 && gnames[neighbor] != grain && gnames[neighbor] > 0)
         {
-		      voxels[j].neighborlist->at(onsurf) = gnames[neighbor];
-          nnum = m_Grains[grain].numneighbors;
-          if (nnum >= (m_Grains[grain].neighborlist->size()))
-          {
-			      m_Grains[grain].neighborlist->resize(nnum + nListSize);
-			      m_Grains[grain].neighborsurfarealist->resize(nnum + nListSize);
-          }
-          m_Grains[grain].neighborlist->at(nnum) = gnames[neighbor];
-		      nnum++;
-          m_Grains[grain].numneighbors = nnum;
-          onsurf++;
+	       voxels[j].neighborlist->at(onsurf) = gnames[neighbor];
+		   nnum = m_Grains[grain].numneighbors;
+	       if (nnum >= (m_Grains[grain].neighborlist->size()))
+	       {
+		      m_Grains[grain].neighborlist->resize(nnum + nListSize);
+		      m_Grains[grain].neighborsurfarealist->resize(nnum + nListSize);
+		   }
+           m_Grains[grain].neighborlist->at(nnum) = gnames[neighbor];
+	       nnum++;
+           m_Grains[grain].numneighbors = nnum;
+           onsurf++;
         }
       }
     }
