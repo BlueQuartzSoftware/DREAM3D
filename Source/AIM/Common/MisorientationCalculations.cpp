@@ -355,21 +355,21 @@ void MisorientationCalculations::getNearestQuatCubic(double *q1, double *q2)
 		if(dist < smallestdist)
 		{
 			smallestdist = dist;
-			qmax[0] = 1.0;
+			qmax[0] = qc[0];
 			qmax[1] = qc[1];
 			qmax[2] = qc[2];
 			qmax[3] = qc[3];
 			qmax[4] = qc[4];
 		}
 	}
-	q2[0] = 1.0;
+	q2[0] = qmax[0];
 	q2[1] = qmax[1];
 	q2[2] = qmax[2];
 	q2[3] = qmax[3];
 	q2[4] = qmax[4];
 	if(q2[4] < 0)
 	{
-		q2[0] = 1.0;
+		q2[0] = q2[0];
 		q2[1] = -q2[1];
 		q2[2] = -q2[2];
 		q2[3] = -q2[3];
@@ -390,21 +390,21 @@ void MisorientationCalculations::getNearestQuatHexagonal(double *q1, double *q2)
 		if(dist < smallestdist)
 		{
 			smallestdist = dist;
-			qmax[0] = 1.0;
+			qmax[0] = qc[0];
 			qmax[1] = qc[1];
 			qmax[2] = qc[2];
 			qmax[3] = qc[3];
 			qmax[4] = qc[4];
 		}
 	}
-	q2[0] = 1.0;
+	q2[0] = qmax[0];
 	q2[1] = qmax[1];
 	q2[2] = qmax[2];
 	q2[3] = qmax[3];
 	q2[4] = qmax[4];
 	if(q2[4] < 0)
 	{
-		q2[0] = 1.0;
+		q2[0] = q2[0];
 		q2[1] = -q2[1];
 		q2[2] = -q2[2];
 		q2[3] = -q2[3];
@@ -425,21 +425,21 @@ void MisorientationCalculations::getFZQuatCubic(double *qr)
 		if(dist < smallestdist)
 		{
 			smallestdist = dist;
-			qmax[0] = 1.0;
+			qmax[0] = qc[0];
 			qmax[1] = qc[1];
 			qmax[2] = qc[2];
 			qmax[3] = qc[3];
 			qmax[4] = qc[4];
 		}
 	}
-	qr[0] = 1.0;
+	qr[0] = qmax[0];
 	qr[1] = qmax[1];
 	qr[2] = qmax[2];
 	qr[3] = qmax[3];
 	qr[4] = qmax[4];
 	if(qr[4] < 0)
 	{
-		qr[0] = 1.0;
+		qr[0] = qr[0];
 		qr[1] = -qr[1];
 		qr[2] = -qr[2];
 		qr[3] = -qr[3];
@@ -460,21 +460,21 @@ void MisorientationCalculations::getFZQuatHexagonal(double *qr)
 		if(dist < smallestdist)
 		{
 			smallestdist = dist;
-			qmax[0] = 1.0;
+			qmax[0] = qc[0];
 			qmax[1] = qc[1];
 			qmax[2] = qc[2];
 			qmax[3] = qc[3];
 			qmax[4] = qc[4];
 		}
 	}
-	qr[0] = 1.0;
+	qr[0] = qmax[0];
 	qr[1] = qmax[1];
 	qr[2] = qmax[2];
 	qr[3] = qmax[3];
 	qr[4] = qmax[4];
 	if(qr[4] < 0)
 	{
-		qr[0] = 1.0;
+		qr[0] = qr[0];
 		qr[1] = -qr[1];
 		qr[2] = -qr[2];
 		qr[3] = -qr[3];
