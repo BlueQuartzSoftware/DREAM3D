@@ -39,25 +39,26 @@ class AIMCOMMON_EXPORT Grain
     MXA_SHARED_POINTERS(Grain);
     MXA_STATIC_NEW_MACRO(Grain);
     MXA_TYPE_MACRO(Grain);
-
-  protected:
-    Grain();
-
- //   Grain(const Grain&);
- //   Grain(Grain& grain);
-  public:
     virtual ~Grain();
+
+    /**
+     * @brief Performs a Depp copy of the Grain object by making copies of the contained
+     * data and not just copying the pointers to the data
+     * @param grain Another Grain object to copy from.
+     */
+    void deepCopy(Grain::Pointer grain);
 
  //   Grain& operator=(const Grain&);
 
     IntVectorType     neighborlist;
     DoubleVectorType  neighborsurfarealist;
 
-   // std::vector<int>* neighborlist;
+    // std::vector<int>* neighborlist;
+    //  std::vector<double>* neighborsurfarealist;
+
     std::vector<int>* voxellist;
     std::vector<double>* ellipfunclist;
     std::vector<double>* misorientationlist;
-  //  std::vector<double>* neighborsurfarealist;
     std::vector<std::vector<int> > neighbordistfunclist;
 
     int nucleus;
@@ -104,6 +105,12 @@ class AIMCOMMON_EXPORT Grain
     double lowanglefraction;
     double avg_quat[5];
     int neighbordistfunc[3];
+
+  protected:
+    Grain();
+
+ //   Grain(const Grain&);
+ //   Grain(Grain& grain);
 
   private:
     Grain(const Grain&); // Copy Constructor Not Implemented

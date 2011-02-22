@@ -57,9 +57,10 @@ SurfaceMeshFunc::~SurfaceMeshFunc()
 
 int SurfaceMeshFunc::initialize_micro(string filename, int zID)
 {
-	int i, j, k, l;
+	int i;
+//	int j, k, l;
 	int tgrainname;
-	int surfacevoxel;
+//	int surfacevoxel;
 	int xnum, ynum, znum;
 	double xres, yres, zres;
 	int col, row, plane;
@@ -2966,21 +2967,21 @@ void SurfaceMeshFunc::smooth_boundaries (int nNodes, int nTriangles, string Node
 	cTriangle = new Patch[nTriangles];
 	int nodenum, nodetype, trianglenum;
 	float x, y, z;
-	double x1, y1, z1;
-	double x2, y2, z2;
-	double x3, y3, z3;
-	double xts1, yts1, zts1;
-	double xts2, yts2, zts2;
-	double xts3, yts3, zts3;
+//	double x1, y1, z1;
+//	double x2, y2, z2;
+//	double x3, y3, z3;
+//	double xts1, yts1, zts1;
+//	double xts2, yts2, zts2;
+//	double xts3, yts3, zts3;
 	int col, row, plane, tsite;
-	int tsite1, tsite2, tsite3;
-	int ntype1, ntype2, ntype3;
+//	int tsite1, tsite2, tsite3;
+//	int ntype1, ntype2, ntype3;
 	int node1, node2, node3;
 	int grain1, grain2;
-	double Nx, Ny, Nz;
-	double tNx, tNy;
-	double BCx, BCy;
-	double t1, t2, t3;
+//	double Nx, Ny, Nz;
+//	double tNx, tNy;
+//	double BCx, BCy;
+//	double t1, t2, t3;
 //	double Rx, Ry, Rz;
 //	double theta, costheta, sintheta;
 //	double rotmat[3][3];
@@ -3402,7 +3403,7 @@ void SurfaceMeshFunc::writeVTKOutputFile (int nNodes, int nTriangles, const std:
 	}
 
 	// Write the triangle indices into the vtk File
-	int trianglenum;
+//	int trianglenum;
 	int node1, node2, node3;
 	int grain1, grain2;
 
