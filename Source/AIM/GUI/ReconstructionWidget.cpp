@@ -101,6 +101,7 @@ void ReconstructionWidget::readSettings(QSettings &prefs)
   READ_CHECKBOX_SETTING(prefs, rec_fillinSample, false);
   READ_COMBO_BOX(prefs, rec_CrystalStructure)
   READ_COMBO_BOX(prefs, rec_AlignMeth)
+  READ_COMBO_BOX(prefs, rec_Orientation)
 
   READ_SETTING(prefs, rec_MinImageQuality, ok, d, 50.0 , Double);
   READ_SETTING(prefs, rec_MisOrientationTolerance, ok, d, 5.0 , Double);
@@ -148,6 +149,7 @@ void ReconstructionWidget::writeSettings(QSettings &prefs)
   WRITE_SETTING(prefs, rec_MisOrientationTolerance)
   WRITE_COMBO_BOX(prefs, rec_CrystalStructure)
   WRITE_COMBO_BOX(prefs, rec_AlignMeth)
+  WRITE_COMBO_BOX(prefs, rec_Orientation)
 
   WRITE_CHECKBOX_SETTING(prefs, rec_DisorientationVizFile)
   WRITE_CHECKBOX_SETTING(prefs, rec_ImageQualityVizFile)
