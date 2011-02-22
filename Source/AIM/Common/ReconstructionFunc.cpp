@@ -810,7 +810,7 @@ int ReconstructionFunc::form_grains()
   }
 
   // Create initial set of grain average quaternions
-  m_grainQuats = DoubleArrayType::CreateArray(1000 * 5);
+  DoubleArrayType::Pointer m_grainQuats = DoubleArrayType::CreateArray(1000*5);
   m_grainQuats->initializeWithZeros();
   double* grainquats = m_grainQuats->getPointer(0);
 
@@ -993,7 +993,7 @@ int ReconstructionFunc::form_grains()
 						mergedgnames[gnames[neighbor]] = i;
 						for(int m=0;m<5;m++)
 						{
-							grainquats[i*5+m] = grainquats[i*5+m] + grainquats[gnames[neighbor]*5+m];
+//							grainquats[i*5+m] = grainquats[i*5+m] + grainquats[gnames[neighbor]*5+m];
 						}
 		                if (size >= mergelist.size()) mergelist.resize(size + initialMergeListSize, -1);
 					}
@@ -1022,15 +1022,15 @@ int ReconstructionFunc::form_grains()
   for (int i = 0; i < totalpoints; ++i)
   {
     mergedname = mergedgnames[gnames[i]];
-	  while(mergedgnames[mergedname] != mergedname)
-	  {
-		  mergedname = mergedgnames[mergedname];
-	  }
-	  newname = newgnames[mergedname];
-	  if(newname > goodgraincount)
-	  {
-		  int stop = 0;
-	  }
+	while(mergedgnames[mergedname] != mergedname)
+	{
+	  mergedname = mergedgnames[mergedname];
+	}
+	newname = newgnames[mergedname];
+	if(newname > goodgraincount)
+	{
+	  int stop = 0;
+	}
     voxels[i].grainname = newname;
   }
   m_Grains.resize(goodgraincount);
@@ -1148,8 +1148,7 @@ void ReconstructionFunc::merge_containedgrains()
     int grainname = voxels[i].grainname;
     if (m_Grains[grainname].numneighbors == 1)
     {
-      int neighbor = m_Grains[grainname].neighborlist->at(0);
-      voxels[i].grainname = neighbor;
+      voxels[i].grainname = m_Grains[grainname].neighborlist->at(0);
       voxels[i].unassigned = 1;
     }
   }
@@ -1199,8 +1198,11 @@ int ReconstructionFunc::reorder_grains()
   for (int i = 0; i < (xpoints * ypoints * zpoints); i++)
   {
     voxels[i].alreadychecked = 0;
-	gnum = voxels[i].grainname;
-	m_Grains[gnum].nucleus = i;
+	if(voxels[i].unassigned == 0)
+	{
+		gnum = voxels[i].grainname;
+		m_Grains[gnum].nucleus = i;
+	}
 	if(voxels[i].grainname == -2)
 	{
 		int stop = 0;
@@ -1210,8 +1212,8 @@ int ReconstructionFunc::reorder_grains()
   {
       size = 0;
       int nucleus = m_Grains[i].nucleus;
-	  if(m_Grains[currentgrain].voxellist == NULL) m_Grains[currentgrain].voxellist = new std::vector<int>(initialVoxelsListSize,-1);
-	  else m_Grains[currentgrain].voxellist->resize(initialVoxelsListSize,-1);
+	  if(m_Grains[currentgrain].voxellist != NULL) { delete m_Grains[currentgrain].voxellist; }
+	  m_Grains[currentgrain].voxellist = new std::vector<int>(initialVoxelsListSize,-1);
 	  m_Grains[currentgrain].voxellist->at(size) = nucleus;
       voxels[nucleus].alreadychecked = 1;
       voxels[nucleus].grainname = currentgrain;
@@ -1288,9 +1290,10 @@ int ReconstructionFunc::reorder_grains()
 		  currentgrain++;
 	  }
   }
-  m_Grains.resize(currentgrain);
+  numgrains = currentgrain;
+  m_Grains.resize(numgrains);
   find_neighbors();
-  return currentgrain;
+  return numgrains;
 }
 
 void ReconstructionFunc::fillin_sample()
@@ -1500,7 +1503,7 @@ void ReconstructionFunc::find_grain_and_kernel_misorientations()
 
   for (int i = 0; i < totalpoints; i++)
   {
-    if (gnames[i] > 0 && unassigned[i] != 1)
+    if (gnames[i] > 0 && unassigned[i] == 0)
     {
       totalmisorientation = 0.0;
       numVoxel = 0;
@@ -1567,7 +1570,7 @@ void ReconstructionFunc::find_grain_and_kernel_misorientations()
 		int stop = 0;
 	  }
     }
-    if (gnames[i] == 0 || unassigned[i] == 1)
+    if (gnames[i] == 0 || unassigned[i] != 0)
     {
       voxels[i].kernelmisorientation = 0;
       voxels[i].grainmisorientation = 0;
@@ -2076,17 +2079,11 @@ void ReconstructionFunc::find_neighbors()
   int nListSize = 100;
   // Copy all the grain names into a densly packed array
   int* gnames = new int[totalpoints];
-  int* gcounts = new int[numgrains];
-  for (int i = 0; i < numgrains; i++)
-  {
-	gcounts[i] = 0;
-  }
   for (int i = 0; i < totalpoints; ++i)
   {
     gnames[i] = voxels[i].grainname;
-	gcounts[gnames[i]]++;
-	if(voxels[i].neighborlist == NULL) voxels[i].neighborlist = new std::vector<int >(6,-1);
-	else voxels[i].neighborlist->resize(6,-1);
+	if(voxels[i].neighborlist != NULL) { delete voxels[i].neighborlist; }
+	voxels[i].neighborlist = new std::vector<int >(6,-1);
   }
   for (int i = 0; i < numgrains; i++)
   {
@@ -2157,12 +2154,12 @@ void ReconstructionFunc::find_neighbors()
         = -1, voxels[j].nearestneighbor[1] = -1, voxels[j].nearestneighbor[2] = -1;
   }
   delete[] gnames;
-  vector<int>* nlistcopy;
+  vector<int> nlistcopy;
   for (int i = 1; i < numgrains; i++)
   {
     vector<int >::iterator newend;
     sort(m_Grains[i].neighborlist->begin(), m_Grains[i].neighborlist->end());
-    nlistcopy->assign(m_Grains[i].neighborlist->begin(), m_Grains[i].neighborlist->end() );
+    nlistcopy.assign(m_Grains[i].neighborlist->begin(), m_Grains[i].neighborlist->end() );
     newend = unique(m_Grains[i].neighborlist->begin(), m_Grains[i].neighborlist->end());
     m_Grains[i].neighborlist->erase(newend, m_Grains[i].neighborlist->end());
     m_Grains[i].neighborlist->erase(std::remove(m_Grains[i].neighborlist->begin(), m_Grains[i].neighborlist->end(), -1), m_Grains[i].neighborlist->end());
@@ -2171,7 +2168,7 @@ void ReconstructionFunc::find_neighbors()
     for (int j = 0; j < numneighs; j++)
     {
       int neigh = m_Grains[i].neighborlist->at(j);
-      int number = std::count(nlistcopy->begin(), nlistcopy->end(), neigh);
+      int number = std::count(nlistcopy.begin(), nlistcopy.end(), neigh);
       double area = number * resx * resx;
       m_Grains[i].neighborsurfarealist->at(j) = area;
       if (m_Grains[i].surfacegrain == 0 && (neigh > i || m_Grains[neigh].surfacegrain == 1))
@@ -3077,6 +3074,7 @@ void ReconstructionFunc::measure_misorientations(H5ReconStatsWriter::Pointer h5i
   if (crystruct == AIM::Reconstruction::Cubic) nummisobins = 18 * 18 * 18;
   if (crystruct == AIM::Reconstruction::Hexagonal) nummisobins = 36 * 36 * 12;
   DoubleArrayType::Pointer misobinPtr = DoubleArrayType::CreateArray(nummisobins);
+  misobinPtr->initializeWithZeros();
   double* misobin = misobinPtr->getPointer(0);
   double microbin[10];
   for(size_t e = 0; e < 10; ++e)
