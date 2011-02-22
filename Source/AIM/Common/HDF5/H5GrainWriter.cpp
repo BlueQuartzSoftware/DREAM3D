@@ -67,7 +67,7 @@ int H5GrainWriter::writeHDF5GrainsFile(ReconstructionFunc* r, const std::string 
   for (int i = 1; i < r->numgrains; i++)
   {
     //   std::cout << " Grain: " << i << " Gathering Data" << std::endl;
-    vector<int >* vlist = r->m_Grains[i].voxellist;
+    vector<int >* vlist = r->m_Grains[i]->voxellist;
     int vid = vlist->at(0);
     ss.str("");
     ss << "/" << i;
@@ -161,13 +161,13 @@ int H5GrainWriter::writeHDF5GrainsFile(ReconstructionFunc* r, const std::string 
     //Write the Field Data
     err = h5writer->writeFieldData<int > (hdfPath, grainName, AIM::Representation::Grain_ID.c_str(), 1);
 
-    schmidFactor[0] = r->m_Grains[i].schmidfactor;
+    schmidFactor[0] = r->m_Grains[i]->schmidfactor;
     err = h5writer->writeFieldData<float > (hdfPath, schmidFactor, AIM::Representation::SchmidFactor.c_str(), 1);
 
     // Write the Neighbor list
-    size_t size = r->m_Grains[i].neighborlist->size();
+    size_t size = r->m_Grains[i]->neighborlist->size();
     if (size > 0) {
-      err = h5writer->writeFieldData<int > (hdfPath, *(r->m_Grains[i].neighborlist), AIM::Representation::Neighbor_Grain_ID_List.c_str(), 1);
+      err = h5writer->writeFieldData<int > (hdfPath, *(r->m_Grains[i]->neighborlist), AIM::Representation::Neighbor_Grain_ID_List.c_str(), 1);
     }
     // Write CELL_DATA
     err = h5writer->writeCellData<float > (hdfPath, kernelAvgDisorientation, AIM::Representation::KernelAvgDisorientation.c_str(), 1);

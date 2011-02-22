@@ -89,9 +89,12 @@ public:
     int *graincounts;
     double **graincenters;
     double **grainmoments;
-    Grain *precipitates;
+//    Grain *precipitates;
+    std::vector<Grain::Pointer> precipitates;
     int *psizes;
-    vector<Grain> grains;
+
+    vector<Grain::Pointer> m_Grains;
+
     vector<int> activegrainlist;
     vector<int> precipitateorder;
     vector<int> takencheck;
