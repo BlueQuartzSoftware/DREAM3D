@@ -3776,6 +3776,7 @@ int ReconstructionFunc::volume_stats2D(H5ReconStatsWriter::Pointer h5io)
 void ReconstructionFunc::deformation_stats(const std::string &filename)
 {
   ofstream outFile;
+  outFile.open(filename.c_str());
   double avgkm = 0;
   double avggam = 0;
   double avgiq = 0;
@@ -3836,7 +3837,7 @@ void ReconstructionFunc::deformation_stats(const std::string &filename)
       sfmm = sf / sf2;
 	  if(sfmm < 0.5 || sfmm > 2)
 	  {
-		int stop = 0;
+		outFile << "Gname " << gname << "	Gname2 " << gname2 << "	SF " << sf << "	SF2 " << sf2 << endl;
 	  }	
       avgkm = avgkm + km;
       avggam = avggam + gam;
@@ -3905,7 +3906,6 @@ void ReconstructionFunc::deformation_stats(const std::string &filename)
       sfmmvgam[gambin][1] = sfmmvgam[gambin][1] + sfmm;
     }
   }
-  outFile.open(filename.c_str());
   outFile << "Kernel Misorientation Data" << endl;
   outFile << "GB		TJ		QP		IQ		SF		SF" << endl;
   for (int i = 0; i < 20; i++)
