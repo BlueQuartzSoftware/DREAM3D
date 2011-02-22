@@ -247,7 +247,8 @@ int ReconstructionVTKWriter::writeIPFVizFile(ReconstructionFunc* r, const std::s
   {
     if(r->crystruct == AIM::Reconstruction::Cubic)
     {
-      OIMColoring::GenerateIPFColor(r->voxels[i].euler1, r->voxels[i].euler2, r->voxels[i].euler3, RefDirection[0], RefDirection[1], RefDirection[2], rgb);
+//      OIMColoring::GenerateIPFColor(r->voxels[i].euler1, r->voxels[i].euler2, r->voxels[i].euler3, RefDirection[0], RefDirection[1], RefDirection[2], rgb);
+      OIMColoring::GenerateIPFColor(r->m_Grains[r->voxels[i].grainname].euler1, r->m_Grains[r->voxels[i].grainname].euler2, r->m_Grains[r->voxels[i].grainname].euler3, RefDirection[0], RefDirection[1], RefDirection[2], rgb);
       red = static_cast<double>(double(rgb[0])/255.0);
       green = static_cast<double>(double(rgb[1])/255.0);
       blue = static_cast<double>(double(rgb[2])/255.0);
