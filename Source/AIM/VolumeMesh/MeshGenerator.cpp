@@ -900,7 +900,7 @@ void clean_triangles()
   for (int i = 0; i < numsurfnodes; i++)
   {
     if (originalnode[i].nodekilled != 1 && originalnode[i].edgenode != 1)
-    //		if(originalnode[i].nodekilled != 1)
+    //    if(originalnode[i].nodekilled != 1)
     {
       nx = 0;
       ny = 0;
@@ -1278,7 +1278,7 @@ void clean_triangles()
       }
     }
   }
-  /*	string fileout;
+  /*  string fileout;
    fileout = "boundary angles ns.vtk";
    ofstream outputFile;
    outputFile.open(fileout.c_str());
@@ -1712,8 +1712,8 @@ void make_nodes(int iter)
   ss << "pointcheck" << iter << ".vtk";
   std::string fileout = ss.str();
 
-  //	ofstream outFile;
-  //	outFile.open(fileout);
+  //  ofstream outFile;
+  //  outFile.open(fileout);
 //  double grainmaxedgelength = grain[iter].maxedgelength;
   double minx = grain[iter].xmin;
   double maxx = grain[iter].xmax;
@@ -2061,7 +2061,7 @@ void make_nodes(int iter)
       }
     }
   }
-  /*	outFile << "# vtk DataFile Version 2.0" << endl;
+  /*  outFile << "# vtk DataFile Version 2.0" << endl;
    outFile << "data set from FFT2dx_GB" << endl;
    outFile << "ASCII" << endl;
    outFile << "DATASET UNSTRUCTURED_GRID" << endl;
@@ -2149,7 +2149,7 @@ void write_nodes()
       double x = finalnode[i].xc;
       double y = finalnode[i].yc;
       double z = finalnode[i].zc;
-      outFile << x << "	" << y << "	" << z << endl;
+      outFile << x << " " << y << " " << z << endl;
     }
   }
   outFile.close();
@@ -3550,8 +3550,8 @@ void improve_mesh()
         double dihedralangle6 = element[i].dihedralangle6;
         if (dihedralangle1 < 10 || dihedralangle1 > 170 || dihedralangle2 < 10 || dihedralangle2 > 170 || dihedralangle3 < 10 || dihedralangle3 > 170
             || dihedralangle4 < 10 || dihedralangle4 > 170 || dihedralangle5 < 10 || dihedralangle5 > 170 || dihedralangle6 < 10 || dihedralangle6 > 170)
-        //				if(dihedralangle1 < 15 || dihedralangle1 > 165 || dihedralangle2 < 15 || dihedralangle2 > 165 || dihedralangle3 < 15 || dihedralangle3 > 165 || dihedralangle4 < 15 || dihedralangle4 > 165 || dihedralangle5 < 15 || dihedralangle5 > 165 || dihedralangle6 < 15 || dihedralangle6 > 165)
-        //				if(dihedralangle1 < 20 || dihedralangle1 > 160 || dihedralangle2 < 20 || dihedralangle2 > 160 || dihedralangle3 < 20 || dihedralangle3 > 160 || dihedralangle4 < 20 || dihedralangle4 > 160 || dihedralangle5 < 20 || dihedralangle5 > 160 || dihedralangle6 < 20 || dihedralangle6 > 160)
+        //        if(dihedralangle1 < 15 || dihedralangle1 > 165 || dihedralangle2 < 15 || dihedralangle2 > 165 || dihedralangle3 < 15 || dihedralangle3 > 165 || dihedralangle4 < 15 || dihedralangle4 > 165 || dihedralangle5 < 15 || dihedralangle5 > 165 || dihedralangle6 < 15 || dihedralangle6 > 165)
+        //        if(dihedralangle1 < 20 || dihedralangle1 > 160 || dihedralangle2 < 20 || dihedralangle2 > 160 || dihedralangle3 < 20 || dihedralangle3 > 160 || dihedralangle4 < 20 || dihedralangle4 > 160 || dihedralangle5 < 20 || dihedralangle5 > 160 || dihedralangle6 < 20 || dihedralangle6 > 160)
         {
           minedgelength = element[i].edgelength1;
           edgetokill = 1;
@@ -3750,7 +3750,7 @@ void improve_mesh()
               nx = nx / counter;
               ny = ny / counter;
               nz = nz / counter;
-              //							node[node1].set_coords(nx,ny,nz);
+              //              node[node1].set_coords(nx,ny,nz);
               size = elvector[node1].size();
               for (int l = 0; l < size; l++)
               {
@@ -4059,7 +4059,7 @@ void improve_mesh()
               nx = nx / counter;
               ny = ny / counter;
               nz = nz / counter;
-              //							node[node1].set_coords(nx,ny,nz);
+              //              node[node1].set_coords(nx,ny,nz);
               size = elvector[node1].size();
               for (int l = 0; l < size; l++)
               {
@@ -4368,7 +4368,7 @@ void improve_mesh()
               nx = nx / counter;
               ny = ny / counter;
               nz = nz / counter;
-              //							node[node1].set_coords(nx,ny,nz);
+              //              node[node1].set_coords(nx,ny,nz);
               size = elvector[node1].size();
               for (int l = 0; l < size; l++)
               {
@@ -4677,7 +4677,7 @@ void improve_mesh()
               nx = nx / counter;
               ny = ny / counter;
               nz = nz / counter;
-              //							node[node2].set_coords(nx,ny,nz);
+              //              node[node2].set_coords(nx,ny,nz);
               size = elvector[node2].size();
               for (int l = 0; l < size; l++)
               {
@@ -4986,7 +4986,7 @@ void improve_mesh()
               nx = nx / counter;
               ny = ny / counter;
               nz = nz / counter;
-              //							node[node2].set_coords(nx,ny,nz);
+              //              node[node2].set_coords(nx,ny,nz);
               size = elvector[node2].size();
               for (int l = 0; l < size; l++)
               {
@@ -5295,7 +5295,7 @@ void improve_mesh()
               nx = nx / counter;
               ny = ny / counter;
               nz = nz / counter;
-              //							node[node3].set_coords(nx,ny,nz);
+              //              node[node3].set_coords(nx,ny,nz);
               size = elvector[node3].size();
               for (int l = 0; l < size; l++)
               {
@@ -5490,8 +5490,8 @@ void write_meshdata(string outname1)
   {
     int nodetype = finalnode[j].surfnode;
     outFile << nodetype << endl;
-    //		if(gvector[j].size() == 1) outFile << gvector[j][0] << endl;
-    //		if(gvector[j].size() != 1) outFile << "0" << endl;
+    //    if(gvector[j].size() == 1) outFile << gvector[j][0] << endl;
+    //    if(gvector[j].size() != 1) outFile << "0" << endl;
   }
   for (int i = 0; i < elementcount; i++)
   {
@@ -5567,11 +5567,11 @@ void write_dihedralangles(string outname2)
   {
     if (i < 25)
     {
-      outFile << i << "	" << dihedralanglesurf[i] << "	" << dihedralanglebulk[i] << "	" << volumesurf[i] << "	" << volumebulk[i] << endl;
+      outFile << i << " " << dihedralanglesurf[i] << "  " << dihedralanglebulk[i] << "  " << volumesurf[i] << " " << volumebulk[i] << endl;
     }
     if (i >= 25)
     {
-      outFile << i << "	" << dihedralanglesurf[i] << "	" << dihedralanglebulk[i] << endl;
+      outFile << i << " " << dihedralanglesurf[i] << "  " << dihedralanglebulk[i] << endl;
     }
   }
   outFile.close();
