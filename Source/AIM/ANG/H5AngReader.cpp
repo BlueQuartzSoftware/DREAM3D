@@ -300,7 +300,7 @@ int H5AngReader::readData(hid_t parId)
   for(size_t i = 0; i < totalDataRows; ++i)
   {
     // Do we transform the data
-      if (userOrigin == UpperRightOrigin)
+      if (userOrigin == Ang::UpperRightOrigin)
       {
         x[i] = xMaxValue - x[i];
         if (p1[i] - PI_OVER_2f < 0.0)
@@ -312,7 +312,7 @@ int H5AngReader::readData(hid_t parId)
           p1[i] = p1[i] - PI_OVER_2f;
         }
       }
-      else if (userOrigin == UpperLeftOrigin)
+      else if (userOrigin == Ang::UpperLeftOrigin)
       {
         if (p1[i] + PI_OVER_2f > TWO_PIf)
         {
@@ -331,7 +331,7 @@ int H5AngReader::readData(hid_t parId)
           p[i] = p[i] + ONE_PIf;
         }
       }
-      else if (userOrigin == LowerLeftOrigin)
+      else if (userOrigin == Ang::LowerLeftOrigin)
       {
         y[i] = yMaxValue - y[i];
         if (p1[i] + PI_OVER_2f > TWO_PIf)
@@ -343,13 +343,13 @@ int H5AngReader::readData(hid_t parId)
           p1[i] = p1[i] + PI_OVER_2f;
         }
       }
-      else if (userOrigin == LowerRightOrigin)
+      else if (userOrigin == Ang::LowerRightOrigin)
       {
         x[i] = xMaxValue - x[i];
         y[i] = yMaxValue - y[i];
       }
 
-      if (userOrigin == NoOrientation) 
+      if (userOrigin == Ang::NoOrientation)
       {
         // If the user/programmer sets "NoOrientation" then we simply read the data
         // from the file and copy the values into the arrays without any regard for
@@ -360,7 +360,7 @@ int H5AngReader::readData(hid_t parId)
       else
       {
         // The next set of calculations figures out where to place the data
-        // in the arrays, ie, which offset based on the array really being a 
+        // in the arrays, ie, which offset based on the array really being a
         // 2D array that is laid out with the X Axis moving the fastest and
         // the Y Axis moving the slowest. On Visual Studio there seems to be some
         // sort of round off error when the floats are converted to size_t types.

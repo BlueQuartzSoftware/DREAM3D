@@ -64,7 +64,8 @@ int H5GrainWriter::writeHDF5GrainsFile(ReconstructionFunc* r, const std::string 
   std::string hdfPath;
   std::vector<std::string > hdfPaths;
   // std::cout << "Writing out " << numgrains << " to an HDF5 Grain File..." << std::endl;
-  for (int i = 1; i < r->numgrains; i++)
+  int numgrains = r->m_Grains.size();
+  for (int i = 1; i < numgrains; i++)
   {
     //   std::cout << " Grain: " << i << " Gathering Data" << std::endl;
     vector<int >* vlist = r->m_Grains[i]->voxellist;

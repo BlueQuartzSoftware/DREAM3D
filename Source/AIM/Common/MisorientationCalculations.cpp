@@ -98,105 +98,105 @@ double MisorientationCalculations::getMisoQuatCubic(double q1[5],double q2[5],do
   if ( qc[1] <= qc[2] && qc[1] <= qc[3] && qc[1] <= qc[4])
   {
      qco[1] = qc[1];
-	 //if qc[2] is next smallest
+   //if qc[2] is next smallest
      if (qc[2] <= qc[3] && qc[2] <= qc[4])
-	 {
-	    qco[2] = qc[2];
-		if(qc[3] <= qc[4]) qco[3] = qc[3], qco[4] = qc[4];
-		else qco[3] = qc[4], qco[4] = qc[3];
-	 }
-	 //if qc[3] is next smallest
+   {
+      qco[2] = qc[2];
+    if(qc[3] <= qc[4]) qco[3] = qc[3], qco[4] = qc[4];
+    else qco[3] = qc[4], qco[4] = qc[3];
+   }
+   //if qc[3] is next smallest
      else if (qc[3] <= qc[2] && qc[3] <= qc[4])
-	 {
-	    qco[2] = qc[3];
-		if(qc[2] <= qc[4]) qco[3] = qc[2], qco[4] = qc[4];
-		else qco[3] = qc[4], qco[4] = qc[2];
-	 }
-	 //if qc[4] is next smallest
-	 else
-	 {
-	    qco[2] = qc[4];
-		if(qc[2] <= qc[3]) qco[3] = qc[2], qco[4] = qc[3];
-		else qco[3] = qc[3], qco[4] = qc[2];
-	 }
+   {
+      qco[2] = qc[3];
+    if(qc[2] <= qc[4]) qco[3] = qc[2], qco[4] = qc[4];
+    else qco[3] = qc[4], qco[4] = qc[2];
+   }
+   //if qc[4] is next smallest
+   else
+   {
+      qco[2] = qc[4];
+    if(qc[2] <= qc[3]) qco[3] = qc[2], qco[4] = qc[3];
+    else qco[3] = qc[3], qco[4] = qc[2];
+   }
   }
 //if qc[2] is smallest
   else if ( qc[2] <= qc[1] && qc[2] <= qc[3] && qc[2] <= qc[4])
   {
      qco[1] = qc[2];
-	 //if qc[1] is next smallest
+   //if qc[1] is next smallest
      if (qc[1] <= qc[3] && qc[1] <= qc[4])
-	 {
-	    qco[2] = qc[1];
-		if(qc[3] <= qc[4]) qco[3] = qc[3], qco[4] = qc[4];
-		else qco[3] = qc[4], qco[4] = qc[3];
-	 }
-	 //if qc[3] is next smallest
+   {
+      qco[2] = qc[1];
+    if(qc[3] <= qc[4]) qco[3] = qc[3], qco[4] = qc[4];
+    else qco[3] = qc[4], qco[4] = qc[3];
+   }
+   //if qc[3] is next smallest
      else if (qc[3] <= qc[1] && qc[3] <= qc[4])
-	 {
-	    qco[2] = qc[3];
-		if(qc[1] <= qc[4]) qco[3] = qc[1], qco[4] = qc[4];
-		else qco[3] = qc[4], qco[4] = qc[1];
-	 }
-	 //if qc[4] is next smallest
-	 else
-	 {
-	    qco[2] = qc[4];
-		if(qc[1] <= qc[3]) qco[3] = qc[1], qco[4] = qc[3];
-		else qco[3] = qc[3], qco[4] = qc[1];
-	 }
+   {
+      qco[2] = qc[3];
+    if(qc[1] <= qc[4]) qco[3] = qc[1], qco[4] = qc[4];
+    else qco[3] = qc[4], qco[4] = qc[1];
+   }
+   //if qc[4] is next smallest
+   else
+   {
+      qco[2] = qc[4];
+    if(qc[1] <= qc[3]) qco[3] = qc[1], qco[4] = qc[3];
+    else qco[3] = qc[3], qco[4] = qc[1];
+   }
   }
 //if qc[3] is smallest
   else if ( qc[3] <= qc[1] && qc[3] <= qc[2] && qc[3] <= qc[4])
   {
      qco[1] = qc[3];
-	 //if qc[1] is next smallest
+   //if qc[1] is next smallest
      if (qc[1] <= qc[2] && qc[1] <= qc[4])
-	 {
-	    qco[2] = qc[1];
-		if(qc[2] <= qc[4]) qco[3] = qc[2], qco[4] = qc[4];
-		else qco[3] = qc[4], qco[4] = qc[2];
-	 }
-	 //if qc[2] is next smallest
+   {
+      qco[2] = qc[1];
+    if(qc[2] <= qc[4]) qco[3] = qc[2], qco[4] = qc[4];
+    else qco[3] = qc[4], qco[4] = qc[2];
+   }
+   //if qc[2] is next smallest
      else if (qc[2] <= qc[1] && qc[2] <= qc[4])
-	 {
-	    qco[2] = qc[2];
-		if(qc[1] <= qc[4]) qco[3] = qc[1], qco[4] = qc[4];
-		else qco[3] = qc[4], qco[4] = qc[1];
-	 }
-	 //if qc[4] is next smallest
-	 else
-	 {
-	    qco[2] = qc[4];
-		if(qc[1] <= qc[2]) qco[3] = qc[1], qco[4] = qc[2];
-		else qco[3] = qc[2], qco[4] = qc[1];
-	 }
+   {
+      qco[2] = qc[2];
+    if(qc[1] <= qc[4]) qco[3] = qc[1], qco[4] = qc[4];
+    else qco[3] = qc[4], qco[4] = qc[1];
+   }
+   //if qc[4] is next smallest
+   else
+   {
+      qco[2] = qc[4];
+    if(qc[1] <= qc[2]) qco[3] = qc[1], qco[4] = qc[2];
+    else qco[3] = qc[2], qco[4] = qc[1];
+   }
   }
 //if qc[4] is smallest
   else
   {
      qco[1] = qc[4];
-	 //if qc[1] is next smallest
+   //if qc[1] is next smallest
      if (qc[1] <= qc[2] && qc[1] <= qc[3])
-	 {
-	    qco[2] = qc[1];
-		if(qc[2] <= qc[3]) qco[3] = qc[2], qco[4] = qc[3];
-		else qco[3] = qc[3], qco[4] = qc[2];
-	 }
-	 //if qc[2] is next smallest
+   {
+      qco[2] = qc[1];
+    if(qc[2] <= qc[3]) qco[3] = qc[2], qco[4] = qc[3];
+    else qco[3] = qc[3], qco[4] = qc[2];
+   }
+   //if qc[2] is next smallest
      else if (qc[2] <= qc[1] && qc[2] <= qc[3])
-	 {
-	    qco[2] = qc[2];
-		if(qc[1] <= qc[3]) qco[3] = qc[1], qco[4] = qc[3];
-		else qco[3] = qc[3], qco[4] = qc[1];
-	 }
-	 //if qc[3] is next smallest
-	 else
-	 {
-	    qco[2] = qc[3];
-		if(qc[1] <= qc[2]) qco[3] = qc[1], qco[4] = qc[2];
-		else qco[3] = qc[2], qco[4] = qc[1];
-	 }
+   {
+      qco[2] = qc[2];
+    if(qc[1] <= qc[3]) qco[3] = qc[1], qco[4] = qc[3];
+    else qco[3] = qc[3], qco[4] = qc[1];
+   }
+   //if qc[3] is next smallest
+   else
+   {
+      qco[2] = qc[3];
+    if(qc[1] <= qc[2]) qco[3] = qc[1], qco[4] = qc[2];
+    else qco[3] = qc[2], qco[4] = qc[1];
+   }
   }
   wmin = qco[4];
   if (((qco[3] + qco[4]) / (sqrt_two)) > wmin)
@@ -271,21 +271,21 @@ double MisorientationCalculations::getMisoQuatHexagonal(double q1[5],double q2[5
   double angle = 180*atan(n2/n1)/m_pi;
   if(angle > 30.0)
   {
-	if(int(angle/30)%2 == 0)
-	{
-		newangle = angle - (30*int(angle/30));
-		newangle = newangle*m_pi/180.0;
-		n1 = cos(newangle);
-		n2 = sin(newangle);
-	}
-	if(int(angle/30)%2 == 1)
-	{
-		newangle = angle - (30*int(angle/30));
-		newangle = 30 - newangle;
-		newangle = newangle*m_pi/180.0;
-		n1 = cos(newangle);
-		n2 = sin(newangle);
-	}
+  if(int(angle/30)%2 == 0)
+  {
+    newangle = angle - (30*int(angle/30));
+    newangle = newangle*m_pi/180.0;
+    n1 = cos(newangle);
+    n2 = sin(newangle);
+  }
+  if(int(angle/30)%2 == 1)
+  {
+    newangle = angle - (30*int(angle/30));
+    newangle = 30 - newangle;
+    newangle = newangle*m_pi/180.0;
+    n1 = cos(newangle);
+    n2 = sin(newangle);
+  }
   }
   wmin = (180.0 / m_pi) * wmin;
   return wmin;
@@ -293,209 +293,209 @@ double MisorientationCalculations::getMisoQuatHexagonal(double q1[5],double q2[5
 
 void MisorientationCalculations::getFZRodCubic(double &r1,double &r2, double &r3)
 {
-	double rodsym[24][3] = {{0,0,0},
-	{10000000.0, 0, 0},
-	{0, 10000000.0, 0},
-	{0, 0, 10000000.0},
-	{1.0, 0, 0},
-	{0, 1.0, 0},
-	{0, 0, 1.0},
-	{-1.0, 0, 0},
-	{0, -1.0, 0},
-	{0, 0, -1.0},
-	{10000000.0, 10000000.0, 0},
-	{-10000000.0, 10000000.0, 0},
-	{0, 10000000.0, 10000000.0},
-	{0, -10000000.0, 10000000.0},
-	{10000000.0, 0, 10000000.0},
-	{-10000000.0, 0, 10000000.0},
-	{1.0, 1.0, 1.0},
-	{-1.0, -1.0, -1.0},
-	{1.0, -1.0, 1.0},
-	{-1.0, 1.0, -1.0},
-	{-1.0, 1.0, 1.0},
-	{1.0, -1.0, -1.0},
-	{-1.0, -1.0, 1.0},
-	{1.0, 1.0, -1.0}};
-	double denom, dist;
-//	int index;
-	double smallestdist = 100000000;
-	double rc1, rc2, rc3;
-	double r1min, r2min, r3min;
-	for(int i=0;i<24;i++)
-	{
-		denom = 1-(r1*rodsym[i][0]+r2*rodsym[i][1]+r3*rodsym[i][2]);
-		rc1 = (r1+rodsym[i][0]-(r3*rodsym[i][1]-r2*rodsym[i][2]))/denom;
-		rc2 = (r2+rodsym[i][1]-(r1*rodsym[i][2]-r3*rodsym[i][0]))/denom;
-		rc3 = (r3+rodsym[i][2]-(r2*rodsym[i][0]-r1*rodsym[i][1]))/denom;
-		dist = rc1*rc1+rc2*rc2+rc3*rc3;
-		if(dist < smallestdist)
-		{
-			smallestdist = dist;
-			r1min = rc1;
-			r2min = rc2;
-			r3min = rc3;
-		}
-	}
-	r1 = r1min;
-	r2 = r2min;
-	r3 = r3min;
+  double rodsym[24][3] = {{0,0,0},
+  {10000000.0, 0, 0},
+  {0, 10000000.0, 0},
+  {0, 0, 10000000.0},
+  {1.0, 0, 0},
+  {0, 1.0, 0},
+  {0, 0, 1.0},
+  {-1.0, 0, 0},
+  {0, -1.0, 0},
+  {0, 0, -1.0},
+  {10000000.0, 10000000.0, 0},
+  {-10000000.0, 10000000.0, 0},
+  {0, 10000000.0, 10000000.0},
+  {0, -10000000.0, 10000000.0},
+  {10000000.0, 0, 10000000.0},
+  {-10000000.0, 0, 10000000.0},
+  {1.0, 1.0, 1.0},
+  {-1.0, -1.0, -1.0},
+  {1.0, -1.0, 1.0},
+  {-1.0, 1.0, -1.0},
+  {-1.0, 1.0, 1.0},
+  {1.0, -1.0, -1.0},
+  {-1.0, -1.0, 1.0},
+  {1.0, 1.0, -1.0}};
+  double denom, dist;
+//  int index;
+  double smallestdist = 100000000;
+  double rc1, rc2, rc3;
+  double r1min, r2min, r3min;
+  for(int i=0;i<24;i++)
+  {
+    denom = 1-(r1*rodsym[i][0]+r2*rodsym[i][1]+r3*rodsym[i][2]);
+    rc1 = (r1+rodsym[i][0]-(r3*rodsym[i][1]-r2*rodsym[i][2]))/denom;
+    rc2 = (r2+rodsym[i][1]-(r1*rodsym[i][2]-r3*rodsym[i][0]))/denom;
+    rc3 = (r3+rodsym[i][2]-(r2*rodsym[i][0]-r1*rodsym[i][1]))/denom;
+    dist = rc1*rc1+rc2*rc2+rc3*rc3;
+    if(dist < smallestdist)
+    {
+      smallestdist = dist;
+      r1min = rc1;
+      r2min = rc2;
+      r3min = rc3;
+    }
+  }
+  r1 = r1min;
+  r2 = r2min;
+  r3 = r3min;
 }
 
 void MisorientationCalculations::getNearestQuatCubic(double *q1, double *q2)
 {
-	double dist = 0;
-	double smallestdist = 1000000;
-	double qc[5];
-	double qmax[5];
-	for(int i=0;i<5;i++)
-	{
-		qc[i] = q2[i];
-	}
-	for(int i=0;i<24;i++)
-	{
-	    AIM::Quaternions::Cubic_MultiplyByUnitQuaterion(q2, i, qc);
-		dist = 2.0*(1-(qc[4]*q1[4]+qc[1]*q1[1]+qc[2]*q1[2]+qc[3]*q1[3]));
-		if(dist < smallestdist)
-		{
-			smallestdist = dist;
-			qmax[0] = qc[0];
-			qmax[1] = qc[1];
-			qmax[2] = qc[2];
-			qmax[3] = qc[3];
-			qmax[4] = qc[4];
-		}
-	}
-	q2[0] = qmax[0];
-	q2[1] = qmax[1];
-	q2[2] = qmax[2];
-	q2[3] = qmax[3];
-	q2[4] = qmax[4];
-	if(q2[4] < 0)
-	{
-		q2[0] = q2[0];
-		q2[1] = -q2[1];
-		q2[2] = -q2[2];
-		q2[3] = -q2[3];
-		q2[4] = -q2[4];
-	}
+  double dist = 0;
+  double smallestdist = 1000000;
+  double qc[5];
+  double qmax[5];
+  for(int i=0;i<5;i++)
+  {
+    qc[i] = q2[i];
+  }
+  for(int i=0;i<24;i++)
+  {
+      AIM::Quaternions::Cubic_MultiplyByUnitQuaterion(q2, i, qc);
+    dist = 2.0*(1-(qc[4]*q1[4]+qc[1]*q1[1]+qc[2]*q1[2]+qc[3]*q1[3]));
+    if(dist < smallestdist)
+    {
+      smallestdist = dist;
+      qmax[0] = qc[0];
+      qmax[1] = qc[1];
+      qmax[2] = qc[2];
+      qmax[3] = qc[3];
+      qmax[4] = qc[4];
+    }
+  }
+  q2[0] = qmax[0];
+  q2[1] = qmax[1];
+  q2[2] = qmax[2];
+  q2[3] = qmax[3];
+  q2[4] = qmax[4];
+  if(q2[4] < 0)
+  {
+    q2[0] = q2[0];
+    q2[1] = -q2[1];
+    q2[2] = -q2[2];
+    q2[3] = -q2[3];
+    q2[4] = -q2[4];
+  }
 }
 
 void MisorientationCalculations::getNearestQuatHexagonal(double *q1, double *q2)
 {
-	double dist = 0;
-	double smallestdist = 1000000;
-	double qc[5];
-	double qmax[5];
-	for(int i=0;i<5;i++)
-	{
-		qc[i] = q2[i];
-	}
-	for(int i=0;i<12;i++)
-	{
-	    AIM::Quaternions::Hex_MultiplyByUnitQuaterion(q2, i, qc);
-		dist = 2.0*(1-(qc[4]*q1[4]+qc[1]*q1[1]+qc[2]*q1[2]+qc[3]*q1[3]));
-		if(dist < smallestdist)
-		{
-			smallestdist = dist;
-			qmax[0] = qc[0];
-			qmax[1] = qc[1];
-			qmax[2] = qc[2];
-			qmax[3] = qc[3];
-			qmax[4] = qc[4];
-		}
-	}
-	q2[0] = qmax[0];
-	q2[1] = qmax[1];
-	q2[2] = qmax[2];
-	q2[3] = qmax[3];
-	q2[4] = qmax[4];
-	if(q2[4] < 0)
-	{
-		q2[0] = q2[0];
-		q2[1] = -q2[1];
-		q2[2] = -q2[2];
-		q2[3] = -q2[3];
-		q2[4] = -q2[4];
-	}
+  double dist = 0;
+  double smallestdist = 1000000;
+  double qc[5];
+  double qmax[5];
+  for(int i=0;i<5;i++)
+  {
+    qc[i] = q2[i];
+  }
+  for(int i=0;i<12;i++)
+  {
+      AIM::Quaternions::Hex_MultiplyByUnitQuaterion(q2, i, qc);
+    dist = 2.0*(1-(qc[4]*q1[4]+qc[1]*q1[1]+qc[2]*q1[2]+qc[3]*q1[3]));
+    if(dist < smallestdist)
+    {
+      smallestdist = dist;
+      qmax[0] = qc[0];
+      qmax[1] = qc[1];
+      qmax[2] = qc[2];
+      qmax[3] = qc[3];
+      qmax[4] = qc[4];
+    }
+  }
+  q2[0] = qmax[0];
+  q2[1] = qmax[1];
+  q2[2] = qmax[2];
+  q2[3] = qmax[3];
+  q2[4] = qmax[4];
+  if(q2[4] < 0)
+  {
+    q2[0] = q2[0];
+    q2[1] = -q2[1];
+    q2[2] = -q2[2];
+    q2[3] = -q2[3];
+    q2[4] = -q2[4];
+  }
 }
 
 void MisorientationCalculations::getFZQuatCubic(double *qr)
 {
-	double dist = 0;
-	double smallestdist = 1000000;
-	double qc[5];
-	double qmax[5];
-	for(int i=0;i<5;i++)
-	{
-		qc[i] = qr[i];
-	}
-	for(int i=0;i<24;i++)
-	{
-	    AIM::Quaternions::Cubic_MultiplyByUnitQuaterion(qr, i, qc);
-		dist = qc[1]*qc[1]+qc[2]*qc[2]+qc[3]*qc[3];
-		if(dist < smallestdist)
-		{
-			smallestdist = dist;
-			qmax[0] = qc[0];
-			qmax[1] = qc[1];
-			qmax[2] = qc[2];
-			qmax[3] = qc[3];
-			qmax[4] = qc[4];
-		}
-	}
-	qr[0] = qmax[0];
-	qr[1] = qmax[1];
-	qr[2] = qmax[2];
-	qr[3] = qmax[3];
-	qr[4] = qmax[4];
-	if(qr[4] < 0)
-	{
-		qr[0] = qr[0];
-		qr[1] = -qr[1];
-		qr[2] = -qr[2];
-		qr[3] = -qr[3];
-		qr[4] = -qr[4];
-	}
+  double dist = 0;
+  double smallestdist = 1000000;
+  double qc[5];
+  double qmax[5];
+  for(int i=0;i<5;i++)
+  {
+    qc[i] = qr[i];
+  }
+  for(int i=0;i<24;i++)
+  {
+      AIM::Quaternions::Cubic_MultiplyByUnitQuaterion(qr, i, qc);
+    dist = qc[1]*qc[1]+qc[2]*qc[2]+qc[3]*qc[3];
+    if(dist < smallestdist)
+    {
+      smallestdist = dist;
+      qmax[0] = qc[0];
+      qmax[1] = qc[1];
+      qmax[2] = qc[2];
+      qmax[3] = qc[3];
+      qmax[4] = qc[4];
+    }
+  }
+  qr[0] = qmax[0];
+  qr[1] = qmax[1];
+  qr[2] = qmax[2];
+  qr[3] = qmax[3];
+  qr[4] = qmax[4];
+  if(qr[4] < 0)
+  {
+    qr[0] = qr[0];
+    qr[1] = -qr[1];
+    qr[2] = -qr[2];
+    qr[3] = -qr[3];
+    qr[4] = -qr[4];
+  }
 }
 
 void MisorientationCalculations::getFZQuatHexagonal(double *qr)
 {
-	double dist = 0;
-	double smallestdist = 1000000;
-	double qc[5];
-	double qmax[5];
-	for(int i=0;i<5;i++)
-	{
-		qc[i] = qr[i];
-	}
-	for(int i=0;i<12;i++)
-	{
-	    AIM::Quaternions::Hex_MultiplyByUnitQuaterion(qr, i, qc);
-		dist = qc[1]*qc[1]+qc[2]*qc[2]+qc[3]*qc[3];
-		if(dist < smallestdist)
-		{
-			smallestdist = dist;
-			qmax[0] = qc[0];
-			qmax[1] = qc[1];
-			qmax[2] = qc[2];
-			qmax[3] = qc[3];
-			qmax[4] = qc[4];
-		}
-	}
-	qr[0] = qmax[0];
-	qr[1] = qmax[1];
-	qr[2] = qmax[2];
-	qr[3] = qmax[3];
-	qr[4] = qmax[4];
-	if(qr[4] < 0)
-	{
-		qr[0] = qr[0];
-		qr[1] = -qr[1];
-		qr[2] = -qr[2];
-		qr[3] = -qr[3];
-		qr[4] = -qr[4];
-	}
+  double dist = 0;
+  double smallestdist = 1000000;
+  double qc[5];
+  double qmax[5];
+  for(int i=0;i<5;i++)
+  {
+    qc[i] = qr[i];
+  }
+  for(int i=0;i<12;i++)
+  {
+      AIM::Quaternions::Hex_MultiplyByUnitQuaterion(qr, i, qc);
+    dist = qc[1]*qc[1]+qc[2]*qc[2]+qc[3]*qc[3];
+    if(dist < smallestdist)
+    {
+      smallestdist = dist;
+      qmax[0] = qc[0];
+      qmax[1] = qc[1];
+      qmax[2] = qc[2];
+      qmax[3] = qc[3];
+      qmax[4] = qc[4];
+    }
+  }
+  qr[0] = qmax[0];
+  qr[1] = qmax[1];
+  qr[2] = qmax[2];
+  qr[3] = qmax[3];
+  qr[4] = qmax[4];
+  if(qr[4] < 0)
+  {
+    qr[0] = qr[0];
+    qr[1] = -qr[1];
+    qr[2] = -qr[2];
+    qr[3] = -qr[3];
+    qr[4] = -qr[4];
+  }
 }
 
 void MisorientationCalculations::initializeDims( AIM::Reconstruction::CrystalStructure crystruct, double &dim1, double &dim2, double &dim3, int &numbins)
@@ -518,30 +518,30 @@ void MisorientationCalculations::initializeDims( AIM::Reconstruction::CrystalStr
 
 int MisorientationCalculations::getMisoBinCubic(double n1, double n2, double n3)
 {
-	double dim1 = CubicDim1InitValue;
-	double dim2 = CubicDim2InitValue;
-	double dim3 = CubicDim3InitValue;
-	size_t miso1bin = size_t(n1*18.0/dim1);
-	size_t miso2bin = size_t(n2*18.0/dim2);
-	size_t miso3bin = size_t(n3*18.0/dim3);
-	if(miso1bin >= 18) miso1bin = 17;
-	if(miso2bin >= 18) miso2bin = 17;
-	if(miso3bin >= 18) miso3bin = 17;
-	return ((18*18*miso3bin)+(18*miso2bin)+miso1bin);
+  double dim1 = CubicDim1InitValue;
+  double dim2 = CubicDim2InitValue;
+  double dim3 = CubicDim3InitValue;
+  size_t miso1bin = size_t(n1*18.0/dim1);
+  size_t miso2bin = size_t(n2*18.0/dim2);
+  size_t miso3bin = size_t(n3*18.0/dim3);
+  if(miso1bin >= 18) miso1bin = 17;
+  if(miso2bin >= 18) miso2bin = 17;
+  if(miso3bin >= 18) miso3bin = 17;
+  return ((18*18*miso3bin)+(18*miso2bin)+miso1bin);
 }
 
 int MisorientationCalculations::getMisoBinHexagonal(double n1, double n2, double n3)
 {
-	double dim1 = HexDim1InitValue;
-	double dim2 = HexDim2InitValue;
-	double dim3 = HexDim3InitValue;
-	size_t miso1bin = size_t(n1*36.0/dim1);
-	size_t miso2bin = size_t(n2*36.0/dim2);
-	size_t miso3bin = size_t(n3*12.0/dim3);
-	if(miso1bin >= 36) miso1bin = 35;
-	if(miso2bin >= 36) miso2bin = 35;
-	if(miso3bin >= 12) miso3bin = 11;
-	return ((36*36*miso3bin)+(36*miso2bin)+miso1bin);
+  double dim1 = HexDim1InitValue;
+  double dim2 = HexDim2InitValue;
+  double dim3 = HexDim3InitValue;
+  size_t miso1bin = size_t(n1*36.0/dim1);
+  size_t miso2bin = size_t(n2*36.0/dim2);
+  size_t miso3bin = size_t(n3*12.0/dim3);
+  if(miso1bin >= 36) miso1bin = 35;
+  if(miso2bin >= 36) miso2bin = 35;
+  if(miso3bin >= 12) miso3bin = 11;
+  return ((36*36*miso3bin)+(36*miso2bin)+miso1bin);
 }
 
 

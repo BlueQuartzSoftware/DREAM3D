@@ -27,7 +27,7 @@
 #include <AIM/Reconstruction/Reconstruction.h>
 
 
-#define RECONSTRUCTION_MANUAL_DEBUG 1
+#define RECONSTRUCTION_MANUAL_DEBUG 0
 
 #define CHECK_ARG(var, mandatory)\
   if (vm.count(#var) > 1) { mxa_log << logTime() << "Multiple Occurances for Parameter " << #var << std::endl; }\
@@ -80,6 +80,8 @@ int main(int argc, char **argv)
     cmd.add(CrystalStructure);
     TCLAP::ValueArg<int>  AlignMeth( "", "alignment", "Alignment Method [0] OuterBoundary [1] Misorientation [2] Mutual Information", false, 0, "Default=0");
     cmd.add(AlignMeth);
+    TCLAP::ValueArg<int>  Orientation( "", "orientation", "OIM Data Orientation [0] Upper Right [1] Upper Left [2] Lower Left [3] Lower Right [4] None", false, 4, "Default=4");
+    cmd.add(Orientation);
 
     TCLAP::ValueArg<int>  MinAllowedGrainSize( "", "minGrainSize", "What is the minimum allowed grain size", false, 50, "Default=50");
     cmd.add(MinAllowedGrainSize);
@@ -126,6 +128,8 @@ int main(int argc, char **argv)
     AIM::Reconstruction::AlignmentMethod alignmeth = static_cast<AIM::Reconstruction::AlignmentMethod>(AlignMeth.getValue() );
     m_Reconstruction->setCrystalStructure(crystruct);
     m_Reconstruction->setAlignmentMethod(alignmeth);
+    Ang::Orientation orient = static_cast<Ang::Orientation>(Orientation.getValue());
+    m_Reconstruction->setOrientation(orient);
 
     m_Reconstruction->setMinAllowedGrainSize(MinAllowedGrainSize.getValue());
     m_Reconstruction->setMisorientationTolerance(MisOrientationTolerance.getValue());
@@ -145,30 +149,31 @@ int main(int argc, char **argv)
 
 #if RECONSTRUCTION_MANUAL_DEBUG
 #if (_WIN32)
-    m_Reconstruction->setH5AngFile("C:\\Data\\Ang_Data\\2PercentStrain.h5ang");
+    m_Reconstruction->setH5AngFile("C:\\Data\\12_strain.h5ang");
     m_Reconstruction->setOutputDirectory("C:\\Data\\ReconstructionOutput");
     if (MXADir::exists("C:\\Data\\ReconstructionOutput") == false )
     {
       MXADir::mkdir("C:\\Data\\ReconstructionOutput", true);
     }
 #else
-    m_Reconstruction->setH5AngFile("/Users/Shared/Data/Ang_Data/2PercentStrain.h5ang");
+    m_Reconstruction->setH5AngFile("/Users/Shared/Data/Ang_Data/2PercentStrain/2PercentStrain.h5ang");
     m_Reconstruction->setOutputDirectory("/tmp/2PercentStrain");
     if (MXADir::exists("/tmp/2PercentStrain") == false )
     {
       MXADir::mkdir("/tmp/2PercentStrain", true);
     }
 #endif
-    m_Reconstruction->setZStartIndex(10112);
-    m_Reconstruction->setZEndIndex(10315);
+    m_Reconstruction->setZStartIndex(10074);
+    m_Reconstruction->setZEndIndex(10376);
     m_Reconstruction->setCrystalStructure(AIM::Reconstruction::Cubic);
     m_Reconstruction->setAlignmentMethod(AIM::Reconstruction::OuterBoundary);
-    m_Reconstruction->setMinAllowedGrainSize(10);
+    m_Reconstruction->setMinAllowedGrainSize(24);
     m_Reconstruction->setMisorientationTolerance(5.0);
-    m_Reconstruction->setMinSeedImageQuality(900);
+    m_Reconstruction->setMinSeedImageQuality(600);
     m_Reconstruction->setMinSeedConfidence(0.1);
+    m_Reconstruction->setOrientation(Ang::UpperRightOrigin);
 
-
+    m_Reconstruction->printSettings(std::cout);
 #endif
     m_Reconstruction->compute();
     err = m_Reconstruction->getErrorCondition();
