@@ -97,7 +97,6 @@ int ReconstructionVTKWriter::write##name##VizFile(ReconstructionFunc* r, const s
   return 0;\
 }
 
-WRITE_VTK_GRAIN_WITH_VOXEL_SCALAR_VALUE(Disorientation, grainmisorientation)
 
 WRITE_VTK_GRAIN_WITH_VOXEL_SCALAR_VALUE(ImageQuality, imagequality)
 
@@ -133,24 +132,26 @@ int ReconstructionVTKWriter::writeVisualizationFile(ReconstructionFunc* r, const
   size_t total = r->xpoints * r->ypoints * r->zpoints;
   WRITE_VTK_GRAIN_IDS(r)
 
+  WRITE_VTK_SCALARS_FROM_VOXEL(r, Euclidean, float, nearestneighbordistance[0])
+
+  fclose(f);
+  return 0;
+}
+
+int ReconstructionVTKWriter::writeDisorientationFile(ReconstructionFunc* r, const std::string &file)
+{
+  FILE* f = NULL;
+  f = fopen(file.c_str(), "w");
+  if (NULL == f)
+  {
+    return 1;
+  }
+  WRITE_VTK_GRAIN_HEADER("ASCII", r)
+  size_t total = r->xpoints * r->ypoints * r->zpoints;
+  WRITE_VTK_GRAIN_IDS(r)
+
   WRITE_VTK_SCALARS_FROM_VOXEL(r, KAM, float, kernelmisorientation)
   WRITE_VTK_SCALARS_FROM_VOXEL(r, GAM, float, grainmisorientation)
-
-  if (r->mergetwinsoption == 1)
-  {
-    fprintf(f, "SCALARS WasTwin int 1");
-    fprintf(f, "LOOKUP_TABLE default\n");
-    size_t grainname = 0;
-    for (size_t i = 0; i < total; i++)
-    {
-      if (i % 20 == 0 && i > 0)
-      {
-        fprintf(f, "\n");
-      }
-      grainname = r->voxels[i].grainname;
-      fprintf(f, "%d ", r->m_Grains[grainname]->gottwinmerged);
-    }
-  }
 
   fclose(f);
   return 0;

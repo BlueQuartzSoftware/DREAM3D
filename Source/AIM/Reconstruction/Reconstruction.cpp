@@ -318,8 +318,8 @@ void Reconstruction::compute()
   if(m_ZEndIndex-m_ZStartIndex == 1) m->find_vectors2D(h5io);
   CHECK_FOR_CANCELED(ReconstructionFunc, find_vectors2D)
 
-  progressMessage(AIM_STRING("Refinding Neighbors"), 63);
-  m->find_neighbors();
+  progressMessage(AIM_STRING("Defining Neighborhoods"), 63);
+  m->define_neighborhood();
   CHECK_FOR_CANCELED(ReconstructionFunc, find_neighbors)
 
 
@@ -361,7 +361,7 @@ void Reconstruction::compute()
   if (m_WriteIPFFile) {outWriter->writeIPFVizFile(m.get(), reconIPFVisFile);}
 
   progressMessage(AIM_STRING("Writing VTK Disorientation File"), 90);
-  if (m_WriteDisorientationFile) {outWriter->writeDisorientationVizFile(m.get(), reconDisVisFile);}
+  if (m_WriteDisorientationFile) {outWriter->writeDisorientationFile(m.get(), reconDisVisFile);}
 
   progressMessage(AIM_STRING("Writing VTK Image Quality File"), 91);
   if (m_WriteImageQualityFile) {outWriter->writeImageQualityVizFile(m.get(), reconIQVisFile);}
