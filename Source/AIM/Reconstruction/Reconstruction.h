@@ -96,7 +96,12 @@ Q_OBJECT
      * @brief Cancel the operation
      */
     MXA_INSTANCE_PROPERTY(bool, Cancel);
-
+  
+    /**
+    * @brief
+    * @param ostream
+    */
+    void printSettings(std::ostream &ostream);
 
     /**
      * @brief Either prints a message or sends the message to the User Interface

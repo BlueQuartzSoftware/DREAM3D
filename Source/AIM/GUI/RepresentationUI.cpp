@@ -119,7 +119,7 @@ void RepresentationUI::readSettings()
   QSettings prefs(QSettings::IniFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
 #endif
   QString val;
-  bool ok;
+//  bool ok;
   qint32 i;
 
   int ActiveTab = 0;

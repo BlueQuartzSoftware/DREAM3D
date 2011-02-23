@@ -290,8 +290,9 @@ int ReconstructionVTKWriter::writeDownSampledVizFile(ReconstructionFunc* r, cons
   int col, row, plane;
   int index;
   int *gnames;
-  gnames = new int[r->numgrains];
-  for (int i = 0; i < r->numgrains; i++)
+  int numgrains = r->m_Grains.size();
+  gnames = new int[numgrains];
+  for (int i = 0; i < numgrains; i++)
   {
     gnames[i] = 0;
   }
@@ -334,7 +335,7 @@ int ReconstructionVTKWriter::writeDownSampledVizFile(ReconstructionFunc* r, cons
       }
     }
   }
-  for (int i = 0; i < r->numgrains; i++)
+  for (int i = 0; i < numgrains; i++)
   {
     fprintf(f, "%d ", i);
     fprintf(f, "%d ", gnames[i]);
