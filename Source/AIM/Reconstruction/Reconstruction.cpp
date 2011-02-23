@@ -155,9 +155,9 @@ void Reconstruction::compute()
   m->initialize(m->xpoints, m->ypoints, m->zpoints,
                 m->resx, m->resy, m->resz,
                 m_MergeTwins, m_MergeColonies, m_MinAllowedGrainSize,
-	              m_MinSeedConfidence, m_DownSampleFactor, m_MinSeedImageQuality,
-	              m_MisorientationTolerance, m_SizeBinStepSize, m_CrystalStructure, m_AlignmentMethod,
-	              m_AlreadyFormed);
+                m_MinSeedConfidence, m_DownSampleFactor, m_MinSeedImageQuality,
+                m_MisorientationTolerance, m_SizeBinStepSize, m_CrystalStructure, m_AlignmentMethod,
+                m_AlreadyFormed);
   m_OutputDirectory = MXADir::toNativeSeparators(m_OutputDirectory);
 
   // Create a new HDF5 Results file by overwriting any HDF5 file that may be in the way
@@ -245,9 +245,9 @@ void Reconstruction::compute()
 
     progressMessage(AIM_STRING("Forming Macro-Grains"), 19);
     m->numgrains = m->form_grains();
-	CHECK_FOR_CANCELED(ReconstructionFunc, form_grains)
+  CHECK_FOR_CANCELED(ReconstructionFunc, form_grains)
 
-	  progressMessage(AIM_STRING("Assigning Bad Points"), 28);
+    progressMessage(AIM_STRING("Assigning Bad Points"), 28);
     m->assign_badpoints();
     CHECK_FOR_CANCELED(ReconstructionFunc, assign_badpoints)
   }
@@ -272,8 +272,8 @@ void Reconstruction::compute()
 
   if(m_FillinSample == true)
   {
-	  progressMessage(AIM_STRING("Creating Smooth Rectangular Sample"), 49);
-	  m->fillin_sample();
+    progressMessage(AIM_STRING("Creating Smooth Rectangular Sample"), 49);
+    m->fillin_sample();
     CHECK_FOR_CANCELED(ReconstructionFunc, fillin_sample)
   }
 
@@ -295,7 +295,7 @@ void Reconstruction::compute()
     m->merge_colonies();
     CHECK_FOR_CANCELED(ReconstructionFunc, merge_colonies)
 
-	  progressMessage(AIM_STRING("Renumbering Grains"), 53);
+    progressMessage(AIM_STRING("Renumbering Grains"), 53);
     m->characterize_colonies();
     CHECK_FOR_CANCELED(ReconstructionFunc, characterize_colonies)
   }
