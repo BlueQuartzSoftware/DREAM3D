@@ -2337,6 +2337,8 @@ void ReconstructionFunc::define_neighborhood()
   double xdist, ydist, zdist;
   double dist, dist2, diam, diam2;
   int dist_int, dist2_int;
+  size_t numgrains = m_Grains.size();
+
   for (int i = 1; i < numgrains; i++)
   {
       Grain& grain = *(m_Grains[i].get());
