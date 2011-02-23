@@ -43,7 +43,8 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-H5AngDataLoader::H5AngDataLoader()
+H5AngDataLoader::H5AngDataLoader() :
+m_Orientation(Ang::NoOrientation)
 {
 }
 
@@ -176,7 +177,7 @@ int H5AngDataLoader::loadData(Voxel voxels[], int xpoints, int ypoints, int zpoi
     H5AngReader::Pointer reader = H5AngReader::New();
     reader->setFileName(getFilename());
     reader->setHDF5Path(StringUtils::numToString(slice + m_ZStartIndex));
-	reader->setUserOrigin(AngReader::UpperRightOrigin);
+    reader->setUserOrigin(m_Orientation);
 
     err = reader->readFile();
     if (err < 0)
@@ -217,7 +218,7 @@ int H5AngDataLoader::loadData(Voxel voxels[], int xpoints, int ypoints, int zpoi
         qr[2] = s * s1;
         qr[3] = c * s2;
         qr[4] = c * c2;
-		MisorientationCalculations::getFZQuatCubic(qr);
+        MisorientationCalculations::getFZQuatCubic(qr);
         voxels[index].quat[0] = 1.0;
         voxels[index].quat[1] = qr[1];
         voxels[index].quat[2] = qr[2];

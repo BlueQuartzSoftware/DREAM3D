@@ -19,8 +19,9 @@
 
 #include <MXA/Common/MXASetGetMacros.h>
 #include <MXA/MXATypes.h>
-#include <AIM/Common/Constants.h>
-#include <AIM/Common/ReconstructionFunc.h>
+#include "AIM/Common/Constants.h"
+#include "AIM/Common/ReconstructionFunc.h"
+#include "AIM/ANG/AngConstants.h"
 
 #ifdef AIM_USE_QT
 #include <QtCore/QObject>
@@ -79,6 +80,7 @@ Q_OBJECT
     MXA_INSTANCE_PROPERTY(AIM::Reconstruction::CrystalStructure, CrystalStructure)
     MXA_INSTANCE_PROPERTY(AIM::Reconstruction::AlignmentMethod, AlignmentMethod)
     MXA_INSTANCE_PROPERTY(bool, AlreadyFormed)
+    MXA_INSTANCE_PROPERTY(Ang::Orientation, Orientation)
 
     MXA_INSTANCE_PROPERTY(bool, WriteVisualizationFile)
     MXA_INSTANCE_PROPERTY(bool, WriteIPFFile)
@@ -94,7 +96,12 @@ Q_OBJECT
      * @brief Cancel the operation
      */
     MXA_INSTANCE_PROPERTY(bool, Cancel);
-
+  
+    /**
+    * @brief
+    * @param ostream
+    */
+    void printSettings(std::ostream &ostream);
 
     /**
      * @brief Either prints a message or sends the message to the User Interface

@@ -7,7 +7,7 @@
 
 
 #if defined (_MSC_VER)
-#define WIN32_LEAN_AND_MEAN		// Exclude rarely-used stuff from Windows headers
+#define WIN32_LEAN_AND_MEAN   // Exclude rarely-used stuff from Windows headers
 #endif
 
 
@@ -35,8 +35,8 @@ const std::string Separator("/");
 //using namespace::std ;
 
 void tokenize(const std::string& str,
-			  std::vector<std::string>& tokens,
-			  const std::string& delimiters = " ")
+        std::vector<std::string>& tokens,
+        const std::string& delimiters = " ")
 {
   // Skip delimiters at beginning.
   std::string::size_type lastPos = str.find_first_not_of(delimiters, 0);
@@ -46,14 +46,14 @@ void tokenize(const std::string& str,
 
   while (std::string::npos != pos || std::string::npos != lastPos)
     {
-	  // Found a token, add it to the vector.
-	  tokens.push_back(str.substr(lastPos, pos - lastPos));
+    // Found a token, add it to the vector.
+    tokens.push_back(str.substr(lastPos, pos - lastPos));
 
-	  // Skip delimiters.  Note the "not_of"
-	  lastPos = str.find_first_not_of(delimiters, pos);
+    // Skip delimiters.  Note the "not_of"
+    lastPos = str.find_first_not_of(delimiters, pos);
 
-	  // Find next "non-delimiter"
-	  pos = str.find_first_of(delimiters, lastPos);
+    // Find next "non-delimiter"
+    pos = str.find_first_of(delimiters, lastPos);
     }
 }
 
@@ -128,10 +128,10 @@ Vector<double> triangle::normal() const
   n[2] = a[0]*b[1]-a[1]*b[0];
   double norm = sqrt(n[0]*n[0]+n[1]*n[1]+n[2]*n[2]);
   if (norm>0.0) {
-	double rnorm = 1.0/norm;
-	n[0] *= rnorm;
-	n[1] *= rnorm;
-	n[2] *= rnorm;
+  double rnorm = 1.0/norm;
+  n[0] *= rnorm;
+  n[1] *= rnorm;
+  n[2] *= rnorm;
   }
   return n;
 }

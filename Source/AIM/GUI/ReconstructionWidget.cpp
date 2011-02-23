@@ -101,6 +101,7 @@ void ReconstructionWidget::readSettings(QSettings &prefs)
   READ_CHECKBOX_SETTING(prefs, rec_fillinSample, false);
   READ_COMBO_BOX(prefs, rec_CrystalStructure)
   READ_COMBO_BOX(prefs, rec_AlignMeth)
+  READ_COMBO_BOX(prefs, rec_Orientation)
 
   READ_SETTING(prefs, rec_MinImageQuality, ok, d, 50.0 , Double);
   READ_SETTING(prefs, rec_MisOrientationTolerance, ok, d, 5.0 , Double);
@@ -148,6 +149,7 @@ void ReconstructionWidget::writeSettings(QSettings &prefs)
   WRITE_SETTING(prefs, rec_MisOrientationTolerance)
   WRITE_COMBO_BOX(prefs, rec_CrystalStructure)
   WRITE_COMBO_BOX(prefs, rec_AlignMeth)
+  WRITE_COMBO_BOX(prefs, rec_Orientation)
 
   WRITE_CHECKBOX_SETTING(prefs, rec_DisorientationVizFile)
   WRITE_CHECKBOX_SETTING(prefs, rec_ImageQualityVizFile)
@@ -432,6 +434,9 @@ void ReconstructionWidget::on_rec_GoBtn_clicked()
   m_Reconstruction->setCrystalStructure(crystruct);
   m_Reconstruction->setAlignmentMethod(alignmeth);
 
+  Ang::Orientation orientation = static_cast<Ang::Orientation>(rec_Orientation->currentIndex());
+  m_Reconstruction->setOrientation(orientation);
+
   m_Reconstruction->setMinAllowedGrainSize(rec_MinAllowedGrainSize->value());
   m_Reconstruction->setMisorientationTolerance(rec_MisOrientationTolerance->value());
   m_Reconstruction->setMinSeedImageQuality(rec_MinImageQuality->value());
@@ -448,6 +453,7 @@ void ReconstructionWidget::on_rec_GoBtn_clicked()
   m_Reconstruction->setWriteDownSampledFile(rec_DownSampledVizFile->isChecked());
   m_Reconstruction->setWriteHDF5GrainFile(rec_HDF5GrainFile->isChecked());
 
+  m_Reconstruction->printSettings(std::cout);
 
   /* Connect the signal 'started()' from the QThread to the 'run' slot of the
    * Reconstruction object. Since the Reconstruction object has been moved to another

@@ -14,7 +14,7 @@
 *  a PC. The Microsoft compiler doesn't support the long double format.  *
 *  You will get an error message if your system doesn't support this.    *
 *                                                                        *
-* © 2002 A. Fog. GNU General Public License www.gnu.org/copyleft/gpl.html*
+*  2002 A. Fog. GNU General Public License www.gnu.org/copyleft/gpl.html*
 *************************************************************************/
 #include "AIMRandomNG.h"
 #include "AIM/Common/AIMMath.h"
@@ -89,18 +89,18 @@ S20:
     if(qsame) goto S30;
     a = aa;
     b = bb;
-	if(a > b)
-	{
-		double temp = a;
-		a = b;
-		b = temp;
-	}
+  if(a > b)
+  {
+    double temp = a;
+    a = b;
+    b = temp;
+  }
     alpha = a+b;
     beta = sqrt((alpha-2.0)/(2.0*a*b-alpha));
     gamma = a+1.0/beta;
 S30:
 S40:
-	u1 = Random();
+  u1 = Random();
     v = beta*log(u1/(1.0-u1));
     if(!(v > expmax)) goto S50;
     w = infnty;
@@ -127,12 +127,12 @@ S100:
     if(qsame) goto S110;
     a = aa;
     b = bb;
-	if(b > a)
-	{
-		double temp = a;
-		a = b;
-		b = temp;
-	}
+  if(b > a)
+  {
+    double temp = a;
+    a = b;
+    b = temp;
+  }
     alpha = a+b;
     beta = 1.0/b;
     delta = 1.0+a-b;
@@ -140,8 +140,8 @@ S100:
     k2 = 0.25+(0.5+0.25/delta)*b;
 S110:
 S120:
-	u1 = Random();
-	u2 = Random();
+  u1 = Random();
+  u2 = Random();
     if(u1 >= 0.5) goto S130;
     y = u1*u2;
     z = u1*y;

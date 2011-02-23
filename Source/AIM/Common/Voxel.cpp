@@ -31,9 +31,12 @@ kernelmisorientation(0.0),
 surfacevoxel(0),
 unassigned(0)
 {
-	grainlist = new std::vector<int>;
-	ellipfunclist = new std::vector<double>;
-	neighborlist = new std::vector<int>;
+  nearestneighbor[0] = 0; nearestneighbor[1] = 0; nearestneighbor[2] = 0;
+  nearestneighbordistance[0] = 0.0; nearestneighbordistance[1] = 0.0; nearestneighbordistance[2] = 0.0;
+  quat[0] = 1.0; quat[1] = 0.0; quat[2] = 0.0; quat[3] = 0.0; quat[4] = 0.0;
+  grainlist = new std::vector<int>;
+  ellipfunclist = new std::vector<double>;
+  neighborlist = new std::vector<int>;
 }
 
 // -----------------------------------------------------------------------------
