@@ -50,7 +50,7 @@ using namespace std;
  * @brief This class holds all the various functions that are needed to reconstruct
  * a 3D representation from a stack of OIM Data.
  * @author Michael A. Jackson for BlueQuartz Software
- * @author Micharl A. Groeber (US Air Force Research Laboratory)
+ * @author Michael A. Groeber (US Air Force Research Laboratory)
  * @version 2.0
  */
 class AIMCOMMON_EXPORT ReconstructionFunc
@@ -102,7 +102,7 @@ class AIMCOMMON_EXPORT ReconstructionFunc
     // vector<vector<double> > grainquats;
     DoubleArrayType::Pointer m_grainQuats;
 
-	vector<vector<double> > neighborhood;
+	  vector<vector<double> > neighborhood;
     vector<vector<double> > neighborhoodfit;
     vector<vector<double> > svbovera;
     vector<vector<double> > svcovera;
@@ -113,7 +113,7 @@ class AIMCOMMON_EXPORT ReconstructionFunc
     int numseNbins;
     int numorients;
     int numeulers;
-    int numgrains;
+ //   int numgrains;
     double totalsurfacearea;
     int maxdiameter;
     int mindiameter;
@@ -146,7 +146,7 @@ class AIMCOMMON_EXPORT ReconstructionFunc
 
 
     void find_border();
-    int form_grains();
+    void form_grains();
     void form_grains_sections();
     void remove_smallgrains();
     int renumber_grains1();
@@ -155,16 +155,16 @@ class AIMCOMMON_EXPORT ReconstructionFunc
     void find_neighbors();
     void define_neighborhood();
     void merge_containedgrains();
-    int reorder_grains();
+    void reorder_grains();
     int remove_smallgrains(int numgrains);
-	void fillin_sample();
+	  void fillin_sample();
     void cleanup_data();
     void find_grain_and_kernel_misorientations();
     void merge_twins();
     void merge_colonies();
     void characterize_twins();
     void characterize_colonies();
-    int renumber_grains3();
+    void renumber_grains3();
     void find_euclidean_map();
 
     void find_vectors(H5ReconStatsWriter::Pointer h5io);
