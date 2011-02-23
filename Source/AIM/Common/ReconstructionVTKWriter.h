@@ -74,7 +74,7 @@ class AIMCOMMON_EXPORT ReconstructionVTKWriter
        * @param Output file name
        * @return 0 on Success
        */
-      int writeDisorientationVizFile(ReconstructionFunc* r, const std::string &file);
+      int writeDisorientationFile(ReconstructionFunc* r, const std::string &file);
 
       /**
        * @brief Writes a VTK visualization file with vector arrays for the Image Quality and grain ID.

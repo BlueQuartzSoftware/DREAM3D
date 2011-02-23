@@ -153,6 +153,7 @@ class AIMCOMMON_EXPORT ReconstructionFunc
     int load_data(const std::string &filename);
     void assign_badpoints();
     void find_neighbors();
+    void define_neighborhood();
     void merge_containedgrains();
     int reorder_grains();
     int remove_smallgrains(int numgrains);
