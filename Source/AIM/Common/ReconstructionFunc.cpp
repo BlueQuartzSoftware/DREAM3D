@@ -1337,14 +1337,14 @@ int ReconstructionFunc::reorder_grains()
 		  currentgrain++;
 	  }
   }
-  if (currentgrain <= m_Grains.size())
+  if (currentgrain < m_Grains.size())
   {
 	  m_Grains.resize(currentgrain);
   }
   else
   {
     size_t oldSize = m_Grains.size();
-    m_Grains.resize(currentgrain);
+    m_Grains.resize(currentgrain +1);
     for(size_t g = oldSize; g < m_Grains.size(); ++g)
     {
       m_Grains[g] = Grain::New();
