@@ -453,6 +453,7 @@ void ReconstructionWidget::on_rec_GoBtn_clicked()
   m_Reconstruction->setWriteDownSampledFile(rec_DownSampledVizFile->isChecked());
   m_Reconstruction->setWriteHDF5GrainFile(rec_HDF5GrainFile->isChecked());
 
+  m_Reconstruction->printSettings(std::cout);
 
   /* Connect the signal 'started()' from the QThread to the 'run' slot of the
    * Reconstruction object. Since the Reconstruction object has been moved to another

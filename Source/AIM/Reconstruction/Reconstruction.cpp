@@ -195,7 +195,7 @@ void Reconstruction::compute()
     if (MXADir::exists(reconVisFile) == true)
     {
       progressMessage(AIM_STRING("Loading Existing Data"), 31);
-      m->numgrains = m->load_data(reconVisFile);
+      int numgrains = m->load_data(reconVisFile);
       CHECK_FOR_CANCELED(ReconstructionFunc, load_data)
     }
     else
@@ -244,8 +244,8 @@ void Reconstruction::compute()
     }
 
     progressMessage(AIM_STRING("Forming Macro-Grains"), 19);
-    m->numgrains = m->form_grains();
-  CHECK_FOR_CANCELED(ReconstructionFunc, form_grains)
+    m->form_grains();
+    CHECK_FOR_CANCELED(ReconstructionFunc, form_grains)
 
     progressMessage(AIM_STRING("Assigning Bad Points"), 28);
     m->assign_badpoints();
@@ -262,8 +262,8 @@ void Reconstruction::compute()
   CHECK_FOR_CANCELED(ReconstructionFunc, merge_containedgrains)
 
   progressMessage(AIM_STRING("Reordering Grains"), 37);
-  m->numgrains = m->reorder_grains();
-  CHECK_FOR_CANCELED(ReconstructionFunc, renumber_grains)
+  m->reorder_grains();
+  CHECK_FOR_CANCELED(ReconstructionFunc, reorder_grains)
 
 
   progressMessage(AIM_STRING("Finding Reference Orientations For Grains"), 40);
@@ -279,13 +279,16 @@ void Reconstruction::compute()
 
   if (m_MergeTwins == true)
   {
+    progressMessage(AIM_STRING("Merging Twins"), 51);
     m->merge_twins();
     CHECK_FOR_CANCELED(ReconstructionFunc, merge_twins)
-    progressMessage(AIM_STRING("Merging Twins"), 51);
+    
+    progressMessage(AIM_STRING("Characterizing Twins"), 52);
     m->characterize_twins();
     CHECK_FOR_CANCELED(ReconstructionFunc, characterize_twins)
+
     progressMessage(AIM_STRING("Renumbering Grains"), 53);
-    m->numgrains = m->renumber_grains3();
+    m->renumber_grains3();
     CHECK_FOR_CANCELED(ReconstructionFunc, renumber_grains3)
   }
 
@@ -420,3 +423,38 @@ void Reconstruction::on_CancelWorker()
 }
 #endif
 
+#define PRINT_PROPERTY( out, var)\
+  out << #var << ": " << m_##var << std::endl;
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void Reconstruction::printSettings(std::ostream &ostream)
+{
+  ostream << "Reconstruction Settings Being Used" << std::endl;
+    PRINT_PROPERTY(ostream, H5AngFile)
+    PRINT_PROPERTY(ostream, ZStartIndex)
+    PRINT_PROPERTY(ostream, ZEndIndex)
+    PRINT_PROPERTY(ostream, OutputDirectory)
+    PRINT_PROPERTY(ostream, MergeTwins)
+    PRINT_PROPERTY(ostream, MergeColonies)
+    PRINT_PROPERTY(ostream, FillinSample)
+    PRINT_PROPERTY(ostream, MinAllowedGrainSize)
+    PRINT_PROPERTY(ostream, MinSeedConfidence)
+    PRINT_PROPERTY(ostream, SizeBinStepSize)
+    PRINT_PROPERTY(ostream, DownSampleFactor)
+    PRINT_PROPERTY(ostream, MinSeedImageQuality)
+    PRINT_PROPERTY(ostream, MisorientationTolerance)
+    PRINT_PROPERTY(ostream, CrystalStructure)
+    PRINT_PROPERTY(ostream, AlignmentMethod)
+    PRINT_PROPERTY(ostream, AlreadyFormed)
+    PRINT_PROPERTY(ostream, Orientation)
+
+    PRINT_PROPERTY(ostream, WriteVisualizationFile)
+    PRINT_PROPERTY(ostream, WriteIPFFile)
+    PRINT_PROPERTY(ostream, WriteDisorientationFile)
+    PRINT_PROPERTY(ostream, WriteImageQualityFile)
+    PRINT_PROPERTY(ostream, WriteSchmidFactorFile)
+    PRINT_PROPERTY(ostream, WriteDownSampledFile)
+    PRINT_PROPERTY(ostream, WriteHDF5GrainFile)
+}
