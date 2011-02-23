@@ -17,6 +17,8 @@
 
 
 #include "MXA/Common/MXASetGetMacros.h"
+
+#include "AIM/ANG/AngConstants.h"
 #include "AIM/ANG/AbstractAngDataLoader.h"
 #include "AIM/Common/AIMCommonConfiguration.h"
 #include "AIM/Common/Voxel.h"
@@ -35,6 +37,7 @@ class AIMCOMMON_EXPORT AngDataLoader : public AbstractAngDataLoader
     MXA_INSTANCE_PROPERTY(int, ZStartIndex)
     MXA_INSTANCE_PROPERTY(int, ZEndIndex)
     MXA_INSTANCE_PROPERTY(float, ZResolution)
+    MXA_INSTANCE_PROPERTY(Ang::Orientation, Orientation)
     MXA_INSTANCE_PROPERTY(bool, Cancel);
 
     int getSizeAndResolution(int &xpoints, int &ypoints, int &zpoints,

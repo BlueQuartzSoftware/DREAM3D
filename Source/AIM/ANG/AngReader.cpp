@@ -29,7 +29,7 @@
 //
 // -----------------------------------------------------------------------------
 AngReader::AngReader() :
-m_UserOrigin(NoOrientation),
+m_UserOrigin(Ang::NoOrientation),
 m_FileName(""),
 m_NumberOfElements(0),
 m_ManageMemory(true)
@@ -348,7 +348,7 @@ void AngReader::readData(const std::string &line, float xMaxValue, float yMaxVal
   m_NumFields = sscanf(line.c_str(), "%f %f %f %f %f %f %f %f %f %f", &p1, &p,&p2, &x, &y, &iqual, &conf, &ph, &d1, &d2);
 
   // Do we transform the data
-  if (m_UserOrigin == UpperRightOrigin)
+  if (m_UserOrigin == Ang::UpperRightOrigin)
   {
     x = xMaxValue - x;
     if (p1 - PI_OVER_2f < 0.0)
@@ -360,7 +360,7 @@ void AngReader::readData(const std::string &line, float xMaxValue, float yMaxVal
       p1 = p1 - PI_OVER_2f;
     }
   }
-  else if (m_UserOrigin == UpperLeftOrigin)
+  else if (m_UserOrigin == Ang::UpperLeftOrigin)
   {
     if (p1 + PI_OVER_2f > TWO_PIf)
     {
@@ -379,7 +379,7 @@ void AngReader::readData(const std::string &line, float xMaxValue, float yMaxVal
       p = p + ONE_PIf;
     }
   }
-  else if (m_UserOrigin == LowerLeftOrigin)
+  else if (m_UserOrigin == Ang::LowerLeftOrigin)
   {
     y = yMaxValue - y;
     if (p1 + PI_OVER_2f > TWO_PIf)
@@ -391,15 +391,15 @@ void AngReader::readData(const std::string &line, float xMaxValue, float yMaxVal
       p1 = p1 + PI_OVER_2f;
     }
   }
-  else if (m_UserOrigin == LowerRightOrigin)
+  else if (m_UserOrigin == Ang::LowerRightOrigin)
   {
     x = xMaxValue - x;
     y = yMaxValue - y;
   }
 
   size_t offset  = 0;
-  
-  if (m_UserOrigin == NoOrientation) 
+
+  if (m_UserOrigin == Ang::NoOrientation)
   {
     // If the user/programmer sets "NoOrientation" then we simply read the data
     // from the file and copy the values into the arrays without any regard for
@@ -410,7 +410,7 @@ void AngReader::readData(const std::string &line, float xMaxValue, float yMaxVal
   else
   {
     // The next set of calculations figures out where to place the data
-    // in the arrays, ie, which offset based on the array really being a 
+    // in the arrays, ie, which offset based on the array really being a
     // 2D array that is laid out with the X Axis moving the fastest and
     // the Y Axis moving the slowest. On Visual Studio there seems to be some
     // sort of round off error when the floats are converted to size_t types.

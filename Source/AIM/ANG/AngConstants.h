@@ -61,7 +61,18 @@
 #define ANG_Z_POS "ZPos"
 #define ANG_Z_MAX "ZMax"
 
+namespace Ang {
 
+  /** @brief Constants defined for the 5 orientation options */
+  enum Orientation
+  {
+     UpperRightOrigin = 0,
+     UpperLeftOrigin = 1,
+     LowerLeftOrigin = 2,
+     LowerRightOrigin = 3,
+     NoOrientation = 4,
+  };
+}
 
 
 namespace TSL {
