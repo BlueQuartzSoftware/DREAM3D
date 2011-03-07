@@ -61,7 +61,8 @@ class AIMCOMMON_EXPORT MisorientationCalculations
     static int getMisoBinHexagonal(double n1, double n2, double n3);
     static void calculateMisorientationAngles(double &w, double &miso1, double &miso2, double &miso3);
     static void initializeDims( AIM::Reconstruction::CrystalStructure crystruct, double &dim1, double &dim2,  double &dim3, int &numbins);
-    static size_t calculateHexOdfBin( double q1[5], double qref[5], double dim1, double dim2, double dim3);
+	static void getSlipMisalignment(int ss1, double q1[5], double q2[5], double &ssap);
+	static size_t calculateHexOdfBin( double q1[5], double qref[5], double dim1, double dim2, double dim3);
     static size_t calculateCubicOdfBin( double q1[5], double qref[5], double dim1, double dim2, double dim3);
 
   protected:

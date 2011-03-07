@@ -152,6 +152,7 @@ int ReconstructionVTKWriter::writeDisorientationFile(ReconstructionFunc* r, cons
 
   WRITE_VTK_SCALARS_FROM_VOXEL(r, KAM, float, kernelmisorientation)
   WRITE_VTK_SCALARS_FROM_VOXEL(r, GAM, float, grainmisorientation)
+  WRITE_VTK_SCALARS_FROM_VOXEL(r, LMG, float, misorientationgradient)
 
   fclose(f);
   return 0;
@@ -242,14 +243,16 @@ int ReconstructionVTKWriter::writeIPFVizFile(ReconstructionFunc* r, const std::s
   double q1[4];
   unsigned char rgb[3] =
   { 0, 0, 0};
+  unsigned char hkl[3] =
+  { 0, 0, 0};
   double RefDirection[3] =
   { 0.0, 0.0, 1.0};
   for (size_t i = 0; i < total; i++)
   {
     if(r->crystruct == AIM::Reconstruction::Cubic)
     {
-//      OIMColoring::GenerateIPFColor(r->voxels[i].euler1, r->voxels[i].euler2, r->voxels[i].euler3, RefDirection[0], RefDirection[1], RefDirection[2], rgb);
-      OIMColoring::GenerateIPFColor(r->m_Grains[r->voxels[i].grainname]->euler1, r->m_Grains[r->voxels[i].grainname]->euler2, r->m_Grains[r->voxels[i].grainname]->euler3, RefDirection[0], RefDirection[1], RefDirection[2], rgb);
+      OIMColoring::GenerateIPFColor(r->voxels[i].euler1, r->voxels[i].euler2, r->voxels[i].euler3, RefDirection[0], RefDirection[1], RefDirection[2], rgb, hkl);
+//      OIMColoring::GenerateIPFColor(r->m_Grains[r->voxels[i].grainname]->euler1, r->m_Grains[r->voxels[i].grainname]->euler2, r->m_Grains[r->voxels[i].grainname]->euler3, RefDirection[0], RefDirection[1], RefDirection[2], rgb);
       red = static_cast<double>(double(rgb[0])/255.0);
       green = static_cast<double>(double(rgb[1])/255.0);
       blue = static_cast<double>(double(rgb[2])/255.0);
