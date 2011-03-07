@@ -62,6 +62,19 @@ static const double HexDim1InitValue = pow((0.75*((m_pi/2.0)-sin((m_pi/2.0)))),(
 static const double HexDim2InitValue = pow((0.75*((m_pi/2.0)-sin((m_pi/2.0)))),(1.0/3.0));
 static const double HexDim3InitValue = pow((0.75*((m_pi/6.0)-sin((m_pi/6.0)))),(1.0/3.0));
 
+static const double CubicSlipSystems[12][6] = {{1,1,1,0,1,-1},
+												{1,1,1,1,0,-1},
+												{1,1,1,1,-1,0},
+												{1,1,-1,1,-1,0},
+												{1,1,-1,1,0,1},
+												{1,1,-1,0,1,1},
+												{1,-1,1,1,1,0},
+												{1,-1,1,0,1,1},
+												{1,-1,1,1,0,-1},
+												{-1,1,1,1,1,0},
+												{-1,1,1,1,0,1},
+												{-1,1,1,0,1,-1}};
+
 
 // -----------------------------------------------------------------------------
 //
@@ -291,6 +304,59 @@ double MisorientationCalculations::getMisoQuatHexagonal(double q1[5],double q2[5
   return wmin;
 }
 
+void MisorientationCalculations::getSlipMisalignment(int ss1, double q1[5], double q2[5], double &ssap)
+{
+	double g1[3][3];
+	double g2[3][3];
+	double maxssap = 0;
+	double h1, k1, l1, u1, v1, w1;
+	double h2, k2, l2, u2, v2, w2;
+	double denomhkl1, denomhkl2, denomuvw1, denomuvw2;
+	double planemisalignment, directionmisalignment;
+	g1[0][0] = 1-(2*q1[2]*q1[2])-(2*q1[3]*q1[3]);
+	g1[0][1] = (2*q1[1]*q1[2])-(2*q1[3]*q1[4]);
+	g1[0][2] = (2*q1[1]*q1[3])+(2*q1[2]*q1[4]);
+	g1[1][0] = (2*q1[1]*q1[2])+(2*q1[3]*q1[4]);
+	g1[1][1] = 1-(2*q1[1]*q1[1])-(2*q1[3]*q1[3]); 
+	g1[1][2] = (2*q1[2]*q1[3])-(2*q1[1]*q1[4]);
+	g1[2][0] = (2*q1[1]*q1[3])-(2*q1[2]*q1[4]);
+	g1[2][1] = (2*q1[2]*q1[3])+(2*q1[1]*q1[4]);
+	g1[2][2] = 1-(2*q1[1]*q1[1])-(2*q1[2]*q1[2]);
+	g2[0][0] = 1-(2*q2[2]*q2[2])-(2*q2[3]*q2[3]); 
+	g2[0][1] = (2*q2[1]*q2[2])-(2*q2[3]*q2[4]);
+	g2[0][2] = (2*q2[1]*q2[3])+(2*q2[2]*q2[4]);
+	g2[1][0] = (2*q2[1]*q2[2])+(2*q2[3]*q2[4]);
+	g2[1][1] = 1-(2*q2[1]*q2[1])-(2*q2[3]*q2[3]); 
+	g2[1][2] = (2*q2[2]*q2[3])-(2*q2[1]*q2[4]);
+	g2[2][0] = (2*q2[1]*q2[3])-(2*q2[2]*q2[4]);
+	g2[2][1] = (2*q2[2]*q2[3])+(2*q2[1]*q2[4]);
+	g2[2][2] = 1-(2*q2[1]*q2[1])-(2*q2[2]*q2[2]); 
+	// Note the order of multiplication is such that I am actually multiplying by the inverse of g1 and g2
+	h1 = CubicSlipSystems[ss1][0]*g1[0][0]+CubicSlipSystems[ss1][1]*g1[1][0]+CubicSlipSystems[ss1][2]*g1[2][0];
+	k1 = CubicSlipSystems[ss1][0]*g1[0][1]+CubicSlipSystems[ss1][1]*g1[1][1]+CubicSlipSystems[ss1][2]*g1[2][1];
+	l1 = CubicSlipSystems[ss1][0]*g1[0][2]+CubicSlipSystems[ss1][1]*g1[1][2]+CubicSlipSystems[ss1][2]*g1[2][2];
+	u1 = CubicSlipSystems[ss1][3]*g1[0][0]+CubicSlipSystems[ss1][4]*g1[1][0]+CubicSlipSystems[ss1][5]*g1[2][0];
+	v1 = CubicSlipSystems[ss1][3]*g1[0][1]+CubicSlipSystems[ss1][4]*g1[1][1]+CubicSlipSystems[ss1][5]*g1[2][1];
+	w1 = CubicSlipSystems[ss1][3]*g1[0][2]+CubicSlipSystems[ss1][4]*g1[1][2]+CubicSlipSystems[ss1][5]*g1[2][2];
+	denomhkl1 = pow((h1*h1+k1*k1+l1*l1),0.5);
+	denomuvw1 = pow((u1*u1+v1*v1+w1*w1),0.5);
+	for(int i=0;i<12;i++)
+	{
+		h2 = CubicSlipSystems[i][0]*g2[0][0]+CubicSlipSystems[i][1]*g2[1][0]+CubicSlipSystems[i][2]*g2[2][0];
+		k2 = CubicSlipSystems[i][0]*g2[0][1]+CubicSlipSystems[i][1]*g2[1][1]+CubicSlipSystems[i][2]*g2[2][1];
+		l2 = CubicSlipSystems[i][0]*g2[0][2]+CubicSlipSystems[i][1]*g2[1][2]+CubicSlipSystems[i][2]*g2[2][2];
+		u2 = CubicSlipSystems[i][3]*g2[0][0]+CubicSlipSystems[i][4]*g2[1][0]+CubicSlipSystems[i][5]*g2[2][0];
+		v2 = CubicSlipSystems[i][3]*g2[0][1]+CubicSlipSystems[i][4]*g2[1][1]+CubicSlipSystems[i][5]*g2[2][1];
+		w2 = CubicSlipSystems[i][3]*g2[0][2]+CubicSlipSystems[i][4]*g2[1][2]+CubicSlipSystems[i][5]*g2[2][2];
+		denomhkl2 = pow((h2*h2+k2*k2+l2*l2),0.5);
+		denomuvw2 = pow((u2*u2+v2*v2+w2*w2),0.5);
+		planemisalignment = fabs((h1*h2+k1*k2+l1*l2)/(denomhkl1*denomhkl2));
+		directionmisalignment = fabs((u1*u2+v1*v2+w1*w2)/(denomuvw1*denomuvw2));
+		ssap = planemisalignment*directionmisalignment;
+		if(ssap > maxssap) maxssap = ssap;
+	}
+	ssap = maxssap;
+}
 void MisorientationCalculations::getFZRodCubic(double &r1,double &r2, double &r3)
 {
   double rodsym[24][3] = {{0,0,0},

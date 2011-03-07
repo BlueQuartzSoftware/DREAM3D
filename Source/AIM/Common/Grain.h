@@ -72,7 +72,8 @@ class AIMCOMMON_EXPORT Grain
     int surfacegrain;
     int twinnewnumber;
     int colonynewnumber;
-	  double packquality;
+	int slipsystem;
+	double packquality;
     double centroidx;
     double centroidy;
     double centroidz;
@@ -89,6 +90,7 @@ class AIMCOMMON_EXPORT Grain
     double red;
     double green;
     double blue;
+    double IPF[3];
     double schmidfactor;
     double euler1;
     double euler2;

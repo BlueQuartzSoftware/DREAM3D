@@ -155,7 +155,7 @@ class AIMCOMMON_EXPORT ReconstructionFunc
     void find_neighbors();
     void define_neighborhood();
     void merge_containedgrains();
-    void reorder_grains();
+    void reorder_grains(const std::string &reconVisFile);
     int remove_smallgrains(int numgrains);
 	  void fillin_sample();
     void cleanup_data();
@@ -179,7 +179,7 @@ class AIMCOMMON_EXPORT ReconstructionFunc
     void find_moments2D();
     void find_axes2D();
 
-    void deformation_stats(const std::string &graindataFile);
+    void deformation_stats(const std::string &filename, const std::string &filename2);
     void write_graindata(const std::string &graindataFile);
     void align_sections(const std::string &filename);
     /* This is deprecated in favor of the HDF5 output file */
