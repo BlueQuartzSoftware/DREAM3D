@@ -3436,7 +3436,7 @@ void SurfaceMeshFunc::writeVTKOutputFile (int nNodes, int nTriangles, const std:
   }
 
 
-  // Write the GrainId Data to teh file
+  // Write the GrainId Data to the file
   fprintf(vtkFile, "\n");
   fprintf(vtkFile, "CELL_DATA %d\n", nTriangles);
   fprintf(vtkFile, "SCALARS GrainID int\n");

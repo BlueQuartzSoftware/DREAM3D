@@ -184,7 +184,7 @@ void Reconstruction::compute()
   std::string reconSFVisFile = m_OutputDirectory + MXADir::Separator + AIM::Reconstruction::SchmidFactorVizFile;
   std::string reconDSVisFile = m_OutputDirectory + MXADir::Separator + AIM::Reconstruction::DownSampledVizFile;
   std::string reconDeformStatsFile = m_OutputDirectory + MXADir::Separator + AIM::Reconstruction::DeformationStatsFile;
-
+  std::string reconDeformIPFFile = m_OutputDirectory + MXADir::Separator + AIM::Reconstruction::IPFDeformVTKFile;
   std::string hdf5GrainFile = m_OutputDirectory + MXADir::Separator + AIM::Reconstruction::HDF5GrainFile;
 
   START_CLOCK()
@@ -213,168 +213,158 @@ void Reconstruction::compute()
   else /* if (m_AlreadyFormed == false) */
   {
 
-    progressMessage(AIM_STRING("Loading Slices"), 3);
+    progressMessage(AIM_STRING("Loading Slices"), 4);
     oimDataLoader->loadData(m->voxels, m->xpoints, m->ypoints, m->zpoints);
     CHECK_FOR_CANCELED(ReconstructionFunc, loadData)
 
-    progressMessage(AIM_STRING("Finding Border"), 6);
+    progressMessage(AIM_STRING("Finding Border"), 8);
     m->find_border();
     CHECK_FOR_CANCELED(ReconstructionFunc, find_border)
 
     if (m_AlignmentMethod == AIM::Reconstruction::MutualInformation)
     {
-      progressMessage(AIM_STRING("Identifying Grains on Sections"), 11);
+      progressMessage(AIM_STRING("Aligning Slices"), 10);
       m->form_grains_sections();
       CHECK_FOR_CANCELED(ReconstructionFunc, form_grains_sections)
     }
 
-    progressMessage(AIM_STRING("Aligning Slices"), 9);
+    progressMessage(AIM_STRING("Aligning Slices"), 12);
     m->align_sections(alignmentFile);
     CHECK_FOR_CANCELED(ReconstructionFunc, align_sections)
 
-    progressMessage(AIM_STRING("Cleaning Data"), 12);
+    progressMessage(AIM_STRING("Cleaning Data"), 16);
     m->cleanup_data();
     CHECK_FOR_CANCELED(ReconstructionFunc, cleanup_data)
 
     if (m_AlignmentMethod == AIM::Reconstruction::MutualInformation)
     {
-      progressMessage(AIM_STRING("Redefining Border"), 16);
+      progressMessage(AIM_STRING("Redefining Border"), 18);
       m->find_border();
       CHECK_FOR_CANCELED(ReconstructionFunc, find_border)
     }
 
-    progressMessage(AIM_STRING("Forming Macro-Grains"), 19);
+    progressMessage(AIM_STRING("Forming Macro-Grains"), 20);
     m->form_grains();
     CHECK_FOR_CANCELED(ReconstructionFunc, form_grains)
-
-    progressMessage(AIM_STRING("Assigning Bad Points"), 28);
-    m->assign_badpoints();
-    CHECK_FOR_CANCELED(ReconstructionFunc, assign_badpoints)
   }
 
-
-  progressMessage(AIM_STRING("Finding Neighbors"), 31);
+  progressMessage(AIM_STRING("Finding Neighbors"), 24);
   m->find_neighbors();
   CHECK_FOR_CANCELED(ReconstructionFunc, find_neighbors)
 
-  progressMessage(AIM_STRING("Merging Contained Grains"), 34);
-  m->merge_containedgrains();
-  CHECK_FOR_CANCELED(ReconstructionFunc, merge_containedgrains)
-
-  progressMessage(AIM_STRING("Reordering Grains"), 37);
-  m->reorder_grains();
+  progressMessage(AIM_STRING("Reordering Grains"), 28);
+  m->reorder_grains(reconVisFile);
   CHECK_FOR_CANCELED(ReconstructionFunc, reorder_grains)
 
-
-  progressMessage(AIM_STRING("Finding Reference Orientations For Grains"), 40);
+  progressMessage(AIM_STRING("Finding Reference Orientations For Grains"), 32);
   m->find_grain_and_kernel_misorientations();
   CHECK_FOR_CANCELED(ReconstructionFunc, find_grain_and_kernel_misorientations)
 
   if(m_FillinSample == true)
   {
-    progressMessage(AIM_STRING("Creating Smooth Rectangular Sample"), 49);
+    progressMessage(AIM_STRING("Creating Smooth Rectangular Sample"), 36);
     m->fillin_sample();
     CHECK_FOR_CANCELED(ReconstructionFunc, fillin_sample)
   }
 
   if (m_MergeTwins == true)
   {
-    progressMessage(AIM_STRING("Merging Twins"), 51);
+    progressMessage(AIM_STRING("Merging Twins"), 40);
     m->merge_twins();
     CHECK_FOR_CANCELED(ReconstructionFunc, merge_twins)
     
-    progressMessage(AIM_STRING("Characterizing Twins"), 52);
+    progressMessage(AIM_STRING("Characterizing Twins"), 40);
     m->characterize_twins();
     CHECK_FOR_CANCELED(ReconstructionFunc, characterize_twins)
 
-    progressMessage(AIM_STRING("Renumbering Grains"), 53);
+    progressMessage(AIM_STRING("Renumbering Grains"), 40);
     m->renumber_grains3();
     CHECK_FOR_CANCELED(ReconstructionFunc, renumber_grains3)
   }
 
   if (m_MergeColonies == true)
   {
-    progressMessage(AIM_STRING("Merging Colonies"), 51);
+    progressMessage(AIM_STRING("Merging Colonies"), 44);
     m->merge_colonies();
     CHECK_FOR_CANCELED(ReconstructionFunc, merge_colonies)
 
-    progressMessage(AIM_STRING("Renumbering Grains"), 53);
+    progressMessage(AIM_STRING("Renumbering Grains"), 44);
     m->characterize_colonies();
     CHECK_FOR_CANCELED(ReconstructionFunc, characterize_colonies)
   }
 
-  progressMessage(AIM_STRING("Finding Grain Centroids"), 55);
+  progressMessage(AIM_STRING("Finding Grain Centroids"), 48);
   if(m_ZEndIndex-m_ZStartIndex > 1) m->find_centroids();
   if(m_ZEndIndex-m_ZStartIndex == 1)m->find_centroids2D();
   CHECK_FOR_CANCELED(ReconstructionFunc, find_centroids2D)
 
-  progressMessage(AIM_STRING("Finding Grain Moments"), 57);
+  progressMessage(AIM_STRING("Finding Grain Moments"), 52);
   if(m_ZEndIndex-m_ZStartIndex > 1) m->find_moments();
   if(m_ZEndIndex-m_ZStartIndex == 1) m->find_moments2D();
   CHECK_FOR_CANCELED(ReconstructionFunc, find_moments2D)
 
-  progressMessage(AIM_STRING("Finding Grain Principal Axes Lengths"), 59);
+  progressMessage(AIM_STRING("Finding Grain Principal Axes Lengths"), 56);
   if(m_ZEndIndex-m_ZStartIndex > 1) m->find_axes();
   if(m_ZEndIndex-m_ZStartIndex == 1) m->find_axes2D();
   CHECK_FOR_CANCELED(ReconstructionFunc, find_axes2D)
 
-  progressMessage(AIM_STRING("Finding Grain Pricipal Axes Vectors"), 61);
+  progressMessage(AIM_STRING("Finding Grain Pricipal Axes Vectors"), 60);
   if(m_ZEndIndex-m_ZStartIndex > 1) m->find_vectors(h5io);
   if(m_ZEndIndex-m_ZStartIndex == 1) m->find_vectors2D(h5io);
   CHECK_FOR_CANCELED(ReconstructionFunc, find_vectors2D)
 
-  progressMessage(AIM_STRING("Defining Neighborhoods"), 63);
+  progressMessage(AIM_STRING("Defining Neighborhoods"), 64);
   m->define_neighborhood();
   CHECK_FOR_CANCELED(ReconstructionFunc, find_neighbors)
 
 
-  progressMessage(AIM_STRING("Finding Euclidean Distance Maps"), 65);
+  progressMessage(AIM_STRING("Finding Euclidean Distance Maps"), 68);
   m->find_euclidean_map();
   CHECK_FOR_CANCELED(ReconstructionFunc, find_euclidean_map)
 
-  progressMessage(AIM_STRING("Finding Euler ODF"), 66);
+  progressMessage(AIM_STRING("Finding Euler ODF"), 72);
   m->find_eulerodf(h5io);
   CHECK_FOR_CANCELED(ReconstructionFunc, find_eulerodf)
 
-  progressMessage(AIM_STRING("Measuring Misorientations"), 67);
+  progressMessage(AIM_STRING("Measuring Misorientations"), 76);
   m->measure_misorientations(h5io);
   CHECK_FOR_CANCELED(ReconstructionFunc, measure_misorientations)
 
-  progressMessage(AIM_STRING("Finding Grain IPF Colors"), 69);
+  progressMessage(AIM_STRING("Finding Grain IPF Colors"), 80);
   m->find_colors();
   CHECK_FOR_CANCELED(ReconstructionFunc, find_colors)
 
-  progressMessage(AIM_STRING("Finding Grain Schmid Factors"), 71);
+  progressMessage(AIM_STRING("Finding Grain Schmid Factors"), 84);
   m->find_schmids();
   CHECK_FOR_CANCELED(ReconstructionFunc, find_schmids)
 
-  progressMessage(AIM_STRING("Writing Statistics"), 80);
+  progressMessage(AIM_STRING("Writing Statistics"), 88);
   if(m_ZEndIndex-m_ZStartIndex > 1) { m->volume_stats(h5io); }
   if(m_ZEndIndex-m_ZStartIndex == 1) { m->volume_stats2D(h5io); }
-  m->deformation_stats(reconDeformStatsFile);
+  m->deformation_stats(reconDeformStatsFile, reconDeformIPFFile);
   CHECK_FOR_CANCELED(ReconstructionFunc, volume_stats)
 
-  progressMessage(AIM_STRING("Writing Grain Data"), 82);
+  progressMessage(AIM_STRING("Writing Grain Data"), 92);
   m->write_graindata(graindataFile);
 
   /** ********** This section writes the ASCII based vtk files for visualization *** */
 
-  progressMessage(AIM_STRING("Writing VTK Visualization File"), 88);
+  progressMessage(AIM_STRING("Writing VTK Visualization File"), 93);
   if (m_WriteVisualizationFile) {outWriter->writeVisualizationFile(m.get(), reconVisFile);}
 
-  progressMessage(AIM_STRING("Writing VTK Inverse Pole Figure File"), 89);
+  progressMessage(AIM_STRING("Writing VTK Inverse Pole Figure File"), 94);
   if (m_WriteIPFFile) {outWriter->writeIPFVizFile(m.get(), reconIPFVisFile);}
 
-  progressMessage(AIM_STRING("Writing VTK Disorientation File"), 90);
+  progressMessage(AIM_STRING("Writing VTK Disorientation File"), 95);
   if (m_WriteDisorientationFile) {outWriter->writeDisorientationFile(m.get(), reconDisVisFile);}
 
-  progressMessage(AIM_STRING("Writing VTK Image Quality File"), 91);
+  progressMessage(AIM_STRING("Writing VTK Image Quality File"), 96);
   if (m_WriteImageQualityFile) {outWriter->writeImageQualityVizFile(m.get(), reconIQVisFile);}
 
-  progressMessage(AIM_STRING("Writing VTK Schmid Factor File"), 92);
+  progressMessage(AIM_STRING("Writing VTK Schmid Factor File"), 97);
   if (m_WriteSchmidFactorFile) {outWriter->writeSchmidFactorVizFile(m.get(), reconSFVisFile);}
 
-  progressMessage(AIM_STRING("Writing VTK Down Sampled File"), 93);
+  progressMessage(AIM_STRING("Writing VTK Down Sampled File"), 98);
   if (m_WriteDownSampledFile) {outWriter->writeDownSampledVizFile(m.get(), reconDSVisFile);}
 
 
@@ -382,7 +372,7 @@ void Reconstruction::compute()
 
   /** ******* End VTK Visualization File Writing Section ****** */
   CHECK_FOR_CANCELED(ReconstructionFunc, vtk_viz_files)
-  progressMessage(AIM_STRING("Writing Out HDF5 Grain File. This may take a few minutes to complete."), 95);
+  progressMessage(AIM_STRING("Writing Out HDF5 Grain File. This may take a few minutes to complete."), 99);
   if (m_WriteHDF5GrainFile) { h5GrainWriter->writeHDF5GrainsFile(m.get(), hdf5GrainFile); }
   CHECK_FOR_CANCELED(ReconstructionFunc, writeHDF5GrainsFile)
 

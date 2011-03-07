@@ -121,10 +121,10 @@ class OIMColoring
      * @param rgb A pointer to store the RGB value into
      */
     template<typename T, typename K>
-    static void GenerateIPFColor(T* eulers, K* refDir, unsigned char* rgb)
+    static void GenerateIPFColor(T* eulers, K* refDir, unsigned char* rgb, unsigned char* hkl)
     {
       OIMColoring::GenerateIPFColor<T>(eulers[0], eulers[1], eulers[2],
-                                       refDir[0], refDir[1], refDir[2],rgb);
+                                       refDir[0], refDir[1], refDir[2],rgb, hkl);
     }
 
     /**
@@ -141,7 +141,7 @@ class OIMColoring
     template <typename T, typename K>
     static void GenerateIPFColor(T phi1, T phi, T phi2,
                                  K refDir0, K refDir1, K refDir2,
-                                 unsigned char* rgb)
+                                 unsigned char* rgb, unsigned char* hkl)
     {
 
       T q1[3][3]; // Rotation Matrix?
@@ -182,6 +182,12 @@ class OIMColoring
       // Sort the sd array from smallest to largest
       OIMColoring::TripletSort<T>(sd[0], sd[1], sd[2], sd);
 
+	  T h = sd[0];
+	  T k = sd[1];
+	  T l = sd[2];
+	  hkl[0] = static_cast<unsigned char>(h*100);
+	  hkl[1] = static_cast<unsigned char>(k*100);
+	  hkl[2] = static_cast<unsigned char>(l*100);
       T theta = (sd[0]*0)+(sd[1]*-sqrt(2.0)/2.0)+(sd[2]*sqrt(2.0)/2.0);
       theta = (180.0/MXA_PI)*acos(theta);
       T red = (90.0-theta)/45.0;
@@ -239,8 +245,8 @@ class OIMColoring
       for (int j = 0; j < 12; j++)
       {
         AIM::Quaternions::Hex_MultiplyByUnitQuaterion(q1, j,qc);
-        p[0] = ((2 * qc[0] * qc[2]) - (2 * qc[1] * qc[3])) * 1;
-        p[1] = ((2 * qc[1] * qc[2]) + (2 * qc[0] * qc[3])) * 1;
+        p[0] = ((2 * qc[0] * qc[2]) + (2 * qc[1] * qc[3])) * 1;
+        p[1] = ((2 * qc[1] * qc[2]) - (2 * qc[0] * qc[3])) * 1;
         p[2] = (1 - (2 * qc[0] * qc[0]) - (2 * qc[1] * qc[1])) * 1;
         double denom = p[0] * p[0] + p[1] * p[1] + p[2] * p[2];
         denom = pow(denom, 0.5);

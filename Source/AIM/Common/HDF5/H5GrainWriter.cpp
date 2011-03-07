@@ -80,6 +80,8 @@ int H5GrainWriter::writeHDF5GrainsFile(ReconstructionFunc* r, const std::string 
     double q1[5];
     unsigned char rgb[3] =
     { 0, 0, 0 };
+    unsigned char hkl[3] =
+    { 0, 0, 0 };
     double RefDirection[3] =
     { 0.0, 0.0, 1.0 };
     int ocol, orow, oplane;
@@ -95,9 +97,9 @@ int H5GrainWriter::writeHDF5GrainsFile(ReconstructionFunc* r, const std::string 
     std::vector<float > grainAvgDisorientation(vlist->size());
     std::vector<float > imageQuality(vlist->size());
     std::vector<unsigned char > ipfColor(vlist->size() * 3);
-    std::vector<float > schmidFactor(1);
+    std::vector<float > schmidFactor(vlist->size());
+    std::vector<int32_t > grainName(vlist->size());
 
-    std::vector<int32_t > grainName(1);
 
     pcount = 0;
     plist.clear();
@@ -138,7 +140,7 @@ int H5GrainWriter::writeHDF5GrainsFile(ReconstructionFunc* r, const std::string 
       imageQuality[j] = r->voxels[vid].imagequality;
       if (r->crystruct == AIM::Reconstruction::Cubic)
       {
-        OIMColoring::GenerateIPFColor(r->voxels[vid].euler1, r->voxels[vid].euler2, r->voxels[vid].euler3, RefDirection[0], RefDirection[1], RefDirection[2], rgb);
+        OIMColoring::GenerateIPFColor(r->voxels[vid].euler1, r->voxels[vid].euler2, r->voxels[vid].euler3, RefDirection[0], RefDirection[1], RefDirection[2], rgb, hkl);
       }
       if (r->crystruct == AIM::Reconstruction::Hexagonal)
       {
@@ -151,7 +153,8 @@ int H5GrainWriter::writeHDF5GrainsFile(ReconstructionFunc* r, const std::string 
       ipfColor[j * 3] = rgb[0];
       ipfColor[j * 3 + 1] = rgb[1];
       ipfColor[j * 3 + 2] = rgb[2];
-      grainName[0] = r->voxels[vid].grainname;
+      grainName[j] = r->voxels[vid].grainname;
+	  schmidFactor[j] = r->m_Grains[r->voxels[vid].grainname]->schmidfactor;
     }
     //   std::cout << " Grain: " << i << " Writing HDF5 File" << std::endl;
     err = h5writer->writeUnstructuredGrid(hdfPath, points, cells, cell_types);
@@ -174,6 +177,8 @@ int H5GrainWriter::writeHDF5GrainsFile(ReconstructionFunc* r, const std::string 
     err = h5writer->writeCellData<float > (hdfPath, kernelAvgDisorientation, AIM::Representation::KernelAvgDisorientation.c_str(), 1);
     err = h5writer->writeCellData<float > (hdfPath, grainAvgDisorientation, AIM::Representation::GrainAvgDisorientation.c_str(), 1);
     err = h5writer->writeCellData<float > (hdfPath, imageQuality, AIM::Representation::ImageQuality.c_str(), 1);
+	err = h5writer->writeCellData<float > (hdfPath, schmidFactor, AIM::Representation::SchmidFactor.c_str(), 1);
+	err = h5writer->writeCellData<int > (hdfPath, grainName, AIM::Representation::Grain_ID.c_str(), 1);
     err = h5writer->writeCellData<unsigned char > (hdfPath, ipfColor, AIM::Representation::IPFColor.c_str(), 3);
 
   }

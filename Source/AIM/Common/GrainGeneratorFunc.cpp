@@ -27,21 +27,12 @@
 #include "AIM/Common/AIMMath.h"
 #include "AIM/Common/MisorientationCalculations.h"
 
-
 const static double m_onepointthree = 1.33333333333;
 const static double m_pi = M_PI;
 const static double SinOfHalf = sin(0.5);
 const static double CosOfHalf = cos(0.5);
 const static double SinOfZero = sin(0.0);
 const static double CosOfZero = cos(0.0);
-
-//static const double CubicDim1InitValue = pow((0.75*((m_pi/4.0)-sin((m_pi/4.0)))),(1.0/3.0));
-//static const double CubicDim2InitValue = pow((0.75*((m_pi/4.0)-sin((m_pi/4.0)))),(1.0/3.0));
-//static const double CubicDim3InitValue = pow((0.75*((m_pi/4.0)-sin((m_pi/4.0)))),(1.0/3.0));
-//
-//static const double HexDim1InitValue = pow((0.75*((m_pi/2.0)-sin((m_pi/2.0)))),(1.0/3.0));
-//static const double HexDim2InitValue = pow((0.75*((m_pi/2.0)-sin((m_pi/2.0)))),(1.0/3.0));
-//static const double HexDim3InitValue = pow((0.75*((m_pi/6.0)-sin((m_pi/6.0)))),(1.0/3.0));
 
 #define DIMS "DIMENSIONS"
 #define LOOKUP "LOOKUP_TABLE"
@@ -68,7 +59,7 @@ actualmdf(NULL),
 simmdf(NULL),
 actualmicrotex(NULL),
 simmicrotex(NULL),
-
+m_Grains(NULL),
 precipitates(NULL),
 psizes(NULL)
 {
@@ -78,8 +69,8 @@ psizes(NULL)
 GrainGeneratorFunc::~GrainGeneratorFunc()
 {
 
- // m_Grains.clear();
- // delete [] precipitates;
+  m_Grains.clear();
+  precipitates.clear();
   delete [] actualodf;
   delete [] simodf;
   delete [] axisodf;
@@ -117,8 +108,11 @@ void GrainGeneratorFunc::initialize(int32_t m_NumGrains, int32_t m_ShapeClass, d
   neighborhooderrorweight = m_neighborhooderrorweight;
   sizedisterrorweight = m_sizedisterrorweight;
 
- // double initializer;
   m_Grains.resize(numextragrains+1);
+  for(size_t g = 0; g < m_Grains.size(); ++g)
+  {
+    m_Grains[g] = Grain::New();
+  }
   size_t nElements = 0;
   if(crystruct == AIM::Reconstruction::Hexagonal)
   {
@@ -148,9 +142,9 @@ void GrainGeneratorFunc::initialize(int32_t m_NumGrains, int32_t m_ShapeClass, d
   nElements = 10;
   initValue = (1.0/double(nElements));
   actualmicrotex = new double [nElements];
-  GG_INIT_DOUBLE_ARRAY(axisodf, initValue, nElements);
+  GG_INIT_DOUBLE_ARRAY(actualmicrotex, initValue, nElements);
   simmicrotex = new double [nElements];
-  GG_INIT_DOUBLE_ARRAY(axisodf, 0.0, nElements);
+  GG_INIT_DOUBLE_ARRAY(simmicrotex, 0.0, nElements);
 }
 void GrainGeneratorFunc::initialize2()
 {
@@ -288,8 +282,7 @@ int GrainGeneratorFunc::readReconStatsData(H5ReconStatsReader::Pointer h5io)
   for (int i = 0; i < 20; i++)
   {
     input = (double(i)*grainsizediststep)+mindiameter;
-      grainsizedist[i] = (1.0 / (double(i + 0.5) * double_data[1] * root2pi)) * exp(-((log(double(input + (grainsizediststep/2.0))) - double_data[0]) * (log(double(input + (grainsizediststep/2.0)))
-          - double_data[0])) / (2 * double_data[1 * double_data[1]]));
+    grainsizedist[i] = (1.0/(double(i+0.5)*double_data[1]*root2pi))*exp(-((log(double(input+(grainsizediststep/2.0)))-double_data[0])*(log(double(input+(grainsizediststep/2.0)))-double_data[0]))/(2*double_data[1*double_data[1]]));
   }
 
   AIM::Reconstruction::DistributionType dt;
@@ -357,9 +350,7 @@ int  GrainGeneratorFunc::readAxisOrientationData(H5ReconStatsReader::Pointer h5i
     //FIXME: This should probably return an ERROR because nothing was read
     return 10;
   }
-//FIXME: This seems to be forcing Cubic. What if the reconstruction was Hexagonal?
   size = 18 * 18 * 18;
-
   if (size != density.size() )
   {
     std::cout << "GrainGeneratorFunc::readAxisOrientationData Error: Mismatch in number of elements in the 'AxisOrientation' "
@@ -475,13 +466,13 @@ void  GrainGeneratorFunc::generate_grain(int gnum)
   int volgood = 0;
   while(volgood == 0)
   {
-  volgood = 1;
-  u = rg.Random();
-  diam = rg.RandNorm(avgdiam,sddiam);
-  diam = exp(diam);
-  if(diam >= maxdiameter) volgood = 0;
-  if(diam < mindiameter) volgood = 0;
-  vol = (4.0/3.0)*(m_pi)*((diam/2.0)*(diam/2.0)*(diam/2.0));
+	  volgood = 1;
+	  u = rg.Random();
+	  diam = rg.RandNorm(avgdiam,sddiam);
+	  diam = exp(diam);
+	  if(diam >= maxdiameter) volgood = 0;
+	  if(diam < mindiameter) volgood = 0;
+	  vol = (4.0/3.0)*(m_pi)*((diam/2.0)*(diam/2.0)*(diam/2.0));
   }
   int diameter = int((diam-mindiameter)/binstepsize);
   good = 0;
@@ -518,11 +509,12 @@ void  GrainGeneratorFunc::generate_grain(int gnum)
   }
   double random = rg.Random();
   int bin=0;
+  double totaldensity = 0;
   for(int i=0;i<(18*18*18);i++)
   {
-    double density = axisodf[i];
-    if(random > density) bin = i;
-    if(random < density) {break;}
+	totaldensity = totaldensity + axisodf[i];
+    if(random > totaldensity) bin = i;
+    if(random < totaldensity) {break;}
   }
   double phi1 = bin%18;
   double PHI = (bin/18)%18;
@@ -559,8 +551,6 @@ void  GrainGeneratorFunc::insert_grain(size_t gnum)
   double xc, yc, zc;
   double xp, yp, zp;
   double x, y, z;
-//  double x1, y1, z1;
-//  double x2, y2, z2;
   double ellipfunc = 0;
   double insidecount = 0;
   rg.RandomInit((static_cast<unsigned int>(time(NULL))));
@@ -623,108 +613,108 @@ void  GrainGeneratorFunc::insert_grain(size_t gnum)
   ymax = int(row+((radcur1/resy)+1));
   zmin = int(plane-((radcur1/resz)+1));
   zmax = int(plane+((radcur1/resz)+1));
-  if(xmin < -xpoints) xmin = -xpoints;
-  if(xmax > (2*xpoints-1)) xmax = (2*xpoints-1);
-  if(ymin < -ypoints) ymin = -ypoints;
-  if(ymax > (2*ypoints-1)) ymax = (2*ypoints-1);
-  if(zmin < -zpoints) zmin = -zpoints;
-  if(zmax > (2*zpoints-1)) zmax = (2*zpoints-1);
+  if(xmin < -0.5*xpoints) xmin = -0.5*xpoints;
+  if(xmax > (1.5*xpoints-1)) xmax = (1.5*xpoints-1);
+  if(ymin < -0.5*ypoints) ymin = -0.5*ypoints;
+  if(ymax > (1.5*ypoints-1)) ymax = (1.5*ypoints-1);
+  if(zmin < -0.5*zpoints) zmin = -0.5*zpoints;
+  if(zmax > (1.5*zpoints-1)) zmax = (1.5*zpoints-1);
   for(int iter1 = xmin; iter1 < xmax+1; iter1++)
   {
     for(int iter2 = ymin; iter2 < ymax+1; iter2++)
     {
-    for(int iter3 = zmin; iter3 < zmax+1; iter3++)
-    {
-      column = iter1;
-      row = iter2;
-      plane = iter3;
-      if(iter1 < 0) column = iter1+xpoints;
-      if(iter1 > xpoints-1) column = iter1-xpoints;
-      if(iter2 < 0) row = iter2+ypoints;
-      if(iter2 > ypoints-1) row = iter2-ypoints;
-      if(iter3 < 0) plane = iter3+zpoints;
-      if(iter3 > zpoints-1) plane = iter3-zpoints;
-      index = (plane*xpoints*ypoints)+(row*xpoints)+column;
-      inside = -1;
-      x = find_xcoord(index);
-      y = find_ycoord(index);
-      z = find_zcoord(index);
-      if(iter1 < 0) x = x-sizex;
-      if(iter1 > xpoints-1) x = x+sizex;
-      if(iter2 < 0) y = y-sizey;
-      if(iter2 > ypoints-1) y = y+sizey;
-      if(iter3 < 0) z = z-sizez;
-      if(iter3 > zpoints-1) z = z+sizez;
-      dist = ((x-xc)*(x-xc))+((y-yc)*(y-yc))+((z-zc)*(z-zc));
-      dist = pow(dist,0.5);
-      if(dist < radcur1)
-      {
-        x = x-xc;
-        y = y-yc;
-        z = z-zc;
-        xp = (x*ga[0][0])+(y*ga[1][0])+(z*ga[2][0]);
-        yp = (x*ga[0][1])+(y*ga[1][1])+(z*ga[2][1]);
-        zp = (x*ga[0][2])+(y*ga[1][2])+(z*ga[2][2]);
-        double axis1comp = xp/radcur1;
-        double axis2comp = yp/radcur2;
-        double axis3comp = zp/radcur3;
-        if(shapeclass == 3)
-        {
-        if(fabs(axis1comp) <= 1 && fabs(axis2comp) <= 1 && fabs(axis3comp) <= 1)
-        {
-          inside = 1;
-          axis1comp = axis1comp+1;
-          axis2comp = axis2comp+1;
-          axis3comp = axis3comp+1;
-          if(((-axis1comp)+(-axis2comp)+(axis3comp)-((-0.5*Gvalue)+(-0.5*Gvalue)+2)) > 0) inside = -1;
-          if(((axis1comp)+(-axis2comp)+(axis3comp)-((2-(0.5*Gvalue))+(-0.5*Gvalue)+2)) > 0) inside = -1;
-          if(((axis1comp)+(axis2comp)+(axis3comp)-((2-(0.5*Gvalue))+(2-(0.5*Gvalue))+2)) > 0) inside = -1;
-          if(((-axis1comp)+(axis2comp)+(axis3comp)-((-0.5*Gvalue)+(2-(0.5*Gvalue))+2)) > 0) inside = -1;
-          if(((-axis1comp)+(-axis2comp)+(-axis3comp)-((-0.5*Gvalue)+(-0.5*Gvalue))) > 0) inside = -1;
-          if(((axis1comp)+(-axis2comp)+(-axis3comp)-((2-(0.5*Gvalue))+(-0.5*Gvalue))) > 0) inside = -1;
-          if(((axis1comp)+(axis2comp)+(-axis3comp)-((2-(0.5*Gvalue))+(2-(0.5*Gvalue)))) > 0) inside = -1;
-          if(((-axis1comp)+(axis2comp)+(-axis3comp)-((-0.5*Gvalue)+(2-(0.5*Gvalue)))) > 0) inside = -1;
-        }
-        }
-        if(shapeclass == 2)
-        {
-        axis1comp = fabs(axis1comp);
-        axis2comp = fabs(axis2comp);
-        axis3comp = fabs(axis3comp);
-        axis1comp = pow(axis1comp,Nvalue);
-        axis2comp = pow(axis2comp,Nvalue);
-        axis3comp = pow(axis3comp,Nvalue);
-        inside = 1-axis1comp-axis2comp-axis3comp;
-        }
-        if(shapeclass == 1)
-        {
-        axis1comp = fabs(axis1comp);
-        axis2comp = fabs(axis2comp);
-        axis3comp = fabs(axis3comp);
-        axis1comp = pow(axis1comp,2);
-        axis2comp = pow(axis2comp,2);
-        axis3comp = pow(axis3comp,2);
-        inside = 1-axis1comp-axis2comp-axis3comp;
-        }
-        if(inside >= 0)
-        {
-        int currentpoint = index;
-        if(index >= totalpoints)
-        {
-          int stop = 0;
-        }
-        ellipfunc = (-0.1/((pow((axis1comp+axis2comp+axis3comp),1)*(1.0-(1.0/(0.90*0.90))))))*(1.0-(((axis1comp+axis2comp+axis3comp)*(axis1comp+axis2comp+axis3comp))/(0.90*0.90)));
-        insidelist[insidecount] = currentpoint;
-        ellipfunclist[insidecount] = ellipfunc;
-        insidecount++;
-        if (insidecount >= (insidelist.size()))
-        {
-          insidelist.resize(insidecount + 1000,-1);
-          ellipfunclist.resize(insidecount + 1000,-1);
-        }
-        }
-      }
-    }
+		for(int iter3 = zmin; iter3 < zmax+1; iter3++)
+		{
+		  column = iter1;
+		  row = iter2;
+		  plane = iter3;
+		  if(iter1 < 0) column = iter1+xpoints;
+		  if(iter1 > xpoints-1) column = iter1-xpoints;
+		  if(iter2 < 0) row = iter2+ypoints;
+		  if(iter2 > ypoints-1) row = iter2-ypoints;
+		  if(iter3 < 0) plane = iter3+zpoints;
+		  if(iter3 > zpoints-1) plane = iter3-zpoints;
+		  index = (plane*xpoints*ypoints)+(row*xpoints)+column;
+		  inside = -1;
+		  x = find_xcoord(index);
+		  y = find_ycoord(index);
+		  z = find_zcoord(index);
+		  if(iter1 < 0) x = x-sizex;
+		  if(iter1 > xpoints-1) x = x+sizex;
+		  if(iter2 < 0) y = y-sizey;
+		  if(iter2 > ypoints-1) y = y+sizey;
+		  if(iter3 < 0) z = z-sizez;
+		  if(iter3 > zpoints-1) z = z+sizez;
+		  dist = ((x-xc)*(x-xc))+((y-yc)*(y-yc))+((z-zc)*(z-zc));
+		  dist = pow(dist,0.5);
+		  if(dist < radcur1)
+		  {
+			x = x-xc;
+			y = y-yc;
+			z = z-zc;
+			xp = (x*ga[0][0])+(y*ga[1][0])+(z*ga[2][0]);
+			yp = (x*ga[0][1])+(y*ga[1][1])+(z*ga[2][1]);
+			zp = (x*ga[0][2])+(y*ga[1][2])+(z*ga[2][2]);
+			double axis1comp = xp/radcur1;
+			double axis2comp = yp/radcur2;
+			double axis3comp = zp/radcur3;
+			if(shapeclass == 3)
+			{
+				if(fabs(axis1comp) <= 1 && fabs(axis2comp) <= 1 && fabs(axis3comp) <= 1)
+				{
+				  inside = 1;
+				  axis1comp = axis1comp+1;
+				  axis2comp = axis2comp+1;
+				  axis3comp = axis3comp+1;
+				  if(((-axis1comp)+(-axis2comp)+(axis3comp)-((-0.5*Gvalue)+(-0.5*Gvalue)+2)) > 0) inside = -1;
+				  if(((axis1comp)+(-axis2comp)+(axis3comp)-((2-(0.5*Gvalue))+(-0.5*Gvalue)+2)) > 0) inside = -1;
+				  if(((axis1comp)+(axis2comp)+(axis3comp)-((2-(0.5*Gvalue))+(2-(0.5*Gvalue))+2)) > 0) inside = -1;
+				  if(((-axis1comp)+(axis2comp)+(axis3comp)-((-0.5*Gvalue)+(2-(0.5*Gvalue))+2)) > 0) inside = -1;
+				  if(((-axis1comp)+(-axis2comp)+(-axis3comp)-((-0.5*Gvalue)+(-0.5*Gvalue))) > 0) inside = -1;
+				  if(((axis1comp)+(-axis2comp)+(-axis3comp)-((2-(0.5*Gvalue))+(-0.5*Gvalue))) > 0) inside = -1;
+				  if(((axis1comp)+(axis2comp)+(-axis3comp)-((2-(0.5*Gvalue))+(2-(0.5*Gvalue)))) > 0) inside = -1;
+				  if(((-axis1comp)+(axis2comp)+(-axis3comp)-((-0.5*Gvalue)+(2-(0.5*Gvalue)))) > 0) inside = -1;
+				}
+			}
+			if(shapeclass == 2)
+			{
+				axis1comp = fabs(axis1comp);
+				axis2comp = fabs(axis2comp);
+				axis3comp = fabs(axis3comp);
+				axis1comp = pow(axis1comp,Nvalue);
+				axis2comp = pow(axis2comp,Nvalue);
+				axis3comp = pow(axis3comp,Nvalue);
+				inside = 1-axis1comp-axis2comp-axis3comp;
+			}
+			if(shapeclass == 1)
+			{
+				axis1comp = fabs(axis1comp);
+				axis2comp = fabs(axis2comp);
+				axis3comp = fabs(axis3comp);
+				axis1comp = pow(axis1comp,2);
+				axis2comp = pow(axis2comp,2);
+				axis3comp = pow(axis3comp,2);
+				inside = 1-axis1comp-axis2comp-axis3comp;
+			}
+			if(inside >= 0)
+			{
+				int currentpoint = index;
+				if(index >= totalpoints)
+				{
+				  int stop = 0;
+				}
+				ellipfunc = (-0.1/((pow((axis1comp+axis2comp+axis3comp),1)*(1.0-(1.0/(0.90*0.90))))))*(1.0-(((axis1comp+axis2comp+axis3comp)*(axis1comp+axis2comp+axis3comp))/(0.90*0.90)));
+				insidelist[insidecount] = currentpoint;
+				ellipfunclist[insidecount] = ellipfunc;
+				insidecount++;
+				if (insidecount >= (insidelist.size()))
+				{
+				  insidelist.resize(insidecount + 1000,-1);
+				  ellipfunclist.resize(insidecount + 1000,-1);
+				}
+			}
+		  }
+		}
     }
   }
   insidelist.erase(std::remove(insidelist.begin(),insidelist.end(),-1),insidelist.end());
@@ -767,19 +757,19 @@ void  GrainGeneratorFunc::add_grain(size_t gnum)
 //  int neigh;
   for(size_t i=0;i<m_Grains[gnum]->voxellist->size();i++)
   {
-  index = m_Grains[gnum]->voxellist->at(i);
-  ellipfunc = m_Grains[gnum]->ellipfunclist->at(i);
-  voxels[index].grainlist->resize(voxels[index].grainlist->size()+1);
-  voxels[index].ellipfunclist->resize(voxels[index].ellipfunclist->size()+1);
-  voxels[index].grainlist->at(voxels[index].grainlist->size()-1) = gnum;
-  voxels[index].ellipfunclist->at(voxels[index].ellipfunclist->size()-1) = ellipfunc;
+	  index = m_Grains[gnum]->voxellist->at(i);
+	  ellipfunc = m_Grains[gnum]->ellipfunclist->at(i);
+	  voxels[index].grainlist->resize(voxels[index].grainlist->size()+1);	
+	  voxels[index].ellipfunclist->resize(voxels[index].ellipfunclist->size()+1);
+	  voxels[index].grainlist->at(voxels[index].grainlist->size()-1) = gnum;
+	  voxels[index].ellipfunclist->at(voxels[index].ellipfunclist->size()-1) = ellipfunc;
   }
   for(int i=0;i<3;i++)
   {
     for(size_t j=0;j<m_Grains[gnum]->neighbordistfunclist[i].size();j++)
     {
-    index = m_Grains[gnum]->neighbordistfunclist[i][j];
-    m_Grains[index]->neighbordistfunc[i]++;
+	    index = m_Grains[gnum]->neighbordistfunclist[i][j];
+	    m_Grains[index]->neighbordistfunc[i]++;
     }
   }
 }
@@ -1010,7 +1000,6 @@ int  GrainGeneratorFunc::pack_grains(const std::string &filename, int numgrains)
   double change1, change2, change3;
 
   std::ofstream outFile;
-//  string filename = "test.txt";
   outFile.open(filename.c_str());
   size_t index;
   double xc, yc, zc;
@@ -1021,7 +1010,6 @@ int  GrainGeneratorFunc::pack_grains(const std::string &filename, int numgrains)
   int acceptedmoves = 0;
   double acceptableerror = 0.0;
   rg.RandomInit((static_cast<unsigned int > (time(NULL))));
-  // std::vector<int>* nlist;
   activegrainlist.resize(numgrains + 1);
   for (int i = 1; i < (numextragrains + 1); i++)
   {
@@ -1067,14 +1055,14 @@ int  GrainGeneratorFunc::pack_grains(const std::string &filename, int numgrains)
     oldsizedisterror = oldsizedisterror + (grainsizedist[i]*grainsizedist[i]);
   }
   oldneighborhooderror = (numdiameterbins) * 4;
-  for (int iteration = 0; iteration < (250000); iteration++)
+  for (int iteration = 0; iteration < (50000); iteration++)
   {
-  change1 = 0;
-  change2 = 0;
-  change3 = 0;
-  acceptableerror = 15*exp(-0.03/((2.6*pow(10,-8.0))*(250000-iteration)));
-  int option = iteration % 4;
-  if(iteration%50 == 0) outFile << oldfillingerror << " " << oldsizedisterror << "  " << oldneighborhooderror << "  " << acceptedmoves << std::endl;
+    change1 = 0;
+    change2 = 0;
+    change3 = 0;
+    acceptableerror = 0.05*exp(-5*(iteration/double(50000)));
+    int option = iteration % 4;
+    if(iteration%100 == 0) outFile << oldfillingerror << " " << oldsizedisterror << "  " << oldneighborhooderror << "  " << acceptedmoves << std::endl;
     if (option == 0)
     {
       int random = int(rg.Random() * (numextragrains));
@@ -1253,18 +1241,18 @@ int GrainGeneratorFunc::assign_voxels(int numgrains)
   voxels = new Voxel[totalpoints];
   for(int i=1;i<numgrains;i++)
   {
-  gsizes[i] = 0;
+	  gsizes[i] = 0;
   }
   for(int i=1;i<numgrains;i++)
   {
     for(int j=1;j<i+1;j++)
     {
-    size = gsizes[j];
-    if(size == 0)
-    {
-      actualid = j;
-      break;
-    }
+	    size = gsizes[j];
+	    if(size == 0)
+	    {
+	      actualid = j;
+	      break;
+	    }
     }
     double volcur = m_Grains[i]->volume;
     double bovera = m_Grains[i]->radius2;
@@ -1279,11 +1267,11 @@ int GrainGeneratorFunc::assign_voxels(int numgrains)
       Gvalue = omega3;
       if(Gvalue >= 0 && Gvalue <= 1)
       {
-      radcur1 = (volcur*6.0)/(6-(Gvalue*Gvalue*Gvalue));
+	      radcur1 = (volcur*6.0)/(6-(Gvalue*Gvalue*Gvalue));
       }
       if(Gvalue > 1 && Gvalue <= 2)
       {
-      radcur1 = (volcur*6.0)/(3+(9*Gvalue)-(9*Gvalue*Gvalue)+(2*Gvalue*Gvalue*Gvalue));
+	      radcur1 = (volcur*6.0)/(3+(9*Gvalue)-(9*Gvalue*Gvalue)+(2*Gvalue*Gvalue*Gvalue));
       }
     }
     if(shapeclass == 2)
@@ -1323,103 +1311,109 @@ int GrainGeneratorFunc::assign_voxels(int numgrains)
     ymax = int(row+((radcur1/resy)+1));
     zmin = int(plane-((radcur1/resz)+1));
     zmax = int(plane+((radcur1/resz)+1));
+	if(xmin < -0.5*xpoints) xmin = -0.5*xpoints;
+	if(xmax > (1.5*xpoints-1)) xmax = (1.5*xpoints-1);
+	if(ymin < -0.5*ypoints) ymin = -0.5*ypoints;
+	if(ymax > (1.5*ypoints-1)) ymax = (1.5*ypoints-1);
+	if(zmin < -0.5*zpoints) zmin = -0.5*zpoints;
+	if(zmax > (1.5*zpoints-1)) zmax = (1.5*zpoints-1);
     for(int iter1 = xmin; iter1 < xmax+1; iter1++)
     {
       for(int iter2 = ymin; iter2 < ymax+1; iter2++)
       {
-      for(int iter3 = zmin; iter3 < zmax+1; iter3++)
-      {
-        column = iter1;
-        row = iter2;
-        plane = iter3;
-        if(iter1 < 0) column = iter1+xpoints;
-        if(iter1 > xpoints-1) column = iter1-xpoints;
-        if(iter2 < 0) row = iter2+ypoints;
-        if(iter2 > ypoints-1) row = iter2-ypoints;
-        if(iter3 < 0) plane = iter3+zpoints;
-        if(iter3 > zpoints-1) plane = iter3-zpoints;
-        index = (plane*xpoints*ypoints)+(row*xpoints)+column;
-        inside = -1;
-        x = find_xcoord(index);
-        y = find_ycoord(index);
-        z = find_zcoord(index);
-        if(iter1 < 0) x = x-sizex;
-        if(iter1 > xpoints-1) x = x+sizex;
-        if(iter2 < 0) y = y-sizey;
-        if(iter2 > ypoints-1) y = y+sizey;
-        if(iter3 < 0) z = z-sizez;
-        if(iter3 > zpoints-1) z = z+sizez;
-        dist = ((x-xc)*(x-xc))+((y-yc)*(y-yc))+((z-zc)*(z-zc));
-        dist = pow(dist,0.5);
-        if(dist < radcur1)
-        {
-          x = x-xc;
-          y = y-yc;
-          z = z-zc;
-          xp = (x*ga[0][0])+(y*ga[1][0])+(z*ga[2][0]);
-          yp = (x*ga[0][1])+(y*ga[1][1])+(z*ga[2][1]);
-          zp = (x*ga[0][2])+(y*ga[1][2])+(z*ga[2][2]);
-          double axis1comp = xp/radcur1;
-          double axis2comp = yp/radcur2;
-          double axis3comp = zp/radcur3;
-          if(shapeclass == 3)
-          {
-          if(fabs(axis1comp) <= 1 && fabs(axis2comp) <= 1 && fabs(axis3comp) <= 1)
-          {
-            inside = 1;
-            axis1comp = axis1comp+1;
-            axis2comp = axis2comp+1;
-            axis3comp = axis3comp+1;
-            if(((-axis1comp)+(-axis2comp)+(axis3comp)-((-0.5*Gvalue)+(-0.5*Gvalue)+2)) > 0) inside = -1;
-            if(((axis1comp)+(-axis2comp)+(axis3comp)-((2-(0.5*Gvalue))+(-0.5*Gvalue)+2)) > 0) inside = -1;
-            if(((axis1comp)+(axis2comp)+(axis3comp)-((2-(0.5*Gvalue))+(2-(0.5*Gvalue))+2)) > 0) inside = -1;
-            if(((-axis1comp)+(axis2comp)+(axis3comp)-((-0.5*Gvalue)+(2-(0.5*Gvalue))+2)) > 0) inside = -1;
-            if(((-axis1comp)+(-axis2comp)+(-axis3comp)-((-0.5*Gvalue)+(-0.5*Gvalue))) > 0) inside = -1;
-            if(((axis1comp)+(-axis2comp)+(-axis3comp)-((2-(0.5*Gvalue))+(-0.5*Gvalue))) > 0) inside = -1;
-            if(((axis1comp)+(axis2comp)+(-axis3comp)-((2-(0.5*Gvalue))+(2-(0.5*Gvalue)))) > 0) inside = -1;
-            if(((-axis1comp)+(axis2comp)+(-axis3comp)-((-0.5*Gvalue)+(2-(0.5*Gvalue)))) > 0) inside = -1;
-          }
-          }
-          if(shapeclass == 2)
-          {
-          axis1comp = fabs(axis1comp);
-          axis2comp = fabs(axis2comp);
-          axis3comp = fabs(axis3comp);
-          axis1comp = pow(axis1comp,Nvalue);
-          axis2comp = pow(axis2comp,Nvalue);
-          axis3comp = pow(axis3comp,Nvalue);
-          inside = 1-axis1comp-axis2comp-axis3comp;
-          }
-          if(shapeclass == 1)
-          {
-          axis1comp = fabs(axis1comp);
-          axis2comp = fabs(axis2comp);
-          axis3comp = fabs(axis3comp);
-          axis1comp = pow(axis1comp,2);
-          axis2comp = pow(axis2comp,2);
-          axis3comp = pow(axis3comp,2);
-          inside = 1-axis1comp-axis2comp-axis3comp;
-          }
-          if(inside >= 0)
-          {
-          int currentpoint = index;
-          if(voxels[currentpoint].grainname > 0)
-          {
-            oldname = voxels[currentpoint].grainname;
-            gsizes[oldname] = gsizes[oldname]-1;
-            voxels[currentpoint].grainname = -1;
-            voxels[currentpoint].unassigned = 1;
-          }
-          if(voxels[currentpoint].grainname == 0 && voxels[currentpoint].unassigned == 0)
-          {
-            voxels[currentpoint].grainname = actualid;
-            gsizes[actualid]++;
-          }
-          }
-        }
-      }
-     }
-    }
+	      for(int iter3 = zmin; iter3 < zmax+1; iter3++)
+	      {
+	        column = iter1;
+			row = iter2;
+			plane = iter3;
+			if(iter1 < 0) column = iter1+xpoints;
+			if(iter1 > xpoints-1) column = iter1-xpoints;
+			if(iter2 < 0) row = iter2+ypoints;
+			if(iter2 > ypoints-1) row = iter2-ypoints;
+			if(iter3 < 0) plane = iter3+zpoints;
+			if(iter3 > zpoints-1) plane = iter3-zpoints;
+			index = (plane*xpoints*ypoints)+(row*xpoints)+column;
+			inside = -1;
+			x = find_xcoord(index);
+			y = find_ycoord(index);
+			z = find_zcoord(index);
+			if(iter1 < 0) x = x-sizex;
+			if(iter1 > xpoints-1) x = x+sizex;
+			if(iter2 < 0) y = y-sizey;
+			if(iter2 > ypoints-1) y = y+sizey;
+			if(iter3 < 0) z = z-sizez;
+			if(iter3 > zpoints-1) z = z+sizez;
+			dist = ((x-xc)*(x-xc))+((y-yc)*(y-yc))+((z-zc)*(z-zc));
+			dist = pow(dist,0.5);
+			if(dist < radcur1)
+			{
+			  x = x-xc;
+			  y = y-yc;
+			  z = z-zc;
+			  xp = (x*ga[0][0])+(y*ga[1][0])+(z*ga[2][0]);
+			  yp = (x*ga[0][1])+(y*ga[1][1])+(z*ga[2][1]);
+			  zp = (x*ga[0][2])+(y*ga[1][2])+(z*ga[2][2]);
+			  double axis1comp = xp/radcur1;
+			  double axis2comp = yp/radcur2;
+			  double axis3comp = zp/radcur3;
+			  if(shapeclass == 3)
+			  {
+				  if(fabs(axis1comp) <= 1 && fabs(axis2comp) <= 1 && fabs(axis3comp) <= 1)
+				  {
+					inside = 1;
+					axis1comp = axis1comp+1;
+					axis2comp = axis2comp+1;
+					axis3comp = axis3comp+1;
+					if(((-axis1comp)+(-axis2comp)+(axis3comp)-((-0.5*Gvalue)+(-0.5*Gvalue)+2)) > 0) inside = -1;
+					if(((axis1comp)+(-axis2comp)+(axis3comp)-((2-(0.5*Gvalue))+(-0.5*Gvalue)+2)) > 0) inside = -1;
+					if(((axis1comp)+(axis2comp)+(axis3comp)-((2-(0.5*Gvalue))+(2-(0.5*Gvalue))+2)) > 0) inside = -1;
+					if(((-axis1comp)+(axis2comp)+(axis3comp)-((-0.5*Gvalue)+(2-(0.5*Gvalue))+2)) > 0) inside = -1;
+					if(((-axis1comp)+(-axis2comp)+(-axis3comp)-((-0.5*Gvalue)+(-0.5*Gvalue))) > 0) inside = -1;
+					if(((axis1comp)+(-axis2comp)+(-axis3comp)-((2-(0.5*Gvalue))+(-0.5*Gvalue))) > 0) inside = -1;
+					if(((axis1comp)+(axis2comp)+(-axis3comp)-((2-(0.5*Gvalue))+(2-(0.5*Gvalue)))) > 0) inside = -1;
+					if(((-axis1comp)+(axis2comp)+(-axis3comp)-((-0.5*Gvalue)+(2-(0.5*Gvalue)))) > 0) inside = -1;
+				  }
+			  }
+			  if(shapeclass == 2)
+			  {
+				  axis1comp = fabs(axis1comp);
+				  axis2comp = fabs(axis2comp);
+				  axis3comp = fabs(axis3comp);
+				  axis1comp = pow(axis1comp,Nvalue);
+				  axis2comp = pow(axis2comp,Nvalue);
+				  axis3comp = pow(axis3comp,Nvalue);
+				  inside = 1-axis1comp-axis2comp-axis3comp;
+			  }
+			  if(shapeclass == 1)
+			  {
+				  axis1comp = fabs(axis1comp);
+				  axis2comp = fabs(axis2comp);
+				  axis3comp = fabs(axis3comp);
+				  axis1comp = pow(axis1comp,2);
+				  axis2comp = pow(axis2comp,2);
+				  axis3comp = pow(axis3comp,2);
+				  inside = 1-axis1comp-axis2comp-axis3comp;
+			  }
+			  if(inside >= 0)
+			  {
+				  int currentpoint = index;
+				  if(voxels[currentpoint].grainname > 0)
+				  {
+					oldname = voxels[currentpoint].grainname;
+					gsizes[oldname] = gsizes[oldname]-1;
+					voxels[currentpoint].grainname = -1;
+					voxels[currentpoint].unassigned = 1;
+				  }
+				  if(voxels[currentpoint].grainname == 0 && voxels[currentpoint].unassigned == 0)
+				  {
+					voxels[currentpoint].grainname = actualid;
+					gsizes[actualid]++;
+				  }
+			  }
+			}
+		  }
+	  }
+	}
     m_Grains[i]->centroidx = xc;
     m_Grains[i]->centroidy = yc;
     m_Grains[i]->centroidz = zc;
@@ -1551,35 +1545,34 @@ void  GrainGeneratorFunc::fill_gaps(int numgrains)
     for(int i = 0; i < (xpoints*ypoints*zpoints); i++)
     {
       int grainname = voxels[i].grainname;
-      if(grainname < 0)
+      if(grainname <= 0)
       {
-    count++;
-    voxels[i].unassigned = 1;
+	    count++;
         for(int c = 1; c < numgrains; c++)
         {
           n[c] = 0;
         }
-      x = i%xpoints;
-    y = (i/xpoints)%ypoints;
-      z = i/(xpoints*ypoints);
-    for(int j=0;j<6;j++)
-    {
-      good = 1;
-      neighpoint = i+neighbors[j];
-        if(j == 0 && z == 0) good = 0;
-        if(j == 5 && z == (zpoints-1)) good = 0;
-        if(j == 1 && y == 0) good = 0;
-        if(j == 4 && y == (ypoints-1)) good = 0;
-        if(j == 2 && x == 0) good = 0;
-        if(j == 3 && x == (xpoints-1)) good = 0;
-      if(good == 1)
+	    x = i%xpoints;
+		y = (i/xpoints)%ypoints;
+		z = i/(xpoints*ypoints);
+	    for(int j=0;j<6;j++)
+	    {
+	      good = 1;
+	      neighpoint = i+neighbors[j];
+          if(j == 0 && z == 0) good = 0;
+          if(j == 5 && z == (zpoints-1)) good = 0;
+          if(j == 1 && y == 0) good = 0;
+          if(j == 4 && y == (ypoints-1)) good = 0;
+          if(j == 2 && x == 0) good = 0;
+          if(j == 3 && x == (xpoints-1)) good = 0;
+		  if(good == 1)
           {
-        int grain = voxels[neighpoint].grainname;
-        if(grain > 0)
-        {
-          neighs.push_back(grain);
-        }
-      }
+	        int grain = voxels[neighpoint].grainname;
+	        if(grain > 0)
+	        {
+	          neighs.push_back(grain);
+	        }
+	      }
         }
         int current = 0;
         int most = 0;
@@ -1617,86 +1610,11 @@ void  GrainGeneratorFunc::fill_gaps(int numgrains)
   for (int i = 0; i < (xpoints*ypoints*zpoints); i++)
   {
     int name = voxels[i].grainname;
-  gsizes[name]++;
-  }
-  count = 1;
-//  int testcount = 0;
-//  int size = 0;
-//  int current = 0;
-//  int most = 0;
-//  int curgrain = 0;
-  while(count != 0)
-  {
-    count = 0;
-    for(int i = 0; i < (xpoints*ypoints*zpoints); i++)
-    {
-      int grainname = voxels[i].grainname;
-      if(grainname == 0)
-      {
-    count++;
-    voxels[i].unassigned = 1;
-        for(int c = 1; c < numgrains; c++)
-        {
-          n[c] = 0;
-        }
-      x = i%xpoints;
-    y = (i/xpoints)%ypoints;
-      z = i/(xpoints*ypoints);
-    for(int j=0;j<6;j++)
-    {
-      good = 1;
-      neighpoint = i+neighbors[j];
-        if(j == 0 && z == 0) good = 0;
-        if(j == 5 && z == (zpoints-1)) good = 0;
-        if(j == 1 && y == 0) good = 0;
-        if(j == 4 && y == (ypoints-1)) good = 0;
-        if(j == 2 && x == 0) good = 0;
-        if(j == 3 && x == (xpoints-1)) good = 0;
-      if(good == 1)
-          {
-        int grain = voxels[neighpoint].grainname;
-        if(grain > 0)
-        {
-          neighs.push_back(grain);
-        }
-      }
-        }
-        int current = 0;
-        int most = 0;
-        int curgrain = 0;
-        int size = int(neighs.size());
-        for(int k=0;k<size;k++)
-        {
-          int neighbor = neighs[k];
-          n[neighbor]++;
-          current = n[neighbor];
-      if(current > most)
-          {
-            most = current;
-            curgrain = neighbor;
-          }
-        }
-        if(size > 0)
-        {
-          voxels[i].neighbor = curgrain;
-          neighs.clear();
-        }
-      }
-    }
-    for(int j = 0; j < (xpoints*ypoints*zpoints); j++)
-    {
-      int grainname = voxels[j].grainname;
-      int neighbor = voxels[j].neighbor;
-      if(grainname <= 0 && neighbor > 0)
-      {
-        voxels[j].grainname = neighbor;
-    gsizes[neighbor]++;
-      }
-    }
+    gsizes[name]++;
   }
   for (int i = 1; i < numgrains; i++)
   {
-  m_Grains[i]->numvoxels = gsizes[i];
+	  m_Grains[i]->numvoxels = gsizes[i];
   }
   gsizes.clear();
 }
@@ -2357,14 +2275,11 @@ void  GrainGeneratorFunc::find_neighbors()
 #include "SwapOutOrientations.cpp"
 #include "SwitchOrientations.cpp"
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void GrainGeneratorFunc::matchCrystallography(const std::string &ErrorFile, H5ReconStatsWriter::Pointer h5io)
 {
   ofstream outFile;
   outFile.open(ErrorFile.c_str());
-   int numbins = 0;
+  int numbins = 0;
 
   int iterations = 0;
   int badtrycount = 0;
@@ -2372,8 +2287,10 @@ void GrainGeneratorFunc::matchCrystallography(const std::string &ErrorFile, H5Re
   double currentodferror = 0;
   double currentmdferror = 0;
 
+  if(crystruct == AIM::Reconstruction::Cubic) numbins = 18*18*18;
+  if(crystruct == AIM::Reconstruction::Hexagonal) numbins = 36*36*12;
   rg.RandomInit((static_cast<unsigned int>(time(NULL))));
-  while(badtrycount < 5000 && iterations < 10000)
+  while(badtrycount < 5000 && iterations < 100000)
   {
     currentodferror = 0;
     currentmdferror = 0;
@@ -2404,10 +2321,6 @@ void GrainGeneratorFunc::matchCrystallography(const std::string &ErrorFile, H5Re
   err = h5io->writeODFData(crystruct, simodf, totalvol);
   err = h5io->writeMisorientationBinsData(simmdf, numbins);
 }
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void  GrainGeneratorFunc::measure_misorientations ()
 {
   vector<double > misolist;
@@ -2419,7 +2332,6 @@ void  GrainGeneratorFunc::measure_misorientations ()
   double q2[5];
   double denom;
   double degtorad = m_pi/180.0;
-//  int miso1bin, miso2bin, miso3bin;
   int mbin;
 
   IntVectorType nlist ;
@@ -2447,30 +2359,30 @@ void  GrainGeneratorFunc::measure_misorientations ()
       q2[3] = m_Grains[nname]->avg_quat[3];
       q2[4] = m_Grains[nname]->avg_quat[4];
       if(crystruct == AIM::Reconstruction::Hexagonal)
-    {
+	  {
         w = MisorientationCalculations::getMisoQuatHexagonal(q1,q2,n1,n2,n3);
       }
       if(crystruct == AIM::Reconstruction::Cubic)
-    {
+	  {
         w = MisorientationCalculations::getMisoQuatCubic(q1,q2,n1,n2,n3);
       }
-    w = w*degtorad;
-    denom = (n1*n1)+(n2*n2)+(n3*n3);
-    denom = pow(denom,0.5);
-    n1 = n1/denom;
-    n2 = n2/denom;
-    n3 = n3/denom;
-    misolist[3*j] = n1*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
-      misolist[3*j+1] = n2*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
-      misolist[3*j+2] = n3*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
-    if (crystruct == AIM::Reconstruction::Cubic)
+	  w = w*degtorad;
+	  denom = (n1*n1)+(n2*n2)+(n3*n3);
+	  denom = pow(denom,0.5);
+	  n1 = n1/denom;
+	  n2 = n2/denom;
+	  n3 = n3/denom;
+	  misolist[3*j] = n1*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
+	  misolist[3*j+1] = n2*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
+	  misolist[3*j+2] = n3*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
+	  if (crystruct == AIM::Reconstruction::Cubic)
       {
-      mbin = MisorientationCalculations::getMisoBinCubic(misolist[3*j],misolist[3*j+1],misolist[3*j+2]);
-    }
+	      mbin = MisorientationCalculations::getMisoBinCubic(misolist[3*j],misolist[3*j+1],misolist[3*j+2]);
+      }
       if (crystruct == AIM::Reconstruction::Hexagonal)
       {
-      mbin = MisorientationCalculations::getMisoBinHexagonal(misolist[3*j],misolist[3*j+1],misolist[3*j+2]);
-    }
+	      mbin = MisorientationCalculations::getMisoBinHexagonal(misolist[3*j],misolist[3*j+1],misolist[3*j+2]);
+	  }
       if (m_Grains[i]->surfacegrain == 0 && (nname > i || m_Grains[nname]->surfacegrain == 1))
       {
         simmdf[mbin] = simmdf[mbin] + (neighsurfarea / totalsurfacearea);
