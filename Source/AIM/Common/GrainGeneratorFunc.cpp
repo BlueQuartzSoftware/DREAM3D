@@ -1239,21 +1239,21 @@ int GrainGeneratorFunc::assign_voxels(int numgrains)
   totalpoints = xpoints * ypoints * zpoints;
   delete [] voxels;
   voxels = new Voxel[totalpoints];
+  int *gnames;
+  gnames = new int[totalpoints];
+  int *unassigned;
+  unassigned = new int[totalpoints];
+  for(int i=0;i<totalpoints;i++)
+  {
+	  gnames[i] = voxels[i].grainname;	
+	  unassigned[i] = voxels[i].unassigned;	
+  }
   for(int i=1;i<numgrains;i++)
   {
 	  gsizes[i] = 0;
   }
   for(int i=1;i<numgrains;i++)
   {
-    for(int j=1;j<i+1;j++)
-    {
-	    size = gsizes[j];
-	    if(size == 0)
-	    {
-	      actualid = j;
-	      break;
-	    }
-    }
     double volcur = m_Grains[i]->volume;
     double bovera = m_Grains[i]->radius2;
     double covera = m_Grains[i]->radius3;
@@ -1397,17 +1397,17 @@ int GrainGeneratorFunc::assign_voxels(int numgrains)
 			  if(inside >= 0)
 			  {
 				  int currentpoint = index;
-				  if(voxels[currentpoint].grainname > 0)
+				  if(gnames[currentpoint] > 0)
 				  {
-					oldname = voxels[currentpoint].grainname;
+					oldname = gnames[currentpoint];
 					gsizes[oldname] = gsizes[oldname]-1;
-					voxels[currentpoint].grainname = -1;
-					voxels[currentpoint].unassigned = 1;
+					gnames[currentpoint] = -1;
+					unassigned[currentpoint] = 1;
 				  }
-				  if(voxels[currentpoint].grainname == 0 && voxels[currentpoint].unassigned == 0)
+				  if(gnames[currentpoint] == 0 && unassigned[currentpoint] == 0)
 				  {
-					voxels[currentpoint].grainname = actualid;
-					gsizes[actualid]++;
+					gnames[currentpoint] = i;
+					gsizes[i]++;
 				  }
 			  }
 			}
@@ -1417,16 +1417,33 @@ int GrainGeneratorFunc::assign_voxels(int numgrains)
     m_Grains[i]->centroidx = xc;
     m_Grains[i]->centroidy = yc;
     m_Grains[i]->centroidz = zc;
-    m_Grains[actualid] = m_Grains[i];
-    m_Grains[actualid]->numvoxels = gsizes[actualid];
+    m_Grains[i]->numvoxels = gsizes[i];
   }
+  int *newnames;
+  newnames = new int[numgrains];
   int goodcount = 1;
   for(int i=1;i<numgrains;i++)
   {
+    newnames[i] = 0;
     if(gsizes[i] > 0)
     {
+	  m_Grains[goodcount] = m_Grains[i];
+	  newnames[i] = goodcount;
       goodcount++;
     }
+  }
+  for(int i=0;i<totalpoints;i++)
+  {
+	  if(gnames[i] > 0)
+	  {
+		  voxels[i].grainname = newnames[gnames[i]];
+		  voxels[i].unassigned = unassigned[i];
+	  }
+	  if(gnames[i] <= 0)
+	  {
+		  voxels[i].grainname = gnames[i];
+		  voxels[i].unassigned = unassigned[i];
+	  }
   }
   return goodcount;
 }
@@ -1523,12 +1540,9 @@ void  GrainGeneratorFunc::fill_gaps(int numgrains)
   vector<int> neighs;
   vector<int> remove;
   vector<int> gsizes;
-  vector<int> accept;
-//  vector<int>* voxellist;
   int count = 1;
   int good = 1;
   double x, y, z;
-  accept.resize(numgrains,1);
   gsizes.resize(numgrains,0);
   int neighpoint;
   int neighbors[6];
