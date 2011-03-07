@@ -48,6 +48,7 @@ class AIMCOMMON_EXPORT Voxel
     int neighbor;
     int numowners;
     double grainmisorientation;
+    double misorientationgradient;
     double kernelmisorientation;
     int surfacevoxel;
     int unassigned;
