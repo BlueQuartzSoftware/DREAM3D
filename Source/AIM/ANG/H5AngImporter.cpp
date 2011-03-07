@@ -274,6 +274,40 @@ int H5AngImporter::importAngFile(hid_t fileId, int z, const std::string &angFile
 {
   herr_t err = -1;
 
+//  std::cout << "H5AngImporter: Importing " << angFile << std::endl;
+  AngReader reader;
+  reader.setFileName(angFile);
+  // This is set to NoOrientation because we want to leave the data intact as it
+  // was received from the instrument. The user can choose to rotate the data as
+  // it is read from the resulting HDF5 data file.
+  reader.setUserOrigin(Ang::NoOrientation);
+  err = reader.readFile();
+  if (err < 0)
+  {
+    std::ostringstream ss;
+    if (err == -400) {
+      ss << "H5AngImporter Error: HexGrid Files are not currently supported.";
+    }
+    else if (err == -300)
+    {
+      ss << "H5AngImporter Error: Grid was NOT set in the header.";
+    }
+    else if (err == -200)
+    {
+      ss << "H5AngImporter Error: There was no data in the file.";
+    }
+    else if (err == -100)
+    {
+      ss << "H5AngImporter Error: The Ang file could not be opened.";
+    }
+    else
+    {
+      ss << "H5AngImporter Error: Unknown error.";
+    }
+    progressMessage(ss.str(), 100);
+    return -1;
+  }
+
   hid_t angGroup = H5Utilities::createGroup(fileId, StringUtils::numToString(z));
   if (angGroup < 0)
   {
@@ -283,15 +317,6 @@ int H5AngImporter::importAngFile(hid_t fileId, int z, const std::string &angFile
     progressMessage(ss.str(), 100);
     return -1;
   }
-
-//  std::cout << "H5AngImporter: Importing " << angFile << std::endl;
-  AngReader reader;
-  reader.setFileName(angFile);
-  // This is set to NoOrientation because we want to leave the data intact as it
-  // was received from the instrument. The user can choose to rotate the data as
-  // it is read from the resulting HDF5 data file.
-  reader.setUserOrigin(Ang::NoOrientation);
-  err = reader.readFile();
 
   hid_t gid = H5Utilities::createGroup(angGroup, AIM::ANG::Header);
   if (gid < 0)
