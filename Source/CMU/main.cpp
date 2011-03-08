@@ -32,6 +32,8 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <numeric>
+#include <limits>
 
 // AIMRepresentation Includes
 //#include <AIM/StatsGenerator/StatsGen.h>
