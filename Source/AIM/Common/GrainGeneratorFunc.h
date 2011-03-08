@@ -127,6 +127,7 @@ public:
     int numorients;
     int numeulers;
     int resdiff;
+	double unbiasedvol;
     double totalsurfacearea;
     int numgrains;
     int numextragrains;
