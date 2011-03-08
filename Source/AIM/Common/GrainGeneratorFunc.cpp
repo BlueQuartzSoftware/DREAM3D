@@ -281,8 +281,8 @@ int GrainGeneratorFunc::readReconStatsData(H5ReconStatsReader::Pointer h5io)
   double input = 0;
   for (int i = 0; i < 20; i++)
   {
-    input = (double(i)*grainsizediststep)+mindiameter;
-    grainsizedist[i] = (1.0/(double(i+0.5)*double_data[1]*root2pi))*exp(-((log(double(input+(grainsizediststep/2.0)))-double_data[0])*(log(double(input+(grainsizediststep/2.0)))-double_data[0]))/(2*double_data[1*double_data[1]]));
+    input = ((double(i)*grainsizediststep)+(grainsizediststep/2.0))+mindiameter;
+    grainsizedist[i] = (grainsizediststep/(input*double_data[1]*root2pi))*exp(-((log(double(input))-double_data[0])*(log(double(input))-double_data[0]))/(2*double_data[1]*double_data[1]));
   }
 
   AIM::Reconstruction::DistributionType dt;
@@ -1046,10 +1046,7 @@ int  GrainGeneratorFunc::pack_grains(const std::string &filename, int numgrains)
     activegrainlist[i] = random;
     oldfillingerror = oldfillingerror + addcost;
   }
-  for(int i=0;i<20;i++)
-  {
-    oldsizedisterror = oldsizedisterror + (grainsizedist[i]*grainsizedist[i]);
-  }
+  oldsizedisterror = check_sizedisterror(-1000,-1000);
   oldneighborhooderror = (numdiameterbins) * 4;
   for (int iteration = 0; iteration < (250000); iteration++)
   {
@@ -1514,7 +1511,7 @@ void  GrainGeneratorFunc::assign_eulers(int numgrains)
     m_Grains[i]->euler1 = synea1;
     m_Grains[i]->euler2 = synea2;
     m_Grains[i]->euler3 = synea3;
-      double s=sin(0.5*synea2);
+    double s=sin(0.5*synea2);
     double c=cos(0.5*synea2);
     double s1=sin(0.5*(synea1-synea3));
     double c1=cos(0.5*(synea1-synea3));
@@ -1526,7 +1523,8 @@ void  GrainGeneratorFunc::assign_eulers(int numgrains)
     m_Grains[i]->avg_quat[4] = c*c2;
     if(m_Grains[gnum]->surfacegrain == 0)
     {
-      simodf[choose] = simodf[choose] + (double(m_Grains[i]->numvoxels)*resx*resy*resz/totalvol);
+      simodf[choose] = simodf[choose] + (double(m_Grains[i]->numvoxels)*resx*resy*resz);
+	  unbiasedvol = unbiasedvol + (double(m_Grains[i]->numvoxels)*resx*resy*resz);
     }
   }
 }
@@ -2166,8 +2164,6 @@ void  GrainGeneratorFunc::find_neighbors()
   int surfacegrain = 1;
   int nListSize = 100;
   int vListSize = 1000;
-  std::vector<int> nlist(nListSize, -1);
-  std::vector<double> nsalist(nListSize, -1.0);
   boundaries.resize(numgrains*numgrains);
   for(int i=0;i<numgrains;i++)
   {
@@ -2246,6 +2242,7 @@ void  GrainGeneratorFunc::find_neighbors()
     nlist->erase(std::remove(nlist->begin(), nlist->end(), -1), nlist->end());
     nlist->erase(std::remove(nlist->begin(), nlist->end(), 0), nlist->end());
     int numneighs = int(nlist->size());
+	nsalist->resize(numneighs,0);
     for (int j = 0; j < numneighs; j++)
     {
       int neigh = nlist->at(j);
@@ -2258,10 +2255,6 @@ void  GrainGeneratorFunc::find_neighbors()
       }
     }
     m_Grains[i]->numneighbors = numneighs;
-//    m_Grains[i]->neighborlist = new std::vector<int>(numneighs);
-//    m_Grains[i]->neighborlist = nlist;
-//    m_Grains[i]->neighborsurfarealist = new std::vector<double>(numneighs);
-//    m_Grains[i]->neighborsurfarealist = nsalist;
   }
   for(int i=1;i<numgrains;i++)
   {
@@ -2349,7 +2342,7 @@ void GrainGeneratorFunc::matchCrystallography(const std::string &ErrorFile, H5Re
   }
   outFile.close();
   int err;
-  err = h5io->writeODFData(crystruct, simodf, totalvol);
+  err = h5io->writeODFData(crystruct, simodf, unbiasedvol);
   err = h5io->writeMisorientationBinsData(simmdf, numbins);
 }
 void  GrainGeneratorFunc::measure_misorientations ()
