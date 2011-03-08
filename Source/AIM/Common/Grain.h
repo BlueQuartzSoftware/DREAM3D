@@ -48,19 +48,18 @@ class AIMCOMMON_EXPORT Grain
      */
     void deepCopy(Grain::Pointer grain);
 
- //   Grain& operator=(const Grain&);
-
     IntVectorType     neighborlist;
     DoubleVectorType  neighborsurfarealist;
-
-    // std::vector<int>* neighborlist;
-    //  std::vector<double>* neighborsurfarealist;
 
     std::vector<int>* voxellist;
     std::vector<double>* ellipfunclist;
     std::vector<double>* misorientationlist;
     std::vector<std::vector<int> > neighbordistfunclist;
 
+    /*
+     * IF YOU ADD NEW VARIABLES MAKE SURE TO UPDATE THE "DeepCopy()" METHOD WITH
+     * THE NEW VARIABLES OTHERWISE BAD THINGS CAN HAPPEN.
+     */
     int nucleus;
     int active;
     int numvoxels;
@@ -72,8 +71,8 @@ class AIMCOMMON_EXPORT Grain
     int surfacegrain;
     int twinnewnumber;
     int colonynewnumber;
-	int slipsystem;
-	double packquality;
+	  int slipsystem;
+	  double packquality;
     double centroidx;
     double centroidy;
     double centroidz;
