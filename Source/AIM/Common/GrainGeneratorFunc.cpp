@@ -636,9 +636,9 @@ void  GrainGeneratorFunc::insert_grain(size_t gnum)
 		  if(iter3 > zpoints-1) plane = iter3-zpoints;
 		  index = (plane*xpoints*ypoints)+(row*xpoints)+column;
 		  inside = -1;
-		  x = find_xcoord(index);
-		  y = find_ycoord(index);
-		  z = find_zcoord(index);
+		  x = double(column)*resx;
+		  y = double(row)*resy;
+		  z = double(plane)*resz;
 		  if(iter1 < 0) x = x-sizex;
 		  if(iter1 > xpoints-1) x = x+sizex;
 		  if(iter2 < 0) y = y-sizey;
@@ -953,11 +953,7 @@ double GrainGeneratorFunc::costcheck_add(size_t gnum)
 }
 double GrainGeneratorFunc::check_sizedisterror(int gadd, int gremove)
 {
-//  double p, df;
-//  double avgdia=0, stddia=0;
-//  double uvar;
   double dia;
-//  double tvalue;
   double sizedisterror = 0;
   int index;
   int count = 0;
@@ -1032,7 +1028,7 @@ int  GrainGeneratorFunc::pack_grains(const std::string &filename, int numgrains)
     insert_grain(i);
   }
   if(neighborhooderrorweight > 0) determine_neighbors();
-  oldfillingerror = numextragrains;
+  oldfillingerror = totalpoints;
   for (int i = 1; i < numgrains + 1; i++)
   {
     int random = int(rg.Random() * (numextragrains));
@@ -1055,12 +1051,12 @@ int  GrainGeneratorFunc::pack_grains(const std::string &filename, int numgrains)
     oldsizedisterror = oldsizedisterror + (grainsizedist[i]*grainsizedist[i]);
   }
   oldneighborhooderror = (numdiameterbins) * 4;
-  for (int iteration = 0; iteration < (50000); iteration++)
+  for (int iteration = 0; iteration < (250000); iteration++)
   {
     change1 = 0;
     change2 = 0;
     change3 = 0;
-    acceptableerror = 0.05*exp(-5*(iteration/double(50000)));
+    acceptableerror = 0.1*exp(-5*(iteration/double(250000)));
     int option = iteration % 4;
     if(iteration%100 == 0) outFile << oldfillingerror << " " << oldsizedisterror << "  " << oldneighborhooderror << "  " << acceptedmoves << std::endl;
     if (option == 0)
@@ -1334,9 +1330,9 @@ int GrainGeneratorFunc::assign_voxels(int numgrains)
 			if(iter3 > zpoints-1) plane = iter3-zpoints;
 			index = (plane*xpoints*ypoints)+(row*xpoints)+column;
 			inside = -1;
-			x = find_xcoord(index);
-			y = find_ycoord(index);
-			z = find_zcoord(index);
+			x = double(column)*resx;
+			y = double(row)*resy;
+			z = double(plane)*resz;
 			if(iter1 < 0) x = x-sizex;
 			if(iter1 > xpoints-1) x = x+sizex;
 			if(iter2 < 0) y = y-sizey;
@@ -2160,6 +2156,7 @@ void  GrainGeneratorFunc::find_neighbors()
   double xdist, ydist, zdist;
   int grain;
   int nnum;
+  int bid;
   int onsurf = 0;
   double dist, dist2, diam, diam2;
   int dist_int, dist2_int;
@@ -2167,9 +2164,11 @@ void  GrainGeneratorFunc::find_neighbors()
   int neighbor = 0;
   totalsurfacearea=0;
   int surfacegrain = 1;
-  int nListSize = 1000;
+  int nListSize = 100;
+  int vListSize = 1000;
   std::vector<int> nlist(nListSize, -1);
   std::vector<double> nsalist(nListSize, -1.0);
+  boundaries.resize(numgrains*numgrains);
   for(int i=0;i<numgrains;i++)
   {
     m_Grains[i]->numneighbors = 0;
@@ -2180,43 +2179,58 @@ void  GrainGeneratorFunc::find_neighbors()
       m_Grains[i]->neighbordistfunc[j] = 0;
     }
   }
+  for(int i=0;i<numgrains*numgrains;i++)
+  {
+	  boundaries[i].resize(0,0);
+  }
+  int *gnames;
+  gnames = new int[totalpoints];
+  for(int i=0;i<totalpoints;i++)
+  {
+	  gnames[i] = voxels[i].grainname;	
+  }
   for(int j = 0; j < (xpoints*ypoints*zpoints); j++)
   {
     onsurf = 0;
-    grain = voxels[j].grainname;
-  if(grain > 0)
-  {
-    column = j%xpoints;
-    row = (j/xpoints)%ypoints;
-    plane = j/(xpoints*ypoints);
-    if((column == 0 || column == (xpoints-1) || row == 0 || row == (ypoints-1) || plane == 0 || plane == (zpoints-1)) && zpoints != 1) m_Grains[grain]->surfacegrain = surfacegrain;
-    if((column == 0 || column == (xpoints-1) || row == 0 || row == (ypoints-1)) && zpoints == 1) m_Grains[grain]->surfacegrain = surfacegrain;
+    grain = gnames[j];
+	if(grain > 0)
+	{
+		column = j%xpoints;
+		row = (j/xpoints)%ypoints;
+		plane = j/(xpoints*ypoints);
+		if((column == 0 || column == (xpoints-1) || row == 0 || row == (ypoints-1) || plane == 0 || plane == (zpoints-1)) && zpoints != 1) m_Grains[grain]->surfacegrain = surfacegrain;
+		if((column == 0 || column == (xpoints-1) || row == 0 || row == (ypoints-1)) && zpoints == 1) m_Grains[grain]->surfacegrain = surfacegrain;
         for(int k=0;k<6;k++)
         {
-      good = 1;
-      neighbor = j+neighbors[k];
+	      good = 1;
+	      neighbor = j+neighbors[k];
           if(k == 0 && plane == 0) good = 0;
           if(k == 5 && plane == (zpoints-1)) good = 0;
           if(k == 1 && row == 0) good = 0;
           if(k == 4 && row == (ypoints-1)) good = 0;
           if(k == 2 && column == 0) good = 0;
           if(k == 3 && column == (xpoints-1)) good = 0;
-      if(good == 1 && voxels[neighbor].grainname != grain && voxels[neighbor].grainname > 0)
+	      if(good == 1 && gnames[neighbor] != grain && gnames[neighbor] > 0)
           {
-        onsurf++;
-        nnum = m_Grains[grain]->numneighbors;
-        IntVectorType nlist = m_Grains[grain]->neighborlist;
-        if (nnum >= (nlist->size()))
-        {
-         nlist->resize(nnum + nListSize);
-        }
-        nlist->at(nnum) = voxels[neighbor].grainname;
-        nnum++;
-        m_Grains[grain]->numneighbors = nnum;
-      }
-    }
-  }
-  voxels[j].surfacevoxel = onsurf;
+	        onsurf++;
+	        nnum = m_Grains[grain]->numneighbors;
+	        IntVectorType nlist = m_Grains[grain]->neighborlist;
+	        if (nnum >= (nlist->size()))
+	        {
+	         nlist->resize(nnum + nListSize);
+	        }
+	        nlist->at(nnum) = gnames[neighbor];
+	        nnum++;
+	        m_Grains[grain]->numneighbors = nnum;
+			if(grain < gnames[neighbor])
+			{
+				bid = grain*numgrains+gnames[neighbor];
+				boundaries[bid].push_back(j);
+			}
+	      }
+	    }
+	}
+	voxels[j].surfacevoxel = onsurf;
   }
   vector<int> nlistcopy;
   for(int i=1;i<numgrains;i++)
@@ -2227,7 +2241,6 @@ void  GrainGeneratorFunc::find_neighbors()
     sort(nlist->begin(), nlist->end());
     // Make a copy of the contents of the neighborlist vector
     nlistcopy.assign(nlist->begin(), nlist->end());
-
     newend = unique(nlist->begin(), nlist->end());
     nlist->erase(newend, nlist->end());
     nlist->erase(std::remove(nlist->begin(), nlist->end(), -1), nlist->end());
@@ -2252,37 +2265,41 @@ void  GrainGeneratorFunc::find_neighbors()
   }
   for(int i=1;i<numgrains;i++)
   {
-  x = m_Grains[i]->centroidx;
-  y = m_Grains[i]->centroidy;
-  z = m_Grains[i]->centroidz;
-  diam = m_Grains[i]->equivdiameter;
-  for(int j=i;j<numgrains;j++)
-  {
-    xn = m_Grains[j]->centroidx;
-    yn = m_Grains[j]->centroidy;
-    zn = m_Grains[j]->centroidz;
-    diam2 = m_Grains[j]->equivdiameter;
-    xdist = fabs(x-xn);
-    ydist = fabs(y-yn);
-    zdist = fabs(z-zn);
-    dist = (xdist*xdist)+(ydist*ydist)+(zdist*zdist);
-    dist = pow(dist,0.5);
-    dist2 = dist;
-    dist_int = int(dist/diam);
-    dist2_int = int(dist2/diam2);
-    if(dist < 3)
-    {
-      m_Grains[i]->neighbordistfunc[dist_int]++;
-    }
-    if(dist2 < 3)
-    {
-      m_Grains[j]->neighbordistfunc[dist2_int]++;
-    }
-  }
+	  x = m_Grains[i]->centroidx;
+	  y = m_Grains[i]->centroidy;
+	  z = m_Grains[i]->centroidz;
+	  diam = m_Grains[i]->equivdiameter;
+	  for(int j=i;j<numgrains;j++)
+	  {
+		xn = m_Grains[j]->centroidx;
+		yn = m_Grains[j]->centroidy;
+		zn = m_Grains[j]->centroidz;
+		diam2 = m_Grains[j]->equivdiameter;
+		xdist = fabs(x-xn);
+		ydist = fabs(y-yn);
+		zdist = fabs(z-zn);
+		dist = (xdist*xdist)+(ydist*ydist)+(zdist*zdist);
+		dist = pow(dist,0.5);
+		dist2 = dist;
+		dist_int = int(dist/diam);
+		dist2_int = int(dist2/diam2);
+		if(dist < 3)
+		{
+		  m_Grains[i]->neighbordistfunc[dist_int]++;
+		}
+		if(dist2 < 3)
+		{
+		  m_Grains[j]->neighbordistfunc[dist2_int]++;
+		}
+	  }
   }
 }
 
 
+void GrainGeneratorFunc::adjust_boundaries()
+{
+	
+}
 /* This is horrible and horrendous type of include and after we figure out that everything works
  * we will move the included methods to another class definition or somewhere else.
  */
