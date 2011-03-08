@@ -1334,11 +1334,11 @@ void ReconstructionFunc::reorder_grains(const std::string &reconVisFile)
     {
       size = 0;
       int nucleus = m_Grains[i]->nucleus;
-      if(m_Grains[currentgrain]->voxellist == NULL) 
-      { 
+      if(m_Grains[currentgrain]->voxellist == NULL)
+      {
         m_Grains[currentgrain]->voxellist = new std::vector<int>(initialVoxelsListSize,-1);
       }
-      else 
+      else
       {
         m_Grains[currentgrain]->voxellist->resize(initialVoxelsListSize,-1);
       }
@@ -1392,9 +1392,9 @@ void ReconstructionFunc::reorder_grains(const std::string &reconVisFile)
               voxels[neighbor].grainname = currentgrain;
               if (currentgrain > maxGrain) maxGrain = currentgrain;
               size++;
-              if (size >= m_Grains[currentgrain]->voxellist->size())  
-              { 
-                m_Grains[currentgrain]->voxellist->resize(size + initialVoxelsListSize, -1); 
+              if (size >= m_Grains[currentgrain]->voxellist->size())
+              {
+                m_Grains[currentgrain]->voxellist->resize(size + initialVoxelsListSize, -1);
               }
             }
           }
@@ -1501,7 +1501,7 @@ void ReconstructionFunc::fillin_sample()
             voxels[point].neighbor = -1;
             voxels[point].unassigned = 1;
           }
-          voxelstemp[newvoxelcount] = voxels[point];
+          voxelstemp[newvoxelcount].deepCopy( &(voxels[point]));// = voxels[point];
           newvoxelcount++;
         }
       }
@@ -1514,7 +1514,7 @@ void ReconstructionFunc::fillin_sample()
     voxels = new Voxel[totalpoints];
     for (int i = 0; i < totalpoints; i++)
     {
-      voxels[i] = voxelstemp[i];
+      voxels[i].deepCopy(&(voxelstemp[i]));
     }
     delete[] voxelstemp;
   }
@@ -2025,7 +2025,7 @@ int ReconstructionFunc::load_data(const std::string &readname)
 	  q1[2] = rod[i][1];
 	  q1[3] = rod[i][2];
 	  q1[4] = cos(asin(mag));
-      MisorientationCalculations::getFZQuatCubic(q1);			  
+      MisorientationCalculations::getFZQuatCubic(q1);
 	  voxels[i].quat[0] = q1[0];
       voxels[i].quat[1] = q1[1];
       voxels[i].quat[2] = q1[2];
@@ -2334,11 +2334,15 @@ void ReconstructionFunc::find_neighbors()
   for (int i = 0; i < totalpoints; ++i)
   {
     gnames[i] = voxels[i].grainname;
-	if (voxels[i].neighborlist != NULL) { delete voxels[i].neighborlist; }
-	voxels[i].neighborlist = new std::vector<int>(6, -1);
+//    if (voxels[i].neighborlist != NULL)
+//    {
+//      delete voxels[i].neighborlist;
+//    }
+//    voxels[i].neighborlist = new std::vector<int>(6, -1);
+    voxels[i].neighborlist = IntVectorType(new std::vector<int>(6, -1) );
   }
 
-  for (int i = 0; i < numgrains; i++)
+  for (size_t i = 0; i < numgrains; i++)
   {
     m_Grains[i]->numneighbors = 0;
     m_Grains[i]->neighborlist->assign(nListSize, -1);
@@ -4281,19 +4285,19 @@ void ReconstructionFunc::deformation_stats(const std::string &filename, const st
 		  gamvsf[sfbin][1] = gamvsf[sfbin][1] + gam;
 		  lmgvsf[sfbin][0]++;
 		  lmgvsf[sfbin][1] = lmgvsf[sfbin][1] + lmg;
-		  kmvsfmm[sfmmbin][0]++;	
+		  kmvsfmm[sfmmbin][0]++;
 		  kmvsfmm[sfmmbin][1] = kmvsfmm[sfmmbin][1] + km;
 		  gamvsfmm[sfmmbin][0]++;
 		  gamvsfmm[sfmmbin][1] = gamvsfmm[sfmmbin][1] + gam;
 		  lmgvsfmm[sfmmbin][0]++;
 		  lmgvsfmm[sfmmbin][1] = lmgvsfmm[sfmmbin][1] + lmg;
-		  kmvssap[ssapbin][0]++;	
+		  kmvssap[ssapbin][0]++;
 		  kmvssap[ssapbin][1] = kmvssap[ssapbin][1] + km;
 		  gamvssap[ssapbin][0]++;
 		  gamvssap[ssapbin][1] = gamvssap[ssapbin][1] + gam;
 		  lmgvssap[ssapbin][0]++;
 		  lmgvssap[ssapbin][1] = lmgvssap[ssapbin][1] + lmg;
-		  kmvdis[disbin][0]++;	
+		  kmvdis[disbin][0]++;
 		  kmvdis[disbin][1] = kmvdis[disbin][1] + km;
 		  gamvdis[disbin][0]++;
 		  gamvdis[disbin][1] = gamvdis[disbin][1] + gam;
@@ -4344,13 +4348,13 @@ void ReconstructionFunc::deformation_stats(const std::string &filename, const st
     if (kmvsfmm[i][0] > 0) kmvsfmm[i][1] = kmvsfmm[i][1] / kmvsfmm[i][0];
     if (kmvssap[i][0] > 0) kmvssap[i][1] = kmvssap[i][1] / kmvssap[i][0];
     if (kmvdis[i][0] > 0) kmvdis[i][1] = kmvdis[i][1] / kmvdis[i][0];
-    outFile << kmvgb[i][0] << "	" << kmvgb[i][1] << "	" 
-		<< kmvtj[i][0] << "	" << kmvtj[i][1] << "	" 
-		<< kmvqp[i][0] << "	" << kmvqp[i][1] << "	" 
-		<< kmviq[i][0] << "	" << kmviq[i][1] << "	" 
-		<< kmvsf[i][0] << "	" << kmvsf[i][1] << "	" 
-		<< kmvsfmm[i][0] << "	" << kmvsfmm[i][1] << "	" 
-		<< kmvssap[i][0] << "	" << kmvssap[i][1] << "	" 
+    outFile << kmvgb[i][0] << "	" << kmvgb[i][1] << "	"
+		<< kmvtj[i][0] << "	" << kmvtj[i][1] << "	"
+		<< kmvqp[i][0] << "	" << kmvqp[i][1] << "	"
+		<< kmviq[i][0] << "	" << kmviq[i][1] << "	"
+		<< kmvsf[i][0] << "	" << kmvsf[i][1] << "	"
+		<< kmvsfmm[i][0] << "	" << kmvsfmm[i][1] << "	"
+		<< kmvssap[i][0] << "	" << kmvssap[i][1] << "	"
 		<< kmvdis[i][0] << "	" << kmvdis[i][1] << endl;
   }
   outFile << endl;
@@ -4367,13 +4371,13 @@ void ReconstructionFunc::deformation_stats(const std::string &filename, const st
     if (gamvsfmm[i][0] > 0) gamvsfmm[i][1] = gamvsfmm[i][1] / gamvsfmm[i][0];
     if (gamvssap[i][0] > 0) gamvssap[i][1] = gamvssap[i][1] / gamvssap[i][0];
     if (gamvdis[i][0] > 0) gamvdis[i][1] = gamvdis[i][1] / gamvdis[i][0];
-    outFile << gamvgb[i][0] << "	" << gamvgb[i][1] << "	" 
-		<< gamvtj[i][0] << "	" << gamvtj[i][1] << "	" 
-		<< gamvqp[i][0] << "	" << gamvqp[i][1] << "	" 
-		<< gamviq[i][0] << "	" << gamviq[i][1] << "	" 
-		<< gamvsf[i][0] << "	" << gamvsf[i][1] << "	" 
-		<< gamvsfmm[i][0] << "	" << gamvsfmm[i][1] << "	" 
-		<< gamvssap[i][0] << "	" << gamvssap[i][1] << "	" 
+    outFile << gamvgb[i][0] << "	" << gamvgb[i][1] << "	"
+		<< gamvtj[i][0] << "	" << gamvtj[i][1] << "	"
+		<< gamvqp[i][0] << "	" << gamvqp[i][1] << "	"
+		<< gamviq[i][0] << "	" << gamviq[i][1] << "	"
+		<< gamvsf[i][0] << "	" << gamvsf[i][1] << "	"
+		<< gamvsfmm[i][0] << "	" << gamvsfmm[i][1] << "	"
+		<< gamvssap[i][0] << "	" << gamvssap[i][1] << "	"
 		<< gamvdis[i][0] << "	" << gamvdis[i][1] << endl;
   }
   outFile << endl;
@@ -4390,13 +4394,13 @@ void ReconstructionFunc::deformation_stats(const std::string &filename, const st
     if (lmgvsfmm[i][0] > 0) lmgvsfmm[i][1] = lmgvsfmm[i][1] / lmgvsfmm[i][0];
     if (lmgvssap[i][0] > 0) lmgvssap[i][1] = lmgvssap[i][1] / lmgvssap[i][0];
     if (lmgvdis[i][0] > 0) lmgvdis[i][1] = lmgvdis[i][1] / lmgvdis[i][0];
-    outFile << lmgvgb[i][0] << "	" << lmgvgb[i][1] << "	" 
-		<< lmgvtj[i][0] << "	" << lmgvtj[i][1] << "	" 
-		<< lmgvqp[i][0] << "	" << lmgvqp[i][1] << "	" 
-		<< lmgviq[i][0] << "	" << lmgviq[i][1] << "	" 
-		<< lmgvsf[i][0] << "	" << lmgvsf[i][1] << "	" 
-		<< lmgvsfmm[i][0] << "	" << lmgvsfmm[i][1] << "	" 
-		<< lmgvssap[i][0] << "	" << lmgvssap[i][1] << "	" 
+    outFile << lmgvgb[i][0] << "	" << lmgvgb[i][1] << "	"
+		<< lmgvtj[i][0] << "	" << lmgvtj[i][1] << "	"
+		<< lmgvqp[i][0] << "	" << lmgvqp[i][1] << "	"
+		<< lmgviq[i][0] << "	" << lmgviq[i][1] << "	"
+		<< lmgvsf[i][0] << "	" << lmgvsf[i][1] << "	"
+		<< lmgvsfmm[i][0] << "	" << lmgvsfmm[i][1] << "	"
+		<< lmgvssap[i][0] << "	" << lmgvssap[i][1] << "	"
 		<< lmgvdis[i][0] << "	" << lmgvdis[i][1] << endl;
   }
   outFile << endl;
