@@ -61,6 +61,10 @@ class AIMCOMMON_EXPORT Grain
     std::vector<double>* misorientationlist;
     std::vector<std::vector<int> > neighbordistfunclist;
 
+    /*
+     * IF YOU ADD NEW VARIABLES MAKE SURE TO UPDATE THE "DeepCopy()" METHOD WITH
+     * THE NEW VARIABLES OTHERWISE BAD THINGS CAN HAPPEN.
+     */
     int nucleus;
     int active;
     int numvoxels;
@@ -72,8 +76,8 @@ class AIMCOMMON_EXPORT Grain
     int surfacegrain;
     int twinnewnumber;
     int colonynewnumber;
-	int slipsystem;
-	double packquality;
+	  int slipsystem;
+	  double packquality;
     double centroidx;
     double centroidy;
     double centroidz;

@@ -25,7 +25,32 @@ typedef boost::shared_ptr<std::vector<int> >    IntVectorType;
 typedef boost::shared_ptr<std::vector<double> > DoubleVectorType;
 typedef boost::shared_ptr<std::vector<size_t> > SizeTVectorType;
 
+#define COPY_ARRAY_3(var, obj)\
+  var[0] = obj->var[0];var[1] = obj->var[1];var[2] = obj->var[2];
 
+#define COPY_ARRAY_4(var, obj)\
+  var[0] = obj->var[0];var[1] = obj->var[1];\
+  var[2] = obj->var[2]; var[3] = obj->var[3];
+
+#define COPY_ARRAY_5(var, obj)\
+  var[0] = obj->var[0];var[1] = obj->var[1];\
+  var[2] = obj->var[2]; var[3] = obj->var[3];\
+  var[4] = obj->var[4];
+
+
+/**
+ * This will perform a deep copy of the content of the shared vector from
+ * target to destination. This is NOT just a simple pointer copy.
+ */
+#define DEEP_COPY_SHARED_VECTOR(sharedPtr, obj, VType, type)\
+if (NULL != sharedPtr.get())\
+{\
+  sharedPtr = VType(static_cast<std::vector<type>*>(NULL));\
+}\
+if (NULL != obj->sharedPtr.get())\
+{\
+  sharedPtr = VType(new std::vector<type>(*(obj->sharedPtr.get())));\
+}
 
 // -----------------------------------------------------------------------------
 //
