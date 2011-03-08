@@ -19,7 +19,10 @@
 
 #include <vector>
 
+#include "MXA/Common/MXASetGetMacros.h"
+
 #include "AIM/Common/AIMCommonConfiguration.h"
+#include "AIM/Common/Constants.h"
 
 /**
 * @class Voxel Voxel.h AIM/Common/Voxel.h
@@ -31,8 +34,18 @@
 class AIMCOMMON_EXPORT Voxel
 {
   public:
+    MXA_SHARED_POINTERS(Voxel);
+    MXA_STATIC_NEW_MACRO(Voxel);
+    MXA_TYPE_MACRO(Voxel);
     Voxel();
     virtual ~Voxel();
+
+    /**
+     * @brief Performs a Depp copy of the Grain object by making copies of the contained
+     * data and not just copying the pointers to the data
+     * @param grain Another Grain object to copy from.
+     */
+    void deepCopy(Voxel* voxel);
 
     int grainname;
     double confidence;
@@ -53,10 +66,17 @@ class AIMCOMMON_EXPORT Voxel
     int surfacevoxel;
     int unassigned;
     double quat[5];
-    std::vector<int>* grainlist;
-    std::vector<double>* ellipfunclist;
-    std::vector<int>* neighborlist;
 
+    IntVectorType grainlist;
+    DoubleVectorType ellipfunclist;
+    IntVectorType neighborlist;
+
+  protected:
+
+
+  private:
+    Voxel(const Voxel&); // Copy Constructor Not Implemented
+    void operator=(const Voxel&); // Operator '=' Not Implemented
 };
 
 #endif /* VOXEL_H_ */

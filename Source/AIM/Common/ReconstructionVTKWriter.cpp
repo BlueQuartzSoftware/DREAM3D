@@ -208,7 +208,7 @@ int ReconstructionVTKWriter::writeIPFVizFile(ReconstructionFunc* r, const std::s
   unsigned char* rgba = new unsigned char[total * 4];
   //double red,green,blue;
   double q1[4];
-  //unsigned char rgb[3] = {0, 0, 0};
+  unsigned char hkl[3] = {0, 0, 0};
 
   double RefDirection[3] =
   { 0.0, 0.0, 1.0 };
@@ -216,7 +216,7 @@ int ReconstructionVTKWriter::writeIPFVizFile(ReconstructionFunc* r, const std::s
   {
     if (r->crystruct == AIM::Reconstruction::Cubic)
     {
-      OIMColoring::GenerateIPFColor(r->voxels[i].euler1, r->voxels[i].euler2, r->voxels[i].euler3, RefDirection[0], RefDirection[1], RefDirection[2], &rgba[i * 4]);
+      OIMColoring::GenerateIPFColor(r->voxels[i].euler1, r->voxels[i].euler2, r->voxels[i].euler3, RefDirection[0], RefDirection[1], RefDirection[2], &rgba[i * 4], hkl);
     }
     else if (r->crystruct == AIM::Reconstruction::Hexagonal)
     {

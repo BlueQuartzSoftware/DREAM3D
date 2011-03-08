@@ -246,6 +246,12 @@ if (AIM_BUILD_TESTING)
     add_subdirectory(${AIMRepresentation_SOURCE_DIR}/Source/Test ${AIMRepresentation_BINARY_DIR}/AIM/Test)
 endif()
 
+
+option(AIM_BUILD_CMU "Compile the CMU Optimization Wrappers" ON)
+if(AIM_BUILD_CMU)
+    add_subdirectory(${AIMRepresentation_SOURCE_DIR}/Source/CMU ${AIMRepresentation_BINARY_DIR}/AIM/CMU)
+endif()
+
 # Should we build the HTML documentation
 option(AIM_BUILD_API_DOCS "Use Doxygen to create the HTML based API documentation" OFF)
 if(AIM_BUILD_API_DOCS)
