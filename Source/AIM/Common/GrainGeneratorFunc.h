@@ -118,6 +118,7 @@ public:
     vector<vector<double> > svcoverb;
     vector<vector<double> > svschmid;
     vector<vector<double> > svomega3;
+    vector<vector<int> > boundaries;
     void initialize(int32_t m_NumGrains, int32_t m_ShapeClass, double m_XResolution, double m_YResolution, double m_ZResolution, double m_fillingerrorweight, double m_neighborhooderrorweight, double m_sizedisterrorweight, int32_t m_Precipitates, AIM::Reconstruction::CrystalStructure m_CrystalStructure, double m_FractionPrecipitates);
     void initialize2();
     double machineepsilon;
@@ -186,6 +187,7 @@ public:
     int create_precipitates();
     void insert_precipitates(int numprecipitates);
     void find_neighbors();
+	void adjust_boundaries();
     void matchCrystallography(const std::string & ErrorFile, H5ReconStatsWriter::Pointer h5io);
     void measure_misorientations();
     void find_centroids();
