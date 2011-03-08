@@ -113,7 +113,7 @@ int SurfaceMeshFunc::initialize_micro(string filename, int zID)
     {
       for (i = 1; i <= NSP; i++)
       {
-      point[i] = point[i+NSP];
+        point[i].deepCopy(&(point[i+NSP]));
       }
     }
     for(i=start;i<=(2*NSP);i++)

@@ -151,7 +151,7 @@ int VTKFileUtils::readZSlice(SurfaceMeshFunc* m, int zID)
   {
     for (int i = 1; i <= m->NSP; i++)
     {
-      m->point[i] = m->point[i+m->NSP];
+      m->point[i].deepCopy(&(m->point[i+m->NSP]));
     }
   }
   int index = start;

@@ -75,17 +75,23 @@ lowanglefraction(0.0)
 void Grain::deepCopy(Grain::Pointer grain)
 {
   if (grain.get() == this) { return; } // The pointers are the same just return
-  numvoxels = grain->numvoxels ;
+  nucleus = grain->nucleus;
   active = grain->active ;
+  numvoxels = grain->numvoxels ;
   numneighbors = grain->numneighbors ;
   newgrainname = grain->newgrainname ;
   gotcontainedmerged = grain->gotcontainedmerged ;
   gottwinmerged = grain->gottwinmerged ;
   gotcolonymerged = grain->gotcolonymerged ;
+  surfacegrain = grain->surfacegrain ;
+  twinnewnumber = grain->twinnewnumber;
+  colonynewnumber = grain->colonynewnumber;
+  slipsystem = grain->slipsystem;
+  packquality = grain->packquality;
+
   centroidx = grain->centroidx ;
   centroidy = grain->centroidy ;
   centroidz = grain->centroidz ;
-  surfacegrain = grain->surfacegrain ;
   Ixx = grain->Ixx ;
   Iyy = grain->Iyy ;
   Izz = grain->Izz ;
@@ -93,14 +99,14 @@ void Grain::deepCopy(Grain::Pointer grain)
   Iyz = grain->Iyz ;
   Ixz = grain->Ixz ;
   omega3 = grain->omega3 ;
+  averageimagequality = grain->averageimagequality;
   averagemisorientation = grain->averagemisorientation ;
   kernelmisorientation = grain->kernelmisorientation;
-  twinnewnumber = grain->twinnewnumber;
-  colonynewnumber = grain->colonynewnumber;
-  packquality = grain->packquality;
   red = grain->red ;
   green = grain->green ;
   blue = grain->blue ;
+
+  COPY_ARRAY_3(IPF, grain);
   schmidfactor = grain->schmidfactor ;
   euler1 = grain->euler1 ;
   euler2 = grain->euler2 ;
@@ -115,26 +121,12 @@ void Grain::deepCopy(Grain::Pointer grain)
   radius2 = grain->radius2 ;
   radius3 = grain->radius3 ;
   lowanglefraction = grain->lowanglefraction;
+  COPY_ARRAY_5(avg_quat, grain);
+  COPY_ARRAY_3(neighbordistfunc, grain);
 
   // These are shared pointers
-  if (NULL != neighborlist.get())
-  {
-     neighborlist = IntVectorType(static_cast<std::vector<int>*>(NULL));
-  }
-  if (NULL != grain->neighborlist.get())
-  {
-    neighborlist = IntVectorType(new std::vector<int>(*(grain->neighborlist.get())));
-  }
-
-  if (NULL != neighborsurfarealist.get())
-  {
-    neighborsurfarealist = DoubleVectorType(static_cast<std::vector<double>*>(NULL));;
-  }
-  if (NULL != grain->neighborsurfarealist.get())
-  {
-    neighborsurfarealist = DoubleVectorType(new std::vector<double>(*(grain->neighborsurfarealist.get())));
-  }
-
+  DEEP_COPY_SHARED_VECTOR(neighborlist, grain, IntVectorType, int)
+  DEEP_COPY_SHARED_VECTOR(neighborsurfarealist, grain, DoubleVectorType, double)
 
   // These are Normal pointers
   if (NULL != voxellist)
