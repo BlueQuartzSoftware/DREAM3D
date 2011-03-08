@@ -48,13 +48,8 @@ class AIMCOMMON_EXPORT Grain
      */
     void deepCopy(Grain::Pointer grain);
 
- //   Grain& operator=(const Grain&);
-
     IntVectorType     neighborlist;
     DoubleVectorType  neighborsurfarealist;
-
-    // std::vector<int>* neighborlist;
-    //  std::vector<double>* neighborsurfarealist;
 
     std::vector<int>* voxellist;
     std::vector<double>* ellipfunclist;
