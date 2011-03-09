@@ -168,10 +168,11 @@ void GrainGeneratorFunc::swapOutOrientation( int &badtrycount, int &numbins)
   good = 0;
   while (good == 0)
   {
+    good = 1;
     selectedgrain1 = int(rg.Random() * numgrains);
     if (selectedgrain1 == 0) selectedgrain1 = 1;
     if (selectedgrain1 == numgrains) selectedgrain1 = numgrains - 1;
-    if (m_Grains[selectedgrain1]->surfacegrain >= 0) good = 1;
+    if (m_Grains[selectedgrain1]->surfacegrain > 0) good = 0;
   }
   q1[1] = m_Grains[selectedgrain1]->avg_quat[1];
   q1[2] = m_Grains[selectedgrain1]->avg_quat[2];
