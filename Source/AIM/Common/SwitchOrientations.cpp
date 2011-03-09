@@ -39,13 +39,14 @@ void GrainGeneratorFunc::switchOrientations( int &badtrycount, int &numbins)
   good = 0;
   while (good == 0)
   {
+    good = 1;
     selectedgrain1 = int(rg.Random() * numgrains);
     if (selectedgrain1 == 0) selectedgrain1 = 1;
     if (selectedgrain1 == numgrains) selectedgrain1 = numgrains - 1;
     selectedgrain2 = int(rg.Random() * numgrains);
     if (selectedgrain2 == 0) selectedgrain2 = 1;
     if (selectedgrain2 == numgrains) selectedgrain2 = numgrains - 1;
-    if (m_Grains[selectedgrain1]->surfacegrain == 0 && m_Grains[selectedgrain2]->surfacegrain == 0) good = 1;
+    if (m_Grains[selectedgrain1]->surfacegrain > 0 || m_Grains[selectedgrain2]->surfacegrain > 0) good = 0;
   }
   g1ea1 = m_Grains[selectedgrain1]->euler1;
   g1ea2 = m_Grains[selectedgrain1]->euler2;

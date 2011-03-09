@@ -150,7 +150,11 @@ void GrainGenerator::compute()
     progressMessage(AIM_STRING("Filling Gaps"), 40);
     m->fill_gaps(m->numgrains);
 
-    if (m_Precipitates > 1)
+    CHECK_FOR_CANCELED(GrainGeneratorFunc)
+    progressMessage(AIM_STRING("Adjusting Boundaries"), 40);
+    m->adjust_boundaries(m->numgrains);
+
+	if (m_Precipitates > 1)
     {
       CHECK_FOR_CANCELED(GrainGeneratorFunc)
       progressMessage(AIM_STRING("Generating Precipitates"), 40);
@@ -174,7 +178,7 @@ void GrainGenerator::compute()
   m->find_neighbors();
 
   CHECK_FOR_CANCELED(GrainGeneratorFunc)
-  progressMessage(AIM_STRING("Loading ODF Data"), 45);
+  progressMessage(AIM_STRING("Loading ODF Data"), 48);
   err = m->readODFData(h5reader);
   CHECK_ERROR(readODFData)
 
