@@ -185,10 +185,10 @@ public:
     double check_sizedisterror(int gadd, int gremove);
     int assign_voxels(int numgrains);
     void fill_gaps(int numgrains);
+	void adjust_boundaries(int numgrains);
     int create_precipitates();
     void insert_precipitates(int numprecipitates);
     void find_neighbors();
-	void adjust_boundaries();
     void matchCrystallography(const std::string & ErrorFile, H5ReconStatsWriter::Pointer h5io);
     void measure_misorientations();
     void find_centroids();
