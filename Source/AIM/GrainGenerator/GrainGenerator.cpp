@@ -152,7 +152,7 @@ void GrainGenerator::compute()
 
     CHECK_FOR_CANCELED(GrainGeneratorFunc)
     progressMessage(AIM_STRING("Adjusting Boundaries"), 40);
-    m->adjust_boundaries(m->numgrains);
+	m->numgrains = m->adjust_boundaries(m->numgrains);
 
 	if (m_Precipitates > 1)
     {
