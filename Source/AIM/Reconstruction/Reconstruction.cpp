@@ -315,7 +315,7 @@ void Reconstruction::compute()
 
   progressMessage(AIM_STRING("Defining Neighborhoods"), 64);
   m->define_neighborhood();
-  CHECK_FOR_CANCELED(ReconstructionFunc, find_neighbors)
+  CHECK_FOR_CANCELED(ReconstructionFunc, define_neighborhood)
 
 
   progressMessage(AIM_STRING("Finding Euclidean Distance Maps"), 68);
