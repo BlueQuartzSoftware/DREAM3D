@@ -2334,11 +2334,6 @@ void ReconstructionFunc::find_neighbors()
   for (int i = 0; i < totalpoints; ++i)
   {
     gnames[i] = voxels[i].grainname;
-//    if (voxels[i].neighborlist != NULL)
-//    {
-//      delete voxels[i].neighborlist;
-//    }
-//    voxels[i].neighborlist = new std::vector<int>(6, -1);
     voxels[i].neighborlist = IntVectorType(new std::vector<int>(6, -1) );
   }
 
@@ -2470,8 +2465,8 @@ void ReconstructionFunc::define_neighborhood()
             dist = (xdist * xdist) + (ydist * ydist) + (zdist * zdist);
             dist = pow(dist, 0.5);
             dist2 = dist;
-            dist_int = int(dist / diam);
-            dist2_int = int(dist2 / diam2);
+            dist_int = int(dist / (diam/2.0));
+            dist2_int = int(dist2 / (diam2/2.0));
             if (dist_int < 3)
             {
               grain.neighbordistfunc[dist_int]++;
