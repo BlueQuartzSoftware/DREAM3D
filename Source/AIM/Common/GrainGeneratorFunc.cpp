@@ -312,9 +312,9 @@ int GrainGeneratorFunc::readReconStatsData(H5ReconStatsReader::Pointer h5io)
       a = neighborhood[temp7][0];
       b = neighborhood[temp7][1];
       k = neighborhood[temp7][2];
-      neighborhood[temp7][0] = a*pow(1,k)+b;
-      neighborhood[temp7][1] = a*pow(2,k)+b;
-      neighborhood[temp7][2] = a*pow(3,k)+b;
+      neighborhood[temp7][0] = a*pow(0,k)+b;
+      neighborhood[temp7][1] = a*pow(1,k)+b;
+      neighborhood[temp7][2] = a*pow(2,k)+b;
     }
   }
 
@@ -871,8 +871,8 @@ double GrainGeneratorFunc::check_neighborhooderror(int gadd, int gremove)
         {
           neighbordist[dia][j] = neighbordist[dia][j]+nnum;
         }
-		count++;
       }
+	  count++;
     }
   }
   if(gadd > 0)
@@ -888,8 +888,8 @@ double GrainGeneratorFunc::check_neighborhooderror(int gadd, int gremove)
       {
         neighbordist[dia][j] = neighbordist[dia][j]+nnum;
       }
-	  count++;
     }
+    count++;
   }
   for(int i=0;i<numdiameterbins;i++)
   {
