@@ -142,7 +142,7 @@ void ReconstructionFunc::initialize(int nX,
 
 void ReconstructionFunc::cleanup_data()
 {
-/*  double bestneighborconfidence;
+  double bestneighborconfidence;
   int bestneighbor;
   double confidence;
   int x, y, z;
@@ -212,8 +212,8 @@ void ReconstructionFunc::cleanup_data()
         voxels[j].neighbor = -1;
       }
     }
-  }*/
-  double q1[5];
+  }
+/*  double q1[5];
   double q2[5];
   double qtot[5];
   int numVoxel;
@@ -289,7 +289,7 @@ void ReconstructionFunc::cleanup_data()
 		  voxels[i].quat[m] = qtot[m];
 	  }
 	}
-  }
+  }*/
 }
 void ReconstructionFunc::find_border()
 {
@@ -907,7 +907,7 @@ void ReconstructionFunc::form_grains()
     randpoint = int(double(rg.Random()) * double(totalPMinus1));
     for (int k = 0; k < totalpoints; ++k)
     {
-     point = randpoint+k;
+	   point = randpoint+k;
        if (point > totalPMinus1) point = point - totalpoints;
        if (gnames[point] == -1 && iqs[point] > minseedimagequality) seed = point;
        if (seed > -1) break;
@@ -1059,40 +1059,43 @@ void ReconstructionFunc::form_grains()
 		          if (l == 4 && row == (ypoints - 1)) good = 0;
 		          if (l == 2 && col == 0) good = 0;
 		          if (l == 3 && col == (xpoints - 1)) good = 0;
-				  if (good == 1 && gnames[neighbor] != i && m_Grains[gnames[neighbor]]->active == 1 && gnames[neighbor] > 0)
+				  if (good == 1 && gnames[neighbor] != i && gnames[neighbor] > 0)
 				  {
-					q1[0] = grainquats[i*5];
-					q1[1] = grainquats[i*5 + 1] / grainquats[i*5];
-					q1[2] = grainquats[i*5 + 2] / grainquats[i*5];
-					q1[3] = grainquats[i*5 + 3] / grainquats[i*5];
-					q1[4] = grainquats[i*5 + 4] / grainquats[i*5];
-					q2[0] = grainquats[gnames[neighbor]*5];
-					q2[1] = grainquats[gnames[neighbor]*5 + 1] / grainquats[gnames[neighbor]*5];
-					q2[2] = grainquats[gnames[neighbor]*5 + 2] / grainquats[gnames[neighbor]*5];
-					q2[3] = grainquats[gnames[neighbor]*5 + 3] / grainquats[gnames[neighbor]*5];
-					q2[4] = grainquats[gnames[neighbor]*5 + 4] / grainquats[gnames[neighbor]*5];
-					if (crystruct == AIM::Reconstruction::Hexagonal)
+				    if(m_Grains[gnames[neighbor]]->active == 1)
 					{
-					  w = MisorientationCalculations::getMisoQuatHexagonal(q1, q2, n1, n2, n3);
-					}
-					if (crystruct == AIM::Reconstruction::Cubic)
-					{
-					  w = MisorientationCalculations::getMisoQuatCubic(q1, q2, n1, n2, n3);
-					}
-					if (w < misorientationtolerance)
-					{
-						mergelist[size] = gnames[neighbor];
-						size++;
-						m_Grains[gnames[neighbor]]->active = 0;
-						mergedgnames[gnames[neighbor]] = i;
-					    if (crystruct == AIM::Reconstruction::Cubic) MisorientationCalculations::getNearestQuatCubic(q1,q2);
-					    if (crystruct == AIM::Reconstruction::Hexagonal) MisorientationCalculations::getNearestQuatHexagonal(q1,q2);
-						for(int m=0;m<5;m++)
+						q1[0] = grainquats[i*5];
+						q1[1] = grainquats[i*5 + 1] / grainquats[i*5];
+						q1[2] = grainquats[i*5 + 2] / grainquats[i*5];
+						q1[3] = grainquats[i*5 + 3] / grainquats[i*5];
+						q1[4] = grainquats[i*5 + 4] / grainquats[i*5];
+						q2[0] = grainquats[gnames[neighbor]*5];
+						q2[1] = grainquats[gnames[neighbor]*5 + 1] / grainquats[gnames[neighbor]*5];
+						q2[2] = grainquats[gnames[neighbor]*5 + 2] / grainquats[gnames[neighbor]*5];
+						q2[3] = grainquats[gnames[neighbor]*5 + 3] / grainquats[gnames[neighbor]*5];
+						q2[4] = grainquats[gnames[neighbor]*5 + 4] / grainquats[gnames[neighbor]*5];
+						if (crystruct == AIM::Reconstruction::Hexagonal)
 						{
-							q2[m] = q2[m]*q2[0];
-							grainquats[i*5 + m] = grainquats[i*5 + m] + q2[m];
+						  w = MisorientationCalculations::getMisoQuatHexagonal(q1, q2, n1, n2, n3);
 						}
-		                if (size >= mergelist.size()) mergelist.resize(size + initialMergeListSize, -1);
+						if (crystruct == AIM::Reconstruction::Cubic)
+						{
+						  w = MisorientationCalculations::getMisoQuatCubic(q1, q2, n1, n2, n3);
+						}
+						if (w < misorientationtolerance)
+						{
+							mergelist[size] = gnames[neighbor];
+							size++;
+							m_Grains[gnames[neighbor]]->active = 0;
+							mergedgnames[gnames[neighbor]] = i;
+							if (crystruct == AIM::Reconstruction::Cubic) MisorientationCalculations::getNearestQuatCubic(q1,q2);
+							if (crystruct == AIM::Reconstruction::Hexagonal) MisorientationCalculations::getNearestQuatHexagonal(q1,q2);
+							for(int m=0;m<5;m++)
+							{
+								q2[m] = q2[m]*q2[0];
+								grainquats[i*5 + m] = grainquats[i*5 + m] + q2[m];
+							}
+							if (size >= mergelist.size()) mergelist.resize(size + initialMergeListSize, -1);
+						}
 					}
 				  }
 				}

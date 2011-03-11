@@ -807,14 +807,18 @@ void GrainGeneratorFunc::determine_neighbors()
       if(totdist < (3*(dia/2.0)))
       {
         DoverR = int(totdist/(dia/2.0));
-        m_Grains[n]->neighbordistfunclist[int(DoverR)].resize(m_Grains[n]->neighbordistfunclist[int(DoverR)].size()+1);
-        m_Grains[n]->neighbordistfunclist[int(DoverR)][(m_Grains[n]->neighbordistfunclist[int(DoverR)].size()-1)] = gnum;
+		for(int iter=DoverR;iter<3;iter++)
+		{
+	        m_Grains[n]->neighbordistfunclist[iter].push_back(gnum);
+		}
       }
       if(totdist < (3*(dia2/2.0)))
       {
         DoverR = int(totdist/(dia2/2.0));
-        m_Grains[gnum]->neighbordistfunclist[int(DoverR)].resize(m_Grains[gnum]->neighbordistfunclist[int(DoverR)].size()+1);
-        m_Grains[gnum]->neighbordistfunclist[int(DoverR)][(m_Grains[gnum]->neighbordistfunclist[int(DoverR)].size()-1)] = n;
+		for(int iter=DoverR;iter<3;iter++)
+		{
+	        m_Grains[gnum]->neighbordistfunclist[iter].push_back(n);
+		}
       }
     }
   }
