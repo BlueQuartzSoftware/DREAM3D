@@ -232,9 +232,11 @@ void Reconstruction::compute()
     m->align_sections(alignmentFile);
     CHECK_FOR_CANCELED(ReconstructionFunc, align_sections)
 
-    progressMessage(AIM_STRING("Cleaning Data"), 16);
+	progressMessage(AIM_STRING("Cleaning Data"), 16);
     m->cleanup_data();
     CHECK_FOR_CANCELED(ReconstructionFunc, cleanup_data)
+
+  if (m_WriteVisualizationFile) {outWriter->writeVisualizationFile(m.get(), reconVisFile);}
 
     if (m_AlignmentMethod == AIM::Reconstruction::MutualInformation)
     {
