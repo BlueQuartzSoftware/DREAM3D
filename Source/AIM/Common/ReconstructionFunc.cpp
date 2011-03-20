@@ -82,23 +82,13 @@ ReconstructionFunc::~ReconstructionFunc()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ReconstructionFunc::initialize(int nX,
-                                    int nY,
-                                    int nZ,
-                                    double xRes,
-                                    double yRes,
-                                    double zRes,
-                                    bool v_mergetwinsoption,
-                                    bool v_mergecoloniesoption,
-                                    int v_minallowedgrainsize,
-                                    double v_minseedconfidence,
-                                    double v_downsamplefactor,
-                                    double v_minseedimagequality,
-                                    double v_misorientationtolerance,
-                                    double v_sizebinstepsize,
+void ReconstructionFunc::initialize(int nX, int nY, int nZ, double xRes, double yRes, double zRes,
+                                    bool v_mergetwinsoption, bool v_mergecoloniesoption,
+                                    int v_minallowedgrainsize, double v_minseedconfidence,
+                                    double v_downsamplefactor, double v_minseedimagequality,
+                                    double v_misorientationtolerance, double v_sizebinstepsize,
                                     AIM::Reconstruction::CrystalStructure v_crystruct,
-                                    int v_alignmeth,
-                                    bool v_alreadyformed)
+                                    int v_alignmeth, bool v_alreadyformed)
 {
 
   mergetwinsoption = (v_mergetwinsoption == true) ? 1 : 0;
@@ -303,58 +293,77 @@ void ReconstructionFunc::find_border()
   double w, n1, n2, n3;
   double q1[5];
   double q2[5];
-  //  int seed = 0;
   size_t size = 0;
+  int index; 
   int good = 0;
-  int count = 0, goodcount = 0;
+  int count = 0;
   int currentpoint = 0;
   int neighbor = 0;
-  //  int keepgoing = 1;
   int col, row, plane;
   int initialVoxelsListSize = 10000;
   std::vector<int > voxelslist(initialVoxelsListSize, -1);
-  if (alignmeth == 3)
+  int *gnames;
+  gnames = new int[(xpoints * ypoints * zpoints)];
+  int *checked;
+  checked = new int[(xpoints * ypoints * zpoints)];
+  for (int iter = 0; iter < (xpoints * ypoints * zpoints); iter++)
   {
-    for (int iter = 0; iter < (xpoints * ypoints * zpoints); iter++)
-    {
-      voxels[iter].grainname = 0;
-    }
+    gnames[iter] = -1;
+    checked[iter] = 0;
   }
-  for (int j = 0; j < (xpoints * ypoints * zpoints); j++)
+  index = 0;
+  while(voxels[index].imagequality > minseedimagequality && voxels[index].confidence > minseedconfidence)
   {
-    if (voxels[j].imagequality > minseedimagequality)
-    {
-      count = 0;
-      goodcount = 0;
-      col = j % xpoints;
-      row = (j / xpoints) % ypoints;
-      plane = j / (xpoints * ypoints);
-      for (int i = 0; i < 6; i++)
+	index++;
+  }
+  voxelslist[count] = index;
+  checked[index] = 1;
+  count++;
+  for(int i=0;i<count;i++)
+  {
+	  index = voxelslist[i];
+      col = index % xpoints;
+      row = (index / xpoints) % ypoints;
+      plane = index / (xpoints * ypoints);
+      for (int j=0;j<6;j++)
       {
         good = 1;
-        neighbor = j + neighbors[i];
-        if (i == 0 && plane == 0) good = 0;
-        if (i == 5 && plane == (zpoints - 1)) good = 0;
-        if (i == 1 && row == 0) good = 0;
-        if (i == 4 && row == (ypoints - 1)) good = 0;
-        if (i == 2 && col == 0) good = 0;
-        if (i == 3 && col == (xpoints - 1)) good = 0;
-        if (good == 1)
+        neighbor = index + neighbors[j];
+        if (j == 0 && plane == 0) good = 0;
+        if (j == 5 && plane == (zpoints - 1)) good = 0;
+        if (j == 1 && row == 0) good = 0;
+        if (j == 4 && row == (ypoints - 1)) good = 0;
+        if (j == 2 && col == 0) good = 0;
+        if (j == 3 && col == (xpoints - 1)) good = 0;
+        if (good == 1 && checked[neighbor] == 0)
         {
-          count++;
-          if (voxels[neighbor].imagequality > minseedimagequality) goodcount++;
+          if (voxels[neighbor].imagequality < minseedimagequality || voxels[neighbor].confidence < minseedconfidence)
+		  {
+		      gnames[neighbor] = 0;
+			  checked[neighbor] = 1;
+		      voxelslist[count] = neighbor;
+			  count++;
+		      if (count >= voxelslist.size()) voxelslist.resize(count + initialVoxelsListSize, -1);
+		  }
         }
       }
-    }
-    if (goodcount == count && goodcount > 0)
-    {
-      voxels[j].grainname = -1;
-      voxelslist[size] = j;
-      size++;
-      if (size >= voxelslist.size()) voxelslist.resize(size + initialVoxelsListSize, -1);
-    }
   }
-  for (size_t j = 0; j < size; j++)
+  voxelslist.clear();
+  voxelslist.resize(initialVoxelsListSize,-1);
+  for (int iter = 0; iter < (xpoints * ypoints * zpoints); iter++)
+  {
+    checked[iter] = 0;
+  }
+  index = 0;
+  while(gnames[index] != -1)
+  {
+	index++;
+  }
+  count = 0;
+  voxelslist[count] = index;
+  checked[index] = 1;
+  count++;
+  for (size_t j = 0; j < count; j++)
   {
     currentpoint = voxelslist[j];
     col = currentpoint % xpoints;
@@ -375,30 +384,38 @@ void ReconstructionFunc::find_border()
       if (i == 4 && row == (ypoints - 1)) good = 0;
       if (i == 2 && col == 0) good = 0;
       if (i == 3 && col == (xpoints - 1)) good = 0;
-      if (good == 1 && voxels[neighbor].grainname == 0)
+      if (good == 1 && gnames[neighbor] == -1 && checked[neighbor] == 0)
+      {
+		  voxelslist[count] = neighbor;
+		  checked[neighbor] = 1;
+		  count++;
+	      if (count >= voxelslist.size()) voxelslist.resize(count + initialVoxelsListSize, -1);
+	  }
+	  if (good == 1 && gnames[neighbor] == 0)
       {
         q2[0] = 0;
         q2[1] = voxels[neighbor].quat[1];
         q2[2] = voxels[neighbor].quat[2];
         q2[3] = voxels[neighbor].quat[3];
         q2[4] = voxels[neighbor].quat[4];
-
-        if (crystruct == AIM::Reconstruction::Hexagonal)
-        {
-          w = MisorientationCalculations::getMisoQuatHexagonal(q1, q2, n1, n2, n3);
-        }
-        if (crystruct == AIM::Reconstruction::Cubic)
-        {
-          w = MisorientationCalculations::getMisoQuatCubic(q1, q2, n1, n2, n3);
-        }
+        if (crystruct == AIM::Reconstruction::Hexagonal) w = MisorientationCalculations::getMisoQuatHexagonal(q1, q2, n1, n2, n3);
+        if (crystruct == AIM::Reconstruction::Cubic) w = MisorientationCalculations::getMisoQuatCubic(q1, q2, n1, n2, n3);
         if (w < misorientationtolerance)
         {
-          voxels[neighbor].grainname = -1;
+          gnames[neighbor] = -1;
+		  checked[neighbor] = 1;
+		  voxelslist[count] = neighbor;
+		  count++;
+	      if (count >= voxelslist.size()) voxelslist.resize(count + initialVoxelsListSize, -1);
         }
       }
     }
   }
   voxelslist.clear();
+  for (int iter = 0; iter < (xpoints * ypoints * zpoints); iter++)
+  {
+	  voxels[iter].grainname = gnames[iter];
+  }
 }
 
 void ReconstructionFunc::align_sections(const std::string &filename)
@@ -897,20 +914,21 @@ void ReconstructionFunc::form_grains()
   double* grainquats = m_grainQuats->getPointer(0);
   for(int i=0;i<1000*5;i++)
   {
-  grainquats[i] = 0.0;
+	  grainquats[i] = 0.0;
   }
 
   // Burn volume with tight orientation tolerance to simulate simultaneous growth/aglomeration
   while (noseeds == 0)
   {
     seed = -1;
+	int counter = 0;
     randpoint = int(double(rg.Random()) * double(totalPMinus1));
-    for (int k = 0; k < totalpoints; ++k)
+    while(seed == -1 && counter < totalpoints)
     {
-	   point = randpoint+k;
-       if (point > totalPMinus1) point = point - totalpoints;
-       if (gnames[point] == -1 && iqs[point] > minseedimagequality) seed = point;
-       if (seed > -1) break;
+       if (randpoint > totalPMinus1) randpoint = randpoint - totalpoints;
+       if (gnames[randpoint] == -1 && iqs[randpoint] > minseedimagequality) seed = randpoint;
+	   randpoint++;
+	   counter++;
     }
     if (seed == -1)
     {
@@ -922,10 +940,10 @@ void ReconstructionFunc::form_grains()
       gnames[seed] = graincount;
       voxelslist[size] = seed;
       size++;
-    for (int k = 0; k < 5; k++)
-    {
-    grainquats[graincount*5 + k] = grainquats[graincount*5 + k] + voxels[seed].quat[k];
-    }
+	  for (int k = 0; k < 5; k++)
+	  {
+	    grainquats[graincount*5 + k] = grainquats[graincount*5 + k] + voxels[seed].quat[k];
+      }
       for (size_t j = 0; j < size; ++j)
       {
         int currentpoint = voxelslist[j];
@@ -1658,96 +1676,100 @@ void ReconstructionFunc::find_grain_and_kernel_misorientations()
   int numchecks; // number of voxels in the grain...
   int good = 0;
   int neighbor;
-  int col, row, plane;
+  int point;
   double w, totalmisorientation;
   double n1, n2, n3;
 
-  int steps = 2;
+  int steps = 1;
   int jStride;
   int kStride;
 
-  for (int i = 0; i < totalpoints; i++)
+  for (int col = 0; col < xpoints; col++)
   {
-    if (gnames[i] > 0)
-    {
-      totalmisorientation = 0.0;
-      numVoxel = 0;
-      q1[1] = voxels[i].quat[1];
-      q1[2] = voxels[i].quat[2];
-      q1[3] = voxels[i].quat[3];
-      q1[4] = voxels[i].quat[4];
-      col = i % xpoints;
-      row = (i / xpoints) % ypoints;
-      plane = i / (xpoints * ypoints);
-      for (int j = -steps; j < steps + 1; j++)
-      {
-        jStride = j * xpoints * ypoints;
-        for (int k = -steps; k < steps + 1; k++)
-        {
-          kStride = k * xpoints;
-          for (int l = -steps; l < steps + 1; l++)
-          {
-            good = 1;
-            neighbor = i + (jStride) + (kStride) + (l);
-            if (plane + j < 0) good = 0;
-            if (plane + j > zpoints - 1) good = 0;
-            if (row + k < 0) good = 0;
-            if (row + k > ypoints - 1) good = 0;
-            if (col + l < 0) good = 0;
-            if (col + l > xpoints - 1) good = 0;
-            if (good == 1)
-            {
-              q2[1] = voxels[neighbor].quat[1];
-              q2[2] = voxels[neighbor].quat[2];
-              q2[3] = voxels[neighbor].quat[3];
-              q2[4] = voxels[neighbor].quat[4];
-              if (crystruct == AIM::Reconstruction::Hexagonal)
-              {
-                w = MisorientationCalculations::getMisoQuatHexagonal(q1, q2, n1, n2, n3);
-              }
-              if (crystruct == AIM::Reconstruction::Cubic)
-              {
-                w = MisorientationCalculations::getMisoQuatCubic(q1, q2, n1, n2, n3);
-              }
-              if(w < 5)
-			  {
-				  totalmisorientation = totalmisorientation + w;
-	              numVoxel++;
-			  }
-            }
-          }
-        }
-      }
-      voxels[i].kernelmisorientation = totalmisorientation / (float)numVoxel;
-	  if(numVoxel == 0) voxels[i].kernelmisorientation = 0;
-      q2[0] = 1;
-      q2[1] = m_Grains[gnames[i]]->avg_quat[1]/m_Grains[gnames[i]]->avg_quat[0];
-      q2[2] = m_Grains[gnames[i]]->avg_quat[2]/m_Grains[gnames[i]]->avg_quat[0];
-      q2[3] = m_Grains[gnames[i]]->avg_quat[3]/m_Grains[gnames[i]]->avg_quat[0];
-      q2[4] = m_Grains[gnames[i]]->avg_quat[4]/m_Grains[gnames[i]]->avg_quat[0];
-      if (crystruct == AIM::Reconstruction::Hexagonal)
-      {
-         w = MisorientationCalculations::getMisoQuatHexagonal(q1, q2, n1, n2, n3);
-      }
-      if (crystruct == AIM::Reconstruction::Cubic)
-      {
-         w = MisorientationCalculations::getMisoQuatCubic(q1, q2, n1, n2, n3);
-      }
-	  if(unassigned[i] == 0)
+	  for (int row = 0; row < ypoints; row++)
 	  {
-	      voxels[i].grainmisorientation = w;
-		  gam[i] = w;
-		  avgmiso[gnames[i]][0]++;
-		  avgmiso[gnames[i]][1] = avgmiso[gnames[i]][1] + w;
+		  for (int plane = 0; plane < zpoints; plane++)
+		  {
+			point = (plane*xpoints*ypoints)+(row*xpoints)+col;
+		    if (gnames[point] > 0)
+			{
+			  totalmisorientation = 0.0;
+			  numVoxel = 0;
+			  q1[1] = voxels[point].quat[1];
+			  q1[2] = voxels[point].quat[2];
+			  q1[3] = voxels[point].quat[3];
+			  q1[4] = voxels[point].quat[4];
+			  for (int j = -steps; j < steps + 1; j++)
+			  {
+				jStride = j * xpoints * ypoints;
+				for (int k = -steps; k < steps + 1; k++)
+				{
+				  kStride = k * xpoints;
+				  for (int l = -steps; l < steps + 1; l++)
+				  {
+					good = 1;
+					neighbor = point + (jStride) + (kStride) + (l);
+					if (plane + j < 0) good = 0;
+					if (plane + j > zpoints - 1) good = 0;
+					if (row + k < 0) good = 0;
+					if (row + k > ypoints - 1) good = 0;
+					if (col + l < 0) good = 0;
+					if (col + l > xpoints - 1) good = 0;
+					if (good == 1)
+					{
+					  q2[1] = voxels[neighbor].quat[1];
+					  q2[2] = voxels[neighbor].quat[2];
+					  q2[3] = voxels[neighbor].quat[3];
+					  q2[4] = voxels[neighbor].quat[4];
+					  if (crystruct == AIM::Reconstruction::Hexagonal)
+					  {
+						w = MisorientationCalculations::getMisoQuatHexagonal(q1, q2, n1, n2, n3);
+					  }
+					  if (crystruct == AIM::Reconstruction::Cubic)
+					  {
+						w = MisorientationCalculations::getMisoQuatCubic(q1, q2, n1, n2, n3);
+					  }
+					  if(w < 5)
+					  {
+						  totalmisorientation = totalmisorientation + w;
+						  numVoxel++;
+					  }
+					}
+				  }
+				}
+			  }
+			  voxels[point].kernelmisorientation = totalmisorientation / (float)numVoxel;
+			  if(numVoxel == 0) voxels[point].kernelmisorientation = 0;
+			  q2[0] = 1;
+			  q2[1] = m_Grains[gnames[point]]->avg_quat[1]/m_Grains[gnames[point]]->avg_quat[0];
+			  q2[2] = m_Grains[gnames[point]]->avg_quat[2]/m_Grains[gnames[point]]->avg_quat[0];
+			  q2[3] = m_Grains[gnames[point]]->avg_quat[3]/m_Grains[gnames[point]]->avg_quat[0];
+			  q2[4] = m_Grains[gnames[point]]->avg_quat[4]/m_Grains[gnames[point]]->avg_quat[0];
+			  if (crystruct == AIM::Reconstruction::Hexagonal)
+			  {
+				 w = MisorientationCalculations::getMisoQuatHexagonal(q1, q2, n1, n2, n3);
+			  }
+			  if (crystruct == AIM::Reconstruction::Cubic)
+			  {
+				 w = MisorientationCalculations::getMisoQuatCubic(q1, q2, n1, n2, n3);
+			  }
+			  if(unassigned[point] == 0)
+			  {
+				  voxels[point].grainmisorientation = w;
+				  gam[point] = w;
+				  avgmiso[gnames[point]][0]++;
+				  avgmiso[gnames[point]][1] = avgmiso[gnames[point]][1] + w;
+			  }
+			  if(unassigned[point] != 0) voxels[point].grainmisorientation = 0;
+			}
+		    if (gnames[point] == 0)
+			{
+			  voxels[point].kernelmisorientation = 0;
+			  voxels[point].grainmisorientation = 0;
+			  gam[point] = 0;
+			}
+		  }
 	  }
-	  if(unassigned[i] != 0) voxels[i].grainmisorientation = 0;
-    }
-    if (gnames[i] == 0)
-    {
-      voxels[i].kernelmisorientation = 0;
-      voxels[i].grainmisorientation = 0;
-	  gam[i] = 0;
-    }
   }
 
   for(int i=0;i<m_Grains.size();i++)
@@ -1756,45 +1778,49 @@ void ReconstructionFunc::find_grain_and_kernel_misorientations()
   }
 
   steps = 1;
-  for (int i = 0; i < totalpoints; i++)
+  for (int col = 0; col < xpoints; col++)
   {
-    if (gnames[i] > 0 && unassigned[i] == 0)
-    {
-      totalmisorientation = 0.0;
-      numchecks = 0;
-      col = i % xpoints;
-      row = (i / xpoints) % ypoints;
-      plane = i / (xpoints * ypoints);
-      for (int j = -steps; j < steps + 1; j++)
-      {
-        jStride = j * xpoints * ypoints;
-        for (int k = -steps; k < steps + 1; k++)
-        {
-          kStride = k * xpoints;
-          for (int l = -steps; l < steps + 1; l++)
-          {
-            good = 1;
-            neighbor = i + (jStride) + (kStride) + (l);
-            if (plane + j < 0) good = 0;
-            if (plane + j > zpoints - 1) good = 0;
-            if (row + k < 0) good = 0;
-            if (row + k > ypoints - 1) good = 0;
-            if (col + l < 0) good = 0;
-            if (col + l > xpoints - 1) good = 0;
-            if (good == 1 && gnames[i] == gnames[neighbor] && unassigned[neighbor] != 1)
-            {
-              numchecks++;
-              totalmisorientation = totalmisorientation + fabs(gam[i]-gam[neighbor]);
-            }
-          }
-        }
-      }
-	  voxels[i].misorientationgradient = totalmisorientation / (float)numchecks;
-	}
-    if (gnames[i] == 0 || unassigned[i] != 0)
-    {
-      voxels[i].misorientationgradient = 0;
-    }
+	  for (int row = 0; row < ypoints; row++)
+	  {
+		  for (int plane = 0; plane < zpoints; plane++)
+		  {
+			point = (plane*xpoints*ypoints)+(row*xpoints)+col;
+			if (gnames[point] > 0 && unassigned[point] == 0)
+			{
+			  totalmisorientation = 0.0;
+			  numchecks = 0;
+			  for (int j = -steps; j < steps + 1; j++)
+			  {
+				jStride = j * xpoints * ypoints;
+				for (int k = -steps; k < steps + 1; k++)
+				{
+				  kStride = k * xpoints;
+				  for (int l = -steps; l < steps + 1; l++)
+				  {
+					good = 1;
+					neighbor = point + (jStride) + (kStride) + (l);
+					if (plane + j < 0) good = 0;
+					if (plane + j > zpoints - 1) good = 0;
+					if (row + k < 0) good = 0;
+					if (row + k > ypoints - 1) good = 0;
+					if (col + l < 0) good = 0;
+					if (col + l > xpoints - 1) good = 0;
+					if (good == 1 && gnames[point] == gnames[neighbor] && unassigned[neighbor] != 1)
+					{
+					  numchecks++;
+					  totalmisorientation = totalmisorientation + fabs(gam[point]-gam[neighbor]);
+					}
+				  }
+				}
+			  }
+			  voxels[point].misorientationgradient = totalmisorientation / (float)numchecks;
+			}
+			if (gnames[point] == 0 || unassigned[point] != 0)
+			{
+			  voxels[point].misorientationgradient = 0;
+			}
+		  }
+	  }
   }
 #endif
   delete[] gnames;
@@ -2011,9 +2037,6 @@ int ReconstructionFunc::load_data(const std::string &readname)
         rod[i][iter] = value;
       }
     }
-    double s, c, s1, c1, s2, c2;
-    double ea1, ea2, ea3;
-    double cosine1, cosine3, sine1, sine3;
     double denom, mag;
 	double q1[5];
     for (int i = 0; i < (xpoints * ypoints * zpoints); i++)
@@ -2038,7 +2061,7 @@ int ReconstructionFunc::load_data(const std::string &readname)
     }
     delete[] rod;
   }
-  return numgrains;
+  return int(numgrains);
 }
 void ReconstructionFunc::merge_twins()
 {
@@ -2742,12 +2765,12 @@ void ReconstructionFunc::find_moments()
     double x = find_xcoord(j);
     double y = find_ycoord(j);
     double z = find_zcoord(j);
-    double x1 = x + (resx / 2);
-    double x2 = x - (resx / 2);
-    double y1 = y + (resy / 2);
-    double y2 = y - (resy / 2);
-    double z1 = z + (resz / 2);
-    double z2 = z - (resz / 2);
+    double x1 = x + (resx / 4);
+    double x2 = x - (resx / 4);
+    double y1 = y + (resy / 4);
+    double y2 = y - (resy / 4);
+    double z1 = z + (resz / 4);
+    double z2 = z - (resz / 4);
     double xdist1 = (x1 - graincenters[gnum][1]);
     double ydist1 = (y1 - graincenters[gnum][2]);
     double zdist1 = (z1 - graincenters[gnum][3]);
@@ -3548,25 +3571,8 @@ int ReconstructionFunc::volume_stats(H5ReconStatsWriter::Pointer h5io)
 {
   int retErr = 0;
   double actualgrains = 0;
-  double avgvol = 0;
-  double avglnvol = 0;
-  double avgbovera = 0;
-  double avgcovera = 0;
-  double avgcoverb = 0;
-  double avgdiam = 0;
   double avglogdiam = 0;
-  double avgdiam2 = 0;
-  double avgschmid = 0;
-  double avgomega3 = 0;
   double neighcount = 0;
-  double maxvol = 0;
-  double maxdiam = 0;
-  double maxlogdiam = 0;
-  double maxbovera = 0;
-  double maxcovera = 0;
-  double maxcoverb = 0;
-  double maxschmid = 0;
-  double maxomega3 = 0;
   size_t numgrains = m_Grains.size();
   int numbins = int((maxdiameter - mindiameter) / sizebinstepsize) + 1;
   neighborhood.resize(numbins);
@@ -3616,15 +3622,7 @@ int ReconstructionFunc::volume_stats(H5ReconStatsWriter::Pointer h5io)
       double coverb = c / b;
       double schmid = m_Grains[i]->schmidfactor;
       double omega3 = m_Grains[i]->omega3;
-      avgvol = avgvol + voxvol;
-      avglnvol = avglnvol + logvol;
-      avgbovera = avgbovera + bovera;
-      avgcovera = avgcovera + covera;
-      avgcoverb = avgcoverb + coverb;
-      avgdiam = avgdiam + diam;
       avglogdiam = avglogdiam + logdiam;
-      avgschmid = avgschmid + schmid;
-      avgomega3 = avgomega3 + omega3;
       int diamint = int((diam - mindiameter) / sizebinstepsize);
       neighborhood[diamint][0]++;
       svbovera[diamint][0]++;
@@ -3643,14 +3641,6 @@ int ReconstructionFunc::volume_stats(H5ReconStatsWriter::Pointer h5io)
         int nnum = m_Grains[i]->neighbordistfunc[k];
         neighborhood[diamint][((2 * k) + 1)] = neighborhood[diamint][((2 * k) + 1)] + nnum;
       }
-      if (voxvol > maxvol) maxvol = voxvol;
-      if (bovera > maxbovera) maxbovera = bovera;
-      if (covera > maxcovera) maxcovera = covera;
-      if (coverb > maxcoverb) maxcoverb = coverb;
-      if (diam > maxdiam) maxdiam = diam;
-      if (logdiam > maxlogdiam) maxlogdiam = logdiam;
-      if (schmid > maxschmid) maxschmid = schmid;
-      if (omega3 > maxomega3) maxomega3 = omega3;
     }
   }
   for (int temp3 = 0; temp3 < numbins; temp3++)
@@ -3671,27 +3661,8 @@ int ReconstructionFunc::volume_stats(H5ReconStatsWriter::Pointer h5io)
       neighborhoodfit[temp3][3] = log((neighborhood[temp3][5] - neighborhoodfit[temp3][2]) / neighborhoodfit[temp3][1]) / log(2.0);
     }
   }
-  avgvol = avgvol / actualgrains;
-  avglnvol = avglnvol / actualgrains;
-  avgbovera = avgbovera / actualgrains;
-  avgcovera = avgcovera / actualgrains;
-  avgcoverb = avgcoverb / actualgrains;
-  avgdiam = avgdiam / actualgrains;
   avglogdiam = avglogdiam / actualgrains;
-  avgdiam2 = avgdiam2 / neighcount;
-  avgschmid = avgschmid / actualgrains;
-  avgomega3 = avgomega3 / actualgrains;
-  maxvol = maxvol / avgvol;
-  double sdvol = 0;
-  double sdlnvol = 0;
-  double sdbovera = 0;
-  double sdcovera = 0;
-  double sdcoverb = 0;
-  double sddiam = 0;
   double sdlogdiam = 0;
-  double sddiam2 = 0;
-  double sdschmid = 0;
-  double sdomega3 = 0;
   for (int j = 1; j < numgrains; j++)
   {
     int onedge = m_Grains[j]->surfacegrain;
@@ -3722,15 +3693,7 @@ int ReconstructionFunc::volume_stats(H5ReconStatsWriter::Pointer h5io)
       double coverb = c / b;
       double schmid = m_Grains[j]->schmidfactor;
       double omega3 = m_Grains[j]->omega3;
-      sdvol = sdvol + ((voxvol - avgvol) * (voxvol - avgvol));
-      sdlnvol = sdlnvol + ((logvol - avglnvol) * (logvol - avglnvol));
-      sdbovera = sdbovera + ((bovera - avgbovera) * (bovera - avgbovera));
-      sdcovera = sdcovera + ((covera - avgcovera) * (covera - avgcovera));
-      sdcoverb = sdcoverb + ((coverb - avgcoverb) * (coverb - avgcoverb));
-      sddiam = sddiam + ((diam - avgdiam) * (diam - avgdiam));
       sdlogdiam = sdlogdiam + ((logdiam - avglogdiam) * (logdiam - avglogdiam));
-      sdschmid = sdschmid + ((schmid - avgschmid) * (schmid - avgschmid));
-      sdomega3 = sdomega3 + ((omega3 - avgomega3) * (omega3 - avgomega3));
       int diamint = int((diam - mindiameter) / sizebinstepsize);
       svbovera[diamint][2] = svbovera[diamint][2] + ((bovera - svbovera[diamint][1]) * (bovera - svbovera[diamint][1]));
       svcovera[diamint][2] = svcovera[diamint][2] + ((covera - svcovera[diamint][1]) * (covera - svcovera[diamint][1]));
@@ -3775,60 +3738,8 @@ int ReconstructionFunc::volume_stats(H5ReconStatsWriter::Pointer h5io)
       svomega3[temp4][2] = pow(svomega3[temp4][2], 0.5);
     }
   }
-  sdvol = sdvol / actualgrains;
-  sdlnvol = sdlnvol / actualgrains;
-  sdbovera = sdbovera / actualgrains;
-  sdcovera = sdcovera / actualgrains;
-  sdcoverb = sdcoverb / actualgrains;
-  sddiam = sddiam / actualgrains;
   sdlogdiam = sdlogdiam / actualgrains;
-  sddiam2 = sddiam2 / neighcount;
-  sdschmid = sdschmid / actualgrains;
-  sdomega3 = sdomega3 / actualgrains;
-  //  double volvar = sdvol;
-  //  double vollnvar = sdlnvol;
-  double boveravar = sdbovera;
-  double coveravar = sdcovera;
-  double coverbvar = sdcoverb;
-  //  double diamvar = sddiam;
-  //  double logdiamvar = sdlogdiam;
-  //  double diamvar2 = sddiam2;
-  double schmidvar = sdschmid;
-  double omega3var = sdomega3;
-  //  double pbovera = avgbovera*(((avgbovera*(1-avgbovera))/boveravar)-1);
-  //  double qbovera = (1-avgbovera)*(((avgbovera*(1-avgbovera))/boveravar)-1);
-  //  double pcovera = avgcovera*(((avgcovera*(1-avgcovera))/coveravar)-1);
-  //  double qcovera = (1-avgcovera)*(((avgcovera*(1-avgcovera))/coveravar)-1);
-  //  double pcoverb = avgcoverb*(((avgcoverb*(1-avgcoverb))/coverbvar)-1);
-  //  double qcoverb = (1-avgcoverb)*(((avgcoverb*(1-avgcoverb))/coverbvar)-1);
-  sdvol = pow(sdvol, 0.5);
-  sdlnvol = pow(sdlnvol, 0.5);
-  sdbovera = pow(sdbovera, 0.5);
-  sdcovera = pow(sdcovera, 0.5);
-  sdcoverb = pow(sdcoverb, 0.5);
-  sddiam = pow(sddiam, 0.5);
   sdlogdiam = pow(sdlogdiam, 0.5);
-  sddiam2 = pow(sddiam2, 0.5);
-  sdschmid = pow(sdschmid, 0.5);
-  sdomega3 = pow(sdomega3, 0.5);
-  double svboveracr = 0;
-  double svcoveracr = 0;
-  double svcoverbcr = 0;
-  double svschmidcr = 0;
-  double svomega3cr = 0;
-  for (int temp5 = 0; temp5 < numbins; temp5++)
-  {
-    svboveracr = svboveracr + (svbovera[temp5][0] * ((svbovera[temp5][1] - avgbovera) * (svbovera[temp5][1] - avgbovera)));
-    svcoveracr = svcoveracr + (svcovera[temp5][0] * ((svcovera[temp5][1] - avgcovera) * (svcovera[temp5][1] - avgcovera)));
-    svcoverbcr = svcoverbcr + (svcoverb[temp5][0] * ((svcoverb[temp5][1] - avgcoverb) * (svcoverb[temp5][1] - avgcoverb)));
-    svschmidcr = svschmidcr + (svschmid[temp5][0] * ((svschmid[temp5][1] - avgschmid) * (svschmid[temp5][1] - avgschmid)));
-    svomega3cr = svomega3cr + (svomega3[temp5][0] * ((svomega3[temp5][1] - avgomega3) * (svomega3[temp5][1] - avgomega3)));
-  }
-  svboveracr = svboveracr / (actualgrains * boveravar);
-  svcoveracr = svcoveracr / (actualgrains * coveravar);
-  svcoverbcr = svcoverbcr / (actualgrains * coverbvar);
-  svschmidcr = svschmidcr / (actualgrains * schmidvar);
-  svomega3cr = svomega3cr / (actualgrains * omega3var);
 
   retErr = h5io->writeVolumeStats(maxdiameter, mindiameter, 1.0, avglogdiam, sdlogdiam, svbovera, svcovera, svcoverb, neighborhoodfit, svomega3);
 
@@ -4587,7 +4498,6 @@ void ReconstructionFunc::deformation_stats(const std::string &filename, const st
   fprintf(vtkFile,  "ASCII\n");
   fprintf(vtkFile,  "DATASET UNSTRUCTURED_GRID\n");
   fprintf(vtkFile,  "POINTS %d float\n", m_Grains.size()-1);
-  float x, y, z;
   for(int i=1;i<m_Grains.size();i++)
   {
 		double x = m_Grains[i]->IPF[0] - (m_Grains[i]->IPF[0] * (m_Grains[i]->IPF[2] / (m_Grains[i]->IPF[2] + 1)));;
@@ -4634,7 +4544,7 @@ void ReconstructionFunc::write_graindata(const std::string &graindataFile)
   size_t numgrains = m_Grains.size();
   outFile.open(graindataFile.c_str());
   outFile << numgrains << endl;
-  outFile << "Grain ID  Euler1  Euler2  Euler3  Equiv. Diameter Grain Avg. Disorientation Surface Grain Schmid Factor No. Neighbors" << endl;
+  outFile << "Grain ID  Euler1  Euler2  Euler3  Equiv. Diameter Grain Avg. Disorientation Surface Grain Schmid Factor No. Neighbors Omega3" << endl;
   for (int i = 1; i < numgrains; i++)
   {
     double diameter = m_Grains[i]->equivdiameter;
@@ -4643,9 +4553,9 @@ void ReconstructionFunc::write_graindata(const std::string &graindataFile)
     double schmid = m_Grains[i]->schmidfactor;
     nlist = m_Grains[i]->neighborlist;
     int nucleus = m_Grains[i]->nucleus;
+	double omega3 = m_Grains[i]->omega3;
     outFile << i << " " << voxels[nucleus].euler1 << "  " << voxels[nucleus].euler2 << "  " << voxels[nucleus].euler3 << "  " << diameter << "  " << avgmiso << " "
-        << onsurface << " " << schmid << "  " << nlist->size() << " ";
-    outFile << endl;
+        << onsurface << " " << schmid << "  " << nlist->size() << " " << omega3 << endl;
   }
   outFile.close();
 

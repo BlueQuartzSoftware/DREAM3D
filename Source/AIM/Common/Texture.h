@@ -50,6 +50,7 @@
  * @date Feb 1, 2011
  * @version 1.0
  */
+
 class AIMCOMMON_EXPORT Texture
 {
   public:

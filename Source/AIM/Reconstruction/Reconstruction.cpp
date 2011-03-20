@@ -236,8 +236,6 @@ void Reconstruction::compute()
     m->cleanup_data();
     CHECK_FOR_CANCELED(ReconstructionFunc, cleanup_data)
 
-  if (m_WriteVisualizationFile) {outWriter->writeVisualizationFile(m.get(), reconVisFile);}
-
     if (m_AlignmentMethod == AIM::Reconstruction::MutualInformation)
     {
       progressMessage(AIM_STRING("Redefining Border"), 18);
