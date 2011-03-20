@@ -117,7 +117,7 @@ void GrainGeneratorFunc::initializeQ(double* q, double e1, double e2, double e3)
 }
 
 
-void GrainGeneratorFunc::swapOutOrientation( int &badtrycount, int &numbins)
+void GrainGeneratorFunc::swapOutOrientation( int &badtrycount, int &numbins, double currentodferror, double currentmdferror)
 {
   double random;
   int good;
@@ -236,7 +236,7 @@ void GrainGeneratorFunc::swapOutOrientation( int &badtrycount, int &numbins)
     MC_LoopBody1(neighbor, j, misolist, neighborsurfarealist.get(), mdfchange);
   }
 
-  deltaerror = 1.0 * odfchange + 1.0 * mdfchange;
+  deltaerror = (odfchange/currentodferror) + (mdfchange/currentmdferror);
   if (deltaerror > 0)
   {
     badtrycount = 0;

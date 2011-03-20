@@ -2,7 +2,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GrainGeneratorFunc::switchOrientations( int &badtrycount, int &numbins)
+void GrainGeneratorFunc::switchOrientations( int &badtrycount, int &numbins, double currentodferror, double currentmdferror)
 {
   // double random = rg.Random();
   int good = 0;
@@ -67,13 +67,13 @@ void GrainGeneratorFunc::switchOrientations( int &badtrycount, int &numbins)
   if (crystruct == AIM::Reconstruction::Hexagonal) g2odfbin = MisorientationCalculations::calculateHexOdfBin(q1, qref, dim1, dim2, dim3);
   else if (crystruct == AIM::Reconstruction::Cubic) g2odfbin = MisorientationCalculations::calculateCubicOdfBin(q1, qref, dim1, dim2, dim3);
 
-  double odfchange = ((actualodf[g1odfbin] - simodf[g1odfbin]) * (actualodf[g1odfbin] - simodf[g1odfbin])) - ((actualodf[g1odfbin]
-      - (simodf[g1odfbin] - (double(m_Grains[selectedgrain1]->numvoxels) * resx * resy * resz / unbiasedvol) + (double(m_Grains[selectedgrain2]->numvoxels) * resx
-          * resy * resz / unbiasedvol))) * (actualodf[g1odfbin] - (simodf[g1odfbin] - (double(m_Grains[selectedgrain1]->numvoxels) * resx * resy * resz / unbiasedvol)
+  double odfchange = ((actualodf[g1odfbin]-simodf[g1odfbin]) * (actualodf[g1odfbin]-simodf[g1odfbin])) - ((actualodf[g1odfbin]
+     -(simodf[g1odfbin] - (double(m_Grains[selectedgrain1]->numvoxels) * resx * resy * resz / unbiasedvol) + (double(m_Grains[selectedgrain2]->numvoxels) * resx
+          * resy * resz / unbiasedvol))) * (actualodf[g1odfbin]-(simodf[g1odfbin] - (double(m_Grains[selectedgrain1]->numvoxels) * resx * resy * resz / unbiasedvol)
       + (double(m_Grains[selectedgrain2]->numvoxels) * resx * resy * resz / unbiasedvol))));
-  odfchange = odfchange + (((actualodf[g2odfbin] - simodf[g2odfbin]) * (actualodf[g2odfbin] - simodf[g2odfbin])) - ((actualodf[g2odfbin]
-      - (simodf[g2odfbin] - (double(m_Grains[selectedgrain2]->numvoxels) * resx * resy * resz / unbiasedvol) + (double(m_Grains[selectedgrain1]->numvoxels) * resx
-          * resy * resz / unbiasedvol))) * (actualodf[g2odfbin] - (simodf[g2odfbin] - (double(m_Grains[selectedgrain2]->numvoxels) * resx * resy * resz / unbiasedvol)
+  odfchange = odfchange + (((actualodf[g2odfbin]-simodf[g2odfbin]) * (actualodf[g2odfbin]-simodf[g2odfbin])) - ((actualodf[g2odfbin]
+     -(simodf[g2odfbin] - (double(m_Grains[selectedgrain2]->numvoxels) * resx * resy * resz / unbiasedvol) + (double(m_Grains[selectedgrain1]->numvoxels) * resx
+          * resy * resz / unbiasedvol))) * (actualodf[g2odfbin]-(simodf[g2odfbin] - (double(m_Grains[selectedgrain2]->numvoxels) * resx * resy * resz / unbiasedvol)
       + (double(m_Grains[selectedgrain1]->numvoxels) * resx * resy * resz / unbiasedvol)))));
 
 
@@ -105,7 +105,7 @@ void GrainGeneratorFunc::switchOrientations( int &badtrycount, int &numbins)
     }
   }
 
-  deltaerror = 1.0 * odfchange + 1.0 * mdfchange;
+  deltaerror = (odfchange/currentodferror) + (mdfchange/currentmdferror);
   if (deltaerror > 0)
   {
     badtrycount = 0;

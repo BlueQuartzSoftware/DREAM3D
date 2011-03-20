@@ -163,9 +163,6 @@ std::vector<double> H5ReconStatsWriter::generateBins(double maxDiameter, double 
 }
 
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 int H5ReconStatsWriter::writeBetaDistribution(const std::string &hdf5GroupName,
                            std::vector<double> &alpha,
                            std::vector<double> &beta)
@@ -185,9 +182,6 @@ int H5ReconStatsWriter::writeBetaDistribution(const std::string &hdf5GroupName,
   return err;
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 int H5ReconStatsWriter::writeLogNormalDistribution(const std::string &hdf5GroupName,
                                                     std::vector<double> &average,
                                                     std::vector<double> &stdDev )
@@ -207,9 +201,6 @@ int H5ReconStatsWriter::writeLogNormalDistribution(const std::string &hdf5GroupN
   return err;
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 int H5ReconStatsWriter::writePowerDistribution(const std::string &hdf5GroupName,
                                                std::vector<double> &alpha,
                                                std::vector<double> &k,
@@ -232,9 +223,6 @@ int H5ReconStatsWriter::writePowerDistribution(const std::string &hdf5GroupName,
   return err;
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 int H5ReconStatsWriter::writeDistributionData(const std::string &disType,
                           const std::string &hdf5GroupName,
                           std::vector<std::string> &columnHeaders,
@@ -289,9 +277,6 @@ int H5ReconStatsWriter::writeDistributionData(const std::string &disType,
   return retErr;
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 int H5ReconStatsWriter::writeVolumeStats(double maxdiameter, double mindiameter, double diamStepSize,
                                          double avglogdiam, double sdlogdiam,
                                          std::vector<std::vector<double> > &svbovera,
@@ -382,17 +367,17 @@ int H5ReconStatsWriter::writeVolumeStats(double maxdiameter, double mindiameter,
     }
   }
 
-  /* Write the Grain_SizeVOmega3_Distributions Shape Statistics which is a LogNormal Distribution */
+  /* Write the Grain_SizeVOmega3_Distributions Shape Statistics which is a Beta Distribution */
   {
-    std::vector<double> average(nBins, 0.0);
-    std::vector<double> stdDev(nBins, 0.0);
+    std::vector<double> alpha(nBins, 0.0);
+    std::vector<double> beta(nBins, 0.0);
     // Convert from Row Major to Column Major
     for (size_t temp7 = 0; temp7 < nBins; ++temp7)
     {
-      average[temp7] = svomega3[temp7][3];
-      stdDev[temp7] = svomega3[temp7][4];
+      alpha[temp7] = svomega3[temp7][3];
+      beta[temp7] = svomega3[temp7][4];
     }
-    err = writeLogNormalDistribution(AIM::HDF5::Grain_SizeVOmega3_Distributions, average, stdDev);
+    err = writeBetaDistribution(AIM::HDF5::Grain_SizeVOmega3_Distributions, alpha, beta);
     if (err < 0)
     {
       H5RSW_ERROR_CHECK(AIM::HDF5::Grain_SizeVOmega3_Distributions)
@@ -421,9 +406,6 @@ int H5ReconStatsWriter::writeMisorientationBinsData(double* misobins, size_t nEl
   return err;
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 int H5ReconStatsWriter::writeMicroTextureData(double* microbin, size_t nElements, double actualgrains)
 {
   herr_t err = 0;
@@ -453,9 +435,6 @@ int H5ReconStatsWriter::writeMicroTextureData(double* microbin, size_t nElements
 
 
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 int H5ReconStatsWriter::writeAxisOrientationData(double* axisodf, double totalaxes)
 {
   herr_t err = 0;
@@ -486,9 +465,6 @@ int H5ReconStatsWriter::writeAxisOrientationData(double* axisodf, double totalax
   return retErr;
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 int H5ReconStatsWriter::writeODFData(AIM::Reconstruction::CrystalStructure crystruct,
                                      double* eulerodf, double totalvol)
 {

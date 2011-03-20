@@ -56,8 +56,8 @@ class AIMCOMMON_EXPORT GrainGeneratorFunc
 {
 public:
     MXA_SHARED_POINTERS(GrainGeneratorFunc)MXA_STATIC_NEW_MACRO(GrainGeneratorFunc)virtual ~GrainGeneratorFunc();
-    void swapOutOrientation(int & badtrycount, int & numbins);
-    void switchOrientations(int & badtrycount, int & numbins);
+    void swapOutOrientation(int & badtrycount, int & numbins, double currentodferror, double currentmdferror);
+    void switchOrientations(int & badtrycount, int & numbins, double currentodferror, double currentmdferror);
 
     void MC_LoopBody1(size_t neighbor, int j,
                                           vector<double>* misolist,

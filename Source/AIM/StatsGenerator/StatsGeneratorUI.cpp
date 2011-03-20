@@ -225,7 +225,7 @@ void StatsGeneratorUI::setupGui()
   m_Omega3Plot->setPlotTitle(QString("Size Vs. Omega 3"));
   m_Omega3Plot->setXAxisName(QString("Omega 3"));
   m_Omega3Plot->setYAxisName(QString("Frequency"));
-  m_Omega3Plot->setDistributionType(AIM::Reconstruction::LogNormal);
+  m_Omega3Plot->setDistributionType(AIM::Reconstruction::Beta);
   m_Omega3Plot->setStatisticsType(AIM::Reconstruction::Grain_SizeVOmega3);
   m_Omega3Plot->blockDistributionTypeChanges(true);
   m_Omega3Plot->setRowOperationEnabled(false);
