@@ -173,8 +173,6 @@ if (err < 0) {\
   std::cout << "  Line: " << __LINE__ << std::endl;\
 return err; }
 
-
-
 #define READ_2_COLUMN_STATS_DATA(err, group, var, distribution, Col0Hdr, Col1Hdr, ColCount)\
 {\
   disType = h5io->getDistributionType(group, dt);\
@@ -205,8 +203,6 @@ return err; }
       break;\
   }\
 }
-
-
 
 #define READ_3_COLUMN_STATS_DATA(err, group, var, distribution, Col0Hdr, Col1Hdr, Col2Hdr, ColCount)\
 {\
@@ -294,7 +290,7 @@ int GrainGeneratorFunc::readReconStatsData(H5ReconStatsReader::Pointer h5io)
   READ_2_COLUMN_STATS_DATA(err, AIM::HDF5::Grain_SizeVCoverB_Distributions, coverb, AIM::Reconstruction::Beta, AIM::HDF5::Alpha, AIM::HDF5::Beta, AIM::HDF5::BetaColumnCount);
 
   /* Read the Omega3 Data */
-  READ_2_COLUMN_STATS_DATA(err, AIM::HDF5::Grain_SizeVOmega3_Distributions, omega3, AIM::Reconstruction::LogNormal, AIM::HDF5::Average, AIM::HDF5::StandardDeviation, AIM::HDF5::LogNormalColumnCount);
+  READ_2_COLUMN_STATS_DATA(err, AIM::HDF5::Grain_SizeVOmega3_Distributions, omega3, AIM::Reconstruction::Beta, AIM::HDF5::Alpha, AIM::HDF5::Beta, AIM::HDF5::LogNormalColumnCount);
 
   /* Read the Neighbor Data - This MUST be the last one because of how variables are assigned bvalues and used in the next section */
   READ_3_COLUMN_STATS_DATA(err, AIM::HDF5::Grain_SizeVNeighbors_Distributions, neighborhood, AIM::Reconstruction::Power, AIM::HDF5::Alpha, AIM::HDF5::Beta, AIM::HDF5::Exp_k, AIM::HDF5::PowerLawColumnCount);
@@ -1005,7 +1001,6 @@ int  GrainGeneratorFunc::pack_grains(const std::string &filename, int numgrains)
 {
   totalvol = 0;
   double change1, change2, change3;
-
   std::ofstream outFile;
   outFile.open(filename.c_str());
   size_t index;
@@ -1064,7 +1059,8 @@ int  GrainGeneratorFunc::pack_grains(const std::string &filename, int numgrains)
     change1 = 0;
     change2 = 0;
     change3 = 0;
-    acceptableerror = 0.005*exp(-7*(iteration/double(250000)));
+//    acceptableerror = 0.005*exp(-7*(iteration/double(250000)));
+	acceptableerror = 0;
     int option = iteration % 4;
     if(iteration%100 == 0) outFile << oldfillingerror << " " << oldsizedisterror << "  " << oldneighborhooderror << "  " << acceptedmoves << std::endl;
     if (option == 0)
@@ -1537,6 +1533,10 @@ void  GrainGeneratorFunc::assign_eulers(int numgrains)
       simodf[choose] = simodf[choose] + (double(m_Grains[i]->numvoxels)*resx*resy*resz);
 	  unbiasedvol = unbiasedvol + (double(m_Grains[i]->numvoxels)*resx*resy*resz);
     }
+  }
+  for(int i=0;i<numbins;i++)
+  {
+	simodf[i] = simodf[i]/unbiasedvol;
   }
 }
 
@@ -2503,11 +2503,11 @@ void GrainGeneratorFunc::matchCrystallography(const std::string &ErrorFile, H5Re
 
     if(random < 0.5)  // SwapOutOrientation
     {
-      swapOutOrientation(badtrycount, numbins);
+      swapOutOrientation(badtrycount, numbins, currentodferror, currentmdferror);
     }
     else if(random > 0.5) // SwitchOrientation
     {
-      switchOrientations(badtrycount, numbins);
+      switchOrientations(badtrycount, numbins, currentodferror, currentmdferror);
     }
   }
   outFile.close();
