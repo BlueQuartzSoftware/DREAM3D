@@ -64,6 +64,7 @@ class AIMCOMMON_EXPORT MisorientationCalculations
 	static void getSlipMisalignment(int ss1, double q1[5], double q2[5], double &ssap);
 	static size_t calculateHexOdfBin( double q1[5], double qref[5], double dim1, double dim2, double dim3);
     static size_t calculateCubicOdfBin( double q1[5], double qref[5], double dim1, double dim2, double dim3);
+	static void initializeQ(double *q, double ea1, double ea2, double ea3);
 
   protected:
     MisorientationCalculations();
