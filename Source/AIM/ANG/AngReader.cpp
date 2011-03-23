@@ -299,6 +299,13 @@ void AngReader::parseHeaderLine(char* buf, size_t length)
   {
     return;
   }
+
+  //TODO: If the word is "Phase" then we need to construct a "Phase" class and
+  //  store all the meta data for the phase into that class. When we are done
+  //  parsing data for the phase then stick the Phase instance into the header
+  //  map or stick it into a vector<Phase::Pointer> and stick the vector into
+  //  the map under the "Phase" key
+
   HeaderEntry::Pointer p = m_Headermap[word];
   if (NULL == p.get())
   {
