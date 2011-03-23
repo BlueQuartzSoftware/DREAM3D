@@ -610,6 +610,20 @@ int MisorientationCalculations::getMisoBinHexagonal(double n1, double n2, double
   return ((36*36*miso3bin)+(36*miso2bin)+miso1bin);
 }
 
+void MisorientationCalculations::initializeQ(double* q, double e1, double e2, double e3)
+{
+  double s, c, s1, c1, s2, c2;
+  s = sin(0.5 * e2);
+  c = cos(0.5 * e2);
+  s1 = sin(0.5 * (e1 - e3));
+  c1 = cos(0.5 * (e1 - e3));
+  s2 = sin(0.5 * (e1 + e3));
+  c2 = cos(0.5 * (e1 + e3));
+  q[1] = s*c1;
+  q[2] = s*s1;
+  q[3] = c*s2;
+  q[4] = c*c2;
+}
 
 void MisorientationCalculations::calculateMisorientationAngles(double &w, double &miso1, double &miso2, double &miso3)
 {
