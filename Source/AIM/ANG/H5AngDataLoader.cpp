@@ -189,16 +189,11 @@ int H5AngDataLoader::loadData(Voxel voxels[], int xpoints, int ypoints, int zpoi
   float* euler2Ptr;
   float* euler3Ptr;
   float* confPtr;
+  float* phasePtr;
   float* imqualPtr;
   float* imqual2Ptr;
   int xstartspot;
   int ystartspot;
-  double s;
-  double c;
-  double s1;
-  double c1;
-  double s2;
-  double c2;
   double qr[5];
 
   for (int slice = 0; slice < zpoints; ++slice)
@@ -220,6 +215,7 @@ int H5AngDataLoader::loadData(Voxel voxels[], int xpoints, int ypoints, int zpoi
     euler1Ptr = reader->getPhi1Pointer();
     euler2Ptr = reader->getPhiPointer();
     euler3Ptr = reader->getPhi2Pointer();
+	phasePtr = reader->getPhasePointer();
     confPtr = reader->getConfidenceIndexPointer();
     imqualPtr = reader->getImageQualityPointer();
     imqual2Ptr = reader->getImageQuality2Pointer();
@@ -236,17 +232,8 @@ int H5AngDataLoader::loadData(Voxel voxels[], int xpoints, int ypoints, int zpoi
         voxels[index].imagequality = imqualPtr[readerIndex];// Image Quality
         voxels[index].imagequality2 = imqual2Ptr[readerIndex];// Image Quality
         voxels[index].confidence = confPtr[readerIndex];// Confidence
-        s = sin(0.5 * euler2Ptr[readerIndex]);
-        c = cos(0.5 * euler2Ptr[readerIndex]);
-        s1 = sin(0.5 * (euler1Ptr[readerIndex] - euler3Ptr[readerIndex]));
-        c1 = cos(0.5 * (euler1Ptr[readerIndex] - euler3Ptr[readerIndex]));
-        s2 = sin(0.5 * (euler1Ptr[readerIndex] + euler3Ptr[readerIndex]));
-        c2 = cos(0.5 * (euler1Ptr[readerIndex] + euler3Ptr[readerIndex]));
-        qr[0] = 1.0;
-        qr[1] = s * c1;
-        qr[2] = s * s1;
-        qr[3] = c * s2;
-        qr[4] = c * c2;
+		voxels[index].phase = phasePtr[readerIndex];// Phase
+		MisorientationCalculations::initializeQ(qr,euler1Ptr[readerIndex],euler2Ptr[readerIndex],euler3Ptr[readerIndex]);
         MisorientationCalculations::getFZQuatCubic(qr);
         voxels[index].quat[0] = 1.0;
         voxels[index].quat[1] = qr[1];
