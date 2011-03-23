@@ -16,6 +16,7 @@
 #include "AIM/Common/AIMCommonConfiguration.h"
 #include "AngConstants.h"
 #include "AngHeaderEntry.h"
+#include "AngPhase.h"
 
 
 // -----------------------------------------------------------------------------
@@ -136,6 +137,8 @@ class AIMCOMMON_EXPORT AngReader
     angInstanceProperty(AngHeaderEntry<float>, float, YStar, TSL::OIM::YStar)
     angInstanceProperty(AngHeaderEntry<float>, float, ZStar, TSL::OIM::ZStar)
     angInstanceProperty(AngHeaderEntry<float>, float, WorkingDistance, TSL::OIM::WorkingDistance)
+
+#if 0
     angInstanceProperty(AngStringHeaderEntry, std::string, Phase, TSL::OIM::Phase)
     angInstanceProperty(AngStringHeaderEntry, std::string, MaterialName, TSL::OIM::MaterialName)
     angInstanceProperty(AngStringHeaderEntry, std::string, Formula, TSL::OIM::Formula)
@@ -145,6 +148,10 @@ class AIMCOMMON_EXPORT AngReader
     angInstanceProperty(AngStringHeaderEntry, std::string, NumberFamilies, TSL::OIM::NumberFamilies)
     angInstanceProperty(AngStringHeaderEntry, std::string, HKLFamilies, TSL::OIM::HKLFamilies)
     angInstanceProperty(AngStringHeaderEntry, std::string, Categories, TSL::OIM::Categories)
+#endif
+
+    std::vector<AngPhase::Pointer> getPhases() { return m_Phases; }
+
     angInstanceProperty(AngStringHeaderEntry, std::string, Grid, TSL::OIM::Grid)
     angInstanceProperty(AngHeaderEntry<float>, float, XStep, TSL::OIM::XStep)
     angInstanceProperty(AngHeaderEntry<float>, float, YStep, TSL::OIM::YStep)
@@ -249,8 +256,6 @@ protected:
       }
 
 private:
-
-
     float* m_Phi1;
     float* m_Phi;
     float* m_Phi2;
@@ -263,6 +268,9 @@ private:
     float* m_D2;
     bool m_ManageMemory;  // We are going to forcibly manage the memory. There is currently NO option otherwise.
     bool m_headerComplete;
+
+    AngPhase::Pointer   m_CurrentPhase;
+    std::vector<AngPhase::Pointer> m_Phases;
 
     /** @brief Parses the value from a single line of the header section of the TSL .ang file
     * @param line The line to parse
