@@ -137,11 +137,40 @@ int H5AngDataLoader::getSizeAndResolution(int &xpoints, int &ypoints, int &zpoin
     if(ypointstemp > ypoints) ypoints = ypointstemp;
     err = H5Gclose(gid);
   }
-
-
   err = H5Fclose(fileId);
 
   return err;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+std::vector<AngPhase::Pointer> H5AngDataLoader::getPhases()
+{
+  m_Phases.clear();
+  hid_t fileId = H5Utilities::openFile(m_Filename, true);
+  if (fileId < 0)
+  {
+    std::cout << "Error" << std::endl;
+    return m_Phases;
+  }
+  herr_t err = 0;
+
+  std::string index = StringUtils::numToString(getZStartIndex());
+  hid_t gid = H5Gopen(fileId, index.c_str());
+  H5AngReader::Pointer reader = H5AngReader::New();
+  reader->setHDF5Path(index);
+  err = reader->readHeader(gid);
+  if (err < 0)
+  {
+    std::cout << "Error reading the .HDF5 Ang Header data" << std::endl;
+    err = H5Gclose(gid);
+    err = H5Fclose(fileId);
+    return m_Phases;
+  }
+  err = H5Gclose(gid);
+  err = H5Fclose(fileId);
+  return m_Phases;
 }
 
 
