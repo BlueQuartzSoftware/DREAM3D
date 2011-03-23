@@ -68,7 +68,7 @@
 int ReconstructionVTKWriter::write##name##VizFile(ReconstructionFunc* r, const std::string &file)\
 {\
   FILE* f = NULL;\
-  f = fopen(file.c_str(), "w");\
+  f = fopen(file.c_str(), "wb");\
   if (NULL == f) {return 1;}\
   WRITE_VTK_GRAIN_HEADER("ASCII", r)\
   size_t total = r->xpoints * r->ypoints * r->zpoints;\
@@ -82,7 +82,7 @@ int ReconstructionVTKWriter::write##name##VizFile(ReconstructionFunc* r, const s
 int ReconstructionVTKWriter::write##name##VizFile(ReconstructionFunc* r, const std::string &file)\
 {\
   FILE* f = NULL;\
-  f = fopen(file.c_str(), "w");\
+  f = fopen(file.c_str(), "wb");\
   if (NULL == f) {return 1;}\
   WRITE_VTK_GRAIN_HEADER("ASCII", r)\
   size_t total = r->xpoints * r->ypoints * r->zpoints;\
@@ -123,7 +123,7 @@ ReconstructionVTKWriter::~ReconstructionVTKWriter()
 int ReconstructionVTKWriter::writeVisualizationFile(ReconstructionFunc* r, const std::string &file)
 {
   FILE* f = NULL;
-  f = fopen(file.c_str(), "w");
+  f = fopen(file.c_str(), "wb");
   if (NULL == f)
   {
     return 1;
@@ -141,7 +141,7 @@ int ReconstructionVTKWriter::writeVisualizationFile(ReconstructionFunc* r, const
 int ReconstructionVTKWriter::writeDisorientationFile(ReconstructionFunc* r, const std::string &file)
 {
   FILE* f = NULL;
-  f = fopen(file.c_str(), "w");
+  f = fopen(file.c_str(), "wb");
   if (NULL == f)
   {
     return 1;
@@ -164,7 +164,7 @@ int ReconstructionVTKWriter::writeDisorientationFile(ReconstructionFunc* r, cons
 int ReconstructionVTKWriter::writeIPFVizFile(ReconstructionFunc* r, const std::string &file)
 {
   FILE* f = NULL;
-  f = fopen(file.c_str(), "w");
+  f = fopen(file.c_str(), "wb");
   if (NULL == f)
   {
     return 1;
@@ -224,7 +224,7 @@ int ReconstructionVTKWriter::writeIPFVizFile(ReconstructionFunc* r, const std::s
       q1[1] = r->voxels[i].quat[2];
       q1[2] = r->voxels[i].quat[3];
       q1[3] = r->voxels[i].quat[4];
-      OIMColoring::CalculateHexIPFColor(q1, &rgba[i]);
+      OIMColoring::CalculateHexIPFColor(q1, &rgba[i * 4]);
     }
     rgba[i * 4 + 3] = 255;
   }
@@ -283,7 +283,7 @@ int ReconstructionVTKWriter::writeIPFVizFile(ReconstructionFunc* r, const std::s
 int ReconstructionVTKWriter::writeDownSampledVizFile(ReconstructionFunc* r, const std::string &file)
 {
   FILE* f = NULL;
-  f = fopen(file.c_str(), "w");
+  f = fopen(file.c_str(), "wb");
   if (NULL == f)
   {
     return 1;
