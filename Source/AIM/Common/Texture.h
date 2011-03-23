@@ -79,11 +79,7 @@ class AIMCOMMON_EXPORT Texture
      * @param totalweight (OUT) The TotalWeight value that is also calculated
      */
     template<typename T>
-    static void calculateCubicODFData(T weights, T sigmas,
-                                      double randomWeight,
-                                       bool normalize,
-                                       T &odf,
-                                       double &totalweight)
+    static void calculateCubicODFData(T weights, T sigmas, double randomWeight, bool normalize, T &odf, double &totalweight)
     {
       int TextureBins[AIM_TEXTURE_COUNT];
       static const size_t eighteenCubed = 5832;
@@ -184,6 +180,7 @@ class AIMCOMMON_EXPORT Texture
       }
 
     }
+
 
 
 
