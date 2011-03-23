@@ -251,7 +251,9 @@ int H5AngReader::readHeader(hid_t parId)
     READ_PHASE_HEADER_ARRAY(pid, std::vector<float>, TSL::OIM::LatticeConstants, LatticeConstants, m_CurrentPhase)
     READ_PHASE_HEADER_DATA(pid, int, TSL::OIM::NumberFamilies, NumberFamilies, m_CurrentPhase)
     //FIXME: Read the HKLFamilies from the file
+    #ifndef _WIN32
 #warning Need to implement the HKL Family reading
+#endif
     READ_PHASE_HEADER_ARRAY(pid, std::vector<int>, TSL::OIM::Categories, Categories, m_CurrentPhase)
     m_Phases.push_back(m_CurrentPhase);
     err = H5Gclose(pid);
