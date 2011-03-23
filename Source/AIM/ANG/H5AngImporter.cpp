@@ -461,7 +461,9 @@ int H5AngImporter::writePhaseData(AngReader &reader, hid_t phasesGid)
     WRITE_PHASE_HEADER_DATA((*phase), int, Symmetry, TSL::OIM::Symmetry)
     WRITE_PHASE_DATA_ARRAY( (*phase), float, pid, LatticeConstants, TSL::OIM::LatticeConstants)
     WRITE_PHASE_HEADER_DATA((*phase), int, NumberFamilies, TSL::OIM::NumberFamilies)
+#ifndef _WIN32
 #warning Need to implement the HKLFamily writing here
+#endif
     //FIXME: Implement the HKLFamily writing
 
 
