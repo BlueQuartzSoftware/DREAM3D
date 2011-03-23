@@ -59,14 +59,8 @@ public:
     void swapOutOrientation(int & badtrycount, int & numbins, double currentodferror, double currentmdferror);
     void switchOrientations(int & badtrycount, int & numbins, double currentodferror, double currentmdferror);
 
-    void MC_LoopBody1(size_t neighbor, int j,
-                                          vector<double>* misolist,
-                                          vector<double>* neighborsurfarealist,
-                                          double &mdfchange);
-    void MC_LoopBody2(size_t neighbor, int j,
-                                      vector<double>* misolist,
-                                      vector<double>* neighborsurfarealist);
-    void initializeQ(double* q, double e1, double e2, double e3);
+    void MC_LoopBody1(size_t neighbor, int j, vector<double>* misolist, vector<double>* neighborsurfarealist, double &mdfchange);
+    void MC_LoopBody2(size_t neighbor, int j, vector<double>* misolist, vector<double>* neighborsurfarealist);
 
     double resx;
     double resy;
