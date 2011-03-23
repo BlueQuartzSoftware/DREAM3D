@@ -35,6 +35,7 @@
 #include <vector>
 
 #include "MXA/Common/MXASetGetMacros.h"
+#include "AIM/Common/AIMCommonConfiguration.h"
 #include "AIM/ANG/AngConstants.h"
 
 
@@ -45,7 +46,7 @@
  * @date Mar 23, 2011
  * @version 1.0
  */
-class HKLFamily
+class AIMCOMMON_EXPORT HKLFamily
 {
   public:
     MXA_SHARED_POINTERS(HKLFamily);
@@ -83,7 +84,7 @@ class HKLFamily
  * @date Mar 23, 2011
  * @version 1.0
  */
-class AngPhase
+class AIMCOMMON_EXPORT AngPhase
 {
   public:
     MXA_SHARED_POINTERS(AngPhase)
