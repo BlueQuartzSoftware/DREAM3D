@@ -32,9 +32,12 @@
 
 #include <hdf5.h>
 
+#include <vector>
+
 #include "MXA/Common/MXASetGetMacros.h"
 #include "AIM/Common/AIMCommonConfiguration.h"
 #include "AIM/ANG/AngReader.h"
+#include "AIM/ANG/AngPhase.h"
 
 
 class AIMCOMMON_EXPORT H5AngReader : public AngReader
@@ -51,12 +54,15 @@ class AIMCOMMON_EXPORT H5AngReader : public AngReader
 
     int readHeader(hid_t parId);
     int readData(hid_t parId);
-
+    std::vector<AngPhase::Pointer> getPhases() { return m_Phases; }
 
   protected:
     H5AngReader();
 
   private:
+    AngPhase::Pointer   m_CurrentPhase;
+    std::vector<AngPhase::Pointer> m_Phases;
+
     H5AngReader(const H5AngReader&); // Copy Constructor Not Implemented
     void operator=(const H5AngReader&); // Operator '=' Not Implemented
 };

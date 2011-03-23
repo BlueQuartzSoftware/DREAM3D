@@ -224,7 +224,7 @@ void H5AngImporter::compute()
   return;
 }
 
-#define WRITE_ANG_HEADER_DATA(HeaderType, type, prpty, key)\
+#define WRITE_ANG_HEADER_DATA(reader, type, prpty, key)\
 {\
   type t = reader.get##prpty();\
   err = H5Lite::writeScalarDataset(gid, key, t);\
@@ -237,7 +237,7 @@ void H5AngImporter::compute()
     return -1; }\
 }
 
-#define WRITE_ANG_HEADER_STRING_DATA(HeaderType, type, prpty, key)\
+#define WRITE_ANG_HEADER_STRING_DATA(reader, type, prpty, key)\
 {\
   type t = reader.get##prpty();\
   err = H5Lite::writeStringDataset(gid, key, t);\
@@ -281,7 +281,11 @@ int H5AngImporter::importAngFile(hid_t fileId, int z, const std::string &angFile
   // was received from the instrument. The user can choose to rotate the data as
   // it is read from the resulting HDF5 data file.
   reader.setUserOrigin(Ang::NoOrientation);
+
+  // Now actually read the file
   err = reader.readFile();
+
+  // Check for errors
   if (err < 0)
   {
     std::ostringstream ss;
@@ -308,6 +312,7 @@ int H5AngImporter::importAngFile(hid_t fileId, int z, const std::string &angFile
     return -1;
   }
 
+  // Start creating the HDF5 group structures for this file
   hid_t angGroup = H5Utilities::createGroup(fileId, StringUtils::numToString(z));
   if (angGroup < 0)
   {
@@ -328,29 +333,26 @@ int H5AngImporter::importAngFile(hid_t fileId, int z, const std::string &angFile
     err = H5Gclose(angGroup);
     return -1;
   }
-  WRITE_ANG_HEADER_DATA(AngHeaderEntry<float>, float, TEMpixPerum, TSL::OIM::TEMPIXPerUM)
-  WRITE_ANG_HEADER_DATA(AngHeaderEntry<float>, float, XStar, TSL::OIM::XStar)
-  WRITE_ANG_HEADER_DATA(AngHeaderEntry<float>, float, YStar, TSL::OIM::YStar)
-  WRITE_ANG_HEADER_DATA(AngHeaderEntry<float>, float, ZStar, TSL::OIM::ZStar)
-  WRITE_ANG_HEADER_DATA(AngHeaderEntry<float>, float, WorkingDistance, TSL::OIM::WorkingDistance)
-  WRITE_ANG_HEADER_STRING_DATA(AngStringHeaderEntry, std::string, Phase, TSL::OIM::Phase)
-  WRITE_ANG_HEADER_STRING_DATA(AngStringHeaderEntry, std::string, MaterialName, TSL::OIM::MaterialName)
-  WRITE_ANG_HEADER_STRING_DATA(AngStringHeaderEntry, std::string, Formula, TSL::OIM::Formula)
-  WRITE_ANG_HEADER_STRING_DATA(AngStringHeaderEntry, std::string, Info, TSL::OIM::Info)
-  WRITE_ANG_HEADER_STRING_DATA(AngStringHeaderEntry, std::string, Symmetry, TSL::OIM::Symmetry)
-  WRITE_ANG_HEADER_STRING_DATA(AngStringHeaderEntry, std::string, LatticeConstants, TSL::OIM::LatticeConstants)
-  WRITE_ANG_HEADER_STRING_DATA(AngStringHeaderEntry, std::string, NumberFamilies, TSL::OIM::NumberFamilies)
-  WRITE_ANG_HEADER_STRING_DATA(AngStringHeaderEntry, std::string, HKLFamilies, TSL::OIM::HKLFamilies)
-  WRITE_ANG_HEADER_STRING_DATA(AngStringHeaderEntry, std::string, Categories, TSL::OIM::Categories)
-  WRITE_ANG_HEADER_STRING_DATA(AngStringHeaderEntry, std::string, Grid, TSL::OIM::Grid)
-  WRITE_ANG_HEADER_DATA(AngHeaderEntry<float>, float, XStep, TSL::OIM::XStep)
-  WRITE_ANG_HEADER_DATA(AngHeaderEntry<float>, float, YStep, TSL::OIM::YStep)
-  WRITE_ANG_HEADER_DATA(AngHeaderEntry<int>, int, NumOddCols, TSL::OIM::NColsOdd)
-  WRITE_ANG_HEADER_DATA(AngHeaderEntry<int>, int, NumEvenCols, TSL::OIM::NColsEven)
-  WRITE_ANG_HEADER_DATA(AngHeaderEntry<int>, int, NumRows, TSL::OIM::NRows)
-  WRITE_ANG_HEADER_STRING_DATA(AngStringHeaderEntry, std::string, OIMOperator, TSL::OIM::Operator)
-  WRITE_ANG_HEADER_STRING_DATA(AngStringHeaderEntry, std::string, SampleID, TSL::OIM::SampleId)
-  WRITE_ANG_HEADER_STRING_DATA(AngStringHeaderEntry, std::string, ScanID, TSL::OIM::ScanId)
+  WRITE_ANG_HEADER_DATA(reader, float, TEMpixPerum, TSL::OIM::TEMPIXPerUM)
+  WRITE_ANG_HEADER_DATA(reader, float, XStar, TSL::OIM::XStar)
+  WRITE_ANG_HEADER_DATA(reader, float, YStar, TSL::OIM::YStar)
+  WRITE_ANG_HEADER_DATA(reader, float, ZStar, TSL::OIM::ZStar)
+  WRITE_ANG_HEADER_DATA(reader, float, WorkingDistance, TSL::OIM::WorkingDistance)
+
+  hid_t phasesGid = H5Utilities::createGroup(gid, AIM::ANG::Phases);
+  err = writePhaseData(reader, phasesGid);
+  // Close this group
+  err = H5Gclose(phasesGid);
+
+  WRITE_ANG_HEADER_STRING_DATA(reader, std::string, Grid, TSL::OIM::Grid)
+  WRITE_ANG_HEADER_DATA(reader, float, XStep, TSL::OIM::XStep)
+  WRITE_ANG_HEADER_DATA(reader, float, YStep, TSL::OIM::YStep)
+  WRITE_ANG_HEADER_DATA(reader, int, NumOddCols, TSL::OIM::NColsOdd)
+  WRITE_ANG_HEADER_DATA(reader, int, NumEvenCols, TSL::OIM::NColsEven)
+  WRITE_ANG_HEADER_DATA(reader, int, NumRows, TSL::OIM::NRows)
+  WRITE_ANG_HEADER_STRING_DATA(reader, std::string, OIMOperator, TSL::OIM::Operator)
+  WRITE_ANG_HEADER_STRING_DATA(reader, std::string, SampleID, TSL::OIM::SampleId)
+  WRITE_ANG_HEADER_STRING_DATA(reader, std::string, ScanID, TSL::OIM::ScanId)
 
   std::string angCompleteHeader = reader.getCompleteHeader();
   err = H5Lite::writeStringDataset(gid, AIM::ANG::AngHeader, angCompleteHeader);
@@ -390,6 +392,82 @@ int H5AngImporter::importAngFile(hid_t fileId, int z, const std::string &angFile
   // Close the group for this file
   err = H5Gclose(angGroup);
 
+  return err;
+}
+
+
+#define WRITE_PHASE_HEADER_DATA(reader, type, prpty, key)\
+{\
+  type t = reader->get##prpty();\
+  err = H5Lite::writeScalarDataset(pid, key, t);\
+  if (err < 0) {\
+    std::ostringstream ss;\
+    ss << "H5AngImporter Error: Could not write Ang Header value '" << t\
+    <<  "' to the HDF5 file with data set name '" << key << "'" << std::endl;\
+    progressMessage(ss.str(), 100);\
+    err = H5Gclose(pid);\
+    return -1; }\
+}
+
+#define WRITE_PHASE_HEADER_STRING_DATA(reader, type, prpty, key)\
+{\
+  type t = reader->get##prpty();\
+  err = H5Lite::writeStringDataset(pid, key, t);\
+  if (err < 0) {\
+    std::ostringstream ss;\
+    ss << "H5AngImporter Error: Could not write Ang Header value '" << t\
+    <<  "' to the HDF5 file with data set name '" << key << "'" << std::endl;\
+    progressMessage(ss.str(), 100);\
+    err = H5Gclose(pid);\
+    return -1; }\
+}
+
+#define WRITE_PHASE_DATA_ARRAY(reader, type, gid, prpty, key)\
+{\
+  std::vector<type> tempVar = reader->get##prpty();\
+  dims[0] = tempVar.size();\
+  type* dataPtr = &(tempVar.front());\
+  if (NULL != dataPtr) {\
+    err = H5Lite::writePointerDataset(pid, key, rank, dims, dataPtr);\
+    if (err < 0) {\
+      std::ostringstream ss;\
+      ss << "H5AngImporter Error: Could not write Ang Data array for '" << key\
+      <<  "' to the HDF5 file with data set name '" << key << "'" << std::endl;\
+      progressMessage(ss.str(), 100);\
+      err = H5Gclose(pid); \
+      return -1; }\
+}\
+}
+
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int H5AngImporter::writePhaseData(AngReader &reader, hid_t phasesGid)
+{
+  int err = 0;
+  int32_t rank = 1;
+  hsize_t dims[1] = { 0 };
+  std::vector<AngPhase::Pointer> phases = reader.getPhases();
+  for (std::vector<AngPhase::Pointer>::iterator phase = phases.begin(); phase != phases.end(); ++phase )
+  {
+    AngPhase* p = (*phase).get();
+    hid_t pid = H5Utilities::createGroup(phasesGid, StringUtils::numToString(p->getPhase()));
+    WRITE_PHASE_HEADER_DATA((*phase), int, Phase, TSL::OIM::Phase)
+    WRITE_PHASE_HEADER_STRING_DATA((*phase), std::string, MaterialName, TSL::OIM::MaterialName)
+    WRITE_PHASE_HEADER_STRING_DATA((*phase), std::string, Formula, TSL::OIM::Formula)
+    WRITE_PHASE_HEADER_STRING_DATA((*phase), std::string, Info, TSL::OIM::Info)
+    WRITE_PHASE_HEADER_DATA((*phase), int, Symmetry, TSL::OIM::Symmetry)
+    WRITE_PHASE_DATA_ARRAY( (*phase), float, pid, LatticeConstants, TSL::OIM::LatticeConstants)
+    WRITE_PHASE_HEADER_DATA((*phase), int, NumberFamilies, TSL::OIM::NumberFamilies)
+#warning Need to implement the HKLFamily writing here
+    //FIXME: Implement the HKLFamily writing
+
+
+    WRITE_PHASE_DATA_ARRAY( (*phase), int, pid, Categories, TSL::OIM::Categories)
+    err = H5Gclose(pid);
+  }
   return err;
 }
 

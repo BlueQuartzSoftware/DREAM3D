@@ -111,7 +111,7 @@ int H5AngReader::readFile()
   err = H5Lite::readScalarDataset(gid, key, t);\
   if (err < 0) {\
     std::ostringstream ss;\
-    ss << "H5AngImporter Error: Could not write Ang Header value '" << t\
+    ss << "H5AngReader Error: Could not read Ang Header value '" << t\
     <<  "' to the HDF5 file with data set name '" << key << "'" << std::endl;\
     std::cout << ss.str() << std::endl;\
     err = H5Gclose(gid);\
@@ -129,7 +129,7 @@ int H5AngReader::readFile()
   err = H5Lite::readStringDataset(gid, key, t);\
   if (err < 0) {\
     std::ostringstream ss;\
-    ss << "H5AngImporter Error: Could not write Ang Header value '" << t\
+    ss << "H5AngReader Error: Could not read Ang Header value '" << t\
     <<  "' to the HDF5 file with data set name '" << key << "'" << std::endl;\
     std::cout << ss.str() << std::endl;\
     err = H5Gclose(gid);\
@@ -140,6 +140,56 @@ int H5AngReader::readFile()
       c->setValue(t);\
     }\
 }
+
+
+#define READ_PHASE_STRING_DATA(pid, fqKey, key, phase)\
+{\
+  std::string t;\
+  err = H5Lite::readStringDataset(pid, fqKey, t);\
+  if (err < 0) {\
+    std::ostringstream ss;\
+    ss << "H5AngReader Error: Could not read Ang Header value '" << t\
+    <<  "' to the HDF5 file with data set name '" << fqKey << "'" << std::endl;\
+    std::cout << ss.str() << std::endl;\
+    err = H5Gclose(pid); H5Gclose(phasesGid);H5Gclose(gid);\
+    return -1; }\
+    else {\
+      phase->set##key(t);\
+    }\
+}
+
+#define READ_PHASE_HEADER_DATA(pid, type, fqKey, key, phase)\
+{\
+  type t;\
+  err = H5Lite::readScalarDataset(pid, fqKey, t);\
+  if (err < 0) {\
+    std::ostringstream ss;\
+    ss << "H5AngReader Error: Could not read Ang Header value '" << t\
+    <<  "' to the HDF5 file with data set name '" << fqKey << "'" << std::endl;\
+    std::cout << ss.str() << std::endl;\
+    err = H5Gclose(pid);H5Gclose(phasesGid);H5Gclose(gid);\
+    return -1; }\
+  else {\
+    phase->set##key(t);\
+  }\
+}
+
+#define READ_PHASE_HEADER_ARRAY(pid, type, fqKey, key, phase)\
+{\
+  type t;\
+  err = H5Lite::readVectorDataset(pid, fqKey, t);\
+  if (err < 0) {\
+    std::ostringstream ss;\
+    ss << "H5AngReader Error: Could not read Ang Header value "\
+    <<  " to the HDF5 file with data set name '" << fqKey << "'" << std::endl;\
+    std::cout << ss.str() << std::endl;\
+    err = H5Gclose(pid);H5Gclose(phasesGid);H5Gclose(gid);\
+    return -1; }\
+  else {\
+    phase->set##key(t);\
+  }\
+}
+
 
 
 // -----------------------------------------------------------------------------
@@ -161,15 +211,6 @@ int H5AngReader::readHeader(hid_t parId)
   READ_ANG_HEADER_DATA(AngHeaderEntry<float>, float, YStar, TSL::OIM::YStar)
   READ_ANG_HEADER_DATA(AngHeaderEntry<float>, float, ZStar, TSL::OIM::ZStar)
   READ_ANG_HEADER_DATA(AngHeaderEntry<float>, float, WorkingDistance, TSL::OIM::WorkingDistance)
-  READ_ANG_HEADER_STRING_DATA(AngStringHeaderEntry, std::string, Phase, TSL::OIM::Phase)
-  READ_ANG_HEADER_STRING_DATA(AngStringHeaderEntry, std::string, MaterialName, TSL::OIM::MaterialName)
-  READ_ANG_HEADER_STRING_DATA(AngStringHeaderEntry, std::string, Formula, TSL::OIM::Formula)
-  READ_ANG_HEADER_STRING_DATA(AngStringHeaderEntry, std::string, Info, TSL::OIM::Info)
-  READ_ANG_HEADER_STRING_DATA(AngStringHeaderEntry, std::string, Symmetry, TSL::OIM::Symmetry)
-  READ_ANG_HEADER_STRING_DATA(AngStringHeaderEntry, std::string, LatticeConstants, TSL::OIM::LatticeConstants)
-  READ_ANG_HEADER_STRING_DATA(AngStringHeaderEntry, std::string, NumberFamilies, TSL::OIM::NumberFamilies)
-  READ_ANG_HEADER_STRING_DATA(AngStringHeaderEntry, std::string, HKLFamilies, TSL::OIM::HKLFamilies)
-  READ_ANG_HEADER_STRING_DATA(AngStringHeaderEntry, std::string, Categories, TSL::OIM::Categories)
   READ_ANG_HEADER_STRING_DATA(AngStringHeaderEntry, std::string, Grid, TSL::OIM::Grid)
   READ_ANG_HEADER_DATA(AngHeaderEntry<float>, float, XStep, TSL::OIM::XStep)
   READ_ANG_HEADER_DATA(AngHeaderEntry<float>, float, YStep, TSL::OIM::YStep)
@@ -179,6 +220,43 @@ int H5AngReader::readHeader(hid_t parId)
   READ_ANG_HEADER_STRING_DATA(AngStringHeaderEntry, std::string, OIMOperator, TSL::OIM::Operator)
   READ_ANG_HEADER_STRING_DATA(AngStringHeaderEntry, std::string, SampleID, TSL::OIM::SampleId)
   READ_ANG_HEADER_STRING_DATA(AngStringHeaderEntry, std::string, ScanID, TSL::OIM::ScanId)
+
+  hid_t phasesGid = H5Gopen(gid, AIM::ANG::Phases.c_str());
+  if (phasesGid < 0)
+  {
+    std::cout << "H5AngReader Error: Could not open Header/Phases HDF Group. Is this an older file?" << std::endl;
+    H5Gclose(gid);
+    return -1;
+  }
+
+  std::list<std::string> names;
+  err = H5Utilities::getGroupObjects(phasesGid, H5Utilities::MXA_GROUP, names);
+  if (err < 0 || names.size() == 0)
+  {
+    std::cout << "H5AngReader Error: There were no Phase groups present in the HDF5 file" << std::endl;
+    H5Gclose(phasesGid);
+    H5Gclose(gid);
+    return -1;
+  }
+  m_Phases.clear();
+  for (std::list<std::string>::iterator phaseGroupName = names.begin(); phaseGroupName != names.end(); ++phaseGroupName )
+  {
+    hid_t pid = H5Gopen(phasesGid, (*phaseGroupName).c_str());
+    m_CurrentPhase = AngPhase::New();
+    READ_PHASE_HEADER_DATA(pid, int, TSL::OIM::Phase, Phase, m_CurrentPhase)
+    READ_PHASE_STRING_DATA(pid, TSL::OIM::MaterialName, MaterialName, m_CurrentPhase)
+    READ_PHASE_STRING_DATA(pid, TSL::OIM::Formula, Formula, m_CurrentPhase)
+    READ_PHASE_STRING_DATA(pid, TSL::OIM::Info, Info, m_CurrentPhase)
+    READ_PHASE_HEADER_DATA(pid, int, TSL::OIM::Symmetry, Symmetry, m_CurrentPhase)
+    READ_PHASE_HEADER_ARRAY(pid, std::vector<float>, TSL::OIM::LatticeConstants, LatticeConstants, m_CurrentPhase)
+    READ_PHASE_HEADER_DATA(pid, int, TSL::OIM::NumberFamilies, NumberFamilies, m_CurrentPhase)
+    //FIXME: Read the HKLFamilies from the file
+#warning Need to implement the HKL Family reading
+    READ_PHASE_HEADER_ARRAY(pid, std::vector<int>, TSL::OIM::Categories, Categories, m_CurrentPhase)
+    m_Phases.push_back(m_CurrentPhase);
+    err = H5Gclose(pid);
+  }
+  err = H5Gclose(phasesGid);
 
   std::string completeHeader;
   err = H5Lite::readStringDataset(gid, AIM::ANG::AngHeader, completeHeader);

@@ -41,17 +41,17 @@
 #include <vector>
 #include <string>
 
-#include <MXA/Common/MXASetGetMacros.h>
-#include <MXA/MXATypes.h>
-#include <AIM/Common/Constants.h>
+#include "MXA/Common/MXASetGetMacros.h"
+#include "MXA/MXATypes.h"
+#include "AIM/Common/AIMCommonConfiguration.h"
+#include "AIM/Common/Constants.h"
+#include "AIM/ANG/AngReader.h"
 
 #ifdef AIM_USE_QT
 #include <QtCore/QObject>
 #include <QtCore/QThread>
 #endif
 
-#include "MXA/Common/MXASetGetMacros.h"
-#include "AIM/Common/AIMCommonConfiguration.h"
 
 /**
  * @class H5AngImporter H5AngImporter.h AIM/ANG/H5AngImporter.h
@@ -127,13 +127,13 @@ Q_OBJECT
 #ifdef AIM_USE_QT
     H5AngImporter(QObject* parent = 0);
     virtual void run();
-
 #else
     H5AngImporter();
 #endif
 
     int importAngFile(hid_t fileId, int index, const std::string &angFile);
 
+    int writePhaseData(AngReader &reader, hid_t gid);
 
   private:
     H5AngImporter(const H5AngImporter&); // Copy Constructor Not Implemented

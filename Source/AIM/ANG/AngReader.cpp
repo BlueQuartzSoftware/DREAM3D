@@ -17,6 +17,7 @@
 
 #include "AngConstants.h"
 
+
 #define PI_OVER_2f       1.57079632679489661f
 #define THREE_PI_OVER_2f 4.71238898038468985f
 #define TWO_PIf          6.28318530717958647f
@@ -53,15 +54,6 @@ m_ManageMemory(true)
   m_Headermap[TSL::OIM::YStar] = AngHeaderEntry<float>::NewHeaderEntry(TSL::OIM::YStar);
   m_Headermap[TSL::OIM::ZStar] = AngHeaderEntry<float>::NewHeaderEntry(TSL::OIM::ZStar);
   m_Headermap[TSL::OIM::WorkingDistance] = AngHeaderEntry<float>::NewHeaderEntry(TSL::OIM::WorkingDistance);
-  m_Headermap[TSL::OIM::Phase] = AngStringHeaderEntry::NewHeaderEntry(TSL::OIM::Phase);
-  m_Headermap[TSL::OIM::MaterialName] = AngStringHeaderEntry::NewHeaderEntry(TSL::OIM::MaterialName);
-  m_Headermap[TSL::OIM::Formula] = AngStringHeaderEntry::NewHeaderEntry(TSL::OIM::Formula);
-  m_Headermap[TSL::OIM::Info] = AngStringHeaderEntry::NewHeaderEntry(TSL::OIM::Info);
-  m_Headermap[TSL::OIM::Symmetry] = AngStringHeaderEntry::NewHeaderEntry(TSL::OIM::Symmetry);
-  m_Headermap[TSL::OIM::LatticeConstants] = AngStringHeaderEntry::NewHeaderEntry(TSL::OIM::LatticeConstants);
-  m_Headermap[TSL::OIM::NumberFamilies] = AngStringHeaderEntry::NewHeaderEntry(TSL::OIM::NumberFamilies);
-  m_Headermap[TSL::OIM::HKLFamilies] = AngStringHeaderEntry::NewHeaderEntry(TSL::OIM::HKLFamilies);
-  m_Headermap[TSL::OIM::Categories] = AngStringHeaderEntry::NewHeaderEntry(TSL::OIM::Categories);
   m_Headermap[TSL::OIM::Grid] = AngStringHeaderEntry::NewHeaderEntry(TSL::OIM::Grid);
   m_Headermap[TSL::OIM::XStep] = AngHeaderEntry<float>::NewHeaderEntry(TSL::OIM::XStep);
   m_Headermap[TSL::OIM::YStep] = AngHeaderEntry<float>::NewHeaderEntry(TSL::OIM::YStep);
@@ -157,6 +149,7 @@ int AngReader::readHeaderOnly()
   }
 
   m_CompleteHeader.clear();
+  m_Phases.clear();
 
   while (!in.eof() && !m_headerComplete)
   {
@@ -185,6 +178,8 @@ int AngReader::readFile()
   }
 
   m_CompleteHeader.clear();
+  m_Phases.clear();
+
   while (!in.eof() && !m_headerComplete)
   {
     ::memset(buf, 0, kBufferSize);
@@ -305,25 +300,67 @@ void AngReader::parseHeaderLine(char* buf, size_t length)
   //  parsing data for the phase then stick the Phase instance into the header
   //  map or stick it into a vector<Phase::Pointer> and stick the vector into
   //  the map under the "Phase" key
-
-  HeaderEntry::Pointer p = m_Headermap[word];
-  if (NULL == p.get())
+  if (word.compare(TSL::OIM::Phase) == 0)
   {
-    std::cout << "---------------------------" << std::endl;
-    std::cout << "Could not find header entry for key'" << word << "'" << std::endl;
-    std::string upper(word);
-    std::transform(upper.begin(), upper.end(), upper.begin(), ::toupper);
-    std::cout << "#define ANG_" << upper << "     \"" << word << "\"" << std::endl;
-    std::cout << "const std::string " << word << "(ANG_" << upper << ");" << std::endl;
-
-    std::cout << "angInstanceProperty(AngHeaderEntry<float>. float, " << word << "TSL::OIM::" << word << std::endl;
-    std::cout << "m_Headermap[TSL::OIM::" << word << "] = AngHeaderEntry<float>::NewHeaderEntry(TSL::OIM::" << word << ");" << std::endl;
-    return;
+    m_CurrentPhase = AngPhase::New();
+    m_CurrentPhase->parsePhase(buf, wordEnd, length);
+  }
+  else if (word.compare(TSL::OIM::MaterialName) == 0)
+  {
+    m_CurrentPhase->parseMaterialName(buf, wordEnd, length);
+  }
+  else if (word.compare(TSL::OIM::Formula) == 0)
+  {
+    m_CurrentPhase->parseFormula(buf, wordEnd, length);
+  }
+  else if (word.compare(TSL::OIM::Info) == 0)
+  {
+    m_CurrentPhase->parseInfo(buf, wordEnd, length);
+  }
+  else if (word.compare(TSL::OIM::Symmetry) == 0)
+  {
+    m_CurrentPhase->parseSymmetry(buf, wordEnd, length);
+  }
+  else if (word.compare(TSL::OIM::LatticeConstants) == 0)
+  {
+    m_CurrentPhase->parseLatticeConstants(buf, wordEnd, length);
+  }
+  else if (word.compare(TSL::OIM::NumberFamilies) == 0)
+  {
+    m_CurrentPhase->parseNumberFamilies(buf, wordEnd, length);
+  }
+  else if (word.compare(TSL::OIM::HKLFamilies) == 0)
+  {
+    m_CurrentPhase->parseHKLFamilies(buf, wordEnd, length);
+  }
+  else if (word.compare(TSL::OIM::Categories) == 0)
+  {
+    m_CurrentPhase->parseCategories(buf, wordEnd, length);
+    // Parsing the phase is complete, now add it to the vector of Phases
+    m_Phases.push_back(m_CurrentPhase);
+    // Set it to a Null Pointer so the temp AngPhase pointer gets cleared correctly
+    m_CurrentPhase = AngPhase::NullPointer();
   }
   else
   {
-    p->parseValue(buf, wordEnd, length);
- //   p->print(std::cout);
+    HeaderEntry::Pointer p = m_Headermap[word];
+    if (NULL == p.get())
+    {
+      std::cout << "---------------------------" << std::endl;
+      std::cout << "Could not find header entry for key'" << word << "'" << std::endl;
+      std::string upper(word);
+      std::transform(upper.begin(), upper.end(), upper.begin(), ::toupper);
+      std::cout << "#define ANG_" << upper << "     \"" << word << "\"" << std::endl;
+      std::cout << "const std::string " << word << "(ANG_" << upper << ");" << std::endl;
+
+      std::cout << "angInstanceProperty(AngHeaderEntry<float>. float, " << word << "TSL::OIM::" << word << std::endl;
+      std::cout << "m_Headermap[TSL::OIM::" << word << "] = AngHeaderEntry<float>::NewHeaderEntry(TSL::OIM::" << word << ");" << std::endl;
+      return;
+    }
+    else
+    {
+      p->parseValue(buf, wordEnd, length);
+    }
   }
 
 }

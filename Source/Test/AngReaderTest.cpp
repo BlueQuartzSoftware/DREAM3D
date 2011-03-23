@@ -1,5 +1,5 @@
 /* ============================================================================
- * Copyright (c) 2010, Michael A. Jackson (BlueQuartz Software)
+ * Copyright (c) 2011, Michael A. Jackson (BlueQuartz Software)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -28,51 +28,44 @@
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _H5ANGDATALOADER_H_
-#define _H5ANGDATALOADER_H_
 
-#include <vector>
-
-#include <MXA/Common/MXASetGetMacros.h>
-
-#include "AIM/ANG/AngConstants.h"
-#include "AIM/ANG/AbstractAngDataLoader.h"
-#include "AIM/Common/AIMCommonConfiguration.h"
-#include "AIM/Common/Voxel.h"
-#include "AIM/ANG/AngDirectoryPatterns.h"
-#include "AIM/ANG/AngPhase.h"
+#include <iostream>
+#include <string>
 
 
+#include "AIM/ANG/AngReader.h"
 
-class AIMCOMMON_EXPORT H5AngDataLoader : public AbstractAngDataLoader
+#if _WIN32_
+
+#else
+  #define ANG_FILE "/Users/Shared/Data/Ang_Data/Test1/post_HT_25.ang"
+#endif
+
+int main(int argc, char **argv)
 {
-  public:
-    MXA_SHARED_POINTERS(H5AngDataLoader)
-    MXA_STATIC_NEW_SUPERCLASS(AbstractAngDataLoader, H5AngDataLoader)
+  std::cout << "Starting AngReaderTest...." << std::endl;
+  std::string angFile(ANG_FILE);
+  AngReader reader;
+  reader.setFileName(angFile);
+  int err = reader.readHeaderOnly();
 
-    virtual ~H5AngDataLoader();
+  std::vector<AngPhase::Pointer> phases = reader.getPhases();
+  if (phases.size() != 2)
+  {
+    std::cout << "Phase Count is Wrong. Should be 2 and is " << phases.size() << std::endl;
+  }
 
-    MXA_INSTANCE_STRING_PROPERTY(Filename)
-    MXA_INSTANCE_PROPERTY(int, ZStartIndex)
-    MXA_INSTANCE_PROPERTY(int, ZEndIndex)
-    MXA_INSTANCE_PROPERTY(bool, Cancel)
-    MXA_INSTANCE_PROPERTY(Ang::Orientation, Orientation)
+  for (std::vector<AngPhase::Pointer>::iterator iter = phases.begin(); iter != phases.end(); ++iter )
+  {
+    (*iter)->printSelf(std::cout);
+  }
 
-    int loadData(Voxel voxels[], int xpoints, int ypoints, int zpoints);
-    int getSizeAndResolution(int &xpoints, int &ypoints, int &zpoints,
-                             double &xres, double &yres, double &zres);
+  if (err < 0)
+  {
+    std::cout << "Error reading file" << angFile << std::endl;
+    return EXIT_FAILURE;
+  }
 
-    int readZHeader(int &zStart, int &zEnd, float &zRes);
-    std::vector<AngPhase::Pointer> getPhases();
-
-  protected:
-    H5AngDataLoader();
-  private:
-    std::vector<AngPhase::Pointer> m_Phases;
-
-    H5AngDataLoader(const H5AngDataLoader&);    // Copy Constructor Not Implemented
-    void operator=(const H5AngDataLoader&);  // Operator '=' Not Implemented
-
-};
-
-#endif /* _H5ANGDATALOADER_H_ */
+  std::cout << "Ending AngReaderTest" << std::endl;
+  return EXIT_SUCCESS;
+}
