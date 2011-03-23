@@ -24,3 +24,7 @@ endif()
 add_executable(ODFTest ${AIMTest_SOURCE_DIR}/ODFTest.cpp  ${AIMRepresentation_SOURCE_DIR}/Source/AIM/StatsGenerator/StatsGen.cpp)
 target_link_libraries(ODFTest AIMCommon)
 
+
+add_executable(AngReaderTest ${AIMTest_SOURCE_DIR}/AngReaderTest.cpp)
+target_link_libraries(AngReaderTest AIMCommon)
+

@@ -83,6 +83,7 @@ namespace AIM
     const std::string OriginalFile("OriginalFile");
     const std::string Index("Index");
     const std::string Header("Header");
+    const std::string Phases("Phases");
     const std::string Data("Data");
   }
 
