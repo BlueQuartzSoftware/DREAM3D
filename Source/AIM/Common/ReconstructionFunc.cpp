@@ -2817,6 +2817,7 @@ void ReconstructionFunc::find_moments()
     grainmoments[gnum][4] = grainmoments[gnum][4] + u011;
     grainmoments[gnum][5] = grainmoments[gnum][5] + u101;
   }
+  double sphere = (2000.0*m_pi*m_pi)/9.0;
   for (int i = 1; i < numgrains; i++)
   {
     grainmoments[i][0] = grainmoments[i][0] * (resx / 2.0) * (resy / 2.0) * (resz / 2.0);
@@ -2825,12 +2826,21 @@ void ReconstructionFunc::find_moments()
     grainmoments[i][3] = grainmoments[i][3] * (resx / 2.0) * (resy / 2.0) * (resz / 2.0);
     grainmoments[i][4] = grainmoments[i][4] * (resx / 2.0) * (resy / 2.0) * (resz / 2.0);
     grainmoments[i][5] = grainmoments[i][5] * (resx / 2.0) * (resy / 2.0) * (resz / 2.0);
-    double o3 = (grainmoments[i][0] * grainmoments[i][1] * grainmoments[i][2]) + (2.0 * grainmoments[i][3] * grainmoments[i][5] * grainmoments[i][4])
-        - (grainmoments[i][0] * grainmoments[i][4] * grainmoments[i][4]) - (grainmoments[i][1] * grainmoments[i][5] * grainmoments[i][5]) - (grainmoments[i][2]
-        * grainmoments[i][3] * grainmoments[i][3]);
+	u200 = (grainmoments[i][1]+grainmoments[i][2]-grainmoments[i][0])/2;
+	u020 = (grainmoments[i][0]+grainmoments[i][2]-grainmoments[i][1])/2;
+	u002 = (grainmoments[i][0]+grainmoments[i][1]-grainmoments[i][2])/2;
+	u110 = grainmoments[i][3];
+	u011 = grainmoments[i][4];
+	u101 = grainmoments[i][5];
+//    double o3 = (grainmoments[i][0] * grainmoments[i][1] * grainmoments[i][2]) + (2.0 * grainmoments[i][3] * grainmoments[i][5] * grainmoments[i][4])
+//        - (grainmoments[i][0] * grainmoments[i][4] * grainmoments[i][4]) - (grainmoments[i][1] * grainmoments[i][5] * grainmoments[i][5]) - (grainmoments[i][2]
+//        * grainmoments[i][3] * grainmoments[i][3]);
+    double o3 = (u200 * u020 * u002) + (2.0 * u110 * u101 * u011) - (u200 * u011 * u011) - (u020 * u101 * u101) - (u002 * u110 * u110);
     double vol5 = m_Grains[i]->volume;
     vol5 = pow(vol5, 5);
     double omega3 = vol5 / o3;
+	omega3 = omega3/sphere;
+	if(omega3 > 1) omega3 = 1;
     m_Grains[i]->Ixx = grainmoments[i][0];
     m_Grains[i]->Iyy = grainmoments[i][1];
     m_Grains[i]->Izz = grainmoments[i][2];
