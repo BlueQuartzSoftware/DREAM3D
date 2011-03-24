@@ -47,11 +47,6 @@
 #include "AIM/Common/Constants.h"
 #include "AIM/ANG/AngReader.h"
 
-#ifdef AIM_USE_QT
-#include <QtCore/QObject>
-#include <QtCore/QThread>
-#endif
-
 
 /**
  * @class H5AngImporter H5AngImporter.h AIM/ANG/H5AngImporter.h
@@ -61,36 +56,26 @@
  * @version 1.2
  *
  */
-class H5AngImporter
-#ifdef AIM_USE_QT
- : public QThread
-#endif
+class AIMCOMMON_EXPORT H5AngImporter
 {
-#ifdef AIM_USE_QT
-Q_OBJECT
-#endif
 
   public:
     MXA_SHARED_POINTERS(H5AngImporter)
     MXA_TYPE_MACRO(H5AngImporter)
-
-#ifdef AIM_USE_QT
-    static Pointer New (QObject* parent = 0);
-#else
     MXA_STATIC_NEW_MACRO(H5AngImporter)
-#endif
+
 
     virtual ~H5AngImporter();
-
+    
+    MXA_INSTANCE_STRING_PROPERTY(ErrorMessage);
+    MXA_INSTANCE_PROPERTY(bool, ErrorCondition);
+#if 0
     MXA_INSTANCE_STRING_PROPERTY(OutputFile)
-//    MXA_INSTANCE_STRING_PROPERTY(InputDirectory)
-//    MXA_INSTANCE_STRING_PROPERTY(AngFilePrefix)
-//    MXA_INSTANCE_PROPERTY(int, AngSeriesMaxSlice)
     MXA_INSTANCE_PROPERTY(int, ZStartIndex)
     MXA_INSTANCE_PROPERTY(int, ZEndIndex)
     MXA_INSTANCE_PROPERTY(float, ZResolution)
-
     MXA_INSTANCE_PROPERTY(std::vector<std::string>, AngFileList);
+#endif
 
     /**
      * @brief Cancel the operation
@@ -104,39 +89,16 @@ Q_OBJECT
      */
     void progressMessage(const std::string &message, int progress);
 
-#ifdef AIM_USE_QT
-    /**
-     * Qt Signals for connections
-     */
-    signals:
-      void updateMessage(QString message);
-      void updateProgress(int value);
-
-    public slots:
-    /**
-     * @brief Slot to receive a signal to cancel the operation
-     */
-      void on_CancelWorker();
-#endif
-
-      /**
-       * @brief Main method to run the operation
-       */
-      void compute();
-
-  protected:
-#ifdef AIM_USE_QT
-    H5AngImporter(QObject* parent = 0);
-    virtual void run();
-#else
-    H5AngImporter();
-#endif
 
     int importAngFile(hid_t fileId, int index, const std::string &angFile);
 
     int writePhaseData(AngReader &reader, hid_t gid);
 
     int writeHKLFamilies(AngPhase* p, hid_t pid);
+
+  protected:
+    H5AngImporter();
+
 
   private:
     H5AngImporter(const H5AngImporter&); // Copy Constructor Not Implemented
