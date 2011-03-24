@@ -37,7 +37,7 @@
 #include "MXA/Utilities/StringUtils.h"
 
 #include "AIM/ANG/AngReader.h"
-#include "AIM/ANG/H5AngImporter.h"
+#include "AIM/OIMImport/OIMImport.h"
 #include "AIM/ANG/H5AngReader.h"
 
 #if _WIN32_
@@ -78,7 +78,7 @@ int main(int argc, char **argv)
   std::vector<std::string> filelist;
   filelist.push_back(angFile);
 
-  H5AngImporter::Pointer h5importer = H5AngImporter::New();
+  OIMImport::Pointer h5importer = OIMImport::New();
   h5importer->setAngFileList(filelist);
   h5importer->setOutputFile(std::string(H5ANG_FILE) );
   h5importer->setZStartIndex(0);
