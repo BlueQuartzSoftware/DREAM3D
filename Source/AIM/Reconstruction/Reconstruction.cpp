@@ -147,9 +147,23 @@ void Reconstruction::compute()
   m = ReconstructionFunc::New();
   progressMessage(AIM_STRING("Gathering Size and Resolution Information from OIM Data"), 1);
   err = oimDataLoader->getSizeAndResolution(m->xpoints, m->ypoints, m->zpoints, m->resx, m->resy, m->resz);
+  H5AngDataLoader* h5AngLoader = dynamic_cast<H5AngDataLoader>(oimDataLoader.get());
+  if (NULL == h5AngLoader)
+  {
+    progressMessage("ReconstructionFunc Error: Problem casting H5AngDataLoader from super class to sub class", 100);
+#if AIM_USE_QT
+  emit finished();
+#endif
+    return;
+  }
+  std::vector<AngPhase::Pointer> phases = h5AngLoader->getPhases();
+
   if (err < 0)
   {
-     std::cout << "ReconstructionFunc Error: Problem loading data size and resolutions" << std::endl;
+    progressMessage("ReconstructionFunc Error: Problem loading data size and resolutions", 100);
+#if AIM_USE_QT
+  emit finished();
+#endif
      return;
   }
   m->initialize(m->xpoints, m->ypoints, m->zpoints,
@@ -272,7 +286,7 @@ void Reconstruction::compute()
     progressMessage(AIM_STRING("Merging Twins"), 40);
     m->merge_twins();
     CHECK_FOR_CANCELED(ReconstructionFunc, merge_twins)
-    
+
     progressMessage(AIM_STRING("Characterizing Twins"), 40);
     m->characterize_twins();
     CHECK_FOR_CANCELED(ReconstructionFunc, characterize_twins)
