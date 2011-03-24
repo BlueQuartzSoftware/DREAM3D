@@ -39,15 +39,18 @@
 #ifdef AIM_USE_QT
 #define CHECK_FOR_CANCELED(AClass)\
   if (this->m_Cancel) { \
+    err = H5Fclose(fileId);\
   QString msg = #AClass; \
   msg += " was Canceled"; \
   emit updateMessage(msg);\
   emit updateProgress(0);\
+  emit finished();\
   return;}
 
 #define CHECK_ERROR(name)\
     if(err < 0) {\
       setErrorCondition(err);\
+      err = H5Fclose(fileId);\
       QString msg = #name;\
       msg += " Returned an error condition. Grain Generator has stopped.";\
       emit updateMessage(msg);\
@@ -228,10 +231,7 @@ void OIMImport::compute()
 // -----------------------------------------------------------------------------
 void OIMImport::on_CancelWorker()
 {
-  if (NULL != m.get() )
-  {
-    m->setCancel(true);
-  }
+  setCancel(true);
 }
 
 #endif

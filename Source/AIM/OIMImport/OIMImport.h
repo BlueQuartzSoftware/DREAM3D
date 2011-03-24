@@ -105,8 +105,6 @@ Q_OBJECT
 
 
   private:
-    H5AngImporter::Pointer m;
-
     OIMImport(const OIMImport&); // Copy Constructor Not Implemented
     void operator=(const OIMImport&); // Operator '=' Not Implemented
 };

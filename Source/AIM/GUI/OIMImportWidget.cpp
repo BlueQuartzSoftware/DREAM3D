@@ -59,7 +59,7 @@ m_OpenDialogLastDirectory("C:\\")
 m_OpenDialogLastDirectory("~/")
 #endif
 {
- 
+
   setupUi(this);
   setupGui();
   checkIOFiles();
@@ -222,7 +222,7 @@ void OIMImportWidget::on_oim_GoBtn_clicked()
   bool ok = false;
   if (oim_GoBtn->text().compare("Cancel") == 0)
   {
-    if(m_OimImport != NULL)
+    if (m_OimImport != NULL)
     {
       emit cancelProcess();
     }
@@ -231,20 +231,20 @@ void OIMImportWidget::on_oim_GoBtn_clicked()
 
   SANITY_CHECK_INPUT(oim_ , InputDir)
 
-    if (m_WorkerThread != NULL)
-    {
-      m_WorkerThread->wait(); // Wait until the thread is complete
-      delete m_WorkerThread; // Kill the thread
-      m_WorkerThread = NULL;
-    }
-    m_WorkerThread = new QThread(); // Create a new Thread Resource
+  if (m_WorkerThread != NULL)
+  {
+    m_WorkerThread->wait(); // Wait until the thread is complete
+    delete m_WorkerThread; // Kill the thread
+    m_WorkerThread = NULL;
+  }
+  m_WorkerThread = new QThread(); // Create a new Thread Resource
 
-    m_OimImport = OIMImport::New();
+  m_OimImport = OIMImport::New();
 
-    // Move the GrainGenerator object into the thread that we just created.
-    m_OimImport->moveToThread(m_WorkerThread);
+  // Move the GrainGenerator object into the thread that we just created.
+  m_OimImport->moveToThread(m_WorkerThread);
 
-  m_OimImport->setOutputFile(oim_OutputFile->text().toStdString() );
+  m_OimImport->setOutputFile(oim_OutputFile->text().toStdString());
   m_OimImport->setZStartIndex(oim_ZStartIndex->value());
   m_OimImport->setZEndIndex(oim_ZEndIndex->value());
   m_OimImport->setZResolution(oim_zSpacing->text().toDouble(&ok));
@@ -253,43 +253,38 @@ void OIMImportWidget::on_oim_GoBtn_clicked()
   std::vector<std::string> fileList;
   for (int f = 0; f < fileCount; ++f)
   {
-    fileList.push_back(oim_FileListView->item(f)->text().toStdString() );
+    fileList.push_back(oim_FileListView->item(f)->text().toStdString());
   }
 
   m_OimImport->setAngFileList(fileList);
 
- /* Connect the signal 'started()' from the QThread to the 'run' slot of the
+  /* Connect the signal 'started()' from the QThread to the 'run' slot of the
    * Reconstruction object. Since the Reconstruction object has been moved to another
    * thread of execution and the actual QThread lives in *this* thread then the
    * type of connection will be a Queued connection.
    */
   // When the thread starts its event loop, start the Reconstruction going
-  connect(m_WorkerThread, SIGNAL(started()),
-          m_OimImport.get(), SLOT(compute()));
+  connect(m_WorkerThread, SIGNAL(started()), m_OimImport.get(), SLOT(compute()));
 
   // When the Reconstruction ends then tell the QThread to stop its event loop
-  connect(m_OimImport.get(), SIGNAL(finished() ),
-          m_WorkerThread, SLOT(quit()) );
+  connect(m_OimImport.get(), SIGNAL(finished() ), m_WorkerThread, SLOT(quit()));
 
   // When the QThread finishes, tell this object that it has finished.
-  connect(m_WorkerThread, SIGNAL(finished()),
-          this, SLOT( threadFinished() ) );
+  connect(m_WorkerThread, SIGNAL(finished()), this, SLOT( threadFinished() ));
 
   // Send Progress from the Reconstruction to this object for display
-  connect(m_OimImport.get(), SIGNAL (updateProgress(int)),
-    this, SLOT(threadProgressed(int) ) );
+  connect(m_OimImport.get(), SIGNAL (updateProgress(int)), this, SLOT(threadProgressed(int) ));
 
   // Send progress messages from Reconstruction to this object for display
-  connect(m_OimImport.get(), SIGNAL (updateMessage(QString)),
-          this, SLOT(threadHasMessage(QString) ) );
+  connect(m_OimImport.get(), SIGNAL (updateMessage(QString)), this, SLOT(threadHasMessage(QString) ));
 
   // If the use clicks on the "Cancel" button send a message to the Reconstruction object
   // We need a Direct Connection so the
-  connect(this, SIGNAL(cancelProcess() ),
-          m_OimImport.get(), SLOT (on_CancelWorker() ) , Qt::DirectConnection);
+  connect(this, SIGNAL(cancelProcess() ), m_OimImport.get(), SLOT (on_CancelWorker() ), Qt::DirectConnection);
 
   setWidgetListEnabled(false);
-  emit processStarted();
+  emit
+  processStarted();
   m_WorkerThread->start();
   oim_GoBtn->setText("Cancel");
 
@@ -455,7 +450,7 @@ void OIMImportWidget::oim_findAngMaxSliceAndPrefix()
 // -----------------------------------------------------------------------------
 void OIMImportWidget::threadFinished()
 {
-  //std::cout << "OIMImportWidget::reconstruction_Finished()" << std::endl;
+ // std::cout << "OIMImportWidget::threadFinished()" << std::endl;
   oim_GoBtn->setText("Go");
   setWidgetListEnabled(true);
   this->oim_progressBar->setValue(0);
