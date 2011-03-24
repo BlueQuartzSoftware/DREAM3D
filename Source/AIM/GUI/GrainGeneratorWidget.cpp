@@ -337,7 +337,7 @@ void GrainGeneratorWidget::on_gg_GoBtn_clicked()
 
   m_GrainGenerator = GrainGenerator::New(NULL);
 
-  // Move the Reconstruction object into the thread that we just created.
+  // Move the GrainGenerator object into the thread that we just created.
   m_GrainGenerator->moveToThread(m_WorkerThread);
 
 

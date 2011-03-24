@@ -41,52 +41,19 @@
 #include "AIM/ANG/AngReader.h"
 #include "AIM/Common/Constants.h"
 
-#ifdef AIM_USE_QT
-#define AIM_STRING QString
-#else
 #define AIM_STRING std::string
-#endif
 
-#ifdef AIM_USE_QT
-#define CHECK_FOR_CANCELED(AClass)\
-    if (this->m_Cancel) { \
-      QString msg = #AClass; \
-              msg += " was Canceled"; \
-              emit updateMessage(msg);\
-              emit updateProgress(100);\
-      break;}
-
-#else
 #define CHECK_FOR_CANCELED(AClass)\
     if (m_Cancel == true){\
       break; }
-#endif
 
 
-#if AIM_USE_QT
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-H5AngImporter::Pointer H5AngImporter::New( QObject* parent)
-{
-  Pointer sharedPtr(new H5AngImporter(parent));
-  return sharedPtr;
-}
-#endif
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-H5AngImporter::H5AngImporter(
-#if AIM_USE_QT
-QObject* parent
-#endif
-) :
-//m_AngSeriesMaxSlice(0),
-m_ZStartIndex(0),
-m_ZEndIndex(0),
-m_ZResolution(1.0),
+H5AngImporter::H5AngImporter() :
+m_ErrorCondition(0),
 m_Cancel(false)
 {
 }
@@ -98,128 +65,6 @@ H5AngImporter::~H5AngImporter()
 {
 }
 
-#if AIM_USE_QT
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void H5AngImporter::run()
-{
-  compute();
-}
-#endif
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void H5AngImporter::compute()
-{
-  herr_t err = 0;
-#if 0
-  int32_t sliceCount = 1;
-  int32_t width = 0;
-  int32_t totalSlices = m_AngSeriesMaxSlice;
-  while (sliceCount < totalSlices)
-  {
-    ++width;
-    sliceCount *= 10;
-  }
-
-  m_InputDirectory = MXADir::toNativeSeparators(m_InputDirectory);
-  AngDirectoryPatterns::Pointer p
-  = AngDirectoryPatterns::New(m_InputDirectory, m_AngFilePrefix, width);
-
-  if (p.get() == NULL)
-  {
-    std::string s("H5AngImport Error: The pointer for the helper class AngDirectoryPatterns is NULL which means");
-    s.append(" this class was NOT set. This algorithm depends on that helper class to generate");
-    s.append(" the proper file names to import. No data was imported.");
-    progressMessage(s, 100);
-    return;
-  }
-#endif
-
-
-
-  if (m_OutputFile.empty() == true)
-  {
-    std::string s("H5AngImport Error: The output file was not set correctly or is empty. The current value is '");
-    s.append("'. Please set the output file before running the importer. ");
-    progressMessage(s, 100);
-    return;
-  }
-  // Create File
-  hid_t fileId = H5Utilities::createFile(m_OutputFile);
-  if (fileId < 0) {
-    std::string s("Error Creating HDF5 file. No data imported.");
-    progressMessage(s, 100);
-    return;
-  }
-
-  // Write Z index start, Z index end and Z Resolution to the HDF5 file
-  err = H5Lite::writeScalarDataset(fileId, AIM::ANG::ZStartIndex, m_ZStartIndex);
-  err = H5Lite::writeScalarDataset(fileId, AIM::ANG::ZEndIndex, m_ZEndIndex);
-  err = H5Lite::writeScalarDataset(fileId, AIM::ANG::ZResolution, m_ZResolution);
-  // Write the Manufacturer of the OIM file here
-  err = H5Lite::writeStringDataset(fileId, AIM::ANG::Manufacturer, AIM::ANG::TSL );
-
-  std::vector<int> indices;
-  // Loop on Each Ang File
-  float total = m_ZEndIndex - m_ZStartIndex;
-  int progress = 0;
-  int z = m_ZStartIndex;
-
-  /* There is a fragilness about the z index and the file list. The programmer
-   * using this code MUST ensure that the list of files that is sent into this
-   * class is in the appropriate order to match up with the z index (slice index)
-   * otherwise the import will have subtle errors. The programmer is urged NOT to
-   * simply gather a list from the file system as those lists are sorted in such
-   * a way that if the number of digits appearing in the filename are NOT the same
-   * then the list will be wrong, ie, this example:
-   *
-   * slice_1.ang
-   * slice_2.ang
-   * ....
-   * slice_10.ang
-   *
-   * Most, if not ALL C++ libraries when asked for that list will return the list
-   * sorted like the following:
-   *
-   * slice_1.ang
-   * slice_10.ang
-   * slice_2.ang
-   *
-   * which is going to cause problems because the data is going to be placed
-   * into the HDF5 file at the wrong index. YOU HAVE BEEN WARNED.
-   */
-  for (std::vector<std::string>::iterator filepath = m_AngFileList.begin(); filepath != m_AngFileList.end(); ++filepath )
-  {
-    std::string angFName = *filepath;
-
-    CHECK_FOR_CANCELED(H5AngImporter)
-    progress = z - m_ZStartIndex;
-    progress = (int)(100.0f * (float)(progress)/total);
-    std::string msg = "Importing: " + angFName;
-    progressMessage(msg, progress );
-
-    err = importAngFile(fileId, z, angFName);
-    if (err < 0)
-    {
-      setCancel(true);
-    }
-    indices.push_back(z);
-    ++z;
-  }
-
-  if (false == m_Cancel) {
-  // Write an Index data set which contains all the z index values which
-  // should help speed up the reading side of this file
-    std::vector<hsize_t> dims(1, indices.size());
-    err = H5Lite::writeVectorDataset(fileId, AIM::ANG::Index, dims, indices);
-  }
-  err = H5Fclose(fileId);
-  progressMessage("Import Complete", 100);
-  return;
-}
 
 #define WRITE_ANG_HEADER_DATA(reader, type, prpty, key)\
 {\
@@ -262,8 +107,6 @@ void H5AngImporter::compute()
 }\
 }
 
-
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -305,6 +148,8 @@ int H5AngImporter::importAngFile(hid_t fileId, int z, const std::string &angFile
     {
       ss << "H5AngImporter Error: Unknown error.";
     }
+    setErrorMessage(ss.str());
+    setErrorCondition(err);
     progressMessage(ss.str(), 100);
     return -1;
   }
@@ -316,7 +161,8 @@ int H5AngImporter::importAngFile(hid_t fileId, int z, const std::string &angFile
     std::ostringstream ss;
     ss << "H5AngImporter Error: A Group for Z index " << z << " could not be created."
          << " Please check other error messages from the HDF5 library for possible reasons.";
-    progressMessage(ss.str(), 100);
+    setErrorMessage(ss.str());
+    setErrorCondition(-500);
     return -1;
   }
 
@@ -328,6 +174,8 @@ int H5AngImporter::importAngFile(hid_t fileId, int z, const std::string &angFile
          << " Please check other error messages from the HDF5 library for possible reasons.";
     progressMessage(ss.str(), 100);
     err = H5Gclose(angGroup);
+    setErrorMessage(ss.str());
+    setErrorCondition(-600);
     return -1;
   }
   WRITE_ANG_HEADER_DATA(reader, float, TEMpixPerum, TSL::OIM::TEMPIXPerUM)
@@ -367,6 +215,8 @@ int H5AngImporter::importAngFile(hid_t fileId, int z, const std::string &angFile
          << " Please check other error messages from the HDF5 library for possible reasons."<< std::endl;
     progressMessage(ss.str(), 100);
     err = H5Gclose(angGroup);
+    setErrorMessage(ss.str());
+    setErrorCondition(-700);
     return -1;
   }
 
@@ -532,24 +382,7 @@ int H5AngImporter::writeHKLFamilies(AngPhase* p, hid_t hklGid)
 // -----------------------------------------------------------------------------
 void H5AngImporter::progressMessage(const std::string &message, int progress)
 {
-#ifdef AIM_USE_QT
-      emit updateMessage(QString(message.c_str()));
-      emit updateProgress(progress);
-    //  std::cout << message.toStdString() << std::endl;
-#else
   std::cout << progress << "% " << message << std::endl;
-#endif
+
 }
-
-#ifdef AIM_USE_QT
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void H5AngImporter::on_CancelWorker()
-{
-  this->m_Cancel = true;
-}
-#endif
-
-
 
