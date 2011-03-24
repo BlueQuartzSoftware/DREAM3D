@@ -57,8 +57,9 @@
  * @class H5AngImporter H5AngImporter.h AIM/ANG/H5AngImporter.h
  * @brief
  * @author Michael A. Jackson for BlueQuartz Software
- * @date Dec 13, 2010
- * @version 1.0
+ * @date March 23, 2011
+ * @version 1.2
+ *
  */
 class H5AngImporter
 #ifdef AIM_USE_QT
@@ -134,6 +135,8 @@ Q_OBJECT
     int importAngFile(hid_t fileId, int index, const std::string &angFile);
 
     int writePhaseData(AngReader &reader, hid_t gid);
+
+    int writeHKLFamilies(AngPhase* p, hid_t pid);
 
   private:
     H5AngImporter(const H5AngImporter&); // Copy Constructor Not Implemented
