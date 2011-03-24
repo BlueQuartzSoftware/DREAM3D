@@ -38,11 +38,8 @@
 #include "MXA/HDF5/H5Utilities.h"
 #include "MXA/Utilities/StringUtils.h"
 
-
 #include "AIM/ANG/AngReader.h"
 #include "AIM/Common/Constants.h"
-// #include "AIM/ANG/AngDirectoryPatterns.h"
-
 
 #ifdef AIM_USE_QT
 #define AIM_STRING QString
@@ -185,7 +182,7 @@ void H5AngImporter::compute()
    * slice_10.ang
    *
    * Most, if not ALL C++ libraries when asked for that list will return the list
-   * sorted like the folowing:
+   * sorted like the following:
    *
    * slice_1.ang
    * slice_10.ang
@@ -461,11 +458,11 @@ int H5AngImporter::writePhaseData(AngReader &reader, hid_t phasesGid)
     WRITE_PHASE_HEADER_DATA((*phase), int, Symmetry, TSL::OIM::Symmetry)
     WRITE_PHASE_DATA_ARRAY( (*phase), float, pid, LatticeConstants, TSL::OIM::LatticeConstants)
     WRITE_PHASE_HEADER_DATA((*phase), int, NumberFamilies, TSL::OIM::NumberFamilies)
-#ifndef _WIN32
-#warning Need to implement the HKLFamily writing here
-#endif
-    //FIXME: Implement the HKLFamily writing
 
+    // Create a Group for the HKLFamilies
+    hid_t hklGid = H5Utilities::createGroup(pid, TSL::OIM::HKLFamilies);
+    err = writeHKLFamilies(p, hklGid);
+    err = H5Gclose(hklGid);
 
     WRITE_PHASE_DATA_ARRAY( (*phase), int, pid, Categories, TSL::OIM::Categories)
     err = H5Gclose(pid);
@@ -473,6 +470,62 @@ int H5AngImporter::writePhaseData(AngReader &reader, hid_t phasesGid)
   return err;
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int H5AngImporter::writeHKLFamilies(AngPhase* p, hid_t hklGid)
+{
+  int err = 0;
+  hid_t       file, filetype, memtype, strtype, space, dset;
+  hsize_t     dims[1] = {1};
+  herr_t      status;
+  int index = 0;
+  std::vector<HKLFamily::Pointer> families = p->getHKLFamilies();
+  HKLFamily_t hkl;
+  for (std::vector<HKLFamily::Pointer>::iterator f = families.begin(); f != families.end(); ++f )
+  {
+    (*f)->copyToStruct(&hkl);
+
+    memtype = H5Tcreate (H5T_COMPOUND, sizeof (HKLFamily_t));
+    status = H5Tinsert(memtype, "H", HOFFSET (HKLFamily_t, h), H5T_NATIVE_INT);
+    status = H5Tinsert(memtype, "K", HOFFSET (HKLFamily_t, k), H5T_NATIVE_INT);
+    status = H5Tinsert(memtype, "L", HOFFSET (HKLFamily_t, l), H5T_NATIVE_INT);
+    status = H5Tinsert(memtype, "Solution 1", HOFFSET (HKLFamily_t, s1), H5T_NATIVE_INT);
+    status = H5Tinsert(memtype, "Diffraction Intensity", HOFFSET (HKLFamily_t, diffractionIntensity), H5T_NATIVE_FLOAT);
+    status = H5Tinsert(memtype, "Solution 2", HOFFSET (HKLFamily_t, s2), H5T_NATIVE_INT);
+
+#if 0
+    filetype = H5Tcreate (H5T_COMPOUND, sizeof(HKLFamily_t));
+    status = H5Tinsert(filetype, "H", 0, H5T_STD_I32LE);
+    status = H5Tinsert(filetype, "K", 4, H5T_STD_I32LE);
+    status = H5Tinsert(filetype, "L", 8, H5T_STD_I32LE);
+    status = H5Tinsert(filetype, "Solution 1", 12, H5T_STD_I32LE);
+    status = H5Tinsert(filetype, "Diffraction Intensity", 16, H5T_IEEE_F32LE);
+    status = H5Tinsert(filetype, "Solution 2", 20, H5T_STD_I32LE);
+#endif
+    /*
+     * Create dataspace.  Setting maximum size to NULL sets the maximum
+     * size to be the current size.
+     */
+    space = H5Screate_simple(1, dims, NULL);
+
+    /*
+     * Create the dataset and write the compound data to it.
+     */
+
+    dset = H5Dcreate (hklGid, StringUtils::numToString(index++).c_str(), memtype, space, H5P_DEFAULT);
+
+    status = H5Dwrite (dset, memtype, H5S_ALL, H5S_ALL, H5P_DEFAULT, (void*)(&hkl)  );
+
+    /*
+     * Close and release resources.
+     */
+    status = H5Tclose (memtype);
+    status = H5Sclose (space);
+    status = H5Dclose (dset);
+  }
+  return status;
+}
 
 // -----------------------------------------------------------------------------
 //

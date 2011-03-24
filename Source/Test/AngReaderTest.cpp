@@ -31,14 +31,20 @@
 
 #include <iostream>
 #include <string>
+#include <vector>
 
+#include "MXA/HDF5/H5Utilities.h"
+#include "MXA/Utilities/StringUtils.h"
 
 #include "AIM/ANG/AngReader.h"
+#include "AIM/ANG/H5AngImporter.h"
+#include "AIM/ANG/H5AngReader.h"
 
 #if _WIN32_
 
 #else
-  #define ANG_FILE "/Users/Shared/Data/Ang_Data/Test1/post_HT_25.ang"
+  #define ANG_FILE "/Users/Shared/Data/Ang_Data/Test1/Test.ang"
+  #define H5ANG_FILE "/tmp/Test.h5ang"
 #endif
 
 int main(int argc, char **argv)
@@ -55,17 +61,58 @@ int main(int argc, char **argv)
     std::cout << "Phase Count is Wrong. Should be 2 and is " << phases.size() << std::endl;
   }
 
+
   for (std::vector<AngPhase::Pointer>::iterator iter = phases.begin(); iter != phases.end(); ++iter )
   {
+    std::cout << "=========================================================" << std::endl;
     (*iter)->printSelf(std::cout);
   }
 
+  std::cout << "\n ******* Testing Import of Ang File to HDF5" << std::endl;
   if (err < 0)
   {
     std::cout << "Error reading file" << angFile << std::endl;
     return EXIT_FAILURE;
   }
 
-  std::cout << "Ending AngReaderTest" << std::endl;
+  std::vector<std::string> filelist;
+  filelist.push_back(angFile);
+
+  H5AngImporter::Pointer h5importer = H5AngImporter::New();
+  h5importer->setAngFileList(filelist);
+  h5importer->setOutputFile(std::string(H5ANG_FILE) );
+  h5importer->setZStartIndex(0);
+  h5importer->setZEndIndex(1);
+  h5importer->setZResolution(0.25);
+  h5importer->compute();
+  std::cout << "=====> Import Complete" << std::endl;
+
+
+  std::cout << "\n ***** Starting H5AngReader Test" << std::endl;
+  hid_t fileId = H5Utilities::openFile(H5ANG_FILE, true);
+  if (fileId < 0)
+  {
+    std::cout << "Error H5AngReader Test" << std::endl;
+    return EXIT_FAILURE;
+  }
+
+
+  std::string index = StringUtils::numToString(0);
+  hid_t gid = H5Gopen(fileId, index.c_str());
+  H5AngReader::Pointer h5reader = H5AngReader::New();
+  h5reader->setHDF5Path(index);
+  err = h5reader->readHeader(gid);
+  if (err < 0)
+  {
+    std::cout << "Error reading the .HDF5 Ang Header data" << std::endl;
+    err = H5Gclose(gid);
+    err = H5Fclose(fileId);
+    return EXIT_FAILURE;
+  }
+  err = H5Gclose(gid);
+  err = H5Fclose(fileId);
+
+
+  std::cout << "Ending H5AngReaderTest" << std::endl;
   return EXIT_SUCCESS;
 }

@@ -250,10 +250,11 @@ int H5AngReader::readHeader(hid_t parId)
     READ_PHASE_HEADER_DATA(pid, int, TSL::OIM::Symmetry, Symmetry, m_CurrentPhase)
     READ_PHASE_HEADER_ARRAY(pid, std::vector<float>, TSL::OIM::LatticeConstants, LatticeConstants, m_CurrentPhase)
     READ_PHASE_HEADER_DATA(pid, int, TSL::OIM::NumberFamilies, NumberFamilies, m_CurrentPhase)
-    //FIXME: Read the HKLFamilies from the file
-    #ifndef _WIN32
-#warning Need to implement the HKL Family reading
-#endif
+
+    hid_t hklGid = H5Gopen(pid, TSL::OIM::HKLFamilies.c_str());
+    err = readHKLFamilies(hklGid, m_CurrentPhase);
+    err = H5Gclose(hklGid);
+
     READ_PHASE_HEADER_ARRAY(pid, std::vector<int>, TSL::OIM::Categories, Categories, m_CurrentPhase)
     m_Phases.push_back(m_CurrentPhase);
     err = H5Gclose(pid);
@@ -266,6 +267,44 @@ int H5AngReader::readHeader(hid_t parId)
 
   err = H5Gclose(gid);
   return err;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int H5AngReader::readHKLFamilies(hid_t hklGid, AngPhase::Pointer phase)
+{
+  herr_t err = 0;
+  hid_t dataset, memtype;
+  herr_t status;
+  HKLFamily_t data;
+  std::vector<HKLFamily::Pointer> families;
+  for (int i = 0; i < phase->getNumberFamilies(); ++i)
+  {
+    std::string dsetName = StringUtils::numToString(i);
+
+    dataset = H5Dopen(hklGid, dsetName.c_str());
+
+    memtype = H5Tcreate (H5T_COMPOUND, sizeof (HKLFamily_t));
+    status = H5Tinsert(memtype, "H", HOFFSET (HKLFamily_t, h), H5T_NATIVE_INT);
+    status = H5Tinsert(memtype, "K", HOFFSET (HKLFamily_t, k), H5T_NATIVE_INT);
+    status = H5Tinsert(memtype, "L", HOFFSET (HKLFamily_t, l), H5T_NATIVE_INT);
+    status = H5Tinsert(memtype, "Solution 1", HOFFSET (HKLFamily_t, s1), H5T_NATIVE_INT);
+    status = H5Tinsert(memtype, "Diffraction Intensity", HOFFSET (HKLFamily_t, diffractionIntensity), H5T_NATIVE_FLOAT);
+    status = H5Tinsert(memtype, "Solution 2", HOFFSET (HKLFamily_t, s2), H5T_NATIVE_INT);
+
+    status = H5Dread(dataset, memtype, H5S_ALL, H5S_ALL, H5P_DEFAULT, (void*)(&data));
+    if (status < 0)
+    {
+      std::cout << "H5AngReader Error: Could not read the HKLFamily data for family number " << i << std::endl;
+      break;
+    }
+    HKLFamily::Pointer f = HKLFamily::New();
+    f->copyFromStruct(&data);
+    families.push_back(f);
+  }
+  phase->setHKLFamilies(families);
+  return status;
 }
 
 // -----------------------------------------------------------------------------
