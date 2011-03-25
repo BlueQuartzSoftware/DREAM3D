@@ -304,42 +304,40 @@ void AngReader::parseHeaderLine(char* buf, size_t length)
   {
     m_CurrentPhase = AngPhase::New();
     m_CurrentPhase->parsePhase(buf, wordEnd, length);
+    // Parsing the phase is complete, now add it to the vector of Phases
+    m_Phases.push_back(m_CurrentPhase);
   }
-  else if (word.compare(TSL::OIM::MaterialName) == 0)
+  else if (word.compare(TSL::OIM::MaterialName) == 0 && m_CurrentPhase.get() != NULL)
   {
     m_CurrentPhase->parseMaterialName(buf, wordEnd, length);
   }
-  else if (word.compare(TSL::OIM::Formula) == 0)
+  else if (word.compare(TSL::OIM::Formula) == 0 && m_CurrentPhase.get() != NULL)
   {
     m_CurrentPhase->parseFormula(buf, wordEnd, length);
   }
-  else if (word.compare(TSL::OIM::Info) == 0)
+  else if (word.compare(TSL::OIM::Info) == 0 && m_CurrentPhase.get() != NULL)
   {
     m_CurrentPhase->parseInfo(buf, wordEnd, length);
   }
-  else if (word.compare(TSL::OIM::Symmetry) == 0)
+  else if (word.compare(TSL::OIM::Symmetry) == 0 && m_CurrentPhase.get() != NULL)
   {
     m_CurrentPhase->parseSymmetry(buf, wordEnd, length);
   }
-  else if (word.compare(TSL::OIM::LatticeConstants) == 0)
+  else if (word.compare(TSL::OIM::LatticeConstants) == 0 && m_CurrentPhase.get() != NULL)
   {
     m_CurrentPhase->parseLatticeConstants(buf, wordEnd, length);
   }
-  else if (word.compare(TSL::OIM::NumberFamilies) == 0)
+  else if (word.compare(TSL::OIM::NumberFamilies) == 0 && m_CurrentPhase.get() != NULL)
   {
     m_CurrentPhase->parseNumberFamilies(buf, wordEnd, length);
   }
-  else if (word.compare(TSL::OIM::HKLFamilies) == 0)
+  else if (word.compare(TSL::OIM::HKLFamilies) == 0 && m_CurrentPhase.get() != NULL)
   {
     m_CurrentPhase->parseHKLFamilies(buf, wordEnd, length);
   }
-  else if (word.compare(TSL::OIM::Categories) == 0)
+  else if (word.compare(TSL::OIM::Categories) == 0 && m_CurrentPhase.get() != NULL)
   {
     m_CurrentPhase->parseCategories(buf, wordEnd, length);
-    // Parsing the phase is complete, now add it to the vector of Phases
-    m_Phases.push_back(m_CurrentPhase);
-    // Set it to a Null Pointer so the temp AngPhase pointer gets cleared correctly
-    m_CurrentPhase = AngPhase::NullPointer();
   }
   else
   {
