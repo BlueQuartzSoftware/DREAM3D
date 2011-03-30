@@ -564,6 +564,48 @@ void MisorientationCalculations::getFZQuatHexagonal(double *qr)
   }
 }
 
+void MisorientationCalculations::determineEulerAngles(AIM::Reconstruction::CrystalStructure crystruct, int choose, double &synea1, double &synea2, double &synea3)
+{
+	double dim1, dim2, dim3;
+	double phi1, PHI, phi2;
+	AIMRandomNG rg;
+	rg.RandomInit((static_cast<unsigned int>(time(NULL))));
+    if(crystruct == AIM::Reconstruction::Hexagonal)
+    {
+	  dim1 = HexDim1InitValue;
+	  dim2 = HexDim2InitValue;
+	  dim3 = HexDim3InitValue;
+      phi1 = choose%36;
+      PHI = (choose/36)%36;
+      phi2 = choose/(36*36);
+    }
+    if(crystruct == AIM::Reconstruction::Cubic)
+    {
+	  dim1 = CubicDim1InitValue;
+	  dim2 = CubicDim2InitValue;
+	  dim3 = CubicDim3InitValue;
+      phi1 = choose%18;
+      PHI = (choose/18)%18;
+      phi2 = choose/(18*18);
+    }
+    double random = rg.Random();
+    double synh1 = (dim1*phi1)+(dim1*random);
+    random = rg.Random();
+    double synh2 = (dim2*PHI)+(dim2*random);
+    random = rg.Random();
+    double synh3 = (dim3*phi2)+(dim3*random);
+    double hmag = pow((synh1*synh1+synh2*synh2+synh3*synh3),0.5);
+    double angle = pow((8.25*hmag*hmag*hmag),(1.0/3.0));
+    double synr1 = tan(angle/2.0)*(synh1/hmag);
+    double synr2 = tan(angle/2.0)*(synh2/hmag);
+    double synr3 = tan(angle/2.0)*(synh3/hmag);
+    double sum=atan(synr3);
+    double diff=atan(synr2/synr1);
+    synea1=sum+diff;
+    synea2=2.*atan(synr1*cos(sum)/cos(diff));
+    synea3=sum-diff;
+
+}
 void MisorientationCalculations::initializeDims( AIM::Reconstruction::CrystalStructure crystruct, double &dim1, double &dim2, double &dim3, int &numbins)
 {
   if(crystruct == AIM::Reconstruction::Cubic)
@@ -649,7 +691,7 @@ void MisorientationCalculations::calculateMisorientationAngles(double &w, double
 
 
 
-size_t MisorientationCalculations::calculateHexOdfBin( double q1[5], double qref[5], double dim1, double dim2, double dim3)
+size_t MisorientationCalculations::calculateHexOdfBin( double q1[5], double qref[5])
 {
   double w;
   double n1;
@@ -657,6 +699,9 @@ size_t MisorientationCalculations::calculateHexOdfBin( double q1[5], double qref
   double n3;
 //  double degtorad = m_pi / 180.0;
 //  double denom;
+  double dim1 = HexDim1InitValue;
+  double dim2 = HexDim2InitValue;
+  double dim3 = HexDim3InitValue;
   size_t g1euler1bin;
   size_t g1euler2bin;
   size_t g1euler3bin;
@@ -664,16 +709,6 @@ size_t MisorientationCalculations::calculateHexOdfBin( double q1[5], double qref
 
   w = MisorientationCalculations::getMisoQuatHexagonal(q1, qref, n1, n2, n3);
   MisorientationCalculations::calculateMisorientationAngles(w, n1, n2, n3);
-//  w = w * degtorad;
-//  denom = (n1 * n1) + (n2 * n2) + (n3 * n3);
-//  denom = pow(denom, 0.5);
-//  n1 = n1 / denom;
-//  n2 = n2 / denom;
-//  n3 = n3 / denom;
-//  n1 = n1 * pow(((3.0 / 4.0) * (w - sin(w))), (1.0 / 3.0));
-//  n2 = n2 * pow(((3.0 / 4.0) * (w - sin(w))), (1.0 / 3.0));
-//  n3 = n3 * pow(((3.0 / 4.0) * (w - sin(w))), (1.0 / 3.0));
-
 
   g1euler1bin = size_t(n1 * 36.0 / dim1);
   g1euler2bin = size_t(n2 * 36.0 / dim2);
@@ -685,29 +720,23 @@ size_t MisorientationCalculations::calculateHexOdfBin( double q1[5], double qref
   return g1odfbin;
 }
 
-size_t MisorientationCalculations::calculateCubicOdfBin( double q1[5], double qref[5], double dim1, double dim2, double dim3)
+size_t MisorientationCalculations::calculateCubicOdfBin( double q1[5], double qref[5])
 {
   double w;
   double n1;
   double n2;
   double n3;
-//  double degtorad = m_pi / 180.0;
-//  double denom;
+  double dim1 = CubicDim1InitValue;
+  double dim2 = CubicDim2InitValue;
+  double dim3 = CubicDim3InitValue;
   size_t g1euler1bin;
   size_t g1euler2bin;
   size_t g1euler3bin;
   size_t g1odfbin;
+
   w = MisorientationCalculations::getMisoQuatCubic(q1, qref, n1, n2, n3);
   MisorientationCalculations::calculateMisorientationAngles(w, n1, n2, n3);
-//  w = w*degtorad;
-//  denom = (n1*n1)+(n2*n2)+(n3*n3);
-//  denom = pow(denom,0.5);
-//  n1 = n1/denom;
-//  n2 = n2/denom;
-//  n3 = n3/denom;
-//  n1 = n1*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
-//  n2 = n2*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
-//  n3 = n3*pow(((3.0/4.0)*(w-sin(w))),(1.0/3.0));
+
   g1euler1bin = size_t(n1*18.0/dim1);
   g1euler2bin = size_t(n2*18.0/dim2);
   g1euler3bin = size_t(n3*18.0/dim3);

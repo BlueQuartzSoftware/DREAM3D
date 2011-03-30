@@ -99,7 +99,6 @@ void ReconstructionWidget::readSettings(QSettings &prefs)
   READ_CHECKBOX_SETTING(prefs, rec_alreadyFormed, false);
   READ_CHECKBOX_SETTING(prefs, rec_mergeTwins, false);
   READ_CHECKBOX_SETTING(prefs, rec_fillinSample, false);
-  READ_COMBO_BOX(prefs, rec_CrystalStructure)
   READ_COMBO_BOX(prefs, rec_AlignMeth)
   READ_COMBO_BOX(prefs, rec_Orientation)
 
@@ -147,7 +146,6 @@ void ReconstructionWidget::writeSettings(QSettings &prefs)
   WRITE_SETTING(prefs, rec_DownSampleFactor)
   WRITE_SETTING(prefs, rec_MinImageQuality)
   WRITE_SETTING(prefs, rec_MisOrientationTolerance)
-  WRITE_COMBO_BOX(prefs, rec_CrystalStructure)
   WRITE_COMBO_BOX(prefs, rec_AlignMeth)
   WRITE_COMBO_BOX(prefs, rec_Orientation)
 
@@ -207,7 +205,7 @@ void ReconstructionWidget::setupGui()
   m_WidgetList << rec_OutputDir << rec_OutputDirBtn;
   m_WidgetList << rec_ZStartIndex << rec_ZEndIndex;
   m_WidgetList << rec_mergeTwins << rec_mergeColonies << rec_fillinSample << rec_alreadyFormed << rec_AlignMeth << rec_MinAllowedGrainSize << rec_MinConfidence << rec_DownSampleFactor << rec_MisOrientationTolerance;
-  m_WidgetList << rec_CrystalStructure << rec_BinStepSize;
+  m_WidgetList << rec_BinStepSize;
   m_WidgetList << rec_DisorientationVizFile << rec_ImageQualityVizFile << rec_IPFVizFile << rec_SchmidFactorVizFile << rec_VisualizationVizFile << rec_DownSampledVizFile;
   m_WidgetList << rec_MinImageQuality;
   m_WidgetList << rec_HDF5GrainFile << rec_H5StatisticsFile << rec_AlignmentFile << rec_GrainDataFile;
@@ -429,9 +427,7 @@ void ReconstructionWidget::on_rec_GoBtn_clicked()
   m_Reconstruction->setMergeTwins(rec_mergeTwins->isChecked() );
   m_Reconstruction->setFillinSample(rec_fillinSample->isChecked() );
 
-  AIM::Reconstruction::CrystalStructure crystruct = static_cast<AIM::Reconstruction::CrystalStructure>(rec_CrystalStructure->currentIndex());
   AIM::Reconstruction::AlignmentMethod alignmeth = static_cast<AIM::Reconstruction::AlignmentMethod>(rec_AlignMeth->currentIndex() );
-  m_Reconstruction->setCrystalStructure(crystruct);
   m_Reconstruction->setAlignmentMethod(alignmeth);
 
   Ang::Orientation orientation = static_cast<Ang::Orientation>(rec_Orientation->currentIndex());

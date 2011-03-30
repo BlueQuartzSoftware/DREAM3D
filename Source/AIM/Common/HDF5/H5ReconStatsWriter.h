@@ -35,6 +35,7 @@
 #include "hdf5.h"
 
 #include <vector>
+#include <string>
 
 #include "MXA/MXATypes.h"
 #include "MXA/Common/MXASetGetMacros.h"
@@ -60,40 +61,40 @@ class AIMCOMMON_EXPORT H5ReconStatsWriter
     MXA_INSTANCE_STRING_PROPERTY(FileName);
 
     //FIXME: We are NOT writing the Precipitate data?
-    int writeAxisOrientationData(double* axisodf, double totalaxes);
-    int writeMicroTextureData(double* microbin, size_t nElements, double actualgrains);
-    int writeMisorientationBinsData(double* misobins, size_t nElements);
-    int writeODFData(AIM::Reconstruction::CrystalStructure crystruct,
-                     double* eulerodf, double totalvol);
+    int writeAxisOrientationData(int phase, double* axisodf, double totalaxes);
+    int writeMicroTextureData(int phase, double* microbin, size_t nElements, double actualgrains);
+    int writeMisorientationBinsData(int phase, double* misobins, AIM::Reconstruction::CrystalStructure crystruct);
+    int writeODFData(int phase, AIM::Reconstruction::CrystalStructure crystruct,
+                     double* eulerodf);
 
 
-    std::vector<double> generateBins( double maxDiameter, double minDiameter, double diameterStep);
+    std::vector<double> generateBins(int phase, double maxDiameter, double minDiameter, double diameterStep);
 
-    int writeBetaDistribution(const std::string &hdf5GroupName,
+    int writeBetaDistribution(int phase, const std::string &hdf5GroupName,
                                std::vector<double> &alpha,
                                std::vector<double> &beta);
 
-    int writeLogNormalDistribution(const std::string &hdf5GroupName,
+    int writeLogNormalDistribution(int phase, const std::string &hdf5GroupName,
                                std::vector<double> &average,
                                std::vector<double> &stdDev );
 
 
-    int writePowerDistribution(const std::string &hdf5GroupName,
+    int writePowerDistribution(int phase, const std::string &hdf5GroupName,
                                std::vector<double> &alpha,
                                std::vector<double> &k,
                                std::vector<double> &beta);
 
 
-    int writeDistributionData(const std::string &disType,
+    int writeDistributionData(int phase, const std::string &disType,
                               const std::string &hdf5GroupName,
                               std::vector<std::string> &columnHeaders,
                               std::vector<std::vector<double> > &colData);
 
-    int writeSizeDistribution(double maxdiameter, double mindiameter, double binStepSize,
+    int writeSizeDistribution(int phase, double phasefraction, double maxdiameter, double mindiameter, double binStepSize,
                               double avglogdiam, double sdlogdiam,
                               size_t &numberOfBins);
 
-    int writeVolumeStats(double maxdiameter, double mindiameter, double diamStepSize,
+    int writeVolumeStats(int phase, double phasefraction, double maxdiameter, double mindiameter, double diamStepSize,
                          double avglogdiam, double sdlogdiam,
                          std::vector<std::vector<double> > &svbovera,
                          std::vector<std::vector<double> > &svcovera,

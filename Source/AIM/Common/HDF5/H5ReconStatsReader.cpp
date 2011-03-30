@@ -51,9 +51,6 @@ H5ReconStatsReader::~H5ReconStatsReader()
 {
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 H5ReconStatsReader::Pointer H5ReconStatsReader::New(const std::string &filename)
 {
   Pointer sharedPtr(new H5ReconStatsReader);
@@ -70,15 +67,14 @@ H5ReconStatsReader::Pointer H5ReconStatsReader::New(const std::string &filename)
   return sharedPtr;
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-std::string H5ReconStatsReader::getDistributionType(const std::string &group,
+std::string H5ReconStatsReader::getDistributionType(int phase, const std::string &group,
                                                     AIM::Reconstruction::DistributionType &dt)
 {
   herr_t err = 0;
 
-  std::string path = AIM::HDF5::Reconstruction + "/" + group;
+  std::string index = StringUtils::numToString(phase);
+
+  std::string path = AIM::HDF5::Reconstruction + "/" + index + "/" + group;
   hid_t fileId = H5Utilities::openFile(m_FileName, false);\
 
   if (fileId < 0)
