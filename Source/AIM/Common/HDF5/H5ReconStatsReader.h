@@ -39,6 +39,9 @@
 #include "MXA/Common/MXASetGetMacros.h"
 #include "MXA/HDF5/H5Utilities.h"
 #include "MXA/HDF5/H5Lite.h"
+#include "MXA/MXATypes.h"
+#include "MXA/Utilities/MXADir.h"
+#include "MXA/Utilities/StringUtils.h"
 
 #include "AIM/Common/AIMCommonConfiguration.h"
 #include "AIM/Common/Constants.h"
@@ -72,22 +75,25 @@ class AIMCOMMON_EXPORT H5ReconStatsReader
 
 
     template<typename T>
-    int readStatsDataset(const std::string &name, std::vector<T> &data)
+    int readStatsDataset(int phase, const std::string &name, std::vector<T> &data)
     {
       herr_t err = 0;
       herr_t retErr = 0;
       OPEN_HDF5_FILE(fileId, m_FileName)
 
       OPEN_RECONSTRUCTION_GROUP(reconGid, AIM::HDF5::Reconstruction.c_str(), fileId)
+	
+	  std::string index = StringUtils::numToString(phase);
+	  hid_t pid = H5Gopen(fileId, index.c_str());
 
-      err = H5Lite::readVectorDataset(reconGid, name, data);
+      err = H5Lite::readVectorDataset(pid, name, data);
       if (err < 0)
       {
         data.clear(); // Clear all the data from the vector.
         retErr = err;
       }
 
-      err = H5Gclose(reconGid);
+      err = H5Gclose(pid);
       if (err < 0)
       {
         retErr = err;
@@ -100,12 +106,46 @@ class AIMCOMMON_EXPORT H5ReconStatsReader
       return retErr;
     }
 
-    /**
+    template<typename T>
+    int readPhaseFractionDataset(int phase, const std::string &name, std::vector<T> &data)
+    {
+      herr_t err = 0;
+      herr_t retErr = 0;
+	  double value;
+      OPEN_HDF5_FILE(fileId, m_FileName)
+
+      OPEN_RECONSTRUCTION_GROUP(reconGid, AIM::HDF5::Reconstruction.c_str(), fileId)
+	
+	  std::string index = StringUtils::numToString(phase);
+	  hid_t pid = H5Gopen(fileId, index.c_str());
+
+      err = H5Lite::readScalarDataset(pid, name, value);
+	  data[phase] = value;
+      if (err < 0)
+      {
+        data[phase] = 0; // Clear all the data from the vector.
+        retErr = err;
+      }
+
+      err = H5Gclose(pid);
+      if (err < 0)
+      {
+        retErr = err;
+      }
+      err = H5Utilities::closeFile(fileId);
+      if (err < 0)
+      {
+        retErr = err;
+      }
+      return retErr;
+    }
+
+	/**
      * @brief
      * @param group
      * @param dt (out) Enumerated value for the distribution type
      */
-    std::string getDistributionType(const std::string &group, AIM::Reconstruction::DistributionType &dt);
+    std::string getDistributionType(int phase, const std::string &group, AIM::Reconstruction::DistributionType &dt);
 
 
 

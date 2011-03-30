@@ -34,6 +34,8 @@
 
 #include "AIM/Common/AIMCommonConfiguration.h"
 #include "AIM/Common/Constants.h"
+#include "AIM/Common/AIMRandomNG.h"
+#include <time.h>
 
 
 /**
@@ -59,11 +61,12 @@ class AIMCOMMON_EXPORT MisorientationCalculations
     static void getFZQuatHexagonal(double *qr);
     static int getMisoBinCubic(double n1, double n2, double n3);
     static int getMisoBinHexagonal(double n1, double n2, double n3);
+	static void determineEulerAngles(AIM::Reconstruction::CrystalStructure crystruct, int choose, double &synea1, double &synea2, double &synea3);
     static void calculateMisorientationAngles(double &w, double &miso1, double &miso2, double &miso3);
     static void initializeDims( AIM::Reconstruction::CrystalStructure crystruct, double &dim1, double &dim2,  double &dim3, int &numbins);
 	static void getSlipMisalignment(int ss1, double q1[5], double q2[5], double &ssap);
-	static size_t calculateHexOdfBin( double q1[5], double qref[5], double dim1, double dim2, double dim3);
-    static size_t calculateCubicOdfBin( double q1[5], double qref[5], double dim1, double dim2, double dim3);
+	static size_t calculateHexOdfBin( double q1[5], double qref[5]);
+    static size_t calculateCubicOdfBin( double q1[5], double qref[5]);
 	static void initializeQ(double *q, double ea1, double ea2, double ea3);
 
   protected:

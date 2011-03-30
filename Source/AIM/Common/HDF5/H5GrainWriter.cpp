@@ -65,6 +65,7 @@ int H5GrainWriter::writeHDF5GrainsFile(ReconstructionFunc* r, const std::string 
   std::vector<std::string > hdfPaths;
   // std::cout << "Writing out " << numgrains << " to an HDF5 Grain File..." << std::endl;
   int numgrains = r->m_Grains.size();
+  int phase;
   for (int i = 1; i < numgrains; i++)
   {
     //   std::cout << " Grain: " << i << " Gathering Data" << std::endl;
@@ -138,11 +139,12 @@ int H5GrainWriter::writeHDF5GrainsFile(ReconstructionFunc* r, const std::string 
       kernelAvgDisorientation[j] = r->voxels[vid].kernelmisorientation;
       grainAvgDisorientation[j] = r->voxels[vid].grainmisorientation;
       imageQuality[j] = r->voxels[vid].imagequality;
-      if (r->crystruct == AIM::Reconstruction::Cubic)
+	  phase = r->voxels[vid].phase;
+      if (r->crystruct[phase] == AIM::Reconstruction::Cubic)
       {
         OIMColoring::GenerateIPFColor(r->voxels[vid].euler1, r->voxels[vid].euler2, r->voxels[vid].euler3, RefDirection[0], RefDirection[1], RefDirection[2], rgb, hkl);
       }
-      if (r->crystruct == AIM::Reconstruction::Hexagonal)
+      if (r->crystruct[phase] == AIM::Reconstruction::Hexagonal)
       {
         q1[0] = r->voxels[i].quat[1];
         q1[1] = r->voxels[i].quat[2];

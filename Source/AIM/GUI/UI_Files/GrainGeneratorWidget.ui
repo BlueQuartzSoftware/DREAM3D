@@ -343,104 +343,6 @@
    </item>
    <item>
     <layout class="QGridLayout" name="gridLayout_7">
-     <item row="1" column="3">
-      <widget class="QLabel" name="label_19">
-       <property name="text">
-        <string>Crystal Structure</string>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="4">
-      <widget class="QComboBox" name="gg_CrystalStructure">
-       <item>
-        <property name="text">
-         <string>Hexagonal</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>Cubic</string>
-        </property>
-       </item>
-      </widget>
-     </item>
-     <item row="0" column="3">
-      <widget class="QLabel" name="label_20">
-       <property name="text">
-        <string>Shape Class</string>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="4">
-      <widget class="QComboBox" name="gg_ShapeClass">
-       <item>
-        <property name="text">
-         <string>Ellipsoid</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>Super-Ellipsoid</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>Cube-Octahedron</string>
-        </property>
-       </item>
-      </widget>
-     </item>
-     <item row="3" column="0">
-      <widget class="QLabel" name="label_16">
-       <property name="text">
-        <string>Z Spacing</string>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="0">
-      <widget class="QLabel" name="label_18">
-       <property name="text">
-        <string>Y Spacing</string>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="0">
-      <widget class="QLabel" name="label_15">
-       <property name="text">
-        <string>X Spacing</string>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="1">
-      <widget class="QDoubleSpinBox" name="gg_ZResolution">
-       <property name="singleStep">
-        <double>0.250000000000000</double>
-       </property>
-       <property name="value">
-        <double>0.250000000000000</double>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="1">
-      <widget class="QDoubleSpinBox" name="gg_YResolution">
-       <property name="singleStep">
-        <double>0.250000000000000</double>
-       </property>
-       <property name="value">
-        <double>0.250000000000000</double>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="1">
-      <widget class="QDoubleSpinBox" name="gg_XResolution">
-       <property name="singleStep">
-        <double>0.250000000000000</double>
-       </property>
-       <property name="value">
-        <double>0.250000000000000</double>
-       </property>
-      </widget>
-     </item>
      <item row="0" column="0">
       <widget class="QLabel" name="label_22">
        <property name="text">
@@ -460,42 +362,6 @@
         <number>1000</number>
        </property>
       </widget>
-     </item>
-     <item row="2" column="3">
-      <widget class="QLabel" name="label_48">
-       <property name="text">
-        <string>Precipitate Structure</string>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="4">
-      <widget class="QComboBox" name="gg_Precipitates">
-       <item>
-        <property name="text">
-         <string>No Precipitates</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>Boundary Precipitates</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>Bulk Precipitates</string>
-        </property>
-       </item>
-      </widget>
-     </item>
-     <item row="3" column="3">
-      <widget class="QLabel" name="label_49">
-       <property name="text">
-        <string>Volume Fraction Precipitates</string>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="4">
-      <widget class="QDoubleSpinBox" name="gg_FractionPrecipitates"/>
      </item>
      <item row="0" column="5" rowspan="4">
       <spacer name="horizontalSpacer_17">
@@ -525,6 +391,83 @@
         </size>
        </property>
       </spacer>
+     </item>
+     <item row="1" column="0">
+      <widget class="QLabel" name="label_20">
+       <property name="text">
+        <string>Shape Class</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QComboBox" name="gg_ShapeClass">
+       <item>
+        <property name="text">
+         <string>Ellipsoid</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Super-Ellipsoid</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Cube-Octahedron</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item row="0" column="3">
+      <widget class="QLabel" name="label_15">
+       <property name="text">
+        <string>X Spacing</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="4">
+      <widget class="QDoubleSpinBox" name="gg_XResolution">
+       <property name="singleStep">
+        <double>0.250000000000000</double>
+       </property>
+       <property name="value">
+        <double>0.250000000000000</double>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="3">
+      <widget class="QLabel" name="label_16">
+       <property name="text">
+        <string>Z Spacing</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="4">
+      <widget class="QDoubleSpinBox" name="gg_ZResolution">
+       <property name="singleStep">
+        <double>0.250000000000000</double>
+       </property>
+       <property name="value">
+        <double>0.250000000000000</double>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="3">
+      <widget class="QLabel" name="label_18">
+       <property name="text">
+        <string>Y Spacing</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="4">
+      <widget class="QDoubleSpinBox" name="gg_YResolution">
+       <property name="singleStep">
+        <double>0.250000000000000</double>
+       </property>
+       <property name="value">
+        <double>0.250000000000000</double>
+       </property>
+      </widget>
      </item>
     </layout>
    </item>
@@ -609,6 +552,8 @@
   </layout>
  </widget>
  <resources>
+  <include location="../../../../Resources/icons/images/Icons.qrc"/>
+  <include location="../../../../Resources/icons/images/Icons.qrc"/>
   <include location="../../../../Resources/icons/images/Icons.qrc"/>
   <include location="../../../../Resources/icons/images/Icons.qrc"/>
  </resources>

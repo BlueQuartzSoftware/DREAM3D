@@ -82,7 +82,7 @@ class AIMCOMMON_EXPORT ReconstructionFunc
     int minallowedgrainsize;
     int mergetwinsoption;
     int mergecoloniesoption;
-    AIM::Reconstruction::CrystalStructure crystruct;
+    vector<AIM::Reconstruction::CrystalStructure> crystruct;
     int alignmeth;
     int alreadyformed;
 
@@ -102,7 +102,7 @@ class AIMCOMMON_EXPORT ReconstructionFunc
     // vector<vector<double> > grainquats;
     DoubleArrayType::Pointer m_grainQuats;
 
-	  vector<vector<double> > neighborhood;
+	vector<vector<double> > neighborhood;
     vector<vector<double> > neighborhoodfit;
     vector<vector<double> > svbovera;
     vector<vector<double> > svcovera;
@@ -114,9 +114,9 @@ class AIMCOMMON_EXPORT ReconstructionFunc
     int numorients;
     int numeulers;
  //   int numgrains;
-    double totalsurfacearea;
-    int maxdiameter;
-    int mindiameter;
+    vector<double> totalsurfacearea;
+    vector<int> maxdiameter;
+    vector<int> mindiameter;
     int cutoutxsize;
     int cutoutysize;
     int cmaxx;
@@ -131,18 +131,16 @@ class AIMCOMMON_EXPORT ReconstructionFunc
     int totalpoints;
     int totaltemppoints;
     int numneighbins;
-    double totalvol;
-    double totalaxes;
+	vector<double> phasefraction;
+    vector<double> totalvol;
+    vector<double> totalaxes;
 
 
     void initialize(int nX, int nY, int nZ,
-                  double xRes, double yRes, double zRes,
-                  bool v_mergetwinsoption,
-                  bool v_mergecoloniesoption, int v_minallowedgrainsize,
-                  double v_minseedconfidence, double v_downsamplefactor,
-                  double v_minseedimagequality, double v_misorientationtolerance,
-                  double v_sizebinstepsize, AIM::Reconstruction::CrystalStructure v_crystruct,
-                  int v_alignmeth, bool v_alreadyformed);
+                  double xRes, double yRes, double zRes, bool v_mergetwinsoption, bool v_mergecoloniesoption, 
+				  int v_minallowedgrainsize, double v_minseedconfidence, double v_downsamplefactor, 
+				  double v_minseedimagequality, double v_misorientationtolerance, double v_sizebinstepsize, 
+				  vector<AIM::Reconstruction::CrystalStructure> v_crystruct, int v_alignmeth, bool v_alreadyformed);
 
 
     void find_border();

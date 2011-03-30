@@ -161,6 +161,7 @@ std::vector<AngPhase::Pointer> H5AngDataLoader::getPhases()
   H5AngReader::Pointer reader = H5AngReader::New();
   reader->setHDF5Path(index);
   err = reader->readHeader(gid);
+  m_Phases = reader->getPhases();
   if (err < 0)
   {
     std::cout << "Error reading the .HDF5 Ang Header data" << std::endl;
@@ -168,8 +169,6 @@ std::vector<AngPhase::Pointer> H5AngDataLoader::getPhases()
     err = H5Fclose(fileId);
     return m_Phases;
   }
-  err = H5Gclose(gid);
-  err = H5Fclose(fileId);
   return m_Phases;
 }
 
