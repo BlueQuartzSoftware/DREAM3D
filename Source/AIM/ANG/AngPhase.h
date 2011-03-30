@@ -38,6 +38,15 @@
 #include "AIM/Common/AIMCommonConfiguration.h"
 #include "AIM/ANG/AngConstants.h"
 
+typedef struct
+{
+    int h;
+    int k;
+    int l;
+    int s1;
+    float diffractionIntensity;
+    int s2;
+} HKLFamily_t;
 
 /**
  * @class HKLFamily HKLFamily.h AIM/ANG/HKLFamily.h
@@ -55,17 +64,37 @@ class AIMCOMMON_EXPORT HKLFamily
 
     virtual ~HKLFamily() {};
 
-    int v1;
-    int v2;
-    int v3;
-    int v4;
-    float v5;
-    int v6;
+    int h;
+    int k;
+    int l;
+    int s1;
+    float diffractionIntensity;
+    int s2;
 
     void printSelf(std::ostream &stream)
     {
       stream << TSL::OIM::HKLFamilies;
-      std::cout << " " << v1 << " " << v2 << " " << v3 << " " << v4 << " " << v5 << " " << v6 << std::endl;
+      std::cout << " " << h << " " << k << " " << l << " " << s1 << " " << diffractionIntensity << " " << s2 << std::endl;
+    }
+
+    void copyToStruct(HKLFamily_t* ptr)
+    {
+      ptr->h = h;
+      ptr->k = k;
+      ptr->l = l;
+      ptr->s1 = s1;
+      ptr->diffractionIntensity = diffractionIntensity;
+      ptr->s2 = s2;
+    }
+
+    void copyFromStruct(HKLFamily_t* ptr)
+    {
+      h = ptr->h;
+      k = ptr->k;
+      l = ptr->l;
+      s1 = ptr->s1;
+      diffractionIntensity = ptr->diffractionIntensity;
+      s2 = ptr->s2;
     }
   protected:
     HKLFamily() {};
@@ -75,6 +104,7 @@ class AIMCOMMON_EXPORT HKLFamily
     void operator=(const HKLFamily&); // Operator '=' Not Implemented
 
 };
+
 
 
 /**
