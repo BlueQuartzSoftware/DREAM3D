@@ -143,6 +143,9 @@ void Reconstruction::compute()
   std::vector<AngPhase::Pointer> test = ptr->getPhases();
   int size = test.size();
   m_CrystalStructure.resize(size);
+  ofstream outFile;
+  string filename = "test.txt";
+  outFile.open(filename.c_str());
   for(int i=0;i<size;i++)
   {
 	  int phaseID = test[0]->getPhase();
@@ -150,7 +153,9 @@ void Reconstruction::compute()
 	  if(phaseID == 43) crystal_structure = AIM::Reconstruction::Cubic;
 	  if(phaseID == 62) crystal_structure = AIM::Reconstruction::Hexagonal;
 	  m_CrystalStructure[phaseID] = crystal_structure;
+	  outFile << i << "	" << phaseID << endl;
   }
+  outFile.close();
   if (err < 0)
   {
      std::cout << "ReconstructionFunc Error: Problem loading data size and resolutions" << std::endl;
