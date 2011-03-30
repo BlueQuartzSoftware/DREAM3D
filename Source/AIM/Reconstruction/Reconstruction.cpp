@@ -140,9 +140,17 @@ void Reconstruction::compute()
   m = ReconstructionFunc::New();
   progressMessage(AIM_STRING("Gathering Size and Resolution Information from OIM Data"), 1);
   err = oimDataLoader->getSizeAndResolution(m->xpoints, m->ypoints, m->zpoints, m->resx, m->resy, m->resz);
-<<<<<<< HEAD
-  std::vector<AngPhase::Pointer> test = ptr->getPhases();
-  int size = test.size();
+  H5AngDataLoader* h5AngLoader = dynamic_cast<H5AngDataLoader*>(oimDataLoader.get());
+  if (NULL == h5AngLoader)
+  {
+    progressMessage("ReconstructionFunc Error: Problem casting H5AngDataLoader from super class to sub class", 100);
+#if AIM_USE_QT
+  emit finished();
+#endif
+    return;
+  }
+  std::vector<AngPhase::Pointer> phases = h5AngLoader->getPhases();
+  int size = phases.size();
   m_CrystalStructure.resize(size);
   ofstream outFile;
   string filename = "test.txt";
@@ -157,19 +165,7 @@ void Reconstruction::compute()
 	  outFile << i << "	" << phaseID << endl;
   }
   outFile.close();
-=======
-  H5AngDataLoader* h5AngLoader = dynamic_cast<H5AngDataLoader*>(oimDataLoader.get());
-  if (NULL == h5AngLoader)
-  {
-    progressMessage("ReconstructionFunc Error: Problem casting H5AngDataLoader from super class to sub class", 100);
-#if AIM_USE_QT
-  emit finished();
-#endif
-    return;
-  }
-  std::vector<AngPhase::Pointer> phases = h5AngLoader->getPhases();
 
->>>>>>> c65d2133da652f34c27688d8cf40b4624b37092f
   if (err < 0)
   {
     progressMessage("ReconstructionFunc Error: Problem loading data size and resolutions", 100);
