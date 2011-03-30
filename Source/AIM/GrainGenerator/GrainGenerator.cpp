@@ -85,7 +85,6 @@ m_NeighborhoodErrorWeight(0.0),
 m_SizeDistErrorWeight(0.0),
 m_AlreadyFormed(false),
 m_Precipitates(0),
-m_CrystalStructure(AIM::Reconstruction::Cubic),
 m_ErrorCondition(0)
 #if AIM_USE_QT
   ,m_Cancel(false)
@@ -123,6 +122,7 @@ void GrainGenerator::compute()
   std::string visFile = m_OutputDirectory + MXADir::Separator + AIM::SyntheticBuilder::VisualizationFile;
   std::string packGrainsFile = m_OutputDirectory + MXADir::Separator + AIM::SyntheticBuilder::PackGrainsFile;
   m = GrainGeneratorFunc::New();
+
   m->initialize(m_NumGrains, m_ShapeClass, m_XResolution, m_YResolution, m_ZResolution, m_FillingErrorWeight, m_NeighborhoodErrorWeight, m_SizeDistErrorWeight, m_Precipitates, m_CrystalStructure, m_FractionPrecipitates);
 
   if (m_AlreadyFormed == false)
@@ -154,16 +154,6 @@ void GrainGenerator::compute()
     progressMessage(AIM_STRING("Adjusting Boundaries"), 40);
 	m->numgrains = m->adjust_boundaries(m->numgrains);
 
-	if (m_Precipitates > 1)
-    {
-      CHECK_FOR_CANCELED(GrainGeneratorFunc)
-      progressMessage(AIM_STRING("Generating Precipitates"), 40);
-      m->numprecipitates = m->create_precipitates();
-
-      CHECK_FOR_CANCELED(GrainGeneratorFunc)
-      progressMessage(AIM_STRING("Inserting Precipitates"), 40);
-      m->insert_precipitates(m->numprecipitates);
-    }
   }
 
   if (m_AlreadyFormed == true)

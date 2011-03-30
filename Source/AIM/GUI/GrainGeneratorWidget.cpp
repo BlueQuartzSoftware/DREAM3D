@@ -93,14 +93,11 @@ void GrainGeneratorWidget::readSettings(QSettings &prefs)
   READ_SETTING(prefs, gg_FillingErrorWeight, ok, d, 1.0 , Double);
   READ_SETTING(prefs, gg_NeighborhoodErrorWeight, ok, d, 1.0 , Double);
   READ_SETTING(prefs, gg_SizeDistErrorWeight, ok, d, 1.0 , Double);
-  READ_SETTING(prefs, gg_FractionPrecipitates, ok, d, 25 , Double);
   READ_SETTING(prefs, gg_NumGrains, ok, i, 1000 , Int);
 
   READ_BOOL_SETTING(prefs, gg_, AlreadyFormed, false);
   gg_AlreadyFormed->blockSignals(false);
-  READ_COMBO_BOX(prefs, gg_CrystalStructure)
   READ_COMBO_BOX(prefs, gg_ShapeClass)
-  READ_COMBO_BOX(prefs, gg_Precipitates)
   prefs.endGroup();
 }
 
@@ -118,13 +115,10 @@ void GrainGeneratorWidget::writeSettings(QSettings &prefs)
   WRITE_SETTING(prefs, gg_FillingErrorWeight )
   WRITE_SETTING(prefs, gg_NeighborhoodErrorWeight )
   WRITE_SETTING(prefs, gg_SizeDistErrorWeight )
-  WRITE_SETTING(prefs, gg_FractionPrecipitates )
   WRITE_SETTING(prefs, gg_NumGrains )
 
   WRITE_BOOL_SETTING(prefs, gg_AlreadyFormed, gg_AlreadyFormed->isChecked())
-  WRITE_COMBO_BOX(prefs, gg_CrystalStructure)
   WRITE_COMBO_BOX(prefs, gg_ShapeClass)
-  WRITE_COMBO_BOX(prefs, gg_Precipitates)
   prefs.endGroup();
 }
 
@@ -173,9 +167,9 @@ void GrainGeneratorWidget::setupGui()
   messageLabel->setText(msg);
 
   m_WidgetList << gg_H5StatisticsFile << gg_InputH5StatisticsFileBtn << gg_OutputDir << gg_OutputDirBtn;
-  m_WidgetList << gg_CrystalStructure << gg_NumGrains << gg_XResolution << gg_YResolution << gg_ZResolution << gg_FillingErrorWeight;
-  m_WidgetList << gg_NeighborhoodErrorWeight << gg_SizeDistErrorWeight << gg_FractionPrecipitates;
-  m_WidgetList << gg_ShapeClass << gg_Precipitates << gg_AlreadyFormed;
+  m_WidgetList << gg_NumGrains << gg_XResolution << gg_YResolution << gg_ZResolution << gg_FillingErrorWeight;
+  m_WidgetList << gg_NeighborhoodErrorWeight << gg_SizeDistErrorWeight;
+  m_WidgetList << gg_ShapeClass << gg_AlreadyFormed;
 
 }
 
@@ -348,24 +342,14 @@ void GrainGeneratorWidget::on_gg_GoBtn_clicked()
   int shapeclass = gg_ShapeClass->currentIndex() + 1;
   m_GrainGenerator->setShapeClass(shapeclass);
 
-  int Precipitates = gg_Precipitates->currentIndex() + 1;
-  m_GrainGenerator->setPrecipitates(Precipitates);
-
   m_GrainGenerator->setXResolution(gg_XResolution->value());
   m_GrainGenerator->setYResolution(gg_YResolution->value());
   m_GrainGenerator->setZResolution(gg_ZResolution->value());
   m_GrainGenerator->setFillingErrorWeight(gg_FillingErrorWeight->value());
   m_GrainGenerator->setNeighborhoodErrorWeight(gg_NeighborhoodErrorWeight->value());
   m_GrainGenerator->setSizeDistErrorWeight(gg_SizeDistErrorWeight->value());
-  m_GrainGenerator->setFractionPrecipitates(gg_FractionPrecipitates->value());
-
 
   m_GrainGenerator->setAlreadyFormed(gg_AlreadyFormed->isChecked() );
-
-  AIM::Reconstruction::CrystalStructure crystruct = static_cast<AIM::Reconstruction::CrystalStructure>(gg_CrystalStructure->currentIndex());
-
-  m_GrainGenerator->setCrystalStructure(crystruct);
-
 
   /* Connect the signal 'started()' from the QThread to the 'run' slot of the
    * Reconstruction object. Since the Reconstruction object has been moved to another

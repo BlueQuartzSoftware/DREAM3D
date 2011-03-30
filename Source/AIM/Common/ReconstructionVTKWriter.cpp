@@ -208,17 +208,19 @@ int ReconstructionVTKWriter::writeIPFVizFile(ReconstructionFunc* r, const std::s
   unsigned char* rgba = new unsigned char[total * 4];
   //double red,green,blue;
   double q1[4];
+  int phase;
   unsigned char hkl[3] = {0, 0, 0};
 
   double RefDirection[3] =
   { 0.0, 0.0, 1.0 };
   for (size_t i = 0; i < total; i++)
   {
-    if (r->crystruct == AIM::Reconstruction::Cubic)
+    phase = r->voxels[i].phase;
+    if (r->crystruct[phase] == AIM::Reconstruction::Cubic)
     {
       OIMColoring::GenerateIPFColor(r->voxels[i].euler1, r->voxels[i].euler2, r->voxels[i].euler3, RefDirection[0], RefDirection[1], RefDirection[2], &rgba[i * 4], hkl);
     }
-    else if (r->crystruct == AIM::Reconstruction::Hexagonal)
+    else if (r->crystruct[phase] == AIM::Reconstruction::Hexagonal)
     {
       q1[0] = r->voxels[i].quat[1];
       q1[1] = r->voxels[i].quat[2];
@@ -247,9 +249,11 @@ int ReconstructionVTKWriter::writeIPFVizFile(ReconstructionFunc* r, const std::s
   { 0, 0, 0};
   double RefDirection[3] =
   { 0.0, 0.0, 1.0};
+  int phase;
   for (size_t i = 0; i < total; i++)
   {
-    if(r->crystruct == AIM::Reconstruction::Cubic)
+	phase = r->voxels[i].phase;
+    if(r->crystruct[phase] == AIM::Reconstruction::Cubic)
     {
       OIMColoring::GenerateIPFColor(r->voxels[i].euler1, r->voxels[i].euler2, r->voxels[i].euler3, RefDirection[0], RefDirection[1], RefDirection[2], rgb, hkl);
 //      OIMColoring::GenerateIPFColor(r->m_Grains[r->voxels[i].grainname]->euler1, r->m_Grains[r->voxels[i].grainname]->euler2, r->m_Grains[r->voxels[i].grainname]->euler3, RefDirection[0], RefDirection[1], RefDirection[2], rgb);
@@ -257,7 +261,7 @@ int ReconstructionVTKWriter::writeIPFVizFile(ReconstructionFunc* r, const std::s
       green = static_cast<double>(double(rgb[1])/255.0);
       blue = static_cast<double>(double(rgb[2])/255.0);
     }
-    if(r->crystruct == AIM::Reconstruction::Hexagonal)
+    if(r->crystruct[phase] == AIM::Reconstruction::Hexagonal)
     {
       q1[0]=r->voxels[i].quat[1];
       q1[1]=r->voxels[i].quat[2];
