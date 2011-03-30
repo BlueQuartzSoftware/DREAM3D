@@ -36,7 +36,7 @@
 
 #include "ui_OIMImportWidget.h"
 #include <AIM/GUI/AIMPluginFrame.h>
-#include <AIM/ANG/H5AngImporter.h>
+#include <AIM/OIMImport/OIMImport.h>
 
 
 /*
@@ -107,7 +107,7 @@ class OIMImportWidget : public AIMPluginFrame, private Ui::OIMImportWidget
 
   private:
     QList<QWidget*>             m_WidgetList;
-    H5AngImporter::Pointer      m_H5AngImporter;
+    OIMImport::Pointer          m_OimImport;
     QThread*                    m_WorkerThread;
 
     QString m_OpenDialogLastDirectory;

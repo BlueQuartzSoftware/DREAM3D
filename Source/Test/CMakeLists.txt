@@ -25,6 +25,6 @@ add_executable(ODFTest ${AIMTest_SOURCE_DIR}/ODFTest.cpp  ${AIMRepresentation_SO
 target_link_libraries(ODFTest AIMCommon)
 
 
-add_executable(AngReaderTest ${AIMTest_SOURCE_DIR}/AngReaderTest.cpp)
+add_executable(AngReaderTest ${AIMTest_SOURCE_DIR}/AngReaderTest.cpp ${AIMRepresentation_SOURCE_DIR}/Source/AIM/OIMImport/OIMImport.cpp)
 target_link_libraries(AngReaderTest AIMCommon)
 
