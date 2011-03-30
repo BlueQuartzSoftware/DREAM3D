@@ -96,7 +96,6 @@ m_MinSeedConfidence(0.0),
 m_SizeBinStepSize(0.0),
 m_MinSeedImageQuality(0.0),
 m_MisorientationTolerance(0.0),
-m_CrystalStructure(AIM::Reconstruction::Cubic),
 m_AlreadyFormed(false),
 m_Orientation(Ang::NoOrientation),
 m_WriteVisualizationFile(false),
@@ -115,9 +114,6 @@ m_ErrorCondition(0)
 }
 
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 Reconstruction::~Reconstruction()
 {
  // std::cout << "~Reconstruction()" << std::endl;
@@ -125,9 +121,6 @@ Reconstruction::~Reconstruction()
 
 
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void Reconstruction::compute()
 {
   //std::cout << "Reconstruction::compute Start" << std::endl;
@@ -147,14 +140,24 @@ void Reconstruction::compute()
   m = ReconstructionFunc::New();
   progressMessage(AIM_STRING("Gathering Size and Resolution Information from OIM Data"), 1);
   err = oimDataLoader->getSizeAndResolution(m->xpoints, m->ypoints, m->zpoints, m->resx, m->resy, m->resz);
+  std::vector<AngPhase::Pointer> test = ptr->getPhases();
+  int size = test.size();
+  m_CrystalStructure.resize(size);
+  for(int i=0;i<size;i++)
+  {
+	  int phaseID = test[0]->getPhase();
+	  AIM::Reconstruction::CrystalStructure crystal_structure;
+	  if(phaseID == 43) crystal_structure = AIM::Reconstruction::Cubic;
+	  if(phaseID == 62) crystal_structure = AIM::Reconstruction::Hexagonal;
+	  m_CrystalStructure[phaseID] = crystal_structure;
+  }
   if (err < 0)
   {
      std::cout << "ReconstructionFunc Error: Problem loading data size and resolutions" << std::endl;
      return;
   }
   m->initialize(m->xpoints, m->ypoints, m->zpoints,
-                m->resx, m->resy, m->resz,
-                m_MergeTwins, m_MergeColonies, m_MinAllowedGrainSize,
+                m->resx, m->resy, m->resz, m_MergeTwins, m_MergeColonies, m_MinAllowedGrainSize,
                 m_MinSeedConfidence, m_DownSampleFactor, m_MinSeedImageQuality,
                 m_MisorientationTolerance, m_SizeBinStepSize, m_CrystalStructure, m_AlignmentMethod,
                 m_AlreadyFormed);
@@ -210,7 +213,7 @@ void Reconstruction::compute()
 
     }
   }
-  else /* if (m_AlreadyFormed == false) */
+  else if (m_AlreadyFormed == false)
   {
 
     progressMessage(AIM_STRING("Loading Slices"), 4);
@@ -435,7 +438,6 @@ void Reconstruction::printSettings(std::ostream &ostream)
     PRINT_PROPERTY(ostream, DownSampleFactor)
     PRINT_PROPERTY(ostream, MinSeedImageQuality)
     PRINT_PROPERTY(ostream, MisorientationTolerance)
-    PRINT_PROPERTY(ostream, CrystalStructure)
     PRINT_PROPERTY(ostream, AlignmentMethod)
     PRINT_PROPERTY(ostream, AlreadyFormed)
     PRINT_PROPERTY(ostream, Orientation)

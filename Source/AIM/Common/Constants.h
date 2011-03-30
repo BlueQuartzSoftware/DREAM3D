@@ -95,6 +95,7 @@ namespace AIM
     const std::string MisorientationBins("MisorientationBins");
     const std::string MicroTextureBins("MicroTextureBins");
     const std::string Stats("Stats");
+	const std::string PhaseFraction("PhaseFraction");
     const std::string Grain_Diameter_Info("Grain_Diameter_Info");
     const std::string Grain_Size_Distribution("GrainSize Distribution");
     const std::string Grain_SizeVBoverA_Distributions("GrainSize Vs B Over A Distributions");
