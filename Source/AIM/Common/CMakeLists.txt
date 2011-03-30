@@ -139,6 +139,7 @@ if (WIN32)
     set(lib_install_dir "")
 endif()
 
+
 if (BUILD_SHARED_LIBS)
     INSTALL(TARGETS ${PROJECT_NAME} 
         COMPONENT Applications
@@ -148,4 +149,5 @@ if (BUILD_SHARED_LIBS)
         BUNDLE DESTINATION "."
     ) 
 endif() 
-    
+
+  

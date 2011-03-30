@@ -227,13 +227,15 @@ void AngPhase::parseHKLFamilies(char* value, size_t start, size_t length)
 
   while(ss.good() )
   {
-    ss >> family->v1;
-    ss >> family->v2;
-    ss >> family->v3;
-    ss >> family->v4;
-    ss >> family->v5;
-    ss >> family->v6;
+    ss >> family->h;
+    ss >> family->k;
+    ss >> family->l;
+    ss >> family->s1;
+    ss >> family->diffractionIntensity;
+    ss >> family->s2;
   }
+  if (family->s1 > 1) { family->s1 = 1; }
+  if (family->s2 > 1) { family->s2 = 1; }
   m_HKLFamilies.push_back(family);
 }
 
