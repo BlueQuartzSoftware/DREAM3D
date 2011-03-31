@@ -234,10 +234,10 @@ class OIMColoring
  * @param q1 Quaternion to calculate the RGB value for
  * @param rgb Output - A pointer to store the RGB value into a unsigned char[3] array.
  */
-    void static CalculateHexIPFColor(double q1[4],
+    void static CalculateHexIPFColor(double q1[5],
                               unsigned char* rgb)
     {
-      double qc[4];
+      double qc[5];
       double p[3];
       double d[3];
       double theta, phi;
@@ -245,9 +245,9 @@ class OIMColoring
       for (int j = 0; j < 12; j++)
       {
         AIM::Quaternions::Hex_MultiplyByUnitQuaterion(q1, j,qc);
-        p[0] = ((2 * qc[0] * qc[2]) + (2 * qc[1] * qc[3])) * 1;
-        p[1] = ((2 * qc[1] * qc[2]) - (2 * qc[0] * qc[3])) * 1;
-        p[2] = (1 - (2 * qc[0] * qc[0]) - (2 * qc[1] * qc[1])) * 1;
+        p[0] = ((2 * qc[1] * qc[3]) + (2 * qc[2] * qc[4])) * 1;
+        p[1] = ((2 * qc[2] * qc[3]) - (2 * qc[1] * qc[4])) * 1;
+        p[2] = (1 - (2 * qc[1] * qc[1]) - (2 * qc[2] * qc[2])) * 1;
         double denom = p[0] * p[0] + p[1] * p[1] + p[2] * p[2];
         denom = pow(denom, 0.5);
         p[0] = p[0] / denom;
