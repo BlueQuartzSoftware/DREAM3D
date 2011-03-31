@@ -77,7 +77,7 @@ Q_OBJECT
     MXA_INSTANCE_PROPERTY(double, DownSampleFactor)
     MXA_INSTANCE_PROPERTY(double, MinSeedImageQuality)
     MXA_INSTANCE_PROPERTY(double, MisorientationTolerance)
-    MXA_INSTANCE_PROPERTY(vector<AIM::Reconstruction::CrystalStructure>, CrystalStructure)
+//    MXA_INSTANCE_PROPERTY(vector<AIM::Reconstruction::CrystalStructure>, CrystalStructure)
     MXA_INSTANCE_PROPERTY(AIM::Reconstruction::AlignmentMethod, AlignmentMethod)
     MXA_INSTANCE_PROPERTY(bool, AlreadyFormed)
     MXA_INSTANCE_PROPERTY(Ang::Orientation, Orientation)
@@ -145,7 +145,7 @@ Q_OBJECT
 
   private:
     ReconstructionFunc::Pointer m;
-
+    
     Reconstruction(const Reconstruction&);    // Copy Constructor Not Implemented
     void operator=(const Reconstruction&);  // Operator '=' Not Implemented
 };

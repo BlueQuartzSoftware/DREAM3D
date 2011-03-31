@@ -124,9 +124,14 @@ int main(int argc, char **argv)
     m_Reconstruction->setMergeTwins(mergeTwins.getValue() );
     m_Reconstruction->setFillinSample(fillinSample.getValue() );
 
+#if 0
     AIM::Reconstruction::CrystalStructure crystruct = static_cast<AIM::Reconstruction::CrystalStructure>(CrystalStructure.getValue());
-    AIM::Reconstruction::AlignmentMethod alignmeth = static_cast<AIM::Reconstruction::AlignmentMethod>(AlignMeth.getValue() );
+    std::vector<AIM::Reconstruction::CrystalStructure> xtals(static_cast<AIM::Reconstruction::CrystalStructure>(CrystalStructure.getValue()));
     m_Reconstruction->setCrystalStructure(crystruct);
+#endif
+
+    AIM::Reconstruction::AlignmentMethod alignmeth = static_cast<AIM::Reconstruction::AlignmentMethod>(AlignMeth.getValue() );
+    
     m_Reconstruction->setAlignmentMethod(alignmeth);
     Ang::Orientation orient = static_cast<Ang::Orientation>(Orientation.getValue());
     m_Reconstruction->setOrientation(orient);
