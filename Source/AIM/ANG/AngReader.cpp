@@ -44,8 +44,8 @@ m_ManageMemory(true)
   m_PhaseData = NULL;
   m_X = NULL;
   m_Y = NULL;
-  m_D1 = NULL;
-  m_D2 = NULL;
+  m_SEMSignal = NULL;
+  m_Fit = NULL;
 
   m_NumFields = 8;
   // Initialize the map of header key to header value
@@ -70,13 +70,9 @@ m_ManageMemory(true)
 
 
   // Give these values some defaults
-//  setNumCols(-1);
   setNumOddCols(-1);
   setNumEvenCols(-1);
   setNumRows(-1);
-//  setZStep(1.0);
-//  setZMax(1.0);
-//  setZPos(0.0);
 }
 
 // -----------------------------------------------------------------------------
@@ -101,8 +97,8 @@ void AngReader::initPointers(size_t numElements)
   m_PhaseData = allocateArray<float > (numElements);
   m_X = allocateArray<float > (numElements);
   m_Y = allocateArray<float > (numElements);
-  m_D1 = allocateArray<float > (numElements);
-  m_D2 = allocateArray<float > (numElements);
+  m_SEMSignal = allocateArray<float > (numElements);
+  m_Fit = allocateArray<float > (numElements);
 
   ::memset(m_Phi1, 0, numBytes);
   ::memset(m_Phi, 0, numBytes);
@@ -112,8 +108,8 @@ void AngReader::initPointers(size_t numElements)
   ::memset(m_PhaseData, 0, numBytes);
   ::memset(m_X, 0, numBytes);
   ::memset(m_Y, 0, numBytes);
-  ::memset(m_D1, 0, numBytes);
-  ::memset(m_D2, 0, numBytes);
+  ::memset(m_SEMSignal, 0, numBytes);
+  ::memset(m_Fit, 0, numBytes);
 }
 
 // -----------------------------------------------------------------------------
@@ -129,8 +125,8 @@ void AngReader::deletePointers()
   this->deallocateArrayData<float > (m_PhaseData);
   this->deallocateArrayData<float > (m_X);
   this->deallocateArrayData<float > (m_Y);
-  this->deallocateArrayData<float > (m_D1);
-  this->deallocateArrayData<float > (m_D2);
+  this->deallocateArrayData<float > (m_SEMSignal);
+  this->deallocateArrayData<float > (m_Fit);
 }
 
 // -----------------------------------------------------------------------------
@@ -224,27 +220,26 @@ int AngReader::readFile()
 
   initPointers(numElements);
 
-  if (NULL == m_Phi1 || NULL == m_Phi || NULL == m_Phi2 || NULL == m_Iq || NULL == m_D1 || NULL == m_Ci || NULL == m_PhaseData || m_X == NULL || m_Y == NULL)
+  if (NULL == m_Phi1 || NULL == m_Phi || NULL == m_Phi2 || NULL == m_Iq || NULL == m_SEMSignal || NULL == m_Ci || NULL == m_PhaseData || m_X == NULL || m_Y == NULL)
   {
     return -1;
   }
 
-  float xstep = getXStep();
-  float ystep = getYStep();
-  float xMaxValue = static_cast<float > ((nEvenCols - 1) * xstep );
-  float yMaxValue = static_cast<float > ((nRows - 1) * ystep );
-
   //double progress = 0.0;
   int totalDataRows = nRows * nEvenCols;
-  int counter = 0;
-  while (in.eof() == false)
+  size_t counter = 0;
+  for(int row = 0; row < nRows && in.eof() == false; ++row)
   {
-
-    this->readData(buf, xMaxValue, yMaxValue, nEvenCols, xstep, ystep, counter);
-    // Read the next line of data
-    in.getline(buf, kBufferSize);
-    ++counter;
+    for(int col = 0; col < nEvenCols && in.eof() == false; ++col)
+    {
+      this->readData(buf, nEvenCols, col, nRows, row, counter);
+      // Read the next line of data
+      in.getline(buf, kBufferSize);
+      ++counter;
+    }
   }
+
+
   if (counter != totalDataRows && in.eof() == true)
   {
     std::cout << "Premature End Of File reached while reading the .ang file.\n NumRows=" << nRows << "nEvenCols=" << nEvenCols << " Total Data Points Read="
@@ -252,11 +247,11 @@ int AngReader::readFile()
   }
   if (m_NumFields < 10)
   {
-    this->deallocateArrayData<float > (m_D2);
+    this->deallocateArrayData<float > (m_Fit);
   }
   if (m_NumFields < 9)
   {
-    this->deallocateArrayData<float > (m_D1);
+    this->deallocateArrayData<float > (m_SEMSignal);
   }
   return err;
 }
@@ -366,8 +361,8 @@ void AngReader::parseHeaderLine(char* buf, size_t length)
 // -----------------------------------------------------------------------------
 //  Read the data part of the ANG file
 // -----------------------------------------------------------------------------
-void AngReader::readData(const std::string &line, float xMaxValue, float yMaxValue,
-                        int nCols, float xstep, float ystep, size_t counter)
+void AngReader::readData(const std::string &line,
+                         int nCols, int col, int nRows, int row, size_t i)
 {
   /* When reading the data there should be at least 8 cols of data. There may even
    * be 10 columns of data. The column names should be the following:
@@ -379,20 +374,21 @@ void AngReader::readData(const std::string &line, float xMaxValue, float yMaxVal
    * image quality
    * confidence index
    * phase
-   * unknown 1
-   * unknown 2
+   * SEM Signal
+   * Fit of Solution
    *
    * Some TSL ang files do NOT have all 10 columns. Assume these are lacking the last
    * 2 columns and all the other columns are the same as above.
    */
   float p1, p, p2, x, y, iqual, conf, ph, d1, d2;
-
+  size_t offset = 0;
   m_NumFields = sscanf(line.c_str(), "%f %f %f %f %f %f %f %f %f %f", &p1, &p,&p2, &x, &y, &iqual, &conf, &ph, &d1, &d2);
+
 
   // Do we transform the data
   if (m_UserOrigin == Ang::UpperRightOrigin)
   {
-    x = xMaxValue - x;
+    offset = (row*nCols)+((nCols-1)-col);
     if (p1 - PI_OVER_2f < 0.0)
     {
       p1 = p1 + THREE_PI_OVER_2f;
@@ -423,7 +419,7 @@ void AngReader::readData(const std::string &line, float xMaxValue, float yMaxVal
   }
   else if (m_UserOrigin == Ang::LowerLeftOrigin)
   {
-    y = yMaxValue - y;
+    offset = (((nRows-1)-row)*nCols)+col;
     if (p1 + PI_OVER_2f > TWO_PIf)
     {
       p1 = p1 - THREE_PI_OVER_2f;
@@ -435,11 +431,8 @@ void AngReader::readData(const std::string &line, float xMaxValue, float yMaxVal
   }
   else if (m_UserOrigin == Ang::LowerRightOrigin)
   {
-    x = xMaxValue - x;
-    y = yMaxValue - y;
+    offset = (((nRows-1)-row)*nCols)+((nCols-1)-col);
   }
-
-  size_t offset  = 0;
 
   if (m_UserOrigin == Ang::NoOrientation)
   {
@@ -447,27 +440,7 @@ void AngReader::readData(const std::string &line, float xMaxValue, float yMaxVal
     // from the file and copy the values into the arrays without any regard for
     // the true X and Y positions in the grid. We are simply trying to keep the
     // data as close to the original as possible.
-    offset = counter;
-  }
-  else
-  {
-    // The next set of calculations figures out where to place the data
-    // in the arrays, ie, which offset based on the array really being a
-    // 2D array that is laid out with the X Axis moving the fastest and
-    // the Y Axis moving the slowest. On Visual Studio there seems to be some
-    // sort of round off error when the floats are converted to size_t types.
-    // In order for Visual Studio compilers to get the conversion correct
-    // it seems that we need to break up the calculations, at least on 32 bit
-    // compiles. 64 Bit compiles did not show this issue. If the user/programmer
-    // sets any type of Orientation preference then we have to calculate
-    // the offsets based on the x, y, xStep and yStep values. Changes to the
-    // x and y values from the "if" statements above will effect what the final
-    // offset is calculated to be.
-    float xTemp = x / xstep;
-    float yTemp = y / ystep;
-    size_t xTempSizeT = static_cast<size_t>(xTemp);
-    size_t yTempSizeT = static_cast<size_t>(yTemp);
-    offset = yTempSizeT * nCols + xTempSizeT;
+    offset = i;
   }
   m_Phi1[offset] = p1;
   m_Phi[offset] = p;
@@ -478,11 +451,11 @@ void AngReader::readData(const std::string &line, float xMaxValue, float yMaxVal
   m_X[offset] = x;
   m_Y[offset] = y;
   if (m_NumFields > 8) {
-    m_D1[offset] = d1;
+    m_SEMSignal[offset] = d1;
   }
   if (m_NumFields > 9)
   {
-    m_D2[offset] = d2;
+    m_Fit[offset] = d2;
   }
 }
 
