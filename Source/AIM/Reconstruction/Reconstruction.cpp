@@ -149,6 +149,7 @@ void Reconstruction::compute()
 #endif
     return;
   }
+  std::vector<AIM::Reconstruction::CrystalStructure> m_CrystalStructure;
   std::vector<AngPhase::Pointer> phases = h5AngLoader->getPhases();
   m_CrystalStructure.resize(phases.size()+1);
   for(int i=0;i<phases.size();i++)
