@@ -55,8 +55,8 @@
 #define ANG_PHASE_DATA "PhaseData"
 #define ANG_X_POSITION "X Position"
 #define ANG_Y_POSITION "Y Position"
-#define ANG_D1 "D1"
-#define ANG_D2 "D2"
+#define ANG_SEM_SIGNAL "SEM Signal"
+#define ANG_FIT "Fit"
 #define ANG_Z_STEP "ZStep"
 #define ANG_Z_POS "ZPos"
 #define ANG_Z_MAX "ZMax"
@@ -112,8 +112,8 @@ namespace TSL {
    const std::string PhaseData(ANG_PHASE_DATA);
    const std::string XPosition(ANG_X_POSITION);
    const std::string YPosition(ANG_Y_POSITION);
-   const std::string D1(ANG_D1);
-   const std::string D2(ANG_D2);
+   const std::string SEMSignal(ANG_SEM_SIGNAL);
+   const std::string Fit(ANG_FIT);
 
    const std::string SquareGrid(ANG_SQUARE_GRID);
    const std::string HexGrid(ANG_HEX_GRID);
@@ -168,6 +168,8 @@ namespace TSL {
 #define ANG_PHASE_DATA_LOWER "phase"
 #define ANG_X_POSITION_LOWER "x position"
 #define ANG_Y_POSITION_LOWER "y position"
+#define ANG_SEM_SIGNAL_LOWER "sem signal"
+#define ANG_FIT_LOWER "fit"
 
 
 namespace TSL {
@@ -210,6 +212,8 @@ namespace OIM
    const std::string PhaseDataLower(ANG_PHASE_DATA_LOWER);
    const std::string XPositionLower(ANG_X_POSITION_LOWER);
    const std::string YPositionLower(ANG_Y_POSITION_LOWER);
+   const std::string SEMSignalLower(ANG_SEM_SIGNAL_LOWER);
+   const std::string FitLower(ANG_FIT_LOWER);
  }
 
 }

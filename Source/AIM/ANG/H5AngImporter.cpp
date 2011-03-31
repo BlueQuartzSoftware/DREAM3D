@@ -231,8 +231,8 @@ int H5AngImporter::importAngFile(hid_t fileId, int z, const std::string &angFile
   WRITE_ANG_DATA_ARRAY(reader, float, gid, ImageQuality, TSL::OIM::ImageQuality);
   WRITE_ANG_DATA_ARRAY(reader, float, gid, ConfidenceIndex, TSL::OIM::ConfidenceIndex);
   WRITE_ANG_DATA_ARRAY(reader, float, gid, Phase, TSL::OIM::PhaseData);
-  WRITE_ANG_DATA_ARRAY(reader, float, gid, D1, TSL::OIM::D1);
-  WRITE_ANG_DATA_ARRAY(reader, float, gid, D2, TSL::OIM::D2);
+  WRITE_ANG_DATA_ARRAY(reader, float, gid, SEMSignal, TSL::OIM::SEMSignal);
+  WRITE_ANG_DATA_ARRAY(reader, float, gid, Fit, TSL::OIM::Fit);
   // Close the "Data" group
   err = H5Gclose(gid);
 
@@ -326,7 +326,7 @@ int H5AngImporter::writePhaseData(AngReader &reader, hid_t phasesGid)
 int H5AngImporter::writeHKLFamilies(AngPhase* p, hid_t hklGid)
 {
   int err = 0;
-  hid_t       file, filetype, memtype, strtype, space, dset;
+  hid_t       memtype, space, dset;
   hsize_t     dims[1] = {1};
   herr_t      status;
   int index = 0;
@@ -344,15 +344,6 @@ int H5AngImporter::writeHKLFamilies(AngPhase* p, hid_t hklGid)
     status = H5Tinsert(memtype, "Diffraction Intensity", HOFFSET (HKLFamily_t, diffractionIntensity), H5T_NATIVE_FLOAT);
     status = H5Tinsert(memtype, "Solution 2", HOFFSET (HKLFamily_t, s2), H5T_NATIVE_INT);
 
-#if 0
-    filetype = H5Tcreate (H5T_COMPOUND, sizeof(HKLFamily_t));
-    status = H5Tinsert(filetype, "H", 0, H5T_STD_I32LE);
-    status = H5Tinsert(filetype, "K", 4, H5T_STD_I32LE);
-    status = H5Tinsert(filetype, "L", 8, H5T_STD_I32LE);
-    status = H5Tinsert(filetype, "Solution 1", 12, H5T_STD_I32LE);
-    status = H5Tinsert(filetype, "Diffraction Intensity", 16, H5T_IEEE_F32LE);
-    status = H5Tinsert(filetype, "Solution 2", 20, H5T_STD_I32LE);
-#endif
     /*
      * Create dataspace.  Setting maximum size to NULL sets the maximum
      * size to be the current size.
