@@ -285,12 +285,9 @@ int H5ReconStatsWriter::writeDistributionData(int phase, const std::string &disT
 }
 
 int H5ReconStatsWriter::writeVolumeStats(int phase, double phasefraction, double maxdiameter, double mindiameter, double diamStepSize,
-                                         double avglogdiam, double sdlogdiam,
-                                         std::vector<std::vector<double> > &svbovera,
-                                         std::vector<std::vector<double> > &svcovera,
-                                         std::vector<std::vector<double> > &svcoverb,
-                                         std::vector<std::vector<double> > &neighborhoodfit,
-                                         std::vector<std::vector<double> > &svomega3)
+                                         double avglogdiam, double sdlogdiam, std::vector<std::vector<double> > &svbovera,
+                                         std::vector<std::vector<double> > &svcovera, std::vector<std::vector<double> > &svcoverb,
+                                         std::vector<std::vector<double> > &neighborhoodfit, std::vector<std::vector<double> > &svomega3)
 {
   int err = 0;
   int retErr = 0;
@@ -391,6 +388,60 @@ int H5ReconStatsWriter::writeVolumeStats(int phase, double phasefraction, double
       retErr = err;
     }
   }
+  return err;
+}
+
+
+int H5ReconStatsWriter::writeVolumeStats2D(int phase, double phasefraction, double maxdiameter, double mindiameter, double diamStepSize,
+                                         double avglogdiam, double sdlogdiam, std::vector<std::vector<double> > &svbovera,
+                                         std::vector<std::vector<double> > &neighborhoodfit)
+{
+  int err = 0;
+  int retErr = 0;
+
+ // std::vector<double> binNum; // = generateBins((double)maxdiameter, (double)mindiameter, diamStepSize);
+  size_t nBins = 0; // Used as a variable that will get written to in the writeSizeDistribution() method
+  err = writeSizeDistribution(phase, phasefraction, (double)maxdiameter, (double)mindiameter, diamStepSize, avglogdiam, sdlogdiam, nBins);
+  if (err < 0) { retErr = err; }
+
+/* Write the Grain_SizeVBoverA_Distributions Shape Statistics which are a Beta Distribution */
+  {
+    std::vector<double> alpha(nBins, 0.0);
+    std::vector<double> beta(nBins, 0.0);
+    // Convert from Row Major to Column Major
+    for (size_t temp7 = 0; temp7 < nBins; ++temp7)
+    {
+      alpha[temp7] = svbovera[temp7][3];
+      beta[temp7] = svbovera[temp7][4];
+    }
+    err = writeBetaDistribution(phase, AIM::HDF5::Grain_SizeVBoverA_Distributions, alpha, beta);
+    if (err < 0)
+    {
+      H5RSW_ERROR_CHECK(AIM::HDF5::Grain_SizeVBoverA_Distributions)
+      retErr = err;
+    }
+  }
+
+  /* Write the Grain_SizeVNeighbors_Distributions Neighbor Statistics which is a Power Law Distribution */
+  {
+    std::vector<double> alpha(nBins, 0.0);
+    std::vector<double> beta(nBins, 0.0);
+    std::vector<double> k(nBins, 0.0);
+    // Convert from Row Major to Column Major
+    for (size_t temp7 = 0; temp7 < nBins; ++temp7)
+    {
+      alpha[temp7] = neighborhoodfit[temp7][1];
+      beta[temp7] = neighborhoodfit[temp7][2];
+      k[temp7] = neighborhoodfit[temp7][3];
+    }
+    err = writePowerDistribution(phase, AIM::HDF5::Grain_SizeVNeighbors_Distributions, alpha, k, beta);
+    if (err < 0)
+    {
+      H5RSW_ERROR_CHECK(AIM::HDF5::Grain_SizeVNeighbors_Distributions)
+      retErr = err;
+    }
+  }
+
   return err;
 }
 

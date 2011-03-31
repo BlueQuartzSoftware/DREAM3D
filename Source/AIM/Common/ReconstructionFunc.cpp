@@ -3742,7 +3742,7 @@ int ReconstructionFunc::volume_stats2D(H5ReconStatsWriter::Pointer h5io)
   vector<vector<double> > svcoverb;
   vector<vector<double> > svschmid;
   vector<vector<double> > svomega3;
-  for(int iter=0;iter<crystruct.size();iter++)
+  for(int iter=1;iter<crystruct.size();iter++)
   {
 	  int numbins = int((maxdiameter[iter] - mindiameter[iter]) / sizebinstepsize) + 1;
 	  size_t numgrains = m_Grains.size();
@@ -3849,7 +3849,7 @@ int ReconstructionFunc::volume_stats2D(H5ReconStatsWriter::Pointer h5io)
 	  sdlogdiam = sdlogdiam / actualgrains;
 	  sdlogdiam = pow(sdlogdiam, 0.5);
 
-	  retErr = h5io->writeVolumeStats(iter, phasefraction[iter], maxdiameter[iter], mindiameter[iter], 1.0, avglogdiam, sdlogdiam, svbovera, svcovera, svcoverb, neighborhoodfit, svomega3);
+	  retErr = h5io->writeVolumeStats2D(iter, phasefraction[iter], maxdiameter[iter], mindiameter[iter], 1.0, avglogdiam, sdlogdiam, svbovera, neighborhoodfit);
   }
   return retErr;
 }

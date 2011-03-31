@@ -102,6 +102,11 @@ class AIMCOMMON_EXPORT H5ReconStatsWriter
                          std::vector<std::vector<double> > &neighborhoodfit,
                          std::vector<std::vector<double> > &svomega3);
 
+    int writeVolumeStats2D(int phase, double phasefraction, double maxdiameter, double mindiameter, double diamStepSize,
+                         double avglogdiam, double sdlogdiam,
+                         std::vector<std::vector<double> > &svbovera,
+                         std::vector<std::vector<double> > &neighborhoodfit);
+
   protected:
     H5ReconStatsWriter();
   private:
