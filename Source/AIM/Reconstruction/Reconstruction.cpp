@@ -150,21 +150,16 @@ void Reconstruction::compute()
     return;
   }
   std::vector<AngPhase::Pointer> phases = h5AngLoader->getPhases();
-  int size = phases.size();
-  m_CrystalStructure.resize(size);
-  ofstream outFile;
-  string filename = "test.txt";
-  outFile.open(filename.c_str());
-  for(int i=0;i<size;i++)
+  m_CrystalStructure.resize(phases.size()+1);
+  for(int i=0;i<phases.size();i++)
   {
-	  int phaseID = test[0]->getPhase();
+	  int phaseID = phases[i]->getPhase();
+	  int symmetry = phases[i]->getSymmetry();
 	  AIM::Reconstruction::CrystalStructure crystal_structure;
-	  if(phaseID == 43) crystal_structure = AIM::Reconstruction::Cubic;
-	  if(phaseID == 62) crystal_structure = AIM::Reconstruction::Hexagonal;
+	  if(symmetry == 43) crystal_structure = AIM::Reconstruction::Cubic;
+	  if(symmetry == 62) crystal_structure = AIM::Reconstruction::Hexagonal;
 	  m_CrystalStructure[phaseID] = crystal_structure;
-	  outFile << i << "	" << phaseID << endl;
   }
-  outFile.close();
 
   if (err < 0)
   {
@@ -338,7 +333,6 @@ void Reconstruction::compute()
   m->define_neighborhood();
   CHECK_FOR_CANCELED(ReconstructionFunc, define_neighborhood)
 
-
   progressMessage(AIM_STRING("Finding Euclidean Distance Maps"), 68);
   m->find_euclidean_map();
   CHECK_FOR_CANCELED(ReconstructionFunc, find_euclidean_map)
@@ -362,6 +356,8 @@ void Reconstruction::compute()
   progressMessage(AIM_STRING("Writing Statistics"), 88);
   if(m_ZEndIndex-m_ZStartIndex > 1) { m->volume_stats(h5io); }
   if(m_ZEndIndex-m_ZStartIndex == 1) { m->volume_stats2D(h5io); }
+
+  progressMessage(AIM_STRING("Writing Deformation Statistics"), 88);
   m->deformation_stats(reconDeformStatsFile, reconDeformIPFFile);
   CHECK_FOR_CANCELED(ReconstructionFunc, volume_stats)
 

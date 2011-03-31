@@ -416,94 +416,74 @@ int H5AngReader::readData(hid_t parId)
   std::vector<size_t> shuffleTable(totalDataRows, 0);
   int userOrigin = getUserOrigin();
 
-  for(size_t i = 0; i < totalDataRows; ++i)
+  for(size_t i = 0; i < nRows; ++i)
   {
+	  for(size_t j = 0; j < nCols; ++j)
+	  {
     // Do we transform the data
-      if (userOrigin == Ang::UpperRightOrigin)
-      {
-        x[i] = xMaxValue - x[i];
-        if (p1[i] - PI_OVER_2f < 0.0)
-        {
-          p1[i] = p1[i] + THREE_PI_OVER_2f;
-        }
-        else
-        {
-          p1[i] = p1[i] - PI_OVER_2f;
-        }
-      }
-      else if (userOrigin == Ang::UpperLeftOrigin)
-      {
-        if (p1[i] + PI_OVER_2f > TWO_PIf)
-        {
-          p1[i] = p1[i] - THREE_PI_OVER_2f;
-        }
-        else
-        {
-          p1[i] = p1[i] + PI_OVER_2f;
-        }
-        if (p[i] + ONE_PIf > TWO_PIf)
-        {
-          p[i] = p[i] - ONE_PIf;
-        }
-        else
-        {
-          p[i] = p[i] + ONE_PIf;
-        }
-      }
-      else if (userOrigin == Ang::LowerLeftOrigin)
-      {
-        y[i] = yMaxValue - y[i];
-        if (p1[i] + PI_OVER_2f > TWO_PIf)
-        {
-          p1[i] = p1[i] - THREE_PI_OVER_2f;
-        }
-        else
-        {
-          p1[i] = p1[i] + PI_OVER_2f;
-        }
-      }
-      else if (userOrigin == Ang::LowerRightOrigin)
-      {
-        x[i] = xMaxValue - x[i];
-        y[i] = yMaxValue - y[i];
-      }
+		  if (userOrigin == Ang::UpperRightOrigin)
+		  {
+			offset = (i*nCols)+((nCols-1)-j);
+			if (p1[i] - PI_OVER_2f < 0.0)
+			{
+			  p1[i] = p1[i] + THREE_PI_OVER_2f;
+			}
+			else
+			{
+			  p1[i] = p1[i] - PI_OVER_2f;
+			}
+		  }
+		  else if (userOrigin == Ang::UpperLeftOrigin)
+		  {
+			if (p1[i] + PI_OVER_2f > TWO_PIf)
+			{
+			  p1[i] = p1[i] - THREE_PI_OVER_2f;
+			}
+			else
+			{
+			  p1[i] = p1[i] + PI_OVER_2f;
+			}
+			if (p[i] + ONE_PIf > TWO_PIf)
+			{
+			  p[i] = p[i] - ONE_PIf;
+			}
+			else
+			{
+			  p[i] = p[i] + ONE_PIf;
+			}
+		  }
+		  else if (userOrigin == Ang::LowerLeftOrigin)
+		  {
+			offset = (((nRows-1)-i)*nCols)+j;
+			if (p1[i] + PI_OVER_2f > TWO_PIf)
+			{
+			  p1[i] = p1[i] - THREE_PI_OVER_2f;
+			}
+			else
+			{
+			  p1[i] = p1[i] + PI_OVER_2f;
+			}
+		  }
+		  else if (userOrigin == Ang::LowerRightOrigin)
+		  {
+			offset = (((nRows-1)-i)*nCols)+((nCols-1)-j);
+		  }
 
-      if (userOrigin == Ang::NoOrientation)
-      {
-        // If the user/programmer sets "NoOrientation" then we simply read the data
-        // from the file and copy the values into the arrays without any regard for
-        // the true X and Y positions in the grid. We are simply trying to keep the
-        // data as close to the original as possible.
-        offset = i;
-      }
-      else
-      {
-        // The next set of calculations figures out where to place the data
-        // in the arrays, ie, which offset based on the array really being a
-        // 2D array that is laid out with the X Axis moving the fastest and
-        // the Y Axis moving the slowest. On Visual Studio there seems to be some
-        // sort of round off error when the floats are converted to size_t types.
-        // In order for Visual Studio compilers to get the conversion correct
-        // it seems that we need to break up the calculations, at least on 32 bit
-        // compiles. 64 Bit compiles did not show this issue. If the user/programmer
-        // sets any type of Orientation preference then we have to calculate
-        // the offsets based on the x, y, xStep and yStep values. Changes to the
-        // x and y values from the "if" statements above will effect what the final
-        // offset is calculated to be.
-        float xTemp = x[i] / xstep;
-        float yTemp = y[i] / ystep;
-        size_t xTempSizeT = static_cast<size_t>(xTemp);
-        size_t yTempSizeT = static_cast<size_t>(yTemp);
-        offset = yTempSizeT * nCols + xTempSizeT;
-      }
-      shuffleTable[i] = offset;
+		  if (userOrigin == Ang::NoOrientation)
+		  {
+			// If the user/programmer sets "NoOrientation" then we simply read the data
+			// from the file and copy the values into the arrays without any regard for
+			// the true X and Y positions in the grid. We are simply trying to keep the
+			// data as close to the original as possible.
+			offset = i;
+		  }
+		  shuffleTable[(i*nCols)+j] = offset;
+	  }
   }
 
   SHUFFLE_ARRAY(Phi1, p1)
   SHUFFLE_ARRAY(Phi, p)
   SHUFFLE_ARRAY(Phi2, p2)
-  SHUFFLE_ARRAY(XPos, x)
-  SHUFFLE_ARRAY(YPos, y)
   SHUFFLE_ARRAY(ImageQuality, iqual)
   SHUFFLE_ARRAY(ConfidenceIndex, conf)
   SHUFFLE_ARRAY(Phase, ph)
