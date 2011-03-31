@@ -148,6 +148,8 @@ int H5ReconStatsWriter::writeSizeDistribution(int phase, double phasefraction, d
   /* Clean up the rest of the HDF5 structures and close the file */
   err = H5Gclose(pid);
   if (err < 0) { retErr = err; }
+  err = H5Gclose(gid);
+  if (err < 0) { retErr = err; }
   err = H5Utilities::closeFile(fileId);
   if (err < 0) { retErr = err; }
   return retErr;
@@ -274,6 +276,8 @@ int H5ReconStatsWriter::writeDistributionData(int phase, const std::string &disT
   }
   /* Clean up the rest of the HDF5 structures and close the file */
   err = H5Gclose(pid);
+  if (err < 0) { retErr = err; }
+  err = H5Gclose(gid);
   if (err < 0) { retErr = err; }
   err = H5Utilities::closeFile(fileId);
   if (err < 0) { retErr = err; }
@@ -409,6 +413,7 @@ int H5ReconStatsWriter::writeMisorientationBinsData(int phase, double* misobins,
     retErr = err;
   }
   err = H5Gclose(pid);
+  err = H5Gclose(gid);
   err = H5Utilities::closeFile(fileId);
   return err;
 }
@@ -435,6 +440,8 @@ int H5ReconStatsWriter::writeMicroTextureData(int phase, double* microbin, size_
   }
   /* Clean up the rest of the HDF5 structures and close the file */
   err = H5Gclose(pid);
+  if (err < 0) { retErr = err; }
+  err = H5Gclose(gid);
   if (err < 0) { retErr = err; }
   err = H5Utilities::closeFile(fileId);
   if (err < 0) { retErr = err; }
@@ -469,6 +476,8 @@ int H5ReconStatsWriter::writeAxisOrientationData(int phase, double* axisodf, dou
   /* Clean up the rest of the HDF5 structures and close the file */
   err = H5Gclose(pid);
   if (err < 0) { retErr = err; }
+  err = H5Gclose(gid);
+  if (err < 0) { retErr = err; }
   err = H5Utilities::closeFile(fileId);
   if (err < 0) { retErr = err; }
   return retErr;
@@ -501,6 +510,8 @@ int H5ReconStatsWriter::writeODFData(int phase, AIM::Reconstruction::CrystalStru
 
   /* Clean up the rest of the HDF5 structures and close the file */
   err = H5Gclose(pid);
+  if (err < 0) { retErr = err; }
+  err = H5Gclose(gid);
   if (err < 0) { retErr = err; }
   err = H5Utilities::closeFile(fileId);
   if (err < 0) { retErr = err; }

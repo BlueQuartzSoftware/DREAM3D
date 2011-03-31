@@ -102,21 +102,17 @@ class AIMCOMMON_EXPORT ReconstructionFunc
     // vector<vector<double> > grainquats;
     DoubleArrayType::Pointer m_grainQuats;
 
-	vector<vector<double> > neighborhood;
-    vector<vector<double> > neighborhoodfit;
-    vector<vector<double> > svbovera;
-    vector<vector<double> > svcovera;
-    vector<vector<double> > svcoverb;
-    vector<vector<double> > svschmid;
-    vector<vector<double> > svomega3;
-
     int numseNbins;
     int numorients;
     int numeulers;
  //   int numgrains;
     vector<double> totalsurfacearea;
+	vector<double> phasefraction;
+    vector<double> totalvol;
+    vector<double> totalaxes;
     vector<int> maxdiameter;
     vector<int> mindiameter;
+	double unbiasedvol;
     int cutoutxsize;
     int cutoutysize;
     int cmaxx;
@@ -131,9 +127,6 @@ class AIMCOMMON_EXPORT ReconstructionFunc
     int totalpoints;
     int totaltemppoints;
     int numneighbins;
-	vector<double> phasefraction;
-    vector<double> totalvol;
-    vector<double> totalaxes;
 
 
     void initialize(int nX, int nY, int nZ,
