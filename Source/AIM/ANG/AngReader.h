@@ -121,7 +121,7 @@ class AIMCOMMON_EXPORT AngReader
     virtual ~AngReader();
 
     /** @brief Allow the user to set the origin of the scan */
-    angInstanceProperty_old(int, UserOrigin)
+    angInstanceProperty_old(Ang::Orientation, UserOrigin)
 
     /** @brief Sets the file name of the ang file to be read */
     angStringProperty_old( FileName )
@@ -187,11 +187,11 @@ class AIMCOMMON_EXPORT AngReader
     float* getXPosPointer() { return m_X; }
     float* getYPosPointer() { return m_Y; }
     float* getImageQualityPointer() { return m_Iq; }
-    float* getImageQuality2Pointer() { return m_D1; }
+    float* getImageQuality2Pointer() { return m_SEMSignal; }
     float* getConfidenceIndexPointer() { return m_Ci; }
     float* getPhasePointer() { return m_PhaseData; }
-    float* getD1Pointer() { return m_D1; }
-    float* getD2Pointer() { return m_D1; }
+    float* getSEMSignalPointer() { return m_SEMSignal; }
+    float* getFitPointer() { return m_SEMSignal; }
 
     SET_POINTER(Phi1, Phi1)
     SET_POINTER(Phi, Phi)
@@ -201,8 +201,8 @@ class AIMCOMMON_EXPORT AngReader
     SET_POINTER(ImageQuality, Iq)
     SET_POINTER(ConfidenceIndex, Ci)
     SET_POINTER(Phase, PhaseData)
-    SET_POINTER(D1, D1)
-    SET_POINTER(D2, D2)
+    SET_POINTER(SEMSignal, SEMSignal)
+    SET_POINTER(Fit, Fit)
 
 protected:
     // Needed by subclasses
@@ -264,8 +264,8 @@ private:
     float* m_PhaseData;
     float* m_X;
     float* m_Y;
-    float* m_D1;
-    float* m_D2;
+    float* m_SEMSignal;
+    float* m_Fit;
     bool m_ManageMemory;  // We are going to forcibly manage the memory. There is currently NO option otherwise.
     bool m_headerComplete;
 
@@ -281,8 +281,7 @@ private:
     * @param line The line of data to parse
     */
     void readData(const std::string &line,
-      float xMaxValue, float yMaxValue, int nCols,
-      float xstep, float ystep, size_t counter);
+      int nCols, int currentCol, int nRows, int currentRow, size_t counter);
 
     AngReader(const AngReader&);    // Copy Constructor Not Implemented
     void operator=(const AngReader&);  // Operator '=' Not Implemented

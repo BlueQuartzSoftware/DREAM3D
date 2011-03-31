@@ -359,7 +359,7 @@ int H5AngReader::readData(hid_t parId)
   if (NULL == getPhi1Pointer() || NULL == getPhiPointer() || NULL == getPhi2Pointer()
       || NULL == getImageQualityPointer()  || NULL == getConfidenceIndexPointer()
       || NULL == getPhasePointer() || getXPosPointer() == NULL || getYPosPointer() == NULL
-      || NULL == getD1Pointer() || NULL == getD2Pointer())
+      || NULL == getSEMSignalPointer() || NULL == getFitPointer())
   {
     return -1;
   }
@@ -389,12 +389,12 @@ int H5AngReader::readData(hid_t parId)
   err = H5Lite::readPointerDataset(gid, TSL::OIM::XPosition, getXPosPointer());
   err = H5Lite::readPointerDataset(gid, TSL::OIM::YPosition, getYPosPointer());
 
-  err = H5Lite::readPointerDataset(gid, TSL::OIM::D2, getD2Pointer());
+  err = H5Lite::readPointerDataset(gid, TSL::OIM::Fit, getFitPointer());
   if (err < 0)
   {
     setNumFields(9);
   }
-  err = H5Lite::readPointerDataset(gid, TSL::OIM::D1, getD1Pointer());
+  err = H5Lite::readPointerDataset(gid, TSL::OIM::SEMSignal, getSEMSignalPointer());
   if (err < 0)
   {
     setNumFields(8);
@@ -408,22 +408,22 @@ int H5AngReader::readData(hid_t parId)
   float* iqual = getImageQualityPointer();
   float* conf = getConfidenceIndexPointer();
   float* ph = getPhasePointer();
-  float* d1 = getD1Pointer();
-  float* d2 = getD2Pointer();
+  float* semSignal = getSEMSignalPointer();
+  float* fit = getFitPointer();
 
   int nCols = getNumEvenCols();
   size_t offset = 0;
   std::vector<size_t> shuffleTable(totalDataRows, 0);
-  int userOrigin = getUserOrigin();
 
-  for(size_t i = 0; i < nRows; ++i)
+  size_t i = 0;
+  for(size_t row = 0; row < nRows; ++row)
   {
-	  for(size_t j = 0; j < nCols; ++j)
+	  for(size_t col = 0; col < nCols; ++col)
 	  {
     // Do we transform the data
-		  if (userOrigin == Ang::UpperRightOrigin)
+		  if (getUserOrigin() == Ang::UpperRightOrigin)
 		  {
-			offset = (i*nCols)+((nCols-1)-j);
+			offset = (row*nCols)+((nCols-1)-col);
 			if (p1[i] - PI_OVER_2f < 0.0)
 			{
 			  p1[i] = p1[i] + THREE_PI_OVER_2f;
@@ -433,7 +433,7 @@ int H5AngReader::readData(hid_t parId)
 			  p1[i] = p1[i] - PI_OVER_2f;
 			}
 		  }
-		  else if (userOrigin == Ang::UpperLeftOrigin)
+		  else if (getUserOrigin() == Ang::UpperLeftOrigin)
 		  {
 			if (p1[i] + PI_OVER_2f > TWO_PIf)
 			{
@@ -452,9 +452,9 @@ int H5AngReader::readData(hid_t parId)
 			  p[i] = p[i] + ONE_PIf;
 			}
 		  }
-		  else if (userOrigin == Ang::LowerLeftOrigin)
+		  else if (getUserOrigin() == Ang::LowerLeftOrigin)
 		  {
-			offset = (((nRows-1)-i)*nCols)+j;
+			offset = (((nRows-1)-row)*nCols)+col;
 			if (p1[i] + PI_OVER_2f > TWO_PIf)
 			{
 			  p1[i] = p1[i] - THREE_PI_OVER_2f;
@@ -464,12 +464,12 @@ int H5AngReader::readData(hid_t parId)
 			  p1[i] = p1[i] + PI_OVER_2f;
 			}
 		  }
-		  else if (userOrigin == Ang::LowerRightOrigin)
+		  else if (getUserOrigin() == Ang::LowerRightOrigin)
 		  {
-			offset = (((nRows-1)-i)*nCols)+((nCols-1)-j);
+			offset = (((nRows-1)-row)*nCols)+((nCols-1)-col);
 		  }
 
-		  if (userOrigin == Ang::NoOrientation)
+		  if (getUserOrigin() == Ang::NoOrientation)
 		  {
 			// If the user/programmer sets "NoOrientation" then we simply read the data
 			// from the file and copy the values into the arrays without any regard for
@@ -477,7 +477,8 @@ int H5AngReader::readData(hid_t parId)
 			// data as close to the original as possible.
 			offset = i;
 		  }
-		  shuffleTable[(i*nCols)+j] = offset;
+		  shuffleTable[(row*nCols)+col] = offset;
+      ++i;
 	  }
   }
 
@@ -487,13 +488,13 @@ int H5AngReader::readData(hid_t parId)
   SHUFFLE_ARRAY(ImageQuality, iqual)
   SHUFFLE_ARRAY(ConfidenceIndex, conf)
   SHUFFLE_ARRAY(Phase, ph)
-  if (NULL != d1)
+  if (NULL != semSignal)
   {
-    SHUFFLE_ARRAY(D1, d1)
+    SHUFFLE_ARRAY(SEMSignal, semSignal)
   }
-  if (NULL != d2)
+  if (NULL != fit)
   {
-    SHUFFLE_ARRAY(D2, d2)
+    SHUFFLE_ARRAY(Fit, fit)
   }
 
   err = H5Gclose(gid);
