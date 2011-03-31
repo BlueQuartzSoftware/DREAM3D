@@ -43,9 +43,11 @@
 namespace AIM
 {
   /**
-   * @class QUaternions QUaternions.h AIM/Common/QUaternions.h
-   * @brief This class is just designed to hold the Quarterions for the Cubic and
-   * Hexagonal crystal structures.
+   * @class Quaternions Quaternions.h AIM/Common/Quaternions.h
+   * @brief This class is just designed to hold the Quaternions for the Cubic and
+   * Hexagonal crystal structures. <b>Please not that for historical reasons the size of the array that
+   * holds the quaternion is of size 5<b>. The first element of the array holds calculation specific
+   * value. The actual quaternion is represented by Elements 1, 2, 3, 4.
    * @author Michael A. Jackson for BlueQuartz Software
    * @date Jan 19, 2011
    * @version 1.0
@@ -56,18 +58,20 @@ namespace AIM
       ~Quaternions() { }
 
       /**
-       * @brief Multiply by a unit quaterion for Hexagonal
-       * @param unitQuat
-       * @param i
-       * @param outQuat
+       * @brief Multiply by a unit quaternion for Hexagonal
+       * @param unitQuat 5 Element array where the actual quaternion is located in elements 1,2,3,4
+       * @param i The index of the reference data from AIM::Quaternions::quat_symmhex
+       * @param outQuat Output Quaternion where it is a 5 Element array and where the actual 
+       * calculated quaternion is located in elements 1,2,3,4
        */
       static AIMCOMMON_EXPORT void Hex_MultiplyByUnitQuaterion(double* unitQuat, size_t i, double* outQuat);
 
       /**
-       * @brief Multiply by a unit quaterion for Cubic
-       * @param unitQuat
-       * @param i
-       * @param outQuat
+       * @brief Multiply by a unit quaternion for Cubic
+       * @param unitQuat 5 Element array where the actual quaternion is located in elements 1,2,3,4
+       * @param i The index of the reference data from AIM::Quaternions::quat_symmcubic
+       * @param outQuat Output Quaternion where it is a 5 Element array and where the actual 
+       * calculated quaternion is located in elements 1,2,3,4
        */
       static AIMCOMMON_EXPORT void Cubic_MultiplyByUnitQuaterion(double* unitQuat, size_t i, double* outQuat);
 
