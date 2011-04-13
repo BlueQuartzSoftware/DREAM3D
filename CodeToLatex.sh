@@ -1,7 +1,9 @@
 #!/bin/bash
 
 texFile=/tmp/AIMRepresentation_PublicAffairs_Release.tex
-cd "/Users/mjackson/Contracts/AFRL-TO90/AIMRepresentation"
+# cd "/Users/mjackson/Contracts/AFRL-TO90/AIMRepresentation"
+DATE=`date +%Y.%m.%d`
+git archive --format=tar HEAD | gzip > /tmp/AIMRepresentation_$DATE.tar.gz
 
 
 echo "\documentclass[10pt,oneside]{book}" > $texFile
