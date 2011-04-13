@@ -232,13 +232,7 @@ int H5AngDataLoader::loadData(Voxel voxels[], int xpoints, int ypoints, int zpoi
         voxels[index].imagequality2 = imqual2Ptr[readerIndex];// Image Quality
         voxels[index].confidence = confPtr[readerIndex];// Confidence
 		voxels[index].phase = phasePtr[readerIndex];// Phase
-		MisorientationCalculations::initializeQ(qr,euler1Ptr[readerIndex],euler2Ptr[readerIndex],euler3Ptr[readerIndex]);
-        MisorientationCalculations::getFZQuatCubic(qr);
-        voxels[index].quat[0] = 1.0;
-        voxels[index].quat[1] = qr[1];
-        voxels[index].quat[2] = qr[2];
-        voxels[index].quat[3] = qr[3];
-        voxels[index].quat[4] = qr[4];
+		if(voxels[index].phase == 0) voxels[index].phase = 1;
         ++readerIndex;
       }
     }

@@ -240,15 +240,17 @@ int ReconstructionVTKWriter::writeIPFVizFile(ReconstructionFunc* r, const std::s
   }
 #else
 
+  WRITE_VTK_SCALARS_FROM_VOXEL(r, Phase, float, phase)
+
   fprintf(f, "COLOR_SCALARS IPF_Colors 3\n");
   double red,green,blue;
-  double q1[4];
+  double q1[5];
   unsigned char rgb[3] =
   { 0, 0, 0};
   unsigned char hkl[3] =
   { 0, 0, 0};
   double RefDirection[3] =
-  { 0.0, 0.0, 1.0};
+  { 1.0, 0.0, 0.0};
   int phase;
   for (size_t i = 0; i < total; i++)
   {
@@ -263,11 +265,11 @@ int ReconstructionVTKWriter::writeIPFVizFile(ReconstructionFunc* r, const std::s
     }
     if(r->crystruct[phase] == AIM::Reconstruction::Hexagonal)
     {
-      q1[0]=r->voxels[i].quat[1];
-      q1[1]=r->voxels[i].quat[2];
-      q1[2]=r->voxels[i].quat[3];
-      q1[3]=r->voxels[i].quat[4];
-      OIMColoring::CalculateHexIPFColor(q1, rgb);
+	  q1[1]=r->voxels[i].quat[1];
+      q1[2]=r->voxels[i].quat[2];
+      q1[3]=r->voxels[i].quat[3];
+      q1[4]=r->voxels[i].quat[4];
+      OIMColoring::CalculateHexIPFColor(q1, RefDirection[0], RefDirection[1], RefDirection[2], rgb);
       red = static_cast<double>(double(rgb[0])/255.0);
       green = static_cast<double>(double(rgb[1])/255.0);
       blue = static_cast<double>(double(rgb[2])/255.0);
