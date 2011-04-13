@@ -125,6 +125,21 @@ void ReconstructionFunc::initialize(int nX, int nY, int nZ, double xRes, double 
   m_grainQuats = DoubleArrayType::NullPointer();
 }
 
+void ReconstructionFunc::initializeQuats()
+{
+	double qr[5];
+	for(int i=0;i<(xpoints*ypoints*zpoints);i++)
+	{
+		MisorientationCalculations::initializeQ(qr,voxels[i].euler1,voxels[i].euler2,voxels[i].euler3);
+		if(crystruct[voxels[i].phase] == AIM::Reconstruction::Cubic) MisorientationCalculations::getFZQuatCubic(qr);
+		if(crystruct[voxels[i].phase] == AIM::Reconstruction::Hexagonal) MisorientationCalculations::getFZQuatHexagonal(qr);
+        voxels[i].quat[0] = 1.0;
+        voxels[i].quat[1] = qr[1];
+        voxels[i].quat[2] = qr[2];
+        voxels[i].quat[3] = qr[3];
+        voxels[i].quat[4] = qr[4];
+	}
+}
 void ReconstructionFunc::cleanup_data()
 {
   double bestneighborconfidence;
@@ -1408,10 +1423,6 @@ void ReconstructionFunc::reorder_grains(const std::string &reconVisFile)
           }
         }
       }
-	  if(size == 0)
-	  {
-		int stop = 0;
-	  }
       m_Grains[currentgrain]->voxellist->erase(std::remove(m_Grains[currentgrain]->voxellist->begin(), m_Grains[currentgrain]->voxellist->end(), -1), m_Grains[currentgrain]->voxellist->end());
       m_Grains[currentgrain]->active = 1;
       m_Grains[currentgrain]->nucleus = nucleus;
@@ -2460,11 +2471,17 @@ void ReconstructionFunc::define_neighborhood()
             dist2_int = int(dist2 / (diam2/2.0));
             if (dist_int < 3)
             {
-              grain.neighbordistfunc[dist_int]++;
+				for(int iter=dist_int;iter<3;iter++)
+				{
+	              grain.neighbordistfunc[dist_int]++;
+				}
             }
             if (dist2_int < 3)
             {
-              grain_j.neighbordistfunc[dist2_int]++;
+				for(int iter=dist2_int;iter<3;iter++)
+				{
+	              grain_j.neighbordistfunc[dist2_int]++;
+				}
             }
           }
         }
@@ -2550,7 +2567,7 @@ void ReconstructionFunc::find_centroids()
   }
   for(int i=1;i<crystruct.size();i++)
   {
-	phasefraction[i] = phasefraction[i]/unbiasedvol;
+	phasefraction[i] = totalvol[i]/unbiasedvol;
   }
 }
 void ReconstructionFunc::find_centroids2D()
@@ -2622,7 +2639,7 @@ void ReconstructionFunc::find_centroids2D()
   }
   for(int i=1;i<crystruct.size();i++)
   {
-	phasefraction[i] = phasefraction[i]/unbiasedvol;
+	phasefraction[i] = totalvol[i]/unbiasedvol;
   }
 }
 
@@ -3295,10 +3312,11 @@ void ReconstructionFunc::find_eulerodf(H5ReconStatsWriter::Pointer h5io)
     if (m_Grains[i]->surfacegrain == 0 && m_Grains[i]->active == 1)
     {
       double vol = m_Grains[i]->volume;
-      q1[1] = m_Grains[i]->avg_quat[1];
-      q1[2] = m_Grains[i]->avg_quat[2];
-      q1[3] = m_Grains[i]->avg_quat[3];
-      q1[4] = m_Grains[i]->avg_quat[4];
+      q1[0] = m_Grains[i]->avg_quat[0]/m_Grains[i]->avg_quat[0];
+      q1[1] = m_Grains[i]->avg_quat[1]/m_Grains[i]->avg_quat[0];
+      q1[2] = m_Grains[i]->avg_quat[2]/m_Grains[i]->avg_quat[0];
+      q1[3] = m_Grains[i]->avg_quat[3]/m_Grains[i]->avg_quat[0];
+      q1[4] = m_Grains[i]->avg_quat[4]/m_Grains[i]->avg_quat[0];
 	  phase = crystruct[m_Grains[i]->phase];
       if (phase == AIM::Reconstruction::Hexagonal)
       {
@@ -3372,6 +3390,7 @@ void ReconstructionFunc::measure_misorientations(H5ReconStatsWriter::Pointer h5i
   for (int i = 1; i < numgrains; i++)
   {
     microcount = 0;
+	q1[0] = m_Grains[i]->avg_quat[0]/m_Grains[i]->avg_quat[0];
 	q1[1] = m_Grains[i]->avg_quat[1]/m_Grains[i]->avg_quat[0];
     q1[2] = m_Grains[i]->avg_quat[2]/m_Grains[i]->avg_quat[0];
     q1[3] = m_Grains[i]->avg_quat[3]/m_Grains[i]->avg_quat[0];
@@ -3382,6 +3401,7 @@ void ReconstructionFunc::measure_misorientations(H5ReconStatsWriter::Pointer h5i
     {
 	  w = 10000.0;
       nname = m_Grains[i]->neighborlist->at(j);
+      q2[0] = m_Grains[nname]->avg_quat[0]/m_Grains[nname]->avg_quat[0];
       q2[1] = m_Grains[nname]->avg_quat[1]/m_Grains[nname]->avg_quat[0];
       q2[2] = m_Grains[nname]->avg_quat[2]/m_Grains[nname]->avg_quat[0];
       q2[3] = m_Grains[nname]->avg_quat[3]/m_Grains[nname]->avg_quat[0];
@@ -3440,7 +3460,7 @@ void ReconstructionFunc::find_colors()
   unsigned char hkl[3] =
   { 0, 0, 0 };
   double RefDirection[3] =
-  { 0.0, 0.0, 1.0 };
+  { 0.0, 1.0, 0.0 };
   double q1[5];
   for (int i = 1; i < numgrains; i++)
   {
@@ -3449,7 +3469,7 @@ void ReconstructionFunc::find_colors()
 	  double g1ea1 = m_Grains[i]->euler1;
 	  double g1ea2 = m_Grains[i]->euler2;
 	  double g1ea3 = m_Grains[i]->euler3;
-	  q1[0] = 1;
+      q1[0] = m_Grains[i]->avg_quat[0]/m_Grains[i]->avg_quat[0];
       q1[1] = m_Grains[i]->avg_quat[1]/m_Grains[i]->avg_quat[0];
       q1[2] = m_Grains[i]->avg_quat[2]/m_Grains[i]->avg_quat[0];
       q1[3] = m_Grains[i]->avg_quat[3]/m_Grains[i]->avg_quat[0];
@@ -3466,7 +3486,7 @@ void ReconstructionFunc::find_colors()
       }
       if (crystruct[m_Grains[i]->phase] == AIM::Reconstruction::Hexagonal)
       {
-        OIMColoring::CalculateHexIPFColor(q1, rgb);
+        OIMColoring::CalculateHexIPFColor(q1, RefDirection[0], RefDirection[1], RefDirection[2], rgb);
         m_Grains[i]->red = rgb[0] / 255.0;
         m_Grains[i]->green = rgb[1] / 255.0;
         m_Grains[i]->blue = rgb[2] / 255.0;
@@ -3477,7 +3497,7 @@ void ReconstructionFunc::find_colors()
 void ReconstructionFunc::find_schmids()
 {
   int ss = 0;
-  double q1[4];
+  double q1[5];
   double schmid = 0;
   double loadx, loady, loadz;
   double theta1, theta2, theta3, theta4;
@@ -3488,13 +3508,13 @@ void ReconstructionFunc::find_schmids()
   {
     if (m_Grains[i]->active == 1)
     {
-      q1[0] = m_Grains[i]->avg_quat[1]/m_Grains[i]->avg_quat[0];
-      q1[1] = m_Grains[i]->avg_quat[2]/m_Grains[i]->avg_quat[0];
-      q1[2] = m_Grains[i]->avg_quat[3]/m_Grains[i]->avg_quat[0];
-      q1[3] = m_Grains[i]->avg_quat[4]/m_Grains[i]->avg_quat[0];
-      loadx = (2 * q1[0] * q1[2] + 2 * q1[1] * q1[3]) * 1;
-      loady = (2 * q1[1] * q1[2] - 2 * q1[0] * q1[3]) * 1;
-      loadz = (1 - 2 * q1[0] * q1[0] - 2 * q1[1] * q1[1]) * 1;
+      q1[1] = m_Grains[i]->avg_quat[1]/m_Grains[i]->avg_quat[0];
+      q1[2] = m_Grains[i]->avg_quat[2]/m_Grains[i]->avg_quat[0];
+      q1[3] = m_Grains[i]->avg_quat[3]/m_Grains[i]->avg_quat[0];
+      q1[4] = m_Grains[i]->avg_quat[4]/m_Grains[i]->avg_quat[0];
+      loadx = (2 * q1[1] * q1[3] + 2 * q1[2] * q1[4]) * 1;
+      loady = (2 * q1[2] * q1[3] - 2 * q1[1] * q1[4]) * 1;
+      loadz = (1 - 2 * q1[1] * q1[1] - 2 * q1[2] * q1[2]) * 1;
       double mag = loadx * loadx + loady * loady + loadz * loadz;
       mag = pow(mag, 0.5);
       theta1 = (loadx + loady + loadz) / (mag * 1.732);
@@ -3783,7 +3803,7 @@ int ReconstructionFunc::volume_stats2D(H5ReconStatsWriter::Pointer h5io)
 		  neighborhood[diamint][0]++;
 		  for (int k = 0; k < 3; k++)
 		  {
-			int nnum = neighdistfunc[k];
+			int nnum = m_Grains[i]->neighbordistfunc[k];
 			neighborhood[diamint][((2 * k) + 1)] = neighborhood[diamint][((2 * k) + 1)] + nnum;
 		  }
 		}
@@ -3822,7 +3842,7 @@ int ReconstructionFunc::volume_stats2D(H5ReconStatsWriter::Pointer h5io)
 		  svschmid[diamint][2] = svschmid[diamint][2] + ((schmid - svschmid[diamint][1]) * (schmid - svschmid[diamint][1]));
 		  for (int k = 0; k < 3; k++)
 		  {
-			int nnum = neighdistfunc[k];
+			int nnum = m_Grains[j]->neighbordistfunc[k];
 			neighborhood[diamint][((2 * k) + 2)] = neighborhood[diamint][((2 * k) + 2)] + ((neighborhood[diamint][((2 * k) + 1)] - nnum)
 				* (neighborhood[diamint][((2 * k) + 1)] - nnum));
 		  }
