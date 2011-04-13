@@ -150,7 +150,7 @@ int H5GrainWriter::writeHDF5GrainsFile(ReconstructionFunc* r, const std::string 
         q1[1] = r->voxels[i].quat[2];
         q1[2] = r->voxels[i].quat[3];
         q1[3] = r->voxels[i].quat[4];
-        OIMColoring::CalculateHexIPFColor(q1, rgb);
+        OIMColoring::CalculateHexIPFColor(q1, RefDirection[0], RefDirection[1], RefDirection[2], rgb);
       }
       ipfColor[j * 3] = rgb[0];
       ipfColor[j * 3 + 1] = rgb[1];

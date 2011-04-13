@@ -14,6 +14,7 @@
 
 #include <string>
 #include "AIM/Common/Quaternions.h"
+#include "AIM/Common/MisorientationCalculations.h"
 
 #define MXA_PI          3.141592653589793
 #define MXA_PI_OVER_4   0.785398163397448
@@ -146,7 +147,6 @@ class OIMColoring
 
       T q1[3][3]; // Rotation Matrix?
       T cd[3];
-      T sd[3];
       T d[3];
 
       // Calcuate all the values once
@@ -168,32 +168,31 @@ class OIMColoring
       q1[2][1] = -cos_phi1 * sin_phi;
       q1[2][2] = cos_phi;
 
-
       // 2) use rotation matrix to find which crystal direction is aligned with 001
       cd[0] = q1[0][0] * refDir0 + q1[0][1] * refDir1 + q1[0][2] * refDir2;
       cd[1] = q1[1][0] * refDir0 + q1[1][1] * refDir1 + q1[1][2] * refDir2;
       cd[2] = q1[2][0] * refDir0 + q1[2][1] * refDir1 + q1[2][2] * refDir2;
-    // IDL Code to here.
-      //3) move that direction to a single standard triangle - using the 001-011-111 triangle)
-      sd[0] = fabs(cd[0]);
-      sd[1] = fabs(cd[1]);
-      sd[2] = fabs(cd[2]);
 
-      // Sort the sd array from smallest to largest
-      OIMColoring::TripletSort<T>(sd[0], sd[1], sd[2], sd);
+	  //3) move that direction to a single standard triangle - using the 001-011-111 triangle)
+      cd[0] = fabs(cd[0]);
+      cd[1] = fabs(cd[1]);
+      cd[2] = fabs(cd[2]);
 
-	  T h = sd[0];
-	  T k = sd[1];
-	  T l = sd[2];
+      // Sort the cd array from smallest to largest
+      OIMColoring::TripletSort<T>(cd[0], cd[1], cd[2], cd);
+
+	  T h = cd[0];
+	  T k = cd[1];
+	  T l = cd[2];
 	  hkl[0] = static_cast<unsigned char>(h*100);
 	  hkl[1] = static_cast<unsigned char>(k*100);
 	  hkl[2] = static_cast<unsigned char>(l*100);
-      T theta = (sd[0]*0)+(sd[1]*-sqrt(2.0)/2.0)+(sd[2]*sqrt(2.0)/2.0);
+      T theta = (cd[0]*0)+(cd[1]*-sqrt(2.0)/2.0)+(cd[2]*sqrt(2.0)/2.0);
       theta = (180.0/MXA_PI)*acos(theta);
       T red = (90.0-theta)/45.0;
-      d[0] = (sd[1]*1)-(sd[2]*0);
-      d[1] = (sd[2]*0)-(sd[0]*1);
-      d[2] = (sd[0]*0)-(sd[1]*0);
+      d[0] = (cd[1]*1)-(cd[2]*0);
+      d[1] = (cd[2]*0)-(cd[0]*1);
+      d[2] = (cd[0]*0)-(cd[1]*0);
       d[0] = -(d[1]+d[2])/d[0];
       d[1] = 1;
       d[2] = 1;
@@ -215,9 +214,9 @@ class OIMColoring
       blue = blue/max;
 
       // Add in some correction factors
-      red = (0.75*red)+0.25;
-      green = (0.75*green)+0.25;
-      blue = (0.75*blue)+0.25;
+      red = (0.85*red)+0.15;
+      green = (0.85*green)+0.15;
+      blue = (0.85*blue)+0.15;
 
       // Multiply by 255 to get an R/G/B value
       red = red * 255.0f;
@@ -234,10 +233,12 @@ class OIMColoring
  * @param q1 Quaternion to calculate the RGB value for
  * @param rgb Output - A pointer to store the RGB value into a unsigned char[3] array.
  */
-    void static CalculateHexIPFColor(double q1[5],
+    template <typename K>
+    void static CalculateHexIPFColor(double q1[5],K refDir0, K refDir1, K refDir2,
                               unsigned char* rgb)
     {
       double qc[5];
+	  double g[3][3];
       double p[3];
       double d[3];
       double theta, phi;
@@ -245,10 +246,21 @@ class OIMColoring
       for (int j = 0; j < 12; j++)
       {
         AIM::Quaternions::Hex_MultiplyByUnitQuaterion(q1, j,qc);
-        p[0] = ((2 * qc[1] * qc[3]) + (2 * qc[2] * qc[4])) * 1;
-        p[1] = ((2 * qc[2] * qc[3]) - (2 * qc[1] * qc[4])) * 1;
-        p[2] = (1 - (2 * qc[1] * qc[1]) - (2 * qc[2] * qc[2])) * 1;
-        double denom = p[0] * p[0] + p[1] * p[1] + p[2] * p[2];
+        g[0][0] = (1 - (2 * qc[2] * qc[2]) - (2 * qc[3] * qc[3]));
+        g[1][0] = ((2 * qc[1] * qc[2]) - (2 * qc[3] * qc[4]));
+        g[2][0] = ((2 * qc[1] * qc[3]) + (2 * qc[2] * qc[4]));
+        g[0][1] = ((2 * qc[1] * qc[2]) + (2 * qc[3] * qc[4]));
+        g[1][1] = (1 - (2 * qc[1] * qc[1]) - (2 * qc[3] * qc[3]));
+        g[2][1] = ((2 * qc[2] * qc[3]) - (2 * qc[1] * qc[4]));
+        g[0][2] = ((2 * qc[1] * qc[3]) - (2 * qc[1] * qc[4]));
+        g[1][2] = ((2 * qc[2] * qc[3]) + (2 * qc[1] * qc[4]));
+        g[2][2] = (1 - (2 * qc[1] * qc[1]) - (2 * qc[2] * qc[2]));
+
+
+		p[0] = g[0][0] * refDir0 + g[0][1] * refDir1 + g[0][2] * refDir2;
+		p[1] = g[1][0] * refDir0 + g[1][1] * refDir1 + g[1][2] * refDir2;
+		p[2] = g[2][0] * refDir0 + g[2][1] * refDir1 + g[2][2] * refDir2;
+		double denom = p[0] * p[0] + p[1] * p[1] + p[2] * p[2];
         denom = pow(denom, 0.5);
         p[0] = p[0] / denom;
         p[1] = p[1] / denom;
@@ -272,7 +284,7 @@ class OIMColoring
         d[0] = d[0] / norm;
         d[1] = d[1] / norm;
         d[2] = d[2] / norm;
-        if (atan(d[1] / d[0]) >= 0 && atan(d[1] / d[0]) <= (30.0 * MXA_PI / 180.0))
+        if (atan2(d[1],d[0]) >= 0 && atan2(d[1],d[0]) < (30.0 * MXA_PI / 180.0))
         {
           theta = (p[0] * 0) + (p[1] * 0) + (p[2] * 1);
           if (theta > 1) theta = 1;
@@ -299,9 +311,9 @@ class OIMColoring
       _rgb[0] = _rgb[0] / max;
       _rgb[1] = _rgb[1] / max;
       _rgb[2] = _rgb[2] / max;
-      _rgb[0] = (0.75 * _rgb[0]) + 0.25;
-      _rgb[1] = (0.75 * _rgb[1]) + 0.25;
-      _rgb[2] = (0.75 * _rgb[2]) + 0.25;
+      _rgb[0] = (0.85 * _rgb[0]) + 0.15;
+      _rgb[1] = (0.85 * _rgb[1]) + 0.15;
+      _rgb[2] = (0.85 * _rgb[2]) + 0.15;
 
       // Multiply by 255 to get an R/G/B value
       _rgb[0] = _rgb[0] * 255.0f;

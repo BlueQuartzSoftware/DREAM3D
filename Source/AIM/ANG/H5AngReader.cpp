@@ -478,7 +478,7 @@ int H5AngReader::readData(hid_t parId)
 			offset = i;
 		  }
 		  shuffleTable[(row*nCols)+col] = offset;
-      ++i;
+		  ++i;
 	  }
   }
 
