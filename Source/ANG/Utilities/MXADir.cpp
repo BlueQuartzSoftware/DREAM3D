@@ -14,6 +14,9 @@
 
 #ifdef _WIN32
 #include "ANG/Utilities/MXADirent.h"
+#else
+#define AngDIR DIR
+#define ang_dirent dirent
 #endif
 
 // -----------------------------------------------------------------------------
