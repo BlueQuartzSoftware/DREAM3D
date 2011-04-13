@@ -33,14 +33,18 @@
 
 #include <vector>
 
-#include <MXA/Common/MXASetGetMacros.h>
+#include "MXA/Common/MXASetGetMacros.h"
 
-#include "AIM/ANG/AngConstants.h"
+//-- TSL Ang Reader Includes
+#include "ANG/AngConstants.h"
+#include "ANG/AngDirectoryPatterns.h"
+#include "ANG/AngPhase.h"
+
+//-- AIM Common Includes
 #include "AIM/ANG/AbstractAngDataLoader.h"
 #include "AIM/Common/AIMCommonConfiguration.h"
 #include "AIM/Common/Voxel.h"
-#include "AIM/ANG/AngDirectoryPatterns.h"
-#include "AIM/ANG/AngPhase.h"
+
 
 
 

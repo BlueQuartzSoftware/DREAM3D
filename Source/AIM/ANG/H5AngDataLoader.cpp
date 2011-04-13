@@ -36,7 +36,9 @@
 #include "MXA/HDF5/H5Lite.h"
 #include "MXA/HDF5/H5Utilities.h"
 #include "MXA/Utilities/StringUtils.h"
-#include "AIM/ANG/H5AngReader.h"
+
+#include "ANG/H5AngReader.h"
+
 #include "AIM/Common/Constants.h"
 #include "AIM/Common/MisorientationCalculations.h"
 
@@ -68,19 +70,19 @@ int H5AngDataLoader::readZHeader(int &zStart, int &zEnd, float &zRes)
     std::cout << "Error Opening file '" << m_Filename << "'" << std::endl;
     return -1;
   }
-  err = H5Lite::readScalarDataset(fileId, AIM::ANG::ZResolution, zRes);
+  err = H5Lite::readScalarDataset(fileId, Ang::ZResolution, zRes);
   if (err < 0)
   {
     std::cout << "H5AngDataLoader::readZHeader Error: Could not load ZResolution data" << std::endl;
     retErr = err;
   }
-  err = H5Lite::readScalarDataset(fileId, AIM::ANG::ZStartIndex, zStart);
+  err = H5Lite::readScalarDataset(fileId, Ang::ZStartIndex, zStart);
   if (err < 0)
   {
     std::cout << "H5AngDataLoader::readZHeader Error: Could not load ZStartIndex data" << std::endl;
     retErr = err;
   }
-  err = H5Lite::readScalarDataset(fileId, AIM::ANG::ZEndIndex, zEnd);
+  err = H5Lite::readScalarDataset(fileId, Ang::ZEndIndex, zEnd);
   if (err < 0)
   {
     std::cout << "H5AngDataLoader::readZHeader Error: Could not load ZEndIndex data" << std::endl;
@@ -113,7 +115,7 @@ int H5AngDataLoader::getSizeAndResolution(int &xpoints, int &ypoints, int &zpoin
 
 
   zres = 0.0f;
-  err = H5Lite::readScalarDataset(fileId, AIM::ANG::ZResolution, zres);
+  err = H5Lite::readScalarDataset(fileId, Ang::ZResolution, zres);
 
   for(int i=0;i<zpoints;i++)
   {
@@ -193,7 +195,7 @@ int H5AngDataLoader::loadData(Voxel voxels[], int xpoints, int ypoints, int zpoi
   float* imqual2Ptr;
   int xstartspot;
   int ystartspot;
-  double qr[5];
+  //double qr[5];
 
   for (int slice = 0; slice < zpoints; ++slice)
   {

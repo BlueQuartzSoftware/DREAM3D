@@ -36,9 +36,11 @@
 #include "MXA/HDF5/H5Utilities.h"
 #include "MXA/Utilities/StringUtils.h"
 
-#include "AIM/ANG/AngReader.h"
+#include "ANG/AngReader.h"
+#include "ANG/H5AngReader.h"
+
 #include "AIM/OIMImport/OIMImport.h"
-#include "AIM/ANG/H5AngReader.h"
+
 
 #if _WIN32_
 

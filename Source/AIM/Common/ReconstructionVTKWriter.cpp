@@ -203,6 +203,16 @@ int ReconstructionVTKWriter::writeIPFVizFile(ReconstructionFunc* r, const std::s
 #endif
 
 #if AIM_WRITE_BINARY_VTK_FILE
+
+#else
+  WRITE_VTK_SCALARS_FROM_VOXEL(r, Phase, float, phase)
+#endif
+
+#if AIM_WRITE_BINARY_VTK_FILE
+
+#error Writing Binary VTK Files is just not working
+
+
   fprintf(f, "COLOR_SCALARS IPF_Colors 4\n");
   // Allocate our RGBA array
   unsigned char* rgba = new unsigned char[total * 4];
@@ -239,9 +249,6 @@ int ReconstructionVTKWriter::writeIPFVizFile(ReconstructionFunc* r, const std::s
     return -1;
   }
 #else
-
-  WRITE_VTK_SCALARS_FROM_VOXEL(r, Phase, float, phase)
-
   fprintf(f, "COLOR_SCALARS IPF_Colors 3\n");
   double red,green,blue;
   double q1[5];
@@ -254,7 +261,7 @@ int ReconstructionVTKWriter::writeIPFVizFile(ReconstructionFunc* r, const std::s
   int phase;
   for (size_t i = 0; i < total; i++)
   {
-	phase = r->voxels[i].phase;
+    phase = r->voxels[i].phase;
     if(r->crystruct[phase] == AIM::Reconstruction::Cubic)
     {
       OIMColoring::GenerateIPFColor(r->voxels[i].euler1, r->voxels[i].euler2, r->voxels[i].euler3, RefDirection[0], RefDirection[1], RefDirection[2], rgb, hkl);
@@ -265,7 +272,7 @@ int ReconstructionVTKWriter::writeIPFVizFile(ReconstructionFunc* r, const std::s
     }
     if(r->crystruct[phase] == AIM::Reconstruction::Hexagonal)
     {
-	  q1[1]=r->voxels[i].quat[1];
+      q1[1]=r->voxels[i].quat[1];
       q1[2]=r->voxels[i].quat[2];
       q1[3]=r->voxels[i].quat[3];
       q1[4]=r->voxels[i].quat[4];

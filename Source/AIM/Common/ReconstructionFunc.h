@@ -33,13 +33,14 @@
 #include "MXA/MXATypes.h"
 #include "MXA/Common/MXASetGetMacros.h"
 
+#include "AIM/ANG/AbstractAngDataLoader.h"
+
 #include "AIM/Common/AIMCommonConfiguration.h"
 #include "AIM/Common/AIMArray.hpp"
 #include "AIM/Common/Constants.h"
 #include "AIM/Common/Grain.h"
 #include "AIM/Common/Voxel.h"
 #include "AIM/Common/AIMRandomNG.h"
-#include "AIM/ANG/AbstractAngDataLoader.h"
 #include "AIM/Common/HDF5/H5ReconStatsWriter.h"
 
 
@@ -130,9 +131,9 @@ class AIMCOMMON_EXPORT ReconstructionFunc
 
 
     void initialize(int nX, int nY, int nZ,
-                  double xRes, double yRes, double zRes, bool v_mergetwinsoption, bool v_mergecoloniesoption, 
-				  int v_minallowedgrainsize, double v_minseedconfidence, double v_downsamplefactor, 
-				  double v_minseedimagequality, double v_misorientationtolerance, double v_sizebinstepsize, 
+                  double xRes, double yRes, double zRes, bool v_mergetwinsoption, bool v_mergecoloniesoption,
+				  int v_minallowedgrainsize, double v_minseedconfidence, double v_downsamplefactor,
+				  double v_minseedimagequality, double v_misorientationtolerance, double v_sizebinstepsize,
 				  vector<AIM::Reconstruction::CrystalStructure> v_crystruct, int v_alignmeth, bool v_alreadyformed);
 
 
