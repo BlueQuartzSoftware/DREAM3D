@@ -15,9 +15,12 @@
 
 #include "MXA/Common/MXASetGetMacros.h"
 #include "MXA/MXATypes.h"
+
+#include "ANG/H5AngImporter.h"
+
 #include "AIM/Common/AIMCommonConfiguration.h"
 #include "AIM/Common/Constants.h"
-#include "AIM/ANG/H5AngImporter.h"
+
 
 #ifdef AIM_USE_QT
 #include <QtCore/QObject>

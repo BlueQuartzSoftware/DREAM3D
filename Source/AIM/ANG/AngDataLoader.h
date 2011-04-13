@@ -18,11 +18,13 @@
 
 #include "MXA/Common/MXASetGetMacros.h"
 
-#include "AIM/ANG/AngConstants.h"
+#include "ANG/AngConstants.h"
+#include "ANG/AngDirectoryPatterns.h"
+
 #include "AIM/ANG/AbstractAngDataLoader.h"
 #include "AIM/Common/AIMCommonConfiguration.h"
 #include "AIM/Common/Voxel.h"
-#include "AIM/ANG/AngDirectoryPatterns.h"
+
 
 
 class AIMCOMMON_EXPORT AngDataLoader : public AbstractAngDataLoader

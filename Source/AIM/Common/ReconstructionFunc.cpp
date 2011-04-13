@@ -21,6 +21,9 @@
 #include <sstream>
 #include <set>
 
+// TSL Ang Library Includes
+#include "ANG/AngReader.h"
+
 //-- MXA Includes
 #include "MXA/Common/MXAEndian.h"
 #include "MXA/Utilities/MXADir.h"
@@ -33,7 +36,7 @@
 #include "AIM/Common/ReconstructionVTKWriter.h"
 #include "AIM/Common/MisorientationCalculations.h"
 #include "AIM/Common/HDF5/AIM_H5VtkDataWriter.h"
-#include "AIM/ANG/AngReader.h"
+
 
 #if AIM_USE_PARALLEL_ALGORITHMS
 #include "AIM/Common/Parallel/Algo.hpp"
@@ -73,9 +76,9 @@ ReconstructionFunc::~ReconstructionFunc()
   m_grainQuats = DoubleArrayType::NullPointer();
 }
 
-void ReconstructionFunc::initialize(int nX, int nY, int nZ, double xRes, double yRes, double zRes, bool v_mergetwinsoption, 
-									bool v_mergecoloniesoption, int v_minallowedgrainsize, double v_minseedconfidence, 
-									double v_downsamplefactor, double v_minseedimagequality, double v_misorientationtolerance, 
+void ReconstructionFunc::initialize(int nX, int nY, int nZ, double xRes, double yRes, double zRes, bool v_mergetwinsoption,
+									bool v_mergecoloniesoption, int v_minallowedgrainsize, double v_minseedconfidence,
+									double v_downsamplefactor, double v_minseedimagequality, double v_misorientationtolerance,
 									double v_sizebinstepsize, vector<AIM::Reconstruction::CrystalStructure> v_crystruct,
                                     int v_alignmeth, bool v_alreadyformed)
 {
@@ -304,7 +307,7 @@ void ReconstructionFunc::find_border()
   double q1[5];
   double q2[5];
   size_t size = 0;
-  int index; 
+  int index;
   int good = 0;
   int count = 0;
   int currentpoint = 0;
