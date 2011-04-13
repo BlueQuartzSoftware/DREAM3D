@@ -59,9 +59,14 @@ SET (AIMCommon_SRCS
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/VTKFileUtils.cpp
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/MisorientationCalculations.cpp
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Texture.cpp
+    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/ANG/AngDataLoader.cpp
+    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/ANG/H5AngDataLoader.cpp
     )
 
 SET (AIMCommon_HDRS
+    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/ANG/AbstractAngDataLoader.h
+    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/ANG/AngDataLoader.h
+    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/ANG/H5AngDataLoader.h
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/GrainGeneratorFunc.h
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/SurfaceMeshFunc.h
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/ReconstructionFunc.h
@@ -107,15 +112,9 @@ cmp_IDE_SOURCE_PROPERTIES( "AIM/Common/HDF5" "${AIMCommon_HDF5_HDRS}" "${AIMComm
 # --------------------------------------------------------------------
 include_directories(${HDF5_INCLUDE_DIR})
 
-# --------------------------------------------------------------------
-include (${AIMRepresentation_SOURCE_DIR}/Source/AIM/ANG/Sources.cmake)
-
-
 set (AIMCommon_SRCS
     ${AIMCommon_SRCS}
     ${AIMCommon_HDRS}
-    ${ANG_SRCS}
-    ${ANG_HDRS}
     ${AIMCommon_HDF5_SRCS}
     ${AIMCommon_HDF5_HDRS}
     )
@@ -126,10 +125,11 @@ configure_file(${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/AIMCommonConfig
                
 include_directories( ${AIMRepresentation_BINARY_DIR} )
 include_directories( ${PROJECT_CODE_DIR} )
+include_directories( ${PROJECT_CODE_DIR}/ANG ) 
 
 #-- Add a library for the AIMCommon Code
 add_library(${PROJECT_NAME} ${LIB_TYPE} ${AIMCommon_SRCS} )
-target_link_libraries(${PROJECT_NAME} MXADataModel ${HDF5_LIBRARIES} ${TBB_LIBRARIES} )
+target_link_libraries(${PROJECT_NAME} MXADataModel ${HDF5_LIBRARIES} TSLAng ${TBB_LIBRARIES} )
 LibraryProperties( ${PROJECT_NAME} ${EXE_DEBUG_EXTENSION} )
 
 set(install_dir "tools")

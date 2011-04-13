@@ -42,6 +42,7 @@
   }
 
 
+#ifndef QT_SHARED_POINTERS
 /**
  * @brief Creates some basic typedefs that can be used throughout the code to
  * reference the class.
@@ -51,6 +52,8 @@
   typedef QSharedPointer< Self >        Pointer;\
   typedef QSharedPointer<const Self >  ConstPointer;\
   MXA_NULL_SHARED_POINTER(thisClass)
+
+#endif
 
 /**
  * @brief Creates some basic typedefs that can be used throughout the code to

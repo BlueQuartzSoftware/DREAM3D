@@ -32,7 +32,7 @@
 #define _AbstractAngReader_h_
 
 
-#include <MXA/Common/MXASetGetMacros.h>
+#include "MXA/Common/MXASetGetMacros.h"
 #include "AIM/Common/AIMCommonConfiguration.h"
 #include "AIM/Common/Voxel.h"
 
