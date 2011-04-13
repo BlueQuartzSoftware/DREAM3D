@@ -16,8 +16,9 @@
 //-- MXA Includes
 #include "ANG/AngTypes.h"
 
+#define MXADir AngMXADir
 
-namespace Ang {
+
 
 class  MXADir
 {
@@ -164,7 +165,5 @@ private:
         MXADir(const MXADir&);    // Copy Constructor Not Implemented
           void operator=(const MXADir&);  // Operator '=' Not Implemented
 };
-
-}
 
 #endif /* MXADIR_H_ */

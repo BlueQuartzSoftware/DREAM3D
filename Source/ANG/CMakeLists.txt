@@ -96,3 +96,22 @@ if (TSLAngLib_ENABLE_HDF5)
     target_link_libraries(TSLAng ${HDF5_LIBRARIES} )
 endif()
 
+LibraryProperties( TSLAng ${EXE_DEBUG_EXTENSION} )
+
+set(install_dir "tools")
+set(lib_install_dir "lib")
+if (WIN32)
+    set (install_dir ".")
+    set(lib_install_dir "")
+endif()
+
+
+if (BUILD_SHARED_LIBS)
+    INSTALL(TARGETS TSLAng 
+        COMPONENT Applications
+        RUNTIME DESTINATION ${install_dir}
+        LIBRARY DESTINATION ${lib_install_dir}
+        ARCHIVE DESTINATION ${lib_install_dir}       
+        BUNDLE DESTINATION "."
+    ) 
+endif() 
