@@ -16,7 +16,7 @@ IF (MSVC)
     SET (TSLAngLib_Utilities_SRCS ${TSLAngLib_Utilities_SRCS} ${TSLAngLib_SOURCE_DIR}/Utilities/MXADirent.c )
     SET (TSLAngLib_Utilities_HDRS ${TSLAngLib_Utilities_HDRS} ${TSLAngLib_SOURCE_DIR}/Utilities/MXADirent.h )
 endif()
-cmp_IDE_SOURCE_PROPERTIES( "ANG/Utilities" "${TSLAngLib_Utilities_HDRS}" "${TSLAngLib_Utilities_SRCS}" "0")
+cmp_IDE_SOURCE_PROPERTIES( "TSLAngLib/Utilities" "${TSLAngLib_Utilities_HDRS}" "${TSLAngLib_Utilities_SRCS}" "0")
 
 if ( ${TSLAngLib_INSTALL_FILES} EQUAL 1 )
     INSTALL (FILES ${TSLAngLib_Utilities_HDRS}
