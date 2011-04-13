@@ -16,7 +16,7 @@
 //-- MXA Includes
 #include "ANG/AngTypes.h"
 
-namespace Ang {
+#define MXAFileInfo AngMXAFileInfo
 
 class  MXAFileInfo
 {
@@ -154,7 +154,5 @@ private:
     MXAFileInfo(const MXAFileInfo&);    // Copy Constructor Not Implemented
       void operator=(const MXAFileInfo&);  // Operator '=' Not Implemented
 };
-
-}
 
 #endif /* MXAFILEINFO_H_ */

@@ -6,20 +6,23 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-#include "MXADir.h"
+#include "ANG/Utilities/MXADir.h"
 
-#define MXA_FILESYSTEM_BASE_CLASS MXADir
+#define MXA_FILESYSTEM_BASE_CLASS AngMXADir
 
-#include "MXAFileSystemPath.cpp"
+#include "ANG/Utilities/MXAFileSystemPath.cpp"
 
-using namespace Ang;
+#ifdef _WIN32
+#include "ANG/Utilities/MXADirent.h"
+#endif
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 std::vector<std::string> MXA_FILESYSTEM_BASE_CLASS::entryList(const std::string &path)
 {
-  DIR* dir = NULL;
-  struct dirent* de = NULL;
+  AngDIR* dir = NULL;
+  struct ang_dirent* de = NULL;
   std::vector<std::string> list;
   dir = opendir( path.c_str() );
 
