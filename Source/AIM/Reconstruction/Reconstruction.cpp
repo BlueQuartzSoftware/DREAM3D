@@ -232,9 +232,10 @@ void Reconstruction::compute()
 
     progressMessage(AIM_STRING("Loading Slices"), 4);
     oimDataLoader->loadData(m->voxels, m->xpoints, m->ypoints, m->zpoints);
+	m->initializeQuats();
     CHECK_FOR_CANCELED(ReconstructionFunc, loadData)
 
-    progressMessage(AIM_STRING("Finding Border"), 8);
+	progressMessage(AIM_STRING("Finding Border"), 8);
     m->find_border();
     CHECK_FOR_CANCELED(ReconstructionFunc, find_border)
 

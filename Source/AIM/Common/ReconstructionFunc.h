@@ -136,6 +136,7 @@ class AIMCOMMON_EXPORT ReconstructionFunc
 				  vector<AIM::Reconstruction::CrystalStructure> v_crystruct, int v_alignmeth, bool v_alreadyformed);
 
 
+	void initializeQuats();
     void find_border();
     void form_grains();
     void form_grains_sections();
