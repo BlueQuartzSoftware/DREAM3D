@@ -13,7 +13,7 @@
 
 #include <cmath>
 
-#include <AIM/ANG/AngReader.h>
+#include <ANG/AngReader.h>
 
 
 // -----------------------------------------------------------------------------

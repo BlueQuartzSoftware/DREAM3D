@@ -19,9 +19,12 @@
 
 #include <MXA/Common/MXASetGetMacros.h>
 #include <MXA/MXATypes.h>
+
+#include "ANG/AngConstants.h"
+
 #include "AIM/Common/Constants.h"
 #include "AIM/Common/ReconstructionFunc.h"
-#include "AIM/ANG/AngConstants.h"
+
 
 #ifdef AIM_USE_QT
 #include <QtCore/QObject>
@@ -96,7 +99,7 @@ Q_OBJECT
      * @brief Cancel the operation
      */
     MXA_INSTANCE_PROPERTY(bool, Cancel);
-  
+
     /**
     * @brief
     * @param ostream
@@ -145,7 +148,7 @@ Q_OBJECT
 
   private:
     ReconstructionFunc::Pointer m;
-    
+
     Reconstruction(const Reconstruction&);    // Copy Constructor Not Implemented
     void operator=(const Reconstruction&);  // Operator '=' Not Implemented
 };

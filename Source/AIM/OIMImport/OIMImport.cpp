@@ -27,14 +27,12 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-
-
-
 #include "OIMImport.h"
-#include "AIM/ANG/H5AngImporter.h"
 
 #include "MXA/HDF5/H5Utilities.h"
 #include "MXA/Utilities/StringUtils.h"
+
+#include "ANG/H5AngImporter.h"
 
 #ifdef AIM_USE_QT
 #define CHECK_FOR_CANCELED(AClass)\
@@ -158,11 +156,11 @@ void OIMImport::compute()
   }
 
   // Write Z index start, Z index end and Z Resolution to the HDF5 file
-  err = H5Lite::writeScalarDataset(fileId, AIM::ANG::ZStartIndex, m_ZStartIndex);
-  err = H5Lite::writeScalarDataset(fileId, AIM::ANG::ZEndIndex, m_ZEndIndex);
-  err = H5Lite::writeScalarDataset(fileId, AIM::ANG::ZResolution, m_ZResolution);
+  err = H5Lite::writeScalarDataset(fileId, Ang::ZStartIndex, m_ZStartIndex);
+  err = H5Lite::writeScalarDataset(fileId, Ang::ZEndIndex, m_ZEndIndex);
+  err = H5Lite::writeScalarDataset(fileId, Ang::ZResolution, m_ZResolution);
   // Write the Manufacturer of the OIM file here
-  err = H5Lite::writeStringDataset(fileId, AIM::ANG::Manufacturer, AIM::ANG::TSL );
+  err = H5Lite::writeStringDataset(fileId, Ang::Manufacturer, Ang::TSL );
 
   std::vector<int> indices;
   // Loop on Each Ang File
@@ -216,7 +214,7 @@ void OIMImport::compute()
   // Write an Index data set which contains all the z index values which
   // should help speed up the reading side of this file
     std::vector<hsize_t> dims(1, indices.size());
-    err = H5Lite::writeVectorDataset(fileId, AIM::ANG::Index, dims, indices);
+    err = H5Lite::writeVectorDataset(fileId, Ang::Index, dims, indices);
   }
   err = H5Fclose(fileId);
   PROGRESS_MESSAGE("Import Complete", 100);
