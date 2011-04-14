@@ -73,6 +73,8 @@ class AIMCOMMON_EXPORT H5ReconStatsReader
 
     MXA_INSTANCE_STRING_PROPERTY(FileName);
 
+    //FIXME: This needs to be implemented
+    std::vector<int> getPhases();
 
     template<typename T>
     int readStatsDataset(int phase, const std::string &name, std::vector<T> &data)
@@ -82,9 +84,9 @@ class AIMCOMMON_EXPORT H5ReconStatsReader
       OPEN_HDF5_FILE(fileId, m_FileName)
 
       OPEN_RECONSTRUCTION_GROUP(reconGid, AIM::HDF5::Reconstruction.c_str(), fileId)
-	
-	  std::string index = StringUtils::numToString(phase);
-	  hid_t pid = H5Gopen(fileId, index.c_str());
+
+      std::string index = StringUtils::numToString(phase);
+      hid_t pid = H5Gopen(fileId, index.c_str());
 
       err = H5Lite::readVectorDataset(pid, name, data);
       if (err < 0)
@@ -111,16 +113,15 @@ class AIMCOMMON_EXPORT H5ReconStatsReader
     {
       herr_t err = 0;
       herr_t retErr = 0;
-	  double value;
+      double value;
       OPEN_HDF5_FILE(fileId, m_FileName)
-
       OPEN_RECONSTRUCTION_GROUP(reconGid, AIM::HDF5::Reconstruction.c_str(), fileId)
-	
-	  std::string index = StringUtils::numToString(phase);
-	  hid_t pid = H5Gopen(fileId, index.c_str());
+
+      std::string index = StringUtils::numToString(phase);
+      hid_t pid = H5Gopen(fileId, index.c_str());
 
       err = H5Lite::readScalarDataset(pid, name, value);
-	  data[phase] = value;
+      data[phase] = value;
       if (err < 0)
       {
         data[phase] = 0; // Clear all the data from the vector.

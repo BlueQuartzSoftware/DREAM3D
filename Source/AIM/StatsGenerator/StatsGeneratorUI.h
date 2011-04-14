@@ -36,6 +36,8 @@
 
 #include <QtGui/QMainWindow>
 
+#include "SGPhase.h"
+
 class QwtPlotZoomer;
 class QwtPlotPicker;
 class QwtPlotPanner;
@@ -74,6 +76,8 @@ Q_OBJECT    ;
     void openFile(QString h5file);
     void setSizeDistributionValues(StatsGenPlotWidget* w);
 
+    void swapPhaseWidgets(SGPhase::Pointer phase);
+
 
   signals:
       void windowIsClosing(StatsGeneratorUI*);
@@ -97,6 +101,16 @@ Q_OBJECT    ;
     void on_m_GenerateDefaultData_clicked();
 
     void dataWasEdited();
+
+
+    void on_phaseCombo_currentIndexChanged(int index);
+    void on_addPhase_clicked();
+    void on_deletePhase_clicked();
+    void on_editPhase_clicked();
+
+
+
+
 
   protected:
 
@@ -180,6 +194,9 @@ Q_OBJECT    ;
     QwtPlotGrid* m_grid;
     QString m_FilePath;
     bool    m_FileSelected;
+
+    std::vector<SGPhase::Pointer>  m_Phases;
+    SGPhase::Pointer               m_CurrentPhase;
 
     QString m_OpenDialogLastDirectory; // Must be last in the list
     StatsGeneratorUI(const StatsGeneratorUI&); // Copy Constructor Not Implemented
