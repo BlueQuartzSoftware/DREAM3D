@@ -62,6 +62,7 @@
 #include "AIM/License/AIMRepresentationLicenseFiles.h"
 #include "StatsGen.h"
 #include "SGApplication.h"
+#include "EditPhaseDialog.h"
 
 
 #define CHECK_ERROR_ON_WRITE(var, msg)\
@@ -287,6 +288,168 @@ void StatsGeneratorUI::setupGui()
   m_grid->setMajPen(QPen(Qt::gray, 0, Qt::SolidLine));
   m_grid->setMinPen(QPen(Qt::lightGray, 0, Qt::DotLine));
   m_grid->attach(m_SizeDistributionPlot);
+
+  updateSizeDistributionPlot();
+  calculateNumberOfBins();
+
+  /* Setup the default Phase as index 0 and Cubic Structure */
+  bool ok = false;
+  m_CurrentPhase = SGPhase::New(0, AIM::Reconstruction::Cubic);
+  m_CurrentPhase->setMu(m_Mu_SizeDistribution->text().toDouble(&ok));
+  m_CurrentPhase->setSigma(m_Sigma_SizeDistribution->text().toDouble(&ok));
+  m_CurrentPhase->setSigmaCutoff(m_SigmaCutOff_SizeDistribution->text().toDouble(&ok));
+  m_CurrentPhase->setBinStepSize(m_BinStepSize->text().toDouble(&ok));
+  m_CurrentPhase->setDistributionType(static_cast<AIM::Reconstruction::DistributionType>(distributionTypeCombo->currentIndex()));
+  m_CurrentPhase->setOmega3Plot(m_Omega3Plot);
+  m_CurrentPhase->setBOverAPlot(m_BOverAPlot);
+  m_CurrentPhase->setCOverAPlot(m_COverAPlot);
+  m_CurrentPhase->setCOverBPlot(m_COverBPlot);
+  m_CurrentPhase->setNeighborPlot(m_NeighborPlot);
+  m_CurrentPhase->setODFWidget(m_ODFWidget);
+
+  m_Phases.push_back(m_CurrentPhase);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void StatsGeneratorUI::on_phaseCombo_currentIndexChanged(int index)
+{
+  std::cout << "on_phaseCombo_currentIndexChanged" << std::endl;
+  SGPhase::Pointer phase = m_Phases[index];
+  swapPhaseWidgets(phase);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void StatsGeneratorUI::on_addPhase_clicked()
+{
+  std::cout << "on_addPhase_clicked" << std::endl;
+  SGPhase::Pointer phase = SGPhase::New( m_Phases.size() , AIM::Reconstruction::Cubic);
+
+  //Display Dialog box asking for the crystal structure
+  EditPhaseDialog dialog(this);
+  int ok = dialog.exec();
+  if (ok == QDialog::Accepted)
+  {
+    m_Phases.push_back(phase);
+    phase->setCrystalStructure(dialog.getCrystalStructure());
+    phase->setMu(1.0);
+    phase->setSigma(0.1);
+    phase->setSigmaCutoff(5);
+    phase->setBinStepSize(0.5);
+    phase->setDistributionType(AIM::Reconstruction::LogNormal);
+    distributionTypeCombo->setCurrentIndex(AIM::Reconstruction::LogNormal);
+    // Create all the widgets for the User Interface
+    StatsGenPlotWidget* w = new StatsGenPlotWidget(omega3DistributionTab);
+    phase->setOmega3Plot(w);
+    w =  new StatsGenPlotWidget(scrollAreaWidgetContents);
+    phase->setBOverAPlot(w);
+    w = new StatsGenPlotWidget(scrollAreaWidgetContents);
+    phase->setCOverAPlot(w);
+    w = new StatsGenPlotWidget(scrollAreaWidgetContents);
+    phase->setCOverBPlot(w);
+    w = new StatsGenPlotWidget(neighborDistributionTab);
+    phase->setNeighborPlot(w);
+    StatsGenODFWidget* o = new StatsGenODFWidget(tab);
+    phase->setODFWidget(o);
+
+    phaseCombo->addItem(phase->getComboString());
+
+    // Now swap out our new widgets with those currently being displayed
+    swapPhaseWidgets(phase);
+ }
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void StatsGeneratorUI::on_editPhase_clicked()
+{
+  std::cout << "on_editPhase_clicked" << std::endl;
+  //Display Dialog box asking for the crystal structure
+  EditPhaseDialog dialog(this);
+  int ok = dialog.exec();
+  if (ok == QDialog::Accepted)
+  {
+    m_CurrentPhase->setCrystalStructure(dialog.getCrystalStructure());
+#warning Do we need to recalculate anything at this point if the phase changes?
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void StatsGeneratorUI::on_deletePhase_clicked()
+{
+
+  std::cout << "on_deletePhase_clicked" << std::endl;
+  if (m_Phases.size() > 1)
+  {
+    int index = phaseCombo->currentIndex();
+    phaseCombo->removeItem(index);
+    std::vector<SGPhase::Pointer>::iterator iter = m_Phases.begin();
+    iter = iter + index;
+    SGPhase::Pointer delPhase = m_Phases[index];
+    // Remove the SGPhase object from the vector
+    m_Phases.erase(iter);
+
+    // Reset the phase index for each SGPhase object
+    for (std::vector<SGPhase::Pointer>::size_type p = 0; p < m_Phases.size(); ++p )
+    {
+      m_Phases[p]->setIndex(p);
+    }
+    // Get the first phase to use as the current phase
+    SGPhase::Pointer phase = m_Phases[0];
+    // Swap out the widgets
+    swapPhaseWidgets(phase);
+    // And now clean up/release any extra widgets that are being used
+    delPhase->deleteWidgets();
+  }
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void StatsGeneratorUI::swapPhaseWidgets(SGPhase::Pointer phase)
+{
+  verticalLayout_4->removeWidget(m_Omega3Plot);
+  m_Omega3Plot = phase->getOmega3Plot();
+  verticalLayout_4->addWidget(m_Omega3Plot);
+
+  verticalLayout->removeWidget(m_BOverAPlot);
+  verticalLayout->removeWidget(m_COverAPlot);
+  verticalLayout->removeWidget(m_COverBPlot);
+
+  m_BOverAPlot = phase->getBOverAPlot();
+  verticalLayout->addWidget(m_BOverAPlot);
+
+  m_COverAPlot = phase->getCOverBPlot();
+  verticalLayout->addWidget(m_COverAPlot);
+
+  m_COverBPlot = phase->getCOverBPlot();
+  verticalLayout->addWidget(m_COverBPlot);
+
+  horizontalLayout_2->removeWidget(m_NeighborPlot);
+  m_NeighborPlot = phase->getNeighborPlot();
+  horizontalLayout_2->addWidget(m_NeighborPlot);
+
+  verticalLayout_6->removeWidget(m_ODFWidget);
+  m_ODFWidget = phase->getODFWidget();
+  verticalLayout_6->addWidget(m_ODFWidget);
+
+  m_CurrentPhase = phase;
+
+  //Do these swaps LAST because we have to get the other widgets swapped out first other
+  // wise we screw up those widgets
+  m_Mu_SizeDistribution->setText( QString::number(m_CurrentPhase->getMu()));
+  m_Sigma_SizeDistribution->setText( QString::number(m_CurrentPhase->getSigma()));
+  m_SigmaCutOff_SizeDistribution->setText( QString::number(m_CurrentPhase->getSigmaCutoff()));
+  m_BinStepSize->setValue(m_CurrentPhase->getBinStepSize());
+  distributionTypeCombo->setCurrentIndex(m_CurrentPhase->getDistributionType());
 
   updateSizeDistributionPlot();
   calculateNumberOfBins();
@@ -672,6 +835,17 @@ void StatsGeneratorUI::openFile(QString h5file)
   int err = 0;
 
   H5ReconStatsReader::Pointer reader = H5ReconStatsReader::New(m_FilePath.toStdString());
+
+
+  // Get the list of Phases from the HDF5 file
+  std::vector<int> phases = reader->getPhases();
+
+  // We should iterate on all the phases here to start setting data and creating
+  // all of the StatsGenPhase Objects
+  for (std::vector<int>::iterator phase = phases.begin(); phase != phases.end(); ++phase )
+  {
+
+  }
 
   /* Read the BinNumbers data set */
   std::vector<double> bins;

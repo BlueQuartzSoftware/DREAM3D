@@ -9,5 +9,9 @@
    <file>Delete-16x16.png</file>
       <file>green-dot.png</file>
          <file>red-dot.png</file>
+         <file>minus.png</file>
+         <file>plus.png</file>
+         <file>preferences.png</file>
+         <file>reload.png</file>
  </qresource>
  </RCC>
