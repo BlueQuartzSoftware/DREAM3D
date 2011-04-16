@@ -58,6 +58,7 @@ set (StatsGenerator_SRCS
     ${StatsGenerator_SOURCE_DIR}/SGODFTableModel.cpp
     ${StatsGenerator_SOURCE_DIR}/SGMDFTableModel.cpp
     ${StatsGenerator_SOURCE_DIR}/SGPhase.cpp
+    ${StatsGenerator_SOURCE_DIR}/SGWidget.cpp
     ${StatsGenerator_SOURCE_DIR}/EditPhaseDialog.cpp
     )
 set (StatsGenerator_HDRS 
@@ -81,6 +82,7 @@ SET( StatsGenerator_MOC_HDRS
     ${StatsGenerator_SOURCE_DIR}/SGODFItemDelegate.h
     ${StatsGenerator_SOURCE_DIR}/SGMDFTableModel.h
     ${StatsGenerator_SOURCE_DIR}/SGMDFItemDelegate.h
+    ${StatsGenerator_SOURCE_DIR}/SGWidget.h
     ${StatsGenerator_SOURCE_DIR}/EditPhaseDialog.h
     )
 cmp_IDE_SOURCE_PROPERTIES( "AIM/StatsGenerator" "${StatsGenerator_HDRS};${StatsGenerator_MOC_HDRS}" "${StatsGenerator_SRCS}" ${PROJECT_INSTALL_HEADERS})
@@ -107,6 +109,7 @@ SET( StatsGenerator_UIS
   ${StatsGenerator_SOURCE_DIR}/UI_Files/StatsGenPlotWidget.ui
   ${StatsGenerator_SOURCE_DIR}/UI_Files/StatsGenODFWidget.ui
   ${StatsGenerator_SOURCE_DIR}/UI_Files/EditPhaseDialog.ui
+  ${StatsGenerator_SOURCE_DIR}/UI_Files/SGWidget.ui
   ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Qt/UI_Files/ApplicationAboutBoxDialog.ui
 )
 
@@ -166,7 +169,7 @@ BuildQtAppBundle(
     VERSION_MINOR ${AIMRepresentation_VER_MINOR}
     VERSION_PATCH ${AIMRepresentation_VER_PATCH}
     BINARY_DIR    ${${PROJECT_NAME}_BINARY_DIR}
-    LINK_LIBRARIES ${QT_LIBRARIES} MXADataModel AIMCommon ${QWT_LIBRARIES}
+    LINK_LIBRARIES ${QT_LIBRARIES} AIMCommon ${QWT_LIBRARIES}
     LIB_SEARCH_DIRS ${CMAKE_LIBRARY_OUTPUT_DIRECTORY} ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
 #    QT_PLUGINS    ${QT_PLUGINS}
 #    OTHER_PLUGINS ${OTHER_PLUGINS}

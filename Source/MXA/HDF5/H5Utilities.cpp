@@ -257,7 +257,7 @@ herr_t H5Utilities::closeHDF5Object(hid_t obj_id)
 /*! @brief Returns a std::list of std::strings containing the names
  *   of all objects attached to the group referred to by loc_id
  *
- * @parameter typeFilter is one of HDF5_GROUP, HDF5_DATASET, HDF5_TYPE,
+ * @parameter typeFilter is one of MXA_GROUP, HDF5_DATASET, HDF5_TYPE,
  *  or HDF5_LINK or any combination of these using the bitwise or |
  *  command.  Or you can pass in HDF5_ANY (equivalent to: HDF5_GROUP |
  *  HDF5_DATASET | HDF5_TYPE | HDF5_LINK) to not filter at all

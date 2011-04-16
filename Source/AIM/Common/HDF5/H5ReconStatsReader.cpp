@@ -30,6 +30,7 @@
 
 #include "H5ReconStatsReader.h"
 
+
 #define CHECK_STATS_READ_ERROR(err, name)\
 if (err < 0) {\
   std::cout << "H5ReconStatsReader Error: Could not read the " << name << " Group Data" << std::endl;\
@@ -67,7 +68,11 @@ H5ReconStatsReader::Pointer H5ReconStatsReader::New(const std::string &filename)
   return sharedPtr;
 }
 
-std::string H5ReconStatsReader::getDistributionType(int phase, const std::string &group,
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+std::string H5ReconStatsReader::getDistributionType(int phase,
+                                                    const std::string &group,
                                                     AIM::Reconstruction::DistributionType &dt)
 {
   herr_t err = 0;
@@ -107,4 +112,43 @@ std::string H5ReconStatsReader::getDistributionType(int phase, const std::string
     dt = AIM::Reconstruction::UnknownDistributionType;
   }
   return data;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int H5ReconStatsReader::getPhases(std::vector<int> &phases)
+{
+  phases.clear();
+  herr_t err = 0;
+  herr_t retErr = 0;
+  OPEN_HDF5_FILE(fileId, m_FileName)
+  OPEN_RECONSTRUCTION_GROUP(reconGid, AIM::HDF5::Reconstruction.c_str(), fileId)
+
+  // Get a list of all the groups
+  std::list<std::string> names;
+  err = H5Utilities::getGroupObjects(reconGid, H5Utilities::MXA_GROUP, names);
+  if (err < 0)
+  {
+    retErr = err;
+  }
+  // Convert the string names to integers
+  int i;
+  for (std::list<std::string>::iterator pString = names.begin(); pString != names.end(); ++pString)
+  {
+    StringUtils::stringToNum(i, *pString);
+    phases.push_back(i);
+  }
+
+  err = H5Gclose(reconGid);
+  if (err < 0)
+  {
+    retErr = err;
+  }
+  err = H5Utilities::closeFile(fileId);
+  if (err < 0)
+  {
+    retErr = err;
+  }
+  return retErr;
 }
