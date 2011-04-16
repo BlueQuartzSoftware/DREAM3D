@@ -39,16 +39,18 @@
 #include <qwt_plot.h>
 #include <qwt_plot_curve.h>
 
-
+#include "AIM/Common/Texture.h"
 #include "SGODFTableModel.h"
 #include "SGMDFTableModel.h"
-#include "AIM/Common/Texture.h"
+#include "StatsGen.h"
+
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 StatsGenODFWidget::StatsGenODFWidget(QWidget *parent) :
 QWidget(parent),
+m_Phase(-1),
 m_TableModel(NULL),
 m_MdfTableModel(NULL)
 {
@@ -108,7 +110,9 @@ int StatsGenODFWidget::writeDataToHDF5(AIM::Reconstruction::CrystalStructure cry
 
   Texture::calculateCubicODFData(weights, sigmas, randomWeight, false, odf, totalWeight);
   double* odfPtr = &(odf.front());
-  err = writer->writeODFData(crystruct, odfPtr, totalWeight);
+
+
+  err = writer->writeODFData(m_Phase, crystruct, odfPtr);
 
   return err;
 }

@@ -36,14 +36,9 @@
 
 #include <QtGui/QMainWindow>
 
-#include "SGPhase.h"
+#include "SGWidget.h"
 
-class QwtPlotZoomer;
-class QwtPlotPicker;
-class QwtPlotPanner;
-class QwtPlotGrid;
-class QwtPlotCurve;
-class QwtPlotMarker;
+
 /**
  * @class StatsGeneratorUI StatsGeneratorUI.h AIM/StatsGenerator/StatsGeneratorUI.h
  * @brief
@@ -59,25 +54,14 @@ Q_OBJECT    ;
     StatsGeneratorUI(QWidget *parent = 0);
     virtual ~StatsGeneratorUI();
 
-    void plotSizeDistribution();
-    void updateSizeDistributionPlot();
-    int computeBinsAndCutOffs( QwtArray<double> &binsizes,
-                               QwtArray<double> &xCo, QwtArray<double> &yCo,
-                               double &xMax, double &yMax,
-                               QwtArray<double> &x, QwtArray<double> &y);
-
     void adjustWindowTitle();
-
-    void calculateNumberOfBins();
 
     void setFilePath(QString filePath);
     QString getFilePath();
 
     void openFile(QString h5file);
-    void setSizeDistributionValues(StatsGenPlotWidget* w);
 
-    void swapPhaseWidgets(SGPhase::Pointer phase);
-
+    SGWidget* createNewSGWidget();
 
   signals:
       void windowIsClosing(StatsGeneratorUI*);
@@ -93,24 +77,10 @@ Q_OBJECT    ;
     void on_actionSaveAs_triggered();
     void on_actionAbout_triggered();
 
-    void on_m_Mu_SizeDistribution_textChanged(const QString &text);
-    void on_m_Sigma_SizeDistribution_textChanged(const QString &text);
-    void on_m_SigmaCutOff_SizeDistribution_textChanged(const QString &text);
-    void on_m_BinStepSize_valueChanged(double v);
-
-    void on_m_GenerateDefaultData_clicked();
-
-    void dataWasEdited();
-
-
     void on_phaseCombo_currentIndexChanged(int index);
     void on_addPhase_clicked();
     void on_deletePhase_clicked();
     void on_editPhase_clicked();
-
-
-
-
 
   protected:
 
@@ -141,11 +111,7 @@ Q_OBJECT    ;
      */
     qint32 checkDirtyDocument();
 
-    /**
-     * @brief Enables or Disables all the widgets in a list
-     * @param b
-     */
-    void setWidgetListEnabled(bool b);
+
 
     /**
      * @brief Verifies that a path exists on the file system.
@@ -161,11 +127,6 @@ Q_OBJECT    ;
      */
     bool verifyOutputPathParentExists(QString outFilePath, QLineEdit* lineEdit);
 
-    /**
-     * @brief Enables or disables the various PlotWidgetTabs
-     * @param b Enable or disable the plotwidgets
-     */
-    void setTabsPlotTabsEnabled(bool b);
 
   private slots:
 
@@ -181,22 +142,10 @@ Q_OBJECT    ;
      */
     void openRecentFile();
 
-    private:
-    QList<QWidget*> m_WidgetList;
-
-    QwtPlotCurve* m_SizeDistributionCurve;
-    QwtPlotMarker* m_CutOffMin;
-    QwtPlotMarker* m_CutOffMax;
-
-    //    QwtPlotZoomer* m_zoomer;
-    //    QwtPlotPicker* m_picker;
-    //    QwtPlotPanner* m_panner;
-    QwtPlotGrid* m_grid;
-    QString m_FilePath;
-    bool    m_FileSelected;
-
-    std::vector<SGPhase::Pointer>  m_Phases;
-    SGPhase::Pointer               m_CurrentPhase;
+  private:
+    QString              m_FilePath;
+    bool                 m_FileSelected;
+    QVector<SGWidget*>   m_SGWidgets;
 
     QString m_OpenDialogLastDirectory; // Must be last in the list
     StatsGeneratorUI(const StatsGeneratorUI&); // Copy Constructor Not Implemented

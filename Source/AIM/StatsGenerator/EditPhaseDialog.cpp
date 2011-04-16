@@ -36,7 +36,7 @@
 EditPhaseDialog::EditPhaseDialog(QWidget* parent) :
 QDialog(parent)
 {
-
+  setupUi(this);
 }
 
 // -----------------------------------------------------------------------------
