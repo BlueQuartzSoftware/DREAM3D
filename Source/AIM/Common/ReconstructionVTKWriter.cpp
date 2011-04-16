@@ -55,6 +55,27 @@
   fprintf(f, "\n");\
 
 
+#define WRITE_VTK_GRAIN_IDS_BINARY(ptr)  \
+  fprintf(f, "SCALARS GrainID int  1\n"); \
+  fprintf(f, "LOOKUP_TABLE default\n"); \
+  { \
+  int* gn = new int[total];\
+  int t;\
+  for (size_t i = 0; i < total; i++) {\
+    t = ptr->voxels[i].grainname;\
+    MXA::Endian::FromSystemToBig::convert<int>(t); \
+    gn[i] = t; \
+  }\
+  size_t totalWritten = fwrite(gn, sizeof(int), total, f);\
+  delete[] gn;\
+  if (totalWritten != total)  {\
+    std::cout << "Error Writing Binary VTK Data into file " << file << std::endl;\
+    fclose(f);\
+    return -1;\
+  }\
+  }
+
+
 #define WRITE_VTK_SCALARS_FROM_VOXEL(ptr, name, type, var)\
   fprintf(f, "SCALARS %s %s\n", #name, #type);\
   fprintf(f, "LOOKUP_TABLE default\n");\
@@ -62,6 +83,29 @@
     if(i%20 == 0 && i > 0) { fprintf(f, "\n");}\
     fprintf(f, "%f ", ptr->voxels[i].var);\
   }\
+
+#define WRITE_VTK_SCALARS_FROM_VOXEL_BINARY(ptr, name, type, var)\
+  fprintf(f, "SCALARS %s %s\n", #name, #type);\
+  fprintf(f, "LOOKUP_TABLE default\n");\
+  { \
+  type* gn = new type[total];\
+  type t;\
+  for (size_t i = 0; i < total; i++) {\
+    t = ptr->voxels[i].var;\
+    MXA::Endian::FromSystemToBig::convert<type>(t); \
+    gn[i] = t; \
+  }\
+  size_t totalWritten = fwrite(gn, sizeof(type), total, f);\
+  delete[] gn;\
+  if (totalWritten != total)  {\
+    std::cout << "Error Writing Binary VTK Data into file " << file << std::endl;\
+    fclose(f);\
+    return -1;\
+  }\
+  }
+
+
+
 
 
 #define WRITE_VTK_GRAIN_WITH_VOXEL_SCALAR_VALUE(name, var)\
@@ -138,6 +182,9 @@ int ReconstructionVTKWriter::writeVisualizationFile(ReconstructionFunc* r, const
   return 0;
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 int ReconstructionVTKWriter::writeDisorientationFile(ReconstructionFunc* r, const std::string &file)
 {
   FILE* f = NULL;
@@ -161,7 +208,7 @@ int ReconstructionVTKWriter::writeDisorientationFile(ReconstructionFunc* r, cons
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int ReconstructionVTKWriter::writeIPFVizFile(ReconstructionFunc* r, const std::string &file)
+int ReconstructionVTKWriter::writeASCII_IPFVizFile(ReconstructionFunc* r, const std::string &file)
 {
   FILE* f = NULL;
   f = fopen(file.c_str(), "wb");
@@ -169,60 +216,72 @@ int ReconstructionVTKWriter::writeIPFVizFile(ReconstructionFunc* r, const std::s
   {
     return 1;
   }
-#if AIM_WRITE_BINARY_VTK_FILE
-  WRITE_VTK_GRAIN_HEADER("BINARY", r)
-#else
   WRITE_VTK_GRAIN_HEADER("ASCII", r)
-#endif
-
   size_t total = r->xpoints * r->ypoints * r->zpoints;
-#if AIM_WRITE_BINARY_VTK_FILE
-  fprintf(f, "SCALARS GrainID int  1\n");
-  fprintf(f, "LOOKUP_TABLE default\n");
-  int* gn = new int[total];
-  int t;
+  WRITE_VTK_GRAIN_IDS(r)
+
+  WRITE_VTK_SCALARS_FROM_VOXEL(r, Phase, float, phase)
+
+  // Write the COLOR_SCALARS
+  fprintf(f, "COLOR_SCALARS IPF_Colors 3\n");
+  double red,green,blue;
+  unsigned char rgb[3] = { 0, 0, 0};
+  double q1[5];
+  unsigned char hkl[3] = { 0, 0, 0};
+  double RefDirection[3] = { 1.0, 0.0, 0.0};
+  int phase;
   for (size_t i = 0; i < total; i++)
   {
-    t = r->voxels[i].grainname;
-#ifdef MXA_LITTLE_ENDIAN
-    MXA::Endian::reverseBytes<int >(t);
-#endif
-    gn[i] = t;
+    phase = r->voxels[i].phase;
+    if(r->crystruct[phase] == AIM::Reconstruction::Cubic)
+    {
+      OIMColoring::GenerateIPFColor(r->voxels[i].euler1, r->voxels[i].euler2, r->voxels[i].euler3, RefDirection[0], RefDirection[1], RefDirection[2], rgb, hkl);
+    }
+    else if(r->crystruct[phase] == AIM::Reconstruction::Hexagonal)
+    {
+      q1[1]=r->voxels[i].quat[1];
+      q1[2]=r->voxels[i].quat[2];
+      q1[3]=r->voxels[i].quat[3];
+      q1[4]=r->voxels[i].quat[4];
+      OIMColoring::CalculateHexIPFColor(q1, RefDirection[0], RefDirection[1], RefDirection[2], rgb);
+    }
+    red = static_cast<double>(double(rgb[0])/255.0);
+    green = static_cast<double>(double(rgb[1])/255.0);
+    blue = static_cast<double>(double(rgb[2])/255.0);
+    fprintf(f, "%f %f %f\n",red, green, blue);
   }
-  size_t totalWritten = fwrite(gn, sizeof(int), total, f);
+  fclose(f);
+  return 0;
+}
 
-  delete[] gn;
-  if (totalWritten != total)
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int ReconstructionVTKWriter::writeBinary_IPFVizFile(ReconstructionFunc* r, const std::string &file)
+{
+  FILE* f = NULL;
+  f = fopen(file.c_str(), "wb");
+  if (NULL == f)
   {
-    std::cout << "Error Writing Binary VTK Data into file " << file << std::endl;
-    fclose(f);
-    return -1;
+    return 1;
   }
-#else
-  WRITE_VTK_GRAIN_IDS(r)
-#endif
+  WRITE_VTK_GRAIN_HEADER("BINARY", r)
+  size_t total = r->xpoints * r->ypoints * r->zpoints;
 
-#if AIM_WRITE_BINARY_VTK_FILE
+  WRITE_VTK_GRAIN_IDS_BINARY(r);
 
-#else
-  WRITE_VTK_SCALARS_FROM_VOXEL(r, Phase, float, phase)
-#endif
+  WRITE_VTK_SCALARS_FROM_VOXEL_BINARY(r, Phase, float, phase)
 
-#if AIM_WRITE_BINARY_VTK_FILE
-
-#error Writing Binary VTK Files is just not working
-
-
+  // Write the COLOR_SCALARS
   fprintf(f, "COLOR_SCALARS IPF_Colors 4\n");
   // Allocate our RGBA array
   unsigned char* rgba = new unsigned char[total * 4];
-  //double red,green,blue;
-  double q1[4];
+//  double red,green,blue;
+//  unsigned char rgb[3] = { 0, 0, 0};
+  double q1[5];
+  unsigned char hkl[3] = { 0, 0, 0};
+  double RefDirection[3] = { 1.0, 0.0, 0.0};
   int phase;
-  unsigned char hkl[3] = {0, 0, 0};
-
-  double RefDirection[3] =
-  { 0.0, 0.0, 1.0 };
   for (size_t i = 0; i < total; i++)
   {
     phase = r->voxels[i].phase;
@@ -232,15 +291,15 @@ int ReconstructionVTKWriter::writeIPFVizFile(ReconstructionFunc* r, const std::s
     }
     else if (r->crystruct[phase] == AIM::Reconstruction::Hexagonal)
     {
-      q1[0] = r->voxels[i].quat[1];
-      q1[1] = r->voxels[i].quat[2];
-      q1[2] = r->voxels[i].quat[3];
-      q1[3] = r->voxels[i].quat[4];
-      OIMColoring::CalculateHexIPFColor(q1, &rgba[i * 4]);
+      q1[1]=r->voxels[i].quat[1];
+      q1[2]=r->voxels[i].quat[2];
+      q1[3]=r->voxels[i].quat[3];
+      q1[4]=r->voxels[i].quat[4];
+      OIMColoring::CalculateHexIPFColor(q1, RefDirection[0], RefDirection[1], RefDirection[2], &rgba[i * 4]);
     }
     rgba[i * 4 + 3] = 255;
   }
-  totalWritten = fwrite(rgba, sizeof(char), total * 4, f);
+  size_t totalWritten = fwrite(rgba, sizeof(char), total * 4, f);
   delete[] rgba;
   if (totalWritten != total * 4)
   {
@@ -248,47 +307,21 @@ int ReconstructionVTKWriter::writeIPFVizFile(ReconstructionFunc* r, const std::s
     fclose(f);
     return -1;
   }
-#else
-  fprintf(f, "COLOR_SCALARS IPF_Colors 3\n");
-  double red,green,blue;
-  double q1[5];
-  unsigned char rgb[3] =
-  { 0, 0, 0};
-  unsigned char hkl[3] =
-  { 0, 0, 0};
-  double RefDirection[3] =
-  { 1.0, 0.0, 0.0};
-  int phase;
-  for (size_t i = 0; i < total; i++)
-  {
-    phase = r->voxels[i].phase;
-    if(r->crystruct[phase] == AIM::Reconstruction::Cubic)
-    {
-      OIMColoring::GenerateIPFColor(r->voxels[i].euler1, r->voxels[i].euler2, r->voxels[i].euler3, RefDirection[0], RefDirection[1], RefDirection[2], rgb, hkl);
-//      OIMColoring::GenerateIPFColor(r->m_Grains[r->voxels[i].grainname]->euler1, r->m_Grains[r->voxels[i].grainname]->euler2, r->m_Grains[r->voxels[i].grainname]->euler3, RefDirection[0], RefDirection[1], RefDirection[2], rgb);
-      red = static_cast<double>(double(rgb[0])/255.0);
-      green = static_cast<double>(double(rgb[1])/255.0);
-      blue = static_cast<double>(double(rgb[2])/255.0);
-    }
-    if(r->crystruct[phase] == AIM::Reconstruction::Hexagonal)
-    {
-      q1[1]=r->voxels[i].quat[1];
-      q1[2]=r->voxels[i].quat[2];
-      q1[3]=r->voxels[i].quat[3];
-      q1[4]=r->voxels[i].quat[4];
-      OIMColoring::CalculateHexIPFColor(q1, RefDirection[0], RefDirection[1], RefDirection[2], rgb);
-      red = static_cast<double>(double(rgb[0])/255.0);
-      green = static_cast<double>(double(rgb[1])/255.0);
-      blue = static_cast<double>(double(rgb[2])/255.0);
-    }
-    fprintf(f, "%f %f %f\n",red, green, blue);
-  }
-#endif
-
   fclose(f);
   return 0;
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int ReconstructionVTKWriter::writeIPFVizFile(ReconstructionFunc* r, const std::string &file)
+{
+#if AIM_WRITE_BINARY_VTK_FILE
+  return writeBinary_IPFVizFile(r, file);
+#else
+  return writeASCII_IPFVizFile(r, file);
+#endif
+}
 
 // -----------------------------------------------------------------------------
 //

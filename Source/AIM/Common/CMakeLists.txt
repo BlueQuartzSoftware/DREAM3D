@@ -129,7 +129,7 @@ include_directories( ${PROJECT_CODE_DIR}/ANG )
 
 #-- Add a library for the AIMCommon Code
 add_library(${PROJECT_NAME} ${LIB_TYPE} ${AIMCommon_SRCS} )
-target_link_libraries(${PROJECT_NAME} MXADataModel ${HDF5_LIBRARIES} TSLAng ${TBB_LIBRARIES} )
+target_link_libraries(${PROJECT_NAME} MXADataModel TSLAng ${TBB_LIBRARIES} )
 LibraryProperties( ${PROJECT_NAME} ${EXE_DEBUG_EXTENSION} )
 
 set(install_dir "tools")

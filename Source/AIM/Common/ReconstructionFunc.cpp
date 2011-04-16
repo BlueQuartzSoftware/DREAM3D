@@ -4395,7 +4395,7 @@ void ReconstructionFunc::deformation_stats(const std::string &filename, const st
   }
   outFile.close();
   FILE* vtkFile = NULL;
-  vtkFile = fopen(filename2.c_str(), "w");
+  vtkFile = fopen(filename2.c_str(), "wb");
   if (NULL == vtkFile)
   {
 	std::cout << "Error Creating VTK Visualization File '" << filename << "'" << std::endl;
