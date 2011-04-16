@@ -535,14 +535,11 @@ void SGWidget::plotSizeDistribution()
 // -----------------------------------------------------------------------------
 int SGWidget::writeDataToHDF5(H5ReconStatsWriter::Pointer writer)
 {
-
-#warning Generate the HDFGroup name based on the PhaseIndex
-
-
   double mu, sigma, cutOff, binStep;
   gatherSizeDistributionFromGui(mu, sigma, cutOff, binStep);
 #ifndef _WIN32
 #warning phaseFraction needs to be calculated somewhere for this function
+#warning Generate the HDFGroup name based on the PhaseIndex
 #endif
   double phaseFraction = 0.0;
   QwtArray<double> xCo;
