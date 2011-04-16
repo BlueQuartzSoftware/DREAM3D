@@ -37,7 +37,7 @@
 #include "AIM/Common/Constants.h"
 #include "AIM/Common/HDF5/H5ReconStatsWriter.h"
 #include "AIM/Common/HDF5/H5ReconStatsReader.h"
-#include "StatsGen.h"
+
 
 class SGODFTableModel;
 class SGMDFTableModel;
@@ -53,7 +53,8 @@ class QwtPlotCurve;
  */
 class StatsGenODFWidget : public QWidget, private Ui::StatsGenODFWidget
 {
-  Q_OBJECT
+  Q_OBJECT;
+
   public:
     enum Tabs
     {
@@ -80,6 +81,8 @@ class StatsGenODFWidget : public QWidget, private Ui::StatsGenODFWidget
 
     void setupGui();
     void initQwtPlot(QString xAxisName, QString yAxisName, QwtPlot* plot);
+
+    MXA_INSTANCE_PROPERTY(int, Phase);
 
     protected slots:
       void on_m_CalculateODFBtn_clicked();
