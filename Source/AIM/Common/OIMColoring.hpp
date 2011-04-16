@@ -257,10 +257,10 @@ class OIMColoring
         g[2][2] = (1 - (2 * qc[1] * qc[1]) - (2 * qc[2] * qc[2]));
 
 
-		p[0] = g[0][0] * refDir0 + g[0][1] * refDir1 + g[0][2] * refDir2;
-		p[1] = g[1][0] * refDir0 + g[1][1] * refDir1 + g[1][2] * refDir2;
-		p[2] = g[2][0] * refDir0 + g[2][1] * refDir1 + g[2][2] * refDir2;
-		double denom = p[0] * p[0] + p[1] * p[1] + p[2] * p[2];
+        p[0] = g[0][0] * refDir0 + g[0][1] * refDir1 + g[0][2] * refDir2;
+        p[1] = g[1][0] * refDir0 + g[1][1] * refDir1 + g[1][2] * refDir2;
+        p[2] = g[2][0] * refDir0 + g[2][1] * refDir1 + g[2][2] * refDir2;
+        double denom = p[0] * p[0] + p[1] * p[1] + p[2] * p[2];
         denom = pow(denom, 0.5);
         p[0] = p[0] / denom;
         p[1] = p[1] / denom;
