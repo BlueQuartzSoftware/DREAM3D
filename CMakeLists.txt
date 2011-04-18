@@ -218,7 +218,7 @@ if (AIM_BUILD_QT_APPS)
    endif()
    OPTION (AIM_BUILD_GUI_STATS_GENERATOR "Compile the Statistics Generator GUI Application" ON)
    if (AIM_BUILD_GUI_STATS_GENERATOR)
-    add_subdirectory(${AIMRepresentation_SOURCE_DIR}/Source/AIM/StatsGenerator ${AIMRepresentation_BINARY_DIR}/Apps/StatsGenerator)
+    add_subdirectory(${AIMRepresentation_SOURCE_DIR}/Source/StatsGenerator ${AIMRepresentation_BINARY_DIR}/Apps/StatsGenerator)
    endif()
    
 else()
