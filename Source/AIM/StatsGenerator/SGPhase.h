@@ -92,6 +92,12 @@ class SGPhase
      */
     void deleteWidgets();
 
+    /**
+     * @brief Updates all the widgets to have the proper phase index
+     * @param index
+     */
+    void updateWidgetPhase();
+
   protected:
     SGPhase();
 

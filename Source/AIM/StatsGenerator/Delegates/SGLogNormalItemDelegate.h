@@ -27,8 +27,8 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef SGPOWERLAWITEMDELEGATE_H_
-#define SGPOWERLAWITEMDELEGATE_H_
+#ifndef SGLOGNORMALITEMDELEGATE_H_
+#define SGLOGNORMALITEMDELEGATE_H_
 
 #include <iostream>
 
@@ -42,21 +42,21 @@
 
 #include "StatsGen.h"
 #include "AIM/Common/Qt/ColorComboPicker.h"
-#include "SGPowerLawTableModel.h"
+#include "StatsGenerator/TableModels/SGLogNormalTableModel.h"
 
 /**
- * @class SGPowerLawItemDelegate SGPowerLawItemDelegate.h AIM/StatsGenerator/SGPowerLawItemDelegate.h
+ * @class SGLogNormalItemDelegate SGLogNormalItemDelegate.h AIM/StatsGenerator/SGLogNormalItemDelegate.h
  * @brief This class creates the appropriate Editor Widget for the Tables
  * @author Michael A. Jackson for BlueQuartz Software
  * @date Dec 28, 2010
  * @version 1.0
  */
-class SGPowerLawItemDelegate : public QStyledItemDelegate
+class SGLogNormalItemDelegate : public QStyledItemDelegate
 {
   Q_OBJECT
 
   public:
-    explicit SGPowerLawItemDelegate(QObject *parent = 0) :
+    explicit SGLogNormalItemDelegate(QObject *parent = 0) :
       QStyledItemDelegate(parent)
     {
     }
@@ -74,44 +74,34 @@ class SGPowerLawItemDelegate : public QStyledItemDelegate
     // -----------------------------------------------------------------------------
     QWidget* createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const
     {
-      QLineEdit* alpha;
-      QLineEdit* beta;
-      QDoubleValidator* alphaValidator;
-      QDoubleValidator* betaValidator;
-      QLineEdit* k;
-      QDoubleValidator* kValidator;
-
+      QLineEdit* avg;
+      QLineEdit* stdDev;
+      QDoubleValidator* avgValidator;
+      QDoubleValidator* stdDevValidator;
       QComboBox* colorCombo;
 
       qint32 col = index.column();
       switch(col)
       {
-        case SGPowerLawTableModel::BinNumber:
+        case SGLogNormalTableModel::BinNumber:
           return NULL;
           break;
 
-        case SGPowerLawTableModel::Alpha:
-          alpha = new QLineEdit(parent);
-          alpha->setFrame(false);
-          alphaValidator = new QDoubleValidator(alpha);
-          alphaValidator->setDecimals(6);
-          alpha->setValidator(alphaValidator);
-          return alpha;
-        case SGPowerLawTableModel::K:
-          k = new QLineEdit(parent);
-          k->setFrame(false);
-          kValidator = new QDoubleValidator(k);
-          kValidator->setDecimals(6);
-          k->setValidator(kValidator);
-          return k;
-        case SGPowerLawTableModel::Beta:
-          beta = new QLineEdit(parent);
-          beta->setFrame(false);
-          betaValidator = new QDoubleValidator(beta);
-          betaValidator->setDecimals(6);
-          beta->setValidator(betaValidator);
-          return beta;
-        case SGPowerLawTableModel::LineColor:
+        case SGLogNormalTableModel::Average:
+          avg = new QLineEdit(parent);
+          avg->setFrame(false);
+          avgValidator = new QDoubleValidator(avg);
+          avgValidator->setDecimals(6);
+          avg->setValidator(avgValidator);
+          return avg;
+        case SGLogNormalTableModel::StdDev:
+          stdDev = new QLineEdit(parent);
+          stdDev->setFrame(false);
+          stdDevValidator = new QDoubleValidator(stdDev);
+          stdDevValidator->setDecimals(6);
+          stdDev->setValidator(stdDevValidator);
+          return stdDev;
+        case SGLogNormalTableModel::LineColor:
           colorCombo = new ColorComboPicker(parent);
           return colorCombo;
         default:
@@ -126,15 +116,15 @@ class SGPowerLawItemDelegate : public QStyledItemDelegate
     void setEditorData(QWidget *editor, const QModelIndex &index) const
     {
       qint32 col = index.column();
-     // bool ok = false;
-      if (col == SGPowerLawTableModel::Alpha || col == SGPowerLawTableModel::K || col == SGPowerLawTableModel::Beta)
+    //  bool ok = false;
+      if (col == SGLogNormalTableModel::Average || col == SGLogNormalTableModel::StdDev)
       {
-    //    double value = index.model()->data(index).toDouble(&ok);
+        //     double value = index.model()->data(index).toDouble(&ok);
         QLineEdit* lineEdit = qobject_cast<QLineEdit* > (editor);
         Q_ASSERT(lineEdit);
         lineEdit->setText(index.model()->data(index).toString());
       }
-      else if (col == SGPowerLawTableModel::LineColor)
+      else if (col == SGLogNormalTableModel::LineColor)
       {
         QString state = index.model()->data(index).toString();
         ColorComboPicker* comboBox = qobject_cast<ColorComboPicker* > (editor);
@@ -149,10 +139,10 @@ class SGPowerLawItemDelegate : public QStyledItemDelegate
     // -----------------------------------------------------------------------------
     void setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const
     {
-      //  std::cout << "SGPowerLawItemDelegate::setModelData" << std::endl;
+      //  std::cout << "SGLogNormalItemDelegate::setModelData" << std::endl;
       qint32 col = index.column();
       //  bool ok = false;
-      if (col == SGPowerLawTableModel::Alpha || col == SGPowerLawTableModel::K || col == SGPowerLawTableModel::Beta)
+      if (col == SGLogNormalTableModel::Average || col == SGLogNormalTableModel::StdDev)
       {
         QLineEdit* lineEdit = qobject_cast<QLineEdit* > (editor);
         Q_ASSERT(lineEdit);
@@ -160,7 +150,7 @@ class SGPowerLawItemDelegate : public QStyledItemDelegate
         double v = lineEdit->text().toDouble(&ok);
         model->setData(index, v);
       }
-      else if (col == SGPowerLawTableModel::LineColor)
+      else if (col == SGLogNormalTableModel::LineColor)
       {
         ColorComboPicker *comboBox = qobject_cast<ColorComboPicker* > (editor);
         Q_ASSERT(comboBox);
@@ -176,4 +166,4 @@ class SGPowerLawItemDelegate : public QStyledItemDelegate
 
 };
 
-#endif /* SGPOWERLAWITEMDELEGATE_H_ */
+#endif /* SGLOGNORMALITEMDELEGATE_H_ */

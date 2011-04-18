@@ -50,9 +50,10 @@
 #include <qwt_plot_curve.h>
 
 #include "AIM/Common/Constants.h"
-#include "SGBetaTableModel.h"
-#include "SGLogNormalTableModel.h"
-#include "SGPowerLawTableModel.h"
+#include "StatsGenerator/TableModels/SGBetaTableModel.h"
+#include "StatsGenerator/TableModels/SGLogNormalTableModel.h"
+#include "StatsGenerator/TableModels/SGPowerLawTableModel.h"
+#include "StatsGen.h"
 
 #define SG_ERROR_CHECK(name)\
     std::cout << "Error writing HDF5 data to " << name << std::endl;\
@@ -68,6 +69,7 @@ m_Mu(1.0),
 m_Sigma(0.1),
 m_Cutoff(3),
 m_BinStep(1.0),
+m_Phase(-1),
 m_TableModel(NULL),
 //m_zoomer(NULL), m_picker(NULL), m_panner(NULL),
 m_grid(NULL),
@@ -107,6 +109,17 @@ void StatsGenPlotWidget::setPlotTitle(QString title)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void StatsGenPlotWidget::setSizeDistributionValues(double mu, double sigma, double cutOff, double binStepSize)
+{
+  m_Mu = mu;
+  m_Sigma = sigma;
+  m_Cutoff = cutOff;
+  m_BinStep = binStepSize;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 int StatsGenPlotWidget::readDataFromHDF5(H5ReconStatsReader::Pointer reader,
                                          QVector<double>  &bins,
                                          const std::string &hdf5GroupName)
@@ -122,7 +135,7 @@ int StatsGenPlotWidget::readDataFromHDF5(H5ReconStatsReader::Pointer reader,
   }
 
   AIM::Reconstruction::DistributionType dt;
-  std::string disType = reader->getDistributionType(hdf5GroupName, dt);
+  std::string disType = reader->getDistributionType(m_Phase, hdf5GroupName, dt);
   if (dt == AIM::Reconstruction::UnknownDistributionType)
   {
     QMessageBox::critical(this, tr("AIM Representation"),
@@ -148,9 +161,9 @@ int StatsGenPlotWidget::readDataFromHDF5(H5ReconStatsReader::Pointer reader,
   {
   case AIM::Reconstruction::Beta:
     datasetName = hdf5GroupName + "/" + AIM::HDF5::Alpha;
-    err = reader->readStatsDataset(datasetName, col0);
+    err = reader->readStatsDataset(m_Phase, datasetName, col0);
     datasetName = hdf5GroupName + "/" + AIM::HDF5::Beta;
-    err = reader->readStatsDataset(datasetName, col1);
+    err = reader->readStatsDataset(m_Phase, datasetName, col1);
     colCount = AIM::HDF5::BetaColumnCount;
     columnsData.push_back(col0);
     columnsData.push_back(col1);
@@ -158,9 +171,9 @@ int StatsGenPlotWidget::readDataFromHDF5(H5ReconStatsReader::Pointer reader,
     break;
   case AIM::Reconstruction::LogNormal:
     datasetName = hdf5GroupName + "/" + AIM::HDF5::Average;
-    err = reader->readStatsDataset(datasetName, col0);
+    err = reader->readStatsDataset(m_Phase, datasetName, col0);
     datasetName = hdf5GroupName + "/" + AIM::HDF5::StandardDeviation;
-    err = reader->readStatsDataset(datasetName, col1);
+    err = reader->readStatsDataset(m_Phase, datasetName, col1);
     colCount = AIM::HDF5::LogNormalColumnCount;
     columnsData.push_back(col0);
     columnsData.push_back(col1);
@@ -168,11 +181,11 @@ int StatsGenPlotWidget::readDataFromHDF5(H5ReconStatsReader::Pointer reader,
     break;
   case AIM::Reconstruction::Power:
     datasetName = hdf5GroupName + "/" + AIM::HDF5::Alpha;
-    err = reader->readStatsDataset(datasetName, col0);
+    err = reader->readStatsDataset(m_Phase, datasetName, col0);
     datasetName = hdf5GroupName + "/" + AIM::HDF5::Exp_k;
-    err = reader->readStatsDataset(datasetName, col1);
+    err = reader->readStatsDataset(m_Phase, datasetName, col1);
     datasetName = hdf5GroupName + "/" + AIM::HDF5::Beta;
-    err = reader->readStatsDataset(datasetName, col2);
+    err = reader->readStatsDataset(m_Phase, datasetName, col2);
     columnsData.push_back(col0);
     columnsData.push_back(col1);
     columnsData.push_back(col2);
@@ -232,9 +245,7 @@ int StatsGenPlotWidget::writeDataToHDF5(H5ReconStatsWriter::Pointer writer,
   std::vector<double> col1;
   std::vector<double> col2;
 
-//  QVector<double> qcol0;
-//  QVector<double> qcol1;
-//  QVector<double> qcol2;
+  Q_ASSERT(m_Phase >= 0);
 
   // Create a new Table Model
   switch(m_DistributionType)
@@ -242,20 +253,20 @@ int StatsGenPlotWidget::writeDataToHDF5(H5ReconStatsWriter::Pointer writer,
   case AIM::Reconstruction::Beta:
     col0 = m_TableModel->getData(SGBetaTableModel::Alpha).toStdVector();
     col1 = m_TableModel->getData(SGBetaTableModel::Beta).toStdVector();
-    err = writer->writeBetaDistribution(hdf5GroupName, col0, col1);
+    err = writer->writeBetaDistribution(m_Phase, hdf5GroupName, col0, col1);
     if (err < 0) { SG_ERROR_CHECK(hdf5GroupName) }
     break;
   case AIM::Reconstruction::LogNormal:
     col0 = m_TableModel->getData(SGLogNormalTableModel::Average).toStdVector();
     col1 = m_TableModel->getData(SGLogNormalTableModel::StdDev).toStdVector();
-    err = writer->writeLogNormalDistribution(hdf5GroupName, col0, col1);
+    err = writer->writeLogNormalDistribution(m_Phase, hdf5GroupName, col0, col1);
     if (err < 0) { SG_ERROR_CHECK(hdf5GroupName) }
     break;
   case AIM::Reconstruction::Power:
     col0 = m_TableModel->getData(SGPowerLawTableModel::Alpha).toStdVector();
     col1 = m_TableModel->getData(SGPowerLawTableModel::K).toStdVector();
     col2 = m_TableModel->getData(SGPowerLawTableModel::Beta).toStdVector();
-    err = writer->writePowerDistribution(hdf5GroupName, col0, col1, col2);
+    err = writer->writePowerDistribution(m_Phase, hdf5GroupName, col0, col1, col2);
     if (err < 0) { SG_ERROR_CHECK(hdf5GroupName) }
     break;
 

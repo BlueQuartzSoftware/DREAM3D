@@ -27,8 +27,8 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef SGMDFITEMDELEGATE_H_
-#define SGMDFITEMDELEGATE_H_
+#ifndef SGPOWERLAWITEMDELEGATE_H_
+#define SGPOWERLAWITEMDELEGATE_H_
 
 #include <iostream>
 
@@ -41,21 +41,22 @@
 #include <QtGui/QStyledItemDelegate>
 
 #include "StatsGen.h"
-#include "SGMDFTableModel.h"
+#include "AIM/Common/Qt/ColorComboPicker.h"
+#include "StatsGenerator/TableModels/SGPowerLawTableModel.h"
 
 /**
- * @class SGMDFItemDelegate SGMDFItemDelegate.h AIM/StatsGenerator/SGMDFItemDelegate.h
+ * @class SGPowerLawItemDelegate SGPowerLawItemDelegate.h AIM/StatsGenerator/SGPowerLawItemDelegate.h
  * @brief This class creates the appropriate Editor Widget for the Tables
  * @author Michael A. Jackson for BlueQuartz Software
  * @date Dec 28, 2010
  * @version 1.0
  */
-class SGMDFItemDelegate : public QStyledItemDelegate
+class SGPowerLawItemDelegate : public QStyledItemDelegate
 {
   Q_OBJECT
 
   public:
-    explicit SGMDFItemDelegate(QObject *parent = 0) :
+    explicit SGPowerLawItemDelegate(QObject *parent = 0) :
       QStyledItemDelegate(parent)
     {
     }
@@ -73,26 +74,46 @@ class SGMDFItemDelegate : public QStyledItemDelegate
     // -----------------------------------------------------------------------------
     QWidget* createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const
     {
-      QLineEdit* editor;
-      editor = new QLineEdit(parent);
-      editor->setFrame(false);
+      QLineEdit* alpha;
+      QLineEdit* beta;
+      QDoubleValidator* alphaValidator;
+      QDoubleValidator* betaValidator;
+      QLineEdit* k;
+      QDoubleValidator* kValidator;
 
-      QDoubleValidator* weightValidator;
-      weightValidator = new QDoubleValidator(editor);
-      weightValidator->setDecimals(4);
+      QComboBox* colorCombo;
 
       qint32 col = index.column();
       switch(col)
       {
-        case SGMDFTableModel::Angle:
-          editor->setValidator(weightValidator);
-          return editor;
-        case SGMDFTableModel::Axis:
-          return editor;
-        case SGMDFTableModel::Weight:
-          editor->setValidator(weightValidator);
-          return editor;
+        case SGPowerLawTableModel::BinNumber:
+          return NULL;
+          break;
 
+        case SGPowerLawTableModel::Alpha:
+          alpha = new QLineEdit(parent);
+          alpha->setFrame(false);
+          alphaValidator = new QDoubleValidator(alpha);
+          alphaValidator->setDecimals(6);
+          alpha->setValidator(alphaValidator);
+          return alpha;
+        case SGPowerLawTableModel::K:
+          k = new QLineEdit(parent);
+          k->setFrame(false);
+          kValidator = new QDoubleValidator(k);
+          kValidator->setDecimals(6);
+          k->setValidator(kValidator);
+          return k;
+        case SGPowerLawTableModel::Beta:
+          beta = new QLineEdit(parent);
+          beta->setFrame(false);
+          betaValidator = new QDoubleValidator(beta);
+          betaValidator->setDecimals(6);
+          beta->setValidator(betaValidator);
+          return beta;
+        case SGPowerLawTableModel::LineColor:
+          colorCombo = new ColorComboPicker(parent);
+          return colorCombo;
         default:
           break;
       }
@@ -105,19 +126,21 @@ class SGMDFItemDelegate : public QStyledItemDelegate
     void setEditorData(QWidget *editor, const QModelIndex &index) const
     {
       qint32 col = index.column();
-      if (col == SGMDFTableModel::Angle || col == SGMDFTableModel::Weight )
+     // bool ok = false;
+      if (col == SGPowerLawTableModel::Alpha || col == SGPowerLawTableModel::K || col == SGPowerLawTableModel::Beta)
       {
+    //    double value = index.model()->data(index).toDouble(&ok);
         QLineEdit* lineEdit = qobject_cast<QLineEdit* > (editor);
         Q_ASSERT(lineEdit);
         lineEdit->setText(index.model()->data(index).toString());
       }
-      else if (col == SGMDFTableModel::Axis)
+      else if (col == SGPowerLawTableModel::LineColor)
       {
-        QLineEdit* lineEdit = qobject_cast<QLineEdit* > (editor);
-        Q_ASSERT(lineEdit);
-        lineEdit->setText(index.model()->data(index).toString());
+        QString state = index.model()->data(index).toString();
+        ColorComboPicker* comboBox = qobject_cast<ColorComboPicker* > (editor);
+        Q_ASSERT(comboBox);
+        comboBox->setCurrentIndex(comboBox->findText(state));
       }
-
       else QStyledItemDelegate::setEditorData(editor, index);
     }
 
@@ -126,10 +149,10 @@ class SGMDFItemDelegate : public QStyledItemDelegate
     // -----------------------------------------------------------------------------
     void setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const
     {
-      //  std::cout << "SGMDFItemDelegate::setModelData" << std::endl;
+      //  std::cout << "SGPowerLawItemDelegate::setModelData" << std::endl;
       qint32 col = index.column();
       //  bool ok = false;
-      if (col == SGMDFTableModel::Angle || col == SGMDFTableModel::Weight)
+      if (col == SGPowerLawTableModel::Alpha || col == SGPowerLawTableModel::K || col == SGPowerLawTableModel::Beta)
       {
         QLineEdit* lineEdit = qobject_cast<QLineEdit* > (editor);
         Q_ASSERT(lineEdit);
@@ -137,15 +160,13 @@ class SGMDFItemDelegate : public QStyledItemDelegate
         double v = lineEdit->text().toDouble(&ok);
         model->setData(index, v);
       }
-      else if (col == SGMDFTableModel::Axis)
+      else if (col == SGPowerLawTableModel::LineColor)
       {
-        QLineEdit* lineEdit = qobject_cast<QLineEdit* > (editor);
-        Q_ASSERT(lineEdit);
-        model->setData(index, lineEdit->text());
+        ColorComboPicker *comboBox = qobject_cast<ColorComboPicker* > (editor);
+        Q_ASSERT(comboBox);
+        model->setData(index, comboBox->currentText());
       }
-
       else QStyledItemDelegate::setModelData(editor, model, index);
-
     }
 
   private:
@@ -155,5 +176,4 @@ class SGMDFItemDelegate : public QStyledItemDelegate
 
 };
 
-
-#endif /* SGMDFITEMDELEGATE_H_ */
+#endif /* SGPOWERLAWITEMDELEGATE_H_ */
