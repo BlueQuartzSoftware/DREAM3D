@@ -68,7 +68,7 @@ SET( StatsGenerator_MOC_HDRS
     ${StatsGenerator_SOURCE_DIR}/SGWidget.h
     ${StatsGenerator_SOURCE_DIR}/EditPhaseDialog.h
     )
-cmp_IDE_SOURCE_PROPERTIES( "AIM/StatsGenerator" "${StatsGenerator_HDRS};${StatsGenerator_MOC_HDRS}" "${StatsGenerator_SRCS}" ${PROJECT_INSTALL_HEADERS})
+cmp_IDE_SOURCE_PROPERTIES( "StatsGenerator" "${StatsGenerator_HDRS};${StatsGenerator_MOC_HDRS}" "${StatsGenerator_SRCS}" ${PROJECT_INSTALL_HEADERS})
 
 SET (StatsGenerator_DELEGATE_SRCS   "" )
 SET (StatsGenerator_DELEGATE_HDRS 
@@ -78,7 +78,7 @@ SET (StatsGenerator_DELEGATE_HDRS
     ${StatsGenerator_SOURCE_DIR}/Delegates/SGODFItemDelegate.h
     ${StatsGenerator_SOURCE_DIR}/Delegates/SGMDFItemDelegate.h
     )
-cmp_IDE_SOURCE_PROPERTIES( "AIM/StatsGenerator/Delegates" "${StatsGenerator_DELEGATE_HDRS}" "${StatsGenerator_DELEGATE_SRCS}" ${PROJECT_INSTALL_HEADERS})
+cmp_IDE_SOURCE_PROPERTIES( "StatsGenerator/Delegates" "${StatsGenerator_DELEGATE_HDRS}" "${StatsGenerator_DELEGATE_SRCS}" ${PROJECT_INSTALL_HEADERS})
     
 SET (StatsGenerator_TABLEMODEL_SRCS 
     ${StatsGenerator_SOURCE_DIR}/TableModels/SGAbstractTableModel.cpp
@@ -97,7 +97,7 @@ SET (StatsGenerator_TABLEMODEL_HDRS
     ${StatsGenerator_SOURCE_DIR}/TableModels/SGODFTableModel.h
     ${StatsGenerator_SOURCE_DIR}/TableModels/SGMDFTableModel.h
     )
-cmp_IDE_SOURCE_PROPERTIES( "AIM/StatsGenerator/TableModels" "${StatsGenerator_TABLEMODEL_HDRS}" "${StatsGenerator_TABLEMODEL_SRCS}" ${PROJECT_INSTALL_HEADERS})
+cmp_IDE_SOURCE_PROPERTIES( "StatsGenerator/TableModels" "${StatsGenerator_TABLEMODEL_HDRS}" "${StatsGenerator_TABLEMODEL_SRCS}" ${PROJECT_INSTALL_HEADERS})
 
 set (AIM_COMMON_QT_SRCS
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Qt/ApplicationAboutBoxDialog.cpp
@@ -136,7 +136,7 @@ QT4_WRAP_UI( Generated_UI_HDRS ${StatsGenerator_UIS} )
 QT4_WRAP_CPP( Generated_MOC_SRCS ${StatsGenerator_MOC_HDRS} ${StatsGenerator_DELEGATE_HDRS} ${StatsGenerator_TABLEMODEL_HDRS} ${AIM_COMMON_QT_HDRS} )
 
 #-- Put the generated files into their own group for IDEs
-cmp_IDE_GENERATED_PROPERTIES("AIM/StatsGenerator/UI_Files" "${StatsGenerator_UIS}" "")
+cmp_IDE_GENERATED_PROPERTIES("StatsGenerator/UI_Files" "${StatsGenerator_UIS}" "")
 cmp_IDE_GENERATED_PROPERTIES("Generated_ui" "${Generated_UI_HDRS}" "")
 cmp_IDE_GENERATED_PROPERTIES("Generated_moc" "${Generated_MOC_SRCS}" "")
 cmp_IDE_GENERATED_PROPERTIES("Generated_qrc" "${QRC_LICENSE_FILES}" "${Generated_RC_SRCS};${PROJECT_RESOURCES_DIR}/icons/images/Icons.qrc")
