@@ -32,13 +32,12 @@
 #define _STATSGENPLOTWIDGET_H_
 
 #include <QtGui/QWidget>
+
 #include "ui_StatsGenPlotWidget.h"
 
 #include "AIM/Common/Constants.h"
 #include "AIM/Common/HDF5/H5ReconStatsWriter.h"
 #include "AIM/Common/HDF5/H5ReconStatsReader.h"
-#include "StatsGen.h"
-
 
 class SGAbstractTableModel;
 class QwtPlotZoomer;
@@ -55,7 +54,7 @@ namespace UIA
 class StatsGenPlotWidget : public QWidget, private Ui::StatsGenPlotWidget
 {
 
-  Q_OBJECT
+  Q_OBJECT;
 
   public:
 
@@ -92,6 +91,9 @@ class StatsGenPlotWidget : public QWidget, private Ui::StatsGenPlotWidget
     MXA_INSTANCE_PROPERTY(double, Sigma);
     MXA_INSTANCE_PROPERTY(double, Cutoff);
     MXA_INSTANCE_PROPERTY(double, BinStep);
+    MXA_INSTANCE_PROPERTY(int, Phase);
+
+    void setSizeDistributionValues(double mu, double sigma, double cutOff, double binStepSize);
 
   signals:
     void userEditedData();

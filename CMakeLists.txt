@@ -214,11 +214,11 @@ if (AIM_BUILD_QT_APPS)
    # Add our Qt based GUI project to the list of targets
    option(AIM_BUILD_GUI_REPRESENTATION "Compile the AIMRepresentation GUI Application" ON)
    if (AIM_BUILD_GUI_REPRESENTATION)
-       ADD_SUBDIRECTORY( ${AIMRepresentation_SOURCE_DIR}/Source/AIM/GUI ${AIMRepresentation_BINARY_DIR}/AIM/GUI)
+       ADD_SUBDIRECTORY( ${AIMRepresentation_SOURCE_DIR}/Source/AIM/GUI ${AIMRepresentation_BINARY_DIR}/Apps/Representation)
    endif()
    OPTION (AIM_BUILD_GUI_STATS_GENERATOR "Compile the Statistics Generator GUI Application" ON)
    if (AIM_BUILD_GUI_STATS_GENERATOR)
-    add_subdirectory(${AIMRepresentation_SOURCE_DIR}/Source/AIM/StatsGenerator ${AIMRepresentation_BINARY_DIR}/AIM/StatsGenerator)
+    add_subdirectory(${AIMRepresentation_SOURCE_DIR}/Source/AIM/StatsGenerator ${AIMRepresentation_BINARY_DIR}/Apps/StatsGenerator)
    endif()
    
 else()
