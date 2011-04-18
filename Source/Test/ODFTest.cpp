@@ -40,7 +40,7 @@
 
 
 #include "AIM/Common/Texture.h"
-#include "AIM/StatsGenerator/StatsGen.h"
+#include "StatsGenerator/StatsGen.h"
 
 int main(int argc, char **argv)
 {

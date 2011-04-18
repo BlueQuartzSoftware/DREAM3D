@@ -21,7 +21,7 @@ add_executable(AngDirectoryPattern ${srcs})
 target_link_libraries(AngDirectoryPattern MXA)
 endif()
 
-add_executable(ODFTest ${AIMTest_SOURCE_DIR}/ODFTest.cpp  ${AIMRepresentation_SOURCE_DIR}/Source/AIM/StatsGenerator/StatsGen.cpp)
+add_executable(ODFTest ${AIMTest_SOURCE_DIR}/ODFTest.cpp  ${AIMRepresentation_SOURCE_DIR}/Source/StatsGenerator/StatsGen.cpp)
 target_link_libraries(ODFTest AIMCommon)
 
 
