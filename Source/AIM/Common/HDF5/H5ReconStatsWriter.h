@@ -47,7 +47,14 @@
 
 
 
-
+/**
+ * @class H5ReconStatsWriter H5ReconStatsWriter.h AIM/Common/HDF5/H5ReconStatsWriter.h
+ * @brief This class writes Reconstruction Module Statistical data to an HDF5 file
+ * @author Michael A. Jackson for BlueQuartz Software
+ * @author Michael A. Groeber for USAF Research Laboratory
+ * @date Apr 15, 2011
+ * @version 1.0
+ */
 class AIMCOMMON_EXPORT H5ReconStatsWriter
 {
   public:

@@ -27,8 +27,8 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef SGLOGNORMALITEMDELEGATE_H_
-#define SGLOGNORMALITEMDELEGATE_H_
+#ifndef SGBETAITEMDELEGATE_H_
+#define SGBETAITEMDELEGATE_H_
 
 #include <iostream>
 
@@ -42,21 +42,21 @@
 
 #include "StatsGen.h"
 #include "AIM/Common/Qt/ColorComboPicker.h"
-#include "SGLogNormalTableModel.h"
+#include "StatsGenerator/TableModels/SGBetaTableModel.h"
 
 /**
- * @class SGLogNormalItemDelegate SGLogNormalItemDelegate.h AIM/StatsGenerator/SGLogNormalItemDelegate.h
+ * @class SGBetaItemDelegate SGBetaItemDelegate.h AIM/StatsGenerator/SGBetaItemDelegate.h
  * @brief This class creates the appropriate Editor Widget for the Tables
  * @author Michael A. Jackson for BlueQuartz Software
  * @date Dec 28, 2010
  * @version 1.0
  */
-class SGLogNormalItemDelegate : public QStyledItemDelegate
+class SGBetaItemDelegate : public QStyledItemDelegate
 {
   Q_OBJECT
 
   public:
-    explicit SGLogNormalItemDelegate(QObject *parent = 0) :
+    explicit SGBetaItemDelegate(QObject *parent = 0) :
       QStyledItemDelegate(parent)
     {
     }
@@ -74,34 +74,34 @@ class SGLogNormalItemDelegate : public QStyledItemDelegate
     // -----------------------------------------------------------------------------
     QWidget* createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const
     {
-      QLineEdit* avg;
-      QLineEdit* stdDev;
-      QDoubleValidator* avgValidator;
-      QDoubleValidator* stdDevValidator;
+      QLineEdit* alpha;
+      QLineEdit* beta;
+      QDoubleValidator* alphaValidator;
+      QDoubleValidator* betaValidator;
       QComboBox* colorCombo;
 
       qint32 col = index.column();
       switch(col)
       {
-        case SGLogNormalTableModel::BinNumber:
+        case SGBetaTableModel::BinNumber:
           return NULL;
           break;
 
-        case SGLogNormalTableModel::Average:
-          avg = new QLineEdit(parent);
-          avg->setFrame(false);
-          avgValidator = new QDoubleValidator(avg);
-          avgValidator->setDecimals(6);
-          avg->setValidator(avgValidator);
-          return avg;
-        case SGLogNormalTableModel::StdDev:
-          stdDev = new QLineEdit(parent);
-          stdDev->setFrame(false);
-          stdDevValidator = new QDoubleValidator(stdDev);
-          stdDevValidator->setDecimals(6);
-          stdDev->setValidator(stdDevValidator);
-          return stdDev;
-        case SGLogNormalTableModel::LineColor:
+        case SGBetaTableModel::Alpha:
+          alpha = new QLineEdit(parent);
+          alpha->setFrame(false);
+          alphaValidator = new QDoubleValidator(alpha);
+          alphaValidator->setDecimals(6);
+          alpha->setValidator(alphaValidator);
+          return alpha;
+        case SGBetaTableModel::Beta:
+          beta = new QLineEdit(parent);
+          beta->setFrame(false);
+          betaValidator = new QDoubleValidator(beta);
+          betaValidator->setDecimals(6);
+          beta->setValidator(betaValidator);
+          return beta;
+        case SGBetaTableModel::LineColor:
           colorCombo = new ColorComboPicker(parent);
           return colorCombo;
         default:
@@ -116,15 +116,15 @@ class SGLogNormalItemDelegate : public QStyledItemDelegate
     void setEditorData(QWidget *editor, const QModelIndex &index) const
     {
       qint32 col = index.column();
-    //  bool ok = false;
-      if (col == SGLogNormalTableModel::Average || col == SGLogNormalTableModel::StdDev)
+   //   bool ok = false;
+      if (col == SGBetaTableModel::Alpha || col == SGBetaTableModel::Beta)
       {
-        //     double value = index.model()->data(index).toDouble(&ok);
+   //     double value = index.model()->data(index).toDouble(&ok);
         QLineEdit* lineEdit = qobject_cast<QLineEdit* > (editor);
         Q_ASSERT(lineEdit);
         lineEdit->setText(index.model()->data(index).toString());
       }
-      else if (col == SGLogNormalTableModel::LineColor)
+      else if (col == SGBetaTableModel::LineColor)
       {
         QString state = index.model()->data(index).toString();
         ColorComboPicker* comboBox = qobject_cast<ColorComboPicker* > (editor);
@@ -139,10 +139,10 @@ class SGLogNormalItemDelegate : public QStyledItemDelegate
     // -----------------------------------------------------------------------------
     void setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const
     {
-      //  std::cout << "SGLogNormalItemDelegate::setModelData" << std::endl;
+      //  std::cout << "SGBetaItemDelegate::setModelData" << std::endl;
       qint32 col = index.column();
       //  bool ok = false;
-      if (col == SGLogNormalTableModel::Average || col == SGLogNormalTableModel::StdDev)
+      if (col == SGBetaTableModel::Alpha || col == SGBetaTableModel::Beta)
       {
         QLineEdit* lineEdit = qobject_cast<QLineEdit* > (editor);
         Q_ASSERT(lineEdit);
@@ -150,13 +150,14 @@ class SGLogNormalItemDelegate : public QStyledItemDelegate
         double v = lineEdit->text().toDouble(&ok);
         model->setData(index, v);
       }
-      else if (col == SGLogNormalTableModel::LineColor)
+      else if (col == SGBetaTableModel::LineColor)
       {
         ColorComboPicker *comboBox = qobject_cast<ColorComboPicker* > (editor);
         Q_ASSERT(comboBox);
         model->setData(index, comboBox->currentText());
       }
       else QStyledItemDelegate::setModelData(editor, model, index);
+
     }
 
   private:
@@ -166,4 +167,4 @@ class SGLogNormalItemDelegate : public QStyledItemDelegate
 
 };
 
-#endif /* SGLOGNORMALITEMDELEGATE_H_ */
+#endif /* SGBETAITEMDELEGATE_H_ */

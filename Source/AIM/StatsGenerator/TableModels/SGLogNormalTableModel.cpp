@@ -35,7 +35,7 @@
 #include <QtGui/QStyleOptionComboBox>
 #include <QtGui/QAbstractItemDelegate>
 
-#include "SGLogNormalItemDelegate.h"
+#include "StatsGenerator/Delegates/SGLogNormalItemDelegate.h"
 
 // -----------------------------------------------------------------------------
 //
