@@ -41,7 +41,7 @@
 #include <QtGui/QStyledItemDelegate>
 
 #include "StatsGen.h"
-#include "SGODFTableModel.h"
+#include "StatsGenerator/TableModels/SGODFTableModel.h"
 
 /**
  * @class SGODFItemDelegate SGODFItemDelegate.h AIM/StatsGenerator/SGODFItemDelegate.h

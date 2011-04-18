@@ -27,8 +27,8 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef SGBETAITEMDELEGATE_H_
-#define SGBETAITEMDELEGATE_H_
+#ifndef SGMDFITEMDELEGATE_H_
+#define SGMDFITEMDELEGATE_H_
 
 #include <iostream>
 
@@ -41,22 +41,21 @@
 #include <QtGui/QStyledItemDelegate>
 
 #include "StatsGen.h"
-#include "AIM/Common/Qt/ColorComboPicker.h"
-#include "SGBetaTableModel.h"
+#include "StatsGenerator/TableModels/SGMDFTableModel.h"
 
 /**
- * @class SGBetaItemDelegate SGBetaItemDelegate.h AIM/StatsGenerator/SGBetaItemDelegate.h
+ * @class SGMDFItemDelegate SGMDFItemDelegate.h AIM/StatsGenerator/SGMDFItemDelegate.h
  * @brief This class creates the appropriate Editor Widget for the Tables
  * @author Michael A. Jackson for BlueQuartz Software
  * @date Dec 28, 2010
  * @version 1.0
  */
-class SGBetaItemDelegate : public QStyledItemDelegate
+class SGMDFItemDelegate : public QStyledItemDelegate
 {
   Q_OBJECT
 
   public:
-    explicit SGBetaItemDelegate(QObject *parent = 0) :
+    explicit SGMDFItemDelegate(QObject *parent = 0) :
       QStyledItemDelegate(parent)
     {
     }
@@ -74,36 +73,26 @@ class SGBetaItemDelegate : public QStyledItemDelegate
     // -----------------------------------------------------------------------------
     QWidget* createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const
     {
-      QLineEdit* alpha;
-      QLineEdit* beta;
-      QDoubleValidator* alphaValidator;
-      QDoubleValidator* betaValidator;
-      QComboBox* colorCombo;
+      QLineEdit* editor;
+      editor = new QLineEdit(parent);
+      editor->setFrame(false);
+
+      QDoubleValidator* weightValidator;
+      weightValidator = new QDoubleValidator(editor);
+      weightValidator->setDecimals(4);
 
       qint32 col = index.column();
       switch(col)
       {
-        case SGBetaTableModel::BinNumber:
-          return NULL;
-          break;
+        case SGMDFTableModel::Angle:
+          editor->setValidator(weightValidator);
+          return editor;
+        case SGMDFTableModel::Axis:
+          return editor;
+        case SGMDFTableModel::Weight:
+          editor->setValidator(weightValidator);
+          return editor;
 
-        case SGBetaTableModel::Alpha:
-          alpha = new QLineEdit(parent);
-          alpha->setFrame(false);
-          alphaValidator = new QDoubleValidator(alpha);
-          alphaValidator->setDecimals(6);
-          alpha->setValidator(alphaValidator);
-          return alpha;
-        case SGBetaTableModel::Beta:
-          beta = new QLineEdit(parent);
-          beta->setFrame(false);
-          betaValidator = new QDoubleValidator(beta);
-          betaValidator->setDecimals(6);
-          beta->setValidator(betaValidator);
-          return beta;
-        case SGBetaTableModel::LineColor:
-          colorCombo = new ColorComboPicker(parent);
-          return colorCombo;
         default:
           break;
       }
@@ -116,21 +105,19 @@ class SGBetaItemDelegate : public QStyledItemDelegate
     void setEditorData(QWidget *editor, const QModelIndex &index) const
     {
       qint32 col = index.column();
-   //   bool ok = false;
-      if (col == SGBetaTableModel::Alpha || col == SGBetaTableModel::Beta)
+      if (col == SGMDFTableModel::Angle || col == SGMDFTableModel::Weight )
       {
-   //     double value = index.model()->data(index).toDouble(&ok);
         QLineEdit* lineEdit = qobject_cast<QLineEdit* > (editor);
         Q_ASSERT(lineEdit);
         lineEdit->setText(index.model()->data(index).toString());
       }
-      else if (col == SGBetaTableModel::LineColor)
+      else if (col == SGMDFTableModel::Axis)
       {
-        QString state = index.model()->data(index).toString();
-        ColorComboPicker* comboBox = qobject_cast<ColorComboPicker* > (editor);
-        Q_ASSERT(comboBox);
-        comboBox->setCurrentIndex(comboBox->findText(state));
+        QLineEdit* lineEdit = qobject_cast<QLineEdit* > (editor);
+        Q_ASSERT(lineEdit);
+        lineEdit->setText(index.model()->data(index).toString());
       }
+
       else QStyledItemDelegate::setEditorData(editor, index);
     }
 
@@ -139,10 +126,10 @@ class SGBetaItemDelegate : public QStyledItemDelegate
     // -----------------------------------------------------------------------------
     void setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const
     {
-      //  std::cout << "SGBetaItemDelegate::setModelData" << std::endl;
+      //  std::cout << "SGMDFItemDelegate::setModelData" << std::endl;
       qint32 col = index.column();
       //  bool ok = false;
-      if (col == SGBetaTableModel::Alpha || col == SGBetaTableModel::Beta)
+      if (col == SGMDFTableModel::Angle || col == SGMDFTableModel::Weight)
       {
         QLineEdit* lineEdit = qobject_cast<QLineEdit* > (editor);
         Q_ASSERT(lineEdit);
@@ -150,12 +137,13 @@ class SGBetaItemDelegate : public QStyledItemDelegate
         double v = lineEdit->text().toDouble(&ok);
         model->setData(index, v);
       }
-      else if (col == SGBetaTableModel::LineColor)
+      else if (col == SGMDFTableModel::Axis)
       {
-        ColorComboPicker *comboBox = qobject_cast<ColorComboPicker* > (editor);
-        Q_ASSERT(comboBox);
-        model->setData(index, comboBox->currentText());
+        QLineEdit* lineEdit = qobject_cast<QLineEdit* > (editor);
+        Q_ASSERT(lineEdit);
+        model->setData(index, lineEdit->text());
       }
+
       else QStyledItemDelegate::setModelData(editor, model, index);
 
     }
@@ -167,4 +155,5 @@ class SGBetaItemDelegate : public QStyledItemDelegate
 
 };
 
-#endif /* SGBETAITEMDELEGATE_H_ */
+
+#endif /* SGMDFITEMDELEGATE_H_ */

@@ -34,7 +34,7 @@
 #include <QtGui/QStyleOptionComboBox>
 #include <QtGui/QAbstractItemDelegate>
 
-#include "SGODFItemDelegate.h"
+#include "StatsGenerator/Delegates/SGODFItemDelegate.h"
 
 // -----------------------------------------------------------------------------
 //
