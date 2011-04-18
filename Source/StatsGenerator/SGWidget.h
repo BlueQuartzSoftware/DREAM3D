@@ -56,7 +56,10 @@ class SGWidget : public QWidget, private Ui::SGWidget
     SGWidget(QWidget *parent = 0);
     virtual ~SGWidget();
 
-    MXA_INSTANCE_PROPERTY(int, PhaseIndex);
+    int setPhaseIndex(int index);
+    int getPhaseIndex();
+
+
     MXA_INSTANCE_PROPERTY(AIM::Reconstruction::CrystalStructure, CrystalStructure);
 
     void plotSizeDistribution();
@@ -108,6 +111,7 @@ class SGWidget : public QWidget, private Ui::SGWidget
     void setTabsPlotTabsEnabled(bool b);
 
   private:
+    int                  m_PhaseIndex;
     QList<QWidget*>      m_WidgetList;
     QwtPlotCurve*        m_SizeDistributionCurve;
     QwtPlotMarker*       m_CutOffMin;

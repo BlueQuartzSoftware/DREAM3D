@@ -74,14 +74,12 @@ if (err < 0) {\
   return err;\
 }
 
-
-
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 SGWidget::SGWidget(QWidget *parent) :
 QWidget(parent),
+m_PhaseIndex(-1),
 m_SizeDistributionCurve(NULL),
 m_CutOffMin(NULL),
 m_CutOffMax(NULL),
@@ -208,6 +206,27 @@ void SGWidget::setupGui()
   calculateNumberOfBins();
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int SGWidget::setPhaseIndex(int index)
+{
+  m_PhaseIndex = index;
+  m_Omega3Plot->setPhase(m_PhaseIndex);
+  m_BOverAPlot->setPhase(m_PhaseIndex);
+  m_COverAPlot->setPhase(m_PhaseIndex);
+  m_COverBPlot->setPhase(m_PhaseIndex);
+  m_NeighborPlot->setPhase(m_PhaseIndex);
+  m_ODFWidget->setPhase(m_PhaseIndex);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int SGWidget::getPhaseIndex()
+{
+  return m_PhaseIndex;
+}
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -535,14 +554,11 @@ void SGWidget::plotSizeDistribution()
 // -----------------------------------------------------------------------------
 int SGWidget::writeDataToHDF5(H5ReconStatsWriter::Pointer writer)
 {
-
-#warning Generate the HDFGroup name based on the PhaseIndex
-
-
   double mu, sigma, cutOff, binStep;
   gatherSizeDistributionFromGui(mu, sigma, cutOff, binStep);
 #ifndef _WIN32
 #warning phaseFraction needs to be calculated somewhere for this function
+#warning Generate the HDFGroup name based on the PhaseIndex
 #endif
   double phaseFraction = 0.0;
   QwtArray<double> xCo;

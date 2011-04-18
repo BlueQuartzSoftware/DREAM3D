@@ -145,6 +145,7 @@ void StatsGeneratorUI::setupGui()
   phaseCombo->blockSignals(true);
   phaseCombo->addItem(cName);
   phaseCombo->blockSignals(false);
+  setWindowModified(true);
 }
 
 // -----------------------------------------------------------------------------
@@ -154,13 +155,12 @@ void StatsGeneratorUI::on_phaseCombo_currentIndexChanged(int index)
 {
   std::cout << "on_phaseCombo_currentIndexChanged" << std::endl;
   SGWidget* widget = m_SGWidgets[index];
-  verticalLayout_2->removeWidget(m_SGWidget);
 
-//  m_SGWidget->setParent(NULL);
+  verticalLayout_2->removeWidget(m_SGWidget);
   m_SGWidget->hide();
   m_SGWidget = widget;
-  m_SGWidget->setParent(centralwidget);
   verticalLayout_2->addWidget(m_SGWidget);
+  m_SGWidget->show();
 }
 
 // -----------------------------------------------------------------------------
@@ -175,14 +175,11 @@ void StatsGeneratorUI::on_addPhase_clicked()
   QString cName = widget->getComboString();
 
   widget->setObjectName(cName);
-  phaseCombo->addItem(cName);
   m_SGWidgets.push_back(widget);
+  phaseCombo->addItem(cName);
 
-  verticalLayout_2->removeWidget(m_SGWidget);
-  // m_SGWidget->setParent(NULL);
-  m_SGWidget->hide();
-  m_SGWidget = widget;
-  verticalLayout_2->addWidget(m_SGWidget);
+  phaseCombo->setCurrentIndex(phaseCombo->count()-1);
+  setWindowModified(true);
 }
 
 // -----------------------------------------------------------------------------
@@ -191,7 +188,9 @@ void StatsGeneratorUI::on_addPhase_clicked()
 void StatsGeneratorUI::on_editPhase_clicked()
 {
   std::cout << "on_editPhase_clicked" << std::endl;
+  setWindowModified(true);
 }
+
 
 // -----------------------------------------------------------------------------
 //
@@ -200,35 +199,42 @@ void StatsGeneratorUI::on_deletePhase_clicked()
 {
 
   std::cout << "on_deletePhase_clicked" << std::endl;
-#if 0
+
   if (m_SGWidgets.size() > 1)
   {
     int index = phaseCombo->currentIndex();
     phaseCombo->blockSignals(true);
     phaseCombo->clear(); // Clear the combo box of everything as we are going to rebuild it
-    std::vector<SGPhase::Pointer>::iterator iter = m_SGWidgets.begin();
-    iter = iter + index;
-    SGPhase::Pointer delPhase = m_SGWidgets[index];
+
     // Remove the SGPhase object from the vector
-    m_SGWidgets.erase(iter);
+    m_SGWidgets.remove(index);
 
     // Reset the phase index for each SGPhase object
-    for (std::vector<SGPhase::Pointer>::size_type p = 0; p < m_SGWidgets.size(); ++p )
+    for(int p = 0; p < m_SGWidgets.size(); ++p)
     {
-      m_SGWidgets[p]->setIndex(p);
-      m_SGWidgets[p]->updateWidgetPhase();
+      m_SGWidgets[p]->setPhaseIndex(p);
       phaseCombo->addItem(m_SGWidgets[p]->getComboString());
+      m_SGWidgets[p]->setObjectName(m_SGWidgets[p]->getComboString());
     }
-    // Get the first phase to use as the current phase
-    SGPhase::Pointer phase = m_SGWidgets[0];
-    // Swap out the widgets
-    swapPhaseWidgets(phase);
+
+    SGWidget* widget = m_SGWidgets[0];
+
+    verticalLayout_2->removeWidget(m_SGWidget);
+    m_SGWidget->hide();
+    m_SGWidget->deleteLater();
+    m_SGWidget = widget;
+    verticalLayout_2->addWidget(m_SGWidget);
+    m_SGWidget->show();
+
+    setWindowModified(true);
+
     // And now clean up/release any extra widgets that are being used
-    delPhase->deleteWidgets();
+
     phaseCombo->blockSignals(false);
   }
-#endif
+  setWindowModified(true);
 }
+
 
 // -----------------------------------------------------------------------------
 //
