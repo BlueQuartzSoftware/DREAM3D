@@ -50,7 +50,8 @@
 // -----------------------------------------------------------------------------
 StatsGenODFWidget::StatsGenODFWidget(QWidget *parent) :
 QWidget(parent),
-m_Phase(-1),
+m_PhaseIndex(-1),
+m_CrystalStructure(AIM::Reconstruction::Cubic),
 m_TableModel(NULL),
 m_MdfTableModel(NULL)
 {
@@ -90,8 +91,7 @@ int StatsGenODFWidget::readDataFromHDF5(H5ReconStatsReader::Pointer reader,
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int StatsGenODFWidget::writeDataToHDF5(AIM::Reconstruction::CrystalStructure crystruct,
-                                       H5ReconStatsWriter::Pointer writer)
+int StatsGenODFWidget::writeDataToHDF5(H5ReconStatsWriter::Pointer writer)
 {
   int err = 0;
   double totalWeight = 0.0;
@@ -107,13 +107,29 @@ int StatsGenODFWidget::writeDataToHDF5(AIM::Reconstruction::CrystalStructure cry
   double randomWeight = weights.front();
   //pop off the random number
   weights.pop_front();
+  sigmas.pop_front();
 
-  Texture::calculateCubicODFData(weights, sigmas, randomWeight, false, odf, totalWeight);
+  std::cout << "--------------------------------------------" << std::endl;
+  for (int i = 0; i < weights.size(); ++i)
+  {
+    std::cout << weights[i] << ", " << sigmas[i] << std::endl;
+  }
+
+  if (m_CrystalStructure == AIM::Reconstruction::Cubic)
+  {
+    Texture::calculateCubicODFData(weights, sigmas, randomWeight, false, odf, totalWeight);
+  }
+  else if (m_CrystalStructure == AIM::Reconstruction::Hexagonal)
+  {
+#ifndef _WIN32
+#warning Hex ODF Calculation Methods needs to be implemented
+#endif
+  }
   double* odfPtr = &(odf.front());
-
-
-  err = writer->writeODFData(m_Phase, crystruct, odfPtr);
-
+  err = -1;
+  if (odfPtr != NULL) {
+    err = writer->writeODFData(m_PhaseIndex, m_CrystalStructure, odfPtr);
+  }
   return err;
 }
 

@@ -51,13 +51,13 @@ set (StatsGenerator_SRCS
     ${StatsGenerator_SOURCE_DIR}/StatsGeneratorUI.cpp
     ${StatsGenerator_SOURCE_DIR}/StatsGenPlotWidget.cpp
     ${StatsGenerator_SOURCE_DIR}/StatsGenODFWidget.cpp
-    ${StatsGenerator_SOURCE_DIR}/SGPhase.cpp
+ #   ${StatsGenerator_SOURCE_DIR}/SGPhase.cpp
     ${StatsGenerator_SOURCE_DIR}/SGWidget.cpp
     ${StatsGenerator_SOURCE_DIR}/EditPhaseDialog.cpp
     )
 set (StatsGenerator_HDRS 
     ${StatsGenerator_SOURCE_DIR}/StatsGen.h
-    ${StatsGenerator_SOURCE_DIR}/SGPhase.h
+ #   ${StatsGenerator_SOURCE_DIR}/SGPhase.h
 )
                    
 SET( StatsGenerator_MOC_HDRS

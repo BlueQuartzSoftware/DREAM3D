@@ -79,12 +79,12 @@ if (err < 0) {\
 // -----------------------------------------------------------------------------
 SGWidget::SGWidget(QWidget *parent) :
 QWidget(parent),
-m_PhaseIndex(-1),
+m_PhaseIndex(0),
 m_SizeDistributionCurve(NULL),
 m_CutOffMin(NULL),
 m_CutOffMax(NULL),
 m_grid(NULL),
-m_Xtal(AIM::Reconstruction::Cubic)
+m_CrystalStructure(AIM::Reconstruction::Cubic)
 {
   setupUi(this);
   setupGui();
@@ -209,15 +209,15 @@ void SGWidget::setupGui()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int SGWidget::setPhaseIndex(int index)
+void SGWidget::setPhaseIndex(int index)
 {
   m_PhaseIndex = index;
-  m_Omega3Plot->setPhase(m_PhaseIndex);
-  m_BOverAPlot->setPhase(m_PhaseIndex);
-  m_COverAPlot->setPhase(m_PhaseIndex);
-  m_COverBPlot->setPhase(m_PhaseIndex);
-  m_NeighborPlot->setPhase(m_PhaseIndex);
-  m_ODFWidget->setPhase(m_PhaseIndex);
+  m_Omega3Plot->setPhaseIndex(m_PhaseIndex);
+  m_BOverAPlot->setPhaseIndex(m_PhaseIndex);
+  m_COverAPlot->setPhaseIndex(m_PhaseIndex);
+  m_COverBPlot->setPhaseIndex(m_PhaseIndex);
+  m_NeighborPlot->setPhaseIndex(m_PhaseIndex);
+  m_ODFWidget->setPhaseIndex(m_PhaseIndex);
 }
 
 // -----------------------------------------------------------------------------
@@ -227,6 +227,30 @@ int SGWidget::getPhaseIndex()
 {
   return m_PhaseIndex;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void SGWidget::setCrystalStructure(AIM::Reconstruction::CrystalStructure xtal)
+{
+  m_CrystalStructure = xtal;
+  m_Omega3Plot->setCrystalStructure(xtal);
+  m_BOverAPlot->setCrystalStructure(xtal);
+  m_COverAPlot->setCrystalStructure(xtal);
+  m_COverBPlot->setCrystalStructure(xtal);
+  m_NeighborPlot->setCrystalStructure(xtal);
+  m_ODFWidget->setCrystalStructure(xtal);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AIM::Reconstruction::CrystalStructure SGWidget::getCrystalStructure()
+{
+  return m_CrystalStructure;
+}
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -234,11 +258,11 @@ QString SGWidget::getComboString()
 {
   QString s = QString::number(m_PhaseIndex);
   s.append(" - ");
-  if (m_Xtal == AIM::Reconstruction::Cubic)
+  if (m_CrystalStructure == AIM::Reconstruction::Cubic)
   {
     s.append("Cubic");
   }
-  else if (m_Xtal == AIM::Reconstruction::Hexagonal)
+  else if (m_CrystalStructure == AIM::Reconstruction::Hexagonal)
   {
     s.append("Hexagonal");
   }
@@ -554,13 +578,23 @@ void SGWidget::plotSizeDistribution()
 // -----------------------------------------------------------------------------
 int SGWidget::writeDataToHDF5(H5ReconStatsWriter::Pointer writer)
 {
+  if (m_PhaseIndex < 1)
+  {
+    QMessageBox::critical(this, tr("StatsGenerator"),
+                                  tr("The Phase Index is Less than 1. This is not allowed."),
+                                  QMessageBox::Default);
+    return -1;
+  }
   double mu, sigma, cutOff, binStep;
   gatherSizeDistributionFromGui(mu, sigma, cutOff, binStep);
 #ifndef _WIN32
 #warning phaseFraction needs to be calculated somewhere for this function
 #warning Generate the HDFGroup name based on the PhaseIndex
 #endif
-  double phaseFraction = 0.0;
+
+  double calcPhaseFraction = m_PhaseFraction / m_TotalPhaseFraction;
+
+
   QwtArray<double> xCo;
   QwtArray<double> yCo;
   QwtArray<double> binsizes;
@@ -582,17 +616,17 @@ int SGWidget::writeDataToHDF5(H5ReconStatsWriter::Pointer writer)
   double stepSize = binStep;
 
   size_t nBins = 0;
-  err = writer->writeSizeDistribution(m_PhaseIndex, phaseFraction, maxdiameter, mindiameter, stepSize, avglogdiam, sdlogdiam, nBins);
+  err = writer->writeSizeDistribution(m_PhaseIndex, calcPhaseFraction, maxdiameter, mindiameter, stepSize, avglogdiam, sdlogdiam, nBins);
   CHECK_ERROR_ON_WRITE(err, "Size Distribution")
 
   // Now that we have bins and grain sizes, push those to the other plot widgets
   // Setup Each Plot Widget
-  m_Omega3Plot->writeDataToHDF5(writer, AIM::HDF5::Grain_SizeVOmega3_Distributions);
-  m_BOverAPlot->writeDataToHDF5(writer, AIM::HDF5::Grain_SizeVBoverA_Distributions);
-  m_COverAPlot->writeDataToHDF5(writer, AIM::HDF5::Grain_SizeVCoverA_Distributions);
-  m_COverBPlot->writeDataToHDF5(writer, AIM::HDF5::Grain_SizeVCoverB_Distributions);
-  m_NeighborPlot->writeDataToHDF5(writer, AIM::HDF5::Grain_SizeVNeighbors_Distributions);
-  m_ODFWidget->writeDataToHDF5(AIM::Reconstruction::Cubic, writer);
+  err = m_Omega3Plot->writeDataToHDF5(writer, AIM::HDF5::Grain_SizeVOmega3_Distributions);
+  err = m_BOverAPlot->writeDataToHDF5(writer, AIM::HDF5::Grain_SizeVBoverA_Distributions);
+  err = m_COverAPlot->writeDataToHDF5(writer, AIM::HDF5::Grain_SizeVCoverA_Distributions);
+  err = m_COverBPlot->writeDataToHDF5(writer, AIM::HDF5::Grain_SizeVCoverB_Distributions);
+  err = m_NeighborPlot->writeDataToHDF5(writer, AIM::HDF5::Grain_SizeVNeighbors_Distributions);
+  err = m_ODFWidget->writeDataToHDF5(writer);
   return 1;
 }
 

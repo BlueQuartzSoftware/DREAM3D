@@ -56,11 +56,15 @@ class SGWidget : public QWidget, private Ui::SGWidget
     SGWidget(QWidget *parent = 0);
     virtual ~SGWidget();
 
-    int setPhaseIndex(int index);
+    void setPhaseIndex(int index);
     int getPhaseIndex();
 
+    MXA_INSTANCE_PROPERTY(double, PhaseFraction);
+    MXA_INSTANCE_PROPERTY(double, TotalPhaseFraction);
 
-    MXA_INSTANCE_PROPERTY(AIM::Reconstruction::CrystalStructure, CrystalStructure);
+  //  MXA_INSTANCE_PROPERTY(AIM::Reconstruction::CrystalStructure, CrystalStructure);
+    void setCrystalStructure(AIM::Reconstruction::CrystalStructure xtal);
+    AIM::Reconstruction::CrystalStructure getCrystalStructure();
 
     void plotSizeDistribution();
     void updateSizeDistributionPlot();
@@ -112,13 +116,13 @@ class SGWidget : public QWidget, private Ui::SGWidget
 
   private:
     int                  m_PhaseIndex;
+    AIM::Reconstruction::CrystalStructure  m_CrystalStructure;
+
     QList<QWidget*>      m_WidgetList;
     QwtPlotCurve*        m_SizeDistributionCurve;
     QwtPlotMarker*       m_CutOffMin;
     QwtPlotMarker*       m_CutOffMax;
     QwtPlotGrid*         m_grid;
-    AIM::Reconstruction::CrystalStructure  m_Xtal;
-
 
     SGWidget(const SGWidget&); // Copy Constructor Not Implemented
     void operator=(const SGWidget&); // Operator '=' Not Implemented
