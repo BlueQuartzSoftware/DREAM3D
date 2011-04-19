@@ -42,6 +42,7 @@
 #include "AIM/Common/Texture.h"
 #include "StatsGenerator/TableModels/SGODFTableModel.h"
 #include "StatsGenerator/TableModels/SGMDFTableModel.h"
+#include "StatsGenerator/TextureDialog.h"
 #include "StatsGen.h"
 
 
@@ -109,12 +110,6 @@ int StatsGenODFWidget::writeDataToHDF5(H5ReconStatsWriter::Pointer writer)
   weights.pop_front();
   sigmas.pop_front();
 
-  std::cout << "--------------------------------------------" << std::endl;
-  for (int i = 0; i < weights.size(); ++i)
-  {
-    std::cout << weights[i] << ", " << sigmas[i] << std::endl;
-  }
-
   if (m_CrystalStructure == AIM::Reconstruction::Cubic)
   {
     Texture::calculateCubicODFData(weights, sigmas, randomWeight, false, odf, totalWeight);
@@ -128,7 +123,8 @@ int StatsGenODFWidget::writeDataToHDF5(H5ReconStatsWriter::Pointer writer)
   }
   double* odfPtr = &(odf.front());
   err = -1;
-  if (odfPtr != NULL) {
+  if (odfPtr != NULL)
+  {
     err = writer->writeODFData(m_PhaseIndex, m_CrystalStructure, odfPtr);
   }
   return err;
@@ -324,5 +320,19 @@ void StatsGenODFWidget::on_deleteMDFRowBtn_clicked()
   if (m_MdfTableModel->rowCount() > 0)
   {
     m_MDFTableView->resizeColumnsToContents();
-  }}
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void StatsGenODFWidget::on_addTextureBtn_clicked()
+{
+  TextureDialog t;
+  int r = t.exec();
+  if (r == QDialog::Accepted)
+  {
+
+  }
+}
 

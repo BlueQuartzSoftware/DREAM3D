@@ -235,7 +235,7 @@ void RepresentationUI::dropEvent(QDropEvent* e)
   QFileInfo fi(file );
   QString ext = fi.suffix();
   file = QDir::toNativeSeparators(file);
-  if (fi.exists() && fi.isFile() && ( ext.compare("tif") || ext.compare("tiff")  ) )
+  if (fi.exists() && fi.isFile() )
   {
     //TODO: INSERT Drop Event CODE HERE
   }
@@ -288,8 +288,8 @@ qint32 RepresentationUI::checkDirtyDocument()
 
   if (this->isWindowModified() == true)
   {
-    int r = QMessageBox::warning(this, tr("AIM Mount Maker"),
-                            tr("The Image has been modified.\nDo you want to save your changes?"),
+    int r = QMessageBox::warning(this, tr("AIMRepresentation"),
+                            tr("The Data has been modified.\nDo you want to save your changes?"),
                             QMessageBox::Save | QMessageBox::Default,
                             QMessageBox::Discard,
                             QMessageBox::Cancel | QMessageBox::Escape);

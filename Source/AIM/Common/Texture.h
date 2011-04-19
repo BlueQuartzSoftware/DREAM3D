@@ -64,8 +64,6 @@ class AIMCOMMON_EXPORT Texture
     const static double Sigmas[AIM_TEXTURE_COUNT];
 
     //FIXME: Implement a Hexagonal Crystal Structure Calculation
-    //TODO: Testing
-
 
     /**
      * @brief This will calculate ODF data based on an array of weights that are
