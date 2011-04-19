@@ -124,6 +124,7 @@ int StatsGenODFWidget::writeDataToHDF5(H5ReconStatsWriter::Pointer writer)
 #ifndef _WIN32
 #warning Hex ODF Calculation Methods needs to be implemented
 #endif
+    Texture::calculateCubicODFData(weights, sigmas, randomWeight, false, odf, totalWeight);
   }
   double* odfPtr = &(odf.front());
   err = -1;
