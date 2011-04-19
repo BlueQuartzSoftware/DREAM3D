@@ -52,6 +52,26 @@ class EditPhaseDialog : public QDialog, private Ui::EditPhaseDialog
     virtual ~EditPhaseDialog();
 
     AIM::Reconstruction::CrystalStructure getCrystalStructure();
+    void setCrystalStructure(AIM::Reconstruction::CrystalStructure xtal);
+
+    double getPhaseFraction();
+    void setPhaseFraction(double d);
+
+    double setOtherPhaseFractionTotal(double t);
+
+  protected slots:
+  void on_phaseFraction_textChanged(const QString &string);
+
+
+
+  protected:
+    void setupGui();
+
+  private:
+    double m_OtherPhaseFractions;
+
+    EditPhaseDialog(const EditPhaseDialog&); // Copy Constructor Not Implemented
+    void operator=(const EditPhaseDialog&); // Operator '=' Not Implemented
 };
 
 #endif /* EDITPHASEDIALOG_H_ */
