@@ -133,7 +133,7 @@ ENDIF ( CMAKE_BUILD_TYPE MATCHES Debug )
 # Should we write Binary or ASCII VTK output files
 # --------------------------------------------------------------------
 set(AIM_WRITE_BINARY_VTK_FILE)
-option(AIM_WRITE_BINARY_VTK_FILES "Write Binary VTK Files instead of ASCII files" OFF)
+option(AIM_WRITE_BINARY_VTK_FILES "Write Binary VTK Files instead of ASCII files" ON)
 if (AIM_WRITE_BINARY_VTK_FILES)
  set(AIM_WRITE_BINARY_VTK_FILE 1)
 endif()
@@ -255,7 +255,7 @@ if (AIM_BUILD_TESTING)
 endif()
 
 
-option(AIM_BUILD_CMU "Compile the CMU Optimization Wrappers" ON)
+option(AIM_BUILD_CMU "Compile the CMU Optimization Wrappers" OFF)
 if(AIM_BUILD_CMU)
     add_subdirectory(${AIMRepresentation_SOURCE_DIR}/Source/CMU ${AIMRepresentation_BINARY_DIR}/AIM/CMU)
 endif()
