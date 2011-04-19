@@ -59,7 +59,7 @@ class AIMCOMMON_EXPORT ReconstructionVTKWriter
        * @param Output file name
        * @return 0 on Success
        */
-      int writeVisualizationFile(ReconstructionFunc* r, const std::string &file); // DONE
+      int writeVisualizationFile(ReconstructionFunc* r, const std::string &file);
 
       /**
        * @brief Writes a VTK visualization file with vector arrays for the Inverse
