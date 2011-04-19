@@ -30,13 +30,17 @@
 
 #include "EditPhaseDialog.h"
 
+#include <QtGui/QDoubleValidator>
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 EditPhaseDialog::EditPhaseDialog(QWidget* parent) :
-QDialog(parent)
+QDialog(parent),
+m_OtherPhaseFractions(0.0)
 {
   setupUi(this);
+  setupGui();
 }
 
 // -----------------------------------------------------------------------------
@@ -50,12 +54,66 @@ EditPhaseDialog::~EditPhaseDialog()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void EditPhaseDialog::setCrystalStructure(AIM::Reconstruction::CrystalStructure xtal)
+{
+  xtalCombo->setCurrentIndex(xtal);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 AIM::Reconstruction::CrystalStructure EditPhaseDialog::getCrystalStructure()
 {
   int index = xtalCombo->currentIndex();
   return static_cast<AIM::Reconstruction::CrystalStructure>(index);
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+double EditPhaseDialog::getPhaseFraction()
+{
+  bool ok = false;
+  double d = phaseFraction->text().toDouble(&ok);
+  if (ok) return d;
+  return -1.0;
+}
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void EditPhaseDialog::setPhaseFraction(double d)
+{
+  phaseFraction->setText(QString::number(d));
+}
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void EditPhaseDialog::setupGui()
+{
+  QDoubleValidator* phaseFractionValidator = new QDoubleValidator(phaseFraction);
+}
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void EditPhaseDialog::on_phaseFraction_textChanged(const QString &string)
+{
+  bool ok = false;
+  double d = phaseFraction->text().toDouble(&ok);
+  if (ok)
+  {
+     double total = d + m_OtherPhaseFractions;
+     total = d / total;
+     calcPhaseFraction->setText(QString::number(total));
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+double EditPhaseDialog::setOtherPhaseFractionTotal(double t)
+{
+  m_OtherPhaseFractions = t;
+}

@@ -83,7 +83,7 @@ class AIMCOMMON_EXPORT Texture
     {
       int TextureBins[AIM_TEXTURE_COUNT];
       static const size_t eighteenCubed = 5832;
-	  odf.resize(eighteenCubed);
+      odf.resize(eighteenCubed);
       size_t ea1bin, ea2bin, ea3bin;
       size_t bin, addbin;
       size_t bin1, bin2, bin3;
@@ -139,35 +139,35 @@ class AIMCOMMON_EXPORT Texture
         bin = TextureBins[i];
         odf[bin] = odf[bin] + (weights[i]);
         totalweight = totalweight + weights[i];
-		bin1 = bin%18;
-		bin2 = (bin/18)%18;
-		bin3 = bin/(18*18);
-		for(int j=-sigmas[i];j<=sigmas[i];j++)
-		{
-			for(int k=-sigmas[i];k<=sigmas[i];k++)
-			{
-				for(int l=-sigmas[i];l<=sigmas[i];l++)
-				{
-					addbin1 = bin1+j;
-					addbin2 = bin2+k;
-					addbin3 = bin3+l;
-					if(addbin1 < 0) addbin1 = addbin1+18;
-					if(addbin1 >= 18) addbin1 = addbin1-18;
-					if(addbin2 < 0) addbin2 = addbin2+18;
-					if(addbin2 >= 18) addbin2 = addbin2-18;
-					if(addbin3 < 0) addbin3 = addbin3+18;
-					if(addbin3 >= 18) addbin3 = addbin3-18;
-					addbin = (addbin3 * 18 * 18) + (addbin2 * 18) + (addbin1);
-					dist = pow((j*j+k*k+l*l),0.5);
-					fraction = 1.0-((dist/sigmas[i])*(dist/sigmas[i]));
-					if(fraction > 0.0)
-					{
-						odf[addbin] = odf[addbin] + (weights[i]*fraction);
-						totalweight = totalweight + (weights[i]*fraction);
-					}
-				}
-			}
-		}
+        bin1 = bin % 18;
+        bin2 = (bin / 18) % 18;
+        bin3 = bin / (18 * 18);
+        for (int j = -sigmas[i]; j <= sigmas[i]; j++)
+        {
+          for (int k = -sigmas[i]; k <= sigmas[i]; k++)
+          {
+            for (int l = -sigmas[i]; l <= sigmas[i]; l++)
+            {
+              addbin1 = bin1 + j;
+              addbin2 = bin2 + k;
+              addbin3 = bin3 + l;
+              if (addbin1 < 0) addbin1 = addbin1 + 18;
+              if (addbin1 >= 18) addbin1 = addbin1 - 18;
+              if (addbin2 < 0) addbin2 = addbin2 + 18;
+              if (addbin2 >= 18) addbin2 = addbin2 - 18;
+              if (addbin3 < 0) addbin3 = addbin3 + 18;
+              if (addbin3 >= 18) addbin3 = addbin3 - 18;
+              addbin = (addbin3 * 18 * 18) + (addbin2 * 18) + (addbin1);
+              dist = pow((j * j + k * k + l * l), 0.5);
+              fraction = 1.0 - ((dist / sigmas[i]) * (dist / sigmas[i]));
+              if (fraction > 0.0)
+              {
+                odf[addbin] = odf[addbin] + (weights[i] * fraction);
+                totalweight = totalweight + (weights[i] * fraction);
+              }
+            }
+          }
+        }
       }
 
       if (normalize == true)
