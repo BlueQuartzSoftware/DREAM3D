@@ -106,7 +106,7 @@ int main(int argc, char **argv)
     r->setXResolution(xRes.getValue());
     r->setYResolution(yRes.getValue());
     r->setZResolution(zRes.getValue());
-    r->setCrystalStructure( static_cast<AIM::Reconstruction::CrystalStructure>(crystruct.getValue()) );
+    //r->setCrystalStructure( static_cast<AIM::Reconstruction::CrystalStructure>(crystruct.getValue()) );
 
     r->compute();
     err = r->getErrorCondition();
