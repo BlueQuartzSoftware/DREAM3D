@@ -397,7 +397,6 @@ void SGPowerLawTableModel::setBinNumbers(QVector<double> binNumbers)
   // Remove all the current rows in the table model
   removeRows(0, rowCount());
 
-  //TODO: SET SOME SESIBLE Defaults
   double alpha = 14.0;
   double k = 1.0;
   double beta = 1.0;

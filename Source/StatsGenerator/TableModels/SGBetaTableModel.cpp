@@ -376,7 +376,6 @@ void SGBetaTableModel::setBinNumbers(QVector<double> binNumbers)
   // Remove all the current rows in the table model
   removeRows(0, rowCount());
 
-  //TODO: SET SOME SESIBLE Defaults
   double alpha = 5.0;
   double beta = 1.0;
   double betaStep = 10.0 / count;
