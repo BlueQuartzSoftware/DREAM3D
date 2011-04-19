@@ -113,7 +113,7 @@ void EditPhaseDialog::on_phaseFraction_textChanged(const QString &string)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-double EditPhaseDialog::setOtherPhaseFractionTotal(double t)
+void EditPhaseDialog::setOtherPhaseFractionTotal(double t)
 {
   m_OtherPhaseFractions = t;
 }
