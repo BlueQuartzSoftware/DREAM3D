@@ -85,11 +85,11 @@ void SGPhase::deleteWidgets()
 // -----------------------------------------------------------------------------
 void SGPhase::updateWidgetPhase()
 {
-  m_Omega3Plot->setPhase(m_Index);
-  m_BOverAPlot->setPhase(m_Index);
-  m_COverAPlot->setPhase(m_Index);
-  m_COverBPlot->setPhase(m_Index);
-  m_NeighborPlot->setPhase(m_Index);
-  m_ODFWidget->setPhase(m_Index);
+  m_Omega3Plot->setPhaseIndex(m_Index);
+  m_BOverAPlot->setPhaseIndex(m_Index);
+  m_COverAPlot->setPhaseIndex(m_Index);
+  m_COverBPlot->setPhaseIndex(m_Index);
+  m_NeighborPlot->setPhaseIndex(m_Index);
+  m_ODFWidget->setPhaseIndex(m_Index);
 }
 
