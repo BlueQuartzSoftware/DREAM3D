@@ -94,11 +94,11 @@ class StatsGenODFWidget : public QWidget, private Ui::StatsGenODFWidget
 
 
     protected:
-      void resetTableModel();
+      void resetTableModel2();
 
     private:
-      SGODFTableModel* m_TableModel;
-      SGMDFTableModel* m_MdfTableModel;
+      SGODFTableModel* m_ODFTableModel;
+      SGMDFTableModel* m_MDFTableModel;
 
       QVector<QwtPlotCurve*> m_PlotCurves;
 

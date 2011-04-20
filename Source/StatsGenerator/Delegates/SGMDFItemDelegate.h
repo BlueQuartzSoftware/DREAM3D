@@ -105,19 +105,14 @@ class SGMDFItemDelegate : public QStyledItemDelegate
     void setEditorData(QWidget *editor, const QModelIndex &index) const
     {
       qint32 col = index.column();
-      if (col == SGMDFTableModel::Angle || col == SGMDFTableModel::Weight )
+      if (col == SGMDFTableModel::Angle
+          || col == SGMDFTableModel::Weight
+          || col == SGMDFTableModel::Axis)
       {
         QLineEdit* lineEdit = qobject_cast<QLineEdit* > (editor);
         Q_ASSERT(lineEdit);
         lineEdit->setText(index.model()->data(index).toString());
       }
-      else if (col == SGMDFTableModel::Axis)
-      {
-        QLineEdit* lineEdit = qobject_cast<QLineEdit* > (editor);
-        Q_ASSERT(lineEdit);
-        lineEdit->setText(index.model()->data(index).toString());
-      }
-
       else QStyledItemDelegate::setEditorData(editor, index);
     }
 
@@ -143,9 +138,7 @@ class SGMDFItemDelegate : public QStyledItemDelegate
         Q_ASSERT(lineEdit);
         model->setData(index, lineEdit->text());
       }
-
       else QStyledItemDelegate::setModelData(editor, model, index);
-
     }
 
   private:

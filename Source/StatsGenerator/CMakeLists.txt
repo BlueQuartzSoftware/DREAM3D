@@ -149,6 +149,7 @@ include_directories(${HDF5_INCLUDE_DIR})
 include_directories(${StatsGenerator_SOURCE_DIR} )
 include_directories(${StatsGenerator_SOURCE_DIR}/.. )
 include_directories(${StatsGenerator_BINARY_DIR} )
+include_directories(${AIMRepresentation_BINARY_DIR}/QtSupport)
 
 IF(APPLE)
     set(APPLICATION_ICON ${PROJECT_RESOURCES_DIR}/icons/icns/${PROJECT_NAME}.icns)
