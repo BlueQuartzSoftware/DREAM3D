@@ -10,7 +10,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 #include "RepresentationUI.h"
-#include <AIM/Common/Qt/QRecentFileList.h>
+#include "QtSupport/QRecentFileList.h"
 
 /**
  * @brief The Main entry point for the application
