@@ -211,6 +211,7 @@ if (AIM_BUILD_QT_APPS)
    # Append the locations of the Qt libraries to our Library Search Paths
    list(APPEND CMP_LIB_SEARCH_DIRS ${QT_BINARY_DIR} ${QT_LIBRARY_DIR} )
    
+   add_subdirectory(${AIMRepresentation_SOURCE_DIR}/Source/QtSupport ${AIMRepresentation_BINARY_DIR}/QtSupport)
    # Add our Qt based GUI project to the list of targets
    option(AIM_BUILD_GUI_REPRESENTATION "Compile the AIMRepresentation GUI Application" ON)
    if (AIM_BUILD_GUI_REPRESENTATION)

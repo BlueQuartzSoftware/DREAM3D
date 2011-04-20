@@ -41,7 +41,7 @@
 #include <QtGui/QStyledItemDelegate>
 
 #include "StatsGen.h"
-#include "AIM/Common/Qt/ColorComboPicker.h"
+#include "QtSupport/ColorComboPicker.h"
 #include "StatsGenerator/TableModels/SGPowerLawTableModel.h"
 
 /**
