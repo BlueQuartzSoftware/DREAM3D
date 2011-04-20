@@ -51,13 +51,12 @@ set (StatsGenerator_SRCS
     ${StatsGenerator_SOURCE_DIR}/StatsGeneratorUI.cpp
     ${StatsGenerator_SOURCE_DIR}/StatsGenPlotWidget.cpp
     ${StatsGenerator_SOURCE_DIR}/StatsGenODFWidget.cpp
-    ${StatsGenerator_SOURCE_DIR}/SGPhase.cpp
     ${StatsGenerator_SOURCE_DIR}/SGWidget.cpp
     ${StatsGenerator_SOURCE_DIR}/EditPhaseDialog.cpp
+    ${StatsGenerator_SOURCE_DIR}/TextureDialog.cpp
     )
 set (StatsGenerator_HDRS 
     ${StatsGenerator_SOURCE_DIR}/StatsGen.h
-    ${StatsGenerator_SOURCE_DIR}/SGPhase.h
 )
                    
 SET( StatsGenerator_MOC_HDRS
@@ -67,6 +66,7 @@ SET( StatsGenerator_MOC_HDRS
     ${StatsGenerator_SOURCE_DIR}/StatsGenODFWidget.h
     ${StatsGenerator_SOURCE_DIR}/SGWidget.h
     ${StatsGenerator_SOURCE_DIR}/EditPhaseDialog.h
+    ${StatsGenerator_SOURCE_DIR}/TextureDialog.h
     )
 cmp_IDE_SOURCE_PROPERTIES( "StatsGenerator" "${StatsGenerator_HDRS};${StatsGenerator_MOC_HDRS}" "${StatsGenerator_SRCS}" ${PROJECT_INSTALL_HEADERS})
 
@@ -119,6 +119,7 @@ SET( StatsGenerator_UIS
   ${StatsGenerator_SOURCE_DIR}/UI_Files/StatsGenPlotWidget.ui
   ${StatsGenerator_SOURCE_DIR}/UI_Files/StatsGenODFWidget.ui
   ${StatsGenerator_SOURCE_DIR}/UI_Files/EditPhaseDialog.ui
+  ${StatsGenerator_SOURCE_DIR}/UI_Files/TextureDialog.ui
   ${StatsGenerator_SOURCE_DIR}/UI_Files/SGWidget.ui
   ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Qt/UI_Files/ApplicationAboutBoxDialog.ui
 )

@@ -137,8 +137,10 @@ void StatsGeneratorUI::writeSettings()
 // -----------------------------------------------------------------------------
 void StatsGeneratorUI::setupGui()
 {
-  m_SGWidget->setPhaseIndex(0);
+  m_SGWidget->setPhaseIndex(1);
   m_SGWidget->setCrystalStructure(AIM::Reconstruction::Cubic);
+  m_SGWidget->setPhaseFraction(1.0);
+  m_SGWidget->setTotalPhaseFraction(1.0);
   m_SGWidgets.push_back(m_SGWidget);
   QString cName = m_SGWidget->getComboString();
   m_SGWidget->setObjectName(cName);
@@ -168,18 +170,32 @@ void StatsGeneratorUI::on_phaseCombo_currentIndexChanged(int index)
 // -----------------------------------------------------------------------------
 void StatsGeneratorUI::on_addPhase_clicked()
 {
-  std::cout << "on_addPhase_clicked" << std::endl;
-  SGWidget* widget = new SGWidget(centralwidget);
-  widget->setPhaseIndex(m_SGWidgets.size());
-  widget->setCrystalStructure(AIM::Reconstruction::Cubic);
-  QString cName = widget->getComboString();
+ // std::cout << "on_addPhase_clicked" << std::endl;
+  double phaseFractionTotal = 0.0;
+  for(int p = 0; p < m_SGWidgets.size(); ++p)
+  {
+    phaseFractionTotal += m_SGWidgets[p]->getPhaseFraction();
+  }
 
-  widget->setObjectName(cName);
-  m_SGWidgets.push_back(widget);
-  phaseCombo->addItem(cName);
+  EditPhaseDialog dialog;
+  dialog.setOtherPhaseFractionTotal(phaseFractionTotal);
+  int r = dialog.exec();
+  if (r == QDialog::Accepted)
+  {
+    SGWidget* widget = new SGWidget(centralwidget);
+    m_SGWidgets.push_back(widget);
+    widget->setPhaseIndex(m_SGWidgets.size());
+    widget->setCrystalStructure(dialog.getCrystalStructure());
+    widget->setPhaseFraction(dialog.getPhaseFraction());
+    QString cName = widget->getComboString();
 
-  phaseCombo->setCurrentIndex(phaseCombo->count()-1);
-  setWindowModified(true);
+    widget->setObjectName(cName);
+
+    phaseCombo->addItem(cName);
+
+    phaseCombo->setCurrentIndex(phaseCombo->count()-1);
+    setWindowModified(true);
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -188,9 +204,40 @@ void StatsGeneratorUI::on_addPhase_clicked()
 void StatsGeneratorUI::on_editPhase_clicked()
 {
   std::cout << "on_editPhase_clicked" << std::endl;
-  setWindowModified(true);
-}
+  double phaseFractionTotal = 0.0;
+  EditPhaseDialog dialog;
+  for(int p = 0; p < m_SGWidgets.size(); ++p)
+  {
+    if (m_SGWidget != m_SGWidgets[p]) {
+      phaseFractionTotal += m_SGWidgets[p]->getPhaseFraction();
+    }
+    else
+    {
+      dialog.setPhaseFraction(m_SGWidget->getPhaseFraction());
+    }
+  }
+  dialog.setOtherPhaseFractionTotal(phaseFractionTotal);
+  dialog.setCrystalStructure(m_SGWidget->getCrystalStructure());
+  int r = dialog.exec();
+  if (r == QDialog::Accepted)
+  {
+    int index = phaseCombo->currentIndex();
+    m_SGWidget->setCrystalStructure(dialog.getCrystalStructure());
+    m_SGWidget->setPhaseFraction(dialog.getPhaseFraction());
+    QString cName = m_SGWidget->getComboString();
+    phaseCombo->blockSignals(true);
+    phaseCombo->clear();
+    for(int p = 0; p < m_SGWidgets.size(); ++p)
+    {
+      phaseCombo->addItem(m_SGWidgets[p]->getComboString());
+    }
+    phaseCombo->setCurrentIndex(index);
+    setWindowModified(true);
 
+    phaseCombo->blockSignals(false);
+  }
+
+}
 
 // -----------------------------------------------------------------------------
 //
@@ -212,7 +259,7 @@ void StatsGeneratorUI::on_deletePhase_clicked()
     // Reset the phase index for each SGPhase object
     for(int p = 0; p < m_SGWidgets.size(); ++p)
     {
-      m_SGWidgets[p]->setPhaseIndex(p);
+      m_SGWidgets[p]->setPhaseIndex(p+1);
       phaseCombo->addItem(m_SGWidgets[p]->getComboString());
       m_SGWidgets[p]->setObjectName(m_SGWidgets[p]->getComboString());
     }
@@ -396,6 +443,12 @@ void StatsGeneratorUI::on_actionSave_triggered()
     m_OpenDialogLastDirectory = fi.path();
     m_FileSelected = true;
   }
+  double phaseFractionTotal = 0.0;
+  for(int p = 0; p < m_SGWidgets.size(); ++p)
+  {
+    phaseFractionTotal += m_SGWidgets[p]->getPhaseFraction();
+  }
+
   // Instantiate a new HDF5 writer object
   H5ReconStatsWriter::Pointer writer = H5ReconStatsWriter::New(m_FilePath.toStdString());
   // Loop on all the phases
@@ -403,6 +456,7 @@ void StatsGeneratorUI::on_actionSave_triggered()
   for(int i = 0; i < nPhases; ++i)
   {
     SGWidget* sgwidget = m_SGWidgets[i];
+    sgwidget->setTotalPhaseFraction(phaseFractionTotal);
     err = sgwidget->writeDataToHDF5(writer);
   }
   // Force the clean up of the writer by assigning a NULL pointer which will
