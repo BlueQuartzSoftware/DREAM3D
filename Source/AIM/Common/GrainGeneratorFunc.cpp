@@ -1703,7 +1703,7 @@ int GrainGeneratorFunc::adjust_boundaries(int numgrains)
 	int bad = 0;
 	double random, oldsizedisterror, currentsizedisterror, diam;
 	int x, y, z;
-	int neighpoint, index, count, currentpoint, affectedcount;
+	int neighpoint, index, count, affectedcount;
 	int vListSize = 1000;
 	int *gsizes;
 	double voxtovol = resx*resy*resz*(3.0/4.0)*(1.0/m_pi);
@@ -2940,121 +2940,121 @@ int GrainGeneratorFunc::volume_stats(H5ReconStatsWriter::Pointer h5io)
 		svomega3[iter][temp].resize(5, 0);
 	  }
 	  for (int i = 1; i < numgrains; i++)
-	  {
-		int onedge = m_Grains[i]->surfacegrain;
-		if (onedge == 0 && m_Grains[i]->phase == iter)
-		{
-		  actualgrains++;
-		  int vol = m_Grains[i]->numvoxels;
-		  double voxvol = vol * resx * resy * resz;
-		  double logvol = log(voxvol);
-		  double diam = m_Grains[i]->equivdiameter;
-		  double logdiam = log(diam);
-		  double I1 = m_Grains[i]->radius1;
-		  double I2 = m_Grains[i]->radius2;
-		  double I3 = m_Grains[i]->radius3;
-		  I1 = (15 * I1) / (4 * m_pi);
-		  I2 = (15 * I2) / (4 * m_pi);
-		  I3 = (15 * I3) / (4 * m_pi);
-		  double A = (I1 + I2 - I3) / 2;
-		  double B = (I1 + I3 - I2) / 2;
-		  double C = (I2 + I3 - I1) / 2;
-		  double a = (A * A * A * A) / (B * C);
-		  a = pow(a, 0.1);
-		  double b = B / A;
-		  b = pow(b, 0.5) * a;
-		  double c = A / (a * a * a * b);
-		  double bovera = b / a;
-		  double covera = c / a;
-		  double coverb = c / b;
-		  double schmid = m_Grains[i]->schmidfactor;
-		  double omega3 = m_Grains[i]->omega3;
-		  avglogdiam = avglogdiam + logdiam;
-		  int diamint = int((diam-mindiameter[iter])/binstepsize[iter]);
-		  neighborhood[iter][diamint][0]++;
-		  svbovera[iter][diamint][0]++;
-		  svcovera[iter][diamint][0]++;
-		  svcoverb[iter][diamint][0]++;
-		  svschmid[iter][diamint][0]++;
-		  svomega3[iter][diamint][0]++;
-		  svbovera[iter][diamint][1] = svbovera[iter][diamint][1] + bovera;
-		  svcovera[iter][diamint][1] = svcovera[iter][diamint][1] + covera;
-		  svcoverb[iter][diamint][1] = svcoverb[iter][diamint][1] + coverb;
-		  svschmid[iter][diamint][1] = svschmid[iter][diamint][1] + schmid;
-		  svomega3[iter][diamint][1] = svomega3[iter][diamint][1] + omega3;
-		  neighborhood[iter][diamint][0]++;
-		  for (int k = 0; k < 3; k++)
-		  {
-			int nnum = m_Grains[i]->neighbordistfunc[k];
-			neighborhood[iter][diamint][((2 * k) + 1)] = neighborhood[iter][diamint][((2 * k) + 1)] + nnum;
-		  }
-		}
-	  }
+    {
+      int onedge = m_Grains[i]->surfacegrain;
+      if (onedge == 0 && m_Grains[i]->phase == iter)
+      {
+        actualgrains++;
+        int vol = m_Grains[i]->numvoxels;
+        double voxvol = vol * resx * resy * resz;
+        //  double logvol = log(voxvol);
+        double diam = m_Grains[i]->equivdiameter;
+        double logdiam = log(diam);
+        double I1 = m_Grains[i]->radius1;
+        double I2 = m_Grains[i]->radius2;
+        double I3 = m_Grains[i]->radius3;
+        I1 = (15 * I1) / (4 * m_pi);
+        I2 = (15 * I2) / (4 * m_pi);
+        I3 = (15 * I3) / (4 * m_pi);
+        double A = (I1 + I2 - I3) / 2;
+        double B = (I1 + I3 - I2) / 2;
+        double C = (I2 + I3 - I1) / 2;
+        double a = (A * A * A * A) / (B * C);
+        a = pow(a, 0.1);
+        double b = B / A;
+        b = pow(b, 0.5) * a;
+        double c = A / (a * a * a * b);
+        double bovera = b / a;
+        double covera = c / a;
+        double coverb = c / b;
+        double schmid = m_Grains[i]->schmidfactor;
+        double omega3 = m_Grains[i]->omega3;
+        avglogdiam = avglogdiam + logdiam;
+        int diamint = int((diam - mindiameter[iter]) / binstepsize[iter]);
+        neighborhood[iter][diamint][0]++;
+        svbovera[iter][diamint][0]++;
+        svcovera[iter][diamint][0]++;
+        svcoverb[iter][diamint][0]++;
+        svschmid[iter][diamint][0]++;
+        svomega3[iter][diamint][0]++;
+        svbovera[iter][diamint][1] = svbovera[iter][diamint][1] + bovera;
+        svcovera[iter][diamint][1] = svcovera[iter][diamint][1] + covera;
+        svcoverb[iter][diamint][1] = svcoverb[iter][diamint][1] + coverb;
+        svschmid[iter][diamint][1] = svschmid[iter][diamint][1] + schmid;
+        svomega3[iter][diamint][1] = svomega3[iter][diamint][1] + omega3;
+        neighborhood[iter][diamint][0]++;
+        for (int k = 0; k < 3; k++)
+        {
+          int nnum = m_Grains[i]->neighbordistfunc[k];
+          neighborhood[iter][diamint][((2 * k) + 1)] = neighborhood[iter][diamint][((2 * k) + 1)] + nnum;
+        }
+      }
+    }
 	  for (int temp3 = 0; temp3 < numbins; temp3++)
 	  {
-		if (svbovera[iter][temp3][0] > 1)
-		{
-		  neighborhood[iter][temp3][1] = neighborhood[iter][temp3][1] / neighborhood[iter][temp3][0];
-		  neighborhood[iter][temp3][3] = neighborhood[iter][temp3][3] / neighborhood[iter][temp3][0];
-		  neighborhood[iter][temp3][5] = neighborhood[iter][temp3][5] / neighborhood[iter][temp3][0];
-		  svbovera[iter][temp3][1] = svbovera[iter][temp3][1] / svbovera[iter][temp3][0];
-		  svcovera[iter][temp3][1] = svcovera[iter][temp3][1] / svcovera[iter][temp3][0];
-		  svcoverb[iter][temp3][1] = svcoverb[iter][temp3][1] / svcoverb[iter][temp3][0];
-		  svschmid[iter][temp3][1] = svschmid[iter][temp3][1] / svschmid[iter][temp3][0];
-		  svomega3[iter][temp3][1] = svomega3[iter][temp3][1] / svomega3[iter][temp3][0];
-		  neighborhoodfit[iter][temp3][0] = neighborhood[iter][temp3][0];
-		  neighborhoodfit[iter][temp3][1] = neighborhood[iter][temp3][3] - neighborhood[iter][temp3][1];
-		  neighborhoodfit[iter][temp3][2] = neighborhood[iter][temp3][1];
-		  neighborhoodfit[iter][temp3][3] = log((neighborhood[iter][temp3][5]-neighborhoodfit[iter][temp3][2])/neighborhoodfit[iter][temp3][1])/log(2.0);
-		}
+      if (svbovera[iter][temp3][0] > 1)
+      {
+        neighborhood[iter][temp3][1] = neighborhood[iter][temp3][1] / neighborhood[iter][temp3][0];
+        neighborhood[iter][temp3][3] = neighborhood[iter][temp3][3] / neighborhood[iter][temp3][0];
+        neighborhood[iter][temp3][5] = neighborhood[iter][temp3][5] / neighborhood[iter][temp3][0];
+        svbovera[iter][temp3][1] = svbovera[iter][temp3][1] / svbovera[iter][temp3][0];
+        svcovera[iter][temp3][1] = svcovera[iter][temp3][1] / svcovera[iter][temp3][0];
+        svcoverb[iter][temp3][1] = svcoverb[iter][temp3][1] / svcoverb[iter][temp3][0];
+        svschmid[iter][temp3][1] = svschmid[iter][temp3][1] / svschmid[iter][temp3][0];
+        svomega3[iter][temp3][1] = svomega3[iter][temp3][1] / svomega3[iter][temp3][0];
+        neighborhoodfit[iter][temp3][0] = neighborhood[iter][temp3][0];
+        neighborhoodfit[iter][temp3][1] = neighborhood[iter][temp3][3] - neighborhood[iter][temp3][1];
+        neighborhoodfit[iter][temp3][2] = neighborhood[iter][temp3][1];
+        neighborhoodfit[iter][temp3][3] = log((neighborhood[iter][temp3][5]-neighborhoodfit[iter][temp3][2])/neighborhoodfit[iter][temp3][1])/log(2.0);
+      }
 	  }
 	  avglogdiam = avglogdiam / actualgrains;
 	  double sdlogdiam = 0;
 	  for (int j = 1; j < numgrains; j++)
-	  {
-		int onedge = m_Grains[j]->surfacegrain;
-		if (onedge == 0 && m_Grains[j]->phase == iter)
-		{
-		  int vol = m_Grains[j]->numvoxels;
-		  double voxvol = vol * resx * resy * resz;
-		  double logvol = log(voxvol);
-		  double rad_3 = 0.75 * (1 / m_pi) * voxvol;
-		  double diam = 2 * pow(rad_3, 0.333333333);
-		  double logdiam = log(diam);
-		  double I1 = m_Grains[j]->radius1;
-		  double I2 = m_Grains[j]->radius2;
-		  double I3 = m_Grains[j]->radius3;
-		  I1 = (15 * I1) / (4 * m_pi);
-		  I2 = (15 * I2) / (4 * m_pi);
-		  I3 = (15 * I3) / (4 * m_pi);
-		  double A = (I1 + I2 - I3) / 2;
-		  double B = (I1 + I3 - I2) / 2;
-		  double C = (I2 + I3 - I1) / 2;
-		  double a = (A * A * A * A) / (B * C);
-		  a = pow(a, 0.1);
-		  double b = B / A;
-		  b = pow(b, 0.5) * a;
-		  double c = A / (a * a * a * b);
-		  double bovera = b / a;
-		  double covera = c / a;
-		  double coverb = c / b;
-		  double schmid = m_Grains[j]->schmidfactor;
-		  double omega3 = m_Grains[j]->omega3;
-		  sdlogdiam = sdlogdiam + ((logdiam - avglogdiam) * (logdiam - avglogdiam));
-		  int diamint = int((diam-mindiameter[iter])/binstepsize[iter]);
-		  svbovera[iter][diamint][2] = svbovera[iter][diamint][2] + ((bovera - svbovera[iter][diamint][1]) * (bovera - svbovera[iter][diamint][1]));
-		  svcovera[iter][diamint][2] = svcovera[iter][diamint][2] + ((covera - svcovera[iter][diamint][1]) * (covera - svcovera[iter][diamint][1]));
-		  svcoverb[iter][diamint][2] = svcoverb[iter][diamint][2] + ((coverb - svcoverb[iter][diamint][1]) * (coverb - svcoverb[iter][diamint][1]));
-		  svschmid[iter][diamint][2] = svschmid[iter][diamint][2] + ((schmid - svschmid[iter][diamint][1]) * (schmid - svschmid[iter][diamint][1]));
-		  svomega3[iter][diamint][2] = svomega3[iter][diamint][2] + ((omega3 - svomega3[iter][diamint][1]) * (omega3 - svomega3[iter][diamint][1]));
-		  for (int k = 0; k < 3; k++)
-		  {
-			int nnum = m_Grains[j]->neighbordistfunc[k];
-			neighborhood[iter][diamint][((2 * k) + 2)] = neighborhood[iter][diamint][((2 * k) + 2)] + ((neighborhood[iter][diamint][((2 * k) + 1)] - nnum)
-				* (neighborhood[iter][diamint][((2 * k) + 1)] - nnum));
-		  }
-		}
-	  }
+    {
+      int onedge = m_Grains[j]->surfacegrain;
+      if (onedge == 0 && m_Grains[j]->phase == iter)
+      {
+        int vol = m_Grains[j]->numvoxels;
+        double voxvol = vol * resx * resy * resz;
+        //  double logvol = log(voxvol);
+        double rad_3 = 0.75 * (1 / m_pi) * voxvol;
+        double diam = 2 * pow(rad_3, 0.333333333);
+        double logdiam = log(diam);
+        double I1 = m_Grains[j]->radius1;
+        double I2 = m_Grains[j]->radius2;
+        double I3 = m_Grains[j]->radius3;
+        I1 = (15 * I1) / (4 * m_pi);
+        I2 = (15 * I2) / (4 * m_pi);
+        I3 = (15 * I3) / (4 * m_pi);
+        double A = (I1 + I2 - I3) / 2;
+        double B = (I1 + I3 - I2) / 2;
+        double C = (I2 + I3 - I1) / 2;
+        double a = (A * A * A * A) / (B * C);
+        a = pow(a, 0.1);
+        double b = B / A;
+        b = pow(b, 0.5) * a;
+        double c = A / (a * a * a * b);
+        double bovera = b / a;
+        double covera = c / a;
+        double coverb = c / b;
+        double schmid = m_Grains[j]->schmidfactor;
+        double omega3 = m_Grains[j]->omega3;
+        sdlogdiam = sdlogdiam + ((logdiam - avglogdiam) * (logdiam - avglogdiam));
+        int diamint = int((diam - mindiameter[iter]) / binstepsize[iter]);
+        svbovera[iter][diamint][2] = svbovera[iter][diamint][2] + ((bovera - svbovera[iter][diamint][1]) * (bovera - svbovera[iter][diamint][1]));
+        svcovera[iter][diamint][2] = svcovera[iter][diamint][2] + ((covera - svcovera[iter][diamint][1]) * (covera - svcovera[iter][diamint][1]));
+        svcoverb[iter][diamint][2] = svcoverb[iter][diamint][2] + ((coverb - svcoverb[iter][diamint][1]) * (coverb - svcoverb[iter][diamint][1]));
+        svschmid[iter][diamint][2] = svschmid[iter][diamint][2] + ((schmid - svschmid[iter][diamint][1]) * (schmid - svschmid[iter][diamint][1]));
+        svomega3[iter][diamint][2] = svomega3[iter][diamint][2] + ((omega3 - svomega3[iter][diamint][1]) * (omega3 - svomega3[iter][diamint][1]));
+        for (int k = 0; k < 3; k++)
+        {
+          int nnum = m_Grains[j]->neighbordistfunc[k];
+          neighborhood[iter][diamint][((2 * k) + 2)] = neighborhood[iter][diamint][((2 * k) + 2)] + ((neighborhood[iter][diamint][((2 * k) + 1)] - nnum)
+              * (neighborhood[iter][diamint][((2 * k) + 1)] - nnum));
+        }
+      }
+    }
 	  for (int temp4 = 0; temp4 < numbins; temp4++)
 	  {
 		if (svbovera[iter][temp4][0] > 1)
