@@ -39,7 +39,7 @@
 
 
 #if AIM_USE_PARALLEL_ALGORITHMS
-#include "AIM/Common/Parallel/Algo.hpp"
+#include "AIM/Parallel/Algo.hpp"
 #endif
 
 const static double m_pi = M_PI;
@@ -1335,7 +1335,7 @@ void ReconstructionFunc::reorder_grains(const std::string &reconVisFile)
 
   size_t maxGrain = 0;
   // Reset all the Grain nucleus values to -1;
-  for (int i = 1; i < numgrains; i++)
+  for (size_t i = 1; i < numgrains; i++)
   {
     m_Grains[i]->nucleus = -1;
 	m_Grains[i]->voxellist->resize(1,0);
@@ -1353,7 +1353,7 @@ void ReconstructionFunc::reorder_grains(const std::string &reconVisFile)
       m_Grains[gnum]->nucleus = i;
     }
   }
-  for (int i = 1; i < numgrains; i++)
+  for (size_t i = 1; i < numgrains; i++)
   {
     if(m_Grains[i]->nucleus != -1)
     {
@@ -1590,7 +1590,7 @@ int ReconstructionFunc::remove_smallgrains(int numgrains)
 	gnum = voxels[i].grainname;
 	if(gnum >= 0) m_Grains[gnum]->nucleus = i;
   }
-  for (int i = 1; i < numgrains; i++)
+  for (size_t i = 1; i < numgrains; i++)
   {
       size = 0;
       int nucleus = m_Grains[i]->nucleus;
@@ -1656,25 +1656,22 @@ void ReconstructionFunc::find_grain_and_kernel_misorientations()
   int* unassigned = new int[totalpoints];
   double* gam = new double[totalpoints];
   double** avgmiso = new double *[m_Grains.size()];
-  for (int i=0;i<m_Grains.size();i++)
+  for (size_t i=0;i<m_Grains.size();i++)
   {
-	avgmiso[i] = new double [2];
-	for(int j=0;j<2;j++)
-	{
-		avgmiso[i][j] = 0.0;
-	}
+    avgmiso[i] = new double[2];
+    for (int j = 0; j < 2; j++)
+    {
+      avgmiso[i][j] = 0.0;
+    }
   }
   for (int i = 0; i < totalpoints; ++i)
   {
     gnames[i] = voxels[i].grainname;
     unassigned[i] = voxels[i].unassigned;
-	gam[i] = 0.0;
+    gam[i] = 0.0;
   }
 
-#if AIM_USE_PARALLEL_ALGORITHMS
-  tbb::parallel_for(tbb::blocked_range<size_t>(0, totalpoints ), ParallelFindKernels( this, gnames, unassigned) );
 
-#else
   double q1[5];
   double q2[5];
   int numVoxel; // number of voxels in the grain...
@@ -1819,7 +1816,7 @@ void ReconstructionFunc::find_grain_and_kernel_misorientations()
 		  }
 	  }
   }
-#endif
+
   delete[] gnames;
   delete[] unassigned;
   delete[] gam;
@@ -1827,12 +1824,15 @@ void ReconstructionFunc::find_grain_and_kernel_misorientations()
 
 int ReconstructionFunc::load_data(const std::string &readname)
 {
+#if 1
+  return m_Grains.size();
+#else
   int bensdata = 1;
   int yoonsdata = 0;
   double **mat;
   double **rod;
   size_t numgrains = m_Grains.size();
-/*  if (yoonsdata == 1)
+  if (yoonsdata == 1)
   {
     const unsigned int size(1024);
     char buf[size];
@@ -2057,9 +2057,14 @@ int ReconstructionFunc::load_data(const std::string &readname)
       delete[] rod[i];
     }
     delete[] rod;
-  }*/
+  }
   return int(numgrains);
+#endif
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void ReconstructionFunc::merge_twins()
 {
   int twinmerged = 1;
@@ -2072,7 +2077,7 @@ void ReconstructionFunc::merge_twins()
   size_t numgrains = m_Grains.size();
   AIM::Reconstruction::CrystalStructure phase1, phase2;
 
-  for (int i = 1; i < numgrains; i++)
+  for (size_t i = 1; i < numgrains; i++)
   {
     if (m_Grains[i]->twinnewnumber == -1)
     {
@@ -2173,7 +2178,7 @@ void ReconstructionFunc::merge_colonies()
   size_t numgrains = m_Grains.size();
   AIM::Reconstruction::CrystalStructure phase1, phase2;
 
-  for (int i = 1; i < numgrains; i++)
+  for (size_t i = 1; i < numgrains; i++)
   {
     if (m_Grains[i]->colonynewnumber != -1)
     {
@@ -2250,7 +2255,7 @@ void ReconstructionFunc::merge_colonies()
 void ReconstructionFunc::characterize_twins()
 {
   size_t numgrains = m_Grains.size();
-  for (int i = 0; i < numgrains; i++)
+  for (size_t i = 0; i < numgrains; i++)
   {
 
   }
@@ -2259,7 +2264,7 @@ void ReconstructionFunc::characterize_twins()
 void ReconstructionFunc::characterize_colonies()
 {
   size_t numgrains = m_Grains.size();
-  for (int i = 0; i < numgrains; i++)
+  for (size_t i = 0; i < numgrains; i++)
   {
 
   }
@@ -2270,7 +2275,7 @@ void ReconstructionFunc::renumber_grains3()
   size_t numgrains = m_Grains.size();
   int graincount = 1;
   std::vector<int > newnames(numgrains);
-  for (int i = 1; i < numgrains; i++)
+  for (size_t i = 1; i < numgrains; i++)
   {
     int gottwinmerged = m_Grains[i]->gottwinmerged;
     if (gottwinmerged != 1)
@@ -2324,7 +2329,7 @@ void ReconstructionFunc::find_neighbors()
   int onsurf = 0;
   int good = 0;
   int neighbor = 0;
-  for(int i=0;i<crystruct.size();i++)
+  for(size_t i=0;i<crystruct.size();i++)
   {
 	  totalsurfacearea[i] = 0;
   }
@@ -2333,7 +2338,7 @@ void ReconstructionFunc::find_neighbors()
   // Copy all the grain names into a densly packed array
   int* gnames = new int[totalpoints];
   size_t numgrains = m_Grains.size();
-  int gnum = 0;
+  //int gnum = 0;
   std::set<int> leftOutGrains;
 
   for (int i = 0; i < totalpoints; ++i)
@@ -2409,7 +2414,7 @@ void ReconstructionFunc::find_neighbors()
   }
   delete[] gnames;
   vector<int> nlistcopy;
-  for (int i = 1; i < numgrains; i++)
+  for (size_t i = 1; i < numgrains; i++)
   {
     vector<int >::iterator newend;
     sort(m_Grains[i]->neighborlist->begin(), m_Grains[i]->neighborlist->end());
@@ -2446,7 +2451,7 @@ void ReconstructionFunc::define_neighborhood()
   int dist_int, dist2_int;
   size_t numgrains = m_Grains.size();
 
-  for (int i = 1; i < numgrains; i++)
+  for (size_t i = 1; i < numgrains; i++)
   {
       Grain& grain = *(m_Grains[i].get());
       if (grain.active == 1)
@@ -2455,7 +2460,7 @@ void ReconstructionFunc::define_neighborhood()
         y = grain.centroidy;
         z = grain.centroidz;
         diam = grain.equivdiameter;
-        for (int j = i; j < numgrains; j++)
+        for (size_t j = i; j < numgrains; j++)
         {
           Grain& grain_j = *(m_Grains[j].get());
           if (grain_j.active == 1)
@@ -2497,7 +2502,7 @@ void ReconstructionFunc::find_centroids()
   //  int count = 0;
   int onedge = 0;
   int insidegraincount = 0;
-  for(int i=0;i<crystruct.size();i++)
+  for(size_t i=0;i<crystruct.size();i++)
   {
 	  maxdiameter[i] = 0;
 	  mindiameter[i] = 100000;
@@ -2509,7 +2514,7 @@ void ReconstructionFunc::find_centroids()
   double diameter;
   size_t numgrains = m_Grains.size();
   graincenters.resize(numgrains);
-  for (int i = 0; i < numgrains; i++)
+  for (size_t i = 0; i < numgrains; i++)
   {
     graincenters[i].resize(5);
     for (int j = 0; j < 5; j++)
@@ -2541,7 +2546,7 @@ void ReconstructionFunc::find_centroids()
   }
   double res_scalar = resx * resy * resz;
   double vol_term = (4.0/3.0)*m_pi;
-  for (int i = 1; i < numgrains; i++)
+  for (size_t i = 1; i < numgrains; i++)
   {
     graincenters[i][1] = graincenters[i][1] / graincenters[i][0];
     graincenters[i][2] = graincenters[i][2] / graincenters[i][0];
@@ -2564,13 +2569,13 @@ void ReconstructionFunc::find_centroids()
 	}
   }
   unbiasedvol = 0;
-  for(int i=1;i<crystruct.size();i++)
+  for(size_t i=1;i<crystruct.size();i++)
   {
-	unbiasedvol = unbiasedvol + totalvol[i];
+    unbiasedvol = unbiasedvol + totalvol[i];
   }
-  for(int i=1;i<crystruct.size();i++)
+  for(size_t i=1;i<crystruct.size();i++)
   {
-	phasefraction[i] = totalvol[i]/unbiasedvol;
+    phasefraction[i] = totalvol[i]/unbiasedvol;
   }
 }
 void ReconstructionFunc::find_centroids2D()
@@ -2578,7 +2583,7 @@ void ReconstructionFunc::find_centroids2D()
   //  int count = 0;
   int onedge = 0;
   int insidegraincount = 0;
-  for(int i=0;i<crystruct.size();i++)
+  for(size_t i=0;i<crystruct.size();i++)
   {
 	  maxdiameter[i] = 0;
 	  mindiameter[i] = 100000;
@@ -2590,7 +2595,7 @@ void ReconstructionFunc::find_centroids2D()
   double diameter;
   size_t numgrains = m_Grains.size();
   graincenters.resize(numgrains);
-  for (int i = 0; i < numgrains; i++)
+  for (size_t i = 0; i < numgrains; i++)
   {
     graincenters[i].resize(5);
     for (int j = 0; j < 5; j++)
@@ -2615,7 +2620,7 @@ void ReconstructionFunc::find_centroids2D()
     graincenters[gnum][2] = graincenters[gnum][2] + y;
     if (onedge == 1) graincenters[gnum][3] = 1;
   }
-  for (int i = 1; i < numgrains; i++)
+  for (size_t i = 1; i < numgrains; i++)
   {
     graincenters[i][1] = graincenters[i][1] / graincenters[i][0];
     graincenters[i][2] = graincenters[i][2] / graincenters[i][0];
@@ -2636,11 +2641,11 @@ void ReconstructionFunc::find_centroids2D()
 	}
   }
   unbiasedvol = 0;
-  for(int i=1;i<crystruct.size();i++)
+  for(size_t i=1;i<crystruct.size();i++)
   {
 	unbiasedvol = unbiasedvol + totalvol[i];
   }
-  for(int i=1;i<crystruct.size();i++)
+  for(size_t i=1;i<crystruct.size();i++)
   {
 	phasefraction[i] = totalvol[i]/unbiasedvol;
   }
@@ -2841,7 +2846,7 @@ void ReconstructionFunc::find_moments()
     grainmoments[gnum][5] = grainmoments[gnum][5] + u101;
   }
   double sphere = (2000.0*m_pi*m_pi)/9.0;
-  for (int i = 1; i < numgrains; i++)
+  for (size_t i = 1; i < numgrains; i++)
   {
     grainmoments[i][0] = grainmoments[i][0] * (resx / 2.0) * (resy / 2.0) * (resz / 2.0);
     grainmoments[i][1] = grainmoments[i][1] * (resx / 2.0) * (resy / 2.0) * (resz / 2.0);
@@ -2877,7 +2882,7 @@ void ReconstructionFunc::find_axes()
 {
 
 size_t numgrains = m_Grains.size();
-for (int i = 1; i < numgrains; i++)
+for (size_t i = 1; i < numgrains; i++)
   {
     double Ixx = m_Grains[i]->Ixx;
     double Iyy = m_Grains[i]->Iyy;
@@ -2915,13 +2920,13 @@ void ReconstructionFunc::find_vectors(H5ReconStatsWriter::Pointer h5io)
 {
   double **axisodf;
   axisodf = new double *[crystruct.size()];
-  for(int i=1;i<crystruct.size();i++)
+  for(size_t i=1;i<crystruct.size();i++)
   {
 	  totalaxes[i] = 0.0;
 	  axisodf[i] = new double[18 * 18 * 18];
   }
   size_t numgrains = m_Grains.size();
-  for (int i = 1; i < numgrains; i++)
+  for (size_t i = 1; i < numgrains; i++)
   {
     //   int size = grains[i].numvoxels;
     double Ixx = m_Grains[i]->Ixx;
@@ -3138,7 +3143,7 @@ void ReconstructionFunc::find_vectors(H5ReconStatsWriter::Pointer h5io)
     }
   }
   int err;
-  for(int i=1;i<crystruct.size();i++)
+  for(size_t i=1;i<crystruct.size();i++)
   {
 	  err = h5io->writeAxisOrientationData(i, axisodf[i], totalaxes[i]);
 	  delete[] axisodf[i];
@@ -3153,7 +3158,7 @@ void ReconstructionFunc::find_moments2D()
   double u110 = 0;
   size_t numgrains = m_Grains.size();
   grainmoments.resize(numgrains);
-  for (int i = 0; i < numgrains; i++)
+  for (size_t i = 0; i < numgrains; i++)
   {
     grainmoments[i].resize(3);
     for (int j = 0; j < 3; j++)
@@ -3188,7 +3193,7 @@ void ReconstructionFunc::find_moments2D()
     grainmoments[gnum][1] = grainmoments[gnum][1] + u020;
     grainmoments[gnum][2] = grainmoments[gnum][2] + u110;
   }
-  for (int i = 1; i < numgrains; i++)
+  for (size_t i = 1; i < numgrains; i++)
   {
     grainmoments[i][0] = grainmoments[i][0] * (resx / 2.0) * (resy / 2.0);
     grainmoments[i][1] = grainmoments[i][1] * (resx / 2.0) * (resy / 2.0);
@@ -3206,7 +3211,7 @@ void ReconstructionFunc::find_moments2D()
 void ReconstructionFunc::find_axes2D()
 {
   size_t numgrains = m_Grains.size();
-  for (int i = 1; i < numgrains; i++)
+  for (size_t i = 1; i < numgrains; i++)
   {
     double Ixx = m_Grains[i]->Ixx;
     double Iyy = m_Grains[i]->Iyy;
@@ -3229,14 +3234,14 @@ void ReconstructionFunc::find_vectors2D(H5ReconStatsWriter::Pointer h5io)
 {
   double **axisodf;
   axisodf = new double *[crystruct.size()];
-  for(int i=1;i<crystruct.size();i++)
+  for(size_t i=1;i<crystruct.size();i++)
   {
 	  totalaxes[i] = 0.0;
 	  axisodf[i] = new double[18 * 18 * 18];
   }
   size_t numgrains = m_Grains.size();
 
-  for (int i = 1; i < numgrains; i++)
+  for (size_t i = 1; i < numgrains; i++)
   {
     //   int size = grains[i].numvoxels;
     double Ixx = m_Grains[i]->Ixx;
@@ -3268,7 +3273,7 @@ void ReconstructionFunc::find_vectors2D(H5ReconStatsWriter::Pointer h5io)
     }
   }
   int err;
-  for(int i=1;i<crystruct.size();i++)
+  for(size_t i=1;i<crystruct.size();i++)
   {
 	  err = h5io->writeAxisOrientationData(i, axisodf[i], totalaxes[i]);
 	  delete[] axisodf[i];
@@ -3279,10 +3284,10 @@ void ReconstructionFunc::find_eulerodf(H5ReconStatsWriter::Pointer h5io)
 {
   //double w, denom, n1, n2, n3;
   size_t bin;
-  double dim1 = 0.0;
-  double dim2 = 0.0;
-  double dim3 = 0.0;
-  int numbins = 0;
+//  double dim1 = 0.0;
+//  double dim2 = 0.0;
+//  double dim3 = 0.0;
+//  int numbins = 0;
   size_t numgrains = m_Grains.size();
   double q1[5];
   double qref[5];
@@ -3290,7 +3295,7 @@ void ReconstructionFunc::find_eulerodf(H5ReconStatsWriter::Pointer h5io)
   double **eulerodf;
 
   eulerodf = new double *[crystruct.size()];
-  for(int i=1;i<crystruct.size();i++)
+  for(size_t i=1;i<crystruct.size();i++)
   {
 	  if (crystruct[i] == AIM::Reconstruction::Hexagonal)
 	  {
@@ -3310,7 +3315,7 @@ void ReconstructionFunc::find_eulerodf(H5ReconStatsWriter::Pointer h5io)
 	  }
   }
   MisorientationCalculations::initializeQ(qref,0.0,0.0,0.0);
-  for (int i = 1; i < numgrains; i++)
+  for (size_t i = 1; i < numgrains; i++)
   {
     if (m_Grains[i]->surfacegrain == 0 && m_Grains[i]->active == 1)
     {
@@ -3334,7 +3339,7 @@ void ReconstructionFunc::find_eulerodf(H5ReconStatsWriter::Pointer h5io)
     }
   }
   int err;
-  for(int i=1;i<crystruct.size();i++)
+  for(size_t i=1;i<crystruct.size();i++)
   {
 	  err = h5io->writeODFData(i, crystruct[i], eulerodf[i]);
 	  delete[] eulerodf[i];
@@ -3362,7 +3367,7 @@ void ReconstructionFunc::measure_misorientations(H5ReconStatsWriter::Pointer h5i
   double **misobin;
 
   misobin = new double *[crystruct.size()];
-  for(int i=1;i<crystruct.size();i++)
+  for(size_t i=1;i<crystruct.size();i++)
   {
 	  if (crystruct[i] == AIM::Reconstruction::Hexagonal)
 	  {
@@ -3390,7 +3395,7 @@ void ReconstructionFunc::measure_misorientations(H5ReconStatsWriter::Pointer h5i
   double microcount = 0.0;
   double nsa;
 
-  for (int i = 1; i < numgrains; i++)
+  for (size_t i = 1; i < numgrains; i++)
   {
     microcount = 0;
 	q1[0] = m_Grains[i]->avg_quat[0]/m_Grains[i]->avg_quat[0];
@@ -3445,7 +3450,7 @@ void ReconstructionFunc::measure_misorientations(H5ReconStatsWriter::Pointer h5i
       microbin[micbin]++;
     }
   }
-  for(int i=1;i<crystruct.size();i++)
+  for(size_t i=1;i<crystruct.size();i++)
   {
 	  h5io->writeMisorientationBinsData(i, misobin[i], crystruct[i]);
 	  h5io->writeMicroTextureData(i, microbin, 10, numgrains);
@@ -3465,7 +3470,7 @@ void ReconstructionFunc::find_colors()
   double RefDirection[3] =
   { 0.0, 1.0, 0.0 };
   double q1[5];
-  for (int i = 1; i < numgrains; i++)
+  for (size_t i = 1; i < numgrains; i++)
   {
     if (m_Grains[i]->active == 1)
     {
@@ -3507,7 +3512,7 @@ void ReconstructionFunc::find_schmids()
   double lambda1, lambda2, lambda3, lambda4, lambda5, lambda6;
   double schmid1, schmid2, schmid3, schmid4, schmid5, schmid6, schmid7, schmid8, schmid9, schmid10, schmid11, schmid12;
   size_t numgrains = m_Grains.size();
-  for (int i = 1; i < numgrains; i++)
+  for (size_t i = 1; i < numgrains; i++)
   {
     if (m_Grains[i]->active == 1)
     {
@@ -3604,7 +3609,7 @@ int ReconstructionFunc::volume_stats(H5ReconStatsWriter::Pointer h5io)
 		svschmid[temp].resize(5, 0);
 		svomega3[temp].resize(5, 0);
 	  }
-	  for (int i = 1; i < numgrains; i++)
+	  for (size_t i = 1; i < numgrains; i++)
 	  {
 		int onedge = m_Grains[i]->surfacegrain;
 		if (onedge == 0 && m_Grains[i]->active == 1 && m_Grains[i]->phase == iter)
@@ -3784,7 +3789,7 @@ int ReconstructionFunc::volume_stats2D(H5ReconStatsWriter::Pointer h5io)
 		svbovera[temp].resize(5, 0);
 		svschmid[temp].resize(5, 0);
 	  }
-	  for (int i = 1; i < numgrains; i++)
+	  for (size_t i = 1; i < numgrains; i++)
 	  {
 		int onedge = m_Grains[i]->surfacegrain;
 		if (onedge == 0 && m_Grains[i]->active == 1 && m_Grains[i]->phase == iter)
@@ -3881,17 +3886,17 @@ void ReconstructionFunc::deformation_stats(const std::string &filename, const st
 {
   ofstream outFile;
   outFile.open(filename.c_str());
-  double avgkm = 0;
-  double avggam = 0;
-  double avglmg = 0;
-  double avgiq = 0;
-  double avggbdist = 0;
-  double avgtjdist = 0;
-  double avgqpdist = 0;
-  double avgsf = 0;
-  double avgsfmm = 0;
-  double avgssap = 0;
-  double avgdis = 0;
+//  double avgkm = 0;
+//  double avggam = 0;
+//  double avglmg = 0;
+//  double avgiq = 0;
+//  double avggbdist = 0;
+//  double avgtjdist = 0;
+//  double avgqpdist = 0;
+//  double avgsf = 0;
+//  double avgsfmm = 0;
+//  double avgssap = 0;
+//  double avgdis = 0;
   double w, n1, n2, n3;
   int distance;
   double km, iq, gbdist, tjdist, qpdist, sf, sf2, sfmm, gam, lmg, ssap;
@@ -4453,7 +4458,7 @@ void ReconstructionFunc::write_graindata(const std::string &graindataFile)
   outFile.open(graindataFile.c_str());
   outFile << numgrains << endl;
   outFile << "Grain ID  Euler1  Euler2  Euler3  Equiv. Diameter Grain Avg. Disorientation Surface Grain Schmid Factor No. Neighbors Omega3" << endl;
-  for (int i = 1; i < numgrains; i++)
+  for (size_t i = 1; i < numgrains; i++)
   {
     double diameter = m_Grains[i]->equivdiameter;
     int onsurface = m_Grains[i]->surfacegrain;
@@ -4484,7 +4489,7 @@ void ReconstructionFunc::write_grains(const std::string &outputdir)
   int col, row, plane;
   int vid, pid;
   size_t numgrains = m_Grains.size();
-  for (int i = 1; i < numgrains; i++)
+  for (size_t i = 1; i < numgrains; i++)
   {
     ss.str("");
     ss << outputdir << MXADir::Separator << "Grain_" << std::setw(5) << i << ".vtk";

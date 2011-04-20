@@ -71,9 +71,9 @@ class AIMCOMMON_EXPORT Grain
     int surfacegrain;
     int twinnewnumber;
     int colonynewnumber;
-	int slipsystem;
-	double packquality;
-	int phase;
+    int slipsystem;
+    double packquality;
+    int phase;
     double centroidx;
     double centroidy;
     double centroidz;
