@@ -90,7 +90,7 @@ class AIMCOMMON_EXPORT Texture
       size_t bin, addbin;
       size_t bin1, bin2, bin3;
       size_t addbin1, addbin2, addbin3;
-	    double dist, fraction;
+	  double dist, fraction;
       double rmag, angle;
       double r1, r2, r3;
       double h1, h2, h3;
@@ -176,6 +176,113 @@ class AIMCOMMON_EXPORT Texture
       {
         // Normalize the odf
         for (size_t i = 0; i < eighteenCubed; i++)
+        {
+          odf[i] = odf[i] / totalweight;
+        }
+      }
+
+    }
+
+
+
+
+
+	template<typename T>
+    static void calculateHexODFData(T weights, T sigmas, double randomWeight, bool normalize, T &odf, double &totalweight)
+    {
+      int TextureBins[AIM_TEXTURE_COUNT];
+      static const size_t odfsize = 15552;
+      odf.resize(odfsize);
+      size_t ea1bin, ea2bin, ea3bin;
+      size_t bin, addbin;
+      size_t bin1, bin2, bin3;
+      size_t addbin1, addbin2, addbin3;
+	  double dist, fraction;
+      double rmag, angle;
+      double r1, r2, r3;
+      double h1, h2, h3;
+      double dim1 = 2*pow((0.75 * ((M_PI / 2.0) - sin((M_PI / 2.0)))), (1.0 / 3.0));
+      double dim2 = 2*pow((0.75 * ((M_PI / 2.0) - sin((M_PI / 2.0)))), (1.0 / 3.0));
+      double dim3 = 2*pow((0.75 * ((M_PI / 6.0) - sin((M_PI / 6.0)))), (1.0 / 3.0));
+      double tan_term = 0.0;
+      double sin_term = 0.0;
+      double cos_term1 = 0.0;
+      double cos_term2 = 0.0;
+      double hTmp = 0.0;
+
+      for (size_t i = 0; i < Texture::Count; i++)
+      {
+        tan_term = tan(Texture::Values[i][1]/2);
+        sin_term = sin((Texture::Values[i][0]-Texture::Values[i][2])/2);
+        cos_term1 = cos((Texture::Values[i][0]+Texture::Values[i][2])/2);
+        cos_term2 = cos((Texture::Values[i][0]-Texture::Values[i][2])/2);
+
+        r1 = tan_term * cos_term2 / cos_term1;
+        r2 = tan_term * sin_term / cos_term1;
+        r3 = tan((Texture::Values[i][0]+Texture::Values[i][2])/2);
+        MisorientationCalculations::getFZRodCubic(r1, r2, r3);
+        rmag = pow((r1 * r1 + r2 * r2 + r3 * r3), 0.5);
+        angle = 2.0 * atan(rmag);
+        hTmp = pow(((3.0 / 4.0) * (angle - sin(angle))), (1.0 / 3.0));
+        h1 = hTmp * (r1 / rmag);
+        h2 = hTmp * (r2 / rmag);
+        h3 = hTmp * (r3 / rmag);
+        if (angle == 0) h1 = 0.0, h2 = 0.0, h3 = 0.0;
+        ea1bin = int((h1 + (dim1 / 2.0)) * 36.0 / dim1);
+        ea2bin = int((h2 + (dim1 / 2.0)) * 36.0 / dim2);
+        ea3bin = int((h3 + (dim1 / 2.0)) * 12.0 / dim3);
+        if (ea1bin >= 36) ea1bin = 35;
+        if (ea2bin >= 36) ea2bin = 35;
+        if (ea3bin >= 12) ea3bin = 11;
+        bin = (ea3bin * 36 * 36) + (ea2bin * 36) + (ea1bin);
+        TextureBins[i] = static_cast<int>(bin);
+      }
+
+      for (size_t i = 0; i < odfsize; i++)
+      {
+        odf[i] = randomWeight / (odfsize);
+        totalweight = totalweight + randomWeight / (odfsize);
+      }
+      for (size_t i = 0; i < Texture::Count; i++)
+      {
+        bin = TextureBins[i];
+        odf[bin] = odf[bin] + (weights[i]);
+        totalweight = totalweight + weights[i];
+        bin1 = bin % 36;
+        bin2 = (bin / 36) % 36;
+        bin3 = bin / (36 * 36);
+        for (int j = -sigmas[i]; j <= sigmas[i]; j++)
+        {
+          for (int k = -sigmas[i]; k <= sigmas[i]; k++)
+          {
+            for (int l = -sigmas[i]; l <= sigmas[i]; l++)
+            {
+              addbin1 = bin1 + j;
+              addbin2 = bin2 + k;
+              addbin3 = bin3 + l;
+              if (addbin1 < 0) addbin1 = addbin1 + 36;
+              if (addbin1 >= 36) addbin1 = addbin1 - 36;
+              if (addbin2 < 0) addbin2 = addbin2 + 36;
+              if (addbin2 >= 36) addbin2 = addbin2 - 36;
+              if (addbin3 < 0) addbin3 = addbin3 + 12;
+              if (addbin3 >= 12) addbin3 = addbin3 - 12;
+              addbin = (addbin3 * 36 * 36) + (addbin2 * 36) + (addbin1);
+              dist = pow((j * j + k * k + l * l), 0.5);
+              fraction = 1.0 - ((dist / sigmas[i]) * (dist / sigmas[i]));
+              if (fraction > 0.0)
+              {
+                odf[addbin] = odf[addbin] + (weights[i] * fraction);
+                totalweight = totalweight + (weights[i] * fraction);
+              }
+            }
+          }
+        }
+      }
+
+      if (normalize == true)
+      {
+        // Normalize the odf
+        for (size_t i = 0; i < odfsize; i++)
         {
           odf[i] = odf[i] / totalweight;
         }
