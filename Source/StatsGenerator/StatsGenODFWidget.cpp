@@ -342,7 +342,7 @@ void StatsGenODFWidget::on_deleteMDFRowBtn_clicked()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void StatsGenODFWidget::on_addTextureBtn_clicked()
+void StatsGenODFWidget::on_addODFTextureBtn_clicked()
 {
   TextureDialog t(m_CrystalStructure, NULL);
   int r = t.exec();
@@ -365,6 +365,22 @@ void StatsGenODFWidget::on_addTextureBtn_clicked()
     m_ODFTableView->setFocus();
     QModelIndex index = m_ODFTableModel->index(m_ODFTableModel->rowCount() - 1, 0);
     m_ODFTableView->setCurrentIndex(index);
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void StatsGenODFWidget::on_deleteODFTextureBtn_clicked()
+{
+  QItemSelectionModel *selectionModel = m_ODFTableView->selectionModel();
+  if (!selectionModel->hasSelection()) return;
+  QModelIndex index = selectionModel->currentIndex();
+  if (!index.isValid()) return;
+  m_ODFTableModel->removeRow(index.row(), index.parent());
+  if (m_ODFTableModel->rowCount() > 0)
+  {
+    m_ODFTableView->resizeColumnsToContents();
   }
 }
 
