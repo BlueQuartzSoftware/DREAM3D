@@ -112,14 +112,11 @@ int StatsGenODFWidget::writeDataToHDF5(H5ReconStatsWriter::Pointer writer)
 
   if (m_CrystalStructure == AIM::Reconstruction::Cubic)
   {
-    Texture::calculateCubicODFData(weights, sigmas, randomWeight, false, odf, totalWeight);
+    Texture::calculateCubicODFData(weights, sigmas, randomWeight, true, odf, totalWeight);
   }
   else if (m_CrystalStructure == AIM::Reconstruction::Hexagonal)
   {
-#ifndef _WIN32
-#warning Hex ODF Calculation Methods needs to be implemented
-#endif
-    Texture::calculateCubicODFData(weights, sigmas, randomWeight, false, odf, totalWeight);
+    Texture::calculateHexODFData(weights, sigmas, randomWeight, true, odf, totalWeight);
   }
   double* odfPtr = &(odf.front());
   err = -1;
@@ -252,7 +249,8 @@ void StatsGenODFWidget::on_m_CalculateODFBtn_clicked()
   weights.pop_front();
   sigmas.pop_front();
   //pop off the random number
-  err = sg.GenCubicODFPlotData(weights, sigmas, x001, y001, x011, y011, x111, y111, size, randomWeight);
+  if (m_CrystalStructure == AIM::Reconstruction::Cubic) err = sg.GenCubicODFPlotData(weights, sigmas, x001, y001, x011, y011, x111, y111, size, randomWeight);
+  if (m_CrystalStructure == AIM::Reconstruction::Hexagonal) err = sg.GenHexODFPlotData(weights, sigmas, x001, y001, x011, y011, x111, y111, size, randomWeight);
   if (err == 1)
   {
     //TODO: Present Error Message
