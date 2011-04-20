@@ -15,12 +15,12 @@ project(CMU)
 set(CMU_SRCS
     ${CMU_SOURCE_DIR}/main.cpp
     ${CMU_SOURCE_DIR}/StatsGenerator.cpp
-    ${PROJECT_CODE_DIR}/AIM/StatsGenerator/StatsGen.cpp
+    ${PROJECT_CODE_DIR}/StatsGenerator/StatsGen.cpp
     ${PROJECT_CODE_DIR}/AIM/GrainGenerator/GrainGenerator.cpp
 )
 
 set(CMU_HDRS
-    ${PROJECT_CODE_DIR}/AIM/StatsGenerator/StatsGen.h
+    ${PROJECT_CODE_DIR}/StatsGenerator/StatsGen.h
     ${PROJECT_CODE_DIR}/AIM/GrainGenerator/GrainGenerator.h
     ${CMU_SOURCE_DIR}/StatsGenerator.h
 )

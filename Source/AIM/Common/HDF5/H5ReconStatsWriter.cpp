@@ -270,13 +270,24 @@ int H5ReconStatsWriter::writeDistributionData(int phase, const std::string &disT
       for (size_t c = 0; c < numColumns; ++c)
       {
         //std::cout << "Writing Dataset:" << hdf5GroupName << "/" << columnHeaders[c] << std::endl;
-        err = H5Lite::writeVectorDataset(disId, columnHeaders[c], dims, colData[c]);
-        if (err < 0)
+        err = -1;
+        if (colData[c].size() > 0) {
+          err = H5Lite::writeVectorDataset(disId, columnHeaders[c], dims, colData[c]);
+          if (err < 0)
+          {
+            H5RSW_ERROR_CHECK(columnHeaders[c])
+            retErr = err;
+            break;
+          }
+        }
+        else
         {
-          H5RSW_ERROR_CHECK(columnHeaders[c])
-          retErr = err;
+          std::cout << hdf5GroupName << ":" << columnHeaders[c] << " Data Column had no data. Did you create the data?"  << std::endl;
+          std::cout << "  File: " << __FILE__ << std::endl;
+          std::cout << "  Line: " << __LINE__ << std::endl;
           break;
         }
+
       }
     }
     else
