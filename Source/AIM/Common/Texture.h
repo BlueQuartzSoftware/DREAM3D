@@ -67,11 +67,13 @@ class AIMCOMMON_EXPORT Texture
 #endif
     /**
      * @brief This will calculate ODF data based on an array of weights that are
-     * passed in and a Cubic Crystal Structure. The weights are from this class
-     * "Weights" static variable but
-     * can have user/programmer changed values. This is templated on the container
+     * passed in and a Cubic Crystal Structure. This is templated on the container
      * type that holds the data. Containers that adhere to the STL Vector API
-     * should be usable. QVector falls into this category.
+     * should be usable. QVector falls into this category. The input data for the
+     * euler angles is in Columnar fashion instead of row major format.
+     * @param e1s The first euler angles
+     * @param e2s The second euler angles
+     * @param e3s The third euler angles
      * @param weights Array of weights. The only stipulation is the length of the
      * array is Texture::Count
      * @param randomWeight  The value of the weight to be applied to random orientations
@@ -105,7 +107,7 @@ class AIMCOMMON_EXPORT Texture
       double cos_term2 = 0.0;
       double hTmp = 0.0;
 
-      for (size_t i = 0; i < e1s.size(); i++)
+      for (typename T::size_type i = 0; i < e1s.size(); i++)
       {
         tan_term = tan(e2s[i]/2);
         sin_term = sin((e1s[i]-e3s[i])/2);
@@ -138,7 +140,7 @@ class AIMCOMMON_EXPORT Texture
         odf[i] = randomWeight / (eighteenCubed);
         totalweight = totalweight + randomWeight / (eighteenCubed);
       }
-      for (size_t i = 0; i < weights.size(); i++)
+      for (typename T::size_type i = 0; i < weights.size(); i++)
       {
         bin = TextureBins[i];
         odf[bin] = odf[bin] + (weights[i]);
@@ -186,7 +188,23 @@ class AIMCOMMON_EXPORT Texture
     }
 
 
-
+    /**
+     * @brief This will calculate ODF data based on an array of weights that are
+     * passed in and a Hexagonal Crystal Structure. This is templated on the container
+     * type that holds the data. Containers that adhere to the STL Vector API
+     * should be usable. QVector falls into this category. The input data for the
+     * euler angles is in Columnar fashion instead of row major format.
+     * @param e1s The first euler angles
+     * @param e2s The second euler angles
+     * @param e3s The third euler angles
+     * @param weights Array of weights. The only stipulation is the length of the
+     * array is Texture::Count
+     * @param randomWeight  The value of the weight to be applied to random orientations
+     * @param normalize Should the ODF data be normalized by the totalWeight value
+     * before returning.
+     * @param odf (OUT) The ODF data that is generated from this function.
+     * @param totalweight (OUT) The TotalWeight value that is also calculated
+     */
 	template<typename T>
     static void calculateHexODFData(T e1s, T e2s, T e3s, T weights, T sigmas, bool normalize, T &odf, double &totalweight)
     {
@@ -211,7 +229,7 @@ class AIMCOMMON_EXPORT Texture
       double cos_term2 = 0.0;
       double hTmp = 0.0;
 
-      for (size_t i = 0; i < e1s.size(); i++)
+      for (typename T::size_type i = 0; i < e1s.size(); i++)
       {
         tan_term = tan(e2s[i]/2);
         sin_term = sin((e1s[i]-e3s[i])/2);
@@ -244,7 +262,7 @@ class AIMCOMMON_EXPORT Texture
         odf[i] = randomWeight / (odfsize);
         totalweight = totalweight + randomWeight / (odfsize);
       }
-      for (size_t i = 0; i < e1s.size(); i++)
+      for (typename T::size_type i = 0; i < e1s.size(); i++)
       {
         bin = TextureBins[i];
         odf[bin] = odf[bin] + (weights[i]);
@@ -291,7 +309,28 @@ class AIMCOMMON_EXPORT Texture
 
     }
 
+  /**
+   * @brief This will calculate ODF data based on an array of weights that are
+   * passed in and a OrthoRhombic Crystal Structure. This is templated on the container
+   * type that holds the data. Containers that adhere to the STL Vector API
+   * should be usable. QVector falls into this category. The input data for the
+   * euler angles is in Columnar fashion instead of row major format.
+   * @param e1s The first euler angles
+   * @param e2s The second euler angles
+   * @param e3s The third euler angles
+   * @param weights Array of weights. The only stipulation is the length of the
+   * array is Texture::Count
+   * @param randomWeight  The value of the weight to be applied to random orientations
+   * @param normalize Should the ODF data be normalized by the totalWeight value
+   * before returning.
+   * @param odf (OUT) The ODF data that is generated from this function.
+   * @param totalweight (OUT) The TotalWeight value that is also calculated
+   */
+  template<typename T>
+  static void calculateOrthoRhombicODFData(T e1s, T e2s, T e3s, T weights, T sigmas, bool normalize, T &odf, double &totalweight)
+  {
 
+  }
 
 
 protected:
