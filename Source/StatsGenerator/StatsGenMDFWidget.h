@@ -1,5 +1,5 @@
 /* ============================================================================
- * Copyright (c) 2010, Michael A. Jackson (BlueQuartz Software)
+ * Copyright (c) 2011, Michael A. Jackson (BlueQuartz Software)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -28,77 +28,60 @@
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _STATSGENODFWIDGET_H_
-#define _STATSGENODFWIDGET_H_
+#ifndef _STATSGENMDFWIDGET_H_
+#define _STATSGENMDFWIDGET_H_
 
 #include <QtGui/QWidget>
-#include "ui_StatsGenODFWidget.h"
+#include "ui_StatsGenMDFWidget.h"
 
 #include "AIM/Common/Constants.h"
 #include "AIM/Common/HDF5/H5ReconStatsWriter.h"
 #include "AIM/Common/HDF5/H5ReconStatsReader.h"
 
 
-class SGODFTableModel;
-class StatsGenMDFWidget;
+
+class SGMDFTableModel;
 class QwtPlot;
 class QwtPlotCurve;
 
 /**
- * @class StatsGenODFWidget StatsGenODFWidget.h AIM/StatsGenerator/StatsGenODFWidget.h
- * @brief Calculates and displays ODF data
+ * @class StatsGenMDFWidget StatsGenMDFWidget.h StatsGenerator/StatsGenMDFWidget.h
+ * @brief This class gives GUIs an interface into the MDF settings
  * @author Michael A. Jackson for BlueQuartz Software
- * @date Jan 27, 2011
+ * @date Apr 20, 2011
  * @version 1.0
  */
-class StatsGenODFWidget : public QWidget, private Ui::StatsGenODFWidget
+class StatsGenMDFWidget : public QWidget, private Ui::StatsGenMDFWidget
 {
   Q_OBJECT;
 
   public:
-    enum Tabs
-    {
-      Weights_Spreads = 0,
-      ODF_001,
-      ODF_011,
-      ODF_111
-    };
-
-    StatsGenODFWidget(QWidget *parent = 0);
-    virtual ~StatsGenODFWidget();
+    StatsGenMDFWidget(QWidget *parent = 0);
+    virtual ~StatsGenMDFWidget();
 
     void setupGui();
     void initQwtPlot(QString xAxisName, QString yAxisName, QwtPlot* plot);
-    void enableMDFTab(bool b);
 
-    void setPhaseIndex(int value);
-    int getPhaseIndex();
-
-    void setCrystalStructure(AIM::Reconstruction::CrystalStructure value);
-    AIM::Reconstruction::CrystalStructure getCrystalStructure();
+    MXA_INSTANCE_PROPERTY(int, PhaseIndex);
+    MXA_INSTANCE_PROPERTY(AIM::Reconstruction::CrystalStructure, CrystalStructure);
 
     int writeDataToHDF5(H5ReconStatsWriter::Pointer writer);
     int readDataFromHDF5(H5ReconStatsReader::Pointer reader,
                         QVector<double>  &bins,
                         const std::string &hdf5GroupName);
 
-    protected slots:
-      void on_m_CalculateODFBtn_clicked();
-      void on_addODFTextureBtn_clicked();
-      void on_deleteODFTextureBtn_clicked();
+  protected slots:
+    void on_addMDFRowBtn_clicked();
+    void on_deleteMDFRowBtn_clicked();
+    void on_m_MDFUpdateBtn_clicked();
 
-    protected:
 
-    private:
-      int      m_PhaseIndex;
-      AIM::Reconstruction::CrystalStructure      m_CrystalStructure;
-      SGODFTableModel*        m_ODFTableModel;
-      StatsGenMDFWidget*      m_MDFWidget;
-      QVector<QwtPlotCurve*>  m_PlotCurves;
+  private:
+    SGMDFTableModel* m_MDFTableModel;
 
-      StatsGenODFWidget(const StatsGenODFWidget&); // Copy Constructor Not Implemented
-      void operator=(const StatsGenODFWidget&); // Operator '=' Not Implemented
+    StatsGenMDFWidget(const StatsGenMDFWidget&); // Copy Constructor Not Implemented
+    void operator=(const StatsGenMDFWidget&); // Operator '=' Not Implemented
 
 };
 
-#endif /* _STATSGENODFWIDGET_H_ */
+#endif /* _STATSGENMDFWIDGET_H_ */
