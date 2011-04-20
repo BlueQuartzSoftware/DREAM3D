@@ -33,8 +33,9 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-TextureDialog::TextureDialog(QWidget *parent) :
-QDialog(parent)
+TextureDialog::TextureDialog(AIM::Reconstruction::CrystalStructure xtal, QWidget *parent) :
+QDialog(parent),
+m_CrystalStructure(xtal)
 {
   setupUi(this);
   setupGui();
@@ -53,52 +54,43 @@ TextureDialog::~TextureDialog()
 // -----------------------------------------------------------------------------
 void TextureDialog::setupGui()
 {
-  m_Cubics = CubicTexturePresets::getTextures();
-  m_Hexs = HexTexturePresets::getTextures();
+  if (AIM::Reconstruction::Cubic == m_CrystalStructure)
+  {
+    m_Presets = CubicTexturePresets::getTextures();
+  }
+  else if (AIM::Reconstruction::Hexagonal == m_CrystalStructure)
+  {
+    m_Presets = HexTexturePresets::getTextures();
+  }
+
   // Clear the list view;
   presetListWidget->clear();
 
-  // Now push the Cubic list into the List View
-  for (TexturePreset::Container::iterator iter = m_Cubics.begin(); iter != m_Cubics.end(); ++iter )
+  // Now push the list into the List View
+  for (TexturePreset::Container::iterator iter = m_Presets.begin(); iter != m_Presets.end(); ++iter )
   {
     presetListWidget->addItem( QString::fromStdString((*iter)->getName() ) );
   }
-}
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void TextureDialog::on_hexCrystalStructure_toggled()
-{
-  if (hexCrystalStructure->isChecked())
   {
-    // Clear the list view;
-    presetListWidget->clear();
-
-    // Now push the Cubic list into the List View
-    for (TexturePreset::Container::iterator iter = m_Hexs.begin(); iter != m_Hexs.end(); ++iter)
-    {
-      presetListWidget->addItem(QString::fromStdString((*iter)->getName()));
-    }
+  QDoubleValidator* weightValidator = new QDoubleValidator(euler1);
+    weightValidator->setDecimals(4);
   }
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void TextureDialog::on_cubicCrystalStructure_toggled()
-{
-  if (cubicCrystalStructure->isChecked())
   {
-
-    // Clear the list view;
-    presetListWidget->clear();
-
-    // Now push the Cubic list into the List View
-    for (TexturePreset::Container::iterator iter = m_Cubics.begin(); iter != m_Cubics.end(); ++iter)
-    {
-      presetListWidget->addItem(QString::fromStdString((*iter)->getName()));
-    }
+    QDoubleValidator* weightValidator = new QDoubleValidator(euler2);
+    weightValidator->setDecimals(4);
+  }
+  {
+    QDoubleValidator* weightValidator = new QDoubleValidator(euler3);
+    weightValidator->setDecimals(4);
+  }
+  {
+    QDoubleValidator* weightValidator = new QDoubleValidator(weight);
+    weightValidator->setDecimals(4);
+  }
+  {
+    QDoubleValidator* weightValidator = new QDoubleValidator(sigma);
+    weightValidator->setDecimals(4);
   }
 }
 
@@ -108,15 +100,7 @@ void TextureDialog::on_cubicCrystalStructure_toggled()
 void TextureDialog::on_presetListWidget_itemDoubleClicked ( QListWidgetItem * item )
 {
   int index = presetListWidget->currentRow();
-  TexturePreset::Pointer t;
-  if (cubicCrystalStructure->isChecked())
-  {
-    t = m_Cubics[index];
-  }
-  else if (hexCrystalStructure->isChecked())
-  {
-    t = m_Hexs[index];
-  }
+  TexturePreset::Pointer t = m_Presets[index];
   euler1Preset->setText(QString::number(t->getEuler1()));
   euler2Preset->setText(QString::number(t->getEuler2()));
   euler3Preset->setText(QString::number(t->getEuler3()));
@@ -136,18 +120,23 @@ void TextureDialog::on_presetListWidget_itemDoubleClicked ( QListWidgetItem * it
 void TextureDialog::on_presetListWidget_itemSelectionChanged()
 {
   int index = presetListWidget->currentRow();
-  TexturePreset::Pointer t;
-  if (cubicCrystalStructure->isChecked())
-  {
-    t = m_Cubics[index];
-  }
-  else if (hexCrystalStructure->isChecked())
-  {
-    t = m_Hexs[index];
-  }
+  TexturePreset::Pointer t = m_Presets[index];
   euler1Preset->setText(QString::number(t->getEuler1()));
   euler2Preset->setText(QString::number(t->getEuler2()));
   euler3Preset->setText(QString::number(t->getEuler3()));
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void TextureDialog::getODFEntry(double &e1, double &e2, double &e3, double &w, double &s)
+{
+  bool ok = false;
+  e1 = euler1->text().toDouble(&ok);
+  e2 = euler2->text().toDouble(&ok);
+  e3 = euler3->text().toDouble(&ok);
+  w = weight->text().toDouble(&ok);
+  s = sigma->text().toDouble(&ok);
 }
 
 
