@@ -119,5 +119,4 @@ Texture::Texture()
 // -----------------------------------------------------------------------------
 Texture::~Texture()
 {
-  // TODO Auto-generated destructor stub
 }

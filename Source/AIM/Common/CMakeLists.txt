@@ -59,6 +59,7 @@ SET (AIMCommon_SRCS
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/VTKFileUtils.cpp
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/MisorientationCalculations.cpp
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Texture.cpp
+    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/TexturePreset.cpp
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/ANG/AngDataLoader.cpp
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/ANG/H5AngDataLoader.cpp
     )
@@ -86,6 +87,7 @@ SET (AIMCommon_HDRS
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/MisorientationCalculations.h
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/OIMColoring.hpp
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Texture.h
+    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/TexturePreset.h
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/AIMMath.h
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/AIMArray.hpp
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/AIMDLLExport.h

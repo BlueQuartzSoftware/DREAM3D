@@ -28,50 +28,48 @@
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef EDITPHASEDIALOG_H_
-#define EDITPHASEDIALOG_H_
+#ifndef TEXTUREDIALOG_H_
+#define TEXTUREDIALOG_H_
+
+#include <vector>
 
 #include <QtGui/QDialog>
-#include "ui_EditPhaseDialog.h"
 
-#include "AIM/Common/Constants.h"
+#include "ui_TextureDialog.h"
 
-/**
- * @class EditPhaseDialog EditPhaseDialog.h AIM/StatsGenerator/EditPhaseDialog.h
- * @brief Simple dialog that is presented to the user when a new phase is added.
- * @author Michael A. Jackson for BlueQuartz Software
- * @date Apr 14, 2011
- * @version 1.0
+#include "AIM/Common/TexturePreset.h"
+
+/*
+ *
  */
-class EditPhaseDialog : public QDialog, private Ui::EditPhaseDialog
+class TextureDialog : public QDialog , private Ui::TextureDialog
 {
   Q_OBJECT;
 
   public:
-    EditPhaseDialog(QWidget *parent = 0);
-    virtual ~EditPhaseDialog();
-
-    AIM::Reconstruction::CrystalStructure getCrystalStructure();
-    void setCrystalStructure(AIM::Reconstruction::CrystalStructure xtal);
-
-    double getPhaseFraction();
-    void setPhaseFraction(double d);
-
-    void setOtherPhaseFractionTotal(double t);
+    TextureDialog(QWidget *parent = 0);
+    virtual ~TextureDialog();
 
   protected slots:
-  void on_phaseFraction_textChanged(const QString &string);
+    void on_cubicCrystalStructure_toggled();
+    void on_hexCrystalStructure_toggled();
 
+    void on_presetListWidget_itemSelectionChanged ();
+    void on_presetListWidget_itemDoubleClicked ( QListWidgetItem * item );
 
 
   protected:
+
     void setupGui();
 
-  private:
-    double m_OtherPhaseFractions;
 
-    EditPhaseDialog(const EditPhaseDialog&); // Copy Constructor Not Implemented
-    void operator=(const EditPhaseDialog&); // Operator '=' Not Implemented
+
+  private:
+    std::vector<TexturePreset::Pointer> m_Cubics;
+    std::vector<TexturePreset::Pointer> m_Hexs;
+
+    TextureDialog(const TextureDialog&); // Copy Constructor Not Implemented
+    void operator=(const TextureDialog&); // Operator '=' Not Implemented
 };
 
-#endif /* EDITPHASEDIALOG_H_ */
+#endif /* TEXTUREDIALOG_H_ */

@@ -32,33 +32,51 @@
       </item>
       <item>
        <widget class="QToolButton" name="addPhase">
+        <property name="toolTip">
+         <string>Add a new Phase</string>
+        </property>
+        <property name="statusTip">
+         <string>Add a new Phase</string>
+        </property>
         <property name="text">
          <string>...</string>
         </property>
         <property name="icon">
-         <iconset resource="../../../../Resources/icons/images/Icons.qrc">
+         <iconset resource="../../../Resources/icons/images/Icons.qrc">
           <normaloff>:/plus.png</normaloff>:/plus.png</iconset>
         </property>
        </widget>
       </item>
       <item>
        <widget class="QToolButton" name="deletePhase">
+        <property name="toolTip">
+         <string>Delete the current phase</string>
+        </property>
+        <property name="statusTip">
+         <string>Delete the current phase</string>
+        </property>
         <property name="text">
          <string>...</string>
         </property>
         <property name="icon">
-         <iconset resource="../../../../Resources/icons/images/Icons.qrc">
+         <iconset resource="../../../Resources/icons/images/Icons.qrc">
           <normaloff>:/minus.png</normaloff>:/minus.png</iconset>
         </property>
        </widget>
       </item>
       <item>
        <widget class="QToolButton" name="editPhase">
+        <property name="toolTip">
+         <string>Edit the current Phase</string>
+        </property>
+        <property name="statusTip">
+         <string>Edit the current Phase</string>
+        </property>
         <property name="text">
          <string>...</string>
         </property>
         <property name="icon">
-         <iconset resource="../../../../Resources/icons/images/Icons.qrc">
+         <iconset resource="../../../Resources/icons/images/Icons.qrc">
           <normaloff>:/preferences.png</normaloff>:/preferences.png</iconset>
         </property>
        </widget>
@@ -196,7 +214,7 @@
   </customwidget>
  </customwidgets>
  <resources>
-  <include location="../../../../Resources/icons/images/Icons.qrc"/>
+  <include location="../../../Resources/icons/images/Icons.qrc"/>
  </resources>
  <connections/>
 </ui>
