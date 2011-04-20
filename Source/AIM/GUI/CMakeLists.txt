@@ -77,19 +77,6 @@ SET (Representation_HDRS
     )
 cmp_IDE_SOURCE_PROPERTIES( "AIM/GUI" "${Representation_HDRS}" "${Representation_SRCS}" ${PROJECT_INSTALL_HEADERS})
 
-
-set (AIM_COMMON_QT_SRCS
-    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Qt/ApplicationAboutBoxDialog.cpp
-    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Qt/QRecentFileList.cpp
-    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Qt/QR3DFileCompleter.cpp
-)
-set (AIM_COMMON_QT_HDRS
-    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Qt/ApplicationAboutBoxDialog.h
-    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Qt/QRecentFileList.h
-    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Qt/QR3DFileCompleter.h     )
-cmp_IDE_SOURCE_PROPERTIES("AIM/Common/Qt" "${AIM_COMMON_QT_HDRS}" "${AIM_COMMON_QT_SRCS}" ${PROJECT_INSTALL_HEADERS})
-
-
 SET (Reconstruction_SRCS
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Reconstruction/Reconstruction.cpp
 )
@@ -141,9 +128,6 @@ SET( Representation_MOC_HDRS
     ${Representation_SOURCE_DIR}/GrainGeneratorWidget.h
     ${Representation_SOURCE_DIR}/SurfaceMeshingWidget.h
     ${Representation_SOURCE_DIR}/VolumeMeshingWidget.h
-    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Qt/ApplicationAboutBoxDialog.h
-    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Qt/QRecentFileList.h
-    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Qt/QR3DFileCompleter.h
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Reconstruction/Reconstruction.h
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/GrainGenerator/GrainGenerator.h
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/SurfaceMesh/SurfaceMesh.h
@@ -161,7 +145,6 @@ ${Representation_SOURCE_DIR}/UI_Files/Test.ui
   ${Representation_SOURCE_DIR}/UI_Files/GrainGeneratorWidget.ui
   ${Representation_SOURCE_DIR}/UI_Files/SurfaceMeshingWidget.ui
   ${Representation_SOURCE_DIR}/UI_Files/VolumeMeshingWidget.ui
-  ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Qt/UI_Files/ApplicationAboutBoxDialog.ui
 )
 
 # and finally any resource files
@@ -222,7 +205,7 @@ BuildQtAppBundle(
     VERSION_MINOR ${AIMRepresentation_VER_MINOR}
     VERSION_PATCH ${AIMRepresentation_VER_PATCH}
     BINARY_DIR    ${${PROJECT_NAME}_BINARY_DIR}
-    LINK_LIBRARIES ${QT_LIBRARIES} MXADataModel AIMCommon
+    LINK_LIBRARIES ${QT_LIBRARIES} QtSupport MXADataModel AIMCommon
     LIB_SEARCH_DIRS ${CMAKE_LIBRARY_OUTPUT_DIRECTORY} ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
 #    QT_PLUGINS    ${QT_PLUGINS}
 #    OTHER_PLUGINS ${OTHER_PLUGINS}
