@@ -28,68 +28,55 @@
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "SGPhase.h"
+#include "TexturePreset.h"
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-SGPhase::SGPhase()
+TexturePreset::TexturePreset()
 {
-  // TODO Auto-generated constructor stub
-
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-SGPhase::~SGPhase()
+TexturePreset::~TexturePreset()
 {
-  // TODO Auto-generated destructor stub
+}
+
+#define ADD_NEW_TEXTURE(name, xtal, e1, e2, e3)\
+    textures.push_back(TexturePreset::New(xtal, name, e1, e2, e3));
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+std::vector<TexturePreset::Pointer> CubicTexturePresets::getTextures()
+{
+  std::vector<TexturePreset::Pointer> textures;
+  ADD_NEW_TEXTURE( "Brass", AIM::Reconstruction::Cubic, 35.0, 45.0, 0.0)
+  ADD_NEW_TEXTURE( "S",  AIM::Reconstruction::Cubic, 59.0, 37.0, 63.0)
+  ADD_NEW_TEXTURE( "Copper", AIM::Reconstruction::Cubic, 90.0, 35.0, 45.0)
+  ADD_NEW_TEXTURE( "S1", AIM::Reconstruction::Cubic, 55.0, 30.0, 65.0)
+  ADD_NEW_TEXTURE( "S2",  AIM::Reconstruction::Cubic, 45.0, 35.0, 65.0)
+  ADD_NEW_TEXTURE( "Goss",  AIM::Reconstruction::Cubic, 0.0, 45.0, 0.0)
+  ADD_NEW_TEXTURE( "Cube",  AIM::Reconstruction::Cubic, 0.0, 0.0, 0.0)
+  ADD_NEW_TEXTURE( "RC(rd1)", AIM::Reconstruction::Cubic, 0.0, 20.0, 0.0)
+  ADD_NEW_TEXTURE( "RC(rd2)", AIM::Reconstruction::Cubic, 0.0, 35.0, 0.0)
+  ADD_NEW_TEXTURE( "RC(nd1)", AIM::Reconstruction::Cubic, 20.0, 0.0, 0.0)
+  ADD_NEW_TEXTURE( "RC(nd2)", AIM::Reconstruction::Cubic, 35.0, 0.0, 0.0)
+  ADD_NEW_TEXTURE( "P", AIM::Reconstruction::Cubic, 70.0, 45.0, 0.0)
+  ADD_NEW_TEXTURE( "Q", AIM::Reconstruction::Cubic, 55.0, 20.0, 0.0)
+  ADD_NEW_TEXTURE( "R", AIM::Reconstruction::Cubic, 55.0, 75.0, 25.0)
+  return textures;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString SGPhase::getComboString()
+std::vector<TexturePreset::Pointer> HexTexturePresets::getTextures()
 {
-  QString s = QString::number(m_Index);
-  s.append(" - ");
-  if (m_CrystalStructure == AIM::Reconstruction::Cubic)
-  {
-    s.append("Cubic");
-  }
-  else if (m_CrystalStructure == AIM::Reconstruction::Hexagonal)
-  {
-    s.append("Hexagonal");
-  }
-  return s;
+  std::vector<TexturePreset::Pointer> textures;
+//  ADD_NEW_TEXTURE( "Brass", AIM::Reconstruction::Hexagonal, 35.0, 45.0, 0.0)
+
+  return textures;
 }
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void SGPhase::deleteWidgets()
-{
-  m_Omega3Plot->setParent(NULL); delete m_Omega3Plot;
-  m_BOverAPlot->setParent(NULL); delete m_BOverAPlot;
-  m_COverAPlot->setParent(NULL); delete m_COverAPlot;
-  m_COverBPlot->setParent(NULL); delete m_COverBPlot;
-  m_NeighborPlot->setParent(NULL); delete m_NeighborPlot;
-  m_ODFWidget->setParent(NULL); delete m_ODFWidget;
-
-
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void SGPhase::updateWidgetPhase()
-{
-  m_Omega3Plot->setPhase(m_Index);
-  m_BOverAPlot->setPhase(m_Index);
-  m_COverAPlot->setPhase(m_Index);
-  m_COverBPlot->setPhase(m_Index);
-  m_NeighborPlot->setPhase(m_Index);
-  m_ODFWidget->setPhase(m_Index);
-}
-

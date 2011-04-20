@@ -71,8 +71,7 @@ class StatsGenODFWidget : public QWidget, private Ui::StatsGenODFWidget
 
     void setPlotTitle(QString title);
 
-    int writeDataToHDF5(AIM::Reconstruction::CrystalStructure crystruct,
-                        H5ReconStatsWriter::Pointer writer);
+    int writeDataToHDF5(H5ReconStatsWriter::Pointer writer);
     int readDataFromHDF5(H5ReconStatsReader::Pointer reader,
                         QVector<double>  &bins,
                         const std::string &hdf5GroupName);
@@ -82,7 +81,8 @@ class StatsGenODFWidget : public QWidget, private Ui::StatsGenODFWidget
     void setupGui();
     void initQwtPlot(QString xAxisName, QString yAxisName, QwtPlot* plot);
 
-    MXA_INSTANCE_PROPERTY(int, Phase);
+    MXA_INSTANCE_PROPERTY(int, PhaseIndex);
+    MXA_INSTANCE_PROPERTY(AIM::Reconstruction::CrystalStructure, CrystalStructure);
 
     protected slots:
       void on_m_CalculateODFBtn_clicked();
@@ -90,7 +90,7 @@ class StatsGenODFWidget : public QWidget, private Ui::StatsGenODFWidget
       void on_addMDFRowBtn_clicked();
       void on_deleteMDFRowBtn_clicked();
       void on_m_MDFUpdateBtn_clicked();
-
+      void on_addTextureBtn_clicked();
 
 
     protected:

@@ -28,16 +28,13 @@
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "EditPhaseDialog.h"
-
-#include <QtGui/QDoubleValidator>
+#include "TextureDialog.h"
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-EditPhaseDialog::EditPhaseDialog(QWidget* parent) :
-QDialog(parent),
-m_OtherPhaseFractions(0.0)
+TextureDialog::TextureDialog(QWidget *parent) :
+QDialog(parent)
 {
   setupUi(this);
   setupGui();
@@ -46,7 +43,7 @@ m_OtherPhaseFractions(0.0)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-EditPhaseDialog::~EditPhaseDialog()
+TextureDialog::~TextureDialog()
 {
 
 }
@@ -54,66 +51,103 @@ EditPhaseDialog::~EditPhaseDialog()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EditPhaseDialog::setCrystalStructure(AIM::Reconstruction::CrystalStructure xtal)
+void TextureDialog::setupGui()
 {
-  xtalCombo->setCurrentIndex(xtal);
-}
+  m_Cubics = CubicTexturePresets::getTextures();
+  m_Hexs = HexTexturePresets::getTextures();
+  // Clear the list view;
+  presetListWidget->clear();
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-AIM::Reconstruction::CrystalStructure EditPhaseDialog::getCrystalStructure()
-{
-  int index = xtalCombo->currentIndex();
-  return static_cast<AIM::Reconstruction::CrystalStructure>(index);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-double EditPhaseDialog::getPhaseFraction()
-{
-  bool ok = false;
-  double d = phaseFraction->text().toDouble(&ok);
-  if (ok) return d;
-  return -1.0;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void EditPhaseDialog::setPhaseFraction(double d)
-{
-  phaseFraction->setText(QString::number(d));
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void EditPhaseDialog::setupGui()
-{
-  QDoubleValidator* phaseFractionValidator = new QDoubleValidator(phaseFraction);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void EditPhaseDialog::on_phaseFraction_textChanged(const QString &string)
-{
-  bool ok = false;
-  double d = phaseFraction->text().toDouble(&ok);
-  if (ok)
+  // Now push the Cubic list into the List View
+  for (TexturePreset::Container::iterator iter = m_Cubics.begin(); iter != m_Cubics.end(); ++iter )
   {
-     double total = d + m_OtherPhaseFractions;
-     total = d / total;
-     calcPhaseFraction->setText(QString::number(total));
+    presetListWidget->addItem( QString::fromStdString((*iter)->getName() ) );
   }
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EditPhaseDialog::setOtherPhaseFractionTotal(double t)
+void TextureDialog::on_hexCrystalStructure_toggled()
 {
-  m_OtherPhaseFractions = t;
+  if (hexCrystalStructure->isChecked())
+  {
+    // Clear the list view;
+    presetListWidget->clear();
+
+    // Now push the Cubic list into the List View
+    for (TexturePreset::Container::iterator iter = m_Hexs.begin(); iter != m_Hexs.end(); ++iter)
+    {
+      presetListWidget->addItem(QString::fromStdString((*iter)->getName()));
+    }
+  }
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void TextureDialog::on_cubicCrystalStructure_toggled()
+{
+  if (cubicCrystalStructure->isChecked())
+  {
+
+    // Clear the list view;
+    presetListWidget->clear();
+
+    // Now push the Cubic list into the List View
+    for (TexturePreset::Container::iterator iter = m_Cubics.begin(); iter != m_Cubics.end(); ++iter)
+    {
+      presetListWidget->addItem(QString::fromStdString((*iter)->getName()));
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void TextureDialog::on_presetListWidget_itemDoubleClicked ( QListWidgetItem * item )
+{
+  int index = presetListWidget->currentRow();
+  TexturePreset::Pointer t;
+  if (cubicCrystalStructure->isChecked())
+  {
+    t = m_Cubics[index];
+  }
+  else if (hexCrystalStructure->isChecked())
+  {
+    t = m_Hexs[index];
+  }
+  euler1Preset->setText(QString::number(t->getEuler1()));
+  euler2Preset->setText(QString::number(t->getEuler2()));
+  euler3Preset->setText(QString::number(t->getEuler3()));
+
+  euler1->setText(QString::number(t->getEuler1()));
+  euler2->setText(QString::number(t->getEuler2()));
+  euler3->setText(QString::number(t->getEuler3()));
+
+  weight->setText("1.0");
+  sigma->setText("1.0");
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void TextureDialog::on_presetListWidget_itemSelectionChanged()
+{
+  int index = presetListWidget->currentRow();
+  TexturePreset::Pointer t;
+  if (cubicCrystalStructure->isChecked())
+  {
+    t = m_Cubics[index];
+  }
+  else if (hexCrystalStructure->isChecked())
+  {
+    t = m_Hexs[index];
+  }
+  euler1Preset->setText(QString::number(t->getEuler1()));
+  euler2Preset->setText(QString::number(t->getEuler2()));
+  euler3Preset->setText(QString::number(t->getEuler3()));
+}
+
+

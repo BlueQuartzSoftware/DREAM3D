@@ -70,7 +70,6 @@ m_OpenDialogLastDirectory("~/")
 // -----------------------------------------------------------------------------
 VolumeMeshingWidget::~VolumeMeshingWidget()
 {
-  // TODO Auto-generated destructor stub
 }
 
 // -----------------------------------------------------------------------------
