@@ -97,26 +97,29 @@ int StatsGenODFWidget::writeDataToHDF5(H5ReconStatsWriter::Pointer writer)
   int err = 0;
   double totalWeight = 0.0;
 
+  QwtArray<double> e1s;
+  QwtArray<double> e2s;
+  QwtArray<double> e3s;
   QwtArray<double> weights;
   QwtArray<double> sigmas;
   QwtArray<double> odf;
 
   // Initialize xMax and yMax....
+  e1s = m_ODFTableModel->getData(SGODFTableModel::Euler1);
+  e2s = m_ODFTableModel->getData(SGODFTableModel::Euler2);
+  e3s = m_ODFTableModel->getData(SGODFTableModel::Euler3);
   weights = m_ODFTableModel->getData(SGODFTableModel::Weight);
   sigmas = m_ODFTableModel->getData(SGODFTableModel::Sigma);
 
-  double randomWeight = weights.front();
-  //pop off the random number
-  weights.pop_front();
-  sigmas.pop_front();
+
 
   if (m_CrystalStructure == AIM::Reconstruction::Cubic)
   {
-    Texture::calculateCubicODFData(weights, sigmas, randomWeight, true, odf, totalWeight);
+    Texture::calculateCubicODFData(e1s, e2s, e3s, weights, sigmas, true, odf, totalWeight);
   }
   else if (m_CrystalStructure == AIM::Reconstruction::Hexagonal)
   {
-    Texture::calculateHexODFData(weights, sigmas, randomWeight, true, odf, totalWeight);
+    Texture::calculateHexODFData(e1s, e2s, e3s, weights, sigmas, true, odf, totalWeight);
   }
   double* odfPtr = &(odf.front());
   err = -1;
@@ -236,21 +239,32 @@ void StatsGenODFWidget::on_m_CalculateODFBtn_clicked()
   QwtArray<double> y011;
   QwtArray<double> x111;
   QwtArray<double> y111;
-  QwtArray<double> weights;
-  QwtArray<double> sigmas;
+
   StatsGen sg;
   int size = 1000;
 
+  QwtArray<double> e1s;
+  QwtArray<double> e2s;
+  QwtArray<double> e3s;
+  QwtArray<double> weights;
+  QwtArray<double> sigmas;
+  QwtArray<double> odf;
+
   // Initialize xMax and yMax....
+  e1s = m_ODFTableModel->getData(SGODFTableModel::Euler1);
+  e2s = m_ODFTableModel->getData(SGODFTableModel::Euler2);
+  e3s = m_ODFTableModel->getData(SGODFTableModel::Euler3);
   weights = m_ODFTableModel->getData(SGODFTableModel::Weight);
   sigmas = m_ODFTableModel->getData(SGODFTableModel::Sigma);
 
-  double randomWeight = weights.front();
-  weights.pop_front();
-  sigmas.pop_front();
+
   //pop off the random number
-  if (m_CrystalStructure == AIM::Reconstruction::Cubic) err = sg.GenCubicODFPlotData(weights, sigmas, x001, y001, x011, y011, x111, y111, size, randomWeight);
-  if (m_CrystalStructure == AIM::Reconstruction::Hexagonal) err = sg.GenHexODFPlotData(weights, sigmas, x001, y001, x011, y011, x111, y111, size, randomWeight);
+  if (m_CrystalStructure == AIM::Reconstruction::Cubic) {
+    err = sg.GenCubicODFPlotData(e1s, e2s, e3s, weights, sigmas, x001, y001, x011, y011, x111, y111, size);
+  }
+  else if (m_CrystalStructure == AIM::Reconstruction::Hexagonal) {
+    err = sg.GenHexODFPlotData(e1s, e2s, e3s, weights, sigmas, x001, y001, x011, y011, x111, y111, size);
+  }
   if (err == 1)
   {
     //TODO: Present Error Message
