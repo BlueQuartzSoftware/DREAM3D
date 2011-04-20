@@ -90,8 +90,9 @@ class StatsGenODFWidget : public QWidget, private Ui::StatsGenODFWidget
       void on_addMDFRowBtn_clicked();
       void on_deleteMDFRowBtn_clicked();
       void on_m_MDFUpdateBtn_clicked();
-      void on_addTextureBtn_clicked();
 
+      void on_addODFTextureBtn_clicked();
+      void on_deleteODFTextureBtn_clicked();
 
     protected:
       void resetTableModel2();
