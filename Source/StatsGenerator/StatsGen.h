@@ -81,15 +81,15 @@ class StatsGen
 
 
     template<typename T>
-    int GenCubicODFPlotData(T weights, T sigmas,
+    int GenCubicODFPlotData(T e1s, T e2s, T e3s, T weights, T sigmas,
                     T &x001, T &y001, T &x011, T &y011, T &x111, T &y111,
-                    int size, double randomWeight)
+                    int size)
     {
       static const size_t eighteenCubed = 5832;
       double totalweight = 0;
       T odf;
       odf.resize(eighteenCubed);
-      Texture::calculateCubicODFData(weights, sigmas, randomWeight, true, odf, totalweight);
+      Texture::calculateCubicODFData(e1s, e2s, e3s, weights, sigmas, true, odf, totalweight);
 
       AIMRandomNG rg;
       /* Get a seed value based off the system clock. The issue is that this will
@@ -439,17 +439,17 @@ class StatsGen
       return err;
     }
 
-    
+
     template<typename T>
-    int GenHexODFPlotData(T weights, T sigmas,
+    int GenHexODFPlotData(T e1s, T e2s, T e3s, T weights, T sigmas,
                     T &x0001, T &y0001, T &x1120, T &y1120, T &x1010, T &y1010,
-                    int size, double randomWeight)
+                    int size)
     {
       static const size_t odfsize = 15552;
       double totalweight = 0;
       T odf;
       odf.resize(odfsize);
-      Texture::calculateHexODFData(weights, sigmas, randomWeight, true, odf, totalweight);
+      Texture::calculateHexODFData(e1s, e2s, e3s, weights, sigmas, true, odf, totalweight);
 
       AIMRandomNG rg;
       /* Get a seed value based off the system clock. The issue is that this will
@@ -679,7 +679,7 @@ class StatsGen
       return err;
     }
 
-	
+
 	template<typename T>
     int GenLogNormal(double avg, double stdDev, T &x, T &y, int size)
     {

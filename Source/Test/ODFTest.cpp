@@ -42,26 +42,32 @@
 #include "AIM/Common/Texture.h"
 #include "StatsGenerator/StatsGen.h"
 
+#define POPULATE_DATA(i, e1, e2, e3, w, s)\
+  e1s[i] = e1;\
+  e2s[i] = e2;\
+  e3s[i] = e3;\
+  weights[i] = w;\
+  sigmas[i] = s;
+
+
+
 int main(int argc, char **argv)
 {
-  static const size_t eighteenCubed = 5832;
   double totalweight = 0.0;
   std::vector<double> odf;
-  std::vector<double> weights(Texture::Count);
-  std::vector<double> sigmas(Texture::Count);
-  double randomWeight = 1.0;
+  std::vector<double> e1s(2);
+  std::vector<double> e2s(2);
+  std::vector<double> e3s(2);
+  std::vector<double> weights(2);
+  std::vector<double> sigmas(2);
 
-  //Copy the weights into the vector
-  for (size_t i = 0; i < Texture::Count; ++i)
-  {
-    weights[i] = Texture::Weights[i];
-    sigmas[i] = Texture::Sigmas[i];
-  }
+  POPULATE_DATA(0, 35, 45, 0, 1.0, 1.0)
+  POPULATE_DATA(1, 59, 37, 63, 1.0, 1.0)
   // Resize the ODF vector properly for Cubic
-  odf.resize(eighteenCubed);
+  odf.resize(5832);
 
   // Calculate the ODF Data
-  Texture::calculateCubicODFData(weights, sigmas, randomWeight, true, odf, totalweight);
+  Texture::calculateCubicODFData(e1s, e2s, e3s, weights, sigmas, true, odf, totalweight);
 
 
   std::vector<double > x001;
@@ -74,7 +80,7 @@ int main(int argc, char **argv)
   StatsGen sg;
   int size = 1000;
   int err = 0;
-  err = sg.GenCubicODFPlotData(weights, sigmas, x001, y001, x011, y011, x111, y111, size, randomWeight);
+  err = sg.GenCubicODFPlotData(e1s, e2s, e3s, weights, sigmas, x001, y001, x011, y011, x111, y111, size);
   if (err == 1)
   {
     //TODO: Present Error Message
