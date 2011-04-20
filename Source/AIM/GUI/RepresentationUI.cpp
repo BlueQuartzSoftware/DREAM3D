@@ -27,10 +27,10 @@
 //-- AIMRep Includes
 #include "AIM/Common/Constants.h"
 #include "AIM/Common/AIMRepresentationVersion.h"
-#include "AIM/Common/Qt/ApplicationAboutBoxDialog.h"
-#include "AIM/Common/Qt/QRecentFileList.h"
-#include "AIM/Common/Qt/QR3DFileCompleter.h"
-#include "AIM/Common/Qt/AIM_QtMacros.h"
+#include "QtSupport/ApplicationAboutBoxDialog.h"
+#include "QtSupport/QRecentFileList.h"
+#include "QtSupport/QR3DFileCompleter.h"
+#include "QtSupport/AIM_QtMacros.h"
 
 
 // -----------------------------------------------------------------------------

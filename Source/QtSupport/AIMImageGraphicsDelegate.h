@@ -6,8 +6,8 @@
 //
 //
 ///////////////////////////////////////////////////////////////////////////////
-#ifndef IMAGEGRAPHICSDELEGATE_H_
-#define IMAGEGRAPHICSDELEGATE_H_
+#ifndef _AIMIMAGEGRAPHICSDELEGATE_H_
+#define _AIMIMAGEGRAPHICSDELEGATE_H_
 
 #include <MXA/Common/MXASetGetMacros.h>
 
@@ -15,6 +15,7 @@
 #include <QtCore/QObject>
 #include <QtGui/QGraphicsPixmapItem>
 #include <QtGui/QPainter>
+
 
 //-- STL Includes
 #include <string>
@@ -45,14 +46,14 @@ class AIMImageGraphicsDelegate : public QObject
   virtual ~AIMImageGraphicsDelegate();
 
 
-  MXA_INSTANCE_PROPERTY_m(QMainWindow*, MainWindow)
-  MXA_INSTANCE_PROPERTY_m(QGraphicsView*, GraphicsView)
-  MXA_INSTANCE_PROPERTY_m(QGraphicsScene*, GraphicsScene)
+  MXA_INSTANCE_PROPERTY(QMainWindow*, MainWindow)
+  MXA_INSTANCE_PROPERTY(QGraphicsView*, GraphicsView)
+  MXA_INSTANCE_PROPERTY(QGraphicsScene*, GraphicsScene)
 
 
-  MXA_INSTANCE_PROPERTY_m(QImage, CachedImage)
-  MXA_INSTANCE_PROPERTY_m(QImage, OverlayImage)
-  MXA_INSTANCE_PROPERTY_m(bool, CompositeImages)
+  MXA_INSTANCE_PROPERTY(QImage, CachedImage)
+  MXA_INSTANCE_PROPERTY(QImage, OverlayImage)
+  MXA_INSTANCE_PROPERTY(bool, CompositeImages)
 
 
   /**
@@ -142,4 +143,4 @@ class AIMImageGraphicsDelegate : public QObject
   void operator=(const AIMImageGraphicsDelegate&); //Copy Assignment Not Implemented
 };
 
-#endif /* IMAGEGRAPHICSDELEGATE_H_ */
+#endif /* _AIMIMAGEGRAPHICSDELEGATE_H_ */
