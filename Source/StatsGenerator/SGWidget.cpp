@@ -218,6 +218,7 @@ int SGWidget::setPhaseIndex(int index)
   m_COverBPlot->setPhase(m_PhaseIndex);
   m_NeighborPlot->setPhase(m_PhaseIndex);
   m_ODFWidget->setPhase(m_PhaseIndex);
+  return m_PhaseIndex;
 }
 
 // -----------------------------------------------------------------------------
