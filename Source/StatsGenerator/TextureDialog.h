@@ -42,8 +42,12 @@
 #include "AIM/Common/Constants.h"
 #include "AIM/Common/TexturePreset.h"
 
-/*
- *
+/**
+ * @class TextureDialog TextureDialog.h StatsGenerator/TextureDialog.h
+ * @brief  This class presents the User a GUI to adjust Texture values.
+ * @author Michael A. Jackson for BlueQuartz Software
+ * @date Apr 20, 2011
+ * @version 1.0
  */
 class TextureDialog : public QDialog , private Ui::TextureDialog
 {

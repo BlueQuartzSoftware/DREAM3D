@@ -51,6 +51,7 @@ set (StatsGenerator_SRCS
     ${StatsGenerator_SOURCE_DIR}/StatsGeneratorUI.cpp
     ${StatsGenerator_SOURCE_DIR}/StatsGenPlotWidget.cpp
     ${StatsGenerator_SOURCE_DIR}/StatsGenODFWidget.cpp
+    ${StatsGenerator_SOURCE_DIR}/StatsGenMDFWidget.cpp
     ${StatsGenerator_SOURCE_DIR}/SGWidget.cpp
     ${StatsGenerator_SOURCE_DIR}/EditPhaseDialog.cpp
     ${StatsGenerator_SOURCE_DIR}/TextureDialog.cpp
@@ -64,6 +65,7 @@ SET( StatsGenerator_MOC_HDRS
     ${StatsGenerator_SOURCE_DIR}/StatsGeneratorUI.h
     ${StatsGenerator_SOURCE_DIR}/StatsGenPlotWidget.h
     ${StatsGenerator_SOURCE_DIR}/StatsGenODFWidget.h
+    ${StatsGenerator_SOURCE_DIR}/StatsGenMDFWidget.h
     ${StatsGenerator_SOURCE_DIR}/SGWidget.h
     ${StatsGenerator_SOURCE_DIR}/EditPhaseDialog.h
     ${StatsGenerator_SOURCE_DIR}/TextureDialog.h
@@ -104,6 +106,7 @@ SET( StatsGenerator_UIS
   ${StatsGenerator_SOURCE_DIR}/UI_Files/StatsGeneratorUI.ui
   ${StatsGenerator_SOURCE_DIR}/UI_Files/StatsGenPlotWidget.ui
   ${StatsGenerator_SOURCE_DIR}/UI_Files/StatsGenODFWidget.ui
+  ${StatsGenerator_SOURCE_DIR}/UI_Files/StatsGenMDFWidget.ui
   ${StatsGenerator_SOURCE_DIR}/UI_Files/EditPhaseDialog.ui
   ${StatsGenerator_SOURCE_DIR}/UI_Files/TextureDialog.ui
   ${StatsGenerator_SOURCE_DIR}/UI_Files/SGWidget.ui
