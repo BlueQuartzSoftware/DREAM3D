@@ -37,6 +37,9 @@
 
 #include "ui_TextureDialog.h"
 
+#include "MXA/Common/MXASetGetMacros.h"
+
+#include "AIM/Common/Constants.h"
 #include "AIM/Common/TexturePreset.h"
 
 /*
@@ -47,13 +50,14 @@ class TextureDialog : public QDialog , private Ui::TextureDialog
   Q_OBJECT;
 
   public:
-    TextureDialog(QWidget *parent = 0);
+    TextureDialog(AIM::Reconstruction::CrystalStructure xtal, QWidget *parent = 0);
     virtual ~TextureDialog();
 
-  protected slots:
-    void on_cubicCrystalStructure_toggled();
-    void on_hexCrystalStructure_toggled();
+    MXA_INSTANCE_PROPERTY(AIM::Reconstruction::CrystalStructure, CrystalStructure);
 
+    void getODFEntry(double &e1, double &e2, double &e3, double &weight, double &sigma);
+
+  protected slots:
     void on_presetListWidget_itemSelectionChanged ();
     void on_presetListWidget_itemDoubleClicked ( QListWidgetItem * item );
 
@@ -65,8 +69,7 @@ class TextureDialog : public QDialog , private Ui::TextureDialog
 
 
   private:
-    std::vector<TexturePreset::Pointer> m_Cubics;
-    std::vector<TexturePreset::Pointer> m_Hexs;
+    std::vector<TexturePreset::Pointer> m_Presets;
 
     TextureDialog(const TextureDialog&); // Copy Constructor Not Implemented
     void operator=(const TextureDialog&); // Operator '=' Not Implemented

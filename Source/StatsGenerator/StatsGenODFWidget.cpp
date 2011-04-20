@@ -53,8 +53,8 @@ StatsGenODFWidget::StatsGenODFWidget(QWidget *parent) :
 QWidget(parent),
 m_PhaseIndex(-1),
 m_CrystalStructure(AIM::Reconstruction::Cubic),
-m_TableModel(NULL),
-m_MdfTableModel(NULL)
+m_ODFTableModel(NULL),
+m_MDFTableModel(NULL)
 {
   this->setupUi(this);
   this->setupGui();
@@ -102,8 +102,8 @@ int StatsGenODFWidget::writeDataToHDF5(H5ReconStatsWriter::Pointer writer)
   QwtArray<double> odf;
 
   // Initialize xMax and yMax....
-  weights = m_TableModel->getData(SGODFTableModel::Weight);
-  sigmas = m_TableModel->getData(SGODFTableModel::Sigma);
+  weights = m_ODFTableModel->getData(SGODFTableModel::Weight);
+  sigmas = m_ODFTableModel->getData(SGODFTableModel::Sigma);
 
   double randomWeight = weights.front();
   //pop off the random number
@@ -137,12 +137,16 @@ void StatsGenODFWidget::setupGui()
 {
 
   // Setup the TableView and Table Models
-  QHeaderView* headerView = new QHeaderView(Qt::Horizontal, m_TableView);
+  QHeaderView* headerView = new QHeaderView(Qt::Horizontal, m_ODFTableView);
   headerView->setResizeMode(QHeaderView::Interactive);
-  m_TableView->setHorizontalHeader(headerView);
+  m_ODFTableView->setHorizontalHeader(headerView);
   headerView->show();
 
-  resetTableModel();
+  m_ODFTableModel = new SGODFTableModel;
+  m_ODFTableModel->setInitialValues();
+  m_ODFTableView->setModel(m_ODFTableModel);
+  QAbstractItemDelegate* idelegate = m_ODFTableModel->getItemDelegate();
+  m_ODFTableView->setItemDelegate(idelegate);
 
   initQwtPlot("x axis", "y axis", m_ODF_001Plot);
   initQwtPlot("x axis", "y axis", m_ODF_011Plot);
@@ -154,10 +158,10 @@ void StatsGenODFWidget::setupGui()
 
   initQwtPlot("Misorientation Angle(w)", "Freq", m_MDFPlot);
   tabWidget->setTabEnabled(MDF_Tab, false);
-  m_MdfTableModel = new SGMDFTableModel;
-  m_MdfTableModel->setInitialValues();
-  m_MDFTableView->setModel(m_MdfTableModel);
-  QAbstractItemDelegate* aid = m_MdfTableModel->getItemDelegate();
+  m_MDFTableModel = new SGMDFTableModel;
+  m_MDFTableModel->setInitialValues();
+  m_MDFTableView->setModel(m_MDFTableModel);
+  QAbstractItemDelegate* aid = m_MDFTableModel->getItemDelegate();
   m_MDFTableView->setItemDelegate(aid);
 
 }
@@ -185,17 +189,17 @@ void StatsGenODFWidget::initQwtPlot(QString xAxisName, QString yAxisName, QwtPlo
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void StatsGenODFWidget::resetTableModel()
+void StatsGenODFWidget::resetTableModel2()
 {
-  if (NULL != m_TableModel)
+  if (NULL != m_ODFTableModel)
   {
-    m_TableModel->deleteLater();
+    m_ODFTableModel->deleteLater();
   }
-  m_TableModel = new SGODFTableModel;
-  m_TableModel->setInitialValues();
-  m_TableView->setModel(m_TableModel);
-  QAbstractItemDelegate* aid = m_TableModel->getItemDelegate();
-  m_TableView->setItemDelegate(aid);
+  m_ODFTableModel = new SGODFTableModel;
+  m_ODFTableModel->setInitialValues();
+  m_ODFTableView->setModel(m_ODFTableModel);
+  QAbstractItemDelegate* aid = m_ODFTableModel->getItemDelegate();
+  m_ODFTableView->setItemDelegate(aid);
 //
 //  connect(m_TableModel, SIGNAL(layoutChanged()),
 //    this, SLOT(updatePlotCurves()));
@@ -229,20 +233,20 @@ void StatsGenODFWidget::on_m_CalculateODFBtn_clicked()
   int err = 0;
 
 
-  QwtArray<double > x001;
-  QwtArray<double > y001;
-  QwtArray<double > x011;
-  QwtArray<double > y011;
-  QwtArray<double > x111;
-  QwtArray<double > y111;
-  QwtArray<double > weights;
-  QwtArray<double > sigmas;
+  QwtArray<double> x001;
+  QwtArray<double> y001;
+  QwtArray<double> x011;
+  QwtArray<double> y011;
+  QwtArray<double> x111;
+  QwtArray<double> y111;
+  QwtArray<double> weights;
+  QwtArray<double> sigmas;
   StatsGen sg;
   int size = 1000;
 
   // Initialize xMax and yMax....
-  weights = m_TableModel->getData(SGODFTableModel::Weight);
-  sigmas = m_TableModel->getData(SGODFTableModel::Sigma);
+  weights = m_ODFTableModel->getData(SGODFTableModel::Weight);
+  sigmas = m_ODFTableModel->getData(SGODFTableModel::Sigma);
 
   double randomWeight = weights.front();
   weights.pop_front();
@@ -299,11 +303,11 @@ void StatsGenODFWidget::on_m_MDFUpdateBtn_clicked()
 // -----------------------------------------------------------------------------
 void StatsGenODFWidget::on_addMDFRowBtn_clicked()
 {
-  if (!m_MdfTableModel->insertRow(m_MdfTableModel->rowCount())) return;
+  if (!m_MDFTableModel->insertRow(m_MDFTableModel->rowCount())) return;
   m_MDFTableView->resizeColumnsToContents();
   m_MDFTableView->scrollToBottom();
   m_MDFTableView->setFocus();
-  QModelIndex index = m_MdfTableModel->index(m_MdfTableModel->rowCount() - 1, 0);
+  QModelIndex index = m_MDFTableModel->index(m_MDFTableModel->rowCount() - 1, 0);
   m_MDFTableView->setCurrentIndex(index);
 }
 
@@ -316,8 +320,8 @@ void StatsGenODFWidget::on_deleteMDFRowBtn_clicked()
   if (!selectionModel->hasSelection()) return;
   QModelIndex index = selectionModel->currentIndex();
   if (!index.isValid()) return;
-  m_MdfTableModel->removeRow(index.row(), index.parent());
-  if (m_MdfTableModel->rowCount() > 0)
+  m_MDFTableModel->removeRow(index.row(), index.parent());
+  if (m_MDFTableModel->rowCount() > 0)
   {
     m_MDFTableView->resizeColumnsToContents();
   }
@@ -328,11 +332,27 @@ void StatsGenODFWidget::on_deleteMDFRowBtn_clicked()
 // -----------------------------------------------------------------------------
 void StatsGenODFWidget::on_addTextureBtn_clicked()
 {
-  TextureDialog t;
+  TextureDialog t(m_CrystalStructure, NULL);
   int r = t.exec();
   if (r == QDialog::Accepted)
   {
+    if (!m_ODFTableModel->insertRow(m_ODFTableModel->rowCount())) return;
+    // Gather values from the dialog and push them to the Table Model
+    double e1 = 0.0;
+    double e2 = 0.0;
+    double e3 = 0.0;
+    double weight = 1.0;
+    double sigma = 1.0;
 
+    t.getODFEntry(e1, e2, e3, weight, sigma);
+    int row = m_ODFTableModel->rowCount() - 1;
+    m_ODFTableModel->setRowData(row, e1, e2, e3, weight, sigma);
+
+    m_ODFTableView->resizeColumnsToContents();
+    m_ODFTableView->scrollToBottom();
+    m_ODFTableView->setFocus();
+    QModelIndex index = m_ODFTableModel->index(m_ODFTableModel->rowCount() - 1, 0);
+    m_ODFTableView->setCurrentIndex(index);
   }
 }
 
