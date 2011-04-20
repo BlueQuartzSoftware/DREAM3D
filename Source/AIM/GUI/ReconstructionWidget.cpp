@@ -45,8 +45,8 @@
 
 #include "AIM/Common/Constants.h"
 #include "AIM/ANG/H5AngDataLoader.h"
-#include "AIM/Common/Qt/QR3DFileCompleter.h"
-#include "AIM/Common/Qt/AIM_QtMacros.h"
+#include "QtSupport/QR3DFileCompleter.h"
+#include "QtSupport/AIM_QtMacros.h"
 
 
 // -----------------------------------------------------------------------------
