@@ -42,8 +42,8 @@
 #include <QtGui/QFileDialog>
 
 #include "AIM/Common/AIMRepresentationVersion.h"
-#include "AIM/Common/Qt/ApplicationAboutBoxDialog.h"
-#include "AIM/Common/Qt/QRecentFileList.h"
+#include "QtSupport/ApplicationAboutBoxDialog.h"
+#include "QtSupport/QRecentFileList.h"
 #include "AIM/License/AIMRepresentationLicenseFiles.h"
 
 #include "SGApplication.h"
