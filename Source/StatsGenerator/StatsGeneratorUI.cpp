@@ -155,7 +155,6 @@ void StatsGeneratorUI::setupGui()
 // -----------------------------------------------------------------------------
 void StatsGeneratorUI::on_phaseCombo_currentIndexChanged(int index)
 {
-  std::cout << "on_phaseCombo_currentIndexChanged" << std::endl;
   SGWidget* widget = m_SGWidgets[index];
 
   verticalLayout_2->removeWidget(m_SGWidget);
@@ -203,7 +202,6 @@ void StatsGeneratorUI::on_addPhase_clicked()
 // -----------------------------------------------------------------------------
 void StatsGeneratorUI::on_editPhase_clicked()
 {
-  std::cout << "on_editPhase_clicked" << std::endl;
   double phaseFractionTotal = 0.0;
   EditPhaseDialog dialog;
   for(int p = 0; p < m_SGWidgets.size(); ++p)
@@ -244,9 +242,6 @@ void StatsGeneratorUI::on_editPhase_clicked()
 // -----------------------------------------------------------------------------
 void StatsGeneratorUI::on_deletePhase_clicked()
 {
-
-  std::cout << "on_deletePhase_clicked" << std::endl;
-
   if (m_SGWidgets.size() > 1)
   {
     int index = phaseCombo->currentIndex();
