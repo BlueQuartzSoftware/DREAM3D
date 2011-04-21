@@ -57,21 +57,23 @@ class AIMCOMMON_EXPORT Texture
 
     virtual ~Texture();
 
+#if 0
     const static size_t Count;
     const static double Values[AIM_TEXTURE_COUNT][3];
     const static char*  Names[AIM_TEXTURE_COUNT];
     const static double Weights[AIM_TEXTURE_COUNT];
     const static double Sigmas[AIM_TEXTURE_COUNT];
 
-    //FIXME: Implement a Hexagonal Crystal Structure Calculation
-
+#endif
     /**
      * @brief This will calculate ODF data based on an array of weights that are
-     * passed in and a Cubic Crystal Structure. The weights are from this class
-     * "Weights" static variable but
-     * can have user/programmer changed values. This is templated on the container
+     * passed in and a Cubic Crystal Structure. This is templated on the container
      * type that holds the data. Containers that adhere to the STL Vector API
-     * should be usable. QVector falls into this category.
+     * should be usable. QVector falls into this category. The input data for the
+     * euler angles is in Columnar fashion instead of row major format.
+     * @param e1s The first euler angles
+     * @param e2s The second euler angles
+     * @param e3s The third euler angles
      * @param weights Array of weights. The only stipulation is the length of the
      * array is Texture::Count
      * @param randomWeight  The value of the weight to be applied to random orientations
@@ -81,8 +83,10 @@ class AIMCOMMON_EXPORT Texture
      * @param totalweight (OUT) The TotalWeight value that is also calculated
      */
     template<typename T>
-    static void calculateCubicODFData(T weights, T sigmas, double randomWeight, bool normalize, T &odf, double &totalweight)
+    static void calculateCubicODFData(T e1s, T e2s, T e3s, T weights, T sigmas,
+                                      bool normalize, T &odf, double &totalweight)
     {
+      double randomWeight = 1.0;
       int TextureBins[AIM_TEXTURE_COUNT];
       static const size_t eighteenCubed = 5832;
       odf.resize(eighteenCubed);
@@ -90,7 +94,7 @@ class AIMCOMMON_EXPORT Texture
       size_t bin, addbin;
       size_t bin1, bin2, bin3;
       size_t addbin1, addbin2, addbin3;
-	  double dist, fraction;
+      double dist, fraction;
       double rmag, angle;
       double r1, r2, r3;
       double h1, h2, h3;
@@ -103,16 +107,16 @@ class AIMCOMMON_EXPORT Texture
       double cos_term2 = 0.0;
       double hTmp = 0.0;
 
-      for (size_t i = 0; i < Texture::Count; i++)
+      for (typename T::size_type i = 0; i < e1s.size(); i++)
       {
-        tan_term = tan(Texture::Values[i][1]/2);
-        sin_term = sin((Texture::Values[i][0]-Texture::Values[i][2])/2);
-        cos_term1 = cos((Texture::Values[i][0]+Texture::Values[i][2])/2);
-        cos_term2 = cos((Texture::Values[i][0]-Texture::Values[i][2])/2);
+        tan_term = tan(e2s[i]/2);
+        sin_term = sin((e1s[i]-e3s[i])/2);
+        cos_term1 = cos((e1s[i]+e3s[i])/2);
+        cos_term2 = cos((e1s[i]-e3s[i])/2);
 
         r1 = tan_term * cos_term2 / cos_term1;
         r2 = tan_term * sin_term / cos_term1;
-        r3 = tan((Texture::Values[i][0]+Texture::Values[i][2])/2);
+        r3 = tan((e1s[i]+e3s[i])/2);
         MisorientationCalculations::getFZRodCubic(r1, r2, r3);
         rmag = pow((r1 * r1 + r2 * r2 + r3 * r3), 0.5);
         angle = 2.0 * atan(rmag);
@@ -136,7 +140,7 @@ class AIMCOMMON_EXPORT Texture
         odf[i] = randomWeight / (eighteenCubed);
         totalweight = totalweight + randomWeight / (eighteenCubed);
       }
-      for (size_t i = 0; i < Texture::Count; i++)
+      for (typename T::size_type i = 0; i < weights.size(); i++)
       {
         bin = TextureBins[i];
         odf[bin] = odf[bin] + (weights[i]);
@@ -184,12 +188,27 @@ class AIMCOMMON_EXPORT Texture
     }
 
 
-
-
-
+    /**
+     * @brief This will calculate ODF data based on an array of weights that are
+     * passed in and a Hexagonal Crystal Structure. This is templated on the container
+     * type that holds the data. Containers that adhere to the STL Vector API
+     * should be usable. QVector falls into this category. The input data for the
+     * euler angles is in Columnar fashion instead of row major format.
+     * @param e1s The first euler angles
+     * @param e2s The second euler angles
+     * @param e3s The third euler angles
+     * @param weights Array of weights. The only stipulation is the length of the
+     * array is Texture::Count
+     * @param randomWeight  The value of the weight to be applied to random orientations
+     * @param normalize Should the ODF data be normalized by the totalWeight value
+     * before returning.
+     * @param odf (OUT) The ODF data that is generated from this function.
+     * @param totalweight (OUT) The TotalWeight value that is also calculated
+     */
 	template<typename T>
-    static void calculateHexODFData(T weights, T sigmas, double randomWeight, bool normalize, T &odf, double &totalweight)
+    static void calculateHexODFData(T e1s, T e2s, T e3s, T weights, T sigmas, bool normalize, T &odf, double &totalweight)
     {
+	  double randomWeight = 1.0;
       int TextureBins[AIM_TEXTURE_COUNT];
       static const size_t odfsize = 15552;
       odf.resize(odfsize);
@@ -210,16 +229,16 @@ class AIMCOMMON_EXPORT Texture
       double cos_term2 = 0.0;
       double hTmp = 0.0;
 
-      for (size_t i = 0; i < Texture::Count; i++)
+      for (typename T::size_type i = 0; i < e1s.size(); i++)
       {
-        tan_term = tan(Texture::Values[i][1]/2);
-        sin_term = sin((Texture::Values[i][0]-Texture::Values[i][2])/2);
-        cos_term1 = cos((Texture::Values[i][0]+Texture::Values[i][2])/2);
-        cos_term2 = cos((Texture::Values[i][0]-Texture::Values[i][2])/2);
+        tan_term = tan(e2s[i]/2);
+        sin_term = sin((e1s[i]-e3s[i])/2);
+        cos_term1 = cos((e1s[i]+e3s[i])/2);
+        cos_term2 = cos((e1s[i]-e3s[i])/2);
 
         r1 = tan_term * cos_term2 / cos_term1;
         r2 = tan_term * sin_term / cos_term1;
-        r3 = tan((Texture::Values[i][0]+Texture::Values[i][2])/2);
+        r3 = tan((e1s[i]+e3s[i])/2);
 		MisorientationCalculations::getFZRodHexagonal(r1, r2, r3);
         rmag = pow((r1 * r1 + r2 * r2 + r3 * r3), 0.5);
         angle = 2.0 * atan(rmag);
@@ -243,7 +262,7 @@ class AIMCOMMON_EXPORT Texture
         odf[i] = randomWeight / (odfsize);
         totalweight = totalweight + randomWeight / (odfsize);
       }
-      for (size_t i = 0; i < Texture::Count; i++)
+      for (typename T::size_type i = 0; i < e1s.size(); i++)
       {
         bin = TextureBins[i];
         odf[bin] = odf[bin] + (weights[i]);
@@ -290,7 +309,28 @@ class AIMCOMMON_EXPORT Texture
 
     }
 
+  /**
+   * @brief This will calculate ODF data based on an array of weights that are
+   * passed in and a OrthoRhombic Crystal Structure. This is templated on the container
+   * type that holds the data. Containers that adhere to the STL Vector API
+   * should be usable. QVector falls into this category. The input data for the
+   * euler angles is in Columnar fashion instead of row major format.
+   * @param e1s The first euler angles
+   * @param e2s The second euler angles
+   * @param e3s The third euler angles
+   * @param weights Array of weights. The only stipulation is the length of the
+   * array is Texture::Count
+   * @param randomWeight  The value of the weight to be applied to random orientations
+   * @param normalize Should the ODF data be normalized by the totalWeight value
+   * before returning.
+   * @param odf (OUT) The ODF data that is generated from this function.
+   * @param totalweight (OUT) The TotalWeight value that is also calculated
+   */
+  template<typename T>
+  static void calculateOrthoRhombicODFData(T e1s, T e2s, T e3s, T weights, T sigmas, bool normalize, T &odf, double &totalweight)
+  {
 
+  }
 
 
 protected:
