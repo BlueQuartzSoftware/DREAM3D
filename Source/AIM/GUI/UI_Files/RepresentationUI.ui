@@ -38,129 +38,30 @@
       <property name="currentIndex">
        <number>3</number>
       </property>
-      <widget class="QWidget" name="oimImportTab">
+      <widget class="OIMImportWidget" name="oimImportWidget">
        <attribute name="title">
         <string>OIM Data Import</string>
        </attribute>
-       <layout class="QVBoxLayout" name="verticalLayout_5">
-        <property name="spacing">
-         <number>2</number>
-        </property>
-        <property name="leftMargin">
-         <number>2</number>
-        </property>
-        <property name="topMargin">
-         <number>6</number>
-        </property>
-        <property name="rightMargin">
-         <number>2</number>
-        </property>
-        <property name="bottomMargin">
-         <number>2</number>
-        </property>
-        <item>
-         <widget class="OIMImportWidget" name="oimImportWidget">
-          <property name="frameShape">
-           <enum>QFrame::NoFrame</enum>
-          </property>
-          <property name="frameShadow">
-           <enum>QFrame::Raised</enum>
-          </property>
-         </widget>
-        </item>
-       </layout>
       </widget>
-      <widget class="QWidget" name="reconstructionTab">
+      <widget class="ReconstructionWidget" name="reconstructionWidget">
        <attribute name="title">
         <string>Reconstruction</string>
        </attribute>
-       <layout class="QVBoxLayout" name="verticalLayout_7">
-        <property name="spacing">
-         <number>4</number>
-        </property>
-        <property name="margin">
-         <number>4</number>
-        </property>
-        <item>
-         <widget class="ReconstructionWidget" name="reconstructionWidget">
-          <property name="frameShape">
-           <enum>QFrame::NoFrame</enum>
-          </property>
-          <property name="frameShadow">
-           <enum>QFrame::Raised</enum>
-          </property>
-         </widget>
-        </item>
-       </layout>
       </widget>
-      <widget class="QWidget" name="grainGeneratorTab">
+      <widget class="GrainGeneratorWidget" name="grainGeneratorWidget">
        <attribute name="title">
         <string>Synthentic Builder</string>
        </attribute>
-       <layout class="QVBoxLayout" name="verticalLayout_2">
-        <property name="spacing">
-         <number>2</number>
-        </property>
-        <property name="margin">
-         <number>2</number>
-        </property>
-        <item>
-         <widget class="GrainGeneratorWidget" name="grainGeneratorWidget">
-          <property name="frameShape">
-           <enum>QFrame::NoFrame</enum>
-          </property>
-          <property name="frameShadow">
-           <enum>QFrame::Raised</enum>
-          </property>
-         </widget>
-        </item>
-       </layout>
       </widget>
-      <widget class="QWidget" name="surfaceMeshingTab">
+      <widget class="SurfaceMeshingWidget" name="surfaceMeshingWidget">
        <attribute name="title">
         <string>Surface Meshing</string>
        </attribute>
-       <layout class="QVBoxLayout" name="verticalLayout_3">
-        <property name="spacing">
-         <number>2</number>
-        </property>
-        <property name="margin">
-         <number>2</number>
-        </property>
-        <item>
-         <widget class="SurfaceMeshingWidget" name="surfaceMeshingWidget">
-          <property name="frameShape">
-           <enum>QFrame::NoFrame</enum>
-          </property>
-          <property name="frameShadow">
-           <enum>QFrame::Raised</enum>
-          </property>
-         </widget>
-        </item>
-       </layout>
       </widget>
-      <widget class="QWidget" name="volumeMeshingTab">
+      <widget class="VolumeMeshingWidget" name="volumeMeshingWidget">
        <attribute name="title">
         <string>Volume Meshing</string>
        </attribute>
-       <layout class="QVBoxLayout" name="verticalLayout_4">
-        <property name="spacing">
-         <number>4</number>
-        </property>
-        <property name="margin">
-         <number>2</number>
-        </property>
-        <item>
-         <widget class="VolumeMeshingWidget" name="volumeMeshingWidget">
-          <property name="frameShape">
-           <enum>QFrame::StyledPanel</enum>
-          </property>
-          <property name="frameShadow">
-           <enum>QFrame::Raised</enum>
-          </property>
-         </widget>
-        </item>
-       </layout>
       </widget>
      </widget>
     </item>
