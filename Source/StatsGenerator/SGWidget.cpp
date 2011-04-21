@@ -431,7 +431,7 @@ int SGWidget::computeBinsAndCutOffs( double mu, double sigma, double cutOff, dou
   int size = 100;
 
   StatsGen sg;
-  err = sg.GenLogNormal<QwtArray<double> > (mu, sigma, x, y, size);
+  err = sg.GenLogNormalPlotData<QwtArray<double> > (mu, sigma, x, y, size);
   if (err == 1)
   {
     //TODO: Present Error Message
