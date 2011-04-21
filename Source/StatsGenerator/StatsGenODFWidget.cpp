@@ -249,9 +249,6 @@ void StatsGenODFWidget::on_m_CalculateODFBtn_clicked()
   QwtArray<double> x111;
   QwtArray<double> y111;
 
-  StatsGen sg;
-  int size = 1000;
-
   QwtArray<double> e1s;
   QwtArray<double> e2s;
   QwtArray<double> e3s;
@@ -259,20 +256,24 @@ void StatsGenODFWidget::on_m_CalculateODFBtn_clicked()
   QwtArray<double> sigmas;
   QwtArray<double> odf;
 
-  // Initialize xMax and yMax....
+
   e1s = m_ODFTableModel->getData(SGODFTableModel::Euler1);
   e2s = m_ODFTableModel->getData(SGODFTableModel::Euler2);
   e3s = m_ODFTableModel->getData(SGODFTableModel::Euler3);
   weights = m_ODFTableModel->getData(SGODFTableModel::Weight);
   sigmas = m_ODFTableModel->getData(SGODFTableModel::Sigma);
 
+  StatsGen sg;
+  int size = 1000;
 
-  //pop off the random number
   if (m_CrystalStructure == AIM::Reconstruction::Cubic) {
     err = sg.GenCubicODFPlotData(e1s, e2s, e3s, weights, sigmas, x001, y001, x011, y011, x111, y111, size);
   }
   else if (m_CrystalStructure == AIM::Reconstruction::Hexagonal) {
     err = sg.GenHexODFPlotData(e1s, e2s, e3s, weights, sigmas, x001, y001, x011, y011, x111, y111, size);
+  }
+  else if (m_CrystalStructure == AIM::Reconstruction::OrthoRhombic) {
+    err = sg.GenOrthoRhombicODFPlotData(e1s, e2s, e3s, weights, sigmas, x001, y001, x011, y011, x111, y111, size);
   }
   if (err == 1)
   {
@@ -304,10 +305,13 @@ void StatsGenODFWidget::on_m_CalculateODFBtn_clicked()
   m_ODF_111Plot->setAxisScale(QwtPlot::xBottom, -1.0, 1.0);
   m_ODF_111Plot->replot();
 
-#ifndef _WIN32
-#warning Enable the MDF tab and Calculate the MDF if needed
   // Enable the MDF tab
- // tabWidget->setTabEnabled(MDF_Tab, true);
+  if (m_MDFWidget != NULL)
+  {
+    m_MDFWidget->setEnabled(true);
+  }
+#ifndef _WIN32
+#warning Calculate the MDF if needed
   // calculate MDF Based on the ODF calculation
 #endif
 }
