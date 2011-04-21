@@ -220,7 +220,7 @@ class AIMCOMMON_EXPORT Texture
         r1 = tan_term * cos_term2 / cos_term1;
         r2 = tan_term * sin_term / cos_term1;
         r3 = tan((Texture::Values[i][0]+Texture::Values[i][2])/2);
-        MisorientationCalculations::getFZRodCubic(r1, r2, r3);
+		MisorientationCalculations::getFZRodHexagonal(r1, r2, r3);
         rmag = pow((r1 * r1 + r2 * r2 + r3 * r3), 0.5);
         angle = 2.0 * atan(rmag);
         hTmp = pow(((3.0 / 4.0) * (angle - sin(angle))), (1.0 / 3.0));
