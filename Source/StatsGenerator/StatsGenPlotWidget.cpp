@@ -494,7 +494,7 @@ void StatsGenPlotWidget::createBetaCurve(int tableRow, double &xMax, double &yMa
   QwtArray<double > x;
   QwtArray<double > y;
   StatsGen sg;
-  err = sg.GenBeta<QwtArray<double > > (alpha, beta, x, y, size);
+  err = sg.GenBetaPlotData<QwtArray<double > > (alpha, beta, x, y, size);
   if (err == 1)
   {
     //TODO: Present Error Message
@@ -533,7 +533,7 @@ void StatsGenPlotWidget::createLogNormalCurve(int tableRow, double &xMax, double
   QwtArray<double > x;
   QwtArray<double > y;
   StatsGen sg;
-  err = sg.GenLogNormal<QwtArray<double > > (avg, stdDev, x, y, size);
+  err = sg.GenLogNormalPlotData<QwtArray<double > > (avg, stdDev, x, y, size);
   if (err == 1)
   {
     //TODO: Present Error Message
@@ -572,7 +572,7 @@ void StatsGenPlotWidget::createPowerCurve(int tableRow, double &xMax, double &yM
   QwtArray<double > x;
   QwtArray<double > y;
   StatsGen sg;
-  err = sg.GenPowerLaw<QwtArray<double > > (alpha, k, beta, x, y, size);
+  err = sg.GenPowerLawPlotData<QwtArray<double > > (alpha, k, beta, x, y, size);
   if (err == 1)
   {
     //TODO: Present Error Message
