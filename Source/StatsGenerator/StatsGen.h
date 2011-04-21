@@ -54,8 +54,17 @@ class StatsGen
     StatsGen();
     virtual ~StatsGen();
 
+    /**
+     * @brief Generates  XY Scatter plot data for a Beta Distribution function
+     * @param alpha Alpha Term in the Beta Distribution function
+     * @param beta Beta term in the Beta Distribution function
+     * @param x X Values (Output)
+     * @param y Y Value (Output)
+     * @param size Number of points in the scatter plot
+     * @return Error Code. 0 is NO ERROR.
+     */
     template<typename T>
-    int GenBeta(double alpha, double beta, T &x, T &y, int size)
+    int GenBetaPlotData(double alpha, double beta, T &x, T &y, int size)
     {
       int err = 0;
       double value, gammapq, gammap, gammaq, betain, betaout;
@@ -79,675 +88,9 @@ class StatsGen
       return err;
     }
 
-  /**
-   * @brief  This method will generate ODF data for 3 scatter plots which are the
-   * <001>, <011> and <111> directions. The method is a C++ Template which the parameter
-   * type is a std::vector conforming class type that holds the data.
-   * QVector falls into this category. The input data for the
-   * euler angles is in Columnar fashion instead of row major format.
-   * @param e1s The first euler angles (input)
-   * @param e2s The second euler angles (input)
-   * @param e3s The third euler angles (input)
-   * @param weights Array of weights values. (input)
-   * @param sigmas Array of sigma values. (input)
-   * @param x001 X Values of the [001] ODF Scatter plot (Output)
-   * @param y001 Y Values of the [001] ODF Scatter plot (Output)
-   * @param x011 X Values of the [011] ODF Scatter plot (Output)
-   * @param y011 Y Values of the [011] ODF Scatter plot (Output)
-   * @param x111 X Values of the [111] ODF Scatter plot (Output)
-   * @param y111 Y Values of the [111] ODF Scatter plot (Output)
-   * @param size The number of points for the Scatter Plot
-   */
-    template<typename T>
-    int GenCubicODFPlotData(T e1s, T e2s, T e3s, T weights, T sigmas,
-                    T &x001, T &y001, T &x011, T &y011, T &x111, T &y111,
-                    int size)
-    {
-      static const size_t eighteenCubed = 5832;
-      double totalweight = 0;
-      T odf;
-      odf.resize(eighteenCubed);
-      Texture::calculateCubicODFData(e1s, e2s, e3s, weights, sigmas, true, odf, totalweight);
-
-      AIMRandomNG rg;
-      /* Get a seed value based off the system clock. The issue is that this will
-       * be a 64 bit unsigned integer where the high 32 bits will basically not
-       * change where as the lower 32 bits will. The following lines of code will
-       * pull off the low 32 bits from the number. This operation depends on most
-       * significant byte ordering which is different between Big Endian and
-       * Little Endian machines. For Big endian machines the Most Significant Byte
-       * (MSB) is the first 32 bits. For Little Endian machines the MSB is the
-       * second 32 bits.
-       */
-      unsigned long long int seed = MXA::getMilliSeconds();
-      unsigned int* seedPtr = reinterpret_cast<unsigned int*> (&seed);
-#if CMP_WORDS_BIGENDIAN
-      rg.RandomInit(seedPtr[1]);
-#else
-      rg.RandomInit(seedPtr[0]);
-#endif
-      int err = 0;
-      int choose;
-      double g[3][3];
-      double x, y, z;
-      double xpf, ypf;
-      double xpfa, ypfa;
-      double totaldensity;
-      double hmag;
-      double angle;
-      double r1, r2, r3;
-      double h1, h2, h3;
-      double n1, n2, n3;
-      double random, tan_angle, density, cos_angle, sin_angle;
-
-      double dim1 = 2 * pow((0.75 * ((M_PI / 4.0) - sin((M_PI / 4.0)))), (1.0 / 3.0));
-      double dim2 = 2 * pow((0.75 * ((M_PI / 4.0) - sin((M_PI / 4.0)))), (1.0 / 3.0));
-      double dim3 = 2 * pow((0.75 * ((M_PI / 4.0) - sin((M_PI / 4.0)))), (1.0 / 3.0));
-
-      x001.resize(size * 3 * 4);
-      y001.resize(size * 3 * 4);
-      x011.resize(size * 6 * 4);
-      y011.resize(size * 6 * 4);
-      x111.resize(size * 4 * 4);
-      y111.resize(size * 4 * 4);
-
-      for (int i = 0; i < size; i++)
-      {
-        random = rg.Random();
-        choose = 0;
-
-        totaldensity = 0;
-        for (size_t j = 0; j < eighteenCubed; j++)
-        {
-          density = odf[j];
-          totaldensity = totaldensity + density;
-          if (random < totaldensity && random >= (totaldensity - density)) choose = static_cast<int> (j);
-        }
-        h1 = choose % 18;
-        h2 = (choose / 18) % 18;
-        h3 = choose / (18 * 18);
-        random = rg.Random();
-        h1 = ((dim1 / 18.0) * h1) + ((dim1 / 18.0) * random) - (dim1 / 2.0);
-        random = rg.Random();
-        h2 = ((dim2 / 18.0) * h2) + ((dim2 / 18.0) * random) - (dim2 / 2.0);
-        random = rg.Random();
-        h3 = ((dim3 / 18.0) * h3) + ((dim3 / 18.0) * random) - (dim3 / 2.0);
-        hmag = pow((h1 * h1 + h2 * h2 + h3 * h3), 0.5);
-        angle = pow((8 * hmag * hmag * hmag), (1.0 / 3.0));
-        tan_angle = tan(angle / 2.0);
-        n1 = h1 / hmag;
-        n2 = h2 / hmag;
-        n3 = h3 / hmag;
-        r1 = tan_angle * n1;
-        r2 = tan_angle * n2;
-        r3 = tan_angle * n3;
-        cos_angle = cos(angle);
-        sin_angle = sin(angle);
-        g[0][0] = cos_angle + n1 * n1 * (1 - cos_angle);
-        g[0][1] = n1 * n2 * (1 - cos_angle) - n3 * sin_angle;
-        g[0][2] = n1 * n3 * (1 - cos_angle) + n2 * sin_angle;
-        g[1][0] = n1 * n2 * (1 - cos_angle) + n3 * sin_angle;
-        g[1][1] = cos_angle + n2 * n2 * (1 - cos_angle);
-        g[1][2] = n2 * n3 * (1 - cos_angle) - n1 * sin_angle;
-        g[2][0] = n1 * n3 * (1 - cos_angle) - n2 * sin_angle;
-        g[2][1] = n2 * n3 * (1 - cos_angle) + n1 * sin_angle;
-        g[2][2] = cos_angle + n3 * n3 * (1 - cos_angle);
-        x = g[0][0];
-        y = g[1][0];
-        z = g[2][0];
-        if (z < 0) z = -z;
-        xpf = y - (y * (z / (z + 1)));
-        ypf = x - (x * (z / (z + 1)));
-        random = rg.Random();
-        x001[12 * i] = xpf;
-        y001[12 * i] = ypf;
-        xpfa = -xpf;
-        ypfa = ypf;
-        x001[12 * i + 1] = xpfa;
-        y001[12 * i + 1] = ypfa;
-        xpfa = xpf;
-        ypfa = -ypf;
-        x001[12 * i + 2] = xpfa;
-        y001[12 * i + 2] = ypfa;
-        xpfa = -xpf;
-        ypfa = -ypf;
-        x001[12 * i + 3] = xpfa;
-        y001[12 * i + 3] = ypfa;
-        x = g[0][1];
-        y = g[1][1];
-        z = g[2][1];
-        if (z < 0) z = -z;
-        xpf = y - (y * (z / (z + 1)));
-        ypf = x - (x * (z / (z + 1)));
-        x001[12 * i + 4] = xpf;
-        y001[12 * i + 4] = ypf;
-        xpfa = -xpf;
-        ypfa = ypf;
-        x001[12 * i + 5] = xpfa;
-        y001[12 * i + 5] = ypfa;
-        xpfa = xpf;
-        ypfa = -ypf;
-        x001[12 * i + 6] = xpfa;
-        y001[12 * i + 6] = ypfa;
-        xpfa = -xpf;
-        ypfa = -ypf;
-        x001[12 * i + 7] = xpfa;
-        y001[12 * i + 7] = ypfa;
-        x = g[0][2];
-        y = g[1][2];
-        z = g[2][2];
-        if (z < 0) z = -z;
-        xpf = y - (y * (z / (z + 1)));
-        ypf = x - (x * (z / (z + 1)));
-        x001[12 * i + 8] = xpf;
-        y001[12 * i + 8] = ypf;
-        xpfa = -xpf;
-        ypfa = ypf;
-        x001[12 * i + 9] = xpfa;
-        y001[12 * i + 9] = ypfa;
-        xpfa = xpf;
-        ypfa = -ypf;
-        x001[12 * i + 10] = xpfa;
-        y001[12 * i + 10] = ypfa;
-        xpfa = -xpf;
-        ypfa = -ypf;
-        x001[12 * i + 11] = xpfa;
-        y001[12 * i + 11] = ypfa;
-        x = 0.707107 * (g[0][0] + g[0][1]);
-        y = 0.707107 * (g[1][0] + g[1][1]);
-        z = 0.707107 * (g[2][0] + g[2][1]);
-        if (z < 0) z = -z;
-        xpf = y - (y * (z / (z + 1)));
-        ypf = x - (x * (z / (z + 1)));
-        x011[24 * i] = xpf;
-        y011[24 * i] = ypf;
-        xpfa = -xpf;
-        ypfa = ypf;
-        x011[24 * i + 1] = xpfa;
-        y011[24 * i + 1] = ypfa;
-        xpfa = xpf;
-        ypfa = -ypf;
-        x011[24 * i + 2] = xpfa;
-        y011[24 * i + 2] = ypfa;
-        xpfa = -xpf;
-        ypfa = -ypf;
-        x011[24 * i + 3] = xpfa;
-        y011[24 * i + 3] = ypfa;
-        x = 0.707107 * (g[0][1] + g[0][2]);
-        y = 0.707107 * (g[1][1] + g[1][2]);
-        z = 0.707107 * (g[2][1] + g[2][2]);
-        if (z < 0) z = -z;
-        xpf = y - (y * (z / (z + 1)));
-        ypf = x - (x * (z / (z + 1)));
-        x011[24 * i + 4] = xpf;
-        y011[24 * i + 4] = ypf;
-        xpfa = -xpf;
-        ypfa = ypf;
-        x011[24 * i + 5] = xpfa;
-        y011[24 * i + 5] = ypfa;
-        xpfa = xpf;
-        ypfa = -ypf;
-        x011[24 * i + 6] = xpfa;
-        y011[24 * i + 6] = ypfa;
-        xpfa = -xpf;
-        ypfa = -ypf;
-        x011[24 * i + 7] = xpfa;
-        y011[24 * i + 7] = ypfa;
-        x = 0.707107 * (g[0][2] + g[0][0]);
-        y = 0.707107 * (g[1][2] + g[1][0]);
-        z = 0.707107 * (g[2][2] + g[2][0]);
-        if (z < 0) z = -z;
-        xpf = y - (y * (z / (z + 1)));
-        ypf = x - (x * (z / (z + 1)));
-        x011[24 * i + 8] = xpf;
-        y011[24 * i + 8] = ypf;
-        xpfa = -xpf;
-        ypfa = ypf;
-        x011[24 * i + 9] = xpfa;
-        y011[24 * i + 9] = ypfa;
-        xpfa = xpf;
-        ypfa = -ypf;
-        x011[24 * i + 10] = xpfa;
-        y011[24 * i + 10] = ypfa;
-        xpfa = -xpf;
-        ypfa = -ypf;
-        x011[24 * i + 11] = xpfa;
-        y011[24 * i + 11] = ypfa;
-        x = 0.707107 * (g[0][0] - g[0][1]);
-        y = 0.707107 * (g[1][0] - g[1][1]);
-        z = 0.707107 * (g[2][0] - g[2][1]);
-        if (z < 0) z = -z;
-        xpf = y - (y * (z / (z + 1)));
-        ypf = x - (x * (z / (z + 1)));
-        x011[24 * i + 12] = xpf;
-        y011[24 * i + 12] = ypf;
-        xpfa = -xpf;
-        ypfa = ypf;
-        x011[24 * i + 13] = xpfa;
-        y011[24 * i + 13] = ypfa;
-        xpfa = xpf;
-        ypfa = -ypf;
-        x011[24 * i + 14] = xpfa;
-        y011[24 * i + 14] = ypfa;
-        xpfa = -xpf;
-        ypfa = -ypf;
-        x011[24 * i + 15] = xpfa;
-        y011[24 * i + 15] = ypfa;
-        x = 0.707107 * (g[0][1] - g[0][2]);
-        y = 0.707107 * (g[1][1] - g[1][2]);
-        z = 0.707107 * (g[2][1] - g[2][2]);
-        if (z < 0) z = -z;
-        xpf = y - (y * (z / (z + 1)));
-        ypf = x - (x * (z / (z + 1)));
-        x011[24 * i + 16] = xpf;
-        y011[24 * i + 16] = ypf;
-        xpfa = -xpf;
-        ypfa = ypf;
-        x011[24 * i + 17] = xpfa;
-        y011[24 * i + 17] = ypfa;
-        xpfa = xpf;
-        ypfa = -ypf;
-        x011[24 * i + 18] = xpfa;
-        y011[24 * i + 18] = ypfa;
-        xpfa = -xpf;
-        ypfa = -ypf;
-        x011[24 * i + 19] = xpfa;
-        y011[24 * i + 19] = ypfa;
-        x = 0.707107 * (g[0][2] - g[0][0]);
-        y = 0.707107 * (g[1][2] - g[1][0]);
-        z = 0.707107 * (g[2][2] - g[2][0]);
-        if (z < 0) z = -z;
-        xpf = y - (y * (z / (z + 1)));
-        ypf = x - (x * (z / (z + 1)));
-        x011[24 * i + 20] = xpf;
-        y011[24 * i + 20] = ypf;
-        xpfa = -xpf;
-        ypfa = ypf;
-        x011[24 * i + 21] = xpfa;
-        y011[24 * i + 21] = ypfa;
-        xpfa = xpf;
-        ypfa = -ypf;
-        x011[24 * i + 22] = xpfa;
-        y011[24 * i + 22] = ypfa;
-        xpfa = -xpf;
-        ypfa = -ypf;
-        x011[24 * i + 23] = xpfa;
-        y011[24 * i + 23] = ypfa;
-        x = 0.57735 * (g[0][0] + g[0][1] + g[0][2]);
-        y = 0.57735 * (g[1][0] + g[1][1] + g[1][2]);
-        z = 0.57735 * (g[2][0] + g[2][1] + g[2][2]);
-        if (z < 0) z = -z;
-        xpf = y - (y * (z / (z + 1)));
-        ypf = x - (x * (z / (z + 1)));
-        x111[16 * i] = xpf;
-        y111[16 * i] = ypf;
-        xpfa = -xpf;
-        ypfa = ypf;
-        x111[16 * i + 1] = xpfa;
-        y111[16 * i + 1] = ypfa;
-        xpfa = xpf;
-        ypfa = -ypf;
-        x111[16 * i + 2] = xpfa;
-        y111[16 * i + 2] = ypfa;
-        xpfa = -xpf;
-        ypfa = -ypf;
-        x111[16 * i + 3] = xpfa;
-        y111[16 * i + 3] = ypfa;
-        x = 0.57735 * (g[0][0] + g[0][1] - g[0][2]);
-        y = 0.57735 * (g[1][0] + g[1][1] - g[1][2]);
-        z = 0.57735 * (g[2][0] + g[2][1] - g[2][2]);
-        if (z < 0) z = -z;
-        xpf = y - (y * (z / (z + 1)));
-        ypf = x - (x * (z / (z + 1)));
-        x111[16 * i + 4] = xpf;
-        y111[16 * i + 4] = ypf;
-        xpfa = -xpf;
-        ypfa = ypf;
-        x111[16 * i + 5] = xpfa;
-        y111[16 * i + 5] = ypfa;
-        xpfa = xpf;
-        ypfa = -ypf;
-        x111[16 * i + 6] = xpfa;
-        y111[16 * i + 6] = ypfa;
-        xpfa = -xpf;
-        ypfa = -ypf;
-        x111[16 * i + 7] = xpfa;
-        y111[16 * i + 7] = ypfa;
-        x = 0.57735 * (g[0][0] - g[0][1] + g[0][2]);
-        y = 0.57735 * (g[1][0] - g[1][1] + g[1][2]);
-        z = 0.57735 * (g[2][0] - g[2][1] + g[2][2]);
-        if (z < 0) z = -z;
-        xpf = y - (y * (z / (z + 1)));
-        ypf = x - (x * (z / (z + 1)));
-        x111[16 * i + 8] = xpf;
-        y111[16 * i + 8] = ypf;
-        xpfa = -xpf;
-        ypfa = ypf;
-        x111[16 * i + 9] = xpfa;
-        y111[16 * i + 9] = ypfa;
-        xpfa = xpf;
-        ypfa = -ypf;
-        x111[16 * i + 10] = xpfa;
-        y111[16 * i + 10] = ypfa;
-        xpfa = -xpf;
-        ypfa = -ypf;
-        x111[16 * i + 11] = xpfa;
-        y111[16 * i + 11] = ypfa;
-        x = 0.57735 * (-g[0][0] + g[0][1] + g[0][2]);
-        y = 0.57735 * (-g[1][0] + g[1][1] + g[1][2]);
-        z = 0.57735 * (-g[2][0] + g[2][1] + g[2][2]);
-        if (z < 0) z = -z;
-        xpf = y - (y * (z / (z + 1)));
-        ypf = x - (x * (z / (z + 1)));
-        x111[16 * i + 12] = xpf;
-        y111[16 * i + 12] = ypf;
-        xpfa = -xpf;
-        ypfa = ypf;
-        x111[16 * i + 13] = xpfa;
-        y111[16 * i + 13] = ypfa;
-        xpfa = xpf;
-        ypfa = -ypf;
-        x111[16 * i + 14] = xpfa;
-        y111[16 * i + 14] = ypfa;
-        xpfa = -xpf;
-        ypfa = -ypf;
-        x111[16 * i + 15] = xpfa;
-        y111[16 * i + 15] = ypfa;
-      }
-      return err;
-    }
-
-    /**
-     * @brief  This method will generate ODF data for a Hexagonal material and
-     * generate 3 scatter plots which are the
-     * <001>, <011> and <111> directions. The method is a C++ Template which the parameter
-     * type is a std::vector conforming class type that holds the data.
-     * QVector falls into this category. The input data for the
-     * euler angles is in Columnar fashion instead of row major format.
-     * @param e1s The first euler angles (input)
-     * @param e2s The second euler angles (input)
-     * @param e3s The third euler angles (input)
-     * @param weights Array of weights values. (input)
-     * @param sigmas Array of sigma values. (input)
-     * @param x001 X Values of the [001] ODF Scatter plot (Output)
-     * @param y001 Y Values of the [001] ODF Scatter plot (Output)
-     * @param x011 X Values of the [011] ODF Scatter plot (Output)
-     * @param y011 Y Values of the [011] ODF Scatter plot (Output)
-     * @param x111 X Values of the [111] ODF Scatter plot (Output)
-     * @param y111 Y Values of the [111] ODF Scatter plot (Output)
-     * @param size The number of points for the Scatter Plot
-     */
-    template<typename T>
-    int GenHexODFPlotData(T e1s, T e2s, T e3s, T weights, T sigmas,
-                    T &x0001, T &y0001, T &x1120, T &y1120, T &x1010, T &y1010,
-                    int size)
-    {
-      static const size_t odfsize = 15552;
-      double totalweight = 0;
-      T odf;
-      odf.resize(odfsize);
-      Texture::calculateHexODFData(e1s, e2s, e3s, weights, sigmas, true, odf, totalweight);
-
-      AIMRandomNG rg;
-      /* Get a seed value based off the system clock. The issue is that this will
-       * be a 64 bit unsigned integer where the high 32 bits will basically not
-       * change where as the lower 32 bits will. The following lines of code will
-       * pull off the low 32 bits from the number. This operation depends on most
-       * significant byte ordering which is different between Big Endian and
-       * Little Endian machines. For Big endian machines the Most Significant Byte
-       * (MSB) is the first 32 bits. For Little Endian machines the MSB is the
-       * second 32 bits.
-       */
-      unsigned long long int seed = MXA::getMilliSeconds();
-      unsigned int* seedPtr = reinterpret_cast<unsigned int*>(&seed);
-#if CMP_WORDS_BIGENDIAN
-      rg.RandomInit(seedPtr[1]);
-#else
-      rg.RandomInit(seedPtr[0]);
-#endif
-      int err = 0;
-      int choose;
-      double g[3][3];
-      double x, y, z;
-      double xpf, ypf;
-      double xpfa, ypfa;
-      double totaldensity;
-      double hmag;
-      double angle;
-      double r1, r2, r3;
-      double h1, h2, h3;
-      double n1, n2, n3;
-      double random, tan_angle, density, cos_angle, sin_angle;
-
-      double dim1 = 2*pow((0.75 * ((M_PI / 2.0) - sin((M_PI / 2.0)))), (1.0 / 3.0));
-      double dim2 = 2*pow((0.75 * ((M_PI / 2.0) - sin((M_PI / 2.0)))), (1.0 / 3.0));
-      double dim3 = 2*pow((0.75 * ((M_PI / 6.0) - sin((M_PI / 6.0)))), (1.0 / 3.0));
-
-      x0001.resize(size * 1 * 4);
-      y0001.resize(size * 1 * 4);
-      x1120.resize(size * 3 * 4);
-      y1120.resize(size * 3 * 4);
-      x1010.resize(size * 3 * 4);
-      y1010.resize(size * 3 * 4);
-
-      for (int i = 0; i < size; i++)
-      {
-        random = rg.Random();
-        choose = 0;
-
-        totaldensity = 0;
-        for (size_t j = 0; j < odfsize; j++)
-        {
-          density = odf[j];
-          totaldensity = totaldensity + density;
-          if (random < totaldensity && random >= (totaldensity - density)) choose = static_cast<int> (j);
-        }
-        h1 = choose % 36;
-        h2 = (choose / 36) % 36;
-        h3 = choose / (36 * 36);
-        random = rg.Random();
-        h1 = ((dim1 / 36.0) * h1) + ((dim1 / 36.0) * random) - (dim1 / 2.0);
-        random = rg.Random();
-        h2 = ((dim2 / 36.0) * h2) + ((dim2 / 36.0) * random) - (dim2 / 2.0);
-        random = rg.Random();
-        h3 = ((dim3 / 12.0) * h3) + ((dim3 / 12.0) * random) - (dim3 / 2.0);
-        hmag = pow((h1 * h1 + h2 * h2 + h3 * h3), 0.5);
-        angle = pow((8 * hmag * hmag * hmag), (1.0 / 3.0));
-        tan_angle = tan(angle / 2.0);
-        n1 = h1 / hmag;
-        n2 = h2 / hmag;
-        n3 = h3 / hmag;
-        r1 = tan_angle * n1;
-        r2 = tan_angle * n2;
-        r3 = tan_angle * n3;
-        cos_angle = cos(angle);
-        sin_angle = sin(angle);
-        g[0][0] = cos_angle + n1 * n1 * (1 - cos_angle);
-        g[0][1] = n1 * n2 * (1 - cos_angle) - n3 * sin_angle;
-        g[0][2] = n1 * n3 * (1 - cos_angle) + n2 * sin_angle;
-        g[1][0] = n1 * n2 * (1 - cos_angle) + n3 * sin_angle;
-        g[1][1] = cos_angle + n2 * n2 * (1 - cos_angle);
-        g[1][2] = n2 * n3 * (1 - cos_angle) - n1 * sin_angle;
-        g[2][0] = n1 * n3 * (1 - cos_angle) - n2 * sin_angle;
-        g[2][1] = n2 * n3 * (1 - cos_angle) + n1 * sin_angle;
-        g[2][2] = cos_angle + n3 * n3 * (1 - cos_angle);
-        x = g[0][2];
-        y = g[1][2];
-        z = g[2][2];
-        if (z < 0) z = -z;
-        xpf = y - (y * (z / (z + 1)));
-        ypf = x - (x * (z / (z + 1)));
-        random = rg.Random();
-        x0001[4 * i] = xpf;
-        y0001[4 * i] = ypf;
-        xpfa = -xpf;
-        ypfa = ypf;
-        x0001[4 * i + 1] = xpfa;
-        y0001[4 * i + 1] = ypfa;
-        xpfa = xpf;
-        ypfa = -ypf;
-        x0001[4 * i + 2] = xpfa;
-        y0001[4 * i + 2] = ypfa;
-        xpfa = -xpf;
-        ypfa = -ypf;
-        x0001[4 * i + 3] = xpfa;
-        y0001[4 * i + 3] = ypfa;
-        x = g[0][0];
-        y = g[1][0];
-        z = g[2][0];
-        if (z < 0) z = -z;
-        xpf = y - (y * (z / (z + 1)));
-        ypf = x - (x * (z / (z + 1)));
-        x1120[12 * i] = xpf;
-        y1120[12 * i] = ypf;
-        xpfa = -xpf;
-        ypfa = ypf;
-        x1120[12 * i + 1] = xpfa;
-        y1120[12 * i + 1] = ypfa;
-        xpfa = xpf;
-        ypfa = -ypf;
-        x1120[12 * i + 2] = xpfa;
-        y1120[12 * i + 2] = ypfa;
-        xpfa = -xpf;
-        ypfa = -ypf;
-        x1120[12 * i + 3] = xpfa;
-        y1120[12 * i + 3] = ypfa;
-        x = (0.5 * g[0][0]) + (0.866025 * g[0][1]);
-        y = (0.5 * g[1][0]) + (0.866025 * g[1][1]);
-        z = (0.5 * g[2][0]) + (0.866025 * g[2][1]);
-        if (z < 0) z = -z;
-        xpf = y - (y * (z / (z + 1)));
-        ypf = x - (x * (z / (z + 1)));
-        x1120[12 * i + 4] = xpf;
-        y1120[12 * i + 4] = ypf;
-        xpfa = -xpf;
-        ypfa = ypf;
-        x1120[12 * i + 5] = xpfa;
-        y1120[12 * i + 5] = ypfa;
-        xpfa = xpf;
-        ypfa = -ypf;
-        x1120[12 * i + 6] = xpfa;
-        y1120[12 * i + 6] = ypfa;
-        xpfa = -xpf;
-        ypfa = -ypf;
-        x1120[12 * i + 7] = xpfa;
-        y1120[12 * i + 7] = ypfa;
-        x = (-0.5 * g[0][0]) + (0.866025 * g[0][1]);
-        y = (-0.5 * g[1][0]) + (0.866025 * g[1][1]);
-        z = (-0.5 * g[2][0]) + (0.866025 * g[2][1]);
-        if (z < 0) z = -z;
-        xpf = y - (y * (z / (z + 1)));
-        ypf = x - (x * (z / (z + 1)));
-        x1120[12 * i + 8] = xpf;
-        y1120[12 * i + 8] = ypf;
-        xpfa = -xpf;
-        ypfa = ypf;
-        x1120[12 * i + 9] = xpfa;
-        y1120[12 * i + 9] = ypfa;
-        xpfa = xpf;
-        ypfa = -ypf;
-        x1120[12 * i + 10] = xpfa;
-        y1120[12 * i + 10] = ypfa;
-        xpfa = -xpf;
-        ypfa = -ypf;
-        x1120[12 * i + 11] = xpfa;
-        y1120[12 * i + 11] = ypfa;
-        x = (0.866025 * g[0][0]) + (0.5 * g[0][1]);
-        y = (0.866025 * g[1][0]) + (0.5 * g[1][1]);
-        z = (0.866025 * g[2][0]) + (0.5 * g[2][1]);
-        if (z < 0) z = -z;
-        xpf = y - (y * (z / (z + 1)));
-        ypf = x - (x * (z / (z + 1)));
-        x1010[12 * i] = xpf;
-        y1010[12 * i] = ypf;
-        xpfa = -xpf;
-        ypfa = ypf;
-        x1010[12 * i + 1] = xpfa;
-        y1010[12 * i + 1] = ypfa;
-        xpfa = xpf;
-        ypfa = -ypf;
-        x1010[12 * i + 2] = xpfa;
-        y1010[12 * i + 2] = ypfa;
-        xpfa = -xpf;
-        ypfa = -ypf;
-        x1010[12 * i + 3] = xpfa;
-        y1010[12 * i + 3] = ypfa;
-        x = g[0][1];
-        y = g[1][1];
-        z = g[2][1];
-        if (z < 0) z = -z;
-        xpf = y - (y * (z / (z + 1)));
-        ypf = x - (x * (z / (z + 1)));
-        x1010[12 * i + 4] = xpf;
-        y1010[12 * i + 4] = ypf;
-        xpfa = -xpf;
-        ypfa = ypf;
-        x1010[12 * i + 5] = xpfa;
-        y1010[12 * i + 5] = ypfa;
-        xpfa = xpf;
-        ypfa = -ypf;
-        x1010[12 * i + 6] = xpfa;
-        y1010[12 * i + 6] = ypfa;
-        xpfa = -xpf;
-        ypfa = -ypf;
-        x1010[12 * i + 7] = xpfa;
-        y1010[12 * i + 7] = ypfa;
-        x = (-0.866025 * g[0][0]) + (0.5 * g[0][1]);
-        y = (-0.866025 * g[1][0]) + (0.5 * g[1][1]);
-        z = (-0.866025 * g[2][0]) + (0.5 * g[2][1]);
-        if (z < 0) z = -z;
-        xpf = y - (y * (z / (z + 1)));
-        ypf = x - (x * (z / (z + 1)));
-        x1010[12 * i + 8] = xpf;
-        y1010[12 * i + 8] = ypf;
-        xpfa = -xpf;
-        ypfa = ypf;
-        x1010[12 * i + 9] = xpfa;
-        y1010[12 * i + 9] = ypfa;
-        xpfa = xpf;
-        ypfa = -ypf;
-        x1010[12 * i + 10] = xpfa;
-        y1010[12 * i + 10] = ypfa;
-        xpfa = -xpf;
-        ypfa = -ypf;
-        x1010[12 * i + 11] = xpfa;
-        y1010[12 * i + 11] = ypfa;
-      }
-      return err;
-    }
-
-    /**
-     * @brief  This method will generate ODF data for a OrthoRhombic material and
-     * generate 3 scatter plots which are the
-     * <001>, <011> and <111> directions. The method is a C++ Template which the parameter
-     * type is a std::vector conforming class type that holds the data.
-     * QVector falls into this category. The input data for the
-     * euler angles is in Columnar fashion instead of row major format.
-     * @param e1s The first euler angles (input)
-     * @param e2s The second euler angles (input)
-     * @param e3s The third euler angles (input)
-     * @param weights Array of weights values. (input)
-     * @param sigmas Array of sigma values. (input)
-     * @param x001 X Values of the [001] ODF Scatter plot (Output)
-     * @param y001 Y Values of the [001] ODF Scatter plot (Output)
-     * @param x011 X Values of the [011] ODF Scatter plot (Output)
-     * @param y011 Y Values of the [011] ODF Scatter plot (Output)
-     * @param x111 X Values of the [111] ODF Scatter plot (Output)
-     * @param y111 Y Values of the [111] ODF Scatter plot (Output)
-     * @param size The number of points for the Scatter Plot
-     */
-    template<typename T>
-    int GenOrthoRhombicODFPlotData(T e1s, T e2s, T e3s, T weights, T sigmas,
-                    T &x0001, T &y0001, T &x1120, T &y1120, T &x1010, T &y1010,
-                    int size)
-    {
-      int err = -1;
-
-      return err;
-    }
 
 	template<typename T>
-    int GenLogNormal(double avg, double stdDev, T &x, T &y, int size)
+    int GenLogNormalPlotData(double avg, double stdDev, T &x, T &y, int size)
     {
       int err = 0;
       double lognormin, lognormout, max, min;
@@ -770,7 +113,7 @@ class StatsGen
     }
 
     template<typename T>
-    int GenPowerLaw(double alpha, double k, double beta, T &x, T &y, int size)
+    int GenPowerLawPlotData(double alpha, double k, double beta, T &x, T &y, int size)
     {
       int err = 0;
       double in, out, max, min;
@@ -856,6 +199,674 @@ class StatsGen
      * @return
      */
     double gamma(double value);
+
+    /**
+      * @brief  This method will generate ODF data for 3 scatter plots which are the
+      * <001>, <011> and <111> directions. The method is a C++ Template which the parameter
+      * type is a std::vector conforming class type that holds the data.
+      * QVector falls into this category. The input data for the
+      * euler angles is in Columnar fashion instead of row major format.
+      * @param e1s The first euler angles (input)
+      * @param e2s The second euler angles (input)
+      * @param e3s The third euler angles (input)
+      * @param weights Array of weights values. (input)
+      * @param sigmas Array of sigma values. (input)
+      * @param x001 X Values of the [001] ODF Scatter plot (Output)
+      * @param y001 Y Values of the [001] ODF Scatter plot (Output)
+      * @param x011 X Values of the [011] ODF Scatter plot (Output)
+      * @param y011 Y Values of the [011] ODF Scatter plot (Output)
+      * @param x111 X Values of the [111] ODF Scatter plot (Output)
+      * @param y111 Y Values of the [111] ODF Scatter plot (Output)
+      * @param size The number of points for the Scatter Plot
+      */
+       template<typename T>
+       int GenCubicODFPlotData(T e1s, T e2s, T e3s, T weights, T sigmas,
+                       T &x001, T &y001, T &x011, T &y011, T &x111, T &y111,
+                       int size)
+       {
+         static const size_t eighteenCubed = 5832;
+         double totalweight = 0;
+         T odf;
+         odf.resize(eighteenCubed);
+         Texture::calculateCubicODFData(e1s, e2s, e3s, weights, sigmas, true, odf, totalweight);
+
+         AIMRandomNG rg;
+         /* Get a seed value based off the system clock. The issue is that this will
+          * be a 64 bit unsigned integer where the high 32 bits will basically not
+          * change where as the lower 32 bits will. The following lines of code will
+          * pull off the low 32 bits from the number. This operation depends on most
+          * significant byte ordering which is different between Big Endian and
+          * Little Endian machines. For Big endian machines the Most Significant Byte
+          * (MSB) is the first 32 bits. For Little Endian machines the MSB is the
+          * second 32 bits.
+          */
+         unsigned long long int seed = MXA::getMilliSeconds();
+         unsigned int* seedPtr = reinterpret_cast<unsigned int*> (&seed);
+   #if CMP_WORDS_BIGENDIAN
+         rg.RandomInit(seedPtr[1]);
+   #else
+         rg.RandomInit(seedPtr[0]);
+   #endif
+         int err = 0;
+         int choose;
+         double g[3][3];
+         double x, y, z;
+         double xpf, ypf;
+         double xpfa, ypfa;
+         double totaldensity;
+         double hmag;
+         double angle;
+         double r1, r2, r3;
+         double h1, h2, h3;
+         double n1, n2, n3;
+         double random, tan_angle, density, cos_angle, sin_angle;
+
+         double dim1 = 2 * pow((0.75 * ((M_PI / 4.0) - sin((M_PI / 4.0)))), (1.0 / 3.0));
+         double dim2 = 2 * pow((0.75 * ((M_PI / 4.0) - sin((M_PI / 4.0)))), (1.0 / 3.0));
+         double dim3 = 2 * pow((0.75 * ((M_PI / 4.0) - sin((M_PI / 4.0)))), (1.0 / 3.0));
+
+         x001.resize(size * 3 * 4);
+         y001.resize(size * 3 * 4);
+         x011.resize(size * 6 * 4);
+         y011.resize(size * 6 * 4);
+         x111.resize(size * 4 * 4);
+         y111.resize(size * 4 * 4);
+
+         for (int i = 0; i < size; i++)
+         {
+           random = rg.Random();
+           choose = 0;
+
+           totaldensity = 0;
+           for (size_t j = 0; j < eighteenCubed; j++)
+           {
+             density = odf[j];
+             totaldensity = totaldensity + density;
+             if (random < totaldensity && random >= (totaldensity - density)) choose = static_cast<int> (j);
+           }
+           h1 = choose % 18;
+           h2 = (choose / 18) % 18;
+           h3 = choose / (18 * 18);
+           random = rg.Random();
+           h1 = ((dim1 / 18.0) * h1) + ((dim1 / 18.0) * random) - (dim1 / 2.0);
+           random = rg.Random();
+           h2 = ((dim2 / 18.0) * h2) + ((dim2 / 18.0) * random) - (dim2 / 2.0);
+           random = rg.Random();
+           h3 = ((dim3 / 18.0) * h3) + ((dim3 / 18.0) * random) - (dim3 / 2.0);
+           hmag = pow((h1 * h1 + h2 * h2 + h3 * h3), 0.5);
+           angle = pow((8 * hmag * hmag * hmag), (1.0 / 3.0));
+           tan_angle = tan(angle / 2.0);
+           n1 = h1 / hmag;
+           n2 = h2 / hmag;
+           n3 = h3 / hmag;
+           r1 = tan_angle * n1;
+           r2 = tan_angle * n2;
+           r3 = tan_angle * n3;
+           cos_angle = cos(angle);
+           sin_angle = sin(angle);
+           g[0][0] = cos_angle + n1 * n1 * (1 - cos_angle);
+           g[0][1] = n1 * n2 * (1 - cos_angle) - n3 * sin_angle;
+           g[0][2] = n1 * n3 * (1 - cos_angle) + n2 * sin_angle;
+           g[1][0] = n1 * n2 * (1 - cos_angle) + n3 * sin_angle;
+           g[1][1] = cos_angle + n2 * n2 * (1 - cos_angle);
+           g[1][2] = n2 * n3 * (1 - cos_angle) - n1 * sin_angle;
+           g[2][0] = n1 * n3 * (1 - cos_angle) - n2 * sin_angle;
+           g[2][1] = n2 * n3 * (1 - cos_angle) + n1 * sin_angle;
+           g[2][2] = cos_angle + n3 * n3 * (1 - cos_angle);
+           x = g[0][0];
+           y = g[1][0];
+           z = g[2][0];
+           if (z < 0) z = -z;
+           xpf = y - (y * (z / (z + 1)));
+           ypf = x - (x * (z / (z + 1)));
+           random = rg.Random();
+           x001[12 * i] = xpf;
+           y001[12 * i] = ypf;
+           xpfa = -xpf;
+           ypfa = ypf;
+           x001[12 * i + 1] = xpfa;
+           y001[12 * i + 1] = ypfa;
+           xpfa = xpf;
+           ypfa = -ypf;
+           x001[12 * i + 2] = xpfa;
+           y001[12 * i + 2] = ypfa;
+           xpfa = -xpf;
+           ypfa = -ypf;
+           x001[12 * i + 3] = xpfa;
+           y001[12 * i + 3] = ypfa;
+           x = g[0][1];
+           y = g[1][1];
+           z = g[2][1];
+           if (z < 0) z = -z;
+           xpf = y - (y * (z / (z + 1)));
+           ypf = x - (x * (z / (z + 1)));
+           x001[12 * i + 4] = xpf;
+           y001[12 * i + 4] = ypf;
+           xpfa = -xpf;
+           ypfa = ypf;
+           x001[12 * i + 5] = xpfa;
+           y001[12 * i + 5] = ypfa;
+           xpfa = xpf;
+           ypfa = -ypf;
+           x001[12 * i + 6] = xpfa;
+           y001[12 * i + 6] = ypfa;
+           xpfa = -xpf;
+           ypfa = -ypf;
+           x001[12 * i + 7] = xpfa;
+           y001[12 * i + 7] = ypfa;
+           x = g[0][2];
+           y = g[1][2];
+           z = g[2][2];
+           if (z < 0) z = -z;
+           xpf = y - (y * (z / (z + 1)));
+           ypf = x - (x * (z / (z + 1)));
+           x001[12 * i + 8] = xpf;
+           y001[12 * i + 8] = ypf;
+           xpfa = -xpf;
+           ypfa = ypf;
+           x001[12 * i + 9] = xpfa;
+           y001[12 * i + 9] = ypfa;
+           xpfa = xpf;
+           ypfa = -ypf;
+           x001[12 * i + 10] = xpfa;
+           y001[12 * i + 10] = ypfa;
+           xpfa = -xpf;
+           ypfa = -ypf;
+           x001[12 * i + 11] = xpfa;
+           y001[12 * i + 11] = ypfa;
+           x = 0.707107 * (g[0][0] + g[0][1]);
+           y = 0.707107 * (g[1][0] + g[1][1]);
+           z = 0.707107 * (g[2][0] + g[2][1]);
+           if (z < 0) z = -z;
+           xpf = y - (y * (z / (z + 1)));
+           ypf = x - (x * (z / (z + 1)));
+           x011[24 * i] = xpf;
+           y011[24 * i] = ypf;
+           xpfa = -xpf;
+           ypfa = ypf;
+           x011[24 * i + 1] = xpfa;
+           y011[24 * i + 1] = ypfa;
+           xpfa = xpf;
+           ypfa = -ypf;
+           x011[24 * i + 2] = xpfa;
+           y011[24 * i + 2] = ypfa;
+           xpfa = -xpf;
+           ypfa = -ypf;
+           x011[24 * i + 3] = xpfa;
+           y011[24 * i + 3] = ypfa;
+           x = 0.707107 * (g[0][1] + g[0][2]);
+           y = 0.707107 * (g[1][1] + g[1][2]);
+           z = 0.707107 * (g[2][1] + g[2][2]);
+           if (z < 0) z = -z;
+           xpf = y - (y * (z / (z + 1)));
+           ypf = x - (x * (z / (z + 1)));
+           x011[24 * i + 4] = xpf;
+           y011[24 * i + 4] = ypf;
+           xpfa = -xpf;
+           ypfa = ypf;
+           x011[24 * i + 5] = xpfa;
+           y011[24 * i + 5] = ypfa;
+           xpfa = xpf;
+           ypfa = -ypf;
+           x011[24 * i + 6] = xpfa;
+           y011[24 * i + 6] = ypfa;
+           xpfa = -xpf;
+           ypfa = -ypf;
+           x011[24 * i + 7] = xpfa;
+           y011[24 * i + 7] = ypfa;
+           x = 0.707107 * (g[0][2] + g[0][0]);
+           y = 0.707107 * (g[1][2] + g[1][0]);
+           z = 0.707107 * (g[2][2] + g[2][0]);
+           if (z < 0) z = -z;
+           xpf = y - (y * (z / (z + 1)));
+           ypf = x - (x * (z / (z + 1)));
+           x011[24 * i + 8] = xpf;
+           y011[24 * i + 8] = ypf;
+           xpfa = -xpf;
+           ypfa = ypf;
+           x011[24 * i + 9] = xpfa;
+           y011[24 * i + 9] = ypfa;
+           xpfa = xpf;
+           ypfa = -ypf;
+           x011[24 * i + 10] = xpfa;
+           y011[24 * i + 10] = ypfa;
+           xpfa = -xpf;
+           ypfa = -ypf;
+           x011[24 * i + 11] = xpfa;
+           y011[24 * i + 11] = ypfa;
+           x = 0.707107 * (g[0][0] - g[0][1]);
+           y = 0.707107 * (g[1][0] - g[1][1]);
+           z = 0.707107 * (g[2][0] - g[2][1]);
+           if (z < 0) z = -z;
+           xpf = y - (y * (z / (z + 1)));
+           ypf = x - (x * (z / (z + 1)));
+           x011[24 * i + 12] = xpf;
+           y011[24 * i + 12] = ypf;
+           xpfa = -xpf;
+           ypfa = ypf;
+           x011[24 * i + 13] = xpfa;
+           y011[24 * i + 13] = ypfa;
+           xpfa = xpf;
+           ypfa = -ypf;
+           x011[24 * i + 14] = xpfa;
+           y011[24 * i + 14] = ypfa;
+           xpfa = -xpf;
+           ypfa = -ypf;
+           x011[24 * i + 15] = xpfa;
+           y011[24 * i + 15] = ypfa;
+           x = 0.707107 * (g[0][1] - g[0][2]);
+           y = 0.707107 * (g[1][1] - g[1][2]);
+           z = 0.707107 * (g[2][1] - g[2][2]);
+           if (z < 0) z = -z;
+           xpf = y - (y * (z / (z + 1)));
+           ypf = x - (x * (z / (z + 1)));
+           x011[24 * i + 16] = xpf;
+           y011[24 * i + 16] = ypf;
+           xpfa = -xpf;
+           ypfa = ypf;
+           x011[24 * i + 17] = xpfa;
+           y011[24 * i + 17] = ypfa;
+           xpfa = xpf;
+           ypfa = -ypf;
+           x011[24 * i + 18] = xpfa;
+           y011[24 * i + 18] = ypfa;
+           xpfa = -xpf;
+           ypfa = -ypf;
+           x011[24 * i + 19] = xpfa;
+           y011[24 * i + 19] = ypfa;
+           x = 0.707107 * (g[0][2] - g[0][0]);
+           y = 0.707107 * (g[1][2] - g[1][0]);
+           z = 0.707107 * (g[2][2] - g[2][0]);
+           if (z < 0) z = -z;
+           xpf = y - (y * (z / (z + 1)));
+           ypf = x - (x * (z / (z + 1)));
+           x011[24 * i + 20] = xpf;
+           y011[24 * i + 20] = ypf;
+           xpfa = -xpf;
+           ypfa = ypf;
+           x011[24 * i + 21] = xpfa;
+           y011[24 * i + 21] = ypfa;
+           xpfa = xpf;
+           ypfa = -ypf;
+           x011[24 * i + 22] = xpfa;
+           y011[24 * i + 22] = ypfa;
+           xpfa = -xpf;
+           ypfa = -ypf;
+           x011[24 * i + 23] = xpfa;
+           y011[24 * i + 23] = ypfa;
+           x = 0.57735 * (g[0][0] + g[0][1] + g[0][2]);
+           y = 0.57735 * (g[1][0] + g[1][1] + g[1][2]);
+           z = 0.57735 * (g[2][0] + g[2][1] + g[2][2]);
+           if (z < 0) z = -z;
+           xpf = y - (y * (z / (z + 1)));
+           ypf = x - (x * (z / (z + 1)));
+           x111[16 * i] = xpf;
+           y111[16 * i] = ypf;
+           xpfa = -xpf;
+           ypfa = ypf;
+           x111[16 * i + 1] = xpfa;
+           y111[16 * i + 1] = ypfa;
+           xpfa = xpf;
+           ypfa = -ypf;
+           x111[16 * i + 2] = xpfa;
+           y111[16 * i + 2] = ypfa;
+           xpfa = -xpf;
+           ypfa = -ypf;
+           x111[16 * i + 3] = xpfa;
+           y111[16 * i + 3] = ypfa;
+           x = 0.57735 * (g[0][0] + g[0][1] - g[0][2]);
+           y = 0.57735 * (g[1][0] + g[1][1] - g[1][2]);
+           z = 0.57735 * (g[2][0] + g[2][1] - g[2][2]);
+           if (z < 0) z = -z;
+           xpf = y - (y * (z / (z + 1)));
+           ypf = x - (x * (z / (z + 1)));
+           x111[16 * i + 4] = xpf;
+           y111[16 * i + 4] = ypf;
+           xpfa = -xpf;
+           ypfa = ypf;
+           x111[16 * i + 5] = xpfa;
+           y111[16 * i + 5] = ypfa;
+           xpfa = xpf;
+           ypfa = -ypf;
+           x111[16 * i + 6] = xpfa;
+           y111[16 * i + 6] = ypfa;
+           xpfa = -xpf;
+           ypfa = -ypf;
+           x111[16 * i + 7] = xpfa;
+           y111[16 * i + 7] = ypfa;
+           x = 0.57735 * (g[0][0] - g[0][1] + g[0][2]);
+           y = 0.57735 * (g[1][0] - g[1][1] + g[1][2]);
+           z = 0.57735 * (g[2][0] - g[2][1] + g[2][2]);
+           if (z < 0) z = -z;
+           xpf = y - (y * (z / (z + 1)));
+           ypf = x - (x * (z / (z + 1)));
+           x111[16 * i + 8] = xpf;
+           y111[16 * i + 8] = ypf;
+           xpfa = -xpf;
+           ypfa = ypf;
+           x111[16 * i + 9] = xpfa;
+           y111[16 * i + 9] = ypfa;
+           xpfa = xpf;
+           ypfa = -ypf;
+           x111[16 * i + 10] = xpfa;
+           y111[16 * i + 10] = ypfa;
+           xpfa = -xpf;
+           ypfa = -ypf;
+           x111[16 * i + 11] = xpfa;
+           y111[16 * i + 11] = ypfa;
+           x = 0.57735 * (-g[0][0] + g[0][1] + g[0][2]);
+           y = 0.57735 * (-g[1][0] + g[1][1] + g[1][2]);
+           z = 0.57735 * (-g[2][0] + g[2][1] + g[2][2]);
+           if (z < 0) z = -z;
+           xpf = y - (y * (z / (z + 1)));
+           ypf = x - (x * (z / (z + 1)));
+           x111[16 * i + 12] = xpf;
+           y111[16 * i + 12] = ypf;
+           xpfa = -xpf;
+           ypfa = ypf;
+           x111[16 * i + 13] = xpfa;
+           y111[16 * i + 13] = ypfa;
+           xpfa = xpf;
+           ypfa = -ypf;
+           x111[16 * i + 14] = xpfa;
+           y111[16 * i + 14] = ypfa;
+           xpfa = -xpf;
+           ypfa = -ypf;
+           x111[16 * i + 15] = xpfa;
+           y111[16 * i + 15] = ypfa;
+         }
+         return err;
+       }
+
+       /**
+        * @brief  This method will generate ODF data for a Hexagonal material and
+        * generate 3 scatter plots which are the
+        * <001>, <011> and <111> directions. The method is a C++ Template which the parameter
+        * type is a std::vector conforming class type that holds the data.
+        * QVector falls into this category. The input data for the
+        * euler angles is in Columnar fashion instead of row major format.
+        * @param e1s The first euler angles (input)
+        * @param e2s The second euler angles (input)
+        * @param e3s The third euler angles (input)
+        * @param weights Array of weights values. (input)
+        * @param sigmas Array of sigma values. (input)
+        * @param x001 X Values of the [001] ODF Scatter plot (Output)
+        * @param y001 Y Values of the [001] ODF Scatter plot (Output)
+        * @param x011 X Values of the [011] ODF Scatter plot (Output)
+        * @param y011 Y Values of the [011] ODF Scatter plot (Output)
+        * @param x111 X Values of the [111] ODF Scatter plot (Output)
+        * @param y111 Y Values of the [111] ODF Scatter plot (Output)
+        * @param size The number of points for the Scatter Plot
+        */
+       template<typename T>
+       int GenHexODFPlotData(T e1s, T e2s, T e3s, T weights, T sigmas,
+                       T &x0001, T &y0001, T &x1120, T &y1120, T &x1010, T &y1010,
+                       int size)
+       {
+         static const size_t odfsize = 15552;
+         double totalweight = 0;
+         T odf;
+         odf.resize(odfsize);
+         Texture::calculateHexODFData(e1s, e2s, e3s, weights, sigmas, true, odf, totalweight);
+
+         AIMRandomNG rg;
+         /* Get a seed value based off the system clock. The issue is that this will
+          * be a 64 bit unsigned integer where the high 32 bits will basically not
+          * change where as the lower 32 bits will. The following lines of code will
+          * pull off the low 32 bits from the number. This operation depends on most
+          * significant byte ordering which is different between Big Endian and
+          * Little Endian machines. For Big endian machines the Most Significant Byte
+          * (MSB) is the first 32 bits. For Little Endian machines the MSB is the
+          * second 32 bits.
+          */
+         unsigned long long int seed = MXA::getMilliSeconds();
+         unsigned int* seedPtr = reinterpret_cast<unsigned int*>(&seed);
+   #if CMP_WORDS_BIGENDIAN
+         rg.RandomInit(seedPtr[1]);
+   #else
+         rg.RandomInit(seedPtr[0]);
+   #endif
+         int err = 0;
+         int choose;
+         double g[3][3];
+         double x, y, z;
+         double xpf, ypf;
+         double xpfa, ypfa;
+         double totaldensity;
+         double hmag;
+         double angle;
+         double r1, r2, r3;
+         double h1, h2, h3;
+         double n1, n2, n3;
+         double random, tan_angle, density, cos_angle, sin_angle;
+
+         double dim1 = 2*pow((0.75 * ((M_PI / 2.0) - sin((M_PI / 2.0)))), (1.0 / 3.0));
+         double dim2 = 2*pow((0.75 * ((M_PI / 2.0) - sin((M_PI / 2.0)))), (1.0 / 3.0));
+         double dim3 = 2*pow((0.75 * ((M_PI / 6.0) - sin((M_PI / 6.0)))), (1.0 / 3.0));
+
+         x0001.resize(size * 1 * 4);
+         y0001.resize(size * 1 * 4);
+         x1120.resize(size * 3 * 4);
+         y1120.resize(size * 3 * 4);
+         x1010.resize(size * 3 * 4);
+         y1010.resize(size * 3 * 4);
+
+         for (int i = 0; i < size; i++)
+         {
+           random = rg.Random();
+           choose = 0;
+
+           totaldensity = 0;
+           for (size_t j = 0; j < odfsize; j++)
+           {
+             density = odf[j];
+             totaldensity = totaldensity + density;
+             if (random < totaldensity && random >= (totaldensity - density)) choose = static_cast<int> (j);
+           }
+           h1 = choose % 36;
+           h2 = (choose / 36) % 36;
+           h3 = choose / (36 * 36);
+           random = rg.Random();
+           h1 = ((dim1 / 36.0) * h1) + ((dim1 / 36.0) * random) - (dim1 / 2.0);
+           random = rg.Random();
+           h2 = ((dim2 / 36.0) * h2) + ((dim2 / 36.0) * random) - (dim2 / 2.0);
+           random = rg.Random();
+           h3 = ((dim3 / 12.0) * h3) + ((dim3 / 12.0) * random) - (dim3 / 2.0);
+           hmag = pow((h1 * h1 + h2 * h2 + h3 * h3), 0.5);
+           angle = pow((8 * hmag * hmag * hmag), (1.0 / 3.0));
+           tan_angle = tan(angle / 2.0);
+           n1 = h1 / hmag;
+           n2 = h2 / hmag;
+           n3 = h3 / hmag;
+           r1 = tan_angle * n1;
+           r2 = tan_angle * n2;
+           r3 = tan_angle * n3;
+           cos_angle = cos(angle);
+           sin_angle = sin(angle);
+           g[0][0] = cos_angle + n1 * n1 * (1 - cos_angle);
+           g[0][1] = n1 * n2 * (1 - cos_angle) - n3 * sin_angle;
+           g[0][2] = n1 * n3 * (1 - cos_angle) + n2 * sin_angle;
+           g[1][0] = n1 * n2 * (1 - cos_angle) + n3 * sin_angle;
+           g[1][1] = cos_angle + n2 * n2 * (1 - cos_angle);
+           g[1][2] = n2 * n3 * (1 - cos_angle) - n1 * sin_angle;
+           g[2][0] = n1 * n3 * (1 - cos_angle) - n2 * sin_angle;
+           g[2][1] = n2 * n3 * (1 - cos_angle) + n1 * sin_angle;
+           g[2][2] = cos_angle + n3 * n3 * (1 - cos_angle);
+           x = g[0][2];
+           y = g[1][2];
+           z = g[2][2];
+           if (z < 0) z = -z;
+           xpf = y - (y * (z / (z + 1)));
+           ypf = x - (x * (z / (z + 1)));
+           random = rg.Random();
+           x0001[4 * i] = xpf;
+           y0001[4 * i] = ypf;
+           xpfa = -xpf;
+           ypfa = ypf;
+           x0001[4 * i + 1] = xpfa;
+           y0001[4 * i + 1] = ypfa;
+           xpfa = xpf;
+           ypfa = -ypf;
+           x0001[4 * i + 2] = xpfa;
+           y0001[4 * i + 2] = ypfa;
+           xpfa = -xpf;
+           ypfa = -ypf;
+           x0001[4 * i + 3] = xpfa;
+           y0001[4 * i + 3] = ypfa;
+           x = g[0][0];
+           y = g[1][0];
+           z = g[2][0];
+           if (z < 0) z = -z;
+           xpf = y - (y * (z / (z + 1)));
+           ypf = x - (x * (z / (z + 1)));
+           x1120[12 * i] = xpf;
+           y1120[12 * i] = ypf;
+           xpfa = -xpf;
+           ypfa = ypf;
+           x1120[12 * i + 1] = xpfa;
+           y1120[12 * i + 1] = ypfa;
+           xpfa = xpf;
+           ypfa = -ypf;
+           x1120[12 * i + 2] = xpfa;
+           y1120[12 * i + 2] = ypfa;
+           xpfa = -xpf;
+           ypfa = -ypf;
+           x1120[12 * i + 3] = xpfa;
+           y1120[12 * i + 3] = ypfa;
+           x = (0.5 * g[0][0]) + (0.866025 * g[0][1]);
+           y = (0.5 * g[1][0]) + (0.866025 * g[1][1]);
+           z = (0.5 * g[2][0]) + (0.866025 * g[2][1]);
+           if (z < 0) z = -z;
+           xpf = y - (y * (z / (z + 1)));
+           ypf = x - (x * (z / (z + 1)));
+           x1120[12 * i + 4] = xpf;
+           y1120[12 * i + 4] = ypf;
+           xpfa = -xpf;
+           ypfa = ypf;
+           x1120[12 * i + 5] = xpfa;
+           y1120[12 * i + 5] = ypfa;
+           xpfa = xpf;
+           ypfa = -ypf;
+           x1120[12 * i + 6] = xpfa;
+           y1120[12 * i + 6] = ypfa;
+           xpfa = -xpf;
+           ypfa = -ypf;
+           x1120[12 * i + 7] = xpfa;
+           y1120[12 * i + 7] = ypfa;
+           x = (-0.5 * g[0][0]) + (0.866025 * g[0][1]);
+           y = (-0.5 * g[1][0]) + (0.866025 * g[1][1]);
+           z = (-0.5 * g[2][0]) + (0.866025 * g[2][1]);
+           if (z < 0) z = -z;
+           xpf = y - (y * (z / (z + 1)));
+           ypf = x - (x * (z / (z + 1)));
+           x1120[12 * i + 8] = xpf;
+           y1120[12 * i + 8] = ypf;
+           xpfa = -xpf;
+           ypfa = ypf;
+           x1120[12 * i + 9] = xpfa;
+           y1120[12 * i + 9] = ypfa;
+           xpfa = xpf;
+           ypfa = -ypf;
+           x1120[12 * i + 10] = xpfa;
+           y1120[12 * i + 10] = ypfa;
+           xpfa = -xpf;
+           ypfa = -ypf;
+           x1120[12 * i + 11] = xpfa;
+           y1120[12 * i + 11] = ypfa;
+           x = (0.866025 * g[0][0]) + (0.5 * g[0][1]);
+           y = (0.866025 * g[1][0]) + (0.5 * g[1][1]);
+           z = (0.866025 * g[2][0]) + (0.5 * g[2][1]);
+           if (z < 0) z = -z;
+           xpf = y - (y * (z / (z + 1)));
+           ypf = x - (x * (z / (z + 1)));
+           x1010[12 * i] = xpf;
+           y1010[12 * i] = ypf;
+           xpfa = -xpf;
+           ypfa = ypf;
+           x1010[12 * i + 1] = xpfa;
+           y1010[12 * i + 1] = ypfa;
+           xpfa = xpf;
+           ypfa = -ypf;
+           x1010[12 * i + 2] = xpfa;
+           y1010[12 * i + 2] = ypfa;
+           xpfa = -xpf;
+           ypfa = -ypf;
+           x1010[12 * i + 3] = xpfa;
+           y1010[12 * i + 3] = ypfa;
+           x = g[0][1];
+           y = g[1][1];
+           z = g[2][1];
+           if (z < 0) z = -z;
+           xpf = y - (y * (z / (z + 1)));
+           ypf = x - (x * (z / (z + 1)));
+           x1010[12 * i + 4] = xpf;
+           y1010[12 * i + 4] = ypf;
+           xpfa = -xpf;
+           ypfa = ypf;
+           x1010[12 * i + 5] = xpfa;
+           y1010[12 * i + 5] = ypfa;
+           xpfa = xpf;
+           ypfa = -ypf;
+           x1010[12 * i + 6] = xpfa;
+           y1010[12 * i + 6] = ypfa;
+           xpfa = -xpf;
+           ypfa = -ypf;
+           x1010[12 * i + 7] = xpfa;
+           y1010[12 * i + 7] = ypfa;
+           x = (-0.866025 * g[0][0]) + (0.5 * g[0][1]);
+           y = (-0.866025 * g[1][0]) + (0.5 * g[1][1]);
+           z = (-0.866025 * g[2][0]) + (0.5 * g[2][1]);
+           if (z < 0) z = -z;
+           xpf = y - (y * (z / (z + 1)));
+           ypf = x - (x * (z / (z + 1)));
+           x1010[12 * i + 8] = xpf;
+           y1010[12 * i + 8] = ypf;
+           xpfa = -xpf;
+           ypfa = ypf;
+           x1010[12 * i + 9] = xpfa;
+           y1010[12 * i + 9] = ypfa;
+           xpfa = xpf;
+           ypfa = -ypf;
+           x1010[12 * i + 10] = xpfa;
+           y1010[12 * i + 10] = ypfa;
+           xpfa = -xpf;
+           ypfa = -ypf;
+           x1010[12 * i + 11] = xpfa;
+           y1010[12 * i + 11] = ypfa;
+         }
+         return err;
+       }
+
+       /**
+        * @brief  This method will generate ODF data for a OrthoRhombic material and
+        * generate 3 scatter plots which are the
+        * <001>, <011> and <111> directions. The method is a C++ Template which the parameter
+        * type is a std::vector conforming class type that holds the data.
+        * QVector falls into this category. The input data for the
+        * euler angles is in Columnar fashion instead of row major format.
+        * @param e1s The first euler angles (input)
+        * @param e2s The second euler angles (input)
+        * @param e3s The third euler angles (input)
+        * @param weights Array of weights values. (input)
+        * @param sigmas Array of sigma values. (input)
+        * @param x001 X Values of the [001] ODF Scatter plot (Output)
+        * @param y001 Y Values of the [001] ODF Scatter plot (Output)
+        * @param x011 X Values of the [011] ODF Scatter plot (Output)
+        * @param y011 Y Values of the [011] ODF Scatter plot (Output)
+        * @param x111 X Values of the [111] ODF Scatter plot (Output)
+        * @param y111 Y Values of the [111] ODF Scatter plot (Output)
+        * @param size The number of points for the Scatter Plot
+        */
+       template<typename T>
+       int GenOrthoRhombicODFPlotData(T e1s, T e2s, T e3s, T weights, T sigmas,
+                       T &x0001, T &y0001, T &x1120, T &y1120, T &x1010, T &y1010,
+                       int size)
+       {
+         int err = -1;
+
+         return err;
+       }
+
 
   private:
     StatsGen(const StatsGen&); // Copy Constructor Not Implemented
