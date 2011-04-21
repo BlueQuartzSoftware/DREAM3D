@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>374</width>
-    <height>430</height>
+    <width>337</width>
+    <height>406</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,40 +16,20 @@
   <layout class="QVBoxLayout" name="verticalLayout_2">
    <item>
     <layout class="QGridLayout" name="gridLayout_2">
-     <item row="0" column="0" rowspan="3">
-      <widget class="QGroupBox" name="groupBox">
-       <property name="title">
-        <string>Crystal Structure</string>
-       </property>
-       <layout class="QVBoxLayout" name="verticalLayout">
-        <item>
-         <widget class="QRadioButton" name="cubicCrystalStructure">
-          <property name="text">
-           <string>Cubic</string>
-          </property>
-          <property name="checked">
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QRadioButton" name="hexCrystalStructure">
-          <property name="text">
-           <string>Hexagonal</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </widget>
-     </item>
      <item row="0" column="1">
       <widget class="QLabel" name="label">
        <property name="text">
         <string>Preset Values</string>
        </property>
+       <property name="alignment">
+        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+       </property>
       </widget>
      </item>
-     <item row="3" column="0">
+     <item row="1" column="1" rowspan="2">
+      <widget class="QListWidget" name="presetListWidget"/>
+     </item>
+     <item row="1" column="2">
       <widget class="QGroupBox" name="groupBox_2">
        <property name="title">
         <string>Selected Preset Value</string>
@@ -100,8 +80,15 @@
        </layout>
       </widget>
      </item>
-     <item row="1" column="1" rowspan="3">
-      <widget class="QListWidget" name="presetListWidget"/>
+     <item row="2" column="2">
+      <widget class="QLabel" name="label_8">
+       <property name="text">
+        <string>Double click an entry in the list to the right to transfer the settings to the fields below or enter your custom values in the fields below. </string>
+       </property>
+       <property name="wordWrap">
+        <bool>true</bool>
+       </property>
+      </widget>
      </item>
     </layout>
    </item>
