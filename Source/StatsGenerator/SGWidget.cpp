@@ -632,7 +632,7 @@ int SGWidget::writeDataToHDF5(H5ReconStatsWriter::Pointer writer)
   double stepSize = binStep;
 
   size_t nBins = 0;
-  err = writer->writeSizeDistribution(m_PhaseIndex, calcPhaseFraction, maxdiameter, mindiameter, stepSize, avglogdiam, sdlogdiam, nBins);
+  err = writer->writeSizeDistribution(m_PhaseIndex, m_CrystalStructure, calcPhaseFraction, maxdiameter, mindiameter, stepSize, avglogdiam, sdlogdiam, nBins);
   CHECK_ERROR_ON_WRITE(err, "Size Distribution")
 
   // Now that we have bins and grain sizes, push those to the other plot widgets

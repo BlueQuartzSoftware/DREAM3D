@@ -117,9 +117,11 @@ std::string H5ReconStatsReader::getDistributionType(int phase,
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5ReconStatsReader::getPhases(std::vector<int> &phases)
+int H5ReconStatsReader::getPhaseAndCrystalStructures(std::vector<int> &phases,
+                                  std::vector<AIM::Reconstruction::CrystalStructure> &xtals)
 {
   phases.clear();
+  xtals.clear();
   herr_t err = 0;
   herr_t retErr = 0;
   OPEN_HDF5_FILE(fileId, m_FileName)
@@ -138,6 +140,13 @@ int H5ReconStatsReader::getPhases(std::vector<int> &phases)
   {
     StringUtils::stringToNum(i, *pString);
     phases.push_back(i);
+    hid_t gid = H5Gopen(reconGid,(*pString).c_str() );
+    //FIXME: CHECK ERROR
+    unsigned int xtal = static_cast<unsigned int>(AIM::Reconstruction::UnknownCrystalStructure);
+    err = H5Lite::readScalarDataset(gid, AIM::HDF5::CrystalStructure, xtal);
+    //FIXME: CHECK ERROR
+    xtals.push_back(static_cast<AIM::Reconstruction::CrystalStructure>(xtal) );
+    err = H5Gclose(gid);
   }
 
   err = H5Gclose(reconGid);

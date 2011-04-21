@@ -69,6 +69,7 @@ SET (AIMCommon_HDRS
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/ANG/AngDataLoader.h
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/ANG/H5AngDataLoader.h
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/GrainGeneratorFunc.h
+    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/CrystalStructure.h
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/SurfaceMeshFunc.h
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/ReconstructionFunc.h
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/ReconstructionVTKWriter.h

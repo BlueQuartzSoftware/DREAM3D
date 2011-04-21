@@ -30,13 +30,16 @@
 
 #include "H5ReconStatsWriter.h"
 
-#include "AIM/Common/Constants.h"
+#include <string>
+
 #include "MXA/HDF5/H5Utilities.h"
 #include "MXA/HDF5/H5Lite.h"
 #include "MXA/MXATypes.h"
 #include "MXA/Utilities/MXADir.h"
 #include "MXA/Utilities/StringUtils.h"
 
+#include "AIM/Common/Constants.h"
+#include "AIM/Common/CrystalStructure.h"
 
 #define OPEN_HDF5_FILE(filename)\
   hid_t fileId = H5Utilities::openFile(filename, false);\
@@ -91,6 +94,7 @@ H5ReconStatsWriter::Pointer H5ReconStatsWriter::New(const std::string &filename)
 //
 // -----------------------------------------------------------------------------
 int H5ReconStatsWriter::writeSizeDistribution(int phase,
+                                              AIM::Reconstruction::CrystalStructure xtal,
                                               double phasefraction,
                                               double maxdiameter, double mindiameter,
                                               double binStepSize,
@@ -106,7 +110,28 @@ int H5ReconStatsWriter::writeSizeDistribution(int phase,
   std::vector<hsize_t> dims(1);
   dims[0] = 3;
 
+  unsigned int crystruct = static_cast<unsigned int>(xtal);
+  err = H5Lite::writeScalarDataset(pid, AIM::HDF5::CrystalStructure, crystruct);
+  if (err < 0)
+  {
+    H5RSW_ERROR_CHECK(AIM::HDF5::CrystalStructure)
+    retErr = err;
+  }
+  std::string xtalName = CrystalStructure::getCrystalStructureString(xtal);
+  std::string name("Name");
+  err = H5Lite::writeStringAttribute(pid, AIM::HDF5::CrystalStructure, name, xtalName);
+  if (err < 0)
+  {
+    H5RSW_ERROR_CHECK(AIM::HDF5::CrystalStructure)
+    retErr = err;
+  }
+
   err = H5Lite::writeScalarDataset(pid, AIM::HDF5::PhaseFraction, phasefraction);
+  if (err < 0)
+  {
+    H5RSW_ERROR_CHECK(AIM::HDF5::Grain_Diameter_Info)
+    retErr = err;
+  }
 
   std::vector<double> grainDiameterInfo(3);
   grainDiameterInfo[0] = binStepSize;
@@ -314,7 +339,7 @@ int H5ReconStatsWriter::writeDistributionData(int phase, const std::string &disT
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5ReconStatsWriter::writeVolumeStats(int phase, double phasefraction, double maxdiameter, double mindiameter, double diamStepSize,
+int H5ReconStatsWriter::writeVolumeStats(int phase, AIM::Reconstruction::CrystalStructure xtal, double phasefraction, double maxdiameter, double mindiameter, double diamStepSize,
                                          double avglogdiam, double sdlogdiam, std::vector<std::vector<double> > &svbovera,
                                          std::vector<std::vector<double> > &svcovera, std::vector<std::vector<double> > &svcoverb,
                                          std::vector<std::vector<double> > &neighborhoodfit, std::vector<std::vector<double> > &svomega3)
@@ -324,7 +349,7 @@ int H5ReconStatsWriter::writeVolumeStats(int phase, double phasefraction, double
 
  // std::vector<double> binNum; // = generateBins((double)maxdiameter, (double)mindiameter, diamStepSize);
   size_t nBins = 0; // Used as a variable that will get written to in the writeSizeDistribution() method
-  err = writeSizeDistribution(phase, phasefraction, (double)maxdiameter, (double)mindiameter, diamStepSize, avglogdiam, sdlogdiam, nBins);
+  err = writeSizeDistribution(phase, xtal, phasefraction, (double)maxdiameter, (double)mindiameter, diamStepSize, avglogdiam, sdlogdiam, nBins);
   if (err < 0) { retErr = err; }
 
 /* Write the Grain_SizeVBoverA_Distributions Shape Statistics which are a Beta Distribution */
@@ -424,7 +449,7 @@ int H5ReconStatsWriter::writeVolumeStats(int phase, double phasefraction, double
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5ReconStatsWriter::writeVolumeStats2D(int phase, double phasefraction, double maxdiameter, double mindiameter, double diamStepSize,
+int H5ReconStatsWriter::writeVolumeStats2D(int phase,  AIM::Reconstruction::CrystalStructure xtal, double phasefraction, double maxdiameter, double mindiameter, double diamStepSize,
                                          double avglogdiam, double sdlogdiam, std::vector<std::vector<double> > &svbovera,
                                          std::vector<std::vector<double> > &neighborhoodfit)
 {
@@ -433,7 +458,7 @@ int H5ReconStatsWriter::writeVolumeStats2D(int phase, double phasefraction, doub
 
  // std::vector<double> binNum; // = generateBins((double)maxdiameter, (double)mindiameter, diamStepSize);
   size_t nBins = 0; // Used as a variable that will get written to in the writeSizeDistribution() method
-  err = writeSizeDistribution(phase, phasefraction, (double)maxdiameter, (double)mindiameter, diamStepSize, avglogdiam, sdlogdiam, nBins);
+  err = writeSizeDistribution(phase, xtal, phasefraction, (double)maxdiameter, (double)mindiameter, diamStepSize, avglogdiam, sdlogdiam, nBins);
   if (err < 0) { retErr = err; }
 
 /* Write the Grain_SizeVBoverA_Distributions Shape Statistics which are a Beta Distribution */
