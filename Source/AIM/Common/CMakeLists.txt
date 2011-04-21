@@ -80,7 +80,6 @@ SET (AIMCommon_HDRS
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Neighbor.h
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Segment.h
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/AIMRandomNG.h
-    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/FeiConstants.h
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Constants.h
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/VTKFileUtils.h
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Quaternions.h
