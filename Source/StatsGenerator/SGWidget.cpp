@@ -80,11 +80,11 @@ if (err < 0) {\
 SGWidget::SGWidget(QWidget *parent) :
 QWidget(parent),
 m_PhaseIndex(0),
+m_CrystalStructure(AIM::Reconstruction::Cubic),
 m_SizeDistributionCurve(NULL),
 m_CutOffMin(NULL),
 m_CutOffMax(NULL),
-m_grid(NULL),
-m_CrystalStructure(AIM::Reconstruction::Cubic)
+m_grid(NULL)
 {
   setupUi(this);
   setupGui();
@@ -202,6 +202,10 @@ void SGWidget::setupGui()
   m_grid->setMinPen(QPen(Qt::lightGray, 0, Qt::DotLine));
   m_grid->attach(m_SizeDistributionPlot);
 
+  // For the ODF Tab we want the MDF functionality
+  m_ODFWidget->enableMDFTab(true);
+  m_AxisODFWidget->setCrystalStructure(AIM::Reconstruction::OrthoRhombic);
+
   updateSizeDistributionPlot();
   calculateNumberOfBins();
 }
@@ -218,6 +222,7 @@ void SGWidget::setPhaseIndex(int index)
   m_COverBPlot->setPhaseIndex(m_PhaseIndex);
   m_NeighborPlot->setPhaseIndex(m_PhaseIndex);
   m_ODFWidget->setPhaseIndex(m_PhaseIndex);
+  m_AxisODFWidget->setPhaseIndex(m_PhaseIndex);
 }
 
 // -----------------------------------------------------------------------------
@@ -240,6 +245,9 @@ void SGWidget::setCrystalStructure(AIM::Reconstruction::CrystalStructure xtal)
   m_COverBPlot->setCrystalStructure(xtal);
   m_NeighborPlot->setCrystalStructure(xtal);
   m_ODFWidget->setCrystalStructure(xtal);
+  /* Note that we do NOT want to set the crystal structure for the AxisODF widget
+   * because we need that crystal structure to be OrthoRhombic in order for those
+   * calculations to be performed correctly */
 }
 
 // -----------------------------------------------------------------------------
@@ -573,6 +581,18 @@ void SGWidget::plotSizeDistribution()
   m_NeighborPlot->setBins(binsizes);
 }
 
+
+#define SGWIGET_WRITE_ERROR_CHECK(var)\
+    if (err < 1)  {\
+      QString msg ("Error Writing Data ");\
+      msg.append(QString::fromStdString(var));\
+      msg.append(" to the HDF5 file");\
+      QMessageBox::critical(this, tr("StatsGenerator"),\
+                                    msg,\
+                                    QMessageBox::Default);\
+      retErr = -1;\
+    }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -585,15 +605,11 @@ int SGWidget::writeDataToHDF5(H5ReconStatsWriter::Pointer writer)
                                   QMessageBox::Default);
     return -1;
   }
+  int retErr = 0;
+  int err = 0;
   double mu, sigma, cutOff, binStep;
   gatherSizeDistributionFromGui(mu, sigma, cutOff, binStep);
-#ifndef _WIN32
-#warning phaseFraction needs to be calculated somewhere for this function
-#warning Generate the HDFGroup name based on the PhaseIndex
-#endif
-
   double calcPhaseFraction = m_PhaseFraction / m_TotalPhaseFraction;
-
 
   QwtArray<double> xCo;
   QwtArray<double> yCo;
@@ -602,7 +618,7 @@ int SGWidget::writeDataToHDF5(H5ReconStatsWriter::Pointer writer)
   double yMax = std::numeric_limits<double>::min();
   QwtArray<double> x;
   QwtArray<double> y;
-  int err = computeBinsAndCutOffs(mu, sigma, cutOff, binStep, binsizes, xCo, yCo, xMax, yMax, x, y);
+  err = computeBinsAndCutOffs(mu, sigma, cutOff, binStep, binsizes, xCo, yCo, xMax, yMax, x, y);
   if (err < 0)
   {
     return err;
@@ -622,12 +638,18 @@ int SGWidget::writeDataToHDF5(H5ReconStatsWriter::Pointer writer)
   // Now that we have bins and grain sizes, push those to the other plot widgets
   // Setup Each Plot Widget
   err = m_Omega3Plot->writeDataToHDF5(writer, AIM::HDF5::Grain_SizeVOmega3_Distributions);
+  SGWIGET_WRITE_ERROR_CHECK(AIM::HDF5::Grain_SizeVOmega3_Distributions)
   err = m_BOverAPlot->writeDataToHDF5(writer, AIM::HDF5::Grain_SizeVBoverA_Distributions);
+  SGWIGET_WRITE_ERROR_CHECK(AIM::HDF5::Grain_SizeVBoverA_Distributions)
   err = m_COverAPlot->writeDataToHDF5(writer, AIM::HDF5::Grain_SizeVCoverA_Distributions);
+  SGWIGET_WRITE_ERROR_CHECK(AIM::HDF5::Grain_SizeVCoverA_Distributions)
   err = m_COverBPlot->writeDataToHDF5(writer, AIM::HDF5::Grain_SizeVCoverB_Distributions);
+  SGWIGET_WRITE_ERROR_CHECK(AIM::HDF5::Grain_SizeVCoverB_Distributions)
   err = m_NeighborPlot->writeDataToHDF5(writer, AIM::HDF5::Grain_SizeVNeighbors_Distributions);
+  SGWIGET_WRITE_ERROR_CHECK(AIM::HDF5::Grain_SizeVNeighbors_Distributions)
   err = m_ODFWidget->writeDataToHDF5(writer);
-  return 1;
+  err = m_AxisODFWidget->writeDataToHDF5(writer);
+  return retErr;
 }
 
 // -----------------------------------------------------------------------------

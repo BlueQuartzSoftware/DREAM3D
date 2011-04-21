@@ -40,7 +40,7 @@
 
 
 class SGODFTableModel;
-class SGMDFTableModel;
+class StatsGenMDFWidget;
 class QwtPlot;
 class QwtPlotCurve;
 
@@ -61,46 +61,40 @@ class StatsGenODFWidget : public QWidget, private Ui::StatsGenODFWidget
       Weights_Spreads = 0,
       ODF_001,
       ODF_011,
-      ODF_111,
-      MDF_Tab
+      ODF_111
     };
 
     StatsGenODFWidget(QWidget *parent = 0);
     virtual ~StatsGenODFWidget();
 
+    void setupGui();
+    void initQwtPlot(QString xAxisName, QString yAxisName, QwtPlot* plot);
+    void enableMDFTab(bool b);
 
-    void setPlotTitle(QString title);
+    void setPhaseIndex(int value);
+    int getPhaseIndex();
+
+    void setCrystalStructure(AIM::Reconstruction::CrystalStructure value);
+    AIM::Reconstruction::CrystalStructure getCrystalStructure();
 
     int writeDataToHDF5(H5ReconStatsWriter::Pointer writer);
     int readDataFromHDF5(H5ReconStatsReader::Pointer reader,
                         QVector<double>  &bins,
                         const std::string &hdf5GroupName);
-    void setXAxisName(QString name);
-    void setYAxisName(QString name);
-
-    void setupGui();
-    void initQwtPlot(QString xAxisName, QString yAxisName, QwtPlot* plot);
-
-    MXA_INSTANCE_PROPERTY(int, PhaseIndex);
-    MXA_INSTANCE_PROPERTY(AIM::Reconstruction::CrystalStructure, CrystalStructure);
 
     protected slots:
       void on_m_CalculateODFBtn_clicked();
-
-      void on_addMDFRowBtn_clicked();
-      void on_deleteMDFRowBtn_clicked();
-      void on_m_MDFUpdateBtn_clicked();
-      void on_addTextureBtn_clicked();
-
+      void on_addODFTextureBtn_clicked();
+      void on_deleteODFTextureBtn_clicked();
 
     protected:
-      void resetTableModel();
 
     private:
-      SGODFTableModel* m_TableModel;
-      SGMDFTableModel* m_MdfTableModel;
-
-      QVector<QwtPlotCurve*> m_PlotCurves;
+      int      m_PhaseIndex;
+      AIM::Reconstruction::CrystalStructure      m_CrystalStructure;
+      SGODFTableModel*        m_ODFTableModel;
+      StatsGenMDFWidget*      m_MDFWidget;
+      QVector<QwtPlotCurve*>  m_PlotCurves;
 
       StatsGenODFWidget(const StatsGenODFWidget&); // Copy Constructor Not Implemented
       void operator=(const StatsGenODFWidget&); // Operator '=' Not Implemented
