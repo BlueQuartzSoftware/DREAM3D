@@ -3750,7 +3750,7 @@ int ReconstructionFunc::volume_stats(H5ReconStatsWriter::Pointer h5io)
 	  }
 	  sdlogdiam = sdlogdiam / actualgrains;
 	  sdlogdiam = pow(sdlogdiam, 0.5);
-	  retErr = h5io->writeVolumeStats(iter, phasefraction[iter], maxdiameter[iter], mindiameter[iter], 1.0, avglogdiam, sdlogdiam, svbovera, svcovera, svcoverb, neighborhoodfit, svomega3);
+	  retErr = h5io->writeVolumeStats(iter, crystruct[iter], phasefraction[iter], maxdiameter[iter], mindiameter[iter], 1.0, avglogdiam, sdlogdiam, svbovera, svcovera, svcoverb, neighborhoodfit, svomega3);
   }
 
   return retErr;
@@ -3760,9 +3760,9 @@ int ReconstructionFunc::volume_stats2D(H5ReconStatsWriter::Pointer h5io)
 {
   int retErr = 0;
   double actualgrains = 0;
-  double avgdiam = 0;
+ // double avgdiam = 0;
   double avglogdiam = 0;
-  int neighdistfunc[3];
+//  int neighdistfunc[3];
   vector<vector<double> > neighborhood;
   vector<vector<double> > neighborhoodfit;
   vector<vector<double> > svbovera;
@@ -3833,7 +3833,7 @@ int ReconstructionFunc::volume_stats2D(H5ReconStatsWriter::Pointer h5io)
 	  }
 	  avglogdiam = avglogdiam / actualgrains;
 	  double sdlogdiam = 0;
-	  for (int j = 1; j < numgrains; j++)
+	  for (size_t j = 1; j < numgrains; j++)
 	  {
 		int onedge = m_Grains[j]->surfacegrain;
 		if (onedge == 0 && m_Grains[j]->active == 1 && m_Grains[j]->phase == iter)
@@ -3877,7 +3877,7 @@ int ReconstructionFunc::volume_stats2D(H5ReconStatsWriter::Pointer h5io)
 	  sdlogdiam = sdlogdiam / actualgrains;
 	  sdlogdiam = pow(sdlogdiam, 0.5);
 
-	  retErr = h5io->writeVolumeStats2D(iter, phasefraction[iter], maxdiameter[iter], mindiameter[iter], 1.0, avglogdiam, sdlogdiam, svbovera, neighborhoodfit);
+	  retErr = h5io->writeVolumeStats2D(iter, crystruct[iter], phasefraction[iter], maxdiameter[iter], mindiameter[iter], 1.0, avglogdiam, sdlogdiam, svbovera, neighborhoodfit);
   }
   return retErr;
 }
@@ -3947,7 +3947,7 @@ void ReconstructionFunc::deformation_stats(const std::string &filename, const st
   int kmbin, gambin, lmgbin;
   int gbbin, tjbin, qpbin;
   int sfbin, ssapbin, sfmmbin, disbin, iqbin;
-  int actualpoints = 0;
+ // int actualpoints = 0;
   for (int h = 0; h < 25; h++)
   {
 	kmdist[h] = 0;
@@ -4410,8 +4410,11 @@ void ReconstructionFunc::deformation_stats(const std::string &filename, const st
   fprintf(vtkFile,  "data set from FFT2dx_GB\n");
   fprintf(vtkFile,  "ASCII\n");
   fprintf(vtkFile,  "DATASET UNSTRUCTURED_GRID\n");
-  fprintf(vtkFile,  "POINTS %d float\n", m_Grains.size()-1);
-  for(int i=1;i<m_Grains.size();i++)
+  fprintf(vtkFile,  "POINTS %ld float\n", m_Grains.size()-1);
+
+  std::vector<Grain::Pointer>::size_type size = m_Grains.size();
+
+  for(size_t i=1;i<size;i++)
   {
 		double x = m_Grains[i]->IPF[0] - (m_Grains[i]->IPF[0] * (m_Grains[i]->IPF[2] / (m_Grains[i]->IPF[2] + 1)));;
 		double y = m_Grains[i]->IPF[1] - (m_Grains[i]->IPF[1] * (m_Grains[i]->IPF[2] / (m_Grains[i]->IPF[2] + 1)));;
@@ -4419,17 +4422,17 @@ void ReconstructionFunc::deformation_stats(const std::string &filename, const st
 		fprintf(vtkFile, "%f %f %f\n", x, y, z);
   }
 
-  fprintf(vtkFile, "CELLS %d %d\n", m_Grains.size()-1, ((m_Grains.size()-1)*2));
+  fprintf(vtkFile, "CELLS %ld %ld\n", m_Grains.size()-1, ((m_Grains.size()-1)*2));
 //  Store the Grain Ids so we don't have to re-read the triangles file again
-  for(int i=1;i<m_Grains.size();i++)
+  for(size_t i=1;i<size;i++)
   {
-	   fprintf(vtkFile, "1 %d\n", (i-1));
+	   fprintf(vtkFile, "1 %ld\n", (i-1));
   }
 
   // Write the CELL_TYPES into the file
   fprintf(vtkFile, "\n");
-  fprintf(vtkFile, "CELL_TYPES %d\n", m_Grains.size()-1);
-  for(int i=1;i<m_Grains.size();i++)
+  fprintf(vtkFile, "CELL_TYPES %ld\n", m_Grains.size()-1);
+  for(size_t i=1;i<size;i++)
   {
 	fprintf(vtkFile, "1\n");
   }
@@ -4437,10 +4440,10 @@ void ReconstructionFunc::deformation_stats(const std::string &filename, const st
 
   // Write the GrainId Data to teh file
   fprintf(vtkFile, "\n");
-  fprintf(vtkFile, "CELL_DATA %d\n", m_Grains.size()-1);
+  fprintf(vtkFile, "CELL_DATA %ld\n", m_Grains.size()-1);
   fprintf(vtkFile, "SCALARS Misorientation float\n");
   fprintf(vtkFile, "LOOKUP_TABLE default\n");
-  for (int i = 1; i < m_Grains.size(); i++)
+  for (size_t i = 1; i < size; i++)
   {
 	  double miso = m_Grains[i]->averagemisorientation;
 	  fprintf(vtkFile, "%f\n", miso);

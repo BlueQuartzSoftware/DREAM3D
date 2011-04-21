@@ -97,11 +97,11 @@ class AIMCOMMON_EXPORT H5ReconStatsWriter
                               std::vector<std::string> &columnHeaders,
                               std::vector<std::vector<double> > &colData);
 
-    int writeSizeDistribution(int phase, double phasefraction, double maxdiameter, double mindiameter, double binStepSize,
+    int writeSizeDistribution(int phase, AIM::Reconstruction::CrystalStructure xtal, double phasefraction, double maxdiameter, double mindiameter, double binStepSize,
                               double avglogdiam, double sdlogdiam,
                               size_t &numberOfBins);
 
-    int writeVolumeStats(int phase, double phasefraction, double maxdiameter, double mindiameter, double diamStepSize,
+    int writeVolumeStats(int phase,  AIM::Reconstruction::CrystalStructure xtal, double phasefraction, double maxdiameter, double mindiameter, double diamStepSize,
                          double avglogdiam, double sdlogdiam,
                          std::vector<std::vector<double> > &svbovera,
                          std::vector<std::vector<double> > &svcovera,
@@ -109,7 +109,7 @@ class AIMCOMMON_EXPORT H5ReconStatsWriter
                          std::vector<std::vector<double> > &neighborhoodfit,
                          std::vector<std::vector<double> > &svomega3);
 
-    int writeVolumeStats2D(int phase, double phasefraction, double maxdiameter, double mindiameter, double diamStepSize,
+    int writeVolumeStats2D(int phase,  AIM::Reconstruction::CrystalStructure xtal, double phasefraction, double maxdiameter, double mindiameter, double diamStepSize,
                          double avglogdiam, double sdlogdiam,
                          std::vector<std::vector<double> > &svbovera,
                          std::vector<std::vector<double> > &neighborhoodfit);
