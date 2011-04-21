@@ -51,8 +51,9 @@ add_definitions(-DAIM_USE_QT
 
 include_directories(${PROJECT_CODE_DIR})
 include_directories(${HDF5_INCLUDE_DIR})
-include_directories( ${Representation_SOURCE_DIR} )
-include_directories( ${Representation_BINARY_DIR} )
+include_directories(${Representation_SOURCE_DIR})
+include_directories(${Representation_BINARY_DIR})
+include_directories(${AIMRepresentation_BINARY_DIR}/QtSupport)
 
 # List the source files here
 SET (Representation_SRCS

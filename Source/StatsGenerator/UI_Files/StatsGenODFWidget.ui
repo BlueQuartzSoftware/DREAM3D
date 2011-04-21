@@ -6,14 +6,29 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>850</width>
-    <height>714</height>
+    <width>764</width>
+    <height>624</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_2">
+   <property name="spacing">
+    <number>6</number>
+   </property>
+   <property name="leftMargin">
+    <number>4</number>
+   </property>
+   <property name="topMargin">
+    <number>4</number>
+   </property>
+   <property name="rightMargin">
+    <number>4</number>
+   </property>
+   <property name="bottomMargin">
+    <number>8</number>
+   </property>
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="tabPosition">
@@ -27,8 +42,11 @@
        <string>Weights and Spreads</string>
       </attribute>
       <layout class="QGridLayout" name="gridLayout">
+       <property name="margin">
+        <number>4</number>
+       </property>
        <item row="0" column="0">
-        <widget class="QTableView" name="m_TableView_2">
+        <widget class="QTableView" name="m_ODFTableView">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
            <horstretch>0</horstretch>
@@ -44,21 +62,31 @@
         </widget>
        </item>
        <item row="1" column="0">
-        <layout class="QHBoxLayout" name="horizontalLayout_4" stretch="0,0,0">
+        <layout class="QHBoxLayout" name="horizontalLayout_4" stretch="0,0,0,0,0">
          <property name="sizeConstraint">
           <enum>QLayout::SetMinAndMaxSize</enum>
          </property>
          <item>
-          <widget class="QToolButton" name="addTextureBtn">
+          <widget class="QToolButton" name="addODFTextureBtn">
            <property name="text">
             <string>+</string>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QToolButton" name="deleteTextureBtn">
+          <widget class="QToolButton" name="deleteODFTextureBtn">
            <property name="text">
             <string>-</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="label_2">
+           <property name="text">
+            <string>By default if no custom rows are entered then a completely random ODF will be generated. Adding rows to this table results in those texture values being integrated into the random ODF data.</string>
+           </property>
+           <property name="wordWrap">
+            <bool>true</bool>
            </property>
           </widget>
          </item>
@@ -75,10 +103,6 @@
            </property>
           </spacer>
          </item>
-        </layout>
-       </item>
-       <item row="3" column="0">
-        <layout class="QHBoxLayout" name="horizontalLayout">
          <item>
           <widget class="QPushButton" name="m_CalculateODFBtn">
            <property name="text">
@@ -86,30 +110,7 @@
            </property>
           </widget>
          </item>
-         <item>
-          <spacer name="horizontalSpacer">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
         </layout>
-       </item>
-       <item row="2" column="0">
-        <widget class="QTableView" name="m_TableView">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-        </widget>
        </item>
       </layout>
      </widget>
@@ -201,99 +202,6 @@
            <width>1</width>
            <height>1</height>
           </size>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </widget>
-     <widget class="QWidget" name="mdf_tab">
-      <attribute name="title">
-       <string>MDF</string>
-      </attribute>
-      <layout class="QHBoxLayout" name="horizontalLayout_3">
-       <property name="spacing">
-        <number>4</number>
-       </property>
-       <property name="margin">
-        <number>4</number>
-       </property>
-       <item>
-        <layout class="QVBoxLayout" name="verticalLayout_6">
-         <item>
-          <widget class="QTableView" name="m_MDFTableView">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Minimum" vsizetype="Ignored">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="minimumSize">
-            <size>
-             <width>300</width>
-             <height>0</height>
-            </size>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="0,0,0">
-           <property name="sizeConstraint">
-            <enum>QLayout::SetMinAndMaxSize</enum>
-           </property>
-           <item>
-            <widget class="QToolButton" name="addMDFRowBtn">
-             <property name="text">
-              <string>+</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QToolButton" name="deleteMDFRowBtn">
-             <property name="text">
-              <string>-</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QPushButton" name="m_MDFUpdateBtn">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="text">
-              <string>Update</string>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </item>
-         <item>
-          <widget class="QLabel" name="label">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="text">
-            <string>Some Message about how the data was generated.</string>
-           </property>
-           <property name="wordWrap">
-            <bool>true</bool>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </item>
-       <item>
-        <widget class="QwtPlot" name="m_MDFPlot">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Ignored" vsizetype="Ignored">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
          </property>
         </widget>
        </item>

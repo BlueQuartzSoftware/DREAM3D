@@ -73,28 +73,19 @@ class SGODFItemDelegate : public QStyledItemDelegate
     // -----------------------------------------------------------------------------
     QWidget* createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const
     {
-      QLineEdit* weight;
+      QLineEdit* editor;
+      editor = new QLineEdit(parent);
+      editor->setFrame(false);
 
       QDoubleValidator* weightValidator;
-
+      weightValidator = new QDoubleValidator(editor);
+      weightValidator->setDecimals(4);
+      editor->setValidator(weightValidator);
 
       qint32 col = index.column();
-      switch(col)
+      if (col < SGODFTableModel::ColumnCount)
       {
-        case SGODFTableModel::Texture:
-          return NULL;
-          break;
-
-        case SGODFTableModel::Weight:
-          weight = new QLineEdit(parent);
-          weight->setFrame(false);
-          weightValidator = new QDoubleValidator(weight);
-          weightValidator->setDecimals(6);
-          weight->setValidator(weightValidator);
-          return weight;
-
-        default:
-          break;
+        return editor;
       }
       return QStyledItemDelegate::createEditor(parent, option, index);
     }
@@ -105,15 +96,12 @@ class SGODFItemDelegate : public QStyledItemDelegate
     void setEditorData(QWidget *editor, const QModelIndex &index) const
     {
       qint32 col = index.column();
-   //   bool ok = false;
-      if (col == SGODFTableModel::Weight )
+      if (col < SGODFTableModel::ColumnCount)
       {
-   //     double value = index.model()->data(index).toDouble(&ok);
         QLineEdit* lineEdit = qobject_cast<QLineEdit* > (editor);
         Q_ASSERT(lineEdit);
         lineEdit->setText(index.model()->data(index).toString());
       }
-
       else QStyledItemDelegate::setEditorData(editor, index);
     }
 
@@ -122,10 +110,8 @@ class SGODFItemDelegate : public QStyledItemDelegate
     // -----------------------------------------------------------------------------
     void setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const
     {
-      //  std::cout << "SGODFItemDelegate::setModelData" << std::endl;
       qint32 col = index.column();
-      //  bool ok = false;
-      if (col == SGODFTableModel::Weight)
+      if (col < SGODFTableModel::ColumnCount)
       {
         QLineEdit* lineEdit = qobject_cast<QLineEdit* > (editor);
         Q_ASSERT(lineEdit);
@@ -133,9 +119,7 @@ class SGODFItemDelegate : public QStyledItemDelegate
         double v = lineEdit->text().toDouble(&ok);
         model->setData(index, v);
       }
-
       else QStyledItemDelegate::setModelData(editor, model, index);
-
     }
 
   private:
