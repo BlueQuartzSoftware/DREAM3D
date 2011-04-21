@@ -184,6 +184,10 @@ void GrainGeneratorWidget::on_gg_LoadSettingsBtn_clicked()
   if ( true == file.isEmpty() ){return;  }
   QSettings prefs(file, QSettings::IniFormat, this);
   readSettings(prefs);
+  if (verifyPathExists(gg_OutputDir->text(), gg_OutputDir) )
+  {
+    checkIOFiles();
+  }
 }
 // -----------------------------------------------------------------------------
 //

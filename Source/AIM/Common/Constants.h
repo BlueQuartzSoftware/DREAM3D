@@ -82,6 +82,7 @@ namespace AIM
     const std::string MicroTextureBins("MicroTextureBins");
     const std::string Stats("Stats");
     const std::string PhaseFraction("PhaseFraction");
+    const std::string CrystalStructure("CrystalStructure");
     const std::string Grain_Diameter_Info("Grain_Diameter_Info");
     const std::string Grain_Size_Distribution("GrainSize Distribution");
     const std::string Grain_SizeVBoverA_Distributions("GrainSize Vs B Over A Distributions");
@@ -131,11 +132,15 @@ namespace AIM
     const std::string HDF5GrainFile("Reconstruction_Grains.h5grain");
     const std::string H5StatisticsFile("Reconstruction_Results.h5");
 
+    /**
+     * @brief IF YOU CHANGE THE VALUES THERE ARE DEEP RAMIFICATIONS IN THE CODE BUT
+     * MOSTLY IN THE HDF5 FILES WHICH ARE WRITTEN USING THE ENUMERATIONS.
+     */
     enum CrystalStructure {
-        Hexagonal = 0,
-        Cubic = 1,
-        OrthoRhombic = 2,
-        UnknownCrystalStructure = 999
+        Hexagonal = 0,               //!< Hexagonal
+        Cubic = 1,                   //!< Cubic
+        OrthoRhombic = 2,            //!< OrthoRhombic
+        UnknownCrystalStructure = 999//!< UnknownCrystalStructure
     };
 
     enum AlignmentMethod {

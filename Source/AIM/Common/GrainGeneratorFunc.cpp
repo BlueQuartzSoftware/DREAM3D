@@ -83,26 +83,33 @@ GrainGeneratorFunc::~GrainGeneratorFunc()
     for(size_t n = 0; n < size; ++n) { array[n] = (value); }
 
 
-void GrainGeneratorFunc::initialize(int32_t m_NumGrains, int32_t m_ShapeClass, double m_XResolution, double m_YResolution, double m_ZResolution,
-        double m_fillingerrorweight, double m_neighborhooderrorweight, double m_sizedisterrorweight, int32_t m_Precipitates,
-              vector<AIM::Reconstruction::CrystalStructure> m_CrystalStructure, double m_FractionPrecipitates)
+void GrainGeneratorFunc::initialize(int32_t m_NumGrains, int32_t m_ShapeClass,
+                                    double m_XResolution, double m_YResolution, double m_ZResolution,
+        double m_fillingerrorweight, double m_neighborhooderrorweight, double m_sizedisterrorweight,
+        int32_t m_Precipitates, double m_FractionPrecipitates,std::vector<AIM::Reconstruction::CrystalStructure> m_CrystalStructure)
 {
-
+  numgrains = m_NumGrains;
+  shapeclass = m_ShapeClass;
   resx = m_XResolution;
   resy = m_YResolution;
   resz = m_ZResolution;
-
-  resdiff = 1;
-
-  numgrains = m_NumGrains;
-  numextragrains = (25*m_NumGrains);
-  shapeclass = m_ShapeClass;
-  crystruct = m_CrystalStructure;
-
   fillingerrorweight = m_fillingerrorweight;
   neighborhooderrorweight = m_neighborhooderrorweight;
   sizedisterrorweight = m_sizedisterrorweight;
+  crystruct = m_CrystalStructure;
 
+  initializeArrays();
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void GrainGeneratorFunc::initializeArrays()
+{
+  //------------------
+  resdiff = 1;
+  numextragrains = (25*numgrains);
   m_Grains.resize(numextragrains+1);
   for(size_t g = 0; g < m_Grains.size(); ++g)
   {
@@ -118,31 +125,33 @@ void GrainGeneratorFunc::initialize(int32_t m_NumGrains, int32_t m_ShapeClass, d
   simmicrotex = new double *[crystruct.size()];
   for(int i=0;i<crystruct.size();i++)
   {
-	  if(crystruct[i] == AIM::Reconstruction::Hexagonal) nElements = 36*36*12;
-	  if(crystruct[i] == AIM::Reconstruction::Cubic) nElements = 18*18*18;
+    if(crystruct[i] == AIM::Reconstruction::Hexagonal) nElements = 36*36*12;
+    if(crystruct[i] == AIM::Reconstruction::Cubic) nElements = 18*18*18;
 
-	  double initValue = 1.0/(double)(nElements);
-	  actualodf[i] = new double [nElements];
-	  GG_INIT_DOUBLE_ARRAY(actualodf[i], initValue, nElements);
-	  simodf[i] = new double [nElements];
-	  GG_INIT_DOUBLE_ARRAY(simodf[i], 0.0, nElements);
-	  actualmdf[i] = new double [nElements];
-	  GG_INIT_DOUBLE_ARRAY(actualmdf[i], initValue, nElements);
-	  simmdf[i] = new double [nElements];
-	  GG_INIT_DOUBLE_ARRAY(simmdf[i], 0.0, nElements);
+    double initValue = 1.0/(double)(nElements);
+    actualodf[i] = new double [nElements];
+    GG_INIT_DOUBLE_ARRAY(actualodf[i], initValue, nElements);
+    simodf[i] = new double [nElements];
+    GG_INIT_DOUBLE_ARRAY(simodf[i], 0.0, nElements);
+    actualmdf[i] = new double [nElements];
+    GG_INIT_DOUBLE_ARRAY(actualmdf[i], initValue, nElements);
+    simmdf[i] = new double [nElements];
+    GG_INIT_DOUBLE_ARRAY(simmdf[i], 0.0, nElements);
 
-	  nElements = 18*18*18;
-	  initValue = (1.0/double(nElements));
-	  axisodf[i] = new double [nElements];
-	  GG_INIT_DOUBLE_ARRAY(axisodf[i], initValue, nElements);
-	  nElements = 10;
-	  initValue = (1.0/double(nElements));
-	  actualmicrotex[i] = new double [nElements];
-	  GG_INIT_DOUBLE_ARRAY(actualmicrotex[i], initValue, nElements);
-	  simmicrotex[i] = new double [nElements];
-	  GG_INIT_DOUBLE_ARRAY(simmicrotex[i], 0.0, nElements);
+    nElements = 18*18*18;
+    initValue = (1.0/double(nElements));
+    axisodf[i] = new double [nElements];
+    GG_INIT_DOUBLE_ARRAY(axisodf[i], initValue, nElements);
+    nElements = 10;
+    initValue = (1.0/double(nElements));
+    actualmicrotex[i] = new double [nElements];
+    GG_INIT_DOUBLE_ARRAY(actualmicrotex[i], initValue, nElements);
+    simmicrotex[i] = new double [nElements];
+    GG_INIT_DOUBLE_ARRAY(simmicrotex[i], 0.0, nElements);
   }
 }
+
+
 void GrainGeneratorFunc::initialize2()
 {
   resx = resx*4.0;
@@ -170,10 +179,10 @@ if (err < 0) {\
   std::cout << "  Line: " << __LINE__ << std::endl;\
 return err; }
 
-#define READ_2_COLUMN_STATS_DATA(err, phase, group, var, distribution, Col0Hdr, Col1Hdr, ColCount)\
+#define READ_2_COLUMN_STATS_DATA(err, index, phase, group, var, distribution, Col0Hdr, Col1Hdr, ColCount)\
 {\
   disType = h5io->getDistributionType(phase, group, dt);\
-  var[phase].resize(numdiameterbins[phase]);\
+  var[index].resize(numdiameterbins[index]);\
   std::vector<double> col0;\
   std::vector<double> col1;\
   switch(dt)\
@@ -187,9 +196,9 @@ return err; }
       CHECK_STATS_READ_ERROR(err, group, Col1Hdr)\
       for (size_t temp7 = 0; temp7 < nBins; temp7++)\
       {\
-        var[phase][temp7].resize(ColCount);\
-        var[phase][temp7][0] = col0[temp7];\
-        var[phase][temp7][1] = col1[temp7];\
+        var[index][temp7].resize(ColCount);\
+        var[index][temp7][0] = col0[temp7];\
+        var[index][temp7][1] = col1[temp7];\
       }\
       break;\
     default:\
@@ -201,10 +210,10 @@ return err; }
   }\
 }
 
-#define READ_3_COLUMN_STATS_DATA(err, phase, group, var, distribution, Col0Hdr, Col1Hdr, Col2Hdr, ColCount)\
+#define READ_3_COLUMN_STATS_DATA(err, index, phase, group, var, distribution, Col0Hdr, Col1Hdr, Col2Hdr, ColCount)\
 {\
   disType = h5io->getDistributionType(phase, group, dt);\
-  var[phase].resize(numdiameterbins[phase]);\
+  var[index].resize(numdiameterbins[index]);\
   std::vector<double> col0;\
   std::vector<double> col1;\
   std::vector<double> col2;\
@@ -222,10 +231,10 @@ return err; }
       CHECK_STATS_READ_ERROR(err, group, Col2Hdr)\
       for (size_t temp7 = 0; temp7 < nBins; temp7++)\
       {\
-        var[phase][temp7].resize(ColCount);\
-        var[phase][temp7][0] = col0[temp7];\
-        var[phase][temp7][1] = col1[temp7];\
-        var[phase][temp7][2] = col2[temp7];\
+        var[index][temp7].resize(ColCount);\
+        var[index][temp7][0] = col0[temp7];\
+        var[index][temp7][1] = col1[temp7];\
+        var[index][temp7][2] = col2[temp7];\
       }\
       break;\
   default:\
@@ -243,36 +252,55 @@ int GrainGeneratorFunc::readReconStatsData(H5ReconStatsReader::Pointer h5io)
   std::vector<double> grainDiamInfo;
   std::vector<double> double_data;
   std::string path;
-  phasefraction.resize(crystruct.size());
-  mindiameter.resize(crystruct.size());
-  maxdiameter.resize(crystruct.size());
-  binstepsize.resize(crystruct.size());
-  numdiameterbins.resize(crystruct.size());
-  avgdiam.resize(crystruct.size());
-  sddiam.resize(crystruct.size());
-  grainsizediststep.resize(crystruct.size());
-  grainsizedist.resize(crystruct.size());
-  simgrainsizedist.resize(crystruct.size());
-  bovera.resize(crystruct.size());
-  covera.resize(crystruct.size());
-  coverb.resize(crystruct.size());
-  omega3.resize(crystruct.size());
-  neighborhood.resize(crystruct.size());
 
-  for(int i=0;i<crystruct.size();i++)
+  // Read the Phase and Crystal Structure information from the Stats File
+  std::vector<int> phases;
+  err = h5io->getPhaseAndCrystalStructures(phases, crystruct);
+  if (err < 0)
   {
+    return err;
+  }
+
+  // Now that we have that information - finish initializing the arrays
+  initializeArrays();
+
+  // Initialize some more arrays
+  size_t size = crystruct.size();
+  phasefraction.resize(size);
+  mindiameter.resize(size);
+  maxdiameter.resize(size);
+  binstepsize.resize(size);
+  numdiameterbins.resize(size);
+  avgdiam.resize(size);
+  sddiam.resize(size);
+  grainsizediststep.resize(size);
+  grainsizedist.resize(size);
+  simgrainsizedist.resize(size);
+  bovera.resize(size);
+  covera.resize(size);
+  coverb.resize(size);
+  omega3.resize(size);
+  neighborhood.resize(size);
+  neighbordist.resize(size);
+
+  int phase = -1;
+  for (size_t i = 0; i < size; i++)
+  {
+    phase = phases[i];
 	  /* Read the PhaseFraction Value*/
-	  err = h5io->readPhaseFractionDataset(i, AIM::HDF5::PhaseFraction, phasefraction);
+    std::vector<double> pFraction;
+	  err = h5io->readStatsDataset(phase, AIM::HDF5::PhaseFraction, pFraction);
+	  phasefraction[i] = pFraction.front();
 
 	  /* Read the BinNumbers data set */
 	  std::vector<double> bins;
-	  err = h5io->readStatsDataset(i, AIM::HDF5::BinNumber, bins);
+	  err = h5io->readStatsDataset(phase, AIM::HDF5::BinNumber, bins);
 	  CHECK_STATS_READ_ERROR(err, AIM::HDF5::Reconstruction, AIM::HDF5::BinNumber)
 	  numdiameterbins[i] = bins.size();
 	  size_t nBins = bins.size();
 
 	  /* Read the Grain_Diameter_Info Data */
-	  err = h5io->readStatsDataset(i, AIM::HDF5::Grain_Diameter_Info, grainDiamInfo);
+	  err = h5io->readStatsDataset(phase, AIM::HDF5::Grain_Diameter_Info, grainDiamInfo);
 	  CHECK_STATS_READ_ERROR(err,  AIM::HDF5::Reconstruction, AIM::HDF5::Grain_Diameter_Info)
 
 	  binstepsize[i] = grainDiamInfo[0];
@@ -280,7 +308,7 @@ int GrainGeneratorFunc::readReconStatsData(H5ReconStatsReader::Pointer h5io)
 	  mindiameter[i] = grainDiamInfo[2];
 
 	  /* Read the Grain_Size_Distribution Data */
-	  err = h5io->readStatsDataset(i, AIM::HDF5::Grain_Size_Distribution, double_data);
+	  err = h5io->readStatsDataset(phase, AIM::HDF5::Grain_Size_Distribution, double_data);
 	  CHECK_STATS_READ_ERROR(err,  AIM::HDF5::Reconstruction, AIM::HDF5::Grain_Size_Distribution)
 	  avgdiam[i] = double_data[0];
 	  sddiam[i] = double_data[1];
@@ -299,39 +327,39 @@ int GrainGeneratorFunc::readReconStatsData(H5ReconStatsReader::Pointer h5io)
 	  std::string disType;
 
 	  /* Read the Shape Data */
-	  READ_2_COLUMN_STATS_DATA(err, i, AIM::HDF5::Grain_SizeVBoverA_Distributions, bovera, AIM::Reconstruction::Beta, AIM::HDF5::Alpha, AIM::HDF5::Beta, AIM::HDF5::BetaColumnCount);
-	  READ_2_COLUMN_STATS_DATA(err, i, AIM::HDF5::Grain_SizeVCoverA_Distributions, covera, AIM::Reconstruction::Beta, AIM::HDF5::Alpha, AIM::HDF5::Beta, AIM::HDF5::BetaColumnCount);
-	  READ_2_COLUMN_STATS_DATA(err, i, AIM::HDF5::Grain_SizeVCoverB_Distributions, coverb, AIM::Reconstruction::Beta, AIM::HDF5::Alpha, AIM::HDF5::Beta, AIM::HDF5::BetaColumnCount);
+	  READ_2_COLUMN_STATS_DATA(err, i, phase, AIM::HDF5::Grain_SizeVBoverA_Distributions, bovera, AIM::Reconstruction::Beta, AIM::HDF5::Alpha, AIM::HDF5::Beta, AIM::HDF5::BetaColumnCount);
+	  READ_2_COLUMN_STATS_DATA(err, i, phase, AIM::HDF5::Grain_SizeVCoverA_Distributions, covera, AIM::Reconstruction::Beta, AIM::HDF5::Alpha, AIM::HDF5::Beta, AIM::HDF5::BetaColumnCount);
+	  READ_2_COLUMN_STATS_DATA(err, i, phase, AIM::HDF5::Grain_SizeVCoverB_Distributions, coverb, AIM::Reconstruction::Beta, AIM::HDF5::Alpha, AIM::HDF5::Beta, AIM::HDF5::BetaColumnCount);
 
 	  /* Read the Omega3 Data */
-	  READ_2_COLUMN_STATS_DATA(err, i, AIM::HDF5::Grain_SizeVOmega3_Distributions, omega3, AIM::Reconstruction::Beta, AIM::HDF5::Alpha, AIM::HDF5::Beta, AIM::HDF5::BetaColumnCount);
+	  READ_2_COLUMN_STATS_DATA(err, i, phase, AIM::HDF5::Grain_SizeVOmega3_Distributions, omega3, AIM::Reconstruction::Beta, AIM::HDF5::Alpha, AIM::HDF5::Beta, AIM::HDF5::BetaColumnCount);
 
 	  /* Read the Neighbor Data - This MUST be the last one because of how variables are assigned bvalues and used in the next section */
-	  READ_3_COLUMN_STATS_DATA(err, i, AIM::HDF5::Grain_SizeVNeighbors_Distributions, neighborhood, AIM::Reconstruction::Power, AIM::HDF5::Alpha, AIM::HDF5::Beta, AIM::HDF5::Exp_k, AIM::HDF5::PowerLawColumnCount);
+	  READ_3_COLUMN_STATS_DATA(err, i, phase, AIM::HDF5::Grain_SizeVNeighbors_Distributions, neighborhood, AIM::Reconstruction::Power, AIM::HDF5::Alpha, AIM::HDF5::Beta, AIM::HDF5::Exp_k, AIM::HDF5::PowerLawColumnCount);
 
 	  /* Convert the data into the various "shell" data which is the data that is actually needed.
 	   * The conversion is done "in place" by extracting out the alpha, beta, and K values then
 	   * using those values to calculate the 3 values that get put back into the row.
 	   */
-	  disType = h5io->getDistributionType(i, AIM::HDF5::Grain_SizeVNeighbors_Distributions, dt);
+	  disType = h5io->getDistributionType(phase, AIM::HDF5::Grain_SizeVNeighbors_Distributions, dt);
 	  if(dt == AIM::Reconstruction::Power)
 	  {
-		double a, b, k;
-		for (size_t temp7 = 0; temp7 < nBins; temp7++)
-		{
-		  a = neighborhood[i][temp7][0];
-		  b = neighborhood[i][temp7][1];
-		  k = neighborhood[i][temp7][2];
-		  neighborhood[i][temp7][0] = a*pow(0,k)+b;
-		  neighborhood[i][temp7][1] = a*pow(1,k)+b;
-		  neighborhood[i][temp7][2] = a*pow(2,k)+b;
-		}
+      double a, b, k;
+      for (size_t temp7 = 0; temp7 < nBins; temp7++)
+      {
+        a = neighborhood[i][temp7][0];
+        b = neighborhood[i][temp7][1];
+        k = neighborhood[i][temp7][2];
+        neighborhood[i][temp7][0] = a*pow(0,k)+b;
+        neighborhood[i][temp7][1] = a*pow(1,k)+b;
+        neighborhood[i][temp7][2] = a*pow(2,k)+b;
+      }
 	  }
 
-	  neighbordist.resize(nBins);
+	  neighbordist[i].resize(nBins);
 	  for (size_t j=0;j<nBins;j++)
 	  {
-		neighbordist[i][j].resize(3, 0.0);
+	    neighbordist[i][j].resize(3, 0.0);
 	  }
   }
 
@@ -353,10 +381,19 @@ int  GrainGeneratorFunc::readAxisOrientationData(H5ReconStatsReader::Pointer h5i
   int err = 0;
   double totaldensity = 0;
   size_t size = 0;
-
-  for(int i=0;i<crystruct.size();i++)
+  // Read the Phase and Crystal Structure information from the Stats File
+  std::vector<int> phases;
+  err = h5io->getPhaseAndCrystalStructures(phases, crystruct);
+  if (err < 0)
   {
-	  err = h5io->readStatsDataset(i, AIM::HDF5::AxisOrientation, density);
+    return err;
+  }
+  int phase = -1;
+  size_t count = crystruct.size();
+  for(size_t i = 0; i< count ;i++)
+  {
+    phase = phases[i];
+	  err = h5io->readStatsDataset(phase, AIM::HDF5::AxisOrientation, density);
 	  if (err < 0)
 	  {
 		GGF_CHECK_READ_ERROR(readAxisOrientationData, AIM::HDF5::AxisOrientation)
@@ -387,9 +424,19 @@ int GrainGeneratorFunc::readODFData(H5ReconStatsReader::Pointer h5io)
 {
   std::vector<double> density;
   int err = 0;
-  for(int i=0;i<crystruct.size();i++)
+  // Read the Phase and Crystal Structure information from the Stats File
+  std::vector<int> phases;
+  err = h5io->getPhaseAndCrystalStructures(phases, crystruct);
+  if (err < 0)
   {
-	  err = h5io->readStatsDataset(i, AIM::HDF5::ODF, density);
+    return err;
+  }
+  int phase = -1;
+  size_t size = crystruct.size();
+  for(size_t i = 0; i< size ;i++)
+  {
+    phase = phases[i];
+	  err = h5io->readStatsDataset(phase, AIM::HDF5::ODF, density);
 	  if (err < 0)
 	  {
 		GGF_CHECK_READ_ERROR(readODFData, AIM::HDF5::ODF)
@@ -422,9 +469,19 @@ int GrainGeneratorFunc::readMisorientationData(H5ReconStatsReader::Pointer h5io)
 {
   std::vector<double> density;
   int err = 0;
-  for(int i=0;i<crystruct.size();i++)
+  // Read the Phase and Crystal Structure information from the Stats File
+  std::vector<int> phases;
+  err = h5io->getPhaseAndCrystalStructures(phases, crystruct);
+  if (err < 0)
   {
-	  err = h5io->readStatsDataset(i, AIM::HDF5::MisorientationBins, density);
+    return err;
+  }
+  int phase = -1;
+  size_t size = crystruct.size();
+  for(size_t i = 0; i< size ;i++)
+  {
+    phase = phases[i];
+	  err = h5io->readStatsDataset(phase, AIM::HDF5::MisorientationBins, density);
 	  if (err < 0)
 	  {
 		GGF_CHECK_READ_ERROR(readMisorientationData, AIM::HDF5::MisorientationBins)
@@ -456,9 +513,19 @@ int GrainGeneratorFunc::readMicroTextureData(H5ReconStatsReader::Pointer h5io)
 {
   std::vector<double> density;
   int err = 0;
-  for(int i=0;i<crystruct.size();i++)
+  // Read the Phase and Crystal Structure information from the Stats File
+  std::vector<int> phases;
+  err = h5io->getPhaseAndCrystalStructures(phases, crystruct);
+  if (err < 0)
   {
-	  err = h5io->readStatsDataset(i, AIM::HDF5::MicroTextureBins, density);
+    return err;
+  }
+  int phase = -1;
+  size_t size = crystruct.size();
+  for(size_t i = 0; i< size ;i++)
+  {
+    phase = phases[i];
+	  err = h5io->readStatsDataset(phase, AIM::HDF5::MicroTextureBins, density);
 	  if (err < 0)
 	  {
 		GGF_CHECK_READ_ERROR(readStatsDataset, AIM::HDF5::MicroTextureBins)
@@ -1589,9 +1656,9 @@ void  GrainGeneratorFunc::assign_eulers(int numgrains)
 
 void  GrainGeneratorFunc::fill_gaps(int numgrains)
 {
-  vector<int> neighs;
-  vector<int> remove;
-  vector<int> gsizes;
+ std::vector<int> neighs;
+ std::vector<int> remove;
+ std::vector<int> gsizes;
   int count = 1;
   int good = 1;
   double x, y, z;
@@ -1980,13 +2047,13 @@ void  GrainGeneratorFunc::find_neighbors()
 	}
 	voxels[j].surfacevoxel = onsurf;
   }
-  vector<int> nlistcopy;
+ std::vector<int> nlistcopy;
   for(int i=1;i<numgrains;i++)
   {
     int phase = m_Grains[i]->phase;
     IntVectorType nlist = m_Grains[i]->neighborlist;
     DoubleVectorType nsalist = m_Grains[i]->neighborsurfarealist;
-    vector<int>::iterator newend;
+   std::vector<int>::iterator newend;
     sort(nlist->begin(), nlist->end());
     // Make a copy of the contents of the neighborlist vector
     nlistcopy.assign(nlist->begin(), nlist->end());
@@ -2042,7 +2109,7 @@ void  GrainGeneratorFunc::find_neighbors()
 }
 
 
-void GrainGeneratorFunc::MC_LoopBody1(int phase, size_t neighbor, int j, vector<double>* misolist, vector<double>* neighborsurfarealist, double &mdfchange)
+void GrainGeneratorFunc::MC_LoopBody1(int phase, size_t neighbor, int j,std::vector<double>* misolist,std::vector<double>* neighborsurfarealist, double &mdfchange)
 {
   double w;
   double n1;
@@ -2089,7 +2156,7 @@ void GrainGeneratorFunc::MC_LoopBody1(int phase, size_t neighbor, int j, vector<
   mdfchange = mdfchange + (((actualmdf[phase][newmisobin]-simmdf[phase][newmisobin])*(actualmdf[phase][newmisobin]-simmdf[phase][newmisobin])) - ((actualmdf[phase][newmisobin]-(simmdf[phase][newmisobin]+(neighsurfarea/totalsurfacearea[phase])))*(actualmdf[phase][newmisobin]-(simmdf[phase][newmisobin]+(neighsurfarea/totalsurfacearea[phase])))));
 }
 
-void GrainGeneratorFunc::MC_LoopBody2(int phase, size_t neighbor, int j, vector<double>* misolist, vector<double>* neighborsurfarealist)
+void GrainGeneratorFunc::MC_LoopBody2(int phase, size_t neighbor, int j,std::vector<double>* misolist,std::vector<double>* neighborsurfarealist)
 {
   double w;
   double n1;
@@ -2158,7 +2225,7 @@ void GrainGeneratorFunc::swapOutOrientation( int &badtrycount, int &numbins, dou
   double g1ea3 = std::numeric_limits<double >::max();
 
   IntVectorType nlist;
-  vector<double>* misolist;
+ std::vector<double>* misolist;
   DoubleVectorType neighborsurfarealist;
 
   double totaldensity = 0;
@@ -2255,7 +2322,7 @@ void GrainGeneratorFunc::switchOrientations( int &badtrycount, int &numbins, dou
   double g2ea3 = std::numeric_limits<double >::max();
 
   IntVectorType nlist;
-  vector<double>* misolist;
+ std::vector<double>* misolist;
   DoubleVectorType neighborsurfarealist;
 
 
@@ -2435,7 +2502,7 @@ void GrainGeneratorFunc::matchCrystallography(const std::string &ErrorFile, H5Re
 }
 void  GrainGeneratorFunc::measure_misorientations ()
 {
-  vector<double > misolist;
+ std::vector<double > misolist;
   double w;
   double n1;
   double n2;
@@ -3088,7 +3155,7 @@ int GrainGeneratorFunc::volume_stats(H5ReconStatsWriter::Pointer h5io)
 	  sdlogdiam = sdlogdiam / actualgrains;
 	  sdlogdiam = pow(sdlogdiam, 0.5);
 
-	  retErr = h5io->writeVolumeStats(iter, phasefraction[iter], maxdiameter[iter], mindiameter[iter], binstepsize[iter], avglogdiam, sdlogdiam,
+	  retErr = h5io->writeVolumeStats(iter, crystruct[iter], phasefraction[iter], maxdiameter[iter], mindiameter[iter], binstepsize[iter], avglogdiam, sdlogdiam,
 									  svbovera[iter], svcovera[iter], svcoverb[iter], neighborhoodfit[iter], svomega3[iter]);
   }
   return retErr;

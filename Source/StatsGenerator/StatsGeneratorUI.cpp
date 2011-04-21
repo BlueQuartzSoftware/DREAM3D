@@ -551,7 +551,8 @@ void StatsGeneratorUI::openFile(QString h5file)
 
   // Get the list of Phases from the HDF5 file
   std::vector<int> phases;
-  err = reader->getPhases(phases);
+  std::vector<AIM::Reconstruction::CrystalStructure> xtals;
+  err = reader->getPhaseAndCrystalStructures(phases, xtals);
   nPhases = phases.size();
 
   SGWidget* sgwidget = NULL;

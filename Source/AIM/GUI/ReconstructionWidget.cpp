@@ -263,6 +263,10 @@ void ReconstructionWidget::on_rec_LoadSettingsBtn_clicked()
   if ( true == file.isEmpty() ){return;  }
   QSettings prefs(file, QSettings::IniFormat, this);
   readSettings(prefs);
+  if (verifyPathExists(rec_OutputDir->text(), rec_OutputDir) )
+  {
+    checkIOFiles();
+  }
 }
 
 // -----------------------------------------------------------------------------

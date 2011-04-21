@@ -113,20 +113,32 @@ void GrainGenerator::compute()
     progressMessage(AIM_STRING("Error Opening HDF5 Stats File. Nothing generated"), 100);
     return;
   }
-
   std::string crystallographicErrorFile = m_OutputDirectory + MXADir::Separator + AIM::SyntheticBuilder::CrystallographicErrorFile;
   std::string eulerFile = m_OutputDirectory + MXADir::Separator + AIM::SyntheticBuilder::EulerFile;
   std::string graindataFile = m_OutputDirectory + MXADir::Separator + AIM::SyntheticBuilder::GrainDataFile;
   std::string hdf5ResultsFile = m_OutputDirectory + MXADir::Separator + AIM::SyntheticBuilder::H5StatisticsFile;
-  H5ReconStatsWriter::Pointer h5io = H5ReconStatsWriter::New(hdf5ResultsFile);
   std::string visFile = m_OutputDirectory + MXADir::Separator + AIM::SyntheticBuilder::VisualizationFile;
   std::string packGrainsFile = m_OutputDirectory + MXADir::Separator + AIM::SyntheticBuilder::PackGrainsFile;
+
+  H5ReconStatsWriter::Pointer h5io = H5ReconStatsWriter::New(hdf5ResultsFile);
   m = GrainGeneratorFunc::New();
 
-  m->initialize(m_NumGrains, m_ShapeClass, m_XResolution, m_YResolution, m_ZResolution, m_FillingErrorWeight, m_NeighborhoodErrorWeight, m_SizeDistErrorWeight, m_Precipitates, m_CrystalStructure, m_FractionPrecipitates);
+
 
   if (m_AlreadyFormed == false)
   {
+    m->numgrains = m_NumGrains;
+    m->shapeclass = m_ShapeClass;
+    m->resx = m_XResolution;
+    m->resy = m_YResolution;
+    m->resz = m_ZResolution;
+    m->fillingerrorweight = m_FillingErrorWeight;
+    m->neighborhooderrorweight = m_NeighborhoodErrorWeight;
+    m->sizedisterrorweight = m_SizeDistErrorWeight;
+#ifndef _WIN32
+#warning Precipitates are not dealt with currently
+#endif
+
     CHECK_FOR_CANCELED(GrainGeneratorFunc)
     progressMessage(AIM_STRING("Loading Stats Data"), 5);
     err = m->readReconStatsData(h5reader);
@@ -152,17 +164,22 @@ void GrainGenerator::compute()
 
     CHECK_FOR_CANCELED(GrainGeneratorFunc)
     progressMessage(AIM_STRING("Adjusting Boundaries"), 40);
-	m->numgrains = m->adjust_boundaries(m->numgrains);
+    m->numgrains = m->adjust_boundaries(m->numgrains);
 
   }
 
+#if 0
   if (m_AlreadyFormed == true)
   {
+    m->initialize(m_NumGrains, m_ShapeClass, m_XResolution, m_YResolution, m_ZResolution,
+                  m_FillingErrorWeight, m_NeighborhoodErrorWeight, m_SizeDistErrorWeight,
+                  m_Precipitates, m_FractionPrecipitates, xtals);
+
     CHECK_FOR_CANCELED(GrainGeneratorFunc)
     progressMessage(AIM_STRING("Reading Structure"), 40);
     m->read_structure(visFile);
   }
-
+#endif
   CHECK_FOR_CANCELED(GrainGeneratorFunc)
   progressMessage(AIM_STRING("Finding Neighbors"), 45);
   m->find_neighbors();
