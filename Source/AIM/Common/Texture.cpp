@@ -30,6 +30,7 @@
 
 #include "Texture.h"
 
+#if 0
 const size_t Texture::Count = AIM_TEXTURE_COUNT;
 
 const double Texture::Values[AIM_TEXTURE_COUNT][3] =
@@ -104,7 +105,7 @@ const double Texture::Sigmas[AIM_TEXTURE_COUNT] =
     1.0,
     1.0
 };
-
+#endif
 
 // -----------------------------------------------------------------------------
 //

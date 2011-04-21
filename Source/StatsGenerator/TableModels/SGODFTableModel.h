@@ -47,7 +47,9 @@ class SGODFTableModel : public QAbstractTableModel
   public:
     enum ColumnIndexes
     {
-      Texture = 0,
+      Euler1 = 0,
+      Euler2,
+      Euler3,
       Weight,
       Sigma,
       ColumnCount
@@ -155,6 +157,8 @@ class SGODFTableModel : public QAbstractTableModel
 
      virtual void setColumnData(int col, QVector<double> &data);
 
+     virtual void setRowData(int row, double e1, double e2, double e3, double weight, double sigma);
+
      virtual void setInitialValues();
 
 
@@ -162,7 +166,9 @@ class SGODFTableModel : public QAbstractTableModel
     int m_ColumnCount;
     int m_RowCount;
 
-    QVector<QString> m_Textures;
+    QVector<double> m_Euler1s;
+    QVector<double> m_Euler2s;
+    QVector<double> m_Euler3s;
     QVector<double> m_Weights;
     QVector<double> m_Sigmas;
 
