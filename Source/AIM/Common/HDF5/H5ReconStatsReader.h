@@ -60,7 +60,14 @@
     return -1; }
 
 
-
+/**
+ * @class H5ReconStatsReader H5ReconStatsReader.h AIM/Common/HDF5/H5ReconStatsReader.h
+ * @brief This class reads the statistics that are produced from a Reconstruction
+ * run or through the StatsGenerator program.
+ * @author Michael A. Jackson for BlueQuartz Software
+ * @date Apr 21, 2011
+ * @version 1.0
+ */
 class AIMCOMMON_EXPORT H5ReconStatsReader
 {
   public:
@@ -76,8 +83,10 @@ class AIMCOMMON_EXPORT H5ReconStatsReader
     /**
      * @brief
      * @param phases std::vector<int> object to place the phase values into
+     * @param xtals std::vector to store the crystal structure values into
      */
-    int getPhases(std::vector<int> &phases);
+    int getPhaseAndCrystalStructures(std::vector<int> &phases,
+                                     std::vector<AIM::Reconstruction::CrystalStructure> &xtals);
 
     /**
      * @brief
@@ -96,7 +105,7 @@ class AIMCOMMON_EXPORT H5ReconStatsReader
       OPEN_RECONSTRUCTION_GROUP(reconGid, AIM::HDF5::Reconstruction.c_str(), fileId)
 
       std::string index = StringUtils::numToString(phase);
-      hid_t pid = H5Gopen(fileId, index.c_str());
+      hid_t pid = H5Gopen(reconGid, index.c_str());
 
       err = H5Lite::readVectorDataset(pid, name, data);
       if (err < 0)
@@ -106,23 +115,15 @@ class AIMCOMMON_EXPORT H5ReconStatsReader
       }
 
       err = H5Gclose(pid);
-      if (err < 0)
-      {
-        retErr = err;
-      }
+      if (err < 0) { retErr = err; }
       err = H5Gclose(reconGid);
-      if (err < 0)
-      {
-        retErr = err;
-      }
+      if (err < 0) { retErr = err; }
       err = H5Utilities::closeFile(fileId);
-      if (err < 0)
-      {
-        retErr = err;
-      }
+      if (err < 0) { retErr = err; }
       return retErr;
     }
 
+#if 0
     template<typename T>
     int readPhaseFractionDataset(int phase, const std::string &name, std::vector<T> &data)
     {
@@ -138,7 +139,7 @@ class AIMCOMMON_EXPORT H5ReconStatsReader
       }
 
       std::string index = StringUtils::numToString(phase);
-      hid_t pid = H5Gopen(fileId, index.c_str());
+      hid_t pid = H5Gopen(reconGid, index.c_str());
 
       err = H5Lite::readScalarDataset(pid, name, value);
       if (err < 0)
@@ -149,17 +150,15 @@ class AIMCOMMON_EXPORT H5ReconStatsReader
       data[phase] = value;
 
       err = H5Gclose(pid);
-      if (err < 0)
-      {
-        retErr = err;
-      }
+      if (err < 0) { retErr = err; }
+
+      err = H5Gclose(reconGid);
+      if (err < 0) { retErr = err; }
       err = H5Utilities::closeFile(fileId);
-      if (err < 0)
-      {
-        retErr = err;
-      }
+      if (err < 0) { retErr = err; }
       return retErr;
     }
+#endif
 
 	/**
      * @brief

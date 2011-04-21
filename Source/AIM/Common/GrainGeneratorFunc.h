@@ -42,9 +42,6 @@
 #include "AIM/Common/HDF5/H5ReconStatsReader.h"
 
 
-
-using namespace std;
-
 /**
  * @class GrainGeneratorFunc GrainGeneratorFunc.h AIM/Common/GrainGeneratorFunc.h
  * @brief
@@ -64,13 +61,13 @@ public:
     double sizey;
     double sizez;
     double misorientationtolerance;
-    vector<AIM::Reconstruction::CrystalStructure> crystruct;
+    std::vector<AIM::Reconstruction::CrystalStructure> crystruct;
     AIMRandomNG rg;
     double **actualodf;
     double **simodf;
     double **axisodf;
 
-	Voxel *voxels;
+    Voxel *voxels;
     double **actualmdf;
     double **simmdf;
     double **actualmicrotex;
@@ -82,27 +79,33 @@ public:
     std::vector<Grain::Pointer> precipitates;
     int *psizes;
 
-    vector<Grain::Pointer> m_Grains;
+    std::vector<Grain::Pointer> m_Grains;
 
-    vector<int> activegrainlist;
-    vector<int> precipitateorder;
-    vector<int> takencheck;
-    vector<vector<double> > grainsizedist;
-    vector<vector<double> > simgrainsizedist;
-    vector<vector<vector<double> > > bovera;
-    vector<vector<vector<double> > > covera;
-    vector<vector<vector<double> > > coverb;
-    vector<vector<vector<double> > > neighborhood;
-    vector<vector<vector<double> > > omega3;
-    vector<vector<vector<double> > > neighbordist;
-    vector<vector<vector<double> > > neighborhoodfit;
-    vector<vector<vector<double> > > svbovera;
-    vector<vector<vector<double> > > svcovera;
-    vector<vector<vector<double> > > svcoverb;
-    vector<vector<vector<double> > > svschmid;
-    vector<vector<vector<double> > > svomega3;
-    vector<vector<vector<int> > > boundaries;
-    void initialize(int32_t m_NumGrains, int32_t m_ShapeClass, double m_XResolution, double m_YResolution, double m_ZResolution, double m_fillingerrorweight, double m_neighborhooderrorweight, double m_sizedisterrorweight, int32_t m_Precipitates, vector<AIM::Reconstruction::CrystalStructure> m_CrystalStructure, double m_FractionPrecipitates);
+    std::vector<int> activegrainlist;
+    std::vector<int> precipitateorder;
+    std::vector<int> takencheck;
+    std::vector<std::vector<double> > grainsizedist;
+    std::vector<std::vector<double> > simgrainsizedist;
+    std::vector<std::vector<std::vector<double> > > bovera;
+    std::vector<std::vector<std::vector<double> > > covera;
+    std::vector<std::vector<std::vector<double> > > coverb;
+    std::vector<std::vector<std::vector<double> > > neighborhood;
+    std::vector<std::vector<std::vector<double> > > omega3;
+    std::vector<std::vector<std::vector<double> > > neighbordist;
+    std::vector<std::vector<std::vector<double> > > neighborhoodfit;
+    std::vector<std::vector<std::vector<double> > > svbovera;
+    std::vector<std::vector<std::vector<double> > > svcovera;
+    std::vector<std::vector<std::vector<double> > > svcoverb;
+    std::vector<std::vector<std::vector<double> > > svschmid;
+    std::vector<std::vector<std::vector<double> > > svomega3;
+    std::vector<std::vector<std::vector<int> > > boundaries;
+    void initialize(int32_t m_NumGrains, int32_t m_ShapeClass,
+                    double m_XResolution, double m_YResolution, double m_ZResolution,
+                    double m_fillingerrorweight, double m_neighborhooderrorweight,
+                    double m_sizedisterrorweight,
+                    int32_t m_Precipitates, double m_FractionPrecipitates,
+                    std::vector<AIM::Reconstruction::CrystalStructure> m_CrystalStructure);
+    void initializeArrays();
     void initialize2();
     double machineepsilon;
     double maxrealnumber;
@@ -110,21 +113,21 @@ public:
     int numorients;
     int numeulers;
     int resdiff;
-	vector<double> unbiasedvol;
-    vector<double> totalsurfacearea;
+    std::vector<double> unbiasedvol;
+    std::vector<double> totalsurfacearea;
     int numgrains;
     int numextragrains;
     int shapeclass;
-	vector<double> phasefraction;
-    vector<double> binstepsize;
-    vector<double> grainsizediststep;
-    vector<double> maxdiameter;
-    vector<double> mindiameter;
-    vector<double> avgdiam;
-    vector<double> sddiam;
-    vector<int> numdiameterbins;
+    std::vector<double> phasefraction;
+    std::vector<double> binstepsize;
+    std::vector<double> grainsizediststep;
+    std::vector<double> maxdiameter;
+    std::vector<double> mindiameter;
+    std::vector<double> avgdiam;
+    std::vector<double> sddiam;
+    std::vector<int> numdiameterbins;
     int worstgrain;
-    vector<double> totalaxes;
+    std::vector<double> totalaxes;
     int32_t xpoints;
     int32_t ypoints;
     int32_t zpoints;
@@ -165,8 +168,8 @@ public:
     void find_neighbors();
     void swapOutOrientation(int & badtrycount, int & numbins, double currentodferror, double currentmdferror);
     void switchOrientations(int & badtrycount, int & numbins, double currentodferror, double currentmdferror);
-    void MC_LoopBody1(int phase, size_t neighbor, int j, vector<double>* misolist, vector<double>* neighborsurfarealist, double &mdfchange);
-    void MC_LoopBody2(int phase, size_t neighbor, int j, vector<double>* misolist, vector<double>* neighborsurfarealist);
+    void MC_LoopBody1(int phase, size_t neighbor, int j, std::vector<double>* misolist, std::vector<double>* neighborsurfarealist, double &mdfchange);
+    void MC_LoopBody2(int phase, size_t neighbor, int j, std::vector<double>* misolist, std::vector<double>* neighborsurfarealist);
     void matchCrystallography(const std::string & ErrorFile, H5ReconStatsWriter::Pointer h5io);
     void measure_misorientations();
     void find_centroids();
