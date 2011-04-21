@@ -79,7 +79,25 @@ class StatsGen
       return err;
     }
 
-
+  /**
+   * @brief  This method will generate ODF data for 3 scatter plots which are the
+   * <001>, <011> and <111> directions. The method is a C++ Template which the parameter
+   * type is a std::vector conforming class type that holds the data.
+   * QVector falls into this category. The input data for the
+   * euler angles is in Columnar fashion instead of row major format.
+   * @param e1s The first euler angles (input)
+   * @param e2s The second euler angles (input)
+   * @param e3s The third euler angles (input)
+   * @param weights Array of weights values. (input)
+   * @param sigmas Array of sigma values. (input)
+   * @param x001 X Values of the [001] ODF Scatter plot (Output)
+   * @param y001 Y Values of the [001] ODF Scatter plot (Output)
+   * @param x011 X Values of the [011] ODF Scatter plot (Output)
+   * @param y011 Y Values of the [011] ODF Scatter plot (Output)
+   * @param x111 X Values of the [111] ODF Scatter plot (Output)
+   * @param y111 Y Values of the [111] ODF Scatter plot (Output)
+   * @param size The number of points for the Scatter Plot
+   */
     template<typename T>
     int GenCubicODFPlotData(T e1s, T e2s, T e3s, T weights, T sigmas,
                     T &x001, T &y001, T &x011, T &y011, T &x111, T &y111,
@@ -102,7 +120,7 @@ class StatsGen
        * second 32 bits.
        */
       unsigned long long int seed = MXA::getMilliSeconds();
-      unsigned int* seedPtr = reinterpret_cast<unsigned int*>(&seed);
+      unsigned int* seedPtr = reinterpret_cast<unsigned int*> (&seed);
 #if CMP_WORDS_BIGENDIAN
       rg.RandomInit(seedPtr[1]);
 #else
@@ -122,9 +140,9 @@ class StatsGen
       double n1, n2, n3;
       double random, tan_angle, density, cos_angle, sin_angle;
 
-      double dim1 = 2*pow((0.75 * ((M_PI / 4.0) - sin((M_PI / 4.0)))), (1.0 / 3.0));
-      double dim2 = 2*pow((0.75 * ((M_PI / 4.0) - sin((M_PI / 4.0)))), (1.0 / 3.0));
-      double dim3 = 2*pow((0.75 * ((M_PI / 4.0) - sin((M_PI / 4.0)))), (1.0 / 3.0));
+      double dim1 = 2 * pow((0.75 * ((M_PI / 4.0) - sin((M_PI / 4.0)))), (1.0 / 3.0));
+      double dim2 = 2 * pow((0.75 * ((M_PI / 4.0) - sin((M_PI / 4.0)))), (1.0 / 3.0));
+      double dim3 = 2 * pow((0.75 * ((M_PI / 4.0) - sin((M_PI / 4.0)))), (1.0 / 3.0));
 
       x001.resize(size * 3 * 4);
       y001.resize(size * 3 * 4);
@@ -143,7 +161,7 @@ class StatsGen
         {
           density = odf[j];
           totaldensity = totaldensity + density;
-          if (random < totaldensity && random >= (totaldensity - density)) choose = static_cast<int>(j);
+          if (random < totaldensity && random >= (totaldensity - density)) choose = static_cast<int> (j);
         }
         h1 = choose % 18;
         h2 = (choose / 18) % 18;
@@ -156,24 +174,24 @@ class StatsGen
         h3 = ((dim3 / 18.0) * h3) + ((dim3 / 18.0) * random) - (dim3 / 2.0);
         hmag = pow((h1 * h1 + h2 * h2 + h3 * h3), 0.5);
         angle = pow((8 * hmag * hmag * hmag), (1.0 / 3.0));
-        tan_angle = tan(angle/2.0);
-		n1 = h1/hmag;
-		n2 = h2/hmag;
-		n3 = h3/hmag;
+        tan_angle = tan(angle / 2.0);
+        n1 = h1 / hmag;
+        n2 = h2 / hmag;
+        n3 = h3 / hmag;
         r1 = tan_angle * n1;
         r2 = tan_angle * n2;
         r3 = tan_angle * n3;
-		cos_angle = cos(angle);
-		sin_angle = sin(angle);
-		g[0][0] = cos_angle + n1*n1*(1-cos_angle);
-		g[0][1] = n1*n2*(1-cos_angle) - n3*sin_angle;
-		g[0][2] = n1*n3*(1-cos_angle) + n2*sin_angle;
-		g[1][0] = n1*n2*(1-cos_angle) + n3*sin_angle;
-		g[1][1] = cos_angle + n2*n2*(1-cos_angle);
-		g[1][2] = n2*n3*(1-cos_angle) - n1*sin_angle;
-		g[2][0] = n1*n3*(1-cos_angle) - n2*sin_angle;
-		g[2][1] = n2*n3*(1-cos_angle) + n1*sin_angle;
-		g[2][2] = cos_angle + n3*n3*(1-cos_angle);
+        cos_angle = cos(angle);
+        sin_angle = sin(angle);
+        g[0][0] = cos_angle + n1 * n1 * (1 - cos_angle);
+        g[0][1] = n1 * n2 * (1 - cos_angle) - n3 * sin_angle;
+        g[0][2] = n1 * n3 * (1 - cos_angle) + n2 * sin_angle;
+        g[1][0] = n1 * n2 * (1 - cos_angle) + n3 * sin_angle;
+        g[1][1] = cos_angle + n2 * n2 * (1 - cos_angle);
+        g[1][2] = n2 * n3 * (1 - cos_angle) - n1 * sin_angle;
+        g[2][0] = n1 * n3 * (1 - cos_angle) - n2 * sin_angle;
+        g[2][1] = n2 * n3 * (1 - cos_angle) + n1 * sin_angle;
+        g[2][2] = cos_angle + n3 * n3 * (1 - cos_angle);
         x = g[0][0];
         y = g[1][0];
         z = g[2][0];
@@ -183,16 +201,16 @@ class StatsGen
         random = rg.Random();
         x001[12 * i] = xpf;
         y001[12 * i] = ypf;
-		xpfa = -xpf;
-		ypfa = ypf;
+        xpfa = -xpf;
+        ypfa = ypf;
         x001[12 * i + 1] = xpfa;
         y001[12 * i + 1] = ypfa;
-		xpfa = xpf;
-		ypfa = -ypf;
+        xpfa = xpf;
+        ypfa = -ypf;
         x001[12 * i + 2] = xpfa;
         y001[12 * i + 2] = ypfa;
-		xpfa = -xpf;
-		ypfa = -ypf;
+        xpfa = -xpf;
+        ypfa = -ypf;
         x001[12 * i + 3] = xpfa;
         y001[12 * i + 3] = ypfa;
         x = g[0][1];
@@ -203,16 +221,16 @@ class StatsGen
         ypf = x - (x * (z / (z + 1)));
         x001[12 * i + 4] = xpf;
         y001[12 * i + 4] = ypf;
-		xpfa = -xpf;
-		ypfa = ypf;
+        xpfa = -xpf;
+        ypfa = ypf;
         x001[12 * i + 5] = xpfa;
         y001[12 * i + 5] = ypfa;
-		xpfa = xpf;
-		ypfa = -ypf;
+        xpfa = xpf;
+        ypfa = -ypf;
         x001[12 * i + 6] = xpfa;
         y001[12 * i + 6] = ypfa;
-		xpfa = -xpf;
-		ypfa = -ypf;
+        xpfa = -xpf;
+        ypfa = -ypf;
         x001[12 * i + 7] = xpfa;
         y001[12 * i + 7] = ypfa;
         x = g[0][2];
@@ -223,16 +241,16 @@ class StatsGen
         ypf = x - (x * (z / (z + 1)));
         x001[12 * i + 8] = xpf;
         y001[12 * i + 8] = ypf;
-		xpfa = -xpf;
-		ypfa = ypf;
+        xpfa = -xpf;
+        ypfa = ypf;
         x001[12 * i + 9] = xpfa;
         y001[12 * i + 9] = ypfa;
-		xpfa = xpf;
-		ypfa = -ypf;
+        xpfa = xpf;
+        ypfa = -ypf;
         x001[12 * i + 10] = xpfa;
         y001[12 * i + 10] = ypfa;
-		xpfa = -xpf;
-		ypfa = -ypf;
+        xpfa = -xpf;
+        ypfa = -ypf;
         x001[12 * i + 11] = xpfa;
         y001[12 * i + 11] = ypfa;
         x = 0.707107 * (g[0][0] + g[0][1]);
@@ -243,16 +261,16 @@ class StatsGen
         ypf = x - (x * (z / (z + 1)));
         x011[24 * i] = xpf;
         y011[24 * i] = ypf;
-		xpfa = -xpf;
-		ypfa = ypf;
+        xpfa = -xpf;
+        ypfa = ypf;
         x011[24 * i + 1] = xpfa;
         y011[24 * i + 1] = ypfa;
-		xpfa = xpf;
-		ypfa = -ypf;
+        xpfa = xpf;
+        ypfa = -ypf;
         x011[24 * i + 2] = xpfa;
         y011[24 * i + 2] = ypfa;
-		xpfa = -xpf;
-		ypfa = -ypf;
+        xpfa = -xpf;
+        ypfa = -ypf;
         x011[24 * i + 3] = xpfa;
         y011[24 * i + 3] = ypfa;
         x = 0.707107 * (g[0][1] + g[0][2]);
@@ -263,16 +281,16 @@ class StatsGen
         ypf = x - (x * (z / (z + 1)));
         x011[24 * i + 4] = xpf;
         y011[24 * i + 4] = ypf;
-		xpfa = -xpf;
-		ypfa = ypf;
+        xpfa = -xpf;
+        ypfa = ypf;
         x011[24 * i + 5] = xpfa;
         y011[24 * i + 5] = ypfa;
-		xpfa = xpf;
-		ypfa = -ypf;
+        xpfa = xpf;
+        ypfa = -ypf;
         x011[24 * i + 6] = xpfa;
         y011[24 * i + 6] = ypfa;
-		xpfa = -xpf;
-		ypfa = -ypf;
+        xpfa = -xpf;
+        ypfa = -ypf;
         x011[24 * i + 7] = xpfa;
         y011[24 * i + 7] = ypfa;
         x = 0.707107 * (g[0][2] + g[0][0]);
@@ -283,16 +301,16 @@ class StatsGen
         ypf = x - (x * (z / (z + 1)));
         x011[24 * i + 8] = xpf;
         y011[24 * i + 8] = ypf;
-		xpfa = -xpf;
-		ypfa = ypf;
+        xpfa = -xpf;
+        ypfa = ypf;
         x011[24 * i + 9] = xpfa;
         y011[24 * i + 9] = ypfa;
-		xpfa = xpf;
-		ypfa = -ypf;
+        xpfa = xpf;
+        ypfa = -ypf;
         x011[24 * i + 10] = xpfa;
         y011[24 * i + 10] = ypfa;
-		xpfa = -xpf;
-		ypfa = -ypf;
+        xpfa = -xpf;
+        ypfa = -ypf;
         x011[24 * i + 11] = xpfa;
         y011[24 * i + 11] = ypfa;
         x = 0.707107 * (g[0][0] - g[0][1]);
@@ -303,16 +321,16 @@ class StatsGen
         ypf = x - (x * (z / (z + 1)));
         x011[24 * i + 12] = xpf;
         y011[24 * i + 12] = ypf;
-		xpfa = -xpf;
-		ypfa = ypf;
+        xpfa = -xpf;
+        ypfa = ypf;
         x011[24 * i + 13] = xpfa;
         y011[24 * i + 13] = ypfa;
-		xpfa = xpf;
-		ypfa = -ypf;
+        xpfa = xpf;
+        ypfa = -ypf;
         x011[24 * i + 14] = xpfa;
         y011[24 * i + 14] = ypfa;
-		xpfa = -xpf;
-		ypfa = -ypf;
+        xpfa = -xpf;
+        ypfa = -ypf;
         x011[24 * i + 15] = xpfa;
         y011[24 * i + 15] = ypfa;
         x = 0.707107 * (g[0][1] - g[0][2]);
@@ -323,16 +341,16 @@ class StatsGen
         ypf = x - (x * (z / (z + 1)));
         x011[24 * i + 16] = xpf;
         y011[24 * i + 16] = ypf;
-		xpfa = -xpf;
-		ypfa = ypf;
+        xpfa = -xpf;
+        ypfa = ypf;
         x011[24 * i + 17] = xpfa;
         y011[24 * i + 17] = ypfa;
-		xpfa = xpf;
-		ypfa = -ypf;
+        xpfa = xpf;
+        ypfa = -ypf;
         x011[24 * i + 18] = xpfa;
         y011[24 * i + 18] = ypfa;
-		xpfa = -xpf;
-		ypfa = -ypf;
+        xpfa = -xpf;
+        ypfa = -ypf;
         x011[24 * i + 19] = xpfa;
         y011[24 * i + 19] = ypfa;
         x = 0.707107 * (g[0][2] - g[0][0]);
@@ -343,16 +361,16 @@ class StatsGen
         ypf = x - (x * (z / (z + 1)));
         x011[24 * i + 20] = xpf;
         y011[24 * i + 20] = ypf;
-		xpfa = -xpf;
-		ypfa = ypf;
+        xpfa = -xpf;
+        ypfa = ypf;
         x011[24 * i + 21] = xpfa;
         y011[24 * i + 21] = ypfa;
-		xpfa = xpf;
-		ypfa = -ypf;
+        xpfa = xpf;
+        ypfa = -ypf;
         x011[24 * i + 22] = xpfa;
         y011[24 * i + 22] = ypfa;
-		xpfa = -xpf;
-		ypfa = -ypf;
+        xpfa = -xpf;
+        ypfa = -ypf;
         x011[24 * i + 23] = xpfa;
         y011[24 * i + 23] = ypfa;
         x = 0.57735 * (g[0][0] + g[0][1] + g[0][2]);
@@ -363,16 +381,16 @@ class StatsGen
         ypf = x - (x * (z / (z + 1)));
         x111[16 * i] = xpf;
         y111[16 * i] = ypf;
-		xpfa = -xpf;
-		ypfa = ypf;
+        xpfa = -xpf;
+        ypfa = ypf;
         x111[16 * i + 1] = xpfa;
         y111[16 * i + 1] = ypfa;
-		xpfa = xpf;
-		ypfa = -ypf;
+        xpfa = xpf;
+        ypfa = -ypf;
         x111[16 * i + 2] = xpfa;
         y111[16 * i + 2] = ypfa;
-		xpfa = -xpf;
-		ypfa = -ypf;
+        xpfa = -xpf;
+        ypfa = -ypf;
         x111[16 * i + 3] = xpfa;
         y111[16 * i + 3] = ypfa;
         x = 0.57735 * (g[0][0] + g[0][1] - g[0][2]);
@@ -383,16 +401,16 @@ class StatsGen
         ypf = x - (x * (z / (z + 1)));
         x111[16 * i + 4] = xpf;
         y111[16 * i + 4] = ypf;
-		xpfa = -xpf;
-		ypfa = ypf;
+        xpfa = -xpf;
+        ypfa = ypf;
         x111[16 * i + 5] = xpfa;
         y111[16 * i + 5] = ypfa;
-		xpfa = xpf;
-		ypfa = -ypf;
+        xpfa = xpf;
+        ypfa = -ypf;
         x111[16 * i + 6] = xpfa;
         y111[16 * i + 6] = ypfa;
-		xpfa = -xpf;
-		ypfa = -ypf;
+        xpfa = -xpf;
+        ypfa = -ypf;
         x111[16 * i + 7] = xpfa;
         y111[16 * i + 7] = ypfa;
         x = 0.57735 * (g[0][0] - g[0][1] + g[0][2]);
@@ -403,16 +421,16 @@ class StatsGen
         ypf = x - (x * (z / (z + 1)));
         x111[16 * i + 8] = xpf;
         y111[16 * i + 8] = ypf;
-		xpfa = -xpf;
-		ypfa = ypf;
+        xpfa = -xpf;
+        ypfa = ypf;
         x111[16 * i + 9] = xpfa;
         y111[16 * i + 9] = ypfa;
-		xpfa = xpf;
-		ypfa = -ypf;
+        xpfa = xpf;
+        ypfa = -ypf;
         x111[16 * i + 10] = xpfa;
         y111[16 * i + 10] = ypfa;
-		xpfa = -xpf;
-		ypfa = -ypf;
+        xpfa = -xpf;
+        ypfa = -ypf;
         x111[16 * i + 11] = xpfa;
         y111[16 * i + 11] = ypfa;
         x = 0.57735 * (-g[0][0] + g[0][1] + g[0][2]);
@@ -423,23 +441,42 @@ class StatsGen
         ypf = x - (x * (z / (z + 1)));
         x111[16 * i + 12] = xpf;
         y111[16 * i + 12] = ypf;
-		xpfa = -xpf;
-		ypfa = ypf;
+        xpfa = -xpf;
+        ypfa = ypf;
         x111[16 * i + 13] = xpfa;
         y111[16 * i + 13] = ypfa;
-		xpfa = xpf;
-		ypfa = -ypf;
+        xpfa = xpf;
+        ypfa = -ypf;
         x111[16 * i + 14] = xpfa;
         y111[16 * i + 14] = ypfa;
-		xpfa = -xpf;
-		ypfa = -ypf;
+        xpfa = -xpf;
+        ypfa = -ypf;
         x111[16 * i + 15] = xpfa;
         y111[16 * i + 15] = ypfa;
       }
       return err;
     }
 
-
+    /**
+     * @brief  This method will generate ODF data for a Hexagonal material and
+     * generate 3 scatter plots which are the
+     * <001>, <011> and <111> directions. The method is a C++ Template which the parameter
+     * type is a std::vector conforming class type that holds the data.
+     * QVector falls into this category. The input data for the
+     * euler angles is in Columnar fashion instead of row major format.
+     * @param e1s The first euler angles (input)
+     * @param e2s The second euler angles (input)
+     * @param e3s The third euler angles (input)
+     * @param weights Array of weights values. (input)
+     * @param sigmas Array of sigma values. (input)
+     * @param x001 X Values of the [001] ODF Scatter plot (Output)
+     * @param y001 Y Values of the [001] ODF Scatter plot (Output)
+     * @param x011 X Values of the [011] ODF Scatter plot (Output)
+     * @param y011 Y Values of the [011] ODF Scatter plot (Output)
+     * @param x111 X Values of the [111] ODF Scatter plot (Output)
+     * @param y111 Y Values of the [111] ODF Scatter plot (Output)
+     * @param size The number of points for the Scatter Plot
+     */
     template<typename T>
     int GenHexODFPlotData(T e1s, T e2s, T e3s, T weights, T sigmas,
                     T &x0001, T &y0001, T &x1120, T &y1120, T &x1010, T &y1010,
@@ -503,7 +540,7 @@ class StatsGen
         {
           density = odf[j];
           totaldensity = totaldensity + density;
-          if (random < totaldensity && random >= (totaldensity - density)) choose = static_cast<int>(j);
+          if (random < totaldensity && random >= (totaldensity - density)) choose = static_cast<int> (j);
         }
         h1 = choose % 36;
         h2 = (choose / 36) % 36;
@@ -516,24 +553,24 @@ class StatsGen
         h3 = ((dim3 / 12.0) * h3) + ((dim3 / 12.0) * random) - (dim3 / 2.0);
         hmag = pow((h1 * h1 + h2 * h2 + h3 * h3), 0.5);
         angle = pow((8 * hmag * hmag * hmag), (1.0 / 3.0));
-        tan_angle = tan(angle/2.0);
-		n1 = h1/hmag;
-		n2 = h2/hmag;
-		n3 = h3/hmag;
+        tan_angle = tan(angle / 2.0);
+        n1 = h1 / hmag;
+        n2 = h2 / hmag;
+        n3 = h3 / hmag;
         r1 = tan_angle * n1;
         r2 = tan_angle * n2;
         r3 = tan_angle * n3;
-		cos_angle = cos(angle);
-		sin_angle = sin(angle);
-		g[0][0] = cos_angle + n1*n1*(1-cos_angle);
-		g[0][1] = n1*n2*(1-cos_angle) - n3*sin_angle;
-		g[0][2] = n1*n3*(1-cos_angle) + n2*sin_angle;
-		g[1][0] = n1*n2*(1-cos_angle) + n3*sin_angle;
-		g[1][1] = cos_angle + n2*n2*(1-cos_angle);
-		g[1][2] = n2*n3*(1-cos_angle) - n1*sin_angle;
-		g[2][0] = n1*n3*(1-cos_angle) - n2*sin_angle;
-		g[2][1] = n2*n3*(1-cos_angle) + n1*sin_angle;
-		g[2][2] = cos_angle + n3*n3*(1-cos_angle);
+        cos_angle = cos(angle);
+        sin_angle = sin(angle);
+        g[0][0] = cos_angle + n1 * n1 * (1 - cos_angle);
+        g[0][1] = n1 * n2 * (1 - cos_angle) - n3 * sin_angle;
+        g[0][2] = n1 * n3 * (1 - cos_angle) + n2 * sin_angle;
+        g[1][0] = n1 * n2 * (1 - cos_angle) + n3 * sin_angle;
+        g[1][1] = cos_angle + n2 * n2 * (1 - cos_angle);
+        g[1][2] = n2 * n3 * (1 - cos_angle) - n1 * sin_angle;
+        g[2][0] = n1 * n3 * (1 - cos_angle) - n2 * sin_angle;
+        g[2][1] = n2 * n3 * (1 - cos_angle) + n1 * sin_angle;
+        g[2][2] = cos_angle + n3 * n3 * (1 - cos_angle);
         x = g[0][2];
         y = g[1][2];
         z = g[2][2];
@@ -543,16 +580,16 @@ class StatsGen
         random = rg.Random();
         x0001[4 * i] = xpf;
         y0001[4 * i] = ypf;
-		xpfa = -xpf;
-		ypfa = ypf;
+        xpfa = -xpf;
+        ypfa = ypf;
         x0001[4 * i + 1] = xpfa;
         y0001[4 * i + 1] = ypfa;
-		xpfa = xpf;
-		ypfa = -ypf;
+        xpfa = xpf;
+        ypfa = -ypf;
         x0001[4 * i + 2] = xpfa;
         y0001[4 * i + 2] = ypfa;
-		xpfa = -xpf;
-		ypfa = -ypf;
+        xpfa = -xpf;
+        ypfa = -ypf;
         x0001[4 * i + 3] = xpfa;
         y0001[4 * i + 3] = ypfa;
         x = g[0][0];
@@ -563,76 +600,76 @@ class StatsGen
         ypf = x - (x * (z / (z + 1)));
         x1120[12 * i] = xpf;
         y1120[12 * i] = ypf;
-		xpfa = -xpf;
-		ypfa = ypf;
+        xpfa = -xpf;
+        ypfa = ypf;
         x1120[12 * i + 1] = xpfa;
         y1120[12 * i + 1] = ypfa;
-		xpfa = xpf;
-		ypfa = -ypf;
+        xpfa = xpf;
+        ypfa = -ypf;
         x1120[12 * i + 2] = xpfa;
         y1120[12 * i + 2] = ypfa;
-		xpfa = -xpf;
-		ypfa = -ypf;
+        xpfa = -xpf;
+        ypfa = -ypf;
         x1120[12 * i + 3] = xpfa;
         y1120[12 * i + 3] = ypfa;
-        x = (0.5*g[0][0]) + (0.866025*g[0][1]);
-        y = (0.5*g[1][0]) + (0.866025*g[1][1]);
-        z = (0.5*g[2][0]) + (0.866025*g[2][1]);
+        x = (0.5 * g[0][0]) + (0.866025 * g[0][1]);
+        y = (0.5 * g[1][0]) + (0.866025 * g[1][1]);
+        z = (0.5 * g[2][0]) + (0.866025 * g[2][1]);
         if (z < 0) z = -z;
         xpf = y - (y * (z / (z + 1)));
         ypf = x - (x * (z / (z + 1)));
         x1120[12 * i + 4] = xpf;
         y1120[12 * i + 4] = ypf;
-		xpfa = -xpf;
-		ypfa = ypf;
+        xpfa = -xpf;
+        ypfa = ypf;
         x1120[12 * i + 5] = xpfa;
         y1120[12 * i + 5] = ypfa;
-		xpfa = xpf;
-		ypfa = -ypf;
+        xpfa = xpf;
+        ypfa = -ypf;
         x1120[12 * i + 6] = xpfa;
         y1120[12 * i + 6] = ypfa;
-		xpfa = -xpf;
-		ypfa = -ypf;
+        xpfa = -xpf;
+        ypfa = -ypf;
         x1120[12 * i + 7] = xpfa;
         y1120[12 * i + 7] = ypfa;
-        x = (-0.5*g[0][0]) + (0.866025*g[0][1]);
-        y = (-0.5*g[1][0]) + (0.866025*g[1][1]);
-        z = (-0.5*g[2][0]) + (0.866025*g[2][1]);
+        x = (-0.5 * g[0][0]) + (0.866025 * g[0][1]);
+        y = (-0.5 * g[1][0]) + (0.866025 * g[1][1]);
+        z = (-0.5 * g[2][0]) + (0.866025 * g[2][1]);
         if (z < 0) z = -z;
         xpf = y - (y * (z / (z + 1)));
         ypf = x - (x * (z / (z + 1)));
         x1120[12 * i + 8] = xpf;
         y1120[12 * i + 8] = ypf;
-		xpfa = -xpf;
-		ypfa = ypf;
+        xpfa = -xpf;
+        ypfa = ypf;
         x1120[12 * i + 9] = xpfa;
         y1120[12 * i + 9] = ypfa;
-		xpfa = xpf;
-		ypfa = -ypf;
+        xpfa = xpf;
+        ypfa = -ypf;
         x1120[12 * i + 10] = xpfa;
         y1120[12 * i + 10] = ypfa;
-		xpfa = -xpf;
-		ypfa = -ypf;
+        xpfa = -xpf;
+        ypfa = -ypf;
         x1120[12 * i + 11] = xpfa;
         y1120[12 * i + 11] = ypfa;
-        x = (0.866025*g[0][0]) + (0.5*g[0][1]);
-        y = (0.866025*g[1][0]) + (0.5*g[1][1]);
-        z = (0.866025*g[2][0]) + (0.5*g[2][1]);
+        x = (0.866025 * g[0][0]) + (0.5 * g[0][1]);
+        y = (0.866025 * g[1][0]) + (0.5 * g[1][1]);
+        z = (0.866025 * g[2][0]) + (0.5 * g[2][1]);
         if (z < 0) z = -z;
         xpf = y - (y * (z / (z + 1)));
         ypf = x - (x * (z / (z + 1)));
         x1010[12 * i] = xpf;
         y1010[12 * i] = ypf;
-		xpfa = -xpf;
-		ypfa = ypf;
+        xpfa = -xpf;
+        ypfa = ypf;
         x1010[12 * i + 1] = xpfa;
         y1010[12 * i + 1] = ypfa;
-		xpfa = xpf;
-		ypfa = -ypf;
+        xpfa = xpf;
+        ypfa = -ypf;
         x1010[12 * i + 2] = xpfa;
         y1010[12 * i + 2] = ypfa;
-		xpfa = -xpf;
-		ypfa = -ypf;
+        xpfa = -xpf;
+        ypfa = -ypf;
         x1010[12 * i + 3] = xpfa;
         y1010[12 * i + 3] = ypfa;
         x = g[0][1];
@@ -643,42 +680,71 @@ class StatsGen
         ypf = x - (x * (z / (z + 1)));
         x1010[12 * i + 4] = xpf;
         y1010[12 * i + 4] = ypf;
-		xpfa = -xpf;
-		ypfa = ypf;
+        xpfa = -xpf;
+        ypfa = ypf;
         x1010[12 * i + 5] = xpfa;
         y1010[12 * i + 5] = ypfa;
-		xpfa = xpf;
-		ypfa = -ypf;
+        xpfa = xpf;
+        ypfa = -ypf;
         x1010[12 * i + 6] = xpfa;
         y1010[12 * i + 6] = ypfa;
-		xpfa = -xpf;
-		ypfa = -ypf;
+        xpfa = -xpf;
+        ypfa = -ypf;
         x1010[12 * i + 7] = xpfa;
         y1010[12 * i + 7] = ypfa;
-        x = (-0.866025*g[0][0]) + (0.5*g[0][1]);
-        y = (-0.866025*g[1][0]) + (0.5*g[1][1]);
-        z = (-0.866025*g[2][0]) + (0.5*g[2][1]);
+        x = (-0.866025 * g[0][0]) + (0.5 * g[0][1]);
+        y = (-0.866025 * g[1][0]) + (0.5 * g[1][1]);
+        z = (-0.866025 * g[2][0]) + (0.5 * g[2][1]);
         if (z < 0) z = -z;
         xpf = y - (y * (z / (z + 1)));
         ypf = x - (x * (z / (z + 1)));
         x1010[12 * i + 8] = xpf;
         y1010[12 * i + 8] = ypf;
-		xpfa = -xpf;
-		ypfa = ypf;
+        xpfa = -xpf;
+        ypfa = ypf;
         x1010[12 * i + 9] = xpfa;
         y1010[12 * i + 9] = ypfa;
-		xpfa = xpf;
-		ypfa = -ypf;
+        xpfa = xpf;
+        ypfa = -ypf;
         x1010[12 * i + 10] = xpfa;
         y1010[12 * i + 10] = ypfa;
-		xpfa = -xpf;
-		ypfa = -ypf;
+        xpfa = -xpf;
+        ypfa = -ypf;
         x1010[12 * i + 11] = xpfa;
         y1010[12 * i + 11] = ypfa;
       }
       return err;
     }
 
+    /**
+     * @brief  This method will generate ODF data for a OrthoRhombic material and
+     * generate 3 scatter plots which are the
+     * <001>, <011> and <111> directions. The method is a C++ Template which the parameter
+     * type is a std::vector conforming class type that holds the data.
+     * QVector falls into this category. The input data for the
+     * euler angles is in Columnar fashion instead of row major format.
+     * @param e1s The first euler angles (input)
+     * @param e2s The second euler angles (input)
+     * @param e3s The third euler angles (input)
+     * @param weights Array of weights values. (input)
+     * @param sigmas Array of sigma values. (input)
+     * @param x001 X Values of the [001] ODF Scatter plot (Output)
+     * @param y001 Y Values of the [001] ODF Scatter plot (Output)
+     * @param x011 X Values of the [011] ODF Scatter plot (Output)
+     * @param y011 Y Values of the [011] ODF Scatter plot (Output)
+     * @param x111 X Values of the [111] ODF Scatter plot (Output)
+     * @param y111 Y Values of the [111] ODF Scatter plot (Output)
+     * @param size The number of points for the Scatter Plot
+     */
+    template<typename T>
+    int GenOrthoRhombicODFPlotData(T e1s, T e2s, T e3s, T weights, T sigmas,
+                    T &x0001, T &y0001, T &x1120, T &y1120, T &x1010, T &y1010,
+                    int size)
+    {
+      int err = -1;
+
+      return err;
+    }
 
 	template<typename T>
     int GenLogNormal(double avg, double stdDev, T &x, T &y, int size)

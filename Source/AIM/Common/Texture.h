@@ -74,9 +74,8 @@ class AIMCOMMON_EXPORT Texture
      * @param e1s The first euler angles
      * @param e2s The second euler angles
      * @param e3s The third euler angles
-     * @param weights Array of weights. The only stipulation is the length of the
-     * array is Texture::Count
-     * @param randomWeight  The value of the weight to be applied to random orientations
+     * @param weights Array of weights values.
+     * @param sigmas Array of sigma values.
      * @param normalize Should the ODF data be normalized by the totalWeight value
      * before returning.
      * @param odf (OUT) The ODF data that is generated from this function.
@@ -197,18 +196,18 @@ class AIMCOMMON_EXPORT Texture
      * @param e1s The first euler angles
      * @param e2s The second euler angles
      * @param e3s The third euler angles
-     * @param weights Array of weights. The only stipulation is the length of the
-     * array is Texture::Count
-     * @param randomWeight  The value of the weight to be applied to random orientations
+     * @param weights Array of weights values.
+     * @param sigmas Array of sigma values.
      * @param normalize Should the ODF data be normalized by the totalWeight value
      * before returning.
      * @param odf (OUT) The ODF data that is generated from this function.
      * @param totalweight (OUT) The TotalWeight value that is also calculated
      */
 	template<typename T>
-    static void calculateHexODFData(T e1s, T e2s, T e3s, T weights, T sigmas, bool normalize, T &odf, double &totalweight)
+    static void calculateHexODFData(T e1s, T e2s, T e3s, T weights, T sigmas,
+                                    bool normalize, T &odf, double &totalweight)
     {
-	  double randomWeight = 1.0;
+	    double randomWeight = 1.0;
       int TextureBins[AIM_TEXTURE_COUNT];
       static const size_t odfsize = 15552;
       odf.resize(odfsize);
@@ -216,7 +215,7 @@ class AIMCOMMON_EXPORT Texture
       size_t bin, addbin;
       size_t bin1, bin2, bin3;
       size_t addbin1, addbin2, addbin3;
-	  double dist, fraction;
+      double dist, fraction;
       double rmag, angle;
       double r1, r2, r3;
       double h1, h2, h3;
@@ -239,7 +238,7 @@ class AIMCOMMON_EXPORT Texture
         r1 = tan_term * cos_term2 / cos_term1;
         r2 = tan_term * sin_term / cos_term1;
         r3 = tan((e1s[i]+e3s[i])/2);
-		MisorientationCalculations::getFZRodHexagonal(r1, r2, r3);
+        MisorientationCalculations::getFZRodHexagonal(r1, r2, r3);
         rmag = pow((r1 * r1 + r2 * r2 + r3 * r3), 0.5);
         angle = 2.0 * atan(rmag);
         hTmp = pow(((3.0 / 4.0) * (angle - sin(angle))), (1.0 / 3.0));
@@ -318,16 +317,16 @@ class AIMCOMMON_EXPORT Texture
    * @param e1s The first euler angles
    * @param e2s The second euler angles
    * @param e3s The third euler angles
-   * @param weights Array of weights. The only stipulation is the length of the
-   * array is Texture::Count
-   * @param randomWeight  The value of the weight to be applied to random orientations
+   * @param weights Array of weights values.
+   * @param sigmas Array of sigma values.
    * @param normalize Should the ODF data be normalized by the totalWeight value
    * before returning.
    * @param odf (OUT) The ODF data that is generated from this function.
    * @param totalweight (OUT) The TotalWeight value that is also calculated
    */
   template<typename T>
-  static void calculateOrthoRhombicODFData(T e1s, T e2s, T e3s, T weights, T sigmas, bool normalize, T &odf, double &totalweight)
+  static void calculateOrthoRhombicODFData(T e1s, T e2s, T e3s, T weights, T sigmas,
+                                           bool normalize, T &odf, double &totalweight)
   {
 
   }
