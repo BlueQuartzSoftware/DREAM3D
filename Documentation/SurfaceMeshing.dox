@@ -1,0 +1,17 @@
+/*!
+
+@page SURFACE_MESHING Surface Meshing
+
+ 1. VTK File  name and location of the .vtk file that will be used in the surface meshing
+@li a.  This can be any of the volumes created in the reconstruction tab or the
+synthetic builder tab.  It only reads the grain ids block from any of those files.
+
+2.  Output Directory  this is the location that all of the output files will be
+written to
+@li a.  The output file is a .vtk file of poly data
+
+3.  Smooth Surface Mesh  this is an option to smooth the surface mesh that is
+output from the marching cubes portion of the tab.  Currently this option is not
+functional is under development with CMU.
+
+ */

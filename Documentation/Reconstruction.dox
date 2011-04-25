@@ -101,6 +101,39 @@ or "true" value.\n
 
 
 
+@section details Reconstruction Tab
+1.  OIM HDF5 File  This is the name and location of the .h5ang file you wish to reconstruct
+@li a.  The minimum and maximum slice numbers will be automatically displayed with the z resolution or spacing
+
+2.  Start Slice and End Slice  This defines the range of sections you wish to reconstruct
+@li a.  Like you can choose to not import the entire dataset, you can choose to not reconstruct everything you imported
+
+
+3.  Options  These are all the options that can be set to control the reconstruction
+@li a.  Merge Colonies  this is an option that will reconstruct prior beta grains in an alpha-beta titanium microstructure.  It will first identify alpha colonies and then compare neighboring colonies to group colonies form the same prior beta grain
+@li b.  Grains Formed  this is an option to read in a previously reconstructed volume in which the grain ids have already been assigned.  Currently it reads the output data from Yoons Abaqus analysis and from the FFT code at CMU.  I am working to change the format the data is read in and create a standard.
+@li c.  Merge Twins  this is an option similar to Mere Colonies, but when comparing neighboring grains to be merged it uses misorientations linked to twins not colonies from the same beta grain
+@li d.  Cryst. Struct.  this is the crystal structure (i.e. Cubic, Hexagonal, Orthorhombic) of the material being reconstructed.  This defines what symmetry operators are used during the misorientation calculations.  Note that right now only one crystal structure can be selected at a time, but we are working to allow crystal structures to be assigned to multiple phases that can be present
+@li e.  Alignment Method  this allows the user to choose the method used to align neighboring sections.  Outer Boundary simply tries to align the area identified as sample on each section.  Minimum Disorientation moves the sections until there is a minimum value of disorientation between all voxels in one section and voxel directly above it in the next section.  Mutual information segments each section independently and then performs a mutual information analysis on the grain ids.
+@li f.  Ang Orientation  this defines the origin of the ang file.
+@li g.  Min Grain Size  this a clean-up filter that can be set to merge grains below a defined size after grains have been formed.  Currently the grains are reset to unassigned and then the region is filled in by a local grain growth algorithm
+@li h.  Disorient. Tol.  this is the orientation difference tolerance allowed between neighboring regions before they are declared different grains
+@li i.  Min. Image Quality  this is a threshold value that is used to define the outer border of the sample and terminate grain formation during segmentation
+@li j.  Min. Confidence Index  this is threshold used the same as Min. Image Quaity
+@li k.  Down-sample Res.  this a factor used to down-sample the 3D volume if desired.  If the value is set to 1, then nothing happens, but any other value will scale the resolution by that value.  A new grid is created and laid over the original data grid.
+@li l.  Bin Step Size  this is the step size used in correlating statistical descriptors to grain size.  The value is set in microns, so for example, if the maximum grain size is 50 microns, a value of 5 would create 10 size bins in which grains would be segregated to create shape, no. of neighbors, etc. distributions as a function of grain size.
+
+4.  Output Directory  location that all output files will be written to.
+
+5.  Optional Output Files  these are all visualization files that can be created.
+@li a.  Reconstruction Visualization  - this file contains grain ids and Euclidean distance to grain boundaries
+@li b.  Reconstruction IPF Visualization  - this file contains grain ids and Inverse Pole Figure colors
+@li c.  Reconstruction Disorientation Visualization  - this file contains grain ids and Kernel Average Misorientations and Grain Average Misorientations
+@li d.  Reconstruction ImageQuality Visualization  - this file contains grain ids and Image Qualities
+@li e.  Reconstruction SchmidFactor Visualization  - this file contains grain ids and Schmid Factors
+@li f.  Reconstruction DownSampled Visualization  - this file contains grain ids for the down-sampled volume
+@li g.  Reconstruction Grains  - this file contains each grain with properly defined voxels and their neighbor connectivities
+
 
 
 
