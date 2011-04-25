@@ -118,13 +118,15 @@ int StatsGenODFWidget::writeDataToHDF5(H5ReconStatsWriter::Pointer writer)
   {
     Texture::calculateOrthoRhombicODFData(e1s, e2s, e3s, weights, sigmas, true, odf, totalWeight);
   }
-  double* odfPtr = &(odf.front());
-  err = -1;
-  if (odfPtr != NULL)
+  if (odf.size() > 0)
   {
-    err = writer->writeODFData(m_PhaseIndex, m_CrystalStructure, odfPtr);
+    double* odfPtr = &(odf.front());
+    err = -1;
+    if (odfPtr != NULL)
+    {
+      err = writer->writeODFData(m_PhaseIndex, m_CrystalStructure, odfPtr);
+    }
   }
-
   // Write the MDF Data if we have that functionality enabled
   if (m_MDFWidget != NULL)
   {
