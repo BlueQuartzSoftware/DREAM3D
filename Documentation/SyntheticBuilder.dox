@@ -1,0 +1,48 @@
+/*!
+
+ @page SYNTHETIC_BUILDER Synthetic Builder
+
+@section details User Interface Parameters
+
+1.  HDF5 Stats File  name and location of the input stats file that can be generated
+from the reconstruction tab or the stats generator module.
+
+2.  Output Directory  location where all the output files will be written
+
+3.  Options
+@li a.  Structure Already Formed  this is similar to the option in the reconstruction
+tab.  If a volume has already been created, this option will read the .vtk file
+with grain ids.  It enters the synthetic builder right before the orientation assignment
+and matching, so it does not need any orientation information, just the structural
+information.
+@li b.  Space Filling Error Weight  this the weight to be applied to the criterion
+of maximizing space filling during grain placement.
+@li c.  Size Distribution Error Weight  this is the weight to be applied to matching
+the size distribution during grain placement.
+@li d.  Neighborhood Error Weight  this is the weight to be applied to matching
+the local neighborhoods during grain placement
+@li e.  Number of Grains  this is the target desired number of grains.  The final
+number may not be this exact value, but should be close.  This defines the size of
+the volume generated, which is not defined by the user.
+@li f.  X, Y, Z Spacing  this is the resolution of the voxels in the generated
+volume.  The user should be aware of the size distribution when selecting this
+value and the number of grains.  If attention is not paid to these values in conjunction,
+crashes do to memory overload are possible.
+@li g.  Shape Class  this is the type of object being placed during grain placement.
+The user can choose ellipsoids, superellipsoids or truncated octahedra.  Ellipsoids
+do not need the omega3 value, but the other two options require omega3 to be defined.
+@li h.  Crystal Structure  this is the crystal structure of the material (i.e.
+cubic or hexagonal) and is used during the misorientation calculations and orientation
+matching portion of the builder.
+@li i.  Precipitate Structure  this is an option to place precipitates in the
+volume on either boundaries or randomly throughout the structure.  Currently this
+option is not useable because neither the reconstruction tab or the stats generator
+produce statistics for precipitates.
+@li j.  Volume Fraction Precipitates  this defines the amount of precipitates to
+be placed in the structure
+
+4.  Load/Save Preset  this allows the user to save input setting or load previously
+saved input setting
+
+
+ */
