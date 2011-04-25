@@ -583,7 +583,7 @@ void SGWidget::plotSizeDistribution()
 
 
 #define SGWIGET_WRITE_ERROR_CHECK(var)\
-    if (err < 1)  {\
+    if (err < 0)  {\
       QString msg ("Error Writing Data ");\
       msg.append(QString::fromStdString(var));\
       msg.append(" to the HDF5 file");\
@@ -648,7 +648,9 @@ int SGWidget::writeDataToHDF5(H5ReconStatsWriter::Pointer writer)
   err = m_NeighborPlot->writeDataToHDF5(writer, AIM::HDF5::Grain_SizeVNeighbors_Distributions);
   SGWIGET_WRITE_ERROR_CHECK(AIM::HDF5::Grain_SizeVNeighbors_Distributions)
   err = m_ODFWidget->writeDataToHDF5(writer);
+  SGWIGET_WRITE_ERROR_CHECK(std::string("ODF Data"));
   err = m_AxisODFWidget->writeDataToHDF5(writer);
+  SGWIGET_WRITE_ERROR_CHECK(std::string("Axis ODF Data"));
   return retErr;
 }
 
