@@ -8,6 +8,10 @@
 
 @subpage reconstruction "Reconstruction"
 
+@subpage SYNTHETIC_BUILDER "Synthetic Builder"
+
+@subpage SURFACE_MESHING "Surface Meshing"
+
 @subpage statsgenerator "StatsGenerator"
 
 
