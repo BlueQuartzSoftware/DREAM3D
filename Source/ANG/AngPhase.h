@@ -27,6 +27,10 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+///////////////////////////////////////////////////////////////////////////////
+// This code was partly written under US Air Force Contract FA8650-07-D-5800
+///////////////////////////////////////////////////////////////////////////////
+
 
 #ifndef ANGPHASE_H_
 #define ANGPHASE_H_
@@ -38,6 +42,10 @@
 #include "ANG/TSLAngLibConfiguration.h"
 #include "AngConstants.h"
 
+/*!
+ * @struct HKLFamily_t is used to write the HKL Family to an HDF5 file using a
+ * compound data type.
+ */
 typedef struct
 {
     int h;
@@ -47,6 +55,7 @@ typedef struct
     float diffractionIntensity;
     int s2;
 } HKLFamily_t;
+
 
 /**
  * @class HKLFamily HKLFamily.h AIM/ANG/HKLFamily.h
@@ -71,12 +80,20 @@ class TSLANG_EXPORT HKLFamily
     float diffractionIntensity;
     int s2;
 
+    /**
+     * @brief Prints this class to the output stream. Useful for debuggin
+     * @param stream The stream to print to
+     */
     void printSelf(std::ostream &stream)
     {
       stream << TSL::OIM::HKLFamilies;
       std::cout << " " << h << " " << k << " " << l << " " << s1 << " " << diffractionIntensity << " " << s2 << std::endl;
     }
 
+    /**
+     * @brief Copies the content of this instance to another class instance
+     * @param ptr The destination of the copied contents
+     */
     void copyToStruct(HKLFamily_t* ptr)
     {
       ptr->h = h;
@@ -87,6 +104,11 @@ class TSLANG_EXPORT HKLFamily
       ptr->s2 = s2;
     }
 
+    /**
+     * @brief Copies the content <b>from</b> another structure into this structure
+     * @param ptr The source of the copy, ie, the values from <i>ptr</i> will be copied
+     * into this instance.
+     */
     void copyFromStruct(HKLFamily_t* ptr)
     {
       h = ptr->h;
@@ -96,6 +118,7 @@ class TSLANG_EXPORT HKLFamily
       diffractionIntensity = ptr->diffractionIntensity;
       s2 = ptr->s2;
     }
+
   protected:
     HKLFamily() {};
 
