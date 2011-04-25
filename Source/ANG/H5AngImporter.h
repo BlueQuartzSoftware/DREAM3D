@@ -27,6 +27,9 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+///////////////////////////////////////////////////////////////////////////////
+// This code was partly written under US Air Force Contract FA8650-07-D-5800
+///////////////////////////////////////////////////////////////////////////////
 
 #ifndef _H5ANGIMPORTER_H_
 #define _H5ANGIMPORTER_H_
