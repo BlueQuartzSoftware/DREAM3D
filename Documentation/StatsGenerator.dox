@@ -3,6 +3,59 @@
  @page statsgenerator StatsGenerator
 
 @section introduction Introduction
+0. Phase Selection - The use can use the "+" button to add another phase to the
+StatsGenerator document. The user can select the crystal structure and Phase Fraction
+of the new phase using the dialog that pops up.
+@image html StatsGenerator_1.png "StatsGenerator Adding additional Phase to document"
 
+
+1.  Size Distribution Tab
+@li a.  <b>Mu</b>  this is the average value of the lognormal grain size distribution
+@li b.  <b>Sigma</b> this is the standard deviation of the lognormal grain size distribution
+@li c.  <b>Sigma Cut Off Value</b>  this allows the user to truncate the distribution
+to remove very large grains
+@li d.  <b>Bin Step Size</b> this is the size of bin to use in segregating the grains
+into size classes for correlating other statistics to grain size. Note that the
+number of bins that will be created is displayed in the
+bottom left corner
+@li e.  <b>Create Default Data</b>  this locks in the values you have entered and populates
+the other tabs with default values.
+
+@image html StatsGenerator_2.png "Stats Generator Size and Weights Tab"
+
+
+2.  Omega 3 Tab
+@li a.  Bin  this column is calculated from the size distribution and cannot be changed.
+@li b.  Alpha  this is the alpha parameter of a Beta distribution.  Omega 3 is normalized and can only be between 0 and 1, so the Beta distribution is a good fit
+@li c.  Beta  this is the beta parameter of the Beta distribution.
+@li d.  Color  this allows the user to change colors of the curves for image creation or easier identification during stats generation
+@image html StatsGenerator_3.png "StatsGenerator Omega 3 Distributions Tab"
+
+
+3.  Shape Distributions Tab (there are 3 aspect ratio combinations)
+@li a.  Bin  this column is calculated from the size distribution and cannot be changed.
+@li b.  Alpha  this is the alpha parameter of a Beta distribution.  B/A, C/A and C/B are all normalized and can only be between 0 and 1, so the Beta distribution is a good fit
+@li c.  Beta  this is the beta parameter of the Beta distribution.
+@li d.  Color  this allows the user to change colors of the curves for image creation or easier identification during stats generation
+@image html StatsGenerator_4.png "StatsGenerator Shape Class Distributions Tab"
+
+4.  Neighbor Distributions Tab
+@li a.  Bin  this column is calculated from the size distribution and cannot be changed.
+@li b.  Alpha  this is the alpha parameter of a Power Law distribution.
+@li c.  K  this is the exponent of a Power Law Distribution
+@li d.  Beta  this is the beta parameter of a Power Law distribution.
+@li e.  Color  this allows the user to change colors of the curves for image creation or easier identification during stats generation
+
+@image html StatsGenerator_6.png "StatsGenerator Neighbor Distributions Tab"
+
+5.  ODF Tab
+@li a.  Texture  these are a list of common FCC textures.
+@li b.  Weight  this is the weight in Times Random to be assigned to the texture listed
+@li c.  Sigma  this is the spread to use in blurring out the texture chosen.
+@li d.  Calculate ODF  this builds the ODF and then creates pole figures for the user to inspect.
+@li e.  MDF  this sub-tab will display the baseline MDF for the generated ODF, but is not currently finished.
+
+@image html StatsGenerator_9.png "StatsGenerator ODF Configuration Tab"
+@image html StatsGenerator_10.png "StatsGenerator MDF Configuration Tab"
 
  */
