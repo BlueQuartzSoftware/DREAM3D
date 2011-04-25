@@ -102,29 +102,29 @@ QVariant SGMDFTableModel::data(const QModelIndex &index, qint32 role) const
 
   if (role == Qt::SizeHintRole)
   {
-    QStyleOptionComboBox comboBox;
-
+    QStyleOptionFrame comboBox;
+    QLineEdit contents("1");
     switch(index.column())
     {
       case Angle:
       {
-        comboBox.currentText = QString("101");
+        contents.setText( QString("11.") );
         const QString header = headerData(Angle, Qt::Horizontal, Qt::DisplayRole).toString();
-        if (header.length() > comboBox.currentText.length()) comboBox.currentText = header;
-        break;
-      }
-      case Weight:
-      {
-        comboBox.currentText = QString("10001");
-        const QString header = headerData(Weight, Qt::Horizontal, Qt::DisplayRole).toString();
-        if (header.length() > comboBox.currentText.length()) comboBox.currentText = header;
+        if (header.length() > contents.text().length()) contents.text() = header;
         break;
       }
       case Axis:
       {
-        comboBox.currentText = QString("10001");
+        contents.setText( QString("1,1,1") );
         const QString header = headerData(Axis, Qt::Horizontal, Qt::DisplayRole).toString();
-        if (header.length() > comboBox.currentText.length()) comboBox.currentText = header;
+        if (header.length() > contents.text().length()) contents.text() = header;
+        break;
+      }
+      case Weight:
+      {
+        contents.setText( QString("11.") );
+        const QString header = headerData(Weight, Qt::Horizontal, Qt::DisplayRole).toString();
+        if (header.length() > contents.text().length()) contents.text() = header;
         break;
       }
       default:
@@ -132,7 +132,7 @@ QVariant SGMDFTableModel::data(const QModelIndex &index, qint32 role) const
     }
     QFontMetrics fontMetrics(data(index, Qt::FontRole) .value<QFont > ());
     comboBox.fontMetrics = fontMetrics;
-    QSize size(fontMetrics.width(comboBox.currentText), fontMetrics.height());
+    QSize size(fontMetrics.width(contents.text()), fontMetrics.height());
     return qApp->style()->sizeFromContents(QStyle::CT_ComboBox, &comboBox, size);
   }
   else if (role == Qt::TextAlignmentRole)
