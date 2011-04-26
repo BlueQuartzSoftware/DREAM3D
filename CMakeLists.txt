@@ -32,6 +32,8 @@ SET (CMAKE_ARCHIVE_OUTPUT_DIRECTORY
   "Single Directory for all static libraries."
   )
 
+set (CMP_SOURCE_DIR ${AIMRepresentation_SOURCE_DIR}/Support/cmp)
+
 SET (PROJECT_CODE_DIR ${PROJECT_SOURCE_DIR}/Source)
 SET (PROJECT_RESOURCES_DIR ${AIMRepresentation_SOURCE_DIR}/Resources)
 
@@ -55,7 +57,7 @@ set (CMP_PROJECT_NAMESPACE "MXA")
 set (CMP_PROJECT_NAME "MXA")
 set (CMP_ENABLE_PLUGINS "1")
 set (CMP_LIB_SEARCH_DIRS "")
-INCLUDE (${PROJECT_RESOURCES_DIR}/cmp/cmpProject.cmake)
+INCLUDE (${CMP_SOURCE_DIR}/cmpProject.cmake)
 
 # --------------------------------------------------------------------
 # Generate a Header file with Compile Version variables
@@ -70,11 +72,6 @@ configure_file(${PROJECT_SOURCE_DIR}/License.txt.in
                 ${PROJECT_BINARY_DIR}/License.txt )
 configure_file(${PROJECT_SOURCE_DIR}/ReadMe.txt.in
                 ${PROJECT_BINARY_DIR}/ReadMe.txt )
-                
-                
-# --------------------------------------------------------------------
-# Generate the License File Headers
-include(${PROJECT_SOURCE_DIR}/License/License.cmake)
 
 SET (MXA_INSTALL_FILES "0")
 SET (MXA_SOURCE_DIR ${PROJECT_CODE_DIR})
@@ -214,15 +211,16 @@ if (AIM_BUILD_QT_APPS)
    
    add_subdirectory(${AIMRepresentation_SOURCE_DIR}/Source/QtSupport ${AIMRepresentation_BINARY_DIR}/QtSupport)
    # Add our Qt based GUI project to the list of targets
-   option(AIM_BUILD_GUI_REPRESENTATION "Compile the AIMRepresentation GUI Application" ON)
-   if (AIM_BUILD_GUI_REPRESENTATION)
-       ADD_SUBDIRECTORY( ${AIMRepresentation_SOURCE_DIR}/Source/AIM/GUI ${AIMRepresentation_BINARY_DIR}/Apps/Representation)
-   endif()
+
    OPTION (AIM_BUILD_GUI_STATS_GENERATOR "Compile the Statistics Generator GUI Application" ON)
    if (AIM_BUILD_GUI_STATS_GENERATOR)
     add_subdirectory(${AIMRepresentation_SOURCE_DIR}/Source/StatsGenerator ${AIMRepresentation_BINARY_DIR}/Apps/StatsGenerator)
    endif()
-   
+      
+   option(AIM_BUILD_GUI_REPRESENTATION "Compile the AIMRepresentation GUI Application" ON)
+   if (AIM_BUILD_GUI_REPRESENTATION)
+       ADD_SUBDIRECTORY( ${AIMRepresentation_SOURCE_DIR}/Source/AIM/GUI ${AIMRepresentation_BINARY_DIR}/Apps/Representation)
+   endif()
 else()
     set (AIM_BUILD_GUI_REPRESENTATION "OFF" CACHE BOOL "" FORCE)
     set (AIM_BUILD_GUI_STATS_GENERATOR "OFF" CACHE BOOL "" FORCE)
