@@ -1,5 +1,6 @@
 /* ============================================================================
  * Copyright (c) 2010, Michael A. Jackson (BlueQuartz Software)
+ * Copyright (c) 2010, Dr. Michael A. Grober (US Air Force Research Laboratories
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -61,7 +62,7 @@ namespace AIM
        * @brief Multiply by a unit quaternion for Hexagonal
        * @param unitQuat 5 Element array where the actual quaternion is located in elements 1,2,3,4
        * @param i The index of the reference data from AIM::Quaternions::quat_symmhex
-       * @param outQuat Output Quaternion where it is a 5 Element array and where the actual 
+       * @param outQuat Output Quaternion where it is a 5 Element array and where the actual
        * calculated quaternion is located in elements 1,2,3,4
        */
       static AIMCOMMON_EXPORT void Hex_MultiplyByUnitQuaterion(double* unitQuat, size_t i, double* outQuat);
@@ -70,7 +71,7 @@ namespace AIM
        * @brief Multiply by a unit quaternion for Cubic
        * @param unitQuat 5 Element array where the actual quaternion is located in elements 1,2,3,4
        * @param i The index of the reference data from AIM::Quaternions::quat_symmcubic
-       * @param outQuat Output Quaternion where it is a 5 Element array and where the actual 
+       * @param outQuat Output Quaternion where it is a 5 Element array and where the actual
        * calculated quaternion is located in elements 1,2,3,4
        */
       static AIMCOMMON_EXPORT void Cubic_MultiplyByUnitQuaterion(double* unitQuat, size_t i, double* outQuat);
