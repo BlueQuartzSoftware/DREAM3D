@@ -195,9 +195,6 @@ class AIMCOMMON_EXPORT ReconstructionFunc
     void deformation_stats(const std::string &filename, const std::string &filename2);
     void write_graindata(const std::string &graindataFile);
     void align_sections(const std::string &filename);
-    /* This is deprecated in favor of the HDF5 output file */
-    void write_grains(const std::string &outputdir);
-
 
     void find_eulerodf(H5ReconStatsWriter::Pointer h5io);
     void measure_misorientations(H5ReconStatsWriter::Pointer h5io);
