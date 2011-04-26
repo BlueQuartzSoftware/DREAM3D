@@ -1,16 +1,20 @@
+
+#message(STATUS "Gathering License Files")
+#message(STATUS "PROJECT_SOURCE_DIR: ${PROJECT_SOURCE_DIR}")
+#message(STATUS "PROJECT_BINARY_DIR: ${PROJECT_BINARY_DIR}")
 # --------------------------------------------------------------------
 # create Resource files for the various license files that are used and 
 # also create a header file that lists all the License Files
 set(LICENSE_FILES 
-                   ${PROJECT_SOURCE_DIR}/License.txt.in
-                   ${PROJECT_SOURCE_DIR}/ReadMe.txt.in
-                   ${PROJECT_SOURCE_DIR}/License/Boost.license
-             #     ${PROJECT_SOURCE_DIR}/License/ITK.license
-                   ${PROJECT_SOURCE_DIR}/License/MXA.license
-                   ${PROJECT_SOURCE_DIR}/License/Qt.license
-             #     ${PROJECT_SOURCE_DIR}/License/tiff.license 
-                   ${PROJECT_SOURCE_DIR}/License/Qwt.license
-                   ${PROJECT_SOURCE_DIR}/License/HDF5.license
+                   ${AIMRepresentation_SOURCE_DIR}/License.txt.in
+                   ${AIMRepresentation_SOURCE_DIR}/ReadMe.txt.in
+                   ${AIMRepresentation_SOURCE_DIR}/License/Boost.license
+             #     ${AIMRepresentation_SOURCE_DIR}/License/ITK.license
+                   ${AIMRepresentation_SOURCE_DIR}/License/MXA.license
+                   ${AIMRepresentation_SOURCE_DIR}/License/Qt.license
+             #     ${AIMRepresentation_SOURCE_DIR}/License/tiff.license 
+                   ${AIMRepresentation_SOURCE_DIR}/License/Qwt.license
+                   ${AIMRepresentation_SOURCE_DIR}/License/HDF5.license
            )
 set(QRC_LICENSE_FILES "")
 set(LICENSE_HEADER_FILE  ${PROJECT_BINARY_DIR}/AIM/License/${PROJECT_NAME}LicenseFiles.h)
@@ -19,9 +23,13 @@ file(APPEND ${LICENSE_HEADER_FILE} "#define _LICENSE_FILES_H_\n")
 file(APPEND ${LICENSE_HEADER_FILE} "namespace ${PROJECT_PREFIX} {\n")
 file(APPEND ${LICENSE_HEADER_FILE} "  QStringList LicenseList = (QStringList()  ")
 foreach(lf ${LICENSE_FILES})
-    get_filename_component(cmp_text_file_name ${lf} NAME)
+    get_filename_component(cmp_text_file_name ${lf} NAME_WE)
+    set (cmp_text_file_name "${cmp_text_file_name}.license")
     get_filename_component(lf_fn ${lf} NAME_WE)
     # Copy the text file into the Build Directory
+#    message(STATUS "lf: ${lf}")
+#    message(STATUS "cmp_text_file_name: ${cmp_text_file_name}")
+#    message(STATUS "lf_fn: ${lf_fn}")
     configure_file("${lf}" ${PROJECT_BINARY_DIR}/AIM/License/${lf_fn}.license   COPYONLY )
         
     # create the Qt Resource File

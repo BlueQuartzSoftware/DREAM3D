@@ -89,7 +89,6 @@ function(gp_item_default_embedded_path_override item default_embedded_path_var)
   set(${default_embedded_path_var} "${path}" PARENT_SCOPE)
 endfunction()
 
-
 # -- Run the BundleUtilities cmake code
 include(BundleUtilities)
 fixup_bundle("${CMAKE_INSTALL_PREFIX}/@osx_app_name@.app" 
@@ -97,3 +96,5 @@ fixup_bundle("${CMAKE_INSTALL_PREFIX}/@osx_app_name@.app"
              "@app_plugin_list@"
              # Directories to Search for Libraries
              "@lib_search_dirs@")
+
+file(WRITE "${CMAKE_INSTALL_PREFIX}/@osx_app_name@.app/Contents/Resources/qt.conf")

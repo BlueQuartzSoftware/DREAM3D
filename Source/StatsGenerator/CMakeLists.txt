@@ -43,7 +43,10 @@ ENDIF(WIN32)
 
 add_definitions(-DAIM_USE_QT)
                 
-                
+# --------------------------------------------------------------------
+# Generate the License File Headers
+include(${AIMRepresentation_SOURCE_DIR}/License/License.cmake)
+           
 set (StatsGenerator_SRCS 
     ${StatsGenerator_SOURCE_DIR}/main.cpp
     ${StatsGenerator_SOURCE_DIR}/SGApplication.cpp
@@ -115,7 +118,11 @@ SET( StatsGenerator_UIS
 # and finally any resource files
 SET( StatsGenerator_RCS ${PROJECT_RESOURCES_DIR}/icons/images/Icons.qrc)
 
-# -- Run MOC and UIC on the necessary files   
+# -- Run MOC and UIC on the necessary files
+#message(STATUS "QRC_LICENSE_FILES:")
+#foreach(lic ${QRC_LICENSE_FILES})
+#  message(STATUS "  ${lic}")
+#endforeach(lic ${QRC_LICENSE_FILES})
 QT4_ADD_RESOURCES( Generated_RC_SRCS ${StatsGenerator_RCS} ${QRC_LICENSE_FILES})
 
 # this will run uic on .ui files:

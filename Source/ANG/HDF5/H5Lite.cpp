@@ -38,9 +38,9 @@
 
 
 /*-------------------------------------------------------------------------
- * Function: find_dataset
+ * Function: ang_find_dataset
  *
- * Purpose: operator function used by H5LTfind_dataset
+ * Purpose: operator function used by H5LTang_find_dataset
  *
  * Programmer: Pedro Vicente, pvn@ncsa.uiuc.edu
  *
@@ -52,7 +52,7 @@
  *
  *-------------------------------------------------------------------------
  */
-herr_t find_dataset( hid_t loc_id, const char *name, void *op_data)
+herr_t ang_find_dataset( hid_t loc_id, const char *name, void *op_data)
 {
 
  /* Define a default zero value for return. This will cause the iterator to continue if
@@ -81,7 +81,7 @@ herr_t find_dataset( hid_t loc_id, const char *name, void *op_data)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-herr_t find_attr( hid_t loc_id, const char *name, void *op_data)
+herr_t ang_find_attr( hid_t loc_id, const char *name, void *op_data)
 {
 
  /* Define a default zero value for return. This will cause the iterator to continue if
@@ -198,7 +198,7 @@ herr_t H5Lite::findAttribute( hid_t loc_id, const std::string& attrName )
  herr_t ret = 0;
 
  attr_num = 0;
- ret = H5Aiterate( loc_id, &attr_num, find_attr, (void *)(attrName.c_str()) );
+ ret = H5Aiterate( loc_id, &attr_num, ang_find_attr, (void *)(attrName.c_str()) );
 
  return ret;
 }
@@ -211,7 +211,7 @@ herr_t H5Lite::findDataset( hid_t loc_id, const std::string& dsetName )
 
  herr_t  ret = 0;
 
- ret = H5Giterate( loc_id, ".", 0, find_dataset, (void*)(dsetName.c_str() ) );
+ ret = H5Giterate( loc_id, ".", 0, ang_find_dataset, (void*)(dsetName.c_str() ) );
 
  return ret;
 }
