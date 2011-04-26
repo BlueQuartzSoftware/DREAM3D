@@ -69,8 +69,6 @@ class AIMCOMMON_EXPORT ReconstructionVTKWriter
        */
       int writeIPFVizFile(ReconstructionFunc* r, const std::string &file);
 
-      int writeBinary_IPFVizFile(ReconstructionFunc* r, const std::string &file);
-      int writeASCII_IPFVizFile(ReconstructionFunc* r, const std::string &file);
 
       /**
        * @brief Writes a VTK visualization file with vector arrays for the disorientation colors and grain ID.
