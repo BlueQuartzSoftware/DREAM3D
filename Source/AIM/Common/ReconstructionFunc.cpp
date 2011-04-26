@@ -329,69 +329,72 @@ void ReconstructionFunc::find_border()
   size_t size = 0;
   int index;
   int good = 0;
-  int count = 0;
+  size_t count = 0;
   int currentpoint = 0;
   int neighbor = 0;
   int col, row, plane;
   AIM::Reconstruction::CrystalStructure phase1, phase2;
   int initialVoxelsListSize = 10000;
-  std::vector<int > voxelslist(initialVoxelsListSize, -1);
-  int *gnames;
-  gnames = new int[(xpoints * ypoints * zpoints)];
-  int *checked;
-  checked = new int[(xpoints * ypoints * zpoints)];
+  std::vector<int> voxelslist(initialVoxelsListSize, -1);
+  size_t totalPoints = xpoints * ypoints * zpoints;
+
+  AIMArray<int>::Pointer gNamesPtr = AIMArray<int>::CreateArray(totalPoints);
+  int *gnames = gNamesPtr->getPointer(0);
+  AIMArray<int>::Pointer checkedPtr = AIMArray<int>::CreateArray(totalPoints);
+  int *checked = checkedPtr->getPointer(0);
+
   for (int iter = 0; iter < (xpoints * ypoints * zpoints); iter++)
   {
     gnames[iter] = -1;
     checked[iter] = 0;
   }
   index = 0;
-  while(voxels[index].imagequality > minseedimagequality && voxels[index].confidence > minseedconfidence)
+  while (voxels[index].imagequality > minseedimagequality && voxels[index].confidence > minseedconfidence)
   {
-	index++;
+    index++;
   }
   voxelslist[count] = index;
   checked[index] = 1;
   count++;
-  for(int i=0;i<count;i++)
+  for (int i = 0; i < count; i++)
   {
-	  index = voxelslist[i];
-      col = index % xpoints;
-      row = (index / xpoints) % ypoints;
-      plane = index / (xpoints * ypoints);
-      for (int j=0;j<6;j++)
+    index = voxelslist[i];
+    col = index % xpoints;
+    row = (index / xpoints) % ypoints;
+    plane = index / (xpoints * ypoints);
+    for (int j = 0; j < 6; j++)
+    {
+      good = 1;
+      neighbor = index + neighbors[j];
+      if (j == 0 && plane == 0) good = 0;
+      if (j == 5 && plane == (zpoints - 1)) good = 0;
+      if (j == 1 && row == 0) good = 0;
+      if (j == 4 && row == (ypoints - 1)) good = 0;
+      if (j == 2 && col == 0) good = 0;
+      if (j == 3 && col == (xpoints - 1)) good = 0;
+      if (good == 1 && checked[neighbor] == 0)
       {
-        good = 1;
-        neighbor = index + neighbors[j];
-        if (j == 0 && plane == 0) good = 0;
-        if (j == 5 && plane == (zpoints - 1)) good = 0;
-        if (j == 1 && row == 0) good = 0;
-        if (j == 4 && row == (ypoints - 1)) good = 0;
-        if (j == 2 && col == 0) good = 0;
-        if (j == 3 && col == (xpoints - 1)) good = 0;
-        if (good == 1 && checked[neighbor] == 0)
+        if (voxels[neighbor].imagequality < minseedimagequality || voxels[neighbor].confidence < minseedconfidence)
         {
-          if (voxels[neighbor].imagequality < minseedimagequality || voxels[neighbor].confidence < minseedconfidence)
-		  {
-		      gnames[neighbor] = 0;
-			  checked[neighbor] = 1;
-		      voxelslist[count] = neighbor;
-			  count++;
-		      if (count >= voxelslist.size()) voxelslist.resize(count + initialVoxelsListSize, -1);
-		  }
+          gnames[neighbor] = 0;
+          checked[neighbor] = 1;
+          voxelslist[count] = neighbor;
+          count++;
+          if (count >= voxelslist.size()) voxelslist.resize(count + initialVoxelsListSize, -1);
         }
       }
+    }
   }
   voxelslist.clear();
-  voxelslist.resize(initialVoxelsListSize,-1);
+  voxelslist.resize(initialVoxelsListSize, -1);
   for (int iter = 0; iter < (xpoints * ypoints * zpoints); iter++)
   {
     checked[iter] = 0;
   }
   index = 0;
-  while(gnames[index] != -1)
+  while (gnames[index] != -1)
   {
-	index++;
+    index++;
   }
   count = 0;
   voxelslist[count] = index;
@@ -408,7 +411,7 @@ void ReconstructionFunc::find_border()
     q1[2] = voxels[currentpoint].quat[2];
     q1[3] = voxels[currentpoint].quat[3];
     q1[4] = voxels[currentpoint].quat[4];
-	phase1 = crystruct[voxels[currentpoint].phase];
+    phase1 = crystruct[voxels[currentpoint].phase];
     for (int i = 1; i < 6; i++)
     {
       good = 1;
@@ -421,29 +424,29 @@ void ReconstructionFunc::find_border()
       if (i == 3 && col == (xpoints - 1)) good = 0;
       if (good == 1 && gnames[neighbor] == -1 && checked[neighbor] == 0)
       {
-		  voxelslist[count] = neighbor;
-		  checked[neighbor] = 1;
-		  count++;
-	      if (count >= voxelslist.size()) voxelslist.resize(count + initialVoxelsListSize, -1);
-	  }
-	  if (good == 1 && gnames[neighbor] == 0)
+        voxelslist[count] = neighbor;
+        checked[neighbor] = 1;
+        count++;
+        if (count >= voxelslist.size()) voxelslist.resize(count + initialVoxelsListSize, -1);
+      }
+      if (good == 1 && gnames[neighbor] == 0)
       {
-	    w = 10000.0;
+        w = 10000.0;
         q2[0] = 0;
         q2[1] = voxels[neighbor].quat[1];
         q2[2] = voxels[neighbor].quat[2];
         q2[3] = voxels[neighbor].quat[3];
         q2[4] = voxels[neighbor].quat[4];
-		phase2 = crystruct[voxels[neighbor].phase];
+        phase2 = crystruct[voxels[neighbor].phase];
         if (phase1 == phase2 && phase1 == AIM::Reconstruction::Hexagonal) w = MisorientationCalculations::getMisoQuatHexagonal(q1, q2, n1, n2, n3);
-		if (phase1 == phase2 && phase1 == AIM::Reconstruction::Cubic) w = MisorientationCalculations::getMisoQuatCubic(q1, q2, n1, n2, n3);
+        if (phase1 == phase2 && phase1 == AIM::Reconstruction::Cubic) w = MisorientationCalculations::getMisoQuatCubic(q1, q2, n1, n2, n3);
         if (w < misorientationtolerance)
         {
           gnames[neighbor] = -1;
-		  checked[neighbor] = 1;
-		  voxelslist[count] = neighbor;
-		  count++;
-	      if (count >= voxelslist.size()) voxelslist.resize(count + initialVoxelsListSize, -1);
+          checked[neighbor] = 1;
+          voxelslist[count] = neighbor;
+          count++;
+          if (count >= voxelslist.size()) voxelslist.resize(count + initialVoxelsListSize, -1);
         }
       }
     }
@@ -451,8 +454,9 @@ void ReconstructionFunc::find_border()
   voxelslist.clear();
   for (int iter = 0; iter < (xpoints * ypoints * zpoints); iter++)
   {
-	  voxels[iter].grainname = gnames[iter];
+    voxels[iter].grainname = gnames[iter];
   }
+
 }
 
 void ReconstructionFunc::align_sections(const std::string &filename)
