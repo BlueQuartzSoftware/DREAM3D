@@ -390,7 +390,7 @@ void Reconstruction::compute()
   progressMessage(AIM_STRING("Writing Grain Data"), 92);
   m->write_graindata(graindataFile);
 
-  /** ********** This section writes the ASCII based vtk files for visualization *** */
+  /** ********** This section writes the VTK files for visualization *** */
 
   progressMessage(AIM_STRING("Writing VTK Visualization File"), 93);
   if (m_WriteVisualizationFile) {outWriter->writeVisualizationFile(m.get(), reconVisFile);}
@@ -409,12 +409,10 @@ void Reconstruction::compute()
 
   progressMessage(AIM_STRING("Writing VTK Down Sampled File"), 98);
   if (m_WriteDownSampledFile) {outWriter->writeDownSampledVizFile(m.get(), reconDSVisFile);}
-
-
-
-
   /** ******* End VTK Visualization File Writing Section ****** */
+
   CHECK_FOR_CANCELED(ReconstructionFunc, vtk_viz_files)
+
   progressMessage(AIM_STRING("Writing Out HDF5 Grain File. This may take a few minutes to complete."), 99);
   if (m_WriteHDF5GrainFile) { h5GrainWriter->writeHDF5GrainsFile(m.get(), hdf5GrainFile); }
   CHECK_FOR_CANCELED(ReconstructionFunc, writeHDF5GrainsFile)
