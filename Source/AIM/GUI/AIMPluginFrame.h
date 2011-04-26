@@ -1,5 +1,6 @@
 /* ============================================================================
  * Copyright (c) 2010, Michael A. Jackson (BlueQuartz Software)
+ * Copyright (c) 2010, Dr. Michael A. Grober (US Air Force Research Laboratories
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
