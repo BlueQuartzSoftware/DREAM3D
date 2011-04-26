@@ -9,7 +9,7 @@
 #endif
 
 int main(int argc, char **argv) {
-    struct timeval t1;
-    gettimeofday(&t1, 0x00);
-  return 0;
+	  struct timeval t1;
+	  gettimeofday(&t1, 0x00);
+	return 0;
 }

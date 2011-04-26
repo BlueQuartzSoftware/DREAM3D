@@ -23,7 +23,6 @@ set (QtSupport_SRCS
     ${QtSupport_SOURCE_DIR}/QRecentFileList.cpp
 )
 set (QtSupport_HDRS
-    ${QtSupport_SOURCE_DIR}/AIM_QtMacros.h
     ${QtSupport_SOURCE_DIR}/AIMImageGraphicsDelegate.h
     ${QtSupport_SOURCE_DIR}/ApplicationAboutBoxDialog.h
     ${QtSupport_SOURCE_DIR}/ColorComboPicker.h

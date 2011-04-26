@@ -326,7 +326,7 @@ void ReconstructionFunc::find_border()
   double w, n1, n2, n3;
   double q1[5];
   double q2[5];
-  size_t size = 0;
+  //size_t size = 0;
   int index;
   int good = 0;
   size_t count = 0;
@@ -356,7 +356,7 @@ void ReconstructionFunc::find_border()
   voxelslist[count] = index;
   checked[index] = 1;
   count++;
-  for (int i = 0; i < count; i++)
+  for (size_t i = 0; i < count; i++)
   {
     index = voxelslist[i];
     col = index % xpoints;

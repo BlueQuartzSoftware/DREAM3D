@@ -18,14 +18,11 @@
 #cmakedefine CMP_EXTRA_CONFIGURATION_FILE @CMP_EXTRA_CONFIGURATION_FILE@
 #ifdef CMP_EXTRA_CONFIGURATION_FILE
 #include "@CMP_EXTRA_CONFIGURATION_FILE@"
+#undef CMP_EXTRA_CONFIGURATION_FILE
 #endif
 
 #if CMP_HAVE_STDINT_H
 #include <stdint.h>
-#endif
-
-#if CMP_HAVE_SYS_TYPES_H
-#include <sys/types.h>
 #endif
 
 /*--------------------------------------------------------------------------*/

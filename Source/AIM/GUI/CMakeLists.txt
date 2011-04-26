@@ -55,6 +55,10 @@ include_directories(${Representation_SOURCE_DIR})
 include_directories(${Representation_BINARY_DIR})
 include_directories(${AIMRepresentation_BINARY_DIR}/QtSupport)
 
+# --------------------------------------------------------------------
+# Generate the License File Headers
+include(${AIMRepresentation_SOURCE_DIR}/License/License.cmake)
+
 # List the source files here
 SET (Representation_SRCS
     ${Representation_SOURCE_DIR}/main.cpp
@@ -152,7 +156,7 @@ ${Representation_SOURCE_DIR}/UI_Files/Test.ui
 SET( Representation_RCS ${PROJECT_RESOURCES_DIR}/icons/images/Icons.qrc)
 
 # -- Run MOC and UIC on the necessary files   
-QT4_ADD_RESOURCES( Generated_RC_SRCS ${Representation_RCS} )
+QT4_ADD_RESOURCES( Generated_RC_SRCS ${Representation_RCS} ${QRC_LICENSE_FILES})
 
 # this will run uic on .ui files:
 QT4_WRAP_UI( Generated_UI_HDRS ${Representation_UIS} )
