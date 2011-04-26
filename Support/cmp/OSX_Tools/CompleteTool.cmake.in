@@ -39,26 +39,26 @@ function(gp_item_default_embedded_path_override item default_embedded_path_var)
   # in same-level-directories inside the bundle. The parent directory
   # of an executable inside the bundle should be MacOS or a sibling of
   # MacOS and all embedded paths returned from here will begin with
-  # "@executable_path/../" and will work from all executables in all
+  # "@executable_path/" and will work from all executables in all
   # such same-level-directories inside the bundle.
   #
 
   # By default, embed things right next to the main bundle executable:
   #
-  set(path "@executable_path/../lib")
+  set(path "@executable_path/lib")
 
   set(overridden 0)
   # Embed .dylibs right next to the main bundle executable:
   #
   if(item MATCHES "\\.dylib$")
-    set(path "@executable_path/../lib")
+    set(path "@executable_path/lib")
     set(overridden 1)
   endif(item MATCHES "\\.dylib$")
 
   # Embed .so right next to the main bundle executable:
   #
   if(item MATCHES "\\.so$")
-    set(path "@executable_path/../plugins")
+    set(path "@executable_path/plugins")
     set(overridden 1)
   endif(item MATCHES "\\.so$")
   
@@ -66,7 +66,7 @@ function(gp_item_default_embedded_path_override item default_embedded_path_var)
   #
   if(NOT overridden)
     if(item MATCHES "[^/]+\\.framework/")
-      set(path "@executable_path/../Frameworks")
+      set(path "@executable_path/Frameworks")
       set(overridden 1)
     endif(item MATCHES "[^/]+\\.framework/")
   endif(NOT overridden)

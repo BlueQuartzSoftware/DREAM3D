@@ -44,7 +44,7 @@
 #include "AIM/Common/AIMRepresentationVersion.h"
 #include "QtSupport/ApplicationAboutBoxDialog.h"
 #include "QtSupport/QRecentFileList.h"
-#include "AIM/License/AIMRepresentationLicenseFiles.h"
+#include "AIM/License/StatsGeneratorLicenseFiles.h"
 
 #include "SGApplication.h"
 #include "EditPhaseDialog.h"

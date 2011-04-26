@@ -5,6 +5,8 @@
 #--////////////////////////////////////////////////////////////////////////////
 
 include (CMakeParseArguments)
+# include(${CMP_OSX_TOOLS_SOURCE_DIR}/OSX_BundleTools.cmake)
+# include(${CMP_OSX_TOOLS_SOURCE_DIR}/ToolUtilities.cmake)
 
 #-------------------------------------------------------------------------------
 MACRO (cmp_IDE_GENERATED_PROPERTIES SOURCE_PATH HEADERS SOURCES)
@@ -110,8 +112,8 @@ function(BuildQtAppBundle)
     #-- Configure the OS X Bundle Plist
     if (APPLE)
         SET(GUI_TYPE MACOSX_BUNDLE)
-#-- Make sure the qt_menu.nib is copied if we are using Qt Cocoa by setting the
-# source files properties of the qt_menu.nib package
+        #-- Make sure the qt_menu.nib is copied if we are using Qt Cocoa by setting the
+        # source files properties of the qt_menu.nib package
         IF(QT_MAC_USE_COCOA)
             GET_FILENAME_COMPONENT(qt_menu_nib
               "${QT_QTGUI_LIBRARY_RELEASE}/Resources/qt_menu.nib"
@@ -131,13 +133,14 @@ function(BuildQtAppBundle)
         ENDIF(QT_MAC_USE_COCOA)
         
 #-- Write out a qt.conf file to place in our App bundle
-        set(qt_conf_file ${${QAB_TARGET}_BINARY_DIR}/qt.conf)
-        file(WRITE ${qt_conf_file})
-        set_source_files_properties(${qt_conf_file}
-                                PROPERTIES
-                                MACOSX_PACKAGE_LOCATION Resources)        
-
-        list(APPEND QAB_SOURCES ${qt_menu_nib_sources} ${qt_conf_file})
+#        set(qt_conf_file ${${QAB_TARGET}_BINARY_DIR}/qt.conf)
+#        file(WRITE ${qt_conf_file})
+#        set_source_files_properties(${qt_conf_file}
+#                                PROPERTIES
+#                                MACOSX_PACKAGE_LOCATION Resources)        
+#
+#        list(APPEND QAB_SOURCES ${qt_menu_nib_sources} ${qt_conf_file})
+         list(APPEND QAB_SOURCES ${qt_menu_nib_sources})
     elseif(WIN32)
         SET(GUI_TYPE WIN32)
         FILE (WRITE "${CMAKE_CURRENT_BINARY_DIR}/Icon.rc"
@@ -145,7 +148,7 @@ function(BuildQtAppBundle)
           "// remains consistent on all systems.\n"
           "IDI_ICON1 ICON \"${QAB_ICON_FILE}\"")
         SET(QAB_ICON_FILE "${CMAKE_CURRENT_BINARY_DIR}/Icon.rc")
-        cmp_IDE_GENERATED_PROPERTIES("Generated_qrc" "${QAB_ICON_FILE}" "")
+        cmp_IDE_GENERATED_PROPERTIES("${TARGET}/Generated/QrcFiles" "${QAB_ICON_FILE}" "")
     endif(APPLE)
     
 #-- Append the Icon file/Image/Resource file to the list of Sources to compile
@@ -226,7 +229,7 @@ function(BuildQtAppBundle)
             list(APPEND app_plugin_list "\${CMAKE_INSTALL_PREFIX}/${pi_dest}/${plugin_name}")
         endforeach()
     endif(APPLE)
-    
+        
 #-- Create last install rule that will run fixup_bundle() on OS X Machines. Other platforms we
 #-- are going to create the install rules elsewhere
     if(APPLE)

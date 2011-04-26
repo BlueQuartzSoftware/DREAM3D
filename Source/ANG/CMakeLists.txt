@@ -28,6 +28,9 @@ SET (PROJECT_CODE_DIR ${PROJECT_SOURCE_DIR}/Source)
 if (NOT PROJECT_RESOURCES_DIR)
 SET (PROJECT_RESOURCES_DIR ${TSLAngLib_SOURCE_DIR}/Resources)
 endif()
+if (NOT DEFINED CMP_SOURCE_DIR)
+set(CMP_SOURCE_DIR ${TSLAngLib_SOURCE_DIR}/Support/cmp)
+endif()
 
 SET (PROJECT_PREFIX "ANG" CACHE STRING "The Prefix to be used for Preprocessor definitions")
 set (TSLAngLib_INSTALL_FILES 0)
@@ -44,7 +47,7 @@ set (CMP_PROJECT_NAMESPACE "ANG")
 set (CMP_PROJECT_NAME "ANG")
 set (CMP_ENABLE_PLUGINS "0")
 set (CMP_LIB_SEARCH_DIRS "")
-INCLUDE (${PROJECT_RESOURCES_DIR}/cmp/cmpProject.cmake)
+INCLUDE (${CMP_SOURCE_DIR}/cmpProject.cmake)
 
 set (ANG_SRCS
     ${TSLAngLib_SOURCE_DIR}/AngDirectoryPatterns.cpp
