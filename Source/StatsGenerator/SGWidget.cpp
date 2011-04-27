@@ -54,6 +54,9 @@
 
 #include "AIM/Common/HDF5/H5ReconStatsWriter.h"
 
+#include "StatsGenerator/Presets/MicrostructurePresetManager.h"
+#include "StatsGenerator/Presets/DefaultStatsPreset.h"
+#include "StatsGenerator/Presets/EquiaxedPreset.h"
 #include "StatsGen.h"
 
 #define CHECK_ERROR_ON_WRITE(var, msg)\
@@ -108,6 +111,24 @@ void SGWidget::setupGui()
   distributionTypeCombo->setCurrentIndex(AIM::Reconstruction::LogNormal);
   // Turn off all the plot widgets
   setTabsPlotTabsEnabled(false);
+
+  microstructurePresetCombo->blockSignals(true);
+  // Register all of our Microstructure Preset Factories
+  AbstractMicrostructurePresetFactory::Pointer presetFactory = DefaultStatsPresetFactory::New();
+  MicrostructurePresetManager::registerMicrostructurePresetFactory(presetFactory);
+
+  QString displayString = QString::fromStdString(presetFactory->displayName());
+  microstructurePresetCombo->addItem(displayString);
+
+  presetFactory = EquiaxedPresetFactory::New();
+  MicrostructurePresetManager::registerMicrostructurePresetFactory(presetFactory);
+  displayString = QString::fromStdString(presetFactory->displayName());
+  microstructurePresetCombo->addItem(displayString);
+  microstructurePresetCombo->blockSignals(false);
+
+  // Select the first Preset in the list
+  microstructurePresetCombo->setCurrentIndex(0);
+  on_microstructurePresetCombo_currentIndexChanged(0);
 
   double mu = 1.0;
   double sigma = 0.1;
@@ -562,23 +583,23 @@ void SGWidget::plotSizeDistribution()
   err = computeBinsAndCutOffs(mu, sigma, cutOff, stepSize, binsizes, xCo, yCo, xMax, yMax, x, y);
   if (err < 0) { return; }
 
-
   // Now that we have bins and grain sizes, push those to the other plot widgets
   // Setup Each Plot Widget
   m_Omega3Plot->setSizeDistributionValues(mu, sigma, cutOff, stepSize);
-  m_Omega3Plot->setBins(binsizes);
+  m_MicroPreset->generateOmega3Data(m_Omega3Plot->tableModel(), binsizes);
 
   m_BOverAPlot->setSizeDistributionValues(mu, sigma, cutOff, stepSize);
-  m_BOverAPlot->setBins(binsizes);
+  m_MicroPreset->generateBOverAPlotData(m_BOverAPlot->tableModel(), binsizes);
 
   m_COverAPlot->setSizeDistributionValues(mu, sigma, cutOff, stepSize);
-  m_COverAPlot->setBins(binsizes);
+  m_MicroPreset->generateCOverAPlotData(m_COverAPlot->tableModel(), binsizes);
 
   m_COverBPlot->setSizeDistributionValues(mu, sigma, cutOff, stepSize);
-  m_COverBPlot->setBins(binsizes);
+  m_MicroPreset->generateCOverBPlotData(m_COverBPlot->tableModel(), binsizes);
 
   m_NeighborPlot->setSizeDistributionValues(mu, sigma, cutOff, stepSize);
-  m_NeighborPlot->setBins(binsizes);
+  m_MicroPreset->generateNeighborPlotData(m_NeighborPlot->tableModel(), binsizes);
+
 }
 
 
@@ -692,8 +713,6 @@ int SGWidget::readDataFromHDF5(H5ReconStatsReader::Pointer reader,int phase)
   m_Mu_SizeDistribution->setText(QString::number(mu));
   m_Sigma_SizeDistribution->setText(QString::number(sigma));
 
-
-
   int nBins = (int)(bins.size());
 
   StatsGen sg;
@@ -738,12 +757,21 @@ int SGWidget::readDataFromHDF5(H5ReconStatsReader::Pointer reader,int phase)
 
   // Enable all the tabs
     setTabsPlotTabsEnabled(true);
-
-
     dataWasEdited();
-
     return err;
 }
 
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void SGWidget::on_microstructurePresetCombo_currentIndexChanged(int index)
+{
+  std::cout << "on_microstructurePresetCombo_currentIndexChanged" << std::endl;
+  QString presetName = microstructurePresetCombo->currentText();
+
+  //Factory Method to get an instantiated object of the correct type?
+  MicrostructurePresetManager::Pointer manager = MicrostructurePresetManager::instance();
+  m_MicroPreset = manager->createNewMicrostructurePreset(presetName.toStdString());
+}
 

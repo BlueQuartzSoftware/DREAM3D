@@ -120,7 +120,6 @@ class AIMCOMMON_EXPORT ReconstructionFunc
 
     vector<vector<double> > graincenters;
     vector<vector<double> > grainmoments;
-    // vector<vector<double> > grainquats;
     DoubleArrayType::Pointer m_grainQuats;
 
     int numseNbins;
