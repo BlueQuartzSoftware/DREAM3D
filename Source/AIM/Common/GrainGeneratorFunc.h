@@ -63,21 +63,23 @@ public:
     double misorientationtolerance;
     std::vector<AIM::Reconstruction::CrystalStructure> crystruct;
     AIMRandomNG rg;
-    double **actualodf;
-    double **simodf;
-    double **axisodf;
 
-    Voxel *voxels;
-    double **actualmdf;
-    double **simmdf;
-    double **actualmicrotex;
-    double **simmicrotex;
-    int *graincounts;
-    double **graincenters;
-    double **grainmoments;
+    double** actualodf;
+    double** simodf;
+    double** axisodf;
+    Voxel* voxels;
+    double** actualmdf;
+    double** simmdf;
+    double** actualmicrotex;
+    double** simmicrotex;
+
+    int* graincounts;
+    double** graincenters;
+    double** grainmoments;
+
 //    Grain *precipitates;
     std::vector<Grain::Pointer> precipitates;
-    int *psizes;
+    int* psizes;
 
     std::vector<Grain::Pointer> m_Grains;
 

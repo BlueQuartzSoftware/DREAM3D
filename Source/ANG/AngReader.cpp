@@ -249,7 +249,7 @@ int AngReader::readFile()
   }
 
   //double progress = 0.0;
-  int totalDataRows = nRows * nEvenCols;
+  size_t totalDataRows = nRows * nEvenCols;
   size_t counter = 0;
   for(int row = 0; row < nRows && in.eof() == false; ++row)
   {

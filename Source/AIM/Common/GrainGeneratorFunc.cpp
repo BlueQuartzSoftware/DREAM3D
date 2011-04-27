@@ -116,14 +116,15 @@ void GrainGeneratorFunc::initializeArrays()
     m_Grains[g] = Grain::New();
   }
   size_t nElements = 0;
-  actualodf = new double *[crystruct.size()];
-  simodf = new double *[crystruct.size()];
-  actualmdf = new double *[crystruct.size()];
-  simmdf = new double *[crystruct.size()];
-  axisodf = new double *[crystruct.size()];
-  actualmicrotex = new double *[crystruct.size()];
-  simmicrotex = new double *[crystruct.size()];
-  for(int i=0;i<crystruct.size();i++)
+  size_t xtalSize = crystruct.size();
+  actualodf = new double *[xtalSize];
+  simodf = new double *[xtalSize];
+  actualmdf = new double *[xtalSize];
+  simmdf = new double *[xtalSize];
+  axisodf = new double *[xtalSize];
+  actualmicrotex = new double *[xtalSize];
+  simmicrotex = new double *[xtalSize];
+  for(size_t i= 0; i < xtalSize; ++i)
   {
     if(crystruct[i] == AIM::Reconstruction::Hexagonal) nElements = 36*36*12;
     if(crystruct[i] == AIM::Reconstruction::Cubic) nElements = 18*18*18;
@@ -806,10 +807,10 @@ void  GrainGeneratorFunc::insert_grain(size_t gnum)
 			if(inside >= 0)
 			{
 				int currentpoint = index;
-				if(index >= totalpoints)
-				{
-				  int stop = 0;
-				}
+//				if(index >= totalpoints)
+//				{
+//				  int stop = 0;
+//				}
 				ellipfunc = (-0.1/((pow((axis1comp+axis2comp+axis3comp),1)*(1.0-(1.0/(0.90*0.90))))))*(1.0-(((axis1comp+axis2comp+axis3comp)*(axis1comp+axis2comp+axis3comp))/(0.90*0.90)));
 				insidelist[insidecount] = currentpoint;
 				ellipfunclist[insidecount] = ellipfunc;
@@ -948,7 +949,8 @@ double GrainGeneratorFunc::check_neighborhooderror(int gadd, int gremove)
   int index;
   int count = 0;
   int phase;
-  for(int iter=0;iter<crystruct.size();iter++)
+  size_t xtalSize = crystruct.size();
+  for(std::vector<AIM::Reconstruction::CrystalStructure>::size_type iter = 0; iter < xtalSize;++iter)
   {
 	  phase = iter+1;
 	  for(int i=0;i<numdiameterbins[phase];i++)
@@ -1099,7 +1101,8 @@ double GrainGeneratorFunc::check_sizedisterror(int gadd, int gremove)
   int index;
   int count = 0;
   int phase;
-  for(int iter=0;iter<crystruct.size();iter++)
+  size_t xtalSize = crystruct.size();
+  for(std::vector<AIM::Reconstruction::CrystalStructure>::size_type iter = 0; iter < xtalSize; ++iter)
   {
 	  phase = iter+1;
 	  for(int i=0;i<40;i++)
@@ -1161,14 +1164,14 @@ int  GrainGeneratorFunc::pack_grains(const std::string &filename, int numgrains)
   double acceptableerror = 0.0;
   rg.RandomInit((static_cast<unsigned int> (time(NULL))));
   activegrainlist.resize(numgrains + 1);
-  for (int i = 1; i < crystruct.size(); i++)
+  for (std::vector<AIM::Reconstruction::CrystalStructure>::size_type i = 1; i < crystruct.size();++i)
   {
     phasefraction[i] = phasefraction[i] + phasefraction[i - 1];
   }
   for (int i = 1; i < (numextragrains + 1); i++)
   {
     random = rg.Random();
-    for (int j = 0; j < crystruct.size(); j++)
+    for (std::vector<AIM::Reconstruction::CrystalStructure>::size_type j = 0; j < crystruct.size();++j)
     {
       if (random < phasefraction[j])
       {
@@ -1382,7 +1385,7 @@ int GrainGeneratorFunc::assign_voxels(int numgrains)
   int *gsizes;
   gsizes = new int[numgrains];
   int oldname;
-  int size;
+ // int size;
   int column, row, plane;
   double inside;
   double Nvalue = 0;
@@ -1770,7 +1773,8 @@ int GrainGeneratorFunc::adjust_boundaries(int numgrains)
 	int bad = 0;
 	double random, oldsizedisterror, currentsizedisterror, diam;
 	int x, y, z;
-	int neighpoint, index, count, affectedcount;
+	int neighpoint, index;
+	size_t count, affectedcount;
 	int vListSize = 1000;
 	int *gsizes;
 	double voxtovol = resx*resy*resz*(3.0/4.0)*(1.0/m_pi);
@@ -1819,7 +1823,7 @@ int GrainGeneratorFunc::adjust_boundaries(int numgrains)
 		}
 		voxellist[count] = nucleus;
 		count++;
-		for(int i=0;i<count;i++)
+		for(size_t i=0;i<count;++i)
 		{
 			index = voxellist[i];
 			x = index%xpoints;
@@ -1863,7 +1867,7 @@ int GrainGeneratorFunc::adjust_boundaries(int numgrains)
 			  }
 			}
 		}
-		for(int i=0;i<affectedcount;i++)
+		for(size_t i=0;i<affectedcount;i++)
 		{
 			index = affectedvoxellist[i];
 			if(reassigned[index] > 0)
@@ -1872,7 +1876,7 @@ int GrainGeneratorFunc::adjust_boundaries(int numgrains)
 				gsizes[reassigned[index]] = gsizes[reassigned[index]]-1;
 			}
 		}
-		for(int i=1;i<activegrainlist.size();i++)
+		for(std::vector<int>::size_type i=1;i<activegrainlist.size();i++)
 		{
 			index = activegrainlist[i];
 			diam = 2.0*pow((gsizes[index]*voxtovol),(1.0/3.0));
@@ -1890,7 +1894,7 @@ int GrainGeneratorFunc::adjust_boundaries(int numgrains)
 		if(currentsizedisterror > oldsizedisterror)
 		{
 			bad++;
-			for(int i=0;i<affectedcount;i++)
+			for(size_t i=0;i<affectedcount;i++)
 			{
 				index = affectedvoxellist[i];
 				if(reassigned[index] > 0)
@@ -1900,7 +1904,7 @@ int GrainGeneratorFunc::adjust_boundaries(int numgrains)
 					gsizes[gnames[index]]++;
 				}
 			}
-			for(int i=1;i<activegrainlist.size();i++)
+			for(std::vector<int>::size_type i=1;i<activegrainlist.size();i++)
 			{
 				index = activegrainlist[i];
 				diam = 2.0*pow((gsizes[index]*voxtovol),(1.0/3.0));
@@ -1981,13 +1985,14 @@ void  GrainGeneratorFunc::find_neighbors()
   double xn, yn, zn;
   double xdist, ydist, zdist;
   int grain;
-  int nnum;
+  size_t nnum;
   int onsurf = 0;
   double dist, dist2, diam, diam2;
   int dist_int, dist2_int;
   int good = 0;
   int neighbor = 0;
-  for(int i=0;i<crystruct.size();i++)
+  size_t xtalCount = crystruct.size();
+  for(size_t i=0;i<xtalCount;++i)
   {
 	totalsurfacearea[i] = 0;
   }
@@ -2125,9 +2130,9 @@ void GrainGeneratorFunc::MC_LoopBody1(int phase, size_t neighbor, int j,std::vec
   int newmisobin = std::numeric_limits<int >::max();
 
   double q1[5], q2[5];
-  double miso1 = std::numeric_limits<double >::max();
-  double miso2 = std::numeric_limits<double >::max();
-  double miso3 = std::numeric_limits<double >::max();
+//  double miso1 = std::numeric_limits<double >::max();
+//  double miso2 = std::numeric_limits<double >::max();
+//  double miso3 = std::numeric_limits<double >::max();
 
 
   curmiso1 = misolist->at(3*j);
@@ -2462,8 +2467,8 @@ void GrainGeneratorFunc::matchCrystallography(const std::string &ErrorFile, H5Re
   double random;
   double currentodferror = 0;
   double currentmdferror = 0;
-
-  for(int iter=0;iter<crystruct.size();iter++)
+  size_t xtalSize = crystruct.size();
+  for(size_t iter=0;iter<xtalSize;++iter)
   {
 	  if(crystruct[iter] == AIM::Reconstruction::Cubic) numbins = 18*18*18;
 	  if(crystruct[iter] == AIM::Reconstruction::Hexagonal) numbins = 36*36*12;
@@ -2578,7 +2583,8 @@ void  GrainGeneratorFunc::find_centroids()
 {
 //  int count = 0;
   int onedge = 0;
-  for(int i=0;i<crystruct.size();i++)
+  size_t xtalSize = crystruct.size();
+  for(size_t i=0;i<xtalSize;++i)
   {
 	  maxdiameter[i]=0;
 	  mindiameter[i]=100000;
@@ -2595,7 +2601,8 @@ void  GrainGeneratorFunc::find_centroids()
       graincenters[i][j]=0;
     }
   }
-  for(int j = 0; j < (xpoints*ypoints*zpoints); j++)
+  int totalPoints = (xpoints*ypoints*zpoints);
+  for(int j = 0; j < totalPoints; ++j)
   {
       onedge = 0;
       int gnum = voxels[j].grainname;
@@ -2634,7 +2641,7 @@ void  GrainGeneratorFunc::find_centroids()
     packquality = (diameter-m_Grains[i]->equivdiameter)/m_Grains[i]->equivdiameter;
     m_Grains[i]->equivdiameter = diameter;
     m_Grains[i]->packquality = packquality;
-	phase = m_Grains[i]->phase;
+	  phase = m_Grains[i]->phase;
     if((diameter) > maxdiameter[phase]) maxdiameter[phase] = (diameter);
     if(diameter < mindiameter[phase]) mindiameter[phase] = diameter;
   }
@@ -2771,12 +2778,14 @@ void  GrainGeneratorFunc::find_axes ()
 }
 void  GrainGeneratorFunc::find_vectors (H5ReconStatsWriter::Pointer h5io)
 {
-	totalaxes.resize(crystruct.size());
+  size_t xtalSize = crystruct.size();
+	totalaxes.resize(xtalSize);
   double **axisodf;
-  axisodf = new double *[crystruct.size()];
-  for(int i=0;i<crystruct.size();i++)
+  axisodf = new double *[xtalSize];
+  for(size_t i=0;i<xtalSize;++i)
   {
 	  totalaxes[i] = 0.0;
+	  //FIXME: Leaking memory because this was already allocated in the "initializeArrays" method
 	  axisodf[i] = new double [18*18*18];
   }
   for(int i = 1; i < numgrains; i++)
@@ -2972,7 +2981,8 @@ void  GrainGeneratorFunc::find_vectors (H5ReconStatsWriter::Pointer h5io)
     }
     }
   }
-  for(int i=0;i<crystruct.size();i++)
+  xtalSize = crystruct.size();
+  for(size_t i=0;i<xtalSize;++i)
   {
 	  int err;
 	  err = h5io->writeAxisOrientationData(i, axisodf[i], totalaxes[i]);
@@ -2986,7 +2996,8 @@ int GrainGeneratorFunc::volume_stats(H5ReconStatsWriter::Pointer h5io)
   double actualgrains = 0;
   double avglogdiam = 0;
   int numbins;
-  for(int iter=0;iter<crystruct.size();iter++)
+  size_t xtalSize = crystruct.size();
+  for(size_t iter=0;iter< xtalSize; ++iter)
   {
 	  numbins = ((maxdiameter[iter]-mindiameter[iter])/binstepsize[iter])+1;
 	  neighborhood[iter].resize(numbins);
@@ -3009,11 +3020,11 @@ int GrainGeneratorFunc::volume_stats(H5ReconStatsWriter::Pointer h5io)
 	  for (int i = 1; i < numgrains; i++)
     {
       int onedge = m_Grains[i]->surfacegrain;
-      if (onedge == 0 && m_Grains[i]->phase == iter)
+      if (onedge == 0 && m_Grains[i]->phase == static_cast<int>(iter) )
       {
         actualgrains++;
-        int vol = m_Grains[i]->numvoxels;
-        double voxvol = vol * resx * resy * resz;
+     //   int vol = m_Grains[i]->numvoxels;
+      //  double voxvol = vol * resx * resy * resz;
         //  double logvol = log(voxvol);
         double diam = m_Grains[i]->equivdiameter;
         double logdiam = log(diam);
@@ -3080,7 +3091,7 @@ int GrainGeneratorFunc::volume_stats(H5ReconStatsWriter::Pointer h5io)
 	  for (int j = 1; j < numgrains; j++)
     {
       int onedge = m_Grains[j]->surfacegrain;
-      if (onedge == 0 && m_Grains[j]->phase == iter)
+      if (onedge == 0 && m_Grains[j]->phase == static_cast<int>(iter) )
       {
         int vol = m_Grains[j]->numvoxels;
         double voxvol = vol * resx * resy * resz;
