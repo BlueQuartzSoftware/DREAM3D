@@ -50,11 +50,11 @@ class DefaultStatsPreset : public AbstractMicrostructurePreset
     virtual ~DefaultStatsPreset();
 
 
-    void generateOmega3Data(SGAbstractTableModel* tableModel, QVector<double> binNumbers);
-    void generateBOverAPlotData(SGAbstractTableModel* tableModel, QVector<double> binNumbers);
-    void generateCOverAPlotData(SGAbstractTableModel* tableModel, QVector<double> binNumbers);
-    void generateCOverBPlotData(SGAbstractTableModel* tableModel, QVector<double> binNumbers);
-    void generateNeighborPlotData(SGAbstractTableModel* tableModel, QVector<double> binNumbers);
+    void generateOmega3Data(StatsGenPlotWidget* plot, QVector<double> binNumbers);
+    void generateBOverAPlotData(StatsGenPlotWidget* plot, QVector<double> binNumbers);
+    void generateCOverAPlotData(StatsGenPlotWidget* plot, QVector<double> binNumbers);
+    void generateCOverBPlotData(StatsGenPlotWidget* plot, QVector<double> binNumbers);
+    void generateNeighborPlotData(StatsGenPlotWidget* plot, QVector<double> binNumbers);
 
   protected:
     DefaultStatsPreset();

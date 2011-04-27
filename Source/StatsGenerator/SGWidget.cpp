@@ -585,20 +585,21 @@ void SGWidget::plotSizeDistribution()
 
   // Now that we have bins and grain sizes, push those to the other plot widgets
   // Setup Each Plot Widget
+  // The MicroPreset class will set the distribution for each of the plots
   m_Omega3Plot->setSizeDistributionValues(mu, sigma, cutOff, stepSize);
-  m_MicroPreset->generateOmega3Data(m_Omega3Plot->tableModel(), binsizes);
+  m_MicroPreset->generateOmega3Data(m_Omega3Plot, binsizes);
 
   m_BOverAPlot->setSizeDistributionValues(mu, sigma, cutOff, stepSize);
-  m_MicroPreset->generateBOverAPlotData(m_BOverAPlot->tableModel(), binsizes);
+  m_MicroPreset->generateBOverAPlotData(m_BOverAPlot, binsizes);
 
   m_COverAPlot->setSizeDistributionValues(mu, sigma, cutOff, stepSize);
-  m_MicroPreset->generateCOverAPlotData(m_COverAPlot->tableModel(), binsizes);
+  m_MicroPreset->generateCOverAPlotData(m_COverAPlot, binsizes);
 
   m_COverBPlot->setSizeDistributionValues(mu, sigma, cutOff, stepSize);
-  m_MicroPreset->generateCOverBPlotData(m_COverBPlot->tableModel(), binsizes);
+  m_MicroPreset->generateCOverBPlotData(m_COverBPlot, binsizes);
 
   m_NeighborPlot->setSizeDistributionValues(mu, sigma, cutOff, stepSize);
-  m_MicroPreset->generateNeighborPlotData(m_NeighborPlot->tableModel(), binsizes);
+  m_MicroPreset->generateNeighborPlotData(m_NeighborPlot, binsizes);
 
 }
 

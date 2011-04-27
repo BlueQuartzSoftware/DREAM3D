@@ -35,7 +35,7 @@
 
 #include "MXA/Common/MXASetGetMacros.h"
 
-class SGAbstractTableModel;
+class StatsGenPlotWidget;
 
 /*
  *
@@ -47,13 +47,40 @@ class AbstractMicrostructurePreset
     MXA_TYPE_MACRO(AbstractMicrostructurePreset)
     virtual ~AbstractMicrostructurePreset() {};
 
- //   void setSizeDistributionValues(double mu, double sigma, double cutOff, double binStepSize) = 0;
+    /**
+     * @brief
+     * @param tableModel
+     * @param binNumbers
+     */
 
-    virtual void generateOmega3Data(SGAbstractTableModel* tableModel, QVector<double> binNumbers) = 0;
-    virtual void generateBOverAPlotData(SGAbstractTableModel* tableModel, QVector<double> binNumbers) = 0;
-    virtual void generateCOverAPlotData(SGAbstractTableModel* tableModel, QVector<double> binNumbers) = 0;
-    virtual void generateCOverBPlotData(SGAbstractTableModel* tableModel, QVector<double> binNumbers) = 0;
-    virtual void generateNeighborPlotData(SGAbstractTableModel* tableModel, QVector<double> binNumbers) = 0;
+    virtual void generateOmega3Data(StatsGenPlotWidget* plot, QVector<double> binNumbers) = 0;
+    /**
+     * @brief
+     * @param tableModel
+     * @param binNumbers
+     */
+    virtual void generateBOverAPlotData(StatsGenPlotWidget* plot, QVector<double> binNumbers) = 0;
+
+    /**
+     * @brief
+     * @param tableModel
+     * @param binNumbers
+     */
+    virtual void generateCOverAPlotData(StatsGenPlotWidget* plot, QVector<double> binNumbers) = 0;
+
+    /**
+     * @brief
+     * @param tableModel
+     * @param binNumbers
+     */
+    virtual void generateCOverBPlotData(StatsGenPlotWidget* plot, QVector<double> binNumbers) = 0;
+
+    /**
+     * @brief
+     * @param tableModel
+     * @param binNumbers
+     */
+    virtual void generateNeighborPlotData(StatsGenPlotWidget* plot, QVector<double> binNumbers) = 0;
 
   protected:
     AbstractMicrostructurePreset() {};
