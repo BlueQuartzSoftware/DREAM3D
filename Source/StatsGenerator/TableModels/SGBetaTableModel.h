@@ -85,14 +85,12 @@ Q_OBJECT    ;
     bool setHeaderData(int col, Qt::Orientation orientation, const QVariant& data, int role=Qt::EditRole)
     { return false;}
 
-    bool insertRows(int row, int count,
-        const QModelIndex &parent=QModelIndex());
-    bool removeRows(int row, int count,
-        const QModelIndex &parent=QModelIndex());
+    bool insertRows(int row, int count, const QModelIndex &parent=QModelIndex());
+    bool removeRows(int row, int count, const QModelIndex &parent=QModelIndex());
 
     QAbstractItemDelegate* getItemDelegate();
 
-    void setBinNumbers(QVector<double> binNumbers);
+  //  void setBinNumbers(QVector<double> binNumbers);
 
     QVector<double>& getBinNumbers()
     { return m_BinNumbers;}
