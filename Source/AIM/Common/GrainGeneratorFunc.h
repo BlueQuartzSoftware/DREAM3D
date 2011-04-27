@@ -30,16 +30,21 @@
 #include <algorithm>
 #include <numeric>
 
+#include <boost/shared_array.hpp>
+
 #include <MXA/MXATypes.h>
 #include <MXA/Common/MXASetGetMacros.h>
 
 #include "AIM/Common/AIMCommonConfiguration.h"
+#include "AIM/Common/AIMArray.hpp"
 #include "AIM/Common/Constants.h"
 #include "AIM/Common/Grain.h"
 #include "AIM/Common/Voxel.h"
 #include "AIM/Common/AIMRandomNG.h"
 #include "AIM/Common/HDF5/H5ReconStatsWriter.h"
 #include "AIM/Common/HDF5/H5ReconStatsReader.h"
+
+typedef boost::shared_array<double>    DoubleArray;
 
 
 /**
@@ -54,6 +59,7 @@ class AIMCOMMON_EXPORT GrainGeneratorFunc
 public:
     MXA_SHARED_POINTERS(GrainGeneratorFunc)MXA_STATIC_NEW_MACRO(GrainGeneratorFunc)virtual ~GrainGeneratorFunc();
 
+
     double resx;
     double resy;
     double resz;
@@ -64,22 +70,23 @@ public:
     std::vector<AIM::Reconstruction::CrystalStructure> crystruct;
     AIMRandomNG rg;
 
-    double** actualodf;
-    double** simodf;
-    double** axisodf;
-    Voxel* voxels;
-    double** actualmdf;
-    double** simmdf;
-    double** actualmicrotex;
-    double** simmicrotex;
+    std::vector<DoubleArray> actualodf;
 
-    int* graincounts;
-    double** graincenters;
-    double** grainmoments;
+    std::vector<DoubleArray> simodf;
+    std::vector<DoubleArray> axisodf;
+    Voxel* voxels;
+    std::vector<DoubleArray> actualmdf;
+    std::vector<DoubleArray> simmdf;
+    std::vector<DoubleArray> actualmicrotex;
+    std::vector<DoubleArray> simmicrotex;
+
+//    int* graincounts;
+    std::vector<DoubleArray> graincenters;
+    std::vector<DoubleArray> grainmoments;
 
 //    Grain *precipitates;
     std::vector<Grain::Pointer> precipitates;
-    int* psizes;
+//    int* psizes;
 
     std::vector<Grain::Pointer> m_Grains;
 
@@ -101,6 +108,8 @@ public:
     std::vector<std::vector<std::vector<double> > > svschmid;
     std::vector<std::vector<std::vector<double> > > svomega3;
     std::vector<std::vector<std::vector<int> > > boundaries;
+
+
     void initialize(int32_t m_NumGrains, int32_t m_ShapeClass,
                     double m_XResolution, double m_YResolution, double m_ZResolution,
                     double m_fillingerrorweight, double m_neighborhooderrorweight,
