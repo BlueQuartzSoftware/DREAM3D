@@ -109,15 +109,6 @@ public:
     std::vector<std::vector<std::vector<double> > > svomega3;
     std::vector<std::vector<std::vector<int> > > boundaries;
 
-
-    void initialize(int32_t m_NumGrains, int32_t m_ShapeClass,
-                    double m_XResolution, double m_YResolution, double m_ZResolution,
-                    double m_fillingerrorweight, double m_neighborhooderrorweight,
-                    double m_sizedisterrorweight,
-                    int32_t m_Precipitates, double m_FractionPrecipitates,
-                    std::vector<AIM::Reconstruction::CrystalStructure> m_CrystalStructure);
-    void initializeArrays();
-    void initialize2();
     double machineepsilon;
     double maxrealnumber;
     double minrealnumber;
@@ -153,6 +144,16 @@ public:
     double fillingerrorweight;
     double neighborhooderrorweight;
     double sizedisterrorweight;
+
+    void initialize(int32_t m_NumGrains, int32_t m_ShapeClass,
+                    double m_XResolution, double m_YResolution, double m_ZResolution,
+                    double m_fillingerrorweight, double m_neighborhooderrorweight,
+                    double m_sizedisterrorweight,
+                    int32_t m_Precipitates, double m_FractionPrecipitates,
+                    std::vector<AIM::Reconstruction::CrystalStructure> m_CrystalStructure);
+    void initializeArrays();
+    void initialize2();
+
     void write_eulerangles(const std::string & filename);
     void write_graindata(const std::string & filename);
     void writeCube(const std::string & filename, int numgrains);

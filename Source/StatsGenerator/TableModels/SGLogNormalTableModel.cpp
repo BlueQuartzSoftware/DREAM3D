@@ -357,6 +357,7 @@ void SGLogNormalTableModel::setColumnData(int col, QVector<double> &data)
   }
 }
 
+#if 0
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -403,6 +404,8 @@ void SGLogNormalTableModel::setBinNumbers(QVector<double> binNumbers)
   }
 
 }
+#endif
+
 
 // -----------------------------------------------------------------------------
 //
