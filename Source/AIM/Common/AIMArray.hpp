@@ -43,6 +43,7 @@ class AIMArray
   public:
 
     MXA_SHARED_POINTERS(AIMArray<T> )
+    typedef std::vector<Pointer>   ContainterType;
 
     /**
      * @brief Static constructor
@@ -61,61 +62,6 @@ class AIMArray
       return ptr;
     }
 
-#if 0
-    /**
-     * @brief Creates an Pointer object for the supplied arguments.
-     * @param nDims Number of dimensions
-     * @param dims Size of each dimension
-     * @return Boost::Shared_Ptr wrapping an instance of AIMArrayTemplate<T>
-     */
-    static Pointer CreateMultiDimensionalArray(size_t nDims, const size_t* dims)
-    {
-      AIMArray<T>* d = new AIMArray<T>( nDims, dims, true);
-      if ( d->_allocate() < 0)
-      { // Could not allocate enough memory, reset the pointer to null and return
-        delete d;
-        return Pointer::NullPointer();
-      }
-      Pointer ptr ( (d) );
-      return ptr;
-    }
-
-    /**
-     * @brief Static construction of AIMArray objects. YOU are
-     * responsible for cleaning up the memory that this method creates.
-     * @param numElements The number of elements in the internal array.
-     * @return
-     */
-    static AIMArray<T>* New( size_t numElements)
-    {
-      AIMArray<T>* d = new AIMArray<T>( numElements, true);
-      if (d->_allocate() < 0)
-      { // Could not allocate enough memory, reset the pointer to null and return
-        delete d;
-        d = NULL;
-      }
-      return d;
-    }
-
-    /**
-     * @brief Creates a MultiDimensional Array allocating the memory immediately
-     * @param nDims The number of dimensions
-     * @param dims The size of each dimension
-     * @return Pointer to Object or NULL if there was an error creating the object.
-     */
-    static AIMArray<T>* New(size_t nDims, const size_t* dims)
-    {
-      AIMArray<T>* d = new AIMArray<T>( static_cast<int32_t>(nDims), dims, true);
-      if ( d->_allocate() < 0)
-      { // Could not allocate enough memory, reset the pointer to null and return
-        delete d;
-        d = NULL;
-      }
-      return d;
-    }
-
-#endif
-
     /**
      * @brief Destructor
      */
@@ -128,10 +74,19 @@ class AIMArray
       }
     }
 
+    /**
+     * @brief Gives this array a human readable name
+     * @param name The name of this array
+     */
     void setName(const std::string &name)
     {
       m_Name = name;
     }
+
+    /**
+     * @brief Returns the human readable name of this array
+     * @return
+     */
     std::string getName()
     {
       return m_Name;
@@ -223,6 +178,16 @@ class AIMArray
     }
 
     /**
+     * @brief Overload the operator[] to return a specific element
+     * @param i
+     * @return
+     */
+    T & operator[] (std::ptrdiff_t i) const // never throws
+    {
+      return this->_data[i];
+    }
+
+    /**
      * @brief Returns the number of elements in the internal array.
      */
     virtual size_t getNumberOfElements()
@@ -231,21 +196,23 @@ class AIMArray
     }
 
     /**
-     * Returns the number of dimensions the data has.
+     * @brief This is for convenience and compatibility with other container types
+     * which return the number of elements in the array.
+     * @return The number of elements in the array.
      */
-    virtual int32_t getNumberOfDimensions()
+    virtual size_t size()
     {
-      return static_cast<int32_t> (this->_dims.size());
+      return _nElements;
     }
 
     /**
-     * @brief Copies the values of the dimensions into the supplied pointer
-     * @param dims Pointer to store the dimension values into
+     * @brief This is for convenience and compatibility with other container types
+     * which return the number of elements in the array.
+     * @return The number of elements in the array.
      */
-    virtual void getDimensions(size_t* dims)
+    virtual size_t count()
     {
-      size_t nBytes = _dims.size() * sizeof(size_t);
-      ::memcpy(dims, &(_dims.front()), nBytes);
+      return _nElements;
     }
 
     /**
@@ -438,6 +405,24 @@ class AIMArray
         _dims[i] = dims[i];
         _nElements = _nElements * dims[i];
       }
+    }
+
+    /**
+     * Returns the number of dimensions the data has.
+     */
+    virtual int32_t getNumberOfDimensions()
+    {
+      return static_cast<int32_t> (this->_dims.size());
+    }
+
+    /**
+     * @brief Copies the values of the dimensions into the supplied pointer
+     * @param dims Pointer to store the dimension values into
+     */
+    virtual void getDimensions(size_t* dims)
+    {
+      size_t nBytes = _dims.size() * sizeof(size_t);
+      ::memcpy(dims, &(_dims.front()), nBytes);
     }
 
     /**
