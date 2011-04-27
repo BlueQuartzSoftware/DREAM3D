@@ -506,13 +506,18 @@ int H5ReconStatsWriter::writeVolumeStats2D(int phase,  AIM::Reconstruction::Crys
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5ReconStatsWriter::writeMisorientationBinsData(int phase, double* misobins, AIM::Reconstruction::CrystalStructure crystruct)
+int H5ReconStatsWriter::writeMisorientationBinsData(int phase, AIM::Reconstruction::CrystalStructure crystruct, double* misobins)
 {
   herr_t err = 0;
   herr_t retErr = 0;
   size_t nElements;
   if (crystruct == AIM::Reconstruction::Hexagonal) nElements = 36 * 36 * 12;
-  if (crystruct == AIM::Reconstruction::Cubic) nElements = 18 * 18 * 18;
+  else if (crystruct == AIM::Reconstruction::Cubic) nElements = 18 * 18 * 18;
+  else
+  {
+    H5RSW_ERROR_CHECK(AIM::HDF5::MisorientationBins)
+    return -1;
+  }
   OPEN_HDF5_FILE(m_FileName)
   CREATE_RECONSTRUCTION_GROUP(AIM::HDF5::Reconstruction)
   hid_t pid = H5Utilities::createGroup(gid, StringUtils::numToString(phase));
@@ -521,6 +526,7 @@ int H5ReconStatsWriter::writeMisorientationBinsData(int phase, double* misobins,
   err = H5Lite::writePointerDataset<double>(pid, AIM::HDF5::MisorientationBins, rank, &dims, misobins);
   if (err < 0)
   {
+    H5RSW_ERROR_CHECK(AIM::HDF5::MisorientationBins)
     retErr = err;
   }
   err = H5Gclose(pid);
