@@ -146,7 +146,8 @@ int StatsGenPlotWidget::readDataFromHDF5(H5ReconStatsReader::Pointer reader,
   }
   setDistributionType(dt); // This makes sure the combo box is set correctly
 
-  m_TableModel->setBinNumbers(bins);
+  //FIXME: This is broken. We will need another way of adding the proper number of rows to the table model
+ // m_TableModel->setBinNumbers(bins);
 
   AIM::HDF5::ColumnCount colCount = AIM::HDF5::UnknownColumCount;
   std::vector<double> col0;
@@ -382,10 +383,12 @@ void StatsGenPlotWidget::setYAxisName(QString name)
 // -----------------------------------------------------------------------------
 void StatsGenPlotWidget::setupGui()
 {
-
+  distributionTypeCombo->blockSignals(true);
   distributionTypeCombo->addItem(AIM::HDF5::BetaDistribution.c_str());
   distributionTypeCombo->addItem(AIM::HDF5::LogNormalDistribution.c_str());
   distributionTypeCombo->addItem(AIM::HDF5::PowerLawDistribution.c_str());
+  distributionTypeCombo->blockSignals(false);
+
 
   // Setup the TableView and Table Models
   QHeaderView* headerView = new QHeaderView(Qt::Horizontal, m_TableView);
@@ -611,6 +614,8 @@ void StatsGenPlotWidget::setRowOperationEnabled(bool b)
 // -----------------------------------------------------------------------------
 void StatsGenPlotWidget::setBins(QVector<double> &binNumbers)
 {
+#if 0
+
 #if 1
   if (m_UserUpdatedData == true)
   {
@@ -654,6 +659,7 @@ void StatsGenPlotWidget::setBins(QVector<double> &binNumbers)
   m_TableView->resizeColumnsToContents();
   m_TableView->scrollToBottom();
   m_TableView->setFocus();
+#endif
   updatePlotCurves();
 }
 
@@ -684,4 +690,12 @@ void StatsGenPlotWidget::on_deleteRowBtn_clicked()
   {
     m_TableView->resizeColumnsToContents();
   }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+SGAbstractTableModel* StatsGenPlotWidget::tableModel()
+{
+  return m_TableModel;
 }
