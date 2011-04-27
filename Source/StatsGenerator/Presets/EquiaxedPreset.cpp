@@ -29,6 +29,7 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 #include "EquiaxedPreset.h"
+#include "StatsGenerator/StatsGenPlotWidget.h"
 #include "StatsGenerator/TableModels/SGBetaTableModel.h"
 #include "StatsGenerator/TableModels/SGPowerLawTableModel.h"
 
@@ -51,10 +52,12 @@ EquiaxedPreset::~EquiaxedPreset()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EquiaxedPreset::generateOmega3Data(SGAbstractTableModel* tableModel, QVector<double> binNumbers)
+void EquiaxedPreset::generateOmega3Data(StatsGenPlotWidget* plot, QVector<double> binNumbers)
 {
+  // Make sure the distribution is set correctly
+  plot->setDistributionType(AIM::Reconstruction::Beta);
   // This line basically makes sure we have the distribution type we are looking for
-  SGBetaTableModel* model = qobject_cast<SGBetaTableModel*>(tableModel);
+  SGBetaTableModel* model = qobject_cast<SGBetaTableModel*>(plot->tableModel());
   if (NULL == model)
   {
     return;
@@ -100,10 +103,12 @@ void EquiaxedPreset::generateOmega3Data(SGAbstractTableModel* tableModel, QVecto
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EquiaxedPreset::generateBOverAPlotData(SGAbstractTableModel* tableModel, QVector<double> binNumbers)
+void EquiaxedPreset::generateBOverAPlotData(StatsGenPlotWidget* plot, QVector<double> binNumbers)
 {
+  // Make sure the distribution is set correctly
+  plot->setDistributionType(AIM::Reconstruction::Beta);
   // This line basically makes sure we have the distribution type we are looking for
-  SGBetaTableModel* model = qobject_cast<SGBetaTableModel*>(tableModel);
+  SGBetaTableModel* model = qobject_cast<SGBetaTableModel*>(plot->tableModel());
   if (NULL == model)
   {
     return;
@@ -149,60 +154,12 @@ void EquiaxedPreset::generateBOverAPlotData(SGAbstractTableModel* tableModel, QV
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EquiaxedPreset::generateCOverAPlotData(SGAbstractTableModel* tableModel, QVector<double> binNumbers)
+void EquiaxedPreset::generateCOverAPlotData(StatsGenPlotWidget* plot, QVector<double> binNumbers)
 {
+  // Make sure the distribution is set correctly
+  plot->setDistributionType(AIM::Reconstruction::Beta);
   // This line basically makes sure we have the distribution type we are looking for
-  SGBetaTableModel* model = qobject_cast<SGBetaTableModel*>(tableModel);
-  if (NULL == model)
-  {
-    return;
-  }
-  qint32 count = binNumbers.count();
-
-  // Remove all the current rows in the table model
-  model->removeRows(0, model->rowCount());
-
-  double alpha = 5.0;
-  double beta = 1.0;
-  double betaStep = 10.0 / count;
-
-  QStringList colorNames = QColor::colorNames();
-  qint32 colorOffset = 21;
-  qint32 cRow = 0;
-  // Now Populate the table data with the data that was passed in
-  for (qint32 i = 0; i < count; ++i)
-  {
-    if (!model->insertRow(model->rowCount())) return;
-    cRow = model->rowCount() - 1;
-    QModelIndex binNumberIndex = model->index(cRow, SGAbstractTableModel::BinNumber);
-    model->setData(binNumberIndex, QVariant(binNumbers[i]), Qt::EditRole);
-
-    QModelIndex alphaIndex = model->index(cRow, SGBetaTableModel::Alpha);
-    model->setData(alphaIndex, QVariant(alpha), Qt::EditRole);
-
-    QModelIndex betaIndex = model->index(cRow, SGBetaTableModel::Beta);
-    model->setData(betaIndex, QVariant(beta), Qt::EditRole);
-
-    alpha += 0.1;
-    beta += betaStep;
-
-    QModelIndex colorIndex = model->index(cRow, SGBetaTableModel::LineColor);
-    model->setData(colorIndex, QVariant(colorNames[colorOffset++]), Qt::EditRole);
-    if (colorOffset == colorNames.count())
-    {
-      colorOffset = colorNames.count() - 1;
-    }
-  }
-}
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void EquiaxedPreset::generateCOverBPlotData(SGAbstractTableModel* tableModel, QVector<double> binNumbers)
-{
-  // This line basically makes sure we have the distribution type we are looking for
-  SGBetaTableModel* model = qobject_cast<SGBetaTableModel*>(tableModel);
+  SGBetaTableModel* model = qobject_cast<SGBetaTableModel*>(plot->tableModel());
   if (NULL == model)
   {
     return;
@@ -249,10 +206,64 @@ void EquiaxedPreset::generateCOverBPlotData(SGAbstractTableModel* tableModel, QV
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EquiaxedPreset::generateNeighborPlotData(SGAbstractTableModel* tableModel, QVector<double> binNumbers)
+void EquiaxedPreset::generateCOverBPlotData(StatsGenPlotWidget* plot, QVector<double> binNumbers)
 {
+  // Make sure the distribution is set correctly
+  plot->setDistributionType(AIM::Reconstruction::Beta);
   // This line basically makes sure we have the distribution type we are looking for
-  SGPowerLawTableModel* model = qobject_cast<SGPowerLawTableModel*>(tableModel);
+  SGBetaTableModel* model = qobject_cast<SGBetaTableModel*>(plot->tableModel());
+  if (NULL == model)
+  {
+    return;
+  }
+  qint32 count = binNumbers.count();
+
+  // Remove all the current rows in the table model
+  model->removeRows(0, model->rowCount());
+
+  double alpha = 5.0;
+  double beta = 1.0;
+  double betaStep = 10.0 / count;
+
+  QStringList colorNames = QColor::colorNames();
+  qint32 colorOffset = 21;
+  qint32 cRow = 0;
+  // Now Populate the table data with the data that was passed in
+  for (qint32 i = 0; i < count; ++i)
+  {
+    if (!model->insertRow(model->rowCount())) return;
+    cRow = model->rowCount() - 1;
+    QModelIndex binNumberIndex = model->index(cRow, SGAbstractTableModel::BinNumber);
+    model->setData(binNumberIndex, QVariant(binNumbers[i]), Qt::EditRole);
+
+    QModelIndex alphaIndex = model->index(cRow, SGBetaTableModel::Alpha);
+    model->setData(alphaIndex, QVariant(alpha), Qt::EditRole);
+
+    QModelIndex betaIndex = model->index(cRow, SGBetaTableModel::Beta);
+    model->setData(betaIndex, QVariant(beta), Qt::EditRole);
+
+    alpha += 0.1;
+    beta += betaStep;
+
+    QModelIndex colorIndex = model->index(cRow, SGBetaTableModel::LineColor);
+    model->setData(colorIndex, QVariant(colorNames[colorOffset++]), Qt::EditRole);
+    if (colorOffset == colorNames.count())
+    {
+      colorOffset = colorNames.count() - 1;
+    }
+  }
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void EquiaxedPreset::generateNeighborPlotData(StatsGenPlotWidget* plot, QVector<double> binNumbers)
+{
+  // Make sure the distribution is set correctly
+  plot->setDistributionType(AIM::Reconstruction::Power);
+  // This line basically makes sure we have the distribution type we are looking for
+  SGPowerLawTableModel* model = qobject_cast<SGPowerLawTableModel*>(plot->tableModel());
   if (NULL == model)
   {
     return;
