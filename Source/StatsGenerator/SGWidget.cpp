@@ -204,7 +204,7 @@ void SGWidget::setupGui()
 
   // For the ODF Tab we want the MDF functionality
   m_ODFWidget->enableMDFTab(true);
-  m_AxisODFWidget->setCrystalStructure(AIM::Reconstruction::OrthoRhombic);
+  m_AxisODFWidget->setCrystalStructure(AIM::Reconstruction::AxisOrthoRhombic);
 
   updateSizeDistributionPlot();
   calculateNumberOfBins();
