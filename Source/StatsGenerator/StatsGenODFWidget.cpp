@@ -38,6 +38,8 @@
 #include <qwt.h>
 #include <qwt_plot.h>
 #include <qwt_plot_curve.h>
+#include <qwt_abstract_scale_draw.h>
+#include <qwt_scale_draw.h>
 
 #include "AIM/Common/Texture.h"
 #include "StatsGenerator/TableModels/SGODFTableModel.h"
@@ -114,7 +116,7 @@ int StatsGenODFWidget::writeDataToHDF5(H5ReconStatsWriter::Pointer writer)
   {
     Texture::calculateHexODFData(e1s, e2s, e3s, weights, sigmas, true, odf, totalWeight);
   }
-  else if (m_CrystalStructure == AIM::Reconstruction::OrthoRhombic)
+  else if (m_CrystalStructure == AIM::Reconstruction::AxisOrthoRhombic)
   {
     Texture::calculateOrthoRhombicODFData(e1s, e2s, e3s, weights, sigmas, true, odf, totalWeight);
   }
@@ -153,11 +155,30 @@ void StatsGenODFWidget::enableMDFTab(bool b)
 // -----------------------------------------------------------------------------
 void StatsGenODFWidget::setCrystalStructure(AIM::Reconstruction::CrystalStructure value)
 {
-  this->m_CrystalStructure = value;
+  if (m_CrystalStructure != value)
+  {
+    this->m_CrystalStructure = value;
+    switch(value)
+    {
+      case AIM::Reconstruction::Cubic:
+        setPlotTabTitles("<001> PF", "<011> PF", "<111> PF");
+        break;
+      case AIM::Reconstruction::Hexagonal:
+        setPlotTabTitles("<0001> PF", "<11-20> PF", "<10-10> PF");
+        break;
+      case AIM::Reconstruction::AxisOrthoRhombic:
+        setPlotTabTitles("A-Axis PF", "B-Axis PF", "C-Axis PF");
+        break;
+      default:
+        setPlotTabTitles("Unkown", "Unknown", "Unknown");
+    }
+    on_m_CalculateODFBtn_clicked();
+  }
   if (m_MDFWidget != NULL)
   {
     m_MDFWidget->setCrystalStructure(m_CrystalStructure);
   }
+
 }
 
 // -----------------------------------------------------------------------------
@@ -173,11 +194,11 @@ AIM::Reconstruction::CrystalStructure StatsGenODFWidget::getCrystalStructure()
 // -----------------------------------------------------------------------------
 void StatsGenODFWidget::setPhaseIndex(int value)
 {
-this->m_PhaseIndex = value;
-if (m_MDFWidget != NULL)
-{
-  m_MDFWidget->setPhaseIndex(m_PhaseIndex);
-}
+  this->m_PhaseIndex = value;
+  if (m_MDFWidget != NULL)
+  {
+    m_MDFWidget->setPhaseIndex(m_PhaseIndex);
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -188,7 +209,15 @@ int StatsGenODFWidget::getPhaseIndex()
 return m_PhaseIndex;
 }
 
-
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void StatsGenODFWidget::setPlotTabTitles(QString t1, QString t2, QString t3)
+{
+  tabWidget->setTabText(1, t1);
+  tabWidget->setTabText(2, t2);
+  tabWidget->setTabText(3, t3);
+}
 
 // -----------------------------------------------------------------------------
 //
@@ -208,9 +237,9 @@ void StatsGenODFWidget::setupGui()
   QAbstractItemDelegate* idelegate = m_ODFTableModel->getItemDelegate();
   m_ODFTableView->setItemDelegate(idelegate);
 
-  initQwtPlot("x axis", "y axis", m_ODF_001Plot);
-  initQwtPlot("x axis", "y axis", m_ODF_011Plot);
-  initQwtPlot("x axis", "y axis", m_ODF_111Plot);
+  initQwtPlot("RD", "TD", m_ODF_001Plot);
+  initQwtPlot("RD", "TD", m_ODF_011Plot);
+  initQwtPlot("RD", "TD", m_ODF_111Plot);
 
   m_PlotCurves.push_back(new QwtPlotCurve);
   m_PlotCurves.push_back(new QwtPlotCurve);
@@ -226,15 +255,13 @@ void StatsGenODFWidget::initQwtPlot(QString xAxisName, QString yAxisName, QwtPlo
   plot->setAxisTitle(QwtPlot::yLeft, yAxisName);
   plot->setCanvasBackground(QColor(Qt::white));
 
-
-#if 0
-  m_grid = new QwtPlotGrid;
-  m_grid->enableXMin(true);
-  m_grid->enableYMin(true);
-  m_grid->setMajPen(QPen(Qt::gray, 0, Qt::SolidLine));
-  m_grid->setMinPen(QPen(Qt::lightGray, 0, Qt::DotLine));
-  m_grid->attach(m_PlotView);
-#endif
+// These set the plot axis to NOT show anything except the axis labels.
+  plot->axisScaleDraw(QwtPlot::yLeft)->enableComponent(QwtAbstractScaleDraw::Backbone, false);
+  plot->axisScaleDraw(QwtPlot::yLeft)->enableComponent(QwtAbstractScaleDraw::Ticks, false);
+  plot->axisScaleDraw(QwtPlot::yLeft)->enableComponent(QwtAbstractScaleDraw::Labels, false);
+  plot->axisScaleDraw(QwtPlot::xBottom)->enableComponent(QwtAbstractScaleDraw::Backbone, false);
+  plot->axisScaleDraw(QwtPlot::xBottom)->enableComponent(QwtAbstractScaleDraw::Ticks, false);
+  plot->axisScaleDraw(QwtPlot::xBottom)->enableComponent(QwtAbstractScaleDraw::Labels, false);
 }
 
 // -----------------------------------------------------------------------------
@@ -274,7 +301,7 @@ void StatsGenODFWidget::on_m_CalculateODFBtn_clicked()
   else if (m_CrystalStructure == AIM::Reconstruction::Hexagonal) {
     err = sg.GenHexODFPlotData(e1s, e2s, e3s, weights, sigmas, x001, y001, x011, y011, x111, y111, size);
   }
-  else if (m_CrystalStructure == AIM::Reconstruction::OrthoRhombic) {
+  else if (m_CrystalStructure == AIM::Reconstruction::AxisOrthoRhombic) {
     err = sg.GenOrthoRhombicODFPlotData(e1s, e2s, e3s, weights, sigmas, x001, y001, x011, y011, x111, y111, size);
   }
   if (err == 1)
@@ -287,24 +314,18 @@ void StatsGenODFWidget::on_m_CalculateODFBtn_clicked()
   curve->setData(x001, y001);
   curve->setStyle(QwtPlotCurve::Dots);
   curve->attach(m_ODF_001Plot);
-  m_ODF_001Plot->setAxisScale(QwtPlot::yLeft, -1.0, 1.0);
-  m_ODF_001Plot->setAxisScale(QwtPlot::xBottom, -1.0, 1.0);
   m_ODF_001Plot->replot();
 
   curve = m_PlotCurves[1];
   curve->setData(x011, y011);
   curve->setStyle(QwtPlotCurve::Dots);
   curve->attach(m_ODF_011Plot);
-  m_ODF_011Plot->setAxisScale(QwtPlot::yLeft, -1.0, 1.0);
-  m_ODF_011Plot->setAxisScale(QwtPlot::xBottom, -1.0, 1.0);
   m_ODF_011Plot->replot();
 
   curve = m_PlotCurves[2];
   curve->setData(x111, y111);
   curve->setStyle(QwtPlotCurve::Dots);
   curve->attach(m_ODF_111Plot);
-  m_ODF_111Plot->setAxisScale(QwtPlot::yLeft, -1.0, 1.0);
-  m_ODF_111Plot->setAxisScale(QwtPlot::xBottom, -1.0, 1.0);
   m_ODF_111Plot->replot();
 
   // Enable the MDF tab
