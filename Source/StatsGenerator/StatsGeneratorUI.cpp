@@ -146,8 +146,6 @@ void StatsGeneratorUI::setupGui()
   phaseCombo->addItem(cName);
   phaseCombo->blockSignals(false);
   setWindowModified(true);
-
-
 }
 
 // -----------------------------------------------------------------------------
