@@ -56,6 +56,7 @@ class AIMCOMMON_EXPORT MisorientationCalculations
     static double getMisoQuatHexagonal(double q1[5],double q2[5],double &n1,double &n2,double &n3);
     static void getFZRodCubic(double &r1,double &r2, double &r3);
     static void getFZRodHexagonal(double &r1,double &r2, double &r3);
+    static void getFZRodOrtho(double &r1,double &r2, double &r3);
     static void getNearestQuatCubic(double *q1, double *q2);
     static void getNearestQuatHexagonal(double *q1, double *q2);
     static void getFZQuatCubic(double *qr);
