@@ -275,7 +275,10 @@ void StatsGenODFWidget::on_m_CalculateODFBtn_clicked()
     err = sg.GenHexODFPlotData(e1s, e2s, e3s, weights, sigmas, x001, y001, x011, y011, x111, y111, size);
   }
   else if (m_CrystalStructure == AIM::Reconstruction::OrthoRhombic) {
-    err = sg.GenOrthoRhombicODFPlotData(e1s, e2s, e3s, weights, sigmas, x001, y001, x011, y011, x111, y111, size);
+	  err = sg.GenOrthoRhombicODFPlotData(e1s, e2s, e3s, weights, sigmas, x001, y001, x011, y011, x111, y111, size);
+  }
+  else if (m_CrystalStructure == AIM::Reconstruction::AxisOrthoRhombic) {
+	  err = sg.GenAxisODFPlotData(e1s, e2s, e3s, weights, sigmas, x001, y001, x011, y011, x111, y111, size);
   }
   if (err == 1)
   {

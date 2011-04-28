@@ -411,23 +411,54 @@ void MisorientationCalculations::getFZRodCubic(double &r1,double &r2, double &r3
 void MisorientationCalculations::getFZRodHexagonal(double &r1,double &r2, double &r3)
 {
   double rodsym[12][3] = {{0,0,0},
-  {10000000.0, 0, 0},
-  {0, 10000000.0, 0},
+  {0, 0, 0.57735},
+  {0, 0, 1.73205},
   {0, 0, 10000000.0},
-  {1.0, 0, 0},
-  {0, 1.0, 0},
-  {0, 0, 1.0},
-  {-1.0, 0, 0},
-  {0, -1.0, 0},
-  {0, 0, -1.0},
-  {10000000.0, 10000000.0, 0},
-  {-10000000.0, 10000000.0, 0}};
+  {0, 0, -1.73205},
+  {0, 0, -0.57735},
+  {0, 10000000.0, 10000000.0},
+  {10000000.0, 0, 0},
+  {0, 10000000.0, 10000000.0},
+  {0, 10000000.0, 10000000.0},
+  {0, 10000000.0, 0},
+  {0, 10000000.0, 10000000.0}};
   double denom, dist;
 //  int index;
   double smallestdist = 100000000;
   double rc1, rc2, rc3;
   double r1min, r2min, r3min;
   for(int i=0;i<12;i++)
+  {
+    denom = 1-(r1*rodsym[i][0]+r2*rodsym[i][1]+r3*rodsym[i][2]);
+    rc1 = (r1+rodsym[i][0]-(r3*rodsym[i][1]-r2*rodsym[i][2]))/denom;
+    rc2 = (r2+rodsym[i][1]-(r1*rodsym[i][2]-r3*rodsym[i][0]))/denom;
+    rc3 = (r3+rodsym[i][2]-(r2*rodsym[i][0]-r1*rodsym[i][1]))/denom;
+    dist = rc1*rc1+rc2*rc2+rc3*rc3;
+    if(dist < smallestdist)
+    {
+      smallestdist = dist;
+      r1min = rc1;
+      r2min = rc2;
+      r3min = rc3;
+    }
+  }
+  r1 = r1min;
+  r2 = r2min;
+  r3 = r3min;
+}
+
+void MisorientationCalculations::getFZRodOrtho(double &r1,double &r2, double &r3)
+{
+  double rodsym[4][3] = {{0,0,0},
+  {10000000.0, 0, 0},
+  {0, 10000000.0, 0},
+  {0, 0, 10000000.0}};
+  double denom, dist;
+//  int index;
+  double smallestdist = 100000000;
+  double rc1, rc2, rc3;
+  double r1min, r2min, r3min;
+  for(int i=0;i<4;i++)
   {
     denom = 1-(r1*rodsym[i][0]+r2*rodsym[i][1]+r3*rodsym[i][2]);
     rc1 = (r1+rodsym[i][0]-(r3*rodsym[i][1]-r2*rodsym[i][2]))/denom;
