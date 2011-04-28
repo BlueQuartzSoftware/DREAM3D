@@ -165,7 +165,7 @@ Q_OBJECT    ;
      *
      * @param binNumbers
      */
-    virtual void setBinNumbers(QVector<double> binNumbers) = 0;
+   // virtual void setBinNumbers(QVector<double> binNumbers) = 0;
 
     /**
      *

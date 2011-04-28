@@ -365,6 +365,7 @@ QAbstractItemDelegate* SGBetaTableModel::getItemDelegate()
   return new SGBetaItemDelegate;
 }
 
+#if 0
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -409,3 +410,6 @@ void SGBetaTableModel::setBinNumbers(QVector<double> binNumbers)
   }
 
 }
+#endif
+
+

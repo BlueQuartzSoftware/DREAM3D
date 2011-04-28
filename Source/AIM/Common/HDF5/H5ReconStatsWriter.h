@@ -71,9 +71,8 @@ class AIMCOMMON_EXPORT H5ReconStatsWriter
     //FIXME: We are NOT writing the Precipitate data?
     int writeAxisOrientationData(int phase, double* axisodf, double totalaxes);
     int writeMicroTextureData(int phase, double* microbin, size_t nElements, double actualgrains);
-    int writeMisorientationBinsData(int phase, double* misobins, AIM::Reconstruction::CrystalStructure crystruct);
-    int writeODFData(int phase, AIM::Reconstruction::CrystalStructure crystruct,
-                     double* eulerodf);
+    int writeMisorientationBinsData(int phase, AIM::Reconstruction::CrystalStructure crystruct, double* misobins);
+    int writeODFData(int phase, AIM::Reconstruction::CrystalStructure crystruct, double* eulerodf);
 
 
     std::vector<double> generateBins(int phase, double maxDiameter, double minDiameter, double diameterStep);

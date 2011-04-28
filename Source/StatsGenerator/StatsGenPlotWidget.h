@@ -83,6 +83,7 @@ class StatsGenPlotWidget : public QWidget, private Ui::StatsGenPlotWidget
     void createBetaCurve(int tableRow, double &xMax, double &yMax);
     void createLogNormalCurve(int tableRow, double &xMax, double &yMax);
     void createPowerCurve(int tableRow, double &xMax, double &yMax);
+    SGAbstractTableModel* tableModel();
 
     void setBins(QVector<double> &binValues);
     bool userUpdatedData();

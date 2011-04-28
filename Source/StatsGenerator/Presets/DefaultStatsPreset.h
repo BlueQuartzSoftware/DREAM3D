@@ -1,5 +1,5 @@
 /* ============================================================================
- * Copyright (c) 2010, Michael A. Jackson (BlueQuartz Software)
+ * Copyright (c) 2011, Michael A. Jackson (BlueQuartz Software)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -28,24 +28,43 @@
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "SGAbstractTableModel.h"
-#include <iostream>
+#ifndef DEFAULTSTATSPRESET_H_
+#define DEFAULTSTATSPRESET_H_
 
-#include <QApplication>
-#include <QtGui/QStyleOptionComboBox>
+//-- C++ includes
+#include <string>
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-SGAbstractTableModel::SGAbstractTableModel(QObject* parent) :
-  QAbstractTableModel(parent)
+//-- MXA Includes
+#include <MXA/Common/MXASetGetMacros.h>
+
+#include "AbstractMicrostructurePresetFactory.h"
+#include "AbstractMicrostructurePreset.h"
+#include "StatsGenerator/TableModels/SGAbstractTableModel.h"
+
+
+class DefaultStatsPreset : public AbstractMicrostructurePreset
 {
-}
+  public:
+    MXA_SHARED_POINTERS(DefaultStatsPreset);
+    MXA_STATIC_NEW_SUPERCLASS(AbstractMicrostructurePreset, DefaultStatsPreset);
+    virtual ~DefaultStatsPreset();
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-SGAbstractTableModel::~SGAbstractTableModel()
-{
-}
 
+    void generateOmega3Data(StatsGenPlotWidget* plot, QVector<double> binNumbers);
+    void generateBOverAPlotData(StatsGenPlotWidget* plot, QVector<double> binNumbers);
+    void generateCOverAPlotData(StatsGenPlotWidget* plot, QVector<double> binNumbers);
+    void generateCOverBPlotData(StatsGenPlotWidget* plot, QVector<double> binNumbers);
+    void generateNeighborPlotData(StatsGenPlotWidget* plot, QVector<double> binNumbers);
+
+  protected:
+    DefaultStatsPreset();
+
+  private:
+    DefaultStatsPreset(const DefaultStatsPreset&); // Copy Constructor Not Implemented
+    void operator=(const DefaultStatsPreset&); // Operator '=' Not Implemented
+};
+
+DECLARE_FACTORY_CLASS(DefaultStatsPresetFactory, DefaultStatsPreset, Default );
+
+
+#endif /* DEFAULTSTATSPRESET_H_ */

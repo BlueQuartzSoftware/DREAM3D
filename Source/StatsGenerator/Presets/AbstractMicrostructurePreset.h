@@ -1,5 +1,5 @@
 /* ============================================================================
- * Copyright (c) 2010, Michael A. Jackson (BlueQuartz Software)
+ * Copyright (c) 2011, Michael A. Jackson (BlueQuartz Software)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -28,24 +28,66 @@
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "SGAbstractTableModel.h"
-#include <iostream>
+#ifndef MICROSTRUCTUREPRESET_H_
+#define MICROSTRUCTUREPRESET_H_
 
-#include <QApplication>
-#include <QtGui/QStyleOptionComboBox>
+#include "QtCore/QVector"
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-SGAbstractTableModel::SGAbstractTableModel(QObject* parent) :
-  QAbstractTableModel(parent)
+#include "MXA/Common/MXASetGetMacros.h"
+
+class StatsGenPlotWidget;
+
+/*
+ *
+ */
+class AbstractMicrostructurePreset
 {
-}
+  public:
+    MXA_SHARED_POINTERS(AbstractMicrostructurePreset)
+    MXA_TYPE_MACRO(AbstractMicrostructurePreset)
+    virtual ~AbstractMicrostructurePreset() {};
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-SGAbstractTableModel::~SGAbstractTableModel()
-{
-}
+    /**
+     * @brief
+     * @param tableModel
+     * @param binNumbers
+     */
 
+    virtual void generateOmega3Data(StatsGenPlotWidget* plot, QVector<double> binNumbers) = 0;
+    /**
+     * @brief
+     * @param tableModel
+     * @param binNumbers
+     */
+    virtual void generateBOverAPlotData(StatsGenPlotWidget* plot, QVector<double> binNumbers) = 0;
+
+    /**
+     * @brief
+     * @param tableModel
+     * @param binNumbers
+     */
+    virtual void generateCOverAPlotData(StatsGenPlotWidget* plot, QVector<double> binNumbers) = 0;
+
+    /**
+     * @brief
+     * @param tableModel
+     * @param binNumbers
+     */
+    virtual void generateCOverBPlotData(StatsGenPlotWidget* plot, QVector<double> binNumbers) = 0;
+
+    /**
+     * @brief
+     * @param tableModel
+     * @param binNumbers
+     */
+    virtual void generateNeighborPlotData(StatsGenPlotWidget* plot, QVector<double> binNumbers) = 0;
+
+  protected:
+    AbstractMicrostructurePreset() {};
+
+  private:
+    AbstractMicrostructurePreset(const AbstractMicrostructurePreset&); // Copy Constructor Not Implemented
+    void operator=(const AbstractMicrostructurePreset&); // Operator '=' Not Implemented
+};
+
+#endif /* MICROSTRUCTUREPRESET_H_ */
