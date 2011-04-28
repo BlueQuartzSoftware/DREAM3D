@@ -68,15 +68,6 @@ GrainGeneratorFunc::~GrainGeneratorFunc()
 
   m_Grains.clear();
   precipitates.clear();
-  delete [] actualodf;
-  delete [] simodf;
-  delete [] axisodf;
-  delete [] voxels;
-  delete [] actualmdf;
-  delete [] simmdf;
-  delete [] actualmicrotex;
-  delete [] simmicrotex;
-
 }
 
 #define GG_INIT_DOUBLE_ARRAY(array, value, size)\
@@ -117,37 +108,40 @@ void GrainGeneratorFunc::initializeArrays()
   }
   size_t nElements = 0;
   size_t xtalSize = crystruct.size();
-  actualodf = new double *[xtalSize];
-  simodf = new double *[xtalSize];
-  actualmdf = new double *[xtalSize];
-  simmdf = new double *[xtalSize];
-  axisodf = new double *[xtalSize];
-  actualmicrotex = new double *[xtalSize];
-  simmicrotex = new double *[xtalSize];
+  //actualodf = new double *[xtalSize];
+  actualodf.resize(xtalSize);
+
+  simodf.resize(xtalSize);
+  actualmdf.resize(xtalSize);
+  simmdf.resize(xtalSize);
+  axisodf.resize(xtalSize);
+  actualmicrotex.resize(xtalSize);
+  simmicrotex.resize(xtalSize);
   for(size_t i= 0; i < xtalSize; ++i)
   {
     if(crystruct[i] == AIM::Reconstruction::Hexagonal) nElements = 36*36*12;
     if(crystruct[i] == AIM::Reconstruction::Cubic) nElements = 18*18*18;
 
     double initValue = 1.0/(double)(nElements);
-    actualodf[i] = new double [nElements];
+    actualodf[i] = DoubleArray(new double [nElements]);
     GG_INIT_DOUBLE_ARRAY(actualodf[i], initValue, nElements);
-    simodf[i] = new double [nElements];
+
+    simodf[i] = DoubleArray(new double [nElements]);
     GG_INIT_DOUBLE_ARRAY(simodf[i], 0.0, nElements);
-    actualmdf[i] = new double [nElements];
+    actualmdf[i] = DoubleArray(new double [nElements]);
     GG_INIT_DOUBLE_ARRAY(actualmdf[i], initValue, nElements);
-    simmdf[i] = new double [nElements];
+    simmdf[i] = DoubleArray(new double [nElements]);
     GG_INIT_DOUBLE_ARRAY(simmdf[i], 0.0, nElements);
 
     nElements = 18*18*18;
     initValue = (1.0/double(nElements));
-    axisodf[i] = new double [nElements];
+    axisodf[i] = DoubleArray(new double [nElements]);
     GG_INIT_DOUBLE_ARRAY(axisodf[i], initValue, nElements);
     nElements = 10;
     initValue = (1.0/double(nElements));
-    actualmicrotex[i] = new double [nElements];
+    actualmicrotex[i] = DoubleArray(new double [nElements]);
     GG_INIT_DOUBLE_ARRAY(actualmicrotex[i], initValue, nElements);
-    simmicrotex[i] = new double [nElements];
+    simmicrotex[i] = DoubleArray(new double [nElements]);
     GG_INIT_DOUBLE_ARRAY(simmicrotex[i], 0.0, nElements);
   }
 }
@@ -2501,8 +2495,8 @@ void GrainGeneratorFunc::matchCrystallography(const std::string &ErrorFile, H5Re
 	  }
 	  outFile.close();
 	  int err;
-	  err = h5io->writeODFData(iter, crystruct[iter], simodf[iter]);
-	  err = h5io->writeMisorientationBinsData(iter, simmdf[iter], crystruct[iter]);
+	  err = h5io->writeODFData(iter, crystruct[iter], simodf[iter].get());
+	  err = h5io->writeMisorientationBinsData(iter, crystruct[iter], simmdf[iter].get());
   }
 }
 void  GrainGeneratorFunc::measure_misorientations ()
@@ -2592,10 +2586,10 @@ void  GrainGeneratorFunc::find_centroids()
   double x, y, z;
   double radcubed, diameter, packquality;
   int col, row, plane;
-  graincenters = new double *[numgrains];
+  graincenters.resize(numgrains);
   for(int i = 0; i < numgrains; i++)
   {
-    graincenters[i] = new double [5];
+    graincenters[i] = DoubleArray(new double [5]);
     for(int j=0;j<5;j++)
     {
       graincenters[i][j]=0;
@@ -2655,10 +2649,10 @@ void  GrainGeneratorFunc::find_moments ()
   double u110=0;
   double u011=0;
   double u101=0;
-  grainmoments = new double *[numgrains];
+  grainmoments.resize(numgrains);
   for(int i = 0; i < numgrains; i++)
   {
-  grainmoments[i] = new double [6];
+  grainmoments[i] = DoubleArray(new double [6]);
   for(int j=0;j<6;j++)
   {
     grainmoments[i][j] = 0;
