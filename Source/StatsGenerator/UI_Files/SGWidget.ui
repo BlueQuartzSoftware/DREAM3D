@@ -301,8 +301,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>810</width>
-            <height>657</height>
+            <width>98</width>
+            <height>58</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout">
@@ -342,7 +342,7 @@
        <string>ODF</string>
       </attribute>
      </widget>
-     <widget class="StatsGenODFWidget" name="m_AxisODFWidget">
+     <widget class="SGAxisODFWidget" name="m_AxisODFWidget">
       <attribute name="title">
        <string>Axis ODF</string>
       </attribute>
@@ -369,6 +369,11 @@
    <extends>QWidget</extends>
    <header location="global">StatsGenODFWidget.h</header>
    <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>SGAxisODFWidget</class>
+   <extends>QWidget</extends>
+   <header>sgaxisodfwidget.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

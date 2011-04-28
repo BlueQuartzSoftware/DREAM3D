@@ -32,15 +32,11 @@
 #ifndef TEXTURE_H_
 #define TEXTURE_H_
 
+#include <vector>
 #include "MXA/MXATypes.h"
 #include "AIM/Common/AIMCommonConfiguration.h"
 #include "AIM/Common/AIMMath.h"
 #include "AIM/Common/MisorientationCalculations.h"
-
-
-#define AIM_TEXTURE_COUNT 14
-
-
 
 /**
  * @class Texture Texture.h AIM/Common/Texture.h
@@ -87,9 +83,11 @@ class AIMCOMMON_EXPORT Texture
                                       bool normalize, T &odf, double &totalweight)
     {
       double randomWeight = 1.0;
-      int TextureBins[AIM_TEXTURE_COUNT];
+      int *TextureBins;
+	  TextureBins = new int[weights.size()];
       static const size_t eighteenCubed = 5832;
-      odf.resize(eighteenCubed);
+      double degtorad = M_PI/180.0;
+	  odf.resize(eighteenCubed);
       size_t ea1bin, ea2bin, ea3bin;
       size_t bin, addbin;
       size_t bin1, bin2, bin3;
@@ -109,14 +107,14 @@ class AIMCOMMON_EXPORT Texture
 
       for (typename T::size_type i = 0; i < e1s.size(); i++)
       {
-        tan_term = tan(e2s[i]/2);
-        sin_term = sin((e1s[i]-e3s[i])/2);
-        cos_term1 = cos((e1s[i]+e3s[i])/2);
-        cos_term2 = cos((e1s[i]-e3s[i])/2);
+        tan_term = tan(e2s[i]*degtorad/2);
+        sin_term = sin((e1s[i]*degtorad-e3s[i]*degtorad)/2);
+        cos_term1 = cos((e1s[i]*degtorad+e3s[i]*degtorad)/2);
+        cos_term2 = cos((e1s[i]*degtorad-e3s[i]*degtorad)/2);
 
         r1 = tan_term * cos_term2 / cos_term1;
         r2 = tan_term * sin_term / cos_term1;
-        r3 = tan((e1s[i]+e3s[i])/2);
+        r3 = tan((e1s[i]*degtorad+e3s[i]*degtorad)/2);
         MisorientationCalculations::getFZRodCubic(r1, r2, r3);
         rmag = pow((r1 * r1 + r2 * r2 + r3 * r3), 0.5);
         angle = 2.0 * atan(rmag);
@@ -208,9 +206,11 @@ class AIMCOMMON_EXPORT Texture
     static void calculateHexODFData(T e1s, T e2s, T e3s, T weights, T sigmas,
                                     bool normalize, T &odf, double &totalweight)
     {
-	    double randomWeight = 1.0;
-      int TextureBins[AIM_TEXTURE_COUNT];
+	  double randomWeight = 1.0;
+      int *TextureBins;
+	  TextureBins = new int[weights.size()];
       static const size_t odfsize = 15552;
+	  double degtorad = M_PI/180.0;
       odf.resize(odfsize);
       size_t ea1bin, ea2bin, ea3bin;
       size_t bin, addbin;
@@ -231,14 +231,14 @@ class AIMCOMMON_EXPORT Texture
 
       for (typename T::size_type i = 0; i < e1s.size(); i++)
       {
-        tan_term = tan(e2s[i]/2);
-        sin_term = sin((e1s[i]-e3s[i])/2);
-        cos_term1 = cos((e1s[i]+e3s[i])/2);
-        cos_term2 = cos((e1s[i]-e3s[i])/2);
+        tan_term = tan(e2s[i]*degtorad/2);
+        sin_term = sin((e1s[i]*degtorad-e3s[i]*degtorad)/2);
+        cos_term1 = cos((e1s[i]*degtorad+e3s[i]*degtorad)/2);
+        cos_term2 = cos((e1s[i]*degtorad-e3s[i]*degtorad)/2);
 
         r1 = tan_term * cos_term2 / cos_term1;
         r2 = tan_term * sin_term / cos_term1;
-        r3 = tan((e1s[i]+e3s[i])/2);
+        r3 = tan((e1s[i]*degtorad+e3s[i]*degtorad)/2);
         MisorientationCalculations::getFZRodHexagonal(r1, r2, r3);
         rmag = pow((r1 * r1 + r2 * r2 + r3 * r3), 0.5);
         angle = 2.0 * atan(rmag);
@@ -329,6 +329,108 @@ class AIMCOMMON_EXPORT Texture
   static void calculateOrthoRhombicODFData(T e1s, T e2s, T e3s, T weights, T sigmas,
                                            bool normalize, T &odf, double &totalweight)
   {
+	  double randomWeight = 1.0;
+      int *TextureBins;
+	  TextureBins = new int[weights.size()];
+      static const size_t odfsize = 46656;
+	  double degtorad = M_PI/180.0;
+      odf.resize(odfsize);
+      size_t ea1bin, ea2bin, ea3bin;
+      size_t bin, addbin;
+      size_t bin1, bin2, bin3;
+      size_t addbin1, addbin2, addbin3;
+      double dist, fraction;
+      double rmag, angle;
+      double r1, r2, r3;
+      double h1, h2, h3;
+      double dim1 = 2*pow((0.75 * ((M_PI / 2.0) - sin((M_PI / 2.0)))), (1.0 / 3.0));
+      double dim2 = 2*pow((0.75 * ((M_PI / 2.0) - sin((M_PI / 2.0)))), (1.0 / 3.0));
+      double dim3 = 2*pow((0.75 * ((M_PI / 2.0) - sin((M_PI / 2.0)))), (1.0 / 3.0));
+      double tan_term = 0.0;
+      double sin_term = 0.0;
+      double cos_term1 = 0.0;
+      double cos_term2 = 0.0;
+      double hTmp = 0.0;
+
+      for (typename T::size_type i = 0; i < e1s.size(); i++)
+      {
+        tan_term = tan(e2s[i]*degtorad/2);
+        sin_term = sin((e1s[i]*degtorad-e3s[i]*degtorad)/2);
+        cos_term1 = cos((e1s[i]*degtorad+e3s[i]*degtorad)/2);
+        cos_term2 = cos((e1s[i]*degtorad-e3s[i]*degtorad)/2);
+
+        r1 = tan_term * cos_term2 / cos_term1;
+        r2 = tan_term * sin_term / cos_term1;
+        r3 = tan((e1s[i]*degtorad+e3s[i]*degtorad)/2);
+		MisorientationCalculations::getFZRodOrtho(r1, r2, r3);
+        rmag = pow((r1 * r1 + r2 * r2 + r3 * r3), 0.5);
+        angle = 2.0 * atan(rmag);
+        hTmp = pow(((3.0 / 4.0) * (angle - sin(angle))), (1.0 / 3.0));
+        h1 = hTmp * (r1 / rmag);
+        h2 = hTmp * (r2 / rmag);
+        h3 = hTmp * (r3 / rmag);
+        if (angle == 0) h1 = 0.0, h2 = 0.0, h3 = 0.0;
+        ea1bin = int((h1 + (dim1 / 2.0)) * 36.0 / dim1);
+        ea2bin = int((h2 + (dim1 / 2.0)) * 36.0 / dim2);
+        ea3bin = int((h3 + (dim1 / 2.0)) * 36.0 / dim3);
+        if (ea1bin >= 36) ea1bin = 35;
+        if (ea2bin >= 36) ea2bin = 35;
+        if (ea3bin >= 36) ea3bin = 35;
+        bin = (ea3bin * 36 * 36) + (ea2bin * 36) + (ea1bin);
+        TextureBins[i] = static_cast<int>(bin);
+      }
+
+      for (size_t i = 0; i < odfsize; i++)
+      {
+        odf[i] = randomWeight / (odfsize);
+        totalweight = totalweight + randomWeight / (odfsize);
+      }
+      for (typename T::size_type i = 0; i < e1s.size(); i++)
+      {
+        bin = TextureBins[i];
+        odf[bin] = odf[bin] + (weights[i]);
+        totalweight = totalweight + weights[i];
+        bin1 = bin % 36;
+        bin2 = (bin / 36) % 36;
+        bin3 = bin / (36 * 36);
+        for (int j = -sigmas[i]; j <= sigmas[i]; j++)
+        {
+          for (int k = -sigmas[i]; k <= sigmas[i]; k++)
+          {
+            for (int l = -sigmas[i]; l <= sigmas[i]; l++)
+            {
+              addbin1 = bin1 + j;
+              addbin2 = bin2 + k;
+              addbin3 = bin3 + l;
+              if (addbin1 < 0) addbin1 = addbin1 + 36;
+              if (addbin1 >= 36) addbin1 = addbin1 - 36;
+              if (addbin2 < 0) addbin2 = addbin2 + 36;
+              if (addbin2 >= 36) addbin2 = addbin2 - 36;
+              if (addbin3 < 0) addbin3 = addbin3 + 36;
+              if (addbin3 >= 36) addbin3 = addbin3 - 36;
+              addbin = (addbin3 * 36 * 36) + (addbin2 * 36) + (addbin1);
+              dist = pow((j * j + k * k + l * l), 0.5);
+              fraction = 1.0 - ((dist / sigmas[i]) * (dist / sigmas[i]));
+              if (fraction > 0.0)
+              {
+                odf[addbin] = odf[addbin] + (weights[i] * fraction);
+                totalweight = totalweight + (weights[i] * fraction);
+              }
+            }
+          }
+        }
+      }
+
+      if (normalize == true)
+      {
+		double test;
+        // Normalize the odf
+        for (size_t i = 0; i < odfsize; i++)
+        {
+          odf[i] = odf[i] / totalweight;
+		  test = odf[i];
+	        }
+      }
 
   }
 
