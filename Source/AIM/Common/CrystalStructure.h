@@ -63,7 +63,7 @@ class AIMCOMMON_EXPORT CrystalStructure
           return std::string("Hexagonal");
         case AIM::Reconstruction::Cubic:
           return std::string("Cubic");
-        case AIM::Reconstruction::OrthoRhombic:
+        case AIM::Reconstruction::AxisOrthoRhombic:
           return std::string("OrthoRhombic");
         default:
           break;
