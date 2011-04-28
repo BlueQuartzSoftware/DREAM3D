@@ -160,6 +160,7 @@ namespace AIM
         Hexagonal = 0,               //!< Hexagonal
         Cubic = 1,                   //!< Cubic
         OrthoRhombic = 2,            //!< OrthoRhombic
+        AxisOrthoRhombic = 3,            //!< AxisOrthoRhombic
         UnknownCrystalStructure = 999//!< UnknownCrystalStructure
     };
 
