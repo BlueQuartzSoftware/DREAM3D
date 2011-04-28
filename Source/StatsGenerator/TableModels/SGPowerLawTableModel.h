@@ -93,7 +93,7 @@ Q_OBJECT    ;
 
     QAbstractItemDelegate* getItemDelegate();
 
-    void setBinNumbers(QVector<double> binNumbers);
+  //  void setBinNumbers(QVector<double> binNumbers);
 
     QVector<double>& getBinNumbers()
     { return m_BinNumbers;}

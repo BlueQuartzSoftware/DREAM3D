@@ -49,8 +49,6 @@
 #include "SGApplication.h"
 #include "EditPhaseDialog.h"
 
-
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -148,6 +146,8 @@ void StatsGeneratorUI::setupGui()
   phaseCombo->addItem(cName);
   phaseCombo->blockSignals(false);
   setWindowModified(true);
+
+
 }
 
 // -----------------------------------------------------------------------------
@@ -628,3 +628,4 @@ QString StatsGeneratorUI::getFilePath()
 {
   return m_FilePath;
 }
+

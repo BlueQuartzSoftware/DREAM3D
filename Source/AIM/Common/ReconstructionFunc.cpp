@@ -3476,7 +3476,7 @@ void ReconstructionFunc::measure_misorientations(H5ReconStatsWriter::Pointer h5i
   }
   for(size_t i=1;i<crystruct.size();i++)
   {
-	  h5io->writeMisorientationBinsData(i, misobin[i], crystruct[i]);
+	  h5io->writeMisorientationBinsData(i, crystruct[i], misobin[i]);
 	  h5io->writeMicroTextureData(i, microbin, 10, numgrains);
 	  delete[] misobin[i];
   }
