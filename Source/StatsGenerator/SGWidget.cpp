@@ -225,7 +225,7 @@ void SGWidget::setupGui()
 
   // For the ODF Tab we want the MDF functionality
   m_ODFWidget->enableMDFTab(true);
-  m_AxisODFWidget->setCrystalStructure(AIM::Reconstruction::OrthoRhombic);
+  m_AxisODFWidget->setCrystalStructure(AIM::Reconstruction::AxisOrthoRhombic);
 
   updateSizeDistributionPlot();
   calculateNumberOfBins();
@@ -768,7 +768,7 @@ int SGWidget::readDataFromHDF5(H5ReconStatsReader::Pointer reader,int phase)
 // -----------------------------------------------------------------------------
 void SGWidget::on_microstructurePresetCombo_currentIndexChanged(int index)
 {
-  std::cout << "on_microstructurePresetCombo_currentIndexChanged" << std::endl;
+  //std::cout << "on_microstructurePresetCombo_currentIndexChanged" << std::endl;
   QString presetName = microstructurePresetCombo->currentText();
 
   //Factory Method to get an instantiated object of the correct type?

@@ -82,6 +82,8 @@ class StatsGenODFWidget : public QWidget, private Ui::StatsGenODFWidget
                         QVector<double>  &bins,
                         const std::string &hdf5GroupName);
 
+    void setPlotTabTitles(QString t1, QString t2, QString t3);
+
     protected slots:
       void on_m_CalculateODFBtn_clicked();
       void on_addODFTextureBtn_clicked();
