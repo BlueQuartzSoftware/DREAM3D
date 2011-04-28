@@ -36,6 +36,7 @@
 #include "AIM/Common/Constants.h"
 #include "AIM/Common/HDF5/H5ReconStatsWriter.h"
 #include "AIM/Common/HDF5/H5ReconStatsReader.h"
+#include "StatsGenerator/Presets/AbstractMicrostructurePreset.h"
 
 class QwtPlotZoomer;
 class QwtPlotPicker;
@@ -95,6 +96,7 @@ class SGWidget : public QWidget, private Ui::SGWidget
     void on_m_SigmaCutOff_SizeDistribution_textChanged(const QString &text);
     void on_m_BinStepSize_valueChanged(double v);
 
+    void on_microstructurePresetCombo_currentIndexChanged(int index);
     void on_m_GenerateDefaultData_clicked();
 
     void dataWasEdited();
@@ -123,6 +125,8 @@ class SGWidget : public QWidget, private Ui::SGWidget
     QwtPlotMarker*       m_CutOffMin;
     QwtPlotMarker*       m_CutOffMax;
     QwtPlotGrid*         m_grid;
+
+    AbstractMicrostructurePreset::Pointer m_MicroPreset;
 
     SGWidget(const SGWidget&); // Copy Constructor Not Implemented
     void operator=(const SGWidget&); // Operator '=' Not Implemented

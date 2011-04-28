@@ -1,0 +1,59 @@
+/*!
+
+@page microPreset StatsGenerator Microstructure Presets Developer Guide
+
+The implementation uses the <b>Factory</b> design pattern where a singleton instance
+of @see MicrostructurePresetManager is responsible for registering each of the
+preset classes and also for creating an instance of each of those classes given
+the name of the class. Each class that wants to implement a <b>MicrostructurePreset</b>
+needs to implement 2 classes:
+@li AbstractMicrostructurePresetFactory
+@li AbstractMicrostructurePreset
+
+The <i>AbstractMicrostructurePresetFactory</i> is the actual factory class that can
+instantiate an actual concrete implementation of <i>AbstractMicrostructurePreset</i>.
+There is a convenience macro (DECLARE_FACTORY_CLASS) that the programmer can use to quickly create the
+factory implementation but they will need to implement their code for the
+AbstractMicrostructurePreset subclass. For instance, here is the header for the
+EquiaxedPreset class:
+
+@code
+class EquiaxedPreset : public AbstractMicrostructurePreset
+{
+  public:
+    MXA_SHARED_POINTERS(EquiaxedPreset);
+    MXA_STATIC_NEW_SUPERCLASS(AbstractMicrostructurePreset, EquiaxedPreset);
+    virtual ~EquiaxedPreset();
+
+    void generateOmega3Data(StatsGenPlotWidget* plot, QVector<double> binNumbers);
+    void generateBOverAPlotData(StatsGenPlotWidget* plot, QVector<double> binNumbers);
+    void generateCOverAPlotData(StatsGenPlotWidget* plot, QVector<double> binNumbers);
+    void generateCOverBPlotData(StatsGenPlotWidget* plot, QVector<double> binNumbers);
+    void generateNeighborPlotData(StatsGenPlotWidget* plot, QVector<double> binNumbers);
+
+  protected:
+    EquiaxedPreset();
+
+  private:
+    EquiaxedPreset(const EquiaxedPreset&); // Copy Constructor Not Implemented
+    void operator=(const EquiaxedPreset&); // Operator '=' Not Implemented
+};
+
+DECLARE_FACTORY_CLASS(EquiaxedPresetFactory, EquiaxedPreset, Equiaxed );
+
+@endcode
+
+After that code is written then the programmer needs to write the actual implementation
+of each of the generateXXXData(...) methods. These methods will generate a set of
+data that will be inserted into the proper SGAbstractTableModel instance for the
+given preset. After it is all written we have something like the following to get
+an instance of the DefaultStatsPreset class:
+
+@code
+  AbstractMicrostructurePresetFactory::Pointer presetFactory = DefaultStatsPresetFactory::New();
+  MicrostructurePresetManager::registerMicrostructurePresetFactory(presetFactory);
+@endcode
+
+
+
+ */

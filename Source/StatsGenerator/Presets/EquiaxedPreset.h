@@ -1,5 +1,5 @@
 /* ============================================================================
- * Copyright (c) 2010, Michael A. Jackson (BlueQuartz Software)
+ * Copyright (c) 2011, Michael A. Jackson (BlueQuartz Software)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -28,24 +28,42 @@
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "SGAbstractTableModel.h"
-#include <iostream>
+#ifndef EQUIAXEDPRESETFACTORY_H_
+#define EQUIAXEDPRESETFACTORY_H_
 
-#include <QApplication>
-#include <QtGui/QStyleOptionComboBox>
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-SGAbstractTableModel::SGAbstractTableModel(QObject* parent) :
-  QAbstractTableModel(parent)
+//-- C++ includes
+#include <string>
+
+//-- MXA Includes
+#include <MXA/Common/MXASetGetMacros.h>
+
+#include "AbstractMicrostructurePresetFactory.h"
+#include "AbstractMicrostructurePreset.h"
+
+
+class EquiaxedPreset : public AbstractMicrostructurePreset
 {
-}
+  public:
+    MXA_SHARED_POINTERS(EquiaxedPreset);
+    MXA_STATIC_NEW_SUPERCLASS(AbstractMicrostructurePreset, EquiaxedPreset);
+    virtual ~EquiaxedPreset();
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-SGAbstractTableModel::~SGAbstractTableModel()
-{
-}
 
+    void generateOmega3Data(StatsGenPlotWidget* plot, QVector<double> binNumbers);
+    void generateBOverAPlotData(StatsGenPlotWidget* plot, QVector<double> binNumbers);
+    void generateCOverAPlotData(StatsGenPlotWidget* plot, QVector<double> binNumbers);
+    void generateCOverBPlotData(StatsGenPlotWidget* plot, QVector<double> binNumbers);
+    void generateNeighborPlotData(StatsGenPlotWidget* plot, QVector<double> binNumbers);
+
+  protected:
+    EquiaxedPreset();
+
+  private:
+    EquiaxedPreset(const EquiaxedPreset&); // Copy Constructor Not Implemented
+    void operator=(const EquiaxedPreset&); // Operator '=' Not Implemented
+};
+
+DECLARE_FACTORY_CLASS(EquiaxedPresetFactory, EquiaxedPreset, Equiaxed );
+
+#endif /* EQUIAXEDPRESETFACTORY_H_ */
