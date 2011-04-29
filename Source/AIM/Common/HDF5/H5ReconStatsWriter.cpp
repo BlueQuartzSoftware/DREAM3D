@@ -579,7 +579,7 @@ int H5ReconStatsWriter::writeAxisOrientationData(int phase, double* axisodf, dou
   CREATE_RECONSTRUCTION_GROUP(AIM::HDF5::Reconstruction)
 
   hid_t pid = H5Utilities::createGroup(gid, StringUtils::numToString(phase));
-  int size = 18 * 18 * 18;
+  int size = 36 * 36 * 36;
   std::vector<double> data(size, 0.0);
   for (int i = 0; i < size; ++i)
   {
