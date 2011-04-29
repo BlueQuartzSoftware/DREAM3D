@@ -72,6 +72,8 @@ class StatsGenMDFWidget : public QWidget, private Ui::StatsGenMDFWidget
                         const std::string &hdf5GroupName);
     
   QwtArray<double> generateODFData();
+  
+  void updateMDFPlots();
 
   protected slots:
     void on_addMDFRowBtn_clicked();
