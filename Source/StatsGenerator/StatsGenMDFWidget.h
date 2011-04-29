@@ -37,7 +37,7 @@
 #include "AIM/Common/Constants.h"
 #include "AIM/Common/HDF5/H5ReconStatsWriter.h"
 #include "AIM/Common/HDF5/H5ReconStatsReader.h"
-
+#include "StatsGenerator/TableModels/SGODFTableModel.h"
 
 
 class SGMDFTableModel;
@@ -64,11 +64,14 @@ class StatsGenMDFWidget : public QWidget, private Ui::StatsGenMDFWidget
 
     MXA_INSTANCE_PROPERTY(int, PhaseIndex);
     MXA_INSTANCE_PROPERTY(AIM::Reconstruction::CrystalStructure, CrystalStructure);
+    MXA_INSTANCE_PROPERTY(SGODFTableModel*, ODFTableModel);
 
     int writeDataToHDF5(H5ReconStatsWriter::Pointer writer);
     int readDataFromHDF5(H5ReconStatsReader::Pointer reader,
                         QVector<double>  &bins,
                         const std::string &hdf5GroupName);
+    
+  QwtArray<double> generateODFData();
 
   protected slots:
     void on_addMDFRowBtn_clicked();

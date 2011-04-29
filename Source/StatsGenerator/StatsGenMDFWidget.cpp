@@ -114,7 +114,7 @@ void StatsGenMDFWidget::on_m_MDFUpdateBtn_clicked()
 
   QwtArray<double> angles;
   QwtArray<double> weights;
-  QwtArray<double> odf;
+  QwtArray<double> odf = generateODFData();
 
   angles = m_MDFTableModel->getData(SGMDFTableModel::Angle);
   weights = m_MDFTableModel->getData(SGMDFTableModel::Weight);
@@ -130,6 +130,39 @@ void StatsGenMDFWidget::on_m_MDFUpdateBtn_clicked()
   }
 
   std::cout << "on_m_MDFUpdateBtn_clicked" << std::endl;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QwtArray<double> StatsGenMDFWidget::generateODFData()
+{
+  int err = 0;
+  double totalWeight = 0.0;
+
+  QwtArray<double> e1s;
+  QwtArray<double> e2s;
+  QwtArray<double> e3s;
+  QwtArray<double> weights;
+  QwtArray<double> sigmas;
+  QwtArray<double> odf;
+
+  // Initialize xMax and yMax....
+  e1s = m_ODFTableModel->getData(SGODFTableModel::Euler1);
+  e2s = m_ODFTableModel->getData(SGODFTableModel::Euler2);
+  e3s = m_ODFTableModel->getData(SGODFTableModel::Euler3);
+  weights = m_ODFTableModel->getData(SGODFTableModel::Weight);
+  sigmas = m_ODFTableModel->getData(SGODFTableModel::Sigma);
+
+  if (m_CrystalStructure == AIM::Reconstruction::Cubic)
+  {
+    Texture::calculateCubicODFData(e1s, e2s, e3s, weights, sigmas, true, odf, totalWeight);
+  }
+  else if (m_CrystalStructure == AIM::Reconstruction::Hexagonal)
+  {
+    Texture::calculateHexODFData(e1s, e2s, e3s, weights, sigmas, true, odf, totalWeight);
+  }
+  return odf;
 }
 
 // -----------------------------------------------------------------------------
