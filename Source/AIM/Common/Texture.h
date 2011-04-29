@@ -428,8 +428,7 @@ class AIMCOMMON_EXPORT Texture
         for (size_t i = 0; i < odfsize; i++)
         {
           odf[i] = odf[i] / totalweight;
-		  test = odf[i];
-	        }
+        }
       }
 
   }

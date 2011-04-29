@@ -989,13 +989,13 @@ class StatsGen
         * @param size The number of points for the Scatter Plot
         */
        template<typename T>
-       int GenCubicMDFPlotData(T angles, T weights, T &x, T &y, int size)
+       int GenCubicMDFPlotData(T angles, T weights, T &xval, T &yval, int size)
        {
          static const size_t eighteenCubed = 5832;
          double totalweight = 0;
          T odf;
          odf.resize(eighteenCubed);
-         Texture::calculateCubicODFData(e1s, e2s, e3s, weights, sigmas, true, odf, totalweight);
+//         Texture::calculateCubicODFData(e1s, e2s, e3s, weights, sigmas, true, odf, totalweight);
 
          AIMRandomNG rg;
          /* Get a seed value based off the system clock. The issue is that this will
@@ -1020,21 +1020,20 @@ class StatsGen
          double g[3][3];
          double x, y, z;
          double xpf, ypf;
-         double xpfa, ypfa;
          double totaldensity;
          double hmag;
          double angle;
          double r1, r2, r3;
          double h1, h2, h3;
          double n1, n2, n3;
-         double random, tan_angle, density, cos_angle, sin_angle;
+         double random, random1, random2, tan_angle, density, cos_angle, sin_angle;
 
          double dim1 = 2 * pow((0.75 * ((M_PI / 4.0) - sin((M_PI / 4.0)))), (1.0 / 3.0));
          double dim2 = 2 * pow((0.75 * ((M_PI / 4.0) - sin((M_PI / 4.0)))), (1.0 / 3.0));
          double dim3 = 2 * pow((0.75 * ((M_PI / 4.0) - sin((M_PI / 4.0)))), (1.0 / 3.0));
 
-         x.resize(size);
-         y.resize(size);
+         xval.resize(size);
+         yval.resize(size);
 
          for (int i = 0; i < size; i++)
          {
@@ -1100,13 +1099,13 @@ class StatsGen
 
 
        template<typename T>
-       int GenHexMDFPlotData(T angles, T weights, T &x, T &y, int size)
+       int GenHexMDFPlotData(T angles, T weights, T &xval, T &yval, int size)
        {
          static const size_t eighteenCubed = 5832;
          double totalweight = 0;
          T odf;
          odf.resize(eighteenCubed);
-         Texture::calculateCubicODFData(e1s, e2s, e3s, weights, sigmas, true, odf, totalweight);
+//         Texture::calculateHexODFData(e1s, e2s, e3s, weights, sigmas, true, odf, totalweight);
 
          AIMRandomNG rg;
          /* Get a seed value based off the system clock. The issue is that this will
@@ -1131,21 +1130,20 @@ class StatsGen
          double g[3][3];
          double x, y, z;
          double xpf, ypf;
-         double xpfa, ypfa;
          double totaldensity;
          double hmag;
          double angle;
          double r1, r2, r3;
          double h1, h2, h3;
          double n1, n2, n3;
-         double random, tan_angle, density, cos_angle, sin_angle;
+         double random, random1, random2, tan_angle, density, cos_angle, sin_angle;
 
          double dim1 = 2 * pow((0.75 * ((M_PI / 4.0) - sin((M_PI / 4.0)))), (1.0 / 3.0));
          double dim2 = 2 * pow((0.75 * ((M_PI / 4.0) - sin((M_PI / 4.0)))), (1.0 / 3.0));
          double dim3 = 2 * pow((0.75 * ((M_PI / 4.0) - sin((M_PI / 4.0)))), (1.0 / 3.0));
 
-         x.resize(size);
-         y.resize(size);
+         xval.resize(size);
+         yval.resize(size);
 
          for (int i = 0; i < size; i++)
          {
