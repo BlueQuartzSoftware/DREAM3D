@@ -302,7 +302,22 @@ QVector<double > SGMDFTableModel::getData(int col)
       return m_Weights;
   }
   else if (col == Axis) {
-
+    int count = rowCount();
+    QVector<double> values;
+    double h = 0.0;
+    double k=0.0;
+    double l=0.0;
+    int err = 0;
+    for (int r = 0; r < count; ++r)
+    {
+      err = parseHKLRow(r, h,k,l);
+      if (err >= 0) {
+        values.push_back(h);
+        values.push_back(k);
+        values.push_back(l);
+      }
+    }
+    return values;
   }
   return QVector<double > ();
 }
