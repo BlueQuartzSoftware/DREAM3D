@@ -323,12 +323,8 @@ void StatsGenODFWidget::on_m_CalculateODFBtn_clicked()
   if (m_MDFWidget != NULL)
   {
     m_MDFWidget->setEnabled(true);
-    m_MDFWidget->on_m_MDFUpdateBtn_clicked();
+    m_MDFWidget->updateMDFPlots();
   }
-#ifndef _WIN32
-#warning Calculate the MDF if needed
-  // calculate MDF Based on the ODF calculation
-#endif
 }
 
 

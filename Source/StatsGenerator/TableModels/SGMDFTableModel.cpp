@@ -295,21 +295,36 @@ bool SGMDFTableModel::removeRows(int row, int count, const QModelIndex& index)
 // -----------------------------------------------------------------------------
 QVector<double > SGMDFTableModel::getData(int col)
 {
-
-  switch(col)
-  {
-    case Angle:
+  if (col == Angle) {
       return m_Angles;
-    case Weight:
+  }
+  else if (col == Weight) {
       return m_Weights;
-    case Axis:
-//      return m_Axis;
-    default:
-      Q_ASSERT(false);
+  }
+  else if (col == Axis) {
+
   }
   return QVector<double > ();
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int SGMDFTableModel::parseHKLRow(int row, double &h, double &k, double &l)
+{
+  QString hklStr = m_Axis[row];
+  hklStr.chop(1); // remove the ">" charater from the end;
+  hklStr.remove(0, 1); // Remove the front "<" character
+  bool ok = false;
+  h = hklStr.section(',', 0,0).toDouble(&ok);
+  k = hklStr.section(',', 1,1).toDouble(&ok);
+  l = hklStr.section(',', 1,1).toDouble(&ok);
+  if (ok) { return 0; }
+  return -1;
+}
+
+
+#if 0
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -328,7 +343,7 @@ double SGMDFTableModel::getDataValue(int col, int row)
   }
   return 0.0;
 }
-
+#endif
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
