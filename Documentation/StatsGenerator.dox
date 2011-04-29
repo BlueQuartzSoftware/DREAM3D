@@ -1,13 +1,16 @@
 /*!
 
- @page statsgenerator StatsGenerator
+@page statsgenerator StatsGenerator
 
-@section introduction Introduction
-0. Phase Selection - The use can use the "+" button to add another phase to the
+@section sg_introduction Introduction
+
+@section sg_gui User Interface - Main Window
+0. Phase Selection - The user can use the "+" button to add another phase to the
 StatsGenerator document. The user can select the crystal structure and Phase Fraction
 of the new phase using the dialog that pops up.
-@image html StatsGenerator_1.png "StatsGenerator Adding additional Phase to document"
 
+@image html StatsGenerator_1.png "StatsGenerator Adding additional Phase to document"
+@image latex StatsGenerator_2.png "StatsGenerator Adding additional Phase to document" width=6in
 
 1.  Size Distribution Tab
 @li a.  <b>Mu</b>  this is the average value of the lognormal grain size distribution
@@ -22,7 +25,7 @@ bottom left corner
 the other tabs with default values.
 
 @image html StatsGenerator_2.png "Stats Generator Size and Weights Tab"
-
+@image latex StatsGenerator_2.png "Stats Generator Size and Weights Tab" width=6in
 
 2.  Omega 3 Tab
 @li a.  Bin  this column is calculated from the size distribution and cannot be changed.
@@ -30,7 +33,7 @@ the other tabs with default values.
 @li c.  Beta  this is the beta parameter of the Beta distribution.
 @li d.  Color  this allows the user to change colors of the curves for image creation or easier identification during stats generation
 @image html StatsGenerator_3.png "StatsGenerator Omega 3 Distributions Tab"
-
+@image latex StatsGenerator_3.png "StatsGenerator Omega 3 Distributions Tab" width=6in
 
 3.  Shape Distributions Tab (there are 3 aspect ratio combinations)
 @li a.  Bin  this column is calculated from the size distribution and cannot be changed.
@@ -38,6 +41,7 @@ the other tabs with default values.
 @li c.  Beta  this is the beta parameter of the Beta distribution.
 @li d.  Color  this allows the user to change colors of the curves for image creation or easier identification during stats generation
 @image html StatsGenerator_4.png "StatsGenerator Shape Class Distributions Tab"
+@image latex StatsGenerator_4.png "StatsGenerator Shape Class Distributions Tab" width=6in
 
 4.  Neighbor Distributions Tab
 @li a.  Bin  this column is calculated from the size distribution and cannot be changed.
@@ -47,6 +51,8 @@ the other tabs with default values.
 @li e.  Color  this allows the user to change colors of the curves for image creation or easier identification during stats generation
 
 @image html StatsGenerator_6.png "StatsGenerator Neighbor Distributions Tab"
+@image latex StatsGenerator_6.png "StatsGenerator Neighbor Distributions Tab" width=6in
+
 
 5.  ODF Tab
 @li a.  Texture  these are a list of common FCC textures.
@@ -56,6 +62,10 @@ the other tabs with default values.
 @li e.  MDF  this sub-tab will display the baseline MDF for the generated ODF, but is not currently finished.
 
 @image html StatsGenerator_9.png "StatsGenerator ODF Configuration Tab"
+@image latex StatsGenerator_9.png "StatsGenerator ODF Configuration Tab" width=6in
+
+
 @image html StatsGenerator_10.png "StatsGenerator MDF Configuration Tab"
+@image latex StatsGenerator_10.png "StatsGenerator MDF Configuration Tab" width=6in
 
  */

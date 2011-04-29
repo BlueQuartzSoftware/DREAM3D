@@ -1,8 +1,8 @@
 /*!
 
- @page SYNTHETIC_BUILDER Synthetic Builder
+ @page syntheticbuilder Synthetic Builder
 
-@section details User Interface Parameters
+@section gg_details User Interface Parameters
 
 1.  HDF5 Stats File  name and location of the input stats file that can be generated
 from the reconstruction tab or the stats generator module.
