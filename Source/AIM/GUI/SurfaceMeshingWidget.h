@@ -80,6 +80,7 @@ class SurfaceMeshingWidget : public AIMPluginFrame, private Ui::SurfaceMeshingWi
     /* Surface Meshing Slots */
     void on_sm_InputFileBtn_clicked();
     void on_sm_OutputDirBtn_clicked();
+
     void on_sm_GoBtn_clicked();
 
   private slots:
@@ -92,7 +93,7 @@ class SurfaceMeshingWidget : public AIMPluginFrame, private Ui::SurfaceMeshingWi
 
     void on_sm_InputFile_textChanged(const QString & text);
     void on_sm_OutputDir_textChanged(const QString & text);
-
+    void on_outputFilePrefix_textChanged(const QString &text);
 
   private:
     QList<QWidget*>             m_WidgetList;

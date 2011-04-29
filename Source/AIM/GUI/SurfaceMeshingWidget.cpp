@@ -333,3 +333,12 @@ void SurfaceMeshingWidget::threadHasMessage(QString message)
     this->statusBar()->showMessage(message);
   }
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void SurfaceMeshingWidget::on_outputFilePrefix_textChanged(const QString &text)
+{
+  checkIOFiles();
+}
+
