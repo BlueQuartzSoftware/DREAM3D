@@ -107,6 +107,28 @@ void StatsGenMDFWidget::initQwtPlot(QString xAxisName, QString yAxisName, QwtPlo
 // -----------------------------------------------------------------------------
 void StatsGenMDFWidget::on_m_MDFUpdateBtn_clicked()
 {
+  int err = 0;
+
+  QwtArray<double> x;
+  QwtArray<double> y;
+
+  QwtArray<double> angles;
+  QwtArray<double> weights;
+  QwtArray<double> odf;
+
+  angles = m_MDFTableModel->getData(SGMDFTableModel::Angle);
+  weights = m_MDFTableModel->getData(SGMDFTableModel::Weight);
+
+  StatsGen sg;
+  int size = 1000;
+
+  if (m_CrystalStructure == AIM::Reconstruction::Cubic) {
+    err = sg.GenCubicMDFPlotData(angles, weights, x, y, size);
+  }
+  else if (m_CrystalStructure == AIM::Reconstruction::Hexagonal) {
+    err = sg.GenHexMDFPlotData(angles, weights, x, y, size);
+  }
+
   std::cout << "on_m_MDFUpdateBtn_clicked" << std::endl;
 }
 
