@@ -7,7 +7,7 @@ with a file name extension of ".ang" to HDF5 file which contains all the data.
 
 @image html oimFileImport.png "The OIM Data Import User Interface"
 
-@section overview Overview of Features
+@section ang_overview Overview of Features
  The user simply selects the directory containing all the .ang files. The File
 List should populate with all the files and each file should have a green dot
 next to its entry indicating that the correct file path has been determined. If
@@ -18,16 +18,20 @@ can be set to import all the slices or just a subset of the data. The desired
 spacing between the slices should also be set. Finally the output file should also
 be selected correctly.
 
-@section importdetails Notes concerning the importing of the data
+@section ang_importdetails Notes concerning the importing of the data
 <b>NO</b> attempt is made to manipulate the data by rotations, transformation,
 sorting or any other changes. The data is simply read by the program, translated
 into its binary representation and stored in the hdf5 file. The complete header
 of the .ang file is also stored into the HDF5 file in order to preserve as much
 of the data as possible.
 
-@section hdf5layout Layout of Data in the HDF5 File.
-Each file is considered a slice of the data volume as is stored as an HDF Group
-in the HDF5 file. This group itself has 2 more groups: <tt>Data</tt> and <tt>Header</tt>.
+@section ang_hdf5layout Layout of Data in the HDF5 File.
+Each .ang file is considered a slice (XY Plane) of a 3D volume. The total number of
+planes is the total number of .ang files being read into the HDF5 file. Within
+the HDF5 file an HDF Group is created for each slice so if there are 234 .ang files
+and the files have a file name of "Slice_0158.ang" and start with "Slice_0010.ang"
+then the groups will start with "10" and increment by 1 until "244". Within each
+of the slice groups are 2 more HDF groups: <tt>Data</tt> and <tt>Header</tt>.
 
 @code
 Data
@@ -42,20 +46,27 @@ Data
   X Position
   Y Position
 @endcode
-  Each of the HDF data sets is a 1D array of 32 bit floating point <tt>H5T_NATIVE_FLOAT</tt>
-values.
+  Each of the HDF data sets in the <tt>Data</tt> group is a 1D array of 32 bit
+floating point values with an HDF type of <tt>H5T_NATIVE_FLOAT</tt>.
 
-In addition several data sets are also stored into the HDF5 file including
-and <tt>Index</tt> data set which is a 32 bit integer array of all the slice numbers
-that are stored in the file. This allows for readers to quickly ascertain how many
-slices are in the file without having to interrogate each group in the HDF5 file
-which takes too much time. The starting index value and terminating index value are
-also stored in addition to the interslice resolution value as a 32 bit floating
-point value.
+Inside the <b>Header</b> group are a combination of data sets and more groups. Each
+data set represents the value for a specific key in the header. For the <b>Phase</b>
+key there can be multiple values which is why those get their own group.
+
+In addition to all of the slices of data there are a number of additional data sets
+stored in the HDF5 file.
+@li Index - The list of all the slice values in the file
+@li Manufacturer - The manufacturer of the instrument that aquired the data
+@li ZStartIndex - The starting slice index
+@li ZEndIndex - The ending slice index (Inclusive)
+@li ZResolution - The inter-slice spacing
 
 
+@section ang_parameter_details Input Parameter Details
 
-OIM Data Import Tab
+@image html oimFileImport.png "TSL OIM File Import Tab"
+@image latex oimFileImport.png "TSL OIM File Import Tab" width=6in
+
 1.  Input Directory  Directory where the .ang files are located
 @li a.  Code will determine how many .ang files are present
 @li b.  Currently only .ang files are supported
@@ -77,8 +88,7 @@ OIM Data Import Tab
 @li a.  The files in the list will have a green light if they are present in the directory selected and a red light if they are not present.
 
 
-@image html oimFileImport.png "TSL OIM File Import Tab"
-@image latex oimFileImport.png "TSL OIM File Import Tab" width=6in
+
 
 
  */
