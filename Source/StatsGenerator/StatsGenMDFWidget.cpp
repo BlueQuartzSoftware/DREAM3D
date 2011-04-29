@@ -119,6 +119,7 @@ void StatsGenMDFWidget::on_m_MDFUpdateBtn_clicked()
   QwtArray<double> y;
 
   QwtArray<double> angles;
+  QwtArray<double> axes;
   QwtArray<double> weights;
   QwtArray<double> axis;
 
@@ -133,10 +134,10 @@ void StatsGenMDFWidget::on_m_MDFUpdateBtn_clicked()
   int size = 1000;
 
   if (m_CrystalStructure == AIM::Reconstruction::Cubic) {
-    err = sg.GenCubicMDFPlotData(angles, weights, axis, odf, x, y, size);
+    err = sg.GenCubicMDFPlotData(angles, axes, weights, odf, x, y, size);
   }
   else if (m_CrystalStructure == AIM::Reconstruction::Hexagonal) {
-    err = sg.GenHexMDFPlotData(angles, weights, axis, odf, x, y, size);
+    err = sg.GenHexMDFPlotData(angles, axes, weights, odf, x, y, size);
   }
 
   QwtPlotCurve* curve = m_PlotCurve;

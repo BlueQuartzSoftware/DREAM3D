@@ -988,7 +988,7 @@ class StatsGen
         * @param size The number of points for the Scatter Plot
         */
        template<typename T>
-       int GenCubicMDFPlotData(T angles, T weights, T axis, T odf, T &xval, T &yval, int size)
+       int GenCubicMDFPlotData(T angles, T axes, T weights, T odf, T &xval, T &yval, int size)
        {
          static const size_t eighteenCubed = 5832;
          double totalweight = 0;
@@ -1095,9 +1095,9 @@ class StatsGen
 
 
        template<typename T>
-       int GenHexMDFPlotData(T angles, T weights, T axis, T odf, T &xval, T &yval, int size)
+       int GenHexMDFPlotData(T angles, T axes, T weights, T odf, T &xval, T &yval, int size)
        {
-         static const size_t eighteenCubed = 5832;
+         static const size_t odfsize = 15552;
          double totalweight = 0;
 
          AIMRandomNG rg;
@@ -1146,7 +1146,7 @@ class StatsGen
            choose2 = 0;
 
            totaldensity = 0;
-           for (size_t j = 0; j < eighteenCubed; j++)
+           for (size_t j = 0; j < odfsize; j++)
            {
              density = odf[j];
              totaldensity = totaldensity + density;
