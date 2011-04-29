@@ -37,6 +37,8 @@
 #include <qwt.h>
 #include <qwt_plot.h>
 #include <qwt_plot_curve.h>
+#include <qwt_abstract_scale_draw.h>
+#include <qwt_scale_draw.h>
 
 #include "AIM/Common/Texture.h"
 
@@ -78,7 +80,7 @@ void StatsGenMDFWidget::setupGui()
   m_MDFTableView->setModel(m_MDFTableModel);
   QAbstractItemDelegate* aid = m_MDFTableModel->getItemDelegate();
   m_MDFTableView->setItemDelegate(aid);
-
+  m_PlotCurve = new QwtPlotCurve;
 }
 
 // -----------------------------------------------------------------------------
@@ -89,16 +91,13 @@ void StatsGenMDFWidget::initQwtPlot(QString xAxisName, QString yAxisName, QwtPlo
   plot->setAxisTitle(QwtPlot::xBottom, xAxisName);
   plot->setAxisTitle(QwtPlot::yLeft, yAxisName);
   plot->setCanvasBackground(QColor(Qt::white));
-
-
-#if 0
-  m_grid = new QwtPlotGrid;
-  m_grid->enableXMin(true);
-  m_grid->enableYMin(true);
-  m_grid->setMajPen(QPen(Qt::gray, 0, Qt::SolidLine));
-  m_grid->setMinPen(QPen(Qt::lightGray, 0, Qt::DotLine));
-  m_grid->attach(m_PlotView);
-#endif
+  // These set the plot axis to NOT show anything except the axis labels.
+  plot->axisScaleDraw(QwtPlot::yLeft)->enableComponent(QwtAbstractScaleDraw::Backbone, false);
+  plot->axisScaleDraw(QwtPlot::yLeft)->enableComponent(QwtAbstractScaleDraw::Ticks, false);
+  plot->axisScaleDraw(QwtPlot::yLeft)->enableComponent(QwtAbstractScaleDraw::Labels, false);
+  plot->axisScaleDraw(QwtPlot::xBottom)->enableComponent(QwtAbstractScaleDraw::Backbone, false);
+  plot->axisScaleDraw(QwtPlot::xBottom)->enableComponent(QwtAbstractScaleDraw::Ticks, false);
+  plot->axisScaleDraw(QwtPlot::xBottom)->enableComponent(QwtAbstractScaleDraw::Labels, false);
 }
 
 // -----------------------------------------------------------------------------
@@ -122,10 +121,14 @@ void StatsGenMDFWidget::on_m_MDFUpdateBtn_clicked()
   QwtArray<double> angles;
   QwtArray<double> axes;
   QwtArray<double> weights;
-  QwtArray<double> odf = generateODFData();
+  QwtArray<double> axis;
 
   angles = m_MDFTableModel->getData(SGMDFTableModel::Angle);
   weights = m_MDFTableModel->getData(SGMDFTableModel::Weight);
+  axis = m_MDFTableModel->getData(SGMDFTableModel::Axis);
+
+  // Generate the ODF Data from the current values in the ODFTableModel
+  QwtArray<double> odf = generateODFData();
 
   StatsGen sg;
   int size = 1000;
@@ -137,7 +140,11 @@ void StatsGenMDFWidget::on_m_MDFUpdateBtn_clicked()
     err = sg.GenHexMDFPlotData(angles, axes, weights, odf, x, y, size);
   }
 
-  std::cout << "on_m_MDFUpdateBtn_clicked" << std::endl;
+  QwtPlotCurve* curve = m_PlotCurve;
+  curve->setData(x, y);
+  curve->setStyle(QwtPlotCurve::Lines);
+  curve->attach(m_MDFPlot);
+  m_MDFPlot->replot();
 }
 
 // -----------------------------------------------------------------------------
