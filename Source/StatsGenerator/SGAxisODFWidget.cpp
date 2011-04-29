@@ -93,7 +93,7 @@ int SGAxisODFWidget::readDataFromHDF5(H5ReconStatsReader::Pointer reader,
 int SGAxisODFWidget::writeDataToHDF5(H5ReconStatsWriter::Pointer writer)
 {
   int err = -1;
-#if 0
+
   double totalWeight = 0.0;
 
   QwtArray<double> e1s;
@@ -110,28 +110,18 @@ int SGAxisODFWidget::writeDataToHDF5(H5ReconStatsWriter::Pointer writer)
   weights = m_ODFTableModel->getData(SGODFTableModel::Weight);
   sigmas = m_ODFTableModel->getData(SGODFTableModel::Sigma);
 
-  if (m_CrystalStructure == AIM::Reconstruction::Cubic)
-  {
-    Texture::calculateCubicODFData(e1s, e2s, e3s, weights, sigmas, true, odf, totalWeight);
-  }
-  else if (m_CrystalStructure == AIM::Reconstruction::Hexagonal)
-  {
-    Texture::calculateHexODFData(e1s, e2s, e3s, weights, sigmas, true, odf, totalWeight);
-  }
-  else if (m_CrystalStructure == AIM::Reconstruction::AxisOrthoRhombic)
-  {
-    Texture::calculateOrthoRhombicODFData(e1s, e2s, e3s, weights, sigmas, true, odf, totalWeight);
-  }
+  Texture::calculateOrthoRhombicODFData(e1s, e2s, e3s, weights, sigmas, true, odf, totalWeight);
+
   if (odf.size() > 0)
   {
     double* odfPtr = &(odf.front());
     err = -1;
     if (odfPtr != NULL)
     {
-      err = writer->writeODFData(m_PhaseIndex, m_CrystalStructure, odfPtr);
+      err = writer->writeAxisOrientationData(m_PhaseIndex, m_CrystalStructure, odfPtr);
     }
   }
-#endif
+
   return err;
 }
 
