@@ -1,6 +1,6 @@
 /*!
 
-@page SURFACE_MESHING Surface Meshing
+@page surfacemeshing Surface Meshing
 
  1. VTK File  name and location of the .vtk file that will be used in the surface meshing
 @li a.  This can be any of the volumes created in the reconstruction tab or the

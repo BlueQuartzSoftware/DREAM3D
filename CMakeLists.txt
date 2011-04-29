@@ -261,15 +261,22 @@ if(AIM_BUILD_CMU)
 endif()
 
 # Should we build the HTML documentation
-option(AIM_BUILD_API_DOCS "Use Doxygen to create the HTML based API documentation" OFF)
-if(AIM_BUILD_API_DOCS)
+option(AIM_BUILD_DOCS "Use Doxygen to create the HTML based API documentation" OFF)
+if(AIM_BUILD_DOCS)
   FIND_PACKAGE(Doxygen)
   if (NOT DOXYGEN_FOUND)
     message(FATAL_ERROR "Doxygen is needed to build the documentation. Please install it correctly")
   endif()
-  configure_file(${PROJECT_RESOURCES_DIR}/AIM.doxyfile.in 
+  # Add a target that builds just the High Level User Manuals/Tutorial type documentation
+  add_subdirectory(${PROJECT_SOURCE_DIR}/Documentation ${PROJECT_BINARY_DIR}/Documentation)
+  
+  option(AIM_BUILD_API_DOCS "Use Doxygen to generate the HTML API documentation" ON)
+  if (AIM_BUILD_API_DOCS)
+      configure_file(${PROJECT_RESOURCES_DIR}/AIM.doxyfile.in 
                  ${PROJECT_BINARY_DIR}/Doxyfile  @ONLY IMMEDIATE)
-  add_custom_target(docs COMMAND ${DOXYGEN_EXECUTABLE} ${PROJECT_BINARY_DIR}/Doxyfile)
+    add_custom_target(apidocs COMMAND ${DOXYGEN_EXECUTABLE} ${PROJECT_BINARY_DIR}/Doxyfile)
+  endif()
+  
 endif()
 
 include(${PROJECT_RESOURCES_DIR}/CPack/PackageProject.cmake)
