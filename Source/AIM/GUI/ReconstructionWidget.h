@@ -79,22 +79,22 @@ class ReconstructionWidget : public AIMPluginFrame, private Ui::ReconstructionWi
   protected slots:
 
     /* Reconstruction Slots */
-    void on_rec_OIMH5Btn_clicked();
-    void on_rec_OutputDirBtn_clicked();
-    void on_rec_alreadyFormed_stateChanged(int);
-    void on_rec_GoBtn_clicked();
-    void on_rec_SaveSettingsBtn_clicked();
-    void on_rec_LoadSettingsBtn_clicked();
+    void on_m_OIMH5Btn_clicked();
+    void on_m_OutputDirBtn_clicked();
+    void on_m_AlreadyFormed_stateChanged(int);
+    void on_m_GoBtn_clicked();
+    void on_m_SaveSettingsBtn_clicked();
+    void on_m_LoadSettingsBtn_clicked();
 
-    void on_rec_H5InputFile_textChanged(const QString &text);
+    void on_m_H5InputFile_textChanged(const QString &text);
 
-    void on_rec_OutputDir_textChanged(const QString &text);
-    void on_outputFilePrefix_textChanged(const QString &text);
+    void on_m_OutputDir_textChanged(const QString &text);
+    void on_m_OutputFilePrefix_textChanged(const QString &text);
 
     /**
      *
      */
-    void rec_SetSliceInfo();
+    void m_SetSliceInfo();
 
     private slots:
       // slots for our worker thread to communicate

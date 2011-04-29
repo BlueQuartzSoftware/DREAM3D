@@ -33,14 +33,14 @@
       </widget>
      </item>
      <item row="0" column="2">
-      <widget class="QLineEdit" name="vm_NodesFile">
+      <widget class="QLineEdit" name="m_NodesFile">
        <property name="text">
         <string/>
        </property>
       </widget>
      </item>
      <item row="0" column="3">
-      <widget class="QPushButton" name="vm_NodesFileBtn">
+      <widget class="QPushButton" name="m_NodesFileBtn">
        <property name="text">
         <string>Select</string>
        </property>
@@ -54,21 +54,21 @@
       </widget>
      </item>
      <item row="1" column="2">
-      <widget class="QLineEdit" name="vm_TrianglesFile">
+      <widget class="QLineEdit" name="m_TrianglesFile">
        <property name="text">
         <string/>
        </property>
       </widget>
      </item>
      <item row="1" column="3">
-      <widget class="QPushButton" name="vm_TrianglesFileBtn">
+      <widget class="QPushButton" name="m_TrianglesFileBtn">
        <property name="text">
         <string>Select</string>
        </property>
       </widget>
      </item>
      <item row="0" column="0">
-      <widget class="QLabel" name="vm_NodesFileIcon">
+      <widget class="QLabel" name="m_NodesFileIcon">
        <property name="text">
         <string/>
        </property>
@@ -78,7 +78,7 @@
       </widget>
      </item>
      <item row="1" column="0">
-      <widget class="QLabel" name="vm_TrianglesFileIcon">
+      <widget class="QLabel" name="m_TrianglesFileIcon">
        <property name="text">
         <string/>
        </property>
@@ -113,7 +113,7 @@
       </widget>
      </item>
      <item row="0" column="1">
-      <widget class="QDoubleSpinBox" name="vm_XDim">
+      <widget class="QDoubleSpinBox" name="m_XDim">
        <property name="maximum">
         <double>1000000.000000000000000</double>
        </property>
@@ -123,7 +123,7 @@
       </widget>
      </item>
      <item row="0" column="3">
-      <widget class="QDoubleSpinBox" name="vm_YDim">
+      <widget class="QDoubleSpinBox" name="m_YDim">
        <property name="maximum">
         <double>1000000.000000000000000</double>
        </property>
@@ -133,7 +133,7 @@
       </widget>
      </item>
      <item row="0" column="5">
-      <widget class="QDoubleSpinBox" name="vm_ZDim">
+      <widget class="QDoubleSpinBox" name="m_ZDim">
        <property name="maximum">
         <double>1000000.000000000000000</double>
        </property>
@@ -168,21 +168,21 @@
       </widget>
      </item>
      <item row="0" column="5">
-      <widget class="QDoubleSpinBox" name="vm_ZRes">
+      <widget class="QDoubleSpinBox" name="m_ZRes">
        <property name="value">
         <double>0.250000000000000</double>
        </property>
       </widget>
      </item>
      <item row="0" column="3">
-      <widget class="QDoubleSpinBox" name="vm_YRes">
+      <widget class="QDoubleSpinBox" name="m_YRes">
        <property name="value">
         <double>0.250000000000000</double>
        </property>
       </widget>
      </item>
      <item row="0" column="1">
-      <widget class="QDoubleSpinBox" name="vm_XRes">
+      <widget class="QDoubleSpinBox" name="m_XRes">
        <property name="value">
         <double>0.250000000000000</double>
        </property>
@@ -200,7 +200,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QSpinBox" name="vm_NumGrains">
+      <widget class="QSpinBox" name="m_NumGrains">
        <property name="minimum">
         <number>1</number>
        </property>
@@ -253,10 +253,10 @@
       </widget>
      </item>
      <item row="0" column="1">
-      <widget class="QLineEdit" name="vm_OutputDir"/>
+      <widget class="QLineEdit" name="m_OutputDir"/>
      </item>
      <item row="0" column="2">
-      <widget class="QPushButton" name="vm_OutputDirBtn">
+      <widget class="QPushButton" name="m_OutputDirBtn">
        <property name="text">
         <string>Select</string>
        </property>
@@ -270,7 +270,7 @@
       </widget>
      </item>
      <item row="1" column="1">
-      <widget class="QLineEdit" name="outputFilePrefix">
+      <widget class="QLineEdit" name="m_OutputFilePrefix">
        <property name="text">
         <string>VolumeMesh_</string>
        </property>
@@ -299,7 +299,7 @@
         <number>4</number>
        </property>
        <item row="0" column="0">
-        <widget class="QLabel" name="vm_MeshFileIcon">
+        <widget class="QLabel" name="m_MeshFileIcon">
          <property name="text">
           <string/>
          </property>
@@ -309,14 +309,14 @@
         </widget>
        </item>
        <item row="0" column="1">
-        <widget class="QLabel" name="vm_MeshFile">
+        <widget class="QLabel" name="m_MeshFile">
          <property name="text">
           <string>meshFile</string>
          </property>
         </widget>
        </item>
        <item row="1" column="0">
-        <widget class="QLabel" name="vm_MeshFile2Icon">
+        <widget class="QLabel" name="m_MeshFile2Icon">
          <property name="text">
           <string/>
          </property>
@@ -326,7 +326,7 @@
         </widget>
        </item>
        <item row="1" column="1">
-        <widget class="QLabel" name="vm_MeshFile2">
+        <widget class="QLabel" name="m_MeshFile2">
          <property name="text">
           <string>meshFile2</string>
          </property>
@@ -343,7 +343,7 @@
         <number>4</number>
        </property>
        <item row="0" column="0">
-        <widget class="QLabel" name="vm_ElementQualityFileIcon">
+        <widget class="QLabel" name="m_ElementQualityFileIcon">
          <property name="text">
           <string/>
          </property>
@@ -353,14 +353,14 @@
         </widget>
        </item>
        <item row="0" column="1">
-        <widget class="QLabel" name="vm_ElementQualityFile">
+        <widget class="QLabel" name="m_ElementQualityFile">
          <property name="text">
           <string>ElementQuality File</string>
          </property>
         </widget>
        </item>
        <item row="1" column="0">
-        <widget class="QLabel" name="vm_VoxelsFileIcon">
+        <widget class="QLabel" name="m_VoxelsFileIcon">
          <property name="text">
           <string/>
          </property>
@@ -370,7 +370,7 @@
         </widget>
        </item>
        <item row="1" column="1">
-        <widget class="QLabel" name="vm_VoxelsFile">
+        <widget class="QLabel" name="m_VoxelsFile">
          <property name="text">
           <string>Voxels File</string>
          </property>
@@ -396,14 +396,14 @@
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_13">
      <item>
-      <widget class="QProgressBar" name="vm_progressBar">
+      <widget class="QProgressBar" name="m_progressBar">
        <property name="value">
         <number>0</number>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="vm_GoBtn">
+      <widget class="QPushButton" name="m_GoBtn">
        <property name="text">
         <string>Go</string>
        </property>

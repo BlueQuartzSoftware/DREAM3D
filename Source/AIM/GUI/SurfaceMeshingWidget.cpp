@@ -91,12 +91,12 @@ void SurfaceMeshingWidget::setWidgetListEnabled(bool b)
 void SurfaceMeshingWidget::writeSettings(QSettings &prefs)
 {
   prefs.beginGroup("SurfaceMesh");
-  WRITE_STRING_SETTING(prefs, sm_InputFile);
-  WRITE_STRING_SETTING(prefs, sm_OutputDir);
-  WRITE_BOOL_SETTING(prefs, sm_SmoothMesh, sm_SmoothMesh->isChecked() );
-  WRITE_BOOL_SETTING(prefs, sm_LockQuadPoints, sm_LockQuadPoints->isChecked() );
-  WRITE_SETTING(prefs, sm_SmoothIterations );
-  WRITE_SETTING(prefs, sm_WriteOutputFileIncrement );
+  WRITE_STRING_SETTING(prefs, m_, InputFile);
+  WRITE_STRING_SETTING(prefs, m_, OutputDir);
+  WRITE_BOOL_SETTING(prefs, m_, SmoothMesh, m_SmoothMesh->isChecked() );
+  WRITE_BOOL_SETTING(prefs, m_, LockQuadPoints, m_LockQuadPoints->isChecked() );
+  WRITE_SETTING(prefs, m_, SmoothIterations );
+  WRITE_SETTING(prefs, m_, WriteOutputFileIncrement );
   prefs.endGroup();
 }
 
@@ -111,13 +111,13 @@ void SurfaceMeshingWidget::readSettings(QSettings &prefs)
   //double d;
 
   prefs.beginGroup("SurfaceMesh");
-  READ_FILEPATH_SETTING(prefs, sm_InputFile, "");
-  READ_FILEPATH_SETTING(prefs, sm_OutputDir, "");
+  READ_FILEPATH_SETTING(prefs, m_, InputFile, "");
+  READ_FILEPATH_SETTING(prefs, m_, OutputDir, "");
 
-  READ_BOOL_SETTING(prefs, sm_, SmoothMesh, false);
-  READ_BOOL_SETTING(prefs, sm_, LockQuadPoints, false);
-  READ_SETTING(prefs, sm_SmoothIterations, ok, i, 1 , Int);
-  READ_SETTING(prefs, sm_WriteOutputFileIncrement, ok, i, 10 , Int);
+  READ_BOOL_SETTING(prefs, m_, SmoothMesh, false);
+  READ_BOOL_SETTING(prefs, m_, LockQuadPoints, false);
+  READ_SETTING(prefs, m_, SmoothIterations, ok, i, 1 , Int);
+  READ_SETTING(prefs, m_, WriteOutputFileIncrement, ok, i, 10 , Int);
   prefs.endGroup();
 }
 
@@ -128,25 +128,25 @@ void SurfaceMeshingWidget::readSettings(QSettings &prefs)
 void SurfaceMeshingWidget::setupGui()
 {
 
-  if (NULL == sm_InputFile->completer()){
+  if (NULL == m_InputFile->completer()){
     QR3DFileCompleter* com = new QR3DFileCompleter(this, false);
-    sm_InputFile->setCompleter(com);
+    m_InputFile->setCompleter(com);
     QObject::connect( com, SIGNAL(activated(const QString &)),
-             this, SLOT(on_sm_InputFile_textChanged(const QString &)));
+             this, SLOT(on_m_InputFile_textChanged(const QString &)));
   }
 
-  if (NULL == sm_OutputDir->completer()) {
+  if (NULL == m_OutputDir->completer()) {
     QR3DFileCompleter* com4 = new QR3DFileCompleter(this, true);
-    sm_OutputDir->setCompleter(com4);
+    m_OutputDir->setCompleter(com4);
     QObject::connect( com4, SIGNAL(activated(const QString &)),
-             this, SLOT(on_sm_OutputDir_textChanged(const QString &)));
+             this, SLOT(on_m_OutputDir_textChanged(const QString &)));
   }
 
-  sm_Message->setText("Any existing output files will be over written with new versions during the operation.");
-  m_WidgetList << sm_InputFile;
-  m_WidgetList << sm_InputFileBtn << sm_OutputDir << sm_OutputDirBtn;
-  m_WidgetList << sm_Message << sm_LockQuadPoints << sm_SmoothIterations << sm_SmoothMesh;
-  m_WidgetList << sm_WriteOutputFileIncrement;
+  m_Message->setText("Any existing output files will be over written with new versions during the operation.");
+  m_WidgetList << m_InputFile;
+  m_WidgetList << m_InputFileBtn << m_OutputDir << m_OutputDirBtn;
+  m_WidgetList << m_Message << m_LockQuadPoints << m_SmoothIterations << m_SmoothMesh;
+  m_WidgetList << m_WriteOutputFileIncrement;
 }
 
 // -----------------------------------------------------------------------------
@@ -155,25 +155,25 @@ void SurfaceMeshingWidget::setupGui()
 void SurfaceMeshingWidget::checkIOFiles()
 {
 
-  if ( verifyPathExists(sm_InputFile->text(), sm_InputFile) == true )
+  if ( verifyPathExists(m_InputFile->text(), m_InputFile) == true )
   {
-    QFileInfo fi (sm_InputFile->text() );
+    QFileInfo fi (m_InputFile->text() );
     QString ext = fi.suffix();
   }
-  CHECK_QLINEEDIT_FILE_EXISTS(sm_InputFile)
+  CHECK_QLINEEDIT_FILE_EXISTS(m_InputFile)
 
-  verifyPathExists(sm_OutputDir->text(), sm_OutputDir);
+  verifyPathExists(m_OutputDir->text(), m_OutputDir);
 
-  CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::SurfaceMeshing, sm_, NodesFile)
-  CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::SurfaceMeshing, sm_, TrianglesFile)
-  CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::SurfaceMeshing, sm_, NodesRawFile)
+  CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::SurfaceMeshing, m_, NodesFile)
+  CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::SurfaceMeshing, m_, TrianglesFile)
+  CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::SurfaceMeshing, m_, NodesRawFile)
 }
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SurfaceMeshingWidget::on_sm_InputFileBtn_clicked()
+void SurfaceMeshingWidget::on_m_InputFileBtn_clicked()
 {
   QString file = QFileDialog::getOpenFileName(this, tr("Select Input File"),
                                                  m_OpenDialogLastDirectory,
@@ -181,24 +181,24 @@ void SurfaceMeshingWidget::on_sm_InputFileBtn_clicked()
   if ( true == file.isEmpty() ){return;  }
   QFileInfo fi (file);
   QString ext = fi.suffix();
-  sm_InputFile->setText(fi.absoluteFilePath());
+  m_InputFile->setText(fi.absoluteFilePath());
 }
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SurfaceMeshingWidget::on_sm_OutputDirBtn_clicked()
+void SurfaceMeshingWidget::on_m_OutputDirBtn_clicked()
 {
   QString outputFile = this->m_OpenDialogLastDirectory + QDir::separator();
   outputFile = QFileDialog::getExistingDirectory(this, tr("Select Surface Meshing Output Directory"), outputFile);
   if (!outputFile.isNull())
   {
-    this->sm_OutputDir->setText(outputFile);
-    if (verifyPathExists(outputFile, sm_OutputDir) == true )
+    this->m_OutputDir->setText(outputFile);
+    if (verifyPathExists(outputFile, m_OutputDir) == true )
     {
       checkIOFiles();
-      sm_OutputDir->setText(outputFile);
+      m_OutputDir->setText(outputFile);
     }
   }
 }
@@ -206,7 +206,7 @@ void SurfaceMeshingWidget::on_sm_OutputDirBtn_clicked()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SurfaceMeshingWidget::on_sm_InputFile_textChanged(const QString & text)
+void SurfaceMeshingWidget::on_m_InputFile_textChanged(const QString & text)
 {
   checkIOFiles();
 }
@@ -214,7 +214,7 @@ void SurfaceMeshingWidget::on_sm_InputFile_textChanged(const QString & text)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SurfaceMeshingWidget::on_sm_OutputDir_textChanged(const QString & text)
+void SurfaceMeshingWidget::on_m_OutputDir_textChanged(const QString & text)
 {
   checkIOFiles();
 }
@@ -222,9 +222,9 @@ void SurfaceMeshingWidget::on_sm_OutputDir_textChanged(const QString & text)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SurfaceMeshingWidget::on_sm_GoBtn_clicked()
+void SurfaceMeshingWidget::on_m_GoBtn_clicked()
 {
-  if (sm_GoBtn->text().compare("Cancel") == 0)
+  if (m_GoBtn->text().compare("Cancel") == 0)
   {
     if(m_SurfaceMesh.get() != NULL)
     {
@@ -234,8 +234,8 @@ void SurfaceMeshingWidget::on_sm_GoBtn_clicked()
     return;
   }
 
-  SANITY_CHECK_INPUT(sm_, InputFile)
-  SANITY_CHECK_INPUT(sm_, OutputDir)
+  SANITY_CHECK_INPUT(m_, InputFile)
+  SANITY_CHECK_INPUT(m_, OutputDir)
 
   if (m_WorkerThread != NULL)
   {
@@ -250,19 +250,19 @@ void SurfaceMeshingWidget::on_sm_GoBtn_clicked()
   // Move the Reconstruction object into the thread that we just created.
   m_SurfaceMesh->moveToThread(m_WorkerThread);
 
-  m_SurfaceMesh->setInputFile(sm_InputFile->text().toStdString() );
+  m_SurfaceMesh->setInputFile(m_InputFile->text().toStdString() );
 
-  QString od = sm_OutputDir->text();
+  QString od = m_OutputDir->text();
   if (od.endsWith('/') == false && od.endsWith('\\') == false)
   {
     od += QDir::separator();
   }
 
   m_SurfaceMesh->setOutputDirectory(od.toStdString());
-  m_SurfaceMesh->setSmoothMesh(sm_SmoothMesh->isChecked());
-  m_SurfaceMesh->setSmoothIterations(sm_SmoothIterations->value());
-  m_SurfaceMesh->setSmoothFileOutputIncrement(sm_WriteOutputFileIncrement->value());
-  m_SurfaceMesh->setSmoothLockQuadPoints(sm_LockQuadPoints->isChecked());
+  m_SurfaceMesh->setSmoothMesh(m_SmoothMesh->isChecked());
+  m_SurfaceMesh->setSmoothIterations(m_SmoothIterations->value());
+  m_SurfaceMesh->setSmoothFileOutputIncrement(m_WriteOutputFileIncrement->value());
+  m_SurfaceMesh->setSmoothLockQuadPoints(m_LockQuadPoints->isChecked());
 
 
   /* Connect the signal 'started()' from the QThread to the 'run' slot of the
@@ -298,7 +298,7 @@ void SurfaceMeshingWidget::on_sm_GoBtn_clicked()
   setWidgetListEnabled(false);
   emit processStarted();
   m_WorkerThread->start();
-  sm_GoBtn->setText("Cancel");
+  m_GoBtn->setText("Cancel");
 }
 
 // -----------------------------------------------------------------------------
@@ -307,9 +307,9 @@ void SurfaceMeshingWidget::on_sm_GoBtn_clicked()
 void SurfaceMeshingWidget::threadFinished()
 {
  // std::cout << "SurfaceMeshWidget::surface_meshing()" << std::endl;
-  sm_GoBtn->setText("Go");
+  m_GoBtn->setText("Go");
   setWidgetListEnabled(true);
-  this->sm_progressBar->setValue(0);
+  this->m_progressBar->setValue(0);
   emit processEnded();
   checkIOFiles();
 }
@@ -319,7 +319,7 @@ void SurfaceMeshingWidget::threadFinished()
 // -----------------------------------------------------------------------------
 void SurfaceMeshingWidget::threadProgressed(int value)
 {
-  sm_progressBar->setValue(value);
+  m_progressBar->setValue(value);
 }
 
 
@@ -337,7 +337,7 @@ void SurfaceMeshingWidget::threadHasMessage(QString message)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SurfaceMeshingWidget::on_outputFilePrefix_textChanged(const QString &text)
+void SurfaceMeshingWidget::on_m_OutputFilePrefix_textChanged(const QString &text)
 {
   checkIOFiles();
 }

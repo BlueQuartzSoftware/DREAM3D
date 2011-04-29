@@ -54,10 +54,10 @@
          </widget>
         </item>
         <item row="1" column="2">
-         <widget class="QLineEdit" name="rec_H5InputFile"/>
+         <widget class="QLineEdit" name="m_H5InputFile"/>
         </item>
         <item row="1" column="3">
-         <widget class="QPushButton" name="rec_OIMH5Btn">
+         <widget class="QPushButton" name="m_OIMH5Btn">
           <property name="text">
            <string>Select</string>
           </property>
@@ -82,14 +82,14 @@
          </widget>
         </item>
         <item row="0" column="1">
-         <widget class="QLabel" name="rec_ZMin">
+         <widget class="QLabel" name="m_ZMin">
           <property name="text">
            <string>0</string>
           </property>
          </widget>
         </item>
         <item row="1" column="1">
-         <widget class="QSpinBox" name="rec_ZStartIndex">
+         <widget class="QSpinBox" name="m_ZStartIndex">
           <property name="minimumSize">
            <size>
             <width>75</width>
@@ -132,14 +132,14 @@
          </widget>
         </item>
         <item row="0" column="3">
-         <widget class="QLabel" name="rec_ZMax">
+         <widget class="QLabel" name="m_ZMax">
           <property name="text">
            <string>100</string>
           </property>
          </widget>
         </item>
         <item row="1" column="3">
-         <widget class="QSpinBox" name="rec_ZEndIndex">
+         <widget class="QSpinBox" name="m_ZEndIndex">
           <property name="minimumSize">
            <size>
             <width>75</width>
@@ -155,14 +155,14 @@
          </widget>
         </item>
         <item row="0" column="4">
-         <widget class="QLabel" name="rec_ZMax_2">
+         <widget class="QLabel" name="m_ZMax_2">
           <property name="text">
            <string>Z Resolution</string>
           </property>
          </widget>
         </item>
         <item row="0" column="5">
-         <widget class="QLabel" name="rec_ZRes">
+         <widget class="QLabel" name="m_ZRes">
           <property name="text">
            <string>0.0</string>
           </property>
@@ -214,28 +214,28 @@
            <number>10</number>
           </property>
           <item row="2" column="0">
-           <widget class="QCheckBox" name="rec_mergeColonies">
+           <widget class="QCheckBox" name="m_MergeColonies">
             <property name="text">
              <string>Merge Colonies</string>
             </property>
            </widget>
           </item>
           <item row="3" column="0">
-           <widget class="QCheckBox" name="rec_alreadyFormed">
+           <widget class="QCheckBox" name="m_AlreadyFormed">
             <property name="text">
              <string>Grains Formed</string>
             </property>
            </widget>
           </item>
           <item row="4" column="0">
-           <widget class="QCheckBox" name="rec_mergeTwins">
+           <widget class="QCheckBox" name="m_MergeTwins">
             <property name="text">
              <string>Merge Twins</string>
             </property>
            </widget>
           </item>
           <item row="5" column="0">
-           <widget class="QCheckBox" name="rec_fillinSample">
+           <widget class="QCheckBox" name="m_FillinSample">
             <property name="text">
              <string>Rectangularized Sample</string>
             </property>
@@ -249,7 +249,7 @@
            </widget>
           </item>
           <item row="6" column="1">
-           <widget class="QComboBox" name="rec_AlignMeth">
+           <widget class="QComboBox" name="m_AlignMeth">
             <item>
              <property name="text">
               <string>OuterBoundary</string>
@@ -275,7 +275,7 @@
            </widget>
           </item>
           <item row="7" column="1">
-           <widget class="QComboBox" name="rec_Orientation">
+           <widget class="QComboBox" name="m_Orientation">
             <property name="currentIndex">
              <number>4</number>
             </property>
@@ -339,7 +339,7 @@
            <number>10</number>
           </property>
           <item row="2" column="1">
-           <widget class="QDoubleSpinBox" name="rec_MisOrientationTolerance">
+           <widget class="QDoubleSpinBox" name="m_MisOrientationTolerance">
             <property name="minimumSize">
              <size>
               <width>120</width>
@@ -364,7 +364,7 @@
            </widget>
           </item>
           <item row="4" column="1">
-           <widget class="QDoubleSpinBox" name="rec_MinConfidence">
+           <widget class="QDoubleSpinBox" name="m_MinConfidence">
             <property name="decimals">
              <number>4</number>
             </property>
@@ -380,14 +380,14 @@
            </widget>
           </item>
           <item row="5" column="1">
-           <widget class="QDoubleSpinBox" name="rec_DownSampleFactor">
+           <widget class="QDoubleSpinBox" name="m_DownSampleFactor">
             <property name="value">
              <double>1.000000000000000</double>
             </property>
            </widget>
           </item>
           <item row="6" column="1">
-           <widget class="QDoubleSpinBox" name="rec_BinStepSize">
+           <widget class="QDoubleSpinBox" name="m_BinStepSize">
             <property name="value">
              <double>1.000000000000000</double>
             </property>
@@ -436,7 +436,7 @@
            </widget>
           </item>
           <item row="3" column="1">
-           <widget class="QDoubleSpinBox" name="rec_MinImageQuality">
+           <widget class="QDoubleSpinBox" name="m_MinImageQuality">
             <property name="maximum">
              <double>5000.000000000000000</double>
             </property>
@@ -449,7 +449,7 @@
            </widget>
           </item>
           <item row="1" column="1">
-           <widget class="QSpinBox" name="rec_MinAllowedGrainSize">
+           <widget class="QSpinBox" name="m_MinAllowedGrainSize">
             <property name="minimum">
              <number>1</number>
             </property>
@@ -499,10 +499,10 @@
          </widget>
         </item>
         <item row="0" column="1">
-         <widget class="QLineEdit" name="rec_OutputDir"/>
+         <widget class="QLineEdit" name="m_OutputDir"/>
         </item>
         <item row="0" column="2">
-         <widget class="QPushButton" name="rec_OutputDirBtn">
+         <widget class="QPushButton" name="m_OutputDirBtn">
           <property name="text">
            <string>Select</string>
           </property>
@@ -516,7 +516,7 @@
          </widget>
         </item>
         <item row="1" column="1">
-         <widget class="QLineEdit" name="outputFilePrefix">
+         <widget class="QLineEdit" name="m_OutputFilePrefix">
           <property name="text">
            <string>Reconstruction_</string>
           </property>
@@ -557,7 +557,7 @@
            <number>1</number>
           </property>
           <item row="1" column="0">
-           <widget class="QLabel" name="rec_AlignmentFileIcon">
+           <widget class="QLabel" name="m_AlignmentFileIcon">
             <property name="text">
              <string/>
             </property>
@@ -567,14 +567,14 @@
            </widget>
           </item>
           <item row="1" column="1">
-           <widget class="QLabel" name="rec_AlignmentFile">
+           <widget class="QLabel" name="m_AlignmentFile">
             <property name="text">
              <string>Alignment File</string>
             </property>
            </widget>
           </item>
           <item row="2" column="0">
-           <widget class="QLabel" name="rec_GrainDataFileIcon">
+           <widget class="QLabel" name="m_GrainDataFileIcon">
             <property name="text">
              <string/>
             </property>
@@ -584,14 +584,14 @@
            </widget>
           </item>
           <item row="2" column="1">
-           <widget class="QLabel" name="rec_GrainDataFile">
+           <widget class="QLabel" name="m_GrainDataFile">
             <property name="text">
              <string>Grain Data File</string>
             </property>
            </widget>
           </item>
           <item row="4" column="0">
-           <widget class="QLabel" name="rec_H5StatisticsFileIcon">
+           <widget class="QLabel" name="m_H5StatisticsFileIcon">
             <property name="text">
              <string/>
             </property>
@@ -601,7 +601,7 @@
            </widget>
           </item>
           <item row="4" column="1">
-           <widget class="QLabel" name="rec_H5StatisticsFile">
+           <widget class="QLabel" name="m_H5StatisticsFile">
             <property name="text">
              <string>HDF5 Statistics File</string>
             </property>
@@ -627,7 +627,7 @@
            <number>1</number>
           </property>
           <item row="1" column="0">
-           <widget class="QLabel" name="rec_VisualizationVizFileIcon">
+           <widget class="QLabel" name="m_VisualizationVizFileIcon">
             <property name="text">
              <string/>
             </property>
@@ -637,7 +637,7 @@
            </widget>
           </item>
           <item row="2" column="0">
-           <widget class="QLabel" name="rec_IPFVizFileIcon">
+           <widget class="QLabel" name="m_IPFVizFileIcon">
             <property name="text">
              <string/>
             </property>
@@ -647,7 +647,7 @@
            </widget>
           </item>
           <item row="2" column="1">
-           <widget class="QCheckBox" name="rec_IPFVizFile">
+           <widget class="QCheckBox" name="m_IPFVizFile">
             <property name="text">
              <string>Inverse Pole Figure</string>
             </property>
@@ -657,7 +657,7 @@
            </widget>
           </item>
           <item row="3" column="0">
-           <widget class="QLabel" name="rec_DisorientationVizFileIcon">
+           <widget class="QLabel" name="m_DisorientationVizFileIcon">
             <property name="text">
              <string/>
             </property>
@@ -667,7 +667,7 @@
            </widget>
           </item>
           <item row="3" column="1">
-           <widget class="QCheckBox" name="rec_DisorientationVizFile">
+           <widget class="QCheckBox" name="m_DisorientationVizFile">
             <property name="text">
              <string>Disorientation</string>
             </property>
@@ -677,7 +677,7 @@
            </widget>
           </item>
           <item row="4" column="0">
-           <widget class="QLabel" name="rec_ImageQualityVizFileIcon">
+           <widget class="QLabel" name="m_ImageQualityVizFileIcon">
             <property name="text">
              <string/>
             </property>
@@ -687,7 +687,7 @@
            </widget>
           </item>
           <item row="4" column="1">
-           <widget class="QCheckBox" name="rec_ImageQualityVizFile">
+           <widget class="QCheckBox" name="m_ImageQualityVizFile">
             <property name="text">
              <string>Image Quality</string>
             </property>
@@ -697,7 +697,7 @@
            </widget>
           </item>
           <item row="5" column="0">
-           <widget class="QLabel" name="rec_SchmidFactorVizFileIcon">
+           <widget class="QLabel" name="m_SchmidFactorVizFileIcon">
             <property name="text">
              <string/>
             </property>
@@ -707,7 +707,7 @@
            </widget>
           </item>
           <item row="5" column="1">
-           <widget class="QCheckBox" name="rec_SchmidFactorVizFile">
+           <widget class="QCheckBox" name="m_SchmidFactorVizFile">
             <property name="text">
              <string>Schmid Factor</string>
             </property>
@@ -717,7 +717,7 @@
            </widget>
           </item>
           <item row="1" column="1">
-           <widget class="QCheckBox" name="rec_VisualizationVizFile">
+           <widget class="QCheckBox" name="m_VisualizationVizFile">
             <property name="text">
              <string>VTK Visualization File</string>
             </property>
@@ -727,7 +727,7 @@
            </widget>
           </item>
           <item row="7" column="1">
-           <widget class="QCheckBox" name="rec_HDF5GrainFile">
+           <widget class="QCheckBox" name="m_HDF5GrainFile">
             <property name="text">
              <string>HDF5 Grain File</string>
             </property>
@@ -737,7 +737,7 @@
            </widget>
           </item>
           <item row="7" column="0">
-           <widget class="QLabel" name="rec_HDF5GrainFileIcon">
+           <widget class="QLabel" name="m_HDF5GrainFileIcon">
             <property name="text">
              <string/>
             </property>
@@ -747,7 +747,7 @@
            </widget>
           </item>
           <item row="6" column="1">
-           <widget class="QCheckBox" name="rec_DownSampledVizFile">
+           <widget class="QCheckBox" name="m_DownSampledVizFile">
             <property name="text">
              <string>Downsampled File</string>
             </property>
@@ -757,7 +757,7 @@
            </widget>
           </item>
           <item row="6" column="0">
-           <widget class="QLabel" name="rec_DownSampledVizFileIcon">
+           <widget class="QLabel" name="m_DownSampledVizFileIcon">
             <property name="text">
              <string/>
             </property>
@@ -801,7 +801,7 @@
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_16">
      <item>
-      <widget class="QPushButton" name="rec_LoadSettingsBtn">
+      <widget class="QPushButton" name="m_LoadSettingsBtn">
        <property name="text">
         <string>Load Preset ...</string>
        </property>
@@ -824,7 +824,7 @@
       </spacer>
      </item>
      <item>
-      <widget class="QPushButton" name="rec_SaveSettingsBtn">
+      <widget class="QPushButton" name="m_SaveSettingsBtn">
        <property name="text">
         <string>Save Preset ...</string>
        </property>
@@ -855,7 +855,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="rec_GoBtn">
+      <widget class="QPushButton" name="m_GoBtn">
        <property name="text">
         <string>Go</string>
        </property>
