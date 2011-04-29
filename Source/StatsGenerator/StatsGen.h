@@ -1029,6 +1029,10 @@ class StatsGen
 
          xval.resize(13);
          yval.resize(13);
+		 for(int i=0;i<13;i++)
+		 {
+			yval[i] = 0;
+		 }
 
          for (int i = 0; i < size; i++)
          {
@@ -1142,6 +1146,10 @@ class StatsGen
 
          xval.resize(20);
          yval.resize(20);
+		 for(int i=0;i<20;i++)
+		 {
+			yval[i] = 0;
+		 }
 
          for (int i = 0; i < size; i++)
          {
