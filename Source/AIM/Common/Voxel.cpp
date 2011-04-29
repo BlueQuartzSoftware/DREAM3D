@@ -66,7 +66,6 @@ unassigned(0)
 // -----------------------------------------------------------------------------
 Voxel::~Voxel()
 {
-  std::cout << "~Voxel()" << std::endl;
 #if 0
   if (NULL != grainlist) { delete grainlist; grainlist = NULL;}
   if (NULL != ellipfunclist) { delete ellipfunclist; ellipfunclist = NULL;}
