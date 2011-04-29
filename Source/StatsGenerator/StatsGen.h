@@ -253,7 +253,7 @@ class StatsGen
          double g[3][3];
          double x, y, z;
          double xpf, ypf;
-         double xpfa, ypfa;
+      //   double xpfa, ypfa;
          double totaldensity;
          double hmag;
          double angle;
@@ -476,7 +476,7 @@ class StatsGen
          double g[3][3];
          double x, y, z;
          double xpf, ypf;
-         double xpfa, ypfa;
+   //      double xpfa, ypfa;
          double totaldensity;
          double hmag;
          double angle;
@@ -651,7 +651,7 @@ class StatsGen
          double g[3][3];
          double x, y, z;
          double xpf, ypf;
-         double xpfa, ypfa;
+     //    double xpfa, ypfa;
          double totaldensity;
          double hmag;
          double angle;
@@ -879,7 +879,7 @@ class StatsGen
          double g[3][3];
          double x, y, z;
          double xpf, ypf;
-         double xpfa, ypfa;
+    //     double xpfa, ypfa;
          double totaldensity;
          double hmag;
          double angle;

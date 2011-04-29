@@ -27,7 +27,7 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#include "StatsGenODFWidget.h"
+#include "SGAxisODFWidget.h"
 
 //-- C++ Includes
 #include <iostream>
@@ -51,11 +51,11 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-StatsGenODFWidget::StatsGenODFWidget(QWidget *parent) :
+SGAxisODFWidget::SGAxisODFWidget(QWidget *parent) :
 QWidget(parent),
 m_Initializing(true),
 m_PhaseIndex(-1),
-m_CrystalStructure(AIM::Reconstruction::Cubic),
+m_CrystalStructure(AIM::Reconstruction::AxisOrthoRhombic),
 m_ODFTableModel(NULL),
 m_MDFWidget(NULL)
 {
@@ -67,7 +67,7 @@ m_MDFWidget(NULL)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-StatsGenODFWidget::~StatsGenODFWidget()
+SGAxisODFWidget::~SGAxisODFWidget()
 {
   if (NULL != m_ODFTableModel)
   {
@@ -78,7 +78,7 @@ StatsGenODFWidget::~StatsGenODFWidget()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int StatsGenODFWidget::readDataFromHDF5(H5ReconStatsReader::Pointer reader,
+int SGAxisODFWidget::readDataFromHDF5(H5ReconStatsReader::Pointer reader,
                                          QVector<double>  &bins,
                                          const std::string &hdf5GroupName)
 {
@@ -90,9 +90,10 @@ int StatsGenODFWidget::readDataFromHDF5(H5ReconStatsReader::Pointer reader,
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int StatsGenODFWidget::writeDataToHDF5(H5ReconStatsWriter::Pointer writer)
+int SGAxisODFWidget::writeDataToHDF5(H5ReconStatsWriter::Pointer writer)
 {
-  int err = 0;
+  int err = -1;
+#if 0
   double totalWeight = 0.0;
 
   QwtArray<double> e1s;
@@ -130,59 +131,14 @@ int StatsGenODFWidget::writeDataToHDF5(H5ReconStatsWriter::Pointer writer)
       err = writer->writeODFData(m_PhaseIndex, m_CrystalStructure, odfPtr);
     }
   }
-  // Write the MDF Data if we have that functionality enabled
-  if (m_MDFWidget != NULL)
-  {
-    m_MDFWidget->writeDataToHDF5(writer);
-  }
+#endif
   return err;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void StatsGenODFWidget::enableMDFTab(bool b)
-{
-  if (NULL != m_MDFWidget)
-  {
-    m_MDFWidget->deleteLater();
-  }
-  m_MDFWidget = new StatsGenMDFWidget();
-  tabWidget->addTab(m_MDFWidget, QString("MDF"));
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void StatsGenODFWidget::setCrystalStructure(AIM::Reconstruction::CrystalStructure value)
-{
-  if (m_CrystalStructure != value)
-  {
-    this->m_CrystalStructure = value;
-    switch(value)
-    {
-      case AIM::Reconstruction::Cubic:
-        setPlotTabTitles("<001> PF", "<011> PF", "<111> PF");
-        break;
-      case AIM::Reconstruction::Hexagonal:
-        setPlotTabTitles("<0001> PF", "<11-20> PF", "<10-10> PF");
-        break;
-      default:
-        setPlotTabTitles("Unkown", "Unknown", "Unknown");
-    }
-    on_m_CalculateODFBtn_clicked();
-  }
-  if (m_MDFWidget != NULL)
-  {
-    m_MDFWidget->setCrystalStructure(m_CrystalStructure);
-  }
-
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-AIM::Reconstruction::CrystalStructure StatsGenODFWidget::getCrystalStructure()
+AIM::Reconstruction::CrystalStructure SGAxisODFWidget::getCrystalStructure()
 {
   return m_CrystalStructure;
 }
@@ -190,19 +146,15 @@ AIM::Reconstruction::CrystalStructure StatsGenODFWidget::getCrystalStructure()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void StatsGenODFWidget::setPhaseIndex(int value)
+void SGAxisODFWidget::setPhaseIndex(int value)
 {
   this->m_PhaseIndex = value;
-  if (m_MDFWidget != NULL)
-  {
-    m_MDFWidget->setPhaseIndex(m_PhaseIndex);
-  }
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int StatsGenODFWidget::getPhaseIndex()
+int SGAxisODFWidget::getPhaseIndex()
 {
 return m_PhaseIndex;
 }
@@ -210,7 +162,7 @@ return m_PhaseIndex;
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void StatsGenODFWidget::setPlotTabTitles(QString t1, QString t2, QString t3)
+void SGAxisODFWidget::setPlotTabTitles(QString t1, QString t2, QString t3)
 {
   tabWidget->setTabText(1, t1);
   tabWidget->setTabText(2, t2);
@@ -220,8 +172,10 @@ void StatsGenODFWidget::setPlotTabTitles(QString t1, QString t2, QString t3)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void StatsGenODFWidget::setupGui()
+void SGAxisODFWidget::setupGui()
 {
+  setPlotTabTitles("A-Axis PF", "B-Axis PF", "C-Axis PF");
+
   // Setup the TableView and Table Models
   QHeaderView* headerView = new QHeaderView(Qt::Horizontal, m_ODFTableView);
   headerView->setResizeMode(QHeaderView::Interactive);
@@ -246,7 +200,7 @@ void StatsGenODFWidget::setupGui()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void StatsGenODFWidget::initQwtPlot(QString xAxisName, QString yAxisName, QwtPlot* plot)
+void SGAxisODFWidget::initQwtPlot(QString xAxisName, QString yAxisName, QwtPlot* plot)
 {
   plot->setAxisTitle(QwtPlot::xBottom, xAxisName);
   plot->setAxisTitle(QwtPlot::yLeft, yAxisName);
@@ -264,10 +218,10 @@ void StatsGenODFWidget::initQwtPlot(QString xAxisName, QString yAxisName, QwtPlo
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void StatsGenODFWidget::on_m_CalculateODFBtn_clicked()
+void SGAxisODFWidget::on_m_CalculateODFBtn_clicked()
 {
   int err = 0;
- // std::cout << "StatsGenODFWidget[" << objectName().toStdString() << "]::on_m_CalculateODFBtn_clicked" << std::endl;
+ // std::cout << "SGAxisODFWidget[" << objectName().toStdString() << "]::on_m_CalculateODFBtn_clicked" << std::endl;
   QwtArray<double> x001;
   QwtArray<double> y001;
   QwtArray<double> x011;
@@ -291,16 +245,7 @@ void StatsGenODFWidget::on_m_CalculateODFBtn_clicked()
 
   StatsGen sg;
   int size = 1000;
-
-  if (m_CrystalStructure == AIM::Reconstruction::Cubic) {
-    err = sg.GenCubicODFPlotData(e1s, e2s, e3s, weights, sigmas, x001, y001, x011, y011, x111, y111, size);
-  }
-  else if (m_CrystalStructure == AIM::Reconstruction::Hexagonal) {
-    err = sg.GenHexODFPlotData(e1s, e2s, e3s, weights, sigmas, x001, y001, x011, y011, x111, y111, size);
-  }
-  else if (m_CrystalStructure == AIM::Reconstruction::OrthoRhombic) {
-	  err = sg.GenOrthoRhombicODFPlotData(e1s, e2s, e3s, weights, sigmas, x001, y001, x011, y011, x111, y111, size);
-  }
+  err = sg.GenAxisODFPlotData(e1s, e2s, e3s, weights, sigmas, x001, y001, x011, y011, x111, y111, size);
   if (err == 1)
   {
     //TODO: Present Error Message
@@ -324,24 +269,12 @@ void StatsGenODFWidget::on_m_CalculateODFBtn_clicked()
   curve->setStyle(QwtPlotCurve::Dots);
   curve->attach(m_ODF_111Plot);
   m_ODF_111Plot->replot();
-
-  // Enable the MDF tab
-  if (m_MDFWidget != NULL)
-  {
-    m_MDFWidget->setEnabled(true);
-  }
-#ifndef _WIN32
-#warning Calculate the MDF if needed
-  // calculate MDF Based on the ODF calculation
-#endif
 }
-
-
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void StatsGenODFWidget::on_addODFTextureBtn_clicked()
+void SGAxisODFWidget::on_addODFTextureBtn_clicked()
 {
   TextureDialog t(m_CrystalStructure, NULL);
   int r = t.exec();
@@ -370,7 +303,7 @@ void StatsGenODFWidget::on_addODFTextureBtn_clicked()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void StatsGenODFWidget::on_deleteODFTextureBtn_clicked()
+void SGAxisODFWidget::on_deleteODFTextureBtn_clicked()
 {
   QItemSelectionModel *selectionModel = m_ODFTableView->selectionModel();
   if (!selectionModel->hasSelection()) return;
