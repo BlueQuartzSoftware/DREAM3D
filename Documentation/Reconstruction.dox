@@ -1,7 +1,7 @@
 
 /*!
 
-@page reconstruction AIMReconstruction Documentation
+@page reconstruction Reconstruction
 
 
 @section gui AIMReconstruction Gui
@@ -20,6 +20,7 @@ ParaView with a custom plugin
 
 
 @image html reconstruction_gui.png "The Reconstruction User Interface"
+@image latex reconstruction_gui.png "The Reconstruction User Interface" width=6in
 
 
 @section inputparamerters Determining Input Parameters
@@ -30,6 +31,7 @@ example we used ParaView to view the ImageQuality data from an TSL OIM scan .ang
 data file. Displaying the raw data shows the following image with an arbitrary
 coloring scheme.
 @image html imagequality.png "Raw Image Quality Data displayed with ParaView"
+@image latex imagequality.png "Raw Image Quality Data displayed with ParaView" width=3in
 
 The object is to find a minimum value where every piece of data below the value
 is considered noise and values above are considered good data. Experimentation
@@ -38,6 +40,7 @@ example data set we used a value of 600 and the resulting thresholded image is
 shown below.
 
 @image html minimagequality.png "Image Quality Data Thresholded at a value of 600"
+@image latex minimagequality.png "Image Quality Data Thresholded at a value of 600" width=3in
 
 @section cli  Command Line Program
 
@@ -49,37 +52,37 @@ are saved to a simple text file with the following format:
 
 @code
 [Reconstruction]
-rec_OutputDir=/tmp
-rec_H5InputFile=/Users/Shared/Data/Ang_Data/12_strain/12_strain.h5ang
-rec_ZStartIndex=10074
-rec_ZEndIndex=10175
-rec_mergeTwins=false
-rec_mergeColonies=false
-rec_fillinSample=false
-rec_alreadyFormed=false
-rec_MinAllowedGrainSize=8
-rec_MinConfidence=0.1
-rec_BinStepSize=1
-rec_DownSampleFactor=1
-rec_MinImageQuality=50
-rec_MisOrientationTolerance=5
-rec_CrystalStructure=0
-rec_AlignMeth=0
-rec_DisorientationVizFile=true
-rec_ImageQualityVizFile=true
-rec_IPFVizFile=true
-rec_SchmidFactorVizFile=true
-rec_VisualizationVizFile=true
-rec_DownSampledVizFile=true
-rec_HDF5GrainFile=true
+OutputDir=/tmp
+H5InputFile=/Users/Shared/Data/Ang_Data/12_strain/12_strain.h5ang
+ZStartIndex=10074
+ZEndIndex=10175
+MergeTwins=false
+MergeColonies=false
+FillinSample=false
+AlreadyFormed=false
+MinAllowedGrainSize=8
+MinConfidence=0.1
+BinStepSize=1
+DownSampleFactor=1
+MinImageQuality=50
+MisOrientationTolerance=5
+CrystalStructure=0
+AlignMeth=0
+DisorientationVizFile=true
+ImageQualityVizFile=true
+IPFVizFile=true
+SchmidFactorVizFile=true
+VisualizationVizFile=true
+DownSampledVizFile=true
+HDF5GrainFile=true
 @endcode
 
 Some of the values have special values:\n
-<b>rec_CrystalStructure</b>
+<b>CrystalStructure</b>
 @li 0 = Hexagonal
 @li 1 = Cubic
 
-<b>rec_AlignMeth</b>\n
+<b>AlignMeth</b>\n
 @li Outer Boundary
 @li Misorientation
 @li Mutual Information
@@ -87,21 +90,21 @@ Some of the values have special values:\n
 The following values are considered boolean values and either have a "false"
 or "true" value.\n
 
-@li rec_mergeTwins
-@li rec_mergeColonies
-@li rec_fillinSample
-@li rec_alreadyFormed
-@li rec_DisorientationVizFile
-@li rec_ImageQualityVizFile
-@li rec_IPFVizFile
-@li rec_SchmidFactorVizFile
-@li rec_VisualizationVizFile
-@li rec_DownSampledVizFile
-@li rec_HDF5GrainFile
+@li MergeTwins
+@li MergeColonies
+@li FillinSample
+@li AlreadyFormed
+@li DisorientationVizFile
+@li ImageQualityVizFile
+@li IPFVizFile
+@li SchmidFactorVizFile
+@li VisualizationVizFile
+@li DownSampledVizFile
+@li HDF5GrainFile
 
 
 
-@section details Reconstruction Tab
+@section rec_details Reconstruction Tab
 1.  OIM HDF5 File  This is the name and location of the .h5ang file you wish to reconstruct
 @li a.  The minimum and maximum slice numbers will be automatically displayed with the z resolution or spacing
 

@@ -3,7 +3,7 @@
 @page microPreset StatsGenerator Microstructure Presets Developer Guide
 
 The implementation uses the <b>Factory</b> design pattern where a singleton instance
-of @see MicrostructurePresetManager is responsible for registering each of the
+of MicrostructurePresetManager is responsible for registering each of the
 preset classes and also for creating an instance of each of those classes given
 the name of the class. Each class that wants to implement a <b>MicrostructurePreset</b>
 needs to implement 2 classes:
@@ -23,23 +23,35 @@ class EquiaxedPreset : public AbstractMicrostructurePreset
   public:
     MXA_SHARED_POINTERS(EquiaxedPreset);
     MXA_STATIC_NEW_SUPERCLASS(AbstractMicrostructurePreset, EquiaxedPreset);
+
     virtual ~EquiaxedPreset();
 
-    void generateOmega3Data(StatsGenPlotWidget* plot, QVector<double> binNumbers);
-    void generateBOverAPlotData(StatsGenPlotWidget* plot, QVector<double> binNumbers);
-    void generateCOverAPlotData(StatsGenPlotWidget* plot, QVector<double> binNumbers);
-    void generateCOverBPlotData(StatsGenPlotWidget* plot, QVector<double> binNumbers);
-    void generateNeighborPlotData(StatsGenPlotWidget* plot, QVector<double> binNumbers);
+    void generateOmega3Data(StatsGenPlotWidget* plot,
+                            QVector<double> binNumbers);
+
+    void generateBOverAPlotData(StatsGenPlotWidget* plot,
+                                QVector<double> binNumbers);
+
+    void generateCOverAPlotData(StatsGenPlotWidget* plot,
+                                QVector<double> binNumbers);
+
+    void generateCOverBPlotData(StatsGenPlotWidget* plot,
+                                QVector<double> binNumbers);
+
+    void generateNeighborPlotData(StatsGenPlotWidget* plot,
+                                  QVector<double> binNumbers);
 
   protected:
     EquiaxedPreset();
 
   private:
-    EquiaxedPreset(const EquiaxedPreset&); // Copy Constructor Not Implemented
-    void operator=(const EquiaxedPreset&); // Operator '=' Not Implemented
+    // Copy Constructor Not Implemented
+    EquiaxedPreset(const EquiaxedPreset&);
+    // Operator '=' Not Implemented
+    void operator=(const EquiaxedPreset&);
 };
 
-DECLARE_FACTORY_CLASS(EquiaxedPresetFactory, EquiaxedPreset, Equiaxed );
+DECLARE_FACTORY_CLASS(EquiaxedPresetFactory, EquiaxedPreset, Equiaxed);
 
 @endcode
 
@@ -50,7 +62,8 @@ given preset. After it is all written we have something like the following to ge
 an instance of the DefaultStatsPreset class:
 
 @code
-  AbstractMicrostructurePresetFactory::Pointer presetFactory = DefaultStatsPresetFactory::New();
+  AbstractMicrostructurePresetFactory::Pointer presetFactory
+                                            = DefaultStatsPresetFactory::New();
   MicrostructurePresetManager::registerMicrostructurePresetFactory(presetFactory);
 @endcode
 

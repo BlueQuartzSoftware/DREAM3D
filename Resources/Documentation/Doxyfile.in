@@ -1,0 +1,89 @@
+#
+# 
+#
+# Copyright (C) 1997-1999 by Dimitri van Heesch.
+#
+# Permission to use, copy, modify, and distribute this software and its
+# documentation under the terms of the GNU General Public License is hereby 
+# granted. No representations are made about the suitability of this software 
+# for any purpose. It is provided "as is" without express or implied warranty.
+# See the GNU General Public License for more details.
+#
+# Documents produced by Doxygen are derivative works derived from the
+# input used in their production; they are not affected by this license.
+#---------------------------------------------------------------------------
+# Project related configuration options
+#---------------------------------------------------------------------------
+PROJECT_NAME      = "@PROJECT_NAME@"
+OUTPUT_DIRECTORY  = @PROJECT_BINARY_DIR@
+
+#---------------------------------------------------------------------------
+# configuration options related to warning and progress messages
+#---------------------------------------------------------------------------
+QUIET             = NO
+WARNINGS          = YES
+
+DISABLE_INDEX     = YES
+ENABLE_PREPROCESSING = NO
+CASE_SENSE_NAMES  = NO
+
+EXTRACT_ALL       = NO
+EXTRACT_PRIVATE   = NO
+
+GENERATE_MAN      = NO
+GENERATE_HTMLHELP = NO
+
+#---------------------------------------------------------------------------
+# configuration options related to the RTF output
+#---------------------------------------------------------------------------
+GENERATE_RTF = @DOX_GENERATE_RTF@
+RTF_OUTPUT = rtf
+COMPACT_RTF = NO
+RTF_HYPERLINKS = NO
+RTF_STYLESHEET_FILE = 
+RTF_EXTENSIONS_FILE =
+
+#---------------------------------------------------------------------------
+# configuration options related to the input files
+#---------------------------------------------------------------------------
+IMAGE_PATH        = @DOX_IMAGE_DIR@
+INPUT             = @DOXYGEN_INPUT_FILES@ 
+FILE_PATTERNS     = *.dox
+RECURSIVE         = NO
+TAGFILES          =
+ALLEXTERNALS      = NO
+PERL_PATH         = /usr/local/bin/perl
+SEARCHENGINE      = NO
+STRIP_CODE_COMMENTS = NO
+EXAMPLE_PATH      = ""
+
+#---------------------------------------------------------------------------
+# configuration options related to the LaTeX output
+#---------------------------------------------------------------------------
+GENERATE_LATEX    = @DOX_GENERATE_LATEX@
+LATEX_HEADER      = @LATEX_HEADER_FILE@
+PDF_HYPERLINKS    = YES
+USE_PDFLATEX      = YES
+LATEX_BATCHMODE   = YES
+
+#---------------------------------------------------------------------------
+# configuration options related to the HTML output
+#---------------------------------------------------------------------------
+GENERATE_HTML = @DOX_GENERATE_HTML@
+HTML_OUTPUT = html
+HTML_FILE_EXTENSION = .html
+HTML_HEADER = 
+HTML_FOOTER = 
+HTML_STYLESHEET = @DOX_TEMPLATE_DIR@/BlueQuartz.css
+HTML_ALIGN_MEMBERS = YES
+GENERATE_HTMLHELP = NO
+CHM_FILE = 
+HHC_LOCATION = 
+GENERATE_CHI = NO
+BINARY_TOC = NO
+TOC_EXPAND = NO
+DISABLE_INDEX = NO
+ENUM_VALUES_PER_LINE = 4
+GENERATE_TREEVIEW = YES
+TREEVIEW_WIDTH = 250
+
