@@ -27,10 +27,10 @@
       </widget>
      </item>
      <item row="0" column="1">
-      <widget class="QLineEdit" name="gg_H5InputStatisticsFile"/>
+      <widget class="QLineEdit" name="m_H5InputStatisticsFile"/>
      </item>
      <item row="0" column="2">
-      <widget class="QPushButton" name="gg_InputH5StatisticsFileBtn">
+      <widget class="QPushButton" name="m_InputH5StatisticsFileBtn">
        <property name="text">
         <string>Select</string>
        </property>
@@ -44,10 +44,10 @@
       </widget>
      </item>
      <item row="1" column="1">
-      <widget class="QLineEdit" name="gg_OutputDir"/>
+      <widget class="QLineEdit" name="m_OutputDir"/>
      </item>
      <item row="1" column="2">
-      <widget class="QPushButton" name="gg_OutputDirBtn">
+      <widget class="QPushButton" name="m_OutputDirBtn">
        <property name="text">
         <string>Select</string>
        </property>
@@ -61,7 +61,7 @@
       </widget>
      </item>
      <item row="2" column="1">
-      <widget class="QLineEdit" name="outputFilePrefix">
+      <widget class="QLineEdit" name="m_OutputFilePrefix">
        <property name="text">
         <string>Synthetic_</string>
        </property>
@@ -106,14 +106,14 @@
         <number>4</number>
        </property>
        <item row="4" column="1">
-        <widget class="QLabel" name="gg_VisualizationFile">
+        <widget class="QLabel" name="m_VisualizationFile">
          <property name="text">
           <string>Synthetic_Vis.vtk</string>
          </property>
         </widget>
        </item>
        <item row="4" column="0">
-        <widget class="QLabel" name="gg_VisualizationFileIcon">
+        <widget class="QLabel" name="m_VisualizationFileIcon">
          <property name="text">
           <string/>
          </property>
@@ -123,14 +123,14 @@
         </widget>
        </item>
        <item row="0" column="1">
-        <widget class="QLabel" name="gg_CrystallographicErrorFile">
+        <widget class="QLabel" name="m_CrystallographicErrorFile">
          <property name="text">
           <string>Synthetic_CrystallographicError.txt</string>
          </property>
         </widget>
        </item>
        <item row="0" column="0">
-        <widget class="QLabel" name="gg_CrystallographicErrorFileIcon">
+        <widget class="QLabel" name="m_CrystallographicErrorFileIcon">
          <property name="text">
           <string/>
          </property>
@@ -140,14 +140,14 @@
         </widget>
        </item>
        <item row="1" column="1">
-        <widget class="QLabel" name="gg_EulerFile">
+        <widget class="QLabel" name="m_EulerFile">
          <property name="text">
           <string>Synthetic_GrainAngles.txt</string>
          </property>
         </widget>
        </item>
        <item row="1" column="0">
-        <widget class="QLabel" name="gg_EulerFileIcon">
+        <widget class="QLabel" name="m_EulerFileIcon">
          <property name="text">
           <string/>
          </property>
@@ -157,7 +157,7 @@
         </widget>
        </item>
        <item row="2" column="1">
-        <widget class="QLabel" name="gg_GrainDataFile">
+        <widget class="QLabel" name="m_GrainDataFile">
          <property name="minimumSize">
           <size>
            <width>300</width>
@@ -170,7 +170,7 @@
         </widget>
        </item>
        <item row="2" column="0">
-        <widget class="QLabel" name="gg_GrainDataFileIcon">
+        <widget class="QLabel" name="m_GrainDataFileIcon">
          <property name="text">
           <string/>
          </property>
@@ -180,7 +180,7 @@
         </widget>
        </item>
        <item row="3" column="1">
-        <widget class="QLabel" name="gg_H5StatisticsFile">
+        <widget class="QLabel" name="m_H5StatisticsFile">
          <property name="minimumSize">
           <size>
            <width>300</width>
@@ -193,7 +193,7 @@
         </widget>
        </item>
        <item row="3" column="0">
-        <widget class="QLabel" name="gg_H5StatisticsFileIcon">
+        <widget class="QLabel" name="m_H5StatisticsFileIcon">
          <property name="text">
           <string/>
          </property>
@@ -247,7 +247,7 @@
       </widget>
      </item>
      <item row="0" column="4">
-      <widget class="QDoubleSpinBox" name="gg_FillingErrorWeight">
+      <widget class="QDoubleSpinBox" name="m_FillingErrorWeight">
        <property name="minimumSize">
         <size>
          <width>100</width>
@@ -273,7 +273,7 @@
       </widget>
      </item>
      <item row="1" column="4">
-      <widget class="QDoubleSpinBox" name="gg_NeighborhoodErrorWeight">
+      <widget class="QDoubleSpinBox" name="m_NeighborhoodErrorWeight">
        <property name="minimumSize">
         <size>
          <width>100</width>
@@ -292,7 +292,7 @@
       </widget>
      </item>
      <item row="0" column="0" colspan="2">
-      <widget class="QCheckBox" name="gg_AlreadyFormed">
+      <widget class="QCheckBox" name="m_AlreadyFormed">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -309,7 +309,7 @@
       </widget>
      </item>
      <item row="1" column="1">
-      <widget class="QDoubleSpinBox" name="gg_SizeDistErrorWeight">
+      <widget class="QDoubleSpinBox" name="m_SizeDistErrorWeight">
        <property name="minimumSize">
         <size>
          <width>100</width>
@@ -368,7 +368,7 @@
       </widget>
      </item>
      <item row="0" column="1">
-      <widget class="QSpinBox" name="gg_NumGrains">
+      <widget class="QSpinBox" name="m_NumGrains">
        <property name="maximum">
         <number>10000000</number>
        </property>
@@ -417,7 +417,7 @@
       </widget>
      </item>
      <item row="1" column="1">
-      <widget class="QComboBox" name="gg_ShapeClass">
+      <widget class="QComboBox" name="m_ShapeClass">
        <item>
         <property name="text">
          <string>Ellipsoid</string>
@@ -443,7 +443,7 @@
       </widget>
      </item>
      <item row="0" column="4">
-      <widget class="QDoubleSpinBox" name="gg_XResolution">
+      <widget class="QDoubleSpinBox" name="m_XResolution">
        <property name="singleStep">
         <double>0.250000000000000</double>
        </property>
@@ -460,7 +460,7 @@
       </widget>
      </item>
      <item row="1" column="4">
-      <widget class="QDoubleSpinBox" name="gg_ZResolution">
+      <widget class="QDoubleSpinBox" name="m_ZResolution">
        <property name="singleStep">
         <double>0.250000000000000</double>
        </property>
@@ -477,7 +477,7 @@
       </widget>
      </item>
      <item row="2" column="4">
-      <widget class="QDoubleSpinBox" name="gg_YResolution">
+      <widget class="QDoubleSpinBox" name="m_YResolution">
        <property name="singleStep">
         <double>0.250000000000000</double>
        </property>
@@ -491,7 +491,7 @@
    <item>
     <layout class="QHBoxLayout" name="BIG_LAYOUT">
      <item>
-      <widget class="QPushButton" name="gg_LoadSettingsBtn">
+      <widget class="QPushButton" name="m_LoadSettingsBtn">
        <property name="text">
         <string>Load Preset ...</string>
        </property>
@@ -514,7 +514,7 @@
       </spacer>
      </item>
      <item>
-      <widget class="QPushButton" name="gg_SaveSettingsBtn">
+      <widget class="QPushButton" name="m_SaveSettingsBtn">
        <property name="text">
         <string>Save Preset ...</string>
        </property>
@@ -551,14 +551,14 @@
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_8">
      <item>
-      <widget class="QProgressBar" name="gg_progressBar">
+      <widget class="QProgressBar" name="m_progressBar">
        <property name="value">
         <number>0</number>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="gg_GoBtn">
+      <widget class="QPushButton" name="m_GoBtn">
        <property name="text">
         <string>Go</string>
        </property>

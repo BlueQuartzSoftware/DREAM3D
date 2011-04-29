@@ -78,25 +78,25 @@ class OIMImportWidget : public AIMPluginFrame, private Ui::OIMImportWidget
     /**
      * @brief Method to attempt the extraction of the .ang max slice value and prefix
      */
-    void oim_findAngMaxSliceAndPrefix();
-    void oim_generateExampleOimInputFile();
+    void m_findAngMaxSliceAndPrefix();
+    void m_generateExampleOimInputFile();
 
   protected slots:
     /* OIM Data Import Slots */
-    void on_oim_InputDirBtn_clicked();
-    void on_oim_OutputFileBtn_clicked();
-    void on_oim_GoBtn_clicked();
+    void on_m_InputDirBtn_clicked();
+    void on_m_OutputFileBtn_clicked();
+    void on_m_GoBtn_clicked();
 
-    void on_oim_FilePrefix_textChanged(const QString &string);
-    void on_oim_FileSuffix_textChanged(const QString &string);
-    void on_oim_FileExt_textChanged(const QString &string);
-    void on_oim_TotalDigits_valueChanged(int value);
-    void on_oim_ZStartIndex_valueChanged(int value);
-    void on_oim_ZEndIndex_valueChanged(int value);
+    void on_m_FilePrefix_textChanged(const QString &string);
+    void on_m_FileSuffix_textChanged(const QString &string);
+    void on_m_FileExt_textChanged(const QString &string);
+    void on_m_TotalDigits_valueChanged(int value);
+    void on_m_ZStartIndex_valueChanged(int value);
+    void on_m_ZEndIndex_valueChanged(int value);
 
     // slots to catch signals emittd by the various QLineEdit widgets
-    void on_oim_InputDir_textChanged(const QString & text);
-    void on_oim_OutputFile_textChanged(const QString & text);
+    void on_m_InputDir_textChanged(const QString & text);
+    void on_m_OutputFile_textChanged(const QString & text);
 
   private slots:
     // slots for our worker thread to communicate

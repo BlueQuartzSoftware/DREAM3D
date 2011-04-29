@@ -33,21 +33,21 @@
       </widget>
      </item>
      <item row="0" column="2">
-      <widget class="QLineEdit" name="sm_InputFile">
+      <widget class="QLineEdit" name="m_InputFile">
        <property name="text">
         <string>*.vtk</string>
        </property>
       </widget>
      </item>
      <item row="0" column="3">
-      <widget class="QPushButton" name="sm_InputFileBtn">
+      <widget class="QPushButton" name="m_InputFileBtn">
        <property name="text">
         <string>Select</string>
        </property>
       </widget>
      </item>
      <item row="0" column="0">
-      <widget class="QLabel" name="sm_InputFileIcon">
+      <widget class="QLabel" name="m_InputFileIcon">
        <property name="text">
         <string/>
        </property>
@@ -81,10 +81,10 @@
       </widget>
      </item>
      <item row="0" column="1">
-      <widget class="QLineEdit" name="sm_OutputDir"/>
+      <widget class="QLineEdit" name="m_OutputDir"/>
      </item>
      <item row="0" column="2">
-      <widget class="QPushButton" name="sm_OutputDirBtn">
+      <widget class="QPushButton" name="m_OutputDirBtn">
        <property name="text">
         <string>Select</string>
        </property>
@@ -98,7 +98,7 @@
       </widget>
      </item>
      <item row="1" column="1">
-      <widget class="QLineEdit" name="outputFilePrefix">
+      <widget class="QLineEdit" name="m_OutputFilePrefix">
        <property name="text">
         <string>SurfaceMesh_</string>
        </property>
@@ -116,7 +116,7 @@
       </widget>
      </item>
      <item row="2" column="0">
-      <widget class="QLabel" name="sm_NodesFileIcon">
+      <widget class="QLabel" name="m_NodesFileIcon">
        <property name="text">
         <string/>
        </property>
@@ -129,21 +129,21 @@
       </widget>
      </item>
      <item row="2" column="1">
-      <widget class="QLabel" name="sm_NodesFile">
+      <widget class="QLabel" name="m_NodesFile">
        <property name="text">
         <string>nodes.txt</string>
        </property>
       </widget>
      </item>
      <item row="3" column="1">
-      <widget class="QLabel" name="sm_NodesRawFile">
+      <widget class="QLabel" name="m_NodesRawFile">
        <property name="text">
         <string>nodes_raw.txt</string>
        </property>
       </widget>
      </item>
      <item row="3" column="0">
-      <widget class="QLabel" name="sm_NodesRawFileIcon">
+      <widget class="QLabel" name="m_NodesRawFileIcon">
        <property name="text">
         <string/>
        </property>
@@ -156,7 +156,7 @@
       </widget>
      </item>
      <item row="4" column="0">
-      <widget class="QLabel" name="sm_TrianglesFileIcon">
+      <widget class="QLabel" name="m_TrianglesFileIcon">
        <property name="text">
         <string/>
        </property>
@@ -169,7 +169,7 @@
       </widget>
      </item>
      <item row="4" column="1">
-      <widget class="QLabel" name="sm_TrianglesFile">
+      <widget class="QLabel" name="m_TrianglesFile">
        <property name="text">
         <string>triangles.txt</string>
        </property>
@@ -191,7 +191,7 @@
     </layout>
    </item>
    <item>
-    <widget class="QLabel" name="sm_Message">
+    <widget class="QLabel" name="m_Message">
      <property name="text">
       <string>Message:</string>
      </property>
@@ -214,7 +214,7 @@
     </widget>
    </item>
    <item>
-    <widget class="QCheckBox" name="sm_SmoothMesh">
+    <widget class="QCheckBox" name="m_SmoothMesh">
      <property name="text">
       <string>Smooth Surface Mesh</string>
      </property>
@@ -238,7 +238,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QSpinBox" name="sm_SmoothIterations">
+        <widget class="QSpinBox" name="m_SmoothIterations">
          <property name="enabled">
           <bool>false</bool>
          </property>
@@ -269,7 +269,7 @@
       </spacer>
      </item>
      <item row="0" column="2">
-      <widget class="QCheckBox" name="sm_LockQuadPoints">
+      <widget class="QCheckBox" name="m_LockQuadPoints">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -291,7 +291,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QSpinBox" name="sm_WriteOutputFileIncrement">
+        <widget class="QSpinBox" name="m_WriteOutputFileIncrement">
          <property name="enabled">
           <bool>false</bool>
          </property>
@@ -350,14 +350,14 @@
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_9">
      <item>
-      <widget class="QProgressBar" name="sm_progressBar">
+      <widget class="QProgressBar" name="m_progressBar">
        <property name="value">
         <number>0</number>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="sm_GoBtn">
+      <widget class="QPushButton" name="m_GoBtn">
        <property name="text">
         <string>Go</string>
        </property>
