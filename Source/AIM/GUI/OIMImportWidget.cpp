@@ -88,19 +88,19 @@ void OIMImportWidget::setWidgetListEnabled(bool b)
 void OIMImportWidget::setupGui()
 {
   QR3DFileCompleter* com = new QR3DFileCompleter(this, true);
-  oim_InputDir->setCompleter(com);
+  m_InputDir->setCompleter(com);
   QObject::connect( com, SIGNAL(activated(const QString &)),
-           this, SLOT(on_oim_InputDir_textChanged(const QString &)));
+           this, SLOT(on_m_InputDir_textChanged(const QString &)));
 
   QR3DFileCompleter* com1 = new QR3DFileCompleter(this, false);
-  oim_OutputFile->setCompleter(com1);
+  m_OutputFile->setCompleter(com1);
   QObject::connect( com1, SIGNAL(activated(const QString &)),
-           this, SLOT(on_oim_OutputFile_textChanged(const QString &)));
+           this, SLOT(on_m_OutputFile_textChanged(const QString &)));
 
-  m_WidgetList << oim_InputDir << oim_InputDirBtn << oim_OutputFile << oim_OutputFileBtn;
-  m_WidgetList << oim_FileExt << oim_ErrorMessage << oim_TotalDigits;
-  m_WidgetList << oim_FilePrefix << oim_TotalSlices << oim_ZStartIndex << oim_ZEndIndex << oim_zSpacing;
-  oim_ErrorMessage->setVisible(false);
+  m_WidgetList << m_InputDir << m_InputDirBtn << m_OutputFile << m_OutputFileBtn;
+  m_WidgetList << m_FileExt << m_ErrorMessage << m_TotalDigits;
+  m_WidgetList << m_FilePrefix << m_TotalSlices << m_ZStartIndex << m_ZEndIndex << m_zSpacing;
+  m_ErrorMessage->setVisible(false);
 }
 
 
@@ -115,15 +115,15 @@ void OIMImportWidget::readSettings(QSettings &prefs)
   //double d;
 
   prefs.beginGroup("OIMImport");
-  READ_FILEPATH_SETTING(prefs, oim_InputDir, "");
-  READ_STRING_SETTING(prefs, oim_FilePrefix, "");
-  READ_STRING_SETTING(prefs, oim_FileSuffix, "");
-  READ_STRING_SETTING(prefs, oim_FileExt, "ang");
-//  READ_STRING_SETTING(prefs, oim_TotalSlices, "");
-  READ_SETTING(prefs, oim_ZStartIndex, ok, i, 1 , Int);
-  READ_SETTING(prefs, oim_ZEndIndex, ok, i, 10 , Int);
-  READ_STRING_SETTING(prefs, oim_zSpacing, "0.25");
-  READ_STRING_SETTING(prefs, oim_OutputFile, "Untitled.h5ang");
+  READ_FILEPATH_SETTING(prefs, m_, InputDir, "");
+  READ_STRING_SETTING(prefs, m_, FilePrefix, "");
+  READ_STRING_SETTING(prefs, m_, FileSuffix, "");
+  READ_STRING_SETTING(prefs, m_, FileExt, "ang");
+//  READ_STRING_SETTING(prefs, m_, TotalSlices, "");
+  READ_SETTING(prefs, m_, ZStartIndex, ok, i, 1 , Int);
+  READ_SETTING(prefs, m_, ZEndIndex, ok, i, 10 , Int);
+  READ_STRING_SETTING(prefs, m_, zSpacing, "0.25");
+  READ_STRING_SETTING(prefs, m_, OutputFile, "Untitled.h5ang");
   prefs.endGroup();
 }
 
@@ -133,15 +133,15 @@ void OIMImportWidget::readSettings(QSettings &prefs)
 void OIMImportWidget::writeSettings(QSettings &prefs)
 {
   prefs.beginGroup("OIMImport");
-  WRITE_STRING_SETTING(prefs, oim_InputDir)
-  WRITE_STRING_SETTING(prefs, oim_FilePrefix)
-  WRITE_STRING_SETTING(prefs, oim_FileSuffix)
-  WRITE_STRING_SETTING(prefs, oim_FileExt)
-//  WRITE_STRING_SETTING(prefs, oim_TotalSlices)
-  WRITE_STRING_SETTING(prefs, oim_ZStartIndex)
-  WRITE_STRING_SETTING(prefs, oim_ZEndIndex)
-  WRITE_STRING_SETTING(prefs, oim_zSpacing)
-  WRITE_STRING_SETTING(prefs, oim_OutputFile)
+  WRITE_STRING_SETTING(prefs, m_, InputDir)
+  WRITE_STRING_SETTING(prefs, m_, FilePrefix)
+  WRITE_STRING_SETTING(prefs, m_, FileSuffix)
+  WRITE_STRING_SETTING(prefs, m_, FileExt)
+//  WRITE_STRING_SETTING(prefs, m_, TotalSlices)
+  WRITE_STRING_SETTING(prefs, m_, ZStartIndex)
+  WRITE_STRING_SETTING(prefs, m_, ZEndIndex)
+  WRITE_STRING_SETTING(prefs, m_, zSpacing)
+  WRITE_STRING_SETTING(prefs, m_, OutputFile)
 
   prefs.endGroup();
 }
@@ -150,7 +150,7 @@ void OIMImportWidget::writeSettings(QSettings &prefs)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void OIMImportWidget::on_oim_OutputFile_textChanged(const QString & text)
+void OIMImportWidget::on_m_OutputFile_textChanged(const QString & text)
 {
 
 }
@@ -160,16 +160,16 @@ void OIMImportWidget::on_oim_OutputFile_textChanged(const QString & text)
 // -----------------------------------------------------------------------------
 void OIMImportWidget::checkIOFiles()
 {
-  if (true == this->verifyPathExists(oim_InputDir->text(), this->oim_InputDir))
+  if (true == this->verifyPathExists(m_InputDir->text(), this->m_InputDir))
    {
-     oim_findAngMaxSliceAndPrefix();
+     m_findAngMaxSliceAndPrefix();
    }
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void OIMImportWidget::on_oim_OutputFileBtn_clicked()
+void OIMImportWidget::on_m_OutputFileBtn_clicked()
 {
   QString file = QFileDialog::getSaveFileName(this, tr("Save OIM HDF5 File"),
                                                  m_OpenDialogLastDirectory,
@@ -177,23 +177,23 @@ void OIMImportWidget::on_oim_OutputFileBtn_clicked()
   if ( true == file.isEmpty() ){ return;  }
   QFileInfo fi (file);
   QString ext = fi.suffix();
-  oim_OutputFile->setText(fi.absoluteFilePath());
+  m_OutputFile->setText(fi.absoluteFilePath());
   m_OpenDialogLastDirectory = fi.path();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void OIMImportWidget::on_oim_InputDirBtn_clicked()
+void OIMImportWidget::on_m_InputDirBtn_clicked()
 {
   // std::cout << "on_angDirBtn_clicked" << std::endl;
   QString outputFile = this->m_OpenDialogLastDirectory + QDir::separator();
   outputFile = QFileDialog::getExistingDirectory(this, tr("Select Ang Directory"), outputFile);
   if (!outputFile.isNull())
   {
-    this->oim_InputDir->setText(outputFile);
-    oim_findAngMaxSliceAndPrefix();
-    verifyPathExists(outputFile, oim_InputDir);
+    this->m_InputDir->setText(outputFile);
+    m_findAngMaxSliceAndPrefix();
+    verifyPathExists(outputFile, m_InputDir);
     m_OpenDialogLastDirectory = outputFile;
   }
 }
@@ -202,26 +202,26 @@ void OIMImportWidget::on_oim_InputDirBtn_clicked()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void OIMImportWidget::on_oim_InputDir_textChanged(const QString & text)
+void OIMImportWidget::on_m_InputDir_textChanged(const QString & text)
 {
-  if (verifyPathExists(oim_InputDir->text(), oim_InputDir) )
+  if (verifyPathExists(m_InputDir->text(), m_InputDir) )
   {
-    oim_findAngMaxSliceAndPrefix();
+    m_findAngMaxSliceAndPrefix();
   }
   else
   {
-    oim_FileListView->clear();
+    m_FileListView->clear();
   }
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void OIMImportWidget::on_oim_GoBtn_clicked()
+void OIMImportWidget::on_m_GoBtn_clicked()
 {
 
   bool ok = false;
-  if (oim_GoBtn->text().compare("Cancel") == 0)
+  if (m_GoBtn->text().compare("Cancel") == 0)
   {
     if (m_OimImport != NULL)
     {
@@ -230,7 +230,7 @@ void OIMImportWidget::on_oim_GoBtn_clicked()
     return;
   }
 
-  SANITY_CHECK_INPUT(oim_ , InputDir)
+  SANITY_CHECK_INPUT(m_ , InputDir)
 
   if (m_WorkerThread != NULL)
   {
@@ -245,16 +245,16 @@ void OIMImportWidget::on_oim_GoBtn_clicked()
   // Move the GrainGenerator object into the thread that we just created.
   m_OimImport->moveToThread(m_WorkerThread);
 
-  m_OimImport->setOutputFile(oim_OutputFile->text().toStdString());
-  m_OimImport->setZStartIndex(oim_ZStartIndex->value());
-  m_OimImport->setZEndIndex(oim_ZEndIndex->value());
-  m_OimImport->setZResolution(oim_zSpacing->text().toDouble(&ok));
+  m_OimImport->setOutputFile(m_OutputFile->text().toStdString());
+  m_OimImport->setZStartIndex(m_ZStartIndex->value());
+  m_OimImport->setZEndIndex(m_ZEndIndex->value());
+  m_OimImport->setZResolution(m_zSpacing->text().toDouble(&ok));
 
-  int fileCount = oim_FileListView->count();
+  int fileCount = m_FileListView->count();
   std::vector<std::string> fileList;
   for (int f = 0; f < fileCount; ++f)
   {
-    fileList.push_back(oim_FileListView->item(f)->text().toStdString());
+    fileList.push_back(m_FileListView->item(f)->text().toStdString());
   }
 
   m_OimImport->setAngFileList(fileList);
@@ -287,84 +287,84 @@ void OIMImportWidget::on_oim_GoBtn_clicked()
   emit
   processStarted();
   m_WorkerThread->start();
-  oim_GoBtn->setText("Cancel");
+  m_GoBtn->setText("Cancel");
 
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void OIMImportWidget::on_oim_ZEndIndex_valueChanged(int value)
+void OIMImportWidget::on_m_ZEndIndex_valueChanged(int value)
 {
-  oim_generateExampleOimInputFile();
+  m_generateExampleOimInputFile();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void OIMImportWidget::on_oim_ZStartIndex_valueChanged(int value)
+void OIMImportWidget::on_m_ZStartIndex_valueChanged(int value)
 {
-  oim_generateExampleOimInputFile();
+  m_generateExampleOimInputFile();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void OIMImportWidget::on_oim_TotalDigits_valueChanged(int value)
+void OIMImportWidget::on_m_TotalDigits_valueChanged(int value)
 {
-    oim_generateExampleOimInputFile();
+    m_generateExampleOimInputFile();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void OIMImportWidget::on_oim_FileExt_textChanged(const QString &string)
+void OIMImportWidget::on_m_FileExt_textChanged(const QString &string)
 {
-  oim_generateExampleOimInputFile();
+  m_generateExampleOimInputFile();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void OIMImportWidget::on_oim_FileSuffix_textChanged(const QString &string)
+void OIMImportWidget::on_m_FileSuffix_textChanged(const QString &string)
 {
-  oim_generateExampleOimInputFile();
+  m_generateExampleOimInputFile();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void OIMImportWidget::on_oim_FilePrefix_textChanged(const QString &string)
+void OIMImportWidget::on_m_FilePrefix_textChanged(const QString &string)
 {
-  oim_generateExampleOimInputFile();
+  m_generateExampleOimInputFile();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void OIMImportWidget::oim_generateExampleOimInputFile()
+void OIMImportWidget::m_generateExampleOimInputFile()
 {
 
-  QString filename = QString("%1%2%3.%4").arg(oim_FilePrefix->text())
-      .arg(oim_ZStartIndex->text(), oim_TotalDigits->value(), '0')
-      .arg(oim_FileSuffix->text()).arg(oim_FileExt->text());
-  oim_GeneratedFileNameExample->setText(filename);
+  QString filename = QString("%1%2%3.%4").arg(m_FilePrefix->text())
+      .arg(m_ZStartIndex->text(), m_TotalDigits->value(), '0')
+      .arg(m_FileSuffix->text()).arg(m_FileExt->text());
+  m_GeneratedFileNameExample->setText(filename);
 
   // Now generate all the file names the user is asking for and populate the table
-  oim_FileListView->clear();
-  int start = oim_ZStartIndex->value();
-  int end = oim_ZEndIndex->value();
+  m_FileListView->clear();
+  int start = m_ZStartIndex->value();
+  int end = m_ZEndIndex->value();
   QIcon greenDot = QIcon(QString(":/green-dot.png"));
   QIcon redDot = QIcon(QString(":/red-dot.png"));
   bool hasMissingFiles = false;
   for (int i = start; i <= end; ++i)
   {
-    filename = QString("%1%2%3.%4").arg(oim_FilePrefix->text())
-        .arg(QString::number(i), oim_TotalDigits->value(), '0')
-        .arg(oim_FileSuffix->text()).arg(oim_FileExt->text());
-    QString filePath = oim_InputDir->text() + QDir::separator() + filename;
+    filename = QString("%1%2%3.%4").arg(m_FilePrefix->text())
+        .arg(QString::number(i), m_TotalDigits->value(), '0')
+        .arg(m_FileSuffix->text()).arg(m_FileExt->text());
+    QString filePath = m_InputDir->text() + QDir::separator() + filename;
     QFileInfo fi(filePath);
-    QListWidgetItem* item = new QListWidgetItem(filePath, oim_FileListView);
+    QListWidgetItem* item = new QListWidgetItem(filePath, m_FileListView);
     if (fi.exists() == true)
     {
       item->setIcon(greenDot);
@@ -377,12 +377,12 @@ void OIMImportWidget::oim_generateExampleOimInputFile()
   }
   if (hasMissingFiles == true)
   {
-    oim_ErrorMessage->setVisible(true);
-    oim_ErrorMessage->setText("Alert: File(s) on the list do NOT exist on the filesystem. Please make sure all files exist");
+    m_ErrorMessage->setVisible(true);
+    m_ErrorMessage->setText("Alert: File(s) on the list do NOT exist on the filesystem. Please make sure all files exist");
   }
   else
   {
-    oim_ErrorMessage->setVisible(false);
+    m_ErrorMessage->setVisible(false);
   }
 }
 
@@ -390,12 +390,12 @@ void OIMImportWidget::oim_generateExampleOimInputFile()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void OIMImportWidget::oim_findAngMaxSliceAndPrefix()
+void OIMImportWidget::m_findAngMaxSliceAndPrefix()
 {
-  if (oim_InputDir->text().length() == 0) { return; }
-  QDir dir(oim_InputDir->text());
+  if (m_InputDir->text().length() == 0) { return; }
+  QDir dir(m_InputDir->text());
   QStringList filters;
-  QString ext = "." + oim_FileExt->text();
+  QString ext = "." + m_FileExt->text();
   filters << "*"+ext;
   dir.setNameFilters(filters);
   QFileInfoList angList = dir.entryInfoList();
@@ -430,7 +430,7 @@ void OIMImportWidget::oim_findAngMaxSliceAndPrefix()
       {
         ++digitEnd;
       }
-      oim_TotalDigits->setValue(digitEnd - digitStart);
+      m_TotalDigits->setValue(digitEnd - digitStart);
       if (list.size() > 0) {
         currValue = list.front().toInt(&ok);
         if (false == flag) { minSlice = currValue; flag = true;}
@@ -440,10 +440,10 @@ void OIMImportWidget::oim_findAngMaxSliceAndPrefix()
       ++totalOimFilesFound;
     }
   }
-  this->oim_TotalSlices->setText(QString::number(totalOimFilesFound));
-  this->oim_FilePrefix->setText(fPrefix);
-  this->oim_ZStartIndex->setValue(minSlice);
-  this->oim_ZEndIndex->setValue(maxSlice);
+  this->m_TotalSlices->setText(QString::number(totalOimFilesFound));
+  this->m_FilePrefix->setText(fPrefix);
+  this->m_ZStartIndex->setValue(minSlice);
+  this->m_ZEndIndex->setValue(maxSlice);
 }
 
 // -----------------------------------------------------------------------------
@@ -452,9 +452,9 @@ void OIMImportWidget::oim_findAngMaxSliceAndPrefix()
 void OIMImportWidget::threadFinished()
 {
  // std::cout << "OIMImportWidget::threadFinished()" << std::endl;
-  oim_GoBtn->setText("Go");
+  m_GoBtn->setText("Go");
   setWidgetListEnabled(true);
-  this->oim_progressBar->setValue(0);
+  this->m_progressBar->setValue(0);
   emit processEnded();
   checkIOFiles();
 }
@@ -464,7 +464,7 @@ void OIMImportWidget::threadFinished()
 // -----------------------------------------------------------------------------
 void OIMImportWidget::threadProgressed(int val)
 {
-  this->oim_progressBar->setValue( val );
+  this->m_progressBar->setValue( val );
 }
 
 // -----------------------------------------------------------------------------

@@ -78,10 +78,10 @@ class SurfaceMeshingWidget : public AIMPluginFrame, private Ui::SurfaceMeshingWi
 
   protected slots:
     /* Surface Meshing Slots */
-    void on_sm_InputFileBtn_clicked();
-    void on_sm_OutputDirBtn_clicked();
+    void on_m_InputFileBtn_clicked();
+    void on_m_OutputDirBtn_clicked();
 
-    void on_sm_GoBtn_clicked();
+    void on_m_GoBtn_clicked();
 
   private slots:
     // slots for our worker thread to communicate
@@ -91,9 +91,9 @@ class SurfaceMeshingWidget : public AIMPluginFrame, private Ui::SurfaceMeshingWi
     virtual void threadFinished();
     virtual void threadProgressed(int value);
 
-    void on_sm_InputFile_textChanged(const QString & text);
-    void on_sm_OutputDir_textChanged(const QString & text);
-    void on_outputFilePrefix_textChanged(const QString &text);
+    void on_m_InputFile_textChanged(const QString & text);
+    void on_m_OutputDir_textChanged(const QString & text);
+    void on_m_OutputFilePrefix_textChanged(const QString &text);
 
   private:
     QList<QWidget*>             m_WidgetList;

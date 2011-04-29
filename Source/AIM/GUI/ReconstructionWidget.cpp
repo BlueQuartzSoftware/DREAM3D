@@ -87,38 +87,38 @@ void ReconstructionWidget::readSettings(QSettings &prefs)
   double d;
 
   prefs.beginGroup("Reconstruction");
-  READ_FILEPATH_SETTING(prefs, rec_OutputDir, "");
-  READ_STRING_SETTING(prefs, outputFilePrefix, "Reconstruction_")
-  READ_FILEPATH_SETTING(prefs, rec_H5InputFile, "");
-  if (verifyPathExists(rec_H5InputFile->text(), rec_H5InputFile) )
+  READ_FILEPATH_SETTING(prefs, m_, OutputDir, "");
+  READ_STRING_SETTING(prefs, m_, OutputFilePrefix, "Reconstruction_")
+  READ_FILEPATH_SETTING(prefs, m_, H5InputFile, "");
+  if (verifyPathExists(m_H5InputFile->text(), m_H5InputFile) )
   {
-    rec_SetSliceInfo();
+    m_SetSliceInfo();
   }
-  READ_SETTING(prefs, rec_ZStartIndex, ok, i, 0, Int)
-  READ_SETTING(prefs, rec_ZEndIndex, ok, i, 0, Int)
+  READ_SETTING(prefs, m_, ZStartIndex, ok, i, 0, Int)
+  READ_SETTING(prefs, m_, ZEndIndex, ok, i, 0, Int)
 
-  READ_CHECKBOX_SETTING(prefs, rec_mergeColonies, false);
-  READ_CHECKBOX_SETTING(prefs, rec_alreadyFormed, false);
-  READ_CHECKBOX_SETTING(prefs, rec_mergeTwins, false);
-  READ_CHECKBOX_SETTING(prefs, rec_fillinSample, false);
-  READ_COMBO_BOX(prefs, rec_AlignMeth)
-  READ_COMBO_BOX(prefs, rec_Orientation)
+  READ_CHECKBOX_SETTING(prefs, m_, MergeColonies, false);
+  READ_CHECKBOX_SETTING(prefs, m_, AlreadyFormed, false);
+  READ_CHECKBOX_SETTING(prefs, m_, MergeTwins, false);
+  READ_CHECKBOX_SETTING(prefs, m_, FillinSample, false);
+  READ_COMBO_BOX(prefs, m_, AlignMeth)
+  READ_COMBO_BOX(prefs, m_, Orientation)
 
-  READ_SETTING(prefs, rec_MinImageQuality, ok, d, 50.0 , Double);
-  READ_SETTING(prefs, rec_MisOrientationTolerance, ok, d, 5.0 , Double);
-  READ_SETTING(prefs, rec_MinAllowedGrainSize, ok, i, 8 , Int);
-  READ_SETTING(prefs, rec_MinConfidence, ok, d, 0.1 , Double);
-  READ_SETTING(prefs, rec_DownSampleFactor, ok, d, 1.0 , Double);
-  READ_SETTING(prefs, rec_BinStepSize, ok, d, 1.0 , Double);
+  READ_SETTING(prefs, m_, MinImageQuality, ok, d, 50.0 , Double);
+  READ_SETTING(prefs, m_, MisOrientationTolerance, ok, d, 5.0 , Double);
+  READ_SETTING(prefs, m_, MinAllowedGrainSize, ok, i, 8 , Int);
+  READ_SETTING(prefs, m_, MinConfidence, ok, d, 0.1 , Double);
+  READ_SETTING(prefs, m_, DownSampleFactor, ok, d, 1.0 , Double);
+  READ_SETTING(prefs, m_, BinStepSize, ok, d, 1.0 , Double);
 
 
-  READ_CHECKBOX_SETTING(prefs, rec_DisorientationVizFile, true);
-  READ_CHECKBOX_SETTING(prefs, rec_ImageQualityVizFile, true);
-  READ_CHECKBOX_SETTING(prefs, rec_IPFVizFile, true);
-  READ_CHECKBOX_SETTING(prefs, rec_SchmidFactorVizFile, true);
-  READ_CHECKBOX_SETTING(prefs, rec_VisualizationVizFile, true);
-  READ_CHECKBOX_SETTING(prefs, rec_DownSampledVizFile, true);
-  READ_CHECKBOX_SETTING(prefs, rec_HDF5GrainFile, true);
+  READ_CHECKBOX_SETTING(prefs, m_, DisorientationVizFile, true);
+  READ_CHECKBOX_SETTING(prefs, m_, ImageQualityVizFile, true);
+  READ_CHECKBOX_SETTING(prefs, m_, IPFVizFile, true);
+  READ_CHECKBOX_SETTING(prefs, m_, SchmidFactorVizFile, true);
+  READ_CHECKBOX_SETTING(prefs, m_, VisualizationVizFile, true);
+  READ_CHECKBOX_SETTING(prefs, m_, DownSampledVizFile, true);
+  READ_CHECKBOX_SETTING(prefs, m_, HDF5GrainFile, true);
   prefs.endGroup();
 }
 
@@ -128,37 +128,37 @@ void ReconstructionWidget::readSettings(QSettings &prefs)
 void ReconstructionWidget::writeSettings(QSettings &prefs)
 {
   prefs.beginGroup("Reconstruction");
-  WRITE_STRING_SETTING(prefs, rec_OutputDir)
-  WRITE_STRING_SETTING(prefs, outputFilePrefix)
-  WRITE_STRING_SETTING(prefs, rec_H5InputFile)
-  WRITE_SETTING(prefs, rec_ZStartIndex)
-  WRITE_SETTING(prefs, rec_ZEndIndex)
+  WRITE_STRING_SETTING(prefs, m_, OutputDir)
+  WRITE_STRING_SETTING(prefs, m_, OutputFilePrefix)
+  WRITE_STRING_SETTING(prefs, m_, H5InputFile)
+  WRITE_SETTING(prefs, m_, ZStartIndex)
+  WRITE_SETTING(prefs, m_, ZEndIndex)
 
-  rec_mergeTwins->objectName();
-  prefs.setValue(rec_mergeTwins->objectName(), rec_mergeTwins->isChecked() );
+  m_MergeTwins->objectName();
+  prefs.setValue(m_MergeTwins->objectName(), m_MergeTwins->isChecked() );
 
 
-  WRITE_CHECKBOX_SETTING(prefs, rec_mergeTwins)
-  WRITE_CHECKBOX_SETTING(prefs, rec_mergeColonies)
-  WRITE_CHECKBOX_SETTING(prefs, rec_fillinSample)
-  WRITE_CHECKBOX_SETTING(prefs, rec_alreadyFormed)
+  WRITE_CHECKBOX_SETTING(prefs, m_, MergeTwins)
+  WRITE_CHECKBOX_SETTING(prefs, m_, MergeColonies)
+  WRITE_CHECKBOX_SETTING(prefs, m_, FillinSample)
+  WRITE_CHECKBOX_SETTING(prefs, m_, AlreadyFormed)
 
-  WRITE_SETTING(prefs, rec_MinAllowedGrainSize)
-  WRITE_SETTING(prefs, rec_MinConfidence)
-  WRITE_SETTING(prefs, rec_BinStepSize)
-  WRITE_SETTING(prefs, rec_DownSampleFactor)
-  WRITE_SETTING(prefs, rec_MinImageQuality)
-  WRITE_SETTING(prefs, rec_MisOrientationTolerance)
-  WRITE_COMBO_BOX(prefs, rec_AlignMeth)
-  WRITE_COMBO_BOX(prefs, rec_Orientation)
+  WRITE_SETTING(prefs, m_, MinAllowedGrainSize)
+  WRITE_SETTING(prefs, m_, MinConfidence)
+  WRITE_SETTING(prefs, m_, BinStepSize)
+  WRITE_SETTING(prefs, m_, DownSampleFactor)
+  WRITE_SETTING(prefs, m_, MinImageQuality)
+  WRITE_SETTING(prefs, m_, MisOrientationTolerance)
+  WRITE_COMBO_BOX(prefs, m_, AlignMeth)
+  WRITE_COMBO_BOX(prefs, m_, Orientation)
 
-  WRITE_CHECKBOX_SETTING(prefs, rec_DisorientationVizFile)
-  WRITE_CHECKBOX_SETTING(prefs, rec_ImageQualityVizFile)
-  WRITE_CHECKBOX_SETTING(prefs, rec_IPFVizFile)
-  WRITE_CHECKBOX_SETTING(prefs, rec_SchmidFactorVizFile)
-  WRITE_CHECKBOX_SETTING(prefs, rec_VisualizationVizFile)
-  WRITE_CHECKBOX_SETTING(prefs, rec_DownSampledVizFile)
-  WRITE_CHECKBOX_SETTING(prefs, rec_HDF5GrainFile)
+  WRITE_CHECKBOX_SETTING(prefs, m_, DisorientationVizFile)
+  WRITE_CHECKBOX_SETTING(prefs, m_, ImageQualityVizFile)
+  WRITE_CHECKBOX_SETTING(prefs, m_, IPFVizFile)
+  WRITE_CHECKBOX_SETTING(prefs, m_, SchmidFactorVizFile)
+  WRITE_CHECKBOX_SETTING(prefs, m_, VisualizationVizFile)
+  WRITE_CHECKBOX_SETTING(prefs, m_, DownSampledVizFile)
+  WRITE_CHECKBOX_SETTING(prefs, m_, HDF5GrainFile)
   prefs.endGroup();
 }
 
@@ -181,38 +181,38 @@ void ReconstructionWidget::setupGui()
 {
 
   QR3DFileCompleter* com = new QR3DFileCompleter(this, false);
-  rec_H5InputFile->setCompleter(com);
+  m_H5InputFile->setCompleter(com);
   QObject::connect( com, SIGNAL(activated(const QString &)),
-           this, SLOT(on_rec_H5InputFile_textChanged(const QString &)));
+           this, SLOT(on_m_H5InputFile_textChanged(const QString &)));
 
   QR3DFileCompleter* com2 = new QR3DFileCompleter(this, true);
-  rec_OutputDir->setCompleter(com2);
+  m_OutputDir->setCompleter(com2);
   QObject::connect( com2, SIGNAL(activated(const QString &)),
-           this, SLOT(on_rec_OutputDir_textChanged(const QString &)));
+           this, SLOT(on_m_OutputDir_textChanged(const QString &)));
 
 
   QString msg ("All files will be over written that appear in the output directory.");
 
-  QFileInfo fi (rec_OutputDir->text() + QDir::separator() +  AIM::Reconstruction::VisualizationVizFile.c_str() );
-  if (rec_alreadyFormed->isChecked() == true && fi.exists() == false)
+  QFileInfo fi (m_OutputDir->text() + QDir::separator() +  AIM::Reconstruction::VisualizationVizFile.c_str() );
+  if (m_AlreadyFormed->isChecked() == true && fi.exists() == false)
   {
-    rec_alreadyFormed->setChecked(false);
+    m_AlreadyFormed->setChecked(false);
   }
 
-  if (rec_alreadyFormed->isChecked())
+  if (m_AlreadyFormed->isChecked())
   {
     msg += QString("\nThe 'reconstructed_data.txt' file will be used as an import and NOT over written with new data");
   }
   messageLabel->setText(msg);
 
-  m_WidgetList << rec_OutputDir << rec_OutputDirBtn;
-  m_WidgetList << rec_ZStartIndex << rec_ZEndIndex;
-  m_WidgetList << rec_mergeTwins << rec_mergeColonies << rec_fillinSample << rec_alreadyFormed << rec_AlignMeth << rec_MinAllowedGrainSize << rec_MinConfidence << rec_DownSampleFactor << rec_MisOrientationTolerance;
-  m_WidgetList << rec_BinStepSize;
-  m_WidgetList << rec_DisorientationVizFile << rec_ImageQualityVizFile << rec_IPFVizFile << rec_SchmidFactorVizFile << rec_VisualizationVizFile << rec_DownSampledVizFile;
-  m_WidgetList << rec_MinImageQuality;
-  m_WidgetList << rec_HDF5GrainFile << rec_H5StatisticsFile << rec_AlignmentFile << rec_GrainDataFile;
-  m_WidgetList << rec_LoadSettingsBtn << rec_SaveSettingsBtn;
+  m_WidgetList << m_OutputDir << m_OutputDirBtn;
+  m_WidgetList << m_ZStartIndex << m_ZEndIndex;
+  m_WidgetList << m_MergeTwins << m_MergeColonies << m_FillinSample << m_AlreadyFormed << m_AlignMeth << m_MinAllowedGrainSize << m_MinConfidence << m_DownSampleFactor << m_MisOrientationTolerance;
+  m_WidgetList << m_BinStepSize;
+  m_WidgetList << m_DisorientationVizFile << m_ImageQualityVizFile << m_IPFVizFile << m_SchmidFactorVizFile << m_VisualizationVizFile << m_DownSampledVizFile;
+  m_WidgetList << m_MinImageQuality;
+  m_WidgetList << m_HDF5GrainFile << m_H5StatisticsFile << m_AlignmentFile << m_GrainDataFile;
+  m_WidgetList << m_LoadSettingsBtn << m_SaveSettingsBtn;
 
 }
 
@@ -223,25 +223,25 @@ void ReconstructionWidget::setupGui()
 void ReconstructionWidget::checkIOFiles()
 {
 
-  this->verifyPathExists(rec_OutputDir->text(), this->rec_OutputDir);
+  this->verifyPathExists(m_OutputDir->text(), this->m_OutputDir);
 
-  CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::Reconstruction,rec_, AlignmentFile)
-  CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::Reconstruction,rec_, GrainDataFile)
+  CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::Reconstruction,m_, AlignmentFile)
+  CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::Reconstruction,m_, GrainDataFile)
 
-  CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(AIM::Reconstruction, rec_ , DisorientationVizFile)
-  CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(AIM::Reconstruction, rec_ , ImageQualityVizFile)
-  CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(AIM::Reconstruction, rec_ , IPFVizFile)
-  CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(AIM::Reconstruction, rec_ , SchmidFactorVizFile)
-  CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(AIM::Reconstruction, rec_ , VisualizationVizFile)
-  CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(AIM::Reconstruction, rec_ , DownSampledVizFile)
-  CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(AIM::Reconstruction, rec_ , HDF5GrainFile)
-  CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::Reconstruction, rec_ , H5StatisticsFile)
+  CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(AIM::Reconstruction, m_ , DisorientationVizFile)
+  CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(AIM::Reconstruction, m_ , ImageQualityVizFile)
+  CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(AIM::Reconstruction, m_ , IPFVizFile)
+  CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(AIM::Reconstruction, m_ , SchmidFactorVizFile)
+  CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(AIM::Reconstruction, m_ , VisualizationVizFile)
+  CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(AIM::Reconstruction, m_ , DownSampledVizFile)
+  CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(AIM::Reconstruction, m_ , HDF5GrainFile)
+  CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::Reconstruction, m_ , H5StatisticsFile)
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ReconstructionWidget::on_rec_SaveSettingsBtn_clicked()
+void ReconstructionWidget::on_m_SaveSettingsBtn_clicked()
 {
   QString proposedFile = m_OpenDialogLastDirectory + QDir::separator() + "ReconstructionSettings.txt";
   QString file = QFileDialog::getSaveFileName(this, tr("Save Reconstruction Settings"),
@@ -258,7 +258,7 @@ void ReconstructionWidget::on_rec_SaveSettingsBtn_clicked()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ReconstructionWidget::on_rec_LoadSettingsBtn_clicked()
+void ReconstructionWidget::on_m_LoadSettingsBtn_clicked()
 {
   QString file = QFileDialog::getOpenFileName(this, tr("Select Settings File"),
                                                  m_OpenDialogLastDirectory,
@@ -266,7 +266,7 @@ void ReconstructionWidget::on_rec_LoadSettingsBtn_clicked()
   if ( true == file.isEmpty() ){return;  }
   QSettings prefs(file, QSettings::IniFormat, this);
   readSettings(prefs);
-  if (verifyPathExists(rec_OutputDir->text(), rec_OutputDir) )
+  if (verifyPathExists(m_OutputDir->text(), m_OutputDir) )
   {
     checkIOFiles();
   }
@@ -275,7 +275,7 @@ void ReconstructionWidget::on_rec_LoadSettingsBtn_clicked()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ReconstructionWidget::on_rec_OIMH5Btn_clicked()
+void ReconstructionWidget::on_m_OIMH5Btn_clicked()
 {
   QString file = QFileDialog::getOpenFileName(this, tr("Select Input File"),
                                                  m_OpenDialogLastDirectory,
@@ -283,32 +283,32 @@ void ReconstructionWidget::on_rec_OIMH5Btn_clicked()
   if ( true == file.isEmpty() ){return;  }
   QFileInfo fi (file);
  // QString ext = fi.suffix();
-  verifyPathExists(file, rec_H5InputFile);
-  rec_H5InputFile->setText(fi.absoluteFilePath());
-  rec_SetSliceInfo();
+  verifyPathExists(file, m_H5InputFile);
+  m_H5InputFile->setText(fi.absoluteFilePath());
+  m_SetSliceInfo();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ReconstructionWidget::on_rec_alreadyFormed_stateChanged(int currentState)
+void ReconstructionWidget::on_m_AlreadyFormed_stateChanged(int currentState)
 {
-  QString absPath = rec_OutputDir->text() + QDir::separator() + AIM::Reconstruction::VisualizationVizFile.c_str();
+  QString absPath = m_OutputDir->text() + QDir::separator() + AIM::Reconstruction::VisualizationVizFile.c_str();
   absPath = QDir::toNativeSeparators(absPath);
   QFileInfo fi (absPath);
   QString msg ("All files will be over written that appear in the output directory.");
-  if (rec_alreadyFormed->isChecked() == true && fi.exists() == false)
+  if (m_AlreadyFormed->isChecked() == true && fi.exists() == false)
   {
     QMessageBox::critical(this, tr("AIM Representation"),
       tr("You have selected the 'Already Formed' check box \nbut the correct output file does not exist.\n"
       "The checkbox will revert to an unchecked state.?"),
       QMessageBox::Ok,
       QMessageBox::Ok);
-    rec_alreadyFormed->setChecked(false);
-      CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(AIM::Reconstruction, rec_, VisualizationVizFile)
+    m_AlreadyFormed->setChecked(false);
+      CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(AIM::Reconstruction, m_, VisualizationVizFile)
   }
 
-  if (rec_alreadyFormed->isChecked())
+  if (m_AlreadyFormed->isChecked())
   {
     msg += QString("\nThe 'reconstructed_data.txt' file will be used as an import and NOT over written with new data");
   }
@@ -320,20 +320,20 @@ void ReconstructionWidget::on_rec_alreadyFormed_stateChanged(int currentState)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ReconstructionWidget::on_rec_OutputDirBtn_clicked()
+void ReconstructionWidget::on_m_OutputDirBtn_clicked()
 {
   QString outputFile = this->m_OpenDialogLastDirectory + QDir::separator();
   outputFile = QFileDialog::getExistingDirectory(this, tr("Select Output Directory"), outputFile);
   if (!outputFile.isNull())
   {
-    this->rec_OutputDir->setText(outputFile);
-    if (verifyPathExists(outputFile, rec_OutputDir) == true )
+    this->m_OutputDir->setText(outputFile);
+    if (verifyPathExists(outputFile, m_OutputDir) == true )
     {
       checkIOFiles();
-      QFileInfo fi (rec_OutputDir->text() + QDir::separator() +  AIM::Reconstruction::VisualizationVizFile.c_str() );
-      if (rec_alreadyFormed->isChecked() == true && fi.exists() == false)
+      QFileInfo fi (m_OutputDir->text() + QDir::separator() +  AIM::Reconstruction::VisualizationVizFile.c_str() );
+      if (m_AlreadyFormed->isChecked() == true && fi.exists() == false)
       {
-        rec_alreadyFormed->setChecked(false);
+        m_AlreadyFormed->setChecked(false);
       }
     }
   }
@@ -342,55 +342,55 @@ void ReconstructionWidget::on_rec_OutputDirBtn_clicked()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ReconstructionWidget::on_rec_H5InputFile_textChanged(const QString &text)
+void ReconstructionWidget::on_m_H5InputFile_textChanged(const QString &text)
 {
-  if (verifyPathExists(rec_H5InputFile->text(), rec_H5InputFile) )
+  if (verifyPathExists(m_H5InputFile->text(), m_H5InputFile) )
   {
-    rec_SetSliceInfo();
+    m_SetSliceInfo();
   }
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ReconstructionWidget::rec_SetSliceInfo()
+void ReconstructionWidget::m_SetSliceInfo()
 {
   AbstractAngDataLoader::Pointer ptr = H5AngDataLoader::New();
   H5AngDataLoader* reader = dynamic_cast<H5AngDataLoader*>(ptr.get());
-  QFileInfo fi(rec_H5InputFile->text());
+  QFileInfo fi(m_H5InputFile->text());
   if (fi.isFile() == false)
   {
     return;
   }
 
-  reader->setFilename(rec_H5InputFile->text().toStdString());
+  reader->setFilename(m_H5InputFile->text().toStdString());
   int zStart = -1, zEnd = -1;
   float zRes = 1.0;
   if (reader->readZHeader(zStart, zEnd, zRes) >= 0)
   {
-    rec_ZStartIndex->setValue(zStart);
-    rec_ZStartIndex->setRange(zStart, zEnd);
-    rec_ZEndIndex->setValue(zEnd);
-    rec_ZEndIndex->setRange(zStart, zEnd);
-    rec_ZRes->setText(QString::number(zRes));
-    rec_ZMin->setText(QString::number(zStart));
-    rec_ZMax->setText(QString::number(zEnd));
+    m_ZStartIndex->setValue(zStart);
+    m_ZStartIndex->setRange(zStart, zEnd);
+    m_ZEndIndex->setValue(zEnd);
+    m_ZEndIndex->setRange(zStart, zEnd);
+    m_ZRes->setText(QString::number(zRes));
+    m_ZMin->setText(QString::number(zStart));
+    m_ZMax->setText(QString::number(zEnd));
   }
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ReconstructionWidget::on_rec_OutputDir_textChanged(const QString & text)
+void ReconstructionWidget::on_m_OutputDir_textChanged(const QString & text)
 {
-  verifyPathExists(rec_OutputDir->text(), rec_OutputDir);
+  verifyPathExists(m_OutputDir->text(), m_OutputDir);
   checkIOFiles();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ReconstructionWidget::on_outputFilePrefix_textChanged(const QString &text)
+void ReconstructionWidget::on_m_OutputFilePrefix_textChanged(const QString &text)
 {
   checkIOFiles();
 }
@@ -398,9 +398,9 @@ void ReconstructionWidget::on_outputFilePrefix_textChanged(const QString &text)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ReconstructionWidget::on_rec_GoBtn_clicked()
+void ReconstructionWidget::on_m_GoBtn_clicked()
 {
-  if (rec_GoBtn->text().compare("Cancel") == 0)
+  if (m_GoBtn->text().compare("Cancel") == 0)
   {
     if(m_Reconstruction.get() != NULL)
     {
@@ -412,11 +412,11 @@ void ReconstructionWidget::on_rec_GoBtn_clicked()
 
 
 
-  if (false == sanityCheckOutputDirectory(rec_OutputDir, QString("Reconstruction")) )
+  if (false == sanityCheckOutputDirectory(m_OutputDir, QString("Reconstruction")) )
   {
     return;
   }
-  SANITY_CHECK_INPUT(rec_ , OutputDir)
+  SANITY_CHECK_INPUT(m_ , OutputDir)
   if (m_WorkerThread != NULL)
   {
     m_WorkerThread->wait(); // Wait until the thread is complete
@@ -431,37 +431,37 @@ void ReconstructionWidget::on_rec_GoBtn_clicked()
   m_Reconstruction->moveToThread(m_WorkerThread);
 
 
-  m_Reconstruction->setH5AngFile(rec_H5InputFile->text().toStdString());
+  m_Reconstruction->setH5AngFile(m_H5InputFile->text().toStdString());
 
-  m_Reconstruction->setZStartIndex(rec_ZStartIndex->value());
-  m_Reconstruction->setZEndIndex(rec_ZEndIndex->value() + 1);
+  m_Reconstruction->setZStartIndex(m_ZStartIndex->value());
+  m_Reconstruction->setZEndIndex(m_ZEndIndex->value() + 1);
 
-  m_Reconstruction->setMergeColonies(rec_mergeColonies->isChecked() );
-  m_Reconstruction->setAlreadyFormed(rec_alreadyFormed->isChecked());
-  m_Reconstruction->setMergeTwins(rec_mergeTwins->isChecked() );
-  m_Reconstruction->setFillinSample(rec_fillinSample->isChecked() );
+  m_Reconstruction->setMergeColonies(m_MergeColonies->isChecked() );
+  m_Reconstruction->setAlreadyFormed(m_AlreadyFormed->isChecked());
+  m_Reconstruction->setMergeTwins(m_MergeTwins->isChecked() );
+  m_Reconstruction->setFillinSample(m_FillinSample->isChecked() );
 
-  AIM::Reconstruction::AlignmentMethod alignmeth = static_cast<AIM::Reconstruction::AlignmentMethod>(rec_AlignMeth->currentIndex() );
+  AIM::Reconstruction::AlignmentMethod alignmeth = static_cast<AIM::Reconstruction::AlignmentMethod>(m_AlignMeth->currentIndex() );
   m_Reconstruction->setAlignmentMethod(alignmeth);
 
-  Ang::Orientation orientation = static_cast<Ang::Orientation>(rec_Orientation->currentIndex());
+  Ang::Orientation orientation = static_cast<Ang::Orientation>(m_Orientation->currentIndex());
   m_Reconstruction->setOrientation(orientation);
 
-  m_Reconstruction->setMinAllowedGrainSize(rec_MinAllowedGrainSize->value());
-  m_Reconstruction->setMisorientationTolerance(rec_MisOrientationTolerance->value());
-  m_Reconstruction->setMinSeedImageQuality(rec_MinImageQuality->value());
-  m_Reconstruction->setMinSeedConfidence(rec_MinConfidence->value());
-  m_Reconstruction->setDownSampleFactor(rec_DownSampleFactor->value());
-  m_Reconstruction->setSizeBinStepSize(rec_BinStepSize->value());
+  m_Reconstruction->setMinAllowedGrainSize(m_MinAllowedGrainSize->value());
+  m_Reconstruction->setMisorientationTolerance(m_MisOrientationTolerance->value());
+  m_Reconstruction->setMinSeedImageQuality(m_MinImageQuality->value());
+  m_Reconstruction->setMinSeedConfidence(m_MinConfidence->value());
+  m_Reconstruction->setDownSampleFactor(m_DownSampleFactor->value());
+  m_Reconstruction->setSizeBinStepSize(m_BinStepSize->value());
 
-  m_Reconstruction->setOutputDirectory(rec_OutputDir->text().toStdString());
-  m_Reconstruction->setWriteVisualizationFile(rec_VisualizationVizFile->isChecked());
-  m_Reconstruction->setWriteIPFFile(rec_IPFVizFile->isChecked());
-  m_Reconstruction->setWriteDisorientationFile(rec_DisorientationVizFile->isChecked());
-  m_Reconstruction->setWriteImageQualityFile(rec_ImageQualityVizFile->isChecked());
-  m_Reconstruction->setWriteSchmidFactorFile(rec_SchmidFactorVizFile->isChecked());
-  m_Reconstruction->setWriteDownSampledFile(rec_DownSampledVizFile->isChecked());
-  m_Reconstruction->setWriteHDF5GrainFile(rec_HDF5GrainFile->isChecked());
+  m_Reconstruction->setOutputDirectory(m_OutputDir->text().toStdString());
+  m_Reconstruction->setWriteVisualizationFile(m_VisualizationVizFile->isChecked());
+  m_Reconstruction->setWriteIPFFile(m_IPFVizFile->isChecked());
+  m_Reconstruction->setWriteDisorientationFile(m_DisorientationVizFile->isChecked());
+  m_Reconstruction->setWriteImageQualityFile(m_ImageQualityVizFile->isChecked());
+  m_Reconstruction->setWriteSchmidFactorFile(m_SchmidFactorVizFile->isChecked());
+  m_Reconstruction->setWriteDownSampledFile(m_DownSampledVizFile->isChecked());
+  m_Reconstruction->setWriteHDF5GrainFile(m_HDF5GrainFile->isChecked());
 
   m_Reconstruction->printSettings(std::cout);
 
@@ -499,7 +499,7 @@ void ReconstructionWidget::on_rec_GoBtn_clicked()
   setWidgetListEnabled(false);
   emit processStarted();
   m_WorkerThread->start();
-  rec_GoBtn->setText("Cancel");
+  m_GoBtn->setText("Cancel");
 }
 
 // -----------------------------------------------------------------------------
@@ -508,7 +508,7 @@ void ReconstructionWidget::on_rec_GoBtn_clicked()
 void ReconstructionWidget::threadFinished()
 {
   //std::cout << "ReconstructionWidget::threadFinished()" << std::endl;
-  rec_GoBtn->setText("Go");
+  m_GoBtn->setText("Go");
   setWidgetListEnabled(true);
   this->progressBar->setValue(0);
   emit processEnded();

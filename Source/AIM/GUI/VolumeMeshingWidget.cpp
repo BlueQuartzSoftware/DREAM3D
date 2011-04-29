@@ -84,17 +84,17 @@ void VolumeMeshingWidget::readSettings(QSettings &prefs)
   double d;
 
   prefs.beginGroup("VolumeMeshing");
-  READ_FILEPATH_SETTING(prefs, vm_NodesFile, "");
-  READ_FILEPATH_SETTING(prefs, vm_TrianglesFile, "");
-  READ_FILEPATH_SETTING(prefs, vm_OutputDir, "");
-  READ_SETTING(prefs, vm_NumGrains, ok, i, 1000 , Int);
-  READ_SETTING(prefs, vm_XDim, ok, d, 100 , Double);
-  READ_SETTING(prefs, vm_YDim, ok, d, 100 , Double);
-  READ_SETTING(prefs, vm_ZDim, ok, d, 100 , Double);
+  READ_FILEPATH_SETTING(prefs, m_, NodesFile, "");
+  READ_FILEPATH_SETTING(prefs, m_, TrianglesFile, "");
+  READ_FILEPATH_SETTING(prefs, m_, OutputDir, "");
+  READ_SETTING(prefs, m_, NumGrains, ok, i, 1000 , Int);
+  READ_SETTING(prefs, m_, XDim, ok, d, 100 , Double);
+  READ_SETTING(prefs, m_, YDim, ok, d, 100 , Double);
+  READ_SETTING(prefs, m_, ZDim, ok, d, 100 , Double);
 
-  READ_SETTING(prefs, vm_XRes, ok, d, 0.25 , Double);
-  READ_SETTING(prefs, vm_YRes, ok, d, 0.25 , Double);
-  READ_SETTING(prefs, vm_ZRes, ok, d, 0.25 , Double);
+  READ_SETTING(prefs, m_, XRes, ok, d, 0.25 , Double);
+  READ_SETTING(prefs, m_, YRes, ok, d, 0.25 , Double);
+  READ_SETTING(prefs, m_, ZRes, ok, d, 0.25 , Double);
   prefs.endGroup();
 }
 
@@ -104,17 +104,17 @@ void VolumeMeshingWidget::readSettings(QSettings &prefs)
 void VolumeMeshingWidget::writeSettings(QSettings &prefs)
 {
   prefs.beginGroup("VolumeMeshing");
-  WRITE_STRING_SETTING(prefs, vm_NodesFile);
-  WRITE_STRING_SETTING(prefs, vm_TrianglesFile);
-  WRITE_STRING_SETTING(prefs, vm_OutputDir);
-  WRITE_SETTING(prefs, vm_NumGrains);
-  WRITE_SETTING(prefs, vm_XDim);
-  WRITE_SETTING(prefs, vm_YDim);
-  WRITE_SETTING(prefs, vm_ZDim);
+  WRITE_STRING_SETTING(prefs, m_, NodesFile);
+  WRITE_STRING_SETTING(prefs, m_, TrianglesFile);
+  WRITE_STRING_SETTING(prefs, m_, OutputDir);
+  WRITE_SETTING(prefs, m_, NumGrains);
+  WRITE_SETTING(prefs, m_, XDim);
+  WRITE_SETTING(prefs, m_, YDim);
+  WRITE_SETTING(prefs, m_, ZDim);
 
-  WRITE_SETTING(prefs, vm_XRes);
-  WRITE_SETTING(prefs, vm_YRes);
-  WRITE_SETTING(prefs, vm_ZRes);
+  WRITE_SETTING(prefs, m_, XRes);
+  WRITE_SETTING(prefs, m_, YRes);
+  WRITE_SETTING(prefs, m_, ZRes);
   prefs.endGroup();
 }
 
@@ -124,31 +124,31 @@ void VolumeMeshingWidget::writeSettings(QSettings &prefs)
 // -----------------------------------------------------------------------------
 void VolumeMeshingWidget::setupGui()
 {
-  if (NULL == vm_NodesFile->completer()) {
+  if (NULL == m_NodesFile->completer()) {
     QR3DFileCompleter* com4 = new QR3DFileCompleter(this, true);
-    vm_NodesFile->setCompleter(com4);
+    m_NodesFile->setCompleter(com4);
     QObject::connect( com4, SIGNAL(activated(const QString &)),
-      this, SLOT(on_vm_NodesFile_textChanged(const QString &)));
+      this, SLOT(on_m_NodesFile_textChanged(const QString &)));
   }
 
-  if (NULL == vm_TrianglesFile->completer()) {
+  if (NULL == m_TrianglesFile->completer()) {
     QR3DFileCompleter* com4 = new QR3DFileCompleter(this, true);
-    vm_TrianglesFile->setCompleter(com4);
+    m_TrianglesFile->setCompleter(com4);
     QObject::connect( com4, SIGNAL(activated(const QString &)),
-      this, SLOT(on_vm_TrianglesFile_textChanged(const QString &)));
+      this, SLOT(on_m_TrianglesFile_textChanged(const QString &)));
   }
 
-  if (NULL == vm_OutputDir->completer()) {
+  if (NULL == m_OutputDir->completer()) {
     QR3DFileCompleter* com4 = new QR3DFileCompleter(this, true);
-    vm_OutputDir->setCompleter(com4);
+    m_OutputDir->setCompleter(com4);
     QObject::connect( com4, SIGNAL(activated(const QString &)),
-      this, SLOT(on_vm_OutputDir_textChanged(const QString &)));
+      this, SLOT(on_m_OutputDir_textChanged(const QString &)));
   }
 
 
-  m_WidgetList << vm_NodesFile << vm_NodesFileBtn << vm_TrianglesFile << vm_TrianglesFileBtn;
-  m_WidgetList << vm_XDim << vm_XRes << vm_YDim << vm_YRes << vm_ZDim << vm_ZRes;
-  m_WidgetList << vm_NumGrains << vm_OutputDir << vm_OutputDirBtn;
+  m_WidgetList << m_NodesFile << m_NodesFileBtn << m_TrianglesFile << m_TrianglesFileBtn;
+  m_WidgetList << m_XDim << m_XRes << m_YDim << m_YRes << m_ZDim << m_ZRes;
+  m_WidgetList << m_NumGrains << m_OutputDir << m_OutputDirBtn;
 
 }
 
@@ -169,23 +169,23 @@ void VolumeMeshingWidget::setWidgetListEnabled(bool b)
 void VolumeMeshingWidget::checkIOFiles()
 {
 
-  verifyPathExists(vm_NodesFile->text(), vm_NodesFile);
-  verifyPathExists(vm_TrianglesFile->text(), vm_TrianglesFile);
-  verifyPathExists(vm_OutputDir->text(), vm_OutputDir );
+  verifyPathExists(m_NodesFile->text(), m_NodesFile);
+  verifyPathExists(m_TrianglesFile->text(), m_TrianglesFile);
+  verifyPathExists(m_OutputDir->text(), m_OutputDir );
 
-  CHECK_QLINEEDIT_FILE_EXISTS(vm_NodesFile);
-  CHECK_QLINEEDIT_FILE_EXISTS(vm_TrianglesFile);
+  CHECK_QLINEEDIT_FILE_EXISTS(m_NodesFile);
+  CHECK_QLINEEDIT_FILE_EXISTS(m_TrianglesFile);
 
-  CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::VolumeMeshing, vm_, MeshFile);
-  CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::VolumeMeshing, vm_, MeshFile2);
-  CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::VolumeMeshing, vm_, ElementQualityFile);
-  CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::VolumeMeshing, vm_, VoxelsFile);
+  CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::VolumeMeshing, m_, MeshFile);
+  CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::VolumeMeshing, m_, MeshFile2);
+  CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::VolumeMeshing, m_, ElementQualityFile);
+  CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::VolumeMeshing, m_, VoxelsFile);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VolumeMeshingWidget::on_outputFilePrefix_textChanged(const QString &text)
+void VolumeMeshingWidget::on_m_OutputFilePrefix_textChanged(const QString &text)
 {
   checkIOFiles();
 }
@@ -193,44 +193,44 @@ void VolumeMeshingWidget::on_outputFilePrefix_textChanged(const QString &text)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VolumeMeshingWidget::on_vm_NodesFileBtn_clicked()
+void VolumeMeshingWidget::on_m_NodesFileBtn_clicked()
 {
   QString file = QFileDialog::getOpenFileName(this, tr("Select Nodes File"),
                                                  m_OpenDialogLastDirectory,
                                                  tr("Txt Files (*.txt)") );
   if ( true == file.isEmpty() ){ return;  }
   QFileInfo fi (file);
-  vm_NodesFile->setText(fi.absoluteFilePath());
+  m_NodesFile->setText(fi.absoluteFilePath());
   checkIOFiles();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VolumeMeshingWidget::on_vm_TrianglesFileBtn_clicked()
+void VolumeMeshingWidget::on_m_TrianglesFileBtn_clicked()
 {
   QString file = QFileDialog::getOpenFileName(this, tr("Select Triangles File"),
                                                  m_OpenDialogLastDirectory,
                                                  tr("Txt Files (*.txt)") );
   if ( true == file.isEmpty() ){ return;  }
   QFileInfo fi (file);
-  vm_TrianglesFile->setText(fi.absoluteFilePath());
+  m_TrianglesFile->setText(fi.absoluteFilePath());
   checkIOFiles();
 }
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VolumeMeshingWidget::on_vm_OutputDirBtn_clicked()
+void VolumeMeshingWidget::on_m_OutputDirBtn_clicked()
 {
   QString outputFile = this->m_OpenDialogLastDirectory + QDir::separator();
   outputFile = QFileDialog::getExistingDirectory(this, tr("Select Volume Meshing Output Directory"), outputFile);
   if (!outputFile.isNull())
   {
-    this->vm_OutputDir->setText(outputFile);
-    if (verifyPathExists(outputFile, vm_OutputDir) == true )
+    this->m_OutputDir->setText(outputFile);
+    if (verifyPathExists(outputFile, m_OutputDir) == true )
     {
       checkIOFiles();
-      vm_OutputDir->setText(outputFile);
+      m_OutputDir->setText(outputFile);
     }
   }
 }
@@ -238,10 +238,10 @@ void VolumeMeshingWidget::on_vm_OutputDirBtn_clicked()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VolumeMeshingWidget::on_vm_GoBtn_clicked()
+void VolumeMeshingWidget::on_m_GoBtn_clicked()
 {
 
-  if (vm_GoBtn->text().compare("Cancel") == 0)
+  if (m_GoBtn->text().compare("Cancel") == 0)
   {
     if(m_VolumeMesh.get() != NULL)
     {
@@ -252,9 +252,9 @@ void VolumeMeshingWidget::on_vm_GoBtn_clicked()
   }
 
 
-  SANITY_CHECK_INPUT(vm_, NodesFile);
-  SANITY_CHECK_INPUT(vm_, TrianglesFile);
-  SANITY_CHECK_INPUT(vm_, OutputDir);
+  SANITY_CHECK_INPUT(m_, NodesFile);
+  SANITY_CHECK_INPUT(m_, TrianglesFile);
+  SANITY_CHECK_INPUT(m_, OutputDir);
 
   if (m_WorkerThread != NULL)
   {
@@ -267,17 +267,17 @@ void VolumeMeshingWidget::on_vm_GoBtn_clicked()
   m_VolumeMesh->moveToThread(m_WorkerThread);
 
   m_VolumeMesh = VolumeMesh::New(NULL);
-  m_VolumeMesh->setNodesFile(vm_NodesFile->text().toStdString() );
-  m_VolumeMesh->setTrianglesFile(vm_TrianglesFile->text().toStdString() );
-  m_VolumeMesh->setOutputDirectory(vm_OutputDir->text().toStdString());
-  m_VolumeMesh->setXDim(vm_XDim->value());
-  m_VolumeMesh->setYDim(vm_YDim->value());
-  m_VolumeMesh->setZDim(vm_ZDim->value());
+  m_VolumeMesh->setNodesFile(m_NodesFile->text().toStdString() );
+  m_VolumeMesh->setTrianglesFile(m_TrianglesFile->text().toStdString() );
+  m_VolumeMesh->setOutputDirectory(m_OutputDir->text().toStdString());
+  m_VolumeMesh->setXDim(m_XDim->value());
+  m_VolumeMesh->setYDim(m_YDim->value());
+  m_VolumeMesh->setZDim(m_ZDim->value());
 
-  m_VolumeMesh->setXRes(vm_XRes->value());
-  m_VolumeMesh->setYRes(vm_YRes->value());
-  m_VolumeMesh->setZRes(vm_ZRes->value());
-  m_VolumeMesh->setNumGrains(vm_NumGrains->value());
+  m_VolumeMesh->setXRes(m_XRes->value());
+  m_VolumeMesh->setYRes(m_YRes->value());
+  m_VolumeMesh->setZRes(m_ZRes->value());
+  m_VolumeMesh->setNumGrains(m_NumGrains->value());
 
   /* Connect the signal 'started()' from the QThread to the 'run' slot of the
    * Reconstruction object. Since the Reconstruction object has been moved to another
@@ -312,33 +312,33 @@ void VolumeMeshingWidget::on_vm_GoBtn_clicked()
   setWidgetListEnabled(false);
   emit processStarted();
   m_WorkerThread->start();
-  vm_GoBtn->setText("Cancel");
+  m_GoBtn->setText("Cancel");
 
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VolumeMeshingWidget::on_vm_NodesFile_textChanged(const QString & text)
+void VolumeMeshingWidget::on_m_NodesFile_textChanged(const QString & text)
 {
   checkIOFiles();
-  verifyPathExists(vm_NodesFile->text(), vm_NodesFile);
+  verifyPathExists(m_NodesFile->text(), m_NodesFile);
 }
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VolumeMeshingWidget::on_vm_TrianglesFile_textChanged(const QString & text)
+void VolumeMeshingWidget::on_m_TrianglesFile_textChanged(const QString & text)
 {
   checkIOFiles();
-  verifyPathExists(vm_TrianglesFile->text(), vm_TrianglesFile);
+  verifyPathExists(m_TrianglesFile->text(), m_TrianglesFile);
 }
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VolumeMeshingWidget::on_vm_OutputDir_textChanged(const QString & text)
+void VolumeMeshingWidget::on_m_OutputDir_textChanged(const QString & text)
 {
   checkIOFiles();
-  verifyPathExists(vm_OutputDir->text(), vm_OutputDir);
+  verifyPathExists(m_OutputDir->text(), m_OutputDir);
 }
 
 // -----------------------------------------------------------------------------
@@ -347,9 +347,9 @@ void VolumeMeshingWidget::on_vm_OutputDir_textChanged(const QString & text)
 void VolumeMeshingWidget::threadFinished()
 {
  // std::cout << "VolumeMeshingWidget::volume_meshing()" << std::endl;
-  vm_GoBtn->setText("Go");
+  m_GoBtn->setText("Go");
   setWidgetListEnabled(true);
-  this->vm_progressBar->setValue(0);
+  this->m_progressBar->setValue(0);
   emit processEnded();
   checkIOFiles();
 }
@@ -359,7 +359,7 @@ void VolumeMeshingWidget::threadFinished()
 // -----------------------------------------------------------------------------
 void VolumeMeshingWidget::threadProgressed(int value)
 {
-  vm_progressBar->setValue(value);
+  m_progressBar->setValue(value);
 }
 
 // -----------------------------------------------------------------------------
