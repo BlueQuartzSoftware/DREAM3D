@@ -117,10 +117,6 @@ int StatsGenODFWidget::writeDataToHDF5(H5ReconStatsWriter::Pointer writer)
   {
     Texture::calculateHexODFData(e1s, e2s, e3s, weights, sigmas, true, odf, totalWeight);
   }
-  else if (m_CrystalStructure == AIM::Reconstruction::AxisOrthoRhombic)
-  {
-    Texture::calculateOrthoRhombicODFData(e1s, e2s, e3s, weights, sigmas, true, odf, totalWeight);
-  }
   if (odf.size() > 0)
   {
     double* odfPtr = &(odf.front());
@@ -297,9 +293,6 @@ void StatsGenODFWidget::on_m_CalculateODFBtn_clicked()
   }
   else if (m_CrystalStructure == AIM::Reconstruction::Hexagonal) {
     err = sg.GenHexODFPlotData(e1s, e2s, e3s, weights, sigmas, x001, y001, x011, y011, x111, y111, size);
-  }
-  else if (m_CrystalStructure == AIM::Reconstruction::OrthoRhombic) {
-	  err = sg.GenOrthoRhombicODFPlotData(e1s, e2s, e3s, weights, sigmas, x001, y001, x011, y011, x111, y111, size);
   }
   if (err == 1)
   {
