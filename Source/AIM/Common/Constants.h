@@ -158,8 +158,8 @@ namespace AIM
      */
     enum CrystalStructure {
         Hexagonal = 0,               //!< Hexagonal
-        Cubic = 1,                   //!< Cubic
-        OrthoRhombic = 2,            //!< OrthoRhombic
+        Cubic = 1,                   //!< Cubic¶
+        OrthoRhombic = 2,             //!< OrthoRhombic
         AxisOrthoRhombic = 3,            //!< AxisOrthoRhombic
         UnknownCrystalStructure = 999//!< UnknownCrystalStructure
     };

@@ -28,8 +28,8 @@
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _STATSGENODFWIDGET_H_
-#define _STATSGENODFWIDGET_H_
+#ifndef _SG_AXIS_ODFWIDGET_H_
+#define _SG_AXIS_ODFWIDGET_H_
 
 #include <QtGui/QWidget>
 
@@ -48,19 +48,19 @@ class QwtPlot;
 class QwtPlotCurve;
 
 /**
- * @class StatsGenODFWidget StatsGenODFWidget.h AIM/StatsGenerator/StatsGenODFWidget.h
+ * @class SGAxisODFWidget SGAxisODFWidget.h AIM/StatsGenerator/SGAxisODFWidget.h
  * @brief Calculates and displays ODF data
  * @author Michael A. Jackson for BlueQuartz Software
  * @date Jan 27, 2011
  * @version 1.0
  */
-class StatsGenODFWidget : public QWidget, private Ui::SGAxisODFWidget
+class SGAxisODFWidget : public QWidget, private Ui::SGAxisODFWidget
 {
   Q_OBJECT;
 
   public:
-    StatsGenODFWidget(QWidget *parent = 0);
-    virtual ~StatsGenODFWidget();
+    SGAxisODFWidget(QWidget *parent = 0);
+    virtual ~SGAxisODFWidget();
 
     void setupGui();
 
@@ -95,9 +95,9 @@ class StatsGenODFWidget : public QWidget, private Ui::SGAxisODFWidget
       StatsGenMDFWidget*      m_MDFWidget;
       QVector<QwtPlotCurve*>  m_PlotCurves;
 
-      StatsGenODFWidget(const StatsGenODFWidget&); // Copy Constructor Not Implemented
-      void operator=(const StatsGenODFWidget&); // Operator '=' Not Implemented
+      SGAxisODFWidget(const SGAxisODFWidget&); // Copy Constructor Not Implemented
+      void operator=(const SGAxisODFWidget&); // Operator '=' Not Implemented
 
 };
 
-#endif /* _STATSGENODFWIDGET_H_ */
+#endif /* _SG_AXIS_ODFWIDGET_H_ */

@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>StatsGenODFWidget</class>
- <widget class="QWidget" name="StatsGenODFWidget">
+ <class>SGAxisODFWidget</class>
+ <widget class="QWidget" name="SGAxisODFWidget">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>764</width>
-    <height>624</height>
+    <width>761</width>
+    <height>583</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -37,7 +37,7 @@
      <property name="currentIndex">
       <number>0</number>
      </property>
-     <widget class="QWidget" name="tab">
+     <widget class="QWidget" name="weightsSpreadsTab">
       <attribute name="title">
        <string>Weights and Spreads</string>
       </attribute>
@@ -62,7 +62,7 @@
         </widget>
        </item>
        <item row="1" column="0">
-        <layout class="QHBoxLayout" name="horizontalLayout_4" stretch="0,0,0,0,0">
+        <layout class="QHBoxLayout" name="horizontalLayout_4" stretch="0,0,0,0">
          <property name="sizeConstraint">
           <enum>QLayout::SetMinAndMaxSize</enum>
          </property>
@@ -82,8 +82,17 @@
          </item>
          <item>
           <widget class="QLabel" name="label_2">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
            <property name="text">
             <string>By default if no custom rows are entered then a completely random ODF will be generated. Adding rows to this table results in those texture values being integrated into the random ODF data.</string>
+           </property>
+           <property name="scaledContents">
+            <bool>false</bool>
            </property>
            <property name="wordWrap">
             <bool>true</bool>
@@ -91,20 +100,13 @@
           </widget>
          </item>
          <item>
-          <spacer name="horizontalSpacer_2">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>78</width>
-             <height>48</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item>
           <widget class="QPushButton" name="m_CalculateODFBtn">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
            <property name="text">
             <string>Calculate ODF</string>
            </property>
@@ -114,7 +116,7 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="tab_2">
+     <widget class="QWidget" name="plot1Tab">
       <attribute name="title">
        <string>&lt;001&gt; PF</string>
       </attribute>
@@ -143,7 +145,7 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="tab_3">
+     <widget class="QWidget" name="plot2Tab">
       <attribute name="title">
        <string>&lt;011&gt; PF</string>
       </attribute>
@@ -178,7 +180,7 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="tab_4">
+     <widget class="QWidget" name="plot3Tab">
       <attribute name="title">
        <string>&lt;111&gt; PF</string>
       </attribute>
