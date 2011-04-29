@@ -121,11 +121,10 @@ void StatsGenMDFWidget::on_m_MDFUpdateBtn_clicked()
   QwtArray<double> angles;
   QwtArray<double> axes;
   QwtArray<double> weights;
-  QwtArray<double> axis;
 
   angles = m_MDFTableModel->getData(SGMDFTableModel::Angle);
   weights = m_MDFTableModel->getData(SGMDFTableModel::Weight);
-  axis = m_MDFTableModel->getData(SGMDFTableModel::Axis);
+  axes = m_MDFTableModel->getData(SGMDFTableModel::Axis);
 
   // Generate the ODF Data from the current values in the ODFTableModel
   QwtArray<double> odf = generateODFData();
