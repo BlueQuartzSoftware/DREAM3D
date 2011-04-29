@@ -101,6 +101,13 @@ void StatsGenMDFWidget::initQwtPlot(QString xAxisName, QString yAxisName, QwtPlo
 #endif
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void StatsGenMDFWidget::updateMDFPlots()
+{
+  on_m_MDFUpdateBtn_clicked();
+}
 
 // -----------------------------------------------------------------------------
 //
