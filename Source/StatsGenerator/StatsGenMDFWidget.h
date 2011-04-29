@@ -83,6 +83,7 @@ class StatsGenMDFWidget : public QWidget, private Ui::StatsGenMDFWidget
 
   private:
     SGMDFTableModel* m_MDFTableModel;
+    QwtPlotCurve*    m_PlotCurve;
 
     StatsGenMDFWidget(const StatsGenMDFWidget&); // Copy Constructor Not Implemented
     void operator=(const StatsGenMDFWidget&); // Operator '=' Not Implemented
