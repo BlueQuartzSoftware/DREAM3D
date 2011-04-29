@@ -979,11 +979,10 @@ class StatsGen
         * type is a std::vector conforming class type that holds the data.
         * QVector falls into this category. The input data for the
         * euler angles is in Columnar fashion instead of row major format.
-        * @param e1s The first euler angles (input)
-        * @param e2s The second euler angles (input)
-        * @param e3s The third euler angles (input)
-        * @param weights Array of weights values. (input)
-        * @param sigmas Array of sigma values. (input)
+        * @param angles The first euler angles (input)
+        * @param weights The second euler angles (input)
+        * @param axis The third euler angles (input)
+        * @param odf Array of weights values. (input)
         * @param x X Values of the Scatter plot (Output)
         * @param y Y Values of the Scatter plot (Output)
         * @param size The number of points for the Scatter Plot
@@ -1120,14 +1119,14 @@ class StatsGen
    #endif
          int err = 0;
          int choose1, choose2;
-		 double q1[5], q2[5];
-         double g[3][3];
-         double x, y, z;
-         double xpf, ypf;
+		     double q1[5], q2[5];
+     //    double g[3][3];
+     //    double x, y, z;
+    //     double xpf, ypf;
          double totaldensity;
          double hmag;
          double angle;
-         double r1, r2, r3;
+    //     double r1, r2, r3;
          double h1, h2, h3;
          double n1, n2, n3;
          double random, random1, random2, tan_angle, density, cos_angle, sin_angle;
