@@ -989,13 +989,10 @@ class StatsGen
         * @param size The number of points for the Scatter Plot
         */
        template<typename T>
-       int GenCubicMDFPlotData(T angles, T weights, T &xval, T &yval, int size)
+       int GenCubicMDFPlotData(T angles, T axes, T weights, T odf, T &xval, T &yval, int size)
        {
          static const size_t eighteenCubed = 5832;
          double totalweight = 0;
-         T odf;
-         odf.resize(eighteenCubed);
-//         Texture::calculateCubicODFData(e1s, e2s, e3s, weights, sigmas, true, odf, totalweight);
 
          AIMRandomNG rg;
          /* Get a seed value based off the system clock. The issue is that this will
@@ -1099,13 +1096,10 @@ class StatsGen
 
 
        template<typename T>
-       int GenHexMDFPlotData(T angles, T weights, T &xval, T &yval, int size)
+       int GenHexMDFPlotData(T angles, T axes, T weights, T odf, T &xval, T &yval, int size)
        {
-         static const size_t eighteenCubed = 5832;
+         static const size_t odfsize = 15552;
          double totalweight = 0;
-         T odf;
-         odf.resize(eighteenCubed);
-//         Texture::calculateHexODFData(e1s, e2s, e3s, weights, sigmas, true, odf, totalweight);
 
          AIMRandomNG rg;
          /* Get a seed value based off the system clock. The issue is that this will
@@ -1153,7 +1147,7 @@ class StatsGen
            choose2 = 0;
 
            totaldensity = 0;
-           for (size_t j = 0; j < eighteenCubed; j++)
+           for (size_t j = 0; j < odfsize; j++)
            {
              density = odf[j];
              totaldensity = totaldensity + density;
