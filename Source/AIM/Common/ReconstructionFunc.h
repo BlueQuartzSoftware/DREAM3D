@@ -50,6 +50,8 @@
 #include <algorithm>
 #include <numeric>
 
+#include <boost/shared_array.hpp>
+
 #include "MXA/MXATypes.h"
 #include "MXA/Common/MXASetGetMacros.h"
 
@@ -62,6 +64,9 @@
 #include "AIM/Common/Voxel.h"
 #include "AIM/Common/AIMRandomNG.h"
 #include "AIM/Common/HDF5/H5ReconStatsWriter.h"
+
+typedef boost::shared_array<double>    DoubleArray;
+typedef boost::shared_array<int>       IntArray;
 
 
 using namespace std;
@@ -109,30 +114,27 @@ class AIMCOMMON_EXPORT ReconstructionFunc
 
 
     AIMRandomNG rg;
-    Voxel* voxels;
-    Voxel* voxelstemp;
+    boost::shared_array<Voxel> voxels;
+
     std::vector<Grain::Pointer> m_Grains;
 
-    int **shifts;
-    int **arr;
-    int *graincounts;
-    double **quat_symm;
+    IntArray graincounts;
 
     vector<vector<double> > graincenters;
     vector<vector<double> > grainmoments;
-    DoubleArrayType::Pointer m_grainQuats;
+    DoubleArrayType::Pointer         m_grainQuats;
 
     int numseNbins;
     int numorients;
     int numeulers;
  //   int numgrains;
     vector<double> totalsurfacearea;
-	vector<double> phasefraction;
+    vector<double> phasefraction;
     vector<double> totalvol;
     vector<double> totalaxes;
     vector<int> maxdiameter;
     vector<int> mindiameter;
-	double unbiasedvol;
+    double unbiasedvol;
     int cutoutxsize;
     int cutoutysize;
     int cmaxx;
@@ -168,7 +170,7 @@ class AIMCOMMON_EXPORT ReconstructionFunc
     void define_neighborhood();
     void merge_containedgrains();
     void reorder_grains(const std::string &reconVisFile);
-    int remove_smallgrains(int numgrains);
+    int remove_smallgrains(size_t numgrains);
 	  void fillin_sample();
     void cleanup_data();
     void find_grain_and_kernel_misorientations();
