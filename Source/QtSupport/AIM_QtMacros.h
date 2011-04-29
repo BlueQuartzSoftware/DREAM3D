@@ -32,34 +32,30 @@
 #define AIM_QTMACROS_H_
 
 
-#define READ_CHECKBOX_SETTING(prefs, tag, emptyValue)\
+#define READ_CHECKBOX_SETTING(prefs, prefix, tag, emptyValue)\
   { QString s = prefs.value(#tag).toString();\
   if (s.isEmpty() == false) {\
     bool bb = prefs.value(#tag).toBool();\
-  tag->setChecked(bb); } else { tag->setChecked(emptyValue); } }
-
-
-#define WRITE_CHECKBOX_SETTING(prefs, o)\
-    prefs.setValue( o->objectName(), o->isChecked() );
+  prefix##tag->setChecked(bb); } else { prefix##tag->setChecked(emptyValue); } }
 
 
 
-#define READ_STRING_SETTING(prefs, var, emptyValue)\
-  var->setText( prefs.value(#var).toString() );\
-  if (var->text().isEmpty() == true) { var->setText(emptyValue); }
+#define READ_STRING_SETTING(prefs, prefix, var, emptyValue)\
+  prefix##var->setText( prefs.value(#var).toString() );\
+  if (prefix##var->text().isEmpty() == true) { prefix##var->setText(emptyValue); }
 
-#define READ_FILEPATH_SETTING(prefs, var, emptyValue)\
-    var->blockSignals(true);\
-  var->setText( prefs.value(#var).toString() );\
-  verifyPathExists(prefs.value(#var).toString(), var);\
-  if (var->text().isEmpty() == true) { var->setText(emptyValue); }\
-  var->blockSignals(false);
+#define READ_FILEPATH_SETTING(prefs, prefix, var, emptyValue)\
+  prefix##var->blockSignals(true);\
+  prefix##var->setText( prefs.value(#var).toString() );\
+  verifyPathExists(prefs.value(#var).toString(), prefix##var);\
+  if (prefix##var->text().isEmpty() == true) { prefix##var->setText(emptyValue); }\
+  prefix##var->blockSignals(false);
 
-#define READ_SETTING(prefs, var, ok, temp, default, type)\
+#define READ_SETTING(prefs, prefix, var, ok, temp, default, type)\
   ok = false;\
   temp = prefs.value(#var).to##type(&ok);\
   if (false == ok) {temp = default;}\
-  var->setValue(temp);
+  prefix##var->setValue(temp);
 
 #define READ_BOOL_SETTING(prefs, prefix, tag, emptyValue)\
   { QString s = prefs.value(#tag).toString();\
@@ -67,21 +63,28 @@
     bool bb = prefs.value(#tag).toBool();\
   prefix##tag->setChecked(bb); } else { prefix##tag->setChecked(emptyValue); } }
 
-#define WRITE_BOOL_SETTING(prefs, tag,  b)\
+#define WRITE_BOOL_SETTING(prefs, prefix, tag,  b)\
     prefs.setValue(#tag, (b) );
 
-#define WRITE_STRING_SETTING(prefs, var)\
-  prefs.setValue(#var , this->var->text());
+#define WRITE_STRING_SETTING(prefs, prefix, var)\
+  prefs.setValue(#var , this->prefix##var->text());
 
-#define WRITE_SETTING(prefs, var)\
-  prefs.setValue(#var, this->var->value());
+#define WRITE_SETTING(prefs, prefix, var)\
+  prefs.setValue(#var, this->prefix##var->value());
 
 
-#define READ_COMBO_BOX(prefs, combobox)\
+#define WRITE_CHECKBOX_SETTING(prefs, prefix, o)\
+    prefs.setValue( #o, prefix##o->isChecked() );
+
+#define WRITE_COMBO_BOX(prefs, prefix, combobox)\
+  prefs.setValue(#combobox, this->prefix##combobox->currentIndex());
+
+
+#define READ_COMBO_BOX(prefs, prefix, combobox)\
     { bool ok = false;\
     int i = prefs.value(#combobox).toInt(&ok);\
     if (false == ok) {i=0;}\
-    combobox->setCurrentIndex(i); }
+    prefix##combobox->setCurrentIndex(i); }
 
 #define WRITE_INT_SETTING(prefs, var)\
     prefs.setValue(#var, var);
@@ -91,12 +94,10 @@
     var = prefs.value(#var).toInt(&ok);\
     if (false == ok) {i=def;} }
 
-#define WRITE_COMBO_BOX(prefs, combobox)\
-  prefs.setValue(#combobox, this->combobox->currentIndex());
 
 
 #define CHECK_QLABEL_OUTPUT_FILE_EXISTS_BODY1(ns, prefixname, name)\
-  prefixname->setText(outputFilePrefix->text() + ns::name.c_str());\
+  prefixname->setText(m_OutputFilePrefix->text() + ns::name.c_str());\
   prefixname##Icon->setPixmap(QPixmap(iconFile));\
 
 
@@ -117,7 +118,7 @@
 
 #define CHECK_QLABEL_OUTPUT_FILE_EXISTS(ns, prefix, name) \
 { \
-  QString absPath = prefix##OutputDir->text() + QDir::separator() + outputFilePrefix->text() + ns::name.c_str();\
+  QString absPath = prefix##OutputDir->text() + QDir::separator() + m_OutputFilePrefix->text() + ns::name.c_str();\
   absPath = QDir::toNativeSeparators(absPath);\
   QFileInfo fi ( absPath );\
   QString iconFile;\
@@ -132,7 +133,7 @@
 
 #define CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(ns, prefix, name) \
 { \
-  QString absPath = prefix##OutputDir->text() + QDir::separator() + outputFilePrefix->text() + ns::name.c_str();\
+  QString absPath = prefix##OutputDir->text() + QDir::separator() + m_OutputFilePrefix->text() + ns::name.c_str();\
   absPath = QDir::toNativeSeparators(absPath);\
   QFileInfo fi ( absPath );\
   QString iconFile;\

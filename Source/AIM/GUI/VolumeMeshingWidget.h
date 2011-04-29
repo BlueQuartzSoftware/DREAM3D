@@ -78,10 +78,10 @@ class VolumeMeshingWidget : public AIMPluginFrame, private Ui::VolumeMeshingWidg
   protected slots:
 
     /* Volume Meshing Slots */
-    void on_vm_NodesFileBtn_clicked();
-    void on_vm_TrianglesFileBtn_clicked();
-    void on_vm_OutputDirBtn_clicked();
-    void on_vm_GoBtn_clicked();
+    void on_m_NodesFileBtn_clicked();
+    void on_m_TrianglesFileBtn_clicked();
+    void on_m_OutputDirBtn_clicked();
+    void on_m_GoBtn_clicked();
 
   private slots:
     // slots for our worker thread to communicate
@@ -91,10 +91,10 @@ class VolumeMeshingWidget : public AIMPluginFrame, private Ui::VolumeMeshingWidg
     virtual void threadFinished();
     virtual void threadProgressed(int value);
 
-    void on_vm_NodesFile_textChanged(const QString & text);
-    void on_vm_TrianglesFile_textChanged(const QString & text);
-    void on_vm_OutputDir_textChanged(const QString & text);
-    void on_outputFilePrefix_textChanged(const QString &text);
+    void on_m_NodesFile_textChanged(const QString & text);
+    void on_m_TrianglesFile_textChanged(const QString & text);
+    void on_m_OutputDir_textChanged(const QString & text);
+    void on_m_OutputFilePrefix_textChanged(const QString &text);
 
   private:
     QList<QWidget*> m_WidgetList;
