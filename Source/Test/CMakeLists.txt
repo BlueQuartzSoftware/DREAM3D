@@ -28,3 +28,6 @@ target_link_libraries(ODFTest AIMCommon)
 add_executable(AngReaderTest ${AIMTest_SOURCE_DIR}/AngReaderTest.cpp ${AIMRepresentation_SOURCE_DIR}/Source/AIM/OIMImport/OIMImport.cpp)
 target_link_libraries(AngReaderTest AIMCommon)
 
+add_executable(VoxelTest ${AIMTest_SOURCE_DIR}/VoxelTest)
+target_link_libraries(VoxelTest AIMCommon)
+

@@ -116,7 +116,7 @@ int SGAxisODFWidget::writeDataToHDF5(H5ReconStatsWriter::Pointer writer)
     err = -1;
     if (aodfPtr != NULL)
     {
-	  err = writer->writeAxisOrientationData(m_PhaseIndex, aodfPtr, 1.0);
+      err = writer->writeAxisOrientationData(m_PhaseIndex, aodfPtr, 1.0);
     }
   }
   return err;
