@@ -176,7 +176,7 @@ void Reconstruction::compute()
   std::vector<AIM::Reconstruction::CrystalStructure> m_CrystalStructure;
   std::vector<AngPhase::Pointer> phases = h5AngLoader->getPhases();
   m_CrystalStructure.resize(phases.size()+1);
-  for(int i=0;i<phases.size();i++)
+  for(size_t i=0;i<phases.size();i++)
   {
 	  int phaseID = phases[i]->getPhase();
 	  int symmetry = phases[i]->getSymmetry();
@@ -255,11 +255,11 @@ void Reconstruction::compute()
   {
 
     progressMessage(AIM_STRING("Loading Slices"), 4);
-    oimDataLoader->loadData(m->voxels, m->xpoints, m->ypoints, m->zpoints);
-	m->initializeQuats();
+    oimDataLoader->loadData(m->voxels.get(), m->xpoints, m->ypoints, m->zpoints);
+    m->initializeQuats();
     CHECK_FOR_CANCELED(ReconstructionFunc, loadData)
 
-	progressMessage(AIM_STRING("Finding Border"), 8);
+    progressMessage(AIM_STRING("Finding Border"), 8);
     m->find_border();
     CHECK_FOR_CANCELED(ReconstructionFunc, find_border)
 
@@ -274,7 +274,7 @@ void Reconstruction::compute()
     m->align_sections(alignmentFile);
     CHECK_FOR_CANCELED(ReconstructionFunc, align_sections)
 
-	progressMessage(AIM_STRING("Cleaning Data"), 16);
+    progressMessage(AIM_STRING("Cleaning Data"), 16);
     m->cleanup_data();
     CHECK_FOR_CANCELED(ReconstructionFunc, cleanup_data)
 

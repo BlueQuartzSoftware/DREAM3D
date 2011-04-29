@@ -179,9 +179,42 @@ void Grain::deepCopy(Grain::Pointer grain)
     misorientationlist = new std::vector<double>(0);
     misorientationlist->assign(grain->misorientationlist->begin(), grain->misorientationlist->end());
   }
+}
 
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+Grain::~Grain()
+{
+
+#if 0
+  if (NULL != neighborlist)
+  {
+    delete neighborlist;
+  }
+  if (NULL != neighborsurfarealist)
+  {
+    delete neighborsurfarealist;
+  }
+#endif
+  if (NULL != voxellist)
+  {
+    delete voxellist;
+  }
+  if (NULL != ellipfunclist)
+  {
+    delete ellipfunclist;
+  }
+  if (NULL != misorientationlist)
+  {
+    delete misorientationlist;
+  }
 
 }
+
+
+
 
 
 #if 0
@@ -375,39 +408,6 @@ Grain& Grain::operator=(const Grain& grain)
   return *this;
 }
 #endif
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-Grain::~Grain()
-{
-
-#if 0
-  if (NULL != neighborlist)
-  {
-    delete neighborlist;
-  }
-  if (NULL != neighborsurfarealist)
-  {
-    delete neighborsurfarealist;
-  }
-#endif
-  if (NULL != voxellist)
-  {
-    delete voxellist;
-  }
-  if (NULL != ellipfunclist)
-  {
-    delete ellipfunclist;
-  }
-  if (NULL != misorientationlist)
-  {
-    delete misorientationlist;
-  }
-
-}
-
-
 
 
 
