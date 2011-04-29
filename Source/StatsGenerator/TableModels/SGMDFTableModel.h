@@ -155,8 +155,9 @@ class SGMDFTableModel : public QAbstractTableModel
       * @param row
       * @return
       */
-      virtual double getDataValue(int col, int row);
+     // virtual double getDataValue(int col, int row);
 
+     int parseHKLRow(int row, double &h, double &k, double &l);
 
       virtual void setColumnData(int col, QVector<double> &data);
 
