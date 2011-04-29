@@ -1,16 +1,16 @@
 /*!
 
-@mainpage AIMRepresentation Project Documentation
+@mainpage mainpage Documentation
 
-@subpage aimrep "AIMRepresentation"
+@subpage dream3d "DREAM.3D"
 
 @subpage angfileimport "OIM Data Import"
 
 @subpage reconstruction "Reconstruction"
 
-@subpage SYNTHETIC_BUILDER "Synthetic Builder"
+@subpage syntheticbuilder "Synthetic Builder"
 
-@subpage SURFACE_MESHING "Surface Meshing"
+@subpage surfacemeshing "Surface Meshing"
 
 @subpage statsgenerator "StatsGenerator"
 
