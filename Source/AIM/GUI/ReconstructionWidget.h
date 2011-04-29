@@ -86,8 +86,10 @@ class ReconstructionWidget : public AIMPluginFrame, private Ui::ReconstructionWi
     void on_rec_SaveSettingsBtn_clicked();
     void on_rec_LoadSettingsBtn_clicked();
 
-    void on_rec_OutputDir_textChanged(const QString &text);
     void on_rec_H5InputFile_textChanged(const QString &text);
+
+    void on_rec_OutputDir_textChanged(const QString &text);
+    void on_outputFilePrefix_textChanged(const QString &text);
 
     /**
      *

@@ -425,3 +425,11 @@ void GrainGeneratorWidget::threadHasMessage(QString message)
     this->statusBar()->showMessage(message);
   }
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void GrainGeneratorWidget::on_outputFilePrefix_textChanged(const QString &text)
+{
+  checkIOFiles();
+}

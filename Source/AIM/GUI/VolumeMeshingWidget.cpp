@@ -185,6 +185,14 @@ void VolumeMeshingWidget::checkIOFiles()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void VolumeMeshingWidget::on_outputFilePrefix_textChanged(const QString &text)
+{
+  checkIOFiles();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void VolumeMeshingWidget::on_vm_NodesFileBtn_clicked()
 {
   QString file = QFileDialog::getOpenFileName(this, tr("Select Nodes File"),

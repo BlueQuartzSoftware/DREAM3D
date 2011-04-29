@@ -94,7 +94,7 @@ class VolumeMeshingWidget : public AIMPluginFrame, private Ui::VolumeMeshingWidg
     void on_vm_NodesFile_textChanged(const QString & text);
     void on_vm_TrianglesFile_textChanged(const QString & text);
     void on_vm_OutputDir_textChanged(const QString & text);
-
+    void on_outputFilePrefix_textChanged(const QString &text);
 
   private:
     QList<QWidget*> m_WidgetList;
