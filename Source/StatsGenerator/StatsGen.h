@@ -38,6 +38,7 @@
 #include "AIM/Common/AIMMath.h"
 #include "AIM/Common/Constants.h"
 #include "AIM/Common/AIMRandomNG.h"
+#include "AIM/Common/MisorientationCalculations.h"
 
 #include "AIM/Common/Texture.h"
 #include "MXA/Common/LogTime.h"
@@ -969,6 +970,234 @@ class StatsGen
        }
 
 
+
+
+
+       /**
+        * @brief  This method will generate MDF data for a Cubic material and
+        * generate 1 XY scatter plots. The method is a C++ Template which the parameter
+        * type is a std::vector conforming class type that holds the data.
+        * QVector falls into this category. The input data for the
+        * euler angles is in Columnar fashion instead of row major format.
+        * @param angles The first euler angles (input)
+        * @param weights The second euler angles (input)
+        * @param axis The third euler angles (input)
+        * @param odf Array of weights values. (input)
+        * @param x X Values of the Scatter plot (Output)
+        * @param y Y Values of the Scatter plot (Output)
+        * @param size The number of points for the Scatter Plot
+        */
+       template<typename T>
+       int GenCubicMDFPlotData(T angles, T weights, T axis, T odf, T &xval, T &yval, int size)
+       {
+         static const size_t eighteenCubed = 5832;
+         double totalweight = 0;
+
+         AIMRandomNG rg;
+         /* Get a seed value based off the system clock. The issue is that this will
+          * be a 64 bit unsigned integer where the high 32 bits will basically not
+          * change where as the lower 32 bits will. The following lines of code will
+          * pull off the low 32 bits from the number. This operation depends on most
+          * significant byte ordering which is different between Big Endian and
+          * Little Endian machines. For Big endian machines the Most Significant Byte
+          * (MSB) is the first 32 bits. For Little Endian machines the MSB is the
+          * second 32 bits.
+          */
+         unsigned long long int seed = MXA::getMilliSeconds();
+         unsigned int* seedPtr = reinterpret_cast<unsigned int*> (&seed);
+   #if CMP_WORDS_BIGENDIAN
+         rg.RandomInit(seedPtr[1]);
+   #else
+         rg.RandomInit(seedPtr[0]);
+   #endif
+         int err = 0;
+         int choose1, choose2;
+		 double q1[5], q2[5];
+         double g[3][3];
+         double x, y, z;
+         double xpf, ypf;
+         double totaldensity;
+         double hmag;
+         double angle;
+         double r1, r2, r3;
+         double h1, h2, h3;
+         double n1, n2, n3;
+         double random, random1, random2, tan_angle, density, cos_angle, sin_angle;
+
+         double dim1 = 2 * pow((0.75 * ((M_PI / 4.0) - sin((M_PI / 4.0)))), (1.0 / 3.0));
+         double dim2 = 2 * pow((0.75 * ((M_PI / 4.0) - sin((M_PI / 4.0)))), (1.0 / 3.0));
+         double dim3 = 2 * pow((0.75 * ((M_PI / 4.0) - sin((M_PI / 4.0)))), (1.0 / 3.0));
+
+         xval.resize(size);
+         yval.resize(size);
+
+         for (int i = 0; i < size; i++)
+         {
+           random1 = rg.Random();
+           random2 = rg.Random();
+           choose1 = 0;
+           choose2 = 0;
+
+           totaldensity = 0;
+           for (size_t j = 0; j < eighteenCubed; j++)
+           {
+             density = odf[j];
+             totaldensity = totaldensity + density;
+             if (random1 < totaldensity && random1 >= (totaldensity - density)) choose1 = static_cast<int> (j);
+             if (random2 < totaldensity && random2 >= (totaldensity - density)) choose2 = static_cast<int> (j);
+           }
+           h1 = choose1 % 18;
+           h2 = (choose1 / 18) % 18;
+           h3 = choose1 / (18 * 18);
+           random = rg.Random();
+           h1 = ((dim1 / 18.0) * h1) + ((dim1 / 18.0) * random) - (dim1 / 2.0);
+           random = rg.Random();
+           h2 = ((dim2 / 18.0) * h2) + ((dim2 / 18.0) * random) - (dim2 / 2.0);
+           random = rg.Random();
+           h3 = ((dim3 / 18.0) * h3) + ((dim3 / 18.0) * random) - (dim3 / 2.0);
+           hmag = pow((h1 * h1 + h2 * h2 + h3 * h3), 0.5);
+           angle = pow((8 * hmag * hmag * hmag), (1.0 / 3.0));
+           n1 = h1 / hmag;
+           n2 = h2 / hmag;
+           n3 = h3 / hmag;
+		   cos_angle = cos(angle/2.0);
+           sin_angle = sin(angle/2.0);
+           q1[0] = 1;
+		   q1[1] = sin_angle * n1;
+           q1[2] = sin_angle * n2;
+           q1[3] = sin_angle * n3;
+           q1[4] = cos_angle;
+           h1 = choose2 % 18;
+           h2 = (choose2 / 18) % 18;
+           h3 = choose2 / (18 * 18);
+           random = rg.Random();
+           h1 = ((dim1 / 18.0) * h1) + ((dim1 / 18.0) * random) - (dim1 / 2.0);
+           random = rg.Random();
+           h2 = ((dim2 / 18.0) * h2) + ((dim2 / 18.0) * random) - (dim2 / 2.0);
+           random = rg.Random();
+           h3 = ((dim3 / 18.0) * h3) + ((dim3 / 18.0) * random) - (dim3 / 2.0);
+           hmag = pow((h1 * h1 + h2 * h2 + h3 * h3), 0.5);
+           angle = pow((8 * hmag * hmag * hmag), (1.0 / 3.0));
+           n1 = h1 / hmag;
+           n2 = h2 / hmag;
+           n3 = h3 / hmag;
+		   cos_angle = cos(angle/2.0);
+           sin_angle = sin(angle/2.0);
+           q2[0] = 1;
+		   q2[1] = sin_angle * n1;
+           q2[2] = sin_angle * n2;
+           q2[3] = sin_angle * n3;
+           q2[4] = cos_angle;
+         }
+         return err;
+       }
+
+
+
+       template<typename T>
+       int GenHexMDFPlotData(T angles, T weights, T axis, T odf, T &xval, T &yval, int size)
+       {
+         static const size_t eighteenCubed = 5832;
+         double totalweight = 0;
+
+         AIMRandomNG rg;
+         /* Get a seed value based off the system clock. The issue is that this will
+          * be a 64 bit unsigned integer where the high 32 bits will basically not
+          * change where as the lower 32 bits will. The following lines of code will
+          * pull off the low 32 bits from the number. This operation depends on most
+          * significant byte ordering which is different between Big Endian and
+          * Little Endian machines. For Big endian machines the Most Significant Byte
+          * (MSB) is the first 32 bits. For Little Endian machines the MSB is the
+          * second 32 bits.
+          */
+         unsigned long long int seed = MXA::getMilliSeconds();
+         unsigned int* seedPtr = reinterpret_cast<unsigned int*> (&seed);
+   #if CMP_WORDS_BIGENDIAN
+         rg.RandomInit(seedPtr[1]);
+   #else
+         rg.RandomInit(seedPtr[0]);
+   #endif
+         int err = 0;
+         int choose1, choose2;
+		     double q1[5], q2[5];
+     //    double g[3][3];
+     //    double x, y, z;
+    //     double xpf, ypf;
+         double totaldensity;
+         double hmag;
+         double angle;
+    //     double r1, r2, r3;
+         double h1, h2, h3;
+         double n1, n2, n3;
+         double random, random1, random2, tan_angle, density, cos_angle, sin_angle;
+
+         double dim1 = 2 * pow((0.75 * ((M_PI / 4.0) - sin((M_PI / 4.0)))), (1.0 / 3.0));
+         double dim2 = 2 * pow((0.75 * ((M_PI / 4.0) - sin((M_PI / 4.0)))), (1.0 / 3.0));
+         double dim3 = 2 * pow((0.75 * ((M_PI / 4.0) - sin((M_PI / 4.0)))), (1.0 / 3.0));
+
+         xval.resize(size);
+         yval.resize(size);
+
+         for (int i = 0; i < size; i++)
+         {
+           random1 = rg.Random();
+           random2 = rg.Random();
+           choose1 = 0;
+           choose2 = 0;
+
+           totaldensity = 0;
+           for (size_t j = 0; j < eighteenCubed; j++)
+           {
+             density = odf[j];
+             totaldensity = totaldensity + density;
+             if (random1 < totaldensity && random1 >= (totaldensity - density)) choose1 = static_cast<int> (j);
+             if (random2 < totaldensity && random2 >= (totaldensity - density)) choose2 = static_cast<int> (j);
+           }
+           h1 = choose1 % 18;
+           h2 = (choose1 / 18) % 18;
+           h3 = choose1 / (18 * 18);
+           random = rg.Random();
+           h1 = ((dim1 / 18.0) * h1) + ((dim1 / 18.0) * random) - (dim1 / 2.0);
+           random = rg.Random();
+           h2 = ((dim2 / 18.0) * h2) + ((dim2 / 18.0) * random) - (dim2 / 2.0);
+           random = rg.Random();
+           h3 = ((dim3 / 18.0) * h3) + ((dim3 / 18.0) * random) - (dim3 / 2.0);
+           hmag = pow((h1 * h1 + h2 * h2 + h3 * h3), 0.5);
+           angle = pow((8 * hmag * hmag * hmag), (1.0 / 3.0));
+           n1 = h1 / hmag;
+           n2 = h2 / hmag;
+           n3 = h3 / hmag;
+		   cos_angle = cos(angle/2.0);
+           sin_angle = sin(angle/2.0);
+           q1[0] = 1;
+		   q1[1] = sin_angle * n1;
+           q1[2] = sin_angle * n2;
+           q1[3] = sin_angle * n3;
+           q1[4] = cos_angle;
+           h1 = choose2 % 18;
+           h2 = (choose2 / 18) % 18;
+           h3 = choose2 / (18 * 18);
+           random = rg.Random();
+           h1 = ((dim1 / 18.0) * h1) + ((dim1 / 18.0) * random) - (dim1 / 2.0);
+           random = rg.Random();
+           h2 = ((dim2 / 18.0) * h2) + ((dim2 / 18.0) * random) - (dim2 / 2.0);
+           random = rg.Random();
+           h3 = ((dim3 / 18.0) * h3) + ((dim3 / 18.0) * random) - (dim3 / 2.0);
+           hmag = pow((h1 * h1 + h2 * h2 + h3 * h3), 0.5);
+           angle = pow((8 * hmag * hmag * hmag), (1.0 / 3.0));
+           n1 = h1 / hmag;
+           n2 = h2 / hmag;
+           n3 = h3 / hmag;
+		   cos_angle = cos(angle/2.0);
+           sin_angle = sin(angle/2.0);
+           q2[0] = 1;
+		   q2[1] = sin_angle * n1;
+           q2[2] = sin_angle * n2;
+           q2[3] = sin_angle * n3;
+           q2[4] = cos_angle;
+         }
+         return err;
+       }
 
 
 

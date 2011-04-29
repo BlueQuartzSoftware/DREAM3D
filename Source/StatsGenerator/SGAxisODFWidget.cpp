@@ -93,7 +93,6 @@ int SGAxisODFWidget::readDataFromHDF5(H5ReconStatsReader::Pointer reader,
 int SGAxisODFWidget::writeDataToHDF5(H5ReconStatsWriter::Pointer writer)
 {
   int err = -1;
-
   double totalWeight = 0.0;
 
   QwtArray<double> e1s;
@@ -101,7 +100,7 @@ int SGAxisODFWidget::writeDataToHDF5(H5ReconStatsWriter::Pointer writer)
   QwtArray<double> e3s;
   QwtArray<double> weights;
   QwtArray<double> sigmas;
-  QwtArray<double> odf;
+  QwtArray<double> aodf;
 
   // Initialize xMax and yMax....
   e1s = m_ODFTableModel->getData(SGODFTableModel::Euler1);
@@ -110,18 +109,16 @@ int SGAxisODFWidget::writeDataToHDF5(H5ReconStatsWriter::Pointer writer)
   weights = m_ODFTableModel->getData(SGODFTableModel::Weight);
   sigmas = m_ODFTableModel->getData(SGODFTableModel::Sigma);
 
-  Texture::calculateOrthoRhombicODFData(e1s, e2s, e3s, weights, sigmas, true, odf, totalWeight);
-
-  if (odf.size() > 0)
+  Texture::calculateOrthoRhombicODFData(e1s, e2s, e3s, weights, sigmas, true, aodf, totalWeight);
+  if (aodf.size() > 0)
   {
-    double* odfPtr = &(odf.front());
+    double* aodfPtr = &(aodf.front());
     err = -1;
-    if (odfPtr != NULL)
+    if (aodfPtr != NULL)
     {
-      err = writer->writeAxisOrientationData(m_PhaseIndex, m_CrystalStructure, odfPtr);
+      err = writer->writeAxisOrientationData(m_PhaseIndex, aodfPtr, 1.0);
     }
   }
-
   return err;
 }
 

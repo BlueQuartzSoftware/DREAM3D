@@ -37,6 +37,8 @@
 #include <qwt.h>
 #include <qwt_plot.h>
 #include <qwt_plot_curve.h>
+#include <qwt_abstract_scale_draw.h>
+#include <qwt_scale_draw.h>
 
 #include "AIM/Common/Texture.h"
 
@@ -78,7 +80,7 @@ void StatsGenMDFWidget::setupGui()
   m_MDFTableView->setModel(m_MDFTableModel);
   QAbstractItemDelegate* aid = m_MDFTableModel->getItemDelegate();
   m_MDFTableView->setItemDelegate(aid);
-
+  m_PlotCurve = new QwtPlotCurve;
 }
 
 // -----------------------------------------------------------------------------
@@ -89,25 +91,92 @@ void StatsGenMDFWidget::initQwtPlot(QString xAxisName, QString yAxisName, QwtPlo
   plot->setAxisTitle(QwtPlot::xBottom, xAxisName);
   plot->setAxisTitle(QwtPlot::yLeft, yAxisName);
   plot->setCanvasBackground(QColor(Qt::white));
-
-
-#if 0
-  m_grid = new QwtPlotGrid;
-  m_grid->enableXMin(true);
-  m_grid->enableYMin(true);
-  m_grid->setMajPen(QPen(Qt::gray, 0, Qt::SolidLine));
-  m_grid->setMinPen(QPen(Qt::lightGray, 0, Qt::DotLine));
-  m_grid->attach(m_PlotView);
-#endif
+  // These set the plot axis to NOT show anything except the axis labels.
+  plot->axisScaleDraw(QwtPlot::yLeft)->enableComponent(QwtAbstractScaleDraw::Backbone, false);
+  plot->axisScaleDraw(QwtPlot::yLeft)->enableComponent(QwtAbstractScaleDraw::Ticks, false);
+  plot->axisScaleDraw(QwtPlot::yLeft)->enableComponent(QwtAbstractScaleDraw::Labels, false);
+  plot->axisScaleDraw(QwtPlot::xBottom)->enableComponent(QwtAbstractScaleDraw::Backbone, false);
+  plot->axisScaleDraw(QwtPlot::xBottom)->enableComponent(QwtAbstractScaleDraw::Ticks, false);
+  plot->axisScaleDraw(QwtPlot::xBottom)->enableComponent(QwtAbstractScaleDraw::Labels, false);
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void StatsGenMDFWidget::updateMDFPlots()
+{
+  on_m_MDFUpdateBtn_clicked();
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void StatsGenMDFWidget::on_m_MDFUpdateBtn_clicked()
 {
-  std::cout << "on_m_MDFUpdateBtn_clicked" << std::endl;
+  int err = 0;
+
+  QwtArray<double> x;
+  QwtArray<double> y;
+
+  QwtArray<double> angles;
+  QwtArray<double> weights;
+  QwtArray<double> axis;
+
+  angles = m_MDFTableModel->getData(SGMDFTableModel::Angle);
+  weights = m_MDFTableModel->getData(SGMDFTableModel::Weight);
+  axis = m_MDFTableModel->getData(SGMDFTableModel::Axis);
+
+  // Generate the ODF Data from the current values in the ODFTableModel
+  QwtArray<double> odf = generateODFData();
+
+  StatsGen sg;
+  int size = 1000;
+
+  if (m_CrystalStructure == AIM::Reconstruction::Cubic) {
+    err = sg.GenCubicMDFPlotData(angles, weights, axis, odf, x, y, size);
+  }
+  else if (m_CrystalStructure == AIM::Reconstruction::Hexagonal) {
+    err = sg.GenHexMDFPlotData(angles, weights, axis, odf, x, y, size);
+  }
+
+  QwtPlotCurve* curve = m_PlotCurve;
+  curve->setData(x, y);
+  curve->setStyle(QwtPlotCurve::Lines);
+  curve->attach(m_MDFPlot);
+  m_MDFPlot->replot();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QwtArray<double> StatsGenMDFWidget::generateODFData()
+{
+  int err = 0;
+  double totalWeight = 0.0;
+
+  QwtArray<double> e1s;
+  QwtArray<double> e2s;
+  QwtArray<double> e3s;
+  QwtArray<double> weights;
+  QwtArray<double> sigmas;
+  QwtArray<double> odf;
+
+  // Initialize xMax and yMax....
+  e1s = m_ODFTableModel->getData(SGODFTableModel::Euler1);
+  e2s = m_ODFTableModel->getData(SGODFTableModel::Euler2);
+  e3s = m_ODFTableModel->getData(SGODFTableModel::Euler3);
+  weights = m_ODFTableModel->getData(SGODFTableModel::Weight);
+  sigmas = m_ODFTableModel->getData(SGODFTableModel::Sigma);
+
+  if (m_CrystalStructure == AIM::Reconstruction::Cubic)
+  {
+    Texture::calculateCubicODFData(e1s, e2s, e3s, weights, sigmas, true, odf, totalWeight);
+  }
+  else if (m_CrystalStructure == AIM::Reconstruction::Hexagonal)
+  {
+    Texture::calculateHexODFData(e1s, e2s, e3s, weights, sigmas, true, odf, totalWeight);
+  }
+  return odf;
 }
 
 // -----------------------------------------------------------------------------
