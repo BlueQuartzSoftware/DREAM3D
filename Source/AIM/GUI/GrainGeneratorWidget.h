@@ -88,6 +88,7 @@ class GrainGeneratorWidget : public AIMPluginFrame, private Ui::GrainGeneratorWi
 
     void on_gg_H5InputStatisticsFile_textChanged(const QString &text);
     void on_gg_OutputDir_textChanged(const QString &text);
+    void on_outputFilePrefix_textChanged(const QString &text);
 
   private slots:
 

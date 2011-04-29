@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>629</width>
-    <height>559</height>
+    <height>563</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -50,6 +50,20 @@
       <widget class="QPushButton" name="gg_OutputDirBtn">
        <property name="text">
         <string>Select</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="0">
+      <widget class="QLabel" name="label">
+       <property name="text">
+        <string>Output File Prefix:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="1">
+      <widget class="QLineEdit" name="outputFilePrefix">
+       <property name="text">
+        <string>Synthetic_</string>
        </property>
       </widget>
      </item>

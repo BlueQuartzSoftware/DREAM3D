@@ -88,6 +88,7 @@ void ReconstructionWidget::readSettings(QSettings &prefs)
 
   prefs.beginGroup("Reconstruction");
   READ_FILEPATH_SETTING(prefs, rec_OutputDir, "");
+  READ_STRING_SETTING(prefs, outputFilePrefix, "Reconstruction_")
   READ_FILEPATH_SETTING(prefs, rec_H5InputFile, "");
   if (verifyPathExists(rec_H5InputFile->text(), rec_H5InputFile) )
   {
@@ -128,6 +129,7 @@ void ReconstructionWidget::writeSettings(QSettings &prefs)
 {
   prefs.beginGroup("Reconstruction");
   WRITE_STRING_SETTING(prefs, rec_OutputDir)
+  WRITE_STRING_SETTING(prefs, outputFilePrefix)
   WRITE_STRING_SETTING(prefs, rec_H5InputFile)
   WRITE_SETTING(prefs, rec_ZStartIndex)
   WRITE_SETTING(prefs, rec_ZEndIndex)
@@ -385,6 +387,13 @@ void ReconstructionWidget::on_rec_OutputDir_textChanged(const QString & text)
   checkIOFiles();
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ReconstructionWidget::on_outputFilePrefix_textChanged(const QString &text)
+{
+  checkIOFiles();
+}
 
 // -----------------------------------------------------------------------------
 //

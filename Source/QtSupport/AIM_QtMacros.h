@@ -96,7 +96,7 @@
 
 
 #define CHECK_QLABEL_OUTPUT_FILE_EXISTS_BODY1(ns, prefixname, name)\
-  prefixname->setText(ns::name.c_str());\
+  prefixname->setText(outputFilePrefix->text() + ns::name.c_str());\
   prefixname##Icon->setPixmap(QPixmap(iconFile));\
 
 
@@ -117,7 +117,7 @@
 
 #define CHECK_QLABEL_OUTPUT_FILE_EXISTS(ns, prefix, name) \
 { \
-  QString absPath = prefix##OutputDir->text() + QDir::separator() + ns::name.c_str();\
+  QString absPath = prefix##OutputDir->text() + QDir::separator() + outputFilePrefix->text() + ns::name.c_str();\
   absPath = QDir::toNativeSeparators(absPath);\
   QFileInfo fi ( absPath );\
   QString iconFile;\
@@ -132,7 +132,7 @@
 
 #define CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(ns, prefix, name) \
 { \
-  QString absPath = prefix##OutputDir->text() + QDir::separator() + ns::name.c_str();\
+  QString absPath = prefix##OutputDir->text() + QDir::separator() + outputFilePrefix->text() + ns::name.c_str();\
   absPath = QDir::toNativeSeparators(absPath);\
   QFileInfo fi ( absPath );\
   QString iconFile;\
