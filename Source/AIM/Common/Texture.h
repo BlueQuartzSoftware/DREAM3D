@@ -146,15 +146,18 @@ class AIMCOMMON_EXPORT Texture
         bin1 = bin % 18;
         bin2 = (bin / 18) % 18;
         bin3 = bin / (18 * 18);
-        for (int j = -sigmas[i]; j <= sigmas[i]; j++)
+        for (double j = -sigmas[i]; j <= sigmas[i]; j++)
         {
-          for (int k = -sigmas[i]; k <= sigmas[i]; k++)
+          double jsqrd = j*j;
+          for (double k = -sigmas[i]; k <= sigmas[i]; k++)
           {
-            for (int l = -sigmas[i]; l <= sigmas[i]; l++)
+            double ksqrd = k*k;
+            for (double l = -sigmas[i]; l <= sigmas[i]; l++)
             {
-              addbin1 = bin1 + j;
-              addbin2 = bin2 + k;
-              addbin3 = bin3 + l;
+              double lsqrd = l*l;
+              addbin1 = bin1 + static_cast<size_t>(j);
+              addbin2 = bin2 + static_cast<size_t>(k);
+              addbin3 = bin3 + static_cast<size_t>(l);
               if (addbin1 < 0) addbin1 = addbin1 + 18;
               if (addbin1 >= 18) addbin1 = addbin1 - 18;
               if (addbin2 < 0) addbin2 = addbin2 + 18;
@@ -162,7 +165,7 @@ class AIMCOMMON_EXPORT Texture
               if (addbin3 < 0) addbin3 = addbin3 + 18;
               if (addbin3 >= 18) addbin3 = addbin3 - 18;
               addbin = (addbin3 * 18 * 18) + (addbin2 * 18) + (addbin1);
-              dist = pow((j * j + k * k + l * l), 0.5);
+              dist = pow((jsqrd +ksqrd + lsqrd), 0.5);
               fraction = 1.0 - ((dist / sigmas[i]) * (dist / sigmas[i]));
               if (fraction > 0.0)
               {
@@ -428,8 +431,7 @@ class AIMCOMMON_EXPORT Texture
         for (size_t i = 0; i < odfsize; i++)
         {
           odf[i] = odf[i] / totalweight;
-		  test = odf[i];
-	        }
+        }
       }
 
   }

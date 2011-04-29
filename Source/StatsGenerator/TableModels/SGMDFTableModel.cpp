@@ -289,27 +289,57 @@ bool SGMDFTableModel::removeRows(int row, int count, const QModelIndex& index)
   return true;
 }
 
-#if 0
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 QVector<double > SGMDFTableModel::getData(int col)
 {
-
-  switch(col)
-  {
-    case Angle:
+  if (col == Angle) {
       return m_Angles;
-    case Weight:
+  }
+  else if (col == Weight) {
       return m_Weights;
-    case Axis:
-      return m_Axis;
-    default:
-      Q_ASSERT(false);
+  }
+  else if (col == Axis) {
+    int count = rowCount();
+    QVector<double> values;
+    double h = 0.0;
+    double k=0.0;
+    double l=0.0;
+    int err = 0;
+    for (int r = 0; r < count; ++r)
+    {
+      err = parseHKLRow(r, h,k,l);
+      if (err >= 0) {
+        values.push_back(h);
+        values.push_back(k);
+        values.push_back(l);
+      }
+    }
+    return values;
   }
   return QVector<double > ();
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int SGMDFTableModel::parseHKLRow(int row, double &h, double &k, double &l)
+{
+  QString hklStr = m_Axis[row];
+  hklStr.chop(1); // remove the ">" charater from the end;
+  hklStr.remove(0, 1); // Remove the front "<" character
+  bool ok = false;
+  h = hklStr.section(',', 0,0).toDouble(&ok);
+  k = hklStr.section(',', 1,1).toDouble(&ok);
+  l = hklStr.section(',', 1,1).toDouble(&ok);
+  if (ok) { return 0; }
+  return -1;
+}
+
+
+#if 0
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -322,13 +352,13 @@ double SGMDFTableModel::getDataValue(int col, int row)
     case Weight:
       return m_Weights[row];
     case Axis:
-      return m_Axis[row];
+//      return m_Axis[row];
     default:
       Q_ASSERT(false);
   }
   return 0.0;
 }
-
+#endif
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -341,12 +371,12 @@ void SGMDFTableModel::setColumnData(int col, QVector<double> &data)
     case Weight:
       m_Weights = data;break;
     case Axis:
-      m_Axis = data; break;
+//      m_Axis = data; break;
     default:
       Q_ASSERT(false);
   }
 }
-#endif
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
