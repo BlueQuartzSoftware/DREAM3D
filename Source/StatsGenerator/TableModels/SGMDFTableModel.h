@@ -147,7 +147,7 @@ class SGMDFTableModel : public QAbstractTableModel
       * @param col
       * @return
       */
-     //virtual QVector<double> getData(int col);
+     virtual QVector<double> getData(int col);
 
      /**
       *
@@ -155,10 +155,10 @@ class SGMDFTableModel : public QAbstractTableModel
       * @param row
       * @return
       */
-    // virtual double getDataValue(int col, int row);
+      virtual double getDataValue(int col, int row);
 
 
-    // virtual void setColumnData(int col, QVector<double> &data);
+      virtual void setColumnData(int col, QVector<double> &data);
 
      virtual void setInitialValues();
 

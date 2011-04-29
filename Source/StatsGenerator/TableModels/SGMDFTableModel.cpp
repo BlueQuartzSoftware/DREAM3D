@@ -289,7 +289,7 @@ bool SGMDFTableModel::removeRows(int row, int count, const QModelIndex& index)
   return true;
 }
 
-#if 0
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -303,7 +303,7 @@ QVector<double > SGMDFTableModel::getData(int col)
     case Weight:
       return m_Weights;
     case Axis:
-      return m_Axis;
+//      return m_Axis;
     default:
       Q_ASSERT(false);
   }
@@ -322,7 +322,7 @@ double SGMDFTableModel::getDataValue(int col, int row)
     case Weight:
       return m_Weights[row];
     case Axis:
-      return m_Axis[row];
+//      return m_Axis[row];
     default:
       Q_ASSERT(false);
   }
@@ -341,12 +341,12 @@ void SGMDFTableModel::setColumnData(int col, QVector<double> &data)
     case Weight:
       m_Weights = data;break;
     case Axis:
-      m_Axis = data; break;
+//      m_Axis = data; break;
     default:
       Q_ASSERT(false);
   }
 }
-#endif
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
