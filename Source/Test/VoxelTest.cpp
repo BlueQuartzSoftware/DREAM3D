@@ -29,20 +29,15 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include <iostream>
 #include "AIM/Common/Voxel.h"
-#include "AIM/Common/SurfaceMeshFunc.h"
-#include "AIM/Common/VTKFileUtils.h"
-
+#include <boost/shared_array.hpp>
 
 int main(int argc, char **argv)
 {
+std::cout << "Starting...." << std::endl;
 
-  {
-  Voxel v;
-  {
-    Voxel v1 = v;
-  }
-    std::cout << "out of scope v" << std::endl;
-  }
+  boost::shared_array<Voxel> voxels (new Voxel[2]);
+  voxels.reset(NULL);
+  Voxel* v = &(voxels[1]);
 
   std::cout << "Ending" << std::endl;
   return 0;
