@@ -144,6 +144,7 @@ void StatsGenODFWidget::enableMDFTab(bool b)
     m_MDFWidget->deleteLater();
   }
   m_MDFWidget = new StatsGenMDFWidget();
+  m_MDFWidget->setODFTableModel(m_ODFTableModel);
   tabWidget->addTab(m_MDFWidget, QString("MDF"));
 }
 
