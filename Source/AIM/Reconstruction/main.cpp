@@ -116,9 +116,11 @@ int main(int argc, char **argv)
     TCLAP::ValueArg<double>  BinStepSize( "", "binStepSize", "Width of each Bin in the Reconstruction Stats", false, 1.0, "Default=1.0");
     cmd.add(BinStepSize);
 
-    TCLAP::ValueArg<std::string> OutputDir("", "outputDir", "Where to write all the output files. If it does not exist it will be created.", false, "", "/Path/To/Output");
+    TCLAP::ValueArg<std::string> OutputDir("", "outputDir", "Where to write all the output files. If it does not exist it will be created.", true, ".", "/Path/To/Output");
     cmd.add(OutputDir);
 
+    TCLAP::ValueArg<std::string> OutputFilePrefix("", "outputFilePrefix", "This is an optional file prefix for each of the output files", false, "Reconstruction_", "Default=Reconstruction_");
+    cmd.add(OutputFilePrefix);
 
     TCLAP::ValueArg<std::string > logfile("l", "logfile", "Name of the Log file to store any output into", false, "", "/Path/To/LogFile.log");
     cmd.add(logfile);
@@ -151,7 +153,7 @@ int main(int argc, char **argv)
 #endif
 
     AIM::Reconstruction::AlignmentMethod alignmeth = static_cast<AIM::Reconstruction::AlignmentMethod>(AlignMeth.getValue() );
-    
+
     m_Reconstruction->setAlignmentMethod(alignmeth);
     Ang::Orientation orient = static_cast<Ang::Orientation>(Orientation.getValue());
     m_Reconstruction->setOrientation(orient);
@@ -164,6 +166,7 @@ int main(int argc, char **argv)
     m_Reconstruction->setSizeBinStepSize(BinStepSize.getValue());
 
     m_Reconstruction->setOutputDirectory(OutputDir.getValue());
+    m_Reconstruction->setOutputFilePrefix(OutputFilePrefix.getValue());
     m_Reconstruction->setWriteVisualizationFile(true);
     m_Reconstruction->setWriteIPFFile(true);
     m_Reconstruction->setWriteDisorientationFile(true);
