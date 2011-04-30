@@ -151,7 +151,7 @@ class TSLANG_EXPORT AngPhase
     ANG_INSTANCE_STRING_PROPERTY(MaterialName)
     ANG_INSTANCE_STRING_PROPERTY(Formula)
     ANG_INSTANCE_STRING_PROPERTY(Info)
-    ANG_INSTANCE_PROPERTY(int, Symmetry)
+    ANG_INSTANCE_PROPERTY(TSL::OIM::PhaseSymmetry, Symmetry)
     ANG_INSTANCE_PROPERTY(std::vector<float>, LatticeConstants)
     ANG_INSTANCE_PROPERTY(int, NumberFamilies)
     ANG_INSTANCE_PROPERTY(std::vector<HKLFamily::Pointer>, HKLFamilies)
