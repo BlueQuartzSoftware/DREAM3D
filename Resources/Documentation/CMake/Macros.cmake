@@ -1,4 +1,13 @@
-
+#--////////////////////////////////////////////////////////////////////////////
+#--
+#--  Copyright (c) 2009, Michael A. Jackson. BlueQuartz Software
+#--  Copyright (c) 2009, Michael Groeber, US Air Force Research Laboratory
+#--  All rights reserved.
+#--  BSD License: http://www.opensource.org/licenses/bsd-license.html
+#--
+#-- This code was partly written under US Air Force Contract FA8650-07-D-5800
+#--
+#--////////////////////////////////////////////////////////////////////////////
 
 
 function(ADD_DOXYGEN_TARGETS)
@@ -8,17 +17,16 @@ function(ADD_DOXYGEN_TARGETS)
     set(multiValueArgs SOURCE_FILES EPS_FILES )
     cmake_parse_arguments(DOX "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN} )
     
-    
-    message(STATUS "Adding Doxygen Targets for ${DOX_PROJECT_NAME}")
+#    message(STATUS "Adding Doxygen Targets for ${DOX_PROJECT_NAME}")
 #    message(STATUS "DOX_PROJECT_NAME: ${DOX_PROJECT_NAME}")
 #    message(STATUS "DOX_GENERATE_HTML: ${DOX_GENERATE_HTML}")
 #    message(STATUS "DOX_GENERATE_LATEX: ${DOX_GENERATE_LATEX}")
 #    message(STATUS "DOX_GENERATE_RTF: ${DOX_GENERATE_RTF}")
-    #message(STATUS "DOX_PROJECT_NAME: ${DOX_PROJECT_NAME}")
-    #message(STATUS "DOX_PROJECT_BINARY_DIR: ${DOX_PROJECT_BINARY_DIR}")
-    #message(STATUS "DOX_TITLE:${LATEX_TITLE}")
-    #message(STATUS "DOX_AUTHOR:${LATEX_AUTHOR}")
-    #message(STATUS "DOX_TEMPLATE_FILE: ${DOX_TEMPLATE_FILE}")
+#    message(STATUS "DOX_PROJECT_NAME: ${DOX_PROJECT_NAME}")
+#    message(STATUS "DOX_PROJECT_BINARY_DIR: ${DOX_PROJECT_BINARY_DIR}")
+#    message(STATUS "DOX_TITLE:${LATEX_TITLE}")
+#    message(STATUS "DOX_AUTHOR:${LATEX_AUTHOR}")
+#    message(STATUS "DOX_TEMPLATE_FILE: ${DOX_TEMPLATE_FILE}")
     
     set (GENERATE_HTML ${GENERATE_HTML})
     set (GENERATE_LATEX ${GENERATE_LATEX})
@@ -43,7 +51,6 @@ function(ADD_DOXYGEN_TARGETS)
     					SOURCES ${DOX_PROJECT_BINARY_DIR}/${DOXYFILE} )
     											
     if (DOX_GENERATE_LATEX STREQUAL "YES")
-        message(STATUS "HERE")
         #-- Create the proper Directory Structure
         file(MAKE_DIRECTORY ${DOX_PROJECT_BINARY_DIR}/latex )
         
