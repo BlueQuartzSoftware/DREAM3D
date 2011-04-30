@@ -342,6 +342,7 @@ void GrainGeneratorWidget::on_m_GoBtn_clicked()
 
   m_GrainGenerator->setH5StatsFile(m_H5InputStatisticsFile->text().toStdString() );
   m_GrainGenerator->setOutputDirectory(m_OutputDir->text().toStdString());
+  m_GrainGenerator->setOutputFilePrefix(m_OutputFilePrefix->text().toStdString());
   m_GrainGenerator->setNumGrains(m_NumGrains->value());
 
   int shapeclass = m_ShapeClass->currentIndex() + 1;

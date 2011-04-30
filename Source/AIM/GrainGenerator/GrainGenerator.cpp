@@ -70,6 +70,11 @@
 #endif
 
 
+
+#define MAKE_OUTPUT_FILE_PATH(outpath, filename)\
+    std::string outpath = m_OutputDirectory + MXADir::Separator + m_OutputFilePrefix + filename;
+
+
 #if AIM_USE_QT
 // -----------------------------------------------------------------------------
 //
@@ -95,6 +100,7 @@ QObject(parent),
 #endif
 m_H5StatsFile(""),
 m_OutputDirectory("."),
+m_OutputFilePrefix("GrainGenerator_"),
 m_NumGrains(0),
 m_ShapeClass(0),
 m_XResolution(0.0),
@@ -133,12 +139,14 @@ void GrainGenerator::compute()
     progressMessage(AIM_STRING("Error Opening HDF5 Stats File. Nothing generated"), 100);
     return;
   }
-  std::string crystallographicErrorFile = m_OutputDirectory + MXADir::Separator + AIM::SyntheticBuilder::CrystallographicErrorFile;
-  std::string eulerFile = m_OutputDirectory + MXADir::Separator + AIM::SyntheticBuilder::EulerFile;
-  std::string graindataFile = m_OutputDirectory + MXADir::Separator + AIM::SyntheticBuilder::GrainDataFile;
-  std::string hdf5ResultsFile = m_OutputDirectory + MXADir::Separator + AIM::SyntheticBuilder::H5StatisticsFile;
-  std::string visFile = m_OutputDirectory + MXADir::Separator + AIM::SyntheticBuilder::VisualizationFile;
-  std::string packGrainsFile = m_OutputDirectory + MXADir::Separator + AIM::SyntheticBuilder::PackGrainsFile;
+  MAKE_OUTPUT_FILE_PATH ( crystallographicErrorFile , AIM::SyntheticBuilder::CrystallographicErrorFile)
+  MAKE_OUTPUT_FILE_PATH ( eulerFile , AIM::SyntheticBuilder::EulerFile)
+  MAKE_OUTPUT_FILE_PATH ( graindataFile , AIM::SyntheticBuilder::GrainDataFile)
+  MAKE_OUTPUT_FILE_PATH ( hdf5ResultsFile , AIM::SyntheticBuilder::H5StatisticsFile)
+  MAKE_OUTPUT_FILE_PATH ( visFile , AIM::SyntheticBuilder::VisualizationFile)
+  MAKE_OUTPUT_FILE_PATH ( packGrainsFile , AIM::SyntheticBuilder::PackGrainsFile)
+
+
 
   H5ReconStatsWriter::Pointer h5io = H5ReconStatsWriter::New(hdf5ResultsFile);
   m = GrainGeneratorFunc::New();
