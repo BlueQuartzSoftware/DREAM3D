@@ -120,8 +120,18 @@ namespace Ang {
 
 
 namespace TSL {
+
  namespace OIM
  {
+
+   enum PhaseSymmetry {
+     CubicSymmetry = 43,
+     HexagonalSymmetry = 62,
+     UnknownSymmetry = 999,
+   };
+
+
+
    const std::string FileExt("ang");
    const std::string TEMPIXPerUM(ANG_TEM_PIXPERUM);
    const std::string XStar(ANG_X_STAR  );
