@@ -40,8 +40,15 @@
 
 class QLineEdit;
 
-/*
- *
+/**
+ * @class AIMPluginFrame AIMPluginFrame.h AIM/GUI/AIMPluginFrame.h
+ * @brief This class is a super class for any High Level User Interface element
+ * that would get loaded from a plugin type architecture. The class implements
+ * some common methods that are needed by all subclasses. Subclasses should implement
+ * the pure virtual methods and so this class can not be directly instantiated.
+ * @author Michael A. Jackson for BlueQuartz Software
+ * @date Jan 30, 2011
+ * @version 1.0
  */
 class AIMPluginFrame : public QFrame
 {
@@ -63,7 +70,7 @@ class AIMPluginFrame : public QFrame
 
     /**
      * @brief Enables or Disables all the widgets in a list
-     * @param b
+     * @param b Enable or Disable the widgets.
      */
     virtual void setWidgetListEnabled(bool b) = 0;
 
@@ -86,29 +93,71 @@ class AIMPluginFrame : public QFrame
      */
     virtual void setupGui() = 0;
 
-
+    /**
+     * @brief Checks for the existance of output files
+     */
     virtual void checkIOFiles() = 0;
 
+    /**
+     * @brief Sets the status bar object for the frame
+     * @param statusBar
+     */
     virtual void setStatusBar(QStatusBar* statusBar);
 
+    /**
+     * @brief Returns a pointer to the QStatusBar being used
+     * @return
+     */
     virtual QStatusBar* statusBar();
 
+    /**
+     * @brief Runs checks on the output files to let the user know which output
+     * files already exist in the output directory location potentially warning
+     * them of an over writing situation
+     * @param le The QLineEdit where the output directory is defined
+     * @param msgTitle A message to display.
+     * @return
+     */
     virtual bool sanityCheckOutputDirectory(QLineEdit* le, QString msgTitle);
-
 
     signals:
 
+    /**
+     * @brief Signal emitted when a process is started
+     */
       void processStarted();
+
+      /**
+       * @brief Signal Emitted when a process has ended.
+       */
       void processEnded();
+
+      /**
+       * @brief Signal Emitted when the process has been canceled.
+       */
       void cancelProcess();
+
+      /**
+       * @brief Signal emitted when a message is available for display to the user
+       * @param
+       */
       void processMessage(const QString &);
 
     private slots:
-      // slots for our worker thread to communicate
+      /**
+       * @brief Slot to catch when a thread has a message to display
+       */
       virtual void threadHasMessage(QString message) = 0;
 
-      /* Reconstruction Thread communicates throught these methods */
+      /**
+       * @brief Slot to catch signals when the processing thread is finished.
+       */
       virtual void threadFinished() = 0;
+
+      /**
+       * @brief Slot to catch signals when a processing thread has made progress
+       * @param value The value of the progress, Typically between 0 and 100.
+       */
       virtual void threadProgressed(int value) = 0;
 
     private:
