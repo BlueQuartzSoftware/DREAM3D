@@ -251,7 +251,7 @@ int H5AngReader::readHeader(hid_t parId)
     READ_PHASE_STRING_DATA(pid, TSL::OIM::MaterialName, MaterialName, m_CurrentPhase)
     READ_PHASE_STRING_DATA(pid, TSL::OIM::Formula, Formula, m_CurrentPhase)
     READ_PHASE_STRING_DATA(pid, TSL::OIM::Info, Info, m_CurrentPhase)
-    READ_PHASE_HEADER_DATA(pid, int, TSL::OIM::Symmetry, Symmetry, m_CurrentPhase)
+    READ_PHASE_HEADER_DATA(pid, TSL::OIM::PhaseSymmetry, TSL::OIM::Symmetry, Symmetry, m_CurrentPhase)
     READ_PHASE_HEADER_ARRAY(pid, std::vector<float>, TSL::OIM::LatticeConstants, LatticeConstants, m_CurrentPhase)
     READ_PHASE_HEADER_DATA(pid, int, TSL::OIM::NumberFamilies, NumberFamilies, m_CurrentPhase)
 
