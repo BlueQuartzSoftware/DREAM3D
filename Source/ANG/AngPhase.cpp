@@ -158,7 +158,9 @@ void AngPhase::parseSymmetry(char* value, size_t start, size_t length)
   } // move past the ":" character
   std::string data(&(value[start]), strlen(value) - start);
   std::stringstream ss(data);
-  ss >> m_Symmetry;
+  unsigned int symm;
+  ss >> symm;
+  m_Symmetry = static_cast<TSL::OIM::PhaseSymmetry>(symm);
 }
 
 // -----------------------------------------------------------------------------
