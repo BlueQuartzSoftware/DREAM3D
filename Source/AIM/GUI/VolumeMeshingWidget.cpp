@@ -270,6 +270,7 @@ void VolumeMeshingWidget::on_m_GoBtn_clicked()
   m_VolumeMesh->setNodesFile(m_NodesFile->text().toStdString() );
   m_VolumeMesh->setTrianglesFile(m_TrianglesFile->text().toStdString() );
   m_VolumeMesh->setOutputDirectory(m_OutputDir->text().toStdString());
+  m_VolumeMesh->setOutputFilePrefix(m_OutputFilePrefix->text().toStdString());
   m_VolumeMesh->setXDim(m_XDim->value());
   m_VolumeMesh->setYDim(m_YDim->value());
   m_VolumeMesh->setZDim(m_ZDim->value());

@@ -455,6 +455,7 @@ void ReconstructionWidget::on_m_GoBtn_clicked()
   m_Reconstruction->setSizeBinStepSize(m_BinStepSize->value());
 
   m_Reconstruction->setOutputDirectory(m_OutputDir->text().toStdString());
+  m_Reconstruction->setOutputFilePrefix(m_OutputFilePrefix->text().toStdString());
   m_Reconstruction->setWriteVisualizationFile(m_VisualizationVizFile->isChecked());
   m_Reconstruction->setWriteIPFFile(m_IPFVizFile->isChecked());
   m_Reconstruction->setWriteDisorientationFile(m_DisorientationVizFile->isChecked());

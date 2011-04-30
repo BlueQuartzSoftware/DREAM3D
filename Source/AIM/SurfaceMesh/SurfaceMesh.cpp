@@ -79,6 +79,7 @@ QObject(parent),
 m_InputDirectory("."),
 m_InputFile(""),
 m_OutputDirectory(""),
+m_OutputFilePrefix("SurfaceMesh_"),
 m_SmoothMesh(false),
 m_SmoothIterations(0),
 m_SmoothFileOutputIncrement(0),
@@ -100,6 +101,8 @@ SurfaceMesh::~SurfaceMesh()
 {
 }
 
+#define MAKE_OUTPUT_FILE_PATH(outpath, filename)\
+    std::string outpath = m_OutputDirectory + MXADir::Separator + m_OutputFilePrefix + filename;
 
 #define USE_VTK_FILE_UTILS 1
 
@@ -111,13 +114,13 @@ void SurfaceMesh::compute()
   CHECK_FOR_CANCELED(Surface Meshing)
   progressMessage(AIM_STRING("Running Surface Meshing"), 0 );
 
-  std::string  NodesRawFile = m_OutputDirectory + MXADir::Separator + AIM::SurfaceMeshing::NodesRawFile;
-  std::string  NodesFile = m_OutputDirectory + MXADir::Separator + AIM::SurfaceMeshing::NodesFile;
-  std::string  TrianglesFile = m_OutputDirectory + MXADir::Separator + AIM::SurfaceMeshing::TrianglesFile;
-  std::string  EdgesFile = m_OutputDirectory + MXADir::Separator + AIM::SurfaceMeshing::EdgesFile;
-  std::string  EdgesFileIndex = m_OutputDirectory + MXADir::Separator + AIM::SurfaceMeshing::EdgesFileIndex;
-  std::string  TrianglesFileIndex = m_OutputDirectory + MXADir::Separator + AIM::SurfaceMeshing::TrianglesFileIndex;
-  std::string  VisualizationFile = m_OutputDirectory + MXADir::Separator + AIM::SurfaceMeshing::VisualizationFile;
+  MAKE_OUTPUT_FILE_PATH (  NodesRawFile , AIM::SurfaceMeshing::NodesRawFile)
+  MAKE_OUTPUT_FILE_PATH (  NodesFile , AIM::SurfaceMeshing::NodesFile)
+  MAKE_OUTPUT_FILE_PATH (  TrianglesFile , AIM::SurfaceMeshing::TrianglesFile)
+  MAKE_OUTPUT_FILE_PATH (  EdgesFile , AIM::SurfaceMeshing::EdgesFile)
+  MAKE_OUTPUT_FILE_PATH (  EdgesFileIndex , AIM::SurfaceMeshing::EdgesFileIndex)
+  MAKE_OUTPUT_FILE_PATH (  TrianglesFileIndex , AIM::SurfaceMeshing::TrianglesFileIndex)
+  MAKE_OUTPUT_FILE_PATH (  VisualizationFile , AIM::SurfaceMeshing::VisualizationFile)
 
   // Create the output directory if needed
   if (MXADir::exists(m_OutputDirectory) == false)
