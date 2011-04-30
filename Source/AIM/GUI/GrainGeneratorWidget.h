@@ -42,8 +42,14 @@
 
 
 
-/*
- *
+/**
+ * @class GrainGeneratorWidget GrainGeneratorWidget.h AIM/GUI/GrainGeneratorWidget.h
+ * @brief This class represents the User Interface for the Synthetic Grain Generator module
+ * of the AIMRepresentation program. The user interface subclasses QFrame which
+ * should make it able to be embedded in most Qt applications.
+ * @author Michael A. Jackson for BlueQuartz Software
+ * @date Jan 30, 2011
+ * @version 1.0
  */
 class GrainGeneratorWidget : public AIMPluginFrame, private Ui::GrainGeneratorWidget
 {

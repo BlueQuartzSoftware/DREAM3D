@@ -51,7 +51,8 @@
 /**
 * @class RepresentationUI RepresentationUI AIM/RepresentationUI/GUI/RepresentationUI.h
 * @brief The class is the actual implementation for the GUI window that appears on screen
-* when the application is launched.
+* when the application is launched. It contains all the subwidgets that the user
+* can utilize to perform the various actions of the AIMRepresentation Software Suite.
 * @author Michael A. Jackson for BlueQuartz Software
 * @date Oct 19, 2009
 * @version 1.0
