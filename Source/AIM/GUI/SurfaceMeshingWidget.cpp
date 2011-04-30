@@ -259,6 +259,7 @@ void SurfaceMeshingWidget::on_m_GoBtn_clicked()
   }
 
   m_SurfaceMesh->setOutputDirectory(od.toStdString());
+  m_SurfaceMesh->setOutputFilePrefix(m_OutputFilePrefix->text().toStdString());
   m_SurfaceMesh->setSmoothMesh(m_SmoothMesh->isChecked());
   m_SurfaceMesh->setSmoothIterations(m_SmoothIterations->value());
   m_SurfaceMesh->setSmoothFileOutputIncrement(m_WriteOutputFileIncrement->value());

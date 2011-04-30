@@ -112,6 +112,7 @@ Reconstruction::Reconstruction() :
 #endif
 m_H5AngFile(""),
 m_OutputDirectory("."),
+m_OutputFilePrefix("Reconstruction_"),
 m_MergeTwins(false),
 m_MergeColonies(false),
 m_FillinSample(false),
@@ -137,14 +138,20 @@ m_ErrorCondition(0)
 
 }
 
-
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 Reconstruction::~Reconstruction()
 {
  // std::cout << "~Reconstruction()" << std::endl;
 }
 
+#define MAKE_OUTPUT_FILE_PATH(outpath, filename)\
+    std::string outpath = m_OutputDirectory + MXADir::Separator + m_OutputFilePrefix + filename;
 
-
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void Reconstruction::compute()
 {
   //std::cout << "Reconstruction::compute Start" << std::endl;
@@ -179,10 +186,10 @@ void Reconstruction::compute()
   for(size_t i=0;i<phases.size();i++)
   {
 	  int phaseID = phases[i]->getPhase();
-	  int symmetry = phases[i]->getSymmetry();
-	  AIM::Reconstruction::CrystalStructure crystal_structure;
-	  if(symmetry == 43) crystal_structure = AIM::Reconstruction::Cubic;
-	  if(symmetry == 62) crystal_structure = AIM::Reconstruction::Hexagonal;
+	  TSL::OIM::PhaseSymmetry symmetry = phases[i]->getSymmetry();
+	  AIM::Reconstruction::CrystalStructure crystal_structure = AIM::Reconstruction::UnknownCrystalStructure;
+	  if(symmetry == TSL::OIM::CubicSymmetry) crystal_structure = AIM::Reconstruction::Cubic;
+	  else if(symmetry == TSL::OIM::HexagonalSymmetry) crystal_structure = AIM::Reconstruction::Hexagonal;
 	  m_CrystalStructure[phaseID] = crystal_structure;
   }
 
@@ -215,18 +222,17 @@ void Reconstruction::compute()
     return;
   }
 
-  std::string graindataFile = m_OutputDirectory + MXADir::Separator + AIM::Reconstruction::GrainDataFile;
-  std::string alignmentFile = m_OutputDirectory + MXADir::Separator + AIM::Reconstruction::AlignmentFile;
-
-  std::string reconVisFile = m_OutputDirectory + MXADir::Separator + AIM::Reconstruction::VisualizationVizFile;
-  std::string reconIPFVisFile = m_OutputDirectory + MXADir::Separator + AIM::Reconstruction::IPFVizFile;
-  std::string reconDisVisFile = m_OutputDirectory + MXADir::Separator + AIM::Reconstruction::DisorientationVizFile;
-  std::string reconIQVisFile = m_OutputDirectory + MXADir::Separator + AIM::Reconstruction::ImageQualityVizFile;
-  std::string reconSFVisFile = m_OutputDirectory + MXADir::Separator + AIM::Reconstruction::SchmidFactorVizFile;
-  std::string reconDSVisFile = m_OutputDirectory + MXADir::Separator + AIM::Reconstruction::DownSampledVizFile;
-  std::string reconDeformStatsFile = m_OutputDirectory + MXADir::Separator + AIM::Reconstruction::DeformationStatsFile;
-  std::string reconDeformIPFFile = m_OutputDirectory + MXADir::Separator + AIM::Reconstruction::IPFDeformVTKFile;
-  std::string hdf5GrainFile = m_OutputDirectory + MXADir::Separator + AIM::Reconstruction::HDF5GrainFile;
+  MAKE_OUTPUT_FILE_PATH (graindataFile, AIM::Reconstruction::GrainDataFile);
+  MAKE_OUTPUT_FILE_PATH ( alignmentFile, AIM::Reconstruction::AlignmentFile);
+  MAKE_OUTPUT_FILE_PATH ( reconVisFile, AIM::Reconstruction::VisualizationVizFile);
+  MAKE_OUTPUT_FILE_PATH ( reconIPFVisFile, AIM::Reconstruction::IPFVizFile);
+  MAKE_OUTPUT_FILE_PATH ( reconDisVisFile, AIM::Reconstruction::DisorientationVizFile);
+  MAKE_OUTPUT_FILE_PATH ( reconIQVisFile, AIM::Reconstruction::ImageQualityVizFile);
+  MAKE_OUTPUT_FILE_PATH ( reconSFVisFile, AIM::Reconstruction::SchmidFactorVizFile);
+  MAKE_OUTPUT_FILE_PATH ( reconDSVisFile, AIM::Reconstruction::DownSampledVizFile);
+  MAKE_OUTPUT_FILE_PATH ( reconDeformStatsFile, AIM::Reconstruction::DeformationStatsFile);
+  MAKE_OUTPUT_FILE_PATH ( reconDeformIPFFile, AIM::Reconstruction::IPFDeformVTKFile);
+  MAKE_OUTPUT_FILE_PATH ( hdf5GrainFile, AIM::Reconstruction::HDF5GrainFile);
 
   START_CLOCK()
 
