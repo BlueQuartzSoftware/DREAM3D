@@ -68,4 +68,23 @@ the other tabs with default values.
 @image html StatsGenerator_10.png "StatsGenerator MDF Configuration Tab"
 @image latex StatsGenerator_10.png "StatsGenerator MDF Configuration Tab" width=6in
 
+
+@section sg_dev_notes StatsGenerator Developer Notes
+This section contains some notes during the development of the StatsGenerator application.
+
+@subsection sg_dev_layout QtWidget Heirarchy
+The StatsGenerator application was written using the Qt framework from Nokia, which
+is a cross platform GUI application framework.
+
+The top level widget is a QMainWindow with the class name <b>StatsGeneratorUI</b>.
+This class contains a single <b>SGWidget</b> which is a QWidget derived class that
+contains all the subwidgets for a given phase. The user can elect to add multiple
+phases to the statistics at which point for each additional phase an additional
+SGWidget will be added. Within each SGWidget are a number of tabs which contain
+various plotting or user input fields. Some of those tabs have one or more <b>StatsGenPlotWidget</b>
+where the various distribution curves are plotted for things like Omega3, Neighbors
+and the various Shape distributions. Another tab type is the SGODFWidget and SGAxisODFWidget
+which contain the user interface elements to generate ODF, Axis ODF and MDF plots.
+
+
  */
