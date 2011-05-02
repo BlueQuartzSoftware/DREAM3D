@@ -2725,7 +2725,7 @@ void ReconstructionFunc::find_centroids2D()
 void ReconstructionFunc::find_euclidean_map()
 {
 
-#if (AIM_USE_PARALLEL_ALGORITHMS == 0)
+#if AIM_USE_PARALLEL_ALGORITHMS
   tbb::task_scheduler_init init();
   tbb::task_group* g = new tbb::task_group;
   g->run(FindEuclideanMap(this, 0));
