@@ -56,11 +56,8 @@
 #include "AIM/Common/ReconstructionVTKWriter.h"
 #include "AIM/Common/MisorientationCalculations.h"
 #include "AIM/Common/HDF5/AIM_H5VtkDataWriter.h"
-
-
-#if AIM_USE_PARALLEL_ALGORITHMS
 #include "AIM/Parallel/Algo.hpp"
-#endif
+
 
 const static double m_pi = M_PI;
 const static double m_OnePointThree = 1.33333333333;
@@ -2734,108 +2731,11 @@ void ReconstructionFunc::find_euclidean_map()
   g->wait();
   delete g;
   #else
-
-
-  int nearestneighbordistance = 0;
-  int count = 1;
-  int good = 1;
-  double x, y, z;
-  int neighpoint;
-  int nearestneighbor;
-  int neighbors[6];
-  neighbors[0] = -xpoints * ypoints;
-  neighbors[1] = -xpoints;
-  neighbors[2] = -1;
-  neighbors[3] = 1;
-  neighbors[4] = xpoints;
-  neighbors[5] = xpoints * ypoints;
-  int* voxel_NearestNeighbor = new int[totalpoints];
-  double* voxel_NearestNeighborDistance = new double[totalpoints];
-
   for (int loop = 0; loop < 3; loop++)
   {
-    nearestneighbordistance = 0;
-    for (int a = 0; a < (totalpoints); ++a)
-    {
-      voxel_NearestNeighbor[a] = voxels[a].nearestneighbor[loop];
-      voxel_NearestNeighborDistance[a] = voxels[a].nearestneighbordistance[loop];
-    }
-    count = 1;
-    int i;
-    char mask[6] = {0,0,0,0,0,0};
-    while (count != 0)
-    {
-      count = 0;
-      nearestneighbordistance++;
-
-      for (int z = 0; z < zpoints; ++z)
-      {
-        mask[0] = mask[5] = 1;
-        if (z == 0 ) { mask[0] = 0; }
-        if (z == zpoints - 1) { mask[5] = 0; }
-
-        for (int y = 0; y < ypoints; ++y)
-        {
-          mask[1] = mask[4] = 1;
-          if (y == 0 ) { mask[1] = 0; }
-          if (y == ypoints - 1) { mask[4] = 0; }
-
-          for (int x = 0; x < xpoints; ++x)
-          {
-            mask[2] = mask[3] = 1;
-            if (x == 0 ) { mask[2] = 0; }
-            if (x == xpoints - 1) { mask[3] = 0; }
-
-            i = (z * xpoints*ypoints) + (y*xpoints) + x;
-            if (voxel_NearestNeighbor[i] == -1)
-            {
-              for (int j = 0; j < 6; j++)
-              {
-                neighpoint = i + neighbors[j];
-                if (mask[j] == 1)
-                {
-                  count++;
-                  if (voxel_NearestNeighborDistance[neighpoint] != -1.0)
-                  {
-                    voxel_NearestNeighbor[i] = voxel_NearestNeighbor[neighpoint];
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-      for (int j = 0; j < (totalpoints); ++j)
-      {
-        if (voxel_NearestNeighbor[j] != -1 && voxel_NearestNeighborDistance[j] == -1)
-        {
-          voxel_NearestNeighborDistance[j] = nearestneighbordistance;
-        }
-      }
-    }
-    double x1, x2, y1, y2, z1, z2;
-    double dist;
-    for (int j = 0; j < (totalpoints); j++)
-    {
-      nearestneighbor = voxel_NearestNeighbor[j];
-      x1 = resx * double(j % xpoints); // find_xcoord(j);
-      y1 = resy * double((j / xpoints) % ypoints);// find_ycoord(j);
-      z1 = resz * double(j / (xpoints * ypoints)); // find_zcoord(j);
-      x2 = resx * double(nearestneighbor % xpoints); // find_xcoord(nearestneighbor);
-      y2 = resy * double((nearestneighbor / xpoints) % ypoints); // find_ycoord(nearestneighbor);
-      z2 = resz * double(nearestneighbor / (xpoints * ypoints)); // find_zcoord(nearestneighbor);
-      dist = ((x1 - x2) * (x1 - x2)) + ((y1 - y2) * (y1 - y2)) + ((z1 - z2) * (z1 - z2));
-      dist = pow(dist, 0.5);
-      voxel_NearestNeighborDistance[j] = dist + (0.5 * resx);
-    }
-    for (int a = 0; a < (totalpoints); ++a)
-    {
-      voxels[a].nearestneighbor[loop] = voxel_NearestNeighbor[a];
-      voxels[a].nearestneighbordistance[loop] = voxel_NearestNeighborDistance[a];
-    }
+    FindEuclideanMap f(this, loop);
+    f();
   }
-  delete[] voxel_NearestNeighbor;
-  delete[] voxel_NearestNeighborDistance;
 #endif
 }
 double ReconstructionFunc::find_xcoord(size_t index)
