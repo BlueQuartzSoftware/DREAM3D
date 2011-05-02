@@ -30,16 +30,19 @@
 #ifndef _AIM_ALGO_HPP_
 #define _AIM_ALGO_HPP_
 
+#if AIM_USE_PARALLEL_ALGORITHMS
 #include <tbb/parallel_for.h>
 #include <tbb/blocked_range.h>
 #include "tbb/atomic.h"
 #include "tbb/tick_count.h"
 #include "tbb/task_scheduler_init.h"
 #include "tbb/task_group.h"
+#endif
 
 #include "AIM/Common/ReconstructionFunc.h"
 #include "AIM/Common/MisorientationCalculations.h"
 
+#if AIM_USE_PARALLEL_ALGORITHMS
 class ParallelRenumberGrains
 {
     const ReconstructionFunc* d;
@@ -64,7 +67,7 @@ class ParallelRenumberGrains
     {
     }
 };
-
+#endif
 
 class FindEuclideanMap
 {
