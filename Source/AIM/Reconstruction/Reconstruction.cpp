@@ -209,7 +209,7 @@ void Reconstruction::compute()
   m_OutputDirectory = MXADir::toNativeSeparators(m_OutputDirectory);
 
   // Create a new HDF5 Results file by overwriting any HDF5 file that may be in the way
-  std::string hdf5ResultsFile = m_OutputDirectory + MXADir::Separator + AIM::Reconstruction::H5StatisticsFile;
+  MAKE_OUTPUT_FILE_PATH ( hdf5ResultsFile, AIM::Reconstruction::H5StatisticsFile)
   H5ReconStatsWriter::Pointer h5io = H5ReconStatsWriter::New(hdf5ResultsFile);
   if (h5io.get() == NULL)
   {
@@ -222,7 +222,7 @@ void Reconstruction::compute()
     return;
   }
 
-  MAKE_OUTPUT_FILE_PATH (graindataFile, AIM::Reconstruction::GrainDataFile);
+  MAKE_OUTPUT_FILE_PATH ( graindataFile, AIM::Reconstruction::GrainDataFile);
   MAKE_OUTPUT_FILE_PATH ( alignmentFile, AIM::Reconstruction::AlignmentFile);
   MAKE_OUTPUT_FILE_PATH ( reconVisFile, AIM::Reconstruction::VisualizationVizFile);
   MAKE_OUTPUT_FILE_PATH ( reconIPFVisFile, AIM::Reconstruction::IPFVizFile);
