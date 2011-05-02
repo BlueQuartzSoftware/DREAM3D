@@ -139,7 +139,7 @@ endif()
 # Should we use Threading Building Blocks
 # --------------------------------------------------------------------
 set (AIM_USE_PARALLEL_ALGORITHMS "")
-if (0)
+
 option(AIM_USE_MULTITHREADED_ALGOS "Use MultiThreaded Algorithms where possible" OFF)
 if (AIM_USE_MULTITHREADED_ALGOS)
     find_package(TBB)
@@ -155,7 +155,7 @@ if (AIM_USE_MULTITHREADED_ALGOS)
     endif()
     set (AIM_USE_PARALLEL_ALGORITHMS "1")
 endif()
-endif()
+
 
 # --------------------------------------------------------------------
 # If was are using GCC, make the compiler messages on a single line
