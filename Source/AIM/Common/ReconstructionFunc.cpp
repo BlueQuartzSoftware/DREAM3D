@@ -2122,9 +2122,6 @@ int ReconstructionFunc::load_data(const std::string &readname)
 #endif
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void ReconstructionFunc::merge_twins()
 {
   int twinmerged = 1;

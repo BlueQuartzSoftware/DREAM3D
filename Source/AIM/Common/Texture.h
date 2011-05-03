@@ -85,9 +85,10 @@ class AIMCOMMON_EXPORT Texture
       double randomWeight = 1.0;
       int *TextureBins;
 	  TextureBins = new int[weights.size()];
-      static const size_t eighteenCubed = 5832;
+      static const size_t odfsize = 5832;
       double degtorad = M_PI/180.0;
-	  odf.resize(eighteenCubed);
+	  double addweight = 0;
+	  odf.resize(odfsize);
       size_t ea1bin, ea2bin, ea3bin;
       size_t bin, addbin;
       size_t bin1, bin2, bin3;
@@ -133,16 +134,13 @@ class AIMCOMMON_EXPORT Texture
         TextureBins[i] = static_cast<int>(bin);
       }
 
-      for (size_t i = 0; i < eighteenCubed; i++)
+      for (size_t i = 0; i < odfsize; i++)
       {
-        odf[i] = randomWeight / (eighteenCubed);
-        totalweight = totalweight + randomWeight / (eighteenCubed);
+        odf[i] = 0.0;
       }
       for (typename T::size_type i = 0; i < weights.size(); i++)
       {
         bin = TextureBins[i];
-        odf[bin] = odf[bin] + (weights[i]);
-        totalweight = totalweight + weights[i];
         bin1 = bin % 18;
         bin2 = (bin / 18) % 18;
         bin3 = bin / (18 * 18);
@@ -169,20 +167,30 @@ class AIMCOMMON_EXPORT Texture
               fraction = 1.0 - ((dist / sigmas[i]) * (dist / sigmas[i]));
               if (fraction > 0.0)
               {
-                odf[addbin] = odf[addbin] + (weights[i] * fraction);
-                totalweight = totalweight + (weights[i] * fraction);
+			    addweight = (weights[i] * fraction);
+                odf[addbin] = odf[addbin]+addweight;
               }
             }
           }
         }
       }
-
+	  double remainingweight = double(odfsize);
+	  double remainingcount = 0;
+      for (size_t i = 0; i < odfsize; i++)
+      {
+	    remainingweight = remainingweight-odf[i];
+        if(odf[i] == 0.0) remainingcount++;
+      }
+      for (size_t i = 0; i < odfsize; i++)
+      {
+        if(odf[i] == 0.0) odf[i] = remainingweight/remainingcount;
+      }
       if (normalize == true)
       {
         // Normalize the odf
-        for (size_t i = 0; i < eighteenCubed; i++)
+        for (size_t i = 0; i < odfsize; i++)
         {
-          odf[i] = odf[i] / totalweight;
+          odf[i] = odf[i] / double(odfsize);
         }
       }
 
@@ -214,6 +222,7 @@ class AIMCOMMON_EXPORT Texture
 	  TextureBins = new int[weights.size()];
       static const size_t odfsize = 15552;
 	  double degtorad = M_PI/180.0;
+	  double addweight = 0;
       odf.resize(odfsize);
       size_t ea1bin, ea2bin, ea3bin;
       size_t bin, addbin;
@@ -262,14 +271,11 @@ class AIMCOMMON_EXPORT Texture
 
       for (size_t i = 0; i < odfsize; i++)
       {
-        odf[i] = randomWeight / (odfsize);
-        totalweight = totalweight + randomWeight / (odfsize);
+        odf[i] = 0.0;
       }
       for (typename T::size_type i = 0; i < e1s.size(); i++)
       {
         bin = TextureBins[i];
-        odf[bin] = odf[bin] + (weights[i]);
-        totalweight = totalweight + weights[i];
         bin1 = bin % 36;
         bin2 = (bin / 36) % 36;
         bin3 = bin / (36 * 36);
@@ -293,20 +299,30 @@ class AIMCOMMON_EXPORT Texture
               fraction = 1.0 - ((dist / sigmas[i]) * (dist / sigmas[i]));
               if (fraction > 0.0)
               {
-                odf[addbin] = odf[addbin] + (weights[i] * fraction);
-                totalweight = totalweight + (weights[i] * fraction);
+			    addweight = (weights[i] * fraction);
+                odf[addbin] = odf[addbin]+addweight;
               }
             }
           }
         }
       }
-
+	  double remainingweight = double(odfsize);
+	  double remainingcount = 0;
+      for (size_t i = 0; i < odfsize; i++)
+      {
+	    remainingweight = remainingweight-odf[i];
+        if(odf[i] == 0.0) remainingcount++;
+      }
+      for (size_t i = 0; i < odfsize; i++)
+      {
+        if(odf[i] == 0.0) odf[i] = remainingweight/remainingcount;
+      }
       if (normalize == true)
       {
         // Normalize the odf
         for (size_t i = 0; i < odfsize; i++)
         {
-          odf[i] = odf[i] / totalweight;
+          odf[i] = odf[i] / double(odfsize);
         }
       }
 
@@ -337,6 +353,7 @@ class AIMCOMMON_EXPORT Texture
 	  TextureBins = new int[weights.size()];
       static const size_t odfsize = 46656;
 	  double degtorad = M_PI/180.0;
+	  double addweight = 0;
       odf.resize(odfsize);
       size_t ea1bin, ea2bin, ea3bin;
       size_t bin, addbin;
@@ -391,8 +408,9 @@ class AIMCOMMON_EXPORT Texture
       for (typename T::size_type i = 0; i < e1s.size(); i++)
       {
         bin = TextureBins[i];
-        odf[bin] = odf[bin] + (weights[i]);
-        totalweight = totalweight + weights[i];
+		addweight = (odf[bin] * (weights[i])) - odf[bin];
+        odf[bin] = odf[bin] * (weights[i]);
+        totalweight = totalweight + addweight;
         bin1 = bin % 36;
         bin2 = (bin / 36) % 36;
         bin3 = bin / (36 * 36);
@@ -416,8 +434,9 @@ class AIMCOMMON_EXPORT Texture
               fraction = 1.0 - ((dist / sigmas[i]) * (dist / sigmas[i]));
               if (fraction > 0.0)
               {
-                odf[addbin] = odf[addbin] + (weights[i] * fraction);
-                totalweight = totalweight + (weights[i] * fraction);
+			    addweight = (odf[addbin] * (weights[i] * fraction)) - odf[addbin];
+                odf[addbin] = odf[addbin] * (weights[i] * fraction);
+                totalweight = totalweight + addweight;
               }
             }
           }
@@ -434,6 +453,279 @@ class AIMCOMMON_EXPORT Texture
         }
       }
 
+  }
+
+
+
+  
+  
+  template<typename T>
+  static void calculateCubicMDFData(T angles, T axes, T weights, T odf, T mdf)
+  {
+         static const size_t odfsize = 5832;
+         static const size_t mdfsize = 5832;
+         double totalweight = 0;
+		 double radtodeg = 180.0/M_PI;
+
+         AIMRandomNG rg;
+         /* Get a seed value based off the system clock. The issue is that this will
+          * be a 64 bit unsigned integer where the high 32 bits will basically not
+          * change where as the lower 32 bits will. The following lines of code will
+          * pull off the low 32 bits from the number. This operation depends on most
+          * significant byte ordering which is different between Big Endian and
+          * Little Endian machines. For Big endian machines the Most Significant Byte
+          * (MSB) is the first 32 bits. For Little Endian machines the MSB is the
+          * second 32 bits.
+          */
+         unsigned long long int seed = MXA::getMilliSeconds();
+         unsigned int* seedPtr = reinterpret_cast<unsigned int*> (&seed);
+   #if CMP_WORDS_BIGENDIAN
+         rg.RandomInit(seedPtr[1]);
+   #else
+         rg.RandomInit(seedPtr[0]);
+   #endif
+         int err = 0;
+		 int mbin;
+		 double w = 0;
+         int choose1, choose2;
+		 double q1[5], q2[5];
+         double totaldensity;
+         double hmag;
+         double angle;
+		 double denom;
+         double r1, r2, r3;
+         double h1, h2, h3;
+         double n1, n2, n3;
+         double random, random1, random2, tan_angle, density, cos_angle, sin_angle;
+
+         double dim1 = 2 * pow((0.75 * ((M_PI / 4.0) - sin((M_PI / 4.0)))), (1.0 / 3.0));
+         double dim2 = 2 * pow((0.75 * ((M_PI / 4.0) - sin((M_PI / 4.0)))), (1.0 / 3.0));
+         double dim3 = 2 * pow((0.75 * ((M_PI / 4.0) - sin((M_PI / 4.0)))), (1.0 / 3.0));
+
+         for (int i = 0; i < mdfsize; i++)
+		 {
+			mdf[i] = 0.0;
+		 }
+		 int remainingcount = 10000;
+		 for (int i = 0; i < angles.size(); i++)
+		 {
+		   denom = pow((axes[3*i]*axes[3*i]+axes[3*i+1]*axes[3*i+1]+axes[3*i+2]*axes[3*i+2]),0.5);
+		   n1 = axes[3*i]/denom;
+		   n2 = axes[3*i+1]/denom;
+		   n3 = axes[3*i+2]/denom;
+		   r1 = n1 * pow(((3.0 / 4.0) * (angles[i] - sin(angles[i]))), (1.0 / 3.0));
+		   r2 = n2 * pow(((3.0 / 4.0) * (angles[i] - sin(angles[i]))), (1.0 / 3.0));
+		   r3 = n3 * pow(((3.0 / 4.0) * (angles[i] - sin(angles[i]))), (1.0 / 3.0));
+		   mbin = MisorientationCalculations::getMisoBinCubic(r1,r2,r3);
+		   mdf[mbin] = -int((weights[i]/double(mdfsize))*10000.0);
+		   remainingcount = remainingcount+mdf[mbin];
+		 }
+		 for (int i = 0; i < remainingcount; i++)
+         {
+           random1 = rg.Random();
+           random2 = rg.Random();
+           choose1 = 0;
+           choose2 = 0;
+
+           totaldensity = 0;
+           for (size_t j = 0; j < odfsize; j++)
+           {
+             density = odf[j];
+             totaldensity = totaldensity + density;
+             if (random1 < totaldensity && random1 >= (totaldensity - density)) choose1 = static_cast<int> (j);
+             if (random2 < totaldensity && random2 >= (totaldensity - density)) choose2 = static_cast<int> (j);
+           }
+           h1 = choose1 % 18;
+           h2 = (choose1 / 18) % 18;
+           h3 = choose1 / (18 * 18);
+           random = rg.Random();
+           h1 = ((dim1 / 18.0) * h1) + ((dim1 / 18.0) * random) - (dim1 / 2.0);
+           random = rg.Random();
+           h2 = ((dim2 / 18.0) * h2) + ((dim2 / 18.0) * random) - (dim2 / 2.0);
+           random = rg.Random();
+           h3 = ((dim3 / 18.0) * h3) + ((dim3 / 18.0) * random) - (dim3 / 2.0);
+           hmag = pow((h1 * h1 + h2 * h2 + h3 * h3), 0.5);
+           angle = pow((8 * hmag * hmag * hmag), (1.0 / 3.0));
+           n1 = h1 / hmag;
+           n2 = h2 / hmag;
+           n3 = h3 / hmag;
+		   cos_angle = cos(angle/2.0);
+           sin_angle = sin(angle/2.0);
+           q1[0] = 1;
+		   q1[1] = sin_angle * n1;
+           q1[2] = sin_angle * n2;
+           q1[3] = sin_angle * n3;
+           q1[4] = cos_angle;
+           h1 = choose2 % 18;
+           h2 = (choose2 / 18) % 18;
+           h3 = choose2 / (18 * 18);
+           random = rg.Random();
+           h1 = ((dim1 / 18.0) * h1) + ((dim1 / 18.0) * random) - (dim1 / 2.0);
+           random = rg.Random();
+           h2 = ((dim2 / 18.0) * h2) + ((dim2 / 18.0) * random) - (dim2 / 2.0);
+           random = rg.Random();
+           h3 = ((dim3 / 18.0) * h3) + ((dim3 / 18.0) * random) - (dim3 / 2.0);
+           hmag = pow((h1 * h1 + h2 * h2 + h3 * h3), 0.5);
+           angle = pow((8 * hmag * hmag * hmag), (1.0 / 3.0));
+           n1 = h1 / hmag;
+           n2 = h2 / hmag;
+           n3 = h3 / hmag;
+		   cos_angle = cos(angle/2.0);
+           sin_angle = sin(angle/2.0);
+           q2[0] = 1;
+		   q2[1] = sin_angle * n1;
+           q2[2] = sin_angle * n2;
+           q2[3] = sin_angle * n3;
+           q2[4] = cos_angle;
+		   w = MisorientationCalculations::getMisoQuatCubic(q1,q2,n1,n2,n3);
+		   w = w/radtodeg;
+		   r1 = n1 * pow(((3.0 / 4.0) * (w - sin(w))), (1.0 / 3.0));
+		   r2 = n2 * pow(((3.0 / 4.0) * (w - sin(w))), (1.0 / 3.0));
+		   r3 = n3 * pow(((3.0 / 4.0) * (w - sin(w))), (1.0 / 3.0));
+		   mbin = MisorientationCalculations::getMisoBinCubic(r1,r2,r3);
+		   if(mdf[mbin] >= 0) mdf[mbin]++;
+		   if(mdf[mbin] < 0) i = i-1;
+         }
+         for (int i = 0; i < mdfsize; i++)
+		 {
+		    if(mdf[i] < 0) mdf[i] = -mdf[i];
+			mdf[i] = mdf[i]/10000.0;
+		 }
+
+  }
+
+  template<typename T>
+  static void calculateHexMDFData(T angles, T axes, T weights, T odf, T mdf)
+  {
+         static const size_t odfsize = 15552;
+         static const size_t mdfsize = 15552;
+         double totalweight = 0;
+		 double radtodeg = 180.0/M_PI;
+
+         AIMRandomNG rg;
+         /* Get a seed value based off the system clock. The issue is that this will
+          * be a 64 bit unsigned integer where the high 32 bits will basically not
+          * change where as the lower 32 bits will. The following lines of code will
+          * pull off the low 32 bits from the number. This operation depends on most
+          * significant byte ordering which is different between Big Endian and
+          * Little Endian machines. For Big endian machines the Most Significant Byte
+          * (MSB) is the first 32 bits. For Little Endian machines the MSB is the
+          * second 32 bits.
+          */
+         unsigned long long int seed = MXA::getMilliSeconds();
+         unsigned int* seedPtr = reinterpret_cast<unsigned int*> (&seed);
+   #if CMP_WORDS_BIGENDIAN
+         rg.RandomInit(seedPtr[1]);
+   #else
+         rg.RandomInit(seedPtr[0]);
+   #endif
+         int err = 0;
+		 int mbin;
+         int choose1, choose2;
+		 double w = 0;
+		 double q1[5], q2[5];
+         double totaldensity;
+         double hmag;
+         double angle;
+		 double denom;
+         double r1, r2, r3;
+         double h1, h2, h3;
+         double n1, n2, n3;
+         double random, random1, random2, tan_angle, density, cos_angle, sin_angle;
+
+         double dim1 = 2 * pow((0.75 * ((M_PI / 4.0) - sin((M_PI / 4.0)))), (1.0 / 3.0));
+         double dim2 = 2 * pow((0.75 * ((M_PI / 4.0) - sin((M_PI / 4.0)))), (1.0 / 3.0));
+         double dim3 = 2 * pow((0.75 * ((M_PI / 4.0) - sin((M_PI / 4.0)))), (1.0 / 3.0));
+
+         for (int i = 0; i < mdfsize; i++)
+         {
+			mdf[i] = 0.0;
+		 }
+		 int remainingcount = 10000;
+		 for (int i = 0; i < angles.size(); i++)
+		 {
+		   denom = pow((axes[3*i]*axes[3*i]+axes[3*i+1]*axes[3*i+1]+axes[3*i+2]*axes[3*i+2]),0.5);
+		   n1 = axes[3*i]/denom;
+		   n2 = axes[3*i+1]/denom;
+		   n3 = axes[3*i+2]/denom;
+		   r1 = n1 * pow(((3.0 / 4.0) * (angles[i] - sin(angles[i]))), (1.0 / 3.0));
+		   r2 = n2 * pow(((3.0 / 4.0) * (angles[i] - sin(angles[i]))), (1.0 / 3.0));
+		   r3 = n3 * pow(((3.0 / 4.0) * (angles[i] - sin(angles[i]))), (1.0 / 3.0));
+		   mbin = MisorientationCalculations::getMisoBinCubic(r1,r2,r3);
+		   mdf[mbin] = -int((weights[i]/double(mdfsize))*10000.0);
+		   remainingcount = remainingcount+mdf[mbin];
+		 }
+		 for (int i = 0; i < remainingcount; i++)
+         {
+           random1 = rg.Random();
+           random2 = rg.Random();
+           choose1 = 0;
+           choose2 = 0;
+
+           totaldensity = 0;
+           for (size_t j = 0; j < odfsize; j++)
+           {
+             density = odf[j];
+             totaldensity = totaldensity + density;
+             if (random1 < totaldensity && random1 >= (totaldensity - density)) choose1 = static_cast<int> (j);
+             if (random2 < totaldensity && random2 >= (totaldensity - density)) choose2 = static_cast<int> (j);
+           }
+           h1 = choose1 % 18;
+           h2 = (choose1 / 18) % 18;
+           h3 = choose1 / (18 * 18);
+           random = rg.Random();
+           h1 = ((dim1 / 18.0) * h1) + ((dim1 / 18.0) * random) - (dim1 / 2.0);
+           random = rg.Random();
+           h2 = ((dim2 / 18.0) * h2) + ((dim2 / 18.0) * random) - (dim2 / 2.0);
+           random = rg.Random();
+           h3 = ((dim3 / 18.0) * h3) + ((dim3 / 18.0) * random) - (dim3 / 2.0);
+           hmag = pow((h1 * h1 + h2 * h2 + h3 * h3), 0.5);
+           angle = pow((8 * hmag * hmag * hmag), (1.0 / 3.0));
+           n1 = h1 / hmag;
+           n2 = h2 / hmag;
+           n3 = h3 / hmag;
+		   cos_angle = cos(angle/2.0);
+           sin_angle = sin(angle/2.0);
+           q1[0] = 1;
+		   q1[1] = sin_angle * n1;
+           q1[2] = sin_angle * n2;
+           q1[3] = sin_angle * n3;
+           q1[4] = cos_angle;
+           h1 = choose2 % 18;
+           h2 = (choose2 / 18) % 18;
+           h3 = choose2 / (18 * 18);
+           random = rg.Random();
+           h1 = ((dim1 / 18.0) * h1) + ((dim1 / 18.0) * random) - (dim1 / 2.0);
+           random = rg.Random();
+           h2 = ((dim2 / 18.0) * h2) + ((dim2 / 18.0) * random) - (dim2 / 2.0);
+           random = rg.Random();
+           h3 = ((dim3 / 18.0) * h3) + ((dim3 / 18.0) * random) - (dim3 / 2.0);
+           hmag = pow((h1 * h1 + h2 * h2 + h3 * h3), 0.5);
+           angle = pow((8 * hmag * hmag * hmag), (1.0 / 3.0));
+           n1 = h1 / hmag;
+           n2 = h2 / hmag;
+           n3 = h3 / hmag;
+		   cos_angle = cos(angle/2.0);
+           sin_angle = sin(angle/2.0);
+           q2[0] = 1;
+		   q2[1] = sin_angle * n1;
+           q2[2] = sin_angle * n2;
+           q2[3] = sin_angle * n3;
+           q2[4] = cos_angle;
+		   w = MisorientationCalculations::getMisoQuatHexagonal(q1,q2,n1,n2,n3);
+		   w = w/radtodeg;
+		   r1 = n1 * pow(((3.0 / 4.0) * (w - sin(w))), (1.0 / 3.0));
+		   r2 = n2 * pow(((3.0 / 4.0) * (w - sin(w))), (1.0 / 3.0));
+		   r3 = n3 * pow(((3.0 / 4.0) * (w - sin(w))), (1.0 / 3.0));
+		   mbin = MisorientationCalculations::getMisoBinHexagonal(r1,r2,r3);
+		   if(mdf[mbin] >= 0) mdf[mbin]++;
+		   if(mdf[mbin] < 0) i = i-1;
+         }
+         for (int i = 0; i < mdfsize; i++)
+		 {
+		    if(mdf[i] < 0) mdf[i] = -mdf[i];
+			mdf[i] = mdf[i]/10000.0;
+		 }
   }
 
 
