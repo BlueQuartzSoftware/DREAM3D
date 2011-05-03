@@ -19,7 +19,7 @@
 
 # This module defines
 # TBB_INCLUDE_DIRS, where to find task_scheduler_init.h, etc.
-# TBB_LIBRARY_DIRS, where to find libtbb, libtbbmalloc
+# TBB_LIBRARY_DIRS, where to find libtbb, libTBB_MALLOC
 # TBB_INSTALL_DIR, the base TBB install directory
 # TBB_LIBRARIES, the libraries to link against to use TBB.
 # TBB_DEBUG_LIBRARIES, the libraries to link against to use TBB with debug symbols.
@@ -43,8 +43,11 @@ if (WIN32)
     if (MSVC90)
         set(_TBB_COMPILER "vc9")
     endif(MSVC90)
+    if (MSVC10)
+        set(_TBB_COMPILER "vc10")
+    endif(MSVC10)
     if (NOT _TBB_COMPILER)
-        message("ERROR: TBB supports only VC 7.1, 8 and 9 compilers on Windows platforms.")
+        message("ERROR: TBB supports only VC 7.1, 8, 9 and 10 compilers on Windows platforms.")
     endif (NOT _TBB_COMPILER)
     set(_TBB_ARCHITECTURE ${TBB_ARCHITECTURE})
 endif (WIN32)
@@ -53,7 +56,7 @@ if (UNIX)
     if (APPLE)
         # MAC
         set(_TBB_DEFAULT_INSTALL_DIR "/Library/Frameworks/Intel_TBB.framework/Versions")
-        # libs: libtbb.dylib, libtbbmalloc.dylib, *_debug
+        # libs: libtbb.dylib, libTBB_MALLOC.dylib, *_debug
         set(_TBB_LIB_NAME "tbb")
         set(_TBB_LIB_MALLOC_NAME "${_TBB_LIB_NAME}malloc")
         set(_TBB_LIB_DEBUG_NAME "${_TBB_LIB_NAME}_debug")
@@ -152,7 +155,7 @@ message(STATUS "TBB_INCLUDE_DIR: ${TBB_INCLUDE_DIR}")
 
 #-- Look for libraries
 # GvdB: $ENV{TBB_ARCH_PLATFORM} is set by the build script tbbvars[.bat|.sh|.csh]
-message(STATUS "ENV{TBB_ARCH_PLATFORM}: $ENV{TBB_ARCH_PLATFORM}")
+message(STATUS "TBB_ARCH_PLATFORM: $ENV{TBB_ARCH_PLATFORM}")
 # if (NOT $ENV{TBB_ARCH_PLATFORM} STREQUAL "")
     set (_TBB_LIBRARY_DIR 
          ${_TBB_INSTALL_DIR}/lib/$ENV{TBB_ARCH_PLATFORM}
@@ -164,8 +167,8 @@ message(STATUS "ENV{TBB_ARCH_PLATFORM}: $ENV{TBB_ARCH_PLATFORM}")
 #    set (TBB_LIBRARY_DIR "${_TBB_INSTALL_DIR}/${_TBB_ARCHITECTURE}/${_TBB_COMPILER}/lib")
 #endif (NOT $ENV{TBB_ARCH_PLATFORM} STREQUAL "")
 
-message(STATUS "_TBB_LIB_NAME: ${_TBB_LIB_NAME}")
-message(STATUS "_TBB_LIBRARY_DIR: ${_TBB_LIBRARY_DIR}")
+#message(STATUS "_TBB_LIB_NAME: ${_TBB_LIB_NAME}")
+#message(STATUS "_TBB_LIBRARY_DIR: ${_TBB_LIBRARY_DIR}")
 
 
 find_library(TBB_LIBRARY_RELEASE        ${_TBB_LIB_NAME}        ${_TBB_LIBRARY_DIR} NO_DEFAULT_PATH)
@@ -188,14 +191,20 @@ find_library(TBB_MALLOC_LIBRARY_DEBUG ${_TBB_LIB_MALLOC_DEBUG_NAME} ${_TBB_LIBRA
 # include the macro to adjust libraries
 INCLUDE (${CMP_MODULES_SOURCE_DIR}/cmpAdjustLibVars.cmake)
 cmp_ADJUST_LIB_VARS(TBB)
+# This line is needed to trigger the correct behavior in the next line
+set(TBB_MALLOC_INCLUDE_DIR ${TBB_INCLUDE_DIR})
 cmp_ADJUST_LIB_VARS(TBB_MALLOC)
 
 if (TBB_INCLUDE_DIR)
     if (TBB_LIBRARY)
         set (TBB_FOUND 1)
-        set (TBB_LIBRARIES ${TBB_LIBRARY} )
+        set (TBB_LIBRARIES ${TBB_LIBRARY} ${TBB_MALLOC_LIBRARY} )
         set (TBB_MALLOC_LIBRARIES ${TBB_MALLOC_LIBRARY})
         set (TBB_INCLUDE_DIRS ${TBB_INCLUDE_DIR} CACHE PATH "TBB include directory")
+        set (TBB_BIN_DIR ${_TBB_INSTALL_DIR}/bin/$ENV{TBB_ARCH_PLATFORM} CACHE PATH "TBB Binary Directory")
+        set (TBB_LIB_DIR ${_TBB_LIBRARY_DIR} CACHE PATH "TBB Library Directory")
+        set (TBB_MALLOC_BIN_DIR ${_TBB_INSTALL_DIR}/bin/$ENV{TBB_ARCH_PLATFORM} CACHE PATH "TBB Binary Directory")
+        set (TBB_MALLOC_LIB_DIR ${_TBB_LIBRARY_DIR} CACHE PATH "TBB Library Directory")
         IF (TBB_LIBRARY_DEBUG)
             GET_FILENAME_COMPONENT(TBB_LIBRARY_PATH ${TBB_LIBRARY_DEBUG} PATH)
             SET(TBB_LIBRARY_DIR  ${TBB_LIBRARY_PATH} CACHE FILEPATH "Path to tbb Library Directory")
@@ -203,7 +212,9 @@ if (TBB_INCLUDE_DIR)
             GET_FILENAME_COMPONENT(TBB_LIBRARY_PATH ${TBB_LIBRARY_RELEASE} PATH)
             SET(TBB_LIBRARY_DIR  ${TBB_LIBRARY_PATH} CACHE FILEPATH "Path to tbb Library Directory")
         ENDIF(TBB_LIBRARY_DEBUG)
-        message(STATUS "Found Intel TBB")
+        set(TBB_IS_SHARED "TRUE")
+        set(TBB_MALLOC_IS_SHARED "TRUE")
+        message(STATUS "Found Intel TBB - ${_TBB_INSTALL_DIR}")
     endif (TBB_LIBRARY)
 endif (TBB_INCLUDE_DIR)
 
