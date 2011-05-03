@@ -99,48 +99,63 @@ void StatsGenMDFWidget::initQwtPlot(QString xAxisName, QString yAxisName, QwtPlo
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void StatsGenMDFWidget::updateMDFPlots()
+void StatsGenMDFWidget::on_m_MDFUpdateBtn_clicked()
 {
-  on_m_MDFUpdateBtn_clicked();
+  // Generate the ODF Data from the current values in the ODFTableModel
+  QwtArray<double> odf = generateODFData();
+
+  updateMDFPlot(odf);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void StatsGenMDFWidget::on_m_MDFUpdateBtn_clicked()
+void StatsGenMDFWidget::updateMDFPlot(QwtArray<double> odf)
 {
   int err = 0;
-
+  StatsGen sg;
+  int size = 1000;
+  
+  // These are the output vectors
   QwtArray<double> x;
   QwtArray<double> y;
 
+  // These are the input vectors
   QwtArray<double> angles;
   QwtArray<double> axes;
   QwtArray<double> weights;
-
+  
   angles = m_MDFTableModel->getData(SGMDFTableModel::Angle);
   weights = m_MDFTableModel->getData(SGMDFTableModel::Weight);
   axes = m_MDFTableModel->getData(SGMDFTableModel::Axis);
 
-  // Generate the ODF Data from the current values in the ODFTableModel
-  QwtArray<double> odf = generateODFData();
-
-  StatsGen sg;
-  int size = 1000;
-
-  if (m_CrystalStructure == AIM::Reconstruction::Cubic) {
-    err = sg.GenCubicMDFPlotData(angles, axes, weights, odf, x, y, size);
+  if (m_CrystalStructure == AIM::Reconstruction::Cubic) 
+  {
+    // Allocate a new vector to hold the mdf data
+    QwtArray<double> mdf(5832); 
+    // Calculate the MDF Data using the ODF data and the rows from the MDF Table model
+    Texture::calculateCubicMDFData(angles, axes, weights, odf, mdf);
+    // Now generate the actual XY point data that gets plotted.
+    err = sg.GenCubicMDFPlotData(mdf, x, y, size);
   }
-  else if (m_CrystalStructure == AIM::Reconstruction::Hexagonal) {
-    err = sg.GenHexMDFPlotData(angles, axes, weights, odf, x, y, size);
+  else if (m_CrystalStructure == AIM::Reconstruction::Hexagonal)
+  {
+    // Allocate a new vector to hold the mdf data
+    QwtArray<double> mdf(15552);
+    // Calculate the MDF Data using the ODF data and the rows from the MDF Table model
+    Texture::calculateHexMDFData(angles, axes, weights, odf, mdf);
+    // Now generate the actual XY point data that gets plotted.
+    err = sg.GenHexMDFPlotData(mdf, x, y, size);
   }
 
+  // This will actually plot the XY data in the Qwt plot widget
   QwtPlotCurve* curve = m_PlotCurve;
   curve->setData(x, y);
   curve->setStyle(QwtPlotCurve::Lines);
   curve->attach(m_MDFPlot);
   m_MDFPlot->replot();
 }
+
 
 // -----------------------------------------------------------------------------
 //

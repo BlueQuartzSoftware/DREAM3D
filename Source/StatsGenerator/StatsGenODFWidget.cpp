@@ -168,12 +168,13 @@ void StatsGenODFWidget::setCrystalStructure(AIM::Reconstruction::CrystalStructur
       default:
         setPlotTabTitles("Unkown", "Unknown", "Unknown");
     }
+    if (m_MDFWidget != NULL)
+    {
+      m_MDFWidget->setCrystalStructure(m_CrystalStructure);
+    }
     on_m_CalculateODFBtn_clicked();
   }
-  if (m_MDFWidget != NULL)
-  {
-    m_MDFWidget->setCrystalStructure(m_CrystalStructure);
-  }
+
 
 }
 
@@ -287,15 +288,26 @@ void StatsGenODFWidget::on_m_CalculateODFBtn_clicked()
   e3s = m_ODFTableModel->getData(SGODFTableModel::Euler3);
   weights = m_ODFTableModel->getData(SGODFTableModel::Weight);
   sigmas = m_ODFTableModel->getData(SGODFTableModel::Sigma);
+  
 
+  
   StatsGen sg;
   int size = 2500;
-
-  if (m_CrystalStructure == AIM::Reconstruction::Cubic) {
-    err = sg.GenCubicODFPlotData(e1s, e2s, e3s, weights, sigmas, x001, y001, x011, y011, x111, y111, size);
+  
+  if (m_CrystalStructure == AIM::Reconstruction::Cubic) 
+  {
+    static const size_t eighteenCubed = 5832;
+    double totalweight = 0;
+    odf.resize(eighteenCubed);
+    Texture::calculateCubicODFData(e1s, e2s, e3s, weights, sigmas, true, odf, totalweight);
+    err = sg.GenCubicODFPlotData(odf, x001, y001, x011, y011, x111, y111, size);
   }
   else if (m_CrystalStructure == AIM::Reconstruction::Hexagonal) {
-    err = sg.GenHexODFPlotData(e1s, e2s, e3s, weights, sigmas, x001, y001, x011, y011, x111, y111, size);
+    static const size_t odfsize = 15552;
+    double totalweight = 0;
+    odf.resize(odfsize);
+    Texture::calculateHexODFData(e1s, e2s, e3s, weights, sigmas, true, odf, totalweight);
+    err = sg.GenHexODFPlotData(odf, x001, y001, x011, y011, x111, y111, size);
   }
   if (err == 1)
   {
@@ -325,7 +337,7 @@ void StatsGenODFWidget::on_m_CalculateODFBtn_clicked()
   if (m_MDFWidget != NULL)
   {
     m_MDFWidget->setEnabled(true);
-    m_MDFWidget->updateMDFPlots();
+    m_MDFWidget->updateMDFPlot(odf);
   }
 }
 

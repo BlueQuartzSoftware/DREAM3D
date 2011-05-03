@@ -4,12 +4,12 @@
 # Adapted by Gino van den Bergen gino _at_ dtecta.com
 
 # GvdB: This module uses the environment variable TBB_ARCH_PLATFORM which defines architecture and compiler.
-#   e.g. "ia32/vc8" or "em64t/cc4.1.0_libc2.4_kernel2.6.16.21"
+#   e.g. "ia32/vc8" or "intel64/cc4.1.0_libc2.4_kernel2.6.16.21"
 #   TBB_ARCH_PLATFORM is set by the build script tbbvars[.bat|.sh|.csh], which can be found
 #   in the TBB installation directory (TBB_INSTALL_DIR).
 #
 # For backwards compatibility, you may explicitely set the CMake variables TBB_ARCHITECTURE and TBB_COMPILER.
-# TBB_ARCHITECTURE     [ ia32 | em64t | itanium ]
+# TBB_ARCHITECTURE     [ ia32 | intel64 | itanium ]
 #   which architecture to use
 # TBB_COMPILER         e.g. vc9 or cc3.2.3_libc2.3.2_kernel2.4.21 or cc4.0.1_os10.4.9
 #   which compiler to use (detected automatically on Windows)
@@ -27,7 +27,7 @@
 
 
 if (WIN32)
-    # has em64t/vc8   em64t/vc9
+    # has intel64/vc8   intel64/vc9
     # has ia32/vc7.1  ia32/vc8   ia32/vc9
     set(_TBB_DEFAULT_INSTALL_DIR "C:/Program Files/Intel/TBB" "C:/Program Files (x86)/Intel/TBB")
     set(_TBB_LIB_NAME "tbb")
@@ -71,7 +71,7 @@ if (UNIX)
         set(_TBB_LIB_MALLOC_NAME "${_TBB_LIB_NAME}malloc")
         set(_TBB_LIB_DEBUG_NAME "${_TBB_LIB_NAME}_debug")
         set(_TBB_LIB_MALLOC_DEBUG_NAME "${_TBB_LIB_MALLOC_NAME}_debug")
-        # has em64t/cc3.2.3_libc2.3.2_kernel2.4.21  em64t/cc3.3.3_libc2.3.3_kernel2.6.5  em64t/cc3.4.3_libc2.3.4_kernel2.6.9  em64t/cc4.1.0_libc2.4_kernel2.6.16.21
+        # has intel64/cc3.2.3_libc2.3.2_kernel2.4.21  intel64/cc3.3.3_libc2.3.3_kernel2.6.5  intel64/cc3.4.3_libc2.3.4_kernel2.6.9  intel64/cc4.1.0_libc2.4_kernel2.6.16.21
         # has ia32/*
         # has itanium/*
         set(_TBB_COMPILER ${TBB_COMPILER})
@@ -82,7 +82,7 @@ endif (UNIX)
 if (CMAKE_SYSTEM MATCHES "SunOS.*")
 # SUN
 # not yet supported
-# has em64t/cc3.4.3_kernel5.10
+# has intel64/cc3.4.3_kernel5.10
 # has ia32/*
 endif (CMAKE_SYSTEM MATCHES "SunOS.*")
 
@@ -130,11 +130,11 @@ endif (NOT TBB_INSTALL_DIR)
 
 
 #-- A macro to rewrite the paths of the library. This is necessary, because 
-#   find_library() always found the em64t/vc9 version of the TBB libs
+#   find_library() always found the intel64/vc9 version of the TBB libs
 macro(TBB_CORRECT_LIB_DIR var_name)
-#    if (NOT "${_TBB_ARCHITECTURE}" STREQUAL "em64t")
-        string(REPLACE em64t "${_TBB_ARCHITECTURE}" ${var_name} ${${var_name}})
-#    endif (NOT "${_TBB_ARCHITECTURE}" STREQUAL "em64t")
+#    if (NOT "${_TBB_ARCHITECTURE}" STREQUAL "intel64")
+        string(REPLACE intel64 "${_TBB_ARCHITECTURE}" ${var_name} ${${var_name}})
+#    endif (NOT "${_TBB_ARCHITECTURE}" STREQUAL "intel64")
     string(REPLACE ia32 "${_TBB_ARCHITECTURE}" ${var_name} ${${var_name}})
     string(REPLACE vc7.1 "${_TBB_COMPILER}" ${var_name} ${${var_name}})
     string(REPLACE vc8 "${_TBB_COMPILER}" ${var_name} ${${var_name}})
