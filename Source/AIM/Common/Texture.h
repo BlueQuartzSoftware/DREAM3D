@@ -464,6 +464,7 @@ class AIMCOMMON_EXPORT Texture
   {
          static const size_t odfsize = 5832;
          static const size_t mdfsize = 5832;
+         mdf.resize(mdfsize);
          double totalweight = 0;
 		 double radtodeg = 180.0/M_PI;
 
