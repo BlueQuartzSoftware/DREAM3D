@@ -178,6 +178,22 @@ int H5AngReader::readFile()
   }\
 }
 
+#define READ_PHASE_HEADER_DATA_CAST(pid, cast, type, fqKey, key, phase)\
+{\
+  type t;\
+  err = H5Lite::readScalarDataset(pid, fqKey, t);\
+  if (err < 0) {\
+    std::ostringstream ss;\
+    ss << "H5AngReader Error: Could not read Ang Header value '" << t\
+    <<  "' to the HDF5 file with data set name '" << fqKey << "'" << std::endl;\
+    std::cout << ss.str() << std::endl;\
+    err = H5Gclose(pid);H5Gclose(phasesGid);H5Gclose(gid);\
+    return -1; }\
+  else {\
+    phase->set##key(static_cast<cast>(t));\
+  }\
+}
+
 #define READ_PHASE_HEADER_ARRAY(pid, type, fqKey, key, phase)\
 {\
   type t;\
@@ -251,7 +267,7 @@ int H5AngReader::readHeader(hid_t parId)
     READ_PHASE_STRING_DATA(pid, TSL::OIM::MaterialName, MaterialName, m_CurrentPhase)
     READ_PHASE_STRING_DATA(pid, TSL::OIM::Formula, Formula, m_CurrentPhase)
     READ_PHASE_STRING_DATA(pid, TSL::OIM::Info, Info, m_CurrentPhase)
-    READ_PHASE_HEADER_DATA(pid, TSL::OIM::PhaseSymmetry, TSL::OIM::Symmetry, Symmetry, m_CurrentPhase)
+    READ_PHASE_HEADER_DATA_CAST(pid, TSL::OIM::PhaseSymmetry, int, TSL::OIM::Symmetry, Symmetry, m_CurrentPhase)
     READ_PHASE_HEADER_ARRAY(pid, std::vector<float>, TSL::OIM::LatticeConstants, LatticeConstants, m_CurrentPhase)
     READ_PHASE_HEADER_DATA(pid, int, TSL::OIM::NumberFamilies, NumberFamilies, m_CurrentPhase)
 
