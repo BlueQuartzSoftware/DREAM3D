@@ -39,6 +39,7 @@
 #include <qwt_plot_curve.h>
 #include <qwt_abstract_scale_draw.h>
 #include <qwt_scale_draw.h>
+#include <qwt_plot_canvas.h>
 
 #include "AIM/Common/Texture.h"
 
@@ -90,14 +91,9 @@ void StatsGenMDFWidget::initQwtPlot(QString xAxisName, QString yAxisName, QwtPlo
 {
   plot->setAxisTitle(QwtPlot::xBottom, xAxisName);
   plot->setAxisTitle(QwtPlot::yLeft, yAxisName);
-  plot->setCanvasBackground(QColor(Qt::white));
-  // These set the plot axis to NOT show anything except the axis labels.
-//  plot->axisScaleDraw(QwtPlot::yLeft)->enableComponent(QwtAbstractScaleDraw::Backbone, false);
-//  plot->axisScaleDraw(QwtPlot::yLeft)->enableComponent(QwtAbstractScaleDraw::Ticks, false);
-//  plot->axisScaleDraw(QwtPlot::yLeft)->enableComponent(QwtAbstractScaleDraw::Labels, false);
-//  plot->axisScaleDraw(QwtPlot::xBottom)->enableComponent(QwtAbstractScaleDraw::Backbone, false);
-//  plot->axisScaleDraw(QwtPlot::xBottom)->enableComponent(QwtAbstractScaleDraw::Ticks, false);
-//  plot->axisScaleDraw(QwtPlot::xBottom)->enableComponent(QwtAbstractScaleDraw::Labels, false);
+  //plot->setCanvasBackground(QColor(Qt::white));
+  plot->canvas()->setFrameShape(QFrame::NoFrame);
+
 }
 
 // -----------------------------------------------------------------------------

@@ -48,6 +48,7 @@
 #include <qwt_plot_zoomer.h>
 #include <qwt_plot_panner.h>
 #include <qwt_plot_curve.h>
+#include <qwt_plot_canvas.h>
 
 #include "AIM/Common/Constants.h"
 #include "StatsGenerator/TableModels/SGBetaTableModel.h"
@@ -396,10 +397,9 @@ void StatsGenPlotWidget::setupGui()
   m_TableView->setHorizontalHeader(headerView);
   headerView->show();
 
-  // Setup the Qwt Plot Wigets
-  // Configure the Histogram Plot
-  m_PlotView->setCanvasBackground(QColor(Qt::white));
-  //  m_PlotView->setTitle(m_PlotTitle->text());
+  // Setup the Qwt Plot Widget
+  //plot->setCanvasBackground(QColor(Qt::white));
+  plot->canvas()->setFrameShape(QFrame::NoFrame);
 
   m_grid = new QwtPlotGrid;
   m_grid->enableXMin(true);

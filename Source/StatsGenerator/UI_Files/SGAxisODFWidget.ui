@@ -31,6 +31,9 @@
    </property>
    <item>
     <widget class="QTabWidget" name="tabWidget">
+     <property name="autoFillBackground">
+      <bool>false</bool>
+     </property>
      <property name="tabPosition">
       <enum>QTabWidget::South</enum>
      </property>
@@ -141,6 +144,15 @@
            <height>1</height>
           </size>
          </property>
+         <property name="frameShape">
+          <enum>QFrame::NoFrame</enum>
+         </property>
+         <property name="frameShadow">
+          <enum>QFrame::Plain</enum>
+         </property>
+         <property name="lineWidth">
+          <number>0</number>
+         </property>
         </widget>
        </item>
       </layout>
@@ -176,6 +188,12 @@
            <height>1</height>
           </size>
          </property>
+         <property name="frameShape">
+          <enum>QFrame::NoFrame</enum>
+         </property>
+         <property name="lineWidth">
+          <number>0</number>
+         </property>
         </widget>
        </item>
       </layout>
@@ -204,6 +222,12 @@
            <width>1</width>
            <height>1</height>
           </size>
+         </property>
+         <property name="frameShape">
+          <enum>QFrame::NoFrame</enum>
+         </property>
+         <property name="lineWidth">
+          <number>0</number>
          </property>
         </widget>
        </item>
