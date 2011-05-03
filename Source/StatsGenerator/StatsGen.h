@@ -218,18 +218,13 @@ class StatsGen
       * @param y011 Y Values of the [011] PF Scatter plot (Output)
       * @param x111 X Values of the [111] PF Scatter plot (Output)
       * @param y111 Y Values of the [111] PF Scatter plot (Output)
-      * @param size The number of points for the Scatter Plot
+      * @param npoints The number of points for the Scatter Plot
       */
        template<typename T>
-       int GenCubicODFPlotData(T e1s, T e2s, T e3s, T weights, T sigmas,
-                       T &x001, T &y001, T &x011, T &y011, T &x111, T &y111,
-                       int size)
+       int GenCubicODFPlotData(T odf, T &x001, T &y001, T &x011, T &y011, T &x111, T &y111,
+                       int npoints)
        {
          static const size_t eighteenCubed = 5832;
-         double totalweight = 0;
-         T odf;
-         odf.resize(eighteenCubed);
-         Texture::calculateCubicODFData(e1s, e2s, e3s, weights, sigmas, true, odf, totalweight);
 
          AIMRandomNG rg;
          /* Get a seed value based off the system clock. The issue is that this will
@@ -266,14 +261,14 @@ class StatsGen
          double dim2 = 2 * pow((0.75 * ((M_PI / 4.0) - sin((M_PI / 4.0)))), (1.0 / 3.0));
          double dim3 = 2 * pow((0.75 * ((M_PI / 4.0) - sin((M_PI / 4.0)))), (1.0 / 3.0));
 
-         x001.resize(size * 3);
-         y001.resize(size * 3);
-         x011.resize(size * 6);
-         y011.resize(size * 6);
-         x111.resize(size * 4);
-         y111.resize(size * 4);
+         x001.resize(npoints * 3);
+         y001.resize(npoints * 3);
+         x011.resize(npoints * 6);
+         y011.resize(npoints * 6);
+         x111.resize(npoints * 4);
+         y111.resize(npoints * 4);
 
-         for (int i = 0; i < size; i++)
+         for (int i = 0; i < npoints; i++)
          {
            random = rg.Random();
            choose = 0;
@@ -444,16 +439,10 @@ class StatsGen
         * @param size The number of points for the Scatter Plot
         */
        template<typename T>
-       int GenHexODFPlotData(T e1s, T e2s, T e3s, T weights, T sigmas,
-                       T &x0001, T &y0001, T &x1120, T &y1120, T &x1010, T &y1010,
-                       int size)
+       int GenHexODFPlotData(T odf, T &x0001, T &y0001, T &x1120, T &y1120, T &x1010, T &y1010,
+                       int npoints)
        {
          static const size_t odfsize = 15552;
-         double totalweight = 0;
-         T odf;
-         odf.resize(odfsize);
-         Texture::calculateHexODFData(e1s, e2s, e3s, weights, sigmas, true, odf, totalweight);
-
          AIMRandomNG rg;
          /* Get a seed value based off the system clock. The issue is that this will
           * be a 64 bit unsigned integer where the high 32 bits will basically not
@@ -489,14 +478,14 @@ class StatsGen
          double dim2 = 2*pow((0.75 * ((M_PI / 2.0) - sin((M_PI / 2.0)))), (1.0 / 3.0));
          double dim3 = 2*pow((0.75 * ((M_PI / 6.0) - sin((M_PI / 6.0)))), (1.0 / 3.0));
 
-         x0001.resize(size * 1);
-         y0001.resize(size * 1);
-         x1120.resize(size * 3);
-         y1120.resize(size * 3);
-         x1010.resize(size * 3);
-         y1010.resize(size * 3);
+         x0001.resize(npoints * 1);
+         y0001.resize(npoints * 1);
+         x1120.resize(npoints * 3);
+         y1120.resize(npoints * 3);
+         x1010.resize(npoints * 3);
+         y1010.resize(npoints * 3);
 
-         for (int i = 0; i < size; i++)
+         for (int i = 0; i < npoints; i++)
          {
            random = rg.Random();
            choose = 0;
@@ -821,11 +810,6 @@ class StatsGen
          return err;
        }
 
-
-
-
-
-
        /**
         * @brief  This method will generate ODF data for a OrthoRhombic material and
         * generate 3 scatter plots which are the
@@ -847,15 +831,11 @@ class StatsGen
         * @param size The number of points for the Scatter Plot
         */
        template<typename T>
-       int GenAxisODFPlotData(T e1s, T e2s, T e3s, T weights, T sigmas,
+       int GenAxisODFPlotData(T odf,
                        T &xA, T &yA, T &xB, T &yB, T &xC, T &yC,
-                       int size)
+                       int npoints)
        {
          static const size_t odfsize = 46656;
-         double totalweight = 0;
-         T odf;
-         odf.resize(odfsize);
-         Texture::calculateOrthoRhombicODFData(e1s, e2s, e3s, weights, sigmas, true, odf, totalweight);
 
          AIMRandomNG rg;
          /* Get a seed value based off the system clock. The issue is that this will
@@ -892,14 +872,14 @@ class StatsGen
          double dim2 = 2*pow((0.75 * ((M_PI / 2.0) - sin((M_PI / 2.0)))), (1.0 / 3.0));
          double dim3 = 2*pow((0.75 * ((M_PI / 2.0) - sin((M_PI / 2.0)))), (1.0 / 3.0));
 
-         xA.resize(size * 1);
-         yA.resize(size * 1);
-         xB.resize(size * 1);
-         yB.resize(size * 1);
-         xC.resize(size * 1);
-         yC.resize(size * 1);
+         xA.resize(npoints * 1);
+         yA.resize(npoints * 1);
+         xB.resize(npoints * 1);
+         yB.resize(npoints * 1);
+         xC.resize(npoints * 1);
+         yC.resize(npoints * 1);
 
-         for (int i = 0; i < size; i++)
+         for (int i = 0; i < npoints; i++)
          {
            random = rg.Random();
            choose = 0;
@@ -988,16 +968,13 @@ class StatsGen
         * @param size The number of points for the Scatter Plot
         */
        template<typename T>
-       int GenCubicMDFPlotData(T angles, T axes, T weights, T odf, T &xval, T &yval, int size)
+       int GenCubicMDFPlotData(T mdf, T &xval, T &yval, int npoints)
        {
-         static const size_t mdfsize = 5832;
-		 T mdf;
-		 mdf.resize(mdfsize);
-         double totalweight = 0;
-		 double radtodeg = 180.0/M_PI;
-		 Texture::calculateCubicMDFData(angles, axes, weights, odf, mdf);
+          static const size_t mdfsize = 5832;
 
-         AIMRandomNG rg;
+          double totalweight = 0;
+		      double radtodeg = 180.0/M_PI;
+	         AIMRandomNG rg;
          /* Get a seed value based off the system clock. The issue is that this will
           * be a 64 bit unsigned integer where the high 32 bits will basically not
           * change where as the lower 32 bits will. The following lines of code will
@@ -1015,12 +992,12 @@ class StatsGen
          rg.RandomInit(seedPtr[0]);
    #endif
          int err = 0;
-		 double density;
+		     double density;
          double totaldensity;
          double hmag;
          double angle;
          double h1, h2, h3;
-		 int choose = 0;
+		     int choose = 0;
          double random;
 
          double dim1 = 2 * pow((0.75 * ((M_PI / 4.0) - sin((M_PI / 4.0)))), (1.0 / 3.0));
@@ -1034,7 +1011,7 @@ class StatsGen
 			yval[i] = 0;
 		 }
 
-         for (int i = 0; i < size; i++)
+         for (int i = 0; i < npoints; i++)
          {
            random = rg.Random();
            totaldensity = 0;
@@ -1061,7 +1038,7 @@ class StatsGen
 		 for(int i=0;i<36;i++)
 		 {
 			xval[i] = i*5.0+2.5;
-			yval[i] = yval[i]/double(size);
+			yval[i] = yval[i]/double(npoints);
 		 }
          return err;
        }
@@ -1069,14 +1046,11 @@ class StatsGen
 
 
        template<typename T>
-       int GenHexMDFPlotData(T angles, T axes, T weights, T odf, T &xval, T &yval, int size)
+       int GenHexMDFPlotData(T mdf, T &xval, T &yval, int npoints)
        {
          static const size_t mdfsize = 15552;
          double totalweight = 0;
-		 T mdf;
-		 mdf.resize(mdfsize);
-		 double radtodeg = 180.0/M_PI;
-		 Texture::calculateHexMDFData(angles, axes, weights, odf, mdf);
+		     double radtodeg = 180.0/M_PI;
 
          AIMRandomNG rg;
          /* Get a seed value based off the system clock. The issue is that this will
@@ -1115,7 +1089,7 @@ class StatsGen
 			yval[i] = 0;
 		 }
 
-         for (int i = 0; i < size; i++)
+         for (int i = 0; i < npoints; i++)
          {
            random = rg.Random();
            choose = 0;
@@ -1144,7 +1118,7 @@ class StatsGen
 		 for(int i=0;i<36;i++)
 		 {
 			xval[i] = i*5.0+2.5;
-			yval[i] = yval[i]/double(size);
+			yval[i] = yval[i]/double(npoints);
 		 }
          return err;
        }
