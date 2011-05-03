@@ -136,20 +136,19 @@ if (AIM_WRITE_BINARY_VTK_FILES)
 endif()
 
 # --------------------------------------------------------------------
-# Should we use Threading Building Blocks
+# Should we use Intel Threading Building Blocks
 # --------------------------------------------------------------------
 set (AIM_USE_PARALLEL_ALGORITHMS "")
-
 option(AIM_USE_MULTITHREADED_ALGOS "Use MultiThreaded Algorithms where possible" OFF)
 if (AIM_USE_MULTITHREADED_ALGOS)
     find_package(TBB)
     if (TBB_FOUND)
         include_directories(${TBB_INCLUDE_DIRS} )
-        CMP_COPY_DEPENDENT_LIBRARIES("tbb")
-        # Append the locations of the HDF5 libraries to our Library Search Paths
+        CMP_COPY_DEPENDENT_LIBRARIES("tbb;tbb_malloc")
+        # Append the locations of the TBB libraries to our Library Search Paths
         list(APPEND CMP_LIB_SEARCH_DIRS ${TBB_BINARY_DIR} ${TBBG_LIBRARY_DIR} )
         # Create an install rule to copy the dependent shared library over to the installed location
-        CMP_LIBRARIES_INSTALL_RULES("tbb" ".")
+        CMP_LIBRARIES_INSTALL_RULES("tbb;tbb_malloc" ".")
     else()
         message(FATAL_ERROR "The Intel Threading Building Blocks library is needed to enable the multithreaded algorithms. Please make sure it is installed properly")
     endif()
