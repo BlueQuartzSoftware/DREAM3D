@@ -71,6 +71,7 @@
               emit updateMessage(msg);\
               emit updateProgress(0);\
               emit finished();\
+              m = ReconstructionFunc::NullPointer();\
       return;}\
       if(AIM_RECONSTRUCTION_BENCHMARKS) {\
     std::cout << #name << " Finish Time(ms): " << (MXA::getMilliSeconds() - millis) << std::endl;\
@@ -80,6 +81,7 @@
 #else
 
 #define CHECK_FOR_CANCELED(AClass, name)\
+  m = ReconstructionFunc::NullPointer();\
   if(AIM_RECONSTRUCTION_BENCHMARKS) {\
     std::cout << #name << " Finish Time(ms): " << (MXA::getMilliSeconds() - millis) << std::endl;\
     millis = MXA::getMilliSeconds(); }
