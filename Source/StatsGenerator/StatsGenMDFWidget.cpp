@@ -92,12 +92,12 @@ void StatsGenMDFWidget::initQwtPlot(QString xAxisName, QString yAxisName, QwtPlo
   plot->setAxisTitle(QwtPlot::yLeft, yAxisName);
   plot->setCanvasBackground(QColor(Qt::white));
   // These set the plot axis to NOT show anything except the axis labels.
-  plot->axisScaleDraw(QwtPlot::yLeft)->enableComponent(QwtAbstractScaleDraw::Backbone, false);
-  plot->axisScaleDraw(QwtPlot::yLeft)->enableComponent(QwtAbstractScaleDraw::Ticks, false);
-  plot->axisScaleDraw(QwtPlot::yLeft)->enableComponent(QwtAbstractScaleDraw::Labels, false);
-  plot->axisScaleDraw(QwtPlot::xBottom)->enableComponent(QwtAbstractScaleDraw::Backbone, false);
-  plot->axisScaleDraw(QwtPlot::xBottom)->enableComponent(QwtAbstractScaleDraw::Ticks, false);
-  plot->axisScaleDraw(QwtPlot::xBottom)->enableComponent(QwtAbstractScaleDraw::Labels, false);
+//  plot->axisScaleDraw(QwtPlot::yLeft)->enableComponent(QwtAbstractScaleDraw::Backbone, false);
+//  plot->axisScaleDraw(QwtPlot::yLeft)->enableComponent(QwtAbstractScaleDraw::Ticks, false);
+//  plot->axisScaleDraw(QwtPlot::yLeft)->enableComponent(QwtAbstractScaleDraw::Labels, false);
+//  plot->axisScaleDraw(QwtPlot::xBottom)->enableComponent(QwtAbstractScaleDraw::Backbone, false);
+//  plot->axisScaleDraw(QwtPlot::xBottom)->enableComponent(QwtAbstractScaleDraw::Ticks, false);
+//  plot->axisScaleDraw(QwtPlot::xBottom)->enableComponent(QwtAbstractScaleDraw::Labels, false);
 }
 
 // -----------------------------------------------------------------------------
@@ -225,7 +225,38 @@ int StatsGenMDFWidget::readDataFromHDF5(H5ReconStatsReader::Pointer reader,
 // -----------------------------------------------------------------------------
 int StatsGenMDFWidget::writeDataToHDF5(H5ReconStatsWriter::Pointer writer)
 {
-  int err = -1;
+  int err = 0;
+
+  QwtArray<double> x;
+  QwtArray<double> y;
+
+  QwtArray<double> angles;
+  QwtArray<double> axes;
+  QwtArray<double> weights;
+
+  angles = m_MDFTableModel->getData(SGMDFTableModel::Angle);
+  weights = m_MDFTableModel->getData(SGMDFTableModel::Weight);
+  axes = m_MDFTableModel->getData(SGMDFTableModel::Axis);
+
+  // Generate the ODF Data from the current values in the ODFTableModel
+  QwtArray<double> odf = generateODFData();
+  QwtArray<double> mdf;
+
+  if (m_CrystalStructure == AIM::Reconstruction::Cubic) {
+	  Texture::calculateCubicMDFData(angles, axes, weights, odf, mdf);
+  }
+  else if (m_CrystalStructure == AIM::Reconstruction::Hexagonal) {
+	  Texture::calculateHexMDFData(angles, axes, weights, odf, mdf);
+  }
+  if (mdf.size() > 0)
+  {
+    double* mdfPtr = &(mdf.front());
+    err = -1;
+    if (mdfPtr != NULL)
+    {
+      err = writer->writeMisorientationBinsData(m_PhaseIndex, m_CrystalStructure, mdfPtr);
+    }
+  }
 
   return err;
 }
