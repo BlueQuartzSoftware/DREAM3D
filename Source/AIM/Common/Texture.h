@@ -578,6 +578,7 @@ class AIMCOMMON_EXPORT Texture
            q2[3] = sin_angle * n3;
            q2[4] = cos_angle;
 		   w = MisorientationCalculations::getMisoQuatCubic(q1,q2,n1,n2,n3);
+		   w = w/radtodeg;
 		   r1 = n1 * pow(((3.0 / 4.0) * (w - sin(w))), (1.0 / 3.0));
 		   r2 = n2 * pow(((3.0 / 4.0) * (w - sin(w))), (1.0 / 3.0));
 		   r3 = n3 * pow(((3.0 / 4.0) * (w - sin(w))), (1.0 / 3.0));
@@ -712,6 +713,7 @@ class AIMCOMMON_EXPORT Texture
            q2[3] = sin_angle * n3;
            q2[4] = cos_angle;
 		   w = MisorientationCalculations::getMisoQuatHexagonal(q1,q2,n1,n2,n3);
+		   w = w/radtodeg;
 		   r1 = n1 * pow(((3.0 / 4.0) * (w - sin(w))), (1.0 / 3.0));
 		   r2 = n2 * pow(((3.0 / 4.0) * (w - sin(w))), (1.0 / 3.0));
 		   r3 = n3 * pow(((3.0 / 4.0) * (w - sin(w))), (1.0 / 3.0));
