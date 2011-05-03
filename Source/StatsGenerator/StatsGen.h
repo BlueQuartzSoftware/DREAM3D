@@ -1055,6 +1055,7 @@ class StatsGen
            h3 = ((dim3 / 18.0) * h3) + ((dim3 / 18.0) * random) - (dim3 / 2.0);
            hmag = pow((h1 * h1 + h2 * h2 + h3 * h3), 0.5);
            angle = pow((8 * hmag * hmag * hmag), (1.0 / 3.0));
+		   angle = angle*radtodeg;
 		   yval[int(angle/5.0)]++;
          }
 		 for(int i=0;i<13;i++)
@@ -1137,6 +1138,7 @@ class StatsGen
            h3 = ((dim3 / 18.0) * h3) + ((dim3 / 18.0) * random) - (dim3 / 2.0);
            hmag = pow((h1 * h1 + h2 * h2 + h3 * h3), 0.5);
            angle = pow((8 * hmag * hmag * hmag), (1.0 / 3.0));
+		   angle = angle*radtodeg;
 		   yval[int(angle/5.0)]++;
          }
 		 for(int i=0;i<20;i++)
