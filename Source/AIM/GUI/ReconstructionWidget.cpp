@@ -404,7 +404,7 @@ void ReconstructionWidget::on_m_GoBtn_clicked()
   {
     if(m_Reconstruction.get() != NULL)
     {
-      //std::cout << "canceling from GUI...." << std::endl;
+      std::cout << "canceling from GUI...." << std::endl;
       emit cancelProcess();
     }
     return;
@@ -508,12 +508,13 @@ void ReconstructionWidget::on_m_GoBtn_clicked()
 // -----------------------------------------------------------------------------
 void ReconstructionWidget::threadFinished()
 {
-  //std::cout << "ReconstructionWidget::threadFinished()" << std::endl;
+  std::cout << "ReconstructionWidget::threadFinished()" << std::endl;
   m_GoBtn->setText("Go");
   setWidgetListEnabled(true);
   this->progressBar->setValue(0);
   emit processEnded();
   checkIOFiles();
+  m_Reconstruction->deleteLater();
 }
 
 // -----------------------------------------------------------------------------
