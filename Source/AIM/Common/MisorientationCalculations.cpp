@@ -317,20 +317,20 @@ void MisorientationCalculations::getSlipMisalignment(int ss1, double q1[5], doub
 	g1[0][1] = (2*q1[1]*q1[2])-(2*q1[3]*q1[4]);
 	g1[0][2] = (2*q1[1]*q1[3])+(2*q1[2]*q1[4]);
 	g1[1][0] = (2*q1[1]*q1[2])+(2*q1[3]*q1[4]);
-	g1[1][1] = 1-(2*q1[1]*q1[1])-(2*q1[3]*q1[3]); 
+	g1[1][1] = 1-(2*q1[1]*q1[1])-(2*q1[3]*q1[3]);
 	g1[1][2] = (2*q1[2]*q1[3])-(2*q1[1]*q1[4]);
 	g1[2][0] = (2*q1[1]*q1[3])-(2*q1[2]*q1[4]);
 	g1[2][1] = (2*q1[2]*q1[3])+(2*q1[1]*q1[4]);
 	g1[2][2] = 1-(2*q1[1]*q1[1])-(2*q1[2]*q1[2]);
-	g2[0][0] = 1-(2*q2[2]*q2[2])-(2*q2[3]*q2[3]); 
+	g2[0][0] = 1-(2*q2[2]*q2[2])-(2*q2[3]*q2[3]);
 	g2[0][1] = (2*q2[1]*q2[2])-(2*q2[3]*q2[4]);
 	g2[0][2] = (2*q2[1]*q2[3])+(2*q2[2]*q2[4]);
 	g2[1][0] = (2*q2[1]*q2[2])+(2*q2[3]*q2[4]);
-	g2[1][1] = 1-(2*q2[1]*q2[1])-(2*q2[3]*q2[3]); 
+	g2[1][1] = 1-(2*q2[1]*q2[1])-(2*q2[3]*q2[3]);
 	g2[1][2] = (2*q2[2]*q2[3])-(2*q2[1]*q2[4]);
 	g2[2][0] = (2*q2[1]*q2[3])-(2*q2[2]*q2[4]);
 	g2[2][1] = (2*q2[2]*q2[3])+(2*q2[1]*q2[4]);
-	g2[2][2] = 1-(2*q2[1]*q2[1])-(2*q2[2]*q2[2]); 
+	g2[2][2] = 1-(2*q2[1]*q2[1])-(2*q2[2]*q2[2]);
 	// Note the order of multiplication is such that I am actually multiplying by the inverse of g1 and g2
 	h1 = CubicSlipSystems[ss1][0]*g1[0][0]+CubicSlipSystems[ss1][1]*g1[1][0]+CubicSlipSystems[ss1][2]*g1[2][0];
 	k1 = CubicSlipSystems[ss1][0]*g1[0][1]+CubicSlipSystems[ss1][1]*g1[1][1]+CubicSlipSystems[ss1][2]*g1[2][1];
@@ -490,7 +490,7 @@ void MisorientationCalculations::getNearestQuatCubic(double *q1, double *q2)
   }
   for(int i=0;i<24;i++)
   {
-      AIM::Quaternions::Cubic_MultiplyByUnitQuaterion(q2, i, qc);
+    AIM::Quaternions::Cubic_MultiplyByUnitQuaterion(q2, i, qc);
     dist = 2.0*(1-(qc[4]*q1[4]+qc[1]*q1[1]+qc[2]*q1[2]+qc[3]*q1[3]));
     if(dist < smallestdist)
     {
