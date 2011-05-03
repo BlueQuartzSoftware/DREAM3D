@@ -287,7 +287,7 @@ void StatsGenODFWidget::on_m_CalculateODFBtn_clicked()
   sigmas = m_ODFTableModel->getData(SGODFTableModel::Sigma);
 
   StatsGen sg;
-  int size = 1000;
+  int size = 2500;
 
   if (m_CrystalStructure == AIM::Reconstruction::Cubic) {
     err = sg.GenCubicODFPlotData(e1s, e2s, e3s, weights, sigmas, x001, y001, x011, y011, x111, y111, size);
