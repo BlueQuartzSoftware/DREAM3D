@@ -399,7 +399,7 @@ void StatsGenPlotWidget::setupGui()
 
   // Setup the Qwt Plot Widget
   //plot->setCanvasBackground(QColor(Qt::white));
-  plot->canvas()->setFrameShape(QFrame::NoFrame);
+  m_PlotView->canvas()->setFrameShape(QFrame::NoFrame);
 
   m_grid = new QwtPlotGrid;
   m_grid->enableXMin(true);

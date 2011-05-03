@@ -224,7 +224,7 @@ void SGAxisODFWidget::on_m_CalculateODFBtn_clicked()
   QwtArray<double> weights;
   QwtArray<double> sigmas;
   QwtArray<double> odf;
-
+   
 
   e1s = m_ODFTableModel->getData(SGODFTableModel::Euler1);
   e2s = m_ODFTableModel->getData(SGODFTableModel::Euler2);
@@ -234,7 +234,13 @@ void SGAxisODFWidget::on_m_CalculateODFBtn_clicked()
 
   StatsGen sg;
   int size = 1000;
-  err = sg.GenAxisODFPlotData(e1s, e2s, e3s, weights, sigmas, x001, y001, x011, y011, x111, y111, size);
+
+  static const size_t odfsize = 46656;
+  double totalweight = 0;
+  odf.resize(odfsize);
+  Texture::calculateOrthoRhombicODFData(e1s, e2s, e3s, weights, sigmas, true, odf, totalweight);
+
+  err = sg.GenAxisODFPlotData(odf, x001, y001, x011, y011, x111, y111, size);
   if (err == 1)
   {
     //TODO: Present Error Message

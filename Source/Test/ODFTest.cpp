@@ -80,7 +80,7 @@ int main(int argc, char **argv)
   StatsGen sg;
   int size = 1000;
   int err = 0;
-  err = sg.GenCubicODFPlotData(e1s, e2s, e3s, weights, sigmas, x001, y001, x011, y011, x111, y111, size);
+  err = sg.GenCubicODFPlotData(odf, x001, y001, x011, y011, x111, y111, size);
   if (err == 1)
   {
     //TODO: Present Error Message
