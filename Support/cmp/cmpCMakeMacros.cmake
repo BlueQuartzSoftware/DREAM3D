@@ -612,8 +612,8 @@ endmacro()
 #-- Copy all the dependent DLLs into the current build directory so that the test
 #-- can run.
 MACRO (CMP_COPY_DEPENDENT_LIBRARIES _libraryList)
- # message(STATUS "#--------------------------------------------")
- # message(STATUS "CMP_COPY_DEPENDENT_LIBRARIES: ${_libraryList}")
+#  message(STATUS "#--------------------------------------------")
+#  message(STATUS "CMP_COPY_DEPENDENT_LIBRARIES: ${_libraryList}")
   set (_libraryList ${_libraryList})
   SET (TYPES Debug Release)
   if (MSVC)
@@ -629,7 +629,7 @@ MACRO (CMP_COPY_DEPENDENT_LIBRARIES _libraryList)
      # message(STATUS "${upperlib}_IS_SHARED: ${${upperlib}_IS_SHARED}")
       if (${upperlib}_IS_SHARED)
         FOREACH(BTYPE ${TYPES} )
-         # message(STATUS "Looking for ${BTYPE} DLL Version of ${lib}")
+        #  message(STATUS "Looking for ${BTYPE} DLL Version of ${lib}")
           STRING(TOUPPER ${BTYPE} TYPE)        
           get_filename_component(lib_path ${${upperlib}_LIBRARY_${TYPE}} PATH)
           get_filename_component(lib_name ${${upperlib}_LIBRARY_${TYPE}} NAME_WE)
@@ -638,14 +638,14 @@ MACRO (CMP_COPY_DEPENDENT_LIBRARIES _libraryList)
           
           find_file(${upperlib}_LIBRARY_DLL_${TYPE}
                         NAMES ${lib_name}.dll
-                        PATHS  ${lib_path}/../bin ${lib_path}/.. ${lib_path}/
+                        PATHS  ${lib_path}/../bin ${lib_path}/.. ${lib_path}/ ${${upperlib}_BIN_DIR}
                         NO_DEFAULT_PATH )
       #    message(STATUS "${upperlib}_LIBRARY_DLL_${TYPE}: ${${upperlib}_LIBRARY_DLL_${TYPE}}")
           mark_as_advanced(${upperlib}_LIBRARY_DLL_${TYPE})
           if ( ${${upperlib}_LIBRARY_DLL_${TYPE}} STREQUAL  "${upperlib}_LIBRARY_DLL_${TYPE}-NOTFOUND")
             message(FATAL_ERROR "According to how ${upperlib}_LIBRARY_${TYPE} was found the library should"
                                 " have been built as a DLL but no .dll file can be found. I looked in the "
-                                " following locations:  ${lib_path}\n  ${lib_path}/..\n  ${lib_path}/../bin")
+                                " following locations:\n  ${lib_path}\n  ${lib_path}/..\n  ${lib_path}/../bin\n  ${${upperlib}_BIN_DIR}")
           endif()
 
          # SET(${upperlib}_LIBRARY_DLL_${TYPE} "${${upperlib}_LIBRARY_DLL_${TYPE}}/${lib_name}.dll" CACHE FILEPATH "The path to the DLL Portion of the library" FORCE)
@@ -668,7 +668,7 @@ endmacro()
 # properly installed with your project.
 # --------------------------------------------------------------------
 MACRO (CMP_LIBRARIES_INSTALL_RULES _libraryList destination)
-  #  message(STATUS "CMP_LIBRARIES_INSTALL_RULES")
+#  message(STATUS "CMP_LIBRARIES_INSTALL_RULES")
   set (_libraryList ${_libraryList})
   SET (TYPES Debug Release)
   if (MSVC)
@@ -683,14 +683,14 @@ MACRO (CMP_LIBRARIES_INSTALL_RULES _libraryList destination)
           
           find_file(${upperlib}_LIBRARY_DLL_${TYPE}
                         NAMES ${lib_name}.dll
-                        PATHS  ${lib_path}/../bin ${lib_path}/.. ${lib_path}/
+                        PATHS  ${lib_path}/../bin ${lib_path}/.. ${lib_path}/ ${${upperlib}_BIN_DIR}
                         NO_DEFAULT_PATH )
          # message(STATUS "${upperlib}_LIBRARY_DLL_${TYPE}: ${${upperlib}_LIBRARY_DLL_${TYPE}}")
           mark_as_advanced(${upperlib}_LIBRARY_DLL_${TYPE})
           if ( ${${upperlib}_LIBRARY_DLL_${TYPE}} STREQUAL  "${upperlib}_LIBRARY_DLL_${TYPE}-NOTFOUND")
-             message(STATUS "A Companion DLL for ${upperlib}_LIBRARY_${TYPE} was NOT found which usually means"
-                                " that the library was NOT built as a DLL. I looked in the "
-                                " following locations:  ${lib_path}\n  ${lib_path}/..\n  ${lib_path}/../bin")
+             message(STATUS "A Companion DLL for ${upperlib}_LIBRARY_${TYPE} was NOT found which usually means\n"
+                                " that the library was NOT built as a DLL. I looked in the \n"
+                                " following locations:\n  ${lib_path}\n  ${lib_path}/..\n  ${lib_path}/../bin\n  ${${upperlib}_BIN_DIR}")
           else()
              # set(${upperlib}_LIBRARY_DLL_${TYPE}  ${${upperlib}_LIBRARY_DLL_${TYPE}}/${lib_name}.dll)
            #   message(STATUS "${upperlib}_LIBRARY_DLL_${TYPE}: ${${upperlib}_LIBRARY_DLL_${TYPE}}")
