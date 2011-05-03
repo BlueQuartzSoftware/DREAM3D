@@ -1027,9 +1027,9 @@ class StatsGen
          double dim2 = 2 * pow((0.75 * ((M_PI / 4.0) - sin((M_PI / 4.0)))), (1.0 / 3.0));
          double dim3 = 2 * pow((0.75 * ((M_PI / 4.0) - sin((M_PI / 4.0)))), (1.0 / 3.0));
 
-         xval.resize(13);
-         yval.resize(13);
-		 for(int i=0;i<13;i++)
+         xval.resize(36);
+         yval.resize(36);
+		 for(int i=0;i<36;i++)
 		 {
 			yval[i] = 0;
 		 }
@@ -1058,7 +1058,7 @@ class StatsGen
 		   angle = angle*radtodeg;
 		   yval[int(angle/5.0)]++;
          }
-		 for(int i=0;i<13;i++)
+		 for(int i=0;i<36;i++)
 		 {
 			xval[i] = i*5.0+2.5;
 			yval[i] = yval[i]/double(size);
@@ -1108,9 +1108,9 @@ class StatsGen
          double dim2 = 2 * pow((0.75 * ((M_PI / 4.0) - sin((M_PI / 4.0)))), (1.0 / 3.0));
          double dim3 = 2 * pow((0.75 * ((M_PI / 4.0) - sin((M_PI / 4.0)))), (1.0 / 3.0));
 
-         xval.resize(20);
-         yval.resize(20);
-		 for(int i=0;i<20;i++)
+         xval.resize(36);
+         yval.resize(36);
+		 for(int i=0;i<36;i++)
 		 {
 			yval[i] = 0;
 		 }
@@ -1141,7 +1141,7 @@ class StatsGen
 		   angle = angle*radtodeg;
 		   yval[int(angle/5.0)]++;
          }
-		 for(int i=0;i<20;i++)
+		 for(int i=0;i<36;i++)
 		 {
 			xval[i] = i*5.0+2.5;
 			yval[i] = yval[i]/double(size);
