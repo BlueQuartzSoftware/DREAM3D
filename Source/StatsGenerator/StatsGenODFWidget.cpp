@@ -172,10 +172,9 @@ void StatsGenODFWidget::setCrystalStructure(AIM::Reconstruction::CrystalStructur
     {
       m_MDFWidget->setCrystalStructure(m_CrystalStructure);
     }
+    // Force the updating of all the plots
     on_m_CalculateODFBtn_clicked();
   }
-
-
 }
 
 // -----------------------------------------------------------------------------
