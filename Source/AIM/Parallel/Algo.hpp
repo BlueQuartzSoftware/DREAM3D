@@ -75,6 +75,12 @@ class FindEuclideanMap
     const int loop;
 
   public:
+    virtual ~FindEuclideanMap() {}
+    virtual FindEuclideanMap* execute()
+    {
+      return NULL;
+    }
+
     void operator()() const
     {
       std::cout << "  FindEuclideanMap: Loop = " << loop << std::endl;
