@@ -92,10 +92,6 @@ void GrainGeneratorFunc::initialize(int32_t m_NumGrains, int32_t m_ShapeClass,
   initializeArrays();
 }
 
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void GrainGeneratorFunc::initializeArrays()
 {
   //------------------
@@ -412,9 +408,6 @@ int  GrainGeneratorFunc::readAxisOrientationData(H5ReconStatsReader::Pointer h5i
   return err;
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 int GrainGeneratorFunc::readODFData(H5ReconStatsReader::Pointer h5io)
 {
   std::vector<double> density;
@@ -457,9 +450,6 @@ int GrainGeneratorFunc::readODFData(H5ReconStatsReader::Pointer h5io)
   return err;
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 int GrainGeneratorFunc::readMisorientationData(H5ReconStatsReader::Pointer h5io)
 {
   std::vector<double> density;
@@ -501,9 +491,6 @@ int GrainGeneratorFunc::readMisorientationData(H5ReconStatsReader::Pointer h5io)
   return err;
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 int GrainGeneratorFunc::readMicroTextureData(H5ReconStatsReader::Pointer h5io)
 {
   std::vector<double> density;
@@ -545,9 +532,6 @@ int GrainGeneratorFunc::readMicroTextureData(H5ReconStatsReader::Pointer h5io)
   return err;
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void  GrainGeneratorFunc::generate_grain(int gnum, int phase)
 {
   int good = 0;
@@ -638,9 +622,6 @@ void  GrainGeneratorFunc::generate_grain(int gnum, int phase)
   m_Grains[gnum]->neighbordistfunc[2] = 0;
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void  GrainGeneratorFunc::insert_grain(size_t gnum)
 {
   double dist;
@@ -829,9 +810,6 @@ void  GrainGeneratorFunc::insert_grain(size_t gnum)
   insidelist.clear();
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void  GrainGeneratorFunc::remove_grain(size_t gnum)
 {
   int index;
@@ -854,9 +832,6 @@ void  GrainGeneratorFunc::remove_grain(size_t gnum)
   }
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void  GrainGeneratorFunc::add_grain(size_t gnum)
 {
   int index;
@@ -881,9 +856,6 @@ void  GrainGeneratorFunc::add_grain(size_t gnum)
   }
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void GrainGeneratorFunc::determine_neighbors()
 {
   double x, y, z;
@@ -932,9 +904,6 @@ void GrainGeneratorFunc::determine_neighbors()
   }
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 double GrainGeneratorFunc::check_neighborhooderror(int gadd, int gremove)
 {
   double neighborerror = 0;
@@ -1045,9 +1014,6 @@ double GrainGeneratorFunc::check_neighborhooderror(int gadd, int gremove)
   return neighborerror;
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 double GrainGeneratorFunc::costcheck_remove(size_t gnum)
 {
   int index;
@@ -1065,9 +1031,6 @@ double GrainGeneratorFunc::costcheck_remove(size_t gnum)
   return removecost;
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 double GrainGeneratorFunc::costcheck_add(size_t gnum)
 {
   int index;
@@ -1085,9 +1048,6 @@ double GrainGeneratorFunc::costcheck_add(size_t gnum)
   return addcost;
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 double GrainGeneratorFunc::check_sizedisterror(int gadd, int gremove)
 {
   double dia;
@@ -1137,9 +1097,6 @@ double GrainGeneratorFunc::check_sizedisterror(int gadd, int gremove)
   return sizedisterror;
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 int  GrainGeneratorFunc::pack_grains(const std::string &filename, int numgrains)
 {
   totalvol = 0;

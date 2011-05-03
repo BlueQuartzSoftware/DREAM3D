@@ -990,9 +990,12 @@ class StatsGen
        template<typename T>
        int GenCubicMDFPlotData(T angles, T axes, T weights, T odf, T &xval, T &yval, int size)
        {
-         static const size_t odfsize = 5832;
+         static const size_t mdfsize = 5832;
+		 T mdf;
+		 mdf.resize(mdfsize);
          double totalweight = 0;
 		 double radtodeg = 180.0/M_PI;
+		 Texture::calculateCubicMDFData(angles, axes, weights, odf, mdf);
 
          AIMRandomNG rg;
          /* Get a seed value based off the system clock. The issue is that this will
@@ -1012,46 +1015,38 @@ class StatsGen
          rg.RandomInit(seedPtr[0]);
    #endif
          int err = 0;
-		 double w = 0;
-         int choose1, choose2;
-		 double q1[5], q2[5];
+		 double density;
          double totaldensity;
          double hmag;
          double angle;
-         double r1, r2, r3;
          double h1, h2, h3;
-         double n1, n2, n3;
-         double random, random1, random2, tan_angle, density, cos_angle, sin_angle;
+		 int choose = 0;
+         double random;
 
          double dim1 = 2 * pow((0.75 * ((M_PI / 4.0) - sin((M_PI / 4.0)))), (1.0 / 3.0));
          double dim2 = 2 * pow((0.75 * ((M_PI / 4.0) - sin((M_PI / 4.0)))), (1.0 / 3.0));
          double dim3 = 2 * pow((0.75 * ((M_PI / 4.0) - sin((M_PI / 4.0)))), (1.0 / 3.0));
 
-         xval.resize(13);
-         yval.resize(13);
-		 for(int i=0;i<13;i++)
+         xval.resize(36);
+         yval.resize(36);
+		 for(int i=0;i<36;i++)
 		 {
 			yval[i] = 0;
 		 }
 
          for (int i = 0; i < size; i++)
          {
-           random1 = rg.Random();
-           random2 = rg.Random();
-           choose1 = 0;
-           choose2 = 0;
-
+           random = rg.Random();
            totaldensity = 0;
-           for (size_t j = 0; j < odfsize; j++)
+           for (size_t j = 0; j < mdfsize; j++)
            {
-             density = odf[j];
+             density = mdf[j];
              totaldensity = totaldensity + density;
-             if (random1 < totaldensity && random1 >= (totaldensity - density)) choose1 = static_cast<int> (j);
-             if (random2 < totaldensity && random2 >= (totaldensity - density)) choose2 = static_cast<int> (j);
+             if (random < totaldensity && random >= (totaldensity - density)) choose = static_cast<int> (j);
            }
-           h1 = choose1 % 18;
-           h2 = (choose1 / 18) % 18;
-           h3 = choose1 / (18 * 18);
+           h1 = choose % 18;
+           h2 = (choose / 18) % 18;
+           h3 = choose / (18 * 18);
            random = rg.Random();
            h1 = ((dim1 / 18.0) * h1) + ((dim1 / 18.0) * random) - (dim1 / 2.0);
            random = rg.Random();
@@ -1060,42 +1055,10 @@ class StatsGen
            h3 = ((dim3 / 18.0) * h3) + ((dim3 / 18.0) * random) - (dim3 / 2.0);
            hmag = pow((h1 * h1 + h2 * h2 + h3 * h3), 0.5);
            angle = pow((8 * hmag * hmag * hmag), (1.0 / 3.0));
-           n1 = h1 / hmag;
-           n2 = h2 / hmag;
-           n3 = h3 / hmag;
-		   cos_angle = cos(angle/2.0);
-           sin_angle = sin(angle/2.0);
-           q1[0] = 1;
-		   q1[1] = sin_angle * n1;
-           q1[2] = sin_angle * n2;
-           q1[3] = sin_angle * n3;
-           q1[4] = cos_angle;
-           h1 = choose2 % 18;
-           h2 = (choose2 / 18) % 18;
-           h3 = choose2 / (18 * 18);
-           random = rg.Random();
-           h1 = ((dim1 / 18.0) * h1) + ((dim1 / 18.0) * random) - (dim1 / 2.0);
-           random = rg.Random();
-           h2 = ((dim2 / 18.0) * h2) + ((dim2 / 18.0) * random) - (dim2 / 2.0);
-           random = rg.Random();
-           h3 = ((dim3 / 18.0) * h3) + ((dim3 / 18.0) * random) - (dim3 / 2.0);
-           hmag = pow((h1 * h1 + h2 * h2 + h3 * h3), 0.5);
-           angle = pow((8 * hmag * hmag * hmag), (1.0 / 3.0));
-           n1 = h1 / hmag;
-           n2 = h2 / hmag;
-           n3 = h3 / hmag;
-		   cos_angle = cos(angle/2.0);
-           sin_angle = sin(angle/2.0);
-           q2[0] = 1;
-		   q2[1] = sin_angle * n1;
-           q2[2] = sin_angle * n2;
-           q2[3] = sin_angle * n3;
-           q2[4] = cos_angle;
-		   w = MisorientationCalculations::getMisoQuatCubic(q1,q2,n1,n2,n3);
-		   w = w*radtodeg;
-		   yval[int(w/5.0)]++;
+		   angle = angle*radtodeg;
+		   yval[int(angle/5.0)]++;
          }
-		 for(int i=0;i<13;i++)
+		 for(int i=0;i<36;i++)
 		 {
 			xval[i] = i*5.0+2.5;
 			yval[i] = yval[i]/double(size);
@@ -1108,9 +1071,12 @@ class StatsGen
        template<typename T>
        int GenHexMDFPlotData(T angles, T axes, T weights, T odf, T &xval, T &yval, int size)
        {
-         static const size_t odfsize = 15552;
+         static const size_t mdfsize = 15552;
          double totalweight = 0;
+		 T mdf;
+		 mdf.resize(mdfsize);
 		 double radtodeg = 180.0/M_PI;
+		 Texture::calculateHexMDFData(angles, axes, weights, odf, mdf);
 
          AIMRandomNG rg;
          /* Get a seed value based off the system clock. The issue is that this will
@@ -1130,45 +1096,40 @@ class StatsGen
          rg.RandomInit(seedPtr[0]);
    #endif
          int err = 0;
-         int choose1, choose2;
-		 double w = 0;
-		 double q1[5], q2[5];
+         int choose = 0;
+		 double density;
          double totaldensity;
          double hmag;
          double angle;
          double h1, h2, h3;
-         double n1, n2, n3;
-         double random, random1, random2, tan_angle, density, cos_angle, sin_angle;
+         double random;
 
          double dim1 = 2 * pow((0.75 * ((M_PI / 4.0) - sin((M_PI / 4.0)))), (1.0 / 3.0));
          double dim2 = 2 * pow((0.75 * ((M_PI / 4.0) - sin((M_PI / 4.0)))), (1.0 / 3.0));
          double dim3 = 2 * pow((0.75 * ((M_PI / 4.0) - sin((M_PI / 4.0)))), (1.0 / 3.0));
 
-         xval.resize(20);
-         yval.resize(20);
-		 for(int i=0;i<20;i++)
+         xval.resize(36);
+         yval.resize(36);
+		 for(int i=0;i<36;i++)
 		 {
 			yval[i] = 0;
 		 }
 
          for (int i = 0; i < size; i++)
          {
-           random1 = rg.Random();
-           random2 = rg.Random();
-           choose1 = 0;
-           choose2 = 0;
+           random = rg.Random();
+           choose = 0;
 
            totaldensity = 0;
-           for (size_t j = 0; j < odfsize; j++)
+           for (size_t j = 0; j < mdfsize; j++)
            {
-             density = odf[j];
+             density = mdf[j];
              totaldensity = totaldensity + density;
-             if (random1 < totaldensity && random1 >= (totaldensity - density)) choose1 = static_cast<int> (j);
-             if (random2 < totaldensity && random2 >= (totaldensity - density)) choose2 = static_cast<int> (j);
+             if (random < totaldensity && random >= (totaldensity - density)) choose = static_cast<int> (j);
            }
-           h1 = choose1 % 18;
-           h2 = (choose1 / 18) % 18;
-           h3 = choose1 / (18 * 18);
+           h1 = choose % 18;
+           h2 = (choose / 18) % 18;
+           h3 = choose / (18 * 18);
            random = rg.Random();
            h1 = ((dim1 / 18.0) * h1) + ((dim1 / 18.0) * random) - (dim1 / 2.0);
            random = rg.Random();
@@ -1177,42 +1138,10 @@ class StatsGen
            h3 = ((dim3 / 18.0) * h3) + ((dim3 / 18.0) * random) - (dim3 / 2.0);
            hmag = pow((h1 * h1 + h2 * h2 + h3 * h3), 0.5);
            angle = pow((8 * hmag * hmag * hmag), (1.0 / 3.0));
-           n1 = h1 / hmag;
-           n2 = h2 / hmag;
-           n3 = h3 / hmag;
-		   cos_angle = cos(angle/2.0);
-           sin_angle = sin(angle/2.0);
-           q1[0] = 1;
-		   q1[1] = sin_angle * n1;
-           q1[2] = sin_angle * n2;
-           q1[3] = sin_angle * n3;
-           q1[4] = cos_angle;
-           h1 = choose2 % 18;
-           h2 = (choose2 / 18) % 18;
-           h3 = choose2 / (18 * 18);
-           random = rg.Random();
-           h1 = ((dim1 / 18.0) * h1) + ((dim1 / 18.0) * random) - (dim1 / 2.0);
-           random = rg.Random();
-           h2 = ((dim2 / 18.0) * h2) + ((dim2 / 18.0) * random) - (dim2 / 2.0);
-           random = rg.Random();
-           h3 = ((dim3 / 18.0) * h3) + ((dim3 / 18.0) * random) - (dim3 / 2.0);
-           hmag = pow((h1 * h1 + h2 * h2 + h3 * h3), 0.5);
-           angle = pow((8 * hmag * hmag * hmag), (1.0 / 3.0));
-           n1 = h1 / hmag;
-           n2 = h2 / hmag;
-           n3 = h3 / hmag;
-		   cos_angle = cos(angle/2.0);
-           sin_angle = sin(angle/2.0);
-           q2[0] = 1;
-		   q2[1] = sin_angle * n1;
-           q2[2] = sin_angle * n2;
-           q2[3] = sin_angle * n3;
-           q2[4] = cos_angle;
-		   w = MisorientationCalculations::getMisoQuatHexagonal(q1,q2,n1,n2,n3);
-		   w = w*radtodeg;
-		   yval[int(w/5.0)]++;
+		   angle = angle*radtodeg;
+		   yval[int(angle/5.0)]++;
          }
-		 for(int i=0;i<20;i++)
+		 for(int i=0;i<36;i++)
 		 {
 			xval[i] = i*5.0+2.5;
 			yval[i] = yval[i]/double(size);
