@@ -99,6 +99,10 @@ class StatsGenPlotWidget : public QWidget, private Ui::StatsGenPlotWidget
 
     void setSizeDistributionValues(double mu, double sigma, double cutOff, double binStepSize);
 
+    void loadTableData(H5ReconStatsReader::Pointer reader,
+                       std::vector<std::string> names,
+                       const std::string &hdf5GroupName);
+
   signals:
     void userEditedData();
 
@@ -116,10 +120,6 @@ class StatsGenPlotWidget : public QWidget, private Ui::StatsGenPlotWidget
 
   private:
     SGAbstractTableModel* m_TableModel;
-
-//    QwtPlotZoomer* m_zoomer;
-//    QwtPlotPicker* m_picker;
-//    QwtPlotPanner* m_panner;
     QwtPlotGrid* m_grid;
     AIM::Reconstruction::DistributionType m_DistributionType;
     AIM::Reconstruction::StatisticsType    m_StatsType;
