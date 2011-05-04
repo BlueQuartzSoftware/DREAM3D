@@ -34,6 +34,7 @@
 
 #include <vector>
 #include "MXA/MXATypes.h"
+#include "MXA/Common/LogTime.h"
 #include "AIM/Common/AIMCommonConfiguration.h"
 #include "AIM/Common/AIMMath.h"
 #include "AIM/Common/MisorientationCalculations.h"
@@ -82,7 +83,7 @@ class AIMCOMMON_EXPORT Texture
   static void calculateCubicODFData(T e1s, T e2s, T e3s, T weights, T sigmas,
       bool normalize, T &odf, double &totalweight)
   {
-    double randomWeight = 1.0;
+ //   double randomWeight = 1.0;
     int *TextureBins;
     TextureBins = new int[weights.size()];
     static const size_t odfsize = 5832;
@@ -216,7 +217,7 @@ class AIMCOMMON_EXPORT Texture
   static void calculateHexODFData(T e1s, T e2s, T e3s, T weights, T sigmas,
       bool normalize, T &odf, double &totalweight)
   {
-    double randomWeight = 1.0;
+  //  double randomWeight = 1.0;
     int *TextureBins;
     TextureBins = new int[weights.size()];
     static const size_t odfsize = 15552;
@@ -444,7 +445,6 @@ class AIMCOMMON_EXPORT Texture
 
     if (normalize == true)
     {
-      double test;
       // Normalize the odf
       for (size_t i = 0; i < odfsize; i++)
       {
@@ -457,10 +457,10 @@ class AIMCOMMON_EXPORT Texture
   template<typename T>
   static void calculateCubicMDFData(T angles, T axes, T weights, T odf, T mdf)
   {
-    static const size_t odfsize = 5832;
-    static const size_t mdfsize = 5832;
+    static const int odfsize = 5832;
+    static const int mdfsize = 5832;
     mdf.resize(mdfsize);
-    double totalweight = 0;
+//    double totalweight = 0;
     double radtodeg = 180.0/M_PI;
 
     AIMRandomNG rg;
@@ -480,7 +480,7 @@ class AIMCOMMON_EXPORT Texture
 #else
     rg.RandomInit(seedPtr[0]);
 #endif
-    int err = 0;
+  //  int err = 0;
     int mbin;
     double w = 0;
     int choose1, choose2;
@@ -492,7 +492,7 @@ class AIMCOMMON_EXPORT Texture
     double r1, r2, r3;
     double h1, h2, h3;
     double n1, n2, n3;
-    double random, random1, random2, tan_angle, density, cos_angle, sin_angle;
+    double random, random1, random2, density, cos_angle, sin_angle;
 
     double dim1 = 2 * pow((0.75 * ((M_PI / 4.0) - sin((M_PI / 4.0)))), (1.0 / 3.0));
     double dim2 = 2 * pow((0.75 * ((M_PI / 4.0) - sin((M_PI / 4.0)))), (1.0 / 3.0));
@@ -524,7 +524,7 @@ class AIMCOMMON_EXPORT Texture
       choose2 = 0;
 
       totaldensity = 0;
-      for (size_t j = 0; j < odfsize; j++)
+      for (int j = 0; j < odfsize; j++)
       {
         density = odf[j];
         totaldensity = totaldensity + density;
@@ -593,9 +593,9 @@ class AIMCOMMON_EXPORT Texture
   template<typename T>
   static void calculateHexMDFData(T angles, T axes, T weights, T odf, T mdf)
   {
-    static const size_t odfsize = 15552;
-    static const size_t mdfsize = 15552;
-    double totalweight = 0;
+    static const int odfsize = 15552;
+    static const int mdfsize = 15552;
+  //  double totalweight = 0;
     double radtodeg = 180.0/M_PI;
 
     AIMRandomNG rg;
@@ -615,7 +615,7 @@ class AIMCOMMON_EXPORT Texture
 #else
     rg.RandomInit(seedPtr[0]);
 #endif
-    int err = 0;
+  //  int err = 0;
     int mbin;
     int choose1, choose2;
     double w = 0;
@@ -627,7 +627,7 @@ class AIMCOMMON_EXPORT Texture
     double r1, r2, r3;
     double h1, h2, h3;
     double n1, n2, n3;
-    double random, random1, random2, tan_angle, density, cos_angle, sin_angle;
+    double random, random1, random2, density, cos_angle, sin_angle;
 
     double dim1 = 2 * pow((0.75 * ((M_PI / 4.0) - sin((M_PI / 4.0)))), (1.0 / 3.0));
     double dim2 = 2 * pow((0.75 * ((M_PI / 4.0) - sin((M_PI / 4.0)))), (1.0 / 3.0));
@@ -659,7 +659,7 @@ class AIMCOMMON_EXPORT Texture
       choose2 = 0;
 
       totaldensity = 0;
-      for (size_t j = 0; j < odfsize; j++)
+      for (int j = 0; j < odfsize; j++)
       {
         density = odf[j];
         totaldensity = totaldensity + density;
