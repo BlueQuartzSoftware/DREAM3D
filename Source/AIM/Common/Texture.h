@@ -455,11 +455,10 @@ class AIMCOMMON_EXPORT Texture
   }
 
   template<typename T>
-  static void calculateCubicMDFData(T angles, T axes, T weights, T odf, T mdf)
+  static void calculateCubicMDFData(T angles, T axes, T weights, T odf, T &mdf)
   {
     static const size_t odfsize = 5832;
     static const size_t mdfsize = 5832;
-    mdf.resize(mdfsize);
     double totalweight = 0;
     double radtodeg = 180.0/M_PI;
 
@@ -582,6 +581,7 @@ class AIMCOMMON_EXPORT Texture
       if(mdf[mbin] >= 0) mdf[mbin]++;
       if(mdf[mbin] < 0) i = i-1;
     }
+	double test;
     for (int i = 0; i < mdfsize; i++)
     {
       if(mdf[i] < 0) mdf[i] = -mdf[i];
@@ -591,7 +591,7 @@ class AIMCOMMON_EXPORT Texture
   }
 
   template<typename T>
-  static void calculateHexMDFData(T angles, T axes, T weights, T odf, T mdf)
+  static void calculateHexMDFData(T angles, T axes, T weights, T odf, T &mdf)
   {
     static const size_t odfsize = 15552;
     static const size_t mdfsize = 15552;
