@@ -70,8 +70,7 @@ Q_OBJECT    ;
     int rowCount(const QModelIndex &parent=QModelIndex()) const;
     int columnCount(const QModelIndex &parent=QModelIndex()) const;
 
-    bool setData(const QModelIndex &index, const QVariant &value,
-        int role=Qt::EditRole);
+    bool setData(const QModelIndex &index, const QVariant &value, int role=Qt::EditRole);
     /**
      *
      * @param col
@@ -88,29 +87,47 @@ Q_OBJECT    ;
 
     QAbstractItemDelegate* getItemDelegate();
 
+    void setTableData(QVector<double> bins, QVector<QVector<double> > data, QVector<QString> colors);
+
     QVector<double>& getBinNumbers()
-    { return m_BinNumbers;}
+    {
+      return m_BinNumbers;
+    }
     double getBinNumber(qint32 row)
-    { return m_BinNumbers[row];}
+    {
+      return m_BinNumbers[row];
+    }
 
     QVector<QString>& getColors()
-    { return m_Colors;}
+    {
+      return m_Colors;
+    }
     QString getColor(qint32 row)
-    { return m_Colors[row];}
+    {
+      return m_Colors[row];
+    }
 
     virtual QVector<double> getData(int col);
     virtual double getDataValue(int col, int row);
     void setColumnData(int col, QVector<double> &data);
 
     QVector<double>& getAlphas()
-    { return m_Alpha;}
+    {
+      return m_Alpha;
+    }
     QVector<double>& getBetas()
-    { return m_Beta;}
+    {
+      return m_Beta;
+    }
 
     double getAlpha(qint32 row)
-    { return m_Alpha[row];}
+    {
+      return m_Alpha[row];
+    }
     double getBeta(qint32 row)
-    { return m_Beta[row];}
+    {
+      return m_Beta[row];
+    }
 
   private:
     int m_ColumnCount;

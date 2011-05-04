@@ -357,54 +357,29 @@ void SGLogNormalTableModel::setColumnData(int col, QVector<double> &data)
   }
 }
 
-#if 0
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SGLogNormalTableModel::setBinNumbers(QVector<double> binNumbers)
+void SGLogNormalTableModel::setTableData(QVector<double> bins, QVector<QVector<double> > data, QVector<QString> colors)
 {
-
-  qint32 count = binNumbers.count();
-
+  qint32 count = bins.count();
+  qint32 row = 0;
   // Remove all the current rows in the table model
   removeRows(0, rowCount());
 
-  double avg = 1.0;
-  double stdDev = 0.10;
-
-  double avgStep = 1.0 / (double)(count);
-  double stdDevStep = 0.2 / (double)(count);
-
-  QStringList colorNames = QColor::colorNames();
-  qint32 colorOffset = 21;
-
-  // Now Populate the table data with the data that was passed in
-  for (qint32 i = 0; i < count; ++i)
-  {
-    if (!insertRow(rowCount())) return;
-
-    QModelIndex binNumberIndex = index(rowCount() - 1, SGAbstractTableModel::BinNumber);
-    setData(binNumberIndex, QVariant(binNumbers[i]), Qt::EditRole);
-
-    QModelIndex avgIndex = index(rowCount() - 1, Average);
-    setData(avgIndex, QVariant(avg), Qt::EditRole);
-
-    QModelIndex stdDevIndex = index(rowCount() - 1, StdDev);
-    setData(stdDevIndex, QVariant(stdDev), Qt::EditRole);
-
-    avg += avgStep;
-    stdDev += stdDevStep;
-
-    QModelIndex colorIndex = index(rowCount() - 1, LineColor);
-    setData(colorIndex, QVariant(colorNames[colorOffset++]), Qt::EditRole);
-    if (colorOffset == colorNames.count())
-    {
-      colorOffset = colorNames.count() - 1;
-    }
-  }
-
+  // Now mass insert the data to the table then emit that the data has changed
+  beginInsertRows(QModelIndex(), row, row + count - 1);
+  m_BinNumbers = bins;
+  m_Average = data[0];
+  m_StdDev = data[1];
+  m_Colors = colors;
+  m_RowCount = count;
+  endInsertRows();
+  QModelIndex topLeft = createIndex(0, 0);
+  QModelIndex botRight = createIndex(count-1, ColumnCount);
+  emit dataChanged(topLeft, botRight);
 }
-#endif
 
 
 // -----------------------------------------------------------------------------
