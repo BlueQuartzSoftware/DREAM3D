@@ -971,8 +971,6 @@ class StatsGen
        int GenCubicMDFPlotData(T mdf, T &xval, T &yval, int npoints)
        {
           static const size_t mdfsize = 5832;
-
-          double totalweight = 0;
 		      double radtodeg = 180.0/M_PI;
 	         AIMRandomNG rg;
          /* Get a seed value based off the system clock. The issue is that this will
@@ -1049,7 +1047,6 @@ class StatsGen
        int GenHexMDFPlotData(T mdf, T &xval, T &yval, int npoints)
        {
          static const size_t mdfsize = 15552;
-         double totalweight = 0;
 		     double radtodeg = 180.0/M_PI;
 
          AIMRandomNG rg;
