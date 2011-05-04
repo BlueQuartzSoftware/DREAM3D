@@ -63,7 +63,6 @@ class SGWidget : public QWidget, private Ui::SGWidget
     MXA_INSTANCE_PROPERTY(double, PhaseFraction);
     MXA_INSTANCE_PROPERTY(double, TotalPhaseFraction);
 
-  //  MXA_INSTANCE_PROPERTY(AIM::Reconstruction::CrystalStructure, CrystalStructure);
     void setCrystalStructure(AIM::Reconstruction::CrystalStructure xtal);
     AIM::Reconstruction::CrystalStructure getCrystalStructure();
 
