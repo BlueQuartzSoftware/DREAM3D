@@ -848,9 +848,6 @@ class StatsGen
        }
 
 
-
-
-
        /**
         * @brief  This method will generate MDF data for a Cubic material and
         * generate 1 XY scatter plots. The method is a C++ Template which the parameter
@@ -921,8 +918,6 @@ class StatsGen
 		 }
          return err;
        }
-
-
 
        template<typename T>
        int GenHexMDFPlotData(T mdf, T &xval, T &yval, int npoints)
