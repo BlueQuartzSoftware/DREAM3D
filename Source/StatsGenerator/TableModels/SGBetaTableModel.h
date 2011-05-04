@@ -65,10 +65,8 @@ Q_OBJECT    ;
     virtual ~SGBetaTableModel();
 
     Qt::ItemFlags flags(const QModelIndex &index) const;
-    QVariant data(const QModelIndex &index,
-        int role=Qt::DisplayRole) const;
-    QVariant headerData(int section, Qt::Orientation orientation,
-        int role=Qt::DisplayRole) const;
+    QVariant data(const QModelIndex &index, int role=Qt::DisplayRole) const;
+    QVariant headerData(int section, Qt::Orientation orientation, int role=Qt::DisplayRole) const;
     int rowCount(const QModelIndex &parent=QModelIndex()) const;
     int columnCount(const QModelIndex &parent=QModelIndex()) const;
 
@@ -89,8 +87,6 @@ Q_OBJECT    ;
     bool removeRows(int row, int count, const QModelIndex &parent=QModelIndex());
 
     QAbstractItemDelegate* getItemDelegate();
-
-  //  void setBinNumbers(QVector<double> binNumbers);
 
     QVector<double>& getBinNumbers()
     { return m_BinNumbers;}
