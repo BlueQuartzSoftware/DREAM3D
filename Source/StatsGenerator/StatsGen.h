@@ -224,7 +224,7 @@ class StatsGen
        int GenCubicODFPlotData(T odf, T &x001, T &y001, T &x011, T &y011, T &x111, T &y111,
                        int npoints)
        {
-         static const size_t eighteenCubed = 5832;
+         static const size_t odfsize = 5832;
 
          AIMRandomNG rg;
          /* Get a seed value based off the system clock. The issue is that this will
@@ -248,7 +248,6 @@ class StatsGen
          double g[3][3];
          double x, y, z;
          double xpf, ypf;
-      //   double xpfa, ypfa;
          double totaldensity;
          double hmag;
          double angle;
@@ -272,9 +271,8 @@ class StatsGen
          {
            random = rg.Random();
            choose = 0;
-
            totaldensity = 0;
-           for (size_t j = 0; j < eighteenCubed; j++)
+           for (size_t j = 0; j < odfsize; j++)
            {
              density = odf[j];
              totaldensity = totaldensity + density;
