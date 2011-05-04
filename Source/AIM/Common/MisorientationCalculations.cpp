@@ -62,6 +62,10 @@ static const double HexDim1InitValue = pow((0.75*((m_pi/2.0)-sin((m_pi/2.0)))),(
 static const double HexDim2InitValue = pow((0.75*((m_pi/2.0)-sin((m_pi/2.0)))),(1.0/3.0));
 static const double HexDim3InitValue = pow((0.75*((m_pi/6.0)-sin((m_pi/6.0)))),(1.0/3.0));
 
+static const double OrthoDim1InitValue = pow((0.75*((m_pi/2.0)-sin((m_pi/2.0)))),(1.0/3.0));
+static const double OrthoDim2InitValue = pow((0.75*((m_pi/2.0)-sin((m_pi/2.0)))),(1.0/3.0));
+static const double OrthoDim3InitValue = pow((0.75*((m_pi/2.0)-sin((m_pi/2.0)))),(1.0/3.0));
+
 static const double CubicSlipSystems[12][6] = {{1,1,1,0,1,-1},
 												{1,1,1,1,0,-1},
 												{1,1,1,1,-1,0},
@@ -650,21 +654,30 @@ void MisorientationCalculations::determineEulerAngles(AIM::Reconstruction::Cryst
 	rg.RandomInit((static_cast<unsigned int>(time(NULL))));
     if(crystruct == AIM::Reconstruction::Hexagonal)
     {
-	  dim1 = HexDim1InitValue;
-	  dim2 = HexDim2InitValue;
-	  dim3 = HexDim3InitValue;
+	  dim1 = HexDim1InitValue/36.0;
+	  dim2 = HexDim2InitValue/36.0;
+	  dim3 = HexDim3InitValue/12.0;
       phi1 = choose%36;
       PHI = (choose/36)%36;
       phi2 = choose/(36*36);
     }
     if(crystruct == AIM::Reconstruction::Cubic)
     {
-	  dim1 = CubicDim1InitValue;
-	  dim2 = CubicDim2InitValue;
-	  dim3 = CubicDim3InitValue;
+	  dim1 = CubicDim1InitValue/18.0;
+	  dim2 = CubicDim2InitValue/18.0;
+	  dim3 = CubicDim3InitValue/18.0;
       phi1 = choose%18;
       PHI = (choose/18)%18;
       phi2 = choose/(18*18);
+    }
+	if(crystruct == AIM::Reconstruction::OrthoRhombic)
+    {
+	  dim1 = OrthoDim1InitValue/36.0;
+	  dim2 = OrthoDim2InitValue/36.0;
+	  dim3 = OrthoDim3InitValue/36.0;
+      phi1 = choose%36;
+      PHI = (choose/36)%36;
+      phi2 = choose/(36*36);
     }
     double random = rg.Random();
     double synh1 = (dim1*phi1)+(dim1*random);
@@ -682,7 +695,49 @@ void MisorientationCalculations::determineEulerAngles(AIM::Reconstruction::Cryst
     synea1=sum+diff;
     synea2=2.*atan(synr1*cos(sum)/cos(diff));
     synea3=sum-diff;
-
+}
+void MisorientationCalculations::determineAxisAngle(AIM::Reconstruction::CrystalStructure crystruct, int choose, double &w, double &n1, double &n2, double &n3)
+{
+	double dim1, dim2, dim3;
+	double phi1, PHI, phi2;
+	AIMRandomNG rg;
+	rg.RandomInit((static_cast<unsigned int>(time(NULL))));
+    if(crystruct == AIM::Reconstruction::Hexagonal)
+    {
+	  dim1 = HexDim1InitValue/36.0;
+	  dim2 = HexDim2InitValue/36.0;
+	  dim3 = HexDim3InitValue/12.0;
+      phi1 = choose%36;
+      PHI = (choose/36)%36;
+      phi2 = choose/(36*36);
+    }
+    if(crystruct == AIM::Reconstruction::Cubic)
+    {
+	  dim1 = CubicDim1InitValue/18.0;
+	  dim2 = CubicDim2InitValue/18.0;
+	  dim3 = CubicDim3InitValue/18.0;
+      phi1 = choose%18;
+      PHI = (choose/18)%18;
+      phi2 = choose/(18*18);
+    }
+	if(crystruct == AIM::Reconstruction::OrthoRhombic)
+    {
+	  dim1 = OrthoDim1InitValue/36.0;
+	  dim2 = OrthoDim2InitValue/36.0;
+	  dim3 = OrthoDim3InitValue/36.0;
+      phi1 = choose%36;
+      PHI = (choose/36)%36;
+      phi2 = choose/(36*36);
+    }
+    double random = rg.Random();
+    double synh1 = (dim1*phi1)+(dim1*random);
+    random = rg.Random();
+    double synh2 = (dim2*PHI)+(dim2*random);
+    random = rg.Random();
+    double synh3 = (dim3*phi2)+(dim3*random);
+    double hmag = pow((synh1*synh1+synh2*synh2+synh3*synh3),0.5);
+    w = pow((8.25*hmag*hmag*hmag),(1.0/3.0));
+	w = w*180.0/M_PI;
 }
 void MisorientationCalculations::initializeDims( AIM::Reconstruction::CrystalStructure crystruct, double &dim1, double &dim2, double &dim3, int &numbins)
 {
