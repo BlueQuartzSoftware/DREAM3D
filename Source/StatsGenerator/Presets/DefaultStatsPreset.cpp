@@ -55,7 +55,7 @@ DefaultStatsPreset::~DefaultStatsPreset()
 void DefaultStatsPreset::generateOmega3Data(StatsGenPlotWidget* plot, QVector<double> binNumbers)
 {
   // Make sure the distribution is set correctly
-  plot->setDistributionType(AIM::Reconstruction::Beta);
+  plot->setDistributionType(AIM::Reconstruction::Beta, false);
   // This line basically makes sure we have the distribution type we are looking for
   SGBetaTableModel* model = qobject_cast<SGBetaTableModel*>(plot->tableModel());
   if (NULL == model)
@@ -97,7 +97,7 @@ void DefaultStatsPreset::generateOmega3Data(StatsGenPlotWidget* plot, QVector<do
 void DefaultStatsPreset::generateBOverAPlotData(StatsGenPlotWidget* plot, QVector<double> binNumbers)
 {
   // Make sure the distribution is set correctly
-  plot->setDistributionType(AIM::Reconstruction::Beta);
+  plot->setDistributionType(AIM::Reconstruction::Beta, false);
   // This line basically makes sure we have the distribution type we are looking for
   SGBetaTableModel* model = qobject_cast<SGBetaTableModel*>(plot->tableModel());
   if (NULL == model)
@@ -139,7 +139,7 @@ void DefaultStatsPreset::generateBOverAPlotData(StatsGenPlotWidget* plot, QVecto
 void DefaultStatsPreset::generateCOverAPlotData(StatsGenPlotWidget* plot, QVector<double> binNumbers)
 {
   // Make sure the distribution is set correctly
-  plot->setDistributionType(AIM::Reconstruction::Beta);
+  plot->setDistributionType(AIM::Reconstruction::Beta, false);
   // This line basically makes sure we have the distribution type we are looking for
   SGBetaTableModel* model = qobject_cast<SGBetaTableModel*>(plot->tableModel());
   if (NULL == model)
@@ -182,7 +182,7 @@ void DefaultStatsPreset::generateCOverAPlotData(StatsGenPlotWidget* plot, QVecto
 void DefaultStatsPreset::generateCOverBPlotData(StatsGenPlotWidget* plot, QVector<double> binNumbers)
 {
   // Make sure the distribution is set correctly
-  plot->setDistributionType(AIM::Reconstruction::Beta);
+  plot->setDistributionType(AIM::Reconstruction::Beta, false);
   // This line basically makes sure we have the distribution type we are looking for
   SGBetaTableModel* model = qobject_cast<SGBetaTableModel*>(plot->tableModel());
   if (NULL == model)
@@ -225,7 +225,7 @@ void DefaultStatsPreset::generateCOverBPlotData(StatsGenPlotWidget* plot, QVecto
 void DefaultStatsPreset::generateNeighborPlotData(StatsGenPlotWidget* plot, QVector<double> binNumbers)
 {
   // Make sure the distribution is set correctly
-  plot->setDistributionType(AIM::Reconstruction::Power);
+  plot->setDistributionType(AIM::Reconstruction::Power, false);
   // This line basically makes sure we have the distribution type we are looking for
   SGPowerLawTableModel* model = qobject_cast<SGPowerLawTableModel*>(plot->tableModel());
   if (NULL == model)
