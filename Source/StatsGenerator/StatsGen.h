@@ -266,18 +266,24 @@ class StatsGen
          y011.resize(npoints * 6);
          x111.resize(npoints * 4);
          y111.resize(npoints * 4);
+         double* odfPtr = NULL;
 
          for (int i = 0; i < npoints; i++)
          {
            random = rg.Random();
            choose = 0;
            totaldensity = 0;
-           for (size_t j = 0; j < odfsize; j++)
+           odfPtr = &(odf.front());
+           for (int j = 0; j < odfsize; j++)
            {
-             density = odf[j];
+             density = *odfPtr;
+             ++odfPtr;
+             double d = totaldensity;
              totaldensity = totaldensity + density;
-             if (random < totaldensity && random >= (totaldensity - density)) choose = static_cast<int> (j);
+             //FIXME: Do we need a 'Break' when this if statement is true?
+             if (random >= d && random < totaldensity) choose = static_cast<int> (j);
            }
+
            h1 = choose % 18;
            h2 = (choose / 18) % 18;
            h3 = choose / (18 * 18);
