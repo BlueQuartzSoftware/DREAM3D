@@ -115,7 +115,7 @@ void StatsGenMDFWidget::updateMDFPlot(QwtArray<double> odf)
   int err = 0;
   StatsGen sg;
   int size = 1000;
-  
+
   // These are the output vectors
   QwtArray<double> x;
   QwtArray<double> y;
@@ -124,15 +124,15 @@ void StatsGenMDFWidget::updateMDFPlot(QwtArray<double> odf)
   QwtArray<double> angles;
   QwtArray<double> axes;
   QwtArray<double> weights;
-  
+
   angles = m_MDFTableModel->getData(SGMDFTableModel::Angle);
   weights = m_MDFTableModel->getData(SGMDFTableModel::Weight);
   axes = m_MDFTableModel->getData(SGMDFTableModel::Axis);
 
-  if (m_CrystalStructure == AIM::Reconstruction::Cubic) 
+  if (m_CrystalStructure == AIM::Reconstruction::Cubic)
   {
     // Allocate a new vector to hold the mdf data
-    QwtArray<double> mdf(5832); 
+    QwtArray<double> mdf(5832);
     // Calculate the MDF Data using the ODF data and the rows from the MDF Table model
     Texture::calculateCubicMDFData(angles, axes, weights, odf, mdf);
     // Now generate the actual XY point data that gets plotted.
@@ -162,7 +162,6 @@ void StatsGenMDFWidget::updateMDFPlot(QwtArray<double> odf)
 // -----------------------------------------------------------------------------
 QwtArray<double> StatsGenMDFWidget::generateODFData()
 {
-  int err = 0;
   double totalWeight = 0.0;
 
   QwtArray<double> e1s;
