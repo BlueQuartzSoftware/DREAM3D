@@ -92,7 +92,7 @@ Q_OBJECT    ;
 
     QAbstractItemDelegate* getItemDelegate();
 
-  //  void setBinNumbers(QVector<double> binNumbers);
+    void setTableData(QVector<double> bins, QVector<QVector<double> > data, QVector<QString> colors);
 
     QVector<double>& getBinNumbers()
     { return m_BinNumbers;}
