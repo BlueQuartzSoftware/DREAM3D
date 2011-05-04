@@ -122,7 +122,7 @@ void StatsGenPlotWidget::setSizeDistributionValues(double mu, double sigma, doub
 //
 // -----------------------------------------------------------------------------
 int StatsGenPlotWidget::readDataFromHDF5(H5ReconStatsReader::Pointer reader,
-                                         QVector<double>  &bins,
+                                         QVector<double>  &binNumbers,
                                          const std::string &hdf5GroupName)
 {
   int err = 0;
@@ -145,68 +145,60 @@ int StatsGenPlotWidget::readDataFromHDF5(H5ReconStatsReader::Pointer reader,
     QMessageBox::Ok);
     return -1;
   }
+
+
+  // Remove all the current rows in the table model
+  qint32 count = binNumbers.count();
+  m_TableModel->removeRows(0, m_TableModel->rowCount());
+
+  // This will force a reset of the table model creating a new table model
   setDistributionType(dt); // This makes sure the combo box is set correctly
 
-  //FIXME: This is broken. We will need another way of adding the proper number of rows to the table model
- // m_TableModel->setBinNumbers(bins);
-
-  AIM::HDF5::ColumnCount colCount = AIM::HDF5::UnknownColumCount;
-  std::vector<double> col0;
-  std::vector<double> col1;
-  std::vector<double> col2;
-
-  std::vector<std::vector<double> > columnsData;
-
-  std::string datasetName;
-  // Create a new Table Model
-  switch(m_DistributionType)
+  QStringList colorNames = QColor::colorNames();
+  qint32 colorOffset = 1;
+  qint32 cRow = 0;
+  // Load up the Bin Values first as this will reset the table model and make sure
+  // the proper number of rows are inserted
+  for (qint32 i = 0; i < count; ++i)
   {
-  case AIM::Reconstruction::Beta:
-    datasetName = hdf5GroupName + "/" + AIM::HDF5::Alpha;
-    err = reader->readStatsDataset(m_PhaseIndex, datasetName, col0);
-    datasetName = hdf5GroupName + "/" + AIM::HDF5::Beta;
-    err = reader->readStatsDataset(m_PhaseIndex, datasetName, col1);
-    colCount = AIM::HDF5::BetaColumnCount;
-    columnsData.push_back(col0);
-    columnsData.push_back(col1);
-    if (err < 0) { SG_ERROR_CHECK(hdf5GroupName) }
-    break;
-  case AIM::Reconstruction::LogNormal:
-    datasetName = hdf5GroupName + "/" + AIM::HDF5::Average;
-    err = reader->readStatsDataset(m_PhaseIndex, datasetName, col0);
-    datasetName = hdf5GroupName + "/" + AIM::HDF5::StandardDeviation;
-    err = reader->readStatsDataset(m_PhaseIndex, datasetName, col1);
-    colCount = AIM::HDF5::LogNormalColumnCount;
-    columnsData.push_back(col0);
-    columnsData.push_back(col1);
-    if (err < 0) { SG_ERROR_CHECK(hdf5GroupName) }
-    break;
-  case AIM::Reconstruction::Power:
-    datasetName = hdf5GroupName + "/" + AIM::HDF5::Alpha;
-    err = reader->readStatsDataset(m_PhaseIndex, datasetName, col0);
-    datasetName = hdf5GroupName + "/" + AIM::HDF5::Exp_k;
-    err = reader->readStatsDataset(m_PhaseIndex, datasetName, col1);
-    datasetName = hdf5GroupName + "/" + AIM::HDF5::Beta;
-    err = reader->readStatsDataset(m_PhaseIndex, datasetName, col2);
-    columnsData.push_back(col0);
-    columnsData.push_back(col1);
-    columnsData.push_back(col2);
-    colCount = AIM::HDF5::PowerLawColumnCount;
-    if (err < 0) { SG_ERROR_CHECK(hdf5GroupName) }
-    break;
+    if (!m_TableModel->insertRow(m_TableModel->rowCount())) return -1;
+    cRow = m_TableModel->rowCount() - 1;
+    QModelIndex binNumberIndex = m_TableModel->index(cRow, SGAbstractTableModel::BinNumber);
+    m_TableModel->setData(binNumberIndex, QVariant(binNumbers[i]), Qt::EditRole);
 
-  default:
-    return -1;
+    // Set some colors
+    QModelIndex colorIndex = m_TableModel->index(cRow, m_TableModel->columnCount() - 1);
+    m_TableModel->setData(colorIndex, QVariant(colorNames[colorOffset++]), Qt::EditRole);
+    if (colorOffset == colorNames.count())
+    {
+      colorOffset = colorNames.count() - 1;
+    }
   }
 
-// Now set all the data into the various columns of data
-  for (int column = 0; column < colCount; ++column)
+
+  // Now we load up all the other column data into the Table Model
+  std::vector<std::string> names;
+  switch(m_DistributionType)
   {
-    QVector<double> colData = QVector<double>::fromStdVector(columnsData[column]);
-    /* we are adding 1 to the column value because by convention Column 0 is the
-     * 'bin' column.
-     */
-    m_TableModel->setColumnData(column + 1, colData);
+    case AIM::Reconstruction::Beta:
+      names.push_back(AIM::HDF5::Alpha);
+      names.push_back(AIM::HDF5::Beta);
+      loadTableData(reader, names, hdf5GroupName);
+      break;
+    case AIM::Reconstruction::LogNormal:
+      names.push_back(AIM::HDF5::Average);
+      names.push_back(AIM::HDF5::StandardDeviation);
+      loadTableData(reader, names, hdf5GroupName);
+      break;
+    case AIM::Reconstruction::Power:
+      names.push_back(AIM::HDF5::Alpha);
+      names.push_back(AIM::HDF5::Exp_k);
+      names.push_back(AIM::HDF5::Beta);
+      loadTableData(reader, names, hdf5GroupName);
+      break;
+
+    default:
+      return -1;
   }
 
   m_TableView->resizeColumnsToContents();
@@ -216,6 +208,29 @@ int StatsGenPlotWidget::readDataFromHDF5(H5ReconStatsReader::Pointer reader,
 
   m_UserUpdatedData = true;
   return err;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void StatsGenPlotWidget::loadTableData(H5ReconStatsReader::Pointer reader, std::vector<std::string> names, const std::string &hdf5GroupName)
+{
+
+  int err = 0;
+  // Now load each of the columns of data into the table model
+  std::string datasetName;
+  int col = 1;
+  for (std::vector<std::string>::iterator name = names.begin(); name != names.end(); ++name )
+  {
+    std::vector<double> col0;
+    datasetName = hdf5GroupName + "/" + *(name);
+    err = reader->readStatsDataset(m_PhaseIndex, datasetName, col0);
+    QVector<double> colData = QVector<double>::fromStdVector(col0);
+    m_TableModel->setColumnData(col, colData);
+    ++col;
+    if (err < 0) { SG_ERROR_CHECK(hdf5GroupName) }
+  }
+
 }
 
 // -----------------------------------------------------------------------------
@@ -290,7 +305,6 @@ void StatsGenPlotWidget::resetTableModel()
     bins = m_TableModel->getBinNumbers();
   }
 
-
   // Create a new Table Model
   switch(m_DistributionType)
   {
@@ -308,8 +322,9 @@ void StatsGenPlotWidget::resetTableModel()
       return;
   }
 
-
+  QAbstractItemModel* model = m_TableView->model();
   m_TableView->setModel(m_TableModel);
+  delete model; // Clean up this memory
   QAbstractItemDelegate* aid = m_TableModel->getItemDelegate();
 
   m_TableView->setItemDelegate(aid);
@@ -323,8 +338,6 @@ void StatsGenPlotWidget::resetTableModel()
   connect(aid, SIGNAL(commitData(QWidget*)),
           this, SLOT(userCommittedData(QWidget*)));
 
-  // Update the plots
-  updatePlotCurves();
 }
 
 // -----------------------------------------------------------------------------
@@ -344,6 +357,8 @@ void StatsGenPlotWidget::setDistributionType(AIM::Reconstruction::DistributionTy
   m_DistributionType = curveType;
   distributionTypeCombo->setCurrentIndex(m_DistributionType);
   resetTableModel();
+  // Update the plots
+  updatePlotCurves();
 }
 
 // -----------------------------------------------------------------------------
@@ -353,6 +368,8 @@ void StatsGenPlotWidget::on_distributionTypeCombo_currentIndexChanged(int index)
 {
   m_DistributionType = static_cast<AIM::Reconstruction::DistributionType>(distributionTypeCombo->currentIndex());
   resetTableModel();
+  // Update the plots
+  updatePlotCurves();
 }
 
 // -----------------------------------------------------------------------------
@@ -408,11 +425,11 @@ void StatsGenPlotWidget::setupGui()
   m_grid->setMinPen(QPen(Qt::lightGray, 0, Qt::DotLine));
   m_grid->attach(m_PlotView);
 
-  // Add the ability to pan the plots
-//  m_panner = new QwtPlotPanner(m_PlotView->canvas());
-//  m_panner->setMouseButton(Qt::MidButton);
-
   resetTableModel();
+  if (NULL != m_TableModel) {
+    // Update the plots
+    updatePlotCurves();
+  }
 }
 
 // -----------------------------------------------------------------------------
