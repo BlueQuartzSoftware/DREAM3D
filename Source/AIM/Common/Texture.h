@@ -83,7 +83,6 @@ class AIMCOMMON_EXPORT Texture
   static void calculateCubicODFData(T e1s, T e2s, T e3s, T weights, T sigmas,
       bool normalize, T &odf, double &totalweight)
   {
- //   double randomWeight = 1.0;
     int *TextureBins;
     TextureBins = new int[weights.size()];
     static const size_t odfsize = 5832;
@@ -98,9 +97,9 @@ class AIMCOMMON_EXPORT Texture
     double rmag, angle;
     double r1, r2, r3;
     double h1, h2, h3;
-    double dim1 = 2*pow((0.75 * ((M_PI / 4.0) - sin((M_PI / 4.0)))), (1.0 / 3.0));
-    double dim2 = 2*pow((0.75 * ((M_PI / 4.0) - sin((M_PI / 4.0)))), (1.0 / 3.0));
-    double dim3 = 2*pow((0.75 * ((M_PI / 4.0) - sin((M_PI / 4.0)))), (1.0 / 3.0));
+    double dim1 = pow((0.75 * ((M_PI / 4.0) - sin((M_PI / 4.0)))), (1.0 / 3.0));
+    double dim2 = pow((0.75 * ((M_PI / 4.0) - sin((M_PI / 4.0)))), (1.0 / 3.0));
+    double dim3 = pow((0.75 * ((M_PI / 4.0) - sin((M_PI / 4.0)))), (1.0 / 3.0));
     double tan_term = 0.0;
     double sin_term = 0.0;
     double cos_term1 = 0.0;
@@ -125,9 +124,9 @@ class AIMCOMMON_EXPORT Texture
       h2 = hTmp * (r2 / rmag);
       h3 = hTmp * (r3 / rmag);
       if (angle == 0) h1 = 0.0, h2 = 0.0, h3 = 0.0;
-      ea1bin = int((h1 + (dim1 / 2.0)) * 18.0 / dim1);
-      ea2bin = int((h2 + (dim1 / 2.0)) * 18.0 / dim2);
-      ea3bin = int((h3 + (dim1 / 2.0)) * 18.0 / dim3);
+      ea1bin = int(h1 * 18.0 / dim1);
+      ea2bin = int(h2 * 18.0 / dim2);
+      ea3bin = int(h3 * 18.0 / dim3);
       if (ea1bin >= 18) ea1bin = 17;
       if (ea2bin >= 18) ea2bin = 17;
       if (ea3bin >= 18) ea3bin = 17;
@@ -217,7 +216,6 @@ class AIMCOMMON_EXPORT Texture
   static void calculateHexODFData(T e1s, T e2s, T e3s, T weights, T sigmas,
       bool normalize, T &odf, double &totalweight)
   {
-  //  double randomWeight = 1.0;
     int *TextureBins;
     TextureBins = new int[weights.size()];
     static const size_t odfsize = 15552;
@@ -232,9 +230,9 @@ class AIMCOMMON_EXPORT Texture
     double rmag, angle;
     double r1, r2, r3;
     double h1, h2, h3;
-    double dim1 = 2*pow((0.75 * ((M_PI / 2.0) - sin((M_PI / 2.0)))), (1.0 / 3.0));
-    double dim2 = 2*pow((0.75 * ((M_PI / 2.0) - sin((M_PI / 2.0)))), (1.0 / 3.0));
-    double dim3 = 2*pow((0.75 * ((M_PI / 6.0) - sin((M_PI / 6.0)))), (1.0 / 3.0));
+    double dim1 = pow((0.75 * ((M_PI / 2.0) - sin((M_PI / 2.0)))), (1.0 / 3.0));
+    double dim2 = pow((0.75 * ((M_PI / 2.0) - sin((M_PI / 2.0)))), (1.0 / 3.0));
+    double dim3 = pow((0.75 * ((M_PI / 6.0) - sin((M_PI / 6.0)))), (1.0 / 3.0));
     double tan_term = 0.0;
     double sin_term = 0.0;
     double cos_term1 = 0.0;
@@ -259,9 +257,9 @@ class AIMCOMMON_EXPORT Texture
       h2 = hTmp * (r2 / rmag);
       h3 = hTmp * (r3 / rmag);
       if (angle == 0) h1 = 0.0, h2 = 0.0, h3 = 0.0;
-      ea1bin = int((h1 + (dim1 / 2.0)) * 36.0 / dim1);
-      ea2bin = int((h2 + (dim1 / 2.0)) * 36.0 / dim2);
-      ea3bin = int((h3 + (dim1 / 2.0)) * 12.0 / dim3);
+      ea1bin = int(h1 * 36.0 / dim1);
+      ea2bin = int(h2 * 36.0 / dim2);
+      ea3bin = int(h3 * 12.0 / dim3);
       if (ea1bin >= 36) ea1bin = 35;
       if (ea2bin >= 36) ea2bin = 35;
       if (ea3bin >= 12) ea3bin = 11;
@@ -348,7 +346,6 @@ class AIMCOMMON_EXPORT Texture
   static void calculateOrthoRhombicODFData(T e1s, T e2s, T e3s, T weights, T sigmas,
       bool normalize, T &odf, double &totalweight)
   {
-    double randomWeight = 1.0;
     int *TextureBins;
     TextureBins = new int[weights.size()];
     static const size_t odfsize = 46656;
@@ -363,9 +360,9 @@ class AIMCOMMON_EXPORT Texture
     double rmag, angle;
     double r1, r2, r3;
     double h1, h2, h3;
-    double dim1 = 2*pow((0.75 * ((M_PI / 2.0) - sin((M_PI / 2.0)))), (1.0 / 3.0));
-    double dim2 = 2*pow((0.75 * ((M_PI / 2.0) - sin((M_PI / 2.0)))), (1.0 / 3.0));
-    double dim3 = 2*pow((0.75 * ((M_PI / 2.0) - sin((M_PI / 2.0)))), (1.0 / 3.0));
+    double dim1 = pow((0.75 * ((M_PI / 2.0) - sin((M_PI / 2.0)))), (1.0 / 3.0));
+    double dim2 = pow((0.75 * ((M_PI / 2.0) - sin((M_PI / 2.0)))), (1.0 / 3.0));
+    double dim3 = pow((0.75 * ((M_PI / 2.0) - sin((M_PI / 2.0)))), (1.0 / 3.0));
     double tan_term = 0.0;
     double sin_term = 0.0;
     double cos_term1 = 0.0;
@@ -390,9 +387,9 @@ class AIMCOMMON_EXPORT Texture
       h2 = hTmp * (r2 / rmag);
       h3 = hTmp * (r3 / rmag);
       if (angle == 0) h1 = 0.0, h2 = 0.0, h3 = 0.0;
-      ea1bin = int((h1 + (dim1 / 2.0)) * 36.0 / dim1);
-      ea2bin = int((h2 + (dim1 / 2.0)) * 36.0 / dim2);
-      ea3bin = int((h3 + (dim1 / 2.0)) * 36.0 / dim3);
+      ea1bin = int(h1 * 36.0 / dim1);
+      ea2bin = int(h2 * 36.0 / dim2);
+      ea3bin = int(h3 * 36.0 / dim3);
       if (ea1bin >= 36) ea1bin = 35;
       if (ea2bin >= 36) ea2bin = 35;
       if (ea3bin >= 36) ea3bin = 35;
@@ -402,15 +399,11 @@ class AIMCOMMON_EXPORT Texture
 
     for (size_t i = 0; i < odfsize; i++)
     {
-      odf[i] = randomWeight / (odfsize);
-      totalweight = totalweight + randomWeight / (odfsize);
+      odf[i] = 0.0;
     }
     for (typename T::size_type i = 0; i < e1s.size(); i++)
     {
       bin = TextureBins[i];
-      addweight = (odf[bin] * (weights[i])) - odf[bin];
-      odf[bin] = odf[bin] * (weights[i]);
-      totalweight = totalweight + addweight;
       bin1 = bin % 36;
       bin2 = (bin / 36) % 36;
       bin3 = bin / (36 * 36);
@@ -434,25 +427,37 @@ class AIMCOMMON_EXPORT Texture
             fraction = 1.0 - ((dist / sigmas[i]) * (dist / sigmas[i]));
             if (fraction > 0.0)
             {
-              addweight = (odf[addbin] * (weights[i] * fraction)) - odf[addbin];
-              odf[addbin] = odf[addbin] * (weights[i] * fraction);
-              totalweight = totalweight + addweight;
+              addweight = (weights[i] * fraction);
+              odf[addbin] = odf[addbin]+addweight;
             }
           }
         }
       }
     }
-
+    double remainingweight = double(odfsize);
+    double remainingcount = 0;
+    for (size_t i = 0; i < odfsize; i++)
+    {
+      remainingweight = remainingweight-odf[i];
+      if(odf[i] == 0.0) remainingcount++;
+    }
+    for (size_t i = 0; i < odfsize; i++)
+    {
+      if(odf[i] == 0.0) odf[i] = remainingweight/remainingcount;
+    }
     if (normalize == true)
     {
       // Normalize the odf
       for (size_t i = 0; i < odfsize; i++)
       {
-        odf[i] = odf[i] / totalweight;
+        odf[i] = odf[i] / double(odfsize);
       }
     }
 
   }
+
+
+
 
   template<typename T>
   static void calculateCubicMDFData(T angles, T axes, T weights, T odf, T &mdf)
@@ -483,6 +488,7 @@ class AIMCOMMON_EXPORT Texture
     int mbin;
     double w = 0;
     int choose1, choose2;
+	double ea1, ea2, ea3;
     double q1[5], q2[5];
     double totaldensity;
     double hmag;
@@ -491,11 +497,7 @@ class AIMCOMMON_EXPORT Texture
     double r1, r2, r3;
     double h1, h2, h3;
     double n1, n2, n3;
-    double random, random1, random2, density, cos_angle, sin_angle;
-
-    double dim1 = 2 * pow((0.75 * ((M_PI / 4.0) - sin((M_PI / 4.0)))), (1.0 / 3.0));
-    double dim2 = 2 * pow((0.75 * ((M_PI / 4.0) - sin((M_PI / 4.0)))), (1.0 / 3.0));
-    double dim3 = 2 * pow((0.75 * ((M_PI / 4.0) - sin((M_PI / 4.0)))), (1.0 / 3.0));
+    double random1, random2, density;
 
     for (int i = 0; i < mdfsize; i++)
     {
@@ -530,48 +532,10 @@ class AIMCOMMON_EXPORT Texture
         if (random1 < totaldensity && random1 >= (totaldensity - density)) choose1 = static_cast<int> (j);
         if (random2 < totaldensity && random2 >= (totaldensity - density)) choose2 = static_cast<int> (j);
       }
-      h1 = choose1 % 18;
-      h2 = (choose1 / 18) % 18;
-      h3 = choose1 / (18 * 18);
-      random = rg.Random();
-      h1 = ((dim1 / 18.0) * h1) + ((dim1 / 18.0) * random) - (dim1 / 2.0);
-      random = rg.Random();
-      h2 = ((dim2 / 18.0) * h2) + ((dim2 / 18.0) * random) - (dim2 / 2.0);
-      random = rg.Random();
-      h3 = ((dim3 / 18.0) * h3) + ((dim3 / 18.0) * random) - (dim3 / 2.0);
-      hmag = pow((h1 * h1 + h2 * h2 + h3 * h3), 0.5);
-      angle = pow((8 * hmag * hmag * hmag), (1.0 / 3.0));
-      n1 = h1 / hmag;
-      n2 = h2 / hmag;
-      n3 = h3 / hmag;
-      cos_angle = cos(angle/2.0);
-      sin_angle = sin(angle/2.0);
-      q1[0] = 1;
-      q1[1] = sin_angle * n1;
-      q1[2] = sin_angle * n2;
-      q1[3] = sin_angle * n3;
-      q1[4] = cos_angle;
-      h1 = choose2 % 18;
-      h2 = (choose2 / 18) % 18;
-      h3 = choose2 / (18 * 18);
-      random = rg.Random();
-      h1 = ((dim1 / 18.0) * h1) + ((dim1 / 18.0) * random) - (dim1 / 2.0);
-      random = rg.Random();
-      h2 = ((dim2 / 18.0) * h2) + ((dim2 / 18.0) * random) - (dim2 / 2.0);
-      random = rg.Random();
-      h3 = ((dim3 / 18.0) * h3) + ((dim3 / 18.0) * random) - (dim3 / 2.0);
-      hmag = pow((h1 * h1 + h2 * h2 + h3 * h3), 0.5);
-      angle = pow((8 * hmag * hmag * hmag), (1.0 / 3.0));
-      n1 = h1 / hmag;
-      n2 = h2 / hmag;
-      n3 = h3 / hmag;
-      cos_angle = cos(angle/2.0);
-      sin_angle = sin(angle/2.0);
-      q2[0] = 1;
-      q2[1] = sin_angle * n1;
-      q2[2] = sin_angle * n2;
-      q2[3] = sin_angle * n3;
-      q2[4] = cos_angle;
+	  MisorientationCalculations::determineEulerAngles(AIM::Reconstruction::Cubic, choose1, ea1, ea2, ea3);
+	  MisorientationCalculations::initializeQ(q1, ea1, ea2, ea3);
+	  MisorientationCalculations::determineEulerAngles(AIM::Reconstruction::Cubic, choose2, ea1, ea2, ea3);
+	  MisorientationCalculations::initializeQ(q2, ea1, ea2, ea3);
       w = MisorientationCalculations::getMisoQuatCubic(q1,q2,n1,n2,n3);
       w = w/radtodeg;
       r1 = n1 * pow(((3.0 / 4.0) * (w - sin(w))), (1.0 / 3.0));
@@ -595,7 +559,6 @@ class AIMCOMMON_EXPORT Texture
   {
     static const int odfsize = 15552;
     static const int mdfsize = 15552;
-  //  double totalweight = 0;
     double radtodeg = 180.0/M_PI;
 
     AIMRandomNG rg;
@@ -619,6 +582,7 @@ class AIMCOMMON_EXPORT Texture
     int mbin;
     int choose1, choose2;
     double w = 0;
+	double ea1, ea2, ea3;
     double q1[5], q2[5];
     double totaldensity;
     double hmag;
@@ -627,11 +591,7 @@ class AIMCOMMON_EXPORT Texture
     double r1, r2, r3;
     double h1, h2, h3;
     double n1, n2, n3;
-    double random, random1, random2, density, cos_angle, sin_angle;
-
-    double dim1 = 2 * pow((0.75 * ((M_PI / 4.0) - sin((M_PI / 4.0)))), (1.0 / 3.0));
-    double dim2 = 2 * pow((0.75 * ((M_PI / 4.0) - sin((M_PI / 4.0)))), (1.0 / 3.0));
-    double dim3 = 2 * pow((0.75 * ((M_PI / 4.0) - sin((M_PI / 4.0)))), (1.0 / 3.0));
+    double random1, random2, density;
 
     for (int i = 0; i < mdfsize; i++)
     {
@@ -666,48 +626,10 @@ class AIMCOMMON_EXPORT Texture
         if (random1 < totaldensity && random1 >= (totaldensity - density)) choose1 = static_cast<int> (j);
         if (random2 < totaldensity && random2 >= (totaldensity - density)) choose2 = static_cast<int> (j);
       }
-      h1 = choose1 % 18;
-      h2 = (choose1 / 18) % 18;
-      h3 = choose1 / (18 * 18);
-      random = rg.Random();
-      h1 = ((dim1 / 18.0) * h1) + ((dim1 / 18.0) * random) - (dim1 / 2.0);
-      random = rg.Random();
-      h2 = ((dim2 / 18.0) * h2) + ((dim2 / 18.0) * random) - (dim2 / 2.0);
-      random = rg.Random();
-      h3 = ((dim3 / 18.0) * h3) + ((dim3 / 18.0) * random) - (dim3 / 2.0);
-      hmag = pow((h1 * h1 + h2 * h2 + h3 * h3), 0.5);
-      angle = pow((8 * hmag * hmag * hmag), (1.0 / 3.0));
-      n1 = h1 / hmag;
-      n2 = h2 / hmag;
-      n3 = h3 / hmag;
-      cos_angle = cos(angle/2.0);
-      sin_angle = sin(angle/2.0);
-      q1[0] = 1;
-      q1[1] = sin_angle * n1;
-      q1[2] = sin_angle * n2;
-      q1[3] = sin_angle * n3;
-      q1[4] = cos_angle;
-      h1 = choose2 % 18;
-      h2 = (choose2 / 18) % 18;
-      h3 = choose2 / (18 * 18);
-      random = rg.Random();
-      h1 = ((dim1 / 18.0) * h1) + ((dim1 / 18.0) * random) - (dim1 / 2.0);
-      random = rg.Random();
-      h2 = ((dim2 / 18.0) * h2) + ((dim2 / 18.0) * random) - (dim2 / 2.0);
-      random = rg.Random();
-      h3 = ((dim3 / 18.0) * h3) + ((dim3 / 18.0) * random) - (dim3 / 2.0);
-      hmag = pow((h1 * h1 + h2 * h2 + h3 * h3), 0.5);
-      angle = pow((8 * hmag * hmag * hmag), (1.0 / 3.0));
-      n1 = h1 / hmag;
-      n2 = h2 / hmag;
-      n3 = h3 / hmag;
-      cos_angle = cos(angle/2.0);
-      sin_angle = sin(angle/2.0);
-      q2[0] = 1;
-      q2[1] = sin_angle * n1;
-      q2[2] = sin_angle * n2;
-      q2[3] = sin_angle * n3;
-      q2[4] = cos_angle;
+	  MisorientationCalculations::determineEulerAngles(AIM::Reconstruction::Hexagonal, choose1, ea1, ea2, ea3);
+	  MisorientationCalculations::initializeQ(q1, ea1, ea2, ea3);
+	  MisorientationCalculations::determineEulerAngles(AIM::Reconstruction::Hexagonal, choose2, ea1, ea2, ea3);
+	  MisorientationCalculations::initializeQ(q2, ea1, ea2, ea3);
       w = MisorientationCalculations::getMisoQuatHexagonal(q1,q2,n1,n2,n3);
       w = w/radtodeg;
       r1 = n1 * pow(((3.0 / 4.0) * (w - sin(w))), (1.0 / 3.0));

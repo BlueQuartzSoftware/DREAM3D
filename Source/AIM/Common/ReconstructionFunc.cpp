@@ -3272,12 +3272,7 @@ void ReconstructionFunc::find_vectors2D(H5ReconStatsWriter::Pointer h5io)
 }
 void ReconstructionFunc::find_eulerodf(H5ReconStatsWriter::Pointer h5io)
 {
-  //double w, denom, n1, n2, n3;
   size_t bin;
-//  double dim1 = 0.0;
-//  double dim2 = 0.0;
-//  double dim3 = 0.0;
-//  int numbins = 0;
   size_t numgrains = m_Grains.size();
   double q1[5];
   double qref[5];
@@ -3297,11 +3292,11 @@ void ReconstructionFunc::find_eulerodf(H5ReconStatsWriter::Pointer h5io)
 	  }
 	  else if (crystruct[i] == AIM::Reconstruction::Cubic)
 	  {
-      eulerodf[i] = new double[18 * 18 * 18];
-      for (int j = 0; j < 18 * 18 * 18; j++)
-      {
-        eulerodf[i][j] = 0.0;
-      }
+		  eulerodf[i] = new double[18 * 18 * 18];
+		  for (int j = 0; j < 18 * 18 * 18; j++)
+		  {
+			eulerodf[i][j] = 0.0;
+		  }
 	  }
   }
   MisorientationCalculations::initializeQ(qref,0.0,0.0,0.0);
@@ -3340,18 +3335,13 @@ void ReconstructionFunc::find_eulerodf(H5ReconStatsWriter::Pointer h5io)
 
 void ReconstructionFunc::measure_misorientations(H5ReconStatsWriter::Pointer h5io)
 {
-//  size_t initialsize = 10;
   double degtorad = m_pi / 180.0;
   double n1, n2, n3;
   int mbin;
   double w;
-//  double dim1 = 0.0;
-//  double dim2 = 0.0;
-//  double dim3 = 0.0;
   double q1[5];
   double q2[5];
   double denom = 0;
-//  int nummisobins = 0;
   size_t numgrains = m_Grains.size();
   AIM::Reconstruction::CrystalStructure phase1, phase2;
   double **misobin;
@@ -3407,14 +3397,9 @@ void ReconstructionFunc::measure_misorientations(H5ReconStatsWriter::Pointer h5i
       phase2 = crystruct[m_Grains[nname]->phase];
       if (phase1 == phase2 && phase1 == AIM::Reconstruction::Hexagonal) w = MisorientationCalculations::getMisoQuatHexagonal(q1, q2, n1, n2, n3);
       else if (phase1 == phase2 && phase1 == AIM::Reconstruction::Cubic) w = MisorientationCalculations::getMisoQuatCubic(q1, q2, n1, n2, n3);
-      w = w * degtorad;
-      denom = (n1 * n1) + (n2 * n2) + (n3 * n3);
-      denom = pow(denom, 0.5);
-      n1 = n1 / denom;
-      n2 = n2 / denom;
-      n3 = n3 / denom;
       if (phase1 == phase2)
       {
+		MisorientationCalculations::calculateMisorientationAngles(w, n1, n2, n3);
         m_Grains[i]->misorientationlist->at(3 * j) = n1 * pow(((3.0 / 4.0) * (w - sin(w))), (1.0 / 3.0));
         m_Grains[i]->misorientationlist->at(3 * j + 1) = n2 * pow(((3.0 / 4.0) * (w - sin(w))), (1.0 / 3.0));
         m_Grains[i]->misorientationlist->at(3 * j + 2) = n3 * pow(((3.0 / 4.0) * (w - sin(w))), (1.0 / 3.0));

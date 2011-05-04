@@ -245,20 +245,13 @@ class StatsGen
    #endif
          int err = 0;
          int choose;
+		 double q1[5];
+		 double ea1, ea2, ea3;
          double g[3][3];
          double x, y, z;
          double xpf, ypf;
          double totaldensity;
-         double hmag;
-         double angle;
-         double r1, r2, r3;
-         double h1, h2, h3;
-         double n1, n2, n3;
-         double random, tan_angle, density, cos_angle, sin_angle;
-
-         double dim1 = 2 * pow((0.75 * ((M_PI / 4.0) - sin((M_PI / 4.0)))), (1.0 / 3.0));
-         double dim2 = 2 * pow((0.75 * ((M_PI / 4.0) - sin((M_PI / 4.0)))), (1.0 / 3.0));
-         double dim3 = 2 * pow((0.75 * ((M_PI / 4.0) - sin((M_PI / 4.0)))), (1.0 / 3.0));
+         double random, density;
 
          x001.resize(npoints * 3);
          y001.resize(npoints * 3);
@@ -278,35 +271,18 @@ class StatsGen
              totaldensity = totaldensity + density;
              if (random < totaldensity && random >= (totaldensity - density)) choose = static_cast<int> (j);
            }
-           h1 = choose % 18;
-           h2 = (choose / 18) % 18;
-           h3 = choose / (18 * 18);
-           random = rg.Random();
-           h1 = ((dim1 / 18.0) * h1) + ((dim1 / 18.0) * random) - (dim1 / 2.0);
-           random = rg.Random();
-           h2 = ((dim2 / 18.0) * h2) + ((dim2 / 18.0) * random) - (dim2 / 2.0);
-           random = rg.Random();
-           h3 = ((dim3 / 18.0) * h3) + ((dim3 / 18.0) * random) - (dim3 / 2.0);
-           hmag = pow((h1 * h1 + h2 * h2 + h3 * h3), 0.5);
-           angle = pow((8 * hmag * hmag * hmag), (1.0 / 3.0));
-           tan_angle = tan(angle / 2.0);
-           n1 = h1 / hmag;
-           n2 = h2 / hmag;
-           n3 = h3 / hmag;
-           r1 = tan_angle * n1;
-           r2 = tan_angle * n2;
-           r3 = tan_angle * n3;
-           cos_angle = cos(angle);
-           sin_angle = sin(angle);
-           g[0][0] = cos_angle + n1 * n1 * (1 - cos_angle);
-           g[0][1] = n1 * n2 * (1 - cos_angle) - n3 * sin_angle;
-           g[0][2] = n1 * n3 * (1 - cos_angle) + n2 * sin_angle;
-           g[1][0] = n1 * n2 * (1 - cos_angle) + n3 * sin_angle;
-           g[1][1] = cos_angle + n2 * n2 * (1 - cos_angle);
-           g[1][2] = n2 * n3 * (1 - cos_angle) - n1 * sin_angle;
-           g[2][0] = n1 * n3 * (1 - cos_angle) - n2 * sin_angle;
-           g[2][1] = n2 * n3 * (1 - cos_angle) + n1 * sin_angle;
-           g[2][2] = cos_angle + n3 * n3 * (1 - cos_angle);
+		   MisorientationCalculations::determineEulerAngles(AIM::Reconstruction::Cubic, choose, ea1, ea2, ea3);
+		   MisorientationCalculations::initializeQ(q1,ea1,ea2,ea3);
+		   MisorientationCalculations::getFZQuatCubic(q1);
+           g[0][0] = (1 - 2 * q1[2] * q1[2] - 2 * q1[3] * q1[3]);
+           g[0][1] = (2 * q1[1] * q1[2] - 2 * q1[3] * q1[4]);
+           g[0][2] = (2 * q1[1] * q1[3] + 2 * q1[2] * q1[4]);
+           g[1][0] = (2 * q1[1] * q1[2] + 2 * q1[3] * q1[4]);
+           g[1][1] = (1 - 2 * q1[1] * q1[1] - 2 * q1[3] * q1[3]);
+           g[1][2] = (2 * q1[2] * q1[3] - 2 * q1[1] * q1[4]);
+           g[2][0] = (2 * q1[1] * q1[3] - 2 * q1[2] * q1[4]);
+           g[2][1] = (2 * q1[2] * q1[3] + 2 * q1[1] * q1[4]);
+           g[2][2] = (1 - 2 * q1[1] * q1[1] - 2 * q1[2] * q1[2]);
            x = g[0][0];
            y = g[1][0];
            z = g[2][0];
@@ -460,21 +436,13 @@ class StatsGen
    #endif
          int err = 0;
          int choose;
+		 double ea1, ea2, ea3;
+		 double q1[5];
          double g[3][3];
          double x, y, z;
          double xpf, ypf;
-   //      double xpfa, ypfa;
          double totaldensity;
-         double hmag;
-         double angle;
-         double r1, r2, r3;
-         double h1, h2, h3;
-         double n1, n2, n3;
-         double random, tan_angle, density, cos_angle, sin_angle;
-
-         double dim1 = 2*pow((0.75 * ((M_PI / 2.0) - sin((M_PI / 2.0)))), (1.0 / 3.0));
-         double dim2 = 2*pow((0.75 * ((M_PI / 2.0) - sin((M_PI / 2.0)))), (1.0 / 3.0));
-         double dim3 = 2*pow((0.75 * ((M_PI / 6.0) - sin((M_PI / 6.0)))), (1.0 / 3.0));
+         double random, density;
 
          x0001.resize(npoints * 1);
          y0001.resize(npoints * 1);
@@ -495,35 +463,18 @@ class StatsGen
              totaldensity = totaldensity + density;
              if (random < totaldensity && random >= (totaldensity - density)) choose = static_cast<int> (j);
            }
-           h1 = choose % 36;
-           h2 = (choose / 36) % 36;
-           h3 = choose / (36 * 36);
-           random = rg.Random();
-           h1 = ((dim1 / 36.0) * h1) + ((dim1 / 36.0) * random) - (dim1 / 2.0);
-           random = rg.Random();
-           h2 = ((dim2 / 36.0) * h2) + ((dim2 / 36.0) * random) - (dim2 / 2.0);
-           random = rg.Random();
-           h3 = ((dim3 / 12.0) * h3) + ((dim3 / 12.0) * random) - (dim3 / 2.0);
-           hmag = pow((h1 * h1 + h2 * h2 + h3 * h3), 0.5);
-           angle = pow((8 * hmag * hmag * hmag), (1.0 / 3.0));
-           tan_angle = tan(angle / 2.0);
-           n1 = h1 / hmag;
-           n2 = h2 / hmag;
-           n3 = h3 / hmag;
-           r1 = tan_angle * n1;
-           r2 = tan_angle * n2;
-           r3 = tan_angle * n3;
-           cos_angle = cos(angle);
-           sin_angle = sin(angle);
-           g[0][0] = cos_angle + n1 * n1 * (1 - cos_angle);
-           g[0][1] = n1 * n2 * (1 - cos_angle) - n3 * sin_angle;
-           g[0][2] = n1 * n3 * (1 - cos_angle) + n2 * sin_angle;
-           g[1][0] = n1 * n2 * (1 - cos_angle) + n3 * sin_angle;
-           g[1][1] = cos_angle + n2 * n2 * (1 - cos_angle);
-           g[1][2] = n2 * n3 * (1 - cos_angle) - n1 * sin_angle;
-           g[2][0] = n1 * n3 * (1 - cos_angle) - n2 * sin_angle;
-           g[2][1] = n2 * n3 * (1 - cos_angle) + n1 * sin_angle;
-           g[2][2] = cos_angle + n3 * n3 * (1 - cos_angle);
+		   MisorientationCalculations::determineEulerAngles(AIM::Reconstruction::Hexagonal, choose, ea1, ea2, ea3);
+		   MisorientationCalculations::initializeQ(q1,ea1,ea2,ea3);
+		   MisorientationCalculations::getFZQuatCubic(q1);
+           g[0][0] = (1 - 2 * q1[2] * q1[2] - 2 * q1[3] * q1[3]);
+           g[0][1] = (2 * q1[1] * q1[2] - 2 * q1[3] * q1[4]);
+           g[0][2] = (2 * q1[1] * q1[3] + 2 * q1[2] * q1[4]);
+           g[1][0] = (2 * q1[1] * q1[2] + 2 * q1[3] * q1[4]);
+           g[1][1] = (1 - 2 * q1[1] * q1[1] - 2 * q1[3] * q1[3]);
+           g[1][2] = (2 * q1[2] * q1[3] - 2 * q1[1] * q1[4]);
+           g[2][0] = (2 * q1[1] * q1[3] - 2 * q1[2] * q1[4]);
+           g[2][1] = (2 * q1[2] * q1[3] + 2 * q1[1] * q1[4]);
+           g[2][2] = (1 - 2 * q1[1] * q1[1] - 2 * q1[2] * q1[2]);
            x = g[0][2];
            y = g[1][2];
            z = g[2][2];
@@ -635,21 +586,12 @@ class StatsGen
    #endif
          int err = 0;
          int choose;
+		 double q1[5];
          double g[3][3];
          double x, y, z;
          double xpf, ypf;
-     //    double xpfa, ypfa;
          double totaldensity;
-         double hmag;
-         double angle;
-         double r1, r2, r3;
-         double h1, h2, h3;
-         double n1, n2, n3;
-         double random, tan_angle, density, cos_angle, sin_angle;
-
-         double dim1 = 2*pow((0.75 * ((M_PI / 2.0) - sin((M_PI / 2.0)))), (1.0 / 3.0));
-         double dim2 = 2*pow((0.75 * ((M_PI / 2.0) - sin((M_PI / 2.0)))), (1.0 / 3.0));
-         double dim3 = 2*pow((0.75 * ((M_PI / 2.0) - sin((M_PI / 2.0)))), (1.0 / 3.0));
+         double random, density;
 
          x001.resize(size * 3);
          y001.resize(size * 3);
@@ -670,35 +612,18 @@ class StatsGen
              totaldensity = totaldensity + density;
              if (random < totaldensity && random >= (totaldensity - density)) choose = static_cast<int> (j);
            }
-           h1 = choose % 36;
-           h2 = (choose / 36) % 36;
-           h3 = choose / (36 * 36);
-           random = rg.Random();
-           h1 = ((dim1 / 36.0) * h1) + ((dim1 / 36.0) * random) - (dim1 / 2.0);
-           random = rg.Random();
-           h2 = ((dim2 / 36.0) * h2) + ((dim2 / 36.0) * random) - (dim2 / 2.0);
-           random = rg.Random();
-           h3 = ((dim3 / 36.0) * h3) + ((dim3 / 36.0) * random) - (dim3 / 2.0);
-           hmag = pow((h1 * h1 + h2 * h2 + h3 * h3), 0.5);
-           angle = pow((8 * hmag * hmag * hmag), (1.0 / 3.0));
-           tan_angle = tan(angle / 2.0);
-           n1 = h1 / hmag;
-           n2 = h2 / hmag;
-           n3 = h3 / hmag;
-           r1 = tan_angle * n1;
-           r2 = tan_angle * n2;
-           r3 = tan_angle * n3;
-           cos_angle = cos(angle);
-           sin_angle = sin(angle);
-           g[0][0] = cos_angle + n1 * n1 * (1 - cos_angle);
-           g[0][1] = n1 * n2 * (1 - cos_angle) - n3 * sin_angle;
-           g[0][2] = n1 * n3 * (1 - cos_angle) + n2 * sin_angle;
-           g[1][0] = n1 * n2 * (1 - cos_angle) + n3 * sin_angle;
-           g[1][1] = cos_angle + n2 * n2 * (1 - cos_angle);
-           g[1][2] = n2 * n3 * (1 - cos_angle) - n1 * sin_angle;
-           g[2][0] = n1 * n3 * (1 - cos_angle) - n2 * sin_angle;
-           g[2][1] = n2 * n3 * (1 - cos_angle) + n1 * sin_angle;
-           g[2][2] = cos_angle + n3 * n3 * (1 - cos_angle);
+		   MisorientationCalculations::determineEulerAngles(AIM::Reconstruction::OrthoRhombic, choose, ea1, ea2, ea3);
+		   MisorientationCalculations::initializeQ(q1,ea1,ea2,ea3);
+		   MisorientationCalculations::getFZQuatCubic(q1);
+           g[0][0] = (1 - 2 * q1[2] * q1[2] - 2 * q1[3] * q1[3]);
+           g[0][1] = (2 * q1[1] * q1[2] - 2 * q1[3] * q1[4]);
+           g[0][2] = (2 * q1[1] * q1[3] + 2 * q1[2] * q1[4]);
+           g[1][0] = (2 * q1[1] * q1[2] + 2 * q1[3] * q1[4]);
+           g[1][1] = (1 - 2 * q1[1] * q1[1] - 2 * q1[3] * q1[3]);
+           g[1][2] = (2 * q1[2] * q1[3] - 2 * q1[1] * q1[4]);
+           g[2][0] = (2 * q1[1] * q1[3] - 2 * q1[2] * q1[4]);
+           g[2][1] = (2 * q1[2] * q1[3] + 2 * q1[1] * q1[4]);
+           g[2][2] = (1 - 2 * q1[1] * q1[1] - 2 * q1[2] * q1[2]);
            x = g[0][0];
            y = g[1][0];
            z = g[2][0];
@@ -854,21 +779,13 @@ class StatsGen
    #endif
          int err = 0;
          int choose;
+		 double ea1, ea2, ea3;
+		 double q1[5];
          double g[3][3];
          double x, y, z;
          double xpf, ypf;
-    //     double xpfa, ypfa;
          double totaldensity;
-         double hmag;
-         double angle;
-         double r1, r2, r3;
-         double h1, h2, h3;
-         double n1, n2, n3;
-         double random, tan_angle, density, cos_angle, sin_angle;
-
-         double dim1 = 2*pow((0.75 * ((M_PI / 2.0) - sin((M_PI / 2.0)))), (1.0 / 3.0));
-         double dim2 = 2*pow((0.75 * ((M_PI / 2.0) - sin((M_PI / 2.0)))), (1.0 / 3.0));
-         double dim3 = 2*pow((0.75 * ((M_PI / 2.0) - sin((M_PI / 2.0)))), (1.0 / 3.0));
+         double random, density;
 
          xA.resize(npoints * 1);
          yA.resize(npoints * 1);
@@ -889,35 +806,18 @@ class StatsGen
              totaldensity = totaldensity + density;
              if (random < totaldensity && random >= (totaldensity - density)) choose = static_cast<int> (j);
            }
-           h1 = choose % 36;
-           h2 = (choose / 36) % 36;
-           h3 = choose / (36 * 36);
-           random = rg.Random();
-           h1 = ((dim1 / 36.0) * h1) + ((dim1 / 36.0) * random) - (dim1 / 2.0);
-           random = rg.Random();
-           h2 = ((dim2 / 36.0) * h2) + ((dim2 / 36.0) * random) - (dim2 / 2.0);
-           random = rg.Random();
-           h3 = ((dim3 / 36.0) * h3) + ((dim3 / 36.0) * random) - (dim3 / 2.0);
-           hmag = pow((h1 * h1 + h2 * h2 + h3 * h3), 0.5);
-           angle = pow((8 * hmag * hmag * hmag), (1.0 / 3.0));
-           tan_angle = tan(angle / 2.0);
-           n1 = h1 / hmag;
-           n2 = h2 / hmag;
-           n3 = h3 / hmag;
-           r1 = tan_angle * n1;
-           r2 = tan_angle * n2;
-           r3 = tan_angle * n3;
-           cos_angle = cos(angle);
-           sin_angle = sin(angle);
-           g[0][0] = cos_angle + n1 * n1 * (1 - cos_angle);
-           g[0][1] = n1 * n2 * (1 - cos_angle) - n3 * sin_angle;
-           g[0][2] = n1 * n3 * (1 - cos_angle) + n2 * sin_angle;
-           g[1][0] = n1 * n2 * (1 - cos_angle) + n3 * sin_angle;
-           g[1][1] = cos_angle + n2 * n2 * (1 - cos_angle);
-           g[1][2] = n2 * n3 * (1 - cos_angle) - n1 * sin_angle;
-           g[2][0] = n1 * n3 * (1 - cos_angle) - n2 * sin_angle;
-           g[2][1] = n2 * n3 * (1 - cos_angle) + n1 * sin_angle;
-           g[2][2] = cos_angle + n3 * n3 * (1 - cos_angle);
+		   MisorientationCalculations::determineEulerAngles(AIM::Reconstruction::Cubic, choose, ea1, ea2, ea3);
+		   MisorientationCalculations::initializeQ(q1,ea1,ea2,ea3);
+		   MisorientationCalculations::getFZQuatCubic(q1);
+           g[0][0] = (1 - 2 * q1[2] * q1[2] - 2 * q1[3] * q1[3]);
+           g[0][1] = (2 * q1[1] * q1[2] - 2 * q1[3] * q1[4]);
+           g[0][2] = (2 * q1[1] * q1[3] + 2 * q1[2] * q1[4]);
+           g[1][0] = (2 * q1[1] * q1[2] + 2 * q1[3] * q1[4]);
+           g[1][1] = (1 - 2 * q1[1] * q1[1] - 2 * q1[3] * q1[3]);
+           g[1][2] = (2 * q1[2] * q1[3] - 2 * q1[1] * q1[4]);
+           g[2][0] = (2 * q1[1] * q1[3] - 2 * q1[2] * q1[4]);
+           g[2][1] = (2 * q1[2] * q1[3] + 2 * q1[1] * q1[4]);
+           g[2][2] = (1 - 2 * q1[1] * q1[1] - 2 * q1[2] * q1[2]);
            x = g[0][0];
            y = g[1][0];
            z = g[2][0];
@@ -988,21 +888,15 @@ class StatsGen
          rg.RandomInit(seedPtr[0]);
    #endif
          int err = 0;
-		     double density;
+	     double density;
          double totaldensity;
-         double hmag;
-         double angle;
-         double h1, h2, h3;
-		     int choose = 0;
+	     int choose = 0;
+		 double angle, n1, n2, n3;
          double random;
 
-         double dim1 = 2 * pow((0.75 * ((M_PI / 4.0) - sin((M_PI / 4.0)))), (1.0 / 3.0));
-         double dim2 = 2 * pow((0.75 * ((M_PI / 4.0) - sin((M_PI / 4.0)))), (1.0 / 3.0));
-         double dim3 = 2 * pow((0.75 * ((M_PI / 4.0) - sin((M_PI / 4.0)))), (1.0 / 3.0));
-
-         xval.resize(36);
-         yval.resize(36);
-		 for(int i=0;i<36;i++)
+         xval.resize(13);
+         yval.resize(13);
+		 for(int i=0;i<13;i++)
 		 {
 			yval[i] = 0;
 		 }
@@ -1017,21 +911,10 @@ class StatsGen
              totaldensity = totaldensity + density;
              if (random < totaldensity && random >= (totaldensity - density)) choose = static_cast<int> (j);
            }
-           h1 = choose % 18;
-           h2 = (choose / 18) % 18;
-           h3 = choose / (18 * 18);
-           random = rg.Random();
-           h1 = ((dim1 / 18.0) * h1) + ((dim1 / 18.0) * random) - (dim1 / 2.0);
-           random = rg.Random();
-           h2 = ((dim2 / 18.0) * h2) + ((dim2 / 18.0) * random) - (dim2 / 2.0);
-           random = rg.Random();
-           h3 = ((dim3 / 18.0) * h3) + ((dim3 / 18.0) * random) - (dim3 / 2.0);
-           hmag = pow((h1 * h1 + h2 * h2 + h3 * h3), 0.5);
-           angle = pow((8 * hmag * hmag * hmag), (1.0 / 3.0));
-		   angle = angle*radtodeg;
+		   MisorientationCalculations::determineAxisAngle(AIM::Reconstruction::Cubic, choose, angle, n1, n2, n3);  
 		   yval[int(angle/5.0)]++;
          }
-		 for(int i=0;i<36;i++)
+		 for(int i=0;i<13;i++)
 		 {
 			xval[i] = i*5.0+2.5;
 			yval[i] = yval[i]/double(npoints);
@@ -1069,13 +952,8 @@ class StatsGen
 		 double density;
          double totaldensity;
          double hmag;
-         double angle;
-         double h1, h2, h3;
+         double angle, n1, n2, n3;
          double random;
-
-         double dim1 = 2 * pow((0.75 * ((M_PI / 4.0) - sin((M_PI / 4.0)))), (1.0 / 3.0));
-         double dim2 = 2 * pow((0.75 * ((M_PI / 4.0) - sin((M_PI / 4.0)))), (1.0 / 3.0));
-         double dim3 = 2 * pow((0.75 * ((M_PI / 4.0) - sin((M_PI / 4.0)))), (1.0 / 3.0));
 
          xval.resize(36);
          yval.resize(36);
@@ -1096,18 +974,7 @@ class StatsGen
              totaldensity = totaldensity + density;
              if (random < totaldensity && random >= (totaldensity - density)) choose = static_cast<int> (j);
            }
-           h1 = choose % 18;
-           h2 = (choose / 18) % 18;
-           h3 = choose / (18 * 18);
-           random = rg.Random();
-           h1 = ((dim1 / 18.0) * h1) + ((dim1 / 18.0) * random) - (dim1 / 2.0);
-           random = rg.Random();
-           h2 = ((dim2 / 18.0) * h2) + ((dim2 / 18.0) * random) - (dim2 / 2.0);
-           random = rg.Random();
-           h3 = ((dim3 / 18.0) * h3) + ((dim3 / 18.0) * random) - (dim3 / 2.0);
-           hmag = pow((h1 * h1 + h2 * h2 + h3 * h3), 0.5);
-           angle = pow((8 * hmag * hmag * hmag), (1.0 / 3.0));
-		   angle = angle*radtodeg;
+		   MisorientationCalculations::determineAxisAngle(AIM::Reconstruction::Hexagonal, choose, angle, n1, n2, n3);  
 		   yval[int(angle/5.0)]++;
          }
 		 for(int i=0;i<36;i++)
