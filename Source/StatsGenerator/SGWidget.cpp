@@ -687,9 +687,17 @@ int SGWidget::readDataFromHDF5(H5ReconStatsReader::Pointer reader,int phase)
   int err = 0;
 
   setPhaseIndex(phase);
-#ifndef _WIN32
-#warning We need to set the crystal structure here also
-#endif
+
+
+  std::vector<unsigned int> xtal;
+  err = reader->readStatsDataset(phase, AIM::HDF5::CrystalStructure, xtal);
+  CHECK_STATS_READ_ERROR(err, AIM::HDF5::Reconstruction, AIM::HDF5::CrystalStructure)
+  m_CrystalStructure = static_cast<AIM::Reconstruction::CrystalStructure>(xtal[0]);
+  m_Omega3Plot->setCrystalStructure(m_CrystalStructure);
+  m_BOverAPlot->setCrystalStructure(m_CrystalStructure);
+  m_COverAPlot->setCrystalStructure(m_CrystalStructure);
+  m_COverBPlot->setCrystalStructure(m_CrystalStructure);
+  m_NeighborPlot->setCrystalStructure(m_CrystalStructure);
 
 
   /* Read the BinNumbers data set */
@@ -702,7 +710,9 @@ int SGWidget::readDataFromHDF5(H5ReconStatsReader::Pointer reader,int phase)
   CHECK_STATS_READ_ERROR(err, AIM::HDF5::Reconstruction, AIM::HDF5::Grain_Diameter_Info)
 
   binStepSize = grainDiamInfo[0];
+  m_BinStepSize->blockSignals(true);
   m_BinStepSize->setValue(grainDiamInfo[0]);
+  m_BinStepSize->blockSignals(false);
 
   /* Read the Grain_Size_Distribution Data */
   err = reader->readStatsDataset(phase, AIM::HDF5::Grain_Size_Distribution, double_data);
@@ -710,8 +720,14 @@ int SGWidget::readDataFromHDF5(H5ReconStatsReader::Pointer reader,int phase)
 
   mu = double_data[0];
   sigma = double_data[1];
+  m_Mu_SizeDistribution->blockSignals(true);
+  m_Sigma_SizeDistribution->blockSignals(true);
+
   m_Mu_SizeDistribution->setText(QString::number(mu));
   m_Sigma_SizeDistribution->setText(QString::number(sigma));
+
+  m_Mu_SizeDistribution->blockSignals(false);
+  m_Sigma_SizeDistribution->blockSignals(false);
 
   int nBins = (int)(bins.size());
 
@@ -727,14 +743,16 @@ int SGWidget::readDataFromHDF5(H5ReconStatsReader::Pointer reader,int phase)
     cutoff++;
   }
 
-#ifndef _WIN32
-#warning We need to set the Distribution Type here also
-#endif
-  QVector<double> qbins = QVector<double>::fromStdVector(bins);
-
+  m_SigmaCutOff_SizeDistribution->blockSignals(true);
   m_SigmaCutOff_SizeDistribution->setText(QString::number(cutoff - 1.0));
+  m_SigmaCutOff_SizeDistribution->blockSignals(false);
 
+  // Update the Size/Weights Plot
+  updateSizeDistributionPlot();
+  calculateNumberOfBins();
 
+  // Now have each of the plots read it's own data
+  QVector<double> qbins = QVector<double>::fromStdVector(bins);
   m_Omega3Plot->readDataFromHDF5(reader, qbins, AIM::HDF5::Grain_SizeVOmega3_Distributions);
   m_Omega3Plot->setSizeDistributionValues(mu, sigma, cutoff - 1.0, binStepSize);
 
@@ -753,11 +771,13 @@ int SGWidget::readDataFromHDF5(H5ReconStatsReader::Pointer reader,int phase)
 
 #ifndef _WIN32
 #warning do We need to read the ODF data????
+#warning do We need to read the MDF data?
 #endif
+
 
   // Enable all the tabs
     setTabsPlotTabsEnabled(true);
-    dataWasEdited();
+  //  dataWasEdited();
     return err;
 }
 
