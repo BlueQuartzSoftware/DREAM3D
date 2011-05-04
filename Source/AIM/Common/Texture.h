@@ -464,6 +464,7 @@ class AIMCOMMON_EXPORT Texture
   {
     static const int odfsize = 5832;
     static const int mdfsize = 5832;
+    mdf.resize(mdfsize);
     double totalweight = 0;
     double radtodeg = 180.0/M_PI;
 
@@ -498,7 +499,6 @@ class AIMCOMMON_EXPORT Texture
     double h1, h2, h3;
     double n1, n2, n3;
     double random1, random2, density;
-
     for (int i = 0; i < mdfsize; i++)
     {
       mdf[i] = 0.0;
@@ -517,6 +517,8 @@ class AIMCOMMON_EXPORT Texture
       mdf[mbin] = -int((weights[i]/double(mdfsize))*10000.0);
       remainingcount = remainingcount+mdf[mbin];
     }
+    double* odfPtr = NULL;
+
     for (int i = 0; i < remainingcount; i++)
     {
       random1 = rg.Random();
@@ -525,12 +527,15 @@ class AIMCOMMON_EXPORT Texture
       choose2 = 0;
 
       totaldensity = 0;
+      odfPtr = &(odf.front());
       for (int j = 0; j < odfsize; j++)
       {
-        density = odf[j];
+        density = *odfPtr;
+        ++odfPtr;
+        double d = totaldensity;
         totaldensity = totaldensity + density;
-        if (random1 < totaldensity && random1 >= (totaldensity - density)) choose1 = static_cast<int> (j);
-        if (random2 < totaldensity && random2 >= (totaldensity - density)) choose2 = static_cast<int> (j);
+        if (random1 >= d && random1 < totaldensity) choose1 = static_cast<int> (j);
+        if (random2 >= d && random2 < totaldensity) choose2 = static_cast<int> (j);
       }
 	  MisorientationCalculations::determineEulerAngles(AIM::Reconstruction::Cubic, choose1, ea1, ea2, ea3);
 	  MisorientationCalculations::initializeQ(q1, ea1, ea2, ea3);
@@ -538,14 +543,14 @@ class AIMCOMMON_EXPORT Texture
 	  MisorientationCalculations::initializeQ(q2, ea1, ea2, ea3);
       w = MisorientationCalculations::getMisoQuatCubic(q1,q2,n1,n2,n3);
       w = w/radtodeg;
-      r1 = n1 * pow(((3.0 / 4.0) * (w - sin(w))), (1.0 / 3.0));
-      r2 = n2 * pow(((3.0 / 4.0) * (w - sin(w))), (1.0 / 3.0));
-      r3 = n3 * pow(((3.0 / 4.0) * (w - sin(w))), (1.0 / 3.0));
+      r1 = n1 * pow(((0.75) * (w - sin(w))), (1.0 / 3.0));
+      r2 = n2 * pow(((0.75) * (w - sin(w))), (1.0 / 3.0));
+      r3 = n3 * pow(((0.75) * (w - sin(w))), (1.0 / 3.0));
       mbin = MisorientationCalculations::getMisoBinCubic(r1,r2,r3);
       if(mdf[mbin] >= 0) mdf[mbin]++;
       if(mdf[mbin] < 0) i = i-1;
     }
-	double test;
+    double test;
     for (int i = 0; i < mdfsize; i++)
     {
       if(mdf[i] < 0) mdf[i] = -mdf[i];

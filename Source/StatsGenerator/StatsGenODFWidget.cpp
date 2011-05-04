@@ -248,7 +248,7 @@ void StatsGenODFWidget::initQwtPlot(QString xAxisName, QString yAxisName, QwtPlo
 {
   plot->setAxisTitle(QwtPlot::xBottom, xAxisName);
   plot->setAxisTitle(QwtPlot::yLeft, yAxisName);
-  //plot->setCanvasBackground(QColor(Qt::white));  
+  //plot->setCanvasBackground(QColor(Qt::white));
   plot->canvas()->setFrameShape(QFrame::NoFrame);
 
 // These set the plot axis to NOT show anything except the axis labels.
@@ -287,13 +287,13 @@ void StatsGenODFWidget::on_m_CalculateODFBtn_clicked()
   e3s = m_ODFTableModel->getData(SGODFTableModel::Euler3);
   weights = m_ODFTableModel->getData(SGODFTableModel::Weight);
   sigmas = m_ODFTableModel->getData(SGODFTableModel::Sigma);
-  
 
-  
+
+
   StatsGen sg;
   int size = 2500;
-  
-  if (m_CrystalStructure == AIM::Reconstruction::Cubic) 
+
+  if (m_CrystalStructure == AIM::Reconstruction::Cubic)
   {
     static const size_t eighteenCubed = 5832;
     double totalweight = 0;
