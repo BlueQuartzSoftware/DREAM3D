@@ -165,7 +165,8 @@ Q_OBJECT    ;
      *
      * @param binNumbers
      */
-   // virtual void setBinNumbers(QVector<double> binNumbers) = 0;
+    //virtual void setBinNumbers(QVector<double> binNumbers) = 0;
+    virtual void setTableData(QVector<double> bins, QVector<QVector<double> > data, QVector<QString> colors) = 0;
 
     /**
      *
