@@ -241,6 +241,10 @@ double MisorientationCalculations::getMisoQuatCubic(double q1[5],double q2[5],do
   n1 = qco[1] / sin_wmin_over_2;
   n2 = qco[2] / sin_wmin_over_2;
   n3 = qco[3] / sin_wmin_over_2;
+  double denom = pow((n1*n1+n2*n2+n3*n3),0.5);
+  n1 = n1/denom;
+  n2 = n2/denom;
+  n3 = n3/denom;
   if(wmin == 0) n1 = 0.0, n2 = 0.0, n3 = 1.0;
   wmin = (threesixty_over_pi) * wmin;
   return wmin;
@@ -280,6 +284,10 @@ double MisorientationCalculations::getMisoQuatHexagonal(double q1[5],double q2[5
   n1 = fabs(n1min);
   n2 = fabs(n2min);
   n3 = fabs(n3min);
+  double denom = pow((n1*n1+n2*n2+n3*n3),0.5);
+  n1 = n1/denom;
+  n2 = n2/denom;
+  n3 = n3/denom;
   double newangle = 0;
   double angle = 180*atan(n2/n1)/m_pi;
   if(angle > 30.0)
