@@ -277,8 +277,7 @@ bool SGBetaTableModel::insertRows(int row, int count, const QModelIndex& index)
     m_RowCount = m_BinNumbers.count();
   }
   endInsertRows();
-  emit
-  dataChanged(index, index);
+  emit dataChanged(index, index);
   return true;
 }
 
@@ -349,9 +348,11 @@ void SGBetaTableModel::setColumnData(int col, QVector<double> &data)
   switch(col)
   {
     case Alpha:
-      m_Alpha = data;break;
+      m_Alpha = data;
+      break;
     case Beta:
-     m_Beta = data;break;
+     m_Beta = data;
+     break;
     default:
       Q_ASSERT(false);
   }
@@ -365,51 +366,29 @@ QAbstractItemDelegate* SGBetaTableModel::getItemDelegate()
   return new SGBetaItemDelegate;
 }
 
-#if 0
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SGBetaTableModel::setBinNumbers(QVector<double> binNumbers)
+void SGBetaTableModel::setTableData(QVector<double> bins, QVector<QVector<double> > data, QVector<QString> colors)
 {
-
-  qint32 count = binNumbers.count();
-
+  qint32 count = bins.count();
+  qint32 row = 0;
   // Remove all the current rows in the table model
   removeRows(0, rowCount());
 
-  double alpha = 5.0;
-  double beta = 1.0;
-  double betaStep = 10.0 / count;
-
-  QStringList colorNames = QColor::colorNames();
-  qint32 colorOffset = 21;
-
-  // Now Populate the table data with the data that was passed in
-  for (qint32 i = 0; i < count; ++i)
-  {
-    if (!insertRow(rowCount())) return;
-
-    QModelIndex binNumberIndex = index(rowCount() - 1, SGAbstractTableModel::BinNumber);
-    setData(binNumberIndex, QVariant(binNumbers[i]), Qt::EditRole);
-
-    QModelIndex alphaIndex = index(rowCount() - 1, Alpha);
-    setData(alphaIndex, QVariant(alpha), Qt::EditRole);
-
-    QModelIndex betaIndex = index(rowCount() - 1, Beta);
-    setData(betaIndex, QVariant(beta), Qt::EditRole);
-
-    alpha += 0.1;
-    beta += betaStep;
-
-    QModelIndex colorIndex = index(rowCount() - 1, LineColor);
-    setData(colorIndex, QVariant(colorNames[colorOffset++]), Qt::EditRole);
-    if (colorOffset == colorNames.count())
-    {
-      colorOffset = colorNames.count() - 1;
-    }
-  }
-
+  // Now mass insert the data to the table then emit that the data has changed
+  beginInsertRows(QModelIndex(), row, row + count - 1);
+  m_BinNumbers = bins;
+  m_Alpha = data[0];
+  m_Beta = data[1];
+  m_Colors = colors;
+  m_RowCount = count;
+  endInsertRows();
+  QModelIndex topLeft = createIndex(0, 0);
+  QModelIndex botRight = createIndex(count-1, ColumnCount);
+  emit dataChanged(topLeft, botRight);
 }
-#endif
+
 
 

@@ -386,61 +386,29 @@ void SGPowerLawTableModel::setColumnData(int col, QVector<double> &data)
   }
 }
 
-#if 0
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SGPowerLawTableModel::setBinNumbers(QVector<double> binNumbers)
+void SGPowerLawTableModel::setTableData(QVector<double> bins, QVector<QVector<double> > data, QVector<QString> colors)
 {
-
-  qint32 count = binNumbers.count();
-
+  qint32 count = bins.count();
+  qint32 row = 0;
   // Remove all the current rows in the table model
   removeRows(0, rowCount());
 
-  double alpha = 14.0;
-  double k = 1.0;
-  double beta = 1.0;
-
-  double alphaStep = 2.0 / (double)(count);
-  double kStep = 0.25 / (double)(count);
-  double betaStep = 20.0 / (double)(count);
-
-  QStringList colorNames = QColor::colorNames();
-  qint32 colorOffset = 21;
-
-  // Now Populate the table data with the data that was passed in
-  for (qint32 i = 0; i < count; ++i)
-  {
-    if (!insertRow(rowCount())) return;
-
-    QModelIndex binNumberIndex = index(rowCount() - 1, SGAbstractTableModel::BinNumber);
-    setData(binNumberIndex, QVariant(binNumbers[i]), Qt::EditRole);
-
-    QModelIndex alphaIndex = index(rowCount() - 1, Alpha);
-    setData(alphaIndex, QVariant(alpha), Qt::EditRole);
-
-    QModelIndex kIndex = index(rowCount() - 1, K);
-    setData(kIndex, QVariant(k), Qt::EditRole);
-
-    QModelIndex betaIndex = index(rowCount() - 1, Beta);
-    setData(betaIndex, QVariant(beta), Qt::EditRole);
-
-    alpha += alphaStep;
-    k += kStep;
-    beta += betaStep;
-
-    QModelIndex colorIndex = index(rowCount() - 1, LineColor);
-    setData(colorIndex, QVariant(colorNames[colorOffset++]), Qt::EditRole);
-    if (colorOffset == colorNames.count())
-    {
-      colorOffset = colorNames.count() - 1;
-    }
-  }
-
+  // Now mass insert the data to the table then emit that the data has changed
+  beginInsertRows(QModelIndex(), row, row + count - 1);
+  m_BinNumbers = bins;
+  m_Alpha = data[0];
+  m_K = data[1];
+  m_Beta = data[2];
+  m_Colors = colors;
+  m_RowCount = count;
+  endInsertRows();
+  QModelIndex topLeft = createIndex(0, 0);
+  QModelIndex botRight = createIndex(count-1, ColumnCount);
+  emit dataChanged(topLeft, botRight);
 }
-#endif
-
 
 // -----------------------------------------------------------------------------
 //
