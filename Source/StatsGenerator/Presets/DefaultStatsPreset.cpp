@@ -65,39 +65,30 @@ void DefaultStatsPreset::generateOmega3Data(StatsGenPlotWidget* plot, QVector<do
   qint32 count = binNumbers.count();
 
   // Remove all the current rows in the table model
-  model->removeRows(0, model->rowCount());
+//  model->removeRows(0, model->rowCount());
 
   double alpha = 5.0;
   double beta = 1.0;
   double betaStep = 10.0 / count;
 
+  QVector<double> alphas;
+  QVector<double> betas;
+  QVector<QString> colors;
   QStringList colorNames = QColor::colorNames();
   qint32 colorOffset = 21;
-  qint32 cRow = 0;
-  // Now Populate the table data with the data that was passed in
   for (qint32 i = 0; i < count; ++i)
-  {
-    if (!model->insertRow(model->rowCount())) return;
-    cRow = model->rowCount() - 1;
-    QModelIndex binNumberIndex = model->index(cRow, SGAbstractTableModel::BinNumber);
-    model->setData(binNumberIndex, QVariant(binNumbers[i]), Qt::EditRole);
-
-    QModelIndex alphaIndex = model->index(cRow, SGBetaTableModel::Alpha);
-    model->setData(alphaIndex, QVariant(alpha), Qt::EditRole);
-
-    QModelIndex betaIndex = model->index(cRow, SGBetaTableModel::Beta);
-    model->setData(betaIndex, QVariant(beta), Qt::EditRole);
-
+   {
+    alphas.push_back(alpha);
+    betas.push_back(beta);
+    colors.push_back(colorNames[colorOffset++]);
     alpha += 0.1;
     beta += betaStep;
+   }
 
-    QModelIndex colorIndex = model->index(cRow, SGBetaTableModel::LineColor);
-    model->setData(colorIndex, QVariant(colorNames[colorOffset++]), Qt::EditRole);
-    if (colorOffset == colorNames.count())
-    {
-      colorOffset = colorNames.count() - 1;
-    }
-  }
+  QVector<QVector<double> > data;
+  data.push_back(alphas);
+  data.push_back(betas);
+  model->setTableData(binNumbers, data, colors);
 }
 
 // -----------------------------------------------------------------------------
@@ -122,33 +113,24 @@ void DefaultStatsPreset::generateBOverAPlotData(StatsGenPlotWidget* plot, QVecto
   double beta = 1.0;
   double betaStep = 10.0 / count;
 
+  QVector<double> alphas;
+  QVector<double> betas;
+  QVector<QString> colors;
   QStringList colorNames = QColor::colorNames();
   qint32 colorOffset = 21;
-  qint32 cRow = 0;
-  // Now Populate the table data with the data that was passed in
   for (qint32 i = 0; i < count; ++i)
-  {
-    if (!model->insertRow(model->rowCount())) return;
-    cRow = model->rowCount() - 1;
-    QModelIndex binNumberIndex = model->index(cRow, SGAbstractTableModel::BinNumber);
-    model->setData(binNumberIndex, QVariant(binNumbers[i]), Qt::EditRole);
-
-    QModelIndex alphaIndex = model->index(cRow, SGBetaTableModel::Alpha);
-    model->setData(alphaIndex, QVariant(alpha), Qt::EditRole);
-
-    QModelIndex betaIndex = model->index(cRow, SGBetaTableModel::Beta);
-    model->setData(betaIndex, QVariant(beta), Qt::EditRole);
-
+   {
+    alphas.push_back(alpha);
+    betas.push_back(beta);
+    colors.push_back(colorNames[colorOffset++]);
     alpha += 0.1;
     beta += betaStep;
+   }
 
-    QModelIndex colorIndex = model->index(cRow, SGBetaTableModel::LineColor);
-    model->setData(colorIndex, QVariant(colorNames[colorOffset++]), Qt::EditRole);
-    if (colorOffset == colorNames.count())
-    {
-      colorOffset = colorNames.count() - 1;
-    }
-  }
+  QVector<QVector<double> > data;
+  data.push_back(alphas);
+  data.push_back(betas);
+  model->setTableData(binNumbers, data, colors);
 }
 
 // -----------------------------------------------------------------------------
@@ -173,33 +155,24 @@ void DefaultStatsPreset::generateCOverAPlotData(StatsGenPlotWidget* plot, QVecto
   double beta = 1.0;
   double betaStep = 10.0 / count;
 
+  QVector<double> alphas;
+  QVector<double> betas;
+  QVector<QString> colors;
   QStringList colorNames = QColor::colorNames();
   qint32 colorOffset = 21;
-  qint32 cRow = 0;
-  // Now Populate the table data with the data that was passed in
   for (qint32 i = 0; i < count; ++i)
-  {
-    if (!model->insertRow(model->rowCount())) return;
-    cRow = model->rowCount() - 1;
-    QModelIndex binNumberIndex = model->index(cRow, SGAbstractTableModel::BinNumber);
-    model->setData(binNumberIndex, QVariant(binNumbers[i]), Qt::EditRole);
-
-    QModelIndex alphaIndex = model->index(cRow, SGBetaTableModel::Alpha);
-    model->setData(alphaIndex, QVariant(alpha), Qt::EditRole);
-
-    QModelIndex betaIndex = model->index(cRow, SGBetaTableModel::Beta);
-    model->setData(betaIndex, QVariant(beta), Qt::EditRole);
-
+   {
+    alphas.push_back(alpha);
+    betas.push_back(beta);
+    colors.push_back(colorNames[colorOffset++]);
     alpha += 0.1;
     beta += betaStep;
+   }
 
-    QModelIndex colorIndex = model->index(cRow, SGBetaTableModel::LineColor);
-    model->setData(colorIndex, QVariant(colorNames[colorOffset++]), Qt::EditRole);
-    if (colorOffset == colorNames.count())
-    {
-      colorOffset = colorNames.count() - 1;
-    }
-  }
+  QVector<QVector<double> > data;
+  data.push_back(alphas);
+  data.push_back(betas);
+  model->setTableData(binNumbers, data, colors);
 }
 
 
@@ -225,33 +198,24 @@ void DefaultStatsPreset::generateCOverBPlotData(StatsGenPlotWidget* plot, QVecto
   double beta = 1.0;
   double betaStep = 10.0 / count;
 
+  QVector<double> alphas;
+  QVector<double> betas;
+  QVector<QString> colors;
   QStringList colorNames = QColor::colorNames();
   qint32 colorOffset = 21;
-  qint32 cRow = 0;
-  // Now Populate the table data with the data that was passed in
   for (qint32 i = 0; i < count; ++i)
-  {
-    if (!model->insertRow(model->rowCount())) return;
-    cRow = model->rowCount() - 1;
-    QModelIndex binNumberIndex = model->index(cRow, SGAbstractTableModel::BinNumber);
-    model->setData(binNumberIndex, QVariant(binNumbers[i]), Qt::EditRole);
-
-    QModelIndex alphaIndex = model->index(cRow, SGBetaTableModel::Alpha);
-    model->setData(alphaIndex, QVariant(alpha), Qt::EditRole);
-
-    QModelIndex betaIndex = model->index(cRow, SGBetaTableModel::Beta);
-    model->setData(betaIndex, QVariant(beta), Qt::EditRole);
-
+   {
+    alphas.push_back(alpha);
+    betas.push_back(beta);
+    colors.push_back(colorNames[colorOffset++]);
     alpha += 0.1;
     beta += betaStep;
+   }
 
-    QModelIndex colorIndex = model->index(cRow, SGBetaTableModel::LineColor);
-    model->setData(colorIndex, QVariant(colorNames[colorOffset++]), Qt::EditRole);
-    if (colorOffset == colorNames.count())
-    {
-      colorOffset = colorNames.count() - 1;
-    }
-  }
+  QVector<QVector<double> > data;
+  data.push_back(alphas);
+  data.push_back(betas);
+  model->setTableData(binNumbers, data, colors);
 }
 
 
@@ -282,38 +246,28 @@ void DefaultStatsPreset::generateNeighborPlotData(StatsGenPlotWidget* plot, QVec
   double kStep = 0.25 / (double)(count);
   double betaStep = 20.0 / (double)(count);
 
+  QVector<double> alphas;
+  QVector<double> ks;
+  QVector<double> betas;
+  QVector<QString> colors;
   QStringList colorNames = QColor::colorNames();
   qint32 colorOffset = 21;
-  qint32 cRow = 0;
-  // Now Populate the table data with the data that was passed in
   for (qint32 i = 0; i < count; ++i)
-  {
-    if (!model->insertRow(model->rowCount())) return;
-    cRow = model->rowCount() - 1;
-
-    QModelIndex binNumberIndex = model->index(cRow, SGAbstractTableModel::BinNumber);
-    model->setData(binNumberIndex, QVariant(binNumbers[i]), Qt::EditRole);
-
-    QModelIndex alphaIndex = model->index(cRow, SGPowerLawTableModel::Alpha);
-    model->setData(alphaIndex, QVariant(alpha), Qt::EditRole);
-
-    QModelIndex kIndex = model->index(cRow, SGPowerLawTableModel::K);
-    model->setData(kIndex, QVariant(k), Qt::EditRole);
-
-    QModelIndex betaIndex = model->index(cRow, SGPowerLawTableModel::Beta);
-    model->setData(betaIndex, QVariant(beta), Qt::EditRole);
-
+   {
+    alphas.push_back(alpha);
+    ks.push_back(k);
+    betas.push_back(beta);
+    colors.push_back(colorNames[colorOffset++]);
     alpha += alphaStep;
     k += kStep;
     beta += betaStep;
+   }
 
-    QModelIndex colorIndex = model->index(cRow, SGPowerLawTableModel::LineColor);
-    model->setData(colorIndex, QVariant(colorNames[colorOffset++]), Qt::EditRole);
-    if (colorOffset == colorNames.count())
-    {
-      colorOffset = colorNames.count() - 1;
-    }
-  }
+  QVector<QVector<double> > data;
+  data.push_back(alphas);
+  data.push_back(ks);
+  data.push_back(betas);
+  model->setTableData(binNumbers, data, colors);
 
 }
 
