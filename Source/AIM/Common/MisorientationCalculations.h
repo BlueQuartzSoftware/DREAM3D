@@ -64,6 +64,7 @@ class AIMCOMMON_EXPORT MisorientationCalculations
     static int getMisoBinCubic(double n1, double n2, double n3);
     static int getMisoBinHexagonal(double n1, double n2, double n3);
     static void determineEulerAngles(AIM::Reconstruction::CrystalStructure crystruct, int choose, double &synea1, double &synea2, double &synea3);
+    static void determineAxisAngle(AIM::Reconstruction::CrystalStructure crystruct, int choose, double &w, double &n1, double &n2, double &n3);
     static void calculateMisorientationAngles(double &w, double &miso1, double &miso2, double &miso3);
     static void initializeDims( AIM::Reconstruction::CrystalStructure crystruct, double &dim1, double &dim2,  double &dim3, int &numbins);
     static void getSlipMisalignment(int ss1, double q1[5], double q2[5], double &ssap);
