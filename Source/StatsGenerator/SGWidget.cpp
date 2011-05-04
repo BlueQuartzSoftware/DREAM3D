@@ -36,6 +36,8 @@
 #include <QtCore/QString>
 #include <QtCore/QSettings>
 #include <QtCore/QVector>
+#include <QtCore/QRunnable>
+#include <QtCore/QThreadPool>
 #include <QtGui/QMessageBox>
 
 

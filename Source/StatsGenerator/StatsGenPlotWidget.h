@@ -70,7 +70,7 @@ class StatsGenPlotWidget : public QWidget, private Ui::StatsGenPlotWidget
                          const std::string &hdf5GroupName);
 
     void setStatisticsType(AIM::Reconstruction::StatisticsType statsType);
-    void setDistributionType(AIM::Reconstruction::DistributionType distributionType);
+    void setDistributionType(AIM::Reconstruction::DistributionType distributionType, bool updatePlots = true);
     void blockDistributionTypeChanges(bool block);
 
     void setXAxisName(QString name);
@@ -85,7 +85,7 @@ class StatsGenPlotWidget : public QWidget, private Ui::StatsGenPlotWidget
     void createPowerCurve(int tableRow, double &xMax, double &yMax);
     SGAbstractTableModel* tableModel();
 
-    void setBins(QVector<double> &binValues);
+//    void setBins(QVector<double> &binValues);
     bool userUpdatedData();
 
     MXA_INSTANCE_PROPERTY(double, Mu);
@@ -100,6 +100,7 @@ class StatsGenPlotWidget : public QWidget, private Ui::StatsGenPlotWidget
     void setSizeDistributionValues(double mu, double sigma, double cutOff, double binStepSize);
 
     void loadTableData(H5ReconStatsReader::Pointer reader,
+                       QVector<double> bins,
                        std::vector<std::string> names,
                        const std::string &hdf5GroupName);
 

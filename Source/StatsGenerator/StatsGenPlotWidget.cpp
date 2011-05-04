@@ -148,33 +148,10 @@ int StatsGenPlotWidget::readDataFromHDF5(H5ReconStatsReader::Pointer reader,
 
 
   // Remove all the current rows in the table model
-  qint32 count = binNumbers.count();
   m_TableModel->removeRows(0, m_TableModel->rowCount());
 
   // This will force a reset of the table model creating a new table model
   setDistributionType(dt); // This makes sure the combo box is set correctly
-
-  QStringList colorNames = QColor::colorNames();
-  qint32 colorOffset = 1;
-  qint32 cRow = 0;
-  // Load up the Bin Values first as this will reset the table model and make sure
-  // the proper number of rows are inserted
-  for (qint32 i = 0; i < count; ++i)
-  {
-    if (!m_TableModel->insertRow(m_TableModel->rowCount())) return -1;
-    cRow = m_TableModel->rowCount() - 1;
-    QModelIndex binNumberIndex = m_TableModel->index(cRow, SGAbstractTableModel::BinNumber);
-    m_TableModel->setData(binNumberIndex, QVariant(binNumbers[i]), Qt::EditRole);
-
-    // Set some colors
-    QModelIndex colorIndex = m_TableModel->index(cRow, m_TableModel->columnCount() - 1);
-    m_TableModel->setData(colorIndex, QVariant(colorNames[colorOffset++]), Qt::EditRole);
-    if (colorOffset == colorNames.count())
-    {
-      colorOffset = colorNames.count() - 1;
-    }
-  }
-
 
   // Now we load up all the other column data into the Table Model
   std::vector<std::string> names;
@@ -183,18 +160,18 @@ int StatsGenPlotWidget::readDataFromHDF5(H5ReconStatsReader::Pointer reader,
     case AIM::Reconstruction::Beta:
       names.push_back(AIM::HDF5::Alpha);
       names.push_back(AIM::HDF5::Beta);
-      loadTableData(reader, names, hdf5GroupName);
+      loadTableData(reader, binNumbers, names, hdf5GroupName);
       break;
     case AIM::Reconstruction::LogNormal:
       names.push_back(AIM::HDF5::Average);
       names.push_back(AIM::HDF5::StandardDeviation);
-      loadTableData(reader, names, hdf5GroupName);
+      loadTableData(reader, binNumbers, names, hdf5GroupName);
       break;
     case AIM::Reconstruction::Power:
       names.push_back(AIM::HDF5::Alpha);
       names.push_back(AIM::HDF5::Exp_k);
       names.push_back(AIM::HDF5::Beta);
-      loadTableData(reader, names, hdf5GroupName);
+      loadTableData(reader, binNumbers, names, hdf5GroupName);
       break;
 
     default:
@@ -213,24 +190,33 @@ int StatsGenPlotWidget::readDataFromHDF5(H5ReconStatsReader::Pointer reader,
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void StatsGenPlotWidget::loadTableData(H5ReconStatsReader::Pointer reader, std::vector<std::string> names, const std::string &hdf5GroupName)
+void StatsGenPlotWidget::loadTableData(H5ReconStatsReader::Pointer reader,
+                                       QVector<double> binNumbers,
+                                       std::vector<std::string> names,
+                                       const std::string &hdf5GroupName)
 {
-
   int err = 0;
+  QVector<QString> colors;
+  qint32 count = binNumbers.count();
+  QStringList colorNames = QColor::colorNames();
+  qint32 colorOffset = 21;
+  for (qint32 i = 0; i < count; ++i)
+  {
+    colors.push_back(colorNames[colorOffset++]);
+  }
+
+  QVector<QVector<double> > data;
   // Now load each of the columns of data into the table model
   std::string datasetName;
-  int col = 1;
   for (std::vector<std::string>::iterator name = names.begin(); name != names.end(); ++name )
   {
     std::vector<double> col0;
     datasetName = hdf5GroupName + "/" + *(name);
     err = reader->readStatsDataset(m_PhaseIndex, datasetName, col0);
-    QVector<double> colData = QVector<double>::fromStdVector(col0);
-    m_TableModel->setColumnData(col, colData);
-    ++col;
+    data.push_back( QVector<double>::fromStdVector(col0) );
     if (err < 0) { SG_ERROR_CHECK(hdf5GroupName) }
   }
-
+  m_TableModel->setTableData(binNumbers, data, colors);
 }
 
 // -----------------------------------------------------------------------------
@@ -328,13 +314,11 @@ void StatsGenPlotWidget::resetTableModel()
   QAbstractItemDelegate* aid = m_TableModel->getItemDelegate();
 
   m_TableView->setItemDelegate(aid);
-  setBins(bins);
 
   connect(m_TableModel, SIGNAL(layoutChanged()),
     this, SLOT(updatePlotCurves()));
   connect(m_TableModel, SIGNAL(dataChanged(const QModelIndex &, const QModelIndex &)),
     this, SLOT(updatePlotCurves()));
-
   connect(aid, SIGNAL(commitData(QWidget*)),
           this, SLOT(userCommittedData(QWidget*)));
 
@@ -352,13 +336,15 @@ void StatsGenPlotWidget::userCommittedData(QWidget* w)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void StatsGenPlotWidget::setDistributionType(AIM::Reconstruction::DistributionType curveType)
+void StatsGenPlotWidget::setDistributionType(AIM::Reconstruction::DistributionType curveType, bool updatePlots)
 {
   m_DistributionType = curveType;
   distributionTypeCombo->setCurrentIndex(m_DistributionType);
   resetTableModel();
-  // Update the plots
-  updatePlotCurves();
+  if (updatePlots) {
+    // Update the plots
+    updatePlotCurves();
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -437,6 +423,7 @@ void StatsGenPlotWidget::setupGui()
 // -----------------------------------------------------------------------------
 void StatsGenPlotWidget::updatePlotCurves()
 {
+// std::cout << "StatsGenPlotWidget::updatePlotCurves" << std::endl;
   //Loop over each entry in the table
   QwtPlotCurve* curve = NULL;
 
@@ -625,13 +612,13 @@ void StatsGenPlotWidget::setRowOperationEnabled(bool b)
   addRowBtn->setVisible(b);
   deleteRowBtn->setVisible(b);
 }
-
+#if 0
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void StatsGenPlotWidget::setBins(QVector<double> &binNumbers)
 {
-#if 0
+
 
 #if 1
   if (m_UserUpdatedData == true)
@@ -676,9 +663,10 @@ void StatsGenPlotWidget::setBins(QVector<double> &binNumbers)
   m_TableView->resizeColumnsToContents();
   m_TableView->scrollToBottom();
   m_TableView->setFocus();
-#endif
+
   updatePlotCurves();
 }
+#endif
 
 // -----------------------------------------------------------------------------
 //
