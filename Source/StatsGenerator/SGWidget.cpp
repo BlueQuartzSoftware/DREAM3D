@@ -559,44 +559,6 @@ void SGWidget::updateSizeDistributionPlot()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-class PresetThreadWrapper : public QRunnable
-{
-
-  public:
-  PresetThreadWrapper(double mu, double sigma, double cutOff, double stepSize,
-                      AbstractMicrostructurePreset* preset, StatsGenPlotWidget* widget, QwtArray<double> binsizes) :
-    mu(mu),
-    sigma(sigma),
-    cutOff(cutOff),
-    stepSize(stepSize),
-    preset(preset),
-    widget(widget),
-    binsizes(binsizes)
-  {
-  }
-    virtual ~PresetThreadWrapper() {}
-     void run()
-     {
-       widget->setSizeDistributionValues(mu, sigma, cutOff, stepSize);
-       preset->generateOmega3Data(widget, binsizes);
-     }
-
-  private:
-     double mu;
-     double sigma;
-     double cutOff;
-     double stepSize;
-     AbstractMicrostructurePreset* preset;
-     StatsGenPlotWidget* widget;
-     QwtArray<double> binsizes;
-     PresetThreadWrapper(const PresetThreadWrapper&); // Copy Constructor Not Implemented
-    void operator=(const PresetThreadWrapper&); // Operator '=' Not Implemented
-};
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void SGWidget::plotSizeDistribution()
 {
   // We have valid data so enable the other plot tabs
@@ -625,9 +587,6 @@ void SGWidget::plotSizeDistribution()
   // Now that we have bins and grain sizes, push those to the other plot widgets
   // Setup Each Plot Widget
   // The MicroPreset class will set the distribution for each of the plots
-//  PresetThreadWrapper* omega = new PresetThreadWrapper(mu, sigma, cutOff, stepSize, m_MicroPreset.get(), m_Omega3Plot, binsizes);
-//  QThreadPool::globalInstance()->start(omega);
-
   m_Omega3Plot->setSizeDistributionValues(mu, sigma, cutOff, stepSize);
   m_MicroPreset->generateOmega3Data(m_Omega3Plot, binsizes);
 

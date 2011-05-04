@@ -494,9 +494,11 @@ class AIMCOMMON_EXPORT Texture
     double random, random1, random2, density, cos_angle, sin_angle;
 
     double dim1 = 2 * pow((0.75 * ((M_PI / 4.0) - sin((M_PI / 4.0)))), (1.0 / 3.0));
+    double dim1Over18 = dim1/18.0;
     double dim2 = 2 * pow((0.75 * ((M_PI / 4.0) - sin((M_PI / 4.0)))), (1.0 / 3.0));
+    double dim2Over18 = dim2/18.0;
     double dim3 = 2 * pow((0.75 * ((M_PI / 4.0) - sin((M_PI / 4.0)))), (1.0 / 3.0));
-
+    double dim3Over18 = dim3/18.0;
     for (int i = 0; i < mdfsize; i++)
     {
       mdf[i] = 0.0;
@@ -515,6 +517,8 @@ class AIMCOMMON_EXPORT Texture
       mdf[mbin] = -int((weights[i]/double(mdfsize))*10000.0);
       remainingcount = remainingcount+mdf[mbin];
     }
+    double* odfPtr = NULL;
+
     for (int i = 0; i < remainingcount; i++)
     {
       random1 = rg.Random();
@@ -523,22 +527,26 @@ class AIMCOMMON_EXPORT Texture
       choose2 = 0;
 
       totaldensity = 0;
+      odfPtr = &(odf.front());
       for (int j = 0; j < odfsize; j++)
       {
-        density = odf[j];
+        density = *odfPtr;
+        ++odfPtr;
+        double d = totaldensity;
         totaldensity = totaldensity + density;
-        if (random1 < totaldensity && random1 >= (totaldensity - density)) choose1 = static_cast<int> (j);
-        if (random2 < totaldensity && random2 >= (totaldensity - density)) choose2 = static_cast<int> (j);
+        //FIXME: Do we need a 'Break' when both of these if statements are true?
+        if (random1 >= d && random1 < totaldensity) choose1 = static_cast<int> (j);
+        if (random2 >= d && random2 < totaldensity) choose2 = static_cast<int> (j);
       }
       h1 = choose1 % 18;
       h2 = (choose1 / 18) % 18;
       h3 = choose1 / (18 * 18);
       random = rg.Random();
-      h1 = ((dim1 / 18.0) * h1) + ((dim1 / 18.0) * random) - (dim1 / 2.0);
+      h1 = ((dim1Over18) * h1) + ((dim1Over18) * random) - (dim1 * 0.5);
       random = rg.Random();
-      h2 = ((dim2 / 18.0) * h2) + ((dim2 / 18.0) * random) - (dim2 / 2.0);
+      h2 = ((dim2Over18) * h2) + ((dim2Over18) * random) - (dim2 * 0.5);
       random = rg.Random();
-      h3 = ((dim3 / 18.0) * h3) + ((dim3 / 18.0) * random) - (dim3 / 2.0);
+      h3 = ((dim3Over18) * h3) + ((dim3Over18) * random) - (dim3 * 0.5);
       hmag = pow((h1 * h1 + h2 * h2 + h3 * h3), 0.5);
       angle = pow((8 * hmag * hmag * hmag), (1.0 / 3.0));
       n1 = h1 / hmag;
@@ -574,14 +582,14 @@ class AIMCOMMON_EXPORT Texture
       q2[4] = cos_angle;
       w = MisorientationCalculations::getMisoQuatCubic(q1,q2,n1,n2,n3);
       w = w/radtodeg;
-      r1 = n1 * pow(((3.0 / 4.0) * (w - sin(w))), (1.0 / 3.0));
-      r2 = n2 * pow(((3.0 / 4.0) * (w - sin(w))), (1.0 / 3.0));
-      r3 = n3 * pow(((3.0 / 4.0) * (w - sin(w))), (1.0 / 3.0));
+      r1 = n1 * pow(((0.75) * (w - sin(w))), (1.0 / 3.0));
+      r2 = n2 * pow(((0.75) * (w - sin(w))), (1.0 / 3.0));
+      r3 = n3 * pow(((0.75) * (w - sin(w))), (1.0 / 3.0));
       mbin = MisorientationCalculations::getMisoBinCubic(r1,r2,r3);
       if(mdf[mbin] >= 0) mdf[mbin]++;
       if(mdf[mbin] < 0) i = i-1;
     }
-	double test;
+    double test;
     for (int i = 0; i < mdfsize; i++)
     {
       if(mdf[i] < 0) mdf[i] = -mdf[i];
