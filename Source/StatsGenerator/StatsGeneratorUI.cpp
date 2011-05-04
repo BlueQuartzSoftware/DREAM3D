@@ -541,9 +541,11 @@ void StatsGeneratorUI::openFile(QString h5file)
   int err = 0;
   int nPhases = 0;
   // Delete any existing phases from the GUI (except the first one)
+  while (phaseCombo->count() != 1)
+  {
+    on_deletePhase_clicked();
+  }
 
-  // Clear all the items from the PhaseComboBox
-  phaseCombo->clear();
   // Instantiate a Reader object
   H5ReconStatsReader::Pointer reader = H5ReconStatsReader::New(m_FilePath.toStdString());
 
@@ -564,6 +566,10 @@ void StatsGeneratorUI::openFile(QString h5file)
     sgwidget->readDataFromHDF5(reader, phases[i]);
     phaseCombo->addItem(sgwidget->getComboString());
   }
+
+  // Now delete the first Phase from the Combo which was left over from something else
+  phaseCombo->setCurrentIndex(0);
+  on_deletePhase_clicked();
 
   // Set the window title correctly
   setWindowModified(false);
