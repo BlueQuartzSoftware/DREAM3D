@@ -219,7 +219,7 @@ void CubicOps::determineEulerAngles(int choose, double &synea1, double &synea2, 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void CubicOps::determineAxisAngle( int choose, double &w, double &n1, double &n2, double &n3)
+double CubicOps::determineAxisAngle( int choose )
 {
   //double init1, init2, init3;
   double step[3];
@@ -232,7 +232,7 @@ void CubicOps::determineAxisAngle( int choose, double &w, double &n1, double &n2
   phi[1] = (choose / 18) % 18;
   phi[2] = choose / (18 * 18);
 
-  _calcDetermineAxisAngle(step, phi, choose, w, n1, n2, n3);
+  return _calcDetermineAxisAngle(step, phi, choose);
 }
 
 // -----------------------------------------------------------------------------

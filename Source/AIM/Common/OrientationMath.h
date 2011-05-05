@@ -75,7 +75,7 @@ class AIMCOMMON_EXPORT OrientationMath
 
     virtual void determineEulerAngles(int choose, double &synea1, double &synea2, double &synea3) = 0;
 
-    virtual void determineAxisAngle(int choose, double &w, double &n1, double &n2, double &n3) = 0;
+    virtual double determineAxisAngle(int choose) = 0;
 
     virtual int getOdfBin(double q1[5], double qref[5]) = 0;
 
@@ -99,8 +99,7 @@ class AIMCOMMON_EXPORT OrientationMath
     int _calcMisoBin(double dim[3], double bins[3], double n1, double n2, double n3);
     void _calcDetermineEulerAngles(double init[3], double step[3], double phi[3],
                                    int choose, double &synea1, double &synea2, double &synea3);
-    void _calcDetermineAxisAngle( double step[3], double phi[3],
-                                  int choose, double &w, double &n1, double &n2, double &n3);
+    double _calcDetermineAxisAngle( double step[3], double phi[3], int choose);
     int _calcODFBin(double dim[3], double bins[3], double q1[5], double qref[5]);
 
   private:
