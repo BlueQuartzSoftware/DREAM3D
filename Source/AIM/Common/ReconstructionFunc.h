@@ -64,6 +64,10 @@
 #include "AIM/Common/Voxel.h"
 #include "AIM/Common/AIMRandomNG.h"
 #include "AIM/Common/HDF5/H5ReconStatsWriter.h"
+#include "AIM/Common/OrientationMath.h"
+#include "AIM/Common/OrientationOps/CubicOps.h"
+#include "AIM/Common/OrientationOps/HexagonalOps.h"
+#include "AIM/Common/OrientationOps/OrthoRhombicOps.h"
 
 typedef boost::shared_array<double>    DoubleArray;
 typedef boost::shared_array<int>       IntArray;
@@ -211,6 +215,11 @@ class AIMCOMMON_EXPORT ReconstructionFunc
     ReconstructionFunc();
 
   private:
+    std::vector<OrientationMath*>    m_OrientatioOps;
+    OrientationMath::Pointer                m_CubicOps;
+    OrientationMath::Pointer            m_HexOps;
+    OrientationMath::Pointer         m_OrthoOps;
+
     ReconstructionFunc(const ReconstructionFunc&);    // Copy Constructor Not Implemented
     void operator=(const ReconstructionFunc&);  // Operator '=' Not Implemented
 };

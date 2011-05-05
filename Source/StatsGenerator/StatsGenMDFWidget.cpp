@@ -42,6 +42,10 @@
 #include <qwt_plot_canvas.h>
 
 #include "AIM/Common/Texture.h"
+#include "AIM/Common/OrientationMath.h"
+#include "AIM/Common/OrientationOps/CubicOps.h"
+#include "AIM/Common/OrientationOps/HexagonalOps.h"
+#include "AIM/Common/OrientationOps/OrthoRhombicOps.h"
 
 #include "StatsGenerator/TableModels/SGMDFTableModel.h"
 #include "StatsGen.h"
@@ -134,7 +138,7 @@ void StatsGenMDFWidget::updateMDFPlot(QwtArray<double> odf)
     // Allocate a new vector to hold the mdf data
     QwtArray<double> mdf(5832);
     // Calculate the MDF Data using the ODF data and the rows from the MDF Table model
-    Texture::calculateCubicMDFData(angles, axes, weights, odf, mdf);
+    Texture::calculateMDFData<QwtArray<double>, CubicOps>(angles, axes, weights, odf, mdf);
     // Now generate the actual XY point data that gets plotted.
     err = sg.GenCubicMDFPlotData(mdf, x, y, size);
   }
@@ -143,7 +147,7 @@ void StatsGenMDFWidget::updateMDFPlot(QwtArray<double> odf)
     // Allocate a new vector to hold the mdf data
     QwtArray<double> mdf(15552);
     // Calculate the MDF Data using the ODF data and the rows from the MDF Table model
-    Texture::calculateHexMDFData(angles, axes, weights, odf, mdf);
+    Texture::calculateMDFData<QwtArray<double>, HexagonalOps>(angles, axes, weights, odf, mdf);
     // Now generate the actual XY point data that gets plotted.
     err = sg.GenHexMDFPlotData(mdf, x, y, size);
   }
@@ -253,10 +257,10 @@ int StatsGenMDFWidget::writeDataToHDF5(H5ReconStatsWriter::Pointer writer)
   QwtArray<double> mdf;
 
   if (m_CrystalStructure == AIM::Reconstruction::Cubic) {
-	  Texture::calculateCubicMDFData(angles, axes, weights, odf, mdf);
+	  Texture::calculateMDFData<QwtArray<double>, CubicOps>(angles, axes, weights, odf, mdf);
   }
   else if (m_CrystalStructure == AIM::Reconstruction::Hexagonal) {
-	  Texture::calculateHexMDFData(angles, axes, weights, odf, mdf);
+	  Texture::calculateMDFData<QwtArray<double>, HexagonalOps>(angles, axes, weights, odf, mdf);
   }
   if (mdf.size() > 0)
   {
