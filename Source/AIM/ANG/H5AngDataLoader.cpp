@@ -41,7 +41,7 @@
 #include "ANG/H5AngReader.h"
 
 #include "AIM/Common/Constants.h"
-#include "AIM/Common/MisorientationCalculations.h"
+#include "AIM/Common/OrientationMath.h"
 
 // -----------------------------------------------------------------------------
 //

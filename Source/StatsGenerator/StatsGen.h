@@ -38,7 +38,7 @@
 #include "AIM/Common/AIMMath.h"
 #include "AIM/Common/Constants.h"
 #include "AIM/Common/AIMRandomNG.h"
-#include "AIM/Common/MisorientationCalculations.h"
+#include "AIM/Common/OrientationMath.h"
 
 #include "AIM/Common/Texture.h"
 #include "MXA/Common/LogTime.h"
@@ -275,9 +275,9 @@ class StatsGen
              totaldensity = totaldensity + density;
              if (random >= d && random < totaldensity) choose = static_cast<int> (j);
            }
-		   MisorientationCalculations::determineEulerAngles(AIM::Reconstruction::Cubic, choose, ea1, ea2, ea3);
-		   MisorientationCalculations::initializeQ(q1,ea1,ea2,ea3);
-		   MisorientationCalculations::getFZQuatCubic(q1);
+		   OrientationMath::determineEulerAngles(AIM::Reconstruction::Cubic, choose, ea1, ea2, ea3);
+		   OrientationMath::EulertoQuat(q1,ea1,ea2,ea3);
+		   OrientationMath::getFZQuat(AIM::Reconstruction::Cubic, q1);
            g[0][0] = (1 - 2 * q1[2] * q1[2] - 2 * q1[3] * q1[3]);
            g[0][1] = (2 * q1[1] * q1[2] - 2 * q1[3] * q1[4]);
            g[0][2] = (2 * q1[1] * q1[3] + 2 * q1[2] * q1[4]);
@@ -467,9 +467,9 @@ class StatsGen
              totaldensity = totaldensity + density;
              if (random < totaldensity && random >= (totaldensity - density)) choose = static_cast<int> (j);
            }
-		   MisorientationCalculations::determineEulerAngles(AIM::Reconstruction::Hexagonal, choose, ea1, ea2, ea3);
-		   MisorientationCalculations::initializeQ(q1,ea1,ea2,ea3);
-		   MisorientationCalculations::getFZQuatCubic(q1);
+		   OrientationMath::determineEulerAngles(AIM::Reconstruction::Hexagonal, choose, ea1, ea2, ea3);
+		   OrientationMath::EulertoQuat(q1,ea1,ea2,ea3);
+		   OrientationMath::getFZQuat(AIM::Reconstruction::Hexagonal, q1);
            g[0][0] = (1 - 2 * q1[2] * q1[2] - 2 * q1[3] * q1[3]);
            g[0][1] = (2 * q1[1] * q1[2] - 2 * q1[3] * q1[4]);
            g[0][2] = (2 * q1[1] * q1[3] + 2 * q1[2] * q1[4]);
@@ -616,9 +616,9 @@ class StatsGen
              totaldensity = totaldensity + density;
              if (random < totaldensity && random >= (totaldensity - density)) choose = static_cast<int> (j);
            }
-		   MisorientationCalculations::determineEulerAngles(AIM::Reconstruction::OrthoRhombic, choose, ea1, ea2, ea3);
-		   MisorientationCalculations::initializeQ(q1,ea1,ea2,ea3);
-		   MisorientationCalculations::getFZQuatCubic(q1);
+		   OrientationMath::determineEulerAngles(AIM::Reconstruction::OrthoRhombic, choose, ea1, ea2, ea3);
+		   OrientationMath::initializeQ(q1,ea1,ea2,ea3);
+		   OrientationMath::getFZQuat(AIM::Reconstruction::OrthoRhombic, q1);
            g[0][0] = (1 - 2 * q1[2] * q1[2] - 2 * q1[3] * q1[3]);
            g[0][1] = (2 * q1[1] * q1[2] - 2 * q1[3] * q1[4]);
            g[0][2] = (2 * q1[1] * q1[3] + 2 * q1[2] * q1[4]);
@@ -810,9 +810,9 @@ class StatsGen
              totaldensity = totaldensity + density;
              if (random < totaldensity && random >= (totaldensity - density)) choose = static_cast<int> (j);
            }
-		   MisorientationCalculations::determineEulerAngles(AIM::Reconstruction::Cubic, choose, ea1, ea2, ea3);
-		   MisorientationCalculations::initializeQ(q1,ea1,ea2,ea3);
-		   MisorientationCalculations::getFZQuatCubic(q1);
+		   OrientationMath::determineEulerAngles(AIM::Reconstruction::OrthoRhombic, choose, ea1, ea2, ea3);
+		   OrientationMath::EulertoQuat(q1,ea1,ea2,ea3);
+		   OrientationMath::getFZQuat(AIM::Reconstruction::OrthoRhombic, q1);
            g[0][0] = (1 - 2 * q1[2] * q1[2] - 2 * q1[3] * q1[3]);
            g[0][1] = (2 * q1[1] * q1[2] - 2 * q1[3] * q1[4]);
            g[0][2] = (2 * q1[1] * q1[3] + 2 * q1[2] * q1[4]);
@@ -912,7 +912,7 @@ class StatsGen
              totaldensity = totaldensity + density;
              if (random < totaldensity && random >= (totaldensity - density)) choose = static_cast<int> (j);
            }
-		   MisorientationCalculations::determineAxisAngle(AIM::Reconstruction::Cubic, choose, angle, n1, n2, n3);  
+		   OrientationMath::determineAxisAngle(AIM::Reconstruction::Cubic, choose, angle, n1, n2, n3);  
 		   yval[int(angle/5.0)]++;
          }
 		 for(int i=0;i<13;i++)
@@ -973,7 +973,7 @@ class StatsGen
              totaldensity = totaldensity + density;
              if (random < totaldensity && random >= (totaldensity - density)) choose = static_cast<int> (j);
            }
-		   MisorientationCalculations::determineAxisAngle(AIM::Reconstruction::Hexagonal, choose, angle, n1, n2, n3);  
+		   OrientationMath::determineAxisAngle(AIM::Reconstruction::Hexagonal, choose, angle, n1, n2, n3);  
 		   yval[int(angle/5.0)]++;
          }
 		 for(int i=0;i<36;i++)

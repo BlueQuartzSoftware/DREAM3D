@@ -40,7 +40,7 @@
 #endif
 
 #include "AIM/Common/ReconstructionFunc.h"
-#include "AIM/Common/MisorientationCalculations.h"
+#include "AIM/Common/OrientationMath.h"
 
 #if AIM_USE_PARALLEL_ALGORITHMS
 class ParallelRenumberGrains
