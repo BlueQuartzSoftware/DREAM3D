@@ -883,7 +883,7 @@ class StatsGen
       double density;
       double totaldensity;
       int choose = 0;
-      double angle, n1, n2, n3;
+      double angle;
       double random;
       CubicOps ops;
       xval.resize(13);
@@ -903,7 +903,7 @@ class StatsGen
           totaldensity = totaldensity + density;
           if (random < totaldensity && random >= (totaldensity - density)) choose = static_cast<int> (j);
         }
-        ops.determineAxisAngle(choose, angle, n1, n2, n3);
+        angle = ops.determineAxisAngle(choose);
         yval[int(angle / 5.0)]++;
       }
       for (int i = 0; i < 13; i++)
@@ -941,8 +941,7 @@ class StatsGen
       int choose = 0;
       double density;
       double totaldensity;
-      //   double hmag;
-      double angle, n1, n2, n3;
+      double angle;
       double random;
       HexagonalOps ops;
       xval.resize(36);
@@ -964,7 +963,7 @@ class StatsGen
           totaldensity = totaldensity + density;
           if (random < totaldensity && random >= (totaldensity - density)) choose = static_cast<int> (j);
         }
-        ops.determineAxisAngle(choose, angle, n1, n2, n3);
+        angle = ops.determineAxisAngle(choose);
         yval[int(angle / 5.0)]++;
       }
       for (int i = 0; i < 36; i++)

@@ -193,7 +193,7 @@ void HexagonalOps::determineEulerAngles(int choose, double &synea1, double &syne
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void HexagonalOps::determineAxisAngle( int choose, double &w, double &n1, double &n2, double &n3)
+double HexagonalOps::determineAxisAngle( int choose)
 {
   //double init1, init2, init3;
   double step[3];
@@ -206,7 +206,7 @@ void HexagonalOps::determineAxisAngle( int choose, double &w, double &n1, double
   phi[1] = (choose / 36) % 36;
   phi[2] = choose / (36 * 36);
 
-  _calcDetermineAxisAngle(step, phi, choose, w, n1, n2, n3);
+  return _calcDetermineAxisAngle(step, phi, choose);
 }
 
 // -----------------------------------------------------------------------------
