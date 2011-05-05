@@ -53,8 +53,8 @@ class AIMCOMMON_EXPORT CubicOps : public OrientationMath
     CubicOps();
     virtual ~CubicOps();
 
-    static const int ODFSize = 5832;
-    static const int MDFSize = 5832;
+    int getODFSize() { return 5832; }
+    int getMDFSize() { return 5832; }
 
     virtual double getMisoQuat( double q1[5],double q2[5],double &n1,double &n2,double &n3);
     virtual void getFZRod(double &r1,double &r2, double &r3);
