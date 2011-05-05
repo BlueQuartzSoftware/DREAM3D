@@ -55,9 +55,8 @@ SET (AIMCommon_SRCS
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Neighbor.cpp
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Segment.cpp
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/AIMRandomNG.cpp
-    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Quaternions.cpp
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/VTKFileUtils.cpp
-    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/MisorientationCalculations.cpp
+    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/OrientationMath.cpp
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Texture.cpp
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/TexturePreset.cpp
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/ANG/AngDataLoader.cpp
@@ -83,8 +82,7 @@ SET (AIMCommon_HDRS
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/AIMRandomNG.h
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Constants.h
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/VTKFileUtils.h
-    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Quaternions.h
-    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/MisorientationCalculations.h
+    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/OrientationMath.h
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/OIMColoring.hpp
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Texture.h
     ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/TexturePreset.h
