@@ -108,6 +108,17 @@ set (AIMCommon_HDF5_HDRS
 )
 cmp_IDE_SOURCE_PROPERTIES( "AIM/Common/HDF5" "${AIMCommon_HDF5_HDRS}" "${AIMCommon_HDF5_SRCS}" ${PROJECT_INSTALL_HEADERS})
 
+set (AIMCommon_OrientatioOps_SRCS
+${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/OrientationOps/CubicOps.cpp
+${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/OrientationOps/HexagonalOps.cpp
+${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/OrientationOps/OrthoRhombicOps.cpp
+)
+set (AIMCommon_OrientatioOps_HDRS
+${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/OrientationOps/CubicOps.h
+${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/OrientationOps/HexagonalOps.h
+${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/OrientationOps/OrthoRhombicOps.h
+)
+cmp_IDE_SOURCE_PROPERTIES( "AIM/Common/OrientationOps" "${AIMCommon_OrientatioOps_HDRS}" "${AIMCommon_OrientatioOps_SRCS}" ${PROJECT_INSTALL_HEADERS})
 
 # --------------------------------------------------------------------
 include_directories(${HDF5_INCLUDE_DIR})
@@ -117,6 +128,8 @@ set (AIMCommon_SRCS
     ${AIMCommon_HDRS}
     ${AIMCommon_HDF5_SRCS}
     ${AIMCommon_HDF5_HDRS}
+    ${AIMCommon_OrientatioOps_SRCS}
+    ${AIMCommon_OrientatioOps_HDRS}
     )
 
 configure_file(${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/AIMCommonConfiguration.h.in

@@ -28,92 +28,49 @@
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef MISOORTHORHOMBIC_H_
-#define MISOORTHORHOMBIC_H_
+#ifndef HEXAGONALOPS_H_
+#define HEXAGONALOPS_H_
 
-#include "MisorientationCalculations.h"
+#include "MXA/Common/MXASetGetMacros.h"
+#include "AIM/Common/OrientationMath.h"
 
-/*
- *
+/**
+ * @class HexagonalOps HexagonalOps.h AIM/Common/OrientationOps/HexagonalOps.h
+ * @brief
+ * @author Michael A. Jackson for BlueQuartz Software
+ * @author Michael A. Groeber for USAF Research Laboratory, Materials Lab
+ * @date May 5, 2011
+ * @version 1.0
  */
-class MisoOrthoRhombic
+class AIMCOMMON_EXPORT HexagonalOps : public OrientationMath
 {
   public:
-    MisoOrthoRhombic();
-    virtual ~MisoOrthoRhombic();
+    MXA_SHARED_POINTERS(HexagonalOps)
+    MXA_TYPE_MACRO(HexagonalOps)
+    MXA_STATIC_NEW_SUPERCLASS(OrientationMath, HexagonalOps)
 
-    /**
-     *
-     * @param q1
-     * @param q2
-     * @param n1
-     * @param n2
-     * @param n3
-     * @return
-     */
-    virtual double getQuaternion(double q1[5],double q2[5],double &n1,double &n2,double &n3);
+    HexagonalOps();
+    virtual ~HexagonalOps();
 
-    /**
-     *
-     * @param r1
-     * @param r2
-     * @param r3
-     */
+    static const int ODFSize = 15552;
+    static const int MDFSize = 15552;
+
+    virtual double getMisoQuat( double q1[5],double q2[5],double &n1,double &n2,double &n3);
     virtual void getFZRod(double &r1,double &r2, double &r3);
-
-    /**
-     *
-     * @param q1
-     * @param q2
-     */
-    virtual void getNearestQuaternion(double* q1, double* q2);
-
-    /**
-     *
-     * @param qr
-     */
-    virtual void getFZQuaternion(double* qr);
-
-    /**
-     *
-     * @param n1
-     * @param n2
-     * @param n3
-     * @return
-     */
+    virtual void getNearestQuat(double *q1, double *q2);
+    virtual void getFZQuat(double *qr);
     virtual int getMisoBin(double n1, double n2, double n3);
-
-    /**
-     *
-     * @param q1
-     * @param qref
-     * @return
-     */
-    virtual size_t calculateODFBin( double q1[5], double qref[5]);
-
-    /**
-     *
-     * @param choose
-     * @param synea1
-     * @param synea2
-     * @param synea3
-     */
     virtual void determineEulerAngles(int choose, double &synea1, double &synea2, double &synea3);
+    virtual void determineAxisAngle(int choose, double &w, double &n1, double &n2, double &n3);
+    virtual int getOdfBin(double q1[5], double qref[5]);
 
-    /**
-     *
-     * @param dim1
-     * @param dim2
-     * @param dim3
-     * @param numbins
-     */
-    virtual void initializeDims(double &dim1, double &dim2,  double &dim3, int &numbins);
+
+  protected:
 
 
   private:
-    MisoOrthoRhombic(const MisoOrthoRhombic&); // Copy Constructor Not Implemented
-    void operator=(const MisoOrthoRhombic&); // Operator '=' Not Implemented
-
+    HexagonalOps(const HexagonalOps&); // Copy Constructor Not Implemented
+    void operator=(const HexagonalOps&); // Operator '=' Not Implemented
 };
 
-#endif /* MISOORTHORHOMBIC_H_ */
+#endif /* HEXAGONALOPS_H_ */
