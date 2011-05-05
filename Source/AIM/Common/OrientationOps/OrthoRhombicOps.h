@@ -53,8 +53,8 @@ class AIMCOMMON_EXPORT OrthoRhombicOps : public OrientationMath
     virtual ~OrthoRhombicOps();
 
     //FIXME: These need actual values assigned to them.
-//    static const int ODFSize;
-//    static const int MDFSize;
+    int getODFSize() { return 0; }
+    int getMDFSize() { return 0; }
 
     virtual double getMisoQuat( double q1[5],double q2[5],double &n1,double &n2,double &n3);
     virtual void getFZRod(double &r1,double &r2, double &r3);

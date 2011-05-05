@@ -52,8 +52,8 @@ class AIMCOMMON_EXPORT HexagonalOps : public OrientationMath
     HexagonalOps();
     virtual ~HexagonalOps();
 
-    static const int ODFSize = 15552;
-    static const int MDFSize = 15552;
+    int getODFSize() { return 15552; }
+    int getMDFSize() { return 15552; }
 
     virtual double getMisoQuat( double q1[5],double q2[5],double &n1,double &n2,double &n3);
     virtual void getFZRod(double &r1,double &r2, double &r3);
