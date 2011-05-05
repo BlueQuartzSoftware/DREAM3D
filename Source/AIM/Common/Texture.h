@@ -58,14 +58,6 @@ class AIMCOMMON_EXPORT Texture
 
   virtual ~Texture();
 
-#if 0
-  const static size_t Count;
-  const static double Values[AIM_TEXTURE_COUNT][3];
-  const static char* Names[AIM_TEXTURE_COUNT];
-  const static double Weights[AIM_TEXTURE_COUNT];
-  const static double Sigmas[AIM_TEXTURE_COUNT];
-
-#endif
   /**
    * @brief This will calculate ODF data based on an array of weights that are
    * passed in and a Cubic Crystal Structure. This is templated on the container
@@ -469,7 +461,7 @@ class AIMCOMMON_EXPORT Texture
       const int mdfsize = orientationOps.getMDFSize();
       mdf.resize(mdfsize);
       double radtodeg = 180.0 / M_PI;
-      
+
 
       AIMRandomNG rg;
       /* Get a seed value based off the system clock. The issue is that this will

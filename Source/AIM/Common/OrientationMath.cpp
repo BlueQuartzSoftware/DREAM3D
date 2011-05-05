@@ -40,15 +40,25 @@
 
 
 	const static double m_pi = M_PI;
+	const static double two_pi = 2.0 * m_pi;
+	const static double recip_pi = 1.0/m_pi;
+	const static double pi_over_180 = m_pi/180.0;
+
 	const static double m_OnePointThree = 1.33333333333;
 
 	const double threesixty_over_pi = 360.0/m_pi;
+	const double oneeighty_over_pi = 180.0/m_pi;
 	const double sqrt_two = pow(2.0, 0.5);
 
 	const double acos_neg_one = acos(-1.0);
 	const double acos_pos_one = acos(1.0);
 	const double sin_wmin_neg_1_over_2 = sin(acos_neg_one/2.0);
 	const double sin_wmin_pos_1_over_2 = sin(acos_pos_one/2.0);
+  const double sin_of_acos_neg_1 = sin(acos_neg_one);
+  const double sin_of_acos_pos_1 = sin(acos_pos_one);
+
+  const double recip_sin_of_acos_neg_1 = 1.0/sin_of_acos_neg_1;
+  const double recip_sin_of_acos_pos_1 = 1.0/sin_of_acos_pos_1;
 
 	const static double SinOfHalf = sin(0.5);
 	const static double CosOfHalf = cos(0.5);
@@ -67,7 +77,11 @@
 												{-1,1,1,1,1,0},
 												{-1,1,1,1,0,1},
 												{-1,1,1,0,1,-1}};
-
+#define MULT_QUAT(q1, q2, out)\
+    out[1] = q2[4] * q1[1] + q2[1] * q1[4] + q2[3] * q1[2] - q2[2] * q1[3];\
+    out[2] = q2[4] * q1[2] + q2[2] * q1[4] + q2[1] * q1[3] - q2[3] * q1[1];\
+    out[3] = q2[4] * q1[3] + q2[3] * q1[4] + q2[2] * q1[1] - q2[1] * q1[2];\
+    out[4] = q2[4] * q1[4] - q2[1] * q1[1] - q2[2] * q1[2] - q2[3] * q1[3];\
 
 // -----------------------------------------------------------------------------
 //
@@ -83,8 +97,6 @@ OrientationMath::~OrientationMath()
 {
 }
 
-
-
 double OrientationMath::_calcMisoQuat(double quatsym[24][5], int numsym,
                   double q1[5], double q2[5],
                   double &n1, double &n2, double &n3){
@@ -93,6 +105,7 @@ double OrientationMath::_calcMisoQuat(double quatsym[24][5], int numsym,
   double n1min, n2min, n3min;
   double qr[5];
   double qc[5];
+  double temp;
 
   qr[1] = -q1[1] * q2[4] + q1[4] * q2[1] - q1[2] * q2[3] + q1[3] * q2[2];
   qr[2] = -q1[2] * q2[4] + q1[4] * q2[2] - q1[3] * q2[1] + q1[1] * q2[3];
@@ -100,15 +113,35 @@ double OrientationMath::_calcMisoQuat(double quatsym[24][5], int numsym,
   qr[4] = -q1[4] * q2[4] - q1[1] * q2[1] - q1[2] * q2[2] - q1[3] * q2[3];
   for (int i = 0; i < numsym; i++)
   {
-	  OrientationMath::multiplyQuaternions(qr, quatsym[i], qc);
-    if (qc[4] < -1) qc[4] = -1;
-    if (qc[4] > 1) qc[4] = 1;
-    w = acos(qc[4]);
+	//  OrientationMath::multiplyQuaternions(qr, quatsym[i], qc);
+	  MULT_QUAT(qr, quatsym[i], qc)
+    if (qc[4] < -1) {
+      qc[4] = -1;
+      w = acos_neg_one;
+      temp = recip_sin_of_acos_neg_1;
+    }
+    else if (qc[4] > 1) {
+      qc[4] = 1;
+      w = acos_pos_one;
+      temp = recip_sin_of_acos_pos_1;
+    }
+    else {
+      /* ***************************************************
+       * THIS SECTION IS TAKING A LOT OF TIME DURING THE RUNS. If this is truly
+       * the code path that needs to happen we might consider a lookup table at
+       * the expense of some memory but it would avoid the acos and sin functions
+       */
+      w = acos(qc[4]);
+      temp = 1.0/sin(w);
+    }
+
+    n1 = qc[1] * temp;
+    n2 = qc[2] * temp;
+    n3 = qc[3] * temp;
     w = 2 * w;
-    n1 = qc[1] / sin(w / 2.0);
-    n2 = qc[2] / sin(w / 2.0);
-    n3 = qc[3] / sin(w / 2.0);
-    if (w > m_pi) w = (2 * m_pi) - w;
+    if (w > m_pi) {
+      w = two_pi - w;
+    }
     if (w < wmin)
     {
       wmin = w;
@@ -125,13 +158,13 @@ double OrientationMath::_calcMisoQuat(double quatsym[24][5], int numsym,
   n2 = n2/denom;
   n3 = n3/denom;
   double newangle = 0;
-  double angle = 180*atan(n2/n1)/m_pi;
+  double angle = 180*atan(n2/n1) * recip_pi;
   if(angle > 30.0)
   {
   if(int(angle/30)%2 == 0)
   {
     newangle = angle - (30*int(angle/30));
-    newangle = newangle*m_pi/180.0;
+    newangle = newangle* pi_over_180;
     n1 = cos(newangle);
     n2 = sin(newangle);
   }
@@ -139,12 +172,12 @@ double OrientationMath::_calcMisoQuat(double quatsym[24][5], int numsym,
   {
     newangle = angle - (30*int(angle/30));
     newangle = 30 - newangle;
-    newangle = newangle*m_pi/180.0;
+    newangle = newangle* pi_over_180;
     n1 = cos(newangle);
     n2 = sin(newangle);
   }
   }
-  wmin = (180.0 / m_pi) * wmin;
+  wmin = oneeighty_over_pi * wmin;
   return wmin;
 }
 
@@ -381,12 +414,13 @@ void OrientationMath::eulertoQuat(double* q, double e1, double e2, double e3)
 
 
 
+
 void OrientationMath::multiplyQuaternions(double* inQuat, double* multQuat, double* outQuat)
 {
-  outQuat[1]=multQuat[4]*inQuat[1]+multQuat[1]*inQuat[4]+multQuat[3]*inQuat[2]-multQuat[2]*inQuat[3];
-  outQuat[2]=multQuat[4]*inQuat[2]+multQuat[2]*inQuat[4]+multQuat[1]*inQuat[3]-multQuat[3]*inQuat[1];
-  outQuat[3]=multQuat[4]*inQuat[3]+multQuat[3]*inQuat[4]+multQuat[2]*inQuat[1]-multQuat[1]*inQuat[2];
-  outQuat[4]=multQuat[4]*inQuat[4]-multQuat[1]*inQuat[1]-multQuat[2]*inQuat[2]-multQuat[3]*inQuat[3];
+  outQuat[1] = multQuat[4] * inQuat[1] + multQuat[1] * inQuat[4] + multQuat[3] * inQuat[2] - multQuat[2] * inQuat[3];
+  outQuat[2] = multQuat[4] * inQuat[2] + multQuat[2] * inQuat[4] + multQuat[1] * inQuat[3] - multQuat[3] * inQuat[1];
+  outQuat[3] = multQuat[4] * inQuat[3] + multQuat[3] * inQuat[4] + multQuat[2] * inQuat[1] - multQuat[1] * inQuat[2];
+  outQuat[4] = multQuat[4] * inQuat[4] - multQuat[1] * inQuat[1] - multQuat[2] * inQuat[2] - multQuat[3] * inQuat[3];
 }
 
 void OrientationMath::getSlipMisalignment(int ss1, double q1[5], double q2[5], double &ssap)

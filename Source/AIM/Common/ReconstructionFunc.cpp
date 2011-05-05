@@ -1729,6 +1729,7 @@ void ReconstructionFunc::find_grain_and_kernel_misorientations()
   int steps = 1;
   int jStride;
   int kStride;
+  CubicOps c;
 
   for (int col = 0; col < xpoints; col++)
   {
@@ -1770,7 +1771,9 @@ void ReconstructionFunc::find_grain_and_kernel_misorientations()
                   q2[3] = voxels[neighbor].quat[3];
                   q2[4] = voxels[neighbor].quat[4];
                   phase2 = crystruct[voxels[neighbor].phase];
-                  w = m_OrientatioOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
+
+                  w = c.getMisoQuat(q1, q2, n1, n2, n3);
+//                  w = m_OrientatioOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
                   if (w < 5.0)
                   {
                     totalmisorientation = totalmisorientation + w;
