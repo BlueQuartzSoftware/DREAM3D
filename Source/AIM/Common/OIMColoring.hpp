@@ -13,8 +13,7 @@
 
 
 #include <string>
-#include "AIM/Common/Quaternions.h"
-#include "AIM/Common/MisorientationCalculations.h"
+#include "AIM/Common/OrientationMath.h"
 
 #define MXA_PI          3.141592653589793
 #define MXA_PI_OVER_4   0.785398163397448
@@ -245,7 +244,7 @@ class OIMColoring
       double _rgb[3] = { 0.0, 0.0, 0.0};
       for (int j = 0; j < 12; j++)
       {
-        AIM::Quaternions::Hex_MultiplyByUnitQuaterion(q1, j,qc);
+        OrientationMath::MultiplyQuaternions(q1, q1, qc);
         g[0][0] = (1 - (2 * qc[2] * qc[2]) - (2 * qc[3] * qc[3]));
         g[1][0] = ((2 * qc[1] * qc[2]) - (2 * qc[3] * qc[4]));
         g[2][0] = ((2 * qc[1] * qc[3]) + (2 * qc[2] * qc[4]));

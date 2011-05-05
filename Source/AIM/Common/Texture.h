@@ -37,7 +37,7 @@
 #include "MXA/Common/LogTime.h"
 #include "AIM/Common/AIMCommonConfiguration.h"
 #include "AIM/Common/AIMMath.h"
-#include "AIM/Common/MisorientationCalculations.h"
+#include "AIM/Common/OrientationMath.h"
 
 /**
  * @class Texture Texture.h AIM/Common/Texture.h
@@ -116,7 +116,7 @@ class AIMCOMMON_EXPORT Texture
       r1 = tan_term * cos_term2 / cos_term1;
       r2 = tan_term * sin_term / cos_term1;
       r3 = tan((e1s[i]*degtorad+e3s[i]*degtorad)/2);
-      MisorientationCalculations::getFZRodCubic(r1, r2, r3);
+	  OrientationMath::getFZRod(AIM::Reconstruction::Cubic, r1, r2, r3);
       rmag = pow((r1 * r1 + r2 * r2 + r3 * r3), 0.5);
       angle = 2.0 * atan(rmag);
       hTmp = pow(((3.0 / 4.0) * (angle - sin(angle))), (1.0 / 3.0));
@@ -249,7 +249,7 @@ class AIMCOMMON_EXPORT Texture
       r1 = tan_term * cos_term2 / cos_term1;
       r2 = tan_term * sin_term / cos_term1;
       r3 = tan((e1s[i]*degtorad+e3s[i]*degtorad)/2);
-      MisorientationCalculations::getFZRodHexagonal(r1, r2, r3);
+	  OrientationMath::getFZRod(AIM::Reconstruction::Hexagonal, r1, r2, r3);
       rmag = pow((r1 * r1 + r2 * r2 + r3 * r3), 0.5);
       angle = 2.0 * atan(rmag);
       hTmp = pow(((3.0 / 4.0) * (angle - sin(angle))), (1.0 / 3.0));
@@ -379,7 +379,7 @@ class AIMCOMMON_EXPORT Texture
       r1 = tan_term * cos_term2 / cos_term1;
       r2 = tan_term * sin_term / cos_term1;
       r3 = tan((e1s[i]*degtorad+e3s[i]*degtorad)/2);
-      MisorientationCalculations::getFZRodOrtho(r1, r2, r3);
+	  OrientationMath::getFZRod(AIM::Reconstruction::OrthoRhombic, r1, r2, r3);
       rmag = pow((r1 * r1 + r2 * r2 + r3 * r3), 0.5);
       angle = 2.0 * atan(rmag);
       hTmp = pow(((3.0 / 4.0) * (angle - sin(angle))), (1.0 / 3.0));
@@ -492,11 +492,8 @@ class AIMCOMMON_EXPORT Texture
 	double ea1, ea2, ea3;
     double q1[5], q2[5];
     double totaldensity;
-    double hmag;
-    double angle;
     double denom;
     double r1, r2, r3;
-    double h1, h2, h3;
     double n1, n2, n3;
     double random1, random2, density;
     for (int i = 0; i < mdfsize; i++)
@@ -513,7 +510,7 @@ class AIMCOMMON_EXPORT Texture
       r1 = n1 * pow(((3.0 / 4.0) * (angles[i] - sin(angles[i]))), (1.0 / 3.0));
       r2 = n2 * pow(((3.0 / 4.0) * (angles[i] - sin(angles[i]))), (1.0 / 3.0));
       r3 = n3 * pow(((3.0 / 4.0) * (angles[i] - sin(angles[i]))), (1.0 / 3.0));
-      mbin = MisorientationCalculations::getMisoBinCubic(r1,r2,r3);
+	  mbin = OrientationMath::getMisoBin(AIM::Reconstruction::Cubic, r1,r2,r3);
       mdf[mbin] = -int((weights[i]/double(mdfsize))*10000.0);
       remainingcount = remainingcount+mdf[mbin];
     }
@@ -537,20 +534,19 @@ class AIMCOMMON_EXPORT Texture
         if (random1 >= d && random1 < totaldensity) choose1 = static_cast<int> (j);
         if (random2 >= d && random2 < totaldensity) choose2 = static_cast<int> (j);
       }
-	  MisorientationCalculations::determineEulerAngles(AIM::Reconstruction::Cubic, choose1, ea1, ea2, ea3);
-	  MisorientationCalculations::initializeQ(q1, ea1, ea2, ea3);
-	  MisorientationCalculations::determineEulerAngles(AIM::Reconstruction::Cubic, choose2, ea1, ea2, ea3);
-	  MisorientationCalculations::initializeQ(q2, ea1, ea2, ea3);
-      w = MisorientationCalculations::getMisoQuatCubic(q1,q2,n1,n2,n3);
+	  OrientationMath::determineEulerAngles(AIM::Reconstruction::Cubic, choose1, ea1, ea2, ea3);
+	  OrientationMath::EulertoQuat(q1, ea1, ea2, ea3);
+	  OrientationMath::determineEulerAngles(AIM::Reconstruction::Cubic, choose2, ea1, ea2, ea3);
+	  OrientationMath::EulertoQuat(q2, ea1, ea2, ea3);
+	  w = OrientationMath::getMisoQuat(AIM::Reconstruction::Cubic,q1,q2,n1,n2,n3);
       w = w/radtodeg;
       r1 = n1 * pow(((0.75) * (w - sin(w))), (1.0 / 3.0));
       r2 = n2 * pow(((0.75) * (w - sin(w))), (1.0 / 3.0));
       r3 = n3 * pow(((0.75) * (w - sin(w))), (1.0 / 3.0));
-      mbin = MisorientationCalculations::getMisoBinCubic(r1,r2,r3);
+      mbin = OrientationMath::getMisoBin(AIM::Reconstruction::Cubic, r1,r2,r3);
       if(mdf[mbin] >= 0) mdf[mbin]++;
       if(mdf[mbin] < 0) i = i-1;
     }
-    double test;
     for (int i = 0; i < mdfsize; i++)
     {
       if(mdf[i] < 0) mdf[i] = -mdf[i];
@@ -612,7 +608,7 @@ class AIMCOMMON_EXPORT Texture
       r1 = n1 * pow(((3.0 / 4.0) * (angles[i] - sin(angles[i]))), (1.0 / 3.0));
       r2 = n2 * pow(((3.0 / 4.0) * (angles[i] - sin(angles[i]))), (1.0 / 3.0));
       r3 = n3 * pow(((3.0 / 4.0) * (angles[i] - sin(angles[i]))), (1.0 / 3.0));
-      mbin = MisorientationCalculations::getMisoBinCubic(r1,r2,r3);
+	  mbin = OrientationMath::getMisoBin(AIM::Reconstruction::Hexagonal, r1,r2,r3);
       mdf[mbin] = -int((weights[i]/double(mdfsize))*10000.0);
       remainingcount = remainingcount+mdf[mbin];
     }
@@ -631,16 +627,16 @@ class AIMCOMMON_EXPORT Texture
         if (random1 < totaldensity && random1 >= (totaldensity - density)) choose1 = static_cast<int> (j);
         if (random2 < totaldensity && random2 >= (totaldensity - density)) choose2 = static_cast<int> (j);
       }
-	  MisorientationCalculations::determineEulerAngles(AIM::Reconstruction::Hexagonal, choose1, ea1, ea2, ea3);
-	  MisorientationCalculations::initializeQ(q1, ea1, ea2, ea3);
-	  MisorientationCalculations::determineEulerAngles(AIM::Reconstruction::Hexagonal, choose2, ea1, ea2, ea3);
-	  MisorientationCalculations::initializeQ(q2, ea1, ea2, ea3);
-      w = MisorientationCalculations::getMisoQuatHexagonal(q1,q2,n1,n2,n3);
+	  OrientationMath::determineEulerAngles(AIM::Reconstruction::Hexagonal, choose1, ea1, ea2, ea3);
+	  OrientationMath::EulertoQuat(q1, ea1, ea2, ea3);
+	  OrientationMath::determineEulerAngles(AIM::Reconstruction::Hexagonal, choose2, ea1, ea2, ea3);
+	  OrientationMath::EulertoQuat(q2, ea1, ea2, ea3);
+	  w = OrientationMath::getMisoQuat(AIM::Reconstruction::Hexagonal,q1,q2,n1,n2,n3);
       w = w/radtodeg;
       r1 = n1 * pow(((3.0 / 4.0) * (w - sin(w))), (1.0 / 3.0));
       r2 = n2 * pow(((3.0 / 4.0) * (w - sin(w))), (1.0 / 3.0));
       r3 = n3 * pow(((3.0 / 4.0) * (w - sin(w))), (1.0 / 3.0));
-      mbin = MisorientationCalculations::getMisoBinHexagonal(r1,r2,r3);
+      mbin = OrientationMath::getMisoBin(AIM::Reconstruction::Hexagonal,r1,r2,r3);
       if(mdf[mbin] >= 0) mdf[mbin]++;
       if(mdf[mbin] < 0) i = i-1;
     }
