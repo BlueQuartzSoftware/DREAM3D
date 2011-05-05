@@ -32,8 +32,6 @@
 // to expose some of the constants needed below
 #include "AIM/Common/AIMMath.h"
 
-const int CubicOps::ODFSize;
-const int CubicOps::MDFSize;
 
   const static double m_pi = M_PI;
   static const double CubicDim1InitValue = pow((0.75*((m_pi/4.0)-sin((m_pi/4.0)))),(1.0/3.0));

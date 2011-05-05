@@ -32,8 +32,6 @@
 // to expose some of the constants needed below
 #include "AIM/Common/AIMMath.h"
 
-const int HexagonalOps::ODFSize;
-const int HexagonalOps::MDFSize;
 
   const static double m_pi = M_PI;
   static const double HexDim1InitValue = pow((0.75*((m_pi/2.0)-sin((m_pi/2.0)))),(1.0/3.0));
