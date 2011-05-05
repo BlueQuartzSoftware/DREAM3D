@@ -25,7 +25,7 @@
 
 // AIM Includes
 #include "AIM/Common/AIMMath.h"
-#include "AIM/Common/OrientationMath.h"
+
 
 const static double m_onepointthree = 1.33333333333;
 const static double m_pi = M_PI;
@@ -49,6 +49,9 @@ const static double CosOfZero = cos(0.0);
 
 using namespace std;
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 GrainGeneratorFunc::GrainGeneratorFunc() :
 actualodf(NULL),
 simodf(NULL),
@@ -60,9 +63,17 @@ actualmicrotex(NULL),
 simmicrotex(NULL),
 m_Grains(NULL)
 {
-
+  m_HexOps = HexagonalOps::New();
+  m_OrientatioOps.push_back(m_HexOps.get());
+  m_CubicOps = CubicOps::New();
+  m_OrientatioOps.push_back(m_CubicOps.get());
+  m_OrthoOps = OrthoRhombicOps::New();
+  m_OrientatioOps.push_back(m_OrthoOps.get());
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 GrainGeneratorFunc::~GrainGeneratorFunc()
 {
 
@@ -1579,27 +1590,27 @@ void  GrainGeneratorFunc::assign_eulers(int numgrains)
     random = rg.Random();
     choose = 0;
     totaldensity = 0;
-	phase = m_Grains[i]->phase;
-    for(int j=0;j<numbins;j++)
+    phase = m_Grains[i]->phase;
+    for (int j = 0; j < numbins; j++)
     {
       double density = actualodf[phase][j];
       totaldensity = totaldensity + density;
-      if(random >= totaldensity) choose = j;
+      if (random >= totaldensity) choose = j;
     }
-	OrientationMath::determineEulerAngles(crystruct[phase], choose, synea1, synea2, synea3);
+    m_OrientatioOps[crystruct[phase]]->determineEulerAngles(choose, synea1, synea2, synea3);
     m_Grains[i]->euler1 = synea1;
     m_Grains[i]->euler2 = synea2;
     m_Grains[i]->euler3 = synea3;
-	OrientationMath::EulertoQuat(q,synea1,synea2,synea3);
+    OrientationMath::eulertoQuat(q, synea1, synea2, synea3);
     m_Grains[i]->avg_quat[0] = q[0];
     m_Grains[i]->avg_quat[1] = q[1];
     m_Grains[i]->avg_quat[2] = q[2];
     m_Grains[i]->avg_quat[3] = q[3];
     m_Grains[i]->avg_quat[4] = q[4];
-    if(m_Grains[gnum]->surfacegrain == 0)
+    if (m_Grains[gnum]->surfacegrain == 0)
     {
-      simodf[phase][choose] = simodf[phase][choose] + (double(m_Grains[i]->numvoxels)*resx*resy*resz);
-	  unbiasedvol[phase] = unbiasedvol[phase] + (double(m_Grains[i]->numvoxels)*resx*resy*resz);
+      simodf[phase][choose] = simodf[phase][choose] + (double(m_Grains[i]->numvoxels) * resx * resy * resz);
+      unbiasedvol[phase] = unbiasedvol[phase] + (double(m_Grains[i]->numvoxels) * resx * resy * resz);
     }
   }
   for(int i=0;i<numbins;i++)
@@ -2086,14 +2097,14 @@ void GrainGeneratorFunc::MC_LoopBody1(int phase, size_t neighbor, int j,std::vec
   curmiso2 = misolist->at(3*j+1);
   curmiso3 = misolist->at(3*j+2);
   neighsurfarea = neighborsurfarealist->at(j);
-  curmisobin = OrientationMath::getMisoBin(crystruct[phase], curmiso1, curmiso2, curmiso3);
+  curmisobin = m_OrientatioOps[crystruct[phase]]->getMisoBin( curmiso1, curmiso2, curmiso3);
   q2[1] = m_Grains[neighbor]->avg_quat[1];
   q2[2] = m_Grains[neighbor]->avg_quat[2];
   q2[3] = m_Grains[neighbor]->avg_quat[3];
   q2[4] = m_Grains[neighbor]->avg_quat[4];
-  w = OrientationMath::getMisoQuat(crystruct[phase],q1,q2,n1,n2,n3);
-  OrientationMath::AxisAngletoHomochoric(w, n1, n2, n3);
-  newmisobin = OrientationMath::getMisoBin(crystruct[phase], n1, n2, n3);
+  w = m_OrientatioOps[crystruct[phase]]->getMisoQuat(q1,q2,n1,n2,n3);
+  OrientationMath::axisAngletoHomochoric(w, n1, n2, n3);
+  newmisobin = m_OrientatioOps[crystruct[phase]]->getMisoBin(n1, n2, n3);
   mdfchange = mdfchange + (((actualmdf[phase][curmisobin]-simmdf[phase][curmisobin])*(actualmdf[phase][curmisobin]-simmdf[phase][curmisobin])) - ((actualmdf[phase][curmisobin]-(simmdf[phase][curmisobin]-(neighsurfarea/totalsurfacearea[phase])))*(actualmdf[phase][curmisobin]-(simmdf[phase][curmisobin]-(neighsurfarea/totalsurfacearea[phase])))));
   mdfchange = mdfchange + (((actualmdf[phase][newmisobin]-simmdf[phase][newmisobin])*(actualmdf[phase][newmisobin]-simmdf[phase][newmisobin])) - ((actualmdf[phase][newmisobin]-(simmdf[phase][newmisobin]+(neighsurfarea/totalsurfacearea[phase])))*(actualmdf[phase][newmisobin]-(simmdf[phase][newmisobin]+(neighsurfarea/totalsurfacearea[phase])))));
 }
@@ -2122,14 +2133,14 @@ void GrainGeneratorFunc::MC_LoopBody2(int phase, size_t neighbor, int j,std::vec
   curmiso2 = misolist->at(3 * j + 1);
   curmiso3 = misolist->at(3 * j + 2);
   neighsurfarea = neighborsurfarealist->at(j);
-  curmisobin = OrientationMath::getMisoBin(crystruct[phase], curmiso1, curmiso2, curmiso3);
+  curmisobin = m_OrientatioOps[crystruct[phase]]->getMisoBin(curmiso1, curmiso2, curmiso3);
   q2[1] = m_Grains[neighbor]->avg_quat[1];
   q2[2] = m_Grains[neighbor]->avg_quat[2];
   q2[3] = m_Grains[neighbor]->avg_quat[3];
   q2[4] = m_Grains[neighbor]->avg_quat[4];
-  w = OrientationMath::getMisoQuat(crystruct[phase], q1, q2, n1, n2, n3);
-  OrientationMath::AxisAngletoHomochoric(w, n1, n2, n3);
-  newmisobin = OrientationMath::getMisoBin(crystruct[phase], n1, n2, n3);
+  w = m_OrientatioOps[crystruct[phase]]->getMisoQuat(q1,q2,n1,n2,n3);
+  OrientationMath::axisAngletoHomochoric(w, n1, n2, n3);
+  newmisobin = m_OrientatioOps[crystruct[phase]]->getMisoBin(n1, n2, n3);
   misolist->at(3 * j) = miso1;
   misolist->at(3 * j + 1) = miso2;
   misolist->at(3 * j + 2) = miso3;
@@ -2145,7 +2156,7 @@ void GrainGeneratorFunc::swapOutOrientation( int &badtrycount, int &numbins, dou
   int selectedgrain1;
   double q1[5];
   double qref[5];
-  OrientationMath::EulertoQuat(qref,0.0,0.0,0.0);
+  OrientationMath::eulertoQuat(qref,0.0,0.0,0.0);
 
   int g1odfbin = std::numeric_limits<int >::max();
 
@@ -2173,7 +2184,7 @@ void GrainGeneratorFunc::swapOutOrientation( int &badtrycount, int &numbins, dou
   q1[3] = m_Grains[selectedgrain1]->avg_quat[3];
   q1[4] = m_Grains[selectedgrain1]->avg_quat[4];
   int phase = m_Grains[selectedgrain1]->phase;
-  g1odfbin = OrientationMath::getOdfBin(crystruct[phase], q1, qref);
+  g1odfbin = m_OrientatioOps[crystruct[phase]]->getOdfBin(q1, qref);
   random = rg.Random();
   int choose = 0;
   totaldensity = 0;
@@ -2184,8 +2195,8 @@ void GrainGeneratorFunc::swapOutOrientation( int &badtrycount, int &numbins, dou
     if (random >= totaldensity) choose = i;
   }
 
-  OrientationMath::determineEulerAngles(crystruct[phase], choose, g1ea1, g1ea2, g1ea3);
-  OrientationMath::EulertoQuat(q1, g1ea1, g1ea2, g1ea3);
+  m_OrientatioOps[crystruct[phase]]->determineEulerAngles(choose, g1ea1, g1ea2, g1ea3);
+  OrientationMath::eulertoQuat(q1, g1ea1, g1ea2, g1ea3);
 
   double odfchange = ((actualodf[phase][choose] - simodf[phase][choose]) * (actualodf[phase][choose] - simodf[phase][choose])) - ((actualodf[phase][choose] - (simodf[phase][choose]
       + (double(m_Grains[selectedgrain1]->numvoxels) * resx * resy * resz / unbiasedvol[phase]))) * (actualodf[phase][choose] - (simodf[phase][choose]
@@ -2234,7 +2245,7 @@ void GrainGeneratorFunc::switchOrientations( int &badtrycount, int &numbins, dou
   int selectedgrain2;
   double q1[5];
   double qref[5];
-  OrientationMath::EulertoQuat(qref,0.0,0.0,0.0);
+  OrientationMath::eulertoQuat(qref,0.0,0.0,0.0);
 
   int g1odfbin = std::numeric_limits<int >::max();
   int g2odfbin = std::numeric_limits<int >::max();
@@ -2273,12 +2284,12 @@ void GrainGeneratorFunc::switchOrientations( int &badtrycount, int &numbins, dou
   q1[3] = m_Grains[selectedgrain1]->avg_quat[3];
   q1[4] = m_Grains[selectedgrain1]->avg_quat[4];
   int phase = m_Grains[selectedgrain1]->phase;
-  g1odfbin = OrientationMath::getOdfBin(crystruct[phase], q1, qref);
+  g1odfbin = m_OrientatioOps[crystruct[phase]]->getOdfBin(q1, qref);
   q1[1] = m_Grains[selectedgrain2]->avg_quat[1];
   q1[2] = m_Grains[selectedgrain2]->avg_quat[2];
   q1[3] = m_Grains[selectedgrain2]->avg_quat[3];
   q1[4] = m_Grains[selectedgrain2]->avg_quat[4];
-  g2odfbin = OrientationMath::getOdfBin(crystruct[phase], q1, qref);
+  g2odfbin = m_OrientatioOps[crystruct[phase]]->getOdfBin(q1, qref);
 
   double odfchange = ((actualodf[phase][g1odfbin]-simodf[phase][g1odfbin]) * (actualodf[phase][g1odfbin]-simodf[phase][g1odfbin])) - ((actualodf[phase][g1odfbin]
      -(simodf[phase][g1odfbin] - (double(m_Grains[selectedgrain1]->numvoxels) * resx * resy * resz / unbiasedvol[phase]) + (double(m_Grains[selectedgrain2]->numvoxels) * resx
@@ -2291,7 +2302,7 @@ void GrainGeneratorFunc::switchOrientations( int &badtrycount, int &numbins, dou
 
 
   double mdfchange = 0;
-  OrientationMath::EulertoQuat(q1, g2ea1, g2ea2, g2ea3);
+  OrientationMath::eulertoQuat(q1, g2ea1, g2ea2, g2ea3);
   nlist = m_Grains[selectedgrain1]->neighborlist;
   misolist = m_Grains[selectedgrain1]->misorientationlist;
   neighborsurfarealist = m_Grains[selectedgrain1]->neighborsurfarealist;
@@ -2304,7 +2315,7 @@ void GrainGeneratorFunc::switchOrientations( int &badtrycount, int &numbins, dou
     }
   }
 
-  OrientationMath::EulertoQuat(q1, g1ea1, g1ea2, g1ea3);
+  OrientationMath::eulertoQuat(q1, g1ea1, g1ea2, g1ea3);
   nlist = m_Grains[selectedgrain2]->neighborlist;
   misolist = m_Grains[selectedgrain2]->misorientationlist;
   neighborsurfarealist = m_Grains[selectedgrain2]->neighborsurfarealist;
@@ -2332,7 +2343,7 @@ void GrainGeneratorFunc::switchOrientations( int &badtrycount, int &numbins, dou
     simodf[phase][g2odfbin] = simodf[phase][g2odfbin] + (double(m_Grains[selectedgrain1]->numvoxels) * resx * resy * resz / unbiasedvol[phase])
         - (double(m_Grains[selectedgrain2]->numvoxels) * resx * resy * resz / unbiasedvol[phase]);
 
-	OrientationMath::EulertoQuat(q1, g2ea1, g2ea2, g2ea3);
+	OrientationMath::eulertoQuat(q1, g2ea1, g2ea2, g2ea3);
 	nlist = m_Grains[selectedgrain1]->neighborlist;
     misolist = m_Grains[selectedgrain1]->misorientationlist;
     neighborsurfarealist = m_Grains[selectedgrain1]->neighborsurfarealist;
@@ -2349,7 +2360,7 @@ void GrainGeneratorFunc::switchOrientations( int &badtrycount, int &numbins, dou
       }
     }
 
-	OrientationMath::EulertoQuat(q1, g1ea1, g1ea2, g1ea3);
+	OrientationMath::eulertoQuat(q1, g1ea1, g1ea2, g1ea3);
     nlist = m_Grains[selectedgrain2]->neighborlist;
     misolist = m_Grains[selectedgrain2]->misorientationlist;
     neighborsurfarealist = m_Grains[selectedgrain2]->neighborsurfarealist;
@@ -2458,7 +2469,7 @@ void  GrainGeneratorFunc::measure_misorientations ()
       q2[3] = m_Grains[nname]->avg_quat[3];
       q2[4] = m_Grains[nname]->avg_quat[4];
 	  phase2 = crystruct[m_Grains[nname]->phase];
-      if(phase1 == phase2) w = OrientationMath::getMisoQuat(phase1,q1,q2,n1,n2,n3);
+      if(phase1 == phase2) w = m_OrientatioOps[phase1]->getMisoQuat(q1,q2,n1,n2,n3);
 	  w = w*degtorad;
 	  denom = (n1*n1)+(n2*n2)+(n3*n3);
 	  denom = pow(denom,0.5);
@@ -2477,7 +2488,7 @@ void  GrainGeneratorFunc::measure_misorientations ()
 	      m_Grains[i]->misorientationlist->at(3 * j + 1) = -100;
 	      m_Grains[i]->misorientationlist->at(3 * j + 2) = -100;
 	  }
-      if (phase1 == phase2) mbin = OrientationMath::getMisoBin(phase1, m_Grains[i]->misorientationlist->at(3*j), m_Grains[i]->misorientationlist->at(3*j+1), m_Grains[i]->misorientationlist->at(3*j+2));
+      if (phase1 == phase2) mbin = m_OrientatioOps[phase1]->getMisoBin(m_Grains[i]->misorientationlist->at(3*j), m_Grains[i]->misorientationlist->at(3*j+1), m_Grains[i]->misorientationlist->at(3*j+2));
       if (m_Grains[i]->surfacegrain == 0 && (nname > i || m_Grains[nname]->surfacegrain == 1) && phase1 == phase2)
       {
         simmdf[m_Grains[i]->phase][mbin] = simmdf[m_Grains[i]->phase][mbin] + (neighsurfarea / totalsurfacearea[m_Grains[i]->phase]);

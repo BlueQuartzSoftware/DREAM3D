@@ -32,10 +32,11 @@
 #ifndef _OrientationMath_H_
 #define _OrientationMath_H_
 
+#include "MXA/Common/MXASetGetMacros.h"
 #include "AIM/Common/AIMCommonConfiguration.h"
 #include "AIM/Common/Constants.h"
 #include "AIM/Common/AIMRandomNG.h"
-#include <time.h>
+
 
 
 /**
@@ -49,24 +50,58 @@
 class AIMCOMMON_EXPORT OrientationMath
 {
   public:
+    MXA_SHARED_POINTERS(OrientationMath)
+    MXA_TYPE_MACRO(OrientationMath)
 
     virtual ~OrientationMath();
 
-	static void MultiplyQuaternions(double inQuat[5], double multQuat[5], double outQuat[5]);
-    static double getMisoQuat(AIM::Reconstruction::CrystalStructure crystruct, double q1[5],double q2[5],double &n1,double &n2,double &n3);
-    static void getFZRod(AIM::Reconstruction::CrystalStructure crystruct, double &r1,double &r2, double &r3);
-    static void getNearestQuat(AIM::Reconstruction::CrystalStructure crystruct, double *q1, double *q2);
-    static void getFZQuat(AIM::Reconstruction::CrystalStructure crystruct, double *qr);
-    static int getMisoBin(AIM::Reconstruction::CrystalStructure crystruct, double n1, double n2, double n3);
-    static void determineEulerAngles(AIM::Reconstruction::CrystalStructure crystruct, int choose, double &synea1, double &synea2, double &synea3);
-    static void determineAxisAngle(AIM::Reconstruction::CrystalStructure crystruct, int choose, double &w, double &n1, double &n2, double &n3);
-    static void AxisAngletoHomochoric(double &w, double &miso1, double &miso2, double &miso3);
+    /**
+     * @brief
+     * @param q1
+     * @param q2
+     * @param n1
+     * @param n2
+     * @param n3
+     */
+    virtual double getMisoQuat(double q1[5], double q2[5], double &n1, double &n2, double &n3) = 0;
+
+    virtual void getFZRod(double &r1, double &r2, double &r3) = 0;
+
+    virtual void getNearestQuat(double *q1, double *q2) = 0;
+
+    virtual void getFZQuat(double *qr) = 0;
+
+    virtual int getMisoBin(double n1, double n2, double n3) = 0;
+
+    virtual void determineEulerAngles(int choose, double &synea1, double &synea2, double &synea3) = 0;
+
+    virtual void determineAxisAngle(int choose, double &w, double &n1, double &n2, double &n3) = 0;
+
+    virtual int getOdfBin(double q1[5], double qref[5]) = 0;
+
+
+    static void axisAngletoHomochoric(double &w, double &miso1, double &miso2, double &miso3);
     static void getSlipMisalignment(int ss1, double q1[5], double q2[5], double &ssap);
-    static int getOdfBin(AIM::Reconstruction::CrystalStructure crystruct, double q1[5], double qref[5]);
-    static void EulertoQuat(double *q, double ea1, double ea2, double ea3);
+    static void multiplyQuaternions(double inQuat[5], double multQuat[5], double outQuat[5]);
+    static void eulertoQuat(double *q, double ea1, double ea2, double ea3);
 
   protected:
     OrientationMath();
+
+    double _calcMisoQuat(double quatsym[24][5], int numsym,
+                  double q1[5], double q2[5],
+                  double &n1, double &n2, double &n3);
+
+    void _calcFZRod(double rodsym[24][3], int numsym, double &r1,double &r2, double &r3);
+    void _calcNearestQuat(double quatsym[24][5], int numsym, double *q1, double *q2);
+    void _calcFZQuat(double quatsym[24][5], int numsym, double *qr);
+
+    int _calcMisoBin(double dim[3], double bins[3], double n1, double n2, double n3);
+    void _calcDetermineEulerAngles(double init[3], double step[3], double phi[3],
+                                   int choose, double &synea1, double &synea2, double &synea3);
+    void _calcDetermineAxisAngle( double step[3], double phi[3],
+                                  int choose, double &w, double &n1, double &n2, double &n3);
+    int _calcODFBin(double dim[3], double bins[3], double q1[5], double qref[5]);
 
   private:
     OrientationMath(const OrientationMath&); // Copy Constructor Not Implemented
