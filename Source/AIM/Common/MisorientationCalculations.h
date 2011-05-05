@@ -54,19 +54,25 @@ class AIMCOMMON_EXPORT MisorientationCalculations
 
     static double getMisoQuatCubic(double q1[5],double q2[5],double &n1,double &n2,double &n3);
     static double getMisoQuatHexagonal(double q1[5],double q2[5],double &n1,double &n2,double &n3);
+
     static void getFZRodCubic(double &r1,double &r2, double &r3);
     static void getFZRodHexagonal(double &r1,double &r2, double &r3);
     static void getFZRodOrtho(double &r1,double &r2, double &r3);
+
     static void getNearestQuatCubic(double *q1, double *q2);
     static void getNearestQuatHexagonal(double *q1, double *q2);
+
     static void getFZQuatCubic(double *qr);
     static void getFZQuatHexagonal(double *qr);
+
     static int getMisoBinCubic(double n1, double n2, double n3);
     static int getMisoBinHexagonal(double n1, double n2, double n3);
+
     static void determineEulerAngles(AIM::Reconstruction::CrystalStructure crystruct, int choose, double &synea1, double &synea2, double &synea3);
     static void determineAxisAngle(AIM::Reconstruction::CrystalStructure crystruct, int choose, double &w, double &n1, double &n2, double &n3);
-    static void calculateMisorientationAngles(double &w, double &miso1, double &miso2, double &miso3);
     static void initializeDims( AIM::Reconstruction::CrystalStructure crystruct, double &dim1, double &dim2,  double &dim3, int &numbins);
+
+    static void calculateMisorientationAngles(double &w, double &miso1, double &miso2, double &miso3);
     static void getSlipMisalignment(int ss1, double q1[5], double q2[5], double &ssap);
     static size_t calculateHexOdfBin( double q1[5], double qref[5]);
     static size_t calculateCubicOdfBin( double q1[5], double qref[5]);
