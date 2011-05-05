@@ -295,11 +295,11 @@ void OrientationMath::_calcDetermineEulerAngles(double init[3], double step[3], 
 }
 
 
-void OrientationMath::_calcDetermineAxisAngle( double step[3], double phi[3],
-                                               int choose, double &w, double &n1, double &n2, double &n3)
+double OrientationMath::_calcDetermineAxisAngle( double step[3], double phi[3], int choose)
 {
   AIMRandomNG rg;
   rg.RandomInit((static_cast<unsigned int> (MXA::getMilliSeconds())));
+  double w = 0.0;
   double random = rg.Random();
   double synh1 = (step[0] * phi[0]) + (step[0] * random);
   random = rg.Random();
@@ -313,6 +313,7 @@ void OrientationMath::_calcDetermineAxisAngle( double step[3], double phi[3],
   {
     int stop = 0;
   }
+  return w;
 }
 
 

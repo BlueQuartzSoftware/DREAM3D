@@ -62,7 +62,7 @@ class AIMCOMMON_EXPORT OrthoRhombicOps : public OrientationMath
     virtual void getFZQuat(double *qr);
     virtual int getMisoBin(double n1, double n2, double n3);
     virtual void determineEulerAngles( int choose, double &synea1, double &synea2, double &synea3);
-    virtual void determineAxisAngle(int choose, double &w, double &n1, double &n2, double &n3);
+    virtual double determineAxisAngle(int choose);
     virtual int getOdfBin(double q1[5], double qref[5]);
 
 
