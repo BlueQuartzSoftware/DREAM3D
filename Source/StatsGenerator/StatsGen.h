@@ -160,11 +160,11 @@ class StatsGen
      * @param sigma
      * @param cutoff
      * @param binstep
-     * @param x
-     * @param y
+     * @param x Type that adheres to the std::vector API
+     * @param y Type that adheres to the std::vector API
      * @param yMax
      * @param numsizebins
-     * @param binsizes
+     * @param binsizes Type that adheres to the std::vector API
      * @return
      */
     template<typename J, typename T>
@@ -541,11 +541,7 @@ class StatsGen
      * type is a std::vector conforming class type that holds the data.
      * QVector falls into this category. The input data for the
      * euler angles is in Columnar fashion instead of row major format.
-     * @param e1s The first euler angles (input)
-     * @param e2s The second euler angles (input)
-     * @param e3s The third euler angles (input)
-     * @param weights Array of weights values. (input)
-     * @param sigmas Array of sigma values. (input)
+     * @param odf The ODF Data
      * @param x001 X Values of the [001] axis PF Scatter plot (Output)
      * @param y001 Y Values of the [001] axis PF Scatter plot (Output)
      * @param x011 X Values of the [011] axis PF Scatter plot (Output)
@@ -555,14 +551,17 @@ class StatsGen
      * @param size The number of points for the Scatter Plot
      */
     template<typename T>
-    int GenOrthoRhombicODFPlotData(T e1s, T e2s, T e3s, T weights, T sigmas, T &x001, T &y001, T &x011, T &y011, T &x111, T &y111, int size)
+    int GenOrthoRhombicODFPlotData(T odf, T &x001, T &y001, T &x011, T &y011, T &x111, T &y111, int size)
     {
       static const size_t odfsize = 46656;
-      double totalweight = 0;
-      T odf;
-      odf.resize(odfsize);
-      Texture::calculateOrthoRhombicODFData(e1s, e2s, e3s, weights, sigmas, true, odf, totalweight);
 
+#if 0
+ These lines need to be run BEFORE you call this method
+  double totalweight = 0;
+  T odf;
+  odf.resize(odfsize);
+  Texture::calculateOrthoRhombicODFData(e1s, e2s, e3s, weights, sigmas, true, odf, totalweight);
+#endif
       AIMRandomNG rg;
       /* Get a seed value based off the system clock. The issue is that this will
        * be a 64 bit unsigned integer where the high 32 bits will basically not
@@ -914,6 +913,14 @@ class StatsGen
       return err;
     }
 
+    /**
+     * @brief
+     * @param mdf
+     * @param xval
+     * @param yval
+     * @param npoints
+     * @return
+     */
     template<typename T>
     int GenHexMDFPlotData(T mdf, T &xval, T &yval, int npoints)
     {
