@@ -464,11 +464,12 @@ class AIMCOMMON_EXPORT Texture
   template<typename T, class O>
   static void calculateMDFData(T angles, T axes, T weights, T odf, T &mdf)
   {
-      const int odfsize = O::ODFSize;
-      const int mdfsize = O::MDFSize;
+    O orientationOps;
+      const int odfsize = orientationOps.getODFSize();
+      const int mdfsize = orientationOps.getMDFSize();
       mdf.resize(mdfsize);
       double radtodeg = 180.0 / M_PI;
-      O orientationOps;
+      
 
       AIMRandomNG rg;
       /* Get a seed value based off the system clock. The issue is that this will

@@ -33,9 +33,6 @@
 // to expose some of the constants needed below
 #include "AIM/Common/AIMMath.h"
 
-//static const int OrthoRhombicOps::ODFSize = 0;
-//static const int OrthoRhombicOps::MDFSize = 0;
-
 const static double m_pi = M_PI;
 static const double OrthoDim1InitValue = pow((0.75*((m_pi/2.0)-sin((m_pi/2.0)))),(1.0/3.0));
 static const double OrthoDim2InitValue = pow((0.75*((m_pi/2.0)-sin((m_pi/2.0)))),(1.0/3.0));
