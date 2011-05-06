@@ -46,7 +46,7 @@
 
 
 #define WRITE_VTK_GRAIN_IDS_ASCII(ptr)\
-  fprintf(f, "SCALARS GrainID int  1\n");\
+  fprintf(f, "SCALARS GrainID int 1\n");\
   fprintf(f, "LOOKUP_TABLE default\n");\
   for (size_t i = 0; i < total; i++) {\
     if(i%20 == 0 && i > 0) { fprintf(f, "\n"); }\
@@ -56,7 +56,7 @@
 
 
 #define WRITE_VTK_GRAIN_IDS_BINARY(ptr)  \
-  fprintf(f, "SCALARS GrainID int  1\n"); \
+  fprintf(f, "SCALARS GrainID int 1\n"); \
   fprintf(f, "LOOKUP_TABLE default\n"); \
   { \
   int* gn = new int[total];\
