@@ -98,8 +98,9 @@ OrientationMath::~OrientationMath()
 }
 
 double OrientationMath::_calcMisoQuat(double quatsym[24][5], int numsym,
-                  double q1[5], double q2[5],
-                  double &n1, double &n2, double &n3){
+                                      double q1[5], double q2[5],
+                                      double &n1, double &n2, double &n3)
+{
   double wmin = 9999999; //,na,nb,nc;
   double w = 0;
   double n1min, n2min, n3min;
@@ -417,10 +418,12 @@ void OrientationMath::eulertoQuat(double* q, double e1, double e2, double e3)
 
 void OrientationMath::multiplyQuaternions(double* inQuat, double* multQuat, double* outQuat)
 {
-  outQuat[1] = multQuat[4] * inQuat[1] + multQuat[1] * inQuat[4] + multQuat[3] * inQuat[2] - multQuat[2] * inQuat[3];
-  outQuat[2] = multQuat[4] * inQuat[2] + multQuat[2] * inQuat[4] + multQuat[1] * inQuat[3] - multQuat[3] * inQuat[1];
-  outQuat[3] = multQuat[4] * inQuat[3] + multQuat[3] * inQuat[4] + multQuat[2] * inQuat[1] - multQuat[1] * inQuat[2];
-  outQuat[4] = multQuat[4] * inQuat[4] - multQuat[1] * inQuat[1] - multQuat[2] * inQuat[2] - multQuat[3] * inQuat[3];
+  MULT_QUAT(inQuat, multQuat, outQuat);
+
+//  outQuat[1] = multQuat[4] * inQuat[1] + multQuat[1] * inQuat[4] + multQuat[3] * inQuat[2] - multQuat[2] * inQuat[3];
+//  outQuat[2] = multQuat[4] * inQuat[2] + multQuat[2] * inQuat[4] + multQuat[1] * inQuat[3] - multQuat[3] * inQuat[1];
+//  outQuat[3] = multQuat[4] * inQuat[3] + multQuat[3] * inQuat[4] + multQuat[2] * inQuat[1] - multQuat[1] * inQuat[2];
+//  outQuat[4] = multQuat[4] * inQuat[4] - multQuat[1] * inQuat[1] - multQuat[2] * inQuat[2] - multQuat[3] * inQuat[3];
 }
 
 void OrientationMath::getSlipMisalignment(int ss1, double q1[5], double q2[5], double &ssap)

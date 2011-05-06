@@ -34,6 +34,16 @@
 
 
   const static double m_pi = M_PI;
+
+  const double threesixty_over_pi = 360.0/m_pi;
+  const double oneeighty_over_pi = 180.0/m_pi;
+  const double sqrt_two = pow(2.0, 0.5);
+
+  const double acos_neg_one = acos(-1.0);
+  const double acos_pos_one = acos(1.0);
+  const double sin_wmin_neg_1_over_2 = sin(acos_neg_one/2.0);
+  const double sin_wmin_pos_1_over_2 = sin(acos_pos_one/2.0);
+
   static const double CubicDim1InitValue = pow((0.75*((m_pi/4.0)-sin((m_pi/4.0)))),(1.0/3.0));
   static const double CubicDim2InitValue = pow((0.75*((m_pi/4.0)-sin((m_pi/4.0)))),(1.0/3.0));
   static const double CubicDim3InitValue = pow((0.75*((m_pi/4.0)-sin((m_pi/4.0)))),(1.0/3.0));
@@ -41,7 +51,8 @@
   static const double CubicDim2StepValue = CubicDim2InitValue/9.0;
   static const double CubicDim3StepValue = CubicDim3InitValue/9.0;
 
-  static const double CubicQuatSym[24][5] = {{0.000000000, 0.000000000, 0.000000000, 0.000000000, 1.000000000},
+  static const double CubicQuatSym[24][5] = {
+                       {0.000000000, 0.000000000, 0.000000000, 0.000000000, 1.000000000},
                        {0.000000000, 1.000000000, 0.000000000, 0.000000000, 0.000000000},
                        {0.000000000, 0.000000000, 1.000000000, 0.000000000, 0.000000000},
                        {0.000000000, 0.000000000, 0.000000000, 1.000000000, 0.000000000},
@@ -91,15 +102,23 @@
                       {-1.0, -1.0, 1.0},
                       {1.0, 1.0, -1.0}};
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 CubicOps::CubicOps()
 {
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 CubicOps::~CubicOps()
 {
 }
 
-
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 double CubicOps::getMisoQuat( double q1[5],double q2[5],double &n1,double &n2,double &n3)
 {
 
@@ -116,6 +135,172 @@ double CubicOps::getMisoQuat( double q1[5],double q2[5],double &n1,double &n2,do
   }
 
   return _calcMisoQuat(quatsym, numsym, q1, q2, n1, n2, n3);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+double CubicOps::_calcMisoQuat(double quatsym[24][5], int numsym,
+                                      double q1[5], double q2[5],
+                                      double &n1, double &n2, double &n3)
+{
+  double wmin=9999999.0; //,na,nb,nc;
+   double qc[5];
+   double qco[5];
+   double sin_wmin_over_2 = 0.0;
+ //  double _1, _2,  _6;
+
+
+   qc[1]=-q1[1]*q2[4]+q1[4]*q2[1]-q1[2]*q2[3]+q1[3]*q2[2];
+   qc[2]=-q1[2]*q2[4]+q1[4]*q2[2]-q1[3]*q2[1]+q1[1]*q2[3];
+   qc[3]=-q1[3]*q2[4]+q1[4]*q2[3]-q1[1]*q2[2]+q1[2]*q2[1];
+   qc[4]=-q1[4]*q2[4]-q1[1]*q2[1]-q1[2]*q2[2]-q1[3]*q2[3];
+   qc[1]=fabs(qc[1]);
+   qc[2]=fabs(qc[2]);
+   qc[3]=fabs(qc[3]);
+   qc[4]=fabs(qc[4]);
+   //if qc[1] is smallest
+   if ( qc[1] <= qc[2] && qc[1] <= qc[3] && qc[1] <= qc[4])
+   {
+      qco[1] = qc[1];
+    //if qc[2] is next smallest
+      if (qc[2] <= qc[3] && qc[2] <= qc[4])
+    {
+       qco[2] = qc[2];
+     if(qc[3] <= qc[4]) qco[3] = qc[3], qco[4] = qc[4];
+     else qco[3] = qc[4], qco[4] = qc[3];
+    }
+    //if qc[3] is next smallest
+      else if (qc[3] <= qc[2] && qc[3] <= qc[4])
+    {
+       qco[2] = qc[3];
+     if(qc[2] <= qc[4]) qco[3] = qc[2], qco[4] = qc[4];
+     else qco[3] = qc[4], qco[4] = qc[2];
+    }
+    //if qc[4] is next smallest
+    else
+    {
+       qco[2] = qc[4];
+     if(qc[2] <= qc[3]) qco[3] = qc[2], qco[4] = qc[3];
+     else qco[3] = qc[3], qco[4] = qc[2];
+    }
+   }
+ //if qc[2] is smallest
+   else if ( qc[2] <= qc[1] && qc[2] <= qc[3] && qc[2] <= qc[4])
+   {
+      qco[1] = qc[2];
+    //if qc[1] is next smallest
+      if (qc[1] <= qc[3] && qc[1] <= qc[4])
+    {
+       qco[2] = qc[1];
+     if(qc[3] <= qc[4]) qco[3] = qc[3], qco[4] = qc[4];
+     else qco[3] = qc[4], qco[4] = qc[3];
+    }
+    //if qc[3] is next smallest
+      else if (qc[3] <= qc[1] && qc[3] <= qc[4])
+    {
+       qco[2] = qc[3];
+     if(qc[1] <= qc[4]) qco[3] = qc[1], qco[4] = qc[4];
+     else qco[3] = qc[4], qco[4] = qc[1];
+    }
+    //if qc[4] is next smallest
+    else
+    {
+       qco[2] = qc[4];
+     if(qc[1] <= qc[3]) qco[3] = qc[1], qco[4] = qc[3];
+     else qco[3] = qc[3], qco[4] = qc[1];
+    }
+   }
+ //if qc[3] is smallest
+   else if ( qc[3] <= qc[1] && qc[3] <= qc[2] && qc[3] <= qc[4])
+   {
+      qco[1] = qc[3];
+    //if qc[1] is next smallest
+      if (qc[1] <= qc[2] && qc[1] <= qc[4])
+    {
+       qco[2] = qc[1];
+     if(qc[2] <= qc[4]) qco[3] = qc[2], qco[4] = qc[4];
+     else qco[3] = qc[4], qco[4] = qc[2];
+    }
+    //if qc[2] is next smallest
+      else if (qc[2] <= qc[1] && qc[2] <= qc[4])
+    {
+       qco[2] = qc[2];
+     if(qc[1] <= qc[4]) qco[3] = qc[1], qco[4] = qc[4];
+     else qco[3] = qc[4], qco[4] = qc[1];
+    }
+    //if qc[4] is next smallest
+    else
+    {
+       qco[2] = qc[4];
+     if(qc[1] <= qc[2]) qco[3] = qc[1], qco[4] = qc[2];
+     else qco[3] = qc[2], qco[4] = qc[1];
+    }
+   }
+ //if qc[4] is smallest
+   else
+   {
+      qco[1] = qc[4];
+    //if qc[1] is next smallest
+      if (qc[1] <= qc[2] && qc[1] <= qc[3])
+    {
+       qco[2] = qc[1];
+     if(qc[2] <= qc[3]) qco[3] = qc[2], qco[4] = qc[3];
+     else qco[3] = qc[3], qco[4] = qc[2];
+    }
+    //if qc[2] is next smallest
+      else if (qc[2] <= qc[1] && qc[2] <= qc[3])
+    {
+       qco[2] = qc[2];
+     if(qc[1] <= qc[3]) qco[3] = qc[1], qco[4] = qc[3];
+     else qco[3] = qc[3], qco[4] = qc[1];
+    }
+    //if qc[3] is next smallest
+    else
+    {
+       qco[2] = qc[3];
+     if(qc[1] <= qc[2]) qco[3] = qc[1], qco[4] = qc[2];
+     else qco[3] = qc[2], qco[4] = qc[1];
+    }
+   }
+   wmin = qco[4];
+   if (((qco[3] + qco[4]) / (sqrt_two)) > wmin)
+   {
+     wmin = ((qco[3] + qco[4]) / (sqrt_two));
+   }
+   if (((qco[1] + qco[2] + qco[3] + qco[4]) / 2) > wmin)
+   {
+     wmin = ((qco[1] + qco[2] + qco[3] + qco[4]) / 2);
+   }
+   if (wmin < -1.0)
+   {
+   //  wmin = -1.0;
+     wmin = acos_neg_one;
+     sin_wmin_over_2 = sin_wmin_neg_1_over_2;
+   }
+   else if (wmin > 1.0)
+   {
+  //   wmin = 1.0;
+     wmin = acos_pos_one;
+     sin_wmin_over_2 = sin_wmin_pos_1_over_2;
+   }
+   else
+   {
+     wmin = acos(wmin);
+     sin_wmin_over_2 = sin(wmin / 2.0);
+   }
+
+   n1 = qco[1] / sin_wmin_over_2;
+   n2 = qco[2] / sin_wmin_over_2;
+   n3 = qco[3] / sin_wmin_over_2;
+   double denom = pow((n1*n1+n2*n2+n3*n3),0.5);
+   n1 = n1/denom;
+   n2 = n2/denom;
+   n3 = n3/denom;
+   if(wmin == 0) n1 = 0.0, n2 = 0.0, n3 = 1.0;
+   wmin = (threesixty_over_pi) * wmin;
+   return wmin;
+
 }
 
 // -----------------------------------------------------------------------------
