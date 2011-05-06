@@ -67,7 +67,9 @@ class AIMCOMMON_EXPORT CubicOps : public OrientationMath
 
 
   protected:
-
+    double _calcMisoQuat(double quatsym[24][5], int numsym,
+                  double q1[5], double q2[5],
+                  double &n1, double &n2, double &n3);
 
   private:
     CubicOps(const CubicOps&); // Copy Constructor Not Implemented
