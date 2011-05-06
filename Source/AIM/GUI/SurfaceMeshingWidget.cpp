@@ -112,7 +112,10 @@ void SurfaceMeshingWidget::readSettings(QSettings &prefs)
 
   prefs.beginGroup("SurfaceMesh");
   READ_FILEPATH_SETTING(prefs, m_, InputFile, "");
+  verifyPathExists(m_InputFile->text(), m_InputFile);
+
   READ_FILEPATH_SETTING(prefs, m_, OutputDir, "");
+  READ_STRING_SETTING(prefs, m_, OutputFilePrefix, "SurfaceMesh_")
 
   READ_BOOL_SETTING(prefs, m_, SmoothMesh, false);
   READ_BOOL_SETTING(prefs, m_, LockQuadPoints, false);
@@ -235,7 +238,11 @@ void SurfaceMeshingWidget::on_m_GoBtn_clicked()
   }
 
   SANITY_CHECK_INPUT(m_, InputFile)
-  SANITY_CHECK_INPUT(m_, OutputDir)
+
+  if (false == sanityCheckOutputDirectory(m_OutputDir, QString("Reconstruction")) )
+  {
+    return;
+  }
 
   if (m_WorkerThread != NULL)
   {
@@ -253,10 +260,10 @@ void SurfaceMeshingWidget::on_m_GoBtn_clicked()
   m_SurfaceMesh->setInputFile(m_InputFile->text().toStdString() );
 
   QString od = m_OutputDir->text();
-  if (od.endsWith('/') == false && od.endsWith('\\') == false)
-  {
-    od += QDir::separator();
-  }
+//  if (od.endsWith('/') == false && od.endsWith('\\') == false)
+//  {
+//    od += QDir::separator();
+//  }
 
   m_SurfaceMesh->setOutputDirectory(od.toStdString());
   m_SurfaceMesh->setOutputFilePrefix(m_OutputFilePrefix->text().toStdString());
