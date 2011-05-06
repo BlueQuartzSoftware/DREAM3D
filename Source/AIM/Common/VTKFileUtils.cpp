@@ -193,7 +193,6 @@ int VTKFileUtils::readZSlice(SurfaceMeshFunc* m, int zID)
   }
   else
   {
-
     int tmp = -1;
     for (int z = 0; z < zEnd; ++z)
     {
@@ -310,9 +309,9 @@ int VTKFileUtils::readHeader(SurfaceMeshFunc* m, const std::string &file)
    6: ORIGIN 0.00 0.00 0.00
    7: SPACING 0.665 0.665 1.48
    8: POINT_DATA 258465900
-   9: FIELD FieldData 1
-   10: grainid 1 258465900 int
-   11:
+   9:
+   10: SCALARS GrainID int  1
+   11: LOOKUP_TABLE default
 
    OR
 
@@ -325,9 +324,9 @@ int VTKFileUtils::readHeader(SurfaceMeshFunc* m, const std::string &file)
    7: SPACING 0.25 0.25 0.25
    8: POINT_DATA 3798900
    9:
-   10:
-   11: SCALARS GrainID int  1
-   12: LOOKUP_TABLE default
+   10: SCALARS GrainID int  1
+   11: LOOKUP_TABLE default
+   12:
    0
    */
   int err = 0;
@@ -394,36 +393,35 @@ int VTKFileUtils::readHeader(SurfaceMeshFunc* m, const std::string &file)
   m->xRes = scaling[0];
   m->yRes = scaling[1];
   m->zRes = scaling[2];
-
   ::memset(buf, 0, kBufferSize);
+
   m_InputFile.getline(buf, kBufferSize); // Read Line 8
   ::memset(buf, 0, kBufferSize);
+
   char text1[kBufferSize]; ::memset(text1, 0, kBufferSize);
   char text2[kBufferSize]; ::memset(text2, 0, kBufferSize);
+  char text3[kBufferSize]; ::memset(text3, 0, kBufferSize);
   int fieldNum = 0;
-  int nComponents = 0;
-  int totalValues = 0;
+//  int nComponents = 0;
+//  int totalValues = 0;
+  m_InputFile.getline(buf, kBufferSize); // Read Line 9
+  ::memset(buf, 0, kBufferSize);
 
-  if (m_fileIsBinary == true)
+  readLine(m_InputFile, buf, kBufferSize); // Read Line 10
+  int n = sscanf(buf, "%s %s %s %d", text1, text2, text3, &fieldNum);
+  m_IntByteSize = parseByteSize(text3);
+  if (m_IntByteSize == 0)
   {
-    readLine(m_InputFile, buf, kBufferSize); // Read Line 9
-    int n = sscanf(buf, "%s %s %d", text1, text2, &fieldNum);
-    ::memset(text1, 0, kBufferSize);
-    ::memset(text2, 0, kBufferSize);
+    return -1;
+  }
+  ::memset(text1, 0, kBufferSize);
+  ::memset(text2, 0, kBufferSize);
+  ::memset(text3, 0, kBufferSize);
+  readLine(m_InputFile, buf, kBufferSize); // Read Line 11
 
-    readLine(m_InputFile, buf, kBufferSize); // Read Line 10
-    n = sscanf(buf, "%s %d %d %s", text1, &nComponents, &totalValues, text2);
-    m_IntByteSize = parseByteSize(text2);
-    m_HeaderComplete = true;
-    err = 1;
-  }
-  else
-  {
-    readLine(m_InputFile, buf, kBufferSize);
-    readLine(m_InputFile, buf, kBufferSize);
-    m_HeaderComplete = true;
-    err = 1;
-  }
+  m_HeaderComplete = true;
+  err = 1;
+
   return m->zDim;
 }
 
