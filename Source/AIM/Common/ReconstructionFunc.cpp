@@ -499,7 +499,7 @@ void ReconstructionFunc::align_sections(const std::string &filename)
       shifts[a][b] = 0;
     }
   }
-  if (alignmeth == 0)
+  if (alignmeth == AIM::Reconstruction::OuterBoundary)
   {
     refxcentroid = 0;
     refycentroid = 0;
@@ -524,7 +524,7 @@ void ReconstructionFunc::align_sections(const std::string &filename)
     outFile << endl;
     mindisorientation = 100000000;
     slice = (zpoints - 1) - iter;
-    if (alignmeth == 2)
+    if (alignmeth == AIM::Reconstruction::MutualInformation)
     {
       graincount1 = graincounts[slice];
       graincount2 = graincounts[slice + 1];
@@ -544,7 +544,7 @@ void ReconstructionFunc::align_sections(const std::string &filename)
     }
     tempxshift = 0;
     tempyshift = 0;
-    if (alignmeth == 0)
+    if (alignmeth == AIM::Reconstruction::OuterBoundary)
     {
       curxcentroid = 0;
       curycentroid = 0;
@@ -592,7 +592,7 @@ void ReconstructionFunc::align_sections(const std::string &filename)
                   curiq = voxels[curposition].imagequality;
                   refgnum = voxels[refposition].grainname;
                   curgnum = voxels[curposition].grainname;
-                  if (alignmeth == 2)
+                  if (alignmeth == AIM::Reconstruction::MutualInformation)
                   {
                     if (curgnum >= 0 && refgnum >= 0)
                     {
@@ -601,7 +601,7 @@ void ReconstructionFunc::align_sections(const std::string &filename)
                       mutualinfo2[refgnum]++;
                     }
                   }
-                  if (alignmeth == 1)
+                  if (alignmeth == AIM::Reconstruction::Misorientation)
                   {
                     if (refiq > minseedimagequality && curiq > minseedimagequality)
                     {
@@ -625,17 +625,17 @@ void ReconstructionFunc::align_sections(const std::string &filename)
                 }
                 else
                 {
-                  if (alignmeth == 2)
+                  if (alignmeth == AIM::Reconstruction::MutualInformation)
                   {
                     mutualinfo12[0][0]++;
                     mutualinfo1[0]++;
                     mutualinfo2[0]++;
                   }
-                  if (alignmeth == 1) disorientation = disorientation;
+                  if (alignmeth == AIM::Reconstruction::Misorientation) disorientation = disorientation;
                 }
               }
             }
-            if (alignmeth == 2)
+            if (alignmeth == AIM::Reconstruction::MutualInformation)
             {
               double ha = 0;
               double hb = 0;
