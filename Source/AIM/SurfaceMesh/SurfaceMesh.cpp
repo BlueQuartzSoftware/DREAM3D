@@ -244,13 +244,20 @@ void SurfaceMesh::compute()
 
     // assign new, cumulative node id...
     nNodes = m->assign_nodeID(cNodeID, i);
-
+    // std::cout << "nNodes: " << nNodes << std::endl;
     // Output nodes and triangles...
     m->writeNodesFile(i, cNodeID, NodesFile);
     m->writeTrianglesFile(nTriangle, TrianglesFile, i, cTriID);
     cNodeID = nNodes;
     cTriID = cTriID + nTriangle;
   }
+
+
+  if (m_SmoothMesh) {
+    progressMessage(AIM_STRING("Smoothing Boundaries"), 90 );
+    m->smooth_boundaries(nNodes, cTriID, NodesFile, TrianglesFile);
+  }
+
 
 #ifdef AIM_USE_QT
   QString msg("Writing Surface Mesh File: ");
@@ -260,8 +267,6 @@ void SurfaceMesh::compute()
   msg.append(VisualizationFile);
 #endif
 
-  progressMessage(AIM_STRING("Smoothing Boundaries"), 90 );
-  m->smooth_boundaries(nNodes, cTriID, NodesFile, TrianglesFile);
 
   progressMessage(msg, 95 );
   m->writeVTKOutputFile(nNodes, cTriID, VisualizationFile, NodesFile, TrianglesFile, m_BinaryVTKFile, m_ConformalMesh);
