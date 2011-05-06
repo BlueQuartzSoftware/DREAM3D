@@ -631,7 +631,7 @@ void ReconstructionFunc::align_sections(const std::string &filename)
                     mutualinfo1[0]++;
                     mutualinfo2[0]++;
                   }
-                  if (alignmeth == AIM::Reconstruction::Misorientation) disorientation = disorientation;
+                  //if (alignmeth == AIM::Reconstruction::Misorientation) disorientation = disorientation;
                 }
               }
             }
