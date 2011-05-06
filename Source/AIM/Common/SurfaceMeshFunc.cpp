@@ -19,6 +19,7 @@
 // to expose some of the constants needed below
 #include "AIM/Common/AIMMath.h"
 
+
 // C Includes
 #include <stdio.h>
 #include <stdlib.h>
@@ -28,7 +29,7 @@
 #include <vector>
 #include <sstream>
 
-
+#include <MXA/Utilities/MXADir.h>
 #include <MXA/Utilities/StringUtils.h>
 
 using namespace std;
@@ -200,74 +201,74 @@ void SurfaceMeshFunc::initialize_nodes(int zID)
   int id, oid;
   int tsite, locale;
   double x, y, z;
-  int start = NSP+1;
-  if(zID == 0) start = 1, numgrains = 0;
+  int start = NSP + 1;
+  if (zID == 0) start = 1, numgrains = 0;
   // node id starts with 0....
-  if(zID > 0)
+  if (zID > 0)
   {
     for (i = 1; i <= NSP; i++)
     {
       id = 7 * (i - 1);
-    oid = 7 * ((i+NSP) - 1);
-    for(j=0;j<7;j++)
-    {
-      cVertex[id+j] = cVertex[oid+j];
-    }
+      oid = 7 * ((i + NSP) - 1);
+      for (j = 0; j < 7; j++)
+      {
+        cVertex[id + j] = cVertex[oid + j];
+      }
     }
   }
-  int shift = (zID*NSP);
+  int shift = (zID * NSP);
   for (i = start; i <= 2 * NSP; i++)
   {
     id = 7 * (i - 1);
     tsite = i;
-  locale = tsite+shift;
+    locale = tsite + shift;
     x = find_xcoord(locale);
     y = find_ycoord(locale);
     z = find_zcoord(locale);
-  int grainid = point[tsite].grainname;
-  if(grainid > numgrains) numgrains = grainid;
-  cVertex[id].xc = x + (0.5*xRes);
-  cVertex[id].yc = y;
-  cVertex[id].zc = z;
-  cVertex[id].nodeKind = 0;
-  cVertex[id].NodeID = -1;
-  cVertex[id].point = tsite;
-  cVertex[id+1].xc = x;
-  cVertex[id+1].yc = y + (0.5*yRes);
-  cVertex[id+1].zc = z;
-  cVertex[id+1].nodeKind = 0;
-  cVertex[id+1].NodeID = -1;
-  cVertex[id+1].point = tsite;
-  cVertex[id+2].xc = x;
-  cVertex[id+2].yc = y;
-  cVertex[id+2].zc = z + (0.5*zRes);
-  cVertex[id+2].nodeKind = 0;
-  cVertex[id+2].NodeID = -1;
-  cVertex[id+2].point = tsite;
-  cVertex[id+3].xc = x + (0.5*xRes);
-  cVertex[id+3].yc = y + (0.5*yRes);
-  cVertex[id+3].zc = z;
-  cVertex[id+3].nodeKind = 0;
-  cVertex[id+3].NodeID = -1;
-  cVertex[id+3].point = tsite;
-  cVertex[id+4].xc = x + (0.5*xRes);
-  cVertex[id+4].yc = y;
-  cVertex[id+4].zc = z + (0.5*zRes);
-  cVertex[id+4].nodeKind = 0;
-  cVertex[id+4].NodeID = -1;
-  cVertex[id+4].point = tsite;
-  cVertex[id+5].xc = x;
-  cVertex[id+5].yc = y + (0.5*yRes);
-  cVertex[id+5].zc = z + (0.5*zRes);
-  cVertex[id+5].nodeKind = 0;
-  cVertex[id+5].NodeID = -1;
-  cVertex[id+5].point = tsite;
-  cVertex[id+6].xc = x + (0.5*xRes);
-  cVertex[id+6].yc = y + (0.5*yRes);
-  cVertex[id+6].zc = z + (0.5*zRes);
-  cVertex[id+6].nodeKind = 0;
-  cVertex[id+6].NodeID = -1;
-  cVertex[id+6].point = tsite;
+    int grainid = point[tsite].grainname;
+    if (grainid > numgrains) numgrains = grainid;
+    cVertex[id].xc = x + (0.5 * xRes);
+    cVertex[id].yc = y;
+    cVertex[id].zc = z;
+    cVertex[id].nodeKind = 0;
+    cVertex[id].NodeID = -1;
+    cVertex[id].point = tsite;
+    cVertex[id + 1].xc = x;
+    cVertex[id + 1].yc = y + (0.5 * yRes);
+    cVertex[id + 1].zc = z;
+    cVertex[id + 1].nodeKind = 0;
+    cVertex[id + 1].NodeID = -1;
+    cVertex[id + 1].point = tsite;
+    cVertex[id + 2].xc = x;
+    cVertex[id + 2].yc = y;
+    cVertex[id + 2].zc = z + (0.5 * zRes);
+    cVertex[id + 2].nodeKind = 0;
+    cVertex[id + 2].NodeID = -1;
+    cVertex[id + 2].point = tsite;
+    cVertex[id + 3].xc = x + (0.5 * xRes);
+    cVertex[id + 3].yc = y + (0.5 * yRes);
+    cVertex[id + 3].zc = z;
+    cVertex[id + 3].nodeKind = 0;
+    cVertex[id + 3].NodeID = -1;
+    cVertex[id + 3].point = tsite;
+    cVertex[id + 4].xc = x + (0.5 * xRes);
+    cVertex[id + 4].yc = y;
+    cVertex[id + 4].zc = z + (0.5 * zRes);
+    cVertex[id + 4].nodeKind = 0;
+    cVertex[id + 4].NodeID = -1;
+    cVertex[id + 4].point = tsite;
+    cVertex[id + 5].xc = x;
+    cVertex[id + 5].yc = y + (0.5 * yRes);
+    cVertex[id + 5].zc = z + (0.5 * zRes);
+    cVertex[id + 5].nodeKind = 0;
+    cVertex[id + 5].NodeID = -1;
+    cVertex[id + 5].point = tsite;
+    cVertex[id + 6].xc = x + (0.5 * xRes);
+    cVertex[id + 6].yc = y + (0.5 * yRes);
+    cVertex[id + 6].zc = z + (0.5 * zRes);
+    cVertex[id + 6].nodeKind = 0;
+    cVertex[id + 6].NodeID = -1;
+    cVertex[id + 6].point = tsite;
   }
 }
 
@@ -2859,7 +2860,7 @@ int SurfaceMeshFunc::assign_nodeID(int nN, int zID)
   {
     nkind = cVertex[i].nodeKind;
     cnid = cVertex[i].NodeID;
-  plane = i%7;
+    plane = i % 7;
     if (nkind != 0 && cnid == -1)
     {
       cVertex[i].NodeID = nid;
@@ -2872,61 +2873,75 @@ int SurfaceMeshFunc::assign_nodeID(int nN, int zID)
 
 void SurfaceMeshFunc::writeNodesFile(int zID, int cNodeID, const std::string &nodesFile)
 {
-  int tID;
-  int nk;
-  double x, y, z;
+//  int tID;
+//  int nk;
+
   int count;
   count = 0;
 
+  unsigned char data[32];
+  int* tId = (int*)(&data[0]);
+  int* nk = (int*)(&data[4]);
+  double* vec3d = (double*)(&data[8]);
+  size_t totalWritten = 0;
   FILE* f = NULL;
 
   // Create a new file if this is our first slice
   if (zID == 0)
   {
-    f = fopen(nodesFile.c_str(), "w");
+    f = fopen(nodesFile.c_str(), "wb");
   }
   // Append to existing file if we are on z>0 slice
   if (zID > 0)
   {
-    f = fopen(nodesFile.c_str(), "a");
+    f = fopen(nodesFile.c_str(), "ab");
   }
-
-  for (int k = 0; k < (7 * 2 * NSP); k++)
+  int total = (7 * 2 * NSP);
+  for (int k = 0; k < total; k++)
   {
-    tID = cVertex[k].NodeID;
-    if (tID > cNodeID - 1)
+    *tId = cVertex[k].NodeID;
+    if (*tId > cNodeID - 1)
     {
-      nk = cVertex[k].nodeKind;
-      x = cVertex[k].xc;
-      y = cVertex[k].yc;
-      z = cVertex[k].zc;
-      fprintf(f, "%d %d %f %f %f\n", tID, nk, x, y, z);
+      *nk = cVertex[k].nodeKind;
+      vec3d[0] = cVertex[k].xc;
+      vec3d[1]  = cVertex[k].yc;
+      vec3d[2]  = cVertex[k].zc;
+//      fprintf(f, "%d %d %f %f %f\n", tID, nk, x, y, z);
+      totalWritten = fwrite(data, sizeof(unsigned char), 32, f);
     }
   }
   fclose(f);
 }
 
-void SurfaceMeshFunc::writeTrianglesFile (int nt, const std::string &trianglesFile, int zID, int ctid)
+// -----------------------------------------------------------------------------
+//  Write a BINARY file which is only TEMP during the surface meshing
+// -----------------------------------------------------------------------------
+void SurfaceMeshFunc::writeTrianglesFile (int nt,
+                                          const std::string &trianglesFile,
+                                          int zID,
+                                          int ctid)
 {
   //int i;
   int tag;
   int end;
-  int newID;
-  int n1, n2, n3, s1, s2;
+ // int newID;
+  int n1, n2, n3;
+  int data[6];
+
   tag = zID;
   end = nt;
-  newID = ctid;
+  data[0] = ctid;
   FILE* f = NULL;
 
   // Create a new file if this is our first slice
   if (zID == 0)
   {
-    f = fopen(trianglesFile.c_str(), "w");
+    f = fopen(trianglesFile.c_str(), "wb");
   }
   // Append to existing file if we are on z>0 slice
   if (zID > 0)
   {
-    f = fopen(trianglesFile.c_str(), "a");
+    f = fopen(trianglesFile.c_str(), "ab");
   }
   //  outFile << nt <<endl;
   for (int i = 0; i < end; i++)
@@ -2934,29 +2949,30 @@ void SurfaceMeshFunc::writeTrianglesFile (int nt, const std::string &trianglesFi
     n1 = cTriangle[i].node_id[0];
     n2 = cTriangle[i].node_id[1];
     n3 = cTriangle[i].node_id[2];
-    n1 = cVertex[n1].NodeID;
-    n2 = cVertex[n2].NodeID;
-    n3 = cVertex[n3].NodeID;
-    s1 = cTriangle[i].ngrainname[0];
-    s2 = cTriangle[i].ngrainname[1];
-    fprintf(f, "%d %d %d %d %d %d\n", newID, n1, n2, n3, s1, s2);
-    newID++;
+    data[1] = cVertex[n1].NodeID;
+    data[2] = cVertex[n2].NodeID;
+    data[3] = cVertex[n3].NodeID;
+    data[4] = cTriangle[i].ngrainname[0];
+    data[5] = cTriangle[i].ngrainname[1];
+    size_t totalWritten = fwrite(data, sizeof(int), 6, f);
+//    fprintf(f, "%d %d %d %d %d %d\n", newID, n1, n2, n3, s1, s2);
+    data[0]= data[0] + 1;
   }
   fclose(f);
-  if (end > 0) delete[] cTriangle;
+  if (end > 0) { delete[] cTriangle; }
 }
 
 void SurfaceMeshFunc::smooth_boundaries (int nNodes, int nTriangles, string NodesFile, string TrianglesFile)
 {
   FILE* nodes = NULL;
   FILE* tris = NULL;
-  nodes = fopen(NodesFile.c_str(), "r");
+  nodes = fopen(NodesFile.c_str(), "rb");
   if (NULL == nodes)
   {
     std::cout << "Error Opening Nodes file '" << NodesFile << "'" << std::endl;
     return;
   }
-  tris = fopen(TrianglesFile.c_str(), "r");
+  tris = fopen(TrianglesFile.c_str(), "rb");
   if (NULL == tris)
   {
     std::cout << "Error Opening Triangles file'" << TrianglesFile << "'" << std::endl;
@@ -2965,8 +2981,9 @@ void SurfaceMeshFunc::smooth_boundaries (int nNodes, int nTriangles, string Node
   }
   cVertex = new Node[nNodes];
   cTriangle = new Patch[nTriangles];
-  int nodenum, nodetype, trianglenum;
-  float x, y, z;
+//  int nodenum, nodetype;
+ // int trianglenum;
+ // float x, y, z;
 //  double x1, y1, z1;
 //  double x2, y2, z2;
 //  double x3, y3, z3;
@@ -2976,8 +2993,8 @@ void SurfaceMeshFunc::smooth_boundaries (int nNodes, int nTriangles, string Node
   int col, row, plane, tsite;
 //  int tsite1, tsite2, tsite3;
 //  int ntype1, ntype2, ntype3;
-  int node1, node2, node3;
-  int grain1, grain2;
+//  int node1, node2, node3;
+//  int grain1, grain2;
 //  double Nx, Ny, Nz;
 //  double tNx, tNy;
 //  double BCx, BCy;
@@ -2990,6 +3007,13 @@ void SurfaceMeshFunc::smooth_boundaries (int nNodes, int nTriangles, string Node
   vector<vector<vector<double> > > boundarynormals;
   boundarytrianglelist.resize(numgrains+1);
   boundarynormals.resize(numgrains+1);
+
+  unsigned char nodeData[32];
+  int* nodenum = (int*)(&nodeData[0]);
+  int* nodetype = (int*)(&nodeData[4]);
+
+  double* vec3d = (double*)(&nodeData[8]);
+
   for(int i=1;i<numgrains+1;i++)
   {
     boundarytrianglelist[i].resize(numgrains+1);
@@ -2997,29 +3021,34 @@ void SurfaceMeshFunc::smooth_boundaries (int nNodes, int nTriangles, string Node
   }
   for(int i=0;i<nNodes;i++)
   {
-    fscanf(nodes, "%d %d %f %f %f\n", &nodenum, &nodetype, &x, &y, &z);
-    cVertex[i].xc = x;
-    cVertex[i].yc = y;
-    cVertex[i].zc = z;
-    cVertex[i].nodeKind = nodetype;
-    col = x/xRes;
-    row = y/yRes;
-    plane = z/zRes;
+    //fscanf(nodes, "%d %d %f %f %f\n", &nodenum, &nodetype, &x, &y, &z);
+    fread(nodeData, 32, 1, nodes); // Read one set of positions from the nodes file
+
+    cVertex[i].xc = vec3d[0];
+    cVertex[i].yc = vec3d[1];
+    cVertex[i].zc = vec3d[2];
+    cVertex[i].nodeKind = *nodetype;
+    col = vec3d[0]/xRes;
+    row = vec3d[1]/yRes;
+    plane = vec3d[2]/zRes;
     tsite = (plane*xDim*yDim)+(row*xDim)+col+1;
     cVertex[i].point = tsite;
   }
   fclose(nodes);
+
+  int tData[6];
   nodes = NULL;
   for(int i=0;i<nTriangles;i++)
   {
-    fscanf(tris, "%d %d %d %d %d %d", &trianglenum, &node1, &node2, &node3, &grain1, &grain2);
-    cTriangle[i].node_id[0] = node1;
-    cTriangle[i].node_id[1] = node2;
-    cTriangle[i].node_id[2] = node3;
-    cTriangle[i].ngrainname[0] = grain1;
-    cTriangle[i].ngrainname[1] = grain2;
-    if(grain1 < grain2 && (grain1 >0 && grain2 > 0)) boundarytrianglelist[grain1][grain2].push_back(i);
-    if(grain1 > grain2 && (grain1 >0 && grain2 > 0)) boundarytrianglelist[grain2][grain1].push_back(i);
+  //  fscanf(tris, "%d %d %d %d %d %d", &trianglenum, &node1, &node2, &node3, &grain1, &grain2);
+    fread(tData, sizeof(int), 6, tris);
+    cTriangle[i].node_id[0] = tData[1];
+    cTriangle[i].node_id[1] = tData[2];
+    cTriangle[i].node_id[2] = tData[3];
+    cTriangle[i].ngrainname[0] = tData[4];
+    cTriangle[i].ngrainname[1] = tData[5];
+    if(tData[4] < tData[5] && (tData[4] >0 && tData[5] > 0)) boundarytrianglelist[tData[4]][tData[5]].push_back(i);
+    if(tData[4] > tData[5] && (tData[4] >0 && tData[5] > 0)) boundarytrianglelist[tData[5]][tData[4]].push_back(i);
   }
   fclose(tris);
   tris = NULL;
@@ -3379,82 +3408,108 @@ void SurfaceMeshFunc::smooth_boundaries (int nNodes, int nTriangles, string Node
   }*/
 }
 
-void SurfaceMeshFunc::writeVTKOutputFile (int nNodes, int nTriangles, const std::string &VisualizationFile, const std::string &NodesFile, const std::string &TrianglesFile, bool binaryFile, bool conformalMesh)
+void SurfaceMeshFunc::writeVTKOutputFile (int nNodes, int nTriangles,
+                                          const std::string &VisualizationFile,
+                                          const std::string &NodesFile,
+                                          const std::string &TrianglesFile,
+                                          bool binaryFile,
+                                          bool conformalMesh)
 {
+  // Open the Nodes file for reading
+  FILE* nodesFile = fopen(NodesFile.c_str(), "rb");
+  // Open the triangles file for reading
+  FILE* triFile = fopen(TrianglesFile.c_str(), "rb");
+
+  // Open the output VTK File for writing
   FILE* vtkFile = NULL;
-  vtkFile = fopen(VisualizationFile.c_str(), "w");
+
+
+  vtkFile = fopen(VisualizationFile.c_str(), "wb");
   if (NULL == vtkFile)
   {
     std::cout << "Error Creating VTK Visualization File '" << VisualizationFile << "'" << std::endl;
     return;
   }
   fprintf(vtkFile, "# vtk DataFile Version 2.0\n");
-  fprintf(vtkFile,  "data set from FFT2dx_GB\n");
-  fprintf(vtkFile,  "ASCII\n");
-  fprintf(vtkFile,  "DATASET UNSTRUCTURED_GRID\n");
-  fprintf(vtkFile,  "POINTS %d float\n", nNodes);
-  float x, y, z;
-  for(int i=0;i<nNodes;i++)
+  fprintf(vtkFile, "data set from FFT2dx_GB\n");
+  fprintf(vtkFile, "ASCII\n");
+  fprintf(vtkFile, "DATASET UNSTRUCTURED_GRID\n");
+  fprintf(vtkFile, "POINTS %d float\n", nNodes);
+  unsigned char nodeData[32];
+  double* vec3d = (double*)(&nodeData[8]);
+
+  for (int i = 0; i < nNodes; i++)
   {
-    x = cVertex[i].xc;
-    y = cVertex[i].yc;
-    z = cVertex[i].zc;
-    fprintf(vtkFile, "%f %f %f\n", x, y, z);
+    fread(nodeData, 32, 1, nodesFile); // Read one set of positions from the nodes file
+    fprintf(vtkFile, "%f %f %f\n", vec3d[0], vec3d[1], vec3d[2]); // Write the positions to the output file
   }
+  fclose(nodesFile);
 
   // Write the triangle indices into the vtk File
 //  int trianglenum;
-  int node1, node2, node3;
-  int grain1, grain2;
+  int tData[6];
+//  int node1, node2, node3;
+//  int grain1, grain2;
 
-
-  fprintf(vtkFile, "CELLS %d %d\n", nTriangles, (nTriangles*4));
-//  Store the Grain Ids so we don't have to re-read the triangles file again
-  for(int i=0;i<nTriangles;i++)
+  fprintf(vtkFile, "CELLS %d %d\n", nTriangles * 2, (nTriangles * 4 * 2));
+  for (int i = 0; i < nTriangles; i++)
   {
-    node1 = cTriangle[i].node_id[0];
-    node2 = cTriangle[i].node_id[1];
-    node3 = cTriangle[i].node_id[2];
-    grain1 = cTriangle[i].ngrainname[0];
-    grain2 = cTriangle[i].ngrainname[1];
-      if (grain1 < grain2)
-      {
-        fprintf(vtkFile, "3 %d %d %d\n", node1, node2, node3);
-      }
-      else
-      {
-        fprintf(vtkFile, "3 %d %d %d\n", node3, node2, node1);
-      }
+    fread(tData, sizeof(int), 6, triFile);
+//    node1 = cTriangle[i].node_id[0];
+//    node2 = cTriangle[i].node_id[1];
+//    node3 = cTriangle[i].node_id[2];
+//    grain1 = cTriangle[i].ngrainname[0];
+//    grain2 = cTriangle[i].ngrainname[1];
+  //  if (tData[4] < tData[5])
+    {
+      fprintf(vtkFile, "3 %d %d %d ", tData[1], tData[2], tData[3]);
+    }
+ //   else
+    {
+      fprintf(vtkFile, "3 %d %d %d\n", tData[3], tData[2], tData[1]);
+    }
   }
+  fclose(triFile);
 
   // Write the CELL_TYPES into the file
   fprintf(vtkFile, "\n");
-  fprintf(vtkFile, "CELL_TYPES %d\n", nTriangles);
-  for(int i=0;i<nTriangles;i++)
+  fprintf(vtkFile, "CELL_TYPES %d\n", nTriangles * 2);
+  for (int i = 0; i < nTriangles; i++)
   {
-    fprintf(vtkFile, "5\n");
+    fprintf(vtkFile, "5 5\n");
   }
 
-
+  // Open the triangles file for reading
+  triFile = fopen(TrianglesFile.c_str(), "rb");
   // Write the GrainId Data to the file
   fprintf(vtkFile, "\n");
-  fprintf(vtkFile, "CELL_DATA %d\n", nTriangles);
+  fprintf(vtkFile, "CELL_DATA %d\n", nTriangles * 2);
   fprintf(vtkFile, "SCALARS GrainID int\n");
   fprintf(vtkFile, "LOOKUP_TABLE default\n");
   for (int i = 0; i < nTriangles; i++)
   {
-  grain1 = cTriangle[i].ngrainname[0];
-  grain2 = cTriangle[i].ngrainname[1];
-    if (grain1 < grain2)
+    fread(tData, sizeof(int), 6, triFile);
+//    grain1 = cTriangle[i].ngrainname[0];
+//    grain2 = cTriangle[i].ngrainname[1];
+ //   if (tData[4] < tData[5])
     {
-      fprintf(vtkFile, "%d\n", grain1);
+      fprintf(vtkFile, "%d\n", tData[4]);
     }
-    else
+//    else
     {
-      fprintf(vtkFile, "%d\n", grain2);
+      fprintf(vtkFile, "%d\n", tData[5]);
     }
   }
+
+  //FIXME: Addin some POINT_DATA of the nodeKind from the nodes file
+
   // Free the memory
   // Close the input and output files
   fclose(vtkFile);
+  fclose(nodesFile);
+  fclose(triFile);
+
+  // Delete the intermediate files
+  MXADir::remove(NodesFile);
+  MXADir::remove(TrianglesFile);
 }
