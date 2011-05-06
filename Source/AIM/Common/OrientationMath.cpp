@@ -243,7 +243,7 @@ void OrientationMath::_calcNearestQuat(double quatsym[24][5], int numsym, double
   q2[4] = qmax[4];
   if(q2[4] < 0)
   {
-    q2[0] = q2[0];
+ //   q2[0] = q2[0];
     q2[1] = -q2[1];
     q2[2] = -q2[2];
     q2[3] = -q2[3];
@@ -283,7 +283,7 @@ void OrientationMath::_calcFZQuat(double quatsym[24][5], int numsym, double *qr)
   qr[4] = qmax[4];
   if(qr[4] < 0)
   {
-    qr[0] = qr[0];
+   // qr[0] = qr[0];
     qr[1] = -qr[1];
     qr[2] = -qr[2];
     qr[3] = -qr[3];
