@@ -86,17 +86,23 @@ Q_OBJECT
     MXA_INSTANCE_STRING_PROPERTY(InputFile)
     MXA_INSTANCE_STRING_PROPERTY(OutputDirectory)
     MXA_INSTANCE_STRING_PROPERTY(OutputFilePrefix)
+    MXA_INSTANCE_PROPERTY(bool, DeleteTempFiles)
     MXA_INSTANCE_PROPERTY(int, XDim)
     MXA_INSTANCE_PROPERTY(int, YDim)
     MXA_INSTANCE_PROPERTY(int, ZDim)
     MXA_INSTANCE_PROPERTY(double, XRes)
     MXA_INSTANCE_PROPERTY(double, YRes)
     MXA_INSTANCE_PROPERTY(double, ZRes)
+
+
     MXA_INSTANCE_PROPERTY(bool, SmoothMesh)
     MXA_INSTANCE_PROPERTY(int, SmoothIterations)
     MXA_INSTANCE_PROPERTY(int, SmoothFileOutputIncrement)
     MXA_INSTANCE_PROPERTY(bool, SmoothLockQuadPoints)
     MXA_INSTANCE_PROPERTY(int, ErrorCondition)
+
+
+
     MXA_INSTANCE_PROPERTY(bool, BinaryVTKFile)
     MXA_INSTANCE_PROPERTY(bool, ConformalMesh)
 

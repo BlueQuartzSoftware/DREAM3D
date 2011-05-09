@@ -3509,7 +3509,5 @@ void SurfaceMeshFunc::writeVTKOutputFile (int nNodes, int nTriangles,
   fclose(nodesFile);
   fclose(triFile);
 
-  // Delete the intermediate files
-  MXADir::remove(NodesFile);
-  MXADir::remove(TrianglesFile);
+
 }
