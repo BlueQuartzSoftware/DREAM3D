@@ -330,7 +330,7 @@ int VTKFileUtils::readHeader(SurfaceMeshFunc* m, const std::string &file)
    0
    */
   int err = 0;
-  std::cout << logTime() << " Reading vtk file " << file << std::endl;
+  //std::cout << logTime() << " Reading vtk file " << file << std::endl;
   //std::ifstream m_InputFile(file.c_str());
 
   m_InputFile.open(file.c_str());
@@ -368,7 +368,7 @@ int VTKFileUtils::readHeader(SurfaceMeshFunc* m, const std::string &file)
 //  int zpoints = 0;
   m_InputFile >> dimension_label >>  m->xDim >>  m->yDim >>  m->zDim; // Read Line 5
 //  m->zDim = 5;
-  std::cout << logTime() << " Volume Size: " << m->xDim << " " << m->yDim << " " << m->zDim << std::endl;
+//  std::cout << logTime() << " Volume Size: " << m->xDim << " " << m->yDim << " " << m->zDim << std::endl;
   m->NS = m->xDim * m->yDim * m->zDim;
   m->NSP = m->xDim * m->yDim;
 
