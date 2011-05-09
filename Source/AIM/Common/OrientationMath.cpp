@@ -343,31 +343,20 @@ double OrientationMath::_calcDetermineAxisAngle( double step[3], double phi[3], 
   double hmag = pow((synh1 * synh1 + synh2 * synh2 + synh3 * synh3), 0.5);
   double angle = pow((8 * hmag * hmag * hmag), (1.0 / 3.0));
   w = angle * 180.0 / M_PI;
-  if (w > 65)
-  {
-    int stop = 0;
-  }
   return w;
 }
 
 
-int OrientationMath::_calcODFBin(double dim[3], double bins[3], double q1[5], double qref[5])
+int OrientationMath::_calcODFBin(double dim[3], double bins[3], double r1, double r2, double r3)
 {
-  double w;
-  double n1, n2, n3;
-
-  CubicOps c;
-  w = c.getMisoQuat(q1, qref, n1, n2, n3);
-  OrientationMath::axisAngletoHomochoric(w, n1, n2, n3);
-
-
+  OrientationMath::RodtoHomochoric(r1,r2,r3);
   size_t g1euler1bin;
   size_t g1euler2bin;
   size_t g1euler3bin;
   size_t g1odfbin;
-  g1euler1bin = size_t(n1*bins[0]/dim[0]);
-  g1euler2bin = size_t(n2*bins[1]/dim[1]);
-  g1euler3bin = size_t(n3*bins[2]/dim[2]);
+  g1euler1bin = size_t(r1*bins[0]/dim[0]);
+  g1euler2bin = size_t(r2*bins[1]/dim[1]);
+  g1euler3bin = size_t(r3*bins[2]/dim[2]);
   if(g1euler1bin >= bins[0]) g1euler1bin = bins[0]-1;
   if(g1euler2bin >= bins[1]) g1euler2bin = bins[1]-1;
   if(g1euler3bin >= bins[2]) g1euler3bin = bins[2]-1;
@@ -375,13 +364,10 @@ int OrientationMath::_calcODFBin(double dim[3], double bins[3], double q1[5], do
   return g1odfbin;
 }
 
-void OrientationMath::axisAngletoHomochoric(double &w, double &miso1, double &miso2, double &miso3)
+void OrientationMath::axisAngletoHomochoric(double w, double n1, double n2, double n3, double &r1, double &r2, double &r3)
 {
   double degtorad = m_pi / 180.0;
   double denom;
-  double n1 = miso1;
-  double n2 = miso2;
-  double n3 = miso3;
 
   w = w * degtorad;
   denom = (n1 * n1) + (n2 * n2) + (n3 * n3);
@@ -389,15 +375,89 @@ void OrientationMath::axisAngletoHomochoric(double &w, double &miso1, double &mi
   n1 = n1 / denom;
   n2 = n2 / denom;
   n3 = n3 / denom;
-  n1 = n1 * pow(((3.0 / 4.0) * (w - sin(w))), (1.0 / 3.0));
-  n2 = n2 * pow(((3.0 / 4.0) * (w - sin(w))), (1.0 / 3.0));
-  n3 = n3 * pow(((3.0 / 4.0) * (w - sin(w))), (1.0 / 3.0));
-  miso1 = n1;
-  miso2 = n2;
-  miso3 = n3;
+  r1 = n1 * pow(((3.0 / 4.0) * (w - sin(w))), (1.0 / 3.0));
+  r2 = n2 * pow(((3.0 / 4.0) * (w - sin(w))), (1.0 / 3.0));
+  r3 = n3 * pow(((3.0 / 4.0) * (w - sin(w))), (1.0 / 3.0));
 }
 
 
+void OrientationMath::axisAngletoRod(double w, double n1, double n2, double n3, double &r1, double &r2, double &r3)
+{
+  double degtorad = m_pi / 180.0;
+  double denom;
+
+  w = w * degtorad;
+  denom = (n1 * n1) + (n2 * n2) + (n3 * n3);
+  denom = pow(denom, 0.5);
+  n1 = n1 / denom;
+  n2 = n2 / denom;
+  n3 = n3 / denom;
+  r1 = n1 * tan(w/2.0);
+  r2 = n2 * tan(w/2.0);
+  r3 = n3 * tan(w/2.0);
+}
+
+
+void OrientationMath::RodtoHomochoric(double &r1, double &r2, double &r3)
+{
+  double rmag, w;
+
+  rmag = (r1 * r1) + (r2 * r2) + (r3 * r3);
+  rmag = pow(rmag, 0.5);
+  r1 = r1 / rmag;
+  r2 = r2 / rmag;
+  r3 = r3 / rmag;
+  w = 2.0*atan(rmag);
+  r1 = r1 * pow(((3.0 / 4.0) * (w - sin(w))), (1.0 / 3.0));
+  r2 = r2 * pow(((3.0 / 4.0) * (w - sin(w))), (1.0 / 3.0));
+  r3 = r3 * pow(((3.0 / 4.0) * (w - sin(w))), (1.0 / 3.0));
+}
+
+
+void OrientationMath::RodtoQuat(double *q, double r1, double r2, double r3)
+{
+  double rmag, w;
+
+  rmag = (r1 * r1) + (r2 * r2) + (r3 * r3);
+  rmag = pow(rmag, 0.5);
+  r1 = r1 / rmag;
+  r2 = r2 / rmag;
+  r3 = r3 / rmag;
+  w = 2.0*atan(rmag);
+  q[1] = r1 * sin(w/2.0);
+  q[2] = r2 * sin(w/2.0);
+  q[3] = r3 * sin(w/2.0);
+  q[4] = cos(w/2.0);
+}
+
+void OrientationMath::QuattoRod(double *q, double &r1, double &r2, double &r3)
+{
+  double qmag, w;
+  double n1, n2, n3;
+
+  qmag = (q[1] * q[1]) + (q[2] * q[2]) + (q[3] * q[3]);
+  qmag = pow(qmag, 0.5);
+  n1 = q[1] / qmag;
+  n2 = q[2] / qmag;
+  n3 = q[3] / qmag;
+  w = 2.0*acos(q[4]);
+  r1 = n1 * tan(w/2.0);
+  r2 = n2 * tan(w/2.0);
+  r3 = n3 * tan(w/2.0);
+}
+
+void OrientationMath::QuattoEuler(double *q, double &ea1, double &ea2, double &ea3)
+{
+	double diff, sum, tmp;
+    diff=atan2(q[2],q[1]);
+    sum=atan2(q[3],q[4]);
+    ea1=(diff+sum);
+    ea3=(sum-diff);
+    tmp=(q[3]*q[3])+(q[4]*q[4]);
+    tmp = pow(tmp,0.5);
+    if(tmp > 1.0) tmp=1.0;
+    ea2=2*acos(tmp);
+}
 void OrientationMath::eulertoQuat(double* q, double e1, double e2, double e3)
 {
   double s, c, s1, c1, s2, c2;
@@ -415,6 +475,20 @@ void OrientationMath::eulertoQuat(double* q, double e1, double e2, double e3)
 
 
 
+
+void OrientationMath::eulertoRod(double &r1, double &r2, double &r3, double ea1, double ea2, double ea3)
+{
+	double sum, diff, csum, cdiff, sdiff, t2;
+	sum = (ea1+ea3)/2.0;
+	diff = (ea1-ea3)/2.0;
+	csum = cos(sum);
+	cdiff = cos(diff);
+	sdiff = sin(diff);
+	t2 = tan(ea2/2.0);
+	r1 = t2*cdiff/csum;
+	r2 = t2*sdiff/csum;
+	r3 = tan(sum);
+}
 
 void OrientationMath::multiplyQuaternions(double* inQuat, double* multQuat, double* outQuat)
 {
