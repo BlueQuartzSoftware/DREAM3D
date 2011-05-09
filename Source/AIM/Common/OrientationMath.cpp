@@ -343,10 +343,6 @@ double OrientationMath::_calcDetermineAxisAngle( double step[3], double phi[3], 
   double hmag = pow((synh1 * synh1 + synh2 * synh2 + synh3 * synh3), 0.5);
   double angle = pow((8 * hmag * hmag * hmag), (1.0 / 3.0));
   w = angle * 180.0 / M_PI;
-  if (w > 65)
-  {
-    int stop = 0;
-  }
   return w;
 }
 
@@ -450,6 +446,18 @@ void OrientationMath::QuattoRod(double *q, double &r1, double &r2, double &r3)
   r3 = n3 * tan(w/2.0);
 }
 
+void OrientationMath::QuattoEuler(double *q, double &ea1, double &ea2, double &ea3)
+{
+	double diff, sum, tmp;
+    diff=atan2(q[2],q[1]);
+    sum=atan2(q[3],q[4]);
+    ea1=(diff+sum);
+    ea3=(sum-diff);
+    tmp=(q[3]*q[3])+(q[4]*q[4]);
+    tmp = pow(tmp,0.5);
+    if(tmp > 1.0) tmp=1.0;
+    ea2=2*acos(tmp);
+}
 void OrientationMath::eulertoQuat(double* q, double e1, double e2, double e3)
 {
   double s, c, s1, c1, s2, c2;

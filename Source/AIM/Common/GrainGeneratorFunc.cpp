@@ -140,7 +140,7 @@ void GrainGeneratorFunc::initializeArrays()
     simmdf[i] = DoubleArray(new double [nElements]);
     GG_INIT_DOUBLE_ARRAY(simmdf[i], 0.0, nElements);
 
-    nElements = 18*18*18;
+    nElements = 36*36*36;
     initValue = (1.0/double(nElements));
     axisodf[i] = DoubleArray(new double [nElements]);
     GG_INIT_DOUBLE_ARRAY(axisodf[i], initValue, nElements);
@@ -402,7 +402,7 @@ int  GrainGeneratorFunc::readAxisOrientationData(H5ReconStatsReader::Pointer h5i
 		//FIXME: This should probably return an ERROR because nothing was read
 		return 10;
 	  }
-	  size = 18 * 18 * 18;
+	  size = 36 * 36 * 36;
 	  if (size != density.size() )
 	  {
 		std::cout << "GrainGeneratorFunc::readAxisOrientationData Error: Mismatch in number of elements in the 'AxisOrientation' "
@@ -484,7 +484,9 @@ int GrainGeneratorFunc::readMisorientationData(H5ReconStatsReader::Pointer h5io)
 	   //FIXME: This should probably return an ERROR because nothing was read
 		return 10;
 	  }
-	  size_t numbins = 18*18*18;
+	  size_t numbins = 0;
+	  if(crystruct[i] == AIM::Reconstruction::Hexagonal) numbins = 36*36*12;
+	  if(crystruct[i] == AIM::Reconstruction::Cubic) numbins = 18*18*18;
 
 	  if (numbins != density.size() )
 	  {
@@ -600,15 +602,15 @@ void  GrainGeneratorFunc::generate_grain(int gnum, int phase)
   double random = rg.Random();
   int bin=0;
   double totaldensity = 0;
-  for(int i=0;i<(18*18*18);i++)
+  for(int i=0;i<(36*36*36);i++)
   {
 	totaldensity = totaldensity + axisodf[phase][i];
     if(random > totaldensity) bin = i;
     if(random < totaldensity) {break;}
   }
-  double phi1 = bin%18;
-  double PHI = (bin/18)%18;
-  double phi2 = bin/(18*18);
+  double phi1 = bin%36;
+  double PHI = (bin/36)%36;
+  double phi2 = bin/(36*36);
   random = rg.Random();
   phi1 = ((phi1*5)+(random*5))*(m_pi/180.0);
   random = rg.Random();
@@ -2432,9 +2434,8 @@ void  GrainGeneratorFunc::measure_misorientations ()
 {
  std::vector<double > misolist;
   double w;
-  double n1;
-  double n2;
-  double n3;
+  double n1, n2, n3;
+  double r1, r2, r3;
   double q1[5];
   double q2[5];
   double denom;
@@ -2470,17 +2471,12 @@ void  GrainGeneratorFunc::measure_misorientations ()
       q2[4] = m_Grains[nname]->avg_quat[4];
 	  phase2 = crystruct[m_Grains[nname]->phase];
       if(phase1 == phase2) w = m_OrientatioOps[phase1]->getMisoQuat(q1,q2,n1,n2,n3);
-	  w = w*degtorad;
-	  denom = (n1*n1)+(n2*n2)+(n3*n3);
-	  denom = pow(denom,0.5);
-	  n1 = n1/denom;
-	  n2 = n2/denom;
-	  n3 = n3/denom;
+	  OrientationMath::axisAngletoHomochoric(w, n1, n2, n3, r1, r2, r3);
       if(phase1 == phase2)
 	  {
-		  m_Grains[i]->misorientationlist->at(3 * j) = n1 * pow(((3.0 / 4.0) * (w - sin(w))), (1.0 / 3.0));
-	      m_Grains[i]->misorientationlist->at(3 * j + 1) = n2 * pow(((3.0 / 4.0) * (w - sin(w))), (1.0 / 3.0));
-	      m_Grains[i]->misorientationlist->at(3 * j + 2) = n3 * pow(((3.0 / 4.0) * (w - sin(w))), (1.0 / 3.0));
+		  m_Grains[i]->misorientationlist->at(3 * j) = r1;
+	      m_Grains[i]->misorientationlist->at(3 * j + 1) = r2;
+	      m_Grains[i]->misorientationlist->at(3 * j + 2) = r3;
 	  }
 	  if(phase1 != phase2)
 	  {
