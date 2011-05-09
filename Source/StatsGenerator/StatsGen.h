@@ -903,7 +903,7 @@ class StatsGen
           if (random < totaldensity && random >= (totaldensity - density)) choose = static_cast<int> (j);
         }
         angle = ops.determineAxisAngle(choose);
-        yval[int(angle / 5.0)]++;
+        yval[int(angle / 10.0)]++;
       }
       for (int i = 0; i < 13; i++)
       {

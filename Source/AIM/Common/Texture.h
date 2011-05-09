@@ -85,49 +85,18 @@ class AIMCOMMON_EXPORT Texture
     double degtorad = M_PI/180.0;
     double addweight = 0;
     odf.resize(odfsize);
-    size_t ea1bin, ea2bin, ea3bin;
     size_t bin, addbin;
     size_t bin1, bin2, bin3;
     size_t addbin1, addbin2, addbin3;
     double dist, fraction;
-    double rmag, angle;
     double r1, r2, r3;
-    double h1, h2, h3;
-    double dim1 = pow((0.75 * ((M_PI / 4.0) - sin((M_PI / 4.0)))), (1.0 / 3.0));
-    double dim2 = pow((0.75 * ((M_PI / 4.0) - sin((M_PI / 4.0)))), (1.0 / 3.0));
-    double dim3 = pow((0.75 * ((M_PI / 4.0) - sin((M_PI / 4.0)))), (1.0 / 3.0));
-    double tan_term = 0.0;
-    double sin_term = 0.0;
-    double cos_term1 = 0.0;
-    double cos_term2 = 0.0;
-    double hTmp = 0.0;
 
     for (typename T::size_type i = 0; i < e1s.size(); i++)
     {
-      tan_term = tan(e2s[i]*degtorad/2);
-      sin_term = sin((e1s[i]*degtorad-e3s[i]*degtorad)/2);
-      cos_term1 = cos((e1s[i]*degtorad+e3s[i]*degtorad)/2);
-      cos_term2 = cos((e1s[i]*degtorad-e3s[i]*degtorad)/2);
-
-      r1 = tan_term * cos_term2 / cos_term1;
-      r2 = tan_term * sin_term / cos_term1;
-      r3 = tan((e1s[i]*degtorad+e3s[i]*degtorad)/2);
-      ops.getFZRod( r1, r2, r3);
-      rmag = pow((r1 * r1 + r2 * r2 + r3 * r3), 0.5);
-      angle = 2.0 * atan(rmag);
-      hTmp = pow(((3.0 / 4.0) * (angle - sin(angle))), (1.0 / 3.0));
-      h1 = hTmp * (r1 / rmag);
-      h2 = hTmp * (r2 / rmag);
-      h3 = hTmp * (r3 / rmag);
-      if (angle == 0) h1 = 0.0, h2 = 0.0, h3 = 0.0;
-      ea1bin = int(h1 * 18.0 / dim1);
-      ea2bin = int(h2 * 18.0 / dim2);
-      ea3bin = int(h3 * 18.0 / dim3);
-      if (ea1bin >= 18) ea1bin = 17;
-      if (ea2bin >= 18) ea2bin = 17;
-      if (ea3bin >= 18) ea3bin = 17;
-      bin = (ea3bin * 18 * 18) + (ea2bin * 18) + (ea1bin);
-      TextureBins[i] = static_cast<int>(bin);
+		OrientationMath::eulertoRod(r1, r2, r3, e1s[i], e2s[i], e3s[i]);
+	    ops.getFZRod( r1, r2, r3);
+		bin = ops.getOdfBin(r1, r2, r3);
+	    TextureBins[i] = static_cast<int>(bin);
     }
 
     for (size_t i = 0; i < odfsize; i++)
@@ -218,49 +187,19 @@ class AIMCOMMON_EXPORT Texture
     double degtorad = M_PI/180.0;
     double addweight = 0;
     odf.resize(odfsize);
-    size_t ea1bin, ea2bin, ea3bin;
     size_t bin, addbin;
     size_t bin1, bin2, bin3;
     size_t addbin1, addbin2, addbin3;
     double dist, fraction;
     double rmag, angle;
     double r1, r2, r3;
-    double h1, h2, h3;
-    double dim1 = pow((0.75 * ((M_PI / 2.0) - sin((M_PI / 2.0)))), (1.0 / 3.0));
-    double dim2 = pow((0.75 * ((M_PI / 2.0) - sin((M_PI / 2.0)))), (1.0 / 3.0));
-    double dim3 = pow((0.75 * ((M_PI / 6.0) - sin((M_PI / 6.0)))), (1.0 / 3.0));
-    double tan_term = 0.0;
-    double sin_term = 0.0;
-    double cos_term1 = 0.0;
-    double cos_term2 = 0.0;
-    double hTmp = 0.0;
     HexagonalOps ops;
     for (typename T::size_type i = 0; i < e1s.size(); i++)
     {
-      tan_term = tan(e2s[i]*degtorad/2);
-      sin_term = sin((e1s[i]*degtorad-e3s[i]*degtorad)/2);
-      cos_term1 = cos((e1s[i]*degtorad+e3s[i]*degtorad)/2);
-      cos_term2 = cos((e1s[i]*degtorad-e3s[i]*degtorad)/2);
-
-      r1 = tan_term * cos_term2 / cos_term1;
-      r2 = tan_term * sin_term / cos_term1;
-      r3 = tan((e1s[i]*degtorad+e3s[i]*degtorad)/2);
-      ops.getFZRod(r1, r2, r3);
-      rmag = pow((r1 * r1 + r2 * r2 + r3 * r3), 0.5);
-      angle = 2.0 * atan(rmag);
-      hTmp = pow(((3.0 / 4.0) * (angle - sin(angle))), (1.0 / 3.0));
-      h1 = hTmp * (r1 / rmag);
-      h2 = hTmp * (r2 / rmag);
-      h3 = hTmp * (r3 / rmag);
-      if (angle == 0) h1 = 0.0, h2 = 0.0, h3 = 0.0;
-      ea1bin = int(h1 * 36.0 / dim1);
-      ea2bin = int(h2 * 36.0 / dim2);
-      ea3bin = int(h3 * 12.0 / dim3);
-      if (ea1bin >= 36) ea1bin = 35;
-      if (ea2bin >= 36) ea2bin = 35;
-      if (ea3bin >= 12) ea3bin = 11;
-      bin = (ea3bin * 36 * 36) + (ea2bin * 36) + (ea1bin);
-      TextureBins[i] = static_cast<int>(bin);
+		OrientationMath::eulertoRod(r1, r2, r3, e1s[i], e2s[i], e3s[i]);
+	    ops.getFZRod( r1, r2, r3);
+		bin = ops.getOdfBin(r1, r2, r3);
+		TextureBins[i] = static_cast<int>(bin);
     }
 
     for (size_t i = 0; i < odfsize; i++)
@@ -348,49 +287,18 @@ class AIMCOMMON_EXPORT Texture
     double degtorad = M_PI/180.0;
     double addweight = 0;
     odf.resize(odfsize);
-    size_t ea1bin, ea2bin, ea3bin;
     size_t bin, addbin;
     size_t bin1, bin2, bin3;
     size_t addbin1, addbin2, addbin3;
     double dist, fraction;
-    double rmag, angle;
     double r1, r2, r3;
-    double h1, h2, h3;
-    double dim1 = pow((0.75 * ((M_PI / 2.0) - sin((M_PI / 2.0)))), (1.0 / 3.0));
-    double dim2 = pow((0.75 * ((M_PI / 2.0) - sin((M_PI / 2.0)))), (1.0 / 3.0));
-    double dim3 = pow((0.75 * ((M_PI / 2.0) - sin((M_PI / 2.0)))), (1.0 / 3.0));
-    double tan_term = 0.0;
-    double sin_term = 0.0;
-    double cos_term1 = 0.0;
-    double cos_term2 = 0.0;
-    double hTmp = 0.0;
     OrthoRhombicOps ops;
     for (typename T::size_type i = 0; i < e1s.size(); i++)
     {
-      tan_term = tan(e2s[i]*degtorad/2);
-      sin_term = sin((e1s[i]*degtorad-e3s[i]*degtorad)/2);
-      cos_term1 = cos((e1s[i]*degtorad+e3s[i]*degtorad)/2);
-      cos_term2 = cos((e1s[i]*degtorad-e3s[i]*degtorad)/2);
-
-      r1 = tan_term * cos_term2 / cos_term1;
-      r2 = tan_term * sin_term / cos_term1;
-      r3 = tan((e1s[i]*degtorad+e3s[i]*degtorad)/2);
-      ops.getFZRod(r1, r2, r3);
-      rmag = pow((r1 * r1 + r2 * r2 + r3 * r3), 0.5);
-      angle = 2.0 * atan(rmag);
-      hTmp = pow(((3.0 / 4.0) * (angle - sin(angle))), (1.0 / 3.0));
-      h1 = hTmp * (r1 / rmag);
-      h2 = hTmp * (r2 / rmag);
-      h3 = hTmp * (r3 / rmag);
-      if (angle == 0) h1 = 0.0, h2 = 0.0, h3 = 0.0;
-      ea1bin = int(h1 * 36.0 / dim1);
-      ea2bin = int(h2 * 36.0 / dim2);
-      ea3bin = int(h3 * 36.0 / dim3);
-      if (ea1bin >= 36) ea1bin = 35;
-      if (ea2bin >= 36) ea2bin = 35;
-      if (ea3bin >= 36) ea3bin = 35;
-      bin = (ea3bin * 36 * 36) + (ea2bin * 36) + (ea1bin);
-      TextureBins[i] = static_cast<int>(bin);
+		OrientationMath::eulertoRod(r1, r2, r3, e1s[i], e2s[i], e3s[i]);
+	    ops.getFZRod( r1, r2, r3);
+		bin = ops.getOdfBin(r1, r2, r3);
+	    TextureBins[i] = static_cast<int>(bin);
     }
 
     for (size_t i = 0; i < odfsize; i++)
@@ -500,13 +408,8 @@ class AIMCOMMON_EXPORT Texture
       int remainingcount = 10000;
       for (int i = 0; i < angles.size(); i++)
       {
-        denom = pow((axes[3 * i] * axes[3 * i] + axes[3 * i + 1] * axes[3 * i + 1] + axes[3 * i + 2] * axes[3 * i + 2]), 0.5);
-        n1 = axes[3 * i] / denom;
-        n2 = axes[3 * i + 1] / denom;
-        n3 = axes[3 * i + 2] / denom;
-        r1 = n1 * pow(((3.0 / 4.0) * (angles[i] - sin(angles[i]))), (1.0 / 3.0));
-        r2 = n2 * pow(((3.0 / 4.0) * (angles[i] - sin(angles[i]))), (1.0 / 3.0));
-        r3 = n3 * pow(((3.0 / 4.0) * (angles[i] - sin(angles[i]))), (1.0 / 3.0));
+		OrientationMath::axisAngletoRod(angles[i], axes[3*i], axes[3*i+1], axes[3*i+2], r1, r2, r3);
+		OrientationMath::RodtoHomochoric(r1, r2, r3);
         mbin = orientationOps.getMisoBin(r1, r2, r3);
         mdf[mbin] = -int((weights[i] / double(mdfsize)) * 10000.0);
         remainingcount = remainingcount + mdf[mbin];
@@ -535,10 +438,7 @@ class AIMCOMMON_EXPORT Texture
         orientationOps.determineEulerAngles(choose2, ea1, ea2, ea3);
         O::eulertoQuat(q2, ea1, ea2, ea3);
         w = orientationOps.getMisoQuat( q1, q2, n1, n2, n3);
-        w = w / radtodeg;
-        r1 = n1 * pow(((0.75) * (w - sin(w))), (1.0 / 3.0));
-        r2 = n2 * pow(((0.75) * (w - sin(w))), (1.0 / 3.0));
-        r3 = n3 * pow(((0.75) * (w - sin(w))), (1.0 / 3.0));
+		OrientationMath::axisAngletoHomochoric(w, n1, n2, n3, r1, r2, r3);
         mbin = orientationOps.getMisoBin(r1, r2, r3);
         if (mdf[mbin] >= 0) mdf[mbin]++;
         if (mdf[mbin] < 0) i = i - 1;

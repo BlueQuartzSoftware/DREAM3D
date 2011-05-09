@@ -77,13 +77,18 @@ class AIMCOMMON_EXPORT OrientationMath
 
     virtual double determineAxisAngle(int choose) = 0;
 
-    virtual int getOdfBin(double q1[5], double qref[5]) = 0;
+    virtual int getOdfBin(double r1, double r2, double r3) = 0;
 
 
-    static void axisAngletoHomochoric(double &w, double &miso1, double &miso2, double &miso3);
+    static void axisAngletoHomochoric(double w, double n1, double n2, double n3, double &r1, double &r2, double &r3);
+    static void axisAngletoRod(double w, double n1, double n2, double n3, double &r1, double &r2, double &r3);
+    static void RodtoHomochoric(double &r1, double &r2, double &r3);
+    static void RodtoQuat(double *q, double r1, double r2, double r3);
+    static void QuattoRod(double *q, double &r1, double &r2, double &r3);
     static void getSlipMisalignment(int ss1, double q1[5], double q2[5], double &ssap);
     static void multiplyQuaternions(double inQuat[5], double multQuat[5], double outQuat[5]);
     static void eulertoQuat(double *q, double ea1, double ea2, double ea3);
+    static void eulertoRod(double &r1, double &r2, double &r3, double ea1, double ea2, double ea3);
 
   protected:
     OrientationMath();
@@ -100,7 +105,7 @@ class AIMCOMMON_EXPORT OrientationMath
     void _calcDetermineEulerAngles(double init[3], double step[3], double phi[3],
                                    int choose, double &synea1, double &synea2, double &synea3);
     double _calcDetermineAxisAngle( double step[3], double phi[3], int choose);
-    int _calcODFBin(double dim[3], double bins[3], double q1[5], double qref[5]);
+    int _calcODFBin(double dim[3], double bins[3], double r1, double r2, double r3);
 
   private:
     OrientationMath(const OrientationMath&); // Copy Constructor Not Implemented
