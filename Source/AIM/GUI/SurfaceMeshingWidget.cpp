@@ -149,7 +149,7 @@ void SurfaceMeshingWidget::setupGui()
   m_WidgetList << m_InputFile << messageLabel;
   m_WidgetList << m_InputFileBtn << m_OutputDir << m_OutputDirBtn << m_OutputFilePrefix;
   m_WidgetList << m_VisualizationFile << m_NodesFileBin << m_TrianglesFileBin << m_DeleteTempFiles;
-  m_WidgetList  << m_LockQuadPoints << m_SmoothIterations << m_SmoothMesh << m_WriteOutputFileIncrement;
+//  m_WidgetList  << m_LockQuadPoints << m_SmoothIterations << m_SmoothMesh << m_WriteOutputFileIncrement;
 }
 
 // -----------------------------------------------------------------------------

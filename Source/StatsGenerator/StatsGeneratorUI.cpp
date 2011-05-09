@@ -41,7 +41,7 @@
 #include <QtGui/QMessageBox>
 #include <QtGui/QFileDialog>
 
-#include "AIM/Common/AIMRepresentationVersion.h"
+#include "AIM/Common/DREAM3DVersion.h"
 #include "QtSupport/ApplicationAboutBoxDialog.h"
 #include "QtSupport/QRecentFileList.h"
 #include "AIM/License/StatsGeneratorLicenseFiles.h"
@@ -608,10 +608,10 @@ void StatsGeneratorUI::adjustWindowTitle()
 // -----------------------------------------------------------------------------
 void StatsGeneratorUI::on_actionAbout_triggered()
 {
-  ApplicationAboutBoxDialog about(AIMRepresentation::LicenseList, this);
+  ApplicationAboutBoxDialog about(DREAM3D::LicenseList, this);
   QString an = QCoreApplication::applicationName();
   QString version("");
-  version.append(AIMRepresentation::Version::PackageComplete.c_str());
+  version.append(DREAM3D::Version::PackageComplete.c_str());
   about.setApplicationInfo(an, version);
   about.exec();
 }
