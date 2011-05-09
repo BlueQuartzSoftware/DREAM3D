@@ -6,15 +6,15 @@
 # create Resource files for the various license files that are used and 
 # also create a header file that lists all the License Files
 set(LICENSE_FILES 
-                   ${AIMRepresentation_SOURCE_DIR}/License.txt.in
-                   ${AIMRepresentation_SOURCE_DIR}/ReadMe.txt.in
-                   ${AIMRepresentation_SOURCE_DIR}/License/Boost.license
-             #     ${AIMRepresentation_SOURCE_DIR}/License/ITK.license
-                   ${AIMRepresentation_SOURCE_DIR}/License/MXA.license
-                   ${AIMRepresentation_SOURCE_DIR}/License/Qt.license
-             #     ${AIMRepresentation_SOURCE_DIR}/License/tiff.license 
-                   ${AIMRepresentation_SOURCE_DIR}/License/Qwt.license
-                   ${AIMRepresentation_SOURCE_DIR}/License/HDF5.license
+                   ${DREAM3D_SOURCE_DIR}/License.txt.in
+                   ${DREAM3D_SOURCE_DIR}/ReadMe.txt.in
+                   ${DREAM3D_SOURCE_DIR}/License/Boost.license
+             #     ${DREAM3D_SOURCE_DIR}/License/ITK.license
+                   ${DREAM3D_SOURCE_DIR}/License/MXA.license
+                   ${DREAM3D_SOURCE_DIR}/License/Qt.license
+             #     ${DREAM3D_SOURCE_DIR}/License/tiff.license 
+                   ${DREAM3D_SOURCE_DIR}/License/Qwt.license
+                   ${DREAM3D_SOURCE_DIR}/License/HDF5.license
            )
 set(QRC_LICENSE_FILES "")
 set(LICENSE_HEADER_FILE  ${PROJECT_BINARY_DIR}/AIM/License/${PROJECT_NAME}LicenseFiles.h)

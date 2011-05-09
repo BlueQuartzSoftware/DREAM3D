@@ -281,6 +281,9 @@
    </item>
    <item>
     <widget class="QCheckBox" name="m_SmoothMesh">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
      <property name="text">
       <string>Smooth Surface Mesh</string>
      </property>
@@ -298,6 +301,9 @@
        </property>
        <item>
         <widget class="QLabel" name="label_26">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
          <property name="text">
           <string>Number of Iterations</string>
          </property>
@@ -351,6 +357,9 @@
        </property>
        <item>
         <widget class="QLabel" name="label_27">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
          <property name="text">
           <string>Write output file every </string>
          </property>
@@ -365,6 +374,9 @@
        </item>
        <item>
         <widget class="QLabel" name="label_28">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
          <property name="text">
           <string>Iterations</string>
          </property>

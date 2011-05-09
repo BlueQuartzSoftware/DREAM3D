@@ -82,7 +82,7 @@ class AIMCOMMON_EXPORT Texture
     int *TextureBins;
     TextureBins = new int[weights.size()];
     static const size_t odfsize = 5832;
-    double degtorad = M_PI/180.0;
+  //  double degtorad = M_PI/180.0;
     double addweight = 0;
     odf.resize(odfsize);
     size_t bin, addbin;
@@ -184,14 +184,14 @@ class AIMCOMMON_EXPORT Texture
     int *TextureBins;
     TextureBins = new int[weights.size()];
     static const size_t odfsize = 15552;
-    double degtorad = M_PI/180.0;
+ //   double degtorad = M_PI/180.0;
     double addweight = 0;
     odf.resize(odfsize);
     size_t bin, addbin;
     size_t bin1, bin2, bin3;
     size_t addbin1, addbin2, addbin3;
     double dist, fraction;
-    double rmag, angle;
+//    double rmag, angle;
     double r1, r2, r3;
     HexagonalOps ops;
     for (typename T::size_type i = 0; i < e1s.size(); i++)
@@ -284,7 +284,7 @@ class AIMCOMMON_EXPORT Texture
     int *TextureBins;
     TextureBins = new int[weights.size()];
     static const size_t odfsize = 46656;
-    double degtorad = M_PI/180.0;
+ //   double degtorad = M_PI/180.0;
     double addweight = 0;
     odf.resize(odfsize);
     size_t bin, addbin;
@@ -368,7 +368,7 @@ class AIMCOMMON_EXPORT Texture
       const int odfsize = orientationOps.getODFSize();
       const int mdfsize = orientationOps.getMDFSize();
       mdf.resize(mdfsize);
-      double radtodeg = 180.0 / M_PI;
+  //    double radtodeg = 180.0 / M_PI;
 
 
       AIMRandomNG rg;
@@ -395,7 +395,7 @@ class AIMCOMMON_EXPORT Texture
       double ea1, ea2, ea3;
       double q1[5], q2[5];
       double totaldensity;
-      double denom;
+  //    double denom;
       double r1, r2, r3;
       double n1, n2, n3;
       double random1, random2, density;
@@ -406,10 +406,11 @@ class AIMCOMMON_EXPORT Texture
         mdf[i] = 0.0;
       }
       int remainingcount = 10000;
-      for (int i = 0; i < angles.size(); i++)
+      int aSize = static_cast<int>(angles.size());
+      for (int i = 0; i < aSize; i++)
       {
-		OrientationMath::axisAngletoRod(angles[i], axes[3*i], axes[3*i+1], axes[3*i+2], r1, r2, r3);
-		OrientationMath::RodtoHomochoric(r1, r2, r3);
+        OrientationMath::axisAngletoRod(angles[i], axes[3 * i], axes[3 * i + 1], axes[3 * i + 2], r1, r2, r3);
+        OrientationMath::RodtoHomochoric(r1, r2, r3);
         mbin = orientationOps.getMisoBin(r1, r2, r3);
         mdf[mbin] = -int((weights[i] / double(mdfsize)) * 10000.0);
         remainingcount = remainingcount + mdf[mbin];

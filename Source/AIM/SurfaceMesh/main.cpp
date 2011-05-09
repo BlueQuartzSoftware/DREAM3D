@@ -39,7 +39,7 @@
 #include <MXA/Utilities/MXALogger.h>
 
 #include <AIM/Common/Constants.h>
-#include <AIM/Common/AIMRepresentationVersion.h>
+#include <AIM/Common/DREAM3DVersion.h>
 #include <AIM/Common/AIMArray.hpp>
 
 #include <AIM/SurfaceMesh/SurfaceMesh.h>
@@ -68,7 +68,7 @@ int main(int argc, char **argv)
   {
 
     // Handle program options passed on command line.
-    TCLAP::CmdLine cmd("AIMRepresentation Surface Meshing", ' ', AIMRepresentation::Version::Complete);
+    TCLAP::CmdLine cmd("DREAM.3D Surface Meshing", ' ', DREAM3D::Version::Complete);
 
     TCLAP::ValueArg<std::string> vtkFile("v", "vtkfile", "VTK Structured Points File to be used as input.", false, "", "VTK Structured Points File");
     cmd.add(vtkFile);

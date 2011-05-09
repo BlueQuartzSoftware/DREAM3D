@@ -40,7 +40,7 @@
 #include <MXA/Utilities/MXADir.h>
 
 #include <AIM/Common/Constants.h>
-#include <AIM/Common/AIMRepresentationVersion.h>
+#include <AIM/Common/DREAM3DVersion.h>
 #include <AIM/Common/AIMArray.hpp>
 
 #include <AIM/VolumeMesh/VolumeMesh.h>
@@ -68,7 +68,7 @@ int main(int argc, char **argv)
   int err = 0;
   try
   {
-    TCLAP::CmdLine cmd("AIMRepresentation Volume Meshing", ' ', AIMRepresentation::Version::Complete);
+    TCLAP::CmdLine cmd("DREAM.3D Volume Meshing", ' ', DREAM3D::Version::Complete);
 
     TCLAP::ValueArg<std::string > nodesfile("", "nodesfile", "Input Nodes File", false, "", "Input Nodes File");
     cmd.add(nodesfile);
