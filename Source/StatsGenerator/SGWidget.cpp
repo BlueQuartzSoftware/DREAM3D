@@ -227,6 +227,11 @@ void SGWidget::setupGui()
 
   // For the ODF Tab we want the MDF functionality
   m_ODFWidget->enableMDFTab(true);
+  // Remove any Axis Decorations. The plots are explicitly know to have a -1 to 1 axis min/max
+  m_ODFWidget->setEnableAxisDecorations(false);
+
+  // Remove any Axis Decorations. The plots are explicitly know to have a -1 to 1 axis min/max
+  m_AxisODFWidget->setEnableAxisDecorations(false);
 
   updateSizeDistributionPlot();
   calculateNumberOfBins();
