@@ -167,7 +167,7 @@ void OrthoRhombicOps::determineEulerAngles(int choose, double &synea1, double &s
 }
 
 
-double OrthoRhombicOps::determineAxisAngle( int choose)
+void OrthoRhombicOps::determineHomochoricValues( int choose, double &r1, double &r2, double &r3)
 {
   //double init1, init2, init3;
   double step[3];
@@ -180,7 +180,7 @@ double OrthoRhombicOps::determineAxisAngle( int choose)
   phi[1] = (choose / 36) % 36;
   phi[2] = choose / (36 * 36);
 
-  return _calcDetermineAxisAngle(step, phi, choose);
+  return _calcDetermineHomochoricValues(step, phi, choose, r1, r2, r3);
 }
 
 int OrthoRhombicOps::getOdfBin(double r1, double r2, double r3)

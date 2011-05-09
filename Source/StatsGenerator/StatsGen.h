@@ -608,7 +608,6 @@ class StatsGen
           totaldensity = totaldensity + density;
           if (random < totaldensity && random >= (totaldensity - density)) choose = static_cast<int> (j);
         }
-
         ops.determineEulerAngles( choose, ea1, ea2, ea3);
         OrientationMath::eulertoQuat(q1, ea1, ea2, ea3);
         ops.getFZQuat(q1);
@@ -860,6 +859,7 @@ class StatsGen
     int GenCubicMDFPlotData(T mdf, T &xval, T &yval, int npoints)
     {
       static const size_t mdfsize = 5832;
+	  double radtodeg = 180.0/M_PI;
       AIMRandomNG rg;
       /* Get a seed value based off the system clock. The issue is that this will
        * be a 64 bit unsigned integer where the high 32 bits will basically not
@@ -883,10 +883,13 @@ class StatsGen
       int choose = 0;
       double angle;
       double random;
+	  double w;
+	  double n1, n2, n3;
+	  double r1, r2, r3;
       CubicOps ops;
-      xval.resize(18);
-      yval.resize(18);
-      for (int i = 0; i < 18; i++)
+      xval.resize(13);
+      yval.resize(13);
+      for (int i = 0; i < 13; i++)
       {
         yval[i] = 0;
       }
@@ -901,12 +904,16 @@ class StatsGen
           totaldensity = totaldensity + density;
           if (random < totaldensity && random >= (totaldensity - density)) choose = static_cast<int> (j);
         }
-        angle = ops.determineAxisAngle(choose);
-        yval[int(angle / 10.0)]++;
+		ops.determineHomochoricValues(choose, r1, r2, r3);
+		OrientationMath::HomochorictoRod(r1, r2, r3);
+		ops.getFZRod(r1, r2, r3);
+		OrientationMath::RodtoAxisAngle(r1, r2, r3, w, n1, n2, n3);
+		w = w*radtodeg;
+        yval[int(w / 5.0)]++;
       }
-      for (int i = 0; i < 18; i++)
+      for (int i = 0; i < 13; i++)
       {
-        xval[i] = i * 10.0 + 5;
+        xval[i] = i * 5.0 + 2.5;
         yval[i] = yval[i] / double(npoints);
       }
       return err;
@@ -924,6 +931,7 @@ class StatsGen
     int GenHexMDFPlotData(T mdf, T &xval, T &yval, int npoints)
     {
       static const size_t mdfsize = 15552;
+	  double radtodeg = 180.0/M_PI;
       AIMRandomNG rg;
       /* Get a seed value based off the system clock. The issue is that this will
        * be a 64 bit unsigned integer where the high 32 bits will basically not
@@ -947,10 +955,13 @@ class StatsGen
       double totaldensity;
       double angle;
       double random;
+	  double w;
+	  double n1, n2, n3;
+	  double r1, r2, r3;
       HexagonalOps ops;
-      xval.resize(18);
-      yval.resize(18);
-      for (int i = 0; i < 18; i++)
+      xval.resize(20);
+      yval.resize(20);
+      for (int i = 0; i < 20; i++)
       {
         yval[i] = 0;
       }
@@ -967,12 +978,16 @@ class StatsGen
           totaldensity = totaldensity + density;
           if (random < totaldensity && random >= (totaldensity - density)) choose = static_cast<int> (j);
         }
-        angle = ops.determineAxisAngle(choose);
-        yval[int(angle / 10.0)]++;
+		ops.determineHomochoricValues(choose, r1, r2, r3);
+		OrientationMath::HomochorictoRod(r1, r2, r3);
+		ops.getFZRod(r1, r2, r3);
+		OrientationMath::RodtoAxisAngle(r1, r2, r3, w, n1, n2, n3);
+		w = w*radtodeg;
+        yval[int(w / 5.0)]++;
       }
-      for (int i = 0; i < 18; i++)
+      for (int i = 0; i < 20; i++)
       {
-        xval[i] = i * 10.0 + 5;
+        xval[i] = i * 5.0 + 2.5;
         yval[i] = yval[i] / double(npoints);
       }
       return err;

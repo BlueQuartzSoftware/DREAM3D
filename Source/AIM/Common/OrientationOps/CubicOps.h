@@ -62,7 +62,7 @@ class AIMCOMMON_EXPORT CubicOps : public OrientationMath
     virtual void getFZQuat(double *qr);
     virtual int getMisoBin(double n1, double n2, double n3);
     virtual void determineEulerAngles(int choose, double &synea1, double &synea2, double &synea3);
-    virtual double determineAxisAngle(int choose);
+	virtual void determineHomochoricValues(int choose, double &r1, double &r2, double &r3);
     virtual int getOdfBin(double r1, double r2, double r3);
 
 
