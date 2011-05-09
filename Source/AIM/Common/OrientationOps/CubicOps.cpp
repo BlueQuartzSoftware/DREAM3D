@@ -386,7 +386,7 @@ void CubicOps::determineEulerAngles(int choose, double &synea1, double &synea2, 
   _calcDetermineEulerAngles(init, step, phi, choose, synea1, synea2, synea3);
 }
 
-double CubicOps::determineAxisAngle( int choose )
+void CubicOps::determineHomochoricValues(int choose, double &r1, double &r2, double &r3)
 {
   //double init1, init2, init3;
   double step[3];
@@ -399,9 +399,9 @@ double CubicOps::determineAxisAngle( int choose )
   phi[1] = (choose / 18) % 18;
   phi[2] = choose / (18 * 18);
 
-  return _calcDetermineAxisAngle(step, phi, choose);
-}
+  return _calcDetermineHomochoricValues(step, phi, choose, r1, r2, r3);
 
+}
 int CubicOps::getOdfBin(double r1, double r2, double r3)
 {
   double dim[3];
