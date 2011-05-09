@@ -85,6 +85,7 @@ class AIMCOMMON_EXPORT OrientationMath
     static void RodtoHomochoric(double &r1, double &r2, double &r3);
     static void RodtoQuat(double *q, double r1, double r2, double r3);
     static void QuattoRod(double *q, double &r1, double &r2, double &r3);
+    static void QuattoEuler(double *q, double &ea1, double &ea2, double &ea3);
     static void getSlipMisalignment(int ss1, double q1[5], double q2[5], double &ssap);
     static void multiplyQuaternions(double inQuat[5], double multQuat[5], double outQuat[5]);
     static void eulertoQuat(double *q, double ea1, double ea2, double ea3);
