@@ -75,14 +75,16 @@ class AIMCOMMON_EXPORT OrientationMath
 
     virtual void determineEulerAngles(int choose, double &synea1, double &synea2, double &synea3) = 0;
 
-    virtual double determineAxisAngle(int choose) = 0;
+    virtual void determineHomochoricValues(int choose, double &r1, double &r2, double &r3) = 0;
 
     virtual int getOdfBin(double r1, double r2, double r3) = 0;
 
 
     static void axisAngletoHomochoric(double w, double n1, double n2, double n3, double &r1, double &r2, double &r3);
     static void axisAngletoRod(double w, double n1, double n2, double n3, double &r1, double &r2, double &r3);
+    static void HomochorictoRod(double &r1, double &r2, double &r3);
     static void RodtoHomochoric(double &r1, double &r2, double &r3);
+    static void RodtoAxisAngle(double r1, double r2, double r3, double &w, double &n1, double &n2, double &n3);
     static void RodtoQuat(double *q, double r1, double r2, double r3);
     static void QuattoRod(double *q, double &r1, double &r2, double &r3);
     static void QuattoEuler(double *q, double &ea1, double &ea2, double &ea3);
@@ -105,7 +107,7 @@ class AIMCOMMON_EXPORT OrientationMath
     int _calcMisoBin(double dim[3], double bins[3], double n1, double n2, double n3);
     void _calcDetermineEulerAngles(double init[3], double step[3], double phi[3],
                                    int choose, double &synea1, double &synea2, double &synea3);
-    double _calcDetermineAxisAngle( double step[3], double phi[3], int choose);
+    void _calcDetermineHomochoricValues(double step[3], double phi[3], int choose, double &r1, double &r2, double &r3);
     int _calcODFBin(double dim[3], double bins[3], double r1, double r2, double r3);
 
   private:

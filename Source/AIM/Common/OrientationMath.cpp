@@ -328,24 +328,19 @@ void OrientationMath::_calcDetermineEulerAngles(double init[3], double step[3], 
   synea3 = sum - diff;
 }
 
-
-double OrientationMath::_calcDetermineAxisAngle( double step[3], double phi[3], int choose)
+void OrientationMath::_calcDetermineHomochoricValues( double step[3], double phi[3], int choose, double &r1, double &r2, double &r3)
 {
+  double random; 
+
   AIMRandomNG rg;
   rg.RandomInit((static_cast<unsigned int> (MXA::getMilliSeconds())));
-  double w = 0.0;
-  double random = rg.Random();
-  double synh1 = (step[0] * phi[0]) + (step[0] * random);
   random = rg.Random();
-  double synh2 = (step[1] * phi[1]) + (step[1] * random);
+  r1 = (step[0] * phi[0]) + (step[0] * random);
   random = rg.Random();
-  double synh3 = (step[2] * phi[2]) + (step[2] * random);
-  double hmag = pow((synh1 * synh1 + synh2 * synh2 + synh3 * synh3), 0.5);
-  double angle = pow((8 * hmag * hmag * hmag), (1.0 / 3.0));
-  w = angle * 180.0 / M_PI;
-  return w;
+  r2 = (step[1] * phi[1]) + (step[1] * random);
+  random = rg.Random();
+  r3 = (step[2] * phi[2]) + (step[2] * random);
 }
-
 
 int OrientationMath::_calcODFBin(double dim[3], double bins[3], double r1, double r2, double r3)
 {
@@ -413,6 +408,34 @@ void OrientationMath::RodtoHomochoric(double &r1, double &r2, double &r3)
   r3 = r3 * pow(((3.0 / 4.0) * (w - sin(w))), (1.0 / 3.0));
 }
 
+
+void OrientationMath::HomochorictoRod(double &r1, double &r2, double &r3)
+{
+  double hmag, w;
+
+  hmag = (r1 * r1) + (r2 * r2) + (r3 * r3);
+  hmag = pow(hmag, 0.5);
+  r1 = r1 / hmag;
+  r2 = r2 / hmag;
+  r3 = r3 / hmag;
+  w = pow((8*hmag*hmag*hmag),(1.0/3.0));
+  r1 = r1 * tan(w/2.0);
+  r2 = r2 * tan(w/2.0);
+  r3 = r3 * tan(w/2.0);
+}
+
+
+void OrientationMath::RodtoAxisAngle(double r1, double r2, double r3, double &w, double &n1, double &n2, double &n3)
+{
+  double rmag;
+
+  rmag = (r1 * r1) + (r2 * r2) + (r3 * r3);
+  rmag = pow(rmag, 0.5);
+  w = 2.0*atan(rmag);
+  n1 = r1 / rmag;
+  n2 = r2 / rmag;
+  n3 = r3 / rmag;
+}
 
 void OrientationMath::RodtoQuat(double *q, double r1, double r2, double r3)
 {
