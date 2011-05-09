@@ -3,6 +3,7 @@
 @mainpage mainpage Documentation
 
 @subpage dream3d "DREAM.3D"
+Digital Representation ENvironment for Analysis of Microstructure in 3D
 
 @subpage angfileimport "OIM Data Import"
 
