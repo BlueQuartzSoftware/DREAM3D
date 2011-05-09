@@ -1336,9 +1336,8 @@ void ReconstructionFunc::reorder_grains(const std::string &reconVisFile)
   int gnum;
   double q1[5];
   double q2[5];
-  double q1avg, q2avg, q3avg, q4avg;
-  double diff, sum, tmp;
-  double ea1good, ea2good, ea3good;
+  double q[5];
+  double ea1, ea2, ea3;
   size_t currentgrain = 1;
   AIM::Reconstruction::CrystalStructure phase;
 
@@ -1470,21 +1469,14 @@ void ReconstructionFunc::reorder_grains(const std::string &reconVisFile)
       m_Grains[currentgrain]->active = 1;
       m_Grains[currentgrain]->nucleus = nucleus;
 	  m_Grains[currentgrain]->phase = voxels[nucleus].phase;
-      q1avg = m_Grains[currentgrain]->avg_quat[1]/m_Grains[currentgrain]->avg_quat[0];
-      q2avg = m_Grains[currentgrain]->avg_quat[2]/m_Grains[currentgrain]->avg_quat[0];
-      q3avg = m_Grains[currentgrain]->avg_quat[3]/m_Grains[currentgrain]->avg_quat[0];
-      q4avg = m_Grains[currentgrain]->avg_quat[4]/m_Grains[currentgrain]->avg_quat[0];
-      diff=atan2(q2avg,q1avg);
-      sum=atan2(q3avg,q4avg);
-      ea1good=(diff+sum);
-      ea3good=(sum-diff);
-      tmp=(q3avg*q3avg)+(q4avg*q4avg);
-      tmp = pow(tmp,0.5);
-      if(tmp > 1.0) tmp=1.0;
-      ea2good=2*acos(tmp);
-      m_Grains[currentgrain]->euler1 = ea1good;
-      m_Grains[currentgrain]->euler2 = ea2good;
-      m_Grains[currentgrain]->euler3 = ea3good;
+      q[1] = m_Grains[currentgrain]->avg_quat[1]/m_Grains[currentgrain]->avg_quat[0];
+      q[2] = m_Grains[currentgrain]->avg_quat[2]/m_Grains[currentgrain]->avg_quat[0];
+      q[3] = m_Grains[currentgrain]->avg_quat[3]/m_Grains[currentgrain]->avg_quat[0];
+      q[4] = m_Grains[currentgrain]->avg_quat[4]/m_Grains[currentgrain]->avg_quat[0];
+	  OrientationMath::QuattoEuler(q, ea1, ea2, ea3);
+	  m_Grains[currentgrain]->euler1 = ea1;
+      m_Grains[currentgrain]->euler2 = ea2;
+      m_Grains[currentgrain]->euler3 = ea3;
       currentgrain++;
     }
   }
@@ -2117,6 +2109,7 @@ void ReconstructionFunc::merge_twins()
   vector<int > twinlist;
   double w;
   double n1, n2, n3;
+  double r1, r2, r3;
   double q1[5];
   double q2[5];
   size_t numgrains = m_Grains.size();
@@ -2153,33 +2146,28 @@ void ReconstructionFunc::merge_twins()
             q2[4] = m_Grains[neigh]->avg_quat[4];
             phase2 = crystruct[m_Grains[neigh]->phase];
             if (phase1 == phase2) w = m_OrientatioOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
-
-            w = w * (m_pi / 180.0);
-            double tanhalfang = tan(w / 2.0);
-            double rodvect1 = tanhalfang * n1;
-            double rodvect2 = tanhalfang * n2;
-            double rodvect3 = tanhalfang * n3;
+			OrientationMath::axisAngletoRod(w, n1, n2, n3, r1, r2, r3);
             double vecttol = 0.03;
-            double rodvectdiff11 = fabs(fabs(rodvect1) - (1.0 / 3.0));
-            double rodvectdiff12 = fabs(fabs(rodvect2) - (1.0 / 3.0));
-            double rodvectdiff13 = fabs(fabs(rodvect3) - (1.0 / 3.0));
-            double rodvectdiff21 = fabs(fabs(rodvect1) - 0.2);
-            double rodvectdiff22 = fabs(fabs(rodvect2) - 0.2);
-            double rodvectdiff23 = fabs(fabs(rodvect3) - 0.2);
-            double rodvectdiff31 = fabs(fabs(rodvect1) - 0.25);
-            double rodvectdiff32 = fabs(fabs(rodvect2) - 0.25);
-            double rodvectdiff33 = fabs(fabs(rodvect3) - 0.25);
+            double rodvectdiff11 = fabs(fabs(r1) - (1.0 / 3.0));
+            double rodvectdiff12 = fabs(fabs(r2) - (1.0 / 3.0));
+            double rodvectdiff13 = fabs(fabs(r3) - (1.0 / 3.0));
+            double rodvectdiff21 = fabs(fabs(r1) - 0.2);
+            double rodvectdiff22 = fabs(fabs(r2) - 0.2);
+            double rodvectdiff23 = fabs(fabs(r3) - 0.2);
+            double rodvectdiff31 = fabs(fabs(r1) - 0.25);
+            double rodvectdiff32 = fabs(fabs(r2) - 0.25);
+            double rodvectdiff33 = fabs(fabs(r3) - 0.25);
             if (rodvectdiff11 < vecttol && rodvectdiff12 < vecttol && rodvectdiff13 < vecttol) twin = 1;
-            if (rodvectdiff11 < vecttol && fabs(rodvect2) < vecttol && fabs(rodvect3) < vecttol) twin = 1;
-            if (rodvectdiff12 < vecttol && fabs(rodvect1) < vecttol && fabs(rodvect3) < vecttol) twin = 1;
-            if (rodvectdiff13 < vecttol && fabs(rodvect1) < vecttol && fabs(rodvect2) < vecttol) twin = 1;
-            if (rodvectdiff11 < vecttol && rodvectdiff12 < vecttol && fabs(rodvect3) < vecttol) twin = 1;
-            if (rodvectdiff11 < vecttol && rodvectdiff13 < vecttol && fabs(rodvect2) < vecttol) twin = 1;
-            if (rodvectdiff12 < vecttol && rodvectdiff13 < vecttol && fabs(rodvect1) < vecttol) twin = 1;
+            if (rodvectdiff11 < vecttol && fabs(r2) < vecttol && fabs(r3) < vecttol) twin = 1;
+            if (rodvectdiff12 < vecttol && fabs(r1) < vecttol && fabs(r3) < vecttol) twin = 1;
+            if (rodvectdiff13 < vecttol && fabs(r1) < vecttol && fabs(r2) < vecttol) twin = 1;
+            if (rodvectdiff11 < vecttol && rodvectdiff12 < vecttol && fabs(r3) < vecttol) twin = 1;
+            if (rodvectdiff11 < vecttol && rodvectdiff13 < vecttol && fabs(r2) < vecttol) twin = 1;
+            if (rodvectdiff12 < vecttol && rodvectdiff13 < vecttol && fabs(r1) < vecttol) twin = 1;
             if (rodvectdiff21 < vecttol && rodvectdiff22 < vecttol && rodvectdiff23 < vecttol) twin = 1;
-            if (rodvectdiff31 < vecttol && rodvectdiff32 < vecttol && fabs(rodvect3) < vecttol) twin = 1;
-            if (rodvectdiff31 < vecttol && rodvectdiff33 < vecttol && fabs(rodvect2) < vecttol) twin = 1;
-            if (rodvectdiff32 < vecttol && rodvectdiff33 < vecttol && fabs(rodvect1) < vecttol) twin = 1;
+            if (rodvectdiff31 < vecttol && rodvectdiff32 < vecttol && fabs(r3) < vecttol) twin = 1;
+            if (rodvectdiff31 < vecttol && rodvectdiff33 < vecttol && fabs(r2) < vecttol) twin = 1;
+            if (rodvectdiff32 < vecttol && rodvectdiff33 < vecttol && fabs(r1) < vecttol) twin = 1;
             if (w < angcur)
             {
               angcur = w;
@@ -2215,6 +2203,7 @@ void ReconstructionFunc::merge_colonies()
   vector<int > colonylist;
   double w;
   double n1, n2, n3;
+  double r1, r2, r3;
   double q1[5];
   double q2[5];
   size_t numgrains = m_Grains.size();
@@ -2251,20 +2240,17 @@ void ReconstructionFunc::merge_colonies()
             q2[4] = m_Grains[neigh]->avg_quat[4];
 			phase2 = crystruct[m_Grains[neigh]->phase];
 			if (phase1 == phase2) w = m_OrientatioOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
-            double tanhalfang = tan((w * m_pi / 180.0) / 2.0);
-            double rodvect1 = tanhalfang * n1;
-            double rodvect2 = tanhalfang * n2;
-            double rodvect3 = tanhalfang * n3;
-            double vecttol = 0.03;
-            if (fabs(rodvect1) < vecttol && fabs(rodvect2) < vecttol && fabs(fabs(rodvect3) - 0.0919) < vecttol) colony = 1;
-            if (fabs(fabs(rodvect1) - 0.289) < vecttol && fabs(fabs(rodvect2) - 0.5) < vecttol && fabs(rodvect3) < vecttol) colony = 1;
-            if (fabs(fabs(rodvect1) - 0.57735) < vecttol && fabs(rodvect2) < vecttol && fabs(rodvect3) < vecttol) colony = 1;
-            if (fabs(fabs(rodvect1) - 0.33) < vecttol && fabs(fabs(rodvect2) - 0.473) < vecttol && fabs(fabs(rodvect3) - 0.093) < vecttol) colony = 1;
-            if (fabs(fabs(rodvect1) - 0.577) < vecttol && fabs(fabs(rodvect2) - 0.053) < vecttol && fabs(fabs(rodvect3) - 0.093) < vecttol) colony = 1;
-            if (fabs(fabs(rodvect1) - 0.293) < vecttol && fabs(fabs(rodvect2) - 0.508) < vecttol && fabs(fabs(rodvect3) - 0.188) < vecttol) colony = 1;
-            if (fabs(fabs(rodvect1) - 0.5866) < vecttol && fabs(rodvect2) < vecttol && fabs(fabs(rodvect3) - 0.188) < vecttol) colony = 1;
-            if (fabs(fabs(rodvect1) - 0.5769) < vecttol && fabs(fabs(rodvect2) - 0.8168) < vecttol && fabs(rodvect3) < vecttol) colony = 1;
-            if (fabs(fabs(rodvect1) - 0.9958) < vecttol && fabs(fabs(rodvect2) - 0.0912) < vecttol && fabs(rodvect3) < vecttol) colony = 1;
+			OrientationMath::axisAngletoRod(w, n1, n2, n3, r1, r2, r3);
+			double vecttol = 0.03;
+            if (fabs(r1) < vecttol && fabs(r2) < vecttol && fabs(fabs(r3) - 0.0919) < vecttol) colony = 1;
+            if (fabs(fabs(r1) - 0.289) < vecttol && fabs(fabs(r2) - 0.5) < vecttol && fabs(r3) < vecttol) colony = 1;
+            if (fabs(fabs(r1) - 0.57735) < vecttol && fabs(r2) < vecttol && fabs(r3) < vecttol) colony = 1;
+            if (fabs(fabs(r1) - 0.33) < vecttol && fabs(fabs(r2) - 0.473) < vecttol && fabs(fabs(r3) - 0.093) < vecttol) colony = 1;
+            if (fabs(fabs(r1) - 0.577) < vecttol && fabs(fabs(r2) - 0.053) < vecttol && fabs(fabs(r3) - 0.093) < vecttol) colony = 1;
+            if (fabs(fabs(r1) - 0.293) < vecttol && fabs(fabs(r2) - 0.508) < vecttol && fabs(fabs(r3) - 0.188) < vecttol) colony = 1;
+            if (fabs(fabs(r1) - 0.5866) < vecttol && fabs(r2) < vecttol && fabs(fabs(r3) - 0.188) < vecttol) colony = 1;
+            if (fabs(fabs(r1) - 0.5769) < vecttol && fabs(fabs(r2) - 0.8168) < vecttol && fabs(r3) < vecttol) colony = 1;
+            if (fabs(fabs(r1) - 0.9958) < vecttol && fabs(fabs(r2) - 0.0912) < vecttol && fabs(r3) < vecttol) colony = 1;
             if (w < angcur)
             {
               angcur = w;
@@ -2313,8 +2299,6 @@ void ReconstructionFunc::characterize_colonies()
 
 void ReconstructionFunc::renumber_grains3()
 {
-
-
   size_t numgrains = m_Grains.size();
   int graincount = 1;
   std::vector<int > newnames(numgrains);
@@ -3309,14 +3293,12 @@ void ReconstructionFunc::find_eulerodf(H5ReconStatsWriter::Pointer h5io)
 
 void ReconstructionFunc::measure_misorientations(H5ReconStatsWriter::Pointer h5io)
 {
-  //double degtorad = m_pi / 180.0;
   double n1, n2, n3;
   double r1, r2, r3;
   int mbin;
   double w;
   double q1[5];
   double q2[5];
- // double denom = 0;
   size_t numgrains = m_Grains.size();
   AIM::Reconstruction::CrystalStructure phase1, phase2;
   double **misobin;
@@ -3374,9 +3356,9 @@ void ReconstructionFunc::measure_misorientations(H5ReconStatsWriter::Pointer h5i
       if (phase1 == phase2)
       {
         OrientationMath::axisAngletoHomochoric(w, n1, n2, n3, r1, r2, r3);
-        m_Grains[i]->misorientationlist->at(3 * j) = n1 * pow(((3.0 / 4.0) * (w - sin(w))), (1.0 / 3.0));
-        m_Grains[i]->misorientationlist->at(3 * j + 1) = n2 * pow(((3.0 / 4.0) * (w - sin(w))), (1.0 / 3.0));
-        m_Grains[i]->misorientationlist->at(3 * j + 2) = n3 * pow(((3.0 / 4.0) * (w - sin(w))), (1.0 / 3.0));
+        m_Grains[i]->misorientationlist->at(3 * j) = r1;
+        m_Grains[i]->misorientationlist->at(3 * j + 1) = r2;
+        m_Grains[i]->misorientationlist->at(3 * j + 2) = r3;
       }
       if (phase1 != phase2)
       {
@@ -3838,17 +3820,6 @@ void ReconstructionFunc::deformation_stats(const std::string &filename, const st
 {
   ofstream outFile;
   outFile.open(filename.c_str());
-//  double avgkm = 0;
-//  double avggam = 0;
-//  double avglmg = 0;
-//  double avgiq = 0;
-//  double avggbdist = 0;
-//  double avgtjdist = 0;
-//  double avgqpdist = 0;
-//  double avgsf = 0;
-//  double avgsfmm = 0;
-//  double avgssap = 0;
-//  double avgdis = 0;
   double w, n1, n2, n3;
   int distance;
   double km, iq, gbdist, tjdist, qpdist, sf, sf2, sfmm, gam, lmg, ssap;

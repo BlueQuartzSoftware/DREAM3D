@@ -907,7 +907,7 @@ class StatsGen
       }
       for (int i = 0; i < 13; i++)
       {
-        xval[i] = i * 5.0 + 2.5;
+        xval[i] = i * 10.0 + 5;
         yval[i] = yval[i] / double(npoints);
       }
       return err;
