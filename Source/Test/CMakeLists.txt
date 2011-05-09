@@ -14,18 +14,18 @@ project(AIMTest)
 if (0)
 set (srcs
     ${AIMTest_SOURCE_DIR}/AngDirectoryPatternTest.cpp
-    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/ANG/AngDirectoryPatterns.cpp
-    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common/Grain.cpp
+    ${DREAM3D_SOURCE_DIR}/Source/AIM/ANG/AngDirectoryPatterns.cpp
+    ${DREAM3D_SOURCE_DIR}/Source/AIM/Common/Grain.cpp
     )
 add_executable(AngDirectoryPattern ${srcs})
 target_link_libraries(AngDirectoryPattern MXA)
 endif()
 
-add_executable(ODFTest ${AIMTest_SOURCE_DIR}/ODFTest.cpp  ${AIMRepresentation_SOURCE_DIR}/Source/StatsGenerator/StatsGen.cpp)
+add_executable(ODFTest ${AIMTest_SOURCE_DIR}/ODFTest.cpp  ${DREAM3D_SOURCE_DIR}/Source/StatsGenerator/StatsGen.cpp)
 target_link_libraries(ODFTest AIMCommon)
 
 
-add_executable(AngReaderTest ${AIMTest_SOURCE_DIR}/AngReaderTest.cpp ${AIMRepresentation_SOURCE_DIR}/Source/AIM/OIMImport/OIMImport.cpp)
+add_executable(AngReaderTest ${AIMTest_SOURCE_DIR}/AngReaderTest.cpp ${DREAM3D_SOURCE_DIR}/Source/AIM/OIMImport/OIMImport.cpp)
 target_link_libraries(AngReaderTest AIMCommon)
 
 add_executable(VoxelTest ${AIMTest_SOURCE_DIR}/VoxelTest.cpp)

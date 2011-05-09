@@ -41,7 +41,7 @@
 #include <MXA/Utilities/MXADir.h>
 
 #include <AIM/Common/Constants.h>
-#include <AIM/Common/AIMRepresentationVersion.h>
+#include <AIM/Common/DREAM3DVersion.h>
 #include <AIM/Common/AIMArray.hpp>
 #include <AIM/Common/Grain.h>
 #include <AIM/Reconstruction/Reconstruction.h>
@@ -76,7 +76,7 @@ int main(int argc, char **argv)
   try
   {
     // Handle program options passed on command line.
-    TCLAP::CmdLine cmd("AIMRepresentation Reconstruction", ' ', AIMRepresentation::Version::Complete);
+    TCLAP::CmdLine cmd("DREAM.3D Reconstruction", ' ', DREAM3D::Version::Complete);
 
     TCLAP::ValueArg<std::string> h5InputFile( "i", "input", "HDF5 Input File", false, "", "HDF5 Input File");
     cmd.add(h5InputFile);

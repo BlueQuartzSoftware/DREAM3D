@@ -41,7 +41,7 @@
 #include <MXA/Utilities/MXADir.h>
 
 #include <AIM/Common/Constants.h>
-#include <AIM/Common/AIMRepresentationVersion.h>
+#include <AIM/Common/DREAM3DVersion.h>
 #include <AIM/Common/AIMArray.hpp>
 
 #include <AIM/GrainGenerator/GrainGenerator.h>
@@ -80,7 +80,7 @@ int main(int argc, char **argv)
   {
 
     // Handle program options passed on command line.
-    TCLAP::CmdLine cmd("AIMRepresentation Grain Generator", ' ', AIMRepresentation::Version::Complete);
+    TCLAP::CmdLine cmd("DREAM.3D Grain Generator", ' ', DREAM3D::Version::Complete);
 
     TCLAP::ValueArg<std::string>   h5StatsFile( "i", "input", "HDF5 Stats File", true, "", "HDF5 Stats File");
     cmd.add(h5StatsFile);
