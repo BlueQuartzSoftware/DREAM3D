@@ -333,7 +333,7 @@ int SGMDFTableModel::parseHKLRow(int row, double &h, double &k, double &l)
   bool ok = false;
   h = hklStr.section(',', 0,0).toDouble(&ok);
   k = hklStr.section(',', 1,1).toDouble(&ok);
-  l = hklStr.section(',', 1,1).toDouble(&ok);
+  l = hklStr.section(',', 2,2).toDouble(&ok);
   if (ok) { return 0; }
   return -1;
 }
