@@ -273,6 +273,8 @@ namespace AIM
     const std::string VTKExt("vtk");
     const std::string NodesRawFile("nodes_raw.txt");
     const std::string NodesFile("nodes.txt");
+    const std::string NodesFileBin("nodes.bin");
+    const std::string TrianglesFileBin("triangles.bin");
     const std::string TrianglesFileIndex("triangles");
     const std::string TrianglesFile("triangles.txt");
     const std::string EdgesFileIndex("edges");
