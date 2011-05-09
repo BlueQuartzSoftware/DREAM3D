@@ -145,11 +145,11 @@ void SurfaceMeshingWidget::setupGui()
              this, SLOT(on_m_OutputDir_textChanged(const QString &)));
   }
 
-  m_Message->setText("Any existing output files will be over written with new versions during the operation.");
-  m_WidgetList << m_InputFile;
-  m_WidgetList << m_InputFileBtn << m_OutputDir << m_OutputDirBtn;
-  m_WidgetList << m_Message << m_LockQuadPoints << m_SmoothIterations << m_SmoothMesh;
-  m_WidgetList << m_WriteOutputFileIncrement;
+  messageLabel->setText("Any existing output files will be over written with new versions during the operation.");
+  m_WidgetList << m_InputFile << messageLabel;
+  m_WidgetList << m_InputFileBtn << m_OutputDir << m_OutputDirBtn << m_OutputFilePrefix;
+  m_WidgetList << m_VisualizationFile << m_NodesFileBin << m_TrianglesFileBin << m_DeleteTempFiles;
+  m_WidgetList  << m_LockQuadPoints << m_SmoothIterations << m_SmoothMesh << m_WriteOutputFileIncrement;
 }
 
 // -----------------------------------------------------------------------------
@@ -167,9 +167,9 @@ void SurfaceMeshingWidget::checkIOFiles()
 
   verifyPathExists(m_OutputDir->text(), m_OutputDir);
 
-  CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::SurfaceMeshing, m_, NodesFile)
-  CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::SurfaceMeshing, m_, TrianglesFile)
-  CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::SurfaceMeshing, m_, NodesRawFile)
+  CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::SurfaceMeshing, m_, NodesFileBin)
+  CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::SurfaceMeshing, m_, TrianglesFileBin)
+  CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::SurfaceMeshing, m_, VisualizationFile)
 }
 
 
@@ -267,6 +267,9 @@ void SurfaceMeshingWidget::on_m_GoBtn_clicked()
 
   m_SurfaceMesh->setOutputDirectory(od.toStdString());
   m_SurfaceMesh->setOutputFilePrefix(m_OutputFilePrefix->text().toStdString());
+  m_SurfaceMesh->setDeleteTempFiles(m_DeleteTempFiles->isChecked());
+  m_SurfaceMesh->setBinaryVTKFile(m_BinaryVtkFiles->isChecked());
+
   m_SurfaceMesh->setSmoothMesh(m_SmoothMesh->isChecked());
   m_SurfaceMesh->setSmoothIterations(m_SmoothIterations->value());
   m_SurfaceMesh->setSmoothFileOutputIncrement(m_WriteOutputFileIncrement->value());
