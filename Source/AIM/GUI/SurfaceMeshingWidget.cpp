@@ -149,6 +149,7 @@ void SurfaceMeshingWidget::setupGui()
   m_WidgetList << m_InputFile << messageLabel;
   m_WidgetList << m_InputFileBtn << m_OutputDir << m_OutputDirBtn << m_OutputFilePrefix;
   m_WidgetList << m_VisualizationFile << m_NodesFileBin << m_TrianglesFileBin << m_DeleteTempFiles;
+  m_WidgetList << m_BinaryVtkFiles << m_ConformalMesh;
 //  m_WidgetList  << m_LockQuadPoints << m_SmoothIterations << m_SmoothMesh << m_WriteOutputFileIncrement;
 }
 
@@ -269,6 +270,7 @@ void SurfaceMeshingWidget::on_m_GoBtn_clicked()
   m_SurfaceMesh->setOutputFilePrefix(m_OutputFilePrefix->text().toStdString());
   m_SurfaceMesh->setDeleteTempFiles(m_DeleteTempFiles->isChecked());
   m_SurfaceMesh->setBinaryVTKFile(m_BinaryVtkFiles->isChecked());
+  m_SurfaceMesh->setConformalMesh(m_ConformalMesh->isChecked());
 
   m_SurfaceMesh->setSmoothMesh(m_SmoothMesh->isChecked());
   m_SurfaceMesh->setSmoothIterations(m_SmoothIterations->value());

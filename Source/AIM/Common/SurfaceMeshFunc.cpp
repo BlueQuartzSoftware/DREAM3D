@@ -3431,12 +3431,19 @@ void SurfaceMeshFunc::writeVTKOutputFile (int nNodes, int nTriangles,
     return;
   }
   fprintf(vtkFile, "# vtk DataFile Version 2.0\n");
-  fprintf(vtkFile, "data set from FFT2dx_GB\n");
-  fprintf(vtkFile, "ASCII\n");
+  fprintf(vtkFile, "Data set from DREAM.3D Surface Meshing Module\n");
+  if (binaryFile) {
+    fprintf(vtkFile, "BINARY\n");
+  }
+  else {
+    fprintf(vtkFile, "ASCII\n");
+  }
   fprintf(vtkFile, "DATASET UNSTRUCTURED_GRID\n");
   fprintf(vtkFile, "POINTS %d float\n", nNodes);
   unsigned char nodeData[32];
   double* vec3d = (double*)(&nodeData[8]);
+  int* nodeId = (int*)(&nodeData[0]);
+  int* nodeKind = (int*)(&nodeData[4]);
 
   for (int i = 0; i < nNodes; i++)
   {
@@ -3446,25 +3453,23 @@ void SurfaceMeshFunc::writeVTKOutputFile (int nNodes, int nTriangles,
   fclose(nodesFile);
 
   // Write the triangle indices into the vtk File
-//  int trianglenum;
   int tData[6];
-//  int node1, node2, node3;
-//  int grain1, grain2;
+  int triangleCount = nTriangles;
+  if (false == conformalMesh)
+  {
+    triangleCount = nTriangles * 2;
+  }
 
-  fprintf(vtkFile, "CELLS %d %d\n", nTriangles * 2, (nTriangles * 4 * 2));
+  fprintf(vtkFile, "CELLS %d %d\n", triangleCount, (triangleCount * 4));
   for (int i = 0; i < nTriangles; i++)
   {
+    // Read from the Input Triangles Temp File
     fread(tData, sizeof(int), 6, triFile);
-//    node1 = cTriangle[i].node_id[0];
-//    node2 = cTriangle[i].node_id[1];
-//    node3 = cTriangle[i].node_id[2];
-//    grain1 = cTriangle[i].ngrainname[0];
-//    grain2 = cTriangle[i].ngrainname[1];
   //  if (tData[4] < tData[5])
     {
       fprintf(vtkFile, "3 %d %d %d ", tData[1], tData[2], tData[3]);
     }
- //   else
+    if (false == conformalMesh)
     {
       fprintf(vtkFile, "3 %d %d %d\n", tData[3], tData[2], tData[1]);
     }
@@ -3473,35 +3478,54 @@ void SurfaceMeshFunc::writeVTKOutputFile (int nNodes, int nTriangles,
 
   // Write the CELL_TYPES into the file
   fprintf(vtkFile, "\n");
-  fprintf(vtkFile, "CELL_TYPES %d\n", nTriangles * 2);
-  for (int i = 0; i < nTriangles; i++)
+  fprintf(vtkFile, "CELL_TYPES %d\n", triangleCount);
+  char sBuf[4];
+  if (conformalMesh == true)
   {
-    fprintf(vtkFile, "5 5\n");
+    sBuf[0] = '5'; sBuf[1] =0; sBuf[2] = 0; sBuf[3] = 0;
+  }
+  else {
+    sBuf[0] = '5'; sBuf[1] =0; sBuf[2] = '5'; sBuf[3] = 0;
+  }
+  for (int i = 0; i < triangleCount; i++)
+  {
+    fprintf(vtkFile, "%s\n", sBuf);
   }
 
   // Open the triangles file for reading
   triFile = fopen(TrianglesFile.c_str(), "rb");
   // Write the GrainId Data to the file
   fprintf(vtkFile, "\n");
-  fprintf(vtkFile, "CELL_DATA %d\n", nTriangles * 2);
-  fprintf(vtkFile, "SCALARS GrainID int\n");
+  fprintf(vtkFile, "CELL_DATA %d\n", triangleCount);
+  fprintf(vtkFile, "SCALARS GrainID int 1\n");
   fprintf(vtkFile, "LOOKUP_TABLE default\n");
   for (int i = 0; i < nTriangles; i++)
   {
     fread(tData, sizeof(int), 6, triFile);
-//    grain1 = cTriangle[i].ngrainname[0];
-//    grain2 = cTriangle[i].ngrainname[1];
+
  //   if (tData[4] < tData[5])
     {
       fprintf(vtkFile, "%d\n", tData[4]);
     }
-//    else
+    if (false == conformalMesh)
     {
       fprintf(vtkFile, "%d\n", tData[5]);
     }
   }
 
-  //FIXME: Addin some POINT_DATA of the nodeKind from the nodes file
+  //FIXME: Add in some POINT_DATA of the nodeKind from the nodes file
+  // Open the Nodes file for reading
+  nodesFile = fopen(NodesFile.c_str(), "rb");
+  fprintf(vtkFile, "\n");
+  fprintf(vtkFile, "POINT_DATA %d\n", nNodes);
+  fprintf(vtkFile, "SCALARS Node_Type int 1\n");
+  fprintf(vtkFile, "LOOKUP_TABLE default\n");
+  for (int i = 0; i < nNodes; i++)
+  {
+    fread(nodeData, 32, 1, nodesFile); // Read one set of Node Kind from the nodes file
+    fprintf(vtkFile, "%d\n", *nodeKind); // Write the Node Kind to the output file
+  }
+  fclose(nodesFile); // Close the Nodes File
 
   // Free the memory
   // Close the input and output files
