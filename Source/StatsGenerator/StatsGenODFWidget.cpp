@@ -54,6 +54,7 @@
 // -----------------------------------------------------------------------------
 StatsGenODFWidget::StatsGenODFWidget(QWidget *parent) :
 QWidget(parent),
+m_EnableAxisDecorations(false),
 m_Initializing(true),
 m_PhaseIndex(-1),
 m_CrystalStructure(AIM::Reconstruction::Cubic),
@@ -251,13 +252,18 @@ void StatsGenODFWidget::initQwtPlot(QString xAxisName, QString yAxisName, QwtPlo
   //plot->setCanvasBackground(QColor(Qt::white));
   plot->canvas()->setFrameShape(QFrame::NoFrame);
 
+  // Lock the Axis Min/Max to -1 to 1 effectively cropping the plot. If there are
+  // data points outside of that range they will never be shown.
+  plot->setAxisScale(QwtPlot::xBottom, -1.0, 1.0);
+  plot->setAxisScale(QwtPlot::yLeft, -1.0, 1.0);
+
 // These set the plot axis to NOT show anything except the axis labels.
-  plot->axisScaleDraw(QwtPlot::yLeft)->enableComponent(QwtAbstractScaleDraw::Backbone, false);
-  plot->axisScaleDraw(QwtPlot::yLeft)->enableComponent(QwtAbstractScaleDraw::Ticks, false);
-  plot->axisScaleDraw(QwtPlot::yLeft)->enableComponent(QwtAbstractScaleDraw::Labels, false);
-  plot->axisScaleDraw(QwtPlot::xBottom)->enableComponent(QwtAbstractScaleDraw::Backbone, false);
-  plot->axisScaleDraw(QwtPlot::xBottom)->enableComponent(QwtAbstractScaleDraw::Ticks, false);
-  plot->axisScaleDraw(QwtPlot::xBottom)->enableComponent(QwtAbstractScaleDraw::Labels, false);
+  plot->axisScaleDraw(QwtPlot::yLeft)->enableComponent(QwtAbstractScaleDraw::Backbone, m_EnableAxisDecorations);
+  plot->axisScaleDraw(QwtPlot::yLeft)->enableComponent(QwtAbstractScaleDraw::Ticks, m_EnableAxisDecorations);
+  plot->axisScaleDraw(QwtPlot::yLeft)->enableComponent(QwtAbstractScaleDraw::Labels, m_EnableAxisDecorations);
+  plot->axisScaleDraw(QwtPlot::xBottom)->enableComponent(QwtAbstractScaleDraw::Backbone, m_EnableAxisDecorations);
+  plot->axisScaleDraw(QwtPlot::xBottom)->enableComponent(QwtAbstractScaleDraw::Ticks, m_EnableAxisDecorations);
+  plot->axisScaleDraw(QwtPlot::xBottom)->enableComponent(QwtAbstractScaleDraw::Labels, m_EnableAxisDecorations);
 }
 
 // -----------------------------------------------------------------------------
