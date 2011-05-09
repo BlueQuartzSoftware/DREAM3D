@@ -80,13 +80,14 @@ m_InputDirectory("."),
 m_InputFile(""),
 m_OutputDirectory(""),
 m_OutputFilePrefix("SurfaceMesh_"),
+m_ConformalMesh(true),
+m_BinaryVTKFile(false),
+m_DeleteTempFiles(true),
 m_SmoothMesh(false),
 m_SmoothIterations(0),
 m_SmoothFileOutputIncrement(0),
 m_SmoothLockQuadPoints(false),
-m_ErrorCondition(0),
-m_BinaryVTKFile(false),
-m_ConformalMesh(true)
+m_ErrorCondition(0)
 #if AIM_USE_QT
 ,
 m_Cancel(false)
