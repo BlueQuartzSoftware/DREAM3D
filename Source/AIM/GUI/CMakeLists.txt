@@ -9,7 +9,7 @@
 #--
 #--////////////////////////////////////////////////////////////////////////////
 # set project's name
-PROJECT( Representation )
+PROJECT( DREAM3DApp )
 cmake_minimum_required(VERSION 2.8)
 
 
@@ -51,119 +51,119 @@ add_definitions(-DAIM_USE_QT
 
 include_directories(${PROJECT_CODE_DIR})
 include_directories(${HDF5_INCLUDE_DIR})
-include_directories(${Representation_SOURCE_DIR})
-include_directories(${Representation_BINARY_DIR})
-include_directories(${AIMRepresentation_BINARY_DIR}/QtSupport)
+include_directories(${DREAM3DApp_SOURCE_DIR})
+include_directories(${DREAM3DApp_BINARY_DIR})
+include_directories(${DREAM3D_BINARY_DIR}/QtSupport)
 
 # --------------------------------------------------------------------
 # Generate the License File Headers
-include(${AIMRepresentation_SOURCE_DIR}/License/License.cmake)
+include(${DREAM3D_SOURCE_DIR}/License/License.cmake)
 
 # List the source files here
-SET (Representation_SRCS
-    ${Representation_SOURCE_DIR}/main.cpp
-    ${Representation_SOURCE_DIR}/RepresentationUI.cpp
-    ${Representation_SOURCE_DIR}/AIMPluginFrame.cpp
-    ${Representation_SOURCE_DIR}/ReconstructionWidget.cpp
-    ${Representation_SOURCE_DIR}/OIMImportWidget.cpp
-    ${Representation_SOURCE_DIR}/GrainGeneratorWidget.cpp
-    ${Representation_SOURCE_DIR}/SurfaceMeshingWidget.cpp
-    ${Representation_SOURCE_DIR}/VolumeMeshingWidget.cpp
+SET (DREAM3DApp_SRCS
+    ${DREAM3DApp_SOURCE_DIR}/main.cpp
+    ${DREAM3DApp_SOURCE_DIR}/RepresentationUI.cpp
+    ${DREAM3DApp_SOURCE_DIR}/AIMPluginFrame.cpp
+    ${DREAM3DApp_SOURCE_DIR}/ReconstructionWidget.cpp
+    ${DREAM3DApp_SOURCE_DIR}/OIMImportWidget.cpp
+    ${DREAM3DApp_SOURCE_DIR}/GrainGeneratorWidget.cpp
+    ${DREAM3DApp_SOURCE_DIR}/SurfaceMeshingWidget.cpp
+    ${DREAM3DApp_SOURCE_DIR}/VolumeMeshingWidget.cpp
 )
 
-SET (Representation_HDRS
-    ${Representation_SOURCE_DIR}/RepresentationUI.h
-    ${Representation_SOURCE_DIR}/AIMPluginFrame.h
-    ${Representation_SOURCE_DIR}/ReconstructionWidget.h
-    ${Representation_SOURCE_DIR}/OIMImportWidget.h
-    ${Representation_SOURCE_DIR}/GrainGeneratorWidget.h
-    ${Representation_SOURCE_DIR}/SurfaceMeshingWidget.h
-    ${Representation_SOURCE_DIR}/VolumeMeshingWidget.h
+SET (DREAM3DApp_HDRS
+    ${DREAM3DApp_SOURCE_DIR}/RepresentationUI.h
+    ${DREAM3DApp_SOURCE_DIR}/AIMPluginFrame.h
+    ${DREAM3DApp_SOURCE_DIR}/ReconstructionWidget.h
+    ${DREAM3DApp_SOURCE_DIR}/OIMImportWidget.h
+    ${DREAM3DApp_SOURCE_DIR}/GrainGeneratorWidget.h
+    ${DREAM3DApp_SOURCE_DIR}/SurfaceMeshingWidget.h
+    ${DREAM3DApp_SOURCE_DIR}/VolumeMeshingWidget.h
     )
-cmp_IDE_SOURCE_PROPERTIES( "AIM/GUI" "${Representation_HDRS}" "${Representation_SRCS}" ${PROJECT_INSTALL_HEADERS})
+cmp_IDE_SOURCE_PROPERTIES( "AIM/GUI" "${DREAM3DApp_HDRS}" "${DREAM3DApp_SRCS}" ${PROJECT_INSTALL_HEADERS})
 
 SET (Reconstruction_SRCS
-    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Reconstruction/Reconstruction.cpp
+    ${DREAM3D_SOURCE_DIR}/Source/AIM/Reconstruction/Reconstruction.cpp
 )
 SET (Reconstruction_HDRS
-   ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Reconstruction/Reconstruction.h
+   ${DREAM3D_SOURCE_DIR}/Source/AIM/Reconstruction/Reconstruction.h
     )
 cmp_IDE_SOURCE_PROPERTIES( "AIM/Reconstruction" "${Reconstruction_HDRS}" "${Reconstruction_SRCS}" ${PROJECT_INSTALL_HEADERS})
 
 SET (GrainGenerator_SRCS
-    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/GrainGenerator/GrainGenerator.cpp
+    ${DREAM3D_SOURCE_DIR}/Source/AIM/GrainGenerator/GrainGenerator.cpp
 )
 SET (GrainGenerator_HDRS
-   ${AIMRepresentation_SOURCE_DIR}/Source/AIM/GrainGenerator/GrainGenerator.h
+   ${DREAM3D_SOURCE_DIR}/Source/AIM/GrainGenerator/GrainGenerator.h
 )
 cmp_IDE_SOURCE_PROPERTIES( "AIM/GrainGenerator" "${GrainGenerator_HDRS}" "${GrainGenerator_SRCS}" ${PROJECT_INSTALL_HEADERS})
 
 SET (SurfaceMesh_SRCS
-    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/SurfaceMesh/SurfaceMesh.cpp
+    ${DREAM3D_SOURCE_DIR}/Source/AIM/SurfaceMesh/SurfaceMesh.cpp
 )
 SET (SurfaceMesh_HDRS
-   ${AIMRepresentation_SOURCE_DIR}/Source/AIM/SurfaceMesh/SurfaceMesh.h
+   ${DREAM3D_SOURCE_DIR}/Source/AIM/SurfaceMesh/SurfaceMesh.h
 )
 cmp_IDE_SOURCE_PROPERTIES( "AIM/SurfaceMesh" "${SurfaceMesh_HDRS}" "${SurfaceMesh_SRCS}" ${PROJECT_INSTALL_HEADERS})
 
 SET (VolumeMesh_SRCS
-    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/VolumeMesh/VolumeMesh.cpp
-    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/VolumeMesh/MeshGenerator.cpp
+    ${DREAM3D_SOURCE_DIR}/Source/AIM/VolumeMesh/VolumeMesh.cpp
+    ${DREAM3D_SOURCE_DIR}/Source/AIM/VolumeMesh/MeshGenerator.cpp
 )
 SET (VolumeMesh_HDRS
-   ${AIMRepresentation_SOURCE_DIR}/Source/AIM/VolumeMesh/VolumeMesh.h
-   ${AIMRepresentation_SOURCE_DIR}/Source/AIM/VolumeMesh/MeshGenerator.h
+   ${DREAM3D_SOURCE_DIR}/Source/AIM/VolumeMesh/VolumeMesh.h
+   ${DREAM3D_SOURCE_DIR}/Source/AIM/VolumeMesh/MeshGenerator.h
 )
 cmp_IDE_SOURCE_PROPERTIES( "AIM/VolumeMesh" "${VolumeMesh_HDRS}" "${VolumeMesh_SRCS}" ${PROJECT_INSTALL_HEADERS})
 
 SET (OIMImport_SRCS
-    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/OIMImport/OIMImport.cpp
+    ${DREAM3D_SOURCE_DIR}/Source/AIM/OIMImport/OIMImport.cpp
 )
 SET (OIMImport_HDRS
-   ${AIMRepresentation_SOURCE_DIR}/Source/AIM/OIMImport/OIMImport.h
+   ${DREAM3D_SOURCE_DIR}/Source/AIM/OIMImport/OIMImport.h
 )
 cmp_IDE_SOURCE_PROPERTIES( "AIM/OIMImport" "${OIMImport_HDRS}" "${OIMImport_SRCS}" ${PROJECT_INSTALL_HEADERS})
 
                     
-SET( Representation_MOC_HDRS
-    ${Representation_SOURCE_DIR}/RepresentationUI.h
-    ${Representation_SOURCE_DIR}/AIMPluginFrame.h
-    ${Representation_SOURCE_DIR}/ReconstructionWidget.h
-    ${Representation_SOURCE_DIR}/OIMImportWidget.h
-    ${Representation_SOURCE_DIR}/GrainGeneratorWidget.h
-    ${Representation_SOURCE_DIR}/SurfaceMeshingWidget.h
-    ${Representation_SOURCE_DIR}/VolumeMeshingWidget.h
-    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Reconstruction/Reconstruction.h
-    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/GrainGenerator/GrainGenerator.h
-    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/SurfaceMesh/SurfaceMesh.h
-    ${AIMRepresentation_SOURCE_DIR}/Source/AIM/VolumeMesh/VolumeMesh.h
+SET( DREAM3DApp_MOC_HDRS
+    ${DREAM3DApp_SOURCE_DIR}/RepresentationUI.h
+    ${DREAM3DApp_SOURCE_DIR}/AIMPluginFrame.h
+    ${DREAM3DApp_SOURCE_DIR}/ReconstructionWidget.h
+    ${DREAM3DApp_SOURCE_DIR}/OIMImportWidget.h
+    ${DREAM3DApp_SOURCE_DIR}/GrainGeneratorWidget.h
+    ${DREAM3DApp_SOURCE_DIR}/SurfaceMeshingWidget.h
+    ${DREAM3DApp_SOURCE_DIR}/VolumeMeshingWidget.h
+    ${DREAM3D_SOURCE_DIR}/Source/AIM/Reconstruction/Reconstruction.h
+    ${DREAM3D_SOURCE_DIR}/Source/AIM/GrainGenerator/GrainGenerator.h
+    ${DREAM3D_SOURCE_DIR}/Source/AIM/SurfaceMesh/SurfaceMesh.h
+    ${DREAM3D_SOURCE_DIR}/Source/AIM/VolumeMesh/VolumeMesh.h
     ${AIM_Threads_HDRS}
     ${OIMImport_HDRS}
 )
 
 # The UI files As generated by Qt Designer
-SET( Representation_UIS
-    ${Representation_SOURCE_DIR}/UI_Files/Test.ui
-    ${Representation_SOURCE_DIR}/UI_Files/RepresentationUI.ui
-    ${Representation_SOURCE_DIR}/UI_Files/ReconstructionWidget.ui
-    ${Representation_SOURCE_DIR}/UI_Files/OIMImportWidget.ui
-    ${Representation_SOURCE_DIR}/UI_Files/GrainGeneratorWidget.ui
-    ${Representation_SOURCE_DIR}/UI_Files/SurfaceMeshingWidget.ui
-    ${Representation_SOURCE_DIR}/UI_Files/VolumeMeshingWidget.ui
+SET( DREAM3DApp_UIS
+    ${DREAM3DApp_SOURCE_DIR}/UI_Files/Test.ui
+    ${DREAM3DApp_SOURCE_DIR}/UI_Files/RepresentationUI.ui
+    ${DREAM3DApp_SOURCE_DIR}/UI_Files/ReconstructionWidget.ui
+    ${DREAM3DApp_SOURCE_DIR}/UI_Files/OIMImportWidget.ui
+    ${DREAM3DApp_SOURCE_DIR}/UI_Files/GrainGeneratorWidget.ui
+    ${DREAM3DApp_SOURCE_DIR}/UI_Files/SurfaceMeshingWidget.ui
+    ${DREAM3DApp_SOURCE_DIR}/UI_Files/VolumeMeshingWidget.ui
 )
-cmp_IDE_GENERATED_PROPERTIES("Representation/UI_Files" "${Representation_UIS}" "")
+cmp_IDE_GENERATED_PROPERTIES("DREAM3DApp/UI_Files" "${DREAM3DApp_UIS}" "")
 
 # and finally any resource files
-SET( Representation_RCS ${PROJECT_RESOURCES_DIR}/icons/images/Icons.qrc)
+SET( DREAM3DApp_RCS ${PROJECT_RESOURCES_DIR}/icons/images/Icons.qrc)
 
 # -- Run MOC and UIC on the necessary files   
-QT4_ADD_RESOURCES( Generated_RC_SRCS ${Representation_RCS} ${QRC_LICENSE_FILES})
+QT4_ADD_RESOURCES( Generated_RC_SRCS ${DREAM3DApp_RCS} ${QRC_LICENSE_FILES})
 
 # this will run uic on .ui files:
-QT4_WRAP_UI( Generated_UI_HDRS ${Representation_UIS} )
+QT4_WRAP_UI( Generated_UI_HDRS ${DREAM3DApp_UIS} )
 
 # and finally this will run moc:
-QT4_WRAP_CPP( Generated_MOC_SRCS ${Representation_MOC_HDRS} )
+QT4_WRAP_CPP( Generated_MOC_SRCS ${DREAM3DApp_MOC_HDRS} )
 
 #-- Put the generated files into their own group for IDEs
 cmp_IDE_GENERATED_PROPERTIES("Generated/ui" "${Generated_UI_HDRS}" "")
@@ -171,9 +171,9 @@ cmp_IDE_GENERATED_PROPERTIES("Generated/moc" "${Generated_MOC_SRCS}" "")
 cmp_IDE_GENERATED_PROPERTIES("Generated/qrc" "${QRC_LICENSE_FILES}" "${Generated_RC_SRCS}")
 
 # -- Finally set the Project Sources to include all the sources
-SET (Representation_PROJECT_SRCS 
-    ${Representation_SRCS}
-    ${Representation_HDRS}
+SET (DREAM3DApp_PROJECT_SRCS 
+    ${DREAM3DApp_SRCS}
+    ${DREAM3DApp_HDRS}
     ${AIM_COMMON_QT_HDRS}
     ${AIM_COMMON_QT_SRCS}
     ${AIM_Threads_SRCS}
@@ -195,23 +195,23 @@ SET (Representation_PROJECT_SRCS
 
 
 IF(APPLE)
-    set(APPLICATION_ICON ${PROJECT_RESOURCES_DIR}/icons/icns/${PROJECT_NAME}.icns)
+    set(APPLICATION_ICON ${PROJECT_RESOURCES_DIR}/icons/icns/DREAM3D.icns)
 ENDIF (APPLE)
 
 IF(Q_WS_WIN)
-    set(APPLICATION_ICON ${PROJECT_RESOURCES_DIR}/icons/ico/${PROJECT_NAME}.ico)
+    set(APPLICATION_ICON ${PROJECT_RESOURCES_DIR}/icons/ico/DREAM3D.ico)
 ENDIF(Q_WS_WIN)
 
                        
 # file(READ ${PROJECT_BINARY_DIR}/Qt_Plugins.txt QT_PLUGINS)
 BuildQtAppBundle(
-    TARGET ${PROJECT_NAME}
+    TARGET DREAM3D
     SOURCES ${${PROJECT_NAME}_PROJECT_SRCS}
     DEBUG_EXTENSION ${EXE_DEBUG_EXTENSION}
     ICON_FILE  ${APPLICATION_ICON}
-    VERSION_MAJOR ${AIMRepresentation_VER_MAJOR}
-    VERSION_MINOR ${AIMRepresentation_VER_MINOR}
-    VERSION_PATCH ${AIMRepresentation_VER_PATCH}
+    VERSION_MAJOR ${DREAM3D_VER_MAJOR}
+    VERSION_MINOR ${DREAM3D_VER_MINOR}
+    VERSION_PATCH ${DREAM3D_VER_PATCH}
     BINARY_DIR    ${${PROJECT_NAME}_BINARY_DIR}
     LINK_LIBRARIES ${QT_LIBRARIES} QtSupport MXADataModel AIMCommon
     LIB_SEARCH_DIRS ${CMAKE_LIBRARY_OUTPUT_DIRECTORY} ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}

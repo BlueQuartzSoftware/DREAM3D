@@ -881,7 +881,7 @@ class StatsGen
       double density;
       double totaldensity;
       int choose = 0;
-      double angle;
+  //    double angle;
       double random;
 	  double w;
 	  double n1, n2, n3;
@@ -953,7 +953,7 @@ class StatsGen
       int choose = 0;
       double density;
       double totaldensity;
-      double angle;
+  //    double angle;
       double random;
 	  double w;
 	  double n1, n2, n3;

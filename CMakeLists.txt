@@ -8,7 +8,7 @@
 #-- This code was partly written under US Air Force Contract FA8650-07-D-5800
 #--
 #--////////////////////////////////////////////////////////////////////////////
-project (AIMRepresentation)
+project (DREAM3D)
 cmake_minimum_required(VERSION 2.8)
 
 # ---------- Setup output Directories -------------------------
@@ -32,10 +32,10 @@ SET (CMAKE_ARCHIVE_OUTPUT_DIRECTORY
   "Single Directory for all static libraries."
   )
 
-set (CMP_SOURCE_DIR ${AIMRepresentation_SOURCE_DIR}/Support/cmp)
+set (CMP_SOURCE_DIR ${DREAM3D_SOURCE_DIR}/Support/cmp)
 
 SET (PROJECT_CODE_DIR ${PROJECT_SOURCE_DIR}/Source)
-SET (PROJECT_RESOURCES_DIR ${AIMRepresentation_SOURCE_DIR}/Resources)
+SET (PROJECT_RESOURCES_DIR ${DREAM3D_SOURCE_DIR}/Resources)
 
 SET (PROJECT_PREFIX "MXA" CACHE STRING "The Prefix to be used for Preprocessor definitions")
 SET (EXE_DEBUG_EXTENSION "_debug")
@@ -48,7 +48,7 @@ SET (PROJECT_INSTALL_EXECUTABLES "1")
 # Include the cmp project to perform all the basic configuration tests for the 
 # project.
 #------------------------------------------------------------------------------- 
-set (CMP_HEADER_DIR ${AIMRepresentation_BINARY_DIR}/MXA)
+set (CMP_HEADER_DIR ${DREAM3D_BINARY_DIR}/MXA)
 set (CMP_CONFIGURATION_FILE_NAME "CMPConfiguration.h")
 set (CMP_TYPES_FILE_NAME "MXATypes.h")
 set (CMP_VERSION_HEADER_FILE_NAME "MXAVersion.h")
@@ -62,9 +62,9 @@ INCLUDE (${CMP_SOURCE_DIR}/cmpProject.cmake)
 # --------------------------------------------------------------------
 # Generate a Header file with Compile Version variables
 # --------------------------------------------------------------------
-cmpGenerateVersionString( "${AIMRepresentation_BINARY_DIR}/AIM/Common/${PROJECT_NAME}Version.h" 
-                          "AIMRepresentation" 
-                          "AIMRepresentation")
+cmpGenerateVersionString( "${DREAM3D_BINARY_DIR}/AIM/Common/${PROJECT_NAME}Version.h" 
+                          "DREAM3D" 
+                          "DREAM3D")
                           
 # --------------------------------------------------------------------
 # Generate our ReadMe and License Files
@@ -168,17 +168,17 @@ ENDIF(CMAKE_COMPILER_IS_GNUCXX)
                
 # -----------------------------------------------------------------------
 # -- Add in the Necessary MXA Sources into a static library
-add_subdirectory( ${AIMRepresentation_SOURCE_DIR}/Source/MXA ${AIMRepresentation_BINARY_DIR}/MXA)
-include_directories (${AIMRepresentation_BINARY_DIR})
+add_subdirectory( ${DREAM3D_SOURCE_DIR}/Source/MXA ${DREAM3D_BINARY_DIR}/MXA)
+include_directories (${DREAM3D_BINARY_DIR})
 
 # -----------------------------------------------------------------------
 # -- Add in the Necessary MXA Sources into a static library
-add_subdirectory( ${AIMRepresentation_SOURCE_DIR}/Source/ANG ${AIMRepresentation_BINARY_DIR}/ANG)
-include_directories (${AIMRepresentation_BINARY_DIR})
+add_subdirectory( ${DREAM3D_SOURCE_DIR}/Source/ANG ${DREAM3D_BINARY_DIR}/ANG)
+include_directories (${DREAM3D_BINARY_DIR})
 
 # -----------------------------------------------------------------------
 # -- Add in the AIM Common Sources into a static library
-add_subdirectory( ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Common ${AIMRepresentation_BINARY_DIR}/AIM)
+add_subdirectory( ${DREAM3D_SOURCE_DIR}/Source/AIM/Common ${DREAM3D_BINARY_DIR}/AIM)
 
 
 option(AIM_BUILD_QT_APPS "Compile the Qt based GUI applications" ON)
@@ -208,55 +208,55 @@ if (AIM_BUILD_QT_APPS)
    # Append the locations of the Qt libraries to our Library Search Paths
    list(APPEND CMP_LIB_SEARCH_DIRS ${QT_BINARY_DIR} ${QT_LIBRARY_DIR} )
    
-   add_subdirectory(${AIMRepresentation_SOURCE_DIR}/Source/QtSupport ${AIMRepresentation_BINARY_DIR}/QtSupport)
+   add_subdirectory(${DREAM3D_SOURCE_DIR}/Source/QtSupport ${DREAM3D_BINARY_DIR}/QtSupport)
    # Add our Qt based GUI project to the list of targets
 
    OPTION (AIM_BUILD_GUI_STATS_GENERATOR "Compile the Statistics Generator GUI Application" ON)
    if (AIM_BUILD_GUI_STATS_GENERATOR)
-    add_subdirectory(${AIMRepresentation_SOURCE_DIR}/Source/StatsGenerator ${AIMRepresentation_BINARY_DIR}/Apps/StatsGenerator)
+    add_subdirectory(${DREAM3D_SOURCE_DIR}/Source/StatsGenerator ${DREAM3D_BINARY_DIR}/Apps/StatsGenerator)
    endif()
       
-   option(AIM_BUILD_GUI_REPRESENTATION "Compile the AIMRepresentation GUI Application" ON)
+   option(AIM_BUILD_GUI_REPRESENTATION "Compile the DREAM3D GUI Application" ON)
    if (AIM_BUILD_GUI_REPRESENTATION)
-       ADD_SUBDIRECTORY( ${AIMRepresentation_SOURCE_DIR}/Source/AIM/GUI ${AIMRepresentation_BINARY_DIR}/Apps/Representation)
+       ADD_SUBDIRECTORY( ${DREAM3D_SOURCE_DIR}/Source/AIM/GUI ${DREAM3D_BINARY_DIR}/Apps/Representation)
    endif()
 else()
     set (AIM_BUILD_GUI_REPRESENTATION "OFF" CACHE BOOL "" FORCE)
     set (AIM_BUILD_GUI_STATS_GENERATOR "OFF" CACHE BOOL "" FORCE)
 endif()
 
-include_directories(${AIMRepresentation_SOURCE_DIR}/Source)
+include_directories(${DREAM3D_SOURCE_DIR}/Source)
 
 # add the Reconstruction Command line Tool
 OPTION(AIM_BUILD_TOOL_RECONSTRUCTION "Compile Reconstruction Tool" OFF)
 IF ( AIM_BUILD_TOOL_RECONSTRUCTION )
-    ADD_SUBDIRECTORY( ${AIMRepresentation_SOURCE_DIR}/Source/AIM/Reconstruction ${AIMRepresentation_BINARY_DIR}/AIM/Reconstruction)
+    ADD_SUBDIRECTORY( ${DREAM3D_SOURCE_DIR}/Source/AIM/Reconstruction ${DREAM3D_BINARY_DIR}/AIM/Reconstruction)
 ENDIF ()
 
 OPTION (AIM_BUILD_TOOL_GRAIN_GENERATOR "Compile the Grain Generator Tool" OFF)
 if (AIM_BUILD_TOOL_GRAIN_GENERATOR)
-    add_subdirectory(${AIMRepresentation_SOURCE_DIR}/Source/AIM/GrainGenerator ${AIMRepresentation_BINARY_DIR}/AIM/GrainGenerator)
+    add_subdirectory(${DREAM3D_SOURCE_DIR}/Source/AIM/GrainGenerator ${DREAM3D_BINARY_DIR}/AIM/GrainGenerator)
 endif()
 
 OPTION (AIM_BUILD_TOOL_SURFACE_MESHING "Compile the surface Meshing tool" OFF)
 if (AIM_BUILD_TOOL_SURFACE_MESHING)
-    add_subdirectory(${AIMRepresentation_SOURCE_DIR}/Source/AIM/SurfaceMesh ${AIMRepresentation_BINARY_DIR}/AIM/SurfaceMesh)
+    add_subdirectory(${DREAM3D_SOURCE_DIR}/Source/AIM/SurfaceMesh ${DREAM3D_BINARY_DIR}/AIM/SurfaceMesh)
 endif()
 
 OPTION (AIM_BUILD_TOOL_VOLUME_MESHING "Compile the Volume Meshing tools" OFF)
 if (AIM_BUILD_TOOL_VOLUME_MESHING)
-    add_subdirectory(${AIMRepresentation_SOURCE_DIR}/Source/AIM/VolumeMesh ${AIMRepresentation_BINARY_DIR}/AIM/VolumeMesh)
+    add_subdirectory(${DREAM3D_SOURCE_DIR}/Source/AIM/VolumeMesh ${DREAM3D_BINARY_DIR}/AIM/VolumeMesh)
 endif()
 
 OPTION(AIM_BUILD_TESTING "Compile the test programs" ON)
 if (AIM_BUILD_TESTING)
-    add_subdirectory(${AIMRepresentation_SOURCE_DIR}/Source/Test ${AIMRepresentation_BINARY_DIR}/AIM/Test)
+    add_subdirectory(${DREAM3D_SOURCE_DIR}/Source/Test ${DREAM3D_BINARY_DIR}/AIM/Test)
 endif()
 
 
 option(AIM_BUILD_CMU "Compile the CMU Optimization Wrappers" OFF)
 if(AIM_BUILD_CMU)
-    add_subdirectory(${AIMRepresentation_SOURCE_DIR}/Source/CMU ${AIMRepresentation_BINARY_DIR}/AIM/CMU)
+    add_subdirectory(${DREAM3D_SOURCE_DIR}/Source/CMU ${DREAM3D_BINARY_DIR}/AIM/CMU)
 endif()
 
 # Should we build the HTML documentation

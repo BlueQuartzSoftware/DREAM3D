@@ -45,7 +45,7 @@ add_definitions(-DAIM_USE_QT)
                 
 # --------------------------------------------------------------------
 # Generate the License File Headers
-include(${AIMRepresentation_SOURCE_DIR}/License/License.cmake)
+include(${DREAM3D_SOURCE_DIR}/License/License.cmake)
            
 set (StatsGenerator_SRCS 
     ${StatsGenerator_SOURCE_DIR}/main.cpp
@@ -179,7 +179,7 @@ include_directories(${HDF5_INCLUDE_DIR})
 include_directories(${StatsGenerator_SOURCE_DIR} )
 include_directories(${StatsGenerator_SOURCE_DIR}/.. )
 include_directories(${StatsGenerator_BINARY_DIR} )
-include_directories(${AIMRepresentation_BINARY_DIR}/QtSupport)
+include_directories(${DREAM3D_BINARY_DIR}/QtSupport)
 
 IF(APPLE)
     set(APPLICATION_ICON ${PROJECT_RESOURCES_DIR}/icons/icns/${PROJECT_NAME}.icns)
@@ -194,9 +194,9 @@ BuildQtAppBundle(
     SOURCES ${${PROJECT_NAME}_PROJECT_SRCS}
     DEBUG_EXTENSION ${EXE_DEBUG_EXTENSION}
     ICON_FILE  ${APPLICATION_ICON}
-    VERSION_MAJOR ${AIMRepresentation_VER_MAJOR}
-    VERSION_MINOR ${AIMRepresentation_VER_MINOR}
-    VERSION_PATCH ${AIMRepresentation_VER_PATCH}
+    VERSION_MAJOR ${DREAM3D_VER_MAJOR}
+    VERSION_MINOR ${DREAM3D_VER_MINOR}
+    VERSION_PATCH ${DREAM3D_VER_PATCH}
     BINARY_DIR    ${${PROJECT_NAME}_BINARY_DIR}
     LINK_LIBRARIES ${QT_LIBRARIES} QtSupport ${QWT_LIBRARIES} AIMCommon 
     LIB_SEARCH_DIRS ${CMAKE_LIBRARY_OUTPUT_DIRECTORY} ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
