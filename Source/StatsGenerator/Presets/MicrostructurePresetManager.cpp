@@ -64,17 +64,13 @@ MicrostructurePresetManager::Pointer MicrostructurePresetManager::instance()
 // -----------------------------------------------------------------------------
 void MicrostructurePresetManager::registerKnownMicrostructurePresetFactories()
 {
-#if MXA_TIFF_SUPPORT
+#if 0
     //Register to be able to import Tiff images
     AbstractMicrostructurePreset::Pointer h5TiffMicrostructurePresetFactory ( new H5TiffMicrostructurePresetFactory() );
     MicrostructurePresetManager::registerMicrostructurePresetFactory(h5TiffMicrostructurePresetFactory);
 #endif
 
-#if MXA_HDF5_SUPPORT
-    //Register to be able to import BMP images
-    AbstractMicrostructurePreset::Pointer h5BmpMicrostructurePresetFactory ( new H5BmpMicrostructurePresetFactory() );
-    MicrostructurePresetManager::registerMicrostructurePresetFactory(h5BmpMicrostructurePresetFactory);
-#endif
+
 }
 
 // -----------------------------------------------------------------------------
