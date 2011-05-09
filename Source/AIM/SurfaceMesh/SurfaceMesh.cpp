@@ -114,12 +114,12 @@ void SurfaceMesh::compute()
   CHECK_FOR_CANCELED(Surface Meshing)
   progressMessage(AIM_STRING("Running Surface Meshing"), 0 );
 
-  MAKE_OUTPUT_FILE_PATH (  NodesRawFile , AIM::SurfaceMeshing::NodesRawFile)
-  MAKE_OUTPUT_FILE_PATH (  NodesFile , AIM::SurfaceMeshing::NodesFile)
-  MAKE_OUTPUT_FILE_PATH (  TrianglesFile , AIM::SurfaceMeshing::TrianglesFile)
-  MAKE_OUTPUT_FILE_PATH (  EdgesFile , AIM::SurfaceMeshing::EdgesFile)
-  MAKE_OUTPUT_FILE_PATH (  EdgesFileIndex , AIM::SurfaceMeshing::EdgesFileIndex)
-  MAKE_OUTPUT_FILE_PATH (  TrianglesFileIndex , AIM::SurfaceMeshing::TrianglesFileIndex)
+//  MAKE_OUTPUT_FILE_PATH (  NodesRawFile , AIM::SurfaceMeshing::NodesRawFile)
+  MAKE_OUTPUT_FILE_PATH (  NodesFile , AIM::SurfaceMeshing::NodesFileBin)
+  MAKE_OUTPUT_FILE_PATH (  TrianglesFile , AIM::SurfaceMeshing::TrianglesFileBin)
+//  MAKE_OUTPUT_FILE_PATH (  EdgesFile , AIM::SurfaceMeshing::EdgesFile)
+//  MAKE_OUTPUT_FILE_PATH (  EdgesFileIndex , AIM::SurfaceMeshing::EdgesFileIndex)
+//  MAKE_OUTPUT_FILE_PATH (  TrianglesFileIndex , AIM::SurfaceMeshing::TrianglesFileIndex)
   MAKE_OUTPUT_FILE_PATH (  VisualizationFile , AIM::SurfaceMeshing::VisualizationFile)
 
   // Create the output directory if needed
@@ -274,6 +274,14 @@ void SurfaceMesh::compute()
   progressMessage(AIM_STRING("Surface Meshing Complete"), 100 );
 
   m = SurfaceMeshFunc::NullPointer();  // Clean up the memory
+
+  if (m_DeleteTempFiles == true)
+  {
+    // Delete the intermediate files
+    MXADir::remove(NodesFile);
+    MXADir::remove(TrianglesFile);
+  }
+
 
 #if AIM_USE_QT
   emit finished();
