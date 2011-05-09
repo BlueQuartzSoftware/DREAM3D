@@ -196,7 +196,6 @@ int H5AngDataLoader::loadData(Voxel voxels[], int xpoints, int ypoints, int zpoi
   float* imqual2Ptr;
   int xstartspot;
   int ystartspot;
-  //double qr[5];
 
   for (int slice = 0; slice < zpoints; ++slice)
   {
