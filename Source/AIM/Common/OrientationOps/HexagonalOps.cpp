@@ -107,9 +107,6 @@ void HexagonalOps::getFZRod(double &r1,double &r2, double &r3)
   _calcFZRod(rodsym, numsym,r1, r2, r3);
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void HexagonalOps::getNearestQuat( double *q1, double *q2)
 {
   int numsym = 0;
@@ -127,9 +124,6 @@ void HexagonalOps::getNearestQuat( double *q1, double *q2)
     _calcNearestQuat(quatsym, numsym, q1, q2);
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void HexagonalOps::getFZQuat(double *qr)
 {
   int numsym = 0;
@@ -148,9 +142,6 @@ void HexagonalOps::getFZQuat(double *qr)
 }
 
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 int HexagonalOps::getMisoBin(double n1, double n2, double n3)
 {
   double dim[3];
@@ -167,9 +158,6 @@ int HexagonalOps::getMisoBin(double n1, double n2, double n3)
 }
 
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void HexagonalOps::determineEulerAngles(int choose, double &synea1, double &synea2, double &synea3)
 {
   double init[3];
@@ -190,9 +178,6 @@ void HexagonalOps::determineEulerAngles(int choose, double &synea1, double &syne
 }
 
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 double HexagonalOps::determineAxisAngle( int choose)
 {
   //double init1, init2, init3;
@@ -209,10 +194,7 @@ double HexagonalOps::determineAxisAngle( int choose)
   return _calcDetermineAxisAngle(step, phi, choose);
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int HexagonalOps::getOdfBin(double q1[5], double qref[5])
+int HexagonalOps::getOdfBin(double r1, double r2, double r3)
 {
   double dim[3];
   double bins[3];
@@ -224,7 +206,7 @@ int HexagonalOps::getOdfBin(double q1[5], double qref[5])
   bins[1] = 36.0;
   bins[2] = 12.0;
 
-  return _calcODFBin(dim, bins, q1, qref);
+  return _calcODFBin(dim, bins, r1, r2, r3);
 }
 
 
