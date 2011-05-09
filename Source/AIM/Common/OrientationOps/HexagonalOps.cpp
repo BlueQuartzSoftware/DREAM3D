@@ -178,7 +178,7 @@ void HexagonalOps::determineEulerAngles(int choose, double &synea1, double &syne
 }
 
 
-double HexagonalOps::determineAxisAngle( int choose)
+void HexagonalOps::determineHomochoricValues( int choose, double &r1, double &r2, double &r3)
 {
   //double init1, init2, init3;
   double step[3];
@@ -191,7 +191,7 @@ double HexagonalOps::determineAxisAngle( int choose)
   phi[1] = (choose / 36) % 36;
   phi[2] = choose / (36 * 36);
 
-  return _calcDetermineAxisAngle(step, phi, choose);
+  return _calcDetermineHomochoricValues(step, phi, choose, r1, r2, r3);
 }
 
 int HexagonalOps::getOdfBin(double r1, double r2, double r3)
