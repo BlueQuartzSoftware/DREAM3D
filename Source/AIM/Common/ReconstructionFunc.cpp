@@ -3258,8 +3258,6 @@ void ReconstructionFunc::find_eulerodf(H5ReconStatsWriter::Pointer h5io)
 {
   size_t bin;
   size_t numgrains = m_Grains.size();
-  double q1[5];
-  double qref[5];
   AIM::Reconstruction::CrystalStructure phase;
   double **eulerodf;
 
@@ -3283,19 +3281,19 @@ void ReconstructionFunc::find_eulerodf(H5ReconStatsWriter::Pointer h5io)
 		  }
 	  }
   }
-  OrientationMath::eulertoQuat(qref,0.0,0.0,0.0);
+  double r1, r2, r3;
+  double ea1, ea2, ea3;
   for (size_t i = 1; i < numgrains; i++)
   {
     if (m_Grains[i]->surfacegrain == 0 && m_Grains[i]->active == 1)
     {
       double vol = m_Grains[i]->volume;
-      q1[0] = m_Grains[i]->avg_quat[0]/m_Grains[i]->avg_quat[0];
-      q1[1] = m_Grains[i]->avg_quat[1]/m_Grains[i]->avg_quat[0];
-      q1[2] = m_Grains[i]->avg_quat[2]/m_Grains[i]->avg_quat[0];
-      q1[3] = m_Grains[i]->avg_quat[3]/m_Grains[i]->avg_quat[0];
-      q1[4] = m_Grains[i]->avg_quat[4]/m_Grains[i]->avg_quat[0];
+	  ea1 = m_Grains[i]->euler1;
+	  ea2 = m_Grains[i]->euler2;
+	  ea3 = m_Grains[i]->euler3;
       phase = crystruct[m_Grains[i]->phase];
-      bin = m_OrientatioOps[phase]->getOdfBin(q1, qref);
+	  OrientationMath::eulertoRod(r1,r2,r3,ea1,ea2,ea3);
+      bin = m_OrientatioOps[phase]->getOdfBin(r1,r2,r3);
       eulerodf[m_Grains[i]->phase][bin] = eulerodf[m_Grains[i]->phase][bin] + (vol/totalvol[m_Grains[i]->phase]);
     }
   }
@@ -3313,6 +3311,7 @@ void ReconstructionFunc::measure_misorientations(H5ReconStatsWriter::Pointer h5i
 {
   //double degtorad = m_pi / 180.0;
   double n1, n2, n3;
+  double r1, r2, r3;
   int mbin;
   double w;
   double q1[5];
@@ -3374,7 +3373,7 @@ void ReconstructionFunc::measure_misorientations(H5ReconStatsWriter::Pointer h5i
       if (phase1 == phase2) w = m_OrientatioOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
       if (phase1 == phase2)
       {
-        OrientationMath::axisAngletoHomochoric(w, n1, n2, n3);
+        OrientationMath::axisAngletoHomochoric(w, n1, n2, n3, r1, r2, r3);
         m_Grains[i]->misorientationlist->at(3 * j) = n1 * pow(((3.0 / 4.0) * (w - sin(w))), (1.0 / 3.0));
         m_Grains[i]->misorientationlist->at(3 * j + 1) = n2 * pow(((3.0 / 4.0) * (w - sin(w))), (1.0 / 3.0));
         m_Grains[i]->misorientationlist->at(3 * j + 2) = n3 * pow(((3.0 / 4.0) * (w - sin(w))), (1.0 / 3.0));

@@ -2079,9 +2079,8 @@ void  GrainGeneratorFunc::find_neighbors()
 void GrainGeneratorFunc::MC_LoopBody1(int phase, size_t neighbor, int j,std::vector<double>* misolist,std::vector<double>* neighborsurfarealist, double &mdfchange)
 {
   double w;
-  double n1;
-  double n2;
-  double n3;
+  double n1, n2, n3;
+  double r1, r2, r3;
 
   int curmiso1 = std::numeric_limits<int >::max();
   int curmiso2 = std::numeric_limits<int >::max();
@@ -2103,7 +2102,7 @@ void GrainGeneratorFunc::MC_LoopBody1(int phase, size_t neighbor, int j,std::vec
   q2[3] = m_Grains[neighbor]->avg_quat[3];
   q2[4] = m_Grains[neighbor]->avg_quat[4];
   w = m_OrientatioOps[crystruct[phase]]->getMisoQuat(q1,q2,n1,n2,n3);
-  OrientationMath::axisAngletoHomochoric(w, n1, n2, n3);
+  OrientationMath::axisAngletoHomochoric(w, n1, n2, n3, r1, r2, r3);
   newmisobin = m_OrientatioOps[crystruct[phase]]->getMisoBin(n1, n2, n3);
   mdfchange = mdfchange + (((actualmdf[phase][curmisobin]-simmdf[phase][curmisobin])*(actualmdf[phase][curmisobin]-simmdf[phase][curmisobin])) - ((actualmdf[phase][curmisobin]-(simmdf[phase][curmisobin]-(neighsurfarea/totalsurfacearea[phase])))*(actualmdf[phase][curmisobin]-(simmdf[phase][curmisobin]-(neighsurfarea/totalsurfacearea[phase])))));
   mdfchange = mdfchange + (((actualmdf[phase][newmisobin]-simmdf[phase][newmisobin])*(actualmdf[phase][newmisobin]-simmdf[phase][newmisobin])) - ((actualmdf[phase][newmisobin]-(simmdf[phase][newmisobin]+(neighsurfarea/totalsurfacearea[phase])))*(actualmdf[phase][newmisobin]-(simmdf[phase][newmisobin]+(neighsurfarea/totalsurfacearea[phase])))));
@@ -2112,9 +2111,8 @@ void GrainGeneratorFunc::MC_LoopBody1(int phase, size_t neighbor, int j,std::vec
 void GrainGeneratorFunc::MC_LoopBody2(int phase, size_t neighbor, int j,std::vector<double>* misolist,std::vector<double>* neighborsurfarealist)
 {
   double w;
-  double n1;
-  double n2;
-  double n3;
+  double n1, n2, n3;
+  double r1, r2, r3;
 
   int curmiso1 = std::numeric_limits<int >::max();
   int curmiso2 = std::numeric_limits<int >::max();
@@ -2139,7 +2137,7 @@ void GrainGeneratorFunc::MC_LoopBody2(int phase, size_t neighbor, int j,std::vec
   q2[3] = m_Grains[neighbor]->avg_quat[3];
   q2[4] = m_Grains[neighbor]->avg_quat[4];
   w = m_OrientatioOps[crystruct[phase]]->getMisoQuat(q1,q2,n1,n2,n3);
-  OrientationMath::axisAngletoHomochoric(w, n1, n2, n3);
+  OrientationMath::axisAngletoHomochoric(w, n1, n2, n3, r1, r2, r3);
   newmisobin = m_OrientatioOps[crystruct[phase]]->getMisoBin(n1, n2, n3);
   misolist->at(3 * j) = miso1;
   misolist->at(3 * j + 1) = miso2;
@@ -2155,8 +2153,8 @@ void GrainGeneratorFunc::swapOutOrientation( int &badtrycount, int &numbins, dou
   double deltaerror = 1.0;
   int selectedgrain1;
   double q1[5];
-  double qref[5];
-  OrientationMath::eulertoQuat(qref,0.0,0.0,0.0);
+  double ea1, ea2, ea3;
+  double r1, r2, r3;
 
   int g1odfbin = std::numeric_limits<int >::max();
 
@@ -2165,7 +2163,7 @@ void GrainGeneratorFunc::swapOutOrientation( int &badtrycount, int &numbins, dou
   double g1ea3 = std::numeric_limits<double >::max();
 
   IntVectorType nlist;
- std::vector<double>* misolist;
+  std::vector<double>* misolist;
   DoubleVectorType neighborsurfarealist;
 
   double totaldensity = 0;
@@ -2179,12 +2177,13 @@ void GrainGeneratorFunc::swapOutOrientation( int &badtrycount, int &numbins, dou
     if (selectedgrain1 == numgrains) selectedgrain1 = numgrains - 1;
     if (m_Grains[selectedgrain1]->surfacegrain > 0) good = 0;
   }
-  q1[1] = m_Grains[selectedgrain1]->avg_quat[1];
-  q1[2] = m_Grains[selectedgrain1]->avg_quat[2];
-  q1[3] = m_Grains[selectedgrain1]->avg_quat[3];
-  q1[4] = m_Grains[selectedgrain1]->avg_quat[4];
+
+  ea1 = m_Grains[selectedgrain1]->euler1;
+  ea2 = m_Grains[selectedgrain1]->euler2;
+  ea3 = m_Grains[selectedgrain1]->euler3;
+  OrientationMath::eulertoRod(r1, r2, r3, ea1, ea2, ea3);
   int phase = m_Grains[selectedgrain1]->phase;
-  g1odfbin = m_OrientatioOps[crystruct[phase]]->getOdfBin(q1, qref);
+  g1odfbin = m_OrientatioOps[crystruct[phase]]->getOdfBin(r1, r2, r3);
   random = rg.Random();
   int choose = 0;
   totaldensity = 0;
@@ -2244,8 +2243,7 @@ void GrainGeneratorFunc::switchOrientations( int &badtrycount, int &numbins, dou
   int selectedgrain1;
   int selectedgrain2;
   double q1[5];
-  double qref[5];
-  OrientationMath::eulertoQuat(qref,0.0,0.0,0.0);
+  double r1, r2, r3;
 
   int g1odfbin = std::numeric_limits<int >::max();
   int g2odfbin = std::numeric_limits<int >::max();
@@ -2284,12 +2282,14 @@ void GrainGeneratorFunc::switchOrientations( int &badtrycount, int &numbins, dou
   q1[3] = m_Grains[selectedgrain1]->avg_quat[3];
   q1[4] = m_Grains[selectedgrain1]->avg_quat[4];
   int phase = m_Grains[selectedgrain1]->phase;
-  g1odfbin = m_OrientatioOps[crystruct[phase]]->getOdfBin(q1, qref);
+  OrientationMath::eulertoRod(r1, r2, r3, g1ea1, g1ea2, g1ea3);
+  g1odfbin = m_OrientatioOps[crystruct[phase]]->getOdfBin(r1, r2, r3);
   q1[1] = m_Grains[selectedgrain2]->avg_quat[1];
   q1[2] = m_Grains[selectedgrain2]->avg_quat[2];
   q1[3] = m_Grains[selectedgrain2]->avg_quat[3];
   q1[4] = m_Grains[selectedgrain2]->avg_quat[4];
-  g2odfbin = m_OrientatioOps[crystruct[phase]]->getOdfBin(q1, qref);
+  OrientationMath::eulertoRod(r1, r2, r3, g2ea1, g2ea2, g2ea3);
+  g2odfbin = m_OrientatioOps[crystruct[phase]]->getOdfBin(r1, r2, r3);
 
   double odfchange = ((actualodf[phase][g1odfbin]-simodf[phase][g1odfbin]) * (actualodf[phase][g1odfbin]-simodf[phase][g1odfbin])) - ((actualodf[phase][g1odfbin]
      -(simodf[phase][g1odfbin] - (double(m_Grains[selectedgrain1]->numvoxels) * resx * resy * resz / unbiasedvol[phase]) + (double(m_Grains[selectedgrain2]->numvoxels) * resx
