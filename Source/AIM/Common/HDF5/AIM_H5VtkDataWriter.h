@@ -55,17 +55,17 @@ class ReconstructionFunc;
  * @class AIMH5DataWriter AIMH5DataWriter.h AIM/Reconstruction/AIMH5DataWriter.h
  * @brief This class is designed to write VTK style objects into an HDF5 type file.
  * Currently supported types are
- * <li> UnstructuredGrid
+ * @li UnstructuredGrid
  *
  * One needs to create at a minimum the points, cells and cell_types array. See the
  * method signatures to create the proper types for each array. Currently STL container
  * vector is used to hold the data to be written. Some sample code
  *
  * @code
- * AIMH5DataWriter::Pointer h5writer = AIMH5DataWriter::New();
- * h5writer->setFileName(hdfFile);
- * int err = h5writer->openFile(false);
- *  std::vector<float> points;
+    AIMH5DataWriter::Pointer h5writer = AIMH5DataWriter::New();
+    h5writer->setFileName(hdfFile);
+    int err = h5writer->openFile(false);
+    std::vector<float> points;
     std::vector<int32_t> cells;
     std::vector<int32_t> cell_types(number_of_cells, VTK_CELLTYPE_VOXEL);
     std::string hdfPath ("/SomePathToTheData");

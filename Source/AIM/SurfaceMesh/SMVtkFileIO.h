@@ -108,13 +108,17 @@ class AIMCOMMON_EXPORT SMVtkFileIO
 
     int readLine(std::istream &in, char* buf, int bufSize);
 
+  protected:
+    int writeBinaryCellData(const std::string &TrianglesFile, FILE* vtkFile, int nTriangles, bool conformalMesh);
+    int writeASCIICellData(const std::string &TrianglesFile, FILE* vtkFile, int nTriangles, bool conformalMesh);
 
+    int writeBinaryPointData(const std::string &NodesFile, FILE* vtkFile, int nNodes, bool conformalMesh);
+    int writeASCIIPointData(const std::string &NodesFile, FILE* vtkFile, int nNodes, bool conformalMesh);
   private:
 
     std::ifstream m_InputFile;
     bool          m_fileIsBinary;
     bool          m_HeaderComplete;
-  //  int           m_CurrentSlice;
     size_t        m_IntByteSize;
 
     SMVtkFileIO(const SMVtkFileIO&); // Copy Constructor Not Implemented
