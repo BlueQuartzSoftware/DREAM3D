@@ -100,9 +100,11 @@ cmp_IDE_SOURCE_PROPERTIES( "AIM/GrainGenerator" "${GrainGenerator_HDRS}" "${Grai
 
 SET (SurfaceMesh_SRCS
     ${DREAM3D_SOURCE_DIR}/Source/AIM/SurfaceMesh/SurfaceMesh.cpp
+    ${DREAM3D_SOURCE_DIR}/Source/AIM/SurfaceMesh/SMVtkFileIO.cpp
 )
 SET (SurfaceMesh_HDRS
    ${DREAM3D_SOURCE_DIR}/Source/AIM/SurfaceMesh/SurfaceMesh.h
+   ${DREAM3D_SOURCE_DIR}/Source/AIM/SurfaceMesh/SMVtkFileIO.h
 )
 cmp_IDE_SOURCE_PROPERTIES( "AIM/SurfaceMesh" "${SurfaceMesh_HDRS}" "${SurfaceMesh_SRCS}" ${PROJECT_INSTALL_HEADERS})
 
