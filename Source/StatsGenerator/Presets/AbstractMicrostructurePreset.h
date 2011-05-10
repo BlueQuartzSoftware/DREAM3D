@@ -52,8 +52,8 @@ class AbstractMicrostructurePreset
      * @param tableModel
      * @param binNumbers
      */
-
     virtual void generateOmega3Data(StatsGenPlotWidget* plot, QVector<double> binNumbers) = 0;
+
     /**
      * @brief
      * @param tableModel
