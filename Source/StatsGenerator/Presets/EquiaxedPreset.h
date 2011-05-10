@@ -40,6 +40,8 @@
 
 #include "AbstractMicrostructurePresetFactory.h"
 #include "AbstractMicrostructurePreset.h"
+#include "AIM/Common/AIMRandomNG.h"
+#include "MXA/Common/LogTime.h"
 
 
 class EquiaxedPreset : public AbstractMicrostructurePreset
