@@ -28,7 +28,7 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#include "VTKFileUtils.h"
+#include "SMVtkFileIO.h"
 
 #include <string.h>
 
@@ -36,13 +36,13 @@
 
 #include "MXA/Common/LogTime.h"
 
-#include "SurfaceMeshFunc.h"
+#include "AIM/Common/SurfaceMeshFunc.h"
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 
-VTKFileUtils::VTKFileUtils() :
+SMVtkFileIO::SMVtkFileIO() :
 m_fileIsBinary(false),
 m_HeaderComplete(false),
 //m_CurrentSlice(-1),
@@ -55,7 +55,7 @@ m_IntByteSize(1)
 //
 // -----------------------------------------------------------------------------
 
-VTKFileUtils::~VTKFileUtils()
+SMVtkFileIO::~SMVtkFileIO()
 {
 
 }
@@ -64,7 +64,7 @@ VTKFileUtils::~VTKFileUtils()
 //
 // -----------------------------------------------------------------------------
 
-int VTKFileUtils::parseFloat3V(const char* input, float* output, float defaultValue)
+int SMVtkFileIO::parseFloat3V(const char* input, float* output, float defaultValue)
 {
   char text[256];
   int n = sscanf(input, "%s %f %f %f", text, &(output[0]), &(output[1]), &(output[2]) );
@@ -79,7 +79,7 @@ int VTKFileUtils::parseFloat3V(const char* input, float* output, float defaultVa
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int VTKFileUtils::readLine(std::istream &in, char* buf, int bufSize)
+int SMVtkFileIO::readLine(std::istream &in, char* buf, int bufSize)
 {
 
   bool readAnotherLine = true;
@@ -134,7 +134,7 @@ size_t parseByteSize(char text[256])
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int VTKFileUtils::readZSlice(SurfaceMeshFunc* m, int zID)
+int SMVtkFileIO::readZSlice(SurfaceMeshFunc* m, int zID)
 {
   if (m_HeaderComplete == false)
   {
@@ -223,7 +223,7 @@ int VTKFileUtils::readZSlice(SurfaceMeshFunc* m, int zID)
 //
 // -----------------------------------------------------------------------------
 #if 0
-int VTKFileUtils::readNextZSlice(SurfaceMeshFunc* m, int zID)
+int SMVtkFileIO::readNextZSlice(SurfaceMeshFunc* m, int zID)
 {
   int error = 0;
   if (m_HeaderComplete == false)
@@ -298,7 +298,7 @@ int VTKFileUtils::readNextZSlice(SurfaceMeshFunc* m, int zID)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int VTKFileUtils::readHeader(SurfaceMeshFunc* m, const std::string &file)
+int SMVtkFileIO::readHeader(SurfaceMeshFunc* m, const std::string &file)
 {
   /*
    1: # vtk DataFile Version 2.0
@@ -430,176 +430,132 @@ int VTKFileUtils::readHeader(SurfaceMeshFunc* m, const std::string &file)
 //
 // -----------------------------------------------------------------------------
 
-int VTKFileUtils::writeVTKFile(SurfaceMeshFunc* m,
-                                int nNodes, int nTriangles,
-                                const std::string &VisualizationFile,
-                                const std::string &NodesFile,
-                                const std::string &TrianglesFile,
-                                bool binaryFile)
+int SMVtkFileIO::writeVTKFile(SurfaceMeshFunc* m,
+                             int nNodes, int nTriangles,
+                             const std::string &VisualizationFile,
+                             const std::string &NodesFile,
+                             const std::string &TrianglesFile,
+                             bool binaryFile,
+                             bool conformalMesh)
 {
+  // Open the Nodes file for reading
+  FILE* nodesFile = fopen(NodesFile.c_str(), "rb");
+  // Open the triangles file for reading
+  FILE* triFile = fopen(TrianglesFile.c_str(), "rb");
 
-int err = -1;
-#if 0
-  bool conformalMesh = inputs->conformalMesh;
-  bool labelPointData = inputs->labelPointData;
-  Label boundingBoxLabel = inputs->boundBox;
+  // Open the output VTK File for writing
+  FILE* vtkFile = NULL;
 
-  std::cout << logTime() << " Writing VTK File: " << vtkFileName << std::endl;
-  NodeVector_Ptr nodes = mesh->nodes();
-  std::cout << logTime() << "  Number of Nodes: " << nodes->size() << std::endl;
-  std::stringstream ss;
-  ss << "M3C-";
-  if (inputs->lockTriplePoints)
-  { ss << "LockedTJ-";}
-  if (inputs->lockQuadPoints)
-  { ss << "LockedQuad-";}
-  if (inputs->boundBox)
-  { ss << "BoundBox-";}
 
-  std::ofstream vtkFile(vtkFileName.c_str(), std::ios::binary);
-  vtkFile << "# vtk DataFile Version 2.0" << std::endl;
-  vtkFile << ss.str() << std::endl;
-  vtkFile << "ASCII" << std::endl;
-  vtkFile << "DATASET POLYDATA" << std::endl;
-  vtkFile << "POINTS " << nodes->size() << " float" << std::endl;
-
-  for (typename NodeVector::const_iterator iter = nodes->begin(); iter != nodes->end(); ++iter)
+  vtkFile = fopen(VisualizationFile.c_str(), "wb");
+  if (NULL == vtkFile)
   {
-    NodeType node = *iter;
-    vtkFile << node.position.x << " " << node.position.y << " " << node.position.z << std::endl;
+    std::cout << "Error Creating VTK Visualization File '" << VisualizationFile << "'" << std::endl;
+    return -1;
   }
+  fprintf(vtkFile, "# vtk DataFile Version 2.0\n");
+  fprintf(vtkFile, "Data set from DREAM.3D Surface Meshing Module\n");
+  if (binaryFile) {
+    fprintf(vtkFile, "BINARY\n");
+  }
+  else {
+    fprintf(vtkFile, "ASCII\n");
+  }
+  fprintf(vtkFile, "DATASET UNSTRUCTURED_GRID\n");
+  fprintf(vtkFile, "POINTS %d float\n", nNodes);
+  unsigned char nodeData[32];
+  double* vec3d = (double*)(&nodeData[8]);
+  int* nodeId = (int*)(&nodeData[0]);
+  int* nodeKind = (int*)(&nodeData[4]);
 
-  // Write out the triangles
-  TriangleListPtrType triangles = mesh->triangles();
-
-  Label label0 = 0;
-  Label label1 = 0;
-  char dir0 = 0;
-  char dir1 = 0;
-  std::map<Label, char > winding;
-
-  std::cout << logTime() << "  Number of triangles: " << triangles->size() << std::endl;
-  size_t nTris = mesh->triangles()->size();
-  size_t triIndex = 0;
-  if (conformalMesh)
+  for (int i = 0; i < nNodes; i++)
   {
-    vtkFile << "POLYGONS " << (nTris) << " " << (nTris * 4) << std::endl;
+    fread(nodeData, 32, 1, nodesFile); // Read one set of positions from the nodes file
+    fprintf(vtkFile, "%f %f %f\n", vec3d[0], vec3d[1], vec3d[2]); // Write the positions to the output file
   }
-  else
-  {
-    vtkFile << "POLYGONS " << (nTris * 2) << " " << (nTris * 4 * 2) << std::endl;
-  }
-  for (typename TriangleListType::const_iterator tri = triangles->begin(); tri != triangles->end(); ++tri)
-  {
-#if 0
-    dir0 = 0;
-    dir1 = 0;
-    label0 = regionVect->at(triIndex * 2);
-    label1 = regionVect->at(triIndex * 2 + 1);
-    if (winding.find(label0) == winding.end())
-    {
-      dir0 = 0;
-    }
-    else
-    {
-      dir0 = winding[label0];
-    }
-    if (winding.find(label1) == winding.end())
-    {
-      dir1 = 0;
-    }
-    else
-    {
-      dir1 = winding[label1];
-    }
+  fclose(nodesFile);
 
-    // No winding direction has been specified for both labels
-    if (dir0 == 0 && dir1 == 0)
-    {
-      winding[label0] = 1;
-      dir0 = 1;
-      winding[label1] = 2;
-      dir1 = 2;
-    }
-    else
-    {
-      if (dir0 != 0 && dir1 == 0) // Direction0 has a preferred winding
-
-      {
-        dir1 = dir0 ^ 3; // Makes dir1 either 1 or 2 based on the value of dir0
-        winding[label1] = dir1;
-      }
-      else if (dir1 != 0 && dir0 == 0)
-      {
-        dir0 = dir1 ^ 3;
-        winding[label0] = dir0;
-      }
-    }
-    if (dir0 == 1)
-    {
-      vtkFile << "3 " << (*tri)->indices[0] << " " << (*tri)->indices[1] << " " << (*tri)->indices[2] << std::endl;
-      if (conformalMesh == false)
-      {
-        vtkFile << "3 " << (*tri)->indices[2] << " " << (*tri)->indices[1] << " " << (*tri)->indices[0] << std::endl;
-      }
-    }
-    else
-    {
-      vtkFile << "3 " << (*tri)->indices[2] << " " << (*tri)->indices[1] << " " << (*tri)->indices[0] << std::endl;
-      if (conformalMesh == false)
-      {
-        vtkFile << "3 " << (*tri)->indices[0] << " " << (*tri)->indices[1] << " " << (*tri)->indices[2] << std::endl;
-      }
-    }
-#endif
-    vtkFile << "3 " << (*tri)->indices[0] << " " << (*tri)->indices[1] << " " << (*tri)->indices[2] << std::endl;
-    if (conformalMesh == false)
-    {
-      vtkFile << "3 " << (*tri)->indices[2] << " " << (*tri)->indices[1] << " " << (*tri)->indices[0] << std::endl;
-    }
-    ++triIndex;
-  }
-
-  if (true == labelPointData)
-  {
-    vtkFile << "POINT_DATA " << nodes->size() << std::endl;
-    vtkFile << "SCALARS Node_Type int 1" << std::endl;
-    vtkFile << "LOOKUP_TABLE default" << std::endl;
-    for (typename NodeVector::const_iterator iter = nodes->begin(); iter != nodes->end(); ++iter)
-    {
-      NodeType node = *iter;
-      if (node.labels.find(boundingBoxLabel) == node.labels.end() )
-      {
-        vtkFile << node.labels.size() << std::endl;
-      }
-      else
-      {
-        vtkFile << "1" << std::endl;
-      }
-    }
-  }
+  // Write the triangle indices into the vtk File
+  int tData[6];
+  int triangleCount = nTriangles;
   if (false == conformalMesh)
   {
-    vtkFile << "CELL_DATA " << (regionVect->size()) << std::endl;
-    vtkFile << "SCALARS Region_ID int 1" << std::endl;
-    vtkFile << "LOOKUP_TABLE default" << std::endl;
-    for (typename TriangleListType::const_iterator tri = triangles->begin(); tri != triangles->end(); ++tri)
-    {
-      vtkFile << (*tri)->labels[0] << std::endl;
-      vtkFile << (*tri)->labels[1] << std::endl;
-    }
+    triangleCount = nTriangles * 2;
   }
-  else
+
+  fprintf(vtkFile, "CELLS %d %d\n", triangleCount, (triangleCount * 4));
+  for (int i = 0; i < nTriangles; i++)
   {
-    vtkFile << "CELL_DATA " << (regionVect->size() / 2) << std::endl;
-    vtkFile << "SCALARS Region_ID int 2" << std::endl;
-    vtkFile << "LOOKUP_TABLE default" << std::endl;
-    for (typename TriangleListType::const_iterator tri = triangles->begin(); tri != triangles->end(); ++tri)
+    // Read from the Input Triangles Temp File
+    fread(tData, sizeof(int), 6, triFile);
+  //  if (tData[4] < tData[5])
     {
-      vtkFile << (*tri)->labels[0] << " " << (*tri)->labels[1] << std::endl;
+      fprintf(vtkFile, "3 %d %d %d ", tData[1], tData[2], tData[3]);
+    }
+    if (false == conformalMesh)
+    {
+      fprintf(vtkFile, "3 %d %d %d\n", tData[3], tData[2], tData[1]);
     }
   }
-#endif
-  return err;
+  fclose(triFile);
+
+  // Write the CELL_TYPES into the file
+  fprintf(vtkFile, "\n");
+  fprintf(vtkFile, "CELL_TYPES %d\n", triangleCount);
+  char sBuf[4];
+  if (conformalMesh == true)
+  {
+    sBuf[0] = '5'; sBuf[1] =0; sBuf[2] = 0; sBuf[3] = 0;
+  }
+  else {
+    sBuf[0] = '5'; sBuf[1] =0; sBuf[2] = '5'; sBuf[3] = 0;
+  }
+  for (int i = 0; i < triangleCount; i++)
+  {
+    fprintf(vtkFile, "%s\n", sBuf);
+  }
+
+  // Open the triangles file for reading
+  triFile = fopen(TrianglesFile.c_str(), "rb");
+  // Write the GrainId Data to the file
+  fprintf(vtkFile, "\n");
+  fprintf(vtkFile, "CELL_DATA %d\n", triangleCount);
+  fprintf(vtkFile, "SCALARS GrainID int 1\n");
+  fprintf(vtkFile, "LOOKUP_TABLE default\n");
+  for (int i = 0; i < nTriangles; i++)
+  {
+    fread(tData, sizeof(int), 6, triFile);
+
+ //   if (tData[4] < tData[5])
+    {
+      fprintf(vtkFile, "%d\n", tData[4]);
+    }
+    if (false == conformalMesh)
+    {
+      fprintf(vtkFile, "%d\n", tData[5]);
+    }
+  }
+
+  //FIXME: Add in some POINT_DATA of the nodeKind from the nodes file
+  // Open the Nodes file for reading
+  nodesFile = fopen(NodesFile.c_str(), "rb");
+  fprintf(vtkFile, "\n");
+  fprintf(vtkFile, "POINT_DATA %d\n", nNodes);
+  fprintf(vtkFile, "SCALARS Node_Type int 1\n");
+  fprintf(vtkFile, "LOOKUP_TABLE default\n");
+  for (int i = 0; i < nNodes; i++)
+  {
+    fread(nodeData, 32, 1, nodesFile); // Read one set of Node Kind from the nodes file
+    fprintf(vtkFile, "%d\n", *nodeKind); // Write the Node Kind to the output file
+  }
+  fclose(nodesFile); // Close the Nodes File
+
+  // Free the memory
+  // Close the input and output files
+  fclose(vtkFile);
+  fclose(nodesFile);
+  fclose(triFile);
+
+  return 0;
 }
 
