@@ -611,7 +611,7 @@ int SurfaceMeshFunc::get_square_index(int tNS[4])
     subIndex = 2 * aBit[4] + 1 * aBit[5];
     if (subIndex == 0)
     {
-      tempIndex = tempIndex;
+     // tempIndex = tempIndex;
     }
     else
     {
@@ -663,8 +663,8 @@ int SurfaceMeshFunc::treat_anomaly(int tNSt[4], int zID1)
     }
     else
     {
-      min = min;
-      minid = minid;
+//      min = min;
+//      minid = minid;
     }
   }
   if (minid == 1 || minid == 3)
@@ -3408,130 +3408,4 @@ void SurfaceMeshFunc::smooth_boundaries (int nNodes, int nTriangles, string Node
   }*/
 }
 
-void SurfaceMeshFunc::writeVTKOutputFile (int nNodes, int nTriangles,
-                                          const std::string &VisualizationFile,
-                                          const std::string &NodesFile,
-                                          const std::string &TrianglesFile,
-                                          bool binaryFile,
-                                          bool conformalMesh)
-{
-  // Open the Nodes file for reading
-  FILE* nodesFile = fopen(NodesFile.c_str(), "rb");
-  // Open the triangles file for reading
-  FILE* triFile = fopen(TrianglesFile.c_str(), "rb");
 
-  // Open the output VTK File for writing
-  FILE* vtkFile = NULL;
-
-
-  vtkFile = fopen(VisualizationFile.c_str(), "wb");
-  if (NULL == vtkFile)
-  {
-    std::cout << "Error Creating VTK Visualization File '" << VisualizationFile << "'" << std::endl;
-    return;
-  }
-  fprintf(vtkFile, "# vtk DataFile Version 2.0\n");
-  fprintf(vtkFile, "Data set from DREAM.3D Surface Meshing Module\n");
-  if (binaryFile) {
-    fprintf(vtkFile, "BINARY\n");
-  }
-  else {
-    fprintf(vtkFile, "ASCII\n");
-  }
-  fprintf(vtkFile, "DATASET UNSTRUCTURED_GRID\n");
-  fprintf(vtkFile, "POINTS %d float\n", nNodes);
-  unsigned char nodeData[32];
-  double* vec3d = (double*)(&nodeData[8]);
-  int* nodeId = (int*)(&nodeData[0]);
-  int* nodeKind = (int*)(&nodeData[4]);
-
-  for (int i = 0; i < nNodes; i++)
-  {
-    fread(nodeData, 32, 1, nodesFile); // Read one set of positions from the nodes file
-    fprintf(vtkFile, "%f %f %f\n", vec3d[0], vec3d[1], vec3d[2]); // Write the positions to the output file
-  }
-  fclose(nodesFile);
-
-  // Write the triangle indices into the vtk File
-  int tData[6];
-  int triangleCount = nTriangles;
-  if (false == conformalMesh)
-  {
-    triangleCount = nTriangles * 2;
-  }
-
-  fprintf(vtkFile, "CELLS %d %d\n", triangleCount, (triangleCount * 4));
-  for (int i = 0; i < nTriangles; i++)
-  {
-    // Read from the Input Triangles Temp File
-    fread(tData, sizeof(int), 6, triFile);
-  //  if (tData[4] < tData[5])
-    {
-      fprintf(vtkFile, "3 %d %d %d ", tData[1], tData[2], tData[3]);
-    }
-    if (false == conformalMesh)
-    {
-      fprintf(vtkFile, "3 %d %d %d\n", tData[3], tData[2], tData[1]);
-    }
-  }
-  fclose(triFile);
-
-  // Write the CELL_TYPES into the file
-  fprintf(vtkFile, "\n");
-  fprintf(vtkFile, "CELL_TYPES %d\n", triangleCount);
-  char sBuf[4];
-  if (conformalMesh == true)
-  {
-    sBuf[0] = '5'; sBuf[1] =0; sBuf[2] = 0; sBuf[3] = 0;
-  }
-  else {
-    sBuf[0] = '5'; sBuf[1] =0; sBuf[2] = '5'; sBuf[3] = 0;
-  }
-  for (int i = 0; i < triangleCount; i++)
-  {
-    fprintf(vtkFile, "%s\n", sBuf);
-  }
-
-  // Open the triangles file for reading
-  triFile = fopen(TrianglesFile.c_str(), "rb");
-  // Write the GrainId Data to the file
-  fprintf(vtkFile, "\n");
-  fprintf(vtkFile, "CELL_DATA %d\n", triangleCount);
-  fprintf(vtkFile, "SCALARS GrainID int 1\n");
-  fprintf(vtkFile, "LOOKUP_TABLE default\n");
-  for (int i = 0; i < nTriangles; i++)
-  {
-    fread(tData, sizeof(int), 6, triFile);
-
- //   if (tData[4] < tData[5])
-    {
-      fprintf(vtkFile, "%d\n", tData[4]);
-    }
-    if (false == conformalMesh)
-    {
-      fprintf(vtkFile, "%d\n", tData[5]);
-    }
-  }
-
-  //FIXME: Add in some POINT_DATA of the nodeKind from the nodes file
-  // Open the Nodes file for reading
-  nodesFile = fopen(NodesFile.c_str(), "rb");
-  fprintf(vtkFile, "\n");
-  fprintf(vtkFile, "POINT_DATA %d\n", nNodes);
-  fprintf(vtkFile, "SCALARS Node_Type int 1\n");
-  fprintf(vtkFile, "LOOKUP_TABLE default\n");
-  for (int i = 0; i < nNodes; i++)
-  {
-    fread(nodeData, 32, 1, nodesFile); // Read one set of Node Kind from the nodes file
-    fprintf(vtkFile, "%d\n", *nodeKind); // Write the Node Kind to the output file
-  }
-  fclose(nodesFile); // Close the Nodes File
-
-  // Free the memory
-  // Close the input and output files
-  fclose(vtkFile);
-  fclose(nodesFile);
-  fclose(triFile);
-
-
-}
