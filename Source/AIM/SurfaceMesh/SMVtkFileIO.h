@@ -51,11 +51,11 @@ class SurfaceMeshFunc;
  * @date Aug 13, 2010
  * @version 1.0
  */
-class AIMCOMMON_EXPORT VTKFileUtils
+class AIMCOMMON_EXPORT SMVtkFileIO
 {
   public:
-    VTKFileUtils();
-    virtual ~VTKFileUtils();
+    SMVtkFileIO();
+    virtual ~SMVtkFileIO();
 
     /**
      * @brief
@@ -90,11 +90,12 @@ class AIMCOMMON_EXPORT VTKFileUtils
  * @return
  */
     int writeVTKFile(SurfaceMeshFunc* m,
-                      int nNodes, int nTriangles,
-                      const std::string &VisualizationFile,
-                      const std::string &NodesFile,
-                      const std::string &TrianglesFile,
-                      bool binaryFile);
+                     int nNodes, int nTriangles,
+                     const std::string &VisualizationFile,
+                     const std::string &NodesFile,
+                     const std::string &TrianglesFile,
+                     bool binaryFile,
+                     bool conformalMesh);
 
     /**
      * @brief This function parses 3 floating point values from a comma delimited string
@@ -116,8 +117,8 @@ class AIMCOMMON_EXPORT VTKFileUtils
   //  int           m_CurrentSlice;
     size_t        m_IntByteSize;
 
-    VTKFileUtils(const VTKFileUtils&); // Copy Constructor Not Implemented
-    void operator=(const VTKFileUtils&); // Operator '=' Not Implemented
+    SMVtkFileIO(const SMVtkFileIO&); // Copy Constructor Not Implemented
+    void operator=(const SMVtkFileIO&); // Operator '=' Not Implemented
 
 };
 

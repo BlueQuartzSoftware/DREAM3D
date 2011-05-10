@@ -154,7 +154,6 @@ public:
   void smooth_boundaries(int nNodes, int nTriangles, string NodesFile, string TrianglesFile);
   void writeNodesFile(int zID, int cNodeID, const std::string &NodesRawFile);
   void writeTrianglesFile(int nt, const std::string &TrianglesFileIndex, int zID, int ctid);
-  void writeVTKOutputFile (int nNodes, int nTriangles, const std::string &VisualizationFile, const std::string &NodesFile, const std::string &TrianglesFile, bool binaryFile, bool conformalMesh);
 
 
 protected:

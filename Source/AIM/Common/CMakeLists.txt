@@ -55,7 +55,7 @@ SET (AIMCommon_SRCS
     ${DREAM3D_SOURCE_DIR}/Source/AIM/Common/Neighbor.cpp
     ${DREAM3D_SOURCE_DIR}/Source/AIM/Common/Segment.cpp
     ${DREAM3D_SOURCE_DIR}/Source/AIM/Common/AIMRandomNG.cpp
-    ${DREAM3D_SOURCE_DIR}/Source/AIM/Common/VTKFileUtils.cpp
+ #   ${DREAM3D_SOURCE_DIR}/Source/AIM/Common/VTKFileUtils.cpp
     ${DREAM3D_SOURCE_DIR}/Source/AIM/Common/OrientationMath.cpp
     ${DREAM3D_SOURCE_DIR}/Source/AIM/Common/Texture.cpp
     ${DREAM3D_SOURCE_DIR}/Source/AIM/Common/TexturePreset.cpp
@@ -81,7 +81,7 @@ SET (AIMCommon_HDRS
     ${DREAM3D_SOURCE_DIR}/Source/AIM/Common/Segment.h
     ${DREAM3D_SOURCE_DIR}/Source/AIM/Common/AIMRandomNG.h
     ${DREAM3D_SOURCE_DIR}/Source/AIM/Common/Constants.h
-    ${DREAM3D_SOURCE_DIR}/Source/AIM/Common/VTKFileUtils.h
+ #   ${DREAM3D_SOURCE_DIR}/Source/AIM/Common/VTKFileUtils.h
     ${DREAM3D_SOURCE_DIR}/Source/AIM/Common/OrientationMath.h
     ${DREAM3D_SOURCE_DIR}/Source/AIM/Common/OIMColoring.hpp
     ${DREAM3D_SOURCE_DIR}/Source/AIM/Common/Texture.h

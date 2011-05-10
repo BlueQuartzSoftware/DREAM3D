@@ -37,6 +37,7 @@ SET (CMAKE_ARCHIVE_OUTPUT_DIRECTORY
 set (SurfaceMesh_SRCS
     ${SurfaceMesh_SOURCE_DIR}/main.cpp
     ${SurfaceMesh_SOURCE_DIR}/SurfaceMesh.cpp
+    ${SurfaceMesh_SOURCE_DIR}/SMVtkFileIO.cpp
 )
 set (SurfaceMesh_HDRS
     ${SurfaceMesh_SOURCE_DIR}/SurfaceMesh.h

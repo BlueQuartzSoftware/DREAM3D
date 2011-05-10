@@ -30,7 +30,7 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 #include "SurfaceMesh.h"
-#include "AIM/Common/VTKFileUtils.h"
+#include "SMVtkFileIO.h"
 
 #include <MXA/Common/LogTime.h>
 #include <MXA/Utilities/MXADir.h>
@@ -199,7 +199,7 @@ void SurfaceMesh::compute()
   m = SurfaceMeshFunc::New();
 //  int err = 0;
 #if  USE_VTK_FILE_UTILS
-  VTKFileUtils vtkreader;
+  SMVtkFileIO vtkreader;
   m_ZDim = vtkreader.readHeader(m.get(), m_InputFile);
 
 #else
@@ -270,7 +270,8 @@ void SurfaceMesh::compute()
 
 
   progressMessage(msg, 95 );
-  m->writeVTKOutputFile(nNodes, cTriID, VisualizationFile, NodesFile, TrianglesFile, m_BinaryVTKFile, m_ConformalMesh);
+  SMVtkFileIO writer;
+  writer.writeVTKFile(m.get(), nNodes, cTriID, VisualizationFile, NodesFile, TrianglesFile, m_BinaryVTKFile, m_ConformalMesh);
 
   progressMessage(AIM_STRING("Surface Meshing Complete"), 100 );
 
