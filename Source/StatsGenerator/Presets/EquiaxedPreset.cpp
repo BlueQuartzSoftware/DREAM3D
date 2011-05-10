@@ -67,9 +67,24 @@ void EquiaxedPreset::generateOmega3Data(StatsGenPlotWidget* plot, QVector<double
   // Remove all the current rows in the table model
 //  model->removeRows(0, model->rowCount());
 
-  double alpha = 5.0;
-  double beta = 1.0;
-  double betaStep = 10.0 / count;
+  double alpha, beta;
+      AIMRandomNG rg;
+      /* Get a seed value based off the system clock. The issue is that this will
+       * be a 64 bit unsigned integer where the high 32 bits will basically not
+       * change where as the lower 32 bits will. The following lines of code will
+       * pull off the low 32 bits from the number. This operation depends on most
+       * significant byte ordering which is different between Big Endian and
+       * Little Endian machines. For Big endian machines the Most Significant Byte
+       * (MSB) is the first 32 bits. For Little Endian machines the MSB is the
+       * second 32 bits.
+       */
+      unsigned long long int seed = MXA::getMilliSeconds();
+      unsigned int* seedPtr = reinterpret_cast<unsigned int*> (&seed);
+#if CMP_WORDS_BIGENDIAN
+      rg.RandomInit(seedPtr[1]);
+#else
+      rg.RandomInit(seedPtr[0]);
+#endif
 
   QVector<double> alphas;
   QVector<double> betas;
@@ -78,11 +93,11 @@ void EquiaxedPreset::generateOmega3Data(StatsGenPlotWidget* plot, QVector<double
   qint32 colorOffset = 21;
   for (qint32 i = 0; i < count; ++i)
    {
-    alphas.push_back(alpha);
-    betas.push_back(beta);
-    colors.push_back(colorNames[colorOffset++]);
-    alpha += 0.1;
-    beta += betaStep;
+		alpha = (0*i) + 10.0 + rg.Random(); 
+		beta = (0*i) + 1.5 + (0.5*rg.Random()); 
+		alphas.push_back(alpha);
+		betas.push_back(beta);
+		colors.push_back(colorNames[colorOffset++]);
    }
 
   QVector<QVector<double> > data;
@@ -109,9 +124,24 @@ void EquiaxedPreset::generateBOverAPlotData(StatsGenPlotWidget* plot, QVector<do
   // Remove all the current rows in the table model
   model->removeRows(0, model->rowCount());
 
-  double alpha = 5.0;
-  double beta = 1.0;
-  double betaStep = 10.0 / count;
+  double alpha, beta;
+      AIMRandomNG rg;
+      /* Get a seed value based off the system clock. The issue is that this will
+       * be a 64 bit unsigned integer where the high 32 bits will basically not
+       * change where as the lower 32 bits will. The following lines of code will
+       * pull off the low 32 bits from the number. This operation depends on most
+       * significant byte ordering which is different between Big Endian and
+       * Little Endian machines. For Big endian machines the Most Significant Byte
+       * (MSB) is the first 32 bits. For Little Endian machines the MSB is the
+       * second 32 bits.
+       */
+      unsigned long long int seed = MXA::getMilliSeconds();
+      unsigned int* seedPtr = reinterpret_cast<unsigned int*> (&seed);
+#if CMP_WORDS_BIGENDIAN
+      rg.RandomInit(seedPtr[1]);
+#else
+      rg.RandomInit(seedPtr[0]);
+#endif
 
   QVector<double> alphas;
   QVector<double> betas;
@@ -120,11 +150,11 @@ void EquiaxedPreset::generateBOverAPlotData(StatsGenPlotWidget* plot, QVector<do
   qint32 colorOffset = 21;
   for (qint32 i = 0; i < count; ++i)
    {
-    alphas.push_back(alpha);
-    betas.push_back(beta);
-    colors.push_back(colorNames[colorOffset++]);
-    alpha += 0.1;
-    beta += betaStep;
+		alpha = (0*i) + 10.0 + rg.Random(); 
+		beta = (0*i) + 1.5 + (0.5*rg.Random()); 
+		alphas.push_back(alpha);
+		betas.push_back(beta);
+		colors.push_back(colorNames[colorOffset++]);
    }
 
   QVector<QVector<double> > data;
@@ -151,9 +181,24 @@ void EquiaxedPreset::generateCOverAPlotData(StatsGenPlotWidget* plot, QVector<do
   // Remove all the current rows in the table model
   model->removeRows(0, model->rowCount());
 
-  double alpha = 5.0;
-  double beta = 1.0;
-  double betaStep = 10.0 / count;
+  double alpha, beta;
+      AIMRandomNG rg;
+      /* Get a seed value based off the system clock. The issue is that this will
+       * be a 64 bit unsigned integer where the high 32 bits will basically not
+       * change where as the lower 32 bits will. The following lines of code will
+       * pull off the low 32 bits from the number. This operation depends on most
+       * significant byte ordering which is different between Big Endian and
+       * Little Endian machines. For Big endian machines the Most Significant Byte
+       * (MSB) is the first 32 bits. For Little Endian machines the MSB is the
+       * second 32 bits.
+       */
+      unsigned long long int seed = MXA::getMilliSeconds();
+      unsigned int* seedPtr = reinterpret_cast<unsigned int*> (&seed);
+#if CMP_WORDS_BIGENDIAN
+      rg.RandomInit(seedPtr[1]);
+#else
+      rg.RandomInit(seedPtr[0]);
+#endif
 
   QVector<double> alphas;
   QVector<double> betas;
@@ -162,11 +207,11 @@ void EquiaxedPreset::generateCOverAPlotData(StatsGenPlotWidget* plot, QVector<do
   qint32 colorOffset = 21;
   for (qint32 i = 0; i < count; ++i)
    {
-    alphas.push_back(alpha);
-    betas.push_back(beta);
-    colors.push_back(colorNames[colorOffset++]);
-    alpha += 0.1;
-    beta += betaStep;
+		alpha = (0*i) + 10.0 + rg.Random(); 
+		beta = (0*i) + 1.5 + (0.5*rg.Random()); 
+		alphas.push_back(alpha);
+		betas.push_back(beta);
+		colors.push_back(colorNames[colorOffset++]);
    }
 
   QVector<QVector<double> > data;
@@ -194,9 +239,24 @@ void EquiaxedPreset::generateCOverBPlotData(StatsGenPlotWidget* plot, QVector<do
   // Remove all the current rows in the table model
   model->removeRows(0, model->rowCount());
 
-  double alpha = 5.0;
-  double beta = 1.0;
-  double betaStep = 10.0 / count;
+  double alpha, beta;
+      AIMRandomNG rg;
+      /* Get a seed value based off the system clock. The issue is that this will
+       * be a 64 bit unsigned integer where the high 32 bits will basically not
+       * change where as the lower 32 bits will. The following lines of code will
+       * pull off the low 32 bits from the number. This operation depends on most
+       * significant byte ordering which is different between Big Endian and
+       * Little Endian machines. For Big endian machines the Most Significant Byte
+       * (MSB) is the first 32 bits. For Little Endian machines the MSB is the
+       * second 32 bits.
+       */
+      unsigned long long int seed = MXA::getMilliSeconds();
+      unsigned int* seedPtr = reinterpret_cast<unsigned int*> (&seed);
+#if CMP_WORDS_BIGENDIAN
+      rg.RandomInit(seedPtr[1]);
+#else
+      rg.RandomInit(seedPtr[0]);
+#endif
 
   QVector<double> alphas;
   QVector<double> betas;
@@ -205,11 +265,11 @@ void EquiaxedPreset::generateCOverBPlotData(StatsGenPlotWidget* plot, QVector<do
   qint32 colorOffset = 21;
   for (qint32 i = 0; i < count; ++i)
    {
-    alphas.push_back(alpha);
-    betas.push_back(beta);
-    colors.push_back(colorNames[colorOffset++]);
-    alpha += 0.1;
-    beta += betaStep;
+		alpha = (0*i) + 10.0 + rg.Random(); 
+		beta = (0*i) + 1.5 + (0.5*rg.Random()); 
+		alphas.push_back(alpha);
+		betas.push_back(beta);
+		colors.push_back(colorNames[colorOffset++]);
    }
 
   QVector<QVector<double> > data;
@@ -238,13 +298,24 @@ void EquiaxedPreset::generateNeighborPlotData(StatsGenPlotWidget* plot, QVector<
   // Remove all the current rows in the table model
   model->removeRows(0, model->rowCount());
 
-  double alpha = 14.0;
-  double k = 1.0;
-  double beta = 1.0;
-
-  double alphaStep = 2.0 / (double)(count);
-  double kStep = 0.25 / (double)(count);
-  double betaStep = 20.0 / (double)(count);
+  double alpha, k, beta;
+      AIMRandomNG rg;
+      /* Get a seed value based off the system clock. The issue is that this will
+       * be a 64 bit unsigned integer where the high 32 bits will basically not
+       * change where as the lower 32 bits will. The following lines of code will
+       * pull off the low 32 bits from the number. This operation depends on most
+       * significant byte ordering which is different between Big Endian and
+       * Little Endian machines. For Big endian machines the Most Significant Byte
+       * (MSB) is the first 32 bits. For Little Endian machines the MSB is the
+       * second 32 bits.
+       */
+      unsigned long long int seed = MXA::getMilliSeconds();
+      unsigned int* seedPtr = reinterpret_cast<unsigned int*> (&seed);
+#if CMP_WORDS_BIGENDIAN
+      rg.RandomInit(seedPtr[1]);
+#else
+      rg.RandomInit(seedPtr[0]);
+#endif
 
   QVector<double> alphas;
   QVector<double> ks;
@@ -252,15 +323,16 @@ void EquiaxedPreset::generateNeighborPlotData(StatsGenPlotWidget* plot, QVector<
   QVector<QString> colors;
   QStringList colorNames = QColor::colorNames();
   qint32 colorOffset = 21;
+  int middlebin = count/2;
   for (qint32 i = 0; i < count; ++i)
    {
-    alphas.push_back(alpha);
-    ks.push_back(k);
-    betas.push_back(beta);
-    colors.push_back(colorNames[colorOffset++]);
-    alpha += alphaStep;
-    k += kStep;
-    beta += betaStep;
+		alpha = (4*(binNumbers[i]/binNumbers[middlebin])) + rg.Random(); 
+		k = 2 + (0.2*(binNumbers[i]/binNumbers[middlebin])) + (0.05*rg.Random()); 
+		beta = (0*i) + 1;
+		alphas.push_back(alpha);
+		ks.push_back(k);
+		betas.push_back(beta);
+		colors.push_back(colorNames[colorOffset++]);
    }
 
   QVector<QVector<double> > data;
