@@ -118,7 +118,7 @@ class StatsGen
       x.resize(size);
       y.resize(size);
       min = 0;
-      max = 5;
+      max = 3;
       for (int i = 0; i < size; i++)
       {
         in = (i * ((max - min) / double(size))) + (((max - min) / double(size)) / 2.0) + min;
