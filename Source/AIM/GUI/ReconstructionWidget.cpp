@@ -205,9 +205,10 @@ void ReconstructionWidget::setupGui()
   }
   messageLabel->setText(msg);
 
-  m_WidgetList << m_OutputDir << m_OutputDirBtn;
+  m_WidgetList << m_H5InputFile << m_OutputDir << m_OutputDirBtn << m_OutputFilePrefix;
   m_WidgetList << m_ZStartIndex << m_ZEndIndex;
-  m_WidgetList << m_MergeTwins << m_MergeColonies << m_FillinSample << m_AlreadyFormed << m_AlignMeth << m_MinAllowedGrainSize << m_MinConfidence << m_DownSampleFactor << m_MisOrientationTolerance;
+  m_WidgetList << m_MergeTwins << m_MergeColonies << m_FillinSample << m_AlreadyFormed << m_AlignMeth << m_Orientation;
+  m_WidgetList << m_MinAllowedGrainSize << m_MinConfidence << m_DownSampleFactor << m_MisOrientationTolerance;
   m_WidgetList << m_BinStepSize;
   m_WidgetList << m_DisorientationVizFile << m_ImageQualityVizFile << m_IPFVizFile << m_SchmidFactorVizFile << m_VisualizationVizFile << m_DownSampledVizFile;
   m_WidgetList << m_MinImageQuality;
