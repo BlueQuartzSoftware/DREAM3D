@@ -153,7 +153,7 @@ int SMVtkFileIO::readZSlice(SurfaceMeshFunc* m, int zID)
   {
     for (int i = 1; i <= m->NSP; i++)
     {
-      m->point[i].deepCopy(&(m->point[i+m->NSP]));
+      m->voxels[i].deepCopy(&(m->voxels[i+m->NSP]));
     }
   }
   int index = start;
@@ -179,12 +179,12 @@ int SMVtkFileIO::readZSlice(SurfaceMeshFunc* m, int zID)
           if (buffer[x] <= 0) {
             buffer[x] = -3;
           }
-          m->point[index].grainname = buffer[x];
+          m->voxels[index].grainname = buffer[x];
           if ((zID == 0 || zID == m->zDim - 2)
               || (y == 0 || y == m->yDim - 1)
               || (x == 0 || x == m->xDim - 1))
           {
-            m->point[index].grainname = -3;
+            m->voxels[index].grainname = -3;
           }
           ++index; // increment i;
         }
@@ -204,12 +204,12 @@ int SMVtkFileIO::readZSlice(SurfaceMeshFunc* m, int zID)
           m_InputFile >> tmp;
           if (tmp <= 0)
             { tmp = -3; }
-          m->point[index].grainname = tmp;
+          m->voxels[index].grainname = tmp;
           if ((zID == 0 || zID == m->zDim - 2)
               || (y == 0 || y == m->yDim - 1)
               || (x == 0 || x == m->xDim - 1))
           {
-            m->point[index].grainname = -3;
+            m->voxels[index].grainname = -3;
           }
           ++index; // increment i;
         }
@@ -254,12 +254,12 @@ int SMVtkFileIO::readNextZSlice(SurfaceMeshFunc* m, int zID)
         {
           if (buffer[x] <= 0)
           { buffer[x] = -3;}
-          m->point[i].grainname = buffer[x];
+          m->voxels[i].grainname = buffer[x];
           if ((zID == 0 || zID == m->zDim - 1)
               || (y == 0 || y == m->yDim - 1)
               || (x == 0 || x == m->xDim - 1))
           {
-            m->point[i].grainname = -3;
+            m->voxels[i].grainname = -3;
           }
           ++i; // increment i;
         }
@@ -280,7 +280,7 @@ int SMVtkFileIO::readNextZSlice(SurfaceMeshFunc* m, int zID)
         {
           m_InputFile >> tmp;
           if (tmp <= 0) tmp = -3;
-          Voxel& v = m->point[i];
+          Voxel& v = m->voxels[i];
           v.grainname = tmp;
           if ((zID == 0 || zID == m->zDim - 1) || (y == 0 || y == m->yDim - 1) || (x == 0 || x == m->xDim - 1))
           {
@@ -374,7 +374,7 @@ int SMVtkFileIO::readHeader(SurfaceMeshFunc* m, const std::string &file)
   m->NSP = m->xDim * m->yDim;
 
   m->neigh = new Neighbor[2 * m->NSP + 1];
-  m->point = new Voxel[2 * m->NSP + 1];
+  m->voxels = new Voxel[2 * m->NSP + 1];
   m->cSquare = new Face[3 * 2 * m->NSP];
   m->cVertex = new Node[2 * 7 * m->NSP];
 
@@ -521,7 +521,7 @@ int SMVtkFileIO::writeVTKFile(SurfaceMeshFunc* m,
     }
     else
     {
-      fprintf(vtkFile, "3 %d %d %d ", tData[1], tData[2], tData[3]);
+      fprintf(vtkFile, "3 %d %d %d\n", tData[1], tData[2], tData[3]);
       if (false == conformalMesh)
       {
         fprintf(vtkFile, "3 %d %d %d\n", tData[3], tData[2], tData[1]);
