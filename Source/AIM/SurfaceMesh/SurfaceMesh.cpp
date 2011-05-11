@@ -201,7 +201,7 @@ void SurfaceMesh::compute()
 //  int err = 0;
 #if  USE_VTK_FILE_UTILS
   SMVtkFileIO vtkreader;
-  m_ZDim = vtkreader.readHeader(m.get(), m_InputFile, m_ScalarName);
+  m_ZDim = vtkreader.primeFileToScalarDataLocation(m.get(), m_InputFile, m_ScalarName);
 
 #else
   m_ZDim = m->initialize_micro(m_InputFile, -1);

@@ -64,8 +64,10 @@ class AIMCOMMON_EXPORT SMVtkFileIO
      * @param slice
      * @return
      */
-    int readHeader(SurfaceMeshFunc* m, const std::string &file, const std::string &scalarName);
+    int primeFileToScalarDataLocation(SurfaceMeshFunc* m, const std::string &file, const std::string &scalarName);
 
+
+    int getVolumeDimensions(const std::string &file, int &xDim, int &yDim, int &zDim);
 
     int readZSlice(SurfaceMeshFunc* m, int zID);
 
