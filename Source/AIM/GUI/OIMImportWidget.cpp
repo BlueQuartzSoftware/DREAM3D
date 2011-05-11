@@ -456,7 +456,6 @@ void OIMImportWidget::threadFinished()
   setWidgetListEnabled(true);
   this->m_progressBar->setValue(0);
   emit processEnded();
-  checkIOFiles();
 }
 
 // -----------------------------------------------------------------------------
