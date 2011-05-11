@@ -92,7 +92,7 @@ int SurfaceMeshFunc::initialize_micro(string filename, int zID)
         yDim = ynum;
         zDim = znum;
         neigh = new Neighbor[2 * NSP + 1];
-        voxels = new Voxel[2*NSP + 1];
+        voxels = new int[2*NSP + 1];
         cSquare = new Face[3 * 2 * NSP];
         cVertex = new Node[2*7*NSP];
       }
@@ -114,7 +114,8 @@ int SurfaceMeshFunc::initialize_micro(string filename, int zID)
     {
       for (i = 1; i <= NSP; i++)
       {
-        voxels[i].deepCopy(&(voxels[i+NSP]));
+        //voxels[i].deepCopy(&(voxels[i+NSP]));
+        voxels[i] = voxels[i+NSP];
       }
     }
     for(i=start;i<=(2*NSP);i++)
@@ -125,10 +126,10 @@ int SurfaceMeshFunc::initialize_micro(string filename, int zID)
       col = (i+shift-1)%xDim;
       row = ((i+shift-1)/xDim)%yDim;
       plane = (i+shift-1)/(xDim*yDim);
-      voxels[i].grainname = tgrainname;
-      if(col == 0 || col == (xDim-1) || row == 0 || row == (yDim-1) || plane == 0 || plane == (zDim-1)) voxels[i].grainname = -3;
+      voxels[i] = tgrainname;
+      if(col == 0 || col == (xDim-1) || row == 0 || row == (yDim-1) || plane == 0 || plane == (zDim-1)) voxels[i] = -3;
     }
-    voxels[0].grainname = 0; // point 0 is a garbage...
+    voxels[0] = 0; // point 0 is a garbage...
   }
 //  in.close();
   return zDim;
@@ -225,7 +226,7 @@ void SurfaceMeshFunc::initialize_nodes(int zID)
     x = find_xcoord(locale);
     y = find_ycoord(locale);
     z = find_zcoord(locale);
-    int grainid = voxels[tsite].grainname;
+    int grainid = voxels[tsite];
     if (grainid > numgrains) numgrains = grainid;
     cVertex[id].xc = x + (0.5 * xRes);
     cVertex[id].yc = y;
@@ -359,7 +360,7 @@ int SurfaceMeshFunc::get_number_Edges(int zID)
     if (quot == 0 || (quot == 1 && rmd == 0))
     {
       csite = cSquare[k].site_id[0];
-      cgrainname = voxels[csite].grainname;
+      cgrainname = voxels[csite];
       tNSite[0] = cSquare[k].site_id[0];
       tNSite[1] = cSquare[k].site_id[1];
       tNSite[2] = cSquare[k].site_id[2];
@@ -368,7 +369,7 @@ int SurfaceMeshFunc::get_number_Edges(int zID)
       for (m = 0; m < 4; m++)
       {
         tsite = tNSite[m];
-        tngrainname[m] = voxels[tsite].grainname;
+        tngrainname[m] = voxels[tsite];
         if (tngrainname[m] > 0)
         {
           atBulk++;
@@ -445,7 +446,7 @@ void SurfaceMeshFunc::get_nodes_Edges(int eT2d[20][8], int NST2d[20][8], int zID
       cubeOrigin = k / 3 + 1;
       sqOrder = k % 3;
       csite = cSquare[k].site_id[0];
-      cgrainname = voxels[csite].grainname;
+      cgrainname = voxels[csite];
       tNSite[0] = cSquare[k].site_id[0];
       tNSite[1] = cSquare[k].site_id[1];
       tNSite[2] = cSquare[k].site_id[2];
@@ -454,7 +455,7 @@ void SurfaceMeshFunc::get_nodes_Edges(int eT2d[20][8], int NST2d[20][8], int zID
       for (m = 0; m < 4; m++)
       {
         tsite = tNSite[m];
-        tngrainname[m] = voxels[tsite].grainname;
+        tngrainname[m] = voxels[tsite];
         if (tngrainname[m] > 0)
         {
           atBulk++;
@@ -641,12 +642,12 @@ int SurfaceMeshFunc::treat_anomaly(int tNSt[4], int zID1)
   {
     csite = tNSt[i];
     cid = csite;
-    cgrainname = voxels[csite].grainname;
+    cgrainname = voxels[csite];
     for (j = 1; j <= num_neigh; j++)
     {
     NSite = neigh[cid].neigh_id[j];
     if(NSite <= 0 || NSite > (2*NSP)) ngrainname = -3;
-    if(NSite > 0 && NSite <= (2*NSP)) ngrainname = voxels[NSite].grainname;
+    if(NSite > 0 && NSite <= (2*NSP)) ngrainname = voxels[NSite];
     if (cgrainname == ngrainname)
     {
       numNeigh[i] = numNeigh[i] + 1;
@@ -856,8 +857,8 @@ int SurfaceMeshFunc::get_number_triangles()
       {
         tsite1 = cSquare[tsqid1].site_id[j];
         tsite2 = cSquare[tsqid2].site_id[j];
-        arraygrainname[j] = voxels[tsite1].grainname;
-        arraygrainname[j + 4] = voxels[tsite2].grainname;
+        arraygrainname[j] = voxels[tsite1];
+        arraygrainname[j + 4] = voxels[tsite2];
       }
       nds = 0;
       nburnt = 0;
@@ -2660,7 +2661,7 @@ void SurfaceMeshFunc::get_caseM_triangles(int site, int *ae, int nedge, int *afc
 
 void SurfaceMeshFunc::arrange_grainnames(int numT, int zID)
 {
-  int i, j, k;
+  int i, j;
   int cnode;
   int csite, kind;
   int tsite1, tsite2;
@@ -2697,22 +2698,22 @@ void SurfaceMeshFunc::arrange_grainnames(int numT, int zID)
       {
         tsite1 = csite;
         tsite2 = neigh[csite].neigh_id[1];
-        tgrainname1 = voxels[tsite1].grainname;
-        tgrainname2 = voxels[tsite2].grainname;
+        tgrainname1 = voxels[tsite1];
+        tgrainname2 = voxels[tsite2];
       }
       else if (kind == 1)
       {
         tsite1 = csite;
         tsite2 = neigh[csite].neigh_id[7];
-        tgrainname1 = voxels[tsite1].grainname;
-        tgrainname2 = voxels[tsite2].grainname;
+        tgrainname1 = voxels[tsite1];
+        tgrainname2 = voxels[tsite2];
       }
       else if (kind == 2)
       {
         tsite1 = csite;
         tsite2 = neigh[csite].neigh_id[18];
-        tgrainname1 = voxels[tsite1].grainname;
-        tgrainname2 = voxels[tsite2].grainname;
+        tgrainname1 = voxels[tsite1];
+        tgrainname2 = voxels[tsite2];
       }
     }
     // Getting the center of triangle...
@@ -2903,35 +2904,16 @@ void SurfaceMeshFunc::smooth_boundaries (int nNodes, int nTriangles, string Node
   }
   cVertex = new Node[nNodes];
   cTriangle = new Patch[nTriangles];
-//  int nodenum, nodetype;
- // int trianglenum;
- // float x, y, z;
-//  double x1, y1, z1;
-//  double x2, y2, z2;
-//  double x3, y3, z3;
-//  double xts1, yts1, zts1;
-//  double xts2, yts2, zts2;
-//  double xts3, yts3, zts3;
+
   int col, row, plane, tsite;
-//  int tsite1, tsite2, tsite3;
-//  int ntype1, ntype2, ntype3;
-//  int node1, node2, node3;
-//  int grain1, grain2;
-//  double Nx, Ny, Nz;
-//  double tNx, tNy;
-//  double BCx, BCy;
-//  double t1, t2, t3;
-//  double Rx, Ry, Rz;
-//  double theta, costheta, sintheta;
-//  double rotmat[3][3];
-//  double ax, ay, az;
+
   vector<vector<vector<int> > > boundarytrianglelist;
   vector<vector<vector<double> > > boundarynormals;
   boundarytrianglelist.resize(numgrains+1);
   boundarynormals.resize(numgrains+1);
 
   unsigned char nodeData[32];
-  int* nodenum = (int*)(&nodeData[0]);
+ // int* nodenum = (int*)(&nodeData[0]);
   int* nodetype = (int*)(&nodeData[4]);
 
   double* vec3d = (double*)(&nodeData[8]);
