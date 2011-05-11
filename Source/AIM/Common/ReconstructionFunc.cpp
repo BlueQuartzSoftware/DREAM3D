@@ -151,7 +151,7 @@ void ReconstructionFunc::initializeQuats()
   for (int i = 0; i < (xpoints * ypoints * zpoints); i++)
   {
     OrientationMath::eulertoQuat(qr, voxels[i].euler1, voxels[i].euler2, voxels[i].euler3);
-    m_OrientatioOps[voxels[i].phase]->getFZQuat(qr);
+    m_OrientatioOps[crystruct[voxels[i].phase]]->getFZQuat(qr);
     voxels[i].quat[0] = 1.0;
     voxels[i].quat[1] = qr[1];
     voxels[i].quat[2] = qr[2];
