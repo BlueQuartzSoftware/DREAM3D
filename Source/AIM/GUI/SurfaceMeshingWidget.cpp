@@ -48,6 +48,7 @@
 
 #include "QtSupport/QR3DFileCompleter.h"
 #include "QtSupport/AIM_QtMacros.h"
+#include "AIM/SurfaceMesh/SMVtkFileIO.h"
 
 
 // -----------------------------------------------------------------------------
@@ -145,8 +146,10 @@ void SurfaceMeshingWidget::setupGui()
              this, SLOT(on_m_OutputDir_textChanged(const QString &)));
   }
 
+  m_ScalarsName->setText(QString::fromStdString(AIM::Reconstruction::GrainIdScalarName));
   messageLabel->setText("Any existing output files will be over written with new versions during the operation.");
   m_WidgetList << m_InputFile << messageLabel;
+  m_WidgetList << m_ScalarsName << xDim << yDim << zDim;
   m_WidgetList << m_InputFileBtn << m_OutputDir << m_OutputDirBtn << m_OutputFilePrefix;
   m_WidgetList << m_VisualizationFile << m_NodesFileBin << m_TrianglesFileBin << m_DeleteTempFiles;
   m_WidgetList << m_BinaryVtkFiles << m_ConformalMesh;
@@ -159,12 +162,20 @@ void SurfaceMeshingWidget::setupGui()
 void SurfaceMeshingWidget::checkIOFiles()
 {
 
+
+  CHECK_QLINEEDIT_FILE_EXISTS(m_InputFile)
   if ( verifyPathExists(m_InputFile->text(), m_InputFile) == true )
   {
-    QFileInfo fi (m_InputFile->text() );
-    QString ext = fi.suffix();
+    SMVtkFileIO io;
+    int x = 0;
+    int y = 0;
+    int z = 0;
+    io.getVolumeDimensions(m_InputFile->text().toStdString(), x, y, z);
+    xDim->setText(QString::number(x));
+    yDim->setText(QString::number(y));
+    zDim->setText(QString::number(z));
   }
-  CHECK_QLINEEDIT_FILE_EXISTS(m_InputFile)
+
 
   verifyPathExists(m_OutputDir->text(), m_OutputDir);
 
@@ -276,6 +287,7 @@ void SurfaceMeshingWidget::on_m_GoBtn_clicked()
   m_SurfaceMesh->setSmoothIterations(m_SmoothIterations->value());
   m_SurfaceMesh->setSmoothFileOutputIncrement(m_WriteOutputFileIncrement->value());
   m_SurfaceMesh->setSmoothLockQuadPoints(m_LockQuadPoints->isChecked());
+  m_SurfaceMesh->setScalarName(m_ScalarsName->text().toStdString());
 
 
   /* Connect the signal 'started()' from the QThread to the 'run' slot of the
