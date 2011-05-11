@@ -36,14 +36,14 @@ using namespace std;
 
 
 const static double m_pi = M_PI;
-const static double m_OnePointThree = 1.33333333333;
+const static double m_OnepointThree = 1.33333333333;
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 SurfaceMeshFunc::SurfaceMeshFunc() :
   neigh(NULL),
-  point(NULL),
+  voxels(NULL),
   cSquare(NULL)
 {
 
@@ -52,7 +52,7 @@ SurfaceMeshFunc::SurfaceMeshFunc() :
 SurfaceMeshFunc::~SurfaceMeshFunc()
 {
   delete []neigh;
-  delete []point;
+  delete []voxels;
   delete []cSquare;
 }
 
@@ -92,7 +92,7 @@ int SurfaceMeshFunc::initialize_micro(string filename, int zID)
         yDim = ynum;
         zDim = znum;
         neigh = new Neighbor[2 * NSP + 1];
-        point = new Voxel[2*NSP + 1];
+        voxels = new Voxel[2*NSP + 1];
         cSquare = new Face[3 * 2 * NSP];
         cVertex = new Node[2*7*NSP];
       }
@@ -114,7 +114,7 @@ int SurfaceMeshFunc::initialize_micro(string filename, int zID)
     {
       for (i = 1; i <= NSP; i++)
       {
-        point[i].deepCopy(&(point[i+NSP]));
+        voxels[i].deepCopy(&(voxels[i+NSP]));
       }
     }
     for(i=start;i<=(2*NSP);i++)
@@ -125,10 +125,10 @@ int SurfaceMeshFunc::initialize_micro(string filename, int zID)
       col = (i+shift-1)%xDim;
       row = ((i+shift-1)/xDim)%yDim;
       plane = (i+shift-1)/(xDim*yDim);
-      point[i].grainname = tgrainname;
-      if(col == 0 || col == (xDim-1) || row == 0 || row == (yDim-1) || plane == 0 || plane == (zDim-1)) point[i].grainname = -3;
+      voxels[i].grainname = tgrainname;
+      if(col == 0 || col == (xDim-1) || row == 0 || row == (yDim-1) || plane == 0 || plane == (zDim-1)) voxels[i].grainname = -3;
     }
-    point[0].grainname = 0; // Point 0 is a garbage...
+    voxels[0].grainname = 0; // point 0 is a garbage...
   }
 //  in.close();
   return zDim;
@@ -225,7 +225,7 @@ void SurfaceMeshFunc::initialize_nodes(int zID)
     x = find_xcoord(locale);
     y = find_ycoord(locale);
     z = find_zcoord(locale);
-    int grainid = point[tsite].grainname;
+    int grainid = voxels[tsite].grainname;
     if (grainid > numgrains) numgrains = grainid;
     cVertex[id].xc = x + (0.5 * xRes);
     cVertex[id].yc = y;
@@ -298,7 +298,7 @@ void SurfaceMeshFunc::initialize_squares(int zID)
   int i, j;
   int csite;
   // square id starts with 0....
-  // notice that voxels at the surface will have the wrong values of node at the other end...
+  // notice that point at the surface will have the wrong values of node at the other end...
   // since it includes periodic boundary condition...
   // but, since the structure surrounded by ghost layer of grainname -3, it's OK...
   for (i = 1; i <= 2 * NSP; i++)
@@ -359,7 +359,7 @@ int SurfaceMeshFunc::get_number_Edges(int zID)
     if (quot == 0 || (quot == 1 && rmd == 0))
     {
       csite = cSquare[k].site_id[0];
-      cgrainname = point[csite].grainname;
+      cgrainname = voxels[csite].grainname;
       tNSite[0] = cSquare[k].site_id[0];
       tNSite[1] = cSquare[k].site_id[1];
       tNSite[2] = cSquare[k].site_id[2];
@@ -368,7 +368,7 @@ int SurfaceMeshFunc::get_number_Edges(int zID)
       for (m = 0; m < 4; m++)
       {
         tsite = tNSite[m];
-        tngrainname[m] = point[tsite].grainname;
+        tngrainname[m] = voxels[tsite].grainname;
         if (tngrainname[m] > 0)
         {
           atBulk++;
@@ -445,7 +445,7 @@ void SurfaceMeshFunc::get_nodes_Edges(int eT2d[20][8], int NST2d[20][8], int zID
       cubeOrigin = k / 3 + 1;
       sqOrder = k % 3;
       csite = cSquare[k].site_id[0];
-      cgrainname = point[csite].grainname;
+      cgrainname = voxels[csite].grainname;
       tNSite[0] = cSquare[k].site_id[0];
       tNSite[1] = cSquare[k].site_id[1];
       tNSite[2] = cSquare[k].site_id[2];
@@ -454,7 +454,7 @@ void SurfaceMeshFunc::get_nodes_Edges(int eT2d[20][8], int NST2d[20][8], int zID
       for (m = 0; m < 4; m++)
       {
         tsite = tNSite[m];
-        tngrainname[m] = point[tsite].grainname;
+        tngrainname[m] = voxels[tsite].grainname;
         if (tngrainname[m] > 0)
         {
           atBulk++;
@@ -641,12 +641,12 @@ int SurfaceMeshFunc::treat_anomaly(int tNSt[4], int zID1)
   {
     csite = tNSt[i];
     cid = csite;
-    cgrainname = point[csite].grainname;
+    cgrainname = voxels[csite].grainname;
     for (j = 1; j <= num_neigh; j++)
     {
     NSite = neigh[cid].neigh_id[j];
     if(NSite <= 0 || NSite > (2*NSP)) ngrainname = -3;
-    if(NSite > 0 && NSite <= (2*NSP)) ngrainname = point[NSite].grainname;
+    if(NSite > 0 && NSite <= (2*NSP)) ngrainname = voxels[NSite].grainname;
     if (cgrainname == ngrainname)
     {
       numNeigh[i] = numNeigh[i] + 1;
@@ -856,8 +856,8 @@ int SurfaceMeshFunc::get_number_triangles()
       {
         tsite1 = cSquare[tsqid1].site_id[j];
         tsite2 = cSquare[tsqid2].site_id[j];
-        arraygrainname[j] = point[tsite1].grainname;
-        arraygrainname[j + 4] = point[tsite2].grainname;
+        arraygrainname[j] = voxels[tsite1].grainname;
+        arraygrainname[j + 4] = voxels[tsite2].grainname;
       }
       nds = 0;
       nburnt = 0;
@@ -1688,17 +1688,17 @@ int SurfaceMeshFunc::get_triangles(int nTriangle)
       // CoNSider each case as Z. Wu's paper...
       if (nFC == 0)
       { // when there's no face center
-        get_case0_triangles(arrayE, nE, tidIn, &tidOut);
+        get_case0_triangles(i, arrayE, nE, tidIn, &tidOut);
         tidIn = tidOut;
       }
       else if (nFC == 2)
       {
-        get_case2_triangles(arrayE, nE, arrayFC, nFC, tidIn, &tidOut);
+        get_case2_triangles(i, arrayE, nE, arrayFC, nFC, tidIn, &tidOut);
         tidIn = tidOut;
       }
       else if (nFC > 2 && nFC <= 6)
       {
-        get_caseM_triangles(arrayE, nE, arrayFC, nFC, tidIn, &tidOut, bodyCtr);
+        get_caseM_triangles(i, arrayE, nE, arrayFC, nFC, tidIn, &tidOut, bodyCtr);
         tidIn = tidOut;
       }
       delete [] arrayE;
@@ -1708,7 +1708,7 @@ int SurfaceMeshFunc::get_triangles(int nTriangle)
   return 0;
 }
 
-void SurfaceMeshFunc::get_case0_triangles(int *ae, int nedge, int tin, int *tout)
+void SurfaceMeshFunc::get_case0_triangles(int site, int *ae, int nedge, int tin, int *tout)
 {
   int ii, i, j, jj, k, kk, k1, mm;
   int loopID;
@@ -1926,7 +1926,7 @@ void SurfaceMeshFunc::get_case0_triangles(int *ae, int nedge, int tin, int *tout
   delete [] count;
 }
 
-void SurfaceMeshFunc::get_case2_triangles(int *ae, int nedge, int *afc, int nfctr, int tin, int *tout)
+void SurfaceMeshFunc::get_case2_triangles(int site, int *ae, int nedge, int *afc, int nfctr, int tin, int *tout)
 {
   int ii, i, j, k, kk, k1, n, i1, j1;
   int loopID;
@@ -2317,7 +2317,7 @@ void SurfaceMeshFunc::get_case2_triangles(int *ae, int nedge, int *afc, int nfct
   delete [] burnt_list;
   delete [] count;
 }
-void SurfaceMeshFunc::get_caseM_triangles(int *ae, int nedge, int *afc, int nfctr, int tin, int *tout, int ccn)
+void SurfaceMeshFunc::get_caseM_triangles(int site, int *ae, int nedge, int *afc, int nfctr, int tin, int *tout, int ccn)
 {
   int ii, i, j, k, kk, k1, n, i1, j1, n1, iii;
   int loopID;
@@ -2663,29 +2663,18 @@ void SurfaceMeshFunc::arrange_grainnames(int numT, int zID)
   int i, j, k;
   int cnode;
   int csite, kind;
-  int cst_index;
   int tsite1, tsite2;
   int ngrainname1, ngrainname2;
   int tgrainname1, tgrainname2;
   double cx, cy, cz;
   double xSum, ySum, zSum;
-  double xSum1, ySum1, zSum1;
-  double xSum2, ySum2, zSum2;
-  int nEnode;
-  double ctr1[3];
-  double ctr2[3];
-  double ncVertex[3];
-  double tcVertex[3];
-  double tv2[3];
   double vcoord[3][3];
-  double u[3];
-  double w[3];
-  double a, b, c, length;
-  double cs1, cs2;
-  double length1, length2; // length of the vectors...
-  double dotP1, dotP2;
-  double theta1, theta2;
-  double tneigh[3];
+  double u[3], w[3];
+  double x, y , z;
+  double a, b, c, d, length;
+  double sidecheck;
+  int shift = (zID * NSP);
+  int locale;
   for (i = 0; i < numT; i++)
   { // for each triangle...
     ngrainname1 = cTriangle[i].ngrainname[0];
@@ -2693,91 +2682,43 @@ void SurfaceMeshFunc::arrange_grainnames(int numT, int zID)
     xSum = 0.0;
     ySum = 0.0;
     zSum = 0.0;
-    xSum1 = 0.0;
-    ySum1 = 0.0;
-    zSum1 = 0.0;
-    xSum2 = 0.0;
-    ySum2 = 0.0;
-    zSum2 = 0.0;
-    nEnode = 0;
     for (j = 0; j < 3; j++)
     { // for each node iNSide the triangle...
       cnode = cTriangle[i].node_id[j];
-      cst_index = cnode / 7 + 1;
       csite = cnode / 7 + 1;
       kind = cnode % 7;
       xSum = xSum + cVertex[cnode].xc;
       ySum = ySum + cVertex[cnode].yc;
       zSum = zSum + cVertex[cnode].zc;
-    vcoord[j][0] = cVertex[cnode].xc;
+	  vcoord[j][0] = cVertex[cnode].xc;
       vcoord[j][1] = cVertex[cnode].yc;
       vcoord[j][2] = cVertex[cnode].zc;
       if (kind == 0)
       {
-        nEnode++;
         tsite1 = csite;
-        tsite2 = neigh[cst_index].neigh_id[1];
-        tgrainname1 = point[tsite1].grainname;
-        tgrainname2 = point[tsite2].grainname;
+        tsite2 = neigh[csite].neigh_id[1];
+        tgrainname1 = voxels[tsite1].grainname;
+        tgrainname2 = voxels[tsite2].grainname;
       }
       else if (kind == 1)
       {
-        nEnode++;
         tsite1 = csite;
-        tsite2 = neigh[cst_index].neigh_id[7];
-        tgrainname1 = point[tsite1].grainname;
-        tgrainname2 = point[tsite2].grainname;
+        tsite2 = neigh[csite].neigh_id[7];
+        tgrainname1 = voxels[tsite1].grainname;
+        tgrainname2 = voxels[tsite2].grainname;
       }
       else if (kind == 2)
       {
-        nEnode++;
         tsite1 = csite;
-        tsite2 = neigh[cst_index].neigh_id[18];
-        tgrainname1 = point[tsite1].grainname;
-        tgrainname2 = point[tsite2].grainname;
-      }
-      else
-      {
-        tgrainname1 = -1;
-        tgrainname2 = -1;
-      }
-      if (tgrainname1 == ngrainname1)
-      {
-        xSum1 = xSum1 + find_xcoord(tsite1);
-        ySum1 = ySum1 + find_ycoord(tsite1);
-        zSum1 = zSum1 + find_zcoord(tsite1);
-        xSum2 = xSum2 + find_xcoord(tsite2);
-        ySum2 = ySum2 + find_ycoord(tsite2);
-        zSum2 = zSum2 + find_zcoord(tsite2);
-      }
-      else if (tgrainname2 == ngrainname1)
-      {
-        xSum1 = xSum1 + find_xcoord(tsite2);
-        ySum1 = ySum1 + find_ycoord(tsite2);
-        zSum1 = zSum1 + find_zcoord(tsite2);
-        xSum2 = xSum2 + find_xcoord(tsite1);
-        ySum2 = ySum2 + find_ycoord(tsite1);
-        zSum2 = zSum2 + find_zcoord(tsite1);
+        tsite2 = neigh[csite].neigh_id[18];
+        tgrainname1 = voxels[tsite1].grainname;
+        tgrainname2 = voxels[tsite2].grainname;
       }
     }
-    // Getting the vectors from center of triangle to each center of mass...
+    // Getting the center of triangle...
     cx = xSum / 3.0;
     cy = ySum / 3.0;
     cz = zSum / 3.0;
-    ctr1[0] = xSum1 / (double) nEnode;
-    ctr1[1] = ySum1 / (double) nEnode;
-    ctr1[2] = zSum1 / (double) nEnode;
-    ctr2[0] = xSum2 / (double) nEnode;
-    ctr2[1] = ySum2 / (double) nEnode;
-    ctr2[2] = zSum2 / (double) nEnode;
-    tcVertex[0] = ctr1[0] - cx;
-    tcVertex[1] = ctr1[1] - cy;
-    tcVertex[2] = ctr1[2] - cz;
-    tv2[0] = ctr2[0] - cx;
-    tv2[1] = ctr2[1] - cy;
-    tv2[2] = ctr2[2] - cz;
-    length1 = sqrt(tcVertex[0] * tcVertex[0] + tcVertex[1] * tcVertex[1] + tcVertex[2] * tcVertex[2]);
-    length2 = sqrt(tv2[0] * tv2[0] + tv2[1] * tv2[1] + tv2[2] * tv2[2]);
     // Getting normal vector of the triangle...(Right-hand Rule!!!)
     // Getting 2 edge vectors of triangle originating from vertex 0...
     u[0] = vcoord[1][0] - vcoord[0][0];
@@ -2792,59 +2733,33 @@ void SurfaceMeshFunc::arrange_grainnames(int numT, int zID)
     b = u[2] * w[0] - u[0] * w[2];
     c = u[0] * w[1] - u[1] * w[0];
     length = sqrt(a * a + b * b + c * c);
-    tneigh[0] = a / length;
-    tneigh[1] = b / length;
-    tneigh[2] = c / length;
-    for (k = 0; k < 3; k++)
-    {
-      if (fabs(tneigh[k]) < 0.0001)
-      {
-        tneigh[k] = 0.0;
-      }
-    }
+    a = a / length;
+    b = b / length;
+    c = c / length;
+	if(fabs(a) < 0.00001) a = 0.0;
+	if(fabs(b) < 0.00001) b = 0.0;
+	if(fabs(c) < 0.00001) c = 0.0;
     // update patch info...
-    cTriangle[i].normal[0] = tneigh[0];
-    cTriangle[i].normal[1] = tneigh[1];
-    cTriangle[i].normal[2] = tneigh[2];
+    cTriangle[i].normal[0] = a;
+    cTriangle[i].normal[1] = b;
+    cTriangle[i].normal[2] = c;
     cTriangle[i].area = 0.5 * length;
-    // normals to triangle...
-    ncVertex[0] = a;
-    ncVertex[1] = b;
-    ncVertex[2] = c;
-    // Let's arrange the grainname order...
-    // Getting angles between vectors...
-    dotP1 = tcVertex[0] * ncVertex[0] + tcVertex[1] * ncVertex[1] + tcVertex[2] * ncVertex[2];
-    dotP2 = tv2[0] * ncVertex[0] + tv2[1] * ncVertex[1] + tv2[2] * ncVertex[2];
-    cs1 = dotP1 / (length * length1);
-    cs2 = dotP2 / (length * length2);
-    if (cs1 > 1.0)
-    {
-      cs1 = 1.0;
+    // determine which way normal should point...
+	d = (a*cx + b*cy + c*cz);
+	locale = tsite1+shift;
+	x = find_xcoord(locale);
+	y = find_ycoord(locale);
+	z = find_zcoord(locale);
+	sidecheck = (a*x + b*y + c*z -d);
+    if (sidecheck < 0.0)
+	{
+      cTriangle[i].ngrainname[0] = tgrainname2;
+      cTriangle[i].ngrainname[1] = tgrainname1;
     }
-    else if (cs1 < -1.0)
+    else if (sidecheck >= 0.0)
     {
-      cs1 = -1.0;
-    }
-    if (cs2 > 1.0)
-    {
-      cs2 = 1.0;
-    }
-    else if (cs2 < -1.0)
-    {
-      cs2 = -1.0;
-    }
-    theta1 = 180.0 / M_PI * acos(cs1);
-    theta2 = 180.0 / M_PI * acos(cs2);
-    // update neighboring grainnames...
-    if (theta1 < theta2)
-    {
-      cTriangle[i].ngrainname[0] = ngrainname1;
-      cTriangle[i].ngrainname[1] = ngrainname2;
-    }
-    else
-    {
-      cTriangle[i].ngrainname[0] = ngrainname2;
-      cTriangle[i].ngrainname[1] = ngrainname1;
+      cTriangle[i].ngrainname[0] = tgrainname1;
+      cTriangle[i].ngrainname[1] = tgrainname2;
     }
   }
 }
