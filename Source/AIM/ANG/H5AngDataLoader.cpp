@@ -191,7 +191,7 @@ int H5AngDataLoader::loadData(Voxel voxels[], int xpoints, int ypoints, int zpoi
   float* euler2Ptr;
   float* euler3Ptr;
   float* confPtr;
-  float* phasePtr;
+  unsigned int* phasePtr;
   float* imqualPtr;
   float* imqual2Ptr;
   int xstartspot;
@@ -216,7 +216,7 @@ int H5AngDataLoader::loadData(Voxel voxels[], int xpoints, int ypoints, int zpoi
     euler1Ptr = reader->getPhi1Pointer();
     euler2Ptr = reader->getPhiPointer();
     euler3Ptr = reader->getPhi2Pointer();
-	phasePtr = reader->getPhasePointer();
+    phasePtr = reader->getPhasePointer();
     confPtr = reader->getConfidenceIndexPointer();
     imqualPtr = reader->getImageQualityPointer();
     imqual2Ptr = reader->getImageQuality2Pointer();
@@ -230,11 +230,20 @@ int H5AngDataLoader::loadData(Voxel voxels[], int xpoints, int ypoints, int zpoi
         voxels[index].euler1 = euler1Ptr[readerIndex]; // Phi1
         voxels[index].euler2 = euler2Ptr[readerIndex]; // Phi
         voxels[index].euler3 = euler3Ptr[readerIndex]; // Phi2
-        voxels[index].imagequality = imqualPtr[readerIndex];// Image Quality
-        voxels[index].imagequality2 = imqual2Ptr[readerIndex];// Image Quality
-        voxels[index].confidence = confPtr[readerIndex];// Confidence
-		voxels[index].phase = phasePtr[readerIndex];// Phase
-		if(voxels[index].phase == 0) voxels[index].phase = 1;
+        voxels[index].imagequality = imqualPtr[readerIndex]; // Image Quality
+        voxels[index].imagequality2 = imqual2Ptr[readerIndex]; // Image Quality
+        voxels[index].confidence = confPtr[readerIndex]; // Confidence
+        voxels[index].phase = phasePtr[readerIndex]; // Phase
+        /* For TSL OIM Files if there is a single phase then the value of the phase
+         * data is zero (0). If there are 2 or more phases then the lowest value
+         * of phase is one (1). In the rest of the reconstruction code we follow the
+         * convention that the lowest value is One (1) even if there is only a single
+         * phase. The next if statement converts all zeros to ones if there is a single
+         * phase in the OIM data.
+         */
+        if (voxels[index].phase == 0) {
+          voxels[index].phase = 1;
+        }
         ++readerIndex;
       }
     }

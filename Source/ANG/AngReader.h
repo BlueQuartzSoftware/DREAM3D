@@ -120,8 +120,8 @@
     angSetMacro(HeaderType, type, prpty, key)\
     angGetMacro(HeaderType, type, prpty, key)
 
-#define SET_POINTER(name, var)\
-void set##name##Pointer(float* f)\
+#define SET_POINTER(name, var, type)\
+void set##name##Pointer(type* f)\
   {\
     if (m_##var != NULL && m_##var != f)\
     {\
@@ -214,20 +214,20 @@ class TSLANG_EXPORT AngReader
     float* getImageQualityPointer() { return m_Iq; }
     float* getImageQuality2Pointer() { return m_SEMSignal; }
     float* getConfidenceIndexPointer() { return m_Ci; }
-    float* getPhasePointer() { return m_PhaseData; }
+    unsigned int* getPhasePointer() { return m_PhaseData; }
     float* getSEMSignalPointer() { return m_SEMSignal; }
     float* getFitPointer() { return m_SEMSignal; }
 
-    SET_POINTER(Phi1, Phi1)
-    SET_POINTER(Phi, Phi)
-    SET_POINTER(Phi2, Phi2)
-    SET_POINTER(XPos, X)
-    SET_POINTER(YPos, Y)
-    SET_POINTER(ImageQuality, Iq)
-    SET_POINTER(ConfidenceIndex, Ci)
-    SET_POINTER(Phase, PhaseData)
-    SET_POINTER(SEMSignal, SEMSignal)
-    SET_POINTER(Fit, Fit)
+    SET_POINTER(Phi1, Phi1, float)
+    SET_POINTER(Phi, Phi, float)
+    SET_POINTER(Phi2, Phi2, float)
+    SET_POINTER(XPos, X, float)
+    SET_POINTER(YPos, Y, float)
+    SET_POINTER(ImageQuality, Iq, float)
+    SET_POINTER(ConfidenceIndex, Ci, float)
+    SET_POINTER(Phase, PhaseData, unsigned int)
+    SET_POINTER(SEMSignal, SEMSignal, float)
+    SET_POINTER(Fit, Fit, float)
 
 protected:
     // Needed by subclasses
@@ -286,7 +286,7 @@ private:
     float* m_Phi2;
     float* m_Iq;
     float* m_Ci;
-    float* m_PhaseData;
+    unsigned int* m_PhaseData;
     float* m_X;
     float* m_Y;
     float* m_SEMSignal;
