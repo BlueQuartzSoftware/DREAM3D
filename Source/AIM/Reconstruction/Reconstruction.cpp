@@ -185,6 +185,7 @@ void Reconstruction::compute()
   std::vector<AIM::Reconstruction::CrystalStructure> m_CrystalStructure;
   std::vector<AngPhase::Pointer> phases = h5AngLoader->getPhases();
   m_CrystalStructure.resize(phases.size()+1);
+  m_CrystalStructure[0] = AIM::Reconstruction::UnknownCrystalStructure;
   for(size_t i=0;i<phases.size();i++)
   {
 	  int phaseID = phases[i]->getPhase();
