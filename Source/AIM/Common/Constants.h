@@ -151,7 +151,7 @@ namespace AIM
     const std::string IPFDeformVTKFile("IPF_DeformationData.vtk");
     const std::string HDF5GrainFile("Grains.h5grain");
     const std::string H5StatisticsFile("Results.h5");
-
+    const std::string GrainIdScalarName("GrainID");
     /**
      * @brief IF YOU CHANGE THE VALUES THERE ARE DEEP RAMIFICATIONS IN THE CODE BUT
      * MOSTLY IN THE HDF5 FILES WHICH ARE WRITTEN USING THE ENUMERATIONS.
