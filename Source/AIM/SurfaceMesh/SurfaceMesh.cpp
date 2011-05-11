@@ -78,6 +78,7 @@ QObject(parent),
 #endif
 m_InputDirectory("."),
 m_InputFile(""),
+m_ScalarName(AIM::Reconstruction::GrainIdScalarName),
 m_OutputDirectory(""),
 m_OutputFilePrefix("SurfaceMesh_"),
 m_ConformalMesh(true),
@@ -137,7 +138,7 @@ void SurfaceMesh::compute()
     return;
     }
   }
-
+  int err = 0;
   int cNodeID = 0;
 //  int cEdgeID = 0;
 //  int fEdgeID = 0;
@@ -200,7 +201,7 @@ void SurfaceMesh::compute()
 //  int err = 0;
 #if  USE_VTK_FILE_UTILS
   SMVtkFileIO vtkreader;
-  m_ZDim = vtkreader.readHeader(m.get(), m_InputFile);
+  m_ZDim = vtkreader.readHeader(m.get(), m_InputFile, m_ScalarName);
 
 #else
   m_ZDim = m->initialize_micro(m_InputFile, -1);
@@ -248,7 +249,16 @@ void SurfaceMesh::compute()
     // std::cout << "nNodes: " << nNodes << std::endl;
     // Output nodes and triangles...
     m->writeNodesFile(i, cNodeID, NodesFile);
-    m->writeTrianglesFile(nTriangle, TrianglesFile, i, cTriID);
+    err = m->writeTrianglesFile(nTriangle, TrianglesFile, i, cTriID);
+    if (err < 0)
+    {
+      this->m_Cancel = true;
+      progressMessage(AIM_STRING("Error Writing Triangles Temp File"), 100 );
+#if AIM_USE_QT
+  emit finished();
+#endif
+      return;
+    }
     cNodeID = nNodes;
     cTriID = cTriID + nTriangle;
   }

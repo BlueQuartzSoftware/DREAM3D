@@ -2690,7 +2690,7 @@ void SurfaceMeshFunc::arrange_grainnames(int numT, int zID)
       xSum = xSum + cVertex[cnode].xc;
       ySum = ySum + cVertex[cnode].yc;
       zSum = zSum + cVertex[cnode].zc;
-	  vcoord[j][0] = cVertex[cnode].xc;
+      vcoord[j][0] = cVertex[cnode].xc;
       vcoord[j][1] = cVertex[cnode].yc;
       vcoord[j][2] = cVertex[cnode].zc;
       if (kind == 0)
@@ -2831,7 +2831,7 @@ void SurfaceMeshFunc::writeNodesFile(int zID, int cNodeID, const std::string &no
 // -----------------------------------------------------------------------------
 //  Write a BINARY file which is only TEMP during the surface meshing
 // -----------------------------------------------------------------------------
-void SurfaceMeshFunc::writeTrianglesFile (int nt,
+int SurfaceMeshFunc::writeTrianglesFile (int nt,
                                           const std::string &trianglesFile,
                                           int zID,
                                           int ctid)
@@ -2858,6 +2858,7 @@ void SurfaceMeshFunc::writeTrianglesFile (int nt,
   {
     f = fopen(trianglesFile.c_str(), "ab");
   }
+  size_t totalWritten = 0;
   //  outFile << nt <<endl;
   for (int i = 0; i < end; i++)
   {
@@ -2869,12 +2870,18 @@ void SurfaceMeshFunc::writeTrianglesFile (int nt,
     data[3] = cVertex[n3].NodeID;
     data[4] = cTriangle[i].ngrainname[0];
     data[5] = cTriangle[i].ngrainname[1];
-    size_t totalWritten = fwrite(data, sizeof(int), 6, f);
+    totalWritten = fwrite(data, sizeof(int), 6, f);
+    if (totalWritten != 6)
+    {
+      std::cout << "Error Writing Triangles Temp File. Not enough elements written. Wrote " << totalWritten << " of 6." << std::endl;
+      return -1;
+    }
 //    fprintf(f, "%d %d %d %d %d %d\n", newID, n1, n2, n3, s1, s2);
     data[0]= data[0] + 1;
   }
   fclose(f);
   if (end > 0) { delete[] cTriangle; }
+  return 0;
 }
 
 void SurfaceMeshFunc::smooth_boundaries (int nNodes, int nTriangles, string NodesFile, string TrianglesFile)
