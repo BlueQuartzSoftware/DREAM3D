@@ -153,7 +153,8 @@ int SMVtkFileIO::readZSlice(SurfaceMeshFunc* m, int zID)
   {
     for (int i = 1; i <= m->NSP; i++)
     {
-      m->voxels[i].deepCopy(&(m->voxels[i+m->NSP]));
+     // m->voxels[i].deepCopy(&(m->voxels[i+m->NSP]));
+      m->voxels[i] = m->voxels[i + m->NSP];
     }
   }
   int index = start;
@@ -186,12 +187,12 @@ int SMVtkFileIO::readZSlice(SurfaceMeshFunc* m, int zID)
           if (buffer[x] <= 0) {
             buffer[x] = -3;
           }
-          m->voxels[index].grainname = buffer[x];
+          m->voxels[index] = buffer[x];
           if ((zID == 0 || zID == m->zDim - 2)
               || (y == 0 || y == m->yDim - 1)
               || (x == 0 || x == m->xDim - 1))
           {
-            m->voxels[index].grainname = -3;
+            m->voxels[index] = -3;
           }
           ++index; // increment i;
         }
@@ -211,12 +212,12 @@ int SMVtkFileIO::readZSlice(SurfaceMeshFunc* m, int zID)
           m_InputFile >> tmp;
           if (tmp <= 0)
             { tmp = -3; }
-          m->voxels[index].grainname = tmp;
+          m->voxels[index] = tmp;
           if ((zID == 0 || zID == m->zDim - 2)
               || (y == 0 || y == m->yDim - 1)
               || (x == 0 || x == m->xDim - 1))
           {
-            m->voxels[index].grainname = -3;
+            m->voxels[index] = -3;
           }
           ++index; // increment i;
         }
@@ -230,7 +231,48 @@ int SMVtkFileIO::readZSlice(SurfaceMeshFunc* m, int zID)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int SMVtkFileIO::readHeader(SurfaceMeshFunc* m, const std::string &file, const std::string &scalarName)
+int SMVtkFileIO::getVolumeDimensions(const std::string &file, int &xDim, int &yDim, int &zDim)
+{
+  int err = 0;
+    m_InputFile.open(file.c_str());
+    if (!m_InputFile.is_open())
+    {
+      std::cout << logTime() << " vtk file could not be opened: " << file << std::endl;
+      return -1;
+    }
+    char buf[kBufferSize];
+    m_InputFile.getline(buf, kBufferSize); // Read Line 1
+    m_InputFile.getline(buf, kBufferSize); // Read Line 2
+    ::memset(buf, 0, kBufferSize);
+    m_InputFile.getline(buf, kBufferSize); // Read Line 3
+    std::string fileType(buf);
+    if (fileType.find("BINARY", 0) == 0)
+    {
+      m_fileIsBinary = true;
+    }
+    else if (fileType.find("ASCII", 0) == 0)
+    {
+      m_fileIsBinary = false;
+    }
+    else
+    {
+      err = -1;
+      std::cout << logTime() << "The file type of the VTK legacy file could not be determined. It should be ASCII' or 'BINARY' and should appear on line 3 of the file."
+          << std::endl;
+      return err;
+    }
+    m_InputFile.getline(buf, kBufferSize); // Read Line 4
+    // Start reading Line 5
+    std::string dimension_label;
+    m_InputFile >> dimension_label >>  xDim >>  yDim >>  zDim; // Read Line 5
+
+    m_InputFile.close();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int SMVtkFileIO::primeFileToScalarDataLocation(SurfaceMeshFunc* m, const std::string &file, const std::string &scalarName)
 {
   /*
    1: # vtk DataFile Version 2.0
@@ -305,7 +347,7 @@ int SMVtkFileIO::readHeader(SurfaceMeshFunc* m, const std::string &file, const s
   m->NSP = m->xDim * m->yDim;
 
   m->neigh = new Neighbor[2 * m->NSP + 1];
-  m->voxels = new Voxel[2 * m->NSP + 1];
+  m->voxels = new int[2 * m->NSP + 1];
   m->cSquare = new Face[3 * 2 * m->NSP];
   m->cVertex = new Node[2 * 7 * m->NSP];
 
