@@ -215,7 +215,7 @@ class AIMCOMMON_EXPORT ReconstructionFunc
     ReconstructionFunc();
 
   private:
-    std::vector<OrientationMath*>    m_OrientatioOps;
+    std::vector<OrientationMath*>    m_OrientationOps;
     OrientationMath::Pointer                m_CubicOps;
     OrientationMath::Pointer            m_HexOps;
     OrientationMath::Pointer         m_OrthoOps;
