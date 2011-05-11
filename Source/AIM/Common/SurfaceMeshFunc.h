@@ -117,7 +117,7 @@ public:
   double yOrigin;
   double zOrigin;
   Neighbor* neigh; // contains nearest neighbor information...
-  Voxel* point; // contains voxel information...
+  Voxel* voxels; // contains voxel information...
   Face* cSquare; // contains square information...
  // Face* pSquare;
   Node* cVertex; // contains edges on square faces for open loops...
@@ -142,9 +142,9 @@ public:
   int get_number_case2_triangles(int *afe, int nfedge, int *afc, int nfctr);
   int get_number_caseM_triangles(int *afe, int nfedge, int *afc, int nfctr);
   int get_triangles(int nTriangle);
-  void get_case0_triangles(int *afe, int nfedge, int tin, int *tout);
-  void get_case2_triangles(int *afe, int nfedge, int *afc, int nfctr, int tin, int *tout);
-  void get_caseM_triangles(int *afe, int nfedge, int *afc, int nfctr, int tin, int *tout, int ccn);
+  void get_case0_triangles(int site, int *afe, int nfedge, int tin, int *tout);
+  void get_case2_triangles(int site, int *afe, int nfedge, int *afc, int nfctr, int tin, int *tout);
+  void get_caseM_triangles(int site, int *afe, int nfedge, int *afc, int nfctr, int tin, int *tout, int ccn);
   void arrange_grainnames(int numT, int zID);
   int assign_nodeID(int nN, int zID);
   void update_current_triangles(int nT);
