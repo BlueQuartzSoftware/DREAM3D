@@ -191,7 +191,7 @@ int H5AngDataLoader::loadData(Voxel voxels[], int xpoints, int ypoints, int zpoi
   float* euler2Ptr;
   float* euler3Ptr;
   float* confPtr;
-  unsigned int* phasePtr;
+  int* phasePtr;
   float* imqualPtr;
   float* imqual2Ptr;
   int xstartspot;
@@ -241,7 +241,7 @@ int H5AngDataLoader::loadData(Voxel voxels[], int xpoints, int ypoints, int zpoi
          * phase. The next if statement converts all zeros to ones if there is a single
          * phase in the OIM data.
          */
-        if (voxels[index].phase == 0) {
+        if (voxels[index].phase < 1) {
           voxels[index].phase = 1;
         }
         ++readerIndex;
