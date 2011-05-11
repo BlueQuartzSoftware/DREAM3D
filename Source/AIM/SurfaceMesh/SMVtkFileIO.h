@@ -64,19 +64,11 @@ class AIMCOMMON_EXPORT SMVtkFileIO
      * @param slice
      * @return
      */
-    int readHeader(SurfaceMeshFunc* m, const std::string &file);
+    int readHeader(SurfaceMeshFunc* m, const std::string &file, const std::string &scalarName);
 
 
     int readZSlice(SurfaceMeshFunc* m, int zID);
 
-//    int readNextZSlice(SurfaceMeshFunc* m, int zID);
-
-    /**
-     * @brief Reads a specific subset of VTK legacy ASCII or BINARY files
-     * @param inputs The M3CInputs pointer
-     * @return
-     */
- //   int readVtkFile(SurfaceMeshFunc* func, const std::string &file);
 
 /**
  * @brief Writes a VTK POLYDATA legacy ASCII file
@@ -120,6 +112,7 @@ class AIMCOMMON_EXPORT SMVtkFileIO
     bool          m_fileIsBinary;
     bool          m_HeaderComplete;
     size_t        m_IntByteSize;
+    std::string   m_ScalarName;
 
     SMVtkFileIO(const SMVtkFileIO&); // Copy Constructor Not Implemented
     void operator=(const SMVtkFileIO&); // Operator '=' Not Implemented

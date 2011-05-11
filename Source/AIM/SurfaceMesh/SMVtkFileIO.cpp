@@ -160,6 +160,11 @@ int SMVtkFileIO::readZSlice(SurfaceMeshFunc* m, int zID)
 
   if (m_fileIsBinary == true)
   {
+    if (m_IntByteSize != 4)
+    {
+      std::cout << "ERROR Reading Binary VTK File. This program only accepts a type of Int" << std::endl;
+      return -1;
+    }
     int* buffer = new int[m->xDim];
    // int i = 1;
     for (int z = 0; z < zEnd; ++z)
@@ -176,6 +181,8 @@ int SMVtkFileIO::readZSlice(SurfaceMeshFunc* m, int zID)
         }
         for (int x = 0; x < m->xDim; ++x)
         {
+          // Binary VTK files are written in Big Endian Form so we need to flip each value
+          MXA::Endian::FromBigToSystem::convert<int>(buffer[x]);
           if (buffer[x] <= 0) {
             buffer[x] = -3;
           }
@@ -223,83 +230,7 @@ int SMVtkFileIO::readZSlice(SurfaceMeshFunc* m, int zID)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-#if 0
-int SMVtkFileIO::readNextZSlice(SurfaceMeshFunc* m, int zID)
-{
-  int error = 0;
-  if (m_HeaderComplete == false)
-  {
-    return -1;
-  }
-
-  size_t i = m->NSP + 1;
-  if (m_fileIsBinary == true)
-  {
-    int* buffer = new int[m->xDim];
-
-    //for (int z = 0; z < m->zDim; ++z)
-
-    {
-      for (int y = 0; y < m->yDim; ++y)
-      {
-        // Read all the xpoints in one shot into a buffer
-        m_InputFile.read(reinterpret_cast<char* > (buffer), (m->xDim * m_IntByteSize));
-        if (m_InputFile.gcount() != (m->xDim * m_IntByteSize))
-        {
-          std::cout << logTime() << " ERROR READING BINARY FILE. Bytes read was not the same as func->xDim *. " << m_IntByteSize << "." << m_InputFile.gcount()
-          << " vs " << (m->xDim * m_IntByteSize) << std::endl;
-          return -1;
-        }
-        for (int x = 0; x < m->xDim; ++x)
-        {
-          if (buffer[x] <= 0)
-          { buffer[x] = -3;}
-          m->voxels[i].grainname = buffer[x];
-          if ((zID == 0 || zID == m->zDim - 1)
-              || (y == 0 || y == m->yDim - 1)
-              || (x == 0 || x == m->xDim - 1))
-          {
-            m->voxels[i].grainname = -3;
-          }
-          ++i; // increment i;
-        }
-      }
-    }
-    delete buffer;
-  }
-  else
-  {
-    int tmp = -1;
-
-    // for (int z = 0; z < m->zDim; ++z)
-
-    {
-      for (int y = 0; y < m->yDim; ++y)
-      {
-        for (int x = 0; x < m->xDim; ++x)
-        {
-          m_InputFile >> tmp;
-          if (tmp <= 0) tmp = -3;
-          Voxel& v = m->voxels[i];
-          v.grainname = tmp;
-          if ((zID == 0 || zID == m->zDim - 1) || (y == 0 || y == m->yDim - 1) || (x == 0 || x == m->xDim - 1))
-          {
-            v.grainname = -3;
-          }
-          ++i; // increment i;
-        }
-      }
-    }
-  }
-  return error;
-}
-#endif
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int SMVtkFileIO::readHeader(SurfaceMeshFunc* m, const std::string &file)
+int SMVtkFileIO::readHeader(SurfaceMeshFunc* m, const std::string &file, const std::string &scalarName)
 {
   /*
    1: # vtk DataFile Version 2.0
@@ -311,7 +242,7 @@ int SMVtkFileIO::readHeader(SurfaceMeshFunc* m, const std::string &file)
    7: SPACING 0.665 0.665 1.48
    8: POINT_DATA 258465900
    9:
-   10: SCALARS GrainID int  1
+   10: SCALARS GrainID int 1
    11: LOOKUP_TABLE default
 
    OR
@@ -325,7 +256,7 @@ int SMVtkFileIO::readHeader(SurfaceMeshFunc* m, const std::string &file)
    7: SPACING 0.25 0.25 0.25
    8: POINT_DATA 3798900
    9:
-   10: SCALARS GrainID int  1
+   10: SCALARS GrainID int 1
    11: LOOKUP_TABLE default
    12:
    0
@@ -403,23 +334,46 @@ int SMVtkFileIO::readHeader(SurfaceMeshFunc* m, const std::string &file)
   char text2[kBufferSize]; ::memset(text2, 0, kBufferSize);
   char text3[kBufferSize]; ::memset(text3, 0, kBufferSize);
   int fieldNum = 0;
-//  int nComponents = 0;
-//  int totalValues = 0;
-  m_InputFile.getline(buf, kBufferSize); // Read Line 9
-  ::memset(buf, 0, kBufferSize);
 
-  readLine(m_InputFile, buf, kBufferSize); // Read Line 10
-  int n = sscanf(buf, "%s %s %s %d", text1, text2, text3, &fieldNum);
-  m_IntByteSize = parseByteSize(text3);
-  if (m_IntByteSize == 0)
+  bool keepReading = true;
+  while (keepReading)
   {
-    return -1;
-  }
-  ::memset(text1, 0, kBufferSize);
-  ::memset(text2, 0, kBufferSize);
-  ::memset(text3, 0, kBufferSize);
-  readLine(m_InputFile, buf, kBufferSize); // Read Line 11
+    m_InputFile.getline(buf, kBufferSize); // Read Line 9
+    ::memset(buf, 0, kBufferSize);
 
+    readLine(m_InputFile, buf, kBufferSize); // Read Line 10
+    int n = sscanf(buf, "%s %s %s %d", text1, text2, text3, &fieldNum);
+    if (n != 4)
+    {
+      std::cout << "Error reading SCALARS header section of VTK file." << std::endl;
+      return -1;
+    }
+    m_ScalarName = std::string(text2);
+    m_IntByteSize = parseByteSize(text3);
+    if (m_IntByteSize == 0)
+    {
+      return -1;
+    }
+    ::memset(text1, 0, kBufferSize);
+    ::memset(text2, 0, kBufferSize);
+    ::memset(text3, 0, kBufferSize);
+    readLine(m_InputFile, buf, kBufferSize); // Read Line 11
+
+    // Check to make sure we are reading the correct set of scalars and if we are
+    // NOT then read all this particular Scalar Data and try again
+    if (m_ScalarName.compare(scalarName) != 0)
+    {
+      for (int i = 0; i < m->zDim - 1; ++i)
+      {
+        readZSlice(m, i);
+      }
+    }
+    else
+    {
+      keepReading = false;
+    }
+  }
+  // We are now queued up to read the data
   m_HeaderComplete = true;
   err = 1;
 
