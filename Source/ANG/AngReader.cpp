@@ -117,7 +117,7 @@ void AngReader::initPointers(size_t numElements)
   m_Phi2 = allocateArray<float > (numElements);
   m_Iq = allocateArray<float > (numElements);
   m_Ci = allocateArray<float > (numElements);
-  m_PhaseData = allocateArray<float > (numElements);
+  m_PhaseData = allocateArray<unsigned int> (numElements);
   m_X = allocateArray<float > (numElements);
   m_Y = allocateArray<float > (numElements);
   m_SEMSignal = allocateArray<float > (numElements);
@@ -145,7 +145,7 @@ void AngReader::deletePointers()
   this->deallocateArrayData<float > (m_Phi2);
   this->deallocateArrayData<float > (m_Iq);
   this->deallocateArrayData<float > (m_Ci);
-  this->deallocateArrayData<float > (m_PhaseData);
+  this->deallocateArrayData<unsigned int > (m_PhaseData);
   this->deallocateArrayData<float > (m_X);
   this->deallocateArrayData<float > (m_Y);
   this->deallocateArrayData<float > (m_SEMSignal);
@@ -403,9 +403,10 @@ void AngReader::readData(const std::string &line,
    * Some TSL ang files do NOT have all 10 columns. Assume these are lacking the last
    * 2 columns and all the other columns are the same as above.
    */
-  float p1, p, p2, x, y, iqual, conf, ph, d1, d2;
+  float p1, p, p2, x, y, iqual, conf, semSignal, fit;
+  unsigned int ph;
   size_t offset = 0;
-  m_NumFields = sscanf(line.c_str(), "%f %f %f %f %f %f %f %f %f %f", &p1, &p,&p2, &x, &y, &iqual, &conf, &ph, &d1, &d2);
+  m_NumFields = sscanf(line.c_str(), "%f %f %f %f %f %f %f %f %f %f", &p1, &p,&p2, &x, &y, &iqual, &conf, &ph, &semSignal, &fit);
 
 
   // Do we transform the data
@@ -474,11 +475,11 @@ void AngReader::readData(const std::string &line,
   m_X[offset] = x;
   m_Y[offset] = y;
   if (m_NumFields > 8) {
-    m_SEMSignal[offset] = d1;
+    m_SEMSignal[offset] = semSignal;
   }
   if (m_NumFields > 9)
   {
-    m_Fit[offset] = d2;
+    m_Fit[offset] = fit;
   }
 }
 

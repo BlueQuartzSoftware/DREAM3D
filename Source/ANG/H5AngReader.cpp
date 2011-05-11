@@ -44,8 +44,8 @@
 #define ONE_PIf          3.14159265358979323f
 
 
-#define SHUFFLE_ARRAY(name, var)\
-  { float* f = allocateArray<float>(numElements);\
+#define SHUFFLE_ARRAY(name, var, type)\
+  { type* f = allocateArray<type>(numElements);\
   for (size_t i = 0; i < totalDataRows; ++i)\
   {\
     size_t nIdx = shuffleTable[i];\
@@ -427,7 +427,7 @@ int H5AngReader::readData(hid_t parId)
 //  float* y = getYPosPointer();
   float* iqual = getImageQualityPointer();
   float* conf = getConfidenceIndexPointer();
-  float* ph = getPhasePointer();
+  unsigned int* ph = getPhasePointer();
   float* semSignal = getSEMSignalPointer();
   float* fit = getFitPointer();
 
@@ -502,19 +502,19 @@ int H5AngReader::readData(hid_t parId)
 	  }
   }
 
-  SHUFFLE_ARRAY(Phi1, p1)
-  SHUFFLE_ARRAY(Phi, p)
-  SHUFFLE_ARRAY(Phi2, p2)
-  SHUFFLE_ARRAY(ImageQuality, iqual)
-  SHUFFLE_ARRAY(ConfidenceIndex, conf)
-  SHUFFLE_ARRAY(Phase, ph)
+  SHUFFLE_ARRAY(Phi1, p1, float)
+  SHUFFLE_ARRAY(Phi, p, float)
+  SHUFFLE_ARRAY(Phi2, p2, float)
+  SHUFFLE_ARRAY(ImageQuality, iqual, float)
+  SHUFFLE_ARRAY(ConfidenceIndex, conf, float)
+  SHUFFLE_ARRAY(Phase, ph, unsigned int)
   if (NULL != semSignal)
   {
-    SHUFFLE_ARRAY(SEMSignal, semSignal)
+    SHUFFLE_ARRAY(SEMSignal, semSignal, float)
   }
   if (NULL != fit)
   {
-    SHUFFLE_ARRAY(Fit, fit)
+    SHUFFLE_ARRAY(Fit, fit, float)
   }
 
   err = H5Gclose(gid);
