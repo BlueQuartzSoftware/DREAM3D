@@ -79,16 +79,16 @@ using namespace std;
 ReconstructionFunc::ReconstructionFunc()
 {
   m_HexOps = HexagonalOps::New();
-  m_OrientatioOps.push_back(m_HexOps.get());
+  m_OrientationOps.push_back(m_HexOps.get());
   m_CubicOps = CubicOps::New();
-  m_OrientatioOps.push_back(m_CubicOps.get());
+  m_OrientationOps.push_back(m_CubicOps.get());
   m_OrthoOps = OrthoRhombicOps::New();
-  m_OrientatioOps.push_back(m_OrthoOps.get());
+  m_OrientationOps.push_back(m_OrthoOps.get());
 }
 
 ReconstructionFunc::~ReconstructionFunc()
 {
-  std::cout << "~ReconstructionFunc" << std::endl;
+  // std::cout << "~ReconstructionFunc" << std::endl;
   m_Grains.clear();
   graincenters.clear();
   grainmoments.clear();
@@ -155,7 +155,7 @@ void ReconstructionFunc::initializeQuats()
     OrientationMath::eulertoQuat(qr, voxels[i].euler1, voxels[i].euler2, voxels[i].euler3);
     phase = voxels[i].phase;
     xtal = crystruct[phase];
-    m_OrientatioOps[xtal]->getFZQuat(qr);
+    m_OrientationOps[xtal]->getFZQuat(qr);
     voxels[i].quat[0] = 1.0;
     voxels[i].quat[1] = qr[1];
     voxels[i].quat[2] = qr[2];
@@ -439,7 +439,7 @@ void ReconstructionFunc::find_border()
         q2[4] = voxels[neighbor].quat[4];
         phase2 = crystruct[voxels[neighbor].phase];
         if (phase1 == phase2) {
-          w = m_OrientatioOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
+          w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
         }
         if (w < misorientationtolerance)
         {
@@ -620,7 +620,7 @@ void ReconstructionFunc::align_sections(const std::string &filename)
                       q2[3] = voxels[curposition].quat[3];
                       q2[4] = voxels[curposition].quat[4];
                       phase2 = crystruct[voxels[curposition].phase];
-                      if (phase1 == phase2) w = m_OrientatioOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
+                      if (phase1 == phase2) w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
                       if (w > misorientationtolerance) disorientation++;
                     }
                     if (refiq < minseedimagequality && curiq > minseedimagequality) disorientation++;
@@ -871,7 +871,7 @@ void ReconstructionFunc::form_grains_sections()
               q2[3] = voxels[neighbor].quat[3];
               q2[4] = voxels[neighbor].quat[4];
 			  phase2 = crystruct[voxels[neighbor].phase];
-			  if (phase1 == phase2) w = m_OrientatioOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
+			  if (phase1 == phase2) w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
               if (w < misorientationtolerance)
               {
                 voxels[neighbor].grainname = graincount;
@@ -1021,7 +1021,7 @@ void ReconstructionFunc::form_grains()
             q2[3] = voxels[neighbor].quat[3];
             q2[4] = voxels[neighbor].quat[4];
             phase2 = crystruct[voxels[neighbor].phase];
-            if (phase1 == phase2) w = m_OrientatioOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
+            if (phase1 == phase2) w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
             if (w < 5.0)
             {
               gnames[neighbor] = graincount;
@@ -1030,7 +1030,7 @@ void ReconstructionFunc::form_grains()
                 qa[k] = voxels[seed].quat[k];
                 qb[k] = voxels[neighbor].quat[k];
               }
-              if (phase1 == phase2) m_OrientatioOps[phase1]->getNearestQuat(qa, qb);
+              if (phase1 == phase2) m_OrientationOps[phase1]->getNearestQuat(qa, qb);
               for (int k = 0; k < 5; k++)
               {
                 voxels[neighbor].quat[k] = qb[k];
@@ -1138,14 +1138,14 @@ void ReconstructionFunc::form_grains()
                 q2[3] = grainquats[gnames[neighbor] * 5 + 3] / grainquats[gnames[neighbor] * 5];
                 q2[4] = grainquats[gnames[neighbor] * 5 + 4] / grainquats[gnames[neighbor] * 5];
                 phase2 = crystruct[gphases[gnames[neighbor]]];
-                if (phase1 == phase2) w = m_OrientatioOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
+                if (phase1 == phase2) w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
                 if (w < misorientationtolerance)
                 {
                   mergelist[size] = gnames[neighbor];
                   size++;
                   m_Grains[gnames[neighbor]]->active = 0;
                   mergedgnames[gnames[neighbor]] = i;
-                  if (phase1 == phase2) m_OrientatioOps[phase1]->getNearestQuat(qa, qb);
+                  if (phase1 == phase2) m_OrientationOps[phase1]->getNearestQuat(qa, qb);
                   for (int m = 0; m < 5; m++)
                   {
                     q2[m] = q2[m] * q2[0];
@@ -1434,7 +1434,7 @@ void ReconstructionFunc::reorder_grains(const std::string &reconVisFile)
             q1[k] = voxels[nucleus].quat[k];
             q2[k] = voxels[currentpoint].quat[k];
           }
-          m_OrientatioOps[phase]->getNearestQuat(q1,q2);
+          m_OrientationOps[phase]->getNearestQuat(q1,q2);
           for (int k = 0; k < 5; k++)
           {
             voxels[currentpoint].quat[k] = q2[k];
@@ -1768,7 +1768,7 @@ void ReconstructionFunc::find_grain_and_kernel_misorientations()
                   q2[4] = voxels[neighbor].quat[4];
                   phase2 = crystruct[voxels[neighbor].phase];
                   if (phase1 == phase2) {
-                    w = m_OrientatioOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
+                    w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
                   }
                   if (w < 5.0)
                   {
@@ -1786,7 +1786,7 @@ void ReconstructionFunc::find_grain_and_kernel_misorientations()
           q2[2] = m_Grains[gnames[point]]->avg_quat[2] / m_Grains[gnames[point]]->avg_quat[0];
           q2[3] = m_Grains[gnames[point]]->avg_quat[3] / m_Grains[gnames[point]]->avg_quat[0];
           q2[4] = m_Grains[gnames[point]]->avg_quat[4] / m_Grains[gnames[point]]->avg_quat[0];
-          w = m_OrientatioOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
+          w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
           if (unassigned[point] == 0)
           {
             voxels[point].grainmisorientation = w;
@@ -2149,7 +2149,7 @@ void ReconstructionFunc::merge_twins()
             q2[3] = m_Grains[neigh]->avg_quat[3];
             q2[4] = m_Grains[neigh]->avg_quat[4];
             phase2 = crystruct[m_Grains[neigh]->phase];
-            if (phase1 == phase2) w = m_OrientatioOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
+            if (phase1 == phase2) w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
 			OrientationMath::axisAngletoRod(w, n1, n2, n3, r1, r2, r3);
             double vecttol = 0.03;
             double rodvectdiff11 = fabs(fabs(r1) - (1.0 / 3.0));
@@ -2243,7 +2243,7 @@ void ReconstructionFunc::merge_colonies()
             q2[3] = m_Grains[neigh]->avg_quat[3];
             q2[4] = m_Grains[neigh]->avg_quat[4];
 			phase2 = crystruct[m_Grains[neigh]->phase];
-			if (phase1 == phase2) w = m_OrientatioOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
+			if (phase1 == phase2) w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
 			OrientationMath::axisAngletoRod(w, n1, n2, n3, r1, r2, r3);
 			double vecttol = 0.03;
             if (fabs(r1) < vecttol && fabs(r2) < vecttol && fabs(fabs(r3) - 0.0919) < vecttol) colony = 1;
@@ -3281,7 +3281,7 @@ void ReconstructionFunc::find_eulerodf(H5ReconStatsWriter::Pointer h5io)
 	  ea3 = m_Grains[i]->euler3;
       phase = crystruct[m_Grains[i]->phase];
 	  OrientationMath::eulertoRod(r1,r2,r3,ea1,ea2,ea3);
-      bin = m_OrientatioOps[phase]->getOdfBin(r1,r2,r3);
+      bin = m_OrientationOps[phase]->getOdfBin(r1,r2,r3);
       eulerodf[m_Grains[i]->phase][bin] = eulerodf[m_Grains[i]->phase][bin] + (vol/totalvol[m_Grains[i]->phase]);
     }
   }
@@ -3356,7 +3356,7 @@ void ReconstructionFunc::measure_misorientations(H5ReconStatsWriter::Pointer h5i
       q2[3] = m_Grains[nname]->avg_quat[3] / m_Grains[nname]->avg_quat[0];
       q2[4] = m_Grains[nname]->avg_quat[4] / m_Grains[nname]->avg_quat[0];
       phase2 = crystruct[m_Grains[nname]->phase];
-      if (phase1 == phase2) w = m_OrientatioOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
+      if (phase1 == phase2) w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
       if (phase1 == phase2)
       {
         OrientationMath::axisAngletoHomochoric(w, n1, n2, n3, r1, r2, r3);
@@ -3370,7 +3370,7 @@ void ReconstructionFunc::measure_misorientations(H5ReconStatsWriter::Pointer h5i
         m_Grains[i]->misorientationlist->at(3 * j + 1) = -100;
         m_Grains[i]->misorientationlist->at(3 * j + 2) = -100;
       }
-      if (phase1 == phase2) mbin = m_OrientatioOps[phase1]->getMisoBin(
+      if (phase1 == phase2) mbin = m_OrientationOps[phase1]->getMisoBin(
                                                                m_Grains[i]->misorientationlist->at(3*j),
                                                                m_Grains[i]->misorientationlist->at(3 * j + 1),
                                                                m_Grains[i]->misorientationlist->at(3 * j + 2));
@@ -3962,7 +3962,7 @@ void ReconstructionFunc::deformation_stats(const std::string &filename, const st
 	  }
 	  OrientationMath::getSlipMisalignment(ss1, q1, q2, ssap);
       if (crystruct[m_Grains[gname]->phase] == crystruct[m_Grains[gname2]->phase]) {
-        w = m_OrientatioOps[crystruct[m_Grains[gname]->phase]]->getMisoQuat(q1, q2, n1, n2, n3);
+        w = m_OrientationOps[crystruct[m_Grains[gname]->phase]]->getMisoQuat(q1, q2, n1, n2, n3);
       }
       kmbin = int(km/0.2);
       gambin = int(gam/0.8);
