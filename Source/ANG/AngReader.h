@@ -214,7 +214,7 @@ class TSLANG_EXPORT AngReader
     float* getImageQualityPointer() { return m_Iq; }
     float* getImageQuality2Pointer() { return m_SEMSignal; }
     float* getConfidenceIndexPointer() { return m_Ci; }
-    unsigned int* getPhasePointer() { return m_PhaseData; }
+    int* getPhasePointer() { return m_PhaseData; }
     float* getSEMSignalPointer() { return m_SEMSignal; }
     float* getFitPointer() { return m_SEMSignal; }
 
@@ -225,7 +225,7 @@ class TSLANG_EXPORT AngReader
     SET_POINTER(YPos, Y, float)
     SET_POINTER(ImageQuality, Iq, float)
     SET_POINTER(ConfidenceIndex, Ci, float)
-    SET_POINTER(Phase, PhaseData, unsigned int)
+    SET_POINTER(Phase, PhaseData, int)
     SET_POINTER(SEMSignal, SEMSignal, float)
     SET_POINTER(Fit, Fit, float)
 
@@ -286,7 +286,7 @@ private:
     float* m_Phi2;
     float* m_Iq;
     float* m_Ci;
-    unsigned int* m_PhaseData;
+    int* m_PhaseData;
     float* m_X;
     float* m_Y;
     float* m_SEMSignal;
