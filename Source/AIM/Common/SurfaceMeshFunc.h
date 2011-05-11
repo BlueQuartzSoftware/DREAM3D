@@ -153,7 +153,7 @@ public:
   double find_zcoord(long);
   void smooth_boundaries(int nNodes, int nTriangles, string NodesFile, string TrianglesFile);
   void writeNodesFile(int zID, int cNodeID, const std::string &NodesRawFile);
-  void writeTrianglesFile(int nt, const std::string &TrianglesFileIndex, int zID, int ctid);
+  int writeTrianglesFile(int nt, const std::string &TrianglesFileIndex, int zID, int ctid);
 
 
 protected:
