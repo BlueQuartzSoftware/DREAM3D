@@ -232,7 +232,7 @@ int H5AngImporter::importAngFile(hid_t fileId, int z, const std::string &angFile
   WRITE_ANG_DATA_ARRAY(reader, float, gid, YPos, TSL::OIM::YPosition);
   WRITE_ANG_DATA_ARRAY(reader, float, gid, ImageQuality, TSL::OIM::ImageQuality);
   WRITE_ANG_DATA_ARRAY(reader, float, gid, ConfidenceIndex, TSL::OIM::ConfidenceIndex);
-  WRITE_ANG_DATA_ARRAY(reader, unsigned int, gid, Phase, TSL::OIM::PhaseData);
+  WRITE_ANG_DATA_ARRAY(reader, int, gid, Phase, TSL::OIM::PhaseData);
   WRITE_ANG_DATA_ARRAY(reader, float, gid, SEMSignal, TSL::OIM::SEMSignal);
   WRITE_ANG_DATA_ARRAY(reader, float, gid, Fit, TSL::OIM::Fit);
   // Close the "Data" group

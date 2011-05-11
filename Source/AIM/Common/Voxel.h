@@ -78,7 +78,7 @@ class AIMCOMMON_EXPORT Voxel
     double euler1;
     double euler2;
     double euler3;
-    unsigned int phase;
+    int phase;
     int neighbor;
     int numowners;
     double grainmisorientation;

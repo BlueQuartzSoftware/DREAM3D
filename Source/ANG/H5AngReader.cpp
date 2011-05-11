@@ -427,7 +427,7 @@ int H5AngReader::readData(hid_t parId)
 //  float* y = getYPosPointer();
   float* iqual = getImageQualityPointer();
   float* conf = getConfidenceIndexPointer();
-  unsigned int* ph = getPhasePointer();
+  int* ph = getPhasePointer();
   float* semSignal = getSEMSignalPointer();
   float* fit = getFitPointer();
 
@@ -507,7 +507,7 @@ int H5AngReader::readData(hid_t parId)
   SHUFFLE_ARRAY(Phi2, p2, float)
   SHUFFLE_ARRAY(ImageQuality, iqual, float)
   SHUFFLE_ARRAY(ConfidenceIndex, conf, float)
-  SHUFFLE_ARRAY(Phase, ph, unsigned int)
+  SHUFFLE_ARRAY(Phase, ph, int)
   if (NULL != semSignal)
   {
     SHUFFLE_ARRAY(SEMSignal, semSignal, float)
