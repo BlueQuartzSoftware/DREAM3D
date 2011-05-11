@@ -117,7 +117,7 @@ void AngReader::initPointers(size_t numElements)
   m_Phi2 = allocateArray<float > (numElements);
   m_Iq = allocateArray<float > (numElements);
   m_Ci = allocateArray<float > (numElements);
-  m_PhaseData = allocateArray<unsigned int> (numElements);
+  m_PhaseData = allocateArray<int> (numElements);
   m_X = allocateArray<float > (numElements);
   m_Y = allocateArray<float > (numElements);
   m_SEMSignal = allocateArray<float > (numElements);
@@ -145,7 +145,7 @@ void AngReader::deletePointers()
   this->deallocateArrayData<float > (m_Phi2);
   this->deallocateArrayData<float > (m_Iq);
   this->deallocateArrayData<float > (m_Ci);
-  this->deallocateArrayData<unsigned int > (m_PhaseData);
+  this->deallocateArrayData<int > (m_PhaseData);
   this->deallocateArrayData<float > (m_X);
   this->deallocateArrayData<float > (m_Y);
   this->deallocateArrayData<float > (m_SEMSignal);
@@ -404,7 +404,7 @@ void AngReader::readData(const std::string &line,
    * 2 columns and all the other columns are the same as above.
    */
   float p1, p, p2, x, y, iqual, conf, semSignal, fit;
-  unsigned int ph;
+  int ph;
   size_t offset = 0;
   m_NumFields = sscanf(line.c_str(), "%f %f %f %f %f %f %f %f %f %f", &p1, &p,&p2, &x, &y, &iqual, &conf, &ph, &semSignal, &fit);
 
