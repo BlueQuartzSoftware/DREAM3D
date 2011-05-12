@@ -2746,12 +2746,12 @@ void SurfaceMeshFunc::arrange_grainnames(int numT, int zID)
     cTriangle[i].normal[2] = c;
     cTriangle[i].area = 0.5 * length;
     // determine which way normal should point...
-	d = (a*cx + b*cy + c*cz);
+	d = -(a*cx + b*cy + c*cz);
 	locale = tsite1+shift;
 	x = find_xcoord(locale);
 	y = find_ycoord(locale);
 	z = find_zcoord(locale);
-	sidecheck = (a*x + b*y + c*z -d);
+	sidecheck = (a*x + b*y + c*z + d);
     if (sidecheck < 0.0)
 	{
       cTriangle[i].ngrainname[0] = tgrainname2;
