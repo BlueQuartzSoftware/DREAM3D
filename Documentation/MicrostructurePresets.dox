@@ -26,6 +26,8 @@ class EquiaxedPreset : public AbstractMicrostructurePreset
 
     virtual ~EquiaxedPreset();
 
+    void displayUserInputDialog();
+
     void generateOmega3Data(StatsGenPlotWidget* plot,
                             QVector<double> binNumbers);
 
@@ -64,9 +66,57 @@ an instance of the DefaultStatsPreset class:
 @code
   AbstractMicrostructurePresetFactory::Pointer presetFactory
                                             = DefaultStatsPresetFactory::New();
-  MicrostructurePresetManager::registerMicrostructurePresetFactory(presetFactory);
+  MicrostructurePresetManager::registerFactory(presetFactory);
 @endcode
 
+@subsection userinputdisplay User Input Display
+  If the programmer wishes they can create a QDialog based class to display options
+for the preset class to the user. The programmer simply supplies an actual implementation
+of the <b>displayUserInputDialog</b> method in their Preset class. Inside of this
+method the programmer can do what ever they want to display a Dialog. Some classes
+use some prebuilt dialogs for their own purpose. For example from the RolledPreset
+class we have the following:
 
+@code
+void RolledPreset::displayUserInputDialog()
+{
+  RolledPresetDialog d(NULL);
+  int ret = d.exec();
+  if (ret == QDialog::Accepted)
+  {
+    // The user clicked the OK button so transfer the values from the
+    //dialog into this class
+    m_AspectRatio = d.getAspectRatio();
+    m_RollingFraction = d.getRollingFraction();
+  }
+  else
+  {
+    // Perform any cancellation actions if the user canceled the dialog box
+  }
+}
+@endcode
+
+ This code instantiates a <b>RolledPresetDialog</b> class and presents it to the
+user. If the user clicks the <i>OK</i> button then the code extracts the values
+from the dialog and stores it in the class. The programmer can then use these values
+when the default set of data is being generated.
+
+@subsection preset_ui_design User Interface Implementation Methods for Preset Dialogs
+ The programmer is welcome to use any technique to develop their dialog. They can
+use the QDesigner program to graphically layout their dialog then use the Multiple
+Inheritance model for the actual implementation details. For simply dialog the programmer
+may find it just as fast to implement a class deriving from <b>QDialog</b> and
+layout the input fields by hand. Both the Rolled Preset and the Recrystallized
+Preset dialog boxes are done this way.
+  During construction of these codes do not forget to update the CMake files with
+the necessary entries for the source files and optionally the <i>uic</i> calls.
 
  */
+
+
+
+
+
+
+
+

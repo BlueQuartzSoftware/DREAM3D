@@ -27,45 +27,41 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+#ifndef ROLLEDPRESETDIALOG_H_
+#define ROLLEDPRESETDIALOG_H_
 
-#ifndef DEFAULTSTATSPRESET_H_
-#define DEFAULTSTATSPRESET_H_
+#include <QtGui/QDialog>
 
-//-- C++ includes
-#include <string>
+class QLineEdit;
 
-//-- MXA Includes
-#include "MXA/Common/MXASetGetMacros.h"
-
-//-- StatsGen Includes
-#include "AbstractMicrostructurePresetFactory.h"
-#include "AbstractMicrostructurePreset.h"
-
-
-
-class DefaultStatsPreset : public AbstractMicrostructurePreset
+/**
+ * @class RolledPresetDialog RolledPresetDialog.h StatsGenerator/Presets/Dialogs/RolledPresetDialog.h
+ * @brief This class is a QDialog subclass that allows the user to input values
+ * that effect the generation of a default set of statistics.
+ * @author Michael A. Jackson for BlueQuartz Software
+ * @date May 12, 2011
+ * @version 1.0
+ */
+class RolledPresetDialog : public QDialog
 {
+    Q_OBJECT    ;
   public:
-    MXA_SHARED_POINTERS(DefaultStatsPreset);
-    MXA_STATIC_NEW_SUPERCLASS(AbstractMicrostructurePreset, DefaultStatsPreset);
-    virtual ~DefaultStatsPreset();
+    RolledPresetDialog(QWidget* parent = NULL);
+    virtual ~RolledPresetDialog();
 
-
-    void generateOmega3Data(StatsGenPlotWidget* plot, QVector<double> binNumbers);
-    void generateBOverAPlotData(StatsGenPlotWidget* plot, QVector<double> binNumbers);
-    void generateCOverAPlotData(StatsGenPlotWidget* plot, QVector<double> binNumbers);
-    void generateCOverBPlotData(StatsGenPlotWidget* plot, QVector<double> binNumbers);
-    void generateNeighborPlotData(StatsGenPlotWidget* plot, QVector<double> binNumbers);
+    float getAspectRatio();
+    float getRollingFraction();
 
   protected:
-    DefaultStatsPreset();
+    void setupGui();
 
   private:
-    DefaultStatsPreset(const DefaultStatsPreset&); // Copy Constructor Not Implemented
-    void operator=(const DefaultStatsPreset&); // Operator '=' Not Implemented
+    QLineEdit* aspectRatio;
+    QLineEdit* rollingFraction;
+
+
+    RolledPresetDialog(const RolledPresetDialog&); // Copy Constructor Not Implemented
+    void operator=(const RolledPresetDialog&); // Operator '=' Not Implemented
 };
 
-DECLARE_FACTORY_CLASS(DefaultStatsPresetFactory, DefaultStatsPreset, Default );
-
-
-#endif /* DEFAULTSTATSPRESET_H_ */
+#endif /* ROLLEDPRESETDIALOG_H_ */

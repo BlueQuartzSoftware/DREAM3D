@@ -28,44 +28,38 @@
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef DEFAULTSTATSPRESET_H_
-#define DEFAULTSTATSPRESET_H_
+#ifndef RECRYSTALLIZEDPRESETDIALOG_H_
+#define RECRYSTALLIZEDPRESETDIALOG_H_
 
-//-- C++ includes
-#include <string>
+#include <QtGui/QDialog>
 
-//-- MXA Includes
-#include "MXA/Common/MXASetGetMacros.h"
+class QLineEdit;
 
-//-- StatsGen Includes
-#include "AbstractMicrostructurePresetFactory.h"
-#include "AbstractMicrostructurePreset.h"
-
-
-
-class DefaultStatsPreset : public AbstractMicrostructurePreset
+/**
+ * @class RecrystallizedPresetDialog RecrystallizedPresetDialog.h StatsGenerator/Presets/Dialogs/RecrystallizedPresetDialog.h
+ * @brief This class is a QDialog subclass that allows the user to input values
+ * that effect the generation of a default set of statistics.
+ * @author Michael A. Jackson for BlueQuartz Software
+ * @date May 12, 2011
+ * @version 1.0
+ */
+class RecrystallizedPresetDialog : public QDialog
 {
+    Q_OBJECT    ;
   public:
-    MXA_SHARED_POINTERS(DefaultStatsPreset);
-    MXA_STATIC_NEW_SUPERCLASS(AbstractMicrostructurePreset, DefaultStatsPreset);
-    virtual ~DefaultStatsPreset();
+    RecrystallizedPresetDialog(QWidget* parent = NULL);
+    virtual ~RecrystallizedPresetDialog();
 
-
-    void generateOmega3Data(StatsGenPlotWidget* plot, QVector<double> binNumbers);
-    void generateBOverAPlotData(StatsGenPlotWidget* plot, QVector<double> binNumbers);
-    void generateCOverAPlotData(StatsGenPlotWidget* plot, QVector<double> binNumbers);
-    void generateCOverBPlotData(StatsGenPlotWidget* plot, QVector<double> binNumbers);
-    void generateNeighborPlotData(StatsGenPlotWidget* plot, QVector<double> binNumbers);
+    float getPercentRecrystallized();
 
   protected:
-    DefaultStatsPreset();
+    void setupGui();
 
   private:
-    DefaultStatsPreset(const DefaultStatsPreset&); // Copy Constructor Not Implemented
-    void operator=(const DefaultStatsPreset&); // Operator '=' Not Implemented
+    QLineEdit* percentRecystallized;
+
+    RecrystallizedPresetDialog(const RecrystallizedPresetDialog&); // Copy Constructor Not Implemented
+    void operator=(const RecrystallizedPresetDialog&); // Operator '=' Not Implemented
 };
 
-DECLARE_FACTORY_CLASS(DefaultStatsPresetFactory, DefaultStatsPreset, Default );
-
-
-#endif /* DEFAULTSTATSPRESET_H_ */
+#endif /* RECRYSTALLIZEDPRESETDIALOG_H_ */

@@ -59,6 +59,8 @@
 #include "StatsGenerator/Presets/MicrostructurePresetManager.h"
 #include "StatsGenerator/Presets/DefaultStatsPreset.h"
 #include "StatsGenerator/Presets/EquiaxedPreset.h"
+#include "StatsGenerator/Presets/RolledPreset.h"
+#include "StatsGenerator/Presets/RecrystallizedPreset.h"
 #include "StatsGen.h"
 
 #define CHECK_ERROR_ON_WRITE(var, msg)\
@@ -102,6 +104,34 @@ SGWidget::~SGWidget()
 {
 }
 
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void SGWidget::on_microstructurePresetCombo_currentIndexChanged(int index)
+{
+  //std::cout << "on_microstructurePresetCombo_currentIndexChanged" << std::endl;
+  QString presetName = microstructurePresetCombo->currentText();
+
+  //Factory Method to get an instantiated object of the correct type?
+  MicrostructurePresetManager::Pointer manager = MicrostructurePresetManager::instance();
+  m_MicroPreset = manager->createNewPreset(presetName.toStdString());
+  m_MicroPreset->displayUserInputDialog();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+template<typename T>
+AbstractMicrostructurePresetFactory::Pointer RegisterPresetFactory(QComboBox* microstructurePresetCombo)
+{
+  AbstractMicrostructurePresetFactory::Pointer presetFactory = T::New();
+  MicrostructurePresetManager::registerFactory(presetFactory);
+  QString displayString = QString::fromStdString(presetFactory->displayName());
+  microstructurePresetCombo->addItem(displayString);
+  return presetFactory;
+}
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -116,21 +146,22 @@ void SGWidget::setupGui()
 
   microstructurePresetCombo->blockSignals(true);
   // Register all of our Microstructure Preset Factories
-  AbstractMicrostructurePresetFactory::Pointer presetFactory = DefaultStatsPresetFactory::New();
-  MicrostructurePresetManager::registerMicrostructurePresetFactory(presetFactory);
+  AbstractMicrostructurePresetFactory::Pointer presetFactory = RegisterPresetFactory<DefaultStatsPresetFactory>(microstructurePresetCombo);
+  QString presetName = QString::fromStdString(presetFactory->displayName());
+  MicrostructurePresetManager::Pointer manager = MicrostructurePresetManager::instance();
+  m_MicroPreset = manager->createNewPreset(presetName.toStdString());
 
-  QString displayString = QString::fromStdString(presetFactory->displayName());
-  microstructurePresetCombo->addItem(displayString);
-
-  presetFactory = EquiaxedPresetFactory::New();
-  MicrostructurePresetManager::registerMicrostructurePresetFactory(presetFactory);
-  displayString = QString::fromStdString(presetFactory->displayName());
-  microstructurePresetCombo->addItem(displayString);
-  microstructurePresetCombo->blockSignals(false);
+  //Register the Equiaxed Preset
+  presetFactory = RegisterPresetFactory<EquiaxedPresetFactory>(microstructurePresetCombo);
+  // Register the Rolled Preset
+  presetFactory = RegisterPresetFactory<RolledPresetFactory>(microstructurePresetCombo);
+  // Register the Recrystallized Preset
+  presetFactory = RegisterPresetFactory<RecrystallizedPresetFactory>(microstructurePresetCombo);
 
   // Select the first Preset in the list
   microstructurePresetCombo->setCurrentIndex(0);
-  on_microstructurePresetCombo_currentIndexChanged(0);
+  microstructurePresetCombo->blockSignals(false);
+
 
   double mu = 1.0;
   double sigma = 0.1;
@@ -788,17 +819,4 @@ int SGWidget::readDataFromHDF5(H5ReconStatsReader::Pointer reader,int phase)
     return err;
 }
 
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void SGWidget::on_microstructurePresetCombo_currentIndexChanged(int index)
-{
-  //std::cout << "on_microstructurePresetCombo_currentIndexChanged" << std::endl;
-  QString presetName = microstructurePresetCombo->currentText();
-
-  //Factory Method to get an instantiated object of the correct type?
-  MicrostructurePresetManager::Pointer manager = MicrostructurePresetManager::instance();
-  m_MicroPreset = manager->createNewMicrostructurePreset(presetName.toStdString());
-}
 
