@@ -135,7 +135,7 @@ int SurfaceMeshFunc::initialize_micro(string filename, int zID)
   return zDim;
 }
 
-void SurfaceMeshFunc::get_neighbor_list(int zID)
+void SurfaceMeshFunc::get_neighbor_list()
 {
   // NSP = number of sites in a plane of xDim by yDim...
   // neigh[][] = 2 dimeNSional array storing its site number and neighbors...
@@ -2764,7 +2764,7 @@ void SurfaceMeshFunc::arrange_grainnames(int numT, int zID)
     }
   }
 }
-int SurfaceMeshFunc::assign_nodeID(int nN, int zID)
+int SurfaceMeshFunc::assign_nodeID(int nN)
 {
   int i;
   int nid;
@@ -2832,10 +2832,9 @@ void SurfaceMeshFunc::writeNodesFile(int zID, int cNodeID, const std::string &no
 // -----------------------------------------------------------------------------
 //  Write a BINARY file which is only TEMP during the surface meshing
 // -----------------------------------------------------------------------------
-int SurfaceMeshFunc::writeTrianglesFile (int nt,
+int SurfaceMeshFunc::writeTrianglesFile (int zID, int ctid,
                                           const std::string &trianglesFile,
-                                          int zID,
-                                          int ctid)
+                                          int nt)
 {
   //int i;
   int tag;
