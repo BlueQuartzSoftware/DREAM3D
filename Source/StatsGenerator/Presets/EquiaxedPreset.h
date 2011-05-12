@@ -36,12 +36,12 @@
 #include <string>
 
 //-- MXA Includes
-#include <MXA/Common/MXASetGetMacros.h>
+#include "MXA/Common/MXASetGetMacros.h"
 
+//-- StatsGen Includes
 #include "AbstractMicrostructurePresetFactory.h"
 #include "AbstractMicrostructurePreset.h"
-#include "AIM/Common/AIMRandomNG.h"
-#include "MXA/Common/LogTime.h"
+
 
 
 class EquiaxedPreset : public AbstractMicrostructurePreset
@@ -50,7 +50,6 @@ class EquiaxedPreset : public AbstractMicrostructurePreset
     MXA_SHARED_POINTERS(EquiaxedPreset);
     MXA_STATIC_NEW_SUPERCLASS(AbstractMicrostructurePreset, EquiaxedPreset);
     virtual ~EquiaxedPreset();
-
 
     void generateOmega3Data(StatsGenPlotWidget* plot, QVector<double> binNumbers);
     void generateBOverAPlotData(StatsGenPlotWidget* plot, QVector<double> binNumbers);

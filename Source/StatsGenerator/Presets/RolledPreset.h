@@ -27,9 +27,8 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-
-#ifndef DEFAULTSTATSPRESET_H_
-#define DEFAULTSTATSPRESET_H_
+#ifndef ROLLEDPRESET_H_
+#define ROLLEDPRESET_H_
 
 //-- C++ includes
 #include <string>
@@ -42,30 +41,32 @@
 #include "AbstractMicrostructurePreset.h"
 
 
-
-class DefaultStatsPreset : public AbstractMicrostructurePreset
+class RolledPreset : public AbstractMicrostructurePreset
 {
   public:
-    MXA_SHARED_POINTERS(DefaultStatsPreset);
-    MXA_STATIC_NEW_SUPERCLASS(AbstractMicrostructurePreset, DefaultStatsPreset);
-    virtual ~DefaultStatsPreset();
+    MXA_SHARED_POINTERS(RolledPreset);
+    MXA_STATIC_NEW_SUPERCLASS(AbstractMicrostructurePreset, RolledPreset);
+    virtual ~RolledPreset();
 
-
+    void displayUserInputDialog();
     void generateOmega3Data(StatsGenPlotWidget* plot, QVector<double> binNumbers);
     void generateBOverAPlotData(StatsGenPlotWidget* plot, QVector<double> binNumbers);
     void generateCOverAPlotData(StatsGenPlotWidget* plot, QVector<double> binNumbers);
     void generateCOverBPlotData(StatsGenPlotWidget* plot, QVector<double> binNumbers);
     void generateNeighborPlotData(StatsGenPlotWidget* plot, QVector<double> binNumbers);
 
+    MXA_INSTANCE_PROPERTY(float, AspectRatio)
+    MXA_INSTANCE_PROPERTY(float, RollingFraction)
+
   protected:
-    DefaultStatsPreset();
+    RolledPreset();
 
   private:
-    DefaultStatsPreset(const DefaultStatsPreset&); // Copy Constructor Not Implemented
-    void operator=(const DefaultStatsPreset&); // Operator '=' Not Implemented
+    RolledPreset(const RolledPreset&); // Copy Constructor Not Implemented
+    void operator=(const RolledPreset&); // Operator '=' Not Implemented
 };
 
-DECLARE_FACTORY_CLASS(DefaultStatsPresetFactory, DefaultStatsPreset, Default );
+DECLARE_FACTORY_CLASS(RolledPresetFactory, RolledPreset, Rolled );
 
 
-#endif /* DEFAULTSTATSPRESET_H_ */
+#endif /* ROLLEDPRESET_H_ */

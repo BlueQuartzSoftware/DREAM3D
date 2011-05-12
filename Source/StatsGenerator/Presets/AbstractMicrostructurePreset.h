@@ -47,6 +47,15 @@ class AbstractMicrostructurePreset
     MXA_TYPE_MACRO(AbstractMicrostructurePreset)
     virtual ~AbstractMicrostructurePreset() {};
 
+
+    /**
+     * @brief Displays a Dialog Box which gives the user a chance to customize
+     * the preset with specific values. Although subclasses MUST implement the
+     * method, nothing actually has to happen, Ie, one can simply have an empty
+     * implementation if there are no customizations to be performed.
+     */
+    virtual void displayUserInputDialog() {};
+
     /**
      * @brief
      * @param tableModel

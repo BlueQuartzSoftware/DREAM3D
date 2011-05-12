@@ -70,14 +70,14 @@ class MicrostructurePresetManager
     *  H5Tiff importer
     *  H5BMP Importer
     */
-    static void registerKnownMicrostructurePresetFactories();
+    static void registerKnownFactories();
 
     /**
     * @brief This method ensures the ImportDelegateManager is instantiated and
     * then registers the passed in ImportDelegate
     * @param importer A Valid AbstractImportDelegateFactory::Pointer subclass
     */
-    static void registerMicrostructurePresetFactory(AbstractMicrostructurePresetFactory::Pointer importer);
+    static void registerFactory(AbstractMicrostructurePresetFactory::Pointer importer);
 
     /**
     * @brief Creates a new ImportDelegate based on a class name
@@ -86,7 +86,7 @@ class MicrostructurePresetManager
     * a null ImportDelegate so check the return value with the boost::shared_ptr.get()
     * method to check the value of the wrapped pointer.
     */
-    static AbstractMicrostructurePreset::Pointer createNewMicrostructurePreset (const std::string &className);
+    static AbstractMicrostructurePreset::Pointer createNewPreset (const std::string &className);
 
     // -----------------------------------------------------------------------------
     //  Public Methods
@@ -100,7 +100,7 @@ class MicrostructurePresetManager
     * a null ImportDelegate so check the return value with the boost::shared_ptr.get()
     * method to check the value of the wrapped pointer.
     */
-    virtual AbstractMicrostructurePreset::Pointer createMicrostructurePreset (const std::string &className);
+    virtual AbstractMicrostructurePreset::Pointer createPreset (const std::string &className);
 
     /**
     * @brief Registers a Specific DataImportFactory. Usually you would use the
@@ -108,13 +108,13 @@ class MicrostructurePresetManager
     * it is perfectly legal to use this method.
     * @param factoryPtr The ImportDelegateFactory to register
     */
-    virtual void addMicrostructurePresetFactory(AbstractMicrostructurePresetFactory::Pointer factoryPtr);
+    virtual void addFactory(AbstractMicrostructurePresetFactory::Pointer factoryPtr);
 
     /**
     * @brief Attempts to return the ImportDelegateFactory for a given class name.
     * @param classname The name of the class to find the factory for OR the display name of the class
     */
-    virtual AbstractMicrostructurePresetFactory::Pointer getMicrostructurePresetFactory(const std::string &classname);
+    virtual AbstractMicrostructurePresetFactory::Pointer getFactory(const std::string &classname);
 
     virtual AbstractMicrostructurePresetFactory::Collection getFactories() { return _factories; }
 
