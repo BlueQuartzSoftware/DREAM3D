@@ -3089,7 +3089,7 @@ int GrainGeneratorFunc::volume_stats(H5ReconStatsWriter::Pointer h5io)
   return retErr;
 }
 
-
+#if 0
 void  GrainGeneratorFunc::writeCube(const std::string &filename, int numgrains)
 {
   ofstream outFile;
@@ -3144,6 +3144,7 @@ void  GrainGeneratorFunc::writeCube(const std::string &filename, int numgrains)
   }
   outFile.close();
 }
+#endif
 
 void GrainGeneratorFunc::write_eulerangles(const std::string &filename)
 {
