@@ -135,25 +135,96 @@ size_t parseByteSize(char text[256])
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int SMVtkFileIO::readZSlice(SurfaceMeshFunc* m, int zID)
+int SMVtkFileIO::skipVolume(int xDim, int yDim, int zDim)
+{
+  int err = 0;
+  if (m_fileIsBinary == true)
+  {
+    int* buffer = new int[xDim];
+    for (int z = 0; z < zDim; ++z)
+    {
+      for (int y = 0; y < yDim; ++y)
+      {
+        // Read all the xpoints in one shot into a buffer
+        m_InputFile.read(reinterpret_cast<char* > (buffer), (xDim * m_IntByteSize));
+        if (m_InputFile.gcount() != (xDim * m_IntByteSize))
+        {
+          std::cout << logTime() << " ERROR READING BINARY FILE. Bytes read was not the same as func->xDim *. " << m_IntByteSize << "." << m_InputFile.gcount()
+              << " vs " << (xDim * m_IntByteSize) << std::endl;
+          return -1;
+        }
+      }
+    }
+    delete buffer;
+  }
+  else
+  {
+    int tmp;
+    for (int z = 0; z < zDim; ++z)
+    {
+      for (int y = 0; y < yDim; ++y)
+      {
+        for (int x = 0; x < xDim; ++x)
+        {
+          m_InputFile >> tmp;
+        }
+      }
+    }
+  }
+  return err;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int SMVtkFileIO::readZSlice(int xDim, int yDim, int zDim, int* voxels)
 {
   if (m_HeaderComplete == false)
   {
     return -1;
   }
+  size_t size = xDim * yDim;
+  if (m_fileIsBinary == true)
+  {
+    if (m_IntByteSize != 4)
+    {
+      std::cout << "ERROR Reading Binary VTK File. This program only accepts a type of Int" << std::endl;
+      return -1;
+    }
+    m_InputFile.read(reinterpret_cast<char*>(voxels), (size * m_IntByteSize));
+    // Binary VTK File are written in Big Endian Format and need to be swapped to the native
+    // format of the host system
+    for(size_t i = 0; i < size; ++i)
+    {
+      MXA::Endian::FromBigToSystem::convert<int>(voxels[i]);
+    }
+  }
+  else
+  {
+    int tmp = -1;
+    for(size_t i = 0; i < size; ++i)
+    {
+      m_InputFile >> tmp;
+      voxels[i] = tmp;
+    }
+  }
+  return 0;
+
+
+
+#if 0
   int start = m->NSP + 1;
   int zEnd = 1;
-  if(zID == 0) { // This is the first read so read a pair of slices
+  if(zID == 1) { // This is the first read so read a pair of slices
     start = 1;
     zEnd = 2;
   }
   // If we are on slice > 0, then copy the Voxels from the top half of the
   // points array to the bottom half
-  if(zID > 0)
+  if(zID > 1)
   {
     for (int i = 1; i <= m->NSP; i++)
     {
-     // m->voxels[i].deepCopy(&(m->voxels[i+m->NSP]));
       m->voxels[i] = m->voxels[i + m->NSP];
     }
   }
@@ -224,7 +295,8 @@ int SMVtkFileIO::readZSlice(SurfaceMeshFunc* m, int zID)
       }
     }
   }
-  return m->zDim;
+  return 0;
+#endif
 
 }
 
@@ -234,39 +306,41 @@ int SMVtkFileIO::readZSlice(SurfaceMeshFunc* m, int zID)
 int SMVtkFileIO::getVolumeDimensions(const std::string &file, int &xDim, int &yDim, int &zDim)
 {
   int err = 0;
-    m_InputFile.open(file.c_str());
-    if (!m_InputFile.is_open())
-    {
-      std::cout << logTime() << " vtk file could not be opened: " << file << std::endl;
-      return -1;
-    }
-    char buf[kBufferSize];
-    m_InputFile.getline(buf, kBufferSize); // Read Line 1
-    m_InputFile.getline(buf, kBufferSize); // Read Line 2
-    ::memset(buf, 0, kBufferSize);
-    m_InputFile.getline(buf, kBufferSize); // Read Line 3
-    std::string fileType(buf);
-    if (fileType.find("BINARY", 0) == 0)
-    {
-      m_fileIsBinary = true;
-    }
-    else if (fileType.find("ASCII", 0) == 0)
-    {
-      m_fileIsBinary = false;
-    }
-    else
-    {
-      err = -1;
-      std::cout << logTime() << "The file type of the VTK legacy file could not be determined. It should be ASCII' or 'BINARY' and should appear on line 3 of the file."
-          << std::endl;
-      return err;
-    }
-    m_InputFile.getline(buf, kBufferSize); // Read Line 4
-    // Start reading Line 5
-    std::string dimension_label;
-    m_InputFile >> dimension_label >>  xDim >>  yDim >>  zDim; // Read Line 5
+  m_InputFile.open(file.c_str());
+  if (!m_InputFile.is_open())
+  {
+    std::cout << logTime() << " vtk file could not be opened: " << file << std::endl;
+    return -1;
+  }
+  char buf[kBufferSize];
+  m_InputFile.getline(buf, kBufferSize); // Read Line 1
+  m_InputFile.getline(buf, kBufferSize); // Read Line 2
+  ::memset(buf, 0, kBufferSize);
+  m_InputFile.getline(buf, kBufferSize); // Read Line 3
+  std::string fileType(buf);
+  if (fileType.find("BINARY", 0) == 0)
+  {
+    m_fileIsBinary = true;
+  }
+  else if (fileType.find("ASCII", 0) == 0)
+  {
+    m_fileIsBinary = false;
+  }
+  else
+  {
+    err = -1;
+    std::cout << logTime()
+        << "The file type of the VTK legacy file could not be determined. It should be ASCII' or 'BINARY' and should appear on line 3 of the file."
+        << std::endl;
+    return err;
+  }
+  m_InputFile.getline(buf, kBufferSize); // Read Line 4
+  // Start reading Line 5
+  std::string dimension_label;
+  m_InputFile >> dimension_label >> xDim >> yDim >> zDim; // Read Line 5
 
-    m_InputFile.close();
+  m_InputFile.close();
+  return err;
 }
 
 // -----------------------------------------------------------------------------
@@ -337,12 +411,16 @@ int SMVtkFileIO::primeFileToScalarDataLocation(SurfaceMeshFunc* m, const std::st
   m_InputFile.getline(buf, kBufferSize); // Read Line 4
   // Start reading Line 5
   std::string dimension_label;
-//  int xpoints = 0;
-//  int ypoints = 0;
-//  int zpoints = 0;
-  m_InputFile >> dimension_label >>  m->xDim >>  m->yDim >>  m->zDim; // Read Line 5
-//  m->zDim = 5;
-//  std::cout << logTime() << " Volume Size: " << m->xDim << " " << m->yDim << " " << m->zDim << std::endl;
+  int xpoints = 0;
+  int ypoints = 0;
+  int zpoints = 0;
+  m_InputFile >> dimension_label >>  xpoints >>  ypoints >>  zpoints; // Read Line 5
+
+  // Add a layer of padding around the volume which are going to be our boundary voxels
+  m->xDim = xpoints + 2;
+  m->yDim = ypoints + 2;
+  m->zDim = zpoints + 2;
+
   m->NS = m->xDim * m->yDim * m->zDim;
   m->NSP = m->xDim * m->yDim;
 
@@ -405,9 +483,9 @@ int SMVtkFileIO::primeFileToScalarDataLocation(SurfaceMeshFunc* m, const std::st
     // NOT then read all this particular Scalar Data and try again
     if (m_ScalarName.compare(scalarName) != 0)
     {
-      for (int i = 0; i < m->zDim - 1; ++i)
+      for (int z = 0; z < zpoints - 1; ++z)
       {
-        readZSlice(m, i);
+        skipVolume(xpoints, ypoints, zpoints);
       }
     }
     else
