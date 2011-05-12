@@ -69,8 +69,10 @@ class AIMCOMMON_EXPORT SMVtkFileIO
 
     int getVolumeDimensions(const std::string &file, int &xDim, int &yDim, int &zDim);
 
-    int readZSlice(SurfaceMeshFunc* m, int zID);
+    int readZSlice(int xDim, int yDim, int zDim, int* voxels);
 
+
+    int skipVolume(int xDim, int yDim, int zDim);
 
 /**
  * @brief Writes a VTK POLYDATA legacy ASCII file

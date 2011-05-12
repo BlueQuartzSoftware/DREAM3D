@@ -1,6 +1,5 @@
 /* ============================================================================
- * Copyright (c) 2010, Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2010, Dr. Michael A. Grober (US Air Force Research Laboratories
+ * Copyright (c) 2011, Michael A. Jackson (BlueQuartz Software)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -28,39 +27,44 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+#ifndef GRAINGENERATORVTKWRITER_H_
+#define GRAINGENERATORVTKWRITER_H_
 
-#ifndef _Node_H_
-#define _Node_H_
+#include <string>
 
-#if defined (_MSC_VER)
-#define WIN32_LEAN_AND_MEAN		// Exclude rarely-used stuff from Windows headers
-#endif
+#include "MXA/Common/MXASetGetMacros.h"
 
-
-#include <vector>
-
-#include "AIM/Common/AIMCommonConfiguration.h"
-
+#include "AIM/Common/GrainGeneratorFunc.h"
 /**
-* @class Node Node.h AIM/Common/Node.h
-* @brief Support class for the MicroGen3D class
-* @author Michael A. Jackson for BlueQuartz Software
-* @author Dr. Michael Groeber for USAFRL
-* @date Nov 4, 2009
-* @version 1.0
-*/
-class AIMCOMMON_EXPORT Node
+ * @class GrainGeneratorVTKWriter GrainGeneratorVTKWriter.h AIM/Common/GrainGeneratorVTKWriter.h
+ * @brief This class has functions to write out GrainGenerator Data to VTK legacy
+ * files either in Binary or ASCII format.
+ * @author Michael A. Jackson for BlueQuartz Software
+ * @date May 12, 2011
+ * @version 1.0
+ */
+class AIMCOMMON_EXPORT GrainGeneratorVTKWriter
 {
-public:
-    Node();
-    virtual ~Node();
+  public:
+    MXA_SHARED_POINTERS(GrainGeneratorVTKWriter)
+    MXA_STATIC_NEW_MACRO(GrainGeneratorVTKWriter)
+    MXA_TYPE_MACRO(GrainGeneratorVTKWriter)
 
-    int nodeKind; // 2 for binary, 3 for triple, and so on...
-    double xc;
-    double yc;
-    double zc;
-    int point;
-    int NodeID; // newID for used nodes; if not used, it's -1...
+    virtual ~GrainGeneratorVTKWriter();
+
+    /**
+     * @brief Writes a VTK visualization file
+     * @param Output file name
+     * @return 0 on Success
+     */
+    int writeVisualizationFile(GrainGeneratorFunc* r, const std::string &file);
+
+  protected:
+    GrainGeneratorVTKWriter();
+
+  private:
+    GrainGeneratorVTKWriter(const GrainGeneratorVTKWriter&); // Copy Constructor Not Implemented
+    void operator=(const GrainGeneratorVTKWriter&); // Operator '=' Not Implemented
 };
 
-#endif /* Node_H_ */
+#endif /* GRAINGENERATORVTKWRITER_H_ */

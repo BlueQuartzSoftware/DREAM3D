@@ -44,6 +44,7 @@ ENDIF (BUILD_SHARED_LIBS)
 
 SET (AIMCommon_SRCS
     ${DREAM3D_SOURCE_DIR}/Source/AIM/Common/GrainGeneratorFunc.cpp
+    ${DREAM3D_SOURCE_DIR}/Source/AIM/Common/GrainGeneratorVTKWriter.cpp
     ${DREAM3D_SOURCE_DIR}/Source/AIM/Common/SurfaceMeshFunc.cpp
     ${DREAM3D_SOURCE_DIR}/Source/AIM/Common/ReconstructionFunc.cpp
     ${DREAM3D_SOURCE_DIR}/Source/AIM/Common/ReconstructionVTKWriter.cpp
@@ -55,7 +56,6 @@ SET (AIMCommon_SRCS
     ${DREAM3D_SOURCE_DIR}/Source/AIM/Common/Neighbor.cpp
     ${DREAM3D_SOURCE_DIR}/Source/AIM/Common/Segment.cpp
     ${DREAM3D_SOURCE_DIR}/Source/AIM/Common/AIMRandomNG.cpp
- #   ${DREAM3D_SOURCE_DIR}/Source/AIM/Common/VTKFileUtils.cpp
     ${DREAM3D_SOURCE_DIR}/Source/AIM/Common/OrientationMath.cpp
     ${DREAM3D_SOURCE_DIR}/Source/AIM/Common/Texture.cpp
     ${DREAM3D_SOURCE_DIR}/Source/AIM/Common/TexturePreset.cpp
@@ -68,6 +68,8 @@ SET (AIMCommon_HDRS
     ${DREAM3D_SOURCE_DIR}/Source/AIM/ANG/AngDataLoader.h
     ${DREAM3D_SOURCE_DIR}/Source/AIM/ANG/H5AngDataLoader.h
     ${DREAM3D_SOURCE_DIR}/Source/AIM/Common/GrainGeneratorFunc.h
+    ${DREAM3D_SOURCE_DIR}/Source/AIM/Common/GrainGeneratorVTKWriter.h
+    ${DREAM3D_SOURCE_DIR}/Source/AIM/Common/VTKWriterMacros.h
     ${DREAM3D_SOURCE_DIR}/Source/AIM/Common/CrystalStructure.h
     ${DREAM3D_SOURCE_DIR}/Source/AIM/Common/SurfaceMeshFunc.h
     ${DREAM3D_SOURCE_DIR}/Source/AIM/Common/ReconstructionFunc.h
@@ -81,7 +83,6 @@ SET (AIMCommon_HDRS
     ${DREAM3D_SOURCE_DIR}/Source/AIM/Common/Segment.h
     ${DREAM3D_SOURCE_DIR}/Source/AIM/Common/AIMRandomNG.h
     ${DREAM3D_SOURCE_DIR}/Source/AIM/Common/Constants.h
- #   ${DREAM3D_SOURCE_DIR}/Source/AIM/Common/VTKFileUtils.h
     ${DREAM3D_SOURCE_DIR}/Source/AIM/Common/OrientationMath.h
     ${DREAM3D_SOURCE_DIR}/Source/AIM/Common/OIMColoring.hpp
     ${DREAM3D_SOURCE_DIR}/Source/AIM/Common/Texture.h
