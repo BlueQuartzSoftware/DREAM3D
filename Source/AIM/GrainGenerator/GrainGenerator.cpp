@@ -30,9 +30,10 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 #include "GrainGenerator.h"
-#include "AIM/Common/HDF5/H5ReconStatsReader.h"
-#include "MXA/Utilities/MXADir.h"
 
+#include "MXA/Utilities/MXADir.h"
+#include "AIM/Common/HDF5/H5ReconStatsReader.h"
+#include "AIM/Common/GrainGeneratorVTKWriter.h"
 
 #define CREATE_INPUT_FILENAME(f, n)\
     std::string f = m_InputDirectory + MXADir::Separator + n;\
@@ -256,13 +257,15 @@ void GrainGenerator::compute()
   progressMessage(AIM_STRING("Finding Grain Principal Axis Directions"), 77);
   m->find_vectors(h5io);
 
+
   CHECK_FOR_CANCELED(GrainGeneratorFunc)
   progressMessage(AIM_STRING("Writing Stats"), 87);
   m->volume_stats(h5io);
 
   CHECK_FOR_CANCELED(GrainGeneratorFunc)
-  progressMessage(AIM_STRING("writing Cube"), 90);
-  m->writeCube(visFile, m->numgrains);
+  progressMessage(AIM_STRING("Writing Cube"), 90);
+  GrainGeneratorVTKWriter::Pointer writer = GrainGeneratorVTKWriter::New();
+  writer->writeVisualizationFile(m.get(), visFile);
 
   CHECK_FOR_CANCELED(GrainGeneratorFunc)
   progressMessage(AIM_STRING("Writing Grain Data"), 94);

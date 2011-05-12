@@ -128,7 +128,7 @@ public:
 
 
   int initialize_micro(string, int);
-  void get_neighbor_list(int zID);
+  void get_neighbor_list();
   void initialize_nodes(int zID);
   void initialize_squares(int zID);
   int get_number_Edges(int zID);
@@ -146,14 +146,16 @@ public:
   void get_case2_triangles(int site, int *afe, int nfedge, int *afc, int nfctr, int tin, int *tout);
   void get_caseM_triangles(int site, int *afe, int nfedge, int *afc, int nfctr, int tin, int *tout, int ccn);
   void arrange_grainnames(int numT, int zID);
-  int assign_nodeID(int nN, int zID);
+  int assign_nodeID(int nN);
   void update_current_triangles(int nT);
   double find_xcoord(long);
   double find_ycoord(long);
   double find_zcoord(long);
   void smooth_boundaries(int nNodes, int nTriangles, string NodesFile, string TrianglesFile);
   void writeNodesFile(int zID, int cNodeID, const std::string &NodesRawFile);
-  int writeTrianglesFile(int nt, const std::string &TrianglesFileIndex, int zID, int ctid);
+  int writeTrianglesFile(int zID, int ctid,
+                         const std::string &trianglesFile,
+                         int nt);
 
 
 protected:
