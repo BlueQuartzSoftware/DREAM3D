@@ -201,22 +201,36 @@ void SurfaceMesh::compute()
 //  int err = 0;
 #if  USE_VTK_FILE_UTILS
   SMVtkFileIO vtkreader;
-  m_ZDim = vtkreader.primeFileToScalarDataLocation(m.get(), m_InputFile, m_ScalarName);
+  vtkreader.primeFileToScalarDataLocation(m.get(), m_InputFile, m_ScalarName);
 
+  // Prime the working voxels (2 layers worth) with -3 values indicating border voxels
+  int size = 2 * m->NSP + 1;
+  for (int i = 0; i < size; ++i)
+  {
+    m->voxels[i] = -3;
+  }
+
+  // Save the actual volume dimensions from the input file
+  int xFileDim = m->xDim - 2;
+  int yFileDim = m->yDim - 2;
+  int zFileDim = m->zDim - 2;
+  size_t totalBytes = xFileDim * yFileDim * sizeof(int);
+  int* fileVoxelLayer = (int*)(malloc(totalBytes));
+  size_t offset = 0;
 #else
   m_ZDim = m->initialize_micro(m_InputFile, -1);
 #endif
   std::stringstream ss;
-  for (int i = 0; i < (m_ZDim - 1); i++)
+  for (int i = 0; i < zFileDim; i++)
   {
     ss.str("");
     ss << "Marching Cubes Between Layers " << i << " and " << i+1;
-    progressMessage(AIM_STRING(ss.str().c_str()), (i*90/m_ZDim) );
+    progressMessage(AIM_STRING(ss.str().c_str()), (i*90/zFileDim) );
 
     // initialize neighbors, possible nodes and squares of marching cubes of each layer...
 #if  USE_VTK_FILE_UTILS
-    m_ZDim = vtkreader.readZSlice(m.get(), i);
-    if(m_ZDim == -1)
+    err = vtkreader.readZSlice(xFileDim, yFileDim, zFileDim, fileVoxelLayer);
+    if(err < 0)
     {
       ss.str("");
       ss << "Error loading slice data from vtk file.";
@@ -227,7 +241,34 @@ void SurfaceMesh::compute()
 #else
     m_ZDim = m->initialize_micro(m_InputFile, i);
 #endif
-    m->get_neighbor_list(i);
+
+    // Copy the Voxels from layer 2 to Layer 1;
+//      for (int i = 1; i <= m->NSP; i++)
+//      {
+//        m->voxels[i] = m->voxels[i + m->NSP];
+//      }
+      ::memcpy( &(m->voxels[1]), &(m->voxels[1 + m->NSP]), m->NSP * sizeof(int) );
+
+    // now splice the data into the 2nd z layer for our marching cubes remembering
+    // that we have a layer of border voxels.
+    int* vxPtr = m->voxels;
+    vxPtr = m->voxels + 1; // Should be 4 bytes farther in memory
+    int* fVxPtr = fileVoxelLayer;
+    for (int y = 0; y < yFileDim; ++y)
+    {
+      // Get the offset into the data just read from the file
+      fVxPtr = fileVoxelLayer + (y*xFileDim);
+      // Get the offset into the second layer remembering the border voxel and
+      // the fact that we do not use voxel[0] for anything.
+      offset = ((y+1) * m->xDim) + 1 + (m->NSP + 1);
+      // Use a straight memory copy to move the values from the temp array into the
+      // array used for the meshing
+      vxPtr = m->voxels + offset;
+
+      ::memcpy( (void*)vxPtr, (void*)fVxPtr, xFileDim * sizeof(int));
+    }
+
+    m->get_neighbor_list();
     m->initialize_nodes(i);
     m->initialize_squares(i);
 
@@ -245,11 +286,11 @@ void SurfaceMesh::compute()
     }
 
     // assign new, cumulative node id...
-    nNodes = m->assign_nodeID(cNodeID, i);
+    nNodes = m->assign_nodeID(cNodeID);
     // std::cout << "nNodes: " << nNodes << std::endl;
     // Output nodes and triangles...
     m->writeNodesFile(i, cNodeID, NodesFile);
-    err = m->writeTrianglesFile(nTriangle, TrianglesFile, i, cTriID);
+    err = m->writeTrianglesFile(i, cTriID, TrianglesFile, nTriangle);
     if (err < 0)
     {
       this->m_Cancel = true;
@@ -262,6 +303,51 @@ void SurfaceMesh::compute()
     cNodeID = nNodes;
     cTriID = cTriID + nTriangle;
   }
+// ---------------------------------------------------------------
+  // Run one more with the top layer being -3
+   ::memcpy( &(m->voxels[1]), &(m->voxels[1 + m->NSP]), m->NSP * sizeof(int) );
+
+   //Make this last layer all border values
+  for (int i = m->NSP + 1; i < 2*m->NSP + 1; ++i)
+  {
+    m->voxels[i] = -3;
+  }
+
+  int i = zFileDim;
+  m->get_neighbor_list();
+  m->initialize_nodes(i);
+  m->initialize_squares(i);
+  // find face edges of each square of marching cubes in each layer...
+  nEdge = m->get_number_Edges(i);
+  m->get_nodes_Edges(edgeTable_2d, nsTable_2d, i, nEdge);
+  // find triangles and arrange the spins across each triangle...
+  nTriangle = m->get_number_triangles();
+  if (nTriangle > 0)
+  {
+    m->get_triangles(nTriangle);
+    m->arrange_grainnames(nTriangle, i);
+  }
+  // assign new, cumulative node id...
+  nNodes = m->assign_nodeID(cNodeID);
+  // std::cout << "nNodes: " << nNodes << std::endl;
+  // Output nodes and triangles...
+  m->writeNodesFile(i, cNodeID, NodesFile);
+  err = m->writeTrianglesFile(i, cTriID, TrianglesFile, nTriangle);
+  if (err < 0)
+  {
+    this->m_Cancel = true;
+    progressMessage(AIM_STRING("Error Writing Triangles Temp File"), 100 );
+#if AIM_USE_QT
+emit finished();
+#endif
+    return;
+  }
+  cNodeID = nNodes;
+  cTriID = cTriID + nTriangle;
+
+//------------ All Done with Marching Cubes-------------------
+  free(fileVoxelLayer);
+  fileVoxelLayer = NULL;
 
 
   if (m_SmoothMesh) {
