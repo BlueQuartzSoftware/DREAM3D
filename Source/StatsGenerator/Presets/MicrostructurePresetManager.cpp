@@ -62,12 +62,12 @@ MicrostructurePresetManager::Pointer MicrostructurePresetManager::instance()
 // -----------------------------------------------------------------------------
 //  Static Method
 // -----------------------------------------------------------------------------
-void MicrostructurePresetManager::registerKnownMicrostructurePresetFactories()
+void MicrostructurePresetManager::registerKnownFactories()
 {
 #if 0
     //Register to be able to import Tiff images
     AbstractMicrostructurePreset::Pointer h5TiffMicrostructurePresetFactory ( new H5TiffMicrostructurePresetFactory() );
-    MicrostructurePresetManager::registerMicrostructurePresetFactory(h5TiffMicrostructurePresetFactory);
+    MicrostructurePresetManager::registerFactory(h5TiffMicrostructurePresetFactory);
 #endif
 
 
@@ -76,30 +76,30 @@ void MicrostructurePresetManager::registerKnownMicrostructurePresetFactories()
 // -----------------------------------------------------------------------------
 //  Static Method
 // -----------------------------------------------------------------------------
-void MicrostructurePresetManager::registerMicrostructurePresetFactory(AbstractMicrostructurePresetFactory::Pointer importer)
+void MicrostructurePresetManager::registerFactory(AbstractMicrostructurePresetFactory::Pointer importer)
 {
   if (NULL != importer.get() )
   {
     // Instantiate the Instance Manager for import delegates
     MicrostructurePresetManager::Pointer idManager = MicrostructurePresetManager::instance();
-    idManager->addMicrostructurePresetFactory( importer );
+    idManager->addFactory( importer );
   }
 }
 
 // -----------------------------------------------------------------------------
 //  Static Method
 // -----------------------------------------------------------------------------
-AbstractMicrostructurePreset::Pointer MicrostructurePresetManager::createNewMicrostructurePreset(const std::string &classname)
+AbstractMicrostructurePreset::Pointer MicrostructurePresetManager::createNewPreset(const std::string &classname)
 {
   MicrostructurePresetManager::Pointer idManager = MicrostructurePresetManager::instance();
-  return idManager->createMicrostructurePreset( classname );
+  return idManager->createPreset( classname );
 }
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractMicrostructurePreset::Pointer MicrostructurePresetManager::createMicrostructurePreset(const std::string &classname)
+AbstractMicrostructurePreset::Pointer MicrostructurePresetManager::createPreset(const std::string &classname)
 {
   //std::cout << "MicrostructurePresetManager::newMicrostructurePreset -> Trying to create MicrostructurePreset for '" << classname << "'" << std::endl;
   AbstractMicrostructurePreset::Pointer MicrostructurePreset;
@@ -117,7 +117,7 @@ AbstractMicrostructurePreset::Pointer MicrostructurePresetManager::createMicrost
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void MicrostructurePresetManager::addMicrostructurePresetFactory(AbstractMicrostructurePresetFactory::Pointer factoryPtr)
+void MicrostructurePresetManager::addFactory(AbstractMicrostructurePresetFactory::Pointer factoryPtr)
 {
   this->_factories.push_back(factoryPtr);
 }
@@ -125,7 +125,7 @@ void MicrostructurePresetManager::addMicrostructurePresetFactory(AbstractMicrost
 // -----------------------------------------------------------------------------
 // public Method
 // -----------------------------------------------------------------------------
-AbstractMicrostructurePresetFactory::Pointer MicrostructurePresetManager::getMicrostructurePresetFactory(const std::string &classname)
+AbstractMicrostructurePresetFactory::Pointer MicrostructurePresetManager::getFactory(const std::string &classname)
 {
   for (AbstractMicrostructurePresetFactory::Collection::iterator iter = _factories.begin(); iter != _factories.end(); ++iter )
   {
