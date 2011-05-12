@@ -28,34 +28,54 @@
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "EquiaxedPreset.h"
+#include "RolledPreset.h"
 
 #include "AIM/Common/AIMRandomNG.h"
 
+#include "StatsGenerator/Presets/Dialogs/RolledPresetDialog.h"
 #include "StatsGenerator/StatsGenPlotWidget.h"
 #include "StatsGenerator/TableModels/SGBetaTableModel.h"
 #include "StatsGenerator/TableModels/SGPowerLawTableModel.h"
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-EquiaxedPreset::EquiaxedPreset()
+RolledPreset::RolledPreset() :
+m_AspectRatio(1.0),
+m_RollingFraction(1.0)
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-EquiaxedPreset::~EquiaxedPreset()
+RolledPreset::~RolledPreset()
 {
 }
-
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EquiaxedPreset::generateOmega3Data(StatsGenPlotWidget* plot, QVector<double> binNumbers)
+void RolledPreset::displayUserInputDialog()
+{
+  RolledPresetDialog d(NULL);
+  int ret = d.exec();
+  if (ret == QDialog::Accepted)
+  {
+    // The user clicked the OK button so transfer the values from the dialog into this class
+    m_AspectRatio = d.getAspectRatio();
+    m_RollingFraction = d.getRollingFraction();
+  }
+  else
+  {
+    // Perform any cancellation actions if the user canceled the dialog box
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void RolledPreset::generateOmega3Data(StatsGenPlotWidget* plot, QVector<double> binNumbers)
 {
   // Make sure the distribution is set correctly
   plot->setDistributionType(AIM::Reconstruction::Beta, false);
@@ -96,11 +116,11 @@ void EquiaxedPreset::generateOmega3Data(StatsGenPlotWidget* plot, QVector<double
   qint32 colorOffset = 21;
   for (qint32 i = 0; i < count; ++i)
    {
-		alpha = (0*i) + 10.0 + rg.Random();
-		beta = (0*i) + 1.5 + (0.5*rg.Random());
-		alphas.push_back(alpha);
-		betas.push_back(beta);
-		colors.push_back(colorNames[colorOffset++]);
+    alpha = (0*i) + 10.0 + rg.Random();
+    beta = (0*i) + 1.5 + (0.5*rg.Random());
+    alphas.push_back(alpha);
+    betas.push_back(beta);
+    colors.push_back(colorNames[colorOffset++]);
    }
 
   QVector<QVector<double> > data;
@@ -112,7 +132,7 @@ void EquiaxedPreset::generateOmega3Data(StatsGenPlotWidget* plot, QVector<double
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EquiaxedPreset::generateBOverAPlotData(StatsGenPlotWidget* plot, QVector<double> binNumbers)
+void RolledPreset::generateBOverAPlotData(StatsGenPlotWidget* plot, QVector<double> binNumbers)
 {
   // Make sure the distribution is set correctly
   plot->setDistributionType(AIM::Reconstruction::Beta, false);
@@ -153,11 +173,11 @@ void EquiaxedPreset::generateBOverAPlotData(StatsGenPlotWidget* plot, QVector<do
   qint32 colorOffset = 21;
   for (qint32 i = 0; i < count; ++i)
    {
-		alpha = (0*i) + 10.0 + rg.Random();
-		beta = (0*i) + 1.5 + (0.5*rg.Random());
-		alphas.push_back(alpha);
-		betas.push_back(beta);
-		colors.push_back(colorNames[colorOffset++]);
+    alpha = (0*i) + 10.0 + rg.Random();
+    beta = (0*i) + 1.5 + (0.5*rg.Random());
+    alphas.push_back(alpha);
+    betas.push_back(beta);
+    colors.push_back(colorNames[colorOffset++]);
    }
 
   QVector<QVector<double> > data;
@@ -169,7 +189,7 @@ void EquiaxedPreset::generateBOverAPlotData(StatsGenPlotWidget* plot, QVector<do
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EquiaxedPreset::generateCOverAPlotData(StatsGenPlotWidget* plot, QVector<double> binNumbers)
+void RolledPreset::generateCOverAPlotData(StatsGenPlotWidget* plot, QVector<double> binNumbers)
 {
   // Make sure the distribution is set correctly
   plot->setDistributionType(AIM::Reconstruction::Beta, false);
@@ -210,11 +230,11 @@ void EquiaxedPreset::generateCOverAPlotData(StatsGenPlotWidget* plot, QVector<do
   qint32 colorOffset = 21;
   for (qint32 i = 0; i < count; ++i)
    {
-		alpha = (0*i) + 10.0 + rg.Random();
-		beta = (0*i) + 1.5 + (0.5*rg.Random());
-		alphas.push_back(alpha);
-		betas.push_back(beta);
-		colors.push_back(colorNames[colorOffset++]);
+    alpha = (0*i) + 10.0 + rg.Random();
+    beta = (0*i) + 1.5 + (0.5*rg.Random());
+    alphas.push_back(alpha);
+    betas.push_back(beta);
+    colors.push_back(colorNames[colorOffset++]);
    }
 
   QVector<QVector<double> > data;
@@ -227,7 +247,7 @@ void EquiaxedPreset::generateCOverAPlotData(StatsGenPlotWidget* plot, QVector<do
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EquiaxedPreset::generateCOverBPlotData(StatsGenPlotWidget* plot, QVector<double> binNumbers)
+void RolledPreset::generateCOverBPlotData(StatsGenPlotWidget* plot, QVector<double> binNumbers)
 {
   // Make sure the distribution is set correctly
   plot->setDistributionType(AIM::Reconstruction::Beta, false);
@@ -268,11 +288,11 @@ void EquiaxedPreset::generateCOverBPlotData(StatsGenPlotWidget* plot, QVector<do
   qint32 colorOffset = 21;
   for (qint32 i = 0; i < count; ++i)
    {
-		alpha = (0*i) + 10.0 + rg.Random();
-		beta = (0*i) + 1.5 + (0.5*rg.Random());
-		alphas.push_back(alpha);
-		betas.push_back(beta);
-		colors.push_back(colorNames[colorOffset++]);
+    alpha = (0*i) + 10.0 + rg.Random();
+    beta = (0*i) + 1.5 + (0.5*rg.Random());
+    alphas.push_back(alpha);
+    betas.push_back(beta);
+    colors.push_back(colorNames[colorOffset++]);
    }
 
   QVector<QVector<double> > data;
@@ -285,7 +305,7 @@ void EquiaxedPreset::generateCOverBPlotData(StatsGenPlotWidget* plot, QVector<do
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EquiaxedPreset::generateNeighborPlotData(StatsGenPlotWidget* plot, QVector<double> binNumbers)
+void RolledPreset::generateNeighborPlotData(StatsGenPlotWidget* plot, QVector<double> binNumbers)
 {
   // Make sure the distribution is set correctly
   plot->setDistributionType(AIM::Reconstruction::Power, false);
@@ -329,13 +349,13 @@ void EquiaxedPreset::generateNeighborPlotData(StatsGenPlotWidget* plot, QVector<
   int middlebin = count/2;
   for (qint32 i = 0; i < count; ++i)
    {
-		alpha = (4*(binNumbers[i]/binNumbers[middlebin])) + rg.Random();
-		k = 2 + (0.2*(binNumbers[i]/binNumbers[middlebin])) + (0.05*rg.Random());
-		beta = (0*i) + 1;
-		alphas.push_back(alpha);
-		ks.push_back(k);
-		betas.push_back(beta);
-		colors.push_back(colorNames[colorOffset++]);
+    alpha = (4*(binNumbers[i]/binNumbers[middlebin])) + rg.Random();
+    k = 2 + (0.2*(binNumbers[i]/binNumbers[middlebin])) + (0.05*rg.Random());
+    beta = (0*i) + 1;
+    alphas.push_back(alpha);
+    ks.push_back(k);
+    betas.push_back(beta);
+    colors.push_back(colorNames[colorOffset++]);
    }
 
   QVector<QVector<double> > data;
@@ -345,5 +365,3 @@ void EquiaxedPreset::generateNeighborPlotData(StatsGenPlotWidget* plot, QVector<
   model->setTableData(binNumbers, data, colors);
 
 }
-
-

@@ -30,6 +30,7 @@
 
 #include "DefaultStatsPreset.h"
 #include "StatsGenerator/StatsGenPlotWidget.h"
+#include "StatsGenerator/TableModels/SGAbstractTableModel.h"
 #include "StatsGenerator/TableModels/SGBetaTableModel.h"
 #include "StatsGenerator/TableModels/SGPowerLawTableModel.h"
 

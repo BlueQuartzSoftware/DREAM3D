@@ -28,8 +28,8 @@
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef DEFAULTSTATSPRESET_H_
-#define DEFAULTSTATSPRESET_H_
+#ifndef RECRYSTALLIZEDPRESET_H_
+#define RECRYSTALLIZEDPRESET_H_
 
 //-- C++ includes
 #include <string>
@@ -41,31 +41,32 @@
 #include "AbstractMicrostructurePresetFactory.h"
 #include "AbstractMicrostructurePreset.h"
 
-
-
-class DefaultStatsPreset : public AbstractMicrostructurePreset
+class RecrystallizedPreset : public AbstractMicrostructurePreset
 {
   public:
-    MXA_SHARED_POINTERS(DefaultStatsPreset);
-    MXA_STATIC_NEW_SUPERCLASS(AbstractMicrostructurePreset, DefaultStatsPreset);
-    virtual ~DefaultStatsPreset();
+    MXA_SHARED_POINTERS(RecrystallizedPreset);
+    MXA_STATIC_NEW_SUPERCLASS(AbstractMicrostructurePreset, RecrystallizedPreset);
+    virtual ~RecrystallizedPreset();
 
 
+    void displayUserInputDialog();
     void generateOmega3Data(StatsGenPlotWidget* plot, QVector<double> binNumbers);
     void generateBOverAPlotData(StatsGenPlotWidget* plot, QVector<double> binNumbers);
     void generateCOverAPlotData(StatsGenPlotWidget* plot, QVector<double> binNumbers);
     void generateCOverBPlotData(StatsGenPlotWidget* plot, QVector<double> binNumbers);
     void generateNeighborPlotData(StatsGenPlotWidget* plot, QVector<double> binNumbers);
 
+    MXA_INSTANCE_PROPERTY(float, PercentRecrystallized)
+
   protected:
-    DefaultStatsPreset();
+    RecrystallizedPreset();
 
   private:
-    DefaultStatsPreset(const DefaultStatsPreset&); // Copy Constructor Not Implemented
-    void operator=(const DefaultStatsPreset&); // Operator '=' Not Implemented
+    RecrystallizedPreset(const RecrystallizedPreset&); // Copy Constructor Not Implemented
+    void operator=(const RecrystallizedPreset&); // Operator '=' Not Implemented
 };
 
-DECLARE_FACTORY_CLASS(DefaultStatsPresetFactory, DefaultStatsPreset, Default );
+DECLARE_FACTORY_CLASS(RecrystallizedPresetFactory, RecrystallizedPreset, Recrystallized );
 
 
-#endif /* DEFAULTSTATSPRESET_H_ */
+#endif /* RECRYSTALLIZEDPRESET_H_ */
