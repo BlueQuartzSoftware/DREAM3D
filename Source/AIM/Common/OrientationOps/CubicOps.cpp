@@ -35,21 +35,21 @@
 
   const static float m_pi = M_PI;
 
-  const float threesixty_over_pi = 360.0/m_pi;
-  const float oneeighty_over_pi = 180.0/m_pi;
-  const float sqrt_two = pow(2.0, 0.5);
+  const float threesixty_over_pi = 360.0f/m_pi;
+  const float oneeighty_over_pi = 180.0f/m_pi;
+  const float sqrt_two = powf(2.0f, 0.5f);
 
-  const float acos_neg_one = acos(-1.0);
-  const float acos_pos_one = acos(1.0);
-  const float sin_wmin_neg_1_over_2 = sin(acos_neg_one/2.0);
-  const float sin_wmin_pos_1_over_2 = sin(acos_pos_one/2.0);
+  const float acos_neg_one = acosf(-1.0f);
+  const float acos_pos_one = acosf(1.0f);
+  const float sin_wmin_neg_1_over_2 = sinf(acos_neg_one/2.0f);
+  const float sin_wmin_pos_1_over_2 = sinf(acos_pos_one/2.0f);
 
-  static const float CubicDim1InitValue = pow((0.75*((m_pi/4.0)-sin((m_pi/4.0)))),(1.0/3.0));
-  static const float CubicDim2InitValue = pow((0.75*((m_pi/4.0)-sin((m_pi/4.0)))),(1.0/3.0));
-  static const float CubicDim3InitValue = pow((0.75*((m_pi/4.0)-sin((m_pi/4.0)))),(1.0/3.0));
-  static const float CubicDim1StepValue = CubicDim1InitValue/9.0;
-  static const float CubicDim2StepValue = CubicDim2InitValue/9.0;
-  static const float CubicDim3StepValue = CubicDim3InitValue/9.0;
+  static const float CubicDim1InitValue = powf((0.75f*((m_pi/4.0f)-sinf((m_pi/4.0f)))),(1.0f/3.0f));
+  static const float CubicDim2InitValue = powf((0.75f*((m_pi/4.0f)-sinf((m_pi/4.0f)))),(1.0f/3.0f));
+  static const float CubicDim3InitValue = powf((0.75f*((m_pi/4.0f)-sinf((m_pi/4.0f)))),(1.0f/3.0f));
+  static const float CubicDim1StepValue = CubicDim1InitValue/9.0f;
+  static const float CubicDim2StepValue = CubicDim2InitValue/9.0f;
+  static const float CubicDim3StepValue = CubicDim3InitValue/9.0f;
 
   static const float CubicQuatSym[24][5] = {
                        {0.000000000, 0.000000000, 0.000000000, 0.000000000, 1.000000000},
@@ -144,7 +144,7 @@ float CubicOps::_calcMisoQuat(float quatsym[24][5], int numsym,
                                       float q1[5], float q2[5],
                                       float &n1, float &n2, float &n3)
 {
-  float wmin=9999999.0; //,na,nb,nc;
+  float wmin=9999999.0f; //,na,nb,nc;
    float qc[5];
    float qco[5];
    float sin_wmin_over_2 = 0.0;
@@ -287,13 +287,13 @@ float CubicOps::_calcMisoQuat(float quatsym[24][5], int numsym,
    else
    {
      wmin = acos(wmin);
-     sin_wmin_over_2 = sin(wmin / 2.0);
+     sin_wmin_over_2 = sinf(wmin / 2.0);
    }
 
    n1 = qco[1] / sin_wmin_over_2;
    n2 = qco[2] / sin_wmin_over_2;
    n3 = qco[3] / sin_wmin_over_2;
-   float denom = pow((n1*n1+n2*n2+n3*n3),0.5);
+   float denom = powf((n1*n1+n2*n2+n3*n3),0.5);
    n1 = n1/denom;
    n2 = n2/denom;
    n3 = n3/denom;
@@ -360,9 +360,9 @@ int CubicOps::getMisoBin(float n1, float n2, float n3)
   dim[0] = CubicDim1InitValue;
   dim[1] = CubicDim2InitValue;
   dim[2] = CubicDim3InitValue;
-  bins[0] = 18.0;
-  bins[1] = 18.0;
-  bins[2] = 18.0;
+  bins[0] = 18.0f;
+  bins[1] = 18.0f;
+  bins[2] = 18.0f;
 
   return _calcMisoBin(dim, bins, n1, n2, n3);
 }
@@ -392,9 +392,9 @@ void CubicOps::determineHomochoricValues(int choose, float &r1, float &r2, float
   float step[3];
   float phi[3];
 
-  step[0] = CubicDim1StepValue/2.0;
-  step[1] = CubicDim2StepValue/2.0;
-  step[2] = CubicDim3StepValue/2.0;
+  step[0] = CubicDim1StepValue/2.0f;
+  step[1] = CubicDim2StepValue/2.0f;
+  step[2] = CubicDim3StepValue/2.0f;
   phi[0] = choose % 18;
   phi[1] = (choose / 18) % 18;
   phi[2] = choose / (18 * 18);
@@ -410,9 +410,9 @@ int CubicOps::getOdfBin(float r1, float r2, float r3)
   dim[0] = CubicDim1InitValue;
   dim[1] = CubicDim2InitValue;
   dim[2] = CubicDim3InitValue;
-  bins[0] = 18.0;
-  bins[1] = 18.0;
-  bins[2] = 18.0;
+  bins[0] = 18.0f;
+  bins[1] = 18.0f;
+  bins[2] = 18.0f;
 
   return _calcODFBin(dim, bins, r1, r2, r3);
 }

@@ -29,10 +29,10 @@
 
 const static float m_onepointthree = 1.33333333333;
 const static float m_pi = M_PI;
-const static float SinOfHalf = sin(0.5);
-const static float CosOfHalf = cos(0.5);
-const static float SinOfZero = sin(0.0);
-const static float CosOfZero = cos(0.0);
+const static float SinOfHalf = sinf(0.5);
+const static float CosOfHalf = cosf(0.5);
+const static float SinOfZero = sinf(0.0);
+const static float CosOfZero = cosf(0.0);
 
 #define DIMS "DIMENSIONS"
 #define LOOKUP "LOOKUP_TABLE"
@@ -688,15 +688,15 @@ void  GrainGeneratorFunc::insert_grain(size_t gnum)
   float PHI = m_Grains[gnum]->axiseuler2;
   float phi2 = m_Grains[gnum]->axiseuler3;
   float ga[3][3];
-  ga[0][0] = cos(phi1)*cos(phi2)-sin(phi1)*sin(phi2)*cos(PHI);
-  ga[0][1] = sin(phi1)*cos(phi2)+cos(phi1)*sin(phi2)*cos(PHI);
-  ga[0][2] = sin(phi2)*sin(PHI);
-  ga[1][0] = -cos(phi1)*sin(phi2)-sin(phi1)*cos(phi2)*cos(PHI);
-  ga[1][1] = -sin(phi1)*sin(phi2)+cos(phi1)*cos(phi2)*cos(PHI);
-  ga[1][2] =  cos(phi2)*sin(PHI);
-  ga[2][0] =  sin(phi1)*sin(PHI);
-  ga[2][1] = -cos(phi1)*sin(PHI);
-  ga[2][2] =  cos(PHI);
+  ga[0][0] = cosf(phi1)*cosf(phi2)-sinf(phi1)*sinf(phi2)*cosf(PHI);
+  ga[0][1] = sinf(phi1)*cosf(phi2)+cosf(phi1)*sinf(phi2)*cosf(PHI);
+  ga[0][2] = sinf(phi2)*sinf(PHI);
+  ga[1][0] = -cosf(phi1)*sinf(phi2)-sinf(phi1)*cosf(phi2)*cosf(PHI);
+  ga[1][1] = -sinf(phi1)*sinf(phi2)+cosf(phi1)*cosf(phi2)*cosf(PHI);
+  ga[1][2] =  cosf(phi2)*sinf(PHI);
+  ga[2][0] =  sinf(phi1)*sinf(PHI);
+  ga[2][1] = -cosf(phi1)*sinf(PHI);
+  ga[2][2] =  cosf(PHI);
   xc = m_Grains[gnum]->centroidx;
   yc = m_Grains[gnum]->centroidy;
   zc = m_Grains[gnum]->centroidz;
@@ -1422,15 +1422,15 @@ int GrainGeneratorFunc::assign_voxels(int numgrains)
     float PHI = m_Grains[i]->axiseuler2;
     float phi2 = m_Grains[i]->axiseuler3;
     float ga[3][3];
-    ga[0][0] = cos(phi1)*cos(phi2)-sin(phi1)*sin(phi2)*cos(PHI);
-    ga[0][1] = sin(phi1)*cos(phi2)+cos(phi1)*sin(phi2)*cos(PHI);
-    ga[0][2] = sin(phi2)*sin(PHI);
-    ga[1][0] = -cos(phi1)*sin(phi2)-sin(phi1)*cos(phi2)*cos(PHI);
-    ga[1][1] = -sin(phi1)*sin(phi2)+cos(phi1)*cos(phi2)*cos(PHI);
-    ga[1][2] =  cos(phi2)*sin(PHI);
-    ga[2][0] =  sin(phi1)*sin(PHI);
-    ga[2][1] = -cos(phi1)*sin(PHI);
-    ga[2][2] =  cos(PHI);
+    ga[0][0] = cosf(phi1)*cosf(phi2)-sinf(phi1)*sinf(phi2)*cosf(PHI);
+    ga[0][1] = sinf(phi1)*cosf(phi2)+cosf(phi1)*sinf(phi2)*cosf(PHI);
+    ga[0][2] = sinf(phi2)*sinf(PHI);
+    ga[1][0] = -cosf(phi1)*sinf(phi2)-sinf(phi1)*cosf(phi2)*cosf(PHI);
+    ga[1][1] = -sinf(phi1)*sinf(phi2)+cosf(phi1)*cosf(phi2)*cosf(PHI);
+    ga[1][2] =  cosf(phi2)*sinf(PHI);
+    ga[2][0] =  sinf(phi1)*sinf(PHI);
+    ga[2][1] = -cosf(phi1)*sinf(PHI);
+    ga[2][2] =  cosf(PHI);
     column = (xc-(resx/2))/resx;
     row = (yc-(resy/2))/resy;
     plane = (zc-(resz/2))/resz;
@@ -2685,9 +2685,9 @@ void  GrainGeneratorFunc::find_axes ()
     {
       theta = acos(-g/(2*r));
     }
-    float r1 = 2*powf(r,0.33333333333)*cos(theta/3)-(b/(3*a));
-    float r2 = -powf(r,0.33333333333)*(cos(theta/3)-(1.7320508*sin(theta/3)))-(b/(3*a));
-    float r3 = -powf(r,0.33333333333)*(cos(theta/3)+(1.7320508*sin(theta/3)))-(b/(3*a));
+    float r1 = 2*powf(r,0.33333333333)*cosf(theta/3)-(b/(3*a));
+    float r2 = -powf(r,0.33333333333)*(cosf(theta/3)-(1.7320508*sinf(theta/3)))-(b/(3*a));
+    float r3 = -powf(r,0.33333333333)*(cosf(theta/3)+(1.7320508*sinf(theta/3)))-(b/(3*a));
   m_Grains[i]->radius1 = r1;
   m_Grains[i]->radius2 = r2;
   m_Grains[i]->radius3 = r3;
@@ -2873,10 +2873,10 @@ void  GrainGeneratorFunc::find_vectors (H5ReconStatsWriter::Pointer h5io)
       m1[2][1] = o[2][0]*ga[0][1] + o[2][1]*ga[1][1] + o[2][2]*ga[2][1];
       m1[2][2] = o[2][0]*ga[0][2] + o[2][1]*ga[1][2] + o[2][2]*ga[2][2];
       float ea2 = acos(m1[2][2]);
-      float cosine3 = (m1[1][2]/sin(ea2));
-      float sine3 = (m1[0][2]/sin(ea2));
-      float cosine1 = (-m1[2][1]/sin(ea2));
-      float sine1 = (m1[2][0]/sin(ea2));
+      float cosine3 = (m1[1][2]/sinf(ea2));
+      float sine3 = (m1[0][2]/sinf(ea2));
+      float cosine1 = (-m1[2][1]/sinf(ea2));
+      float sine1 = (m1[2][0]/sinf(ea2));
       float ea3 = acos(cosine3);
       float ea1 = acos(cosine1);
       if(sine3 < 0) ea3 = (2*m_pi)-ea3;
@@ -3246,7 +3246,7 @@ float GrainGeneratorFunc::gamma(float x)
         if (fabs(x) > 1.0) {
             ga *= r;
             if (x < 0.0) {
-                ga = -1 * m_pi/(x*ga*sin(m_pi*x));
+                ga = -1 * m_pi/(x*ga*sinf(m_pi*x));
             }
         }
     }
@@ -3321,7 +3321,7 @@ float GrainGeneratorFunc::lngamma(float x, float& sgngam)
             p = p+1;
             z = p-q;
         }
-        z = q*sin(m_pi*z);
+        z = q*sinf(m_pi*z);
         result = logpi-log(z)-w;
         return result;
     }

@@ -64,8 +64,8 @@ const static float m_pi_over_180 = M_PI / 180.0;
 const static float sqrt_two = powf(2.0, 0.5);
 const static float acos_neg_one = acos(-1.0);
 const static float acos_pos_one = acos(1.0);
-const static float sin_wmin_neg_1_over_2 = sin(acos_neg_one / 2.0);
-const static float sin_wmin_pos_1_over_2 = sin(acos_pos_one / 2.0);
+const static float sin_wmin_neg_1_over_2 = sinf(acos_neg_one / 2.0);
+const static float sin_wmin_pos_1_over_2 = sinf(acos_pos_one / 2.0);
 
 #define DIMS "DIMENSIONS"
 #define LOOKUP "LOOKUP_TABLE"
@@ -1974,10 +1974,10 @@ int ReconstructionFunc::load_data(const std::string &readname)
       if (mat[i][8] > 1) mat[i][8] = 1;
       if (mat[i][8] < -1) mat[i][8] = -1;
       ea2 = acos(mat[i][8]);
-      cosine3 = (mat[i][5] / sin(ea2));
-      sine3 = (mat[i][2] / sin(ea2));
-      cosine1 = (-mat[i][7] / sin(ea2));
-      sine1 = (mat[i][6] / sin(ea2));
+      cosine3 = (mat[i][5] / sinf(ea2));
+      sine3 = (mat[i][2] / sinf(ea2));
+      cosine1 = (-mat[i][7] / sinf(ea2));
+      sine1 = (mat[i][6] / sinf(ea2));
       if (cosine3 > 1) cosine3 = 1;
       if (cosine3 < -1) cosine3 = -1;
       ea3 = acos(cosine3);
@@ -1989,12 +1989,12 @@ int ReconstructionFunc::load_data(const std::string &readname)
       voxels[i].euler1 = ea1;
       voxels[i].euler2 = ea2;
       voxels[i].euler3 = ea3;
-      s = sin(0.5 * ea2);
-      c = cos(0.5 * ea2);
-      s1 = sin(0.5 * (ea1 - ea3));
-      c1 = cos(0.5 * (ea1 - ea3));
-      s2 = sin(0.5 * (ea1 + ea3));
-      c2 = cos(0.5 * (ea1 + ea3));
+      s = sinf(0.5 * ea2);
+      c = cosf(0.5 * ea2);
+      s1 = sinf(0.5 * (ea1 - ea3));
+      c1 = cosf(0.5 * (ea1 - ea3));
+      s2 = sinf(0.5 * (ea1 + ea3));
+      c2 = cosf(0.5 * (ea1 + ea3));
 	  voxels[i].quat[0] = 1.0;
       voxels[i].quat[1] = s * c1;
       voxels[i].quat[2] = s * s1;
@@ -2091,7 +2091,7 @@ int ReconstructionFunc::load_data(const std::string &readname)
 	  q1[1] = rod[i][0];
 	  q1[2] = rod[i][1];
 	  q1[3] = rod[i][2];
-	  q1[4] = cos(asin(mag));
+	  q1[4] = cosf(asin(mag));
       OrientationMath::getFZQuatCubic(q1);
 	  voxels[i].quat[0] = q1[0];
       voxels[i].quat[1] = q1[1];
@@ -2870,9 +2870,9 @@ for (size_t i = 1; i < numgrains; i++)
     {
       theta = acos(-g / (2 * r));
     }
-    float r1 = 2 * powf(r, 0.33333333333) * cos(theta / 3) - (b / (3 * a));
-    float r2 = -powf(r, 0.33333333333) * (cos(theta / 3) - (1.7320508 * sin(theta / 3))) - (b / (3 * a));
-    float r3 = -powf(r, 0.33333333333) * (cos(theta / 3) + (1.7320508 * sin(theta / 3))) - (b / (3 * a));
+    float r1 = 2 * powf(r, 0.33333333333) * cosf(theta / 3) - (b / (3 * a));
+    float r2 = -powf(r, 0.33333333333) * (cosf(theta / 3) - (1.7320508 * sinf(theta / 3))) - (b / (3 * a));
+    float r3 = -powf(r, 0.33333333333) * (cosf(theta / 3) + (1.7320508 * sinf(theta / 3))) - (b / (3 * a));
     m_Grains[i]->radius1 = r1;
     m_Grains[i]->radius2 = r2;
     m_Grains[i]->radius3 = r3;
@@ -3080,10 +3080,10 @@ void ReconstructionFunc::find_vectors(H5ReconStatsWriter::Pointer h5io)
         m1[2][1] = o[2][0] * ga[0][1] + o[2][1] * ga[1][1] + o[2][2] * ga[2][1];
         m1[2][2] = o[2][0] * ga[0][2] + o[2][1] * ga[1][2] + o[2][2] * ga[2][2];
         float ea2 = acos(m1[2][2]);
-        float cosine3 = (m1[1][2] / sin(ea2));
-        float sine3 = (m1[0][2] / sin(ea2));
-        float cosine1 = (-m1[2][1] / sin(ea2));
-        float sine1 = (m1[2][0] / sin(ea2));
+        float cosine3 = (m1[1][2] / sinf(ea2));
+        float sine3 = (m1[0][2] / sinf(ea2));
+        float cosine1 = (-m1[2][1] / sinf(ea2));
+        float sine1 = (m1[2][0] / sinf(ea2));
         float ea3 = acos(cosine3);
         float ea1 = acos(cosine1);
         if (sine3 < 0) ea3 = (2 * m_pi) - ea3;
@@ -4477,7 +4477,7 @@ float ReconstructionFunc::gamma(float x)
       ga *= r;
       if (x < 0.0)
       {
-        ga = -1 * m_pi / (x * ga * sin(m_pi * x));
+        ga = -1 * m_pi / (x * ga * sinf(m_pi * x));
       }
     }
   }

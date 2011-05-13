@@ -34,12 +34,12 @@
 
 
   const static float m_pi = M_PI;
-  static const float HexDim1InitValue = pow((0.75*((m_pi/2.0)-sin((m_pi/2.0)))),(1.0/3.0));
-  static const float HexDim2InitValue = pow((0.75*((m_pi/2.0)-sin((m_pi/2.0)))),(1.0/3.0));
-  static const float HexDim3InitValue = pow((0.75*((m_pi/6.0)-sin((m_pi/6.0)))),(1.0/3.0));
-  static const float HexDim1StepValue = HexDim1InitValue/18.0;
-  static const float HexDim2StepValue = HexDim1InitValue/18.0;
-  static const float HexDim3StepValue = HexDim1InitValue/6.0;
+  static const float HexDim1InitValue = powf((0.75f*((m_pi/2.0f)-sinf((m_pi/2.0f)))),(1.0f/3.0f));
+  static const float HexDim2InitValue = powf((0.75f*((m_pi/2.0f)-sinf((m_pi/2.0f)))),(1.0f/3.0f));
+  static const float HexDim3InitValue = powf((0.75f*((m_pi/6.0f)-sinf((m_pi/6.0f)))),(1.0f/3.0f));
+  static const float HexDim1StepValue = HexDim1InitValue/18.0f;
+  static const float HexDim2StepValue = HexDim1InitValue/18.0f;
+  static const float HexDim3StepValue = HexDim1InitValue/6.0f;
 static const float HexQuatSym[12][5] = {{0.000000000, 0.000000000, 0.000000000, 0.000000000, 1.000000000},
                        {0.000000000, 0.000000000, 0.000000000, 0.500000000, 0.866025400},
                        {0.000000000, 0.000000000, 0.000000000, 0.866025400, 0.500000000},
@@ -150,9 +150,9 @@ int HexagonalOps::getMisoBin(float n1, float n2, float n3)
   dim[0] = HexDim1InitValue;
   dim[1] = HexDim2InitValue;
   dim[2] = HexDim3InitValue;
-  bins[0] = 36.0;
-  bins[1] = 36.0;
-  bins[2] = 12.0;
+  bins[0] = 36.0f;
+  bins[1] = 36.0f;
+  bins[2] = 12.0f;
 
   return _calcMisoBin(dim, bins, n1, n2, n3);
 }
@@ -184,9 +184,9 @@ void HexagonalOps::determineHomochoricValues( int choose, float &r1, float &r2, 
   float step[3];
   float phi[3];
 
-  step[0] = HexDim1StepValue/2.0;
-  step[1] = HexDim2StepValue/2.0;
-  step[2] = HexDim3StepValue/2.0;
+  step[0] = HexDim1StepValue/2.0f;
+  step[1] = HexDim2StepValue/2.0f;
+  step[2] = HexDim3StepValue/2.0f;
   phi[0] = choose % 36;
   phi[1] = (choose / 36) % 36;
   phi[2] = choose / (36 * 36);
@@ -202,9 +202,9 @@ int HexagonalOps::getOdfBin(float r1, float r2, float r3)
   dim[0] = HexDim1InitValue;
   dim[1] = HexDim2InitValue;
   dim[2] = HexDim3InitValue;
-  bins[0] = 36.0;
-  bins[1] = 36.0;
-  bins[2] = 12.0;
+  bins[0] = 36.0f;
+  bins[1] = 36.0f;
+  bins[2] = 12.0f;
 
   return _calcODFBin(dim, bins, r1, r2, r3);
 }
