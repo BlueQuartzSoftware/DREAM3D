@@ -964,13 +964,13 @@ class StatsGen
         {
           density = mdf[j];
           totaldensity = totaldensity + density;
-          if (random < totaldensity && random >= (totaldensity - density)) choose = static_cast<int> (j);
+          if (random < totaldensity && random >= (totaldensity - density)) choose = static_cast<int>(j);
         }
-		ops.determineHomochoricValues(choose, r1, r2, r3);
-		OrientationMath::HomochorictoRod(r1, r2, r3);
-		ops.getFZRod(r1, r2, r3);
-		OrientationMath::RodtoAxisAngle(r1, r2, r3, w, n1, n2, n3);
-		w = w*radtodeg;
+        ops.determineHomochoricValues(choose, r1, r2, r3);
+        OrientationMath::HomochorictoRod(r1, r2, r3);
+        ops.getFZRod(r1, r2, r3);
+        OrientationMath::RodtoAxisAngle(r1, r2, r3, w, n1, n2, n3);
+        w = w * radtodeg;
         yval[int(w / 5.0)]++;
       }
       for (int i = 0; i < 20; i++)
