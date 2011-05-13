@@ -45,7 +45,7 @@ extern "C"
   class nodes
   {
    public:
-    void set_coords(double x, double y, double z)
+    void set_coords(float x, float y, float z)
     {
       xc = x;
       yc = y;
@@ -83,9 +83,9 @@ extern "C"
     {
       nodemoved = moved;
     }
-    double xc;
-    double yc;
-    double zc;
+    float xc;
+    float yc;
+    float zc;
     int finalnumber;
     int edgenode;
     int nodemoved;
@@ -112,7 +112,7 @@ extern "C"
       secondnoderight = node3;
       thirdnoderight = node2;
     }
-    void set_avgmisorientation(double avgmisorient)
+    void set_avgmisorientation(float avgmisorient)
     {
       averagemisorientation = avgmisorient;
     }
@@ -121,23 +121,23 @@ extern "C"
       leftgrain = grain1;
       rightgrain = grain2;
     }
-    void set_normal(double nx, double ny, double nz)
+    void set_normal(float nx, float ny, float nz)
     {
       normalx = nx;
       normaly = ny;
       normalz = nz;
     }
-    void set_center(double xc, double yc, double zc)
+    void set_center(float xc, float yc, float zc)
     {
       xcenter = xc;
       ycenter = yc;
       zcenter = zc;
     }
-    void set_vol_leftgrain(double leftvol)
+    void set_vol_leftgrain(float leftvol)
     {
       leftvolume = leftvol;
     }
-    void set_vol_rightgrain(double rightvol)
+    void set_vol_rightgrain(float rightvol)
     {
       rightvolume = rightvol;
     }
@@ -149,11 +149,11 @@ extern "C"
     {
       finalnumber = count;
     }
-    void set_area(double area)
+    void set_area(float area)
     {
       trianglearea = area;
     }
-    void set_edgelengths(double length1, double length2, double length3)
+    void set_edgelengths(float length1, float length2, float length3)
     {
       edgelength1 = length1;
       edgelength2 = length2;
@@ -163,11 +163,11 @@ extern "C"
     {
       trianglekilled = killed;
     }
-    void set_averageedgelength(double avgdist)
+    void set_averageedgelength(float avgdist)
     {
       averageedgelength = avgdist;
     }
-    void set_maxedgelength(double maxdist)
+    void set_maxedgelength(float maxdist)
     {
       maxedgelength = maxdist;
     }
@@ -175,7 +175,7 @@ extern "C"
     {
       tripletriangle = ttriangle;
     }
-    void set_facetD(double dval)
+    void set_facetD(float dval)
     {
       dvalue = dval;
     }
@@ -185,28 +185,28 @@ extern "C"
     int firstnoderight;
     int secondnoderight;
     int thirdnoderight;
-    double trianglearea;
-    double normalx;
-    double normaly;
-    double normalz;
+    float trianglearea;
+    float normalx;
+    float normaly;
+    float normalz;
     int finalnumber;
     int edgetriangle;
-    double averageedgelength;
-    double maxedgelength;
+    float averageedgelength;
+    float maxedgelength;
     int leftgrain;
     int rightgrain;
-    double leftvolume;
-    double rightvolume;
-    double xcenter;
-    double ycenter;
-    double zcenter;
-    double edgelength1;
-    double edgelength2;
-    double edgelength3;
+    float leftvolume;
+    float rightvolume;
+    float xcenter;
+    float ycenter;
+    float zcenter;
+    float edgelength1;
+    float edgelength2;
+    float edgelength3;
     int trianglekilled;
     int tripletriangle;
-    double dvalue;
-    double averagemisorientation;
+    float dvalue;
+    float averagemisorientation;
   };
 
 
@@ -224,7 +224,7 @@ extern "C"
     {
       grainname = gnum;
     }
-    void set_dihedralangles(double dihedral1, double dihedral2, double dihedral3, double dihedral4, double dihedral5, double dihedral6)
+    void set_dihedralangles(float dihedral1, float dihedral2, float dihedral3, float dihedral4, float dihedral5, float dihedral6)
     {
       dihedralangle1 = dihedral1;
       dihedralangle2 = dihedral2;
@@ -233,7 +233,7 @@ extern "C"
       dihedralangle5 = dihedral5;
       dihedralangle6 = dihedral6;
     }
-    void set_edgelengths(double length1, double length2, double length3, double length4, double length5, double length6)
+    void set_edgelengths(float length1, float length2, float length3, float length4, float length5, float length6)
     {
       edgelength1 = length1;
       edgelength2 = length2;
@@ -250,7 +250,7 @@ extern "C"
     {
       originalnodecount = surfnodecount;
     }
-    void set_volume(double vol)
+    void set_volume(float vol)
     {
       volume = vol;
     }
@@ -263,28 +263,28 @@ extern "C"
     int node3;
     int node4;
     int grainname;
-    double dihedralangle1;
-    double dihedralangle2;
-    double dihedralangle3;
-    double dihedralangle4;
-    double dihedralangle5;
-    double dihedralangle6;
-    double edgelength1;
-    double edgelength2;
-    double edgelength3;
-    double edgelength4;
-    double edgelength5;
-    double edgelength6;
+    float dihedralangle1;
+    float dihedralangle2;
+    float dihedralangle3;
+    float dihedralangle4;
+    float dihedralangle5;
+    float dihedralangle6;
+    float edgelength1;
+    float edgelength2;
+    float edgelength3;
+    float edgelength4;
+    float edgelength5;
+    float edgelength6;
     int elementkilled;
     int edgeelement;
     int originalnodecount;
-    double volume;
+    float volume;
   };
 
   class grains
   {
    public:
-    void set_centroid(double xcenter, double ycenter, double zcenter)
+    void set_centroid(float xcenter, float ycenter, float zcenter)
     {
       xcentroid = xcenter;
       ycentroid = ycenter;
@@ -294,7 +294,7 @@ extern "C"
     {
       edgegrain = onedge;
     }
-    void set_bounds(double minx, double maxx, double miny, double maxy, double minz, double maxz)
+    void set_bounds(float minx, float maxx, float miny, float maxy, float minz, float maxz)
     {
       xmin = minx;
       xmax = maxx;
@@ -303,31 +303,31 @@ extern "C"
       zmin = minz;
       zmax = maxz;
     }
-    void set_mindist(double mindist)
+    void set_mindist(float mindist)
     {
       minimumdistance = mindist;
     }
-    void set_maxedgelength(double maxlength)
+    void set_maxedgelength(float maxlength)
     {
       maxedgelength = maxlength;
     }
-    void set_volume(double totalvol)
+    void set_volume(float totalvol)
     {
       volume = totalvol;
     }
-    double xcentroid;
-    double ycentroid;
-    double zcentroid;
+    float xcentroid;
+    float ycentroid;
+    float zcentroid;
     int edgegrain;
-    double xmin;
-    double xmax;
-    double ymin;
-    double ymax;
-    double zmin;
-    double zmax;
-    double minimumdistance;
-    double volume;
-    double maxedgelength;
+    float xmin;
+    float xmax;
+    float ymin;
+    float ymax;
+    float zmin;
+    float zmax;
+    float minimumdistance;
+    float volume;
+    float maxedgelength;
   };
 
 
@@ -336,8 +336,8 @@ extern "C"
 int MeshGenerator_Main(const std::string &readname1, const std::string &readname2,
                     const std::string &writename1, const std::string &writename1a,
                     const std::string &writename2, const std::string &writename3,
-                    double xDim, double yDim, double zDim,
-                    double xRes, double yRes, double zRes,
+                    float xDim, float yDim, float zDim,
+                    float xRes, float yRes, float zRes,
                     int numGrains);
 #endif
 

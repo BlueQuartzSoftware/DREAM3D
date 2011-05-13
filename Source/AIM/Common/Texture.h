@@ -128,7 +128,7 @@ class AIMCOMMON_EXPORT Texture
             if (addbin3 < 0) addbin3 = addbin3 + 18;
             if (addbin3 >= 18) addbin3 = addbin3 - 18;
             addbin = (addbin3 * 18 * 18) + (addbin2 * 18) + (addbin1);
-            dist = pow((jsqrd +ksqrd + lsqrd), 0.5);
+            dist = powf((jsqrd +ksqrd + lsqrd), 0.5);
             fraction = 1.0 - ((dist / sigmas[i]) * (dist / sigmas[i]));
             if (fraction > 0.0)
             {
@@ -228,7 +228,7 @@ class AIMCOMMON_EXPORT Texture
             if (addbin3 < 0) addbin3 = addbin3 + 12;
             if (addbin3 >= 12) addbin3 = addbin3 - 12;
             addbin = (addbin3 * 36 * 36) + (addbin2 * 36) + (addbin1);
-            dist = pow((j * j + k * k + l * l), 0.5);
+            dist = powf((j * j + k * k + l * l), 0.5);
             fraction = 1.0 - ((dist / sigmas[i]) * (dist / sigmas[i]));
             if (fraction > 0.0)
             {
@@ -327,7 +327,7 @@ class AIMCOMMON_EXPORT Texture
             if (addbin3 < 0) addbin3 = addbin3 + 36;
             if (addbin3 >= 36) addbin3 = addbin3 - 36;
             addbin = (addbin3 * 36 * 36) + (addbin2 * 36) + (addbin1);
-            dist = pow((j * j + k * k + l * l), 0.5);
+            dist = powf((j * j + k * k + l * l), 0.5);
             fraction = 1.0 - ((dist / sigmas[i]) * (dist / sigmas[i]));
             if (fraction > 0.0)
             {

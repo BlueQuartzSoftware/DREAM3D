@@ -134,7 +134,7 @@ float StatsGen::gamma(float value)
       ga *= r;
       if (value < 0.0)
       {
-        ga = -1 * m_pi / (value * ga * sin(m_pi * value));
+        ga = -1 * m_pi / (value * ga * sinf(m_pi * value));
       }
     }
   }

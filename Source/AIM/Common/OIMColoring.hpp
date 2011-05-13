@@ -149,12 +149,12 @@ class OIMColoring
       T d[3];
 
       // Calcuate all the values once
-      T cos_phi1 = cos(phi1);
-      T sin_phi1 = sin(phi1);
-      T cos_phi = cos(phi);
-      T sin_phi = sin(phi);
-      T cos_phi2 = cos(phi2);
-      T sin_phi2 = sin(phi2);
+      T cos_phi1 = cosf(phi1);
+      T sin_phi1 = sinf(phi1);
+      T cos_phi = cosf(phi);
+      T sin_phi = sinf(phi);
+      T cos_phi2 = cosf(phi2);
+      T sin_phi2 = sinf(phi2);
 
       // 1) find rotation matrix from Euler angles
       q1[0][0] = cos_phi1 * cos_phi2 - sin_phi1 * sin_phi2 * cos_phi;

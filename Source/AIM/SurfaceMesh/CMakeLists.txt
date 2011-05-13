@@ -41,6 +41,7 @@ set (SurfaceMesh_SRCS
 )
 set (SurfaceMesh_HDRS
     ${SurfaceMesh_SOURCE_DIR}/SurfaceMesh.h
+    ${SurfaceMesh_SOURCE_DIR}/SMVtkFileIO.h
 )
 cmp_IDE_SOURCE_PROPERTIES( "AIM/SurfaceMesh" "${SurfaceMesh_HDRS}" "${SurfaceMesh_SRCS}" ${PROJECT_INSTALL_HEADERS})
                       
