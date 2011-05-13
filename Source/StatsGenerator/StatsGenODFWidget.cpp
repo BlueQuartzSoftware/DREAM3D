@@ -320,12 +320,12 @@ void StatsGenODFWidget::on_m_CalculateODFBtn_clicked()
     return;
   }
 
-  QwtArray<double> x001d;
-  QwtArray<double> y001d;
-  QwtArray<double> x011d;
-  QwtArray<double> y011d;
-  QwtArray<double> x111d;
-  QwtArray<double> y111d;
+  QwtArray<double> x001d(size);
+  QwtArray<double> y001d(size);
+  QwtArray<double> x011d(size);
+  QwtArray<double> y011d(size);
+  QwtArray<double> x111d(size);
+  QwtArray<double> y111d(size);
   for(int i =0; i < size; ++i)
   {
     x001d[i] = x001[i];
