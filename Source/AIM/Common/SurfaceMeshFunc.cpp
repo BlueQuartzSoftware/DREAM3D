@@ -2664,9 +2664,9 @@ void SurfaceMeshFunc::arrange_grainnames(int numT, int zID)
   int i, j;
   int cnode;
   int csite, kind;
-  int tsite1, tsite2;
+  int tsite1[3], tsite2[3];
   int ngrainname1, ngrainname2;
-  int tgrainname1, tgrainname2;
+  int tgrainname1[3], tgrainname2[3];
   double cx, cy, cz;
   double xSum, ySum, zSum;
   double vcoord[3][3];
@@ -2678,13 +2678,19 @@ void SurfaceMeshFunc::arrange_grainnames(int numT, int zID)
   int locale;
   for (i = 0; i < numT; i++)
   { // for each triangle...
-    ngrainname1 = cTriangle[i].ngrainname[0];
-    ngrainname2 = cTriangle[i].ngrainname[1];
     xSum = 0.0;
     ySum = 0.0;
     zSum = 0.0;
+	ngrainname1 = cTriangle[i].ngrainname[0];
+	ngrainname2 = cTriangle[i].ngrainname[1];
+	cTriangle[i].ngrainname[0] = -1;
+	cTriangle[i].ngrainname[1] = -1;
     for (j = 0; j < 3; j++)
     { // for each node iNSide the triangle...
+	  tsite1[j] = -1;
+	  tsite2[j] = -1;
+	  tgrainname1[j] = -1;
+	  tgrainname2[j] = -1;
       cnode = cTriangle[i].node_id[j];
       csite = cnode / 7 + 1;
       kind = cnode % 7;
@@ -2696,24 +2702,24 @@ void SurfaceMeshFunc::arrange_grainnames(int numT, int zID)
       vcoord[j][2] = cVertex[cnode].zc;
       if (kind == 0)
       {
-        tsite1 = csite;
-        tsite2 = neigh[csite].neigh_id[1];
-        tgrainname1 = voxels[tsite1];
-        tgrainname2 = voxels[tsite2];
+        tsite1[j] = csite;
+        tsite2[j] = neigh[csite].neigh_id[1];
+        tgrainname1[j] = voxels[tsite1[j]];
+        tgrainname2[j] = voxels[tsite2[j]];
       }
       else if (kind == 1)
       {
-        tsite1 = csite;
-        tsite2 = neigh[csite].neigh_id[7];
-        tgrainname1 = voxels[tsite1];
-        tgrainname2 = voxels[tsite2];
+        tsite1[j] = csite;
+        tsite2[j] = neigh[csite].neigh_id[7];
+        tgrainname1[j] = voxels[tsite1[j]];
+        tgrainname2[j] = voxels[tsite2[j]];
       }
       else if (kind == 2)
       {
-        tsite1 = csite;
-        tsite2 = neigh[csite].neigh_id[18];
-        tgrainname1 = voxels[tsite1];
-        tgrainname2 = voxels[tsite2];
+        tsite1[j] = csite;
+        tsite2[j] = neigh[csite].neigh_id[18];
+        tgrainname1[j] = voxels[tsite1[j]];
+        tgrainname2[j] = voxels[tsite2[j]];
       }
     }
     // Getting the center of triangle...
@@ -2747,21 +2753,52 @@ void SurfaceMeshFunc::arrange_grainnames(int numT, int zID)
     cTriangle[i].area = 0.5 * length;
     // determine which way normal should point...
 	d = -(a*cx + b*cy + c*cz);
-	locale = tsite1+shift;
-	x = find_xcoord(locale);
-	y = find_ycoord(locale);
-	z = find_zcoord(locale);
-	sidecheck = (a*x + b*y + c*z + d);
-    if (sidecheck < 0.0)
+	for(int j = 0; j < 3; j++)
 	{
-      cTriangle[i].ngrainname[0] = tgrainname2;
-      cTriangle[i].ngrainname[1] = tgrainname1;
-    }
-    else if (sidecheck >= 0.0)
-    {
-      cTriangle[i].ngrainname[0] = tgrainname1;
-      cTriangle[i].ngrainname[1] = tgrainname2;
-    }
+		if(tsite1[j] != -1)
+		{
+			locale = tsite1[j]+shift;
+			x = find_xcoord(locale);
+			y = find_ycoord(locale);
+			z = find_zcoord(locale);
+			sidecheck = (a*x + b*y + c*z + d);
+			if((ngrainname1 == 2 && ngrainname2 == 545) || (ngrainname2 == 2 && ngrainname1 == 545))
+			{
+				int stop = 0;
+			}
+			if (sidecheck < -0.000001)
+			{
+			  cTriangle[i].ngrainname[0] = tgrainname2[j];
+			  cTriangle[i].ngrainname[1] = tgrainname1[j];
+			}
+			else if (sidecheck > 0.000001)
+			{
+			  cTriangle[i].ngrainname[0] = tgrainname1[j];
+			  cTriangle[i].ngrainname[1] = tgrainname2[j];
+			}
+		}
+	}
+	int k = 0;
+	while(cTriangle[i].ngrainname[0] == -1)
+	{
+		while(tsite1[k] == -1)
+		{
+			k++;
+		}
+		int testtsite = tsite1[k] + (a + b*xDim + c*NSP);
+		int gname = voxels[testtsite];
+		if(gname == tgrainname1[k])
+		{
+			  cTriangle[i].ngrainname[0] = tgrainname1[k];
+			  cTriangle[i].ngrainname[1] = tgrainname2[k];
+		}
+		if(gname == tgrainname2[k])
+		{
+			  cTriangle[i].ngrainname[0] = tgrainname2[k];
+			  cTriangle[i].ngrainname[1] = tgrainname1[k];
+		}
+		k++;
+	}
   }
 }
 int SurfaceMeshFunc::assign_nodeID(int nN)
