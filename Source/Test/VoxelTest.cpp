@@ -28,16 +28,16 @@
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include <iostream>
-#include "AIM/Common/Voxel.h"
+#include "AIM/Common/ReconstructionVoxel.h"
 #include <boost/shared_array.hpp>
 
 int main(int argc, char **argv)
 {
 std::cout << "Starting...." << std::endl;
 
-  boost::shared_array<Voxel> voxels (new Voxel[2]);
+  boost::shared_array<ReconstructionVoxel> voxels (new ReconstructionVoxel[2]);
   voxels.reset(NULL);
-  Voxel* v = &(voxels[1]);
+  ReconstructionVoxel* v = &(voxels[1]);
 
   std::cout << "Ending" << std::endl;
   return 0;

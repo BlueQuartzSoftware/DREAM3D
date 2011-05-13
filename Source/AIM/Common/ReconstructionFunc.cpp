@@ -142,7 +142,7 @@ void ReconstructionFunc::initialize(int nX, int nY, int nZ, double xRes, double 
     m_Grains[g] = Grain::New();
   }
 
-  voxels.reset(new Voxel[totalpoints]);
+  voxels.reset(new ReconstructionVoxel[totalpoints]);
 }
 
 void ReconstructionFunc::initializeQuats()
@@ -1518,7 +1518,7 @@ void ReconstructionFunc::fillin_sample()
   maxcol = 0;
   maxrow = 0;
   maxplane = 0;
-  boost::shared_array<Voxel> voxelstemp;
+  boost::shared_array<ReconstructionVoxel> voxelstemp;
 
   for (int k = 0; k < zpoints; ++k)
   {
@@ -1551,7 +1551,7 @@ void ReconstructionFunc::fillin_sample()
   sizez = (maxplane - minplane) * resz;
   if (newxpoints != xpoints || newypoints != ypoints || newzpoints != zpoints)
   {
-    voxelstemp.reset (new Voxel[(newxpoints * newypoints * newzpoints)] );
+    voxelstemp.reset (new ReconstructionVoxel[(newxpoints * newypoints * newzpoints)] );
     for (int k = minplane; k < maxplane + 1; ++k)
     {
       for (int j = minrow; j < maxrow + 1; ++j)
@@ -1575,7 +1575,7 @@ void ReconstructionFunc::fillin_sample()
     ypoints = newypoints;
     zpoints = newzpoints;
     totalpoints = (xpoints * ypoints * zpoints);
-    voxels.reset(new Voxel[totalpoints]);
+    voxels.reset(new ReconstructionVoxel[totalpoints]);
     for (int i = 0; i < totalpoints; i++)
     {
       voxels[i].deepCopy(&(voxelstemp[i]));

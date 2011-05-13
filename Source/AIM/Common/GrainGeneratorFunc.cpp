@@ -171,7 +171,7 @@ void GrainGeneratorFunc::initialize2()
   totalvol = ((xpoints-1)*resx)*((ypoints-1)*resy)*((zpoints-1)*resz);
   totalpoints = xpoints * ypoints * zpoints;
 
-  voxels = new Voxel[totalpoints];
+  voxels = new GrainGeneratorVoxel[totalpoints];
 }
 
 #define CHECK_STATS_READ_ERROR(err, group, dataset)\
@@ -1367,7 +1367,7 @@ int GrainGeneratorFunc::assign_voxels(int numgrains)
   zpoints = int((sizez/resz)+1);
   totalpoints = xpoints * ypoints * zpoints;
   delete [] voxels;
-  voxels = new Voxel[totalpoints];
+  voxels = new GrainGeneratorVoxel[totalpoints];
   int *gnames;
   gnames = new int[totalpoints];
   int *unassigned;
@@ -1910,7 +1910,7 @@ void GrainGeneratorFunc::read_structure(const std::string &filename)
     {
         in >> xpoints >> ypoints >> zpoints;
       totalpoints = xpoints * ypoints * zpoints;
-      voxels = new Voxel[totalpoints];
+      voxels = new GrainGeneratorVoxel[totalpoints];
       totalvol = double(totalpoints)*resx*resy*resz;
     }
     if(LOOKUP == word)

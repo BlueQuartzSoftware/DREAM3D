@@ -44,7 +44,7 @@
 //-- AIM Common Includes
 #include "AIM/ANG/AbstractAngDataLoader.h"
 #include "AIM/Common/AIMCommonConfiguration.h"
-#include "AIM/Common/Voxel.h"
+#include "AIM/Common/ReconstructionVoxel.h"
 
 
 
@@ -63,7 +63,7 @@ class AIMCOMMON_EXPORT H5AngDataLoader : public AbstractAngDataLoader
     MXA_INSTANCE_PROPERTY(bool, Cancel)
     MXA_INSTANCE_PROPERTY(Ang::Orientation, Orientation)
 
-    int loadData(Voxel voxels[], int xpoints, int ypoints, int zpoints);
+    int loadData(ReconstructionVoxel voxels[], int xpoints, int ypoints, int zpoints);
     int getSizeAndResolution(int &xpoints, int &ypoints, int &zpoints,
                              double &xres, double &yres, double &zres);
 
