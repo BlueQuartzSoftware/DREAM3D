@@ -179,7 +179,7 @@ std::vector<AngPhase::Pointer> H5AngDataLoader::getPhases()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5AngDataLoader::loadData(Voxel voxels[], int xpoints, int ypoints, int zpoints)
+int H5AngDataLoader::loadData(ReconstructionVoxel voxels[], int xpoints, int ypoints, int zpoints)
 {
   int index = 0;
   int err = -1;
@@ -231,7 +231,6 @@ int H5AngDataLoader::loadData(Voxel voxels[], int xpoints, int ypoints, int zpoi
         voxels[index].euler2 = euler2Ptr[readerIndex]; // Phi
         voxels[index].euler3 = euler3Ptr[readerIndex]; // Phi2
         voxels[index].imagequality = imqualPtr[readerIndex]; // Image Quality
-        voxels[index].imagequality2 = imqual2Ptr[readerIndex]; // Image Quality
         voxels[index].confidence = confPtr[readerIndex]; // Confidence
         voxels[index].phase = phasePtr[readerIndex]; // Phase
         /* For TSL OIM Files if there is a single phase then the value of the phase

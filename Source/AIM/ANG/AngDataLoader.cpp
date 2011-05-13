@@ -90,7 +90,7 @@ int AngDataLoader::getSizeAndResolution(int &xpoints, int &ypoints, int &zpoints
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int AngDataLoader::loadData(Voxel voxels[], int xpoints, int ypoints, int zpoints)
+int AngDataLoader::loadData(ReconstructionVoxel voxels[], int xpoints, int ypoints, int zpoints)
 {
   int index = 0;
   int err = -1;
@@ -150,7 +150,6 @@ int AngDataLoader::loadData(Voxel voxels[], int xpoints, int ypoints, int zpoint
         voxels[index].euler2 = euler2Ptr[readerIndex]; // Phi
         voxels[index].euler3 = euler3Ptr[readerIndex]; // Phi2
         voxels[index].imagequality = imqualPtr[readerIndex];// Image Quality
-        voxels[index].imagequality2 = imqual2Ptr[readerIndex];// Image Quality
         voxels[index].confidence = confPtr[readerIndex];// Confidence
         s = sin(0.5 * euler2Ptr[readerIndex]);
         c = cos(0.5 * euler2Ptr[readerIndex]);

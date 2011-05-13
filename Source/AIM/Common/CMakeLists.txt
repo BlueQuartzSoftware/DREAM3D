@@ -49,7 +49,8 @@ SET (AIMCommon_SRCS
     ${DREAM3D_SOURCE_DIR}/Source/AIM/Common/ReconstructionFunc.cpp
     ${DREAM3D_SOURCE_DIR}/Source/AIM/Common/ReconstructionVTKWriter.cpp
     ${DREAM3D_SOURCE_DIR}/Source/AIM/Common/Grain.cpp
-    ${DREAM3D_SOURCE_DIR}/Source/AIM/Common/Voxel.cpp
+    ${DREAM3D_SOURCE_DIR}/Source/AIM/Common/GrainGeneratorVoxel.cpp
+    ${DREAM3D_SOURCE_DIR}/Source/AIM/Common/ReconstructionVoxel.cpp
     ${DREAM3D_SOURCE_DIR}/Source/AIM/Common/Patch.cpp
     ${DREAM3D_SOURCE_DIR}/Source/AIM/Common/Face.cpp
     ${DREAM3D_SOURCE_DIR}/Source/AIM/Common/Node.cpp
@@ -75,7 +76,8 @@ SET (AIMCommon_HDRS
     ${DREAM3D_SOURCE_DIR}/Source/AIM/Common/ReconstructionFunc.h
     ${DREAM3D_SOURCE_DIR}/Source/AIM/Common/ReconstructionVTKWriter.h
     ${DREAM3D_SOURCE_DIR}/Source/AIM/Common/Grain.h
-    ${DREAM3D_SOURCE_DIR}/Source/AIM/Common/Voxel.h
+    ${DREAM3D_SOURCE_DIR}/Source/AIM/Common/GrainGeneratorVoxel.h
+    ${DREAM3D_SOURCE_DIR}/Source/AIM/Common/ReconstructionVoxel.h
     ${DREAM3D_SOURCE_DIR}/Source/AIM/Common/Patch.h
     ${DREAM3D_SOURCE_DIR}/Source/AIM/Common/Face.h
     ${DREAM3D_SOURCE_DIR}/Source/AIM/Common/Node.h

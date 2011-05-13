@@ -61,7 +61,7 @@
 #include "AIM/Common/AIMArray.hpp"
 #include "AIM/Common/Constants.h"
 #include "AIM/Common/Grain.h"
-#include "AIM/Common/Voxel.h"
+#include "AIM/Common/ReconstructionVoxel.h"
 #include "AIM/Common/AIMRandomNG.h"
 #include "AIM/Common/HDF5/H5ReconStatsWriter.h"
 #include "AIM/Common/OrientationMath.h"
@@ -118,7 +118,7 @@ class AIMCOMMON_EXPORT ReconstructionFunc
 
 
     AIMRandomNG rg;
-    boost::shared_array<Voxel> voxels;
+    boost::shared_array<ReconstructionVoxel> voxels;
 
     std::vector<Grain::Pointer> m_Grains;
 
