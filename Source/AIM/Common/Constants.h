@@ -104,6 +104,7 @@ namespace AIM
     const std::string Stats("Stats");
     const std::string PhaseFraction("PhaseFraction");
     const std::string CrystalStructure("CrystalStructure");
+    const std::string PhaseType("PhaseType");
     const std::string Grain_Diameter_Info("Grain_Diameter_Info");
     const std::string Grain_Size_Distribution("GrainSize Distribution");
     const std::string Grain_SizeVBoverA_Distributions("GrainSize Vs B Over A Distributions");
@@ -163,6 +164,14 @@ namespace AIM
         OrthoRhombic = 2,             //!< OrthoRhombic
         AxisOrthoRhombic = 3,            //!< AxisOrthoRhombic
         UnknownCrystalStructure = 999//!< UnknownCrystalStructure
+    };
+
+    enum PhaseType {
+      Primary = 0,              //!<
+      BoundaryPrecipitate = 1,  //!<
+      BulkPrecipitate = 2,      //!<
+      Transformation = 3,       //!<
+      UnknownPhaseType          //!<
     };
 
     enum AlignmentMethod {

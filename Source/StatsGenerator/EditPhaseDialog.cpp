@@ -87,6 +87,25 @@ void EditPhaseDialog::setPhaseFraction(double d)
   phaseFraction->setText(QString::number(d));
 }
 
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void EditPhaseDialog::setPhaseType(AIM::Reconstruction::PhaseType pt)
+{
+  phaseTypeCombo->setCurrentIndex(pt);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AIM::Reconstruction::PhaseType EditPhaseDialog::getPhaseType()
+{
+  int index = phaseTypeCombo->currentIndex();
+  return static_cast<AIM::Reconstruction::PhaseType>(index);
+}
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

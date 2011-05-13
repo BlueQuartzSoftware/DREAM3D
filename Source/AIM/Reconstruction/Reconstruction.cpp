@@ -182,10 +182,17 @@ void Reconstruction::compute()
 #endif
     return;
   }
-  std::vector<AIM::Reconstruction::CrystalStructure> m_CrystalStructure;
+
+  //FIXME: Mike Groeber: Take a look at this setup for the PhaseTypes. I am
+  // putting in UnknownTypes just to have something. You can change to suit
+  // your needs.
+  std::vector<AIM::Reconstruction::PhaseType> phaseTypes;
+  std::vector<AIM::Reconstruction::CrystalStructure> crystalStructures;
   std::vector<AngPhase::Pointer> phases = h5AngLoader->getPhases();
-  m_CrystalStructure.resize(phases.size()+1);
-  m_CrystalStructure[0] = AIM::Reconstruction::UnknownCrystalStructure;
+  crystalStructures.resize(phases.size()+1);
+  phaseTypes.resize(phases.size() + 1);
+  crystalStructures[0] = AIM::Reconstruction::UnknownCrystalStructure;
+  phaseTypes[0] = AIM::Reconstruction::UnknownPhaseType;
   for(size_t i=0;i<phases.size();i++)
   {
 	  int phaseID = phases[i]->getPhase();
@@ -193,7 +200,8 @@ void Reconstruction::compute()
 	  AIM::Reconstruction::CrystalStructure crystal_structure = AIM::Reconstruction::UnknownCrystalStructure;
 	  if(symmetry == TSL::OIM::CubicSymmetry) crystal_structure = AIM::Reconstruction::Cubic;
 	  else if(symmetry == TSL::OIM::HexagonalSymmetry) crystal_structure = AIM::Reconstruction::Hexagonal;
-	  m_CrystalStructure[phaseID] = crystal_structure;
+	  crystalStructures[phaseID] = crystal_structure;
+	  phaseTypes[phaseID] = AIM::Reconstruction::UnknownPhaseType;
   }
 
   if (err < 0)
@@ -207,8 +215,8 @@ void Reconstruction::compute()
   m->initialize(m->xpoints, m->ypoints, m->zpoints,
                 m->resx, m->resy, m->resz, m_MergeTwins, m_MergeColonies, m_MinAllowedGrainSize,
                 m_MinSeedConfidence, m_DownSampleFactor, m_MinSeedImageQuality,
-                m_MisorientationTolerance, m_SizeBinStepSize, m_CrystalStructure, m_AlignmentMethod,
-                m_AlreadyFormed);
+                m_MisorientationTolerance, m_SizeBinStepSize, crystalStructures, phaseTypes,
+                m_AlignmentMethod, m_AlreadyFormed);
   m_OutputDirectory = MXADir::toNativeSeparators(m_OutputDirectory);
 
   // Create a new HDF5 Results file by overwriting any HDF5 file that may be in the way
