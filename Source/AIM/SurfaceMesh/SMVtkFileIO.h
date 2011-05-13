@@ -51,7 +51,7 @@ class SurfaceMeshFunc;
  * @date Aug 13, 2010
  * @version 1.0
  */
-class AIMCOMMON_EXPORT SMVtkFileIO
+class SMVtkFileIO
 {
   public:
     SMVtkFileIO();

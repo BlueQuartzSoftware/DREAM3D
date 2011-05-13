@@ -34,12 +34,12 @@
 #include "AIM/Common/AIMMath.h"
 
 const static float m_pi = M_PI;
-static const float OrthoDim1InitValue = pow((0.75*((m_pi/2.0)-sin((m_pi/2.0)))),(1.0/3.0));
-static const float OrthoDim2InitValue = pow((0.75*((m_pi/2.0)-sin((m_pi/2.0)))),(1.0/3.0));
-static const float OrthoDim3InitValue = pow((0.75*((m_pi/2.0)-sin((m_pi/2.0)))),(1.0/3.0));
-static const float OrthoDim1StepValue = OrthoDim1InitValue/18.0;
-static const float OrthoDim2StepValue = OrthoDim1InitValue/18.0;
-static const float OrthoDim3StepValue = OrthoDim1InitValue/18.0;
+static const float OrthoDim1InitValue = powf((0.75*((m_pi/2.0)-sinf((m_pi/2.0)))),(1.0/3.0));
+static const float OrthoDim2InitValue = powf((0.75*((m_pi/2.0)-sinf((m_pi/2.0)))),(1.0/3.0));
+static const float OrthoDim3InitValue = powf((0.75*((m_pi/2.0)-sinf((m_pi/2.0)))),(1.0/3.0));
+static const float OrthoDim1StepValue = OrthoDim1InitValue/18.0f;
+static const float OrthoDim2StepValue = OrthoDim1InitValue/18.0f;
+static const float OrthoDim3StepValue = OrthoDim1InitValue/18.0f;
 
 
 static const float OrthoQuatSym[4][5] = {{0.000000000, 0.000000000, 0.000000000, 0.000000000, 1.000000000},
@@ -173,9 +173,9 @@ void OrthoRhombicOps::determineHomochoricValues( int choose, float &r1, float &r
   float step[3];
   float phi[3];
 
-  step[0] = OrthoDim1StepValue/2.0;
-  step[1] = OrthoDim2StepValue/2.0;
-  step[2] = OrthoDim3StepValue/2.0;
+  step[0] = OrthoDim1StepValue/2.0f;
+  step[1] = OrthoDim2StepValue/2.0f;
+  step[2] = OrthoDim3StepValue/2.0f;
   phi[0] = choose % 36;
   phi[1] = (choose / 36) % 36;
   phi[2] = choose / (36 * 36);
@@ -191,9 +191,9 @@ int OrthoRhombicOps::getOdfBin(float r1, float r2, float r3)
   dim[0] = OrthoDim1InitValue;
   dim[1] = OrthoDim2InitValue;
   dim[2] = OrthoDim3InitValue;
-  bins[0] = 36.0;
-  bins[1] = 36.0;
-  bins[2] = 36.0;
+  bins[0] = 36.0f;
+  bins[1] = 36.0f;
+  bins[2] = 36.0f;
 
   return _calcODFBin(dim, bins, r1, r2, r3);
 }
