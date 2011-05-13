@@ -29,24 +29,21 @@
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "Voxel.h"
+#include "ReconstructionVoxel.h"
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-Voxel::Voxel() :
+ReconstructionVoxel::ReconstructionVoxel() :
 grainname(0),
 confidence(0.0),
 imagequality(0.0),
-imagequality2(0.0),
-ellipfunc(0.0),
 alreadychecked(0),
 euler1(-1.0),
 euler2(-1.0),
 euler3(-1.0),
 phase(0),
 neighbor(-1),
-numowners(0),
 grainmisorientation(0.0),
 misorientationgradient(0.0),
 kernelmisorientation(0.0),
@@ -56,15 +53,13 @@ unassigned(0)
   nearestneighbor[0] = 0; nearestneighbor[1] = 0; nearestneighbor[2] = 0;
   nearestneighbordistance[0] = 0.0; nearestneighbordistance[1] = 0.0; nearestneighbordistance[2] = 0.0;
   quat[0] = 1.0; quat[1] = 0.0; quat[2] = 0.0; quat[3] = 0.0; quat[4] = 0.0;
-  grainlist = IntVectorType(new std::vector<int>(0) );
-  ellipfunclist = DoubleVectorType(new std::vector<double>(0) );
   neighborlist = IntVectorType(new std::vector<int>(0) );
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-Voxel::~Voxel()
+ReconstructionVoxel::~ReconstructionVoxel()
 {
 #if 0
   if (NULL != grainlist) { delete grainlist; grainlist = NULL;}
@@ -77,34 +72,29 @@ Voxel::~Voxel()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void Voxel::deepCopy(Voxel* voxel)
+void ReconstructionVoxel::deepCopy(ReconstructionVoxel* reconstructionvoxel)
 {
-  if (voxel == this) { return; } // The pointers are the same just return
+  if (reconstructionvoxel == this) { return; } // The pointers are the same just return
 
-   grainname = voxel->grainname;
-   confidence = voxel->confidence;
-   imagequality = voxel->imagequality;
-   imagequality2 = voxel->imagequality2;
-   ellipfunc = voxel->ellipfunc;
-   alreadychecked = voxel->alreadychecked;
-   COPY_ARRAY_3(nearestneighbor, voxel);
+   grainname = reconstructionvoxel->grainname;
+   confidence = reconstructionvoxel->confidence;
+   imagequality = reconstructionvoxel->imagequality;
+   alreadychecked = reconstructionvoxel->alreadychecked;
+   COPY_ARRAY_3(nearestneighbor, reconstructionvoxel);
 
-   COPY_ARRAY_3(nearestneighbordistance, voxel);
-   euler1 = voxel->euler1;
-   euler2 = voxel->euler2;
-   euler3 = voxel->euler3;
-   neighbor = voxel->neighbor;
-   numowners = voxel->numowners;
-   grainmisorientation = voxel->grainmisorientation;
-   misorientationgradient = voxel->misorientationgradient;
-   kernelmisorientation = voxel->kernelmisorientation;
-   surfacevoxel = voxel->surfacevoxel;
-   unassigned = voxel->unassigned;
+   COPY_ARRAY_3(nearestneighbordistance, reconstructionvoxel);
+   euler1 = reconstructionvoxel->euler1;
+   euler2 = reconstructionvoxel->euler2;
+   euler3 = reconstructionvoxel->euler3;
+   neighbor = reconstructionvoxel->neighbor;
+   grainmisorientation = reconstructionvoxel->grainmisorientation;
+   misorientationgradient = reconstructionvoxel->misorientationgradient;
+   kernelmisorientation = reconstructionvoxel->kernelmisorientation;
+   surfacevoxel = reconstructionvoxel->surfacevoxel;
+   unassigned = reconstructionvoxel->unassigned;
 
-   COPY_ARRAY_5(quat, voxel);
-   DEEP_COPY_SHARED_VECTOR(grainlist, voxel, IntVectorType, int)
-   DEEP_COPY_SHARED_VECTOR(ellipfunclist, voxel, DoubleVectorType, double)
-   DEEP_COPY_SHARED_VECTOR(neighborlist, voxel, IntVectorType, int)
+   COPY_ARRAY_5(quat, reconstructionvoxel);
+   DEEP_COPY_SHARED_VECTOR(neighborlist, reconstructionvoxel, IntVectorType, int)
 
 }
 
