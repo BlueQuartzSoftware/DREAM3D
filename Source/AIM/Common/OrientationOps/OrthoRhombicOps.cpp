@@ -33,21 +33,21 @@
 // to expose some of the constants needed below
 #include "AIM/Common/AIMMath.h"
 
-const static double m_pi = M_PI;
-static const double OrthoDim1InitValue = pow((0.75*((m_pi/2.0)-sin((m_pi/2.0)))),(1.0/3.0));
-static const double OrthoDim2InitValue = pow((0.75*((m_pi/2.0)-sin((m_pi/2.0)))),(1.0/3.0));
-static const double OrthoDim3InitValue = pow((0.75*((m_pi/2.0)-sin((m_pi/2.0)))),(1.0/3.0));
-static const double OrthoDim1StepValue = OrthoDim1InitValue/18.0;
-static const double OrthoDim2StepValue = OrthoDim1InitValue/18.0;
-static const double OrthoDim3StepValue = OrthoDim1InitValue/18.0;
+const static float m_pi = M_PI;
+static const float OrthoDim1InitValue = powf((0.75*((m_pi/2.0)-sinf((m_pi/2.0)))),(1.0/3.0));
+static const float OrthoDim2InitValue = powf((0.75*((m_pi/2.0)-sinf((m_pi/2.0)))),(1.0/3.0));
+static const float OrthoDim3InitValue = powf((0.75*((m_pi/2.0)-sinf((m_pi/2.0)))),(1.0/3.0));
+static const float OrthoDim1StepValue = OrthoDim1InitValue/18.0f;
+static const float OrthoDim2StepValue = OrthoDim1InitValue/18.0f;
+static const float OrthoDim3StepValue = OrthoDim1InitValue/18.0f;
 
 
-static const double OrthoQuatSym[4][5] = {{0.000000000, 0.000000000, 0.000000000, 0.000000000, 1.000000000},
+static const float OrthoQuatSym[4][5] = {{0.000000000, 0.000000000, 0.000000000, 0.000000000, 1.000000000},
                    {0.000000000, 1.000000000, 0.000000000, 0.000000000, 0.000000000},
                    {0.000000000, 0.000000000, 1.000000000, 0.000000000, 0.000000000},
                    {0.000000000, 0.000000000, 0.000000000, 1.000000000, 0.000000000}};
 
-static const double OrthoRodSym[4][3] = {{0,0,0},
+static const float OrthoRodSym[4][3] = {{0,0,0},
                   {10000000000.0, 0, 0},
                   {0, 10000000000.0, 0},
                   {0, 0, 10000000000.0}};
@@ -66,10 +66,10 @@ OrthoRhombicOps::~OrthoRhombicOps()
   // TODO Auto-generated destructor stub
 }
 
-double OrthoRhombicOps::getMisoQuat( double q1[5],double q2[5],double &n1,double &n2,double &n3)
+float OrthoRhombicOps::getMisoQuat( float q1[5],float q2[5],float &n1,float &n2,float &n3)
 {
   int numsym = 0;
-  double quatsym[24][5];
+  float quatsym[24][5];
 
   numsym = 4;
   for(int i=0;i<4;i++)
@@ -84,9 +84,9 @@ double OrthoRhombicOps::getMisoQuat( double q1[5],double q2[5],double &n1,double
 }
 
 
-void OrthoRhombicOps::getFZRod(double &r1,double &r2, double &r3)
+void OrthoRhombicOps::getFZRod(float &r1,float &r2, float &r3)
 {
-  double rodsym[24][3];
+  float rodsym[24][3];
   int numsym;
   numsym = 4;
   for(int i=0;i<4;i++)
@@ -99,10 +99,10 @@ void OrthoRhombicOps::getFZRod(double &r1,double &r2, double &r3)
   _calcFZRod(rodsym, numsym, r1, r2, r3);
 }
 
-void OrthoRhombicOps::getNearestQuat( double *q1, double *q2)
+void OrthoRhombicOps::getNearestQuat( float *q1, float *q2)
 {
   int numsym = 0;
-  double quatsym[24][5];
+  float quatsym[24][5];
 
   numsym = 4;
   for (int i = 0; i < 4; i++)
@@ -116,10 +116,10 @@ void OrthoRhombicOps::getNearestQuat( double *q1, double *q2)
   _calcNearestQuat(quatsym, numsym, q1, q2);
 }
 
-void OrthoRhombicOps::getFZQuat(double *qr)
+void OrthoRhombicOps::getFZQuat(float *qr)
 {
   int numsym = 0;
-  double quatsym[24][5];
+  float quatsym[24][5];
   numsym = 4;
   for(int i=0;i<4;i++)
   {
@@ -132,10 +132,10 @@ void OrthoRhombicOps::getFZQuat(double *qr)
 
 }
 
-int OrthoRhombicOps::getMisoBin(double n1, double n2, double n3)
+int OrthoRhombicOps::getMisoBin(float n1, float n2, float n3)
 {
-  double dim[3];
-  double bins[3];
+  float dim[3];
+  float bins[3];
 
   dim[0] = OrthoDim1InitValue;
   dim[1] = OrthoDim2InitValue;
@@ -147,11 +147,11 @@ int OrthoRhombicOps::getMisoBin(double n1, double n2, double n3)
   return _calcMisoBin(dim, bins, n1, n2, n3);
 }
 
-void OrthoRhombicOps::determineEulerAngles(int choose, double &synea1, double &synea2, double &synea3)
+void OrthoRhombicOps::determineEulerAngles(int choose, float &synea1, float &synea2, float &synea3)
 {
-  double init[3];
-  double step[3];
-  double phi[3];
+  float init[3];
+  float step[3];
+  float phi[3];
 
   init[0] = OrthoDim1InitValue;
   init[1] = OrthoDim2InitValue;
@@ -167,15 +167,15 @@ void OrthoRhombicOps::determineEulerAngles(int choose, double &synea1, double &s
 }
 
 
-void OrthoRhombicOps::determineHomochoricValues( int choose, double &r1, double &r2, double &r3)
+void OrthoRhombicOps::determineHomochoricValues( int choose, float &r1, float &r2, float &r3)
 {
-  //double init1, init2, init3;
-  double step[3];
-  double phi[3];
+  //float init1, init2, init3;
+  float step[3];
+  float phi[3];
 
-  step[0] = OrthoDim1StepValue/2.0;
-  step[1] = OrthoDim2StepValue/2.0;
-  step[2] = OrthoDim3StepValue/2.0;
+  step[0] = OrthoDim1StepValue/2.0f;
+  step[1] = OrthoDim2StepValue/2.0f;
+  step[2] = OrthoDim3StepValue/2.0f;
   phi[0] = choose % 36;
   phi[1] = (choose / 36) % 36;
   phi[2] = choose / (36 * 36);
@@ -183,17 +183,17 @@ void OrthoRhombicOps::determineHomochoricValues( int choose, double &r1, double 
   return _calcDetermineHomochoricValues(step, phi, choose, r1, r2, r3);
 }
 
-int OrthoRhombicOps::getOdfBin(double r1, double r2, double r3)
+int OrthoRhombicOps::getOdfBin(float r1, float r2, float r3)
 {
-  double dim[3];
-  double bins[3];
+  float dim[3];
+  float bins[3];
 
   dim[0] = OrthoDim1InitValue;
   dim[1] = OrthoDim2InitValue;
   dim[2] = OrthoDim3InitValue;
-  bins[0] = 36.0;
-  bins[1] = 36.0;
-  bins[2] = 36.0;
+  bins[0] = 36.0f;
+  bins[1] = 36.0f;
+  bins[2] = 36.0f;
 
   return _calcODFBin(dim, bins, r1, r2, r3);
 }

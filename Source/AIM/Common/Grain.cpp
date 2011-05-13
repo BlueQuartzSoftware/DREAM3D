@@ -82,11 +82,11 @@ radius3(0.0),
 lowanglefraction(0.0)
 {
   neighborlist = IntVectorType(new std::vector<int>(0) );
-  neighborsurfarealist = DoubleVectorType(new std::vector<double>(0) );
+  neighborsurfarealist = FloatVectorType(new std::vector<float>(0) );
 
   voxellist = NULL; //new std::vector<int>;
-  ellipfunclist = NULL; //new std::vector<double>;
-  misorientationlist = NULL; //new std::vector<double>;
+  ellipfunclist = NULL; //new std::vector<float>;
+  misorientationlist = NULL; //new std::vector<float>;
 
 }
 
@@ -147,7 +147,7 @@ void Grain::deepCopy(Grain::Pointer grain)
 
   // These are shared pointers
   DEEP_COPY_SHARED_VECTOR(neighborlist, grain, IntVectorType, int)
-  DEEP_COPY_SHARED_VECTOR(neighborsurfarealist, grain, DoubleVectorType, double)
+  DEEP_COPY_SHARED_VECTOR(neighborsurfarealist, grain, FloatVectorType, float)
 
   // These are Normal pointers
   if (NULL != voxellist)
@@ -171,12 +171,12 @@ void Grain::deepCopy(Grain::Pointer grain)
 
   if (NULL != grain->ellipfunclist)
   {
-    ellipfunclist = new std::vector<double>(0);
+    ellipfunclist = new std::vector<float>(0);
     ellipfunclist->assign(grain->ellipfunclist->begin(), grain->ellipfunclist->end());
   }
   if (NULL != grain->misorientationlist)
   {
-    misorientationlist = new std::vector<double>(0);
+    misorientationlist = new std::vector<float>(0);
     misorientationlist->assign(grain->misorientationlist->begin(), grain->misorientationlist->end());
   }
 }
@@ -266,9 +266,9 @@ Grain::Grain(const Grain& grain)
 
   neighborlist = NULL; //new std::vector<int>;
   voxellist = NULL; //new std::vector<int>;
-  ellipfunclist = NULL; //new std::vector<double>;
-  misorientationlist = NULL; //new std::vector<double>;
-  neighborsurfarealist = NULL; //new std::vector<double>;
+  ellipfunclist = NULL; //new std::vector<float>;
+  misorientationlist = NULL; //new std::vector<float>;
+  neighborsurfarealist = NULL; //new std::vector<float>;
 
   if (NULL != grain.neighborlist)
   {
@@ -284,18 +284,18 @@ Grain::Grain(const Grain& grain)
 
   if (NULL != grain.ellipfunclist)
   {
-    ellipfunclist = new std::vector<double >;
+    ellipfunclist = new std::vector<float >;
     ellipfunclist->assign(grain.ellipfunclist->begin(), grain.ellipfunclist->end());
   }
   if (NULL != grain.misorientationlist)
   {
-    misorientationlist = new std::vector<double >;
+    misorientationlist = new std::vector<float >;
     misorientationlist->assign(grain.misorientationlist->begin(), grain.misorientationlist->end());
   }
 
   if (NULL != grain.neighborsurfarealist)
   {
-    neighborsurfarealist = new std::vector<double >;
+    neighborsurfarealist = new std::vector<float >;
     neighborsurfarealist->assign(grain.neighborsurfarealist->begin(), grain.neighborsurfarealist->end());
   }
 }
@@ -372,9 +372,9 @@ Grain& Grain::operator=(const Grain& grain)
 
   neighborlist = NULL; //new std::vector<int>;
   voxellist = NULL; //new std::vector<int>;
-  ellipfunclist = NULL; //new std::vector<double>;
-  misorientationlist = NULL; //new std::vector<double>;
-  neighborsurfarealist = NULL; //new std::vector<double>;
+  ellipfunclist = NULL; //new std::vector<float>;
+  misorientationlist = NULL; //new std::vector<float>;
+  neighborsurfarealist = NULL; //new std::vector<float>;
 
   if (NULL != grain.neighborlist)
   {
@@ -390,18 +390,18 @@ Grain& Grain::operator=(const Grain& grain)
 
   if (NULL != grain.ellipfunclist)
   {
-    ellipfunclist = new std::vector<double >;
+    ellipfunclist = new std::vector<float >;
     ellipfunclist->assign(grain.ellipfunclist->begin(), grain.ellipfunclist->end());
   }
   if (NULL != grain.misorientationlist)
   {
-    misorientationlist = new std::vector<double >;
+    misorientationlist = new std::vector<float >;
     misorientationlist->assign(grain.misorientationlist->begin(), grain.misorientationlist->end());
   }
 
   if (NULL != grain.neighborsurfarealist)
   {
-    neighborsurfarealist = new std::vector<double >;
+    neighborsurfarealist = new std::vector<float >;
     neighborsurfarealist->assign(grain.neighborsurfarealist->begin(), grain.neighborsurfarealist->end());
   }
   }

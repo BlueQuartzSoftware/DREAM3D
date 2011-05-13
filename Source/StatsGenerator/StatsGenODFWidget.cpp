@@ -81,7 +81,7 @@ StatsGenODFWidget::~StatsGenODFWidget()
 //
 // -----------------------------------------------------------------------------
 int StatsGenODFWidget::readDataFromHDF5(H5ReconStatsReader::Pointer reader,
-                                         QVector<double>  &bins,
+                                         QVector<float>  &bins,
                                          const std::string &hdf5GroupName)
 {
   int err = -1;
@@ -95,14 +95,14 @@ int StatsGenODFWidget::readDataFromHDF5(H5ReconStatsReader::Pointer reader,
 int StatsGenODFWidget::writeDataToHDF5(H5ReconStatsWriter::Pointer writer)
 {
   int err = 0;
-  double totalWeight = 0.0;
+  float totalWeight = 0.0;
 
-  QwtArray<double> e1s;
-  QwtArray<double> e2s;
-  QwtArray<double> e3s;
-  QwtArray<double> weights;
-  QwtArray<double> sigmas;
-  QwtArray<double> odf;
+  QwtArray<float> e1s;
+  QwtArray<float> e2s;
+  QwtArray<float> e3s;
+  QwtArray<float> weights;
+  QwtArray<float> sigmas;
+  QwtArray<float> odf;
 
   // Initialize xMax and yMax....
   e1s = m_ODFTableModel->getData(SGODFTableModel::Euler1);
@@ -121,7 +121,7 @@ int StatsGenODFWidget::writeDataToHDF5(H5ReconStatsWriter::Pointer writer)
   }
   if (odf.size() > 0)
   {
-    double* odfPtr = &(odf.front());
+    float* odfPtr = &(odf.front());
     err = -1;
     if (odfPtr != NULL)
     {
@@ -273,19 +273,19 @@ void StatsGenODFWidget::on_m_CalculateODFBtn_clicked()
 {
   int err = 0;
  // std::cout << "StatsGenODFWidget[" << objectName().toStdString() << "]::on_m_CalculateODFBtn_clicked" << std::endl;
-  QwtArray<double> x001;
-  QwtArray<double> y001;
-  QwtArray<double> x011;
-  QwtArray<double> y011;
-  QwtArray<double> x111;
-  QwtArray<double> y111;
+  QwtArray<float> x001;
+  QwtArray<float> y001;
+  QwtArray<float> x011;
+  QwtArray<float> y011;
+  QwtArray<float> x111;
+  QwtArray<float> y111;
 
-  QwtArray<double> e1s;
-  QwtArray<double> e2s;
-  QwtArray<double> e3s;
-  QwtArray<double> weights;
-  QwtArray<double> sigmas;
-  QwtArray<double> odf;
+  QwtArray<float> e1s;
+  QwtArray<float> e2s;
+  QwtArray<float> e3s;
+  QwtArray<float> weights;
+  QwtArray<float> sigmas;
+  QwtArray<float> odf;
 
 
   e1s = m_ODFTableModel->getData(SGODFTableModel::Euler1);
@@ -302,14 +302,14 @@ void StatsGenODFWidget::on_m_CalculateODFBtn_clicked()
   if (m_CrystalStructure == AIM::Reconstruction::Cubic)
   {
     static const size_t eighteenCubed = 5832;
-    double totalweight = 0;
+    float totalweight = 0;
     odf.resize(eighteenCubed);
     Texture::calculateCubicODFData(e1s, e2s, e3s, weights, sigmas, true, odf, totalweight);
     err = sg.GenCubicODFPlotData(odf, x001, y001, x011, y011, x111, y111, size);
   }
   else if (m_CrystalStructure == AIM::Reconstruction::Hexagonal) {
     static const size_t odfsize = 15552;
-    double totalweight = 0;
+    float totalweight = 0;
     odf.resize(odfsize);
     Texture::calculateHexODFData(e1s, e2s, e3s, weights, sigmas, true, odf, totalweight);
     err = sg.GenHexODFPlotData(odf, x001, y001, x011, y011, x111, y111, size);
@@ -320,20 +320,36 @@ void StatsGenODFWidget::on_m_CalculateODFBtn_clicked()
     return;
   }
 
+  QwtArray<double> x001d;
+  QwtArray<double> y001d;
+  QwtArray<double> x011d;
+  QwtArray<double> y011d;
+  QwtArray<double> x111d;
+  QwtArray<double> y111d;
+  for(int i =0; i < size; ++i)
+  {
+    x001d[i] = x001[i];
+    y001d[i] = y001[i];
+    x011d[i] = x011[i];
+    y011d[i] = y011[i];
+    x111d[i] = x111[i];
+    x111d[i] = x111[i];
+  }
+
   QwtPlotCurve* curve = m_PlotCurves[0];
-  curve->setData(x001, y001);
+  curve->setData(x001d, y001d);
   curve->setStyle(QwtPlotCurve::Dots);
   curve->attach(m_ODF_001Plot);
   m_ODF_001Plot->replot();
 
   curve = m_PlotCurves[1];
-  curve->setData(x011, y011);
+  curve->setData(x011d, y011d);
   curve->setStyle(QwtPlotCurve::Dots);
   curve->attach(m_ODF_011Plot);
   m_ODF_011Plot->replot();
 
   curve = m_PlotCurves[2];
-  curve->setData(x111, y111);
+  curve->setData(x111d, y111d);
   curve->setStyle(QwtPlotCurve::Dots);
   curve->attach(m_ODF_111Plot);
   m_ODF_111Plot->replot();
@@ -359,11 +375,11 @@ void StatsGenODFWidget::on_addODFTextureBtn_clicked()
   {
     if (!m_ODFTableModel->insertRow(m_ODFTableModel->rowCount())) return;
     // Gather values from the dialog and push them to the Table Model
-    double e1 = 0.0;
-    double e2 = 0.0;
-    double e3 = 0.0;
-    double weight = 1.0;
-    double sigma = 1.0;
+    float e1 = 0.0;
+    float e2 = 0.0;
+    float e3 = 0.0;
+    float weight = 1.0;
+    float sigma = 1.0;
 
     t.getODFEntry(e1, e2, e3, weight, sigma);
     int row = m_ODFTableModel->rowCount() - 1;
