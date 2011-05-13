@@ -109,12 +109,12 @@ public:
   int xDim;
   int yDim;
   int zDim;
-  double xRes;
-  double yRes;
-  double zRes;
-  double xOrigin;
-  double yOrigin;
-  double zOrigin;
+  float xRes;
+  float yRes;
+  float zRes;
+  float xOrigin;
+  float yOrigin;
+  float zOrigin;
   Neighbor* neigh; // contains nearest neighbor information...
   int* voxels; // contains voxel information...
   Face* cSquare; // contains square information...
@@ -147,9 +147,9 @@ public:
   void arrange_grainnames(int numT, int zID);
   int assign_nodeID(int nN);
   void update_current_triangles(int nT);
-  double find_xcoord(long);
-  double find_ycoord(long);
-  double find_zcoord(long);
+  float find_xcoord(int);
+  float find_ycoord(int);
+  float find_zcoord(int);
   void smooth_boundaries(int nNodes, int nTriangles, string NodesFile, string TrianglesFile);
   void writeNodesFile(int zID, int cNodeID, const std::string &NodesRawFile);
   int writeTrianglesFile(int zID, int ctid,
