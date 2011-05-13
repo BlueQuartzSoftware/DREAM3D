@@ -47,7 +47,9 @@ class AIMCOMMON_EXPORT OrthoRhombicOps : public OrientationMath
   public:
     MXA_SHARED_POINTERS(OrthoRhombicOps)
     MXA_TYPE_MACRO(OrthoRhombicOps)
-    MXA_STATIC_NEW_SUPERCLASS(OrientationMath, OrthoRhombicOps)
+ //   MXA_STATIC_NEW_SUPERCLASS(OrientationMath, OrthoRhombicOps)
+    MXA_STATIC_NEW_MACRO(OrthoRhombicOps)
+
 
     OrthoRhombicOps();
     virtual ~OrthoRhombicOps();

@@ -96,13 +96,13 @@ class AIMCOMMON_EXPORT OrientationMath
   protected:
     OrientationMath();
 
-    float _calcMisoQuat(float quatsym[24][5], int numsym,
+    float _calcMisoQuat(const float quatsym[24][5], int numsym,
                   float q1[5], float q2[5],
                   float &n1, float &n2, float &n3);
 
-    void _calcFZRod(float rodsym[24][3], int numsym, float &r1,float &r2, float &r3);
-    void _calcNearestQuat(float quatsym[24][5], int numsym, float *q1, float *q2);
-    void _calcFZQuat(float quatsym[24][5], int numsym, float *qr);
+    void _calcFZRod(const float rodsym[24][3], int numsym, float &r1,float &r2, float &r3);
+    void _calcNearestQuat(const float quatsym[24][5], int numsym, float *q1, float *q2);
+    void _calcFZQuat(const float quatsym[24][5], int numsym, float *qr);
 
     int _calcMisoBin(float dim[3], float bins[3], float n1, float n2, float n3);
     void _calcDetermineEulerAngles(float init[3], float step[3], float phi[3],
