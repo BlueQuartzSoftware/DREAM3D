@@ -3263,20 +3263,23 @@ void ReconstructionFunc::find_eulerodf(H5ReconStatsWriter::Pointer h5io)
   float **eulerodf;
 
   eulerodf = new float *[crystruct.size()];
-  for(size_t i=1;i<crystruct.size();i++)
+  unsigned long long dims = 0;
+  for(unsigned long long i=1;i<crystruct.size();i++)
   {
 	  if (crystruct[i] == AIM::Reconstruction::Hexagonal)
 	  {
-	    eulerodf[i] = new float[36 * 36 * 12];
-	    for (int j = 0; j < 36 * 36 * 12; j++)
+	    dims = 36 * 36 * 12;
+	    eulerodf[i] = new float[dims];
+	    for (unsigned long long j = 0; j < dims; j++)
 	    {
 	      eulerodf[i][j] = 0.0;
 	    }
 	  }
 	  else if (crystruct[i] == AIM::Reconstruction::Cubic)
 	  {
-		  eulerodf[i] = new float[18 * 18 * 18];
-		  for (int j = 0; j < 18 * 18 * 18; j++)
+	    dims = 18 * 18 * 18;
+		  eulerodf[i] = new float[dims];
+		  for (unsigned long long j = 0; j < dims; j++)
 		  {
 			eulerodf[i][j] = 0.0;
 		  }
@@ -3289,19 +3292,19 @@ void ReconstructionFunc::find_eulerodf(H5ReconStatsWriter::Pointer h5io)
     if (m_Grains[i]->surfacegrain == 0 && m_Grains[i]->active == 1)
     {
       float vol = m_Grains[i]->volume;
-	  ea1 = m_Grains[i]->euler1;
-	  ea2 = m_Grains[i]->euler2;
-	  ea3 = m_Grains[i]->euler3;
+      ea1 = m_Grains[i]->euler1;
+      ea2 = m_Grains[i]->euler2;
+      ea3 = m_Grains[i]->euler3;
       phase = crystruct[m_Grains[i]->phase];
-	  OrientationMath::eulertoRod(r1,r2,r3,ea1,ea2,ea3);
-      bin = m_OrientationOps[phase]->getOdfBin(r1,r2,r3);
-      eulerodf[m_Grains[i]->phase][bin] = eulerodf[m_Grains[i]->phase][bin] + (vol/totalvol[m_Grains[i]->phase]);
+      OrientationMath::eulertoRod(r1, r2, r3, ea1, ea2, ea3);
+      bin = m_OrientationOps[phase]->getOdfBin(r1, r2, r3);
+      eulerodf[m_Grains[i]->phase][bin] = eulerodf[m_Grains[i]->phase][bin] + (vol / totalvol[m_Grains[i]->phase]);
     }
   }
   int err;
   for(size_t i=1;i<crystruct.size();i++)
   {
-	  err = h5io->writeODFData(i, crystruct[i], eulerodf[i]);
+	  err = h5io->writeODFData(i, &dims, eulerodf[i]);
 	  delete[] eulerodf[i];
   }
   delete[] eulerodf;

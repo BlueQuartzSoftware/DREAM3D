@@ -2434,7 +2434,8 @@ void GrainGeneratorFunc::matchCrystallography(const std::string &ErrorFile, H5Re
 	  }
 	  outFile.close();
 	  int err;
-	  err = h5io->writeODFData(iter, crystruct[iter], simodf[iter].get());
+	  unsigned long long int dims = numbins;
+	  err = h5io->writeODFData(iter, &dims, simodf[iter].get());
 	  err = h5io->writeMisorientationBinsData(iter, crystruct[iter], simmdf[iter].get());
   }
 }
