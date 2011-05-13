@@ -125,7 +125,8 @@ int StatsGenODFWidget::writeDataToHDF5(H5ReconStatsWriter::Pointer writer)
     err = -1;
     if (odfPtr != NULL)
     {
-      err = writer->writeODFData(m_PhaseIndex, m_CrystalStructure, odfPtr);
+      unsigned long long int dims = odf.size();
+      err = writer->writeODFData(m_PhaseIndex, &dims, odfPtr);
     }
   }
   // Write the MDF Data if we have that functionality enabled

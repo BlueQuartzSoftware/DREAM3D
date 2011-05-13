@@ -72,7 +72,9 @@ class AIMCOMMON_EXPORT H5ReconStatsWriter
     int writeAxisOrientationData(int phase, float* axisodf, float totalaxes);
     int writeMicroTextureData(int phase, float* microbin, size_t nElements, float actualgrains);
     int writeMisorientationBinsData(int phase, AIM::Reconstruction::CrystalStructure crystruct, float* misobins);
-    int writeODFData(int phase, AIM::Reconstruction::CrystalStructure crystruct, float* eulerodf);
+    int writeODFData(int phase,
+                     unsigned long long* dims,
+                     float* eulerodf);
 
 
     std::vector<float> generateBins(int phase, float maxDiameter, float minDiameter, float diameterStep);
