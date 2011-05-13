@@ -253,16 +253,16 @@ bool SGPowerLawTableModel::setData(const QModelIndex & index, const QVariant & v
   switch(col)
   {
     case BinNumber:
-      m_BinNumbers[row] = value.toDouble(&ok);
+      m_BinNumbers[row] = value.toFloat(&ok);
       break;
     case Alpha:
-      m_Alpha[row] = value.toDouble(&ok);
+      m_Alpha[row] = value.toFloat(&ok);
       break;
     case K:
-      m_K[row] = value.toDouble(&ok);
+      m_K[row] = value.toFloat(&ok);
       break;
     case Beta:
-      m_Beta[row] = value.toDouble(&ok);
+      m_Beta[row] = value.toFloat(&ok);
       break;
     case LineColor:
       m_Colors[row] = value.toString();
