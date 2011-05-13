@@ -57,9 +57,12 @@ class SGWidget : public QWidget, private Ui::SGWidget
     SGWidget(QWidget *parent = 0);
     virtual ~SGWidget();
 
+    void updatePlots();
+
     void setPhaseIndex(int index);
     int getPhaseIndex();
 
+    MXA_INSTANCE_PROPERTY(AIM::Reconstruction::PhaseType, PhaseType);
     MXA_INSTANCE_PROPERTY(float, PhaseFraction);
     MXA_INSTANCE_PROPERTY(float, TotalPhaseFraction);
 
@@ -124,7 +127,7 @@ class SGWidget : public QWidget, private Ui::SGWidget
     QwtPlotMarker*       m_CutOffMin;
     QwtPlotMarker*       m_CutOffMax;
     QwtPlotGrid*         m_grid;
-
+    bool                 m_DataHasBeenGenerated;
     AbstractMicrostructurePreset::Pointer m_MicroPreset;
 
     SGWidget(const SGWidget&); // Copy Constructor Not Implemented

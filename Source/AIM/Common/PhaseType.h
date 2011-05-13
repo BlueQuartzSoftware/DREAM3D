@@ -1,6 +1,5 @@
 /* ============================================================================
- * Copyright (c) 2010, Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2010, Dr. Michael A. Grober (US Air Force Research Laboratories
+ * Copyright (c) 2011, Michael A. Jackson (BlueQuartz Software)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -28,60 +27,51 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef CRYSTALSTRUCTURE_H_
-#define CRYSTALSTRUCTURE_H_
+#ifndef _PhaseType_h_
+#define _PhaseType_h_
 
 #include "AIM/Common/AIMCommonConfiguration.h"
 #include "AIM/Common/Constants.h"
 
-
 /**
- * @class CrystalStructure CrystalStructure.h AIM/Common/CrystalStructure.h
- * @brief  This class has some utility methods relating to CrystalStructure and
- * how they are used in the AIMRepresentation package.
- * @author Michael A. Jackson for BlueQuartz Software
- * @date Apr 21, 2011
+ * @class PhaseType PhaseType.h PathToHeader/PhaseType.h
+ * @brief
+ * @author Mike Jackson for BlueQuartz.net
+ * @date May 13, 2011
  * @version 1.0
  */
-class  CrystalStructure
+class PhaseType
 {
   public:
-    virtual ~CrystalStructure()
-    {
-    }
 
-    /**
-     * @brief Converts an enumeration value for CrystalStructure into a String
-     * @param xtal
-     * @return
-     */
-    static std::string getCrystalStructureString(AIM::Reconstruction::CrystalStructure xtal)
+    virtual ~PhaseType();
+    static std::string getPhaseTypeString(AIM::Reconstruction::PhaseType phaseType)
     {
-      switch(xtal)
+      switch(phaseType)
       {
-        case AIM::Reconstruction::Hexagonal:
-          return std::string("Hexagonal");
-        case AIM::Reconstruction::Cubic:
-          return std::string("Cubic");
-        case AIM::Reconstruction::AxisOrthoRhombic:
-          return std::string("OrthoRhombic");
+        case AIM::Reconstruction::Primary:
+          return std::string("Primary");
+        case AIM::Reconstruction::BoundaryPrecipitate:
+          return std::string("Boundary Precipitate");
+        case AIM::Reconstruction::BulkPrecipitate:
+          return std::string("Bulk Precipitate");
+        case AIM::Reconstruction::Transformation:
+          return std::string("Transformation");
+        case AIM::Reconstruction::UnknownPhaseType:
+          return std::string("Uknown Phase Type");
         default:
           break;
       }
-      return std::string("Unknown");
+      return std::string("Undefined Phase Type (Error)");
     }
-
-
-
   protected:
-    CrystalStructure()
-    {
-    }
-
+    PhaseType();
   private:
-    CrystalStructure(const CrystalStructure&); // Copy Constructor Not Implemented
-    void operator=(const CrystalStructure&); // Operator '=' Not Implemented
+    PhaseType(const PhaseType&); //Not Implemented
+    void operator=(const PhaseType&); //Not Implemented
 
 };
 
-#endif /* CRYSTALSTRUCTURE_H_ */
+#endif //_PhaseType_h_
+
+

@@ -113,6 +113,7 @@ class AIMCOMMON_EXPORT ReconstructionFunc
     int mergetwinsoption;
     int mergecoloniesoption;
     vector<AIM::Reconstruction::CrystalStructure> crystruct;
+    vector<AIM::Reconstruction::PhaseType>        phaseType;
     int alignmeth;
     int alreadyformed;
 
@@ -155,11 +156,12 @@ class AIMCOMMON_EXPORT ReconstructionFunc
     int numneighbins;
 
 
-    void initialize(int nX, int nY, int nZ,
-                  float xRes, float yRes, float zRes, bool v_mergetwinsoption, bool v_mergecoloniesoption,
-				  int v_minallowedgrainsize, float v_minseedconfidence, float v_downsamplefactor,
-				  float v_minseedimagequality, float v_misorientationtolerance, float v_sizebinstepsize,
-				  vector<AIM::Reconstruction::CrystalStructure> v_crystruct, int v_alignmeth, bool v_alreadyformed);
+    void initialize(int nX, int nY, int nZ, float xRes, float yRes, float zRes, bool v_mergetwinsoption,
+                    bool v_mergecoloniesoption, int v_minallowedgrainsize, float v_minseedconfidence,
+                    float v_downsamplefactor, float v_minseedimagequality, float v_misorientationtolerance,
+                    float v_sizebinstepsize, vector<AIM::Reconstruction::CrystalStructure> v_crystruct,
+                    vector<AIM::Reconstruction::PhaseType> v_phaseType,
+                                      int v_alignmeth, bool v_alreadyformed);
 
 
 	void initializeQuats();
@@ -216,9 +218,9 @@ class AIMCOMMON_EXPORT ReconstructionFunc
 
   private:
     std::vector<OrientationMath*>    m_OrientationOps;
-    OrientationMath::Pointer                m_CubicOps;
-    OrientationMath::Pointer            m_HexOps;
-    OrientationMath::Pointer         m_OrthoOps;
+    CubicOps::Pointer                m_CubicOps;
+    HexagonalOps::Pointer            m_HexOps;
+    OrthoRhombicOps::Pointer         m_OrthoOps;
 
     ReconstructionFunc(const ReconstructionFunc&);    // Copy Constructor Not Implemented
     void operator=(const ReconstructionFunc&);  // Operator '=' Not Implemented

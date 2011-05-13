@@ -947,8 +947,8 @@ class StatsGen
       float n1, n2, n3;
       float r1, r2, r3;
       HexagonalOps ops;
-      xval.resize(20);
-      yval.resize(20);
+      xval.resize(22);
+      yval.resize(22);
       for (int i = 0; i < 20; i++)
       {
         yval[i] = 0;

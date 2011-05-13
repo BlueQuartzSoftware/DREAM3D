@@ -57,7 +57,13 @@ class EditPhaseDialog : public QDialog, private Ui::EditPhaseDialog
     double getPhaseFraction();
     void setPhaseFraction(double d);
 
+    void setPhaseType(AIM::Reconstruction::PhaseType pt);
+    AIM::Reconstruction::PhaseType getPhaseType();
+
+
     void setOtherPhaseFractionTotal(double t);
+
+
 
   protected slots:
   void on_phaseFraction_textChanged(const QString &string);
