@@ -77,7 +77,7 @@ class StatsGenODFWidget : public QWidget, private Ui::SGAxisODFWidget
 
     int writeDataToHDF5(H5ReconStatsWriter::Pointer writer);
     int readDataFromHDF5(H5ReconStatsReader::Pointer reader,
-                        QVector<double>  &bins,
+                        QVector<float>  &bins,
                         const std::string &hdf5GroupName);
 
     void setPlotTabTitles(QString t1, QString t2, QString t3);

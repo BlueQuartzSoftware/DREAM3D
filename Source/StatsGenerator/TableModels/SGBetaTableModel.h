@@ -87,13 +87,13 @@ Q_OBJECT    ;
 
     QAbstractItemDelegate* getItemDelegate();
 
-    void setTableData(QVector<double> bins, QVector<QVector<double> > data, QVector<QString> colors);
+    void setTableData(QVector<float> bins, QVector<QVector<float> > data, QVector<QString> colors);
 
-    QVector<double>& getBinNumbers()
+    QVector<float>& getBinNumbers()
     {
       return m_BinNumbers;
     }
-    double getBinNumber(qint32 row)
+    float getBinNumber(qint32 row)
     {
       return m_BinNumbers[row];
     }
@@ -107,24 +107,24 @@ Q_OBJECT    ;
       return m_Colors[row];
     }
 
-    virtual QVector<double> getData(int col);
-    virtual double getDataValue(int col, int row);
-    void setColumnData(int col, QVector<double> &data);
+    virtual QVector<float> getData(int col);
+    virtual float getDataValue(int col, int row);
+    void setColumnData(int col, QVector<float> &data);
 
-    QVector<double>& getAlphas()
+    QVector<float>& getAlphas()
     {
       return m_Alpha;
     }
-    QVector<double>& getBetas()
+    QVector<float>& getBetas()
     {
       return m_Beta;
     }
 
-    double getAlpha(qint32 row)
+    float getAlpha(qint32 row)
     {
       return m_Alpha[row];
     }
-    double getBeta(qint32 row)
+    float getBeta(qint32 row)
     {
       return m_Beta[row];
     }
@@ -133,9 +133,9 @@ Q_OBJECT    ;
     int m_ColumnCount;
     int m_RowCount;
 
-    QVector<double> m_BinNumbers;
-    QVector<double> m_Alpha;
-    QVector<double> m_Beta;
+    QVector<float> m_BinNumbers;
+    QVector<float> m_Alpha;
+    QVector<float> m_Beta;
     QVector<QString> m_Colors;
 
     SGBetaTableModel(const SGBetaTableModel&); // Copy Constructor Not Implemented

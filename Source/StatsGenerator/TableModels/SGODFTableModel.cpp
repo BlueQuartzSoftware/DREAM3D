@@ -240,11 +240,11 @@ bool SGODFTableModel::setData(const QModelIndex & index, const QVariant & value,
 // -----------------------------------------------------------------------------
 bool SGODFTableModel::insertRows(int row, int count, const QModelIndex& index)
 {
-  double e1 = 0.0;
-  double e2 = 0.0;
-  double e3 = 0.0;
-  double weight = 1.0;
-  double sigma = 1.0;
+  float e1 = 0.0;
+  float e2 = 0.0;
+  float e3 = 0.0;
+  float weight = 1.0;
+  float sigma = 1.0;
 
   QString c("blue");
 
@@ -290,7 +290,7 @@ bool SGODFTableModel::removeRows(int row, int count, const QModelIndex& index)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QVector<double > SGODFTableModel::getData(int col)
+QVector<float > SGODFTableModel::getData(int col)
 {
 
   switch(col)
@@ -308,13 +308,13 @@ QVector<double > SGODFTableModel::getData(int col)
     default:
       Q_ASSERT(false);
   }
-  return QVector<double > ();
+  return QVector<float > ();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-double SGODFTableModel::getDataValue(int col, int row)
+float SGODFTableModel::getDataValue(int col, int row)
 {
   switch(col)
   {
@@ -337,7 +337,7 @@ double SGODFTableModel::getDataValue(int col, int row)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SGODFTableModel::setColumnData(int col, QVector<double> &data)
+void SGODFTableModel::setColumnData(int col, QVector<float> &data)
 {
   switch(col)
   {
@@ -359,7 +359,7 @@ void SGODFTableModel::setColumnData(int col, QVector<double> &data)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SGODFTableModel::setRowData(int row, double e1, double e2, double e3, double weight, double sigma)
+void SGODFTableModel::setRowData(int row, float e1, float e2, float e3, float weight, float sigma)
 {
    m_Euler1s[row] = e1;
    m_Euler2s[row] = e2;

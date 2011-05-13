@@ -65,10 +65,10 @@ class StatsGen
      * @return Error Code. 0 is NO ERROR.
      */
     template<typename T>
-    int GenBetaPlotData(double alpha, double beta, T &x, T &y, int size)
+    int GenBetaPlotData(float alpha, float beta, T &x, T &y, int size)
     {
       int err = 0;
-      double value, gammapq, gammap, gammaq, betain, betaout;
+      float value, gammapq, gammap, gammaq, betain, betaout;
       x.resize(size);
       y.resize(size);
       value = alpha;
@@ -79,49 +79,49 @@ class StatsGen
       gammapq = gamma(value);
       for (int i = 0; i < size; i++)
       {
-        betain = (i * (1.0 / double(size))) + ((1.0 / double(size)) / 2.0);
+        betain = (i * (1.0 / float(size))) + ((1.0 / float(size)) / 2.0);
         betaout = (gammapq / (gammap * gammaq)) * pow(betain, (alpha - 1)) * pow((1 - betain), (beta - 1));
         x[i] = betain;
-        y[i] = betaout * (1.0 / double(size));
+        y[i] = betaout * (1.0 / float(size));
         if (betaout < 0) err = 1;
       }
       return err;
     }
 
     template<typename T>
-    int GenLogNormalPlotData(double avg, double stdDev, T &x, T &y, int size)
+    int GenLogNormalPlotData(float avg, float stdDev, T &x, T &y, int size)
     {
       int err = 0;
-      double lognormin, lognormout, max, min;
-      double s2 = pow(stdDev, 2);
-      double root2pi = pow((2.0 * 3.1415926535897), 0.5);
+      float lognormin, lognormout, max, min;
+      float s2 = pow(stdDev, 2);
+      float root2pi = pow((2.0 * 3.1415926535897), 0.5);
       x.resize(size);
       y.resize(size);
       min = exp(avg - (5 * stdDev));
       max = exp(avg + (5 * stdDev));
       for (int i = 0; i < size; i++)
       {
-        lognormin = (i * ((max - min) / double(size))) + (((max - min) / double(size)) / 2.0) + min;
+        lognormin = (i * ((max - min) / float(size))) + (((max - min) / float(size)) / 2.0) + min;
         lognormout = (1.0 / (lognormin * stdDev * root2pi)) * exp(-((log(lognormin) - avg) * (log(lognormin) - avg)) / (2 * s2));
         x[i] = lognormin;
-        y[i] = lognormout * ((max - min) / double(size));
+        y[i] = lognormout * ((max - min) / float(size));
         if (lognormout < 0) err = 1;
       }
       return err;
     }
 
     template<typename T>
-    int GenPowerLawPlotData(double alpha, double k, double beta, T &x, T &y, int size)
+    int GenPowerLawPlotData(float alpha, float k, float beta, T &x, T &y, int size)
     {
       int err = 0;
-      double in, out, max, min;
+      float in, out, max, min;
       x.resize(size);
       y.resize(size);
       min = 0;
       max = 3;
       for (int i = 0; i < size; i++)
       {
-        in = (i * ((max - min) / double(size))) + (((max - min) / double(size)) / 2.0) + min;
+        in = (i * ((max - min) / float(size))) + (((max - min) / float(size)) / 2.0) + min;
         out = alpha * pow(in, k) + beta;
         x[i] = in;
         y[i] = out;
@@ -132,18 +132,6 @@ class StatsGen
 
     /**
      * @brief Calculates the number of bins using 64 bit floating point values
-     * @param mu
-     * @param sigma
-     * @param cutoff
-     * @param binstep
-     * @param max (out)
-     * @param min (out)
-     * @return
-     */
-    int computeNumberOfBins(double mu, double sigma, double cutoff, double binstep, double &max, double &min);
-
-    /**
-     * @brief Calculates the number of bins using 32 bit floating point values
      * @param mu
      * @param sigma
      * @param cutoff
@@ -195,7 +183,7 @@ class StatsGen
      * @param value
      * @return
      */
-    double gamma(double value);
+    float gamma(float value);
 
     /**
      * @brief  This method will generate ODF data for 3 scatter plots which are the
@@ -240,13 +228,13 @@ class StatsGen
 #endif
       int err = 0;
       int choose;
-      double q1[5];
-      double ea1, ea2, ea3;
-      double g[3][3];
-      double x, y, z;
-      double xpf, ypf;
-      double totaldensity;
-      double random, density;
+      float q1[5];
+      float ea1, ea2, ea3;
+      float g[3][3];
+      float x, y, z;
+      float xpf, ypf;
+      float totaldensity;
+      float random, density;
 
       x001.resize(npoints * 3);
       y001.resize(npoints * 3);
@@ -254,7 +242,7 @@ class StatsGen
       y011.resize(npoints * 6);
       x111.resize(npoints * 4);
       y111.resize(npoints * 4);
-      double* odfPtr = NULL;
+      float* odfPtr = NULL;
       CubicOps ops;
       for (int i = 0; i < npoints; i++)
       {
@@ -266,7 +254,7 @@ class StatsGen
         {
           density = *odfPtr;
           ++odfPtr;
-          double d = totaldensity;
+          float d = totaldensity;
           totaldensity = totaldensity + density;
           if (random >= d && random < totaldensity) choose = static_cast<int> (j);
         }
@@ -434,13 +422,13 @@ class StatsGen
 #endif
       int err = 0;
       int choose;
-      double ea1, ea2, ea3;
-      double q1[5];
-      double g[3][3];
-      double x, y, z;
-      double xpf, ypf;
-      double totaldensity;
-      double random, density;
+      float ea1, ea2, ea3;
+      float q1[5];
+      float g[3][3];
+      float x, y, z;
+      float xpf, ypf;
+      float totaldensity;
+      float random, density;
       HexagonalOps ops;
       x0001.resize(npoints * 1);
       y0001.resize(npoints * 1);
@@ -557,7 +545,7 @@ class StatsGen
 
 #if 0
  These lines need to be run BEFORE you call this method
-  double totalweight = 0;
+  float totalweight = 0;
   T odf;
   odf.resize(odfsize);
   Texture::calculateOrthoRhombicODFData(e1s, e2s, e3s, weights, sigmas, true, odf, totalweight);
@@ -581,13 +569,13 @@ class StatsGen
 #endif
       int err = 0;
       int choose;
-      double ea1, ea2, ea3;
-      double q1[5];
-      double g[3][3];
-      double x, y, z;
-      double xpf, ypf;
-      double totaldensity;
-      double random, density;
+      float ea1, ea2, ea3;
+      float q1[5];
+      float g[3][3];
+      float x, y, z;
+      float xpf, ypf;
+      float totaldensity;
+      float random, density;
       OrthoRhombicOps ops;
       x001.resize(size * 3);
       y001.resize(size * 3);
@@ -773,13 +761,13 @@ class StatsGen
 #endif
       int err = 0;
       int choose;
-      double ea1, ea2, ea3;
-      double q1[5];
-      double g[3][3];
-      double x, y, z;
-      double xpf, ypf;
-      double totaldensity;
-      double random, density;
+      float ea1, ea2, ea3;
+      float q1[5];
+      float g[3][3];
+      float x, y, z;
+      float xpf, ypf;
+      float totaldensity;
+      float random, density;
       OrthoRhombicOps ops;
       xA.resize(npoints * 1);
       yA.resize(npoints * 1);
@@ -859,7 +847,7 @@ class StatsGen
     int GenCubicMDFPlotData(T mdf, T &xval, T &yval, int npoints)
     {
       static const size_t mdfsize = 5832;
-	  double radtodeg = 180.0/M_PI;
+	  float radtodeg = 180.0/M_PI;
       AIMRandomNG rg;
       /* Get a seed value based off the system clock. The issue is that this will
        * be a 64 bit unsigned integer where the high 32 bits will basically not
@@ -878,14 +866,14 @@ class StatsGen
       rg.RandomInit(seedPtr[0]);
 #endif
       int err = 0;
-      double density;
-      double totaldensity;
+      float density;
+      float totaldensity;
       int choose = 0;
-  //    double angle;
-      double random;
-	  double w;
-	  double n1, n2, n3;
-	  double r1, r2, r3;
+  //    float angle;
+      float random;
+	  float w;
+	  float n1, n2, n3;
+	  float r1, r2, r3;
       CubicOps ops;
       xval.resize(13);
       yval.resize(13);
@@ -914,7 +902,7 @@ class StatsGen
       for (int i = 0; i < 13; i++)
       {
         xval[i] = i * 5.0 + 2.5;
-        yval[i] = yval[i] / double(npoints);
+        yval[i] = yval[i] / float(npoints);
       }
       return err;
     }
@@ -931,7 +919,7 @@ class StatsGen
     int GenHexMDFPlotData(T mdf, T &xval, T &yval, int npoints)
     {
       static const size_t mdfsize = 15552;
-	  double radtodeg = 180.0/M_PI;
+	  float radtodeg = 180.0/M_PI;
       AIMRandomNG rg;
       /* Get a seed value based off the system clock. The issue is that this will
        * be a 64 bit unsigned integer where the high 32 bits will basically not
@@ -951,13 +939,13 @@ class StatsGen
 #endif
       int err = 0;
       int choose = 0;
-      double density;
-      double totaldensity;
-  //    double angle;
-      double random;
-	  double w;
-	  double n1, n2, n3;
-	  double r1, r2, r3;
+      float density;
+      float totaldensity;
+  //    float angle;
+      float random;
+	  float w;
+	  float n1, n2, n3;
+	  float r1, r2, r3;
       HexagonalOps ops;
       xval.resize(20);
       yval.resize(20);
@@ -988,7 +976,7 @@ class StatsGen
       for (int i = 0; i < 20; i++)
       {
         xval[i] = i * 5.0 + 2.5;
-        yval[i] = yval[i] / double(npoints);
+        yval[i] = yval[i] / float(npoints);
       }
       return err;
     }

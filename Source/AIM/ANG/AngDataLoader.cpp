@@ -57,7 +57,7 @@ AngDataLoader::~AngDataLoader()
 //
 // -----------------------------------------------------------------------------
 int AngDataLoader::getSizeAndResolution(int &xpoints, int &ypoints, int &zpoints,
-                                   double &xres, double &yres, double &zres)
+                                   float &xres, float &yres, float &zres)
 {
   zpoints = (getZEndIndex() - getZStartIndex() );
   int xpointstemp = 0;
@@ -106,16 +106,16 @@ int AngDataLoader::loadData(ReconstructionVoxel voxels[], int xpoints, int ypoin
   float* imqual2Ptr;
   int xstartspot;
   int ystartspot;
-  double s;
-  double c;
-  double s1;
-  double c1;
-  double s2;
-  double c2;
-  double q1;
-  double q2;
-  double q3;
-  double q4;
+  float s;
+  float c;
+  float s1;
+  float c1;
+  float s2;
+  float c2;
+  float q1;
+  float q2;
+  float q3;
+  float q4;
 
   for (int slice = 0; slice < zpoints; ++slice)
   {

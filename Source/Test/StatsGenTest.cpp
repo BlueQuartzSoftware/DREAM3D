@@ -46,42 +46,42 @@ int main(int argc, char **argv)
   StatsGen sg;
 
   int err = 0;
-  double alpha = 1.0;
-  double beta = 1.0;
+  float alpha = 1.0;
+  float beta = 1.0;
 
-  std::vector<double> x;
-  std::vector<double> y;
+  std::vector<float> x;
+  std::vector<float> y;
   int size = 1000;
   err = sg.GenBetaPlotData(alpha, beta, x, y, size);
 
 
-  double avg = 1.0;
-  double stdDev = 0.5;
+  float avg = 1.0;
+  float stdDev = 0.5;
   err = sg.GenLogNormalPlotData(avg, stdDev, x, y, size);
 
-  double k = 1.4;
+  float k = 1.4;
   err = sg.GenPowerLawPlotData(alpha, k, beta, x, y, size);
 
 
-  double mu = 1.0;
-  double sigma = 1.0;
-  double cutoff = 4.0;
-  double binstep = 0.75;
-  double max, min;
+  float mu = 1.0;
+  float sigma = 1.0;
+  float cutoff = 4.0;
+  float binstep = 0.75;
+  float max, min;
 
   err = sg.computeNumberOfBins(mu, sigma, cutoff, binstep, max, min);
 
-  std::vector<double> binsizes;
+  std::vector<float> binsizes;
   err = sg.GenCutOff(mu, sigma, cutoff, binstep, x, y, max, size, binsizes);
 
 
-  std::vector<double> odf;
-  std::vector<double> x1;
-  std::vector<double> y1;
-  std::vector<double> x2;
-  std::vector<double> y2;
-  std::vector<double> x3;
-  std::vector<double> y3;
+  std::vector<float> odf;
+  std::vector<float> x1;
+  std::vector<float> y1;
+  std::vector<float> x2;
+  std::vector<float> y2;
+  std::vector<float> x3;
+  std::vector<float> y3;
   int npoints = 1000;
   err = sg.GenCubicODFPlotData(odf, x1, y1, x2, y2, x3, y3, npoints);
 
@@ -93,7 +93,7 @@ int main(int argc, char **argv)
 
   err = sg.GenAxisODFPlotData(odf, x1, y1, x2, y2, x3, y3, npoints);
 
-  std::vector<double> mdf;
+  std::vector<float> mdf;
 
   err = sg.GenCubicMDFPlotData(mdf, x, y, npoints);
 
