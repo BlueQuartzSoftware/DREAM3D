@@ -74,7 +74,7 @@ AIM::Reconstruction::CrystalStructure EditPhaseDialog::getCrystalStructure()
 double EditPhaseDialog::getPhaseFraction()
 {
   bool ok = false;
-  double d = phaseFraction->text().toDouble(&ok);
+  double d = phaseFraction->text().toFloat(&ok);
   if (ok) return d;
   return -1.0;
 }
@@ -101,7 +101,7 @@ void EditPhaseDialog::setupGui()
 void EditPhaseDialog::on_phaseFraction_textChanged(const QString &string)
 {
   bool ok = false;
-  double d = phaseFraction->text().toDouble(&ok);
+  double d = phaseFraction->text().toFloat(&ok);
   if (ok)
   {
      double total = d + m_OtherPhaseFractions;

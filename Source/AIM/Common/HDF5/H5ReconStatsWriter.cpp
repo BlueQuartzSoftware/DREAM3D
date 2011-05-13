@@ -96,10 +96,10 @@ H5ReconStatsWriter::Pointer H5ReconStatsWriter::New(const std::string &filename)
 // -----------------------------------------------------------------------------
 int H5ReconStatsWriter::writeSizeDistribution(int phase,
                                               AIM::Reconstruction::CrystalStructure xtal,
-                                              double phasefraction,
-                                              double maxdiameter, double mindiameter,
-                                              double binStepSize,
-                                              double avglogdiam, double sdlogdiam,
+                                              float phasefraction,
+                                              float maxdiameter, float mindiameter,
+                                              float binStepSize,
+                                              float avglogdiam, float sdlogdiam,
                                               size_t &numberOfBins)
 {
   herr_t err = 0;
@@ -134,7 +134,7 @@ int H5ReconStatsWriter::writeSizeDistribution(int phase,
     retErr = err;
   }
 
-  std::vector<double> grainDiameterInfo(3);
+  std::vector<float> grainDiameterInfo(3);
   grainDiameterInfo[0] = binStepSize;
   grainDiameterInfo[1] = maxdiameter;
   grainDiameterInfo[2] = mindiameter;
@@ -146,7 +146,7 @@ int H5ReconStatsWriter::writeSizeDistribution(int phase,
   }
 
 
-  std::vector<double> grainSizeInfo(2);
+  std::vector<float> grainSizeInfo(2);
   grainSizeInfo[0] = avglogdiam;
   grainSizeInfo[1] = sdlogdiam;
   dims[0] = 2;
@@ -157,8 +157,8 @@ int H5ReconStatsWriter::writeSizeDistribution(int phase,
     retErr = err;
   }
 
-  std::vector<double> bins;
-  double d = mindiameter;
+  std::vector<float> bins;
+  float d = mindiameter;
   while (d <= maxdiameter)
   {
     bins.push_back(d);
@@ -186,10 +186,10 @@ int H5ReconStatsWriter::writeSizeDistribution(int phase,
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::vector<double> H5ReconStatsWriter::generateBins(int phase, double maxDiameter, double minDiameter, double diameterStep)
+std::vector<float> H5ReconStatsWriter::generateBins(int phase, float maxDiameter, float minDiameter, float diameterStep)
 {
-  std::vector<double> bins;
-  double d = minDiameter;
+  std::vector<float> bins;
+  float d = minDiameter;
   while (d <= maxDiameter)
   {
     bins.push_back(d);
@@ -202,8 +202,8 @@ std::vector<double> H5ReconStatsWriter::generateBins(int phase, double maxDiamet
 //
 // -----------------------------------------------------------------------------
 int H5ReconStatsWriter::writeBetaDistribution(int phase, const std::string &hdf5GroupName,
-                           std::vector<double> &alpha,
-                           std::vector<double> &beta)
+                           std::vector<float> &alpha,
+                           std::vector<float> &beta)
 {
   herr_t err = 0;
 
@@ -211,7 +211,7 @@ int H5ReconStatsWriter::writeBetaDistribution(int phase, const std::string &hdf5
   headers.push_back(AIM::HDF5::Alpha);
   headers.push_back(AIM::HDF5::Beta);
 
-  std::vector<std::vector<double> > data(AIM::HDF5::BetaColumnCount);
+  std::vector<std::vector<float> > data(AIM::HDF5::BetaColumnCount);
   size_t i = 0;
   data[i++] = alpha;
   data[i++] = beta;
@@ -224,8 +224,8 @@ int H5ReconStatsWriter::writeBetaDistribution(int phase, const std::string &hdf5
 //
 // -----------------------------------------------------------------------------
 int H5ReconStatsWriter::writeLogNormalDistribution(int phase, const std::string &hdf5GroupName,
-                                                    std::vector<double> &average,
-                                                    std::vector<double> &stdDev )
+                                                    std::vector<float> &average,
+                                                    std::vector<float> &stdDev )
 {
   herr_t err = 0;
 
@@ -233,7 +233,7 @@ int H5ReconStatsWriter::writeLogNormalDistribution(int phase, const std::string 
   headers.push_back(AIM::HDF5::Average);
   headers.push_back(AIM::HDF5::StandardDeviation);
 
-  std::vector<std::vector<double> > data(AIM::HDF5::LogNormalColumnCount);
+  std::vector<std::vector<float> > data(AIM::HDF5::LogNormalColumnCount);
   size_t i = 0;
   data[i++] = average;
   data[i++] = stdDev;
@@ -246,9 +246,9 @@ int H5ReconStatsWriter::writeLogNormalDistribution(int phase, const std::string 
 //
 // -----------------------------------------------------------------------------
 int H5ReconStatsWriter::writePowerDistribution(int phase, const std::string &hdf5GroupName,
-                                               std::vector<double> &alpha,
-                                               std::vector<double> &k,
-                                               std::vector<double> &beta)
+                                               std::vector<float> &alpha,
+                                               std::vector<float> &k,
+                                               std::vector<float> &beta)
 {
   herr_t err = 0;
 
@@ -257,7 +257,7 @@ int H5ReconStatsWriter::writePowerDistribution(int phase, const std::string &hdf
   headers.push_back(AIM::HDF5::Exp_k);
   headers.push_back(AIM::HDF5::Beta);
 
-  std::vector<std::vector<double> > data(AIM::HDF5::PowerLawColumnCount);
+  std::vector<std::vector<float> > data(AIM::HDF5::PowerLawColumnCount);
   size_t i = 0;
   data[i++] = alpha;
   data[i++] = k;
@@ -273,7 +273,7 @@ int H5ReconStatsWriter::writePowerDistribution(int phase, const std::string &hdf
 int H5ReconStatsWriter::writeDistributionData(int phase, const std::string &disType,
                           const std::string &hdf5GroupName,
                           std::vector<std::string> &columnHeaders,
-                          std::vector<std::vector<double> > &colData)
+                          std::vector<std::vector<float> > &colData)
 {
   herr_t err = 0;
   herr_t retErr = 0;
@@ -340,23 +340,23 @@ int H5ReconStatsWriter::writeDistributionData(int phase, const std::string &disT
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5ReconStatsWriter::writeVolumeStats(int phase, AIM::Reconstruction::CrystalStructure xtal, double phasefraction, double maxdiameter, double mindiameter, double diamStepSize,
-                                         double avglogdiam, double sdlogdiam, std::vector<std::vector<double> > &svbovera,
-                                         std::vector<std::vector<double> > &svcovera, std::vector<std::vector<double> > &svcoverb,
-                                         std::vector<std::vector<double> > &neighborhoodfit, std::vector<std::vector<double> > &svomega3)
+int H5ReconStatsWriter::writeVolumeStats(int phase, AIM::Reconstruction::CrystalStructure xtal, float phasefraction, float maxdiameter, float mindiameter, float diamStepSize,
+                                         float avglogdiam, float sdlogdiam, std::vector<std::vector<float> > &svbovera,
+                                         std::vector<std::vector<float> > &svcovera, std::vector<std::vector<float> > &svcoverb,
+                                         std::vector<std::vector<float> > &neighborhoodfit, std::vector<std::vector<float> > &svomega3)
 {
   int err = 0;
   int retErr = 0;
 
- // std::vector<double> binNum; // = generateBins((double)maxdiameter, (double)mindiameter, diamStepSize);
+ // std::vector<float> binNum; // = generateBins((float)maxdiameter, (float)mindiameter, diamStepSize);
   size_t nBins = 0; // Used as a variable that will get written to in the writeSizeDistribution() method
-  err = writeSizeDistribution(phase, xtal, phasefraction, (double)maxdiameter, (double)mindiameter, diamStepSize, avglogdiam, sdlogdiam, nBins);
+  err = writeSizeDistribution(phase, xtal, phasefraction, (float)maxdiameter, (float)mindiameter, diamStepSize, avglogdiam, sdlogdiam, nBins);
   if (err < 0) { retErr = err; }
 
 /* Write the Grain_SizeVBoverA_Distributions Shape Statistics which are a Beta Distribution */
   {
-    std::vector<double> alpha(nBins, 0.0);
-    std::vector<double> beta(nBins, 0.0);
+    std::vector<float> alpha(nBins, 0.0);
+    std::vector<float> beta(nBins, 0.0);
     // Convert from Row Major to Column Major
     for (size_t temp7 = 0; temp7 < nBins; ++temp7)
     {
@@ -373,8 +373,8 @@ int H5ReconStatsWriter::writeVolumeStats(int phase, AIM::Reconstruction::Crystal
 
   /* Write the Grain_SizeVCoverA_Distributions Shape Statistics which are a Beta Distribution */
   {
-    std::vector<double> alpha(nBins, 0.0);
-    std::vector<double> beta(nBins, 0.0);
+    std::vector<float> alpha(nBins, 0.0);
+    std::vector<float> beta(nBins, 0.0);
     // Convert from Row Major to Column Major
     for (size_t temp7 = 0; temp7 < nBins; ++temp7)
     {
@@ -391,8 +391,8 @@ int H5ReconStatsWriter::writeVolumeStats(int phase, AIM::Reconstruction::Crystal
 
   /* Write the Grain_SizeVCoverB_Distributions Shape Statistics which are a Beta Distribution */
   {
-    std::vector<double> alpha(nBins, 0.0);
-    std::vector<double> beta(nBins, 0.0);
+    std::vector<float> alpha(nBins, 0.0);
+    std::vector<float> beta(nBins, 0.0);
     // Convert from Row Major to Column Major
     for (size_t temp7 = 0; temp7 < nBins; ++temp7)
     {
@@ -409,9 +409,9 @@ int H5ReconStatsWriter::writeVolumeStats(int phase, AIM::Reconstruction::Crystal
 
   /* Write the Grain_SizeVNeighbors_Distributions Neighbor Statistics which is a Power Law Distribution */
   {
-    std::vector<double> alpha(nBins, 0.0);
-    std::vector<double> beta(nBins, 0.0);
-    std::vector<double> k(nBins, 0.0);
+    std::vector<float> alpha(nBins, 0.0);
+    std::vector<float> beta(nBins, 0.0);
+    std::vector<float> k(nBins, 0.0);
     // Convert from Row Major to Column Major
     for (size_t temp7 = 0; temp7 < nBins; ++temp7)
     {
@@ -429,8 +429,8 @@ int H5ReconStatsWriter::writeVolumeStats(int phase, AIM::Reconstruction::Crystal
 
   /* Write the Grain_SizeVOmega3_Distributions Shape Statistics which is a Beta Distribution */
   {
-    std::vector<double> alpha(nBins, 0.0);
-    std::vector<double> beta(nBins, 0.0);
+    std::vector<float> alpha(nBins, 0.0);
+    std::vector<float> beta(nBins, 0.0);
     // Convert from Row Major to Column Major
     for (size_t temp7 = 0; temp7 < nBins; ++temp7)
     {
@@ -450,22 +450,22 @@ int H5ReconStatsWriter::writeVolumeStats(int phase, AIM::Reconstruction::Crystal
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5ReconStatsWriter::writeVolumeStats2D(int phase,  AIM::Reconstruction::CrystalStructure xtal, double phasefraction, double maxdiameter, double mindiameter, double diamStepSize,
-                                         double avglogdiam, double sdlogdiam, std::vector<std::vector<double> > &svbovera,
-                                         std::vector<std::vector<double> > &neighborhoodfit)
+int H5ReconStatsWriter::writeVolumeStats2D(int phase,  AIM::Reconstruction::CrystalStructure xtal, float phasefraction, float maxdiameter, float mindiameter, float diamStepSize,
+                                         float avglogdiam, float sdlogdiam, std::vector<std::vector<float> > &svbovera,
+                                         std::vector<std::vector<float> > &neighborhoodfit)
 {
   int err = 0;
   int retErr = 0;
 
- // std::vector<double> binNum; // = generateBins((double)maxdiameter, (double)mindiameter, diamStepSize);
+ // std::vector<float> binNum; // = generateBins((float)maxdiameter, (float)mindiameter, diamStepSize);
   size_t nBins = 0; // Used as a variable that will get written to in the writeSizeDistribution() method
-  err = writeSizeDistribution(phase, xtal, phasefraction, (double)maxdiameter, (double)mindiameter, diamStepSize, avglogdiam, sdlogdiam, nBins);
+  err = writeSizeDistribution(phase, xtal, phasefraction, (float)maxdiameter, (float)mindiameter, diamStepSize, avglogdiam, sdlogdiam, nBins);
   if (err < 0) { retErr = err; }
 
 /* Write the Grain_SizeVBoverA_Distributions Shape Statistics which are a Beta Distribution */
   {
-    std::vector<double> alpha(nBins, 0.0);
-    std::vector<double> beta(nBins, 0.0);
+    std::vector<float> alpha(nBins, 0.0);
+    std::vector<float> beta(nBins, 0.0);
     // Convert from Row Major to Column Major
     for (size_t temp7 = 0; temp7 < nBins; ++temp7)
     {
@@ -482,9 +482,9 @@ int H5ReconStatsWriter::writeVolumeStats2D(int phase,  AIM::Reconstruction::Crys
 
   /* Write the Grain_SizeVNeighbors_Distributions Neighbor Statistics which is a Power Law Distribution */
   {
-    std::vector<double> alpha(nBins, 0.0);
-    std::vector<double> beta(nBins, 0.0);
-    std::vector<double> k(nBins, 0.0);
+    std::vector<float> alpha(nBins, 0.0);
+    std::vector<float> beta(nBins, 0.0);
+    std::vector<float> k(nBins, 0.0);
     // Convert from Row Major to Column Major
     for (size_t temp7 = 0; temp7 < nBins; ++temp7)
     {
@@ -506,7 +506,7 @@ int H5ReconStatsWriter::writeVolumeStats2D(int phase,  AIM::Reconstruction::Crys
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5ReconStatsWriter::writeMisorientationBinsData(int phase, AIM::Reconstruction::CrystalStructure crystruct, double* misobins)
+int H5ReconStatsWriter::writeMisorientationBinsData(int phase, AIM::Reconstruction::CrystalStructure crystruct, float* misobins)
 {
   herr_t err = 0;
   herr_t retErr = 0;
@@ -523,7 +523,7 @@ int H5ReconStatsWriter::writeMisorientationBinsData(int phase, AIM::Reconstructi
   hid_t pid = H5Utilities::createGroup(gid, StringUtils::numToString(phase));
   int32_t rank = 1; // Single Dimension
   hsize_t dims = static_cast<hsize_t>(nElements);
-  err = H5Lite::writePointerDataset<double>(pid, AIM::HDF5::MisorientationBins, rank, &dims, misobins);
+  err = H5Lite::writePointerDataset<float>(pid, AIM::HDF5::MisorientationBins, rank, &dims, misobins);
   if (err < 0)
   {
     H5RSW_ERROR_CHECK(AIM::HDF5::MisorientationBins)
@@ -538,7 +538,7 @@ int H5ReconStatsWriter::writeMisorientationBinsData(int phase, AIM::Reconstructi
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5ReconStatsWriter::writeMicroTextureData(int phase, double* microbin, size_t nElements, double actualgrains)
+int H5ReconStatsWriter::writeMicroTextureData(int phase, float* microbin, size_t nElements, float actualgrains)
 {
   herr_t err = 0;
   herr_t retErr = 0;
@@ -548,7 +548,7 @@ int H5ReconStatsWriter::writeMicroTextureData(int phase, double* microbin, size_
   hid_t pid = H5Utilities::createGroup(gid, StringUtils::numToString(phase));
   std::vector<hsize_t> dims(1);
   dims[0] = static_cast<hsize_t>(nElements);
-  std::vector<double> data(nElements, 0.0);
+  std::vector<float> data(nElements, 0.0);
   for (size_t i = 0; i < nElements; ++i)
   {
     data[i] = microbin[i]/actualgrains;
@@ -571,7 +571,7 @@ int H5ReconStatsWriter::writeMicroTextureData(int phase, double* microbin, size_
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5ReconStatsWriter::writeAxisOrientationData(int phase, double* axisodf, double totalaxes)
+int H5ReconStatsWriter::writeAxisOrientationData(int phase, float* axisodf, float totalaxes)
 {
   herr_t err = 0;
   herr_t retErr = 0;
@@ -580,7 +580,7 @@ int H5ReconStatsWriter::writeAxisOrientationData(int phase, double* axisodf, dou
 
   hid_t pid = H5Utilities::createGroup(gid, StringUtils::numToString(phase));
   int size = 36 * 36 * 36;
-  std::vector<double> data(size, 0.0);
+  std::vector<float> data(size, 0.0);
   for (int i = 0; i < size; ++i)
   {
     data[i] = axisodf[i] / totalaxes;
@@ -608,7 +608,7 @@ int H5ReconStatsWriter::writeAxisOrientationData(int phase, double* axisodf, dou
 //
 // -----------------------------------------------------------------------------
 int H5ReconStatsWriter::writeODFData(int phase, AIM::Reconstruction::CrystalStructure crystruct,
-                                     double* eulerodf)
+                                     float* eulerodf)
 {
   herr_t err = 0;
   herr_t retErr = 0;
@@ -619,7 +619,7 @@ int H5ReconStatsWriter::writeODFData(int phase, AIM::Reconstruction::CrystalStru
   size_t numbins = 0;
   if (crystruct == AIM::Reconstruction::Hexagonal) numbins = 36 * 36 * 12;
   if (crystruct == AIM::Reconstruction::Cubic) numbins = 18 * 18 * 18;
-  std::vector<double> data(numbins, 0.0);
+  std::vector<float> data(numbins, 0.0);
   for (size_t i = 0; i < numbins; i++)
   {
     data[i] = eulerodf[i];

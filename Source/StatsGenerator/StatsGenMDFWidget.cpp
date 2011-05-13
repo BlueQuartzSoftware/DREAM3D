@@ -106,7 +106,7 @@ void StatsGenMDFWidget::initQwtPlot(QString xAxisName, QString yAxisName, QwtPlo
 void StatsGenMDFWidget::on_m_MDFUpdateBtn_clicked()
 {
   // Generate the ODF Data from the current values in the ODFTableModel
-  QwtArray<double> odf = generateODFData();
+  QwtArray<float> odf = generateODFData();
 
   updateMDFPlot(odf);
 }
@@ -114,20 +114,20 @@ void StatsGenMDFWidget::on_m_MDFUpdateBtn_clicked()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void StatsGenMDFWidget::updateMDFPlot(QwtArray<double> odf)
+void StatsGenMDFWidget::updateMDFPlot(QwtArray<float> odf)
 {
   int err = 0;
   StatsGen sg;
   int size = 1000;
 
   // These are the output vectors
-  QwtArray<double> x;
-  QwtArray<double> y;
+  QwtArray<float> x;
+  QwtArray<float> y;
 
   // These are the input vectors
-  QwtArray<double> angles;
-  QwtArray<double> axes;
-  QwtArray<double> weights;
+  QwtArray<float> angles;
+  QwtArray<float> axes;
+  QwtArray<float> weights;
 
   angles = m_MDFTableModel->getData(SGMDFTableModel::Angle);
   weights = m_MDFTableModel->getData(SGMDFTableModel::Weight);
@@ -136,25 +136,34 @@ void StatsGenMDFWidget::updateMDFPlot(QwtArray<double> odf)
   if (m_CrystalStructure == AIM::Reconstruction::Cubic)
   {
     // Allocate a new vector to hold the mdf data
-    QwtArray<double> mdf(5832);
+    QwtArray<float> mdf(5832);
     // Calculate the MDF Data using the ODF data and the rows from the MDF Table model
-    Texture::calculateMDFData<QwtArray<double>, CubicOps>(angles, axes, weights, odf, mdf);
+    Texture::calculateMDFData<QwtArray<float>, CubicOps>(angles, axes, weights, odf, mdf);
     // Now generate the actual XY point data that gets plotted.
     err = sg.GenCubicMDFPlotData(mdf, x, y, size);
   }
   else if (m_CrystalStructure == AIM::Reconstruction::Hexagonal)
   {
     // Allocate a new vector to hold the mdf data
-    QwtArray<double> mdf(15552);
+    QwtArray<float> mdf(15552);
     // Calculate the MDF Data using the ODF data and the rows from the MDF Table model
-    Texture::calculateMDFData<QwtArray<double>, HexagonalOps>(angles, axes, weights, odf, mdf);
+    Texture::calculateMDFData<QwtArray<float>, HexagonalOps>(angles, axes, weights, odf, mdf);
     // Now generate the actual XY point data that gets plotted.
     err = sg.GenHexMDFPlotData(mdf, x, y, size);
   }
 
+  QwtArray<double> xD(size);
+  QwtArray<double> yD(size);
+  for (int i = 0; i < size; ++i)
+  {
+    xD[i] = static_cast<double>(x[i]);
+    yD[i] = static_cast<double>(y[i]);
+  }
+
+
   // This will actually plot the XY data in the Qwt plot widget
   QwtPlotCurve* curve = m_PlotCurve;
-  curve->setData(x, y);
+  curve->setData(xD, yD);
   curve->setStyle(QwtPlotCurve::Lines);
   curve->attach(m_MDFPlot);
   m_MDFPlot->replot();
@@ -164,16 +173,16 @@ void StatsGenMDFWidget::updateMDFPlot(QwtArray<double> odf)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QwtArray<double> StatsGenMDFWidget::generateODFData()
+QwtArray<float> StatsGenMDFWidget::generateODFData()
 {
-  double totalWeight = 0.0;
+  float totalWeight = 0.0;
 
-  QwtArray<double> e1s;
-  QwtArray<double> e2s;
-  QwtArray<double> e3s;
-  QwtArray<double> weights;
-  QwtArray<double> sigmas;
-  QwtArray<double> odf;
+  QwtArray<float> e1s;
+  QwtArray<float> e2s;
+  QwtArray<float> e3s;
+  QwtArray<float> weights;
+  QwtArray<float> sigmas;
+  QwtArray<float> odf;
 
   // Initialize xMax and yMax....
   e1s = m_ODFTableModel->getData(SGODFTableModel::Euler1);
@@ -226,7 +235,7 @@ void StatsGenMDFWidget::on_deleteMDFRowBtn_clicked()
 //
 // -----------------------------------------------------------------------------
 int StatsGenMDFWidget::readDataFromHDF5(H5ReconStatsReader::Pointer reader,
-                                         QVector<double>  &bins,
+                                         QVector<float>  &bins,
                                          const std::string &hdf5GroupName)
 {
   int err = -1;
@@ -241,30 +250,30 @@ int StatsGenMDFWidget::writeDataToHDF5(H5ReconStatsWriter::Pointer writer)
 {
   int err = 0;
 
-  QwtArray<double> x;
-  QwtArray<double> y;
+  QwtArray<float> x;
+  QwtArray<float> y;
 
-  QwtArray<double> angles;
-  QwtArray<double> axes;
-  QwtArray<double> weights;
+  QwtArray<float> angles;
+  QwtArray<float> axes;
+  QwtArray<float> weights;
 
   angles = m_MDFTableModel->getData(SGMDFTableModel::Angle);
   weights = m_MDFTableModel->getData(SGMDFTableModel::Weight);
   axes = m_MDFTableModel->getData(SGMDFTableModel::Axis);
 
   // Generate the ODF Data from the current values in the ODFTableModel
-  QwtArray<double> odf = generateODFData();
-  QwtArray<double> mdf;
+  QwtArray<float> odf = generateODFData();
+  QwtArray<float> mdf;
 
   if (m_CrystalStructure == AIM::Reconstruction::Cubic) {
-	  Texture::calculateMDFData<QwtArray<double>, CubicOps>(angles, axes, weights, odf, mdf);
+	  Texture::calculateMDFData<QwtArray<float>, CubicOps>(angles, axes, weights, odf, mdf);
   }
   else if (m_CrystalStructure == AIM::Reconstruction::Hexagonal) {
-	  Texture::calculateMDFData<QwtArray<double>, HexagonalOps>(angles, axes, weights, odf, mdf);
+	  Texture::calculateMDFData<QwtArray<float>, HexagonalOps>(angles, axes, weights, odf, mdf);
   }
   if (mdf.size() > 0)
   {
-    double* mdfPtr = &(mdf.front());
+    float* mdfPtr = &(mdf.front());
     err = -1;
     if (mdfPtr != NULL)
     {

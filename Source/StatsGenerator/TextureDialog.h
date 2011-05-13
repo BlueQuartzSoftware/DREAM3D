@@ -59,7 +59,7 @@ class TextureDialog : public QDialog , private Ui::TextureDialog
 
     MXA_INSTANCE_PROPERTY(AIM::Reconstruction::CrystalStructure, CrystalStructure);
 
-    void getODFEntry(double &e1, double &e2, double &e3, double &weight, double &sigma);
+    void getODFEntry(float &e1, float &e2, float &e3, float &weight, float &sigma);
 
   protected slots:
     void on_presetListWidget_itemSelectionChanged ();
