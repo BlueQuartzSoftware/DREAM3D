@@ -33,7 +33,7 @@
 
 int main(int argc, char **argv)
 {
-std::cout << "Starting...." << std::endl;
+  std::cout << "Starting...." << std::endl;
 
   boost::shared_array<ReconstructionVoxel> voxels (new ReconstructionVoxel[2]);
   voxels.reset(NULL);

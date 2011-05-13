@@ -437,7 +437,7 @@ void SGWidget::on_m_SigmaCutOff_SizeDistribution_textChanged(const QString &text
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SGWidget::on_m_BinStepSize_valueChanged(float v)
+void SGWidget::on_m_BinStepSize_valueChanged(double v)
 {
   calculateNumberOfBins();
 }
