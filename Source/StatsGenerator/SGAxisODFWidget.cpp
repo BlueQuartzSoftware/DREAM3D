@@ -213,6 +213,14 @@ void SGAxisODFWidget::initQwtPlot(QString xAxisName, QString yAxisName, QwtPlot*
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void SGAxisODFWidget::updatePlots()
+{
+  on_m_CalculateODFBtn_clicked();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void SGAxisODFWidget::on_m_CalculateODFBtn_clicked()
 {
   int err = 0;

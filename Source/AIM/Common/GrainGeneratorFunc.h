@@ -72,6 +72,7 @@ public:
     float sizez;
     float misorientationtolerance;
     std::vector<AIM::Reconstruction::CrystalStructure> crystruct;
+    std::vector<AIM::Reconstruction::PhaseType>        phaseType;
     AIMRandomNG rg;
 
     std::vector<FloatArray> actualodf;
@@ -149,12 +150,15 @@ public:
     float neighborhooderrorweight;
     float sizedisterrorweight;
 
+#if 0
     void initialize(int32_t m_NumGrains, int32_t m_ShapeClass,
                     float m_XResolution, float m_YResolution, float m_ZResolution,
-                    float m_fillingerrorweight, float m_neighborhooderrorweight,
-                    float m_sizedisterrorweight,
+                    float m_fillingerrorweight, float m_neighborhooderrorweight, float m_sizedisterrorweight,
                     int32_t m_Precipitates, float m_FractionPrecipitates,
-                    std::vector<AIM::Reconstruction::CrystalStructure> m_CrystalStructure);
+                    std::vector<AIM::Reconstruction::CrystalStructure> m_CrystalStructure,
+                    std::vector<AIM::Reconstruction::PhaseType> m_PhaseType);
+
+#endif
     void initializeArrays();
     void initialize2();
 

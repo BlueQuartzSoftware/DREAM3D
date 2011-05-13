@@ -82,6 +82,8 @@ class SGAxisODFWidget : public QWidget, private Ui::SGAxisODFWidget
 
     void setPlotTabTitles(QString t1, QString t2, QString t3);
 
+    void updatePlots();
+
     protected slots:
       void on_m_CalculateODFBtn_clicked();
       void on_addODFTextureBtn_clicked();
