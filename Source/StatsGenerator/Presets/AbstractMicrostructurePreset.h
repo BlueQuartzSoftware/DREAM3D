@@ -61,35 +61,35 @@ class AbstractMicrostructurePreset
      * @param tableModel
      * @param binNumbers
      */
-    virtual void generateOmega3Data(StatsGenPlotWidget* plot, QVector<double> binNumbers) = 0;
+    virtual void generateOmega3Data(StatsGenPlotWidget* plot, QVector<float> binNumbers) = 0;
 
     /**
      * @brief
      * @param tableModel
      * @param binNumbers
      */
-    virtual void generateBOverAPlotData(StatsGenPlotWidget* plot, QVector<double> binNumbers) = 0;
+    virtual void generateBOverAPlotData(StatsGenPlotWidget* plot, QVector<float> binNumbers) = 0;
 
     /**
      * @brief
      * @param tableModel
      * @param binNumbers
      */
-    virtual void generateCOverAPlotData(StatsGenPlotWidget* plot, QVector<double> binNumbers) = 0;
+    virtual void generateCOverAPlotData(StatsGenPlotWidget* plot, QVector<float> binNumbers) = 0;
 
     /**
      * @brief
      * @param tableModel
      * @param binNumbers
      */
-    virtual void generateCOverBPlotData(StatsGenPlotWidget* plot, QVector<double> binNumbers) = 0;
+    virtual void generateCOverBPlotData(StatsGenPlotWidget* plot, QVector<float> binNumbers) = 0;
 
     /**
      * @brief
      * @param tableModel
      * @param binNumbers
      */
-    virtual void generateNeighborPlotData(StatsGenPlotWidget* plot, QVector<double> binNumbers) = 0;
+    virtual void generateNeighborPlotData(StatsGenPlotWidget* plot, QVector<float> binNumbers) = 0;
 
   protected:
     AbstractMicrostructurePreset() {};

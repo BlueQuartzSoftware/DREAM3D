@@ -56,20 +56,20 @@ class AIMCOMMON_EXPORT CubicOps : public OrientationMath
     int getODFSize() { return 5832; }
     int getMDFSize() { return 5832; }
 
-    virtual double getMisoQuat( double q1[5],double q2[5],double &n1,double &n2,double &n3);
-    virtual void getFZRod(double &r1,double &r2, double &r3);
-    virtual void getNearestQuat(double *q1, double *q2);
-    virtual void getFZQuat(double *qr);
-    virtual int getMisoBin(double n1, double n2, double n3);
-    virtual void determineEulerAngles(int choose, double &synea1, double &synea2, double &synea3);
-	virtual void determineHomochoricValues(int choose, double &r1, double &r2, double &r3);
-    virtual int getOdfBin(double r1, double r2, double r3);
+    virtual float getMisoQuat( float q1[5],float q2[5],float &n1,float &n2,float &n3);
+    virtual void getFZRod(float &r1,float &r2, float &r3);
+    virtual void getNearestQuat(float *q1, float *q2);
+    virtual void getFZQuat(float *qr);
+    virtual int getMisoBin(float n1, float n2, float n3);
+    virtual void determineEulerAngles(int choose, float &synea1, float &synea2, float &synea3);
+	virtual void determineHomochoricValues(int choose, float &r1, float &r2, float &r3);
+    virtual int getOdfBin(float r1, float r2, float r3);
 
 
   protected:
-    double _calcMisoQuat(double quatsym[24][5], int numsym,
-                  double q1[5], double q2[5],
-                  double &n1, double &n2, double &n3);
+    float _calcMisoQuat(float quatsym[24][5], int numsym,
+                  float q1[5], float q2[5],
+                  float &n1, float &n2, float &n3);
 
   private:
     CubicOps(const CubicOps&); // Copy Constructor Not Implemented

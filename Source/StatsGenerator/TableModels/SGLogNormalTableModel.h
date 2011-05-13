@@ -92,11 +92,11 @@ Q_OBJECT    ;
 
     QAbstractItemDelegate* getItemDelegate();
 
-    void setTableData(QVector<double> bins, QVector<QVector<double> > data, QVector<QString> colors);
+    void setTableData(QVector<float> bins, QVector<QVector<float> > data, QVector<QString> colors);
 
-    QVector<double>& getBinNumbers()
+    QVector<float>& getBinNumbers()
     { return m_BinNumbers;}
-    double getBinNumber(qint32 row)
+    float getBinNumber(qint32 row)
     { return m_BinNumbers[row];}
 
     QVector<QString>& getColors()
@@ -104,27 +104,27 @@ Q_OBJECT    ;
     QString getColor(qint32 row)
     { return m_Colors[row];}
 
-    virtual QVector<double> getData(int col);
-    virtual double getDataValue(int col, int row);
-    virtual void setColumnData(int col, QVector<double> &data);
+    virtual QVector<float> getData(int col);
+    virtual float getDataValue(int col, int row);
+    virtual void setColumnData(int col, QVector<float> &data);
 
-    QVector<double>& getAvergaes()
+    QVector<float>& getAvergaes()
     { return m_Average;}
-    QVector<double>& getStdDevs()
+    QVector<float>& getStdDevs()
     { return m_StdDev;}
 
-    double getAverage(qint32 row)
+    float getAverage(qint32 row)
     { return m_Average[row];}
-    double getStdDev(qint32 row)
+    float getStdDev(qint32 row)
     { return m_StdDev[row];}
 
     private:
     int m_ColumnCount;
     int m_RowCount;
 
-    QVector<double> m_BinNumbers;
-    QVector<double> m_Average;
-    QVector<double> m_StdDev;
+    QVector<float> m_BinNumbers;
+    QVector<float> m_Average;
+    QVector<float> m_StdDev;
     QVector<QString> m_Colors;
 
     SGLogNormalTableModel(const SGLogNormalTableModel&); // Copy Constructor Not Implemented

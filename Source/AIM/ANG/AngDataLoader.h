@@ -63,7 +63,7 @@ class AIMCOMMON_EXPORT AngDataLoader : public AbstractAngDataLoader
     MXA_INSTANCE_PROPERTY(bool, Cancel);
 
     int getSizeAndResolution(int &xpoints, int &ypoints, int &zpoints,
-                                       double &xres, double &yres, double &zres);
+                                       float &xres, float &yres, float &zres);
 
     int loadData(ReconstructionVoxel voxels[], int xpoints, int ypoints, int zpoints);
 

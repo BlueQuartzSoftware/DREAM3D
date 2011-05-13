@@ -69,11 +69,11 @@ class AIMCOMMON_EXPORT Grain
     void deepCopy(Grain::Pointer grain);
 
     IntVectorType     neighborlist;
-    DoubleVectorType  neighborsurfarealist;
+    FloatVectorType  neighborsurfarealist;
 
     std::vector<int>* voxellist;
-    std::vector<double>* ellipfunclist;
-    std::vector<double>* misorientationlist;
+    std::vector<float>* ellipfunclist;
+    std::vector<float>* misorientationlist;
     std::vector<std::vector<int> > neighbordistfunclist;
 
     /*
@@ -92,40 +92,40 @@ class AIMCOMMON_EXPORT Grain
     int twinnewnumber;
     int colonynewnumber;
     int slipsystem;
-    double packquality;
+    float packquality;
     int phase;
-    double centroidx;
-    double centroidy;
-    double centroidz;
-    double Ixx;
-    double Iyy;
-    double Izz;
-    double Ixy;
-    double Iyz;
-    double Ixz;
-    double omega3;
-  	double averageimagequality;
-    double averagemisorientation;
-    double kernelmisorientation;
-    double red;
-    double green;
-    double blue;
-    double IPF[3];
-    double schmidfactor;
-    double euler1;
-    double euler2;
-    double euler3;
-    double axiseuler1;
-    double axiseuler2;
-    double axiseuler3;
-    double volume;
-    double equivdiameter;
-    double neigherror;
-    double radius1;
-    double radius2;
-    double radius3;
-    double lowanglefraction;
-    double avg_quat[5];
+    float centroidx;
+    float centroidy;
+    float centroidz;
+    float Ixx;
+    float Iyy;
+    float Izz;
+    float Ixy;
+    float Iyz;
+    float Ixz;
+    float omega3;
+  	float averageimagequality;
+    float averagemisorientation;
+    float kernelmisorientation;
+    float red;
+    float green;
+    float blue;
+    float IPF[3];
+    float schmidfactor;
+    float euler1;
+    float euler2;
+    float euler3;
+    float axiseuler1;
+    float axiseuler2;
+    float axiseuler3;
+    float volume;
+    float equivdiameter;
+    float neigherror;
+    float radius1;
+    float radius2;
+    float radius3;
+    float lowanglefraction;
+    float avg_quat[5];
     int neighbordistfunc[3];
 
   protected:

@@ -66,7 +66,7 @@ class StatsGenPlotWidget : public QWidget, private Ui::StatsGenPlotWidget
 
     int writeDataToHDF5(H5ReconStatsWriter::Pointer writer, const std::string &hdf5GroupName);
     int readDataFromHDF5(H5ReconStatsReader::Pointer reader,
-                         QVector<double>  &bins,
+                         QVector<float>  &bins,
                          const std::string &hdf5GroupName);
 
     void setStatisticsType(AIM::Reconstruction::StatisticsType statsType);
@@ -80,27 +80,27 @@ class StatsGenPlotWidget : public QWidget, private Ui::StatsGenPlotWidget
 
     void setupGui();
 
-    void createBetaCurve(int tableRow, double &xMax, double &yMax);
-    void createLogNormalCurve(int tableRow, double &xMax, double &yMax);
-    void createPowerCurve(int tableRow, double &xMax, double &yMax);
+    void createBetaCurve(int tableRow, float &xMax, float &yMax);
+    void createLogNormalCurve(int tableRow, float &xMax, float &yMax);
+    void createPowerCurve(int tableRow, float &xMax, float &yMax);
     SGAbstractTableModel* tableModel();
 
-//    void setBins(QVector<double> &binValues);
+//    void setBins(QVector<float> &binValues);
     bool userUpdatedData();
 
-    MXA_INSTANCE_PROPERTY(double, Mu);
-    MXA_INSTANCE_PROPERTY(double, Sigma);
-    MXA_INSTANCE_PROPERTY(double, Cutoff);
-    MXA_INSTANCE_PROPERTY(double, BinStep);
+    MXA_INSTANCE_PROPERTY(float, Mu);
+    MXA_INSTANCE_PROPERTY(float, Sigma);
+    MXA_INSTANCE_PROPERTY(float, Cutoff);
+    MXA_INSTANCE_PROPERTY(float, BinStep);
 
     MXA_INSTANCE_PROPERTY(int, PhaseIndex);
     MXA_INSTANCE_PROPERTY(AIM::Reconstruction::CrystalStructure, CrystalStructure);
 
 
-    void setSizeDistributionValues(double mu, double sigma, double cutOff, double binStepSize);
+    void setSizeDistributionValues(float mu, float sigma, float cutOff, float binStepSize);
 
     void loadTableData(H5ReconStatsReader::Pointer reader,
-                       QVector<double> bins,
+                       QVector<float> bins,
                        std::vector<std::string> names,
                        const std::string &hdf5GroupName);
 

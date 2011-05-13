@@ -33,25 +33,25 @@
 #include "AIM/Common/AIMMath.h"
 
 
-  const static double m_pi = M_PI;
+  const static float m_pi = M_PI;
 
-  const double threesixty_over_pi = 360.0/m_pi;
-  const double oneeighty_over_pi = 180.0/m_pi;
-  const double sqrt_two = pow(2.0, 0.5);
+  const float threesixty_over_pi = 360.0f/m_pi;
+  const float oneeighty_over_pi = 180.0f/m_pi;
+  const float sqrt_two = powf(2.0f, 0.5f);
 
-  const double acos_neg_one = acos(-1.0);
-  const double acos_pos_one = acos(1.0);
-  const double sin_wmin_neg_1_over_2 = sin(acos_neg_one/2.0);
-  const double sin_wmin_pos_1_over_2 = sin(acos_pos_one/2.0);
+  const float acos_neg_one = acosf(-1.0f);
+  const float acos_pos_one = acosf(1.0f);
+  const float sin_wmin_neg_1_over_2 = sinf(acos_neg_one/2.0f);
+  const float sin_wmin_pos_1_over_2 = sinf(acos_pos_one/2.0f);
 
-  static const double CubicDim1InitValue = pow((0.75*((m_pi/4.0)-sin((m_pi/4.0)))),(1.0/3.0));
-  static const double CubicDim2InitValue = pow((0.75*((m_pi/4.0)-sin((m_pi/4.0)))),(1.0/3.0));
-  static const double CubicDim3InitValue = pow((0.75*((m_pi/4.0)-sin((m_pi/4.0)))),(1.0/3.0));
-  static const double CubicDim1StepValue = CubicDim1InitValue/9.0;
-  static const double CubicDim2StepValue = CubicDim2InitValue/9.0;
-  static const double CubicDim3StepValue = CubicDim3InitValue/9.0;
+  static const float CubicDim1InitValue = powf((0.75f*((m_pi/4.0f)-sinf((m_pi/4.0f)))),(1.0f/3.0f));
+  static const float CubicDim2InitValue = powf((0.75f*((m_pi/4.0f)-sinf((m_pi/4.0f)))),(1.0f/3.0f));
+  static const float CubicDim3InitValue = powf((0.75f*((m_pi/4.0f)-sinf((m_pi/4.0f)))),(1.0f/3.0f));
+  static const float CubicDim1StepValue = CubicDim1InitValue/9.0f;
+  static const float CubicDim2StepValue = CubicDim2InitValue/9.0f;
+  static const float CubicDim3StepValue = CubicDim3InitValue/9.0f;
 
-  static const double CubicQuatSym[24][5] = {
+  static const float CubicQuatSym[24][5] = {
                        {0.000000000, 0.000000000, 0.000000000, 0.000000000, 1.000000000},
                        {0.000000000, 1.000000000, 0.000000000, 0.000000000, 0.000000000},
                        {0.000000000, 0.000000000, 1.000000000, 0.000000000, 0.000000000},
@@ -77,7 +77,7 @@
                        {0.000000000, -0.500000000, -0.500000000, 0.500000000, 0.500000000},
                        {0.000000000, 0.500000000, 0.500000000, -0.500000000, 0.500000000}};
 
-  static const double CubicRodSym[24][3] = {{0,0,0},
+  static const float CubicRodSym[24][3] = {{0,0,0},
                       {10000000000.0, 0, 0},
                       {0, 10000000000.0, 0},
                       {0, 0, 10000000000.0},
@@ -119,11 +119,11 @@ CubicOps::~CubicOps()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-double CubicOps::getMisoQuat( double q1[5],double q2[5],double &n1,double &n2,double &n3)
+float CubicOps::getMisoQuat( float q1[5],float q2[5],float &n1,float &n2,float &n3)
 {
 
   int numsym = 0;
-  double quatsym[24][5];
+  float quatsym[24][5];
 
   numsym = 24;
   for (int i = 0; i < 24; i++)
@@ -140,15 +140,15 @@ double CubicOps::getMisoQuat( double q1[5],double q2[5],double &n1,double &n2,do
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-double CubicOps::_calcMisoQuat(double quatsym[24][5], int numsym,
-                                      double q1[5], double q2[5],
-                                      double &n1, double &n2, double &n3)
+float CubicOps::_calcMisoQuat(float quatsym[24][5], int numsym,
+                                      float q1[5], float q2[5],
+                                      float &n1, float &n2, float &n3)
 {
-  double wmin=9999999.0; //,na,nb,nc;
-   double qc[5];
-   double qco[5];
-   double sin_wmin_over_2 = 0.0;
- //  double _1, _2,  _6;
+  float wmin=9999999.0f; //,na,nb,nc;
+   float qc[5];
+   float qco[5];
+   float sin_wmin_over_2 = 0.0;
+ //  float _1, _2,  _6;
 
 
    qc[1]=-q1[1]*q2[4]+q1[4]*q2[1]-q1[2]*q2[3]+q1[3]*q2[2];
@@ -287,13 +287,13 @@ double CubicOps::_calcMisoQuat(double quatsym[24][5], int numsym,
    else
    {
      wmin = acos(wmin);
-     sin_wmin_over_2 = sin(wmin / 2.0);
+     sin_wmin_over_2 = sinf(wmin / 2.0);
    }
 
    n1 = qco[1] / sin_wmin_over_2;
    n2 = qco[2] / sin_wmin_over_2;
    n3 = qco[3] / sin_wmin_over_2;
-   double denom = pow((n1*n1+n2*n2+n3*n3),0.5);
+   float denom = powf((n1*n1+n2*n2+n3*n3),0.5);
    n1 = n1/denom;
    n2 = n2/denom;
    n3 = n3/denom;
@@ -303,9 +303,9 @@ double CubicOps::_calcMisoQuat(double quatsym[24][5], int numsym,
 
 }
 
-void CubicOps::getFZRod(double &r1,double &r2, double &r3)
+void CubicOps::getFZRod(float &r1,float &r2, float &r3)
 {
-  double rodsym[24][3];
+  float rodsym[24][3];
   int numsym;
   numsym = 24;
   for(int i=0;i<24;i++)
@@ -318,10 +318,10 @@ void CubicOps::getFZRod(double &r1,double &r2, double &r3)
   _calcFZRod(rodsym, numsym, r1, r2, r3);
 }
 
-void CubicOps::getNearestQuat( double *q1, double *q2)
+void CubicOps::getNearestQuat( float *q1, float *q2)
 {
   int numsym = 0;
-  double quatsym[24][5];
+  float quatsym[24][5];
 
     numsym = 24;
     for (int i = 0; i < 24; i++)
@@ -335,10 +335,10 @@ void CubicOps::getNearestQuat( double *q1, double *q2)
     _calcNearestQuat(quatsym, numsym, q1, q2);
 }
 
-void CubicOps::getFZQuat(double *qr)
+void CubicOps::getFZQuat(float *qr)
 {
   int numsym = 0;
-  double quatsym[24][5];
+  float quatsym[24][5];
 
     numsym = 24;
     for(int i=0;i<24;i++)
@@ -352,26 +352,26 @@ void CubicOps::getFZQuat(double *qr)
 
 }
 
-int CubicOps::getMisoBin(double n1, double n2, double n3)
+int CubicOps::getMisoBin(float n1, float n2, float n3)
 {
-  double dim[3];
-  double bins[3];
+  float dim[3];
+  float bins[3];
 
   dim[0] = CubicDim1InitValue;
   dim[1] = CubicDim2InitValue;
   dim[2] = CubicDim3InitValue;
-  bins[0] = 18.0;
-  bins[1] = 18.0;
-  bins[2] = 18.0;
+  bins[0] = 18.0f;
+  bins[1] = 18.0f;
+  bins[2] = 18.0f;
 
   return _calcMisoBin(dim, bins, n1, n2, n3);
 }
 
-void CubicOps::determineEulerAngles(int choose, double &synea1, double &synea2, double &synea3)
+void CubicOps::determineEulerAngles(int choose, float &synea1, float &synea2, float &synea3)
 {
-  double init[3];
-  double step[3];
-  double phi[3];
+  float init[3];
+  float step[3];
+  float phi[3];
 
   init[0] = CubicDim1InitValue;
   init[1] = CubicDim2InitValue;
@@ -386,15 +386,15 @@ void CubicOps::determineEulerAngles(int choose, double &synea1, double &synea2, 
   _calcDetermineEulerAngles(init, step, phi, choose, synea1, synea2, synea3);
 }
 
-void CubicOps::determineHomochoricValues(int choose, double &r1, double &r2, double &r3)
+void CubicOps::determineHomochoricValues(int choose, float &r1, float &r2, float &r3)
 {
-  //double init1, init2, init3;
-  double step[3];
-  double phi[3];
+  //float init1, init2, init3;
+  float step[3];
+  float phi[3];
 
-  step[0] = CubicDim1StepValue/2.0;
-  step[1] = CubicDim2StepValue/2.0;
-  step[2] = CubicDim3StepValue/2.0;
+  step[0] = CubicDim1StepValue/2.0f;
+  step[1] = CubicDim2StepValue/2.0f;
+  step[2] = CubicDim3StepValue/2.0f;
   phi[0] = choose % 18;
   phi[1] = (choose / 18) % 18;
   phi[2] = choose / (18 * 18);
@@ -402,17 +402,17 @@ void CubicOps::determineHomochoricValues(int choose, double &r1, double &r2, dou
   return _calcDetermineHomochoricValues(step, phi, choose, r1, r2, r3);
 
 }
-int CubicOps::getOdfBin(double r1, double r2, double r3)
+int CubicOps::getOdfBin(float r1, float r2, float r3)
 {
-  double dim[3];
-  double bins[3];
+  float dim[3];
+  float bins[3];
 
   dim[0] = CubicDim1InitValue;
   dim[1] = CubicDim2InitValue;
   dim[2] = CubicDim3InitValue;
-  bins[0] = 18.0;
-  bins[1] = 18.0;
-  bins[2] = 18.0;
+  bins[0] = 18.0f;
+  bins[1] = 18.0f;
+  bins[2] = 18.0f;
 
   return _calcODFBin(dim, bins, r1, r2, r3);
 }
