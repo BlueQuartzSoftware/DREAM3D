@@ -341,22 +341,22 @@ QString SGWidget::getComboString()
 int SGWidget::gatherSizeDistributionFromGui(float &mu, float &sigma, float &cutOff, float &stepSize)
 {
   bool ok = false;
-  mu = m_Mu_SizeDistribution->text().toDouble(&ok);
+  mu = m_Mu_SizeDistribution->text().toFloat(&ok);
   if (ok == false)
   {
     return 0;
   }
-  sigma = m_Sigma_SizeDistribution->text().toDouble(&ok);
+  sigma = m_Sigma_SizeDistribution->text().toFloat(&ok);
   if (ok == false)
   {
     return 0;
   }
-  cutOff = m_SigmaCutOff_SizeDistribution->text().toDouble(&ok);
+  cutOff = m_SigmaCutOff_SizeDistribution->text().toFloat(&ok);
   if (ok == false)
   {
     return 0;
   }
-  stepSize = m_BinStepSize->text().toDouble(&ok);
+  stepSize = m_BinStepSize->text().toFloat(&ok);
   if (ok == false)
   {
     return 0;

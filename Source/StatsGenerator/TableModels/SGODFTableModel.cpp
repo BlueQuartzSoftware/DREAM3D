@@ -212,19 +212,19 @@ bool SGODFTableModel::setData(const QModelIndex & index, const QVariant & value,
   switch(col)
   {
     case Euler1:
-      m_Euler1s[row] = value.toDouble(&ok);
+      m_Euler1s[row] = value.toFloat(&ok);
       break;
     case Euler2:
-      m_Euler2s[row] = value.toDouble(&ok);
+      m_Euler2s[row] = value.toFloat(&ok);
       break;
     case Euler3:
-      m_Euler3s[row] = value.toDouble(&ok);
+      m_Euler3s[row] = value.toFloat(&ok);
       break;
     case Weight:
-      m_Weights[row] = value.toDouble(&ok);
+      m_Weights[row] = value.toFloat(&ok);
       break;
     case Sigma:
-      m_Sigmas[row] = value.toDouble(&ok);
+      m_Sigmas[row] = value.toFloat(&ok);
       break;
     default:
       Q_ASSERT(false);

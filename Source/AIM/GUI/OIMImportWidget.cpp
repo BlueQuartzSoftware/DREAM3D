@@ -248,7 +248,7 @@ void OIMImportWidget::on_m_GoBtn_clicked()
   m_OimImport->setOutputFile(m_OutputFile->text().toStdString());
   m_OimImport->setZStartIndex(m_ZStartIndex->value());
   m_OimImport->setZEndIndex(m_ZEndIndex->value());
-  m_OimImport->setZResolution(m_zSpacing->text().toDouble(&ok));
+  m_OimImport->setZResolution(m_zSpacing->text().toFloat(&ok));
 
   int fileCount = m_FileListView->count();
   std::vector<std::string> fileList;

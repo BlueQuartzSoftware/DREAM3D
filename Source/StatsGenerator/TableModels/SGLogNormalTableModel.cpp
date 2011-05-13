@@ -235,13 +235,13 @@ bool SGLogNormalTableModel::setData(const QModelIndex & index, const QVariant & 
   switch(col)
   {
     case BinNumber:
-      m_BinNumbers[row] = value.toDouble(&ok);
+      m_BinNumbers[row] = value.toFloat(&ok);
       break;
     case Average:
-      m_Average[row] = value.toDouble(&ok);
+      m_Average[row] = value.toFloat(&ok);
       break;
     case StdDev:
-      m_StdDev[row] = value.toDouble(&ok);
+      m_StdDev[row] = value.toFloat(&ok);
       break;
     case LineColor:
       m_Colors[row] = value.toString();
