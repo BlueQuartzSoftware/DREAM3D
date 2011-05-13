@@ -35,7 +35,7 @@
 
 #include "MXA/Common/MXASetGetMacros.h"
 #include "AIM/Common/AIMCommonConfiguration.h"
-#include "AIM/Common/Voxel.h"
+#include "AIM/Common/ReconstructionVoxel.h"
 
 
 
@@ -48,7 +48,7 @@ class AIMCOMMON_EXPORT AbstractAngDataLoader
 
     virtual ~AbstractAngDataLoader() {}
 
-    virtual int loadData(Voxel voxels[],
+    virtual int loadData(ReconstructionVoxel voxels[],
                          int xpoints, int ypoints, int zpoints) = 0;
 
     virtual int getSizeAndResolution(int &xpoints, int &ypoints, int &zpoints,
