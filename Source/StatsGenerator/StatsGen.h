@@ -80,7 +80,7 @@ class StatsGen
       for (int i = 0; i < size; i++)
       {
         betain = (i * (1.0 / float(size))) + ((1.0 / float(size)) / 2.0);
-        betaout = (gammapq / (gammap * gammaq)) * pow(betain, (alpha - 1)) * pow((1 - betain), (beta - 1));
+        betaout = (gammapq / (gammap * gammaq)) * powf(betain, (alpha - 1)) * powf((1 - betain), (beta - 1));
         x[i] = betain;
         y[i] = betaout * (1.0 / float(size));
         if (betaout < 0) err = 1;
@@ -93,8 +93,8 @@ class StatsGen
     {
       int err = 0;
       float lognormin, lognormout, max, min;
-      float s2 = pow(stdDev, 2);
-      float root2pi = pow((2.0 * 3.1415926535897), 0.5);
+      float s2 = powf(stdDev, 2);
+      float root2pi = powf((2.0 * 3.1415926535897), 0.5);
       x.resize(size);
       y.resize(size);
       min = exp(avg - (5 * stdDev));
@@ -122,7 +122,7 @@ class StatsGen
       for (int i = 0; i < size; i++)
       {
         in = (i * ((max - min) / float(size))) + (((max - min) / float(size)) / 2.0) + min;
-        out = alpha * pow(in, k) + beta;
+        out = alpha * powf(in, k) + beta;
         x[i] = in;
         y[i] = out;
         if (out < 0) err = 1;
