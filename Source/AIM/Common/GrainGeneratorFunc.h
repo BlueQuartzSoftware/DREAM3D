@@ -39,7 +39,7 @@
 #include "AIM/Common/AIMArray.hpp"
 #include "AIM/Common/Constants.h"
 #include "AIM/Common/Grain.h"
-#include "AIM/Common/Voxel.h"
+#include "AIM/Common/GrainGeneratorVoxel.h"
 #include "AIM/Common/AIMRandomNG.h"
 #include "AIM/Common/HDF5/H5ReconStatsWriter.h"
 #include "AIM/Common/HDF5/H5ReconStatsReader.h"
@@ -78,7 +78,7 @@ public:
 
     std::vector<DoubleArray> simodf;
     std::vector<DoubleArray> axisodf;
-    Voxel* voxels;
+    GrainGeneratorVoxel* voxels;
     std::vector<DoubleArray> actualmdf;
     std::vector<DoubleArray> simmdf;
     std::vector<DoubleArray> actualmicrotex;

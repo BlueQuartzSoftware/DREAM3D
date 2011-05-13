@@ -43,7 +43,7 @@
 
 #include "AIM/ANG/AbstractAngDataLoader.h"
 #include "AIM/Common/AIMCommonConfiguration.h"
-#include "AIM/Common/Voxel.h"
+#include "AIM/Common/ReconstructionVoxel.h"
 
 
 
@@ -65,7 +65,7 @@ class AIMCOMMON_EXPORT AngDataLoader : public AbstractAngDataLoader
     int getSizeAndResolution(int &xpoints, int &ypoints, int &zpoints,
                                        double &xres, double &yres, double &zres);
 
-    int loadData(Voxel voxels[], int xpoints, int ypoints, int zpoints);
+    int loadData(ReconstructionVoxel voxels[], int xpoints, int ypoints, int zpoints);
 
   protected:
     AngDataLoader();

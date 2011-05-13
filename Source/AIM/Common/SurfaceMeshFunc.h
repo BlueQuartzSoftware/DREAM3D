@@ -55,7 +55,6 @@
 
 #include "AIM/Common/AIMCommonConfiguration.h"
 #include <AIM/Common/Grain.h>
-#include <AIM/Common/Voxel.h>
 #include <AIM/Common/Patch.h>
 #include <AIM/Common/Face.h>
 #include <AIM/Common/Neighbor.h>

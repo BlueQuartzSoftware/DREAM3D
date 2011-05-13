@@ -42,6 +42,7 @@
 #include <boost/shared_ptr.hpp>
 
 typedef boost::shared_ptr<std::vector<int> >    IntVectorType;
+typedef boost::shared_ptr<std::vector<float> > FloatVectorType;
 typedef boost::shared_ptr<std::vector<double> > DoubleVectorType;
 typedef boost::shared_ptr<std::vector<size_t> > SizeTVectorType;
 
