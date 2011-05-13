@@ -69,7 +69,7 @@
 #include "AIM/Common/OrientationOps/HexagonalOps.h"
 #include "AIM/Common/OrientationOps/OrthoRhombicOps.h"
 
-typedef boost::shared_array<double>    DoubleArray;
+typedef boost::shared_array<float>    FloatArray;
 typedef boost::shared_array<int>       IntArray;
 
 
@@ -93,22 +93,22 @@ class AIMCOMMON_EXPORT ReconstructionFunc
 
     virtual ~ReconstructionFunc();
 
-    typedef AIMArray<double> DoubleArrayType;
+    typedef AIMArray<float> FloatArrayType;
     typedef AIMArray<int>    IntArrayType;
 
-    double sizex;
-    double sizey;
-    double sizez;
+    float sizex;
+    float sizey;
+    float sizez;
 
-    double resx;
-    double resy;
-    double resz;
+    float resx;
+    float resy;
+    float resz;
 
-    double misorientationtolerance;
-    double minseedconfidence;
-    double minseedimagequality;
-    double downsamplefactor;
-    double sizebinstepsize;
+    float misorientationtolerance;
+    float minseedconfidence;
+    float minseedimagequality;
+    float downsamplefactor;
+    float sizebinstepsize;
     int minallowedgrainsize;
     int mergetwinsoption;
     int mergecoloniesoption;
@@ -124,21 +124,21 @@ class AIMCOMMON_EXPORT ReconstructionFunc
 
     IntArray graincounts;
 
-    vector<vector<double> > graincenters;
-    vector<vector<double> > grainmoments;
-    DoubleArrayType::Pointer         m_grainQuats;
+    vector<vector<float> > graincenters;
+    vector<vector<float> > grainmoments;
+    FloatArrayType::Pointer         m_grainQuats;
 
     int numseNbins;
     int numorients;
     int numeulers;
  //   int numgrains;
-    vector<double> totalsurfacearea;
-    vector<double> phasefraction;
-    vector<double> totalvol;
-    vector<double> totalaxes;
+    vector<float> totalsurfacearea;
+    vector<float> phasefraction;
+    vector<float> totalvol;
+    vector<float> totalaxes;
     vector<int> maxdiameter;
     vector<int> mindiameter;
-    double unbiasedvol;
+    float unbiasedvol;
     int cutoutxsize;
     int cutoutysize;
     int cmaxx;
@@ -156,9 +156,9 @@ class AIMCOMMON_EXPORT ReconstructionFunc
 
 
     void initialize(int nX, int nY, int nZ,
-                  double xRes, double yRes, double zRes, bool v_mergetwinsoption, bool v_mergecoloniesoption,
-				  int v_minallowedgrainsize, double v_minseedconfidence, double v_downsamplefactor,
-				  double v_minseedimagequality, double v_misorientationtolerance, double v_sizebinstepsize,
+                  float xRes, float yRes, float zRes, bool v_mergetwinsoption, bool v_mergecoloniesoption,
+				  int v_minallowedgrainsize, float v_minseedconfidence, float v_downsamplefactor,
+				  float v_minseedimagequality, float v_misorientationtolerance, float v_sizebinstepsize,
 				  vector<AIM::Reconstruction::CrystalStructure> v_crystruct, int v_alignmeth, bool v_alreadyformed);
 
 
@@ -206,10 +206,10 @@ class AIMCOMMON_EXPORT ReconstructionFunc
     int volume_stats(H5ReconStatsWriter::Pointer h5io);
     int volume_stats2D(H5ReconStatsWriter::Pointer h5io);
 
-    double gamma(double x);
-    double find_xcoord(size_t index);
-    double find_ycoord(size_t index);
-    double find_zcoord(size_t index);
+    float gamma(float x);
+    float find_xcoord(size_t index);
+    float find_ycoord(size_t index);
+    float find_zcoord(size_t index);
 
   protected:
     ReconstructionFunc();

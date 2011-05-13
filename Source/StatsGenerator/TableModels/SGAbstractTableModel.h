@@ -165,21 +165,21 @@ Q_OBJECT    ;
      *
      * @param binNumbers
      */
-    //virtual void setBinNumbers(QVector<double> binNumbers) = 0;
-    virtual void setTableData(QVector<double> bins, QVector<QVector<double> > data, QVector<QString> colors) = 0;
+    //virtual void setBinNumbers(QVector<float> binNumbers) = 0;
+    virtual void setTableData(QVector<float> bins, QVector<QVector<float> > data, QVector<QString> colors) = 0;
 
     /**
      *
      * @return
      */
-    virtual QVector<double>& getBinNumbers() = 0;
+    virtual QVector<float>& getBinNumbers() = 0;
 
     /**
      *
      * @param row
      * @return
      */
-    virtual double getBinNumber(qint32 row) = 0;
+    virtual float getBinNumber(qint32 row) = 0;
 
     /**
      *
@@ -199,7 +199,7 @@ Q_OBJECT    ;
      * @param col
      * @return
      */
-    virtual QVector<double> getData(int col) = 0;
+    virtual QVector<float> getData(int col) = 0;
 
     /**
      *
@@ -207,10 +207,10 @@ Q_OBJECT    ;
      * @param row
      * @return
      */
-    virtual double getDataValue(int col, int row) = 0;
+    virtual float getDataValue(int col, int row) = 0;
 
 
-    virtual void setColumnData(int col, QVector<double> &data) = 0;
+    virtual void setColumnData(int col, QVector<float> &data) = 0;
 
 
     private:

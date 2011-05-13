@@ -39,33 +39,33 @@
 #include "AIM/Common/OrientationOps/CubicOps.h"
 
 
-	const static double m_pi = M_PI;
-	const static double two_pi = 2.0 * m_pi;
-	const static double recip_pi = 1.0/m_pi;
-	const static double pi_over_180 = m_pi/180.0;
+	const static float m_pi = M_PI;
+	const static float two_pi = 2.0 * m_pi;
+	const static float recip_pi = 1.0/m_pi;
+	const static float pi_over_180 = m_pi/180.0;
 
-	const static double m_OnePointThree = 1.33333333333;
+	const static float m_OnePointThree = 1.33333333333;
 
-	const double threesixty_over_pi = 360.0/m_pi;
-	const double oneeighty_over_pi = 180.0/m_pi;
-	const double sqrt_two = pow(2.0, 0.5);
+	const float threesixty_over_pi = 360.0/m_pi;
+	const float oneeighty_over_pi = 180.0/m_pi;
+	const float sqrt_two = pow(2.0, 0.5);
 
-	const double acos_neg_one = acos(-1.0);
-	const double acos_pos_one = acos(1.0);
-	const double sin_wmin_neg_1_over_2 = sin(acos_neg_one/2.0);
-	const double sin_wmin_pos_1_over_2 = sin(acos_pos_one/2.0);
-  const double sin_of_acos_neg_1 = sin(acos_neg_one);
-  const double sin_of_acos_pos_1 = sin(acos_pos_one);
+	const float acos_neg_one = acos(-1.0);
+	const float acos_pos_one = acos(1.0);
+	const float sin_wmin_neg_1_over_2 = sin(acos_neg_one/2.0);
+	const float sin_wmin_pos_1_over_2 = sin(acos_pos_one/2.0);
+  const float sin_of_acos_neg_1 = sin(acos_neg_one);
+  const float sin_of_acos_pos_1 = sin(acos_pos_one);
 
-  const double recip_sin_of_acos_neg_1 = 1.0/sin_of_acos_neg_1;
-  const double recip_sin_of_acos_pos_1 = 1.0/sin_of_acos_pos_1;
+  const float recip_sin_of_acos_neg_1 = 1.0/sin_of_acos_neg_1;
+  const float recip_sin_of_acos_pos_1 = 1.0/sin_of_acos_pos_1;
 
-	const static double SinOfHalf = sin(0.5);
-	const static double CosOfHalf = cos(0.5);
-	const static double SinOfZero = sin(0.0);
-	const static double CosOfZero = cos(0.0);
+	const static float SinOfHalf = sin(0.5);
+	const static float CosOfHalf = cos(0.5);
+	const static float SinOfZero = sin(0.0);
+	const static float CosOfZero = cos(0.0);
 
-  static const double CubicSlipSystems[12][6] = {{1,1,1,0,1,-1},
+  static const float CubicSlipSystems[12][6] = {{1,1,1,0,1,-1},
 												{1,1,1,1,0,-1},
 												{1,1,1,1,-1,0},
 												{1,1,-1,1,-1,0},
@@ -97,16 +97,16 @@ OrientationMath::~OrientationMath()
 {
 }
 
-double OrientationMath::_calcMisoQuat(double quatsym[24][5], int numsym,
-                                      double q1[5], double q2[5],
-                                      double &n1, double &n2, double &n3)
+float OrientationMath::_calcMisoQuat(float quatsym[24][5], int numsym,
+                                      float q1[5], float q2[5],
+                                      float &n1, float &n2, float &n3)
 {
-  double wmin = 9999999; //,na,nb,nc;
-  double w = 0;
-  double n1min, n2min, n3min;
-  double qr[5];
-  double qc[5];
-  double temp;
+  float wmin = 9999999; //,na,nb,nc;
+  float w = 0;
+  float n1min, n2min, n3min;
+  float qr[5];
+  float qc[5];
+  float temp;
 
   qr[1] = -q1[1] * q2[4] + q1[4] * q2[1] - q1[2] * q2[3] + q1[3] * q2[2];
   qr[2] = -q1[2] * q2[4] + q1[4] * q2[2] - q1[3] * q2[1] + q1[1] * q2[3];
@@ -154,12 +154,12 @@ double OrientationMath::_calcMisoQuat(double quatsym[24][5], int numsym,
   n1 = fabs(n1min);
   n2 = fabs(n2min);
   n3 = fabs(n3min);
-  double denom = pow((n1*n1+n2*n2+n3*n3),0.5);
+  float denom = pow((n1*n1+n2*n2+n3*n3),0.5);
   n1 = n1/denom;
   n2 = n2/denom;
   n3 = n3/denom;
-  double newangle = 0;
-  double angle = 180*atan(n2/n1) * recip_pi;
+  float newangle = 0;
+  float angle = 180*atan(n2/n1) * recip_pi;
   if(angle > 30.0)
   {
   if(int(angle/30)%2 == 0)
@@ -183,13 +183,13 @@ double OrientationMath::_calcMisoQuat(double quatsym[24][5], int numsym,
 }
 
 
-void OrientationMath::_calcFZRod(double rodsym[24][3], int numsym, double &r1,double &r2, double &r3)
+void OrientationMath::_calcFZRod(float rodsym[24][3], int numsym, float &r1,float &r2, float &r3)
 {
-  double denom, dist;
+  float denom, dist;
 //  int index;
-  double smallestdist = 100000000;
-  double rc1, rc2, rc3;
-  double r1min, r2min, r3min;
+  float smallestdist = 100000000;
+  float rc1, rc2, rc3;
+  float r1min, r2min, r3min;
   for(int i=0;i<numsym;i++)
   {
     denom = 1-(r1*rodsym[i][0]+r2*rodsym[i][1]+r3*rodsym[i][2]);
@@ -210,12 +210,12 @@ void OrientationMath::_calcFZRod(double rodsym[24][3], int numsym, double &r1,do
   r3 = r3min;
 }
 
-void OrientationMath::_calcNearestQuat(double quatsym[24][5], int numsym, double *q1, double *q2)
+void OrientationMath::_calcNearestQuat(float quatsym[24][5], int numsym, float *q1, float *q2)
 {
-  double dist = 0;
-  double smallestdist = 1000000;
-  double qc[5];
-  double qmax[5];
+  float dist = 0;
+  float smallestdist = 1000000;
+  float qc[5];
+  float qmax[5];
 
 
   for(int i=0;i<5;i++)
@@ -251,12 +251,12 @@ void OrientationMath::_calcNearestQuat(double quatsym[24][5], int numsym, double
   }
 }
 
-void OrientationMath::_calcFZQuat(double quatsym[24][5], int numsym, double *qr)
+void OrientationMath::_calcFZQuat(float quatsym[24][5], int numsym, float *qr)
 {
-  double dist = 0;
-  double smallestdist = 1000000;
-  double qc[5];
-  double qmax[5];
+  float dist = 0;
+  float smallestdist = 1000000;
+  float qc[5];
+  float qmax[5];
 
   for(int i=0;i<5;i++)
   {
@@ -292,7 +292,7 @@ void OrientationMath::_calcFZQuat(double quatsym[24][5], int numsym, double *qr)
 }
 
 
-int OrientationMath::_calcMisoBin(double dim[3], double bins[3], double n1, double n2, double n3)
+int OrientationMath::_calcMisoBin(float dim[3], float bins[3], float n1, float n2, float n3)
 {
   size_t miso1bin = size_t(n1*bins[0]/dim[0]);
   size_t miso2bin = size_t(n2*bins[1]/dim[1]);
@@ -305,32 +305,32 @@ int OrientationMath::_calcMisoBin(double dim[3], double bins[3], double n1, doub
 
 
 
-void OrientationMath::_calcDetermineEulerAngles(double init[3], double step[3], double phi[3],
-                                                int choose, double &synea1, double &synea2, double &synea3)
+void OrientationMath::_calcDetermineEulerAngles(float init[3], float step[3], float phi[3],
+                                                int choose, float &synea1, float &synea2, float &synea3)
 {
   AIMRandomNG rg;
   rg.RandomInit((static_cast<unsigned int> (MXA::getMilliSeconds())));
-  double random = rg.Random();
-  double synh1 = (step[0] * phi[0]) + (step[0] * random) - (init[0]);
+  float random = rg.Random();
+  float synh1 = (step[0] * phi[0]) + (step[0] * random) - (init[0]);
   random = rg.Random();
-  double synh2 = (step[1] * phi[1]) + (step[1] * random) - (init[1]);
+  float synh2 = (step[1] * phi[1]) + (step[1] * random) - (init[1]);
   random = rg.Random();
-  double synh3 = (step[2] * phi[2]) + (step[2] * random) - (init[2]);
-  double hmag = pow((synh1 * synh1 + synh2 * synh2 + synh3 * synh3), 0.5);
-  double angle = pow((8 * hmag * hmag * hmag), (1.0 / 3.0));
-  double synr1 = tan(angle / 2.0) * (synh1 / hmag);
-  double synr2 = tan(angle / 2.0) * (synh2 / hmag);
-  double synr3 = tan(angle / 2.0) * (synh3 / hmag);
-  double sum = atan(synr3);
-  double diff = atan(synr2 / synr1);
+  float synh3 = (step[2] * phi[2]) + (step[2] * random) - (init[2]);
+  float hmag = pow((synh1 * synh1 + synh2 * synh2 + synh3 * synh3), 0.5);
+  float angle = pow((8 * hmag * hmag * hmag), (1.0 / 3.0));
+  float synr1 = tan(angle / 2.0) * (synh1 / hmag);
+  float synr2 = tan(angle / 2.0) * (synh2 / hmag);
+  float synr3 = tan(angle / 2.0) * (synh3 / hmag);
+  float sum = atan(synr3);
+  float diff = atan(synr2 / synr1);
   synea1 = sum + diff;
   synea2 = 2. * atan(synr1 * cos(sum) / cos(diff));
   synea3 = sum - diff;
 }
 
-void OrientationMath::_calcDetermineHomochoricValues( double step[3], double phi[3], int choose, double &r1, double &r2, double &r3)
+void OrientationMath::_calcDetermineHomochoricValues( float step[3], float phi[3], int choose, float &r1, float &r2, float &r3)
 {
-  double random; 
+  float random;
 
   AIMRandomNG rg;
   rg.RandomInit((static_cast<unsigned int> (MXA::getMilliSeconds())));
@@ -342,7 +342,7 @@ void OrientationMath::_calcDetermineHomochoricValues( double step[3], double phi
   r3 = (step[2] * phi[2]) + (step[2] * random);
 }
 
-int OrientationMath::_calcODFBin(double dim[3], double bins[3], double r1, double r2, double r3)
+int OrientationMath::_calcODFBin(float dim[3], float bins[3], float r1, float r2, float r3)
 {
   OrientationMath::RodtoHomochoric(r1,r2,r3);
   size_t g1euler1bin;
@@ -359,10 +359,10 @@ int OrientationMath::_calcODFBin(double dim[3], double bins[3], double r1, doubl
   return g1odfbin;
 }
 
-void OrientationMath::axisAngletoHomochoric(double w, double n1, double n2, double n3, double &r1, double &r2, double &r3)
+void OrientationMath::axisAngletoHomochoric(float w, float n1, float n2, float n3, float &r1, float &r2, float &r3)
 {
-  double degtorad = m_pi / 180.0;
-  double denom;
+  float degtorad = m_pi / 180.0;
+  float denom;
 
   w = w * degtorad;
   denom = (n1 * n1) + (n2 * n2) + (n3 * n3);
@@ -376,10 +376,10 @@ void OrientationMath::axisAngletoHomochoric(double w, double n1, double n2, doub
 }
 
 
-void OrientationMath::axisAngletoRod(double w, double n1, double n2, double n3, double &r1, double &r2, double &r3)
+void OrientationMath::axisAngletoRod(float w, float n1, float n2, float n3, float &r1, float &r2, float &r3)
 {
-  double degtorad = m_pi / 180.0;
-  double denom;
+  float degtorad = m_pi / 180.0;
+  float denom;
 
   w = w * degtorad;
   denom = (n1 * n1) + (n2 * n2) + (n3 * n3);
@@ -393,9 +393,9 @@ void OrientationMath::axisAngletoRod(double w, double n1, double n2, double n3, 
 }
 
 
-void OrientationMath::RodtoHomochoric(double &r1, double &r2, double &r3)
+void OrientationMath::RodtoHomochoric(float &r1, float &r2, float &r3)
 {
-  double rmag, w;
+  float rmag, w;
 
   rmag = (r1 * r1) + (r2 * r2) + (r3 * r3);
   rmag = pow(rmag, 0.5);
@@ -409,9 +409,9 @@ void OrientationMath::RodtoHomochoric(double &r1, double &r2, double &r3)
 }
 
 
-void OrientationMath::HomochorictoRod(double &r1, double &r2, double &r3)
+void OrientationMath::HomochorictoRod(float &r1, float &r2, float &r3)
 {
-  double hmag, w;
+  float hmag, w;
 
   hmag = (r1 * r1) + (r2 * r2) + (r3 * r3);
   hmag = pow(hmag, 0.5);
@@ -425,9 +425,9 @@ void OrientationMath::HomochorictoRod(double &r1, double &r2, double &r3)
 }
 
 
-void OrientationMath::RodtoAxisAngle(double r1, double r2, double r3, double &w, double &n1, double &n2, double &n3)
+void OrientationMath::RodtoAxisAngle(float r1, float r2, float r3, float &w, float &n1, float &n2, float &n3)
 {
-  double rmag;
+  float rmag;
 
   rmag = (r1 * r1) + (r2 * r2) + (r3 * r3);
   rmag = pow(rmag, 0.5);
@@ -437,9 +437,9 @@ void OrientationMath::RodtoAxisAngle(double r1, double r2, double r3, double &w,
   n3 = r3 / rmag;
 }
 
-void OrientationMath::RodtoQuat(double *q, double r1, double r2, double r3)
+void OrientationMath::RodtoQuat(float *q, float r1, float r2, float r3)
 {
-  double rmag, w;
+  float rmag, w;
 
   rmag = (r1 * r1) + (r2 * r2) + (r3 * r3);
   rmag = pow(rmag, 0.5);
@@ -453,10 +453,10 @@ void OrientationMath::RodtoQuat(double *q, double r1, double r2, double r3)
   q[4] = cos(w/2.0);
 }
 
-void OrientationMath::QuattoRod(double *q, double &r1, double &r2, double &r3)
+void OrientationMath::QuattoRod(float *q, float &r1, float &r2, float &r3)
 {
-  double qmag, w;
-  double n1, n2, n3;
+  float qmag, w;
+  float n1, n2, n3;
 
   qmag = (q[1] * q[1]) + (q[2] * q[2]) + (q[3] * q[3]);
   qmag = pow(qmag, 0.5);
@@ -469,9 +469,9 @@ void OrientationMath::QuattoRod(double *q, double &r1, double &r2, double &r3)
   r3 = n3 * tan(w/2.0);
 }
 
-void OrientationMath::QuattoEuler(double *q, double &ea1, double &ea2, double &ea3)
+void OrientationMath::QuattoEuler(float *q, float &ea1, float &ea2, float &ea3)
 {
-	double diff, sum, tmp;
+	float diff, sum, tmp;
     diff=atan2(q[2],q[1]);
     sum=atan2(q[3],q[4]);
     ea1=(diff+sum);
@@ -481,9 +481,9 @@ void OrientationMath::QuattoEuler(double *q, double &ea1, double &ea2, double &e
     if(tmp > 1.0) tmp=1.0;
     ea2=2*acos(tmp);
 }
-void OrientationMath::eulertoQuat(double* q, double e1, double e2, double e3)
+void OrientationMath::eulertoQuat(float* q, float e1, float e2, float e3)
 {
-  double s, c, s1, c1, s2, c2;
+  float s, c, s1, c1, s2, c2;
   s = sin(0.5 * e2);
   c = cos(0.5 * e2);
   s1 = sin(0.5 * (e1 - e3));
@@ -499,9 +499,9 @@ void OrientationMath::eulertoQuat(double* q, double e1, double e2, double e3)
 
 
 
-void OrientationMath::eulertoRod(double &r1, double &r2, double &r3, double ea1, double ea2, double ea3)
+void OrientationMath::eulertoRod(float &r1, float &r2, float &r3, float ea1, float ea2, float ea3)
 {
-	double sum, diff, csum, cdiff, sdiff, t2;
+	float sum, diff, csum, cdiff, sdiff, t2;
 	sum = (ea1+ea3)/2.0;
 	diff = (ea1-ea3)/2.0;
 	csum = cos(sum);
@@ -513,7 +513,7 @@ void OrientationMath::eulertoRod(double &r1, double &r2, double &r3, double ea1,
 	r3 = tan(sum);
 }
 
-void OrientationMath::multiplyQuaternions(double* inQuat, double* multQuat, double* outQuat)
+void OrientationMath::multiplyQuaternions(float* inQuat, float* multQuat, float* outQuat)
 {
   MULT_QUAT(inQuat, multQuat, outQuat);
 
@@ -523,15 +523,15 @@ void OrientationMath::multiplyQuaternions(double* inQuat, double* multQuat, doub
 //  outQuat[4] = multQuat[4] * inQuat[4] - multQuat[1] * inQuat[1] - multQuat[2] * inQuat[2] - multQuat[3] * inQuat[3];
 }
 
-void OrientationMath::getSlipMisalignment(int ss1, double q1[5], double q2[5], double &ssap)
+void OrientationMath::getSlipMisalignment(int ss1, float q1[5], float q2[5], float &ssap)
 {
-  double g1[3][3];
-  double g2[3][3];
-  double maxssap = 0;
-  double h1, k1, l1, u1, v1, w1;
-  double h2, k2, l2, u2, v2, w2;
-  double denomhkl1, denomhkl2, denomuvw1, denomuvw2;
-  double planemisalignment, directionmisalignment;
+  float g1[3][3];
+  float g2[3][3];
+  float maxssap = 0;
+  float h1, k1, l1, u1, v1, w1;
+  float h2, k2, l2, u2, v2, w2;
+  float denomhkl1, denomhkl2, denomuvw1, denomuvw2;
+  float planemisalignment, directionmisalignment;
   g1[0][0] = 1-(2*q1[2]*q1[2])-(2*q1[3]*q1[3]);
   g1[0][1] = (2*q1[1]*q1[2])-(2*q1[3]*q1[4]);
   g1[0][2] = (2*q1[1]*q1[3])+(2*q1[2]*q1[4]);

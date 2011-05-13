@@ -262,8 +262,8 @@ bool SGLogNormalTableModel::setData(const QModelIndex & index, const QVariant & 
 bool SGLogNormalTableModel::insertRows(int row, int count, const QModelIndex& index)
 {
   qint32 binNum = 0;
-  double avg = 1.0;
-  double stdDev = 0.25;
+  float avg = 1.0;
+  float stdDev = 0.25;
   QString c("blue");
 
   beginInsertRows(QModelIndex(), row, row + count - 1);
@@ -308,7 +308,7 @@ bool SGLogNormalTableModel::removeRows(int row, int count, const QModelIndex& in
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QVector<double > SGLogNormalTableModel::getData(int col)
+QVector<float > SGLogNormalTableModel::getData(int col)
 {
 
   switch(col)
@@ -320,13 +320,13 @@ QVector<double > SGLogNormalTableModel::getData(int col)
     default:
       Q_ASSERT(false);
   }
-  return QVector<double > ();
+  return QVector<float > ();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-double SGLogNormalTableModel::getDataValue(int col, int row)
+float SGLogNormalTableModel::getDataValue(int col, int row)
 {
   switch(col)
   {
@@ -343,7 +343,7 @@ double SGLogNormalTableModel::getDataValue(int col, int row)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SGLogNormalTableModel::setColumnData(int col, QVector<double> &data)
+void SGLogNormalTableModel::setColumnData(int col, QVector<float> &data)
 {
   switch(col)
   {
@@ -361,7 +361,7 @@ void SGLogNormalTableModel::setColumnData(int col, QVector<double> &data)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SGLogNormalTableModel::setTableData(QVector<double> bins, QVector<QVector<double> > data, QVector<QString> colors)
+void SGLogNormalTableModel::setTableData(QVector<float> bins, QVector<QVector<float> > data, QVector<QString> colors)
 {
   qint32 count = bins.count();
   qint32 row = 0;
