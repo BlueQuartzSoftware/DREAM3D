@@ -57,7 +57,7 @@ AngDataLoader::~AngDataLoader()
 //
 // -----------------------------------------------------------------------------
 int AngDataLoader::getSizeAndResolution(int &xpoints, int &ypoints, int &zpoints,
-                                   double &xres, double &yres, double &zres)
+                                   float &xres, float &yres, float &zres)
 {
   zpoints = (getZEndIndex() - getZStartIndex() );
   int xpointstemp = 0;
@@ -106,16 +106,16 @@ int AngDataLoader::loadData(ReconstructionVoxel voxels[], int xpoints, int ypoin
   float* imqual2Ptr;
   int xstartspot;
   int ystartspot;
-  double s;
-  double c;
-  double s1;
-  double c1;
-  double s2;
-  double c2;
-  double q1;
-  double q2;
-  double q3;
-  double q4;
+  float s;
+  float c;
+  float s1;
+  float c1;
+  float s2;
+  float c2;
+  float q1;
+  float q2;
+  float q3;
+  float q4;
 
   for (int slice = 0; slice < zpoints; ++slice)
   {
@@ -151,12 +151,12 @@ int AngDataLoader::loadData(ReconstructionVoxel voxels[], int xpoints, int ypoin
         voxels[index].euler3 = euler3Ptr[readerIndex]; // Phi2
         voxels[index].imagequality = imqualPtr[readerIndex];// Image Quality
         voxels[index].confidence = confPtr[readerIndex];// Confidence
-        s = sin(0.5 * euler2Ptr[readerIndex]);
-        c = cos(0.5 * euler2Ptr[readerIndex]);
-        s1 = sin(0.5 * (euler1Ptr[readerIndex] - euler3Ptr[readerIndex]));
-        c1 = cos(0.5 * (euler1Ptr[readerIndex] - euler3Ptr[readerIndex]));
-        s2 = sin(0.5 * (euler1Ptr[readerIndex] + euler3Ptr[readerIndex]));
-        c2 = cos(0.5 * (euler1Ptr[readerIndex] + euler3Ptr[readerIndex]));
+        s = sinf(0.5f * euler2Ptr[readerIndex]);
+        c = cosf(0.5f * euler2Ptr[readerIndex]);
+        s1 = sinf(0.5f * (euler1Ptr[readerIndex] - euler3Ptr[readerIndex]));
+        c1 = cosf(0.5f * (euler1Ptr[readerIndex] - euler3Ptr[readerIndex]));
+        s2 = sinf(0.5f * (euler1Ptr[readerIndex] + euler3Ptr[readerIndex]));
+        c2 = cosf(0.5f * (euler1Ptr[readerIndex] + euler3Ptr[readerIndex]));
         q1 = s * c1;
         q2 = s * s1;
         q3 = c * s2;

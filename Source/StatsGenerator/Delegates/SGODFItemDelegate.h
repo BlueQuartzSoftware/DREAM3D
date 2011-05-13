@@ -116,7 +116,7 @@ class SGODFItemDelegate : public QStyledItemDelegate
         QLineEdit* lineEdit = qobject_cast<QLineEdit* > (editor);
         Q_ASSERT(lineEdit);
         bool ok = false;
-        double v = lineEdit->text().toDouble(&ok);
+        double v = lineEdit->text().toFloat(&ok);
         model->setData(index, v);
       }
       else QStyledItemDelegate::setModelData(editor, model, index);

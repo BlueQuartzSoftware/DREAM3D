@@ -253,16 +253,16 @@ bool SGPowerLawTableModel::setData(const QModelIndex & index, const QVariant & v
   switch(col)
   {
     case BinNumber:
-      m_BinNumbers[row] = value.toDouble(&ok);
+      m_BinNumbers[row] = value.toFloat(&ok);
       break;
     case Alpha:
-      m_Alpha[row] = value.toDouble(&ok);
+      m_Alpha[row] = value.toFloat(&ok);
       break;
     case K:
-      m_K[row] = value.toDouble(&ok);
+      m_K[row] = value.toFloat(&ok);
       break;
     case Beta:
-      m_Beta[row] = value.toDouble(&ok);
+      m_Beta[row] = value.toFloat(&ok);
       break;
     case LineColor:
       m_Colors[row] = value.toString();
@@ -283,9 +283,9 @@ bool SGPowerLawTableModel::setData(const QModelIndex & index, const QVariant & v
 bool SGPowerLawTableModel::insertRows(int row, int count, const QModelIndex& index)
 {
   qint32 binNum = 0;
-  double alpha = 15.0;
-  double k = 2.0;
-  double beta = 1.0;
+  float alpha = 15.0;
+  float k = 2.0;
+  float beta = 1.0;
   QString c("blue");
 
   beginInsertRows(QModelIndex(), row, row + count - 1);
@@ -332,7 +332,7 @@ bool SGPowerLawTableModel::removeRows(int row, int count, const QModelIndex& ind
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QVector<double > SGPowerLawTableModel::getData(int col)
+QVector<float > SGPowerLawTableModel::getData(int col)
 {
 
   switch(col)
@@ -346,13 +346,13 @@ QVector<double > SGPowerLawTableModel::getData(int col)
     default:
       Q_ASSERT(false);
   }
-  return QVector<double > ();
+  return QVector<float > ();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-double SGPowerLawTableModel::getDataValue(int col, int row)
+float SGPowerLawTableModel::getDataValue(int col, int row)
 {
   switch(col)
   {
@@ -371,7 +371,7 @@ double SGPowerLawTableModel::getDataValue(int col, int row)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SGPowerLawTableModel::setColumnData(int col, QVector<double> &data)
+void SGPowerLawTableModel::setColumnData(int col, QVector<float> &data)
 {
   switch(col)
   {
@@ -389,7 +389,7 @@ void SGPowerLawTableModel::setColumnData(int col, QVector<double> &data)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SGPowerLawTableModel::setTableData(QVector<double> bins, QVector<QVector<double> > data, QVector<QString> colors)
+void SGPowerLawTableModel::setTableData(QVector<float> bins, QVector<QVector<float> > data, QVector<QString> colors)
 {
   qint32 count = bins.count();
   qint32 row = 0;

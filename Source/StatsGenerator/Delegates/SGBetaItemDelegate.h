@@ -119,7 +119,7 @@ class SGBetaItemDelegate : public QStyledItemDelegate
    //   bool ok = false;
       if (col == SGBetaTableModel::Alpha || col == SGBetaTableModel::Beta)
       {
-   //     double value = index.model()->data(index).toDouble(&ok);
+   //     double value = index.model()->data(index).toFloat(&ok);
         QLineEdit* lineEdit = qobject_cast<QLineEdit* > (editor);
         Q_ASSERT(lineEdit);
         lineEdit->setText(index.model()->data(index).toString());
@@ -147,7 +147,7 @@ class SGBetaItemDelegate : public QStyledItemDelegate
         QLineEdit* lineEdit = qobject_cast<QLineEdit* > (editor);
         Q_ASSERT(lineEdit);
         bool ok = false;
-        double v = lineEdit->text().toDouble(&ok);
+        double v = lineEdit->text().toFloat(&ok);
         model->setData(index, v);
       }
       else if (col == SGBetaTableModel::LineColor)

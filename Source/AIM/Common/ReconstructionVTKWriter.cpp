@@ -238,9 +238,9 @@ int ReconstructionVTKWriter::writeIPFVizFile(ReconstructionFunc* r, const std::s
     WRITE_VTK_GRAIN_HEADER("ASCII", r)
   }
   size_t total = r->xpoints * r->ypoints * r->zpoints;
-  double q1[5];
+  float q1[5];
   unsigned char hkl[3] = { 0, 0, 0 };
-  double RefDirection[3] = { 1.0, 0.0, 0.0 };
+  float RefDirection[3] = { 1.0, 0.0, 0.0 };
   int phase;
 
   if (true == bin)
@@ -283,7 +283,7 @@ int ReconstructionVTKWriter::writeIPFVizFile(ReconstructionFunc* r, const std::s
     WRITE_VTK_SCALARS_FROM_VOXEL_ASCII(r, Phase, int, voxels, phase, "%d ")
     // Write the COLOR_SCALARS
     fprintf(f, "COLOR_SCALARS IPF_Colors 3\n");
-    double red, green, blue;
+    float red, green, blue;
     unsigned char rgb[3] = { 0, 0, 0 };
     for (size_t i = 0; i < total; i++)
     {
@@ -300,9 +300,9 @@ int ReconstructionVTKWriter::writeIPFVizFile(ReconstructionFunc* r, const std::s
         q1[4] = r->voxels[i].quat[4];
         OIMColoring::CalculateHexIPFColor(q1, RefDirection[0], RefDirection[1], RefDirection[2], rgb);
       }
-      red = static_cast<double> (double(rgb[0]) / 255.0);
-      green = static_cast<double> (double(rgb[1]) / 255.0);
-      blue = static_cast<double> (double(rgb[2]) / 255.0);
+      red = static_cast<float> (float(rgb[0]) / 255.0);
+      green = static_cast<float> (float(rgb[1]) / 255.0);
+      blue = static_cast<float> (float(rgb[2]) / 255.0);
       fprintf(f, "%f %f %f\n", red, green, blue);
     }
   }
@@ -323,8 +323,8 @@ int ReconstructionVTKWriter::writeDownSampledVizFile(ReconstructionFunc* r, cons
     return 1;
   }
   int counter = 0;
-  double x, y, z;
-  double dsresx, dsresy, dsresz;
+  float x, y, z;
+  float dsresx, dsresy, dsresz;
   int col, row, plane;
   int index;
   int *gnames;

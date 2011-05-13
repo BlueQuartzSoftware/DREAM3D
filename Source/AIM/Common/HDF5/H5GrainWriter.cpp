@@ -78,12 +78,12 @@ int H5GrainWriter::writeHDF5GrainsFile(ReconstructionFunc* r, const std::string 
 
   //  vector<int> plist(((r->xpoints + 1) * (r->ypoints + 1) * (r->zpoints + 1)), 0);
     int pcount = 0;
-    double q1[5];
+    float q1[5];
     unsigned char rgb[3] =
     { 0, 0, 0 };
     unsigned char hkl[3] =
     { 0, 0, 0 };
-    double RefDirection[3] =
+    float RefDirection[3] =
     { 0.0, 0.0, 1.0 };
     int ocol, orow, oplane;
     int col, row, plane;

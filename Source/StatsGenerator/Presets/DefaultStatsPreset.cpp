@@ -53,7 +53,7 @@ DefaultStatsPreset::~DefaultStatsPreset()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DefaultStatsPreset::generateOmega3Data(StatsGenPlotWidget* plot, QVector<double> binNumbers)
+void DefaultStatsPreset::generateOmega3Data(StatsGenPlotWidget* plot, QVector<float> binNumbers)
 {
   // Make sure the distribution is set correctly
   plot->setDistributionType(AIM::Reconstruction::Beta, false);
@@ -68,12 +68,12 @@ void DefaultStatsPreset::generateOmega3Data(StatsGenPlotWidget* plot, QVector<do
   // Remove all the current rows in the table model
 //  model->removeRows(0, model->rowCount());
 
-  double alpha = 5.0;
-  double beta = 1.0;
-  double betaStep = 10.0 / count;
+  float alpha = 5.0;
+  float beta = 1.0;
+  float betaStep = 10.0 / count;
 
-  QVector<double> alphas;
-  QVector<double> betas;
+  QVector<float> alphas;
+  QVector<float> betas;
   QVector<QString> colors;
   QStringList colorNames = QColor::colorNames();
   qint32 colorOffset = 21;
@@ -86,7 +86,7 @@ void DefaultStatsPreset::generateOmega3Data(StatsGenPlotWidget* plot, QVector<do
     beta += betaStep;
    }
 
-  QVector<QVector<double> > data;
+  QVector<QVector<float> > data;
   data.push_back(alphas);
   data.push_back(betas);
   model->setTableData(binNumbers, data, colors);
@@ -95,7 +95,7 @@ void DefaultStatsPreset::generateOmega3Data(StatsGenPlotWidget* plot, QVector<do
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DefaultStatsPreset::generateBOverAPlotData(StatsGenPlotWidget* plot, QVector<double> binNumbers)
+void DefaultStatsPreset::generateBOverAPlotData(StatsGenPlotWidget* plot, QVector<float> binNumbers)
 {
   // Make sure the distribution is set correctly
   plot->setDistributionType(AIM::Reconstruction::Beta, false);
@@ -110,12 +110,12 @@ void DefaultStatsPreset::generateBOverAPlotData(StatsGenPlotWidget* plot, QVecto
   // Remove all the current rows in the table model
   model->removeRows(0, model->rowCount());
 
-  double alpha = 5.0;
-  double beta = 1.0;
-  double betaStep = 10.0 / count;
+  float alpha = 5.0;
+  float beta = 1.0;
+  float betaStep = 10.0 / count;
 
-  QVector<double> alphas;
-  QVector<double> betas;
+  QVector<float> alphas;
+  QVector<float> betas;
   QVector<QString> colors;
   QStringList colorNames = QColor::colorNames();
   qint32 colorOffset = 21;
@@ -128,7 +128,7 @@ void DefaultStatsPreset::generateBOverAPlotData(StatsGenPlotWidget* plot, QVecto
     beta += betaStep;
    }
 
-  QVector<QVector<double> > data;
+  QVector<QVector<float> > data;
   data.push_back(alphas);
   data.push_back(betas);
   model->setTableData(binNumbers, data, colors);
@@ -137,7 +137,7 @@ void DefaultStatsPreset::generateBOverAPlotData(StatsGenPlotWidget* plot, QVecto
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DefaultStatsPreset::generateCOverAPlotData(StatsGenPlotWidget* plot, QVector<double> binNumbers)
+void DefaultStatsPreset::generateCOverAPlotData(StatsGenPlotWidget* plot, QVector<float> binNumbers)
 {
   // Make sure the distribution is set correctly
   plot->setDistributionType(AIM::Reconstruction::Beta, false);
@@ -152,12 +152,12 @@ void DefaultStatsPreset::generateCOverAPlotData(StatsGenPlotWidget* plot, QVecto
   // Remove all the current rows in the table model
   model->removeRows(0, model->rowCount());
 
-  double alpha = 5.0;
-  double beta = 1.0;
-  double betaStep = 10.0 / count;
+  float alpha = 5.0;
+  float beta = 1.0;
+  float betaStep = 10.0 / count;
 
-  QVector<double> alphas;
-  QVector<double> betas;
+  QVector<float> alphas;
+  QVector<float> betas;
   QVector<QString> colors;
   QStringList colorNames = QColor::colorNames();
   qint32 colorOffset = 21;
@@ -170,7 +170,7 @@ void DefaultStatsPreset::generateCOverAPlotData(StatsGenPlotWidget* plot, QVecto
     beta += betaStep;
    }
 
-  QVector<QVector<double> > data;
+  QVector<QVector<float> > data;
   data.push_back(alphas);
   data.push_back(betas);
   model->setTableData(binNumbers, data, colors);
@@ -180,7 +180,7 @@ void DefaultStatsPreset::generateCOverAPlotData(StatsGenPlotWidget* plot, QVecto
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DefaultStatsPreset::generateCOverBPlotData(StatsGenPlotWidget* plot, QVector<double> binNumbers)
+void DefaultStatsPreset::generateCOverBPlotData(StatsGenPlotWidget* plot, QVector<float> binNumbers)
 {
   // Make sure the distribution is set correctly
   plot->setDistributionType(AIM::Reconstruction::Beta, false);
@@ -195,12 +195,12 @@ void DefaultStatsPreset::generateCOverBPlotData(StatsGenPlotWidget* plot, QVecto
   // Remove all the current rows in the table model
   model->removeRows(0, model->rowCount());
 
-  double alpha = 5.0;
-  double beta = 1.0;
-  double betaStep = 10.0 / count;
+  float alpha = 5.0;
+  float beta = 1.0;
+  float betaStep = 10.0 / count;
 
-  QVector<double> alphas;
-  QVector<double> betas;
+  QVector<float> alphas;
+  QVector<float> betas;
   QVector<QString> colors;
   QStringList colorNames = QColor::colorNames();
   qint32 colorOffset = 21;
@@ -213,7 +213,7 @@ void DefaultStatsPreset::generateCOverBPlotData(StatsGenPlotWidget* plot, QVecto
     beta += betaStep;
    }
 
-  QVector<QVector<double> > data;
+  QVector<QVector<float> > data;
   data.push_back(alphas);
   data.push_back(betas);
   model->setTableData(binNumbers, data, colors);
@@ -223,7 +223,7 @@ void DefaultStatsPreset::generateCOverBPlotData(StatsGenPlotWidget* plot, QVecto
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DefaultStatsPreset::generateNeighborPlotData(StatsGenPlotWidget* plot, QVector<double> binNumbers)
+void DefaultStatsPreset::generateNeighborPlotData(StatsGenPlotWidget* plot, QVector<float> binNumbers)
 {
   // Make sure the distribution is set correctly
   plot->setDistributionType(AIM::Reconstruction::Power, false);
@@ -239,17 +239,17 @@ void DefaultStatsPreset::generateNeighborPlotData(StatsGenPlotWidget* plot, QVec
   // Remove all the current rows in the table model
   model->removeRows(0, model->rowCount());
 
-  double alpha = 14.0;
-  double k = 1.0;
-  double beta = 1.0;
+  float alpha = 14.0;
+  float k = 1.0;
+  float beta = 1.0;
 
-  double alphaStep = 2.0 / (double)(count);
-  double kStep = 0.25 / (double)(count);
-  double betaStep = 20.0 / (double)(count);
+  float alphaStep = 2.0 / (float)(count);
+  float kStep = 0.25 / (float)(count);
+  float betaStep = 20.0 / (float)(count);
 
-  QVector<double> alphas;
-  QVector<double> ks;
-  QVector<double> betas;
+  QVector<float> alphas;
+  QVector<float> ks;
+  QVector<float> betas;
   QVector<QString> colors;
   QStringList colorNames = QColor::colorNames();
   qint32 colorOffset = 21;
@@ -264,7 +264,7 @@ void DefaultStatsPreset::generateNeighborPlotData(StatsGenPlotWidget* plot, QVec
     beta += betaStep;
    }
 
-  QVector<QVector<double> > data;
+  QVector<QVector<float> > data;
   data.push_back(alphas);
   data.push_back(ks);
   data.push_back(betas);

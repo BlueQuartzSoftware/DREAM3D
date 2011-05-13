@@ -149,12 +149,12 @@ class OIMColoring
       T d[3];
 
       // Calcuate all the values once
-      T cos_phi1 = cos(phi1);
-      T sin_phi1 = sin(phi1);
-      T cos_phi = cos(phi);
-      T sin_phi = sin(phi);
-      T cos_phi2 = cos(phi2);
-      T sin_phi2 = sin(phi2);
+      T cos_phi1 = cosf(phi1);
+      T sin_phi1 = sinf(phi1);
+      T cos_phi = cosf(phi);
+      T sin_phi = sinf(phi);
+      T cos_phi2 = cosf(phi2);
+      T sin_phi2 = sinf(phi2);
 
       // 1) find rotation matrix from Euler angles
       q1[0][0] = cos_phi1 * cos_phi2 - sin_phi1 * sin_phi2 * cos_phi;
@@ -233,15 +233,15 @@ class OIMColoring
  * @param rgb Output - A pointer to store the RGB value into a unsigned char[3] array.
  */
     template <typename K>
-    void static CalculateHexIPFColor(double q1[5],K refDir0, K refDir1, K refDir2,
+    void static CalculateHexIPFColor(float q1[5],K refDir0, K refDir1, K refDir2,
                               unsigned char* rgb)
     {
-      double qc[5];
-	  double g[3][3];
-      double p[3];
-      double d[3];
-      double theta, phi;
-      double _rgb[3] = { 0.0, 0.0, 0.0};
+      float qc[5];
+	  float g[3][3];
+      float p[3];
+      float d[3];
+      float theta, phi;
+      float _rgb[3] = { 0.0, 0.0, 0.0};
       for (int j = 0; j < 12; j++)
       {
         OrientationMath::multiplyQuaternions(q1, q1, qc);
@@ -259,8 +259,8 @@ class OIMColoring
 		p[0] = g[0][0] * refDir0 + g[0][1] * refDir1 + g[0][2] * refDir2;
 		p[1] = g[1][0] * refDir0 + g[1][1] * refDir1 + g[1][2] * refDir2;
 		p[2] = g[2][0] * refDir0 + g[2][1] * refDir1 + g[2][2] * refDir2;
-		double denom = p[0] * p[0] + p[1] * p[1] + p[2] * p[2];
-        denom = pow(denom, 0.5);
+		float denom = p[0] * p[0] + p[1] * p[1] + p[2] * p[2];
+        denom = powf(denom, 0.5);
         p[0] = p[0] / denom;
         p[1] = p[1] / denom;
         p[2] = p[2] / denom;
@@ -279,7 +279,7 @@ class OIMColoring
 
         d[1] = 1;
         d[2] = 0;
-        double norm = pow(((d[0] * d[0]) + (d[1] * d[1]) + (d[2] * d[2])), 0.5);
+        float norm = powf(((d[0] * d[0]) + (d[1] * d[1]) + (d[2] * d[2])), 0.5);
         d[0] = d[0] / norm;
         d[1] = d[1] / norm;
         d[2] = d[2] / norm;
@@ -303,7 +303,7 @@ class OIMColoring
         }
       }
 
-      double max = _rgb[0];
+      float max = _rgb[0];
       if (_rgb[1] > max) max = _rgb[1];
       if (_rgb[2] > max) max = _rgb[2];
 

@@ -98,7 +98,7 @@ int H5AngDataLoader::readZHeader(int &zStart, int &zEnd, float &zRes)
 //
 // -----------------------------------------------------------------------------
 int H5AngDataLoader::getSizeAndResolution(int &xpoints, int &ypoints, int &zpoints,
-                                    double &xres, double &yres, double &zres)
+                                    float &xres, float &yres, float &zres)
 {
   int err = -1;
   zpoints = (getZEndIndex() - getZStartIndex() );

@@ -50,11 +50,11 @@ class RecrystallizedPreset : public AbstractMicrostructurePreset
 
 
     void displayUserInputDialog();
-    void generateOmega3Data(StatsGenPlotWidget* plot, QVector<double> binNumbers);
-    void generateBOverAPlotData(StatsGenPlotWidget* plot, QVector<double> binNumbers);
-    void generateCOverAPlotData(StatsGenPlotWidget* plot, QVector<double> binNumbers);
-    void generateCOverBPlotData(StatsGenPlotWidget* plot, QVector<double> binNumbers);
-    void generateNeighborPlotData(StatsGenPlotWidget* plot, QVector<double> binNumbers);
+    void generateOmega3Data(StatsGenPlotWidget* plot, QVector<float> binNumbers);
+    void generateBOverAPlotData(StatsGenPlotWidget* plot, QVector<float> binNumbers);
+    void generateCOverAPlotData(StatsGenPlotWidget* plot, QVector<float> binNumbers);
+    void generateCOverBPlotData(StatsGenPlotWidget* plot, QVector<float> binNumbers);
+    void generateNeighborPlotData(StatsGenPlotWidget* plot, QVector<float> binNumbers);
 
     MXA_INSTANCE_PROPERTY(float, PercentRecrystallized)
 

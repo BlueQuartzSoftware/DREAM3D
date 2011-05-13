@@ -163,10 +163,10 @@ void SGWidget::setupGui()
   microstructurePresetCombo->blockSignals(false);
 
 
-  double mu = 1.0;
-  double sigma = 0.1;
-  double cutOff = 5;
-  double binStepSize = 0.5;
+  float mu = 1.0;
+  float sigma = 0.1;
+  float cutOff = 5;
+  float binStepSize = 0.5;
 
   StatsGenPlotWidget* w = m_Omega3Plot;
 
@@ -338,25 +338,25 @@ QString SGWidget::getComboString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int SGWidget::gatherSizeDistributionFromGui(double &mu, double &sigma, double &cutOff, double &stepSize)
+int SGWidget::gatherSizeDistributionFromGui(float &mu, float &sigma, float &cutOff, float &stepSize)
 {
   bool ok = false;
-  mu = m_Mu_SizeDistribution->text().toDouble(&ok);
+  mu = m_Mu_SizeDistribution->text().toFloat(&ok);
   if (ok == false)
   {
     return 0;
   }
-  sigma = m_Sigma_SizeDistribution->text().toDouble(&ok);
+  sigma = m_Sigma_SizeDistribution->text().toFloat(&ok);
   if (ok == false)
   {
     return 0;
   }
-  cutOff = m_SigmaCutOff_SizeDistribution->text().toDouble(&ok);
+  cutOff = m_SigmaCutOff_SizeDistribution->text().toFloat(&ok);
   if (ok == false)
   {
     return 0;
   }
-  stepSize = m_BinStepSize->text().toDouble(&ok);
+  stepSize = m_BinStepSize->text().toFloat(&ok);
   if (ok == false)
   {
     return 0;
@@ -437,7 +437,7 @@ void SGWidget::on_m_SigmaCutOff_SizeDistribution_textChanged(const QString &text
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SGWidget::on_m_BinStepSize_valueChanged(double v)
+void SGWidget::on_m_BinStepSize_valueChanged(float v)
 {
   calculateNumberOfBins();
 }
@@ -448,11 +448,11 @@ void SGWidget::on_m_BinStepSize_valueChanged(double v)
 // -----------------------------------------------------------------------------
 void SGWidget::calculateNumberOfBins()
 {
-  double mu = 1.0;
-  double sigma = 1.0;
-  double cutOff = 1.0;
-  double stepSize = 1.0;
-  double max, min;
+  float mu = 1.0;
+  float sigma = 1.0;
+  float cutOff = 1.0;
+  float stepSize = 1.0;
+  float max, min;
   int err = gatherSizeDistributionFromGui(mu, sigma, cutOff, stepSize);
   if (err == 0)
   {
@@ -467,9 +467,9 @@ void SGWidget::calculateNumberOfBins()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int SGWidget::calculateNumberOfBins(double mu, double sigma, double cutOff, double stepSize)
+int SGWidget::calculateNumberOfBins(float mu, float sigma, float cutOff, float stepSize)
 {
-  double max, min; // Only needed for the method. Not used otherwise.
+  float max, min; // Only needed for the method. Not used otherwise.
   StatsGen sg;
   return sg.computeNumberOfBins(mu, sigma, cutOff, stepSize, max, min);
 }
@@ -477,27 +477,27 @@ int SGWidget::calculateNumberOfBins(double mu, double sigma, double cutOff, doub
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int SGWidget::computeBinsAndCutOffs( double mu, double sigma, double cutOff, double binStepSize,
-                                             QwtArray<double> &binsizes,
-                                             QwtArray<double> &xCo,
-                                             QwtArray<double> &yCo,
-                                             double &xMax, double &yMax,
-                                             QwtArray<double> &x,
-                                             QwtArray<double> &y)
+int SGWidget::computeBinsAndCutOffs( float mu, float sigma, float cutOff, float binStepSize,
+                                             QwtArray<float> &binsizes,
+                                             QwtArray<float> &xCo,
+                                             QwtArray<float> &yCo,
+                                             float &xMax, float &yMax,
+                                             QwtArray<float> &x,
+                                             QwtArray<float> &y)
 {
   int err = 0;
   int size = 100;
 
   StatsGen sg;
-  err = sg.GenLogNormalPlotData<QwtArray<double> > (mu, sigma, x, y, size);
+  err = sg.GenLogNormalPlotData<QwtArray<float> > (mu, sigma, x, y, size);
   if (err == 1)
   {
     //TODO: Present Error Message
     return -1;
   }
 
-//  double xMax = std::numeric_limits<double >::min();
-//  double yMax = std::numeric_limits<double >::min();
+//  float xMax = std::numeric_limits<float >::min();
+//  float yMax = std::numeric_limits<float >::min();
   for (int i = 0; i < size; ++i)
   {
     //   std::cout << x[i] << "  " << y[i] << std::endl;
@@ -516,7 +516,7 @@ int SGWidget::computeBinsAndCutOffs( double mu, double sigma, double cutOff, dou
   int numsizebins = 1;
   binsizes.clear();
   // QwtArray<int> numgrains;
-  err = sg.GenCutOff<double, QwtArray<double> > (mu, sigma, cutOff, binStepSize, xCo, yCo, yMax, numsizebins, binsizes);
+  err = sg.GenCutOff<float, QwtArray<float> > (mu, sigma, cutOff, binStepSize, xCo, yCo, yMax, numsizebins, binsizes);
 
   return 0;
 }
@@ -528,23 +528,23 @@ int SGWidget::computeBinsAndCutOffs( double mu, double sigma, double cutOff, dou
 void SGWidget::updateSizeDistributionPlot()
 {
 
-  double mu = 1.0;
-  double sigma = 1.0;
-  double cutOff = 1.0;
-  double stepSize = 1.0;
+  float mu = 1.0;
+  float sigma = 1.0;
+  float cutOff = 1.0;
+  float stepSize = 1.0;
   int err = gatherSizeDistributionFromGui(mu, sigma, cutOff, stepSize);
   if (err == 0)
   {
     return;
   }
 
-  QwtArray<double> xCo;
-  QwtArray<double> yCo;
-  QwtArray<double> binsizes;
-  double xMax = std::numeric_limits<double >::min();
-  double yMax = std::numeric_limits<double >::min();
-  QwtArray<double> x;
-  QwtArray<double> y;
+  QwtArray<float> xCo;
+  QwtArray<float> yCo;
+  QwtArray<float> binsizes;
+  float xMax = std::numeric_limits<float >::min();
+  float yMax = std::numeric_limits<float >::min();
+  QwtArray<float> x;
+  QwtArray<float> y;
   err = computeBinsAndCutOffs(mu, sigma, cutOff, stepSize, binsizes, xCo, yCo, xMax, yMax, x, y);
   if (err < 0) { return; }
 
@@ -581,10 +581,15 @@ void SGWidget::updateSizeDistributionPlot()
   m_CutOffMax->setLinePen(QPen(Qt::blue, 1, Qt::SolidLine));
   m_CutOffMax->setXValue(xCo[1]);
 
-  m_SizeDistributionCurve->setData(x, y);
-//  std::cout << "----------------" << std::endl;
-//  std::cout << "yMax: " << yMax << std::endl;
-//  std::cout << "xMax: " << xMax << std::endl;
+  QwtArray<double> xD(x.size());
+  QwtArray<double> yD(x.size());
+  for (int i = 0; i < x.size(); ++i)
+  {
+    xD[i] = static_cast<double>(x[i]);
+    yD[i] = static_cast<double>(y[i]);
+  }
+
+  m_SizeDistributionCurve->setData(xD, yD);
 
   m_SizeDistributionPlot->setAxisScale(QwtPlot::xBottom, xCo[0] - (xCo[0] * 0.1), xMax * 1.10);
   m_SizeDistributionPlot->setAxisScale(QwtPlot::yLeft, 0.0, yMax);
@@ -600,23 +605,23 @@ void SGWidget::plotSizeDistribution()
   // We have valid data so enable the other plot tabs
   setTabsPlotTabsEnabled(true);
 
-  double mu = 1.0;
-  double sigma = 1.0;
-  double cutOff = 1.0;
-  double stepSize = 1.0;
+  float mu = 1.0;
+  float sigma = 1.0;
+  float cutOff = 1.0;
+  float stepSize = 1.0;
   int err = gatherSizeDistributionFromGui(mu, sigma, cutOff, stepSize);
   if (err == 0)
   {
     return;
   }
 
-  QwtArray<double> xCo;
-  QwtArray<double> yCo;
-  QwtArray<double> binsizes;
-  double xMax = std::numeric_limits<double >::min();
-  double yMax = std::numeric_limits<double >::min();
-  QwtArray<double> x;
-  QwtArray<double> y;
+  QwtArray<float> xCo;
+  QwtArray<float> yCo;
+  QwtArray<float> binsizes;
+  float xMax = std::numeric_limits<float >::min();
+  float yMax = std::numeric_limits<float >::min();
+  QwtArray<float> x;
+  QwtArray<float> y;
   err = computeBinsAndCutOffs(mu, sigma, cutOff, stepSize, binsizes, xCo, yCo, xMax, yMax, x, y);
   if (err < 0) { return; }
 
@@ -666,17 +671,17 @@ int SGWidget::writeDataToHDF5(H5ReconStatsWriter::Pointer writer)
   }
   int retErr = 0;
   int err = 0;
-  double mu, sigma, cutOff, binStep;
+  float mu, sigma, cutOff, binStep;
   gatherSizeDistributionFromGui(mu, sigma, cutOff, binStep);
-  double calcPhaseFraction = m_PhaseFraction / m_TotalPhaseFraction;
+  float calcPhaseFraction = m_PhaseFraction / m_TotalPhaseFraction;
 
-  QwtArray<double> xCo;
-  QwtArray<double> yCo;
-  QwtArray<double> binsizes;
-  double xMax = std::numeric_limits<double>::min();
-  double yMax = std::numeric_limits<double>::min();
-  QwtArray<double> x;
-  QwtArray<double> y;
+  QwtArray<float> xCo;
+  QwtArray<float> yCo;
+  QwtArray<float> binsizes;
+  float xMax = std::numeric_limits<float>::min();
+  float yMax = std::numeric_limits<float>::min();
+  QwtArray<float> x;
+  QwtArray<float> y;
   err = computeBinsAndCutOffs(mu, sigma, cutOff, binStep, binsizes, xCo, yCo, xMax, yMax, x, y);
   if (err < 0)
   {
@@ -684,11 +689,11 @@ int SGWidget::writeDataToHDF5(H5ReconStatsWriter::Pointer writer)
   }
 
   // We need to compute the Max and Min Diameter Bin Values
-  double mindiameter = xCo[0];
-  double maxdiameter = xCo[1];
-  double avglogdiam = mu;
-  double sdlogdiam = sigma;
-  double stepSize = binStep;
+  float mindiameter = xCo[0];
+  float maxdiameter = xCo[1];
+  float avglogdiam = mu;
+  float sdlogdiam = sigma;
+  float stepSize = binStep;
 
   size_t nBins = 0;
   err = writer->writeSizeDistribution(m_PhaseIndex, m_CrystalStructure, calcPhaseFraction, maxdiameter, mindiameter, stepSize, avglogdiam, sdlogdiam, nBins);
@@ -719,9 +724,9 @@ int SGWidget::writeDataToHDF5(H5ReconStatsWriter::Pointer writer)
 int SGWidget::readDataFromHDF5(H5ReconStatsReader::Pointer reader,int phase)
 {
   setWidgetListEnabled(true);
-  double mu, sigma, binStepSize, xMax, yMax, cutoff;
-  std::vector<double> grainDiamInfo;
-  std::vector<double> double_data;
+  float mu, sigma, binStepSize, xMax, yMax, cutoff;
+  std::vector<float> grainDiamInfo;
+  std::vector<float> double_data;
   int err = 0;
 
   setPhaseIndex(phase);
@@ -739,7 +744,7 @@ int SGWidget::readDataFromHDF5(H5ReconStatsReader::Pointer reader,int phase)
 
 
   /* Read the BinNumbers data set */
-  std::vector<double> bins;
+  std::vector<float> bins;
   err = reader->readStatsDataset(phase, AIM::HDF5::BinNumber, bins);
   CHECK_STATS_READ_ERROR(err, AIM::HDF5::Reconstruction, AIM::HDF5::BinNumber)
 
@@ -790,7 +795,7 @@ int SGWidget::readDataFromHDF5(H5ReconStatsReader::Pointer reader,int phase)
   calculateNumberOfBins();
 
   // Now have each of the plots read it's own data
-  QVector<double> qbins = QVector<double>::fromStdVector(bins);
+  QVector<float> qbins = QVector<float>::fromStdVector(bins);
   m_Omega3Plot->readDataFromHDF5(reader, qbins, AIM::HDF5::Grain_SizeVOmega3_Distributions);
   m_Omega3Plot->setSizeDistributionValues(mu, sigma, cutoff - 1.0, binStepSize);
 

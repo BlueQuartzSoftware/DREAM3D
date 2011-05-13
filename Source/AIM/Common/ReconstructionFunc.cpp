@@ -57,15 +57,15 @@
 #include "AIM/Parallel/Algo.hpp"
 
 
-const static double m_pi = M_PI;
-const static double m_OnePointThree = 1.33333333333;
-const static double threesixty_over_pi = 360.0 / m_pi;
-const static double m_pi_over_180 = M_PI / 180.0;
-const static double sqrt_two = pow(2.0, 0.5);
-const static double acos_neg_one = acos(-1.0);
-const static double acos_pos_one = acos(1.0);
-const static double sin_wmin_neg_1_over_2 = sin(acos_neg_one / 2.0);
-const static double sin_wmin_pos_1_over_2 = sin(acos_pos_one / 2.0);
+const static float m_pi = M_PI;
+const static float m_OnePointThree = 1.33333333333;
+const static float threesixty_over_pi = 360.0 / m_pi;
+const static float m_pi_over_180 = M_PI / 180.0;
+const static float sqrt_two = powf(2.0, 0.5);
+const static float acos_neg_one = acos(-1.0);
+const static float acos_pos_one = acos(1.0);
+const static float sin_wmin_neg_1_over_2 = sinf(acos_neg_one / 2.0);
+const static float sin_wmin_pos_1_over_2 = sinf(acos_pos_one / 2.0);
 
 #define DIMS "DIMENSIONS"
 #define LOOKUP "LOOKUP_TABLE"
@@ -95,10 +95,10 @@ ReconstructionFunc::~ReconstructionFunc()
   voxels.reset(NULL);
 }
 
-void ReconstructionFunc::initialize(int nX, int nY, int nZ, double xRes, double yRes, double zRes, bool v_mergetwinsoption,
-									bool v_mergecoloniesoption, int v_minallowedgrainsize, double v_minseedconfidence,
-									double v_downsamplefactor, double v_minseedimagequality, double v_misorientationtolerance,
-									double v_sizebinstepsize, vector<AIM::Reconstruction::CrystalStructure> v_crystruct,
+void ReconstructionFunc::initialize(int nX, int nY, int nZ, float xRes, float yRes, float zRes, bool v_mergetwinsoption,
+									bool v_mergecoloniesoption, int v_minallowedgrainsize, float v_minseedconfidence,
+									float v_downsamplefactor, float v_minseedimagequality, float v_misorientationtolerance,
+									float v_sizebinstepsize, vector<AIM::Reconstruction::CrystalStructure> v_crystruct,
                                     int v_alignmeth, bool v_alreadyformed)
 {
 
@@ -147,7 +147,7 @@ void ReconstructionFunc::initialize(int nX, int nY, int nZ, double xRes, double 
 
 void ReconstructionFunc::initializeQuats()
 {
-  double qr[5];
+  float qr[5];
   AIM::Reconstruction::CrystalStructure xtal = AIM::Reconstruction::UnknownCrystalStructure;
   int phase = -1;
   for (int i = 0; i < (xpoints * ypoints * zpoints); i++)
@@ -165,9 +165,9 @@ void ReconstructionFunc::initializeQuats()
 }
 void ReconstructionFunc::cleanup_data()
 {
-  double bestneighborconfidence;
+  float bestneighborconfidence;
   int bestneighbor;
-  double confidence;
+  float confidence;
   int x, y, z;
   int neighpoint;
   int good = 0;
@@ -236,16 +236,16 @@ void ReconstructionFunc::cleanup_data()
       }
     }
   }
-/*  double q1[5];
-  double q2[5];
-  double qtot[5];
+/*  float q1[5];
+  float q2[5];
+  float qtot[5];
   int numVoxel;
   int col, row, plane;
   int steps = 1;
   int jStride;
   int kStride;
   int neighbor, good;
-  double w, n1, n2, n3;
+  float w, n1, n2, n3;
   for (int i = 0; i < totalpoints; i++)
   {
 	if (voxels[i].grainname != 0)
@@ -323,9 +323,9 @@ void ReconstructionFunc::find_border()
   neighbors[3] = 1;
   neighbors[4] = xpoints;
   neighbors[5] = (xpoints * ypoints);
-  double w, n1, n2, n3;
-  double q1[5];
-  double q2[5];
+  float w, n1, n2, n3;
+  float q1[5];
+  float q2[5];
   //size_t size = 0;
   int index;
   int good = 0;
@@ -465,11 +465,11 @@ void ReconstructionFunc::align_sections(const std::string &filename)
 
   ofstream outFile;
   outFile.open(filename.c_str());
-  double disorientation = 0;
-  double mindisorientation = 100000000;
-  double **mutualinfo12;
-  double *mutualinfo1;
-  double *mutualinfo2;
+  float disorientation = 0;
+  float mindisorientation = 100000000;
+  float **mutualinfo12;
+  float *mutualinfo1;
+  float *mutualinfo2;
   int graincount1, graincount2;
   int xshift = 0;
   int yshift = 0;
@@ -480,13 +480,13 @@ void ReconstructionFunc::align_sections(const std::string &filename)
   int slice = 0;
   int nsteps = 0;
   int xspot, yspot;
-  double w;
-  double n1, n2, n3;
-  double q1[5];
-  double q2[5];
-  double refci, curci, refiq, curiq;
-  double refxcentroid, refycentroid;
-  double curxcentroid, curycentroid;
+  float w;
+  float n1, n2, n3;
+  float q1[5];
+  float q2[5];
+  float refci, curci, refiq, curiq;
+  float refxcentroid, refycentroid;
+  float curxcentroid, curycentroid;
   int refgnum, curgnum;
   int refposition = 0;
   int curposition = 0;
@@ -514,13 +514,13 @@ void ReconstructionFunc::align_sections(const std::string &filename)
       for (int m = 0; m < xpoints; m++)
       {
         refposition = ((slice) * xpoints * ypoints) + (l * xpoints) + m;
-        refxcentroid = refxcentroid + (((resx * m) + (resx / 2.0)) * (double(voxels[refposition].grainname)));
-        refycentroid = refycentroid + (((resy * l) + (resy / 2.0)) * (double(voxels[refposition].grainname)));
+        refxcentroid = refxcentroid + (((resx * m) + (resx / 2.0)) * (float(voxels[refposition].grainname)));
+        refycentroid = refycentroid + (((resy * l) + (resy / 2.0)) * (float(voxels[refposition].grainname)));
         count = count + voxels[refposition].grainname;
       }
     }
-    refxcentroid = refxcentroid / double(count);
-    refycentroid = refycentroid / double(count);
+    refxcentroid = refxcentroid / float(count);
+    refycentroid = refycentroid / float(count);
   }
   for (int iter = 1; iter < zpoints; iter++)
   {
@@ -532,13 +532,13 @@ void ReconstructionFunc::align_sections(const std::string &filename)
     {
       graincount1 = graincounts[slice];
       graincount2 = graincounts[slice + 1];
-      mutualinfo12 = new double *[graincount1];
-      mutualinfo1 = new double[graincount1];
-      mutualinfo2 = new double[graincount2];
+      mutualinfo12 = new float *[graincount1];
+      mutualinfo1 = new float[graincount1];
+      mutualinfo2 = new float[graincount2];
       for (int a = 0; a < graincount1; a++)
       {
         mutualinfo1[a] = 0;
-        mutualinfo12[a] = new double[graincount2];
+        mutualinfo12[a] = new float[graincount2];
         for (int b = 0; b < graincount2; b++)
         {
           mutualinfo12[a][b] = 0;
@@ -559,13 +559,13 @@ void ReconstructionFunc::align_sections(const std::string &filename)
         for (int m = 0; m < xpoints; m++)
         {
           curposition = ((slice) * xpoints * ypoints) + (l * xpoints) + m;
-          curxcentroid = curxcentroid + (((resx * m) + (resx / 2.0)) * (double(voxels[curposition].grainname)));
-          curycentroid = curycentroid + (((resy * l) + (resy / 2.0)) * (double(voxels[curposition].grainname)));
+          curxcentroid = curxcentroid + (((resx * m) + (resx / 2.0)) * (float(voxels[curposition].grainname)));
+          curycentroid = curycentroid + (((resy * l) + (resy / 2.0)) * (float(voxels[curposition].grainname)));
           count = count + voxels[curposition].grainname;
         }
       }
-      curxcentroid = curxcentroid / double(count);
-      curycentroid = curycentroid / double(count);
+      curxcentroid = curxcentroid / float(count);
+      curycentroid = curycentroid / float(count);
     }
     if (alignmeth >= 1)
     {
@@ -641,26 +641,26 @@ void ReconstructionFunc::align_sections(const std::string &filename)
             }
             if (alignmeth == AIM::Reconstruction::MutualInformation)
             {
-              double ha = 0;
-              double hb = 0;
-              double hab = 0;
+              float ha = 0;
+              float hb = 0;
+              float hab = 0;
               for (int b = 0; b < graincount1; b++)
               {
-                mutualinfo1[b] = mutualinfo1[b] / double(count);
+                mutualinfo1[b] = mutualinfo1[b] / float(count);
                 if (mutualinfo1[b] != 0) ha = ha + mutualinfo1[b] * log(mutualinfo1[b]);
               }
               for (int c = 0; c < graincount2; c++)
               {
-                mutualinfo2[c] = mutualinfo2[c] / double(count);
+                mutualinfo2[c] = mutualinfo2[c] / float(count);
                 if (mutualinfo2[c] != 0) hb = hb + mutualinfo2[c] * log(mutualinfo2[c]);
               }
               for (int b = 0; b < graincount1; b++)
               {
                 for (int c = 0; c < graincount2; c++)
                 {
-                  mutualinfo12[b][c] = mutualinfo12[b][c] / double(count);
+                  mutualinfo12[b][c] = mutualinfo12[b][c] / float(count);
                   if (mutualinfo12[b][c] != 0) hab = hab + mutualinfo12[b][c] * log(mutualinfo12[b][c]);
-                  double value = 0;
+                  float value = 0;
                   if (mutualinfo1[b] > 0 && mutualinfo2[c] > 0) value = (mutualinfo12[b][c] / (mutualinfo1[b] * mutualinfo2[c]));
                   if (value != 0) disorientation = disorientation + (mutualinfo12[b][c] * log(value));
                 }
@@ -674,7 +674,7 @@ void ReconstructionFunc::align_sections(const std::string &filename)
                   mutualinfo2[c] = 0;
                 }
               }
-              //    double disorientation2 = ha + hb - hab;
+              //    float disorientation2 = ha + hb - hab;
               disorientation = 1.0 / disorientation;
             }
             outFile << disorientation << "  ";
@@ -762,13 +762,13 @@ void ReconstructionFunc::form_grains_sections()
   int graincount = 1;
   int neighbor;
   // int currentpoint;
-  double q1[5];
-  double q2[5];
-  double qs[5];
-  double w;
-  double n1;
-  double n2;
-  double n3;
+  float q1[5];
+  float q2[5];
+  float qs[5];
+  float w;
+  float n1;
+  float n2;
+  float n3;
   int seed = -1;
   int randx = 0;
   int randy = 0;
@@ -799,8 +799,8 @@ void ReconstructionFunc::form_grains_sections()
     while (noseeds == 0)
     {
       seed = -1;
-      randx = int(double(rg.Random()) * double(xpoints));
-      randy = int(double(rg.Random()) * double(ypoints));
+      randx = int(float(rg.Random()) * float(xpoints));
+      randy = int(float(rg.Random()) * float(ypoints));
       for (int j = 0; j < ypoints; ++j)
       {
         for (int i = 0; i < xpoints; ++i)
@@ -811,8 +811,8 @@ void ReconstructionFunc::form_grains_sections()
           if (x > xpoints - 1) x = x - xpoints;
           if (y > ypoints - 1) y = y - ypoints;
           point = (z * xpoints * ypoints) + (y * xpoints) + x;
-          double confidence = voxels[point].confidence;
-          double imagequality = voxels[point].imagequality;
+          float confidence = voxels[point].confidence;
+          float imagequality = voxels[point].imagequality;
           //  int grainname = voxels[point].grainname;
           if (confidence > minseedconfidence && imagequality > minseedimagequality && voxels[point].grainname == -1)
           {
@@ -897,12 +897,12 @@ void ReconstructionFunc::form_grains()
   int noseeds = 0;
   size_t graincount = 1;
   int neighbor;
-  double q1[5];
-  double q2[5];
-  double qa[5];
-  double qb[5];
-  double w;
-  double n1, n2, n3;
+  float q1[5];
+  float q2[5];
+  float qa[5];
+  float qb[5];
+  float w;
+  float n1, n2, n3;
   int seed = -1;
 //  int point = 0;
   int randpoint = 0;
@@ -933,9 +933,9 @@ void ReconstructionFunc::form_grains()
   IntArray gnames(new int[totalpoints]);
 //  IntArrayType::Pointer grainNames = IntArrayType::CreateArray(totalpoints);
 //  int* gnames = grainNames->getPointer(0);
-  DoubleArray iqs(new double[totalpoints]);
+  FloatArray iqs(new float[totalpoints]);
 //  DoubleArrayType::Pointer m_IQs = DoubleArrayType::CreateArray(totalpoints);
-//  double* iqs = m_IQs->getPointer(0);
+//  float* iqs = m_IQs->getPointer(0);
   for (int i = 0; i < totalpoints; ++i)
   {
     gnames[i] = voxels[i].grainname;
@@ -944,9 +944,9 @@ void ReconstructionFunc::form_grains()
 
   // Create initial set of grain average quaternions
 
-  DoubleArrayType::Pointer m_grainQuats = DoubleArrayType::CreateArray(1000*5);
+  FloatArrayType::Pointer m_grainQuats = FloatArrayType::CreateArray(1000*5);
   m_grainQuats->initializeWithZeros();
-  double* grainquats = m_grainQuats->getPointer(0);
+  float* grainquats = m_grainQuats->getPointer(0);
 
   IntArrayType::Pointer m_grainPhases = IntArrayType::CreateArray(1000*5);
   int* gphases = m_grainPhases->getPointer(0);
@@ -962,7 +962,7 @@ void ReconstructionFunc::form_grains()
   {
     seed = -1;
     int counter = 0;
-    randpoint = int(double(rg.Random()) * double(totalPMinus1));
+    randpoint = int(float(rg.Random()) * float(totalPMinus1));
     while (seed == -1 && counter < totalpoints)
     {
       if (randpoint > totalPMinus1) randpoint = randpoint - totalpoints;
@@ -1203,7 +1203,7 @@ void ReconstructionFunc::form_grains()
   {
     m_Grains[g] = Grain::New();
   }
-  m_grainQuats = AIMArray<double >::NullPointer(); // Clean up the array to release some memory
+  m_grainQuats = AIMArray<float >::NullPointer(); // Clean up the array to release some memory
 
   assign_badpoints();
 }
@@ -1214,7 +1214,7 @@ void ReconstructionFunc::assign_badpoints()
   vector<int > remove;
   int count = 1;
   int good = 1;
-  double x, y, z;
+  float x, y, z;
   int neighpoint;
   int neighbors[6];
   size_t numgrains = m_Grains.size();
@@ -1338,10 +1338,10 @@ void ReconstructionFunc::reorder_grains(const std::string &reconVisFile)
   int neighbor = 0;
   int col, row, plane;
   int gnum;
-  double q1[5];
-  double q2[5];
-  double q[5];
-  double ea1, ea2, ea3;
+  float q1[5];
+  float q2[5];
+  float q[5];
+  float ea1, ea2, ea3;
   size_t currentgrain = 1;
   AIM::Reconstruction::CrystalStructure phase;
 
@@ -1692,12 +1692,12 @@ void ReconstructionFunc::find_grain_and_kernel_misorientations()
 {
   IntArray gnames(new int[totalpoints]);
   IntArray unassigned(new int[totalpoints]);
-  DoubleArray gam(new double[totalpoints]);
+  FloatArray gam(new float[totalpoints]);
 
-  double** avgmiso = new double *[m_Grains.size()];
+  float** avgmiso = new float *[m_Grains.size()];
   for (size_t i = 0; i < m_Grains.size(); i++)
   {
-    avgmiso[i] = new double[2];
+    avgmiso[i] = new float[2];
     for (int j = 0; j < 2; j++)
     {
       avgmiso[i][j] = 0.0;
@@ -1710,15 +1710,15 @@ void ReconstructionFunc::find_grain_and_kernel_misorientations()
     gam[i] = 0.0;
   }
 
-  double q1[5];
-  double q2[5];
+  float q1[5];
+  float q2[5];
   int numVoxel; // number of voxels in the grain...
   int numchecks; // number of voxels in the grain...
   int good = 0;
   int neighbor;
   int point;
-  double w, totalmisorientation;
-  double n1, n2, n3;
+  float w, totalmisorientation;
+  float n1, n2, n3;
   AIM::Reconstruction::CrystalStructure phase1 = AIM::Reconstruction::UnknownCrystalStructure;
   AIM::Reconstruction::CrystalStructure phase2 = AIM::Reconstruction::UnknownCrystalStructure;
 
@@ -1873,8 +1873,8 @@ int ReconstructionFunc::load_data(const std::string &readname)
 #else
   int bensdata = 1;
   int yoonsdata = 0;
-  double **mat;
-  double **rod;
+  float **mat;
+  float **rod;
   size_t numgrains = m_Grains.size();
   if (yoonsdata == 1)
   {
@@ -1894,8 +1894,8 @@ int ReconstructionFunc::load_data(const std::string &readname)
         totalpoints = xpoints * ypoints * zpoints;
         delete[] voxels;
         voxels = new Voxel[totalpoints];
-        mat = new double *[totalpoints];
-        totalvol = double(totalpoints) * resx * resy * resz;
+        mat = new float *[totalpoints];
+        totalvol = float(totalpoints) * resx * resy * resz;
       }
       if (LOOKUP == word)
       {
@@ -1906,10 +1906,10 @@ int ReconstructionFunc::load_data(const std::string &readname)
     int gnum = 0;
     int onedge = 0;
     int col, row, plane;
-    double value;
+    float value;
     for (int i = 0; i < totalpoints; i++)
     {
-      mat[i] = new double[9];
+      mat[i] = new float[9];
       onedge = 0;
       in >> gnum;
       col = i % xpoints;
@@ -1950,34 +1950,34 @@ int ReconstructionFunc::load_data(const std::string &readname)
         mat[i][iter] = value;
       }
     }
-    double s, c, s1, c1, s2, c2;
-    double ea1, ea2, ea3;
-    double cosine1, cosine3, sine1, sine3;
-    double denom;
+    float s, c, s1, c1, s2, c2;
+    float ea1, ea2, ea3;
+    float cosine1, cosine3, sine1, sine3;
+    float denom;
     for (int i = 0; i < (xpoints * ypoints * zpoints); i++)
     {
       denom = mat[i][0] * mat[i][0] + mat[i][1] * mat[i][1] + mat[i][2] * mat[i][2];
-      denom = pow(denom, 0.5);
+      denom = powf(denom, 0.5);
       mat[i][0] = mat[i][0] / denom;
       mat[i][3] = mat[i][3] / denom;
       mat[i][6] = mat[i][6] / denom;
       denom = mat[i][3] * mat[i][3] + mat[i][4] * mat[i][4] + mat[i][5] * mat[i][5];
-      denom = pow(denom, 0.5);
+      denom = powf(denom, 0.5);
       mat[i][1] = mat[i][1] / denom;
       mat[i][4] = mat[i][4] / denom;
       mat[i][7] = mat[i][7] / denom;
       denom = mat[i][6] * mat[i][6] + mat[i][7] * mat[i][7] + mat[i][8] * mat[i][8];
-      denom = pow(denom, 0.5);
+      denom = powf(denom, 0.5);
       mat[i][2] = mat[i][2] / denom;
       mat[i][5] = mat[i][5] / denom;
       mat[i][8] = mat[i][8] / denom;
       if (mat[i][8] > 1) mat[i][8] = 1;
       if (mat[i][8] < -1) mat[i][8] = -1;
       ea2 = acos(mat[i][8]);
-      cosine3 = (mat[i][5] / sin(ea2));
-      sine3 = (mat[i][2] / sin(ea2));
-      cosine1 = (-mat[i][7] / sin(ea2));
-      sine1 = (mat[i][6] / sin(ea2));
+      cosine3 = (mat[i][5] / sinf(ea2));
+      sine3 = (mat[i][2] / sinf(ea2));
+      cosine1 = (-mat[i][7] / sinf(ea2));
+      sine1 = (mat[i][6] / sinf(ea2));
       if (cosine3 > 1) cosine3 = 1;
       if (cosine3 < -1) cosine3 = -1;
       ea3 = acos(cosine3);
@@ -1989,12 +1989,12 @@ int ReconstructionFunc::load_data(const std::string &readname)
       voxels[i].euler1 = ea1;
       voxels[i].euler2 = ea2;
       voxels[i].euler3 = ea3;
-      s = sin(0.5 * ea2);
-      c = cos(0.5 * ea2);
-      s1 = sin(0.5 * (ea1 - ea3));
-      c1 = cos(0.5 * (ea1 - ea3));
-      s2 = sin(0.5 * (ea1 + ea3));
-      c2 = cos(0.5 * (ea1 + ea3));
+      s = sinf(0.5 * ea2);
+      c = cosf(0.5 * ea2);
+      s1 = sinf(0.5 * (ea1 - ea3));
+      c1 = cosf(0.5 * (ea1 - ea3));
+      s2 = sinf(0.5 * (ea1 + ea3));
+      c2 = cosf(0.5 * (ea1 + ea3));
 	  voxels[i].quat[0] = 1.0;
       voxels[i].quat[1] = s * c1;
       voxels[i].quat[2] = s * s1;
@@ -2022,8 +2022,8 @@ int ReconstructionFunc::load_data(const std::string &readname)
         totalpoints = xpoints * ypoints * zpoints;
         delete[] voxels;
         voxels = new Voxel[totalpoints];
-        rod = new double *[totalpoints];
-        totalvol = double(totalpoints) * resx * resy * resz;
+        rod = new float *[totalpoints];
+        totalvol = float(totalpoints) * resx * resy * resz;
       }
       if (LOOKUP == word)
       {
@@ -2034,10 +2034,10 @@ int ReconstructionFunc::load_data(const std::string &readname)
     int gnum = 0;
     int onedge = 0;
     int col, row, plane;
-    double value;
+    float value;
     for (int i = 0; i < totalpoints; i++)
     {
-      rod[i] = new double[3];
+      rod[i] = new float[3];
       onedge = 0;
       in >> gnum;
       col = i % xpoints;
@@ -2078,20 +2078,20 @@ int ReconstructionFunc::load_data(const std::string &readname)
         rod[i][iter] = value;
       }
     }
-    double denom, mag;
-	double q1[5];
+    float denom, mag;
+	float q1[5];
     for (int i = 0; i < (xpoints * ypoints * zpoints); i++)
     {
-      denom = pow((rod[i][0] * rod[i][0] + rod[i][1] * rod[i][1] + rod[i][2] * rod[i][2]),0.5);
+      denom = powf((rod[i][0] * rod[i][0] + rod[i][1] * rod[i][1] + rod[i][2] * rod[i][2]),0.5);
       rod[i][0] = rod[i][0] / denom;
       rod[i][1] = rod[i][1] / denom;
       rod[i][2] = rod[i][2] / denom;
-      mag = pow((rod[i][0] * rod[i][0] + rod[i][1] * rod[i][1] + rod[i][2] * rod[i][2]),0.5);
+      mag = powf((rod[i][0] * rod[i][0] + rod[i][1] * rod[i][1] + rod[i][2] * rod[i][2]),0.5);
 	  q1[0] = 1.0;
 	  q1[1] = rod[i][0];
 	  q1[2] = rod[i][1];
 	  q1[3] = rod[i][2];
-	  q1[4] = cos(asin(mag));
+	  q1[4] = cosf(asin(mag));
       OrientationMath::getFZQuatCubic(q1);
 	  voxels[i].quat[0] = q1[0];
       voxels[i].quat[1] = q1[1];
@@ -2109,13 +2109,13 @@ int ReconstructionFunc::load_data(const std::string &readname)
 void ReconstructionFunc::merge_twins()
 {
   int twinmerged = 1;
-  double angcur = 180;
+  float angcur = 180;
   vector<int > twinlist;
-  double w;
-  double n1, n2, n3;
-  double r1, r2, r3;
-  double q1[5];
-  double q2[5];
+  float w;
+  float n1, n2, n3;
+  float r1, r2, r3;
+  float q1[5];
+  float q2[5];
   size_t numgrains = m_Grains.size();
   AIM::Reconstruction::CrystalStructure phase1, phase2;
 
@@ -2151,16 +2151,16 @@ void ReconstructionFunc::merge_twins()
             phase2 = crystruct[m_Grains[neigh]->phase];
             if (phase1 == phase2) w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
 			OrientationMath::axisAngletoRod(w, n1, n2, n3, r1, r2, r3);
-            double vecttol = 0.03;
-            double rodvectdiff11 = fabs(fabs(r1) - (1.0 / 3.0));
-            double rodvectdiff12 = fabs(fabs(r2) - (1.0 / 3.0));
-            double rodvectdiff13 = fabs(fabs(r3) - (1.0 / 3.0));
-            double rodvectdiff21 = fabs(fabs(r1) - 0.2);
-            double rodvectdiff22 = fabs(fabs(r2) - 0.2);
-            double rodvectdiff23 = fabs(fabs(r3) - 0.2);
-            double rodvectdiff31 = fabs(fabs(r1) - 0.25);
-            double rodvectdiff32 = fabs(fabs(r2) - 0.25);
-            double rodvectdiff33 = fabs(fabs(r3) - 0.25);
+            float vecttol = 0.03;
+            float rodvectdiff11 = fabs(fabs(r1) - (1.0 / 3.0));
+            float rodvectdiff12 = fabs(fabs(r2) - (1.0 / 3.0));
+            float rodvectdiff13 = fabs(fabs(r3) - (1.0 / 3.0));
+            float rodvectdiff21 = fabs(fabs(r1) - 0.2);
+            float rodvectdiff22 = fabs(fabs(r2) - 0.2);
+            float rodvectdiff23 = fabs(fabs(r3) - 0.2);
+            float rodvectdiff31 = fabs(fabs(r1) - 0.25);
+            float rodvectdiff32 = fabs(fabs(r2) - 0.25);
+            float rodvectdiff33 = fabs(fabs(r3) - 0.25);
             if (rodvectdiff11 < vecttol && rodvectdiff12 < vecttol && rodvectdiff13 < vecttol) twin = 1;
             if (rodvectdiff11 < vecttol && fabs(r2) < vecttol && fabs(r3) < vecttol) twin = 1;
             if (rodvectdiff12 < vecttol && fabs(r1) < vecttol && fabs(r3) < vecttol) twin = 1;
@@ -2203,13 +2203,13 @@ void ReconstructionFunc::merge_twins()
 void ReconstructionFunc::merge_colonies()
 {
   int colonymerged = 1;
-  double angcur = 180;
+  float angcur = 180;
   vector<int > colonylist;
-  double w;
-  double n1, n2, n3;
-  double r1, r2, r3;
-  double q1[5];
-  double q2[5];
+  float w;
+  float n1, n2, n3;
+  float r1, r2, r3;
+  float q1[5];
+  float q2[5];
   size_t numgrains = m_Grains.size();
   AIM::Reconstruction::CrystalStructure phase1, phase2;
 
@@ -2245,7 +2245,7 @@ void ReconstructionFunc::merge_colonies()
 			phase2 = crystruct[m_Grains[neigh]->phase];
 			if (phase1 == phase2) w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
 			OrientationMath::axisAngletoRod(w, n1, n2, n3, r1, r2, r3);
-			double vecttol = 0.03;
+			float vecttol = 0.03;
             if (fabs(r1) < vecttol && fabs(r2) < vecttol && fabs(fabs(r3) - 0.0919) < vecttol) colony = 1;
             if (fabs(fabs(r1) - 0.289) < vecttol && fabs(fabs(r2) - 0.5) < vecttol && fabs(r3) < vecttol) colony = 1;
             if (fabs(fabs(r1) - 0.57735) < vecttol && fabs(r2) < vecttol && fabs(r3) < vecttol) colony = 1;
@@ -2312,9 +2312,9 @@ void ReconstructionFunc::renumber_grains3()
     if (gottwinmerged != 1)
     {
       newnames[i] = graincount;
-      double ea1good = m_Grains[i]->euler1;
-      double ea2good = m_Grains[i]->euler2;
-      double ea3good = m_Grains[i]->euler3;
+      float ea1good = m_Grains[i]->euler1;
+      float ea2good = m_Grains[i]->euler2;
+      float ea3good = m_Grains[i]->euler3;
       int size = m_Grains[i]->numvoxels;
       int numneighbors = m_Grains[i]->numneighbors;
       IntVectorType nlist = m_Grains[i]->neighborlist;
@@ -2358,7 +2358,7 @@ void ReconstructionFunc::find_neighbors()
   neighbors[3] = 1;
   neighbors[4] = xpoints;
   neighbors[5] = (xpoints * ypoints);
-  double column, row, plane;
+  float column, row, plane;
   int grain;
   size_t nnum;
   int onsurf = 0;
@@ -2462,7 +2462,7 @@ void ReconstructionFunc::find_neighbors()
     {
       size_t neigh = m_Grains[i]->neighborlist->at(j);
       int number = std::count(nlistcopy.begin(), nlistcopy.end(), neigh);
-      double area = number * resx * resx;
+      float area = number * resx * resx;
       m_Grains[i]->neighborsurfarealist->at(j) = area;
       if (m_Grains[i]->surfacegrain == 0 && (neigh > i || m_Grains[neigh]->surfacegrain == 1))
       {
@@ -2478,10 +2478,10 @@ void ReconstructionFunc::find_neighbors()
 
 void ReconstructionFunc::define_neighborhood()
 {
-  double x, y, z;
-  double xn, yn, zn;
-  double xdist, ydist, zdist;
-  double dist, dist2, diam, diam2;
+  float x, y, z;
+  float xn, yn, zn;
+  float xdist, ydist, zdist;
+  float dist, dist2, diam, diam2;
   int dist_int, dist2_int;
   size_t numgrains = m_Grains.size();
 
@@ -2507,7 +2507,7 @@ void ReconstructionFunc::define_neighborhood()
             ydist = fabs(y - yn);
             zdist = fabs(z - zn);
             dist = (xdist * xdist) + (ydist * ydist) + (zdist * zdist);
-            dist = pow(dist, 0.5);
+            dist = powf(dist, 0.5);
             dist2 = dist;
             dist_int = int(dist / (diam/2.0));
             dist2_int = int(dist2 / (diam2/2.0));
@@ -2542,10 +2542,10 @@ void ReconstructionFunc::find_centroids()
 	  mindiameter[i] = 100000;
 	  phasefraction[i] = 0;
   }
-  double x, y, z;
+  float x, y, z;
   int col, row, plane;
-  double radcubed;
-  double diameter;
+  float radcubed;
+  float diameter;
   size_t numgrains = m_Grains.size();
   graincenters.resize(numgrains);
   for (size_t i = 0; i < numgrains; i++)
@@ -2564,9 +2564,9 @@ void ReconstructionFunc::find_centroids()
     col = j % xpoints;
     row = (j / xpoints) % ypoints;
     plane = j / (xpoints * ypoints);
-	x = double(col)*resx;
-	y = double(row)*resy;
-	z = double(plane)*resz;
+	x = float(col)*resx;
+	y = float(row)*resy;
+	z = float(plane)*resz;
     if (col <= 0) onedge = 1;
     if (col >= xpoints - 1) onedge = 1;
     if (row <= 0) onedge = 1;
@@ -2578,8 +2578,8 @@ void ReconstructionFunc::find_centroids()
     graincenters[gnum][3] = graincenters[gnum][3] + z;
     if (onedge == 1) graincenters[gnum][4] = 1;
   }
-  double res_scalar = resx * resy * resz;
-  double vol_term = (4.0/3.0)*m_pi;
+  float res_scalar = resx * resy * resz;
+  float vol_term = (4.0/3.0)*m_pi;
   for (size_t i = 1; i < numgrains; i++)
   {
     graincenters[i][1] = graincenters[i][1] / graincenters[i][0];
@@ -2592,7 +2592,7 @@ void ReconstructionFunc::find_centroids()
     m_Grains[i]->volume = (graincenters[i][0] * res_scalar);
     m_Grains[i]->surfacegrain = graincenters[i][4];
     radcubed = m_Grains[i]->volume/vol_term;
-    diameter = 2.0*pow(radcubed, 0.3333333333);
+    diameter = 2.0*powf(radcubed, 0.3333333333);
     m_Grains[i]->equivdiameter = diameter;
     if(int(diameter) > maxdiameter[m_Grains[i]->phase]) maxdiameter[m_Grains[i]->phase] = int(diameter);
     if(int(diameter) < mindiameter[m_Grains[i]->phase]) mindiameter[m_Grains[i]->phase] = int(diameter);
@@ -2623,10 +2623,10 @@ void ReconstructionFunc::find_centroids2D()
 	  mindiameter[i] = 100000;
 	  phasefraction[i] = 0;
   }
-  double x, y;
+  float x, y;
   int col, row;
-  double radsquared;
-  double diameter;
+  float radsquared;
+  float diameter;
   size_t numgrains = m_Grains.size();
   graincenters.resize(numgrains);
   for (size_t i = 0; i < numgrains; i++)
@@ -2644,8 +2644,8 @@ void ReconstructionFunc::find_centroids2D()
     graincenters[gnum][0]++;
     col = j % xpoints;
     row = (j / xpoints) % ypoints;
-	x = double(col)*resx;
-	y = double(row)*resy;
+	x = float(col)*resx;
+	y = float(row)*resy;
     if (col <= 0) onedge = 1;
     if (col >= xpoints - 1) onedge = 1;
     if (row <= 0) onedge = 1;
@@ -2664,7 +2664,7 @@ void ReconstructionFunc::find_centroids2D()
     m_Grains[i]->volume = (graincenters[i][0] * resx * resy);
     m_Grains[i]->surfacegrain = graincenters[i][3];
     radsquared = m_Grains[i]->volume / m_pi;
-    diameter = (2 * pow(radsquared, 0.5));
+    diameter = (2 * powf(radsquared, 0.5));
     m_Grains[i]->equivdiameter = diameter;
     if (int(diameter) > maxdiameter[m_Grains[i]->phase]) maxdiameter[m_Grains[i]->phase] = int(diameter);
     if (int(diameter) < mindiameter[m_Grains[i]->phase]) mindiameter[m_Grains[i]->phase] = int(diameter);
@@ -2707,31 +2707,31 @@ void ReconstructionFunc::find_euclidean_map()
   }
 #endif
 }
-double ReconstructionFunc::find_xcoord(size_t index)
+float ReconstructionFunc::find_xcoord(size_t index)
 {
-  double x = resx * double(index % xpoints);
+  float x = resx * float(index % xpoints);
   return x;
 }
-double ReconstructionFunc::find_ycoord(size_t index)
+float ReconstructionFunc::find_ycoord(size_t index)
 {
-  double y = resy * double((index / xpoints) % ypoints);
+  float y = resy * float((index / xpoints) % ypoints);
   return y;
 }
-double ReconstructionFunc::find_zcoord(size_t index)
+float ReconstructionFunc::find_zcoord(size_t index)
 {
-  double z = resz * double(index / (xpoints * ypoints));
+  float z = resz * float(index / (xpoints * ypoints));
   return z;
 }
 
 void ReconstructionFunc::find_moments()
 {
   //  int count = 0;
-  double u200 = 0;
-  double u020 = 0;
-  double u002 = 0;
-  double u110 = 0;
-  double u011 = 0;
-  double u101 = 0;
+  float u200 = 0;
+  float u020 = 0;
+  float u002 = 0;
+  float u110 = 0;
+  float u011 = 0;
+  float u101 = 0;
   size_t numgrains = m_Grains.size();
   grainmoments.resize(numgrains);
   for (size_t i = 0; i < numgrains; i++)
@@ -2752,39 +2752,39 @@ void ReconstructionFunc::find_moments()
     u011 = 0;
     u101 = 0;
     int gnum = voxels[j].grainname;
-    double x = find_xcoord(j);
-    double y = find_ycoord(j);
-    double z = find_zcoord(j);
-    double x1 = x + (resx / 4);
-    double x2 = x - (resx / 4);
-    double y1 = y + (resy / 4);
-    double y2 = y - (resy / 4);
-    double z1 = z + (resz / 4);
-    double z2 = z - (resz / 4);
-    double xdist1 = (x1 - graincenters[gnum][1]);
-    double ydist1 = (y1 - graincenters[gnum][2]);
-    double zdist1 = (z1 - graincenters[gnum][3]);
-    double xdist2 = (x1 - graincenters[gnum][1]);
-    double ydist2 = (y1 - graincenters[gnum][2]);
-    double zdist2 = (z2 - graincenters[gnum][3]);
-    double xdist3 = (x1 - graincenters[gnum][1]);
-    double ydist3 = (y2 - graincenters[gnum][2]);
-    double zdist3 = (z1 - graincenters[gnum][3]);
-    double xdist4 = (x1 - graincenters[gnum][1]);
-    double ydist4 = (y2 - graincenters[gnum][2]);
-    double zdist4 = (z2 - graincenters[gnum][3]);
-    double xdist5 = (x2 - graincenters[gnum][1]);
-    double ydist5 = (y1 - graincenters[gnum][2]);
-    double zdist5 = (z1 - graincenters[gnum][3]);
-    double xdist6 = (x2 - graincenters[gnum][1]);
-    double ydist6 = (y1 - graincenters[gnum][2]);
-    double zdist6 = (z2 - graincenters[gnum][3]);
-    double xdist7 = (x2 - graincenters[gnum][1]);
-    double ydist7 = (y2 - graincenters[gnum][2]);
-    double zdist7 = (z1 - graincenters[gnum][3]);
-    double xdist8 = (x2 - graincenters[gnum][1]);
-    double ydist8 = (y2 - graincenters[gnum][2]);
-    double zdist8 = (z2 - graincenters[gnum][3]);
+    float x = find_xcoord(j);
+    float y = find_ycoord(j);
+    float z = find_zcoord(j);
+    float x1 = x + (resx / 4);
+    float x2 = x - (resx / 4);
+    float y1 = y + (resy / 4);
+    float y2 = y - (resy / 4);
+    float z1 = z + (resz / 4);
+    float z2 = z - (resz / 4);
+    float xdist1 = (x1 - graincenters[gnum][1]);
+    float ydist1 = (y1 - graincenters[gnum][2]);
+    float zdist1 = (z1 - graincenters[gnum][3]);
+    float xdist2 = (x1 - graincenters[gnum][1]);
+    float ydist2 = (y1 - graincenters[gnum][2]);
+    float zdist2 = (z2 - graincenters[gnum][3]);
+    float xdist3 = (x1 - graincenters[gnum][1]);
+    float ydist3 = (y2 - graincenters[gnum][2]);
+    float zdist3 = (z1 - graincenters[gnum][3]);
+    float xdist4 = (x1 - graincenters[gnum][1]);
+    float ydist4 = (y2 - graincenters[gnum][2]);
+    float zdist4 = (z2 - graincenters[gnum][3]);
+    float xdist5 = (x2 - graincenters[gnum][1]);
+    float ydist5 = (y1 - graincenters[gnum][2]);
+    float zdist5 = (z1 - graincenters[gnum][3]);
+    float xdist6 = (x2 - graincenters[gnum][1]);
+    float ydist6 = (y1 - graincenters[gnum][2]);
+    float zdist6 = (z2 - graincenters[gnum][3]);
+    float xdist7 = (x2 - graincenters[gnum][1]);
+    float ydist7 = (y2 - graincenters[gnum][2]);
+    float zdist7 = (z1 - graincenters[gnum][3]);
+    float xdist8 = (x2 - graincenters[gnum][1]);
+    float ydist8 = (y2 - graincenters[gnum][2]);
+    float zdist8 = (z2 - graincenters[gnum][3]);
     u200 = u200 + ((ydist1) * (ydist1)) + ((zdist1) * (zdist1)) + ((ydist2) * (ydist2)) + ((zdist2) * (zdist2)) + ((ydist3) * (ydist3)) + ((zdist3) * (zdist3))
         + ((ydist4) * (ydist4)) + ((zdist4) * (zdist4)) + ((ydist5) * (ydist5)) + ((zdist5) * (zdist5)) + ((ydist6) * (ydist6)) + ((zdist6) * (zdist6))
         + ((ydist7) * (ydist7)) + ((zdist7) * (zdist7)) + ((ydist8) * (ydist8)) + ((zdist8) * (zdist8));
@@ -2807,7 +2807,7 @@ void ReconstructionFunc::find_moments()
     grainmoments[gnum][4] = grainmoments[gnum][4] + u011;
     grainmoments[gnum][5] = grainmoments[gnum][5] + u101;
   }
-  double sphere = (2000.0*m_pi*m_pi)/9.0;
+  float sphere = (2000.0*m_pi*m_pi)/9.0;
   for (size_t i = 1; i < numgrains; i++)
   {
     grainmoments[i][0] = grainmoments[i][0] * (resx / 2.0) * (resy / 2.0) * (resz / 2.0);
@@ -2822,13 +2822,13 @@ void ReconstructionFunc::find_moments()
     u110 = grainmoments[i][3];
     u011 = grainmoments[i][4];
     u101 = grainmoments[i][5];
-    //    double o3 = (grainmoments[i][0] * grainmoments[i][1] * grainmoments[i][2]) + (2.0 * grainmoments[i][3] * grainmoments[i][5] * grainmoments[i][4])
+    //    float o3 = (grainmoments[i][0] * grainmoments[i][1] * grainmoments[i][2]) + (2.0 * grainmoments[i][3] * grainmoments[i][5] * grainmoments[i][4])
     //        - (grainmoments[i][0] * grainmoments[i][4] * grainmoments[i][4]) - (grainmoments[i][1] * grainmoments[i][5] * grainmoments[i][5]) - (grainmoments[i][2]
     //        * grainmoments[i][3] * grainmoments[i][3]);
-    double o3 = (u200 * u020 * u002) + (2.0 * u110 * u101 * u011) - (u200 * u011 * u011) - (u020 * u101 * u101) - (u002 * u110 * u110);
-    double vol5 = m_Grains[i]->volume;
-    vol5 = pow(vol5, 5);
-    double omega3 = vol5 / o3;
+    float o3 = (u200 * u020 * u002) + (2.0 * u110 * u101 * u011) - (u200 * u011 * u011) - (u020 * u101 * u101) - (u002 * u110 * u110);
+    float vol5 = m_Grains[i]->volume;
+    vol5 = powf(vol5, 5);
+    float omega3 = vol5 / o3;
     omega3 = omega3 / sphere;
     if (omega3 > 1) omega3 = 1;
     m_Grains[i]->Ixx = grainmoments[i][0];
@@ -2846,22 +2846,22 @@ void ReconstructionFunc::find_axes()
 size_t numgrains = m_Grains.size();
 for (size_t i = 1; i < numgrains; i++)
   {
-    double Ixx = m_Grains[i]->Ixx;
-    double Iyy = m_Grains[i]->Iyy;
-    double Izz = m_Grains[i]->Izz;
-    double Ixy = m_Grains[i]->Ixy;
-    double Iyz = m_Grains[i]->Iyz;
-    double Ixz = m_Grains[i]->Ixz;
-    double a = 1;
-    double b = -Ixx - Iyy - Izz;
-    double c = ((Ixx * Izz) + (Ixx * Iyy) + (Iyy * Izz) - (Ixz * Ixz) - (Ixy * Ixy) - (Iyz * Iyz));
-    double d = ((Ixz * Iyy * Ixz) + (Ixy * Izz * Ixy) + (Iyz * Ixx * Iyz) - (Ixx * Iyy * Izz) - (Ixy * Iyz * Ixz) - (Ixy * Iyz * Ixz));
-    double f = ((3 * c / a) - ((b / a) * (b / a))) / 3;
-    double g = ((2 * (b / a) * (b / a) * (b / a)) - (9 * b * c / (a * a)) + (27 * (d / a))) / 27;
-    double h = (g * g / 4) + (f * f * f / 27);
-    double rsquare = (g * g / 4) - h;
-    double r = pow(rsquare, 0.5);
-    double theta = 0;
+    float Ixx = m_Grains[i]->Ixx;
+    float Iyy = m_Grains[i]->Iyy;
+    float Izz = m_Grains[i]->Izz;
+    float Ixy = m_Grains[i]->Ixy;
+    float Iyz = m_Grains[i]->Iyz;
+    float Ixz = m_Grains[i]->Ixz;
+    float a = 1;
+    float b = -Ixx - Iyy - Izz;
+    float c = ((Ixx * Izz) + (Ixx * Iyy) + (Iyy * Izz) - (Ixz * Ixz) - (Ixy * Ixy) - (Iyz * Iyz));
+    float d = ((Ixz * Iyy * Ixz) + (Ixy * Izz * Ixy) + (Iyz * Ixx * Iyz) - (Ixx * Iyy * Izz) - (Ixy * Iyz * Ixz) - (Ixy * Iyz * Ixz));
+    float f = ((3 * c / a) - ((b / a) * (b / a))) / 3;
+    float g = ((2 * (b / a) * (b / a) * (b / a)) - (9 * b * c / (a * a)) + (27 * (d / a))) / 27;
+    float h = (g * g / 4) + (f * f * f / 27);
+    float rsquare = (g * g / 4) - h;
+    float r = powf(rsquare, 0.5);
+    float theta = 0;
     if (r == 0)
     {
       theta = 0;
@@ -2870,9 +2870,9 @@ for (size_t i = 1; i < numgrains; i++)
     {
       theta = acos(-g / (2 * r));
     }
-    double r1 = 2 * pow(r, 0.33333333333) * cos(theta / 3) - (b / (3 * a));
-    double r2 = -pow(r, 0.33333333333) * (cos(theta / 3) - (1.7320508 * sin(theta / 3))) - (b / (3 * a));
-    double r3 = -pow(r, 0.33333333333) * (cos(theta / 3) + (1.7320508 * sin(theta / 3))) - (b / (3 * a));
+    float r1 = 2 * powf(r, 0.33333333333) * cosf(theta / 3) - (b / (3 * a));
+    float r2 = -powf(r, 0.33333333333) * (cosf(theta / 3) - (1.7320508 * sinf(theta / 3))) - (b / (3 * a));
+    float r3 = -powf(r, 0.33333333333) * (cosf(theta / 3) + (1.7320508 * sinf(theta / 3))) - (b / (3 * a));
     m_Grains[i]->radius1 = r1;
     m_Grains[i]->radius2 = r2;
     m_Grains[i]->radius3 = r3;
@@ -2880,31 +2880,31 @@ for (size_t i = 1; i < numgrains; i++)
 }
 void ReconstructionFunc::find_vectors(H5ReconStatsWriter::Pointer h5io)
 {
-  double **axisodf;
-  axisodf = new double *[crystruct.size()];
+  float **axisodf;
+  axisodf = new float *[crystruct.size()];
   for(size_t i=1;i<crystruct.size();i++)
   {
 	  totalaxes[i] = 0.0;
-	  axisodf[i] = new double[18 * 18 * 18];
+	  axisodf[i] = new float[18 * 18 * 18];
   }
   size_t numgrains = m_Grains.size();
   for (size_t i = 1; i < numgrains; i++)
   {
     //   int size = grains[i].numvoxels;
-    double Ixx = m_Grains[i]->Ixx;
-    double Iyy = m_Grains[i]->Iyy;
-    double Izz = m_Grains[i]->Izz;
-    double Ixy = m_Grains[i]->Ixy;
-    double Iyz = m_Grains[i]->Iyz;
-    double Ixz = m_Grains[i]->Ixz;
-    double radius1 = m_Grains[i]->radius1;
-    double radius2 = m_Grains[i]->radius2;
-    double radius3 = m_Grains[i]->radius3;
-    double m[3][3];
-    double e[3][1];
-    double uber[3][3];
-    double bmat[3][1];
-    double vect[3][3];
+    float Ixx = m_Grains[i]->Ixx;
+    float Iyy = m_Grains[i]->Iyy;
+    float Izz = m_Grains[i]->Izz;
+    float Ixy = m_Grains[i]->Ixy;
+    float Iyz = m_Grains[i]->Iyz;
+    float Ixz = m_Grains[i]->Ixz;
+    float radius1 = m_Grains[i]->radius1;
+    float radius2 = m_Grains[i]->radius2;
+    float radius3 = m_Grains[i]->radius3;
+    float m[3][3];
+    float e[3][1];
+    float uber[3][3];
+    float bmat[3][1];
+    float vect[3][3];
     m[0][0] = Ixx;
     m[0][1] = Ixy;
     m[0][2] = Ixz;
@@ -2931,20 +2931,20 @@ void ReconstructionFunc::find_vectors(H5ReconStatsWriter::Pointer h5io)
       uber[2][0] = Ixz;
       uber[2][1] = Iyz;
       uber[2][2] = Izz - e[j][0];
-      double **uberelim;
-      double **uberbelim;
-      uberelim = new double *[3];
-      uberbelim = new double *[3];
+      float **uberelim;
+      float **uberbelim;
+      uberelim = new float *[3];
+      uberbelim = new float *[3];
       for (int d = 0; d < 3; d++)
       {
-        uberelim[d] = new double[3];
-        uberbelim[d] = new double[1];
+        uberelim[d] = new float[3];
+        uberbelim[d] = new float[1];
       }
       int elimcount = 0;
       int elimcount1 = 0;
-      double q = 0;
-      double sum = 0;
-      double c = 0;
+      float q = 0;
+      float sum = 0;
+      float c = 0;
       for (int a = 0; a < 3; a++)
       {
         elimcount1 = 0;
@@ -2985,18 +2985,18 @@ void ReconstructionFunc::find_vectors(H5ReconStatsWriter::Pointer h5io)
         vect[j][p] = q;
       }
     }
-    double n1x = vect[0][0];
-    double n1y = vect[0][1];
-    double n1z = vect[0][2];
-    double n2x = vect[1][0];
-    double n2y = vect[1][1];
-    double n2z = vect[1][2];
-    double n3x = vect[2][0];
-    double n3y = vect[2][1];
-    double n3z = vect[2][2];
-    double norm1 = pow(((n1x * n1x) + (n1y * n1y) + (n1z * n1z)), 0.5);
-    double norm2 = pow(((n2x * n2x) + (n2y * n2y) + (n2z * n2z)), 0.5);
-    double norm3 = pow(((n3x * n3x) + (n3y * n3y) + (n3z * n3z)), 0.5);
+    float n1x = vect[0][0];
+    float n1y = vect[0][1];
+    float n1z = vect[0][2];
+    float n2x = vect[1][0];
+    float n2y = vect[1][1];
+    float n2z = vect[1][2];
+    float n3x = vect[2][0];
+    float n3y = vect[2][1];
+    float n3z = vect[2][2];
+    float norm1 = powf(((n1x * n1x) + (n1y * n1y) + (n1z * n1z)), 0.5);
+    float norm2 = powf(((n2x * n2x) + (n2y * n2y) + (n2z * n2z)), 0.5);
+    float norm3 = powf(((n3x * n3x) + (n3y * n3y) + (n3z * n3z)), 0.5);
     if (m_Grains[i]->surfacegrain == 0)
     {
       n1x = n1x / norm1;
@@ -3010,9 +3010,9 @@ void ReconstructionFunc::find_vectors(H5ReconStatsWriter::Pointer h5io)
       n3z = n3z / norm3;
       for (int k = 0; k < 4; k++)
       {
-        double o[3][3];
-        double ga[3][3];
-        double m1[3][3];
+        float o[3][3];
+        float ga[3][3];
+        float m1[3][3];
         if (k == 0)
         {
           o[0][0] = 1.0;
@@ -3079,13 +3079,13 @@ void ReconstructionFunc::find_vectors(H5ReconStatsWriter::Pointer h5io)
         m1[2][0] = o[2][0] * ga[0][0] + o[2][1] * ga[1][0] + o[2][2] * ga[2][0];
         m1[2][1] = o[2][0] * ga[0][1] + o[2][1] * ga[1][1] + o[2][2] * ga[2][1];
         m1[2][2] = o[2][0] * ga[0][2] + o[2][1] * ga[1][2] + o[2][2] * ga[2][2];
-        double ea2 = acos(m1[2][2]);
-        double cosine3 = (m1[1][2] / sin(ea2));
-        double sine3 = (m1[0][2] / sin(ea2));
-        double cosine1 = (-m1[2][1] / sin(ea2));
-        double sine1 = (m1[2][0] / sin(ea2));
-        double ea3 = acos(cosine3);
-        double ea1 = acos(cosine1);
+        float ea2 = acos(m1[2][2]);
+        float cosine3 = (m1[1][2] / sinf(ea2));
+        float sine3 = (m1[0][2] / sinf(ea2));
+        float cosine1 = (-m1[2][1] / sinf(ea2));
+        float sine1 = (m1[2][0] / sinf(ea2));
+        float ea3 = acos(cosine3);
+        float ea1 = acos(cosine1);
         if (sine3 < 0) ea3 = (2 * m_pi) - ea3;
         if (sine1 < 0) ea1 = (2 * m_pi) - ea1;
         int ea1bin = int(ea1 / (m_pi / 18));
@@ -3115,9 +3115,9 @@ void ReconstructionFunc::find_vectors(H5ReconStatsWriter::Pointer h5io)
 void ReconstructionFunc::find_moments2D()
 {
   //  int count = 0;
-  double u200 = 0;
-  double u020 = 0;
-  double u110 = 0;
+  float u200 = 0;
+  float u020 = 0;
+  float u110 = 0;
   size_t numgrains = m_Grains.size();
   grainmoments.resize(numgrains);
   for (size_t i = 0; i < numgrains; i++)
@@ -3134,20 +3134,20 @@ void ReconstructionFunc::find_moments2D()
     u020 = 0;
     u110 = 0;
     int gnum = voxels[j].grainname;
-    double x = find_xcoord(j);
-    double y = find_ycoord(j);
-    double x1 = x + (resx / 2);
-    double x2 = x - (resx / 2);
-    double y1 = y + (resy / 2);
-    double y2 = y - (resy / 2);
-    double xdist1 = (x1 - graincenters[gnum][1]);
-    double ydist1 = (y1 - graincenters[gnum][2]);
-    double xdist2 = (x1 - graincenters[gnum][1]);
-    double ydist2 = (y2 - graincenters[gnum][2]);
-    double xdist3 = (x2 - graincenters[gnum][1]);
-    double ydist3 = (y1 - graincenters[gnum][2]);
-    double xdist4 = (x2 - graincenters[gnum][1]);
-    double ydist4 = (y2 - graincenters[gnum][2]);
+    float x = find_xcoord(j);
+    float y = find_ycoord(j);
+    float x1 = x + (resx / 2);
+    float x2 = x - (resx / 2);
+    float y1 = y + (resy / 2);
+    float y2 = y - (resy / 2);
+    float xdist1 = (x1 - graincenters[gnum][1]);
+    float ydist1 = (y1 - graincenters[gnum][2]);
+    float xdist2 = (x1 - graincenters[gnum][1]);
+    float ydist2 = (y2 - graincenters[gnum][2]);
+    float xdist3 = (x2 - graincenters[gnum][1]);
+    float ydist3 = (y1 - graincenters[gnum][2]);
+    float xdist4 = (x2 - graincenters[gnum][1]);
+    float ydist4 = (y2 - graincenters[gnum][2]);
     u200 = u200 + ((ydist1) * (ydist1)) + ((ydist2) * (ydist2)) + ((ydist3) * (ydist3)) + ((ydist4) * (ydist4));
     u020 = u020 + ((xdist1) * (xdist1)) + ((xdist2) * (xdist2)) + ((xdist3) * (xdist3)) + ((xdist4) * (xdist4));
     u110 = u110 + ((xdist1) * (ydist1)) + ((xdist2) * (ydist2)) + ((xdist3) * (ydist3)) + ((xdist4) * (ydist4));
@@ -3160,10 +3160,10 @@ void ReconstructionFunc::find_moments2D()
     grainmoments[i][0] = grainmoments[i][0] * (resx / 2.0) * (resy / 2.0);
     grainmoments[i][1] = grainmoments[i][1] * (resx / 2.0) * (resy / 2.0);
     grainmoments[i][2] = grainmoments[i][2] * (resx / 2.0) * (resy / 2.0);
-    //  double o3 = (grainmoments[i][0]*grainmoments[i][1]*grainmoments[i][2])+(2.0*grainmoments[i][3]*grainmoments[i][5]*grainmoments[i][4])-(grainmoments[i][0]*grainmoments[i][4]*grainmoments[i][4])-(grainmoments[i][1]*grainmoments[i][5]*grainmoments[i][5])-(grainmoments[i][2]*grainmoments[i][3]*grainmoments[i][3]);
-    //  double vol5 = m_Grains[i]->volume;
-    //  vol5 = pow(vol5,5);
-    //  double omega3 = vol5/o3;
+    //  float o3 = (grainmoments[i][0]*grainmoments[i][1]*grainmoments[i][2])+(2.0*grainmoments[i][3]*grainmoments[i][5]*grainmoments[i][4])-(grainmoments[i][0]*grainmoments[i][4]*grainmoments[i][4])-(grainmoments[i][1]*grainmoments[i][5]*grainmoments[i][5])-(grainmoments[i][2]*grainmoments[i][3]*grainmoments[i][3]);
+    //  float vol5 = m_Grains[i]->volume;
+    //  vol5 = powf(vol5,5);
+    //  float omega3 = vol5/o3;
     m_Grains[i]->Ixx = grainmoments[i][0];
     m_Grains[i]->Iyy = grainmoments[i][1];
     m_Grains[i]->Ixy = -grainmoments[i][2];
@@ -3175,17 +3175,17 @@ void ReconstructionFunc::find_axes2D()
   size_t numgrains = m_Grains.size();
   for (size_t i = 1; i < numgrains; i++)
   {
-    double Ixx = m_Grains[i]->Ixx;
-    double Iyy = m_Grains[i]->Iyy;
-    double Ixy = m_Grains[i]->Ixy;
-    double r1 = (Ixx + Iyy) / 2.0 + sqrt(((Ixx + Iyy) * (Ixx + Iyy)) / 4.0 + (Ixy * Ixy - Ixx * Iyy));
-    double r2 = (Ixx + Iyy) / 2.0 - sqrt(((Ixx + Iyy) * (Ixx + Iyy)) / 4.0 + (Ixy * Ixy - Ixx * Iyy));
-    double preterm = 4 / 3.1415926535897;
-    preterm = pow(preterm, 0.25);
-    double postterm1 = r1 * r1 * r1 / r2;
-    double postterm2 = r2 * r2 * r2 / r1;
-    postterm1 = pow(postterm1, 0.125);
-    postterm2 = pow(postterm2, 0.125);
+    float Ixx = m_Grains[i]->Ixx;
+    float Iyy = m_Grains[i]->Iyy;
+    float Ixy = m_Grains[i]->Ixy;
+    float r1 = (Ixx + Iyy) / 2.0 + sqrt(((Ixx + Iyy) * (Ixx + Iyy)) / 4.0 + (Ixy * Ixy - Ixx * Iyy));
+    float r2 = (Ixx + Iyy) / 2.0 - sqrt(((Ixx + Iyy) * (Ixx + Iyy)) / 4.0 + (Ixy * Ixy - Ixx * Iyy));
+    float preterm = 4 / 3.1415926535897;
+    preterm = powf(preterm, 0.25);
+    float postterm1 = r1 * r1 * r1 / r2;
+    float postterm2 = r2 * r2 * r2 / r1;
+    postterm1 = powf(postterm1, 0.125);
+    postterm2 = powf(postterm2, 0.125);
     r1 = preterm * postterm1;
     r2 = preterm * postterm2;
     m_Grains[i]->radius1 = r1;
@@ -3194,35 +3194,35 @@ void ReconstructionFunc::find_axes2D()
 }
 void ReconstructionFunc::find_vectors2D(H5ReconStatsWriter::Pointer h5io)
 {
-  double **axisodf;
-  axisodf = new double *[crystruct.size()];
+  float **axisodf;
+  axisodf = new float *[crystruct.size()];
   for(size_t i=1;i<crystruct.size();i++)
   {
 	  totalaxes[i] = 0.0;
-	  axisodf[i] = new double[18 * 18 * 18];
+	  axisodf[i] = new float[18 * 18 * 18];
   }
   size_t numgrains = m_Grains.size();
 
   for (size_t i = 1; i < numgrains; i++)
   {
     //   int size = grains[i].numvoxels;
-    double Ixx = m_Grains[i]->Ixx;
-    double Iyy = m_Grains[i]->Iyy;
-    double Ixy = m_Grains[i]->Ixy;
-    double I1 = (Ixx + Iyy) / 2.0 + sqrt(((Ixx + Iyy) * (Ixx + Iyy)) / 4.0 + (Ixy * Ixy - Ixx * Iyy));
-    double I2 = (Ixx + Iyy) / 2.0 - sqrt(((Ixx + Iyy) * (Ixx + Iyy)) / 4.0 + (Ixy * Ixy - Ixx * Iyy));
-    double n1x = (Ixx - I1) / Ixy;
-    double n1y = 1;
-    double n2x = (Ixx - I2) / Ixy;
-    double n2y = 1;
-    double norm1 = pow((n1x * n1x + n1y * n1y), 0.5);
-    double norm2 = pow((n2x * n2x + n2y * n2y), 0.5);
+    float Ixx = m_Grains[i]->Ixx;
+    float Iyy = m_Grains[i]->Iyy;
+    float Ixy = m_Grains[i]->Ixy;
+    float I1 = (Ixx + Iyy) / 2.0 + sqrt(((Ixx + Iyy) * (Ixx + Iyy)) / 4.0 + (Ixy * Ixy - Ixx * Iyy));
+    float I2 = (Ixx + Iyy) / 2.0 - sqrt(((Ixx + Iyy) * (Ixx + Iyy)) / 4.0 + (Ixy * Ixy - Ixx * Iyy));
+    float n1x = (Ixx - I1) / Ixy;
+    float n1y = 1;
+    float n2x = (Ixx - I2) / Ixy;
+    float n2y = 1;
+    float norm1 = powf((n1x * n1x + n1y * n1y), 0.5);
+    float norm2 = powf((n2x * n2x + n2y * n2y), 0.5);
     n1x = n1x / norm1;
     n1y = n1y / norm1;
     n2x = n2x / norm2;
     n2y = n2y / norm2;
-    double cosine1 = n1x;
-    double ea1 = acos(cosine1);
+    float cosine1 = n1x;
+    float ea1 = acos(cosine1);
     if (ea1 > m_pi) ea1 = ea1 - m_pi;
     int ea1bin = int(ea1 / (m_pi / 18));
     int bin = 0;
@@ -3247,14 +3247,14 @@ void ReconstructionFunc::find_eulerodf(H5ReconStatsWriter::Pointer h5io)
   size_t bin;
   size_t numgrains = m_Grains.size();
   AIM::Reconstruction::CrystalStructure phase;
-  double **eulerodf;
+  float **eulerodf;
 
-  eulerodf = new double *[crystruct.size()];
+  eulerodf = new float *[crystruct.size()];
   for(size_t i=1;i<crystruct.size();i++)
   {
 	  if (crystruct[i] == AIM::Reconstruction::Hexagonal)
 	  {
-	    eulerodf[i] = new double[36 * 36 * 12];
+	    eulerodf[i] = new float[36 * 36 * 12];
 	    for (int j = 0; j < 36 * 36 * 12; j++)
 	    {
 	      eulerodf[i][j] = 0.0;
@@ -3262,20 +3262,20 @@ void ReconstructionFunc::find_eulerodf(H5ReconStatsWriter::Pointer h5io)
 	  }
 	  else if (crystruct[i] == AIM::Reconstruction::Cubic)
 	  {
-		  eulerodf[i] = new double[18 * 18 * 18];
+		  eulerodf[i] = new float[18 * 18 * 18];
 		  for (int j = 0; j < 18 * 18 * 18; j++)
 		  {
 			eulerodf[i][j] = 0.0;
 		  }
 	  }
   }
-  double r1, r2, r3;
-  double ea1, ea2, ea3;
+  float r1, r2, r3;
+  float ea1, ea2, ea3;
   for (size_t i = 1; i < numgrains; i++)
   {
     if (m_Grains[i]->surfacegrain == 0 && m_Grains[i]->active == 1)
     {
-      double vol = m_Grains[i]->volume;
+      float vol = m_Grains[i]->volume;
 	  ea1 = m_Grains[i]->euler1;
 	  ea2 = m_Grains[i]->euler2;
 	  ea3 = m_Grains[i]->euler3;
@@ -3297,22 +3297,22 @@ void ReconstructionFunc::find_eulerodf(H5ReconStatsWriter::Pointer h5io)
 
 void ReconstructionFunc::measure_misorientations(H5ReconStatsWriter::Pointer h5io)
 {
-  double n1, n2, n3;
-  double r1, r2, r3;
+  float n1, n2, n3;
+  float r1, r2, r3;
   int mbin;
-  double w;
-  double q1[5];
-  double q2[5];
+  float w;
+  float q1[5];
+  float q2[5];
   size_t numgrains = m_Grains.size();
   AIM::Reconstruction::CrystalStructure phase1, phase2;
-  double **misobin;
+  float **misobin;
 
-  misobin = new double *[crystruct.size()];
+  misobin = new float *[crystruct.size()];
   for(size_t i=1;i<crystruct.size();i++)
   {
 	  if (crystruct[i] == AIM::Reconstruction::Hexagonal)
 	  {
-	    misobin[i] = new double[36 * 36 * 12];
+	    misobin[i] = new float[36 * 36 * 12];
 	    for (int j = 0; j < 36 * 36 * 12; j++)
 	    {
 	      misobin[i][j] = 0.0;
@@ -3320,21 +3320,21 @@ void ReconstructionFunc::measure_misorientations(H5ReconStatsWriter::Pointer h5i
 	  }
 	  if (crystruct[i] == AIM::Reconstruction::Cubic)
 	  {
-		misobin[i] = new double[18 * 18 * 18];
+		misobin[i] = new float[18 * 18 * 18];
 		for (int j = 0; j < 18 * 18 * 18; j++)
 		{
 		  misobin[i][j] = 0.0;
 		}
 	  }
   }
-  double microbin[10];
+  float microbin[10];
   for(size_t e = 0; e < 10; ++e)
   {
     microbin[e] = 0.0;
   }
   size_t nname;
-  double microcount = 0.0;
-  double nsa;
+  float microcount = 0.0;
+  float nsa;
 
   for (size_t i = 1; i < numgrains; i++)
   {
@@ -3345,7 +3345,7 @@ void ReconstructionFunc::measure_misorientations(H5ReconStatsWriter::Pointer h5i
     q1[3] = m_Grains[i]->avg_quat[3] / m_Grains[i]->avg_quat[0];
     q1[4] = m_Grains[i]->avg_quat[4] / m_Grains[i]->avg_quat[0];
     phase1 = crystruct[m_Grains[i]->phase];
-    m_Grains[i]->misorientationlist = new std::vector<double>(m_Grains[i]->neighborlist->size() * 3, -1.0);
+    m_Grains[i]->misorientationlist = new std::vector<float>(m_Grains[i]->neighborlist->size() * 3, -1.0);
     for (size_t j = 0; j < m_Grains[i]->neighborlist->size(); j++)
     {
       w = 10000.0;
@@ -3383,7 +3383,7 @@ void ReconstructionFunc::measure_misorientations(H5ReconStatsWriter::Pointer h5i
     }
     if (m_Grains[i]->neighborlist->size() > 0)
     {
-      int micbin = int((double(microcount) / double(m_Grains[i]->neighborlist->size())) / 0.1);
+      int micbin = int((float(microcount) / float(m_Grains[i]->neighborlist->size())) / 0.1);
       microbin[micbin]++;
     }
   }
@@ -3399,21 +3399,21 @@ void ReconstructionFunc::measure_misorientations(H5ReconStatsWriter::Pointer h5i
 void ReconstructionFunc::find_colors()
 {
   size_t numgrains = m_Grains.size();
-  //  double red, green, blue;
+  //  float red, green, blue;
   unsigned char rgb[3] =
   { 0, 0, 0 };
   unsigned char hkl[3] =
   { 0, 0, 0 };
-  double RefDirection[3] =
+  float RefDirection[3] =
   { 0.0, 1.0, 0.0 };
-  double q1[5];
+  float q1[5];
   for (size_t i = 1; i < numgrains; i++)
   {
     if (m_Grains[i]->active == 1)
     {
-      double g1ea1 = m_Grains[i]->euler1;
-      double g1ea2 = m_Grains[i]->euler2;
-      double g1ea3 = m_Grains[i]->euler3;
+      float g1ea1 = m_Grains[i]->euler1;
+      float g1ea2 = m_Grains[i]->euler2;
+      float g1ea3 = m_Grains[i]->euler3;
       q1[0] = m_Grains[i]->avg_quat[0] / m_Grains[i]->avg_quat[0];
       q1[1] = m_Grains[i]->avg_quat[1] / m_Grains[i]->avg_quat[0];
       q1[2] = m_Grains[i]->avg_quat[2] / m_Grains[i]->avg_quat[0];
@@ -3422,12 +3422,12 @@ void ReconstructionFunc::find_colors()
       if (crystruct[m_Grains[i]->phase] == AIM::Reconstruction::Cubic)
       {
         OIMColoring::GenerateIPFColor(g1ea1, g1ea2, g1ea3, RefDirection[0], RefDirection[1], RefDirection[2], rgb, hkl);
-        m_Grains[i]->red = static_cast<double> (rgb[0] / 255.0);
-        m_Grains[i]->green = static_cast<double> (rgb[1] / 255.0);
-        m_Grains[i]->blue = static_cast<double> (rgb[2] / 255.0);
-        m_Grains[i]->IPF[0] = static_cast<double> (hkl[0] / 100.0);
-        m_Grains[i]->IPF[1] = static_cast<double> (hkl[1] / 100.0);
-        m_Grains[i]->IPF[2] = static_cast<double> (hkl[2] / 100.0);
+        m_Grains[i]->red = static_cast<float> (rgb[0] / 255.0);
+        m_Grains[i]->green = static_cast<float> (rgb[1] / 255.0);
+        m_Grains[i]->blue = static_cast<float> (rgb[2] / 255.0);
+        m_Grains[i]->IPF[0] = static_cast<float> (hkl[0] / 100.0);
+        m_Grains[i]->IPF[1] = static_cast<float> (hkl[1] / 100.0);
+        m_Grains[i]->IPF[2] = static_cast<float> (hkl[2] / 100.0);
       }
       if (crystruct[m_Grains[i]->phase] == AIM::Reconstruction::Hexagonal)
       {
@@ -3442,12 +3442,12 @@ void ReconstructionFunc::find_colors()
 void ReconstructionFunc::find_schmids()
 {
   int ss = 0;
-  double q1[5];
-  double schmid = 0;
-  double loadx, loady, loadz;
-  double theta1, theta2, theta3, theta4;
-  double lambda1, lambda2, lambda3, lambda4, lambda5, lambda6;
-  double schmid1, schmid2, schmid3, schmid4, schmid5, schmid6, schmid7, schmid8, schmid9, schmid10, schmid11, schmid12;
+  float q1[5];
+  float schmid = 0;
+  float loadx, loady, loadz;
+  float theta1, theta2, theta3, theta4;
+  float lambda1, lambda2, lambda3, lambda4, lambda5, lambda6;
+  float schmid1, schmid2, schmid3, schmid4, schmid5, schmid6, schmid7, schmid8, schmid9, schmid10, schmid11, schmid12;
   size_t numgrains = m_Grains.size();
   for (size_t i = 1; i < numgrains; i++)
   {
@@ -3460,8 +3460,8 @@ void ReconstructionFunc::find_schmids()
       loadx = (2 * q1[1] * q1[3] + 2 * q1[2] * q1[4]) * 1;
       loady = (2 * q1[2] * q1[3] - 2 * q1[1] * q1[4]) * 1;
       loadz = (1 - 2 * q1[1] * q1[1] - 2 * q1[2] * q1[2]) * 1;
-      double mag = loadx * loadx + loady * loady + loadz * loadz;
-      mag = pow(mag, 0.5);
+      float mag = loadx * loadx + loady * loady + loadz * loadz;
+      mag = powf(mag, 0.5);
       theta1 = (loadx + loady + loadz) / (mag * 1.732);
       theta1 = fabs(theta1);
       theta2 = (loadx + loady - loadz) / (mag * 1.732);
@@ -3515,17 +3515,17 @@ void ReconstructionFunc::find_schmids()
 int ReconstructionFunc::volume_stats(H5ReconStatsWriter::Pointer h5io)
 {
   int retErr = 0;
-  double actualgrains = 0;
-  double avglogdiam = 0;
-//  double neighcount = 0;
+  float actualgrains = 0;
+  float avglogdiam = 0;
+//  float neighcount = 0;
   size_t numgrains = m_Grains.size();
-  vector<vector<double> > neighborhood;
-  vector<vector<double> > neighborhoodfit;
-  vector<vector<double> > svbovera;
-  vector<vector<double> > svcovera;
-  vector<vector<double> > svcoverb;
-  vector<vector<double> > svschmid;
-  vector<vector<double> > svomega3;
+  vector<vector<float> > neighborhood;
+  vector<vector<float> > neighborhoodfit;
+  vector<vector<float> > svbovera;
+  vector<vector<float> > svcovera;
+  vector<vector<float> > svcoverb;
+  vector<vector<float> > svschmid;
+  vector<vector<float> > svomega3;
   for(size_t iter=1;iter<crystruct.size();iter++)
   {
 	  int numbins = int((maxdiameter[iter] - mindiameter[iter]) / sizebinstepsize) + 1;
@@ -3552,27 +3552,27 @@ int ReconstructionFunc::volume_stats(H5ReconStatsWriter::Pointer h5io)
 		if (onedge == 0 && m_Grains[i]->active == 1 && m_Grains[i]->phase == static_cast<int>(iter) )
 		{
 		  actualgrains++;
-		  double diam = m_Grains[i]->equivdiameter;
-		  double logdiam = log(diam);
-		  double I1 = m_Grains[i]->radius1;
-		  double I2 = m_Grains[i]->radius2;
-		  double I3 = m_Grains[i]->radius3;
+		  float diam = m_Grains[i]->equivdiameter;
+		  float logdiam = log(diam);
+		  float I1 = m_Grains[i]->radius1;
+		  float I2 = m_Grains[i]->radius2;
+		  float I3 = m_Grains[i]->radius3;
 		  I1 = (15 * I1) / (4 * m_pi);
 		  I2 = (15 * I2) / (4 * m_pi);
 		  I3 = (15 * I3) / (4 * m_pi);
-		  double A = (I1 + I2 - I3) / 2;
-		  double B = (I1 + I3 - I2) / 2;
-		  double C = (I2 + I3 - I1) / 2;
-		  double a = (A * A * A * A) / (B * C);
-		  a = pow(a, 0.1);
-		  double b = B / A;
-		  b = pow(b, 0.5) * a;
-		  double c = A / (a * a * a * b);
-		  double bovera = b / a;
-		  double covera = c / a;
-		  double coverb = c / b;
-		  double schmid = m_Grains[i]->schmidfactor;
-		  double omega3 = m_Grains[i]->omega3;
+		  float A = (I1 + I2 - I3) / 2;
+		  float B = (I1 + I3 - I2) / 2;
+		  float C = (I2 + I3 - I1) / 2;
+		  float a = (A * A * A * A) / (B * C);
+		  a = powf(a, 0.1);
+		  float b = B / A;
+		  b = powf(b, 0.5) * a;
+		  float c = A / (a * a * a * b);
+		  float bovera = b / a;
+		  float covera = c / a;
+		  float coverb = c / b;
+		  float schmid = m_Grains[i]->schmidfactor;
+		  float omega3 = m_Grains[i]->omega3;
 		  avglogdiam = avglogdiam + logdiam;
 		  int diamint = int((diam - mindiameter[iter]) / sizebinstepsize);
 		  neighborhood[diamint][0]++;
@@ -3613,33 +3613,33 @@ int ReconstructionFunc::volume_stats(H5ReconStatsWriter::Pointer h5io)
 		}
 	  }
 	  avglogdiam = avglogdiam / actualgrains;
-	  double sdlogdiam = 0;
+	  float sdlogdiam = 0;
 	  for (size_t j = 1; j < numgrains; j++)
 	  {
 		int onedge = m_Grains[j]->surfacegrain;
 		if (onedge == 0 && m_Grains[j]->active == 1 && m_Grains[j]->phase == static_cast<int>(iter) )
 		{
-		  double diam = m_Grains[j]->equivdiameter;
-		  double logdiam = log(diam);
-		  double I1 = m_Grains[j]->radius1;
-		  double I2 = m_Grains[j]->radius2;
-		  double I3 = m_Grains[j]->radius3;
+		  float diam = m_Grains[j]->equivdiameter;
+		  float logdiam = log(diam);
+		  float I1 = m_Grains[j]->radius1;
+		  float I2 = m_Grains[j]->radius2;
+		  float I3 = m_Grains[j]->radius3;
 		  I1 = (15 * I1) / (4 * m_pi);
 		  I2 = (15 * I2) / (4 * m_pi);
 		  I3 = (15 * I3) / (4 * m_pi);
-		  double A = (I1 + I2 - I3) / 2;
-		  double B = (I1 + I3 - I2) / 2;
-		  double C = (I2 + I3 - I1) / 2;
-		  double a = (A * A * A * A) / (B * C);
-		  a = pow(a, 0.1);
-		  double b = B / A;
-		  b = pow(b, 0.5) * a;
-		  double c = A / (a * a * a * b);
-		  double bovera = b / a;
-		  double covera = c / a;
-		  double coverb = c / b;
-		  double schmid = m_Grains[j]->schmidfactor;
-		  double omega3 = m_Grains[j]->omega3;
+		  float A = (I1 + I2 - I3) / 2;
+		  float B = (I1 + I3 - I2) / 2;
+		  float C = (I2 + I3 - I1) / 2;
+		  float a = (A * A * A * A) / (B * C);
+		  a = powf(a, 0.1);
+		  float b = B / A;
+		  b = powf(b, 0.5) * a;
+		  float c = A / (a * a * a * b);
+		  float bovera = b / a;
+		  float covera = c / a;
+		  float coverb = c / b;
+		  float schmid = m_Grains[j]->schmidfactor;
+		  float omega3 = m_Grains[j]->omega3;
 		  sdlogdiam = sdlogdiam + ((logdiam - avglogdiam) * (logdiam - avglogdiam));
 		  int diamint = int((diam - mindiameter[iter]) / sizebinstepsize);
 		  svbovera[diamint][2] = svbovera[diamint][2] + ((bovera - svbovera[diamint][1]) * (bovera - svbovera[diamint][1]));
@@ -3675,18 +3675,18 @@ int ReconstructionFunc::volume_stats(H5ReconStatsWriter::Pointer h5io)
 		  svcoverb[temp4][4] = (1 - svcoverb[temp4][1]) * (((svcoverb[temp4][1] * (1 - svcoverb[temp4][1])) / svcoverb[temp4][2]) - 1);
 		  svomega3[temp4][3] = svomega3[temp4][1] * (((svomega3[temp4][1] * (1 - svomega3[temp4][1])) / svomega3[temp4][2]) - 1);
 		  svomega3[temp4][4] = (1 - svomega3[temp4][1]) * (((svomega3[temp4][1] * (1 - svomega3[temp4][1])) / svomega3[temp4][2]) - 1);
-		  neighborhood[temp4][2] = pow(neighborhood[temp4][2], 0.5);
-		  neighborhood[temp4][4] = pow(neighborhood[temp4][4], 0.5);
-		  neighborhood[temp4][6] = pow(neighborhood[temp4][6], 0.5);
-		  svbovera[temp4][2] = pow(svbovera[temp4][2], 0.5);
-		  svcovera[temp4][2] = pow(svcovera[temp4][2], 0.5);
-		  svcoverb[temp4][2] = pow(svcoverb[temp4][2], 0.5);
-		  svschmid[temp4][2] = pow(svschmid[temp4][2], 0.5);
-		  svomega3[temp4][2] = pow(svomega3[temp4][2], 0.5);
+		  neighborhood[temp4][2] = powf(neighborhood[temp4][2], 0.5);
+		  neighborhood[temp4][4] = powf(neighborhood[temp4][4], 0.5);
+		  neighborhood[temp4][6] = powf(neighborhood[temp4][6], 0.5);
+		  svbovera[temp4][2] = powf(svbovera[temp4][2], 0.5);
+		  svcovera[temp4][2] = powf(svcovera[temp4][2], 0.5);
+		  svcoverb[temp4][2] = powf(svcoverb[temp4][2], 0.5);
+		  svschmid[temp4][2] = powf(svschmid[temp4][2], 0.5);
+		  svomega3[temp4][2] = powf(svomega3[temp4][2], 0.5);
 		}
 	  }
 	  sdlogdiam = sdlogdiam / actualgrains;
-	  sdlogdiam = pow(sdlogdiam, 0.5);
+	  sdlogdiam = powf(sdlogdiam, 0.5);
 	  retErr = h5io->writeVolumeStats(iter, crystruct[iter], phasefraction[iter], maxdiameter[iter], mindiameter[iter], 1.0, avglogdiam, sdlogdiam, svbovera, svcovera, svcoverb, neighborhoodfit, svomega3);
   }
 
@@ -3696,17 +3696,17 @@ int ReconstructionFunc::volume_stats(H5ReconStatsWriter::Pointer h5io)
 int ReconstructionFunc::volume_stats2D(H5ReconStatsWriter::Pointer h5io)
 {
   int retErr = 0;
-  double actualgrains = 0;
-  // double avgdiam = 0;
-  double avglogdiam = 0;
+  float actualgrains = 0;
+  // float avgdiam = 0;
+  float avglogdiam = 0;
   //  int neighdistfunc[3];
-  vector<vector<double> > neighborhood;
-  vector<vector<double> > neighborhoodfit;
-  vector<vector<double> > svbovera;
-  vector<vector<double> > svcovera;
-  vector<vector<double> > svcoverb;
-  vector<vector<double> > svschmid;
-  vector<vector<double> > svomega3;
+  vector<vector<float> > neighborhood;
+  vector<vector<float> > neighborhoodfit;
+  vector<vector<float> > svbovera;
+  vector<vector<float> > svcovera;
+  vector<vector<float> > svcoverb;
+  vector<vector<float> > svschmid;
+  vector<vector<float> > svomega3;
   for (size_t iter = 1; iter < crystruct.size(); iter++)
   {
     int numbins = int((maxdiameter[iter] - mindiameter[iter]) / sizebinstepsize) + 1;
@@ -3732,12 +3732,12 @@ int ReconstructionFunc::volume_stats2D(H5ReconStatsWriter::Pointer h5io)
       if (onedge == 0 && m_Grains[i]->active == 1 && m_Grains[i]->phase == static_cast<int>(iter) )
       {
         actualgrains++;
-        double diam = m_Grains[i]->equivdiameter;
-        double logdiam = log(diam);
-        double rad1 = m_Grains[i]->radius1;
-        double rad2 = m_Grains[i]->radius2;
-        double bovera = rad2 / rad1;
-        double schmid = m_Grains[i]->schmidfactor;
+        float diam = m_Grains[i]->equivdiameter;
+        float logdiam = log(diam);
+        float rad1 = m_Grains[i]->radius1;
+        float rad2 = m_Grains[i]->radius2;
+        float bovera = rad2 / rad1;
+        float schmid = m_Grains[i]->schmidfactor;
         avglogdiam = avglogdiam + logdiam;
         int diamint = int((diam - mindiameter[iter]) / sizebinstepsize);
         neighborhood[diamint][0]++;
@@ -3769,18 +3769,18 @@ int ReconstructionFunc::volume_stats2D(H5ReconStatsWriter::Pointer h5io)
       }
     }
     avglogdiam = avglogdiam / actualgrains;
-    double sdlogdiam = 0;
+    float sdlogdiam = 0;
     for (size_t j = 1; j < numgrains; j++)
     {
       int onedge = m_Grains[j]->surfacegrain;
       if (onedge == 0 && m_Grains[j]->active == 1 && m_Grains[j]->phase == static_cast<int>(iter) )
       {
-        double diam = m_Grains[j]->equivdiameter;
-        double logdiam = log(diam);
-        double rad1 = m_Grains[j]->radius1;
-        double rad2 = m_Grains[j]->radius2;
-        double bovera = rad2 / rad1;
-        double schmid = m_Grains[j]->schmidfactor;
+        float diam = m_Grains[j]->equivdiameter;
+        float logdiam = log(diam);
+        float rad1 = m_Grains[j]->radius1;
+        float rad2 = m_Grains[j]->radius2;
+        float bovera = rad2 / rad1;
+        float schmid = m_Grains[j]->schmidfactor;
         sdlogdiam = sdlogdiam + ((logdiam - avglogdiam) * (logdiam - avglogdiam));
         int diamint = int((diam - mindiameter[iter]) / sizebinstepsize);
         svbovera[diamint][2] = svbovera[diamint][2] + ((bovera - svbovera[diamint][1]) * (bovera - svbovera[diamint][1]));
@@ -3804,15 +3804,15 @@ int ReconstructionFunc::volume_stats2D(H5ReconStatsWriter::Pointer h5io)
         svschmid[temp4][2] = svschmid[temp4][2] / svschmid[temp4][0];
         svbovera[temp4][3] = svbovera[temp4][1] * (((svbovera[temp4][1] * (1 - svbovera[temp4][1])) / svbovera[temp4][2]) - 1);
         svbovera[temp4][4] = (1 - svbovera[temp4][1]) * (((svbovera[temp4][1] * (1 - svbovera[temp4][1])) / svbovera[temp4][2]) - 1);
-        neighborhood[temp4][2] = pow(neighborhood[temp4][2], 0.5);
-        neighborhood[temp4][4] = pow(neighborhood[temp4][4], 0.5);
-        neighborhood[temp4][6] = pow(neighborhood[temp4][6], 0.5);
-        svbovera[temp4][2] = pow(svbovera[temp4][2], 0.5);
-        svschmid[temp4][2] = pow(svschmid[temp4][2], 0.5);
+        neighborhood[temp4][2] = powf(neighborhood[temp4][2], 0.5);
+        neighborhood[temp4][4] = powf(neighborhood[temp4][4], 0.5);
+        neighborhood[temp4][6] = powf(neighborhood[temp4][6], 0.5);
+        svbovera[temp4][2] = powf(svbovera[temp4][2], 0.5);
+        svschmid[temp4][2] = powf(svschmid[temp4][2], 0.5);
       }
     }
     sdlogdiam = sdlogdiam / actualgrains;
-    sdlogdiam = pow(sdlogdiam, 0.5);
+    sdlogdiam = powf(sdlogdiam, 0.5);
 
     retErr
         = h5io->writeVolumeStats2D(iter, crystruct[iter], phasefraction[iter], maxdiameter[iter], mindiameter[iter], 1.0, avglogdiam, sdlogdiam, svbovera, neighborhoodfit);
@@ -3824,53 +3824,53 @@ void ReconstructionFunc::deformation_stats(const std::string &filename, const st
 {
   ofstream outFile;
   outFile.open(filename.c_str());
-  double w, n1, n2, n3;
+  float w, n1, n2, n3;
   int distance;
-  double km, iq, gbdist, tjdist, qpdist, sf, sf2, sfmm, gam, lmg, ssap;
+  float km, iq, gbdist, tjdist, qpdist, sf, sf2, sfmm, gam, lmg, ssap;
   int nearestneighbor, gname, gname2, ss1, ss2;
-  double q1[5], q2[5];
+  float q1[5], q2[5];
   int kmdist[25];
   int gamdist[25];
   int lmgdist[25];
-  double kmvgb[10][2];
-  double gamvgb[10][2];
-  double lmgvgb[10][2];
-  double kmvtj[10][2];
-  double gamvtj[10][2];
-  double lmgvtj[10][2];
-  double kmvqp[10][2];
-  double gamvqp[10][2];
-  double lmgvqp[10][2];
-  double kmviq[10][2];
-  double gamviq[10][2];
-  double lmgviq[10][2];
-  double kmvsf[10][2];
-  double gamvsf[10][2];
-  double lmgvsf[10][2];
-  double kmvsfmm[10][2];
-  double gamvsfmm[10][2];
-  double lmgvsfmm[10][2];
-  double kmvssap[10][2];
-  double gamvssap[10][2];
-  double lmgvssap[10][2];
-  double kmvdis[10][2];
-  double gamvdis[10][2];
-  double lmgvdis[10][2];
-  double kmvsfdistthresh[10][10][2];
-  double gamvsfdistthresh[10][10][2];
-  double lmgvsfdistthresh[10][10][2];
-  double kmvsfmmdistthresh[10][10][2];
-  double gamvsfmmdistthresh[10][10][2];
-  double lmgvsfmmdistthresh[10][10][2];
-  double kmvssapdistthresh[10][10][2];
-  double gamvssapdistthresh[10][10][2];
-  double lmgvssapdistthresh[10][10][2];
-  double kmvdisdistthresh[10][10][2];
-  double gamvdisdistthresh[10][10][2];
-  double lmgvdisdistthresh[10][10][2];
-  double kmvsfmmssapthresh[10][10][2];
-  double gamvsfmmssapthresh[10][10][2];
-  double lmgvsfmmssapthresh[10][10][2];
+  float kmvgb[10][2];
+  float gamvgb[10][2];
+  float lmgvgb[10][2];
+  float kmvtj[10][2];
+  float gamvtj[10][2];
+  float lmgvtj[10][2];
+  float kmvqp[10][2];
+  float gamvqp[10][2];
+  float lmgvqp[10][2];
+  float kmviq[10][2];
+  float gamviq[10][2];
+  float lmgviq[10][2];
+  float kmvsf[10][2];
+  float gamvsf[10][2];
+  float lmgvsf[10][2];
+  float kmvsfmm[10][2];
+  float gamvsfmm[10][2];
+  float lmgvsfmm[10][2];
+  float kmvssap[10][2];
+  float gamvssap[10][2];
+  float lmgvssap[10][2];
+  float kmvdis[10][2];
+  float gamvdis[10][2];
+  float lmgvdis[10][2];
+  float kmvsfdistthresh[10][10][2];
+  float gamvsfdistthresh[10][10][2];
+  float lmgvsfdistthresh[10][10][2];
+  float kmvsfmmdistthresh[10][10][2];
+  float gamvsfmmdistthresh[10][10][2];
+  float lmgvsfmmdistthresh[10][10][2];
+  float kmvssapdistthresh[10][10][2];
+  float gamvssapdistthresh[10][10][2];
+  float lmgvssapdistthresh[10][10][2];
+  float kmvdisdistthresh[10][10][2];
+  float gamvdisdistthresh[10][10][2];
+  float lmgvdisdistthresh[10][10][2];
+  float kmvsfmmssapthresh[10][10][2];
+  float gamvsfmmssapthresh[10][10][2];
+  float lmgvsfmmssapthresh[10][10][2];
   int kmbin, gambin, lmgbin;
   int gbbin, tjbin, qpbin;
   int sfbin, ssapbin, sfmmbin, disbin, iqbin;
@@ -4324,7 +4324,7 @@ void ReconstructionFunc::deformation_stats(const std::string &filename, const st
   outFile << "KAM DIST		GAM DIST		LMG DIST" << endl;
   for (int i = 0; i < 25; i++)
   {
-	    outFile << double(i)*0.2+0.1 << "	" << kmdist[i] << "	" << double(i)*0.8+0.4 << "	" << gamdist[i] << "	" << double(i)*0.1+0.05 << "	" << lmgdist[i] << endl;
+	    outFile << float(i)*0.2+0.1 << "	" << kmdist[i] << "	" << float(i)*0.8+0.4 << "	" << gamdist[i] << "	" << float(i)*0.1+0.05 << "	" << lmgdist[i] << endl;
   }
   outFile.close();
   FILE* vtkFile = NULL;
@@ -4344,9 +4344,9 @@ void ReconstructionFunc::deformation_stats(const std::string &filename, const st
 
   for(size_t i=1;i<size;i++)
   {
-		double x = m_Grains[i]->IPF[0] - (m_Grains[i]->IPF[0] * (m_Grains[i]->IPF[2] / (m_Grains[i]->IPF[2] + 1)));;
-		double y = m_Grains[i]->IPF[1] - (m_Grains[i]->IPF[1] * (m_Grains[i]->IPF[2] / (m_Grains[i]->IPF[2] + 1)));;
-		double z = 0.0;
+		float x = m_Grains[i]->IPF[0] - (m_Grains[i]->IPF[0] * (m_Grains[i]->IPF[2] / (m_Grains[i]->IPF[2] + 1)));;
+		float y = m_Grains[i]->IPF[1] - (m_Grains[i]->IPF[1] * (m_Grains[i]->IPF[2] / (m_Grains[i]->IPF[2] + 1)));;
+		float z = 0.0;
 		fprintf(vtkFile, "%f %f %f\n", x, y, z);
   }
 
@@ -4373,7 +4373,7 @@ void ReconstructionFunc::deformation_stats(const std::string &filename, const st
   fprintf(vtkFile, "LOOKUP_TABLE default\n");
   for (size_t i = 1; i < size; i++)
   {
-	  double miso = m_Grains[i]->averagemisorientation;
+	  float miso = m_Grains[i]->averagemisorientation;
 	  fprintf(vtkFile, "%f\n", miso);
   }
   fclose(vtkFile);
@@ -4391,13 +4391,13 @@ void ReconstructionFunc::write_graindata(const std::string &graindataFile)
   outFile << "Grain ID  Euler1  Euler2  Euler3  Equiv. Diameter Grain Avg. Disorientation Surface Grain Schmid Factor No. Neighbors Omega3" << endl;
   for (size_t i = 1; i < numgrains; i++)
   {
-    double diameter = m_Grains[i]->equivdiameter;
+    float diameter = m_Grains[i]->equivdiameter;
     int onsurface = m_Grains[i]->surfacegrain;
-    double avgmiso = m_Grains[i]->averagemisorientation;
-    double schmid = m_Grains[i]->schmidfactor;
+    float avgmiso = m_Grains[i]->averagemisorientation;
+    float schmid = m_Grains[i]->schmidfactor;
     nlist = m_Grains[i]->neighborlist;
     int nucleus = m_Grains[i]->nucleus;
-	double omega3 = m_Grains[i]->omega3;
+	float omega3 = m_Grains[i]->omega3;
     outFile << i << " " << voxels[nucleus].euler1 << "  " << voxels[nucleus].euler2 << "  " << voxels[nucleus].euler3 << "  " << diameter << "  " << avgmiso << " "
         << onsurface << " " << schmid << "  " << nlist->size() << " " << omega3 << endl;
   }
@@ -4406,12 +4406,12 @@ void ReconstructionFunc::write_graindata(const std::string &graindataFile)
 }
 
 
-double ReconstructionFunc::gamma(double x)
+float ReconstructionFunc::gamma(float x)
 {
   int i, k, m;
-  double ga, gr, r, z;
+  float ga, gr, r, z;
 
-  static double g[] =
+  static float g[] =
   {
   1.0,
   0.5772156649015329,
@@ -4477,7 +4477,7 @@ double ReconstructionFunc::gamma(double x)
       ga *= r;
       if (x < 0.0)
       {
-        ga = -1 * m_pi / (x * ga * sin(m_pi * x));
+        ga = -1 * m_pi / (x * ga * sinf(m_pi * x));
       }
     }
   }

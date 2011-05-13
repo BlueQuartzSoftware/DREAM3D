@@ -110,7 +110,7 @@ void StatsGenPlotWidget::setPlotTitle(QString title)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void StatsGenPlotWidget::setSizeDistributionValues(double mu, double sigma, double cutOff, double binStepSize)
+void StatsGenPlotWidget::setSizeDistributionValues(float mu, float sigma, float cutOff, float binStepSize)
 {
   m_Mu = mu;
   m_Sigma = sigma;
@@ -122,7 +122,7 @@ void StatsGenPlotWidget::setSizeDistributionValues(double mu, double sigma, doub
 //
 // -----------------------------------------------------------------------------
 int StatsGenPlotWidget::readDataFromHDF5(H5ReconStatsReader::Pointer reader,
-                                         QVector<double>  &binNumbers,
+                                         QVector<float>  &binNumbers,
                                          const std::string &hdf5GroupName)
 {
   int err = 0;
@@ -191,7 +191,7 @@ int StatsGenPlotWidget::readDataFromHDF5(H5ReconStatsReader::Pointer reader,
 //
 // -----------------------------------------------------------------------------
 void StatsGenPlotWidget::loadTableData(H5ReconStatsReader::Pointer reader,
-                                       QVector<double> binNumbers,
+                                       QVector<float> binNumbers,
                                        std::vector<std::string> names,
                                        const std::string &hdf5GroupName)
 {
@@ -205,15 +205,15 @@ void StatsGenPlotWidget::loadTableData(H5ReconStatsReader::Pointer reader,
     colors.push_back(colorNames[colorOffset++]);
   }
 
-  QVector<QVector<double> > data;
+  QVector<QVector<float> > data;
   // Now load each of the columns of data into the table model
   std::string datasetName;
   for (std::vector<std::string>::iterator name = names.begin(); name != names.end(); ++name )
   {
-    std::vector<double> col0;
+    std::vector<float> col0;
     datasetName = hdf5GroupName + "/" + *(name);
     err = reader->readStatsDataset(m_PhaseIndex, datasetName, col0);
-    data.push_back( QVector<double>::fromStdVector(col0) );
+    data.push_back( QVector<float>::fromStdVector(col0) );
     if (err < 0) { SG_ERROR_CHECK(hdf5GroupName) }
   }
   m_TableModel->setTableData(binNumbers, data, colors);
@@ -244,9 +244,9 @@ int StatsGenPlotWidget::writeDataToHDF5(H5ReconStatsWriter::Pointer writer,
     return -1;
   }
 
-  std::vector<double> col0;
-  std::vector<double> col1;
-  std::vector<double> col2;
+  std::vector<float> col0;
+  std::vector<float> col1;
+  std::vector<float> col2;
 
   Q_ASSERT(m_PhaseIndex >= 0);
 
@@ -284,7 +284,7 @@ int StatsGenPlotWidget::writeDataToHDF5(H5ReconStatsWriter::Pointer writer,
 // -----------------------------------------------------------------------------
 void StatsGenPlotWidget::resetTableModel()
 {
-  QVector<double> bins;
+  QVector<float> bins;
   // Get a copy of the bins from the current TableModel if available
   if (NULL != m_TableModel)
   {
@@ -438,8 +438,8 @@ void StatsGenPlotWidget::updatePlotCurves()
   }
 
   nRows = m_TableModel->rowCount();
-  double xMax = 0.0;
-  double yMax = 0.0;
+  float xMax = 0.0;
+  float yMax = 0.0;
 
   for (qint32 r = 0; r < nRows; ++r)
   {
@@ -491,23 +491,25 @@ bool StatsGenPlotWidget::userUpdatedData()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void StatsGenPlotWidget::createBetaCurve(int tableRow, double &xMax, double &yMax)
+void StatsGenPlotWidget::createBetaCurve(int tableRow, float &xMax, float &yMax)
 {
   QwtPlotCurve* curve = m_PlotCurves[tableRow];
   int err = 0;
-  double alpha = m_TableModel->getDataValue(SGBetaTableModel::Alpha, tableRow);
-  double beta = m_TableModel->getDataValue(SGBetaTableModel::Beta, tableRow);
+  float alpha = m_TableModel->getDataValue(SGBetaTableModel::Alpha, tableRow);
+  float beta = m_TableModel->getDataValue(SGBetaTableModel::Beta, tableRow);
   int size = 256;
-  QwtArray<double > x;
-  QwtArray<double > y;
+  QwtArray<float > x;
+  QwtArray<float > y;
   StatsGen sg;
-  err = sg.GenBetaPlotData<QwtArray<double > > (alpha, beta, x, y, size);
+  err = sg.GenBetaPlotData<QwtArray<float > > (alpha, beta, x, y, size);
   if (err == 1)
   {
     //TODO: Present Error Message
     return;
   }
 
+  QwtArray<double> xD(size);
+  QwtArray<double> yD(size);
   for (int i = 0; i < size; ++i)
   {
     //   std::cout << x[i] << "  " << y[i] << std::endl;
@@ -519,8 +521,10 @@ void StatsGenPlotWidget::createBetaCurve(int tableRow, double &xMax, double &yMa
     {
       yMax = y[i];
     }
+    xD[i] = static_cast<double>(x[i]);
+    yD[i] = static_cast<double>(y[i]);
   }
-  curve->setData(x, y);
+  curve->setData(xD, yD);
 
   m_PlotView->setAxisScale(QwtPlot::yLeft, 0.0, yMax);
   m_PlotView->setAxisScale(QwtPlot::xBottom, 0.0, xMax);
@@ -530,23 +534,25 @@ void StatsGenPlotWidget::createBetaCurve(int tableRow, double &xMax, double &yMa
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void StatsGenPlotWidget::createLogNormalCurve(int tableRow, double &xMax, double &yMax)
+void StatsGenPlotWidget::createLogNormalCurve(int tableRow, float &xMax, float &yMax)
 {
   QwtPlotCurve* curve = m_PlotCurves[tableRow];
   int err = 0;
-  double avg = m_TableModel->getDataValue(SGLogNormalTableModel::Average, tableRow);
-  double stdDev = m_TableModel->getDataValue(SGLogNormalTableModel::StdDev, tableRow);
+  float avg = m_TableModel->getDataValue(SGLogNormalTableModel::Average, tableRow);
+  float stdDev = m_TableModel->getDataValue(SGLogNormalTableModel::StdDev, tableRow);
   int size = 256;
-  QwtArray<double > x;
-  QwtArray<double > y;
+  QwtArray<float > x;
+  QwtArray<float > y;
   StatsGen sg;
-  err = sg.GenLogNormalPlotData<QwtArray<double > > (avg, stdDev, x, y, size);
+  err = sg.GenLogNormalPlotData<QwtArray<float > > (avg, stdDev, x, y, size);
   if (err == 1)
   {
     //TODO: Present Error Message
     return;
   }
 
+  QwtArray<double> xD(size);
+  QwtArray<double> yD(size);
   for (int i = 0; i < size; ++i)
   {
     //   std::cout << x[i] << "  " << y[i] << std::endl;
@@ -558,8 +564,10 @@ void StatsGenPlotWidget::createLogNormalCurve(int tableRow, double &xMax, double
     {
       yMax = y[i];
     }
+    xD[i] = static_cast<double>(x[i]);
+    yD[i] = static_cast<double>(y[i]);
   }
-  curve->setData(x, y);
+  curve->setData(xD, yD);
 
   m_PlotView->setAxisScale(QwtPlot::yLeft, 0.0, yMax);
   m_PlotView->setAxisScale(QwtPlot::xBottom, 0.0, xMax);
@@ -568,24 +576,26 @@ void StatsGenPlotWidget::createLogNormalCurve(int tableRow, double &xMax, double
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void StatsGenPlotWidget::createPowerCurve(int tableRow, double &xMax, double &yMax)
+void StatsGenPlotWidget::createPowerCurve(int tableRow, float &xMax, float &yMax)
 {
   QwtPlotCurve* curve = m_PlotCurves[tableRow];
   int err = 0;
-  double alpha = m_TableModel->getDataValue(SGPowerLawTableModel::Alpha, tableRow);
-  double k = m_TableModel->getDataValue(SGPowerLawTableModel::K, tableRow);
-  double beta = m_TableModel->getDataValue(SGPowerLawTableModel::Beta, tableRow);
+  float alpha = m_TableModel->getDataValue(SGPowerLawTableModel::Alpha, tableRow);
+  float k = m_TableModel->getDataValue(SGPowerLawTableModel::K, tableRow);
+  float beta = m_TableModel->getDataValue(SGPowerLawTableModel::Beta, tableRow);
   int size = 256;
-  QwtArray<double > x;
-  QwtArray<double > y;
+  QwtArray<float> x;
+  QwtArray<float> y;
   StatsGen sg;
-  err = sg.GenPowerLawPlotData<QwtArray<double > > (alpha, k, beta, x, y, size);
+  err = sg.GenPowerLawPlotData<QwtArray<float > > (alpha, k, beta, x, y, size);
   if (err == 1)
   {
     //TODO: Present Error Message
     return;
   }
 
+  QwtArray<double> xD(size);
+  QwtArray<double> yD(size);
   for (int i = 0; i < size; ++i)
   {
     //   std::cout << x[i] << "  " << y[i] << std::endl;
@@ -597,8 +607,10 @@ void StatsGenPlotWidget::createPowerCurve(int tableRow, double &xMax, double &yM
     {
       yMax = y[i];
     }
+    xD[i] = static_cast<double>(x[i]);
+    yD[i] = static_cast<double>(y[i]);
   }
-  curve->setData(x, y);
+  curve->setData(xD, yD);
 
   m_PlotView->setAxisScale(QwtPlot::yLeft, 0.0, yMax);
   m_PlotView->setAxisScale(QwtPlot::xBottom, 0.0, xMax);
@@ -616,7 +628,7 @@ void StatsGenPlotWidget::setRowOperationEnabled(bool b)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void StatsGenPlotWidget::setBins(QVector<double> &binNumbers)
+void StatsGenPlotWidget::setBins(QVector<float> &binNumbers)
 {
 
 
