@@ -11,6 +11,18 @@
 
 project(AIMTest)
 
+# --------------------------------------------------------------------------
+macro(MXA_ADD_TEST testname Exename)
+    if (NOT APPLE)
+        ADD_TEST(${testname} ${Exename})
+    else()
+        foreach(arch ${CMAKE_OSX_ARCHITECTURES})
+            ADD_TEST( ${arch}_${testname} ${CMP_OSX_TOOLS_SOURCE_DIR}/UBTest.sh ${arch} ${Exename} )
+        endforeach()
+    endif()
+endmacro()
+
+
 if (0)
 set (srcs
     ${AIMTest_SOURCE_DIR}/AngDirectoryPatternTest.cpp
@@ -37,4 +49,4 @@ target_link_libraries(TextureTest AIMCommon)
 
 add_executable(StatsGenTest ${AIMTest_SOURCE_DIR}/StatsGenTest.cpp)
 target_link_libraries(StatsGenTest AIMCommon)
-
+MXA_ADD_TEST(StatsGenTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/StatsGenTest)
