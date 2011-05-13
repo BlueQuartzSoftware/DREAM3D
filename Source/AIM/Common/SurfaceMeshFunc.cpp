@@ -35,8 +35,8 @@
 using namespace std;
 
 
-const static double m_pi = M_PI;
-const static double m_OnepointThree = 1.33333333333;
+const static float m_pi = M_PI;
+const static float m_OnepointThree = 1.33333333333f;
 
 // -----------------------------------------------------------------------------
 //
@@ -63,7 +63,7 @@ int SurfaceMeshFunc::initialize_micro(string filename, int zID)
   int tgrainname;
 //  int surfacevoxel;
   int xnum, ynum, znum;
-  double xres, yres, zres;
+  float xres, yres, zres;
   int col, row, plane;
   const unsigned int size ( 1024 );
   char buf [ size ];
@@ -201,7 +201,7 @@ void SurfaceMeshFunc::initialize_nodes(int zID)
   int i, j;
   int id, oid;
   int tsite, locale;
-  double x, y, z;
+  float x, y, z;
   int start = NSP + 1;
   if (zID == 0) start = 1, numgrains = 0;
   // node id starts with 0....
@@ -273,22 +273,22 @@ void SurfaceMeshFunc::initialize_nodes(int zID)
   }
 }
 
-double SurfaceMeshFunc::find_xcoord(long index)
+float SurfaceMeshFunc::find_xcoord(int index)
 {
   index = index-1;
-  double x = xRes*double(index%xDim);
+  float x = xRes*float(index%xDim);
   return x;
 }
-double SurfaceMeshFunc::find_ycoord(long index)
+float SurfaceMeshFunc::find_ycoord(int index)
 {
   index = index-1;
-  double y = yRes*double((index/xDim)%yDim);
+  float y = yRes*float((index/xDim)%yDim);
   return y;
 }
-double SurfaceMeshFunc::find_zcoord(long index)
+float SurfaceMeshFunc::find_zcoord(int index)
 {
   index = index-1;
-  double z = zRes*double(index/(xDim*yDim));
+  float z = zRes*float(index/(xDim*yDim));
   return z;
 }
 void SurfaceMeshFunc::initialize_squares(int zID)
@@ -2667,13 +2667,13 @@ void SurfaceMeshFunc::arrange_grainnames(int numT, int zID)
   int tsite1[3], tsite2[3];
   int ngrainname1, ngrainname2;
   int tgrainname1[3], tgrainname2[3];
-  double cx, cy, cz;
-  double xSum, ySum, zSum;
-  double vcoord[3][3];
-  double u[3], w[3];
-  double x, y , z;
-  double a, b, c, d, length;
-  double sidecheck;
+  float cx, cy, cz;
+  float xSum, ySum, zSum;
+  float vcoord[3][3];
+  float u[3], w[3];
+  float x, y , z;
+  float a, b, c, d, length;
+  float sidecheck;
   int shift = (zID * NSP);
   int locale;
   for (i = 0; i < numT; i++)
@@ -2835,7 +2835,7 @@ void SurfaceMeshFunc::writeNodesFile(int zID, int cNodeID, const std::string &no
   unsigned char data[32];
   int* tId = (int*)(&data[0]);
   int* nk = (int*)(&data[4]);
-  double* vec3d = (double*)(&data[8]);
+  float* vec3d = (float*)(&data[8]);
   size_t totalWritten = 0;
   FILE* f = NULL;
 
@@ -2944,7 +2944,7 @@ void SurfaceMeshFunc::smooth_boundaries (int nNodes, int nTriangles, string Node
   int col, row, plane, tsite;
 
   vector<vector<vector<int> > > boundarytrianglelist;
-  vector<vector<vector<double> > > boundarynormals;
+  vector<vector<vector<float> > > boundarynormals;
   boundarytrianglelist.resize(numgrains+1);
   boundarynormals.resize(numgrains+1);
 
@@ -2952,7 +2952,7 @@ void SurfaceMeshFunc::smooth_boundaries (int nNodes, int nTriangles, string Node
  // int* nodenum = (int*)(&nodeData[0]);
   int* nodetype = (int*)(&nodeData[4]);
 
-  double* vec3d = (double*)(&nodeData[8]);
+  float* vec3d = (float*)(&nodeData[8]);
 
   for(int i=1;i<numgrains+1;i++)
   {
