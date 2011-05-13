@@ -173,8 +173,6 @@ void StatsGenODFWidget::setCrystalStructure(AIM::Reconstruction::CrystalStructur
     {
       m_MDFWidget->setCrystalStructure(m_CrystalStructure);
     }
-    // Force the updating of all the plots
-    on_m_CalculateODFBtn_clicked();
   }
 }
 
@@ -266,6 +264,13 @@ void StatsGenODFWidget::initQwtPlot(QString xAxisName, QString yAxisName, QwtPlo
   plot->axisScaleDraw(QwtPlot::xBottom)->enableComponent(QwtAbstractScaleDraw::Labels, m_EnableAxisDecorations);
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void StatsGenODFWidget::updatePlots()
+{
+  on_m_CalculateODFBtn_clicked();
+}
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

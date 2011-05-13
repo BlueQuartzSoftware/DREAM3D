@@ -86,12 +86,16 @@ if (err < 0) {\
 // -----------------------------------------------------------------------------
 SGWidget::SGWidget(QWidget *parent) :
 QWidget(parent),
+m_PhaseType(AIM::Reconstruction::Primary),
+m_PhaseFraction(1.0),
+m_TotalPhaseFraction(1.0),
 m_PhaseIndex(0),
 m_CrystalStructure(AIM::Reconstruction::Cubic),
 m_SizeDistributionCurve(NULL),
 m_CutOffMin(NULL),
 m_CutOffMax(NULL),
-m_grid(NULL)
+m_grid(NULL),
+m_DataHasBeenGenerated(false)
 {
   setupUi(this);
   setupGui();
@@ -396,13 +400,26 @@ void SGWidget::setWidgetListEnabled(bool b)
     }
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void SGWidget::updatePlots()
+{
+  if (m_DataHasBeenGenerated == true)
+  {
+    plotSizeDistribution();
+    m_ODFWidget->updatePlots();
+    m_AxisODFWidget->updatePlots();
+  }
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void SGWidget::on_m_GenerateDefaultData_clicked()
 {
-  plotSizeDistribution();
+  m_DataHasBeenGenerated = true;
+  updatePlots();
 }
 
 // -----------------------------------------------------------------------------
@@ -696,7 +713,10 @@ int SGWidget::writeDataToHDF5(H5ReconStatsWriter::Pointer writer)
   float stepSize = binStep;
 
   size_t nBins = 0;
-  err = writer->writeSizeDistribution(m_PhaseIndex, m_CrystalStructure, calcPhaseFraction, maxdiameter, mindiameter, stepSize, avglogdiam, sdlogdiam, nBins);
+
+  err = writer->writePhaseInformation(m_PhaseIndex, m_PhaseType, m_CrystalStructure, calcPhaseFraction);
+  CHECK_ERROR_ON_WRITE(err, "PhaseInformation")
+  err = writer->writeSizeDistribution(m_PhaseIndex, maxdiameter, mindiameter, stepSize, avglogdiam, sdlogdiam, nBins);
   CHECK_ERROR_ON_WRITE(err, "Size Distribution")
 
   // Now that we have bins and grain sizes, push those to the other plot widgets
@@ -721,7 +741,7 @@ int SGWidget::writeDataToHDF5(H5ReconStatsWriter::Pointer writer)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int SGWidget::readDataFromHDF5(H5ReconStatsReader::Pointer reader,int phase)
+int SGWidget::readDataFromHDF5(H5ReconStatsReader::Pointer reader, int phase)
 {
   setWidgetListEnabled(true);
   float mu, sigma, binStepSize, xMax, yMax, cutoff;
@@ -736,6 +756,12 @@ int SGWidget::readDataFromHDF5(H5ReconStatsReader::Pointer reader,int phase)
   err = reader->readStatsDataset(phase, AIM::HDF5::CrystalStructure, xtal);
   CHECK_STATS_READ_ERROR(err, AIM::HDF5::Reconstruction, AIM::HDF5::CrystalStructure)
   m_CrystalStructure = static_cast<AIM::Reconstruction::CrystalStructure>(xtal[0]);
+
+  std::vector<unsigned int> pt;
+  err = reader->readStatsDataset(phase, AIM::HDF5::PhaseType, pt);
+  CHECK_STATS_READ_ERROR(err, AIM::HDF5::Reconstruction, AIM::HDF5::PhaseType)
+  m_PhaseType = static_cast<AIM::Reconstruction::PhaseType>(pt[0]);
+
   m_Omega3Plot->setCrystalStructure(m_CrystalStructure);
   m_BOverAPlot->setCrystalStructure(m_CrystalStructure);
   m_COverAPlot->setCrystalStructure(m_CrystalStructure);

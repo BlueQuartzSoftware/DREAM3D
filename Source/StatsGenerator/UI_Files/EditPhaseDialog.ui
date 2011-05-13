@@ -6,14 +6,26 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>311</width>
-    <height>144</height>
+    <width>389</width>
+    <height>173</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Phase Properties</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
+   <property name="leftMargin">
+    <number>8</number>
+   </property>
+   <property name="topMargin">
+    <number>4</number>
+   </property>
+   <property name="rightMargin">
+    <number>4</number>
+   </property>
+   <property name="bottomMargin">
+    <number>4</number>
+   </property>
    <item>
     <layout class="QFormLayout" name="formLayout">
      <item row="1" column="0">
@@ -59,6 +71,42 @@
        <property name="text">
         <string>0.0</string>
        </property>
+      </widget>
+     </item>
+     <item row="3" column="0">
+      <widget class="QLabel" name="label_4">
+       <property name="text">
+        <string>Select Crystal Structure</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="1">
+      <widget class="QComboBox" name="phaseTypeCombo">
+       <item>
+        <property name="text">
+         <string>Primary</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Boundary Precipitate</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Bulk Precipitate</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Transformation</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Unknown Phase Type</string>
+        </property>
+       </item>
       </widget>
      </item>
     </layout>

@@ -92,6 +92,7 @@ SET (AIMCommon_HDRS
     ${DREAM3D_SOURCE_DIR}/Source/AIM/Common/AIMMath.h
     ${DREAM3D_SOURCE_DIR}/Source/AIM/Common/AIMArray.hpp
     ${DREAM3D_SOURCE_DIR}/Source/AIM/Common/AIMDLLExport.h
+    ${DREAM3D_SOURCE_DIR}/Source/AIM/Common/PhaseType.h
     )
 cmp_IDE_SOURCE_PROPERTIES( "AIM/Common" "${AIMCommon_HDRS}" "${AIMCommon_SRCS}" ${PROJECT_INSTALL_HEADERS})
 

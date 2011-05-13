@@ -84,11 +84,13 @@ GrainGeneratorFunc::~GrainGeneratorFunc()
 #define GG_INIT_DOUBLE_ARRAY(array, value, size)\
     for(size_t n = 0; n < size; ++n) { array[n] = (value); }
 
-
+#if 0
 void GrainGeneratorFunc::initialize(int32_t m_NumGrains, int32_t m_ShapeClass,
                                     float m_XResolution, float m_YResolution, float m_ZResolution,
         float m_fillingerrorweight, float m_neighborhooderrorweight, float m_sizedisterrorweight,
-        int32_t m_Precipitates, float m_FractionPrecipitates,std::vector<AIM::Reconstruction::CrystalStructure> m_CrystalStructure)
+        int32_t m_Precipitates, float m_FractionPrecipitates,
+        std::vector<AIM::Reconstruction::CrystalStructure> m_CrystalStructure,
+        std::vector<AIM::Reconstruction::PhaseType> m_PhaseType)
 {
   numgrains = m_NumGrains;
   shapeclass = m_ShapeClass;
@@ -99,9 +101,10 @@ void GrainGeneratorFunc::initialize(int32_t m_NumGrains, int32_t m_ShapeClass,
   neighborhooderrorweight = m_neighborhooderrorweight;
   sizedisterrorweight = m_sizedisterrorweight;
   crystruct = m_CrystalStructure;
-
+  phaseType = m_PhaseType;
   initializeArrays();
 }
+#endif
 
 void GrainGeneratorFunc::initializeArrays()
 {
@@ -268,6 +271,7 @@ int GrainGeneratorFunc::readReconStatsData(H5ReconStatsReader::Pointer h5io)
 
   // Initialize some more arrays
   size_t size = crystruct.size();
+  phaseType.resize(size);
   phasefraction.resize(size);
   mindiameter.resize(size);
   maxdiameter.resize(size);
@@ -293,6 +297,10 @@ int GrainGeneratorFunc::readReconStatsData(H5ReconStatsReader::Pointer h5io)
     std::vector<float> pFraction;
 	  err = h5io->readStatsDataset(phase, AIM::HDF5::PhaseFraction, pFraction);
 	  phasefraction[i] = pFraction.front();
+
+	  std::vector<unsigned int> phasetypes;
+	  err = h5io->readStatsDataset(phase, AIM::HDF5::PhaseType, phasetypes);
+	  phaseType[i] = static_cast<AIM::Reconstruction::PhaseType>(phasetypes[0]);
 
 	  /* Read the BinNumbers data set */
 	  std::vector<float> bins;
@@ -3084,7 +3092,7 @@ int GrainGeneratorFunc::volume_stats(H5ReconStatsWriter::Pointer h5io)
 	  sdlogdiam = sdlogdiam / actualgrains;
 	  sdlogdiam = powf(sdlogdiam, 0.5);
 
-	  retErr = h5io->writeVolumeStats(iter, crystruct[iter], phasefraction[iter], maxdiameter[iter], mindiameter[iter], binstepsize[iter], avglogdiam, sdlogdiam,
+	  retErr = h5io->writeVolumeStats(iter, crystruct[iter], phaseType[iter], phasefraction[iter], maxdiameter[iter], mindiameter[iter], binstepsize[iter], avglogdiam, sdlogdiam,
 									  svbovera[iter], svcovera[iter], svcoverb[iter], neighborhoodfit[iter], svomega3[iter]);
   }
   return retErr;

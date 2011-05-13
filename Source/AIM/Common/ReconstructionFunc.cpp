@@ -79,11 +79,14 @@ using namespace std;
 ReconstructionFunc::ReconstructionFunc()
 {
   m_HexOps = HexagonalOps::New();
-  m_OrientationOps.push_back(m_HexOps.get());
+  m_OrientationOps.push_back(dynamic_cast<OrientationMath*> (m_CubicOps.get()));
+
   m_CubicOps = CubicOps::New();
-  m_OrientationOps.push_back(m_CubicOps.get());
+  m_OrientationOps.push_back(dynamic_cast<OrientationMath*> (m_CubicOps.get()));
+
   m_OrthoOps = OrthoRhombicOps::New();
-  m_OrientationOps.push_back(m_OrthoOps.get());
+  m_OrientationOps.push_back(dynamic_cast<OrientationMath*> (m_CubicOps.get()));
+
 }
 
 ReconstructionFunc::~ReconstructionFunc()
@@ -99,6 +102,7 @@ void ReconstructionFunc::initialize(int nX, int nY, int nZ, float xRes, float yR
 									bool v_mergecoloniesoption, int v_minallowedgrainsize, float v_minseedconfidence,
 									float v_downsamplefactor, float v_minseedimagequality, float v_misorientationtolerance,
 									float v_sizebinstepsize, vector<AIM::Reconstruction::CrystalStructure> v_crystruct,
+									vector<AIM::Reconstruction::PhaseType> v_phaseType,
                                     int v_alignmeth, bool v_alreadyformed)
 {
 
@@ -111,6 +115,7 @@ void ReconstructionFunc::initialize(int nX, int nY, int nZ, float xRes, float yR
   sizebinstepsize = v_sizebinstepsize;
   misorientationtolerance = v_misorientationtolerance;
   crystruct = v_crystruct;
+  phaseType = v_phaseType;
   alignmeth = v_alignmeth;
   alreadyformed = (v_alreadyformed == true) ? 1 : 0;
 
@@ -1768,7 +1773,15 @@ void ReconstructionFunc::find_grain_and_kernel_misorientations()
                   q2[4] = voxels[neighbor].quat[4];
                   phase2 = crystruct[voxels[neighbor].phase];
                   if (phase1 == phase2) {
-                    w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
+                    //w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
+                    switch(phase1)
+                    {
+                      case 0: w = m_HexOps->getMisoQuat( q1, q2, n1, n2, n3); break;
+                      case 1: w = m_CubicOps->getMisoQuat( q1, q2, n1, n2, n3); break;
+                      case 2: w = m_OrthoOps->getMisoQuat( q1, q2, n1, n2, n3); break;
+                      default:
+                        assert(false);
+                    }
                   }
                   if (w < 5.0)
                   {
@@ -3687,7 +3700,7 @@ int ReconstructionFunc::volume_stats(H5ReconStatsWriter::Pointer h5io)
 	  }
 	  sdlogdiam = sdlogdiam / actualgrains;
 	  sdlogdiam = powf(sdlogdiam, 0.5);
-	  retErr = h5io->writeVolumeStats(iter, crystruct[iter], phasefraction[iter], maxdiameter[iter], mindiameter[iter], 1.0, avglogdiam, sdlogdiam, svbovera, svcovera, svcoverb, neighborhoodfit, svomega3);
+	  retErr = h5io->writeVolumeStats(iter, crystruct[iter], phaseType[iter], phasefraction[iter], maxdiameter[iter], mindiameter[iter], 1.0, avglogdiam, sdlogdiam, svbovera, svcovera, svcoverb, neighborhoodfit, svomega3);
   }
 
   return retErr;
@@ -3815,7 +3828,7 @@ int ReconstructionFunc::volume_stats2D(H5ReconStatsWriter::Pointer h5io)
     sdlogdiam = powf(sdlogdiam, 0.5);
 
     retErr
-        = h5io->writeVolumeStats2D(iter, crystruct[iter], phasefraction[iter], maxdiameter[iter], mindiameter[iter], 1.0, avglogdiam, sdlogdiam, svbovera, neighborhoodfit);
+        = h5io->writeVolumeStats2D(iter, crystruct[iter], phaseType[iter], phasefraction[iter], maxdiameter[iter], mindiameter[iter], 1.0, avglogdiam, sdlogdiam, svbovera, neighborhoodfit);
   }
   return retErr;
 }
