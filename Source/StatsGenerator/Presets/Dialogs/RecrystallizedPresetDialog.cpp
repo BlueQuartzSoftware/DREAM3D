@@ -105,7 +105,7 @@ void RecrystallizedPresetDialog::setupGui()
 float RecrystallizedPresetDialog::getPercentRecrystallized()
 {
   bool ok = false;
-  double d = percentRecystallized->text().toDouble(&ok);
+  double d = percentRecystallized->text().toFloat(&ok);
   //FIXME: Should check the 'ok' variable here
   return d;
 }

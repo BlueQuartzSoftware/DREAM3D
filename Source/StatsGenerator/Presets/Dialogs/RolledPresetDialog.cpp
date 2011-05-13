@@ -118,7 +118,7 @@ void RolledPresetDialog::setupGui()
 float RolledPresetDialog::getAspectRatio()
 {
   bool ok = false;
-  double d = aspectRatio->text().toDouble(&ok);
+  double d = aspectRatio->text().toFloat(&ok);
   //FIXME: Should check the 'ok' variable here
   return d;
 }
@@ -129,7 +129,7 @@ float RolledPresetDialog::getAspectRatio()
 float RolledPresetDialog::getRollingFraction()
 {
   bool ok = false;
-  double d = rollingFraction->text().toDouble(&ok);
+  double d = rollingFraction->text().toFloat(&ok);
   //FIXME: Should check the 'ok' variable here
   return d;
 }

@@ -227,13 +227,13 @@ bool SGMDFTableModel::setData(const QModelIndex & index, const QVariant & value,
   switch(col)
   {
     case Angle:
-      m_Angles[row] = value.toDouble(&ok);
+      m_Angles[row] = value.toFloat(&ok);
       break;
     case Axis:
       m_Axis[row] = value.toString();
       break;
     case Weight:
-      m_Weights[row] = value.toDouble(&ok);
+      m_Weights[row] = value.toFloat(&ok);
       break;
 
     default:
@@ -331,9 +331,9 @@ int SGMDFTableModel::parseHKLRow(int row, float &h, float &k, float &l)
   hklStr.chop(1); // remove the ">" charater from the end;
   hklStr.remove(0, 1); // Remove the front "<" character
   bool ok = false;
-  h = hklStr.section(',', 0,0).toDouble(&ok);
-  k = hklStr.section(',', 1,1).toDouble(&ok);
-  l = hklStr.section(',', 2,2).toDouble(&ok);
+  h = hklStr.section(',', 0,0).toFloat(&ok);
+  k = hklStr.section(',', 1,1).toFloat(&ok);
+  l = hklStr.section(',', 2,2).toFloat(&ok);
   if (ok) { return 0; }
   return -1;
 }
