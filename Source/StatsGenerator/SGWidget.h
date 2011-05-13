@@ -93,7 +93,7 @@ class SGWidget : public QWidget, private Ui::SGWidget
     void on_m_Mu_SizeDistribution_textChanged(const QString &text);
     void on_m_Sigma_SizeDistribution_textChanged(const QString &text);
     void on_m_SigmaCutOff_SizeDistribution_textChanged(const QString &text);
-    void on_m_BinStepSize_valueChanged(float v);
+    void on_m_BinStepSize_valueChanged(double v);
 
     void on_microstructurePresetCombo_currentIndexChanged(int index);
     void on_m_GenerateDefaultData_clicked();

@@ -2438,9 +2438,9 @@ void  GrainGeneratorFunc::measure_misorientations ()
   float r1, r2, r3;
   float q1[5];
   float q2[5];
-  float denom;
+//  float denom;
   AIM::Reconstruction::CrystalStructure phase1, phase2;
-  float degtorad = m_pi/180.0;
+//  float degtorad = m_pi/180.0;
   int mbin;
 
   IntVectorType nlist ;
@@ -2449,12 +2449,12 @@ void  GrainGeneratorFunc::measure_misorientations ()
   {
     nlist = m_Grains[i]->neighborlist;
     neighsurfarealist = m_Grains[i]->neighborsurfarealist;
-    misolist.resize(nlist->size()*3);
+    misolist.resize(nlist->size() * 3);
     q1[1] = m_Grains[i]->avg_quat[1];
     q1[2] = m_Grains[i]->avg_quat[2];
     q1[3] = m_Grains[i]->avg_quat[3];
     q1[4] = m_Grains[i]->avg_quat[4];
-	phase1 = crystruct[m_Grains[i]->phase];
+    phase1 = crystruct[m_Grains[i]->phase];
     size_t size = 0;
     if (NULL != nlist)
     {
@@ -2462,35 +2462,36 @@ void  GrainGeneratorFunc::measure_misorientations ()
     }
     for (size_t j = 0; j < size; j++)
     {
-	  w = 10000.0;
+      w = 10000.0;
       int nname = nlist->at(j);
       float neighsurfarea = neighsurfarealist->at(j);
       q2[1] = m_Grains[nname]->avg_quat[1];
       q2[2] = m_Grains[nname]->avg_quat[2];
       q2[3] = m_Grains[nname]->avg_quat[3];
       q2[4] = m_Grains[nname]->avg_quat[4];
-	  phase2 = crystruct[m_Grains[nname]->phase];
-      if(phase1 == phase2) w = m_OrientatioOps[phase1]->getMisoQuat(q1,q2,n1,n2,n3);
-	  OrientationMath::axisAngletoHomochoric(w, n1, n2, n3, r1, r2, r3);
-      if(phase1 == phase2)
-	  {
-		  m_Grains[i]->misorientationlist->at(3 * j) = r1;
-	      m_Grains[i]->misorientationlist->at(3 * j + 1) = r2;
-	      m_Grains[i]->misorientationlist->at(3 * j + 2) = r3;
-	  }
-	  if(phase1 != phase2)
-	  {
-		  m_Grains[i]->misorientationlist->at(3 * j) = -100;
-	      m_Grains[i]->misorientationlist->at(3 * j + 1) = -100;
-	      m_Grains[i]->misorientationlist->at(3 * j + 2) = -100;
-	  }
-      if (phase1 == phase2) mbin = m_OrientatioOps[phase1]->getMisoBin(m_Grains[i]->misorientationlist->at(3*j), m_Grains[i]->misorientationlist->at(3*j+1), m_Grains[i]->misorientationlist->at(3*j+2));
+      phase2 = crystruct[m_Grains[nname]->phase];
+      if (phase1 == phase2) w = m_OrientatioOps[phase1]->getMisoQuat(q1, q2, n1, n2, n3);
+      OrientationMath::axisAngletoHomochoric(w, n1, n2, n3, r1, r2, r3);
+      if (phase1 == phase2)
+      {
+        m_Grains[i]->misorientationlist->at(3 * j) = r1;
+        m_Grains[i]->misorientationlist->at(3 * j + 1) = r2;
+        m_Grains[i]->misorientationlist->at(3 * j + 2) = r3;
+      }
+      if (phase1 != phase2)
+      {
+        m_Grains[i]->misorientationlist->at(3 * j) = -100;
+        m_Grains[i]->misorientationlist->at(3 * j + 1) = -100;
+        m_Grains[i]->misorientationlist->at(3 * j + 2) = -100;
+      }
+      if (phase1 == phase2) mbin = m_OrientatioOps[phase1]->getMisoBin(m_Grains[i]->misorientationlist->at(3 * j), m_Grains[i]->misorientationlist->at(3 * j
+          + 1), m_Grains[i]->misorientationlist->at(3 * j + 2));
       if (m_Grains[i]->surfacegrain == 0 && (nname > i || m_Grains[nname]->surfacegrain == 1) && phase1 == phase2)
       {
         simmdf[m_Grains[i]->phase][mbin] = simmdf[m_Grains[i]->phase][mbin] + (neighsurfarea / totalsurfacearea[m_Grains[i]->phase]);
       }
     }
-    m_Grains[i]->misorientationlist = new std::vector<float >(misolist.size());
+    m_Grains[i]->misorientationlist = new std::vector<float>(misolist.size());
     m_Grains[i]->misorientationlist->swap(misolist);
     misolist.clear();
   }
