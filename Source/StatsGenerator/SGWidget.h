@@ -60,31 +60,31 @@ class SGWidget : public QWidget, private Ui::SGWidget
     void setPhaseIndex(int index);
     int getPhaseIndex();
 
-    MXA_INSTANCE_PROPERTY(double, PhaseFraction);
-    MXA_INSTANCE_PROPERTY(double, TotalPhaseFraction);
+    MXA_INSTANCE_PROPERTY(float, PhaseFraction);
+    MXA_INSTANCE_PROPERTY(float, TotalPhaseFraction);
 
     void setCrystalStructure(AIM::Reconstruction::CrystalStructure xtal);
     AIM::Reconstruction::CrystalStructure getCrystalStructure();
 
     void plotSizeDistribution();
     void updateSizeDistributionPlot();
-    int computeBinsAndCutOffs(double mu,
-                              double sigma,
-                              double cutOff,
-                              double binStepSize,
-                              QwtArray<double> &binsizes,
-                              QwtArray<double> &xCo,
-                              QwtArray<double> &yCo,
-                              double &xMax,
-                              double &yMax,
-                              QwtArray<double> &x,
-                              QwtArray<double> &y);
+    int computeBinsAndCutOffs(float mu,
+                              float sigma,
+                              float cutOff,
+                              float binStepSize,
+                              QwtArray<float> &binsizes,
+                              QwtArray<float> &xCo,
+                              QwtArray<float> &yCo,
+                              float &xMax,
+                              float &yMax,
+                              QwtArray<float> &x,
+                              QwtArray<float> &y);
 
     QString getComboString();
 
     void calculateNumberOfBins();
-    int calculateNumberOfBins(double mu, double sigma, double cutOff, double stepSize);
-    int gatherSizeDistributionFromGui(double &mu, double &sigma, double &cutOff, double &binStepSize);
+    int calculateNumberOfBins(float mu, float sigma, float cutOff, float stepSize);
+    int gatherSizeDistributionFromGui(float &mu, float &sigma, float &cutOff, float &binStepSize);
 
     int writeDataToHDF5(H5ReconStatsWriter::Pointer writer);
     int readDataFromHDF5(H5ReconStatsReader::Pointer reader, int phase);
@@ -93,7 +93,7 @@ class SGWidget : public QWidget, private Ui::SGWidget
     void on_m_Mu_SizeDistribution_textChanged(const QString &text);
     void on_m_Sigma_SizeDistribution_textChanged(const QString &text);
     void on_m_SigmaCutOff_SizeDistribution_textChanged(const QString &text);
-    void on_m_BinStepSize_valueChanged(double v);
+    void on_m_BinStepSize_valueChanged(float v);
 
     void on_microstructurePresetCombo_currentIndexChanged(int index);
     void on_m_GenerateDefaultData_clicked();

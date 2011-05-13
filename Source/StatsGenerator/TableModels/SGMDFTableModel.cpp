@@ -251,8 +251,8 @@ bool SGMDFTableModel::setData(const QModelIndex & index, const QVariant & value,
 bool SGMDFTableModel::insertRows(int row, int count, const QModelIndex& index)
 {
   QString axis("<0,0,1>");
-  double weight = 0.0;
-  double angle = 0.0;
+  float weight = 0.0;
+  float angle = 0.0;
 
   beginInsertRows(QModelIndex(), row, row + count - 1);
   for (int i = 0; i < count; ++i)
@@ -293,7 +293,7 @@ bool SGMDFTableModel::removeRows(int row, int count, const QModelIndex& index)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QVector<double > SGMDFTableModel::getData(int col)
+QVector<float > SGMDFTableModel::getData(int col)
 {
   if (col == Angle) {
       return m_Angles;
@@ -303,10 +303,10 @@ QVector<double > SGMDFTableModel::getData(int col)
   }
   else if (col == Axis) {
     int count = rowCount();
-    QVector<double> values;
-    double h = 0.0;
-    double k=0.0;
-    double l=0.0;
+    QVector<float> values;
+    float h = 0.0;
+    float k=0.0;
+    float l=0.0;
     int err = 0;
     for (int r = 0; r < count; ++r)
     {
@@ -319,13 +319,13 @@ QVector<double > SGMDFTableModel::getData(int col)
     }
     return values;
   }
-  return QVector<double > ();
+  return QVector<float > ();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int SGMDFTableModel::parseHKLRow(int row, double &h, double &k, double &l)
+int SGMDFTableModel::parseHKLRow(int row, float &h, float &k, float &l)
 {
   QString hklStr = m_Axis[row];
   hklStr.chop(1); // remove the ">" charater from the end;
@@ -343,7 +343,7 @@ int SGMDFTableModel::parseHKLRow(int row, double &h, double &k, double &l)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-double SGMDFTableModel::getDataValue(int col, int row)
+float SGMDFTableModel::getDataValue(int col, int row)
 {
   switch(col)
   {
@@ -362,7 +362,7 @@ double SGMDFTableModel::getDataValue(int col, int row)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SGMDFTableModel::setColumnData(int col, QVector<double> &data)
+void SGMDFTableModel::setColumnData(int col, QVector<float> &data)
 {
   switch(col)
   {

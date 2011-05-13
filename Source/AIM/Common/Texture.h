@@ -76,20 +76,20 @@ class AIMCOMMON_EXPORT Texture
    */
   template<typename T>
   static void calculateCubicODFData(T e1s, T e2s, T e3s, T weights, T sigmas,
-      bool normalize, T &odf, double &totalweight)
+      bool normalize, T &odf, float &totalweight)
   {
     CubicOps ops;
     int *TextureBins;
     TextureBins = new int[weights.size()];
     static const size_t odfsize = 5832;
-  //  double degtorad = M_PI/180.0;
-    double addweight = 0;
+  //  float degtorad = M_PI/180.0;
+    float addweight = 0;
     odf.resize(odfsize);
     size_t bin, addbin;
     size_t bin1, bin2, bin3;
     size_t addbin1, addbin2, addbin3;
-    double dist, fraction;
-    double r1, r2, r3;
+    float dist, fraction;
+    float r1, r2, r3;
 
     for (typename T::size_type i = 0; i < e1s.size(); i++)
     {
@@ -109,15 +109,15 @@ class AIMCOMMON_EXPORT Texture
       bin1 = bin % 18;
       bin2 = (bin / 18) % 18;
       bin3 = bin / (18 * 18);
-      for (double j = -sigmas[i]; j <= sigmas[i]; j++)
+      for (float j = -sigmas[i]; j <= sigmas[i]; j++)
       {
-        double jsqrd = j*j;
-        for (double k = -sigmas[i]; k <= sigmas[i]; k++)
+        float jsqrd = j*j;
+        for (float k = -sigmas[i]; k <= sigmas[i]; k++)
         {
-          double ksqrd = k*k;
-          for (double l = -sigmas[i]; l <= sigmas[i]; l++)
+          float ksqrd = k*k;
+          for (float l = -sigmas[i]; l <= sigmas[i]; l++)
           {
-            double lsqrd = l*l;
+            float lsqrd = l*l;
             addbin1 = bin1 + static_cast<size_t>(j);
             addbin2 = bin2 + static_cast<size_t>(k);
             addbin3 = bin3 + static_cast<size_t>(l);
@@ -139,8 +139,8 @@ class AIMCOMMON_EXPORT Texture
         }
       }
     }
-    double remainingweight = double(odfsize);
-    double remainingcount = 0;
+    float remainingweight = float(odfsize);
+    float remainingcount = 0;
     for (size_t i = 0; i < odfsize; i++)
     {
       remainingweight = remainingweight-odf[i];
@@ -155,7 +155,7 @@ class AIMCOMMON_EXPORT Texture
       // Normalize the odf
       for (size_t i = 0; i < odfsize; i++)
       {
-        odf[i] = odf[i] / double(odfsize);
+        odf[i] = odf[i] / float(odfsize);
       }
     }
 
@@ -179,20 +179,20 @@ class AIMCOMMON_EXPORT Texture
    */
   template<typename T>
   static void calculateHexODFData(T e1s, T e2s, T e3s, T weights, T sigmas,
-      bool normalize, T &odf, double &totalweight)
+      bool normalize, T &odf, float &totalweight)
   {
     int *TextureBins;
     TextureBins = new int[weights.size()];
     static const size_t odfsize = 15552;
- //   double degtorad = M_PI/180.0;
-    double addweight = 0;
+ //   float degtorad = M_PI/180.0;
+    float addweight = 0;
     odf.resize(odfsize);
     size_t bin, addbin;
     size_t bin1, bin2, bin3;
     size_t addbin1, addbin2, addbin3;
-    double dist, fraction;
-//    double rmag, angle;
-    double r1, r2, r3;
+    float dist, fraction;
+//    float rmag, angle;
+    float r1, r2, r3;
     HexagonalOps ops;
     for (typename T::size_type i = 0; i < e1s.size(); i++)
     {
@@ -239,8 +239,8 @@ class AIMCOMMON_EXPORT Texture
         }
       }
     }
-    double remainingweight = double(odfsize);
-    double remainingcount = 0;
+    float remainingweight = float(odfsize);
+    float remainingcount = 0;
     for (size_t i = 0; i < odfsize; i++)
     {
       remainingweight = remainingweight-odf[i];
@@ -255,7 +255,7 @@ class AIMCOMMON_EXPORT Texture
       // Normalize the odf
       for (size_t i = 0; i < odfsize; i++)
       {
-        odf[i] = odf[i] / double(odfsize);
+        odf[i] = odf[i] / float(odfsize);
       }
     }
 
@@ -279,19 +279,19 @@ class AIMCOMMON_EXPORT Texture
    */
   template<typename T>
   static void calculateOrthoRhombicODFData(T e1s, T e2s, T e3s, T weights, T sigmas,
-      bool normalize, T &odf, double &totalweight)
+      bool normalize, T &odf, float &totalweight)
   {
     int *TextureBins;
     TextureBins = new int[weights.size()];
     static const size_t odfsize = 46656;
- //   double degtorad = M_PI/180.0;
-    double addweight = 0;
+ //   float degtorad = M_PI/180.0;
+    float addweight = 0;
     odf.resize(odfsize);
     size_t bin, addbin;
     size_t bin1, bin2, bin3;
     size_t addbin1, addbin2, addbin3;
-    double dist, fraction;
-    double r1, r2, r3;
+    float dist, fraction;
+    float r1, r2, r3;
     OrthoRhombicOps ops;
     for (typename T::size_type i = 0; i < e1s.size(); i++)
     {
@@ -338,8 +338,8 @@ class AIMCOMMON_EXPORT Texture
         }
       }
     }
-    double remainingweight = double(odfsize);
-    double remainingcount = 0;
+    float remainingweight = float(odfsize);
+    float remainingcount = 0;
     for (size_t i = 0; i < odfsize; i++)
     {
       remainingweight = remainingweight-odf[i];
@@ -354,7 +354,7 @@ class AIMCOMMON_EXPORT Texture
       // Normalize the odf
       for (size_t i = 0; i < odfsize; i++)
       {
-        odf[i] = odf[i] / double(odfsize);
+        odf[i] = odf[i] / float(odfsize);
       }
     }
 
@@ -368,7 +368,7 @@ class AIMCOMMON_EXPORT Texture
       const int odfsize = orientationOps.getODFSize();
       const int mdfsize = orientationOps.getMDFSize();
       mdf.resize(mdfsize);
-  //    double radtodeg = 180.0 / M_PI;
+  //    float radtodeg = 180.0 / M_PI;
 
 
       AIMRandomNG rg;
@@ -390,16 +390,16 @@ class AIMCOMMON_EXPORT Texture
 #endif
       //  int err = 0;
       int mbin;
-      double w = 0;
+      float w = 0;
       int choose1, choose2;
-      double ea1, ea2, ea3;
-      double q1[5], q2[5];
-      double totaldensity;
-  //    double denom;
-      double r1, r2, r3;
-      double n1, n2, n3;
-      double random1, random2, density;
-      double* odfPtr = NULL;
+      float ea1, ea2, ea3;
+      float q1[5], q2[5];
+      float totaldensity;
+  //    float denom;
+      float r1, r2, r3;
+      float n1, n2, n3;
+      float random1, random2, density;
+      float* odfPtr = NULL;
 
       for (int i = 0; i < mdfsize; i++)
       {
@@ -412,7 +412,7 @@ class AIMCOMMON_EXPORT Texture
         OrientationMath::axisAngletoRod(angles[i], axes[3 * i], axes[3 * i + 1], axes[3 * i + 2], r1, r2, r3);
         OrientationMath::RodtoHomochoric(r1, r2, r3);
         mbin = orientationOps.getMisoBin(r1, r2, r3);
-        mdf[mbin] = -int((weights[i] / double(mdfsize)) * 10000.0);
+        mdf[mbin] = -int((weights[i] / float(mdfsize)) * 10000.0);
         remainingcount = remainingcount + mdf[mbin];
       }
 
@@ -429,7 +429,7 @@ class AIMCOMMON_EXPORT Texture
         {
           density = *odfPtr;
           ++odfPtr;
-          double d = totaldensity;
+          float d = totaldensity;
           totaldensity = totaldensity + density;
           if (random1 >= d && random1 < totaldensity) choose1 = static_cast<int> (j);
           if (random2 >= d && random2 < totaldensity) choose2 = static_cast<int> (j);
@@ -454,198 +454,6 @@ class AIMCOMMON_EXPORT Texture
   }
 
 
-
-
-#if 0
-
-  template<typename T>
-  static void calculateCubicMDFData(T angles, T axes, T weights, T odf, T &mdf)
-  {
-      static const int odfsize = 5832;
-      static const int mdfsize = 5832;
-      mdf.resize(mdfsize);
-      //  double totalweight = 0;
-      double radtodeg = 180.0 / M_PI;
-
-      AIMRandomNG rg;
-      /* Get a seed value based off the system clock. The issue is that this will
-       * be a 64 bit unsigned integer where the high 32 bits will basically not
-       * change where as the lower 32 bits will. The following lines of code will
-       * pull off the low 32 bits from the number. This operation depends on most
-       * significant byte ordering which is different between Big Endian and
-       * Little Endian machines. For Big endian machines the Most Significant Byte
-       * (MSB) is the first 32 bits. For Little Endian machines the MSB is the
-       * second 32 bits.
-       */
-      unsigned long long int seed = MXA::getMilliSeconds();
-      unsigned int* seedPtr = reinterpret_cast<unsigned int*> (&seed);
-#if CMP_WORDS_BIGENDIAN
-      rg.RandomInit(seedPtr[1]);
-#else
-      rg.RandomInit(seedPtr[0]);
-#endif
-      //  int err = 0;
-      int mbin;
-      double w = 0;
-      int choose1, choose2;
-      double ea1, ea2, ea3;
-      double q1[5], q2[5];
-      double totaldensity;
-      double denom;
-      double r1, r2, r3;
-      double n1, n2, n3;
-      double random1, random2, density;
-      for (int i = 0; i < mdfsize; i++)
-      {
-        mdf[i] = 0.0;
-      }
-      int remainingcount = 10000;
-      for (int i = 0; i < angles.size(); i++)
-      {
-        denom = pow((axes[3 * i] * axes[3 * i] + axes[3 * i + 1] * axes[3 * i + 1] + axes[3 * i + 2] * axes[3 * i + 2]), 0.5);
-        n1 = axes[3 * i] / denom;
-        n2 = axes[3 * i + 1] / denom;
-        n3 = axes[3 * i + 2] / denom;
-        r1 = n1 * pow(((3.0 / 4.0) * (angles[i] - sin(angles[i]))), (1.0 / 3.0));
-        r2 = n2 * pow(((3.0 / 4.0) * (angles[i] - sin(angles[i]))), (1.0 / 3.0));
-        r3 = n3 * pow(((3.0 / 4.0) * (angles[i] - sin(angles[i]))), (1.0 / 3.0));
-        mbin = OrientationMath::getMisoBin(AIM::Reconstruction::Cubic, r1, r2, r3);
-        mdf[mbin] = -int((weights[i] / double(mdfsize)) * 10000.0);
-        remainingcount = remainingcount + mdf[mbin];
-      }
-      double* odfPtr = NULL;
-
-      for (int i = 0; i < remainingcount; i++)
-      {
-        random1 = rg.Random();
-        random2 = rg.Random();
-        choose1 = 0;
-        choose2 = 0;
-
-        totaldensity = 0;
-        odfPtr = &(odf.front());
-        for (int j = 0; j < odfsize; j++)
-        {
-          density = *odfPtr;
-          ++odfPtr;
-          double d = totaldensity;
-          totaldensity = totaldensity + density;
-          if (random1 >= d && random1 < totaldensity) choose1 = static_cast<int> (j);
-          if (random2 >= d && random2 < totaldensity) choose2 = static_cast<int> (j);
-        }
-        OrientationMath::determineEulerAngles(AIM::Reconstruction::Cubic, choose1, ea1, ea2, ea3);
-        OrientationMath::eulertoQuat(q1, ea1, ea2, ea3);
-        OrientationMath::determineEulerAngles(AIM::Reconstruction::Cubic, choose2, ea1, ea2, ea3);
-        OrientationMath::eulertoQuat(q2, ea1, ea2, ea3);
-        w = OrientationMath::getMisoQuat(AIM::Reconstruction::Cubic, q1, q2, n1, n2, n3);
-        w = w / radtodeg;
-        r1 = n1 * pow(((0.75) * (w - sin(w))), (1.0 / 3.0));
-        r2 = n2 * pow(((0.75) * (w - sin(w))), (1.0 / 3.0));
-        r3 = n3 * pow(((0.75) * (w - sin(w))), (1.0 / 3.0));
-        mbin = OrientationMath::getMisoBin(AIM::Reconstruction::Cubic, r1, r2, r3);
-        if (mdf[mbin] >= 0) mdf[mbin]++;
-        if (mdf[mbin] < 0) i = i - 1;
-      }
-      for (int i = 0; i < mdfsize; i++)
-      {
-        if (mdf[i] < 0) mdf[i] = -mdf[i];
-        mdf[i] = mdf[i] / 10000.0;
-      }
-
-    }
-
-  template<typename T>
-  static void calculateHexMDFData(T angles, T axes, T weights, T odf, T &mdf)
-  {
-      static const int odfsize = 15552;
-      static const int mdfsize = 15552;
-      double radtodeg = 180.0 / M_PI;
-
-      AIMRandomNG rg;
-      /* Get a seed value based off the system clock. The issue is that this will
-       * be a 64 bit unsigned integer where the high 32 bits will basically not
-       * change where as the lower 32 bits will. The following lines of code will
-       * pull off the low 32 bits from the number. This operation depends on most
-       * significant byte ordering which is different between Big Endian and
-       * Little Endian machines. For Big endian machines the Most Significant Byte
-       * (MSB) is the first 32 bits. For Little Endian machines the MSB is the
-       * second 32 bits.
-       */
-      unsigned long long int seed = MXA::getMilliSeconds();
-      unsigned int* seedPtr = reinterpret_cast<unsigned int*> (&seed);
-#if CMP_WORDS_BIGENDIAN
-      rg.RandomInit(seedPtr[1]);
-#else
-      rg.RandomInit(seedPtr[0]);
-#endif
-      //  int err = 0;
-      int mbin;
-      int choose1, choose2;
-      double w = 0;
-      double ea1, ea2, ea3;
-      double q1[5], q2[5];
-      double totaldensity;
-      //    double hmag;
-      //    double angle;
-      double denom;
-      double r1, r2, r3;
-      //    double h1, h2, h3;
-      double n1, n2, n3;
-      double random1, random2, density;
-
-      for (int i = 0; i < mdfsize; i++)
-      {
-        mdf[i] = 0.0;
-      }
-      int remainingcount = 10000;
-      for (int i = 0; i < angles.size(); i++)
-      {
-        denom = pow((axes[3 * i] * axes[3 * i] + axes[3 * i + 1] * axes[3 * i + 1] + axes[3 * i + 2] * axes[3 * i + 2]), 0.5);
-        n1 = axes[3 * i] / denom;
-        n2 = axes[3 * i + 1] / denom;
-        n3 = axes[3 * i + 2] / denom;
-        r1 = n1 * pow(((3.0 / 4.0) * (angles[i] - sin(angles[i]))), (1.0 / 3.0));
-        r2 = n2 * pow(((3.0 / 4.0) * (angles[i] - sin(angles[i]))), (1.0 / 3.0));
-        r3 = n3 * pow(((3.0 / 4.0) * (angles[i] - sin(angles[i]))), (1.0 / 3.0));
-        mbin = OrientationMath::getMisoBin(AIM::Reconstruction::Hexagonal, r1, r2, r3);
-        mdf[mbin] = -int((weights[i] / double(mdfsize)) * 10000.0);
-        remainingcount = remainingcount + mdf[mbin];
-      }
-      for (int i = 0; i < remainingcount; i++)
-      {
-        random1 = rg.Random();
-        random2 = rg.Random();
-        choose1 = 0;
-        choose2 = 0;
-
-        totaldensity = 0;
-        for (int j = 0; j < odfsize; j++)
-        {
-          density = odf[j];
-          totaldensity = totaldensity + density;
-          if (random1 < totaldensity && random1 >= (totaldensity - density)) choose1 = static_cast<int> (j);
-          if (random2 < totaldensity && random2 >= (totaldensity - density)) choose2 = static_cast<int> (j);
-        }
-        OrientationMath::determineEulerAngles(AIM::Reconstruction::Hexagonal, choose1, ea1, ea2, ea3);
-        OrientationMath::eulertoQuat(q1, ea1, ea2, ea3);
-        OrientationMath::determineEulerAngles(AIM::Reconstruction::Hexagonal, choose2, ea1, ea2, ea3);
-        OrientationMath::eulertoQuat(q2, ea1, ea2, ea3);
-        w = OrientationMath::getMisoQuat(AIM::Reconstruction::Hexagonal, q1, q2, n1, n2, n3);
-        w = w / radtodeg;
-        r1 = n1 * pow(((3.0 / 4.0) * (w - sin(w))), (1.0 / 3.0));
-        r2 = n2 * pow(((3.0 / 4.0) * (w - sin(w))), (1.0 / 3.0));
-        r3 = n3 * pow(((3.0 / 4.0) * (w - sin(w))), (1.0 / 3.0));
-        mbin = OrientationMath::getMisoBin(AIM::Reconstruction::Hexagonal, r1, r2, r3);
-        if (mdf[mbin] >= 0) mdf[mbin]++;
-        if (mdf[mbin] < 0) i = i - 1;
-      }
-      for (int i = 0; i < mdfsize; i++)
-      {
-        if (mdf[i] < 0) mdf[i] = -mdf[i];
-        mdf[i] = mdf[i] / 10000.0;
-      }
-    }
-#endif
 
   protected:
   Texture();

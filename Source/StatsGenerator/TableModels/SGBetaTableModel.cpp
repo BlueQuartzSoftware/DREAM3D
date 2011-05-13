@@ -262,8 +262,8 @@ bool SGBetaTableModel::setData(const QModelIndex & index, const QVariant & value
 bool SGBetaTableModel::insertRows(int row, int count, const QModelIndex& index)
 {
   qint32 binNum = 0;
-  double alpha = 5.0;
-  double beta = 5.0;
+  float alpha = 5.0;
+  float beta = 5.0;
 
   QString c("blue");
 
@@ -308,7 +308,7 @@ bool SGBetaTableModel::removeRows(int row, int count, const QModelIndex& index)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QVector<double > SGBetaTableModel::getData(int col)
+QVector<float > SGBetaTableModel::getData(int col)
 {
 
   switch(col)
@@ -320,13 +320,13 @@ QVector<double > SGBetaTableModel::getData(int col)
     default:
       Q_ASSERT(false);
   }
-  return QVector<double > ();
+  return QVector<float > ();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-double SGBetaTableModel::getDataValue(int col, int row)
+float SGBetaTableModel::getDataValue(int col, int row)
 {
   switch(col)
   {
@@ -343,7 +343,7 @@ double SGBetaTableModel::getDataValue(int col, int row)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SGBetaTableModel::setColumnData(int col, QVector<double> &data)
+void SGBetaTableModel::setColumnData(int col, QVector<float> &data)
 {
   switch(col)
   {
@@ -370,7 +370,7 @@ QAbstractItemDelegate* SGBetaTableModel::getItemDelegate()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SGBetaTableModel::setTableData(QVector<double> bins, QVector<QVector<double> > data, QVector<QString> colors)
+void SGBetaTableModel::setTableData(QVector<float> bins, QVector<QVector<float> > data, QVector<QString> colors)
 {
   qint32 count = bins.count();
   qint32 row = 0;

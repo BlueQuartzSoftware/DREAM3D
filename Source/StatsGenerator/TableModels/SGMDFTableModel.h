@@ -147,7 +147,7 @@ class SGMDFTableModel : public QAbstractTableModel
       * @param col
       * @return
       */
-     virtual QVector<double> getData(int col);
+     virtual QVector<float> getData(int col);
 
      /**
       *
@@ -155,11 +155,11 @@ class SGMDFTableModel : public QAbstractTableModel
       * @param row
       * @return
       */
-     // virtual double getDataValue(int col, int row);
+     // virtual float getDataValue(int col, int row);
 
-     int parseHKLRow(int row, double &h, double &k, double &l);
+     int parseHKLRow(int row, float &h, float &k, float &l);
 
-      virtual void setColumnData(int col, QVector<double> &data);
+      virtual void setColumnData(int col, QVector<float> &data);
 
      virtual void setInitialValues();
 
@@ -167,9 +167,9 @@ class SGMDFTableModel : public QAbstractTableModel
      int m_ColumnCount;
      int m_RowCount;
 
-     QVector<double> m_Angles;
+     QVector<float> m_Angles;
      QVector<QString> m_Axis;
-     QVector<double> m_Weights;
+     QVector<float> m_Weights;
 
 
      SGMDFTableModel(const SGMDFTableModel&); // Copy Constructor Not Implemented

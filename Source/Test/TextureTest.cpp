@@ -46,19 +46,19 @@
 int main(int argc, char **argv)
 {
 
-  std::vector<double> e1s;
-  std::vector<double> e2s;
-  std::vector<double> e3s;
-  std::vector<double> weights;
-  std::vector<double> sigmas;
-  std::vector<double> odf;
-  double totalweight;
+  std::vector<float> e1s;
+  std::vector<float> e2s;
+  std::vector<float> e3s;
+  std::vector<float> weights;
+  std::vector<float> sigmas;
+  std::vector<float> odf;
+  float totalweight;
 
   Texture::calculateCubicODFData(e1s, e2s, e3s, weights, sigmas, true, odf, totalweight);
   Texture::calculateHexODFData(e1s, e2s, e3s, weights, sigmas, true, odf, totalweight);
   Texture::calculateOrthoRhombicODFData(e1s, e2s, e3s, weights, sigmas, true, odf, totalweight);
 
-  Texture::calculateMDFData<std::vector<double>, CubicOps>(e1s, e2s, e3s, weights, sigmas);
+  Texture::calculateMDFData<std::vector<float>, CubicOps>(e1s, e2s, e3s, weights, sigmas);
 
   return EXIT_SUCCESS;
 }
