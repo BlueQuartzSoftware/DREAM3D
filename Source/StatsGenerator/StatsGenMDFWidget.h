@@ -68,12 +68,12 @@ class StatsGenMDFWidget : public QWidget, private Ui::StatsGenMDFWidget
 
     int writeDataToHDF5(H5ReconStatsWriter::Pointer writer);
     int readDataFromHDF5(H5ReconStatsReader::Pointer reader,
-                        QVector<double>  &bins,
+                        QVector<float>  &bins,
                         const std::string &hdf5GroupName);
-    
-  QwtArray<double> generateODFData();
 
-  void updateMDFPlot(QwtArray<double> odf);
+  QwtArray<float> generateODFData();
+
+  void updateMDFPlot(QwtArray<float> odf);
 
   protected slots:
     void on_addMDFRowBtn_clicked();

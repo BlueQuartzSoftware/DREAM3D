@@ -53,13 +53,13 @@
 
 int main(int argc, char **argv)
 {
-  double totalweight = 0.0;
-  std::vector<double> odf;
-  std::vector<double> e1s(2);
-  std::vector<double> e2s(2);
-  std::vector<double> e3s(2);
-  std::vector<double> weights(2);
-  std::vector<double> sigmas(2);
+  float totalweight = 0.0;
+  std::vector<float> odf;
+  std::vector<float> e1s(2);
+  std::vector<float> e2s(2);
+  std::vector<float> e3s(2);
+  std::vector<float> weights(2);
+  std::vector<float> sigmas(2);
 
   POPULATE_DATA(0, 35, 45, 0, 1.0, 1.0)
   POPULATE_DATA(1, 59, 37, 63, 1.0, 1.0)
@@ -70,12 +70,12 @@ int main(int argc, char **argv)
   Texture::calculateCubicODFData(e1s, e2s, e3s, weights, sigmas, true, odf, totalweight);
 
 
-  std::vector<double > x001;
-  std::vector<double > y001;
-  std::vector<double > x011;
-  std::vector<double > y011;
-  std::vector<double > x111;
-  std::vector<double > y111;
+  std::vector<float > x001;
+  std::vector<float > y001;
+  std::vector<float > x011;
+  std::vector<float > y011;
+  std::vector<float > x111;
+  std::vector<float > y111;
 
   StatsGen sg;
   int size = 1000;

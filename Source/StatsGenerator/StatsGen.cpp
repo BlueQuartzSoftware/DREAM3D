@@ -46,20 +46,7 @@ StatsGen::~StatsGen()
 {
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int StatsGen::computeNumberOfBins(double mu, double sigma, double cutoff,
-                                  double binstep, double &max, double &min)
-{
-  min = exp(mu - (cutoff * sigma));
-  max = exp(mu + (cutoff * sigma));
-  return static_cast<int>((max -min)/binstep)+1;
-}
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -75,13 +62,13 @@ int StatsGen::computeNumberOfBins(float mu, float sigma, float cutoff,
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-double StatsGen::gamma(double value)
+float StatsGen::gamma(float value)
 {
   int i, k, m;
-  double ga, gr, r, z;
-  double m_pi = M_PI;
+  float ga, gr, r, z;
+  float m_pi = M_PI;
 
-  static double g[] =
+  static float g[] =
   {
   1.0,
   0.5772156649015329,

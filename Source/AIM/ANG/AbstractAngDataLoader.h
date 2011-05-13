@@ -52,7 +52,7 @@ class AIMCOMMON_EXPORT AbstractAngDataLoader
                          int xpoints, int ypoints, int zpoints) = 0;
 
     virtual int getSizeAndResolution(int &xpoints, int &ypoints, int &zpoints,
-                                       double &xres, double &yres, double &zres) = 0;
+                                       float &xres, float &yres, float &zres) = 0;
 
 
   protected:

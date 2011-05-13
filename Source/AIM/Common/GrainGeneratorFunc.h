@@ -48,7 +48,7 @@
 #include "AIM/Common/OrientationOps/HexagonalOps.h"
 #include "AIM/Common/OrientationOps/OrthoRhombicOps.h"
 
-typedef boost::shared_array<double>    DoubleArray;
+typedef boost::shared_array<float>    FloatArray;
 
 
 /**
@@ -64,29 +64,29 @@ public:
     MXA_SHARED_POINTERS(GrainGeneratorFunc)MXA_STATIC_NEW_MACRO(GrainGeneratorFunc)virtual ~GrainGeneratorFunc();
 
 
-    double resx;
-    double resy;
-    double resz;
-    double sizex;
-    double sizey;
-    double sizez;
-    double misorientationtolerance;
+    float resx;
+    float resy;
+    float resz;
+    float sizex;
+    float sizey;
+    float sizez;
+    float misorientationtolerance;
     std::vector<AIM::Reconstruction::CrystalStructure> crystruct;
     AIMRandomNG rg;
 
-    std::vector<DoubleArray> actualodf;
+    std::vector<FloatArray> actualodf;
 
-    std::vector<DoubleArray> simodf;
-    std::vector<DoubleArray> axisodf;
+    std::vector<FloatArray> simodf;
+    std::vector<FloatArray> axisodf;
     GrainGeneratorVoxel* voxels;
-    std::vector<DoubleArray> actualmdf;
-    std::vector<DoubleArray> simmdf;
-    std::vector<DoubleArray> actualmicrotex;
-    std::vector<DoubleArray> simmicrotex;
+    std::vector<FloatArray> actualmdf;
+    std::vector<FloatArray> simmdf;
+    std::vector<FloatArray> actualmicrotex;
+    std::vector<FloatArray> simmicrotex;
 
 //    int* graincounts;
-    std::vector<DoubleArray> graincenters;
-    std::vector<DoubleArray> grainmoments;
+    std::vector<FloatArray> graincenters;
+    std::vector<FloatArray> grainmoments;
 
 //    Grain *precipitates;
     std::vector<Grain::Pointer> precipitates;
@@ -97,63 +97,63 @@ public:
     std::vector<int> activegrainlist;
     std::vector<int> precipitateorder;
     std::vector<int> takencheck;
-    std::vector<std::vector<double> > grainsizedist;
-    std::vector<std::vector<double> > simgrainsizedist;
-    std::vector<std::vector<std::vector<double> > > bovera;
-    std::vector<std::vector<std::vector<double> > > covera;
-    std::vector<std::vector<std::vector<double> > > coverb;
-    std::vector<std::vector<std::vector<double> > > neighborhood;
-    std::vector<std::vector<std::vector<double> > > omega3;
-    std::vector<std::vector<std::vector<double> > > neighbordist;
-    std::vector<std::vector<std::vector<double> > > neighborhoodfit;
-    std::vector<std::vector<std::vector<double> > > svbovera;
-    std::vector<std::vector<std::vector<double> > > svcovera;
-    std::vector<std::vector<std::vector<double> > > svcoverb;
-    std::vector<std::vector<std::vector<double> > > svschmid;
-    std::vector<std::vector<std::vector<double> > > svomega3;
+    std::vector<std::vector<float> > grainsizedist;
+    std::vector<std::vector<float> > simgrainsizedist;
+    std::vector<std::vector<std::vector<float> > > bovera;
+    std::vector<std::vector<std::vector<float> > > covera;
+    std::vector<std::vector<std::vector<float> > > coverb;
+    std::vector<std::vector<std::vector<float> > > neighborhood;
+    std::vector<std::vector<std::vector<float> > > omega3;
+    std::vector<std::vector<std::vector<float> > > neighbordist;
+    std::vector<std::vector<std::vector<float> > > neighborhoodfit;
+    std::vector<std::vector<std::vector<float> > > svbovera;
+    std::vector<std::vector<std::vector<float> > > svcovera;
+    std::vector<std::vector<std::vector<float> > > svcoverb;
+    std::vector<std::vector<std::vector<float> > > svschmid;
+    std::vector<std::vector<std::vector<float> > > svomega3;
     std::vector<std::vector<std::vector<int> > > boundaries;
 
-    double machineepsilon;
-    double maxrealnumber;
-    double minrealnumber;
+    float machineepsilon;
+    float maxrealnumber;
+    float minrealnumber;
     int numorients;
     int numeulers;
     int resdiff;
-    std::vector<double> unbiasedvol;
-    std::vector<double> totalsurfacearea;
+    std::vector<float> unbiasedvol;
+    std::vector<float> totalsurfacearea;
     int numgrains;
     int numextragrains;
     int shapeclass;
-    std::vector<double> phasefraction;
-    std::vector<double> binstepsize;
-    std::vector<double> grainsizediststep;
-    std::vector<double> maxdiameter;
-    std::vector<double> mindiameter;
-    std::vector<double> avgdiam;
-    std::vector<double> sddiam;
+    std::vector<float> phasefraction;
+    std::vector<float> binstepsize;
+    std::vector<float> grainsizediststep;
+    std::vector<float> maxdiameter;
+    std::vector<float> mindiameter;
+    std::vector<float> avgdiam;
+    std::vector<float> sddiam;
     std::vector<int> numdiameterbins;
     int worstgrain;
-    std::vector<double> totalaxes;
+    std::vector<float> totalaxes;
     int32_t xpoints;
     int32_t ypoints;
     int32_t zpoints;
     int totalpoints;
-    double totalvol;
+    float totalvol;
     int numneighbins;
-    double volcheck;
+    float volcheck;
     int ownercheck;
-    double currentfillingerror, oldfillingerror;
-    double currentneighborhooderror, oldneighborhooderror;
-    double currentsizedisterror, oldsizedisterror;
-    double fillingerrorweight;
-    double neighborhooderrorweight;
-    double sizedisterrorweight;
+    float currentfillingerror, oldfillingerror;
+    float currentneighborhooderror, oldneighborhooderror;
+    float currentsizedisterror, oldsizedisterror;
+    float fillingerrorweight;
+    float neighborhooderrorweight;
+    float sizedisterrorweight;
 
     void initialize(int32_t m_NumGrains, int32_t m_ShapeClass,
-                    double m_XResolution, double m_YResolution, double m_ZResolution,
-                    double m_fillingerrorweight, double m_neighborhooderrorweight,
-                    double m_sizedisterrorweight,
-                    int32_t m_Precipitates, double m_FractionPrecipitates,
+                    float m_XResolution, float m_YResolution, float m_ZResolution,
+                    float m_fillingerrorweight, float m_neighborhooderrorweight,
+                    float m_sizedisterrorweight,
+                    int32_t m_Precipitates, float m_FractionPrecipitates,
                     std::vector<AIM::Reconstruction::CrystalStructure> m_CrystalStructure);
     void initializeArrays();
     void initialize2();
@@ -173,19 +173,19 @@ public:
     void insert_grain(size_t grainNum);
     void add_grain(size_t grainNum);
     void remove_grain(size_t grainNum);
-    double costcheck_remove(size_t grainNum);
-    double costcheck_add(size_t grainNum);
+    float costcheck_remove(size_t grainNum);
+    float costcheck_add(size_t grainNum);
     void determine_neighbors();
-    double check_neighborhooderror(int gadd, int gremove);
-    double check_sizedisterror(int gadd, int gremove);
+    float check_neighborhooderror(int gadd, int gremove);
+    float check_sizedisterror(int gadd, int gremove);
     int assign_voxels(int numgrains);
     void fill_gaps(int numgrains);
 	int adjust_boundaries(int numgrains);
     void find_neighbors();
-    void swapOutOrientation(int & badtrycount, int & numbins, double currentodferror, double currentmdferror);
-    void switchOrientations(int & badtrycount, int & numbins, double currentodferror, double currentmdferror);
-    void MC_LoopBody1(int phase, size_t neighbor, int j, std::vector<double>* misolist, std::vector<double>* neighborsurfarealist, double &mdfchange);
-    void MC_LoopBody2(int phase, size_t neighbor, int j, std::vector<double>* misolist, std::vector<double>* neighborsurfarealist);
+    void swapOutOrientation(int & badtrycount, int & numbins, float currentodferror, float currentmdferror);
+    void switchOrientations(int & badtrycount, int & numbins, float currentodferror, float currentmdferror);
+    void MC_LoopBody1(int phase, size_t neighbor, int j, std::vector<float>* misolist, std::vector<float>* neighborsurfarealist, float &mdfchange);
+    void MC_LoopBody2(int phase, size_t neighbor, int j, std::vector<float>* misolist, std::vector<float>* neighborsurfarealist);
     void matchCrystallography(const std::string & ErrorFile, H5ReconStatsWriter::Pointer h5io);
     void measure_misorientations();
     void find_centroids();
@@ -193,18 +193,18 @@ public:
     void find_axes();
     void find_vectors(H5ReconStatsWriter::Pointer h5io);
     int volume_stats(H5ReconStatsWriter::Pointer h5io);
-    double gamma(double);
-    double erf(double);
-    double erfc(double);
-    double gammastirf(double);
-    double lngamma(double, double& );
-    double incompletebeta(double, double, double);
-    double incompletebetafe(double, double, double, double, double);
-    double incompletebetafe2(double, double, double, double, double);
-    double incompletebetaps(double, double, double, double);
-    double find_xcoord(long );
-    double find_ycoord(long );
-    double find_zcoord(long );
+    float gamma(float);
+    float erf(float);
+    float erfc(float);
+    float gammastirf(float);
+    float lngamma(float, float& );
+    float incompletebeta(float, float, float);
+    float incompletebetafe(float, float, float, float, float);
+    float incompletebetafe2(float, float, float, float, float);
+    float incompletebetaps(float, float, float, float);
+    float find_xcoord(long long int index);
+    float find_ycoord(long long int index);
+    float find_zcoord(long long int index);
 protected:
     GrainGeneratorFunc();
 private:

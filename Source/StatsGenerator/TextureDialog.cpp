@@ -131,14 +131,14 @@ void TextureDialog::on_presetListWidget_itemSelectionChanged()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void TextureDialog::getODFEntry(double &e1, double &e2, double &e3, double &w, double &s)
+void TextureDialog::getODFEntry(float &e1, float &e2, float &e3, float &w, float &s)
 {
   bool ok = false;
-  e1 = euler1->text().toDouble(&ok);
-  e2 = euler2->text().toDouble(&ok);
-  e3 = euler3->text().toDouble(&ok);
-  w = weight->text().toDouble(&ok);
-  s = sigma->text().toDouble(&ok);
+  e1 = euler1->text().toFloat(&ok);
+  e2 = euler2->text().toFloat(&ok);
+  e3 = euler3->text().toFloat(&ok);
+  w = weight->text().toFloat(&ok);
+  s = sigma->text().toFloat(&ok);
 }
 
 

@@ -65,7 +65,7 @@ class AIMCOMMON_EXPORT H5AngDataLoader : public AbstractAngDataLoader
 
     int loadData(ReconstructionVoxel voxels[], int xpoints, int ypoints, int zpoints);
     int getSizeAndResolution(int &xpoints, int &ypoints, int &zpoints,
-                             double &xres, double &yres, double &zres);
+                             float &xres, float &yres, float &zres);
 
     int readZHeader(int &zStart, int &zEnd, float &zRes);
     std::vector<AngPhase::Pointer> getPhases();

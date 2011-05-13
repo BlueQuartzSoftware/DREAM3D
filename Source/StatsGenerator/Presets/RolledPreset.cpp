@@ -75,7 +75,7 @@ void RolledPreset::displayUserInputDialog()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RolledPreset::generateOmega3Data(StatsGenPlotWidget* plot, QVector<double> binNumbers)
+void RolledPreset::generateOmega3Data(StatsGenPlotWidget* plot, QVector<float> binNumbers)
 {
   // Make sure the distribution is set correctly
   plot->setDistributionType(AIM::Reconstruction::Beta, false);
@@ -90,7 +90,7 @@ void RolledPreset::generateOmega3Data(StatsGenPlotWidget* plot, QVector<double> 
   // Remove all the current rows in the table model
 //  model->removeRows(0, model->rowCount());
 
-  double alpha, beta;
+  float alpha, beta;
       AIMRandomNG rg;
       /* Get a seed value based off the system clock. The issue is that this will
        * be a 64 bit unsigned integer where the high 32 bits will basically not
@@ -109,8 +109,8 @@ void RolledPreset::generateOmega3Data(StatsGenPlotWidget* plot, QVector<double> 
       rg.RandomInit(seedPtr[0]);
 #endif
 
-  QVector<double> alphas;
-  QVector<double> betas;
+  QVector<float> alphas;
+  QVector<float> betas;
   QVector<QString> colors;
   QStringList colorNames = QColor::colorNames();
   qint32 colorOffset = 21;
@@ -123,7 +123,7 @@ void RolledPreset::generateOmega3Data(StatsGenPlotWidget* plot, QVector<double> 
     colors.push_back(colorNames[colorOffset++]);
    }
 
-  QVector<QVector<double> > data;
+  QVector<QVector<float> > data;
   data.push_back(alphas);
   data.push_back(betas);
   model->setTableData(binNumbers, data, colors);
@@ -132,7 +132,7 @@ void RolledPreset::generateOmega3Data(StatsGenPlotWidget* plot, QVector<double> 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RolledPreset::generateBOverAPlotData(StatsGenPlotWidget* plot, QVector<double> binNumbers)
+void RolledPreset::generateBOverAPlotData(StatsGenPlotWidget* plot, QVector<float> binNumbers)
 {
   // Make sure the distribution is set correctly
   plot->setDistributionType(AIM::Reconstruction::Beta, false);
@@ -147,7 +147,7 @@ void RolledPreset::generateBOverAPlotData(StatsGenPlotWidget* plot, QVector<doub
   // Remove all the current rows in the table model
   model->removeRows(0, model->rowCount());
 
-  double alpha, beta;
+  float alpha, beta;
       AIMRandomNG rg;
       /* Get a seed value based off the system clock. The issue is that this will
        * be a 64 bit unsigned integer where the high 32 bits will basically not
@@ -166,8 +166,8 @@ void RolledPreset::generateBOverAPlotData(StatsGenPlotWidget* plot, QVector<doub
       rg.RandomInit(seedPtr[0]);
 #endif
 
-  QVector<double> alphas;
-  QVector<double> betas;
+  QVector<float> alphas;
+  QVector<float> betas;
   QVector<QString> colors;
   QStringList colorNames = QColor::colorNames();
   qint32 colorOffset = 21;
@@ -180,7 +180,7 @@ void RolledPreset::generateBOverAPlotData(StatsGenPlotWidget* plot, QVector<doub
     colors.push_back(colorNames[colorOffset++]);
    }
 
-  QVector<QVector<double> > data;
+  QVector<QVector<float> > data;
   data.push_back(alphas);
   data.push_back(betas);
   model->setTableData(binNumbers, data, colors);
@@ -189,7 +189,7 @@ void RolledPreset::generateBOverAPlotData(StatsGenPlotWidget* plot, QVector<doub
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RolledPreset::generateCOverAPlotData(StatsGenPlotWidget* plot, QVector<double> binNumbers)
+void RolledPreset::generateCOverAPlotData(StatsGenPlotWidget* plot, QVector<float> binNumbers)
 {
   // Make sure the distribution is set correctly
   plot->setDistributionType(AIM::Reconstruction::Beta, false);
@@ -204,7 +204,7 @@ void RolledPreset::generateCOverAPlotData(StatsGenPlotWidget* plot, QVector<doub
   // Remove all the current rows in the table model
   model->removeRows(0, model->rowCount());
 
-  double alpha, beta;
+  float alpha, beta;
       AIMRandomNG rg;
       /* Get a seed value based off the system clock. The issue is that this will
        * be a 64 bit unsigned integer where the high 32 bits will basically not
@@ -223,8 +223,8 @@ void RolledPreset::generateCOverAPlotData(StatsGenPlotWidget* plot, QVector<doub
       rg.RandomInit(seedPtr[0]);
 #endif
 
-  QVector<double> alphas;
-  QVector<double> betas;
+  QVector<float> alphas;
+  QVector<float> betas;
   QVector<QString> colors;
   QStringList colorNames = QColor::colorNames();
   qint32 colorOffset = 21;
@@ -237,7 +237,7 @@ void RolledPreset::generateCOverAPlotData(StatsGenPlotWidget* plot, QVector<doub
     colors.push_back(colorNames[colorOffset++]);
    }
 
-  QVector<QVector<double> > data;
+  QVector<QVector<float> > data;
   data.push_back(alphas);
   data.push_back(betas);
   model->setTableData(binNumbers, data, colors);
@@ -247,7 +247,7 @@ void RolledPreset::generateCOverAPlotData(StatsGenPlotWidget* plot, QVector<doub
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RolledPreset::generateCOverBPlotData(StatsGenPlotWidget* plot, QVector<double> binNumbers)
+void RolledPreset::generateCOverBPlotData(StatsGenPlotWidget* plot, QVector<float> binNumbers)
 {
   // Make sure the distribution is set correctly
   plot->setDistributionType(AIM::Reconstruction::Beta, false);
@@ -262,7 +262,7 @@ void RolledPreset::generateCOverBPlotData(StatsGenPlotWidget* plot, QVector<doub
   // Remove all the current rows in the table model
   model->removeRows(0, model->rowCount());
 
-  double alpha, beta;
+  float alpha, beta;
       AIMRandomNG rg;
       /* Get a seed value based off the system clock. The issue is that this will
        * be a 64 bit unsigned integer where the high 32 bits will basically not
@@ -281,8 +281,8 @@ void RolledPreset::generateCOverBPlotData(StatsGenPlotWidget* plot, QVector<doub
       rg.RandomInit(seedPtr[0]);
 #endif
 
-  QVector<double> alphas;
-  QVector<double> betas;
+  QVector<float> alphas;
+  QVector<float> betas;
   QVector<QString> colors;
   QStringList colorNames = QColor::colorNames();
   qint32 colorOffset = 21;
@@ -295,7 +295,7 @@ void RolledPreset::generateCOverBPlotData(StatsGenPlotWidget* plot, QVector<doub
     colors.push_back(colorNames[colorOffset++]);
    }
 
-  QVector<QVector<double> > data;
+  QVector<QVector<float> > data;
   data.push_back(alphas);
   data.push_back(betas);
   model->setTableData(binNumbers, data, colors);
@@ -305,7 +305,7 @@ void RolledPreset::generateCOverBPlotData(StatsGenPlotWidget* plot, QVector<doub
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RolledPreset::generateNeighborPlotData(StatsGenPlotWidget* plot, QVector<double> binNumbers)
+void RolledPreset::generateNeighborPlotData(StatsGenPlotWidget* plot, QVector<float> binNumbers)
 {
   // Make sure the distribution is set correctly
   plot->setDistributionType(AIM::Reconstruction::Power, false);
@@ -321,7 +321,7 @@ void RolledPreset::generateNeighborPlotData(StatsGenPlotWidget* plot, QVector<do
   // Remove all the current rows in the table model
   model->removeRows(0, model->rowCount());
 
-  double alpha, k, beta;
+  float alpha, k, beta;
       AIMRandomNG rg;
       /* Get a seed value based off the system clock. The issue is that this will
        * be a 64 bit unsigned integer where the high 32 bits will basically not
@@ -340,9 +340,9 @@ void RolledPreset::generateNeighborPlotData(StatsGenPlotWidget* plot, QVector<do
       rg.RandomInit(seedPtr[0]);
 #endif
 
-  QVector<double> alphas;
-  QVector<double> ks;
-  QVector<double> betas;
+  QVector<float> alphas;
+  QVector<float> ks;
+  QVector<float> betas;
   QVector<QString> colors;
   QStringList colorNames = QColor::colorNames();
   qint32 colorOffset = 21;
@@ -358,7 +358,7 @@ void RolledPreset::generateNeighborPlotData(StatsGenPlotWidget* plot, QVector<do
     colors.push_back(colorNames[colorOffset++]);
    }
 
-  QVector<QVector<double> > data;
+  QVector<QVector<float> > data;
   data.push_back(alphas);
   data.push_back(ks);
   data.push_back(betas);

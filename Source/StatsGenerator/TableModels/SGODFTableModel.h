@@ -144,7 +144,7 @@ class SGODFTableModel : public QAbstractTableModel
       * @param col
       * @return
       */
-     virtual QVector<double> getData(int col);
+     virtual QVector<float> getData(int col);
 
      /**
       *
@@ -152,12 +152,12 @@ class SGODFTableModel : public QAbstractTableModel
       * @param row
       * @return
       */
-     virtual double getDataValue(int col, int row);
+     virtual float getDataValue(int col, int row);
 
 
-     virtual void setColumnData(int col, QVector<double> &data);
+     virtual void setColumnData(int col, QVector<float> &data);
 
-     virtual void setRowData(int row, double e1, double e2, double e3, double weight, double sigma);
+     virtual void setRowData(int row, float e1, float e2, float e3, float weight, float sigma);
 
      virtual void setInitialValues();
 
@@ -166,11 +166,11 @@ class SGODFTableModel : public QAbstractTableModel
     int m_ColumnCount;
     int m_RowCount;
 
-    QVector<double> m_Euler1s;
-    QVector<double> m_Euler2s;
-    QVector<double> m_Euler3s;
-    QVector<double> m_Weights;
-    QVector<double> m_Sigmas;
+    QVector<float> m_Euler1s;
+    QVector<float> m_Euler2s;
+    QVector<float> m_Euler3s;
+    QVector<float> m_Weights;
+    QVector<float> m_Sigmas;
 
     SGODFTableModel(const SGODFTableModel&); // Copy Constructor Not Implemented
     void operator=(const SGODFTableModel&); // Operator '=' Not Implemented
