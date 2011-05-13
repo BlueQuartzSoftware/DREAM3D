@@ -30,9 +30,52 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <map>
 
+#include "UnitTestSupport.hpp"
 
 #include "StatsGenerator/StatsGen.cpp"
+
+void GenHexMDFPlotData()
+{
+  StatsGen sg;
+  int err = 0;
+  int size = 2500;
+  std::vector<float> e1s;
+  std::vector<float> e2s;
+  std::vector<float> e3s;
+  std::vector<float> weights;
+  std::vector<float> sigmas;
+  std::vector<float> odf;
+  static const size_t odfsize = 15552;
+  float totalweight = 0;
+  odf.resize(odfsize);
+  Texture::calculateHexODFData(e1s, e2s, e3s, weights, sigmas, true, odf, totalweight);
+
+
+  // These are the output vectors
+  std::vector<float> x;
+  std::vector<float> y;
+
+  // These are the input vectors
+  std::vector<float> angles;
+  std::vector<float> axes;
+
+
+  // Allocate a new vector to hold the mdf data
+  std::vector<float> mdf(15552);
+  // Calculate the MDF Data using the ODF data and the rows from the MDF Table model
+  Texture::calculateMDFData<std::vector<float>, HexagonalOps>(angles, axes, weights, odf, mdf);
+
+  size = 1000;
+  // Now generate the actual XY point data that gets plotted.
+  err = sg.GenHexMDFPlotData(mdf, x, y, size);
+
+  MXA_REQUIRE(err >= 0)
+}
+
+
+
 /**
  * @brief This code is just here to make sure each of the methods in the StatsGen
  *  class gets compiled due to some compilers NOT compiling the templates unless
@@ -43,6 +86,12 @@
  */
 int main(int argc, char **argv)
 {
+  int err = EXIT_SUCCESS;
+  MXA_REGISTER_TEST(GenHexMDFPlotData());
+
+  PRINT_TEST_SUMMARY();
+  return err;
+#if 0
   StatsGen sg;
 
   int err = 0;
@@ -100,4 +149,5 @@ int main(int argc, char **argv)
   err = sg.GenHexMDFPlotData(mdf, x, y, npoints);
 
   return EXIT_SUCCESS;
+#endif
 }
