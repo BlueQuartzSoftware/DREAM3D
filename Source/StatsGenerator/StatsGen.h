@@ -890,13 +890,13 @@ class StatsGen
         {
           density = mdf[j];
           totaldensity = totaldensity + density;
-          if (random < totaldensity && random >= (totaldensity - density)) choose = static_cast<int> (j);
+          if (random < totaldensity && random >= (totaldensity - density)) choose = static_cast<int>(j);
         }
-		ops.determineHomochoricValues(choose, r1, r2, r3);
-		OrientationMath::HomochorictoRod(r1, r2, r3);
-		ops.getFZRod(r1, r2, r3);
-		OrientationMath::RodtoAxisAngle(r1, r2, r3, w, n1, n2, n3);
-		w = w*radtodeg;
+        ops.determineHomochoricValues(choose, r1, r2, r3);
+        OrientationMath::HomochorictoRod(r1, r2, r3);
+        ops.getFZRod(r1, r2, r3);
+        OrientationMath::RodtoAxisAngle(r1, r2, r3, w, n1, n2, n3);
+        w = w * radtodeg;
         yval[int(w / 5.0)]++;
       }
       for (int i = 0; i < 13; i++)
@@ -919,7 +919,7 @@ class StatsGen
     int GenHexMDFPlotData(T mdf, T &xval, T &yval, int npoints)
     {
       static const size_t mdfsize = 15552;
-	  float radtodeg = 180.0/M_PI;
+      float radtodeg = 180.0 / M_PI;
       AIMRandomNG rg;
       /* Get a seed value based off the system clock. The issue is that this will
        * be a 64 bit unsigned integer where the high 32 bits will basically not
@@ -931,7 +931,7 @@ class StatsGen
        * second 32 bits.
        */
       unsigned long long int seed = MXA::getMilliSeconds();
-      unsigned int* seedPtr = reinterpret_cast<unsigned int*> (&seed);
+      unsigned int* seedPtr = reinterpret_cast<unsigned int*>(&seed);
 #if CMP_WORDS_BIGENDIAN
       rg.RandomInit(seedPtr[1]);
 #else
@@ -941,11 +941,11 @@ class StatsGen
       int choose = 0;
       float density;
       float totaldensity;
-  //    float angle;
+      //    float angle;
       float random;
-	  float w;
-	  float n1, n2, n3;
-	  float r1, r2, r3;
+      float w;
+      float n1, n2, n3;
+      float r1, r2, r3;
       HexagonalOps ops;
       xval.resize(20);
       yval.resize(20);
@@ -971,7 +971,8 @@ class StatsGen
         ops.getFZRod(r1, r2, r3);
         OrientationMath::RodtoAxisAngle(r1, r2, r3, w, n1, n2, n3);
         w = w * radtodeg;
-        yval[int(w / 5.0)]++;
+        size_t index = static_cast<size_t>(w / 5.0f);
+        yval[index]++;
       }
       for (int i = 0; i < 20; i++)
       {

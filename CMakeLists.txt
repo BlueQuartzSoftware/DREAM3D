@@ -248,8 +248,10 @@ if (AIM_BUILD_TOOL_VOLUME_MESHING)
     add_subdirectory(${DREAM3D_SOURCE_DIR}/Source/AIM/VolumeMesh ${DREAM3D_BINARY_DIR}/AIM/VolumeMesh)
 endif()
 
+# ------- Enable the CTest testing. Use make test to run all tests ---------------
 OPTION(AIM_BUILD_TESTING "Compile the test programs" ON)
 if (AIM_BUILD_TESTING)
+    ENABLE_TESTING()
     add_subdirectory(${DREAM3D_SOURCE_DIR}/Source/Test ${DREAM3D_BINARY_DIR}/AIM/Test)
 endif()
 

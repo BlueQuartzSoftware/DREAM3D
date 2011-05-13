@@ -152,9 +152,9 @@ void StatsGenMDFWidget::updateMDFPlot(QwtArray<float> odf)
     err = sg.GenHexMDFPlotData(mdf, x, y, size);
   }
 
-  QwtArray<double> xD(size);
-  QwtArray<double> yD(size);
-  for (int i = 0; i < size; ++i)
+  QwtArray<double> xD(x.size());
+  QwtArray<double> yD(x.size());
+  for (int i = 0; i < x.size(); ++i)
   {
     xD[i] = static_cast<double>(x[i]);
     yD[i] = static_cast<double>(y[i]);
