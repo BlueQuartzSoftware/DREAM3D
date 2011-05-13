@@ -665,7 +665,8 @@ int H5ReconStatsWriter::writeAxisOrientationData(int phase, float* axisodf, floa
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5ReconStatsWriter::writeODFData(int phase, AIM::Reconstruction::CrystalStructure crystruct,
+int H5ReconStatsWriter::writeODFData(int phase,
+                                     unsigned long long* dims,
                                      float* eulerodf)
 {
   herr_t err = 0;
@@ -674,17 +675,18 @@ int H5ReconStatsWriter::writeODFData(int phase, AIM::Reconstruction::CrystalStru
   CREATE_RECONSTRUCTION_GROUP(AIM::HDF5::Reconstruction)
 
   hid_t pid = H5Utilities::createGroup(gid, StringUtils::numToString(phase));
-  size_t numbins = 0;
-  if (crystruct == AIM::Reconstruction::Hexagonal) numbins = 36 * 36 * 12;
-  if (crystruct == AIM::Reconstruction::Cubic) numbins = 18 * 18 * 18;
-  std::vector<float> data(numbins, 0.0);
-  for (size_t i = 0; i < numbins; i++)
-  {
-    data[i] = eulerodf[i];
-  }
-  std::vector<hsize_t> dims(1);
-  dims[0] = numbins;
-  err = H5Lite::writeVectorDataset(pid, AIM::HDF5::ODF, dims, data);
+//  size_t numbins = 0;
+//  if (crystruct == AIM::Reconstruction::Hexagonal) numbins = 36 * 36 * 12;
+//  if (crystruct == AIM::Reconstruction::Cubic) numbins = 18 * 18 * 18;
+//  std::vector<float> data(numbins, 0.0);
+//  for (size_t i = 0; i < numbins; i++)
+//  {
+//    data[i] = eulerodf[i];
+//  }
+//  std::vector<hsize_t> dims(1);
+//  dims[0] = numbins;
+  int32_t rank = 1;
+  err = H5Lite::writePointerDataset<float>(pid, AIM::HDF5::ODF, rank, dims, eulerodf);
   if (err < 0)
   {
    retErr = err;
