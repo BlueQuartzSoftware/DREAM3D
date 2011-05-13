@@ -122,25 +122,25 @@ CubicOps::~CubicOps()
 float CubicOps::getMisoQuat( float q1[5],float q2[5],float &n1,float &n2,float &n3)
 {
 
-  int numsym = 0;
-  float quatsym[24][5];
+  int numsym = 24;
+  //float quatsym[24][5];
 
-  numsym = 24;
-  for (int i = 0; i < 24; i++)
-  {
-    for (int j = 0; j < 5; j++)
-    {
-      quatsym[i][j] = CubicQuatSym[i][j];
-    }
-  }
 
-  return _calcMisoQuat(quatsym, numsym, q1, q2, n1, n2, n3);
+//  for (int i = 0; i < 24; i++)
+//  {
+//    for (int j = 0; j < 5; j++)
+//    {
+//      quatsym[i][j] = CubicQuatSym[i][j];
+//    }
+//  }
+  return _calcMisoQuat(CubicQuatSym, numsym, q1, q2, n1, n2, n3);
+ // return _calcMisoQuat(quatsym, numsym, q1, q2, n1, n2, n3);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-float CubicOps::_calcMisoQuat(float quatsym[24][5], int numsym,
+float CubicOps::_calcMisoQuat(const float quatsym[24][5], int numsym,
                                       float q1[5], float q2[5],
                                       float &n1, float &n2, float &n3)
 {

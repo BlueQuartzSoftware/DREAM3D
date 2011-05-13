@@ -97,7 +97,7 @@ OrientationMath::~OrientationMath()
 {
 }
 
-float OrientationMath::_calcMisoQuat(float quatsym[24][5], int numsym,
+float OrientationMath::_calcMisoQuat(const float quatsym[24][5], int numsym,
                                       float q1[5], float q2[5],
                                       float &n1, float &n2, float &n3)
 {
@@ -183,7 +183,7 @@ float OrientationMath::_calcMisoQuat(float quatsym[24][5], int numsym,
 }
 
 
-void OrientationMath::_calcFZRod(float rodsym[24][3], int numsym, float &r1,float &r2, float &r3)
+void OrientationMath::_calcFZRod(const float rodsym[24][3], int numsym, float &r1,float &r2, float &r3)
 {
   float denom, dist;
 //  int index;
@@ -210,7 +210,7 @@ void OrientationMath::_calcFZRod(float rodsym[24][3], int numsym, float &r1,floa
   r3 = r3min;
 }
 
-void OrientationMath::_calcNearestQuat(float quatsym[24][5], int numsym, float *q1, float *q2)
+void OrientationMath::_calcNearestQuat(const float quatsym[24][5], int numsym, float *q1, float *q2)
 {
   float dist = 0;
   float smallestdist = 1000000.0f;
@@ -224,7 +224,8 @@ void OrientationMath::_calcNearestQuat(float quatsym[24][5], int numsym, float *
   }
   for(int i=0;i<numsym;i++)
   {
-	OrientationMath::multiplyQuaternions(q2, quatsym[i], qc);
+//	OrientationMath::multiplyQuaternions(q2, quatsym[i], qc);
+  MULT_QUAT(q2, quatsym[i], qc);
     dist = 2.0*(1-(qc[4]*q1[4]+qc[1]*q1[1]+qc[2]*q1[2]+qc[3]*q1[3]));
     if(dist < smallestdist)
     {
@@ -251,7 +252,7 @@ void OrientationMath::_calcNearestQuat(float quatsym[24][5], int numsym, float *
   }
 }
 
-void OrientationMath::_calcFZQuat(float quatsym[24][5], int numsym, float *qr)
+void OrientationMath::_calcFZQuat(const float quatsym[24][5], int numsym, float *qr)
 {
   float dist = 0;
   float smallestdist = 1000000.0f;
@@ -264,7 +265,8 @@ void OrientationMath::_calcFZQuat(float quatsym[24][5], int numsym, float *qr)
   }
   for(int i=0;i<numsym;i++)
   {
-	OrientationMath::multiplyQuaternions(qr, quatsym[i], qc);
+    //OrientationMath::multiplyQuaternions(qr, quatsym[i], qc);
+	  MULT_QUAT(qr, quatsym[i], qc);
     dist = qc[1]*qc[1]+qc[2]*qc[2]+qc[3]*qc[3];
     if(dist < smallestdist)
     {

@@ -68,67 +68,66 @@ OrthoRhombicOps::~OrthoRhombicOps()
 
 float OrthoRhombicOps::getMisoQuat( float q1[5],float q2[5],float &n1,float &n2,float &n3)
 {
-  int numsym = 0;
-  float quatsym[24][5];
+  int numsym = 4;
+//  float quatsym[24][5];
 
-  numsym = 4;
-  for(int i=0;i<4;i++)
-  {
-  for(int j=0;j<5;j++)
-  {
-    quatsym[i][j] = OrthoQuatSym[i][j];
-  }
-  }
 
-  return _calcMisoQuat(quatsym, numsym, q1, q2, n1, n2, n3);
+//  for(int i=0;i<4;i++)
+//  {
+//  for(int j=0;j<5;j++)
+//  {
+//    quatsym[i][j] = OrthoQuatSym[i][j];
+//  }
+//  }
+
+  return _calcMisoQuat(OrthoQuatSym, numsym, q1, q2, n1, n2, n3);
 }
 
 
 void OrthoRhombicOps::getFZRod(float &r1,float &r2, float &r3)
 {
-  float rodsym[24][3];
-  int numsym;
-  numsym = 4;
-  for(int i=0;i<4;i++)
-  {
-    for(int j=0;j<3;j++)
-    {
-      rodsym[i][j] = OrthoRodSym[i][j];
-    }
-  }
-  _calcFZRod(rodsym, numsym, r1, r2, r3);
+  //float rodsym[24][3];
+  int  numsym = 4;
+//  for(int i=0;i<4;i++)
+//  {
+//    for(int j=0;j<3;j++)
+//    {
+//      rodsym[i][j] = OrthoRodSym[i][j];
+//    }
+//  }
+  _calcFZRod(OrthoRodSym, numsym, r1, r2, r3);
 }
 
 void OrthoRhombicOps::getNearestQuat( float *q1, float *q2)
 {
-  int numsym = 0;
-  float quatsym[24][5];
+  int numsym = 4;
+//  float quatsym[24][5];
+//
+//
+//  for (int i = 0; i < 4; i++)
+//  {
+//    for (int j = 0; j < 5; j++)
+//    {
+//      quatsym[i][j] = OrthoQuatSym[i][j];
+//    }
+//  }
 
-  numsym = 4;
-  for (int i = 0; i < 4; i++)
-  {
-    for (int j = 0; j < 5; j++)
-    {
-      quatsym[i][j] = OrthoQuatSym[i][j];
-    }
-  }
-
-  _calcNearestQuat(quatsym, numsym, q1, q2);
+  _calcNearestQuat(OrthoQuatSym, numsym, q1, q2);
 }
 
 void OrthoRhombicOps::getFZQuat(float *qr)
 {
-  int numsym = 0;
-  float quatsym[24][5];
-  numsym = 4;
-  for(int i=0;i<4;i++)
-  {
-    for(int j=0;j<5;j++)
-    {
-      quatsym[i][j] = OrthoQuatSym[i][j];
-    }
-  }
-    _calcFZQuat(quatsym, numsym, qr);
+  int numsym = 4;
+//  float quatsym[24][5];
+
+//  for(int i=0;i<4;i++)
+//  {
+//    for(int j=0;j<5;j++)
+//    {
+//      quatsym[i][j] = OrthoQuatSym[i][j];
+//    }
+//  }
+    _calcFZQuat(OrthoQuatSym, numsym, qr);
 
 }
 
