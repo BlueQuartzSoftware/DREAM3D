@@ -339,7 +339,7 @@ void StatsGenODFWidget::on_m_CalculateODFBtn_clicked()
     x011d[i] = x011[i];
     y011d[i] = y011[i];
     x111d[i] = x111[i];
-    x111d[i] = x111[i];
+    y111d[i] = y111[i];
   }
 
   QwtPlotCurve* curve = m_PlotCurves[0];
