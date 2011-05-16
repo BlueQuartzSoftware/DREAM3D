@@ -254,6 +254,7 @@ void Reconstruction::compute()
     {
       progressMessage(AIM_STRING("Loading Existing Data"), 31);
       int numgrains = m->load_data(reconVisFile);
+      numgrains = numgrains; // Quiet the compiler down
       CHECK_FOR_CANCELED(ReconstructionFunc, load_data)
     }
     else
