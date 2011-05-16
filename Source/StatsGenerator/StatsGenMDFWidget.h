@@ -67,9 +67,7 @@ class StatsGenMDFWidget : public QWidget, private Ui::StatsGenMDFWidget
     MXA_INSTANCE_PROPERTY(SGODFTableModel*, ODFTableModel);
 
     int writeDataToHDF5(H5ReconStatsWriter::Pointer writer);
-    int readDataFromHDF5(H5ReconStatsReader::Pointer reader,
-                        QVector<float>  &bins,
-                        const std::string &hdf5GroupName);
+    int readDataFromHDF5(H5ReconStatsReader::Pointer reader,int phase);
 
   QwtArray<float> generateODFData();
 

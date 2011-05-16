@@ -163,6 +163,8 @@ class SGMDFTableModel : public QAbstractTableModel
 
      virtual void setInitialValues();
 
+     void setTableData(QVector<float> angles, QVector<float> axis, QVector<float> weights);
+
   private:
      int m_ColumnCount;
      int m_RowCount;
