@@ -112,6 +112,7 @@ AIM::Reconstruction::PhaseType EditPhaseDialog::getPhaseType()
 void EditPhaseDialog::setupGui()
 {
   QDoubleValidator* phaseFractionValidator = new QDoubleValidator(phaseFraction);
+  phaseFractionValidator = phaseFractionValidator;
 }
 
 // -----------------------------------------------------------------------------

@@ -2895,6 +2895,7 @@ void ReconstructionFunc::find_vectors(H5ReconStatsWriter::Pointer h5io)
 {
   float **axisodf;
   axisodf = new float *[crystruct.size()];
+  axisodf[0] = NULL;
   for(size_t i=1;i<crystruct.size();i++)
   {
 	  totalaxes[i] = 0.0;
@@ -3125,6 +3126,10 @@ void ReconstructionFunc::find_vectors(H5ReconStatsWriter::Pointer h5io)
   }
   delete[] axisodf;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void ReconstructionFunc::find_moments2D()
 {
   //  int count = 0;
@@ -3248,6 +3253,7 @@ void ReconstructionFunc::find_vectors2D(H5ReconStatsWriter::Pointer h5io)
     }
   }
   int err;
+
   for(size_t i=1;i<crystruct.size();i++)
   {
 	  err = h5io->writeAxisOrientationData(i, axisodf[i], totalaxes[i]);
@@ -3322,26 +3328,26 @@ void ReconstructionFunc::measure_misorientations(H5ReconStatsWriter::Pointer h5i
   size_t numgrains = m_Grains.size();
   AIM::Reconstruction::CrystalStructure phase1, phase2;
   float **misobin;
+  int numbins = 0;
 
   misobin = new float *[crystruct.size()];
   for(size_t i=1;i<crystruct.size();i++)
   {
-	  if (crystruct[i] == AIM::Reconstruction::Hexagonal)
-	  {
-	    misobin[i] = new float[36 * 36 * 12];
-	    for (int j = 0; j < 36 * 36 * 12; j++)
-	    {
-	      misobin[i][j] = 0.0;
-	    }
-	  }
-	  if (crystruct[i] == AIM::Reconstruction::Cubic)
-	  {
-		misobin[i] = new float[18 * 18 * 18];
-		for (int j = 0; j < 18 * 18 * 18; j++)
-		{
-		  misobin[i][j] = 0.0;
-		}
-	  }
+    if (crystruct[i] == AIM::Reconstruction::Hexagonal)
+    {
+      numbins = 36 * 36 * 12;
+      misobin[i] = new float[numbins];
+    }
+    else if (crystruct[i] == AIM::Reconstruction::Cubic)
+    {
+      numbins = 18 * 18 * 18;
+      misobin[i] = new float[numbins];
+    }
+    // Now initialize all bins to 0.0
+    for (int j = 0; j < numbins; j++)
+    {
+      misobin[i][j] = 0.0;
+    }
   }
   float microbin[10];
   for(size_t e = 0; e < 10; ++e)
@@ -3403,9 +3409,10 @@ void ReconstructionFunc::measure_misorientations(H5ReconStatsWriter::Pointer h5i
       microbin[micbin]++;
     }
   }
+  unsigned long long int dims = static_cast<unsigned long long int>(numbins);
   for(size_t i=1;i<crystruct.size();i++)
   {
-	  h5io->writeMisorientationBinsData(i, crystruct[i], misobin[i]);
+	  h5io->writeMisorientationBinsData(i, &dims, misobin[i]);
 	  h5io->writeMicroTextureData(i, microbin, 10, numgrains);
 	  delete[] misobin[i];
   }
