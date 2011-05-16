@@ -80,11 +80,41 @@ StatsGenODFWidget::~StatsGenODFWidget()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int StatsGenODFWidget::readDataFromHDF5(H5ReconStatsReader::Pointer reader,
-                                         QVector<float>  &bins,
-                                         const std::string &hdf5GroupName)
+int StatsGenODFWidget::readDataFromHDF5(H5ReconStatsReader::Pointer reader, int phase)
 {
   int err = -1;
+  std::string index = StringUtils::numToString(phase);
+  std::string path = "/" + AIM::HDF5::Reconstruction + "/" + index  + "/" + AIM::HDF5::ODFWeights;
+
+  //FIXME: Do we load the ODF data array at all or generate a new one?
+
+
+  // Load the ODF Weights and Spreads Table data
+  HDF_ERROR_HANDLER_OFF;
+  std::vector<float> e1;
+  err = reader->readVectorDataset(path, AIM::HDF5::Euler1, e1);
+  if (e1.size() > 0)
+  {
+    std::vector<float> e2;
+    err = reader->readVectorDataset(path, AIM::HDF5::Euler2, e2);
+    std::vector<float> e3;
+    err = reader->readVectorDataset(path, AIM::HDF5::Euler3, e3);
+    std::vector<float> weights;
+    err = reader->readVectorDataset(path, AIM::HDF5::Weight, weights);
+    std::vector<float> sigmas;
+    err = reader->readVectorDataset(path, AIM::HDF5::Sigma, sigmas);
+
+    // Load the data into the table model
+    m_ODFTableModel->setTableData(QVector<float>::fromStdVector(e1),
+                                  QVector<float>::fromStdVector(e2),
+                                  QVector<float>::fromStdVector(e3),
+                                  QVector<float>::fromStdVector(weights),
+                                  QVector<float>::fromStdVector(sigmas));
+  }
+
+  HDF_ERROR_HANDLER_ON
+
+  updatePlots();
 
   return err;
 }
@@ -133,7 +163,7 @@ int StatsGenODFWidget::writeDataToHDF5(H5ReconStatsWriter::Pointer writer)
     err = -1;
     if (odfPtr != NULL)
     {
-      unsigned long long int dims = odf.size();
+      uint64_t dims = odf.size();
       err = writer->writeODFData(m_PhaseIndex, &dims, odfPtr);
       if (err < 0)
       {
@@ -323,11 +353,12 @@ void StatsGenODFWidget::on_m_CalculateODFBtn_clicked()
   weights = m_ODFTableModel->getData(SGODFTableModel::Weight);
   sigmas = m_ODFTableModel->getData(SGODFTableModel::Sigma);
 
+  // Convert from Degrees to Radians
   for(int i=0;i<e1s.size();i++)
   {
-	e1s[i] = e1s[i]*M_PI/180.0;
-	e2s[i] = e2s[i]*M_PI/180.0;
-	e3s[i] = e3s[i]*M_PI/180.0;
+    e1s[i] = e1s[i]*M_PI/180.0;
+    e2s[i] = e2s[i]*M_PI/180.0;
+    e3s[i] = e3s[i]*M_PI/180.0;
   }
 
   StatsGen sg;
