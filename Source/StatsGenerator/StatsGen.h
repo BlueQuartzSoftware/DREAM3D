@@ -242,21 +242,21 @@ class StatsGen
       y011.resize(npoints * 6);
       x111.resize(npoints * 4);
       y111.resize(npoints * 4);
-      float* odfPtr = NULL;
+
       CubicOps ops;
+      float td1;
+      float* odfPtr = &(odf.front());
       for (int i = 0; i < npoints; i++)
       {
         random = rg.Random();
         choose = 0;
         totaldensity = 0;
-        odfPtr = &(odf.front());
         for (int j = 0; j < odfsize; j++)
         {
-          density = *odfPtr;
-          ++odfPtr;
-          float d = totaldensity;
+          density = odfPtr[j];
+          td1 = totaldensity;
           totaldensity = totaldensity + density;
-          if (random >= d && random < totaldensity) choose = static_cast<int> (j);
+          if (random < totaldensity && random >= td1) { choose = static_cast<int> (j); break; }
         }
         ops.determineEulerAngles(choose, ea1, ea2, ea3);
         OrientationMath::eulertoQuat(q1, ea1, ea2, ea3);
@@ -437,17 +437,19 @@ class StatsGen
       x1010.resize(npoints * 3);
       y1010.resize(npoints * 3);
 
+      float td1;
+      float* odfPtr = &(odf.front());
       for (int i = 0; i < npoints; i++)
       {
         random = rg.Random();
         choose = 0;
-
         totaldensity = 0;
         for (size_t j = 0; j < odfsize; j++)
         {
-          density = odf[j];
+          density = odfPtr[j];
+          td1 = totaldensity;
           totaldensity = totaldensity + density;
-          if (random < totaldensity && random >= (totaldensity - density)) choose = static_cast<int> (j);
+          if (random < totaldensity && random >= td1) { choose = static_cast<int> (j); break; }
         }
         ops.determineEulerAngles(choose, ea1, ea2, ea3);
         OrientationMath::eulertoQuat(q1, ea1, ea2, ea3);
@@ -467,7 +469,6 @@ class StatsGen
         if (z < 0) x = -x, y = -y, z = -z;
         xpf = y - (y * (z / (z + 1)));
         ypf = x - (x * (z / (z + 1)));
-        random = rg.Random();
         x0001[1 * i] = xpf;
         y0001[1 * i] = ypf;
         x = g[0][0];
@@ -539,7 +540,7 @@ class StatsGen
      * @param size The number of points for the Scatter Plot
      */
     template<typename T>
-    int GenOrthoRhombicODFPlotData(T odf, T &x001, T &y001, T &x011, T &y011, T &x111, T &y111, int size)
+    int GenOrthoRhombicODFPlotData(T odf, T &x001, T &y001, T &x011, T &y011, T &x111, T &y111, int npoints)
     {
       static const size_t odfsize = 46656;
 
@@ -577,24 +578,26 @@ class StatsGen
       float totaldensity;
       float random, density;
       OrthoRhombicOps ops;
-      x001.resize(size * 3);
-      y001.resize(size * 3);
-      x011.resize(size * 6);
-      y011.resize(size * 6);
-      x111.resize(size * 4);
-      y111.resize(size * 4);
+      x001.resize(npoints * 3);
+      y001.resize(npoints * 3);
+      x011.resize(npoints * 6);
+      y011.resize(npoints * 6);
+      x111.resize(npoints * 4);
+      y111.resize(npoints * 4);
 
-      for (int i = 0; i < size; i++)
+      float td1;
+      float* odfPtr = &(odf.front());
+      for (int i = 0; i < npoints; i++)
       {
         random = rg.Random();
         choose = 0;
-
         totaldensity = 0;
         for (size_t j = 0; j < odfsize; j++)
         {
-          density = odf[j];
+          density = odfPtr[j];
+          td1 = totaldensity;
           totaldensity = totaldensity + density;
-          if (random < totaldensity && random >= (totaldensity - density)) choose = static_cast<int> (j);
+          if (random < totaldensity && random >= td1) { choose = static_cast<int> (j); break; }
         }
         ops.determineEulerAngles( choose, ea1, ea2, ea3);
         OrientationMath::eulertoQuat(q1, ea1, ea2, ea3);
@@ -614,7 +617,6 @@ class StatsGen
         if (z < 0) x = -x, y = -y, z = -z;
         xpf = y - (y * (z / (z + 1)));
         ypf = x - (x * (z / (z + 1)));
-        random = rg.Random();
         x001[3 * i] = xpf;
         y001[3 * i] = ypf;
         x = g[0][1];
@@ -775,38 +777,42 @@ class StatsGen
       yB.resize(npoints * 1);
       xC.resize(npoints * 1);
       yC.resize(npoints * 1);
-
+      float td1;
+      float* odfPtr = &(odf.front());
       for (int i = 0; i < npoints; i++)
       {
         random = rg.Random();
         choose = 0;
-
         totaldensity = 0;
         for (size_t j = 0; j < odfsize; j++)
         {
-          density = odf[j];
+          density = odfPtr[j];
+          td1 = totaldensity;
           totaldensity = totaldensity + density;
-          if (random < totaldensity && random >= (totaldensity - density)) choose = static_cast<int> (j);
+          if (random < totaldensity && random >= td1) { choose = static_cast<int> (j); break; }
         }
         ops.determineEulerAngles(choose, ea1, ea2, ea3);
         OrientationMath::eulertoQuat(q1, ea1, ea2, ea3);
         ops.getFZQuat(q1);
         g[0][0] = (1 - 2 * q1[2] * q1[2] - 2 * q1[3] * q1[3]);
-        g[0][1] = (2 * q1[1] * q1[2] - 2 * q1[3] * q1[4]);
-        g[0][2] = (2 * q1[1] * q1[3] + 2 * q1[2] * q1[4]);
         g[1][0] = (2 * q1[1] * q1[2] + 2 * q1[3] * q1[4]);
-        g[1][1] = (1 - 2 * q1[1] * q1[1] - 2 * q1[3] * q1[3]);
-        g[1][2] = (2 * q1[2] * q1[3] - 2 * q1[1] * q1[4]);
         g[2][0] = (2 * q1[1] * q1[3] - 2 * q1[2] * q1[4]);
+
+        g[0][1] = (2 * q1[1] * q1[2] - 2 * q1[3] * q1[4]);
+        g[1][1] = (1 - 2 * q1[1] * q1[1] - 2 * q1[3] * q1[3]);
         g[2][1] = (2 * q1[2] * q1[3] + 2 * q1[1] * q1[4]);
+
+        g[0][2] = (2 * q1[1] * q1[3] + 2 * q1[2] * q1[4]);
+        g[1][2] = (2 * q1[2] * q1[3] - 2 * q1[1] * q1[4]);
         g[2][2] = (1 - 2 * q1[1] * q1[1] - 2 * q1[2] * q1[2]);
+
         x = g[0][0];
         y = g[1][0];
         z = g[2][0];
         if (z < 0) x = -x, y = -y, z = -z;
         xpf = y - (y * (z / (z + 1)));
         ypf = x - (x * (z / (z + 1)));
-        random = rg.Random();
+      //  random = rg.Random();
         xA[1 * i] = xpf;
         yA[1 * i] = ypf;
         x = g[0][1];
@@ -847,7 +853,7 @@ class StatsGen
     int GenCubicMDFPlotData(T mdf, T &xval, T &yval, int npoints)
     {
       static const size_t mdfsize = 5832;
-	  float radtodeg = 180.0/M_PI;
+      float radtodeg = 180.0 / M_PI;
       AIMRandomNG rg;
       /* Get a seed value based off the system clock. The issue is that this will
        * be a 64 bit unsigned integer where the high 32 bits will basically not
@@ -869,11 +875,11 @@ class StatsGen
       float density;
       float totaldensity;
       int choose = 0;
-  //    float angle;
+      //    float angle;
       float random;
-	  float w;
-	  float n1, n2, n3;
-	  float r1, r2, r3;
+      float w;
+      float n1, n2, n3;
+      float r1, r2, r3;
       CubicOps ops;
       xval.resize(13);
       yval.resize(13);
@@ -882,15 +888,23 @@ class StatsGen
         yval[i] = 0;
       }
 
+      float td1;
+      float* mdfPtr = &(mdf.front());
       for (int i = 0; i < npoints; i++)
       {
         random = rg.Random();
+        choose = 0;
         totaldensity = 0;
         for (size_t j = 0; j < mdfsize; j++)
         {
-          density = mdf[j];
+          density = mdfPtr[j];
+          td1 = totaldensity;
           totaldensity = totaldensity + density;
-          if (random < totaldensity && random >= (totaldensity - density)) choose = static_cast<int>(j);
+          if (random < totaldensity && random >= td1)
+          {
+            choose = static_cast<int> (j);
+            break;
+          }
         }
         ops.determineHomochoricValues(choose, r1, r2, r3);
         OrientationMath::HomochorictoRod(r1, r2, r3);
@@ -954,17 +968,19 @@ class StatsGen
         yval[i] = 0;
       }
 
+      float td1;
+      float* mdfPtr = &(mdf.front());
       for (int i = 0; i < npoints; i++)
       {
         random = rg.Random();
         choose = 0;
-
         totaldensity = 0;
         for (size_t j = 0; j < mdfsize; j++)
         {
-          density = mdf[j];
+          density = mdfPtr[j];
+          td1 = totaldensity;
           totaldensity = totaldensity + density;
-          if (random < totaldensity && random >= (totaldensity - density)) choose = static_cast<int>(j);
+          if (random < totaldensity && random >= td1) { choose = static_cast<int> (j); break; }
         }
         ops.determineHomochoricValues(choose, r1, r2, r3);
         OrientationMath::HomochorictoRod(r1, r2, r3);
