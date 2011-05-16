@@ -593,7 +593,8 @@ int H5ReconStatsWriter::writeMisorientationBinsData(int phase, unsigned long lon
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5ReconStatsWriter::writeMDFWeights(int phase, uint64_t* dims, float* angles, float* axes, float* weights)
+int H5ReconStatsWriter::writeMDFWeights(int phase, uint64_t* dims,
+                                        float* angles, float* axes, float* weights)
 {
   herr_t err = 0;
   herr_t retErr = 0;
@@ -615,15 +616,21 @@ int H5ReconStatsWriter::writeMDFWeights(int phase, uint64_t* dims, float* angles
     H5RSW_ERROR_CHECK(AIM::HDF5::Angle);
     retErr = err;
   }
-  err = H5Lite::writePointerDataset<float>(wid, AIM::HDF5::Axis, rank, dims, axes);
-  if (err < 0)
-  {
-    H5RSW_ERROR_CHECK(AIM::HDF5::Axis); retErr = err;
-  }
   err = H5Lite::writePointerDataset<float>(wid, AIM::HDF5::Weight, rank, dims, weights);
   if (err < 0)
   {
-    H5RSW_ERROR_CHECK(AIM::HDF5::Weight); retErr = err;
+    H5RSW_ERROR_CHECK(AIM::HDF5::Weight);
+    retErr = err;
+  }
+  rank = 2;
+  hsize_t adim[2];
+  adim[0] = *dims;
+  adim[1] = 3;
+  err = H5Lite::writePointerDataset<float>(wid, AIM::HDF5::Axis, rank, adim, axes);
+  if (err < 0)
+  {
+    H5RSW_ERROR_CHECK(AIM::HDF5::Axis);
+    retErr = err;
   }
 
   err = H5Gclose(wid);
@@ -710,7 +717,65 @@ int H5ReconStatsWriter::writeAxisOrientationData(int phase, float* axisodf, floa
   {
     retErr = err;
   }
-  return retErr;}
+  return retErr;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int H5ReconStatsWriter::writeAxisODFWeights(int phase, unsigned long long int *dims,
+                        float* e1, float* e2, float* e3, float* weights, float* sigmas)
+{
+  herr_t err = 0;
+  herr_t retErr = 0;
+  OPEN_HDF5_FILE(m_FileName)
+  CREATE_RECONSTRUCTION_GROUP(AIM::HDF5::Reconstruction)
+
+  hid_t pid = H5Utilities::createGroup(gid, StringUtils::numToString(phase));
+  int32_t rank = 1;
+
+  hid_t wid = H5Utilities::createGroup(pid, AIM::HDF5::AxisODFWeights);
+
+
+  err = H5Lite::writePointerDataset<float>(wid, AIM::HDF5::Euler1, rank, dims, e1);
+  if (err < 0)
+  {
+    H5RSW_ERROR_CHECK(AIM::HDF5::Euler1); retErr = err;
+  }
+  err = H5Lite::writePointerDataset<float>(wid, AIM::HDF5::Euler2, rank, dims, e2);
+  if (err < 0)
+  {
+    H5RSW_ERROR_CHECK(AIM::HDF5::Euler2); retErr = err;
+  }
+  err = H5Lite::writePointerDataset<float>(wid, AIM::HDF5::Euler3, rank, dims, e3);
+  if (err < 0)
+  {
+    H5RSW_ERROR_CHECK(AIM::HDF5::Euler3); retErr = err;
+  }
+  err = H5Lite::writePointerDataset<float>(wid, AIM::HDF5::Weight, rank, dims, weights);
+  if (err < 0)
+  {
+    H5RSW_ERROR_CHECK(AIM::HDF5::Weight); retErr = err;
+  }
+  err = H5Lite::writePointerDataset<float>(wid, AIM::HDF5::Sigma, rank, dims, sigmas);
+  if (err < 0)
+  {
+    H5RSW_ERROR_CHECK(AIM::HDF5::Sigma); retErr = err;
+  }
+  /* Clean up the rest of the HDF5 structures and close the file */
+  err = H5Gclose(wid);
+  if (err < 0) { retErr = err; }
+  err = H5Gclose(pid);
+  if (err < 0) { retErr = err; }
+  err = H5Gclose(gid);
+  if (err < 0) { retErr = err; }
+  err = H5Utilities::closeFile(fileId);
+  if (err < 0) { retErr = err; }
+  return retErr;
+
+}
+
+
 
 // -----------------------------------------------------------------------------
 //

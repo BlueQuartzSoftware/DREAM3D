@@ -72,7 +72,7 @@ class SGAxisODFWidget : public QWidget, private Ui::SGAxisODFWidget
     void setPhaseIndex(int value);
     int getPhaseIndex();
 
-    void setCrystalStructure(AIM::Reconstruction::CrystalStructure value);
+ //   void setCrystalStructure(AIM::Reconstruction::CrystalStructure value);
     AIM::Reconstruction::CrystalStructure getCrystalStructure();
 
     int writeDataToHDF5(H5ReconStatsWriter::Pointer writer);

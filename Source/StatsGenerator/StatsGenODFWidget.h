@@ -76,9 +76,7 @@ class StatsGenODFWidget : public QWidget, private Ui::SGAxisODFWidget
     AIM::Reconstruction::CrystalStructure getCrystalStructure();
 
     int writeDataToHDF5(H5ReconStatsWriter::Pointer writer);
-    int readDataFromHDF5(H5ReconStatsReader::Pointer reader,
-                        QVector<float>  &bins,
-                        const std::string &hdf5GroupName);
+    int readDataFromHDF5(H5ReconStatsReader::Pointer reader, int phase);
 
     void setPlotTabTitles(QString t1, QString t2, QString t3);
 

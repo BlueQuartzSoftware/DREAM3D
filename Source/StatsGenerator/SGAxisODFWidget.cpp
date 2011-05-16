@@ -136,7 +136,7 @@ int SGAxisODFWidget::writeDataToHDF5(H5ReconStatsWriter::Pointer writer)
       dims = e1s.size();
       if (dims > 0)
       {
-        err = writer->writeODFWeights(m_PhaseIndex, &dims, &(e1s.front()),  &(e2s.front()),  &(e3s.front()),  &(weights.front()),  &(sigmas.front()));
+        err = writer->writeAxisODFWeights(m_PhaseIndex, &dims, &(e1s.front()),  &(e2s.front()),  &(e3s.front()),  &(weights.front()),  &(sigmas.front()));
         if (err < 0)
         {
           //FIXME: Display an error message
