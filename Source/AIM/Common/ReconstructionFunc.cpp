@@ -2899,7 +2899,7 @@ void ReconstructionFunc::find_vectors(H5ReconStatsWriter::Pointer h5io)
   for(size_t i=1;i<crystruct.size();i++)
   {
 	  totalaxes[i] = 0.0;
-	  axisodf[i] = new float[18 * 18 * 18];
+	  axisodf[i] = new float[36*36*36];
   }
   size_t numgrains = m_Grains.size();
   for (size_t i = 1; i < numgrains; i++)

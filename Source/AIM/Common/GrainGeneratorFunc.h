@@ -159,7 +159,7 @@ public:
                     std::vector<AIM::Reconstruction::PhaseType> m_PhaseType);
 
 #endif
-    void initializeArrays();
+	void initializeArrays(std::vector<AIM::Reconstruction::CrystalStructure> structures);
     void initialize2();
 
     void write_eulerangles(const std::string & filename);
