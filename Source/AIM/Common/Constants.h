@@ -98,6 +98,7 @@ namespace AIM
   {
     const std::string Reconstruction("Reconstruction");
     const std::string AxisOrientation("AxisOrientation");
+    const std::string AxisODFWeights("AxisODF-Weights");
     const std::string ODF("ODF");
     const std::string ODFWeights("ODF-Weights");
     const std::string Euler1("Euler 1");
