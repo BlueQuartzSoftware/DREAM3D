@@ -85,9 +85,9 @@ class AIMCOMMON_EXPORT Texture
   //  float degtorad = M_PI/180.0;
     float addweight = 0;
     odf.resize(odfsize);
-    size_t bin, addbin;
-    size_t bin1, bin2, bin3;
-    size_t addbin1, addbin2, addbin3;
+    int bin, addbin;
+    int bin1, bin2, bin3;
+    int addbin1, addbin2, addbin3;
     float dist, fraction;
     float r1, r2, r3;
 
@@ -109,18 +109,18 @@ class AIMCOMMON_EXPORT Texture
       bin1 = bin % 18;
       bin2 = (bin / 18) % 18;
       bin3 = bin / (18 * 18);
-      for (float j = -sigmas[i]; j <= sigmas[i]; j++)
+      for (int j = -sigmas[i]; j <= sigmas[i]; j++)
       {
-        float jsqrd = j*j;
-        for (float k = -sigmas[i]; k <= sigmas[i]; k++)
+        int jsqrd = j*j;
+        for (int k = -sigmas[i]; k <= sigmas[i]; k++)
         {
-          float ksqrd = k*k;
-          for (float l = -sigmas[i]; l <= sigmas[i]; l++)
+          int ksqrd = k*k;
+          for (int l = -sigmas[i]; l <= sigmas[i]; l++)
           {
-            float lsqrd = l*l;
-            addbin1 = bin1 + static_cast<size_t>(j);
-            addbin2 = bin2 + static_cast<size_t>(k);
-            addbin3 = bin3 + static_cast<size_t>(l);
+            int lsqrd = l*l;
+            addbin1 = bin1 + int(j);
+            addbin2 = bin2 + int(k);
+            addbin3 = bin3 + int(l);
             if (addbin1 < 0) addbin1 = addbin1 + 18;
             if (addbin1 >= 18) addbin1 = addbin1 - 18;
             if (addbin2 < 0) addbin2 = addbin2 + 18;
@@ -129,10 +129,11 @@ class AIMCOMMON_EXPORT Texture
             if (addbin3 >= 18) addbin3 = addbin3 - 18;
             addbin = (addbin3 * 18 * 18) + (addbin2 * 18) + (addbin1);
             dist = powf((jsqrd +ksqrd + lsqrd), 0.5);
-            fraction = 1.0 - ((dist / sigmas[i]) * (dist / sigmas[i]));
-            if (fraction > 0.0)
+            fraction = 1.0 - (double(dist / int(sigmas[i])) * double(dist / int(sigmas[i])));
+            if (dist <= int(sigmas[i]))
             {
               addweight = (weights[i] * fraction);
+			  if(sigmas[i] == 0.0) addweight = weights[i];
               odf[addbin] = odf[addbin]+addweight;
             }
           }
@@ -187,9 +188,9 @@ class AIMCOMMON_EXPORT Texture
  //   float degtorad = M_PI/180.0;
     float addweight = 0;
     odf.resize(odfsize);
-    size_t bin, addbin;
-    size_t bin1, bin2, bin3;
-    size_t addbin1, addbin2, addbin3;
+    int bin, addbin;
+    int bin1, bin2, bin3;
+    int addbin1, addbin2, addbin3;
     float dist, fraction;
 //    float rmag, angle;
     float r1, r2, r3;
@@ -214,13 +215,16 @@ class AIMCOMMON_EXPORT Texture
       bin3 = bin / (36 * 36);
       for (int j = -sigmas[i]; j <= sigmas[i]; j++)
       {
+        int jsqrd = j*j;
         for (int k = -sigmas[i]; k <= sigmas[i]; k++)
         {
+          int ksqrd = k*k;
           for (int l = -sigmas[i]; l <= sigmas[i]; l++)
           {
-            addbin1 = bin1 + j;
-            addbin2 = bin2 + k;
-            addbin3 = bin3 + l;
+            int lsqrd = l*l;
+            addbin1 = bin1 + int(j);
+            addbin2 = bin2 + int(k);
+            addbin3 = bin3 + int(l);
             if (addbin1 < 0) addbin1 = addbin1 + 36;
             if (addbin1 >= 36) addbin1 = addbin1 - 36;
             if (addbin2 < 0) addbin2 = addbin2 + 36;
@@ -228,11 +232,12 @@ class AIMCOMMON_EXPORT Texture
             if (addbin3 < 0) addbin3 = addbin3 + 12;
             if (addbin3 >= 12) addbin3 = addbin3 - 12;
             addbin = (addbin3 * 36 * 36) + (addbin2 * 36) + (addbin1);
-            dist = powf((j * j + k * k + l * l), 0.5);
-            fraction = 1.0 - ((dist / sigmas[i]) * (dist / sigmas[i]));
-            if (fraction > 0.0)
+            dist = powf((jsqrd + ksqrd + lsqrd), 0.5);
+            fraction = 1.0 - (double(dist / int(sigmas[i])) * double(dist / int(sigmas[i])));
+            if (dist <= int(sigmas[i]))
             {
               addweight = (weights[i] * fraction);
+			  if(sigmas[i] == 0.0) addweight = weights[i];
               odf[addbin] = odf[addbin]+addweight;
             }
           }
@@ -287,9 +292,9 @@ class AIMCOMMON_EXPORT Texture
  //   float degtorad = M_PI/180.0;
     float addweight = 0;
     odf.resize(odfsize);
-    size_t bin, addbin;
-    size_t bin1, bin2, bin3;
-    size_t addbin1, addbin2, addbin3;
+    int bin, addbin;
+    int bin1, bin2, bin3;
+    int addbin1, addbin2, addbin3;
     float dist, fraction;
     float r1, r2, r3;
     OrthoRhombicOps ops;
@@ -313,13 +318,16 @@ class AIMCOMMON_EXPORT Texture
       bin3 = bin / (36 * 36);
       for (int j = -sigmas[i]; j <= sigmas[i]; j++)
       {
+        int jsqrd = j*j;
         for (int k = -sigmas[i]; k <= sigmas[i]; k++)
         {
+          int ksqrd = k*k;
           for (int l = -sigmas[i]; l <= sigmas[i]; l++)
           {
-            addbin1 = bin1 + j;
-            addbin2 = bin2 + k;
-            addbin3 = bin3 + l;
+            int lsqrd = l*l;
+            addbin1 = bin1 + int(j);
+            addbin2 = bin2 + int(k);
+            addbin3 = bin3 + int(l);
             if (addbin1 < 0) addbin1 = addbin1 + 36;
             if (addbin1 >= 36) addbin1 = addbin1 - 36;
             if (addbin2 < 0) addbin2 = addbin2 + 36;
@@ -328,10 +336,11 @@ class AIMCOMMON_EXPORT Texture
             if (addbin3 >= 36) addbin3 = addbin3 - 36;
             addbin = (addbin3 * 36 * 36) + (addbin2 * 36) + (addbin1);
             dist = powf((j * j + k * k + l * l), 0.5);
-            fraction = 1.0 - ((dist / sigmas[i]) * (dist / sigmas[i]));
-            if (fraction > 0.0)
+            fraction = 1.0 - (double(dist / int(sigmas[i])) * double(dist / int(sigmas[i])));
+            if (dist <= int(sigmas[i]))
             {
               addweight = (weights[i] * fraction);
+			  if(sigmas[i] == 0.0) addweight = weights[i];
               odf[addbin] = odf[addbin]+addweight;
             }
           }
