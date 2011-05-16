@@ -84,28 +84,6 @@ GrainGeneratorFunc::~GrainGeneratorFunc()
 #define GG_INIT_DOUBLE_ARRAY(array, value, size)\
     for(size_t n = 0; n < size; ++n) { array[n] = (value); }
 
-#if 0
-void GrainGeneratorFunc::initialize(int32_t m_NumGrains, int32_t m_ShapeClass,
-                                    float m_XResolution, float m_YResolution, float m_ZResolution,
-        float m_fillingerrorweight, float m_neighborhooderrorweight, float m_sizedisterrorweight,
-        int32_t m_Precipitates, float m_FractionPrecipitates,
-        std::vector<AIM::Reconstruction::CrystalStructure> m_CrystalStructure,
-        std::vector<AIM::Reconstruction::PhaseType> m_PhaseType)
-{
-  numgrains = m_NumGrains;
-  shapeclass = m_ShapeClass;
-  resx = m_XResolution;
-  resy = m_YResolution;
-  resz = m_ZResolution;
-  fillingerrorweight = m_fillingerrorweight;
-  neighborhooderrorweight = m_neighborhooderrorweight;
-  sizedisterrorweight = m_sizedisterrorweight;
-  crystruct = m_CrystalStructure;
-  phaseType = m_PhaseType;
-  initializeArrays();
-}
-#endif
-
 void GrainGeneratorFunc::initializeArrays(std::vector<AIM::Reconstruction::CrystalStructure> structures)
 {
   //------------------
@@ -1144,6 +1122,8 @@ int  GrainGeneratorFunc::pack_grains(const std::string &filename, int numgrains)
   float acceptableerror = 0.0;
   rg.RandomInit((static_cast<unsigned int> (time(NULL))));
   activegrainlist.resize(numgrains + 1);
+  vector<double> primaryphases;
+  primaryphases.resize(1,0);
   vector<double> primaryphasefractions;
   primaryphasefractions.resize(1,0);
   double totalprimaryfractions = 0.0;
@@ -1151,6 +1131,7 @@ int  GrainGeneratorFunc::pack_grains(const std::string &filename, int numgrains)
   {
 	  if(phaseType[i] == AIM::Reconstruction::Primary)
 	  {
+		primaryphases.push_back(i);
 		primaryphasefractions.push_back(phasefraction[i]);
 		totalprimaryfractions = totalprimaryfractions + phasefraction[i];
 	  }
@@ -1163,11 +1144,11 @@ int  GrainGeneratorFunc::pack_grains(const std::string &filename, int numgrains)
   for (int i = 1; i < (numextragrains + 1); i++)
   {
     random = rg.Random();
-    for (std::vector<AIM::Reconstruction::CrystalStructure>::size_type j = 1; j < crystruct.size();++j)
+    for (std::vector<AIM::Reconstruction::CrystalStructure>::size_type j = 1; j < primaryphases.size();++j)
     {
       if (random < primaryphasefractions[j])
       {
-        phase = j;
+        phase = primaryphases[j];
         break;
       }
     }
@@ -1361,11 +1342,11 @@ int  GrainGeneratorFunc::pack_grains(const std::string &filename, int numgrains)
   }
   sort(activegrainlist.begin(), activegrainlist.end());
   activegrainlist.erase(std::remove(activegrainlist.begin(), activegrainlist.end(), 0), activegrainlist.end());
-  for (size_t i = 0; i < activegrainlist.size(); i++)
+  for (size_t i = 1; i < activegrainlist.size(); i++)
   {
-    m_Grains[i + 1] = m_Grains[activegrainlist[i]];
+    m_Grains[i] = m_Grains[activegrainlist[i]];
   }
-  m_Grains.resize(activegrainlist.size() + 1);
+  m_Grains.resize(activegrainlist.size());
   return (m_Grains.size());
 }
 
@@ -1612,6 +1593,12 @@ void  GrainGeneratorFunc::assign_eulers(int numgrains)
   float random;
   int choose, phase;
 
+  int xtalCount = crystruct.size();
+  unbiasedvol.resize(xtalCount);
+  for(size_t i=1;i<xtalCount;++i)
+  {
+	unbiasedvol[i] = 0;
+  }
   rg.RandomInit((static_cast<unsigned int>(time(NULL))));
   for(int i=1;i<numgrains;i++)
   {
@@ -1746,6 +1733,74 @@ void  GrainGeneratorFunc::fill_gaps(int numgrains)
   gsizes.clear();
 }
 
+int  GrainGeneratorFunc::place_precipitates(int numgrains)
+{
+  totalprecipvol = 0;
+  int currentnumgrains = numgrains;
+  size_t index;
+  int phase;
+  float random;
+  float xc, yc, zc;
+  rg.RandomInit((static_cast<unsigned int> (time(NULL))));
+  vector<double> precipitatephases;
+  precipitatephases.resize(1,0);
+  vector<double> precipitatephasefractions;
+  precipitatephasefractions.resize(1,0);
+  double totalprecipitatefractions = 0.0;
+  for (std::vector<AIM::Reconstruction::CrystalStructure>::size_type i = 1; i < crystruct.size();++i)
+  {
+	  if(phaseType[i] == AIM::Reconstruction::BoundaryPrecipitate || phaseType[i] == AIM::Reconstruction::BulkPrecipitate)
+	  {
+		precipitatephases.push_back(i);
+		precipitatephasefractions.push_back(phasefraction[i]);
+		totalprecipitatefractions = totalprecipitatefractions + phasefraction[i];
+	  }
+  }
+  for (int i = 1; i < precipitatephasefractions.size(); i++)
+  {
+	  precipitatephasefractions[i] = precipitatephasefractions[i]/totalprecipitatefractions;
+	  precipitatephasefractions[i] = precipitatephasefractions[i] + precipitatephasefractions[i-1];
+  }
+  while(totalprecipvol < totalvol*totalprecipitatefractions)
+  {
+    random = rg.Random();
+    for (std::vector<AIM::Reconstruction::CrystalStructure>::size_type j = 1; j < precipitatephases.size();++j)
+    {
+      if (random < precipitatephasefractions[j])
+      {
+        phase = precipitatephases[j];
+        break;
+      }
+    }
+	if(currentnumgrains >= m_Grains.size())
+	{
+		m_Grains.resize(currentnumgrains + 1000);
+		for(size_t g = currentnumgrains; g < m_Grains.size(); ++g)
+		{
+			m_Grains[g] = Grain::New();
+		}  
+	}
+    generate_grain(currentnumgrains, phase);
+    totalprecipvol = totalprecipvol + m_Grains[currentnumgrains]->volume;
+	currentnumgrains++;
+  }
+  m_Grains.resize(currentnumgrains);
+  for (int i = numgrains; i < currentnumgrains; i++)
+  {
+    xc = rg.Random() * (xpoints * resx);
+    yc = rg.Random() * (ypoints * resy);
+    zc = rg.Random() * (zpoints * resz);
+    m_Grains[i]->centroidx = xc;
+    m_Grains[i]->centroidy = yc;
+    m_Grains[i]->centroidz = zc;
+  }
+  for (int i = numgrains; i < currentnumgrains; i++)
+  {
+    insert_grain(i);
+	m_Grains[i]->active = 1;
+  }
+  return (m_Grains.size());
+}
 int GrainGeneratorFunc::adjust_boundaries(int numgrains)
 {
 	int neighbors[6];
@@ -1982,13 +2037,14 @@ void  GrainGeneratorFunc::find_neighbors()
   int good = 0;
   int neighbor = 0;
   size_t xtalCount = crystruct.size();
-  for(size_t i=0;i<xtalCount;++i)
+  totalsurfacearea.resize(xtalCount);
+  for(size_t i=1;i<xtalCount;++i)
   {
 	totalsurfacearea[i] = 0;
   }
   int surfacegrain = 1;
   int nListSize = 100;
-  for(int i=0;i<numgrains;i++)
+  for(int i=1;i<numgrains;i++)
   {
     m_Grains[i]->numneighbors = 0;
     m_Grains[i]->neighborlist->assign(nListSize, -1);
@@ -2476,7 +2532,7 @@ void  GrainGeneratorFunc::measure_misorientations ()
   {
     nlist = m_Grains[i]->neighborlist;
     neighsurfarealist = m_Grains[i]->neighborsurfarealist;
-    misolist.resize(nlist->size() * 3);
+    m_Grains[i]->misorientationlist->assign(nlist->size() * 3, 0.0);
     q1[1] = m_Grains[i]->avg_quat[1];
     q1[2] = m_Grains[i]->avg_quat[2];
     q1[3] = m_Grains[i]->avg_quat[3];
