@@ -177,7 +177,7 @@ class AIMCOMMON_EXPORT ReconstructionFunc
     void merge_containedgrains();
     void reorder_grains(const std::string &reconVisFile);
     int remove_smallgrains(size_t numgrains);
-	  void fillin_sample();
+	void fillin_sample();
     void cleanup_data();
     void find_grain_and_kernel_misorientations();
     void merge_twins();
