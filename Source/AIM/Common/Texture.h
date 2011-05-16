@@ -93,11 +93,11 @@ class AIMCOMMON_EXPORT Texture
 
     for (typename T::size_type i = 0; i < e1s.size(); i++)
     {
-		OrientationMath::eulertoRod(r1, r2, r3, e1s[i], e2s[i], e3s[i]);
-	    ops.getFZRod( r1, r2, r3);
-		bin = ops.getOdfBin(r1, r2, r3);
-	    TextureBins[i] = static_cast<int>(bin);
-    }
+        OrientationMath::eulertoRod(r1, r2, r3, e1s[i], e2s[i], e3s[i]);
+        ops.getFZRod(r1, r2, r3);
+        bin = ops.getOdfBin(r1, r2, r3);
+        TextureBins[i] = static_cast<int>(bin);
+      }
 
     for (size_t i = 0; i < odfsize; i++)
     {
