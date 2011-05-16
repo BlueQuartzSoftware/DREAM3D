@@ -89,6 +89,44 @@ class AIMCOMMON_EXPORT H5ReconStatsReader
     int getPhaseAndCrystalStructures(std::vector<int> &phases,
                                      std::vector<AIM::Reconstruction::CrystalStructure> &xtals);
 
+
+    /**
+     * @brief
+     * @param path
+     * @param name
+     * @param data
+     */
+    template<typename T>
+    int readVectorDataset(const std::string &path, const std::string &name, std::vector<T> &data)
+    {
+      herr_t err = 0;
+      herr_t retErr = 0;
+      OPEN_HDF5_FILE(fileId, m_FileName)
+
+      // The group may NOT be written to the file
+      hid_t pid = H5Gopen(fileId, path.c_str());
+      if (pid < 0)
+      {
+        err = H5Utilities::closeFile(fileId);
+        return -1;
+      }
+
+      err = H5Lite::readVectorDataset(pid, name, data);
+      if (err < 0)
+      {
+        data.clear(); // Clear all the data from the vector.
+        retErr = err;
+      }
+
+      err = H5Gclose(pid);
+      if (err < 0) { retErr = err; }
+      err = H5Utilities::closeFile(fileId);
+      if (err < 0) { retErr = err; }
+      return retErr;
+    }
+
+
+
     /**
      * @brief
      * @param phase
