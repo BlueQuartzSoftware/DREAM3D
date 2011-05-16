@@ -767,6 +767,8 @@ int SGWidget::readDataFromHDF5(H5ReconStatsReader::Pointer reader, int phase)
   m_COverAPlot->setCrystalStructure(m_CrystalStructure);
   m_COverBPlot->setCrystalStructure(m_CrystalStructure);
   m_NeighborPlot->setCrystalStructure(m_CrystalStructure);
+  m_ODFWidget->setCrystalStructure(m_CrystalStructure);
+ // m_AxisODFWidget->setCrystalStructure(m_CrystalStructure);
 
 
   /* Read the BinNumbers data set */
@@ -837,6 +839,15 @@ int SGWidget::readDataFromHDF5(H5ReconStatsReader::Pointer reader, int phase)
   m_NeighborPlot->readDataFromHDF5(reader, qbins, AIM::HDF5::Grain_SizeVNeighbors_Distributions);
   m_NeighborPlot->setSizeDistributionValues(mu, sigma, cutoff - 1.0, binStepSize);
 
+
+  // Read the ODF Data
+  err = m_ODFWidget->readDataFromHDF5(reader, m_PhaseIndex);
+
+  // Read the MDF Data
+
+
+  // Read the Axis ODF Data
+  err = m_AxisODFWidget->readDataFromHDF5(reader, m_PhaseIndex);
 
 #ifndef _WIN32
 #warning do We need to read the ODF data????

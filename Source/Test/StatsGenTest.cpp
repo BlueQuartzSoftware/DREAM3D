@@ -90,11 +90,11 @@ int main(int argc, char **argv)
   MXA_REGISTER_TEST(GenHexMDFPlotData());
 
   PRINT_TEST_SUMMARY();
-  return err;
-#if 0
+  //return err;
+#if 1
   StatsGen sg;
 
-  int err = 0;
+
   float alpha = 1.0;
   float beta = 1.0;
 

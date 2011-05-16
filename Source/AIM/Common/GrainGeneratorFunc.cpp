@@ -2510,7 +2510,7 @@ void GrainGeneratorFunc::matchCrystallography(const std::string &ErrorFile, H5Re
 	  int err;
 	  unsigned long long int dims = numbins;
 	  err = h5io->writeODFData(iter, &dims, simodf[iter].get());
-	  err = h5io->writeMisorientationBinsData(iter, crystruct[iter], simmdf[iter].get());
+	  err = h5io->writeMisorientationBinsData(iter, &dims, simmdf[iter].get());
   }
 }
 void  GrainGeneratorFunc::measure_misorientations ()
@@ -2983,6 +2983,7 @@ void  GrainGeneratorFunc::find_vectors (H5ReconStatsWriter::Pointer h5io)
     }
   }
   xtalSize = crystruct.size();
+  uint64_t dims = 36 * 36 * 36;
   for(size_t i=0;i<xtalSize;++i)
   {
 	  int err;
