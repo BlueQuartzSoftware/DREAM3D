@@ -140,6 +140,7 @@ public:
     int32_t zpoints;
     int totalpoints;
     float totalvol;
+    float totalprecipvol;
     int numneighbins;
     float volcheck;
     int ownercheck;
@@ -185,6 +186,7 @@ public:
     int assign_voxels(int numgrains);
     void fill_gaps(int numgrains);
 	int adjust_boundaries(int numgrains);
+    int place_precipitates(int numgrains);
     void find_neighbors();
     void swapOutOrientation(int & badtrycount, int & numbins, float currentodferror, float currentmdferror);
     void switchOrientations(int & badtrycount, int & numbins, float currentodferror, float currentmdferror);
