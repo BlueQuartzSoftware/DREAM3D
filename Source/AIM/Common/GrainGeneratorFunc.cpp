@@ -106,7 +106,7 @@ void GrainGeneratorFunc::initialize(int32_t m_NumGrains, int32_t m_ShapeClass,
 }
 #endif
 
-void GrainGeneratorFunc::initializeArrays()
+void GrainGeneratorFunc::initializeArrays(std::vector<AIM::Reconstruction::CrystalStructure> structures)
 {
   //------------------
   resdiff = 1;
@@ -117,17 +117,39 @@ void GrainGeneratorFunc::initializeArrays()
     m_Grains[g] = Grain::New();
   }
   size_t nElements = 0;
-  size_t xtalSize = crystruct.size();
-  //actualodf = new float *[xtalSize];
-  actualodf.resize(xtalSize);
+  size_t size = structures.size();
 
-  simodf.resize(xtalSize);
-  actualmdf.resize(xtalSize);
-  simmdf.resize(xtalSize);
-  axisodf.resize(xtalSize);
-  actualmicrotex.resize(xtalSize);
-  simmicrotex.resize(xtalSize);
-  for(size_t i= 0; i < xtalSize; ++i)
+  crystruct.resize(size+1);
+  for(int i = 0; i < size; i++)
+  {
+	crystruct[i+1] = structures[i];
+  }
+  phaseType.resize(size+1);
+  phasefraction.resize(size+1);
+  mindiameter.resize(size+1);
+  maxdiameter.resize(size+1);
+  binstepsize.resize(size+1);
+  numdiameterbins.resize(size+1);
+  avgdiam.resize(size+1);
+  sddiam.resize(size+1);
+  grainsizediststep.resize(size+1);
+  grainsizedist.resize(size+1);
+  simgrainsizedist.resize(size+1);
+  bovera.resize(size+1);
+  covera.resize(size+1);
+  coverb.resize(size+1);
+  omega3.resize(size+1);
+  neighborhood.resize(size+1);
+  neighbordist.resize(size+1);
+
+  actualodf.resize(size+1);
+  simodf.resize(size+1);
+  actualmdf.resize(size+1);
+  simmdf.resize(size+1);
+  axisodf.resize(size+1);
+  actualmicrotex.resize(size+1);
+  simmicrotex.resize(size+1);
+  for(size_t i= 1; i < size+1; ++i)
   {
     if(crystruct[i] == AIM::Reconstruction::Hexagonal) nElements = 36*36*12;
     if(crystruct[i] == AIM::Reconstruction::Cubic) nElements = 18*18*18;
@@ -267,29 +289,9 @@ int GrainGeneratorFunc::readReconStatsData(H5ReconStatsReader::Pointer h5io)
     return err;
   }
 
-  // Now that we have that information - finish initializing the arrays
-  initializeArrays();
-
-  // Initialize some more arrays
-  size_t size = phases.size();
-  crystruct.resize(size+1);
-  phaseType.resize(size+1);
-  phasefraction.resize(size+1);
-  mindiameter.resize(size+1);
-  maxdiameter.resize(size+1);
-  binstepsize.resize(size+1);
-  numdiameterbins.resize(size+1);
-  avgdiam.resize(size+1);
-  sddiam.resize(size+1);
-  grainsizediststep.resize(size+1);
-  grainsizedist.resize(size+1);
-  simgrainsizedist.resize(size+1);
-  bovera.resize(size+1);
-  covera.resize(size+1);
-  coverb.resize(size+1);
-  omega3.resize(size+1);
-  neighborhood.resize(size+1);
-  neighbordist.resize(size+1);
+  // Now that we have that information - initialize the arrays
+  initializeArrays(structures);
+  int size = phases.size();
 
   int phase = -1;
   for (size_t i = 0; i < size; i++)
@@ -1147,12 +1149,15 @@ int  GrainGeneratorFunc::pack_grains(const std::string &filename, int numgrains)
   double totalprimaryfractions = 0.0;
   for (std::vector<AIM::Reconstruction::CrystalStructure>::size_type i = 1; i < crystruct.size();++i)
   {
-	  if(phaseType[i] == AIM::Reconstruction::Primary) primaryphasefractions.push_back(phasefraction[i]);
-	  totalprimaryfractions = totalprimaryfractions + phasefraction[i];
+	  if(phaseType[i] == AIM::Reconstruction::Primary)
+	  {
+		primaryphasefractions.push_back(phasefraction[i]);
+		totalprimaryfractions = totalprimaryfractions + phasefraction[i];
+	  }
   }
   for (int i = 1; i < primaryphasefractions.size(); i++)
   {
-	  primaryphasefractions[i]/totalprimaryfractions;
+	  primaryphasefractions[i] = primaryphasefractions[i]/totalprimaryfractions;
 	  primaryphasefractions[i] = primaryphasefractions[i] + primaryphasefractions[i-1];
   }
   for (int i = 1; i < (numextragrains + 1); i++)
