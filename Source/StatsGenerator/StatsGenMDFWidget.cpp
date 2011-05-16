@@ -256,7 +256,7 @@ int StatsGenMDFWidget::readDataFromHDF5(H5ReconStatsReader::Pointer reader,
 int StatsGenMDFWidget::writeDataToHDF5(H5ReconStatsWriter::Pointer writer)
 {
   int err = 0;
-
+  int retErr = 0;
   QwtArray<float> x;
   QwtArray<float> y;
 
@@ -272,11 +272,15 @@ int StatsGenMDFWidget::writeDataToHDF5(H5ReconStatsWriter::Pointer writer)
   QwtArray<float> odf = generateODFData();
   QwtArray<float> mdf;
 
+  unsigned long long int nElements = 0;
+
   if (m_CrystalStructure == AIM::Reconstruction::Cubic) {
 	  Texture::calculateMDFData<QwtArray<float>, CubicOps>(angles, axes, weights, odf, mdf);
+	  nElements = 18 * 18 * 18;
   }
   else if (m_CrystalStructure == AIM::Reconstruction::Hexagonal) {
 	  Texture::calculateMDFData<QwtArray<float>, HexagonalOps>(angles, axes, weights, odf, mdf);
+	  nElements = 36 * 36 * 12;
   }
   if (mdf.size() > 0)
   {
@@ -284,7 +288,19 @@ int StatsGenMDFWidget::writeDataToHDF5(H5ReconStatsWriter::Pointer writer)
     err = -1;
     if (mdfPtr != NULL)
     {
-      err = writer->writeMisorientationBinsData(m_PhaseIndex, m_CrystalStructure, mdfPtr);
+      err = writer->writeMisorientationBinsData(m_PhaseIndex, &nElements, mdfPtr);
+      if (err < 0)
+      {
+        retErr = err;
+      }
+
+      if (angles.size() > 0)
+      {
+        nElements = angles.size();
+        err = writer->writeMDFWeights(m_PhaseIndex, &nElements, &(angles.front()), &(axes.front()), &(weights.front()) );
+        if (err < 0)
+        { retErr = err;}
+      }
     }
   }
 
