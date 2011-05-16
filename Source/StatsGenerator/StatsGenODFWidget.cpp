@@ -95,6 +95,7 @@ int StatsGenODFWidget::readDataFromHDF5(H5ReconStatsReader::Pointer reader,
 int StatsGenODFWidget::writeDataToHDF5(H5ReconStatsWriter::Pointer writer)
 {
   int err = 0;
+  int retErr = 0;
   float totalWeight = 0.0;
 
   QwtArray<float> e1s;
@@ -111,11 +112,11 @@ int StatsGenODFWidget::writeDataToHDF5(H5ReconStatsWriter::Pointer writer)
   weights = m_ODFTableModel->getData(SGODFTableModel::Weight);
   sigmas = m_ODFTableModel->getData(SGODFTableModel::Sigma);
 
-  for(int i=0;i<e1s.size();i++)
+  for (int i = 0; i < e1s.size(); i++)
   {
-	e1s[i] = e1s[i]*M_PI/180.0;
-	e2s[i] = e2s[i]*M_PI/180.0;
-	e3s[i] = e3s[i]*M_PI/180.0;
+    e1s[i] = e1s[i] * M_PI / 180.0;
+    e2s[i] = e2s[i] * M_PI / 180.0;
+    e3s[i] = e3s[i] * M_PI / 180.0;
   }
 
   if (m_CrystalStructure == AIM::Reconstruction::Cubic)
@@ -134,6 +135,21 @@ int StatsGenODFWidget::writeDataToHDF5(H5ReconStatsWriter::Pointer writer)
     {
       unsigned long long int dims = odf.size();
       err = writer->writeODFData(m_PhaseIndex, &dims, odfPtr);
+      if (err < 0)
+      {
+        //FIXME: Display an error message
+        retErr = err;
+      }
+      dims = e1s.size();
+      if (dims > 0)
+      {
+        err = writer->writeODFWeights(m_PhaseIndex, &dims, &(e1s.front()),  &(e2s.front()),  &(e3s.front()),  &(weights.front()),  &(sigmas.front()));
+        if (err < 0)
+        {
+          //FIXME: Display an error message
+          retErr = err;
+        }
+      }
     }
   }
   // Write the MDF Data if we have that functionality enabled
@@ -141,7 +157,7 @@ int StatsGenODFWidget::writeDataToHDF5(H5ReconStatsWriter::Pointer writer)
   {
     m_MDFWidget->writeDataToHDF5(writer);
   }
-  return err;
+  return retErr;
 }
 
 // -----------------------------------------------------------------------------

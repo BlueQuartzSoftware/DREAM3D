@@ -95,6 +95,7 @@ int SGAxisODFWidget::readDataFromHDF5(H5ReconStatsReader::Pointer reader,
 int SGAxisODFWidget::writeDataToHDF5(H5ReconStatsWriter::Pointer writer)
 {
   int err = -1;
+  int retErr = 0;
   float totalWeight = 0.0;
 
   QwtArray<float> e1s;
@@ -113,9 +114,9 @@ int SGAxisODFWidget::writeDataToHDF5(H5ReconStatsWriter::Pointer writer)
 
   for(int i=0;i<e1s.size();i++)
   {
-	e1s[i] = e1s[i]*M_PI/180.0;
-	e2s[i] = e2s[i]*M_PI/180.0;
-	e3s[i] = e3s[i]*M_PI/180.0;
+    e1s[i] = e1s[i]*M_PI/180.0;
+    e2s[i] = e2s[i]*M_PI/180.0;
+    e3s[i] = e3s[i]*M_PI/180.0;
   }
 
   Texture::calculateOrthoRhombicODFData(e1s, e2s, e3s, weights, sigmas, true, aodf, totalWeight);
@@ -125,10 +126,26 @@ int SGAxisODFWidget::writeDataToHDF5(H5ReconStatsWriter::Pointer writer)
     err = -1;
     if (aodfPtr != NULL)
     {
+      uint64_t dims = 36 * 36 * 36;
       err = writer->writeAxisOrientationData(m_PhaseIndex, aodfPtr, 1.0);
+      if (err < 0)
+      {
+        //FIXME: Display an error message
+        retErr = err;
+      }
+      dims = e1s.size();
+      if (dims > 0)
+      {
+        err = writer->writeODFWeights(m_PhaseIndex, &dims, &(e1s.front()),  &(e2s.front()),  &(e3s.front()),  &(weights.front()),  &(sigmas.front()));
+        if (err < 0)
+        {
+          //FIXME: Display an error message
+          retErr = err;
+        }
+      }
     }
   }
-  return err;
+  return retErr;;
 }
 
 // -----------------------------------------------------------------------------
