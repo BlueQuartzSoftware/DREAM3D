@@ -949,7 +949,7 @@ class StatsGen
       HexagonalOps ops;
       xval.resize(22);
       yval.resize(22);
-      for (int i = 0; i < 20; i++)
+      for (int i = 0; i < 22; i++)
       {
         yval[i] = 0;
       }
@@ -974,7 +974,7 @@ class StatsGen
         size_t index = static_cast<size_t>(w / 5.0f);
         yval[index]++;
       }
-      for (int i = 0; i < 20; i++)
+      for (int i = 0; i < 22; i++)
       {
         xval[i] = i * 5.0 + 2.5;
         yval[i] = yval[i] / float(npoints);

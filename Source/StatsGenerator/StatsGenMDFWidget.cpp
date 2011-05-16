@@ -191,6 +191,13 @@ QwtArray<float> StatsGenMDFWidget::generateODFData()
   weights = m_ODFTableModel->getData(SGODFTableModel::Weight);
   sigmas = m_ODFTableModel->getData(SGODFTableModel::Sigma);
 
+  for(int i=0;i<e1s.size();i++)
+  {
+	e1s[i] = e1s[i]*M_PI/180.0;
+	e2s[i] = e2s[i]*M_PI/180.0;
+	e3s[i] = e3s[i]*M_PI/180.0;
+  }
+
   if (m_CrystalStructure == AIM::Reconstruction::Cubic)
   {
     Texture::calculateCubicODFData(e1s, e2s, e3s, weights, sigmas, true, odf, totalWeight);

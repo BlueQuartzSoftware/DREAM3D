@@ -111,6 +111,13 @@ int SGAxisODFWidget::writeDataToHDF5(H5ReconStatsWriter::Pointer writer)
   weights = m_ODFTableModel->getData(SGODFTableModel::Weight);
   sigmas = m_ODFTableModel->getData(SGODFTableModel::Sigma);
 
+  for(int i=0;i<e1s.size();i++)
+  {
+	e1s[i] = e1s[i]*M_PI/180.0;
+	e2s[i] = e2s[i]*M_PI/180.0;
+	e3s[i] = e3s[i]*M_PI/180.0;
+  }
+
   Texture::calculateOrthoRhombicODFData(e1s, e2s, e3s, weights, sigmas, true, aodf, totalWeight);
   if (aodf.size() > 0)
   {
@@ -246,8 +253,15 @@ void SGAxisODFWidget::on_m_CalculateODFBtn_clicked()
   weights = m_ODFTableModel->getData(SGODFTableModel::Weight);
   sigmas = m_ODFTableModel->getData(SGODFTableModel::Sigma);
 
+  for(int i=0;i<e1s.size();i++)
+  {
+	e1s[i] = e1s[i]*M_PI/180.0;
+	e2s[i] = e2s[i]*M_PI/180.0;
+	e3s[i] = e3s[i]*M_PI/180.0;
+  }
+
   StatsGen sg;
-  int size = 1000;
+  int size = 2500;
 
   static const size_t odfsize = 46656;
   float totalweight = 0;
@@ -261,20 +275,26 @@ void SGAxisODFWidget::on_m_CalculateODFBtn_clicked()
     return;
   }
 
-  QwtArray<double> x001d(size);
-  QwtArray<double> y001d(size);
-  QwtArray<double> x011d(size);
-  QwtArray<double> y011d(size);
-  QwtArray<double> x111d(size);
-  QwtArray<double> y111d(size);
-  for(int i =0; i < size; ++i)
+  QwtArray<double> x001d(x001.size());
+  QwtArray<double> y001d(y001.size());
+  QwtArray<double> x011d(x011.size());
+  QwtArray<double> y011d(y011.size());
+  QwtArray<double> x111d(x111.size());
+  QwtArray<double> y111d(y111.size());
+  for(int i =0; i < x001.size(); ++i)
   {
     x001d[i] = x001[i];
     y001d[i] = y001[i];
+  }
+  for(int i =0; i < x011.size(); ++i)
+  {
     x011d[i] = x011[i];
     y011d[i] = y011[i];
+  }
+  for(int i =0; i < x111.size(); ++i)
+  {
     x111d[i] = x111[i];
-    x111d[i] = x111[i];
+    y111d[i] = y111[i];
   }
 
   QwtPlotCurve* curve = m_PlotCurves[0];

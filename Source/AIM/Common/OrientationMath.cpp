@@ -323,6 +323,7 @@ void OrientationMath::_calcDetermineEulerAngles(float init[3], float step[3], fl
   float synr1 = tanf(angle / 2.0) * (synh1 / hmag);
   float synr2 = tanf(angle / 2.0) * (synh2 / hmag);
   float synr3 = tanf(angle / 2.0) * (synh3 / hmag);
+  if (hmag == 0.0) synr1 = 0.0, synr2 = 0.0, synr3 = 0.0;
   float sum = atan(synr3);
   float diff = atan(synr2 / synr1);
   synea1 = sum + diff;
@@ -351,9 +352,9 @@ int OrientationMath::_calcODFBin(float dim[3], float bins[3], float r1, float r2
   size_t g1euler2bin;
   size_t g1euler3bin;
   size_t g1odfbin;
-  g1euler1bin = size_t(r1*bins[0]/dim[0]);
-  g1euler2bin = size_t(r2*bins[1]/dim[1]);
-  g1euler3bin = size_t(r3*bins[2]/dim[2]);
+  g1euler1bin = size_t(fabs(r1+dim[0])*bins[0]/(2.0*dim[0]));
+  g1euler2bin = size_t(fabs(r2+dim[1])*bins[1]/(2.0*dim[1]));
+  g1euler3bin = size_t(fabs(r3+dim[2])*bins[2]/(2.0*dim[2]));
   if(g1euler1bin >= bins[0]) g1euler1bin = bins[0]-1;
   if(g1euler2bin >= bins[1]) g1euler2bin = bins[1]-1;
   if(g1euler3bin >= bins[2]) g1euler3bin = bins[2]-1;
@@ -372,6 +373,7 @@ void OrientationMath::axisAngletoHomochoric(float w, float n1, float n2, float n
   n1 = n1 / denom;
   n2 = n2 / denom;
   n3 = n3 / denom;
+  if(denom == 0.0) n1 = 0.0, n2 = 0.0, n3 = 1.0;
   r1 = n1 * powf(((0.75f) * (w - sinf(w))), (1.0f / 3.0f));
   r2 = n2 * powf(((0.75f) * (w - sinf(w))), (1.0f / 3.0f));
   r3 = n3 * powf(((0.75f) * (w - sinf(w))), (1.0f / 3.0f));
@@ -389,6 +391,7 @@ void OrientationMath::axisAngletoRod(float w, float n1, float n2, float n3, floa
   n1 = n1 / denom;
   n2 = n2 / denom;
   n3 = n3 / denom;
+  if(denom == 0.0) n1 = 0.0, n2 = 0.0, n3 = 1.0;
   r1 = n1 * tanf(w/2.0);
   r2 = n2 * tanf(w/2.0);
   r3 = n3 * tanf(w/2.0);
@@ -404,6 +407,7 @@ void OrientationMath::RodtoHomochoric(float &r1, float &r2, float &r3)
   r1 = r1 / rmag;
   r2 = r2 / rmag;
   r3 = r3 / rmag;
+  if(rmag == 0.0) r1 = 0.0, r2 = 0.0, r3 = 0.0;
   w = 2.0*atan(rmag);
   r1 = r1 * powf(((3.0 / 4.0) * (w - sinf(w))), (1.0 / 3.0));
   r2 = r2 * powf(((3.0 / 4.0) * (w - sinf(w))), (1.0 / 3.0));
@@ -420,6 +424,7 @@ void OrientationMath::HomochorictoRod(float &r1, float &r2, float &r3)
   r1 = r1 / hmag;
   r2 = r2 / hmag;
   r3 = r3 / hmag;
+  if(hmag == 0.0) r1 = 0.0, r2 = 0.0, r3 = 0.0;
   w = powf((8*hmag*hmag*hmag),(1.0/3.0));
   r1 = r1 * tanf(w/2.0);
   r2 = r2 * tanf(w/2.0);
@@ -437,6 +442,7 @@ void OrientationMath::RodtoAxisAngle(float r1, float r2, float r3, float &w, flo
   n1 = r1 / rmag;
   n2 = r2 / rmag;
   n3 = r3 / rmag;
+  if(rmag == 0.0) n1 = 0.0, n2 = 0.0, n3 = 1.0;
 }
 
 void OrientationMath::RodtoQuat(float *q, float r1, float r2, float r3)
@@ -448,6 +454,7 @@ void OrientationMath::RodtoQuat(float *q, float r1, float r2, float r3)
   r1 = r1 / rmag;
   r2 = r2 / rmag;
   r3 = r3 / rmag;
+  if(rmag == 0.0) r1 = 0.0, r2 = 0.0, r3 = 0.0;
   w = 2.0*atan(rmag);
   q[1] = r1 * sinf(w/2.0);
   q[2] = r2 * sinf(w/2.0);
@@ -465,6 +472,7 @@ void OrientationMath::QuattoRod(float *q, float &r1, float &r2, float &r3)
   n1 = q[1] / qmag;
   n2 = q[2] / qmag;
   n3 = q[3] / qmag;
+  if(qmag == 0.0) n1 = 0.0, n2 = 0.0, n3 = 1.0;
   w = 2.0*acos(q[4]);
   r1 = n1 * tanf(w/2.0);
   r2 = n2 * tanf(w/2.0);
