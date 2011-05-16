@@ -192,9 +192,12 @@ void GrainGenerator::compute()
     m->fill_gaps(m->numgrains);
 
     CHECK_FOR_CANCELED(GrainGeneratorFunc)
-    progressMessage(AIM_STRING("Adjusting Boundaries"), 40);
-    m->numgrains = m->adjust_boundaries(m->numgrains);
+    progressMessage(AIM_STRING("Adjusting Boundaries"), 42);
+//    m->numgrains = m->adjust_boundaries(m->numgrains);
 
+	CHECK_FOR_CANCELED(GrainGeneratorFunc)
+    progressMessage(AIM_STRING("Placing Precipitates"), 42);
+    m->numgrains = m->place_precipitates(m->numgrains);
   }
 
 #if 0
