@@ -305,8 +305,8 @@ QVector<float > SGMDFTableModel::getData(int col)
     int count = rowCount();
     QVector<float> values;
     float h = 0.0;
-    float k=0.0;
-    float l=0.0;
+    float k = 0.0;
+    float l = 0.0;
     int err = 0;
     for (int r = 0; r < count; ++r)
     {
@@ -375,6 +375,39 @@ void SGMDFTableModel::setColumnData(int col, QVector<float> &data)
     default:
       Q_ASSERT(false);
   }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void SGMDFTableModel::setTableData(QVector<float> angles, QVector<float> axis, QVector<float> weights)
+{
+  qint32 count = angles.count();
+  qint32 row = 0;
+  // Remove all the current rows in the table model
+  removeRows(0, rowCount());
+
+  // Now mass insert the data to the table then emit that the data has changed
+  beginInsertRows(QModelIndex(), row, row + count - 1);
+  m_Angles = angles;
+  m_Weights = weights;
+
+  m_Axis.clear();
+  int h,k,l;
+  for (int i = 0; i < axis.size(); ++i)
+  {
+    h = axis[i];
+    k = axis[++i];
+    l = axis[++i];
+    QString status = QString("<%1,%2,%3>").arg(h).arg(k).arg(l);
+    m_Axis.push_back(status);
+  }
+
+  m_RowCount = count;
+  endInsertRows();
+  QModelIndex topLeft = createIndex(0, 0);
+  QModelIndex botRight = createIndex(count-1, ColumnCount);
+  emit dataChanged(topLeft, botRight);
 }
 
 // -----------------------------------------------------------------------------
