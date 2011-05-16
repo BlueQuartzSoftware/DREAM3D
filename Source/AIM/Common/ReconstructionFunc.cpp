@@ -3101,16 +3101,16 @@ void ReconstructionFunc::find_vectors(H5ReconStatsWriter::Pointer h5io)
         float ea1 = acos(cosine1);
         if (sine3 < 0) ea3 = (2 * m_pi) - ea3;
         if (sine1 < 0) ea1 = (2 * m_pi) - ea1;
-        int ea1bin = int(ea1 / (m_pi / 18));
-        int ea2bin = int(ea2 / (m_pi / 18));
-        int ea3bin = int(ea3 / (m_pi / 18));
+        int ea1bin = int(ea1 / (m_pi / 36));
+        int ea2bin = int(ea2 / (m_pi / 36));
+        int ea3bin = int(ea3 / (m_pi / 36));
         int bin = 0;
-        if (ea1 >= 0.0 && ea2 >= 0.0 && ea3 >= 0.0 && ea1 <= (m_pi) && ea2 <= (m_pi) && ea3 <= (m_pi))
+        if (ea1 >= 0.0 && ea2 >= 0.0 && ea3 >= 0.0 && ea1 < (m_pi) && ea2 < (m_pi) && ea3 < (m_pi))
         {
           m_Grains[i]->axiseuler1 = ea1;
           m_Grains[i]->axiseuler2 = ea2;
           m_Grains[i]->axiseuler3 = ea3;
-          bin = (ea3bin * 18 * 18) + (ea2bin * 18) + (ea1bin);
+          bin = (ea3bin * 36 * 36) + (ea2bin * 36) + (ea1bin);
           axisodf[m_Grains[i]->phase][bin]++;
           totalaxes[m_Grains[i]->phase]++;
         }
