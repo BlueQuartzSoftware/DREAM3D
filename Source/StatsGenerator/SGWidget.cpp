@@ -847,6 +847,7 @@ int SGWidget::readDataFromHDF5(H5ReconStatsReader::Pointer reader, int phase)
 
 
   // Read the Axis ODF Data
+  err = m_AxisODFWidget->readDataFromHDF5(reader, m_PhaseIndex);
 
 #ifndef _WIN32
 #warning do We need to read the ODF data????
