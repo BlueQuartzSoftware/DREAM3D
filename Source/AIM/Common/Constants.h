@@ -98,8 +98,18 @@ namespace AIM
   {
     const std::string Reconstruction("Reconstruction");
     const std::string AxisOrientation("AxisOrientation");
+    const std::string AxisODFWeights("AxisODF-Weights");
     const std::string ODF("ODF");
+    const std::string ODFWeights("ODF-Weights");
+    const std::string Euler1("Euler 1");
+    const std::string Euler2("Euler 2");
+    const std::string Euler3("Euler 3");
+    const std::string Weight("Weight");
+    const std::string Sigma("Sigma");
     const std::string MisorientationBins("MisorientationBins");
+    const std::string MDFWeights("MDF-Weights");
+    const std::string Angle("Angle");
+    const std::string Axis("Axis");
     const std::string MicroTextureBins("MicroTextureBins");
     const std::string Stats("Stats");
     const std::string PhaseFraction("PhaseFraction");
