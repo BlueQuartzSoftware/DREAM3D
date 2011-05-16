@@ -70,6 +70,8 @@ class AIMCOMMON_EXPORT H5ReconStatsWriter
 
     //FIXME: We are NOT writing the Precipitate data?
     int writeAxisOrientationData(int phase, float* axisodf, float totalaxes);
+    int writeAxisODFWeights(int phase, unsigned long long int *dims,
+                            float* e1, float* e2, float* e3, float* weights, float* sigmas);
 
     int writeMicroTextureData(int phase, float* microbin, size_t nElements, float actualgrains);
 
@@ -82,7 +84,7 @@ class AIMCOMMON_EXPORT H5ReconStatsWriter
                      float* eulerodf);
 
     int writeODFWeights(int phase, unsigned long long int *dims,
-                                  float* e1, float* e2, float* e3, float* weights, float* spreads);
+                                  float* e1, float* e2, float* e3, float* weights, float* sigmas);
 
     std::vector<float> generateBins(int phase, float maxDiameter, float minDiameter, float diameterStep);
 
