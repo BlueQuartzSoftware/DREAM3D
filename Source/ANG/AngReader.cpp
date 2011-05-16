@@ -406,7 +406,7 @@ void AngReader::readData(const std::string &line,
   float p1, p, p2, x, y, iqual, conf, semSignal, fit;
   int ph;
   size_t offset = 0;
-  m_NumFields = sscanf(line.c_str(), "%f %f %f %f %f %f %f %f %f %f", &p1, &p,&p2, &x, &y, &iqual, &conf, &ph, &semSignal, &fit);
+  m_NumFields = sscanf(line.c_str(), "%f %f %f %f %f %f %f %d %f %f", &p1, &p,&p2, &x, &y, &iqual, &conf, &ph, &semSignal, &fit);
 
 
   // Do we transform the data

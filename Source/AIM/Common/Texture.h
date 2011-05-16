@@ -93,11 +93,11 @@ class AIMCOMMON_EXPORT Texture
 
     for (typename T::size_type i = 0; i < e1s.size(); i++)
     {
-		OrientationMath::eulertoRod(r1, r2, r3, e1s[i], e2s[i], e3s[i]);
-	    ops.getFZRod( r1, r2, r3);
-		bin = ops.getOdfBin(r1, r2, r3);
-	    TextureBins[i] = static_cast<int>(bin);
-    }
+        OrientationMath::eulertoRod(r1, r2, r3, e1s[i], e2s[i], e3s[i]);
+        ops.getFZRod(r1, r2, r3);
+        bin = ops.getOdfBin(r1, r2, r3);
+        TextureBins[i] = static_cast<int>(bin);
+      }
 
     for (size_t i = 0; i < odfsize; i++)
     {
@@ -289,7 +289,6 @@ class AIMCOMMON_EXPORT Texture
     int *TextureBins;
     TextureBins = new int[weights.size()];
     static const size_t odfsize = 46656;
- //   float degtorad = M_PI/180.0;
     float addweight = 0;
     odf.resize(odfsize);
     int bin, addbin;
@@ -300,11 +299,11 @@ class AIMCOMMON_EXPORT Texture
     OrthoRhombicOps ops;
     for (typename T::size_type i = 0; i < e1s.size(); i++)
     {
-		OrientationMath::eulertoRod(r1, r2, r3, e1s[i], e2s[i], e3s[i]);
-	    ops.getFZRod(r1, r2, r3);
-		bin = ops.getOdfBin(r1, r2, r3);
-	    TextureBins[i] = static_cast<int>(bin);
-    }
+        OrientationMath::eulertoRod(r1, r2, r3, e1s[i], e2s[i], e3s[i]);
+        ops.getFZRod(r1, r2, r3);
+        bin = ops.getOdfBin(r1, r2, r3);
+        TextureBins[i] = static_cast<int>(bin);
+      }
 
     for (size_t i = 0; i < odfsize; i++)
     {
@@ -335,8 +334,8 @@ class AIMCOMMON_EXPORT Texture
             if (addbin3 < 0) addbin3 = addbin3 + 36;
             if (addbin3 >= 36) addbin3 = addbin3 - 36;
             addbin = (addbin3 * 36 * 36) + (addbin2 * 36) + (addbin1);
-            dist = powf((j * j + k * k + l * l), 0.5);
-            fraction = 1.0 - (double(dist / int(sigmas[i])) * double(dist / int(sigmas[i])));
+            dist = powf((jsqrd + ksqrd + lsqrd), 0.5);
+            fraction = 1.0 - (float(dist / int(sigmas[i])) * float(dist / int(sigmas[i])));
             if (dist <= int(sigmas[i]))
             {
               addweight = (weights[i] * fraction);
