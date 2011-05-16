@@ -161,6 +161,9 @@ class SGODFTableModel : public QAbstractTableModel
 
      virtual void setInitialValues();
 
+     void setTableData(QVector<float> e1, QVector<float> e2, QVector<float> e3, QVector<float> weights, QVector<float> sigmas);
+
+
 
   private:
     int m_ColumnCount;
