@@ -114,8 +114,12 @@ int StatsGenODFWidget::readDataFromHDF5(H5ReconStatsReader::Pointer reader, int 
 
   HDF_ERROR_HANDLER_ON
 
+  // Write the MDF Data if we have that functionality enabled
+  if (m_MDFWidget != NULL)
+  {
+    m_MDFWidget->readDataFromHDF5(reader, phase);
+  }
   updatePlots();
-
   return err;
 }
 
