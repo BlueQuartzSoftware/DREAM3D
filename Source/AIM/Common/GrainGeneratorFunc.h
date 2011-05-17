@@ -165,7 +165,6 @@ public:
 
     void write_eulerangles(const std::string & filename);
     void write_graindata(const std::string & filename);
- //   void writeCube(const std::string & filename, int numgrains);
     int readReconStatsData(H5ReconStatsReader::Pointer h5io);
     int readAxisOrientationData(H5ReconStatsReader::Pointer h5io);
     int readODFData(H5ReconStatsReader::Pointer h5io);
