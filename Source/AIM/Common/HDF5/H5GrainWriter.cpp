@@ -37,6 +37,103 @@
 #include "AIM/Common/ReconstructionFunc.h"
 #include "AIM/Common/GrainGeneratorFunc.h"
 
+
+#define H5GW_IPF_COLOR()\
+if (r->crystruct[phase] == AIM::Reconstruction::Cubic) {\
+  OIMColoring::GenerateIPFColor(r->voxels[vid].euler1, r->voxels[vid].euler2, r->voxels[vid].euler3, RefDirection[0], RefDirection[1], RefDirection[2], rgb, hkl);\
+} else if (r->crystruct[phase] == AIM::Reconstruction::Hexagonal)\
+{\
+  q1[1] = r->voxels[i].quat[1];\
+  q1[2] = r->voxels[i].quat[2];\
+  q1[3] = r->voxels[i].quat[3];\
+  q1[4] = r->voxels[i].quat[4];\
+  OIMColoring::CalculateHexIPFColor(q1, RefDirection[0], RefDirection[1], RefDirection[2], rgb);\
+}\
+ipfColor[j * 3] = rgb[0];\
+ipfColor[j * 3 + 1] = rgb[1];\
+ipfColor[j * 3 + 2] = rgb[2];\
+
+
+#define H5GW_DECLS() \
+    int err = -1;\
+  AIM_H5VtkDataWriter::Pointer h5writer = AIM_H5VtkDataWriter::New();\
+  h5writer->setFileName(hdfFile);\
+  err = h5writer->openFile(false);\
+  std::stringstream ss;\
+  std::string hdfPath;\
+  std::vector<std::string > hdfPaths;\
+  int numgrains = r->m_Grains.size();\
+  int phase;\
+  int pcount = 0;\
+  float q1[5];\
+  unsigned char rgb[3] =  { 0, 0, 0 };\
+  unsigned char hkl[3] = { 0, 0, 0 };\
+  float RefDirection[3] = { 0.0, 0.0, 1.0 };\
+  int ocol, orow, oplane;\
+  int col, row, plane;\
+  int pid;\
+
+
+#define H5GW_GRAIN_LOOP_1() \
+    vector<int >* vlist = r->m_Grains[i]->voxellist;\
+    int vid = vlist->at(0);\
+    ss.str("");\
+    ss << "/" << i;\
+    hdfPath = ss.str();\
+    hdfPaths.push_back(hdfPath);\
+    std::vector<float > points;\
+    std::vector<int32_t > cells(vlist->size() * 9);\
+    std::vector<int32_t > cell_types(vlist->size(), VTK_CELLTYPE_VOXEL);\
+    std::vector<int32_t > grainName(vlist->size());\
+    std::vector<unsigned char > ipfColor(vlist->size() * 3);\
+    std::vector<int32_t>  phaseValues(vlist->size());\
+    std::map<int, int> pointMap;\
+    err = 0;\
+    pcount = 0;\
+    size_t cIdx = 0;
+
+#define H5GW_VLIST_LOOP_1()\
+vid = vlist->at(j);\
+ocol = vid % r->xpoints;\
+orow = (vid / r->xpoints) % r->ypoints;\
+oplane = vid / (r->xpoints * r->ypoints);\
+cells[cIdx] = 8;\
+++cIdx;\
+for (int k = 0; k < 8; k++) {\
+  if (k == 0) col = ocol, row = orow, plane = oplane;\
+  if (k == 1) col = ocol + 1, row = orow, plane = oplane;\
+  if (k == 2) col = ocol, row = orow + 1, plane = oplane;\
+  if (k == 3) col = ocol + 1, row = orow + 1, plane = oplane;\
+  if (k == 4) col = ocol, row = orow, plane = oplane + 1;\
+  if (k == 5) col = ocol + 1, row = orow, plane = oplane + 1;\
+  if (k == 6) col = ocol, row = orow + 1, plane = oplane + 1;\
+  if (k == 7) col = ocol + 1, row = orow + 1, plane = oplane + 1;\
+  pid = (plane * (r->xpoints + 1) * (r->ypoints + 1)) + (row * (r->xpoints + 1)) + col;\
+  if (pointMap.find(pid) == pointMap.end())  {\
+    pointMap[pid] = pcount;\
+    pcount++;\
+    points.push_back((col * r->resx));\
+    points.push_back((row * r->resy));\
+    points.push_back((plane * r->resz));\
+  }\
+  cells[cIdx] = pointMap[pid];\
+  ++cIdx;\
+}
+
+
+#define H5GW_GRAIN_LOOP_2() \
+err = h5writer->writeUnstructuredGrid(hdfPath, points, cells, cell_types);\
+err = h5writer->writeFieldData<int> (hdfPath, grainName, AIM::Representation::Grain_ID.c_str(), 1);\
+size_t size = r->m_Grains[i]->neighborlist->size();\
+if (size > 0) {\
+err = h5writer->writeFieldData<int> (hdfPath, *(r->m_Grains[i]->neighborlist), AIM::Representation::Neighbor_Grain_ID_List.c_str(), 1);\
+}\
+err = h5writer->writeCellData<int> (hdfPath, grainName, AIM::Representation::Grain_ID.c_str(), 1);\
+err = h5writer->writeCellData<unsigned char> (hdfPath, ipfColor, AIM::Representation::IPFColor.c_str(), 3);\
+err = h5writer->writeCellData<int32_t> (hdfPath, phaseValues, AIM::Representation::Phase.c_str(), 1);
+
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -57,145 +154,42 @@ H5GrainWriter::~H5GrainWriter()
 // -----------------------------------------------------------------------------
 int H5GrainWriter::writeHDF5GrainsFile(ReconstructionFunc* r, const std::string &hdfFile)
 {
-  int err = -1;
-  AIM_H5VtkDataWriter::Pointer h5writer = AIM_H5VtkDataWriter::New();
-  h5writer->setFileName(hdfFile);
-  err = h5writer->openFile(false); // Open a new file over writing any other file
+  H5GW_DECLS()
 
-  std::stringstream ss;
-  std::string hdfPath;
-  std::vector<std::string > hdfPaths;
-  // std::cout << "Writing out " << numgrains << " to an HDF5 Grain File..." << std::endl;
-  int numgrains = r->m_Grains.size();
-  int phase;
+  err = 0;
+
   for (int i = 1; i < numgrains; i++)
   {
-    //   std::cout << " Grain: " << i << " Gathering Data" << std::endl;
-    vector<int >* vlist = r->m_Grains[i]->voxellist;
-    int vid = vlist->at(0);
-    ss.str("");
-    ss << "/" << i;
-    hdfPath = ss.str();
-    hdfPaths.push_back(hdfPath);
+    H5GW_GRAIN_LOOP_1()
 
-  //  vector<int> plist(((r->xpoints + 1) * (r->ypoints + 1) * (r->zpoints + 1)), 0);
-    int pcount = 0;
-    float q1[5];
-    unsigned char rgb[3] =
-    { 0, 0, 0 };
-    unsigned char hkl[3] =
-    { 0, 0, 0 };
-    float RefDirection[3] =
-    { 0.0, 0.0, 1.0 };
-    int ocol, orow, oplane;
-    int col, row, plane;
-    int pid;
-    int err = 0;
-
-    std::vector<float > points;
-    std::vector<int32_t > cells(vlist->size() * 9);
-    std::vector<int32_t > cell_types(vlist->size(), VTK_CELLTYPE_VOXEL);
-
+    // These are Reconstruction specific arrays that we want to write
     std::vector<float > kernelAvgDisorientation(vlist->size());
     std::vector<float > grainAvgDisorientation(vlist->size());
     std::vector<float > imageQuality(vlist->size());
-    std::vector<unsigned char > ipfColor(vlist->size() * 3);
     std::vector<float > schmidFactor(vlist->size());
-    std::vector<int32_t > grainName(vlist->size());
-    std::map<int, int> pointMap;
 
-    size_t cIdx = 0;
-    pcount = 0;
     for (std::vector<int >::size_type j = 0; j < vlist->size(); j++)
     {
-      vid = vlist->at(j);
-      ocol = vid % r->xpoints;
-      orow = (vid / r->xpoints) % r->ypoints;
-      oplane = vid / (r->xpoints * r->ypoints);
-      cells[cIdx] = 8;
-      ++cIdx;
-      for (int k = 0; k < 8; k++)
-      {
-        if (k == 0) col = ocol, row = orow, plane = oplane;
-        if (k == 1) col = ocol + 1, row = orow, plane = oplane;
-        if (k == 2) col = ocol, row = orow + 1, plane = oplane;
-        if (k == 3) col = ocol + 1, row = orow + 1, plane = oplane;
-        if (k == 4) col = ocol, row = orow, plane = oplane + 1;
-        if (k == 5) col = ocol + 1, row = orow, plane = oplane + 1;
-        if (k == 6) col = ocol, row = orow + 1, plane = oplane + 1;
-        if (k == 7) col = ocol + 1, row = orow + 1, plane = oplane + 1;
-        pid = (plane * (r->xpoints + 1) * (r->ypoints + 1)) + (row * (r->xpoints + 1)) + col;
-#if 1
-        if (pointMap.find(pid) == pointMap.end())
-        {
-          pointMap[pid] = pcount;
-          pcount++;
-          points.push_back((col * r->resx));
-          points.push_back((row * r->resy));
-          points.push_back((plane * r->resz));
-        }
-        cells[cIdx] = pointMap[pid];
-#else
-        if (plist[pid] == 0)
-        {
-          plist[pid] = pcount;
-          pcount++;
-          //     outFile << (col * resx) << "  " << (row * resy) << "  " << (plane * resz) << endl;
-          points.push_back((col * r->resx));
-          points.push_back((row * r->resy));
-          points.push_back((plane * r->resz));
-        }
-        // Add onto our cells vector
-        cells[cIdx] = plist[pid];
-#endif
+      H5GW_VLIST_LOOP_1()
 
-        ++cIdx;
-      }
-      // Append a grainId to the grainIds vector
+      phase = r->voxels[vid].phase;
+      phaseValues[j] = phase;
+      H5GW_IPF_COLOR()
+
+      // Reconstruction Specific Assignments
       kernelAvgDisorientation[j] = r->voxels[vid].kernelmisorientation;
       grainAvgDisorientation[j] = r->voxels[vid].grainmisorientation;
       imageQuality[j] = r->voxels[vid].imagequality;
-      phase = r->voxels[vid].phase;
-      if (r->crystruct[phase] == AIM::Reconstruction::Cubic)
-      {
-        OIMColoring::GenerateIPFColor(r->voxels[vid].euler1, r->voxels[vid].euler2, r->voxels[vid].euler3, RefDirection[0], RefDirection[1], RefDirection[2], rgb, hkl);
-      }
-      if (r->crystruct[phase] == AIM::Reconstruction::Hexagonal)
-      {
-        q1[0] = r->voxels[i].quat[1];
-        q1[1] = r->voxels[i].quat[2];
-        q1[2] = r->voxels[i].quat[3];
-        q1[3] = r->voxels[i].quat[4];
-        OIMColoring::CalculateHexIPFColor(q1, RefDirection[0], RefDirection[1], RefDirection[2], rgb);
-      }
-      ipfColor[j * 3] = rgb[0];
-      ipfColor[j * 3 + 1] = rgb[1];
-      ipfColor[j * 3 + 2] = rgb[2];
       grainName[j] = r->voxels[vid].grainname;
       schmidFactor[j] = r->m_Grains[r->voxels[vid].grainname]->schmidfactor;
     }
-    //   std::cout << " Grain: " << i << " Writing HDF5 File" << std::endl;
-    err = h5writer->writeUnstructuredGrid(hdfPath, points, cells, cell_types);
+    H5GW_GRAIN_LOOP_2()
 
-    //Write the Field Data
-    err = h5writer->writeFieldData<int> (hdfPath, grainName, AIM::Representation::Grain_ID.c_str(), 1);
-
-    schmidFactor[0] = r->m_Grains[i]->schmidfactor;
-    err = h5writer->writeFieldData<float> (hdfPath, schmidFactor, AIM::Representation::SchmidFactor.c_str(), 1);
-
-    // Write the Neighbor list
-    size_t size = r->m_Grains[i]->neighborlist->size();
-    if (size > 0) {
-      err = h5writer->writeFieldData<int> (hdfPath, *(r->m_Grains[i]->neighborlist), AIM::Representation::Neighbor_Grain_ID_List.c_str(), 1);
-    }
-    // Write CELL_DATA
     err = h5writer->writeCellData<float> (hdfPath, kernelAvgDisorientation, AIM::Representation::KernelAvgDisorientation.c_str(), 1);
     err = h5writer->writeCellData<float> (hdfPath, grainAvgDisorientation, AIM::Representation::GrainAvgDisorientation.c_str(), 1);
     err = h5writer->writeCellData<float> (hdfPath, imageQuality, AIM::Representation::ImageQuality.c_str(), 1);
-    err = h5writer->writeCellData<float> (hdfPath, schmidFactor, AIM::Representation::SchmidFactor.c_str(), 1);
-    err = h5writer->writeCellData<int> (hdfPath, grainName, AIM::Representation::Grain_ID.c_str(), 1);
-    err = h5writer->writeCellData<unsigned char> (hdfPath, ipfColor, AIM::Representation::IPFColor.c_str(), 3);
-
+    schmidFactor[0] = r->m_Grains[i]->schmidfactor;
+    err = h5writer->writeFieldData<float> (hdfPath, schmidFactor, AIM::Representation::SchmidFactor.c_str(), 1);
   }
 
   err = h5writer->writeObjectIndex(hdfPaths);
@@ -205,150 +199,30 @@ int H5GrainWriter::writeHDF5GrainsFile(ReconstructionFunc* r, const std::string 
 
 
 
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 int H5GrainWriter::writeHDF5GrainsFile(GrainGeneratorFunc* r, const std::string &hdfFile)
 {
-  int err = -1;
-  AIM_H5VtkDataWriter::Pointer h5writer = AIM_H5VtkDataWriter::New();
-  h5writer->setFileName(hdfFile);
-  err = h5writer->openFile(false); // Open a new file over writing any other file
+  H5GW_DECLS()
 
-  std::stringstream ss;
-  std::string hdfPath;
-  std::vector<std::string > hdfPaths;
-  // std::cout << "Writing out " << numgrains << " to an HDF5 Grain File..." << std::endl;
-  int numgrains = r->m_Grains.size();
-  int phase;
+  err = 0;
+
   for (int i = 1; i < numgrains; i++)
   {
-    //   std::cout << " Grain: " << i << " Gathering Data" << std::endl;
-    vector<int >* vlist = r->m_Grains[i]->voxellist;
-    int vid = vlist->at(0);
-    ss.str("");
-    ss << "/" << i;
-    hdfPath = ss.str();
-    hdfPaths.push_back(hdfPath);
+    H5GW_GRAIN_LOOP_1()
 
-  //  vector<int> plist(((r->xpoints + 1) * (r->ypoints + 1) * (r->zpoints + 1)), 0);
-    int pcount = 0;
-    float q1[5];
-    unsigned char rgb[3] =
-    { 0, 0, 0 };
-    unsigned char hkl[3] =
-    { 0, 0, 0 };
-    float RefDirection[3] =
-    { 0.0, 0.0, 1.0 };
-    int ocol, orow, oplane;
-    int col, row, plane;
-    int pid;
-    int err = 0;
-
-    std::vector<float > points;
-    std::vector<int32_t > cells(vlist->size() * 9);
-    std::vector<int32_t > cell_types(vlist->size(), VTK_CELLTYPE_VOXEL);
-
-//    std::vector<float > kernelAvgDisorientation(vlist->size());
-//    std::vector<float > grainAvgDisorientation(vlist->size());
-//    std::vector<float > imageQuality(vlist->size());
-    std::vector<unsigned char > ipfColor(vlist->size() * 3);
- //   std::vector<float > schmidFactor(vlist->size());
-    std::vector<int32_t > grainName(vlist->size());
-    std::map<int, int> pointMap;
-
-    size_t cIdx = 0;
-    pcount = 0;
     for (std::vector<int >::size_type j = 0; j < vlist->size(); j++)
     {
-      vid = vlist->at(j);
-      ocol = vid % r->xpoints;
-      orow = (vid / r->xpoints) % r->ypoints;
-      oplane = vid / (r->xpoints * r->ypoints);
-      cells[cIdx] = 8;
-      ++cIdx;
-      for (int k = 0; k < 8; k++)
-      {
-        if (k == 0) col = ocol, row = orow, plane = oplane;
-        if (k == 1) col = ocol + 1, row = orow, plane = oplane;
-        if (k == 2) col = ocol, row = orow + 1, plane = oplane;
-        if (k == 3) col = ocol + 1, row = orow + 1, plane = oplane;
-        if (k == 4) col = ocol, row = orow, plane = oplane + 1;
-        if (k == 5) col = ocol + 1, row = orow, plane = oplane + 1;
-        if (k == 6) col = ocol, row = orow + 1, plane = oplane + 1;
-        if (k == 7) col = ocol + 1, row = orow + 1, plane = oplane + 1;
-        pid = (plane * (r->xpoints + 1) * (r->ypoints + 1)) + (row * (r->xpoints + 1)) + col;
-#if 1
-        if (pointMap.find(pid) == pointMap.end())
-        {
-          pointMap[pid] = pcount;
-          pcount++;
-          points.push_back((col * r->resx));
-          points.push_back((row * r->resy));
-          points.push_back((plane * r->resz));
-        }
-        cells[cIdx] = pointMap[pid];
-#else
-        if (plist[pid] == 0)
-        {
-          plist[pid] = pcount;
-          pcount++;
-          //     outFile << (col * resx) << "  " << (row * resy) << "  " << (plane * resz) << endl;
-          points.push_back((col * r->resx));
-          points.push_back((row * r->resy));
-          points.push_back((plane * r->resz));
-        }
-        // Add onto our cells vector
-        cells[cIdx] = plist[pid];
-#endif
+      H5GW_VLIST_LOOP_1()
 
-        ++cIdx;
-      }
-      // Append a grainId to the grainIds vector
-//      kernelAvgDisorientation[j] = r->voxels[vid].kernelmisorientation;
-//      grainAvgDisorientation[j] = r->voxels[vid].grainmisorientation;
-//      imageQuality[j] = r->voxels[vid].imagequality;
       phase = r->voxels[vid].phase;
-      if (r->crystruct[phase] == AIM::Reconstruction::Cubic)
-      {
-        OIMColoring::GenerateIPFColor(r->voxels[vid].euler1, r->voxels[vid].euler2, r->voxels[vid].euler3, RefDirection[0], RefDirection[1], RefDirection[2], rgb, hkl);
-      }
-      else if (r->crystruct[phase] == AIM::Reconstruction::Hexagonal)
-      {
-        q1[0] = r->voxels[i].quat[1];
-        q1[1] = r->voxels[i].quat[2];
-        q1[2] = r->voxels[i].quat[3];
-        q1[3] = r->voxels[i].quat[4];
-        OIMColoring::CalculateHexIPFColor(q1, RefDirection[0], RefDirection[1], RefDirection[2], rgb);
-      }
-      ipfColor[j * 3] = rgb[0];
-      ipfColor[j * 3 + 1] = rgb[1];
-      ipfColor[j * 3 + 2] = rgb[2];
-      grainName[j] = r->voxels[vid].grainname;
-  //    schmidFactor[j] = r->m_Grains[r->voxels[vid].grainname]->schmidfactor;
+      phaseValues[j] = phase;
+      H5GW_IPF_COLOR()
+
     }
-    //   std::cout << " Grain: " << i << " Writing HDF5 File" << std::endl;
-    err = h5writer->writeUnstructuredGrid(hdfPath, points, cells, cell_types);
-
-    //Write the Field Data
-    err = h5writer->writeFieldData<int> (hdfPath, grainName, AIM::Representation::Grain_ID.c_str(), 1);
-
-//    schmidFactor[0] = r->m_Grains[i]->schmidfactor;
-//    err = h5writer->writeFieldData<float> (hdfPath, schmidFactor, AIM::Representation::SchmidFactor.c_str(), 1);
-
-    // Write the Neighbor list
-    size_t size = r->m_Grains[i]->neighborlist->size();
-    if (size > 0) {
-      err = h5writer->writeFieldData<int> (hdfPath, *(r->m_Grains[i]->neighborlist), AIM::Representation::Neighbor_Grain_ID_List.c_str(), 1);
-    }
-    // Write CELL_DATA
-//    err = h5writer->writeCellData<float> (hdfPath, kernelAvgDisorientation, AIM::Representation::KernelAvgDisorientation.c_str(), 1);
-//    err = h5writer->writeCellData<float> (hdfPath, grainAvgDisorientation, AIM::Representation::GrainAvgDisorientation.c_str(), 1);
-//    err = h5writer->writeCellData<float> (hdfPath, imageQuality, AIM::Representation::ImageQuality.c_str(), 1);
-//    err = h5writer->writeCellData<float> (hdfPath, schmidFactor, AIM::Representation::SchmidFactor.c_str(), 1);
-    err = h5writer->writeCellData<int> (hdfPath, grainName, AIM::Representation::Grain_ID.c_str(), 1);
-    err = h5writer->writeCellData<unsigned char> (hdfPath, ipfColor, AIM::Representation::IPFColor.c_str(), 3);
-
+    H5GW_GRAIN_LOOP_2()
   }
 
   err = h5writer->writeObjectIndex(hdfPaths);
