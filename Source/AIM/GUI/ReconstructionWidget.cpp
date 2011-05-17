@@ -87,13 +87,14 @@ void ReconstructionWidget::readSettings(QSettings &prefs)
   double d;
 
   prefs.beginGroup("Reconstruction");
-  READ_FILEPATH_SETTING(prefs, m_, OutputDir, "");
-  READ_STRING_SETTING(prefs, m_, OutputFilePrefix, "Reconstruction_")
   READ_FILEPATH_SETTING(prefs, m_, H5InputFile, "");
   if (verifyPathExists(m_H5InputFile->text(), m_H5InputFile) )
   {
     m_SetSliceInfo();
   }
+  READ_FILEPATH_SETTING(prefs, m_, OutputDir, "");
+  READ_STRING_SETTING(prefs, m_, OutputFilePrefix, "Reconstruction_")
+
   READ_SETTING(prefs, m_, ZStartIndex, ok, i, 0, Int)
   READ_SETTING(prefs, m_, ZEndIndex, ok, i, 0, Int)
 
@@ -128,9 +129,9 @@ void ReconstructionWidget::readSettings(QSettings &prefs)
 void ReconstructionWidget::writeSettings(QSettings &prefs)
 {
   prefs.beginGroup("Reconstruction");
+  WRITE_STRING_SETTING(prefs, m_, H5InputFile)
   WRITE_STRING_SETTING(prefs, m_, OutputDir)
   WRITE_STRING_SETTING(prefs, m_, OutputFilePrefix)
-  WRITE_STRING_SETTING(prefs, m_, H5InputFile)
   WRITE_SETTING(prefs, m_, ZStartIndex)
   WRITE_SETTING(prefs, m_, ZEndIndex)
 

@@ -103,7 +103,7 @@ void GrainGeneratorFunc::initializeArrays(std::vector<AIM::Reconstruction::Cryst
 
   crystruct.resize(size+1);
   pptFractions.resize(size + 1);
-  for(size_t i = 0; i < size; i++)
+  for(size_t i = 0; i < size + 1; i++)
   {
     crystruct[i+1] = structures[i];
     pptFractions[i+1] = -1.0;
@@ -296,7 +296,7 @@ int GrainGeneratorFunc::readReconStatsData(H5ReconStatsReader::Pointer h5io)
 	    float f = -1.0f;
 	    err = h5io->readScalarAttribute(phase, AIM::HDF5::PhaseType, AIM::HDF5::PrecipitateBoundaryFraction, f);
 	    if (err < 0) {
-	      f = 1.0f;
+	      f = -1.0f;
 	    }
 	    pptFractions[phase] = f;
 	  }

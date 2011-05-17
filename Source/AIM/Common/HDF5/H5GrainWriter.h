@@ -34,7 +34,10 @@
 
 #include "MXA/Common/MXASetGetMacros.h"
 
-#include "AIM/Common/ReconstructionFunc.h"
+#include "AIM/Common/AIMCommonConfiguration.h"
+
+class ReconstructionFunc;
+class GrainGeneratorFunc;
 
 /**
  * @class H5GrainWriter H5GrainWriter.h AIM/Common/HDF5/H5GrainWriter.h
@@ -59,6 +62,13 @@ class AIMCOMMON_EXPORT H5GrainWriter
      * @return
      */
     int writeHDF5GrainsFile(ReconstructionFunc* r, const std::string &hdfFile);
+
+    /**
+     * @brief
+     * @param hdfFile
+     * @return
+     */
+    int writeHDF5GrainsFile(GrainGeneratorFunc* r, const std::string &hdfFile);
 
   protected:
     H5GrainWriter();
