@@ -104,9 +104,9 @@ public:
     std::vector<std::vector<std::vector<float> > > covera;
     std::vector<std::vector<std::vector<float> > > coverb;
     std::vector<std::vector<std::vector<float> > > neighborhood;
+    std::vector<std::vector<std::vector<float> > > neighborhoodfit;
     std::vector<std::vector<std::vector<float> > > omega3;
     std::vector<std::vector<std::vector<float> > > neighbordist;
-    std::vector<std::vector<std::vector<float> > > neighborhoodfit;
     std::vector<std::vector<std::vector<float> > > svbovera;
     std::vector<std::vector<std::vector<float> > > svcovera;
     std::vector<std::vector<std::vector<float> > > svcoverb;
