@@ -87,6 +87,10 @@ ReconstructionFunc::ReconstructionFunc()
   m_OrthoOps = OrthoRhombicOps::New();
   m_OrientationOps.push_back(dynamic_cast<OrientationMath*> (m_CubicOps.get()));
 
+  // Just to quiet the compiler
+  float f = sqrt_two;
+  f = sin_wmin_neg_1_over_2;
+  f = sin_wmin_pos_1_over_2;
 }
 
 ReconstructionFunc::~ReconstructionFunc()
@@ -98,26 +102,40 @@ ReconstructionFunc::~ReconstructionFunc()
   voxels.reset(NULL);
 }
 
-void ReconstructionFunc::initialize(int nX, int nY, int nZ, float xRes, float yRes, float zRes, bool v_mergetwinsoption,
-									bool v_mergecoloniesoption, int v_minallowedgrainsize, float v_minseedconfidence,
-									float v_downsamplefactor, float v_minseedimagequality, float v_misorientationtolerance,
-									float v_sizebinstepsize, vector<AIM::Reconstruction::CrystalStructure> v_crystruct,
-									vector<AIM::Reconstruction::PhaseType> v_phaseType,
-                                    int v_alignmeth, bool v_alreadyformed)
+void ReconstructionFunc::initialize(int nX,
+                                    int nY,
+                                    int nZ,
+                                    float xRes,
+                                    float yRes,
+                                    float zRes,
+                                    bool mrgTwins,
+                                    bool mrgColonies,
+                                    int minAllowedGrSize,
+                                    float minSeedConfidence,
+                                    float dwnSmplFact,
+                                    float minImgQlty,
+                                    float misoTol,
+                                    float szBinStepSize,
+                                    vector<AIM::Reconstruction::CrystalStructure> crystalStructures,
+                                    vector<AIM::Reconstruction::PhaseType> phaseTypes,
+                                    std::vector<float> precipFractions,
+                                    int alignmentMethod,
+                                    bool alreadyFormed)
 {
 
-  mergetwinsoption = (v_mergetwinsoption == true) ? 1 : 0;
-  mergecoloniesoption = (v_mergecoloniesoption == true) ? 1 : 0;
-  minallowedgrainsize = v_minallowedgrainsize;
-  minseedconfidence = v_minseedconfidence;
-  downsamplefactor = v_downsamplefactor;
-  minseedimagequality = v_minseedimagequality;
-  sizebinstepsize = v_sizebinstepsize;
-  misorientationtolerance = v_misorientationtolerance;
-  crystruct = v_crystruct;
-  phaseType = v_phaseType;
-  alignmeth = v_alignmeth;
-  alreadyformed = (v_alreadyformed == true) ? 1 : 0;
+  mergetwinsoption = (mrgTwins == true) ? 1 : 0;
+  mergecoloniesoption = (mrgColonies == true) ? 1 : 0;
+  minallowedgrainsize = minAllowedGrSize;
+  minseedconfidence = minSeedConfidence;
+  downsamplefactor = dwnSmplFact;
+  minseedimagequality = minImgQlty;
+  sizebinstepsize = szBinStepSize;
+  misorientationtolerance = misoTol;
+  crystruct = crystalStructures;
+  phaseType = phaseTypes;
+  pptFractions = pptFractions;
+  alignmeth = alignmentMethod;
+  alreadyformed = (alreadyFormed == true) ? 1 : 0;
 
   maxdiameter.resize(crystruct.size());
   mindiameter.resize(crystruct.size());
@@ -3710,7 +3728,8 @@ int ReconstructionFunc::volume_stats(H5ReconStatsWriter::Pointer h5io)
 	  }
 	  sdlogdiam = sdlogdiam / actualgrains;
 	  sdlogdiam = powf(sdlogdiam, 0.5);
-	  retErr = h5io->writeVolumeStats(iter, crystruct[iter], phaseType[iter], phasefraction[iter], maxdiameter[iter], mindiameter[iter], 1.0, avglogdiam, sdlogdiam, svbovera, svcovera, svcoverb, neighborhoodfit, svomega3);
+	  retErr = h5io->writeVolumeStats(iter, crystruct[iter], phaseType[iter], phasefraction[iter], pptFractions[iter],
+	                                  maxdiameter[iter], mindiameter[iter], 1.0, avglogdiam, sdlogdiam, svbovera, svcovera, svcoverb, neighborhoodfit, svomega3);
   }
 
   return retErr;
@@ -3838,7 +3857,8 @@ int ReconstructionFunc::volume_stats2D(H5ReconStatsWriter::Pointer h5io)
     sdlogdiam = powf(sdlogdiam, 0.5);
 
     retErr
-        = h5io->writeVolumeStats2D(iter, crystruct[iter], phaseType[iter], phasefraction[iter], maxdiameter[iter], mindiameter[iter], 1.0, avglogdiam, sdlogdiam, svbovera, neighborhoodfit);
+        = h5io->writeVolumeStats2D(iter, crystruct[iter], phaseType[iter], phasefraction[iter], pptFractions[iter],
+                                   maxdiameter[iter], mindiameter[iter], 1.0, avglogdiam, sdlogdiam, svbovera, neighborhoodfit);
   }
   return retErr;
 }

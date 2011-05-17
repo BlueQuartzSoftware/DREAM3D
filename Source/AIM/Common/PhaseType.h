@@ -33,6 +33,7 @@
 #include "AIM/Common/AIMCommonConfiguration.h"
 #include "AIM/Common/Constants.h"
 
+namespace AIM {
 /**
  * @class PhaseType PhaseType.h PathToHeader/PhaseType.h
  * @brief
@@ -43,27 +44,41 @@
 class PhaseType
 {
   public:
+    const static std::string PrimaryStr;
+    const static std::string PrecipitateStr;
+    const static std::string TransformationStr;
+    const static std::string UnknownPhaseTypeStr;
+
 
     virtual ~PhaseType();
+
     static std::string getPhaseTypeString(AIM::Reconstruction::PhaseType phaseType)
     {
       switch(phaseType)
       {
-        case AIM::Reconstruction::Primary:
-          return std::string("Primary");
-        case AIM::Reconstruction::BoundaryPrecipitate:
-          return std::string("Boundary Precipitate");
-        case AIM::Reconstruction::BulkPrecipitate:
-          return std::string("Bulk Precipitate");
-        case AIM::Reconstruction::Transformation:
-          return std::string("Transformation");
+        case AIM::Reconstruction::PrimaryPhase:
+          return PrimaryStr;
+        case AIM::Reconstruction::PrecipitatePhase:
+          return PrecipitateStr;
+        case AIM::Reconstruction::TransformationPhase:
+          return TransformationStr;
         case AIM::Reconstruction::UnknownPhaseType:
-          return std::string("Uknown Phase Type");
+          return UnknownPhaseTypeStr;
         default:
           break;
       }
       return std::string("Undefined Phase Type (Error)");
     }
+
+
+    static void getPhaseTypeStringList(std::list<std::string> &list)
+    {
+      list.push_back(PrimaryStr);
+      list.push_back(PrecipitateStr);
+      list.push_back(TransformationStr);
+      list.push_back(UnknownPhaseTypeStr);
+    }
+
   protected:
     PhaseType();
   private:
@@ -71,6 +86,12 @@ class PhaseType
     void operator=(const PhaseType&); //Not Implemented
 
 };
+
+  const std::string PhaseType::PrimaryStr("Primary");
+  const std::string PhaseType::PrecipitateStr("Precipitate");
+  const std::string PhaseType::TransformationStr("Transformation");
+  const std::string PhaseType::UnknownPhaseTypeStr("Unknown Phase Type");
+} // End Namespace 'AIM'
 
 #endif //_PhaseType_h_
 

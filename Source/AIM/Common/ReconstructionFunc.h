@@ -114,6 +114,7 @@ class AIMCOMMON_EXPORT ReconstructionFunc
     int mergecoloniesoption;
     vector<AIM::Reconstruction::CrystalStructure> crystruct;
     vector<AIM::Reconstruction::PhaseType>        phaseType;
+    std::vector<float>                            pptFractions;
     int alignmeth;
     int alreadyformed;
 
@@ -155,13 +156,25 @@ class AIMCOMMON_EXPORT ReconstructionFunc
     int totaltemppoints;
     int numneighbins;
 
-
-    void initialize(int nX, int nY, int nZ, float xRes, float yRes, float zRes, bool v_mergetwinsoption,
-                    bool v_mergecoloniesoption, int v_minallowedgrainsize, float v_minseedconfidence,
-                    float v_downsamplefactor, float v_minseedimagequality, float v_misorientationtolerance,
-                    float v_sizebinstepsize, vector<AIM::Reconstruction::CrystalStructure> v_crystruct,
-                    vector<AIM::Reconstruction::PhaseType> v_phaseType,
-                                      int v_alignmeth, bool v_alreadyformed);
+    void initialize(int nX,
+                    int nY,
+                    int nZ,
+                    float xRes,
+                    float yRes,
+                    float zRes,
+                    bool mrgTwins,
+                    bool mrgColonies,
+                    int minAllowedGrSize,
+                    float minSeedConfidence,
+                    float dwnSmplFact,
+                    float minImgQlty,
+                    float misoTol,
+                    float szBinStepSize,
+                    vector<AIM::Reconstruction::CrystalStructure> crystalStructures,
+                    vector<AIM::Reconstruction::PhaseType> phaseTypes,
+                    std::vector<float> precipFractions,
+                    int alignmentMethod,
+                    bool alreadyFormed);
 
 
 	void initializeQuats();
