@@ -126,6 +126,30 @@ class AIMCOMMON_EXPORT H5ReconStatsReader
     }
 
 
+    template<typename T>
+    int readScalarAttribute(int phase, const std::string &name, const std::string &attrName, T &data)
+    {
+      herr_t err = 0;
+      herr_t retErr = 0;
+      OPEN_HDF5_FILE(fileId, m_FileName)
+
+      OPEN_RECONSTRUCTION_GROUP(reconGid, AIM::HDF5::Reconstruction.c_str(), fileId)
+
+      std::string index = StringUtils::numToString(phase);
+      hid_t pid = H5Gopen(reconGid, index.c_str());
+
+      err = H5Lite::readScalarAttribute(pid, name, attrName, data);
+
+      err = H5Gclose(pid);
+      if (err < 0) { retErr = err; }
+      err = H5Gclose(reconGid);
+      if (err < 0) { retErr = err; }
+      err = H5Utilities::closeFile(fileId);
+      if (err < 0) { retErr = err; }
+      return retErr;
+    }
+
+
 
     /**
      * @brief

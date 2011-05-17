@@ -99,7 +99,7 @@ H5ReconStatsWriter::Pointer H5ReconStatsWriter::New(const std::string &filename)
 int H5ReconStatsWriter::writePhaseInformation(int phase,
                                               AIM::Reconstruction::PhaseType  phaseType,
                                               AIM::Reconstruction::CrystalStructure xtal,
-                                              float phasefraction)
+                                              float phasefraction, float pptFraction)
 {
   herr_t err = 0;
   herr_t retErr = 0;
@@ -136,15 +136,22 @@ int H5ReconStatsWriter::writePhaseInformation(int phase,
     H5RSW_ERROR_CHECK(AIM::HDF5::PhaseType)
     retErr = err;
   }
-  std::string ptName = PhaseType::getPhaseTypeString(phaseType);
+  std::string ptName = AIM::PhaseType::getPhaseTypeString(phaseType);
   name = std::string("Name");
   err = H5Lite::writeStringAttribute(pid, AIM::HDF5::PhaseType, name, ptName);
   if (err < 0)
   {
-    H5RSW_ERROR_CHECK(AIM::HDF5::PhaseType)
+    H5RSW_ERROR_CHECK(name)
     retErr = err;
   }
-
+  if (pptFraction > 0.0f) {
+    err = H5Lite::writeScalarAttribute(pid, AIM::HDF5::PhaseType, AIM::HDF5::PrecipitateBoundaryFraction, pptFraction);
+    if (err < 0)
+    {
+      H5RSW_ERROR_CHECK(AIM::HDF5::PrecipitateBoundaryFraction)
+      retErr = err;
+    }
+  }
   /* **** Write the Phase Fraction Information ****** */
   err = H5Lite::writeScalarDataset(pid, AIM::HDF5::PhaseFraction, phasefraction);
   if (err < 0)
@@ -388,7 +395,8 @@ int H5ReconStatsWriter::writeDistributionData(int phase, const std::string &disT
 // -----------------------------------------------------------------------------
 int H5ReconStatsWriter::writeVolumeStats(int phase, AIM::Reconstruction::CrystalStructure xtal,
                                          AIM::Reconstruction::PhaseType phaseType,
-                                         float phasefraction, float maxdiameter, float mindiameter, float diamStepSize,
+                                         float phasefraction, float pptFraction,
+                                         float maxdiameter, float mindiameter, float diamStepSize,
                                          float avglogdiam, float sdlogdiam, std::vector<std::vector<float> > &svbovera,
                                          std::vector<std::vector<float> > &svcovera, std::vector<std::vector<float> > &svcoverb,
                                          std::vector<std::vector<float> > &neighborhoodfit, std::vector<std::vector<float> > &svomega3)
@@ -399,7 +407,7 @@ int H5ReconStatsWriter::writeVolumeStats(int phase, AIM::Reconstruction::Crystal
  // std::vector<float> binNum; // = generateBins((float)maxdiameter, (float)mindiameter, diamStepSize);
   size_t nBins = 0; // Used as a variable that will get written to in the writeSizeDistribution() method
 
-  err = writePhaseInformation(phase, phaseType, xtal, phasefraction);
+  err = writePhaseInformation(phase, phaseType, xtal, phasefraction, pptFraction);
   if (err < 0) { retErr = err; }
 
   err = writeSizeDistribution(phase, (float)maxdiameter, (float)mindiameter, diamStepSize, avglogdiam, sdlogdiam, nBins);
@@ -505,7 +513,8 @@ int H5ReconStatsWriter::writeVolumeStats(int phase, AIM::Reconstruction::Crystal
 int H5ReconStatsWriter::writeVolumeStats2D(int phase,
                                            AIM::Reconstruction::CrystalStructure xtal,
                                            AIM::Reconstruction::PhaseType phaseType,
-                                           float phasefraction, float maxdiameter, float mindiameter, float diamStepSize,
+                                           float phasefraction, float pptFraction,
+                                           float maxdiameter, float mindiameter, float diamStepSize,
                                          float avglogdiam, float sdlogdiam, std::vector<std::vector<float> > &svbovera,
                                          std::vector<std::vector<float> > &neighborhoodfit)
 {
@@ -514,7 +523,7 @@ int H5ReconStatsWriter::writeVolumeStats2D(int phase,
 
  // std::vector<float> binNum; // = generateBins((float)maxdiameter, (float)mindiameter, diamStepSize);
   size_t nBins = 0; // Used as a variable that will get written to in the writeSizeDistribution() method
-  err = writePhaseInformation(phase, phaseType, xtal, phasefraction);
+  err = writePhaseInformation(phase, phaseType, xtal, phasefraction, pptFraction);
   if (err < 0) { retErr = err; }
 
   err = writeSizeDistribution(phase, (float)maxdiameter, (float)mindiameter, diamStepSize, avglogdiam, sdlogdiam, nBins);

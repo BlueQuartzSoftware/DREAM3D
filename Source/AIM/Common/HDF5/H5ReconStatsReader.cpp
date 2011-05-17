@@ -142,10 +142,12 @@ int H5ReconStatsReader::getPhaseAndCrystalStructures(std::vector<int> &phases,
     StringUtils::stringToNum(i, *pString);
     phases.push_back(i);
     hid_t gid = H5Gopen(reconGid,(*pString).c_str() );
-    //FIXME: CHECK ERROR
     unsigned int xtal = static_cast<unsigned int>(AIM::Reconstruction::UnknownCrystalStructure);
     err = H5Lite::readScalarDataset(gid, AIM::HDF5::CrystalStructure, xtal);
-    //FIXME: CHECK ERROR
+    if (err < 0)
+    {
+      xtal = static_cast<unsigned int>(AIM::Reconstruction::UnknownCrystalStructure);
+    }
     xtals.push_back(static_cast<AIM::Reconstruction::CrystalStructure>(xtal) );
     err = H5Gclose(gid);
   }
