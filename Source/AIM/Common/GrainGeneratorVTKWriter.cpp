@@ -75,7 +75,7 @@ int GrainGeneratorVTKWriter::writeVisualizationFile(GrainGeneratorFunc* r, const
   {
     WRITE_VTK_GRAIN_IDS_BINARY(r, AIM::Reconstruction::GrainIdScalarName, voxels);
     WRITE_VTK_SCALARS_FROM_VOXEL_BINARY(r, SurfaceVoxel, int, voxels, surfacevoxel)
-    WRITE_VTK_SCALARS_FROM_VOXEL_BINARY(r, PhaseID, int, voxels, unassigned)
+    WRITE_VTK_SCALARS_FROM_VOXEL_BINARY(r, PhaseID, int, voxels, phase)
   }
   else
   {
