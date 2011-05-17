@@ -87,7 +87,7 @@ if (err < 0) {\
 // -----------------------------------------------------------------------------
 SGWidget::SGWidget(QWidget *parent) :
 QWidget(parent),
-m_PhaseType(AIM::Reconstruction::Primary),
+m_PhaseType(AIM::Reconstruction::PrimaryPhase),
 m_PhaseFraction(1.0),
 m_TotalPhaseFraction(1.0),
 m_PhaseIndex(0),
@@ -717,7 +717,7 @@ int SGWidget::writeDataToHDF5(H5ReconStatsWriter::Pointer writer)
 
   size_t nBins = 0;
 
-  err = writer->writePhaseInformation(m_PhaseIndex, m_PhaseType, m_CrystalStructure, calcPhaseFraction);
+  err = writer->writePhaseInformation(m_PhaseIndex, m_PhaseType, m_CrystalStructure, calcPhaseFraction, m_PptFraction);
   CHECK_ERROR_ON_WRITE(err, "PhaseInformation")
   err = writer->writeSizeDistribution(m_PhaseIndex, maxdiameter, mindiameter, stepSize, avglogdiam, sdlogdiam, nBins);
   CHECK_ERROR_ON_WRITE(err, "Size Distribution")

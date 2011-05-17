@@ -32,6 +32,7 @@
 #define EDITPHASEDIALOG_H_
 
 #include <QtGui/QDialog>
+#include <QtGui/QDoubleValidator>
 #include "ui_EditPhaseDialog.h"
 
 #include "AIM/Common/Constants.h"
@@ -54,28 +55,29 @@ class EditPhaseDialog : public QDialog, private Ui::EditPhaseDialog
     AIM::Reconstruction::CrystalStructure getCrystalStructure();
     void setCrystalStructure(AIM::Reconstruction::CrystalStructure xtal);
 
-    double getPhaseFraction();
-    void setPhaseFraction(double d);
+    float getPhaseFraction();
+    void setPhaseFraction(float d);
 
     void setPhaseType(AIM::Reconstruction::PhaseType pt);
     AIM::Reconstruction::PhaseType getPhaseType();
 
+    void setOtherPhaseFractionTotal(float t);
 
-    void setOtherPhaseFractionTotal(double t);
-
-
+    float getPptFraction();
+    void setPptFraction(float d);
 
   protected slots:
   void on_phaseFraction_textChanged(const QString &string);
-
+  void on_phaseTypeCombo_currentIndexChanged(int index);
 
 
   protected:
     void setupGui();
 
   private:
-    double m_OtherPhaseFractions;
-
+    float m_OtherPhaseFractions;
+    QDoubleValidator* m_PhaseFractionValidator;
+    QDoubleValidator* m_PptFractionValidator;
     EditPhaseDialog(const EditPhaseDialog&); // Copy Constructor Not Implemented
     void operator=(const EditPhaseDialog&); // Operator '=' Not Implemented
 };
