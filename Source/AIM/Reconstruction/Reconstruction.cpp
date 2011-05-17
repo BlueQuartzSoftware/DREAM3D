@@ -187,12 +187,15 @@ void Reconstruction::compute()
   // putting in UnknownTypes just to have something. You can change to suit
   // your needs.
   std::vector<AIM::Reconstruction::PhaseType> phaseTypes;
+  std::vector<float> precipFractions;
   std::vector<AIM::Reconstruction::CrystalStructure> crystalStructures;
   std::vector<AngPhase::Pointer> phases = h5AngLoader->getPhases();
   crystalStructures.resize(phases.size()+1);
   phaseTypes.resize(phases.size() + 1);
+  precipFractions.resize(phases.size() + 1);
   crystalStructures[0] = AIM::Reconstruction::UnknownCrystalStructure;
   phaseTypes[0] = AIM::Reconstruction::UnknownPhaseType;
+  precipFractions[0] = -1.0f;
   for(size_t i=0;i<phases.size();i++)
   {
 	  int phaseID = phases[i]->getPhase();
@@ -202,6 +205,7 @@ void Reconstruction::compute()
 	  else if(symmetry == TSL::OIM::HexagonalSymmetry) crystal_structure = AIM::Reconstruction::Hexagonal;
 	  crystalStructures[phaseID] = crystal_structure;
 	  phaseTypes[phaseID] = AIM::Reconstruction::UnknownPhaseType;
+	  precipFractions[phaseID] = -1.0f;
   }
 
   if (err < 0)
@@ -215,7 +219,7 @@ void Reconstruction::compute()
   m->initialize(m->xpoints, m->ypoints, m->zpoints,
                 m->resx, m->resy, m->resz, m_MergeTwins, m_MergeColonies, m_MinAllowedGrainSize,
                 m_MinSeedConfidence, m_DownSampleFactor, m_MinSeedImageQuality,
-                m_MisorientationTolerance, m_SizeBinStepSize, crystalStructures, phaseTypes,
+                m_MisorientationTolerance, m_SizeBinStepSize, crystalStructures, phaseTypes, precipFractions,
                 m_AlignmentMethod, m_AlreadyFormed);
   m_OutputDirectory = MXADir::toNativeSeparators(m_OutputDirectory);
 

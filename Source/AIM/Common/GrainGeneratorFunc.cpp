@@ -69,6 +69,10 @@ m_Grains(NULL)
   m_OrientatioOps.push_back(m_CubicOps.get());
   m_OrthoOps = OrthoRhombicOps::New();
   m_OrientatioOps.push_back(m_OrthoOps.get());
+
+  // Just stuff to quiet the compiler
+  float a = SinOfHalf;
+  a = CosOfHalf;
 }
 
 // -----------------------------------------------------------------------------
@@ -98,9 +102,11 @@ void GrainGeneratorFunc::initializeArrays(std::vector<AIM::Reconstruction::Cryst
   size_t size = structures.size();
 
   crystruct.resize(size+1);
-  for(int i = 0; i < size; i++)
+  pptFractions.resize(size + 1);
+  for(size_t i = 0; i < size; i++)
   {
-	crystruct[i+1] = structures[i];
+    crystruct[i+1] = structures[i];
+    pptFractions[i+1] = -1.0;
   }
   phaseType.resize(size+1);
   phasefraction.resize(size+1);
@@ -272,7 +278,7 @@ int GrainGeneratorFunc::readReconStatsData(H5ReconStatsReader::Pointer h5io)
   int size = phases.size();
 
   int phase = -1;
-  for (size_t i = 0; i < size; i++)
+  for (int i = 0; i < size; i++)
   {
     phase = phases[i];
 	  /* Read the PhaseFraction Value*/
@@ -283,6 +289,17 @@ int GrainGeneratorFunc::readReconStatsData(H5ReconStatsReader::Pointer h5io)
 	  std::vector<unsigned int> phasetypes;
 	  err = h5io->readStatsDataset(phase, AIM::HDF5::PhaseType, phasetypes);
 	  phaseType[phase] = static_cast<AIM::Reconstruction::PhaseType>(phasetypes[0]);
+
+	  // If the Phase Type is Precipitate then we need the pptFraction on Boundary
+	  if (phaseType[phase] == AIM::Reconstruction::PrecipitatePhase)
+	  {
+	    float f = -1.0f;
+	    err = h5io->readScalarAttribute(phase, AIM::HDF5::PhaseType, AIM::HDF5::PrecipitateBoundaryFraction, f);
+	    if (err < 0) {
+	      f = 1.0f;
+	    }
+	    pptFractions[phase] = f;
+	  }
 
 	  /* Read the BinNumbers data set */
 	  std::vector<float> bins;
@@ -1129,14 +1146,14 @@ int  GrainGeneratorFunc::pack_grains(const std::string &filename, int numgrains)
   double totalprimaryfractions = 0.0;
   for (std::vector<AIM::Reconstruction::CrystalStructure>::size_type i = 1; i < crystruct.size();++i)
   {
-	  if(phaseType[i] == AIM::Reconstruction::Primary)
+	  if(phaseType[i] == AIM::Reconstruction::PrimaryPhase)
 	  {
 		primaryphases.push_back(i);
 		primaryphasefractions.push_back(phasefraction[i]);
 		totalprimaryfractions = totalprimaryfractions + phasefraction[i];
 	  }
   }
-  for (int i = 1; i < primaryphasefractions.size(); i++)
+  for (size_t i = 1; i < primaryphasefractions.size(); i++)
   {
 	  primaryphasefractions[i] = primaryphasefractions[i]/totalprimaryfractions;
 	  primaryphasefractions[i] = primaryphasefractions[i] + primaryphasefractions[i-1];
@@ -1593,7 +1610,7 @@ void  GrainGeneratorFunc::assign_eulers(int numgrains)
   float random;
   int choose, phase;
 
-  int xtalCount = crystruct.size();
+  size_t xtalCount = crystruct.size();
   unbiasedvol.resize(xtalCount);
   for(size_t i=1;i<xtalCount;++i)
   {
@@ -1736,8 +1753,8 @@ void  GrainGeneratorFunc::fill_gaps(int numgrains)
 int  GrainGeneratorFunc::place_precipitates(int numgrains)
 {
   totalprecipvol = 0;
-  int currentnumgrains = numgrains;
-  size_t index;
+  size_t currentnumgrains = numgrains;
+ // size_t index;
   int phase;
   float random;
   float xc, yc, zc;
@@ -1749,14 +1766,15 @@ int  GrainGeneratorFunc::place_precipitates(int numgrains)
   double totalprecipitatefractions = 0.0;
   for (std::vector<AIM::Reconstruction::CrystalStructure>::size_type i = 1; i < crystruct.size();++i)
   {
-	  if(phaseType[i] == AIM::Reconstruction::BoundaryPrecipitate || phaseType[i] == AIM::Reconstruction::BulkPrecipitate)
+	  if(phaseType[i] == AIM::Reconstruction::PrecipitatePhase)
 	  {
 		precipitatephases.push_back(i);
 		precipitatephasefractions.push_back(phasefraction[i]);
 		totalprecipitatefractions = totalprecipitatefractions + phasefraction[i];
 	  }
   }
-  for (int i = 1; i < precipitatephasefractions.size(); i++)
+  size_t size = precipitatephasefractions.size();
+  for (size_t i = 1; i < size; i++)
   {
 	  precipitatephasefractions[i] = precipitatephasefractions[i]/totalprecipitatefractions;
 	  precipitatephasefractions[i] = precipitatephasefractions[i] + precipitatephasefractions[i-1];
@@ -1772,20 +1790,21 @@ int  GrainGeneratorFunc::place_precipitates(int numgrains)
         break;
       }
     }
+
 	if(currentnumgrains >= m_Grains.size())
 	{
 		m_Grains.resize(currentnumgrains + 1000);
 		for(size_t g = currentnumgrains; g < m_Grains.size(); ++g)
 		{
 			m_Grains[g] = Grain::New();
-		}  
+		}
 	}
     generate_grain(currentnumgrains, phase);
     totalprecipvol = totalprecipvol + m_Grains[currentnumgrains]->volume;
 	currentnumgrains++;
   }
   m_Grains.resize(currentnumgrains);
-  for (int i = numgrains; i < currentnumgrains; i++)
+  for (size_t i = numgrains; i < currentnumgrains; i++)
   {
     xc = rg.Random() * (xpoints * resx);
     yc = rg.Random() * (ypoints * resy);
@@ -1794,7 +1813,7 @@ int  GrainGeneratorFunc::place_precipitates(int numgrains)
     m_Grains[i]->centroidy = yc;
     m_Grains[i]->centroidz = zc;
   }
-  for (int i = numgrains; i < currentnumgrains; i++)
+  for (size_t i = numgrains; i < currentnumgrains; i++)
   {
     insert_grain(i);
 	m_Grains[i]->active = 1;
@@ -3167,7 +3186,8 @@ int GrainGeneratorFunc::volume_stats(H5ReconStatsWriter::Pointer h5io)
 	  sdlogdiam = sdlogdiam / actualgrains;
 	  sdlogdiam = powf(sdlogdiam, 0.5);
 
-	  retErr = h5io->writeVolumeStats(iter, crystruct[iter], phaseType[iter], phasefraction[iter], maxdiameter[iter], mindiameter[iter], binstepsize[iter], avglogdiam, sdlogdiam,
+	  retErr = h5io->writeVolumeStats(iter, crystruct[iter], phaseType[iter], phasefraction[iter], pptFractions[iter],
+	                                  maxdiameter[iter], mindiameter[iter], binstepsize[iter], avglogdiam, sdlogdiam,
 									  svbovera[iter], svcovera[iter], svcoverb[iter], neighborhoodfit[iter], svomega3[iter]);
   }
   return retErr;

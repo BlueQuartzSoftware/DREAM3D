@@ -115,7 +115,8 @@ class AIMCOMMON_EXPORT H5ReconStatsWriter
 
     int writeVolumeStats(int phase, AIM::Reconstruction::CrystalStructure xtal,
                          AIM::Reconstruction::PhaseType phaseType,
-                         float phasefraction, float maxdiameter, float mindiameter, float diamStepSize,
+                         float phasefraction, float pptFraction,
+                         float maxdiameter, float mindiameter, float diamStepSize,
                          float avglogdiam, float sdlogdiam, std::vector<std::vector<float> > &svbovera,
                          std::vector<std::vector<float> > &svcovera, std::vector<std::vector<float> > &svcoverb,
                          std::vector<std::vector<float> > &neighborhoodfit, std::vector<std::vector<float> > &svomega3);
@@ -123,13 +124,14 @@ class AIMCOMMON_EXPORT H5ReconStatsWriter
     int writeVolumeStats2D(int phase,
                            AIM::Reconstruction::CrystalStructure xtal,
                            AIM::Reconstruction::PhaseType phaseType,
-                           float phasefraction, float maxdiameter, float mindiameter, float diamStepSize,
-                         float avglogdiam, float sdlogdiam, std::vector<std::vector<float> > &svbovera,
-                         std::vector<std::vector<float> > &neighborhoodfit);
+                           float phasefraction, float pptFraction,
+                           float maxdiameter, float mindiameter, float diamStepSize,
+                           float avglogdiam, float sdlogdiam, std::vector<std::vector<float> > &svbovera,
+                           std::vector<std::vector<float> > &neighborhoodfit);
     int writePhaseInformation(int phase,
                               AIM::Reconstruction::PhaseType  pt,
                               AIM::Reconstruction::CrystalStructure xtal,
-                              float phasefraction);
+                              float phasefraction, float pptFraction);
   protected:
     H5ReconStatsWriter();
   private:
