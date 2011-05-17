@@ -30,6 +30,9 @@
 #ifndef _PhaseType_h_
 #define _PhaseType_h_
 
+#include <string>
+#include <vector>
+
 #include "AIM/Common/AIMCommonConfiguration.h"
 #include "AIM/Common/Constants.h"
 
@@ -41,7 +44,7 @@ namespace AIM {
  * @date May 13, 2011
  * @version 1.0
  */
-class PhaseType
+class AIMCOMMON_EXPORT PhaseType
 {
   public:
     const static std::string PrimaryStr;
@@ -71,7 +74,7 @@ class PhaseType
     }
 
 
-    static void getPhaseTypeStringList(std::list<std::string> &list)
+    static void getPhaseTypeStringList(std::vector<std::string> &list)
     {
       list.push_back(PrimaryStr);
       list.push_back(PrecipitateStr);
@@ -87,10 +90,7 @@ class PhaseType
 
 };
 
-  const std::string PhaseType::PrimaryStr("Primary");
-  const std::string PhaseType::PrecipitateStr("Precipitate");
-  const std::string PhaseType::TransformationStr("Transformation");
-  const std::string PhaseType::UnknownPhaseTypeStr("Unknown Phase Type");
+
 } // End Namespace 'AIM'
 
 #endif //_PhaseType_h_
