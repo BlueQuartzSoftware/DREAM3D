@@ -103,10 +103,10 @@ void GrainGeneratorFunc::initializeArrays(std::vector<AIM::Reconstruction::Cryst
 
   crystruct.resize(size+1);
   pptFractions.resize(size + 1);
-  for(size_t i = 0; i < size; i++)
+  for(size_t i = 0; i < size+1; i++)
   {
-    crystruct[i+1] = structures[i];
-    pptFractions[i+1] = -1.0;
+    crystruct[i] = structures[i];
+    pptFractions[i] = -1.0;
   }
   phaseType.resize(size+1);
   phasefraction.resize(size+1);
