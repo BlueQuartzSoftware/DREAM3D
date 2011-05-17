@@ -30,14 +30,16 @@
 
 #include "EditPhaseDialog.h"
 
-#include <QtGui/QDoubleValidator>
+#include "AIM/Common/PhaseType.h"
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 EditPhaseDialog::EditPhaseDialog(QWidget* parent) :
 QDialog(parent),
-m_OtherPhaseFractions(0.0)
+m_OtherPhaseFractions(0.0),
+m_PhaseFractionValidator(NULL),
+m_PptFractionValidator(NULL)
 {
   setupUi(this);
   setupGui();
@@ -71,10 +73,10 @@ AIM::Reconstruction::CrystalStructure EditPhaseDialog::getCrystalStructure()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-double EditPhaseDialog::getPhaseFraction()
+float EditPhaseDialog::getPhaseFraction()
 {
   bool ok = false;
-  double d = phaseFraction->text().toFloat(&ok);
+  float d = phaseFraction->text().toFloat(&ok);
   if (ok) return d;
   return -1.0;
 }
@@ -82,9 +84,28 @@ double EditPhaseDialog::getPhaseFraction()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EditPhaseDialog::setPhaseFraction(double d)
+void EditPhaseDialog::setPhaseFraction(float d)
 {
   phaseFraction->setText(QString::number(d));
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+float EditPhaseDialog::getPptFraction()
+{
+  bool ok = false;
+  float d = pptFraction->text().toFloat(&ok);
+  if (ok) return d;
+  return -1.0;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void EditPhaseDialog::setPptFraction(float d)
+{
+  pptFraction->setText(QString::number(d));
 }
 
 
@@ -111,8 +132,13 @@ AIM::Reconstruction::PhaseType EditPhaseDialog::getPhaseType()
 // -----------------------------------------------------------------------------
 void EditPhaseDialog::setupGui()
 {
-  QDoubleValidator* phaseFractionValidator = new QDoubleValidator(phaseFraction);
-  phaseFractionValidator = phaseFractionValidator;
+  m_PhaseFractionValidator = new QDoubleValidator(phaseFraction);
+  m_PptFractionValidator = new QDoubleValidator(pptFraction);
+  m_PptFractionValidator->setBottom(0.0);
+  m_PptFractionValidator->setTop(1.0);
+  m_PptFractionValidator->setDecimals(6);
+  pptFraction->setEnabled(false);
+  pptFractionLabel->setEnabled(false);
 }
 
 // -----------------------------------------------------------------------------
@@ -121,10 +147,10 @@ void EditPhaseDialog::setupGui()
 void EditPhaseDialog::on_phaseFraction_textChanged(const QString &string)
 {
   bool ok = false;
-  double d = phaseFraction->text().toFloat(&ok);
+  float d = phaseFraction->text().toFloat(&ok);
   if (ok)
   {
-     double total = d + m_OtherPhaseFractions;
+     float total = d + m_OtherPhaseFractions;
      total = d / total;
      calcPhaseFraction->setText(QString::number(total));
   }
@@ -133,7 +159,23 @@ void EditPhaseDialog::on_phaseFraction_textChanged(const QString &string)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EditPhaseDialog::setOtherPhaseFractionTotal(double t)
+void EditPhaseDialog::setOtherPhaseFractionTotal(float t)
 {
   m_OtherPhaseFractions = t;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void EditPhaseDialog::on_phaseTypeCombo_currentIndexChanged(int index)
+{
+  bool b = false;
+  if (phaseTypeCombo->currentIndex() == AIM::Reconstruction::PrecipitatePhase)
+  {
+    b = true;
+  }
+  pptFraction->setEnabled(b);
+  pptFractionLabel->setEnabled(b);
+}
+
+

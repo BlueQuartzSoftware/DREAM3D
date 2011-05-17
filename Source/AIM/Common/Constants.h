@@ -115,6 +115,7 @@ namespace AIM
     const std::string PhaseFraction("PhaseFraction");
     const std::string CrystalStructure("CrystalStructure");
     const std::string PhaseType("PhaseType");
+    const std::string PrecipitateBoundaryFraction("Precipitate Boundary Fraction");
     const std::string Grain_Diameter_Info("Grain_Diameter_Info");
     const std::string Grain_Size_Distribution("GrainSize Distribution");
     const std::string Grain_SizeVBoverA_Distributions("GrainSize Vs B Over A Distributions");
@@ -139,10 +140,10 @@ namespace AIM
 
     enum ColumnCount
     {
-      BetaColumnCount = 2,
-      LogNormalColumnCount = 2,
-      PowerLawColumnCount = 3,
-      UnknownColumCount = 0
+      BetaColumnCount = 2,       //!<
+      LogNormalColumnCount = 2,  //!<
+      PowerLawColumnCount = 3,   //!<
+      UnknownColumCount = 0      //!<
     };
   }
 
@@ -169,44 +170,43 @@ namespace AIM
      * MOSTLY IN THE HDF5 FILES WHICH ARE WRITTEN USING THE ENUMERATIONS.
      */
     enum CrystalStructure {
-        Hexagonal = 0,               //!< Hexagonal
-        Cubic = 1,                   //!< Cubic¶
-        OrthoRhombic = 2,             //!< OrthoRhombic
+        Hexagonal = 0,                   //!< Hexagonal
+        Cubic = 1,                       //!< Cubic¶
+        OrthoRhombic = 2,                //!< OrthoRhombic
         AxisOrthoRhombic = 3,            //!< AxisOrthoRhombic
-        UnknownCrystalStructure = 999//!< UnknownCrystalStructure
+        UnknownCrystalStructure = 999    //!< UnknownCrystalStructure
     };
 
     enum PhaseType {
-      Primary = 0,              //!<
-      BoundaryPrecipitate = 1,  //!<
-      BulkPrecipitate = 2,      //!<
-      Transformation = 3,       //!<
-      UnknownPhaseType          //!<
+      PrimaryPhase = 0,              //!<
+      PrecipitatePhase = 1,          //!<
+      TransformationPhase = 2,       //!<
+      UnknownPhaseType = 999    //!<
     };
 
     enum AlignmentMethod {
-        OuterBoundary = 0,
-        Misorientation = 1,
-        MutualInformation = 2,
-        UnknownAlignmentMethod = 999
+        OuterBoundary = 0,        //!<
+        Misorientation = 1,       //!<
+        MutualInformation = 2,    //!<
+        UnknownAlignmentMethod = 999    //!<
     };
 
     enum StatisticsType
     {
-      Grain_SizeVBoverA = 0,
-      Grain_SizeVCoverA,
-      Grain_SizeVCoverB,
-      Grain_SizeVNeighbors,
-      Grain_SizeVOmega3,
-      UnknownStatisticsGroup = 999
+      Grain_SizeVBoverA = 0,    //!<
+      Grain_SizeVCoverA,        //!<
+      Grain_SizeVCoverB,        //!<
+      Grain_SizeVNeighbors,     //!<
+      Grain_SizeVOmega3,        //!<
+      UnknownStatisticsGroup = 999    //!<
     };
 
     enum DistributionType
     {
-      Beta = 0,
-      LogNormal = 1,
-      Power = 2,
-      UnknownDistributionType = 999
+      Beta = 0,         //!<
+      LogNormal = 1,    //!<
+      Power = 2,        //!<
+      UnknownDistributionType = 999    //!<
     };
 
 #if 0
@@ -266,23 +266,23 @@ namespace AIM
 
 
     enum Overlap {
-        UnknownOverlap = 0,
-        Rigid = 1,
-        Progressive = 2
+        UnknownOverlap = 0,    //!<
+        Rigid = 1,             //!<
+        Progressive = 2        //!<
     };
 
     enum ShapeClass {
-        UnknownShapeClass = 0,
-        Ellipsoid = 1,
-        Superellipsoid = 2,
-        CubeOctahedron = 3
+        UnknownShapeClass = 0,   //!<
+        Ellipsoid = 1,           //!<
+        Superellipsoid = 2,      //!<
+        CubeOctahedron = 3       //!<
     };
 
 	enum Precipitates {
-        UnknownPrecipitates = 0,
-        NoPrecipitates= 1,
-        BoundaryPrecipitates = 2,
-        BulkPrecipitates = 3
+        UnknownPrecipitates = 0,    //!<
+        NoPrecipitates= 1,          //!<
+        BoundaryPrecipitates = 2,   //!<
+        BulkPrecipitates = 3        //!<
     };
 
   }
