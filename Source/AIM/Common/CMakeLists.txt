@@ -62,6 +62,7 @@ SET (AIMCommon_SRCS
     ${DREAM3D_SOURCE_DIR}/Source/AIM/Common/TexturePreset.cpp
     ${DREAM3D_SOURCE_DIR}/Source/AIM/ANG/AngDataLoader.cpp
     ${DREAM3D_SOURCE_DIR}/Source/AIM/ANG/H5AngDataLoader.cpp
+     ${DREAM3D_SOURCE_DIR}/Source/AIM/Common/PhaseType.cpp
     )
 
 SET (AIMCommon_HDRS
