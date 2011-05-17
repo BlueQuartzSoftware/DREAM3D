@@ -103,10 +103,11 @@ void GrainGeneratorFunc::initializeArrays(std::vector<AIM::Reconstruction::Cryst
 
   crystruct.resize(size+1);
   pptFractions.resize(size + 1);
-  for(size_t i = 0; i < size + 1; i++)
+
+  for(size_t i = 0; i < size+1; i++)
   {
-    crystruct[i+1] = structures[i];
-    pptFractions[i+1] = -1.0;
+    crystruct[i] = structures[i];
+    pptFractions[i] = -1.0;
   }
   phaseType.resize(size+1);
   phasefraction.resize(size+1);
@@ -806,10 +807,6 @@ void  GrainGeneratorFunc::insert_grain(size_t gnum)
 			if(inside >= 0)
 			{
 				int currentpoint = index;
-//				if(index >= totalpoints)
-//				{
-//				  int stop = 0;
-//				}
 				ellipfunc = (-0.1/((powf((axis1comp+axis2comp+axis3comp),1)*(1.0-(1.0/(0.90*0.90))))))*(1.0-(((axis1comp+axis2comp+axis3comp)*(axis1comp+axis2comp+axis3comp))/(0.90*0.90)));
 				insidelist[insidecount] = currentpoint;
 				ellipfunclist[insidecount] = ellipfunc;
@@ -1382,6 +1379,7 @@ int GrainGeneratorFunc::assign_voxels(int numgrains)
   float xp, yp, zp;
   float dist;
   float x, y, z;
+  int phase;
   int xmin, xmax, ymin, ymax, zmin, zmax;
   resx = resx/4.0;
   resy = resy/4.0;
@@ -1396,10 +1394,13 @@ int GrainGeneratorFunc::assign_voxels(int numgrains)
   gnames = new int[totalpoints];
   int *unassigned;
   unassigned = new int[totalpoints];
+  int *phases;
+  phases = new int[totalpoints];
   for(int i=0;i<totalpoints;i++)
   {
 	  gnames[i] = voxels[i].grainname;
 	  unassigned[i] = voxels[i].unassigned;
+	  phases[i] = voxels[i].phase;
   }
   for(int i=1;i<numgrains;i++)
   {
@@ -1411,6 +1412,7 @@ int GrainGeneratorFunc::assign_voxels(int numgrains)
     float bovera = m_Grains[i]->radius2;
     float covera = m_Grains[i]->radius3;
     float omega3 = m_Grains[i]->omega3;
+	phase = m_Grains[i]->phase;
     xc = m_Grains[i]->centroidx;
     yc = m_Grains[i]->centroidy;
     zc = m_Grains[i]->centroidz;
@@ -1556,10 +1558,12 @@ int GrainGeneratorFunc::assign_voxels(int numgrains)
 					gsizes[oldname] = gsizes[oldname]-1;
 					gnames[currentpoint] = -1;
 					unassigned[currentpoint] = 1;
+					phases[currentpoint] = 0;
 				  }
 				  if(gnames[currentpoint] == 0 && unassigned[currentpoint] == 0)
 				  {
 					gnames[currentpoint] = i;
+					phases[currentpoint] = phase;
 					gsizes[i]++;
 				  }
 			  }
@@ -1591,11 +1595,13 @@ int GrainGeneratorFunc::assign_voxels(int numgrains)
 	  {
 		  voxels[i].grainname = newnames[gnames[i]];
 		  voxels[i].unassigned = unassigned[i];
+		  voxels[i].phase = phases[i];
 	  }
 	  if(gnames[i] <= 0)
 	  {
 		  voxels[i].grainname = gnames[i];
 		  voxels[i].unassigned = unassigned[i];
+		  voxels[i].phase = phases[i];
 	  }
   }
   return goodcount;
@@ -1733,6 +1739,7 @@ void  GrainGeneratorFunc::fill_gaps(int numgrains)
       if(grainname <= 0 && neighbor > 0)
       {
         voxels[j].grainname = neighbor;
+		voxels[j].phase = m_Grains[neighbor]->phase;
       }
     }
   }
@@ -1817,6 +1824,11 @@ int  GrainGeneratorFunc::place_precipitates(int numgrains)
   {
     insert_grain(i);
 	m_Grains[i]->active = 1;
+	for(int j = 0; j < m_Grains[i]->voxellist->size(); j++)
+	{
+		voxels[m_Grains[i]->voxellist->at(j)].grainname = i;
+		voxels[m_Grains[i]->voxellist->at(j)].phase = m_Grains[i]->phase;
+	}
   }
   return (m_Grains.size());
 }
