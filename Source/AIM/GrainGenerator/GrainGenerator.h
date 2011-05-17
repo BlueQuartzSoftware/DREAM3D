@@ -96,7 +96,12 @@ Q_OBJECT
     MXA_INSTANCE_PROPERTY(double, FractionPrecipitates)
     MXA_INSTANCE_PROPERTY(bool, AlreadyFormed)
     MXA_INSTANCE_PROPERTY(int, Precipitates)
- //   MXA_INSTANCE_PROPERTY(vector<AIM::Reconstruction::CrystalStructure>, CrystalStructure)
+
+    MXA_INSTANCE_PROPERTY(bool, WriteVisualizationFile)
+    MXA_INSTANCE_PROPERTY(bool, WriteIPFFile)
+    MXA_INSTANCE_PROPERTY(bool, WriteHDF5GrainFile)
+
+
 
     MXA_INSTANCE_PROPERTY(int, ErrorCondition);
 
