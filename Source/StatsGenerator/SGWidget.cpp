@@ -38,6 +38,7 @@
 #include <QtCore/QVector>
 #include <QtCore/QRunnable>
 #include <QtCore/QThreadPool>
+#include <QtCore/QtConcurrentRun>
 #include <QtGui/QMessageBox>
 
 
@@ -400,6 +401,7 @@ void SGWidget::setWidgetListEnabled(bool b)
     }
 }
 
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -407,6 +409,7 @@ void SGWidget::updatePlots()
 {
   if (m_DataHasBeenGenerated == true)
   {
+
     plotSizeDistribution();
     m_ODFWidget->updatePlots();
     m_AxisODFWidget->updatePlots();
@@ -843,22 +846,13 @@ int SGWidget::readDataFromHDF5(H5ReconStatsReader::Pointer reader, int phase)
   // Read the ODF Data
   err = m_ODFWidget->readDataFromHDF5(reader, m_PhaseIndex);
 
-  // Read the MDF Data
-
-
   // Read the Axis ODF Data
   err = m_AxisODFWidget->readDataFromHDF5(reader, m_PhaseIndex);
 
-#ifndef _WIN32
-#warning do We need to read the ODF data????
-#warning do We need to read the MDF data?
-#endif
-
-
   // Enable all the tabs
-    setTabsPlotTabsEnabled(true);
-  //  dataWasEdited();
-    return err;
+  setTabsPlotTabsEnabled(true);
+  m_DataHasBeenGenerated = true;
+  return err;
 }
 
 
