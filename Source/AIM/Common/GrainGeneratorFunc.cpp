@@ -2475,7 +2475,7 @@ void GrainGeneratorFunc::matchCrystallography(const std::string &ErrorFile, H5Re
   float currentodferror = 0;
   float currentmdferror = 0;
   size_t xtalSize = crystruct.size();
-  for(size_t iter=0;iter<xtalSize;++iter)
+  for(size_t iter=1;iter<xtalSize;++iter)
   {
 	  if(crystruct[iter] == AIM::Reconstruction::Cubic) numbins = 18*18*18;
 	  if(crystruct[iter] == AIM::Reconstruction::Hexagonal) numbins = 36*36*12;
@@ -2515,15 +2515,12 @@ void GrainGeneratorFunc::matchCrystallography(const std::string &ErrorFile, H5Re
 }
 void  GrainGeneratorFunc::measure_misorientations ()
 {
- std::vector<float > misolist;
   float w;
   float n1, n2, n3;
   float r1, r2, r3;
   float q1[5];
   float q2[5];
-//  float denom;
   AIM::Reconstruction::CrystalStructure phase1, phase2;
-//  float degtorad = m_pi/180.0;
   int mbin;
 
   IntVectorType nlist ;
@@ -2532,7 +2529,7 @@ void  GrainGeneratorFunc::measure_misorientations ()
   {
     nlist = m_Grains[i]->neighborlist;
     neighsurfarealist = m_Grains[i]->neighborsurfarealist;
-    m_Grains[i]->misorientationlist->assign(nlist->size() * 3, 0.0);
+	m_Grains[i]->misorientationlist = new std::vector<float>(nlist->size() * 3, 0.0);
     q1[1] = m_Grains[i]->avg_quat[1];
     q1[2] = m_Grains[i]->avg_quat[2];
     q1[3] = m_Grains[i]->avg_quat[3];
@@ -2574,9 +2571,6 @@ void  GrainGeneratorFunc::measure_misorientations ()
         simmdf[m_Grains[i]->phase][mbin] = simmdf[m_Grains[i]->phase][mbin] + (neighsurfarea / totalsurfacearea[m_Grains[i]->phase]);
       }
     }
-    m_Grains[i]->misorientationlist = new std::vector<float>(misolist.size());
-    m_Grains[i]->misorientationlist->swap(misolist);
-    misolist.clear();
   }
 }
 
@@ -2585,7 +2579,7 @@ void  GrainGeneratorFunc::find_centroids()
 //  int count = 0;
   int onedge = 0;
   size_t xtalSize = crystruct.size();
-  for(size_t i=0;i<xtalSize;++i)
+  for(size_t i=1;i<xtalSize;++i)
   {
 	  maxdiameter[i]=0;
 	  mindiameter[i]=100000;
@@ -2780,14 +2774,13 @@ void  GrainGeneratorFunc::find_axes ()
 void  GrainGeneratorFunc::find_vectors (H5ReconStatsWriter::Pointer h5io)
 {
   size_t xtalSize = crystruct.size();
-	totalaxes.resize(xtalSize);
-  float **axisodf;
-  axisodf = new float *[xtalSize];
-  for(size_t i=0;i<xtalSize;++i)
+  totalaxes.resize(xtalSize);
+  float **aodf;
+  aodf = new float *[xtalSize];
+  for(size_t i=1;i<xtalSize;++i)
   {
 	  totalaxes[i] = 0.0;
-	  //FIXME: Leaking memory because this was already allocated in the "initializeArrays" method
-	  axisodf[i] = new float [18*18*18];
+	  aodf[i] = new float [36*36*36];
   }
   for(int i = 1; i < numgrains; i++)
   {
@@ -2965,9 +2958,9 @@ void  GrainGeneratorFunc::find_vectors (H5ReconStatsWriter::Pointer h5io)
       float ea1 = acos(cosine1);
       if(sine3 < 0) ea3 = (2*m_pi)-ea3;
       if(sine1 < 0) ea1 = (2*m_pi)-ea1;
-      int ea1bin = int(ea1/(m_pi/18));
-      int ea2bin = int(ea2/(m_pi/18));
-      int ea3bin = int(ea3/(m_pi/18));
+      int ea1bin = int(ea1/(m_pi/36));
+      int ea2bin = int(ea2/(m_pi/36));
+      int ea3bin = int(ea3/(m_pi/36));
       int bin=0;
       if(ea1 >= 0.0 && ea2 >= 0.0 && ea3 >= 0.0 && ea1 <= (m_pi) && ea2 <= (m_pi) && ea3 <= (m_pi))
       {
@@ -2975,22 +2968,21 @@ void  GrainGeneratorFunc::find_vectors (H5ReconStatsWriter::Pointer h5io)
         m_Grains[i]->axiseuler2 = ea2;
         m_Grains[i]->axiseuler3 = ea3;
 		int phase = m_Grains[i]->phase;
-        bin = (ea3bin*18*18)+(ea2bin*18)+(ea1bin);
-        axisodf[phase][bin] = axisodf[phase][bin] + 1.0;
+        bin = (ea3bin*36*36)+(ea2bin*36)+(ea1bin);
+        aodf[phase][bin] = aodf[phase][bin] + 1.0;
         totalaxes[phase] = totalaxes[phase]+1.0;
       }
     }
     }
   }
   xtalSize = crystruct.size();
-  uint64_t dims = 36 * 36 * 36;
-  for(size_t i=0;i<xtalSize;++i)
+  for(size_t i=1;i<xtalSize;++i)
   {
 	  int err;
-	  err = h5io->writeAxisOrientationData(i, axisodf[i], totalaxes[i]);
-	  delete [] axisodf[i];
+	  err = h5io->writeAxisOrientationData(i, aodf[i], totalaxes[i]);
+	  delete [] aodf[i];
   }
-  delete [] axisodf;
+  delete [] aodf;
 }
 int GrainGeneratorFunc::volume_stats(H5ReconStatsWriter::Pointer h5io)
 {
@@ -2999,7 +2991,14 @@ int GrainGeneratorFunc::volume_stats(H5ReconStatsWriter::Pointer h5io)
   float avglogdiam = 0;
   int numbins;
   size_t xtalSize = crystruct.size();
-  for(size_t iter=0;iter< xtalSize; ++iter)
+  neighborhood.resize(xtalSize);
+  neighborhoodfit.resize(xtalSize);
+  svbovera.resize(xtalSize);
+  svcovera.resize(xtalSize);
+  svcoverb.resize(xtalSize);
+  svschmid.resize(xtalSize);
+  svomega3.resize(xtalSize);
+  for(size_t iter=1;iter< xtalSize; ++iter)
   {
 	  numbins = ((maxdiameter[iter]-mindiameter[iter])/binstepsize[iter])+1;
 	  neighborhood[iter].resize(numbins);
