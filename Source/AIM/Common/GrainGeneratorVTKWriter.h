@@ -59,6 +59,14 @@ class AIMCOMMON_EXPORT GrainGeneratorVTKWriter
      */
     int writeVisualizationFile(GrainGeneratorFunc* r, const std::string &file);
 
+    /**
+     * @brief Writes a VTK visualization file with vector arrays for the Inverse
+     * pole figure colors and grain ID.
+     * @param Output file name
+     * @return 0 on Success
+     */
+    int writeIPFVizFile(GrainGeneratorFunc* r, const std::string &file);
+
   protected:
     GrainGeneratorVTKWriter();
 

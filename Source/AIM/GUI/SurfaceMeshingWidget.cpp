@@ -151,7 +151,7 @@ void SurfaceMeshingWidget::setupGui()
   m_WidgetList << m_InputFile << messageLabel;
   m_WidgetList << m_ScalarsName << xDim << yDim << zDim;
   m_WidgetList << m_InputFileBtn << m_OutputDir << m_OutputDirBtn << m_OutputFilePrefix;
-  m_WidgetList << m_VisualizationFile << m_NodesFileBin << m_TrianglesFileBin << m_DeleteTempFiles;
+  m_WidgetList << m_VisualizationVizFile << m_NodesFileBin << m_TrianglesFileBin << m_DeleteTempFiles;
   m_WidgetList << m_BinaryVtkFiles << m_ConformalMesh;
 //  m_WidgetList  << m_LockQuadPoints << m_SmoothIterations << m_SmoothMesh << m_WriteOutputFileIncrement;
 }
@@ -181,7 +181,7 @@ void SurfaceMeshingWidget::checkIOFiles()
 
   CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::SurfaceMeshing, m_, NodesFileBin)
   CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::SurfaceMeshing, m_, TrianglesFileBin)
-  CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::SurfaceMeshing, m_, VisualizationFile)
+  CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::SurfaceMeshing, m_, VisualizationVizFile)
 }
 
 

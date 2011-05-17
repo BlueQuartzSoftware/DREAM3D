@@ -71,7 +71,7 @@
               emit updateMessage(msg);\
               emit updateProgress(0);\
               emit finished();\
-              m = ReconstructionFunc::NullPointer();\
+              m = AClass::NullPointer();\
       return;}\
       if(AIM_RECONSTRUCTION_BENCHMARKS) {\
     std::cout << #name << " Finish Time(ms): " << (MXA::getMilliSeconds() - millis) << std::endl;\
@@ -81,7 +81,7 @@
 #else
 
 #define CHECK_FOR_CANCELED(AClass, name)\
-  m = ReconstructionFunc::NullPointer();\
+  m = AClass::NullPointer();\
   if(AIM_RECONSTRUCTION_BENCHMARKS) {\
     std::cout << #name << " Finish Time(ms): " << (MXA::getMilliSeconds() - millis) << std::endl;\
     millis = MXA::getMilliSeconds(); }
@@ -167,7 +167,7 @@ void Reconstruction::compute()
   ptr->setOrientation(m_Orientation);
 
   // Create our File Output Writer Object. This will handle all the File Output duties
-  ReconstructionVTKWriter::Pointer outWriter = ReconstructionVTKWriter::New();
+  ReconstructionVTKWriter::Pointer vtkWriter = ReconstructionVTKWriter::New();
   H5GrainWriter::Pointer h5GrainWriter = H5GrainWriter::New();
 
   m = ReconstructionFunc::New();
@@ -415,22 +415,22 @@ void Reconstruction::compute()
   /** ********** This section writes the VTK files for visualization *** */
 
   progressMessage(AIM_STRING("Writing VTK Visualization File"), 93);
-  if (m_WriteVisualizationFile) {outWriter->writeVisualizationFile(m.get(), reconVisFile);}
+  if (m_WriteVisualizationFile) {vtkWriter->writeVisualizationFile(m.get(), reconVisFile);}
 
   progressMessage(AIM_STRING("Writing VTK Inverse Pole Figure File"), 94);
-  if (m_WriteIPFFile) {outWriter->writeIPFVizFile(m.get(), reconIPFVisFile);}
+  if (m_WriteIPFFile) {vtkWriter->writeIPFVizFile(m.get(), reconIPFVisFile);}
 
   progressMessage(AIM_STRING("Writing VTK Disorientation File"), 95);
-  if (m_WriteDisorientationFile) {outWriter->writeDisorientationFile(m.get(), reconDisVisFile);}
+  if (m_WriteDisorientationFile) {vtkWriter->writeDisorientationFile(m.get(), reconDisVisFile);}
 
   progressMessage(AIM_STRING("Writing VTK Image Quality File"), 96);
-  if (m_WriteImageQualityFile) {outWriter->writeImageQualityVizFile(m.get(), reconIQVisFile);}
+  if (m_WriteImageQualityFile) {vtkWriter->writeImageQualityVizFile(m.get(), reconIQVisFile);}
 
   progressMessage(AIM_STRING("Writing VTK Schmid Factor File"), 97);
-  if (m_WriteSchmidFactorFile) {outWriter->writeSchmidFactorVizFile(m.get(), reconSFVisFile);}
+  if (m_WriteSchmidFactorFile) {vtkWriter->writeSchmidFactorVizFile(m.get(), reconSFVisFile);}
 
   progressMessage(AIM_STRING("Writing VTK Down Sampled File"), 98);
-  if (m_WriteDownSampledFile) {outWriter->writeDownSampledVizFile(m.get(), reconDSVisFile);}
+  if (m_WriteDownSampledFile) {vtkWriter->writeDownSampledVizFile(m.get(), reconDSVisFile);}
   /** ******* End VTK Visualization File Writing Section ****** */
 
   CHECK_FOR_CANCELED(ReconstructionFunc, vtk_viz_files)
