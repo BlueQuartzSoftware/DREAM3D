@@ -185,6 +185,7 @@ void StatsGeneratorUI::on_addPhase_clicked()
     widget->setCrystalStructure(dialog.getCrystalStructure());
     widget->setPhaseFraction(dialog.getPhaseFraction());
     widget->setPhaseType(dialog.getPhaseType());
+    widget->setPhaseType(dialog.getPhaseType());
     QString cName = widget->getComboString();
 
     widget->setObjectName(cName);
@@ -217,6 +218,7 @@ void StatsGeneratorUI::on_editPhase_clicked()
   dialog.setOtherPhaseFractionTotal(phaseFractionTotal);
   dialog.setCrystalStructure(m_SGWidget->getCrystalStructure());
   dialog.setPhaseType(m_SGWidget->getPhaseType());
+  dialog.setPptFraction(m_SGWidget->getPptFraction());
   int r = dialog.exec();
   if (r == QDialog::Accepted)
   {
@@ -224,6 +226,7 @@ void StatsGeneratorUI::on_editPhase_clicked()
     m_SGWidget->setCrystalStructure(dialog.getCrystalStructure());
     m_SGWidget->setPhaseFraction(dialog.getPhaseFraction());
     m_SGWidget->setPhaseType(dialog.getPhaseType());
+    m_SGWidget->setPptFraction(dialog.getPptFraction());
     QString cName = m_SGWidget->getComboString();
     phaseCombo->blockSignals(true);
     phaseCombo->clear();

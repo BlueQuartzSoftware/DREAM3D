@@ -73,6 +73,8 @@ public:
     float misorientationtolerance;
     std::vector<AIM::Reconstruction::CrystalStructure> crystruct;
     std::vector<AIM::Reconstruction::PhaseType>        phaseType;
+    std::vector<float>                                 pptFractions;
+
     AIMRandomNG rg;
 
     std::vector<FloatArray> actualodf;
