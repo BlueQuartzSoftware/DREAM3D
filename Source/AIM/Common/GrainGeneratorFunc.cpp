@@ -2596,14 +2596,14 @@ void  GrainGeneratorFunc::measure_misorientations ()
   {
     nlist = m_Grains[i]->neighborlist;
     neighsurfarealist = m_Grains[i]->neighborsurfarealist;
-	m_Grains[i]->misorientationlist = new std::vector<float>(nlist->size() * 3, 0.0);
+	  m_Grains[i]->misorientationlist = new std::vector<float>(nlist->size() * 3, 0.0);
     q1[1] = m_Grains[i]->avg_quat[1];
     q1[2] = m_Grains[i]->avg_quat[2];
     q1[3] = m_Grains[i]->avg_quat[3];
     q1[4] = m_Grains[i]->avg_quat[4];
     phase1 = crystruct[m_Grains[i]->phase];
     size_t size = 0;
-    if (NULL != nlist)
+    if (NULL != nlist.get())
     {
       size = nlist->size();
     }
