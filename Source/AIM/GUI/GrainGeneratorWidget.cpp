@@ -88,6 +88,7 @@ void GrainGeneratorWidget::readSettings(QSettings &prefs)
   prefs.beginGroup("GrainGenerator");
   READ_FILEPATH_SETTING(prefs, m_, H5InputStatisticsFile, "");
   READ_FILEPATH_SETTING(prefs, m_, OutputDir, "");
+  READ_STRING_SETTING(prefs, m_, OutputFilePrefix, "GrainGenerator_")
   READ_SETTING(prefs, m_, XResolution, ok, d, 0.25 , Double);
   READ_SETTING(prefs, m_, YResolution, ok, d, 0.25 , Double);
   READ_SETTING(prefs, m_, ZResolution, ok, d, 0.25 , Double);
@@ -97,6 +98,11 @@ void GrainGeneratorWidget::readSettings(QSettings &prefs)
   READ_SETTING(prefs, m_, NumGrains, ok, i, 1000 , Int);
 
   READ_BOOL_SETTING(prefs, m_, AlreadyFormed, false);
+
+  READ_CHECKBOX_SETTING(prefs, m_, IPFVizFile, true);
+  READ_CHECKBOX_SETTING(prefs, m_, VisualizationVizFile, true);
+  READ_CHECKBOX_SETTING(prefs, m_, HDF5GrainFile, true);
+
   m_AlreadyFormed->blockSignals(false);
   READ_COMBO_BOX(prefs, m_, ShapeClass)
   prefs.endGroup();
@@ -110,6 +116,8 @@ void GrainGeneratorWidget::writeSettings(QSettings &prefs)
   prefs.beginGroup("GrainGenerator");
   WRITE_STRING_SETTING(prefs, m_, H5InputStatisticsFile)
   WRITE_STRING_SETTING(prefs, m_, OutputDir)
+  WRITE_STRING_SETTING(prefs, m_, OutputFilePrefix)
+
   WRITE_SETTING(prefs, m_, XResolution )
   WRITE_SETTING(prefs, m_, YResolution )
   WRITE_SETTING(prefs, m_, ZResolution )
@@ -120,6 +128,11 @@ void GrainGeneratorWidget::writeSettings(QSettings &prefs)
 
   WRITE_BOOL_SETTING(prefs, m_, AlreadyFormed, m_AlreadyFormed->isChecked())
   WRITE_COMBO_BOX(prefs, m_, ShapeClass)
+
+  WRITE_CHECKBOX_SETTING(prefs, m_, IPFVizFile)
+  WRITE_CHECKBOX_SETTING(prefs, m_, VisualizationVizFile)
+  WRITE_CHECKBOX_SETTING(prefs, m_, HDF5GrainFile)
+
   prefs.endGroup();
 }
 
@@ -155,7 +168,7 @@ void GrainGeneratorWidget::setupGui()
 
   QString msg ("All files will be over written that appear in the output directory.");
 
-  QFileInfo fi (m_OutputDir->text() + QDir::separator() +  AIM::SyntheticBuilder::VisualizationFile.c_str() );
+  QFileInfo fi (m_OutputDir->text() + QDir::separator() +  AIM::SyntheticBuilder::VisualizationVizFile.c_str() );
   if (m_AlreadyFormed->isChecked() == true && fi.exists() == false)
   {
     m_AlreadyFormed->setChecked(false);
@@ -212,10 +225,15 @@ void GrainGeneratorWidget::on_m_SaveSettingsBtn_clicked()
 void GrainGeneratorWidget::checkIOFiles()
 {
   CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::SyntheticBuilder, m_, CrystallographicErrorFile)
-  CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::SyntheticBuilder, m_, EulerFile)
+  CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::SyntheticBuilder, m_, GrainAnglesFile)
   CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::SyntheticBuilder, m_, GrainDataFile)
-  CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::SyntheticBuilder, m_, H5StatisticsFile)
-  CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::SyntheticBuilder, m_, VisualizationFile)
+  CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::SyntheticBuilder, m_ , PackGrainsFile)
+  CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::SyntheticBuilder, m_ , H5StatisticsFile)
+
+  CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(AIM::SyntheticBuilder, m_ , IPFVizFile)
+  CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(AIM::SyntheticBuilder, m_ , VisualizationVizFile)
+  CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(AIM::SyntheticBuilder, m_ , HDF5GrainFile)
+
 }
 
 
@@ -225,7 +243,7 @@ void GrainGeneratorWidget::checkIOFiles()
 void GrainGeneratorWidget::on_m_AlreadyFormed_stateChanged(int currentState)
 {
 
-  QString absPath = m_OutputDir->text() + QDir::separator() + AIM::SyntheticBuilder::VisualizationFile.c_str();
+  QString absPath = m_OutputDir->text() + QDir::separator() + AIM::SyntheticBuilder::VisualizationVizFile.c_str();
   absPath = QDir::toNativeSeparators(absPath);
   QFileInfo fi (absPath);
   QString msg ("All files will be over written that appear in the output directory.");
@@ -237,7 +255,7 @@ void GrainGeneratorWidget::on_m_AlreadyFormed_stateChanged(int currentState)
       QMessageBox::Ok,
       QMessageBox::Ok);
       m_AlreadyFormed->setChecked(false);
-      CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::SyntheticBuilder, m_, VisualizationFile)
+      CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::SyntheticBuilder, m_, VisualizationVizFile)
   }
 
   if (m_AlreadyFormed->isChecked())
@@ -274,7 +292,7 @@ void GrainGeneratorWidget::on_m_OutputDirBtn_clicked()
     if (verifyPathExists(outputFile, m_OutputDir) == true )
     {
       checkIOFiles();
-      QFileInfo fi (m_OutputDir->text() + QDir::separator() +  AIM::SyntheticBuilder::VisualizationFile.c_str() );
+      QFileInfo fi (m_OutputDir->text() + QDir::separator() +  AIM::SyntheticBuilder::VisualizationVizFile.c_str() );
       if (m_AlreadyFormed->isChecked() == true && fi.exists() == false)
       {
         m_AlreadyFormed->setChecked(false);
@@ -356,6 +374,10 @@ void GrainGeneratorWidget::on_m_GoBtn_clicked()
   m_GrainGenerator->setSizeDistErrorWeight(m_SizeDistErrorWeight->value());
 
   m_GrainGenerator->setAlreadyFormed(m_AlreadyFormed->isChecked() );
+
+  m_GrainGenerator->setWriteVisualizationFile(m_VisualizationVizFile->isChecked());
+  m_GrainGenerator->setWriteIPFFile(m_IPFVizFile->isChecked());
+  m_GrainGenerator->setWriteHDF5GrainFile(m_HDF5GrainFile->isChecked());
 
   /* Connect the signal 'started()' from the QThread to the 'run' slot of the
    * Reconstruction object. Since the Reconstruction object has been moved to another
