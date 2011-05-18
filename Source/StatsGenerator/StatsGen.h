@@ -209,23 +209,7 @@ class StatsGen
     {
       static const int odfsize = 5832;
 
-      AIMRandomNG rg;
-      /* Get a seed value based off the system clock. The issue is that this will
-       * be a 64 bit unsigned integer where the high 32 bits will basically not
-       * change where as the lower 32 bits will. The following lines of code will
-       * pull off the low 32 bits from the number. This operation depends on most
-       * significant byte ordering which is different between Big Endian and
-       * Little Endian machines. For Big endian machines the Most Significant Byte
-       * (MSB) is the first 32 bits. For Little Endian machines the MSB is the
-       * second 32 bits.
-       */
-      unsigned long long int seed = MXA::getMilliSeconds();
-      unsigned int* seedPtr = reinterpret_cast<unsigned int*> (&seed);
-#if CMP_WORDS_BIGENDIAN
-      rg.RandomInit(seedPtr[1]);
-#else
-      rg.RandomInit(seedPtr[0]);
-#endif
+      AIM_RANDOMNG_NEW()
       int err = 0;
       int choose;
       float q1[5];
@@ -403,23 +387,7 @@ class StatsGen
     int GenHexODFPlotData(T odf, T &x0001, T &y0001, T &x1120, T &y1120, T &x1010, T &y1010, int npoints)
     {
       static const size_t odfsize = 15552;
-      AIMRandomNG rg;
-      /* Get a seed value based off the system clock. The issue is that this will
-       * be a 64 bit unsigned integer where the high 32 bits will basically not
-       * change where as the lower 32 bits will. The following lines of code will
-       * pull off the low 32 bits from the number. This operation depends on most
-       * significant byte ordering which is different between Big Endian and
-       * Little Endian machines. For Big endian machines the Most Significant Byte
-       * (MSB) is the first 32 bits. For Little Endian machines the MSB is the
-       * second 32 bits.
-       */
-      unsigned long long int seed = MXA::getMilliSeconds();
-      unsigned int* seedPtr = reinterpret_cast<unsigned int*> (&seed);
-#if CMP_WORDS_BIGENDIAN
-      rg.RandomInit(seedPtr[1]);
-#else
-      rg.RandomInit(seedPtr[0]);
-#endif
+      AIM_RANDOMNG_NEW()
       int err = 0;
       int choose;
       float ea1, ea2, ea3;
@@ -543,31 +511,14 @@ class StatsGen
     int GenOrthoRhombicODFPlotData(T odf, T &x001, T &y001, T &x011, T &y011, T &x111, T &y111, int npoints)
     {
       static const size_t odfsize = 46656;
-
 #if 0
- These lines need to be run BEFORE you call this method
-  float totalweight = 0;
-  T odf;
-  odf.resize(odfsize);
-  Texture::calculateOrthoRhombicODFData(e1s, e2s, e3s, weights, sigmas, true, odf, totalweight);
+      These lines need to be run BEFORE you call this method
+      float totalweight = 0;
+      T odf;
+      odf.resize(odfsize);
+      Texture::calculateOrthoRhombicODFData(e1s, e2s, e3s, weights, sigmas, true, odf, totalweight);
 #endif
-      AIMRandomNG rg;
-      /* Get a seed value based off the system clock. The issue is that this will
-       * be a 64 bit unsigned integer where the high 32 bits will basically not
-       * change where as the lower 32 bits will. The following lines of code will
-       * pull off the low 32 bits from the number. This operation depends on most
-       * significant byte ordering which is different between Big Endian and
-       * Little Endian machines. For Big endian machines the Most Significant Byte
-       * (MSB) is the first 32 bits. For Little Endian machines the MSB is the
-       * second 32 bits.
-       */
-      unsigned long long int seed = MXA::getMilliSeconds();
-      unsigned int* seedPtr = reinterpret_cast<unsigned int*> (&seed);
-#if CMP_WORDS_BIGENDIAN
-      rg.RandomInit(seedPtr[1]);
-#else
-      rg.RandomInit(seedPtr[0]);
-#endif
+      AIM_RANDOMNG_NEW()
       int err = 0;
       int choose;
       float ea1, ea2, ea3;
@@ -597,9 +548,13 @@ class StatsGen
           density = odfPtr[j];
           td1 = totaldensity;
           totaldensity = totaldensity + density;
-          if (random < totaldensity && random >= td1) { choose = static_cast<int> (j); break; }
+          if (random < totaldensity && random >= td1)
+          {
+            choose = static_cast<int> (j);
+            break;
+          }
         }
-        ops.determineEulerAngles( choose, ea1, ea2, ea3);
+        ops.determineEulerAngles(choose, ea1, ea2, ea3);
         OrientationMath::eulertoQuat(q1, ea1, ea2, ea3);
         ops.getFZQuat(q1);
         g[0][0] = (1 - 2 * q1[2] * q1[2] - 2 * q1[3] * q1[3]);
@@ -744,23 +699,7 @@ class StatsGen
     {
       static const size_t odfsize = 46656;
 
-      AIMRandomNG rg;
-      /* Get a seed value based off the system clock. The issue is that this will
-       * be a 64 bit unsigned integer where the high 32 bits will basically not
-       * change where as the lower 32 bits will. The following lines of code will
-       * pull off the low 32 bits from the number. This operation depends on most
-       * significant byte ordering which is different between Big Endian and
-       * Little Endian machines. For Big endian machines the Most Significant Byte
-       * (MSB) is the first 32 bits. For Little Endian machines the MSB is the
-       * second 32 bits.
-       */
-      unsigned long long int seed = MXA::getMilliSeconds();
-      unsigned int* seedPtr = reinterpret_cast<unsigned int*> (&seed);
-#if CMP_WORDS_BIGENDIAN
-      rg.RandomInit(seedPtr[1]);
-#else
-      rg.RandomInit(seedPtr[0]);
-#endif
+      AIM_RANDOMNG_NEW()
       int err = 0;
       int choose;
       float ea1, ea2, ea3;
@@ -854,23 +793,7 @@ class StatsGen
     {
       static const size_t mdfsize = 5832;
       float radtodeg = 180.0 / M_PI;
-      AIMRandomNG rg;
-      /* Get a seed value based off the system clock. The issue is that this will
-       * be a 64 bit unsigned integer where the high 32 bits will basically not
-       * change where as the lower 32 bits will. The following lines of code will
-       * pull off the low 32 bits from the number. This operation depends on most
-       * significant byte ordering which is different between Big Endian and
-       * Little Endian machines. For Big endian machines the Most Significant Byte
-       * (MSB) is the first 32 bits. For Little Endian machines the MSB is the
-       * second 32 bits.
-       */
-      unsigned long long int seed = MXA::getMilliSeconds();
-      unsigned int* seedPtr = reinterpret_cast<unsigned int*> (&seed);
-#if CMP_WORDS_BIGENDIAN
-      rg.RandomInit(seedPtr[1]);
-#else
-      rg.RandomInit(seedPtr[0]);
-#endif
+      AIM_RANDOMNG_NEW()
       int err = 0;
       float density;
       float totaldensity;
@@ -934,23 +857,7 @@ class StatsGen
     {
       static const size_t mdfsize = 15552;
       float radtodeg = 180.0 / M_PI;
-      AIMRandomNG rg;
-      /* Get a seed value based off the system clock. The issue is that this will
-       * be a 64 bit unsigned integer where the high 32 bits will basically not
-       * change where as the lower 32 bits will. The following lines of code will
-       * pull off the low 32 bits from the number. This operation depends on most
-       * significant byte ordering which is different between Big Endian and
-       * Little Endian machines. For Big endian machines the Most Significant Byte
-       * (MSB) is the first 32 bits. For Little Endian machines the MSB is the
-       * second 32 bits.
-       */
-      unsigned long long int seed = MXA::getMilliSeconds();
-      unsigned int* seedPtr = reinterpret_cast<unsigned int*>(&seed);
-#if CMP_WORDS_BIGENDIAN
-      rg.RandomInit(seedPtr[1]);
-#else
-      rg.RandomInit(seedPtr[0]);
-#endif
+      AIM_RANDOMNG_NEW()
       int err = 0;
       int choose = 0;
       float density;
