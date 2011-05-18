@@ -942,103 +942,104 @@ float GrainGeneratorFunc::check_neighborhooderror(int gadd, int gremove)
   int count = 0;
   int phase;
   size_t xtalSize = crystruct.size();
-  for(std::vector<AIM::Reconstruction::CrystalStructure>::size_type iter = 1; iter < xtalSize;++iter)
+  for (std::vector<AIM::Reconstruction::CrystalStructure>::size_type iter = 1; iter < xtalSize; ++iter)
   {
-	  phase = iter;
-	  for(int i=0;i<numdiameterbins[phase];i++)
-	  {
-		neighbordist[phase][i][0] = 0;
-		neighbordist[phase][i][1] = 0;
-		neighbordist[phase][i][2] = 0;
-	  }
-	  if(gadd > 0 && m_Grains[gadd]->phase == phase)
-	  {
-		for(int i=0;i<3;i++)
-		{
-		  for(size_t j=0;j<m_Grains[gadd]->neighbordistfunclist[i].size();j++)
-		  {
-			  index = m_Grains[gadd]->neighbordistfunclist[i][j];
-			  m_Grains[index]->neighbordistfunc[i]++;
-		  }
-		}
-	  }
-	  if(gremove > 0 && m_Grains[gremove]->phase == phase)
-	  {
-		for(int i=0;i<3;i++)
-		{
-		  for(size_t j=0;j<m_Grains[gremove]->neighbordistfunclist[i].size();j++)
-		  {
-			  index = m_Grains[gremove]->neighbordistfunclist[i][j];
-			  m_Grains[index]->neighbordistfunc[i] = m_Grains[index]->neighbordistfunc[i]-1;
-		  }
-		}
-	  }
-	  for(size_t i=1;i<activegrainlist.size();i++)
-	  {
-		nnum=0;
-		index = activegrainlist[i];
-		if(index != gremove && m_Grains[index]->phase == phase)
-		{
-		  for(int j=0;j<3;j++)
-		  {
-			nnum = m_Grains[index]->neighbordistfunc[j];
-			dia = m_Grains[index]->equivdiameter;
-			if(dia > maxdiameter[phase]) dia = maxdiameter[phase];
-			if(dia < mindiameter[phase]) dia = mindiameter[phase];
-			dia = int((dia-mindiameter[phase])/binstepsize[phase]);
-			if(nnum > 0)
-			{
-			  neighbordist[phase][dia][j] = neighbordist[phase][dia][j]+nnum;
-			}
-		  }
-		  count++;
-		}
-	  }
-	  if(gadd > 0 && m_Grains[gadd]->phase == phase)
-	  {
-		for(int j=0;j<3;j++)
-		{
-		  nnum = m_Grains[index]->neighbordistfunc[j];
-		  dia = m_Grains[index]->equivdiameter;
-		  if(dia > maxdiameter[phase]) dia = maxdiameter[phase];
-		  if(dia < mindiameter[phase]) dia = mindiameter[phase];
-		  dia = int((dia-mindiameter[phase])/binstepsize[phase]);
-		  if(nnum > 0)
-		  {
-			neighbordist[phase][dia][j] = neighbordist[phase][dia][j]+nnum;
-		  }
-		}
-		count++;
-	  }
-	  for(int i=0;i<numdiameterbins[phase];i++)
-	  {
-		for(int j=0;j<3;j++)
-		{
-		  neighborerror = neighborerror + ((neighborhood[phase][i][j]-(neighbordist[phase][i][j]/float(count)))*(neighborhood[phase][i][j]-(neighbordist[phase][i][j]/float(count))));
-		}
-	  }
-	  if(gadd > 0 && m_Grains[gadd]->phase == phase)
-	  {
-		for(int i=0;i<3;i++)
-		{
-		  for(size_t j=0;j<m_Grains[gadd]->neighbordistfunclist[i].size();j++)
-		  {
-			  index = m_Grains[gadd]->neighbordistfunclist[i][j];
-			  m_Grains[index]->neighbordistfunc[i] = m_Grains[index]->neighbordistfunc[i]-1;
-		  }
-		}
-	  }
-	  if(gremove > 0 && m_Grains[gadd]->phase == phase)
-	  {
-		for(int i=0;i<3;i++)
-		{
-		  for(size_t j=0;j<m_Grains[gremove]->neighbordistfunclist[i].size();j++)
-		  {
-			  index = m_Grains[gremove]->neighbordistfunclist[i][j];
-			  m_Grains[index]->neighbordistfunc[i]++;
-		  }
-		}
-	  }
+    phase = iter;
+    for (int i = 0; i < numdiameterbins[phase]; i++)
+    {
+      neighbordist[phase][i][0] = 0;
+      neighbordist[phase][i][1] = 0;
+      neighbordist[phase][i][2] = 0;
+    }
+    if (gadd > 0 && m_Grains[gadd]->phase == phase)
+    {
+      for (int i = 0; i < 3; i++)
+      {
+        for (size_t j = 0; j < m_Grains[gadd]->neighbordistfunclist[i].size(); j++)
+        {
+          index = m_Grains[gadd]->neighbordistfunclist[i][j];
+          m_Grains[index]->neighbordistfunc[i]++;
+        }
+      }
+    }
+    if (gremove > 0 && m_Grains[gremove]->phase == phase)
+    {
+      for (int i = 0; i < 3; i++)
+      {
+        for (size_t j = 0; j < m_Grains[gremove]->neighbordistfunclist[i].size(); j++)
+        {
+          index = m_Grains[gremove]->neighbordistfunclist[i][j];
+          m_Grains[index]->neighbordistfunc[i] = m_Grains[index]->neighbordistfunc[i] - 1;
+        }
+      }
+    }
+    for (size_t i = 1; i < activegrainlist.size(); i++)
+    {
+      nnum = 0;
+      index = activegrainlist[i];
+      if (index != gremove && m_Grains[index]->phase == phase)
+      {
+        for (int j = 0; j < 3; j++)
+        {
+          nnum = m_Grains[index]->neighbordistfunc[j];
+          dia = m_Grains[index]->equivdiameter;
+          if (dia > maxdiameter[phase]) dia = maxdiameter[phase];
+          if (dia < mindiameter[phase]) dia = mindiameter[phase];
+          dia = int((dia - mindiameter[phase]) / binstepsize[phase]);
+          if (nnum > 0)
+          {
+            neighbordist[phase][dia][j] = neighbordist[phase][dia][j] + nnum;
+          }
+        }
+        count++;
+      }
+    }
+    if (gadd > 0 && m_Grains[gadd]->phase == phase)
+    {
+      for (int j = 0; j < 3; j++)
+      {
+        nnum = m_Grains[index]->neighbordistfunc[j];
+        dia = m_Grains[index]->equivdiameter;
+        if (dia > maxdiameter[phase]) dia = maxdiameter[phase];
+        if (dia < mindiameter[phase]) dia = mindiameter[phase];
+        dia = int((dia - mindiameter[phase]) / binstepsize[phase]);
+        if (nnum > 0)
+        {
+          neighbordist[phase][dia][j] = neighbordist[phase][dia][j] + nnum;
+        }
+      }
+      count++;
+    }
+    for (int i = 0; i < numdiameterbins[phase]; i++)
+    {
+      for (int j = 0; j < 3; j++)
+      {
+        neighborerror = neighborerror + ((neighborhood[phase][i][j] - (neighbordist[phase][i][j] / float(count))) * (neighborhood[phase][i][j]
+            - (neighbordist[phase][i][j] / float(count))));
+      }
+    }
+    if (gadd > 0 && m_Grains[gadd]->phase == phase)
+    {
+      for (int i = 0; i < 3; i++)
+      {
+        for (size_t j = 0; j < m_Grains[gadd]->neighbordistfunclist[i].size(); j++)
+        {
+          index = m_Grains[gadd]->neighbordistfunclist[i][j];
+          m_Grains[index]->neighbordistfunc[i] = m_Grains[index]->neighbordistfunc[i] - 1;
+        }
+      }
+    }
+    if (gremove > 0 && m_Grains[gremove]->phase == phase)
+    {
+      for (int i = 0; i < 3; i++)
+      {
+        for (size_t j = 0; j < m_Grains[gremove]->neighbordistfunclist[i].size(); j++)
+        {
+          index = m_Grains[gremove]->neighbordistfunclist[i][j];
+          m_Grains[index]->neighbordistfunc[i]++;
+        }
+      }
+    }
   }
   return neighborerror;
 }
