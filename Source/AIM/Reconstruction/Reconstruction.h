@@ -90,6 +90,7 @@ Q_OBJECT
     MXA_INSTANCE_STRING_PROPERTY(H5AngFile)
     MXA_INSTANCE_PROPERTY(int, ZStartIndex)
     MXA_INSTANCE_PROPERTY(int, ZEndIndex)
+    MXA_INSTANCE_PROPERTY(std::vector<AIM::Reconstruction::PhaseType>, PhaseTypes)
     MXA_INSTANCE_STRING_PROPERTY(OutputDirectory)
     MXA_INSTANCE_STRING_PROPERTY(OutputFilePrefix)
     MXA_INSTANCE_PROPERTY(bool, MergeTwins)
