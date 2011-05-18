@@ -10,9 +10,10 @@
 #ifndef OIMCOLORING_HPP_
 #define OIMCOLORING_HPP_
 
-
-
 #include <string>
+
+#include "AIM/Common/AIMMath.h"
+
 #include "AIM/Common/OrientationMath.h"
 
 #define MXA_PI          3.141592653589793

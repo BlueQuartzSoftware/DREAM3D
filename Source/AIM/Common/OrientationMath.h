@@ -36,6 +36,7 @@
 #include "AIM/Common/AIMCommonConfiguration.h"
 #include "AIM/Common/Constants.h"
 #include "AIM/Common/AIMRandomNG.h"
+#include "AIM/Common/AIMMath.h"
 
 
 

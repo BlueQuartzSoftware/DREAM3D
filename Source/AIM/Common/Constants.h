@@ -152,18 +152,20 @@ namespace AIM
     /*    Reconstruction related */
     const std::string AlignmentFile("Alignment.txt");
     const std::string GrainDataFile("GrainData.txt");//14
+    const std::string H5StatisticsFile("Results.h5");
 
+    const std::string VisualizationVizFile("Visualization.vtk");//11
+    const std::string IPFVizFile("IPF_Visualization.vtk");//11
     const std::string DisorientationVizFile("Disorientation_Visualization.vtk");//11
     const std::string ImageQualityVizFile("ImageQuality_Visualization.vtk");//11
-    const std::string IPFVizFile("IPF_Visualization.vtk");//11
     const std::string SchmidFactorVizFile("SchmidFactor_Visualization.vtk");//11
-    const std::string VisualizationVizFile("Visualization.vtk");//11
     const std::string DownSampledVizFile("DownSampled_Visualization.vtk");//11
+    const std::string HDF5GrainFile("Grains.h5grain");
+
 
     const std::string DeformationStatsFile("Deformation_Stats.txt");
     const std::string IPFDeformVTKFile("IPF_DeformationData.vtk");
-    const std::string HDF5GrainFile("Grains.h5grain");
-    const std::string H5StatisticsFile("Results.h5");
+
     const std::string GrainIdScalarName("GrainID");
     /**
      * @brief IF YOU CHANGE THE VALUES THERE ARE DEEP RAMIFICATIONS IN THE CODE BUT
@@ -256,12 +258,16 @@ namespace AIM
     /*  Grain Generator Related */
 
     const std::string CrystallographicErrorFile("CrystallographicError.txt");
-    const std::string EulerFile("GrainAngles.txt");
+    const std::string GrainAnglesFile("GrainAngles.txt");
     const std::string GrainDataFile("GrainData.txt");
-    const std::string H5StatisticsFile("Results.h5");
-    const std::string VisualizationFile("Visualization.vtk");
     const std::string PackGrainsFile("PackGrains.txt");
-//   const std::string AnalysisFile("Synthetic_Stats.txt");
+    const std::string H5StatisticsFile("Results.h5");
+
+    const std::string VisualizationVizFile("Visualization.vtk");
+    const std::string IPFVizFile("IPF_Visualization.vtk");
+    const std::string HDF5GrainFile("Grains.h5grain");
+
+    const std::string GrainIdScalarName("GrainID");
 
 
 
@@ -299,7 +305,7 @@ namespace AIM
     const std::string TrianglesFile("triangles.txt");
     const std::string EdgesFileIndex("edges");
     const std::string EdgesFile("edges.txt");
-    const std::string VisualizationFile("Visualization.vtk");
+    const std::string VisualizationVizFile("Visualization.vtk");
     const std::string Smooth3DIterationFile("Smooth3D");
     const std::string NodesSmoothedFile("nodes_smoothed.txt");
   }

@@ -31,9 +31,13 @@
 
 #include "GrainGenerator.h"
 
+#include "MXA/Common/LogTime.h"
 #include "MXA/Utilities/MXADir.h"
+
 #include "AIM/Common/HDF5/H5ReconStatsReader.h"
 #include "AIM/Common/GrainGeneratorVTKWriter.h"
+#include "AIM/Common/HDF5/H5GrainWriter.h"
+
 
 #define CREATE_INPUT_FILENAME(f, n)\
     std::string f = m_InputDirectory + MXADir::Separator + n;\
@@ -44,31 +48,41 @@
     f = MXADir::toNativeSeparators(f);
 
 
-#ifdef AIM_USE_QT
-#define CHECK_FOR_CANCELED(AClass)\
-  if (this->m_Cancel) { \
-  QString msg = #AClass; \
-  msg += " was Canceled"; \
-  emit updateMessage(msg);\
-  emit updateProgress(0);\
-  return;}
+#define AIM_RECONSTRUCTION_BENCHMARKS 1
 
-#define CHECK_ERROR(name)\
-    if(err < 0) {\
-      setErrorCondition(err);\
-      QString msg = #name;\
-      msg += " Returned an error condition. Grain Generator has stopped.";\
-      emit updateMessage(msg);\
-      emit updateProgress(0);\
-      emit finished();\
-      return;   }
+#if AIM_RECONSTRUCTION_BENCHMARKS
+#define START_CLOCK()\
+  unsigned long long int millis;\
+  millis = MXA::getMilliSeconds();
+#else
+#define START_CLOCK() unsigned long long int millis = 0;\
+  millis = 0;
+#endif
+
+#ifdef AIM_USE_QT
+#define CHECK_FOR_CANCELED(AClass, name)\
+    if (this->m_Cancel) { \
+      QString msg = #AClass; \
+              msg += " was Canceled"; \
+              emit updateMessage(msg);\
+              emit updateProgress(0);\
+              emit finished();\
+              m = AClass::NullPointer();\
+      return;}\
+      if(AIM_RECONSTRUCTION_BENCHMARKS) {\
+    std::cout << #name << " Finish Time(ms): " << (MXA::getMilliSeconds() - millis) << std::endl;\
+    millis = MXA::getMilliSeconds(); }
+
 
 #else
-#define CHECK_FOR_CANCELED(AClass)\
-  ;
-#define CHECK_ERROR(name)\
-    ;
+
+#define CHECK_FOR_CANCELED(AClass, name)\
+  m = AClass::NullPointer();\
+  if(AIM_RECONSTRUCTION_BENCHMARKS) {\
+    std::cout << #name << " Finish Time(ms): " << (MXA::getMilliSeconds() - millis) << std::endl;\
+    millis = MXA::getMilliSeconds(); }
 #endif
+
 
 
 
@@ -112,6 +126,9 @@ m_NeighborhoodErrorWeight(0.0),
 m_SizeDistErrorWeight(0.0),
 m_AlreadyFormed(false),
 m_Precipitates(0),
+m_WriteVisualizationFile(false),
+m_WriteIPFFile(false),
+m_WriteHDF5GrainFile(false),
 m_ErrorCondition(0)
 #if AIM_USE_QT
   ,m_Cancel(false)
@@ -141,13 +158,19 @@ void GrainGenerator::compute()
     return;
   }
   MAKE_OUTPUT_FILE_PATH ( crystallographicErrorFile , AIM::SyntheticBuilder::CrystallographicErrorFile)
-  MAKE_OUTPUT_FILE_PATH ( eulerFile , AIM::SyntheticBuilder::EulerFile)
+  MAKE_OUTPUT_FILE_PATH ( eulerFile , AIM::SyntheticBuilder::GrainAnglesFile)
   MAKE_OUTPUT_FILE_PATH ( graindataFile , AIM::SyntheticBuilder::GrainDataFile)
-  MAKE_OUTPUT_FILE_PATH ( hdf5ResultsFile , AIM::SyntheticBuilder::H5StatisticsFile)
-  MAKE_OUTPUT_FILE_PATH ( visFile , AIM::SyntheticBuilder::VisualizationFile)
   MAKE_OUTPUT_FILE_PATH ( packGrainsFile , AIM::SyntheticBuilder::PackGrainsFile)
+  MAKE_OUTPUT_FILE_PATH ( hdf5ResultsFile , AIM::SyntheticBuilder::H5StatisticsFile)
 
+  MAKE_OUTPUT_FILE_PATH ( reconVisFile, AIM::Reconstruction::VisualizationVizFile);
+  MAKE_OUTPUT_FILE_PATH ( reconIPFVisFile, AIM::Reconstruction::IPFVizFile);
+  MAKE_OUTPUT_FILE_PATH ( hdf5GrainFile, AIM::Reconstruction::HDF5GrainFile);
 
+  START_CLOCK()
+
+  GrainGeneratorVTKWriter::Pointer vtkWriter = GrainGeneratorVTKWriter::New();
+  H5GrainWriter::Pointer h5GrainWriter = H5GrainWriter::New();
 
   H5ReconStatsWriter::Pointer h5io = H5ReconStatsWriter::New(hdf5ResultsFile);
   m = GrainGeneratorFunc::New();
@@ -168,33 +191,36 @@ void GrainGenerator::compute()
 #warning Precipitates are not dealt with currently
 #endif
 
-    CHECK_FOR_CANCELED(GrainGeneratorFunc)
     progressMessage(AIM_STRING("Loading Stats Data"), 5);
     err = m->readReconStatsData(h5reader);
-    CHECK_ERROR(readReconStatsData)
+    CHECK_FOR_CANCELED(GrainGeneratorFunc, readReconStatsData)
 
-    CHECK_FOR_CANCELED(GrainGeneratorFunc)
     progressMessage(AIM_STRING("Loading Axis Orientation Data"), 10);
     err = m->readAxisOrientationData(h5reader);
-    CHECK_ERROR(readAxisOrientationData);
+    CHECK_FOR_CANCELED(GrainGeneratorFunc, readAxisOrientationData);
 
-
-    CHECK_FOR_CANCELED(GrainGeneratorFunc)
     progressMessage(AIM_STRING("Packing Grains"), 25);
     m->numgrains = m->pack_grains(packGrainsFile, m->numgrains);
+    CHECK_FOR_CANCELED(GrainGeneratorFunc, pack_grains)
 
-    CHECK_FOR_CANCELED(GrainGeneratorFunc)
     progressMessage(AIM_STRING("Assigning Voxels"), 30);
     m->numgrains = m->assign_voxels(m->numgrains);
+    CHECK_FOR_CANCELED(GrainGeneratorFunc, assign_voxels)
 
-    CHECK_FOR_CANCELED(GrainGeneratorFunc)
     progressMessage(AIM_STRING("Filling Gaps"), 40);
     m->fill_gaps(m->numgrains);
+    CHECK_FOR_CANCELED(GrainGeneratorFunc, fill_gaps)
 
+<<<<<<< HEAD
     CHECK_FOR_CANCELED(GrainGeneratorFunc)
     progressMessage(AIM_STRING("Adjusting Boundaries"), 42);
 //    m->numgrains = m->adjust_boundaries(m->numgrains);
 
+=======
+    progressMessage(AIM_STRING("Placing Precipitates"), 42);
+    m->numgrains = m->place_precipitates(m->numgrains);
+    CHECK_FOR_CANCELED(GrainGeneratorFunc, place_precipitates)
+>>>>>>> 55722f81cbc34731029db7b93231fb1fb0b05820
   }
 
 #if 0
@@ -209,76 +235,93 @@ void GrainGenerator::compute()
     m->read_structure(visFile);
   }
 #endif
+<<<<<<< HEAD
   CHECK_FOR_CANCELED(GrainGeneratorFunc)
   progressMessage(AIM_STRING("Finding Neighbors"), 44);
-  m->find_neighbors();
+=======
 
+  progressMessage(AIM_STRING("Finding Neighbors"), 45);
+>>>>>>> 55722f81cbc34731029db7b93231fb1fb0b05820
+  m->find_neighbors();
+  CHECK_FOR_CANCELED(GrainGeneratorFunc, find_neighbors)
+
+<<<<<<< HEAD
   CHECK_FOR_CANCELED(GrainGeneratorFunc)
   progressMessage(AIM_STRING("Placing Precipitates"), 46);
   m->numgrains = m->place_precipitates(m->numgrains);
 
   CHECK_FOR_CANCELED(GrainGeneratorFunc)
+=======
+>>>>>>> 55722f81cbc34731029db7b93231fb1fb0b05820
   progressMessage(AIM_STRING("Loading ODF Data"), 48);
   err = m->readODFData(h5reader);
-  CHECK_ERROR(readODFData)
+  CHECK_FOR_CANCELED(GrainGeneratorFunc, readODFData)
 
-  CHECK_FOR_CANCELED(GrainGeneratorFunc)
   progressMessage(AIM_STRING("Loading Misorientation Data"), 50);
   err = m->readMisorientationData(h5reader);
-  CHECK_ERROR(readMisorientationData)
+  CHECK_FOR_CANCELED(GrainGeneratorFunc, readMisorientationData)
 
-  CHECK_FOR_CANCELED(GrainGeneratorFunc)
   progressMessage(AIM_STRING("Loading Microtexture Data "), 55);
   err = m->readMicroTextureData(h5reader);
-  CHECK_ERROR(readMicroTextureData)
+  CHECK_FOR_CANCELED(GrainGeneratorFunc, readMicroTextureData)
 
-
-  CHECK_FOR_CANCELED(GrainGeneratorFunc)
   progressMessage(AIM_STRING("Assigning Eulers"), 60);
   m->assign_eulers(m->numgrains);
+  CHECK_FOR_CANCELED(GrainGeneratorFunc, assign_eulers)
 
-  CHECK_FOR_CANCELED(GrainGeneratorFunc)
+
   progressMessage(AIM_STRING("Measuring Misorientations"), 65);
   m->measure_misorientations();
+  CHECK_FOR_CANCELED(GrainGeneratorFunc, measure_misorientations)
 
-  CHECK_FOR_CANCELED(GrainGeneratorFunc)
   progressMessage(AIM_STRING("Matching Crystallography"), 65);
   m->matchCrystallography(crystallographicErrorFile, h5io);
+  CHECK_FOR_CANCELED(GrainGeneratorFunc, matchCrystallography)
 
-  CHECK_FOR_CANCELED(GrainGeneratorFunc)
   progressMessage(AIM_STRING("Finding Grain Centroids"), 68);
   m->find_centroids();
+  CHECK_FOR_CANCELED(GrainGeneratorFunc, find_centroids)
 
-  CHECK_FOR_CANCELED(GrainGeneratorFunc)
   progressMessage(AIM_STRING("Finding Grain Moments"), 71);
   m->find_moments();
+  CHECK_FOR_CANCELED(GrainGeneratorFunc, find_moments)
 
-  CHECK_FOR_CANCELED(GrainGeneratorFunc)
   progressMessage(AIM_STRING("Finding Grain Principal Axis Lengths"), 74);
   m->find_axes();
+  CHECK_FOR_CANCELED(GrainGeneratorFunc, find_axes)
 
-  CHECK_FOR_CANCELED(GrainGeneratorFunc)
+
   progressMessage(AIM_STRING("Finding Grain Principal Axis Directions"), 77);
   m->find_vectors(h5io);
+  CHECK_FOR_CANCELED(GrainGeneratorFunc, find_vectors)
 
-
-  CHECK_FOR_CANCELED(GrainGeneratorFunc)
-  progressMessage(AIM_STRING("Writing Stats"), 87);
+  progressMessage(AIM_STRING("Writing Stats"), 78);
   m->volume_stats(h5io);
+  CHECK_FOR_CANCELED(GrainGeneratorFunc, volume_stats)
 
-  CHECK_FOR_CANCELED(GrainGeneratorFunc)
-  progressMessage(AIM_STRING("Writing Cube"), 90);
-  GrainGeneratorVTKWriter::Pointer writer = GrainGeneratorVTKWriter::New();
-  writer->writeVisualizationFile(m.get(), visFile);
-
-  CHECK_FOR_CANCELED(GrainGeneratorFunc)
-  progressMessage(AIM_STRING("Writing Grain Data"), 94);
+  progressMessage(AIM_STRING("Writing Grain Data"), 80);
   m->write_graindata(graindataFile);
+  CHECK_FOR_CANCELED(GrainGeneratorFunc, write_graindata)
 
-  CHECK_FOR_CANCELED(GrainGeneratorFunc)
-  progressMessage(AIM_STRING("Writing Euler Angles"), 98);
+  progressMessage(AIM_STRING("Writing Euler Angles"), 81);
   m->write_eulerangles(eulerFile);
+  CHECK_FOR_CANCELED(GrainGeneratorFunc, write_eulerangles)
 
+  /** ********** This section writes the VTK files for visualization *** */
+
+  progressMessage(AIM_STRING("Writing VTK Visualization File"), 93);
+  if (m_WriteVisualizationFile) {vtkWriter->writeVisualizationFile(m.get(), reconVisFile);}
+  CHECK_FOR_CANCELED(GrainGeneratorFunc, writeVisualizationFile)
+
+  progressMessage(AIM_STRING("Writing VTK Inverse Pole Figure File"), 94);
+  if (m_WriteIPFFile) {vtkWriter->writeIPFVizFile(m.get(), reconIPFVisFile);}
+  CHECK_FOR_CANCELED(GrainGeneratorFunc, writeIPFVizFile)
+  /** ******* End VTK Visualization File Writing Section ****** */
+
+
+  progressMessage(AIM_STRING("Writing Out HDF5 Grain File. This may take a few minutes to complete."), 99);
+  if (m_WriteHDF5GrainFile) { h5GrainWriter->writeHDF5GrainsFile(m.get(), hdf5GrainFile); }
+  CHECK_FOR_CANCELED(GrainGeneratorFunc, writeHDF5GrainsFile)
   progressMessage(AIM_STRING("Generation Completed"), 100);
 
   // Clean up all the memory
