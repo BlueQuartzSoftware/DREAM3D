@@ -133,7 +133,7 @@ void ReconstructionFunc::initialize(int nX,
   misorientationtolerance = misoTol;
   crystruct = crystalStructures;
   phaseType = phaseTypes;
-  pptFractions = pptFractions;
+  pptFractions = precipFractions;
   alignmeth = alignmentMethod;
   alreadyformed = (alreadyFormed == true) ? 1 : 0;
 
