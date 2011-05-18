@@ -125,6 +125,7 @@ m_MinSeedImageQuality(0.0),
 m_MisorientationTolerance(0.0),
 m_AlreadyFormed(false),
 m_Orientation(Ang::NoOrientation),
+m_WriteBinaryFiles(true),
 m_WriteVisualizationFile(false),
 m_WriteIPFFile(false),
 m_WriteDisorientationFile(false),
@@ -166,10 +167,7 @@ void Reconstruction::compute()
   ptr->setZEndIndex(m_ZEndIndex);
   ptr->setOrientation(m_Orientation);
 
-  // Create our File Output Writer Object. This will handle all the File Output duties
-  ReconstructionVTKWriter::Pointer vtkWriter = ReconstructionVTKWriter::New();
-  H5GrainWriter::Pointer h5GrainWriter = H5GrainWriter::New();
-
+  // Create the ReconstructionFunc object
   m = ReconstructionFunc::New();
   progressMessage(AIM_STRING("Gathering Size and Resolution Information from OIM Data"), 1);
   err = oimDataLoader->getSizeAndResolution(m->xpoints, m->ypoints, m->zpoints, m->resx, m->resy, m->resz);
@@ -413,6 +411,9 @@ void Reconstruction::compute()
   m->write_graindata(graindataFile);
 
   /** ********** This section writes the VTK files for visualization *** */
+  // Create our File Output Writer Object. This will handle all the File Output duties
+  ReconstructionVTKWriter::Pointer vtkWriter = ReconstructionVTKWriter::New();
+  vtkWriter->setWriteBinaryFiles(m_WriteBinaryFiles);
 
   progressMessage(AIM_STRING("Writing VTK Visualization File"), 93);
   if (m_WriteVisualizationFile) {vtkWriter->writeVisualizationFile(m.get(), reconVisFile);}
@@ -436,6 +437,7 @@ void Reconstruction::compute()
   CHECK_FOR_CANCELED(ReconstructionFunc, vtk_viz_files)
 
   progressMessage(AIM_STRING("Writing Out HDF5 Grain File. This may take a few minutes to complete."), 99);
+  H5GrainWriter::Pointer h5GrainWriter = H5GrainWriter::New();
   if (m_WriteHDF5GrainFile) { h5GrainWriter->writeHDF5GrainsFile(m.get(), hdf5GrainFile); }
   CHECK_FOR_CANCELED(ReconstructionFunc, writeHDF5GrainsFile)
 

@@ -54,6 +54,7 @@ class AIMCOMMON_EXPORT ReconstructionVTKWriter
     MXA_STATIC_NEW_MACRO(ReconstructionVTKWriter)
     MXA_TYPE_MACRO(ReconstructionVTKWriter)
 
+    MXA_INSTANCE_PROPERTY(bool, WriteBinaryFiles)
       /**
        * @brief Writes a VTK visualization file
        * @param Output file name

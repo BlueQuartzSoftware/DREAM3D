@@ -38,7 +38,8 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ReconstructionVTKWriter::ReconstructionVTKWriter()
+ReconstructionVTKWriter::ReconstructionVTKWriter() :
+m_WriteBinaryFiles(false)
 {
 }
 
@@ -54,11 +55,6 @@ ReconstructionVTKWriter::~ReconstructionVTKWriter()
 // -----------------------------------------------------------------------------
 int ReconstructionVTKWriter::writeImageQualityVizFile(ReconstructionFunc* r, const std::string &file)
 {
-  bool bin = false;
-#if AIM_WRITE_BINARY_VTK_FILE
-  bin = true;
-#endif
-
   FILE* f = NULL;
   f = fopen(file.c_str(), "wb");
   if (NULL == f)
@@ -66,7 +62,7 @@ int ReconstructionVTKWriter::writeImageQualityVizFile(ReconstructionFunc* r, con
     return 1;
   }
   // Write the correct header
-  if (bin == true)
+  if (m_WriteBinaryFiles == true)
   {
     WRITE_VTK_GRAIN_HEADER("BINARY", r)
   }
@@ -75,7 +71,7 @@ int ReconstructionVTKWriter::writeImageQualityVizFile(ReconstructionFunc* r, con
     WRITE_VTK_GRAIN_HEADER("ASCII", r)
   }
   size_t total = r->xpoints * r->ypoints * r->zpoints;
-  if (true == bin)
+  if (true == m_WriteBinaryFiles)
   {
     WRITE_VTK_GRAIN_IDS_BINARY(r, AIM::Reconstruction::GrainIdScalarName, voxels);
     WRITE_VTK_SCALARS_FROM_VOXEL_BINARY(r, ImageQuality, float, voxels, imagequality)
@@ -94,11 +90,6 @@ int ReconstructionVTKWriter::writeImageQualityVizFile(ReconstructionFunc* r, con
 // -----------------------------------------------------------------------------
 int ReconstructionVTKWriter::writeSchmidFactorVizFile(ReconstructionFunc* r, const std::string &file)
 {
-  bool bin = false;
-#if AIM_WRITE_BINARY_VTK_FILE
-  bin = true;
-#endif
-
   FILE* f = NULL;
   f = fopen(file.c_str(), "wb");
   if (NULL == f)
@@ -106,7 +97,7 @@ int ReconstructionVTKWriter::writeSchmidFactorVizFile(ReconstructionFunc* r, con
     return 1;
   }
   // Write the correct header
-  if (bin == true)
+  if (m_WriteBinaryFiles == true)
   {
     WRITE_VTK_GRAIN_HEADER("BINARY", r)
   }
@@ -115,7 +106,7 @@ int ReconstructionVTKWriter::writeSchmidFactorVizFile(ReconstructionFunc* r, con
     WRITE_VTK_GRAIN_HEADER("ASCII", r)
   }
   size_t total = r->xpoints * r->ypoints * r->zpoints;
-  if (true == bin)
+  if (true == m_WriteBinaryFiles)
   {
     WRITE_VTK_GRAIN_IDS_BINARY(r, AIM::Reconstruction::GrainIdScalarName, voxels);
     WRITE_VTK_GRAIN_WITH_GRAIN_SCALAR_VALUE_BINARY(r, SchmidFactor, float, schmidfactor)
@@ -134,11 +125,6 @@ int ReconstructionVTKWriter::writeSchmidFactorVizFile(ReconstructionFunc* r, con
 // -----------------------------------------------------------------------------
 int ReconstructionVTKWriter::writeVisualizationFile(ReconstructionFunc* r, const std::string &file)
 {
-  bool bin = false;
-#if AIM_WRITE_BINARY_VTK_FILE
-  bin = true;
-#endif
-
   FILE* f = NULL;
   f = fopen(file.c_str(), "wb");
   if (NULL == f)
@@ -146,7 +132,7 @@ int ReconstructionVTKWriter::writeVisualizationFile(ReconstructionFunc* r, const
     return 1;
   }
   // Write the correct header
-  if (bin == true)
+  if (m_WriteBinaryFiles == true)
   {
     WRITE_VTK_GRAIN_HEADER("BINARY", r)
   }
@@ -156,7 +142,7 @@ int ReconstructionVTKWriter::writeVisualizationFile(ReconstructionFunc* r, const
   }
   size_t total = r->xpoints * r->ypoints * r->zpoints;
 
-  if (true == bin)
+  if (true == m_WriteBinaryFiles)
   {
     WRITE_VTK_GRAIN_IDS_BINARY(r, AIM::Reconstruction::GrainIdScalarName, voxels);
     WRITE_VTK_SCALARS_FROM_VOXEL_BINARY(r, Euclidean, float, voxels, nearestneighbordistance[0])
@@ -175,10 +161,6 @@ int ReconstructionVTKWriter::writeVisualizationFile(ReconstructionFunc* r, const
 // -----------------------------------------------------------------------------
 int ReconstructionVTKWriter::writeDisorientationFile(ReconstructionFunc* r, const std::string &file)
 {
-  bool bin = false;
-#if AIM_WRITE_BINARY_VTK_FILE
-  bin = true;
-#endif
   FILE* f = NULL;
   f = fopen(file.c_str(), "wb");
   if (NULL == f)
@@ -186,7 +168,7 @@ int ReconstructionVTKWriter::writeDisorientationFile(ReconstructionFunc* r, cons
     return 1;
   }
   // Write the correct header
-  if (bin == true)
+  if (m_WriteBinaryFiles == true)
   {
     WRITE_VTK_GRAIN_HEADER("BINARY", r)
   }
@@ -195,7 +177,7 @@ int ReconstructionVTKWriter::writeDisorientationFile(ReconstructionFunc* r, cons
     WRITE_VTK_GRAIN_HEADER("ASCII", r)
   }
   size_t total = r->xpoints * r->ypoints * r->zpoints;
-  if (true == bin)
+  if (true == m_WriteBinaryFiles)
   {
     WRITE_VTK_GRAIN_IDS_BINARY(r, AIM::Reconstruction::GrainIdScalarName, voxels);
     WRITE_VTK_SCALARS_FROM_VOXEL_BINARY(r, KAM, float, voxels, kernelmisorientation)
@@ -218,10 +200,6 @@ int ReconstructionVTKWriter::writeDisorientationFile(ReconstructionFunc* r, cons
 // -----------------------------------------------------------------------------
 int ReconstructionVTKWriter::writeIPFVizFile(ReconstructionFunc* r, const std::string &file)
 {
-  bool bin = false;
-#if AIM_WRITE_BINARY_VTK_FILE
-  bin = true;
-#endif
   FILE* f = NULL;
   f = fopen(file.c_str(), "wb");
   if (NULL == f)
@@ -229,7 +207,7 @@ int ReconstructionVTKWriter::writeIPFVizFile(ReconstructionFunc* r, const std::s
     return 1;
   }
   // Write the correct header
-  if (bin == true)
+  if (m_WriteBinaryFiles == true)
   {
     WRITE_VTK_GRAIN_HEADER("BINARY", r)
   }
@@ -243,7 +221,7 @@ int ReconstructionVTKWriter::writeIPFVizFile(ReconstructionFunc* r, const std::s
   float RefDirection[3] = { 1.0, 0.0, 0.0 };
   int phase;
 
-  if (true == bin)
+  if (true == m_WriteBinaryFiles)
   {
     WRITE_VTK_GRAIN_IDS_BINARY(r, AIM::Reconstruction::GrainIdScalarName, voxels);
     WRITE_VTK_SCALARS_FROM_VOXEL_BINARY(r, Phase, int, voxels, phase)
