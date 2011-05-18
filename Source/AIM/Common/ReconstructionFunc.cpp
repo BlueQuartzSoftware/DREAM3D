@@ -780,16 +780,10 @@ void ReconstructionFunc::align_sections(const std::string &filename)
 }
 void ReconstructionFunc::form_grains_sections()
 {
-  AIMRandomNG rg;
-  unsigned long long int seed = MXA::getMilliSeconds();
-  unsigned int* seedPtr = reinterpret_cast<unsigned int*> (&seed);
-#if CMP_WORDS_BIGENDIAN
-      rg.RandomInit(seedPtr[1]);
-#else
-      rg.RandomInit(seedPtr[0]);
-#endif
+  AIM_RANDOMNG_NEW()
 
   int point = 0;
+  int seed = 0;
   int noseeds = 0;
   int graincount = 1;
   int neighbor;
@@ -924,15 +918,8 @@ void ReconstructionFunc::form_grains_sections()
 
 void ReconstructionFunc::form_grains()
 {
-  AIMRandomNG rg;
-  unsigned long long int seed = MXA::getMilliSeconds();
-  unsigned int* seedPtr = reinterpret_cast<unsigned int*> (&seed);
-#if CMP_WORDS_BIGENDIAN
-      rg.RandomInit(seedPtr[1]);
-#else
-      rg.RandomInit(seedPtr[0]);
-#endif
-
+  AIM_RANDOMNG_NEW()
+  int seed = 0;
   int noseeds = 0;
   size_t graincount = 1;
   int neighbor;

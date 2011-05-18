@@ -306,8 +306,7 @@ int OrientationMath::_calcMisoBin(float dim[3], float bins[3], float n1, float n
 void OrientationMath::_calcDetermineEulerAngles(float init[3], float step[3], float phi[3],
                                                 int choose, float &synea1, float &synea2, float &synea3)
 {
-  AIMRandomNG rg;
-  rg.RandomInit((static_cast<unsigned int> (MXA::getMilliSeconds())));
+  AIM_RANDOMNG_NEW()
   float random = rg.Random();
   float synh1 = (step[0] * phi[0]) + (step[0] * random) - (init[0]);
   random = rg.Random();
@@ -331,8 +330,7 @@ void OrientationMath::_calcDetermineHomochoricValues( float step[3], float phi[3
 {
   float random;
 
-  AIMRandomNG rg;
-  rg.RandomInit((static_cast<unsigned int> (MXA::getMilliSeconds())));
+  AIM_RANDOMNG_NEW()
   random = rg.Random();
   r1 = (step[0] * phi[0]) + (step[0] * random);
   random = rg.Random();

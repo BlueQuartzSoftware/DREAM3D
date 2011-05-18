@@ -564,14 +564,7 @@ int GrainGeneratorFunc::readMicroTextureData(H5ReconStatsReader::Pointer h5io)
 
 void  GrainGeneratorFunc::generate_grain(int gnum, int phase)
 {
-  AIMRandomNG rg;
-  unsigned long long int seed = MXA::getMilliSeconds();
-  unsigned int* seedPtr = reinterpret_cast<unsigned int*> (&seed);
-#if CMP_WORDS_BIGENDIAN
-      rg.RandomInit(seedPtr[1]);
-#else
-      rg.RandomInit(seedPtr[0]);
-#endif
+  AIM_RANDOMNG_NEW()
 
   int good = 0;
   float r1 = 1;
@@ -663,14 +656,7 @@ void  GrainGeneratorFunc::generate_grain(int gnum, int phase)
 
 void  GrainGeneratorFunc::insert_grain(size_t gnum)
 {
-  AIMRandomNG rg;
-  unsigned long long int seed = MXA::getMilliSeconds();
-  unsigned int* seedPtr = reinterpret_cast<unsigned int*> (&seed);
-#if CMP_WORDS_BIGENDIAN
-      rg.RandomInit(seedPtr[1]);
-#else
-      rg.RandomInit(seedPtr[0]);
-#endif
+  AIM_RANDOMNG_NEW()
 
   float dist;
   float Nvalue = 0;
@@ -1142,14 +1128,7 @@ float GrainGeneratorFunc::check_sizedisterror(int gadd, int gremove)
 
 int  GrainGeneratorFunc::pack_grains(const std::string &filename, int numgrains)
 {
-  AIMRandomNG rg;
-  unsigned long long int seed = MXA::getMilliSeconds();
-  unsigned int* seedPtr = reinterpret_cast<unsigned int*> (&seed);
-#if CMP_WORDS_BIGENDIAN
-      rg.RandomInit(seedPtr[1]);
-#else
-      rg.RandomInit(seedPtr[0]);
-#endif
+  AIM_RANDOMNG_NEW()
 
   totalvol = 0;
   float change1, change2, change3;
@@ -1638,14 +1617,7 @@ int GrainGeneratorFunc::assign_voxels(int numgrains)
 }
 void  GrainGeneratorFunc::assign_eulers(int numgrains)
 {
-  AIMRandomNG rg;
-  unsigned long long int seed = MXA::getMilliSeconds();
-  unsigned int* seedPtr = reinterpret_cast<unsigned int*> (&seed);
-#if CMP_WORDS_BIGENDIAN
-      rg.RandomInit(seedPtr[1]);
-#else
-      rg.RandomInit(seedPtr[0]);
-#endif
+  AIM_RANDOMNG_NEW()
 
   int gnum = 0;
   int numbins = 0;
@@ -1799,14 +1771,7 @@ void  GrainGeneratorFunc::fill_gaps(int numgrains)
 
 int  GrainGeneratorFunc::place_precipitates(int numgrains)
 {
-  AIMRandomNG rg;
-  unsigned long long int seed = MXA::getMilliSeconds();
-  unsigned int* seedPtr = reinterpret_cast<unsigned int*> (&seed);
-#if CMP_WORDS_BIGENDIAN
-      rg.RandomInit(seedPtr[1]);
-#else
-      rg.RandomInit(seedPtr[0]);
-#endif
+  AIM_RANDOMNG_NEW()
 
   totalprecipvol = 0;
   size_t currentnumgrains = numgrains;
@@ -1897,14 +1862,7 @@ int  GrainGeneratorFunc::place_precipitates(int numgrains)
 }
 int GrainGeneratorFunc::adjust_boundaries(int numgrains)
 {
-  AIMRandomNG rg;
-  unsigned long long int seed = MXA::getMilliSeconds();
-  unsigned int* seedPtr = reinterpret_cast<unsigned int*> (&seed);
-#if CMP_WORDS_BIGENDIAN
-      rg.RandomInit(seedPtr[1]);
-#else
-      rg.RandomInit(seedPtr[0]);
-#endif
+  AIM_RANDOMNG_NEW()
 
 	int neighbors[6];
 	neighbors[0] = -xpoints*ypoints;
@@ -2335,14 +2293,7 @@ void GrainGeneratorFunc::MC_LoopBody2(int phase, size_t neighbor, int j,std::vec
 
 void GrainGeneratorFunc::swapOutOrientation( int &badtrycount, int &numbins, float currentodferror, float currentmdferror)
 {
-  AIMRandomNG rg;
-  unsigned long long int seed = MXA::getMilliSeconds();
-  unsigned int* seedPtr = reinterpret_cast<unsigned int*> (&seed);
-#if CMP_WORDS_BIGENDIAN
-      rg.RandomInit(seedPtr[1]);
-#else
-      rg.RandomInit(seedPtr[0]);
-#endif
+  AIM_RANDOMNG_NEW()
 
   float random;
   int good;
@@ -2434,14 +2385,7 @@ void GrainGeneratorFunc::swapOutOrientation( int &badtrycount, int &numbins, flo
 
 void GrainGeneratorFunc::switchOrientations( int &badtrycount, int &numbins, float currentodferror, float currentmdferror)
 {
-  AIMRandomNG rg;
-  unsigned long long int seed = MXA::getMilliSeconds();
-  unsigned int* seedPtr = reinterpret_cast<unsigned int*> (&seed);
-#if CMP_WORDS_BIGENDIAN
-      rg.RandomInit(seedPtr[1]);
-#else
-      rg.RandomInit(seedPtr[0]);
-#endif
+  AIM_RANDOMNG_NEW()
 
   int good = 0;
   float deltaerror;
@@ -2586,14 +2530,7 @@ void GrainGeneratorFunc::switchOrientations( int &badtrycount, int &numbins, flo
 
 void GrainGeneratorFunc::matchCrystallography(const std::string &ErrorFile, H5ReconStatsWriter::Pointer h5io)
 {
-  AIMRandomNG rg;
-  unsigned long long int seed = MXA::getMilliSeconds();
-  unsigned int* seedPtr = reinterpret_cast<unsigned int*> (&seed);
-#if CMP_WORDS_BIGENDIAN
-      rg.RandomInit(seedPtr[1]);
-#else
-      rg.RandomInit(seedPtr[0]);
-#endif
+  AIM_RANDOMNG_NEW()
 
   ofstream outFile;
   outFile.open(ErrorFile.c_str());
