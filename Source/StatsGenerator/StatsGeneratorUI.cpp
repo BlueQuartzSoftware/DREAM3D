@@ -185,7 +185,7 @@ void StatsGeneratorUI::on_addPhase_clicked()
     widget->setCrystalStructure(dialog.getCrystalStructure());
     widget->setPhaseFraction(dialog.getPhaseFraction());
     widget->setPhaseType(dialog.getPhaseType());
-	widget->setPptFraction(dialog.getPptFraction());
+    widget->setPptFraction(dialog.getPptFraction());
     QString cName = widget->getComboString();
 
     widget->setObjectName(cName);

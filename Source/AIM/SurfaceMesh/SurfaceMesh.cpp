@@ -122,7 +122,7 @@ void SurfaceMesh::compute()
 //  MAKE_OUTPUT_FILE_PATH (  EdgesFile , AIM::SurfaceMeshing::EdgesFile)
 //  MAKE_OUTPUT_FILE_PATH (  EdgesFileIndex , AIM::SurfaceMeshing::EdgesFileIndex)
 //  MAKE_OUTPUT_FILE_PATH (  TrianglesFileIndex , AIM::SurfaceMeshing::TrianglesFileIndex)
-  MAKE_OUTPUT_FILE_PATH (  VisualizationFile , AIM::SurfaceMeshing::VisualizationFile)
+  MAKE_OUTPUT_FILE_PATH (  VisualizationFile , AIM::SurfaceMeshing::VisualizationVizFile)
 
   // Create the output directory if needed
   if (MXADir::exists(m_OutputDirectory) == false)
@@ -361,7 +361,7 @@ emit finished();
   msg.append(QString::fromStdString(VisualizationFile));
 #else
   std::string msg("Writing Surface Mesh File: ");
-  msg.append(VisualizationFile);
+  msg.append(AIM::SurfaceMeshing::VisualizationVizFile);
 #endif
 
 
