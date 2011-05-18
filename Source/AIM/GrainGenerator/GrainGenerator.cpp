@@ -233,10 +233,12 @@ void GrainGenerator::compute()
   m->find_neighbors();
   CHECK_FOR_CANCELED(GrainGeneratorFunc, find_neighbors)
 
-  progressMessage(AIM_STRING("Placing Precipitates"), 46);
-  m->numgrains = m->place_precipitates(m->numgrains);
-  CHECK_FOR_CANCELED(GrainGeneratorFunc, place_precipitates)
-
+  if (m_AlreadyFormed == false)
+  {
+    progressMessage(AIM_STRING("Placing Precipitates"), 46);
+    m->numgrains = m->place_precipitates(m->numgrains);
+    CHECK_FOR_CANCELED(GrainGeneratorFunc, place_precipitates)
+  }
   progressMessage(AIM_STRING("Loading ODF Data"), 48);
   err = m->readODFData(h5reader);
   CHECK_FOR_CANCELED(GrainGeneratorFunc, readODFData)
@@ -252,7 +254,6 @@ void GrainGenerator::compute()
   progressMessage(AIM_STRING("Assigning Eulers"), 60);
   m->assign_eulers(m->numgrains);
   CHECK_FOR_CANCELED(GrainGeneratorFunc, assign_eulers)
-
 
   progressMessage(AIM_STRING("Measuring Misorientations"), 65);
   m->measure_misorientations();
