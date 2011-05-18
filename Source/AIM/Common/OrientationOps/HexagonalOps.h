@@ -34,6 +34,43 @@
 #include "MXA/Common/MXASetGetMacros.h"
 #include "AIM/Common/OrientationMath.h"
 
+namespace HexagonalMath {
+  namespace Detail {
+    const static float m_pi = M_PI;
+    static const float HexDim1InitValue = powf((0.75f*((m_pi/2.0f)-sinf((m_pi/2.0f)))),(1.0f/3.0f));
+    static const float HexDim2InitValue = powf((0.75f*((m_pi/2.0f)-sinf((m_pi/2.0f)))),(1.0f/3.0f));
+    static const float HexDim3InitValue = powf((0.75f*((m_pi/6.0f)-sinf((m_pi/6.0f)))),(1.0f/3.0f));
+    static const float HexDim1StepValue = HexDim1InitValue/18.0f;
+    static const float HexDim2StepValue = HexDim1InitValue/18.0f;
+    static const float HexDim3StepValue = HexDim1InitValue/6.0f;
+  static const float HexQuatSym[12][5] = {{0.000000000, 0.000000000, 0.000000000, 0.000000000, 1.000000000},
+                         {0.000000000, 0.000000000, 0.000000000, 0.500000000, 0.866025400},
+                         {0.000000000, 0.000000000, 0.000000000, 0.866025400, 0.500000000},
+                         {0.000000000, 0.000000000, 0.000000000, 1.000000000, 0.000000000},
+                         {0.000000000, 0.000000000, 0.000000000, 0.866025400, -0.50000000},
+                         {0.000000000, 0.000000000, 0.000000000, 0.500000000, -0.86602540},
+                         {0.000000000, 1.000000000, 0.000000000, 0.000000000, 0.000000000},
+                         {0.000000000, 0.866025400, 0.500000000, 0.000000000, 0.000000000},
+                         {0.000000000, 0.500000000, 0.866025400, 0.000000000, 0.000000000},
+                         {0.000000000, 0.000000000, 1.000000000, 0.000000000, 0.000000000},
+                         {0.000000000, -0.50000000, 0.866025400, 0.000000000, 0.000000000},
+                         {0.000000000, -0.86602540, 0.500000000, 0.000000000, 0.000000000}};
+  static const float HexRodSym[12][3] = {{0,0,0},
+                      {0, 0, 0.57735},
+                      {0, 0, 1.73205},
+                      {0, 0, 10000000000.0},
+                      {0, 0, -1.73205},
+                      {0, 0, -0.57735},
+                      {0, 10000000000.0, 10000000000.0},
+                      {10000000000.0, 0, 0},
+                      {0, 10000000000.0, 10000000000.0},
+                      {0, 10000000000.0, 10000000000.0},
+                      {0, 10000000000.0, 0},
+                      {0, 10000000000.0, 10000000000.0}};
+  }
+}
+
+
 /**
  * @class HexagonalOps HexagonalOps.h AIM/Common/OrientationOps/HexagonalOps.h
  * @brief
@@ -47,7 +84,6 @@ class AIMCOMMON_EXPORT HexagonalOps : public OrientationMath
   public:
     MXA_SHARED_POINTERS(HexagonalOps)
     MXA_TYPE_MACRO(HexagonalOps)
- //   MXA_STATIC_NEW_SUPERCLASS(OrientationMath, HexagonalOps)
     MXA_STATIC_NEW_MACRO(HexagonalOps);
 
     HexagonalOps();
@@ -62,9 +98,8 @@ class AIMCOMMON_EXPORT HexagonalOps : public OrientationMath
     virtual void getFZQuat(float *qr);
     virtual int getMisoBin(float n1, float n2, float n3);
     virtual void determineEulerAngles(int choose, float &synea1, float &synea2, float &synea3);
-	virtual void determineHomochoricValues(int choose, float &r1, float &r2, float &r3);
+    virtual void determineHomochoricValues(int choose, float &r1, float &r2, float &r3);
     virtual int getOdfBin(float r1, float r2, float r3);
-
 
   protected:
 
