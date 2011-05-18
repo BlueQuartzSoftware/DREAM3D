@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>724</width>
-    <height>662</height>
+    <width>708</width>
+    <height>641</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -15,7 +15,7 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <property name="margin">
-    <number>4</number>
+    <number>8</number>
    </property>
    <item>
     <layout class="QGridLayout" name="gridLayout_6">
@@ -202,19 +202,6 @@
           </property>
          </widget>
         </item>
-        <item row="0" column="5" rowspan="4">
-         <spacer name="horizontalSpacer_17">
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>40</width>
-            <height>20</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
         <item row="0" column="2" rowspan="4">
          <spacer name="horizontalSpacer_23">
           <property name="orientation">
@@ -307,6 +294,45 @@
            <double>0.250000000000000</double>
           </property>
          </widget>
+        </item>
+        <item row="0" column="6" rowspan="3">
+         <widget class="QListWidget" name="phaseTypeList">
+          <property name="editTriggers">
+           <set>QAbstractItemView::AllEditTriggers</set>
+          </property>
+          <property name="alternatingRowColors">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="7" rowspan="3">
+         <spacer name="horizontalSpacer">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item row="0" column="5" rowspan="3">
+         <spacer name="horizontalSpacer_2">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeType">
+           <enum>QSizePolicy::Fixed</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>12</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
         </item>
        </layout>
       </item>

@@ -46,6 +46,8 @@
 
 #include "AIM/Common/Constants.h"
 #include "AIM/GrainGenerator/GrainGenerator.h"
+#include "AIM/Common/HDF5/H5ReconStatsReader.h"
+#include "AIM/Common/PhaseType.h"
 #include "QtSupport/AIM_QtMacros.h"
 #include "QtSupport/QR3DFileCompleter.h"
 
@@ -318,6 +320,32 @@ void GrainGeneratorWidget::on_m_OutputDir_textChanged(const QString &text)
 void GrainGeneratorWidget::on_m_H5InputStatisticsFile_textChanged(const QString &text)
 {
   verifyPathExists(m_H5InputStatisticsFile->text(), m_H5InputStatisticsFile);
+  QFileInfo fi(m_H5InputStatisticsFile->text());
+  if (fi.exists() && fi.isFile())
+  {
+    // Read the Phase and Crystal Structure information from the Stats File
+    H5ReconStatsReader::Pointer h5io = H5ReconStatsReader::New(m_H5InputStatisticsFile->text().toStdString() );
+    std::vector<int> phases;
+    std::vector<AIM::Reconstruction::CrystalStructure> structures;
+    int err = h5io->getPhaseAndCrystalStructures(phases, structures);
+    if (err < 0)
+    {
+      return;
+    }
+    int size = phases.size();
+    int phase = -1;
+    for (int i = 0; i < size; i++)
+    {
+      phase = phases[i];
+
+      std::vector<unsigned int> phasetypes;
+      err = h5io->readStatsDataset(phase, AIM::HDF5::PhaseType, phasetypes);
+//      phaseType[phase] = static_cast<AIM::Reconstruction::PhaseType>(phasetypes[0]);
+      std::cout << "PhaseType: " << phasetypes[0] << std::endl;
+      QString name = QString::fromStdString( AIM::PhaseType::getPhaseTypeString(static_cast<AIM::Reconstruction::PhaseType>(phasetypes[0])) );
+      phaseTypeList->addItem(name);
+    }
+  }
 }
 
 // -----------------------------------------------------------------------------

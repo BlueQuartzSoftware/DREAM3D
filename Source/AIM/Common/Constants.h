@@ -91,6 +91,7 @@ namespace AIM
     const std::string GrainAvgDisorientation ("GrainAvgDisorientation");
     const std::string ImageQuality( "ImageQuality");
     const std::string IPFColor("IPFColor");
+    const std::string Phase("Phase");
   }
 
 
