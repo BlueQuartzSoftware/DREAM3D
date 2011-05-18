@@ -38,6 +38,11 @@
 #include "AIM/Common/AIMRandomNG.h"
 #include "AIM/Common/AIMMath.h"
 
+#define MULT_QUAT(q1, q2, out)\
+    out[1] = q2[4] * q1[1] + q2[1] * q1[4] + q2[3] * q1[2] - q2[2] * q1[3];\
+    out[2] = q2[4] * q1[2] + q2[2] * q1[4] + q2[1] * q1[3] - q2[3] * q1[1];\
+    out[3] = q2[4] * q1[3] + q2[3] * q1[4] + q2[2] * q1[1] - q2[1] * q1[2];\
+    out[4] = q2[4] * q1[4] - q2[1] * q1[1] - q2[2] * q1[2] - q2[3] * q1[3];\
 
 
 /**
