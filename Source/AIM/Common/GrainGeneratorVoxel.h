@@ -72,15 +72,15 @@ class AIMCOMMON_EXPORT GrainGeneratorVoxel
     int alreadychecked;
     int nearestneighbor[3];
     float nearestneighbordistance[3];
-    float euler1;
-    float euler2;
-    float euler3;
+//    float euler1;
+//    float euler2;
+//    float euler3;
     int phase;
     int neighbor;
     int numowners;
     int surfacevoxel;
     int unassigned;
-    float quat[5];
+//    float quat[5];
 
     IntVectorType grainlist;
     FloatVectorType ellipfunclist;
