@@ -755,7 +755,6 @@ int SGWidget::readDataFromHDF5(H5ReconStatsReader::Pointer reader, int phase)
 
   setPhaseIndex(phase);
 
-
   std::vector<unsigned int> xtal;
   err = reader->readStatsDataset(phase, AIM::HDF5::CrystalStructure, xtal);
   CHECK_STATS_READ_ERROR(err, AIM::HDF5::Reconstruction, AIM::HDF5::CrystalStructure)
@@ -765,6 +764,12 @@ int SGWidget::readDataFromHDF5(H5ReconStatsReader::Pointer reader, int phase)
   err = reader->readStatsDataset(phase, AIM::HDF5::PhaseType, pt);
   CHECK_STATS_READ_ERROR(err, AIM::HDF5::Reconstruction, AIM::HDF5::PhaseType)
   m_PhaseType = static_cast<AIM::Reconstruction::PhaseType>(pt[0]);
+
+  m_PptFraction = -1.0;
+  if (AIM::Reconstruction::PrecipitatePhase == m_PhaseType) {
+    err = reader->readScalarAttribute<float>(phase, AIM::HDF5::PhaseType, AIM::HDF5::PrecipitateBoundaryFraction, m_PptFraction);
+    CHECK_STATS_READ_ERROR(err, AIM::HDF5::Reconstruction, AIM::HDF5::PrecipitateBoundaryFraction)
+  }
 
   m_Omega3Plot->setCrystalStructure(m_CrystalStructure);
   m_BOverAPlot->setCrystalStructure(m_CrystalStructure);
