@@ -211,16 +211,10 @@ void GrainGenerator::compute()
     m->fill_gaps(m->numgrains);
     CHECK_FOR_CANCELED(GrainGeneratorFunc, fill_gaps)
 
-<<<<<<< HEAD
-    CHECK_FOR_CANCELED(GrainGeneratorFunc)
     progressMessage(AIM_STRING("Adjusting Boundaries"), 42);
 //    m->numgrains = m->adjust_boundaries(m->numgrains);
+    CHECK_FOR_CANCELED(GrainGeneratorFunc, adjust_boundaries)
 
-=======
-    progressMessage(AIM_STRING("Placing Precipitates"), 42);
-    m->numgrains = m->place_precipitates(m->numgrains);
-    CHECK_FOR_CANCELED(GrainGeneratorFunc, place_precipitates)
->>>>>>> 55722f81cbc34731029db7b93231fb1fb0b05820
   }
 
 #if 0
@@ -235,24 +229,14 @@ void GrainGenerator::compute()
     m->read_structure(visFile);
   }
 #endif
-<<<<<<< HEAD
-  CHECK_FOR_CANCELED(GrainGeneratorFunc)
   progressMessage(AIM_STRING("Finding Neighbors"), 44);
-=======
-
-  progressMessage(AIM_STRING("Finding Neighbors"), 45);
->>>>>>> 55722f81cbc34731029db7b93231fb1fb0b05820
   m->find_neighbors();
   CHECK_FOR_CANCELED(GrainGeneratorFunc, find_neighbors)
 
-<<<<<<< HEAD
-  CHECK_FOR_CANCELED(GrainGeneratorFunc)
   progressMessage(AIM_STRING("Placing Precipitates"), 46);
   m->numgrains = m->place_precipitates(m->numgrains);
+  CHECK_FOR_CANCELED(GrainGeneratorFunc, place_precipitates)
 
-  CHECK_FOR_CANCELED(GrainGeneratorFunc)
-=======
->>>>>>> 55722f81cbc34731029db7b93231fb1fb0b05820
   progressMessage(AIM_STRING("Loading ODF Data"), 48);
   err = m->readODFData(h5reader);
   CHECK_FOR_CANCELED(GrainGeneratorFunc, readODFData)
