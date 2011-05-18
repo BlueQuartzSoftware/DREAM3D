@@ -107,6 +107,7 @@ Q_OBJECT
     MXA_INSTANCE_PROPERTY(bool, AlreadyFormed)
     MXA_INSTANCE_PROPERTY(Ang::Orientation, Orientation)
 
+    MXA_INSTANCE_PROPERTY(bool, WriteBinaryFiles)
     MXA_INSTANCE_PROPERTY(bool, WriteVisualizationFile)
     MXA_INSTANCE_PROPERTY(bool, WriteIPFFile)
     MXA_INSTANCE_PROPERTY(bool, WriteDisorientationFile)
