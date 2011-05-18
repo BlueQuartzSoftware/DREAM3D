@@ -115,8 +115,10 @@ int GrainGeneratorVTKWriter::writeIPFVizFile(GrainGeneratorFunc* r, const std::s
   }
   size_t total = r->xpoints * r->ypoints * r->zpoints;
   float q1[5];
-  unsigned char hkl[3] = { 0, 0, 0 };
-  float RefDirection[3] = { 1.0, 0.0, 0.0 };
+  unsigned char hkl[3] =
+  { 0, 0, 0 };
+  float RefDirection[3] =
+  { 1.0, 0.0, 0.0 };
   int phase;
 
   if (true == bin)
@@ -132,14 +134,18 @@ int GrainGeneratorVTKWriter::writeIPFVizFile(GrainGeneratorFunc* r, const std::s
       phase = r->voxels[i].phase;
       if (r->crystruct[phase] == AIM::Reconstruction::Cubic)
       {
-		  OIMColoring::GenerateIPFColor(r->m_Grains[r->voxels[i].grainname]->euler1, r->m_Grains[r->voxels[i].grainname]->euler2, r->m_Grains[r->voxels[i].grainname]->euler3, RefDirection[0], RefDirection[1], RefDirection[2], &rgba[i * 4], hkl);
+        OIMColoring::GenerateIPFColor(r->m_Grains[r->voxels[i].grainname]->euler1,
+                                      r->m_Grains[r->voxels[i].grainname]->euler2,
+                                      r->m_Grains[r->voxels[i].grainname]->euler3,
+                                      RefDirection[0], RefDirection[1], RefDirection[2],
+                                      &rgba[i * 4], hkl);
       }
       else if (r->crystruct[phase] == AIM::Reconstruction::Hexagonal)
       {
-		q1[1] = r->m_Grains[r->voxels[i].grainname]->avg_quat[1];
-		q1[2] = r->m_Grains[r->voxels[i].grainname]->avg_quat[2];
-		q1[3] = r->m_Grains[r->voxels[i].grainname]->avg_quat[3];
-		q1[4] = r->m_Grains[r->voxels[i].grainname]->avg_quat[4];
+        q1[1] = r->m_Grains[r->voxels[i].grainname]->avg_quat[1];
+        q1[2] = r->m_Grains[r->voxels[i].grainname]->avg_quat[2];
+        q1[3] = r->m_Grains[r->voxels[i].grainname]->avg_quat[3];
+        q1[4] = r->m_Grains[r->voxels[i].grainname]->avg_quat[4];
         OIMColoring::CalculateHexIPFColor(q1, RefDirection[0], RefDirection[1], RefDirection[2], &rgba[i * 4]);
       }
       rgba[i * 4 + 3] = 255;
@@ -160,20 +166,25 @@ int GrainGeneratorVTKWriter::writeIPFVizFile(GrainGeneratorFunc* r, const std::s
     // Write the COLOR_SCALARS
     fprintf(f, "COLOR_SCALARS IPF_Colors 3\n");
     float red, green, blue;
-    unsigned char rgb[3] = { 0, 0, 0 };
+    unsigned char rgb[3] =
+    { 0, 0, 0 };
     for (size_t i = 0; i < total; i++)
     {
       phase = r->voxels[i].phase;
       if (r->crystruct[phase] == AIM::Reconstruction::Cubic)
       {
-		  OIMColoring::GenerateIPFColor(r->m_Grains[r->voxels[i].grainname]->euler1, r->m_Grains[r->voxels[i].grainname]->euler2, r->m_Grains[r->voxels[i].grainname]->euler3, RefDirection[0], RefDirection[1], RefDirection[2], &rgb[i * 4], hkl);
+        OIMColoring::GenerateIPFColor(r->m_Grains[r->voxels[i].grainname]->euler1,
+                                      r->m_Grains[r->voxels[i].grainname]->euler2,
+                                      r->m_Grains[r->voxels[i].grainname]->euler3,
+                                      RefDirection[0], RefDirection[1], RefDirection[2],
+                                      &rgb[i * 4], hkl);
       }
       else if (r->crystruct[phase] == AIM::Reconstruction::Hexagonal)
       {
-		q1[1] = r->m_Grains[r->voxels[i].grainname]->avg_quat[1];
-		q1[2] = r->m_Grains[r->voxels[i].grainname]->avg_quat[2];
-		q1[3] = r->m_Grains[r->voxels[i].grainname]->avg_quat[3];
-		q1[4] = r->m_Grains[r->voxels[i].grainname]->avg_quat[4];
+        q1[1] = r->m_Grains[r->voxels[i].grainname]->avg_quat[1];
+        q1[2] = r->m_Grains[r->voxels[i].grainname]->avg_quat[2];
+        q1[3] = r->m_Grains[r->voxels[i].grainname]->avg_quat[3];
+        q1[4] = r->m_Grains[r->voxels[i].grainname]->avg_quat[4];
         OIMColoring::CalculateHexIPFColor(q1, RefDirection[0], RefDirection[1], RefDirection[2], rgb);
       }
       red = static_cast<float> (float(rgb[0]) / 255.0);

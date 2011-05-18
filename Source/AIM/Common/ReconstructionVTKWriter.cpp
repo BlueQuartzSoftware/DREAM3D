@@ -256,7 +256,11 @@ int ReconstructionVTKWriter::writeIPFVizFile(ReconstructionFunc* r, const std::s
       phase = r->voxels[i].phase;
       if (r->crystruct[phase] == AIM::Reconstruction::Cubic)
       {
-        OIMColoring::GenerateIPFColor(r->voxels[i].euler1, r->voxels[i].euler2, r->voxels[i].euler3, RefDirection[0], RefDirection[1], RefDirection[2], &rgba[i * 4], hkl);
+        OIMColoring::GenerateIPFColor(r->voxels[i].euler1,
+                                      r->voxels[i].euler2,
+                                      r->voxels[i].euler3,
+                                      RefDirection[0], RefDirection[1], RefDirection[2],
+                                      &rgba[i * 4], hkl);
       }
       else if (r->crystruct[phase] == AIM::Reconstruction::Hexagonal)
       {
@@ -290,7 +294,11 @@ int ReconstructionVTKWriter::writeIPFVizFile(ReconstructionFunc* r, const std::s
       phase = r->voxels[i].phase;
       if (r->crystruct[phase] == AIM::Reconstruction::Cubic)
       {
-        OIMColoring::GenerateIPFColor(r->voxels[i].euler1, r->voxels[i].euler2, r->voxels[i].euler3, RefDirection[0], RefDirection[1], RefDirection[2], rgb, hkl);
+        OIMColoring::GenerateIPFColor(r->voxels[i].euler1,
+                                      r->voxels[i].euler2,
+                                      r->voxels[i].euler3,
+                                      RefDirection[0], RefDirection[1], RefDirection[2],
+                                      rgb, hkl);
       }
       else if (r->crystruct[phase] == AIM::Reconstruction::Hexagonal)
       {
