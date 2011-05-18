@@ -136,6 +136,20 @@
 
 
 
+#define GGVTKW_IPFCOLOR(var, quat)\
+if (r->crystruct[phase] == AIM::Reconstruction::Cubic) {\
+  OIMColoring::GenerateIPFColor(var->euler1,\
+                              var->euler2,\
+                              var->euler3,\
+                              RefDirection[0], RefDirection[1], RefDirection[2],\
+                              &rgba[i * 4], hkl);\
+} else if (r->crystruct[phase] == AIM::Reconstruction::Hexagonal)   { \
+  q1[1] = var->quat[1];\
+  q1[2] = var->quat[2];\
+  q1[3] = var->quat[3];\
+  q1[4] = var->quat[4];\
+  OIMColoring::CalculateHexIPFColor(q1, RefDirection[0], RefDirection[1], RefDirection[2], &rgba[i * 4]); \
+}
 
 
 #endif /* VTKWRITER_H_ */
