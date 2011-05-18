@@ -1772,6 +1772,12 @@ int  GrainGeneratorFunc::place_precipitates(int numgrains)
   float random;
   int random2;
   float xc, yc, zc;
+  vector<int> placecheck;
+  placecheck.resize(zpoints);
+  for(int i=0;i<zpoints;i++)
+  {
+	placecheck[i] = 0.0;
+  }
   rg.RandomInit((static_cast<unsigned int> (time(NULL))));
   vector<double> precipitatephases;
   precipitatephases.resize(1,0);
@@ -1818,9 +1824,6 @@ int  GrainGeneratorFunc::place_precipitates(int numgrains)
 	if(random <= precipboundaryfraction)
 	{
 		random2 = int(double(rg.Random())*double(totalpoints-1));
-	    xc = find_xcoord(random2);
-	    yc = find_ycoord(random2);
-	    zc = find_zcoord(random2);
 		while(voxels[random2].surfacevoxel == 0 || voxels[random2].grainname > numgrains)
 		{
 			random2++;
@@ -1839,6 +1842,7 @@ int  GrainGeneratorFunc::place_precipitates(int numgrains)
     xc = find_xcoord(random2);
     yc = find_ycoord(random2);
     zc = find_zcoord(random2);
+	placecheck[int(zc)]++;
     m_Grains[currentnumgrains]->centroidx = xc;
     m_Grains[currentnumgrains]->centroidy = yc;
     m_Grains[currentnumgrains]->centroidz = zc;
@@ -2090,6 +2094,12 @@ void  GrainGeneratorFunc::find_neighbors()
   int dist_int, dist2_int;
   int good = 0;
   int neighbor = 0;
+  vector<int> surfvoxcheck;
+  surfvoxcheck.resize(zpoints);
+  for(int i=0;i<zpoints;i++)
+  {
+	surfvoxcheck[i] = 0;
+  }
   size_t xtalCount = crystruct.size();
   totalsurfacearea.resize(xtalCount);
   for(size_t i=1;i<xtalCount;++i)
@@ -2151,6 +2161,11 @@ void  GrainGeneratorFunc::find_neighbors()
 	    }
 	}
 	voxels[j].surfacevoxel = onsurf;
+	if(onsurf > 0)
+	{
+		int z = j/(xpoints*ypoints);
+		surfvoxcheck[z]++;
+	}
   }
  std::vector<int> nlistcopy;
   for(int i=1;i<numgrains;i++)
