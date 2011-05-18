@@ -1166,7 +1166,7 @@ int  GrainGeneratorFunc::pack_grains(const std::string &filename, int numgrains)
   int acceptedmoves = 0;
   float acceptableerror = 0.0;
   activegrainlist.resize(numgrains + 1);
-  vector<double> primaryphases;
+  vector<int> primaryphases;
   primaryphases.resize(1,0);
   vector<double> primaryphasefractions;
   primaryphasefractions.resize(1,0);
@@ -1816,7 +1816,7 @@ int  GrainGeneratorFunc::place_precipitates(int numgrains)
   float random;
   int random2;
   float xc, yc, zc;
-  vector<double> precipitatephases;
+  vector<int> precipitatephases;
   precipitatephases.resize(1,0);
   vector<double> precipitatephasefractions;
   precipitatephasefractions.resize(1,0);

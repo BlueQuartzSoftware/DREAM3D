@@ -109,14 +109,17 @@ class ReconstructionWidget : public AIMPluginFrame, private Ui::ReconstructionWi
       /* Reconstruction Thread communicates throught these methods */
       virtual void threadFinished();
       virtual void threadProgressed(int value);
-
+      void phaseTypeEdited(int i);
 
   private:
     QList<QWidget*>             m_WidgetList;
     Reconstruction::Pointer     m_Reconstruction;
     QThread*                    m_WorkerThread;
+    bool                        m_phaseTypeEdited;
 
     QString m_OpenDialogLastDirectory;
+
+    bool checkPhaseTypes();
 
     ReconstructionWidget(const ReconstructionWidget&); // Copy Constructor Not Implemented
     void operator=(const ReconstructionWidget&); // Operator '=' Not Implemented
