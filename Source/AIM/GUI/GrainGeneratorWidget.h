@@ -40,6 +40,7 @@
 #include <AIM/GUI/AIMPluginFrame.h>
 #include <AIM/GrainGenerator/GrainGenerator.h>
 
+class QListWidgetItem;
 
 
 /**
@@ -109,7 +110,6 @@ class GrainGeneratorWidget : public AIMPluginFrame, private Ui::GrainGeneratorWi
     QList<QWidget*> m_WidgetList;
     GrainGenerator::Pointer     m_GrainGenerator;
     QThread*                    m_WorkerThread;
-
     QString m_OpenDialogLastDirectory;
 
     GrainGeneratorWidget(const GrainGeneratorWidget&); // Copy Constructor Not Implemented
