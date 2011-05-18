@@ -564,6 +564,15 @@ int GrainGeneratorFunc::readMicroTextureData(H5ReconStatsReader::Pointer h5io)
 
 void  GrainGeneratorFunc::generate_grain(int gnum, int phase)
 {
+  AIMRandomNG rg;
+  unsigned long long int seed = MXA::getMilliSeconds();
+  unsigned int* seedPtr = reinterpret_cast<unsigned int*> (&seed);
+#if CMP_WORDS_BIGENDIAN
+      rg.RandomInit(seedPtr[1]);
+#else
+      rg.RandomInit(seedPtr[0]);
+#endif
+
   int good = 0;
   float r1 = 1;
   float u=0 ;
@@ -654,6 +663,15 @@ void  GrainGeneratorFunc::generate_grain(int gnum, int phase)
 
 void  GrainGeneratorFunc::insert_grain(size_t gnum)
 {
+  AIMRandomNG rg;
+  unsigned long long int seed = MXA::getMilliSeconds();
+  unsigned int* seedPtr = reinterpret_cast<unsigned int*> (&seed);
+#if CMP_WORDS_BIGENDIAN
+      rg.RandomInit(seedPtr[1]);
+#else
+      rg.RandomInit(seedPtr[0]);
+#endif
+
   float dist;
   float Nvalue = 0;
   float Gvalue = 0;
@@ -666,7 +684,6 @@ void  GrainGeneratorFunc::insert_grain(size_t gnum)
   float x, y, z;
   float ellipfunc = 0;
   float insidecount = 0;
-  rg.RandomInit((static_cast<unsigned int>(time(NULL))));
   std::vector<int> insidelist(1000,-1);
   std::vector<float> ellipfunclist(1000,-1);
   float volcur = m_Grains[gnum]->volume;
@@ -1125,6 +1142,15 @@ float GrainGeneratorFunc::check_sizedisterror(int gadd, int gremove)
 
 int  GrainGeneratorFunc::pack_grains(const std::string &filename, int numgrains)
 {
+  AIMRandomNG rg;
+  unsigned long long int seed = MXA::getMilliSeconds();
+  unsigned int* seedPtr = reinterpret_cast<unsigned int*> (&seed);
+#if CMP_WORDS_BIGENDIAN
+      rg.RandomInit(seedPtr[1]);
+#else
+      rg.RandomInit(seedPtr[0]);
+#endif
+
   totalvol = 0;
   float change1, change2, change3;
   std::ofstream outFile;
@@ -1139,7 +1165,6 @@ int  GrainGeneratorFunc::pack_grains(const std::string &filename, int numgrains)
   float addcost, removecost;
   int acceptedmoves = 0;
   float acceptableerror = 0.0;
-  rg.RandomInit((static_cast<unsigned int> (time(NULL))));
   activegrainlist.resize(numgrains + 1);
   vector<double> primaryphases;
   primaryphases.resize(1,0);
@@ -1613,6 +1638,15 @@ int GrainGeneratorFunc::assign_voxels(int numgrains)
 }
 void  GrainGeneratorFunc::assign_eulers(int numgrains)
 {
+  AIMRandomNG rg;
+  unsigned long long int seed = MXA::getMilliSeconds();
+  unsigned int* seedPtr = reinterpret_cast<unsigned int*> (&seed);
+#if CMP_WORDS_BIGENDIAN
+      rg.RandomInit(seedPtr[1]);
+#else
+      rg.RandomInit(seedPtr[0]);
+#endif
+
   int gnum = 0;
   int numbins = 0;
   float totaldensity = 0;
@@ -1627,7 +1661,6 @@ void  GrainGeneratorFunc::assign_eulers(int numgrains)
   {
 	unbiasedvol[i] = 0;
   }
-  rg.RandomInit((static_cast<unsigned int>(time(NULL))));
   for(int i=1;i<numgrains;i++)
   {
     random = rg.Random();
@@ -1764,6 +1797,15 @@ void  GrainGeneratorFunc::fill_gaps(int numgrains)
 
 int  GrainGeneratorFunc::place_precipitates(int numgrains)
 {
+  AIMRandomNG rg;
+  unsigned long long int seed = MXA::getMilliSeconds();
+  unsigned int* seedPtr = reinterpret_cast<unsigned int*> (&seed);
+#if CMP_WORDS_BIGENDIAN
+      rg.RandomInit(seedPtr[1]);
+#else
+      rg.RandomInit(seedPtr[0]);
+#endif
+
   totalprecipvol = 0;
   size_t currentnumgrains = numgrains;
  // size_t index;
@@ -1772,13 +1814,6 @@ int  GrainGeneratorFunc::place_precipitates(int numgrains)
   float random;
   int random2;
   float xc, yc, zc;
-  vector<int> placecheck;
-  placecheck.resize(zpoints);
-  for(int i=0;i<zpoints;i++)
-  {
-	placecheck[i] = 0.0;
-  }
-  rg.RandomInit((static_cast<unsigned int> (time(NULL))));
   vector<double> precipitatephases;
   precipitatephases.resize(1,0);
   vector<double> precipitatephasefractions;
@@ -1823,7 +1858,7 @@ int  GrainGeneratorFunc::place_precipitates(int numgrains)
 	random = rg.Random();
 	if(random <= precipboundaryfraction)
 	{
-		random2 = int(double(rg.Random())*double(totalpoints-1));
+		random2 = int(rg.Random()*double(totalpoints-1));
 		while(voxels[random2].surfacevoxel == 0 || voxels[random2].grainname > numgrains)
 		{
 			random2++;
@@ -1842,7 +1877,6 @@ int  GrainGeneratorFunc::place_precipitates(int numgrains)
     xc = find_xcoord(random2);
     yc = find_ycoord(random2);
     zc = find_zcoord(random2);
-	placecheck[int(zc)]++;
     m_Grains[currentnumgrains]->centroidx = xc;
     m_Grains[currentnumgrains]->centroidy = yc;
     m_Grains[currentnumgrains]->centroidz = zc;
@@ -1861,6 +1895,15 @@ int  GrainGeneratorFunc::place_precipitates(int numgrains)
 }
 int GrainGeneratorFunc::adjust_boundaries(int numgrains)
 {
+  AIMRandomNG rg;
+  unsigned long long int seed = MXA::getMilliSeconds();
+  unsigned int* seedPtr = reinterpret_cast<unsigned int*> (&seed);
+#if CMP_WORDS_BIGENDIAN
+      rg.RandomInit(seedPtr[1]);
+#else
+      rg.RandomInit(seedPtr[0]);
+#endif
+
 	int neighbors[6];
 	neighbors[0] = -xpoints*ypoints;
 	neighbors[1] = -xpoints;
@@ -2094,12 +2137,6 @@ void  GrainGeneratorFunc::find_neighbors()
   int dist_int, dist2_int;
   int good = 0;
   int neighbor = 0;
-  vector<int> surfvoxcheck;
-  surfvoxcheck.resize(zpoints);
-  for(int i=0;i<zpoints;i++)
-  {
-	surfvoxcheck[i] = 0;
-  }
   size_t xtalCount = crystruct.size();
   totalsurfacearea.resize(xtalCount);
   for(size_t i=1;i<xtalCount;++i)
@@ -2161,11 +2198,6 @@ void  GrainGeneratorFunc::find_neighbors()
 	    }
 	}
 	voxels[j].surfacevoxel = onsurf;
-	if(onsurf > 0)
-	{
-		int z = j/(xpoints*ypoints);
-		surfvoxcheck[z]++;
-	}
   }
  std::vector<int> nlistcopy;
   for(int i=1;i<numgrains;i++)
@@ -2301,6 +2333,15 @@ void GrainGeneratorFunc::MC_LoopBody2(int phase, size_t neighbor, int j,std::vec
 
 void GrainGeneratorFunc::swapOutOrientation( int &badtrycount, int &numbins, float currentodferror, float currentmdferror)
 {
+  AIMRandomNG rg;
+  unsigned long long int seed = MXA::getMilliSeconds();
+  unsigned int* seedPtr = reinterpret_cast<unsigned int*> (&seed);
+#if CMP_WORDS_BIGENDIAN
+      rg.RandomInit(seedPtr[1]);
+#else
+      rg.RandomInit(seedPtr[0]);
+#endif
+
   float random;
   int good;
   float deltaerror = 1.0;
@@ -2391,6 +2432,15 @@ void GrainGeneratorFunc::swapOutOrientation( int &badtrycount, int &numbins, flo
 
 void GrainGeneratorFunc::switchOrientations( int &badtrycount, int &numbins, float currentodferror, float currentmdferror)
 {
+  AIMRandomNG rg;
+  unsigned long long int seed = MXA::getMilliSeconds();
+  unsigned int* seedPtr = reinterpret_cast<unsigned int*> (&seed);
+#if CMP_WORDS_BIGENDIAN
+      rg.RandomInit(seedPtr[1]);
+#else
+      rg.RandomInit(seedPtr[0]);
+#endif
+
   int good = 0;
   float deltaerror;
   int selectedgrain1;
@@ -2534,6 +2584,15 @@ void GrainGeneratorFunc::switchOrientations( int &badtrycount, int &numbins, flo
 
 void GrainGeneratorFunc::matchCrystallography(const std::string &ErrorFile, H5ReconStatsWriter::Pointer h5io)
 {
+  AIMRandomNG rg;
+  unsigned long long int seed = MXA::getMilliSeconds();
+  unsigned int* seedPtr = reinterpret_cast<unsigned int*> (&seed);
+#if CMP_WORDS_BIGENDIAN
+      rg.RandomInit(seedPtr[1]);
+#else
+      rg.RandomInit(seedPtr[0]);
+#endif
+
   ofstream outFile;
   outFile.open(ErrorFile.c_str());
   int numbins = 0;
@@ -2548,7 +2607,6 @@ void GrainGeneratorFunc::matchCrystallography(const std::string &ErrorFile, H5Re
   {
 	  if(crystruct[iter] == AIM::Reconstruction::Cubic) numbins = 18*18*18;
 	  if(crystruct[iter] == AIM::Reconstruction::Hexagonal) numbins = 36*36*12;
-	  rg.RandomInit((static_cast<unsigned int>(time(NULL))));
 	  while(badtrycount < 5000 && iterations < 100000)
 	  {
 		currentodferror = 0;
