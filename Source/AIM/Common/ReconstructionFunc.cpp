@@ -780,6 +780,15 @@ void ReconstructionFunc::align_sections(const std::string &filename)
 }
 void ReconstructionFunc::form_grains_sections()
 {
+  AIMRandomNG rg;
+  unsigned long long int seed = MXA::getMilliSeconds();
+  unsigned int* seedPtr = reinterpret_cast<unsigned int*> (&seed);
+#if CMP_WORDS_BIGENDIAN
+      rg.RandomInit(seedPtr[1]);
+#else
+      rg.RandomInit(seedPtr[0]);
+#endif
+
   int point = 0;
   int noseeds = 0;
   int graincount = 1;
@@ -792,7 +801,6 @@ void ReconstructionFunc::form_grains_sections()
   float n1;
   float n2;
   float n3;
-  int seed = -1;
   int randx = 0;
   int randy = 0;
   int good = 0;
@@ -813,7 +821,6 @@ void ReconstructionFunc::form_grains_sections()
   neighbors[5] = xpoints - 1;
   neighbors[6] = xpoints;
   neighbors[7] = xpoints + 1;
-  rg.RandomInit((static_cast<unsigned int > (time(NULL))));
   AIM::Reconstruction::CrystalStructure phase1, phase2;
   for (int slice = 0; slice < zpoints; slice++)
   {
@@ -917,6 +924,15 @@ void ReconstructionFunc::form_grains_sections()
 
 void ReconstructionFunc::form_grains()
 {
+  AIMRandomNG rg;
+  unsigned long long int seed = MXA::getMilliSeconds();
+  unsigned int* seedPtr = reinterpret_cast<unsigned int*> (&seed);
+#if CMP_WORDS_BIGENDIAN
+      rg.RandomInit(seedPtr[1]);
+#else
+      rg.RandomInit(seedPtr[0]);
+#endif
+
   int noseeds = 0;
   size_t graincount = 1;
   int neighbor;
@@ -926,7 +942,6 @@ void ReconstructionFunc::form_grains()
   float qb[5];
   float w;
   float n1, n2, n3;
-  int seed = -1;
 //  int point = 0;
   int randpoint = 0;
   int good = 0;
@@ -945,7 +960,6 @@ void ReconstructionFunc::form_grains()
   neighbors[3] = 1;
   neighbors[4] = xpoints;
   neighbors[5] = (xpoints * ypoints);
-  rg.RandomInit((static_cast<unsigned int > (time(NULL))));
   AIM::Reconstruction::CrystalStructure phase1, phase2;
 
   // Precalculate some constants

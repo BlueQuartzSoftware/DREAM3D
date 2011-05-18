@@ -118,8 +118,6 @@ class AIMCOMMON_EXPORT ReconstructionFunc
     int alignmeth;
     int alreadyformed;
 
-
-    AIMRandomNG rg;
     boost::shared_array<ReconstructionVoxel> voxels;
 
     std::vector<Grain::Pointer> m_Grains;
