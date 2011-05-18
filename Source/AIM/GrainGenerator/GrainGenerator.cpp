@@ -195,9 +195,6 @@ void GrainGenerator::compute()
     progressMessage(AIM_STRING("Adjusting Boundaries"), 42);
 //    m->numgrains = m->adjust_boundaries(m->numgrains);
 
-	CHECK_FOR_CANCELED(GrainGeneratorFunc)
-    progressMessage(AIM_STRING("Placing Precipitates"), 42);
-    m->numgrains = m->place_precipitates(m->numgrains);
   }
 
 #if 0
@@ -213,8 +210,12 @@ void GrainGenerator::compute()
   }
 #endif
   CHECK_FOR_CANCELED(GrainGeneratorFunc)
-  progressMessage(AIM_STRING("Finding Neighbors"), 45);
+  progressMessage(AIM_STRING("Finding Neighbors"), 44);
   m->find_neighbors();
+
+  CHECK_FOR_CANCELED(GrainGeneratorFunc)
+  progressMessage(AIM_STRING("Placing Precipitates"), 46);
+  m->numgrains = m->place_precipitates(m->numgrains);
 
   CHECK_FOR_CANCELED(GrainGeneratorFunc)
   progressMessage(AIM_STRING("Loading ODF Data"), 48);
