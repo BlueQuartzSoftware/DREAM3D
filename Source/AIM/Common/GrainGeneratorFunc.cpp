@@ -103,15 +103,6 @@ void GrainGeneratorFunc::initializeArrays(std::vector<AIM::Reconstruction::Cryst
 
   crystruct.resize(size+1);
   pptFractions.resize(size + 1);
-<<<<<<< HEAD
-=======
-
-  for(size_t i = 0; i < size+1; i++)
-  {
-    crystruct[i] = structures[i];
-    pptFractions[i] = -1.0;
-  }
->>>>>>> 55722f81cbc34731029db7b93231fb1fb0b05820
   phaseType.resize(size+1);
   phasefraction.resize(size+1);
 
@@ -1827,6 +1818,9 @@ int  GrainGeneratorFunc::place_precipitates(int numgrains)
 	if(random <= precipboundaryfraction)
 	{
 		random2 = int(double(rg.Random())*double(totalpoints-1));
+	    xc = find_xcoord(random2);
+	    yc = find_ycoord(random2);
+	    zc = find_zcoord(random2);
 		while(voxels[random2].surfacevoxel == 0 || voxels[random2].grainname > numgrains)
 		{
 			random2++;
