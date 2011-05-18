@@ -103,14 +103,15 @@ void GrainGeneratorFunc::initializeArrays(std::vector<AIM::Reconstruction::Cryst
 
   crystruct.resize(size+1);
   pptFractions.resize(size + 1);
-
-  for(size_t i = 0; i < size+1; i++)
-  {
-    crystruct[i] = structures[i];
-    pptFractions[i] = -1.0;
-  }
   phaseType.resize(size+1);
   phasefraction.resize(size+1);
+
+  // Initialize the first slot in these arrays since they should never be used
+  crystruct[0] = AIM::Reconstruction::UnknownCrystalStructure;
+  phasefraction[0] = 0.0;
+  phaseType[0] = AIM::Reconstruction::UnknownPhaseType;
+  pptFractions[0] = -1.0;
+
   mindiameter.resize(size+1);
   maxdiameter.resize(size+1);
   binstepsize.resize(size+1);
@@ -279,11 +280,14 @@ int GrainGeneratorFunc::readReconStatsData(H5ReconStatsReader::Pointer h5io)
   int size = phases.size();
 
   int phase = -1;
+
   for (int i = 0; i < size; i++)
   {
-    phase = phases[i];
+      phase = phases[i];
+	  crystruct[phase] = structures[i];
+
 	  /* Read the PhaseFraction Value*/
-    std::vector<float> pFraction;
+      std::vector<float> pFraction;
 	  err = h5io->readStatsDataset(phase, AIM::HDF5::PhaseFraction, pFraction);
 	  phasefraction[phase] = pFraction.front();
 
@@ -301,6 +305,7 @@ int GrainGeneratorFunc::readReconStatsData(H5ReconStatsReader::Pointer h5io)
 	    }
 	    pptFractions[phase] = f;
 	  }
+	  if (phaseType[phase] != AIM::Reconstruction::PrecipitatePhase) pptFractions[phase] = -1.0;
 
 	  /* Read the BinNumbers data set */
 	  std::vector<float> bins;
@@ -1763,8 +1768,16 @@ int  GrainGeneratorFunc::place_precipitates(int numgrains)
   size_t currentnumgrains = numgrains;
  // size_t index;
   int phase;
+  float precipboundaryfraction = 0.0;
   float random;
+  int random2;
   float xc, yc, zc;
+  vector<int> placecheck;
+  placecheck.resize(zpoints);
+  for(int i=0;i<zpoints;i++)
+  {
+	placecheck[i] = 0.0;
+  }
   rg.RandomInit((static_cast<unsigned int> (time(NULL))));
   vector<double> precipitatephases;
   precipitatephases.resize(1,0);
@@ -1797,7 +1810,6 @@ int  GrainGeneratorFunc::place_precipitates(int numgrains)
         break;
       }
     }
-
 	if(currentnumgrains >= m_Grains.size())
 	{
 		m_Grains.resize(currentnumgrains + 1000);
@@ -1807,29 +1819,44 @@ int  GrainGeneratorFunc::place_precipitates(int numgrains)
 		}
 	}
     generate_grain(currentnumgrains, phase);
-    totalprecipvol = totalprecipvol + m_Grains[currentnumgrains]->volume;
+	precipboundaryfraction = pptFractions[phase];
+	random = rg.Random();
+	if(random <= precipboundaryfraction)
+	{
+		random2 = int(double(rg.Random())*double(totalpoints-1));
+		while(voxels[random2].surfacevoxel == 0 || voxels[random2].grainname > numgrains)
+		{
+			random2++;
+			if(random2 >= totalpoints) random2 = random2-totalpoints;
+		}
+	}
+	else if(random > precipboundaryfraction)
+	{
+		random2 = rg.Random()*(totalpoints-1);
+		while(voxels[random2].surfacevoxel != 0 || voxels[random2].grainname > numgrains)
+		{
+			random2++;
+			if(random2 >= totalpoints) random2 = random2-totalpoints;
+		}
+	}
+    xc = find_xcoord(random2);
+    yc = find_ycoord(random2);
+    zc = find_zcoord(random2);
+	placecheck[int(zc)]++;
+    m_Grains[currentnumgrains]->centroidx = xc;
+    m_Grains[currentnumgrains]->centroidy = yc;
+    m_Grains[currentnumgrains]->centroidz = zc;
+    insert_grain(currentnumgrains);
+	m_Grains[currentnumgrains]->active = 1;
+	for(int j = 0; j < m_Grains[currentnumgrains]->voxellist->size(); j++)
+	{
+		voxels[m_Grains[currentnumgrains]->voxellist->at(j)].grainname = currentnumgrains;
+		voxels[m_Grains[currentnumgrains]->voxellist->at(j)].phase = m_Grains[currentnumgrains]->phase;
+	}
+    totalprecipvol = totalprecipvol + (m_Grains[currentnumgrains]->voxellist->size()*resx*resy*resz);
 	currentnumgrains++;
   }
   m_Grains.resize(currentnumgrains);
-  for (size_t i = numgrains; i < currentnumgrains; i++)
-  {
-    xc = rg.Random() * (xpoints * resx);
-    yc = rg.Random() * (ypoints * resy);
-    zc = rg.Random() * (zpoints * resz);
-    m_Grains[i]->centroidx = xc;
-    m_Grains[i]->centroidy = yc;
-    m_Grains[i]->centroidz = zc;
-  }
-  for (size_t i = numgrains; i < currentnumgrains; i++)
-  {
-    insert_grain(i);
-	m_Grains[i]->active = 1;
-	for(int j = 0; j < m_Grains[i]->voxellist->size(); j++)
-	{
-		voxels[m_Grains[i]->voxellist->at(j)].grainname = i;
-		voxels[m_Grains[i]->voxellist->at(j)].phase = m_Grains[i]->phase;
-	}
-  }
   return (m_Grains.size());
 }
 int GrainGeneratorFunc::adjust_boundaries(int numgrains)
@@ -2067,6 +2094,12 @@ void  GrainGeneratorFunc::find_neighbors()
   int dist_int, dist2_int;
   int good = 0;
   int neighbor = 0;
+  vector<int> surfvoxcheck;
+  surfvoxcheck.resize(zpoints);
+  for(int i=0;i<zpoints;i++)
+  {
+	surfvoxcheck[i] = 0;
+  }
   size_t xtalCount = crystruct.size();
   totalsurfacearea.resize(xtalCount);
   for(size_t i=1;i<xtalCount;++i)
@@ -2128,6 +2161,11 @@ void  GrainGeneratorFunc::find_neighbors()
 	    }
 	}
 	voxels[j].surfacevoxel = onsurf;
+	if(onsurf > 0)
+	{
+		int z = j/(xpoints*ypoints);
+		surfvoxcheck[z]++;
+	}
   }
  std::vector<int> nlistcopy;
   for(int i=1;i<numgrains;i++)
