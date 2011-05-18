@@ -15,6 +15,7 @@
 #include "AIM/Common/AIMMath.h"
 
 #include "AIM/Common/OrientationMath.h"
+#include "AIM/Common/OrientationOps/HexagonalOps.h"
 
 #define MXA_PI          3.141592653589793
 #define MXA_PI_OVER_4   0.785398163397448
@@ -173,7 +174,7 @@ class OIMColoring
       cd[1] = q1[1][0] * refDir0 + q1[1][1] * refDir1 + q1[1][2] * refDir2;
       cd[2] = q1[2][0] * refDir0 + q1[2][1] * refDir1 + q1[2][2] * refDir2;
 
-	  //3) move that direction to a single standard triangle - using the 001-011-111 triangle)
+      //3) move that direction to a single standard triangle - using the 001-011-111 triangle)
       cd[0] = fabs(cd[0]);
       cd[1] = fabs(cd[1]);
       cd[2] = fabs(cd[2]);
@@ -181,51 +182,51 @@ class OIMColoring
       // Sort the cd array from smallest to largest
       OIMColoring::TripletSort<T>(cd[0], cd[1], cd[2], cd);
 
-	  T h = cd[0];
-	  T k = cd[1];
-	  T l = cd[2];
-	  hkl[0] = static_cast<unsigned char>(h*100);
-	  hkl[1] = static_cast<unsigned char>(k*100);
-	  hkl[2] = static_cast<unsigned char>(l*100);
-      T theta = (cd[0]*0)+(cd[1]*-sqrt(2.0)/2.0)+(cd[2]*sqrt(2.0)/2.0);
-      theta = (180.0/MXA_PI)*acos(theta);
-      T red = (90.0-theta)/45.0;
-      d[0] = (cd[1]*1)-(cd[2]*0);
-      d[1] = (cd[2]*0)-(cd[0]*1);
-      d[2] = (cd[0]*0)-(cd[1]*0);
-      d[0] = -(d[1]+d[2])/d[0];
+      T h = cd[0];
+      T k = cd[1];
+      T l = cd[2];
+      hkl[0] = static_cast<unsigned char> (h * 100);
+      hkl[1] = static_cast<unsigned char> (k * 100);
+      hkl[2] = static_cast<unsigned char> (l * 100);
+      T theta = (cd[0] * 0) + (cd[1] * -sqrt(2.0) / 2.0) + (cd[2] * sqrt(2.0) / 2.0);
+      theta = (180.0 / MXA_PI) * acos(theta);
+      T red = (90.0 - theta) / 45.0;
+      d[0] = (cd[1] * 1) - (cd[2] * 0);
+      d[1] = (cd[2] * 0) - (cd[0] * 1);
+      d[2] = (cd[0] * 0) - (cd[1] * 0);
+      d[0] = -(d[1] + d[2]) / d[0];
       d[1] = 1;
       d[2] = 1;
-      T norm = powf(((d[0]*d[0])+(d[1]*d[1])+(d[2]*d[2])),0.5);
-      d[0] = d[0]/norm;
-      d[1] = d[1]/norm;
-      d[2] = d[2]/norm;
-      T phi_local = (d[0]*0)+(d[1]*sqrt(2.0)/2.0)+(d[2]*sqrt(2.0)/2.0);
-      phi_local = (180.0/MXA_PI)*acos(phi_local);
-      T green = (1-red)*((35.26-phi_local)/35.26);
-      T blue = (1-red)-green;
+      T norm = powf(((d[0] * d[0]) + (d[1] * d[1]) + (d[2] * d[2])), 0.5);
+      d[0] = d[0] / norm;
+      d[1] = d[1] / norm;
+      d[2] = d[2] / norm;
+      T phi_local = (d[0] * 0) + (d[1] * sqrt(2.0) / 2.0) + (d[2] * sqrt(2.0) / 2.0);
+      phi_local = (180.0 / MXA_PI) * acos(phi_local);
+      T green = (1 - red) * ((35.26 - phi_local) / 35.26);
+      T blue = (1 - red) - green;
       T max = red;
-      if(green > max) max = green;
-      if(blue > max) max = blue;
+      if (green > max) max = green;
+      if (blue > max) max = blue;
 
       // Scale values from 0 to 1.0
-      red = red/max;
-      green = green/max;
-      blue = blue/max;
+      red = red / max;
+      green = green / max;
+      blue = blue / max;
 
       // Add in some correction factors
-      red = (0.85*red)+0.15;
-      green = (0.85*green)+0.15;
-      blue = (0.85*blue)+0.15;
+      red = (0.85 * red) + 0.15;
+      green = (0.85 * green) + 0.15;
+      blue = (0.85 * blue) + 0.15;
 
       // Multiply by 255 to get an R/G/B value
       red = red * 255.0f;
       green = green * 255.0f;
       blue = blue * 255.0f;
 
-      rgb[0] = static_cast<unsigned char>(red);
-      rgb[1] = static_cast<unsigned char>(green);
-      rgb[2] = static_cast<unsigned char>(blue);
+      rgb[0] = static_cast<unsigned char> (red);
+      rgb[1] = static_cast<unsigned char> (green);
+      rgb[2] = static_cast<unsigned char> (blue);
     }
 
 /**
@@ -234,18 +235,22 @@ class OIMColoring
  * @param rgb Output - A pointer to store the RGB value into a unsigned char[3] array.
  */
     template <typename K>
-    void static CalculateHexIPFColor(float q1[5],K refDir0, K refDir1, K refDir2,
+    void static CalculateHexIPFColor(float q1[5], K refDir0, K refDir1, K refDir2,
                               unsigned char* rgb)
     {
       float qc[5];
-	  float g[3][3];
+      float g[3][3];
       float p[3];
       float d[3];
       float theta, phi;
-      float _rgb[3] = { 0.0, 0.0, 0.0};
+      float _rgb[3] = { 0.0, 0.0, 0.0 };
+
       for (int j = 0; j < 12; j++)
       {
-        OrientationMath::multiplyQuaternions(q1, q1, qc);
+//        q2 =  const_HexagonalMath::Detail::HexQuatSym[j];
+//        OrientationMath::multiplyQuaternions(q1, q2, qc);
+        MULT_QUAT(q1, HexagonalMath::Detail::HexQuatSym[j], qc);
+
         g[0][0] = (1 - (2 * qc[2] * qc[2]) - (2 * qc[3] * qc[3]));
         g[1][0] = ((2 * qc[1] * qc[2]) - (2 * qc[3] * qc[4]));
         g[2][0] = ((2 * qc[1] * qc[3]) + (2 * qc[2] * qc[4]));
@@ -256,11 +261,10 @@ class OIMColoring
         g[1][2] = ((2 * qc[2] * qc[3]) + (2 * qc[1] * qc[4]));
         g[2][2] = (1 - (2 * qc[1] * qc[1]) - (2 * qc[2] * qc[2]));
 
-
-		p[0] = g[0][0] * refDir0 + g[0][1] * refDir1 + g[0][2] * refDir2;
-		p[1] = g[1][0] * refDir0 + g[1][1] * refDir1 + g[1][2] * refDir2;
-		p[2] = g[2][0] * refDir0 + g[2][1] * refDir1 + g[2][2] * refDir2;
-		float denom = p[0] * p[0] + p[1] * p[1] + p[2] * p[2];
+        p[0] = g[0][0] * refDir0 + g[0][1] * refDir1 + g[0][2] * refDir2;
+        p[1] = g[1][0] * refDir0 + g[1][1] * refDir1 + g[1][2] * refDir2;
+        p[2] = g[2][0] * refDir0 + g[2][1] * refDir1 + g[2][2] * refDir2;
+        float denom = p[0] * p[0] + p[1] * p[1] + p[2] * p[2];
         denom = powf(denom, 0.5);
         p[0] = p[0] / denom;
         p[1] = p[1] / denom;
@@ -284,7 +288,7 @@ class OIMColoring
         d[0] = d[0] / norm;
         d[1] = d[1] / norm;
         d[2] = d[2] / norm;
-        if (atan2(d[1],d[0]) >= 0 && atan2(d[1],d[0]) < (30.0 * MXA_PI / 180.0))
+        if (atan2(d[1], d[0]) >= 0 && atan2(d[1], d[0]) < (30.0 * MXA_PI / 180.0))
         {
           theta = (p[0] * 0) + (p[1] * 0) + (p[2] * 1);
           if (theta > 1) theta = 1;
