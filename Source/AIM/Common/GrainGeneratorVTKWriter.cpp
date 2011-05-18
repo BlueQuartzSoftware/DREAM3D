@@ -132,14 +132,14 @@ int GrainGeneratorVTKWriter::writeIPFVizFile(GrainGeneratorFunc* r, const std::s
       phase = r->voxels[i].phase;
       if (r->crystruct[phase] == AIM::Reconstruction::Cubic)
       {
-        OIMColoring::GenerateIPFColor(r->voxels[i].euler1, r->voxels[i].euler2, r->voxels[i].euler3, RefDirection[0], RefDirection[1], RefDirection[2], &rgba[i * 4], hkl);
+		  OIMColoring::GenerateIPFColor(r->m_Grains[r->voxels[i].grainname]->euler1, r->m_Grains[r->voxels[i].grainname]->euler2, r->m_Grains[r->voxels[i].grainname]->euler3, RefDirection[0], RefDirection[1], RefDirection[2], &rgba[i * 4], hkl);
       }
       else if (r->crystruct[phase] == AIM::Reconstruction::Hexagonal)
       {
-        q1[1] = r->voxels[i].quat[1];
-        q1[2] = r->voxels[i].quat[2];
-        q1[3] = r->voxels[i].quat[3];
-        q1[4] = r->voxels[i].quat[4];
+		q1[1] = r->m_Grains[r->voxels[i].grainname]->avg_quat[1];
+		q1[2] = r->m_Grains[r->voxels[i].grainname]->avg_quat[2];
+		q1[3] = r->m_Grains[r->voxels[i].grainname]->avg_quat[3];
+		q1[4] = r->m_Grains[r->voxels[i].grainname]->avg_quat[4];
         OIMColoring::CalculateHexIPFColor(q1, RefDirection[0], RefDirection[1], RefDirection[2], &rgba[i * 4]);
       }
       rgba[i * 4 + 3] = 255;
@@ -166,14 +166,14 @@ int GrainGeneratorVTKWriter::writeIPFVizFile(GrainGeneratorFunc* r, const std::s
       phase = r->voxels[i].phase;
       if (r->crystruct[phase] == AIM::Reconstruction::Cubic)
       {
-        OIMColoring::GenerateIPFColor(r->voxels[i].euler1, r->voxels[i].euler2, r->voxels[i].euler3, RefDirection[0], RefDirection[1], RefDirection[2], rgb, hkl);
+		  OIMColoring::GenerateIPFColor(r->m_Grains[r->voxels[i].grainname]->euler1, r->m_Grains[r->voxels[i].grainname]->euler2, r->m_Grains[r->voxels[i].grainname]->euler3, RefDirection[0], RefDirection[1], RefDirection[2], &rgb[i * 4], hkl);
       }
       else if (r->crystruct[phase] == AIM::Reconstruction::Hexagonal)
       {
-        q1[1] = r->voxels[i].quat[1];
-        q1[2] = r->voxels[i].quat[2];
-        q1[3] = r->voxels[i].quat[3];
-        q1[4] = r->voxels[i].quat[4];
+		q1[1] = r->m_Grains[r->voxels[i].grainname]->avg_quat[1];
+		q1[2] = r->m_Grains[r->voxels[i].grainname]->avg_quat[2];
+		q1[3] = r->m_Grains[r->voxels[i].grainname]->avg_quat[3];
+		q1[4] = r->m_Grains[r->voxels[i].grainname]->avg_quat[4];
         OIMColoring::CalculateHexIPFColor(q1, RefDirection[0], RefDirection[1], RefDirection[2], rgb);
       }
       red = static_cast<float> (float(rgb[0]) / 255.0);

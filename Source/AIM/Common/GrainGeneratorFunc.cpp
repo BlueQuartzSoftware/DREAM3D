@@ -1667,6 +1667,8 @@ void  GrainGeneratorFunc::assign_eulers(int numgrains)
     choose = 0;
     totaldensity = 0;
     phase = m_Grains[i]->phase;
+	if(crystruct[phase] == AIM::Reconstruction::Cubic) numbins = 5832;
+	if(crystruct[phase] == AIM::Reconstruction::Hexagonal) numbins = 15552;
     for (int j = 0; j < numbins; j++)
     {
       float density = actualodf[phase][j];
@@ -1683,7 +1685,7 @@ void  GrainGeneratorFunc::assign_eulers(int numgrains)
     m_Grains[i]->avg_quat[2] = q[2];
     m_Grains[i]->avg_quat[3] = q[3];
     m_Grains[i]->avg_quat[4] = q[4];
-    if (m_Grains[gnum]->surfacegrain == 0)
+    if (m_Grains[i]->surfacegrain == 0)
     {
       simodf[phase][choose] = simodf[phase][choose] + (float(m_Grains[i]->numvoxels) * resx * resy * resz);
       unbiasedvol[phase] = unbiasedvol[phase] + (float(m_Grains[i]->numvoxels) * resx * resy * resz);
