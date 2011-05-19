@@ -68,7 +68,7 @@ ipfColor[j * 3 + 2] = rgb[2];\
   float q1[5];\
   unsigned char rgb[3] =  { 0, 0, 0 };\
   unsigned char hkl[3] = { 0, 0, 0 };\
-  float RefDirection[3] = { 0.0, 0.0, 1.0 };\
+  float RefDirection[3] = { 1.0, 0.0, 0.0 };\
   int ocol, orow, oplane;\
   int col, row, plane;\
   int pid;\
@@ -174,7 +174,25 @@ int H5GrainWriter::writeHDF5GrainsFile(ReconstructionFunc* r, const std::string 
 
       phase = r->voxels[vid].phase;
       phaseValues[j] = phase;
-      H5GW_IPF_COLOR()
+      if (r->crystruct[phase] == AIM::Reconstruction::Cubic)
+      {
+        OIMColoring::GenerateIPFColor(r->voxels[vid].euler1,
+                                      r->voxels[vid].euler2,
+                                      r->voxels[vid].euler3,
+                                      RefDirection[0], RefDirection[1], RefDirection[2],
+                                      rgb, hkl);
+      }
+      if (r->crystruct[phase] == AIM::Reconstruction::Hexagonal)
+      {
+        q1[0] = r->voxels[i].quat[1];
+        q1[1] = r->voxels[i].quat[2];
+        q1[2] = r->voxels[i].quat[3];
+        q1[3] = r->voxels[i].quat[4];
+        OIMColoring::CalculateHexIPFColor(q1, RefDirection[0], RefDirection[1], RefDirection[2], rgb);
+      }
+      ipfColor[j * 3] = rgb[0];
+      ipfColor[j * 3 + 1] = rgb[1];
+      ipfColor[j * 3 + 2] = rgb[2];
 
       // Reconstruction Specific Assignments
       kernelAvgDisorientation[j] = r->voxels[vid].kernelmisorientation;
