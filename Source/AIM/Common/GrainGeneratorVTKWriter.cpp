@@ -51,11 +51,6 @@ GrainGeneratorVTKWriter::~GrainGeneratorVTKWriter()
 // -----------------------------------------------------------------------------
 int GrainGeneratorVTKWriter::writeVisualizationFile(GrainGeneratorFunc* r, const std::string &file)
 {
-  bool bin = false;
-#if AIM_WRITE_BINARY_VTK_FILE
-  bin = true;
-#endif
-
   FILE* f = NULL;
   f = fopen(file.c_str(), "wb");
   if (NULL == f)
@@ -63,7 +58,7 @@ int GrainGeneratorVTKWriter::writeVisualizationFile(GrainGeneratorFunc* r, const
     return 1;
   }
   // Write the correct header
-  if (bin == true)
+  if (true == m_WriteBinaryFiles)
   {
     WRITE_VTK_GRAIN_HEADER("BINARY", r)
   }
@@ -73,7 +68,7 @@ int GrainGeneratorVTKWriter::writeVisualizationFile(GrainGeneratorFunc* r, const
   }
   size_t total = r->xpoints * r->ypoints * r->zpoints;
 
-  if (true == bin)
+  if (true == m_WriteBinaryFiles)
   {
     WRITE_VTK_GRAIN_IDS_BINARY(r, AIM::Reconstruction::GrainIdScalarName, voxels);
     WRITE_VTK_SCALARS_FROM_VOXEL_BINARY(r, SurfaceVoxel, int, voxels, surfacevoxel)
@@ -94,58 +89,80 @@ int GrainGeneratorVTKWriter::writeVisualizationFile(GrainGeneratorFunc* r, const
 // -----------------------------------------------------------------------------
 int GrainGeneratorVTKWriter::writeIPFVizFile(GrainGeneratorFunc* r, const std::string &file)
 {
-  bool bin = false;
-#if AIM_WRITE_BINARY_VTK_FILE
-  bin = true;
-#endif
   FILE* f = NULL;
   f = fopen(file.c_str(), "wb");
   if (NULL == f)
   {
     return 1;
   }
-  // Write the correct header
-  if (bin == true)
-  {
-    WRITE_VTK_GRAIN_HEADER("BINARY", r)
-  }
-  else
-  {
-    WRITE_VTK_GRAIN_HEADER("ASCII", r)
-  }
+
   size_t total = r->xpoints * r->ypoints * r->zpoints;
-  float q1[5];
   unsigned char hkl[3] = { 0, 0, 0 };
   float RefDirection[3] = { 0.0, 0.0, 1.0 };
   int phase;
-
-  if (true == bin)
+  unsigned char* rgba = NULL;
+  float red, green, blue;
+  size_t index = 0;
+  // Write the correct header
+  if (true == m_WriteBinaryFiles)
   {
+    WRITE_VTK_GRAIN_HEADER("BINARY", r)
     WRITE_VTK_GRAIN_IDS_BINARY(r, AIM::Reconstruction::GrainIdScalarName, voxels);
     WRITE_VTK_SCALARS_FROM_VOXEL_BINARY(r, Phase, int, voxels, phase)
     // Write the COLOR_SCALARS
     fprintf(f, "COLOR_SCALARS IPF_Colors 4\n");
-    // Allocate our RGBA array
-    unsigned char* rgba = new unsigned char[total * 4];
-    for (size_t i = 0; i < total; i++)
+    rgba = new unsigned char[total * 4]; // We need the whole array because we build it and write it all at the end
+  }
+  else
+  {
+    WRITE_VTK_GRAIN_HEADER("ASCII", r)
+    WRITE_VTK_GRAIN_IDS_ASCII(r, AIM::Reconstruction::GrainIdScalarName, voxels);
+    WRITE_VTK_SCALARS_FROM_VOXEL_ASCII(r, Phase, int, voxels, phase, "%d ")
+    // Write the COLOR_SCALARS
+    fprintf(f, "COLOR_SCALARS IPF_Colors 3\n");
+    rgba = new unsigned char[4]; // We just need 4 bytes for ASCII writing
+  }
+
+
+  for (size_t i = 0; i < total; i++)
+  {
+    phase = r->voxels[i].phase;
+    if (true == m_WriteBinaryFiles)
     {
-      phase = r->voxels[i].phase;
-      if (r->crystruct[phase] == AIM::Reconstruction::Cubic)
-      {
-		  OIMColoring::GenerateIPFColor(r->m_Grains[r->voxels[i].grainname]->euler1, r->m_Grains[r->voxels[i].grainname]->euler2, r->m_Grains[r->voxels[i].grainname]->euler3, RefDirection[0], RefDirection[1], RefDirection[2], &rgba[i * 4], hkl);
-      }
-      else if (r->crystruct[phase] == AIM::Reconstruction::Hexagonal)
-      {
-		q1[1] = r->m_Grains[r->voxels[i].grainname]->avg_quat[1];
-		q1[2] = r->m_Grains[r->voxels[i].grainname]->avg_quat[2];
-		q1[3] = r->m_Grains[r->voxels[i].grainname]->avg_quat[3];
-		q1[4] = r->m_Grains[r->voxels[i].grainname]->avg_quat[4];
-        OIMColoring::CalculateHexIPFColor(q1, RefDirection[0], RefDirection[1], RefDirection[2], &rgba[i * 4]);
-      }
-      rgba[i * 4 + 3] = 255;
+      index = i * 4;
     }
+    else {
+      index = 0;
+    }
+    if (r->crystruct[phase] == AIM::Reconstruction::Cubic)
+    {
+      OIMColoring::GenerateIPFColor(r->m_Grains[r->voxels[i].grainname]->euler1,
+                                    r->m_Grains[r->voxels[i].grainname]->euler2,
+                                    r->m_Grains[r->voxels[i].grainname]->euler3,
+                                    RefDirection[0], RefDirection[1], RefDirection[2],
+                                    &rgba[index], hkl);
+    }
+    else if (r->crystruct[phase] == AIM::Reconstruction::Hexagonal)
+    {
+      OIMColoring::CalculateHexIPFColor(r->m_Grains[r->voxels[i].grainname]->avg_quat,
+                                        RefDirection,
+                                        &rgba[index]);
+    }
+    if (true == m_WriteBinaryFiles) {
+      rgba[index + 3] = 255;
+    }
+    else
+    {
+      red = static_cast<float> (float(rgba[index]) / 255.0);
+      green = static_cast<float> (float(rgba[index + 1]) / 255.0);
+      blue = static_cast<float> (float(rgba[index + 2]) / 255.0);
+      fprintf(f, "%f %f %f\n", red, green, blue);
+    }
+  }
+
+  if (true == m_WriteBinaryFiles)
+  {
     size_t totalWritten = fwrite(rgba, sizeof(char), total * 4, f);
-    delete[] rgba;
     if (totalWritten != total * 4)
     {
       std::cout << "Error Writing Binary Data for IPF Colors to file " << file << std::endl;
@@ -153,35 +170,8 @@ int GrainGeneratorVTKWriter::writeIPFVizFile(GrainGeneratorFunc* r, const std::s
       return -1;
     }
   }
-  else
-  {
-    WRITE_VTK_GRAIN_IDS_ASCII(r, AIM::Reconstruction::GrainIdScalarName, voxels);
-    WRITE_VTK_SCALARS_FROM_VOXEL_ASCII(r, Phase, int, voxels, phase, "%d ")
-    // Write the COLOR_SCALARS
-    fprintf(f, "COLOR_SCALARS IPF_Colors 3\n");
-    float red, green, blue;
-    unsigned char rgb[3] = { 0, 0, 0 };
-    for (size_t i = 0; i < total; i++)
-    {
-      phase = r->voxels[i].phase;
-      if (r->crystruct[phase] == AIM::Reconstruction::Cubic)
-      {
-		  OIMColoring::GenerateIPFColor(r->m_Grains[r->voxels[i].grainname]->euler1, r->m_Grains[r->voxels[i].grainname]->euler2, r->m_Grains[r->voxels[i].grainname]->euler3, RefDirection[0], RefDirection[1], RefDirection[2], &rgb[i * 4], hkl);
-      }
-      else if (r->crystruct[phase] == AIM::Reconstruction::Hexagonal)
-      {
-		q1[1] = r->m_Grains[r->voxels[i].grainname]->avg_quat[1];
-		q1[2] = r->m_Grains[r->voxels[i].grainname]->avg_quat[2];
-		q1[3] = r->m_Grains[r->voxels[i].grainname]->avg_quat[3];
-		q1[4] = r->m_Grains[r->voxels[i].grainname]->avg_quat[4];
-        OIMColoring::CalculateHexIPFColor(q1, RefDirection[0], RefDirection[1], RefDirection[2], rgb);
-      }
-      red = static_cast<float> (float(rgb[0]) / 255.0);
-      green = static_cast<float> (float(rgb[1]) / 255.0);
-      blue = static_cast<float> (float(rgb[2]) / 255.0);
-      fprintf(f, "%f %f %f\n", red, green, blue);
-    }
-  }
+  // Clean up the allocated memory
+  delete[] rgba;
 
   fclose(f);
   return 0;

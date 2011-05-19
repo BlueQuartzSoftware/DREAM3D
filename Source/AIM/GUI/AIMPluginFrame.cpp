@@ -113,6 +113,15 @@ QStatusBar* AIMPluginFrame::statusBar()
 // -----------------------------------------------------------------------------
 bool AIMPluginFrame::sanityCheckOutputDirectory(QLineEdit* le, QString msgTitle)
 {
+
+  if (le->text().isEmpty() == true)
+  {
+    QMessageBox::critical(this, msgTitle,
+                          "The output directory has NOT been set. Please set a directory path and try again.",
+                          QMessageBox::Ok | QMessageBox::Default);
+    return false;
+  }
+
   if (verifyPathExists(le->text(), le) == false)
   {
     QString msg("The Output Directory '");

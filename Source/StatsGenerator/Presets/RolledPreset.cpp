@@ -91,23 +91,7 @@ void RolledPreset::generateOmega3Data(StatsGenPlotWidget* plot, QVector<float> b
 //  model->removeRows(0, model->rowCount());
 
   float alpha, beta;
-      AIMRandomNG rg;
-      /* Get a seed value based off the system clock. The issue is that this will
-       * be a 64 bit unsigned integer where the high 32 bits will basically not
-       * change where as the lower 32 bits will. The following lines of code will
-       * pull off the low 32 bits from the number. This operation depends on most
-       * significant byte ordering which is different between Big Endian and
-       * Little Endian machines. For Big endian machines the Most Significant Byte
-       * (MSB) is the first 32 bits. For Little Endian machines the MSB is the
-       * second 32 bits.
-       */
-      unsigned long long int seed = MXA::getMilliSeconds();
-      unsigned int* seedPtr = reinterpret_cast<unsigned int*> (&seed);
-#if CMP_WORDS_BIGENDIAN
-      rg.RandomInit(seedPtr[1]);
-#else
-      rg.RandomInit(seedPtr[0]);
-#endif
+  AIM_RANDOMNG_NEW()
 
   QVector<float> alphas;
   QVector<float> betas;
@@ -148,23 +132,7 @@ void RolledPreset::generateBOverAPlotData(StatsGenPlotWidget* plot, QVector<floa
   model->removeRows(0, model->rowCount());
 
   float alpha, beta;
-      AIMRandomNG rg;
-      /* Get a seed value based off the system clock. The issue is that this will
-       * be a 64 bit unsigned integer where the high 32 bits will basically not
-       * change where as the lower 32 bits will. The following lines of code will
-       * pull off the low 32 bits from the number. This operation depends on most
-       * significant byte ordering which is different between Big Endian and
-       * Little Endian machines. For Big endian machines the Most Significant Byte
-       * (MSB) is the first 32 bits. For Little Endian machines the MSB is the
-       * second 32 bits.
-       */
-      unsigned long long int seed = MXA::getMilliSeconds();
-      unsigned int* seedPtr = reinterpret_cast<unsigned int*> (&seed);
-#if CMP_WORDS_BIGENDIAN
-      rg.RandomInit(seedPtr[1]);
-#else
-      rg.RandomInit(seedPtr[0]);
-#endif
+  AIM_RANDOMNG_NEW()
 
   QVector<float> alphas;
   QVector<float> betas;
@@ -205,23 +173,7 @@ void RolledPreset::generateCOverAPlotData(StatsGenPlotWidget* plot, QVector<floa
   model->removeRows(0, model->rowCount());
 
   float alpha, beta;
-      AIMRandomNG rg;
-      /* Get a seed value based off the system clock. The issue is that this will
-       * be a 64 bit unsigned integer where the high 32 bits will basically not
-       * change where as the lower 32 bits will. The following lines of code will
-       * pull off the low 32 bits from the number. This operation depends on most
-       * significant byte ordering which is different between Big Endian and
-       * Little Endian machines. For Big endian machines the Most Significant Byte
-       * (MSB) is the first 32 bits. For Little Endian machines the MSB is the
-       * second 32 bits.
-       */
-      unsigned long long int seed = MXA::getMilliSeconds();
-      unsigned int* seedPtr = reinterpret_cast<unsigned int*> (&seed);
-#if CMP_WORDS_BIGENDIAN
-      rg.RandomInit(seedPtr[1]);
-#else
-      rg.RandomInit(seedPtr[0]);
-#endif
+  AIM_RANDOMNG_NEW()
 
   QVector<float> alphas;
   QVector<float> betas;
@@ -263,23 +215,7 @@ void RolledPreset::generateCOverBPlotData(StatsGenPlotWidget* plot, QVector<floa
   model->removeRows(0, model->rowCount());
 
   float alpha, beta;
-      AIMRandomNG rg;
-      /* Get a seed value based off the system clock. The issue is that this will
-       * be a 64 bit unsigned integer where the high 32 bits will basically not
-       * change where as the lower 32 bits will. The following lines of code will
-       * pull off the low 32 bits from the number. This operation depends on most
-       * significant byte ordering which is different between Big Endian and
-       * Little Endian machines. For Big endian machines the Most Significant Byte
-       * (MSB) is the first 32 bits. For Little Endian machines the MSB is the
-       * second 32 bits.
-       */
-      unsigned long long int seed = MXA::getMilliSeconds();
-      unsigned int* seedPtr = reinterpret_cast<unsigned int*> (&seed);
-#if CMP_WORDS_BIGENDIAN
-      rg.RandomInit(seedPtr[1]);
-#else
-      rg.RandomInit(seedPtr[0]);
-#endif
+  AIM_RANDOMNG_NEW()
 
   QVector<float> alphas;
   QVector<float> betas;
@@ -322,23 +258,7 @@ void RolledPreset::generateNeighborPlotData(StatsGenPlotWidget* plot, QVector<fl
   model->removeRows(0, model->rowCount());
 
   float alpha, k, beta;
-      AIMRandomNG rg;
-      /* Get a seed value based off the system clock. The issue is that this will
-       * be a 64 bit unsigned integer where the high 32 bits will basically not
-       * change where as the lower 32 bits will. The following lines of code will
-       * pull off the low 32 bits from the number. This operation depends on most
-       * significant byte ordering which is different between Big Endian and
-       * Little Endian machines. For Big endian machines the Most Significant Byte
-       * (MSB) is the first 32 bits. For Little Endian machines the MSB is the
-       * second 32 bits.
-       */
-      unsigned long long int seed = MXA::getMilliSeconds();
-      unsigned int* seedPtr = reinterpret_cast<unsigned int*> (&seed);
-#if CMP_WORDS_BIGENDIAN
-      rg.RandomInit(seedPtr[1]);
-#else
-      rg.RandomInit(seedPtr[0]);
-#endif
+  AIM_RANDOMNG_NEW()
 
   QVector<float> alphas;
   QVector<float> ks;

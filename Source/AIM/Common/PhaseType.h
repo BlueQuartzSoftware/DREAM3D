@@ -32,6 +32,7 @@
 
 #include <string>
 #include <vector>
+#include <map>
 
 #include "AIM/Common/AIMCommonConfiguration.h"
 #include "AIM/Common/Constants.h"
@@ -73,13 +74,49 @@ class AIMCOMMON_EXPORT PhaseType
       return std::string("Undefined Phase Type (Error)");
     }
 
-
-    static void getPhaseTypeStringList(std::vector<std::string> &list)
+    static AIM::Reconstruction::PhaseType getPhaseType(const char* str)
     {
-      list.push_back(PrimaryStr);
-      list.push_back(PrecipitateStr);
-      list.push_back(TransformationStr);
-      list.push_back(UnknownPhaseTypeStr);
+      if (PrimaryStr.compare(str) == 0)
+      {
+        return AIM::Reconstruction::PrimaryPhase;
+      }
+      else if (PrecipitateStr.compare(str) == 0)
+      {
+        return AIM::Reconstruction::PrecipitatePhase;
+      }
+      else if (TransformationStr.compare(str) == 0)
+      {
+        return AIM::Reconstruction::TransformationPhase;
+      }
+      return AIM::Reconstruction::UnknownPhaseType;
+    }
+
+
+    static void getPhaseTypeStrings(std::vector<std::string> &strings)
+    {
+      strings.clear();
+      strings.push_back(PrimaryStr);
+      strings.push_back(PrecipitateStr);
+      strings.push_back(TransformationStr);
+      strings.push_back(UnknownPhaseTypeStr);
+    }
+
+    static void getPhaseTypeEnums(std::vector<AIM::Reconstruction::PhaseType> &types)
+    {
+      types.clear();
+      types.push_back(AIM::Reconstruction::PrimaryPhase);
+      types.push_back(AIM::Reconstruction::PrecipitatePhase);
+      types.push_back(AIM::Reconstruction::TransformationPhase);
+      types.push_back(AIM::Reconstruction::UnknownPhaseType);
+    }
+
+    static void getPhaseTypeMap(std::map<int, std::string> &map)
+    {
+      map.clear();
+      map[AIM::Reconstruction::PrimaryPhase] = PrimaryStr;
+      map[AIM::Reconstruction::PrecipitatePhase] = PrecipitateStr;
+      map[AIM::Reconstruction::TransformationPhase] = TransformationStr;
+      map[AIM::Reconstruction::UnknownPhaseType] = UnknownPhaseTypeStr;
     }
 
   protected:
