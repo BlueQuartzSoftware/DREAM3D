@@ -200,8 +200,8 @@ void SurfaceMesh::compute()
   m = SurfaceMeshFunc::New();
 //  int err = 0;
 #if  USE_VTK_FILE_UTILS
-  SMVtkFileIO vtkreader;
-  vtkreader.primeFileToScalarDataLocation(m.get(), m_InputFile, m_ScalarName);
+  SMVtkFileIO::Pointer vtkreader = SMVtkFileIO::New();
+  vtkreader->primeFileToScalarDataLocation(m.get(), m_InputFile, m_ScalarName);
 
   // Prime the working voxels (2 layers worth) with -3 values indicating border voxels
   int size = 2 * m->NSP + 1;
@@ -229,7 +229,7 @@ void SurfaceMesh::compute()
 
     // initialize neighbors, possible nodes and squares of marching cubes of each layer...
 #if  USE_VTK_FILE_UTILS
-    err = vtkreader.readZSlice(xFileDim, yFileDim, zFileDim, fileVoxelLayer);
+    err = vtkreader->readZSlice(xFileDim, yFileDim, zFileDim, fileVoxelLayer);
     if(err < 0)
     {
       ss.str("");
@@ -366,8 +366,8 @@ emit finished();
 
 
   progressMessage(msg, 95 );
-  SMVtkFileIO writer;
-  writer.writeVTKFile(m.get(), nNodes, cTriID, VisualizationFile, NodesFile, TrianglesFile, m_BinaryVTKFile, m_ConformalMesh);
+  SMVtkFileIO::Pointer writer;
+  writer->writeVTKFile(m.get(), nNodes, cTriID, VisualizationFile, NodesFile, TrianglesFile, m_BinaryVTKFile, m_ConformalMesh);
 
   progressMessage(AIM_STRING("Surface Meshing Complete"), 100 );
 
