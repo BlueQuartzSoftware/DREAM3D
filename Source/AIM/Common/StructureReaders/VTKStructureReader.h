@@ -90,6 +90,7 @@ class AIMCOMMON_EXPORT VTKStructureReader : public VTKFileReader, public Abstrac
 
     virtual ~VTKStructureReader();
 
+    /* These can be used to tune the reader to read the proper Scalars */
     MXA_INSTANCE_STRING_PROPERTY(GrainIdScalarName)
     MXA_INSTANCE_STRING_PROPERTY(PhaseIdScalarName)
 
