@@ -168,6 +168,16 @@ namespace AIM
     const std::string IPFDeformVTKFile("IPF_DeformationData.vtk");
 
     const std::string GrainIdScalarName("GrainID");
+    const std::string EuclideanScalarName("Euclidean");
+    const std::string SchmidFactorScalarName("SchmidFactor");
+    const std::string PhaseIdScalarName("PhaseID");
+    const std::string KAMScalarName("KAM");
+    const std::string GAMScalarName("GAM");
+    const std::string LMGScalarName("LMG");
+    const std::string ImageQualityScalarName("ImageQuality");
+    const std::string SurfaceVoxelScalarName("SurfaceVoxel");
+
+
     /**
      * @brief IF YOU CHANGE THE VALUES THERE ARE DEEP RAMIFICATIONS IN THE CODE BUT
      * MOSTLY IN THE HDF5 FILES WHICH ARE WRITTEN USING THE ENUMERATIONS.

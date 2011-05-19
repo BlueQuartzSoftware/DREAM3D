@@ -2073,49 +2073,7 @@ int GrainGeneratorFunc::adjust_boundaries(int numgrains)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GrainGeneratorFunc::read_structure(const std::string &filename)
-{
-  const unsigned int size ( 1024 );
-  char buf [ size ];
-  std::ifstream in ( filename.c_str() );
-  std::string word;
-  bool headerdone = false;
-  while(headerdone == false)
-  {
-    in.getline( buf, size );
-    std::string line = buf;
-    in >> word;
-    if (DIMS == word )
-    {
-        in >> xpoints >> ypoints >> zpoints;
-      totalpoints = xpoints * ypoints * zpoints;
-//      voxels = new GrainGeneratorVoxel[totalpoints];
-      voxels.reset(new GrainGeneratorVoxel[totalpoints]);
 
-      totalvol = float(totalpoints)*resx*resy*resz;
-    }
-    if(LOOKUP == word)
-    {
-      headerdone = true;
-      in >> word;
-    }
-  }
-
-  int gnum=0;
-  int onedge = 0;
-  int col, row, plane;
-  for(int i=0;i<(xpoints*ypoints*zpoints);i++)
-  {
-    onedge = 0;
-    in >> gnum;
-    col = i%xpoints;
-    row = (i/xpoints)%ypoints;
-    plane = i/(xpoints*ypoints);
-    if(col == 0 || col == (xpoints-1) || row == 0 || row == (ypoints-1) || plane == 0 || plane == (zpoints-1)) onedge = 1;
-    voxels[i].grainname = gnum;
-    m_Grains[gnum]->surfacegrain = onedge;
-  }
-}
 void  GrainGeneratorFunc::find_neighbors()
 {
   int neighbors[6];
