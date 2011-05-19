@@ -37,7 +37,10 @@
 
 #include <boost/shared_ptr.hpp>
 
+#include <MXA/Common/MXASetGetMacros.h>
 #include "AIM/Common/AIMCommonConfiguration.h"
+#include "AIM/Common/VTKFileReader.h"
+
 
 #define kBufferSize 1024
 
@@ -51,10 +54,13 @@ class SurfaceMeshFunc;
  * @date Aug 13, 2010
  * @version 1.0
  */
-class SMVtkFileIO
+class SMVtkFileIO : public VTKFileReader
 {
   public:
-    SMVtkFileIO();
+    MXA_SHARED_POINTERS(SMVtkFileIO)
+    MXA_TYPE_MACRO(SMVtkFileIO)
+    MXA_STATIC_NEW_MACRO(SMVtkFileIO)
+
     virtual ~SMVtkFileIO();
 
     /**
@@ -66,8 +72,6 @@ class SMVtkFileIO
      */
     int primeFileToScalarDataLocation(SurfaceMeshFunc* m, const std::string &file, const std::string &scalarName);
 
-
-    int getVolumeDimensions(const std::string &file, int &xDim, int &yDim, int &zDim);
 
     int readZSlice(int xDim, int yDim, int zDim, int* voxels);
 
@@ -93,18 +97,12 @@ class SMVtkFileIO
                      bool binaryFile,
                      bool conformalMesh);
 
-    /**
-     * @brief This function parses 3 floating point values from a comma delimited string
-     * @param input
-     * @param output
-     * @param defaultValue The value to set if the parsing fails
-     * @return
-     */
-    int parseFloat3V(const char* input, float* output, float defaultValue);
 
-    int readLine(std::istream &in, char* buf, int bufSize);
 
   protected:
+    SMVtkFileIO();
+
+
     int writeBinaryCellData(const std::string &TrianglesFile, FILE* vtkFile, int nTriangles, bool conformalMesh);
     int writeASCIICellData(const std::string &TrianglesFile, FILE* vtkFile, int nTriangles, bool conformalMesh);
 
