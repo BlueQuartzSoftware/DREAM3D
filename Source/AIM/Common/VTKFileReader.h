@@ -133,14 +133,13 @@ class VTKFileReader
      */
     size_t parseByteSize(char text[256]);
 
+    int skipVolume(std::ifstream &inStream, int byteSize, int xDim, int yDim, int zDim);
 
   protected:
     VTKFileReader();
 
 
   private:
-    std::ifstream m_fstream;
-
     VTKFileReader(const VTKFileReader&); // Copy Constructor Not Implemented
     void operator=(const VTKFileReader&); // Operator '=' Not Implemented
 };

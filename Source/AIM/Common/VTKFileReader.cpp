@@ -95,7 +95,7 @@ int VTKFileReader::readLine(std::istream &in, char* buf, int bufSize)
 {
 
   bool readAnotherLine = true;
-  while ( readAnotherLine == true) {
+  while ( readAnotherLine == true && in.gcount() != 0) {
     // Zero out the buffer
     ::memset(buf, 0, bufSize);
     // Read a line up to a '\n' which will catch windows and unix line endings but
@@ -155,19 +155,20 @@ int VTKFileReader::readHeader()
     return -1;
   }
 
-  m_fstream.open(m_InputFileName.c_str());
-  if (!m_fstream.is_open())
+  std::ifstream instream;
+  instream.open(m_InputFileName.c_str());
+  if (!instream.is_open())
   {
     std::cout << logTime() << " vtk file could not be opened: " << m_InputFileName << std::endl;
     return -1;
   }
   char buf[kBufferSize];
-  m_fstream.getline(buf, kBufferSize); // Read Line 1 - VTK Version Info
+  instream.getline(buf, kBufferSize); // Read Line 1 - VTK Version Info
   ::memset(buf, 0, kBufferSize);
-  m_fstream.getline(buf, kBufferSize); // Read Line 2 - User Comment
+  instream.getline(buf, kBufferSize); // Read Line 2 - User Comment
   setComment(std::string(buf));
   ::memset(buf, 0, kBufferSize);
-  m_fstream.getline(buf, kBufferSize); // Read Line 3 - BINARY or ASCII
+  instream.getline(buf, kBufferSize); // Read Line 3 - BINARY or ASCII
   std::string fileType(buf);
   if (fileType.find("BINARY", 0) == 0)
   {
@@ -186,27 +187,72 @@ int VTKFileReader::readHeader()
     return err;
   }
   ::memset(buf, 0, kBufferSize);
-  m_fstream.getline(buf, kBufferSize); // Read Line 4 - Type of Dataset
-  std::string dataset(buf);
-  setDatasetType(dataset);
+  instream.getline(buf, kBufferSize); // Read Line 4 - Type of Dataset
+  {
+    char text[256];
+    int n = sscanf(buf, "%s %s", text, &(text[16]) );
+    std::string dataset(&(text[16]));
+    setDatasetType(dataset);
+  }
 
   ::memset(buf, 0, kBufferSize);
-  m_fstream.getline(buf, kBufferSize); // Read Line 5 which is the Dimension values
+  instream.getline(buf, kBufferSize); // Read Line 5 which is the Dimension values
   err = parseInt3V(buf, m_Dims, 0);
 
   ::memset(buf, 0, kBufferSize);
-  m_fstream.getline(buf, kBufferSize); // Read Line 6 which is the Origin values
+  instream.getline(buf, kBufferSize); // Read Line 6 which is the Origin values
   err = parseFloat3V(buf, m_Origin, 0.0f);
 
   ::memset(buf, 0, kBufferSize);
-  m_fstream.getline(buf, kBufferSize); // Read Line 7 which is the Scaling values
+  instream.getline(buf, kBufferSize); // Read Line 7 which is the Scaling values
   err = parseFloat3V(buf, m_Scaling, 1.0f);
 
   ::memset(buf, 0, kBufferSize);
 
 
-  m_fstream.close();
+  instream.close();
   return err;
 
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int VTKFileReader::skipVolume(std::ifstream &inStream, int byteSize, int xDim, int yDim, int zDim)
+{
+  int err = 0;
+  if (getFileIsBinary() == true)
+  {
+    int* buffer = new int[xDim];
+    for (int z = 0; z < zDim; ++z)
+    {
+      for (int y = 0; y < yDim; ++y)
+      {
+        // Read all the xpoints in one shot into a buffer
+        inStream.read(reinterpret_cast<char* > (buffer), (xDim * byteSize));
+        if (inStream.gcount() != (xDim * byteSize))
+        {
+          std::cout << logTime() << " ERROR READING BINARY FILE. Bytes read was not the same as func->xDim *. " << byteSize << "." << inStream.gcount()
+              << " vs " << (xDim * byteSize) << std::endl;
+          return -1;
+        }
+      }
+    }
+    delete buffer;
+  }
+  else
+  {
+    int tmp;
+    for (int z = 0; z < zDim; ++z)
+    {
+      for (int y = 0; y < yDim; ++y)
+      {
+        for (int x = 0; x < xDim; ++x)
+        {
+          inStream >> tmp;
+        }
+      }
+    }
+  }
+  return err;
+}

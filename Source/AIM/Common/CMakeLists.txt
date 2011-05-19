@@ -60,17 +60,14 @@ SET (AIMCommon_SRCS
     ${DREAM3D_SOURCE_DIR}/Source/AIM/Common/OrientationMath.cpp
     ${DREAM3D_SOURCE_DIR}/Source/AIM/Common/Texture.cpp
     ${DREAM3D_SOURCE_DIR}/Source/AIM/Common/TexturePreset.cpp
-    ${DREAM3D_SOURCE_DIR}/Source/AIM/ANG/AngDataLoader.cpp
-    ${DREAM3D_SOURCE_DIR}/Source/AIM/ANG/H5AngDataLoader.cpp
-     ${DREAM3D_SOURCE_DIR}/Source/AIM/Common/PhaseType.cpp
-    )
+    ${DREAM3D_SOURCE_DIR}/Source/AIM/Common/VTKFileReader.cpp
+    ${DREAM3D_SOURCE_DIR}/Source/AIM/Common/PhaseType.cpp
+)
 
 SET (AIMCommon_HDRS
-    ${DREAM3D_SOURCE_DIR}/Source/AIM/ANG/AbstractAngDataLoader.h
-    ${DREAM3D_SOURCE_DIR}/Source/AIM/ANG/AngDataLoader.h
-    ${DREAM3D_SOURCE_DIR}/Source/AIM/ANG/H5AngDataLoader.h
     ${DREAM3D_SOURCE_DIR}/Source/AIM/Common/GrainGeneratorFunc.h
     ${DREAM3D_SOURCE_DIR}/Source/AIM/Common/GrainGeneratorVTKWriter.h
+    ${DREAM3D_SOURCE_DIR}/Source/AIM/Common/VTKFileReader.h
     ${DREAM3D_SOURCE_DIR}/Source/AIM/Common/VTKWriterMacros.h
     ${DREAM3D_SOURCE_DIR}/Source/AIM/Common/CrystalStructure.h
     ${DREAM3D_SOURCE_DIR}/Source/AIM/Common/SurfaceMeshFunc.h
@@ -97,6 +94,16 @@ SET (AIMCommon_HDRS
     )
 cmp_IDE_SOURCE_PROPERTIES( "AIM/Common" "${AIMCommon_HDRS}" "${AIMCommon_SRCS}" ${PROJECT_INSTALL_HEADERS})
 
+set(AIMAng_SRCS 
+    ${DREAM3D_SOURCE_DIR}/Source/AIM/ANG/AngDataLoader.cpp
+    ${DREAM3D_SOURCE_DIR}/Source/AIM/ANG/H5AngDataLoader.cpp
+)
+set(AIMAng_HDRS 
+    ${DREAM3D_SOURCE_DIR}/Source/AIM/ANG/AbstractAngDataLoader.h
+    ${DREAM3D_SOURCE_DIR}/Source/AIM/ANG/AngDataLoader.h
+    ${DREAM3D_SOURCE_DIR}/Source/AIM/ANG/H5AngDataLoader.h
+)
+cmp_IDE_SOURCE_PROPERTIES( "AIM/ANG" "${AIMAng_HDRS}" "${AIMAng_SRCS}" ${PROJECT_INSTALL_HEADERS})
     
 set (AIMCommon_HDF5_SRCS
     ${DREAM3D_SOURCE_DIR}/Source/AIM/Common/HDF5/AIM_H5VtkDataWriter.cpp
@@ -125,6 +132,16 @@ ${DREAM3D_SOURCE_DIR}/Source/AIM/Common/OrientationOps/OrthoRhombicOps.h
 )
 cmp_IDE_SOURCE_PROPERTIES( "AIM/Common/OrientationOps" "${AIMCommon_OrientatioOps_HDRS}" "${AIMCommon_OrientatioOps_SRCS}" ${PROJECT_INSTALL_HEADERS})
 
+
+set(StructureReaders_SRCS
+    ${DREAM3D_SOURCE_DIR}/Source/AIM/Common/StructureReaders/VTKStructureReader.cpp
+)
+set(StructureReaders_HDRS
+    ${DREAM3D_SOURCE_DIR}/Source/AIM/Common/StructureReaders/AbstractStructureReader.h
+    ${DREAM3D_SOURCE_DIR}/Source/AIM/Common/StructureReaders/VTKStructureReader.h
+)
+cmp_IDE_SOURCE_PROPERTIES( "AIM/Common/StructureReaders" "${StructureReaders_HDRS}" "${StructureReaders_SRCS}" ${PROJECT_INSTALL_HEADERS})
+
 # --------------------------------------------------------------------
 include_directories(${HDF5_INCLUDE_DIR})
 
@@ -135,6 +152,10 @@ set (AIMCommon_SRCS
     ${AIMCommon_HDF5_HDRS}
     ${AIMCommon_OrientatioOps_SRCS}
     ${AIMCommon_OrientatioOps_HDRS}
+    ${AIMAng_SRCS}
+    ${AIMAng_HDRS}
+    ${StructureReaders_SRCS}
+    ${StructureReaders_HDRS}
     )
 
 configure_file(${DREAM3D_SOURCE_DIR}/Source/AIM/Common/AIMCommonConfiguration.h.in
