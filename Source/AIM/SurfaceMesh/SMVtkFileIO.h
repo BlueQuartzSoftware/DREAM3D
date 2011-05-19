@@ -75,9 +75,6 @@ class SMVtkFileIO : public VTKFileReader
 
     int readZSlice(int xDim, int yDim, int zDim, int* voxels);
 
-
-    int skipVolume(int xDim, int yDim, int zDim);
-
 /**
  * @brief Writes a VTK POLYDATA legacy ASCII file
  * @param m

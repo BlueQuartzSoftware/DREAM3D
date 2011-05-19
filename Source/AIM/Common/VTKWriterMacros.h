@@ -79,7 +79,7 @@
 
 
 #define WRITE_VTK_SCALARS_FROM_VOXEL_ASCII(ptr, name, type, voxelsVar, var, FORMAT)\
-  fprintf(f, "SCALARS %s %s 1\n", #name, #type);\
+  fprintf(f, "SCALARS %s %s 1\n", name.c_str(), #type);\
   fprintf(f, "LOOKUP_TABLE default\n");\
   for (size_t i = 0; i < total; i++) {\
     if(i%20 == 0 && i > 0) { fprintf(f, "\n");}\
@@ -87,7 +87,7 @@
   }\
 
 #define WRITE_VTK_SCALARS_FROM_VOXEL_BINARY(ptr, name, type, voxelsVar, var)\
-  fprintf(f, "SCALARS %s %s 1\n", #name, #type);\
+  fprintf(f, "SCALARS %s %s 1\n", name.c_str(), #type);\
   fprintf(f, "LOOKUP_TABLE default\n");\
   { \
   type* gn = new type[total];\
@@ -107,7 +107,7 @@
   }
 
 #define WRITE_VTK_GRAIN_WITH_GRAIN_SCALAR_VALUE_ASCII(ptr, name, type, var, FORMAT)\
-  fprintf(f, "SCALARS %s float 1\n", #name);\
+  fprintf(f, "SCALARS %s float 1\n", name.c_str());\
   fprintf(f, "LOOKUP_TABLE default\n");\
   for (size_t i = 0; i < total; i++) {\
     if(i%20 == 0 && i > 0) { fprintf(f, "\n");}\
@@ -115,7 +115,7 @@
   }
 
 #define WRITE_VTK_GRAIN_WITH_GRAIN_SCALAR_VALUE_BINARY(ptr, name, type, var)\
-  fprintf(f, "SCALARS %s %s 1\n", #name, #type);\
+  fprintf(f, "SCALARS %s %s 1\n", name.c_str(), #type);\
   fprintf(f, "LOOKUP_TABLE default\n");\
   { \
   type* gn = new type[total];\
