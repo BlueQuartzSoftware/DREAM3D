@@ -90,6 +90,7 @@ Q_OBJECT
     MXA_INSTANCE_STRING_PROPERTY(H5AngFile)
     MXA_INSTANCE_PROPERTY(int, ZStartIndex)
     MXA_INSTANCE_PROPERTY(int, ZEndIndex)
+    MXA_INSTANCE_PROPERTY(std::vector<AIM::Reconstruction::PhaseType>, PhaseTypes)
     MXA_INSTANCE_STRING_PROPERTY(OutputDirectory)
     MXA_INSTANCE_STRING_PROPERTY(OutputFilePrefix)
     MXA_INSTANCE_PROPERTY(bool, MergeTwins)
@@ -106,6 +107,7 @@ Q_OBJECT
     MXA_INSTANCE_PROPERTY(bool, AlreadyFormed)
     MXA_INSTANCE_PROPERTY(Ang::Orientation, Orientation)
 
+    MXA_INSTANCE_PROPERTY(bool, WriteBinaryFiles)
     MXA_INSTANCE_PROPERTY(bool, WriteVisualizationFile)
     MXA_INSTANCE_PROPERTY(bool, WriteIPFFile)
     MXA_INSTANCE_PROPERTY(bool, WriteDisorientationFile)

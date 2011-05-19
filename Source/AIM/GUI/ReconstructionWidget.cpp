@@ -45,6 +45,7 @@
 #include <QtGui/QListWidget>
 
 #include "AIM/Common/Constants.h"
+#include "AIM/Common/PhaseType.h"
 #include "AIM/ANG/H5AngDataLoader.h"
 #include "QtSupport/QR3DFileCompleter.h"
 #include "QtSupport/AIM_QtMacros.h"
@@ -56,6 +57,7 @@
 ReconstructionWidget::ReconstructionWidget(QWidget *parent) :
 AIMPluginFrame(parent),
 m_WorkerThread(NULL),
+m_phaseTypeEdited(false),
 #if defined(Q_WS_WIN)
 m_OpenDialogLastDirectory("C:\\")
 #else
@@ -91,6 +93,7 @@ void ReconstructionWidget::readSettings(QSettings &prefs)
   if (verifyPathExists(m_H5InputFile->text(), m_H5InputFile) )
   {
     m_SetSliceInfo();
+    on_m_H5InputFile_textChanged(QString(""));
   }
   READ_FILEPATH_SETTING(prefs, m_, OutputDir, "");
   READ_STRING_SETTING(prefs, m_, OutputFilePrefix, "Reconstruction_")
@@ -350,6 +353,45 @@ void ReconstructionWidget::on_m_H5InputFile_textChanged(const QString &text)
   {
     m_SetSliceInfo();
   }
+
+  QFileInfo fi(m_H5InputFile->text());
+  if (fi.exists() && fi.isFile())
+  {
+    // Read the Phase information from the .h5ang file
+    AbstractAngDataLoader::Pointer oimDataLoader = H5AngDataLoader::New();
+    H5AngDataLoader* h5io = dynamic_cast<H5AngDataLoader*>(oimDataLoader.get());
+    h5io->setFilename(m_H5InputFile->text().toStdString() );
+    h5io->setZStartIndex(m_ZStartIndex->value());
+
+    std::vector<AngPhase::Pointer> phases = h5io->getPhases();
+    int size = phases.size();
+    std::vector<std::string> phaseTypeStrings;
+    AIM::PhaseType::getPhaseTypeStrings(phaseTypeStrings);
+    std::vector<AIM::Reconstruction::PhaseType> phaseTypeEnums;
+    AIM::PhaseType::getPhaseTypeEnums(phaseTypeEnums);
+
+    // Remove all the items
+    phaseTypeList->clear();
+
+    for (int i = 0; i < size; i++)
+    {
+
+      phaseTypeList->addItem(AIM::PhaseType::PrimaryStr.c_str());
+      QListWidgetItem* item = phaseTypeList->item(i);
+
+      QComboBox* cb = new QComboBox(phaseTypeList);
+      for(size_t i = 0; i < phaseTypeStrings.size(); ++i)
+      {
+        cb->addItem(QString::fromStdString( phaseTypeStrings[i]), phaseTypeEnums[i] );
+        cb->setItemData(i, phaseTypeEnums[i], Qt::UserRole);
+      }
+      phaseTypeList->setItemWidget(item, cb);
+      connect(cb, SIGNAL(currentIndexChanged(int)),
+              this, SLOT(phaseTypeEdited(int)));
+    }
+  }
+
+
 }
 
 // -----------------------------------------------------------------------------
@@ -379,6 +421,42 @@ void ReconstructionWidget::m_SetSliceInfo()
     m_ZMax->setText(QString::number(zEnd));
   }
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ReconstructionWidget::phaseTypeEdited(int i)
+{
+  m_phaseTypeEdited = true;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+bool ReconstructionWidget::checkPhaseTypes()
+{
+
+
+  if (m_phaseTypeEdited == true)
+  {
+    int
+        ret =
+            QMessageBox::warning(this, QString("Reconstruction"), "The Phase Types were Edited. We need to save this data to the input file. Do you want to do that now. Canceling will leave all files untouched but NOT execute the grain generation.", QMessageBox::Ok
+                | QMessageBox::Default, QMessageBox::No);
+    if (ret == QMessageBox::No)
+    {
+      return false;
+    }
+    else
+    {
+      std::cout << "We need to save the Phase Type to something?" << std::endl;
+      return false;
+    }
+
+  }
+  return true;
+}
+
 
 // -----------------------------------------------------------------------------
 //
@@ -419,6 +497,27 @@ void ReconstructionWidget::on_m_GoBtn_clicked()
     return;
   }
   SANITY_CHECK_INPUT(m_ , OutputDir)
+
+  std::vector<AIM::Reconstruction::PhaseType> phaseTypes(1, AIM::Reconstruction::UnknownPhaseType);
+  int count = phaseTypeList->count();
+  bool ok = false;
+  for (int i = 0; i < count; ++i)
+  {
+    QListWidgetItem* item = phaseTypeList->item(i);
+    QComboBox* cb = qobject_cast<QComboBox*> (phaseTypeList->itemWidget(item));
+    AIM::Reconstruction::PhaseType enPtValue = static_cast<AIM::Reconstruction::PhaseType>(cb->itemData(cb->currentIndex(), Qt::UserRole).toUInt(&ok));
+    if (enPtValue >= AIM::Reconstruction::UnknownPhaseType)
+    {
+      QString msg("The Phase Type for phase ");
+      msg.append(QString::number(i)).append(" is not set correctly. Please set the phase to Primary, Precipitate or Transformation.");
+      int ret = QMessageBox::critical(this, QString("Grain Generator"), msg, QMessageBox::Ok | QMessageBox::Default);
+      return;
+    }
+    phaseTypes.push_back(enPtValue);
+  }
+
+  ok = checkPhaseTypes();
+
   if (m_WorkerThread != NULL)
   {
     m_WorkerThread->wait(); // Wait until the thread is complete
@@ -437,6 +536,7 @@ void ReconstructionWidget::on_m_GoBtn_clicked()
 
   m_Reconstruction->setZStartIndex(m_ZStartIndex->value());
   m_Reconstruction->setZEndIndex(m_ZEndIndex->value() + 1);
+  m_Reconstruction->setPhaseTypes(phaseTypes);
 
   m_Reconstruction->setMergeColonies(m_MergeColonies->isChecked() );
   m_Reconstruction->setAlreadyFormed(m_AlreadyFormed->isChecked());
@@ -458,6 +558,8 @@ void ReconstructionWidget::on_m_GoBtn_clicked()
 
   m_Reconstruction->setOutputDirectory(m_OutputDir->text().toStdString());
   m_Reconstruction->setOutputFilePrefix(m_OutputFilePrefix->text().toStdString());
+  m_Reconstruction->setWriteBinaryFiles(m_BinaryVtkFiles->isChecked());
+
   m_Reconstruction->setWriteVisualizationFile(m_VisualizationVizFile->isChecked());
   m_Reconstruction->setWriteIPFFile(m_IPFVizFile->isChecked());
   m_Reconstruction->setWriteDisorientationFile(m_DisorientationVizFile->isChecked());
