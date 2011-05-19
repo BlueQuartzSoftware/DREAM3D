@@ -185,7 +185,7 @@ public:
     int readODFData(H5ReconStatsReader::Pointer h5io);
     int readMisorientationData(H5ReconStatsReader::Pointer h5io);
     int readMicroTextureData(H5ReconStatsReader::Pointer h5io);
-    void read_structure(const std::string & filename);
+
     int pack_grains(const std::string & filename, int numgrains);
     void generate_grain(int, int);
     void assign_eulers(int);
