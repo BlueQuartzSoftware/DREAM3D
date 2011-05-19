@@ -321,12 +321,12 @@ int GrainGeneratorFunc::readReconStatsData(H5ReconStatsReader::Pointer h5io)
 	  CHECK_STATS_READ_ERROR(err,  AIM::HDF5::Reconstruction, AIM::HDF5::Grain_Size_Distribution)
 	  avgdiam[phase] = double_data[0];
 	  sddiam[phase] = double_data[1];
-	  grainsizediststep[phase] = ((2*maxdiameter[i])-(mindiameter[i]/2.0))/20.0;
 	  grainsizedist[phase].resize(40);
 	  simgrainsizedist[phase].resize(40);
+	  grainsizediststep[phase] = ((2*maxdiameter[phase])-(mindiameter[phase]/2.0))/grainsizedist[phase].size();
 	  float root2pi = powf((2.0 * 3.1415926535897), 0.5);
 	  float input = 0;
-	  for (int j=0;j<40;j++)
+	  for (int j=0;j<grainsizedist[phase].size();j++)
 	  {
 		input = ((float(j)*grainsizediststep[phase])+(grainsizediststep[phase]/2.0))+(mindiameter[phase]/2.0);
 		grainsizedist[phase][j] = (grainsizediststep[phase]/(input*double_data[1]*root2pi))*exp(-((log(float(input))-double_data[0])*(log(float(input))-double_data[0]))/(2*double_data[1]*double_data[1]));
@@ -353,16 +353,16 @@ int GrainGeneratorFunc::readReconStatsData(H5ReconStatsReader::Pointer h5io)
 	  disType = h5io->getDistributionType(phase, AIM::HDF5::Grain_SizeVNeighbors_Distributions, dt);
 	  if(dt == AIM::Reconstruction::Power)
 	  {
-      float a, b, k;
-      for (size_t temp7 = 0; temp7 < nBins; temp7++)
-      {
-        a = neighborhood[phase][temp7][0];
-        b = neighborhood[phase][temp7][1];
-        k = neighborhood[phase][temp7][2];
-        neighborhood[phase][temp7][0] = a*powf(0,k)+b;
-        neighborhood[phase][temp7][1] = a*powf(1,k)+b;
-        neighborhood[phase][temp7][2] = a*powf(2,k)+b;
-      }
+	      float a, b, k;
+	      for (size_t temp7 = 0; temp7 < nBins; temp7++)
+	      {
+	        a = neighborhood[phase][temp7][0];
+	        b = neighborhood[phase][temp7][1];
+	        k = neighborhood[phase][temp7][2];
+		    neighborhood[phase][temp7][0] = a*powf(0,k)+b;
+			neighborhood[phase][temp7][1] = a*powf(1,k)+b;
+			neighborhood[phase][temp7][2] = a*powf(2,k)+b;
+		}
 	  }
 
 	  neighbordist[phase].resize(nBins);
@@ -1099,7 +1099,7 @@ float GrainGeneratorFunc::compare_3Ddistributions(std::vector<std::vector<std::v
 	{
 		for(int j=0;j<array1[i].size();j++)
 		{
-			for(int k=0;j<array1[i][j].size();j++)
+			for(int k=0;k<array1[i][j].size();k++)
 			{
 				bhattmoment = bhattmoment + (array1[i][j][k]*array2[i][j][k]);
 				mag1 = mag1 + (array1[i][j][k]*array1[i][j][k]);
@@ -1121,6 +1121,7 @@ float GrainGeneratorFunc::check_sizedisterror(int gadd, int gremove)
   for(std::vector<AIM::Reconstruction::CrystalStructure>::size_type iter = 1; iter < xtalSize; ++iter)
   {
 	  phase = iter;
+	  count = 0;
 	  for(int i=0;i<40;i++)
 	  {
 		simgrainsizedist[phase][i] = 0.0;
@@ -1268,11 +1269,11 @@ int  GrainGeneratorFunc::pack_grains(const std::string &filename, int numgrains)
       if (fillingerrorweight > 0) currentfillingerror = oldfillingerror + addcost;
       if (sizedisterrorweight > 0) currentsizedisterror = check_sizedisterror(random, -1000);
       if (neighborhooderrorweight > 0) currentneighborhooderror = check_neighborhooderror(random, -1000);
-      if (fillingerrorweight > 0) change1 = (currentfillingerror - oldfillingerror) / oldfillingerror;
+      if (fillingerrorweight > 0) change1 = (currentfillingerror - oldfillingerror);
       if (fillingerrorweight > 0 && oldfillingerror < 0) change1 = -change1;
-      if (sizedisterrorweight > 0) change2 = (currentsizedisterror - oldsizedisterror) / oldsizedisterror;
-      if (neighborhooderrorweight > 0) change3 = (currentneighborhooderror - oldneighborhooderror) / oldneighborhooderror;
-      if (fillingerrorweight * change1 + sizedisterrorweight * change2 + neighborhooderrorweight * change3 <= acceptableerror)
+      if (sizedisterrorweight > 0) change2 = (currentsizedisterror - oldsizedisterror);
+      if (neighborhooderrorweight > 0) change3 = (currentneighborhooderror - oldneighborhooderror);
+      if (fillingerrorweight * change1 + sizedisterrorweight * change2 + neighborhooderrorweight * change3 >= 0)
       {
         m_Grains[random]->active = 1;
         add_grain(random);
@@ -1291,14 +1292,14 @@ int  GrainGeneratorFunc::pack_grains(const std::string &filename, int numgrains)
       if (random == activegrainlist.size()) random = activegrainlist.size() - 1;
       random = activegrainlist[random];
       removecost = costcheck_remove(random);
-      if (fillingerrorweight > 0) currentfillingerror = oldfillingerror + removecost;
-      if (sizedisterrorweight > 0) currentsizedisterror = check_sizedisterror(-1000, random);
-      if (neighborhooderrorweight > 0) currentneighborhooderror = check_neighborhooderror(-1000, random);
-      if (fillingerrorweight > 0) change1 = (currentfillingerror - oldfillingerror) / oldfillingerror;
+      if (fillingerrorweight > 0) currentfillingerror = oldfillingerror + addcost;
+      if (sizedisterrorweight > 0) currentsizedisterror = check_sizedisterror(random, -1000);
+      if (neighborhooderrorweight > 0) currentneighborhooderror = check_neighborhooderror(random, -1000);
+      if (fillingerrorweight > 0) change1 = (currentfillingerror - oldfillingerror);
       if (fillingerrorweight > 0 && oldfillingerror < 0) change1 = -change1;
-      if (sizedisterrorweight > 0) change2 = (currentsizedisterror - oldsizedisterror) / oldsizedisterror;
-      if (neighborhooderrorweight > 0) change3 = (currentneighborhooderror - oldneighborhooderror) / oldneighborhooderror;
-      if (fillingerrorweight * change1 + sizedisterrorweight * change2 + neighborhooderrorweight * change3 <= acceptableerror)
+      if (sizedisterrorweight > 0) change2 = (currentsizedisterror - oldsizedisterror);
+      if (neighborhooderrorweight > 0) change3 = (currentneighborhooderror - oldneighborhooderror);
+      if (fillingerrorweight * change1 + sizedisterrorweight * change2 + neighborhooderrorweight * change3 >= 0)
       {
         m_Grains[random]->active = 0;
         remove_grain(random);
@@ -1326,14 +1327,14 @@ int  GrainGeneratorFunc::pack_grains(const std::string &filename, int numgrains)
       }
       addcost = costcheck_add(random);
       removecost = costcheck_remove(random1);
-      if (fillingerrorweight > 0) currentfillingerror = oldfillingerror + addcost + removecost;
-      if (sizedisterrorweight > 0) currentsizedisterror = check_sizedisterror(random, random1);
-      if (neighborhooderrorweight > 0) currentneighborhooderror = check_neighborhooderror(random, random1);
-      if (fillingerrorweight > 0) change1 = (currentfillingerror - oldfillingerror) / oldfillingerror;
+      if (fillingerrorweight > 0) currentfillingerror = oldfillingerror + addcost;
+      if (sizedisterrorweight > 0) currentsizedisterror = check_sizedisterror(random, -1000);
+      if (neighborhooderrorweight > 0) currentneighborhooderror = check_neighborhooderror(random, -1000);
+      if (fillingerrorweight > 0) change1 = (currentfillingerror - oldfillingerror);
       if (fillingerrorweight > 0 && oldfillingerror < 0) change1 = -change1;
-      if (sizedisterrorweight > 0) change2 = (currentsizedisterror - oldsizedisterror) / oldsizedisterror;
-      if (neighborhooderrorweight > 0) change3 = (currentneighborhooderror - oldneighborhooderror) / oldneighborhooderror;
-      if (fillingerrorweight * change1 + sizedisterrorweight * change2 + neighborhooderrorweight * change3 <= acceptableerror)
+      if (sizedisterrorweight > 0) change2 = (currentsizedisterror - oldsizedisterror);
+      if (neighborhooderrorweight > 0) change3 = (currentneighborhooderror - oldneighborhooderror);
+      if (fillingerrorweight * change1 + sizedisterrorweight * change2 + neighborhooderrorweight * change3 >= 0)
       {
         m_Grains[random]->active = 1;
         m_Grains[random1]->active = 0;
@@ -1369,14 +1370,14 @@ int  GrainGeneratorFunc::pack_grains(const std::string &filename, int numgrains)
       {
         addcost = costcheck_add(random);
         removecost = costcheck_remove(random1);
-        if (fillingerrorweight > 0) currentfillingerror = oldfillingerror + addcost + removecost;
-        if (sizedisterrorweight > 0) currentsizedisterror = check_sizedisterror(random, random1);
-        if (neighborhooderrorweight > 0) currentneighborhooderror = check_neighborhooderror(random, random1);
-        if (fillingerrorweight > 0) change1 = (currentfillingerror - oldfillingerror) / oldfillingerror;
-        if (fillingerrorweight > 0 && oldfillingerror < 0) change1 = -change1;
-        if (sizedisterrorweight > 0) change2 = (currentsizedisterror - oldsizedisterror) / oldsizedisterror;
-        if (neighborhooderrorweight > 0) change3 = (currentneighborhooderror - oldneighborhooderror) / oldneighborhooderror;
-        if (fillingerrorweight * change1 + sizedisterrorweight * change2 + neighborhooderrorweight * change3 <= acceptableerror)
+	    if (fillingerrorweight > 0) currentfillingerror = oldfillingerror + addcost;
+	    if (sizedisterrorweight > 0) currentsizedisterror = check_sizedisterror(random, -1000);
+	    if (neighborhooderrorweight > 0) currentneighborhooderror = check_neighborhooderror(random, -1000);
+	    if (fillingerrorweight > 0) change1 = (currentfillingerror - oldfillingerror);
+	    if (fillingerrorweight > 0 && oldfillingerror < 0) change1 = -change1;
+	    if (sizedisterrorweight > 0) change2 = (currentsizedisterror - oldsizedisterror);
+	    if (neighborhooderrorweight > 0) change3 = (currentneighborhooderror - oldneighborhooderror);
+	    if (fillingerrorweight * change1 + sizedisterrorweight * change2 + neighborhooderrorweight * change3 >= 0)
         {
           m_Grains[random]->active = 1;
           m_Grains[random1]->active = 0;
