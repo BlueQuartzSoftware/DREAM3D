@@ -933,108 +933,109 @@ float GrainGeneratorFunc::check_neighborhooderror(int gadd, int gremove)
   float dia;
   int nnum;
   int index;
-  int count = 0;
+  vector<int> count;
   int phase;
   size_t xtalSize = crystruct.size();
   for (std::vector<AIM::Reconstruction::CrystalStructure>::size_type iter = 1; iter < xtalSize; ++iter)
   {
-    phase = iter;
-    for (int i = 0; i < numdiameterbins[phase]; i++)
-    {
-      neighbordist[phase][i][0] = 0;
-      neighbordist[phase][i][1] = 0;
-      neighbordist[phase][i][2] = 0;
-    }
-    if (gadd > 0 && m_Grains[gadd]->phase == phase)
-    {
-      for (int i = 0; i < 3; i++)
-      {
-        for (size_t j = 0; j < m_Grains[gadd]->neighbordistfunclist[i].size(); j++)
-        {
-          index = m_Grains[gadd]->neighbordistfunclist[i][j];
-          m_Grains[index]->neighbordistfunc[i]++;
-        }
-      }
-    }
-    if (gremove > 0 && m_Grains[gremove]->phase == phase)
-    {
-      for (int i = 0; i < 3; i++)
-      {
-        for (size_t j = 0; j < m_Grains[gremove]->neighbordistfunclist[i].size(); j++)
-        {
-          index = m_Grains[gremove]->neighbordistfunclist[i][j];
-          m_Grains[index]->neighbordistfunc[i] = m_Grains[index]->neighbordistfunc[i] - 1;
-        }
-      }
-    }
-    for (size_t i = 1; i < activegrainlist.size(); i++)
-    {
-      nnum = 0;
-      index = activegrainlist[i];
-      if (index != gremove && m_Grains[index]->phase == phase)
-      {
-        for (int j = 0; j < 3; j++)
-        {
-          nnum = m_Grains[index]->neighbordistfunc[j];
-          dia = m_Grains[index]->equivdiameter;
-          if (dia > maxdiameter[phase]) dia = maxdiameter[phase];
-          if (dia < mindiameter[phase]) dia = mindiameter[phase];
-          dia = int((dia - mindiameter[phase]) / binstepsize[phase]);
-          if (nnum > 0)
-          {
-            neighbordist[phase][dia][j] = neighbordist[phase][dia][j] + nnum;
-          }
-        }
-        count++;
-      }
-    }
-    if (gadd > 0 && m_Grains[gadd]->phase == phase)
-    {
-      for (int j = 0; j < 3; j++)
-      {
-        nnum = m_Grains[index]->neighbordistfunc[j];
-        dia = m_Grains[index]->equivdiameter;
-        if (dia > maxdiameter[phase]) dia = maxdiameter[phase];
-        if (dia < mindiameter[phase]) dia = mindiameter[phase];
-        dia = int((dia - mindiameter[phase]) / binstepsize[phase]);
-        if (nnum > 0)
-        {
-          neighbordist[phase][dia][j] = neighbordist[phase][dia][j] + nnum;
-        }
-      }
-      count++;
-    }
-    for (int i = 0; i < numdiameterbins[phase]; i++)
-    {
-      for (int j = 0; j < 3; j++)
-      {
-        neighborerror = neighborerror + ((neighborhood[phase][i][j] - (neighbordist[phase][i][j] / float(count))) * (neighborhood[phase][i][j]
-            - (neighbordist[phase][i][j] / float(count))));
-      }
-    }
-    if (gadd > 0 && m_Grains[gadd]->phase == phase)
-    {
-      for (int i = 0; i < 3; i++)
-      {
-        for (size_t j = 0; j < m_Grains[gadd]->neighbordistfunclist[i].size(); j++)
-        {
-          index = m_Grains[gadd]->neighbordistfunclist[i][j];
-          m_Grains[index]->neighbordistfunc[i] = m_Grains[index]->neighbordistfunc[i] - 1;
-        }
-      }
-    }
-    if (gremove > 0 && m_Grains[gremove]->phase == phase)
-    {
-      for (int i = 0; i < 3; i++)
-      {
-        for (size_t j = 0; j < m_Grains[gremove]->neighbordistfunclist[i].size(); j++)
-        {
-          index = m_Grains[gremove]->neighbordistfunclist[i][j];
-          m_Grains[index]->neighbordistfunc[i]++;
-        }
-      }
-    }
+	  phase = iter;
+	  count.resize(numdiameterbins[phase],0);
+	  for(int i=0;i<numdiameterbins[phase];i++)
+	  {
+		neighbordist[phase][i][0] = 0;
+		neighbordist[phase][i][1] = 0;
+		neighbordist[phase][i][2] = 0;
+	  }
+	  if(gadd > 0 && m_Grains[gadd]->phase == phase)
+	  {
+		for(int i=0;i<3;i++)
+		{
+		  for(size_t j=0;j<m_Grains[gadd]->neighbordistfunclist[i].size();j++)
+		  {
+			  index = m_Grains[gadd]->neighbordistfunclist[i][j];
+			  m_Grains[index]->neighbordistfunc[i]++;
+		  }
+		}
+	  }
+	  if(gremove > 0 && m_Grains[gremove]->phase == phase)
+	  {
+		for(int i=0;i<3;i++)
+		{
+		  for(size_t j=0;j<m_Grains[gremove]->neighbordistfunclist[i].size();j++)
+		  {
+			  index = m_Grains[gremove]->neighbordistfunclist[i][j];
+			  m_Grains[index]->neighbordistfunc[i] = m_Grains[index]->neighbordistfunc[i]-1;
+		  }
+		}
+	  }
+	  for(size_t i=1;i<activegrainlist.size();i++)
+	  {
+		nnum=0;
+		index = activegrainlist[i];
+		if(index != gremove && m_Grains[index]->phase == phase)
+		{
+		  dia = m_Grains[index]->equivdiameter;
+		  if(dia > maxdiameter[phase]) dia = maxdiameter[phase];
+		  if(dia < mindiameter[phase]) dia = mindiameter[phase];
+		  dia = int((dia-mindiameter[phase])/binstepsize[phase]);
+		  for(int j=0;j<3;j++)
+		  {
+			nnum = m_Grains[index]->neighbordistfunc[j];
+			if(nnum > 0)
+			{
+			  neighbordist[phase][dia][j] = neighbordist[phase][dia][j]+nnum;
+			}
+		  }
+		  count[dia]++;
+		}
+	  }
+	  if(gadd > 0 && m_Grains[gadd]->phase == phase)
+	  {
+	    dia = m_Grains[index]->equivdiameter;
+	    if(dia > maxdiameter[phase]) dia = maxdiameter[phase];
+	    if(dia < mindiameter[phase]) dia = mindiameter[phase];
+	    dia = int((dia-mindiameter[phase])/binstepsize[phase]);
+		for(int j=0;j<3;j++)
+		{
+		  nnum = m_Grains[index]->neighbordistfunc[j];
+		  if(nnum > 0)
+		  {
+			neighbordist[phase][dia][j] = neighbordist[phase][dia][j]+nnum;
+		  }
+		}
+		count[dia]++;
+	  }
+	  for(int i=0;i<numdiameterbins[phase];i++)
+	  {
+		for(int j=0;j<3;j++)
+		{
+			neighbordist[phase][i][j] = neighbordist[phase][i][j]/double(count[i]);
+		}
+	  }
+	  if(gadd > 0 && m_Grains[gadd]->phase == phase)
+	  {
+		for(int i=0;i<3;i++)
+		{
+		  for(size_t j=0;j<m_Grains[gadd]->neighbordistfunclist[i].size();j++)
+		  {
+			  index = m_Grains[gadd]->neighbordistfunclist[i][j];
+			  m_Grains[index]->neighbordistfunc[i] = m_Grains[index]->neighbordistfunc[i]-1;
+		  }
+		}
+	  }
+	  if(gremove > 0 && m_Grains[gremove]->phase == phase)
+	  {
+		for(int i=0;i<3;i++)
+		{
+		  for(size_t j=0;j<m_Grains[gremove]->neighbordistfunclist[i].size();j++)
+		  {
+			  index = m_Grains[gremove]->neighbordistfunclist[i][j];
+			  m_Grains[index]->neighbordistfunc[i]++;
+		  }
+		}
+	  }
   }
+  neighborerror = compare_3Ddistributions(neighborhood, neighbordist);
   return neighborerror;
 }
 
@@ -1072,6 +1073,43 @@ float GrainGeneratorFunc::costcheck_add(size_t gnum)
   return addcost;
 }
 
+float GrainGeneratorFunc::compare_2Ddistributions(std::vector<std::vector<float> > array1, std::vector<std::vector<float> > array2)
+{
+	float bhattmoment = 0;
+	float mag1 = 0;
+	float mag2 = 0;
+	for(int i=0;i<array1.size();i++)
+	{
+		for(int j=0;j<array1[i].size();j++)
+		{
+			bhattmoment = bhattmoment + (array1[i][j]*array2[i][j]);
+			mag1 = mag1 + (array1[i][j]*array1[i][j]);
+			mag2 = mag2 + (array2[i][j]*array2[i][j]);
+		}
+	}
+	bhattmoment = bhattmoment/(mag1*mag2);
+  return bhattmoment;
+}
+float GrainGeneratorFunc::compare_3Ddistributions(std::vector<std::vector<std::vector<float> > > array1, std::vector<std::vector<std::vector<float> > > array2)
+{
+	float bhattmoment = 0;
+	float mag1 = 0;
+	float mag2 = 0;
+	for(int i=0;i<array1.size();i++)
+	{
+		for(int j=0;j<array1[i].size();j++)
+		{
+			for(int k=0;j<array1[i][j].size();j++)
+			{
+				bhattmoment = bhattmoment + (array1[i][j][k]*array2[i][j][k]);
+				mag1 = mag1 + (array1[i][j][k]*array1[i][j][k]);
+				mag2 = mag2 + (array2[i][j][k]*array2[i][j][k]);
+			}
+		}
+	}
+	bhattmoment = bhattmoment/(mag1*mag2);
+  return bhattmoment;
+}
 float GrainGeneratorFunc::check_sizedisterror(int gadd, int gremove)
 {
   float dia;
@@ -1113,11 +1151,8 @@ float GrainGeneratorFunc::check_sizedisterror(int gadd, int gremove)
 	  {
 		simgrainsizedist[phase][i] = simgrainsizedist[phase][i]/float(count);
 	  }
-	  for(int i=0;i<40;i++)
-	  {
-		  sizedisterror = sizedisterror + ((simgrainsizedist[phase][i]-grainsizedist[phase][i])*(simgrainsizedist[phase][i]-grainsizedist[phase][i]));
-	  }
   }
+  sizedisterror = compare_2Ddistributions(simgrainsizedist, grainsizedist);
   return sizedisterror;
 }
 
