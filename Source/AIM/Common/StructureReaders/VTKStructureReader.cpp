@@ -134,6 +134,7 @@ int VTKStructureReader::readStructure(GrainGeneratorFunc* m)
           {
             MXA::Endian::FromBigToSystem::convert<int>(ids[i]);
             m->voxels[index].grainname = ids[i];
+            m->voxels[index].surfacevoxel = 1;
 //            m->m_Grains[0]->surfacegrain = 0;
 //            if( x == 0 || x == (m->xpoints-1)
 //                || y == 0 || y == (m->ypoints-1)
