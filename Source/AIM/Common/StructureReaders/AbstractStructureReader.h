@@ -46,7 +46,13 @@ class AbstractStructureReader
     MXA_SHARED_POINTERS(AbstractStructureReader)
 
     virtual ~AbstractStructureReader() {};
-
+/**
+ * @brief Pure virtual method that needs to be implemented by subclasses. This
+ * is the main entry point to read the grain structure from the file or other
+ * data sink.
+ * @param r The GrainGeneratorFunc pointer
+ * @return Error. Negative is Error. Zero or Positive is Success.
+ */
     virtual int readStructure(GrainGeneratorFunc* r) = 0;
 
   protected:
