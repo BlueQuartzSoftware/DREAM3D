@@ -48,7 +48,7 @@
 #include "AIM/Common/OrientationOps/HexagonalOps.h"
 #include "AIM/Common/OrientationOps/OrthoRhombicOps.h"
 
-typedef boost::shared_array<float>    FloatArray;
+
 
 
 /**
@@ -61,40 +61,57 @@ typedef boost::shared_array<float>    FloatArray;
 class AIMCOMMON_EXPORT GrainGeneratorFunc
 {
 public:
-    MXA_SHARED_POINTERS(GrainGeneratorFunc)MXA_STATIC_NEW_MACRO(GrainGeneratorFunc)virtual ~GrainGeneratorFunc();
+    MXA_SHARED_POINTERS(GrainGeneratorFunc)
+    MXA_STATIC_NEW_MACRO(GrainGeneratorFunc)
 
+    virtual ~GrainGeneratorFunc();
+
+    typedef boost::shared_array<float>    SharedFloatArray;
+    typedef boost::shared_array<int>      SharedIntArray;
+
+    float sizex;
+    float sizey;
+    float sizez;
 
     float resx;
     float resy;
     float resz;
-    float sizex;
-    float sizey;
-    float sizez;
+
+    int xpoints;
+    int ypoints;
+    int zpoints;
+    int totalpoints;
+
     float misorientationtolerance;
+
     std::vector<AIM::Reconstruction::CrystalStructure> crystruct;
     std::vector<AIM::Reconstruction::PhaseType>        phaseType;
     std::vector<float>                                 pptFractions;
 
+    boost::shared_array<GrainGeneratorVoxel> voxels;
 
-    std::vector<FloatArray> actualodf;
+    std::vector<Grain::Pointer> m_Grains;
 
-    std::vector<FloatArray> simodf;
-    std::vector<FloatArray> axisodf;
-    GrainGeneratorVoxel* voxels;
-    std::vector<FloatArray> actualmdf;
-    std::vector<FloatArray> simmdf;
-    std::vector<FloatArray> actualmicrotex;
-    std::vector<FloatArray> simmicrotex;
+
+    std::vector<SharedFloatArray> actualodf;
+    std::vector<SharedFloatArray> simodf;
+    std::vector<SharedFloatArray> axisodf;
+
+
+    std::vector<SharedFloatArray> actualmdf;
+    std::vector<SharedFloatArray> simmdf;
+    std::vector<SharedFloatArray> actualmicrotex;
+    std::vector<SharedFloatArray> simmicrotex;
 
 //    int* graincounts;
-    std::vector<FloatArray> graincenters;
-    std::vector<FloatArray> grainmoments;
+    std::vector<SharedFloatArray> graincenters;
+    std::vector<SharedFloatArray> grainmoments;
 
 //    Grain *precipitates;
     std::vector<Grain::Pointer> precipitates;
 //    int* psizes;
 
-    std::vector<Grain::Pointer> m_Grains;
+
 
     std::vector<int> activegrainlist;
     std::vector<int> precipitateorder;
@@ -136,10 +153,7 @@ public:
     std::vector<int> numdiameterbins;
     int worstgrain;
     std::vector<float> totalaxes;
-    int32_t xpoints;
-    int32_t ypoints;
-    int32_t zpoints;
-    int totalpoints;
+
     float totalvol;
     float totalprecipvol;
     int numneighbins;

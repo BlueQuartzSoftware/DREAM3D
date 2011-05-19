@@ -52,6 +52,8 @@ class AIMCOMMON_EXPORT GrainGeneratorVTKWriter
 
     virtual ~GrainGeneratorVTKWriter();
 
+    MXA_INSTANCE_PROPERTY(bool, WriteBinaryFiles)
+
     /**
      * @brief Writes a VTK visualization file
      * @param Output file name
