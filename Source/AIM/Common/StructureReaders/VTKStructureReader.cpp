@@ -61,11 +61,10 @@ int VTKStructureReader::readStructure(GrainGeneratorFunc* m)
   getScaling(m->resx, m->resy, m->resz);
   m->totalpoints = m->xpoints * m->ypoints * m->zpoints;
   m->totalvol = float(m->totalpoints)*m->resx*m->resy*m->resz;
-
-  // Make sure everthing is initialized correctly
-  m->initialize2();
-
-
+  m->sizex = m->xpoints * m->resx;
+  m->sizey = m->ypoints * m->resy;
+  m->sizez = m->zpoints * m->resz;
+  m->voxels.reset(new GrainGeneratorVoxel[m->totalpoints]);
 
   std::string filename = getInputFileName();
   std::ifstream instream;
@@ -136,27 +135,22 @@ int VTKStructureReader::readStructure(GrainGeneratorFunc* m)
             MXA::Endian::FromBigToSystem::convert<int>(ids[i]);
             m->voxels[index].grainname = ids[i];
             grainIdMap[ids[i]]++;
-//
-//            m->m_Grains[0]->surfacegrain = 0;
-//            if( x == 0 || x == (m->xpoints-1)
-//                || y == 0 || y == (m->ypoints-1)
-//                || z == 0 || z == (m->zpoints-1))
-//            {
-//              m->m_Grains[0]->surfacegrain = 1;
-//            }
             ++i;
             ++index;
           }
         }
       }
       // We now have our list of grains so allocate that many grains
-      m->m_Grains.resize(grainIdMap.size());
+      // Currently we assume a dense array starting at index 1. Index Zero is
+      // NOT used, at least internally
+      m->m_Grains.resize(grainIdMap.size() + 1);
       size_t g = 0;
       for (std::map<int, int>::iterator iter = grainIdMap.begin(); iter != grainIdMap.end(); ++iter )
       {
         //int gid = (*iter).first;
         m->m_Grains[g] = Grain::New();
         m->m_Grains[g]->numvoxels = (*iter).second;
+        m->m_Grains[g]->active = 1;
         ++g;
       }
       needGrainIds = false;
