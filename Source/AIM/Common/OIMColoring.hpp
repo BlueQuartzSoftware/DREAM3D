@@ -229,14 +229,25 @@ class OIMColoring
       rgb[2] = static_cast<unsigned char> (blue);
     }
 
+
+
+    template <typename K>
+    void static CalculateHexIPFColor(float* q1, K* refDir, unsigned char* rgb)
+    {
+      OIMColoring::CalculateHexIPFColor(q1, refDir[0], refDir[1], refDir[2], rgb);
+    }
+
+
+
 /**
  * @brief Calculates the IPF Color in RGB for a Hexagonal Crystal Structure.
  * @param q1 Quaternion to calculate the RGB value for
  * @param rgb Output - A pointer to store the RGB value into a unsigned char[3] array.
  */
     template <typename K>
-    void static CalculateHexIPFColor(float q1[5], K refDir0, K refDir1, K refDir2,
-                              unsigned char* rgb)
+    void static CalculateHexIPFColor(float q1[5],
+                                     K refDir0, K refDir1, K refDir2,
+                                     unsigned char* rgb)
     {
       float qc[5];
       float g[3][3];
