@@ -123,6 +123,7 @@ int VTKStructureReader::readStructure(GrainGeneratorFunc* m)
 
     if (m_GrainIdScalarName.compare(scalarName) == 0)
     {
+      std::map<int, int> grainIdMap;
       for (int z = 0; z < m->zpoints; ++z)
       {
         // Read an entire plane of data
@@ -134,7 +135,8 @@ int VTKStructureReader::readStructure(GrainGeneratorFunc* m)
           {
             MXA::Endian::FromBigToSystem::convert<int>(ids[i]);
             m->voxels[index].grainname = ids[i];
-            m->voxels[index].surfacevoxel = 1;
+            grainIdMap[ids[i]]++;
+//
 //            m->m_Grains[0]->surfacegrain = 0;
 //            if( x == 0 || x == (m->xpoints-1)
 //                || y == 0 || y == (m->ypoints-1)
@@ -146,6 +148,16 @@ int VTKStructureReader::readStructure(GrainGeneratorFunc* m)
             ++index;
           }
         }
+      }
+      // We now have our list of grains so allocate that many grains
+      m->m_Grains.resize(grainIdMap.size());
+      size_t g = 0;
+      for (std::map<int, int>::iterator iter = grainIdMap.begin(); iter != grainIdMap.end(); ++iter )
+      {
+        //int gid = (*iter).first;
+        m->m_Grains[g] = Grain::New();
+        m->m_Grains[g]->numvoxels = (*iter).second;
+        ++g;
       }
       needGrainIds = false;
     }

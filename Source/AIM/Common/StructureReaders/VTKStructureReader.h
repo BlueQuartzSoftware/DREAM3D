@@ -40,7 +40,47 @@
 
 class GrainGeneratorFunc;
 
+/**
+ * @class VTKStructureReader VTKStructureReader.h AIM/Common/StructureReaders/VTKStructureReader.h
+ * @brief This class inherits both from VTKFileReader and AbstractStructureReader
+ * and provides the necessary methods to read an existing grain structure from a
+ * file on disk. The layout of the VTK legacy file is very strict and must match
+ * one of the following forms:
+ *
+ @code
+   1: # vtk DataFile Version 2.0
+   2: NRL TiBeta Stack
+   3: BINARY
+   4: DATASET STRUCTURED_POINTS
+   5: DIMENSIONS 1670 770 201
+   6: ORIGIN 0.00 0.00 0.00
+   7: SPACING 0.665 0.665 1.48
+   8: POINT_DATA 258465900
+   9:
+   10: SCALARS GrainID int 1
+   11: LOOKUP_TABLE default
 
+   OR
+
+   1: # vtk DataFile Version 2.0
+   2: data set from FFT2dx_GB
+   3: ASCII
+   4: DATASET STRUCTURED_POINTS
+   5: DIMENSIONS 189 201 100
+   6: ORIGIN 0.0 0.0 0.0
+   7: SPACING 0.25 0.25 0.25
+   8: POINT_DATA 3798900
+   9:
+   10: SCALARS GrainID int 1
+   11: LOOKUP_TABLE default
+ @endcode
+  In addition it must also have 2 scalar arrays: <b>GrainID</b and <b>PhaseId</b>
+  which BOTH must be of the <b>int</b> type.
+ *
+ * @author Michael A. Jackson for BlueQuartz Software
+ * @date May 19, 2011
+ * @version 1.0
+ */
 class AIMCOMMON_EXPORT VTKStructureReader : public VTKFileReader, public AbstractStructureReader
 {
   public:
