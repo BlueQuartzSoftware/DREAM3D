@@ -133,7 +133,7 @@ int VTKStructureReader::readStructure(GrainGeneratorFunc* m)
           for (int x = 0; x < m->xpoints; ++x)
           {
             MXA::Endian::FromBigToSystem::convert<int>(ids[i]);
-            m->voxels[index].grainname = ids[i];
+            m->voxels[index].grain_index = ids[i];
             grainIdMap[ids[i]]++;
             ++i;
             ++index;

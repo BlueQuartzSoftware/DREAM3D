@@ -345,8 +345,8 @@ int ReconstructionVTKWriter::writeDownSampledVizFile(ReconstructionFunc* r, cons
         {
           fprintf(f, "\n");
         }
-        fprintf(f, "%d ", r->voxels[index].grainname);
-        gnames[r->voxels[index].grainname]++;
+        fprintf(f, "%d ", r->voxels[index].grain_index);
+        gnames[r->voxels[index].grain_index]++;
         counter++;
       }
     }

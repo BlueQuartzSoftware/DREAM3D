@@ -35,7 +35,7 @@
 //
 // -----------------------------------------------------------------------------
 GrainGeneratorVoxel::GrainGeneratorVoxel() :
-grainname(0),
+grain_index(0),
 ellipfunc(0.0),
 alreadychecked(0),
 //euler1(-1.0),
@@ -75,7 +75,7 @@ void GrainGeneratorVoxel::deepCopy(GrainGeneratorVoxel* graingeneratorvoxel)
 {
   if (graingeneratorvoxel == this) { return; } // The pointers are the same just return
 
-   grainname = graingeneratorvoxel->grainname;
+   grain_index = graingeneratorvoxel->grain_index;
    ellipfunc = graingeneratorvoxel->ellipfunc;
    alreadychecked = graingeneratorvoxel->alreadychecked;
    COPY_ARRAY_3(nearestneighbor, graingeneratorvoxel);
