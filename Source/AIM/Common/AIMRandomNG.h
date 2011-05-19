@@ -50,4 +50,28 @@ class AIMCOMMON_EXPORT  AIMRandomNG
     void operator=(const AIMRandomNG&); // Operator '=' Not Implemented
 };
 
+#if CMP_WORDS_BIGENDIAN
+#define AIMRNG_OFFSET 1
+#else
+#define AIMRNG_OFFSET 0
+#endif
+
+/* Get a seed value based off the system clock. The issue is that this will
+  * be a 64 bit unsigned integer where the high 32 bits will basically not
+  * change where as the lower 32 bits will. The following lines of code will
+  * pull off the low 32 bits from the number. This operation depends on most
+  * significant byte ordering which is different between Big Endian and
+  * Little Endian machines. For Big endian machines the Most Significant Byte
+  * (MSB) is the first 32 bits. For Little Endian machines the MSB is the
+  * second 32 bits.
+  */
+
+#define AIM_RANDOMNG_NEW()\
+AIMRandomNG rg;\
+{\
+unsigned long long int seed = MXA::getMilliSeconds();\
+unsigned int* seedPtr = reinterpret_cast<unsigned int*> (&seed);\
+rg.RandomInit(seedPtr[AIMRNG_OFFSET]);\
+}
+
 #endif /* AIMRANDOMNG_H_ */

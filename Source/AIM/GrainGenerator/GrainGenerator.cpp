@@ -126,6 +126,7 @@ m_NeighborhoodErrorWeight(0.0),
 m_SizeDistErrorWeight(0.0),
 m_AlreadyFormed(false),
 m_Precipitates(0),
+m_WriteBinaryFiles(true),
 m_WriteVisualizationFile(false),
 m_WriteIPFFile(false),
 m_WriteHDF5GrainFile(false),
@@ -169,13 +170,8 @@ void GrainGenerator::compute()
 
   START_CLOCK()
 
-  GrainGeneratorVTKWriter::Pointer vtkWriter = GrainGeneratorVTKWriter::New();
-  H5GrainWriter::Pointer h5GrainWriter = H5GrainWriter::New();
-
   H5ReconStatsWriter::Pointer h5io = H5ReconStatsWriter::New(hdf5ResultsFile);
   m = GrainGeneratorFunc::New();
-
-
 
   if (m_AlreadyFormed == false)
   {
@@ -187,9 +183,6 @@ void GrainGenerator::compute()
     m->fillingerrorweight = m_FillingErrorWeight;
     m->neighborhooderrorweight = m_NeighborhoodErrorWeight;
     m->sizedisterrorweight = m_SizeDistErrorWeight;
-#ifndef _WIN32
-#warning Precipitates are not dealt with currently
-#endif
 
     progressMessage(AIM_STRING("Loading Stats Data"), 5);
     err = m->readReconStatsData(h5reader);
@@ -233,10 +226,12 @@ void GrainGenerator::compute()
   m->find_neighbors();
   CHECK_FOR_CANCELED(GrainGeneratorFunc, find_neighbors)
 
-  progressMessage(AIM_STRING("Placing Precipitates"), 46);
-  m->numgrains = m->place_precipitates(m->numgrains);
-  CHECK_FOR_CANCELED(GrainGeneratorFunc, place_precipitates)
-
+  if (m_AlreadyFormed == false)
+  {
+    progressMessage(AIM_STRING("Placing Precipitates"), 46);
+    m->numgrains = m->place_precipitates(m->numgrains);
+    CHECK_FOR_CANCELED(GrainGeneratorFunc, place_precipitates)
+  }
   progressMessage(AIM_STRING("Loading ODF Data"), 48);
   err = m->readODFData(h5reader);
   CHECK_FOR_CANCELED(GrainGeneratorFunc, readODFData)
@@ -252,7 +247,6 @@ void GrainGenerator::compute()
   progressMessage(AIM_STRING("Assigning Eulers"), 60);
   m->assign_eulers(m->numgrains);
   CHECK_FOR_CANCELED(GrainGeneratorFunc, assign_eulers)
-
 
   progressMessage(AIM_STRING("Measuring Misorientations"), 65);
   m->measure_misorientations();
@@ -292,6 +286,8 @@ void GrainGenerator::compute()
   CHECK_FOR_CANCELED(GrainGeneratorFunc, write_eulerangles)
 
   /** ********** This section writes the VTK files for visualization *** */
+  GrainGeneratorVTKWriter::Pointer vtkWriter = GrainGeneratorVTKWriter::New();
+  vtkWriter->setWriteBinaryFiles(m_WriteBinaryFiles);
 
   progressMessage(AIM_STRING("Writing VTK Visualization File"), 93);
   if (m_WriteVisualizationFile) {vtkWriter->writeVisualizationFile(m.get(), reconVisFile);}
@@ -304,6 +300,7 @@ void GrainGenerator::compute()
 
 
   progressMessage(AIM_STRING("Writing Out HDF5 Grain File. This may take a few minutes to complete."), 99);
+  H5GrainWriter::Pointer h5GrainWriter = H5GrainWriter::New();
   if (m_WriteHDF5GrainFile) { h5GrainWriter->writeHDF5GrainsFile(m.get(), hdf5GrainFile); }
   CHECK_FOR_CANCELED(GrainGeneratorFunc, writeHDF5GrainsFile)
   progressMessage(AIM_STRING("Generation Completed"), 100);
