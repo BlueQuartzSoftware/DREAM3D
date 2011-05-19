@@ -36,6 +36,7 @@
 #include "AIM/Common/OIMColoring.hpp"
 #include "AIM/Common/ReconstructionFunc.h"
 #include "AIM/Common/GrainGeneratorFunc.h"
+#include "AIM/Common/VTKWriterMacros.h"
 
 
 #define H5GW_IPF_COLOR()\

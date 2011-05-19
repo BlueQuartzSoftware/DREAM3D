@@ -35,6 +35,8 @@
 #include "MXA/Utilities/MXADir.h"
 
 #include "AIM/Common/HDF5/H5ReconStatsReader.h"
+#include "AIM/Common/StructureReaders/AbstractStructureReader.h"
+#include "AIM/Common/StructureReaders/VTKStructureReader.h"
 #include "AIM/Common/GrainGeneratorVTKWriter.h"
 #include "AIM/Common/HDF5/H5GrainWriter.h"
 
@@ -209,19 +211,20 @@ void GrainGenerator::compute()
     CHECK_FOR_CANCELED(GrainGeneratorFunc, adjust_boundaries)
 
   }
-
-#if 0
-  if (m_AlreadyFormed == true)
+  else if (m_AlreadyFormed == true)
   {
-    m->initialize(m_NumGrains, m_ShapeClass, m_XResolution, m_YResolution, m_ZResolution,
-                  m_FillingErrorWeight, m_NeighborhoodErrorWeight, m_SizeDistErrorWeight,
-                  m_Precipitates, m_FractionPrecipitates, xtals);
-
-    CHECK_FOR_CANCELED(GrainGeneratorFunc)
     progressMessage(AIM_STRING("Reading Structure"), 40);
-    m->read_structure(visFile);
+    VTKStructureReader::Pointer reader = VTKStructureReader::New();
+    reader->setInputFileName(m_StructureFile);
+    reader->setGrainIdScalarName(AIM::Reconstruction::GrainIdScalarName);
+    reader->setPhaseIdScalarName(AIM::Reconstruction::PhaseIdScalarName);
+    err = reader->readStructure(m.get());
+    if (err < 0) { m_Cancel = true; }
+    CHECK_FOR_CANCELED(GrainGeneratorFunc, reading_structure)
+
+    //FIXME: There is more to do here would be my guess. Allocating and assigning voxels to grains is one
   }
-#endif
+
   progressMessage(AIM_STRING("Finding Neighbors"), 44);
   m->find_neighbors();
   CHECK_FOR_CANCELED(GrainGeneratorFunc, find_neighbors)

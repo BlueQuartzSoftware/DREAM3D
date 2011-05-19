@@ -179,6 +179,32 @@ static Pointer New args \
     MXA_SET_2DVECTOR_PROPERTY(type, prpty, m_##prpty)\
     MXA_GET_2DVECTOR_PROPERTY(type, prpty, m_##prpty)
 
+
+#define MXA_SET_VEC3_PROPERTY(type, prpty, varname)\
+  void set##prpty(type value[3]) {\
+      varname[0] = value[0]; varname[1] = value[1]; varname[2] = value[2]; }\
+  void set##prpty(type value_0, type value_1, type value_2) {\
+      varname[0] = value_0; varname[1] = value_1; varname[2] = value_2; }
+
+#define MXA_GET_VEC3_PROPERTY(type, prpty, varname)\
+  void get##prpty(type value[3]) {\
+      value[0] = varname[0]; value[1] = varname[1]; value[2] = varname[2]; }\
+  void get##prpty(type &value_0, type &value_1, type &value_2) {\
+      value_0 = varname[0]; value_1 = varname[1]; value_2 = varname[2]; }
+
+
+#define MXA_INSTANCE_VEC3_PROPERTY(type, prpty)\
+  private:\
+    type   m_##prpty[3];\
+  public:\
+    MXA_SET_VEC3_PROPERTY(type, prpty, m_##prpty)\
+    MXA_GET_VEC3_PROPERTY(type, prpty, m_##prpty)
+
+
+
+
+
+
 /**
 * @brief Creates a "setter" method to set the property.
 */
