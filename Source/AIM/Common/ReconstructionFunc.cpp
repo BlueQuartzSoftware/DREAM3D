@@ -937,9 +937,9 @@ void ReconstructionFunc::form_grains()
   size_t initialVoxelsListSize = 1000;
   size_t initialMergeListSize = 10;
   int vid;
-  std::vector<int > voxelslist(initialVoxelsListSize, -1);
-  std::vector<int >* vlist;
-  std::vector<int > mergelist(initialMergeListSize, -1);
+  std::vector<int> voxelslist(initialVoxelsListSize, -1);
+  std::vector<int>* vlist;
+  std::vector<int> mergelist(initialMergeListSize, -1);
   int neighbors[6];
   neighbors[0] = -(xpoints * ypoints);
   neighbors[1] = -xpoints;
@@ -954,12 +954,8 @@ void ReconstructionFunc::form_grains()
 
 
   // Copy all the grain names into a densly packed array
-  IntArray gnames(new int[totalpoints]);
-//  IntArrayType::Pointer grainNames = IntArrayType::CreateArray(totalpoints);
-//  int* gnames = grainNames->getPointer(0);
-  FloatArray iqs(new float[totalpoints]);
-//  DoubleArrayType::Pointer m_IQs = DoubleArrayType::CreateArray(totalpoints);
-//  float* iqs = m_IQs->getPointer(0);
+  SharedIntArray gnames(new int[totalpoints]);
+  SharedFloatArray iqs(new float[totalpoints]);
   for (int i = 0; i < totalpoints; ++i)
   {
     gnames[i] = voxels[i].grainname;
@@ -967,19 +963,11 @@ void ReconstructionFunc::form_grains()
   }
 
   // Create initial set of grain average quaternions
-
-  FloatArrayType::Pointer m_grainQuats = FloatArrayType::CreateArray(1000*5);
-  m_grainQuats->initializeWithZeros();
-  float* grainquats = m_grainQuats->getPointer(0);
-
-  IntArrayType::Pointer m_grainPhases = IntArrayType::CreateArray(1000*5);
-  int* gphases = m_grainPhases->getPointer(0);
-
-  for(int i=0;i<1000*5;i++)
-  {
-	  grainquats[i] = 0.0;
-	  gphases[i] = 0;
-  }
+  size_t grainSize = 1000;
+  std::vector<float> m_grainQuats(grainSize*5, 0.0);
+  std::vector<int>   m_grainPhases(grainSize, 0);
+  float* grainquats = &(m_grainQuats.front());
+  int* gphases = &(m_grainPhases.front());
 
   // Burn volume with tight orientation tolerance to simulate simultaneous growth/aglomeration
   while (noseeds == 0)
@@ -1086,21 +1074,21 @@ void ReconstructionFunc::form_grains()
           m_Grains[g] = Grain::New();
         }
       }
-      if (graincount >= m_grainQuats->getNumberOfElements() / 5)
+      if (graincount >= grainSize)
       {
         // This will allocate a new array and copy all the old values to the new array
-        m_grainQuats->resize((graincount + 100) * 5);
-        grainquats = m_grainQuats->getPointer(0);
-        m_grainPhases->resize((graincount + 100));
-        gphases = m_grainPhases->getPointer(0);
-        for (size_t i = graincount; i < graincount + 100; i++)
-        {
-          gphases[i] = 0;
-          for (size_t j = 0; j < 5; j++)
-          {
-            grainquats[i * 5 + j] = 0.0;
-          }
-        }
+        m_grainQuats.resize((graincount + 100) * 5, 0.0);
+        grainquats = &(m_grainQuats.front());
+        m_grainPhases.resize((graincount + 100), 0);
+        gphases = &(m_grainPhases.front());
+//        for (size_t i = graincount; i < graincount + 100; i++)
+//        {
+//          gphases[i] = 0;
+//          for (size_t j = 0; j < 5; j++)
+//          {
+//            grainquats[i * 5 + j] = 0.0;
+//          }
+//        }
       }
       voxelslist.clear();
       voxelslist.resize(initialVoxelsListSize, -1);
@@ -1108,10 +1096,10 @@ void ReconstructionFunc::form_grains()
   }
 
 
-  IntArrayType::Pointer mergedgrainNames = IntArrayType::CreateArray(graincount);
-  int* mergedgnames = mergedgrainNames->getPointer(0);
-  IntArrayType::Pointer newgrainNames = IntArrayType::CreateArray(graincount);
-  int* newgnames = newgrainNames->getPointer(0);
+  SharedIntArray mergedgrainNames(new int[graincount]);
+  int* mergedgnames = mergedgrainNames.get();
+  SharedIntArray newgrainNames(new int[graincount]);
+  int* newgnames = newgrainNames.get();
 
   for(size_t i=0;i<graincount;i++)
   {
@@ -1227,7 +1215,7 @@ void ReconstructionFunc::form_grains()
   {
     m_Grains[g] = Grain::New();
   }
-  m_grainQuats = AIMArray<float >::NullPointer(); // Clean up the array to release some memory
+ // m_grainQuats = AIMArray<float >::NullPointer(); // Clean up the array to release some memory
 
   assign_badpoints();
 }
@@ -1250,9 +1238,11 @@ void ReconstructionFunc::assign_badpoints()
   neighbors[4] = xpoints;
   neighbors[5] = xpoints * ypoints;
 
+  std::vector<int> gNamesVec(totalpoints);
+  std::vector<int> gNeighsVec(totalpoints);
+  int* gnames = &(gNamesVec.front());
+  int* gneighs = &(gNeighsVec.front());
 
-  IntArray gnames (new int[totalpoints]);
-  IntArray gneighs (new int[totalpoints]);
 
   for (int i = 0; i < totalpoints; ++i)
   {
@@ -1714,9 +1704,17 @@ int ReconstructionFunc::remove_smallgrains(size_t numgrains)
 
 void ReconstructionFunc::find_grain_and_kernel_misorientations()
 {
-  IntArray gnames(new int[totalpoints]);
-  IntArray unassigned(new int[totalpoints]);
-  FloatArray gam(new float[totalpoints]);
+
+  std::vector<int> gNamesVec(totalpoints);
+  std::vector<int> unAssignedVec(totalpoints);
+  std::vector<float> gamVec(totalpoints);
+  int* gnames = &(gNamesVec.front());
+  int* unassigned = &(unAssignedVec.front());
+  float* gam = &(gamVec.front());
+
+//  IntArray gnames(new int[totalpoints]);
+//  IntArray unassigned(new int[totalpoints]);
+//  FloatArray gam(new float[totalpoints]);
 
   float** avgmiso = new float *[m_Grains.size()];
   for (size_t i = 0; i < m_Grains.size(); i++)
