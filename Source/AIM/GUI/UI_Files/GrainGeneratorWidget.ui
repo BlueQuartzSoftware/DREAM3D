@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>676</width>
-    <height>629</height>
+    <height>632</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -355,6 +355,19 @@
          <widget class="QPushButton" name="m_OutputDirBtn">
           <property name="text">
            <string>Select</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="2">
+         <widget class="QCheckBox" name="m_BinaryVtkFiles">
+          <property name="enabled">
+           <bool>true</bool>
+          </property>
+          <property name="text">
+           <string>Write Binary VTK Files</string>
+          </property>
+          <property name="checked">
+           <bool>true</bool>
           </property>
          </widget>
         </item>

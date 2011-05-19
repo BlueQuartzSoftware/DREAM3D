@@ -54,7 +54,10 @@ class AIMCOMMON_EXPORT ReconstructionVTKWriter
     MXA_STATIC_NEW_MACRO(ReconstructionVTKWriter)
     MXA_TYPE_MACRO(ReconstructionVTKWriter)
 
+    virtual ~ReconstructionVTKWriter();
+
     MXA_INSTANCE_PROPERTY(bool, WriteBinaryFiles)
+
       /**
        * @brief Writes a VTK visualization file
        * @param Output file name
@@ -99,7 +102,7 @@ class AIMCOMMON_EXPORT ReconstructionVTKWriter
         */
       int writeDownSampledVizFile(ReconstructionFunc* r, const std::string &file);
 
-    virtual ~ReconstructionVTKWriter();
+
 
   protected:
     ReconstructionVTKWriter();

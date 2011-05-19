@@ -52,16 +52,7 @@ using namespace std;
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-GrainGeneratorFunc::GrainGeneratorFunc() :
-actualodf(NULL),
-simodf(NULL),
-axisodf(NULL),
-voxels(NULL),
-actualmdf(NULL),
-simmdf(NULL),
-actualmicrotex(NULL),
-simmicrotex(NULL),
-m_Grains(NULL)
+GrainGeneratorFunc::GrainGeneratorFunc()
 {
   m_HexOps = HexagonalOps::New();
   m_OrientatioOps.push_back(m_HexOps.get());
@@ -69,6 +60,8 @@ m_Grains(NULL)
   m_OrientatioOps.push_back(m_CubicOps.get());
   m_OrthoOps = OrthoRhombicOps::New();
   m_OrientatioOps.push_back(m_OrthoOps.get());
+
+  voxels.reset(NULL);
 
   // Just stuff to quiet the compiler
   float a = SinOfHalf;
@@ -141,25 +134,25 @@ void GrainGeneratorFunc::initializeArrays(std::vector<AIM::Reconstruction::Cryst
     if(crystruct[i] == AIM::Reconstruction::Cubic) nElements = 18*18*18;
 
     float initValue = 1.0/(float)(nElements);
-    actualodf[i] = FloatArray(new float [nElements]);
+    actualodf[i] = SharedFloatArray(new float [nElements]);
     GG_INIT_DOUBLE_ARRAY(actualodf[i], initValue, nElements);
 
-    simodf[i] = FloatArray(new float [nElements]);
+    simodf[i] = SharedFloatArray(new float [nElements]);
     GG_INIT_DOUBLE_ARRAY(simodf[i], 0.0, nElements);
-    actualmdf[i] = FloatArray(new float [nElements]);
+    actualmdf[i] = SharedFloatArray(new float [nElements]);
     GG_INIT_DOUBLE_ARRAY(actualmdf[i], initValue, nElements);
-    simmdf[i] = FloatArray(new float [nElements]);
+    simmdf[i] = SharedFloatArray(new float [nElements]);
     GG_INIT_DOUBLE_ARRAY(simmdf[i], 0.0, nElements);
 
     nElements = 36*36*36;
     initValue = (1.0/float(nElements));
-    axisodf[i] = FloatArray(new float [nElements]);
+    axisodf[i] = SharedFloatArray(new float [nElements]);
     GG_INIT_DOUBLE_ARRAY(axisodf[i], initValue, nElements);
     nElements = 10;
     initValue = (1.0/float(nElements));
-    actualmicrotex[i] = FloatArray(new float [nElements]);
+    actualmicrotex[i] = SharedFloatArray(new float [nElements]);
     GG_INIT_DOUBLE_ARRAY(actualmicrotex[i], initValue, nElements);
-    simmicrotex[i] = FloatArray(new float [nElements]);
+    simmicrotex[i] = SharedFloatArray(new float [nElements]);
     GG_INIT_DOUBLE_ARRAY(simmicrotex[i], 0.0, nElements);
   }
 }
@@ -182,7 +175,8 @@ void GrainGeneratorFunc::initialize2()
   totalvol = ((xpoints-1)*resx)*((ypoints-1)*resy)*((zpoints-1)*resz);
   totalpoints = xpoints * ypoints * zpoints;
 
-  voxels = new GrainGeneratorVoxel[totalpoints];
+  //voxels = new GrainGeneratorVoxel[totalpoints];
+  voxels.reset(new GrainGeneratorVoxel[totalpoints]);
 }
 
 #define CHECK_STATS_READ_ERROR(err, group, dataset)\
@@ -1398,8 +1392,10 @@ int GrainGeneratorFunc::assign_voxels(int numgrains)
   ypoints = int((sizey/resy)+1);
   zpoints = int((sizez/resz)+1);
   totalpoints = xpoints * ypoints * zpoints;
-  delete [] voxels;
-  voxels = new GrainGeneratorVoxel[totalpoints];
+//  delete [] voxels;
+//  voxels = new GrainGeneratorVoxel[totalpoints];
+  voxels.reset(new GrainGeneratorVoxel[totalpoints]);
+
   int *gnames;
   gnames = new int[totalpoints];
   int *unassigned;
@@ -1620,7 +1616,7 @@ void  GrainGeneratorFunc::assign_eulers(int numgrains)
 {
   AIM_RANDOMNG_NEW()
 
-  int gnum = 0;
+ // int gnum = 0;
   int numbins = 0;
   float totaldensity = 0;
   float synea1=0,synea2=0,synea3=0;
@@ -1850,7 +1846,7 @@ int  GrainGeneratorFunc::place_precipitates(int numgrains)
     m_Grains[currentnumgrains]->centroidz = zc;
     insert_grain(currentnumgrains);
 	m_Grains[currentnumgrains]->active = 1;
-	for(int j = 0; j < m_Grains[currentnumgrains]->voxellist->size(); j++)
+	for(size_t j = 0; j < m_Grains[currentnumgrains]->voxellist->size(); j++)
 	{
 		voxels[m_Grains[currentnumgrains]->voxellist->at(j)].grainname = currentnumgrains;
 		voxels[m_Grains[currentnumgrains]->voxellist->at(j)].phase = m_Grains[currentnumgrains]->phase;
@@ -2037,6 +2033,10 @@ int GrainGeneratorFunc::adjust_boundaries(int numgrains)
 	}
 	return (m_Grains.size());
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void GrainGeneratorFunc::read_structure(const std::string &filename)
 {
   const unsigned int size ( 1024 );
@@ -2053,7 +2053,9 @@ void GrainGeneratorFunc::read_structure(const std::string &filename)
     {
         in >> xpoints >> ypoints >> zpoints;
       totalpoints = xpoints * ypoints * zpoints;
-      voxels = new GrainGeneratorVoxel[totalpoints];
+//      voxels = new GrainGeneratorVoxel[totalpoints];
+      voxels.reset(new GrainGeneratorVoxel[totalpoints]);
+
       totalvol = float(totalpoints)*resx*resy*resz;
     }
     if(LOOKUP == word)
@@ -2657,7 +2659,7 @@ void  GrainGeneratorFunc::find_centroids()
   graincenters.resize(numgrains);
   for(int i = 0; i < numgrains; i++)
   {
-    graincenters[i] = FloatArray(new float [5]);
+    graincenters[i] = SharedFloatArray(new float [5]);
     for(int j=0;j<5;j++)
     {
       graincenters[i][j]=0;
@@ -2720,7 +2722,7 @@ void  GrainGeneratorFunc::find_moments ()
   grainmoments.resize(numgrains);
   for(int i = 0; i < numgrains; i++)
   {
-  grainmoments[i] = FloatArray(new float [6]);
+  grainmoments[i] = SharedFloatArray(new float [6]);
   for(int j=0;j<6;j++)
   {
     grainmoments[i][j] = 0;

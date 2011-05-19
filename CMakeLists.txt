@@ -127,15 +127,6 @@ IF ( CMAKE_BUILD_TYPE MATCHES Debug )
 ENDIF ( CMAKE_BUILD_TYPE MATCHES Debug )
 
 # --------------------------------------------------------------------
-# Should we write Binary or ASCII VTK output files
-# --------------------------------------------------------------------
-set(AIM_WRITE_BINARY_VTK_FILE)
-option(AIM_WRITE_BINARY_VTK_FILES "Write Binary VTK Files instead of ASCII files" ON)
-if (AIM_WRITE_BINARY_VTK_FILES)
- set(AIM_WRITE_BINARY_VTK_FILE 1)
-endif()
-
-# --------------------------------------------------------------------
 # Should we use Intel Threading Building Blocks
 # --------------------------------------------------------------------
 set (AIM_USE_PARALLEL_ALGORITHMS "")
