@@ -88,7 +88,7 @@ class GrainGeneratorWidget : public AIMPluginFrame, private Ui::GrainGeneratorWi
     /* Grain Generator Slots*/
     void on_m_InputH5StatisticsFileBtn_clicked();
     void on_m_OutputDirBtn_clicked();
-    void on_m_AlreadyFormed_stateChanged(int);
+    //void on_m_AlreadyFormed_stateChanged(int);
     void on_m_GoBtn_clicked();
     void on_m_SaveSettingsBtn_clicked();
     void on_m_LoadSettingsBtn_clicked();
@@ -96,6 +96,10 @@ class GrainGeneratorWidget : public AIMPluginFrame, private Ui::GrainGeneratorWi
     void on_m_H5InputStatisticsFile_textChanged(const QString &text);
     void on_m_OutputDir_textChanged(const QString &text);
     void on_m_OutputFilePrefix_textChanged(const QString &text);
+    void on_m_StructureFileBtn_clicked();
+
+    void on_m_StructureFile_textChanged(const QString &text);
+
 
   private slots:
 
