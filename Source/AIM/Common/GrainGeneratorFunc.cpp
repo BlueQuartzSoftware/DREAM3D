@@ -953,12 +953,13 @@ float GrainGeneratorFunc::check_neighborhooderror(int gadd, int gremove)
   float dia;
   int nnum;
   int index;
-  int count = 0;
+  vector<int> count;
   int phase;
   size_t xtalSize = crystruct.size();
   for(std::vector<AIM::Reconstruction::CrystalStructure>::size_type iter = 1; iter < xtalSize;++iter)
   {
 	  phase = iter;
+	  count.resize(numdiameterbins[phase],0);
 	  for(int i=0;i<numdiameterbins[phase];i++)
 	  {
 		neighbordist[phase][i][0] = 0;
@@ -993,42 +994,42 @@ float GrainGeneratorFunc::check_neighborhooderror(int gadd, int gremove)
 		index = activegrainlist[i];
 		if(index != gremove && m_Grains[index]->phase == phase)
 		{
+		  dia = m_Grains[index]->equivdiameter;
+		  if(dia > maxdiameter[phase]) dia = maxdiameter[phase];
+		  if(dia < mindiameter[phase]) dia = mindiameter[phase];
+		  dia = int((dia-mindiameter[phase])/binstepsize[phase]);
 		  for(int j=0;j<3;j++)
 		  {
 			nnum = m_Grains[index]->neighbordistfunc[j];
-			dia = m_Grains[index]->equivdiameter;
-			if(dia > maxdiameter[phase]) dia = maxdiameter[phase];
-			if(dia < mindiameter[phase]) dia = mindiameter[phase];
-			dia = int((dia-mindiameter[phase])/binstepsize[phase]);
 			if(nnum > 0)
 			{
 			  neighbordist[phase][dia][j] = neighbordist[phase][dia][j]+nnum;
 			}
 		  }
-		  count++;
+		  count[dia]++;
 		}
 	  }
 	  if(gadd > 0 && m_Grains[gadd]->phase == phase)
 	  {
+	    dia = m_Grains[index]->equivdiameter;
+	    if(dia > maxdiameter[phase]) dia = maxdiameter[phase];
+	    if(dia < mindiameter[phase]) dia = mindiameter[phase];
+	    dia = int((dia-mindiameter[phase])/binstepsize[phase]);
 		for(int j=0;j<3;j++)
 		{
 		  nnum = m_Grains[index]->neighbordistfunc[j];
-		  dia = m_Grains[index]->equivdiameter;
-		  if(dia > maxdiameter[phase]) dia = maxdiameter[phase];
-		  if(dia < mindiameter[phase]) dia = mindiameter[phase];
-		  dia = int((dia-mindiameter[phase])/binstepsize[phase]);
 		  if(nnum > 0)
 		  {
 			neighbordist[phase][dia][j] = neighbordist[phase][dia][j]+nnum;
 		  }
 		}
-		count++;
+		count[dia]++;
 	  }
 	  for(int i=0;i<numdiameterbins[phase];i++)
 	  {
 		for(int j=0;j<3;j++)
 		{
-		  neighborerror = neighborerror + ((neighborhood[phase][i][j]-(neighbordist[phase][i][j]/float(count)))*(neighborhood[phase][i][j]-(neighbordist[phase][i][j]/float(count))));
+			neighbordist[phase][i][j] = neighbordist[phase][i][j]/double(count[i]);
 		}
 	  }
 	  if(gadd > 0 && m_Grains[gadd]->phase == phase)
@@ -1042,7 +1043,7 @@ float GrainGeneratorFunc::check_neighborhooderror(int gadd, int gremove)
 		  }
 		}
 	  }
-	  if(gremove > 0 && m_Grains[gadd]->phase == phase)
+	  if(gremove > 0 && m_Grains[gremove]->phase == phase)
 	  {
 		for(int i=0;i<3;i++)
 		{
@@ -1054,6 +1055,7 @@ float GrainGeneratorFunc::check_neighborhooderror(int gadd, int gremove)
 		}
 	  }
   }
+  neighborerror = compare_3Ddistributions(neighborhood, neighbordist);
   return neighborerror;
 }
 
@@ -1091,6 +1093,43 @@ float GrainGeneratorFunc::costcheck_add(size_t gnum)
   return addcost;
 }
 
+float GrainGeneratorFunc::compare_2Ddistributions(std::vector<std::vector<float> > array1, std::vector<std::vector<float> > array2)
+{
+	float bhattmoment = 0;
+	float mag1 = 0;
+	float mag2 = 0;
+	for(int i=0;i<array1.size();i++)
+	{
+		for(int j=0;j<array1[i].size();j++)
+		{
+			bhattmoment = bhattmoment + (array1[i][j]*array2[i][j]);
+			mag1 = mag1 + (array1[i][j]*array1[i][j]);
+			mag2 = mag2 + (array2[i][j]*array2[i][j]);
+		}
+	}
+	bhattmoment = bhattmoment/(mag1*mag2);
+  return bhattmoment;
+}
+float GrainGeneratorFunc::compare_3Ddistributions(std::vector<std::vector<std::vector<float> > > array1, std::vector<std::vector<std::vector<float> > > array2)
+{
+	float bhattmoment = 0;
+	float mag1 = 0;
+	float mag2 = 0;
+	for(int i=0;i<array1.size();i++)
+	{
+		for(int j=0;j<array1[i].size();j++)
+		{
+			for(int k=0;j<array1[i][j].size();j++)
+			{
+				bhattmoment = bhattmoment + (array1[i][j][k]*array2[i][j][k]);
+				mag1 = mag1 + (array1[i][j][k]*array1[i][j][k]);
+				mag2 = mag2 + (array2[i][j][k]*array2[i][j][k]);
+			}
+		}
+	}
+	bhattmoment = bhattmoment/(mag1*mag2);
+  return bhattmoment;
+}
 float GrainGeneratorFunc::check_sizedisterror(int gadd, int gremove)
 {
   float dia;
@@ -1132,11 +1171,8 @@ float GrainGeneratorFunc::check_sizedisterror(int gadd, int gremove)
 	  {
 		simgrainsizedist[phase][i] = simgrainsizedist[phase][i]/float(count);
 	  }
-	  for(int i=0;i<40;i++)
-	  {
-		  sizedisterror = sizedisterror + ((simgrainsizedist[phase][i]-grainsizedist[phase][i])*(simgrainsizedist[phase][i]-grainsizedist[phase][i]));
-	  }
   }
+  sizedisterror = compare_2Ddistributions(simgrainsizedist, grainsizedist);
   return sizedisterror;
 }
 
@@ -1166,7 +1202,7 @@ int  GrainGeneratorFunc::pack_grains(const std::string &filename, int numgrains)
   int acceptedmoves = 0;
   float acceptableerror = 0.0;
   activegrainlist.resize(numgrains + 1);
-  vector<double> primaryphases;
+  vector<int> primaryphases;
   primaryphases.resize(1,0);
   vector<double> primaryphasefractions;
   primaryphasefractions.resize(1,0);
@@ -1816,7 +1852,7 @@ int  GrainGeneratorFunc::place_precipitates(int numgrains)
   float random;
   int random2;
   float xc, yc, zc;
-  vector<double> precipitatephases;
+  vector<int> precipitatephases;
   precipitatephases.resize(1,0);
   vector<double> precipitatephasefractions;
   precipitatephasefractions.resize(1,0);
