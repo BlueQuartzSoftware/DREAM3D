@@ -53,11 +53,11 @@ class ParallelRenumberGrains
       //std::cout << "Threaded RenumberGrains." << std::endl;
       for (size_t j = r.begin(); j != r.end(); ++j)
       {
-        int grainname = d->voxels[j].grainname;
+        int grainname = d->voxels[j].grain_index;
         if (grainname >= 1)
         {
           int newgrainname = d->m_Grains[grainname]->newgrainname;
-          d->voxels[j].grainname = newgrainname;
+          d->voxels[j].grain_index = newgrainname;
         }
 
       }

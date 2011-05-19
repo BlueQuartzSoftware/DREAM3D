@@ -207,7 +207,7 @@ void ReconstructionFunc::cleanup_data()
     count = 0;
     for (int i = 0; i < (xpoints * ypoints * zpoints); i++)
     {
-      if (voxels[i].grainname == -1 && voxels[i].confidence < minseedconfidence)
+      if (voxels[i].grain_index == -1 && voxels[i].confidence < minseedconfidence)
       {
         x = i % xpoints;
         y = (i / xpoints) % ypoints;
@@ -478,7 +478,7 @@ void ReconstructionFunc::find_border()
   voxelslist.clear();
   for (int iter = 0; iter < (xpoints * ypoints * zpoints); iter++)
   {
-    voxels[iter].grainname = gnames[iter];
+    voxels[iter].grain_index = gnames[iter];
   }
 
 }
@@ -537,9 +537,9 @@ void ReconstructionFunc::align_sections(const std::string &filename)
       for (int m = 0; m < xpoints; m++)
       {
         refposition = ((slice) * xpoints * ypoints) + (l * xpoints) + m;
-        refxcentroid = refxcentroid + (((resx * m) + (resx / 2.0)) * (float(voxels[refposition].grainname)));
-        refycentroid = refycentroid + (((resy * l) + (resy / 2.0)) * (float(voxels[refposition].grainname)));
-        count = count + voxels[refposition].grainname;
+        refxcentroid = refxcentroid + (((resx * m) + (resx / 2.0)) * (float(voxels[refposition].grain_index)));
+        refycentroid = refycentroid + (((resy * l) + (resy / 2.0)) * (float(voxels[refposition].grain_index)));
+        count = count + voxels[refposition].grain_index;
       }
     }
     refxcentroid = refxcentroid / float(count);
@@ -582,9 +582,9 @@ void ReconstructionFunc::align_sections(const std::string &filename)
         for (int m = 0; m < xpoints; m++)
         {
           curposition = ((slice) * xpoints * ypoints) + (l * xpoints) + m;
-          curxcentroid = curxcentroid + (((resx * m) + (resx / 2.0)) * (float(voxels[curposition].grainname)));
-          curycentroid = curycentroid + (((resy * l) + (resy / 2.0)) * (float(voxels[curposition].grainname)));
-          count = count + voxels[curposition].grainname;
+          curxcentroid = curxcentroid + (((resx * m) + (resx / 2.0)) * (float(voxels[curposition].grain_index)));
+          curycentroid = curycentroid + (((resy * l) + (resy / 2.0)) * (float(voxels[curposition].grain_index)));
+          count = count + voxels[curposition].grain_index;
         }
       }
       curxcentroid = curxcentroid / float(count);
@@ -617,8 +617,8 @@ void ReconstructionFunc::align_sections(const std::string &filename)
                   curci = voxels[curposition].confidence;
                   refiq = voxels[refposition].imagequality;
                   curiq = voxels[curposition].imagequality;
-                  refgnum = voxels[refposition].grainname;
-                  curgnum = voxels[curposition].grainname;
+                  refgnum = voxels[refposition].grain_index;
+                  curgnum = voxels[curposition].grain_index;
                   if (alignmeth == AIM::Reconstruction::MutualInformation)
                   {
                     if (curgnum >= 0 && refgnum >= 0)
@@ -749,7 +749,7 @@ void ReconstructionFunc::align_sections(const std::string &filename)
           voxels[position].quat[4] = voxels[tempposition].quat[4];
           voxels[position].confidence = voxels[tempposition].confidence;
           voxels[position].imagequality = voxels[tempposition].imagequality;
-          voxels[position].grainname = voxels[tempposition].grainname;
+          voxels[position].grain_index = voxels[tempposition].grain_index;
         }
         if ((yspot + shifts[iter][1]) < 0 || (yspot + shifts[iter][1]) > ypoints - 1 || (xspot + shifts[iter][0]) < 0 || (xspot + shifts[iter][0]) > xpoints
             - 1)
@@ -764,7 +764,7 @@ void ReconstructionFunc::align_sections(const std::string &filename)
           voxels[position].quat[4] = 1.0;
           voxels[position].confidence = 0.0;
           voxels[position].imagequality = 0.0;
-          voxels[position].grainname = 0;
+          voxels[position].grain_index = 0;
         }
       }
     }
@@ -838,7 +838,7 @@ void ReconstructionFunc::form_grains_sections()
           float confidence = voxels[point].confidence;
           float imagequality = voxels[point].imagequality;
           //  int grainname = voxels[point].grainname;
-          if (confidence > minseedconfidence && imagequality > minseedimagequality && voxels[point].grainname == -1)
+          if (confidence > minseedconfidence && imagequality > minseedimagequality && voxels[point].grain_index == -1)
           {
             seed = point;
           }
@@ -859,7 +859,7 @@ void ReconstructionFunc::form_grains_sections()
       if (seed >= 0)
       {
         size = 0;
-        voxels[seed].grainname = graincount;
+        voxels[seed].grain_index = graincount;
         voxelslist[size] = seed;
         size++;
         qs[0] = 0;
@@ -886,7 +886,7 @@ void ReconstructionFunc::form_grains_sections()
             if ((i == 5 || i == 6 || i == 7) && row == (ypoints - 1)) good = 0;
             if ((i == 0 || i == 3 || i == 5) && col == 0) good = 0;
             if ((i == 2 || i == 4 || i == 7) && col == (xpoints - 1)) good = 0;
-            if (good == 1 && voxels[neighbor].grainname <= 0)
+            if (good == 1 && voxels[neighbor].grain_index <= 0)
             {
 			  w = 10000.0;
               q2[0] = 0;
@@ -898,7 +898,7 @@ void ReconstructionFunc::form_grains_sections()
 			  if (phase1 == phase2) w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
               if (w < misorientationtolerance)
               {
-                voxels[neighbor].grainname = graincount;
+                voxels[neighbor].grain_index = graincount;
                 voxelslist[size] = neighbor;
                 size++;
                 if (size >= voxelslist.size()) voxelslist.resize(size + initialVoxelsListSize, -1);
@@ -958,7 +958,7 @@ void ReconstructionFunc::form_grains()
   SharedFloatArray iqs(new float[totalpoints]);
   for (int i = 0; i < totalpoints; ++i)
   {
-    gnames[i] = voxels[i].grainname;
+    gnames[i] = voxels[i].grain_index;
     iqs[i] = voxels[i].imagequality;
   }
 
@@ -1198,7 +1198,7 @@ void ReconstructionFunc::form_grains()
 		  mergedname = mergedgnames[mergedname];
 		}
 		newname = newgnames[mergedname];
-	    voxels[i].grainname = newname;
+	    voxels[i].grain_index = newname;
 	}
   }
   size_t oldSize = m_Grains.size();
@@ -1246,8 +1246,8 @@ void ReconstructionFunc::assign_badpoints()
 
   for (int i = 0; i < totalpoints; ++i)
   {
-    gnames[i] = voxels[i].grainname;
-    gneighs[i] = voxels[i].grainname;
+    gnames[i] = voxels[i].grain_index;
+    gneighs[i] = voxels[i].grain_index;
   }
   while (count != 0)
   {
@@ -1321,7 +1321,7 @@ void ReconstructionFunc::assign_badpoints()
   }
   for (int i = 0; i < totalpoints; ++i)
   {
-    voxels[i].grainname = gnames[i];
+    voxels[i].grain_index = gnames[i];
     voxels[i].neighbor = gneighs[i];
   }
 }
@@ -1331,11 +1331,11 @@ void ReconstructionFunc::merge_containedgrains()
 {
   for (int i = 0; i < (xpoints * ypoints * zpoints); i++)
   {
-    int grainname = voxels[i].grainname;
+    int grainname = voxels[i].grain_index;
     if (m_Grains[grainname]->numneighbors == 1)
     {
       m_Grains[grainname]->gotcontainedmerged = 1;
-      voxels[i].grainname = m_Grains[grainname]->neighborlist->at(0);
+      voxels[i].grain_index = m_Grains[grainname]->neighborlist->at(0);
       m_Grains[m_Grains[grainname]->neighborlist->at(0)]->numvoxels++;
       voxels[i].unassigned = 1;
     }
@@ -1402,7 +1402,7 @@ void ReconstructionFunc::reorder_grains(const std::string &reconVisFile)
     voxels[i].alreadychecked = 0;
     if(voxels[i].unassigned == 0)
     {
-      gnum = voxels[i].grainname;
+      gnum = voxels[i].grain_index;
       m_Grains[gnum]->nucleus = i;
     }
   }
@@ -1428,7 +1428,7 @@ void ReconstructionFunc::reorder_grains(const std::string &reconVisFile)
       }
       m_Grains[currentgrain]->voxellist->at(size) = nucleus;
       voxels[nucleus].alreadychecked = 1;
-      voxels[nucleus].grainname = currentgrain;
+      voxels[nucleus].grain_index = currentgrain;
       if (currentgrain > maxGrain) maxGrain = currentgrain;
       size++;
       for (size_t k = 0; k < 5; k++)
@@ -1467,12 +1467,12 @@ void ReconstructionFunc::reorder_grains(const std::string &reconVisFile)
           if ((k == 2 || k == 5 || k == 8 || k == 11 || k == 13 || k == 16 || k == 19 || k == 22 || k == 25) && col == (xpoints - 1)) good = 0;
           if (good == 1 && voxels[neighbor].alreadychecked == 0)
           {
-            size_t grainname = voxels[neighbor].grainname;
+            size_t grainname = voxels[neighbor].grain_index;
             if (grainname == i)
             {
               m_Grains[currentgrain]->voxellist->at(size) = neighbor;
               voxels[neighbor].alreadychecked = 1;
-              voxels[neighbor].grainname = currentgrain;
+              voxels[neighbor].grain_index = currentgrain;
               if (currentgrain > maxGrain) maxGrain = currentgrain;
               size++;
               if (size >= m_Grains[currentgrain]->voxellist->size())
@@ -1501,9 +1501,9 @@ void ReconstructionFunc::reorder_grains(const std::string &reconVisFile)
 
   for (int i = 0; i < totalpoints; i++)
   {
-	if(voxels[i].grainname >= currentgrain)
+	if(voxels[i].grain_index >= currentgrain)
     {
-      voxels[i].grainname = -2;
+      voxels[i].grain_index = -2;
 	  voxels[i].unassigned = 1;
     }
   }
@@ -1541,7 +1541,7 @@ void ReconstructionFunc::fillin_sample()
       for (int i = 0; i < xpoints; ++i)
       {
         point = (k * xpoints * ypoints) + (j * xpoints) + i;
-        if (voxels[point].grainname > 0)
+        if (voxels[point].grain_index > 0)
         {
           col = i;
           row = j;
@@ -1573,9 +1573,9 @@ void ReconstructionFunc::fillin_sample()
         for (int i = mincol; i < maxcol + 1; ++i)
         {
           point = (k * xpoints * ypoints) + (j * xpoints) + i;
-          if (voxels[point].grainname == 0)
+          if (voxels[point].grain_index == 0)
           {
-            voxels[point].grainname = -1;
+            voxels[point].grain_index = -1;
             voxels[point].neighbor = -1;
             voxels[point].unassigned = 1;
           }
@@ -1639,7 +1639,7 @@ int ReconstructionFunc::remove_smallgrains(size_t numgrains)
   for (int i = 0; i < (xpoints * ypoints * zpoints); i++)
   {
     voxels[i].alreadychecked = 0;
-	gnum = voxels[i].grainname;
+	gnum = voxels[i].grain_index;
 	if(gnum >= 0) m_Grains[gnum]->nucleus = i;
   }
   for (size_t i = 1; i < numgrains; i++)
@@ -1648,7 +1648,7 @@ int ReconstructionFunc::remove_smallgrains(size_t numgrains)
       int nucleus = m_Grains[i]->nucleus;
       voxelslist[size] = nucleus;
       voxels[nucleus].alreadychecked = 1;
-      voxels[nucleus].grainname = currentgrain;
+      voxels[nucleus].grain_index = currentgrain;
       size++;
       for (size_t j = 0; j < size; j++)
       {
@@ -1668,12 +1668,12 @@ int ReconstructionFunc::remove_smallgrains(size_t numgrains)
           if ((k == 2 || k == 5 || k == 8 || k == 11 || k == 13 || k == 16 || k == 19 || k == 22 || k == 25) && col == (xpoints - 1)) good = 0;
           if (good == 1 && voxels[neighbor].alreadychecked == 0)
           {
-            int grainname = voxels[neighbor].grainname;
+            int grainname = voxels[neighbor].grain_index;
             if (grainname == i)
             {
               voxelslist[size] = neighbor;
               voxels[neighbor].alreadychecked = 1;
-              voxels[neighbor].grainname = currentgrain;
+              voxels[neighbor].grain_index = currentgrain;
               size++;
               if (size >= voxelslist.size()) voxelslist.resize(size + initialVoxelsListSize, -1);
             }
@@ -1694,7 +1694,7 @@ int ReconstructionFunc::remove_smallgrains(size_t numgrains)
         for (size_t b = 0; b < voxelslist.size(); b++)
         {
           int index = voxelslist[b];
-          voxels[index].grainname = -2;
+          voxels[index].grain_index = -2;
         }
         voxelslist.resize(initialVoxelsListSize, -1);
     }
@@ -1727,7 +1727,7 @@ void ReconstructionFunc::find_grain_and_kernel_misorientations()
   }
   for (int i = 0; i < totalpoints; ++i)
   {
-    gnames[i] = voxels[i].grainname;
+    gnames[i] = voxels[i].grain_index;
     unassigned[i] = voxels[i].unassigned;
     gam[i] = 0.0;
   }
@@ -1946,7 +1946,7 @@ int ReconstructionFunc::load_data(const std::string &readname)
       row = (i / xpoints) % ypoints;
       plane = i / (xpoints * ypoints);
       if (col == 0 || col == (xpoints - 1) || row == 0 || row == (ypoints - 1) || plane == 0 || plane == (zpoints - 1)) onedge = 1;
-      voxels[i].grainname = gnum;
+      voxels[i].grain_index = gnum;
       if (gnum >= numgrains)
       {
         numgrains = gnum + 1;
@@ -2074,7 +2074,7 @@ int ReconstructionFunc::load_data(const std::string &readname)
       row = (i / xpoints) % ypoints;
       plane = i / (xpoints * ypoints);
       if (col == 0 || col == (xpoints - 1) || row == 0 || row == (ypoints - 1) || plane == 0 || plane == (zpoints - 1)) onedge = 1;
-      voxels[i].grainname = gnum;
+      voxels[i].grain_index = gnum;
       if (gnum >= numgrains)
       {
         numgrains = gnum + 1;
@@ -2220,12 +2220,12 @@ void ReconstructionFunc::merge_twins()
   }
   for (int k = 0; k < (xpoints * ypoints * zpoints); k++)
   {
-    int grainname = voxels[k].grainname;
+    int grainname = voxels[k].grain_index;
     int gottwinmerged = m_Grains[grainname]->gottwinmerged;
     if (gottwinmerged == 1)
     {
       int twinnewnumber = m_Grains[grainname]->twinnewnumber;
-      voxels[k].grainname = twinnewnumber;
+      voxels[k].grain_index = twinnewnumber;
     }
   }
 }
@@ -2303,12 +2303,12 @@ void ReconstructionFunc::merge_colonies()
   }
   for (int k = 0; k < (xpoints * ypoints * zpoints); k++)
   {
-    int grainname = voxels[k].grainname;
+    int grainname = voxels[k].grain_index;
     int gotcolonymerged = m_Grains[grainname]->gotcolonymerged;
     if (gotcolonymerged == 1)
     {
       int colonynewnumber = m_Grains[grainname]->colonynewnumber;
-      voxels[k].grainname = colonynewnumber;
+      voxels[k].grain_index = colonynewnumber;
     }
   }
 }
@@ -2369,11 +2369,11 @@ void ReconstructionFunc::renumber_grains3()
 #else
  for (int j = 0; j < totalpoints; j++)
   {
-    int grainname = voxels[j].grainname;
+    int grainname = voxels[j].grain_index;
     if (grainname >= 1)
     {
       int newgrainname = newnames[grainname];
-      voxels[j].grainname = newgrainname;
+      voxels[j].grain_index = newgrainname;
     }
   }
 #endif
@@ -2407,7 +2407,7 @@ void ReconstructionFunc::find_neighbors()
 
   for (int i = 0; i < totalpoints; ++i)
   {
-    gnames[i] = voxels[i].grainname;
+    gnames[i] = voxels[i].grain_index;
     voxels[i].neighborlist = IntVectorType(new std::vector<int>(6, -1) );
   }
 
@@ -2589,7 +2589,7 @@ void ReconstructionFunc::find_centroids()
   for (int j = 0; j < (xpoints * ypoints * zpoints); j++)
   {
     onedge = 0;
-    int gnum = voxels[j].grainname;
+    int gnum = voxels[j].grain_index;
     graincenters[gnum][0]++;
     col = j % xpoints;
     row = (j / xpoints) % ypoints;
@@ -2670,7 +2670,7 @@ void ReconstructionFunc::find_centroids2D()
   for (int j = 0; j < (xpoints * ypoints * zpoints); j++)
   {
     onedge = 0;
-    int gnum = voxels[j].grainname;
+    int gnum = voxels[j].grain_index;
     graincenters[gnum][0]++;
     col = j % xpoints;
     row = (j / xpoints) % ypoints;
@@ -2781,7 +2781,7 @@ void ReconstructionFunc::find_moments()
     u110 = 0;
     u011 = 0;
     u101 = 0;
-    int gnum = voxels[j].grainname;
+    int gnum = voxels[j].grain_index;
     float x = find_xcoord(j);
     float y = find_ycoord(j);
     float z = find_zcoord(j);
@@ -3168,7 +3168,7 @@ void ReconstructionFunc::find_moments2D()
     u200 = 0;
     u020 = 0;
     u110 = 0;
-    int gnum = voxels[j].grainname;
+    int gnum = voxels[j].grain_index;
     float x = find_xcoord(j);
     float y = find_ycoord(j);
     float x1 = x + (resx / 2);
@@ -3986,7 +3986,7 @@ void ReconstructionFunc::deformation_stats(const std::string &filename, const st
       gbdist = voxels[i].nearestneighbordistance[0];
       tjdist = voxels[i].nearestneighbordistance[1];
       qpdist = voxels[i].nearestneighbordistance[2];
-      gname = voxels[i].grainname;
+      gname = voxels[i].grain_index;
       nearestneighbor = voxels[i].nearestneighbor[0];
       gname2 = voxels[nearestneighbor].neighborlist->at(0);
       sf = m_Grains[gname]->schmidfactor;

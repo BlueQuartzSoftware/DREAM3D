@@ -41,13 +41,13 @@
 
 #define H5GW_IPF_COLOR()\
 if (r->crystruct[phase] == AIM::Reconstruction::Cubic) {\
-  OIMColoring::GenerateIPFColor(r->m_Grains[r->voxels[i].grainname]->euler1, r->m_Grains[r->voxels[i].grainname]->euler2, r->m_Grains[r->voxels[i].grainname]->euler3, RefDirection[0], RefDirection[1], RefDirection[2], rgb, hkl);\
+  OIMColoring::GenerateIPFColor(r->m_Grains[r->voxels[i].grain_index]->euler1, r->m_Grains[r->voxels[i].grain_index]->euler2, r->m_Grains[r->voxels[i].grain_index]->euler3, RefDirection[0], RefDirection[1], RefDirection[2], rgb, hkl);\
 } else if (r->crystruct[phase] == AIM::Reconstruction::Hexagonal)\
 {\
-  q1[1] = r->m_Grains[r->voxels[i].grainname]->avg_quat[1];\
-  q1[2] = r->m_Grains[r->voxels[i].grainname]->avg_quat[2];\
-  q1[3] = r->m_Grains[r->voxels[i].grainname]->avg_quat[3];\
-  q1[4] = r->m_Grains[r->voxels[i].grainname]->avg_quat[4];\
+  q1[1] = r->m_Grains[r->voxels[i].grain_index]->avg_quat[1];\
+  q1[2] = r->m_Grains[r->voxels[i].grain_index]->avg_quat[2];\
+  q1[3] = r->m_Grains[r->voxels[i].grain_index]->avg_quat[3];\
+  q1[4] = r->m_Grains[r->voxels[i].grain_index]->avg_quat[4];\
   OIMColoring::CalculateHexIPFColor(q1, RefDirection[0], RefDirection[1], RefDirection[2], rgb);\
 }\
 ipfColor[j * 3] = rgb[0];\
@@ -199,8 +199,8 @@ int H5GrainWriter::writeHDF5GrainsFile(ReconstructionFunc* r, const std::string 
       kernelAvgDisorientation[j] = r->voxels[vid].kernelmisorientation;
       grainAvgDisorientation[j] = r->voxels[vid].grainmisorientation;
       imageQuality[j] = r->voxels[vid].imagequality;
-      grainName[j] = r->voxels[vid].grainname;
-      schmidFactor[j] = r->m_Grains[r->voxels[vid].grainname]->schmidfactor;
+      grainName[j] = r->voxels[vid].grain_index;
+      schmidFactor[j] = r->m_Grains[r->voxels[vid].grain_index]->schmidfactor;
     }
     H5GW_GRAIN_LOOP_2()
 

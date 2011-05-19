@@ -67,7 +67,7 @@ class AIMCOMMON_EXPORT ReconstructionVoxel
      */
     void deepCopy(ReconstructionVoxel* reconstructionvoxel);
 
-    int grainname;
+    int grain_index;
     float confidence;
     float imagequality;
     int alreadychecked;

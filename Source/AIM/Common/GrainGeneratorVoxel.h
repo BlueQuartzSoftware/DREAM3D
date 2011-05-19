@@ -67,7 +67,7 @@ class AIMCOMMON_EXPORT GrainGeneratorVoxel
      */
     void deepCopy(GrainGeneratorVoxel* graingeneratorvoxel);
 
-    int grainname;
+    int grain_index;
    	float ellipfunc;
     int alreadychecked;
     int nearestneighbor[3];
