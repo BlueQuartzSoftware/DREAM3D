@@ -94,7 +94,10 @@ Q_OBJECT
     MXA_INSTANCE_PROPERTY(double, NeighborhoodErrorWeight)
     MXA_INSTANCE_PROPERTY(double, SizeDistErrorWeight)
     MXA_INSTANCE_PROPERTY(double, FractionPrecipitates)
+
+    MXA_INSTANCE_STRING_PROPERTY(StructureFile)
     MXA_INSTANCE_PROPERTY(bool, AlreadyFormed)
+
     MXA_INSTANCE_PROPERTY(int, Precipitates)
 
     MXA_INSTANCE_PROPERTY(bool, WriteBinaryFiles)

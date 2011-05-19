@@ -166,14 +166,29 @@ void SurfaceMeshingWidget::checkIOFiles()
   CHECK_QLINEEDIT_FILE_EXISTS(m_InputFile)
   if ( verifyPathExists(m_InputFile->text(), m_InputFile) == true )
   {
-    SMVtkFileIO io;
-    int x = 0;
-    int y = 0;
-    int z = 0;
-    io.getVolumeDimensions(m_InputFile->text().toStdString(), x, y, z);
-    xDim->setText(QString::number(x));
-    yDim->setText(QString::number(y));
-    zDim->setText(QString::number(z));
+    VTKFileReader::Pointer reader = VTKFileReader::New();
+    reader->setInputFileName(m_InputFile->text().toStdString());
+    int err = reader->readHeader();
+    if (err >= 0)
+    {
+      std::string dataset = reader->getDatasetType();
+      if(dataset.compare("STRUCTURED_POINTS") != 0)
+      {
+        QMessageBox::critical(this, QString("SurfaceMeshing"),
+                              QString("The VTK File does not have the correct data type. We only support STRUCTURED_POINTS."),
+                              QMessageBox::Ok | QMessageBox::Default);
+      }
+      else
+      {
+        int x = 0;
+        int y = 0;
+        int z = 0;
+        reader->getDims(x, y, z);
+        xDim->setText(QString::number(x));
+        yDim->setText(QString::number(y));
+        zDim->setText(QString::number(z));
+      }
+    }
   }
 
 

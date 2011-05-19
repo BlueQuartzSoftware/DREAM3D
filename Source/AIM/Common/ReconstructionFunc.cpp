@@ -3440,12 +3440,9 @@ void ReconstructionFunc::find_colors()
 {
   size_t numgrains = m_Grains.size();
   //  float red, green, blue;
-  unsigned char rgb[3] =
-  { 0, 0, 0 };
-  unsigned char hkl[3] =
-  { 0, 0, 0 };
-  float RefDirection[3] =
-  { 0.0, 1.0, 0.0 };
+  unsigned char rgb[3] = { 0, 0, 0 };
+  unsigned char hkl[3] = { 0, 0, 0 };
+  float RefDirection[3] = { 0.0, 1.0, 0.0 };
   float q1[5];
   for (size_t i = 1; i < numgrains; i++)
   {

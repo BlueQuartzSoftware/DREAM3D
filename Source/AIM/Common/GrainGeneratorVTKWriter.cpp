@@ -71,14 +71,14 @@ int GrainGeneratorVTKWriter::writeVisualizationFile(GrainGeneratorFunc* r, const
   if (true == m_WriteBinaryFiles)
   {
     WRITE_VTK_GRAIN_IDS_BINARY(r, AIM::Reconstruction::GrainIdScalarName, voxels);
-    WRITE_VTK_SCALARS_FROM_VOXEL_BINARY(r, SurfaceVoxel, int, voxels, surfacevoxel)
-    WRITE_VTK_SCALARS_FROM_VOXEL_BINARY(r, PhaseID, int, voxels, phase)
+    WRITE_VTK_SCALARS_FROM_VOXEL_BINARY(r, AIM::Reconstruction::SurfaceVoxelScalarName, int, voxels, surfacevoxel)
+    WRITE_VTK_SCALARS_FROM_VOXEL_BINARY(r, AIM::Reconstruction::PhaseIdScalarName, int, voxels, phase)
   }
   else
   {
     WRITE_VTK_GRAIN_IDS_ASCII(r, AIM::Reconstruction::GrainIdScalarName, voxels)
-    WRITE_VTK_SCALARS_FROM_VOXEL_ASCII(r, SurfaceVoxel, int, voxels, surfacevoxel, "%d ")
-    WRITE_VTK_SCALARS_FROM_VOXEL_ASCII(r, PhaseID, int, voxels, unassigned, "%d ")
+    WRITE_VTK_SCALARS_FROM_VOXEL_ASCII(r, AIM::Reconstruction::SurfaceVoxelScalarName, int, voxels, surfacevoxel, "%d ")
+    WRITE_VTK_SCALARS_FROM_VOXEL_ASCII(r, AIM::Reconstruction::PhaseIdScalarName, int, voxels, unassigned, "%d ")
   }
   fclose(f);
   return 0;
@@ -98,7 +98,7 @@ int GrainGeneratorVTKWriter::writeIPFVizFile(GrainGeneratorFunc* r, const std::s
 
   size_t total = r->xpoints * r->ypoints * r->zpoints;
   unsigned char hkl[3] = { 0, 0, 0 };
-  float RefDirection[3] = { 0.0, 0.0, 1.0 };
+  VTK_IPF_COLOR_REFDIRECTION(RefDirection);
   int phase;
   unsigned char* rgba = NULL;
   float red, green, blue;
@@ -108,7 +108,7 @@ int GrainGeneratorVTKWriter::writeIPFVizFile(GrainGeneratorFunc* r, const std::s
   {
     WRITE_VTK_GRAIN_HEADER("BINARY", r)
     WRITE_VTK_GRAIN_IDS_BINARY(r, AIM::Reconstruction::GrainIdScalarName, voxels);
-    WRITE_VTK_SCALARS_FROM_VOXEL_BINARY(r, Phase, int, voxels, phase)
+    WRITE_VTK_SCALARS_FROM_VOXEL_BINARY(r, AIM::Reconstruction::PhaseIdScalarName, int, voxels, phase)
     // Write the COLOR_SCALARS
     fprintf(f, "COLOR_SCALARS IPF_Colors 4\n");
     rgba = new unsigned char[total * 4]; // We need the whole array because we build it and write it all at the end
@@ -117,7 +117,7 @@ int GrainGeneratorVTKWriter::writeIPFVizFile(GrainGeneratorFunc* r, const std::s
   {
     WRITE_VTK_GRAIN_HEADER("ASCII", r)
     WRITE_VTK_GRAIN_IDS_ASCII(r, AIM::Reconstruction::GrainIdScalarName, voxels);
-    WRITE_VTK_SCALARS_FROM_VOXEL_ASCII(r, Phase, int, voxels, phase, "%d ")
+    WRITE_VTK_SCALARS_FROM_VOXEL_ASCII(r, AIM::Reconstruction::PhaseIdScalarName, int, voxels, phase, "%d ")
     // Write the COLOR_SCALARS
     fprintf(f, "COLOR_SCALARS IPF_Colors 3\n");
     rgba = new unsigned char[4]; // We just need 4 bytes for ASCII writing

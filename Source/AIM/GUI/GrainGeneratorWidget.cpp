@@ -102,6 +102,7 @@ void GrainGeneratorWidget::readSettings(QSettings &prefs)
   READ_SETTING(prefs, m_, NumGrains, ok, i, 1000 , Int);
 
   READ_BOOL_SETTING(prefs, m_, AlreadyFormed, false);
+  READ_FILEPATH_SETTING(prefs, m_, StructureFile, "");
 
   READ_CHECKBOX_SETTING(prefs, m_, IPFVizFile, true);
   READ_CHECKBOX_SETTING(prefs, m_, VisualizationVizFile, true);
@@ -133,6 +134,8 @@ void GrainGeneratorWidget::writeSettings(QSettings &prefs)
   WRITE_SETTING(prefs, m_, NumGrains )
 
   WRITE_BOOL_SETTING(prefs, m_, AlreadyFormed, m_AlreadyFormed->isChecked())
+  WRITE_STRING_SETTING(prefs, m_, StructureFile)
+
   WRITE_COMBO_BOX(prefs, m_, ShapeClass)
 
   WRITE_CHECKBOX_SETTING(prefs, m_, IPFVizFile)
@@ -152,6 +155,29 @@ void GrainGeneratorWidget::setWidgetListEnabled(bool b)
   }
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void GrainGeneratorWidget::on_m_StructureFileBtn_clicked()
+{
+  QString file = QFileDialog::getOpenFileName(this, tr("Select Structure File"),
+                                                 m_OpenDialogLastDirectory,
+                                                 tr("Any File (*.*)") );
+  if ( true == file.isEmpty() ){return;  }
+  QFileInfo fi (file);
+  QString ext = fi.suffix();
+  m_StructureFile->setText(fi.absoluteFilePath());
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void GrainGeneratorWidget::on_m_StructureFile_textChanged(const QString &text)
+{
+  verifyPathExists(text, m_StructureFile);
+}
+
 
 // -----------------------------------------------------------------------------
 //
@@ -166,31 +192,35 @@ void GrainGeneratorWidget::setupGui()
            this, SLOT(on_m_H5InputStatisticsFile_textChanged(const QString &)));
 
 
-
   QR3DFileCompleter* com2 = new QR3DFileCompleter(this, true);
   m_OutputDir->setCompleter(com2);
   QObject::connect( com2, SIGNAL(activated(const QString &)),
            this, SLOT(on_m_OutputDir_textChanged(const QString &)));
 
+  QR3DFileCompleter* com3 = new QR3DFileCompleter(this, false);
+  m_StructureFile->setCompleter(com3);
+  QObject::connect( com3, SIGNAL(activated(const QString &)),
+           this, SLOT(on_m_StructureFile_textChanged(const QString &)));
+
   QString msg ("All files will be over written that appear in the output directory.");
 
   QFileInfo fi (m_OutputDir->text() + QDir::separator() +  AIM::SyntheticBuilder::VisualizationVizFile.c_str() );
-  if (m_AlreadyFormed->isChecked() == true && fi.exists() == false)
-  {
-    m_AlreadyFormed->setChecked(false);
-  }
-
-  if (m_AlreadyFormed->isChecked())
-  {
-    msg += QString("\nThe 'Cube.vtk' file will be used as an import and NOT over written with new data");
-  }
-  messageLabel->setText(msg);
+//  if (m_AlreadyFormed->isChecked() == true && fi.exists() == false)
+//  {
+//    m_AlreadyFormed->setChecked(false);
+//  }
+//
+//  if (m_AlreadyFormed->isChecked())
+//  {
+//    msg += QString("\nThe 'Cube.vtk' file will be used as an import and NOT over written with new data");
+//  }
+//  messageLabel->setText(msg);
 
   m_WidgetList << m_H5StatisticsFile << m_InputH5StatisticsFileBtn << m_OutputDir << m_OutputDirBtn;
   m_WidgetList << m_NumGrains << m_XResolution << m_YResolution << m_ZResolution << m_FillingErrorWeight;
   m_WidgetList << m_NeighborhoodErrorWeight << m_SizeDistErrorWeight;
   m_WidgetList << m_ShapeClass << m_AlreadyFormed;
-
+  m_WidgetList << m_AlreadyFormed;
 }
 
 // -----------------------------------------------------------------------------
@@ -244,30 +274,30 @@ void GrainGeneratorWidget::checkIOFiles()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GrainGeneratorWidget::on_m_AlreadyFormed_stateChanged(int currentState)
-{
-
-  QString absPath = m_OutputDir->text() + QDir::separator() + AIM::SyntheticBuilder::VisualizationVizFile.c_str();
-  absPath = QDir::toNativeSeparators(absPath);
-  QFileInfo fi (absPath);
-  QString msg ("All files will be over written that appear in the output directory.");
-  if (m_AlreadyFormed->isChecked() == true && fi.exists() == false)
-  {
-    QMessageBox::critical(this, tr("AIM Representation"),
-      tr("You have selected the 'Already Formed' check box \nbut the correct output file does not exist.\n"
-      "The checkbox will revert to an unchecked state.?"),
-      QMessageBox::Ok,
-      QMessageBox::Ok);
-      m_AlreadyFormed->setChecked(false);
-      CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::SyntheticBuilder, m_, VisualizationVizFile)
-  }
-
-  if (m_AlreadyFormed->isChecked())
-  {
-    msg += QString("\nThe 'reconstructed_data.txt' file will be used as an import and NOT over written with new data");
-  }
-  messageLabel->setText(msg);
-}
+//void GrainGeneratorWidget::on_m_AlreadyFormed_stateChanged(int currentState)
+//{
+//
+//  QString absPath = m_OutputDir->text() + QDir::separator() + AIM::SyntheticBuilder::VisualizationVizFile.c_str();
+//  absPath = QDir::toNativeSeparators(absPath);
+//  QFileInfo fi (absPath);
+//  QString msg ("All files will be over written that appear in the output directory.");
+//  if (m_AlreadyFormed->isChecked() == true && fi.exists() == false)
+//  {
+//    QMessageBox::critical(this, tr("AIM Representation"),
+//      tr("You have selected the 'Already Formed' check box \nbut the correct output file does not exist.\n"
+//      "The checkbox will revert to an unchecked state.?"),
+//      QMessageBox::Ok,
+//      QMessageBox::Ok);
+//      m_AlreadyFormed->setChecked(false);
+//      CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::SyntheticBuilder, m_, VisualizationVizFile)
+//  }
+//
+//  if (m_AlreadyFormed->isChecked())
+//  {
+//    msg += QString("\nThe 'reconstructed_data.txt' file will be used as an import and NOT over written with new data");
+//  }
+//  messageLabel->setText(msg);
+//}
 
 // -----------------------------------------------------------------------------
 //
@@ -377,6 +407,8 @@ void GrainGeneratorWidget::on_m_GoBtn_clicked()
   m_GrainGenerator->setSizeDistErrorWeight(m_SizeDistErrorWeight->value());
 
   m_GrainGenerator->setAlreadyFormed(m_AlreadyFormed->isChecked() );
+  m_GrainGenerator->setStructureFile(m_StructureFile->text().toStdString());
+
   m_GrainGenerator->setWriteBinaryFiles(m_BinaryVtkFiles->isChecked());
   m_GrainGenerator->setWriteVisualizationFile(m_VisualizationVizFile->isChecked());
   m_GrainGenerator->setWriteIPFFile(m_IPFVizFile->isChecked());
