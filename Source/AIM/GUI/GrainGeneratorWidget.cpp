@@ -377,7 +377,7 @@ void GrainGeneratorWidget::on_m_GoBtn_clicked()
   m_GrainGenerator->setSizeDistErrorWeight(m_SizeDistErrorWeight->value());
 
   m_GrainGenerator->setAlreadyFormed(m_AlreadyFormed->isChecked() );
-
+  m_GrainGenerator->setWriteBinaryFiles(m_BinaryVtkFiles->isChecked());
   m_GrainGenerator->setWriteVisualizationFile(m_VisualizationVizFile->isChecked());
   m_GrainGenerator->setWriteIPFFile(m_IPFVizFile->isChecked());
   m_GrainGenerator->setWriteHDF5GrainFile(m_HDF5GrainFile->isChecked());

@@ -136,7 +136,7 @@
 
 
 
-#define GGVTKW_IPFCOLOR(var, quat)\
+#define GGVTKW_IPFCOLOR_BIANRY(var, quat)\
 if (r->crystruct[phase] == AIM::Reconstruction::Cubic) {\
   OIMColoring::GenerateIPFColor(var->euler1,\
                               var->euler2,\

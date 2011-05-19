@@ -69,8 +69,7 @@
 #include "AIM/Common/OrientationOps/HexagonalOps.h"
 #include "AIM/Common/OrientationOps/OrthoRhombicOps.h"
 
-typedef boost::shared_array<float>    FloatArray;
-typedef boost::shared_array<int>       IntArray;
+
 
 
 using namespace std;
@@ -85,16 +84,14 @@ using namespace std;
  */
 class AIMCOMMON_EXPORT ReconstructionFunc
 {
-
   public:
-
     MXA_SHARED_POINTERS(ReconstructionFunc)
     MXA_STATIC_NEW_MACRO(ReconstructionFunc)
 
     virtual ~ReconstructionFunc();
 
-    typedef AIMArray<float> FloatArrayType;
-    typedef AIMArray<int>    IntArrayType;
+    typedef boost::shared_array<float>    SharedFloatArray;
+    typedef boost::shared_array<int>      SharedIntArray;
 
     float sizex;
     float sizey;
@@ -104,7 +101,21 @@ class AIMCOMMON_EXPORT ReconstructionFunc
     float resy;
     float resz;
 
+    int xpoints;
+    int ypoints;
+    int zpoints;
+    int totalpoints;
+
     float misorientationtolerance;
+
+    vector<AIM::Reconstruction::CrystalStructure> crystruct;
+    vector<AIM::Reconstruction::PhaseType>        phaseType;
+    std::vector<float>                            pptFractions;
+
+    boost::shared_array<ReconstructionVoxel> voxels;
+
+    std::vector<Grain::Pointer> m_Grains;
+
     float minseedconfidence;
     float minseedimagequality;
     float downsamplefactor;
@@ -112,21 +123,17 @@ class AIMCOMMON_EXPORT ReconstructionFunc
     int minallowedgrainsize;
     int mergetwinsoption;
     int mergecoloniesoption;
-    vector<AIM::Reconstruction::CrystalStructure> crystruct;
-    vector<AIM::Reconstruction::PhaseType>        phaseType;
-    std::vector<float>                            pptFractions;
+
     int alignmeth;
     int alreadyformed;
 
-    boost::shared_array<ReconstructionVoxel> voxels;
 
-    std::vector<Grain::Pointer> m_Grains;
 
-    IntArray graincounts;
+    SharedIntArray graincounts;
 
     vector<vector<float> > graincenters;
     vector<vector<float> > grainmoments;
-    FloatArrayType::Pointer         m_grainQuats;
+
 
     int numseNbins;
     int numorients;
@@ -145,14 +152,14 @@ class AIMCOMMON_EXPORT ReconstructionFunc
     int cminx;
     int cmaxy;
     int cminy;
-    int xpoints;
-    int ypoints;
+
+
+
     int tempxpoints;
     int tempypoints;
-    int zpoints;
-    int totalpoints;
     int totaltemppoints;
     int numneighbins;
+
 
     void initialize(int nX,
                     int nY,
