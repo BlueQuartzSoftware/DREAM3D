@@ -35,7 +35,7 @@
 //
 // -----------------------------------------------------------------------------
 ReconstructionVoxel::ReconstructionVoxel() :
-grainname(0),
+grain_index(0),
 confidence(0.0),
 imagequality(0.0),
 alreadychecked(0),
@@ -76,7 +76,7 @@ void ReconstructionVoxel::deepCopy(ReconstructionVoxel* reconstructionvoxel)
 {
   if (reconstructionvoxel == this) { return; } // The pointers are the same just return
 
-   grainname = reconstructionvoxel->grainname;
+   grain_index = reconstructionvoxel->grain_index;
    confidence = reconstructionvoxel->confidence;
    imagequality = reconstructionvoxel->imagequality;
    alreadychecked = reconstructionvoxel->alreadychecked;
