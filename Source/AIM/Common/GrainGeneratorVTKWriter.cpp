@@ -98,7 +98,7 @@ int GrainGeneratorVTKWriter::writeIPFVizFile(GrainGeneratorFunc* r, const std::s
 
   size_t total = r->xpoints * r->ypoints * r->zpoints;
   unsigned char hkl[3] = { 0, 0, 0 };
-  float RefDirection[3] = { 0.0, 0.0, 1.0 };
+  VTK_IPF_COLOR_REFDIRECTION(RefDirection);
   int phase;
   unsigned char* rgba = NULL;
   float red, green, blue;
