@@ -134,7 +134,8 @@
   }\
   }
 
-
+#define VTK_IPF_COLOR_REFDIRECTION(var)\
+    float var[3] = {0.0f, 0.0f, 1.0f};
 
 #define GGVTKW_IPFCOLOR_BIANRY(var, quat)\
 if (r->crystruct[phase] == AIM::Reconstruction::Cubic) {\

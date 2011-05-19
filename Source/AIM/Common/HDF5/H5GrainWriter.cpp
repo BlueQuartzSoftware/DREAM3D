@@ -68,7 +68,7 @@ ipfColor[j * 3 + 2] = rgb[2];\
   float q1[5];\
   unsigned char rgb[3] =  { 0, 0, 0 };\
   unsigned char hkl[3] = { 0, 0, 0 };\
-  float RefDirection[3] = { 1.0, 0.0, 0.0 };\
+  VTK_IPF_COLOR_REFDIRECTION(RefDirection);\
   int ocol, orow, oplane;\
   int col, row, plane;\
   int pid;\
