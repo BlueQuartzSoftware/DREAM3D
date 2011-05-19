@@ -136,15 +136,15 @@ int GrainGeneratorVTKWriter::writeIPFVizFile(GrainGeneratorFunc* r, const std::s
     }
     if (r->crystruct[phase] == AIM::Reconstruction::Cubic)
     {
-      OIMColoring::GenerateIPFColor(r->m_Grains[r->voxels[i].grainname]->euler1,
-                                    r->m_Grains[r->voxels[i].grainname]->euler2,
-                                    r->m_Grains[r->voxels[i].grainname]->euler3,
+      OIMColoring::GenerateIPFColor(r->m_Grains[r->voxels[i].grain_index]->euler1,
+                                    r->m_Grains[r->voxels[i].grain_index]->euler2,
+                                    r->m_Grains[r->voxels[i].grain_index]->euler3,
                                     RefDirection[0], RefDirection[1], RefDirection[2],
                                     &rgba[index], hkl);
     }
     else if (r->crystruct[phase] == AIM::Reconstruction::Hexagonal)
     {
-      OIMColoring::CalculateHexIPFColor(r->m_Grains[r->voxels[i].grainname]->avg_quat,
+      OIMColoring::CalculateHexIPFColor(r->m_Grains[r->voxels[i].grain_index]->avg_quat,
                                         RefDirection,
                                         &rgba[index]);
     }

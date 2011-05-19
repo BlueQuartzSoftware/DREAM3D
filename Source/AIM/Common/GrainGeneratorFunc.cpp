@@ -1440,7 +1440,7 @@ int GrainGeneratorFunc::assign_voxels(int numgrains)
   phases = new int[totalpoints];
   for(int i=0;i<totalpoints;i++)
   {
-	  gnames[i] = voxels[i].grainname;
+	  gnames[i] = voxels[i].grain_index;
 	  unassigned[i] = voxels[i].unassigned;
 	  phases[i] = voxels[i].phase;
   }
@@ -1635,13 +1635,13 @@ int GrainGeneratorFunc::assign_voxels(int numgrains)
   {
 	  if(gnames[i] > 0)
 	  {
-		  voxels[i].grainname = newnames[gnames[i]];
+		  voxels[i].grain_index = newnames[gnames[i]];
 		  voxels[i].unassigned = unassigned[i];
 		  voxels[i].phase = phases[i];
 	  }
 	  if(gnames[i] <= 0)
 	  {
-		  voxels[i].grainname = gnames[i];
+		  voxels[i].grain_index = gnames[i];
 		  voxels[i].unassigned = unassigned[i];
 		  voxels[i].phase = phases[i];
 	  }
@@ -1725,7 +1725,7 @@ void  GrainGeneratorFunc::fill_gaps(int numgrains)
     count = 0;
     for(int i = 0; i < (xpoints*ypoints*zpoints); i++)
     {
-      int grainname = voxels[i].grainname;
+      int grainname = voxels[i].grain_index;
       if(grainname <= 0)
       {
 	    count++;
@@ -1748,7 +1748,7 @@ void  GrainGeneratorFunc::fill_gaps(int numgrains)
           if(j == 3 && x == (xpoints-1)) good = 0;
 		  if(good == 1)
           {
-	        int grain = voxels[neighpoint].grainname;
+	        int grain = voxels[neighpoint].grain_index;
 	        if(grain > 0)
 	        {
 	          neighs.push_back(grain);
@@ -1779,11 +1779,11 @@ void  GrainGeneratorFunc::fill_gaps(int numgrains)
     }
     for(int j = 0; j < (xpoints*ypoints*zpoints); j++)
     {
-      int grainname = voxels[j].grainname;
+      int grainname = voxels[j].grain_index;
       int neighbor = voxels[j].neighbor;
       if(grainname <= 0 && neighbor > 0)
       {
-        voxels[j].grainname = neighbor;
+        voxels[j].grain_index = neighbor;
 		voxels[j].phase = m_Grains[neighbor]->phase;
       }
     }
@@ -1791,7 +1791,7 @@ void  GrainGeneratorFunc::fill_gaps(int numgrains)
   gsizes.resize(numgrains,0);
   for (int i = 0; i < (xpoints*ypoints*zpoints); i++)
   {
-    int name = voxels[i].grainname;
+    int name = voxels[i].grain_index;
     gsizes[name]++;
   }
   for (int i = 1; i < numgrains; i++)
@@ -1859,7 +1859,7 @@ int  GrainGeneratorFunc::place_precipitates(int numgrains)
 	if(random <= precipboundaryfraction)
 	{
 		random2 = int(rg.Random()*double(totalpoints-1));
-		while(voxels[random2].surfacevoxel == 0 || voxels[random2].grainname > numgrains)
+		while(voxels[random2].surfacevoxel == 0 || voxels[random2].grain_index > numgrains)
 		{
 			random2++;
 			if(random2 >= totalpoints) random2 = random2-totalpoints;
@@ -1868,7 +1868,7 @@ int  GrainGeneratorFunc::place_precipitates(int numgrains)
 	else if(random > precipboundaryfraction)
 	{
 		random2 = rg.Random()*(totalpoints-1);
-		while(voxels[random2].surfacevoxel != 0 || voxels[random2].grainname > numgrains)
+		while(voxels[random2].surfacevoxel != 0 || voxels[random2].grain_index > numgrains)
 		{
 			random2++;
 			if(random2 >= totalpoints) random2 = random2-totalpoints;
@@ -1884,7 +1884,7 @@ int  GrainGeneratorFunc::place_precipitates(int numgrains)
 	m_Grains[currentnumgrains]->active = 1;
 	for(size_t j = 0; j < m_Grains[currentnumgrains]->voxellist->size(); j++)
 	{
-		voxels[m_Grains[currentnumgrains]->voxellist->at(j)].grainname = currentnumgrains;
+		voxels[m_Grains[currentnumgrains]->voxellist->at(j)].grain_index = currentnumgrains;
 		voxels[m_Grains[currentnumgrains]->voxellist->at(j)].phase = m_Grains[currentnumgrains]->phase;
 	}
     totalprecipvol = totalprecipvol + (m_Grains[currentnumgrains]->voxellist->size()*resx*resy*resz);
@@ -1932,7 +1932,7 @@ int GrainGeneratorFunc::adjust_boundaries(int numgrains)
 	reassigned = new int[totalpoints];
 	for(int i=0;i<totalpoints;i++)
 	{
-	  gnames[i] = voxels[i].grainname;
+	  gnames[i] = voxels[i].grain_index;
 	  reassigned[i] = 0;
 	  gsizes[gnames[i]]++;
 	}
@@ -2065,7 +2065,7 @@ int GrainGeneratorFunc::adjust_boundaries(int numgrains)
 	m_Grains.resize(activegrainlist.size());
 	for(int i=0;i<totalpoints;i++)
 	{
-	  voxels[i].grainname = newnames[gnames[i]];
+	  voxels[i].grain_index = newnames[gnames[i]];
 	}
 	return (m_Grains.size());
 }
@@ -2116,7 +2116,7 @@ void  GrainGeneratorFunc::find_neighbors()
   gnames = new int[totalpoints];
   for(int i=0;i<totalpoints;i++)
   {
-	  gnames[i] = voxels[i].grainname;
+	  gnames[i] = voxels[i].grain_index;
   }
   for(int j = 0; j < (xpoints*ypoints*zpoints); j++)
   {
@@ -2663,7 +2663,7 @@ void  GrainGeneratorFunc::find_centroids()
   for(int j = 0; j < totalPoints; ++j)
   {
       onedge = 0;
-      int gnum = voxels[j].grainname;
+      int gnum = voxels[j].grain_index;
       graincenters[gnum][0]++;
       x = find_xcoord(j);
       y = find_ycoord(j);
@@ -2730,7 +2730,7 @@ void  GrainGeneratorFunc::find_moments ()
     u110=0;
     u011=0;
     u101=0;
-      int gnum = voxels[j].grainname;
+      int gnum = voxels[j].grain_index;
       float x = find_xcoord(j);
       float y = find_ycoord(j);
       float z = find_zcoord(j);
