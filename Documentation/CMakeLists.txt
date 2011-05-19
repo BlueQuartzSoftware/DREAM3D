@@ -66,6 +66,7 @@ set (DOCUMENTATION_SOURCE_FILES
     ${PROJECT_SOURCE_DIR}/SurfaceMeshing.dox
     ${PROJECT_SOURCE_DIR}/StatsGenerator.dox
     ${PROJECT_SOURCE_DIR}/MicrostructurePresets.dox
+    ${PROJECT_SOURCE_DIR}/StructureReaders.dox
 )
 
 set (LATEX_EPS_FILES 

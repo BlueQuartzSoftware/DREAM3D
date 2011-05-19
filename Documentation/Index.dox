@@ -11,11 +11,16 @@ Digital Representation ENvironment for Analysis of Microstructure in 3D
 
 @subpage syntheticbuilder "Synthetic Builder"
 
+@subpage structurereaders "Structure Readers"
+
 @subpage surfacemeshing "Surface Meshing"
+
 
 @subpage statsgenerator "StatsGenerator"
 
-@subpage microPreset
+@subpage microPreset "Microstructure Presets"
+
+
 
 
 
