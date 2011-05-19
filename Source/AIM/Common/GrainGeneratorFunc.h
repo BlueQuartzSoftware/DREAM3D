@@ -181,6 +181,8 @@ public:
     float costcheck_remove(size_t grainNum);
     float costcheck_add(size_t grainNum);
     void determine_neighbors();
+	float compare_2Ddistributions(std::vector<std::vector<float> >, std::vector<std::vector<float> >);
+	float compare_3Ddistributions(std::vector<std::vector<std::vector<float> > >, std::vector<std::vector<std::vector<float> > >);
     float check_neighborhooderror(int gadd, int gremove);
     float check_sizedisterror(int gadd, int gremove);
     int assign_voxels(int numgrains);
