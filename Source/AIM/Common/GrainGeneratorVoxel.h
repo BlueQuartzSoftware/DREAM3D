@@ -68,18 +68,13 @@ class AIMCOMMON_EXPORT GrainGeneratorVoxel
     void deepCopy(GrainGeneratorVoxel* graingeneratorvoxel);
 
     int grain_index;
-   	float ellipfunc;
     int alreadychecked;
-    int nearestneighbor[3];
-    float nearestneighbordistance[3];
     int phase;
     int neighbor;
     int numowners;
     int surfacevoxel;
     int unassigned;
 
-    IntVectorType grainlist;
-    FloatVectorType ellipfunclist;
     IntVectorType neighborlist;
 
   protected:
