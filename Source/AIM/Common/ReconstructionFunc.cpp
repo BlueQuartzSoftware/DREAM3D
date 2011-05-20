@@ -2512,52 +2512,52 @@ void ReconstructionFunc::define_neighborhood()
   float xn, yn, zn;
   float xdist, ydist, zdist;
   float dist, dist2, diam, diam2;
-  int dist_int, dist2_int;
+  unsigned int dist_int, dist2_int;
   size_t numgrains = m_Grains.size();
 
   for (size_t i = 1; i < numgrains; i++)
   {
-      Grain& grain = *(m_Grains[i].get());
-      if (grain.active == 1)
+    Grain& grain = *(m_Grains[i].get());
+    if (grain.active == 1)
+    {
+      x = grain.centroidx;
+      y = grain.centroidy;
+      z = grain.centroidz;
+      diam = grain.equivdiameter;
+      for (size_t j = i; j < numgrains; j++)
       {
-        x = grain.centroidx;
-        y = grain.centroidy;
-        z = grain.centroidz;
-        diam = grain.equivdiameter;
-        for (size_t j = i; j < numgrains; j++)
+        Grain& grain_j = *(m_Grains[j].get());
+        if (grain_j.active == 1)
         {
-          Grain& grain_j = *(m_Grains[j].get());
-          if (grain_j.active == 1)
+          xn = grain_j.centroidx;
+          yn = grain_j.centroidy;
+          zn = grain_j.centroidz;
+          diam2 = grain_j.equivdiameter;
+          xdist = fabs(x - xn);
+          ydist = fabs(y - yn);
+          zdist = fabs(z - zn);
+          dist = (xdist * xdist) + (ydist * ydist) + (zdist * zdist);
+          dist = powf(dist, 0.5);
+          dist2 = dist;
+          dist_int = int(dist / (diam / 2.0));
+          dist2_int = int(dist2 / (diam2 / 2.0));
+          if (dist_int < 3)
           {
-            xn = grain_j.centroidx;
-            yn = grain_j.centroidy;
-            zn = grain_j.centroidz;
-            diam2 = grain_j.equivdiameter;
-            xdist = fabs(x - xn);
-            ydist = fabs(y - yn);
-            zdist = fabs(z - zn);
-            dist = (xdist * xdist) + (ydist * ydist) + (zdist * zdist);
-            dist = powf(dist, 0.5);
-            dist2 = dist;
-            dist_int = int(dist / (diam/2.0));
-            dist2_int = int(dist2 / (diam2/2.0));
-            if (dist_int < 3)
+            for (int iter = dist_int; iter < 3; iter++)
             {
-				for(int iter=dist_int;iter<3;iter++)
-				{
-	              grain.neighbordistfunc[dist_int]++;
-				}
+              grain.neighbordistfunc[dist_int]++;
             }
-            if (dist2_int < 3)
+          }
+          if (dist2_int < 3)
+          {
+            for (int iter = dist2_int; iter < 3; iter++)
             {
-				for(int iter=dist2_int;iter<3;iter++)
-				{
-	              grain_j.neighbordistfunc[dist2_int]++;
-				}
+              grain_j.neighbordistfunc[dist2_int]++;
             }
           }
         }
       }
+    }
   }
 }
 
