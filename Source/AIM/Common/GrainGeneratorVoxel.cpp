@@ -47,8 +47,6 @@ numowners(0),
 surfacevoxel(0),
 unassigned(0)
 {
-  nearestneighbor[0] = 0; nearestneighbor[1] = 0; nearestneighbor[2] = 0;
-  nearestneighbordistance[0] = 0.0; nearestneighbordistance[1] = 0.0; nearestneighbordistance[2] = 0.0;
 //  quat[0] = 1.0; quat[1] = 0.0; quat[2] = 0.0; quat[3] = 0.0; quat[4] = 0.0;
   grainlist = IntVectorType(new std::vector<int>(0) );
   ellipfunclist = FloatVectorType(new std::vector<float>(0) );
@@ -78,9 +76,7 @@ void GrainGeneratorVoxel::deepCopy(GrainGeneratorVoxel* graingeneratorvoxel)
    grain_index = graingeneratorvoxel->grain_index;
    ellipfunc = graingeneratorvoxel->ellipfunc;
    alreadychecked = graingeneratorvoxel->alreadychecked;
-   COPY_ARRAY_3(nearestneighbor, graingeneratorvoxel);
 
-   COPY_ARRAY_3(nearestneighbordistance, graingeneratorvoxel);
 //   euler1 = graingeneratorvoxel->euler1;
 //   euler2 = graingeneratorvoxel->euler2;
 //   euler3 = graingeneratorvoxel->euler3;
