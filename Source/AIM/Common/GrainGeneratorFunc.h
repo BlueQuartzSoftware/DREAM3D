@@ -103,18 +103,12 @@ public:
     std::vector<SharedFloatArray> actualmicrotex;
     std::vector<SharedFloatArray> simmicrotex;
 
-//    int* graincounts;
     std::vector<SharedFloatArray> graincenters;
     std::vector<SharedFloatArray> grainmoments;
 
-//    Grain *precipitates;
     std::vector<Grain::Pointer> precipitates;
-//    int* psizes;
-
-
 
     std::vector<int> activegrainlist;
-    std::vector<int> precipitateorder;
     std::vector<int> takencheck;
     std::vector<std::vector<float> > grainsizedist;
     std::vector<std::vector<float> > simgrainsizedist;
