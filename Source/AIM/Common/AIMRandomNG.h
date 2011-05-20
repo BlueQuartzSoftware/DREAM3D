@@ -23,8 +23,9 @@
 #define WIN32_LEAN_AND_MEAN		// Exclude rarely-used stuff from Windows headers
 #endif
 
-#include "AIM/Common/AIMCommonConfiguration.h"
+
 #include <MXA/MXATypes.h>
+#include "AIM/Common/AIMCommonConfiguration.h"
 
 /**
 * @class AIMRandomNG AIMRandomNG.h AIM/Common/AIMRandomNG.h
@@ -50,7 +51,7 @@ class AIMCOMMON_EXPORT  AIMRandomNG
     void operator=(const AIMRandomNG&); // Operator '=' Not Implemented
 };
 
-#if CMP_WORDS_BIGENDIAN
+#ifdef CMP_WORDS_BIGENDIAN
 #define AIMRNG_OFFSET 1
 #else
 #define AIMRNG_OFFSET 0
