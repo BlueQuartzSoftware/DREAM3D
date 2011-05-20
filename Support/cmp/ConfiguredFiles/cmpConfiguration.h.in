@@ -230,7 +230,6 @@
   #cmakedefine CMP_WORDS_BIGENDIAN
 #elif defined(__BIG_ENDIAN__)
   #define CMP_WORDS_BIGENDIAN
-  #define WORDS_BIGENDIAN
 #endif
   
 #endif /* _@CMP_CONFIGURATION_HEADER_GUARD@_H_ */
