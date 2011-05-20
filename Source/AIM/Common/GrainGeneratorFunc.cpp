@@ -75,7 +75,6 @@ GrainGeneratorFunc::~GrainGeneratorFunc()
 {
 
   m_Grains.clear();
-  precipitates.clear();
 }
 
 #define GG_INIT_DOUBLE_ARRAY(array, value, size)\
@@ -111,15 +110,11 @@ void GrainGeneratorFunc::initializeArrays(std::vector<AIM::Reconstruction::Cryst
   numdiameterbins.resize(size+1);
   avgdiam.resize(size+1);
   sddiam.resize(size+1);
-  grainsizediststep.resize(size+1);
-  grainsizedist.resize(size+1);
-  simgrainsizedist.resize(size+1);
   bovera.resize(size+1);
   covera.resize(size+1);
   coverb.resize(size+1);
   omega3.resize(size+1);
-  neighborhood.resize(size+1);
-  neighbordist.resize(size+1);
+  neighborparams.resize(size+1);
 
   actualodf.resize(size+1);
   simodf.resize(size+1);
@@ -158,25 +153,32 @@ void GrainGeneratorFunc::initializeArrays(std::vector<AIM::Reconstruction::Cryst
 }
 
 
-void GrainGeneratorFunc::initialize2()
+void GrainGeneratorFunc::initialize_packinggrid()
 {
-  resx = resx*4.0;
-  resy = resy*4.0;
-  resz = resz*4.0;
   sizex = (powf(totalvol,0.33333));
   sizey = (powf(totalvol,0.33333));
   sizez = (powf(totalvol,0.33333));
   xpoints = int((sizex/resx)+1);
   ypoints = int((sizey/resy)+1);
   zpoints = int((sizez/resz)+1);
-  sizex = xpoints*resx;
-  sizey = ypoints*resy;
-  sizez = zpoints*resz;
-  totalvol = ((xpoints-1)*resx)*((ypoints-1)*resy)*((zpoints-1)*resz);
+  sizex = (xpoints-1)*resx;
+  sizey = (ypoints-1)*resy;
+  sizez = (zpoints-1)*resz;
+  totalvol = sizex*sizey*sizez;
   totalpoints = xpoints * ypoints * zpoints;
-
-  //voxels = new GrainGeneratorVoxel[totalpoints];
   voxels.reset(new GrainGeneratorVoxel[totalpoints]);
+
+  packingresx = resx*2.0;
+  packingresy = resy*2.0;
+  packingresz = resz*2.0;
+  packingxpoints = int((sizex/packingresx)+1);
+  packingypoints = int((sizey/packingresy)+1);
+  packingzpoints = int((sizez/packingresz)+1);
+  packingtotalpoints = packingxpoints*packingypoints*packingzpoints;
+  grainids.resize(packingtotalpoints,0);
+  ellipfuncs.resize(packingtotalpoints,0.0);
+  grainlists.resize(packingtotalpoints);
+  ellipfunclists.resize(packingtotalpoints);
 }
 
 #define CHECK_STATS_READ_ERROR(err, group, dataset)\
@@ -321,16 +323,6 @@ int GrainGeneratorFunc::readReconStatsData(H5ReconStatsReader::Pointer h5io)
 	  CHECK_STATS_READ_ERROR(err,  AIM::HDF5::Reconstruction, AIM::HDF5::Grain_Size_Distribution)
 	  avgdiam[phase] = double_data[0];
 	  sddiam[phase] = double_data[1];
-	  grainsizedist[phase].resize(40);
-	  simgrainsizedist[phase].resize(40);
-	  grainsizediststep[phase] = ((2*maxdiameter[phase])-(mindiameter[phase]/2.0))/grainsizedist[phase].size();
-	  float root2pi = powf((2.0 * 3.1415926535897), 0.5);
-	  float input = 0;
-	  for (int j=0;j<grainsizedist[phase].size();j++)
-	  {
-		input = ((float(j)*grainsizediststep[phase])+(grainsizediststep[phase]/2.0))+(mindiameter[phase]/2.0);
-		grainsizedist[phase][j] = (grainsizediststep[phase]/(input*double_data[1]*root2pi))*exp(-((log(float(input))-double_data[0])*(log(float(input))-double_data[0]))/(2*double_data[1]*double_data[1]));
-	  }
 
 	  AIM::Reconstruction::DistributionType dt;
 	  std::string disType;
@@ -344,34 +336,8 @@ int GrainGeneratorFunc::readReconStatsData(H5ReconStatsReader::Pointer h5io)
 	  READ_2_COLUMN_STATS_DATA(err, phase, phase, AIM::HDF5::Grain_SizeVOmega3_Distributions, omega3, AIM::Reconstruction::Beta, AIM::HDF5::Alpha, AIM::HDF5::Beta, AIM::HDF5::BetaColumnCount);
 
 	  /* Read the Neighbor Data - This MUST be the last one because of how variables are assigned bvalues and used in the next section */
-	  READ_3_COLUMN_STATS_DATA(err, phase, phase, AIM::HDF5::Grain_SizeVNeighbors_Distributions, neighborhood, AIM::Reconstruction::Power, AIM::HDF5::Alpha, AIM::HDF5::Beta, AIM::HDF5::Exp_k, AIM::HDF5::PowerLawColumnCount);
-
-	  /* Convert the data into the various "shell" data which is the data that is actually needed.
-	   * The conversion is done "in place" by extracting out the alpha, beta, and K values then
-	   * using those values to calculate the 3 values that get put back into the row.
-	   */
-	  disType = h5io->getDistributionType(phase, AIM::HDF5::Grain_SizeVNeighbors_Distributions, dt);
-	  if(dt == AIM::Reconstruction::Power)
-	  {
-	      float a, b, k;
-	      for (size_t temp7 = 0; temp7 < nBins; temp7++)
-	      {
-	        a = neighborhood[phase][temp7][0];
-	        b = neighborhood[phase][temp7][1];
-	        k = neighborhood[phase][temp7][2];
-		    neighborhood[phase][temp7][0] = a*powf(0,k)+b;
-			neighborhood[phase][temp7][1] = a*powf(1,k)+b;
-			neighborhood[phase][temp7][2] = a*powf(2,k)+b;
-		}
-	  }
-
-	  neighbordist[phase].resize(nBins);
-	  for (size_t j=0;j<nBins;j++)
-	  {
-	    neighbordist[phase][j].resize(3, 0.0);
-	  }
+	  READ_3_COLUMN_STATS_DATA(err, phase, phase, AIM::HDF5::Grain_SizeVNeighbors_Distributions, neighborparams, AIM::Reconstruction::Power, AIM::HDF5::Alpha, AIM::HDF5::Beta, AIM::HDF5::Exp_k, AIM::HDF5::PowerLawColumnCount);
   }
-
   return err;
 }
 
@@ -714,21 +680,21 @@ void  GrainGeneratorFunc::insert_grain(size_t gnum)
   xc = m_Grains[gnum]->centroidx;
   yc = m_Grains[gnum]->centroidy;
   zc = m_Grains[gnum]->centroidz;
-  column = (xc-(resx/2))/resx;
-  row = (yc-(resy/2))/resy;
-  plane = (zc-(resz/2))/resz;
-  xmin = int(column-((radcur1/resx)+1));
-  xmax = int(column+((radcur1/resx)+1));
-  ymin = int(row-((radcur1/resy)+1));
-  ymax = int(row+((radcur1/resy)+1));
-  zmin = int(plane-((radcur1/resz)+1));
-  zmax = int(plane+((radcur1/resz)+1));
-  if(xmin < -0.5*xpoints) xmin = -0.5*xpoints;
-  if(xmax > (1.5*xpoints-1)) xmax = (1.5*xpoints-1);
-  if(ymin < -0.5*ypoints) ymin = -0.5*ypoints;
-  if(ymax > (1.5*ypoints-1)) ymax = (1.5*ypoints-1);
-  if(zmin < -0.5*zpoints) zmin = -0.5*zpoints;
-  if(zmax > (1.5*zpoints-1)) zmax = (1.5*zpoints-1);
+  column = (xc-(packingresx/2))/packingresx;
+  row = (yc-(packingresy/2))/packingresy;
+  plane = (zc-(packingresz/2))/packingresz;
+  xmin = int(column-((radcur1/packingresx)+1));
+  xmax = int(column+((radcur1/packingresx)+1));
+  ymin = int(row-((radcur1/packingresy)+1));
+  ymax = int(row+((radcur1/packingresy)+1));
+  zmin = int(plane-((radcur1/packingresz)+1));
+  zmax = int(plane+((radcur1/packingresz)+1));
+  if(xmin < -0.5*packingxpoints) xmin = -0.5*packingxpoints;
+  if(xmax > (1.5*packingxpoints-1)) xmax = (1.5*packingxpoints-1);
+  if(ymin < -0.5*packingypoints) ymin = -0.5*packingypoints;
+  if(ymax > (1.5*packingypoints-1)) ymax = (1.5*packingypoints-1);
+  if(zmin < -0.5*packingzpoints) zmin = -0.5*packingzpoints;
+  if(zmax > (1.5*packingzpoints-1)) zmax = (1.5*packingzpoints-1);
   for(int iter1 = xmin; iter1 < xmax+1; iter1++)
   {
     for(int iter2 = ymin; iter2 < ymax+1; iter2++)
@@ -738,23 +704,23 @@ void  GrainGeneratorFunc::insert_grain(size_t gnum)
 		  column = iter1;
 		  row = iter2;
 		  plane = iter3;
-		  if(iter1 < 0) column = iter1+xpoints;
-		  if(iter1 > xpoints-1) column = iter1-xpoints;
-		  if(iter2 < 0) row = iter2+ypoints;
-		  if(iter2 > ypoints-1) row = iter2-ypoints;
-		  if(iter3 < 0) plane = iter3+zpoints;
-		  if(iter3 > zpoints-1) plane = iter3-zpoints;
-		  index = (plane*xpoints*ypoints)+(row*xpoints)+column;
+		  if(iter1 < 0) column = iter1+packingxpoints;
+		  if(iter1 > packingxpoints-1) column = iter1-packingxpoints;
+		  if(iter2 < 0) row = iter2+packingypoints;
+		  if(iter2 > packingypoints-1) row = iter2-packingypoints;
+		  if(iter3 < 0) plane = iter3+packingzpoints;
+		  if(iter3 > packingzpoints-1) plane = iter3-packingzpoints;
+		  index = (plane*packingxpoints*packingypoints)+(row*packingxpoints)+column;
 		  inside = -1;
-		  x = float(column)*resx;
-		  y = float(row)*resy;
-		  z = float(plane)*resz;
+		  x = float(column)*packingresx;
+		  y = float(row)*packingresy;
+		  z = float(plane)*packingresz;
 		  if(iter1 < 0) x = x-sizex;
-		  if(iter1 > xpoints-1) x = x+sizex;
+		  if(iter1 > packingxpoints-1) x = x+sizex;
 		  if(iter2 < 0) y = y-sizey;
-		  if(iter2 > ypoints-1) y = y+sizey;
+		  if(iter2 > packingypoints-1) y = y+sizey;
 		  if(iter3 < 0) z = z-sizez;
-		  if(iter3 > zpoints-1) z = z+sizez;
+		  if(iter3 > packingzpoints-1) z = z+sizez;
 		  dist = ((x-xc)*(x-xc))+((y-yc)*(y-yc))+((z-zc)*(z-zc));
 		  dist = powf(dist,0.5);
 		  if(dist < radcur1)
@@ -840,17 +806,17 @@ void  GrainGeneratorFunc::remove_grain(size_t gnum)
 //  int neigh;
   for(size_t i=0;i<m_Grains[gnum]->voxellist->size();i++)
   {
-  index = m_Grains[gnum]->voxellist->at(i);
-  ellipfunc = m_Grains[gnum]->ellipfunclist->at(i);
-  voxels[index].grainlist->erase(std::remove(voxels[index].grainlist->begin(),voxels[index].grainlist->end(),gnum),voxels[index].grainlist->end());
-  voxels[index].ellipfunclist->erase(std::remove(voxels[index].ellipfunclist->begin(),voxels[index].ellipfunclist->end(),ellipfunc),voxels[index].ellipfunclist->end());
+	  index = m_Grains[gnum]->voxellist->at(i);
+	  ellipfunc = m_Grains[gnum]->ellipfunclist->at(i);
+	  grainlists[index].erase(std::remove(grainlists[index].begin(),grainlists[index].end(),gnum),grainlists[index].end());
+	  ellipfunclists[index].erase(std::remove(ellipfunclists[index].begin(),ellipfunclists[index].end(),ellipfunc),ellipfunclists[index].end());
   }
   for(int i=0;i<3;i++)
   {
     for(size_t j=0;j<m_Grains[gnum]->neighbordistfunclist[i].size();j++)
     {
-    index = m_Grains[gnum]->neighbordistfunclist[i][j];
-    m_Grains[index]->neighbordistfunc[i] = m_Grains[index]->neighbordistfunc[i]-1;
+	    index = m_Grains[gnum]->neighbordistfunclist[i][j];
+	    m_Grains[index]->neighbordistfunc[i] = m_Grains[index]->neighbordistfunc[i]-1;
     }
   }
 }
@@ -864,10 +830,10 @@ void  GrainGeneratorFunc::add_grain(size_t gnum)
   {
 	  index = m_Grains[gnum]->voxellist->at(i);
 	  ellipfunc = m_Grains[gnum]->ellipfunclist->at(i);
-	  voxels[index].grainlist->resize(voxels[index].grainlist->size()+1);
-	  voxels[index].ellipfunclist->resize(voxels[index].ellipfunclist->size()+1);
-	  voxels[index].grainlist->at(voxels[index].grainlist->size()-1) = gnum;
-	  voxels[index].ellipfunclist->at(voxels[index].ellipfunclist->size()-1) = ellipfunc;
+	  grainlists[index].resize(grainlists[index].size()+1);
+	  ellipfunclists[index].resize(ellipfunclists[index].size()+1);
+	  grainlists[index][grainlists[index].size()-1] = gnum;
+	  ellipfunclists[index][ellipfunclists[index].size()-1] = ellipfunc;
   }
   for(int i=0;i<3;i++)
   {
@@ -935,16 +901,15 @@ float GrainGeneratorFunc::check_neighborhooderror(int gadd, int gremove)
   int index;
   vector<int> count;
   int phase;
-  size_t xtalSize = crystruct.size();
-  for (std::vector<AIM::Reconstruction::CrystalStructure>::size_type iter = 1; iter < xtalSize; ++iter)
+  for (size_t iter = 0; iter < neighbordist.size(); ++iter)
   {
-	  phase = iter;
-	  count.resize(numdiameterbins[phase],0);
-	  for(int i=0;i<numdiameterbins[phase];i++)
+	  phase = primaryphases[iter];
+	  count.resize(simneighbordist[iter].size(),0);
+	  for(int i=0;i<simneighbordist[iter].size();i++)
 	  {
-		neighbordist[phase][i][0] = 0;
-		neighbordist[phase][i][1] = 0;
-		neighbordist[phase][i][2] = 0;
+		simneighbordist[iter][i][0] = 0;
+		simneighbordist[iter][i][1] = 0;
+		simneighbordist[iter][i][2] = 0;
 	  }
 	  if(gadd > 0 && m_Grains[gadd]->phase == phase)
 	  {
@@ -983,7 +948,7 @@ float GrainGeneratorFunc::check_neighborhooderror(int gadd, int gremove)
 			nnum = m_Grains[index]->neighbordistfunc[j];
 			if(nnum > 0)
 			{
-			  neighbordist[phase][dia][j] = neighbordist[phase][dia][j]+nnum;
+			  simneighbordist[iter][dia][j] = simneighbordist[iter][dia][j]+nnum;
 			}
 		  }
 		  count[dia]++;
@@ -1000,16 +965,17 @@ float GrainGeneratorFunc::check_neighborhooderror(int gadd, int gremove)
 		  nnum = m_Grains[index]->neighbordistfunc[j];
 		  if(nnum > 0)
 		  {
-			neighbordist[phase][dia][j] = neighbordist[phase][dia][j]+nnum;
+			simneighbordist[iter][dia][j] = simneighbordist[iter][dia][j]+nnum;
 		  }
 		}
 		count[dia]++;
 	  }
-	  for(int i=0;i<numdiameterbins[phase];i++)
+	  for(int i=0;i<simneighbordist[iter].size();i++)
 	  {
 		for(int j=0;j<3;j++)
 		{
-			neighbordist[phase][i][j] = neighbordist[phase][i][j]/double(count[i]);
+			simneighbordist[iter][i][j] = simneighbordist[iter][i][j]/double(count[i]);
+			if(count[i] == 0) simneighbordist[iter][i][j] = 0.0;
 		}
 	  }
 	  if(gadd > 0 && m_Grains[gadd]->phase == phase)
@@ -1035,7 +1001,7 @@ float GrainGeneratorFunc::check_neighborhooderror(int gadd, int gremove)
 		}
 	  }
   }
-  neighborerror = compare_3Ddistributions(neighborhood, neighbordist);
+  neighborerror = compare_3Ddistributions(neighbordist, simneighbordist);
   return neighborerror;
 }
 
@@ -1045,13 +1011,13 @@ float GrainGeneratorFunc::costcheck_remove(size_t gnum)
   float removecost = 0;
   for(size_t i=0;i<m_Grains[gnum]->voxellist->size();i++)
   {
-  index = m_Grains[gnum]->voxellist->at(i);
-  if(voxels[index].grainlist->size() == 1) removecost = removecost+1.0;
-  if(voxels[index].grainlist->size() > 1)
-  {
-    if(voxels[index].grainlist->size() == 2) removecost = removecost - voxels[index].ellipfunclist->at(0);
-    removecost = removecost - m_Grains[gnum]->ellipfunclist->at(i);
-  }
+	  index = m_Grains[gnum]->voxellist->at(i);
+	  if(grainlists[index].size() == 1) removecost = removecost+1.0;
+	  if(grainlists[index].size() > 1)
+	  {
+	    if(grainlists[index].size() == 2) removecost = removecost - ellipfunclists[index][0];
+	    removecost = removecost - m_Grains[gnum]->ellipfunclist->at(i);
+	  }
   }
   return removecost;
 }
@@ -1062,13 +1028,13 @@ float GrainGeneratorFunc::costcheck_add(size_t gnum)
   float addcost = 0;
   for(size_t i=0;i<m_Grains[gnum]->voxellist->size();i++)
   {
-  index = m_Grains[gnum]->voxellist->at(i);
-  if(voxels[index].grainlist->size() == 0) addcost = addcost-1.0;
-  if(voxels[index].grainlist->size() >= 1)
-  {
-    if(voxels[index].grainlist->size() == 1) addcost = addcost + voxels[index].ellipfunclist->at(0);
-    addcost = addcost + m_Grains[gnum]->ellipfunclist->at(i);
-  }
+	  index = m_Grains[gnum]->voxellist->at(i);
+	  if(grainlists[index].size() == 0) addcost = addcost-1.0;
+	  if(grainlists[index].size() >= 1)
+	  {
+	    if(grainlists[index].size() == 1) addcost = addcost + ellipfunclists[index][0];
+	    addcost = addcost + m_Grains[gnum]->ellipfunclist->at(i);
+	  }
   }
   return addcost;
 }
@@ -1087,6 +1053,8 @@ float GrainGeneratorFunc::compare_2Ddistributions(std::vector<std::vector<float>
 			mag2 = mag2 + (array2[i][j]*array2[i][j]);
 		}
 	}
+	mag1 = powf(mag1,0.5);
+	mag2 = powf(mag2,0.5);
 	bhattmoment = bhattmoment/(mag1*mag2);
   return bhattmoment;
 }
@@ -1107,6 +1075,8 @@ float GrainGeneratorFunc::compare_3Ddistributions(std::vector<std::vector<std::v
 			}
 		}
 	}
+	mag1 = powf(mag1,0.5);
+	mag2 = powf(mag2,0.5);
 	bhattmoment = bhattmoment/(mag1*mag2);
   return bhattmoment;
 }
@@ -1117,14 +1087,13 @@ float GrainGeneratorFunc::check_sizedisterror(int gadd, int gremove)
   int index;
   int count = 0;
   int phase;
-  size_t xtalSize = crystruct.size();
-  for(std::vector<AIM::Reconstruction::CrystalStructure>::size_type iter = 1; iter < xtalSize; ++iter)
+  for(size_t iter = 0; iter < grainsizedist.size(); ++iter)
   {
-	  phase = iter;
+	  phase = primaryphases[iter];
 	  count = 0;
 	  for(int i=0;i<40;i++)
 	  {
-		simgrainsizedist[phase][i] = 0.0;
+		simgrainsizedist[iter][i] = 0.0;
 	  }
 	  for(size_t b=1;b<activegrainlist.size();b++)
 	  {
@@ -1132,25 +1101,26 @@ float GrainGeneratorFunc::check_sizedisterror(int gadd, int gremove)
 		if(index != gremove && m_Grains[index]->surfacegrain == 0 && m_Grains[index]->phase == phase)
 		{
 		  dia = m_Grains[index]->equivdiameter;
-		  dia = (dia-(mindiameter[phase]/2.0))/grainsizediststep[phase];
+		  dia = (dia-(mindiameter[phase]/2.0))/grainsizediststep[iter];
 		  if(dia < 0) dia = 0;
 		  if(dia > 39) dia = 39;
-		  simgrainsizedist[phase][int(dia)]++;
+		  simgrainsizedist[iter][int(dia)]++;
 		  count++;
 		}
 	  }
 	  if(gadd > 0 && m_Grains[gadd]->surfacegrain == 0 && m_Grains[gadd]->phase == phase)
 	  {
 		dia = m_Grains[gadd]->equivdiameter;
-		dia = (dia-(mindiameter[phase]/2.0))/grainsizediststep[phase];
+		dia = (dia-(mindiameter[phase]/2.0))/grainsizediststep[iter];
 		if(dia < 0) dia = 0;
 		if(dia > 39) dia = 39;
-		simgrainsizedist[phase][int(dia)]++;
+		simgrainsizedist[iter][int(dia)]++;
 		count++;
 	  }
 	  for(int i=0;i<40;i++)
 	  {
-		simgrainsizedist[phase][i] = simgrainsizedist[phase][i]/float(count);
+		simgrainsizedist[iter][i] = simgrainsizedist[iter][i]/float(count);
+		if(count == 0) simgrainsizedist[iter][i] = 0.0;
 	  }
   }
   sizedisterror = compare_2Ddistributions(simgrainsizedist, grainsizedist);
@@ -1176,12 +1146,9 @@ int  GrainGeneratorFunc::pack_grains(const std::string &filename, int numgrains)
   int acceptedmoves = 0;
   float acceptableerror = 0.0;
   activegrainlist.resize(numgrains + 1);
-  vector<int> primaryphases;
-  primaryphases.resize(1,0);
-  vector<double> primaryphasefractions;
-  primaryphasefractions.resize(1,0);
   double totalprimaryfractions = 0.0;
-  for (std::vector<AIM::Reconstruction::CrystalStructure>::size_type i = 1; i < crystruct.size();++i)
+  // find which phases are primary phases
+  for (size_t i = 1; i < phaseType.size();++i)
   {
 	  if(phaseType[i] == AIM::Reconstruction::PrimaryPhase)
 	  {
@@ -1190,15 +1157,18 @@ int  GrainGeneratorFunc::pack_grains(const std::string &filename, int numgrains)
 		totalprimaryfractions = totalprimaryfractions + phasefraction[i];
 	  }
   }
-  for (size_t i = 1; i < primaryphasefractions.size(); i++)
+  // scale the primary phase fractions to total to 1
+  for (size_t i = 0; i < primaryphasefractions.size(); i++)
   {
 	  primaryphasefractions[i] = primaryphasefractions[i]/totalprimaryfractions;
-	  primaryphasefractions[i] = primaryphasefractions[i] + primaryphasefractions[i-1];
+	  if(i > 0) primaryphasefractions[i] = primaryphasefractions[i] + primaryphasefractions[i-1];
+	  if(i == 0) primaryphasefractions[i] = primaryphasefractions[i];
   }
+  // generate the large amount of grains
   for (int i = 1; i < (numextragrains + 1); i++)
   {
     random = rg.Random();
-    for (std::vector<AIM::Reconstruction::CrystalStructure>::size_type j = 1; j < primaryphases.size();++j)
+    for (size_t j = 0; j < primaryphases.size();++j)
     {
       if (random < primaryphasefractions[j])
       {
@@ -1209,8 +1179,46 @@ int  GrainGeneratorFunc::pack_grains(const std::string &filename, int numgrains)
     generate_grain(i, phase);
     totalvol = totalvol + m_Grains[i]->volume;
   }
+  // determine the volume needed for the desired number of grains and initialize the coarse array of voxels for grain packing
   totalvol = totalvol / (float(numextragrains) / float(numgrains));
-  initialize2();
+  // this initializes the arrays to hold the details of the locations of all of the grains during packing
+  initialize_packinggrid();
+  // initialize the sim and goal size distributions for the primary phases
+  grainsizedist.resize(primaryphases.size());
+  simgrainsizedist.resize(primaryphases.size());
+  grainsizediststep.resize(primaryphases.size());
+  for(int i = 0; i < primaryphases.size(); i++)
+  {
+	  phase = primaryphases[i];
+	  grainsizedist[i].resize(40);
+	  simgrainsizedist[i].resize(40);
+	  grainsizediststep[i] = ((2*maxdiameter[phase])-(mindiameter[phase]/2.0))/grainsizedist[i].size();
+	  float root2pi = powf((2.0 * 3.1415926535897), 0.5);
+	  float input = 0;
+	  for (int j=0;j<grainsizedist[i].size();j++)
+	  {
+		input = ((float(j)*grainsizediststep[i])+(grainsizediststep[i]/2.0))+(mindiameter[phase]/2.0);
+		grainsizedist[i][j] = (grainsizediststep[i]/(input*sddiam[phase]*root2pi))*exp(-((log(float(input))-avgdiam[phase])*(log(float(input))-avgdiam[phase]))/(2*sddiam[phase]*sddiam[phase]));
+	  }
+  }
+  // initialize the sim and goal neighbor distribution for the primary phases
+  neighbordist.resize(primaryphases.size());
+  simneighbordist.resize(primaryphases.size());
+  for(int i = 0; i < primaryphases.size(); i++)
+  {
+	  phase = primaryphases[i];
+	  neighbordist[i].resize(numdiameterbins[phase]);
+	  simneighbordist[i].resize(numdiameterbins[phase]);
+	  for (int j=0;j<neighbordist[i].size();j++)
+	  {
+		neighbordist[i][j].resize(3);
+		simneighbordist[i][j].resize(3);
+		neighbordist[i][j][0] = neighborparams[phase][j][0]*powf(0.0,neighborparams[phase][j][2])+neighborparams[phase][j][1];
+		neighbordist[i][j][1] = neighborparams[phase][j][0]*powf(1.0,neighborparams[phase][j][2])+neighborparams[phase][j][1];
+		neighbordist[i][j][2] = neighborparams[phase][j][0]*powf(2.0,neighborparams[phase][j][2])+neighborparams[phase][j][1];
+	  }
+  }
+  // generate the centroids for the large number of grains
   for (int i = 1; i < (numextragrains + 1); i++)
   {
     xc = rg.Random() * (xpoints * resx);
@@ -1220,12 +1228,16 @@ int  GrainGeneratorFunc::pack_grains(const std::string &filename, int numgrains)
     m_Grains[i]->centroidy = yc;
     m_Grains[i]->centroidz = zc;
   }
+  // determine which voxels are within each grain and where within the grain they are located
   for (int i = 1; i < (numextragrains + 1); i++)
   {
     insert_grain(i);
   }
+  // determine which grains neighbor each other
   if (neighborhooderrorweight > 0) determine_neighbors();
+  // initialize filling error
   oldfillingerror = totalpoints;
+  // select desired number of grains to start and update the filling error as grains are added
   for (int i = 1; i < numgrains + 1; i++)
   {
     int random = int(rg.Random() * (numextragrains));
@@ -1243,18 +1255,20 @@ int  GrainGeneratorFunc::pack_grains(const std::string &filename, int numgrains)
     activegrainlist[i] = random;
     oldfillingerror = oldfillingerror + addcost;
   }
+  // determine initial size distribution and neighbor distribution errors
   oldsizedisterror = check_sizedisterror(-1000, -1000);
   oldneighborhooderror = check_neighborhooderror(-1000, -1000);
+  // begin swaping/moving/adding/removing grains to try to improve packing
   for (int iteration = 0; iteration < (250000); iteration++)
   {
     change1 = 0;
     change2 = 0;
     change3 = 0;
-    //    acceptableerror = 0.005*exp(-7*(iteration/float(250000)));
     acceptableerror = 0;
     int option = iteration % 4;
     if (iteration % 100 == 0) outFile << oldfillingerror << " " << oldsizedisterror << "  " << oldneighborhooderror << "  " << acceptedmoves << std::endl;
-    if (option == 0)
+	// this option adds a grain not currently active
+	if (option == 0)
     {
       int random = int(rg.Random() * (numextragrains));
       if (random == 0) random = 1;
@@ -1285,6 +1299,7 @@ int  GrainGeneratorFunc::pack_grains(const std::string &filename, int numgrains)
         acceptedmoves++;
       }
     }
+	// this option removes a grain that is currently active
     if (option == 1)
     {
       size_t random = int(rg.Random() * activegrainlist.size());
@@ -1310,6 +1325,7 @@ int  GrainGeneratorFunc::pack_grains(const std::string &filename, int numgrains)
         acceptedmoves++;
       }
     }
+	// this option removes one active grain and adds one non-active grain
     if (option == 2)
     {
       size_t random1 = int(rg.Random() * activegrainlist.size());
@@ -1349,6 +1365,7 @@ int  GrainGeneratorFunc::pack_grains(const std::string &filename, int numgrains)
         acceptedmoves++;
       }
     }
+	// this option removes an active grain and replaces it with a non-active grain with a centroid inside of the removed grain
     if (option == 3)
     {
       size_t random1 = int(rg.Random() * activegrainlist.size());
@@ -1421,16 +1438,6 @@ int GrainGeneratorFunc::assign_voxels(int numgrains)
   float x, y, z;
   int phase;
   int xmin, xmax, ymin, ymax, zmin, zmax;
-  resx = resx/4.0;
-  resy = resy/4.0;
-  resz = resz/4.0;
-  xpoints = int((sizex/resx)+1);
-  ypoints = int((sizey/resy)+1);
-  zpoints = int((sizez/resz)+1);
-  totalpoints = xpoints * ypoints * zpoints;
-//  delete [] voxels;
-//  voxels = new GrainGeneratorVoxel[totalpoints];
-  voxels.reset(new GrainGeneratorVoxel[totalpoints]);
 
   int *gnames;
   gnames = new int[totalpoints];
@@ -1646,6 +1653,10 @@ int GrainGeneratorFunc::assign_voxels(int numgrains)
 		  voxels[i].phase = phases[i];
 	  }
   }
+  delete [] gnames;
+  delete [] phases;
+  delete [] unassigned;
+  delete [] newnames;
   return goodcount;
 }
 void  GrainGeneratorFunc::assign_eulers(int numgrains)
@@ -1814,12 +1825,8 @@ int  GrainGeneratorFunc::place_precipitates(int numgrains)
   float random;
   int random2;
   float xc, yc, zc;
-  vector<int> precipitatephases;
-  precipitatephases.resize(1,0);
-  vector<double> precipitatephasefractions;
-  precipitatephasefractions.resize(1,0);
   double totalprecipitatefractions = 0.0;
-  for (std::vector<AIM::Reconstruction::CrystalStructure>::size_type i = 1; i < crystruct.size();++i)
+  for (size_t i = 1; i < phaseType.size();++i)
   {
 	  if(phaseType[i] == AIM::Reconstruction::PrecipitatePhase)
 	  {
@@ -1828,8 +1835,7 @@ int  GrainGeneratorFunc::place_precipitates(int numgrains)
 		totalprecipitatefractions = totalprecipitatefractions + phasefraction[i];
 	  }
   }
-  size_t size = precipitatephasefractions.size();
-  for (size_t i = 1; i < size; i++)
+  for (size_t i = 0; i < precipitatephases.size(); i++)
   {
 	  precipitatephasefractions[i] = precipitatephasefractions[i]/totalprecipitatefractions;
 	  precipitatephasefractions[i] = precipitatephasefractions[i] + precipitatephasefractions[i-1];
@@ -1837,7 +1843,7 @@ int  GrainGeneratorFunc::place_precipitates(int numgrains)
   while(totalprecipvol < totalvol*totalprecipitatefractions)
   {
     random = rg.Random();
-    for (std::vector<AIM::Reconstruction::CrystalStructure>::size_type j = 1; j < precipitatephases.size();++j)
+    for (size_t j = 0; j < precipitatephases.size();++j)
     {
       if (random < precipitatephasefractions[j])
       {
@@ -2069,10 +2075,6 @@ int GrainGeneratorFunc::adjust_boundaries(int numgrains)
 	}
 	return (m_Grains.size());
 }
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 
 void  GrainGeneratorFunc::find_neighbors()
 {
@@ -3053,6 +3055,13 @@ int GrainGeneratorFunc::volume_stats(H5ReconStatsWriter::Pointer h5io)
   float actualgrains = 0;
   float avglogdiam = 0;
   int numbins;
+  std::vector<std::vector<std::vector<float> > > svbovera;
+  std::vector<std::vector<std::vector<float> > > svcovera;
+  std::vector<std::vector<std::vector<float> > > svcoverb;
+  std::vector<std::vector<std::vector<float> > > svschmid;
+  std::vector<std::vector<std::vector<float> > > svomega3;
+  std::vector<std::vector<std::vector<float> > > neighborhood;
+  std::vector<std::vector<std::vector<float> > > neighborhoodfit;
   size_t xtalSize = crystruct.size();
   neighborhood.resize(xtalSize);
   neighborhoodfit.resize(xtalSize);
