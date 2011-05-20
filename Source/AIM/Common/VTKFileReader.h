@@ -35,6 +35,7 @@
 
 
 #include <MXA/Common/MXASetGetMacros.h>
+#include "AIM/Common/AIMCommonConfiguration.h"
 
 /**
  * @class VTKFileReader VTKFileReader.h PathToHeader/VTKFileReader.h
@@ -76,7 +77,7 @@
  * @date May 19, 2011
  * @version 1.0
  */
-class VTKFileReader
+class AIMCOMMON_EXPORT VTKFileReader
 {
   public:
     MXA_SHARED_POINTERS(VTKFileReader)
