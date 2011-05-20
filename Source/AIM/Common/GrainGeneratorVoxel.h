@@ -70,8 +70,6 @@ class AIMCOMMON_EXPORT GrainGeneratorVoxel
     int grain_index;
    	float ellipfunc;
     int alreadychecked;
-    int nearestneighbor[3];
-    float nearestneighbordistance[3];
     int phase;
     int neighbor;
     int numowners;
