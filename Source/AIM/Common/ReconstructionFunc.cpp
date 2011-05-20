@@ -1501,7 +1501,7 @@ void ReconstructionFunc::reorder_grains(const std::string &reconVisFile)
 
   for (int i = 0; i < totalpoints; i++)
   {
-	if(voxels[i].grain_index >= currentgrain)
+	if(voxels[i].grain_index >= (int)(currentgrain) )
     {
       voxels[i].grain_index = -2;
 	  voxels[i].unassigned = 1;
@@ -1668,7 +1668,7 @@ int ReconstructionFunc::remove_smallgrains(size_t numgrains)
           if ((k == 2 || k == 5 || k == 8 || k == 11 || k == 13 || k == 16 || k == 19 || k == 22 || k == 25) && col == (xpoints - 1)) good = 0;
           if (good == 1 && voxels[neighbor].alreadychecked == 0)
           {
-            int grainname = voxels[neighbor].grain_index;
+            size_t grainname = static_cast<size_t>(voxels[neighbor].grain_index);
             if (grainname == i)
             {
               voxelslist[size] = neighbor;

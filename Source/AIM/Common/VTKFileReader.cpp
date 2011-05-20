@@ -191,6 +191,11 @@ int VTKFileReader::readHeader()
   {
     char text[256];
     int n = sscanf(buf, "%s %s", text, &(text[16]) );
+    if (n < 2)
+    {
+      std::cout << "Error Reading the type of data set. Was expecting 2 fields but got " << n << std::endl;
+      return -1;
+    }
     std::string dataset(&(text[16]));
     setDatasetType(dataset);
   }
