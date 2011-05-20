@@ -905,7 +905,7 @@ float GrainGeneratorFunc::check_neighborhooderror(int gadd, int gremove)
   {
 	  phase = primaryphases[iter];
 	  count.resize(simneighbordist[iter].size(),0);
-	  for(int i=0;i<simneighbordist[iter].size();i++)
+	  for(size_t i=0;i<simneighbordist[iter].size();i++)
 	  {
 		simneighbordist[iter][i][0] = 0;
 		simneighbordist[iter][i][1] = 0;
@@ -970,14 +970,14 @@ float GrainGeneratorFunc::check_neighborhooderror(int gadd, int gremove)
 		}
 		count[dia]++;
 	  }
-	  for(int i=0;i<simneighbordist[iter].size();i++)
+	  for(size_t i=0;i<simneighbordist[iter].size();i++)
 	  {
-		for(int j=0;j<3;j++)
-		{
-			simneighbordist[iter][i][j] = simneighbordist[iter][i][j]/double(count[i]);
-			if(count[i] == 0) simneighbordist[iter][i][j] = 0.0;
-		}
-	  }
+      for (size_t j = 0; j < 3; j++)
+      {
+        simneighbordist[iter][i][j] = simneighbordist[iter][i][j] / double(count[i]);
+        if (count[i] == 0) simneighbordist[iter][i][j] = 0.0;
+      }
+    }
 	  if(gadd > 0 && m_Grains[gadd]->phase == phase)
 	  {
 		for(int i=0;i<3;i++)
@@ -1044,9 +1044,9 @@ float GrainGeneratorFunc::compare_2Ddistributions(std::vector<std::vector<float>
 	float bhattmoment = 0;
 	float mag1 = 0;
 	float mag2 = 0;
-	for(int i=0;i<array1.size();i++)
+	for(size_t i=0;i<array1.size();i++)
 	{
-		for(int j=0;j<array1[i].size();j++)
+		for(size_t j=0;j<array1[i].size();j++)
 		{
 			bhattmoment = bhattmoment + (array1[i][j]*array2[i][j]);
 			mag1 = mag1 + (array1[i][j]*array1[i][j]);
@@ -1063,11 +1063,11 @@ float GrainGeneratorFunc::compare_3Ddistributions(std::vector<std::vector<std::v
 	float bhattmoment = 0;
 	float mag1 = 0;
 	float mag2 = 0;
-	for(int i=0;i<array1.size();i++)
+	for(size_t i=0;i<array1.size();i++)
 	{
-		for(int j=0;j<array1[i].size();j++)
+		for(size_t j=0;j<array1[i].size();j++)
 		{
-			for(int k=0;k<array1[i][j].size();k++)
+			for(size_t k=0;k<array1[i][j].size();k++)
 			{
 				bhattmoment = bhattmoment + (array1[i][j][k]*array2[i][j][k]);
 				mag1 = mag1 + (array1[i][j][k]*array1[i][j][k]);
@@ -1187,7 +1187,7 @@ int  GrainGeneratorFunc::pack_grains(const std::string &filename, int numgrains)
   grainsizedist.resize(primaryphases.size());
   simgrainsizedist.resize(primaryphases.size());
   grainsizediststep.resize(primaryphases.size());
-  for(int i = 0; i < primaryphases.size(); i++)
+  for(size_t i = 0; i < primaryphases.size(); i++)
   {
 	  phase = primaryphases[i];
 	  grainsizedist[i].resize(40);
@@ -1195,7 +1195,7 @@ int  GrainGeneratorFunc::pack_grains(const std::string &filename, int numgrains)
 	  grainsizediststep[i] = ((2*maxdiameter[phase])-(mindiameter[phase]/2.0))/grainsizedist[i].size();
 	  float root2pi = powf((2.0 * 3.1415926535897), 0.5);
 	  float input = 0;
-	  for (int j=0;j<grainsizedist[i].size();j++)
+	  for (size_t j=0;j<grainsizedist[i].size();j++)
 	  {
 		input = ((float(j)*grainsizediststep[i])+(grainsizediststep[i]/2.0))+(mindiameter[phase]/2.0);
 		grainsizedist[i][j] = (grainsizediststep[i]/(input*sddiam[phase]*root2pi))*exp(-((log(float(input))-avgdiam[phase])*(log(float(input))-avgdiam[phase]))/(2*sddiam[phase]*sddiam[phase]));
@@ -1204,12 +1204,12 @@ int  GrainGeneratorFunc::pack_grains(const std::string &filename, int numgrains)
   // initialize the sim and goal neighbor distribution for the primary phases
   neighbordist.resize(primaryphases.size());
   simneighbordist.resize(primaryphases.size());
-  for(int i = 0; i < primaryphases.size(); i++)
+  for(size_t i = 0; i < primaryphases.size(); i++)
   {
 	  phase = primaryphases[i];
 	  neighbordist[i].resize(numdiameterbins[phase]);
 	  simneighbordist[i].resize(numdiameterbins[phase]);
-	  for (int j=0;j<neighbordist[i].size();j++)
+	  for (size_t j=0;j<neighbordist[i].size();j++)
 	  {
 		neighbordist[i][j].resize(3);
 		simneighbordist[i][j].resize(3);
