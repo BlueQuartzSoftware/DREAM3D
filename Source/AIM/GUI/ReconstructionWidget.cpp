@@ -510,7 +510,7 @@ void ReconstructionWidget::on_m_GoBtn_clicked()
     {
       QString msg("The Phase Type for phase ");
       msg.append(QString::number(i)).append(" is not set correctly. Please set the phase to Primary, Precipitate or Transformation.");
-      int ret = QMessageBox::critical(this, QString("Grain Generator"), msg, QMessageBox::Ok | QMessageBox::Default);
+      QMessageBox::critical(this, QString("Grain Generator"), msg, QMessageBox::Ok | QMessageBox::Default);
       return;
     }
     phaseTypes.push_back(enPtValue);
