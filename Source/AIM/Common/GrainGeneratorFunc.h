@@ -76,11 +76,18 @@ public:
     float resx;
     float resy;
     float resz;
+    float packingresx;
+    float packingresy;
+    float packingresz;
 
     int xpoints;
     int ypoints;
     int zpoints;
     int totalpoints;
+    int packingxpoints;
+    int packingypoints;
+    int packingzpoints;
+    int packingtotalpoints;
 
     float misorientationtolerance;
 
@@ -92,44 +99,39 @@ public:
 
     std::vector<Grain::Pointer> m_Grains;
 
-
-    std::vector<SharedFloatArray> actualodf;
+	std::vector<int> grainids;
+	std::vector<float> ellipfuncs;
+	std::vector<std::vector<int> > grainlists;
+	std::vector<std::vector<float> > ellipfunclists;
+	
+	std::vector<SharedFloatArray> actualodf;
     std::vector<SharedFloatArray> simodf;
     std::vector<SharedFloatArray> axisodf;
-
 
     std::vector<SharedFloatArray> actualmdf;
     std::vector<SharedFloatArray> simmdf;
     std::vector<SharedFloatArray> actualmicrotex;
     std::vector<SharedFloatArray> simmicrotex;
 
-//    int* graincounts;
     std::vector<SharedFloatArray> graincenters;
     std::vector<SharedFloatArray> grainmoments;
 
-//    Grain *precipitates;
-    std::vector<Grain::Pointer> precipitates;
-//    int* psizes;
-
-
+	std::vector<int> primaryphases;
+	std::vector<double> primaryphasefractions;
+	std::vector<int> precipitatephases;
+	std::vector<double> precipitatephasefractions;
 
     std::vector<int> activegrainlist;
-    std::vector<int> precipitateorder;
     std::vector<int> takencheck;
-    std::vector<std::vector<float> > grainsizedist;
-    std::vector<std::vector<float> > simgrainsizedist;
     std::vector<std::vector<std::vector<float> > > bovera;
     std::vector<std::vector<std::vector<float> > > covera;
     std::vector<std::vector<std::vector<float> > > coverb;
-    std::vector<std::vector<std::vector<float> > > neighborhood;
-    std::vector<std::vector<std::vector<float> > > neighborhoodfit;
     std::vector<std::vector<std::vector<float> > > omega3;
+    std::vector<std::vector<std::vector<float> > > neighborparams;
+    std::vector<std::vector<float> > grainsizedist;
+    std::vector<std::vector<float> > simgrainsizedist;
     std::vector<std::vector<std::vector<float> > > neighbordist;
-    std::vector<std::vector<std::vector<float> > > svbovera;
-    std::vector<std::vector<std::vector<float> > > svcovera;
-    std::vector<std::vector<std::vector<float> > > svcoverb;
-    std::vector<std::vector<std::vector<float> > > svschmid;
-    std::vector<std::vector<std::vector<float> > > svomega3;
+    std::vector<std::vector<std::vector<float> > > simneighbordist;
     std::vector<std::vector<std::vector<int> > > boundaries;
 
     float machineepsilon;
@@ -176,7 +178,7 @@ public:
 
 #endif
 	void initializeArrays(std::vector<AIM::Reconstruction::CrystalStructure> structures);
-    void initialize2();
+    void initialize_packinggrid();
 
     void write_eulerangles(const std::string & filename);
     void write_graindata(const std::string & filename);
