@@ -38,7 +38,7 @@ int main(int argc, char **argv)
   boost::shared_array<ReconstructionVoxel> voxels (new ReconstructionVoxel[2]);
   voxels.reset(NULL);
   ReconstructionVoxel* v = &(voxels[1]);
-
+  std::cout << "v->alreadychecked" << v->alreadychecked << std::endl;
   std::cout << "Ending" << std::endl;
   return 0;
 
