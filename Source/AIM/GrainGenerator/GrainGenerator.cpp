@@ -215,6 +215,14 @@ void GrainGenerator::compute()
   }
   else if (m_AlreadyFormed == true)
   {
+    progressMessage(AIM_STRING("Loading Stats Data"), 10);
+    err = m->readReconStatsData(h5reader);
+    CHECK_FOR_CANCELED(GrainGeneratorFunc, readReconStatsData)
+
+    progressMessage(AIM_STRING("Loading Axis Orientation Data"), 25);
+    err = m->readAxisOrientationData(h5reader);
+    CHECK_FOR_CANCELED(GrainGeneratorFunc, readAxisOrientationData);
+
     progressMessage(AIM_STRING("Reading Structure"), 40);
     std::string ext = MXAFileInfo::extension(m_StructureFile);
     if (ext.compare("vtk") == 0) {
