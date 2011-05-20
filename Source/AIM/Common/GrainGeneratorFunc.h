@@ -76,11 +76,18 @@ public:
     float resx;
     float resy;
     float resz;
+    float packingresx;
+    float packingresy;
+    float packingresz;
 
     int xpoints;
     int ypoints;
     int zpoints;
     int totalpoints;
+    int packingxpoints;
+    int packingypoints;
+    int packingzpoints;
+    int packingtotalpoints;
 
     float misorientationtolerance;
 
@@ -92,11 +99,14 @@ public:
 
     std::vector<Grain::Pointer> m_Grains;
 
-
-    std::vector<SharedFloatArray> actualodf;
+	std::vector<int> grainids;
+	std::vector<float> ellipfuncs;
+	std::vector<std::vector<int> > grainlists;
+	std::vector<std::vector<float> > ellipfunclists;
+	
+	std::vector<SharedFloatArray> actualodf;
     std::vector<SharedFloatArray> simodf;
     std::vector<SharedFloatArray> axisodf;
-
 
     std::vector<SharedFloatArray> actualmdf;
     std::vector<SharedFloatArray> simmdf;
@@ -168,7 +178,7 @@ public:
 
 #endif
 	void initializeArrays(std::vector<AIM::Reconstruction::CrystalStructure> structures);
-    void initialize2();
+    void initialize_packinggrid();
 
     void write_eulerangles(const std::string & filename);
     void write_graindata(const std::string & filename);

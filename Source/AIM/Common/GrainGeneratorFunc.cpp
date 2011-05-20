@@ -153,25 +153,32 @@ void GrainGeneratorFunc::initializeArrays(std::vector<AIM::Reconstruction::Cryst
 }
 
 
-void GrainGeneratorFunc::initialize2()
+void GrainGeneratorFunc::initialize_packinggrid()
 {
-  resx = resx*4.0;
-  resy = resy*4.0;
-  resz = resz*4.0;
   sizex = (powf(totalvol,0.33333));
   sizey = (powf(totalvol,0.33333));
   sizez = (powf(totalvol,0.33333));
   xpoints = int((sizex/resx)+1);
   ypoints = int((sizey/resy)+1);
   zpoints = int((sizez/resz)+1);
-  sizex = xpoints*resx;
-  sizey = ypoints*resy;
-  sizez = zpoints*resz;
-  totalvol = ((xpoints-1)*resx)*((ypoints-1)*resy)*((zpoints-1)*resz);
+  sizex = (xpoints-1)*resx;
+  sizey = (ypoints-1)*resy;
+  sizez = (zpoints-1)*resz;
+  totalvol = sizex*sizey*sizez;
   totalpoints = xpoints * ypoints * zpoints;
-
-  //voxels = new GrainGeneratorVoxel[totalpoints];
   voxels.reset(new GrainGeneratorVoxel[totalpoints]);
+
+  packingresx = resx*2.0;
+  packingresy = resy*2.0;
+  packingresz = resz*2.0;
+  packingxpoints = int((sizex/packingresx)+1);
+  packingypoints = int((sizey/packingresy)+1);
+  packingzpoints = int((sizez/packingresz)+1);
+  packingtotalpoints = packingxpoints*packingypoints*packingzpoints;
+  grainids.resize(packingtotalpoints,0);
+  ellipfuncs.resize(packingtotalpoints,0.0);
+  grainlists.resize(packingtotalpoints);
+  ellipfunclists.resize(packingtotalpoints);
 }
 
 #define CHECK_STATS_READ_ERROR(err, group, dataset)\
@@ -673,21 +680,21 @@ void  GrainGeneratorFunc::insert_grain(size_t gnum)
   xc = m_Grains[gnum]->centroidx;
   yc = m_Grains[gnum]->centroidy;
   zc = m_Grains[gnum]->centroidz;
-  column = (xc-(resx/2))/resx;
-  row = (yc-(resy/2))/resy;
-  plane = (zc-(resz/2))/resz;
-  xmin = int(column-((radcur1/resx)+1));
-  xmax = int(column+((radcur1/resx)+1));
-  ymin = int(row-((radcur1/resy)+1));
-  ymax = int(row+((radcur1/resy)+1));
-  zmin = int(plane-((radcur1/resz)+1));
-  zmax = int(plane+((radcur1/resz)+1));
-  if(xmin < -0.5*xpoints) xmin = -0.5*xpoints;
-  if(xmax > (1.5*xpoints-1)) xmax = (1.5*xpoints-1);
-  if(ymin < -0.5*ypoints) ymin = -0.5*ypoints;
-  if(ymax > (1.5*ypoints-1)) ymax = (1.5*ypoints-1);
-  if(zmin < -0.5*zpoints) zmin = -0.5*zpoints;
-  if(zmax > (1.5*zpoints-1)) zmax = (1.5*zpoints-1);
+  column = (xc-(packingresx/2))/packingresx;
+  row = (yc-(packingresy/2))/packingresy;
+  plane = (zc-(packingresz/2))/packingresz;
+  xmin = int(column-((radcur1/packingresx)+1));
+  xmax = int(column+((radcur1/packingresx)+1));
+  ymin = int(row-((radcur1/packingresy)+1));
+  ymax = int(row+((radcur1/packingresy)+1));
+  zmin = int(plane-((radcur1/packingresz)+1));
+  zmax = int(plane+((radcur1/packingresz)+1));
+  if(xmin < -0.5*packingxpoints) xmin = -0.5*packingxpoints;
+  if(xmax > (1.5*packingxpoints-1)) xmax = (1.5*packingxpoints-1);
+  if(ymin < -0.5*packingypoints) ymin = -0.5*packingypoints;
+  if(ymax > (1.5*packingypoints-1)) ymax = (1.5*packingypoints-1);
+  if(zmin < -0.5*packingzpoints) zmin = -0.5*packingzpoints;
+  if(zmax > (1.5*packingzpoints-1)) zmax = (1.5*packingzpoints-1);
   for(int iter1 = xmin; iter1 < xmax+1; iter1++)
   {
     for(int iter2 = ymin; iter2 < ymax+1; iter2++)
@@ -697,23 +704,23 @@ void  GrainGeneratorFunc::insert_grain(size_t gnum)
 		  column = iter1;
 		  row = iter2;
 		  plane = iter3;
-		  if(iter1 < 0) column = iter1+xpoints;
-		  if(iter1 > xpoints-1) column = iter1-xpoints;
-		  if(iter2 < 0) row = iter2+ypoints;
-		  if(iter2 > ypoints-1) row = iter2-ypoints;
-		  if(iter3 < 0) plane = iter3+zpoints;
-		  if(iter3 > zpoints-1) plane = iter3-zpoints;
-		  index = (plane*xpoints*ypoints)+(row*xpoints)+column;
+		  if(iter1 < 0) column = iter1+packingxpoints;
+		  if(iter1 > packingxpoints-1) column = iter1-packingxpoints;
+		  if(iter2 < 0) row = iter2+packingypoints;
+		  if(iter2 > packingypoints-1) row = iter2-packingypoints;
+		  if(iter3 < 0) plane = iter3+packingzpoints;
+		  if(iter3 > packingzpoints-1) plane = iter3-packingzpoints;
+		  index = (plane*packingxpoints*packingypoints)+(row*packingxpoints)+column;
 		  inside = -1;
-		  x = float(column)*resx;
-		  y = float(row)*resy;
-		  z = float(plane)*resz;
+		  x = float(column)*packingresx;
+		  y = float(row)*packingresy;
+		  z = float(plane)*packingresz;
 		  if(iter1 < 0) x = x-sizex;
-		  if(iter1 > xpoints-1) x = x+sizex;
+		  if(iter1 > packingxpoints-1) x = x+sizex;
 		  if(iter2 < 0) y = y-sizey;
-		  if(iter2 > ypoints-1) y = y+sizey;
+		  if(iter2 > packingypoints-1) y = y+sizey;
 		  if(iter3 < 0) z = z-sizez;
-		  if(iter3 > zpoints-1) z = z+sizez;
+		  if(iter3 > packingzpoints-1) z = z+sizez;
 		  dist = ((x-xc)*(x-xc))+((y-yc)*(y-yc))+((z-zc)*(z-zc));
 		  dist = powf(dist,0.5);
 		  if(dist < radcur1)
@@ -799,17 +806,17 @@ void  GrainGeneratorFunc::remove_grain(size_t gnum)
 //  int neigh;
   for(size_t i=0;i<m_Grains[gnum]->voxellist->size();i++)
   {
-  index = m_Grains[gnum]->voxellist->at(i);
-  ellipfunc = m_Grains[gnum]->ellipfunclist->at(i);
-  voxels[index].grainlist->erase(std::remove(voxels[index].grainlist->begin(),voxels[index].grainlist->end(),gnum),voxels[index].grainlist->end());
-  voxels[index].ellipfunclist->erase(std::remove(voxels[index].ellipfunclist->begin(),voxels[index].ellipfunclist->end(),ellipfunc),voxels[index].ellipfunclist->end());
+	  index = m_Grains[gnum]->voxellist->at(i);
+	  ellipfunc = m_Grains[gnum]->ellipfunclist->at(i);
+	  grainlists[index].erase(std::remove(grainlists[index].begin(),grainlists[index].end(),gnum),grainlists[index].end());
+	  ellipfunclists[index].erase(std::remove(ellipfunclists[index].begin(),ellipfunclists[index].end(),ellipfunc),ellipfunclists[index].end());
   }
   for(int i=0;i<3;i++)
   {
     for(size_t j=0;j<m_Grains[gnum]->neighbordistfunclist[i].size();j++)
     {
-    index = m_Grains[gnum]->neighbordistfunclist[i][j];
-    m_Grains[index]->neighbordistfunc[i] = m_Grains[index]->neighbordistfunc[i]-1;
+	    index = m_Grains[gnum]->neighbordistfunclist[i][j];
+	    m_Grains[index]->neighbordistfunc[i] = m_Grains[index]->neighbordistfunc[i]-1;
     }
   }
 }
@@ -823,10 +830,10 @@ void  GrainGeneratorFunc::add_grain(size_t gnum)
   {
 	  index = m_Grains[gnum]->voxellist->at(i);
 	  ellipfunc = m_Grains[gnum]->ellipfunclist->at(i);
-	  voxels[index].grainlist->resize(voxels[index].grainlist->size()+1);
-	  voxels[index].ellipfunclist->resize(voxels[index].ellipfunclist->size()+1);
-	  voxels[index].grainlist->at(voxels[index].grainlist->size()-1) = gnum;
-	  voxels[index].ellipfunclist->at(voxels[index].ellipfunclist->size()-1) = ellipfunc;
+	  grainlists[index].resize(grainlists[index].size()+1);
+	  ellipfunclists[index].resize(ellipfunclists[index].size()+1);
+	  grainlists[index][grainlists[index].size()-1] = gnum;
+	  ellipfunclists[index][ellipfunclists[index].size()-1] = ellipfunc;
   }
   for(int i=0;i<3;i++)
   {
@@ -1004,13 +1011,13 @@ float GrainGeneratorFunc::costcheck_remove(size_t gnum)
   float removecost = 0;
   for(size_t i=0;i<m_Grains[gnum]->voxellist->size();i++)
   {
-  index = m_Grains[gnum]->voxellist->at(i);
-  if(voxels[index].grainlist->size() == 1) removecost = removecost+1.0;
-  if(voxels[index].grainlist->size() > 1)
-  {
-    if(voxels[index].grainlist->size() == 2) removecost = removecost - voxels[index].ellipfunclist->at(0);
-    removecost = removecost - m_Grains[gnum]->ellipfunclist->at(i);
-  }
+	  index = m_Grains[gnum]->voxellist->at(i);
+	  if(grainlists[index].size() == 1) removecost = removecost+1.0;
+	  if(grainlists[index].size() > 1)
+	  {
+	    if(grainlists[index].size() == 2) removecost = removecost - ellipfunclists[index][0];
+	    removecost = removecost - m_Grains[gnum]->ellipfunclist->at(i);
+	  }
   }
   return removecost;
 }
@@ -1021,13 +1028,13 @@ float GrainGeneratorFunc::costcheck_add(size_t gnum)
   float addcost = 0;
   for(size_t i=0;i<m_Grains[gnum]->voxellist->size();i++)
   {
-  index = m_Grains[gnum]->voxellist->at(i);
-  if(voxels[index].grainlist->size() == 0) addcost = addcost-1.0;
-  if(voxels[index].grainlist->size() >= 1)
-  {
-    if(voxels[index].grainlist->size() == 1) addcost = addcost + voxels[index].ellipfunclist->at(0);
-    addcost = addcost + m_Grains[gnum]->ellipfunclist->at(i);
-  }
+	  index = m_Grains[gnum]->voxellist->at(i);
+	  if(grainlists[index].size() == 0) addcost = addcost-1.0;
+	  if(grainlists[index].size() >= 1)
+	  {
+	    if(grainlists[index].size() == 1) addcost = addcost + ellipfunclists[index][0];
+	    addcost = addcost + m_Grains[gnum]->ellipfunclist->at(i);
+	  }
   }
   return addcost;
 }
@@ -1174,7 +1181,8 @@ int  GrainGeneratorFunc::pack_grains(const std::string &filename, int numgrains)
   }
   // determine the volume needed for the desired number of grains and initialize the coarse array of voxels for grain packing
   totalvol = totalvol / (float(numextragrains) / float(numgrains));
-  initialize2();
+  // this initializes the arrays to hold the details of the locations of all of the grains during packing
+  initialize_packinggrid();
   // initialize the sim and goal size distributions for the primary phases
   grainsizedist.resize(primaryphases.size());
   simgrainsizedist.resize(primaryphases.size());
@@ -1259,7 +1267,8 @@ int  GrainGeneratorFunc::pack_grains(const std::string &filename, int numgrains)
     acceptableerror = 0;
     int option = iteration % 4;
     if (iteration % 100 == 0) outFile << oldfillingerror << " " << oldsizedisterror << "  " << oldneighborhooderror << "  " << acceptedmoves << std::endl;
-    if (option == 0)
+	// this option adds a grain not currently active
+	if (option == 0)
     {
       int random = int(rg.Random() * (numextragrains));
       if (random == 0) random = 1;
@@ -1290,6 +1299,7 @@ int  GrainGeneratorFunc::pack_grains(const std::string &filename, int numgrains)
         acceptedmoves++;
       }
     }
+	// this option removes a grain that is currently active
     if (option == 1)
     {
       size_t random = int(rg.Random() * activegrainlist.size());
@@ -1315,6 +1325,7 @@ int  GrainGeneratorFunc::pack_grains(const std::string &filename, int numgrains)
         acceptedmoves++;
       }
     }
+	// this option removes one active grain and adds one non-active grain
     if (option == 2)
     {
       size_t random1 = int(rg.Random() * activegrainlist.size());
@@ -1354,6 +1365,7 @@ int  GrainGeneratorFunc::pack_grains(const std::string &filename, int numgrains)
         acceptedmoves++;
       }
     }
+	// this option removes an active grain and replaces it with a non-active grain with a centroid inside of the removed grain
     if (option == 3)
     {
       size_t random1 = int(rg.Random() * activegrainlist.size());
@@ -1426,16 +1438,6 @@ int GrainGeneratorFunc::assign_voxels(int numgrains)
   float x, y, z;
   int phase;
   int xmin, xmax, ymin, ymax, zmin, zmax;
-  resx = resx/4.0;
-  resy = resy/4.0;
-  resz = resz/4.0;
-  xpoints = int((sizex/resx)+1);
-  ypoints = int((sizey/resy)+1);
-  zpoints = int((sizez/resz)+1);
-  totalpoints = xpoints * ypoints * zpoints;
-//  delete [] voxels;
-//  voxels = new GrainGeneratorVoxel[totalpoints];
-  voxels.reset(new GrainGeneratorVoxel[totalpoints]);
 
   int *gnames;
   gnames = new int[totalpoints];
