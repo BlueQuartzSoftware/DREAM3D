@@ -106,24 +106,22 @@ public:
     std::vector<SharedFloatArray> graincenters;
     std::vector<SharedFloatArray> grainmoments;
 
-    std::vector<Grain::Pointer> precipitates;
+	std::vector<int> primaryphases;
+	std::vector<double> primaryphasefractions;
+	std::vector<int> precipitatephases;
+	std::vector<double> precipitatephasefractions;
 
     std::vector<int> activegrainlist;
     std::vector<int> takencheck;
-    std::vector<std::vector<float> > grainsizedist;
-    std::vector<std::vector<float> > simgrainsizedist;
     std::vector<std::vector<std::vector<float> > > bovera;
     std::vector<std::vector<std::vector<float> > > covera;
     std::vector<std::vector<std::vector<float> > > coverb;
-    std::vector<std::vector<std::vector<float> > > neighborhood;
-    std::vector<std::vector<std::vector<float> > > neighborhoodfit;
     std::vector<std::vector<std::vector<float> > > omega3;
+    std::vector<std::vector<std::vector<float> > > neighborparams;
+    std::vector<std::vector<float> > grainsizedist;
+    std::vector<std::vector<float> > simgrainsizedist;
     std::vector<std::vector<std::vector<float> > > neighbordist;
-    std::vector<std::vector<std::vector<float> > > svbovera;
-    std::vector<std::vector<std::vector<float> > > svcovera;
-    std::vector<std::vector<std::vector<float> > > svcoverb;
-    std::vector<std::vector<std::vector<float> > > svschmid;
-    std::vector<std::vector<std::vector<float> > > svomega3;
+    std::vector<std::vector<std::vector<float> > > simneighbordist;
     std::vector<std::vector<std::vector<int> > > boundaries;
 
     float machineepsilon;
