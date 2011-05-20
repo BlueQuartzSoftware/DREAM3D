@@ -1653,6 +1653,10 @@ int GrainGeneratorFunc::assign_voxels(int numgrains)
 		  voxels[i].phase = phases[i];
 	  }
   }
+  delete [] gnames;
+  delete [] phases;
+  delete [] unassigned;
+  delete [] newnames;
   return goodcount;
 }
 void  GrainGeneratorFunc::assign_eulers(int numgrains)
