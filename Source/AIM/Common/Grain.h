@@ -73,7 +73,6 @@ class AIMCOMMON_EXPORT Grain
 
     std::vector<int>* voxellist;
     std::vector<float>* misorientationlist;
-    std::vector<std::vector<int> > neighbordistfunclist;
 
     /*
      * IF YOU ADD NEW VARIABLES MAKE SURE TO UPDATE THE "DeepCopy()" METHOD WITH
