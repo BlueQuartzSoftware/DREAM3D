@@ -85,7 +85,6 @@ lowanglefraction(0.0)
   neighborsurfarealist = FloatVectorType(new std::vector<float>(0) );
 
   voxellist = NULL; //new std::vector<int>;
-  ellipfunclist = NULL; //new std::vector<float>;
   misorientationlist = NULL; //new std::vector<float>;
 
 }
@@ -154,10 +153,6 @@ void Grain::deepCopy(Grain::Pointer grain)
   {
     delete voxellist;
   }
-  if (NULL != ellipfunclist)
-  {
-    delete ellipfunclist;
-  }
   if (NULL != misorientationlist)
   {
     delete misorientationlist;
@@ -169,11 +164,6 @@ void Grain::deepCopy(Grain::Pointer grain)
     voxellist->assign(grain->voxellist->begin(), grain->voxellist->end());
   }
 
-  if (NULL != grain->ellipfunclist)
-  {
-    ellipfunclist = new std::vector<float>(0);
-    ellipfunclist->assign(grain->ellipfunclist->begin(), grain->ellipfunclist->end());
-  }
   if (NULL != grain->misorientationlist)
   {
     misorientationlist = new std::vector<float>(0);
@@ -201,10 +191,6 @@ Grain::~Grain()
   if (NULL != voxellist)
   {
     delete voxellist;
-  }
-  if (NULL != ellipfunclist)
-  {
-    delete ellipfunclist;
   }
   if (NULL != misorientationlist)
   {

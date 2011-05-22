@@ -101,7 +101,7 @@ void GrainGeneratorWidget::readSettings(QSettings &prefs)
   READ_SETTING(prefs, m_, SizeDistErrorWeight, ok, d, 1.0 , Double);
   READ_SETTING(prefs, m_, NumGrains, ok, i, 1000 , Int);
 
-  READ_BOOL_SETTING(prefs, m_, PeriodicBoundaryConditions, true);
+  READ_BOOL_SETTING(prefs, m_, PeriodicBoundaryConditions, false);
   READ_BOOL_SETTING(prefs, m_, AlreadyFormed, false);
   READ_FILEPATH_SETTING(prefs, m_, StructureFile, "");
 
@@ -222,7 +222,7 @@ void GrainGeneratorWidget::setupGui()
   m_WidgetList << m_NumGrains << m_XResolution << m_YResolution << m_ZResolution << m_FillingErrorWeight;
   m_WidgetList << m_NeighborhoodErrorWeight << m_SizeDistErrorWeight;
   m_WidgetList << m_ShapeClass << m_AlreadyFormed;
-  m_WidgetList << m_AlreadyFormed;
+  m_WidgetList << m_PeriodicBoundaryConditions;
 }
 
 // -----------------------------------------------------------------------------
@@ -408,7 +408,7 @@ void GrainGeneratorWidget::on_m_GoBtn_clicked()
   m_GrainGenerator->setNeighborhoodErrorWeight(m_NeighborhoodErrorWeight->value());
   m_GrainGenerator->setSizeDistErrorWeight(m_SizeDistErrorWeight->value());
 
-  m_GrainGenerator->setPeriodicBoundary(m_PeriodicBoundaryConditions->isCheckable());
+  m_GrainGenerator->setPeriodicBoundary(m_PeriodicBoundaryConditions->isChecked());
   m_GrainGenerator->setAlreadyFormed(m_AlreadyFormed->isChecked() );
   m_GrainGenerator->setStructureFile(m_StructureFile->text().toStdString());
 
