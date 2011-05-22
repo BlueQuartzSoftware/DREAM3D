@@ -179,7 +179,8 @@ void GrainGenerator::compute()
 
   if (m_AlreadyFormed == false)
   {
-    m->numgrains = m_NumGrains;
+    m->periodic_boundaries = m_PeriodicBoundary;
+	m->numgrains = m_NumGrains;
     m->shapeclass = m_ShapeClass;
     m->resx = m_XResolution;
     m->resy = m_YResolution;
