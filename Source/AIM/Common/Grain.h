@@ -72,7 +72,6 @@ class AIMCOMMON_EXPORT Grain
     FloatVectorType  neighborsurfarealist;
 
     std::vector<int>* voxellist;
-    std::vector<float>* ellipfunclist;
     std::vector<float>* misorientationlist;
     std::vector<std::vector<int> > neighbordistfunclist;
 

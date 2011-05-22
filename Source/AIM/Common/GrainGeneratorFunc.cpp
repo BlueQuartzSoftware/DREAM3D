@@ -168,17 +168,15 @@ void GrainGeneratorFunc::initialize_packinggrid()
   totalpoints = xpoints * ypoints * zpoints;
   voxels.reset(new GrainGeneratorVoxel[totalpoints]);
 
-  packingresx = resx*2.0;
-  packingresy = resy*2.0;
-  packingresz = resz*2.0;
+  packingresx = resx*4.0;
+  packingresy = resy*4.0;
+  packingresz = resz*4.0;
   packingxpoints = int((sizex/packingresx)+1);
   packingypoints = int((sizey/packingresy)+1);
   packingzpoints = int((sizez/packingresz)+1);
   packingtotalpoints = packingxpoints*packingypoints*packingzpoints;
-  grainids.resize(packingtotalpoints,0);
-  ellipfuncs.resize(packingtotalpoints,0.0);
-  grainlists.resize(packingtotalpoints);
-  ellipfunclists.resize(packingtotalpoints);
+  goalgrainowners.resize(packingtotalpoints,1);
+  grainowners.resize(packingtotalpoints,0);
 }
 
 #define CHECK_STATS_READ_ERROR(err, group, dataset)\
@@ -624,14 +622,13 @@ void  GrainGeneratorFunc::insert_grain(size_t gnum)
   float inside = -1;
   int index;
   int column, row, plane;
-  float xmin, xmax, ymin, ymax, zmin, zmax;
+  int xmin, xmax, ymin, ymax, zmin, zmax, xdiff, ydiff, zdiff;
   float xc, yc, zc;
   float xp, yp, zp;
   float x, y, z;
   float ellipfunc = 0;
   float insidecount = 0;
   std::vector<int> insidelist(1000,-1);
-  std::vector<float> ellipfunclist(1000,-1);
   float volcur = m_Grains[gnum]->volume;
   float bovera = m_Grains[gnum]->radius2;
   float covera = m_Grains[gnum]->radius3;
@@ -689,12 +686,24 @@ void  GrainGeneratorFunc::insert_grain(size_t gnum)
   ymax = int(row+((radcur1/packingresy)+1));
   zmin = int(plane-((radcur1/packingresz)+1));
   zmax = int(plane+((radcur1/packingresz)+1));
-  if(xmin < -0.5*packingxpoints) xmin = -0.5*packingxpoints;
-  if(xmax > (1.5*packingxpoints-1)) xmax = (1.5*packingxpoints-1);
-  if(ymin < -0.5*packingypoints) ymin = -0.5*packingypoints;
-  if(ymax > (1.5*packingypoints-1)) ymax = (1.5*packingypoints-1);
-  if(zmin < -0.5*packingzpoints) zmin = -0.5*packingzpoints;
-  if(zmax > (1.5*packingzpoints-1)) zmax = (1.5*packingzpoints-1);
+  if(periodic_boundaries == true)
+  {
+	  if(xmin < -packingxpoints) xmin = -packingxpoints;
+	  if(xmax > 2*packingxpoints-1) xmax = (2*packingxpoints-1);
+	  if(ymin < -packingypoints) ymin = -packingypoints;
+	  if(ymax > 2*packingypoints-1) ymax = (2*packingypoints-1);
+	  if(zmin < -packingzpoints) zmin = -packingzpoints;
+	  if(zmax > 2*packingzpoints-1) zmax = (2*packingzpoints-1);
+  }
+  if(periodic_boundaries == false)
+  {
+	  if(xmin < 0) xmin = 0;
+	  if(xmax > packingxpoints-1) xmax = packingxpoints-1;
+	  if(ymin < 0) ymin = 0;
+	  if(ymax > packingypoints-1) ymax = packingypoints-1;
+	  if(zmin < 0) zmin = 0;
+	  if(zmax > packingzpoints-1) zmax = packingzpoints-1;
+  }
   for(int iter1 = xmin; iter1 < xmax+1; iter1++)
   {
     for(int iter2 = ymin; iter2 < ymax+1; iter2++)
@@ -775,14 +784,11 @@ void  GrainGeneratorFunc::insert_grain(size_t gnum)
 			if(inside >= 0)
 			{
 				int currentpoint = index;
-				ellipfunc = (-0.1/((powf((axis1comp+axis2comp+axis3comp),1)*(1.0-(1.0/(0.90*0.90))))))*(1.0-(((axis1comp+axis2comp+axis3comp)*(axis1comp+axis2comp+axis3comp))/(0.90*0.90)));
 				insidelist[insidecount] = currentpoint;
-				ellipfunclist[insidecount] = ellipfunc;
 				insidecount++;
 				if (insidecount >= (insidelist.size()))
 				{
 				  insidelist.resize(insidecount + 1000,-1);
-				  ellipfunclist.resize(insidecount + 1000,-1);
 				}
 			}
 		  }
@@ -790,11 +796,8 @@ void  GrainGeneratorFunc::insert_grain(size_t gnum)
     }
   }
   insidelist.erase(std::remove(insidelist.begin(),insidelist.end(),-1),insidelist.end());
-  ellipfunclist.erase(std::remove(ellipfunclist.begin(),ellipfunclist.end(),-1),ellipfunclist.end());
   m_Grains[gnum]->voxellist = new std::vector<int>(insidecount);
-  m_Grains[gnum]->ellipfunclist = new std::vector<float>(insidecount);
   m_Grains[gnum]->voxellist->swap(insidelist);
-  m_Grains[gnum]->ellipfunclist->swap(ellipfunclist);
   m_Grains[gnum]->neighbordistfunclist.resize(3);
   insidelist.clear();
 }
@@ -802,14 +805,10 @@ void  GrainGeneratorFunc::insert_grain(size_t gnum)
 void  GrainGeneratorFunc::remove_grain(size_t gnum)
 {
   int index;
-  float ellipfunc;
-//  int neigh;
   for(size_t i=0;i<m_Grains[gnum]->voxellist->size();i++)
   {
 	  index = m_Grains[gnum]->voxellist->at(i);
-	  ellipfunc = m_Grains[gnum]->ellipfunclist->at(i);
-	  grainlists[index].erase(std::remove(grainlists[index].begin(),grainlists[index].end(),gnum),grainlists[index].end());
-	  ellipfunclists[index].erase(std::remove(ellipfunclists[index].begin(),ellipfunclists[index].end(),ellipfunc),ellipfunclists[index].end());
+	  grainowners[index] = grainowners[index]-1;
   }
   for(int i=0;i<3;i++)
   {
@@ -824,16 +823,10 @@ void  GrainGeneratorFunc::remove_grain(size_t gnum)
 void  GrainGeneratorFunc::add_grain(size_t gnum)
 {
   int index;
-  float ellipfunc;
-//  int neigh;
   for(size_t i=0;i<m_Grains[gnum]->voxellist->size();i++)
   {
 	  index = m_Grains[gnum]->voxellist->at(i);
-	  ellipfunc = m_Grains[gnum]->ellipfunclist->at(i);
-	  grainlists[index].resize(grainlists[index].size()+1);
-	  ellipfunclists[index].resize(ellipfunclists[index].size()+1);
-	  grainlists[index][grainlists[index].size()-1] = gnum;
-	  ellipfunclists[index][ellipfunclists[index].size()-1] = ellipfunc;
+	  grainowners[index]++;
   }
   for(int i=0;i<3;i++)
   {
@@ -848,8 +841,6 @@ void  GrainGeneratorFunc::add_grain(size_t gnum)
 void GrainGeneratorFunc::determine_neighbors()
 {
   float x, y, z;
-//  float rad1, rad2;
-
   float xn, yn, zn;
   float dia, dia2;
   int DoverR;
@@ -1005,40 +996,22 @@ float GrainGeneratorFunc::check_neighborhooderror(int gadd, int gremove)
   return neighborerror;
 }
 
-float GrainGeneratorFunc::costcheck_remove(size_t gnum)
+float GrainGeneratorFunc::compare_1Ddistributions(std::vector<float> array1, std::vector<float> array2)
 {
-  int index;
-  float removecost = 0;
-  for(size_t i=0;i<m_Grains[gnum]->voxellist->size();i++)
-  {
-	  index = m_Grains[gnum]->voxellist->at(i);
-	  if(grainlists[index].size() == 1) removecost = removecost+1.0;
-	  if(grainlists[index].size() > 1)
-	  {
-	    if(grainlists[index].size() == 2) removecost = removecost - ellipfunclists[index][0];
-	    removecost = removecost - m_Grains[gnum]->ellipfunclist->at(i);
-	  }
-  }
-  return removecost;
+	float bhattmoment = 0;
+	float mag1 = 0;
+	float mag2 = 0;
+	for(size_t i=0;i<array1.size();i++)
+	{
+		bhattmoment = bhattmoment + (array1[i]*array2[i]);
+		mag1 = mag1 + (array1[i]*array1[i]);
+		mag2 = mag2 + (array2[i]*array2[i]);
+	}
+	mag1 = powf(mag1,0.5);
+	mag2 = powf(mag2,0.5);
+	bhattmoment = bhattmoment/(mag1*mag2);
+  return bhattmoment;
 }
-
-float GrainGeneratorFunc::costcheck_add(size_t gnum)
-{
-  int index;
-  float addcost = 0;
-  for(size_t i=0;i<m_Grains[gnum]->voxellist->size();i++)
-  {
-	  index = m_Grains[gnum]->voxellist->at(i);
-	  if(grainlists[index].size() == 0) addcost = addcost-1.0;
-	  if(grainlists[index].size() >= 1)
-	  {
-	    if(grainlists[index].size() == 1) addcost = addcost + ellipfunclists[index][0];
-	    addcost = addcost + m_Grains[gnum]->ellipfunclist->at(i);
-	  }
-  }
-  return addcost;
-}
-
 float GrainGeneratorFunc::compare_2Ddistributions(std::vector<std::vector<float> > array1, std::vector<std::vector<float> > array2)
 {
 	float bhattmoment = 0;
@@ -1127,6 +1100,60 @@ float GrainGeneratorFunc::check_sizedisterror(int gadd, int gremove)
   return sizedisterror;
 }
 
+float GrainGeneratorFunc::check_fillingerror(int gadd, int gremove)
+{
+  float fillingerror = 0.0;
+  float mag1 = 0.0;
+  float mag2 = 0.0;
+  float multiplier;
+  int index;
+  if(gadd > 0)
+  {
+	  for(size_t i=0;i<m_Grains[gadd]->voxellist->size();i++)
+	  {
+		  index = m_Grains[gadd]->voxellist->at(i);
+		  grainowners[index]++;
+	  }
+  }
+  if(gremove > 0)
+  {
+	  for(size_t i=0;i<m_Grains[gremove]->voxellist->size();i++)
+	  {
+		  index = m_Grains[gremove]->voxellist->at(i);
+		  grainowners[index] = grainowners[index]-1;
+	  }
+  }
+  for(int i=0;i<packingtotalpoints;i++)
+  {
+	fillingerror = fillingerror + (grainowners[i]*goalgrainowners[i]);
+	mag1 = mag1 + (grainowners[i]*grainowners[i]);
+	mag2 = mag2 + (goalgrainowners[i]*goalgrainowners[i]);
+  }
+  mag1 = powf(mag1,0.5);
+  mag2 = powf(mag2,0.5);
+  fillingerror = fillingerror/(mag1*mag2);
+  if(mag2 <= mag1) multiplier = mag2/mag1;
+  if(mag1 < mag2) multiplier = mag1/mag2;
+  fillingerror = fillingerror*multiplier;
+  if(gadd > 0)
+  {
+	  for(size_t i=0;i<m_Grains[gadd]->voxellist->size();i++)
+	  {
+		  index = m_Grains[gadd]->voxellist->at(i);
+		  grainowners[index] = grainowners[index]-1;
+	  }
+  }
+  if(gremove > 0)
+  {
+	  for(size_t i=0;i<m_Grains[gremove]->voxellist->size();i++)
+	  {
+		  index = m_Grains[gremove]->voxellist->at(i);
+		  grainowners[index]++;
+	  }
+  }
+  return fillingerror;
+}
+
 int  GrainGeneratorFunc::pack_grains(const std::string &filename, int numgrains)
 {
   AIM_RANDOMNG_NEW()
@@ -1144,7 +1171,6 @@ int  GrainGeneratorFunc::pack_grains(const std::string &filename, int numgrains)
   currentsizedisterror = 0, oldsizedisterror = 0;
   float addcost, removecost;
   int acceptedmoves = 0;
-  float acceptableerror = 0.0;
   activegrainlist.resize(numgrains + 1);
   double totalprimaryfractions = 0.0;
   // find which phases are primary phases
@@ -1228,16 +1254,15 @@ int  GrainGeneratorFunc::pack_grains(const std::string &filename, int numgrains)
     m_Grains[i]->centroidy = yc;
     m_Grains[i]->centroidz = zc;
   }
-  // determine which voxels are within each grain and where within the grain they are located
+  // determine which voxels are within each graind
   for (int i = 1; i < (numextragrains + 1); i++)
   {
     insert_grain(i);
   }
   // determine which grains neighbor each other
   if (neighborhooderrorweight > 0) determine_neighbors();
-  // initialize filling error
-  oldfillingerror = totalpoints;
-  // select desired number of grains to start and update the filling error as grains are added
+  // select "good" set of desired number of grains to start monitoring filling error as grains are added
+  oldfillingerror = 0;
   for (int i = 1; i < numgrains + 1; i++)
   {
     int random = int(rg.Random() * (numextragrains));
@@ -1250,21 +1275,24 @@ int  GrainGeneratorFunc::pack_grains(const std::string &filename, int numgrains)
       if (random == 0) random = 1;
     }
     m_Grains[random]->active = 1;
-    addcost = costcheck_add(random);
-    add_grain(random);
-    activegrainlist[i] = random;
-    oldfillingerror = oldfillingerror + addcost;
+    currentfillingerror = check_fillingerror(random, -1000);
+	if(currentfillingerror > oldfillingerror)
+	{
+	    add_grain(random);
+	    activegrainlist[i] = random;
+	}
+	else if(currentfillingerror < oldfillingerror) i = i-1;
   }
-  // determine initial size distribution and neighbor distribution errors
+  // determine initial filling, size distribution and neighbor distribution errors
   oldsizedisterror = check_sizedisterror(-1000, -1000);
   oldneighborhooderror = check_neighborhooderror(-1000, -1000);
+  oldfillingerror = check_fillingerror(-1000, -1000);
   // begin swaping/moving/adding/removing grains to try to improve packing
   for (int iteration = 0; iteration < (250000); iteration++)
   {
-    change1 = 0;
+	change1 = 0;
     change2 = 0;
     change3 = 0;
-    acceptableerror = 0;
     int option = iteration % 4;
     if (iteration % 100 == 0) outFile << oldfillingerror << " " << oldsizedisterror << "  " << oldneighborhooderror << "  " << acceptedmoves << std::endl;
 	// this option adds a grain not currently active
@@ -1279,8 +1307,7 @@ int  GrainGeneratorFunc::pack_grains(const std::string &filename, int numgrains)
         if (random > (numextragrains)) random = random - (numextragrains);
         if (random == 0) random = 1;
       }
-      addcost = costcheck_add(random);
-      if (fillingerrorweight > 0) currentfillingerror = oldfillingerror + addcost;
+      if (fillingerrorweight > 0) currentfillingerror = check_fillingerror(random, -1000);
       if (sizedisterrorweight > 0) currentsizedisterror = check_sizedisterror(random, -1000);
       if (neighborhooderrorweight > 0) currentneighborhooderror = check_neighborhooderror(random, -1000);
       if (fillingerrorweight > 0) change1 = (currentfillingerror - oldfillingerror);
@@ -1306,10 +1333,9 @@ int  GrainGeneratorFunc::pack_grains(const std::string &filename, int numgrains)
       if (random == 0) random = 1;
       if (random == activegrainlist.size()) random = activegrainlist.size() - 1;
       random = activegrainlist[random];
-      removecost = costcheck_remove(random);
-      if (fillingerrorweight > 0) currentfillingerror = oldfillingerror + addcost;
-      if (sizedisterrorweight > 0) currentsizedisterror = check_sizedisterror(random, -1000);
-      if (neighborhooderrorweight > 0) currentneighborhooderror = check_neighborhooderror(random, -1000);
+      if (fillingerrorweight > 0) currentfillingerror = check_fillingerror(-1000, random);
+      if (sizedisterrorweight > 0) currentsizedisterror = check_sizedisterror(-1000, random);
+      if (neighborhooderrorweight > 0) currentneighborhooderror = check_neighborhooderror(-1000, random);
       if (fillingerrorweight > 0) change1 = (currentfillingerror - oldfillingerror);
       if (fillingerrorweight > 0 && oldfillingerror < 0) change1 = -change1;
       if (sizedisterrorweight > 0) change2 = (currentsizedisterror - oldsizedisterror);
@@ -1341,11 +1367,9 @@ int  GrainGeneratorFunc::pack_grains(const std::string &filename, int numgrains)
         if (random > (numextragrains)) random = random - (numextragrains);
         if (random == 0) random = 1;
       }
-      addcost = costcheck_add(random);
-      removecost = costcheck_remove(random1);
-      if (fillingerrorweight > 0) currentfillingerror = oldfillingerror + addcost;
-      if (sizedisterrorweight > 0) currentsizedisterror = check_sizedisterror(random, -1000);
-      if (neighborhooderrorweight > 0) currentneighborhooderror = check_neighborhooderror(random, -1000);
+      if (fillingerrorweight > 0) currentfillingerror = check_fillingerror(random, random1);
+      if (sizedisterrorweight > 0) currentsizedisterror = check_sizedisterror(random, random1);
+      if (neighborhooderrorweight > 0) currentneighborhooderror = check_neighborhooderror(random, random1);
       if (fillingerrorweight > 0) change1 = (currentfillingerror - oldfillingerror);
       if (fillingerrorweight > 0 && oldfillingerror < 0) change1 = -change1;
       if (sizedisterrorweight > 0) change2 = (currentsizedisterror - oldsizedisterror);
@@ -1385,11 +1409,9 @@ int  GrainGeneratorFunc::pack_grains(const std::string &filename, int numgrains)
       }
       if (random != random1)
       {
-        addcost = costcheck_add(random);
-        removecost = costcheck_remove(random1);
-	    if (fillingerrorweight > 0) currentfillingerror = oldfillingerror + addcost;
-	    if (sizedisterrorweight > 0) currentsizedisterror = check_sizedisterror(random, -1000);
-	    if (neighborhooderrorweight > 0) currentneighborhooderror = check_neighborhooderror(random, -1000);
+        if (fillingerrorweight > 0) currentfillingerror = check_fillingerror(random, random1);
+        if (sizedisterrorweight > 0) currentsizedisterror = check_sizedisterror(random, random1);
+        if (neighborhooderrorweight > 0) currentneighborhooderror = check_neighborhooderror(random, random1);
 	    if (fillingerrorweight > 0) change1 = (currentfillingerror - oldfillingerror);
 	    if (fillingerrorweight > 0 && oldfillingerror < 0) change1 = -change1;
 	    if (sizedisterrorweight > 0) change2 = (currentsizedisterror - oldsizedisterror);
