@@ -69,7 +69,9 @@ public:
     typedef boost::shared_array<float>    SharedFloatArray;
     typedef boost::shared_array<int>      SharedIntArray;
 
-    float sizex;
+	bool periodic_boundaries;
+	
+	float sizex;
     float sizey;
     float sizez;
 
@@ -99,10 +101,8 @@ public:
 
     std::vector<Grain::Pointer> m_Grains;
 
-	std::vector<int> grainids;
-	std::vector<float> ellipfuncs;
-	std::vector<std::vector<int> > grainlists;
-	std::vector<std::vector<float> > ellipfunclists;
+	std::vector<float> grainowners;
+	std::vector<float> goalgrainowners;
 	
 	std::vector<SharedFloatArray> actualodf;
     std::vector<SharedFloatArray> simodf;
@@ -194,13 +194,13 @@ public:
     void insert_grain(size_t grainNum);
     void add_grain(size_t grainNum);
     void remove_grain(size_t grainNum);
-    float costcheck_remove(size_t grainNum);
-    float costcheck_add(size_t grainNum);
     void determine_neighbors();
+	float compare_1Ddistributions(std::vector<float>, std::vector<float>);
 	float compare_2Ddistributions(std::vector<std::vector<float> >, std::vector<std::vector<float> >);
 	float compare_3Ddistributions(std::vector<std::vector<std::vector<float> > >, std::vector<std::vector<std::vector<float> > >);
     float check_neighborhooderror(int gadd, int gremove);
     float check_sizedisterror(int gadd, int gremove);
+    float check_fillingerror(int gadd, int gremove);
     int assign_voxels(int numgrains);
     void fill_gaps(int numgrains);
 	int adjust_boundaries(int numgrains);
