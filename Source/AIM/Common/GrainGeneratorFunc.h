@@ -75,7 +75,9 @@ public:
     float sizey;
     float sizez;
 
-    float resx;
+    unsigned long long int GGseed;
+    
+	float resx;
     float resy;
     float resz;
     float packingresx;
@@ -100,6 +102,7 @@ public:
     boost::shared_array<GrainGeneratorVoxel> voxels;
 
     std::vector<Grain::Pointer> m_Grains;
+	std::vector<float> sizetest;
 
 	std::vector<float> grainowners;
 	std::vector<float> goalgrainowners;
@@ -121,7 +124,6 @@ public:
 	std::vector<int> precipitatephases;
 	std::vector<double> precipitatephasefractions;
 
-    std::vector<int> activegrainlist;
     std::vector<int> takencheck;
     std::vector<std::vector<std::vector<float> > > bovera;
     std::vector<std::vector<std::vector<float> > > covera;
@@ -143,7 +145,6 @@ public:
     std::vector<float> unbiasedvol;
     std::vector<float> totalsurfacearea;
     int numgrains;
-    int numextragrains;
     int shapeclass;
     std::vector<float> phasefraction;
     std::vector<float> binstepsize;
@@ -192,12 +193,13 @@ public:
     void generate_grain(int, int);
     void assign_eulers(int);
     void insert_grain(size_t grainNum);
+    void move_grain(size_t grainNum, float xc, float yc, float zc);
     void add_grain(size_t grainNum);
     void remove_grain(size_t grainNum);
-    void determine_neighbors();
-	float compare_1Ddistributions(std::vector<float>, std::vector<float>);
-	float compare_2Ddistributions(std::vector<std::vector<float> >, std::vector<std::vector<float> >);
-	float compare_3Ddistributions(std::vector<std::vector<std::vector<float> > >, std::vector<std::vector<std::vector<float> > >);
+    void determine_neighbors(size_t grainNum, int add);
+	void compare_1Ddistributions(std::vector<float>, std::vector<float>, float &sqrerror);
+	void compare_2Ddistributions(std::vector<std::vector<float> >, std::vector<std::vector<float> >, float &sqrerror);
+	void compare_3Ddistributions(std::vector<std::vector<std::vector<float> > >, std::vector<std::vector<std::vector<float> > >, float &sqrerror);
     float check_neighborhooderror(int gadd, int gremove);
     float check_sizedisterror(int gadd, int gremove);
     float check_fillingerror(int gadd, int gremove);
