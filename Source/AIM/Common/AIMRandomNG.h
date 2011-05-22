@@ -75,4 +75,11 @@ unsigned int* seedPtr = reinterpret_cast<unsigned int*> (&seed);\
 rg.RandomInit(seedPtr[AIMRNG_OFFSET]);\
 }
 
+#define AIM_RANDOMNG_NEW_SEEDED(seed)\
+AIMRandomNG rg;\
+{\
+unsigned int* seedPtr = reinterpret_cast<unsigned int*> (&seed);\
+rg.RandomInit(seedPtr[AIMRNG_OFFSET]);\
+}
+
 #endif /* AIMRANDOMNG_H_ */
