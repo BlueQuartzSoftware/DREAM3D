@@ -1601,7 +1601,7 @@ int  GrainGeneratorFunc::pack_grains(const std::string &filename, int numgrains)
     change3 = 0;
     int option = iteration % 4;
 //    if (iteration % 100 == 0) outFile << oldfillingerror << " " << oldsizedisterror << "  " << oldneighborhooderror << "  " << acceptedmoves << std::endl;
-	// this option adds a grain not currently active
+	// this option adds a grain
 	if (option == 0)
     {
 	  newgrain = numgrains+1;
@@ -1643,7 +1643,7 @@ int  GrainGeneratorFunc::pack_grains(const std::string &filename, int numgrains)
         acceptedmoves++;
       }
     }
-	// this option removes a grain that is currently active
+	// this option removes a grain
     if (option == 1)
     {
       size_t random = int(rg.Random() * numgrains);
@@ -1669,7 +1669,7 @@ int  GrainGeneratorFunc::pack_grains(const std::string &filename, int numgrains)
         acceptedmoves++;
       }
     }
-	// this option removes one active grain and adds one non-active grain
+	// this option removes one grain and adds another grain
     if (option == 2)
     {
       size_t random1 = int(rg.Random() * numgrains);
@@ -1714,7 +1714,7 @@ int  GrainGeneratorFunc::pack_grains(const std::string &filename, int numgrains)
         acceptedmoves++;
       }
     }
-	// this option removes an active grain and replaces it with a non-active grain with a centroid inside of the removed grain
+	// this option removes a grain and replaces it with another grain at the same centroid
     if (option == 3)
     {
       size_t random1 = int(rg.Random() * numgrains);
