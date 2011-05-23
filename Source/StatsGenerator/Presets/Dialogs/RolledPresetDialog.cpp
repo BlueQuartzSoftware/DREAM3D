@@ -62,27 +62,27 @@ void RolledPresetDialog::setupGui()
   QFormLayout*         formLayout = new QFormLayout();
   formLayout->setObjectName(QString::fromUtf8("eulerLayout"));
 
-  QLabel* aspectRatioLabel = new QLabel(this);
-  aspectRatioLabel->setObjectName(QString::fromUtf8("Aspect Ratio Label"));
-  formLayout->setWidget(0, QFormLayout::LabelRole, aspectRatioLabel);
+  QLabel* aspectRatio1Label = new QLabel(this);
+  aspectRatio1Label->setObjectName(QString::fromUtf8("Aspect Ratio 1 Label"));
+  formLayout->setWidget(0, QFormLayout::LabelRole, aspectRatio1Label);
 
-  aspectRatio = new QLineEdit(this);
-  aspectRatio->setText(QString("1.0"));
-  aspectRatio->setObjectName(QString::fromUtf8("aspectRatio"));
-  formLayout->setWidget(0, QFormLayout::FieldRole, aspectRatio);
-  QDoubleValidator* aspectRatioValidator = new QDoubleValidator(aspectRatio);
-  aspectRatioValidator->setDecimals(4);
+  aspectRatio1 = new QLineEdit(this);
+  aspectRatio1->setText(QString("1.0"));
+  aspectRatio1->setObjectName(QString::fromUtf8("aspectRatio1"));
+  formLayout->setWidget(0, QFormLayout::FieldRole, aspectRatio1);
+  QDoubleValidator* aspectRatio1Validator = new QDoubleValidator(aspectRatio1);
+  aspectRatio1Validator->setDecimals(4);
 
-  QLabel* rollingFractionLabel = new QLabel(this);
-  rollingFractionLabel->setObjectName(QString::fromUtf8("Rolling Fraction Label"));
-  formLayout->setWidget(1, QFormLayout::LabelRole, rollingFractionLabel);
+  QLabel* aspectRatio2Label = new QLabel(this);
+  aspectRatio2Label->setObjectName(QString::fromUtf8("Aspect Ratio 2 Label"));
+  formLayout->setWidget(1, QFormLayout::LabelRole, aspectRatio2Label);
 
-  rollingFraction = new QLineEdit(this);
-  rollingFraction->setText(QString("0.5"));
-  rollingFraction->setObjectName(QString::fromUtf8("rollingFraction"));
-  formLayout->setWidget(1, QFormLayout::FieldRole, rollingFraction);
-  QDoubleValidator* rollingFractionValidator = new QDoubleValidator(rollingFraction);
-  rollingFractionValidator->setDecimals(4);
+  aspectRatio2 = new QLineEdit(this);
+  aspectRatio2->setText(QString("1.0"));
+  aspectRatio2->setObjectName(QString::fromUtf8("aspectRatio2"));
+  formLayout->setWidget(1, QFormLayout::FieldRole, aspectRatio2);
+  QDoubleValidator* aspectRatio2Validator = new QDoubleValidator(aspectRatio2);
+  aspectRatio2Validator->setDecimals(4);
 
   verticalLayout_2->addLayout(formLayout);
 
@@ -92,8 +92,8 @@ void RolledPresetDialog::setupGui()
   buttonBox->setStandardButtons(QDialogButtonBox::Cancel|QDialogButtonBox::Ok);
   verticalLayout_2->addWidget(buttonBox);
 
-  aspectRatioLabel->setText(QApplication::translate("Rolled Preset Dialog", "Aspect Ratio:", 0, QApplication::UnicodeUTF8));
-  rollingFractionLabel->setText(QApplication::translate("Rolled Preset Dialog", "Rolling Fraction:", 0, QApplication::UnicodeUTF8));
+  aspectRatio1Label->setText(QApplication::translate("Rolled Preset Dialog", "Aspect Ratio 1 (b/a):", 0, QApplication::UnicodeUTF8));
+  aspectRatio2Label->setText(QApplication::translate("Rolled Preset Dialog", "Aspect Ratio 2 (c/a):", 0, QApplication::UnicodeUTF8));
 
 
   QObject::connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
@@ -115,10 +115,10 @@ void RolledPresetDialog::setupGui()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-float RolledPresetDialog::getAspectRatio()
+float RolledPresetDialog::getAspectRatio1()
 {
   bool ok = false;
-  double d = aspectRatio->text().toFloat(&ok);
+  double d = aspectRatio1->text().toFloat(&ok);
   //FIXME: Should check the 'ok' variable here
   return d;
 }
@@ -126,10 +126,10 @@ float RolledPresetDialog::getAspectRatio()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-float RolledPresetDialog::getRollingFraction()
+float RolledPresetDialog::getAspectRatio2()
 {
   bool ok = false;
-  double d = rollingFraction->text().toFloat(&ok);
+  double d = aspectRatio2->text().toFloat(&ok);
   //FIXME: Should check the 'ok' variable here
   return d;
 }
