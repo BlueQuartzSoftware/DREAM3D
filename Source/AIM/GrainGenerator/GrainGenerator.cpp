@@ -38,6 +38,7 @@
 #include "AIM/Common/HDF5/H5ReconStatsReader.h"
 #include "AIM/Common/StructureReaders/AbstractStructureReader.h"
 #include "AIM/Common/StructureReaders/VTKStructureReader.h"
+#include "AIM/Common/StructureReaders/DXStructureReader.h"
 #include "AIM/Common/GrainGeneratorVTKWriter.h"
 #include "AIM/Common/HDF5/H5GrainWriter.h"
 
@@ -155,32 +156,25 @@ GrainGenerator::~GrainGenerator()
 void GrainGenerator::compute()
 {
   int err = 0;
+  // Instantiate our GrainGeneratorFunc object
+  m = GrainGeneratorFunc::New();
+  // Initialize some benchmark timers
+  START_CLOCK()
 
+  // Open the HDF5 Stats file
   H5ReconStatsReader::Pointer h5reader = H5ReconStatsReader::New(m_H5StatsFile);
   if (h5reader.get() == NULL)
   {
     progressMessage(AIM_STRING("Error Opening HDF5 Stats File. Nothing generated"), 100);
+    m_Cancel = true;
+    CHECK_FOR_CANCELED(GrainGeneratorFunc, readHDF5StatsFile)
     return;
   }
-  MAKE_OUTPUT_FILE_PATH ( crystallographicErrorFile , AIM::SyntheticBuilder::CrystallographicErrorFile)
-  MAKE_OUTPUT_FILE_PATH ( eulerFile , AIM::SyntheticBuilder::GrainAnglesFile)
-  MAKE_OUTPUT_FILE_PATH ( graindataFile , AIM::SyntheticBuilder::GrainDataFile)
-  MAKE_OUTPUT_FILE_PATH ( packGrainsFile , AIM::SyntheticBuilder::PackGrainsFile)
-  MAKE_OUTPUT_FILE_PATH ( hdf5ResultsFile , AIM::SyntheticBuilder::H5StatisticsFile)
-
-  MAKE_OUTPUT_FILE_PATH ( reconVisFile, AIM::Reconstruction::VisualizationVizFile);
-  MAKE_OUTPUT_FILE_PATH ( reconIPFVisFile, AIM::Reconstruction::IPFVizFile);
-  MAKE_OUTPUT_FILE_PATH ( hdf5GrainFile, AIM::Reconstruction::HDF5GrainFile);
-
-  START_CLOCK()
-
-  H5ReconStatsWriter::Pointer h5io = H5ReconStatsWriter::New(hdf5ResultsFile);
-  m = GrainGeneratorFunc::New();
 
   if (m_AlreadyFormed == false)
   {
     m->periodic_boundaries = m_PeriodicBoundary;
-	m->numgrains = m_NumGrains;
+    m->numgrains = m_NumGrains;
     m->shapeclass = m_ShapeClass;
     m->resx = m_XResolution;
     m->resy = m_YResolution;
@@ -198,6 +192,7 @@ void GrainGenerator::compute()
     CHECK_FOR_CANCELED(GrainGeneratorFunc, readAxisOrientationData);
 
     progressMessage(AIM_STRING("Packing Grains"), 25);
+    MAKE_OUTPUT_FILE_PATH ( packGrainsFile , AIM::SyntheticBuilder::PackGrainsFile)
     m->numgrains = m->pack_grains(packGrainsFile, m->numgrains);
     CHECK_FOR_CANCELED(GrainGeneratorFunc, pack_grains)
 
@@ -234,8 +229,16 @@ void GrainGenerator::compute()
       if (err < 0) { m_Cancel = true; }
       CHECK_FOR_CANCELED(GrainGeneratorFunc, reading_structure)
     }
-    else {
-    //FIXME: Use another reader to get the structure.
+    else if (ext.compare("dx") == 0)
+    {
+      DXStructureReader::Pointer reader = DXStructureReader::New();
+      reader->setInputFileName(m_StructureFile);
+      err = reader->readStructure(m.get());
+      if (err < 0)
+      {
+        m_Cancel = true;
+      }
+      CHECK_FOR_CANCELED(GrainGeneratorFunc, reading_structure)
     }
   }
 
@@ -274,6 +277,18 @@ void GrainGenerator::compute()
   m->measure_misorientations();
   CHECK_FOR_CANCELED(GrainGeneratorFunc, measure_misorientations)
 
+  MAKE_OUTPUT_FILE_PATH ( crystallographicErrorFile , AIM::SyntheticBuilder::CrystallographicErrorFile)
+  MAKE_OUTPUT_FILE_PATH ( eulerFile , AIM::SyntheticBuilder::GrainAnglesFile)
+  MAKE_OUTPUT_FILE_PATH ( graindataFile , AIM::SyntheticBuilder::GrainDataFile)
+
+  MAKE_OUTPUT_FILE_PATH ( hdf5ResultsFile , AIM::SyntheticBuilder::H5StatisticsFile)
+
+  MAKE_OUTPUT_FILE_PATH ( reconVisFile, AIM::Reconstruction::VisualizationVizFile);
+  MAKE_OUTPUT_FILE_PATH ( reconIPFVisFile, AIM::Reconstruction::IPFVizFile);
+  MAKE_OUTPUT_FILE_PATH ( hdf5GrainFile, AIM::Reconstruction::HDF5GrainFile);
+
+  H5ReconStatsWriter::Pointer h5io = H5ReconStatsWriter::New(hdf5ResultsFile);
+
   progressMessage(AIM_STRING("Matching Crystallography"), 65);
   m->matchCrystallography(crystallographicErrorFile, h5io);
   CHECK_FOR_CANCELED(GrainGeneratorFunc, matchCrystallography)
@@ -289,6 +304,7 @@ void GrainGenerator::compute()
   progressMessage(AIM_STRING("Finding Grain Principal Axis Lengths"), 74);
   m->find_axes();
   CHECK_FOR_CANCELED(GrainGeneratorFunc, find_axes)
+
 
   progressMessage(AIM_STRING("Finding Grain Principal Axis Directions"), 77);
   m->find_vectors(h5io);
