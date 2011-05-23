@@ -35,28 +35,30 @@ class GrainGeneratorFunc;
 
 /**
  * @class AbstractStructureReader AbstractStructureReader.h AIM/GrainGenerator/AbstractStructureReader.h
- * @brief
- * @author mjackson
+ * @brief This is the superclass for classes that are written to read a pre-existing
+ * microstructure into the Grain Generator Environment.
+ * @author Michael A. Jackson (BlueQuartz Software)
  * @date May 19, 2011
- * @version $Revision$
+ * @version 1.0
  */
 class AbstractStructureReader
 {
   public:
-    MXA_SHARED_POINTERS(AbstractStructureReader)
+    MXA_SHARED_POINTERS( AbstractStructureReader)
 
-    virtual ~AbstractStructureReader() {};
-/**
- * @brief Pure virtual method that needs to be implemented by subclasses. This
- * is the main entry point to read the grain structure from the file or other
- * data sink.
- * @param r The GrainGeneratorFunc pointer
- * @return Error. Negative is Error. Zero or Positive is Success.
- */
+    virtual ~AbstractStructureReader() { } ;
+
+    /**
+     * @brief Pure virtual method that needs to be implemented by subclasses. This
+     * is the main entry point to read the grain structure from the file or other
+     * data sink.
+     * @param r The GrainGeneratorFunc pointer
+     * @return Error. Negative is Error. Zero or Positive is Success.
+     */
     virtual int readStructure(GrainGeneratorFunc* r) = 0;
 
   protected:
-    AbstractStructureReader() {};
+    AbstractStructureReader() { } ;
 
   private:
     AbstractStructureReader(const AbstractStructureReader&); //Not Implemented
@@ -65,4 +67,3 @@ class AbstractStructureReader
 };
 
 #endif //_AbstractStructureReader_h_
-

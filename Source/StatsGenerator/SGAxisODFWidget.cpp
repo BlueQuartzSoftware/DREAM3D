@@ -408,3 +408,10 @@ void SGAxisODFWidget::on_deleteODFTextureBtn_clicked()
   }
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+SGODFTableModel* SGAxisODFWidget::tableModel()
+{
+  return m_ODFTableModel;
+}

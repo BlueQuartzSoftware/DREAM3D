@@ -650,19 +650,23 @@ void SGWidget::plotSizeDistribution()
   // Setup Each Plot Widget
   // The MicroPreset class will set the distribution for each of the plots
   m_Omega3Plot->setSizeDistributionValues(mu, sigma, cutOff, stepSize);
-  m_MicroPreset->generateOmega3Data(m_Omega3Plot, binsizes);
+  m_MicroPreset->initializeOmega3TableModel(m_Omega3Plot, binsizes);
 
   m_BOverAPlot->setSizeDistributionValues(mu, sigma, cutOff, stepSize);
-  m_MicroPreset->generateBOverAPlotData(m_BOverAPlot, binsizes);
+  m_MicroPreset->initializeBOverATableModel(m_BOverAPlot, binsizes);
 
   m_COverAPlot->setSizeDistributionValues(mu, sigma, cutOff, stepSize);
-  m_MicroPreset->generateCOverAPlotData(m_COverAPlot, binsizes);
+  m_MicroPreset->initializeCOverATableModel(m_COverAPlot, binsizes);
 
   m_COverBPlot->setSizeDistributionValues(mu, sigma, cutOff, stepSize);
-  m_MicroPreset->generateCOverBPlotData(m_COverBPlot, binsizes);
+  m_MicroPreset->initializeCOverBTableModel(m_COverBPlot, binsizes);
 
   m_NeighborPlot->setSizeDistributionValues(mu, sigma, cutOff, stepSize);
-  m_MicroPreset->generateNeighborPlotData(m_NeighborPlot, binsizes);
+  m_MicroPreset->initializeNeighborTableModel(m_NeighborPlot, binsizes);
+
+  // Get any presets for the ODF/AxisODF/MDF also
+  m_MicroPreset->initializeODFTableModel(m_ODFWidget);
+  m_MicroPreset->initializeAxisODFTableModel(m_AxisODFWidget);
 
 }
 
