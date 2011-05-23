@@ -94,11 +94,6 @@
        </item>
        <item>
         <property name="text">
-         <string>Transformation</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
          <string>Unknown Phase Type</string>
         </property>
        </item>

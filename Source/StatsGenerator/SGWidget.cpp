@@ -162,7 +162,7 @@ void SGWidget::setupGui()
   // Register the Rolled Preset
   presetFactory = RegisterPresetFactory<RolledPresetFactory>(microstructurePresetCombo);
   // Register the Recrystallized Preset
-  presetFactory = RegisterPresetFactory<RecrystallizedPresetFactory>(microstructurePresetCombo);
+//  presetFactory = RegisterPresetFactory<RecrystallizedPresetFactory>(microstructurePresetCombo);
 
   // Select the first Preset in the list
   microstructurePresetCombo->setCurrentIndex(0);
