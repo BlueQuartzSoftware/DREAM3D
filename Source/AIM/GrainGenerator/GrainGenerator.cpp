@@ -212,7 +212,6 @@ void GrainGenerator::compute()
     progressMessage(AIM_STRING("Adjusting Boundaries"), 42);
 //    m->numgrains = m->adjust_boundaries(m->numgrains);
     CHECK_FOR_CANCELED(GrainGeneratorFunc, adjust_boundaries)
-
   }
   else if (m_AlreadyFormed == true)
   {
@@ -246,10 +245,15 @@ void GrainGenerator::compute()
 
   if (m_AlreadyFormed == false)
   {
-    progressMessage(AIM_STRING("Placing Precipitates"), 46);
+    progressMessage(AIM_STRING("Placing Precipitates"), 45);
     m->numgrains = m->place_precipitates(m->numgrains);
     CHECK_FOR_CANCELED(GrainGeneratorFunc, place_precipitates)
+
+    progressMessage(AIM_STRING("Filling In Precipitates"), 47);
+    m->fillin_precipitates(m->numgrains);
+    CHECK_FOR_CANCELED(GrainGeneratorFunc, fill_gaps)
   }
+
   progressMessage(AIM_STRING("Loading ODF Data"), 48);
   err = m->readODFData(h5reader);
   CHECK_FOR_CANCELED(GrainGeneratorFunc, readODFData)
@@ -285,7 +289,6 @@ void GrainGenerator::compute()
   progressMessage(AIM_STRING("Finding Grain Principal Axis Lengths"), 74);
   m->find_axes();
   CHECK_FOR_CANCELED(GrainGeneratorFunc, find_axes)
-
 
   progressMessage(AIM_STRING("Finding Grain Principal Axis Directions"), 77);
   m->find_vectors(h5io);
