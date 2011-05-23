@@ -145,6 +145,7 @@ public:
     std::vector<float> unbiasedvol;
     std::vector<float> totalsurfacearea;
     int numgrains;
+    int numprimarygrains;
     int shapeclass;
     std::vector<float> phasefraction;
     std::vector<float> binstepsize;
@@ -193,6 +194,7 @@ public:
     void generate_grain(int, int);
     void assign_eulers(int);
     void insert_grain(size_t grainNum);
+    void insert_precipitate(size_t grainNum);
     void move_grain(size_t grainNum, float xc, float yc, float zc);
     void add_grain(size_t grainNum);
     void remove_grain(size_t grainNum);
@@ -205,6 +207,7 @@ public:
     float check_fillingerror(int gadd, int gremove);
     int assign_voxels(int numgrains);
     void fill_gaps(int numgrains);
+    void fillin_precipitates(int numgrains);
 	int adjust_boundaries(int numgrains);
     int place_precipitates(int numgrains);
     void find_neighbors();
