@@ -41,8 +41,8 @@
 //
 // -----------------------------------------------------------------------------
 RolledPreset::RolledPreset() :
-m_AspectRatio(1.0),
-m_RollingFraction(1.0)
+m_AspectRatio1(1.0),
+m_AspectRatio2(1.0)
 {
 }
 
@@ -63,8 +63,8 @@ void RolledPreset::displayUserInputDialog()
   if (ret == QDialog::Accepted)
   {
     // The user clicked the OK button so transfer the values from the dialog into this class
-    m_AspectRatio = d.getAspectRatio();
-    m_RollingFraction = d.getRollingFraction();
+    m_AspectRatio1 = d.getAspectRatio1();
+	m_AspectRatio2 = d.getAspectRatio2();
   }
   else
   {

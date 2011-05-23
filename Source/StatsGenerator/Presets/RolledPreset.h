@@ -55,8 +55,8 @@ class RolledPreset : public AbstractMicrostructurePreset
     void generateCOverBPlotData(StatsGenPlotWidget* plot, QVector<float> binNumbers);
     void generateNeighborPlotData(StatsGenPlotWidget* plot, QVector<float> binNumbers);
 
-    MXA_INSTANCE_PROPERTY(float, AspectRatio)
-    MXA_INSTANCE_PROPERTY(float, RollingFraction)
+    MXA_INSTANCE_PROPERTY(float, AspectRatio1)
+    MXA_INSTANCE_PROPERTY(float, AspectRatio2)
 
   protected:
     RolledPreset();
