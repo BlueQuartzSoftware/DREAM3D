@@ -222,7 +222,7 @@ void GrainGeneratorWidget::setupGui()
   m_WidgetList << m_NumGrains << m_XResolution << m_YResolution << m_ZResolution << m_FillingErrorWeight;
   m_WidgetList << m_NeighborhoodErrorWeight << m_SizeDistErrorWeight;
   m_WidgetList << m_ShapeClass << m_AlreadyFormed;
-  m_WidgetList << m_PeriodicBoundaryConditions;
+  m_WidgetList << m_PeriodicBoundaryConditions << m_BinaryVtkFiles;
 }
 
 // -----------------------------------------------------------------------------

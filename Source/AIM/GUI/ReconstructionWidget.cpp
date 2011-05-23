@@ -217,7 +217,7 @@ void ReconstructionWidget::setupGui()
   m_WidgetList << m_DisorientationVizFile << m_ImageQualityVizFile << m_IPFVizFile << m_SchmidFactorVizFile << m_VisualizationVizFile << m_DownSampledVizFile;
   m_WidgetList << m_MinImageQuality;
   m_WidgetList << m_HDF5GrainFile << m_H5StatisticsFile << m_AlignmentFile << m_GrainDataFile;
-  m_WidgetList << m_LoadSettingsBtn << m_SaveSettingsBtn;
+  m_WidgetList << m_LoadSettingsBtn << m_SaveSettingsBtn << m_BinaryVtkFiles;
 
 }
 
