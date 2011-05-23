@@ -48,7 +48,13 @@
 
 
 
-
+/**
+ * @class H5AngDataLoader H5AngDataLoader.h AIM/ANG/H5AngDataLoader.h
+ * @brief This class loads OIM data from an HDF5 based file.
+ * @author Michael A. Jackson for BlueQuartz Software
+ * @date May 23, 2011
+ * @version 1.0
+ */
 class AIMCOMMON_EXPORT H5AngDataLoader : public AbstractAngDataLoader
 {
   public:
