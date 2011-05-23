@@ -82,6 +82,8 @@ class SGAxisODFWidget : public QWidget, private Ui::SGAxisODFWidget
 
     void updatePlots();
 
+    SGODFTableModel* tableModel();
+
     protected slots:
       void on_m_CalculateODFBtn_clicked();
       void on_addODFTextureBtn_clicked();
