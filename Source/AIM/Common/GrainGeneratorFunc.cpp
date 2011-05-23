@@ -1725,12 +1725,24 @@ int GrainGeneratorFunc::assign_voxels(int numgrains)
     ymax = int(row+((radcur1/resy)+1));
     zmin = int(plane-((radcur1/resz)+1));
     zmax = int(plane+((radcur1/resz)+1));
-	if(xmin < -0.5*xpoints) xmin = -0.5*xpoints;
-	if(xmax > (1.5*xpoints-1)) xmax = (1.5*xpoints-1);
-	if(ymin < -0.5*ypoints) ymin = -0.5*ypoints;
-	if(ymax > (1.5*ypoints-1)) ymax = (1.5*ypoints-1);
-	if(zmin < -0.5*zpoints) zmin = -0.5*zpoints;
-	if(zmax > (1.5*zpoints-1)) zmax = (1.5*zpoints-1);
+	if(periodic_boundaries == true)
+	{
+	  if(xmin < -xpoints) xmin = -xpoints;
+	  if(xmax > 2*xpoints-1) xmax = (2*xpoints-1);
+	  if(ymin < -ypoints) ymin = -ypoints;
+	  if(ymax > 2*ypoints-1) ymax = (2*ypoints-1);
+	  if(zmin < -zpoints) zmin = -zpoints;
+	  if(zmax > 2*zpoints-1) zmax = (2*zpoints-1);
+	}
+	if(periodic_boundaries == false)
+	{
+	  if(xmin < 0) xmin = 0;
+	  if(xmax > xpoints-1) xmax = xpoints-1;
+	  if(ymin < 0) ymin = 0;
+	  if(ymax > ypoints-1) ymax = ypoints-1;
+	  if(zmin < 0) zmin = 0;
+	  if(zmax > zpoints-1) zmax = zpoints-1;
+	}
     for(int iter1 = xmin; iter1 < xmax+1; iter1++)
     {
       for(int iter2 = ymin; iter2 < ymax+1; iter2++)
