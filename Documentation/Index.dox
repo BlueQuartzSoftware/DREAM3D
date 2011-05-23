@@ -6,20 +6,31 @@
 Digital Representation ENvironment for Analysis of Microstructure in 3D
 
 @subpage angfileimport "OIM Data Import"
+Importing OIM data into the DREAM3D environment
 
 @subpage reconstruction "Reconstruction"
+Reconstructing the 3D microstructure from the 2D OIM Scans
 
 @subpage syntheticbuilder "Synthetic Builder"
-
-@subpage structurereaders "Structure Readers"
+Creating Synthetic microstructures
 
 @subpage surfacemeshing "Surface Meshing"
+Creating a surface mesh of the reconstructed or synthetic microstructures that
+were generated from either the Reconstruction or Synthetic Builder modules
+
+@subpage structurereaders "Structure Readers"
+How to write a "StructureReader" subclass in order to read previously existing
+microstructure representations into the Synthetic Builder module.
 
 
 @subpage statsgenerator "StatsGenerator"
+This program can be used to generate a set of statistical data which can be used
+as input into the Synthetic Builder module.
 
 @subpage microPreset "Microstructure Presets"
-
+The StatsGenerator has a few predefined sets of statistics for various types of
+microsrtuctures. The programmer can create more Preset classes by extending a
+few C++ classes and compiling the application.
 
 
 

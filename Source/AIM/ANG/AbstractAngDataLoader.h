@@ -38,7 +38,14 @@
 #include "AIM/Common/ReconstructionVoxel.h"
 
 
-
+/**
+ * @class AbstractAngDataLoader AbstractAngDataLoader.h AIM/ANG/AbstractAngDataLoader.h
+ * @brief  This class defines the C++ interface that subclasses must implement
+ * in order to be able to load OIM data into the DREAM.3D programs.
+ * @author Michael A. Jackson for BlueQuartz Software
+ * @date May 23, 2011
+ * @version 1.0
+ */
 class AIMCOMMON_EXPORT AbstractAngDataLoader
 {
 
@@ -48,9 +55,29 @@ class AIMCOMMON_EXPORT AbstractAngDataLoader
 
     virtual ~AbstractAngDataLoader() {}
 
+    /**
+     * @brief This method does the actual loading of the OIM data from the data
+     * source (files, streams, etc) into the Reconstruction Module data structures.
+     * @param voxels A preallocated array of ReconstructionVoxel
+     * @param xpoints The number of points along the X Axis
+     * @param ypoints The number of points along the Y Axis
+     * @param zpoints The number of points along the Z Axis
+     */
     virtual int loadData(ReconstructionVoxel voxels[],
                          int xpoints, int ypoints, int zpoints) = 0;
 
+    /**
+     * @brief This method gathers the number of points in each of the 3 axis directions
+     * and also the resolution in each of the axis directions where each of the
+     * arguments are "output" parameters, ie, they will be over written with the
+     * values from the data source.
+     * @param xpoints The number of points along the X Axis
+     * @param ypoints The number of points along the Y Axis
+     * @param zpoints The number of points along the Z Axis
+     * @param xres The resolution along the X Axis
+     * @param yres The resolution along the Y Axis
+     * @param zres The resolution along the Z Axis
+     */
     virtual int getSizeAndResolution(int &xpoints, int &ypoints, int &zpoints,
                                        float &xres, float &yres, float &zres) = 0;
 
