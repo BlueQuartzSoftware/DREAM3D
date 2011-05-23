@@ -135,10 +135,12 @@ cmp_IDE_SOURCE_PROPERTIES( "AIM/Common/OrientationOps" "${AIMCommon_OrientatioOp
 
 set(StructureReaders_SRCS
     ${DREAM3D_SOURCE_DIR}/Source/AIM/Common/StructureReaders/VTKStructureReader.cpp
+    ${DREAM3D_SOURCE_DIR}/Source/AIM/Common/StructureReaders/DXStructureReader.cpp
 )
 set(StructureReaders_HDRS
     ${DREAM3D_SOURCE_DIR}/Source/AIM/Common/StructureReaders/AbstractStructureReader.h
     ${DREAM3D_SOURCE_DIR}/Source/AIM/Common/StructureReaders/VTKStructureReader.h
+    ${DREAM3D_SOURCE_DIR}/Source/AIM/Common/StructureReaders/DXStructureReader.h
 )
 cmp_IDE_SOURCE_PROPERTIES( "AIM/Common/StructureReaders" "${StructureReaders_HDRS}" "${StructureReaders_SRCS}" ${PROJECT_INSTALL_HEADERS})
 
