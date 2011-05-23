@@ -139,6 +139,7 @@ void EditPhaseDialog::setupGui()
   m_PptFractionValidator->setDecimals(6);
   pptFraction->setEnabled(false);
   pptFractionLabel->setEnabled(false);
+  on_phaseFraction_textChanged(QString());
 }
 
 // -----------------------------------------------------------------------------
@@ -162,6 +163,7 @@ void EditPhaseDialog::on_phaseFraction_textChanged(const QString &string)
 void EditPhaseDialog::setOtherPhaseFractionTotal(float t)
 {
   m_OtherPhaseFractions = t;
+  on_phaseFraction_textChanged(QString());
 }
 
 // -----------------------------------------------------------------------------

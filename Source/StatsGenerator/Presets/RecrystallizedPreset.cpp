@@ -32,9 +32,11 @@
 
 #include "StatsGenerator/Presets/Dialogs/RecrystallizedPresetDialog.h"
 #include "StatsGenerator/StatsGenPlotWidget.h"
+#include "StatsGenerator/StatsGenODFWidget.h"
+#include "StatsGenerator/SGAxisODFWidget.h"
 #include "StatsGenerator/TableModels/SGBetaTableModel.h"
 #include "StatsGenerator/TableModels/SGPowerLawTableModel.h"
-
+#include "StatsGenerator/TableModels/SGODFTableModel.h"
 
 
 // -----------------------------------------------------------------------------
@@ -72,7 +74,7 @@ void RecrystallizedPreset::displayUserInputDialog()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RecrystallizedPreset::generateOmega3Data(StatsGenPlotWidget* plot, QVector<float> binNumbers)
+void RecrystallizedPreset::initializeOmega3TableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers)
 {
   // Make sure the distribution is set correctly
   plot->setDistributionType(AIM::Reconstruction::Beta, false);
@@ -113,7 +115,7 @@ void RecrystallizedPreset::generateOmega3Data(StatsGenPlotWidget* plot, QVector<
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RecrystallizedPreset::generateBOverAPlotData(StatsGenPlotWidget* plot, QVector<float> binNumbers)
+void RecrystallizedPreset::initializeBOverATableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers)
 {
   // Make sure the distribution is set correctly
   plot->setDistributionType(AIM::Reconstruction::Beta, false);
@@ -154,49 +156,7 @@ void RecrystallizedPreset::generateBOverAPlotData(StatsGenPlotWidget* plot, QVec
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RecrystallizedPreset::generateCOverAPlotData(StatsGenPlotWidget* plot, QVector<float> binNumbers)
-{
-  // Make sure the distribution is set correctly
-  plot->setDistributionType(AIM::Reconstruction::Beta, false);
-  // This line basically makes sure we have the distribution type we are looking for
-  SGBetaTableModel* model = qobject_cast<SGBetaTableModel*>(plot->tableModel());
-  if (NULL == model)
-  {
-    return;
-  }
-  qint32 count = binNumbers.count();
-
-  // Remove all the current rows in the table model
-  model->removeRows(0, model->rowCount());
-
-  float alpha, beta;
-  AIM_RANDOMNG_NEW()
-
-  QVector<float> alphas;
-  QVector<float> betas;
-  QVector<QString> colors;
-  QStringList colorNames = QColor::colorNames();
-  qint32 colorOffset = 21;
-  for (qint32 i = 0; i < count; ++i)
-   {
-    alpha = (0*i) + 10.0 + rg.Random();
-    beta = (0*i) + 1.5 + (0.5*rg.Random());
-    alphas.push_back(alpha);
-    betas.push_back(beta);
-    colors.push_back(colorNames[colorOffset++]);
-   }
-
-  QVector<QVector<float> > data;
-  data.push_back(alphas);
-  data.push_back(betas);
-  model->setTableData(binNumbers, data, colors);
-}
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void RecrystallizedPreset::generateCOverBPlotData(StatsGenPlotWidget* plot, QVector<float> binNumbers)
+void RecrystallizedPreset::initializeCOverATableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers)
 {
   // Make sure the distribution is set correctly
   plot->setDistributionType(AIM::Reconstruction::Beta, false);
@@ -238,7 +198,49 @@ void RecrystallizedPreset::generateCOverBPlotData(StatsGenPlotWidget* plot, QVec
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RecrystallizedPreset::generateNeighborPlotData(StatsGenPlotWidget* plot, QVector<float> binNumbers)
+void RecrystallizedPreset::initializeCOverBTableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers)
+{
+  // Make sure the distribution is set correctly
+  plot->setDistributionType(AIM::Reconstruction::Beta, false);
+  // This line basically makes sure we have the distribution type we are looking for
+  SGBetaTableModel* model = qobject_cast<SGBetaTableModel*>(plot->tableModel());
+  if (NULL == model)
+  {
+    return;
+  }
+  qint32 count = binNumbers.count();
+
+  // Remove all the current rows in the table model
+  model->removeRows(0, model->rowCount());
+
+  float alpha, beta;
+  AIM_RANDOMNG_NEW()
+
+  QVector<float> alphas;
+  QVector<float> betas;
+  QVector<QString> colors;
+  QStringList colorNames = QColor::colorNames();
+  qint32 colorOffset = 21;
+  for (qint32 i = 0; i < count; ++i)
+   {
+    alpha = (0*i) + 10.0 + rg.Random();
+    beta = (0*i) + 1.5 + (0.5*rg.Random());
+    alphas.push_back(alpha);
+    betas.push_back(beta);
+    colors.push_back(colorNames[colorOffset++]);
+   }
+
+  QVector<QVector<float> > data;
+  data.push_back(alphas);
+  data.push_back(betas);
+  model->setTableData(binNumbers, data, colors);
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void RecrystallizedPreset::initializeNeighborTableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers)
 {
   // Make sure the distribution is set correctly
   plot->setDistributionType(AIM::Reconstruction::Power, false);

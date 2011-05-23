@@ -46,7 +46,13 @@
 #include "AIM/Common/ReconstructionVoxel.h"
 
 
-
+/**
+ * @class AngDataLoader AngDataLoader.h AIM/ANG/AngDataLoader.h
+ * @brief This class loads OIM data from TSL .ang files.
+ * @author Michael A. Jackson for BlueQuartz Software
+ * @date May 23, 2011
+ * @version 1.0
+ */
 class AIMCOMMON_EXPORT AngDataLoader : public AbstractAngDataLoader
 {
   public:
