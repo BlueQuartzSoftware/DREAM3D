@@ -664,6 +664,7 @@ void SGWidget::plotSizeDistribution()
   m_NeighborPlot->setSizeDistributionValues(mu, sigma, cutOff, stepSize);
   m_MicroPreset->generateNeighborPlotData(m_NeighborPlot, binsizes);
 
+
 }
 
 
