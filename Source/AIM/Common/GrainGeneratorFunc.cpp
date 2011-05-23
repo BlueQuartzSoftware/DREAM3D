@@ -33,6 +33,47 @@ const static float SinOfHalf = sinf(0.5);
 const static float CosOfHalf = cosf(0.5);
 const static float SinOfZero = sinf(0.0);
 const static float CosOfZero = cosf(0.0);
+const static float ShapeClass3Omega3[41][2] = {{0.787873524, 0.0},
+											  {0.78793553, 0.05},
+											  {0.788341216, 0.1},
+											  {0.789359741, 0.15},
+											  {0.791186818, 0.2},
+											  {0.793953966, 0.25},
+											  {0.797737494, 0.3},
+											  {0.802566619, 0.35},
+											  {0.808430467, 0.4},
+											  {0.815283954, 0.45},
+											  {0.823052718, 0.5},
+											  {0.831637359, 0.55},
+											  {0.840917349, 0.6},
+											  {0.850755028, 0.65},
+											  {0.86100021, 0.7},
+											  {0.871496036, 0.75},
+											  {0.882086906, 0.8},
+											  {0.892629636, 0.85},
+											  {0.903009489, 0.9},
+											  {0.913163591, 0.95},
+											  {0.92311574, 1.00},
+											  {0.932874613, 1.05},
+											  {0.941981628, 1.1},
+											  {0.949904418, 1.15},
+											  {0.956171947, 1.2},
+											  {0.96037277, 1.25},
+											  {0.962158855, 1.3},
+											  {0.961254001, 1.35},
+											  {0.957466141, 1.4},
+											  {0.950703099, 1.45},
+											  {0.940991385, 1.5},
+											  {0.92849772, 1.55},
+											  {0.913552923, 1.6},
+											  {0.89667764, 1.65},
+											  {0.878608694, 1.7},
+											  {0.860322715, 1.75},
+											  {0.843047317, 1.8},
+											  {0.828232275, 1.85},
+											  {0.81740437, 1.9},
+											  {0.811701359, 1.95},
+											  {0.810569469, 2.0}};
 
 #define DIMS "DIMENSIONS"
 #define LOOKUP "LOOKUP_TABLE"
@@ -64,7 +105,8 @@ GrainGeneratorFunc::GrainGeneratorFunc()
   voxels.reset(NULL);
   GGseed = MXA::getMilliSeconds();
 
-  // Just stuff to quiet the compiler
+
+// Just stuff to quiet the compiler
   float a = SinOfHalf;
   a = CosOfHalf;
 }
@@ -618,7 +660,11 @@ void  GrainGeneratorFunc::insert_grain(size_t gnum)
 
   float dist;
   float Nvalue = 0;
+  float Nvaluedist = 0;
+  float bestNvaluedist = 1000000;
   float Gvalue = 0;
+  float Gvaluedist = 0;
+  float bestGvaluedist = 1000000;
   float inside = -1;
   int index;
   int column, row, plane;
@@ -636,7 +682,15 @@ void  GrainGeneratorFunc::insert_grain(size_t gnum)
   float radcur1 = 1;
   if(shapeclass == 3)
   {
-    Gvalue = omega3;
+	  for(int i=0;i<41;i++)
+	  {
+		Gvaluedist = fabsf(omega3-ShapeClass3Omega3[i][0]);
+		if(Gvaluedist < bestGvaluedist)
+		{
+		    bestGvaluedist = Gvaluedist;
+			Gvalue = ShapeClass3Omega3[i][1];
+		}
+	  }
       if(Gvalue >= 0 && Gvalue <= 1)
       {
         radcur1 = (volcur*6.0)/(6-(Gvalue*Gvalue*Gvalue));
