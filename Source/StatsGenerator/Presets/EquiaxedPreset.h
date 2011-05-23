@@ -42,8 +42,14 @@
 #include "AbstractMicrostructurePresetFactory.h"
 #include "AbstractMicrostructurePreset.h"
 
-
-
+/**
+ * @class EquiaxedPreset EquiaxedPreset.h StatsGenerator/Presets/EquiaxedPreset.h
+ * @brief This class will populate the various tables with the necessary values
+ * to create an Equiaxed Microstructure.
+ * @author Michael A. Jackson for BlueQuartz Software
+ * @date May 23, 2011
+ * @version 1.0
+ */
 class EquiaxedPreset : public AbstractMicrostructurePreset
 {
   public:
@@ -51,11 +57,12 @@ class EquiaxedPreset : public AbstractMicrostructurePreset
     MXA_STATIC_NEW_SUPERCLASS(AbstractMicrostructurePreset, EquiaxedPreset);
     virtual ~EquiaxedPreset();
 
-    void generateOmega3Data(StatsGenPlotWidget* plot, QVector<float> binNumbers);
-    void generateBOverAPlotData(StatsGenPlotWidget* plot, QVector<float> binNumbers);
-    void generateCOverAPlotData(StatsGenPlotWidget* plot, QVector<float> binNumbers);
-    void generateCOverBPlotData(StatsGenPlotWidget* plot, QVector<float> binNumbers);
-    void generateNeighborPlotData(StatsGenPlotWidget* plot, QVector<float> binNumbers);
+    void initializeOmega3TableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers);
+    void initializeBOverATableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers);
+    void initializeCOverATableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers);
+    void initializeCOverBTableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers);
+    void initializeNeighborTableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers);
+
 
   protected:
     EquiaxedPreset();
@@ -65,6 +72,6 @@ class EquiaxedPreset : public AbstractMicrostructurePreset
     void operator=(const EquiaxedPreset&); // Operator '=' Not Implemented
 };
 
-DECLARE_FACTORY_CLASS(EquiaxedPresetFactory, EquiaxedPreset, Equiaxed );
+DECLARE_FACTORY_CLASS(EquiaxedPresetFactory, EquiaxedPreset, "Equiaxed" );
 
 #endif /* EQUIAXEDPRESETFACTORY_H_ */
