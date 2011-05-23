@@ -60,7 +60,7 @@ int VTKStructureReader::readStructure(GrainGeneratorFunc* m)
   getDims(m->xpoints, m->ypoints, m->zpoints);
   getScaling(m->resx, m->resy, m->resz);
   m->totalpoints = m->xpoints * m->ypoints * m->zpoints;
-  m->totalvol = float(m->totalpoints)*m->resx*m->resy*m->resz;
+  m->totalvol = float(m->totalpoints) * m->resx * m->resy * m->resz;
   m->sizex = m->xpoints * m->resx;
   m->sizey = m->ypoints * m->resy;
   m->sizez = m->zpoints * m->resz;
@@ -70,10 +70,10 @@ int VTKStructureReader::readStructure(GrainGeneratorFunc* m)
   std::ifstream instream;
   instream.open(filename.c_str());
   if (!instream.is_open())
-   {
-     std::cout << logTime() << " vtk file could not be opened: " << filename << std::endl;
-     return -1;
-   }
+  {
+    std::cout << logTime() << " vtk file could not be opened: " << filename << std::endl;
+    return -1;
+  }
   char buf[kBufferSize];
   for (int i = 0; i < 8; ++i)
   {
@@ -81,9 +81,12 @@ int VTKStructureReader::readStructure(GrainGeneratorFunc* m)
   }
 
   // Now we need to search for the 'GrainID' and
-  char text1[kBufferSize]; ::memset(text1, 0, kBufferSize);
-  char text2[kBufferSize]; ::memset(text2, 0, kBufferSize);
-  char text3[kBufferSize]; ::memset(text3, 0, kBufferSize);
+  char text1[kBufferSize];
+  ::memset(text1, 0, kBufferSize);
+  char text2[kBufferSize];
+  ::memset(text2, 0, kBufferSize);
+  char text3[kBufferSize];
+  ::memset(text3, 0, kBufferSize);
   int fieldNum = 0;
   bool needGrainIds = true;
   bool needPhaseIds = true;
@@ -119,25 +122,38 @@ int VTKStructureReader::readStructure(GrainGeneratorFunc* m)
     // Check to make sure we are reading the correct set of scalars and if we are
     // NOT then read all this particular Scalar Data and try again
 
-
     if (m_GrainIdScalarName.compare(scalarName) == 0)
     {
       std::map<int, int> grainIdMap;
-      for (int z = 0; z < m->zpoints; ++z)
+      if (getFileIsBinary() == true)
       {
-        // Read an entire plane of data
-        instream.read(reinterpret_cast<char*>(ids), sizeof(int) * planeVoxels);
-        i = 0;
-        for (int y = 0; y < m->ypoints; ++y)
+        for (int z = 0; z < m->zpoints; ++z)
         {
-          for (int x = 0; x < m->xpoints; ++x)
+          // Read an entire plane of data
+          instream.read(reinterpret_cast<char*> (ids), sizeof(int) * planeVoxels);
+          i = 0;
+          for (int y = 0; y < m->ypoints; ++y)
           {
-            MXA::Endian::FromBigToSystem::convert<int>(ids[i]);
-            m->voxels[index].grain_index = ids[i];
-            grainIdMap[ids[i]]++;
-            ++i;
-            ++index;
+            for (int x = 0; x < m->xpoints; ++x)
+            {
+              MXA::Endian::FromBigToSystem::convert<int>(ids[i]);
+              m->voxels[index].grain_index = ids[i];
+              grainIdMap[ids[i]]++;
+              ++i;
+              ++index;
+            }
           }
+        }
+      }
+      else // ASCII VTK File
+      {
+        int grain_index = -1;
+        size_t size = m->totalpoints;
+        for (size_t i = 0; i < size; ++i)
+        {
+          instream >> grain_index;
+          m->voxels[i].grain_index = grain_index;
+          grainIdMap[grain_index]++;
         }
       }
       // We now have our list of grains so allocate that many grains
@@ -145,7 +161,7 @@ int VTKStructureReader::readStructure(GrainGeneratorFunc* m)
       // NOT used, at least internally
       m->m_Grains.resize(grainIdMap.size() + 1);
       size_t g = 0;
-      for (std::map<int, int>::iterator iter = grainIdMap.begin(); iter != grainIdMap.end(); ++iter )
+      for (std::map<int, int>::iterator iter = grainIdMap.begin(); iter != grainIdMap.end(); ++iter)
       {
         //int gid = (*iter).first;
         m->m_Grains[g] = Grain::New();
@@ -155,22 +171,35 @@ int VTKStructureReader::readStructure(GrainGeneratorFunc* m)
       }
       needGrainIds = false;
     }
-    else if ( m_PhaseIdScalarName.compare(scalarName) == 0)
+    else if (m_PhaseIdScalarName.compare(scalarName) == 0)
     {
-      for (int z = 0; z < m->zpoints; ++z)
+      if (getFileIsBinary() == true)
       {
-        // Read an entire plane of data
-        instream.read(reinterpret_cast<char*>(ids), sizeof(int) * planeVoxels);
-        i = 0;
-        for (int y = 0; y < m->ypoints; ++y)
+        for (int z = 0; z < m->zpoints; ++z)
         {
-          for (int x = 0; x < m->xpoints; ++x)
+          // Read an entire plane of data
+          instream.read(reinterpret_cast<char*> (ids), sizeof(int) * planeVoxels);
+          i = 0;
+          for (int y = 0; y < m->ypoints; ++y)
           {
-            MXA::Endian::FromBigToSystem::convert<int>(ids[i]);
-            m->voxels[index].phase = ids[i];
-            ++i;
-            ++index;
+            for (int x = 0; x < m->xpoints; ++x)
+            {
+              MXA::Endian::FromBigToSystem::convert<int>(ids[i]);
+              m->voxels[index].phase = ids[i];
+              ++i;
+              ++index;
+            }
           }
+        }
+      }
+      else // ASCII VTK File
+      {
+        int phase = -1;
+        size_t size = m->totalpoints;
+        for (size_t i = 0; i < size; ++i)
+        {
+          instream >> phase;
+          m->voxels[i].phase = phase;
         }
       }
       needPhaseIds = false;
