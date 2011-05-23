@@ -229,16 +229,21 @@ void GrainGenerator::compute()
       if (err < 0) { m_Cancel = true; }
       CHECK_FOR_CANCELED(GrainGeneratorFunc, reading_structure)
     }
-    else if (ext.compare("dx") == 0)
+//    else if (ext.compare("dx") == 0)
+//    {
+//      DXStructureReader::Pointer reader = DXStructureReader::New();
+//      reader->setInputFileName(m_StructureFile);
+//      err = reader->readStructure(m.get());
+//      if (err < 0)
+//      {
+//        m_Cancel = true;
+//      }
+//      CHECK_FOR_CANCELED(GrainGeneratorFunc, reading_structure)
+//    }
+    else
     {
-      DXStructureReader::Pointer reader = DXStructureReader::New();
-      reader->setInputFileName(m_StructureFile);
-      err = reader->readStructure(m.get());
-      if (err < 0)
-      {
-        m_Cancel = true;
-      }
-      CHECK_FOR_CANCELED(GrainGeneratorFunc, reading_structure)
+      m_Cancel = true;
+      CHECK_FOR_CANCELED(GrainGeneratorFunc, reading_structure);
     }
   }
 
