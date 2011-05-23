@@ -915,7 +915,11 @@ void  GrainGeneratorFunc::insert_precipitate(size_t gnum)
 
   float dist;
   float Nvalue = 0;
+  float Nvaluedist = 0;
+  float bestNvaluedist = 1000000;
   float Gvalue = 0;
+  float Gvaluedist = 0;
+  float bestGvaluedist = 1000000;
   float inside = -1;
   int index;
   int column, row, plane;
@@ -933,7 +937,15 @@ void  GrainGeneratorFunc::insert_precipitate(size_t gnum)
   float radcur1 = 1;
   if(shapeclass == 3)
   {
-    Gvalue = omega3;
+	  for(int i=0;i<41;i++)
+	  {
+		Gvaluedist = fabsf(omega3-ShapeClass3Omega3[i][0]);
+		if(Gvaluedist < bestGvaluedist)
+		{
+		    bestGvaluedist = Gvaluedist;
+			Gvalue = ShapeClass3Omega3[i][1];
+		}
+	  }
       if(Gvalue >= 0 && Gvalue <= 1)
       {
         radcur1 = (volcur*6.0)/(6-(Gvalue*Gvalue*Gvalue));
@@ -945,7 +957,20 @@ void  GrainGeneratorFunc::insert_precipitate(size_t gnum)
   }
   if(shapeclass == 2)
   {
-    Nvalue = omega3;
+	  for(int i=0;i<41;i++)
+	  {
+	    float a = gamma(1.0+1.0/ShapeClass2Omega3[i][1]);
+		float b = gamma(5.0/ShapeClass2Omega3[i][1]);
+	    float c = gamma(3.0/ShapeClass2Omega3[i][1]);
+		float d = gamma(1.0+3.0/ShapeClass2Omega3[i][1]);
+		ShapeClass2Omega3[i][0] = powf(20.0*(powf(a,3)*b)/(c*powf(d,5.0/3.0)),3)/(2000.0*M_PI*M_PI/9.0);
+		Nvaluedist = fabsf(omega3-ShapeClass2Omega3[i][0]);
+		if(Nvaluedist < bestNvaluedist)
+		{
+		    bestNvaluedist = Nvaluedist;
+			Nvalue = ShapeClass2Omega3[i][1];
+		}
+	  }
       float beta1 = (gamma((1.0/Nvalue))*gamma((1.0/Nvalue)))/gamma((2.0/Nvalue));
       float beta2 = (gamma((2.0/Nvalue))*gamma((1.0/Nvalue)))/gamma((3.0/Nvalue));
       radcur1 = (volcur*(3.0/2.0)*(1.0/bovera)*(1.0/covera)*((Nvalue*Nvalue)/4.0)*(1.0/beta1)*(1.0/beta2));
