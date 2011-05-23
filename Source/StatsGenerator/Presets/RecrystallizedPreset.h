@@ -41,6 +41,15 @@
 #include "AbstractMicrostructurePresetFactory.h"
 #include "AbstractMicrostructurePreset.h"
 
+
+/**
+ * @class RecrystallizedPreset RecrystallizedPreset.h StatsGenerator/Presets/RecrystallizedPreset.h
+ * @brief This class will populate the various tables with the necessary values
+ * to create a Recrystallized Microstructure.
+ * @author Michael A. Jackson for BlueQuartz Software
+ * @date May 23, 2011
+ * @version 1.0
+*/
 class RecrystallizedPreset : public AbstractMicrostructurePreset
 {
   public:
@@ -50,11 +59,12 @@ class RecrystallizedPreset : public AbstractMicrostructurePreset
 
 
     void displayUserInputDialog();
-    void generateOmega3Data(StatsGenPlotWidget* plot, QVector<float> binNumbers);
-    void generateBOverAPlotData(StatsGenPlotWidget* plot, QVector<float> binNumbers);
-    void generateCOverAPlotData(StatsGenPlotWidget* plot, QVector<float> binNumbers);
-    void generateCOverBPlotData(StatsGenPlotWidget* plot, QVector<float> binNumbers);
-    void generateNeighborPlotData(StatsGenPlotWidget* plot, QVector<float> binNumbers);
+    void initializeOmega3TableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers);
+    void initializeBOverATableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers);
+    void initializeCOverATableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers);
+    void initializeCOverBTableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers);
+    void initializeNeighborTableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers);
+
 
     MXA_INSTANCE_PROPERTY(float, PercentRecrystallized)
 
@@ -66,7 +76,7 @@ class RecrystallizedPreset : public AbstractMicrostructurePreset
     void operator=(const RecrystallizedPreset&); // Operator '=' Not Implemented
 };
 
-DECLARE_FACTORY_CLASS(RecrystallizedPresetFactory, RecrystallizedPreset, Recrystallized );
+DECLARE_FACTORY_CLASS(RecrystallizedPresetFactory, RecrystallizedPreset, "Recrystallized" );
 
 
 #endif /* RECRYSTALLIZEDPRESET_H_ */

@@ -7,10 +7,8 @@
 # -----------------------------------------------------------------------------
 #
 # -----------------------------------------------------------------------------
-project (DREAM3DDocumentation)
+project (Docs)
 cmake_minimum_required(VERSION 2.8)
-
-
 
 if (NOT DEFINED PROJECT_RESOURCES_DIR)
 set (PROJECT_RESOURCES_DIR ${PROJECT_SOURCE_DIR}/Resources)
@@ -84,7 +82,7 @@ set (LATEX_EPS_FILES
 )
 
 if (DOX_GENERATE_LATEX)
-ADD_DOXYGEN_TARGETS (PDF_FILENAME ${PROJECT_NAME}
+ADD_DOXYGEN_TARGETS (PDF_FILENAME "DREAM.3D Documentation"
                      PROJECT_NAME  "${PROJECT_NAME}_LATEX" 
                      PROJECT_BINARY_DIR "${PROJECT_BINARY_DIR}" 
                      SOURCE_FILES "${DOCUMENTATION_SOURCE_FILES}" 

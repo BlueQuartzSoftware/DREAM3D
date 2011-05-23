@@ -38,7 +38,22 @@
 #include "AbstractMicrostructurePreset.h"
 
 
-
+/**
+ * @def DECLARE_FACTORY_CLASS(name, type, display)
+ * @brief This macro is used to quickly create the Factory class for a custom
+ * preset subclass of AbstractMicrostructurePreset. This must be implemented
+ * because of the Factory Design pattern used for each of the presets.
+ * @param name The Name of the Factory subclass
+ * @param type The name of the AbstractMicrostructurePreset subclass that you are implementing
+ * @param display A Human understandable string for your custom preset class.
+ *
+ * An example would be a programmer that wants to create a custom preset class for
+ * cast Magnesium microstructures. If they call their AbstractMicrostructurePreset subclass
+ * CastAlMicrostructurePreset then they may want to call this macro in the following way:
+ * @code
+ * DECLARE_FACTORY_CLASS(CastAlMicrostructurePresetFactory, CastAlMicrostructurePreset, "Cast Al" );
+ * @endcode
+ */
 #define DECLARE_FACTORY_CLASS(name, type, display)\
   class name : public AbstractMicrostructurePresetFactory {\
     public:\
@@ -56,7 +71,7 @@
         return false;\
     }\
     const std::string className() { return std::string(#type); }\
-    const std::string displayName() { return std::string(#display); }\
+    const std::string displayName() { return std::string(display); }\
     protected:\
     name(){};\
     private:\
