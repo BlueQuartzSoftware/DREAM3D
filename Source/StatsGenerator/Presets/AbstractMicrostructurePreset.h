@@ -36,9 +36,20 @@
 #include "MXA/Common/MXASetGetMacros.h"
 
 class StatsGenPlotWidget;
+class StatsGenODFWidget;
+class SGAxisODFWidget;
+class StatsGenMDFWidget;
 
-/*
- *
+/**
+ * @class AbstractMicrostructurePreset AbstractMicrostructurePreset.h StatsGenerator/Presets/AbstractMicrostructurePreset.h
+ * @brief This class is the superclass for Microstructure Preset classes. It contains both
+ * pure virtual and virtual methods. For those programmers wanting to create new
+ * presets to make available to the end user they need to fully implement the methods
+ * that they want to setup specific presets for. Each method has a default implementation
+ * that does nothing.
+ * @author Michael A. Jackson for BlueQuartz Software
+ * @date May 23, 2011
+ * @version 1.0
  */
 class AbstractMicrostructurePreset
 {
@@ -57,39 +68,60 @@ class AbstractMicrostructurePreset
     virtual void displayUserInputDialog() {};
 
     /**
-     * @brief
-     * @param tableModel
-     * @param binNumbers
+     * @brief Initializes the Omega3 preset table values
+     * @param tableModel The TableModel that will receive the preset values
+     * @param binNumbers The array of Bin values which are needed for the table model
      */
-    virtual void generateOmega3Data(StatsGenPlotWidget* plot, QVector<float> binNumbers) = 0;
+    virtual void initializeOmega3TableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers) = 0;
 
     /**
-     * @brief
-     * @param tableModel
-     * @param binNumbers
+     * @brief Initializes the B Over A preset table values
+     * @param tableModel The TableModel that will receive the preset values
+     * @param binNumbers The array of Bin values which are needed for the table model
      */
-    virtual void generateBOverAPlotData(StatsGenPlotWidget* plot, QVector<float> binNumbers) = 0;
+    virtual void initializeBOverATableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers) = 0;
 
     /**
-     * @brief
-     * @param tableModel
-     * @param binNumbers
+     * @brief Initializes the C Over A preset table values
+     * @param tableModel The TableModel that will receive the preset values
+     * @param binNumbers The array of Bin values which are needed for the table model
      */
-    virtual void generateCOverAPlotData(StatsGenPlotWidget* plot, QVector<float> binNumbers) = 0;
+    virtual void initializeCOverATableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers) = 0;
 
     /**
-     * @brief
-     * @param tableModel
-     * @param binNumbers
+     * @brief Initializes the C Over B preset table values
+     * @param tableModel The TableModel that will receive the preset values
+     * @param binNumbers The array of Bin values which are needed for the table model
      */
-    virtual void generateCOverBPlotData(StatsGenPlotWidget* plot, QVector<float> binNumbers) = 0;
+    virtual void initializeCOverBTableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers) = 0;
 
     /**
-     * @brief
-     * @param tableModel
-     * @param binNumbers
+     * @brief Initializes the Neighbor preset table values
+     * @param tableModel The TableModel that will receive the preset values
+     * @param binNumbers The array of Bin values which are needed for the table model
      */
-    virtual void generateNeighborPlotData(StatsGenPlotWidget* plot, QVector<float> binNumbers) = 0;
+    virtual void initializeNeighborTableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers) = 0;
+
+    /**
+     * @brief This method initializes the AxisODF Table with preset Euler angles,
+     * Weights and Spreads.
+     * @param widget Non Null SGAxisODFWidget
+     */
+    virtual void initializeAxisODFTableModel(SGAxisODFWidget* widget) {}
+
+    /**
+     * @brief This method initializes the ODF Table with preset Euler angles,
+     * Weights and Spreads.
+     * @param widget
+     */
+    virtual void initializeODFTableModel(StatsGenODFWidget* widget) {}
+
+    /**
+     * @brief This method initializes the MDF Table with preset Euler angles,
+     * Weights and Spreads.
+     * @param widget
+     */
+    virtual void initializeMDFTableModel(StatsGenMDFWidget* widget) {}
 
   protected:
     AbstractMicrostructurePreset() {};

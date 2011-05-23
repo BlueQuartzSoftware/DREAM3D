@@ -484,3 +484,11 @@ void StatsGenODFWidget::on_deleteODFTextureBtn_clicked()
   }
 }
 
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+SGODFTableModel* StatsGenODFWidget::tableModel()
+{
+  return m_ODFTableModel;
+}

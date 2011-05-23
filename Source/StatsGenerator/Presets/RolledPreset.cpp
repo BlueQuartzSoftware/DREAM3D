@@ -34,15 +34,17 @@
 
 #include "StatsGenerator/Presets/Dialogs/RolledPresetDialog.h"
 #include "StatsGenerator/StatsGenPlotWidget.h"
+#include "StatsGenerator/StatsGenODFWidget.h"
+#include "StatsGenerator/SGAxisODFWidget.h"
 #include "StatsGenerator/TableModels/SGBetaTableModel.h"
 #include "StatsGenerator/TableModels/SGPowerLawTableModel.h"
+#include "StatsGenerator/TableModels/SGODFTableModel.h"
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 RolledPreset::RolledPreset() :
-m_AspectRatio1(1.0),
-m_AspectRatio2(1.0)
+  m_AspectRatio1(1.0), m_AspectRatio2(1.0)
 {
 }
 
@@ -64,7 +66,7 @@ void RolledPreset::displayUserInputDialog()
   {
     // The user clicked the OK button so transfer the values from the dialog into this class
     m_AspectRatio1 = d.getAspectRatio1();
-	m_AspectRatio2 = d.getAspectRatio2();
+    m_AspectRatio2 = d.getAspectRatio2();
   }
   else
   {
@@ -75,12 +77,12 @@ void RolledPreset::displayUserInputDialog()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RolledPreset::generateOmega3Data(StatsGenPlotWidget* plot, QVector<float> binNumbers)
+void RolledPreset::initializeOmega3TableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers)
 {
   // Make sure the distribution is set correctly
   plot->setDistributionType(AIM::Reconstruction::Beta, false);
   // This line basically makes sure we have the distribution type we are looking for
-  SGBetaTableModel* model = qobject_cast<SGBetaTableModel*>(plot->tableModel());
+  SGBetaTableModel* model = qobject_cast<SGBetaTableModel*> (plot->tableModel());
   if (NULL == model)
   {
     return;
@@ -88,7 +90,7 @@ void RolledPreset::generateOmega3Data(StatsGenPlotWidget* plot, QVector<float> b
   qint32 count = binNumbers.count();
 
   // Remove all the current rows in the table model
-//  model->removeRows(0, model->rowCount());
+  //  model->removeRows(0, model->rowCount());
 
   float alpha, beta;
   AIM_RANDOMNG_NEW()
@@ -99,54 +101,13 @@ void RolledPreset::generateOmega3Data(StatsGenPlotWidget* plot, QVector<float> b
   QStringList colorNames = QColor::colorNames();
   qint32 colorOffset = 21;
   for (qint32 i = 0; i < count; ++i)
-   {
-    alpha = (0*i) + 10.0 + rg.Random();
-    beta = (0*i) + 1.5 + (0.5*rg.Random());
-    alphas.push_back(alpha);
-    betas.push_back(beta);
-    colors.push_back(colorNames[colorOffset++]);
-   }
-
-  QVector<QVector<float> > data;
-  data.push_back(alphas);
-  data.push_back(betas);
-  model->setTableData(binNumbers, data, colors);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void RolledPreset::generateBOverAPlotData(StatsGenPlotWidget* plot, QVector<float> binNumbers)
-{
-  // Make sure the distribution is set correctly
-  plot->setDistributionType(AIM::Reconstruction::Beta, false);
-  // This line basically makes sure we have the distribution type we are looking for
-  SGBetaTableModel* model = qobject_cast<SGBetaTableModel*>(plot->tableModel());
-  if (NULL == model)
   {
-    return;
-  }
-  qint32 count = binNumbers.count();
-
-  // Remove all the current rows in the table model
-  model->removeRows(0, model->rowCount());
-
-  float alpha, beta;
-  AIM_RANDOMNG_NEW()
-
-  QVector<float> alphas;
-  QVector<float> betas;
-  QVector<QString> colors;
-  QStringList colorNames = QColor::colorNames();
-  qint32 colorOffset = 21;
-  for (qint32 i = 0; i < count; ++i)
-   {
-    alpha = (0*i) + 10.0 + rg.Random();
-    beta = (0*i) + 1.5 + (0.5*rg.Random());
+    alpha = (0 * i) + 10.0 + rg.Random();
+    beta = (0 * i) + 1.5 + (0.5 * rg.Random());
     alphas.push_back(alpha);
     betas.push_back(beta);
     colors.push_back(colorNames[colorOffset++]);
-   }
+  }
 
   QVector<QVector<float> > data;
   data.push_back(alphas);
@@ -157,12 +118,12 @@ void RolledPreset::generateBOverAPlotData(StatsGenPlotWidget* plot, QVector<floa
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RolledPreset::generateCOverAPlotData(StatsGenPlotWidget* plot, QVector<float> binNumbers)
+void RolledPreset::initializeBOverATableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers)
 {
   // Make sure the distribution is set correctly
   plot->setDistributionType(AIM::Reconstruction::Beta, false);
   // This line basically makes sure we have the distribution type we are looking for
-  SGBetaTableModel* model = qobject_cast<SGBetaTableModel*>(plot->tableModel());
+  SGBetaTableModel* model = qobject_cast<SGBetaTableModel*> (plot->tableModel());
   if (NULL == model)
   {
     return;
@@ -181,13 +142,13 @@ void RolledPreset::generateCOverAPlotData(StatsGenPlotWidget* plot, QVector<floa
   QStringList colorNames = QColor::colorNames();
   qint32 colorOffset = 21;
   for (qint32 i = 0; i < count; ++i)
-   {
-    alpha = (0*i) + 10.0 + rg.Random();
-    beta = (0*i) + 1.5 + (0.5*rg.Random());
+  {
+    alpha = (0 * i) + 10.0 + rg.Random();
+    beta = (0 * i) + 1.5 + (0.5 * rg.Random());
     alphas.push_back(alpha);
     betas.push_back(beta);
     colors.push_back(colorNames[colorOffset++]);
-   }
+  }
 
   QVector<QVector<float> > data;
   data.push_back(alphas);
@@ -195,16 +156,15 @@ void RolledPreset::generateCOverAPlotData(StatsGenPlotWidget* plot, QVector<floa
   model->setTableData(binNumbers, data, colors);
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RolledPreset::generateCOverBPlotData(StatsGenPlotWidget* plot, QVector<float> binNumbers)
+void RolledPreset::initializeCOverATableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers)
 {
   // Make sure the distribution is set correctly
   plot->setDistributionType(AIM::Reconstruction::Beta, false);
   // This line basically makes sure we have the distribution type we are looking for
-  SGBetaTableModel* model = qobject_cast<SGBetaTableModel*>(plot->tableModel());
+  SGBetaTableModel* model = qobject_cast<SGBetaTableModel*> (plot->tableModel());
   if (NULL == model)
   {
     return;
@@ -223,13 +183,13 @@ void RolledPreset::generateCOverBPlotData(StatsGenPlotWidget* plot, QVector<floa
   QStringList colorNames = QColor::colorNames();
   qint32 colorOffset = 21;
   for (qint32 i = 0; i < count; ++i)
-   {
-    alpha = (0*i) + 10.0 + rg.Random();
-    beta = (0*i) + 1.5 + (0.5*rg.Random());
+  {
+    alpha = (0 * i) + 10.0 + rg.Random();
+    beta = (0 * i) + 1.5 + (0.5 * rg.Random());
     alphas.push_back(alpha);
     betas.push_back(beta);
     colors.push_back(colorNames[colorOffset++]);
-   }
+  }
 
   QVector<QVector<float> > data;
   data.push_back(alphas);
@@ -237,16 +197,56 @@ void RolledPreset::generateCOverBPlotData(StatsGenPlotWidget* plot, QVector<floa
   model->setTableData(binNumbers, data, colors);
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void RolledPreset::initializeCOverBTableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers)
+{
+  // Make sure the distribution is set correctly
+  plot->setDistributionType(AIM::Reconstruction::Beta, false);
+  // This line basically makes sure we have the distribution type we are looking for
+  SGBetaTableModel* model = qobject_cast<SGBetaTableModel*> (plot->tableModel());
+  if (NULL == model)
+  {
+    return;
+  }
+  qint32 count = binNumbers.count();
+
+  // Remove all the current rows in the table model
+  model->removeRows(0, model->rowCount());
+
+  float alpha, beta;
+  AIM_RANDOMNG_NEW()
+
+  QVector<float> alphas;
+  QVector<float> betas;
+  QVector<QString> colors;
+  QStringList colorNames = QColor::colorNames();
+  qint32 colorOffset = 21;
+  for (qint32 i = 0; i < count; ++i)
+  {
+    alpha = (0 * i) + 10.0 + rg.Random();
+    beta = (0 * i) + 1.5 + (0.5 * rg.Random());
+    alphas.push_back(alpha);
+    betas.push_back(beta);
+    colors.push_back(colorNames[colorOffset++]);
+  }
+
+  QVector<QVector<float> > data;
+  data.push_back(alphas);
+  data.push_back(betas);
+  model->setTableData(binNumbers, data, colors);
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RolledPreset::generateNeighborPlotData(StatsGenPlotWidget* plot, QVector<float> binNumbers)
+void RolledPreset::initializeNeighborTableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers)
 {
   // Make sure the distribution is set correctly
   plot->setDistributionType(AIM::Reconstruction::Power, false);
   // This line basically makes sure we have the distribution type we are looking for
-  SGPowerLawTableModel* model = qobject_cast<SGPowerLawTableModel*>(plot->tableModel());
+  SGPowerLawTableModel* model = qobject_cast<SGPowerLawTableModel*> (plot->tableModel());
   if (NULL == model)
   {
     return;
@@ -266,17 +266,17 @@ void RolledPreset::generateNeighborPlotData(StatsGenPlotWidget* plot, QVector<fl
   QVector<QString> colors;
   QStringList colorNames = QColor::colorNames();
   qint32 colorOffset = 21;
-  int middlebin = count/2;
+  int middlebin = count / 2;
   for (qint32 i = 0; i < count; ++i)
-   {
-    alpha = (4*(binNumbers[i]/binNumbers[middlebin])) + rg.Random();
-    k = 2 + (0.2*(binNumbers[i]/binNumbers[middlebin])) + (0.05*rg.Random());
-    beta = (0*i) + 1;
+  {
+    alpha = (4 * (binNumbers[i] / binNumbers[middlebin])) + rg.Random();
+    k = 2 + (0.2 * (binNumbers[i] / binNumbers[middlebin])) + (0.05 * rg.Random());
+    beta = (0 * i) + 1;
     alphas.push_back(alpha);
     ks.push_back(k);
     betas.push_back(beta);
     colors.push_back(colorNames[colorOffset++]);
-   }
+  }
 
   QVector<QVector<float> > data;
   data.push_back(alphas);
@@ -285,3 +285,31 @@ void RolledPreset::generateNeighborPlotData(StatsGenPlotWidget* plot, QVector<fl
   model->setTableData(binNumbers, data, colors);
 
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void RolledPreset::initializeAxisODFTableModel(SGAxisODFWidget* widget)
+{
+  // This line basically makes sure we have the distribution type we are looking for
+  SGODFTableModel* model = (widget->tableModel());
+  if (NULL == model)
+  {
+    return;
+  }
+  QVector<float> e1;
+  QVector<float> e2;
+  QVector<float> e3;
+  QVector<float> weights;
+  QVector<float> sigmas;
+
+  e1.push_back(0.0f);
+  e2.push_back(0.0f);
+  e3.push_back(0.0f);
+  weights.push_back(500);
+  sigmas.push_back(2.5);
+
+
+  model->setTableData(e1, e2, e3, weights, sigmas);
+}
+
