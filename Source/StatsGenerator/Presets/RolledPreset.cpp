@@ -143,8 +143,8 @@ void RolledPreset::initializeBOverATableModel(StatsGenPlotWidget* plot, QVector<
   qint32 colorOffset = 21;
   for (qint32 i = 0; i < count; ++i)
   {
-    alpha = (0 * i) + 10.0 + rg.Random();
-    beta = (0 * i) + 1.5 + (0.5 * rg.Random());
+    alpha = (0 * i) + (2+(18*(1.0/m_AspectRatio1))) + (rg.Random());
+    beta = (0 * i) + (20-(18.5*(1.0/m_AspectRatio1))) + (rg.Random());
     alphas.push_back(alpha);
     betas.push_back(beta);
     colors.push_back(colorNames[colorOffset++]);
@@ -184,8 +184,8 @@ void RolledPreset::initializeCOverATableModel(StatsGenPlotWidget* plot, QVector<
   qint32 colorOffset = 21;
   for (qint32 i = 0; i < count; ++i)
   {
-    alpha = (0 * i) + 10.0 + rg.Random();
-    beta = (0 * i) + 1.5 + (0.5 * rg.Random());
+    alpha = (0 * i) + (2+(18*(1.0/m_AspectRatio2))) + (rg.Random());
+    beta = (0 * i) + (20-(18.5*(1.0/m_AspectRatio2))) + (rg.Random());
     alphas.push_back(alpha);
     betas.push_back(beta);
     colors.push_back(colorNames[colorOffset++]);
@@ -225,8 +225,8 @@ void RolledPreset::initializeCOverBTableModel(StatsGenPlotWidget* plot, QVector<
   qint32 colorOffset = 21;
   for (qint32 i = 0; i < count; ++i)
   {
-    alpha = (0 * i) + 10.0 + rg.Random();
-    beta = (0 * i) + 1.5 + (0.5 * rg.Random());
+    alpha = (0 * i) + (2+(18*((m_AspectRatio1/m_AspectRatio2)))) + (rg.Random());
+    beta = (0 * i) + (20-(18.5*((m_AspectRatio1/m_AspectRatio2)))) + (rg.Random());
     alphas.push_back(alpha);
     betas.push_back(beta);
     colors.push_back(colorNames[colorOffset++]);
@@ -307,7 +307,7 @@ void RolledPreset::initializeAxisODFTableModel(SGAxisODFWidget* widget)
   e2.push_back(0.0f);
   e3.push_back(0.0f);
   weights.push_back(500);
-  sigmas.push_back(2.5);
+  sigmas.push_back(3);
 
 
   model->setTableData(e1, e2, e3, weights, sigmas);
