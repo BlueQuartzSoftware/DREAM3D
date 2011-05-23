@@ -41,6 +41,14 @@
 #include "AbstractMicrostructurePreset.h"
 
 
+/**
+ * @class RolledPreset RolledPreset.h StatsGenerator/Presets/RolledPreset.h
+ * @brief This class will populate the various tables with the necessary values
+ * to create a Rolled Microstructure.
+ * @author Michael A. Jackson for BlueQuartz Software
+ * @date May 23, 2011
+ * @version 1.0
+ */
 class RolledPreset : public AbstractMicrostructurePreset
 {
   public:
@@ -49,11 +57,14 @@ class RolledPreset : public AbstractMicrostructurePreset
     virtual ~RolledPreset();
 
     void displayUserInputDialog();
-    void generateOmega3Data(StatsGenPlotWidget* plot, QVector<float> binNumbers);
-    void generateBOverAPlotData(StatsGenPlotWidget* plot, QVector<float> binNumbers);
-    void generateCOverAPlotData(StatsGenPlotWidget* plot, QVector<float> binNumbers);
-    void generateCOverBPlotData(StatsGenPlotWidget* plot, QVector<float> binNumbers);
-    void generateNeighborPlotData(StatsGenPlotWidget* plot, QVector<float> binNumbers);
+    void initializeOmega3TableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers);
+    void initializeBOverATableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers);
+    void initializeCOverATableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers);
+    void initializeCOverBTableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers);
+    void initializeNeighborTableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers);
+
+    void initializeAxisODFTableModel(SGAxisODFWidget* widget);
+
 
     MXA_INSTANCE_PROPERTY(float, AspectRatio1)
     MXA_INSTANCE_PROPERTY(float, AspectRatio2)
@@ -66,7 +77,7 @@ class RolledPreset : public AbstractMicrostructurePreset
     void operator=(const RolledPreset&); // Operator '=' Not Implemented
 };
 
-DECLARE_FACTORY_CLASS(RolledPresetFactory, RolledPreset, Rolled );
+DECLARE_FACTORY_CLASS(RolledPresetFactory, RolledPreset, "Rolled");
 
 
 #endif /* ROLLEDPRESET_H_ */
