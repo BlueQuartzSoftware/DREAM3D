@@ -709,11 +709,11 @@ void  GrainGeneratorFunc::insert_grain(size_t gnum)
   float inside = -1;
   int index;
   int column, row, plane;
-  int xmin, xmax, ymin, ymax, zmin, zmax, xdiff, ydiff, zdiff;
+  int xmin, xmax, ymin, ymax, zmin, zmax;
   float xc, yc, zc;
   float xp, yp, zp;
   float x, y, z;
-  float ellipfunc = 0;
+//  float ellipfunc = 0;
   float insidecount = 0;
   std::vector<int> insidelist(1000,-1);
   float volcur = m_Grains[gnum]->volume;
@@ -923,11 +923,11 @@ void  GrainGeneratorFunc::insert_precipitate(size_t gnum)
   float inside = -1;
   int index;
   int column, row, plane;
-  int xmin, xmax, ymin, ymax, zmin, zmax, xdiff, ydiff, zdiff;
+  int xmin, xmax, ymin, ymax, zmin, zmax;
   float xc, yc, zc;
   float xp, yp, zp;
   float x, y, z;
-  float ellipfunc = 0;
+//  float ellipfunc = 0;
   float insidecount = 0;
   std::vector<int> insidelist(1000,-1);
   float volcur = m_Grains[gnum]->volume;
@@ -1130,7 +1130,7 @@ void GrainGeneratorFunc::move_grain(size_t gnum, float nxc, float nyc, float nzc
   int oldcolumn, oldrow, oldplane;
   int newcolumn, newrow, newplane;
   int column, row, plane;
-  int index, newindex;
+  int index;
   float oxc = m_Grains[gnum]->centroidx;
   float oyc = m_Grains[gnum]->centroidy;
   float ozc = m_Grains[gnum]->centroidz;
@@ -1140,7 +1140,7 @@ void GrainGeneratorFunc::move_grain(size_t gnum, float nxc, float nyc, float nzc
   newcolumn = (nxc-(packingresx/2))/packingresx;
   newrow = (nyc-(packingresy/2))/packingresy;
   newplane = (nzc-(packingresz/2))/packingresz;
-  for(int i=0;i<m_Grains[gnum]->voxellist->size();i++)
+  for(size_t i=0;i<m_Grains[gnum]->voxellist->size();i++)
   {
 	index = m_Grains[gnum]->voxellist->at(i);
 	column = index%packingxpoints;
@@ -1326,7 +1326,7 @@ float GrainGeneratorFunc::check_neighborhooderror(int gadd, int gremove)
 		determine_neighbors(gremove, 1);
 	  }
   }
-  compare_3Ddistributions(simneighbordist, neighbordist, sqrerror);	
+  compare_3Ddistributions(simneighbordist, neighbordist, sqrerror);
   neighborerror = sqrerror;
   return neighborerror;
 }
@@ -1340,7 +1340,7 @@ void GrainGeneratorFunc::compare_1Ddistributions(std::vector<float> array1, std:
 		sqrerror = sqrerror + ((array1[i]-array2[i])*(array1[i]-array2[i]));
 		scalingmag = scalingmag + array2[i]*array2[i];
 	}
-	sqrerror;
+//	sqrerror;
 	sqrerror = sqrerror/scalingmag;
 }
 void GrainGeneratorFunc::compare_2Ddistributions(std::vector<std::vector<float> > array1, std::vector<std::vector<float> > array2, float &sqrerror)
@@ -1444,7 +1444,7 @@ float GrainGeneratorFunc::check_fillingerror(int gadd, int gremove)
 		  grainowners[index] = grainowners[index]-1;
 	  }
   }
-  compare_1Ddistributions(grainowners, goalgrainowners, sqrerror);	
+  compare_1Ddistributions(grainowners, goalgrainowners, sqrerror);
   fillingerror = sqrerror;
   if(gadd > 0)
   {
@@ -1473,12 +1473,12 @@ int  GrainGeneratorFunc::pack_grains(const std::string &filename, int numgrains)
   float change1, change2, change3;
   std::ofstream outFile;
   outFile.open(filename.c_str());
-  size_t index;
+ // size_t index;
   int phase;
-  int good = 0;
+//  int good = 0;
   float random;
   int newgrain;
-  int placecount = 0;
+//  int placecount = 0;
   float xc, yc, zc;
   float bestxc, bestyc, bestzc, bestcurrentfillingerror;
   currentfillingerror = 0, oldfillingerror = 0;
@@ -1585,7 +1585,7 @@ int  GrainGeneratorFunc::pack_grains(const std::string &filename, int numgrains)
 	m_Grains[i]->centroidy = bestyc;
 	m_Grains[i]->centroidz = bestzc;
 	insert_grain(i);
-    add_grain(i);	
+    add_grain(i);
     if (neighborhooderrorweight > 0) determine_neighbors(i, 1);
 	oldfillingerror = currentfillingerror;
   }
@@ -2352,7 +2352,7 @@ int  GrainGeneratorFunc::place_precipitates(int numgrains)
 		if(voxels[m_Grains[currentnumgrains]->voxellist->at(j)].grain_index > 0 && voxels[m_Grains[currentnumgrains]->voxellist->at(j)].grain_index < numgrains)
 		{
 			precipvoxelcounter++;
-		}		
+		}
 	}
 	if(double(precipvoxelcounter)/double(m_Grains[currentnumgrains]->voxellist->size()) > 0.75)
 	{
@@ -2362,7 +2362,7 @@ int  GrainGeneratorFunc::place_precipitates(int numgrains)
 			if(voxels[m_Grains[currentnumgrains]->voxellist->at(j)].grain_index < 0 || voxels[m_Grains[currentnumgrains]->voxellist->at(j)].grain_index >= numgrains)
 			{
 				voxels[m_Grains[currentnumgrains]->voxellist->at(j)].grain_index = -1;
-				voxels[m_Grains[currentnumgrains]->voxellist->at(j)].phase = 0;	
+				voxels[m_Grains[currentnumgrains]->voxellist->at(j)].phase = 0;
 			}
 			if(voxels[m_Grains[currentnumgrains]->voxellist->at(j)].grain_index > 0 && voxels[m_Grains[currentnumgrains]->voxellist->at(j)].grain_index < numgrains)
 			{
@@ -2526,7 +2526,7 @@ int GrainGeneratorFunc::adjust_boundaries(int numgrains)
 					gsizes[gnames[index]]++;
 				}
 			}
-			for(std::vector<int>::size_type i=1;i<numgrains+1;i++)
+			for(int i=1;i<numgrains+1;i++)
 			{
 				index = i;
 				diam = 2.0*powf((gsizes[index]*voxtovol),(1.0/3.0));
@@ -2540,7 +2540,7 @@ int GrainGeneratorFunc::adjust_boundaries(int numgrains)
 	}
 	int *newnames;
 	newnames = new int[m_Grains.size()];
-	for (size_t i=1;i<numgrains+1;i++)
+	for (int i=1;i<numgrains+1;i++)
 	{
 		newnames[i] = i;
 	}

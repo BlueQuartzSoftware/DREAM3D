@@ -57,6 +57,8 @@ class DefaultStatsPreset : public AbstractMicrostructurePreset
     void generateCOverBPlotData(StatsGenPlotWidget* plot, QVector<float> binNumbers);
     void generateNeighborPlotData(StatsGenPlotWidget* plot, QVector<float> binNumbers);
 
+
+
   protected:
     DefaultStatsPreset();
 
