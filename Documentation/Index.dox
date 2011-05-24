@@ -32,7 +32,10 @@ The StatsGenerator has a few predefined sets of statistics for various types of
 microsrtuctures. The programmer can create more Preset classes by extending a
 few C++ classes and compiling the application.
 
-
+@subpage compiling "Compiling DREAM.3D"
+If you would like to make changes to the DREAM.3D applications then you will need
+to be able to compile DREAM.3D your self. This page will attemp to describe the
+prerequisites that are needed to compile DREAM.3D
 
 
 */
