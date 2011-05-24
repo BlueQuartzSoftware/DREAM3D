@@ -84,6 +84,7 @@ class AIMCOMMON_EXPORT Texture
     static const size_t odfsize = 5832;
   //  float degtorad = M_PI/180.0;
     float addweight = 0;
+    float totaladdweight = 0;
     odf.resize(odfsize);
     int bin, addbin;
     int bin1, bin2, bin3;
@@ -135,11 +136,20 @@ class AIMCOMMON_EXPORT Texture
               addweight = (weights[i] * fraction);
 			  if(sigmas[i] == 0.0) addweight = weights[i];
               odf[addbin] = odf[addbin]+addweight;
+			  totaladdweight = totaladdweight + addweight;
             }
           }
         }
       }
     }
+	if(totaladdweight > odfsize)
+	{
+		float scale = (totaladdweight/odfsize);
+	    for (size_t i = 0; i < odfsize; i++)
+	    {
+	      odf[i] = odf[i]/scale;
+	    }
+	}
     float remainingweight = float(odfsize);
     float remainingcount = 0;
     for (size_t i = 0; i < odfsize; i++)
@@ -187,6 +197,7 @@ class AIMCOMMON_EXPORT Texture
     static const size_t odfsize = 15552;
  //   float degtorad = M_PI/180.0;
     float addweight = 0;
+    float totaladdweight = 0;
     odf.resize(odfsize);
     int bin, addbin;
     int bin1, bin2, bin3;
@@ -239,11 +250,20 @@ class AIMCOMMON_EXPORT Texture
               addweight = (weights[i] * fraction);
 			  if(sigmas[i] == 0.0) addweight = weights[i];
               odf[addbin] = odf[addbin]+addweight;
+			  totaladdweight = totaladdweight + addweight;
             }
           }
         }
       }
     }
+	if(totaladdweight > odfsize)
+	{
+		float scale = (totaladdweight/odfsize);
+	    for (size_t i = 0; i < odfsize; i++)
+	    {
+	      odf[i] = odf[i]/scale;
+	    }
+	}
     float remainingweight = float(odfsize);
     float remainingcount = 0;
     for (size_t i = 0; i < odfsize; i++)
@@ -290,6 +310,7 @@ class AIMCOMMON_EXPORT Texture
     TextureBins = new int[weights.size()];
     static const size_t odfsize = 46656;
     float addweight = 0;
+    float totaladdweight = 0;
     odf.resize(odfsize);
     int bin, addbin;
     int bin1, bin2, bin3;
@@ -341,11 +362,20 @@ class AIMCOMMON_EXPORT Texture
               addweight = (weights[i] * fraction);
 			  if(sigmas[i] == 0.0) addweight = weights[i];
               odf[addbin] = odf[addbin]+addweight;
+			  totaladdweight = totaladdweight + addweight;
             }
           }
         }
       }
     }
+	if(totaladdweight > odfsize)
+	{
+		float scale = (totaladdweight/odfsize);
+	    for (size_t i = 0; i < odfsize; i++)
+	    {
+	      odf[i] = odf[i]/scale;
+	    }
+	}
     float remainingweight = float(odfsize);
     float remainingcount = 0;
     for (size_t i = 0; i < odfsize; i++)
