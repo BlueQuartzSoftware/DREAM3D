@@ -97,7 +97,7 @@ class AIMCOMMON_EXPORT PhaseType
       strings.clear();
       strings.push_back(PrimaryStr);
       strings.push_back(PrecipitateStr);
-      strings.push_back(TransformationStr);
+//      strings.push_back(TransformationStr);
       strings.push_back(UnknownPhaseTypeStr);
     }
 
@@ -106,7 +106,7 @@ class AIMCOMMON_EXPORT PhaseType
       types.clear();
       types.push_back(AIM::Reconstruction::PrimaryPhase);
       types.push_back(AIM::Reconstruction::PrecipitatePhase);
-      types.push_back(AIM::Reconstruction::TransformationPhase);
+//      types.push_back(AIM::Reconstruction::TransformationPhase);
       types.push_back(AIM::Reconstruction::UnknownPhaseType);
     }
 
@@ -115,7 +115,7 @@ class AIMCOMMON_EXPORT PhaseType
       map.clear();
       map[AIM::Reconstruction::PrimaryPhase] = PrimaryStr;
       map[AIM::Reconstruction::PrecipitatePhase] = PrecipitateStr;
-      map[AIM::Reconstruction::TransformationPhase] = TransformationStr;
+//      map[AIM::Reconstruction::TransformationPhase] = TransformationStr;
       map[AIM::Reconstruction::UnknownPhaseType] = UnknownPhaseTypeStr;
     }
 
