@@ -249,67 +249,41 @@ void Reconstruction::compute()
 
   START_CLOCK()
 
-  if (m_AlreadyFormed == true)
+  progressMessage(AIM_STRING("Loading Slices"), 4);
+  oimDataLoader->loadData(m->voxels.get(), m->xpoints, m->ypoints, m->zpoints);
+  m->initializeQuats();
+  CHECK_FOR_CANCELED(ReconstructionFunc, loadData)
+
+  progressMessage(AIM_STRING("Finding Border"), 8);
+  m->find_border();
+  CHECK_FOR_CANCELED(ReconstructionFunc, find_border)
+
+  if (m_AlignmentMethod == AIM::Reconstruction::MutualInformation)
   {
-    // Sanity Check the the Reconstruction File does exist in the output directory
-    if (MXADir::exists(reconVisFile) == true)
-    {
-      progressMessage(AIM_STRING("Loading Existing Data"), 31);
-      int numgrains = m->load_data(reconVisFile);
-      numgrains = numgrains; // Quiet the compiler down
-      CHECK_FOR_CANCELED(ReconstructionFunc, load_data)
-    }
-    else
-    {
-      std::cout << "******************************************************************************************" << std::endl;
-      std::cout << "* Input file needed by using the --alreadyFormed option was not found. The following file " << std::endl;
-      std::cout << "* should exist and be readable." << std::endl;
-      std::cout << "* " << reconVisFile << std::endl;
-      std::cout << "******************************************************************************************" << std::endl;
-      m_ErrorCondition = -1;
-      return;
-
-    }
-  }
-  else if (m_AlreadyFormed == false)
-  {
-
-    progressMessage(AIM_STRING("Loading Slices"), 4);
-    oimDataLoader->loadData(m->voxels.get(), m->xpoints, m->ypoints, m->zpoints);
-    m->initializeQuats();
-    CHECK_FOR_CANCELED(ReconstructionFunc, loadData)
-
-    progressMessage(AIM_STRING("Finding Border"), 8);
-    m->find_border();
-    CHECK_FOR_CANCELED(ReconstructionFunc, find_border)
-
-    if (m_AlignmentMethod == AIM::Reconstruction::MutualInformation)
-    {
       progressMessage(AIM_STRING("Aligning Slices"), 10);
       m->form_grains_sections();
       CHECK_FOR_CANCELED(ReconstructionFunc, form_grains_sections)
-    }
+  }
 
-    progressMessage(AIM_STRING("Aligning Slices"), 12);
-    m->align_sections(alignmentFile);
-    CHECK_FOR_CANCELED(ReconstructionFunc, align_sections)
+  progressMessage(AIM_STRING("Aligning Slices"), 12);
+  m->align_sections(alignmentFile);
+  CHECK_FOR_CANCELED(ReconstructionFunc, align_sections)
 
-    progressMessage(AIM_STRING("Cleaning Data"), 16);
-    m->cleanup_data();
-    CHECK_FOR_CANCELED(ReconstructionFunc, cleanup_data)
+  progressMessage(AIM_STRING("Cleaning Data"), 16);
+  m->cleanup_data();
+  CHECK_FOR_CANCELED(ReconstructionFunc, cleanup_data)
 
-    if (m_AlignmentMethod == AIM::Reconstruction::MutualInformation)
-    {
+  if (m_AlignmentMethod == AIM::Reconstruction::MutualInformation)
+  {
       progressMessage(AIM_STRING("Redefining Border"), 18);
       m->find_border();
       CHECK_FOR_CANCELED(ReconstructionFunc, find_border)
-    }
-
-    progressMessage(AIM_STRING("Forming Macro-Grains"), 20);
-    m->form_grains();
-    CHECK_FOR_CANCELED(ReconstructionFunc, form_grains)
   }
 
+  progressMessage(AIM_STRING("Forming Macro-Grains"), 20);
+  m->form_grains();
+  CHECK_FOR_CANCELED(ReconstructionFunc, form_grains)
+  
   progressMessage(AIM_STRING("Finding Neighbors"), 24);
   m->find_neighbors();
   CHECK_FOR_CANCELED(ReconstructionFunc, find_neighbors)
