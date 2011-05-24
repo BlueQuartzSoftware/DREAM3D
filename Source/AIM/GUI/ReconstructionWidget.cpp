@@ -102,7 +102,6 @@ void ReconstructionWidget::readSettings(QSettings &prefs)
   READ_SETTING(prefs, m_, ZEndIndex, ok, i, 0, Int)
 
   READ_CHECKBOX_SETTING(prefs, m_, MergeColonies, false);
-  READ_CHECKBOX_SETTING(prefs, m_, AlreadyFormed, false);
   READ_CHECKBOX_SETTING(prefs, m_, MergeTwins, false);
   READ_CHECKBOX_SETTING(prefs, m_, FillinSample, false);
   READ_COMBO_BOX(prefs, m_, AlignMeth)
@@ -145,7 +144,6 @@ void ReconstructionWidget::writeSettings(QSettings &prefs)
   WRITE_CHECKBOX_SETTING(prefs, m_, MergeTwins)
   WRITE_CHECKBOX_SETTING(prefs, m_, MergeColonies)
   WRITE_CHECKBOX_SETTING(prefs, m_, FillinSample)
-  WRITE_CHECKBOX_SETTING(prefs, m_, AlreadyFormed)
 
   WRITE_SETTING(prefs, m_, MinAllowedGrainSize)
   WRITE_SETTING(prefs, m_, MinConfidence)
@@ -198,20 +196,11 @@ void ReconstructionWidget::setupGui()
   QString msg ("All files will be over written that appear in the output directory.");
 
   QFileInfo fi (m_OutputDir->text() + QDir::separator() +  AIM::Reconstruction::VisualizationVizFile.c_str() );
-  if (m_AlreadyFormed->isChecked() == true && fi.exists() == false)
-  {
-    m_AlreadyFormed->setChecked(false);
-  }
 
-  if (m_AlreadyFormed->isChecked())
-  {
-    msg += QString("\nThe 'reconstructed_data.txt' file will be used as an import and NOT over written with new data");
-  }
-  messageLabel->setText(msg);
 
   m_WidgetList << m_H5InputFile << m_OutputDir << m_OutputDirBtn << m_OutputFilePrefix;
   m_WidgetList << m_ZStartIndex << m_ZEndIndex;
-  m_WidgetList << m_MergeTwins << m_MergeColonies << m_FillinSample << m_AlreadyFormed << m_AlignMeth << m_Orientation;
+  m_WidgetList << m_MergeTwins << m_MergeColonies << m_FillinSample << m_AlignMeth << m_Orientation;
   m_WidgetList << m_MinAllowedGrainSize << m_MinConfidence << m_DownSampleFactor << m_MisOrientationTolerance;
   m_WidgetList << m_BinStepSize;
   m_WidgetList << m_DisorientationVizFile << m_ImageQualityVizFile << m_IPFVizFile << m_SchmidFactorVizFile << m_VisualizationVizFile << m_DownSampledVizFile;
@@ -302,22 +291,6 @@ void ReconstructionWidget::on_m_AlreadyFormed_stateChanged(int currentState)
   absPath = QDir::toNativeSeparators(absPath);
   QFileInfo fi (absPath);
   QString msg ("All files will be over written that appear in the output directory.");
-  if (m_AlreadyFormed->isChecked() == true && fi.exists() == false)
-  {
-    QMessageBox::critical(this, tr("AIM Representation"),
-      tr("You have selected the 'Already Formed' check box \nbut the correct output file does not exist.\n"
-      "The checkbox will revert to an unchecked state.?"),
-      QMessageBox::Ok,
-      QMessageBox::Ok);
-    m_AlreadyFormed->setChecked(false);
-      CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(AIM::Reconstruction, m_, VisualizationVizFile)
-  }
-
-  if (m_AlreadyFormed->isChecked())
-  {
-    msg += QString("\nThe 'reconstructed_data.txt' file will be used as an import and NOT over written with new data");
-  }
-  messageLabel->setText(msg);
 }
 
 
@@ -336,10 +309,6 @@ void ReconstructionWidget::on_m_OutputDirBtn_clicked()
     {
       checkIOFiles();
       QFileInfo fi (m_OutputDir->text() + QDir::separator() +  AIM::Reconstruction::VisualizationVizFile.c_str() );
-      if (m_AlreadyFormed->isChecked() == true && fi.exists() == false)
-      {
-        m_AlreadyFormed->setChecked(false);
-      }
     }
   }
 }
@@ -539,7 +508,6 @@ void ReconstructionWidget::on_m_GoBtn_clicked()
   m_Reconstruction->setPhaseTypes(phaseTypes);
 
   m_Reconstruction->setMergeColonies(m_MergeColonies->isChecked() );
-  m_Reconstruction->setAlreadyFormed(m_AlreadyFormed->isChecked());
   m_Reconstruction->setMergeTwins(m_MergeTwins->isChecked() );
   m_Reconstruction->setFillinSample(m_FillinSample->isChecked() );
 
