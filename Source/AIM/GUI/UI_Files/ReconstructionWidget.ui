@@ -367,23 +367,6 @@
           <property name="rightMargin">
            <number>10</number>
           </property>
-          <item row="3" column="0">
-           <widget class="QCheckBox" name="m_AlreadyFormed">
-            <property name="enabled">
-             <bool>false</bool>
-            </property>
-            <property name="text">
-             <string>Grains Formed</string>
-            </property>
-           </widget>
-          </item>
-          <item row="5" column="0">
-           <widget class="QCheckBox" name="m_FillinSample">
-            <property name="text">
-             <string>Rectangularized Sample</string>
-            </property>
-           </widget>
-          </item>
           <item row="6" column="0">
            <widget class="QLabel" name="label_34">
             <property name="text">
@@ -449,20 +432,6 @@
             </item>
            </widget>
           </item>
-          <item row="3" column="1">
-           <widget class="QCheckBox" name="m_MergeColonies">
-            <property name="text">
-             <string>Merge Colonies</string>
-            </property>
-           </widget>
-          </item>
-          <item row="5" column="1">
-           <widget class="QCheckBox" name="m_MergeTwins">
-            <property name="text">
-             <string>Merge Twins</string>
-            </property>
-           </widget>
-          </item>
           <item row="8" column="0">
            <widget class="QLabel" name="label_46">
             <property name="text">
@@ -474,6 +443,27 @@
            <widget class="QDoubleSpinBox" name="m_DownSampleFactor">
             <property name="value">
              <double>1.000000000000000</double>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="1">
+           <widget class="QCheckBox" name="m_FillinSample">
+            <property name="text">
+             <string>Rectangularized Sample</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="0">
+           <widget class="QCheckBox" name="m_MergeTwins">
+            <property name="text">
+             <string>Merge Twins</string>
+            </property>
+           </widget>
+          </item>
+          <item row="5" column="0">
+           <widget class="QCheckBox" name="m_MergeColonies">
+            <property name="text">
+             <string>Merge Colonies</string>
             </property>
            </widget>
           </item>
@@ -895,6 +885,7 @@
   </layout>
  </widget>
  <resources>
+  <include location="../../../../Resources/icons/images/Icons.qrc"/>
   <include location="../../../../Resources/icons/images/Icons.qrc"/>
   <include location="../../../../Resources/icons/images/Icons.qrc"/>
   <include location="../../../../Resources/icons/images/Icons.qrc"/>
