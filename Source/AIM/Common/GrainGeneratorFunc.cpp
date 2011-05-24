@@ -1272,7 +1272,7 @@ float GrainGeneratorFunc::check_neighborhooderror(int gadd, int gremove)
 	  {
 		determine_neighbors(gremove, -1);
 	  }
-	  for(size_t i=1;i<numgrains+1;i++)
+	  for(int i=1;i<numgrains+1;i++)
 	  {
 		nnum=0;
 		index = i;
@@ -1386,11 +1386,11 @@ float GrainGeneratorFunc::check_sizedisterror(int gadd, int gremove)
   {
 	  phase = primaryphases[iter];
 	  count = 0;
-	  for(int i=0;i<grainsizedist[iter].size();i++)
+	  for(size_t i=0;i<grainsizedist[iter].size();i++)
 	  {
 		simgrainsizedist[iter][i] = 0.0;
 	  }
-	  for(size_t b=1;b<numgrains+1;b++)
+	  for(int b=1;b<numgrains+1;b++)
 	  {
 		index = b;
 		if(index != gremove && m_Grains[index]->surfacegrain == 0 && m_Grains[index]->phase == phase)
@@ -1412,7 +1412,7 @@ float GrainGeneratorFunc::check_sizedisterror(int gadd, int gremove)
 		simgrainsizedist[iter][int(dia)]++;
 		count++;
 	  }
-	  for(int i=0;i<grainsizedist[iter].size();i++)
+	  for(size_t i=0;i<grainsizedist[iter].size();i++)
 	  {
 		simgrainsizedist[iter][i] = simgrainsizedist[iter][i]/float(count);
 		if(count == 0) simgrainsizedist[iter][i] = 0.0;
@@ -2498,7 +2498,7 @@ int GrainGeneratorFunc::adjust_boundaries(int numgrains)
 				gsizes[reassigned[index]] = gsizes[reassigned[index]]-1;
 			}
 		}
-		for(std::vector<int>::size_type i=1;i<numgrains+1;i++)
+		for(int i=1;i<numgrains+1;i++)
 		{
 			index = i;
 			diam = 2.0*powf((gsizes[index]*voxtovol),(1.0/3.0));
