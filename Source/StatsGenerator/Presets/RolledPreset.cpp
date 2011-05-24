@@ -306,8 +306,13 @@ void RolledPreset::initializeAxisODFTableModel(SGAxisODFWidget* widget)
   e1.push_back(0.0f);
   e2.push_back(0.0f);
   e3.push_back(0.0f);
-  weights.push_back((46656)*powf((1-(1/m_AspectRatio1)),5.0));
-  sigmas.push_back(1+(4*powf((1/m_AspectRatio1),1.0)));
+  int spread = int(3.0+(5*powf((1/m_AspectRatio1),1.0)));
+  float weight = (46656.0*(1-powf((1/m_AspectRatio1),2.0)));
+  if(weight == 0.0) spread = 1;
+  int scaler = (8*(spread-1)*(spread-1)*(spread-1));
+  if(scaler == 0) scaler = 1;
+  weights.push_back(weight/scaler);
+  sigmas.push_back(spread);
 
 
   model->setTableData(e1, e2, e3, weights, sigmas);
