@@ -285,13 +285,13 @@ void ReconstructionWidget::on_m_OIMH5Btn_clicked()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ReconstructionWidget::on_m_AlreadyFormed_stateChanged(int currentState)
-{
-  QString absPath = m_OutputDir->text() + QDir::separator() + AIM::Reconstruction::VisualizationVizFile.c_str();
-  absPath = QDir::toNativeSeparators(absPath);
-  QFileInfo fi (absPath);
-  QString msg ("All files will be over written that appear in the output directory.");
-}
+//void ReconstructionWidget::on_m_AlreadyFormed_stateChanged(int currentState)
+//{
+//  QString absPath = m_OutputDir->text() + QDir::separator() + AIM::Reconstruction::VisualizationVizFile.c_str();
+//  absPath = QDir::toNativeSeparators(absPath);
+//  QFileInfo fi (absPath);
+//  QString msg ("All files will be over written that appear in the output directory.");
+//}
 
 
 

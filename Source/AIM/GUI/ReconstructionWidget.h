@@ -87,7 +87,7 @@ class ReconstructionWidget : public AIMPluginFrame, private Ui::ReconstructionWi
     /* Reconstruction Slots */
     void on_m_OIMH5Btn_clicked();
     void on_m_OutputDirBtn_clicked();
-    void on_m_AlreadyFormed_stateChanged(int);
+  //  void on_m_AlreadyFormed_stateChanged(int);
     void on_m_GoBtn_clicked();
     void on_m_SaveSettingsBtn_clicked();
     void on_m_LoadSettingsBtn_clicked();
