@@ -421,6 +421,7 @@ void ReconstructionFunc::find_border()
   }
   count = 0;
   voxelslist[count] = index;
+  gnames[index] = 0;
   checked[index] = 1;
   count++;
   for (size_t j = 0; j < count; j++)
