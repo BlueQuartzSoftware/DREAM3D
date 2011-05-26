@@ -39,7 +39,7 @@
 #include "AIM/Common/StructureReaders/AbstractStructureReader.h"
 #include "AIM/Common/StructureReaders/VTKStructureReader.h"
 #include "AIM/Common/StructureReaders/DXStructureReader.h"
-#include "AIM/Common/GrainGeneratorVTKWriter.h"
+#include "AIM/Common/GrainGeneratorVoxelWriter.h"
 #include "AIM/Common/HDF5/H5GrainWriter.h"
 
 
@@ -135,6 +135,7 @@ m_WriteBinaryFiles(true),
 m_WriteVisualizationFile(false),
 m_WriteIPFFile(false),
 m_WriteHDF5GrainFile(false),
+m_WritePhFile(false),
 m_ErrorCondition(0)
 #if AIM_USE_QT
   ,m_Cancel(false)
@@ -291,6 +292,7 @@ void GrainGenerator::compute()
   MAKE_OUTPUT_FILE_PATH ( reconVisFile, AIM::Reconstruction::VisualizationVizFile);
   MAKE_OUTPUT_FILE_PATH ( reconIPFVisFile, AIM::Reconstruction::IPFVizFile);
   MAKE_OUTPUT_FILE_PATH ( hdf5GrainFile, AIM::Reconstruction::HDF5GrainFile);
+  MAKE_OUTPUT_FILE_PATH ( phFile, AIM::Reconstruction::PhFile);
 
   H5ReconStatsWriter::Pointer h5io = H5ReconStatsWriter::New(hdf5ResultsFile);
 
@@ -328,7 +330,7 @@ void GrainGenerator::compute()
   CHECK_FOR_CANCELED(GrainGeneratorFunc, write_eulerangles)
 
   /** ********** This section writes the VTK files for visualization *** */
-  GrainGeneratorVTKWriter::Pointer vtkWriter = GrainGeneratorVTKWriter::New();
+  GrainGeneratorVoxelWriter::Pointer vtkWriter = GrainGeneratorVoxelWriter::New();
   vtkWriter->setWriteBinaryFiles(m_WriteBinaryFiles);
 
   progressMessage(AIM_STRING("Writing VTK Visualization File"), 93);
@@ -340,6 +342,10 @@ void GrainGenerator::compute()
   CHECK_FOR_CANCELED(GrainGeneratorFunc, writeIPFVizFile)
   /** ******* End VTK Visualization File Writing Section ****** */
 
+  /*  This CMU's ph format */
+  progressMessage(AIM_STRING("Writing Ph Voxel File"), 95);
+  if (m_WritePhFile) {vtkWriter->writePhFile(m.get(), phFile);}
+  CHECK_FOR_CANCELED(GrainGeneratorFunc, writePhFile)
 
   progressMessage(AIM_STRING("Writing Out HDF5 Grain File. This may take a few minutes to complete."), 99);
   H5GrainWriter::Pointer h5GrainWriter = H5GrainWriter::New();
