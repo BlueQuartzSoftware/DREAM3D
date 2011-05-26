@@ -102,14 +102,17 @@ void GrainGeneratorWidget::readSettings(QSettings &prefs)
   READ_SETTING(prefs, m_, NumGrains, ok, i, 1000 , Int);
 
   READ_BOOL_SETTING(prefs, m_, PeriodicBoundaryConditions, false);
+  m_AlreadyFormed->blockSignals(true);
   READ_BOOL_SETTING(prefs, m_, AlreadyFormed, false);
   READ_FILEPATH_SETTING(prefs, m_, StructureFile, "");
+  m_AlreadyFormed->blockSignals(false);
 
   READ_CHECKBOX_SETTING(prefs, m_, IPFVizFile, true);
   READ_CHECKBOX_SETTING(prefs, m_, VisualizationVizFile, true);
   READ_CHECKBOX_SETTING(prefs, m_, HDF5GrainFile, true);
+  READ_CHECKBOX_SETTING(prefs, m_, PhFile, true);
 
-  m_AlreadyFormed->blockSignals(false);
+
   READ_COMBO_BOX(prefs, m_, ShapeClass)
   prefs.endGroup();
 
@@ -143,6 +146,7 @@ void GrainGeneratorWidget::writeSettings(QSettings &prefs)
   WRITE_CHECKBOX_SETTING(prefs, m_, IPFVizFile)
   WRITE_CHECKBOX_SETTING(prefs, m_, VisualizationVizFile)
   WRITE_CHECKBOX_SETTING(prefs, m_, HDF5GrainFile)
+  WRITE_CHECKBOX_SETTING(prefs, m_, PhFile)
 
   prefs.endGroup();
 }
@@ -271,6 +275,7 @@ void GrainGeneratorWidget::checkIOFiles()
   CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(AIM::SyntheticBuilder, m_ , IPFVizFile)
   CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(AIM::SyntheticBuilder, m_ , VisualizationVizFile)
   CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(AIM::SyntheticBuilder, m_ , HDF5GrainFile)
+  CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(AIM::SyntheticBuilder, m_ , PhFile)
 }
 
 // -----------------------------------------------------------------------------
@@ -416,6 +421,7 @@ void GrainGeneratorWidget::on_m_GoBtn_clicked()
   m_GrainGenerator->setWriteVisualizationFile(m_VisualizationVizFile->isChecked());
   m_GrainGenerator->setWriteIPFFile(m_IPFVizFile->isChecked());
   m_GrainGenerator->setWriteHDF5GrainFile(m_HDF5GrainFile->isChecked());
+  m_GrainGenerator->setWritePhFile(m_PhFile->isChecked());
 
   /* Connect the signal 'started()' from the QThread to the 'run' slot of the
    * Reconstruction object. Since the Reconstruction object has been moved to another
