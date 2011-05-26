@@ -6,9 +6,15 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>659</width>
-    <height>594</height>
+    <width>658</width>
+    <height>627</height>
    </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
   </property>
   <property name="windowTitle">
    <string>DREAM.3D</string>
@@ -72,7 +78,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>659</width>
+     <width>658</width>
      <height>22</height>
     </rect>
    </property>

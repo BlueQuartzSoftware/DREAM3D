@@ -27,7 +27,13 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#include "GrainGeneratorVTKWriter.h"
+#include "GrainGeneratorVoxelWriter.h"
+
+#include<string.h>
+
+#include <vector>
+#include <string>
+#include<iomanip>
 
 #include "AIM/Common/OIMColoring.hpp"
 #include "AIM/Common/VTKWriterMacros.h"
@@ -35,21 +41,21 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-GrainGeneratorVTKWriter::GrainGeneratorVTKWriter()
+GrainGeneratorVoxelWriter::GrainGeneratorVoxelWriter()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-GrainGeneratorVTKWriter::~GrainGeneratorVTKWriter()
+GrainGeneratorVoxelWriter::~GrainGeneratorVoxelWriter()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int GrainGeneratorVTKWriter::writeVisualizationFile(GrainGeneratorFunc* r, const std::string &file)
+int GrainGeneratorVoxelWriter::writeVisualizationFile(GrainGeneratorFunc* r, const std::string &file)
 {
   FILE* f = NULL;
   f = fopen(file.c_str(), "wb");
@@ -87,7 +93,7 @@ int GrainGeneratorVTKWriter::writeVisualizationFile(GrainGeneratorFunc* r, const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int GrainGeneratorVTKWriter::writeIPFVizFile(GrainGeneratorFunc* r, const std::string &file)
+int GrainGeneratorVoxelWriter::writeIPFVizFile(GrainGeneratorFunc* r, const std::string &file)
 {
   FILE* f = NULL;
   f = fopen(file.c_str(), "wb");
@@ -97,7 +103,8 @@ int GrainGeneratorVTKWriter::writeIPFVizFile(GrainGeneratorFunc* r, const std::s
   }
 
   size_t total = r->xpoints * r->ypoints * r->zpoints;
-  unsigned char hkl[3] = { 0, 0, 0 };
+  unsigned char hkl[3] =
+  { 0, 0, 0 };
   VTK_IPF_COLOR_REFDIRECTION(RefDirection);
   int phase;
   unsigned char* rgba = NULL;
@@ -123,7 +130,6 @@ int GrainGeneratorVTKWriter::writeIPFVizFile(GrainGeneratorFunc* r, const std::s
     rgba = new unsigned char[4]; // We just need 4 bytes for ASCII writing
   }
 
-
   for (size_t i = 0; i < total; i++)
   {
     phase = r->voxels[i].phase;
@@ -131,24 +137,20 @@ int GrainGeneratorVTKWriter::writeIPFVizFile(GrainGeneratorFunc* r, const std::s
     {
       index = i * 4;
     }
-    else {
+    else
+    {
       index = 0;
     }
     if (r->crystruct[phase] == AIM::Reconstruction::Cubic)
     {
-      OIMColoring::GenerateIPFColor(r->m_Grains[r->voxels[i].grain_index]->euler1,
-                                    r->m_Grains[r->voxels[i].grain_index]->euler2,
-                                    r->m_Grains[r->voxels[i].grain_index]->euler3,
-                                    RefDirection[0], RefDirection[1], RefDirection[2],
-                                    &rgba[index], hkl);
+      OIMColoring::GenerateIPFColor(r->m_Grains[r->voxels[i].grain_index]->euler1, r->m_Grains[r->voxels[i].grain_index]->euler2, r->m_Grains[r->voxels[i].grain_index]->euler3, RefDirection[0], RefDirection[1], RefDirection[2], &rgba[index], hkl);
     }
     else if (r->crystruct[phase] == AIM::Reconstruction::Hexagonal)
     {
-      OIMColoring::CalculateHexIPFColor(r->m_Grains[r->voxels[i].grain_index]->avg_quat,
-                                        RefDirection,
-                                        &rgba[index]);
+      OIMColoring::CalculateHexIPFColor(r->m_Grains[r->voxels[i].grain_index]->avg_quat, RefDirection, &rgba[index]);
     }
-    if (true == m_WriteBinaryFiles) {
+    if (true == m_WriteBinaryFiles)
+    {
       rgba[index + 3] = 255;
     }
     else
@@ -174,5 +176,63 @@ int GrainGeneratorVTKWriter::writeIPFVizFile(GrainGeneratorFunc* r, const std::s
   delete[] rgba;
 
   fclose(f);
+  return 0;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int GrainGeneratorVoxelWriter::writePhFile(GrainGeneratorFunc* r, const std::string &file)
+{
+  std::string OutputName;
+
+  // Change the name of the input filename for outout
+  // std::vector<std::string> tokens;
+ // std::string delimeters = "."; // Only a period
+  //  std::tokenize(filename, tokens, delimeters);
+
+  //OutputName = tokens[0] + ".ph";
+  std::ofstream outfile;
+  outfile.open(file.c_str());
+  if (!outfile)
+  {
+    std::cout << "Failed to open: " << file << std::endl;
+    return -1;
+  }
+
+  // Find the unique number of grains
+  std::map<int, bool> used;
+
+  for (int i = 0; i < r->totalpoints; ++i)
+  {
+    used[r->voxels[i].grain_index] = true;
+  }
+
+  int grains = 0;
+  typedef std::map<int, bool>::iterator iterator;
+  for (iterator i = used.begin(); i != used.end(); i++)
+    if ((*i).second == true) grains++;
+
+  //std::cout<<grains<< " " << used.size() << std::endl;
+
+
+  outfile << "     " << r->xpoints << "     " << r->ypoints << "     " << r->zpoints << std::endl;
+  outfile << "\'DREAM3\'              52.00  1.000  1.0       " << grains << std::endl;
+  outfile << " 3.000 0.000 0.000          0        \n"; // << grains << endl;
+
+  int count = 0;
+  for (int k = 0; k < r->totalpoints; k++)
+  {
+    outfile << std::setw(6) << r->voxels[k].grain_index;
+    count++;
+    if (count == 20)
+    {
+      outfile << std::endl;
+      count = 0;
+    }
+    //                    outfile << grid[i][j][k] << endl;
+  }
+  outfile << std::endl;
+  outfile.close();
   return 0;
 }

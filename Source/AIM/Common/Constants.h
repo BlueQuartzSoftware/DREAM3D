@@ -162,6 +162,7 @@ namespace AIM
     const std::string SchmidFactorVizFile("SchmidFactor_Visualization.vtk");//11
     const std::string DownSampledVizFile("DownSampled_Visualization.vtk");//11
     const std::string HDF5GrainFile("Grains.h5grain");
+    const std::string PhFile("Voxels.ph");
 
 
     const std::string DeformationStatsFile("Deformation_Stats.txt");
@@ -277,6 +278,7 @@ namespace AIM
     const std::string VisualizationVizFile("Visualization.vtk");
     const std::string IPFVizFile("IPF_Visualization.vtk");
     const std::string HDF5GrainFile("Grains.h5grain");
+    const std::string PhFile("Voxels.ph");
 
     const std::string GrainIdScalarName("GrainID");
 
