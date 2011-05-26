@@ -85,4 +85,3 @@ void GrainGeneratorVoxel::deepCopy(GrainGeneratorVoxel* graingeneratorvoxel)
    DEEP_COPY_SHARED_VECTOR(neighborlist, graingeneratorvoxel, IntVectorType, int)
 
 }
-
