@@ -33,6 +33,7 @@
 #include "SMVtkFileIO.h"
 
 #include <MXA/Common/LogTime.h>
+#include "MXA/Common/MXAEndian.h"
 #include <MXA/Utilities/MXADir.h>
 
 
@@ -308,7 +309,7 @@ void SurfaceMesh::compute()
    ::memcpy( &(m->voxels[1]), &(m->voxels[1 + m->NSP]), m->NSP * sizeof(int) );
 
    //Make this last layer all border values
-  for (int i = m->NSP + 1; i < 2*m->NSP + 1; ++i)
+  for (int i = m->NSP; i < 2*m->NSP+1; ++i)
   {
     m->voxels[i] = -3;
   }
@@ -366,7 +367,7 @@ emit finished();
 
 
   progressMessage(msg, 95 );
-  SMVtkFileIO::Pointer writer;
+  SMVtkFileIO::Pointer writer = SMVtkFileIO::New();
   writer->writeVTKFile(m.get(), nNodes, cTriID, VisualizationFile, NodesFile, TrianglesFile, m_BinaryVTKFile, m_ConformalMesh);
 
   progressMessage(AIM_STRING("Surface Meshing Complete"), 100 );

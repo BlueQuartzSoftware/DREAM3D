@@ -294,7 +294,7 @@ int SMVtkFileIO::writeVTKFile(SurfaceMeshFunc* m,
   fprintf(vtkFile, "DATASET POLYDATA\n");
   fprintf(vtkFile, "POINTS %d float\n", nNodes);
   unsigned char nodeData[32];
-  double* vec3d = (double*)(&nodeData[8]);
+  float* vec3d = (float*)(&nodeData[8]);
 //  int* nodeId = (int*)(&nodeData[0]);
 //  int* nodeKind = (int*)(&nodeData[4]);
   float vec3f[3];
