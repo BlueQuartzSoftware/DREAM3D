@@ -271,9 +271,9 @@ void GrainGenerator::compute()
   err = m->readMisorientationData(h5reader);
   CHECK_FOR_CANCELED(GrainGeneratorFunc, readMisorientationData)
 
-  progressMessage(AIM_STRING("Loading Microtexture Data "), 55);
-  err = m->readMicroTextureData(h5reader);
-  CHECK_FOR_CANCELED(GrainGeneratorFunc, readMicroTextureData)
+//  progressMessage(AIM_STRING("Loading Microtexture Data "), 55);
+//  err = m->readMicroTextureData(h5reader);
+//  CHECK_FOR_CANCELED(GrainGeneratorFunc, readMicroTextureData)
 
   progressMessage(AIM_STRING("Assigning Eulers"), 60);
   m->assign_eulers(m->numgrains);
