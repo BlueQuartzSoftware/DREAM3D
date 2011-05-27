@@ -222,11 +222,11 @@ void GrainGeneratorWidget::setupGui()
 //  }
 //  messageLabel->setText(msg);
 
-  m_WidgetList << m_H5StatisticsFile << m_InputH5StatisticsFileBtn << m_OutputDir << m_OutputDirBtn;
+  m_WidgetList << m_H5InputStatisticsFile << m_InputH5StatisticsFileBtn << m_OutputDir << m_OutputDirBtn;
   m_WidgetList << m_NumGrains << m_XResolution << m_YResolution << m_ZResolution << m_FillingErrorWeight;
   m_WidgetList << m_NeighborhoodErrorWeight << m_SizeDistErrorWeight;
   m_WidgetList << m_ShapeClass << m_AlreadyFormed;
-  m_WidgetList << m_PeriodicBoundaryConditions << m_BinaryVtkFiles;
+  m_WidgetList << m_PeriodicBoundaryConditions << m_BinaryVtkFiles << m_OutputFilePrefix;
 }
 
 // -----------------------------------------------------------------------------
@@ -358,7 +358,11 @@ void GrainGeneratorWidget::on_m_OutputDir_textChanged(const QString &text)
 // -----------------------------------------------------------------------------
 void GrainGeneratorWidget::on_m_H5InputStatisticsFile_textChanged(const QString &text)
 {
-  verifyPathExists(m_H5InputStatisticsFile->text(), m_H5InputStatisticsFile);
+  if (verifyPathExists(m_H5InputStatisticsFile->text(), m_H5InputStatisticsFile) )
+  {
+    QFileInfo fi (m_H5InputStatisticsFile->text());
+    m_OutputFilePrefix->setText(fi.baseName() + QString("_") );
+  }
 }
 
 // -----------------------------------------------------------------------------

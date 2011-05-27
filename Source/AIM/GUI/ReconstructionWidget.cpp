@@ -206,7 +206,7 @@ void ReconstructionWidget::setupGui()
   m_WidgetList << m_DisorientationVizFile << m_ImageQualityVizFile << m_IPFVizFile << m_SchmidFactorVizFile << m_VisualizationVizFile << m_DownSampledVizFile;
   m_WidgetList << m_MinImageQuality;
   m_WidgetList << m_HDF5GrainFile << m_H5StatisticsFile << m_AlignmentFile << m_GrainDataFile;
-  m_WidgetList << m_LoadSettingsBtn << m_SaveSettingsBtn << m_BinaryVtkFiles;
+  m_WidgetList << m_LoadSettingsBtn << m_SaveSettingsBtn << m_BinaryVtkFiles << phaseTypeList;
 
 }
 
@@ -326,6 +326,9 @@ void ReconstructionWidget::on_m_H5InputFile_textChanged(const QString &text)
   QFileInfo fi(m_H5InputFile->text());
   if (fi.exists() && fi.isFile())
   {
+    // Set the output file Prefix based on the name of the input file
+    m_OutputFilePrefix->setText(fi.baseName() + QString("_") );
+
     // Read the Phase information from the .h5ang file
     AbstractAngDataLoader::Pointer oimDataLoader = H5AngDataLoader::New();
     H5AngDataLoader* h5io = dynamic_cast<H5AngDataLoader*>(oimDataLoader.get());
