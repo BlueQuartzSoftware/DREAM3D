@@ -78,9 +78,11 @@ int SMVtkFileIO::readZSlice(int xDim, int yDim, int zDim, int* voxels)
       std::cout << "ERROR Reading Binary VTK File. This program only accepts a type of Int" << std::endl;
       return -1;
     }
+    ::memset(voxels, 0xff, size * m_IntByteSize);
     m_InputFile.read(reinterpret_cast<char*>(voxels), (size * m_IntByteSize));
     // Binary VTK File are written in Big Endian Format and need to be swapped to the native
     // format of the host system
+    int preValue = 0;
     for(size_t i = 0; i < size; ++i)
     {
       MXA::Endian::FromBigToSystem::convert<int>(voxels[i]);
@@ -136,7 +138,7 @@ int SMVtkFileIO::primeFileToScalarDataLocation(SurfaceMeshFunc* m, const std::st
   //std::cout << logTime() << " Reading vtk file " << file << std::endl;
   //std::ifstream m_InputFile(file.c_str());
 
-  m_InputFile.open(file.c_str());
+  m_InputFile.open(file.c_str(), std::ios::binary);
   if (!m_InputFile.is_open())
   {
     std::cout << logTime() << " vtk file could not be opened: " << file << std::endl;
