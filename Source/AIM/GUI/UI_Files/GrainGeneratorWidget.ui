@@ -27,7 +27,7 @@
       </widget>
      </item>
      <item row="0" column="1">
-      <widget class="QLineEdit" name="m_H5InputStatisticsFile"/>
+      <widget class="QFSDropLineEdit" name="m_H5InputStatisticsFile"/>
      </item>
      <item row="0" column="2">
       <widget class="QPushButton" name="m_InputH5StatisticsFileBtn">
@@ -72,7 +72,7 @@
          </widget>
         </item>
         <item row="1" column="3">
-         <widget class="QLineEdit" name="m_StructureFile">
+         <widget class="QFSDropLineEdit" name="m_StructureFile">
           <property name="enabled">
            <bool>false</bool>
           </property>
@@ -327,7 +327,7 @@
          </widget>
         </item>
         <item row="0" column="1">
-         <widget class="QLineEdit" name="m_OutputDir"/>
+         <widget class="QFSDropLineEdit" name="m_OutputDir"/>
         </item>
         <item row="1" column="1">
          <widget class="QLineEdit" name="m_OutputFilePrefix">
@@ -678,6 +678,13 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>QFSDropLineEdit</class>
+   <extends>QLineEdit</extends>
+   <header location="global">QFSDropLineEdit.h</header>
+  </customwidget>
+ </customwidgets>
  <resources>
   <include location="../../../../Resources/icons/images/Icons.qrc"/>
   <include location="../../../../Resources/icons/images/Icons.qrc"/>

@@ -4,10 +4,11 @@ Ang Import:
 * Better Display of errors when importing to help user fix their data
 
 Reconstruction:
-* Fix 2 Phase Crashing bug - Bad output file is written
+* Fix 2 Phase bug - Bad output file is written
 * Rework existing user interface for showing output file that will be written and
 indicate which files will be over written during execution.
 * Indicate with a set of images what is meant for the "Oreintation" of the Ang Data
+* Set output prefix based on the name of the input file
 
 GrainGenerator:
 * Rework existing user interface for showing output file that will be written and
@@ -16,7 +17,7 @@ indicate which files will be over written during execution.
 * Switch to defining Dimensions and resolution of the volume to be created
 * Real time indicate the average grain size, number of grains as user inputs values
 into the user interface
-* Stop reading MicroTexture from the HDF5 Input file
+* DONE - Stop reading MicroTexture from the HDF5 Input file
 
 
 Surface Meshing:
@@ -45,4 +46,11 @@ Infrastructure Changes:
 * Redesign Main User Interface to load an individual Tab at a time through a menu
 instead of having all the tabs.
 * Move to a more modular pipeline architecture for each of the Modules where we start
-mimicing a VTK filter pipeline. 
+mimicing a VTK filter pipeline.
+* Better Organize Source Code Files
+
+ParaView Integration:
+* Create .h5ang plugin for ParaView to allow the direct reading of the imported OIM data
+
+
+
