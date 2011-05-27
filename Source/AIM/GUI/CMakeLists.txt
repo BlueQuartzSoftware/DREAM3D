@@ -49,11 +49,12 @@ add_definitions(-DAIM_USE_QT
                 -DVOLUME_MESH_LIBRARY 
                 -DUPDATE_EDGE_TRI_LIBRARY)
 
-include_directories(${PROJECT_CODE_DIR})
-include_directories(${HDF5_INCLUDE_DIR})
-include_directories(${DREAM3DApp_SOURCE_DIR})
-include_directories(${DREAM3DApp_BINARY_DIR})
-include_directories(${DREAM3D_BINARY_DIR}/QtSupport)
+include_directories(${PROJECT_CODE_DIR}
+                    ${HDF5_INCLUDE_DIR}
+                    ${DREAM3DApp_SOURCE_DIR}
+                    ${DREAM3DApp_BINARY_DIR}
+                    ${PROJECT_CODE_DIR}/QtSupport
+                    ${DREAM3D_BINARY_DIR}/QtSupport)
 
 # --------------------------------------------------------------------
 # Generate the License File Headers
