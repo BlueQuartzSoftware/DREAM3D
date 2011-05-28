@@ -8,8 +8,8 @@
 //                           FA8650-04-C-5229
 //
 ///////////////////////////////////////////////////////////////////////////////
-#ifndef _AIMCOMMON_DLL_EXPORT_H_
-#define _AIMCOMMON_DLL_EXPORT_H_
+#ifndef _DREAM3DLib_DLL_EXPORT_H_
+#define _DREAM3DLib_DLL_EXPORT_H_
 
 
 #if defined (_MSC_VER)
@@ -24,53 +24,53 @@
   #pragma warning(disable: 4548)
 #endif
 
-/* Cmake will define AIMCommon_EXPORTS on Windows when it
+/* Cmake will define DREAM3DLib_EXPORTS on Windows when it
 configures to build a shared library. If you are going to use
 another build system on windows or create the visual studio
-projects by hand you need to define AIMCommon_EXPORTS when
+projects by hand you need to define DREAM3DLib_EXPORTS when
 building the MXADatModel DLL on windows.
 */
 
-#if defined (AIMCOMMON_BUILT_AS_DYNAMIC_LIB)
+#if defined (DREAM3DLib_BUILT_AS_DYNAMIC_LIB)
 
-  #if defined (AIMCommon_EXPORTS)  /* Compiling the MXA DLL/Dylib */
+  #if defined (DREAM3DLib_EXPORTS)  /* Compiling the MXA DLL/Dylib */
     #if defined (_MSC_VER)  /* MSVC Compiler Case */
-      #define  AIMCOMMON_EXPORT __declspec(dllexport)
+      #define  DREAM3DLib_EXPORT __declspec(dllexport)
     #elif (__GNUC__ >= 4)  /* GCC 4.x has support for visibility options */
-      #define AIMCOMMON_EXPORT __attribute__ ((visibility("default")))
+      #define DREAM3DLib_EXPORT __attribute__ ((visibility("default")))
     #endif
   #else  /* Importing the DLL into another project */
     #if defined (_MSC_VER)  /* MSVC Compiler Case */
-      #define  AIMCOMMON_EXPORT __declspec(dllimport)
+      #define  DREAM3DLib_EXPORT __declspec(dllimport)
     #elif (__GNUC__ >= 4)  /* GCC 4.x has support for visibility options */
-      #define AIMCOMMON_EXPORT __attribute__ ((visibility("default")))
+      #define DREAM3DLib_EXPORT __attribute__ ((visibility("default")))
     #endif
   #endif
 #endif
 
-/* If AIMCOMMON_EXPORT was never defined, define it here */
-#ifndef AIMCOMMON_EXPORT
-  #define AIMCOMMON_EXPORT
+/* If DREAM3DLib_EXPORT was never defined, define it here */
+#ifndef DREAM3DLib_EXPORT
+  #define DREAM3DLib_EXPORT
 #endif
 
 #if 0
 #if defined (_WIN32) || defined __CYGWIN__
 
   #if defined (MXA_BUILT_AS_DYNAMIC_LIB)
-    #if defined(AIMCommon_EXPORTS)
-      #define  AIMCOMMON_EXPORT __declspec(dllexport)
+    #if defined(DREAM3DLib_EXPORTS)
+      #define  DREAM3DLib_EXPORT __declspec(dllexport)
     #else
-      #define  AIMCOMMON_EXPORT __declspec(dllimport)
-    #endif /* AIMCommon_EXPORTS */
+      #define  DREAM3DLib_EXPORT __declspec(dllimport)
+    #endif /* DREAM3DLib_EXPORTS */
   #else
-    #define AIMCOMMON_EXPORT
+    #define DREAM3DLib_EXPORT
   #endif
 #elif __GNUC__ >= 4
  #define FLOW_DLL __attribute__ ((visibility("default")))
  #define DLL_LOCAL  __attribute__ ((visibility("hidden")
 #else /* defined (_WIN32) && defined (MXA_BUILD_SHARED_LIBS)  */
- #define AIMCOMMON_EXPORT
+ #define DREAM3DLib_EXPORT
 #endif
 #endif
 
-#endif /* _AIMCOMMON_DLL_EXPORT_H_ */
+#endif /* _DREAM3DLib_DLL_EXPORT_H_ */
