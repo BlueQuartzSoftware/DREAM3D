@@ -485,6 +485,7 @@ void SurfaceMeshFunc::get_nodes_Edges(int eT2d[20][8], int NST2d[20][8], int zID
               tnode1 = nodeID[0];
               tnode2 = nodeID[1];
         get_grainnames(tngrainname,pixIndex,pixgrainname);
+
         if(pixgrainname[0] > 0 || pixgrainname[1] > 0)
         {
           // Categorize the node...if it's triple junction or not...
