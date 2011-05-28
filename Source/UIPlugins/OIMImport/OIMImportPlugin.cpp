@@ -30,6 +30,8 @@
 
 #include "OIMImportPlugin.h"
 #include "OIMImportWidget.h"
+#include "QtSupport/AIMPluginFrame.h"
+
 
 Q_EXPORT_PLUGIN2(OIMImportPlugin, OIMImportPlugin)
 ;
@@ -70,6 +72,15 @@ QWidget* OIMImportPlugin::getInputWidget(QWidget* parent)
 {
   m_InputWidget->setParent(parent);
   return m_InputWidget;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AIMPluginFrame* OIMImportPlugin::getPluginFrame(QWidget* parent)
+{
+  AIMPluginFrame* frame = qobject_cast<AIMPluginFrame*>(m_InputWidget);
+  return frame;
 }
 
 // -----------------------------------------------------------------------------

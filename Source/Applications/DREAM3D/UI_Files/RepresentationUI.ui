@@ -19,58 +19,23 @@
   <property name="windowTitle">
    <string>DREAM.3D</string>
   </property>
-  <widget class="QWidget" name="centralwidget">
-   <layout class="QGridLayout" name="gridLayout">
+  <widget class="QWidget" name="centerWidget">
+   <layout class="QVBoxLayout" name="verticalLayout_2">
+    <property name="spacing">
+     <number>4</number>
+    </property>
     <property name="leftMargin">
      <number>4</number>
     </property>
     <property name="topMargin">
-     <number>12</number>
+     <number>4</number>
     </property>
     <property name="rightMargin">
      <number>4</number>
     </property>
     <property name="bottomMargin">
-     <number>4</number>
+     <number>6</number>
     </property>
-    <item row="0" column="0">
-     <widget class="QTabWidget" name="tabWidget">
-      <property name="minimumSize">
-       <size>
-        <width>650</width>
-        <height>0</height>
-       </size>
-      </property>
-      <property name="currentIndex">
-       <number>0</number>
-      </property>
-      <widget class="OIMImportWidget" name="oimImportWidget">
-       <attribute name="title">
-        <string>OIM Data Import</string>
-       </attribute>
-      </widget>
-      <widget class="ReconstructionWidget" name="reconstructionWidget">
-       <attribute name="title">
-        <string>Reconstruction</string>
-       </attribute>
-      </widget>
-      <widget class="GrainGeneratorWidget" name="grainGeneratorWidget">
-       <attribute name="title">
-        <string>Synthentic Builder</string>
-       </attribute>
-      </widget>
-      <widget class="SurfaceMeshingWidget" name="surfaceMeshingWidget">
-       <attribute name="title">
-        <string>Surface Meshing</string>
-       </attribute>
-      </widget>
-      <widget class="VolumeMeshingWidget" name="volumeMeshingWidget">
-       <attribute name="title">
-        <string>Volume Meshing</string>
-       </attribute>
-      </widget>
-     </widget>
-    </item>
    </layout>
   </widget>
   <widget class="QMenuBar" name="menubar">
@@ -100,7 +65,13 @@
     <addaction name="separator"/>
     <addaction name="actionExit"/>
    </widget>
+   <widget class="QMenu" name="menuPlugins">
+    <property name="title">
+     <string>Plugins</string>
+    </property>
+   </widget>
    <addaction name="menuFile"/>
+   <addaction name="menuPlugins"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionOpen">
@@ -124,38 +95,6 @@
    </property>
   </action>
  </widget>
- <customwidgets>
-  <customwidget>
-   <class>ReconstructionWidget</class>
-   <extends>QFrame</extends>
-   <header location="global">ReconstructionWidget.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>OIMImportWidget</class>
-   <extends>QFrame</extends>
-   <header location="global">OIMImportWidget.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>GrainGeneratorWidget</class>
-   <extends>QFrame</extends>
-   <header location="global">GrainGeneratorWidget.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>SurfaceMeshingWidget</class>
-   <extends>QFrame</extends>
-   <header location="global">SurfaceMeshingWidget.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>VolumeMeshingWidget</class>
-   <extends>QFrame</extends>
-   <header location="global">VolumeMeshingWidget.h</header>
-   <container>1</container>
-  </customwidget>
- </customwidgets>
  <resources>
   <include location="../../../../Resources/icons/images/Icons.qrc"/>
   <include location="../../../../Resources/icons/images/Icons.qrc"/>

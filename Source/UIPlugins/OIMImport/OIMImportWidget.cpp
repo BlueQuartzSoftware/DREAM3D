@@ -487,6 +487,7 @@ void OIMImportWidget::threadProgressed(int val)
 // -----------------------------------------------------------------------------
 void OIMImportWidget::threadHasMessage(QString message)
 {
+ // std::cout << "OIMImportWidget::threadHasMessage()" << std::endl;
   if (NULL != this->statusBar()) {
     this->statusBar()->showMessage(message);
   }
