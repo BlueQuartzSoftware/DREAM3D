@@ -36,6 +36,8 @@
 #include "QtSupport/DREAM3DPluginInterface.h"
 
 class OIMImportWidget;
+class AIMPluginFrame;
+
 
 class OIMImportPlugin : public QObject, public DREAM3DPluginInterface
 {
@@ -46,12 +48,10 @@ class OIMImportPlugin : public QObject, public DREAM3DPluginInterface
     OIMImportPlugin();
     virtual ~OIMImportPlugin();
 
-    typedef QPair<QString, QString>        InputOutputFilePair;
-    typedef QList<InputOutputFilePair>     InputOutputFilePairList;
-
     QString getPluginName();
 
     virtual QWidget* getInputWidget(QWidget* parent);
+    virtual AIMPluginFrame* getPluginFrame(QWidget* parent);
 
 
     virtual void writeSettings(QSettings &prefs);

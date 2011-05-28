@@ -30,6 +30,7 @@
 
 #include "ReconstructionPlugin.h"
 #include "ReconstructionWidget.h"
+#include "QtSupport/AIMPluginFrame.h"
 
 Q_EXPORT_PLUGIN2(ReconstructionPlugin, ReconstructionPlugin)
 ;
@@ -70,6 +71,15 @@ QWidget* ReconstructionPlugin::getInputWidget(QWidget* parent)
 {
   m_InputWidget->setParent(parent);
   return m_InputWidget;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AIMPluginFrame* ReconstructionPlugin::getPluginFrame(QWidget* parent)
+{
+  AIMPluginFrame* frame = qobject_cast<AIMPluginFrame*>(m_InputWidget);
+  return frame;
 }
 
 // -----------------------------------------------------------------------------

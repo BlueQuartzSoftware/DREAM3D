@@ -31,6 +31,7 @@
 #include "RepresentationUI.h"
 
 //-- Qt Includes
+#include <QtCore/QPluginLoader>
 #include <QtCore/QFileInfo>
 #include <QtCore/QFile>
 #include <QtCore/QDir>
@@ -38,6 +39,7 @@
 #include <QtCore/QUrl>
 #include <QtCore/QThread>
 #include <QtCore/QFileInfoList>
+#include <QtGui/QApplication>
 #include <QtGui/QFileDialog>
 #include <QtGui/QCloseEvent>
 #include <QtGui/QMessageBox>
@@ -46,12 +48,13 @@
 
 //-- AIMRep Includes
 #include "DREAM3D/Common/Constants.h"
-#include "DREAM3D/Common/DREAM3DVersion.h"
+#include "DREAM3D/DREAM3DVersion.h"
 #include "QtSupport/ApplicationAboutBoxDialog.h"
 #include "QtSupport/QRecentFileList.h"
 #include "QtSupport/QR3DFileCompleter.h"
 #include "QtSupport/AIM_QtMacros.h"
-
+#include "QtSupport/AIMPluginFrame.h"
+#include "QtSupport/DREAM3DPluginInterface.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -59,6 +62,7 @@
 RepresentationUI::RepresentationUI(QWidget *parent) :
   QMainWindow(parent),
   m_WorkerThread(NULL),
+  m_ActivePlugin(NULL),
 #if defined(Q_WS_WIN)
 m_OpenDialogLastDirectory("C:\\")
 #else
@@ -66,12 +70,14 @@ m_OpenDialogLastDirectory("~/")
 #endif
 {
   setupUi(this);
-  readSettings();
-  setupGui();
 
-   QRecentFileList* recentFileList = QRecentFileList::instance();
-   connect(recentFileList, SIGNAL (fileListChanged(const QString &)),
-           this, SLOT(updateRecentFileList(const QString &)) );
+  setupGui();
+  loadPlugins();
+  readSettings();
+
+//   QRecentFileList* recentFileList = QRecentFileList::instance();
+//   connect(recentFileList, SIGNAL (fileListChanged(const QString &)),
+//           this, SLOT(updateRecentFileList(const QString &)) );
    // Get out initial Recent File List
    this->updateRecentFileList(QString::null);
    this->setAcceptDrops(true);
@@ -138,28 +144,15 @@ void RepresentationUI::readSettings()
 #else
   QSettings prefs(QSettings::IniFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
 #endif
-  QString val;
-//  bool ok;
-  qint32 i;
 
-  int ActiveTab = 0;
-  READ_INT_SETTING(prefs, ActiveTab, 0);
-  this->tabWidget->setCurrentIndex(ActiveTab);
 
-  /* ******** This Section is for the OIM Import Data Tab ************ */
-  oimImportWidget->readSettings(prefs);
+//  int ActiveTab = 0;
+//  READ_INT_SETTING(prefs, ActiveTab, 0);
+//  this->centralWidget->setCurrentIndex(ActiveTab);
 
-  /* ******** This Section is for the Reconstruction Tab ************ */
-  reconstructionWidget->readSettings(prefs);
-
-  /* ******** This Section is for the Grain Generator Tab ************ */
-  grainGeneratorWidget->readSettings(prefs);
-
-  /* ******** This Section is for the Surface Meshing Tab ************ */
-  surfaceMeshingWidget->readSettings(prefs);
-
-  /* ******** This Section is for the Volume Meshing Tab ************ */
-  volumeMeshingWidget->readSettings(prefs);
+  foreach (DREAM3DPluginInterface* plugin, m_LoadedPlugins) {
+    plugin->readSettings(prefs);
+  }
 
 }
 
@@ -174,25 +167,13 @@ void RepresentationUI::writeSettings()
 #else
   QSettings prefs(QSettings::IniFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
 #endif
-//  bool ok = false;
-//  qint32 i = 0;
-  int ActiveTab = this->tabWidget->currentIndex();
-  WRITE_INT_SETTING(prefs, ActiveTab);
 
-  /* ******** This Section is for the OIM Import Data Tab ************ */
-  oimImportWidget->writeSettings(prefs);
+//  int ActiveTab = this->centralWidget->currentIndex();
+//  WRITE_INT_SETTING(prefs, ActiveTab);
 
-  /* ******** This Section is for the Reconstruction Tab ************ */
-  reconstructionWidget->writeSettings(prefs);
-
-  /* ******** This Section is for the Grain Generator Tab ************ */
-  grainGeneratorWidget->writeSettings(prefs);
-
-  /* ******** This Section is for the Surface Meshing Tab ************ */
-  surfaceMeshingWidget->writeSettings(prefs);
-
-  /* ******** This Section is for the Volume Meshing Tab ************ */
-  volumeMeshingWidget->writeSettings(prefs);
+  foreach (DREAM3DPluginInterface* plugin, m_LoadedPlugins) {
+    plugin->writeSettings(prefs);
+  }
 
 }
 
@@ -202,12 +183,7 @@ void RepresentationUI::writeSettings()
 // -----------------------------------------------------------------------------
 void RepresentationUI::setupGui()
 {
-  oimImportWidget->setStatusBar(this->statusbar);
-  reconstructionWidget->setStatusBar(this->statusbar);
-  grainGeneratorWidget->setStatusBar(this->statusbar);
-  surfaceMeshingWidget->setStatusBar(this->statusbar);
-  volumeMeshingWidget->setStatusBar(this->statusbar);
-  this->tabWidget->removeTab(4);
+  pluginActionGroup = new QActionGroup(this);
 }
 
 // -----------------------------------------------------------------------------
@@ -260,44 +236,6 @@ void RepresentationUI::dropEvent(QDropEvent* e)
     //TODO: INSERT Drop Event CODE HERE
   }
 }
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-bool RepresentationUI::verifyOutputPathParentExists(QString outFilePath, QLineEdit* lineEdit)
-{
-  QFileInfo fileinfo(outFilePath);
-  QDir parent (fileinfo.dir() );
-//  if (false == parent.exists() )
-//  {
-//    lineEdit->setStyleSheet("border: 1px solid red;");
-//  }
-//  else
-//  {
-//    lineEdit->setStyleSheet("");
-//  }
-  return parent.exists();
-}
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-bool RepresentationUI::verifyPathExists(QString outFilePath, QLineEdit* lineEdit)
-{
-//  std::cout << "outFilePath: " << outFilePath.toStdString() << std::endl;
-  QFileInfo fileinfo(outFilePath);
-  if (false == fileinfo.exists() )
-  {
-    lineEdit->setStyleSheet("border: 1px solid red;");
-  }
-  else
-  {
-    lineEdit->setStyleSheet("");
-  }
-  return fileinfo.exists();
-}
-
 
 // -----------------------------------------------------------------------------
 //
@@ -405,5 +343,145 @@ void RepresentationUI::threadHasMessage(QString message)
 {
  // std::cout << "RepresentationUI::threadHasMessage()" << message.toStdString() << std::endl;
   this->statusBar()->showMessage(message);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void RepresentationUI::loadPlugins()
+ {
+     foreach (QObject *plugin, QPluginLoader::staticInstances())
+         populateMenus(plugin);
+
+     m_PluginDirs.clear();
+     m_PluginDirs << qApp->applicationDirPath();
+
+     QDir aPluginDir = QDir(qApp->applicationDirPath());
+     QString thePath;
+
+ #if defined(Q_OS_WIN)
+     if (aPluginDir.cd("plugins") ) {
+      thePath = aPluginDir.absolutePath();
+      m_PluginDirs << thePath;
+     }
+ #elif defined(Q_OS_MAC)
+     if (aPluginDir.dirName() == "MacOS") {
+         aPluginDir.cdUp();
+         thePath = aPluginDir.absolutePath() + "/Plugins";
+         m_PluginDirs << thePath;
+         aPluginDir.cdUp();
+         thePath = aPluginDir.absolutePath() + "/Plugins";
+        // m_PluginDirs << thePath;
+         aPluginDir.cdUp();
+     }
+    // aPluginDir.cd("Plugins");
+     thePath = aPluginDir.absolutePath() + "/Plugins";
+     m_PluginDirs << thePath;
+#else
+     if (aPluginDir.cd("plugins")) {
+      thePath = aPluginDir.absolutePath();
+      m_PluginDirs << thePath;
+     }
+#endif
+
+  this->setWindowTitle("DREAM3D - No Plugins Loaded");
+
+foreach (QString pluginDirString, m_PluginDirs) {
+ // std::cout << "Plugin Directory being Searched: " << pluginDirString.toStdString() << std::endl;
+    aPluginDir = QDir(pluginDirString);
+     foreach (QString fileName, aPluginDir.entryList(QDir::Files))
+    {
+   //   std::cout << "File: " << fileName.toStdString() << std::endl;
+#ifdef QT_DEBUG
+       if (fileName.endsWith( "_debug.plugin", Qt::CaseSensitive) )
+#endif
+
+#if defined (QT_NO_DEBUG)
+       if (fileName.endsWith( ".plugin", Qt::CaseSensitive) )
+#endif
+       {
+    //     std::cout << "File Extension matches.." << std::endl;
+         QPluginLoader loader(aPluginDir.absoluteFilePath(fileName));
+         QObject *plugin = loader.instance();
+       //  std::cout << "plugin Pointer: " << plugin << std::endl;
+         if (plugin && pluginFileNames.contains(fileName, Qt::CaseSensitive) == false)
+         {
+             populateMenus(plugin);
+             pluginFileNames += fileName;
+         }
+         else
+         {
+           std::cout << "The plugin did not load with the following error\n   " << loader.errorString().toStdString() << std::endl;
+         }
+       }
+     }
+
+     menuPlugins->setEnabled(!pluginActionGroup->actions().isEmpty());
+     // Load the first plugin found
+     if (pluginActionGroup->actions().size() > 0) {
+       pluginActionGroup->actions().at(0)->activate(QAction::Trigger);
+     }
+  }
+ }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+ void RepresentationUI::populateMenus(QObject *plugin)
+{
+  std::cout << "Found Plugin..." << std::endl;
+  DREAM3DPluginInterface* ipPlugin = qobject_cast<DREAM3DPluginInterface * > (plugin);
+  if (ipPlugin)
+  {
+    m_LoadedPlugins.push_back(ipPlugin);
+    qWarning(ipPlugin->getPluginName().toAscii(), "%s");
+    addToPluginMenu(plugin, ipPlugin->getPluginName(), menuPlugins, SLOT(setInputUI()), pluginActionGroup);
+  }
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void RepresentationUI::addToPluginMenu(QObject *plugin, const QString &text,
+                                     QMenu *menu, const char *member,
+                                     QActionGroup *actionGroup)
+{
+  QAction *action = new QAction(text, plugin);
+  connect(action, SIGNAL(triggered()), this, member);
+  menu->addAction(action);
+
+  if (actionGroup)
+  {
+    action->setCheckable(true);
+    actionGroup->addAction(action);
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void RepresentationUI::setInputUI()
+{
+  // Get the current QWidget
+  if (NULL != m_ActivePlugin) {
+    QWidget* activeInputWidget = m_ActivePlugin->getInputWidget(this);
+    centerWidget->layout()->removeWidget(activeInputWidget);
+  }
+  // Get the action Associated with the Plugin that was just activated
+  QAction *action = qobject_cast<QAction*> (sender());
+  // Get a pointer to the new active plugin instance
+  m_ActivePlugin = qobject_cast<DREAM3DPluginInterface* > (action->parent());
+  this->setWindowTitle(m_ActivePlugin->getPluginName() + " is now Active");
+
+  // Get a pointer to the plugins Input Widget
+  QWidget* inputWidget = m_ActivePlugin->getInputWidget(this);
+  centerWidget->layout()->addWidget(inputWidget);
+
+  AIMPluginFrame* frame = m_ActivePlugin->getPluginFrame(NULL);
+  if (frame){
+      frame->setStatusBar(this->statusBar());
+    }
+
 }
 

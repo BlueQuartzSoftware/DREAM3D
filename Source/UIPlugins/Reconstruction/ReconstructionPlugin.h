@@ -36,6 +36,8 @@
 #include "QtSupport/DREAM3DPluginInterface.h"
 
 class ReconstructionWidget;
+class AIMPluginFrame;
+
 
 class ReconstructionPlugin : public QObject, public DREAM3DPluginInterface
 {
@@ -46,13 +48,10 @@ class ReconstructionPlugin : public QObject, public DREAM3DPluginInterface
     ReconstructionPlugin();
     virtual ~ReconstructionPlugin();
 
-    typedef QPair<QString, QString>        InputOutputFilePair;
-    typedef QList<InputOutputFilePair>     InputOutputFilePairList;
-
     QString getPluginName();
 
     virtual QWidget* getInputWidget(QWidget* parent);
-
+    virtual AIMPluginFrame* getPluginFrame(QWidget* parent);
 
     virtual void writeSettings(QSettings &prefs);
     virtual void readSettings(QSettings &prefs);
