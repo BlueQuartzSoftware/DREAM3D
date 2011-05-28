@@ -105,6 +105,7 @@ Q_OBJECT
     MXA_INSTANCE_PROPERTY(bool, WriteVisualizationFile)
     MXA_INSTANCE_PROPERTY(bool, WriteIPFFile)
     MXA_INSTANCE_PROPERTY(bool, WriteHDF5GrainFile)
+    MXA_INSTANCE_PROPERTY(bool, WritePhFile)
 
 
 

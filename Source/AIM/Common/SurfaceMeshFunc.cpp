@@ -2672,7 +2672,7 @@ void SurfaceMeshFunc::arrange_grainnames(int numT, int zID)
   float xSum, ySum, zSum;
   float vcoord[3][3];
   float u[3], w[3];
-  float x, y , z;
+  float x, y, z;
   float a, b, c, d, length;
   float sidecheck;
   int shift = (zID * NSP);
@@ -2682,16 +2682,16 @@ void SurfaceMeshFunc::arrange_grainnames(int numT, int zID)
     xSum = 0.0;
     ySum = 0.0;
     zSum = 0.0;
-	ngrainname1 = cTriangle[i].ngrainname[0];
-	ngrainname2 = cTriangle[i].ngrainname[1];
-	cTriangle[i].ngrainname[0] = -1;
-	cTriangle[i].ngrainname[1] = -1;
+    ngrainname1 = cTriangle[i].ngrainname[0];
+    ngrainname2 = cTriangle[i].ngrainname[1];
+    cTriangle[i].ngrainname[0] = -1;
+    cTriangle[i].ngrainname[1] = -1;
     for (j = 0; j < 3; j++)
     { // for each node iNSide the triangle...
-	  tsite1[j] = -1;
-	  tsite2[j] = -1;
-	  tgrainname1[j] = -1;
-	  tgrainname2[j] = -1;
+      tsite1[j] = -1;
+      tsite2[j] = -1;
+      tgrainname1[j] = -1;
+      tgrainname2[j] = -1;
       cnode = cTriangle[i].node_id[j];
       csite = cnode / 7 + 1;
       kind = cnode % 7;
@@ -2744,62 +2744,66 @@ void SurfaceMeshFunc::arrange_grainnames(int numT, int zID)
     a = a / length;
     b = b / length;
     c = c / length;
-	if(fabs(a) < 0.00001) a = 0.0;
-	if(fabs(b) < 0.00001) b = 0.0;
-	if(fabs(c) < 0.00001) c = 0.0;
+    if (fabs(a) < 0.00001) a = 0.0;
+    if (fabs(b) < 0.00001) b = 0.0;
+    if (fabs(c) < 0.00001) c = 0.0;
     // update patch info...
     cTriangle[i].normal[0] = a;
     cTriangle[i].normal[1] = b;
     cTriangle[i].normal[2] = c;
     cTriangle[i].area = 0.5 * length;
     // determine which way normal should point...
-	d = -(a*cx + b*cy + c*cz);
-	for(int j = 0; j < 3; j++)
-	{
-		if(tsite1[j] != -1)
-		{
-			locale = tsite1[j]+shift;
-			x = find_xcoord(locale);
-			y = find_ycoord(locale);
-			z = find_zcoord(locale);
-			sidecheck = (a*x + b*y + c*z + d);
-			if((ngrainname1 == 2 && ngrainname2 == 545) || (ngrainname2 == 2 && ngrainname1 == 545))
-			{
-				int stop = 0;
-			}
-			if (sidecheck < -0.000001)
-			{
-			  cTriangle[i].ngrainname[0] = tgrainname2[j];
-			  cTriangle[i].ngrainname[1] = tgrainname1[j];
-			}
-			else if (sidecheck > 0.000001)
-			{
-			  cTriangle[i].ngrainname[0] = tgrainname1[j];
-			  cTriangle[i].ngrainname[1] = tgrainname2[j];
-			}
-		}
-	}
-	int k = 0;
-	while(cTriangle[i].ngrainname[0] == -1)
-	{
-		while(tsite1[k] == -1)
-		{
-			k++;
-		}
-		int testtsite = tsite1[k] + (a + b*xDim + c*NSP);
-		int gname = voxels[testtsite];
-		if(gname == tgrainname1[k])
-		{
-			  cTriangle[i].ngrainname[0] = tgrainname1[k];
-			  cTriangle[i].ngrainname[1] = tgrainname2[k];
-		}
-		if(gname == tgrainname2[k])
-		{
-			  cTriangle[i].ngrainname[0] = tgrainname2[k];
-			  cTriangle[i].ngrainname[1] = tgrainname1[k];
-		}
-		k++;
-	}
+    d = -(a * cx + b * cy + c * cz);
+    for (int j = 0; j < 3; j++)
+    {
+      if (tsite1[j] != -1)
+      {
+        locale = tsite1[j] + shift;
+        x = find_xcoord(locale);
+        y = find_ycoord(locale);
+        z = find_zcoord(locale);
+        sidecheck = (a * x + b * y + c * z + d);
+        if ((ngrainname1 == 2 && ngrainname2 == 545) || (ngrainname2 == 2 && ngrainname1 == 545))
+        {
+          int stop = 0;
+        }
+        if (sidecheck < -0.000001)
+        {
+          cTriangle[i].ngrainname[0] = tgrainname2[j];
+          cTriangle[i].ngrainname[1] = tgrainname1[j];
+        }
+        else if (sidecheck > 0.000001)
+        {
+          cTriangle[i].ngrainname[0] = tgrainname1[j];
+          cTriangle[i].ngrainname[1] = tgrainname2[j];
+        }
+      }
+    }
+    int k = 0;
+    while (cTriangle[i].ngrainname[0] == -1)
+    {
+      while (tsite1[k] == -1)
+      {
+        k++;
+      }
+      if (k > 2)
+      {
+        std::cout << "HEre" << std::endl;
+      }
+      int testtsite = tsite1[k] + (a + b * xDim + c * NSP);
+      int gname = voxels[testtsite];
+      if (gname == tgrainname1[k])
+      {
+        cTriangle[i].ngrainname[0] = tgrainname1[k];
+        cTriangle[i].ngrainname[1] = tgrainname2[k];
+      }
+      if (gname == tgrainname2[k])
+      {
+        cTriangle[i].ngrainname[0] = tgrainname2[k];
+        cTriangle[i].ngrainname[1] = tgrainname1[k];
+      }
+      k++;
+    }
   }
 }
 int SurfaceMeshFunc::assign_nodeID(int nN)

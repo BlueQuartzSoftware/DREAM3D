@@ -44,7 +44,7 @@ ENDIF (BUILD_SHARED_LIBS)
 
 SET (AIMCommon_SRCS
     ${DREAM3D_SOURCE_DIR}/Source/AIM/Common/GrainGeneratorFunc.cpp
-    ${DREAM3D_SOURCE_DIR}/Source/AIM/Common/GrainGeneratorVTKWriter.cpp
+    ${DREAM3D_SOURCE_DIR}/Source/AIM/Common/GrainGeneratorVoxelWriter.cpp
     ${DREAM3D_SOURCE_DIR}/Source/AIM/Common/SurfaceMeshFunc.cpp
     ${DREAM3D_SOURCE_DIR}/Source/AIM/Common/ReconstructionFunc.cpp
     ${DREAM3D_SOURCE_DIR}/Source/AIM/Common/ReconstructionVTKWriter.cpp
@@ -66,7 +66,7 @@ SET (AIMCommon_SRCS
 
 SET (AIMCommon_HDRS
     ${DREAM3D_SOURCE_DIR}/Source/AIM/Common/GrainGeneratorFunc.h
-    ${DREAM3D_SOURCE_DIR}/Source/AIM/Common/GrainGeneratorVTKWriter.h
+    ${DREAM3D_SOURCE_DIR}/Source/AIM/Common/GrainGeneratorVoxelWriter.h
     ${DREAM3D_SOURCE_DIR}/Source/AIM/Common/VTKFileReader.h
     ${DREAM3D_SOURCE_DIR}/Source/AIM/Common/VTKWriterMacros.h
     ${DREAM3D_SOURCE_DIR}/Source/AIM/Common/CrystalStructure.h
