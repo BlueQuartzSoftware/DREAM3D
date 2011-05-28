@@ -35,13 +35,12 @@
 #include "MXA/Utilities/MXADir.h"
 #include "MXA/Utilities/MXAFileInfo.h"
 
-#include "DREAM3D/HDF5/H5ReconStatsReader.h"
+#include "DREAM3D/GrainGenerator/GrainGeneratorVoxelWriter.h"
 #include "DREAM3D/StructureReaders/AbstractStructureReader.h"
 #include "DREAM3D/StructureReaders/VTKStructureReader.h"
 #include "DREAM3D/StructureReaders/DXStructureReader.h"
-#include "DREAM3D/GrainGenerator/GrainGeneratorVoxelWriter.h"
 #include "DREAM3D/HDF5/H5GrainWriter.h"
-
+#include "DREAM3D/HDF5/H5ReconStatsReader.h"
 
 #define CREATE_INPUT_FILENAME(f, n)\
     std::string f = m_InputDirectory + MXADir::Separator + n;\
@@ -347,14 +346,16 @@ void GrainGenerator::compute()
   if (m_WritePhFile) {vtkWriter->writePhFile(m.get(), phFile);}
   CHECK_FOR_CANCELED(GrainGeneratorFunc, writePhFile)
 
-  progressMessage(AIM_STRING("Writing Out HDF5 Grain File. This may take a few minutes to complete."), 99);
+  progressMessage(AIM_STRING("Writing Out HDF5 Grain File. This may take a few minutes to complete."), 96);
   H5GrainWriter::Pointer h5GrainWriter = H5GrainWriter::New();
   if (m_WriteHDF5GrainFile) { h5GrainWriter->writeHDF5GrainsFile(m.get(), hdf5GrainFile); }
   CHECK_FOR_CANCELED(GrainGeneratorFunc, writeHDF5GrainsFile)
-  progressMessage(AIM_STRING("Generation Completed"), 100);
-
+  
   // Clean up all the memory
+  progressMessage(AIM_STRING("Cleaning up Memory."), 98);
   m = GrainGeneratorFunc::NullPointer();
+
+  progressMessage(AIM_STRING("Generation Completed"), 100);
 #if DREAM3D_USE_QT
   emit finished();
 #endif

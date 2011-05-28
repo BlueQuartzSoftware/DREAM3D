@@ -157,7 +157,7 @@ GrainGeneratorFunc::GrainGeneratorFunc()
 // -----------------------------------------------------------------------------
 GrainGeneratorFunc::~GrainGeneratorFunc()
 {
-//  m_Grains.clear();
+  m_Grains.clear();
 }
 
 #define GG_INIT_DOUBLE_ARRAY(array, value, size)\
