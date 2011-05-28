@@ -9,7 +9,7 @@
 #--
 #--////////////////////////////////////////////////////////////////////////////
 project (DREAM3D)
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 2.8.3)
 
 # ---------- Setup output Directories -------------------------
 SET (CMAKE_LIBRARY_OUTPUT_DIRECTORY
@@ -32,17 +32,20 @@ SET (CMAKE_ARCHIVE_OUTPUT_DIRECTORY
   "Single Directory for all static libraries."
   )
 
+
+set(DREAM3D_VER_MAJOR "0")
+set(DREAM3D_VER_MINOR "9")
+set(DREAM3D_VER_PATCH "0")
+set(DREAM3D_VERSION "${DREAM3D_VER_MAJOR}.${DREAM3D_VER_MINOR}.${DREAM3D_VER_PATCH}")
+               
 set (CMP_SOURCE_DIR ${DREAM3D_SOURCE_DIR}/Support/cmp)
 
 SET (PROJECT_CODE_DIR ${PROJECT_SOURCE_DIR}/Source)
 SET (PROJECT_RESOURCES_DIR ${DREAM3D_SOURCE_DIR}/Resources)
-
 SET (PROJECT_PREFIX "MXA" CACHE STRING "The Prefix to be used for Preprocessor definitions")
 SET (EXE_DEBUG_EXTENSION "_debug")
 SET (PROJECT_INSTALL_HEADERS "0")
 SET (PROJECT_INSTALL_EXECUTABLES "1")
-
-
 
 #-------------------------------------------------------------------------------
 # Include the cmp project to perform all the basic configuration tests for the 
@@ -57,14 +60,27 @@ set (CMP_PROJECT_NAMESPACE "MXA")
 set (CMP_PROJECT_NAME "MXA")
 set (CMP_ENABLE_PLUGINS "1")
 set (CMP_LIB_SEARCH_DIRS "")
+set(CMP_GENERATE_VERSION_STRING 0)
 INCLUDE (${CMP_SOURCE_DIR}/cmpProject.cmake)
+
+# We do NOT want to install any of the headers
+SET (DREAM3D_INSTALL_FILES "${PROJECT_INSTALL_HEADERS}")
 
 # --------------------------------------------------------------------
 # Generate a Header file with Compile Version variables
 # --------------------------------------------------------------------
-cmpGenerateVersionString( "${DREAM3D_BINARY_DIR}/AIM/Common/${PROJECT_NAME}Version.h" 
-                          "DREAM3D" 
-                          "DREAM3D")
+set (VERSION_GEN_NAME "DREAM3D")
+set (VERSION_GEN_NAMESPACE "DREAM3D")
+set (PROJECT_PREFIX "DREAM3D")
+set (VERSION_GEN_COMPLETE  ${DREAM3D_VERSION})
+set (VERSION_GEN_VER_MAJOR ${DREAM3D_VER_MAJOR})
+set (VERSION_GEN_VER_MINOR ${DREAM3D_VER_MINOR})
+set (VERSION_GEN_VER_PATCH ${DREAM3D_VER_PATCH})
+configure_file(${CMP_CONFIGURED_FILES_SOURCE_DIR}/cmpVersion.h.in   
+               ${DREAM3D_BINARY_DIR}/DREAM3D/DREAM3DVersion.h  )
+
+configure_file(${DREAM3D_SOURCE_DIR}/Source/DREAM3D/DREAM3DConfiguration.h.in
+               ${DREAM3D_BINARY_DIR}/DREAM3D/DREAM3DConfiguration.h)
                           
 # --------------------------------------------------------------------
 # Generate our ReadMe and License Files
@@ -129,9 +145,9 @@ ENDIF ( CMAKE_BUILD_TYPE MATCHES Debug )
 # --------------------------------------------------------------------
 # Should we use Intel Threading Building Blocks
 # --------------------------------------------------------------------
-set (AIM_USE_PARALLEL_ALGORITHMS "")
-option(AIM_USE_MULTITHREADED_ALGOS "Use MultiThreaded Algorithms where possible" OFF)
-if (AIM_USE_MULTITHREADED_ALGOS)
+set (DREAM3D_USE_PARALLEL_ALGORITHMS "")
+option(DREAM3D_USE_MULTITHREADED_ALGOS "Use MultiThreaded Algorithms where possible" OFF)
+if (DREAM3D_USE_MULTITHREADED_ALGOS)
     find_package(TBB)
     if (TBB_FOUND)
         include_directories(${TBB_INCLUDE_DIRS} )
@@ -143,7 +159,7 @@ if (AIM_USE_MULTITHREADED_ALGOS)
     else()
         message(FATAL_ERROR "The Intel Threading Building Blocks library is needed to enable the multithreaded algorithms. Please make sure it is installed properly")
     endif()
-    set (AIM_USE_PARALLEL_ALGORITHMS "1")
+    set (DREAM3D_USE_PARALLEL_ALGORITHMS "1")
 endif()
 
 
@@ -169,12 +185,12 @@ include_directories (${DREAM3D_BINARY_DIR})
 
 # -----------------------------------------------------------------------
 # -- Add in the AIM Common Sources into a static library
-add_subdirectory( ${DREAM3D_SOURCE_DIR}/Source/AIM/Common ${DREAM3D_BINARY_DIR}/AIM)
+add_subdirectory( ${DREAM3D_SOURCE_DIR}/Source/DREAM3D/ ${DREAM3D_BINARY_DIR}/DREAM3D)
 
 
-option(AIM_BUILD_QT_APPS "Compile the Qt based GUI applications" ON)
+option(DREAM3D_BUILD_QT_APPS "Compile the Qt based GUI applications" OFF)
 #if we are going to build Qt based applications then we need to find Qt 4 first
-if (AIM_BUILD_QT_APPS)
+if (DREAM3D_BUILD_QT_APPS)
    # ------------------------------------------------------------------------------
    #  Qt 4 Section
    # ------------------------------------------------------------------------------
@@ -202,59 +218,59 @@ if (AIM_BUILD_QT_APPS)
    add_subdirectory(${DREAM3D_SOURCE_DIR}/Source/QtSupport ${DREAM3D_BINARY_DIR}/QtSupport)
    # Add our Qt based GUI project to the list of targets
 
-   OPTION (AIM_BUILD_GUI_STATS_GENERATOR "Compile the Statistics Generator GUI Application" ON)
-   if (AIM_BUILD_GUI_STATS_GENERATOR)
+   OPTION (DREAM3D_BUILD_GUI_STATS_GENERATOR "Compile the Statistics Generator GUI Application" ON)
+   if (DREAM3D_BUILD_GUI_STATS_GENERATOR)
     add_subdirectory(${DREAM3D_SOURCE_DIR}/Source/StatsGenerator ${DREAM3D_BINARY_DIR}/Apps/StatsGenerator)
    endif()
       
-   option(AIM_BUILD_GUI_REPRESENTATION "Compile the DREAM3D GUI Application" ON)
-   if (AIM_BUILD_GUI_REPRESENTATION)
+   option(DREAM3D_BUILD_GUI_REPRESENTATION "Compile the DREAM3D GUI Application" ON)
+   if (DREAM3D_BUILD_GUI_REPRESENTATION)
        ADD_SUBDIRECTORY( ${DREAM3D_SOURCE_DIR}/Source/AIM/GUI ${DREAM3D_BINARY_DIR}/Apps/DREAM.3D)
    endif()
 else()
-    set (AIM_BUILD_GUI_REPRESENTATION "OFF" CACHE BOOL "" FORCE)
-    set (AIM_BUILD_GUI_STATS_GENERATOR "OFF" CACHE BOOL "" FORCE)
+    set (DREAM3D_BUILD_GUI_REPRESENTATION "OFF" CACHE BOOL "" FORCE)
+    set (DREAM3D_BUILD_GUI_STATS_GENERATOR "OFF" CACHE BOOL "" FORCE)
 endif()
 
 include_directories(${DREAM3D_SOURCE_DIR}/Source)
 
 # add the Reconstruction Command line Tool
-OPTION(AIM_BUILD_TOOL_RECONSTRUCTION "Compile Reconstruction Tool" OFF)
-IF ( AIM_BUILD_TOOL_RECONSTRUCTION )
+OPTION(DREAM3D_BUILD_TOOL_RECONSTRUCTION "Compile Reconstruction Tool" OFF)
+IF ( DREAM3D_BUILD_TOOL_RECONSTRUCTION )
     ADD_SUBDIRECTORY( ${DREAM3D_SOURCE_DIR}/Source/AIM/Reconstruction ${DREAM3D_BINARY_DIR}/AIM/Reconstruction)
 ENDIF ()
 
-OPTION (AIM_BUILD_TOOL_GRAIN_GENERATOR "Compile the Grain Generator Tool" OFF)
-if (AIM_BUILD_TOOL_GRAIN_GENERATOR)
+OPTION (DREAM3D_BUILD_TOOL_GRAIN_GENERATOR "Compile the Grain Generator Tool" OFF)
+if (DREAM3D_BUILD_TOOL_GRAIN_GENERATOR)
     add_subdirectory(${DREAM3D_SOURCE_DIR}/Source/AIM/GrainGenerator ${DREAM3D_BINARY_DIR}/AIM/GrainGenerator)
 endif()
 
-OPTION (AIM_BUILD_TOOL_SURFACE_MESHING "Compile the surface Meshing tool" OFF)
-if (AIM_BUILD_TOOL_SURFACE_MESHING)
+OPTION (DREAM3D_BUILD_TOOL_SURFACE_MESHING "Compile the surface Meshing tool" OFF)
+if (DREAM3D_BUILD_TOOL_SURFACE_MESHING)
     add_subdirectory(${DREAM3D_SOURCE_DIR}/Source/AIM/SurfaceMesh ${DREAM3D_BINARY_DIR}/AIM/SurfaceMesh)
 endif()
 
-OPTION (AIM_BUILD_TOOL_VOLUME_MESHING "Compile the Volume Meshing tools" OFF)
-if (AIM_BUILD_TOOL_VOLUME_MESHING)
+OPTION (DREAM3D_BUILD_TOOL_VOLUME_MESHING "Compile the Volume Meshing tools" OFF)
+if (DREAM3D_BUILD_TOOL_VOLUME_MESHING)
     add_subdirectory(${DREAM3D_SOURCE_DIR}/Source/AIM/VolumeMesh ${DREAM3D_BINARY_DIR}/AIM/VolumeMesh)
 endif()
 
 # ------- Enable the CTest testing. Use make test to run all tests ---------------
-OPTION(AIM_BUILD_TESTING "Compile the test programs" ON)
-if (AIM_BUILD_TESTING)
+OPTION(DREAM3D_BUILD_TESTING "Compile the test programs" OFF)
+if (DREAM3D_BUILD_TESTING)
     ENABLE_TESTING()
     add_subdirectory(${DREAM3D_SOURCE_DIR}/Source/Test ${DREAM3D_BINARY_DIR}/AIM/Test)
 endif()
 
 
-option(AIM_BUILD_CMU "Compile the CMU Optimization Wrappers" OFF)
-if(AIM_BUILD_CMU)
+option(DREAM3D_BUILD_CMU "Compile the CMU Optimization Wrappers" OFF)
+if(DREAM3D_BUILD_CMU)
     add_subdirectory(${DREAM3D_SOURCE_DIR}/Source/CMU ${DREAM3D_BINARY_DIR}/AIM/CMU)
 endif()
 
 # Should we build the HTML documentation
-option(AIM_BUILD_DOCS "Use Doxygen to create the HTML based API documentation" OFF)
-if(AIM_BUILD_DOCS)
+option(DREAM3D_BUILD_DOCS "Use Doxygen to create the HTML based API documentation" OFF)
+if(DREAM3D_BUILD_DOCS)
   FIND_PACKAGE(Doxygen)
   if (NOT DOXYGEN_FOUND)
     message(FATAL_ERROR "Doxygen is needed to build the documentation. Please install it correctly")
@@ -262,8 +278,8 @@ if(AIM_BUILD_DOCS)
   # Add a target that builds just the High Level User Manuals/Tutorial type documentation
   add_subdirectory(${PROJECT_SOURCE_DIR}/Documentation ${PROJECT_BINARY_DIR}/Documentation)
   
-  option(AIM_BUILD_API_DOCS "Use Doxygen to generate the HTML API documentation" ON)
-  if (AIM_BUILD_API_DOCS)
+  option(DREAM3D_BUILD_API_DOCS "Use Doxygen to generate the HTML API documentation" ON)
+  if (DREAM3D_BUILD_API_DOCS)
       configure_file(${PROJECT_RESOURCES_DIR}/AIM.doxyfile.in 
                  ${PROJECT_BINARY_DIR}/Doxyfile  @ONLY IMMEDIATE)
     add_custom_target(apidocs COMMAND ${DOXYGEN_EXECUTABLE} ${PROJECT_BINARY_DIR}/Doxyfile)
