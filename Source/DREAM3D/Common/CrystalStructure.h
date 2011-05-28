@@ -31,8 +31,8 @@
 #ifndef CRYSTALSTRUCTURE_H_
 #define CRYSTALSTRUCTURE_H_
 
-#include "AIM/Common/AIMCommonConfiguration.h"
-#include "AIM/Common/Constants.h"
+#include "DREAM3D/DREAM3DConfiguration.h"
+#include "DREAM3D/Common/Constants.h"
 
 
 /**

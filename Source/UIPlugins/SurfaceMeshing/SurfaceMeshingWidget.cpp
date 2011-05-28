@@ -44,7 +44,7 @@
 #include <QtGui/QMessageBox>
 #include <QtGui/QListWidget>
 
-#include "AIM/Common/Constants.h"
+#include "DREAM3D/Common/Constants.h"
 
 #include "QtSupport/QR3DFileCompleter.h"
 #include "QtSupport/AIM_QtMacros.h"

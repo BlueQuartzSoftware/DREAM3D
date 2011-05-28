@@ -40,8 +40,8 @@
 
 #include "ANG/H5AngReader.h"
 
-#include "AIM/Common/Constants.h"
-#include "AIM/Common/OrientationMath.h"
+#include "DREAM3D/Common/Constants.h"
+#include "DREAM3D/Common/OrientationMath.h"
 
 // -----------------------------------------------------------------------------
 //

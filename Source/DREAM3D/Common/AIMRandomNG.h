@@ -25,7 +25,7 @@
 
 
 #include <MXA/MXATypes.h>
-#include "AIM/Common/AIMCommonConfiguration.h"
+#include "DREAM3D/DREAM3DConfiguration.h"
 
 /**
 * @class AIMRandomNG AIMRandomNG.h AIM/Common/AIMRandomNG.h
@@ -34,7 +34,7 @@
 * @date Nov 5, 2009
 * @version 1.0
 */
-class AIMCOMMON_EXPORT  AIMRandomNG
+class DREAM3DLib_EXPORT  AIMRandomNG
 {
   public:
     AIMRandomNG();

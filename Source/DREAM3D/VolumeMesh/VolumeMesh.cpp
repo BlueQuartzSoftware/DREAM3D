@@ -32,8 +32,8 @@
 #include "VolumeMesh.h"
 
 #include <MXA/Utilities/MXADir.h>
-#include <AIM/Common/Constants.h>
-#include <AIM/VolumeMesh/MeshGenerator.h>
+#include "DREAM3D/Common/Constants.h"
+#include "DREAM3D/VolumeMesh/MeshGenerator.h"
 
 
 #ifdef AIM_USE_QT

@@ -53,15 +53,15 @@
 #include <MXA/MXATypes.h>
 #include <MXA/Common/MXASetGetMacros.h>
 
-#include "AIM/Common/AIMCommonConfiguration.h"
-#include <AIM/Common/Grain.h>
-#include <AIM/Common/Patch.h>
-#include <AIM/Common/Face.h>
-#include <AIM/Common/Neighbor.h>
-#include <AIM/Common/Node.h>
-#include <AIM/Common/Segment.h>
-#include <AIM/Common/AIMRandomNG.h>
-#include <AIM/ANG/AngDataLoader.h>
+#include "DREAM3D/DREAM3DConfiguration.h"
+#include <DREAM3D/Common/Grain.h>
+#include <DREAM3D/Common/Patch.h>
+#include <DREAM3D/Common/Face.h>
+#include <DREAM3D/Common/Neighbor.h>
+#include <DREAM3D/Common/Node.h>
+#include <DREAM3D/Common/Segment.h>
+#include <DREAM3D/Common/AIMRandomNG.h>
+#include <DREAM3D/ANGSupport/AngDataLoader.h>
 
 
 using namespace std;
@@ -91,7 +91,7 @@ using namespace std;
 
 #endif
 
-class AIMCOMMON_EXPORT SurfaceMeshFunc
+class DREAM3DLib_EXPORT SurfaceMeshFunc
 {
 
 public:

@@ -45,10 +45,10 @@
 #include <QtGui/QListWidget>
 #include <QtGui/QListWidgetItem>
 
-#include "AIM/Common/Constants.h"
+#include "DREAM3D/Common/Constants.h"
 #include "AIM/GrainGenerator/GrainGenerator.h"
-#include "AIM/Common/HDF5/H5ReconStatsReader.h"
-#include "AIM/Common/HDF5/H5ReconStatsWriter.h"
+#include "DREAM3D/HDF5/H5ReconStatsReader.h"
+#include "DREAM3D/HDF5/H5ReconStatsWriter.h"
 
 #include "QtSupport/AIM_QtMacros.h"
 #include "QtSupport/QR3DFileCompleter.h"

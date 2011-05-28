@@ -28,7 +28,7 @@
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include <iostream>
-#include "AIM/Common/ReconstructionVoxel.h"
+#include "DREAM3D/Reconstruction/ReconstructionVoxel.h"
 #include <boost/shared_array.hpp>
 
 int main(int argc, char **argv)

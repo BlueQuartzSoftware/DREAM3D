@@ -12,10 +12,10 @@
 
 #include <string>
 
-#include "AIM/Common/AIMMath.h"
+#include "DREAM3D/Common/AIMMath.h"
 
-#include "AIM/Common/OrientationMath.h"
-#include "AIM/Common/OrientationOps/HexagonalOps.h"
+#include "DREAM3D/Common/OrientationMath.h"
+#include "DREAM3D/Common/OrientationOps/HexagonalOps.h"
 
 #define MXA_PI          3.141592653589793
 #define MXA_PI_OVER_4   0.785398163397448

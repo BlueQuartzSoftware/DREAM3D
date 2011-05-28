@@ -42,8 +42,8 @@
 #include "MXA/Common/MXASetGetMacros.h"
 
 
-#include "AIM/Common/AIMCommonConfiguration.h"
-#include "AIM/Common/Constants.h"
+#include "DREAM3D/DREAM3DConfiguration.h"
+#include "DREAM3D/Common/Constants.h"
 
 
 
@@ -56,7 +56,7 @@
  * @date Apr 15, 2011
  * @version 1.0
  */
-class AIMCOMMON_EXPORT H5ReconStatsWriter
+class DREAM3DLib_EXPORT H5ReconStatsWriter
 {
   public:
     MXA_SHARED_POINTERS(H5ReconStatsWriter);

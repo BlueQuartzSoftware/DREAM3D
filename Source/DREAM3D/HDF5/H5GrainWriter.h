@@ -34,7 +34,7 @@
 
 #include "MXA/Common/MXASetGetMacros.h"
 
-#include "AIM/Common/AIMCommonConfiguration.h"
+#include "DREAM3D/DREAM3DConfiguration.h"
 
 class ReconstructionFunc;
 class GrainGeneratorFunc;
@@ -47,7 +47,7 @@ class GrainGeneratorFunc;
  * @date Jan 19, 2011
  * @version 1.0
  */
-class AIMCOMMON_EXPORT H5GrainWriter
+class DREAM3DLib_EXPORT H5GrainWriter
 {
   public:
     MXA_SHARED_POINTERS(H5GrainWriter)

@@ -38,8 +38,8 @@
 #include <boost/shared_ptr.hpp>
 
 #include <MXA/Common/MXASetGetMacros.h>
-#include "AIM/Common/AIMCommonConfiguration.h"
-#include "AIM/Common/VTKFileReader.h"
+#include "DREAM3D/DREAM3DConfiguration.h"
+#include "DREAM3D/Common/VTKFileReader.h"
 
 
 #define kBufferSize 1024

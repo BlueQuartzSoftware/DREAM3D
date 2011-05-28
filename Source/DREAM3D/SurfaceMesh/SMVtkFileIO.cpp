@@ -37,7 +37,7 @@
 #include "MXA/Common/LogTime.h"
 #include "MXA/Common/MXAEndian.h"
 
-#include "AIM/Common/SurfaceMeshFunc.h"
+#include "DREAM3D/SurfaceMesh/SurfaceMeshFunc.h"
 
 // -----------------------------------------------------------------------------
 //

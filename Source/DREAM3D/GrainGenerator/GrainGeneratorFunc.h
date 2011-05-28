@@ -35,18 +35,18 @@
 #include <MXA/MXATypes.h>
 #include <MXA/Common/MXASetGetMacros.h>
 
-#include "AIM/Common/AIMCommonConfiguration.h"
-#include "AIM/Common/AIMArray.hpp"
-#include "AIM/Common/Constants.h"
-#include "AIM/Common/Grain.h"
-#include "AIM/Common/GrainGeneratorVoxel.h"
-#include "AIM/Common/AIMRandomNG.h"
-#include "AIM/Common/HDF5/H5ReconStatsWriter.h"
-#include "AIM/Common/HDF5/H5ReconStatsReader.h"
-#include "AIM/Common/OrientationMath.h"
-#include "AIM/Common/OrientationOps/CubicOps.h"
-#include "AIM/Common/OrientationOps/HexagonalOps.h"
-#include "AIM/Common/OrientationOps/OrthoRhombicOps.h"
+#include "DREAM3D/DREAM3DConfiguration.h"
+#include "DREAM3D/Common/AIMArray.hpp"
+#include "DREAM3D/Common/Constants.h"
+#include "DREAM3D/Common/Grain.h"
+#include "DREAM3D/GrainGenerator/GrainGeneratorVoxel.h"
+#include "DREAM3D/Common/AIMRandomNG.h"
+#include "DREAM3D/HDF5/H5ReconStatsWriter.h"
+#include "DREAM3D/HDF5/H5ReconStatsReader.h"
+#include "DREAM3D/Common/OrientationMath.h"
+#include "DREAM3D/Common/OrientationOps/CubicOps.h"
+#include "DREAM3D/Common/OrientationOps/HexagonalOps.h"
+#include "DREAM3D/Common/OrientationOps/OrthoRhombicOps.h"
 
 
 
@@ -58,7 +58,7 @@
  * @date
  * @version 1.0
  */
-class AIMCOMMON_EXPORT GrainGeneratorFunc
+class DREAM3DLib_EXPORT GrainGeneratorFunc
 {
 public:
     MXA_SHARED_POINTERS(GrainGeneratorFunc)

@@ -31,7 +31,7 @@
 
 #include <fstream>
 
-#include "AIM/Common/GrainGeneratorFunc.h"
+#include "DREAM3D/GrainGenerator/GrainGeneratorFunc.h"
 
 #define kBufferSize 1024
 
