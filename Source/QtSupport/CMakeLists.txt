@@ -21,6 +21,7 @@ set (QtSupport_SRCS
     ${QtSupport_SOURCE_DIR}/ColorComboPicker.cpp
     ${QtSupport_SOURCE_DIR}/QR3DFileCompleter.cpp
     ${QtSupport_SOURCE_DIR}/QRecentFileList.cpp
+    ${QtSupport_SOURCE_DIR}/QFSDropLineEdit.cpp
 )
 set (QtSupport_HDRS
     ${QtSupport_SOURCE_DIR}/AIMImageGraphicsDelegate.h
@@ -28,6 +29,7 @@ set (QtSupport_HDRS
     ${QtSupport_SOURCE_DIR}/ColorComboPicker.h
     ${QtSupport_SOURCE_DIR}/QR3DFileCompleter.h
     ${QtSupport_SOURCE_DIR}/QRecentFileList.h  
+    ${QtSupport_SOURCE_DIR}/QFSDropLineEdit.h
 )
 cmp_IDE_SOURCE_PROPERTIES("QtSupport" "${QtSupport_HDRS}" "${QtSupport_SRCS}" "0")
 

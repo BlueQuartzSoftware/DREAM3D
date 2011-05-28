@@ -265,8 +265,12 @@ int AngReader::readFile()
 
   if (counter != totalDataRows && in.eof() == true)
   {
-    std::cout << "Premature End Of File reached while reading the .ang file.\n NumRows=" << nRows << "nEvenCols=" << nEvenCols << " Total Data Points Read="
-        << counter << std::endl;
+
+    std::cout << "Premature End Of File reached.\n"
+        << m_FileName
+        << "\nNumRows=" << nRows << " nEvenCols=" << nEvenCols
+        << "\ncounter=" << counter << " totalDataRows=" << totalDataRows
+        << "\nTotal Data Points Read=" << counter << std::endl;
   }
   if (m_NumFields < 10)
   {
