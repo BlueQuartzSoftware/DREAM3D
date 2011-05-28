@@ -35,7 +35,7 @@
 #include <QtGui/QDoubleValidator>
 #include "ui_EditPhaseDialog.h"
 
-#include "AIM/Common/Constants.h"
+#include "DREAM3D/Common/Constants.h"
 
 /**
  * @class EditPhaseDialog EditPhaseDialog.h AIM/StatsGenerator/EditPhaseDialog.h

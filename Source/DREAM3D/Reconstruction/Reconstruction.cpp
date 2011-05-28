@@ -38,16 +38,16 @@
 #include "ANG/AngDirectoryPatterns.h"
 #include "ANG/AngReader.h"
 
-#include "AIM/ANG/AbstractAngDataLoader.h"
-#include "AIM/ANG/AngDataLoader.h"
-#include "AIM/ANG/H5AngDataLoader.h"
+#include "DREAM3D/ANGSupport/AbstractAngDataLoader.h"
+#include "DREAM3D/ANGSupport/AngDataLoader.h"
+#include "DREAM3D/ANGSupport/H5AngDataLoader.h"
 
-#include "AIM/Common/Constants.h"
-#include "AIM/Common/AIMCommonConfiguration.h"
-#include "AIM/Common/OIMColoring.hpp"
-#include "AIM/Common/ReconstructionVTKWriter.h"
-#include "AIM/Common/HDF5/H5ReconStatsWriter.h"
-#include "AIM/Common/HDF5/H5GrainWriter.h"
+#include "DREAM3D/Common/Constants.h"
+#include "DREAM3D/DREAM3DConfiguration.h"
+#include "DREAM3D/Common/OIMColoring.hpp"
+#include "DREAM3D/Reconstruction/ReconstructionVTKWriter.h"
+#include "DREAM3D/HDF5/H5ReconStatsWriter.h"
+#include "DREAM3D/HDF5/H5GrainWriter.h"
 
 
 

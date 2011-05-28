@@ -49,12 +49,12 @@
 #include "MXA/Utilities/MXADir.h"
 
 //-- AIM Includes
-#include "AIM/Common/AIMMath.h"
-#include "AIM/Common/Constants.h"
-#include "AIM/Common/OIMColoring.hpp"
-#include "AIM/Common/ReconstructionVTKWriter.h"
-#include "AIM/Common/HDF5/AIM_H5VtkDataWriter.h"
-#include "AIM/Parallel/Algo.hpp"
+#include "DREAM3D/Common/AIMMath.h"
+#include "DREAM3D/Common/Constants.h"
+#include "DREAM3D/Common/OIMColoring.hpp"
+#include "DREAM3D/Reconstruction/ReconstructionVTKWriter.h"
+#include "DREAM3D/HDF5/AIM_H5VtkDataWriter.h"
+#include "DREAM3D/Parallel/Algo.hpp"
 
 
 const static float m_pi = M_PI;

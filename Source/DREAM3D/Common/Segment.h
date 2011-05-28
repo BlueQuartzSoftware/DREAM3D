@@ -39,7 +39,7 @@
 
 #include <vector>
 
-#include "AIM/Common/AIMCommonConfiguration.h"
+#include "DREAM3D/DREAM3DConfiguration.h"
 
 /**
 * @class Segment Segment.h AIM/Common/Segment.h
@@ -48,7 +48,7 @@
 * @date Nov 4, 2009
 * @version 1.0
 */
-class AIMCOMMON_EXPORT Segment
+class DREAM3DLib_EXPORT Segment
 {
 public:
     Segment();

@@ -46,7 +46,7 @@
 #include "MXA/HDF5/H5Utilities.h"
 #include "MXA/HDF5/H5Lite.h"
 
-#include "AIM/Common/AIMCommonConfiguration.h"
+#include "DREAM3D/DREAM3DConfiguration.h"
 
 
 class ReconstructionFunc;
@@ -86,7 +86,7 @@ class ReconstructionFunc;
  * @date Nov 19, 2010
  * @version 1.0
  */
-class AIMCOMMON_EXPORT AIM_H5VtkDataWriter
+class DREAM3DLib_EXPORT AIM_H5VtkDataWriter
 {
   public:
     MXA_SHARED_POINTERS(AIM_H5VtkDataWriter);

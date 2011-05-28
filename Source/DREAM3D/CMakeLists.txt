@@ -32,17 +32,18 @@ D3DCompileDir(Common)
 D3DCompileDir(GrainGenerator)
 D3DCompileDir(HDF5)
 D3DCompileDir(OIMImport)
+D3DCompileDir(Parallel)
 D3DCompileDir(Reconstruction)
 D3DCompileDir(StructureReaders)
 D3DCompileDir(SurfaceMesh)
-D3DCompileDir(VolumeMesh)
+#D3DCompileDir(VolumeMesh)
 
 # --------------------------------------------------------------------
 include_directories(${HDF5_INCLUDE_DIR})
-
-include_directories( ${DREAM3DLib_BINARY_DIR} )
-include_directories( ${DREAM3DLib} )
+include_directories( ${PROJECT_CODE_DIR} )
 include_directories( ${PROJECT_CODE_DIR}/ANG ) 
+include_directories( ${DREAM3DLib_BINARY_DIR} )
+
 
 #-- Add a library for the AIMCommon Code
 add_library(${PROJECT_NAME} ${LIB_TYPE} ${Project_SRCS} )

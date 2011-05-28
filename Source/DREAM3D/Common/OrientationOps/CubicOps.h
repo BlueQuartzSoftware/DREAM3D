@@ -33,7 +33,7 @@
 
 
 #include "MXA/Common/MXASetGetMacros.h"
-#include "AIM/Common/OrientationMath.h"
+#include "DREAM3D/Common/OrientationMath.h"
 
 /**
  * @class CubicOps CubicOps.h AIM/Common/OrientationOps/CubicOps.h
@@ -43,7 +43,7 @@
  * @date May 5, 2011
  * @version 1.0
  */
-class AIMCOMMON_EXPORT CubicOps : public OrientationMath
+class DREAM3DLib_EXPORT CubicOps : public OrientationMath
 {
   public:
     MXA_SHARED_POINTERS(CubicOps)

@@ -35,7 +35,7 @@
 #include <string>
 #include <vector>
 
-#include <AIM/Common/AIMRandomNG.h>
+#include <DREAM3D/Common/AIMRandomNG.h>
 
 #ifdef __cplusplus
 extern "C"

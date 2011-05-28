@@ -32,7 +32,7 @@
 #define ORTHORHOMBICOPS_H_
 
 #include "MXA/Common/MXASetGetMacros.h"
-#include "AIM/Common/OrientationMath.h"
+#include "DREAM3D/Common/OrientationMath.h"
 
 /**
  * @class OrthoRhombicOps OrthoRhombicOps.h AIM/Common/OrientationOps/OrthoRhombicOps.h
@@ -42,7 +42,7 @@
  * @date May 5, 2011
  * @version 1.0
  */
-class AIMCOMMON_EXPORT OrthoRhombicOps : public OrientationMath
+class DREAM3DLib_EXPORT OrthoRhombicOps : public OrientationMath
 {
   public:
     MXA_SHARED_POINTERS(OrthoRhombicOps)

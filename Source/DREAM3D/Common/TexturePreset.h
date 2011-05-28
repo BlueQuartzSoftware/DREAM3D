@@ -37,12 +37,12 @@
 
 
 #include <MXA/Common/MXASetGetMacros.h>
-#include "AIM/Common/AIMCommonConfiguration.h"
-#include "AIM/Common/Constants.h"
+#include "DREAM3D/DREAM3DConfiguration.h"
+#include "DREAM3D/Common/Constants.h"
 
 
 
-class AIMCOMMON_EXPORT TexturePreset
+class DREAM3DLib_EXPORT TexturePreset
 {
   public:
     MXA_SHARED_POINTERS(TexturePreset);
@@ -81,7 +81,7 @@ class AIMCOMMON_EXPORT TexturePreset
 
 
 
-class AIMCOMMON_EXPORT CubicTexturePresets
+class DREAM3DLib_EXPORT CubicTexturePresets
 {
   public:
     virtual ~CubicTexturePresets();
@@ -96,7 +96,7 @@ class AIMCOMMON_EXPORT CubicTexturePresets
 };
 
 
-class AIMCOMMON_EXPORT HexTexturePresets
+class DREAM3DLib_EXPORT HexTexturePresets
 {
   public:
     virtual ~HexTexturePresets();

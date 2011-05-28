@@ -44,9 +44,9 @@
 #include <QtGui/QMessageBox>
 #include <QtGui/QListWidget>
 
-#include "AIM/Common/Constants.h"
-#include "AIM/Common/PhaseType.h"
-#include "AIM/ANG/H5AngDataLoader.h"
+#include "DREAM3D/Common/Constants.h"
+#include "DREAM3D/Common/PhaseType.h"
+#include "DREAM3D/ANGSupport/H5AngDataLoader.h"
 #include "QtSupport/QR3DFileCompleter.h"
 #include "QtSupport/AIM_QtMacros.h"
 

@@ -39,8 +39,8 @@
 
 #include <MXA/Common/MXASetGetMacros.h>
 #include <MXA/MXATypes.h>
-#include <AIM/Common/Constants.h>
-#include <AIM/Common/SurfaceMeshFunc.h>
+#include "DREAM3D/Common/Constants.h"
+#include <DREAM3D/SurfaceMesh/SurfaceMeshFunc.h>
 
 #ifdef AIM_USE_QT
 #include <QtCore/QObject>

@@ -40,9 +40,9 @@
 #include <MXA/Utilities/MXALogger.h>
 #include <MXA/Utilities/MXADir.h>
 
-#include <AIM/Common/Constants.h>
-#include <AIM/Common/DREAM3DVersion.h>
-#include <AIM/Common/AIMArray.hpp>
+#include "DREAM3D/Common/Constants.h"
+#include <DREAM3D/Common/DREAM3DVersion.h>
+#include <DREAM3D/Common/AIMArray.hpp>
 
 #include <AIM/GrainGenerator/GrainGenerator.h>
 

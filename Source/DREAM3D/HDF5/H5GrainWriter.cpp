@@ -31,12 +31,12 @@
 
 #include "H5GrainWriter.h"
 
-#include "AIM/Common/HDF5/VTKH5Constants.h"
-#include "AIM/Common/HDF5/AIM_H5VtkDataWriter.h"
-#include "AIM/Common/OIMColoring.hpp"
-#include "AIM/Common/ReconstructionFunc.h"
-#include "AIM/Common/GrainGeneratorFunc.h"
-#include "AIM/Common/VTKWriterMacros.h"
+#include "DREAM3D/HDF5/VTKH5Constants.h"
+#include "DREAM3D/HDF5/AIM_H5VtkDataWriter.h"
+#include "DREAM3D/Common/OIMColoring.hpp"
+#include "DREAM3D/Reconstruction/ReconstructionFunc.h"
+#include "DREAM3D/GrainGenerator/GrainGeneratorFunc.h"
+#include "DREAM3D/Common/VTKWriterMacros.h"
 
 
 #define H5GW_IPF_COLOR()\

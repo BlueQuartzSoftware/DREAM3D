@@ -42,7 +42,7 @@
 #include <qwt_scale_draw.h>
 #include <qwt_plot_canvas.h>
 
-#include "AIM/Common/Texture.h"
+#include "DREAM3D/Common/Texture.h"
 #include "StatsGenerator/TableModels/SGODFTableModel.h"
 #include "StatsGenerator/StatsGenMDFWidget.h"
 #include "StatsGenerator/TextureDialog.h"

@@ -39,7 +39,7 @@
 
 #include <MXA/Common/MXASetGetMacros.h>
 #include <MXA/MXATypes.h>
-#include <AIM/Common/Constants.h>
+#include "DREAM3D/Common/Constants.h"
 
 
 #ifdef AIM_USE_QT

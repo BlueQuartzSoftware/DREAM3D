@@ -39,7 +39,7 @@
 
 #include <vector>
 
-#include "AIM/Common/AIMCommonConfiguration.h"
+#include "DREAM3D/DREAM3DConfiguration.h"
 
 /**
 * @class Face Face.h AIM/Common/Face.h
@@ -48,7 +48,7 @@
 * @date Nov 4, 2009
 * @version 1.0
 */
-class AIMCOMMON_EXPORT Face
+class DREAM3DLib_EXPORT Face
 {
 public:
     Face();
