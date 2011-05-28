@@ -348,7 +348,7 @@ void ReconstructionWidget::on_m_H5InputFile_textChanged(const QString &text)
     for (int i = 0; i < size; i++)
     {
 
-      phaseTypeList->addItem(AIM::PhaseType::PrimaryStr.c_str());
+      phaseTypeList->addItem(AIM::PhaseType::PrimaryStr().c_str());
       QListWidgetItem* item = phaseTypeList->item(i);
 
       QComboBox* cb = new QComboBox(phaseTypeList);

@@ -48,26 +48,27 @@ namespace AIM {
 class DREAM3DLib_EXPORT PhaseType
 {
   public:
-    const static std::string PrimaryStr;
-    const static std::string PrecipitateStr;
-    const static std::string TransformationStr;
-    const static std::string UnknownPhaseTypeStr;
-
 
     virtual ~PhaseType();
+
+    static std::string PrimaryStr() { return std::string("Primary"); }
+    static std::string PrecipitateStr() { return std::string("Precipitate"); }
+    static std::string TransformationStr() { return std::string("Transformation"); }
+    static std::string UnknownPhaseTypeStr() { return std::string("Unknown Phase Type"); }
+
 
     static std::string getPhaseTypeString(AIM::Reconstruction::PhaseType phaseType)
     {
       switch(phaseType)
       {
         case AIM::Reconstruction::PrimaryPhase:
-          return PrimaryStr;
+          return PrimaryStr();
         case AIM::Reconstruction::PrecipitatePhase:
-          return PrecipitateStr;
+          return PrecipitateStr();
         case AIM::Reconstruction::TransformationPhase:
-          return TransformationStr;
+          return TransformationStr();
         case AIM::Reconstruction::UnknownPhaseType:
-          return UnknownPhaseTypeStr;
+          return UnknownPhaseTypeStr();
         default:
           break;
       }
@@ -76,15 +77,15 @@ class DREAM3DLib_EXPORT PhaseType
 
     static AIM::Reconstruction::PhaseType getPhaseType(const char* str)
     {
-      if (PrimaryStr.compare(str) == 0)
+      if (PrimaryStr().compare(str) == 0)
       {
         return AIM::Reconstruction::PrimaryPhase;
       }
-      else if (PrecipitateStr.compare(str) == 0)
+      else if (PrecipitateStr().compare(str) == 0)
       {
         return AIM::Reconstruction::PrecipitatePhase;
       }
-      else if (TransformationStr.compare(str) == 0)
+      else if (TransformationStr().compare(str) == 0)
       {
         return AIM::Reconstruction::TransformationPhase;
       }
@@ -95,10 +96,10 @@ class DREAM3DLib_EXPORT PhaseType
     static void getPhaseTypeStrings(std::vector<std::string> &strings)
     {
       strings.clear();
-      strings.push_back(PrimaryStr);
-      strings.push_back(PrecipitateStr);
-//      strings.push_back(TransformationStr);
-      strings.push_back(UnknownPhaseTypeStr);
+      strings.push_back(PrimaryStr());
+      strings.push_back(PrecipitateStr());
+//      strings.push_back(TransformationStr());
+      strings.push_back(UnknownPhaseTypeStr());
     }
 
     static void getPhaseTypeEnums(std::vector<AIM::Reconstruction::PhaseType> &types)
@@ -113,10 +114,10 @@ class DREAM3DLib_EXPORT PhaseType
     static void getPhaseTypeMap(std::map<int, std::string> &map)
     {
       map.clear();
-      map[AIM::Reconstruction::PrimaryPhase] = PrimaryStr;
-      map[AIM::Reconstruction::PrecipitatePhase] = PrecipitateStr;
-//      map[AIM::Reconstruction::TransformationPhase] = TransformationStr;
-      map[AIM::Reconstruction::UnknownPhaseType] = UnknownPhaseTypeStr;
+      map[AIM::Reconstruction::PrimaryPhase] = PrimaryStr();
+      map[AIM::Reconstruction::PrecipitatePhase] = PrecipitateStr();
+//      map[AIM::Reconstruction::TransformationPhase] = TransformationStr();
+      map[AIM::Reconstruction::UnknownPhaseType] = UnknownPhaseTypeStr();
     }
 
   protected:

@@ -11,11 +11,5 @@
 
 using namespace AIM;
 
-  const std::string PhaseType::PrimaryStr("Primary");
-  const std::string PhaseType::PrecipitateStr("Precipitate");
-  const std::string PhaseType::TransformationStr("Transformation");
-  const std::string PhaseType::UnknownPhaseTypeStr("Unknown Phase Type");
-
-
-  PhaseType::PhaseType() {}
-  PhaseType::~PhaseType() {}
+PhaseType::PhaseType() {}
+PhaseType::~PhaseType() {}

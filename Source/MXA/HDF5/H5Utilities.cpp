@@ -53,10 +53,10 @@
 // -----------------------------------------------------------------------------
 hid_t H5Utilities::createFile(const std::string &filename)
 {
-  HDF_ERROR_HANDLER_OFF
+// HDF_ERROR_HANDLER_OFF
   //Create the HDF File
   hid_t fileId = H5Fcreate(filename.c_str(), H5F_ACC_TRUNC, H5P_DEFAULT, H5P_DEFAULT);
-  HDF_ERROR_HANDLER_ON
+// HDF_ERROR_HANDLER_ON
   return fileId;
 }
 
