@@ -35,7 +35,7 @@
 
 #include "ANG/H5AngImporter.h"
 
-#ifdef AIM_USE_QT
+#ifdef DREAM3D_USE_QT
 #define CHECK_FOR_CANCELED(AClass)\
   if (this->m_Cancel) { \
     err = H5Fclose(fileId);\
@@ -70,7 +70,7 @@
 #endif
 
 
-#if AIM_USE_QT
+#if DREAM3D_USE_QT
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -85,17 +85,17 @@ OIMImport::Pointer OIMImport::New( QObject* parent)
 //
 // -----------------------------------------------------------------------------
 OIMImport::OIMImport(
-#if AIM_USE_QT
+#if DREAM3D_USE_QT
 QObject* parent
 #endif
 ) :
-#if AIM_USE_QT
+#if DREAM3D_USE_QT
 QObject(parent),
 #endif
 m_ZStartIndex(0),
 m_ZEndIndex(0),
 m_ZResolution(1.0)
-#if AIM_USE_QT
+#if DREAM3D_USE_QT
   ,m_Cancel(false)
 #endif
 {
@@ -218,12 +218,12 @@ void OIMImport::compute()
   }
   err = H5Fclose(fileId);
   PROGRESS_MESSAGE("Import Complete", 100);
-#if AIM_USE_QT
+#if DREAM3D_USE_QT
   emit finished();
 #endif
 }
 
-#ifdef AIM_USE_QT
+#ifdef DREAM3D_USE_QT
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -238,7 +238,7 @@ void OIMImport::on_CancelWorker()
 // -----------------------------------------------------------------------------
 void OIMImport::progressMessage(AIM_STRING message, int progress)
 {
-#ifdef AIM_USE_QT
+#ifdef DREAM3D_USE_QT
   emit updateMessage(QString(message));
   emit updateProgress(progress);
   //  std::cout << message.toStdString() << std::endl;

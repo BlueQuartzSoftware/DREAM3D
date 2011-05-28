@@ -1,12 +1,12 @@
 SET (DREAM3D_Reconstruction_HDRS
-  ${DREAM3DLib_SOURCE_DIR}/Reconstruction/Reconstruction.h
+#  ${DREAM3DLib_SOURCE_DIR}/Reconstruction/Reconstruction.h
   ${DREAM3DLib_SOURCE_DIR}/Reconstruction/ReconstructionFunc.h
   ${DREAM3DLib_SOURCE_DIR}/Reconstruction/ReconstructionVTKWriter.h
   ${DREAM3DLib_SOURCE_DIR}/Reconstruction/ReconstructionVoxel.h
 )
 
 SET (DREAM3D_Reconstruction_SRCS
-  ${DREAM3DLib_SOURCE_DIR}/Reconstruction/Reconstruction.cpp
+#  ${DREAM3DLib_SOURCE_DIR}/Reconstruction/Reconstruction.cpp
   ${DREAM3DLib_SOURCE_DIR}/Reconstruction/ReconstructionFunc.cpp
   ${DREAM3DLib_SOURCE_DIR}/Reconstruction/ReconstructionVTKWriter.cpp
   ${DREAM3DLib_SOURCE_DIR}/Reconstruction/ReconstructionVoxel.cpp

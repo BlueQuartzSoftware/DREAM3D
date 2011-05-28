@@ -1,12 +1,12 @@
 SET (DREAM3D_GrainGenerator_HDRS
-  ${DREAM3DLib_SOURCE_DIR}/GrainGenerator/GrainGenerator.h
+#  ${DREAM3DLib_SOURCE_DIR}/GrainGenerator/GrainGenerator.h
   ${DREAM3DLib_SOURCE_DIR}/GrainGenerator/GrainGeneratorFunc.h
   ${DREAM3DLib_SOURCE_DIR}/GrainGenerator/GrainGeneratorVoxel.h
   ${DREAM3DLib_SOURCE_DIR}/GrainGenerator/GrainGeneratorVoxelWriter.h
 )
 
 SET (DREAM3D_GrainGenerator_SRCS
-  ${DREAM3DLib_SOURCE_DIR}/GrainGenerator/GrainGenerator.cpp
+#  ${DREAM3DLib_SOURCE_DIR}/GrainGenerator/GrainGenerator.cpp
   ${DREAM3DLib_SOURCE_DIR}/GrainGenerator/GrainGeneratorFunc.cpp
   ${DREAM3DLib_SOURCE_DIR}/GrainGenerator/GrainGeneratorVoxel.cpp
   ${DREAM3DLib_SOURCE_DIR}/GrainGenerator/GrainGeneratorVoxelWriter.cpp

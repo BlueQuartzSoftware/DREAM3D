@@ -51,7 +51,7 @@
 #include "DREAM3D/Common/Constants.h"
 
 
-#ifdef AIM_USE_QT
+#ifdef DREAM3D_USE_QT
 #include <QtCore/QObject>
 
 #define AIM_STRING QString
@@ -69,11 +69,11 @@
  *
  */
 class OIMImport
-#ifdef AIM_USE_QT
+#ifdef DREAM3D_USE_QT
  : public QObject
 #endif
 {
-#ifdef AIM_USE_QT
+#ifdef DREAM3D_USE_QT
 Q_OBJECT
 #endif
 
@@ -81,7 +81,7 @@ Q_OBJECT
     MXA_SHARED_POINTERS(OIMImport)
     MXA_TYPE_MACRO(OIMImport)
 
-#ifdef AIM_USE_QT
+#ifdef DREAM3D_USE_QT
     static Pointer New (QObject* parent = 0);
 #else
     MXA_STATIC_NEW_MACRO(OIMImport)
@@ -107,7 +107,7 @@ Q_OBJECT
      */
     void progressMessage(AIM_STRING message, int progress);
 
-#ifdef AIM_USE_QT
+#ifdef DREAM3D_USE_QT
     /**
      * Qt Signals for connections
      */
@@ -130,7 +130,7 @@ Q_OBJECT
 
   protected:
       OIMImport(
-  #ifdef AIM_USE_QT
+  #ifdef DREAM3D_USE_QT
           QObject* parent = 0
   #endif
       );

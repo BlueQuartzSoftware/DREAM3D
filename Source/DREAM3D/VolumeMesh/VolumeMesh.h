@@ -42,7 +42,7 @@
 #include "DREAM3D/Common/Constants.h"
 
 
-#ifdef AIM_USE_QT
+#ifdef DREAM3D_USE_QT
 #include <QtCore/QObject>
 
 #define AIM_STRING QString
@@ -63,11 +63,11 @@
 * @version 1.0
 */
 class VolumeMesh
-#ifdef AIM_USE_QT
+#ifdef DREAM3D_USE_QT
  : public QObject
 #endif
 {
-#ifdef AIM_USE_QT
+#ifdef DREAM3D_USE_QT
 Q_OBJECT
 #endif
 
@@ -75,7 +75,7 @@ Q_OBJECT
     MXA_SHARED_POINTERS(VolumeMesh);
     MXA_TYPE_MACRO(VolumeMesh);
 
-#ifdef AIM_USE_QT
+#ifdef DREAM3D_USE_QT
     static Pointer New (QObject* parent = 0);
 #else
     MXA_STATIC_NEW_MACRO(VolumeMesh);
@@ -112,7 +112,7 @@ Q_OBJECT
      */
     void progressMessage(AIM_STRING message, int progress);
 
-#ifdef AIM_USE_QT
+#ifdef DREAM3D_USE_QT
     /**
      * Qt Signals for connections
      */
@@ -136,7 +136,7 @@ Q_OBJECT
   protected:
 
     VolumeMesh(
-#ifdef AIM_USE_QT
+#ifdef DREAM3D_USE_QT
         QObject* parent = 0
 #endif
         );

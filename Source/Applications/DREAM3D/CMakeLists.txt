@@ -64,7 +64,6 @@ include(${DREAM3D_SOURCE_DIR}/License/License.cmake)
 SET (DREAM3DApp_SRCS
     ${DREAM3DApp_SOURCE_DIR}/main.cpp
     ${DREAM3DApp_SOURCE_DIR}/RepresentationUI.cpp
-    ${DREAM3DApp_SOURCE_DIR}/AIMPluginFrame.cpp
     ${DREAM3DApp_SOURCE_DIR}/ReconstructionWidget.cpp
     ${DREAM3DApp_SOURCE_DIR}/OIMImportWidget.cpp
     ${DREAM3DApp_SOURCE_DIR}/GrainGeneratorWidget.cpp
@@ -74,7 +73,6 @@ SET (DREAM3DApp_SRCS
 
 SET (DREAM3DApp_HDRS
     ${DREAM3DApp_SOURCE_DIR}/RepresentationUI.h
-    ${DREAM3DApp_SOURCE_DIR}/AIMPluginFrame.h
     ${DREAM3DApp_SOURCE_DIR}/ReconstructionWidget.h
     ${DREAM3DApp_SOURCE_DIR}/OIMImportWidget.h
     ${DREAM3DApp_SOURCE_DIR}/GrainGeneratorWidget.h

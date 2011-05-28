@@ -36,8 +36,8 @@
 #include <QtCore/QSettings>
 
 #include "ui_OIMImportWidget.h"
-#include <AIM/GUI/AIMPluginFrame.h>
-#include <AIM/OIMImport/OIMImport.h>
+#include "QtSupport/AIMPluginFrame.h"
+#include "DREAM3D/OIMImport/OIMImport.h"
 
 
 /**

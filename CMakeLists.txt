@@ -188,7 +188,7 @@ include_directories (${DREAM3D_BINARY_DIR})
 add_subdirectory( ${DREAM3D_SOURCE_DIR}/Source/DREAM3D/ ${DREAM3D_BINARY_DIR}/DREAM3D)
 
 
-option(DREAM3D_BUILD_QT_APPS "Compile the Qt based GUI applications" OFF)
+option(DREAM3D_BUILD_QT_APPS "Compile the Qt based GUI applications" ON)
 #if we are going to build Qt based applications then we need to find Qt 4 first
 if (DREAM3D_BUILD_QT_APPS)
    # ------------------------------------------------------------------------------
@@ -218,18 +218,26 @@ if (DREAM3D_BUILD_QT_APPS)
    add_subdirectory(${DREAM3D_SOURCE_DIR}/Source/QtSupport ${DREAM3D_BINARY_DIR}/QtSupport)
    # Add our Qt based GUI project to the list of targets
 
-   OPTION (DREAM3D_BUILD_GUI_STATS_GENERATOR "Compile the Statistics Generator GUI Application" ON)
-   if (DREAM3D_BUILD_GUI_STATS_GENERATOR)
-    add_subdirectory(${DREAM3D_SOURCE_DIR}/Source/StatsGenerator ${DREAM3D_BINARY_DIR}/Apps/StatsGenerator)
+   add_subdirectory(${DREAM3D_SOURCE_DIR}/Source/UIPlugins/OIMImport ${DREAM3D_BINARY_DIR}/UIPlugins/OIMImport)
+   add_subdirectory(${DREAM3D_SOURCE_DIR}/Source/UIPlugins/GrainGenerator ${DREAM3D_BINARY_DIR}/UIPlugins/GrainGenerator)
+   add_subdirectory(${DREAM3D_SOURCE_DIR}/Source/UIPlugins/Reconstruction ${DREAM3D_BINARY_DIR}/UIPlugins/Reconstruction)
+   add_subdirectory(${DREAM3D_SOURCE_DIR}/Source/UIPlugins/SurfaceMeshing ${DREAM3D_BINARY_DIR}/UIPlugins/SurfaceMeshing)
+         
+if (0)
+   OPTION (DREAM3D_BUILD_STATS_GENERATOR "Compile the Statistics Generator GUI Application" ON)
+   if (DREAM3D_BUILD_STATS_GENERATOR)
+    add_subdirectory(${DREAM3D_SOURCE_DIR}/Source/Applications/StatsGenerator ${DREAM3D_BINARY_DIR}/Applications/StatsGenerator)
    endif()
       
-   option(DREAM3D_BUILD_GUI_REPRESENTATION "Compile the DREAM3D GUI Application" ON)
-   if (DREAM3D_BUILD_GUI_REPRESENTATION)
-       ADD_SUBDIRECTORY( ${DREAM3D_SOURCE_DIR}/Source/AIM/GUI ${DREAM3D_BINARY_DIR}/Apps/DREAM.3D)
+   option(DREAM3D_BUILD_GUI "Compile the DREAM3D GUI Application" ON)
+   if (DREAM3D_BUILD_GUI)
+       ADD_SUBDIRECTORY( ${DREAM3D_SOURCE_DIR}/Source/Applications/DREAM3D ${DREAM3D_BINARY_DIR}/Applications/DREAM_3D)
    endif()
+endif()
+   
 else()
-    set (DREAM3D_BUILD_GUI_REPRESENTATION "OFF" CACHE BOOL "" FORCE)
-    set (DREAM3D_BUILD_GUI_STATS_GENERATOR "OFF" CACHE BOOL "" FORCE)
+    set (DREAM3D_BUILD_GUI "OFF" CACHE BOOL "" FORCE)
+    set (DREAM3D_BUILD_STATS_GENERATOR "OFF" CACHE BOOL "" FORCE)
 endif()
 
 include_directories(${DREAM3D_SOURCE_DIR}/Source)

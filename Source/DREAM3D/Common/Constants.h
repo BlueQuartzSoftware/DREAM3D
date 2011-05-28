@@ -306,7 +306,7 @@ namespace AIM
 
   }
 
-  namespace SurfaceMeshing {
+  namespace SurfaceMesh {
 
     /*   Surface Meshing Related   */
     const std::string VTKExt("vtk");

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>SurfaceMeshingWidget</class>
- <widget class="QWidget" name="SurfaceMeshingWidget">
+ <class>SurfaceMeshWidget</class>
+ <widget class="QWidget" name="SurfaceMeshWidget">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -61,7 +61,7 @@
         <string/>
        </property>
        <property name="pixmap">
-        <pixmap resource="../../../../Resources/icons/images/Icons.qrc">:/Delete-16x16.png</pixmap>
+        <pixmap>:/Delete-16x16.png</pixmap>
        </property>
       </widget>
      </item>
@@ -277,7 +277,7 @@
           <string/>
          </property>
          <property name="pixmap">
-          <pixmap resource="../../../../Resources/icons/images/Icons.qrc">:/Delete-16x16.png</pixmap>
+          <pixmap>:/Delete-16x16.png</pixmap>
          </property>
          <property name="alignment">
           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -359,7 +359,7 @@
           <string/>
          </property>
          <property name="pixmap">
-          <pixmap resource="../../../../Resources/icons/images/Icons.qrc">:/Delete-16x16.png</pixmap>
+          <pixmap>:/Delete-16x16.png</pixmap>
          </property>
          <property name="alignment">
           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -372,7 +372,7 @@
           <string/>
          </property>
          <property name="pixmap">
-          <pixmap resource="../../../../Resources/icons/images/Icons.qrc">:/Delete-16x16.png</pixmap>
+          <pixmap>:/Delete-16x16.png</pixmap>
          </property>
          <property name="alignment">
           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
