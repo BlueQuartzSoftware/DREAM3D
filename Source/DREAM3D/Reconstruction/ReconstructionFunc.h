@@ -55,22 +55,18 @@
 #include "MXA/MXATypes.h"
 #include "MXA/Common/MXASetGetMacros.h"
 
-#include "DREAM3D/ANGSupport/AbstractAngDataLoader.h"
-
 #include "DREAM3D/DREAM3DConfiguration.h"
 #include "DREAM3D/Common/AIMArray.hpp"
 #include "DREAM3D/Common/Constants.h"
 #include "DREAM3D/Common/Grain.h"
-#include "DREAM3D/Reconstruction/ReconstructionVoxel.h"
 #include "DREAM3D/Common/AIMRandomNG.h"
-#include "DREAM3D/HDF5/H5ReconStatsWriter.h"
 #include "DREAM3D/Common/OrientationMath.h"
 #include "DREAM3D/Common/OrientationOps/CubicOps.h"
 #include "DREAM3D/Common/OrientationOps/HexagonalOps.h"
 #include "DREAM3D/Common/OrientationOps/OrthoRhombicOps.h"
-
-
-
+#include "DREAM3D/ANGSupport/AbstractAngDataLoader.h"
+#include "DREAM3D/Reconstruction/ReconstructionVoxel.h"
+#include "DREAM3D/HDF5/H5ReconStatsWriter.h"
 
 using namespace std;
 
