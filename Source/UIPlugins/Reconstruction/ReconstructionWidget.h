@@ -37,8 +37,8 @@
 
 #include "ui_ReconstructionWidget.h"
 
-#include <AIM/GUI/AIMPluginFrame.h>
-#include <AIM/Reconstruction/Reconstruction.h>
+#include "QtSupport/AIMPluginFrame.h"
+#include "DREAM3D/Reconstruction/Reconstruction.h"
 
 
 

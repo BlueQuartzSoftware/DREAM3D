@@ -38,7 +38,7 @@
 
 
 
-#ifdef AIM_USE_QT
+#ifdef DREAM3D_USE_QT
 #define CHECK_FOR_CANCELED(AClass)\
   if (this->m_Cancel) { \
   QString msg = #AClass; \
@@ -54,7 +54,7 @@
 
 
 
-#if AIM_USE_QT
+#if DREAM3D_USE_QT
 
 // -----------------------------------------------------------------------------
 //
@@ -70,11 +70,11 @@ SurfaceMesh::Pointer SurfaceMesh::New( QObject* parent)
 //
 // -----------------------------------------------------------------------------
 SurfaceMesh::SurfaceMesh(
-#if AIM_USE_QT
+#if DREAM3D_USE_QT
 QObject* parent
 #endif
 ) :
-#if AIM_USE_QT
+#if DREAM3D_USE_QT
 QObject(parent),
 #endif
 m_InputDirectory("."),
@@ -90,7 +90,7 @@ m_SmoothIterations(0),
 m_SmoothFileOutputIncrement(0),
 m_SmoothLockQuadPoints(false),
 m_ErrorCondition(0)
-#if AIM_USE_QT
+#if DREAM3D_USE_QT
 ,
 m_Cancel(false)
 #endif
@@ -118,19 +118,19 @@ void SurfaceMesh::compute()
   progressMessage(AIM_STRING("Running Surface Meshing"), 0 );
 
 //  MAKE_OUTPUT_FILE_PATH (  NodesRawFile , AIM::SurfaceMeshing::NodesRawFile)
-  MAKE_OUTPUT_FILE_PATH (  NodesFile , AIM::SurfaceMeshing::NodesFileBin)
-  MAKE_OUTPUT_FILE_PATH (  TrianglesFile , AIM::SurfaceMeshing::TrianglesFileBin)
+  MAKE_OUTPUT_FILE_PATH (  NodesFile , AIM::SurfaceMesh::NodesFileBin)
+  MAKE_OUTPUT_FILE_PATH (  TrianglesFile , AIM::SurfaceMesh::TrianglesFileBin)
 //  MAKE_OUTPUT_FILE_PATH (  EdgesFile , AIM::SurfaceMeshing::EdgesFile)
 //  MAKE_OUTPUT_FILE_PATH (  EdgesFileIndex , AIM::SurfaceMeshing::EdgesFileIndex)
 //  MAKE_OUTPUT_FILE_PATH (  TrianglesFileIndex , AIM::SurfaceMeshing::TrianglesFileIndex)
-  MAKE_OUTPUT_FILE_PATH (  VisualizationFile , AIM::SurfaceMeshing::VisualizationVizFile)
+  MAKE_OUTPUT_FILE_PATH (  VisualizationFile , AIM::SurfaceMesh::VisualizationVizFile)
 
   // Create the output directory if needed
   if (MXADir::exists(m_OutputDirectory) == false)
   {
     if (MXADir::mkdir(m_OutputDirectory, true) == false)
     {
-#ifdef AIM_USE_QT
+#ifdef DREAM3D_USE_QT
     this->m_Cancel = true;
 #endif
     this->m_ErrorCondition = 1;
@@ -276,7 +276,7 @@ void SurfaceMesh::compute()
 		if(check > 1000 || check < -5)
 		{
 			int stop = 0;
-		}	
+		}
 	}
     m->get_neighbor_list();
     m->initialize_nodes(i);
@@ -305,7 +305,7 @@ void SurfaceMesh::compute()
     {
       this->m_Cancel = true;
       progressMessage(AIM_STRING("Error Writing Triangles Temp File"), 100 );
-#if AIM_USE_QT
+#if DREAM3D_USE_QT
   emit finished();
 #endif
       return;
@@ -347,7 +347,7 @@ void SurfaceMesh::compute()
   {
     this->m_Cancel = true;
     progressMessage(AIM_STRING("Error Writing Triangles Temp File"), 100 );
-#if AIM_USE_QT
+#if DREAM3D_USE_QT
 emit finished();
 #endif
     return;
@@ -366,12 +366,12 @@ emit finished();
   }
 
 
-#ifdef AIM_USE_QT
+#ifdef DREAM3D_USE_QT
   QString msg("Writing Surface Mesh File: ");
   msg.append(QString::fromStdString(VisualizationFile));
 #else
   std::string msg("Writing Surface Mesh File: ");
-  msg.append(AIM::SurfaceMeshing::VisualizationVizFile);
+  msg.append(AIM::SurfaceMesh::VisualizationVizFile);
 #endif
 
 
@@ -392,7 +392,7 @@ emit finished();
   }
 
 
-#if AIM_USE_QT
+#if DREAM3D_USE_QT
   emit finished();
 #endif
 }
@@ -402,7 +402,7 @@ emit finished();
 // -----------------------------------------------------------------------------
 void SurfaceMesh::progressMessage(AIM_STRING message, int progress)
 {
-#ifdef AIM_USE_QT
+#ifdef DREAM3D_USE_QT
   emit updateMessage(QString(message));
   emit updateProgress(progress);
   //  std::cout << message.toStdString() << std::endl;
@@ -411,7 +411,7 @@ void SurfaceMesh::progressMessage(AIM_STRING message, int progress)
 #endif
 }
 
-#ifdef AIM_USE_QT
+#ifdef DREAM3D_USE_QT
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

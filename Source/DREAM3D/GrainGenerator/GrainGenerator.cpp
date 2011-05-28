@@ -63,7 +63,7 @@
   millis = 0;
 #endif
 
-#ifdef AIM_USE_QT
+#ifdef DREAM3D_USE_QT
 #define CHECK_FOR_CANCELED(AClass, name)\
     if (this->m_Cancel) { \
       QString msg = #AClass; \
@@ -94,7 +94,7 @@
     std::string outpath = m_OutputDirectory + MXADir::Separator + m_OutputFilePrefix + filename;
 
 
-#if AIM_USE_QT
+#if DREAM3D_USE_QT
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -110,11 +110,11 @@ GrainGenerator::Pointer GrainGenerator::New( QObject* parent)
 //
 // -----------------------------------------------------------------------------
 GrainGenerator::GrainGenerator(
-#if AIM_USE_QT
+#if DREAM3D_USE_QT
 QObject* parent
 #endif
 ) :
-#if AIM_USE_QT
+#if DREAM3D_USE_QT
 QObject(parent),
 #endif
 m_H5StatsFile(""),
@@ -137,7 +137,7 @@ m_WriteIPFFile(false),
 m_WriteHDF5GrainFile(false),
 m_WritePhFile(false),
 m_ErrorCondition(0)
-#if AIM_USE_QT
+#if DREAM3D_USE_QT
   ,m_Cancel(false)
 #endif
 {
@@ -355,7 +355,7 @@ void GrainGenerator::compute()
 
   // Clean up all the memory
   m = GrainGeneratorFunc::NullPointer();
-#if AIM_USE_QT
+#if DREAM3D_USE_QT
   emit finished();
 #endif
 }
@@ -365,7 +365,7 @@ void GrainGenerator::compute()
 // -----------------------------------------------------------------------------
 void GrainGenerator::progressMessage(AIM_STRING message, int progress)
 {
-#ifdef AIM_USE_QT
+#ifdef DREAM3D_USE_QT
       emit updateMessage(QString(message));
       emit updateProgress(progress);
     //  std::cout << message.toStdString() << std::endl;
@@ -374,7 +374,7 @@ void GrainGenerator::progressMessage(AIM_STRING message, int progress)
 #endif
 }
 
-#ifdef AIM_USE_QT
+#ifdef DREAM3D_USE_QT
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

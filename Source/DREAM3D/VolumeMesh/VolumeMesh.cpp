@@ -36,7 +36,7 @@
 #include "DREAM3D/VolumeMesh/MeshGenerator.h"
 
 
-#ifdef AIM_USE_QT
+#ifdef DREAM3D_USE_QT
 #define CHECK_FOR_CANCELED(AClass)\
   if (this->m_Cancel) { \
   QString msg = #AClass; \
@@ -54,7 +54,7 @@
     std::string outpath = m_OutputDirectory + MXADir::Separator + m_OutputFilePrefix + filename;
 
 
-#if AIM_USE_QT
+#if DREAM3D_USE_QT
 
 // -----------------------------------------------------------------------------
 //
@@ -70,11 +70,11 @@ VolumeMesh::Pointer VolumeMesh::New( QObject* parent)
 //
 // -----------------------------------------------------------------------------
 VolumeMesh::VolumeMesh(
-#if AIM_USE_QT
+#if DREAM3D_USE_QT
 QObject* parent
 #endif
 ) :
-#if AIM_USE_QT
+#if DREAM3D_USE_QT
 QObject(parent),
 #endif
 m_NodesFile(""),
@@ -89,7 +89,7 @@ m_YRes(0.0),
 m_ZRes(0.0),
 m_NumGrains(0),
 m_ErrorCondition(0)
-#if AIM_USE_QT
+#if DREAM3D_USE_QT
 ,
 m_Cancel(false)
 #endif
@@ -130,7 +130,7 @@ void VolumeMesh::compute()
                                      m_XRes, m_YRes, m_ZRes, m_NumGrains);
 
   progressMessage(AIM_STRING("Surface Volume Complete"), 100 );
-#if AIM_USE_QT
+#if DREAM3D_USE_QT
   emit finished();
 #endif
 
@@ -141,7 +141,7 @@ void VolumeMesh::compute()
 // -----------------------------------------------------------------------------
 void VolumeMesh::progressMessage(AIM_STRING message, int progress)
 {
-#ifdef AIM_USE_QT
+#ifdef DREAM3D_USE_QT
       emit updateMessage(QString(message));
       emit updateProgress(progress);
      // std::cout << message.toStdString() << std::endl;
@@ -150,7 +150,7 @@ void VolumeMesh::progressMessage(AIM_STRING message, int progress)
 #endif
 }
 
-#ifdef AIM_USE_QT
+#ifdef DREAM3D_USE_QT
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
