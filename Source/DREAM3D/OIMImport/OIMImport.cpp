@@ -114,44 +114,25 @@ OIMImport::~OIMImport()
 void OIMImport::compute()
 {
   herr_t err = 0;
-#if 0
-  int32_t sliceCount = 1;
-  int32_t width = 0;
-  int32_t totalSlices = m_AngSeriesMaxSlice;
-  while (sliceCount < totalSlices)
-  {
-    ++width;
-    sliceCount *= 10;
-  }
-
-  m_InputDirectory = MXADir::toNativeSeparators(m_InputDirectory);
-  AngDirectoryPatterns::Pointer p
-  = AngDirectoryPatterns::New(m_InputDirectory, m_AngFilePrefix, width);
-
-  if (p.get() == NULL)
-  {
-    std::string s("H5AngImport Error: The pointer for the helper class AngDirectoryPatterns is NULL which means");
-    s.append(" this class was NOT set. This algorithm depends on that helper class to generate");
-    s.append(" the proper file names to import. No data was imported.");
-    progressMessage(s, 100);
-    return;
-  }
-#endif
-
-
+  hid_t fileId = -1;
 
   if (m_OutputFile.empty() == true)
   {
     std::string s("H5AngImport Error: The output file was not set correctly or is empty. The current value is '");
     s.append("'. Please set the output file before running the importer. ");
+    m_Cancel = true;
     PROGRESS_MESSAGE(s, 100);
+    err = -1;
+    CHECK_FOR_CANCELED(OIMImport)
     return;
   }
   // Create File
-  hid_t fileId = H5Utilities::createFile(m_OutputFile);
+  fileId = H5Utilities::createFile(m_OutputFile);
   if (fileId < 0) {
-    std::string s("Error Creating HDF5 file. No data imported.");
+    std::string s("The Output HDF5 file could not be created. Check Permissions, if the File is in use by another program.");
+    m_Cancel = true;
     PROGRESS_MESSAGE(s, 100);
+    CHECK_FOR_CANCELED(OIMImport)
     return;
   }
 
@@ -168,7 +149,7 @@ void OIMImport::compute()
   int progress = 0;
   int z = m_ZStartIndex;
 
-  /* There is a fragilness about the z index and the file list. The programmer
+  /* There is a frailness about the z index and the file list. The programmer
    * using this code MUST ensure that the list of files that is sent into this
    * class is in the appropriate order to match up with the z index (slice index)
    * otherwise the import will have subtle errors. The programmer is urged NOT to

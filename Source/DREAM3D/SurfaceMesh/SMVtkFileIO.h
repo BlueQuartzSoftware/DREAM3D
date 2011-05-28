@@ -54,7 +54,7 @@ class SurfaceMeshFunc;
  * @date Aug 13, 2010
  * @version 1.0
  */
-class SMVtkFileIO : public VTKFileReader
+class DREAM3DLib_EXPORT SMVtkFileIO : public VTKFileReader
 {
   public:
     MXA_SHARED_POINTERS(SMVtkFileIO)
