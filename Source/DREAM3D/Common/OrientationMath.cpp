@@ -468,9 +468,9 @@ void OrientationMath::QuattoRod(float *q, float &r1, float &r2, float &r3)
   n3 = q[3] / qmag;
   if(qmag == 0.0) n1 = 0.0, n2 = 0.0, n3 = 1.0;
   w = 2.0*acos(q[4]);
-  r1 = n1 * tanf(w/2.0);
-  r2 = n2 * tanf(w/2.0);
-  r3 = n3 * tanf(w/2.0);
+  r1 = n1 * tanf(w * 0.5f);
+  r2 = n2 * tanf(w * 0.5f);
+  r3 = n3 * tanf(w * 0.5f);
 }
 
 void OrientationMath::QuattoEuler(float *q, float &ea1, float &ea2, float &ea3)
