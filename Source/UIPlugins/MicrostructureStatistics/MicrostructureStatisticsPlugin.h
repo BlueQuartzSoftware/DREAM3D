@@ -38,6 +38,7 @@
 class MicrostructureStatisticsWidget;
 class AIMPluginFrame;
 
+
 class MicrostructureStatisticsPlugin : public QObject, public DREAM3DPluginInterface
 {
     Q_OBJECT;
