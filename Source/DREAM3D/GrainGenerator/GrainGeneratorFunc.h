@@ -102,12 +102,12 @@ public:
     boost::shared_array<GrainGeneratorVoxel> voxels;
 
     std::vector<Grain::Pointer> m_Grains;
-	std::vector<float> sizetest;
+	  std::vector<float> sizetest;
 
-	std::vector<float> grainowners;
-	std::vector<float> goalgrainowners;
+	  std::vector<float> grainowners;
+	  std::vector<float> goalgrainowners;
 
-	std::vector<SharedFloatArray> actualodf;
+	  std::vector<SharedFloatArray> actualodf;
     std::vector<SharedFloatArray> simodf;
     std::vector<SharedFloatArray> axisodf;
 
@@ -119,10 +119,10 @@ public:
     std::vector<SharedFloatArray> graincenters;
     std::vector<SharedFloatArray> grainmoments;
 
-	std::vector<int> primaryphases;
-	std::vector<double> primaryphasefractions;
-	std::vector<int> precipitatephases;
-	std::vector<double> precipitatephasefractions;
+	  std::vector<int> primaryphases;
+	  std::vector<double> primaryphasefractions;
+	  std::vector<int> precipitatephases;
+	  std::vector<double> precipitatephasefractions;
 
     std::vector<int> takencheck;
     std::vector<std::vector<std::vector<float> > > bovera;
@@ -179,7 +179,7 @@ public:
                     std::vector<AIM::Reconstruction::PhaseType> m_PhaseType);
 
 #endif
-	void initializeArrays(std::vector<AIM::Reconstruction::CrystalStructure> structures);
+	  void initializeArrays(std::vector<AIM::Reconstruction::CrystalStructure> structures);
     void initialize_packinggrid();
 
     void write_eulerangles(const std::string & filename);
