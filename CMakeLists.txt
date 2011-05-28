@@ -224,6 +224,7 @@ if (DREAM3D_BUILD_QT_APPS)
    add_subdirectory(${DREAM3D_SOURCE_DIR}/Source/UIPlugins/GrainGenerator ${DREAM3D_BINARY_DIR}/UIPlugins/GrainGenerator)
    add_subdirectory(${DREAM3D_SOURCE_DIR}/Source/UIPlugins/Reconstruction ${DREAM3D_BINARY_DIR}/UIPlugins/Reconstruction)
    add_subdirectory(${DREAM3D_SOURCE_DIR}/Source/UIPlugins/SurfaceMeshing ${DREAM3D_BINARY_DIR}/UIPlugins/SurfaceMeshing)
+   add_subdirectory(${DREAM3D_SOURCE_DIR}/Source/UIPlugins/MicrostructureStatistics ${DREAM3D_BINARY_DIR}/UIPlugins/MicrostructureStatistics)
    
    # Build the DREAM3D Application  
    option(DREAM3D_BUILD_GUI "Compile the DREAM3D GUI Application" ON)
