@@ -37,8 +37,8 @@
 
 #include "ui_GrainGeneratorWidget.h"
 
-#include <AIM/GUI/AIMPluginFrame.h>
-#include <AIM/GrainGenerator/GrainGenerator.h>
+#include "QtSupport/AIMPluginFrame.h"
+#include "DREAM3D/GrainGenerator/GrainGenerator.h"
 
 class QListWidgetItem;
 
