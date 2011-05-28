@@ -36,10 +36,10 @@ SET (CMAKE_ARCHIVE_OUTPUT_DIRECTORY
   
 SET (Reconstruction_SRCS
     ${Reconstruction_SOURCE_DIR}/main.cpp
-    ${Reconstruction_SOURCE_DIR}/Reconstruction.cpp
+    ${PROJECT_CODE_DIR}/DREAM3D/Reconstruction/Reconstruction.cpp
 )
 SET (Reconstruction_HDRS
-    ${Reconstruction_SOURCE_DIR}/Reconstruction.h
+    ${PROJECT_CODE_DIR}/DREAM3D/Reconstruction/Reconstruction.h
     )
 cmp_IDE_SOURCE_PROPERTIES( "AIM/Reconstruction" "${Reconstruction_HDRS}" "${Reconstruction_SRCS}" ${PROJECT_INSTALL_HEADERS})
 
@@ -68,7 +68,7 @@ BuildToolBundle(
     VERSION_MINOR ${AIMRepresentation_VER_MINOR}
     VERSION_PATCH ${AIMRepresentation_VER_PATCH}
     BINARY_DIR    ${${PROJECT_NAME}_BINARY_DIR}
-    LINK_LIBRARIES AIMCommon
+    LINK_LIBRARIES DREAM3DLib
     LIB_SEARCH_DIRS ${CMAKE_LIBRARY_OUTPUT_DIRECTORY} ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
     COMPONENT     Applications
     INSTALL_DEST  "${install_dir}"
