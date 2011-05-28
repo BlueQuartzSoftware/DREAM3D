@@ -228,12 +228,13 @@ if (0)
    if (DREAM3D_BUILD_STATS_GENERATOR)
     add_subdirectory(${DREAM3D_SOURCE_DIR}/Source/Applications/StatsGenerator ${DREAM3D_BINARY_DIR}/Applications/StatsGenerator)
    endif()
+endif()
       
    option(DREAM3D_BUILD_GUI "Compile the DREAM3D GUI Application" ON)
    if (DREAM3D_BUILD_GUI)
-       ADD_SUBDIRECTORY( ${DREAM3D_SOURCE_DIR}/Source/Applications/DREAM3D ${DREAM3D_BINARY_DIR}/Applications/DREAM_3D)
+       ADD_SUBDIRECTORY( ${DREAM3D_SOURCE_DIR}/Source/Applications/DREAM3D ${DREAM3D_BINARY_DIR}/Applications/DREAM3D)
    endif()
-endif()
+
    
 else()
     set (DREAM3D_BUILD_GUI "OFF" CACHE BOOL "" FORCE)
