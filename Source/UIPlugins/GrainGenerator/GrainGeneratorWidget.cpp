@@ -46,7 +46,7 @@
 #include <QtGui/QListWidgetItem>
 
 #include "DREAM3D/Common/Constants.h"
-#include "AIM/GrainGenerator/GrainGenerator.h"
+#include "DREAM3D/GrainGenerator/GrainGenerator.h"
 #include "DREAM3D/HDF5/H5ReconStatsReader.h"
 #include "DREAM3D/HDF5/H5ReconStatsWriter.h"
 

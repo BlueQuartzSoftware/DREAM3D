@@ -29,89 +29,86 @@
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _SURFACEMESHWIDGET_H_
-#define _SURFACEMESHWIDGET_H_
+#ifndef VOLUMEMESHINGWIDGET_H_
+#define VOLUMEMESHINGWIDGET_H_
 
 #include <QtCore/QString>
 #include <QtCore/QSettings>
 
-#include "ui_SurfaceMeshingWidget.h"
+#include "ui_VolumeMeshingWidget.h"
 
-#include <AIM/GUI/AIMPluginFrame.h>
-#include <AIM/SurfaceMesh/SurfaceMesh.h>
+#include "DREAM3D/QtSupport/AIMPluginFrame.h"
+#include <AIM/VolumeMesh/VolumeMesh.h>
 
-/**
- * @class SurfaceMeshingWidget SurfaceMeshingWidget.h AIM/GUI/SurfaceMeshingWidget.h
- * @brief This class represents the User Interface for the Surface Meshing module
- * of the AIMRepresentation program. The user interface subclasses QFrame which
- * should make it able to be embedded in most Qt applications.
- * @author Michael A. Jackson for BlueQuartz Software
- * @date Jan 30, 2011
- * @version 1.0
+
+/*
+ *
  */
-class SurfaceMeshingWidget : public AIMPluginFrame, private Ui::SurfaceMeshingWidget
+class VolumeMeshingWidget : public AIMPluginFrame, private Ui::VolumeMeshingWidget
 {
   Q_OBJECT
 
   public:
-    SurfaceMeshingWidget(QWidget *parent = 0);
-    virtual ~SurfaceMeshingWidget();
+    VolumeMeshingWidget(QWidget *parent = 0);
+    virtual ~VolumeMeshingWidget();
 
     /**
-      * @brief Reads the Preferences from the users pref file
-      */
-    virtual void readSettings(QSettings &prefs);
+        * @brief Reads the Preferences from the users pref file
+        */
+      virtual void readSettings(QSettings &prefs);
 
-     /**
-      * @brief Writes the preferences to the users pref file
-      */
-    virtual void writeSettings(QSettings &prefs);
+       /**
+        * @brief Writes the preferences to the users pref file
+        */
+      virtual void writeSettings(QSettings &prefs);
 
-    /**
-     * @brief Enables or Disables all the widgets in a list
-     * @param b
-     */
-    virtual void setWidgetListEnabled(bool b);
+      /**
+       * @brief Enables or Disables all the widgets in a list
+       * @param b
+       */
+      virtual void setWidgetListEnabled(bool b);
 
-    /**
-     * @brief Initializes some of the GUI elements with selections or other GUI related items
-     */
-    virtual void setupGui();
-
-
-    virtual void checkIOFiles();
+      /**
+       * @brief Initializes some of the GUI elements with selections or other GUI related items
+       */
+      virtual void setupGui();
 
 
+      virtual void checkIOFiles();
   protected slots:
-    /* Surface Meshing Slots */
-    void on_m_InputFileBtn_clicked();
-    void on_m_OutputDirBtn_clicked();
 
+    /* Volume Meshing Slots */
+    void on_m_NodesFileBtn_clicked();
+    void on_m_TrianglesFileBtn_clicked();
+    void on_m_OutputDirBtn_clicked();
     void on_m_GoBtn_clicked();
 
   private slots:
     // slots for our worker thread to communicate
     virtual void threadHasMessage(QString message);
 
-    /* Surface Mesh Thread communicates throught these methods */
+    /* Reconstruction Thread communicates throught these methods */
     virtual void threadFinished();
     virtual void threadProgressed(int value);
 
-    void on_m_InputFile_textChanged(const QString & text);
+    void on_m_NodesFile_textChanged(const QString & text);
+    void on_m_TrianglesFile_textChanged(const QString & text);
     void on_m_OutputDir_textChanged(const QString & text);
     void on_m_OutputFilePrefix_textChanged(const QString &text);
 
   private:
-    QList<QWidget*>             m_WidgetList;
-    SurfaceMesh::Pointer        m_SurfaceMesh;
+    QList<QWidget*> m_WidgetList;
+    VolumeMesh::Pointer         m_VolumeMesh;
     QThread*                    m_WorkerThread;
 
     QString m_OpenDialogLastDirectory;
 
-    SurfaceMeshingWidget(const SurfaceMeshingWidget&); // Copy Constructor Not Implemented
-    void operator=(const SurfaceMeshingWidget&); // Operator '=' Not Implemented
+    VolumeMeshingWidget(const VolumeMeshingWidget&); // Copy Constructor Not Implemented
+    void operator=(const VolumeMeshingWidget&); // Operator '=' Not Implemented
+
+
 
 
 };
 
-#endif /* _SURFACEMESHWIDGET_H_ */
+#endif /* VOLUMEMESHINGWIDGET_H_ */

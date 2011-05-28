@@ -29,7 +29,7 @@
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "SurfaceMeshingWidget.h"
+#include "SurfaceMeshWidget.h"
 
 //-- Qt Includes
 #include <QtCore/QFileInfo>
@@ -48,13 +48,13 @@
 
 #include "QtSupport/QR3DFileCompleter.h"
 #include "QtSupport/AIM_QtMacros.h"
-#include "AIM/SurfaceMesh/SMVtkFileIO.h"
+#include "DREAM3D/SurfaceMesh/SMVtkFileIO.h"
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-SurfaceMeshingWidget::SurfaceMeshingWidget(QWidget *parent) :
+SurfaceMeshWidget::SurfaceMeshWidget(QWidget *parent) :
 AIMPluginFrame(parent),
 m_WorkerThread(NULL),
 #if defined(Q_WS_WIN)
@@ -71,7 +71,7 @@ m_OpenDialogLastDirectory("~/")
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-SurfaceMeshingWidget::~SurfaceMeshingWidget()
+SurfaceMeshWidget::~SurfaceMeshWidget()
 {
 }
 
@@ -79,7 +79,7 @@ SurfaceMeshingWidget::~SurfaceMeshingWidget()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SurfaceMeshingWidget::setWidgetListEnabled(bool b)
+void SurfaceMeshWidget::setWidgetListEnabled(bool b)
 {
   foreach (QWidget* w, m_WidgetList) {
     w->setEnabled(b);
@@ -89,7 +89,7 @@ void SurfaceMeshingWidget::setWidgetListEnabled(bool b)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SurfaceMeshingWidget::writeSettings(QSettings &prefs)
+void SurfaceMeshWidget::writeSettings(QSettings &prefs)
 {
   prefs.beginGroup("SurfaceMesh");
   WRITE_STRING_SETTING(prefs, m_, InputFile);
@@ -104,7 +104,7 @@ void SurfaceMeshingWidget::writeSettings(QSettings &prefs)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SurfaceMeshingWidget::readSettings(QSettings &prefs)
+void SurfaceMeshWidget::readSettings(QSettings &prefs)
 {
   QString val;
   bool ok;
@@ -129,7 +129,7 @@ void SurfaceMeshingWidget::readSettings(QSettings &prefs)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SurfaceMeshingWidget::setupGui()
+void SurfaceMeshWidget::setupGui()
 {
 
   if (NULL == m_InputFile->completer()){
@@ -159,7 +159,7 @@ void SurfaceMeshingWidget::setupGui()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SurfaceMeshingWidget::checkIOFiles()
+void SurfaceMeshWidget::checkIOFiles()
 {
 
 
@@ -174,7 +174,7 @@ void SurfaceMeshingWidget::checkIOFiles()
       std::string dataset = reader->getDatasetType();
       if(dataset.compare("STRUCTURED_POINTS") != 0)
       {
-        QMessageBox::critical(this, QString("SurfaceMeshing"),
+        QMessageBox::critical(this, QString("SurfaceMesh"),
                               QString("The VTK File does not have the correct data type. We only support STRUCTURED_POINTS."),
                               QMessageBox::Ok | QMessageBox::Default);
       }
@@ -194,16 +194,16 @@ void SurfaceMeshingWidget::checkIOFiles()
 
   verifyPathExists(m_OutputDir->text(), m_OutputDir);
 
-  CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::SurfaceMeshing, m_, NodesFileBin)
-  CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::SurfaceMeshing, m_, TrianglesFileBin)
-  CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::SurfaceMeshing, m_, VisualizationVizFile)
+  CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::SurfaceMesh, m_, NodesFileBin)
+  CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::SurfaceMesh, m_, TrianglesFileBin)
+  CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::SurfaceMesh, m_, VisualizationVizFile)
 }
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SurfaceMeshingWidget::on_m_InputFileBtn_clicked()
+void SurfaceMeshWidget::on_m_InputFileBtn_clicked()
 {
   QString file = QFileDialog::getOpenFileName(this, tr("Select Input File"),
                                                  m_OpenDialogLastDirectory,
@@ -218,7 +218,7 @@ void SurfaceMeshingWidget::on_m_InputFileBtn_clicked()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SurfaceMeshingWidget::on_m_OutputDirBtn_clicked()
+void SurfaceMeshWidget::on_m_OutputDirBtn_clicked()
 {
   QString outputFile = this->m_OpenDialogLastDirectory + QDir::separator();
   outputFile = QFileDialog::getExistingDirectory(this, tr("Select Surface Meshing Output Directory"), outputFile);
@@ -236,7 +236,7 @@ void SurfaceMeshingWidget::on_m_OutputDirBtn_clicked()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SurfaceMeshingWidget::on_m_InputFile_textChanged(const QString & text)
+void SurfaceMeshWidget::on_m_InputFile_textChanged(const QString & text)
 {
   checkIOFiles();
 }
@@ -244,7 +244,7 @@ void SurfaceMeshingWidget::on_m_InputFile_textChanged(const QString & text)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SurfaceMeshingWidget::on_m_OutputDir_textChanged(const QString & text)
+void SurfaceMeshWidget::on_m_OutputDir_textChanged(const QString & text)
 {
   checkIOFiles();
 }
@@ -252,7 +252,7 @@ void SurfaceMeshingWidget::on_m_OutputDir_textChanged(const QString & text)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SurfaceMeshingWidget::on_m_GoBtn_clicked()
+void SurfaceMeshWidget::on_m_GoBtn_clicked()
 {
   if (m_GoBtn->text().compare("Cancel") == 0)
   {
@@ -344,7 +344,7 @@ void SurfaceMeshingWidget::on_m_GoBtn_clicked()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SurfaceMeshingWidget::threadFinished()
+void SurfaceMeshWidget::threadFinished()
 {
  // std::cout << "SurfaceMeshWidget::surface_meshing()" << std::endl;
   m_GoBtn->setText("Go");
@@ -357,7 +357,7 @@ void SurfaceMeshingWidget::threadFinished()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SurfaceMeshingWidget::threadProgressed(int value)
+void SurfaceMeshWidget::threadProgressed(int value)
 {
   m_progressBar->setValue(value);
 }
@@ -367,7 +367,7 @@ void SurfaceMeshingWidget::threadProgressed(int value)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SurfaceMeshingWidget::threadHasMessage(QString message)
+void SurfaceMeshWidget::threadHasMessage(QString message)
 {
   if (NULL != this->statusBar()) {
     this->statusBar()->showMessage(message);
@@ -377,7 +377,7 @@ void SurfaceMeshingWidget::threadHasMessage(QString message)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SurfaceMeshingWidget::on_m_OutputFilePrefix_textChanged(const QString &text)
+void SurfaceMeshWidget::on_m_OutputFilePrefix_textChanged(const QString &text)
 {
   checkIOFiles();
 }

@@ -63,7 +63,7 @@
   millis = 0;
 #endif
 
-#ifdef AIM_USE_QT
+#ifdef DREAM3D_USE_QT
 #define CHECK_FOR_CANCELED(AClass, name)\
     if (this->m_Cancel) { \
       QString msg = #AClass; \
@@ -91,7 +91,7 @@
 
 
 
-#if AIM_USE_QT
+#if DREAM3D_USE_QT
 
 // -----------------------------------------------------------------------------
 //
@@ -106,7 +106,7 @@ Reconstruction::Pointer Reconstruction::New( QObject* parent)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-#if AIM_USE_QT
+#if DREAM3D_USE_QT
 Reconstruction::Reconstruction(QObject* parent) :
 QObject(parent),
 #else
@@ -134,7 +134,7 @@ m_WriteSchmidFactorFile(false),
 m_WriteDownSampledFile(false),
 m_WriteHDF5GrainFile(false),
 m_ErrorCondition(0)
-#if AIM_USE_QT
+#if DREAM3D_USE_QT
   ,m_Cancel(false)
 #endif
 {
@@ -175,7 +175,7 @@ void Reconstruction::compute()
   if (NULL == h5AngLoader)
   {
     progressMessage("ReconstructionFunc Error: Problem casting H5AngDataLoader from super class to sub class", 100);
-#if AIM_USE_QT
+#if DREAM3D_USE_QT
   emit finished();
 #endif
     return;
@@ -209,7 +209,7 @@ void Reconstruction::compute()
   if (err < 0)
   {
     progressMessage("ReconstructionFunc Error: Problem loading data size and resolutions", 100);
-#if AIM_USE_QT
+#if DREAM3D_USE_QT
   emit finished();
 #endif
      return;
@@ -229,7 +229,7 @@ void Reconstruction::compute()
     progressMessage("The HDF5 Statistics file could not be created. Does the path exist and do you have write access to the output directory.", 100);
     m = ReconstructionFunc::NullPointer();  // Clean up the memory
     //std::cout << "Reconstruction::compute Complete" << std::endl;
-  #if AIM_USE_QT
+  #if DREAM3D_USE_QT
     emit finished();
   #endif
     return;
@@ -422,7 +422,7 @@ void Reconstruction::compute()
   // pointer object.
   m = ReconstructionFunc::NullPointer();  // Clean up the memory
   //std::cout << "Reconstruction::compute Complete" << std::endl;
-#if AIM_USE_QT
+#if DREAM3D_USE_QT
   emit finished();
 #endif
 }
@@ -432,7 +432,7 @@ void Reconstruction::compute()
 // -----------------------------------------------------------------------------
 void Reconstruction::progressMessage(AIM_STRING message, int progress)
 {
-#ifdef AIM_USE_QT
+#ifdef DREAM3D_USE_QT
       emit updateMessage(QString(message));
       emit updateProgress(progress);
     //  std::cout << message.toStdString() << std::endl;
@@ -441,7 +441,7 @@ void Reconstruction::progressMessage(AIM_STRING message, int progress)
 #endif
 }
 
-#ifdef AIM_USE_QT
+#ifdef DREAM3D_USE_QT
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
