@@ -29,7 +29,7 @@ Surface Meshing:
 * Create new tab for this interface which will generate 3D Stats from a set of 
 2D statistics or input files
 
-Misc:
+Microstructure Statistics Module:
 * Move all the stats functions to their own class out of the Reconstruction and
 GrainGenerator modules
 * Add new tab "Calculate Stats" which will use existing grain structure files as
@@ -38,7 +38,7 @@ the input.
 
 StatsGenerator:
 * Rolled Preset Dialog needs to be redone and made "idiot" proof.
-* When switching between presets the ODF/MDF tables are NOT cleared as they should be.
+* DONE (MAJ 2011/05/28) - When switching between presets the ODF/MDF tables are NOT cleared as they should be.
 
 
 Infrastructure Changes:
