@@ -34,8 +34,8 @@
 
 
 #include "MXA/Common/MXASetGetMacros.h"
-#include "AIM/Common/AIMCommonConfiguration.h"
-#include "AIM/Common/ReconstructionVoxel.h"
+#include "DREAM3D/DREAM3DConfiguration.h"
+#include "DREAM3D/Reconstruction/ReconstructionVoxel.h"
 
 
 /**
@@ -46,7 +46,7 @@
  * @date May 23, 2011
  * @version 1.0
  */
-class AIMCOMMON_EXPORT AbstractAngDataLoader
+class DREAM3DLib_EXPORT AbstractAngDataLoader
 {
 
   public:

@@ -35,12 +35,12 @@
 #include <vector>
 #include "MXA/MXATypes.h"
 #include "MXA/Common/LogTime.h"
-#include "AIM/Common/AIMCommonConfiguration.h"
-#include "AIM/Common/AIMMath.h"
-#include "AIM/Common/OrientationMath.h"
-#include "AIM/Common/OrientationOps/CubicOps.h"
-#include "AIM/Common/OrientationOps/HexagonalOps.h"
-#include "AIM/Common/OrientationOps/OrthoRhombicOps.h"
+#include "DREAM3D/DREAM3DConfiguration.h"
+#include "DREAM3D/Common/AIMMath.h"
+#include "DREAM3D/Common/OrientationMath.h"
+#include "DREAM3D/Common/OrientationOps/CubicOps.h"
+#include "DREAM3D/Common/OrientationOps/HexagonalOps.h"
+#include "DREAM3D/Common/OrientationOps/OrthoRhombicOps.h"
 
 /**
  * @class Texture Texture.h AIM/Common/Texture.h
@@ -52,7 +52,7 @@
  * @version 1.0
  */
 
-class AIMCOMMON_EXPORT Texture
+class DREAM3DLib_EXPORT Texture
 {
   public:
 

@@ -37,8 +37,8 @@
 
 // AIMRepresentation Includes
 //#include <AIM/StatsGenerator/StatsGen.h>
-#include "AIM/Common/Constants.h"
-#include "AIM/Common/HDF5/H5ReconStatsWriter.h"
+#include "DREAM3D/Common/Constants.h"
+#include "DREAM3D/HDF5/H5ReconStatsWriter.h"
 #include "AIM/GrainGenerator/GrainGenerator.h"
 
 #include "CMU/StatsGenerator.h"

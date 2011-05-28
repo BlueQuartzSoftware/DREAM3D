@@ -39,7 +39,7 @@
 #include "MXA/Common/LogTime.h"
 #include "MXA/Common/MXAEndian.h"
 
-#include "AIM/Common/AIMCommonConfiguration.h"
+#include "DREAM3D/DREAM3DConfiguration.h"
 
 #define kBufferSize 1024
 

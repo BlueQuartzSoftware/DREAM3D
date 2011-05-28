@@ -30,7 +30,7 @@
 
 #include "RolledPreset.h"
 
-#include "AIM/Common/AIMRandomNG.h"
+#include "DREAM3D/Common/AIMRandomNG.h"
 
 #include "StatsGenerator/Presets/Dialogs/RolledPresetDialog.h"
 #include "StatsGenerator/StatsGenPlotWidget.h"

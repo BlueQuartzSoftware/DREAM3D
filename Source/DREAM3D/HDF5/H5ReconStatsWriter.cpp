@@ -39,9 +39,9 @@
 #include "MXA/Utilities/MXADir.h"
 #include "MXA/Utilities/StringUtils.h"
 
-#include "AIM/Common/Constants.h"
-#include "AIM/Common/CrystalStructure.h"
-#include "AIM/Common/PhaseType.h"
+#include "DREAM3D/Common/Constants.h"
+#include "DREAM3D/Common/CrystalStructure.h"
+#include "DREAM3D/Common/PhaseType.h"
 
 #define OPEN_HDF5_FILE(filename)\
   hid_t fileId = H5Utilities::openFile(filename, false);\

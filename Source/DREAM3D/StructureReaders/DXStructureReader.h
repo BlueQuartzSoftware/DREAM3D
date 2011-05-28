@@ -31,9 +31,9 @@
 #define DXSTRUCTUREREADER_H_
 
 #include <MXA/Common/MXASetGetMacros.h>
-#include "AIM/Common/AIMCommonConfiguration.h"
-#include "AIM/Common/VTKFileReader.h"
-#include "AIM/Common/StructureReaders/AbstractStructureReader.h"
+#include "DREAM3D/DREAM3DConfiguration.h"
+#include "DREAM3D/Common/VTKFileReader.h"
+#include "DREAM3D/StructureReaders/AbstractStructureReader.h"
 
 class GrainGeneratorFunc;
 

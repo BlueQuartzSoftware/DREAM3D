@@ -37,9 +37,9 @@
 #include "MXA/Common/LogTime.h"
 #include "MXA/Common/MXAEndian.h"
 
-#include "AIM/Common/AIMCommonConfiguration.h"
+#include "DREAM3D/DREAM3DConfiguration.h"
 
-#include "AIM/Common/GrainGeneratorFunc.h"
+#include "DREAM3D/GrainGenerator/GrainGeneratorFunc.h"
 
 // -----------------------------------------------------------------------------
 //

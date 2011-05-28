@@ -34,8 +34,9 @@
 
 #include <MXA/Common/MXASetGetMacros.h>
 #include <MXA/MXATypes.h>
-#include <AIM/Common/Constants.h>
-#include <AIM/Common/GrainGeneratorFunc.h>
+
+#include "DREAM3D/Common/Constants.h"
+#include "DREAM3D/GrainGenerator/GrainGeneratorFunc.h"
 
 
 #ifdef AIM_USE_QT
@@ -47,7 +48,7 @@
 #endif
 
 #include "MXA/Common/MXASetGetMacros.h"
-#include "AIM/Common/AIMCommonConfiguration.h"
+#include "DREAM3D/DREAM3DConfiguration.h"
 
 /**
 * @class GrainGenerator GrainGenerator.h AIM/GrainGenerator/GrainGenerator.h

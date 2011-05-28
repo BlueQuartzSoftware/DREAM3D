@@ -30,7 +30,7 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 #include "AIM_H5VtkDataWriter.h"
-#include "AIM/Common/ReconstructionFunc.h"
+#include "DREAM3D/Reconstruction/ReconstructionFunc.h"
 
 
 

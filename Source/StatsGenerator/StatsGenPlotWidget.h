@@ -35,9 +35,9 @@
 
 #include "ui_StatsGenPlotWidget.h"
 
-#include "AIM/Common/Constants.h"
-#include "AIM/Common/HDF5/H5ReconStatsWriter.h"
-#include "AIM/Common/HDF5/H5ReconStatsReader.h"
+#include "DREAM3D/Common/Constants.h"
+#include "DREAM3D/HDF5/H5ReconStatsWriter.h"
+#include "DREAM3D/HDF5/H5ReconStatsReader.h"
 
 class SGAbstractTableModel;
 class QwtPlotZoomer;

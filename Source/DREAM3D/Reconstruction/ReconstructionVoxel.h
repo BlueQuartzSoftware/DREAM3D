@@ -41,8 +41,8 @@
 
 #include "MXA/Common/MXASetGetMacros.h"
 
-#include "AIM/Common/AIMCommonConfiguration.h"
-#include "AIM/Common/Constants.h"
+#include "DREAM3D/DREAM3DConfiguration.h"
+#include "DREAM3D/Common/Constants.h"
 
 /**
 * @class ReconstructionVoxel ReconstructionVoxel.h AIM/Common/ReconstructionVoxel.h
@@ -51,7 +51,7 @@
 * @date Nov 4, 2009
 * @version 1.0
 */
-class AIMCOMMON_EXPORT ReconstructionVoxel
+class DREAM3DLib_EXPORT ReconstructionVoxel
 {
   public:
     MXA_SHARED_POINTERS(ReconstructionVoxel);

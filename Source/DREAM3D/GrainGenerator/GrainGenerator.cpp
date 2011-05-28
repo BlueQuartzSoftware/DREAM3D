@@ -35,12 +35,12 @@
 #include "MXA/Utilities/MXADir.h"
 #include "MXA/Utilities/MXAFileInfo.h"
 
-#include "AIM/Common/HDF5/H5ReconStatsReader.h"
-#include "AIM/Common/StructureReaders/AbstractStructureReader.h"
-#include "AIM/Common/StructureReaders/VTKStructureReader.h"
-#include "AIM/Common/StructureReaders/DXStructureReader.h"
-#include "AIM/Common/GrainGeneratorVoxelWriter.h"
-#include "AIM/Common/HDF5/H5GrainWriter.h"
+#include "DREAM3D/HDF5/H5ReconStatsReader.h"
+#include "DREAM3D/StructureReaders/AbstractStructureReader.h"
+#include "DREAM3D/StructureReaders/VTKStructureReader.h"
+#include "DREAM3D/StructureReaders/DXStructureReader.h"
+#include "DREAM3D/GrainGenerator/GrainGeneratorVoxelWriter.h"
+#include "DREAM3D/HDF5/H5GrainWriter.h"
 
 
 #define CREATE_INPUT_FILENAME(f, n)\

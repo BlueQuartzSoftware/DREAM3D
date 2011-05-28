@@ -28,7 +28,7 @@
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "RecrystallizedPreset.h"
-#include "AIM/Common/AIMRandomNG.h"
+#include "DREAM3D/Common/AIMRandomNG.h"
 
 #include "StatsGenerator/Presets/Dialogs/RecrystallizedPresetDialog.h"
 #include "StatsGenerator/StatsGenPlotWidget.h"

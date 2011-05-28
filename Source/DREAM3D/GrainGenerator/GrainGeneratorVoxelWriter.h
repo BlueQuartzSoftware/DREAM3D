@@ -34,7 +34,7 @@
 
 #include "MXA/Common/MXASetGetMacros.h"
 
-#include "AIM/Common/GrainGeneratorFunc.h"
+#include "DREAM3D/GrainGenerator/GrainGeneratorFunc.h"
 /**
  * @class GrainGeneratorVTKWriter GrainGeneratorVTKWriter.h AIM/Common/GrainGeneratorVTKWriter.h
  * @brief This class has functions to write out GrainGenerator Data to VTK legacy
@@ -43,7 +43,7 @@
  * @date May 12, 2011
  * @version 1.0
  */
-class AIMCOMMON_EXPORT GrainGeneratorVoxelWriter
+class DREAM3DLib_EXPORT GrainGeneratorVoxelWriter
 {
   public:
     MXA_SHARED_POINTERS(GrainGeneratorVoxelWriter)

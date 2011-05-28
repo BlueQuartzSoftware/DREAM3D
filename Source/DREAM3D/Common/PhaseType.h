@@ -34,8 +34,8 @@
 #include <vector>
 #include <map>
 
-#include "AIM/Common/AIMCommonConfiguration.h"
-#include "AIM/Common/Constants.h"
+#include "DREAM3D/DREAM3DConfiguration.h"
+#include "DREAM3D/Common/Constants.h"
 
 namespace AIM {
 /**
@@ -45,7 +45,7 @@ namespace AIM {
  * @date May 13, 2011
  * @version 1.0
  */
-class AIMCOMMON_EXPORT PhaseType
+class DREAM3DLib_EXPORT PhaseType
 {
   public:
     const static std::string PrimaryStr;

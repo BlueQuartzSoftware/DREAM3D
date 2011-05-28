@@ -41,7 +41,7 @@
 #include <QtGui/QMessageBox>
 #include <QtGui/QFileDialog>
 
-#include "AIM/Common/DREAM3DVersion.h"
+#include "DREAM3D/Common/DREAM3DVersion.h"
 #include "QtSupport/ApplicationAboutBoxDialog.h"
 #include "QtSupport/QRecentFileList.h"
 #include "AIM/License/StatsGeneratorLicenseFiles.h"
