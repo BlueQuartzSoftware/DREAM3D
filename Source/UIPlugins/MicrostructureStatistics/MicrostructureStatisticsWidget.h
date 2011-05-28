@@ -45,11 +45,11 @@ class QListWidgetItem;
 
 /**
  * @class MicrostructureStatisticsWidget MicrostructureStatisticsWidget.h AIM/GUI/MicrostructureStatisticsWidget.h
- * @brief This class represents the User Interface for the Synthetic Grain Generator module
- * of the AIMRepresentation program. The user interface subclasses QFrame which
+ * @brief This class represents the User Interface for the Microstructure Statistics module
+ * of the DREAM3D program. The user interface subclasses AIMPluginFrame which
  * should make it able to be embedded in most Qt applications.
  * @author Michael A. Jackson for BlueQuartz Software
- * @date Jan 30, 2011
+ * @date May 30, 2011
  * @version 1.0
  */
 class MicrostructureStatisticsWidget : public AIMPluginFrame, private Ui::MicrostructureStatisticsWidget
