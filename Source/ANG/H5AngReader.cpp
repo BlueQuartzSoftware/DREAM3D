@@ -32,7 +32,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 #include "H5AngReader.h"
-//#include "AIM/Common/Constants.h"
+//#include "DREAM3D/Common/Constants.h"
 #include "AngConstants.h"
 #include "ANG/HDF5/H5Lite.h"
 #include "ANG/HDF5/H5Utilities.h"

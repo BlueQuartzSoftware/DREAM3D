@@ -24,7 +24,7 @@
 #include <limits>
 
 // AIM Includes
-#include "AIM/Common/AIMMath.h"
+#include "DREAM3D/Common/AIMMath.h"
 
 
 const static float m_onepointthree = 1.33333333333;

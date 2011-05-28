@@ -12,9 +12,6 @@
 
 
 #include "smooth-grain3d.h"
-#include <AIM/Common/Constants.h>
-#include "LinearAlgebra.h"
-
 
 #include <cstdlib>
 #include <cstdio>
@@ -23,8 +20,10 @@
 #include <fstream>
 #include <sstream>
 #include <iomanip>
-
 #include <vector>
+
+#include "DREAM3D/Common/Constants.h"
+#include "LinearAlgebra.h"
 
 #ifdef _WIN32
 const std::string Separator("\\");
@@ -555,11 +554,11 @@ int SmoothGrain3D(const std::string &nodesFile, const std::string &trianglesFile
 
 #ifndef SMOOTH_MESH_LIBRARY
 
-#include <AIM/Common/AIMVersion.h>
+#include <DREAM3D/DREAM3DVersion.h>
 
 #include <MXA/Common/LogTime.h>
 #include <MXA/Utilities/MXALogger.h>
-#include <MXA/Utilities/MXAFileSystemPath.h>
+
 
 #include <string>
 #include <iostream>

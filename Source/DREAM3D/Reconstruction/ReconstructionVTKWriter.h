@@ -36,7 +36,7 @@
 
 #include "MXA/Common/MXASetGetMacros.h"
 
-#include "AIM/Common/ReconstructionFunc.h"
+#include "DREAM3D/Reconstruction/ReconstructionFunc.h"
 
 
 /**
@@ -47,7 +47,7 @@
  * @date Feb 19, 2011
  * @version 1.0
  */
-class AIMCOMMON_EXPORT ReconstructionVTKWriter
+class DREAM3DLib_EXPORT ReconstructionVTKWriter
 {
   public:
     MXA_SHARED_POINTERS(ReconstructionVTKWriter)

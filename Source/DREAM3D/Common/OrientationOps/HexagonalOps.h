@@ -32,7 +32,7 @@
 #define HEXAGONALOPS_H_
 
 #include "MXA/Common/MXASetGetMacros.h"
-#include "AIM/Common/OrientationMath.h"
+#include "DREAM3D/Common/OrientationMath.h"
 
 namespace HexagonalMath {
   namespace Detail {
@@ -79,7 +79,7 @@ namespace HexagonalMath {
  * @date May 5, 2011
  * @version 1.0
  */
-class AIMCOMMON_EXPORT HexagonalOps : public OrientationMath
+class DREAM3DLib_EXPORT HexagonalOps : public OrientationMath
 {
   public:
     MXA_SHARED_POINTERS(HexagonalOps)

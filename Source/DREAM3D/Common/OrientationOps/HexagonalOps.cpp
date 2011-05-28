@@ -30,7 +30,7 @@
 #include "HexagonalOps.h"
 // Include this FIRST because there is a needed define for some compiles
 // to expose some of the constants needed below
-#include "AIM/Common/AIMMath.h"
+#include "DREAM3D/Common/AIMMath.h"
 
 
 using namespace HexagonalMath::Detail;

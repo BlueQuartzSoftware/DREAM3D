@@ -41,11 +41,11 @@
 #include <qwt_scale_draw.h>
 #include <qwt_plot_canvas.h>
 
-#include "AIM/Common/Texture.h"
-#include "AIM/Common/OrientationMath.h"
-#include "AIM/Common/OrientationOps/CubicOps.h"
-#include "AIM/Common/OrientationOps/HexagonalOps.h"
-#include "AIM/Common/OrientationOps/OrthoRhombicOps.h"
+#include "DREAM3D/Common/Texture.h"
+#include "DREAM3D/Common/OrientationMath.h"
+#include "DREAM3D/Common/OrientationOps/CubicOps.h"
+#include "DREAM3D/Common/OrientationOps/HexagonalOps.h"
+#include "DREAM3D/Common/OrientationOps/OrthoRhombicOps.h"
 
 #include "StatsGenerator/TableModels/SGMDFTableModel.h"
 #include "StatsGen.h"

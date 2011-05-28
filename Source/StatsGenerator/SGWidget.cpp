@@ -55,7 +55,7 @@
 #include <qwt_plot_marker.h>
 
 
-#include "AIM/Common/HDF5/H5ReconStatsWriter.h"
+#include "DREAM3D/HDF5/H5ReconStatsWriter.h"
 
 #include "StatsGenerator/Presets/MicrostructurePresetManager.h"
 #include "StatsGenerator/Presets/DefaultStatsPreset.h"

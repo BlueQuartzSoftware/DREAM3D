@@ -31,7 +31,7 @@
 #include "OrthoRhombicOps.h"
 // Include this FIRST because there is a needed define for some compiles
 // to expose some of the constants needed below
-#include "AIM/Common/AIMMath.h"
+#include "DREAM3D/Common/AIMMath.h"
 
 const static float m_pi = M_PI;
 static const float OrthoDim1InitValue = powf((0.75*((m_pi/2.0)-sinf((m_pi/2.0)))),(1.0/3.0));

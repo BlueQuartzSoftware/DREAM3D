@@ -45,8 +45,8 @@
 
 
 //-- AIMRep Includes
-#include "AIM/Common/Constants.h"
-#include "AIM/Common/DREAM3DVersion.h"
+#include "DREAM3D/Common/Constants.h"
+#include "DREAM3D/Common/DREAM3DVersion.h"
 #include "QtSupport/ApplicationAboutBoxDialog.h"
 #include "QtSupport/QRecentFileList.h"
 #include "QtSupport/QR3DFileCompleter.h"

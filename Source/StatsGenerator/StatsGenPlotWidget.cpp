@@ -50,7 +50,7 @@
 #include <qwt_plot_curve.h>
 #include <qwt_plot_canvas.h>
 
-#include "AIM/Common/Constants.h"
+#include "DREAM3D/Common/Constants.h"
 #include "StatsGenerator/TableModels/SGBetaTableModel.h"
 #include "StatsGenerator/TableModels/SGLogNormalTableModel.h"
 #include "StatsGenerator/TableModels/SGPowerLawTableModel.h"

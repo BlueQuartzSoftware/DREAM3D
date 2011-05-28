@@ -34,9 +34,9 @@
 
 
 #include <MXA/Common/MXASetGetMacros.h>
-#include "AIM/Common/AIMCommonConfiguration.h"
-#include "AIM/Common/VTKFileReader.h"
-#include "AIM/Common/StructureReaders/AbstractStructureReader.h"
+#include "DREAM3D/DREAM3DConfiguration.h"
+#include "DREAM3D/Common/VTKFileReader.h"
+#include "DREAM3D/StructureReaders/AbstractStructureReader.h"
 
 class GrainGeneratorFunc;
 
@@ -81,7 +81,7 @@ class GrainGeneratorFunc;
  * @date May 19, 2011
  * @version 1.0
  */
-class AIMCOMMON_EXPORT VTKStructureReader : public VTKFileReader, public AbstractStructureReader
+class DREAM3DLib_EXPORT VTKStructureReader : public VTKFileReader, public AbstractStructureReader
 {
   public:
     MXA_SHARED_POINTERS(VTKStructureReader)

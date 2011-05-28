@@ -44,8 +44,8 @@
 #include "MXA/Utilities/MXADir.h"
 #include "MXA/Utilities/StringUtils.h"
 
-#include "AIM/Common/AIMCommonConfiguration.h"
-#include "AIM/Common/Constants.h"
+#include "DREAM3D/DREAM3DConfiguration.h"
+#include "DREAM3D/Common/Constants.h"
 
 
 
@@ -69,7 +69,7 @@
  * @date Apr 21, 2011
  * @version 1.0
  */
-class AIMCOMMON_EXPORT H5ReconStatsReader
+class DREAM3DLib_EXPORT H5ReconStatsReader
 {
   public:
     MXA_SHARED_POINTERS(H5ReconStatsReader);

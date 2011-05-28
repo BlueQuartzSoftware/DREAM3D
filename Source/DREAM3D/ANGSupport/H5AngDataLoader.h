@@ -42,9 +42,9 @@
 #include "ANG/AngPhase.h"
 
 //-- AIM Common Includes
-#include "AIM/ANG/AbstractAngDataLoader.h"
-#include "AIM/Common/AIMCommonConfiguration.h"
-#include "AIM/Common/ReconstructionVoxel.h"
+#include "DREAM3D/ANGSupport/AbstractAngDataLoader.h"
+#include "DREAM3D/DREAM3DConfiguration.h"
+#include "DREAM3D/Reconstruction/ReconstructionVoxel.h"
 
 
 
@@ -55,7 +55,7 @@
  * @date May 23, 2011
  * @version 1.0
  */
-class AIMCOMMON_EXPORT H5AngDataLoader : public AbstractAngDataLoader
+class DREAM3DLib_EXPORT H5AngDataLoader : public AbstractAngDataLoader
 {
   public:
     MXA_SHARED_POINTERS(H5AngDataLoader)

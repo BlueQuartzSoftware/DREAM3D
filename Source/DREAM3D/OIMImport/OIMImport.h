@@ -47,8 +47,8 @@
 
 #include "ANG/H5AngImporter.h"
 
-#include "AIM/Common/AIMCommonConfiguration.h"
-#include "AIM/Common/Constants.h"
+#include "DREAM3D/DREAM3DConfiguration.h"
+#include "DREAM3D/Common/Constants.h"
 
 
 #ifdef AIM_USE_QT

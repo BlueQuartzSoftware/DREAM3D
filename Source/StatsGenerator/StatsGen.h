@@ -35,12 +35,12 @@
 #define WIN32_LEAN_AND_MEAN		// Exclude rarely-used stuff from Windows headers
 #endif
 
-#include "AIM/Common/AIMMath.h"
-#include "AIM/Common/Constants.h"
-#include "AIM/Common/AIMRandomNG.h"
-#include "AIM/Common/OrientationMath.h"
+#include "DREAM3D/Common/AIMMath.h"
+#include "DREAM3D/Common/Constants.h"
+#include "DREAM3D/Common/AIMRandomNG.h"
+#include "DREAM3D/Common/OrientationMath.h"
 
-#include "AIM/Common/Texture.h"
+#include "DREAM3D/Common/Texture.h"
 #include "MXA/Common/LogTime.h"
 
 /**

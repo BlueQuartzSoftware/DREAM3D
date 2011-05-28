@@ -42,8 +42,8 @@
 
 #include "ANG/AngConstants.h"
 
-#include "AIM/Common/Constants.h"
-#include "AIM/Common/ReconstructionFunc.h"
+#include "DREAM3D/Common/Constants.h"
+#include "DREAM3D/Reconstruction/ReconstructionFunc.h"
 
 
 #ifdef AIM_USE_QT

@@ -32,11 +32,11 @@
 
 // Include this FIRST because there is a needed define for some compiles
 // to expose some of the constants needed below
-#include "AIM/Common/AIMMath.h"
+#include "DREAM3D/Common/AIMMath.h"
 
 #include "MXA/Common/LogTime.h"
 
-#include "AIM/Common/OrientationOps/CubicOps.h"
+#include "DREAM3D/Common/OrientationOps/CubicOps.h"
 
 
 	const static float m_pi = M_PI;
