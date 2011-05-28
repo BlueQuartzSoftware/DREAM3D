@@ -79,13 +79,13 @@ using namespace std;
 ReconstructionFunc::ReconstructionFunc()
 {
   m_HexOps = HexagonalOps::New();
-  m_OrientationOps.push_back(dynamic_cast<OrientationMath*> (m_CubicOps.get()));
+  m_OrientationOps.push_back(dynamic_cast<OrientationMath*> (m_HexOps.get()));
 
   m_CubicOps = CubicOps::New();
   m_OrientationOps.push_back(dynamic_cast<OrientationMath*> (m_CubicOps.get()));
 
   m_OrthoOps = OrthoRhombicOps::New();
-  m_OrientationOps.push_back(dynamic_cast<OrientationMath*> (m_CubicOps.get()));
+  m_OrientationOps.push_back(dynamic_cast<OrientationMath*> (m_OrthoOps.get()));
 
   // Just to quiet the compiler
   float f = sqrt_two;
@@ -377,6 +377,7 @@ void ReconstructionFunc::find_border()
     index++;
   }
   voxelslist[count] = index;
+  gnames[index] = 0;
   checked[index] = 1;
   count++;
   for (size_t i = 0; i < count; i++)
