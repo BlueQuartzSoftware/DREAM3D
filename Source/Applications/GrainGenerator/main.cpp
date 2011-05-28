@@ -41,10 +41,10 @@
 #include <MXA/Utilities/MXADir.h>
 
 #include "DREAM3D/Common/Constants.h"
-#include <DREAM3D/Common/DREAM3DVersion.h>
+#include <DREAM3D/DREAM3DVersion.h>
 #include <DREAM3D/Common/AIMArray.hpp>
 
-#include <AIM/GrainGenerator/GrainGenerator.h>
+#include <DREAM3D/GrainGenerator/GrainGenerator.h>
 
 
 

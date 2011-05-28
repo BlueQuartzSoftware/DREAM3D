@@ -8,6 +8,9 @@
 #-- This code was partly written under US Air Force Contract FA8650-07-D-5800
 #--
 #--////////////////////////////////////////////////////////////////////////////
+
+message(FATAL_ERROR "Volume Mesh is NOT working. All the sources need to be updated")
+
 # set project's name
 PROJECT( VolumeMesh )
 cmake_minimum_required(VERSION 2.8)
@@ -38,11 +41,11 @@ SET (CMAKE_ARCHIVE_OUTPUT_DIRECTORY
 # Add in a target for the command line version that combines all the above code
 set (VolumeMesh_SRCS
     ${VolumeMesh_SOURCE_DIR}/main.cpp
-    ${VolumeMesh_SOURCE_DIR}/MeshGenerator.cpp
+#    ${VolumeMesh_SOURCE_DIR}/MeshGenerator.cpp
     ${VolumeMesh_SOURCE_DIR}/VolumeMesh.cpp
 )
 set (VolumeMesh_HDRS
-    ${VolumeMesh_SOURCE_DIR}/MeshGenerator.h
+#    ${VolumeMesh_SOURCE_DIR}/MeshGenerator.h
     ${VolumeMesh_SOURCE_DIR}/VolumeMesh.h
 )
 

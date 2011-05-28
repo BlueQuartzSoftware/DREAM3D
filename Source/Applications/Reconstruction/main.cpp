@@ -41,10 +41,10 @@
 #include <MXA/Utilities/MXADir.h>
 
 #include "DREAM3D/Common/Constants.h"
-#include <DREAM3D/Common/DREAM3DVersion.h>
+#include <DREAM3D/DREAM3DVersion.h>
 #include <DREAM3D/Common/AIMArray.hpp>
 #include <DREAM3D/Common/Grain.h>
-#include <AIM/Reconstruction/Reconstruction.h>
+#include <DREAM3D/Reconstruction/Reconstruction.h>
 
 
 #define RECONSTRUCTION_MANUAL_DEBUG 0

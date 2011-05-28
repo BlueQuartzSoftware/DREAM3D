@@ -37,12 +37,12 @@ SET (CMAKE_ARCHIVE_OUTPUT_DIRECTORY
 add_definitions(-DSVG_3D_LIBRARY)
 
 set (GrainGenerator_SRCS
-    ${GrainGenerator_SOURCE_DIR}/GrainGenerator.cpp
+    ${PROJECT_CODE_DIR}/DREAM3D/GrainGenerator/GrainGenerator.cpp
     ${GrainGenerator_SOURCE_DIR}/main.cpp
 )
 
 set (GrainGenerator_HDRS 
-    ${GrainGenerator_SOURCE_DIR}/GrainGenerator.h
+    ${PROJECT_CODE_DIR}/DREAM3D/GrainGenerator/GrainGenerator.h
 )
 cmp_IDE_SOURCE_PROPERTIES( "AIM/GrainGenerator" "${GrainGenerator_HDRS}" "${GrainGenerator_SRCS}" ${PROJECT_INSTALL_HEADERS} )
 
@@ -66,7 +66,7 @@ BuildToolBundle(
     VERSION_MINOR ${DREAM3D_VER_MINOR}
     VERSION_PATCH ${DREAM3D_VER_PATCH}
     BINARY_DIR    ${${PROJECT_NAME}_BINARY_DIR}
-    LINK_LIBRARIES AIMCommon
+    LINK_LIBRARIES DREAM3DLib
     LIB_SEARCH_DIRS ${CMAKE_LIBRARY_OUTPUT_DIRECTORY} ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
     COMPONENT     Applications
     INSTALL_DEST  "${install_dir}"

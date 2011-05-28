@@ -39,7 +39,7 @@
 #include "ANG/AngReader.h"
 #include "ANG/H5AngReader.h"
 
-#include "AIM/OIMImport/OIMImport.h"
+#include "DREAM3D/OIMImport/OIMImport.h"
 
 
 #if _WIN32_
