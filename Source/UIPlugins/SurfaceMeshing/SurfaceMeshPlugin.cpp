@@ -30,6 +30,8 @@
 
 #include "SurfaceMeshPlugin.h"
 #include "SurfaceMeshWidget.h"
+#include "QtSupport/AIMPluginFrame.h"
+
 
 Q_EXPORT_PLUGIN2(SurfaceMeshPlugin, SurfaceMeshPlugin)
 ;
@@ -70,6 +72,15 @@ QWidget* SurfaceMeshPlugin::getInputWidget(QWidget* parent)
 {
   m_InputWidget->setParent(parent);
   return m_InputWidget;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AIMPluginFrame* SurfaceMeshPlugin::getPluginFrame(QWidget* parent)
+{
+  AIMPluginFrame* frame = qobject_cast<AIMPluginFrame*>(m_InputWidget);
+  return frame;
 }
 
 // -----------------------------------------------------------------------------

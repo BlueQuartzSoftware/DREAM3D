@@ -39,6 +39,7 @@
 #include <QtCore/QObject>
 #include <QtCore/QString>
 #include <QtCore/QList>
+#include <QtCore/QVector>
 #include <QtCore/QSettings>
 #include <QtGui/QWidget>
 #include <QtGui/QMainWindow>
@@ -47,6 +48,8 @@
 
 //-- UIC generated Header
 #include <ui_RepresentationUI.h>
+
+class DREAM3DPluginInterface;
 
 /**
 * @class RepresentationUI RepresentationUI AIM/RepresentationUI/GUI/RepresentationUI.h
@@ -83,12 +86,11 @@ class RepresentationUI : public QMainWindow, private Ui::RepresentationUI
    */
   void openRecentFile();
 
+  void setInputUI();
 
   private slots:
     // slots for our worker thread to communicate
     void threadHasMessage(QString message);
-
-
 
     // Our Signals that we can emit custom for this class
   signals:
@@ -100,6 +102,12 @@ class RepresentationUI : public QMainWindow, private Ui::RepresentationUI
     void sig_CancelWorker();
 
   protected:
+
+    void loadPlugins();
+    void populateMenus(QObject *plugin);
+    void addToPluginMenu(QObject *plugin, const QString &text,
+                               QMenu *menu, const char *member,
+                               QActionGroup *actionGroup);
 
     /**
      * @brief Implements the CloseEvent to Quit the application and write settings
@@ -122,20 +130,6 @@ class RepresentationUI : public QMainWindow, private Ui::RepresentationUI
      * @param b
      */
     void setWidgetListEnabled(bool b);
-
-    /**
-     * @brief Verifies that a path exists on the file system.
-     * @param outFilePath The file path to check
-     * @param lineEdit The QLineEdit object to modify visuals of (Usually by placing a red line around the QLineEdit widget)
-     */
-    bool verifyPathExists(QString outFilePath, QLineEdit* lineEdit);
-
-    /**
-     * @brief Verifies that a parent path exists on the file system.
-     * @param outFilePath The parent file path to check
-     * @param lineEdit The QLineEdit object to modify visuals of (Usually by placing a red line around the QLineEdit widget)
-     */
-    bool verifyOutputPathParentExists(QString outFilePath, QLineEdit* lineEdit);
 
     /**
      * @brief Reads the Preferences from the users pref file
@@ -168,7 +162,14 @@ class RepresentationUI : public QMainWindow, private Ui::RepresentationUI
   private:
     QList<QWidget*>             m_WidgetList;
     QThread*                    m_WorkerThread;
+    QStringList m_PluginDirs;
+    QStringList pluginFileNames;
+    QActionGroup* pluginActionGroup;
+    DREAM3DPluginInterface*     m_ActivePlugin;
+    QVector<DREAM3DPluginInterface*> m_LoadedPlugins;
+
     QString                     m_OpenDialogLastDirectory;
+
 
     RepresentationUI(const RepresentationUI&);    // Copy Constructor Not Implemented
     void operator=(const RepresentationUI&);  // Operator '=' Not Implemented

@@ -36,6 +36,7 @@
 #include "QtSupport/DREAM3DPluginInterface.h"
 
 class GrainGeneratorWidget;
+class AIMPluginFrame;
 
 class GrainGeneratorPlugin : public QObject, public DREAM3DPluginInterface
 {
@@ -46,12 +47,10 @@ class GrainGeneratorPlugin : public QObject, public DREAM3DPluginInterface
     GrainGeneratorPlugin();
     virtual ~GrainGeneratorPlugin();
 
-    typedef QPair<QString, QString>        InputOutputFilePair;
-    typedef QList<InputOutputFilePair>     InputOutputFilePairList;
-
     QString getPluginName();
 
     virtual QWidget* getInputWidget(QWidget* parent);
+    virtual AIMPluginFrame* getPluginFrame(QWidget* parent);
 
 
     virtual void writeSettings(QSettings &prefs);
