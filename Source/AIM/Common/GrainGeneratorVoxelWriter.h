@@ -43,14 +43,14 @@
  * @date May 12, 2011
  * @version 1.0
  */
-class AIMCOMMON_EXPORT GrainGeneratorVTKWriter
+class AIMCOMMON_EXPORT GrainGeneratorVoxelWriter
 {
   public:
-    MXA_SHARED_POINTERS(GrainGeneratorVTKWriter)
-    MXA_STATIC_NEW_MACRO(GrainGeneratorVTKWriter)
-    MXA_TYPE_MACRO(GrainGeneratorVTKWriter)
+    MXA_SHARED_POINTERS(GrainGeneratorVoxelWriter)
+    MXA_STATIC_NEW_MACRO(GrainGeneratorVoxelWriter)
+    MXA_TYPE_MACRO(GrainGeneratorVoxelWriter)
 
-    virtual ~GrainGeneratorVTKWriter();
+    virtual ~GrainGeneratorVoxelWriter();
 
     MXA_INSTANCE_PROPERTY(bool, WriteBinaryFiles)
 
@@ -69,12 +69,15 @@ class AIMCOMMON_EXPORT GrainGeneratorVTKWriter
      */
     int writeIPFVizFile(GrainGeneratorFunc* r, const std::string &file);
 
+
+    int writePhFile(GrainGeneratorFunc* r, const std::string &file);
+
   protected:
-    GrainGeneratorVTKWriter();
+    GrainGeneratorVoxelWriter();
 
   private:
-    GrainGeneratorVTKWriter(const GrainGeneratorVTKWriter&); // Copy Constructor Not Implemented
-    void operator=(const GrainGeneratorVTKWriter&); // Operator '=' Not Implemented
+    GrainGeneratorVoxelWriter(const GrainGeneratorVoxelWriter&); // Copy Constructor Not Implemented
+    void operator=(const GrainGeneratorVoxelWriter&); // Operator '=' Not Implemented
 };
 
 #endif /* GRAINGENERATORVTKWRITER_H_ */

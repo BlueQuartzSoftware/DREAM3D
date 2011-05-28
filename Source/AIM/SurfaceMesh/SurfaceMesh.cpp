@@ -33,6 +33,7 @@
 #include "SMVtkFileIO.h"
 
 #include <MXA/Common/LogTime.h>
+#include "MXA/Common/MXAEndian.h"
 #include <MXA/Utilities/MXADir.h>
 
 
@@ -317,7 +318,7 @@ void SurfaceMesh::compute()
    ::memcpy( &(m->voxels[1]), &(m->voxels[1 + m->NSP]), m->NSP * sizeof(int) );
 
    //Make this last layer all border values
-  for (int i = m->NSP + 1; i < 2*m->NSP + 1; ++i)
+  for (int i = m->NSP; i < 2*m->NSP+1; ++i)
   {
     m->voxels[i] = -3;
   }

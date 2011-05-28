@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>803</width>
-    <height>672</height>
+    <width>764</width>
+    <height>550</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -27,7 +27,7 @@
       </widget>
      </item>
      <item row="0" column="1">
-      <widget class="QLineEdit" name="m_H5InputStatisticsFile"/>
+      <widget class="QFSDropLineEdit" name="m_H5InputStatisticsFile"/>
      </item>
      <item row="0" column="2">
       <widget class="QPushButton" name="m_InputH5StatisticsFileBtn">
@@ -72,7 +72,7 @@
          </widget>
         </item>
         <item row="1" column="3">
-         <widget class="QLineEdit" name="m_StructureFile">
+         <widget class="QFSDropLineEdit" name="m_StructureFile">
           <property name="enabled">
            <bool>false</bool>
           </property>
@@ -327,7 +327,7 @@
          </widget>
         </item>
         <item row="0" column="1">
-         <widget class="QLineEdit" name="m_OutputDir"/>
+         <widget class="QFSDropLineEdit" name="m_OutputDir"/>
         </item>
         <item row="1" column="1">
          <widget class="QLineEdit" name="m_OutputFilePrefix">
@@ -499,7 +499,7 @@
           </item>
          </layout>
         </item>
-        <item row="2" column="1">
+        <item row="2" column="1" colspan="2">
          <widget class="QLabel" name="messageLabel">
           <property name="font">
            <font>
@@ -594,6 +594,26 @@
             </property>
            </widget>
           </item>
+          <item row="4" column="1">
+           <widget class="QCheckBox" name="m_PhFile">
+            <property name="text">
+             <string>Ph File</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="0">
+           <widget class="QLabel" name="m_PhFileIcon">
+            <property name="text">
+             <string/>
+            </property>
+            <property name="pixmap">
+             <pixmap resource="../../../../Resources/icons/images/Icons.qrc">:/Delete-16x16.png</pixmap>
+            </property>
+           </widget>
+          </item>
          </layout>
         </item>
         <item row="0" column="2">
@@ -641,36 +661,6 @@
       </widget>
      </item>
      <item>
-      <spacer name="horizontalSpacer_20">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>40</width>
-         <height>20</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
-    </layout>
-   </item>
-   <item>
-    <spacer name="verticalSpacer_2">
-     <property name="orientation">
-      <enum>Qt::Vertical</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>20</width>
-       <height>95</height>
-      </size>
-     </property>
-    </spacer>
-   </item>
-   <item>
-    <layout class="QHBoxLayout" name="horizontalLayout_8">
-     <item>
       <widget class="QProgressBar" name="m_progressBar">
        <property name="value">
         <number>0</number>
@@ -688,6 +678,13 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>QFSDropLineEdit</class>
+   <extends>QLineEdit</extends>
+   <header location="global">QFSDropLineEdit.h</header>
+  </customwidget>
+ </customwidgets>
  <resources>
   <include location="../../../../Resources/icons/images/Icons.qrc"/>
   <include location="../../../../Resources/icons/images/Icons.qrc"/>

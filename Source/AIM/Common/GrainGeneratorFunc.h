@@ -70,13 +70,13 @@ public:
     typedef boost::shared_array<int>      SharedIntArray;
 
 	bool periodic_boundaries;
-	
+
 	float sizex;
     float sizey;
     float sizez;
 
     unsigned long long int GGseed;
-    
+
 	float resx;
     float resy;
     float resz;
@@ -106,7 +106,7 @@ public:
 
 	std::vector<float> grainowners;
 	std::vector<float> goalgrainowners;
-	
+
 	std::vector<SharedFloatArray> actualodf;
     std::vector<SharedFloatArray> simodf;
     std::vector<SharedFloatArray> axisodf;
@@ -234,6 +234,9 @@ public:
     float find_xcoord(long long int index);
     float find_ycoord(long long int index);
     float find_zcoord(long long int index);
+
+    int writePhFormat(const std::string &file);
+
 protected:
     GrainGeneratorFunc();
 private:
