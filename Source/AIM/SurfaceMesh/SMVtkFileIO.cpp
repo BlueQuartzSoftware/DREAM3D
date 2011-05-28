@@ -84,6 +84,10 @@ int SMVtkFileIO::readZSlice(int xDim, int yDim, int zDim, int* voxels)
     for(size_t i = 0; i < size; ++i)
     {
       MXA::Endian::FromBigToSystem::convert<int>(voxels[i]);
+	  if(voxels[i] > 1000 || voxels[i] < -5)
+	  {
+		int stop = 0;
+	  }
     }
   }
   else
@@ -93,7 +97,7 @@ int SMVtkFileIO::readZSlice(int xDim, int yDim, int zDim, int* voxels)
     {
       m_InputFile >> tmp;
       voxels[i] = tmp;
-    }
+	}
   }
   return 0;
 }
@@ -294,7 +298,7 @@ int SMVtkFileIO::writeVTKFile(SurfaceMeshFunc* m,
   fprintf(vtkFile, "DATASET POLYDATA\n");
   fprintf(vtkFile, "POINTS %d float\n", nNodes);
   unsigned char nodeData[32];
-  double* vec3d = (double*)(&nodeData[8]);
+  float* vec3d = (float*)(&nodeData[8]);
 //  int* nodeId = (int*)(&nodeData[0]);
 //  int* nodeKind = (int*)(&nodeData[4]);
   float vec3f[3];

@@ -210,6 +210,7 @@ void SurfaceMesh::compute()
     m->voxels[i] = -3;
   }
 
+
   // Save the actual volume dimensions from the input file
   int xFileDim = m->xDim - 2;
   int yFileDim = m->yDim - 2;
@@ -268,6 +269,14 @@ void SurfaceMesh::compute()
       ::memcpy( (void*)vxPtr, (void*)fVxPtr, xFileDim * sizeof(int));
     }
 
+	for(int q=0;q<size;q++)
+	{
+		int check = m->voxels[q];
+		if(check > 1000 || check < -5)
+		{
+			int stop = 0;
+		}	
+	}
     m->get_neighbor_list();
     m->initialize_nodes(i);
     m->initialize_squares(i);
@@ -366,7 +375,8 @@ emit finished();
 
 
   progressMessage(msg, 95 );
-  SMVtkFileIO::Pointer writer;
+  SMVtkFileIO::Pointer writer = SMVtkFileIO::New();
+  writer->setInputFileName(VisualizationFile);
   writer->writeVTKFile(m.get(), nNodes, cTriID, VisualizationFile, NodesFile, TrianglesFile, m_BinaryVTKFile, m_ConformalMesh);
 
   progressMessage(AIM_STRING("Surface Meshing Complete"), 100 );
