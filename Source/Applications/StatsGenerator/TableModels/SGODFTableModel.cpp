@@ -402,19 +402,20 @@ void SGODFTableModel::setTableData(QVector<float> e1, QVector<float> e2, QVector
   qint32 row = 0;
   // Remove all the current rows in the table model
   removeRows(0, rowCount());
-
-  // Now mass insert the data to the table then emit that the data has changed
-  beginInsertRows(QModelIndex(), row, row + count - 1);
-  m_Euler1s = e1;
-  m_Euler2s = e2;
-  m_Euler3s = e3;
-  m_Weights = weights;
-  m_Sigmas = sigmas;
-  m_RowCount = count;
-  endInsertRows();
-  QModelIndex topLeft = createIndex(0, 0);
-  QModelIndex botRight = createIndex(count-1, ColumnCount);
+  QModelIndex topLeft;
+  QModelIndex botRight;
+  if (count > 1) {
+    // Now mass insert the data to the table then emit that the data has changed
+    beginInsertRows(QModelIndex(), row, row + count - 1);
+    m_Euler1s = e1;
+    m_Euler2s = e2;
+    m_Euler3s = e3;
+    m_Weights = weights;
+    m_Sigmas = sigmas;
+    m_RowCount = count;
+    endInsertRows();
+    QModelIndex topLeft = createIndex(0, 0);
+    QModelIndex botRight = createIndex(count-1, ColumnCount);
+  }
   emit dataChanged(topLeft, botRight);
-
-
 }

@@ -56,7 +56,7 @@ class AbstractMicrostructurePreset
   public:
     MXA_SHARED_POINTERS(AbstractMicrostructurePreset)
     MXA_TYPE_MACRO(AbstractMicrostructurePreset)
-    virtual ~AbstractMicrostructurePreset() {};
+    virtual ~AbstractMicrostructurePreset();
 
 
     /**
@@ -107,24 +107,24 @@ class AbstractMicrostructurePreset
      * Weights and Spreads.
      * @param widget Non Null SGAxisODFWidget
      */
-    virtual void initializeAxisODFTableModel(SGAxisODFWidget* widget) {}
+    virtual void initializeAxisODFTableModel(SGAxisODFWidget* widget);
 
     /**
      * @brief This method initializes the ODF Table with preset Euler angles,
      * Weights and Spreads.
      * @param widget
      */
-    virtual void initializeODFTableModel(StatsGenODFWidget* widget) {}
+    virtual void initializeODFTableModel(StatsGenODFWidget* widget);
 
     /**
      * @brief This method initializes the MDF Table with preset Euler angles,
      * Weights and Spreads.
      * @param widget
      */
-    virtual void initializeMDFTableModel(StatsGenMDFWidget* widget) {}
+    virtual void initializeMDFTableModel(StatsGenMDFWidget* widget);
 
   protected:
-    AbstractMicrostructurePreset() {};
+    AbstractMicrostructurePreset();
 
   private:
     AbstractMicrostructurePreset(const AbstractMicrostructurePreset&); // Copy Constructor Not Implemented

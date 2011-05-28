@@ -73,6 +73,8 @@ class StatsGenMDFWidget : public QWidget, private Ui::StatsGenMDFWidget
 
   void updateMDFPlot(QwtArray<float> odf);
 
+  SGMDFTableModel* tableModel();
+
   protected slots:
     void on_addMDFRowBtn_clicked();
     void on_deleteMDFRowBtn_clicked();
