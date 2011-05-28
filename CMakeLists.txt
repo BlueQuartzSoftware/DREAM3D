@@ -223,12 +223,12 @@ if (DREAM3D_BUILD_QT_APPS)
    add_subdirectory(${DREAM3D_SOURCE_DIR}/Source/UIPlugins/Reconstruction ${DREAM3D_BINARY_DIR}/UIPlugins/Reconstruction)
    add_subdirectory(${DREAM3D_SOURCE_DIR}/Source/UIPlugins/SurfaceMeshing ${DREAM3D_BINARY_DIR}/UIPlugins/SurfaceMeshing)
          
-if (0)
+
    OPTION (DREAM3D_BUILD_STATS_GENERATOR "Compile the Statistics Generator GUI Application" ON)
    if (DREAM3D_BUILD_STATS_GENERATOR)
     add_subdirectory(${DREAM3D_SOURCE_DIR}/Source/Applications/StatsGenerator ${DREAM3D_BINARY_DIR}/Applications/StatsGenerator)
    endif()
-endif()
+
       
    option(DREAM3D_BUILD_GUI "Compile the DREAM3D GUI Application" ON)
    if (DREAM3D_BUILD_GUI)
