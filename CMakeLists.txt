@@ -222,19 +222,18 @@ if (DREAM3D_BUILD_QT_APPS)
    add_subdirectory(${DREAM3D_SOURCE_DIR}/Source/UIPlugins/GrainGenerator ${DREAM3D_BINARY_DIR}/UIPlugins/GrainGenerator)
    add_subdirectory(${DREAM3D_SOURCE_DIR}/Source/UIPlugins/Reconstruction ${DREAM3D_BINARY_DIR}/UIPlugins/Reconstruction)
    add_subdirectory(${DREAM3D_SOURCE_DIR}/Source/UIPlugins/SurfaceMeshing ${DREAM3D_BINARY_DIR}/UIPlugins/SurfaceMeshing)
-         
-
-   OPTION (DREAM3D_BUILD_STATS_GENERATOR "Compile the Statistics Generator GUI Application" ON)
-   if (DREAM3D_BUILD_STATS_GENERATOR)
-    add_subdirectory(${DREAM3D_SOURCE_DIR}/Source/Applications/StatsGenerator ${DREAM3D_BINARY_DIR}/Applications/StatsGenerator)
-   endif()
-
-      
+   
+   # Build the DREAM3D Application  
    option(DREAM3D_BUILD_GUI "Compile the DREAM3D GUI Application" ON)
    if (DREAM3D_BUILD_GUI)
        ADD_SUBDIRECTORY( ${DREAM3D_SOURCE_DIR}/Source/Applications/DREAM3D ${DREAM3D_BINARY_DIR}/Applications/DREAM3D)
    endif()
-
+       
+   # Build the StatsGenerator Application
+   OPTION (DREAM3D_BUILD_STATS_GENERATOR "Compile the Statistics Generator GUI Application" ON)
+   if (DREAM3D_BUILD_STATS_GENERATOR)
+    add_subdirectory(${DREAM3D_SOURCE_DIR}/Source/Applications/StatsGenerator ${DREAM3D_BINARY_DIR}/Applications/StatsGenerator)
+   endif()
    
 else()
     set (DREAM3D_BUILD_GUI "OFF" CACHE BOOL "" FORCE)
@@ -246,22 +245,17 @@ include_directories(${DREAM3D_SOURCE_DIR}/Source)
 # add the Reconstruction Command line Tool
 OPTION(DREAM3D_BUILD_TOOL_RECONSTRUCTION "Compile Reconstruction Tool" OFF)
 IF ( DREAM3D_BUILD_TOOL_RECONSTRUCTION )
-    ADD_SUBDIRECTORY( ${DREAM3D_SOURCE_DIR}/Source/AIM/Reconstruction ${DREAM3D_BINARY_DIR}/AIM/Reconstruction)
+    ADD_SUBDIRECTORY( ${DREAM3D_SOURCE_DIR}/Source/Applications/Reconstruction ${DREAM3D_BINARY_DIR}/Applications/Reconstruction)
 ENDIF ()
 
 OPTION (DREAM3D_BUILD_TOOL_GRAIN_GENERATOR "Compile the Grain Generator Tool" OFF)
 if (DREAM3D_BUILD_TOOL_GRAIN_GENERATOR)
-    add_subdirectory(${DREAM3D_SOURCE_DIR}/Source/AIM/GrainGenerator ${DREAM3D_BINARY_DIR}/AIM/GrainGenerator)
+    add_subdirectory(${DREAM3D_SOURCE_DIR}/Source/Applications/GrainGenerator ${DREAM3D_BINARY_DIR}/Applications/GrainGenerator)
 endif()
 
 OPTION (DREAM3D_BUILD_TOOL_SURFACE_MESHING "Compile the surface Meshing tool" OFF)
 if (DREAM3D_BUILD_TOOL_SURFACE_MESHING)
-    add_subdirectory(${DREAM3D_SOURCE_DIR}/Source/AIM/SurfaceMesh ${DREAM3D_BINARY_DIR}/AIM/SurfaceMesh)
-endif()
-
-OPTION (DREAM3D_BUILD_TOOL_VOLUME_MESHING "Compile the Volume Meshing tools" OFF)
-if (DREAM3D_BUILD_TOOL_VOLUME_MESHING)
-    add_subdirectory(${DREAM3D_SOURCE_DIR}/Source/AIM/VolumeMesh ${DREAM3D_BINARY_DIR}/AIM/VolumeMesh)
+    add_subdirectory(${DREAM3D_SOURCE_DIR}/Source/Applications/SurfaceMesh ${DREAM3D_BINARY_DIR}/Applications/SurfaceMesh)
 endif()
 
 # ------- Enable the CTest testing. Use make test to run all tests ---------------

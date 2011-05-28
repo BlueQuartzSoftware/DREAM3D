@@ -36,12 +36,10 @@ SET (CMAKE_ARCHIVE_OUTPUT_DIRECTORY
 
 set (SurfaceMesh_SRCS
     ${SurfaceMesh_SOURCE_DIR}/main.cpp
-    ${SurfaceMesh_SOURCE_DIR}/SurfaceMesh.cpp
-    ${SurfaceMesh_SOURCE_DIR}/SMVtkFileIO.cpp
+    ${PROJECT_CODE_DIR}/DREAM3D/SurfaceMesh/SurfaceMesh.cpp
 )
 set (SurfaceMesh_HDRS
-    ${SurfaceMesh_SOURCE_DIR}/SurfaceMesh.h
-    ${SurfaceMesh_SOURCE_DIR}/SMVtkFileIO.h
+    ${PROJECT_CODE_DIR}/DREAM3D/SurfaceMesh/SurfaceMesh.h
 )
 cmp_IDE_SOURCE_PROPERTIES( "AIM/SurfaceMesh" "${SurfaceMesh_HDRS}" "${SurfaceMesh_SRCS}" ${PROJECT_INSTALL_HEADERS})
                       
@@ -65,7 +63,7 @@ BuildToolBundle(
     VERSION_MINOR ${DREAM3D_VER_MINOR}
     VERSION_PATCH ${DREAM3D_VER_PATCH}
     BINARY_DIR    ${${PROJECT_NAME}_BINARY_DIR}
-    LINK_LIBRARIES AIMCommon
+    LINK_LIBRARIES DREAM3DLib
     LIB_SEARCH_DIRS ${CMAKE_LIBRARY_OUTPUT_DIRECTORY} ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
     COMPONENT     Applications
     INSTALL_DEST  "${install_dir}"

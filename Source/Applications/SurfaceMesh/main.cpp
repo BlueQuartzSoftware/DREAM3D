@@ -39,10 +39,10 @@
 #include <MXA/Utilities/MXALogger.h>
 
 #include "DREAM3D/Common/Constants.h"
-#include <DREAM3D/Common/DREAM3DVersion.h>
+#include <DREAM3D/DREAM3DVersion.h>
 #include <DREAM3D/Common/AIMArray.hpp>
 
-#include <AIM/SurfaceMesh/SurfaceMesh.h>
+#include <DREAM3D/SurfaceMesh/SurfaceMesh.h>
 
 #define CHECK_ARG(var, mandatory)\
     if (vm.count(#var) > 1) { mxa_log << logTime() << "Multiple Occurances for Parameter " << #var << std::endl; }\

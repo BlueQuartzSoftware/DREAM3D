@@ -26,27 +26,29 @@ endmacro()
 if (0)
 set (srcs
     ${AIMTest_SOURCE_DIR}/AngDirectoryPatternTest.cpp
-    ${DREAM3D_SOURCE_DIR}/Source/AIM/ANG/AngDirectoryPatterns.cpp
-    ${DREAM3D_SOURCE_DIR}/Source/AIM/Common/Grain.cpp
+    ${DREAM3D_SOURCE_DIR}/Source/DREAM3D/ANG/AngDirectoryPatterns.cpp
+    ${DREAM3D_SOURCE_DIR}/Source/DREAM3D/Common/Grain.cpp
     )
 add_executable(AngDirectoryPattern ${srcs})
 target_link_libraries(AngDirectoryPattern MXA)
 endif()
 
-add_executable(ODFTest ${AIMTest_SOURCE_DIR}/ODFTest.cpp  ${DREAM3D_SOURCE_DIR}/Source/StatsGenerator/StatsGen.cpp)
-target_link_libraries(ODFTest AIMCommon)
+include_directories(${DREAM3D_SOURCE_DIR}/Source/Applications)
+
+add_executable(ODFTest ${AIMTest_SOURCE_DIR}/ODFTest.cpp  ${DREAM3D_SOURCE_DIR}/Source/Applications/StatsGenerator/StatsGen.cpp)
+target_link_libraries(ODFTest DREAM3DLib)
 
 
-add_executable(AngReaderTest ${AIMTest_SOURCE_DIR}/AngReaderTest.cpp ${DREAM3D_SOURCE_DIR}/Source/AIM/OIMImport/OIMImport.cpp)
-target_link_libraries(AngReaderTest AIMCommon)
+add_executable(AngReaderTest ${AIMTest_SOURCE_DIR}/AngReaderTest.cpp ${DREAM3D_SOURCE_DIR}/Source/DREAM3D/OIMImport/OIMImport.cpp)
+target_link_libraries(AngReaderTest DREAM3DLib)
 
 add_executable(VoxelTest ${AIMTest_SOURCE_DIR}/VoxelTest.cpp)
-target_link_libraries(VoxelTest AIMCommon)
+target_link_libraries(VoxelTest DREAM3DLib)
 
 
 add_executable(TextureTest ${AIMTest_SOURCE_DIR}/TextureTest.cpp)
-target_link_libraries(TextureTest AIMCommon)
+target_link_libraries(TextureTest DREAM3DLib)
 
 add_executable(StatsGenTest ${AIMTest_SOURCE_DIR}/StatsGenTest.cpp)
-target_link_libraries(StatsGenTest AIMCommon)
+target_link_libraries(StatsGenTest DREAM3DLib)
 MXA_ADD_TEST(StatsGenTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/StatsGenTest)
