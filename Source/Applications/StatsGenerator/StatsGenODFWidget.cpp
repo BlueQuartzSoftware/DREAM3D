@@ -492,3 +492,11 @@ SGODFTableModel* StatsGenODFWidget::tableModel()
 {
   return m_ODFTableModel;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+StatsGenMDFWidget* StatsGenODFWidget::getMDFWidget()
+{
+  return m_MDFWidget;
+}

@@ -84,6 +84,8 @@ class StatsGenODFWidget : public QWidget, private Ui::SGAxisODFWidget
 
     SGODFTableModel* tableModel();
 
+    StatsGenMDFWidget* getMDFWidget();
+
     protected slots:
       void on_m_CalculateODFBtn_clicked();
       void on_addODFTextureBtn_clicked();

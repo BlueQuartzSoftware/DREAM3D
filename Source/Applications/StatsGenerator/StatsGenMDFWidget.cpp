@@ -77,6 +77,14 @@ StatsGenMDFWidget::~StatsGenMDFWidget()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+SGMDFTableModel* StatsGenMDFWidget::tableModel()
+{
+  return m_MDFTableModel;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void StatsGenMDFWidget::setupGui()
 {
   initQwtPlot("Misorientation Angle(w)", "Freq", m_MDFPlot);

@@ -386,27 +386,31 @@ void SGMDFTableModel::setTableData(QVector<float> angles, QVector<float> axis, Q
   qint32 row = 0;
   // Remove all the current rows in the table model
   removeRows(0, rowCount());
+  QModelIndex topLeft;
+  QModelIndex botRight;
 
-  // Now mass insert the data to the table then emit that the data has changed
-  beginInsertRows(QModelIndex(), row, row + count - 1);
-  m_Angles = angles;
-  m_Weights = weights;
+  if (count > 0) {
+    // Now mass insert the data to the table then emit that the data has changed
+    beginInsertRows(QModelIndex(), row, row + count - 1);
+    m_Angles = angles;
+    m_Weights = weights;
 
-  m_Axis.clear();
-  int h,k,l;
-  for (int i = 0; i < axis.size(); ++i)
-  {
-    h = axis[i];
-    k = axis[++i];
-    l = axis[++i];
-    QString status = QString("<%1,%2,%3>").arg(h).arg(k).arg(l);
-    m_Axis.push_back(status);
+    m_Axis.clear();
+    int h,k,l;
+    for (int i = 0; i < axis.size(); ++i)
+    {
+      h = axis[i];
+      k = axis[++i];
+      l = axis[++i];
+      QString status = QString("<%1,%2,%3>").arg(h).arg(k).arg(l);
+      m_Axis.push_back(status);
+    }
+
+    m_RowCount = count;
+    endInsertRows();
+    QModelIndex topLeft = createIndex(0, 0);
+    QModelIndex botRight = createIndex(count-1, ColumnCount);
   }
-
-  m_RowCount = count;
-  endInsertRows();
-  QModelIndex topLeft = createIndex(0, 0);
-  QModelIndex botRight = createIndex(count-1, ColumnCount);
   emit dataChanged(topLeft, botRight);
 }
 

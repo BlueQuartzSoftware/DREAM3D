@@ -109,6 +109,7 @@ cmp_IDE_SOURCE_PROPERTIES( "StatsGenerator/TableModels" "${StatsGenerator_TABLEM
 
 set (StatsGenerator_PRESETS_SRCS
     ${StatsGenerator_SOURCE_DIR}/Presets/MicrostructurePresetManager.cpp
+    ${StatsGenerator_SOURCE_DIR}/Presets/AbstractMicrostructurePreset.cpp
     ${StatsGenerator_SOURCE_DIR}/Presets/EquiaxedPreset.cpp
     ${StatsGenerator_SOURCE_DIR}/Presets/DefaultStatsPreset.cpp
     ${StatsGenerator_SOURCE_DIR}/Presets/RecrystallizedPreset.cpp
