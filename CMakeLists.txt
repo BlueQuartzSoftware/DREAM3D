@@ -215,9 +215,11 @@ if (DREAM3D_BUILD_QT_APPS)
    # Append the locations of the Qt libraries to our Library Search Paths
    list(APPEND CMP_LIB_SEARCH_DIRS ${QT_BINARY_DIR} ${QT_LIBRARY_DIR} )
    
+   # Build the static QtSupport library - which MUST be a static library or the linking
+   # will not work.
    add_subdirectory(${DREAM3D_SOURCE_DIR}/Source/QtSupport ${DREAM3D_BINARY_DIR}/QtSupport)
-   # Add our Qt based GUI project to the list of targets
-
+   
+    # Add in each GUI Plugin Project here
    add_subdirectory(${DREAM3D_SOURCE_DIR}/Source/UIPlugins/OIMImport ${DREAM3D_BINARY_DIR}/UIPlugins/OIMImport)
    add_subdirectory(${DREAM3D_SOURCE_DIR}/Source/UIPlugins/GrainGenerator ${DREAM3D_BINARY_DIR}/UIPlugins/GrainGenerator)
    add_subdirectory(${DREAM3D_SOURCE_DIR}/Source/UIPlugins/Reconstruction ${DREAM3D_BINARY_DIR}/UIPlugins/Reconstruction)

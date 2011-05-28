@@ -410,7 +410,6 @@ void SGWidget::updatePlots()
 {
   if (m_DataHasBeenGenerated == true)
   {
-
     plotSizeDistribution();
     m_ODFWidget->updatePlots();
     m_AxisODFWidget->updatePlots();
@@ -667,6 +666,7 @@ void SGWidget::plotSizeDistribution()
   // Get any presets for the ODF/AxisODF/MDF also
   m_MicroPreset->initializeODFTableModel(m_ODFWidget);
   m_MicroPreset->initializeAxisODFTableModel(m_AxisODFWidget);
+  m_MicroPreset->initializeMDFTableModel(m_ODFWidget->getMDFWidget());
 
 }
 
