@@ -301,8 +301,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>810</width>
-            <height>657</height>
+            <width>98</width>
+            <height>58</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout">
@@ -373,7 +373,7 @@
   <customwidget>
    <class>SGAxisODFWidget</class>
    <extends>QWidget</extends>
-   <header>sgaxisodfwidget.h</header>
+   <header location="global">SGAxisODFWidget.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

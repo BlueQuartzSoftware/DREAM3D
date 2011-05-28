@@ -207,6 +207,10 @@ void OIMImportWidget::on_m_InputDir_textChanged(const QString & text)
   if (verifyPathExists(m_InputDir->text(), m_InputDir) )
   {
     m_findAngMaxSliceAndPrefix();
+    QFileInfo fi(m_InputDir->text());
+    QDir dir = fi.dir();
+    m_OutputFile->setText(dir.path() + QDir::separator() + fi.fileName() + ".h5ang");
+
   }
   else
   {
@@ -411,6 +415,7 @@ void OIMImportWidget::m_findAngMaxSliceAndPrefix()
   int digitStart = 0;
   int digitEnd = 0;
   int totalOimFilesFound = 0;
+  int minTotalDigits = 1000;
   foreach(QFileInfo fi, angList)
   {
     if (fi.suffix().compare(ext) && fi.isFile() == true)
@@ -418,6 +423,15 @@ void OIMImportWidget::m_findAngMaxSliceAndPrefix()
       pos = 0;
       list.clear();
       QString fn = fi.baseName();
+      std::string fns = fn.toStdString();
+      int length =  fn.length();
+      digitEnd = length-1;
+      while(digitEnd >= 0 && fn[digitEnd] >= '0' && fn[digitEnd]<='9')
+      {
+        --digitEnd;
+      }
+      pos = digitEnd;
+
       digitStart = pos = rx.indexIn(fn, pos);
       digitEnd = digitStart;
       while ((pos = rx.indexIn(fn, pos)) != -1)
@@ -430,7 +444,9 @@ void OIMImportWidget::m_findAngMaxSliceAndPrefix()
       {
         ++digitEnd;
       }
-      m_TotalDigits->setValue(digitEnd - digitStart);
+
+      if ( digitEnd - digitStart < minTotalDigits) { minTotalDigits = digitEnd - digitStart; }
+      m_TotalDigits->setValue(minTotalDigits);
       if (list.size() > 0) {
         currValue = list.front().toInt(&ok);
         if (false == flag) { minSlice = currValue; flag = true;}
