@@ -842,10 +842,10 @@
   </customwidget>
  </customwidgets>
  <resources>
-  <include location="../../../../Resources/icons/images/Icons.qrc"/>
-  <include location="../../../../Resources/icons/images/Icons.qrc"/>
-  <include location="../../../../Resources/icons/images/Icons.qrc"/>
-  <include location="../../../../Resources/icons/images/Icons.qrc"/>
+  <include location="../../../Resources/icons/images/Icons.qrc"/>
+  <include location="../../../Resources/icons/images/Icons.qrc"/>
+  <include location="../../../Resources/icons/images/Icons.qrc"/>
+  <include location="../../../Resources/icons/images/Icons.qrc"/>
  </resources>
  <connections/>
 </ui>

@@ -98,3 +98,10 @@ void GrainGeneratorPlugin::readSettings(QSettings &prefs)
   m_InputWidget->readSettings(prefs);
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QIcon GrainGeneratorPlugin::icon()
+{
+  return QIcon(":/graingenerator.png");
+}

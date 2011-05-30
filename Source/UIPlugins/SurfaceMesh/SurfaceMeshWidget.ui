@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>671</width>
-    <height>485</height>
+    <height>512</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -61,7 +61,7 @@
         <string/>
        </property>
        <property name="pixmap">
-        <pixmap>:/Delete-16x16.png</pixmap>
+        <pixmap resource="../../../Resources/icons/images/Icons.qrc">:/Delete-16x16.png</pixmap>
        </property>
       </widget>
      </item>
@@ -262,7 +262,7 @@
         <number>12</number>
        </property>
        <property name="verticalSpacing">
-        <number>6</number>
+        <number>10</number>
        </property>
        <item row="1" column="1">
         <widget class="QLabel" name="m_VisualizationVizFile">
@@ -277,14 +277,14 @@
           <string/>
          </property>
          <property name="pixmap">
-          <pixmap>:/Delete-16x16.png</pixmap>
+          <pixmap resource="../../../Resources/icons/images/Icons.qrc">:/Delete-16x16.png</pixmap>
          </property>
          <property name="alignment">
           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
          </property>
         </widget>
        </item>
-       <item row="2" column="1">
+       <item row="4" column="1">
         <widget class="QCheckBox" name="m_BinaryVtkFiles">
          <property name="enabled">
           <bool>true</bool>
@@ -297,7 +297,7 @@
          </property>
         </widget>
        </item>
-       <item row="3" column="1">
+       <item row="5" column="1">
         <widget class="QCheckBox" name="m_ConformalMesh">
          <property name="toolTip">
           <string>A Conformal Mesh only has a single copy of each triangle. If you turn this OFF then there will be 2 copies of each triangle entry, one for each grain.</string>
@@ -307,6 +307,26 @@
          </property>
          <property name="checked">
           <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="0">
+        <widget class="QLabel" name="m_STLFileIcon">
+         <property name="text">
+          <string/>
+         </property>
+         <property name="pixmap">
+          <pixmap resource="../../../Resources/icons/images/Icons.qrc">:/Delete-16x16.png</pixmap>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="1">
+        <widget class="QCheckBox" name="m_STLFile">
+         <property name="text">
+          <string>Mesh.stl</string>
          </property>
         </widget>
        </item>
@@ -359,7 +379,7 @@
           <string/>
          </property>
          <property name="pixmap">
-          <pixmap>:/Delete-16x16.png</pixmap>
+          <pixmap resource="../../../Resources/icons/images/Icons.qrc">:/Delete-16x16.png</pixmap>
          </property>
          <property name="alignment">
           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -372,7 +392,7 @@
           <string/>
          </property>
          <property name="pixmap">
-          <pixmap>:/Delete-16x16.png</pixmap>
+          <pixmap resource="../../../Resources/icons/images/Icons.qrc">:/Delete-16x16.png</pixmap>
          </property>
          <property name="alignment">
           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -588,7 +608,7 @@
   </layout>
  </widget>
  <resources>
-  <include location="../../../../Resources/icons/images/Icons.qrc"/>
+  <include location="../../../Resources/icons/images/Icons.qrc"/>
  </resources>
  <connections/>
 </ui>

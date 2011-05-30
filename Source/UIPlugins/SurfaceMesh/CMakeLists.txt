@@ -34,6 +34,10 @@ set (SurfaceMeshPlugin_SRCS
     ${PROJECT_CODE_DIR}/QtSupport/AIMPluginFrame.cpp
     ${PROJECT_CODE_DIR}/DREAM3D/SurfaceMesh/SurfaceMesh.cpp
     )
+
+# -- Run MOC and UIC on the necessary files   
+QT4_ADD_RESOURCES( SurfaceMeshPlugin_Generated_RC_SRCS ${PROJECT_SOURCE_DIR}/Icons.qrc)    
+    
 QT4_WRAP_UI( SurfaceMeshPlugin_Generated_UI_HDRS 
             ${PROJECT_SOURCE_DIR}/SurfaceMeshWidget.ui )
 
@@ -44,6 +48,7 @@ set (SurfaceMeshPlugin_PROJECT_SRCS
     ${SurfaceMeshPlugin_HDRS}
     ${SurfaceMeshPlugin_Generated_MOC_SRCS} 
     ${SurfaceMeshPlugin_Generated_UI_HDRS}
+    ${SurfaceMeshPlugin_Generated_RC_SRCS}
     ${PROJECT_CODE_DIR}/QtSupport/DREAM3DPluginInterface.h
 )
 

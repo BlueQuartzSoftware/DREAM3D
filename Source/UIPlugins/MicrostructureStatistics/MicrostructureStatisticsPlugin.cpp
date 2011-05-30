@@ -98,3 +98,11 @@ void MicrostructureStatisticsPlugin::readSettings(QSettings &prefs)
   m_InputWidget->readSettings(prefs);
 }
 
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QIcon MicrostructureStatisticsPlugin::icon()
+{
+  return QIcon(":/microstructurestatistics.png");
+}

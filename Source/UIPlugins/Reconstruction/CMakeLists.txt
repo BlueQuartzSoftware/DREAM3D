@@ -34,6 +34,10 @@ set (ReconstructionPlugin_SRCS
     ${PROJECT_CODE_DIR}/QtSupport/AIMPluginFrame.cpp
     ${PROJECT_CODE_DIR}/DREAM3D/Reconstruction/Reconstruction.cpp
     )
+
+# -- Run MOC and UIC on the necessary files   
+QT4_ADD_RESOURCES( ReconstructionPlugin_Generated_RC_SRCS ${PROJECT_SOURCE_DIR}/Icons.qrc)    
+    
 QT4_WRAP_UI( ReconstructionPlugin_Generated_UI_HDRS 
             ${PROJECT_SOURCE_DIR}/ReconstructionWidget.ui )
 
@@ -44,6 +48,7 @@ set (ReconstructionPlugin_PROJECT_SRCS
     ${ReconstructionPlugin_HDRS}
     ${ReconstructionPlugin_Generated_MOC_SRCS} 
     ${ReconstructionPlugin_Generated_UI_HDRS}
+    ${ReconstructionPlugin_Generated_RC_SRCS}
     ${PROJECT_CODE_DIR}/QtSupport/DREAM3DPluginInterface.h
 )
 

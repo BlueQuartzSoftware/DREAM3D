@@ -57,6 +57,7 @@ class MicrostructureStatisticsPlugin : public QObject, public DREAM3DPluginInter
     virtual void writeSettings(QSettings &prefs);
     virtual void readSettings(QSettings &prefs);
 
+    virtual QIcon icon();
 
   protected:
     MicrostructureStatisticsWidget* m_InputWidget;

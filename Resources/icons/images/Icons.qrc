@@ -1,17 +1,17 @@
  <!DOCTYPE RCC>
  <RCC version="1.0">
  <qresource>
-
-    <file>zoomIn.png</file>
-    <file>zoomOut.png</file>
-    <file>fitToWindow.png</file>
-   <file>Check-16x16.png</file>
-   <file>Delete-16x16.png</file>
-      <file>green-dot.png</file>
-         <file>red-dot.png</file>
-         <file>minus.png</file>
-         <file>plus.png</file>
-         <file>preferences.png</file>
-         <file>reload.png</file>
+  <file>zoomIn.png</file>
+  <file>zoomOut.png</file>
+  <file>fitToWindow.png</file>
+  <file>Check-16x16.png</file>
+  <file>Delete-16x16.png</file>
+  <file>green-dot.png</file>
+  <file>red-dot.png</file>
+  <file>minus.png</file>
+  <file>plus.png</file>
+  <file>preferences.png</file>
+  <file>reload.png</file>
+  
  </qresource>
  </RCC>
