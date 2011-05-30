@@ -2828,8 +2828,10 @@ int SurfaceMeshFunc::assign_nodeID(int nN)
   return (nid);
 }
 
-
-void SurfaceMeshFunc::writeNodesFile(int zID, int cNodeID, const std::string &nodesFile)
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int SurfaceMeshFunc::writeNodesFile(int zID, int cNodeID, const std::string &nodesFile)
 {
 //  int tID;
 //  int nk;
@@ -2840,7 +2842,7 @@ void SurfaceMeshFunc::writeNodesFile(int zID, int cNodeID, const std::string &no
   unsigned char data[32];
   int* tId = (int*)(&data[0]);
   int* nk = (int*)(&data[4]);
-  float* vec3d = (float*)(&data[8]);
+  float* vec3f = (float*)(&data[8]);
   size_t totalWritten = 0;
   FILE* f = NULL;
 
@@ -2848,11 +2850,19 @@ void SurfaceMeshFunc::writeNodesFile(int zID, int cNodeID, const std::string &no
   if (zID == 0)
   {
     f = fopen(nodesFile.c_str(), "wb");
+    if (NULL == f)
+    {
+      return -1;
+    }
   }
   // Append to existing file if we are on z>0 slice
   if (zID > 0)
   {
     f = fopen(nodesFile.c_str(), "ab");
+    if (NULL == f)
+    {
+      return -1;
+    }
   }
   int total = (7 * 2 * NSP);
   for (int k = 0; k < total; k++)
@@ -2861,14 +2871,15 @@ void SurfaceMeshFunc::writeNodesFile(int zID, int cNodeID, const std::string &no
     if (*tId > cNodeID - 1)
     {
       *nk = cVertex[k].nodeKind;
-      vec3d[0] = cVertex[k].xc;
-      vec3d[1]  = cVertex[k].yc;
-      vec3d[2]  = cVertex[k].zc;
+      vec3f[0] = cVertex[k].xc;
+      vec3f[1] = cVertex[k].yc;
+      vec3f[2] = cVertex[k].zc;
 //      fprintf(f, "%d %d %f %f %f\n", tID, nk, x, y, z);
       totalWritten = fwrite(data, sizeof(unsigned char), 32, f);
     }
   }
   fclose(f);
+  return 0;
 }
 
 // -----------------------------------------------------------------------------
@@ -2894,11 +2905,19 @@ int SurfaceMeshFunc::writeTrianglesFile (int zID, int ctid,
   if (zID == 0)
   {
     f = fopen(trianglesFile.c_str(), "wb");
+    if (NULL == f)
+    {
+      return -1;
+    }
   }
   // Append to existing file if we are on z>0 slice
   if (zID > 0)
   {
     f = fopen(trianglesFile.c_str(), "ab");
+    if (NULL == f)
+    {
+      return -1;
+    }
   }
   size_t totalWritten = 0;
   //  outFile << nt <<endl;

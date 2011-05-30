@@ -321,6 +321,7 @@ namespace AIM
     const std::string VisualizationVizFile("Visualization.vtk");
     const std::string Smooth3DIterationFile("Smooth3D");
     const std::string NodesSmoothedFile("nodes_smoothed.txt");
+    const std::string STLFile("Mesh.stl");
   }
 
   namespace VolumeMeshing {
