@@ -1,0 +1,55 @@
+/**
+@page todo DREAM3D ToDo List
+
+This is the list of things to do. It is written with the DOxygen style
+so it can be integrated with the other documentation pages.
+
+@section ang_import Ang Import:
+@li Better Display of errors when importing to help user fix their data
+
+@section reconstruction Reconstruction:
+@li Fix 2 Phase bug - Bad output file is written
+@li Rework existing user interface for showing output file that will be written and
+indicate which files will be over written during execution.
+@li Indicate with a set of images what is meant for the "Orientation" of the OIM Data
+@li <b>DONE</b> (MAJ 2011/05/27) - Set output prefix based on the name of the input file
+
+@section  graingenerator GrainGenerator:
+@li Rework existing user interface for showing output file that will be written and
+indicate which files will be over written during execution.
+@li Confirm Crashing bug in Destructor of GrainGeneratorFunc is fixed.
+@li Switch to defining Dimensions and resolution of the volume to be created
+@li Real time indicate the average grain size, number of grains as user inputs values
+into the user interface
+@li <b>DONE</b> (MAJ 2011/05/27) - Stop reading MicroTexture from the HDF5 Input file
+
+
+@section surfacemeshing Surface Meshing:
+@li Output STL File per grain
+@li Fix bug in assign_grains();
+
+@section twotothree 2D to 3D Module:
+@li Create new tab for this interface which will generate 3D Stats from a set of 2D statistics or input files
+
+@section microstats Microstructure Statistics Module:
+@li Move all the stats functions to their own class out of the Reconstruction and GrainGenerator modules
+@li <b>DONE</b> (MAJ 2011/05/28) - Add new tab "Calculate Stats" which will use existing grain structure files as the input.
+
+
+@section statsgen StatsGenerator
+@li Rolled Preset Dialog needs to be redone and made "idiot" proof.
+@li <b>DONE</b> (MAJ 2011/05/28) - When switching between presets the ODF/MDF tables are NOT cleared as they should be.
+@li Stop Calculating MicroTexture
+
+@section infrastructure Infrastructure Changes:
+@li Move to a more modular pipeline architecture for each of the Modules where we start mimicing a VTK filter pipeline.
+@li <b>DONE</b> (MAJ 2011/05/28) - Move each UI Tab Module to be an actual Plugin library.
+@li <b>DONE</b> (MAJ 2011/05/28) - Redesign Main User Interface to load an individual Tab at a time through a menu instead of having all the tabs.
+@li <b>DONE</b> (MAJ 2011/05/28) - Better Organize Source Code Files
+
+@section pv ParaView Integration:
+@li Create .h5ang plugin for ParaView to allow the direct reading of the imported OIM data
+
+
+
+*/
