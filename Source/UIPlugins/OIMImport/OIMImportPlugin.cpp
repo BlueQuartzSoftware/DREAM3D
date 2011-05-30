@@ -99,3 +99,11 @@ void OIMImportPlugin::readSettings(QSettings &prefs)
   m_InputWidget->readSettings(prefs);
 }
 
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QIcon OIMImportPlugin::icon()
+{
+  return QIcon(":/oimimport.png");
+}

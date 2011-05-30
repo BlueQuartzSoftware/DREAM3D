@@ -36,6 +36,7 @@
 #include <QtCore/QtPlugin>
 #include <QPair>
 #include <QVector>
+#include <QtGui/QIcon>
 
 class AIMPluginFrame;
 
@@ -133,6 +134,12 @@ class DREAM3DPluginInterface
      * @param prefs
      */
     virtual void readSettings(QSettings &prefs) = 0;
+
+    /**
+     *
+     * @return
+     */
+    virtual QIcon icon() = 0;
 };
 
 

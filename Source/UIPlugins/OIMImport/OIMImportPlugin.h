@@ -56,7 +56,7 @@ class OIMImportPlugin : public QObject, public DREAM3DPluginInterface
 
     virtual void writeSettings(QSettings &prefs);
     virtual void readSettings(QSettings &prefs);
-
+    virtual QIcon icon();
 
   protected:
     OIMImportWidget* m_InputWidget;

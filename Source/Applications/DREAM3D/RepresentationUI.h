@@ -44,6 +44,7 @@
 #include <QtGui/QWidget>
 #include <QtGui/QMainWindow>
 #include <QtGui/QResizeEvent>
+#include <QtGui/QToolbar>
 
 
 //-- UIC generated Header
@@ -106,8 +107,8 @@ class RepresentationUI : public QMainWindow, private Ui::RepresentationUI
     void loadPlugins();
     void populateMenus(QObject *plugin);
     void addToPluginMenu(QObject *plugin, const QString &text,
-                               QMenu *menu, const char *member,
-                               QActionGroup *actionGroup);
+                         QMenu *menu, const char *member,
+                         QActionGroup *actionGroup, QIcon icon);
 
     /**
      * @brief Implements the CloseEvent to Quit the application and write settings
@@ -162,12 +163,12 @@ class RepresentationUI : public QMainWindow, private Ui::RepresentationUI
   private:
     QList<QWidget*>             m_WidgetList;
     QThread*                    m_WorkerThread;
-    QStringList m_PluginDirs;
-    QStringList pluginFileNames;
-    QActionGroup* pluginActionGroup;
+    QStringList                 m_PluginDirs;
+    QStringList                 pluginFileNames;
+    QActionGroup*               pluginActionGroup;
     DREAM3DPluginInterface*     m_ActivePlugin;
     QVector<DREAM3DPluginInterface*> m_LoadedPlugins;
-
+    QToolBar*                   m_PluginToolBar;
     QString                     m_OpenDialogLastDirectory;
 
 

@@ -63,6 +63,7 @@ RepresentationUI::RepresentationUI(QWidget *parent) :
   QMainWindow(parent),
   m_WorkerThread(NULL),
   m_ActivePlugin(NULL),
+  m_PluginToolBar(NULL),
 #if defined(Q_WS_WIN)
 m_OpenDialogLastDirectory("C:\\")
 #else
@@ -150,10 +151,34 @@ void RepresentationUI::readSettings()
 //  READ_INT_SETTING(prefs, ActiveTab, 0);
 //  this->centralWidget->setCurrentIndex(ActiveTab);
 
+
+
   foreach (DREAM3DPluginInterface* plugin, m_LoadedPlugins) {
     plugin->readSettings(prefs);
   }
+  bool loaded = false;
+  QString pluginName = prefs.value("ActivePlugin").toString();
+  for (int i = 0; i < m_LoadedPlugins.size(); ++i)
+  {
+    if (m_LoadedPlugins[i]->getPluginName().compare(pluginName) == 0)
+    {
+      if (pluginActionGroup->actions().size() > 0)
+      {
+        pluginActionGroup->actions().at(i)->activate(QAction::Trigger);
+        loaded = true;
+      }
+      break;
+    }
+  }
 
+  // If the proper plugin was not found, Load the first plugin found
+  if (loaded == false)
+  {
+    if (pluginActionGroup->actions().size() > 0)
+    {
+      pluginActionGroup->actions().at(0)->activate(QAction::Trigger);
+    }
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -170,6 +195,7 @@ void RepresentationUI::writeSettings()
 
 //  int ActiveTab = this->centralWidget->currentIndex();
 //  WRITE_INT_SETTING(prefs, ActiveTab);
+  prefs.setValue("ActivePlugin" , this->m_ActivePlugin->getPluginName());
 
   foreach (DREAM3DPluginInterface* plugin, m_LoadedPlugins) {
     plugin->writeSettings(prefs);
@@ -184,6 +210,10 @@ void RepresentationUI::writeSettings()
 void RepresentationUI::setupGui()
 {
   pluginActionGroup = new QActionGroup(this);
+  m_PluginToolBar = new QToolBar(this);
+  m_PluginToolBar->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
+  m_PluginToolBar->setWindowTitle(tr("Plugins"));
+  addToolBar(m_PluginToolBar);
 }
 
 // -----------------------------------------------------------------------------
@@ -350,79 +380,78 @@ void RepresentationUI::threadHasMessage(QString message)
 // -----------------------------------------------------------------------------
 void RepresentationUI::loadPlugins()
  {
-     foreach (QObject *plugin, QPluginLoader::staticInstances())
-         populateMenus(plugin);
+  foreach (QObject *plugin, QPluginLoader::staticInstances())
+    populateMenus(plugin);
 
-     m_PluginDirs.clear();
-     m_PluginDirs << qApp->applicationDirPath();
+  m_PluginDirs.clear();
+  m_PluginDirs << qApp->applicationDirPath();
 
-     QDir aPluginDir = QDir(qApp->applicationDirPath());
-     QString thePath;
+  QDir aPluginDir = QDir(qApp->applicationDirPath());
+  QString thePath;
 
- #if defined(Q_OS_WIN)
-     if (aPluginDir.cd("plugins") ) {
-      thePath = aPluginDir.absolutePath();
-      m_PluginDirs << thePath;
-     }
- #elif defined(Q_OS_MAC)
-     if (aPluginDir.dirName() == "MacOS") {
-         aPluginDir.cdUp();
-         thePath = aPluginDir.absolutePath() + "/Plugins";
-         m_PluginDirs << thePath;
-         aPluginDir.cdUp();
-         thePath = aPluginDir.absolutePath() + "/Plugins";
-        // m_PluginDirs << thePath;
-         aPluginDir.cdUp();
-     }
-    // aPluginDir.cd("Plugins");
-     thePath = aPluginDir.absolutePath() + "/Plugins";
-     m_PluginDirs << thePath;
+#if defined(Q_OS_WIN)
+  if (aPluginDir.cd("plugins") )
+  {
+    thePath = aPluginDir.absolutePath();
+    m_PluginDirs << thePath;
+  }
+#elif defined(Q_OS_MAC)
+  if (aPluginDir.dirName() == "MacOS")
+  {
+    aPluginDir.cdUp();
+    thePath = aPluginDir.absolutePath() + "/Plugins";
+    m_PluginDirs << thePath;
+    aPluginDir.cdUp();
+    thePath = aPluginDir.absolutePath() + "/Plugins";
+    // m_PluginDirs << thePath;
+    aPluginDir.cdUp();
+  }
+  // aPluginDir.cd("Plugins");
+  thePath = aPluginDir.absolutePath() + "/Plugins";
+  m_PluginDirs << thePath;
 #else
-     if (aPluginDir.cd("plugins")) {
-      thePath = aPluginDir.absolutePath();
-      m_PluginDirs << thePath;
-     }
+  if (aPluginDir.cd("plugins"))
+  {
+    thePath = aPluginDir.absolutePath();
+    m_PluginDirs << thePath;
+  }
 #endif
 
   this->setWindowTitle("DREAM3D - No Plugins Loaded");
 
-foreach (QString pluginDirString, m_PluginDirs) {
- // std::cout << "Plugin Directory being Searched: " << pluginDirString.toStdString() << std::endl;
+  foreach (QString pluginDirString, m_PluginDirs)
+  {
+    // std::cout << "Plugin Directory being Searched: " << pluginDirString.toStdString() << std::endl;
     aPluginDir = QDir(pluginDirString);
-     foreach (QString fileName, aPluginDir.entryList(QDir::Files))
+    foreach (QString fileName, aPluginDir.entryList(QDir::Files))
     {
-   //   std::cout << "File: " << fileName.toStdString() << std::endl;
+      //   std::cout << "File: " << fileName.toStdString() << std::endl;
 #ifdef QT_DEBUG
-       if (fileName.endsWith( "_debug.plugin", Qt::CaseSensitive) )
+      if (fileName.endsWith("_debug.plugin", Qt::CaseSensitive))
 #endif
 
 #if defined (QT_NO_DEBUG)
-       if (fileName.endsWith( ".plugin", Qt::CaseSensitive) )
+      if (fileName.endsWith( ".plugin", Qt::CaseSensitive) )
 #endif
-       {
-    //     std::cout << "File Extension matches.." << std::endl;
-         QPluginLoader loader(aPluginDir.absoluteFilePath(fileName));
-         QObject *plugin = loader.instance();
-       //  std::cout << "plugin Pointer: " << plugin << std::endl;
-         if (plugin && pluginFileNames.contains(fileName, Qt::CaseSensitive) == false)
-         {
-             populateMenus(plugin);
-             pluginFileNames += fileName;
-         }
-         else
-         {
-           std::cout << "The plugin did not load with the following error\n   " << loader.errorString().toStdString() << std::endl;
-         }
-       }
-     }
-
-     menuPlugins->setEnabled(!pluginActionGroup->actions().isEmpty());
-     // Load the first plugin found
-     if (pluginActionGroup->actions().size() > 0) {
-       pluginActionGroup->actions().at(0)->activate(QAction::Trigger);
-     }
+      {
+        //     std::cout << "File Extension matches.." << std::endl;
+        QPluginLoader loader(aPluginDir.absoluteFilePath(fileName));
+        QObject *plugin = loader.instance();
+        //  std::cout << "plugin Pointer: " << plugin << std::endl;
+        if (plugin && pluginFileNames.contains(fileName, Qt::CaseSensitive) == false)
+        {
+          populateMenus(plugin);
+          pluginFileNames += fileName;
+        }
+        else
+        {
+          std::cout << "The plugin did not load with the following error\n   " << loader.errorString().toStdString() << std::endl;
+        }
+      }
+    }
+    menuPlugins->setEnabled(!pluginActionGroup->actions().isEmpty());
   }
- }
+}
 
 // -----------------------------------------------------------------------------
 //
@@ -435,7 +464,10 @@ foreach (QString pluginDirString, m_PluginDirs) {
   {
     m_LoadedPlugins.push_back(ipPlugin);
     qWarning(ipPlugin->getPluginName().toAscii(), "%s");
-    addToPluginMenu(plugin, ipPlugin->getPluginName(), menuPlugins, SLOT(setInputUI()), pluginActionGroup);
+    QIcon newIcon = ipPlugin->icon();
+
+    addToPluginMenu(plugin, ipPlugin->getPluginName(),
+                    menuPlugins, SLOT(setInputUI()), pluginActionGroup, newIcon);
   }
 }
 
@@ -445,11 +477,12 @@ foreach (QString pluginDirString, m_PluginDirs) {
 // -----------------------------------------------------------------------------
 void RepresentationUI::addToPluginMenu(QObject *plugin, const QString &text,
                                      QMenu *menu, const char *member,
-                                     QActionGroup *actionGroup)
+                                     QActionGroup *actionGroup, QIcon icon)
 {
-  QAction *action = new QAction(text, plugin);
+  QAction *action = new QAction(icon, text, plugin);
   connect(action, SIGNAL(triggered()), this, member);
   menu->addAction(action);
+  m_PluginToolBar->addAction(action);
 
   if (actionGroup)
   {
@@ -464,14 +497,15 @@ void RepresentationUI::addToPluginMenu(QObject *plugin, const QString &text,
 void RepresentationUI::setInputUI()
 {
   // Get the current QWidget
-  if (NULL != m_ActivePlugin) {
+  if (NULL != m_ActivePlugin)
+  {
     QWidget* activeInputWidget = m_ActivePlugin->getInputWidget(this);
     centerWidget->layout()->removeWidget(activeInputWidget);
   }
   // Get the action Associated with the Plugin that was just activated
-  QAction *action = qobject_cast<QAction*> (sender());
+  QAction *action = qobject_cast<QAction*>(sender());
   // Get a pointer to the new active plugin instance
-  m_ActivePlugin = qobject_cast<DREAM3DPluginInterface* > (action->parent());
+  m_ActivePlugin = qobject_cast<DREAM3DPluginInterface*>(action->parent());
   this->setWindowTitle(m_ActivePlugin->getPluginName() + " is now Active");
 
   // Get a pointer to the plugins Input Widget
@@ -479,9 +513,10 @@ void RepresentationUI::setInputUI()
   centerWidget->layout()->addWidget(inputWidget);
 
   AIMPluginFrame* frame = m_ActivePlugin->getPluginFrame(NULL);
-  if (frame){
-      frame->setStatusBar(this->statusBar());
-    }
+  if (frame)
+  {
+    frame->setStatusBar(this->statusBar());
+  }
 
 }
 

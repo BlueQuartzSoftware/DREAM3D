@@ -19,6 +19,9 @@
   <property name="windowTitle">
    <string>DREAM.3D</string>
   </property>
+  <property name="unifiedTitleAndToolBarOnMac">
+   <bool>false</bool>
+  </property>
   <widget class="QWidget" name="centerWidget">
    <layout class="QVBoxLayout" name="verticalLayout_2">
     <property name="spacing">

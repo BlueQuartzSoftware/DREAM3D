@@ -56,6 +56,7 @@ class GrainGeneratorPlugin : public QObject, public DREAM3DPluginInterface
     virtual void writeSettings(QSettings &prefs);
     virtual void readSettings(QSettings &prefs);
 
+    virtual QIcon icon();
 
   protected:
     GrainGeneratorWidget* m_InputWidget;

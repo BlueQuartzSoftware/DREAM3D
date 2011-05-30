@@ -37,6 +37,7 @@
 #include <QtGui/QFrame>
 #include <QtCore/QSettings>
 #include <QtGui/QStatusBar>
+#include <QtGui/QIcon>
 
 class QLineEdit;
 
@@ -119,6 +120,8 @@ class AIMPluginFrame : public QFrame
      * @return
      */
     virtual bool sanityCheckOutputDirectory(QLineEdit* le, QString msgTitle);
+
+
 
     signals:
 
