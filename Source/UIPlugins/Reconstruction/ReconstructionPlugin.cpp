@@ -98,3 +98,11 @@ void ReconstructionPlugin::readSettings(QSettings &prefs)
   m_InputWidget->readSettings(prefs);
 }
 
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QIcon ReconstructionPlugin::icon()
+{
+  return QIcon(":/reconstruction.png");
+}

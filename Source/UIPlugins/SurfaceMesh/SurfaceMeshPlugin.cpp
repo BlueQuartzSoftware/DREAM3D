@@ -99,3 +99,11 @@ void SurfaceMeshPlugin::readSettings(QSettings &prefs)
   m_InputWidget->readSettings(prefs);
 }
 
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QIcon SurfaceMeshPlugin::icon()
+{
+  return QIcon(":/surfacemesh.png");
+}
