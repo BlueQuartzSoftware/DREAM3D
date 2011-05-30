@@ -97,6 +97,7 @@ Q_OBJECT
     MXA_INSTANCE_STRING_PROPERTY(OutputFilePrefix)
     MXA_INSTANCE_PROPERTY(bool, ConformalMesh)
     MXA_INSTANCE_PROPERTY(bool, BinaryVTKFile)
+    MXA_INSTANCE_PROPERTY(bool, WriteSTLFile)
 
     MXA_INSTANCE_PROPERTY(bool, DeleteTempFiles)
 
@@ -105,6 +106,8 @@ Q_OBJECT
     MXA_INSTANCE_PROPERTY(int, SmoothFileOutputIncrement)
     MXA_INSTANCE_PROPERTY(bool, SmoothLockQuadPoints)
     MXA_INSTANCE_PROPERTY(int, ErrorCondition)
+
+
 
     /**
      * @brief Cancel the operation
