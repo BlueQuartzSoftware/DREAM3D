@@ -151,7 +151,7 @@ public:
   float find_ycoord(int);
   float find_zcoord(int);
   void smooth_boundaries(int nNodes, int nTriangles, string NodesFile, string TrianglesFile);
-  void writeNodesFile(int zID, int cNodeID, const std::string &NodesRawFile);
+  int writeNodesFile(int zID, int cNodeID, const std::string &NodesRawFile);
   int writeTrianglesFile(int zID, int ctid,
                          const std::string &trianglesFile,
                          int nt);
