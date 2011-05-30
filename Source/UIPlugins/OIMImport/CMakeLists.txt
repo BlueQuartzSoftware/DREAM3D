@@ -34,6 +34,10 @@ set (OIMImportPlugin_SRCS
     ${PROJECT_CODE_DIR}/QtSupport/AIMPluginFrame.cpp
     ${PROJECT_CODE_DIR}/DREAM3D/OIMImport/OIMImport.cpp
     )
+
+# -- Run MOC and UIC on the necessary files   
+QT4_ADD_RESOURCES( OIMImportPlugin_Generated_RC_SRCS ${PROJECT_SOURCE_DIR}/Icons.qrc)    
+    
 QT4_WRAP_UI( OIMImportPlugin_Generated_UI_HDRS 
             ${PROJECT_SOURCE_DIR}/OIMImportWidget.ui )
 
@@ -44,6 +48,7 @@ set (OIMImportPlugin_PROJECT_SRCS
     ${OIMImportPlugin_HDRS}
     ${OIMImportPlugin_Generated_MOC_SRCS} 
     ${OIMImportPlugin_Generated_UI_HDRS}
+    ${OIMImportPlugin_Generated_RC_SRCS}
     ${PROJECT_CODE_DIR}/QtSupport/DREAM3DPluginInterface.h
 )
 

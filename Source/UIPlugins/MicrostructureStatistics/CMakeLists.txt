@@ -34,6 +34,10 @@ set (MicrostructureStatisticsPlugin_SRCS
     ${PROJECT_CODE_DIR}/QtSupport/AIMPluginFrame.cpp
     ${PROJECT_CODE_DIR}/DREAM3D/MicrostructureStatistics/MicrostructureStatistics.cpp
     )
+
+# -- Run MOC and UIC on the necessary files   
+QT4_ADD_RESOURCES( MicrostructureStatisticsPlugin_Generated_RC_SRCS ${PROJECT_SOURCE_DIR}/Icons.qrc)    
+
 QT4_WRAP_UI( MicrostructureStatisticsPlugin_Generated_UI_HDRS 
             ${PROJECT_SOURCE_DIR}/MicrostructureStatisticsWidget.ui )
 
@@ -44,6 +48,7 @@ set (MicrostructureStatisticsPlugin_PROJECT_SRCS
     ${MicrostructureStatisticsPlugin_HDRS}
     ${MicrostructureStatisticsPlugin_Generated_MOC_SRCS} 
     ${MicrostructureStatisticsPlugin_Generated_UI_HDRS}
+    ${MicrostructureStatisticsPlugin_Generated_RC_SRCS}
     ${PROJECT_CODE_DIR}/QtSupport/DREAM3DPluginInterface.h
 )
 

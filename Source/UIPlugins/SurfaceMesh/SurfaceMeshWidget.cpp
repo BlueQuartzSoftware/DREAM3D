@@ -89,21 +89,6 @@ void SurfaceMeshWidget::setWidgetListEnabled(bool b)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SurfaceMeshWidget::writeSettings(QSettings &prefs)
-{
-  prefs.beginGroup("SurfaceMesh");
-  WRITE_STRING_SETTING(prefs, m_, InputFile);
-  WRITE_STRING_SETTING(prefs, m_, OutputDir);
-  WRITE_BOOL_SETTING(prefs, m_, SmoothMesh, m_SmoothMesh->isChecked() );
-  WRITE_BOOL_SETTING(prefs, m_, LockQuadPoints, m_LockQuadPoints->isChecked() );
-  WRITE_SETTING(prefs, m_, SmoothIterations );
-  WRITE_SETTING(prefs, m_, WriteOutputFileIncrement );
-  prefs.endGroup();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void SurfaceMeshWidget::readSettings(QSettings &prefs)
 {
   QString val;
@@ -118,6 +103,8 @@ void SurfaceMeshWidget::readSettings(QSettings &prefs)
   READ_FILEPATH_SETTING(prefs, m_, OutputDir, "");
   READ_STRING_SETTING(prefs, m_, OutputFilePrefix, "SurfaceMesh_")
 
+  READ_CHECKBOX_SETTING(prefs, m_, STLFile, true);
+
   READ_BOOL_SETTING(prefs, m_, SmoothMesh, false);
   READ_BOOL_SETTING(prefs, m_, LockQuadPoints, false);
   READ_SETTING(prefs, m_, SmoothIterations, ok, i, 1 , Int);
@@ -125,6 +112,25 @@ void SurfaceMeshWidget::readSettings(QSettings &prefs)
   prefs.endGroup();
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void SurfaceMeshWidget::writeSettings(QSettings &prefs)
+{
+  prefs.beginGroup("SurfaceMesh");
+  WRITE_STRING_SETTING(prefs, m_, InputFile);
+  WRITE_STRING_SETTING(prefs, m_, OutputDir);
+  WRITE_STRING_SETTING(prefs, m_, OutputFilePrefix)
+
+  WRITE_CHECKBOX_SETTING(prefs, m_, STLFile)
+
+
+  WRITE_BOOL_SETTING(prefs, m_, SmoothMesh, m_SmoothMesh->isChecked() );
+  WRITE_BOOL_SETTING(prefs, m_, LockQuadPoints, m_LockQuadPoints->isChecked() );
+  WRITE_SETTING(prefs, m_, SmoothIterations );
+  WRITE_SETTING(prefs, m_, WriteOutputFileIncrement );
+  prefs.endGroup();
+}
 
 // -----------------------------------------------------------------------------
 //
@@ -161,8 +167,6 @@ void SurfaceMeshWidget::setupGui()
 // -----------------------------------------------------------------------------
 void SurfaceMeshWidget::checkIOFiles()
 {
-
-
   CHECK_QLINEEDIT_FILE_EXISTS(m_InputFile)
   if ( verifyPathExists(m_InputFile->text(), m_InputFile) == true )
   {
@@ -197,6 +201,7 @@ void SurfaceMeshWidget::checkIOFiles()
   CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::SurfaceMesh, m_, NodesFileBin)
   CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::SurfaceMesh, m_, TrianglesFileBin)
   CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::SurfaceMesh, m_, VisualizationVizFile)
+  CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::SurfaceMesh, m_, STLFile)
 }
 
 
@@ -297,6 +302,7 @@ void SurfaceMeshWidget::on_m_GoBtn_clicked()
   m_SurfaceMesh->setDeleteTempFiles(m_DeleteTempFiles->isChecked());
   m_SurfaceMesh->setBinaryVTKFile(m_BinaryVtkFiles->isChecked());
   m_SurfaceMesh->setConformalMesh(m_ConformalMesh->isChecked());
+  m_SurfaceMesh->setWriteSTLFile(m_STLFile->isChecked());
 
   m_SurfaceMesh->setSmoothMesh(m_SmoothMesh->isChecked());
   m_SurfaceMesh->setSmoothIterations(m_SmoothIterations->value());
