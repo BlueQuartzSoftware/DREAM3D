@@ -211,7 +211,10 @@ void RepresentationUI::setupGui()
 {
   pluginActionGroup = new QActionGroup(this);
   m_PluginToolBar = new QToolBar(this);
+
+  // This should be a preference setting somewhere.
   m_PluginToolBar->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
+
   m_PluginToolBar->setWindowTitle(tr("Plugins"));
   addToolBar(m_PluginToolBar);
 }
