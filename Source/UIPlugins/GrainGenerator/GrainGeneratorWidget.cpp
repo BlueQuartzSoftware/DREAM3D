@@ -402,8 +402,8 @@ void GrainGeneratorWidget::on_m_GoBtn_clicked()
   m_GrainGenerator->moveToThread(m_WorkerThread);
 
 
-  m_GrainGenerator->setH5StatsFile(m_H5InputStatisticsFile->text().toStdString() );
-  m_GrainGenerator->setOutputDirectory(m_OutputDir->text().toStdString());
+  m_GrainGenerator->setH5StatsFile(QDir::toNativeSeparators(m_H5InputStatisticsFile->text()).toStdString() );
+  m_GrainGenerator->setOutputDirectory(QDir::toNativeSeparators(m_OutputDir->text()).toStdString());
   m_GrainGenerator->setOutputFilePrefix(m_OutputFilePrefix->text().toStdString());
   m_GrainGenerator->setNumGrains(m_NumGrains->value());
 
@@ -418,8 +418,8 @@ void GrainGeneratorWidget::on_m_GoBtn_clicked()
   m_GrainGenerator->setSizeDistErrorWeight(m_SizeDistErrorWeight->value());
 
   m_GrainGenerator->setPeriodicBoundary(m_PeriodicBoundaryConditions->isChecked());
-  m_GrainGenerator->setAlreadyFormed(m_AlreadyFormed->isChecked() );
-  m_GrainGenerator->setStructureFile(m_StructureFile->text().toStdString());
+//  m_GrainGenerator->setAlreadyFormed(m_AlreadyFormed->isChecked() );
+//  m_GrainGenerator->setStructureFile(m_StructureFile->text().toStdString());
 
   m_GrainGenerator->setWriteBinaryFiles(m_BinaryVtkFiles->isChecked());
   m_GrainGenerator->setWriteVisualizationFile(m_VisualizationVizFile->isChecked());

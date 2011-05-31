@@ -289,15 +289,8 @@ void SurfaceMeshWidget::on_m_GoBtn_clicked()
   // Move the Reconstruction object into the thread that we just created.
   m_SurfaceMesh->moveToThread(m_WorkerThread);
 
-  m_SurfaceMesh->setInputFile(m_InputFile->text().toStdString() );
-
-  QString od = m_OutputDir->text();
-//  if (od.endsWith('/') == false && od.endsWith('\\') == false)
-//  {
-//    od += QDir::separator();
-//  }
-
-  m_SurfaceMesh->setOutputDirectory(od.toStdString());
+  m_SurfaceMesh->setInputFile(QDir::toNativeSeparators(m_InputFile->text()).toStdString() );
+  m_SurfaceMesh->setOutputDirectory(QDir::toNativeSeparators(m_OutputDir->text()).toStdString());
   m_SurfaceMesh->setOutputFilePrefix(m_OutputFilePrefix->text().toStdString());
   m_SurfaceMesh->setDeleteTempFiles(m_DeleteTempFiles->isChecked());
   m_SurfaceMesh->setBinaryVTKFile(m_BinaryVtkFiles->isChecked());

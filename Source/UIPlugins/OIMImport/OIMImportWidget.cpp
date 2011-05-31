@@ -249,7 +249,7 @@ void OIMImportWidget::on_m_GoBtn_clicked()
   // Move the GrainGenerator object into the thread that we just created.
   m_OimImport->moveToThread(m_WorkerThread);
 
-  m_OimImport->setOutputFile(m_OutputFile->text().toStdString());
+  m_OimImport->setOutputFile(QDir::toNativeSeparators(m_OutputFile->text()).toStdString());
   m_OimImport->setZStartIndex(m_ZStartIndex->value());
   m_OimImport->setZEndIndex(m_ZEndIndex->value());
   m_OimImport->setZResolution(m_zSpacing->text().toFloat(&ok));
@@ -258,7 +258,7 @@ void OIMImportWidget::on_m_GoBtn_clicked()
   std::vector<std::string> fileList;
   for (int f = 0; f < fileCount; ++f)
   {
-    fileList.push_back(m_FileListView->item(f)->text().toStdString());
+    fileList.push_back(QDir::toNativeSeparators(m_FileListView->item(f)->text()).toStdString());
   }
 
   m_OimImport->setAngFileList(fileList);
