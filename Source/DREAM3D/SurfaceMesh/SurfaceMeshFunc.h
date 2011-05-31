@@ -140,7 +140,7 @@ public:
   int get_number_case0_triangles(int *afe, int nfedge);
   int get_number_case2_triangles(int *afe, int nfedge, int *afc, int nfctr);
   int get_number_caseM_triangles(int *afe, int nfedge, int *afc, int nfctr);
-  int get_triangles(int nTriangle);
+  int get_triangles();
   void get_case0_triangles(int site, int *afe, int nfedge, int tin, int *tout);
   void get_case2_triangles(int site, int *afe, int nfedge, int *afc, int nfctr, int tin, int *tout);
   void get_caseM_triangles(int site, int *afe, int nfedge, int *afc, int nfctr, int tin, int *tout, int ccn);

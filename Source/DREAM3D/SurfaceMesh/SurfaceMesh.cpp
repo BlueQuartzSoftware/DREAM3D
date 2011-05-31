@@ -290,7 +290,8 @@ void SurfaceMesh::compute()
 
     if (nTriangle > 0)
     {
-      m->get_triangles(nTriangle);
+	  m->cTriangle = new Patch[nTriangle];
+      m->get_triangles();
       m->arrange_grainnames(nTriangle, i);
     }
 
@@ -325,6 +326,7 @@ void SurfaceMesh::compute()
     }
     cNodeID = nNodes;
     cTriID = cTriID + nTriangle;
+    if (nTriangle > 0) { delete[] m->cTriangle; }
   }
 // ---------------------------------------------------------------
   // Run one more with the top layer being -3
@@ -347,7 +349,8 @@ void SurfaceMesh::compute()
   nTriangle = m->get_number_triangles();
   if (nTriangle > 0)
   {
-    m->get_triangles(nTriangle);
+	m->cTriangle = new Patch[nTriangle];
+    m->get_triangles();
     m->arrange_grainnames(nTriangle, i);
   }
   // assign new, cumulative node id...
@@ -384,6 +387,7 @@ void SurfaceMesh::compute()
 
   cNodeID = nNodes;
   cTriID = cTriID + nTriangle;
+  if (nTriangle > 0) { delete[] m->cTriangle; }
 
 //------------ All Done with Marching Cubes-------------------
   free(fileVoxelLayer);

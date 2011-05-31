@@ -99,8 +99,10 @@ int STLWriter::writeHeader(const std::string &header)
     return -1;
   }
   char h[80];
+  int headlength = 80;
+  if(header.length() < 80) headlength = header.length();
   ::memset(h, 0, 80);
-  ::memcpy(h, header.data(), header.length());
+  ::memcpy(h, header.data(), headlength);
   // Return the number of bytes written - which should be 80
   fwrite(h, 1, 80, m_File);
   fwrite(h, 1, 4, m_File);// Write junk into the 4 bytes that hold the triangle count,
