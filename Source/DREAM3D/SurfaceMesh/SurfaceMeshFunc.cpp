@@ -1604,7 +1604,7 @@ int SurfaceMeshFunc::get_number_caseM_triangles(int *ae, int nedge, int *afc, in
   return (numTri);
 }
 
-int SurfaceMeshFunc::get_triangles(int nTriangle)
+int SurfaceMeshFunc::get_triangles()
 {
   int i, ii, i1, i2;
   int sqID[6];
@@ -1623,7 +1623,6 @@ int SurfaceMeshFunc::get_triangles(int nTriangle)
   int tidIn, tidOut;
   arrayFC = new int[6];
   tidIn = 0;
-  cTriangle = new Patch[nTriangle];
   for (i = 1; i <= NSP; i++)
   {
     cubeFlag = 0;
@@ -2763,10 +2762,6 @@ void SurfaceMeshFunc::arrange_grainnames(int numT, int zID)
         y = find_ycoord(locale);
         z = find_zcoord(locale);
         sidecheck = (a * x + b * y + c * z + d);
-        if ((ngrainname1 == 2 && ngrainname2 == 545) || (ngrainname2 == 2 && ngrainname1 == 545))
-        {
-          int stop = 0;
-        }
         if (sidecheck < -0.000001)
         {
           cTriangle[i].ngrainname[0] = tgrainname2[j];
@@ -2780,29 +2775,37 @@ void SurfaceMeshFunc::arrange_grainnames(int numT, int zID)
       }
     }
     int k = 0;
+	int testtsite = 0;
+	int sidechecked = 1;
     while (cTriangle[i].ngrainname[0] == -1)
     {
       while (tsite1[k] == -1)
       {
         k++;
       }
-      if (k > 2)
-      {
-        std::cout << "HEre" << std::endl;
-      }
-      int testtsite = tsite1[k] + (a + b * xDim + c * NSP);
+	  if(a == 1 && tsite1[k]%xDim != (xDim-1)) testtsite = tsite1[k] + a, sidechecked = 1;
+	  if(a == 1 && tsite1[k]%xDim == (xDim-1)) testtsite = tsite1[k] - a, sidechecked = -1;
+	  if(a == -1 && tsite1[k]%xDim != 0) testtsite = tsite1[k] - a, sidechecked = 1;
+	  if(a == -1 && tsite1[k]%xDim == 0) testtsite = tsite1[k] + a, sidechecked = -1;
+	  if(b == 1 && (tsite1[k]/xDim)%yDim != (yDim-1)) testtsite = tsite1[k] + xDim, sidechecked = 1;
+	  if(b == 1 && (tsite1[k]/xDim)%yDim == (yDim-1)) testtsite = tsite1[k] - xDim, sidechecked = -1;
+	  if(b == -1 && (tsite1[k]/xDim)%yDim != 0) testtsite = tsite1[k] - xDim, sidechecked = 1;
+	  if(b == -1 && (tsite1[k]/xDim)%yDim == 0) testtsite = tsite1[k] + xDim, sidechecked = -1;
+	  if(c == 1 && tsite1[k]/(xDim*yDim) != 1) testtsite = tsite1[k] + NSP, sidechecked = 1;
+	  if(c == 1 && tsite1[k]/(xDim*yDim) == 1) testtsite = tsite1[k] - NSP, sidechecked = -1;
+	  if(c == -1 && tsite1[k]/(xDim*yDim) != 0) testtsite = tsite1[k] - NSP, sidechecked = 1;
+	  if(c == -1 && tsite1[k]/(xDim*yDim) == 0) testtsite = tsite1[k] + NSP, sidechecked = -1;
       int gname = voxels[testtsite];
-      if (gname == tgrainname1[k])
+      if ((gname == tgrainname1[k] && sidechecked == 1) || (gname == tgrainname2[k] && sidechecked == -1))
       {
         cTriangle[i].ngrainname[0] = tgrainname1[k];
         cTriangle[i].ngrainname[1] = tgrainname2[k];
       }
-      if (gname == tgrainname2[k])
+      if ((gname == tgrainname2[k] && sidechecked == 1) || (gname == tgrainname1[k] && sidechecked == -1))
       {
         cTriangle[i].ngrainname[0] = tgrainname2[k];
         cTriangle[i].ngrainname[1] = tgrainname1[k];
       }
-      k++;
     }
   }
 }
@@ -2941,7 +2944,6 @@ int SurfaceMeshFunc::writeTrianglesFile (int zID, int ctid,
     data[0]= data[0] + 1;
   }
   fclose(f);
-  if (end > 0) { delete[] cTriangle; }
   return 0;
 }
 
