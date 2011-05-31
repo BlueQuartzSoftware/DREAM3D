@@ -26,7 +26,7 @@ into the user interface
 
 @section surfacemeshing Surface Meshing:
 @li Output STL File per grain
-@li Fix bug in assign_grains();
+@li <b>DONE</b> (MAG 2011/05/31) - Fix bug in assign_grains();
 
 @section twotothree 2D to 3D Module:
 @li Create new tab for this interface which will generate 3D Stats from a set of 2D statistics or input files
