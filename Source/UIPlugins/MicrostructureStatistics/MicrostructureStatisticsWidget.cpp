@@ -274,9 +274,9 @@ void MicrostructureStatisticsWidget::on_m_GoBtn_clicked()
 
   // Move the MicrostructureStatistics object into the thread that we just created.
   m_MicrostructureStatistics->moveToThread(m_WorkerThread);
-  m_MicrostructureStatistics->setOutputDirectory(m_OutputDir->text().toStdString());
+  m_MicrostructureStatistics->setOutputDirectory(QDir::toNativeSeparators(m_OutputDir->text()).toStdString());
   m_MicrostructureStatistics->setOutputFilePrefix(m_OutputFilePrefix->text().toStdString());
-  m_MicrostructureStatistics->setStructureFile(m_StructureFile->text().toStdString());
+  m_MicrostructureStatistics->setStructureFile(QDir::toNativeSeparators(m_StructureFile->text()).toStdString());
 
 
   /* Connect the signal 'started()' from the QThread to the 'run' slot of the
