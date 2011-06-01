@@ -22,22 +22,22 @@ if (NOT DOXYGEN_FOUND)
 endif()
 
 SET (DOX_GENERATE_RTF "NO")
-option(EIM_GENERATE_RTF "Generate RTF Documentation" ON)
-if (EIM_GENERATE_RTF STREQUAL "ON")
+option(DREAM3D_GENERATE_RTF "Generate RTF Documentation" ON)
+if (DREAM3D_GENERATE_RTF STREQUAL "ON")
     SET (DOX_GENERATE_RTF "YES")
 endif()
   
 
 SET (DOX_GENERATE_HTML "NO")
-option(EIM_GENERATE_HTML "Generate HTML Documentation" ON)
-if (EIM_GENERATE_HTML STREQUAL "ON")
+option(DREAM3D_GENERATE_HTML "Generate HTML Documentation" ON)
+if (DREAM3D_GENERATE_HTML STREQUAL "ON")
     SET (DOX_GENERATE_HTML "YES")
 endif()
 
 
 SET (DOX_GENERATE_LATEX "NO")
-option(EIM_GENERATE_LATEX "Generate HTML Documentation" ON)
-if (EIM_GENERATE_LATEX STREQUAL "ON")
+option(DREAM3D_GENERATE_LATEX "Generate HTML Documentation" ON)
+if (DREAM3D_GENERATE_LATEX STREQUAL "ON")
     SET (DOX_GENERATE_LATEX "YES")
     # Check for existence of LaTex executable files
     INCLUDE( ${DOCUMENTATION_RESOURCES_DIR}/CMake/UseLATEX.cmake)
