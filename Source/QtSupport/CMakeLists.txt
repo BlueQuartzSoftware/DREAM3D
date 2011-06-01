@@ -17,6 +17,7 @@ set (Project_HDRS "")
 
 set (QtSupport_SRCS
     ${QtSupport_SOURCE_DIR}/AIMImageGraphicsDelegate.cpp
+    ${QtSupport_SOURCE_DIR}/AIMPluginFrame.cpp
     ${QtSupport_SOURCE_DIR}/ApplicationAboutBoxDialog.cpp
     ${QtSupport_SOURCE_DIR}/ColorComboPicker.cpp
     ${QtSupport_SOURCE_DIR}/QR3DFileCompleter.cpp
@@ -25,6 +26,7 @@ set (QtSupport_SRCS
 )
 set (QtSupport_HDRS
     ${QtSupport_SOURCE_DIR}/AIMImageGraphicsDelegate.h
+    ${QtSupport_SOURCE_DIR}/AIMPluginFrame.h
     ${QtSupport_SOURCE_DIR}/ApplicationAboutBoxDialog.h
     ${QtSupport_SOURCE_DIR}/ColorComboPicker.h
     ${QtSupport_SOURCE_DIR}/QR3DFileCompleter.h

@@ -88,9 +88,18 @@ include ( ${TSLAngLib_SOURCE_DIR}/Utilities/SourceList.cmake)
 # --------------------------------------------------------------------
 # Generate a Header file with Compile Version variables
 # --------------------------------------------------------------------
-cmpGenerateVersionString( "${TSLAngLib_BINARY_DIR}/${PROJECT_NAME}Version.h" 
-                          "TSLAngLib" 
-                          "TSLAngLib")
+set (VERSION_GEN_NAME "TSLAng")
+set (VERSION_GEN_NAMESPACE "TSLAng")
+set (PROJECT_PREFIX "TSLAng")
+set (VERSION_GEN_COMPLETE  ${DREAM3D_VERSION})
+set (VERSION_GEN_VER_MAJOR ${DREAM3D_VER_MAJOR})
+set (VERSION_GEN_VER_MINOR ${DREAM3D_VER_MINOR})
+set (VERSION_GEN_VER_PATCH ${DREAM3D_VER_PATCH})
+
+configure_file(${CMP_CONFIGURED_FILES_SOURCE_DIR}/cmpVersion.h.in   
+               ${TSLAngLib_BINARY_DIR}/TSLAngLibVersion.h  )
+
+
 configure_file(${TSLAngLib_SOURCE_DIR}/TSLAngLibConfiguration.h.in
                ${TSLAngLib_BINARY_DIR}/TSLAngLibConfiguration.h)   
 
