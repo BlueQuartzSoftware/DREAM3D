@@ -41,6 +41,20 @@ set (MXA_TIFF_SUPPORT "0")
 set (MXA_XML_SUPPORT "0")
 set (HDF5_VTK_BRIDGE "0")
 
+# --------------------------------------------------------------------
+# Generate a Header file with Compile Version variables
+# --------------------------------------------------------------------
+set (VERSION_GEN_NAME "MXA")
+set (VERSION_GEN_NAMESPACE "MXA")
+set (PROJECT_PREFIX "MXA")
+set (VERSION_GEN_COMPLETE  ${DREAM3D_VERSION})
+set (VERSION_GEN_VER_MAJOR ${DREAM3D_VER_MAJOR})
+set (VERSION_GEN_VER_MINOR ${DREAM3D_VER_MINOR})
+set (VERSION_GEN_VER_PATCH ${DREAM3D_VER_PATCH})
+
+configure_file(${CMP_CONFIGURED_FILES_SOURCE_DIR}/cmpVersion.h.in   
+               ${CMP_HEADER_DIR}/MXAVersion.h  )
+
 configure_file(${PROJECT_RESOURCES_DIR}/MXACMake/MXAConfiguration.h.in
                ${CMP_HEADER_DIR}/${CMP_EXTRA_CONFIGURATION_FILE})
                

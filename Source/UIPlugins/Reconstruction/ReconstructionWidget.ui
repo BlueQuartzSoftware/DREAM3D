@@ -1,0 +1,851 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>ReconstructionWidget</class>
+ <widget class="QWidget" name="ReconstructionWidget">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>625</width>
+    <height>691</height>
+   </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout_2">
+   <property name="spacing">
+    <number>4</number>
+   </property>
+   <property name="margin">
+    <number>4</number>
+   </property>
+   <item>
+    <widget class="QGroupBox" name="groupBox_3">
+     <property name="title">
+      <string>Inputs</string>
+     </property>
+     <layout class="QGridLayout" name="gridLayout_5">
+      <property name="margin">
+       <number>4</number>
+      </property>
+      <property name="spacing">
+       <number>4</number>
+      </property>
+      <item row="0" column="0" colspan="2">
+       <layout class="QGridLayout" name="gridLayout_2">
+        <item row="1" column="1">
+         <widget class="QLabel" name="label">
+          <property name="text">
+           <string>OIM HDF5 File</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="2">
+         <widget class="QFSDropLineEdit" name="m_H5InputFile"/>
+        </item>
+        <item row="1" column="3">
+         <widget class="QPushButton" name="m_OIMH5Btn">
+          <property name="text">
+           <string>Select</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item row="1" column="0">
+       <layout class="QGridLayout" name="gridLayout_3">
+        <item row="0" column="0">
+         <widget class="QLabel" name="label_7">
+          <property name="text">
+           <string>Minimum Slice</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QLabel" name="m_ZMin">
+          <property name="text">
+           <string>0</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="2">
+         <widget class="QLabel" name="label_5">
+          <property name="text">
+           <string>Start Slice</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="3">
+         <widget class="QSpinBox" name="m_ZStartIndex">
+          <property name="minimumSize">
+           <size>
+            <width>75</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="maximum">
+           <number>100000</number>
+          </property>
+          <property name="value">
+           <number>1</number>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QLabel" name="label_54">
+          <property name="text">
+           <string>Maximum Slice</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QLabel" name="m_ZMax">
+          <property name="text">
+           <string>100</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="2">
+         <widget class="QLabel" name="label_6">
+          <property name="text">
+           <string>End Slice</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="0">
+         <widget class="QLabel" name="m_ZMax_2">
+          <property name="text">
+           <string>Z Resolution</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="1">
+         <widget class="QLabel" name="m_ZRes">
+          <property name="text">
+           <string>0.0</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="3">
+         <widget class="QSpinBox" name="m_ZEndIndex">
+          <property name="minimumSize">
+           <size>
+            <width>75</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="maximum">
+           <number>1000000</number>
+          </property>
+          <property name="value">
+           <number>99</number>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item row="1" column="1">
+       <layout class="QFormLayout" name="formLayout_7">
+        <item row="0" column="0">
+         <widget class="QLabel" name="label_11">
+          <property name="text">
+           <string>Phase Types</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QListWidget" name="phaseTypeList">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="editTriggers">
+           <set>QAbstractItemView::AllEditTriggers</set>
+          </property>
+          <property name="alternatingRowColors">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="groupBox_2">
+     <property name="title">
+      <string>Options</string>
+     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <property name="spacing">
+       <number>4</number>
+      </property>
+      <property name="margin">
+       <number>4</number>
+      </property>
+      <item>
+       <layout class="QFormLayout" name="formLayout_5">
+        <property name="fieldGrowthPolicy">
+         <enum>QFormLayout::FieldsStayAtSizeHint</enum>
+        </property>
+        <property name="labelAlignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+        <property name="horizontalSpacing">
+         <number>6</number>
+        </property>
+        <property name="verticalSpacing">
+         <number>6</number>
+        </property>
+        <property name="rightMargin">
+         <number>10</number>
+        </property>
+        <item row="6" column="0">
+         <widget class="QLabel" name="label_34">
+          <property name="text">
+           <string>Alignment Method</string>
+          </property>
+         </widget>
+        </item>
+        <item row="6" column="1">
+         <widget class="QComboBox" name="m_AlignMeth">
+          <item>
+           <property name="text">
+            <string>OuterBoundary</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Misorientation</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>MutualInformation</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+        <item row="7" column="0">
+         <widget class="QLabel" name="label_3">
+          <property name="text">
+           <string>Ang Orientation</string>
+          </property>
+         </widget>
+        </item>
+        <item row="7" column="1">
+         <widget class="QComboBox" name="m_Orientation">
+          <property name="currentIndex">
+           <number>4</number>
+          </property>
+          <item>
+           <property name="text">
+            <string>Upper Right</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Upper Left</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Lower Left</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Lower Right</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>No Transform</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+        <item row="8" column="0">
+         <widget class="QLabel" name="label_46">
+          <property name="text">
+           <string>Down-sample Res.</string>
+          </property>
+         </widget>
+        </item>
+        <item row="8" column="1">
+         <widget class="QDoubleSpinBox" name="m_DownSampleFactor">
+          <property name="value">
+           <double>1.000000000000000</double>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="1">
+         <widget class="QCheckBox" name="m_FillinSample">
+          <property name="text">
+           <string>Rectangularized Sample</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="0">
+         <widget class="QCheckBox" name="m_MergeTwins">
+          <property name="text">
+           <string>Merge Twins</string>
+          </property>
+         </widget>
+        </item>
+        <item row="5" column="0">
+         <widget class="QCheckBox" name="m_MergeColonies">
+          <property name="text">
+           <string>Merge Colonies</string>
+          </property>
+         </widget>
+        </item>
+        <item row="9" column="0">
+         <widget class="QLabel" name="label_8">
+          <property name="text">
+           <string>Min. Grain Size</string>
+          </property>
+         </widget>
+        </item>
+        <item row="9" column="1">
+         <widget class="QSpinBox" name="m_MinAllowedGrainSize">
+          <property name="minimum">
+           <number>1</number>
+          </property>
+          <property name="maximum">
+           <number>1000</number>
+          </property>
+          <property name="value">
+           <number>8</number>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QFormLayout" name="formLayout_3">
+        <item row="0" column="0">
+         <widget class="QLabel" name="label_31">
+          <property name="text">
+           <string>Min. Image Quality</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QDoubleSpinBox" name="m_MinImageQuality">
+          <property name="maximum">
+           <double>50000.000000000000000</double>
+          </property>
+          <property name="singleStep">
+           <double>10.000000000000000</double>
+          </property>
+          <property name="value">
+           <double>50.000000000000000</double>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QLabel" name="label_9">
+          <property name="text">
+           <string>Min. Confidence Index</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QDoubleSpinBox" name="m_MinConfidence">
+          <property name="decimals">
+           <number>4</number>
+          </property>
+          <property name="maximum">
+           <double>1.000000000000000</double>
+          </property>
+          <property name="singleStep">
+           <double>0.100000000000000</double>
+          </property>
+          <property name="value">
+           <double>0.100000000000000</double>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="0">
+         <widget class="QLabel" name="label_59">
+          <property name="text">
+           <string>Bin Step Size</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="1">
+         <widget class="QDoubleSpinBox" name="m_BinStepSize">
+          <property name="value">
+           <double>1.000000000000000</double>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="0">
+         <widget class="QLabel" name="label_10">
+          <property name="text">
+           <string>Disorient. Tol.</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="1">
+         <widget class="QDoubleSpinBox" name="m_MisOrientationTolerance">
+          <property name="minimumSize">
+           <size>
+            <width>120</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="suffix">
+           <string> Deg</string>
+          </property>
+          <property name="decimals">
+           <number>2</number>
+          </property>
+          <property name="maximum">
+           <double>180.000000000000000</double>
+          </property>
+          <property name="singleStep">
+           <double>1.000000000000000</double>
+          </property>
+          <property name="value">
+           <double>5.000000000000000</double>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="groupBox">
+     <property name="title">
+      <string>Outputs</string>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout">
+      <property name="spacing">
+       <number>6</number>
+      </property>
+      <property name="leftMargin">
+       <number>4</number>
+      </property>
+      <property name="topMargin">
+       <number>6</number>
+      </property>
+      <property name="rightMargin">
+       <number>4</number>
+      </property>
+      <property name="bottomMargin">
+       <number>4</number>
+      </property>
+      <item>
+       <layout class="QGridLayout" name="gridLayout">
+        <item row="0" column="0">
+         <widget class="QLabel" name="label_2">
+          <property name="text">
+           <string>Output Directory</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QFSDropLineEdit" name="m_OutputDir"/>
+        </item>
+        <item row="0" column="2">
+         <widget class="QPushButton" name="m_OutputDirBtn">
+          <property name="text">
+           <string>Select</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QLabel" name="label_4">
+          <property name="text">
+           <string>Output File Prefix:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QLineEdit" name="m_OutputFilePrefix">
+          <property name="text">
+           <string>Reconstruction_</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="2">
+         <widget class="QCheckBox" name="m_BinaryVtkFiles">
+          <property name="enabled">
+           <bool>true</bool>
+          </property>
+          <property name="text">
+           <string>Write Binary VTK Files</string>
+          </property>
+          <property name="checked">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QGridLayout" name="gridLayout_4">
+        <property name="horizontalSpacing">
+         <number>2</number>
+        </property>
+        <property name="verticalSpacing">
+         <number>3</number>
+        </property>
+        <item row="0" column="0">
+         <widget class="QLabel" name="label_12">
+          <property name="text">
+           <string>Existing Output Files</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <layout class="QFormLayout" name="formLayout_2">
+          <property name="fieldGrowthPolicy">
+           <enum>QFormLayout::FieldsStayAtSizeHint</enum>
+          </property>
+          <property name="labelAlignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+          <property name="horizontalSpacing">
+           <number>12</number>
+          </property>
+          <property name="verticalSpacing">
+           <number>1</number>
+          </property>
+          <item row="1" column="0">
+           <widget class="QLabel" name="m_AlignmentFileIcon">
+            <property name="text">
+             <string/>
+            </property>
+            <property name="pixmap">
+             <pixmap resource="../../../../Resources/icons/images/Icons.qrc">:/Delete-16x16.png</pixmap>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QLabel" name="m_AlignmentFile">
+            <property name="text">
+             <string>Alignment File</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0">
+           <widget class="QLabel" name="m_GrainDataFileIcon">
+            <property name="text">
+             <string/>
+            </property>
+            <property name="pixmap">
+             <pixmap resource="../../../../Resources/icons/images/Icons.qrc">:/Delete-16x16.png</pixmap>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1">
+           <widget class="QLabel" name="m_GrainDataFile">
+            <property name="text">
+             <string>Grain Data File</string>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="0">
+           <widget class="QLabel" name="m_H5StatisticsFileIcon">
+            <property name="text">
+             <string/>
+            </property>
+            <property name="pixmap">
+             <pixmap resource="../../../../Resources/icons/images/Icons.qrc">:/Delete-16x16.png</pixmap>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="1">
+           <widget class="QLabel" name="m_H5StatisticsFile">
+            <property name="text">
+             <string>HDF5 Statistics File</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item row="1" column="1">
+         <layout class="QFormLayout" name="formLayout">
+          <property name="fieldGrowthPolicy">
+           <enum>QFormLayout::FieldsStayAtSizeHint</enum>
+          </property>
+          <property name="labelAlignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+          <property name="formAlignment">
+           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+          </property>
+          <property name="horizontalSpacing">
+           <number>12</number>
+          </property>
+          <property name="verticalSpacing">
+           <number>1</number>
+          </property>
+          <item row="1" column="0">
+           <widget class="QLabel" name="m_VisualizationVizFileIcon">
+            <property name="text">
+             <string/>
+            </property>
+            <property name="pixmap">
+             <pixmap resource="../../../../Resources/icons/images/Icons.qrc">:/Delete-16x16.png</pixmap>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0">
+           <widget class="QLabel" name="m_IPFVizFileIcon">
+            <property name="text">
+             <string/>
+            </property>
+            <property name="pixmap">
+             <pixmap resource="../../../../Resources/icons/images/Icons.qrc">:/Delete-16x16.png</pixmap>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1">
+           <widget class="QCheckBox" name="m_IPFVizFile">
+            <property name="text">
+             <string>Inverse Pole Figure</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="0">
+           <widget class="QLabel" name="m_DisorientationVizFileIcon">
+            <property name="text">
+             <string/>
+            </property>
+            <property name="pixmap">
+             <pixmap resource="../../../../Resources/icons/images/Icons.qrc">:/Delete-16x16.png</pixmap>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="1">
+           <widget class="QCheckBox" name="m_DisorientationVizFile">
+            <property name="text">
+             <string>Disorientation</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="0">
+           <widget class="QLabel" name="m_ImageQualityVizFileIcon">
+            <property name="text">
+             <string/>
+            </property>
+            <property name="pixmap">
+             <pixmap resource="../../../../Resources/icons/images/Icons.qrc">:/Delete-16x16.png</pixmap>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="1">
+           <widget class="QCheckBox" name="m_ImageQualityVizFile">
+            <property name="text">
+             <string>Image Quality</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="5" column="0">
+           <widget class="QLabel" name="m_SchmidFactorVizFileIcon">
+            <property name="text">
+             <string/>
+            </property>
+            <property name="pixmap">
+             <pixmap resource="../../../../Resources/icons/images/Icons.qrc">:/Delete-16x16.png</pixmap>
+            </property>
+           </widget>
+          </item>
+          <item row="5" column="1">
+           <widget class="QCheckBox" name="m_SchmidFactorVizFile">
+            <property name="text">
+             <string>Schmid Factor</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QCheckBox" name="m_VisualizationVizFile">
+            <property name="text">
+             <string>VTK Visualization File</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="7" column="1">
+           <widget class="QCheckBox" name="m_HDF5GrainFile">
+            <property name="text">
+             <string>HDF5 Grain File</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="7" column="0">
+           <widget class="QLabel" name="m_HDF5GrainFileIcon">
+            <property name="text">
+             <string/>
+            </property>
+            <property name="pixmap">
+             <pixmap resource="../../../../Resources/icons/images/Icons.qrc">:/Delete-16x16.png</pixmap>
+            </property>
+           </widget>
+          </item>
+          <item row="6" column="1">
+           <widget class="QCheckBox" name="m_DownSampledVizFile">
+            <property name="text">
+             <string>Downsampled File</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="6" column="0">
+           <widget class="QLabel" name="m_DownSampledVizFileIcon">
+            <property name="text">
+             <string/>
+            </property>
+            <property name="pixmap">
+             <pixmap resource="../../../../Resources/icons/images/Icons.qrc">:/Delete-16x16.png</pixmap>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item row="2" column="0" colspan="2">
+         <widget class="QLabel" name="messageLabel">
+          <property name="font">
+           <font>
+            <italic>true</italic>
+           </font>
+          </property>
+          <property name="text">
+           <string>Message:</string>
+          </property>
+          <property name="wordWrap">
+           <bool>true</bool>
+          </property>
+          <property name="margin">
+           <number>3</number>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QLabel" name="label_60">
+          <property name="text">
+           <string>Optional Output Files</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <spacer name="verticalSpacer">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>40</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_16">
+     <item>
+      <widget class="QPushButton" name="m_LoadSettingsBtn">
+       <property name="text">
+        <string>Load Preset ...</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer_14">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeType">
+        <enum>QSizePolicy::Fixed</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>12</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QPushButton" name="m_SaveSettingsBtn">
+       <property name="text">
+        <string>Save Preset ...</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QProgressBar" name="progressBar">
+       <property name="value">
+        <number>0</number>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="m_GoBtn">
+       <property name="text">
+        <string>Go</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>QFSDropLineEdit</class>
+   <extends>QLineEdit</extends>
+   <header location="global">QFSDropLineEdit.h</header>
+  </customwidget>
+ </customwidgets>
+ <resources>
+  <include location="../../../Resources/icons/images/Icons.qrc"/>
+  <include location="../../../Resources/icons/images/Icons.qrc"/>
+  <include location="../../../Resources/icons/images/Icons.qrc"/>
+  <include location="../../../Resources/icons/images/Icons.qrc"/>
+ </resources>
+ <connections/>
+</ui>

@@ -1,6 +1,10 @@
 /*!
 
-@mainpage mainpage Documentation
+@mainpage DREAM3D Documentation
+
+@subpage todo "ToDo List"
+List of things that need to be done in the code
+
 
 @subpage dream3d "DREAM.3D"
 Digital Representation ENvironment for Analysis of Microstructure in 3D

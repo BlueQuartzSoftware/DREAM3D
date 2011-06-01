@@ -73,7 +73,7 @@ WARN_LOGFILE =
 #---------------------------------------------------------------------------
 # configuration options related to the input files
 #---------------------------------------------------------------------------
-INPUT = @DREAM3D_SOURCE_DIR@/Source/AIM @DREAM3D_SOURCE_DIR@/Documentation @DREAM3D_SOURCE_DIR@/Source/ANG @DREAM3D_SOURCE_DIR@/Source/QtSupport @DREAM3D_SOURCE_DIR@/Source/StatsGenerator
+INPUT = @DREAM3D_SOURCE_DIR@ @DREAM3D_SOURCE_DIR@/Source/DREAM3D @DREAM3D_SOURCE_DIR@/Documentation @DREAM3D_SOURCE_DIR@/Source/ANG @DREAM3D_SOURCE_DIR@/Source/QtSupport @DREAM3D_SOURCE_DIR@/Source/StatsGenerator @DREAM3D_SOURCE_DIR@/Source/Applications @DREAM3D_SOURCE_DIR@/Source/UIPlugins
 INPUT_ENCODING = UTF-8
 FILE_PATTERNS = *.c *.cc *.cxx *.cpp *.h *.hxx *.hpp *.m *.mm *.dox
 RECURSIVE = YES
