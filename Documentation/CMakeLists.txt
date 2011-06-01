@@ -14,7 +14,7 @@ if (NOT DEFINED PROJECT_RESOURCES_DIR)
 set (PROJECT_RESOURCES_DIR ${PROJECT_SOURCE_DIR}/Resources)
 endif()
 
-set(DOCUMENTATION_RESOURCES_DIR ${PROJECT_RESOURCES_DIR}/Documentation)
+set(DOCUMENTATION_RESOURCES_DIR ${PROJECT_RESOURCES_DIR}/DocConfigFiles)
 
 FIND_PACKAGE(Doxygen)
 if (NOT DOXYGEN_FOUND)
@@ -51,8 +51,8 @@ endif()
 
 include ( ${DOCUMENTATION_RESOURCES_DIR}/CMake/Macros.cmake)
 
-set (LATEX_TITLE "DREAM.3D:\\\\Documentation")
-set (LATEX_AUTHOR "Many and \\\\ Varied")
+set (LATEX_TITLE "DREAM.3D:\\\\Developer Documentation")
+set (LATEX_AUTHOR "")
 
 # The order of the files as they appear here is the order they will appear in the
 # Latex/PDF output
@@ -66,6 +66,7 @@ set (DOCUMENTATION_SOURCE_FILES
     ${PROJECT_SOURCE_DIR}/MicrostructurePresets.dox
     ${PROJECT_SOURCE_DIR}/StructureReaders.dox
     ${PROJECT_SOURCE_DIR}/Compiling.dox
+    ${DREAM3D_SOURCE_DIR}/ToDo.dox
 )
 
 set (LATEX_EPS_FILES 

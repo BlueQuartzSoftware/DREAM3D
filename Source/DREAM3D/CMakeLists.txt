@@ -27,7 +27,6 @@ Macro(D3DCompileDir DirName)
 endMacro()
 
 D3DCompileDir(ANGSupport)
-D3DCompileDir(CalculateStats)
 D3DCompileDir(Common)
 D3DCompileDir(GrainGenerator)
 D3DCompileDir(HDF5)
@@ -59,7 +58,7 @@ if (WIN32)
 endif()
 
 
-if (BUILD_SHARED_LIBS)
+if (BUILD_SHARED_LIBS AND DREAM3D_BUILD_CLI_TOOLS)
     INSTALL(TARGETS ${PROJECT_NAME} 
         COMPONENT Applications
         RUNTIME DESTINATION ${install_dir}
