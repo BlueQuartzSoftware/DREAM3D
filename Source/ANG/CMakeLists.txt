@@ -131,7 +131,7 @@ if (WIN32)
 endif()
 
 
-if (BUILD_SHARED_LIBS)
+if (BUILD_SHARED_LIBS AND DREAM3D_BUILD_CLI_TOOLS)
     INSTALL(TARGETS TSLAng 
         COMPONENT Applications
         RUNTIME DESTINATION ${install_dir}

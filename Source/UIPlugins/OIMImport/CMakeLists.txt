@@ -68,8 +68,9 @@ target_link_libraries(OIMImportPlugin
                     ${QT_QTGUI_LIBRARY}
                     QtSupport 
                      )
+
 PluginProperties(OIMImportPlugin "_debug" "${DREAM3D_VERSION}" 
-                "${DREAM3D_BINARY_DIR}" "DREAM3D_Plugins.txt")
+                "${DREAM3D_BINARY_DIR}" "${CMP_PLUGIN_LIST_FILE}")
 if (NOT MSVC)
   SET (CMAKE_LIBRARY_OUTPUT_DIRECTORY  ${DREAM3D_BINARY_DIR}/Bin  )
 endif()

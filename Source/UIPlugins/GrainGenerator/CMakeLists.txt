@@ -67,7 +67,7 @@ target_link_libraries(GrainGeneratorPlugin
                     QtSupport 
                      )
 PluginProperties(GrainGeneratorPlugin "_debug" "${DREAM3D_VERSION}" 
-                "${DREAM3D_BINARY_DIR}" "DREAM3D_Plugins.txt")
+                "${DREAM3D_BINARY_DIR}" "${CMP_PLUGIN_LIST_FILE}")
 if (NOT MSVC)
   SET (CMAKE_LIBRARY_OUTPUT_DIRECTORY  ${DREAM3D_BINARY_DIR}/Bin  )
 endif()

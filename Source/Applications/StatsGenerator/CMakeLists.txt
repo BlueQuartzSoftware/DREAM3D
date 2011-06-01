@@ -41,7 +41,7 @@ IF(WIN32)
  SET(GUI_TYPE WIN32)
 ENDIF(WIN32)
 
-add_definitions(-DAIM_USE_QT)
+add_definitions(-DDREAM3D_USE_QT)
                 
 # --------------------------------------------------------------------
 # Generate the License File Headers
@@ -166,8 +166,7 @@ QT4_WRAP_CPP( Generated_MOC_SRCS
             ${StatsGenerator_MOC_HDRS} 
             ${StatsGenerator_DELEGATE_HDRS} 
             ${StatsGenerator_TABLEMODEL_HDRS}
-            ${StatsGenerator_DIALOGS_HDRS}
-            ${AIM_COMMON_QT_HDRS} )
+            ${StatsGenerator_DIALOGS_HDRS} )
 
 #-- Put the generated files into their own group for IDEs
 cmp_IDE_GENERATED_PROPERTIES("Generated/ui" "${Generated_UI_HDRS}" "")
@@ -187,8 +186,6 @@ SET (StatsGenerator_PROJECT_SRCS
     ${StatsGenerator_PRESETS_SRCS}
     ${StatsGenerator_DIALOGS_SRCS}
     ${StatsGenerator_DIALOGS_HDRS}
-    ${AIM_COMMON_QT_HDRS}
-    ${AIM_COMMON_QT_SRCS}
     ${Generated_RC_SRCS} 
     ${Generated_UI_HDRS} 
     ${Generated_MOC_SRCS}
