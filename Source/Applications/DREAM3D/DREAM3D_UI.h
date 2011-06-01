@@ -48,7 +48,7 @@
 
 
 //-- UIC generated Header
-#include <ui_RepresentationUI.h>
+#include <ui_DREAM3D_UI.h>
 
 class DREAM3DPluginInterface;
 
@@ -61,13 +61,13 @@ class DREAM3DPluginInterface;
 * @date Oct 19, 2009
 * @version 1.0
 */
-class RepresentationUI : public QMainWindow, private Ui::RepresentationUI
+class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
 {
   Q_OBJECT;
 
   public:
-    RepresentationUI(QWidget *parent = 0);
-    virtual ~RepresentationUI();
+    DREAM3D_UI(QWidget *parent = 0);
+    virtual ~DREAM3D_UI();
 
   protected slots:
 
@@ -172,8 +172,8 @@ class RepresentationUI : public QMainWindow, private Ui::RepresentationUI
     QString                     m_OpenDialogLastDirectory;
 
 
-    RepresentationUI(const RepresentationUI&);    // Copy Constructor Not Implemented
-    void operator=(const RepresentationUI&);  // Operator '=' Not Implemented
+    DREAM3D_UI(const DREAM3D_UI&);    // Copy Constructor Not Implemented
+    void operator=(const DREAM3D_UI&);  // Operator '=' Not Implemented
 
 };
 

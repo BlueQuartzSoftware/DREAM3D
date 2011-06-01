@@ -28,7 +28,7 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#include "RepresentationUI.h"
+#include "DREAM3D_UI.h"
 
 //-- Qt Includes
 #include <QtCore/QPluginLoader>
@@ -59,7 +59,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-RepresentationUI::RepresentationUI(QWidget *parent) :
+DREAM3D_UI::DREAM3D_UI(QWidget *parent) :
   QMainWindow(parent),
   m_WorkerThread(NULL),
   m_ActivePlugin(NULL),
@@ -87,7 +87,7 @@ m_OpenDialogLastDirectory("~/")
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-RepresentationUI::~RepresentationUI()
+DREAM3D_UI::~DREAM3D_UI()
 {
   if (m_WorkerThread != NULL) {
     delete m_WorkerThread;
@@ -98,19 +98,19 @@ RepresentationUI::~RepresentationUI()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RepresentationUI::resizeEvent ( QResizeEvent * event )
+void DREAM3D_UI::resizeEvent ( QResizeEvent * event )
 {
- // std::cout << "RepresentationUI::resizeEvent" << std::endl;
+ // std::cout << "DREAM3D_UI::resizeEvent" << std::endl;
  // std::cout << "   oldSize: " << event->oldSize().width() << " x " << event->oldSize().height() << std::endl;
  // std::cout << "   newSize: " << event->size().width() << " x " << event->size().height() << std::endl;
   emit parentResized();
- // std::cout << "RepresentationUI::resizeEvent --- Done" << std::endl;
+ // std::cout << "DREAM3D_UI::resizeEvent --- Done" << std::endl;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RepresentationUI::on_actionExit_triggered()
+void DREAM3D_UI::on_actionExit_triggered()
 {
   this->close();
 }
@@ -118,7 +118,7 @@ void RepresentationUI::on_actionExit_triggered()
 // -----------------------------------------------------------------------------
 //  Called when the main window is closed.
 // -----------------------------------------------------------------------------
-void RepresentationUI::closeEvent(QCloseEvent *event)
+void DREAM3D_UI::closeEvent(QCloseEvent *event)
 {
   qint32 err = checkDirtyDocument();
   if (err < 0)
@@ -137,7 +137,7 @@ void RepresentationUI::closeEvent(QCloseEvent *event)
 // -----------------------------------------------------------------------------
 //  Read the prefs from the local storage file
 // -----------------------------------------------------------------------------
-void RepresentationUI::readSettings()
+void DREAM3D_UI::readSettings()
 {
   // std::cout << "Read Settings" << std::endl;
 #if defined (Q_OS_MAC)
@@ -184,7 +184,7 @@ void RepresentationUI::readSettings()
 // -----------------------------------------------------------------------------
 //  Write our Prefs to file
 // -----------------------------------------------------------------------------
-void RepresentationUI::writeSettings()
+void DREAM3D_UI::writeSettings()
 {
   // std::cout << "writeSettings" << std::endl;
 #if defined (Q_OS_MAC)
@@ -207,7 +207,7 @@ void RepresentationUI::writeSettings()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RepresentationUI::setupGui()
+void DREAM3D_UI::setupGui()
 {
   pluginActionGroup = new QActionGroup(this);
   m_PluginToolBar = new QToolBar(this);
@@ -222,7 +222,7 @@ void RepresentationUI::setupGui()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RepresentationUI::setWidgetListEnabled(bool b)
+void DREAM3D_UI::setWidgetListEnabled(bool b)
 {
   foreach (QWidget* w, m_WidgetList) {
     w->setEnabled(b);
@@ -232,7 +232,7 @@ void RepresentationUI::setWidgetListEnabled(bool b)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RepresentationUI::dragEnterEvent(QDragEnterEvent* e)
+void DREAM3D_UI::dragEnterEvent(QDragEnterEvent* e)
 {
   const QMimeData* dat = e->mimeData();
   QList<QUrl> urls = dat->urls();
@@ -254,7 +254,7 @@ void RepresentationUI::dragEnterEvent(QDragEnterEvent* e)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RepresentationUI::dropEvent(QDropEvent* e)
+void DREAM3D_UI::dropEvent(QDropEvent* e)
 {
   const QMimeData* dat = e->mimeData();
   QList<QUrl> urls = dat->urls();
@@ -273,7 +273,7 @@ void RepresentationUI::dropEvent(QDropEvent* e)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-qint32 RepresentationUI::checkDirtyDocument()
+qint32 DREAM3D_UI::checkDirtyDocument()
 {
   qint32 err = -1;
 
@@ -309,8 +309,8 @@ qint32 RepresentationUI::checkDirtyDocument()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RepresentationUI::on_actionClose_triggered() {
- // std::cout << "RepresentationUI::on_actionClose_triggered" << std::endl;
+void DREAM3D_UI::on_actionClose_triggered() {
+ // std::cout << "DREAM3D_UI::on_actionClose_triggered" << std::endl;
   qint32 err = -1;
   err = checkDirtyDocument();
   if (err >= 0)
@@ -331,9 +331,9 @@ void RepresentationUI::on_actionClose_triggered() {
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RepresentationUI::updateRecentFileList(const QString &file)
+void DREAM3D_UI::updateRecentFileList(const QString &file)
 {
- // std::cout << "RepresentationUI::updateRecentFileList" << std::endl;
+ // std::cout << "DREAM3D_UI::updateRecentFileList" << std::endl;
 
   // Clear the Recent Items Menu
   this->menu_RecentFiles->clear();
@@ -355,7 +355,7 @@ void RepresentationUI::updateRecentFileList(const QString &file)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RepresentationUI::openRecentFile()
+void DREAM3D_UI::openRecentFile()
 {
   //std::cout << "QRecentFileList::openRecentFile()" << std::endl;
 
@@ -372,16 +372,16 @@ void RepresentationUI::openRecentFile()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RepresentationUI::threadHasMessage(QString message)
+void DREAM3D_UI::threadHasMessage(QString message)
 {
- // std::cout << "RepresentationUI::threadHasMessage()" << message.toStdString() << std::endl;
+ // std::cout << "DREAM3D_UI::threadHasMessage()" << message.toStdString() << std::endl;
   this->statusBar()->showMessage(message);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RepresentationUI::loadPlugins()
+void DREAM3D_UI::loadPlugins()
  {
   foreach (QObject *plugin, QPluginLoader::staticInstances())
     populateMenus(plugin);
@@ -459,7 +459,7 @@ void RepresentationUI::loadPlugins()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
- void RepresentationUI::populateMenus(QObject *plugin)
+ void DREAM3D_UI::populateMenus(QObject *plugin)
 {
   std::cout << "Found Plugin..." << std::endl;
   DREAM3DPluginInterface* ipPlugin = qobject_cast<DREAM3DPluginInterface * > (plugin);
@@ -478,7 +478,7 @@ void RepresentationUI::loadPlugins()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RepresentationUI::addToPluginMenu(QObject *plugin, const QString &text,
+void DREAM3D_UI::addToPluginMenu(QObject *plugin, const QString &text,
                                      QMenu *menu, const char *member,
                                      QActionGroup *actionGroup, QIcon icon)
 {
@@ -497,7 +497,7 @@ void RepresentationUI::addToPluginMenu(QObject *plugin, const QString &text,
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RepresentationUI::setInputUI()
+void DREAM3D_UI::setInputUI()
 {
   // Get the current QWidget
   if (NULL != m_ActivePlugin)
