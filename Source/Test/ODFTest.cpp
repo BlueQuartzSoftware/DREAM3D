@@ -39,7 +39,7 @@
 #include <vector>
 
 
-#include "AIM/Common/Texture.h"
+#include "DREAM3D/Common/Texture.h"
 #include "StatsGenerator/StatsGen.h"
 
 #define POPULATE_DATA(i, e1, e2, e3, w, s)\
