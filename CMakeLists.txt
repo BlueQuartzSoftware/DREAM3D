@@ -59,6 +59,7 @@ set (CMP_EXTRA_CONFIGURATION_FILE "MXAConfiguration.h")
 set (CMP_PROJECT_NAMESPACE "MXA")
 set (CMP_PROJECT_NAME "MXA")
 set (CMP_ENABLE_PLUGINS "1")
+set (CMP_PLUGIN_LIST_FILE ${PROJECT_BINARY_DIR}/DREAM3D_PluginList.txt)
 set (CMP_LIB_SEARCH_DIRS "")
 set(CMP_GENERATE_VERSION_STRING 0)
 INCLUDE (${CMP_SOURCE_DIR}/cmpProject.cmake)
@@ -176,7 +177,9 @@ if (MSVC)
  add_definitions(-D_CRT_SECURE_NO_WARNINGS)
 endif()
 
-               
+# Figure out here if we are going to build the command line tools
+option(DREAM3D_BUILD_CLI_TOOLS "Build the command line versions of the applications" OFF)
+
 # -----------------------------------------------------------------------
 # -- Add in the Necessary MXA Sources into a static library
 add_subdirectory( ${DREAM3D_SOURCE_DIR}/Source/MXA ${DREAM3D_BINARY_DIR}/MXA)
@@ -250,19 +253,8 @@ endif()
 include_directories(${DREAM3D_SOURCE_DIR}/Source)
 
 # add the Reconstruction Command line Tool
-OPTION(DREAM3D_BUILD_TOOL_RECONSTRUCTION "Compile Reconstruction Tool" OFF)
-IF ( DREAM3D_BUILD_TOOL_RECONSTRUCTION )
-    ADD_SUBDIRECTORY( ${DREAM3D_SOURCE_DIR}/Source/Applications/Reconstruction ${DREAM3D_BINARY_DIR}/Applications/Reconstruction)
-ENDIF ()
-
-OPTION (DREAM3D_BUILD_TOOL_GRAIN_GENERATOR "Compile the Grain Generator Tool" OFF)
-if (DREAM3D_BUILD_TOOL_GRAIN_GENERATOR)
-    add_subdirectory(${DREAM3D_SOURCE_DIR}/Source/Applications/GrainGenerator ${DREAM3D_BINARY_DIR}/Applications/GrainGenerator)
-endif()
-
-OPTION (DREAM3D_BUILD_TOOL_SURFACE_MESHING "Compile the surface Meshing tool" OFF)
-if (DREAM3D_BUILD_TOOL_SURFACE_MESHING)
-    add_subdirectory(${DREAM3D_SOURCE_DIR}/Source/Applications/SurfaceMesh ${DREAM3D_BINARY_DIR}/Applications/SurfaceMesh)
+IF ( DREAM3D_BUILD_CLI_TOOLS )
+    add_subdirectory( ${DREAM3D_SOURCE_DIR}/Source/Tools ${DREAM3D_BINARY_DIR}/Tools)
 endif()
 
 # ------- Enable the CTest testing. Use make test to run all tests ---------------
@@ -279,7 +271,7 @@ if(DREAM3D_BUILD_CMU)
 endif()
 
 # Should we build the HTML documentation
-option(DREAM3D_BUILD_DOCS "Use Doxygen to create the HTML based API documentation" OFF)
+option(DREAM3D_BUILD_DOCS "Use Doxygen to create the User Manual, Tutorial, Developer and API documentation" OFF)
 if(DREAM3D_BUILD_DOCS)
   FIND_PACKAGE(Doxygen)
   if (NOT DOXYGEN_FOUND)
