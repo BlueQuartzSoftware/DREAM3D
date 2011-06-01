@@ -192,8 +192,8 @@ include_directories (${DREAM3D_BINARY_DIR})
 
 # -----------------------------------------------------------------------
 # -- Add in the AIM Common Sources into a static library
+include_directories(${DREAM3D_SOURCE_DIR}/Source)
 add_subdirectory( ${DREAM3D_SOURCE_DIR}/Source/DREAM3D/ ${DREAM3D_BINARY_DIR}/DREAM3D)
-
 
 option(DREAM3D_BUILD_QT_APPS "Compile the Qt based GUI applications" ON)
 #if we are going to build Qt based applications then we need to find Qt 4 first
@@ -250,8 +250,6 @@ else()
     set (DREAM3D_BUILD_STATS_GENERATOR "OFF" CACHE BOOL "" FORCE)
 endif()
 
-include_directories(${DREAM3D_SOURCE_DIR}/Source)
-
 # add the Reconstruction Command line Tool
 IF ( DREAM3D_BUILD_CLI_TOOLS )
     add_subdirectory( ${DREAM3D_SOURCE_DIR}/Source/Tools ${DREAM3D_BINARY_DIR}/Tools)
@@ -261,16 +259,16 @@ endif()
 OPTION(DREAM3D_BUILD_TESTING "Compile the test programs" OFF)
 if (DREAM3D_BUILD_TESTING)
     ENABLE_TESTING()
-    add_subdirectory(${DREAM3D_SOURCE_DIR}/Source/Test ${DREAM3D_BINARY_DIR}/AIM/Test)
+    add_subdirectory(${DREAM3D_SOURCE_DIR}/Source/Test ${DREAM3D_BINARY_DIR}/Test)
 endif()
 
-
+# Should we build the Example program that was originally for CMU's use
 option(DREAM3D_BUILD_CMU "Compile the CMU Optimization Wrappers" OFF)
 if(DREAM3D_BUILD_CMU)
     add_subdirectory(${DREAM3D_SOURCE_DIR}/Source/CMU ${DREAM3D_BINARY_DIR}/AIM/CMU)
 endif()
 
-# Should we build the HTML documentation
+# Should we build the documentation using DOxygen
 option(DREAM3D_BUILD_DOCS "Use Doxygen to create the User Manual, Tutorial, Developer and API documentation" OFF)
 if(DREAM3D_BUILD_DOCS)
   FIND_PACKAGE(Doxygen)
