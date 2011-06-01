@@ -57,7 +57,8 @@ set (LATEX_AUTHOR "")
 # The order of the files as they appear here is the order they will appear in the
 # Latex/PDF output
 set (DOCUMENTATION_SOURCE_FILES
-    ${PROJECT_SOURCE_DIR}/AIMRep.dox
+    ${DREAM3D_SOURCE_DIR}/ToDo.dox
+    ${PROJECT_SOURCE_DIR}/DREAM3D_Overview.dox
     ${PROJECT_SOURCE_DIR}/AngFileImport.dox
     ${PROJECT_SOURCE_DIR}/Reconstruction.dox
     ${PROJECT_SOURCE_DIR}/SyntheticBuilder.dox
@@ -66,7 +67,7 @@ set (DOCUMENTATION_SOURCE_FILES
     ${PROJECT_SOURCE_DIR}/MicrostructurePresets.dox
     ${PROJECT_SOURCE_DIR}/StructureReaders.dox
     ${PROJECT_SOURCE_DIR}/Compiling.dox
-    ${DREAM3D_SOURCE_DIR}/ToDo.dox
+    
 )
 
 set (LATEX_EPS_FILES 
