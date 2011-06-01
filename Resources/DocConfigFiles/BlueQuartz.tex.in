@@ -1,0 +1,74 @@
+%----------------------------------------------------------
+% This is a substitute header file for Doxygen to use to generate the refman.tex file
+%----------------------------------------------------------
+%\batchmode
+\documentclass[12pt,oneside]{book}
+\usepackage{newclude}
+\usepackage{a4wide}
+\usepackage{makeidx}
+\usepackage{graphicx}
+\usepackage{multicol}
+\usepackage{float}
+\usepackage{listings}
+\usepackage{color}
+\usepackage{textcomp}
+\usepackage{alltt}
+\usepackage{times}
+\usepackage{ifpdf}
+\ifpdf
+\usepackage[pdftex,
+            pagebackref=true,
+            colorlinks=true,
+            linkcolor=blue,
+            unicode
+           ]{hyperref}
+\else
+\usepackage[ps2pdf,
+            pagebackref=true,
+            colorlinks=true,
+            linkcolor=blue,
+            unicode
+           ]{hyperref}
+\usepackage{pspicture}
+\fi
+\usepackage[utf8]{inputenc}
+\usepackage{doxygen}
+\lstset{language=C++,inputencoding=utf8,basicstyle=\footnotesize,breaklines=true,breakatwhitespace=true,tabsize=4,numbers=left }
+\makeindex
+\setcounter{tocdepth}{3}
+\renewcommand{\footrulewidth}{0.4pt}
+
+\textheight=9.0in
+\textwidth=6.0in
+\oddsidemargin=0.25in
+\evensidemargin=0.0in
+\topmargin=-0.5in
+
+%----------------------------------------------------------
+% Set the LaTex variables for the title page
+%----------------------------------------------------------
+\title{ @LATEX_TITLE@}
+\author{@LATEX_AUTHOR@}
+\authoraddress{
+  \url{http://www.bluequartz.net}\\
+  Email: \email{mike.jackson@bluequartz.net}
+}
+\date{\today}
+\begin{document}
+    \maketitle
+    
+\hypersetup{pageanchor=false}
+
+%----------------------------------------------------------
+% Set Table of Contents
+%----------------------------------------------------------
+%\clearemptydoublepage
+\pagenumbering{roman}
+\tableofcontents
+%\clearemptydoublepage
+\pagenumbering{arabic}
+\hypersetup{pageanchor=true}
+
+%----------------------------------------------------------
+% This is the end of the header file
+%----------------------------------------------------------
