@@ -449,9 +449,9 @@ macro(PluginProperties targetName DEBUG_EXTENSION projectVersion binaryDir plugi
     
     # Add the plugin to our list of plugins that will need to be installed
     if (CMAKE_BUILD_TYPE STREQUAL "Debug" AND NOT MSVC)
-        file(APPEND ${binaryDir}/${pluginfile} "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/lib${targetName}${DEBUG_EXTENSION}.plugin;")
+        file(APPEND ${pluginfile} "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/lib${targetName}${DEBUG_EXTENSION}.plugin;")
     else()
-        file(APPEND ${binaryDir}/${pluginfile} "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/lib${targetName}.plugin;")
+        file(APPEND ${pluginfile} "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/lib${targetName}.plugin;")
     endif()
     
     if (NOT APPLE)
