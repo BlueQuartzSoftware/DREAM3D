@@ -33,7 +33,7 @@ into the user interface
 
 @section microstats Microstructure Statistics Module:
 @li Move all the stats functions to their own class out of the Reconstruction and GrainGenerator modules
-@li <b>DONE</b> (MAJ 2011/05/28) - Add new tab "Calculate Stats" which will use existing grain structure files as the input.
+@li <b>DONE</b> (MAJ 2011/05/28) - Add new tab "Microstructure Statistics" which will use existing grain structure files as the input.
 
 
 @section statsgen StatsGenerator
