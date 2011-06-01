@@ -3790,7 +3790,7 @@ float GrainGeneratorFunc::gamma(float x)
        -0.54e-14,
         0.14e-14};
 
-    if (x > 171.0) return 1e308;    // This value is an overflow flag.
+    if (x > 171.0f) return 1e308;    // This value is an overflow flag.
     if (x == (int)x) {
         if (x > 0.0) {
             ga = 1.0;               // use factorial
