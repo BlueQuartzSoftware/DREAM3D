@@ -46,8 +46,8 @@
 #include "DREAM3D/DREAM3DConfiguration.h"
 #include "DREAM3D/Common/OIMColoring.hpp"
 #include "DREAM3D/Reconstruction/ReconstructionVTKWriter.h"
-#include "DREAM3D/Reconstruction/H5ReconVolumeWriter.h"
-#include "DREAM3D/HDF5/H5ReconStatsWriter.h"
+#include "DREAM3D/HDF5/H5ReconVolumeWriter.h"
+//#include "DREAM3D/HDF5/H5ReconStatsWriter.h"
 #include "DREAM3D/HDF5/H5GrainWriter.h"
 
 
