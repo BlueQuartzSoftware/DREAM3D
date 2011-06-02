@@ -1,0 +1,52 @@
+
+
+#ifndef @PluginName@_H_
+#define @PluginName@_H_
+
+#include <MXA/Common/MXASetGetMacros.h>
+#include <MXA/MXATypes.h>
+
+#include "DREAM3D/DREAM3DConfiguration.h"
+#include "DREAM3D/Common/Constants.h"
+#include "DREAM3D/Common/AbstractPipeline.h"
+#include "DREAM3D/@PluginName@/@PluginName@Func.h"
+
+
+
+/**
+* @class @PluginName@ @PluginName@.h AIM/@PluginName@/@PluginName@.h
+* @brief This class serves as the main entry point to execute the @PluginName@
+* pipeline
+* @author 
+* @author 
+* @date 
+* @version 1.0
+*/
+class DREAM3DLib_EXPORT @PluginName@ : public AbstractPipeline
+{
+  public:
+    MXA_SHARED_POINTERS(@PluginName@);
+    MXA_TYPE_MACRO(@PluginName@);
+
+    MXA_STATIC_NEW_MACRO(@PluginName@);
+
+    virtual ~@PluginName@();
+
+    /**
+    * @brief Main method to run the operation
+    */
+    virtual void execute();
+
+  protected:
+    @PluginName@();
+
+  private:
+    @PluginName@Func::Pointer m;
+
+    @PluginName@(const @PluginName@&);    // Copy Constructor Not Implemented
+    void operator=(const @PluginName@&);  // Operator '=' Not Implemented
+};
+
+
+
+#endif /* @PluginName@_H_ */

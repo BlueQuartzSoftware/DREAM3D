@@ -1,0 +1,78 @@
+
+
+#include "@PluginName@Plugin.h"
+#include "@PluginName@Widget.h"
+#include "QtSupport/AIMPluginFrame.h"
+
+Q_EXPORT_PLUGIN2(@PluginName@Plugin, @PluginName@Plugin);
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+@PluginName@Plugin::@PluginName@Plugin() :
+m_InputWidget(NULL)
+{
+  m_InputWidget = new @PluginName@Widget(NULL);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+@PluginName@Plugin::~@PluginName@Plugin()
+{
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString @PluginName@Plugin::getPluginName()
+{
+#ifdef NDEBUG
+  return QString("@PluginName@");
+#else
+  return QString("@PluginName@ Debug");
+#endif
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QWidget* @PluginName@Plugin::getInputWidget(QWidget* parent)
+{
+  m_InputWidget->setParent(parent);
+  return m_InputWidget;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AIMPluginFrame* @PluginName@Plugin::getPluginFrame(QWidget* parent)
+{
+  AIMPluginFrame* frame = qobject_cast<AIMPluginFrame*>(m_InputWidget);
+  return frame;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void @PluginName@Plugin::writeSettings(QSettings &prefs)
+{
+  m_InputWidget->writeSettings(prefs);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void @PluginName@Plugin::readSettings(QSettings &prefs)
+{
+  m_InputWidget->readSettings(prefs);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QIcon @PluginName@Plugin::icon()
+{
+  return QIcon(":/@PluginName@.png");
+}

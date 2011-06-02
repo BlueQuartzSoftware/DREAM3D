@@ -1,0 +1,261 @@
+
+#include "@PluginName@Widget.h"
+
+
+//-- Qt Includes
+#include <QtCore/QFileInfo>
+#include <QtCore/QFile>
+#include <QtCore/QDir>
+#include <QtCore/QString>
+#include <QtCore/QUrl>
+#include <QtCore/QThread>
+#include <QtCore/QFileInfoList>
+#include <QtGui/QFileDialog>
+#include <QtGui/QCloseEvent>
+#include <QtGui/QMessageBox>
+#include <QtGui/QListWidget>
+#include <QtGui/QListWidgetItem>
+
+#include "DREAM3D/Common/Constants.h"
+#include "DREAM3D/@PluginName@/@PluginName@.h"
+#include "DREAM3D/HDF5/H5ReconStatsReader.h"
+#include "DREAM3D/HDF5/H5ReconStatsWriter.h"
+
+#include "QtSupport/AIM_QtMacros.h"
+#include "QtSupport/QR3DFileCompleter.h"
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+@PluginName@Widget::@PluginName@Widget(QWidget *parent) :
+AIMPluginFrame(parent),
+m_@PluginName@(NULL),
+m_WorkerThread(NULL),
+
+#if defined(Q_WS_WIN)
+m_OpenDialogLastDirectory("C:\\")
+#else
+m_OpenDialogLastDirectory("~/")
+#endif
+{
+  setupUi(this);
+  setupGui();
+  checkIOFiles();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+@PluginName@Widget::~@PluginName@Widget()
+{
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void @PluginName@Widget::readSettings(QSettings &prefs)
+{
+  prefs.beginGroup("@PluginName@");
+
+  prefs.endGroup();
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void @PluginName@Widget::writeSettings(QSettings &prefs)
+{
+  prefs.beginGroup("@PluginName@");
+
+  prefs.endGroup();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void @PluginName@Widget::setWidgetListEnabled(bool b)
+{
+  foreach (QWidget* w, m_WidgetList) {
+    w->setEnabled(b);
+  }
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void @PluginName@Widget::setupGui()
+{
+
+#if 0
+  // If you want to add an inline "file completer" for QLineEdits use this code
+  // as an example
+  QR3DFileCompleter* com = new QR3DFileCompleter(this, false);
+  m_H5InputStatisticsFile->setCompleter(com);
+  QObject::connect( com, SIGNAL(activated(const QString &)),
+           this, SLOT(on_m_H5InputStatisticsFile_textChanged(const QString &)));
+#endif
+
+  // Add the other widgets from the GUI here so that when the pipeline is running
+  // the user can not change the values of any of the inputs
+  m_WidgetList << m_LoadSettingsBtn << m_SaveSettingsBtn;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void @PluginName@Widget::on_m_LoadSettingsBtn_clicked()
+{
+  QString file = QFileDialog::getOpenFileName(this, tr("Select Settings File"),
+                                                 m_OpenDialogLastDirectory,
+                                                 tr("Settings File (*.txt)") );
+  if ( true == file.isEmpty() ){  return;  }
+  QSettings prefs(file, QSettings::IniFormat, this);
+  readSettings(prefs);
+  // Do any additional validation necessary
+  
+}
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void @PluginName@Widget::on_m_SaveSettingsBtn_clicked()
+{
+  QString proposedFile = m_OpenDialogLastDirectory + QDir::separator() + "@PluginName@Settings.txt";
+  QString file = QFileDialog::getSaveFileName(this, tr("Save @PluginName@ Settings"),
+                                              proposedFile,
+                                              tr("*.txt") );
+  if ( true == file.isEmpty() ){ return;  }
+
+  QSettings prefs(file, QSettings::IniFormat, this);
+  writeSettings(prefs);
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void @PluginName@Widget::checkIOFiles()
+{
+#if 0
+  // Use this code as an example of using some macros to make the validation of
+  // input/output files easier
+  CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::SyntheticBuilder, m_, CrystallographicErrorFile)
+
+  CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(AIM::SyntheticBuilder, m_ , IPFVizFile)
+#endif
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void @PluginName@Widget::on_m_GoBtn_clicked()
+{
+
+  if (m_GoBtn->text().compare("Cancel") == 0)
+  {
+    if(m_@PluginName@!= NULL)
+    {
+      //std::cout << "canceling from GUI...." << std::endl;
+      emit cancelProcess();
+    }
+    return;
+  }
+
+#if 0
+  if (false == sanityCheckOutputDirectory(m_OutputDir, QString("@PluginName@")) )
+  {
+    return;
+  }
+  SANITY_CHECK_INPUT(m_, OutputDir)
+#endif
+  
+  
+  if (m_WorkerThread != NULL)
+  {
+    m_WorkerThread->wait(); // Wait until the thread is complete
+    delete m_WorkerThread; // Kill the thread
+    m_WorkerThread = NULL;
+  }
+  m_WorkerThread = new QThread(); // Create a new Thread Resource
+
+  m_@PluginName@ = new Q@PluginName@(NULL);
+
+  // Move the @PluginName@ object into the thread that we just created.
+  m_@PluginName@->moveToThread(m_WorkerThread);
+
+  // Pull the values from the GUI and push them into the m_@PluginName@ variable
+ 
+
+  /* Connect the signal 'started()' from the QThread to the 'run' slot of the
+   * Reconstruction object. Since the Reconstruction object has been moved to another
+   * thread of execution and the actual QThread lives in *this* thread then the
+   * type of connection will be a Queued connection.
+   */
+  // When the thread starts its event loop, start the Reconstruction going
+  connect(m_WorkerThread, SIGNAL(started()),
+          m_@PluginName@, SLOT(run()));
+
+  // When the Reconstruction ends then tell the QThread to stop its event loop
+  connect(m_@PluginName@, SIGNAL(finished() ),
+          m_WorkerThread, SLOT(quit()) );
+
+  // When the QThread finishes, tell this object that it has finished.
+  connect(m_WorkerThread, SIGNAL(finished()),
+          this, SLOT( threadFinished() ) );
+
+  // Send Progress from the Reconstruction to this object for display
+  connect(m_@PluginName@, SIGNAL (updateProgress(int)),
+    this, SLOT(threadProgressed(int) ) );
+
+  // Send progress messages from Reconstruction to this object for display
+  connect(m_@PluginName@, SIGNAL (updateMessage(QString)),
+          this, SLOT(threadHasMessage(QString) ) );
+
+  // If the use clicks on the "Cancel" button send a message to the Reconstruction object
+  // We need a Direct Connection so the
+  connect(this, SIGNAL(cancelProcess() ),
+          m_@PluginName@, SLOT (on_CancelWorker() ) , Qt::DirectConnection);
+
+
+  setWidgetListEnabled(false);
+  emit processStarted();
+  m_WorkerThread->start();
+  m_GoBtn->setText("Cancel");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void @PluginName@Widget::threadFinished()
+{
+ // std::cout << "@PluginName@Widget::@PluginName@_Finished()" << std::endl;
+  m_GoBtn->setText("Go");
+  setWidgetListEnabled(true);
+  this->m_progressBar->setValue(0);
+  emit processEnded();
+  checkIOFiles();
+  m_@PluginName@->deleteLater();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void @PluginName@Widget::threadProgressed(int val)
+{
+  this->m_progressBar->setValue( val );
+}
+
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void @PluginName@Widget::threadHasMessage(QString message)
+{
+  if (NULL != this->statusBar()) {
+    this->statusBar()->showMessage(message);
+  }
+}

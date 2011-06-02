@@ -1,5 +1,7 @@
 #!/bin/bash
-
+# This is a script to checkout all the projects that are needed by DREAM3D and compile
+# them on your system. Somethings like usernames for the source repository will have
+# to be changed for this to work for a specific user.
 # You need Qt Version 4.6.x already installed
 # You need CMake version 2.8.3 at the minimum to build everything.
 # You need both GCC and g++ installed
