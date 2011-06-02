@@ -1,5 +1,6 @@
 #!/bin/bash
-
+# This is a complete kludge of a shell script that basically generates a PDF file containing
+# as much of the source codes as possible when we want to release to US Air Force Public Affairs
 texFile=/tmp/AIMRepresentation_PublicAffairs_Release.tex
 # cd "/Users/mjackson/Contracts/AFRL-TO90/AIMRepresentation"
 DATE=`date +%Y.%m.%d`
@@ -69,7 +70,7 @@ do
   echo "% ----------------------------------------------------------------------------------------" >> $texFile
 done
 
-files=`find ./Source/AIM -type f ! -name "itk*" -and \( -name "*.c*" -or -name "*.h*" -or -name "*.txx" \)`
+files=`find ./Source/DREAM3D -type f ! -name "itk*" -and \( -name "*.c*" -or -name "*.h*" -or -name "*.txx" \)`
 for file in $files;
 do
   echo "$file"
