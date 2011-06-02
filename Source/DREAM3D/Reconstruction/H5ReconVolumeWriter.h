@@ -1,6 +1,5 @@
 /* ============================================================================
- * Copyright (c) 2010, Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2010, Dr. Michael A. Grober (US Air Force Research Laboratories
+ * Copyright (c) 2011, Michael A. Jackson (BlueQuartz Software)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -29,67 +28,52 @@
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _MICROSTRUCTURE_STATISTICS_H_
-#define _MICROSTRUCTURE_STATISTICS_H_
+#ifndef _H5RECONVOLUMEWRITER_H_
+#define _H5RECONVOLUMEWRITER_H_
 
-#if defined (_MSC_VER)
-#define WIN32_LEAN_AND_MEAN   // Exclude rarely-used stuff from Windows headers
-#endif
+#include "hdf5.h"
+
+#include <vector>
+#include <string>
+
+#include "MXA/MXATypes.h"
+#include "MXA/Common/MXASetGetMacros.h"
 
 
-#include <MXA/Common/MXASetGetMacros.h>
-#include <MXA/MXATypes.h>
-
+#include "DREAM3D/DREAM3DConfiguration.h"
 #include "DREAM3D/Common/Constants.h"
-#include "DREAM3D/MicrostructureStatistics/MicrostructureStatisticsFunc.h"
-#include "DREAM3D/Common/AbstractPipeline.h"
+
+class ReconstructionFunc;
 
 
 /**
-* @class MicrostructureStatistics MicrostructureStatistics AIM/MicrostructureStatistics.h/MicrostructureStatistics.h
-* @brief This class serves as the main entry point to execute the Microstructure Statistics codes
-*
-* @author Michael A. Jackson for BlueQuartz Software
-* @author Dr. Michael Groeber, USAFRL
-* @date May 30, 2011
-* @version 1.0
-*/
-class DREAM3DLib_EXPORT MicrostructureStatistics  : public AbstractPipeline
+ * @class H5ReconVolumeWriter H5ReconVolumeWriter.h DREAM3D/Reconstruction/H5ReconVolumeWriter.h
+ * @brief This class will write Voxel data to an HDF5 file for the Reconstruction
+ * module.
+ * @author Michael A. Jackson for BlueQuartz Software
+ * @date Jun 2, 2011
+ * @version 1.0
+ */
+class DREAM3DLib_EXPORT H5ReconVolumeWriter
 {
-
   public:
-    MXA_SHARED_POINTERS(MicrostructureStatistics);
-    MXA_TYPE_MACRO(MicrostructureStatistics);
-    MXA_STATIC_NEW_MACRO(MicrostructureStatistics);
+    MXA_SHARED_POINTERS(H5ReconVolumeWriter)
+    MXA_TYPE_MACRO(H5ReconVolumeWriter)
+    MXA_STATIC_NEW_MACRO(H5ReconVolumeWriter)
 
-    virtual ~MicrostructureStatistics();
+    virtual ~H5ReconVolumeWriter();
 
-    MXA_INSTANCE_STRING_PROPERTY(InputFile)
-    MXA_INSTANCE_STRING_PROPERTY(OutputDirectory)
-    MXA_INSTANCE_STRING_PROPERTY(OutputFilePrefix)
+    MXA_INSTANCE_STRING_PROPERTY(Filename);
 
+    int writeVoxelData(ReconstructionFunc* m);
 
-    /**
-    * @brief
-    * @param ostream
-    */
-    void printSettings(std::ostream &ostream);
-
-    /**
-     * @brief Main method to run the operation
-     */
-    void execute();
 
   protected:
-
-    MicrostructureStatistics();
-
+    H5ReconVolumeWriter();
 
   private:
-    MicrostructureStatisticsFunc::Pointer m;
-
-    MicrostructureStatistics(const MicrostructureStatistics&);    // Copy Constructor Not Implemented
-    void operator=(const MicrostructureStatistics&);  // Operator '=' Not Implemented
+    H5ReconVolumeWriter(const H5ReconVolumeWriter&); // Copy Constructor Not Implemented
+    void operator=(const H5ReconVolumeWriter&); // Operator '=' Not Implemented
 };
 
-#endif /* _MICROSTRUCTURE_STATISTICS_H_ */
+#endif /* _H5RECONVOLUMEWRITER_H_ */

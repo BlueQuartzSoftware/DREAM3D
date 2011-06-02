@@ -3,12 +3,14 @@ SET (DREAM3D_Reconstruction_HDRS
   ${DREAM3DLib_SOURCE_DIR}/Reconstruction/ReconstructionFunc.h
   ${DREAM3DLib_SOURCE_DIR}/Reconstruction/ReconstructionVTKWriter.h
   ${DREAM3DLib_SOURCE_DIR}/Reconstruction/ReconstructionVoxel.h
+  ${DREAM3DLib_SOURCE_DIR}/Reconstruction/H5ReconVolumeWriter.h
 )
 
 SET (DREAM3D_Reconstruction_SRCS
   ${DREAM3DLib_SOURCE_DIR}/Reconstruction/Reconstruction.cpp
   ${DREAM3DLib_SOURCE_DIR}/Reconstruction/ReconstructionFunc.cpp
   ${DREAM3DLib_SOURCE_DIR}/Reconstruction/ReconstructionVTKWriter.cpp
+  ${DREAM3DLib_SOURCE_DIR}/Reconstruction/H5ReconVolumeWriter.cpp
   ${DREAM3DLib_SOURCE_DIR}/Reconstruction/ReconstructionVoxel.cpp
 )
 cmp_IDE_SOURCE_PROPERTIES( "DREAM3DLib/Reconstruction" "${DREAM3D_Reconstruction_HDRS}" "${DREAM3D_Reconstruction_SRCS}" "0")

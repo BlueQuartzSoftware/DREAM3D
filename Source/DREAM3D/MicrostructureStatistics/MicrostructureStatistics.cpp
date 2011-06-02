@@ -74,12 +74,10 @@ void MicrostructureStatistics::execute()
 {
 
   //std::cout << "MicrostructureStatistics::compute Start" << std::endl;
-  int err = -1;
-  MAKE_OUTPUT_FILE_PATH ( graindataFile, AIM::Reconstruction::GrainDataFile);
-  MAKE_OUTPUT_FILE_PATH ( reconDeformStatsFile, AIM::Reconstruction::DeformationStatsFile);
-  MAKE_OUTPUT_FILE_PATH ( reconDeformIPFFile, AIM::Reconstruction::IPFDeformVTKFile);
-
-  MAKE_OUTPUT_FILE_PATH ( hdf5ResultsFile, AIM::Reconstruction::H5StatisticsFile)
+  MAKE_OUTPUT_FILE_PATH ( graindataFile, AIM::MicroStats::GrainDataFile);
+  MAKE_OUTPUT_FILE_PATH ( reconDeformStatsFile, AIM::MicroStats::DeformationStatsFile);
+  MAKE_OUTPUT_FILE_PATH ( reconDeformIPFFile, AIM::MicroStats::IPFDeformVTKFile);
+  MAKE_OUTPUT_FILE_PATH ( hdf5ResultsFile, AIM::MicroStats::H5StatisticsFile)
   H5ReconStatsWriter::Pointer h5io = H5ReconStatsWriter::New(hdf5ResultsFile);
 
   m = MicrostructureStatisticsFunc::New();
