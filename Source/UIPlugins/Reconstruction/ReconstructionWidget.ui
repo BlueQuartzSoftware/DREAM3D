@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>625</width>
-    <height>691</height>
+    <width>617</width>
+    <height>648</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -275,20 +275,6 @@
           </item>
          </widget>
         </item>
-        <item row="8" column="0">
-         <widget class="QLabel" name="label_46">
-          <property name="text">
-           <string>Down-sample Res.</string>
-          </property>
-         </widget>
-        </item>
-        <item row="8" column="1">
-         <widget class="QDoubleSpinBox" name="m_DownSampleFactor">
-          <property name="value">
-           <double>1.000000000000000</double>
-          </property>
-         </widget>
-        </item>
         <item row="3" column="1">
          <widget class="QCheckBox" name="m_FillinSample">
           <property name="text">
@@ -310,38 +296,21 @@
           </property>
          </widget>
         </item>
-        <item row="9" column="0">
-         <widget class="QLabel" name="label_8">
-          <property name="text">
-           <string>Min. Grain Size</string>
-          </property>
-         </widget>
-        </item>
-        <item row="9" column="1">
-         <widget class="QSpinBox" name="m_MinAllowedGrainSize">
-          <property name="minimum">
-           <number>1</number>
-          </property>
-          <property name="maximum">
-           <number>1000</number>
-          </property>
-          <property name="value">
-           <number>8</number>
-          </property>
-         </widget>
-        </item>
        </layout>
       </item>
       <item>
        <layout class="QFormLayout" name="formLayout_3">
-        <item row="0" column="0">
+        <property name="fieldGrowthPolicy">
+         <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
+        </property>
+        <item row="1" column="0">
          <widget class="QLabel" name="label_31">
           <property name="text">
            <string>Min. Image Quality</string>
           </property>
          </widget>
         </item>
-        <item row="0" column="1">
+        <item row="1" column="1">
          <widget class="QDoubleSpinBox" name="m_MinImageQuality">
           <property name="maximum">
            <double>50000.000000000000000</double>
@@ -354,14 +323,7 @@
           </property>
          </widget>
         </item>
-        <item row="1" column="0">
-         <widget class="QLabel" name="label_9">
-          <property name="text">
-           <string>Min. Confidence Index</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="1">
+        <item row="2" column="1">
          <widget class="QDoubleSpinBox" name="m_MinConfidence">
           <property name="decimals">
            <number>4</number>
@@ -374,20 +336,6 @@
           </property>
           <property name="value">
            <double>0.100000000000000</double>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="0">
-         <widget class="QLabel" name="label_59">
-          <property name="text">
-           <string>Bin Step Size</string>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="1">
-         <widget class="QDoubleSpinBox" name="m_BinStepSize">
-          <property name="value">
-           <double>1.000000000000000</double>
           </property>
          </widget>
         </item>
@@ -420,6 +368,47 @@
           </property>
           <property name="value">
            <double>5.000000000000000</double>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="0">
+         <widget class="QLabel" name="label_9">
+          <property name="text">
+           <string>Min. Confidence Index</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QSpinBox" name="m_MinAllowedGrainSize">
+          <property name="minimum">
+           <number>1</number>
+          </property>
+          <property name="maximum">
+           <number>1000</number>
+          </property>
+          <property name="value">
+           <number>8</number>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="0">
+         <widget class="QLabel" name="label_8">
+          <property name="text">
+           <string>Min. Grain Size</string>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="0">
+         <widget class="QLabel" name="label_46">
+          <property name="text">
+           <string>Down-sample Res.</string>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="1">
+         <widget class="QDoubleSpinBox" name="m_DownSampleFactor">
+          <property name="value">
+           <double>1.000000000000000</double>
           </property>
          </widget>
         </item>
@@ -546,7 +535,7 @@
             </property>
            </widget>
           </item>
-          <item row="3" column="0">
+          <item row="2" column="0">
            <widget class="QLabel" name="m_H5VolumeFileIcon">
             <property name="text">
              <string/>
@@ -556,10 +545,10 @@
             </property>
            </widget>
           </item>
-          <item row="3" column="1">
+          <item row="2" column="1">
            <widget class="QLabel" name="m_H5VolumeFile">
             <property name="text">
-             <string>HDF5 Volume File</string>
+             <string>VoxelVolumeData</string>
             </property>
            </widget>
           </item>
@@ -592,6 +581,16 @@
             </property>
            </widget>
           </item>
+          <item row="1" column="1">
+           <widget class="QCheckBox" name="m_VisualizationVizFile">
+            <property name="text">
+             <string>VTK Visualization File</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
           <item row="2" column="0">
            <widget class="QLabel" name="m_IPFVizFileIcon">
             <property name="text">
@@ -613,26 +612,6 @@
            </widget>
           </item>
           <item row="3" column="0">
-           <widget class="QLabel" name="m_DisorientationVizFileIcon">
-            <property name="text">
-             <string/>
-            </property>
-            <property name="pixmap">
-             <pixmap resource="../../../Resources/icons/images/Icons.qrc">:/Delete-16x16.png</pixmap>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="1">
-           <widget class="QCheckBox" name="m_DisorientationVizFile">
-            <property name="text">
-             <string>Disorientation</string>
-            </property>
-            <property name="checked">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="4" column="0">
            <widget class="QLabel" name="m_ImageQualityVizFileIcon">
             <property name="text">
              <string/>
@@ -642,7 +621,7 @@
             </property>
            </widget>
           </item>
-          <item row="4" column="1">
+          <item row="3" column="1">
            <widget class="QCheckBox" name="m_ImageQualityVizFile">
             <property name="text">
              <string>Image Quality</string>
@@ -652,8 +631,8 @@
             </property>
            </widget>
           </item>
-          <item row="5" column="0">
-           <widget class="QLabel" name="m_SchmidFactorVizFileIcon">
+          <item row="4" column="0">
+           <widget class="QLabel" name="m_DownSampledVizFileIcon">
             <property name="text">
              <string/>
             </property>
@@ -662,47 +641,7 @@
             </property>
            </widget>
           </item>
-          <item row="5" column="1">
-           <widget class="QCheckBox" name="m_SchmidFactorVizFile">
-            <property name="text">
-             <string>Schmid Factor</string>
-            </property>
-            <property name="checked">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="1">
-           <widget class="QCheckBox" name="m_VisualizationVizFile">
-            <property name="text">
-             <string>VTK Visualization File</string>
-            </property>
-            <property name="checked">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="7" column="1">
-           <widget class="QCheckBox" name="m_HDF5GrainFile">
-            <property name="text">
-             <string>HDF5 Grain File (.h5grain)</string>
-            </property>
-            <property name="checked">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="7" column="0">
-           <widget class="QLabel" name="m_HDF5GrainFileIcon">
-            <property name="text">
-             <string/>
-            </property>
-            <property name="pixmap">
-             <pixmap resource="../../../Resources/icons/images/Icons.qrc">:/Delete-16x16.png</pixmap>
-            </property>
-           </widget>
-          </item>
-          <item row="6" column="1">
+          <item row="4" column="1">
            <widget class="QCheckBox" name="m_DownSampledVizFile">
             <property name="text">
              <string>Downsampled File</string>
@@ -712,13 +651,23 @@
             </property>
            </widget>
           </item>
-          <item row="6" column="0">
-           <widget class="QLabel" name="m_DownSampledVizFileIcon">
+          <item row="5" column="0">
+           <widget class="QLabel" name="m_HDF5GrainFileIcon">
             <property name="text">
              <string/>
             </property>
             <property name="pixmap">
              <pixmap resource="../../../Resources/icons/images/Icons.qrc">:/Delete-16x16.png</pixmap>
+            </property>
+           </widget>
+          </item>
+          <item row="5" column="1">
+           <widget class="QCheckBox" name="m_HDF5GrainFile">
+            <property name="text">
+             <string>HDF5 Grain File (.h5grain)</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
             </property>
            </widget>
           </item>
@@ -826,10 +775,6 @@
  </customwidgets>
  <resources>
   <include location="../../../Resources/icons/images/Icons.qrc"/>
-  <include location="../../../Resources/icons/images/Icons.qrc"/>
-  <include location="../../../Resources/icons/images/Icons.qrc"/>
-  <include location="../../../Resources/icons/images/Icons.qrc"/>
-  <include location="../../../../Resources/icons/images/Icons.qrc"/>
  </resources>
  <connections/>
 </ui>
