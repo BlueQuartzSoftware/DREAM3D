@@ -113,13 +113,10 @@ void ReconstructionWidget::readSettings(QSettings &prefs)
   READ_SETTING(prefs, m_, MinAllowedGrainSize, ok, i, 8 , Int);
   READ_SETTING(prefs, m_, MinConfidence, ok, d, 0.1 , Double);
   READ_SETTING(prefs, m_, DownSampleFactor, ok, d, 1.0 , Double);
-  READ_SETTING(prefs, m_, BinStepSize, ok, d, 1.0 , Double);
 
 
-  READ_CHECKBOX_SETTING(prefs, m_, DisorientationVizFile, true);
   READ_CHECKBOX_SETTING(prefs, m_, ImageQualityVizFile, true);
   READ_CHECKBOX_SETTING(prefs, m_, IPFVizFile, true);
-  READ_CHECKBOX_SETTING(prefs, m_, SchmidFactorVizFile, true);
   READ_CHECKBOX_SETTING(prefs, m_, VisualizationVizFile, true);
   READ_CHECKBOX_SETTING(prefs, m_, DownSampledVizFile, true);
   READ_CHECKBOX_SETTING(prefs, m_, HDF5GrainFile, true);
@@ -148,17 +145,14 @@ void ReconstructionWidget::writeSettings(QSettings &prefs)
 
   WRITE_SETTING(prefs, m_, MinAllowedGrainSize)
   WRITE_SETTING(prefs, m_, MinConfidence)
-  WRITE_SETTING(prefs, m_, BinStepSize)
   WRITE_SETTING(prefs, m_, DownSampleFactor)
   WRITE_SETTING(prefs, m_, MinImageQuality)
   WRITE_SETTING(prefs, m_, MisOrientationTolerance)
   WRITE_COMBO_BOX(prefs, m_, AlignMeth)
   WRITE_COMBO_BOX(prefs, m_, Orientation)
 
-  WRITE_CHECKBOX_SETTING(prefs, m_, DisorientationVizFile)
   WRITE_CHECKBOX_SETTING(prefs, m_, ImageQualityVizFile)
   WRITE_CHECKBOX_SETTING(prefs, m_, IPFVizFile)
-  WRITE_CHECKBOX_SETTING(prefs, m_, SchmidFactorVizFile)
   WRITE_CHECKBOX_SETTING(prefs, m_, VisualizationVizFile)
   WRITE_CHECKBOX_SETTING(prefs, m_, DownSampledVizFile)
   WRITE_CHECKBOX_SETTING(prefs, m_, HDF5GrainFile)
@@ -203,10 +197,9 @@ void ReconstructionWidget::setupGui()
   m_WidgetList << m_ZStartIndex << m_ZEndIndex;
   m_WidgetList << m_MergeTwins << m_MergeColonies << m_FillinSample << m_AlignMeth << m_Orientation;
   m_WidgetList << m_MinAllowedGrainSize << m_MinConfidence << m_DownSampleFactor << m_MisOrientationTolerance;
-  m_WidgetList << m_BinStepSize;
-  m_WidgetList << m_DisorientationVizFile << m_ImageQualityVizFile << m_IPFVizFile << m_SchmidFactorVizFile << m_VisualizationVizFile << m_DownSampledVizFile;
+  m_WidgetList << m_ImageQualityVizFile << m_IPFVizFile << m_VisualizationVizFile << m_DownSampledVizFile;
   m_WidgetList << m_MinImageQuality;
-  m_WidgetList << m_HDF5GrainFile << m_H5StatisticsFile << m_AlignmentFile << m_GrainDataFile;
+  m_WidgetList << m_HDF5GrainFile << m_AlignmentFile;
   m_WidgetList << m_LoadSettingsBtn << m_SaveSettingsBtn << m_BinaryVtkFiles << phaseTypeList;
 
 }
@@ -221,16 +214,12 @@ void ReconstructionWidget::checkIOFiles()
   this->verifyPathExists(m_OutputDir->text(), this->m_OutputDir);
 
   CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::Reconstruction,m_, AlignmentFile)
-  CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::Reconstruction,m_, GrainDataFile)
 
-  CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(AIM::Reconstruction, m_ , DisorientationVizFile)
   CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(AIM::Reconstruction, m_ , ImageQualityVizFile)
   CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(AIM::Reconstruction, m_ , IPFVizFile)
-  CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(AIM::Reconstruction, m_ , SchmidFactorVizFile)
   CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(AIM::Reconstruction, m_ , VisualizationVizFile)
   CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(AIM::Reconstruction, m_ , DownSampledVizFile)
   CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(AIM::Reconstruction, m_ , HDF5GrainFile)
-  CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::Reconstruction, m_ , H5StatisticsFile)
 }
 
 // -----------------------------------------------------------------------------
@@ -533,9 +522,7 @@ void ReconstructionWidget::on_m_GoBtn_clicked()
 
   m_Reconstruction->setWriteVisualizationFile(m_VisualizationVizFile->isChecked());
   m_Reconstruction->setWriteIPFFile(m_IPFVizFile->isChecked());
-  m_Reconstruction->setWriteDisorientationFile(m_DisorientationVizFile->isChecked());
   m_Reconstruction->setWriteImageQualityFile(m_ImageQualityVizFile->isChecked());
-  m_Reconstruction->setWriteSchmidFactorFile(m_SchmidFactorVizFile->isChecked());
   m_Reconstruction->setWriteDownSampledFile(m_DownSampledVizFile->isChecked());
   m_Reconstruction->setWriteHDF5GrainFile(m_HDF5GrainFile->isChecked());
 

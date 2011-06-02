@@ -177,7 +177,6 @@ class DREAM3DLib_EXPORT ReconstructionFunc
     void characterize_colonies();
     void renumber_grains3();
     void align_sections(const std::string &filename);
-	void find_colors();
 
     float gamma(float x);
     float find_xcoord(size_t index);
