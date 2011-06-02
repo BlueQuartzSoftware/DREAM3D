@@ -14,6 +14,7 @@
 #define H5_VTK_DATA_OBJECT  "VTK_DATA_OBJECT"
 #define H5_VTK_POLYDATA     "VTK_POLYDATA"
 #define H5_VTK_UNSTRUCTURED_GRID "VTK_UNSTRUCTURED_GRID"
+#define H5_VTK_STRUCTURED_POINTS "VTK_STRUCTURED_POINTS"
 #define H5_NAME             "NAME"
 #define H5_VTK_DATASET_ATTRIBUTE "VTK_DATASET_ATTRIBUTE"
 
@@ -21,6 +22,7 @@
 #define H5_FIELD_DATA_DEFAULT    "FieldData"
 #define H5_CELL_DATA_GROUP_NAME  "CELL_DATA"
 #define H5_POINT_DATA_GROUP_NAME "POINT_DATA"
+#define H5_SCALAR_DATA_GROUP_NAME "SCALARS"
 
 #define H5_POINTS                "POINTS"
 #define H5_VERTICES              "VERTICES"
@@ -34,6 +36,12 @@
 #define H5_NUMCOMPONENTS          "NumComponents"
 
 #define H5_DEFAULT       "default"
+
+#define H5_DIMENSIONS          "DIMENSIONS"
+#define H5_ORIGIN              "ORIGIN"
+#define H5_SPACING             "SPACING"
+#define H5_POINT_DATA          "POINT_DATA"
+#define H5_NUMBER_OF_POINTS    "NUM_POINTS"
 
 #define H5_ACTIVE_SCALARS      "ActiveScalars"
 #define H5_SCALARS             "SCALARS"

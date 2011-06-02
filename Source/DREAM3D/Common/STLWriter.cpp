@@ -107,6 +107,7 @@ int STLWriter::writeHeader(const std::string &header)
   fwrite(h, 1, 80, m_File);
   fwrite(h, 1, 4, m_File);// Write junk into the 4 bytes that hold the triangle count,
                           //  which will get updated as we write the file
+  return 0;
 }
 
 // -----------------------------------------------------------------------------

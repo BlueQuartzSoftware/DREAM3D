@@ -29,8 +29,8 @@
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef GRAINGENERATORWIDGET_H_
-#define GRAINGENERATORWIDGET_H_
+#ifndef _MICROSTATISTICS_H_
+#define _MICROSTATISTICS_H_
 
 #include <QtCore/QString>
 #include <QtCore/QSettings>
@@ -86,8 +86,8 @@ class MicrostructureStatisticsWidget : public AIMPluginFrame, private Ui::Micros
 
   protected slots:
     /* Microstructure Statistics Slots*/
-    void on_m_StructureFileBtn_clicked();
-    void on_m_StructureFile_textChanged(const QString &text);
+    void on_m_InputFileBtn_clicked();
+    void on_m_InputFile_textChanged(const QString &text);
 
     void on_m_OutputDirBtn_clicked();
     void on_m_GoBtn_clicked();
@@ -116,4 +116,4 @@ class MicrostructureStatisticsWidget : public AIMPluginFrame, private Ui::Micros
     void operator=(const MicrostructureStatisticsWidget&); // Operator '=' Not Implemented
 };
 
-#endif /* GRAINGENERATORWIDGET_H_ */
+#endif /* _MICROSTATISTICS_H_ */

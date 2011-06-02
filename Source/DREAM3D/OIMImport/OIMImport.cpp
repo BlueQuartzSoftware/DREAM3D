@@ -91,7 +91,7 @@ void OIMImport::execute()
     setCancel(true);
     updateProgressAndMessage(s.c_str(), 100);
     err = -1;
-    CHECK_FOR_CANCELED(OIMImportFunc, "OIMImport was Canceled", function)
+    CHECK_FOR_CANCELED(OIMImportFunc, "OIMImport input filename was empty", load_input_filename)
     return;
   }
   // Create File
@@ -99,7 +99,7 @@ void OIMImport::execute()
   if (fileId < 0) {
     setCancel(true);
     updateProgressAndMessage("The Output HDF5 file could not be created. Check Permissions, if the File is in use by another program.", 100);
-    CHECK_FOR_CANCELED(OIMImportFunc, "OIMImport was Canceled", function)
+    CHECK_FOR_CANCELED(OIMImportFunc, "OIMImport Error - Output HDF5 file could not be created", create_output_file)
     return;
   }
 
@@ -142,8 +142,6 @@ void OIMImport::execute()
   for (std::vector<std::string>::iterator filepath = m_AngFileList.begin(); filepath != m_AngFileList.end(); ++filepath )
   {
     std::string angFName = *filepath;
-
-    CHECK_FOR_CANCELED(OIMImportFunc, "OIMImport was Canceled", function)
     progress = z - m_ZStartIndex;
     progress = (int)(100.0f * (float)(progress)/total);
     std::string msg = "Importing: " + angFName;
@@ -156,6 +154,7 @@ void OIMImport::execute()
     }
     indices.push_back(z);
     ++z;
+    CHECK_FOR_CANCELED(OIMImportFunc, "OIMImport was Canceled", import_data)
   }
 
   if (false == getCancel())
@@ -167,6 +166,5 @@ void OIMImport::execute()
   }
   err = H5Fclose(fileId);
   updateProgressAndMessage("Import Complete", 100);
-
 }
 
