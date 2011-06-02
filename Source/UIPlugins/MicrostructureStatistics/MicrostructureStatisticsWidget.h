@@ -38,7 +38,7 @@
 #include "ui_MicrostructureStatisticsWidget.h"
 
 #include "QtSupport/AIMPluginFrame.h"
-#include "DREAM3D/MicrostructureStatistics/MicrostructureStatistics.h"
+#include "QMicrostructureStatistics.h"
 
 class QListWidgetItem;
 
@@ -108,7 +108,7 @@ class MicrostructureStatisticsWidget : public AIMPluginFrame, private Ui::Micros
 
   private:
     QList<QWidget*>             m_WidgetList;
-    MicrostructureStatistics::Pointer     m_MicrostructureStatistics;
+    QMicrostructureStatistics*  m_MicrostructureStatistics;
     QThread*                    m_WorkerThread;
     QString                     m_OpenDialogLastDirectory;
 

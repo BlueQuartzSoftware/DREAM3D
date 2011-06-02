@@ -41,45 +41,25 @@
 #include <MXA/MXATypes.h>
 #include "DREAM3D/Common/Constants.h"
 #include <DREAM3D/SurfaceMesh/SurfaceMeshFunc.h>
+#include "DREAM3D/Common/AbstractPipeline.h"
 
-#ifdef DREAM3D_USE_QT
-#include <QtCore/QObject>
-
-#define AIM_STRING QString
-#else
-#define AIM_STRING std::string
-#endif
 
 /**
 * @class SurfaceMesh SurfaceMesh.h AIM/SurfaceMesh/SurfaceMesh.h
 * @brief This class serves as the main entry point to execute the Surface Mesh
-* codes. When used from a Qt framework this class inherits from QThread thus making this class able to be excuted
-* on another thread of execution so that the User interface does not lock up while the code executes. The main method
-* to implement is the 'compute()' method. This method will be called from the 'run()' method during the execution of
-* the thread. The normal constructor is protected so that the end programmer must instantiate this class through the
-* static "New()" method which will produce a boost::shared_ptr instance.
-* @author Michael A. Jackson for BlueQuartz Software, Dr. Michael Groeber, USAFRL
+* codes.
+* @author Michael A. Jackson for BlueQuartz Software,
+* @author Dr. Michael Groeber, USAFRL
 * @date Nov 3, 2009
 * @version 1.0
 */
-class SurfaceMesh
-#ifdef DREAM3D_USE_QT
- : public QObject
-#endif
+class DREAM3DLib_EXPORT SurfaceMesh : public AbstractPipeline
 {
-#ifdef DREAM3D_USE_QT
-Q_OBJECT
-#endif
-
   public:
     MXA_SHARED_POINTERS(SurfaceMesh);
     MXA_TYPE_MACRO(SurfaceMesh);
-
-#ifdef DREAM3D_USE_QT
-    static Pointer New (QObject* parent = 0);
-#else
     MXA_STATIC_NEW_MACRO(SurfaceMesh);
-#endif
+
     virtual ~SurfaceMesh();
 
     MXA_INSTANCE_STRING_PROPERTY(InputDirectory)
@@ -105,54 +85,16 @@ Q_OBJECT
     MXA_INSTANCE_PROPERTY(int, SmoothIterations)
     MXA_INSTANCE_PROPERTY(int, SmoothFileOutputIncrement)
     MXA_INSTANCE_PROPERTY(bool, SmoothLockQuadPoints)
-    MXA_INSTANCE_PROPERTY(int, ErrorCondition)
-
-
-
-    /**
-     * @brief Cancel the operation
-     */
-    MXA_INSTANCE_PROPERTY(bool, Cancel);
-
-    /**
-     * @brief Either prints a message or sends the message to the User Interface
-     * @param message The message to print
-     * @param progress The progress of the SurfaceMesh normalized to a value between 0 and 100
-     */
-    void progressMessage(AIM_STRING message, int progress);
-
-#ifdef DREAM3D_USE_QT
 
 
     /**
-     * Qt Signals for connections
+     * @brief Main method to run the operation
      */
-    signals:
-      void updateMessage(QString message);
-      void updateProgress(int value);
-      void finished();
-
-    public slots:
-    /**
-     * @brief Slot to receive a signal to cancel the operation
-     */
-      void on_CancelWorker();
-
-
-#endif
-      /**
-       * @brief Main method to run the operation
-       */
-      void compute();
-
+    void execute();
 
   protected:
 
-    SurfaceMesh(
-#ifdef DREAM3D_USE_QT
-        QObject* parent = 0
-#endif
-        );
+    SurfaceMesh();
 
   private:
 	  SurfaceMeshFunc::Pointer m;

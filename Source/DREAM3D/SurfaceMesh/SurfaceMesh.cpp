@@ -40,73 +40,33 @@
 #include "SMVtkFileIO.h"
 #include "DREAM3D/Common/STLWriter.h"
 
-#ifdef DREAM3D_USE_QT
-#define CHECK_FOR_CANCELED(AClass)\
-  if (this->m_Cancel) { \
-  QString msg = #AClass; \
-  msg += " was Canceled"; \
-  emit updateMessage(msg);\
-  emit updateProgress(0);\
-  return;}
-
 #define CHECK_ERROR(name, message)\
     if(err < 0) {\
       setErrorCondition(err);\
-      QString msg = #name;\
+      std::string msg = #name;\
       msg += message;\
-      emit updateMessage(msg);\
-      emit updateProgress(0);\
-      emit finished();\
+      pipelineMessage(msg.c_str());\
+      pipelineProgress(0);\
+      pipelineFinished();\
       return;   }
 
-#else
-#define CHECK_FOR_CANCELED(AClass)\
-  ;
-#define CHECK_ERROR(name, message)\
-    ;
-#endif
-
-#if DREAM3D_USE_QT
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-SurfaceMesh::Pointer SurfaceMesh::New( QObject* parent)
-{
-  Pointer sharedPtr(new SurfaceMesh(parent));
-  return sharedPtr;
-}
-#endif
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-SurfaceMesh::SurfaceMesh(
-#if DREAM3D_USE_QT
-QObject* parent
-#endif
-) :
-#if DREAM3D_USE_QT
-        QObject(parent),
-#endif
-        m_InputDirectory("."),
-        m_InputFile(""),
-        m_ScalarName(AIM::Reconstruction::GrainIdScalarName),
-        m_OutputDirectory(""),
-        m_OutputFilePrefix("SurfaceMesh_"),
-        m_ConformalMesh(true),
-        m_BinaryVTKFile(false),
-        m_WriteSTLFile(false),
-        m_DeleteTempFiles(true),
-        m_SmoothMesh(false),
-        m_SmoothIterations(0),
-        m_SmoothFileOutputIncrement(0),
-        m_SmoothLockQuadPoints(false),
-        m_ErrorCondition(0)
-#if DREAM3D_USE_QT
-,
-m_Cancel(false)
-#endif
+SurfaceMesh::SurfaceMesh() :
+m_InputDirectory("."),
+m_InputFile(""),
+m_ScalarName(AIM::Reconstruction::GrainIdScalarName),
+m_OutputDirectory(""),
+m_OutputFilePrefix("SurfaceMesh_"),
+m_ConformalMesh(true),
+m_BinaryVTKFile(false),
+m_WriteSTLFile(false),
+m_DeleteTempFiles(true),
+m_SmoothMesh(false),
+m_SmoothIterations(0),
+m_SmoothFileOutputIncrement(0),
+m_SmoothLockQuadPoints(false)
 {
 }
 
@@ -117,18 +77,15 @@ SurfaceMesh::~SurfaceMesh()
 {
 }
 
-#define MAKE_OUTPUT_FILE_PATH(outpath, filename)\
-    std::string outpath = m_OutputDirectory + MXADir::Separator + m_OutputFilePrefix + filename;
-
 #define USE_VTK_FILE_UTILS 1
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SurfaceMesh::compute()
+void SurfaceMesh::execute()
 {
-  CHECK_FOR_CANCELED(Surface Meshing)
-  progressMessage(AIM_STRING("Running Surface Meshing"), 0);
+
+  updateProgressAndMessage(("Running Surface Meshing"), 0);
   int err = 0;
 //  MAKE_OUTPUT_FILE_PATH (  NodesRawFile , AIM::SurfaceMeshing::NodesRawFile)
   MAKE_OUTPUT_FILE_PATH( NodesFile, AIM::SurfaceMesh::NodesFileBin)MAKE_OUTPUT_FILE_PATH( TrianglesFile, AIM::SurfaceMesh::TrianglesFileBin)
@@ -138,18 +95,19 @@ void SurfaceMesh::compute()
   MAKE_OUTPUT_FILE_PATH( VisualizationFile, AIM::SurfaceMesh::VisualizationVizFile)
   MAKE_OUTPUT_FILE_PATH( stlFilename, AIM::SurfaceMesh::STLFile)
 
+  m = SurfaceMeshFunc::New();
+  // Initialize some benchmark timers
+  START_CLOCK()
 
   // Create the output directory if needed
   if (MXADir::exists(m_OutputDirectory) == false)
   {
     if (MXADir::mkdir(m_OutputDirectory, true) == false)
     {
-#ifdef DREAM3D_USE_QT
-      this->m_Cancel = true;
-#endif
-      this->m_ErrorCondition = 1;
-      CHECK_FOR_CANCELED(Surface Meshing)
-      progressMessage(AIM_STRING("Could not create output directory."), 100);
+      setCancel(true);
+      setErrorCondition(1);
+      CHECK_FOR_CANCELED(SurfaceMeshFunc, "SurfaceMesh could not create the output directory", outputDirCreation )
+      updateProgressAndMessage(("Could not create output directory."), 100);
       return;
     }
   }
@@ -218,7 +176,6 @@ void SurfaceMesh::compute()
   { 0, 3, 2, 1, -1, -1, -1, -1 },
   { 0, 3, 2, 1, 1, 0, 3, 2 } };
 
-  m = SurfaceMeshFunc::New();
 
   SMVtkFileIO::Pointer vtkreader = SMVtkFileIO::New();
   vtkreader->primeFileToScalarDataLocation(m.get(), m_InputFile, m_ScalarName);
@@ -243,15 +200,15 @@ void SurfaceMesh::compute()
   {
     ss.str("");
     ss << "Marching Cubes Between Layers " << i << " and " << i + 1;
-    progressMessage(AIM_STRING(ss.str().c_str()), (i * 90 / zFileDim));
+    updateProgressAndMessage((ss.str().c_str()), (i * 90 / zFileDim));
 
     err = vtkreader->readZSlice(xFileDim, yFileDim, zFileDim, fileVoxelLayer);
     if (err < 0)
     {
       ss.str("");
       ss << "Error loading slice data from vtk file.";
-      this->m_ErrorCondition = 1;
-      progressMessage(AIM_STRING(ss.str().c_str()), 100);
+      setErrorCondition(1);
+      updateProgressAndMessage((ss.str().c_str()), 100);
       return;
     }
 
@@ -303,11 +260,8 @@ void SurfaceMesh::compute()
     err = m->writeTrianglesFile(i, cTriID, TrianglesFile, nTriangle);
     if (err < 0)
     {
-      this->m_Cancel = true;
-      progressMessage(AIM_STRING("Error Writing Triangles Temp File"), 100);
-#if DREAM3D_USE_QT
-      emit finished();
-#endif
+      setCancel(true);
+      updateProgressAndMessage(("Error Writing Triangles Temp File"), 100);
       return;
     }
     if (NULL != stlWriter.get())
@@ -315,12 +269,8 @@ void SurfaceMesh::compute()
       err = stlWriter->writeTriangleBlock(nTriangle, m->cTriangle, m->cVertex);
       if (err < 0)
       {
-        this->m_Cancel = true;
-        progressMessage(AIM_STRING("Error Writing STL File"), 100);
-#if DREAM3D_USE_QT
-        emit
-        finished();
-#endif
+        setCancel(true);
+        updateProgressAndMessage(("Error Writing STL File"), 100);
         return;
       }
     }
@@ -361,11 +311,8 @@ void SurfaceMesh::compute()
   err = m->writeTrianglesFile(i, cTriID, TrianglesFile, nTriangle);
   if (err < 0)
   {
-    this->m_Cancel = true;
-    progressMessage(AIM_STRING("Error Writing Triangles Temp File"), 100);
-#if DREAM3D_USE_QT
-    emit finished();
-#endif
+    setCancel(true);
+    updateProgressAndMessage(("Error Writing Triangles Temp File"), 100);
     return;
   }
   if (NULL != stlWriter.get())
@@ -373,11 +320,8 @@ void SurfaceMesh::compute()
     err = stlWriter->writeTriangleBlock(nTriangle, m->cTriangle, m->cVertex);
     if (err < 0)
     {
-      this->m_Cancel = true;
-      progressMessage(AIM_STRING("Error Writing STL File"), 100);
-  #if DREAM3D_USE_QT
-      emit finished();
-  #endif
+      setCancel(true);
+      updateProgressAndMessage(("Error Writing STL File"), 100);
       return;
     }
     stlWriter->closeFile();
@@ -395,24 +339,18 @@ void SurfaceMesh::compute()
 
   if (m_SmoothMesh)
   {
-    progressMessage(AIM_STRING("Smoothing Boundaries"), 90);
+    updateProgressAndMessage(("Smoothing Boundaries"), 90);
     m->smooth_boundaries(nNodes, cTriID, NodesFile, TrianglesFile);
   }
 
-#ifdef DREAM3D_USE_QT
-  QString msg("Writing Surface Mesh File: ");
-  msg.append(QString::fromStdString(VisualizationFile));
-#else
   std::string msg("Writing Surface Mesh File: ");
   msg.append(AIM::SurfaceMesh::VisualizationVizFile);
-#endif
-
-  progressMessage(msg, 95);
+  updateProgressAndMessage(msg.c_str(), 95);
   SMVtkFileIO::Pointer writer = SMVtkFileIO::New();
   writer->setInputFileName(VisualizationFile);
   writer->writeVTKFile(m.get(), nNodes, cTriID, VisualizationFile, NodesFile, TrianglesFile, m_BinaryVTKFile, m_ConformalMesh);
 
-  progressMessage(AIM_STRING("Surface Meshing Complete"), 100);
+  updateProgressAndMessage(("Surface Meshing Complete"), 100);
 
   m = SurfaceMeshFunc::NullPointer(); // Clean up the memory
 
@@ -423,33 +361,4 @@ void SurfaceMesh::compute()
     MXADir::remove(TrianglesFile);
   }
 
-#if DREAM3D_USE_QT
-  emit finished();
-#endif
 }
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void SurfaceMesh::progressMessage(AIM_STRING message, int progress)
-{
-#ifdef DREAM3D_USE_QT
-  emit updateMessage(QString(message));
-  emit updateProgress(progress);
-  //  std::cout << message.toStdString() << std::endl;
-#else
-  std::cout << logTime() << progress << "% - " << message << std::endl;
-#endif
-}
-
-#ifdef DREAM3D_USE_QT
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void SurfaceMesh::on_CancelWorker()
-{
-  // std::cout << "SurfaceMesh::cancelWorker()" << std::endl;
-  this->m_Cancel = true;
-}
-#endif
-

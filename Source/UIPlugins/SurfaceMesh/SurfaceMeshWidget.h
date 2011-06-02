@@ -38,7 +38,7 @@
 #include "ui_SurfaceMeshWidget.h"
 
 #include "QtSupport/AIMPluginFrame.h"
-#include "DREAM3D/SurfaceMesh/SurfaceMesh.h"
+#include "QSurfaceMesh.h"
 
 /**
  * @class SurfaceMeshWidget SurfaceMeshWidget.h AIM/GUI/SurfaceMeshWidget.h
@@ -103,7 +103,7 @@ class SurfaceMeshWidget : public AIMPluginFrame, private Ui::SurfaceMeshWidget
 
   private:
     QList<QWidget*>             m_WidgetList;
-    SurfaceMesh::Pointer        m_SurfaceMesh;
+    QSurfaceMesh*               m_SurfaceMesh;
     QThread*                    m_WorkerThread;
 
     QString m_OpenDialogLastDirectory;

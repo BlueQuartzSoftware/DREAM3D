@@ -1,6 +1,5 @@
 /* ============================================================================
- * Copyright (c) 2010, Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2010, Dr. Michael A. Grober (US Air Force Research Laboratories
+ * Copyright (c) 2011, Michael A. Jackson (BlueQuartz Software)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -29,22 +28,20 @@
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "MicrostructureStatistics.h"
-
-#include "MXA/MXATypes.h"
-#include "MXA/Common/LogTime.h"
-#include "MXA/Utilities/MXADir.h"
-
-#include "DREAM3D/DREAM3DConfiguration.h"
-#include "DREAM3D/Common/Constants.h"
-
+#include "AbstractPipeline.h"
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-MicrostructureStatistics::MicrostructureStatistics() :
-m_OutputDirectory("."),
-m_OutputFilePrefix("MicrostructureStatistics_")
+AbstractPipeline::AbstractPipeline() :
+    m_ErrorCondition(0), m_Cancel(false)
+{
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractPipeline::~AbstractPipeline()
 {
 
 }
@@ -52,42 +49,41 @@ m_OutputFilePrefix("MicrostructureStatistics_")
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-MicrostructureStatistics::~MicrostructureStatistics()
+void AbstractPipeline::run()
 {
- // std::cout << "~MicrostructureStatistics()" << std::endl;
+  pipelineProgress(0);
+  pipelineMessage("Starting Pipeline");
+  execute();
+  pipelineFinished();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void MicrostructureStatistics::execute()
+void AbstractPipeline::updateProgressAndMessage(const char* message, int progress)
 {
-  // Instantiate our GrainGeneratorFunc object
-  m = MicrostructureStatisticsFunc::New();
-  // Initialize some benchmark timers
-  START_CLOCK()
-
-  /*****************************************
-   * Put your pipeline code starting here
-   ****************************************/
-
-
-
-  // Clean up all the memory by forcibly setting a NULL pointer to the Shared
-  // pointer object.
-  m = MicrostructureStatisticsFunc::NullPointer();  // Clean up the memory
-  updateProgressAndMessage("MicrostructureStatistics Complete", 100);
+  std::cout << progress << "% " << message << std::endl;
 }
-
-
-#define PRINT_PROPERTY( out, var)\
-  out << #var << ": " << m_##var << std::endl;
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void MicrostructureStatistics::printSettings(std::ostream &ostream)
+void AbstractPipeline::pipelineProgress(int value)
 {
-  ostream << "MicrostructureStatistics Settings Being Used" << std::endl;
+  std::cout << value << "%" << std::endl;
+}
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void AbstractPipeline::pipelineMessage(const char* message)
+{
+  std::cout << message << std::endl;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void AbstractPipeline::pipelineFinished()
+{
 }
