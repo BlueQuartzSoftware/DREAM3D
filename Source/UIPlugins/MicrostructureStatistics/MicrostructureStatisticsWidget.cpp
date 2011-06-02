@@ -207,8 +207,8 @@ void MicrostructureStatisticsWidget::checkIOFiles()
   CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::SyntheticBuilder, m_, CrystallographicErrorFile)
   CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::SyntheticBuilder, m_, GrainAnglesFile)
   CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::SyntheticBuilder, m_, GrainDataFile)
-  CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::SyntheticBuilder, m_ , PackGrainsFile)
-  CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::SyntheticBuilder, m_ , H5StatisticsFile)
+  CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::SyntheticBuilder, m_, PackGrainsFile)
+  CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::SyntheticBuilder, m_, H5StatisticsFile)
 
 }
 
@@ -278,6 +278,16 @@ void MicrostructureStatisticsWidget::on_m_GoBtn_clicked()
   m_MicrostructureStatistics->setOutputDirectory(QDir::toNativeSeparators(m_OutputDir->text()).toStdString());
   m_MicrostructureStatistics->setOutputFilePrefix(m_OutputFilePrefix->text().toStdString());
   m_MicrostructureStatistics->setInputFile(QDir::toNativeSeparators(m_InputFile->text()).toStdString());
+
+  /********************************
+   * Gather any other values from the User Interface and send those to the lower level code
+   */
+  m_MicrostructureStatistics->setComputeGrainSize(computeGrainSize->isChecked());
+  m_MicrostructureStatistics->setComputeGrainShapes(computeGrainShapes->isChecked());
+  m_MicrostructureStatistics->setComputeNumNeighbors(computeNumNeighbors->isChecked());
+
+  m_MicrostructureStatistics->setComputeODF(computeODF->isChecked());
+  m_MicrostructureStatistics->setComputeMDF(computeMDF->isChecked());
 
 
   /* Connect the signal 'started()' from the QThread to the 'run' slot of the
