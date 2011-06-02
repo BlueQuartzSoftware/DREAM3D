@@ -116,9 +116,6 @@ public:
     std::vector<SharedFloatArray> actualmicrotex;
     std::vector<SharedFloatArray> simmicrotex;
 
-    std::vector<SharedFloatArray> graincenters;
-    std::vector<SharedFloatArray> grainmoments;
-
 	  std::vector<int> primaryphases;
 	  std::vector<double> primaryphasefractions;
 	  std::vector<int> precipitatephases;
@@ -156,7 +153,7 @@ public:
     std::vector<float> sddiam;
     std::vector<int> numdiameterbins;
     int worstgrain;
-    std::vector<float> totalaxes;
+//    std::vector<float> totalaxes;
 
     float totalvol;
     float totalprecipvol;
@@ -183,7 +180,6 @@ public:
     void initialize_packinggrid();
 
     void write_eulerangles(const std::string & filename);
-    void write_graindata(const std::string & filename);
     int readReconStatsData(H5ReconStatsReader::Pointer h5io);
     int readAxisOrientationData(H5ReconStatsReader::Pointer h5io);
     int readODFData(H5ReconStatsReader::Pointer h5io);
@@ -217,11 +213,6 @@ public:
     void MC_LoopBody2(int phase, size_t neighbor, int j, std::vector<float>* misolist, std::vector<float>* neighborsurfarealist);
     void matchCrystallography(const std::string & ErrorFile, H5ReconStatsWriter::Pointer h5io);
     void measure_misorientations();
-    void find_centroids();
-    void find_moments();
-    void find_axes();
-    void find_vectors(H5ReconStatsWriter::Pointer h5io);
-    int volume_stats(H5ReconStatsWriter::Pointer h5io);
     float gamma(float);
     float erf(float);
     float erfc(float);
