@@ -535,7 +535,7 @@
              <string/>
             </property>
             <property name="pixmap">
-             <pixmap resource="../../../../Resources/icons/images/Icons.qrc">:/Delete-16x16.png</pixmap>
+             <pixmap resource="../../../Resources/icons/images/Icons.qrc">:/Delete-16x16.png</pixmap>
             </property>
            </widget>
           </item>
@@ -546,37 +546,20 @@
             </property>
            </widget>
           </item>
-          <item row="2" column="0">
-           <widget class="QLabel" name="m_GrainDataFileIcon">
+          <item row="3" column="0">
+           <widget class="QLabel" name="m_H5VolumeFileIcon">
             <property name="text">
              <string/>
             </property>
             <property name="pixmap">
-             <pixmap resource="../../../../Resources/icons/images/Icons.qrc">:/Delete-16x16.png</pixmap>
+             <pixmap resource="../../../Resources/icons/images/Icons.qrc">:/Delete-16x16.png</pixmap>
             </property>
            </widget>
           </item>
-          <item row="2" column="1">
-           <widget class="QLabel" name="m_GrainDataFile">
+          <item row="3" column="1">
+           <widget class="QLabel" name="m_H5VolumeFile">
             <property name="text">
-             <string>Grain Data File</string>
-            </property>
-           </widget>
-          </item>
-          <item row="4" column="0">
-           <widget class="QLabel" name="m_H5StatisticsFileIcon">
-            <property name="text">
-             <string/>
-            </property>
-            <property name="pixmap">
-             <pixmap resource="../../../../Resources/icons/images/Icons.qrc">:/Delete-16x16.png</pixmap>
-            </property>
-           </widget>
-          </item>
-          <item row="4" column="1">
-           <widget class="QLabel" name="m_H5StatisticsFile">
-            <property name="text">
-             <string>HDF5 Statistics File</string>
+             <string>HDF5 Volume File</string>
             </property>
            </widget>
           </item>
@@ -605,7 +588,7 @@
              <string/>
             </property>
             <property name="pixmap">
-             <pixmap resource="../../../../Resources/icons/images/Icons.qrc">:/Delete-16x16.png</pixmap>
+             <pixmap resource="../../../Resources/icons/images/Icons.qrc">:/Delete-16x16.png</pixmap>
             </property>
            </widget>
           </item>
@@ -615,7 +598,7 @@
              <string/>
             </property>
             <property name="pixmap">
-             <pixmap resource="../../../../Resources/icons/images/Icons.qrc">:/Delete-16x16.png</pixmap>
+             <pixmap resource="../../../Resources/icons/images/Icons.qrc">:/Delete-16x16.png</pixmap>
             </property>
            </widget>
           </item>
@@ -635,7 +618,7 @@
              <string/>
             </property>
             <property name="pixmap">
-             <pixmap resource="../../../../Resources/icons/images/Icons.qrc">:/Delete-16x16.png</pixmap>
+             <pixmap resource="../../../Resources/icons/images/Icons.qrc">:/Delete-16x16.png</pixmap>
             </property>
            </widget>
           </item>
@@ -655,7 +638,7 @@
              <string/>
             </property>
             <property name="pixmap">
-             <pixmap resource="../../../../Resources/icons/images/Icons.qrc">:/Delete-16x16.png</pixmap>
+             <pixmap resource="../../../Resources/icons/images/Icons.qrc">:/Delete-16x16.png</pixmap>
             </property>
            </widget>
           </item>
@@ -675,7 +658,7 @@
              <string/>
             </property>
             <property name="pixmap">
-             <pixmap resource="../../../../Resources/icons/images/Icons.qrc">:/Delete-16x16.png</pixmap>
+             <pixmap resource="../../../Resources/icons/images/Icons.qrc">:/Delete-16x16.png</pixmap>
             </property>
            </widget>
           </item>
@@ -702,7 +685,7 @@
           <item row="7" column="1">
            <widget class="QCheckBox" name="m_HDF5GrainFile">
             <property name="text">
-             <string>HDF5 Grain File</string>
+             <string>HDF5 Grain File (.h5grain)</string>
             </property>
             <property name="checked">
              <bool>true</bool>
@@ -715,7 +698,7 @@
              <string/>
             </property>
             <property name="pixmap">
-             <pixmap resource="../../../../Resources/icons/images/Icons.qrc">:/Delete-16x16.png</pixmap>
+             <pixmap resource="../../../Resources/icons/images/Icons.qrc">:/Delete-16x16.png</pixmap>
             </property>
            </widget>
           </item>
@@ -735,7 +718,7 @@
              <string/>
             </property>
             <property name="pixmap">
-             <pixmap resource="../../../../Resources/icons/images/Icons.qrc">:/Delete-16x16.png</pixmap>
+             <pixmap resource="../../../Resources/icons/images/Icons.qrc">:/Delete-16x16.png</pixmap>
             </property>
            </widget>
           </item>
@@ -846,6 +829,7 @@
   <include location="../../../Resources/icons/images/Icons.qrc"/>
   <include location="../../../Resources/icons/images/Icons.qrc"/>
   <include location="../../../Resources/icons/images/Icons.qrc"/>
+  <include location="../../../../Resources/icons/images/Icons.qrc"/>
  </resources>
  <connections/>
 </ui>

@@ -148,12 +148,12 @@ namespace AIM
     };
   }
 
+
   namespace Reconstruction
   {
     /*    Reconstruction related */
     const std::string AlignmentFile("Alignment.txt");
-    const std::string GrainDataFile("GrainData.txt");//14
-    const std::string H5StatisticsFile("Results.h5");
+    const std::string H5VolumeFile("VoxelData.h5");
 
     const std::string VisualizationVizFile("Visualization.vtk");//11
     const std::string IPFVizFile("IPF_Visualization.vtk");//11
@@ -165,10 +165,12 @@ namespace AIM
     const std::string PhFile("Voxels.ph");
 
 
-    const std::string DeformationStatsFile("Deformation_Stats.txt");
-    const std::string IPFDeformVTKFile("IPF_DeformationData.vtk");
 
+
+    const std::string VoxelDataName("VoxelData");
     const std::string GrainIdScalarName("GrainID");
+    const std::string EulerAnglesName("Euler Angles");
+    const std::string CrystalStructureName("CrystalStructure");
     const std::string EuclideanScalarName("Euclidean");
     const std::string SchmidFactorScalarName("SchmidFactor");
     const std::string PhaseIdScalarName("PhaseID");
@@ -305,6 +307,17 @@ namespace AIM
     };
 
   }
+
+  namespace MicroStats {
+    const std::string H5StatisticsFile("Results.h5");
+    const std::string GrainDataFile("GrainData.txt");//14
+    const std::string DeformationStatsFile("Deformation_Stats.txt");
+    const std::string IPFDeformVTKFile("IPF_DeformationData.vtk");
+
+  }
+
+
+
 
   namespace SurfaceMesh {
 

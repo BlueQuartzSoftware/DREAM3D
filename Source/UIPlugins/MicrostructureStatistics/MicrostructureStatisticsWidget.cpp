@@ -90,7 +90,7 @@ void MicrostructureStatisticsWidget::readSettings(QSettings &prefs)
 
   READ_FILEPATH_SETTING(prefs, m_, OutputDir, "");
   READ_STRING_SETTING(prefs, m_, OutputFilePrefix, "MicrostructureStatistics_")
-  READ_FILEPATH_SETTING(prefs, m_, StructureFile, "");
+  READ_FILEPATH_SETTING(prefs, m_, InputFile, "");
 
   prefs.endGroup();
 }
@@ -103,7 +103,7 @@ void MicrostructureStatisticsWidget::writeSettings(QSettings &prefs)
   prefs.beginGroup("MicrostructureStatistics");
   WRITE_STRING_SETTING(prefs, m_, OutputDir)
   WRITE_STRING_SETTING(prefs, m_, OutputFilePrefix)
-  WRITE_STRING_SETTING(prefs, m_, StructureFile)
+  WRITE_STRING_SETTING(prefs, m_, InputFile)
   prefs.endGroup();
 }
 
@@ -120,7 +120,7 @@ void MicrostructureStatisticsWidget::setWidgetListEnabled(bool b)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void MicrostructureStatisticsWidget::on_m_StructureFileBtn_clicked()
+void MicrostructureStatisticsWidget::on_m_InputFileBtn_clicked()
 {
   QString file = QFileDialog::getOpenFileName(this, tr("Select Structure File"),
                                                  m_OpenDialogLastDirectory,
@@ -128,16 +128,16 @@ void MicrostructureStatisticsWidget::on_m_StructureFileBtn_clicked()
   if ( true == file.isEmpty() ){return;  }
   QFileInfo fi (file);
   QString ext = fi.suffix();
-  m_StructureFile->setText(fi.absoluteFilePath());
+  m_InputFile->setText(fi.absoluteFilePath());
 }
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void MicrostructureStatisticsWidget::on_m_StructureFile_textChanged(const QString &text)
+void MicrostructureStatisticsWidget::on_m_InputFile_textChanged(const QString &text)
 {
-  verifyPathExists(text, m_StructureFile);
+  verifyPathExists(text, m_InputFile);
 }
 
 
@@ -155,9 +155,9 @@ void MicrostructureStatisticsWidget::setupGui()
            this, SLOT(on_m_OutputDir_textChanged(const QString &)));
 
   QR3DFileCompleter* com3 = new QR3DFileCompleter(this, false);
-  m_StructureFile->setCompleter(com3);
+  m_InputFile->setCompleter(com3);
   QObject::connect( com3, SIGNAL(activated(const QString &)),
-           this, SLOT(on_m_StructureFile_textChanged(const QString &)));
+           this, SLOT(on_m_InputFile_textChanged(const QString &)));
 
   QString msg ("All files will be over written that appear in the output directory.");
 
@@ -277,7 +277,7 @@ void MicrostructureStatisticsWidget::on_m_GoBtn_clicked()
   m_MicrostructureStatistics->moveToThread(m_WorkerThread);
   m_MicrostructureStatistics->setOutputDirectory(QDir::toNativeSeparators(m_OutputDir->text()).toStdString());
   m_MicrostructureStatistics->setOutputFilePrefix(m_OutputFilePrefix->text().toStdString());
-  m_MicrostructureStatistics->setStructureFile(QDir::toNativeSeparators(m_StructureFile->text()).toStdString());
+  m_MicrostructureStatistics->setInputFile(QDir::toNativeSeparators(m_InputFile->text()).toStdString());
 
 
   /* Connect the signal 'started()' from the QThread to the 'run' slot of the

@@ -46,6 +46,7 @@
 #include "DREAM3D/DREAM3DConfiguration.h"
 #include "DREAM3D/Common/OIMColoring.hpp"
 #include "DREAM3D/Reconstruction/ReconstructionVTKWriter.h"
+#include "DREAM3D/Reconstruction/H5ReconVolumeWriter.h"
 #include "DREAM3D/HDF5/H5ReconStatsWriter.h"
 #include "DREAM3D/HDF5/H5GrainWriter.h"
 
@@ -150,18 +151,9 @@ void Reconstruction::execute()
                 m_AlignmentMethod);
   m_OutputDirectory = MXADir::toNativeSeparators(m_OutputDirectory);
 
-  // Create a new HDF5 Results file by overwriting any HDF5 file that may be in the way
-  MAKE_OUTPUT_FILE_PATH ( hdf5ResultsFile, AIM::Reconstruction::H5StatisticsFile)
-  H5ReconStatsWriter::Pointer h5io = H5ReconStatsWriter::New(hdf5ResultsFile);
-  if (h5io.get() == NULL)
-  {
-    updateProgressAndMessage("The HDF5 Statistics file could not be created. Does the path exist and do you have write access to the output directory.", 100);
-    m = ReconstructionFunc::NullPointer();  // Clean up the memory
-    //std::cout << "Reconstruction::compute Complete" << std::endl;
-    return;
-  }
 
   MAKE_OUTPUT_FILE_PATH ( alignmentFile, AIM::Reconstruction::AlignmentFile);
+  //Optional Files
   MAKE_OUTPUT_FILE_PATH ( reconVisFile, AIM::Reconstruction::VisualizationVizFile);
   MAKE_OUTPUT_FILE_PATH ( reconIPFVisFile, AIM::Reconstruction::IPFVizFile);
   MAKE_OUTPUT_FILE_PATH ( reconDisVisFile, AIM::Reconstruction::DisorientationVizFile);
@@ -252,6 +244,28 @@ void Reconstruction::execute()
   updateProgressAndMessage(("Finding Grain IPF Colors"), 80);
   m->find_colors();
   CHECK_FOR_CANCELED(ReconstructionFunc, "Reconstruction was canceled", find_colors)
+
+
+  /** ********** This section writes the Voxel Data for the Stats Module *** */
+  // Create a new HDF5 Volume file by overwriting any HDF5 file that may be in the way
+  MAKE_OUTPUT_FILE_PATH ( hdf5VolumeFile, AIM::Reconstruction::H5VolumeFile)
+  H5ReconVolumeWriter::Pointer h5VolWriter = H5ReconVolumeWriter::New();
+  if (h5VolWriter.get() == NULL)
+  {
+    updateProgressAndMessage("The HDF5 Voxel file could not be created. Does the path exist and do you have write access to the output directory.", 100);
+    m = ReconstructionFunc::NullPointer();  // Clean up the memory
+    return;
+  }
+  h5VolWriter->setFilename(hdf5VolumeFile);
+  updateProgressAndMessage(("Writing HDF5 Voxel Data File"), 83);
+  err = h5VolWriter->writeVoxelData(m.get());
+  if (err < 0)
+  {
+    updateProgressAndMessage("The HDF5 Voxel file could not be written to. Does the path exist and do you have write access to the output directory.", 100);
+    m = ReconstructionFunc::NullPointer();  // Clean up the memory
+    return;
+  }
+
 
   /** ********** This section writes the VTK files for visualization *** */
   // Create our File Output Writer Object. This will handle all the File Output duties
