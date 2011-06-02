@@ -128,7 +128,7 @@ int main(int argc, char **argv)
     r->setZResolution(zRes.getValue());
     //r->setCrystalStructure( static_cast<AIM::Reconstruction::CrystalStructure>(crystruct.getValue()) );
 
-    r->compute();
+    r->run();
     err = r->getErrorCondition();
   }
 

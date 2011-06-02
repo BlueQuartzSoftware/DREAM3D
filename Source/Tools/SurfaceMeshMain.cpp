@@ -129,7 +129,7 @@ int main(int argc, char **argv)
     surfaceMesh->setSmoothFileOutputIncrement(writeOutputFileIncrement.getValue());
     surfaceMesh->setSmoothLockQuadPoints(lockQuadPoints.getValue());
 
-    surfaceMesh->compute();
+    surfaceMesh->run();
     err = surfaceMesh->getErrorCondition();
   }
   catch (TCLAP::ArgException &e) // catch any exceptions
