@@ -35,16 +35,12 @@
 
 #include "ANG/H5AngImporter.h"
 
-#ifdef DREAM3D_USE_QT
-#define CHECK_FOR_CANCELED(AClass)\
-  if (this->m_Cancel) { \
-    err = H5Fclose(fileId);\
-  QString msg = #AClass; \
-  msg += " was Canceled"; \
-  emit updateMessage(msg);\
-  emit updateProgress(0);\
-  emit finished();\
-  return;}
+class OIMImportFunc
+{
+  public:
+    MXA_SHARED_POINTERS(OIMImportFunc);
+    MXA_STATIC_NEW_MACRO(OIMImportFunc);
+};
 
 #define CHECK_ERROR(name)\
     if(err < 0) {\
@@ -57,47 +53,14 @@
       emit finished();\
       return;   }
 
-#define PROGRESS_MESSAGE(str, percent)\
-  progressMessage(QString::fromStdString(str), percent);
-
-#else
-#define CHECK_FOR_CANCELED(AClass)\
-  ;
-#define CHECK_ERROR(name)\
-    ;
-#define PROGRESS_MESSAGE(str, percent)\
-  progressMessage(str, percent);
-#endif
-
-
-#if DREAM3D_USE_QT
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-OIMImport::Pointer OIMImport::New( QObject* parent)
-{
-  Pointer sharedPtr(new OIMImport(parent));
-  return sharedPtr;
-}
-#endif
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-OIMImport::OIMImport(
-#if DREAM3D_USE_QT
-QObject* parent
-#endif
-) :
-#if DREAM3D_USE_QT
-QObject(parent),
-#endif
+OIMImport::OIMImport( ) :
 m_ZStartIndex(0),
 m_ZEndIndex(0),
 m_ZResolution(1.0)
-#if DREAM3D_USE_QT
-  ,m_Cancel(false)
-#endif
 {
 }
 
@@ -111,28 +74,32 @@ OIMImport::~OIMImport()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void OIMImport::compute()
+void OIMImport::execute()
 {
   herr_t err = 0;
   hid_t fileId = -1;
+  // This is just a dummy variable to keep the macros happy
+  OIMImportFunc::Pointer m;
+
+  // Start the Benchmark clock
+  START_CLOCK()
 
   if (m_OutputFile.empty() == true)
   {
     std::string s("H5AngImport Error: The output file was not set correctly or is empty. The current value is '");
     s.append("'. Please set the output file before running the importer. ");
-    m_Cancel = true;
-    PROGRESS_MESSAGE(s, 100);
+    setCancel(true);
+    updateProgressAndMessage(s.c_str(), 100);
     err = -1;
-    CHECK_FOR_CANCELED(OIMImport)
+    CHECK_FOR_CANCELED(OIMImportFunc, "OIMImport was Canceled", function)
     return;
   }
   // Create File
   fileId = H5Utilities::createFile(m_OutputFile);
   if (fileId < 0) {
-    std::string s("The Output HDF5 file could not be created. Check Permissions, if the File is in use by another program.");
-    m_Cancel = true;
-    PROGRESS_MESSAGE(s, 100);
-    CHECK_FOR_CANCELED(OIMImport)
+    setCancel(true);
+    updateProgressAndMessage("The Output HDF5 file could not be created. Check Permissions, if the File is in use by another program.", 100);
+    CHECK_FOR_CANCELED(OIMImportFunc, "OIMImport was Canceled", function)
     return;
   }
 
@@ -176,11 +143,11 @@ void OIMImport::compute()
   {
     std::string angFName = *filepath;
 
-    CHECK_FOR_CANCELED(OIMImport)
+    CHECK_FOR_CANCELED(OIMImportFunc, "OIMImport was Canceled", function)
     progress = z - m_ZStartIndex;
     progress = (int)(100.0f * (float)(progress)/total);
     std::string msg = "Importing: " + angFName;
-    PROGRESS_MESSAGE(msg, progress );
+    updateProgressAndMessage(msg.c_str(), progress );
     H5AngImporter::Pointer conv = H5AngImporter::New();
     err = conv->importAngFile(fileId, z, angFName);
     if (err < 0)
@@ -191,39 +158,15 @@ void OIMImport::compute()
     ++z;
   }
 
-  if (false == m_Cancel) {
+  if (false == getCancel())
+  {
   // Write an Index data set which contains all the z index values which
   // should help speed up the reading side of this file
     std::vector<hsize_t> dims(1, indices.size());
     err = H5Lite::writeVectorDataset(fileId, Ang::Index, dims, indices);
   }
   err = H5Fclose(fileId);
-  PROGRESS_MESSAGE("Import Complete", 100);
-#if DREAM3D_USE_QT
-  emit finished();
-#endif
+  updateProgressAndMessage("Import Complete", 100);
+
 }
 
-#ifdef DREAM3D_USE_QT
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void OIMImport::on_CancelWorker()
-{
-  setCancel(true);
-}
-
-#endif
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void OIMImport::progressMessage(AIM_STRING message, int progress)
-{
-#ifdef DREAM3D_USE_QT
-  emit updateMessage(QString(message));
-  emit updateProgress(progress);
-  //  std::cout << message.toStdString() << std::endl;
-#else
-  std::cout << message << std::endl;
-#endif
-}

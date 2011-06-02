@@ -32,8 +32,7 @@
 #include "GrainGeneratorWidget.h"
 #include "QtSupport/AIMPluginFrame.h"
 
-Q_EXPORT_PLUGIN2(GrainGeneratorPlugin, GrainGeneratorPlugin)
-;
+Q_EXPORT_PLUGIN2(GrainGeneratorPlugin, GrainGeneratorPlugin);
 
 // -----------------------------------------------------------------------------
 //

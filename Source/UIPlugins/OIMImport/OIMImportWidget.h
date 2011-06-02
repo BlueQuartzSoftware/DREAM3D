@@ -37,7 +37,7 @@
 
 #include "ui_OIMImportWidget.h"
 #include "QtSupport/AIMPluginFrame.h"
-#include "DREAM3D/OIMImport/OIMImport.h"
+#include "QOIMImport.h"
 
 
 /**
@@ -116,7 +116,7 @@ class OIMImportWidget : public AIMPluginFrame, private Ui::OIMImportWidget
 
   private:
     QList<QWidget*>             m_WidgetList;
-    OIMImport::Pointer          m_OimImport;
+    QOIMImport*                 m_OimImport;
     QThread*                    m_WorkerThread;
 
     QString m_OpenDialogLastDirectory;

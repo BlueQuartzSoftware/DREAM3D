@@ -38,7 +38,7 @@
 #include "ui_ReconstructionWidget.h"
 
 #include "QtSupport/AIMPluginFrame.h"
-#include "DREAM3D/Reconstruction/Reconstruction.h"
+#include "QReconstruction.h"
 
 
 
@@ -113,7 +113,7 @@ class ReconstructionWidget : public AIMPluginFrame, private Ui::ReconstructionWi
 
   private:
     QList<QWidget*>             m_WidgetList;
-    Reconstruction::Pointer     m_Reconstruction;
+    QReconstruction*            m_Reconstruction;
     QThread*                    m_WorkerThread;
     bool                        m_phaseTypeEdited;
 

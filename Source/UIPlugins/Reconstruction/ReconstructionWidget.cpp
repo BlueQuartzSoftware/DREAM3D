@@ -56,6 +56,7 @@
 // -----------------------------------------------------------------------------
 ReconstructionWidget::ReconstructionWidget(QWidget *parent) :
 AIMPluginFrame(parent),
+m_Reconstruction(NULL),
 m_WorkerThread(NULL),
 m_phaseTypeEdited(false),
 #if defined(Q_WS_WIN)
@@ -454,7 +455,7 @@ void ReconstructionWidget::on_m_GoBtn_clicked()
 {
   if (m_GoBtn->text().compare("Cancel") == 0)
   {
-    if(m_Reconstruction.get() != NULL)
+    if(m_Reconstruction != NULL)
     {
       std::cout << "canceling from GUI...." << std::endl;
       emit cancelProcess();
@@ -499,7 +500,7 @@ void ReconstructionWidget::on_m_GoBtn_clicked()
   }
   m_WorkerThread = new QThread(); // Create a new Thread Resource
 
-  m_Reconstruction = Reconstruction::New();
+  m_Reconstruction = new QReconstruction(NULL);
 
   // Move the Reconstruction object into the thread that we just created.
   m_Reconstruction->moveToThread(m_WorkerThread);
@@ -548,10 +549,10 @@ void ReconstructionWidget::on_m_GoBtn_clicked()
    */
   // When the thread starts its event loop, start the Reconstruction going
   connect(m_WorkerThread, SIGNAL(started()),
-          m_Reconstruction.get(), SLOT(compute()));
+          m_Reconstruction, SLOT(run()));
 
   // When the Reconstruction ends then tell the QThread to stop its event loop
-  connect(m_Reconstruction.get(), SIGNAL(finished() ),
+  connect(m_Reconstruction, SIGNAL(finished() ),
           m_WorkerThread, SLOT(quit()) );
 
   // When the QThread finishes, tell this object that it has finished.
@@ -559,17 +560,17 @@ void ReconstructionWidget::on_m_GoBtn_clicked()
           this, SLOT( threadFinished() ) );
 
   // Send Progress from the Reconstruction to this object for display
-  connect(m_Reconstruction.get(), SIGNAL (updateProgress(int)),
+  connect(m_Reconstruction, SIGNAL (updateProgress(int)),
     this, SLOT(threadProgressed(int) ) );
 
   // Send progress messages from Reconstruction to this object for display
-  connect(m_Reconstruction.get(), SIGNAL (updateMessage(QString)),
+  connect(m_Reconstruction, SIGNAL (updateMessage(QString)),
           this, SLOT(threadHasMessage(QString) ) );
 
   // If the use clicks on the "Cancel" button send a message to the Reconstruction object
   // We need a Direct Connection so the
   connect(this, SIGNAL(cancelProcess() ),
-          m_Reconstruction.get(), SLOT (on_CancelWorker() ) , Qt::DirectConnection);
+          m_Reconstruction, SLOT (on_CancelWorker() ) , Qt::DirectConnection);
 
 
   setWidgetListEnabled(false);
