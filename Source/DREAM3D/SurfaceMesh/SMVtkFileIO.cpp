@@ -82,14 +82,9 @@ int SMVtkFileIO::readZSlice(int xDim, int yDim, int zDim, int* voxels)
     m_InputFile.read(reinterpret_cast<char*>(voxels), (size * m_IntByteSize));
     // Binary VTK File are written in Big Endian Format and need to be swapped to the native
     // format of the host system
-    int preValue = 0;
     for(size_t i = 0; i < size; ++i)
     {
       MXA::Endian::FromBigToSystem::convert<int>(voxels[i]);
-	  if(voxels[i] > 1000 || voxels[i] < -5)
-	  {
-		int stop = 0;
-	  }
     }
   }
   else

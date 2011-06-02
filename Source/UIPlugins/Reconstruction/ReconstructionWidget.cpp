@@ -206,7 +206,7 @@ void ReconstructionWidget::setupGui()
   m_WidgetList << m_BinStepSize;
   m_WidgetList << m_DisorientationVizFile << m_ImageQualityVizFile << m_IPFVizFile << m_SchmidFactorVizFile << m_VisualizationVizFile << m_DownSampledVizFile;
   m_WidgetList << m_MinImageQuality;
-  m_WidgetList << m_HDF5GrainFile << m_H5StatisticsFile << m_AlignmentFile << m_GrainDataFile;
+  m_WidgetList << m_HDF5GrainFile << m_AlignmentFile;
   m_WidgetList << m_LoadSettingsBtn << m_SaveSettingsBtn << m_BinaryVtkFiles << phaseTypeList;
 
 }
@@ -221,7 +221,7 @@ void ReconstructionWidget::checkIOFiles()
   this->verifyPathExists(m_OutputDir->text(), this->m_OutputDir);
 
   CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::Reconstruction,m_, AlignmentFile)
-  CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::Reconstruction,m_, GrainDataFile)
+  CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::Reconstruction,m_, H5VolumeFile)
 
   CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(AIM::Reconstruction, m_ , DisorientationVizFile)
   CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(AIM::Reconstruction, m_ , ImageQualityVizFile)
@@ -230,7 +230,7 @@ void ReconstructionWidget::checkIOFiles()
   CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(AIM::Reconstruction, m_ , VisualizationVizFile)
   CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(AIM::Reconstruction, m_ , DownSampledVizFile)
   CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(AIM::Reconstruction, m_ , HDF5GrainFile)
-  CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::Reconstruction, m_ , H5StatisticsFile)
+
 }
 
 // -----------------------------------------------------------------------------

@@ -109,7 +109,8 @@ class DREAM3DLib_EXPORT AIM_H5VtkDataWriter
      */
     int closeFile();
 
-
+    int writeStructuredPoints(const std::string &hdfPath, int dims[3],
+                              float resolution[3], float origin[3]);
 
   /**
    * @brief
@@ -245,6 +246,51 @@ class DREAM3DLib_EXPORT AIM_H5VtkDataWriter
 
       return err;
     }
+
+    /**
+     *
+     */
+    template<typename T>
+    int writeScalarData(const std::string &hdfPath,
+                        const std::vector<T> &scalar_data,
+                        const char *label,
+                        int numComp, int32_t rank, hsize_t* dims)
+    {
+      hid_t gid = H5Gopen(m_FileId, hdfPath.c_str() );
+      herr_t err = H5Utilities::createGroupsFromPath(H5_SCALAR_DATA_GROUP_NAME, gid);
+      if (err < 0)
+      {
+        std::cout << "Error creating HDF Group " << H5_SCALAR_DATA_GROUP_NAME << std::endl;
+        return err;
+      }
+      hid_t cellGroupId = H5Gopen(gid, H5_SCALAR_DATA_GROUP_NAME );
+      if(err < 0)
+      {
+        std::cout << "Error writing string attribute to HDF Group " << H5_SCALAR_DATA_GROUP_NAME << std::endl;
+        return err;
+      }
+
+      T* data = const_cast<T*>(&(scalar_data.front()));
+
+
+      std::string name (label);
+      err = H5Lite::writePointerDataset(cellGroupId, name, rank, dims, data);
+      if (err < 0)
+      {
+        std::cout << "Error writing array with name: " << std::string (label) << std::endl;
+      }
+      err = H5Lite::writeScalarAttribute(cellGroupId, name, std::string(H5_NUMCOMPONENTS), numComp);
+      if (err < 0)
+      {
+        std::cout << "Error writing dataset " << label << std::endl;
+      }
+      err = H5Gclose(cellGroupId);
+
+      err = H5Gclose(gid);
+      return err;
+    }
+
+
 
     /**
      * @brief

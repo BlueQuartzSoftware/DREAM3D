@@ -114,6 +114,44 @@ int AIM_H5VtkDataWriter::closeFile()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+int AIM_H5VtkDataWriter::writeStructuredPoints(const std::string &hdfPath, int volDims[3],
+                          float spacing[3], float origin[3])
+{
+  herr_t err = 0;
+  err = createVtkObjectGroup(hdfPath, H5_VTK_STRUCTURED_POINTS);
+  hid_t gid = H5Gopen(m_FileId, hdfPath.c_str() );
+
+  int32_t rank =1;
+  hsize_t dims[1] = {3};
+  err = H5Lite::writePointerDataset(gid, H5_DIMENSIONS, rank, dims, volDims);
+  if (err < 0)
+  {
+     std::cout << "Error Writing H5_DIMENSIONS array for " << hdfPath << std::endl;
+  }
+  err = H5Lite::writePointerDataset(gid, H5_ORIGIN, rank, dims, origin);
+  if (err < 0)
+  {
+     std::cout << "Error Writing H5_ORIGIN array for " << hdfPath << std::endl;
+  }
+  err = H5Lite::writePointerDataset(gid, H5_SPACING, rank, dims, spacing);
+  if (err < 0)
+  {
+     std::cout << "Error Writing H5_SPACING array for " << hdfPath << std::endl;
+  }
+  int nPoints = volDims[0] * volDims[1] * volDims[2];
+  err = H5Lite::writeScalarAttribute(m_FileId, hdfPath, H5_NUMBER_OF_POINTS, nPoints);
+  if (err < 0)
+  {
+    std::cout << "Error Writing H5_NUMBER_OF_POINTS attribute for " << hdfPath << std::endl;
+  }
+
+  err = H5Gclose(gid);
+  return err;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 int AIM_H5VtkDataWriter::writeUnstructuredGrid(const std::string &hdfPath,
                                            const std::vector<float> &points,
                                            const std::vector<int32_t> &cells,
