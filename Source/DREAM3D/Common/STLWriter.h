@@ -34,12 +34,13 @@
 #include <stdio.h>
 
 #include "MXA/Common/MXASetGetMacros.h"
+#include "DREAM3D/DREAM3DConfiguration.h"
 
 class SurfaceMeshFunc;
 class Patch;
 class Node;
 
-class STLWriter
+class DREAM3DLib_EXPORT STLWriter
 {
   public:
     MXA_SHARED_POINTERS(STLWriter)
