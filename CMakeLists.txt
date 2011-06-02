@@ -232,7 +232,11 @@ if (DREAM3D_BUILD_QT_APPS)
    add_subdirectory(${DREAM3D_SOURCE_DIR}/Source/UIPlugins/Reconstruction ${DREAM3D_BINARY_DIR}/UIPlugins/Reconstruction)
    add_subdirectory(${DREAM3D_SOURCE_DIR}/Source/UIPlugins/SurfaceMesh ${DREAM3D_BINARY_DIR}/UIPlugins/SurfaceMesh)
    add_subdirectory(${DREAM3D_SOURCE_DIR}/Source/UIPlugins/MicrostructureStatistics ${DREAM3D_BINARY_DIR}/UIPlugins/MicrostructureStatistics)
+   #-----------------
+   # Add any additional Plugins that you develop here
    
+   
+      
    # Build the DREAM3D Application  
    option(DREAM3D_BUILD_GUI "Compile the DREAM3D GUI Application" ON)
    if (DREAM3D_BUILD_GUI)
@@ -287,5 +291,12 @@ if(DREAM3D_BUILD_DOCS)
   
 endif()
 
+# Option to have CMake Generate the Skeleton Code for a UI Plugin
+option(DREAM3D_CREATE_PLUGIN "Create the Skeleton Code for a new Pipeline and GUI Plugin" OFF)
+if (DREAM3D_CREATE_PLUGIN)
+    add_subdirectory(${PROJECT_SOURCE_DIR}/Support/PluginMaker ${PROJECT_BINARY_DIR}/PluginMaker)
+endif()
+
+# This should be the last line in this file:
 include(${PROJECT_RESOURCES_DIR}/CPack/PackageProject.cmake)
 

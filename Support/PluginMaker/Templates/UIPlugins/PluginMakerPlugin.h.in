@@ -1,0 +1,41 @@
+
+
+#ifndef @PluginName@Plugin_H_
+#define @PluginName@Plugin_H_
+
+#include <QtCore/QObject>
+#include <QtCore/QSettings>
+#include "QtSupport/DREAM3DPluginInterface.h"
+
+class @PluginName@Widget;
+class AIMPluginFrame;
+
+class @PluginName@Plugin : public QObject, public DREAM3DPluginInterface
+{
+    Q_OBJECT;
+    Q_INTERFACES(DREAM3DPluginInterface)
+
+  public:
+    @PluginName@Plugin();
+    virtual ~@PluginName@Plugin();
+
+    QString getPluginName();
+
+    virtual QWidget* getInputWidget(QWidget* parent);
+    virtual AIMPluginFrame* getPluginFrame(QWidget* parent);
+
+
+    virtual void writeSettings(QSettings &prefs);
+    virtual void readSettings(QSettings &prefs);
+
+    virtual QIcon icon();
+
+  protected:
+    @PluginName@Widget* m_InputWidget;
+
+  private:
+    @PluginName@Plugin(const @PluginName@Plugin&); // Copy Constructor Not Implemented
+    void operator=(const @PluginName@Plugin&); // Operator '=' Not Implemented
+};
+
+#endif /* @PluginName@Plugin_H_ */
