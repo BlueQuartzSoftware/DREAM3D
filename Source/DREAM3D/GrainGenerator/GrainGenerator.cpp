@@ -299,31 +299,6 @@ void GrainGenerator::compute()
   m->matchCrystallography(crystallographicErrorFile, h5io);
   CHECK_FOR_CANCELED(GrainGeneratorFunc, matchCrystallography)
 
-  progressMessage(AIM_STRING("Finding Grain Centroids"), 68);
-  m->find_centroids();
-  CHECK_FOR_CANCELED(GrainGeneratorFunc, find_centroids)
-
-  progressMessage(AIM_STRING("Finding Grain Moments"), 71);
-  m->find_moments();
-  CHECK_FOR_CANCELED(GrainGeneratorFunc, find_moments)
-
-  progressMessage(AIM_STRING("Finding Grain Principal Axis Lengths"), 74);
-  m->find_axes();
-  CHECK_FOR_CANCELED(GrainGeneratorFunc, find_axes)
-
-
-  progressMessage(AIM_STRING("Finding Grain Principal Axis Directions"), 77);
-  m->find_vectors(h5io);
-  CHECK_FOR_CANCELED(GrainGeneratorFunc, find_vectors)
-
-  progressMessage(AIM_STRING("Writing Stats"), 78);
-  m->volume_stats(h5io);
-  CHECK_FOR_CANCELED(GrainGeneratorFunc, volume_stats)
-
-  progressMessage(AIM_STRING("Writing Grain Data"), 80);
-  m->write_graindata(graindataFile);
-  CHECK_FOR_CANCELED(GrainGeneratorFunc, write_graindata)
-
   progressMessage(AIM_STRING("Writing Euler Angles"), 81);
   m->write_eulerangles(eulerFile);
   CHECK_FOR_CANCELED(GrainGeneratorFunc, write_eulerangles)

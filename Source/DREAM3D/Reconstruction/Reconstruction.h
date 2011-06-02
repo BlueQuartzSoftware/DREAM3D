@@ -98,13 +98,11 @@ Q_OBJECT
     MXA_INSTANCE_PROPERTY(bool, FillinSample)
     MXA_INSTANCE_PROPERTY(int32_t, MinAllowedGrainSize)
     MXA_INSTANCE_PROPERTY(double, MinSeedConfidence)
-    MXA_INSTANCE_PROPERTY(double, SizeBinStepSize)
     MXA_INSTANCE_PROPERTY(double, DownSampleFactor)
     MXA_INSTANCE_PROPERTY(double, MinSeedImageQuality)
     MXA_INSTANCE_PROPERTY(double, MisorientationTolerance)
 //    MXA_INSTANCE_PROPERTY(vector<AIM::Reconstruction::CrystalStructure>, CrystalStructure)
     MXA_INSTANCE_PROPERTY(AIM::Reconstruction::AlignmentMethod, AlignmentMethod)
-    MXA_INSTANCE_PROPERTY(bool, AlreadyFormed)
     MXA_INSTANCE_PROPERTY(Ang::Orientation, Orientation)
 
     MXA_INSTANCE_PROPERTY(bool, WriteBinaryFiles)
