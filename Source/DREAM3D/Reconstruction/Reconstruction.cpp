@@ -120,10 +120,8 @@ m_MergeColonies(false),
 m_FillinSample(false),
 m_MinAllowedGrainSize(0),
 m_MinSeedConfidence(0.0),
-m_SizeBinStepSize(0.0),
 m_MinSeedImageQuality(0.0),
 m_MisorientationTolerance(0.0),
-m_AlreadyFormed(false),
 m_Orientation(Ang::NoOrientation),
 m_WriteBinaryFiles(true),
 m_WriteVisualizationFile(false),
@@ -217,8 +215,8 @@ void Reconstruction::compute()
   m->initialize(m->xpoints, m->ypoints, m->zpoints,
                 m->resx, m->resy, m->resz, m_MergeTwins, m_MergeColonies, m_MinAllowedGrainSize,
                 m_MinSeedConfidence, m_DownSampleFactor, m_MinSeedImageQuality,
-                m_MisorientationTolerance, m_SizeBinStepSize, crystalStructures, m_PhaseTypes, precipFractions,
-                m_AlignmentMethod, m_AlreadyFormed);
+                m_MisorientationTolerance, crystalStructures, m_PhaseTypes, precipFractions,
+                m_AlignmentMethod);
   m_OutputDirectory = MXADir::toNativeSeparators(m_OutputDirectory);
 
   // Create a new HDF5 Results file by overwriting any HDF5 file that may be in the way
@@ -235,7 +233,6 @@ void Reconstruction::compute()
     return;
   }
 
-  MAKE_OUTPUT_FILE_PATH ( graindataFile, AIM::Reconstruction::GrainDataFile);
   MAKE_OUTPUT_FILE_PATH ( alignmentFile, AIM::Reconstruction::AlignmentFile);
   MAKE_OUTPUT_FILE_PATH ( reconVisFile, AIM::Reconstruction::VisualizationVizFile);
   MAKE_OUTPUT_FILE_PATH ( reconIPFVisFile, AIM::Reconstruction::IPFVizFile);
@@ -243,8 +240,6 @@ void Reconstruction::compute()
   MAKE_OUTPUT_FILE_PATH ( reconIQVisFile, AIM::Reconstruction::ImageQualityVizFile);
   MAKE_OUTPUT_FILE_PATH ( reconSFVisFile, AIM::Reconstruction::SchmidFactorVizFile);
   MAKE_OUTPUT_FILE_PATH ( reconDSVisFile, AIM::Reconstruction::DownSampledVizFile);
-  MAKE_OUTPUT_FILE_PATH ( reconDeformStatsFile, AIM::Reconstruction::DeformationStatsFile);
-  MAKE_OUTPUT_FILE_PATH ( reconDeformIPFFile, AIM::Reconstruction::IPFDeformVTKFile);
   MAKE_OUTPUT_FILE_PATH ( hdf5GrainFile, AIM::Reconstruction::HDF5GrainFile);
 
   START_CLOCK()
@@ -292,10 +287,6 @@ void Reconstruction::compute()
   m->reorder_grains(reconVisFile);
   CHECK_FOR_CANCELED(ReconstructionFunc, reorder_grains)
 
-  progressMessage(AIM_STRING("Finding Reference Orientations For Grains"), 32);
-  m->find_grain_and_kernel_misorientations();
-  CHECK_FOR_CANCELED(ReconstructionFunc, find_grain_and_kernel_misorientations)
-
   if(m_FillinSample == true)
   {
     progressMessage(AIM_STRING("Creating Smooth Rectangular Sample"), 36);
@@ -329,60 +320,9 @@ void Reconstruction::compute()
     CHECK_FOR_CANCELED(ReconstructionFunc, characterize_colonies)
   }
 
-  progressMessage(AIM_STRING("Finding Grain Centroids"), 48);
-  if(m_ZEndIndex-m_ZStartIndex > 1) m->find_centroids();
-  if(m_ZEndIndex-m_ZStartIndex == 1)m->find_centroids2D();
-  CHECK_FOR_CANCELED(ReconstructionFunc, find_centroids2D)
-
-  progressMessage(AIM_STRING("Finding Grain Moments"), 52);
-  if(m_ZEndIndex-m_ZStartIndex > 1) m->find_moments();
-  if(m_ZEndIndex-m_ZStartIndex == 1) m->find_moments2D();
-  CHECK_FOR_CANCELED(ReconstructionFunc, find_moments2D)
-
-  progressMessage(AIM_STRING("Finding Grain Principal Axes Lengths"), 56);
-  if(m_ZEndIndex-m_ZStartIndex > 1) m->find_axes();
-  if(m_ZEndIndex-m_ZStartIndex == 1) m->find_axes2D();
-  CHECK_FOR_CANCELED(ReconstructionFunc, find_axes2D)
-
-  progressMessage(AIM_STRING("Finding Grain Pricipal Axes Vectors"), 60);
-  if(m_ZEndIndex-m_ZStartIndex > 1) m->find_vectors(h5io);
-  if(m_ZEndIndex-m_ZStartIndex == 1) m->find_vectors2D(h5io);
-  CHECK_FOR_CANCELED(ReconstructionFunc, find_vectors2D)
-
-  progressMessage(AIM_STRING("Defining Neighborhoods"), 64);
-  m->define_neighborhood();
-  CHECK_FOR_CANCELED(ReconstructionFunc, define_neighborhood)
-
-  progressMessage(AIM_STRING("Finding Euclidean Distance Maps"), 68);
-  m->find_euclidean_map();
-  CHECK_FOR_CANCELED(ReconstructionFunc, find_euclidean_map)
-
-  progressMessage(AIM_STRING("Finding Euler ODF"), 72);
-  m->find_eulerodf(h5io);
-  CHECK_FOR_CANCELED(ReconstructionFunc, find_eulerodf)
-
-  progressMessage(AIM_STRING("Measuring Misorientations"), 76);
-  m->measure_misorientations(h5io);
-  CHECK_FOR_CANCELED(ReconstructionFunc, measure_misorientations)
-
   progressMessage(AIM_STRING("Finding Grain IPF Colors"), 80);
   m->find_colors();
   CHECK_FOR_CANCELED(ReconstructionFunc, find_colors)
-
-  progressMessage(AIM_STRING("Finding Grain Schmid Factors"), 84);
-  m->find_schmids();
-  CHECK_FOR_CANCELED(ReconstructionFunc, find_schmids)
-
-  progressMessage(AIM_STRING("Writing Statistics"), 88);
-  if(m_ZEndIndex-m_ZStartIndex > 1) { m->volume_stats(h5io); }
-  if(m_ZEndIndex-m_ZStartIndex == 1) { m->volume_stats2D(h5io); }
-
-  progressMessage(AIM_STRING("Writing Deformation Statistics"), 88);
-  m->deformation_stats(reconDeformStatsFile, reconDeformIPFFile);
-  CHECK_FOR_CANCELED(ReconstructionFunc, volume_stats)
-
-  progressMessage(AIM_STRING("Writing Grain Data"), 92);
-  m->write_graindata(graindataFile);
 
   /** ********** This section writes the VTK files for visualization *** */
   // Create our File Output Writer Object. This will handle all the File Output duties
@@ -470,12 +410,10 @@ void Reconstruction::printSettings(std::ostream &ostream)
     PRINT_PROPERTY(ostream, FillinSample)
     PRINT_PROPERTY(ostream, MinAllowedGrainSize)
     PRINT_PROPERTY(ostream, MinSeedConfidence)
-    PRINT_PROPERTY(ostream, SizeBinStepSize)
     PRINT_PROPERTY(ostream, DownSampleFactor)
     PRINT_PROPERTY(ostream, MinSeedImageQuality)
     PRINT_PROPERTY(ostream, MisorientationTolerance)
     PRINT_PROPERTY(ostream, AlignmentMethod)
-    PRINT_PROPERTY(ostream, AlreadyFormed)
     PRINT_PROPERTY(ostream, Orientation)
 
     PRINT_PROPERTY(ostream, WriteVisualizationFile)
