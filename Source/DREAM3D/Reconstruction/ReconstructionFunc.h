@@ -110,12 +110,12 @@ class DREAM3DLib_EXPORT ReconstructionFunc
 
     boost::shared_array<ReconstructionVoxel> voxels;
 
+    SharedIntArray graincounts;
     std::vector<Grain::Pointer> m_Grains;
 
     float minseedconfidence;
     float minseedimagequality;
     float downsamplefactor;
-    float sizebinstepsize;
     int minallowedgrainsize;
     int mergetwinsoption;
     int mergecoloniesoption;
@@ -123,25 +123,10 @@ class DREAM3DLib_EXPORT ReconstructionFunc
     int alignmeth;
     int alreadyformed;
 
-
-
-    SharedIntArray graincounts;
-
-    vector<vector<float> > graincenters;
-    vector<vector<float> > grainmoments;
-
-
     int numseNbins;
     int numorients;
     int numeulers;
  //   int numgrains;
-    vector<float> totalsurfacearea;
-    vector<float> phasefraction;
-    vector<float> totalvol;
-    vector<float> totalaxes;
-    vector<int> maxdiameter;
-    vector<int> mindiameter;
-    float unbiasedvol;
     int cutoutxsize;
     int cutoutysize;
     int cmaxx;
@@ -149,13 +134,10 @@ class DREAM3DLib_EXPORT ReconstructionFunc
     int cmaxy;
     int cminy;
 
-
-
     int tempxpoints;
     int tempypoints;
     int totaltemppoints;
     int numneighbins;
-
 
     void initialize(int nX,
                     int nY,
@@ -170,12 +152,10 @@ class DREAM3DLib_EXPORT ReconstructionFunc
                     float dwnSmplFact,
                     float minImgQlty,
                     float misoTol,
-                    float szBinStepSize,
                     vector<AIM::Reconstruction::CrystalStructure> crystalStructures,
                     vector<AIM::Reconstruction::PhaseType> phaseTypes,
                     std::vector<float> precipFractions,
-                    int alignmentMethod,
-                    bool alreadyFormed);
+                    int alignmentMethod);
 
 
 	void initializeQuats();
@@ -184,43 +164,20 @@ class DREAM3DLib_EXPORT ReconstructionFunc
     void form_grains_sections();
     void remove_smallgrains();
     int renumber_grains1();
-    int load_data(const std::string &filename);
     void assign_badpoints();
     void find_neighbors();
-    void define_neighborhood();
     void merge_containedgrains();
     void reorder_grains(const std::string &reconVisFile);
     int remove_smallgrains(size_t numgrains);
 	void fillin_sample();
     void cleanup_data();
-    void find_grain_and_kernel_misorientations();
     void merge_twins();
     void merge_colonies();
     void characterize_twins();
     void characterize_colonies();
     void renumber_grains3();
-    void find_euclidean_map();
-
-    void find_vectors(H5ReconStatsWriter::Pointer h5io);
-    void find_centroids();
-    void find_moments();
-    void find_axes();
-    void find_colors();
-    void find_schmids();
-
-    void find_vectors2D(H5ReconStatsWriter::Pointer h5io);
-    void find_centroids2D();
-    void find_moments2D();
-    void find_axes2D();
-
-    void deformation_stats(const std::string &filename, const std::string &filename2);
-    void write_graindata(const std::string &graindataFile);
     void align_sections(const std::string &filename);
-
-    void find_eulerodf(H5ReconStatsWriter::Pointer h5io);
-    void measure_misorientations(H5ReconStatsWriter::Pointer h5io);
-    int volume_stats(H5ReconStatsWriter::Pointer h5io);
-    int volume_stats2D(H5ReconStatsWriter::Pointer h5io);
+	void find_colors();
 
     float gamma(float x);
     float find_xcoord(size_t index);
