@@ -78,6 +78,8 @@ void MicrostructureStatistics::execute()
   MAKE_OUTPUT_FILE_PATH ( graindataFile, AIM::Reconstruction::GrainDataFile);
   MAKE_OUTPUT_FILE_PATH ( reconDeformStatsFile, AIM::Reconstruction::DeformationStatsFile);
   MAKE_OUTPUT_FILE_PATH ( reconDeformIPFFile, AIM::Reconstruction::IPFDeformVTKFile);
+  MAKE_OUTPUT_FILE_PATH ( reconDisVisFile, AIM::Reconstruction::DisorientationVizFile);
+  MAKE_OUTPUT_FILE_PATH ( reconSFVisFile, AIM::Reconstruction::SchmidFactorVizFile);
 
   MAKE_OUTPUT_FILE_PATH ( hdf5ResultsFile, AIM::Reconstruction::H5StatisticsFile)
   H5ReconStatsWriter::Pointer h5io = H5ReconStatsWriter::New(hdf5ResultsFile);
@@ -134,6 +136,9 @@ void MicrostructureStatistics::execute()
   if(m->zpoints > 1) { m->volume_stats(h5io); }
   if(m->zpoints == 1) { m->volume_stats2D(h5io); }
 
+  updateProgressAndMessage(("Finding Grain IPF Colors"), 80);
+  m->find_colors();
+  CHECK_FOR_CANCELED(MicrostructureStatisticsFunc, "MicrostructureStatistics was canceled", find_colors)
 
   updateProgressAndMessage(("Writing Deformation Statistics"), 88);
   m->deformation_stats(reconDeformStatsFile, reconDeformIPFFile);
