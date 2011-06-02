@@ -35,9 +35,19 @@
 #include "MXA/Common/LogTime.h"
 #include "MXA/Utilities/MXADir.h"
 
-#include "DREAM3D/DREAM3DConfiguration.h"
-#include "DREAM3D/Common/Constants.h"
+#include "ANG/AngDirectoryPatterns.h"
+#include "ANG/AngReader.h"
 
+#include "DREAM3D/ANGSupport/AbstractAngDataLoader.h"
+#include "DREAM3D/ANGSupport/AngDataLoader.h"
+#include "DREAM3D/ANGSupport/H5AngDataLoader.h"
+
+#include "DREAM3D/Common/Constants.h"
+#include "DREAM3D/DREAM3DConfiguration.h"
+#include "DREAM3D/Common/OIMColoring.hpp"
+#include "DREAM3D/Reconstruction/ReconstructionVTKWriter.h"
+#include "DREAM3D/HDF5/H5ReconStatsWriter.h"
+#include "DREAM3D/HDF5/H5GrainWriter.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -62,16 +72,75 @@ MicrostructureStatistics::~MicrostructureStatistics()
 // -----------------------------------------------------------------------------
 void MicrostructureStatistics::execute()
 {
-  // Instantiate our GrainGeneratorFunc object
+
+  //std::cout << "MicrostructureStatistics::compute Start" << std::endl;
+  int err = -1;
+  MAKE_OUTPUT_FILE_PATH ( graindataFile, AIM::Reconstruction::GrainDataFile);
+  MAKE_OUTPUT_FILE_PATH ( reconDeformStatsFile, AIM::Reconstruction::DeformationStatsFile);
+  MAKE_OUTPUT_FILE_PATH ( reconDeformIPFFile, AIM::Reconstruction::IPFDeformVTKFile);
+
+  MAKE_OUTPUT_FILE_PATH ( hdf5ResultsFile, AIM::Reconstruction::H5StatisticsFile)
+  H5ReconStatsWriter::Pointer h5io = H5ReconStatsWriter::New(hdf5ResultsFile);
+
   m = MicrostructureStatisticsFunc::New();
-  // Initialize some benchmark timers
+
   START_CLOCK()
 
-  /*****************************************
-   * Put your pipeline code starting here
-   ****************************************/
+  updateProgressAndMessage(("Finding Reference Orientations For Grains"), 32);
+  m->find_grain_and_kernel_misorientations();
+  CHECK_FOR_CANCELED(MicrostructureStatisticsFunc, "MicrostructureStatistics was canceled",  find_grain_and_kernel_misorientations)
+
+  updateProgressAndMessage(("Finding Grain Schmid Factors"), 84);
+  m->find_schmids();
+  CHECK_FOR_CANCELED(MicrostructureStatisticsFunc, "MicrostructureStatistics was canceled",  find_schmids)
+
+  updateProgressAndMessage(("Finding Grain Centroids"), 48);
+  if(m->zpoints > 1) m->find_centroids();
+  if(m->zpoints == 1)m->find_centroids2D();
+  CHECK_FOR_CANCELED(MicrostructureStatisticsFunc, "MicrostructureStatistics was canceled",  find_centroids2D)
+
+  updateProgressAndMessage(("Finding Grain Moments"), 52);
+  if(m->zpoints > 1) m->find_moments();
+  if(m->zpoints == 1) m->find_moments2D();
+  CHECK_FOR_CANCELED(MicrostructureStatisticsFunc, "MicrostructureStatistics was canceled",  find_moments2D)
+
+  updateProgressAndMessage(("Finding Grain Principal Axes Lengths"), 56);
+  if(m->zpoints > 1) m->find_axes();
+  if(m->zpoints == 1) m->find_axes2D();
+  CHECK_FOR_CANCELED(MicrostructureStatisticsFunc, "MicrostructureStatistics was canceled",  find_axes2D)
+
+  updateProgressAndMessage(("Finding Grain Pricipal Axes Vectors"), 60);
+  if(m->zpoints > 1) m->find_vectors(h5io);
+  if(m->zpoints == 1) m->find_vectors2D(h5io);
+  CHECK_FOR_CANCELED(MicrostructureStatisticsFunc, "MicrostructureStatistics was canceled",  find_vectors2D)
+
+  updateProgressAndMessage(("Defining Neighborhoods"), 64);
+  m->define_neighborhood();
+  CHECK_FOR_CANCELED(MicrostructureStatisticsFunc, "MicrostructureStatistics was canceled",  define_neighborhood)
+
+  updateProgressAndMessage(("Finding Euclidean Distance Maps"), 68);
+  m->find_euclidean_map();
+  CHECK_FOR_CANCELED(MicrostructureStatisticsFunc, "MicrostructureStatistics was canceled",  find_euclidean_map)
+
+  updateProgressAndMessage(("Finding Euler ODF"), 72);
+  m->find_eulerodf(h5io);
+  CHECK_FOR_CANCELED(MicrostructureStatisticsFunc, "MicrostructureStatistics was canceled",  find_eulerodf)
+
+  updateProgressAndMessage(("Measuring Misorientations"), 76);
+  m->measure_misorientations(h5io);
+  CHECK_FOR_CANCELED(MicrostructureStatisticsFunc, "MicrostructureStatistics was canceled",  measure_misorientations)
+
+  updateProgressAndMessage(("Writing Statistics"), 88);
+  if(m->zpoints > 1) { m->volume_stats(h5io); }
+  if(m->zpoints == 1) { m->volume_stats2D(h5io); }
 
 
+  updateProgressAndMessage(("Writing Deformation Statistics"), 88);
+  m->deformation_stats(reconDeformStatsFile, reconDeformIPFFile);
+  CHECK_FOR_CANCELED(MicrostructureStatisticsFunc, "MicrostructureStatistics was canceled",  volume_stats)
+
+  updateProgressAndMessage(("Writing Grain Data"), 92);
+  m->write_graindata(graindataFile);
 
   // Clean up all the memory by forcibly setting a NULL pointer to the Shared
   // pointer object.
