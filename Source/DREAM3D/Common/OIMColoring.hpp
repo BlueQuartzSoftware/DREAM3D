@@ -263,18 +263,18 @@ class OIMColoring
         MULT_QUAT(q1, HexagonalMath::Detail::HexQuatSym[j], qc);
 
         g[0][0] = (1 - (2 * qc[2] * qc[2]) - (2 * qc[3] * qc[3]));
-        g[1][0] = ((2 * qc[1] * qc[2]) - (2 * qc[3] * qc[4]));
-        g[2][0] = ((2 * qc[1] * qc[3]) + (2 * qc[2] * qc[4]));
-        g[0][1] = ((2 * qc[1] * qc[2]) + (2 * qc[3] * qc[4]));
+        g[1][0] = ((2 * qc[1] * qc[2]) + (2 * qc[3] * qc[4]));
+        g[2][0] = ((2 * qc[1] * qc[3]) - (2 * qc[2] * qc[4]));
+        g[0][1] = ((2 * qc[1] * qc[2]) - (2 * qc[3] * qc[4]));
         g[1][1] = (1 - (2 * qc[1] * qc[1]) - (2 * qc[3] * qc[3]));
-        g[2][1] = ((2 * qc[2] * qc[3]) - (2 * qc[1] * qc[4]));
-        g[0][2] = ((2 * qc[1] * qc[3]) - (2 * qc[1] * qc[4]));
-        g[1][2] = ((2 * qc[2] * qc[3]) + (2 * qc[1] * qc[4]));
+        g[2][1] = ((2 * qc[2] * qc[3]) + (2 * qc[1] * qc[4]));
+        g[0][2] = ((2 * qc[1] * qc[3]) + (2 * qc[2] * qc[4]));
+        g[1][2] = ((2 * qc[2] * qc[3]) - (2 * qc[1] * qc[4]));
         g[2][2] = (1 - (2 * qc[1] * qc[1]) - (2 * qc[2] * qc[2]));
 
-        p[0] = g[0][0] * refDir0 + g[0][1] * refDir1 + g[0][2] * refDir2;
-        p[1] = g[1][0] * refDir0 + g[1][1] * refDir1 + g[1][2] * refDir2;
-        p[2] = g[2][0] * refDir0 + g[2][1] * refDir1 + g[2][2] * refDir2;
+        p[0] = g[0][0] * refDir0 + g[1][0] * refDir1 + g[2][0] * refDir2;
+        p[1] = g[0][1] * refDir0 + g[1][1] * refDir1 + g[2][1] * refDir2;
+        p[2] = g[0][2] * refDir0 + g[1][2] * refDir1 + g[2][2] * refDir2;
         float denom = p[0] * p[0] + p[1] * p[1] + p[2] * p[2];
         denom = powf(denom, 0.5);
         p[0] = p[0] / denom;
@@ -286,14 +286,8 @@ class OIMColoring
           p[1] = -p[1];
           p[2] = -p[2];
         }
-        d[0] = (p[1] * 1) - (p[2] * 0);
-        d[1] = (p[2] * 0) - (p[0] * 1);
-        d[2] = (p[0] * 0) - (p[1] * 0);
-        if (d[0] != 0) d[0] = -d[1] / d[0];
-
-        if (d[0] == 0) d[0] = 0;
-
-        d[1] = 1;
+        d[0] = p[0];
+        d[1] = p[1];
         d[2] = 0;
         float norm = powf(((d[0] * d[0]) + (d[1] * d[1]) + (d[2] * d[2])), 0.5);
         d[0] = d[0] / norm;

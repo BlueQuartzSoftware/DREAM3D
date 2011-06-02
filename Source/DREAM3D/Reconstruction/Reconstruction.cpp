@@ -164,9 +164,7 @@ void Reconstruction::execute()
   MAKE_OUTPUT_FILE_PATH ( alignmentFile, AIM::Reconstruction::AlignmentFile);
   MAKE_OUTPUT_FILE_PATH ( reconVisFile, AIM::Reconstruction::VisualizationVizFile);
   MAKE_OUTPUT_FILE_PATH ( reconIPFVisFile, AIM::Reconstruction::IPFVizFile);
-  MAKE_OUTPUT_FILE_PATH ( reconDisVisFile, AIM::Reconstruction::DisorientationVizFile);
   MAKE_OUTPUT_FILE_PATH ( reconIQVisFile, AIM::Reconstruction::ImageQualityVizFile);
-  MAKE_OUTPUT_FILE_PATH ( reconSFVisFile, AIM::Reconstruction::SchmidFactorVizFile);
   MAKE_OUTPUT_FILE_PATH ( reconDSVisFile, AIM::Reconstruction::DownSampledVizFile);
   MAKE_OUTPUT_FILE_PATH ( hdf5GrainFile, AIM::Reconstruction::HDF5GrainFile);
 
@@ -249,10 +247,6 @@ void Reconstruction::execute()
   }
 
 
-  updateProgressAndMessage(("Finding Grain IPF Colors"), 80);
-  m->find_colors();
-  CHECK_FOR_CANCELED(ReconstructionFunc, "Reconstruction was canceled", find_colors)
-
   /** ********** This section writes the VTK files for visualization *** */
   // Create our File Output Writer Object. This will handle all the File Output duties
   ReconstructionVTKWriter::Pointer vtkWriter = ReconstructionVTKWriter::New();
@@ -264,14 +258,8 @@ void Reconstruction::execute()
   updateProgressAndMessage(("Writing VTK Inverse Pole Figure File"), 94);
   if (m_WriteIPFFile) {vtkWriter->writeIPFVizFile(m.get(), reconIPFVisFile);}
 
-  updateProgressAndMessage(("Writing VTK Disorientation File"), 95);
-  if (m_WriteDisorientationFile) {vtkWriter->writeDisorientationFile(m.get(), reconDisVisFile);}
-
   updateProgressAndMessage(("Writing VTK Image Quality File"), 96);
   if (m_WriteImageQualityFile) {vtkWriter->writeImageQualityVizFile(m.get(), reconIQVisFile);}
-
-  updateProgressAndMessage(("Writing VTK Schmid Factor File"), 97);
-  if (m_WriteSchmidFactorFile) {vtkWriter->writeSchmidFactorVizFile(m.get(), reconSFVisFile);}
 
   updateProgressAndMessage(("Writing VTK Down Sampled File"), 98);
   if (m_WriteDownSampledFile) {vtkWriter->writeDownSampledVizFile(m.get(), reconDSVisFile);}

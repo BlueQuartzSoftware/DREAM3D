@@ -2216,5 +2216,3 @@ float MicrostructureStatisticsFunc::find_zcoord(size_t index)
   float z = resz * float(index / (xpoints * ypoints));
   return z;
 }
-
-
