@@ -36,7 +36,9 @@ D3DCompileDir(Parallel)
 D3DCompileDir(Reconstruction)
 D3DCompileDir(StructureReaders)
 D3DCompileDir(SurfaceMesh)
-#D3DCompileDir(VolumeMesh)
+#--------------------------
+# Add any additional Pipeline Groups here
+
 
 # --------------------------------------------------------------------
 include_directories(${HDF5_INCLUDE_DIR})
