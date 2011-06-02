@@ -35,51 +35,29 @@
 #include <MXA/Common/MXASetGetMacros.h>
 #include <MXA/MXATypes.h>
 
+#include "DREAM3D/DREAM3DConfiguration.h"
 #include "DREAM3D/Common/Constants.h"
 #include "DREAM3D/GrainGenerator/GrainGeneratorFunc.h"
+#include "DREAM3D/Common/AbstractPipeline.h"
 
-
-#ifdef DREAM3D_USE_QT
-#include <QtCore/QObject>
-
-#define AIM_STRING QString
-#else
-#define AIM_STRING std::string
-#endif
-
-#include "MXA/Common/MXASetGetMacros.h"
-#include "DREAM3D/DREAM3DConfiguration.h"
 
 /**
 * @class GrainGenerator GrainGenerator.h AIM/GrainGenerator/GrainGenerator.h
 * @brief This class serves as the main entry point to execute the Synthetic Grain
-* generation. When used from a Qt framework this class inherits from QThread thus making this class able to be excuted
-* on another thread of execution so that the User interface does not lock up while the code executes. The main method
-* to implement is the 'compute()' method. This method will be called from the 'run()' method during the execution of
-* the thread. The normal constructor is protected so that the end programmer must instantiate this class through the
-* static "New()" method which will produce a boost::shared_ptr instance.
-* @author Michael A. Jackson for BlueQuartz Software, Dr. Michael Groeber, USAFRL
+* generation.
+* @author Michael A. Jackson for BlueQuartz Software
+* @author Dr. Michael Groeber, USAFRL
 * @date Nov 3, 2009
 * @version 1.0
 */
-class GrainGenerator
-#ifdef DREAM3D_USE_QT
- : public QObject
-#endif
+class DREAM3DLib_EXPORT GrainGenerator : public AbstractPipeline
 {
-#ifdef DREAM3D_USE_QT
-Q_OBJECT
-#endif
-
   public:
     MXA_SHARED_POINTERS(GrainGenerator);
     MXA_TYPE_MACRO(GrainGenerator);
 
-#ifdef DREAM3D_USE_QT
-    static Pointer New (QObject* parent = 0);
-#else
     MXA_STATIC_NEW_MACRO(GrainGenerator);
-#endif
+
     virtual ~GrainGenerator();
 
 
@@ -108,52 +86,15 @@ Q_OBJECT
     MXA_INSTANCE_PROPERTY(bool, WriteHDF5GrainFile)
     MXA_INSTANCE_PROPERTY(bool, WritePhFile)
 
-
-
-    MXA_INSTANCE_PROPERTY(int, ErrorCondition);
+    MXA_INSTANCE_PROPERTY(GrainGeneratorFunc::Pointer, Func)
 
     /**
-     * @brief Cancel the operation
-     */
-    MXA_INSTANCE_PROPERTY(bool, Cancel);
-
-    /**
-     * @brief Either prints a message or sends the message to the User Interface
-     * @param message The message to print
-     * @param progress The progress of the GrainGenerator normalized to a value between 0 and 100
-     */
-    void progressMessage(AIM_STRING message, int progress);
-
-#ifdef DREAM3D_USE_QT
-
-    /**
-     * Qt Signals for connections
-     */
-    signals:
-      void updateMessage(QString message);
-      void updateProgress(int value);
-      void finished();
-
-    public slots:
-    /**
-     * @brief Slot to receive a signal to cancel the operation
-     */
-      void on_CancelWorker();
-
-#endif
-      /**
-       * @brief Main method to run the operation
-       */
-      void compute();
+    * @brief Main method to run the operation
+    */
+    virtual void execute();
 
   protected:
-
-    GrainGenerator(
-#ifdef DREAM3D_USE_QT
-        QObject* parent = 0
-#endif
-    );
-
+    GrainGenerator();
 
   private:
     GrainGeneratorFunc::Pointer m;
@@ -161,5 +102,7 @@ Q_OBJECT
     GrainGenerator(const GrainGenerator&);    // Copy Constructor Not Implemented
     void operator=(const GrainGenerator&);  // Operator '=' Not Implemented
 };
+
+
 
 #endif /* GRAINGENERATOR_H_ */

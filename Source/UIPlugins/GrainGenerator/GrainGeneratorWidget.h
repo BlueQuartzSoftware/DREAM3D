@@ -38,7 +38,7 @@
 #include "ui_GrainGeneratorWidget.h"
 
 #include "QtSupport/AIMPluginFrame.h"
-#include "DREAM3D/GrainGenerator/GrainGenerator.h"
+#include "QGrainGenerator.h"
 
 class QListWidgetItem;
 
@@ -112,7 +112,7 @@ class GrainGeneratorWidget : public AIMPluginFrame, private Ui::GrainGeneratorWi
 
   private:
     QList<QWidget*> m_WidgetList;
-    GrainGenerator::Pointer     m_GrainGenerator;
+    QGrainGenerator*    m_GrainGenerator;
     QThread*                    m_WorkerThread;
     QString m_OpenDialogLastDirectory;
 

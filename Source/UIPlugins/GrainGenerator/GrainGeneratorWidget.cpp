@@ -59,7 +59,9 @@
 // -----------------------------------------------------------------------------
 GrainGeneratorWidget::GrainGeneratorWidget(QWidget *parent) :
 AIMPluginFrame(parent),
+m_GrainGenerator(NULL),
 m_WorkerThread(NULL),
+
 #if defined(Q_WS_WIN)
 m_OpenDialogLastDirectory("C:\\")
 #else
@@ -373,7 +375,7 @@ void GrainGeneratorWidget::on_m_GoBtn_clicked()
 
   if (m_GoBtn->text().compare("Cancel") == 0)
   {
-    if(m_GrainGenerator.get() != NULL)
+    if(m_GrainGenerator!= NULL)
     {
       //std::cout << "canceling from GUI...." << std::endl;
       emit cancelProcess();
@@ -396,7 +398,7 @@ void GrainGeneratorWidget::on_m_GoBtn_clicked()
   }
   m_WorkerThread = new QThread(); // Create a new Thread Resource
 
-  m_GrainGenerator = GrainGenerator::New(NULL);
+  m_GrainGenerator = new QGrainGenerator(NULL);
 
   // Move the GrainGenerator object into the thread that we just created.
   m_GrainGenerator->moveToThread(m_WorkerThread);
@@ -434,10 +436,10 @@ void GrainGeneratorWidget::on_m_GoBtn_clicked()
    */
   // When the thread starts its event loop, start the Reconstruction going
   connect(m_WorkerThread, SIGNAL(started()),
-          m_GrainGenerator.get(), SLOT(compute()));
+          m_GrainGenerator, SLOT(run()));
 
   // When the Reconstruction ends then tell the QThread to stop its event loop
-  connect(m_GrainGenerator.get(), SIGNAL(finished() ),
+  connect(m_GrainGenerator, SIGNAL(finished() ),
           m_WorkerThread, SLOT(quit()) );
 
   // When the QThread finishes, tell this object that it has finished.
@@ -445,17 +447,17 @@ void GrainGeneratorWidget::on_m_GoBtn_clicked()
           this, SLOT( threadFinished() ) );
 
   // Send Progress from the Reconstruction to this object for display
-  connect(m_GrainGenerator.get(), SIGNAL (updateProgress(int)),
+  connect(m_GrainGenerator, SIGNAL (updateProgress(int)),
     this, SLOT(threadProgressed(int) ) );
 
   // Send progress messages from Reconstruction to this object for display
-  connect(m_GrainGenerator.get(), SIGNAL (updateMessage(QString)),
+  connect(m_GrainGenerator, SIGNAL (updateMessage(QString)),
           this, SLOT(threadHasMessage(QString) ) );
 
   // If the use clicks on the "Cancel" button send a message to the Reconstruction object
   // We need a Direct Connection so the
   connect(this, SIGNAL(cancelProcess() ),
-          m_GrainGenerator.get(), SLOT (on_CancelWorker() ) , Qt::DirectConnection);
+          m_GrainGenerator, SLOT (on_CancelWorker() ) , Qt::DirectConnection);
 
 
   setWidgetListEnabled(false);
@@ -475,6 +477,7 @@ void GrainGeneratorWidget::threadFinished()
   this->m_progressBar->setValue(0);
   emit processEnded();
   checkIOFiles();
+  m_GrainGenerator->deleteLater();
 }
 
 // -----------------------------------------------------------------------------

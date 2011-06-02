@@ -20,19 +20,23 @@ include_directories(${PROJECT_SOURCE_DIR} ${PROJECT_BINARY_DIR} ${PROJECT_SOURCE
 include_directories(${PROJECT_CODE_DIR} )
 include_directories(${PROJECT_CODE_DIR}/QtSupport )
 
+set(CLASS_NAME "Reconstruction")
+SET(ORIGINAL_FILE ${PROJECT_CODE_DIR}/QtSupport/QAbstractPipelineWrapper.h.in)
+configure_file( ${PROJECT_CODE_DIR}/QtSupport/QAbstractPipelineWrapper.h.in
+                ${${CLASS_NAME}Plugin_BINARY_DIR}/Q${CLASS_NAME}.h @ONLY IMMEDIATE)
+
 
 set (ReconstructionPlugin_HDRS
+    ${${CLASS_NAME}Plugin_BINARY_DIR}/Q${CLASS_NAME}.h
     ${PROJECT_SOURCE_DIR}/ReconstructionPlugin.h
     ${PROJECT_SOURCE_DIR}/ReconstructionWidget.h
     ${PROJECT_CODE_DIR}/QtSupport/AIMPluginFrame.h
-    ${PROJECT_CODE_DIR}/DREAM3D/Reconstruction/Reconstruction.h
     )
     
 set (ReconstructionPlugin_SRCS 
     ${PROJECT_SOURCE_DIR}/ReconstructionPlugin.cpp
     ${PROJECT_SOURCE_DIR}/ReconstructionWidget.cpp
     ${PROJECT_CODE_DIR}/QtSupport/AIMPluginFrame.cpp
-    ${PROJECT_CODE_DIR}/DREAM3D/Reconstruction/Reconstruction.cpp
     )
 
 # -- Run MOC and UIC on the necessary files   

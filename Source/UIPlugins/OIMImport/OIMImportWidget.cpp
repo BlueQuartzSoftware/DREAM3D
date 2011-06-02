@@ -53,6 +53,7 @@
 // -----------------------------------------------------------------------------
 OIMImportWidget::OIMImportWidget(QWidget *parent) :
 AIMPluginFrame(parent),
+m_OimImport(NULL),
 m_WorkerThread(NULL),
 #if defined(Q_WS_WIN)
 m_OpenDialogLastDirectory("C:\\")
@@ -60,12 +61,14 @@ m_OpenDialogLastDirectory("C:\\")
 m_OpenDialogLastDirectory("~/")
 #endif
 {
-
   setupUi(this);
   setupGui();
   checkIOFiles();
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 OIMImportWidget::~OIMImportWidget()
 {
 }
@@ -244,7 +247,7 @@ void OIMImportWidget::on_m_GoBtn_clicked()
   }
   m_WorkerThread = new QThread(); // Create a new Thread Resource
 
-  m_OimImport = OIMImport::New();
+  m_OimImport = new QOIMImport(NULL);
 
   // Move the GrainGenerator object into the thread that we just created.
   m_OimImport->moveToThread(m_WorkerThread);
@@ -269,23 +272,23 @@ void OIMImportWidget::on_m_GoBtn_clicked()
    * type of connection will be a Queued connection.
    */
   // When the thread starts its event loop, start the Reconstruction going
-  connect(m_WorkerThread, SIGNAL(started()), m_OimImport.get(), SLOT(compute()));
+  connect(m_WorkerThread, SIGNAL(started()), m_OimImport, SLOT(run()));
 
   // When the Reconstruction ends then tell the QThread to stop its event loop
-  connect(m_OimImport.get(), SIGNAL(finished() ), m_WorkerThread, SLOT(quit()));
+  connect(m_OimImport, SIGNAL(finished() ), m_WorkerThread, SLOT(quit()));
 
   // When the QThread finishes, tell this object that it has finished.
   connect(m_WorkerThread, SIGNAL(finished()), this, SLOT( threadFinished() ));
 
   // Send Progress from the Reconstruction to this object for display
-  connect(m_OimImport.get(), SIGNAL (updateProgress(int)), this, SLOT(threadProgressed(int) ));
+  connect(m_OimImport, SIGNAL (updateProgress(int)), this, SLOT(threadProgressed(int) ));
 
   // Send progress messages from Reconstruction to this object for display
-  connect(m_OimImport.get(), SIGNAL (updateMessage(QString)), this, SLOT(threadHasMessage(QString) ));
+  connect(m_OimImport, SIGNAL (updateMessage(QString)), this, SLOT(threadHasMessage(QString) ));
 
   // If the use clicks on the "Cancel" button send a message to the Reconstruction object
   // We need a Direct Connection so the
-  connect(this, SIGNAL(cancelProcess() ), m_OimImport.get(), SLOT (on_CancelWorker() ), Qt::DirectConnection);
+  connect(this, SIGNAL(cancelProcess() ), m_OimImport, SLOT (on_CancelWorker() ), Qt::DirectConnection);
 
   setWidgetListEnabled(false);
   emit
@@ -472,6 +475,7 @@ void OIMImportWidget::threadFinished()
   setWidgetListEnabled(true);
   this->m_progressBar->setValue(0);
   emit processEnded();
+  m_OimImport->deleteLater();
 }
 
 // -----------------------------------------------------------------------------

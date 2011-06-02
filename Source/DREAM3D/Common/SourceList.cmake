@@ -1,4 +1,7 @@
+
+
 SET (DREAM3D_Common_HDRS
+  ${DREAM3DLib_SOURCE_DIR}/Common/AbstractPipeline.h
   ${DREAM3DLib_SOURCE_DIR}/Common/AIMArray.hpp
   ${DREAM3DLib_SOURCE_DIR}/Common/DLLExport.h
   ${DREAM3DLib_SOURCE_DIR}/Common/AIMMath.h
@@ -26,6 +29,7 @@ SET (DREAM3D_Common_HDRS
 )
 
 SET (DREAM3D_Common_SRCS
+  ${DREAM3DLib_SOURCE_DIR}/Common/AbstractPipeline.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/AIMRandomNG.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/Face.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/Grain.cpp

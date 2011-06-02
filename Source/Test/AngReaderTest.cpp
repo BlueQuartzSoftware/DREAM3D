@@ -86,7 +86,7 @@ int main(int argc, char **argv)
   h5importer->setZStartIndex(0);
   h5importer->setZEndIndex(1);
   h5importer->setZResolution(0.25);
-  h5importer->compute();
+  h5importer->run();
   std::cout << "=====> Import Complete" << std::endl;
 
 
