@@ -68,6 +68,14 @@ class DREAM3DLib_EXPORT MicrostructureStatistics  : public AbstractPipeline
     MXA_INSTANCE_STRING_PROPERTY(OutputDirectory)
     MXA_INSTANCE_STRING_PROPERTY(OutputFilePrefix)
 
+    // Morphological Attributes
+    MXA_INSTANCE_PROPERTY(bool, ComputeGrainSize);
+    MXA_INSTANCE_PROPERTY(bool, ComputeGrainShapes);
+    MXA_INSTANCE_PROPERTY(bool, ComputeNumNeighbors);
+
+    // Crystalographic Attributes
+    MXA_INSTANCE_PROPERTY(bool, ComputeODF);
+    MXA_INSTANCE_PROPERTY(bool, ComputeMDF);
 
     /**
     * @brief

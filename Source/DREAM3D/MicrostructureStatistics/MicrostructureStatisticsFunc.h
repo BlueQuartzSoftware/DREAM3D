@@ -64,7 +64,6 @@
 #include "DREAM3D/Reconstruction/ReconstructionVoxel.h"
 #include "DREAM3D/HDF5/H5ReconStatsWriter.h"
 
-
 class DREAM3DLib_EXPORT MicrostructureStatisticsFunc
 {
   public:
@@ -73,19 +72,19 @@ class DREAM3DLib_EXPORT MicrostructureStatisticsFunc
 
     virtual ~MicrostructureStatisticsFunc();
 
-    typedef boost::shared_array<float>    SharedFloatArray;
-    typedef boost::shared_array<int>      SharedIntArray;
+    typedef boost::shared_array<float> SharedFloatArray;
+    typedef boost::shared_array<int> SharedIntArray;
 
-	std::vector<AIM::Reconstruction::CrystalStructure> crystruct;
-    std::vector<AIM::Reconstruction::PhaseType>        phaseType;
-    std::vector<float>                            pptFractions;
+    std::vector<AIM::Reconstruction::CrystalStructure> crystruct;
+    std::vector<AIM::Reconstruction::PhaseType> phaseType;
+    std::vector<float> pptFractions;
 
-	boost::shared_array<ReconstructionVoxel> voxels;
+    boost::shared_array<ReconstructionVoxel> voxels;
 
     SharedIntArray graincounts;
     std::vector<Grain::Pointer> m_Grains;
 
-	std::vector<std::vector<float> > graincenters;
+    std::vector<std::vector<float> > graincenters;
     std::vector<std::vector<float> > grainmoments;
 
     std::vector<float> totalsurfacearea;
@@ -106,7 +105,10 @@ class DREAM3DLib_EXPORT MicrostructureStatisticsFunc
     int zpoints;
     int totalpoints;
 
-	void define_neighborhood();
+    void initializeGrains();
+    void initializeArrays();
+
+    void define_neighborhood();
     void find_euclidean_map();
     void find_vectors(H5ReconStatsWriter::Pointer h5io);
     void find_centroids();
@@ -129,18 +131,17 @@ class DREAM3DLib_EXPORT MicrostructureStatisticsFunc
     float find_ycoord(size_t index);
     float find_zcoord(size_t index);
 
-
   protected:
     MicrostructureStatisticsFunc();
 
   private:
-    std::vector<OrientationMath*>    m_OrientationOps;
-    CubicOps::Pointer                m_CubicOps;
-    HexagonalOps::Pointer            m_HexOps;
-    OrthoRhombicOps::Pointer         m_OrthoOps;
+    std::vector<OrientationMath*> m_OrientationOps;
+    CubicOps::Pointer m_CubicOps;
+    HexagonalOps::Pointer m_HexOps;
+    OrthoRhombicOps::Pointer m_OrthoOps;
 
-    MicrostructureStatisticsFunc(const MicrostructureStatisticsFunc&);    // Copy Constructor Not Implemented
-    void operator=(const MicrostructureStatisticsFunc&);  // Operator '=' Not Implemented
+    MicrostructureStatisticsFunc(const MicrostructureStatisticsFunc&); // Copy Constructor Not Implemented
+    void operator=(const MicrostructureStatisticsFunc&); // Operator '=' Not Implemented
 };
 
 #endif /* MICROSTRUCTURESTATISTICSFUNC_H_ */

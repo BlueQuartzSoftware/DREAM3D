@@ -53,6 +53,9 @@ H5ReconStatsReader::~H5ReconStatsReader()
 {
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 H5ReconStatsReader::Pointer H5ReconStatsReader::New(const std::string &filename)
 {
   Pointer sharedPtr(new H5ReconStatsReader);

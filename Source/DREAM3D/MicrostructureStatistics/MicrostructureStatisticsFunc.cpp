@@ -83,10 +83,124 @@ MicrostructureStatisticsFunc::MicrostructureStatisticsFunc()
   m_OrientationOps.push_back(dynamic_cast<OrientationMath*> (m_OrthoOps.get()));
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 MicrostructureStatisticsFunc::~MicrostructureStatisticsFunc()
 {
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void MicrostructureStatisticsFunc::initializeGrains()
+{
+  /*
+   * This assumes a dense packed grain list which probably isn't that safe based
+   * on some of the data that is floating around. For our data though this is a
+   * reasonable assumption.
+   */
+  // Put at least 1 Grain in the Vector
+  m_Grains.resize(1);
+  size_t curGrainSize = 1;
+  int grainIndex = 0;
+  Grain::Pointer grain;
+  for(int i = 0; i < totalpoints; ++i)
+  {
+    grainIndex = voxels[i].grain_index;
+    curGrainSize = m_Grains.size();
+    if (grainIndex > m_Grains.size()-1)
+    {
+      // Resize the Grain Vector to be as large as this index. The other Grain
+      // objects will be copied to the resized Vector. This probably isn't really
+      // efficient at all.
+      m_Grains.resize(grainIndex + 1);
+    }
+    curGrainSize = m_Grains.size();
+    grain = m_Grains[grainIndex];
+    if (NULL == grain.get())
+    {
+      m_Grains[grainIndex] = Grain::New();
+      grain = m_Grains[grainIndex];
+      // Assign a new voxel list pointer to it
+      grain->voxellist = new std::vector<int>(0);
+      grain->phase = voxels[i].phase;
+    }
+    grain->voxellist->push_back(i);
+    grain->numvoxels = grain->voxellist->size();
+  }
+
+#if 0
+  // Loop over the Grains and initialize them as necessary
+  size_t gSize = m_Grains.size();
+  for (int g = 0; g < gSize; ++g)
+  {
+
+  }
+#endif
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+
+#define GG_INIT_DOUBLE_ARRAY(array, value, size)\
+    for(size_t n = 0; n < size; ++n) { array[n] = (value); }
+
+void MicrostructureStatisticsFunc::initializeArrays()
+{
+
+  size_t nElements = 0;
+  size_t size = crystruct.size();
+
+  crystruct.resize(size+1);
+  pptFractions.resize(size + 1);
+  phaseType.resize(size+1);
+  phasefraction.resize(size+1);
+
+  // Initialize the first slot in these arrays since they should never be used
+  crystruct[0] = AIM::Reconstruction::UnknownCrystalStructure;
+  phasefraction[0] = 0.0;
+  phaseType[0] = AIM::Reconstruction::UnknownPhaseType;
+  pptFractions[0] = -1.0;
+
+  mindiameter.resize(size+1);
+  maxdiameter.resize(size+1);
+
+  for(size_t i= 1; i < size+1; ++i)
+  {
+    if(crystruct[i] == AIM::Reconstruction::Hexagonal) nElements = 36*36*12;
+    if(crystruct[i] == AIM::Reconstruction::Cubic) nElements = 18*18*18;
+
+    float initValue = 1.0/(float)(nElements);
+//    actualodf[i] = SharedFloatArray(new float [nElements]);
+//    GG_INIT_DOUBLE_ARRAY(actualodf[i], initValue, nElements);
+//
+//    simodf[i] = SharedFloatArray(new float [nElements]);
+//    GG_INIT_DOUBLE_ARRAY(simodf[i], 0.0, nElements);
+//    actualmdf[i] = SharedFloatArray(new float [nElements]);
+//    GG_INIT_DOUBLE_ARRAY(actualmdf[i], initValue, nElements);
+//    simmdf[i] = SharedFloatArray(new float [nElements]);
+//    GG_INIT_DOUBLE_ARRAY(simmdf[i], 0.0, nElements);
+
+    nElements = 36*36*36;
+    initValue = (1.0/float(nElements));
+//    axisodf[i] = SharedFloatArray(new float [nElements]);
+//    GG_INIT_DOUBLE_ARRAY(axisodf[i], initValue, nElements);
+    nElements = 10;
+    initValue = (1.0/float(nElements));
+//    actualmicrotex[i] = SharedFloatArray(new float [nElements]);
+//    GG_INIT_DOUBLE_ARRAY(actualmicrotex[i], initValue, nElements);
+//    simmicrotex[i] = SharedFloatArray(new float [nElements]);
+//    GG_INIT_DOUBLE_ARRAY(simmicrotex[i], 0.0, nElements);
+  }
+}
+
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void MicrostructureStatisticsFunc::define_neighborhood()
 {
   float x, y, z;
