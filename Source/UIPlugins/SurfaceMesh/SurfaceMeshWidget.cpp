@@ -56,6 +56,7 @@
 // -----------------------------------------------------------------------------
 SurfaceMeshWidget::SurfaceMeshWidget(QWidget *parent) :
 AIMPluginFrame(parent),
+m_SurfaceMesh(NULL),
 m_WorkerThread(NULL),
 #if defined(Q_WS_WIN)
 m_OpenDialogLastDirectory("C:\\")
@@ -261,7 +262,7 @@ void SurfaceMeshWidget::on_m_GoBtn_clicked()
 {
   if (m_GoBtn->text().compare("Cancel") == 0)
   {
-    if(m_SurfaceMesh.get() != NULL)
+    if(m_SurfaceMesh != NULL)
     {
       //std::cout << "canceling from GUI...." << std::endl;
       emit cancelProcess();
@@ -285,7 +286,7 @@ void SurfaceMeshWidget::on_m_GoBtn_clicked()
   m_WorkerThread = new QThread(); // Create a new Thread Resource
 
 
-  m_SurfaceMesh = SurfaceMesh::New(NULL);
+  m_SurfaceMesh = new QSurfaceMesh(NULL);
   // Move the Reconstruction object into the thread that we just created.
   m_SurfaceMesh->moveToThread(m_WorkerThread);
 
@@ -311,10 +312,10 @@ void SurfaceMeshWidget::on_m_GoBtn_clicked()
    */
   // When the thread starts its event loop, start the Reconstruction going
   connect(m_WorkerThread, SIGNAL(started()),
-          m_SurfaceMesh.get(), SLOT(compute()));
+          m_SurfaceMesh, SLOT(run()));
 
   // When the Reconstruction ends then tell the QThread to stop its event loop
-  connect(m_SurfaceMesh.get(), SIGNAL(finished() ),
+  connect(m_SurfaceMesh, SIGNAL(finished() ),
           m_WorkerThread, SLOT(quit()) );
 
   // When the QThread finishes, tell this object that it has finished.
@@ -322,17 +323,17 @@ void SurfaceMeshWidget::on_m_GoBtn_clicked()
           this, SLOT( threadFinished() ) );
 
   // Send Progress from the Reconstruction to this object for display
-  connect(m_SurfaceMesh.get(), SIGNAL (updateProgress(int)),
+  connect(m_SurfaceMesh, SIGNAL (updateProgress(int)),
     this, SLOT(threadProgressed(int) ) );
 
   // Send progress messages from Reconstruction to this object for display
-  connect(m_SurfaceMesh.get(), SIGNAL (updateMessage(QString)),
+  connect(m_SurfaceMesh, SIGNAL (updateMessage(QString)),
           this, SLOT(threadHasMessage(QString) ) );
 
   // If the use clicks on the "Cancel" button send a message to the Reconstruction object
   // We need a Direct Connection so the
   connect(this, SIGNAL(cancelProcess() ),
-          m_SurfaceMesh.get(), SLOT (on_CancelWorker() ) , Qt::DirectConnection);
+          m_SurfaceMesh, SLOT (on_CancelWorker() ) , Qt::DirectConnection);
 
   setWidgetListEnabled(false);
   emit processStarted();
@@ -351,6 +352,7 @@ void SurfaceMeshWidget::threadFinished()
   this->m_progressBar->setValue(0);
   emit processEnded();
   checkIOFiles();
+  m_SurfaceMesh->deleteLater();
 }
 
 // -----------------------------------------------------------------------------

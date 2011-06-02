@@ -39,7 +39,7 @@
 #include "tbb/task_group.h"
 #endif
 
-#include "DREAM3D/Reconstruction/ReconstructionFunc.h"
+#include "DREAM3D/MicrostructureStatistics/MicrostructureStatisticsFunc.h"
 #include "DREAM3D/Common/OrientationMath.h"
 
 #if AIM_USE_PARALLEL_ALGORITHMS
@@ -71,7 +71,7 @@ class ParallelRenumberGrains
 
 class FindEuclideanMap
 {
-    const ReconstructionFunc* d;
+    const MicrostructureStatisticsFunc* d;
     const int loop;
 
   public:
@@ -193,8 +193,8 @@ class FindEuclideanMap
      *
      * @param recon
      */
-    FindEuclideanMap(ReconstructionFunc* recon, int l) :
-      d(recon),
+    FindEuclideanMap(MicrostructureStatisticsFunc* microstats, int l) :
+      d(microstats),
       loop (l)
     {}
 

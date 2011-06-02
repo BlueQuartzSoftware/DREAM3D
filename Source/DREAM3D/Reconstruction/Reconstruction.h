@@ -44,46 +44,24 @@
 
 #include "DREAM3D/Common/Constants.h"
 #include "DREAM3D/Reconstruction/ReconstructionFunc.h"
-
-
-#ifdef DREAM3D_USE_QT
-#include <QtCore/QObject>
-
-#define AIM_STRING QString
-#else
-#define AIM_STRING std::string
-#endif
+#include "DREAM3D/Common/AbstractPipeline.h"
 
 /**
 * @class Reconstruction Reconstruction AIM/Reconstruction.h/Reconstruction.h
 * @brief This class serves as the main entry point to execute the reconstruction codes
-* When used from a Qt framework this class inherits from QThread thus making this class able to be excuted
-* on another thread of execution so that the User interface does not lock up while the code executes. The main method
-* to implement is the 'compute()' method. This method will be called from the 'run()' method during the execution of
-* the thread. The normal constructor is protected so that the end programmer must instantiate this class through the
-* static "New()" method which will produce a boost::shared_ptr instance.
-* @author Michael A. Jackson for BlueQuartz Software, Dr. Michael Groeber, USAFRL
+*
+* @author Michael A. Jackson for BlueQuartz Software
+* @author Dr. Michael Groeber, USAFRL
 * @date Nov 3, 2009
 * @version 1.0
 */
-class Reconstruction
-#ifdef DREAM3D_USE_QT
- : public QObject
-#endif
+class DREAM3DLib_EXPORT Reconstruction : public AbstractPipeline
 {
-#ifdef DREAM3D_USE_QT
-Q_OBJECT
-#endif
-
   public:
     MXA_SHARED_POINTERS(Reconstruction);
     MXA_TYPE_MACRO(Reconstruction);
-
-#ifdef DREAM3D_USE_QT
-    static Pointer New (QObject* parent = 0);
-#else
     MXA_STATIC_NEW_MACRO(Reconstruction);
-#endif
+
     virtual ~Reconstruction();
 
 
@@ -102,7 +80,6 @@ Q_OBJECT
     MXA_INSTANCE_PROPERTY(double, DownSampleFactor)
     MXA_INSTANCE_PROPERTY(double, MinSeedImageQuality)
     MXA_INSTANCE_PROPERTY(double, MisorientationTolerance)
-//    MXA_INSTANCE_PROPERTY(vector<AIM::Reconstruction::CrystalStructure>, CrystalStructure)
     MXA_INSTANCE_PROPERTY(AIM::Reconstruction::AlignmentMethod, AlignmentMethod)
     MXA_INSTANCE_PROPERTY(bool, AlreadyFormed)
     MXA_INSTANCE_PROPERTY(Ang::Orientation, Orientation)
@@ -116,57 +93,15 @@ Q_OBJECT
     MXA_INSTANCE_PROPERTY(bool, WriteDownSampledFile)
     MXA_INSTANCE_PROPERTY(bool, WriteHDF5GrainFile)
 
-    MXA_INSTANCE_PROPERTY(int, ErrorCondition)
-
     /**
-     * @brief Cancel the operation
-     */
-    MXA_INSTANCE_PROPERTY(bool, Cancel);
-
-    /**
-    * @brief
-    * @param ostream
+    * @brief Main method to run the operation
     */
-    void printSettings(std::ostream &ostream);
+    virtual void execute();
 
-    /**
-     * @brief Either prints a message or sends the message to the User Interface
-     * @param message The message to print
-     * @param progress The progress of the Reconstruction normalized to a value between 0 and 100
-     */
-    void progressMessage(AIM_STRING message, int progress);
-
-#ifdef DREAM3D_USE_QT
-
-
-
-    /**
-     * Qt Signals for connections
-     */
-    signals:
-      void updateMessage(QString message);
-      void updateProgress(int value);
-      void finished();
-
-    public slots:
-    /**
-     * @brief Slot to receive a signal to cancel the operation
-     */
-      void on_CancelWorker();
-
-#endif
-      /**
-       * @brief Main method to run the operation
-       */
-      void compute();
+    virtual void printSettings(std::ostream &stream);
 
   protected:
-
-    Reconstruction(
-#ifdef DREAM3D_USE_QT
-        QObject* parent = 0
-#endif
-        );
+    Reconstruction();
 
 
   private:

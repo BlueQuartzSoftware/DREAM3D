@@ -59,6 +59,7 @@
 // -----------------------------------------------------------------------------
 MicrostructureStatisticsWidget::MicrostructureStatisticsWidget(QWidget *parent) :
 AIMPluginFrame(parent),
+m_MicrostructureStatistics(NULL),
 m_WorkerThread(NULL),
 #if defined(Q_WS_WIN)
 m_OpenDialogLastDirectory("C:\\")
@@ -247,7 +248,7 @@ void MicrostructureStatisticsWidget::on_m_GoBtn_clicked()
 
   if (m_GoBtn->text().compare("Cancel") == 0)
   {
-    if(m_MicrostructureStatistics.get() != NULL)
+    if(m_MicrostructureStatistics != NULL)
     {
       //std::cout << "canceling from GUI...." << std::endl;
       emit cancelProcess();
@@ -270,7 +271,7 @@ void MicrostructureStatisticsWidget::on_m_GoBtn_clicked()
   }
   m_WorkerThread = new QThread(); // Create a new Thread Resource
 
-  m_MicrostructureStatistics = MicrostructureStatistics::New(NULL);
+  m_MicrostructureStatistics = new QMicrostructureStatistics(NULL);
 
   // Move the MicrostructureStatistics object into the thread that we just created.
   m_MicrostructureStatistics->moveToThread(m_WorkerThread);
@@ -284,12 +285,12 @@ void MicrostructureStatisticsWidget::on_m_GoBtn_clicked()
    * thread of execution and the actual QThread lives in *this* thread then the
    * type of connection will be a Queued connection.
    */
-  // When the thread starts its event loop, start the Reconstruction going
+  // When the thread starts its event loop, start the MicrostructureStatistics going
   connect(m_WorkerThread, SIGNAL(started()),
-          m_MicrostructureStatistics.get(), SLOT(compute()));
+          m_MicrostructureStatistics, SLOT(run()));
 
   // When the Reconstruction ends then tell the QThread to stop its event loop
-  connect(m_MicrostructureStatistics.get(), SIGNAL(finished() ),
+  connect(m_MicrostructureStatistics, SIGNAL(finished() ),
           m_WorkerThread, SLOT(quit()) );
 
   // When the QThread finishes, tell this object that it has finished.
@@ -297,17 +298,17 @@ void MicrostructureStatisticsWidget::on_m_GoBtn_clicked()
           this, SLOT( threadFinished() ) );
 
   // Send Progress from the Reconstruction to this object for display
-  connect(m_MicrostructureStatistics.get(), SIGNAL (updateProgress(int)),
+  connect(m_MicrostructureStatistics, SIGNAL (updateProgress(int)),
     this, SLOT(threadProgressed(int) ) );
 
   // Send progress messages from Reconstruction to this object for display
-  connect(m_MicrostructureStatistics.get(), SIGNAL (updateMessage(QString)),
+  connect(m_MicrostructureStatistics, SIGNAL (updateMessage(QString)),
           this, SLOT(threadHasMessage(QString) ) );
 
   // If the use clicks on the "Cancel" button send a message to the Reconstruction object
   // We need a Direct Connection so the
   connect(this, SIGNAL(cancelProcess() ),
-          m_MicrostructureStatistics.get(), SLOT (on_CancelWorker() ) , Qt::DirectConnection);
+          m_MicrostructureStatistics, SLOT (on_CancelWorker() ) , Qt::DirectConnection);
 
 
   setWidgetListEnabled(false);
@@ -327,6 +328,7 @@ void MicrostructureStatisticsWidget::threadFinished()
   this->m_progressBar->setValue(0);
   emit processEnded();
   checkIOFiles();
+  m_MicrostructureStatistics->deleteLater();
 }
 
 // -----------------------------------------------------------------------------

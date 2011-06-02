@@ -1,14 +1,14 @@
 SET (DREAM3D_SurfaceMesh_HDRS
   ${DREAM3DLib_SOURCE_DIR}/SurfaceMesh/LinearAlgebra.h
   ${DREAM3DLib_SOURCE_DIR}/SurfaceMesh/SMVtkFileIO.h
-#  ${DREAM3DLib_SOURCE_DIR}/SurfaceMesh/SurfaceMesh.h
+  ${DREAM3DLib_SOURCE_DIR}/SurfaceMesh/SurfaceMesh.h
   ${DREAM3DLib_SOURCE_DIR}/SurfaceMesh/SurfaceMeshFunc.h
 #  ${DREAM3DLib_SOURCE_DIR}/SurfaceMesh/smooth-grain3d.h
 )
 
 SET (DREAM3D_SurfaceMesh_SRCS
   ${DREAM3DLib_SOURCE_DIR}/SurfaceMesh/SMVtkFileIO.cpp
-#  ${DREAM3DLib_SOURCE_DIR}/SurfaceMesh/SurfaceMesh.cpp
+  ${DREAM3DLib_SOURCE_DIR}/SurfaceMesh/SurfaceMesh.cpp
   ${DREAM3DLib_SOURCE_DIR}/SurfaceMesh/SurfaceMeshFunc.cpp
 #  ${DREAM3DLib_SOURCE_DIR}/SurfaceMesh/smooth-grain3d.cpp
 )
