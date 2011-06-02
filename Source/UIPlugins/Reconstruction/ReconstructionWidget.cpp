@@ -525,7 +525,6 @@ void ReconstructionWidget::on_m_GoBtn_clicked()
   m_Reconstruction->setMinSeedImageQuality(m_MinImageQuality->value());
   m_Reconstruction->setMinSeedConfidence(m_MinConfidence->value());
   m_Reconstruction->setDownSampleFactor(m_DownSampleFactor->value());
-  m_Reconstruction->setSizeBinStepSize(m_BinStepSize->value());
 
   m_Reconstruction->setOutputDirectory(QDir::toNativeSeparators(m_OutputDir->text()).toStdString());
   m_Reconstruction->setOutputFilePrefix(m_OutputFilePrefix->text().toStdString());

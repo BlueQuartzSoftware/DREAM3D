@@ -32,11 +32,37 @@
 #ifndef MICROSTRUCTURESTATISTICSFUNC_H_
 #define MICROSTRUCTURESTATISTICSFUNC_H_
 
+#include <assert.h>
+#include <stdio.h>
+#include <time.h>
+#include <stdlib.h>
+
+#include <cstddef>
+#include <vector>
+#include <string>
+#include <iostream>
+#include <cmath>
+#include <fstream>
+#include <list>
+#include <algorithm>
+#include <numeric>
+
+#include <boost/shared_array.hpp>
 
 #include "MXA/MXATypes.h"
 #include "MXA/Common/MXASetGetMacros.h"
 
 #include "DREAM3D/DREAM3DConfiguration.h"
+#include "DREAM3D/Common/AIMArray.hpp"
+#include "DREAM3D/Common/Constants.h"
+#include "DREAM3D/Common/Grain.h"
+#include "DREAM3D/Common/AIMRandomNG.h"
+#include "DREAM3D/Common/OrientationMath.h"
+#include "DREAM3D/Common/OrientationOps/CubicOps.h"
+#include "DREAM3D/Common/OrientationOps/HexagonalOps.h"
+#include "DREAM3D/Common/OrientationOps/OrthoRhombicOps.h"
+#include "DREAM3D/Reconstruction/ReconstructionVoxel.h"
+#include "DREAM3D/HDF5/H5ReconStatsWriter.h"
 
 
 class DREAM3DLib_EXPORT MicrostructureStatisticsFunc
@@ -47,10 +73,72 @@ class DREAM3DLib_EXPORT MicrostructureStatisticsFunc
 
     virtual ~MicrostructureStatisticsFunc();
 
+    typedef boost::shared_array<float>    SharedFloatArray;
+    typedef boost::shared_array<int>      SharedIntArray;
+
+	std::vector<AIM::Reconstruction::CrystalStructure> crystruct;
+    std::vector<AIM::Reconstruction::PhaseType>        phaseType;
+    std::vector<float>                            pptFractions;
+
+	boost::shared_array<ReconstructionVoxel> voxels;
+
+    SharedIntArray graincounts;
+    std::vector<Grain::Pointer> m_Grains;
+
+	std::vector<std::vector<float> > graincenters;
+    std::vector<std::vector<float> > grainmoments;
+
+    std::vector<float> totalsurfacearea;
+    std::vector<float> phasefraction;
+    std::vector<float> totalvol;
+    std::vector<float> totalaxes;
+    std::vector<int> maxdiameter;
+    std::vector<int> mindiameter;
+    float unbiasedvol;
+    float sizebinstepsize;
+
+    float resx;
+    float resy;
+    float resz;
+
+    int xpoints;
+    int ypoints;
+    int zpoints;
+    int totalpoints;
+
+	void define_neighborhood();
+    void find_euclidean_map();
+    void find_vectors(H5ReconStatsWriter::Pointer h5io);
+    void find_centroids();
+    void find_moments();
+    void find_axes();
+    void find_colors();
+    void find_schmids();
+    void find_vectors2D(H5ReconStatsWriter::Pointer h5io);
+    void find_centroids2D();
+    void find_moments2D();
+    void find_axes2D();
+    void deformation_stats(const std::string &filename, const std::string &filename2);
+    void write_graindata(const std::string &graindataFile);
+    void find_eulerodf(H5ReconStatsWriter::Pointer h5io);
+    void measure_misorientations(H5ReconStatsWriter::Pointer h5io);
+    int volume_stats(H5ReconStatsWriter::Pointer h5io);
+    int volume_stats2D(H5ReconStatsWriter::Pointer h5io);
+    void find_grain_and_kernel_misorientations();
+    float find_xcoord(size_t index);
+    float find_ycoord(size_t index);
+    float find_zcoord(size_t index);
+
+
   protected:
     MicrostructureStatisticsFunc();
 
   private:
+    std::vector<OrientationMath*>    m_OrientationOps;
+    CubicOps::Pointer                m_CubicOps;
+    HexagonalOps::Pointer            m_HexOps;
+    OrthoRhombicOps::Pointer         m_OrthoOps;
+
     MicrostructureStatisticsFunc(const MicrostructureStatisticsFunc&);    // Copy Constructor Not Implemented
     void operator=(const MicrostructureStatisticsFunc&);  // Operator '=' Not Implemented
 };
