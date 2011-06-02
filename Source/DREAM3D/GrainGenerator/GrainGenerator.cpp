@@ -202,10 +202,6 @@ void GrainGenerator::execute()
   err = m->readMisorientationData(h5reader);
   CHECK_FOR_CANCELED(GrainGeneratorFunc, "GrainGenerator Was canceled", readMisorientationData)
 
-//  progressMessage(("Loading Microtexture Data "), 55);
-//  err = m->readMicroTextureData(h5reader);
-//  CHECK_FOR_CANCELED(GrainGeneratorFunc, "GrainGenerator Was canceled", readMicroTextureData)
-
   updateProgressAndMessage(("Assigning Eulers"), 60);
   m->assign_eulers(m->numgrains);
   CHECK_FOR_CANCELED(GrainGeneratorFunc, "GrainGenerator Was canceled", assign_eulers)
@@ -231,32 +227,8 @@ void GrainGenerator::execute()
   m->matchCrystallography(crystallographicErrorFile, h5io);
   CHECK_FOR_CANCELED(GrainGeneratorFunc, "GrainGenerator Was canceled", matchCrystallography)
 
-  updateProgressAndMessage(("Finding Grain Centroids"), 68);
-  m->find_centroids();
-  CHECK_FOR_CANCELED(GrainGeneratorFunc, "GrainGenerator Was canceled", find_centroids)
-
-  updateProgressAndMessage(("Finding Grain Moments"), 71);
-  m->find_moments();
-  CHECK_FOR_CANCELED(GrainGeneratorFunc, "GrainGenerator Was canceled", find_moments)
-
-  updateProgressAndMessage(("Finding Grain Principal Axis Lengths"), 74);
-  m->find_axes();
-  CHECK_FOR_CANCELED(GrainGeneratorFunc, "GrainGenerator Was canceled", find_axes)
-
-
-  updateProgressAndMessage(("Finding Grain Principal Axis Directions"), 77);
-  m->find_vectors(h5io);
-  CHECK_FOR_CANCELED(GrainGeneratorFunc, "GrainGenerator Was canceled", find_vectors)
-
-  updateProgressAndMessage(("Writing Stats"), 78);
-  m->volume_stats(h5io);
-  CHECK_FOR_CANCELED(GrainGeneratorFunc, "GrainGenerator Was canceled", volume_stats)
-
-  updateProgressAndMessage(("Writing Grain Data"), 80);
-  m->write_graindata(graindataFile);
-  CHECK_FOR_CANCELED(GrainGeneratorFunc, "GrainGenerator Was canceled", write_graindata)
-
   updateProgressAndMessage(("Writing Euler Angles"), 81);
+
   m->write_eulerangles(eulerFile);
   CHECK_FOR_CANCELED(GrainGeneratorFunc, "GrainGenerator Was canceled", write_eulerangles)
 
