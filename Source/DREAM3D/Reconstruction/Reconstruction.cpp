@@ -47,7 +47,6 @@
 #include "DREAM3D/Common/OIMColoring.hpp"
 #include "DREAM3D/Reconstruction/ReconstructionVTKWriter.h"
 #include "DREAM3D/HDF5/H5ReconVolumeWriter.h"
-//#include "DREAM3D/HDF5/H5ReconStatsWriter.h"
 #include "DREAM3D/HDF5/H5GrainWriter.h"
 
 
@@ -152,7 +151,6 @@ void Reconstruction::execute()
   m_OutputDirectory = MXADir::toNativeSeparators(m_OutputDirectory);
 
 
-  MAKE_OUTPUT_FILE_PATH ( alignmentFile, AIM::Reconstruction::AlignmentFile);
   //Optional Files
   MAKE_OUTPUT_FILE_PATH ( reconVisFile, AIM::Reconstruction::VisualizationVizFile);
   MAKE_OUTPUT_FILE_PATH ( reconIPFVisFile, AIM::Reconstruction::IPFVizFile);
@@ -179,7 +177,7 @@ void Reconstruction::execute()
   }
 
   updateProgressAndMessage(("Aligning Slices"), 12);
-  m->align_sections(alignmentFile);
+  m->align_sections();
   CHECK_FOR_CANCELED(ReconstructionFunc, "Reconstruction was canceled", align_sections)
 
   updateProgressAndMessage(("Cleaning Data"), 16);
@@ -251,7 +249,7 @@ void Reconstruction::execute()
   }
   h5VolWriter->setFilename(hdf5VolumeFile);
   updateProgressAndMessage(("Writing HDF5 Voxel Data File"), 83);
-  err = h5VolWriter->writeVoxelData(m.get());
+  err = h5VolWriter->writeVoxelData<ReconstructionFunc, ReconstructionVoxel>(m.get());
   if (err < 0)
   {
     updateProgressAndMessage("The HDF5 Voxel file could not be written to. Does the path exist and do you have write access to the output directory.", 100);

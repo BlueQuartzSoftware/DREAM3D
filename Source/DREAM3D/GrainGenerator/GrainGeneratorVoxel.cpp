@@ -37,16 +37,15 @@
 GrainGeneratorVoxel::GrainGeneratorVoxel() :
 grain_index(0),
 alreadychecked(0),
-//euler1(-1.0),
-//euler2(-1.0),
-//euler3(-1.0),
+euler1(-1.0),
+euler2(-1.0),
+euler3(-1.0),
 phase(0),
 neighbor(-1),
 numowners(0),
 surfacevoxel(0),
 unassigned(0)
 {
-//  quat[0] = 1.0; quat[1] = 0.0; quat[2] = 0.0; quat[3] = 0.0; quat[4] = 0.0;
   neighborlist = IntVectorType(new std::vector<int>(0) );
 }
 

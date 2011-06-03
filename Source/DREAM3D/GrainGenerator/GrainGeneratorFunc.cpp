@@ -1464,14 +1464,12 @@ float GrainGeneratorFunc::check_fillingerror(int gadd, int gremove)
   return fillingerror;
 }
 
-int  GrainGeneratorFunc::pack_grains(const std::string &filename, int numgrains)
+int  GrainGeneratorFunc::pack_grains(int numgrains)
 {
   AIM_RANDOMNG_NEW()
 
   totalvol = 0;
   float change1, change2, change3;
-  std::ofstream outFile;
-  outFile.open(filename.c_str());
  // size_t index;
   int phase;
 //  int good = 0;
@@ -1599,7 +1597,6 @@ int  GrainGeneratorFunc::pack_grains(const std::string &filename, int numgrains)
     change2 = 0;
     change3 = 0;
     int option = iteration % 4;
-//    if (iteration % 100 == 0) outFile << oldfillingerror << " " << oldsizedisterror << "  " << oldneighborhooderror << "  " << acceptedmoves << std::endl;
 	// this option adds a grain
 	if (option == 0)
     {
@@ -3002,12 +2999,10 @@ void GrainGeneratorFunc::switchOrientations( int &badtrycount, int &numbins, flo
   }
 }
 
-void GrainGeneratorFunc::matchCrystallography(const std::string &ErrorFile, H5ReconStatsWriter::Pointer h5io)
+void GrainGeneratorFunc::matchCrystallography()
 {
   AIM_RANDOMNG_NEW()
 
-  ofstream outFile;
-  outFile.open(ErrorFile.c_str());
   int numbins = 0;
 
   int iterations = 0;
@@ -3032,7 +3027,6 @@ void GrainGeneratorFunc::matchCrystallography(const std::string &ErrorFile, H5Re
 		{
 		  currentmdferror = currentmdferror + ((actualmdf[iter][i]-simmdf[iter][i])*(actualmdf[iter][i]-simmdf[iter][i]));
 		}
-		if(iterations%100 == 0) outFile << iterations << "  " << currentodferror << " " << currentmdferror << endl;
 		iterations++;
 		badtrycount++;
 		random = rg.Random();
@@ -3046,11 +3040,6 @@ void GrainGeneratorFunc::matchCrystallography(const std::string &ErrorFile, H5Re
 		  switchOrientations(badtrycount, numbins, currentodferror, currentmdferror);
 		}
 	  }
-	  outFile.close();
-	  int err;
-	  unsigned long long int dims = numbins;
-	  err = h5io->writeODFData(iter, &dims, simodf[iter].get());
-	  err = h5io->writeMisorientationBinsData(iter, &dims, simmdf[iter].get());
   }
 }
 void  GrainGeneratorFunc::measure_misorientations ()

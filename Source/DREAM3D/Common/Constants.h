@@ -152,7 +152,6 @@ namespace AIM
   namespace Reconstruction
   {
     /*    Reconstruction related */
-    const std::string AlignmentFile("Alignment.txt");
     const std::string H5VolumeFile("VoxelData.h5");
 
     const std::string VisualizationVizFile("Visualization.vtk");//11
@@ -271,18 +270,18 @@ namespace AIM
   {
     /*  Grain Generator Related */
 
-    const std::string CrystallographicErrorFile("CrystallographicError.txt");
     const std::string GrainAnglesFile("GrainAngles.txt");
-    const std::string GrainDataFile("GrainData.txt");
-    const std::string PackGrainsFile("PackGrains.txt");
-    const std::string H5StatisticsFile("Results.h5");
+    const std::string H5VolumeFile("VoxelData.h5");
 
     const std::string VisualizationVizFile("Visualization.vtk");
     const std::string IPFVizFile("IPF_Visualization.vtk");
     const std::string HDF5GrainFile("Grains.h5grain");
     const std::string PhFile("Voxels.ph");
 
+    const std::string VoxelDataName("VoxelData");
     const std::string GrainIdScalarName("GrainID");
+    const std::string EulerAnglesName("Euler Angles");
+    const std::string CrystalStructureName("CrystalStructure");
 
 
 
