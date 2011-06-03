@@ -39,13 +39,12 @@
 
 #include "MXA/MXATypes.h"
 #include "MXA/Common/MXASetGetMacros.h"
-
+#include "MXA/HDF5/H5Lite.h"
+#include "MXA/HDF5/H5Utilities.h"
 
 #include "DREAM3D/DREAM3DConfiguration.h"
 #include "DREAM3D/Common/Constants.h"
 #include "DREAM3D/Reconstruction/ReconstructionVoxel.h"
-#include "HDF5/H5Lite.h"
-#include "HDF5/H5Utilities.h"
 #include "DREAM3D/HDF5/VTKH5Constants.h"
 
 
