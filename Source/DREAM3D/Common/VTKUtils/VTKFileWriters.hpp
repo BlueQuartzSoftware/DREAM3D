@@ -41,6 +41,9 @@
 #include "DREAM3D/Common/OIMColoring.hpp"
 #include "DREAM3D/Common/VTKUtils/VTKWriterMacros.h"
 
+
+class DREAM3DLib_EXPORT GrainGeneratorFunc;
+
 /**
  * @class VTKFileWriters VTKFileWriters.h DREAM3D/Common/VTKUtils/VTKFileWriters.h
  * @brief This class holds the functions to write the various VTK output files.
@@ -56,9 +59,7 @@ class VTKFileWriters
     MXA_STATIC_NEW_MACRO(VTKFileWriters);
     MXA_TYPE_MACRO(VTKFileWriters);
 
-    VTKFileWriters() {}
-
-    virtual ~VTKFileWriters(){};
+    virtual ~VTKFileWriters();
 
     MXA_INSTANCE_PROPERTY(bool, WriteBinaryFiles)
 
@@ -90,15 +91,15 @@ class VTKFileWriters
 
       if (true == m_WriteBinaryFiles)
       {
-        WRITE_VTK_GRAIN_IDS_BINARY(r, AIM::MicroStats::GrainIdScalarName, voxels);
-        WRITE_VTK_SCALARS_FROM_VOXEL_BINARY(r, AIM::MicroStats::EuclideanScalarName, float, voxels, nearestneighbordistance[0])
-          WRITE_VTK_SCALARS_FROM_VOXEL_BINARY(r, AIM::MicroStats::PhaseIdScalarName, float, voxels, phase)
+        WRITE_VTK_GRAIN_IDS_BINARY(r, AIM::VTK::GrainIdScalarName, voxels);
+        WRITE_VTK_SCALARS_FROM_VOXEL_BINARY(r, AIM::VTK::EuclideanScalarName, float, voxels, nearestneighbordistance[0])
+        WRITE_VTK_SCALARS_FROM_VOXEL_BINARY(r, AIM::VTK::PhaseIdScalarName, int, voxels, phase)
       }
       else
       {
-        WRITE_VTK_GRAIN_IDS_ASCII(r, AIM::MicroStats::GrainIdScalarName, voxels)
-          WRITE_VTK_SCALARS_FROM_VOXEL_ASCII(r, AIM::MicroStats::EuclideanScalarName, float, voxels, nearestneighbordistance[0], "%f ")
-          WRITE_VTK_SCALARS_FROM_VOXEL_ASCII(r, AIM::MicroStats::PhaseIdScalarName, float, voxels, phase, "%d ")
+        WRITE_VTK_GRAIN_IDS_ASCII(r, AIM::VTK::GrainIdScalarName, voxels)
+        WRITE_VTK_SCALARS_FROM_VOXEL_ASCII(r, AIM::VTK::EuclideanScalarName, float, voxels, nearestneighbordistance[0], "%f ")
+        WRITE_VTK_SCALARS_FROM_VOXEL_ASCII(r, AIM::VTK::PhaseIdScalarName, int, voxels, phase, "%d ")
       }
       fclose(f);
       return 0;
@@ -133,8 +134,8 @@ class VTKFileWriters
       if (true == m_WriteBinaryFiles)
       {
         WRITE_VTK_GRAIN_HEADER("BINARY", r)
-        WRITE_VTK_GRAIN_IDS_BINARY(r, AIM::MicroStats::GrainIdScalarName, voxels);
-        WRITE_VTK_SCALARS_FROM_VOXEL_BINARY(r, AIM::MicroStats::PhaseIdScalarName, int, voxels, phase)
+        WRITE_VTK_GRAIN_IDS_BINARY(r, AIM::VTK::GrainIdScalarName, voxels);
+        WRITE_VTK_SCALARS_FROM_VOXEL_BINARY(r, AIM::VTK::PhaseIdScalarName, int, voxels, phase)
         // Write the COLOR_SCALARS
         fprintf(f, "COLOR_SCALARS IPF_Colors 4\n");
         rgba = new unsigned char[total * 4]; // We need the whole array because we build it and write it all at the end
@@ -142,8 +143,8 @@ class VTKFileWriters
       else
       {
         WRITE_VTK_GRAIN_HEADER("ASCII", r)
-        WRITE_VTK_GRAIN_IDS_ASCII(r, AIM::MicroStats::GrainIdScalarName, voxels);
-        WRITE_VTK_SCALARS_FROM_VOXEL_ASCII(r, AIM::MicroStats::PhaseIdScalarName, int, voxels, phase, "%d ")
+        WRITE_VTK_GRAIN_IDS_ASCII(r, AIM::VTK::GrainIdScalarName, voxels);
+        WRITE_VTK_SCALARS_FROM_VOXEL_ASCII(r, AIM::VTK::PhaseIdScalarName, int, voxels, phase, "%d ")
         // Write the COLOR_SCALARS
         fprintf(f, "COLOR_SCALARS IPF_Colors 3\n");
         rgba = new unsigned char[4]; // We just need 4 bytes for ASCII writing
@@ -230,17 +231,17 @@ class VTKFileWriters
       size_t total = r->xpoints * r->ypoints * r->zpoints;
       if (true == m_WriteBinaryFiles)
       {
-        WRITE_VTK_GRAIN_IDS_BINARY(r, AIM::MicroStats::GrainIdScalarName, voxels);
-        WRITE_VTK_SCALARS_FROM_VOXEL_BINARY(r, AIM::MicroStats::KAMScalarName, float, voxels, kernelmisorientation)
-          WRITE_VTK_SCALARS_FROM_VOXEL_BINARY(r, AIM::MicroStats::GAMScalarName, float, voxels, grainmisorientation)
-          WRITE_VTK_SCALARS_FROM_VOXEL_BINARY(r, AIM::MicroStats::LMGScalarName, float, voxels, misorientationgradient)
+        WRITE_VTK_GRAIN_IDS_BINARY(r, AIM::VTK::GrainIdScalarName, voxels);
+        WRITE_VTK_SCALARS_FROM_VOXEL_BINARY(r, AIM::VTK::KAMScalarName, float, voxels, kernelmisorientation)
+        WRITE_VTK_SCALARS_FROM_VOXEL_BINARY(r, AIM::VTK::GAMScalarName, float, voxels, grainmisorientation)
+        WRITE_VTK_SCALARS_FROM_VOXEL_BINARY(r, AIM::VTK::LMGScalarName, float, voxels, misorientationgradient)
       }
       else
       {
-        WRITE_VTK_GRAIN_IDS_ASCII(r, AIM::Reconstruction::GrainIdScalarName, voxels)
-        WRITE_VTK_SCALARS_FROM_VOXEL_ASCII(r, AIM::MicroStats::KAMScalarName, float, voxels, kernelmisorientation, "%f ")
-        WRITE_VTK_SCALARS_FROM_VOXEL_ASCII(r, AIM::MicroStats::GAMScalarName, float, voxels, grainmisorientation, "%f ")
-        WRITE_VTK_SCALARS_FROM_VOXEL_ASCII(r, AIM::MicroStats::LMGScalarName, float, voxels, misorientationgradient, "%f ")
+        WRITE_VTK_GRAIN_IDS_ASCII(r, AIM::VTK::GrainIdScalarName, voxels)
+        WRITE_VTK_SCALARS_FROM_VOXEL_ASCII(r, AIM::VTK::KAMScalarName, float, voxels, kernelmisorientation, "%f ")
+        WRITE_VTK_SCALARS_FROM_VOXEL_ASCII(r, AIM::VTK::GAMScalarName, float, voxels, grainmisorientation, "%f ")
+        WRITE_VTK_SCALARS_FROM_VOXEL_ASCII(r, AIM::VTK::LMGScalarName, float, voxels, misorientationgradient, "%f ")
       }
       fclose(f);
       return 0;
@@ -273,13 +274,13 @@ class VTKFileWriters
       size_t total = r->xpoints * r->ypoints * r->zpoints;
       if (true == m_WriteBinaryFiles)
       {
-        WRITE_VTK_GRAIN_IDS_BINARY(r, AIM::MicroStats::GrainIdScalarName, voxels);
-        WRITE_VTK_GRAIN_WITH_GRAIN_SCALAR_VALUE_BINARY(r, AIM::MicroStats::SchmidFactorScalarName, float, schmidfactor)
+        WRITE_VTK_GRAIN_IDS_BINARY(r, AIM::VTK::GrainIdScalarName, voxels);
+        WRITE_VTK_GRAIN_WITH_GRAIN_SCALAR_VALUE_BINARY(r, AIM::VTK::SchmidFactorScalarName, float, schmidfactor)
       }
       else
       {
-        WRITE_VTK_GRAIN_IDS_ASCII(r, AIM::MicroStats::GrainIdScalarName, voxels)
-          WRITE_VTK_GRAIN_WITH_GRAIN_SCALAR_VALUE_ASCII(r, AIM::MicroStats::SchmidFactorScalarName, float, schmidfactor, "%f ")
+        WRITE_VTK_GRAIN_IDS_ASCII(r, AIM::VTK::GrainIdScalarName, voxels)
+          WRITE_VTK_GRAIN_WITH_GRAIN_SCALAR_VALUE_ASCII(r, AIM::VTK::SchmidFactorScalarName, float, schmidfactor, "%f ")
       }
       fclose(f);
       return 0;
@@ -312,13 +313,13 @@ class VTKFileWriters
       size_t total = r->xpoints * r->ypoints * r->zpoints;
       if (true == m_WriteBinaryFiles)
       {
-        WRITE_VTK_GRAIN_IDS_BINARY(r, AIM::Reconstruction::GrainIdScalarName, voxels);
-        WRITE_VTK_SCALARS_FROM_VOXEL_BINARY(r, AIM::Reconstruction::ImageQualityScalarName, float, voxels, imagequality)
+        WRITE_VTK_GRAIN_IDS_BINARY(r, AIM::VTK::GrainIdScalarName, voxels);
+        WRITE_VTK_SCALARS_FROM_VOXEL_BINARY(r, AIM::VTK::ImageQualityScalarName, float, voxels, imagequality)
       }
       else
       {
-        WRITE_VTK_GRAIN_IDS_ASCII(r, AIM::Reconstruction::GrainIdScalarName, voxels)
-        WRITE_VTK_SCALARS_FROM_VOXEL_ASCII(r, AIM::Reconstruction::ImageQualityScalarName, float, voxels, imagequality, "%f ")
+        WRITE_VTK_GRAIN_IDS_ASCII(r, AIM::VTK::GrainIdScalarName, voxels)
+        WRITE_VTK_SCALARS_FROM_VOXEL_ASCII(r, AIM::VTK::ImageQualityScalarName, float, voxels, imagequality, "%f ")
       }
       fclose(f);
       return 0;
@@ -401,8 +402,29 @@ class VTKFileWriters
       return 0;
     }
 
-  protected:
+    /**
+     * @brief Writes a VTK visualization file for the GrainGenerator Class
+     * @param Output file name
+     * @return 0 on Success
+     */
+    int writeGrainVisualizationFile(GrainGeneratorFunc* r, const std::string &file);
 
+    /**
+     * @brief Writes a VTK visualization file  for the GrainGenerator Class
+     * @param Output file name
+     * @return 0 on Success
+     */
+    int writeGrainIPFVizFile(GrainGeneratorFunc* r, const std::string &file);
+
+    /**
+     * @brief Writes Ph data file for the GrainGenerator Class
+     * @param Output file name
+     * @return 0 on Success
+     */
+    int writeGrainPhFile(GrainGeneratorFunc* r, const std::string &file);
+
+  protected:
+    VTKFileWriters();
 
   private:
     VTKFileWriters(const VTKFileWriters&); // Copy Constructor Not Implemented
