@@ -111,7 +111,7 @@ void MicrostructureStatistics::execute()
 
   updateProgressAndMessage("Allocating Voxel Memory", 5);
   //Allocate all of our Voxel Objects
-  m->voxels.reset(new ReconstructionVoxel[m->totalpoints]);
+  m->voxels.reset(new MicrostructureStatisticsVoxel[m->totalpoints]);
 
   updateProgressAndMessage(("Reading the Voxel Data from the HDF5 File"), 10);
   err = h5Reader->readVoxelData(m->voxels, m->crystruct, m->totalpoints);

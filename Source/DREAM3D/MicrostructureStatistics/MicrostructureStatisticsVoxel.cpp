@@ -29,23 +29,22 @@
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "ReconstructionVoxel.h"
+#include "MicrostructureStatisticsVoxel.h"
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ReconstructionVoxel::ReconstructionVoxel() :
+MicrostructureStatisticsVoxel::MicrostructureStatisticsVoxel() :
 grain_index(0),
-confidence(0.0),
-imagequality(0.0),
-alreadychecked(0),
 euler1(-1.0),
 euler2(-1.0),
 euler3(-1.0),
 phase(0),
 neighbor(-1),
-surfacevoxel(0),
-unassigned(0)
+grainmisorientation(0.0),
+misorientationgradient(0.0),
+kernelmisorientation(0.0),
+surfacevoxel(0)
 {
   nearestneighbor[0] = 0; nearestneighbor[1] = 0; nearestneighbor[2] = 0;
   nearestneighbordistance[0] = 0.0; nearestneighbordistance[1] = 0.0; nearestneighbordistance[2] = 0.0;
@@ -56,7 +55,7 @@ unassigned(0)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ReconstructionVoxel::~ReconstructionVoxel()
+MicrostructureStatisticsVoxel::~MicrostructureStatisticsVoxel()
 {
 #if 0
   if (NULL != grainlist) { delete grainlist; grainlist = NULL;}
@@ -69,26 +68,25 @@ ReconstructionVoxel::~ReconstructionVoxel()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ReconstructionVoxel::deepCopy(ReconstructionVoxel* reconstructionvoxel)
+void MicrostructureStatisticsVoxel::deepCopy(MicrostructureStatisticsVoxel* MicrostructureStatisticsvoxel)
 {
-  if (reconstructionvoxel == this) { return; } // The pointers are the same just return
+  if (MicrostructureStatisticsvoxel == this) { return; } // The pointers are the same just return
 
-   grain_index = reconstructionvoxel->grain_index;
-   confidence = reconstructionvoxel->confidence;
-   imagequality = reconstructionvoxel->imagequality;
-   alreadychecked = reconstructionvoxel->alreadychecked;
-   COPY_ARRAY_3(nearestneighbor, reconstructionvoxel);
+   grain_index = MicrostructureStatisticsvoxel->grain_index;
+   COPY_ARRAY_3(nearestneighbor, MicrostructureStatisticsvoxel);
 
-   COPY_ARRAY_3(nearestneighbordistance, reconstructionvoxel);
-   euler1 = reconstructionvoxel->euler1;
-   euler2 = reconstructionvoxel->euler2;
-   euler3 = reconstructionvoxel->euler3;
-   neighbor = reconstructionvoxel->neighbor;
-   surfacevoxel = reconstructionvoxel->surfacevoxel;
-   unassigned = reconstructionvoxel->unassigned;
+   COPY_ARRAY_3(nearestneighbordistance, MicrostructureStatisticsvoxel);
+   euler1 = MicrostructureStatisticsvoxel->euler1;
+   euler2 = MicrostructureStatisticsvoxel->euler2;
+   euler3 = MicrostructureStatisticsvoxel->euler3;
+   neighbor = MicrostructureStatisticsvoxel->neighbor;
+   grainmisorientation = MicrostructureStatisticsvoxel->grainmisorientation;
+   misorientationgradient = MicrostructureStatisticsvoxel->misorientationgradient;
+   kernelmisorientation = MicrostructureStatisticsvoxel->kernelmisorientation;
+   surfacevoxel = MicrostructureStatisticsvoxel->surfacevoxel;
 
-   COPY_ARRAY_5(quat, reconstructionvoxel);
-   DEEP_COPY_SHARED_VECTOR(neighborlist, reconstructionvoxel, IntVectorType, int)
+   COPY_ARRAY_5(quat, MicrostructureStatisticsvoxel);
+   DEEP_COPY_SHARED_VECTOR(neighborlist, MicrostructureStatisticsvoxel, IntVectorType, int)
 
 }
 
