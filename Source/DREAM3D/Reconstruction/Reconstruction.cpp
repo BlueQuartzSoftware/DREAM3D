@@ -42,10 +42,10 @@
 #include "DREAM3D/ANGSupport/AngDataLoader.h"
 #include "DREAM3D/ANGSupport/H5AngDataLoader.h"
 
-#include "DREAM3D/Common/Constants.h"
 #include "DREAM3D/DREAM3DConfiguration.h"
+#include "DREAM3D/Common/Constants.h"
 #include "DREAM3D/Common/OIMColoring.hpp"
-#include "DREAM3D/Reconstruction/ReconstructionVTKWriter.h"
+#include "DREAM3D/Common/VTKUtils/VTKFileWriters.hpp"
 #include "DREAM3D/HDF5/H5VoxelWriter.h"
 #include "DREAM3D/HDF5/H5GrainWriter.h"
 
@@ -259,7 +259,7 @@ void Reconstruction::execute()
 
   /** ********** This section writes the VTK files for visualization *** */
   // Create our File Output Writer Object. This will handle all the File Output duties
-  ReconstructionVTKWriter::Pointer vtkWriter = ReconstructionVTKWriter::New();
+  VTKFileWriters::Pointer vtkWriter = VTKFileWriters::New();
   vtkWriter->setWriteBinaryFiles(m_WriteBinaryFiles);
 
   updateProgressAndMessage(("Writing VTK Visualization File"), 93);

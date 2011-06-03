@@ -36,7 +36,7 @@
 #include<iomanip>
 
 #include "DREAM3D/Common/OIMColoring.hpp"
-#include "DREAM3D/Common/VTKWriterMacros.h"
+#include "DREAM3D/Common/VTKUtils/VTKWriterMacros.h"
 
 // -----------------------------------------------------------------------------
 //
