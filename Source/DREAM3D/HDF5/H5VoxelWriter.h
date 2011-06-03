@@ -73,14 +73,14 @@ hsize_t dims[2] = {totalPoints};\
  * @version 1.0
  */
 
-class DREAM3DLib_EXPORT H5ReconVolumeWriter
+class DREAM3DLib_EXPORT H5VoxelWriter
 {
   public:
-    MXA_SHARED_POINTERS(H5ReconVolumeWriter)
-    MXA_TYPE_MACRO(H5ReconVolumeWriter)
-    MXA_STATIC_NEW_MACRO(H5ReconVolumeWriter)
+    MXA_SHARED_POINTERS(H5VoxelWriter)
+    MXA_TYPE_MACRO(H5VoxelWriter)
+    MXA_STATIC_NEW_MACRO(H5VoxelWriter)
 
-    virtual ~H5ReconVolumeWriter();
+    virtual ~H5VoxelWriter();
 
     MXA_INSTANCE_STRING_PROPERTY(Filename);
 
@@ -146,11 +146,11 @@ int writeVoxelData(T* m)
 
 
   protected:
-    H5ReconVolumeWriter();
+    H5VoxelWriter();
 
   private:
-    H5ReconVolumeWriter(const H5ReconVolumeWriter&); // Copy Constructor Not Implemented
-    void operator=(const H5ReconVolumeWriter&); // Operator '=' Not Implemented
+    H5VoxelWriter(const H5VoxelWriter&); // Copy Constructor Not Implemented
+    void operator=(const H5VoxelWriter&); // Operator '=' Not Implemented
 };
 
 #endif /* _H5RECONVOLUMEWRITER_H_ */
