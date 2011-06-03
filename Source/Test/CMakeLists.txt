@@ -45,9 +45,13 @@ target_link_libraries(AngReaderTest DREAM3DLib)
 add_executable(VoxelTest ${AIMTest_SOURCE_DIR}/VoxelTest.cpp)
 target_link_libraries(VoxelTest DREAM3DLib)
 
-
 add_executable(TextureTest ${AIMTest_SOURCE_DIR}/TextureTest.cpp)
 target_link_libraries(TextureTest DREAM3DLib)
+
+add_executable(VTKFileWritersTest ${AIMTest_SOURCE_DIR}/VTKFileWritersTest.cpp)
+target_link_libraries(VTKFileWritersTest DREAM3DLib)
+
+
 
 add_executable(StatsGenTest ${AIMTest_SOURCE_DIR}/StatsGenTest.cpp)
 target_link_libraries(StatsGenTest DREAM3DLib)
