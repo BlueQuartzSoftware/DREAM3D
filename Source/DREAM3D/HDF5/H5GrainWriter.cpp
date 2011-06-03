@@ -164,10 +164,7 @@ int H5GrainWriter::writeHDF5GrainsFile(ReconstructionFunc* r, const std::string 
     H5GW_GRAIN_LOOP_1()
 
     // These are Reconstruction specific arrays that we want to write
-    std::vector<float > kernelAvgDisorientation(vlist->size());
-    std::vector<float > grainAvgDisorientation(vlist->size());
     std::vector<float > imageQuality(vlist->size());
-    std::vector<float > schmidFactor(vlist->size());
 
     for (std::vector<int >::size_type j = 0; j < vlist->size(); j++)
     {
@@ -196,19 +193,12 @@ int H5GrainWriter::writeHDF5GrainsFile(ReconstructionFunc* r, const std::string 
       ipfColor[j * 3 + 2] = rgb[2];
 
       // Reconstruction Specific Assignments
-      kernelAvgDisorientation[j] = r->voxels[vid].kernelmisorientation;
-      grainAvgDisorientation[j] = r->voxels[vid].grainmisorientation;
       imageQuality[j] = r->voxels[vid].imagequality;
       grainName[j] = r->voxels[vid].grain_index;
-      schmidFactor[j] = r->m_Grains[r->voxels[vid].grain_index]->schmidfactor;
     }
     H5GW_GRAIN_LOOP_2()
 
-    err = h5writer->writeCellData<float> (hdfPath, kernelAvgDisorientation, AIM::Representation::KernelAvgDisorientation.c_str(), 1);
-    err = h5writer->writeCellData<float> (hdfPath, grainAvgDisorientation, AIM::Representation::GrainAvgDisorientation.c_str(), 1);
     err = h5writer->writeCellData<float> (hdfPath, imageQuality, AIM::Representation::ImageQuality.c_str(), 1);
-    schmidFactor[0] = r->m_Grains[i]->schmidfactor;
-    err = h5writer->writeFieldData<float> (hdfPath, schmidFactor, AIM::Representation::SchmidFactor.c_str(), 1);
   }
 
   err = h5writer->writeObjectIndex(hdfPaths);
