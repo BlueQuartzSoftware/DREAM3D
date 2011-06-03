@@ -56,7 +56,7 @@
 SurfaceMesh::SurfaceMesh() :
 m_InputDirectory("."),
 m_InputFile(""),
-m_ScalarName(AIM::Reconstruction::GrainIdScalarName),
+m_ScalarName(AIM::VTK::GrainIdScalarName),
 m_OutputDirectory(""),
 m_OutputFilePrefix("SurfaceMesh_"),
 m_ConformalMesh(true),
