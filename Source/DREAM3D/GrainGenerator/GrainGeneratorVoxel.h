@@ -68,17 +68,17 @@ class DREAM3DLib_EXPORT GrainGeneratorVoxel
     void deepCopy(GrainGeneratorVoxel* graingeneratorvoxel);
 
     int grain_index;
-    int alreadychecked;
     int phase;
+    float euler1;
+    float euler2;
+    float euler3;
     int neighbor;
-    int numowners;
     int surfacevoxel;
-    int unassigned;
-	float euler1;
-	float euler2;
-	float euler3;
-
     IntVectorType neighborlist;
+
+    int alreadychecked;
+    int unassigned;
+    int numowners;
 
   protected:
 
