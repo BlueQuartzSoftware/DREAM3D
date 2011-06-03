@@ -170,12 +170,7 @@ namespace AIM
     const std::string GrainIdScalarName("GrainID");
     const std::string EulerAnglesName("Euler Angles");
     const std::string CrystalStructureName("CrystalStructure");
-    const std::string EuclideanScalarName("Euclidean");
-    const std::string SchmidFactorScalarName("SchmidFactor");
     const std::string PhaseIdScalarName("PhaseID");
-    const std::string KAMScalarName("KAM");
-    const std::string GAMScalarName("GAM");
-    const std::string LMGScalarName("LMG");
     const std::string ImageQualityScalarName("ImageQuality");
     const std::string SurfaceVoxelScalarName("SurfaceVoxel");
 
@@ -282,6 +277,7 @@ namespace AIM
     const std::string GrainIdScalarName("GrainID");
     const std::string EulerAnglesName("Euler Angles");
     const std::string CrystalStructureName("CrystalStructure");
+    const std::string PhaseIdScalarName("PhaseID");
 
 
 
@@ -312,6 +308,17 @@ namespace AIM
     const std::string GrainDataFile("GrainData.txt");//14
     const std::string DeformationStatsFile("Deformation_Stats.txt");
     const std::string IPFDeformVTKFile("IPF_DeformationData.vtk");
+
+	const std::string VoxelDataName("VoxelData");
+    const std::string GrainIdScalarName("GrainID");
+    const std::string EulerAnglesName("Euler Angles");
+    const std::string CrystalStructureName("CrystalStructure");
+    const std::string EuclideanScalarName("Euclidean");
+    const std::string SchmidFactorScalarName("SchmidFactor");
+    const std::string KAMScalarName("KAM");
+    const std::string GAMScalarName("GAM");
+    const std::string LMGScalarName("LMG");
+    const std::string PhaseIdScalarName("PhaseID");
 
   }
 

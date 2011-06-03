@@ -1,10 +1,14 @@
 SET (DREAM3D_MicrostructureStatistics_HDRS
   ${DREAM3DLib_SOURCE_DIR}/MicrostructureStatistics/MicrostructureStatistics.h
+  ${DREAM3DLib_SOURCE_DIR}/MicrostructureStatistics/MicrostructureStatisticsVTKWriter.h
+  ${DREAM3DLib_SOURCE_DIR}/MicrostructureStatistics/MicrostructureStatisticsVoxel.h
   ${DREAM3DLib_SOURCE_DIR}/MicrostructureStatistics/MicrostructureStatisticsFunc.h
 )
 
 SET (DREAM3D_MicrostructureStatistics_SRCS
   ${DREAM3DLib_SOURCE_DIR}/MicrostructureStatistics/MicrostructureStatistics.cpp
+  ${DREAM3DLib_SOURCE_DIR}/MicrostructureStatistics/MicrostructureStatisticsVTKWriter.cpp
+  ${DREAM3DLib_SOURCE_DIR}/MicrostructureStatistics/MicrostructureStatisticsVoxel.cpp
   ${DREAM3DLib_SOURCE_DIR}/MicrostructureStatistics/MicrostructureStatisticsFunc.cpp
 )
 cmp_IDE_SOURCE_PROPERTIES( "DREAM3DLib/MicrostructureStatistics" "${DREAM3D_MicrostructureStatistics_HDRS}" "${DREAM3D_MicrostructureStatistics_SRCS}" "0")
