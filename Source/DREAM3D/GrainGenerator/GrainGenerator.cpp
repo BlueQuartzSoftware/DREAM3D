@@ -42,8 +42,8 @@
 #include "DREAM3D/StructureReaders/VTKStructureReader.h"
 #include "DREAM3D/StructureReaders/DXStructureReader.h"
 #include "DREAM3D/HDF5/H5GrainWriter.h"
-#include "DREAM3D/HDF5/H5ReconVolumeWriter.h"
-#include "DREAM3D/HDF5/H5ReconVolumeReader.h"
+#include "DREAM3D/HDF5/H5VoxelWriter.h"
+#include "DREAM3D/HDF5/H5VoxelReader.h"
 
 
 
@@ -165,7 +165,7 @@ void GrainGenerator::execute()
     else if (ext.compare("h5") == 0)
 	{
 	  // Load up the voxel data
-	  H5ReconVolumeReader::Pointer h5Reader = H5ReconVolumeReader::New();
+	  H5VoxelReader::Pointer h5Reader = H5VoxelReader::New();
 	  h5Reader->setFilename(m_StructureFile);
 	  int dims[3];
 	  float spacing[3];
@@ -254,7 +254,7 @@ void GrainGenerator::execute()
   /** ********** This section writes the Voxel Data for the Stats Module *** */
   // Create a new HDF5 Volume file by overwriting any HDF5 file that may be in the way
   MAKE_OUTPUT_FILE_PATH ( hdf5VolumeFile, AIM::SyntheticBuilder::H5VolumeFile)
-  H5ReconVolumeWriter::Pointer h5VolWriter = H5ReconVolumeWriter::New();
+  H5VoxelWriter::Pointer h5VolWriter = H5VoxelWriter::New();
   if (h5VolWriter.get() == NULL)
   {
     updateProgressAndMessage("The HDF5 Voxel file could not be created. Does the path exist and do you have write access to the output directory.", 100);
