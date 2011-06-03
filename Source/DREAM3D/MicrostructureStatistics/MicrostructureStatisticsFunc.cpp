@@ -846,7 +846,6 @@ void MicrostructureStatisticsFunc::find_grain_and_kernel_misorientations()
   for (int i = 0; i < totalpoints; ++i)
   {
     gnames[i] = voxels[i].grain_index;
-    unassigned[i] = voxels[i].unassigned;
     gam[i] = 0.0;
   }
 
@@ -935,14 +934,10 @@ void MicrostructureStatisticsFunc::find_grain_and_kernel_misorientations()
           q2[3] = m_Grains[gnames[point]]->avg_quat[3] / m_Grains[gnames[point]]->avg_quat[0];
           q2[4] = m_Grains[gnames[point]]->avg_quat[4] / m_Grains[gnames[point]]->avg_quat[0];
           w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
-          if (unassigned[point] == 0)
-          {
-            voxels[point].grainmisorientation = w;
-            gam[point] = w;
-            avgmiso[gnames[point]][0]++;
-            avgmiso[gnames[point]][1] = avgmiso[gnames[point]][1] + w;
-          }
-          if (unassigned[point] != 0) voxels[point].grainmisorientation = 0;
+          voxels[point].grainmisorientation = w;
+          gam[point] = w;
+          avgmiso[gnames[point]][0]++;
+          avgmiso[gnames[point]][1] = avgmiso[gnames[point]][1] + w;
         }
         if (gnames[point] == 0)
         {
@@ -1735,7 +1730,7 @@ void MicrostructureStatisticsFunc::deformation_stats(const std::string &filename
   outFile.open(filename.c_str());
   float w, n1, n2, n3;
   int distance;
-  float km, iq, gbdist, tjdist, qpdist, sf, sf2, sfmm, gam, lmg, ssap;
+  float km, gbdist, tjdist, qpdist, sf, sf2, sfmm, gam, lmg, ssap;
   int nearestneighbor, gname, gname2, ss1, ss2;
   float q1[5], q2[5];
   int kmdist[25];
@@ -1750,9 +1745,6 @@ void MicrostructureStatisticsFunc::deformation_stats(const std::string &filename
   float kmvqp[10][2];
   float gamvqp[10][2];
   float lmgvqp[10][2];
-  float kmviq[10][2];
-  float gamviq[10][2];
-  float lmgviq[10][2];
   float kmvsf[10][2];
   float gamvsf[10][2];
   float lmgvsf[10][2];
@@ -1782,7 +1774,7 @@ void MicrostructureStatisticsFunc::deformation_stats(const std::string &filename
   float lmgvsfmmssapthresh[10][10][2];
   int kmbin, gambin, lmgbin;
   int gbbin, tjbin, qpbin;
-  int sfbin, ssapbin, sfmmbin, disbin, iqbin;
+  int sfbin, ssapbin, sfmmbin, disbin;
  // int actualpoints = 0;
   for (int h = 0; h < 25; h++)
   {
@@ -1825,9 +1817,6 @@ void MicrostructureStatisticsFunc::deformation_stats(const std::string &filename
 			  kmvqp[i][j] = 0;
 			  gamvqp[i][j] = 0;
 			  lmgvqp[i][j] = 0;
-			  kmviq[i][j] = 0;
-			  gamviq[i][j] = 0;
-			  lmgviq[i][j] = 0;
 			  kmvsf[i][j] = 0;
 			  gamvsf[i][j] = 0;
 			  lmgvsf[i][j] = 0;
@@ -1847,12 +1836,9 @@ void MicrostructureStatisticsFunc::deformation_stats(const std::string &filename
 
   for (int i = 0; i < totalpoints; i++)
   {
-    if (voxels[i].unassigned == 0)
-    {
       km = voxels[i].kernelmisorientation;
       gam = voxels[i].grainmisorientation;
       lmg = voxels[i].misorientationgradient;
-      iq = voxels[i].imagequality;
       gbdist = voxels[i].nearestneighbordistance[0];
       tjdist = voxels[i].nearestneighbordistance[1];
       qpdist = voxels[i].nearestneighbordistance[2];
@@ -1870,7 +1856,8 @@ void MicrostructureStatisticsFunc::deformation_stats(const std::string &filename
 		q2[j] = m_Grains[gname2]->avg_quat[j]/m_Grains[gname2]->avg_quat[0];
 	  }
 	  OrientationMath::getSlipMisalignment(ss1, q1, q2, ssap);
-      if (crystruct[m_Grains[gname]->phase] == crystruct[m_Grains[gname2]->phase]) {
+      if (crystruct[m_Grains[gname]->phase] == crystruct[m_Grains[gname2]->phase]) 
+	  {
         w = m_OrientationOps[crystruct[m_Grains[gname]->phase]]->getMisoQuat(q1, q2, n1, n2, n3);
       }
       kmbin = int(km/0.2);
@@ -1884,7 +1871,6 @@ void MicrostructureStatisticsFunc::deformation_stats(const std::string &filename
 	  if(sfmm < 1) sfmmbin = 4-int(((1.0/sfmm)-1.0)/0.2);
 	  ssapbin = int((ssap-0.4) / 0.06);
 	  disbin = int((w) / 10.0);
-	  iqbin = int((iq) / 250.0);
       if (kmbin < 0) kmbin = 0;
       if (kmbin > 24) kmbin = 24;
       if (gambin < 0) gambin = 0;
@@ -1905,8 +1891,6 @@ void MicrostructureStatisticsFunc::deformation_stats(const std::string &filename
       if (ssapbin > 9) ssapbin = 9;
       if (disbin < 0) disbin = 0;
       if (disbin > 9) disbin = 9;
-      if (iqbin < 0) iqbin = 0;
-      if (iqbin > 9) iqbin = 9;
 	  kmdist[kmbin]++;
 	  gamdist[gambin]++;
 	  lmgdist[lmgbin]++;
@@ -1928,12 +1912,6 @@ void MicrostructureStatisticsFunc::deformation_stats(const std::string &filename
       gamvqp[qpbin][1] = gamvqp[qpbin][1] + gam;
       lmgvqp[qpbin][0]++;
       lmgvqp[qpbin][1] = lmgvqp[qpbin][1] + lmg;
-      kmviq[iqbin][0]++;
-      kmviq[iqbin][1] = kmviq[iqbin][1] + km;
-      gamviq[iqbin][0]++;
-      gamviq[iqbin][1] = gamviq[iqbin][1] + gam;
-      lmgviq[iqbin][0]++;
-      lmgviq[iqbin][1] = lmgviq[iqbin][1] + lmg;
 	  distance = int(voxels[i].nearestneighbordistance[0]);
 	  if(distance > 9) distance = 9;
 	  if(distance <= 5)
@@ -1993,16 +1971,14 @@ void MicrostructureStatisticsFunc::deformation_stats(const std::string &filename
 	  gamvsfmmssapthresh[sfmmbin][ssapbin][1] = gamvsfmmssapthresh[sfmmbin][ssapbin][1] + gam;
 	  lmgvsfmmssapthresh[sfmmbin][ssapbin][0]++;
 	  lmgvsfmmssapthresh[sfmmbin][ssapbin][1] = lmgvsfmmssapthresh[sfmmbin][ssapbin][1] + lmg;
-    }
   }
   outFile << "Kernel Misorientation Data" << endl;
-  outFile << "GB		TJ		QP		IQ		SF		SFMM		SSAP		DIS" << endl;
+  outFile << "GB		TJ		QP		SF		SFMM		SSAP		DIS" << endl;
   for (int i = 0; i < 10; i++)
   {
     if (kmvgb[i][0] > 0) kmvgb[i][1] = kmvgb[i][1] / kmvgb[i][0];
     if (kmvtj[i][0] > 0) kmvtj[i][1] = kmvtj[i][1] / kmvtj[i][0];
     if (kmvqp[i][0] > 0) kmvqp[i][1] = kmvqp[i][1] / kmvqp[i][0];
-    if (kmviq[i][0] > 0) kmviq[i][1] = kmviq[i][1] / kmviq[i][0];
     if (kmvsf[i][0] > 0) kmvsf[i][1] = kmvsf[i][1] / kmvsf[i][0];
     if (kmvsfmm[i][0] > 0) kmvsfmm[i][1] = kmvsfmm[i][1] / kmvsfmm[i][0];
     if (kmvssap[i][0] > 0) kmvssap[i][1] = kmvssap[i][1] / kmvssap[i][0];
@@ -2010,7 +1986,6 @@ void MicrostructureStatisticsFunc::deformation_stats(const std::string &filename
     outFile << kmvgb[i][0] << "	" << kmvgb[i][1] << "	"
 		<< kmvtj[i][0] << "	" << kmvtj[i][1] << "	"
 		<< kmvqp[i][0] << "	" << kmvqp[i][1] << "	"
-		<< kmviq[i][0] << "	" << kmviq[i][1] << "	"
 		<< kmvsf[i][0] << "	" << kmvsf[i][1] << "	"
 		<< kmvsfmm[i][0] << "	" << kmvsfmm[i][1] << "	"
 		<< kmvssap[i][0] << "	" << kmvssap[i][1] << "	"
@@ -2019,13 +1994,12 @@ void MicrostructureStatisticsFunc::deformation_stats(const std::string &filename
   outFile << endl;
   outFile << endl;
   outFile << "Grain Average Misorientation Data" << endl;
-  outFile << "GB		TJ		QP		IQ		SF		SFMM		SSAP		DIS" << endl;
+  outFile << "GB		TJ		QP		SF		SFMM		SSAP		DIS" << endl;
   for (int i = 0; i < 10; i++)
   {
     if (gamvgb[i][0] > 0) gamvgb[i][1] = gamvgb[i][1] / gamvgb[i][0];
     if (gamvtj[i][0] > 0) gamvtj[i][1] = gamvtj[i][1] / gamvtj[i][0];
     if (gamvqp[i][0] > 0) gamvqp[i][1] = gamvqp[i][1] / gamvqp[i][0];
-    if (gamviq[i][0] > 0) gamviq[i][1] = gamviq[i][1] / gamviq[i][0];
     if (gamvsf[i][0] > 0) gamvsf[i][1] = gamvsf[i][1] / gamvsf[i][0];
     if (gamvsfmm[i][0] > 0) gamvsfmm[i][1] = gamvsfmm[i][1] / gamvsfmm[i][0];
     if (gamvssap[i][0] > 0) gamvssap[i][1] = gamvssap[i][1] / gamvssap[i][0];
@@ -2033,7 +2007,6 @@ void MicrostructureStatisticsFunc::deformation_stats(const std::string &filename
     outFile << gamvgb[i][0] << "	" << gamvgb[i][1] << "	"
 		<< gamvtj[i][0] << "	" << gamvtj[i][1] << "	"
 		<< gamvqp[i][0] << "	" << gamvqp[i][1] << "	"
-		<< gamviq[i][0] << "	" << gamviq[i][1] << "	"
 		<< gamvsf[i][0] << "	" << gamvsf[i][1] << "	"
 		<< gamvsfmm[i][0] << "	" << gamvsfmm[i][1] << "	"
 		<< gamvssap[i][0] << "	" << gamvssap[i][1] << "	"
@@ -2042,13 +2015,12 @@ void MicrostructureStatisticsFunc::deformation_stats(const std::string &filename
   outFile << endl;
   outFile << endl;
   outFile << "Misorientation Gradient Data" << endl;
-  outFile << "GB		TJ		QP		IQ		SF		SFMM		SSAP		DIS" << endl;
+  outFile << "GB		TJ		QP		SF		SFMM		SSAP		DIS" << endl;
   for (int i = 0; i < 10; i++)
   {
     if (lmgvgb[i][0] > 0) lmgvgb[i][1] = lmgvgb[i][1] / lmgvgb[i][0];
     if (lmgvtj[i][0] > 0) lmgvtj[i][1] = lmgvtj[i][1] / lmgvtj[i][0];
     if (lmgvqp[i][0] > 0) lmgvqp[i][1] = lmgvqp[i][1] / lmgvqp[i][0];
-    if (lmgviq[i][0] > 0) lmgviq[i][1] = lmgviq[i][1] / lmgviq[i][0];
     if (lmgvsf[i][0] > 0) lmgvsf[i][1] = lmgvsf[i][1] / lmgvsf[i][0];
     if (lmgvsfmm[i][0] > 0) lmgvsfmm[i][1] = lmgvsfmm[i][1] / lmgvsfmm[i][0];
     if (lmgvssap[i][0] > 0) lmgvssap[i][1] = lmgvssap[i][1] / lmgvssap[i][0];
@@ -2056,7 +2028,6 @@ void MicrostructureStatisticsFunc::deformation_stats(const std::string &filename
     outFile << lmgvgb[i][0] << "	" << lmgvgb[i][1] << "	"
 		<< lmgvtj[i][0] << "	" << lmgvtj[i][1] << "	"
 		<< lmgvqp[i][0] << "	" << lmgvqp[i][1] << "	"
-		<< lmgviq[i][0] << "	" << lmgviq[i][1] << "	"
 		<< lmgvsf[i][0] << "	" << lmgvsf[i][1] << "	"
 		<< lmgvsfmm[i][0] << "	" << lmgvsfmm[i][1] << "	"
 		<< lmgvssap[i][0] << "	" << lmgvssap[i][1] << "	"
