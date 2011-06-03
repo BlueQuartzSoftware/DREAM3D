@@ -78,9 +78,6 @@ class DREAM3DLib_EXPORT ReconstructionVoxel
     float euler3;
     int phase;
     int neighbor;
-    float grainmisorientation;
-    float misorientationgradient;
-    float kernelmisorientation;
     int surfacevoxel;
     int unassigned;
     float quat[5];

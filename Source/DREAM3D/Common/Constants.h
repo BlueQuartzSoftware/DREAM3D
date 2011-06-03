@@ -152,7 +152,6 @@ namespace AIM
   namespace Reconstruction
   {
     /*    Reconstruction related */
-    const std::string AlignmentFile("Alignment.txt");
     const std::string H5VolumeFile("VoxelData.h5");
 
     const std::string VisualizationVizFile("Visualization.vtk");//11
@@ -171,12 +170,7 @@ namespace AIM
     const std::string GrainIdScalarName("GrainID");
     const std::string EulerAnglesName("Euler Angles");
     const std::string CrystalStructureName("CrystalStructure");
-    const std::string EuclideanScalarName("Euclidean");
-    const std::string SchmidFactorScalarName("SchmidFactor");
     const std::string PhaseIdScalarName("PhaseID");
-    const std::string KAMScalarName("KAM");
-    const std::string GAMScalarName("GAM");
-    const std::string LMGScalarName("LMG");
     const std::string ImageQualityScalarName("ImageQuality");
     const std::string SurfaceVoxelScalarName("SurfaceVoxel");
 
@@ -271,18 +265,19 @@ namespace AIM
   {
     /*  Grain Generator Related */
 
-    const std::string CrystallographicErrorFile("CrystallographicError.txt");
     const std::string GrainAnglesFile("GrainAngles.txt");
-    const std::string GrainDataFile("GrainData.txt");
-    const std::string PackGrainsFile("PackGrains.txt");
-    const std::string H5StatisticsFile("Results.h5");
+    const std::string H5VolumeFile("VoxelData.h5");
 
     const std::string VisualizationVizFile("Visualization.vtk");
     const std::string IPFVizFile("IPF_Visualization.vtk");
     const std::string HDF5GrainFile("Grains.h5grain");
     const std::string PhFile("Voxels.ph");
 
+    const std::string VoxelDataName("VoxelData");
     const std::string GrainIdScalarName("GrainID");
+    const std::string EulerAnglesName("Euler Angles");
+    const std::string CrystalStructureName("CrystalStructure");
+    const std::string PhaseIdScalarName("PhaseID");
 
 
 
@@ -313,6 +308,17 @@ namespace AIM
     const std::string GrainDataFile("GrainData.txt");//14
     const std::string DeformationStatsFile("Deformation_Stats.txt");
     const std::string IPFDeformVTKFile("IPF_DeformationData.vtk");
+
+	const std::string VoxelDataName("VoxelData");
+    const std::string GrainIdScalarName("GrainID");
+    const std::string EulerAnglesName("Euler Angles");
+    const std::string CrystalStructureName("CrystalStructure");
+    const std::string EuclideanScalarName("Euclidean");
+    const std::string SchmidFactorScalarName("SchmidFactor");
+    const std::string KAMScalarName("KAM");
+    const std::string GAMScalarName("GAM");
+    const std::string LMGScalarName("LMG");
+    const std::string PhaseIdScalarName("PhaseID");
 
   }
 
