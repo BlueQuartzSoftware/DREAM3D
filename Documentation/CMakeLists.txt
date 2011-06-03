@@ -57,18 +57,20 @@ set (LATEX_AUTHOR "")
 # The order of the files as they appear here is the order they will appear in the
 # Latex/PDF output
 set (DOCUMENTATION_SOURCE_FILES
-    ${DREAM3D_SOURCE_DIR}/ToDo.dox
     ${PROJECT_SOURCE_DIR}/DREAM3D_Overview.dox
-    ${PROJECT_SOURCE_DIR}/AngFileImport.dox
-    ${PROJECT_SOURCE_DIR}/Reconstruction.dox
-    ${PROJECT_SOURCE_DIR}/SyntheticBuilder.dox
-    ${PROJECT_SOURCE_DIR}/SurfaceMeshing.dox
-    ${PROJECT_SOURCE_DIR}/StatsGenerator.dox
+    ${DREAM3D_SOURCE_DIR}/ToDo.dox
+    ${PROJECT_SOURCE_DIR}/Compiling.dox
+    ${PROJECT_SOURCE_DIR}/WritingPlugin.dox  
+    ${PROJECT_SOURCE_DIR}/H5VoxelVolume.dox
     ${PROJECT_SOURCE_DIR}/MicrostructurePresets.dox
     ${PROJECT_SOURCE_DIR}/StructureReaders.dox
-    ${PROJECT_SOURCE_DIR}/WritingPlugin.dox
-    ${PROJECT_SOURCE_DIR}/Compiling.dox
-    
+
+#    ${PROJECT_SOURCE_DIR}/AngFileImport.dox
+#    ${PROJECT_SOURCE_DIR}/Reconstruction.dox
+#    ${PROJECT_SOURCE_DIR}/SyntheticBuilder.dox
+#    ${PROJECT_SOURCE_DIR}/SurfaceMeshing.dox
+#    ${PROJECT_SOURCE_DIR}/StatsGenerator.dox
+
 )
 
 set (LATEX_EPS_FILES 
@@ -86,7 +88,7 @@ set (LATEX_EPS_FILES
 )
 
 if (DOX_GENERATE_LATEX)
-ADD_DOXYGEN_TARGETS (PDF_FILENAME "DREAM.3D Documentation"
+ADD_DOXYGEN_TARGETS (PDF_FILENAME "DREAM.3D Developer Documentation"
                      PROJECT_NAME  "${PROJECT_NAME}_LATEX" 
                      PROJECT_BINARY_DIR "${PROJECT_BINARY_DIR}" 
                      SOURCE_FILES "${DOCUMENTATION_SOURCE_FILES}" 
