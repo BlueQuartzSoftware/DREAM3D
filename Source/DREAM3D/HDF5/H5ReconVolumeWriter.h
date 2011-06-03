@@ -36,6 +36,8 @@
 #include <vector>
 #include <string>
 
+#include <boost/shared_array.hpp>
+
 #include "MXA/MXATypes.h"
 #include "MXA/Common/MXASetGetMacros.h"
 
