@@ -27,7 +27,7 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#include "H5ReconVolumeWriter.h"
+#include "H5VoxelWriter.h"
 
 #include "DREAM3D/Reconstruction/ReconstructionFunc.h"
 
@@ -36,7 +36,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-H5ReconVolumeWriter::H5ReconVolumeWriter()
+H5VoxelWriter::H5VoxelWriter()
 {
 
 }
@@ -44,7 +44,7 @@ H5ReconVolumeWriter::H5ReconVolumeWriter()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-H5ReconVolumeWriter::~H5ReconVolumeWriter()
+H5VoxelWriter::~H5VoxelWriter()
 {
 }
 

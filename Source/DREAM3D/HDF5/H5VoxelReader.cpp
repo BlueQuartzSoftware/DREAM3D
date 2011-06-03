@@ -28,12 +28,12 @@
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "H5ReconVolumeReader.h"
+#include "H5VoxelReader.h"
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-H5ReconVolumeReader::H5ReconVolumeReader()
+H5VoxelReader::H5VoxelReader()
 {
 
 }
@@ -41,7 +41,7 @@ H5ReconVolumeReader::H5ReconVolumeReader()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-H5ReconVolumeReader::~H5ReconVolumeReader()
+H5VoxelReader::~H5VoxelReader()
 {
 
 }
@@ -49,7 +49,7 @@ H5ReconVolumeReader::~H5ReconVolumeReader()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5ReconVolumeReader::getSizeAndResolution(int volDims[3], float spacing[3])
+int H5VoxelReader::getSizeAndResolution(int volDims[3], float spacing[3])
 {
   int err = 0;
 
