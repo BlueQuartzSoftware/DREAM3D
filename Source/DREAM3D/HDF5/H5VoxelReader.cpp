@@ -60,7 +60,7 @@ int H5VoxelReader::getSizeAndResolution(int volDims[3], float spacing[3])
   }
 
   OPEN_HDF5_FILE(fileId, m_Filename)
-  OPEN_RECONSTRUCTION_GROUP(reconGid, AIM::Reconstruction::VoxelDataName.c_str(), fileId)
+  OPEN_RECONSTRUCTION_GROUP(reconGid, AIM::HDF5::VoxelDataName.c_str(), fileId)
 
   err = H5Lite::readPointerDataset(reconGid, H5_DIMENSIONS, volDims);
   if (err < 0)
