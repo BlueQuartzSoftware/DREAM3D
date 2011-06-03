@@ -30,7 +30,7 @@
 #include "H5ReconVolumeWriter.h"
 
 #include "DREAM3D/Reconstruction/ReconstructionFunc.h"
-#include "DREAM3D/HDF5/AIM_H5VtkDataWriter.h"
+
 
 
 // -----------------------------------------------------------------------------
@@ -49,80 +49,8 @@ H5ReconVolumeWriter::~H5ReconVolumeWriter()
 }
 
 
-#define H5_WRITE_SCALAR(type, group, scalar_name, voxel_attr)\
-{\
-std::vector<type> data(totalPoints);\
-int32_t rank = 1;\
-hsize_t dims[2] = {totalPoints};\
- for (int i = 0; i < totalPoints; ++i)\
- {\
-   data[i] = voxels[i].voxel_attr;\
- }\
- err = h5writer->writeScalarData(group, data, scalar_name, numComp, rank, dims);\
- if (err < 0)\
- {\
-   std::cout << "Error Writing Scalars '" << scalar_name << "' to " << group << std::endl;\
-   return err;\
- }\
- }
+
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5ReconVolumeWriter::writeVoxelData(ReconstructionFunc* m)
-{
-  int err = -1;
-  AIM_H5VtkDataWriter::Pointer h5writer = AIM_H5VtkDataWriter::New();
-  h5writer->setFileName(m_Filename);
-  err = h5writer->openFile(false);
-
-  int volDims[3] =
-  { m->xpoints, m->ypoints, m->zpoints };
-  float spacing[3] =
-  { m->resx, m->resy, m->resz };
-  float origin[3] =
-  { 0.0f, 0.0f, 0.0f };
-  // This just creates the group and writes the header information
-  h5writer->writeStructuredPoints(AIM::Reconstruction::VoxelDataName, volDims, spacing, origin);
-
-  // We now need to write the actual voxel data
-  int numComp = 1; //
-  int totalPoints = m->totalpoints;
-  boost::shared_array<ReconstructionVoxel> voxels = m->voxels;
-  H5_WRITE_SCALAR(int, AIM::Reconstruction::VoxelDataName, AIM::Reconstruction::GrainIdScalarName.c_str(), grain_index);
-
-  H5_WRITE_SCALAR(int, AIM::Reconstruction::VoxelDataName, AIM::Reconstruction::PhaseIdScalarName.c_str(), phase);
-
-  std::vector<float> dataf(totalPoints * 3);
-  for (int i = 0; i < totalPoints; ++i)
-  {
-    dataf[i * 3] = voxels[i].euler1;
-    dataf[i * 3 + 1] = voxels[i].euler2;
-    dataf[i * 3 + 2] = voxels[i].euler3;
-  }
-  numComp = 3;
-  int32_t rank = 2;
-  hsize_t dims[2] = {totalPoints, numComp};
-  err = h5writer->writeScalarData(AIM::Reconstruction::VoxelDataName,
-                                  dataf, AIM::Reconstruction::EulerAnglesName.c_str(),
-                                  numComp, rank, dims);
-  if (err < 0)
-  {
-    std::cout << "Error Writing Scalars '" << AIM::Reconstruction::EulerAnglesName << "' to " << AIM::Reconstruction::VoxelDataName << std::endl;
-  }
-
-  std::vector<int> fieldData(m->crystruct.size());
-  for(size_t i = 0; i < m->crystruct.size(); ++i)
-  {
-    fieldData[i] = m->crystruct[i];
-  }
-
-  err = h5writer->writeFieldData<int>(AIM::Reconstruction::VoxelDataName, fieldData, AIM::Reconstruction::CrystalStructureName.c_str(), 1);
-  if (err < 0)
-  {
-    std::cout << "Error Writing Field Data '" << AIM::Reconstruction::CrystalStructureName << "' to " << AIM::Reconstruction::VoxelDataName << std::endl;
-  }
-
-  err = h5writer->closeFile();
-  return err;
-}

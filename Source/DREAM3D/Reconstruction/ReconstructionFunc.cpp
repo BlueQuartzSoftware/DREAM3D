@@ -473,11 +473,8 @@ void ReconstructionFunc::find_border()
 
 }
 
-void ReconstructionFunc::align_sections(const std::string &filename)
+void ReconstructionFunc::align_sections()
 {
-
-  ofstream outFile;
-  outFile.open(filename.c_str());
   float disorientation = 0;
   float mindisorientation = 100000000;
   float **mutualinfo12;
@@ -537,8 +534,6 @@ void ReconstructionFunc::align_sections(const std::string &filename)
   }
   for (int iter = 1; iter < zpoints; iter++)
   {
-    outFile << endl;
-    outFile << endl;
     mindisorientation = 100000000;
     slice = (zpoints - 1) - iter;
     if (alignmeth == AIM::Reconstruction::MutualInformation)
@@ -588,7 +583,6 @@ void ReconstructionFunc::align_sections(const std::string &filename)
         if (a == 1) step = 1, nsteps = 3;
         for (int j = -nsteps; j < (nsteps + 1); j++)
         {
-          outFile << endl;
           for (int k = -nsteps; k < (nsteps + 1); k++)
           {
             disorientation = 0;
@@ -690,7 +684,6 @@ void ReconstructionFunc::align_sections(const std::string &filename)
               //    float disorientation2 = ha + hb - hab;
               disorientation = 1.0 / disorientation;
             }
-            outFile << disorientation << "  ";
             if (disorientation < mindisorientation)
             {
               xshift = (k * step) + tempxshift;
@@ -766,7 +759,6 @@ void ReconstructionFunc::align_sections(const std::string &filename)
     delete [] shifts[a];
   }
   delete [] shifts;
-  outFile.close();
 }
 void ReconstructionFunc::form_grains_sections()
 {
