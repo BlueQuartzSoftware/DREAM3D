@@ -31,8 +31,8 @@
 
 
 #include "DREAM3D/SurfaceMesh/SurfaceMeshFunc.h"
-#include "DREAM3D/Common/Patch.h"
-#include "DREAM3D/Common/Node.h"
+#include "DREAM3D/SurfaceMesh/Patch.h"
+#include "DREAM3D/SurfaceMesh/Node.h"
 
 
 // -----------------------------------------------------------------------------
