@@ -38,6 +38,9 @@
 #include "MXA/Common/MXAEndian.h"
 
 #include "DREAM3D/SurfaceMesh/SurfaceMeshFunc.h"
+#include "DREAM3D/SurfaceMesh/Node.h"
+#include "DREAM3D/SurfaceMesh/Face.h"
+#include "DREAM3D/SurfaceMesh/Neighbor.h"
 
 // -----------------------------------------------------------------------------
 //
