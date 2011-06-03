@@ -68,21 +68,22 @@ class DREAM3DLib_EXPORT ReconstructionVoxel
     void deepCopy(ReconstructionVoxel* reconstructionvoxel);
 
     int grain_index;
-    float confidence;
-    float imagequality;
-    int alreadychecked;
-    int nearestneighbor[3];
-    float nearestneighbordistance[3];
+    int phase;
     float euler1;
     float euler2;
     float euler3;
-    int phase;
     int neighbor;
     int surfacevoxel;
-    int unassigned;
-    float quat[5];
-
     IntVectorType neighborlist;
+
+    int alreadychecked;
+    int unassigned;
+    float confidence;
+    float imagequality;
+
+    float quat[5];
+    int nearestneighbor[3];
+    float nearestneighbordistance[3];
 
   protected:
 
