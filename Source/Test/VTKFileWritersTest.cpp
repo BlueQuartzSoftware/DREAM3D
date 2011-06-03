@@ -8,6 +8,7 @@
 #include "DREAM3D/Common/VTKUtils/VTKFileWriters.hpp"
 #include "DREAM3D/Reconstruction/ReconstructionFunc.h"
 #include "DREAM3D/MicrostructureStatistics/MicrostructureStatisticsFunc.h"
+#include "DREAM3D/GrainGenerator/GrainGeneratorFunc.h"
 
 int main(int argc, char **argv)
 {

@@ -33,7 +33,8 @@ SET (DREAM3D_Common_SRCS
   ${DREAM3DLib_SOURCE_DIR}/Common/OrientationOps/CubicOps.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/OrientationOps/HexagonalOps.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/OrientationOps/OrthoRhombicOps.cpp
-  ${DREAM3DLib_SOURCE_DIR}/Common/VTKUtils/VTKFileReader.cpp  
+  ${DREAM3DLib_SOURCE_DIR}/Common/VTKUtils/VTKFileReader.cpp
+  ${DREAM3DLib_SOURCE_DIR}/Common/VTKUtils/VTKFileWriters.cpp  
 )
 
 
