@@ -68,20 +68,21 @@ class DREAM3DLib_EXPORT MicrostructureStatisticsVoxel
     void deepCopy(MicrostructureStatisticsVoxel* MicrostructureStatisticsvoxel);
 
     int grain_index;
-    int nearestneighbor[3];
-    float nearestneighbordistance[3];
+    int phase;
     float euler1;
     float euler2;
     float euler3;
-    int phase;
     int neighbor;
+    int surfacevoxel;
+    IntVectorType neighborlist;
+
     float grainmisorientation;
     float misorientationgradient;
     float kernelmisorientation;
-    int surfacevoxel;
-    float quat[5];
 
-    IntVectorType neighborlist;
+    float quat[5];
+    int nearestneighbor[3];
+    float nearestneighbordistance[3];
 
   protected:
 
