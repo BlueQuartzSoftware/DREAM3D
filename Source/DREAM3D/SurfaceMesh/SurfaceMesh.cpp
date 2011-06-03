@@ -38,7 +38,7 @@
 #include "MXA/Utilities/MXAFileInfo.h"
 
 #include "SMVtkFileIO.h"
-#include "DREAM3D/Common/STLWriter.h"
+#include "DREAM3D/SurfaceMesh/STLWriter.h"
 
 #define CHECK_ERROR(name, message)\
     if(err < 0) {\
