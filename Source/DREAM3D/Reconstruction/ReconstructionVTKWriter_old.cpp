@@ -29,7 +29,7 @@
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "MicrostructureStatisticsVTKWriter.h"
+#include "ReconstructionVTKWriter.h"
 
 #include "DREAM3D/Common/OIMColoring.hpp"
 #include "DREAM3D/Common/VTKWriterMacros.h"
@@ -38,7 +38,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-MicrostructureStatisticsVTKWriter::MicrostructureStatisticsVTKWriter() :
+ReconstructionVTKWriter::ReconstructionVTKWriter() :
 m_WriteBinaryFiles(false)
 {
 }
@@ -46,14 +46,14 @@ m_WriteBinaryFiles(false)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-MicrostructureStatisticsVTKWriter::~MicrostructureStatisticsVTKWriter()
+ReconstructionVTKWriter::~ReconstructionVTKWriter()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int MicrostructureStatisticsVTKWriter::writeSchmidFactorVizFile(MicrostructureStatisticsFunc* r, const std::string &file)
+int ReconstructionVTKWriter::writeImageQualityVizFile(ReconstructionFunc* r, const std::string &file)
 {
   FILE* f = NULL;
   f = fopen(file.c_str(), "wb");
@@ -73,90 +73,13 @@ int MicrostructureStatisticsVTKWriter::writeSchmidFactorVizFile(MicrostructureSt
   size_t total = r->xpoints * r->ypoints * r->zpoints;
   if (true == m_WriteBinaryFiles)
   {
-	  WRITE_VTK_GRAIN_IDS_BINARY(r, AIM::MicroStats::GrainIdScalarName, voxels);
-	  WRITE_VTK_GRAIN_WITH_GRAIN_SCALAR_VALUE_BINARY(r, AIM::MicroStats::SchmidFactorScalarName, float, schmidfactor)
-  }
-  else
-  {
-	  WRITE_VTK_GRAIN_IDS_ASCII(r, AIM::MicroStats::GrainIdScalarName, voxels)
-		  WRITE_VTK_GRAIN_WITH_GRAIN_SCALAR_VALUE_ASCII(r, AIM::MicroStats::SchmidFactorScalarName, float, schmidfactor, "%f ")
-  }
-  fclose(f);
-  return 0;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int MicrostructureStatisticsVTKWriter::writeVisualizationFile(MicrostructureStatisticsFunc* r, const std::string &file)
-{
-  FILE* f = NULL;
-  f = fopen(file.c_str(), "wb");
-  if (NULL == f)
-  {
-    return 1;
-  }
-  // Write the correct header
-  if (m_WriteBinaryFiles == true)
-  {
-    WRITE_VTK_GRAIN_HEADER("BINARY", r)
-  }
-  else
-  {
-    WRITE_VTK_GRAIN_HEADER("ASCII", r)
-  }
-  size_t total = r->xpoints * r->ypoints * r->zpoints;
-
-  if (true == m_WriteBinaryFiles)
-  {
-	  WRITE_VTK_GRAIN_IDS_BINARY(r, AIM::MicroStats::GrainIdScalarName, voxels);
-	  WRITE_VTK_SCALARS_FROM_VOXEL_BINARY(r, AIM::MicroStats::EuclideanScalarName, float, voxels, nearestneighbordistance[0])
-		  WRITE_VTK_SCALARS_FROM_VOXEL_BINARY(r, AIM::MicroStats::PhaseIdScalarName, float, voxels, phase)
-  }
-  else
-  {
-	  WRITE_VTK_GRAIN_IDS_ASCII(r, AIM::MicroStats::GrainIdScalarName, voxels)
-		  WRITE_VTK_SCALARS_FROM_VOXEL_ASCII(r, AIM::MicroStats::EuclideanScalarName, float, voxels, nearestneighbordistance[0], "%f ")
-		  WRITE_VTK_SCALARS_FROM_VOXEL_ASCII(r, AIM::MicroStats::PhaseIdScalarName, float, voxels, phase, "%d ")
-  }
-  fclose(f);
-  return 0;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int MicrostructureStatisticsVTKWriter::writeDisorientationFile(MicrostructureStatisticsFunc* r, const std::string &file)
-{
-  FILE* f = NULL;
-  f = fopen(file.c_str(), "wb");
-  if (NULL == f)
-  {
-    return 1;
-  }
-  // Write the correct header
-  if (m_WriteBinaryFiles == true)
-  {
-    WRITE_VTK_GRAIN_HEADER("BINARY", r)
-  }
-  else
-  {
-    WRITE_VTK_GRAIN_HEADER("ASCII", r)
-  }
-  size_t total = r->xpoints * r->ypoints * r->zpoints;
-  if (true == m_WriteBinaryFiles)
-  {
-	  WRITE_VTK_GRAIN_IDS_BINARY(r, AIM::MicroStats::GrainIdScalarName, voxels);
-	  WRITE_VTK_SCALARS_FROM_VOXEL_BINARY(r, AIM::MicroStats::KAMScalarName, float, voxels, kernelmisorientation)
-		  WRITE_VTK_SCALARS_FROM_VOXEL_BINARY(r, AIM::MicroStats::GAMScalarName, float, voxels, grainmisorientation)
-		  WRITE_VTK_SCALARS_FROM_VOXEL_BINARY(r, AIM::MicroStats::LMGScalarName, float, voxels, misorientationgradient)
+    WRITE_VTK_GRAIN_IDS_BINARY(r, AIM::Reconstruction::GrainIdScalarName, voxels);
+    WRITE_VTK_SCALARS_FROM_VOXEL_BINARY(r, AIM::Reconstruction::ImageQualityScalarName, float, voxels, imagequality)
   }
   else
   {
     WRITE_VTK_GRAIN_IDS_ASCII(r, AIM::Reconstruction::GrainIdScalarName, voxels)
-		WRITE_VTK_SCALARS_FROM_VOXEL_ASCII(r, AIM::MicroStats::KAMScalarName, float, voxels, kernelmisorientation, "%f ")
-		WRITE_VTK_SCALARS_FROM_VOXEL_ASCII(r, AIM::MicroStats::GAMScalarName, float, voxels, grainmisorientation, "%f ")
-		WRITE_VTK_SCALARS_FROM_VOXEL_ASCII(r, AIM::MicroStats::LMGScalarName, float, voxels, misorientationgradient, "%f ")
+    WRITE_VTK_SCALARS_FROM_VOXEL_ASCII(r, AIM::Reconstruction::ImageQualityScalarName, float, voxels, imagequality, "%f ")
   }
   fclose(f);
   return 0;
@@ -165,7 +88,43 @@ int MicrostructureStatisticsVTKWriter::writeDisorientationFile(MicrostructureSta
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int MicrostructureStatisticsVTKWriter::writeIPFVizFile(MicrostructureStatisticsFunc* r, const std::string &file)
+int ReconstructionVTKWriter::writeVisualizationFile(ReconstructionFunc* r, const std::string &file)
+{
+  FILE* f = NULL;
+  f = fopen(file.c_str(), "wb");
+  if (NULL == f)
+  {
+    return 1;
+  }
+  // Write the correct header
+  if (m_WriteBinaryFiles == true)
+  {
+    WRITE_VTK_GRAIN_HEADER("BINARY", r)
+  }
+  else
+  {
+    WRITE_VTK_GRAIN_HEADER("ASCII", r)
+  }
+  size_t total = r->xpoints * r->ypoints * r->zpoints;
+
+  if (true == m_WriteBinaryFiles)
+  {
+    WRITE_VTK_GRAIN_IDS_BINARY(r, AIM::Reconstruction::GrainIdScalarName, voxels);
+    WRITE_VTK_SCALARS_FROM_VOXEL_BINARY(r, AIM::Reconstruction::PhaseIdScalarName, float, voxels, phase)
+  }
+  else
+  {
+    WRITE_VTK_GRAIN_IDS_ASCII(r, AIM::Reconstruction::GrainIdScalarName, voxels)
+    WRITE_VTK_SCALARS_FROM_VOXEL_ASCII(r, AIM::Reconstruction::PhaseIdScalarName, float, voxels, phase, "%d ")
+  }
+  fclose(f);
+  return 0;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int ReconstructionVTKWriter::writeIPFVizFile(ReconstructionFunc* r, const std::string &file)
 {
   FILE* f = NULL;
   f = fopen(file.c_str(), "wb");
@@ -185,8 +144,8 @@ int MicrostructureStatisticsVTKWriter::writeIPFVizFile(MicrostructureStatisticsF
   if (true == m_WriteBinaryFiles)
   {
     WRITE_VTK_GRAIN_HEADER("BINARY", r)
-    WRITE_VTK_GRAIN_IDS_BINARY(r, AIM::MicroStats::GrainIdScalarName, voxels);
-    WRITE_VTK_SCALARS_FROM_VOXEL_BINARY(r, AIM::MicroStats::PhaseIdScalarName, int, voxels, phase)
+    WRITE_VTK_GRAIN_IDS_BINARY(r, AIM::Reconstruction::GrainIdScalarName, voxels);
+    WRITE_VTK_SCALARS_FROM_VOXEL_BINARY(r, AIM::Reconstruction::PhaseIdScalarName, int, voxels, phase)
     // Write the COLOR_SCALARS
     fprintf(f, "COLOR_SCALARS IPF_Colors 4\n");
     rgba = new unsigned char[total * 4]; // We need the whole array because we build it and write it all at the end
@@ -194,8 +153,8 @@ int MicrostructureStatisticsVTKWriter::writeIPFVizFile(MicrostructureStatisticsF
   else
   {
     WRITE_VTK_GRAIN_HEADER("ASCII", r)
-    WRITE_VTK_GRAIN_IDS_ASCII(r, AIM::MicroStats::GrainIdScalarName, voxels);
-    WRITE_VTK_SCALARS_FROM_VOXEL_ASCII(r, AIM::MicroStats::PhaseIdScalarName, int, voxels, phase, "%d ")
+    WRITE_VTK_GRAIN_IDS_ASCII(r, AIM::Reconstruction::GrainIdScalarName, voxels);
+    WRITE_VTK_SCALARS_FROM_VOXEL_ASCII(r, AIM::Reconstruction::PhaseIdScalarName, int, voxels, phase, "%d ")
     // Write the COLOR_SCALARS
     fprintf(f, "COLOR_SCALARS IPF_Colors 3\n");
     rgba = new unsigned char[4]; // We just need 4 bytes for ASCII writing
@@ -212,7 +171,7 @@ int MicrostructureStatisticsVTKWriter::writeIPFVizFile(MicrostructureStatisticsF
     {
       index = 0;
     }
-	if (r->crystruct[phase] == AIM::Reconstruction::Cubic)
+    if (r->crystruct[phase] == AIM::Reconstruction::Cubic)
     {
       OIMColoring::GenerateIPFColor(r->voxels[i].euler1,
                                     r->voxels[i].euler2,
@@ -220,7 +179,7 @@ int MicrostructureStatisticsVTKWriter::writeIPFVizFile(MicrostructureStatisticsF
                                     RefDirection[0], RefDirection[1], RefDirection[2],
                                     &rgba[index], hkl);
     }
-	else if (r->crystruct[phase] == AIM::Reconstruction::Hexagonal)
+    else if (r->crystruct[phase] == AIM::Reconstruction::Hexagonal)
     {
       OIMColoring::CalculateHexIPFColor(r->voxels[i].quat, RefDirection, &rgba[index]);
     }
@@ -254,3 +213,8 @@ int MicrostructureStatisticsVTKWriter::writeIPFVizFile(MicrostructureStatisticsF
   return 0;
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int ReconstructionVTKWriter::writeDownSampledVizFile(ReconstructionFunc* r, const std::string &file)
+{}

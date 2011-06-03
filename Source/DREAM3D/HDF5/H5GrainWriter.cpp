@@ -36,7 +36,7 @@
 #include "DREAM3D/Common/OIMColoring.hpp"
 #include "DREAM3D/Reconstruction/ReconstructionFunc.h"
 #include "DREAM3D/GrainGenerator/GrainGeneratorFunc.h"
-#include "DREAM3D/Common/VTKWriterMacros.h"
+#include "DREAM3D/Common/VTKUtils/VTKWriterMacros.h"
 
 
 #define H5GW_IPF_COLOR()\

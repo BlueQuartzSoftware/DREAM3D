@@ -21,11 +21,12 @@ SET (DREAM3D_Common_HDRS
   ${DREAM3DLib_SOURCE_DIR}/Common/STLWriter.h
   ${DREAM3DLib_SOURCE_DIR}/Common/Texture.h
   ${DREAM3DLib_SOURCE_DIR}/Common/TexturePreset.h
-  ${DREAM3DLib_SOURCE_DIR}/Common/VTKFileReader.h
-  ${DREAM3DLib_SOURCE_DIR}/Common/VTKWriterMacros.h
   ${DREAM3DLib_SOURCE_DIR}/Common/OrientationOps/CubicOps.h
   ${DREAM3DLib_SOURCE_DIR}/Common/OrientationOps/HexagonalOps.h
   ${DREAM3DLib_SOURCE_DIR}/Common/OrientationOps/OrthoRhombicOps.h
+  ${DREAM3DLib_SOURCE_DIR}/Common/VTKUtils/VTKFileReader.h
+  ${DREAM3DLib_SOURCE_DIR}/Common/VTKUtils/VTKFileWriters.hpp
+  ${DREAM3DLib_SOURCE_DIR}/Common/VTKUtils/VTKWriterMacros.h
 )
 
 SET (DREAM3D_Common_SRCS
@@ -43,10 +44,10 @@ SET (DREAM3D_Common_SRCS
   ${DREAM3DLib_SOURCE_DIR}/Common/STLWriter.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/Texture.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/TexturePreset.cpp
-  ${DREAM3DLib_SOURCE_DIR}/Common/VTKFileReader.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/OrientationOps/CubicOps.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/OrientationOps/HexagonalOps.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/OrientationOps/OrthoRhombicOps.cpp
+  ${DREAM3DLib_SOURCE_DIR}/Common/VTKUtils/VTKFileReader.cpp  
 )
 cmp_IDE_SOURCE_PROPERTIES( "DREAM3DLib/Common" "${DREAM3D_Common_HDRS}" "${DREAM3D_Common_SRCS}" "0")
 if ( ${DREAM3D_INSTALL_FILES} EQUAL 1 )
