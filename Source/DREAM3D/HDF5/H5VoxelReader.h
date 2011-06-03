@@ -62,14 +62,14 @@
 /*
  *
  */
-class H5ReconVolumeReader
+class H5VoxelReader
 {
   public:
-    MXA_SHARED_POINTERS(H5ReconVolumeReader)
-    MXA_TYPE_MACRO(H5ReconVolumeReader)
-    MXA_STATIC_NEW_MACRO(H5ReconVolumeReader)
+    MXA_SHARED_POINTERS(H5VoxelReader)
+    MXA_TYPE_MACRO(H5VoxelReader)
+    MXA_STATIC_NEW_MACRO(H5VoxelReader)
 
-    virtual ~H5ReconVolumeReader();
+    virtual ~H5VoxelReader();
 
     MXA_INSTANCE_STRING_PROPERTY(Filename);
 
@@ -181,11 +181,11 @@ class H5ReconVolumeReader
 
 
   protected:
-    H5ReconVolumeReader();
+    H5VoxelReader();
 
   private:
-    H5ReconVolumeReader(const H5ReconVolumeReader&); // Copy Constructor Not Implemented
-    void operator=(const H5ReconVolumeReader&); // Operator '=' Not Implemented
+    H5VoxelReader(const H5VoxelReader&); // Copy Constructor Not Implemented
+    void operator=(const H5VoxelReader&); // Operator '=' Not Implemented
 };
 
 #endif /* H5RECONVOLUMEREADER_H_ */
