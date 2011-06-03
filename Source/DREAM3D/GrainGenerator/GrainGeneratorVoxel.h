@@ -74,6 +74,9 @@ class DREAM3DLib_EXPORT GrainGeneratorVoxel
     int numowners;
     int surfacevoxel;
     int unassigned;
+	float euler1;
+	float euler2;
+	float euler3;
 
     IntVectorType neighborlist;
 

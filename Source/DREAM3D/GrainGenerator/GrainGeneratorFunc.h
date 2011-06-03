@@ -186,7 +186,7 @@ public:
     int readMisorientationData(H5ReconStatsReader::Pointer h5io);
     int readMicroTextureData(H5ReconStatsReader::Pointer h5io);
 
-    int pack_grains(const std::string & filename, int numgrains);
+    int pack_grains(int numgrains);
     void generate_grain(int, int);
     void assign_eulers(int);
     void insert_grain(size_t grainNum);
@@ -211,7 +211,7 @@ public:
     void switchOrientations(int & badtrycount, int & numbins, float currentodferror, float currentmdferror);
     void MC_LoopBody1(int phase, size_t neighbor, int j, std::vector<float>* misolist, std::vector<float>* neighborsurfarealist, float &mdfchange);
     void MC_LoopBody2(int phase, size_t neighbor, int j, std::vector<float>* misolist, std::vector<float>* neighborsurfarealist);
-    void matchCrystallography(const std::string & ErrorFile, H5ReconStatsWriter::Pointer h5io);
+    void matchCrystallography();
     void measure_misorientations();
     float gamma(float);
     float erf(float);
