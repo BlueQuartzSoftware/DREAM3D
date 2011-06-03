@@ -1,5 +1,6 @@
 /* ============================================================================
- * Copyright (c) 2011, Michael A. Jackson (BlueQuartz Software)
+ * Copyright (c) 2010, Michael A. Jackson (BlueQuartz Software)
+ * Copyright (c) 2010, Dr. Michael A. Grober (US Air Force Research Laboratories
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -27,30 +28,65 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#include "H5ReconVolumeWriter.h"
 
-#include "DREAM3D/Reconstruction/ReconstructionFunc.h"
-
-
+#include "MicrostructureStatisticsVoxel.h"
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-H5ReconVolumeWriter::H5ReconVolumeWriter()
+MicrostructureStatisticsVoxel::MicrostructureStatisticsVoxel() :
+grain_index(0),
+euler1(-1.0),
+euler2(-1.0),
+euler3(-1.0),
+phase(0),
+neighbor(-1),
+grainmisorientation(0.0),
+misorientationgradient(0.0),
+kernelmisorientation(0.0),
+surfacevoxel(0)
 {
-
+  nearestneighbor[0] = 0; nearestneighbor[1] = 0; nearestneighbor[2] = 0;
+  nearestneighbordistance[0] = 0.0; nearestneighbordistance[1] = 0.0; nearestneighbordistance[2] = 0.0;
+  quat[0] = 1.0; quat[1] = 0.0; quat[2] = 0.0; quat[3] = 0.0; quat[4] = 0.0;
+  neighborlist = IntVectorType(new std::vector<int>(0) );
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-H5ReconVolumeWriter::~H5ReconVolumeWriter()
+MicrostructureStatisticsVoxel::~MicrostructureStatisticsVoxel()
 {
+#if 0
+  if (NULL != grainlist) { delete grainlist; grainlist = NULL;}
+  if (NULL != ellipfunclist) { delete ellipfunclist; ellipfunclist = NULL;}
+  if (NULL != neighborlist) { delete neighborlist; neighborlist = NULL;}
+#endif
 }
-
-
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void MicrostructureStatisticsVoxel::deepCopy(MicrostructureStatisticsVoxel* MicrostructureStatisticsvoxel)
+{
+  if (MicrostructureStatisticsvoxel == this) { return; } // The pointers are the same just return
+
+   grain_index = MicrostructureStatisticsvoxel->grain_index;
+   COPY_ARRAY_3(nearestneighbor, MicrostructureStatisticsvoxel);
+
+   COPY_ARRAY_3(nearestneighbordistance, MicrostructureStatisticsvoxel);
+   euler1 = MicrostructureStatisticsvoxel->euler1;
+   euler2 = MicrostructureStatisticsvoxel->euler2;
+   euler3 = MicrostructureStatisticsvoxel->euler3;
+   neighbor = MicrostructureStatisticsvoxel->neighbor;
+   grainmisorientation = MicrostructureStatisticsvoxel->grainmisorientation;
+   misorientationgradient = MicrostructureStatisticsvoxel->misorientationgradient;
+   kernelmisorientation = MicrostructureStatisticsvoxel->kernelmisorientation;
+   surfacevoxel = MicrostructureStatisticsvoxel->surfacevoxel;
+
+   COPY_ARRAY_5(quat, MicrostructureStatisticsvoxel);
+   DEEP_COPY_SHARED_VECTOR(neighborlist, MicrostructureStatisticsvoxel, IntVectorType, int)
+
+}
+

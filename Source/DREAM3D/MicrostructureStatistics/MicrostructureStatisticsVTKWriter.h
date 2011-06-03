@@ -29,32 +29,32 @@
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef RECONSTRUCTIONOUTPUTWRITERS_H_
-#define RECONSTRUCTIONOUTPUTWRITERS_H_
+#ifndef MICROSTRUCTURESTATISTICSOUTPUTWRITERS_H_
+#define MICROSTRUCTURESTATISTICSOUTPUTWRITERS_H_
 
 #include <string>
 
 #include "MXA/Common/MXASetGetMacros.h"
 
-#include "DREAM3D/Reconstruction/ReconstructionFunc.h"
+#include "DREAM3D/MicrostructureStatistics/MicrostructureStatisticsFunc.h"
 
 
 /**
- * @class ReconstructionOutputWriters ReconstructionOutputWriters.h AIM/Common/ReconstructionOutputWriters.h
+ * @class MicrostructureStatisticsOutputWriters MicrostructureStatisticsOutputWriters.h AIM/Common/MicrostructureStatisticsOutputWriters.h
  * @brief This class holds the functions to write the various output files that
- * result from the Reconstruction Module.
+ * result from the MicrostructureStatistics Module.
  * @author Michael A. Jackson for BlueQuartz Software
  * @date Feb 19, 2011
  * @version 1.0
  */
-class DREAM3DLib_EXPORT ReconstructionVTKWriter
+class DREAM3DLib_EXPORT MicrostructureStatisticsVTKWriter
 {
   public:
-    MXA_SHARED_POINTERS(ReconstructionVTKWriter)
-    MXA_STATIC_NEW_MACRO(ReconstructionVTKWriter)
-    MXA_TYPE_MACRO(ReconstructionVTKWriter)
+    MXA_SHARED_POINTERS(MicrostructureStatisticsVTKWriter)
+    MXA_STATIC_NEW_MACRO(MicrostructureStatisticsVTKWriter)
+    MXA_TYPE_MACRO(MicrostructureStatisticsVTKWriter)
 
-    virtual ~ReconstructionVTKWriter();
+    virtual ~MicrostructureStatisticsVTKWriter();
 
     MXA_INSTANCE_PROPERTY(bool, WriteBinaryFiles)
 
@@ -63,7 +63,7 @@ class DREAM3DLib_EXPORT ReconstructionVTKWriter
        * @param Output file name
        * @return 0 on Success
        */
-      int writeVisualizationFile(ReconstructionFunc* r, const std::string &file);
+      int writeVisualizationFile(MicrostructureStatisticsFunc* r, const std::string &file);
 
       /**
        * @brief Writes a VTK visualization file with vector arrays for the Inverse
@@ -71,30 +71,29 @@ class DREAM3DLib_EXPORT ReconstructionVTKWriter
        * @param Output file name
        * @return 0 on Success
        */
-      int writeIPFVizFile(ReconstructionFunc* r, const std::string &file);
+      int writeIPFVizFile(MicrostructureStatisticsFunc* r, const std::string &file);
 
       /**
-       * @brief Writes a VTK visualization file with vector arrays for the Image Quality and grain ID.
+       * @brief Writes a VTK visualization file with vector arrays for the disorientation colors and grain ID.
        * @param Output file name
        * @return 0 on Success
        */
-      int writeImageQualityVizFile(ReconstructionFunc* r, const std::string &file);
+      int writeDisorientationFile(MicrostructureStatisticsFunc* r, const std::string &file);
 
       /**
-        * @brief Writes a low resolution VTK visualization file.
+        * @brief Writes a VTK visualization file with vector arrays for the Schmid Factor and grain ID.
         * @param Output file name
         * @return 0 on Success
         */
-      int writeDownSampledVizFile(ReconstructionFunc* r, const std::string &file);
-
+      int writeSchmidFactorVizFile(MicrostructureStatisticsFunc* r, const std::string &file);
 
 
   protected:
-    ReconstructionVTKWriter();
+    MicrostructureStatisticsVTKWriter();
 
   private:
-    ReconstructionVTKWriter(const ReconstructionVTKWriter&); // Copy Constructor Not Implemented
-    void operator=(const ReconstructionVTKWriter&); // Operator '=' Not Implemented
+    MicrostructureStatisticsVTKWriter(const MicrostructureStatisticsVTKWriter&); // Copy Constructor Not Implemented
+    void operator=(const MicrostructureStatisticsVTKWriter&); // Operator '=' Not Implemented
 };
 
-#endif /* RECONSTRUCTIONOUTPUTWRITERS_H_ */
+#endif /* MICROSTRUCTURESTATISTICSOUTPUTWRITERS_H_ */

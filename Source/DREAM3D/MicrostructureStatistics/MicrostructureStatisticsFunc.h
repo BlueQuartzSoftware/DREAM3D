@@ -61,7 +61,7 @@
 #include "DREAM3D/Common/OrientationOps/CubicOps.h"
 #include "DREAM3D/Common/OrientationOps/HexagonalOps.h"
 #include "DREAM3D/Common/OrientationOps/OrthoRhombicOps.h"
-#include "DREAM3D/Reconstruction/ReconstructionVoxel.h"
+#include "DREAM3D/MicrostructureStatistics/MicrostructureStatisticsVoxel.h"
 #include "DREAM3D/HDF5/H5ReconStatsWriter.h"
 
 class DREAM3DLib_EXPORT MicrostructureStatisticsFunc
@@ -79,7 +79,7 @@ class DREAM3DLib_EXPORT MicrostructureStatisticsFunc
     std::vector<AIM::Reconstruction::PhaseType> phaseType;
     std::vector<float> pptFractions;
 
-    boost::shared_array<ReconstructionVoxel> voxels;
+    boost::shared_array<MicrostructureStatisticsVoxel> voxels;
 
     SharedIntArray graincounts;
     std::vector<Grain::Pointer> m_Grains;

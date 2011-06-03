@@ -29,8 +29,8 @@
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _GRAINGENERATORVOXEL_H_
-#define _GRAINGENERATORVOXEL_H_
+#ifndef _MICROSTRUCTURESTATISTICSVOXEL_H_
+#define _MICROSTRUCTURESTATISTICSVOXEL_H_
 
 #if defined (_MSC_VER)
 #define WIN32_LEAN_AND_MEAN		// Exclude rarely-used stuff from Windows headers
@@ -45,38 +45,41 @@
 #include "DREAM3D/Common/Constants.h"
 
 /**
-* @class GrainGeneratorVoxel GrainGeneratorVoxel.h AIM/Common/GrainGeneratorVoxel.h
+* @class MicrostructureStatisticsVoxel MicrostructureStatisticsVoxel.h AIM/Common/MicrostructureStatisticsVoxel.h
 * @brief Support class for the MicroGen3D class
 * @author Michael A. Jackson for BlueQuartz Software, Dr. Michael Groeber for USAFRL
 * @date Nov 4, 2009
 * @version 1.0
 */
-class DREAM3DLib_EXPORT GrainGeneratorVoxel
+class DREAM3DLib_EXPORT MicrostructureStatisticsVoxel
 {
   public:
-    MXA_SHARED_POINTERS(GrainGeneratorVoxel);
-    MXA_STATIC_NEW_MACRO(GrainGeneratorVoxel);
-    MXA_TYPE_MACRO(GrainGeneratorVoxel);
-    GrainGeneratorVoxel();
-    virtual ~GrainGeneratorVoxel();
+    MXA_SHARED_POINTERS(MicrostructureStatisticsVoxel);
+    MXA_STATIC_NEW_MACRO(MicrostructureStatisticsVoxel);
+    MXA_TYPE_MACRO(MicrostructureStatisticsVoxel);
+    MicrostructureStatisticsVoxel();
+    virtual ~MicrostructureStatisticsVoxel();
 
     /**
      * @brief Performs a Depp copy of the Grain object by making copies of the contained
      * data and not just copying the pointers to the data
      * @param grain Another Grain object to copy from.
      */
-    void deepCopy(GrainGeneratorVoxel* graingeneratorvoxel);
+    void deepCopy(MicrostructureStatisticsVoxel* MicrostructureStatisticsvoxel);
 
     int grain_index;
-    int alreadychecked;
+    int nearestneighbor[3];
+    float nearestneighbordistance[3];
+    float euler1;
+    float euler2;
+    float euler3;
     int phase;
     int neighbor;
-    int numowners;
+    float grainmisorientation;
+    float misorientationgradient;
+    float kernelmisorientation;
     int surfacevoxel;
-    int unassigned;
-	float euler1;
-	float euler2;
-	float euler3;
+    float quat[5];
 
     IntVectorType neighborlist;
 
@@ -84,8 +87,8 @@ class DREAM3DLib_EXPORT GrainGeneratorVoxel
 
 
   private:
-    GrainGeneratorVoxel(const GrainGeneratorVoxel&); // Copy Constructor Not Implemented
-    void operator=(const GrainGeneratorVoxel&); // Operator '=' Not Implemented
+    MicrostructureStatisticsVoxel(const MicrostructureStatisticsVoxel&); // Copy Constructor Not Implemented
+    void operator=(const MicrostructureStatisticsVoxel&); // Operator '=' Not Implemented
 };
 
-#endif /* GRAINGENERATORVOXEL_H_ */
+#endif /* MICROSTRUCTURESTATISTICSVOXEL_H_ */

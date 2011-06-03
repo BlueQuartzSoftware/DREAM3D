@@ -44,9 +44,6 @@ euler2(-1.0),
 euler3(-1.0),
 phase(0),
 neighbor(-1),
-grainmisorientation(0.0),
-misorientationgradient(0.0),
-kernelmisorientation(0.0),
 surfacevoxel(0),
 unassigned(0)
 {
@@ -87,9 +84,6 @@ void ReconstructionVoxel::deepCopy(ReconstructionVoxel* reconstructionvoxel)
    euler2 = reconstructionvoxel->euler2;
    euler3 = reconstructionvoxel->euler3;
    neighbor = reconstructionvoxel->neighbor;
-   grainmisorientation = reconstructionvoxel->grainmisorientation;
-   misorientationgradient = reconstructionvoxel->misorientationgradient;
-   kernelmisorientation = reconstructionvoxel->kernelmisorientation;
    surfacevoxel = reconstructionvoxel->surfacevoxel;
    unassigned = reconstructionvoxel->unassigned;
 

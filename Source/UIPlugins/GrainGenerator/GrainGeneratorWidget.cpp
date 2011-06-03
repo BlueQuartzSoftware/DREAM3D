@@ -213,16 +213,12 @@ void GrainGeneratorWidget::setupGui()
   QString msg ("All files will be over written that appear in the output directory.");
 
   QFileInfo fi (m_OutputDir->text() + QDir::separator() +  AIM::SyntheticBuilder::VisualizationVizFile.c_str() );
-//  if (m_AlreadyFormed->isChecked() == true && fi.exists() == false)
-//  {
-//    m_AlreadyFormed->setChecked(false);
-//  }
-//
-//  if (m_AlreadyFormed->isChecked())
-//  {
-//    msg += QString("\nThe 'Cube.vtk' file will be used as an import and NOT over written with new data");
-//  }
-//  messageLabel->setText(msg);
+  if (m_AlreadyFormed->isChecked() == true && fi.exists() == false)
+  {
+    m_AlreadyFormed->setChecked(false);
+  }
+
+
 
   m_WidgetList << m_H5InputStatisticsFile << m_InputH5StatisticsFileBtn << m_OutputDir << m_OutputDirBtn;
   m_WidgetList << m_NumGrains << m_XResolution << m_YResolution << m_ZResolution << m_FillingErrorWeight;
@@ -268,9 +264,7 @@ void GrainGeneratorWidget::on_m_SaveSettingsBtn_clicked()
 // -----------------------------------------------------------------------------
 void GrainGeneratorWidget::checkIOFiles()
 {
-  CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::SyntheticBuilder, m_, CrystallographicErrorFile)
   CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::SyntheticBuilder, m_, GrainAnglesFile)
-  CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::SyntheticBuilder, m_ , PackGrainsFile)
 
   CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(AIM::SyntheticBuilder, m_ , IPFVizFile)
   CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(AIM::SyntheticBuilder, m_ , VisualizationVizFile)
@@ -418,8 +412,8 @@ void GrainGeneratorWidget::on_m_GoBtn_clicked()
   m_GrainGenerator->setSizeDistErrorWeight(m_SizeDistErrorWeight->value());
 
   m_GrainGenerator->setPeriodicBoundary(m_PeriodicBoundaryConditions->isChecked());
-//  m_GrainGenerator->setAlreadyFormed(m_AlreadyFormed->isChecked() );
-//  m_GrainGenerator->setStructureFile(m_StructureFile->text().toStdString());
+  m_GrainGenerator->setAlreadyFormed(m_AlreadyFormed->isChecked() );
+  m_GrainGenerator->setStructureFile(m_StructureFile->text().toStdString());
 
   m_GrainGenerator->setWriteBinaryFiles(m_BinaryVtkFiles->isChecked());
   m_GrainGenerator->setWriteVisualizationFile(m_VisualizationVizFile->isChecked());

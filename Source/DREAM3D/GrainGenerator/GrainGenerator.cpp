@@ -42,7 +42,8 @@
 #include "DREAM3D/StructureReaders/VTKStructureReader.h"
 #include "DREAM3D/StructureReaders/DXStructureReader.h"
 #include "DREAM3D/HDF5/H5GrainWriter.h"
-#include "DREAM3D/HDF5/H5ReconStatsReader.h"
+#include "DREAM3D/HDF5/H5ReconVolumeWriter.h"
+#include "DREAM3D/HDF5/H5ReconVolumeReader.h"
 
 
 
@@ -124,8 +125,7 @@ void GrainGenerator::execute()
     CHECK_FOR_CANCELED(GrainGeneratorFunc, "GrainGenerator Was canceled", readAxisOrientationData);
 
     updateProgressAndMessage(("Packing Grains"), 25);
-    MAKE_OUTPUT_FILE_PATH ( packGrainsFile , AIM::SyntheticBuilder::PackGrainsFile)
-    m->numgrains = m->pack_grains(packGrainsFile, m->numgrains);
+    m->numgrains = m->pack_grains(m->numgrains);
     CHECK_FOR_CANCELED(GrainGeneratorFunc, "GrainGenerator Was canceled", pack_grains)
 
     updateProgressAndMessage(("Assigning Voxels"), 30);
@@ -152,7 +152,8 @@ void GrainGenerator::execute()
 
     updateProgressAndMessage(("Reading Structure"), 40);
     std::string ext = MXAFileInfo::extension(m_StructureFile);
-    if (ext.compare("vtk") == 0) {
+    if (ext.compare("vtk") == 0) 
+	{
       VTKStructureReader::Pointer reader = VTKStructureReader::New();
       reader->setInputFileName(m_StructureFile);
       reader->setGrainIdScalarName(AIM::Reconstruction::GrainIdScalarName);
@@ -161,18 +162,43 @@ void GrainGenerator::execute()
       if (err < 0) { setCancel(true); }
       CHECK_FOR_CANCELED(GrainGeneratorFunc, "GrainGenerator Was canceled", reading_structure)
     }
-//    else if (ext.compare("dx") == 0)
-//    {
-//      DXStructureReader::Pointer reader = DXStructureReader::New();
-//      reader->setInputFileName(m_StructureFile);
-//      err = reader->readStructure(m.get());
-//      if (err < 0)
-//      {
-//        m_Cancel = true;
-//      }
-//      CHECK_FOR_CANCELED(GrainGeneratorFunc, "GrainGenerator Was canceled", reading_structure)
-//    }
-    else
+    else if (ext.compare("h5") == 0)
+	{
+	  // Load up the voxel data
+	  H5ReconVolumeReader::Pointer h5Reader = H5ReconVolumeReader::New();
+	  h5Reader->setFilename(m_StructureFile);
+	  int dims[3];
+	  float spacing[3];
+	  err = h5Reader->getSizeAndResolution(dims, spacing);
+	  if (err < 0)
+	  {
+		updateProgressAndMessage("Error Reading the Dimensions and Resolution from the File.", 100);
+		setErrorCondition(err);
+		return;
+	  }
+
+	  m->xpoints = dims[0];
+	  m->ypoints = dims[1];
+	  m->zpoints = dims[2];
+	  m->totalpoints = dims[0] * dims[1] * dims[2];
+	  m->resx = spacing[0];
+	  m->resy = spacing[1];
+	  m->resz = spacing[2];
+
+	  updateProgressAndMessage("Allocating Voxel Memory", 5);
+	  //Allocate all of our Voxel Objects
+	  m->voxels.reset(new GrainGeneratorVoxel[m->totalpoints]);
+
+	  updateProgressAndMessage(("Reading the Voxel Data from the HDF5 File"), 10);
+	  err = h5Reader->readVoxelData(m->voxels, m->crystruct, m->totalpoints);
+	  if (err < 0)
+	  {
+		updateProgressAndMessage("Error Reading the Voxel Data from the File.", 100);
+		setErrorCondition(err);
+		return;
+      }
+	}
+	else
     {
       setCancel(true);
       CHECK_FOR_CANCELED(GrainGeneratorFunc, "GrainGenerator Was canceled", reading_structure);
@@ -210,27 +236,40 @@ void GrainGenerator::execute()
   m->measure_misorientations();
   CHECK_FOR_CANCELED(GrainGeneratorFunc, "GrainGenerator Was canceled", measure_misorientations)
 
-  MAKE_OUTPUT_FILE_PATH ( crystallographicErrorFile , AIM::SyntheticBuilder::CrystallographicErrorFile)
   MAKE_OUTPUT_FILE_PATH ( eulerFile , AIM::SyntheticBuilder::GrainAnglesFile)
-  MAKE_OUTPUT_FILE_PATH ( graindataFile , AIM::SyntheticBuilder::GrainDataFile)
-
-  MAKE_OUTPUT_FILE_PATH ( hdf5ResultsFile , AIM::SyntheticBuilder::H5StatisticsFile)
-
   MAKE_OUTPUT_FILE_PATH ( reconVisFile, AIM::Reconstruction::VisualizationVizFile);
   MAKE_OUTPUT_FILE_PATH ( reconIPFVisFile, AIM::Reconstruction::IPFVizFile);
   MAKE_OUTPUT_FILE_PATH ( hdf5GrainFile, AIM::Reconstruction::HDF5GrainFile);
   MAKE_OUTPUT_FILE_PATH ( phFile, AIM::Reconstruction::PhFile);
 
-  H5ReconStatsWriter::Pointer h5io = H5ReconStatsWriter::New(hdf5ResultsFile);
-
   updateProgressAndMessage(("Matching Crystallography"), 65);
-  m->matchCrystallography(crystallographicErrorFile, h5io);
+  m->matchCrystallography();
   CHECK_FOR_CANCELED(GrainGeneratorFunc, "GrainGenerator Was canceled", matchCrystallography)
 
   updateProgressAndMessage(("Writing Euler Angles"), 81);
 
   m->write_eulerangles(eulerFile);
   CHECK_FOR_CANCELED(GrainGeneratorFunc, "GrainGenerator Was canceled", write_eulerangles)
+
+  /** ********** This section writes the Voxel Data for the Stats Module *** */
+  // Create a new HDF5 Volume file by overwriting any HDF5 file that may be in the way
+  MAKE_OUTPUT_FILE_PATH ( hdf5VolumeFile, AIM::SyntheticBuilder::H5VolumeFile)
+  H5ReconVolumeWriter::Pointer h5VolWriter = H5ReconVolumeWriter::New();
+  if (h5VolWriter.get() == NULL)
+  {
+    updateProgressAndMessage("The HDF5 Voxel file could not be created. Does the path exist and do you have write access to the output directory.", 100);
+    m = GrainGeneratorFunc::NullPointer();  // Clean up the memory
+    return;
+  }
+  h5VolWriter->setFilename(hdf5VolumeFile);
+  updateProgressAndMessage(("Writing HDF5 Voxel Data File"), 83);
+  err = h5VolWriter->writeVoxelData<GrainGeneratorFunc, GrainGeneratorVoxel>(m.get());
+  if (err < 0)
+  {
+    updateProgressAndMessage("The HDF5 Voxel file could not be written to. Does the path exist and do you have write access to the output directory.", 100);
+    m = GrainGeneratorFunc::NullPointer();  // Clean up the memory
+    return;
+  }
 
   /** ********** This section writes the VTK files for visualization *** */
   GrainGeneratorVoxelWriter::Pointer vtkWriter = GrainGeneratorVoxelWriter::New();
@@ -243,6 +282,7 @@ void GrainGenerator::execute()
   updateProgressAndMessage(("Writing VTK Inverse Pole Figure File"), 94);
   if (m_WriteIPFFile) {vtkWriter->writeIPFVizFile(m.get(), reconIPFVisFile);}
   CHECK_FOR_CANCELED(GrainGeneratorFunc, "GrainGenerator Was canceled", writeIPFVizFile)
+
   /** ******* End VTK Visualization File Writing Section ****** */
 
   /*  This CMU's ph format */
