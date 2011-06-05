@@ -2,26 +2,15 @@
 
 @page surfacemeshing Surface Meshing
 
- 1. VTK File  name and location of the .vtk file that will be used in the surface meshing
-@li a.  This can be any of the volumes created in the reconstruction tab or the
-synthetic builder tab.  It only reads the grain ids block from any of those files.
 
-2.  Output Directory  this is the location that all of the output files will be
-written to
-@li a.  The output file is a .vtk file of poly data
-
-3.  Smooth Surface Mesh  this is an option to smooth the surface mesh that is
-output from the marching cubes portion of the tab.  Currently this option is not
-functional is under development with CMU.
-
-@section dev_1  Intermediate Files
+@section sm1  Intermediate Files
 
 The surface meshing module creates some intermediate files that are written in
 binary form to help keep the memory to a minimum during the meshing process. Those
 files are the <i>Nodes</i> file and the <i>Triangles</i> file. The format of each
 one is as follows:
 
-@subsection dev_nodes_file Nodes File
+@subsection sm1 Nodes File
 
 The nodes file is made up of n number of nodes where each node has the following
 fields:
@@ -33,7 +22,7 @@ fields:
  The total byte count of each Node Record is 32 bytes
 
 
-@subsection dev_trifile Triangle File
+@subsection sm3 Triangle File
 
 The Triangle file is made up of Triangle Records where each record is make up of
 the following fields:

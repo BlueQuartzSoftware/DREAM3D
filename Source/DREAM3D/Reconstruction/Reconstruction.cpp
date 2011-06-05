@@ -42,11 +42,11 @@
 #include "DREAM3D/ANGSupport/AngDataLoader.h"
 #include "DREAM3D/ANGSupport/H5AngDataLoader.h"
 
-#include "DREAM3D/Common/Constants.h"
 #include "DREAM3D/DREAM3DConfiguration.h"
+#include "DREAM3D/Common/Constants.h"
 #include "DREAM3D/Common/OIMColoring.hpp"
-#include "DREAM3D/Reconstruction/ReconstructionVTKWriter.h"
-#include "DREAM3D/HDF5/H5ReconVolumeWriter.h"
+#include "DREAM3D/Common/VTKUtils/VTKFileWriters.hpp"
+#include "DREAM3D/HDF5/H5VoxelWriter.h"
 #include "DREAM3D/HDF5/H5GrainWriter.h"
 
 
@@ -240,7 +240,7 @@ void Reconstruction::execute()
   /** ********** This section writes the Voxel Data for the Stats Module *** */
   // Create a new HDF5 Volume file by overwriting any HDF5 file that may be in the way
   MAKE_OUTPUT_FILE_PATH ( hdf5VolumeFile, AIM::Reconstruction::H5VolumeFile)
-  H5ReconVolumeWriter::Pointer h5VolWriter = H5ReconVolumeWriter::New();
+  H5VoxelWriter::Pointer h5VolWriter = H5VoxelWriter::New();
   if (h5VolWriter.get() == NULL)
   {
     updateProgressAndMessage("The HDF5 Voxel file could not be created. Does the path exist and do you have write access to the output directory.", 100);
@@ -259,7 +259,7 @@ void Reconstruction::execute()
 
   /** ********** This section writes the VTK files for visualization *** */
   // Create our File Output Writer Object. This will handle all the File Output duties
-  ReconstructionVTKWriter::Pointer vtkWriter = ReconstructionVTKWriter::New();
+  VTKFileWriters::Pointer vtkWriter = VTKFileWriters::New();
   vtkWriter->setWriteBinaryFiles(m_WriteBinaryFiles);
 
   updateProgressAndMessage(("Writing VTK Visualization File"), 93);

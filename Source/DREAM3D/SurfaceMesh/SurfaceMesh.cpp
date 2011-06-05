@@ -38,7 +38,7 @@
 #include "MXA/Utilities/MXAFileInfo.h"
 
 #include "SMVtkFileIO.h"
-#include "DREAM3D/Common/STLWriter.h"
+#include "DREAM3D/SurfaceMesh/STLWriter.h"
 
 #define CHECK_ERROR(name, message)\
     if(err < 0) {\
@@ -56,7 +56,7 @@
 SurfaceMesh::SurfaceMesh() :
 m_InputDirectory("."),
 m_InputFile(""),
-m_ScalarName(AIM::Reconstruction::GrainIdScalarName),
+m_ScalarName(AIM::VTK::GrainIdScalarName),
 m_OutputDirectory(""),
 m_OutputFilePrefix("SurfaceMesh_"),
 m_ConformalMesh(true),

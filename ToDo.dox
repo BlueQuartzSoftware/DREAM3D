@@ -17,7 +17,7 @@ indicate which files will be over written during execution.
 @section  graingenerator GrainGenerator:
 @li Rework existing user interface for showing output file that will be written and
 indicate which files will be over written during execution.
-@li Confirm Crashing bug in Destructor of GrainGeneratorFunc is fixed.
+@li <b>DONE</b> (MAJ 2011/05/30) - Confirm Crashing bug in Destructor of GrainGeneratorFunc is fixed.
 @li Switch to defining Dimensions and resolution of the volume to be created
 @li Real time indicate the average grain size, number of grains as user inputs values
 into the user interface
