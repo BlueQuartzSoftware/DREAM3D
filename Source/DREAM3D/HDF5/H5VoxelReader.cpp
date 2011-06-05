@@ -28,46 +28,60 @@
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef STLWRITER_H_
-#define STLWRITER_H_
+#include "H5VoxelReader.h"
 
-#include <stdio.h>
-
-#include "MXA/Common/MXASetGetMacros.h"
-#include "DREAM3D/DREAM3DConfiguration.h"
-
-class SurfaceMeshFunc;
-class Patch;
-class Node;
-
-class DREAM3DLib_EXPORT STLWriter
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+H5VoxelReader::H5VoxelReader()
 {
-  public:
-    MXA_SHARED_POINTERS(STLWriter)
-    MXA_STATIC_NEW_MACRO(STLWriter)
-    MXA_TYPE_MACRO(STLWriter)
 
-    virtual ~STLWriter();
+}
 
-    MXA_INSTANCE_STRING_PROPERTY(Filename)
-    MXA_INSTANCE_PROPERTY(int, TriangleCount);
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+H5VoxelReader::~H5VoxelReader()
+{
 
-    int openFile();
-    void closeFile();
-    void resetTriangleCount();
+}
 
-    int writeHeader(const std::string &header);
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int H5VoxelReader::getSizeAndResolution(int volDims[3], float spacing[3])
+{
+  int err = 0;
 
-    int writeTriangleBlock(int numTriangles, Patch* cTriangle, Node* cVertex);
+  if (m_Filename.empty() == true)
+  {
+    std::cout << "H5ReconVolumeReader Error; Filename was empty" << std::endl;
+    return -1;
+  }
 
-  protected:
-    STLWriter();
+  OPEN_HDF5_FILE(fileId, m_Filename)
+  OPEN_RECONSTRUCTION_GROUP(reconGid, AIM::HDF5::VoxelDataName.c_str(), fileId)
 
-  private:
-    FILE* m_File;
+  err = H5Lite::readPointerDataset(reconGid, H5_DIMENSIONS, volDims);
+  if (err < 0)
+  {
+    std::cout << "H5ReconVolumeReader Error Reading the Dimensions" << std::endl;
+    err = H5Gclose(reconGid);
+    err = H5Fclose(fileId);
+    return err;
+  }
+  err = H5Lite::readPointerDataset(reconGid, H5_SPACING, spacing);
+  if (err < 0)
+  {
+    std::cout << "H5ReconVolumeReader Error Reading the Spacing (Resolution)" << std::endl;
+    err = H5Gclose(reconGid);
+    err = H5Fclose(fileId);
+    return err;
+  }
 
-    STLWriter(const STLWriter&); // Copy Constructor Not Implemented
-    void operator=(const STLWriter&); // Operator '=' Not Implemented
-};
+  err = H5Gclose(reconGid);
+  err = H5Fclose(fileId);
 
-#endif /* STLWRITER_H_ */
+  return err;
+}
+
