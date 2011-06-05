@@ -36,16 +36,16 @@
 // -----------------------------------------------------------------------------
 ReconstructionVoxel::ReconstructionVoxel() :
 grain_index(0),
-confidence(0.0),
-imagequality(0.0),
-alreadychecked(0),
+phase(0),
 euler1(-1.0),
 euler2(-1.0),
 euler3(-1.0),
-phase(0),
 neighbor(-1),
 surfacevoxel(0),
-unassigned(0)
+alreadychecked(0),
+unassigned(0),
+confidence(0.0),
+imagequality(0.0)
 {
   nearestneighbor[0] = 0; nearestneighbor[1] = 0; nearestneighbor[2] = 0;
   nearestneighbordistance[0] = 0.0; nearestneighbordistance[1] = 0.0; nearestneighbordistance[2] = 0.0;

@@ -139,6 +139,8 @@ namespace AIM
     const std::string LogNormalDistribution("Log Normal Distribution");
     const std::string PowerLawDistribution("Power Law Distribution");
 
+    const std::string VoxelDataName("VoxelData");
+
     enum ColumnCount
     {
       BetaColumnCount = 2,       //!<
@@ -163,25 +165,13 @@ namespace AIM
     const std::string HDF5GrainFile("Grains.h5grain");
     const std::string PhFile("Voxels.ph");
 
-
-
-
-    const std::string VoxelDataName("VoxelData");
-    const std::string GrainIdScalarName("GrainID");
-    const std::string EulerAnglesName("Euler Angles");
-    const std::string CrystalStructureName("CrystalStructure");
-    const std::string PhaseIdScalarName("PhaseID");
-    const std::string ImageQualityScalarName("ImageQuality");
-    const std::string SurfaceVoxelScalarName("SurfaceVoxel");
-
-
     /**
      * @brief IF YOU CHANGE THE VALUES THERE ARE DEEP RAMIFICATIONS IN THE CODE BUT
      * MOSTLY IN THE HDF5 FILES WHICH ARE WRITTEN USING THE ENUMERATIONS.
      */
     enum CrystalStructure {
         Hexagonal = 0,                   //!< Hexagonal
-        Cubic = 1,                       //!< Cubic¶
+        Cubic = 1,                       //!< Cubic
         OrthoRhombic = 2,                //!< OrthoRhombic
         AxisOrthoRhombic = 3,            //!< AxisOrthoRhombic
         UnknownCrystalStructure = 999    //!< UnknownCrystalStructure
@@ -273,14 +263,6 @@ namespace AIM
     const std::string HDF5GrainFile("Grains.h5grain");
     const std::string PhFile("Voxels.ph");
 
-    const std::string VoxelDataName("VoxelData");
-    const std::string GrainIdScalarName("GrainID");
-    const std::string EulerAnglesName("Euler Angles");
-    const std::string CrystalStructureName("CrystalStructure");
-    const std::string PhaseIdScalarName("PhaseID");
-
-
-
     enum Overlap {
         UnknownOverlap = 0,    //!<
         Rigid = 1,             //!<
@@ -309,20 +291,22 @@ namespace AIM
     const std::string DeformationStatsFile("Deformation_Stats.txt");
     const std::string IPFDeformVTKFile("IPF_DeformationData.vtk");
 
-	const std::string VoxelDataName("VoxelData");
-    const std::string GrainIdScalarName("GrainID");
-    const std::string EulerAnglesName("Euler Angles");
-    const std::string CrystalStructureName("CrystalStructure");
-    const std::string EuclideanScalarName("Euclidean");
-    const std::string SchmidFactorScalarName("SchmidFactor");
-    const std::string KAMScalarName("KAM");
-    const std::string GAMScalarName("GAM");
-    const std::string LMGScalarName("LMG");
-    const std::string PhaseIdScalarName("PhaseID");
-
+    const std::string VoxelDataName("VoxelData");
   }
 
-
+  namespace VTK {
+     const std::string GrainIdScalarName("GrainID");
+     const std::string EulerAnglesName("Euler Angles");
+     const std::string CrystalStructureName("CrystalStructure");
+     const std::string EuclideanScalarName("Euclidean");
+     const std::string SchmidFactorScalarName("SchmidFactor");
+     const std::string KAMScalarName("KAM");
+     const std::string GAMScalarName("GAM");
+     const std::string LMGScalarName("LMG");
+     const std::string PhaseIdScalarName("PhaseID");
+     const std::string ImageQualityScalarName("ImageQuality");
+     const std::string SurfaceVoxelScalarName("SurfaceVoxel");
+  }
 
 
   namespace SurfaceMesh {

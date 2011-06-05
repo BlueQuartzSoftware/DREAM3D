@@ -45,10 +45,10 @@
 #include "DREAM3D/Common/Constants.h"
 #include "DREAM3D/DREAM3DConfiguration.h"
 #include "DREAM3D/Common/OIMColoring.hpp"
-#include "DREAM3D/Reconstruction/ReconstructionVTKWriter.h"
+#include "DREAM3D/Common/VTKUtils/VTKFileWriters.hpp"
 #include "DREAM3D/HDF5/H5ReconStatsWriter.h"
 #include "DREAM3D/HDF5/H5GrainWriter.h"
-#include "DREAM3D/HDF5/H5ReconVolumeReader.h"
+#include "DREAM3D/HDF5/H5VoxelReader.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -94,7 +94,7 @@ void MicrostructureStatistics::execute()
 
   updateProgressAndMessage("Reading the Voxel Dimensions and Resolution", 2);
   // Load up the voxel data
-  H5ReconVolumeReader::Pointer h5Reader = H5ReconVolumeReader::New();
+  H5VoxelReader::Pointer h5Reader = H5VoxelReader::New();
   h5Reader->setFilename(m_InputFile);
   int dims[3];
   float spacing[3];

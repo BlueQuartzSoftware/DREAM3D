@@ -39,13 +39,12 @@
 
 #include "MXA/MXATypes.h"
 #include "MXA/Common/MXASetGetMacros.h"
-
+#include "MXA/HDF5/H5Lite.h"
+#include "MXA/HDF5/H5Utilities.h"
 
 #include "DREAM3D/DREAM3DConfiguration.h"
 #include "DREAM3D/Common/Constants.h"
 #include "DREAM3D/Reconstruction/ReconstructionVoxel.h"
-#include "HDF5/H5Lite.h"
-#include "HDF5/H5Utilities.h"
 #include "DREAM3D/HDF5/VTKH5Constants.h"
 
 
@@ -63,14 +62,14 @@
 /*
  *
  */
-class H5ReconVolumeReader
+class H5VoxelReader
 {
   public:
-    MXA_SHARED_POINTERS(H5ReconVolumeReader)
-    MXA_TYPE_MACRO(H5ReconVolumeReader)
-    MXA_STATIC_NEW_MACRO(H5ReconVolumeReader)
+    MXA_SHARED_POINTERS(H5VoxelReader)
+    MXA_TYPE_MACRO(H5VoxelReader)
+    MXA_STATIC_NEW_MACRO(H5VoxelReader)
 
-    virtual ~H5ReconVolumeReader();
+    virtual ~H5VoxelReader();
 
     MXA_INSTANCE_STRING_PROPERTY(Filename);
 
@@ -89,13 +88,13 @@ class H5ReconVolumeReader
   }
 
   OPEN_HDF5_FILE(fileId, m_Filename)
-  OPEN_RECONSTRUCTION_GROUP(reconGid, AIM::Reconstruction::VoxelDataName.c_str(), fileId)
+  OPEN_RECONSTRUCTION_GROUP(reconGid, AIM::HDF5::VoxelDataName.c_str(), fileId)
   OPEN_RECONSTRUCTION_GROUP(scalarGid, H5_SCALAR_DATA_GROUP_NAME, reconGid)
 
   int* iData = (int*)(malloc(totalpoints * sizeof(int)));
 
   // Read in the Grain ID data
-  err = H5Lite::readPointerDataset(scalarGid, AIM::Reconstruction::GrainIdScalarName, iData);
+  err = H5Lite::readPointerDataset(scalarGid, AIM::VTK::GrainIdScalarName, iData);
   if (err < 0)
   {
     std::cout << "H5ReconVolumeReader Error Reading the Grain IDs" << std::endl;
@@ -111,7 +110,7 @@ class H5ReconVolumeReader
   }
 
   // Read the Phase ID data
-  err = H5Lite::readPointerDataset(scalarGid, AIM::Reconstruction::PhaseIdScalarName, iData);
+  err = H5Lite::readPointerDataset(scalarGid, AIM::VTK::PhaseIdScalarName, iData);
   if (err < 0)
   {
     std::cout << "H5ReconVolumeReader Error Reading the Phase IDs" << std::endl;
@@ -130,7 +129,7 @@ class H5ReconVolumeReader
 
   // Read in the Euler Angles Data
   float* fData = (float*)(malloc(totalpoints * 3 * sizeof(float)));
-  err = H5Lite::readPointerDataset(scalarGid, AIM::Reconstruction::EulerAnglesName, fData);
+  err = H5Lite::readPointerDataset(scalarGid, AIM::VTK::EulerAnglesName, fData);
   if (err < 0)
   {
     std::cout << "H5ReconVolumeReader Error Reading the Euler Angles" << std::endl;
@@ -155,7 +154,7 @@ class H5ReconVolumeReader
 
   // Read the CrystalStructure Field Data
   std::vector<unsigned int> xtals;
-  err = H5Lite::readVectorDataset(fieldGid, AIM::Reconstruction::CrystalStructureName, xtals);
+  err = H5Lite::readVectorDataset(fieldGid, AIM::VTK::CrystalStructureName, xtals);
   if (err < 0)
   {
     std::cout << "H5ReconVolumeReader Error Reading the Crystal Structure Field Data" << std::endl;
@@ -182,11 +181,11 @@ class H5ReconVolumeReader
 
 
   protected:
-    H5ReconVolumeReader();
+    H5VoxelReader();
 
   private:
-    H5ReconVolumeReader(const H5ReconVolumeReader&); // Copy Constructor Not Implemented
-    void operator=(const H5ReconVolumeReader&); // Operator '=' Not Implemented
+    H5VoxelReader(const H5VoxelReader&); // Copy Constructor Not Implemented
+    void operator=(const H5VoxelReader&); // Operator '=' Not Implemented
 };
 
 #endif /* H5RECONVOLUMEREADER_H_ */
