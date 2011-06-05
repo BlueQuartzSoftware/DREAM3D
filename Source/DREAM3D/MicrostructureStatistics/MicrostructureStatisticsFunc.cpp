@@ -52,7 +52,6 @@
 #include "DREAM3D/Common/AIMMath.h"
 #include "DREAM3D/Common/Constants.h"
 #include "DREAM3D/Common/OIMColoring.hpp"
-#include "DREAM3D/Reconstruction/ReconstructionVTKWriter.h"
 #include "DREAM3D/HDF5/AIM_H5VtkDataWriter.h"
 #include "DREAM3D/Parallel/Algo.hpp"
 
@@ -70,7 +69,11 @@ const static float sin_wmin_pos_1_over_2 = sinf(acos_pos_one / 2.0);
 #define DIMS "DIMENSIONS"
 #define LOOKUP "LOOKUP_TABLE"
 
+using namespace std;
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 MicrostructureStatisticsFunc::MicrostructureStatisticsFunc()
 {
   m_HexOps = HexagonalOps::New();
@@ -1825,7 +1828,7 @@ void MicrostructureStatisticsFunc::deformation_stats(const std::string &filename
 		q2[j] = m_Grains[gname2]->avg_quat[j]/m_Grains[gname2]->avg_quat[0];
 	  }
 	  OrientationMath::getSlipMisalignment(ss1, q1, q2, ssap);
-      if (crystruct[m_Grains[gname]->phase] == crystruct[m_Grains[gname2]->phase]) 
+      if (crystruct[m_Grains[gname]->phase] == crystruct[m_Grains[gname2]->phase])
 	  {
         w = m_OrientationOps[crystruct[m_Grains[gname]->phase]]->getMisoQuat(q1, q2, n1, n2, n3);
       }

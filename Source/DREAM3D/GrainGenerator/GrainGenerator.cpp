@@ -37,13 +37,13 @@
 #include "MXA/Utilities/MXADir.h"
 #include "MXA/Utilities/MXAFileInfo.h"
 
-#include "DREAM3D/GrainGenerator/GrainGeneratorVoxelWriter.h"
+#include "DREAM3D/Common/VTKUtils/VTKFileWriters.hpp"
 #include "DREAM3D/StructureReaders/AbstractStructureReader.h"
 #include "DREAM3D/StructureReaders/VTKStructureReader.h"
 #include "DREAM3D/StructureReaders/DXStructureReader.h"
 #include "DREAM3D/HDF5/H5GrainWriter.h"
-#include "DREAM3D/HDF5/H5ReconVolumeWriter.h"
-#include "DREAM3D/HDF5/H5ReconVolumeReader.h"
+#include "DREAM3D/HDF5/H5VoxelWriter.h"
+#include "DREAM3D/HDF5/H5VoxelReader.h"
 
 
 
@@ -152,12 +152,12 @@ void GrainGenerator::execute()
 
     updateProgressAndMessage(("Reading Structure"), 40);
     std::string ext = MXAFileInfo::extension(m_StructureFile);
-    if (ext.compare("vtk") == 0) 
+    if (ext.compare("vtk") == 0)
 	{
       VTKStructureReader::Pointer reader = VTKStructureReader::New();
       reader->setInputFileName(m_StructureFile);
-      reader->setGrainIdScalarName(AIM::Reconstruction::GrainIdScalarName);
-      reader->setPhaseIdScalarName(AIM::Reconstruction::PhaseIdScalarName);
+      reader->setGrainIdScalarName(AIM::VTK::GrainIdScalarName);
+      reader->setPhaseIdScalarName(AIM::VTK::PhaseIdScalarName);
       err = reader->readStructure(m.get());
       if (err < 0) { setCancel(true); }
       CHECK_FOR_CANCELED(GrainGeneratorFunc, "GrainGenerator Was canceled", reading_structure)
@@ -165,7 +165,7 @@ void GrainGenerator::execute()
     else if (ext.compare("h5") == 0)
 	{
 	  // Load up the voxel data
-	  H5ReconVolumeReader::Pointer h5Reader = H5ReconVolumeReader::New();
+	  H5VoxelReader::Pointer h5Reader = H5VoxelReader::New();
 	  h5Reader->setFilename(m_StructureFile);
 	  int dims[3];
 	  float spacing[3];
@@ -254,7 +254,7 @@ void GrainGenerator::execute()
   /** ********** This section writes the Voxel Data for the Stats Module *** */
   // Create a new HDF5 Volume file by overwriting any HDF5 file that may be in the way
   MAKE_OUTPUT_FILE_PATH ( hdf5VolumeFile, AIM::SyntheticBuilder::H5VolumeFile)
-  H5ReconVolumeWriter::Pointer h5VolWriter = H5ReconVolumeWriter::New();
+  H5VoxelWriter::Pointer h5VolWriter = H5VoxelWriter::New();
   if (h5VolWriter.get() == NULL)
   {
     updateProgressAndMessage("The HDF5 Voxel file could not be created. Does the path exist and do you have write access to the output directory.", 100);
@@ -271,25 +271,26 @@ void GrainGenerator::execute()
     return;
   }
 
-  /** ********** This section writes the VTK files for visualization *** */
-  GrainGeneratorVoxelWriter::Pointer vtkWriter = GrainGeneratorVoxelWriter::New();
+  /* ********** This section writes the VTK files for visualization *** */
+  VTKFileWriters::Pointer vtkWriter = VTKFileWriters::New();
   vtkWriter->setWriteBinaryFiles(m_WriteBinaryFiles);
 
   updateProgressAndMessage(("Writing VTK Visualization File"), 93);
-  if (m_WriteVisualizationFile) {vtkWriter->writeVisualizationFile(m.get(), reconVisFile);}
+  if (m_WriteVisualizationFile) {vtkWriter->writeGrainVisualizationFile(m.get(), reconVisFile);}
   CHECK_FOR_CANCELED(GrainGeneratorFunc, "GrainGenerator Was canceled", writeVisualizationFile)
 
   updateProgressAndMessage(("Writing VTK Inverse Pole Figure File"), 94);
-  if (m_WriteIPFFile) {vtkWriter->writeIPFVizFile(m.get(), reconIPFVisFile);}
+  if (m_WriteIPFFile) {vtkWriter->writeGrainIPFVizFile(m.get(), reconIPFVisFile);}
   CHECK_FOR_CANCELED(GrainGeneratorFunc, "GrainGenerator Was canceled", writeIPFVizFile)
 
   /** ******* End VTK Visualization File Writing Section ****** */
 
-  /*  This CMU's ph format */
+  /* **********   This CMU's ph format */
   updateProgressAndMessage(("Writing Ph Voxel File"), 95);
-  if (m_WritePhFile) {vtkWriter->writePhFile(m.get(), phFile);}
+  if (m_WritePhFile) {vtkWriter->writeGrainPhFile(m.get(), phFile);}
   CHECK_FOR_CANCELED(GrainGeneratorFunc, "GrainGenerator Was canceled", writePhFile)
 
+  /* ********** HDF5 Grains File  ********** */
   updateProgressAndMessage(("Writing Out HDF5 Grain File. This may take a few minutes to complete."), 96);
   H5GrainWriter::Pointer h5GrainWriter = H5GrainWriter::New();
   if (m_WriteHDF5GrainFile) { h5GrainWriter->writeHDF5GrainsFile(m.get(), hdf5GrainFile); }

@@ -36,15 +36,15 @@
 // -----------------------------------------------------------------------------
 MicrostructureStatisticsVoxel::MicrostructureStatisticsVoxel() :
 grain_index(0),
+phase(0),
 euler1(-1.0),
 euler2(-1.0),
 euler3(-1.0),
-phase(0),
 neighbor(-1),
+surfacevoxel(0),
 grainmisorientation(0.0),
 misorientationgradient(0.0),
-kernelmisorientation(0.0),
-surfacevoxel(0)
+kernelmisorientation(0.0)
 {
   nearestneighbor[0] = 0; nearestneighbor[1] = 0; nearestneighbor[2] = 0;
   nearestneighbordistance[0] = 0.0; nearestneighbordistance[1] = 0.0; nearestneighbordistance[2] = 0.0;

@@ -52,7 +52,6 @@
 #include "DREAM3D/Common/AIMMath.h"
 #include "DREAM3D/Common/Constants.h"
 #include "DREAM3D/Common/OIMColoring.hpp"
-#include "DREAM3D/Reconstruction/ReconstructionVTKWriter.h"
 #include "DREAM3D/HDF5/AIM_H5VtkDataWriter.h"
 #include "DREAM3D/Parallel/Algo.hpp"
 

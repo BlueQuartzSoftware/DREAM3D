@@ -55,11 +55,11 @@
 
 #include "DREAM3D/DREAM3DConfiguration.h"
 #include <DREAM3D/Common/Grain.h>
-#include <DREAM3D/Common/Patch.h>
-#include <DREAM3D/Common/Face.h>
-#include <DREAM3D/Common/Neighbor.h>
-#include <DREAM3D/Common/Node.h>
-#include <DREAM3D/Common/Segment.h>
+#include <DREAM3D/SurfaceMesh/Patch.h>
+#include <DREAM3D/SurfaceMesh/Face.h>
+#include <DREAM3D/SurfaceMesh/Neighbor.h>
+#include <DREAM3D/SurfaceMesh/Node.h>
+#include <DREAM3D/SurfaceMesh/Segment.h>
 #include <DREAM3D/Common/AIMRandomNG.h>
 #include <DREAM3D/ANGSupport/AngDataLoader.h>
 
