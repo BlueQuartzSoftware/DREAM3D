@@ -285,7 +285,7 @@ void MicrostructureStatisticsWidget::on_m_GoBtn_clicked()
 
   m_MicrostructureStatistics->setComputeODF(computeODF->isChecked());
   m_MicrostructureStatistics->setComputeMDF(computeMDF->isChecked());
-
+  m_MicrostructureStatistics->setBinStepSize(m_BinStepSize->value());
 
   /* Connect the signal 'started()' from the QThread to the 'run' slot of the
    * Reconstruction object. Since the Reconstruction object has been moved to another
