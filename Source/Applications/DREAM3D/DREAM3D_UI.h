@@ -75,6 +75,14 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
     void on_actionClose_triggered();
     void on_actionExit_triggered();
 
+    void on_action_ShowPluginToolbar_toggled(bool state);
+
+    void on_action_IconText_toggled(bool state);
+    void on_action_IconOnly_toggled(bool state);
+    void on_action_TextOnly_toggled(bool state);
+
+    void pluginToolbarVisibilityChanged(bool state);
+
   /**
    * @brief Updates the QMenu 'Recent Files' with the latest list of files. This
    * should be connected to the Signal QRecentFileList->fileListChanged
@@ -143,6 +151,13 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
     void writeSettings();
 
     /**
+     *
+     * @param prefs
+     */
+    void writeWindowSettings(QSettings &prefs);
+    void readWindowSettings(QSettings &prefs);
+
+    /**
      * @brief Initializes some of the GUI elements with selections or other GUI related items
      */
     void setupGui();
@@ -164,8 +179,9 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
     QList<QWidget*>             m_WidgetList;
     QThread*                    m_WorkerThread;
     QStringList                 m_PluginDirs;
-    QStringList                 pluginFileNames;
-    QActionGroup*               pluginActionGroup;
+    QStringList                 m_PluginFileNames;
+    QActionGroup*               m_PluginActionGroup;
+    QActionGroup*               m_PluginPrefsActionGroup;
     DREAM3DPluginInterface*     m_ActivePlugin;
     QVector<DREAM3DPluginInterface*> m_LoadedPlugins;
     QToolBar*                   m_PluginToolBar;

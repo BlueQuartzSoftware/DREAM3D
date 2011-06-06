@@ -72,6 +72,15 @@
     <property name="title">
      <string>Plugins</string>
     </property>
+    <widget class="QMenu" name="menuToolbar_Prefs">
+     <property name="title">
+      <string>Toolbar Prefs</string>
+     </property>
+     <addaction name="action_IconText"/>
+     <addaction name="action_IconOnly"/>
+     <addaction name="action_TextOnly"/>
+    </widget>
+    <addaction name="menuToolbar_Prefs"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuPlugins"/>
@@ -95,6 +104,38 @@
   <action name="actionSomething">
    <property name="text">
     <string>Something</string>
+   </property>
+  </action>
+  <action name="action_IconText">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Icon and Text</string>
+   </property>
+  </action>
+  <action name="action_IconOnly">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Icon Only</string>
+   </property>
+  </action>
+  <action name="action_TextOnly">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Text Only</string>
+   </property>
+  </action>
+  <action name="action_ShowPluginToolbar">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Show Toolbar</string>
    </property>
   </action>
  </widget>
