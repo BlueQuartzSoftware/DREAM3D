@@ -46,7 +46,7 @@
 #include <QtGui/QListWidget>
 
 
-//-- AIMRep Includes
+//-- DREAM3D Includes
 #include "DREAM3D/Common/Constants.h"
 #include "DREAM3D/DREAM3DVersion.h"
 #include "QtSupport/ApplicationAboutBoxDialog.h"
@@ -70,18 +70,21 @@ m_OpenDialogLastDirectory("C:\\")
 m_OpenDialogLastDirectory("~/")
 #endif
 {
+  // Calls the Parent Class to do all the Widget Initialization that were created
+  // using the QDesigner program
   setupUi(this);
 
+  // Do our own widget initializations
   setupGui();
+  // Look for plugins
   loadPlugins();
+
+  // Read the Preferences for each plugin and our own settings
   readSettings();
 
-//   QRecentFileList* recentFileList = QRecentFileList::instance();
-//   connect(recentFileList, SIGNAL (fileListChanged(const QString &)),
-//           this, SLOT(updateRecentFileList(const QString &)) );
-   // Get out initial Recent File List
-   this->updateRecentFileList(QString::null);
-   this->setAcceptDrops(true);
+  // Get out initial Recent File List
+  this->updateRecentFileList(QString::null);
+  this->setAcceptDrops(true);
 }
 
 // -----------------------------------------------------------------------------
@@ -265,18 +268,6 @@ void DREAM3D_UI::setupGui()
 
   action_ShowPluginToolbar->setChecked(m_PluginToolBar->isVisible());
 
-  connect(m_PluginToolBar, SIGNAL(visibilityChanged(bool)),
-          this, SLOT(pluginToolbarVisibilityChanged(bool)));
-
-
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void DREAM3D_UI::pluginToolbarVisibilityChanged(bool state)
-{
-  action_ShowPluginToolbar->setChecked(state);
 }
 
 
@@ -558,12 +549,22 @@ void DREAM3D_UI::loadPlugins()
 // -----------------------------------------------------------------------------
  void DREAM3D_UI::populateMenus(QObject *plugin)
 {
+#ifdef QT_DEBUG
   std::cout << "Found Plugin..." << std::endl;
+#endif
   DREAM3DPluginInterface* ipPlugin = qobject_cast<DREAM3DPluginInterface * > (plugin);
   if (ipPlugin)
   {
+    quint32 order = ipPlugin->pluginOrder();
+    if (order >= m_LoadedPlugins.size() && order < DREAM3D::UserDefinedPluginOrder)
+    {
+      m_LoadedPlugins.resize(order + 1);
+      m_LoadedPlugins[order] = ipPlugin;
+    }
     m_LoadedPlugins.push_back(ipPlugin);
+#ifdef QT_DEBUG
     qWarning(ipPlugin->getPluginName().toAscii(), "%s");
+#endif
     QIcon newIcon = ipPlugin->icon();
 
     addToPluginMenu(plugin, ipPlugin->getPluginName(),
