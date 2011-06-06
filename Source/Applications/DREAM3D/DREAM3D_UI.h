@@ -81,7 +81,6 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
     void on_action_IconOnly_toggled(bool state);
     void on_action_TextOnly_toggled(bool state);
 
-    void pluginToolbarVisibilityChanged(bool state);
 
   /**
    * @brief Updates the QMenu 'Recent Files' with the latest list of files. This
