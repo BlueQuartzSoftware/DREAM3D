@@ -79,9 +79,6 @@ if (NULL != obj->sharedPtr.get())\
 namespace AIM
 {
 
-
-
-
   // These are also used as HDF5 Group/Data/Attribute names so DONT change these.
   namespace Representation {
     const std::string Grain_ID("Grain_ID");
