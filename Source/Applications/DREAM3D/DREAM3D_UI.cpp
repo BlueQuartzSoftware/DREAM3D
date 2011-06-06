@@ -145,26 +145,25 @@ void DREAM3D_UI::readSettings()
 #else
   QSettings prefs(QSettings::IniFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
 #endif
+  bool ok = false;
 
+  Qt::ToolButtonStyle tbstyle = static_cast<Qt::ToolButtonStyle>(prefs.value("PluginDisplay").toUInt(&ok));
+  m_PluginToolBar->setToolButtonStyle(tbstyle);
 
-//  int ActiveTab = 0;
-//  READ_INT_SETTING(prefs, ActiveTab, 0);
-//  this->centralWidget->setCurrentIndex(ActiveTab);
-
-
-
+  // Read the preference for each plugin
   foreach (DREAM3DPluginInterface* plugin, m_LoadedPlugins) {
     plugin->readSettings(prefs);
   }
+
   bool loaded = false;
   QString pluginName = prefs.value("ActivePlugin").toString();
   for (int i = 0; i < m_LoadedPlugins.size(); ++i)
   {
     if (m_LoadedPlugins[i]->getPluginName().compare(pluginName) == 0)
     {
-      if (pluginActionGroup->actions().size() > 0)
+      if (m_PluginActionGroup->actions().size() > 0)
       {
-        pluginActionGroup->actions().at(i)->activate(QAction::Trigger);
+        m_PluginActionGroup->actions().at(i)->activate(QAction::Trigger);
         loaded = true;
       }
       break;
@@ -174,11 +173,34 @@ void DREAM3D_UI::readSettings()
   // If the proper plugin was not found, Load the first plugin found
   if (loaded == false)
   {
-    if (pluginActionGroup->actions().size() > 0)
+    if (m_PluginActionGroup->actions().size() > 0)
     {
-      pluginActionGroup->actions().at(0)->activate(QAction::Trigger);
+      m_PluginActionGroup->actions().at(0)->activate(QAction::Trigger);
     }
   }
+
+  readWindowSettings(prefs);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3D_UI::readWindowSettings(QSettings &prefs)
+{
+  bool ok = false;
+  prefs.beginGroup("WindowSettings");
+  if (prefs.contains(QString("Geometry")) )
+  {
+    QByteArray geo_data = prefs.value(QString("Geometry")).toByteArray();
+    ok = restoreGeometry(geo_data);
+  }
+
+  if (prefs.contains(QString("Layout")))
+  {
+    QByteArray layout_data = prefs.value(QString("Layout")).toByteArray();
+    restoreState(layout_data);
+  }
+  prefs.endGroup();
 }
 
 // -----------------------------------------------------------------------------
@@ -193,14 +215,27 @@ void DREAM3D_UI::writeSettings()
   QSettings prefs(QSettings::IniFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
 #endif
 
-//  int ActiveTab = this->centralWidget->currentIndex();
-//  WRITE_INT_SETTING(prefs, ActiveTab);
   prefs.setValue("ActivePlugin" , this->m_ActivePlugin->getPluginName());
 
   foreach (DREAM3DPluginInterface* plugin, m_LoadedPlugins) {
     plugin->writeSettings(prefs);
   }
 
+  writeWindowSettings(prefs);
+  prefs.setValue("PluginDisplay", this->m_PluginToolBar->toolButtonStyle());
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3D_UI::writeWindowSettings(QSettings &prefs)
+{
+  prefs.beginGroup("WindowSettings");
+  QByteArray geo_data = saveGeometry();
+  QByteArray layout_data = saveState();
+  prefs.setValue(QString("Geometry"), geo_data);
+  prefs.setValue(QString("Layout"), layout_data);
+  prefs.endGroup();
 }
 
 
@@ -209,15 +244,77 @@ void DREAM3D_UI::writeSettings()
 // -----------------------------------------------------------------------------
 void DREAM3D_UI::setupGui()
 {
-  pluginActionGroup = new QActionGroup(this);
+  m_PluginActionGroup = new QActionGroup(this);
   m_PluginToolBar = new QToolBar(this);
+  m_PluginToolBar->setObjectName(QString("PluginToolbar"));
 
   // This should be a preference setting somewhere.
   m_PluginToolBar->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
-
-  m_PluginToolBar->setWindowTitle(tr("Plugins"));
+  m_PluginToolBar->setWindowTitle(tr("Show Plugin Toolbar"));
   addToolBar(m_PluginToolBar);
+
+  // Get the Action to Display/Hide the
+  QAction* showToolbarAction = m_PluginToolBar->toggleViewAction();
+  menuPlugins->addAction(showToolbarAction);
+
+  // Make these Menus Mutually Exclusive
+  m_PluginPrefsActionGroup = new QActionGroup(this);
+  m_PluginPrefsActionGroup->addAction(action_IconText);
+  m_PluginPrefsActionGroup->addAction(action_IconOnly);
+  m_PluginPrefsActionGroup->addAction(action_TextOnly);
+
+  action_ShowPluginToolbar->setChecked(m_PluginToolBar->isVisible());
+
+  connect(m_PluginToolBar, SIGNAL(visibilityChanged(bool)),
+          this, SLOT(pluginToolbarVisibilityChanged(bool)));
+
+
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3D_UI::pluginToolbarVisibilityChanged(bool state)
+{
+  action_ShowPluginToolbar->setChecked(state);
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3D_UI::on_action_ShowPluginToolbar_toggled(bool state )
+{
+  m_PluginToolBar->setVisible(state);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3D_UI::on_action_IconText_toggled(bool state)
+{
+  m_PluginToolBar->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3D_UI::on_action_IconOnly_toggled(bool state)
+{
+  m_PluginToolBar->setToolButtonStyle(Qt::ToolButtonIconOnly);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3D_UI::on_action_TextOnly_toggled(bool state)
+{
+  m_PluginToolBar->setToolButtonStyle(Qt::ToolButtonTextOnly);
+}
+
+
+
+
 
 // -----------------------------------------------------------------------------
 //
@@ -441,10 +538,10 @@ void DREAM3D_UI::loadPlugins()
         QPluginLoader loader(aPluginDir.absoluteFilePath(fileName));
         QObject *plugin = loader.instance();
         //  std::cout << "plugin Pointer: " << plugin << std::endl;
-        if (plugin && pluginFileNames.contains(fileName, Qt::CaseSensitive) == false)
+        if (plugin && m_PluginFileNames.contains(fileName, Qt::CaseSensitive) == false)
         {
           populateMenus(plugin);
-          pluginFileNames += fileName;
+          m_PluginFileNames += fileName;
         }
         else
         {
@@ -452,7 +549,7 @@ void DREAM3D_UI::loadPlugins()
         }
       }
     }
-    menuPlugins->setEnabled(!pluginActionGroup->actions().isEmpty());
+    menuPlugins->setEnabled(!m_PluginActionGroup->actions().isEmpty());
   }
 }
 
@@ -470,7 +567,7 @@ void DREAM3D_UI::loadPlugins()
     QIcon newIcon = ipPlugin->icon();
 
     addToPluginMenu(plugin, ipPlugin->getPluginName(),
-                    menuPlugins, SLOT(setInputUI()), pluginActionGroup, newIcon);
+                    menuPlugins, SLOT(setInputUI()), m_PluginActionGroup, newIcon);
   }
 }
 
