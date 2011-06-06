@@ -168,6 +168,7 @@ void MicrostructureStatisticsFunc::initializeArrays()
 
   mindiameter.resize(size+1);
   maxdiameter.resize(size+1);
+  totalvol.resize(size+1);
 
 }
 

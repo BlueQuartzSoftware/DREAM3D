@@ -2775,37 +2775,33 @@ void SurfaceMeshFunc::arrange_grainnames(int numT, int zID)
       }
     }
     int k = 0;
+	int index = 0;
 	int testtsite = 0;
 	int sidechecked = 1;
-    while (cTriangle[i].ngrainname[0] == -1)
+    while (cTriangle[i].ngrainname[0] == -1 && k < 6)
     {
       while (tsite1[k] == -1)
       {
         k++;
       }
-	  if(a == 1 && tsite1[k]%xDim != (xDim-1)) testtsite = tsite1[k] + a, sidechecked = 1;
-	  if(a == 1 && tsite1[k]%xDim == (xDim-1)) testtsite = tsite1[k] - a, sidechecked = -1;
-	  if(a == -1 && tsite1[k]%xDim != 0) testtsite = tsite1[k] - a, sidechecked = 1;
-	  if(a == -1 && tsite1[k]%xDim == 0) testtsite = tsite1[k] + a, sidechecked = -1;
-	  if(b == 1 && (tsite1[k]/xDim)%yDim != (yDim-1)) testtsite = tsite1[k] + xDim, sidechecked = 1;
-	  if(b == 1 && (tsite1[k]/xDim)%yDim == (yDim-1)) testtsite = tsite1[k] - xDim, sidechecked = -1;
-	  if(b == -1 && (tsite1[k]/xDim)%yDim != 0) testtsite = tsite1[k] - xDim, sidechecked = 1;
-	  if(b == -1 && (tsite1[k]/xDim)%yDim == 0) testtsite = tsite1[k] + xDim, sidechecked = -1;
-	  if(c == 1 && tsite1[k]/(xDim*yDim) != 1) testtsite = tsite1[k] + NSP, sidechecked = 1;
-	  if(c == 1 && tsite1[k]/(xDim*yDim) == 1) testtsite = tsite1[k] - NSP, sidechecked = -1;
-	  if(c == -1 && tsite1[k]/(xDim*yDim) != 0) testtsite = tsite1[k] - NSP, sidechecked = 1;
-	  if(c == -1 && tsite1[k]/(xDim*yDim) == 0) testtsite = tsite1[k] + NSP, sidechecked = -1;
+	  if(k == 3) a = -a, b = -b, c = -c;
+	  if(k < 3) index = k;
+	  if(k >= 3) index = k-3;
+	  if(a != 0 && (tsite1[index]%xDim+a) >= 0 && (tsite1[index]%xDim+a) < xDim) testtsite = tsite1[index] + (a*1);
+	  if(b != 0 && ((tsite1[index]/xDim)%yDim+b) >= 0 && ((tsite1[index]/xDim)%yDim+b) < yDim) testtsite = tsite1[index] + (b*xDim);
+	  if(c != 0 && (tsite1[index]/(xDim*yDim)+c) >= 0 && (tsite1[index]/(xDim*yDim)+c) < 2) testtsite = tsite1[index] + (c*NSP);
       int gname = voxels[testtsite];
-      if ((gname == tgrainname1[k] && sidechecked == 1) || (gname == tgrainname2[k] && sidechecked == -1))
+      if (gname == tgrainname1[index])
       {
-        cTriangle[i].ngrainname[0] = tgrainname1[k];
-        cTriangle[i].ngrainname[1] = tgrainname2[k];
+        if(k < 3) cTriangle[i].ngrainname[0] = tgrainname1[index], cTriangle[i].ngrainname[1] = tgrainname2[index];
+        if(k >= 3) cTriangle[i].ngrainname[0] = tgrainname2[index], cTriangle[i].ngrainname[1] = tgrainname1[index];
       }
-      if ((gname == tgrainname2[k] && sidechecked == 1) || (gname == tgrainname1[k] && sidechecked == -1))
+      if (gname == tgrainname2[index])
       {
-        cTriangle[i].ngrainname[0] = tgrainname2[k];
-        cTriangle[i].ngrainname[1] = tgrainname1[k];
+        if(k < 3) cTriangle[i].ngrainname[0] = tgrainname2[index], cTriangle[i].ngrainname[1] = tgrainname1[index];
+        if(k >= 3) cTriangle[i].ngrainname[0] = tgrainname1[index], cTriangle[i].ngrainname[1] = tgrainname2[index];
       }
+	  if(gname != tgrainname1[index] && gname != tgrainname2[index]) k++;
     }
   }
 }
