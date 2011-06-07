@@ -5,8 +5,7 @@ This is the list of things to do. It is written with the DOxygen style
 so it can be integrated with the other documentation pages.
 
 @section todomisc Misc Bugs
-@li Change all vtk to rectilinear grid.
-@li Combine all vtk to 1 per tab (with option pop-up to click all attributes desired).
+
 
 @section ang_import Ang Import:
 @li Better Display of errors when importing to help user fix their data
@@ -19,6 +18,8 @@ indicate which files will be over written during execution.
 @li Put pop-up on check of h5grain to let them know they need special Paraview.
 @li <b>DONE</b> (MAJ 2011/05/27) - Set output prefix based on the name of the input file
 @li <b>DONE</b> (MAJ 2011/06/07) - Write RectilinearGrid for VTK files with Optional Scalars
+@li <b>DONE</b> (MAJ 2011/06/07) - Combine all vtk to 1 per tab (with option pop-up to click all attributes desired).
+@li <b>DONE</b> (MAJ 2011/06/07) - Change all vtk to rectilinear grid.
 
 @section  graingenerator GrainGenerator:
 @li <b>DONE</b> (MAJ 2011/06/07) Write PhaseType array from Reconstruction and GrainGenerator to VoxelData.h5.
@@ -29,7 +30,8 @@ indicate which files will be over written during execution.
 @li Real time indicate the average grain size, number of grains as user inputs values
 into the user interface
 @li <b>DONE</b> (MAJ 2011/05/27) - Stop reading MicroTexture from the HDF5 Input file
-
+@li <b>DONE</b> (MAJ 2011/06/07) - Combine all vtk to 1 per tab (with option pop-up to click all attributes desired).
+@li <b>DONE</b> (MAJ 2011/06/07) - Change all vtk to rectilinear grid.
 
 @section surfacemeshing Surface Meshing:
 @li Output STL File per grain
