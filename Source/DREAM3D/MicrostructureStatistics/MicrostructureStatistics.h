@@ -77,6 +77,9 @@ class DREAM3DLib_EXPORT MicrostructureStatistics  : public AbstractPipeline
     MXA_INSTANCE_PROPERTY(bool, ComputeODF);
     MXA_INSTANCE_PROPERTY(bool, ComputeMDF);
 
+    // Options
+    MXA_INSTANCE_PROPERTY(float, BinStepStize);
+
     /**
     * @brief
     * @param ostream
