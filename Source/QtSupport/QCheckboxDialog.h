@@ -27,24 +27,40 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#include "H5VoxelWriter.h"
 
-#include "DREAM3D/Reconstruction/ReconstructionFunc.h"
+#ifndef QCHECKBOXDIALOG_H_
+#define QCHECKBOXDIALOG_H_
+
+#include <QtCore/QMap>
+#include <QtCore/QString>
+#include <QtGui/QDialog>
+
+class QCheckBox;
 
 
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-H5VoxelWriter::H5VoxelWriter()
+/*
+ *
+ */
+class QCheckboxDialog : public QDialog
 {
+    Q_OBJECT    ;
+  public:
+    QCheckboxDialog(QVector<QString> list, QWidget* parent = NULL);
+    virtual ~QCheckboxDialog();
 
-}
+    bool getValue(QString key);
+    void setValue(QString key, bool value);
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-H5VoxelWriter::~H5VoxelWriter()
-{
-}
+  protected:
+    void setupGui();
 
+  private:
+    QVector<QString>    m_List;
+    QMap<QString, QCheckBox*>   m_WidgetMap;
+
+    QCheckboxDialog(const QCheckboxDialog&); // Copy Constructor Not Implemented
+    void operator=(const QCheckboxDialog&); // Operator '=' Not Implemented
+
+};
+
+#endif /* QCHECKBOXDIALOG_H_ */

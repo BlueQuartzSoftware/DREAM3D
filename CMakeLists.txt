@@ -260,7 +260,7 @@ IF ( DREAM3D_BUILD_CLI_TOOLS )
 endif()
 
 # ------- Enable the CTest testing. Use make test to run all tests ---------------
-OPTION(DREAM3D_BUILD_TESTING "Compile the test programs" OFF)
+OPTION(DREAM3D_BUILD_TESTING "Compile the test programs" ON)
 if (DREAM3D_BUILD_TESTING)
     ENABLE_TESTING()
     add_subdirectory(${DREAM3D_SOURCE_DIR}/Source/Test ${DREAM3D_BINARY_DIR}/Test)
@@ -295,6 +295,7 @@ endif()
 option(DREAM3D_CREATE_PLUGIN "Create the Skeleton Code for a new Pipeline and GUI Plugin" OFF)
 if (DREAM3D_CREATE_PLUGIN)
     add_subdirectory(${PROJECT_SOURCE_DIR}/Support/PluginMaker ${PROJECT_BINARY_DIR}/PluginMaker)
+ #   set (DREAM3D_CREATE_PLUGIN OFF CACHE "" FORCE)
 endif()
 
 # This should be the last line in this file:

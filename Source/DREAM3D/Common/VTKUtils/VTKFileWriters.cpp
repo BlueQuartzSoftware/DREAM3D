@@ -33,7 +33,7 @@
 
 #include <vector>
 #include <string>
-#include<iomanip>
+#include <iomanip>
 
 #include "DREAM3D/Common/OIMColoring.hpp"
 #include "DREAM3D/Common/VTKUtils/VTKWriterMacros.h"
@@ -177,63 +177,5 @@ int VTKFileWriters::writeGrainIPFVizFile(GrainGeneratorFunc* r, const std::strin
   delete[] rgba;
 
   fclose(f);
-  return 0;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int VTKFileWriters::writeGrainPhFile(GrainGeneratorFunc* r, const std::string &file)
-{
-  std::string OutputName;
-
-  // Change the name of the input filename for outout
-  // std::vector<std::string> tokens;
- // std::string delimeters = "."; // Only a period
-  //  std::tokenize(filename, tokens, delimeters);
-
-  //OutputName = tokens[0] + ".ph";
-  std::ofstream outfile;
-  outfile.open(file.c_str());
-  if (!outfile)
-  {
-    std::cout << "Failed to open: " << file << std::endl;
-    return -1;
-  }
-
-  // Find the unique number of grains
-  std::map<int, bool> used;
-
-  for (int i = 0; i < r->totalpoints; ++i)
-  {
-    used[r->voxels[i].grain_index] = true;
-  }
-
-  int grains = 0;
-  typedef std::map<int, bool>::iterator iterator;
-  for (iterator i = used.begin(); i != used.end(); i++)
-    if ((*i).second == true) grains++;
-
-  //std::cout<<grains<< " " << used.size() << std::endl;
-
-
-  outfile << "     " << r->xpoints << "     " << r->ypoints << "     " << r->zpoints << std::endl;
-  outfile << "\'DREAM3\'              52.00  1.000  1.0       " << grains << std::endl;
-  outfile << " 3.000 0.000 0.000          0        \n"; // << grains << endl;
-
-  int count = 0;
-  for (int k = 0; k < r->totalpoints; k++)
-  {
-    outfile << std::setw(6) << r->voxels[k].grain_index;
-    count++;
-    if (count == 20)
-    {
-      outfile << std::endl;
-      count = 0;
-    }
-    //                    outfile << grid[i][j][k] << endl;
-  }
-  outfile << std::endl;
-  outfile.close();
   return 0;
 }

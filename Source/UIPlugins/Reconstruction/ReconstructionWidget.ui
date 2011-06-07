@@ -471,19 +471,6 @@
           </property>
          </widget>
         </item>
-        <item row="1" column="2">
-         <widget class="QCheckBox" name="m_BinaryVtkFiles">
-          <property name="enabled">
-           <bool>true</bool>
-          </property>
-          <property name="text">
-           <string>Write Binary VTK Files</string>
-          </property>
-          <property name="checked">
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
        </layout>
       </item>
       <item>
@@ -574,47 +561,7 @@
             </property>
            </widget>
           </item>
-          <item row="2" column="0">
-           <widget class="QLabel" name="m_IPFVizFileIcon">
-            <property name="text">
-             <string/>
-            </property>
-            <property name="pixmap">
-             <pixmap resource="../../../Resources/icons/images/Icons.qrc">:/Delete-16x16.png</pixmap>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="1">
-           <widget class="QCheckBox" name="m_IPFVizFile">
-            <property name="text">
-             <string>Inverse Pole Figure</string>
-            </property>
-            <property name="checked">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
           <item row="3" column="0">
-           <widget class="QLabel" name="m_ImageQualityVizFileIcon">
-            <property name="text">
-             <string/>
-            </property>
-            <property name="pixmap">
-             <pixmap resource="../../../Resources/icons/images/Icons.qrc">:/Delete-16x16.png</pixmap>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="1">
-           <widget class="QCheckBox" name="m_ImageQualityVizFile">
-            <property name="text">
-             <string>Image Quality</string>
-            </property>
-            <property name="checked">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="4" column="0">
            <widget class="QLabel" name="m_DownSampledVizFileIcon">
             <property name="text">
              <string/>
@@ -624,17 +571,17 @@
             </property>
            </widget>
           </item>
-          <item row="4" column="1">
+          <item row="3" column="1">
            <widget class="QCheckBox" name="m_DownSampledVizFile">
             <property name="text">
              <string>Downsampled File</string>
             </property>
             <property name="checked">
-             <bool>true</bool>
+             <bool>false</bool>
             </property>
            </widget>
           </item>
-          <item row="5" column="0">
+          <item row="4" column="0">
            <widget class="QLabel" name="m_HDF5GrainFileIcon">
             <property name="text">
              <string/>
@@ -644,13 +591,20 @@
             </property>
            </widget>
           </item>
-          <item row="5" column="1">
+          <item row="4" column="1">
            <widget class="QCheckBox" name="m_HDF5GrainFile">
             <property name="text">
              <string>HDF5 Grain File (.h5grain)</string>
             </property>
             <property name="checked">
-             <bool>true</bool>
+             <bool>false</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1">
+           <widget class="QPushButton" name="m_VtkOptionsBtn">
+            <property name="text">
+             <string>VTK Options</string>
             </property>
            </widget>
           </item>

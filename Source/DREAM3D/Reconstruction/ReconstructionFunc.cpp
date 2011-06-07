@@ -1324,7 +1324,7 @@ void ReconstructionFunc::merge_containedgrains()
 
 }
 
-void ReconstructionFunc::reorder_grains(const std::string &reconVisFile)
+void ReconstructionFunc::reorder_grains()
 {
   size_t initialVoxelsListSize = 1000;
   size_t size = 0;
