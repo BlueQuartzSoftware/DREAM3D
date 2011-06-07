@@ -66,11 +66,11 @@ m_MinSeedImageQuality(0.0),
 m_MisorientationTolerance(0.0),
 m_Orientation(Ang::NoOrientation),
 m_WriteBinaryFiles(true),
-m_WriteVisualizationFile(false),
-m_WriteIPFFile(false),
-m_WriteDisorientationFile(false),
-m_WriteImageQualityFile(false),
-m_WriteSchmidFactorFile(false),
+m_WriteVtkFile(true),
+m_WriteEuclidean(true),
+m_WritePhaseId(true),
+m_WriteImageQuality(true),
+m_WriteIPFColor(true),
 m_WriteDownSampledFile(false),
 m_WriteHDF5GrainFile(false)
 {
@@ -151,12 +151,8 @@ void Reconstruction::execute()
   m_OutputDirectory = MXADir::toNativeSeparators(m_OutputDirectory);
 
 
-  //Optional Files
-  MAKE_OUTPUT_FILE_PATH ( reconVisFile, AIM::Reconstruction::VisualizationVizFile);
-  MAKE_OUTPUT_FILE_PATH ( reconIPFVisFile, AIM::Reconstruction::IPFVizFile);
-  MAKE_OUTPUT_FILE_PATH ( reconIQVisFile, AIM::Reconstruction::ImageQualityVizFile);
-  MAKE_OUTPUT_FILE_PATH ( reconDSVisFile, AIM::Reconstruction::DownSampledVizFile);
-  MAKE_OUTPUT_FILE_PATH ( hdf5GrainFile, AIM::Reconstruction::HDF5GrainFile);
+
+
 
   START_CLOCK()
 
@@ -200,7 +196,7 @@ void Reconstruction::execute()
   CHECK_FOR_CANCELED(ReconstructionFunc, "Reconstruction was canceled", find_neighbors)
 
   updateProgressAndMessage(("Reordering Grains"), 28);
-  m->reorder_grains(reconVisFile);
+  m->reorder_grains();
   CHECK_FOR_CANCELED(ReconstructionFunc, "Reconstruction was canceled", reorder_grains)
 
   if(m_FillinSample == true)
@@ -262,26 +258,38 @@ void Reconstruction::execute()
   VTKFileWriters::Pointer vtkWriter = VTKFileWriters::New();
   vtkWriter->setWriteBinaryFiles(m_WriteBinaryFiles);
 
+  //Optional Files
+
+//  MAKE_OUTPUT_FILE_PATH ( reconIPFVisFile, AIM::Reconstruction::IPFVizFile);
+//  MAKE_OUTPUT_FILE_PATH ( reconIQVisFile, AIM::Reconstruction::ImageQualityVizFile);
+//
+
   updateProgressAndMessage(("Writing VTK Visualization File"), 93);
-  if (m_WriteVisualizationFile) {vtkWriter->writeVisualizationFile(m.get(), reconVisFile);}
+  if (m_WriteVtkFile)
+  {
+    MAKE_OUTPUT_FILE_PATH ( reconVisFile, AIM::Reconstruction::VisualizationVizFile);
+    vtkWriter->writeRectilinearGrid(m.get(), reconVisFile, m_WriteEuclidean, m_WritePhaseId, m_WriteImageQuality, m_WriteIPFColor);
+  }
 
-  updateProgressAndMessage(("Writing VTK Inverse Pole Figure File"), 94);
-  if (m_WriteIPFFile) {vtkWriter->writeIPFVizFile(m.get(), reconIPFVisFile);}
 
-  updateProgressAndMessage(("Writing VTK Image Quality File"), 96);
-  if (m_WriteImageQualityFile) {vtkWriter->writeImageQualityVizFile(m.get(), reconIQVisFile);}
-
-  updateProgressAndMessage(("Writing VTK Down Sampled File"), 98);
-  if (m_WriteDownSampledFile) {vtkWriter->writeDownSampledVizFile(m.get(), reconDSVisFile);}
+  if (m_WriteDownSampledFile) {
+    MAKE_OUTPUT_FILE_PATH ( reconDSVisFile, AIM::Reconstruction::DownSampledVizFile);
+    updateProgressAndMessage(("Writing VTK Down Sampled File"), 98);
+    vtkWriter->writeDownSampledVizFile(m.get(), reconDSVisFile);
+  }
   /** ******* End VTK Visualization File Writing Section ****** */
 
   CHECK_FOR_CANCELED(ReconstructionFunc, "Reconstruction was canceled", vtk_viz_files)
 
-  updateProgressAndMessage(("Writing Out HDF5 Grain File. This may take a few minutes to complete."), 99);
-  H5GrainWriter::Pointer h5GrainWriter = H5GrainWriter::New();
-  if (m_WriteHDF5GrainFile) { h5GrainWriter->writeHDF5GrainsFile(m.get(), hdf5GrainFile); }
-  CHECK_FOR_CANCELED(ReconstructionFunc, "Reconstruction was canceled", writeHDF5GrainsFile)
-
+  /** Optionally write the .h5grain file */
+  if (m_WriteHDF5GrainFile)
+  {
+    updateProgressAndMessage(("Writing Out HDF5 Grain File. This may take a few minutes to complete."), 99);
+    MAKE_OUTPUT_FILE_PATH( hdf5GrainFile, AIM::Reconstruction::HDF5GrainFile);
+    H5GrainWriter::Pointer h5GrainWriter = H5GrainWriter::New();
+    h5GrainWriter->writeHDF5GrainsFile(m.get(), hdf5GrainFile);
+    CHECK_FOR_CANCELED(ReconstructionFunc, "Reconstruction was canceled", writeHDF5GrainsFile);
+  }
 
   updateProgressAndMessage(("Reconstruction Complete"), 100);
 
@@ -318,11 +326,11 @@ void Reconstruction::printSettings(std::ostream &ostream)
     PRINT_PROPERTY(ostream, AlignmentMethod)
     PRINT_PROPERTY(ostream, Orientation)
 
-    PRINT_PROPERTY(ostream, WriteVisualizationFile)
-    PRINT_PROPERTY(ostream, WriteIPFFile)
-    PRINT_PROPERTY(ostream, WriteDisorientationFile)
-    PRINT_PROPERTY(ostream, WriteImageQualityFile)
-    PRINT_PROPERTY(ostream, WriteSchmidFactorFile)
+    PRINT_PROPERTY(ostream, WriteVtkFile)
+    PRINT_PROPERTY(ostream, WriteEuclidean)
+    PRINT_PROPERTY(ostream, WritePhaseId)
+    PRINT_PROPERTY(ostream, WriteImageQuality)
+    PRINT_PROPERTY(ostream, WriteIPFColor)
     PRINT_PROPERTY(ostream, WriteDownSampledFile)
     PRINT_PROPERTY(ostream, WriteHDF5GrainFile)
 }

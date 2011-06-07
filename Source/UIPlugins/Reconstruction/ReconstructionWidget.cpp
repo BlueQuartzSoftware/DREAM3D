@@ -49,6 +49,7 @@
 #include "DREAM3D/ANGSupport/H5AngDataLoader.h"
 #include "QtSupport/QR3DFileCompleter.h"
 #include "QtSupport/AIM_QtMacros.h"
+#include "QtSupport/QCheckboxDialog.h"
 
 
 // -----------------------------------------------------------------------------
@@ -59,6 +60,11 @@ AIMPluginFrame(parent),
 m_Reconstruction(NULL),
 m_WorkerThread(NULL),
 m_phaseTypeEdited(false),
+m_WriteEuclideanScalars(false),
+m_WritePhaseIdScalars(true),
+m_WriteImageQualityScalars(true),
+m_WriteIPFColorScalars(true),
+m_WriteBinaryVTKFile(true),
 #if defined(Q_WS_WIN)
 m_OpenDialogLastDirectory("C:\\")
 #else
@@ -115,8 +121,7 @@ void ReconstructionWidget::readSettings(QSettings &prefs)
   READ_SETTING(prefs, m_, DownSampleFactor, ok, d, 1.0 , Double);
 
 
-  READ_CHECKBOX_SETTING(prefs, m_, ImageQualityVizFile, true);
-  READ_CHECKBOX_SETTING(prefs, m_, IPFVizFile, true);
+
   READ_CHECKBOX_SETTING(prefs, m_, VisualizationVizFile, true);
   READ_CHECKBOX_SETTING(prefs, m_, DownSampledVizFile, true);
   READ_CHECKBOX_SETTING(prefs, m_, HDF5GrainFile, true);
@@ -151,8 +156,7 @@ void ReconstructionWidget::writeSettings(QSettings &prefs)
   WRITE_COMBO_BOX(prefs, m_, AlignMeth)
   WRITE_COMBO_BOX(prefs, m_, Orientation)
 
-  WRITE_CHECKBOX_SETTING(prefs, m_, ImageQualityVizFile)
-  WRITE_CHECKBOX_SETTING(prefs, m_, IPFVizFile)
+
   WRITE_CHECKBOX_SETTING(prefs, m_, VisualizationVizFile)
   WRITE_CHECKBOX_SETTING(prefs, m_, DownSampledVizFile)
   WRITE_CHECKBOX_SETTING(prefs, m_, HDF5GrainFile)
@@ -197,10 +201,10 @@ void ReconstructionWidget::setupGui()
   m_WidgetList << m_ZStartIndex << m_ZEndIndex;
   m_WidgetList << m_MergeTwins << m_MergeColonies << m_FillinSample << m_AlignMeth << m_Orientation;
   m_WidgetList << m_MinAllowedGrainSize << m_MinConfidence << m_DownSampleFactor << m_MisOrientationTolerance;
-  m_WidgetList << m_ImageQualityVizFile << m_IPFVizFile << m_VisualizationVizFile << m_DownSampledVizFile;
+  m_WidgetList << m_VisualizationVizFile << m_DownSampledVizFile;
   m_WidgetList << m_MinImageQuality;
   m_WidgetList << m_HDF5GrainFile;
-  m_WidgetList << m_LoadSettingsBtn << m_SaveSettingsBtn << m_BinaryVtkFiles << phaseTypeList;
+  m_WidgetList << m_LoadSettingsBtn << m_SaveSettingsBtn << phaseTypeList;
 
 }
 
@@ -214,8 +218,6 @@ void ReconstructionWidget::checkIOFiles()
 
   CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::Reconstruction,m_, H5VolumeFile)
 
-  CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(AIM::Reconstruction, m_ , ImageQualityVizFile)
-  CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(AIM::Reconstruction, m_ , IPFVizFile)
   CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(AIM::Reconstruction, m_ , VisualizationVizFile)
   CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(AIM::Reconstruction, m_ , DownSampledVizFile)
   CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(AIM::Reconstruction, m_ , HDF5GrainFile)
@@ -517,11 +519,15 @@ void ReconstructionWidget::on_m_GoBtn_clicked()
 
   m_Reconstruction->setOutputDirectory(QDir::toNativeSeparators(m_OutputDir->text()).toStdString());
   m_Reconstruction->setOutputFilePrefix(m_OutputFilePrefix->text().toStdString());
-  m_Reconstruction->setWriteBinaryFiles(m_BinaryVtkFiles->isChecked());
 
-  m_Reconstruction->setWriteVisualizationFile(m_VisualizationVizFile->isChecked());
-  m_Reconstruction->setWriteIPFFile(m_IPFVizFile->isChecked());
-  m_Reconstruction->setWriteImageQualityFile(m_ImageQualityVizFile->isChecked());
+
+  m_Reconstruction->setWriteVtkFile(m_VisualizationVizFile->isChecked());
+  m_Reconstruction->setWriteEuclidean(m_WriteEuclideanScalars);
+  m_Reconstruction->setWritePhaseId(m_WritePhaseIdScalars);
+  m_Reconstruction->setWriteImageQuality(m_WriteImageQualityScalars);
+  m_Reconstruction->setWriteIPFColor(m_WriteIPFColorScalars);
+  m_Reconstruction->setWriteBinaryFiles(m_WriteBinaryVTKFile);
+
   m_Reconstruction->setWriteDownSampledFile(m_DownSampledVizFile->isChecked());
   m_Reconstruction->setWriteHDF5GrainFile(m_HDF5GrainFile->isChecked());
 
@@ -596,3 +602,35 @@ void ReconstructionWidget::threadHasMessage(QString message)
     this->statusBar()->showMessage(message);
   }
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ReconstructionWidget::on_m_VtkOptionsBtn_clicked()
+{
+  QVector<QString> options;
+  options.push_back("Write Euclidean Scalars");
+  options.push_back("Write Phase Ids Scalars");
+  options.push_back("Write Image Quality Scalars");
+  options.push_back("Write IPF Color Scalars");
+  options.push_back("Write Binary VTK File");
+  QCheckboxDialog d(options, this);
+
+  d.setValue("Write Euclidean Scalars", m_WriteEuclideanScalars);
+  d.setValue("Write Phase Ids Scalars", m_WritePhaseIdScalars);
+  d.setValue("Write Image Quality Scalars", m_WriteImageQualityScalars);
+  d.setValue("Write IPF Color Scalars", m_WriteIPFColorScalars);
+  d.setValue("Write Binary VTK File", m_WriteBinaryVTKFile);
+
+  int ret = d.exec();
+  if (ret == QDialog::Accepted)
+  {
+    m_WriteEuclideanScalars = d.getValue("Write Euclidean Scalars");
+    m_WritePhaseIdScalars = d.getValue("Write Phase Ids Scalars");
+    m_WriteImageQualityScalars = d.getValue("Write Image Quality Scalars");
+    m_WriteIPFColorScalars = d.getValue("Write IPF Color Scalars");
+    m_WriteBinaryVTKFile = d.getValue("Write Binary VTK File");
+  }
+
+}
+

@@ -56,11 +56,7 @@ GrainGeneratorPlugin::~GrainGeneratorPlugin()
 // -----------------------------------------------------------------------------
 QString GrainGeneratorPlugin::getPluginName()
 {
-#ifdef NDEBUG
-  return QString("GrainGenerator");
-#else
-  return QString("GrainGenerator Debug");
-#endif
+  return QString::fromStdString(DREAM3D::UIPlugins::GrainGeneratorName);
 }
 
 // -----------------------------------------------------------------------------
