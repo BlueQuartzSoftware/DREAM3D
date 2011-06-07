@@ -131,6 +131,7 @@ void MicrostructureStatisticsFunc::initializeGrains()
     }
     grain->voxellist->push_back(i);
     grain->numvoxels = grain->voxellist->size();
+	grain->active = 1;
   }
 
 #if 0
@@ -155,20 +156,18 @@ void MicrostructureStatisticsFunc::initializeArrays()
 
   size_t size = crystruct.size();
 
-  crystruct.resize(size+1);
-  pptFractions.resize(size + 1);
-  phaseType.resize(size+1);
-  phasefraction.resize(size+1);
+  pptFractions.resize(size);
+  phaseType.resize(size);
+  phasefraction.resize(size);
 
   // Initialize the first slot in these arrays since they should never be used
-  crystruct[0] = AIM::Reconstruction::UnknownCrystalStructure;
   phasefraction[0] = 0.0;
   phaseType[0] = AIM::Reconstruction::UnknownPhaseType;
   pptFractions[0] = -1.0;
 
-  mindiameter.resize(size+1);
-  maxdiameter.resize(size+1);
-  totalvol.resize(size+1);
+  mindiameter.resize(size);
+  maxdiameter.resize(size);
+  totalvol.resize(size);
 
 }
 
@@ -297,27 +296,17 @@ void MicrostructureStatisticsFunc::find_centroids()
     m_Grains[i]->equivdiameter = diameter;
     if(int(diameter) > maxdiameter[m_Grains[i]->phase]) maxdiameter[m_Grains[i]->phase] = int(diameter);
     if(int(diameter) < mindiameter[m_Grains[i]->phase]) mindiameter[m_Grains[i]->phase] = int(diameter);
-	if(m_Grains[i]->surfacegrain == 0)
-	{
-		totalvol[m_Grains[i]->phase] = totalvol[m_Grains[i]->phase] + m_Grains[i]->volume;
-		insidegraincount++;
-	}
-  }
-  unbiasedvol = 0;
-  for(size_t i=1;i<crystruct.size();i++)
-  {
-    unbiasedvol = unbiasedvol + totalvol[i];
+	totalvol[m_Grains[i]->phase] = totalvol[m_Grains[i]->phase] + m_Grains[i]->volume;
   }
   for(size_t i=1;i<crystruct.size();i++)
   {
-    phasefraction[i] = totalvol[i]/unbiasedvol;
+    phasefraction[i] = totalvol[i]/(sizex*sizey*sizez);
   }
 }
 void MicrostructureStatisticsFunc::find_centroids2D()
 {
   //  int count = 0;
   int onedge = 0;
-  int insidegraincount = 0;
   for(size_t i=0;i<crystruct.size();i++)
   {
 	  maxdiameter[i] = 0;
@@ -369,20 +358,11 @@ void MicrostructureStatisticsFunc::find_centroids2D()
     m_Grains[i]->equivdiameter = diameter;
     if (int(diameter) > maxdiameter[m_Grains[i]->phase]) maxdiameter[m_Grains[i]->phase] = int(diameter);
     if (int(diameter) < mindiameter[m_Grains[i]->phase]) mindiameter[m_Grains[i]->phase] = int(diameter);
-	if(m_Grains[i]->surfacegrain == 0)
-	{
-		totalvol[m_Grains[i]->phase] = totalvol[m_Grains[i]->phase] + m_Grains[i]->volume;
-		insidegraincount++;
-	}
-  }
-  unbiasedvol = 0;
-  for(size_t i=1;i<crystruct.size();i++)
-  {
-	unbiasedvol = unbiasedvol + totalvol[i];
+	totalvol[m_Grains[i]->phase] = totalvol[m_Grains[i]->phase] + m_Grains[i]->volume;
   }
   for(size_t i=1;i<crystruct.size();i++)
   {
-	phasefraction[i] = totalvol[i]/unbiasedvol;
+    phasefraction[i] = totalvol[i]/(sizex*sizey);
   }
 }
 
@@ -1387,7 +1367,7 @@ void MicrostructureStatisticsFunc::find_schmids()
   }
 }
 
-int MicrostructureStatisticsFunc::volume_stats(H5ReconStatsWriter::Pointer h5io)
+int MicrostructureStatisticsFunc::volume_stats(H5ReconStatsWriter::Pointer h5io, float sizebinstepsize)
 {
   int retErr = 0;
   float actualgrains = 0;
@@ -1569,7 +1549,7 @@ int MicrostructureStatisticsFunc::volume_stats(H5ReconStatsWriter::Pointer h5io)
   return retErr;
 }
 
-int MicrostructureStatisticsFunc::volume_stats2D(H5ReconStatsWriter::Pointer h5io)
+int MicrostructureStatisticsFunc::volume_stats2D(H5ReconStatsWriter::Pointer h5io, float sizebinstepsize)
 {
   int retErr = 0;
   float actualgrains = 0;
