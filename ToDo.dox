@@ -41,12 +41,12 @@ into the user interface
 @section microstats Microstructure Statistics Module:
 @li Move all the stats functions to their own class out of the Reconstruction and GrainGenerator modules
 @li <b>DONE</b> (MAJ 2011/05/28) - Add new tab "Microstructure Statistics" which will use existing grain structure files as the input.
+@li Stop Calculating MicroTexture
 
 
 @section statsgen StatsGenerator
 @li Rolled Preset Dialog needs to be redone and made "idiot" proof.
 @li <b>DONE</b> (MAJ 2011/05/28) - When switching between presets the ODF/MDF tables are NOT cleared as they should be.
-@li Stop Calculating MicroTexture
 
 @section infrastructure Infrastructure Changes:
 @li Move to a more modular pipeline architecture for each of the Modules where we start mimicing a VTK filter pipeline.
