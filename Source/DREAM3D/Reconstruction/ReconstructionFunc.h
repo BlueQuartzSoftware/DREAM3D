@@ -167,7 +167,7 @@ class DREAM3DLib_EXPORT ReconstructionFunc
     void assign_badpoints();
     void find_neighbors();
     void merge_containedgrains();
-    void reorder_grains(const std::string &reconVisFile);
+    void reorder_grains();
     int remove_smallgrains(size_t numgrains);
 	void fillin_sample();
     void cleanup_data();
