@@ -97,6 +97,9 @@ class ReconstructionWidget : public AIMPluginFrame, private Ui::ReconstructionWi
     void on_m_OutputDir_textChanged(const QString &text);
     void on_m_OutputFilePrefix_textChanged(const QString &text);
 
+    void on_m_VtkOptionsBtn_clicked();
+
+
     /**
      *
      */
@@ -116,6 +119,11 @@ class ReconstructionWidget : public AIMPluginFrame, private Ui::ReconstructionWi
     QReconstruction*            m_Reconstruction;
     QThread*                    m_WorkerThread;
     bool                        m_phaseTypeEdited;
+    bool                        m_WriteEuclideanScalars;
+    bool                        m_WritePhaseIdScalars;
+    bool                        m_WriteImageQualityScalars;
+    bool                        m_WriteIPFColorScalars;
+    bool                        m_WriteBinaryVTKFile;
 
     QString m_OpenDialogLastDirectory;
 
