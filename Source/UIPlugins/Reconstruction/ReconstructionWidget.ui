@@ -650,7 +650,7 @@
              <string>HDF5 Grain File (.h5grain)</string>
             </property>
             <property name="checked">
-             <bool>true</bool>
+             <bool>false</bool>
             </property>
            </widget>
           </item>
