@@ -295,6 +295,7 @@ namespace AIM
      const std::string GrainIdScalarName("GrainID");
      const std::string EulerAnglesName("Euler Angles");
      const std::string CrystalStructureName("CrystalStructure");
+     const std::string PhaseTypeName("PhaseType");
      const std::string EuclideanScalarName("Euclidean");
      const std::string SchmidFactorScalarName("SchmidFactor");
      const std::string KAMScalarName("KAM");
