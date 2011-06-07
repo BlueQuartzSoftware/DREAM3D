@@ -58,11 +58,7 @@ SurfaceMeshPlugin::~SurfaceMeshPlugin()
 // -----------------------------------------------------------------------------
 QString SurfaceMeshPlugin::getPluginName()
 {
-#ifdef NDEBUG
-  return QString("SurfaceMesh");
-#else
-  return QString("SurfaceMesh Debug");
-#endif
+  return QString::fromStdString(DREAM3D::UIPlugins::SurfaceMeshName);
 }
 
 // -----------------------------------------------------------------------------
