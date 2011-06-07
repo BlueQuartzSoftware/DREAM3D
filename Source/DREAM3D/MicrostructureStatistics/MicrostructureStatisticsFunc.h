@@ -93,12 +93,13 @@ class DREAM3DLib_EXPORT MicrostructureStatisticsFunc
     std::vector<float> totalaxes;
     std::vector<int> maxdiameter;
     std::vector<int> mindiameter;
-    float unbiasedvol;
-    float sizebinstepsize;
 
     float resx;
     float resy;
     float resz;
+    float sizex;
+    float sizey;
+    float sizez;
 
     int xpoints;
     int ypoints;
@@ -124,8 +125,8 @@ class DREAM3DLib_EXPORT MicrostructureStatisticsFunc
     void write_graindata(const std::string &graindataFile);
     void find_eulerodf(H5ReconStatsWriter::Pointer h5io);
     void measure_misorientations(H5ReconStatsWriter::Pointer h5io);
-    int volume_stats(H5ReconStatsWriter::Pointer h5io);
-    int volume_stats2D(H5ReconStatsWriter::Pointer h5io);
+    int volume_stats(H5ReconStatsWriter::Pointer h5io, float BinStepSize);
+    int volume_stats2D(H5ReconStatsWriter::Pointer h5io, float BinStepSize);
     void find_grain_and_kernel_misorientations();
     float find_xcoord(size_t index);
     float find_ycoord(size_t index);
