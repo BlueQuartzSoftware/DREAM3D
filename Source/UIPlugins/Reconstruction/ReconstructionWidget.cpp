@@ -199,7 +199,7 @@ void ReconstructionWidget::setupGui()
   m_WidgetList << m_MinAllowedGrainSize << m_MinConfidence << m_DownSampleFactor << m_MisOrientationTolerance;
   m_WidgetList << m_ImageQualityVizFile << m_IPFVizFile << m_VisualizationVizFile << m_DownSampledVizFile;
   m_WidgetList << m_MinImageQuality;
-  m_WidgetList << m_HDF5GrainFile << m_AlignmentFile;
+  m_WidgetList << m_HDF5GrainFile;
   m_WidgetList << m_LoadSettingsBtn << m_SaveSettingsBtn << m_BinaryVtkFiles << phaseTypeList;
 
 }
