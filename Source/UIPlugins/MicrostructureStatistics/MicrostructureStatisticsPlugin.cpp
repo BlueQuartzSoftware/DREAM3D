@@ -57,11 +57,7 @@ MicrostructureStatisticsPlugin::~MicrostructureStatisticsPlugin()
 // -----------------------------------------------------------------------------
 QString MicrostructureStatisticsPlugin::getPluginName()
 {
-#ifdef NDEBUG
-  return QString("Microstructure Statistics");
-#else
-  return QString("Microstructure Statistics Debug");
-#endif
+  return QString::fromStdString(DREAM3D::UIPlugins::MicrostructureStatisticsName);
 }
 
 // -----------------------------------------------------------------------------

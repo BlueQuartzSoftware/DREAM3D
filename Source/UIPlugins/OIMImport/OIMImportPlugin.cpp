@@ -58,11 +58,7 @@ OIMImportPlugin::~OIMImportPlugin()
 // -----------------------------------------------------------------------------
 QString OIMImportPlugin::getPluginName()
 {
-#ifdef NDEBUG
-  return QString("OIMImport");
-#else
-  return QString("OIMImport Debug");
-#endif
+  return QString::fromStdString(DREAM3D::UIPlugins::OIMImportName);
 }
 
 // -----------------------------------------------------------------------------

@@ -139,6 +139,16 @@ int writeVoxelData(T* m)
     std::cout << "Error Writing Field Data '" << AIM::VTK::CrystalStructureName << "' to " << AIM::HDF5::VoxelDataName << std::endl;
   }
 
+  for(size_t i = 0; i < m->crystruct.size(); ++i)
+  {
+    fieldData[i] = m->phaseType[i];
+  }
+  err = h5writer->writeFieldData<int>(AIM::HDF5::VoxelDataName, fieldData, AIM::VTK::PhaseTypeName.c_str(), 1);
+  if (err < 0)
+  {
+    std::cout << "Error Writing Field Data '" << AIM::VTK::PhaseTypeName << "' to " << AIM::HDF5::VoxelDataName << std::endl;
+  }
+
   err = h5writer->closeFile();
   return err;
 }

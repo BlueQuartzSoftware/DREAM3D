@@ -27,24 +27,32 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#include "H5VoxelWriter.h"
 
-#include "DREAM3D/Reconstruction/ReconstructionFunc.h"
+#include <vector>
 
+#include "DREAM3D/Common/PhWriter.hpp"
+#include "DREAM3D/GrainGenerator/GrainGeneratorVoxel.h"
 
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-H5VoxelWriter::H5VoxelWriter()
+int main(int argc, char **argv)
 {
 
+  GrainGeneratorVoxel* voxels = new GrainGeneratorVoxel[27];
+  int xpoints = 3;
+  int ypoints = 3;
+  int zpoints = 3;
+
+
+  PhWriter writer;
+  int err = writer.writeGrainPhFile("test.ph", voxels, xpoints, ypoints, zpoints);
+  if (err < 0)
+  {
+    return EXIT_FAILURE;
+  }
+
+
+  return EXIT_SUCCESS;
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-H5VoxelWriter::~H5VoxelWriter()
-{
-}
+
+
 
