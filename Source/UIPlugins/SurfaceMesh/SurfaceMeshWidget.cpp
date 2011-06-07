@@ -106,8 +106,8 @@ void SurfaceMeshWidget::readSettings(QSettings &prefs)
 
   READ_CHECKBOX_SETTING(prefs, m_, STLFile, true);
 
-  READ_BOOL_SETTING(prefs, m_, SmoothMesh, false);
-  READ_BOOL_SETTING(prefs, m_, LockQuadPoints, false);
+  READ_CHECKBOX_SETTING(prefs, m_, SmoothMesh, false);
+  READ_CHECKBOX_SETTING(prefs, m_, LockQuadPoints, false);
   READ_SETTING(prefs, m_, SmoothIterations, ok, i, 1 , Int);
   READ_SETTING(prefs, m_, WriteOutputFileIncrement, ok, i, 10 , Int);
   prefs.endGroup();
