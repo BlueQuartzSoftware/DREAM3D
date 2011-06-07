@@ -153,7 +153,6 @@ void MicrostructureStatisticsFunc::initializeGrains()
 void MicrostructureStatisticsFunc::initializeArrays()
 {
 
-  size_t nElements = 0;
   size_t size = crystruct.size();
 
   crystruct.resize(size+1);
@@ -169,34 +168,8 @@ void MicrostructureStatisticsFunc::initializeArrays()
 
   mindiameter.resize(size+1);
   maxdiameter.resize(size+1);
+  totalvol.resize(size+1);
 
-  for(size_t i= 1; i < size+1; ++i)
-  {
-    if(crystruct[i] == AIM::Reconstruction::Hexagonal) nElements = 36*36*12;
-    if(crystruct[i] == AIM::Reconstruction::Cubic) nElements = 18*18*18;
-
-    float initValue = 1.0/(float)(nElements);
-//    actualodf[i] = SharedFloatArray(new float [nElements]);
-//    GG_INIT_DOUBLE_ARRAY(actualodf[i], initValue, nElements);
-//
-//    simodf[i] = SharedFloatArray(new float [nElements]);
-//    GG_INIT_DOUBLE_ARRAY(simodf[i], 0.0, nElements);
-//    actualmdf[i] = SharedFloatArray(new float [nElements]);
-//    GG_INIT_DOUBLE_ARRAY(actualmdf[i], initValue, nElements);
-//    simmdf[i] = SharedFloatArray(new float [nElements]);
-//    GG_INIT_DOUBLE_ARRAY(simmdf[i], 0.0, nElements);
-
-    nElements = 36*36*36;
-    initValue = (1.0/float(nElements));
-//    axisodf[i] = SharedFloatArray(new float [nElements]);
-//    GG_INIT_DOUBLE_ARRAY(axisodf[i], initValue, nElements);
-    nElements = 10;
-    initValue = (1.0/float(nElements));
-//    actualmicrotex[i] = SharedFloatArray(new float [nElements]);
-//    GG_INIT_DOUBLE_ARRAY(actualmicrotex[i], initValue, nElements);
-//    simmicrotex[i] = SharedFloatArray(new float [nElements]);
-//    GG_INIT_DOUBLE_ARRAY(simmicrotex[i], 0.0, nElements);
-  }
 }
 
 
@@ -1012,9 +985,6 @@ void MicrostructureStatisticsFunc::find_grain_and_kernel_misorientations()
   delete avgmiso;
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void MicrostructureStatisticsFunc::find_moments2D()
 {
   //  int count = 0;
