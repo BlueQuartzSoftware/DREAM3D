@@ -120,6 +120,15 @@ class DREAM3DLib_EXPORT AbstractPipeline
     std::cout << #name << " Finish Time(ms): " << (MXA::getMilliSeconds() - millis) << std::endl;\
     millis = MXA::getMilliSeconds(); }
 
+#define CHECK_FOR_ERROR(FuncClass, Message, err)\
+    if(err < 0) {\
+      setErrorCondition(err);\
+      std::string msg = std::string(Message);\
+      pipelineMessage(msg.c_str());\
+      pipelineProgress(0);\
+      pipelineFinished();\
+      m = FuncClass::NullPointer();\
+      return;   }
 
 
 #define MAKE_OUTPUT_FILE_PATH(outpath, filename)\
