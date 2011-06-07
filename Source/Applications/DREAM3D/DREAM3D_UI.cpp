@@ -218,7 +218,10 @@ void DREAM3D_UI::writeSettings()
   QSettings prefs(QSettings::IniFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
 #endif
 
-  prefs.setValue("ActivePlugin" , this->m_ActivePlugin->getPluginName());
+  if (m_ActivePlugin != NULL) {
+    prefs.setValue("ActivePlugin" , this->m_ActivePlugin->getPluginName());
+  }
+
 
   foreach (DREAM3DPluginInterface* plugin, m_LoadedPlugins) {
     plugin->writeSettings(prefs);
@@ -510,6 +513,8 @@ void DREAM3D_UI::loadPlugins()
 
   this->setWindowTitle("DREAM3D - No Plugins Loaded");
 
+  QStringList pluginFilePaths;
+
   foreach (QString pluginDirString, m_PluginDirs)
   {
     // std::cout << "Plugin Directory being Searched: " << pluginDirString.toStdString() << std::endl;
@@ -519,28 +524,67 @@ void DREAM3D_UI::loadPlugins()
       //   std::cout << "File: " << fileName.toStdString() << std::endl;
 #ifdef QT_DEBUG
       if (fileName.endsWith("_debug.plugin", Qt::CaseSensitive))
-#endif
-
-#if defined (QT_NO_DEBUG)
+#else
       if (fileName.endsWith( ".plugin", Qt::CaseSensitive) )
 #endif
       {
-        //     std::cout << "File Extension matches.." << std::endl;
-        QPluginLoader loader(aPluginDir.absoluteFilePath(fileName));
-        QObject *plugin = loader.instance();
-        //  std::cout << "plugin Pointer: " << plugin << std::endl;
-        if (plugin && m_PluginFileNames.contains(fileName, Qt::CaseSensitive) == false)
-        {
-          populateMenus(plugin);
-          m_PluginFileNames += fileName;
-        }
-        else
-        {
-          std::cout << "The plugin did not load with the following error\n   " << loader.errorString().toStdString() << std::endl;
-        }
+        pluginFilePaths << aPluginDir.absoluteFilePath(fileName);
+        //qWarning(aPluginDir.absoluteFilePath(fileName).toAscii(), "%s");
+        std::cout << "Adding " << aPluginDir.absoluteFilePath(fileName).toStdString() << std::endl;
       }
     }
     menuPlugins->setEnabled(!m_PluginActionGroup->actions().isEmpty());
+  }
+
+  // Now try to sort the paths based on their names
+  QStringList pluginNames;
+  pluginNames << QString::fromStdString(DREAM3D::UIPlugins::OIMImportFile)
+              << QString::fromStdString(DREAM3D::UIPlugins::ReconstructionFile)
+              << QString::fromStdString(DREAM3D::UIPlugins::MicrostructureStatisticsFile)
+              << QString::fromStdString(DREAM3D::UIPlugins::GrainGeneratorFile)
+              << QString::fromStdString(DREAM3D::UIPlugins::SurfaceMeshFile);
+
+  QVector<QString> sortedPaths;
+  foreach(QString piName, pluginNames)
+  {
+    //std::cout << "Searching for the " << piName.toStdString() << " Plugin File" << std::endl;
+    QStringList possiblePlugins = pluginFilePaths.filter(piName);
+    //std::cout << "  Matches = " << possiblePlugins.size() << std::endl;
+    if(possiblePlugins.size() == 1)
+    {
+      sortedPaths.push_back(possiblePlugins.at(0));
+      // Remove it from the master List of plugins found on the file system
+      pluginFilePaths.removeAll(possiblePlugins.at(0));
+      std::cout << "Found plugin library: " << possiblePlugins.at(0).toStdString() << std::endl;
+    }
+
+  }
+
+  //Copy of the remaining plugins that are NOT on our master list
+  foreach(QString str, pluginFilePaths)
+  {
+    sortedPaths.push_back(str);
+  }
+  pluginFilePaths.clear();
+
+
+  foreach(QString path, sortedPaths)
+  {
+    //     std::cout << "File Extension matches.." << std::endl;
+    QPluginLoader loader(path);
+    QFileInfo fi(path);
+    QString fileName = fi.fileName();
+    QObject *plugin = loader.instance();
+    //  std::cout << "plugin Pointer: " << plugin << std::endl;
+    if (plugin && m_PluginFileNames.contains(fileName, Qt::CaseSensitive) == false)
+    {
+      populateMenus(plugin);
+      m_PluginFileNames += fileName;
+    }
+    else
+    {
+      std::cout << "The plugin did not load with the following error\n   " << loader.errorString().toStdString() << std::endl;
+    }
   }
 }
 
@@ -550,20 +594,14 @@ void DREAM3D_UI::loadPlugins()
  void DREAM3D_UI::populateMenus(QObject *plugin)
 {
 #ifdef QT_DEBUG
-  std::cout << "Found Plugin..." << std::endl;
+ // std::cout << "Found Plugin..." << std::endl;
 #endif
   DREAM3DPluginInterface* ipPlugin = qobject_cast<DREAM3DPluginInterface * > (plugin);
   if (ipPlugin)
   {
-    quint32 order = ipPlugin->pluginOrder();
-    if (order >= m_LoadedPlugins.size() && order < DREAM3D::UserDefinedPluginOrder)
-    {
-      m_LoadedPlugins.resize(order + 1);
-      m_LoadedPlugins[order] = ipPlugin;
-    }
     m_LoadedPlugins.push_back(ipPlugin);
 #ifdef QT_DEBUG
-    qWarning(ipPlugin->getPluginName().toAscii(), "%s");
+  //  qWarning(ipPlugin->getPluginName().toAscii(), "%s");
 #endif
     QIcon newIcon = ipPlugin->icon();
 

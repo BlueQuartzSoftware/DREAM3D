@@ -57,11 +57,7 @@ ReconstructionPlugin::~ReconstructionPlugin()
 // -----------------------------------------------------------------------------
 QString ReconstructionPlugin::getPluginName()
 {
-#ifdef NDEBUG
-  return QString("Reconstruction");
-#else
-  return QString("Reconstruction Debug");
-#endif
+  return QString::fromStdString(DREAM3D::UIPlugins::ReconstructionName);
 }
 
 // -----------------------------------------------------------------------------
