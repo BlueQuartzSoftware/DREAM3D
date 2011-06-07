@@ -113,6 +113,9 @@ void MicrostructureStatistics::execute()
   m->resx = spacing[0];
   m->resy = spacing[1];
   m->resz = spacing[2];
+  m->sizex = dims[0]*spacing[0];
+  m->sizey = dims[1]*spacing[1];
+  m->sizez = dims[2]*spacing[2];
 
   updateProgressAndMessage("Allocating Voxel Memory", 5);
   //Allocate all of our Voxel Objects
@@ -197,8 +200,8 @@ void MicrostructureStatistics::execute()
   }
 
   updateProgressAndMessage(("Writing Statistics"), 65);
-  if(m->zpoints > 1) { m->volume_stats(h5io); }
-  if(m->zpoints == 1) { m->volume_stats2D(h5io); }
+  if(m->zpoints > 1) { m->volume_stats(h5io, m_BinStepSize); }
+  if(m->zpoints == 1) { m->volume_stats2D(h5io, m_BinStepSize); }
 
 
 /*  updateProgressAndMessage(("Finding Grain Schmid Factors"), 20);
@@ -219,12 +222,12 @@ void MicrostructureStatistics::execute()
 
   updateProgressAndMessage(("Writing Grain Data"), 85);
   m->write_graindata(graindataFile);
-
+*/
   // Clean up all the memory by forcibly setting a NULL pointer to the Shared
   // pointer object.
   m = MicrostructureStatisticsFunc::NullPointer();  // Clean up the memory
   updateProgressAndMessage("MicrostructureStatistics Complete", 100);
-*/
+
 }
 
 
