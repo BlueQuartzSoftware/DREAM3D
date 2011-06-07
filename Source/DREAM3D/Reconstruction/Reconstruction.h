@@ -82,7 +82,7 @@ class DREAM3DLib_EXPORT Reconstruction : public AbstractPipeline
     MXA_INSTANCE_PROPERTY(AIM::Reconstruction::AlignmentMethod, AlignmentMethod)
     MXA_INSTANCE_PROPERTY(Ang::Orientation, Orientation)
 
-    MXA_INSTANCE_PROPERTY(bool, WriteBinaryFiles)
+    MXA_INSTANCE_PROPERTY(bool, WriteBinaryVTKFiles)
     MXA_INSTANCE_PROPERTY(bool, WriteVtkFile)
     MXA_INSTANCE_PROPERTY(bool, WriteEuclidean)
     MXA_INSTANCE_PROPERTY(bool, WritePhaseId)

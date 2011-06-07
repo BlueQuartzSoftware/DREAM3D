@@ -80,13 +80,16 @@ class DREAM3DLib_EXPORT GrainGenerator : public AbstractPipeline
 
     MXA_INSTANCE_PROPERTY(int, Precipitates)
 
-    MXA_INSTANCE_PROPERTY(bool, WriteBinaryFiles)
-    MXA_INSTANCE_PROPERTY(bool, WriteVisualizationFile)
-    MXA_INSTANCE_PROPERTY(bool, WriteIPFFile)
-    MXA_INSTANCE_PROPERTY(bool, WriteHDF5GrainFile)
+    MXA_INSTANCE_PROPERTY(bool, WriteBinaryVTKFiles)
+    MXA_INSTANCE_PROPERTY(bool, WriteVtkFile)
+    MXA_INSTANCE_PROPERTY(bool, WriteSurfaceVoxel)
+    MXA_INSTANCE_PROPERTY(bool, WritePhaseId)
+    MXA_INSTANCE_PROPERTY(bool, WriteIPFColor)
+
     MXA_INSTANCE_PROPERTY(bool, WritePhFile)
 
-    MXA_INSTANCE_PROPERTY(GrainGeneratorFunc::Pointer, Func)
+    MXA_INSTANCE_PROPERTY(bool, WriteHDF5GrainFile)
+
 
     /**
     * @brief Main method to run the operation
