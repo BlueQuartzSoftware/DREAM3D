@@ -18,6 +18,7 @@ indicate which files will be over written during execution.
 @li Indicate with a set of images what is meant for the "Orientation" of the OIM Data
 @li Put pop-up on check of h5grain to let them know they need special Paraview.
 @li <b>DONE</b> (MAJ 2011/05/27) - Set output prefix based on the name of the input file
+@li <b>DONE</b> (MAJ 2011/06/07) - Write RectilinearGrid for VTK files with Optional Scalars
 
 @section  graingenerator GrainGenerator:
 @li <b>DONE</b> (MAJ 2011/06/07) Write PhaseType array from Reconstruction and GrainGenerator to VoxelData.h5.
@@ -55,13 +56,6 @@ into the user interface
 
 @section pv ParaView Integration:
 @li Create .h5ang plugin for ParaView to allow the direct reading of the imported OIM data
-
-
-
-
-
-
-
 
 
 */
