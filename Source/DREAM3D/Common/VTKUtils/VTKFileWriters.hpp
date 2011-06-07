@@ -564,14 +564,8 @@ class VTKFileWriters
      * @param Output file name
      * @return 0 on Success
      */
-    int writeGrainVisualizationFile(GrainGeneratorFunc* r, const std::string &file);
-
-    /**
-     * @brief Writes a VTK visualization file  for the GrainGenerator Class
-     * @param Output file name
-     * @return 0 on Success
-     */
-    int writeGrainIPFVizFile(GrainGeneratorFunc* r, const std::string &file);
+    int writeGrainVisualizationFile(GrainGeneratorFunc* r, const std::string &file,
+                                    bool writeSurfaceVoxel, bool writePhaseId, bool writeIPFColor);
 
 
   protected:
