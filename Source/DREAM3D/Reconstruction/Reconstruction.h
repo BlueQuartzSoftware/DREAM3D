@@ -83,11 +83,12 @@ class DREAM3DLib_EXPORT Reconstruction : public AbstractPipeline
     MXA_INSTANCE_PROPERTY(Ang::Orientation, Orientation)
 
     MXA_INSTANCE_PROPERTY(bool, WriteBinaryFiles)
-    MXA_INSTANCE_PROPERTY(bool, WriteVisualizationFile)
-    MXA_INSTANCE_PROPERTY(bool, WriteIPFFile)
-    MXA_INSTANCE_PROPERTY(bool, WriteDisorientationFile)
-    MXA_INSTANCE_PROPERTY(bool, WriteImageQualityFile)
-    MXA_INSTANCE_PROPERTY(bool, WriteSchmidFactorFile)
+    MXA_INSTANCE_PROPERTY(bool, WriteVtkFile)
+    MXA_INSTANCE_PROPERTY(bool, WriteEuclidean)
+    MXA_INSTANCE_PROPERTY(bool, WritePhaseId)
+    MXA_INSTANCE_PROPERTY(bool, WriteImageQuality)
+    MXA_INSTANCE_PROPERTY(bool, WriteIPFColor)
+
     MXA_INSTANCE_PROPERTY(bool, WriteDownSampledFile)
     MXA_INSTANCE_PROPERTY(bool, WriteHDF5GrainFile)
 
