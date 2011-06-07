@@ -530,13 +530,14 @@ void DREAM3D_UI::loadPlugins()
       {
         pluginFilePaths << aPluginDir.absoluteFilePath(fileName);
         //qWarning(aPluginDir.absoluteFilePath(fileName).toAscii(), "%s");
-        std::cout << "Adding " << aPluginDir.absoluteFilePath(fileName).toStdString() << std::endl;
+        //std::cout << "Adding " << aPluginDir.absoluteFilePath(fileName).toStdString() << std::endl;
       }
     }
     menuPlugins->setEnabled(!m_PluginActionGroup->actions().isEmpty());
   }
 
-  // Now try to sort the paths based on their names
+  // Our list of Plugins that we want control over the order in which they appear
+  // in the toolbar and menu
   QStringList pluginNames;
   pluginNames << QString::fromStdString(DREAM3D::UIPlugins::OIMImportFile)
               << QString::fromStdString(DREAM3D::UIPlugins::ReconstructionFile)
@@ -544,6 +545,7 @@ void DREAM3D_UI::loadPlugins()
               << QString::fromStdString(DREAM3D::UIPlugins::GrainGeneratorFile)
               << QString::fromStdString(DREAM3D::UIPlugins::SurfaceMeshFile);
 
+  // Now try to sort the paths based on their names
   QVector<QString> sortedPaths;
   foreach(QString piName, pluginNames)
   {
@@ -555,7 +557,7 @@ void DREAM3D_UI::loadPlugins()
       sortedPaths.push_back(possiblePlugins.at(0));
       // Remove it from the master List of plugins found on the file system
       pluginFilePaths.removeAll(possiblePlugins.at(0));
-      std::cout << "Found plugin library: " << possiblePlugins.at(0).toStdString() << std::endl;
+    //  std::cout << "Found plugin library: " << possiblePlugins.at(0).toStdString() << std::endl;
     }
 
   }
@@ -565,9 +567,11 @@ void DREAM3D_UI::loadPlugins()
   {
     sortedPaths.push_back(str);
   }
+  // Clear the String list just because we really shouldn't need it anymore
   pluginFilePaths.clear();
 
-
+  // Now that we have a sorted list of plugins, go ahead and load them all from the
+  // file system and add each to the toolbar and menu
   foreach(QString path, sortedPaths)
   {
     //     std::cout << "File Extension matches.." << std::endl;
@@ -583,7 +587,12 @@ void DREAM3D_UI::loadPlugins()
     }
     else
     {
-      std::cout << "The plugin did not load with the following error\n   " << loader.errorString().toStdString() << std::endl;
+      QString message("The plugin did not load with the following error\n");
+      message.append(loader.errorString());
+      QMessageBox::critical(this, "DREAM.3D Plugin Load Error",
+                                message,
+                                QMessageBox::Ok | QMessageBox::Default);
+      //std::cout << "The plugin did not load with the following error\n   " << loader.errorString().toStdString() << std::endl;
     }
   }
 }
