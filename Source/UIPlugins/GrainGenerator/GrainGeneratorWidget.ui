@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>764</width>
-    <height>550</height>
+    <height>574</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -350,19 +350,6 @@
           </property>
          </widget>
         </item>
-        <item row="1" column="2">
-         <widget class="QCheckBox" name="m_BinaryVtkFiles">
-          <property name="enabled">
-           <bool>true</bool>
-          </property>
-          <property name="text">
-           <string>Write Binary VTK Files</string>
-          </property>
-          <property name="checked">
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
        </layout>
       </item>
       <item>
@@ -491,26 +478,6 @@
             </property>
            </widget>
           </item>
-          <item row="2" column="0">
-           <widget class="QLabel" name="m_IPFVizFileIcon">
-            <property name="text">
-             <string/>
-            </property>
-            <property name="pixmap">
-             <pixmap resource="../../../Resources/icons/images/Icons.qrc">:/Delete-16x16.png</pixmap>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="1">
-           <widget class="QCheckBox" name="m_IPFVizFile">
-            <property name="text">
-             <string>Inverse Pole Figure</string>
-            </property>
-            <property name="checked">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
           <item row="3" column="0">
            <widget class="QLabel" name="m_HDF5GrainFileIcon">
             <property name="text">
@@ -548,6 +515,13 @@
             </property>
             <property name="pixmap">
              <pixmap resource="../../../Resources/icons/images/Icons.qrc">:/Delete-16x16.png</pixmap>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1">
+           <widget class="QPushButton" name="m_VtkOptionsBtn">
+            <property name="text">
+             <string>VTK Options</string>
             </property>
            </widget>
           </item>
@@ -624,7 +598,7 @@
  </customwidgets>
  <resources>
   <include location="../../../Resources/icons/images/Icons.qrc"/>
-  <include location="../../../../Resources/icons/images/Icons.qrc"/>
+  <include location="../../../Resources/icons/images/Icons.qrc"/>
   <include location="../../../Resources/icons/images/Icons.qrc"/>
   <include location="../../../Resources/icons/images/Icons.qrc"/>
   <include location="../../../Resources/icons/images/Icons.qrc"/>
