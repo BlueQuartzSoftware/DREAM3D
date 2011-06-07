@@ -265,6 +265,7 @@ void GrainGeneratorWidget::on_m_SaveSettingsBtn_clicked()
 void GrainGeneratorWidget::checkIOFiles()
 {
   CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::SyntheticBuilder, m_, GrainAnglesFile)
+  CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::SyntheticBuilder, m_, H5VolumeFile)
 
   CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(AIM::SyntheticBuilder, m_ , IPFVizFile)
   CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(AIM::SyntheticBuilder, m_ , VisualizationVizFile)

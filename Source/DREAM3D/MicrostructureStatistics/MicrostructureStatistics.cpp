@@ -55,7 +55,12 @@
 // -----------------------------------------------------------------------------
 MicrostructureStatistics::MicrostructureStatistics() :
 m_OutputDirectory("."),
-m_OutputFilePrefix("MicrostructureStatistics_")
+m_OutputFilePrefix("MicrostructureStatistics_"),
+m_ComputeGrainSize(false),
+m_ComputeGrainShapes(false),
+m_ComputeNumNeighbors(false),
+m_ComputeODF(false),
+m_ComputeMDF(false)
 {
 
 }
@@ -133,53 +138,76 @@ void MicrostructureStatistics::execute()
 
 
   // Start Computing the statistics
-  updateProgressAndMessage(("Finding Reference Orientations For Grains"), 15);
-  m->find_grain_and_kernel_misorientations();
-  CHECK_FOR_CANCELED(MicrostructureStatisticsFunc, "MicrostructureStatistics was canceled",  find_grain_and_kernel_misorientations)
+  if(m_ComputeGrainSize == true)
+  {
+	  updateProgressAndMessage(("Finding Grain Centroids"), 25);
+	  if(m->zpoints > 1) m->find_centroids();
+	  if(m->zpoints == 1)m->find_centroids2D();
+	  CHECK_FOR_CANCELED(MicrostructureStatisticsFunc, "MicrostructureStatistics was canceled",  find_centroids2D)
+  }
 
-  updateProgressAndMessage(("Finding Grain Schmid Factors"), 20);
-  m->find_schmids();
-  CHECK_FOR_CANCELED(MicrostructureStatisticsFunc, "MicrostructureStatistics was canceled",  find_schmids)
+  if(m_ComputeGrainShapes == true)
+  {
+	  if(m_ComputeGrainSize == false)
+	  {
+		  updateProgressAndMessage(("Finding Grain Centroids"), 25);
+		  if(m->zpoints > 1) m->find_centroids();
+		  if(m->zpoints == 1)m->find_centroids2D();
+		  CHECK_FOR_CANCELED(MicrostructureStatisticsFunc, "MicrostructureStatistics was canceled",  find_centroids2D)
+	  }
+	  updateProgressAndMessage(("Finding Grain Moments"), 30);
+	  if(m->zpoints > 1) m->find_moments();
+	  if(m->zpoints == 1) m->find_moments2D();
+	  CHECK_FOR_CANCELED(MicrostructureStatisticsFunc, "MicrostructureStatistics was canceled",  find_moments2D)
 
-  updateProgressAndMessage(("Finding Grain Centroids"), 25);
-  if(m->zpoints > 1) m->find_centroids();
-  if(m->zpoints == 1)m->find_centroids2D();
-  CHECK_FOR_CANCELED(MicrostructureStatisticsFunc, "MicrostructureStatistics was canceled",  find_centroids2D)
+	  updateProgressAndMessage(("Finding Grain Principal Axes Lengths"), 35);
+	  if(m->zpoints > 1) m->find_axes();
+	  if(m->zpoints == 1) m->find_axes2D();
+	  CHECK_FOR_CANCELED(MicrostructureStatisticsFunc, "MicrostructureStatistics was canceled",  find_axes2D)
 
-  updateProgressAndMessage(("Finding Grain Moments"), 30);
-  if(m->zpoints > 1) m->find_moments();
-  if(m->zpoints == 1) m->find_moments2D();
-  CHECK_FOR_CANCELED(MicrostructureStatisticsFunc, "MicrostructureStatistics was canceled",  find_moments2D)
+	  updateProgressAndMessage(("Finding Grain Pricipal Axes Vectors"), 40);
+	  if(m->zpoints > 1) m->find_vectors(h5io);
+	  if(m->zpoints == 1) m->find_vectors2D(h5io);
+	  CHECK_FOR_CANCELED(MicrostructureStatisticsFunc, "MicrostructureStatistics was canceled",  find_vectors2D)
+  }
 
-  updateProgressAndMessage(("Finding Grain Principal Axes Lengths"), 35);
-  if(m->zpoints > 1) m->find_axes();
-  if(m->zpoints == 1) m->find_axes2D();
-  CHECK_FOR_CANCELED(MicrostructureStatisticsFunc, "MicrostructureStatistics was canceled",  find_axes2D)
+  if(m_ComputeNumNeighbors == true)
+  {
+	  updateProgressAndMessage(("Defining Neighborhoods"), 45);
+	  m->define_neighborhood();
+	  CHECK_FOR_CANCELED(MicrostructureStatisticsFunc, "MicrostructureStatistics was canceled",  define_neighborhood)
+  }
 
-  updateProgressAndMessage(("Finding Grain Pricipal Axes Vectors"), 40);
-  if(m->zpoints > 1) m->find_vectors(h5io);
-  if(m->zpoints == 1) m->find_vectors2D(h5io);
-  CHECK_FOR_CANCELED(MicrostructureStatisticsFunc, "MicrostructureStatistics was canceled",  find_vectors2D)
+  if(m_ComputeODF == true)
+  {
+	  updateProgressAndMessage(("Finding Reference Orientations For Grains"), 15);
+	  m->find_grain_and_kernel_misorientations();
+	  CHECK_FOR_CANCELED(MicrostructureStatisticsFunc, "MicrostructureStatistics was canceled",  find_grain_and_kernel_misorientations)
 
-  updateProgressAndMessage(("Defining Neighborhoods"), 45);
-  m->define_neighborhood();
-  CHECK_FOR_CANCELED(MicrostructureStatisticsFunc, "MicrostructureStatistics was canceled",  define_neighborhood)
+	  updateProgressAndMessage(("Finding Euler ODF"), 55);
+	  m->find_eulerodf(h5io);
+	  CHECK_FOR_CANCELED(MicrostructureStatisticsFunc, "MicrostructureStatistics was canceled",  find_eulerodf)
+  }
 
-  updateProgressAndMessage(("Finding Euclidean Distance Maps"), 50);
-  m->find_euclidean_map();
-  CHECK_FOR_CANCELED(MicrostructureStatisticsFunc, "MicrostructureStatistics was canceled",  find_euclidean_map)
-
-  updateProgressAndMessage(("Finding Euler ODF"), 55);
-  m->find_eulerodf(h5io);
-  CHECK_FOR_CANCELED(MicrostructureStatisticsFunc, "MicrostructureStatistics was canceled",  find_eulerodf)
-
-  updateProgressAndMessage(("Measuring Misorientations"), 60);
-  m->measure_misorientations(h5io);
-  CHECK_FOR_CANCELED(MicrostructureStatisticsFunc, "MicrostructureStatistics was canceled",  measure_misorientations)
+  if(m_ComputeODF == true)
+  {
+	  updateProgressAndMessage(("Measuring Misorientations"), 60);
+	  m->measure_misorientations(h5io);
+	  CHECK_FOR_CANCELED(MicrostructureStatisticsFunc, "MicrostructureStatistics was canceled",  measure_misorientations)
+  }
 
   updateProgressAndMessage(("Writing Statistics"), 65);
   if(m->zpoints > 1) { m->volume_stats(h5io); }
   if(m->zpoints == 1) { m->volume_stats2D(h5io); }
+
+
+/*  updateProgressAndMessage(("Finding Grain Schmid Factors"), 20);
+  m->find_schmids();
+  CHECK_FOR_CANCELED(MicrostructureStatisticsFunc, "MicrostructureStatistics was canceled",  find_schmids)
+
+  updateProgressAndMessage(("Finding Euclidean Distance Maps"), 50);
+  m->find_euclidean_map();
+  CHECK_FOR_CANCELED(MicrostructureStatisticsFunc, "MicrostructureStatistics was canceled",  find_euclidean_map)
 
   updateProgressAndMessage(("Finding Grain IPF Colors"), 75);
   m->find_colors();
@@ -196,6 +224,7 @@ void MicrostructureStatistics::execute()
   // pointer object.
   m = MicrostructureStatisticsFunc::NullPointer();  // Clean up the memory
   updateProgressAndMessage("MicrostructureStatistics Complete", 100);
+*/
 }
 
 
