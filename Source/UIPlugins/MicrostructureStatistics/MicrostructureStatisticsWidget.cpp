@@ -87,10 +87,21 @@ void MicrostructureStatisticsWidget::readSettings(QSettings &prefs)
 {
   QString val;
   prefs.beginGroup("MicrostructureStatistics");
+  bool ok = false;
+  double d;
 
   READ_FILEPATH_SETTING(prefs, m_, OutputDir, "");
   READ_STRING_SETTING(prefs, m_, OutputFilePrefix, "MicrostructureStatistics_")
   READ_FILEPATH_SETTING(prefs, m_, InputFile, "");
+
+  READ_CHECKBOX_SETTING(prefs, m_, ComputeGrainSize, true);
+  READ_CHECKBOX_SETTING(prefs, m_, ComputeGrainShapes, true);
+  READ_CHECKBOX_SETTING(prefs, m_, ComputeNumNeighbors, true);
+
+  READ_CHECKBOX_SETTING(prefs, m_, ComputeMDF, true);
+  READ_CHECKBOX_SETTING(prefs, m_, ComputeODF, true);
+
+  READ_SETTING(prefs, m_, BinStepSize, ok, d, 1.0 , Double);
 
   prefs.endGroup();
 }
@@ -104,6 +115,16 @@ void MicrostructureStatisticsWidget::writeSettings(QSettings &prefs)
   WRITE_STRING_SETTING(prefs, m_, OutputDir)
   WRITE_STRING_SETTING(prefs, m_, OutputFilePrefix)
   WRITE_STRING_SETTING(prefs, m_, InputFile)
+
+  WRITE_CHECKBOX_SETTING(prefs, m_, ComputeGrainSize);
+  WRITE_CHECKBOX_SETTING(prefs, m_, ComputeGrainShapes);
+  WRITE_CHECKBOX_SETTING(prefs, m_, ComputeNumNeighbors);
+
+  WRITE_CHECKBOX_SETTING(prefs, m_, ComputeMDF);
+  WRITE_CHECKBOX_SETTING(prefs, m_, ComputeODF);
+
+  WRITE_SETTING(prefs, m_, BinStepSize);
+
   prefs.endGroup();
 }
 
@@ -279,12 +300,12 @@ void MicrostructureStatisticsWidget::on_m_GoBtn_clicked()
   /********************************
    * Gather any other values from the User Interface and send those to the lower level code
    */
-  m_MicrostructureStatistics->setComputeGrainSize(computeGrainSize->isChecked());
-  m_MicrostructureStatistics->setComputeGrainShapes(computeGrainShapes->isChecked());
-  m_MicrostructureStatistics->setComputeNumNeighbors(computeNumNeighbors->isChecked());
+  m_MicrostructureStatistics->setComputeGrainSize(m_ComputeGrainSize->isChecked());
+  m_MicrostructureStatistics->setComputeGrainShapes(m_ComputeGrainShapes->isChecked());
+  m_MicrostructureStatistics->setComputeNumNeighbors(m_ComputeNumNeighbors->isChecked());
 
-  m_MicrostructureStatistics->setComputeODF(computeODF->isChecked());
-  m_MicrostructureStatistics->setComputeMDF(computeMDF->isChecked());
+  m_MicrostructureStatistics->setComputeODF(m_ComputeODF->isChecked());
+  m_MicrostructureStatistics->setComputeMDF(m_ComputeMDF->isChecked());
   m_MicrostructureStatistics->setBinStepSize(m_BinStepSize->value());
 
   /* Connect the signal 'started()' from the QThread to the 'run' slot of the
