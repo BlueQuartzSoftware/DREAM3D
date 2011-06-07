@@ -533,7 +533,7 @@ void DREAM3D_UI::loadPlugins()
         //std::cout << "Adding " << aPluginDir.absoluteFilePath(fileName).toStdString() << std::endl;
       }
     }
-    menuPlugins->setEnabled(!m_PluginActionGroup->actions().isEmpty());
+
   }
 
   // Our list of Plugins that we want control over the order in which they appear
@@ -595,6 +595,7 @@ void DREAM3D_UI::loadPlugins()
       //std::cout << "The plugin did not load with the following error\n   " << loader.errorString().toStdString() << std::endl;
     }
   }
+  menuPlugins->setEnabled(!m_PluginActionGroup->actions().isEmpty());
 }
 
 // -----------------------------------------------------------------------------
