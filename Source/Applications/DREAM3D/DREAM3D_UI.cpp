@@ -555,13 +555,13 @@ void DREAM3D_UI::loadPlugins()
   DREAM3DPluginInterface* ipPlugin = qobject_cast<DREAM3DPluginInterface * > (plugin);
   if (ipPlugin)
   {
-    quint32 order = ipPlugin->pluginOrder();
+/*    quint32 order = ipPlugin->pluginOrder();
     if (order >= m_LoadedPlugins.size() && order < DREAM3D::UserDefinedPluginOrder)
     {
       m_LoadedPlugins.resize(order + 1);
       m_LoadedPlugins[order] = ipPlugin;
     }
-    m_LoadedPlugins.push_back(ipPlugin);
+    m_LoadedPlugins.push_back(ipPlugin);*/
 #ifdef QT_DEBUG
     qWarning(ipPlugin->getPluginName().toAscii(), "%s");
 #endif
