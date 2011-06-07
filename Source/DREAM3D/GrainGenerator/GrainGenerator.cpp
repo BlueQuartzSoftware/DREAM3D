@@ -37,6 +37,7 @@
 #include "MXA/Utilities/MXADir.h"
 #include "MXA/Utilities/MXAFileInfo.h"
 
+#include "DREAM3D/Common/PhWriter.hpp"
 #include "DREAM3D/Common/VTKUtils/VTKFileWriters.hpp"
 #include "DREAM3D/StructureReaders/AbstractStructureReader.h"
 #include "DREAM3D/StructureReaders/VTKStructureReader.h"
@@ -283,11 +284,14 @@ void GrainGenerator::execute()
   if (m_WriteIPFFile) {vtkWriter->writeGrainIPFVizFile(m.get(), reconIPFVisFile);}
   CHECK_FOR_CANCELED(GrainGeneratorFunc, "GrainGenerator Was canceled", writeIPFVizFile)
 
-  /** ******* End VTK Visualization File Writing Section ****** */
+  /* ******* End VTK Visualization File Writing Section ****** */
 
   /* **********   This CMU's ph format */
   updateProgressAndMessage(("Writing Ph Voxel File"), 95);
-  if (m_WritePhFile) {vtkWriter->writeGrainPhFile(m.get(), phFile);}
+  if (m_WritePhFile) {
+    PhWriter phWriter;
+    err = phWriter.writeGrainPhFile(phFile, m->voxels, m->xpoints, m->ypoints, m->zpoints);}
+  if (err < 0)
   CHECK_FOR_CANCELED(GrainGeneratorFunc, "GrainGenerator Was canceled", writePhFile)
 
   /* ********** HDF5 Grains File  ********** */
