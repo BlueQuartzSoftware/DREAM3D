@@ -61,7 +61,7 @@
   { QString s = prefs.value(#tag).toString();\
   if (s.isEmpty() == false) {\
     bool bb = prefs.value(#tag).toBool();\
-  prefix##tag->setChecked(bb); } else { prefix##tag->setChecked(emptyValue); } }
+  prefix##tag = (bb); } else { prefix##tag = (emptyValue); } }
 
 #define WRITE_BOOL_SETTING(prefs, prefix, tag,  b)\
     prefs.setValue(#tag, (b) );
