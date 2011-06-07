@@ -100,6 +100,7 @@ class GrainGeneratorWidget : public AIMPluginFrame, private Ui::GrainGeneratorWi
 
     void on_m_StructureFile_textChanged(const QString &text);
 
+    void on_m_VtkOptionsBtn_clicked();
 
   private slots:
 
@@ -114,6 +115,12 @@ class GrainGeneratorWidget : public AIMPluginFrame, private Ui::GrainGeneratorWi
     QList<QWidget*> m_WidgetList;
     QGrainGenerator*    m_GrainGenerator;
     QThread*                    m_WorkerThread;
+
+    bool                        m_WriteSurfaceVoxelScalars;
+    bool                        m_WritePhaseIdScalars;
+    bool                        m_WriteIPFColorScalars;
+    bool                        m_WriteBinaryVTKFile;
+
     QString m_OpenDialogLastDirectory;
 
     GrainGeneratorWidget(const GrainGeneratorWidget&); // Copy Constructor Not Implemented
