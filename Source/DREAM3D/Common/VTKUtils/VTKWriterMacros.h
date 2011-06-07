@@ -35,10 +35,19 @@
  * style files.
  */
 
+#define WRITE_RECTILINEAR_GRID_HEADER(FILE_TYPE, ptr, xpoints, ypoints, zpoints)\
+  fprintf(f, "# vtk DataFile Version 2.0\n");\
+  fprintf(f, "data set from DREAM3D\n");\
+  fprintf(f, FILE_TYPE); fprintf(f, "\n");\
+  fprintf(f, "DATASET RECTILINEAR_GRID\n");\
+  fprintf(f, "DIMENSIONS %d %d %d\n", xpoints, ypoints, zpoints);\
+
+
+
 
 #define WRITE_VTK_GRAIN_HEADER(FILE_TYPE, ptr)\
   fprintf(f, "# vtk DataFile Version 2.0\n");\
-  fprintf(f, "data set from AIMReconstruction\n");\
+  fprintf(f, "data set from DREAM3D\n");\
   fprintf(f, FILE_TYPE); fprintf(f, "\n");\
   fprintf(f, "DATASET STRUCTURED_POINTS\n");\
   fprintf(f, "DIMENSIONS %d %d %d\n", ptr->xpoints, ptr->ypoints, ptr->zpoints);\
