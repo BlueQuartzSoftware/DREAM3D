@@ -22,7 +22,7 @@
      <item row="0" column="0">
       <widget class="QLabel" name="label_11">
        <property name="text">
-        <string>Input File</string>
+        <string>HDF5 Voxel File</string>
        </property>
       </widget>
      </item>
@@ -66,21 +66,21 @@
       <item>
        <layout class="QGridLayout" name="gridLayout_7">
         <item row="2" column="0">
-         <widget class="QCheckBox" name="computeNumNeighbors">
+         <widget class="QCheckBox" name="m_ComputeNumNeighbors">
           <property name="text">
            <string>Number of Neighbors</string>
           </property>
          </widget>
         </item>
         <item row="1" column="0">
-         <widget class="QCheckBox" name="computeGrainShapes">
+         <widget class="QCheckBox" name="m_ComputeGrainShapes">
           <property name="text">
            <string>Grain Shapes</string>
           </property>
          </widget>
         </item>
         <item row="0" column="0">
-         <widget class="QCheckBox" name="computeGrainSize">
+         <widget class="QCheckBox" name="m_ComputeGrainSize">
           <property name="text">
            <string>Grain Size</string>
           </property>
@@ -103,14 +103,14 @@
       <item>
        <layout class="QGridLayout" name="gridLayout_9">
         <item row="0" column="0">
-         <widget class="QCheckBox" name="computeMDF">
+         <widget class="QCheckBox" name="m_ComputeMDF">
           <property name="text">
            <string>MDF</string>
           </property>
          </widget>
         </item>
         <item row="1" column="0">
-         <widget class="QCheckBox" name="computeODF">
+         <widget class="QCheckBox" name="m_ComputeODF">
           <property name="text">
            <string>ODF</string>
           </property>
