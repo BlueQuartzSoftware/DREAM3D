@@ -416,12 +416,6 @@ class VTKFileWriters
      */
     int writeGrainIPFVizFile(GrainGeneratorFunc* r, const std::string &file);
 
-    /**
-     * @brief Writes Ph data file for the GrainGenerator Class
-     * @param Output file name
-     * @return 0 on Success
-     */
-    int writeGrainPhFile(GrainGeneratorFunc* r, const std::string &file);
 
   protected:
     VTKFileWriters();
