@@ -62,7 +62,7 @@
 /*
  *
  */
-class H5VoxelReader
+class DREAM3DLib_EXPORT H5VoxelReader
 {
   public:
     MXA_SHARED_POINTERS(H5VoxelReader)
