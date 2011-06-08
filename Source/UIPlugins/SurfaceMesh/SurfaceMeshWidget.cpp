@@ -105,7 +105,7 @@ void SurfaceMeshWidget::readSettings(QSettings &prefs)
   READ_FILEPATH_SETTING(prefs, m_, OutputDir, "");
   READ_STRING_SETTING(prefs, m_, OutputFilePrefix, "SurfaceMesh_")
 
-  READ_CHECKBOX_SETTING(prefs, m_, STLFile, true);
+  READ_CHECKBOX_SETTING(prefs, m_, WriteSTLFiles, true);
 
   READ_CHECKBOX_SETTING(prefs, m_, SmoothMesh, false);
   READ_CHECKBOX_SETTING(prefs, m_, LockQuadPoints, false);
@@ -124,7 +124,7 @@ void SurfaceMeshWidget::writeSettings(QSettings &prefs)
   WRITE_STRING_SETTING(prefs, m_, OutputDir);
   WRITE_STRING_SETTING(prefs, m_, OutputFilePrefix)
 
-  WRITE_CHECKBOX_SETTING(prefs, m_, STLFile)
+  WRITE_CHECKBOX_SETTING(prefs, m_, WriteSTLFiles)
 
 
   WRITE_BOOL_SETTING(prefs, m_, SmoothMesh, m_SmoothMesh->isChecked() );
@@ -169,7 +169,7 @@ void SurfaceMeshWidget::setupGui()
 // -----------------------------------------------------------------------------
 void SurfaceMeshWidget::checkIOFiles()
 {
-  CHECK_QLINEEDIT_FILE_EXISTS(m_InputFile)
+  //CHECK_QLINEEDIT_FILE_EXISTS(m_InputFile)
   if ( verifyPathExists(m_InputFile->text(), m_InputFile) == true )
   {
     // Load up the voxel data
@@ -219,7 +219,6 @@ void SurfaceMeshWidget::checkIOFiles()
   CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::SurfaceMesh, m_, NodesFileBin)
   CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::SurfaceMesh, m_, TrianglesFileBin)
   CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::SurfaceMesh, m_, VisualizationVizFile)
-  CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::SurfaceMesh, m_, STLFile)
 }
 
 
@@ -313,7 +312,7 @@ void SurfaceMeshWidget::on_m_GoBtn_clicked()
   m_SurfaceMesh->setDeleteTempFiles(m_DeleteTempFiles->isChecked());
   m_SurfaceMesh->setBinaryVTKFile(m_BinaryVtkFiles->isChecked());
   m_SurfaceMesh->setConformalMesh(m_ConformalMesh->isChecked());
-  m_SurfaceMesh->setWriteSTLFile(m_STLFile->isChecked());
+  m_SurfaceMesh->setWriteSTLFile(m_WriteSTLFiles->isChecked());
 
   m_SurfaceMesh->setSmoothMesh(m_SmoothMesh->isChecked());
   m_SurfaceMesh->setSmoothIterations(m_SmoothIterations->value());
