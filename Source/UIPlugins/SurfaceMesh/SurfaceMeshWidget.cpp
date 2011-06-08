@@ -49,6 +49,7 @@
 #include "QtSupport/QR3DFileCompleter.h"
 #include "QtSupport/AIM_QtMacros.h"
 #include "DREAM3D/SurfaceMesh/SMVtkFileIO.h"
+#include "DREAM3D/HDF5/H5VoxelReader.h"
 
 
 // -----------------------------------------------------------------------------
@@ -171,6 +172,20 @@ void SurfaceMeshWidget::checkIOFiles()
   CHECK_QLINEEDIT_FILE_EXISTS(m_InputFile)
   if ( verifyPathExists(m_InputFile->text(), m_InputFile) == true )
   {
+    // Load up the voxel data
+      H5VoxelReader::Pointer h5Reader = H5VoxelReader::New();
+      h5Reader->setFilename(m_InputFile->text().toStdString());
+      int dims[3];
+      float spacing[3];
+      int err = h5Reader->getSizeAndResolution(dims, spacing);
+      if (err >= 0)
+      {
+          xDim->setText(QString::number(dims[0]));
+          yDim->setText(QString::number(dims[1]));
+          zDim->setText(QString::number(dims[2]));
+      }
+
+#if 0
     VTKFileReader::Pointer reader = VTKFileReader::New();
     reader->setInputFileName(m_InputFile->text().toStdString());
     int err = reader->readHeader();
@@ -180,8 +195,8 @@ void SurfaceMeshWidget::checkIOFiles()
       if(dataset.compare("STRUCTURED_POINTS") != 0)
       {
         QMessageBox::critical(this, QString("SurfaceMesh"),
-                              QString("The VTK File does not have the correct data type. We only support STRUCTURED_POINTS."),
-                              QMessageBox::Ok | QMessageBox::Default);
+            QString("The VTK File does not have the correct data type. We only support STRUCTURED_POINTS."),
+            QMessageBox::Ok | QMessageBox::Default);
       }
       else
       {
@@ -194,6 +209,8 @@ void SurfaceMeshWidget::checkIOFiles()
         zDim->setText(QString::number(z));
       }
     }
+#endif
+
   }
 
 
@@ -211,9 +228,9 @@ void SurfaceMeshWidget::checkIOFiles()
 // -----------------------------------------------------------------------------
 void SurfaceMeshWidget::on_m_InputFileBtn_clicked()
 {
-  QString file = QFileDialog::getOpenFileName(this, tr("Select Input File"),
+  QString file = QFileDialog::getOpenFileName(this, tr("Select HDF5 Voxel File"),
                                                  m_OpenDialogLastDirectory,
-                                                 tr("Viz Files (*.vtk)") );
+                                                 tr("Voxel Data (*.h5)") );
   if ( true == file.isEmpty() ){return;  }
   QFileInfo fi (file);
   QString ext = fi.suffix();

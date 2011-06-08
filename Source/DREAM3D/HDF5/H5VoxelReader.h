@@ -75,6 +75,11 @@ class H5VoxelReader
 
     int getSizeAndResolution(int volDims[3], float spacing[3]);
 
+    int readHyperSlab(int xdim, int ydim, int zIndex, int* fileVoxelLayer);
+
+
+
+
 	template<typename T>
 	int readVoxelData(boost::shared_array<T> voxels,
                                        std::vector<AIM::Reconstruction::CrystalStructure> &crystruct,
