@@ -23,6 +23,7 @@
 #include <iostream>
 #include <algorithm>
 
+#include "MXA/MXATypes.h"
 
 //TODO: Create Test Suite for these Methods
 
