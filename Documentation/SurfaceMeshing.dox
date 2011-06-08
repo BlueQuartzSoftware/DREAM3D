@@ -27,12 +27,12 @@ fields:
 The Triangle file is made up of Triangle Records where each record is make up of
 the following fields:
 
-@li ID: The triangle ID
-@li N1: The first Node's index into the Nodes Array
-@li N2: The second Node's index into the Nodes Array
-@li N3: The third Node's index into the Nodes Array
-@li Grain ID 1: The First grain the triangle belongs to
-@li Grain ID 2: The Second grain the triangle belongs to
+@li ID: The triangle ID 4 Byte Unsigned Int.
+@li N1: The first Node's index into the Nodes Array. 4 Byte Unsigned Int
+@li N2: The second Node's index into the Nodes Array. 4 Byte Unsigned Int
+@li N3: The third Node's index into the Nodes Array. 4 Byte Unsigned Int
+@li Grain ID 1: The First grain the triangle belongs to. 4 Byte Unsigned Int
+@li Grain ID 2: The Second grain the triangle belongs to. 4 Byte Unsigned Int
 
 Each Triangle is shared between 2 grains.
 
