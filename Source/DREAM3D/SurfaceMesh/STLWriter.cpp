@@ -140,6 +140,7 @@ int STLWriter::writeTriangleBlock(int numTriangles, Patch* cTriangle, Node* cVer
   float u[3], w[3];
   float length;
 
+
   for (int i = 0; i < numTriangles; i++)
   {
     ::memset(data, 0, 50);
