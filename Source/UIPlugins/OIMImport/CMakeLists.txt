@@ -77,7 +77,7 @@ PluginProperties(OIMImportPlugin "_debug" "${DREAM3D_VERSION}"
                 "${DREAM3D_BINARY_DIR}" "${CMP_PLUGIN_LIST_FILE}")
 
 # Add a Dependency so that the plugins are always build before the main Application
-add_dependencies(OIMImportPlugin DREAM3DApp)
+add_dependencies(OIMImportPlugin DREAM3D)
 
 if (NOT MSVC)
   SET (CMAKE_LIBRARY_OUTPUT_DIRECTORY  ${DREAM3D_BINARY_DIR}/Bin  )
