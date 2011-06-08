@@ -11,7 +11,7 @@ so it can be integrated with the other documentation pages.
 @li Better Display of errors when importing to help user fix their data
 
 @section reconstruction Reconstruction:
-@li Fix 2 Phase bug - Bad output file is written
+@li <b>DONE</b> (MAG 2011/06/11) - Fix 2 Phase bug - Bad output file is written
 @li Rework existing user interface for showing output file that will be written and
 indicate which files will be over written during execution.
 @li Indicate with a set of images what is meant for the "Orientation" of the OIM Data
@@ -26,7 +26,7 @@ indicate which files will be over written during execution.
 @li Rework existing user interface for showing output file that will be written and
 indicate which files will be over written during execution.
 @li <b>DONE</b> (MAJ 2011/05/30) - Confirm Crashing bug in Destructor of GrainGeneratorFunc is fixed.
-@li Switch to defining Dimensions and resolution of the volume to be created
+@li <b>DONE</b> (MAG 2011/06/10) - Switch to defining Dimensions and resolution of the volume to be created
 @li Real time indicate the average grain size, number of grains as user inputs values
 into the user interface
 @li <b>DONE</b> (MAJ 2011/05/27) - Stop reading MicroTexture from the HDF5 Input file
@@ -41,9 +41,9 @@ into the user interface
 @li Create new tab for this interface which will generate 3D Stats from a set of 2D statistics or input files
 
 @section microstats Microstructure Statistics Module:
-@li Move all the stats functions to their own class out of the Reconstruction and GrainGenerator modules
+@li <b>DONE</b> (MAG 2011/06/11) - Move all the stats functions to their own class out of the Reconstruction and GrainGenerator modules
 @li <b>DONE</b> (MAJ 2011/05/28) - Add new tab "Microstructure Statistics" which will use existing grain structure files as the input.
-@li Stop Calculating MicroTexture
+@li <b>DONE</b> (MAG 2011/06/11) - Stop Calculating MicroTexture
 
 
 @section statsgen StatsGenerator
