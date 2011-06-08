@@ -101,7 +101,9 @@ void GrainGeneratorWidget::readSettings(QSettings &prefs)
   READ_SETTING(prefs, m_, FillingErrorWeight, ok, d, 1.0 , Double);
   READ_SETTING(prefs, m_, NeighborhoodErrorWeight, ok, d, 1.0 , Double);
   READ_SETTING(prefs, m_, SizeDistErrorWeight, ok, d, 1.0 , Double);
-  READ_SETTING(prefs, m_, NumGrains, ok, i, 1000 , Int);
+  READ_SETTING(prefs, m_, XPoints, ok, i, 100 , Int);
+  READ_SETTING(prefs, m_, YPoints, ok, i, 100 , Int);
+  READ_SETTING(prefs, m_, ZPoints, ok, i, 100 , Int);
 
   READ_BOOL_SETTING(prefs, m_, PeriodicBoundaryConditions, false);
   m_AlreadyFormed->blockSignals(true);
@@ -137,7 +139,9 @@ void GrainGeneratorWidget::writeSettings(QSettings &prefs)
   WRITE_SETTING(prefs, m_, FillingErrorWeight )
   WRITE_SETTING(prefs, m_, NeighborhoodErrorWeight )
   WRITE_SETTING(prefs, m_, SizeDistErrorWeight )
-  WRITE_SETTING(prefs, m_, NumGrains )
+  WRITE_SETTING(prefs, m_, XPoints )
+  WRITE_SETTING(prefs, m_, YPoints )
+  WRITE_SETTING(prefs, m_, ZPoints )
 
   WRITE_BOOL_SETTING(prefs, m_, PeriodicBoundaryConditions, m_PeriodicBoundaryConditions->isChecked())
   WRITE_BOOL_SETTING(prefs, m_, AlreadyFormed, m_AlreadyFormed->isChecked())
@@ -221,7 +225,7 @@ void GrainGeneratorWidget::setupGui()
 
 
   m_WidgetList << m_H5InputStatisticsFile << m_InputH5StatisticsFileBtn << m_OutputDir << m_OutputDirBtn;
-  m_WidgetList << m_NumGrains << m_XResolution << m_YResolution << m_ZResolution << m_FillingErrorWeight;
+  m_WidgetList << m_XPoints << m_YPoints << m_ZPoints << m_XResolution << m_YResolution << m_ZResolution << m_FillingErrorWeight;
   m_WidgetList << m_NeighborhoodErrorWeight << m_SizeDistErrorWeight;
   m_WidgetList << m_ShapeClass << m_AlreadyFormed;
   m_WidgetList << m_PeriodicBoundaryConditions << m_BinaryVtkFiles << m_OutputFilePrefix;
@@ -400,7 +404,9 @@ void GrainGeneratorWidget::on_m_GoBtn_clicked()
   m_GrainGenerator->setH5StatsFile(QDir::toNativeSeparators(m_H5InputStatisticsFile->text()).toStdString() );
   m_GrainGenerator->setOutputDirectory(QDir::toNativeSeparators(m_OutputDir->text()).toStdString());
   m_GrainGenerator->setOutputFilePrefix(m_OutputFilePrefix->text().toStdString());
-  m_GrainGenerator->setNumGrains(m_NumGrains->value());
+  m_GrainGenerator->setXPoints(m_XPoints->value());
+  m_GrainGenerator->setYPoints(m_YPoints->value());
+  m_GrainGenerator->setZPoints(m_ZPoints->value());
 
   int shapeclass = m_ShapeClass->currentIndex() + 1;
   m_GrainGenerator->setShapeClass(shapeclass);
