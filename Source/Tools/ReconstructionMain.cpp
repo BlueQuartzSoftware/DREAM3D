@@ -167,11 +167,13 @@ int main(int argc, char **argv)
 
     m_Reconstruction->setOutputDirectory(OutputDir.getValue());
     m_Reconstruction->setOutputFilePrefix(OutputFilePrefix.getValue());
-    m_Reconstruction->setWriteVisualizationFile(true);
-    m_Reconstruction->setWriteIPFFile(true);
-    m_Reconstruction->setWriteDisorientationFile(true);
-    m_Reconstruction->setWriteImageQualityFile(true);
-    m_Reconstruction->setWriteSchmidFactorFile(true);
+    m_Reconstruction->setWriteVtkFile(true);
+    m_Reconstruction->setWriteEuclidean(true);
+    m_Reconstruction->setWritePhaseId(true);
+    m_Reconstruction->setWriteImageQuality(true);
+    m_Reconstruction->setWriteIPFColor(true);
+    m_Reconstruction->setWriteBinaryVTKFiles(true);
+
     m_Reconstruction->setWriteDownSampledFile(true);
     m_Reconstruction->setWriteHDF5GrainFile(true);
 

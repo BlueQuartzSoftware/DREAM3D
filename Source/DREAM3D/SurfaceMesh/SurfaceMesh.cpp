@@ -36,9 +36,11 @@
 #include "MXA/Common/MXAEndian.h"
 #include "MXA/Utilities/MXADir.h"
 #include "MXA/Utilities/MXAFileInfo.h"
+#include "MXA/Utilities/StringUtils.h"
 
 #include "SMVtkFileIO.h"
-#include "DREAM3D/SurfaceMesh/STLWriter.h"
+#include "DREAM3D/HDF5/H5VoxelReader.h"
+
 
 #define CHECK_ERROR(name, message)\
     if(err < 0) {\
@@ -93,7 +95,7 @@ void SurfaceMesh::execute()
 //  MAKE_OUTPUT_FILE_PATH (  EdgesFileIndex , AIM::SurfaceMeshing::EdgesFileIndex)
 //  MAKE_OUTPUT_FILE_PATH (  TrianglesFileIndex , AIM::SurfaceMeshing::TrianglesFileIndex)
   MAKE_OUTPUT_FILE_PATH( VisualizationFile, AIM::SurfaceMesh::VisualizationVizFile)
-  MAKE_OUTPUT_FILE_PATH( stlFilename, AIM::SurfaceMesh::STLFile)
+//  MAKE_OUTPUT_FILE_PATH( stlFilename, AIM::SurfaceMesh::STLFile)
 
   m = SurfaceMeshFunc::New();
   // Initialize some benchmark timers
@@ -112,18 +114,7 @@ void SurfaceMesh::execute()
     }
   }
 
-  // Check to see if we are going to write an STL File
-  STLWriter::Pointer stlWriter = STLWriter::NullPointer();
-  if (m_WriteSTLFile == true)
-  {
-    stlWriter = STLWriter::New();
-    stlWriter->setFilename(stlFilename);
-    err = stlWriter->openFile();
-    CHECK_ERROR(SurfaceMesh, "An Error Occured trying to open the STL File for writing.");
-    std::string stlHeader("DREAM.3D Surface Mesh from file ");
-    stlHeader.append(MXAFileInfo::filename(m_InputFile));
-    stlWriter->writeHeader(stlHeader);
-  }
+
 
   int cNodeID = 0;
   int cTriID = 0;
@@ -177,8 +168,38 @@ void SurfaceMesh::execute()
   { 0, 3, 2, 1, 1, 0, 3, 2 } };
 
 
+#if 0
   SMVtkFileIO::Pointer vtkreader = SMVtkFileIO::New();
   vtkreader->primeFileToScalarDataLocation(m.get(), m_InputFile, m_ScalarName);
+#endif
+
+  H5VoxelReader::Pointer reader = H5VoxelReader::New();
+  reader->setFilename(m_InputFile);
+
+  int dims[3];
+  float scaling[3];
+  err = reader->getSizeAndResolution(dims, scaling);
+  // Initialize our SurfaceMeshFunc Variable
+  // Add a layer of padding around the volume which are going to be our boundary voxels
+  m->xDim = dims[0] + 2;
+  m->yDim = dims[1] + 2;
+  m->zDim = dims[2] + 2;
+
+  m->NS = m->xDim * m->yDim * m->zDim;
+  m->NSP = m->xDim * m->yDim;
+
+  m->neigh = new Neighbor[2 * m->NSP + 1];
+  m->voxels = new int[2 * m->NSP + 1];
+  m->cSquare = new Face[3 * 2 * m->NSP];
+  m->cVertex = new Node[2 * 7 * m->NSP];
+
+  m->xOrigin = 0.0f;
+  m->yOrigin = 0.0f;
+  m->zOrigin = 0.0f;
+
+  m->xRes = scaling[0];
+  m->yRes = scaling[1];
+  m->zRes = scaling[2];
 
   // Prime the working voxels (2 layers worth) with -3 values indicating border voxels
   int size = 2 * m->NSP + 1;
@@ -186,6 +207,8 @@ void SurfaceMesh::execute()
   {
     m->voxels[i] = -3;
   }
+
+  std::map<int, STLWriter::Pointer> gidToSTLWriter;
 
   // Save the actual volume dimensions from the input file
   int xFileDim = m->xDim - 2;
@@ -202,15 +225,11 @@ void SurfaceMesh::execute()
     ss << "Marching Cubes Between Layers " << i << " and " << i + 1;
     updateProgressAndMessage((ss.str().c_str()), (i * 90 / zFileDim));
 
+#if 0
     err = vtkreader->readZSlice(xFileDim, yFileDim, zFileDim, fileVoxelLayer);
-    if (err < 0)
-    {
-      ss.str("");
-      ss << "Error loading slice data from vtk file.";
-      setErrorCondition(1);
-      updateProgressAndMessage((ss.str().c_str()), 100);
-      return;
-    }
+#endif
+    err = reader->readHyperSlab(xFileDim, yFileDim, i, fileVoxelLayer);
+    CHECK_FOR_ERROR(SurfaceMeshFunc, "Error Loading Slice Data as a Hyperslab from HDF5 file", err)
 
     // Copy the Voxels from layer 2 to Layer 1;
     ::memcpy(&(m->voxels[1]), &(m->voxels[1 + m->NSP]), m->NSP * sizeof(int));
@@ -264,15 +283,9 @@ void SurfaceMesh::execute()
       updateProgressAndMessage(("Error Writing Triangles Temp File"), 100);
       return;
     }
-    if (NULL != stlWriter.get())
+    if (m_WriteSTLFile == true)
     {
-      err = stlWriter->writeTriangleBlock(nTriangle, m->cTriangle, m->cVertex);
-      if (err < 0)
-      {
-        setCancel(true);
-        updateProgressAndMessage(("Error Writing STL File"), 100);
-        return;
-      }
+      writeSTLFiles(nTriangle, gidToSTLWriter);
     }
     cNodeID = nNodes;
     cTriID = cTriID + nTriangle;
@@ -315,18 +328,13 @@ void SurfaceMesh::execute()
     updateProgressAndMessage(("Error Writing Triangles Temp File"), 100);
     return;
   }
-  if (NULL != stlWriter.get())
+
+
+  // Write the last layers of the STL Files
+  if (m_WriteSTLFile == true)
   {
-    err = stlWriter->writeTriangleBlock(nTriangle, m->cTriangle, m->cVertex);
-    if (err < 0)
-    {
-      setCancel(true);
-      updateProgressAndMessage(("Error Writing STL File"), 100);
-      return;
-    }
-    stlWriter->closeFile();
+    writeSTLFiles(nTriangle, gidToSTLWriter);
   }
-  stlWriter = STLWriter::NullPointer();
 
 
   cNodeID = nNodes;
@@ -360,5 +368,82 @@ void SurfaceMesh::execute()
     MXADir::remove(NodesFile);
     MXADir::remove(TrianglesFile);
   }
+
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void SurfaceMesh::writeSTLFiles(int nTriangle, std::map<int, STLWriter::Pointer> &gidToSTLWriter )
+{
+// First loop through the All the triangles adding up how many triangles are
+// in each grain and create STL Files for each Grain if needed
+  std::map<int, int> grainIdMap;
+  int g0, g1;
+  for (int i = 0; i < nTriangle; ++i)
+  {
+    g0 = m->cTriangle[i].ngrainname[0];
+    g1 = m->cTriangle[i].ngrainname[1];
+    if (gidToSTLWriter[g0].get() == NULL)
+    {
+      std::string stlFile = m_OutputDirectory + MXADir::Separator + m_OutputFilePrefix + "STLFiles/";
+      MXADir::mkdir(stlFile, true);
+      stlFile.append(StringUtils::numToString(g0)).append(".stl");
+      gidToSTLWriter[g0] = STLWriter::CreateNewSTLWriter(g0, stlFile);
+    }
+    if (gidToSTLWriter[g1].get() == NULL)
+    {
+      std::string stlFile = m_OutputDirectory + MXADir::Separator + m_OutputFilePrefix + "STLFiles/";
+      MXADir::mkdir(stlFile, true);
+      stlFile.append(StringUtils::numToString(g1)).append(".stl");
+      gidToSTLWriter[g1] = STLWriter::CreateNewSTLWriter(g1, stlFile);
+    }
+    grainIdMap[m->cTriangle[i].ngrainname[0]]++;
+    grainIdMap[m->cTriangle[i].ngrainname[1]]++;
+  }
+
+// Allocate all the new Patch Blocks
+  std::map<int, Patch*> gidToPatch;
+  std::map<int, int> gidToCurIdx;
+  for (std::map<int, int>::iterator iter = grainIdMap.begin(); iter != grainIdMap.end(); ++iter)
+  {
+    int gid = (*iter).first;
+    int count = (*iter).second;
+    gidToPatch[gid] = new Patch[count];
+    gidToCurIdx[gid] = 0;
+  }
+
+  int idx = 0;
+  Patch* front = NULL;
+// Loop over all the triangles and copy the Patch Pointers into our new Pointers
+  for (int i = 0; i < nTriangle; ++i)
+  {
+    g0 = m->cTriangle[i].ngrainname[0];
+    front = gidToPatch[g0];
+    idx = gidToCurIdx[g0];
+    front[idx] = m->cTriangle[i];
+    gidToCurIdx[g0]++;
+
+    g1 = m->cTriangle[i].ngrainname[1];
+    front = gidToPatch[g1];
+    idx = gidToCurIdx[g1];
+    front[idx] = m->cTriangle[i];
+    gidToCurIdx[g1]++;
+  }
+
+  for (std::map<int, Patch*>::iterator iter = gidToPatch.begin(); iter != gidToPatch.end(); ++iter)
+  {
+    int gid = (*iter).first;
+    Patch* cTriangle = (*iter).second;
+    int nTriangle = grainIdMap[gid];
+    STLWriter::Pointer writer = gidToSTLWriter[gid];
+    if (NULL != writer.get())
+    {
+      writer->writeTriangleBlock(nTriangle, cTriangle, m->cVertex);
+    }
+    delete [] cTriangle; // Delete this block of Patch objects as we are done with it
+  }
+
 
 }

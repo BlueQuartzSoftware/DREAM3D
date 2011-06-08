@@ -52,7 +52,7 @@
 
 #include "QtSupport/AIM_QtMacros.h"
 #include "QtSupport/QR3DFileCompleter.h"
-
+#include "QtSupport/QCheckboxDialog.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -61,7 +61,10 @@ GrainGeneratorWidget::GrainGeneratorWidget(QWidget *parent) :
 AIMPluginFrame(parent),
 m_GrainGenerator(NULL),
 m_WorkerThread(NULL),
-
+m_WriteSurfaceVoxelScalars(true),
+m_WritePhaseIdScalars(true),
+m_WriteIPFColorScalars(true),
+m_WriteBinaryVTKFile(true),
 #if defined(Q_WS_WIN)
 m_OpenDialogLastDirectory("C:\\")
 #else
@@ -105,13 +108,17 @@ void GrainGeneratorWidget::readSettings(QSettings &prefs)
   READ_SETTING(prefs, m_, YPoints, ok, i, 100 , Int);
   READ_SETTING(prefs, m_, ZPoints, ok, i, 100 , Int);
 
-  READ_BOOL_SETTING(prefs, m_, PeriodicBoundaryConditions, false);
+  READ_CHECKBOX_SETTING(prefs, m_, PeriodicBoundaryConditions, false);
   m_AlreadyFormed->blockSignals(true);
-  READ_BOOL_SETTING(prefs, m_, AlreadyFormed, false);
+  READ_CHECKBOX_SETTING(prefs, m_, AlreadyFormed, false);
   READ_FILEPATH_SETTING(prefs, m_, StructureFile, "");
   m_AlreadyFormed->blockSignals(false);
 
-  READ_CHECKBOX_SETTING(prefs, m_, IPFVizFile, true);
+  READ_BOOL_SETTING(prefs, m_, WriteSurfaceVoxelScalars, true);
+  READ_BOOL_SETTING(prefs, m_, WritePhaseIdScalars, true);
+  READ_BOOL_SETTING(prefs, m_, WriteIPFColorScalars, true);
+  READ_BOOL_SETTING(prefs, m_, WriteBinaryVTKFile, true);
+
   READ_CHECKBOX_SETTING(prefs, m_, VisualizationVizFile, true);
   READ_CHECKBOX_SETTING(prefs, m_, HDF5GrainFile, true);
   READ_CHECKBOX_SETTING(prefs, m_, PhFile, true);
@@ -149,7 +156,11 @@ void GrainGeneratorWidget::writeSettings(QSettings &prefs)
 
   WRITE_COMBO_BOX(prefs, m_, ShapeClass)
 
-  WRITE_CHECKBOX_SETTING(prefs, m_, IPFVizFile)
+  WRITE_BOOL_SETTING(prefs, m_, WriteSurfaceVoxelScalars, true);
+  WRITE_BOOL_SETTING(prefs, m_, WritePhaseIdScalars, true);
+  WRITE_BOOL_SETTING(prefs, m_, WriteIPFColorScalars, true);
+  WRITE_BOOL_SETTING(prefs, m_, WriteBinaryVTKFile, true);
+
   WRITE_CHECKBOX_SETTING(prefs, m_, VisualizationVizFile)
   WRITE_CHECKBOX_SETTING(prefs, m_, HDF5GrainFile)
   WRITE_CHECKBOX_SETTING(prefs, m_, PhFile)
@@ -228,7 +239,7 @@ void GrainGeneratorWidget::setupGui()
   m_WidgetList << m_XPoints << m_YPoints << m_ZPoints << m_XResolution << m_YResolution << m_ZResolution << m_FillingErrorWeight;
   m_WidgetList << m_NeighborhoodErrorWeight << m_SizeDistErrorWeight;
   m_WidgetList << m_ShapeClass << m_AlreadyFormed;
-  m_WidgetList << m_PeriodicBoundaryConditions << m_BinaryVtkFiles << m_OutputFilePrefix;
+  m_WidgetList << m_PeriodicBoundaryConditions  << m_OutputFilePrefix;
 }
 
 // -----------------------------------------------------------------------------
@@ -271,7 +282,6 @@ void GrainGeneratorWidget::checkIOFiles()
   CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::SyntheticBuilder, m_, GrainAnglesFile)
   CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::SyntheticBuilder, m_, H5VolumeFile)
 
-  CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(AIM::SyntheticBuilder, m_ , IPFVizFile)
   CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(AIM::SyntheticBuilder, m_ , VisualizationVizFile)
   CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(AIM::SyntheticBuilder, m_ , HDF5GrainFile)
   CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(AIM::SyntheticBuilder, m_ , PhFile)
@@ -422,9 +432,12 @@ void GrainGeneratorWidget::on_m_GoBtn_clicked()
   m_GrainGenerator->setAlreadyFormed(m_AlreadyFormed->isChecked() );
   m_GrainGenerator->setStructureFile(m_StructureFile->text().toStdString());
 
-  m_GrainGenerator->setWriteBinaryFiles(m_BinaryVtkFiles->isChecked());
-  m_GrainGenerator->setWriteVisualizationFile(m_VisualizationVizFile->isChecked());
-  m_GrainGenerator->setWriteIPFFile(m_IPFVizFile->isChecked());
+  m_GrainGenerator->setWriteVtkFile(m_VisualizationVizFile->isChecked());
+  m_GrainGenerator->setWriteSurfaceVoxel(m_WriteSurfaceVoxelScalars);
+  m_GrainGenerator->setWritePhaseId(m_WritePhaseIdScalars);
+  m_GrainGenerator->setWriteIPFColor(m_WriteIPFColorScalars);
+  m_GrainGenerator->setWriteBinaryVTKFiles(m_WriteBinaryVTKFile);
+
   m_GrainGenerator->setWriteHDF5GrainFile(m_HDF5GrainFile->isChecked());
   m_GrainGenerator->setWritePhFile(m_PhFile->isChecked());
 
@@ -506,3 +519,32 @@ void GrainGeneratorWidget::on_m_OutputFilePrefix_textChanged(const QString &text
 {
   checkIOFiles();
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void GrainGeneratorWidget::on_m_VtkOptionsBtn_clicked()
+{
+  QVector<QString> options;
+  options.push_back("Write Surface Voxel Scalars");
+  options.push_back("Write Phase Ids Scalars");
+  options.push_back("Write IPF Color Scalars");
+  options.push_back("Write Binary VTK File");
+  QCheckboxDialog d(options, this);
+
+  d.setValue("Write Surface Voxel Scalars", m_WriteSurfaceVoxelScalars);
+  d.setValue("Write Phase Ids Scalars", m_WritePhaseIdScalars);
+  d.setValue("Write IPF Color Scalars", m_WriteIPFColorScalars);
+  d.setValue("Write Binary VTK File", m_WriteBinaryVTKFile);
+
+  int ret = d.exec();
+  if (ret == QDialog::Accepted)
+  {
+    m_WriteSurfaceVoxelScalars = d.getValue("Write Surface Voxel Scalars");
+    m_WritePhaseIdScalars = d.getValue("Write Phase Ids Scalars");
+    m_WriteIPFColorScalars = d.getValue("Write IPF Color Scalars");
+    m_WriteBinaryVTKFile = d.getValue("Write Binary VTK File");
+  }
+
+}
+

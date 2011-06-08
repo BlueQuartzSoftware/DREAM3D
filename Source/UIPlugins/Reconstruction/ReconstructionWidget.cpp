@@ -120,7 +120,11 @@ void ReconstructionWidget::readSettings(QSettings &prefs)
   READ_SETTING(prefs, m_, MinConfidence, ok, d, 0.1 , Double);
   READ_SETTING(prefs, m_, DownSampleFactor, ok, d, 1.0 , Double);
 
-
+  READ_BOOL_SETTING(prefs, m_, WriteEuclideanScalars, true);
+  READ_BOOL_SETTING(prefs, m_, WritePhaseIdScalars, true);
+  READ_BOOL_SETTING(prefs, m_, WriteImageQualityScalars, true);
+  READ_BOOL_SETTING(prefs, m_, WriteIPFColorScalars, true);
+  READ_BOOL_SETTING(prefs, m_, WriteBinaryVTKFile, true);
 
   READ_CHECKBOX_SETTING(prefs, m_, VisualizationVizFile, true);
   READ_CHECKBOX_SETTING(prefs, m_, DownSampledVizFile, true);
@@ -155,6 +159,13 @@ void ReconstructionWidget::writeSettings(QSettings &prefs)
   WRITE_SETTING(prefs, m_, MisOrientationTolerance)
   WRITE_COMBO_BOX(prefs, m_, AlignMeth)
   WRITE_COMBO_BOX(prefs, m_, Orientation)
+
+
+  WRITE_BOOL_SETTING(prefs, m_, WriteEuclideanScalars, true);
+  WRITE_BOOL_SETTING(prefs, m_, WritePhaseIdScalars, true);
+  WRITE_BOOL_SETTING(prefs, m_, WriteImageQualityScalars, true);
+  WRITE_BOOL_SETTING(prefs, m_, WriteIPFColorScalars, true);
+  WRITE_BOOL_SETTING(prefs, m_, WriteBinaryVTKFile, true);
 
 
   WRITE_CHECKBOX_SETTING(prefs, m_, VisualizationVizFile)
@@ -526,12 +537,12 @@ void ReconstructionWidget::on_m_GoBtn_clicked()
   m_Reconstruction->setWritePhaseId(m_WritePhaseIdScalars);
   m_Reconstruction->setWriteImageQuality(m_WriteImageQualityScalars);
   m_Reconstruction->setWriteIPFColor(m_WriteIPFColorScalars);
-  m_Reconstruction->setWriteBinaryFiles(m_WriteBinaryVTKFile);
+  m_Reconstruction->setWriteBinaryVTKFiles(m_WriteBinaryVTKFile);
 
   m_Reconstruction->setWriteDownSampledFile(m_DownSampledVizFile->isChecked());
   m_Reconstruction->setWriteHDF5GrainFile(m_HDF5GrainFile->isChecked());
 
-  m_Reconstruction->printSettings(std::cout);
+  // m_Reconstruction->printSettings(std::cout);
 
   /* Connect the signal 'started()' from the QThread to the 'run' slot of the
    * Reconstruction object. Since the Reconstruction object has been moved to another

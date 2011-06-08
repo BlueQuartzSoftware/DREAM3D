@@ -27,6 +27,7 @@
 
 //-- C++ STL
 #include <vector>
+#include <map>
 #include <sstream>
 
 #include <MXA/Utilities/MXADir.h>
@@ -2888,6 +2889,8 @@ int SurfaceMeshFunc::writeTrianglesFile (int zID, int ctid,
                                           const std::string &trianglesFile,
                                           int nt)
 {
+
+
   //int i;
   int tag;
   int end;
@@ -2936,6 +2939,8 @@ int SurfaceMeshFunc::writeTrianglesFile (int zID, int ctid,
       std::cout << "Error Writing Triangles Temp File. Not enough elements written. Wrote " << totalWritten << " of 6." << std::endl;
       return -1;
     }
+
+
 //    fprintf(f, "%d %d %d %d %d %d\n", newID, n1, n2, n3, s1, s2);
     data[0]= data[0] + 1;
   }
