@@ -56,7 +56,9 @@ GrainGenerator::GrainGenerator() :
 m_H5StatsFile(""),
 m_OutputDirectory("."),
 m_OutputFilePrefix("GrainGenerator_"),
-m_NumGrains(0),
+m_XPoints(0),
+m_YPoints(0),
+m_ZPoints(0),
 m_ShapeClass(0),
 m_XResolution(0.0),
 m_YResolution(0.0),
@@ -108,7 +110,9 @@ void GrainGenerator::execute()
   if (m_AlreadyFormed == false)
   {
     m->periodic_boundaries = m_PeriodicBoundary;
-    m->numgrains = m_NumGrains;
+    m->xpoints = m_XPoints;
+    m->ypoints = m_YPoints;
+    m->zpoints = m_ZPoints;
     m->shapeclass = m_ShapeClass;
     m->resx = m_XResolution;
     m->resy = m_YResolution;
@@ -126,19 +130,19 @@ void GrainGenerator::execute()
     CHECK_FOR_CANCELED(GrainGeneratorFunc, "GrainGenerator Was canceled", readAxisOrientationData);
 
     updateProgressAndMessage(("Packing Grains"), 25);
-    m->numgrains = m->pack_grains(m->numgrains);
+    m->pack_grains();
     CHECK_FOR_CANCELED(GrainGeneratorFunc, "GrainGenerator Was canceled", pack_grains)
 
     updateProgressAndMessage(("Assigning Voxels"), 30);
-    m->numgrains = m->assign_voxels(m->numgrains);
+    m->assign_voxels();
     CHECK_FOR_CANCELED(GrainGeneratorFunc, "GrainGenerator Was canceled", assign_voxels)
 
     updateProgressAndMessage(("Filling Gaps"), 40);
-    m->fill_gaps(m->numgrains);
+    m->fill_gaps();
     CHECK_FOR_CANCELED(GrainGeneratorFunc, "GrainGenerator Was canceled", fill_gaps)
 
     updateProgressAndMessage(("Adjusting Boundaries"), 42);
-//    m->numgrains = m->adjust_boundaries(m->numgrains);
+//    m->adjust_boundaries();
     CHECK_FOR_CANCELED(GrainGeneratorFunc, "GrainGenerator Was canceled", adjust_boundaries)
   }
   else if (m_AlreadyFormed == true)
@@ -213,11 +217,11 @@ void GrainGenerator::execute()
   if (m_AlreadyFormed == false)
   {
     updateProgressAndMessage(("Placing Precipitates"), 45);
-    m->numgrains = m->place_precipitates(m->numgrains);
+    m->place_precipitates();
     CHECK_FOR_CANCELED(GrainGeneratorFunc, "GrainGenerator Was canceled", place_precipitates)
 
     updateProgressAndMessage(("Filling In Precipitates"), 47);
-    m->fillin_precipitates(m->numgrains);
+    m->fillin_precipitates();
     CHECK_FOR_CANCELED(GrainGeneratorFunc, "GrainGenerator Was canceled", fill_gaps)
   }
 
@@ -230,7 +234,7 @@ void GrainGenerator::execute()
   CHECK_FOR_CANCELED(GrainGeneratorFunc, "GrainGenerator Was canceled", readMisorientationData)
 
   updateProgressAndMessage(("Assigning Eulers"), 60);
-  m->assign_eulers(m->numgrains);
+  m->assign_eulers();
   CHECK_FOR_CANCELED(GrainGeneratorFunc, "GrainGenerator Was canceled", assign_eulers)
 
   updateProgressAndMessage(("Measuring Misorientations"), 65);

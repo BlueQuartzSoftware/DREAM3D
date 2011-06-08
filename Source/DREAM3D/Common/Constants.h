@@ -88,7 +88,7 @@ namespace DREAM3D
     const std::string ReconstructionName("Reconstruction");
     const std::string MicrostructureStatisticsName("Microstructure Statistics");
     const std::string GrainGeneratorName("Grain Generator");
-    const std::string SurfaceMeshFile("Surface Mesh");
+    const std::string SurfaceMeshName("Surface Mesh");
 #else
     const std::string OIMImportFile("OIMImportPlugin_debug");
     const std::string ReconstructionFile("ReconstructionPlugin_debug");
