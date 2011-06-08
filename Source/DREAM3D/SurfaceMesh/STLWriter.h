@@ -34,6 +34,7 @@
 #include <stdio.h>
 
 #include "MXA/Common/MXASetGetMacros.h"
+#include "MXA/Utilities/StringUtils.h"
 #include "DREAM3D/DREAM3DConfiguration.h"
 
 class SurfaceMeshFunc;
@@ -47,6 +48,20 @@ class STLWriter
     MXA_STATIC_NEW_MACRO(STLWriter)
     MXA_TYPE_MACRO(STLWriter)
 
+    static Pointer CreateNewSTLWriter(int gid, const std::string &filename)
+    {
+      Pointer stlWriter = STLWriter::New();
+      stlWriter->setFilename(filename);
+      int err = stlWriter->openFile();
+      if (err < 0)
+      {
+        return NullPointer();
+      }
+      std::string stlHeader("DREAM.3D Surface Mesh for Grain ID ");
+      stlHeader.append(StringUtils::numToString(gid));
+      stlWriter->writeHeader(stlHeader);
+      return stlWriter;
+    }
     virtual ~STLWriter();
 
     MXA_INSTANCE_STRING_PROPERTY(Filename)

@@ -37,14 +37,14 @@
      <item row="0" column="1">
       <widget class="QLabel" name="label_24">
        <property name="text">
-        <string>VTK File</string>
+        <string>HDF Voxel File</string>
        </property>
       </widget>
      </item>
      <item row="0" column="2">
-      <widget class="QLineEdit" name="m_InputFile">
+      <widget class="QFSDropLineEdit" name="m_InputFile">
        <property name="text">
-        <string>*.vtk</string>
+        <string>*.h5</string>
        </property>
       </widget>
      </item>
@@ -207,7 +207,7 @@
       </widget>
      </item>
      <item row="0" column="1">
-      <widget class="QLineEdit" name="m_OutputDir"/>
+      <widget class="QFSDropLineEdit" name="m_OutputDir"/>
      </item>
      <item row="0" column="2">
       <widget class="QPushButton" name="m_OutputDirBtn">
@@ -607,6 +607,13 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>QFSDropLineEdit</class>
+   <extends>QLineEdit</extends>
+   <header location="global">QFSDropLineEdit.h</header>
+  </customwidget>
+ </customwidgets>
  <resources>
   <include location="../../../Resources/icons/images/Icons.qrc"/>
  </resources>
