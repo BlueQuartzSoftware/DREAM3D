@@ -49,6 +49,7 @@
 #include "QtSupport/QR3DFileCompleter.h"
 #include "QtSupport/AIM_QtMacros.h"
 #include "DREAM3D/SurfaceMesh/SMVtkFileIO.h"
+#include "DREAM3D/HDF5/H5VoxelReader.h"
 
 
 // -----------------------------------------------------------------------------
@@ -104,10 +105,10 @@ void SurfaceMeshWidget::readSettings(QSettings &prefs)
   READ_FILEPATH_SETTING(prefs, m_, OutputDir, "");
   READ_STRING_SETTING(prefs, m_, OutputFilePrefix, "SurfaceMesh_")
 
-  READ_CHECKBOX_SETTING(prefs, m_, STLFile, true);
+  READ_CHECKBOX_SETTING(prefs, m_, WriteSTLFiles, true);
 
-  READ_BOOL_SETTING(prefs, m_, SmoothMesh, false);
-  READ_BOOL_SETTING(prefs, m_, LockQuadPoints, false);
+  READ_CHECKBOX_SETTING(prefs, m_, SmoothMesh, false);
+  READ_CHECKBOX_SETTING(prefs, m_, LockQuadPoints, false);
   READ_SETTING(prefs, m_, SmoothIterations, ok, i, 1 , Int);
   READ_SETTING(prefs, m_, WriteOutputFileIncrement, ok, i, 10 , Int);
   prefs.endGroup();
@@ -123,7 +124,7 @@ void SurfaceMeshWidget::writeSettings(QSettings &prefs)
   WRITE_STRING_SETTING(prefs, m_, OutputDir);
   WRITE_STRING_SETTING(prefs, m_, OutputFilePrefix)
 
-  WRITE_CHECKBOX_SETTING(prefs, m_, STLFile)
+  WRITE_CHECKBOX_SETTING(prefs, m_, WriteSTLFiles)
 
 
   WRITE_BOOL_SETTING(prefs, m_, SmoothMesh, m_SmoothMesh->isChecked() );
@@ -168,9 +169,23 @@ void SurfaceMeshWidget::setupGui()
 // -----------------------------------------------------------------------------
 void SurfaceMeshWidget::checkIOFiles()
 {
-  CHECK_QLINEEDIT_FILE_EXISTS(m_InputFile)
+  //CHECK_QLINEEDIT_FILE_EXISTS(m_InputFile)
   if ( verifyPathExists(m_InputFile->text(), m_InputFile) == true )
   {
+    // Load up the voxel data
+      H5VoxelReader::Pointer h5Reader = H5VoxelReader::New();
+      h5Reader->setFilename(m_InputFile->text().toStdString());
+      int dims[3];
+      float spacing[3];
+      int err = h5Reader->getSizeAndResolution(dims, spacing);
+      if (err >= 0)
+      {
+          xDim->setText(QString::number(dims[0]));
+          yDim->setText(QString::number(dims[1]));
+          zDim->setText(QString::number(dims[2]));
+      }
+
+#if 0
     VTKFileReader::Pointer reader = VTKFileReader::New();
     reader->setInputFileName(m_InputFile->text().toStdString());
     int err = reader->readHeader();
@@ -180,8 +195,8 @@ void SurfaceMeshWidget::checkIOFiles()
       if(dataset.compare("STRUCTURED_POINTS") != 0)
       {
         QMessageBox::critical(this, QString("SurfaceMesh"),
-                              QString("The VTK File does not have the correct data type. We only support STRUCTURED_POINTS."),
-                              QMessageBox::Ok | QMessageBox::Default);
+            QString("The VTK File does not have the correct data type. We only support STRUCTURED_POINTS."),
+            QMessageBox::Ok | QMessageBox::Default);
       }
       else
       {
@@ -194,6 +209,8 @@ void SurfaceMeshWidget::checkIOFiles()
         zDim->setText(QString::number(z));
       }
     }
+#endif
+
   }
 
 
@@ -202,7 +219,6 @@ void SurfaceMeshWidget::checkIOFiles()
   CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::SurfaceMesh, m_, NodesFileBin)
   CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::SurfaceMesh, m_, TrianglesFileBin)
   CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::SurfaceMesh, m_, VisualizationVizFile)
-  CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::SurfaceMesh, m_, STLFile)
 }
 
 
@@ -211,9 +227,9 @@ void SurfaceMeshWidget::checkIOFiles()
 // -----------------------------------------------------------------------------
 void SurfaceMeshWidget::on_m_InputFileBtn_clicked()
 {
-  QString file = QFileDialog::getOpenFileName(this, tr("Select Input File"),
+  QString file = QFileDialog::getOpenFileName(this, tr("Select HDF5 Voxel File"),
                                                  m_OpenDialogLastDirectory,
-                                                 tr("Viz Files (*.vtk)") );
+                                                 tr("Voxel Data (*.h5)") );
   if ( true == file.isEmpty() ){return;  }
   QFileInfo fi (file);
   QString ext = fi.suffix();
@@ -296,7 +312,7 @@ void SurfaceMeshWidget::on_m_GoBtn_clicked()
   m_SurfaceMesh->setDeleteTempFiles(m_DeleteTempFiles->isChecked());
   m_SurfaceMesh->setBinaryVTKFile(m_BinaryVtkFiles->isChecked());
   m_SurfaceMesh->setConformalMesh(m_ConformalMesh->isChecked());
-  m_SurfaceMesh->setWriteSTLFile(m_STLFile->isChecked());
+  m_SurfaceMesh->setWriteSTLFile(m_WriteSTLFiles->isChecked());
 
   m_SurfaceMesh->setSmoothMesh(m_SmoothMesh->isChecked());
   m_SurfaceMesh->setSmoothIterations(m_SmoothIterations->value());

@@ -225,8 +225,15 @@ if (DREAM3D_BUILD_QT_APPS)
    # Build the static QtSupport library - which MUST be a static library or the linking
    # will not work.
    add_subdirectory(${DREAM3D_SOURCE_DIR}/Source/QtSupport ${DREAM3D_BINARY_DIR}/QtSupport)
-   
-    # Add in each GUI Plugin Project here
+  
+   # Build the DREAM3D Application  
+   option(DREAM3D_BUILD_GUI "Compile the DREAM3D GUI Application" ON)
+   if (DREAM3D_BUILD_GUI)
+       ADD_SUBDIRECTORY( ${DREAM3D_SOURCE_DIR}/Source/Applications/DREAM3D ${DREAM3D_BINARY_DIR}/Applications/DREAM3D)
+   endif()
+  
+   # Add in each GUI Plugin Projects here which MUST be AFTER the DREAM3DApp is added because we are going to 
+   # set up some dependencies and we need that target already in the Cache
    add_subdirectory(${DREAM3D_SOURCE_DIR}/Source/UIPlugins/OIMImport ${DREAM3D_BINARY_DIR}/UIPlugins/OIMImport)
    add_subdirectory(${DREAM3D_SOURCE_DIR}/Source/UIPlugins/GrainGenerator ${DREAM3D_BINARY_DIR}/UIPlugins/GrainGenerator)
    add_subdirectory(${DREAM3D_SOURCE_DIR}/Source/UIPlugins/Reconstruction ${DREAM3D_BINARY_DIR}/UIPlugins/Reconstruction)
@@ -235,14 +242,7 @@ if (DREAM3D_BUILD_QT_APPS)
    #-----------------
    # Add any additional Plugins that you develop here
    
-   
-      
-   # Build the DREAM3D Application  
-   option(DREAM3D_BUILD_GUI "Compile the DREAM3D GUI Application" ON)
-   if (DREAM3D_BUILD_GUI)
-       ADD_SUBDIRECTORY( ${DREAM3D_SOURCE_DIR}/Source/Applications/DREAM3D ${DREAM3D_BINARY_DIR}/Applications/DREAM3D)
-   endif()
-       
+        
    # Build the StatsGenerator Application
    OPTION (DREAM3D_BUILD_STATS_GENERATOR "Compile the Statistics Generator GUI Application" ON)
    if (DREAM3D_BUILD_STATS_GENERATOR)

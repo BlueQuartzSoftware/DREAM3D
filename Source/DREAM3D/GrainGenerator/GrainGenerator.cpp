@@ -69,14 +69,13 @@ m_SizeDistErrorWeight(0.0),
 m_PeriodicBoundary(true),
 m_AlreadyFormed(false),
 m_Precipitates(0),
-m_WriteBinaryFiles(true),
-m_WriteVisualizationFile(false),
-m_WriteIPFFile(false),
-m_WriteHDF5GrainFile(false),
-m_WritePhFile(false)
-
+m_WriteBinaryVTKFiles(true),
+m_WriteVtkFile(false),
+m_WriteIPFColor(false),
+m_WritePhFile(false),
+m_WriteHDF5GrainFile(false)
 {
-std::cout << "GrainGenerator Constructor" << std::endl;
+//std::cout << "GrainGenerator Constructor" << std::endl;
 }
 
 // -----------------------------------------------------------------------------
@@ -101,9 +100,7 @@ void GrainGenerator::execute()
   H5ReconStatsReader::Pointer h5reader = H5ReconStatsReader::New(m_H5StatsFile);
   if (h5reader.get() == NULL)
   {
-    updateProgressAndMessage(("Error Opening HDF5 Stats File. Nothing generated"), 100);
-    setCancel(true);
-    CHECK_FOR_CANCELED(GrainGeneratorFunc, "GrainGenerator Was canceled", readHDF5StatsFile)
+    CHECK_FOR_ERROR(GrainGeneratorFunc, "GrainGenerator Error Opening the HDF5 Input file", -1)
     return;
   }
 
@@ -123,11 +120,11 @@ void GrainGenerator::execute()
 
     updateProgressAndMessage(("Loading Stats Data"), 5);
     err = m->readReconStatsData(h5reader);
-    CHECK_FOR_CANCELED(GrainGeneratorFunc, "GrainGenerator Was canceled", readReconStatsData)
+    CHECK_FOR_CANCELED(GrainGeneratorFunc, "readReconStatsData Was canceled", readReconStatsData)
 
     updateProgressAndMessage(("Loading Axis Orientation Data"), 10);
     err = m->readAxisOrientationData(h5reader);
-    CHECK_FOR_CANCELED(GrainGeneratorFunc, "GrainGenerator Was canceled", readAxisOrientationData);
+    CHECK_FOR_CANCELED(GrainGeneratorFunc, "readAxisOrientationData Was canceled", readAxisOrientationData);
 
     updateProgressAndMessage(("Packing Grains"), 25);
     m->pack_grains();
@@ -149,64 +146,54 @@ void GrainGenerator::execute()
   {
     updateProgressAndMessage(("Loading Stats Data"), 10);
     err = m->readReconStatsData(h5reader);
-    CHECK_FOR_CANCELED(GrainGeneratorFunc, "GrainGenerator Was canceled", readReconStatsData)
+    CHECK_FOR_CANCELED(GrainGeneratorFunc, "readReconStatsData Was canceled", readReconStatsData)
 
     updateProgressAndMessage(("Loading Axis Orientation Data"), 25);
     err = m->readAxisOrientationData(h5reader);
-    CHECK_FOR_CANCELED(GrainGeneratorFunc, "GrainGenerator Was canceled", readAxisOrientationData);
+    CHECK_FOR_CANCELED(GrainGeneratorFunc, "readAxisOrientationData Was canceled", readAxisOrientationData);
 
     updateProgressAndMessage(("Reading Structure"), 40);
     std::string ext = MXAFileInfo::extension(m_StructureFile);
     if (ext.compare("vtk") == 0)
-	{
+    {
       VTKStructureReader::Pointer reader = VTKStructureReader::New();
       reader->setInputFileName(m_StructureFile);
       reader->setGrainIdScalarName(AIM::VTK::GrainIdScalarName);
       reader->setPhaseIdScalarName(AIM::VTK::PhaseIdScalarName);
       err = reader->readStructure(m.get());
-      if (err < 0) { setCancel(true); }
-      CHECK_FOR_CANCELED(GrainGeneratorFunc, "GrainGenerator Was canceled", reading_structure)
+      CHECK_FOR_ERROR(GrainGeneratorFunc, "GrainGenerator Error getting size and resolution from VTK Voxel File", err);
     }
     else if (ext.compare("h5") == 0)
-	{
-	  // Load up the voxel data
-	  H5VoxelReader::Pointer h5Reader = H5VoxelReader::New();
-	  h5Reader->setFilename(m_StructureFile);
-	  int dims[3];
-	  float spacing[3];
-	  err = h5Reader->getSizeAndResolution(dims, spacing);
-	  if (err < 0)
-	  {
-		updateProgressAndMessage("Error Reading the Dimensions and Resolution from the File.", 100);
-		setErrorCondition(err);
-		return;
-	  }
-
-	  m->xpoints = dims[0];
-	  m->ypoints = dims[1];
-	  m->zpoints = dims[2];
-	  m->totalpoints = dims[0] * dims[1] * dims[2];
-	  m->resx = spacing[0];
-	  m->resy = spacing[1];
-	  m->resz = spacing[2];
-
-	  updateProgressAndMessage("Allocating Voxel Memory", 5);
-	  //Allocate all of our Voxel Objects
-	  m->voxels.reset(new GrainGeneratorVoxel[m->totalpoints]);
-
-	  updateProgressAndMessage(("Reading the Voxel Data from the HDF5 File"), 10);
-	  err = h5Reader->readVoxelData(m->voxels, m->crystruct, m->totalpoints);
-	  if (err < 0)
-	  {
-		updateProgressAndMessage("Error Reading the Voxel Data from the File.", 100);
-		setErrorCondition(err);
-		return;
-      }
-	}
-	else
     {
-      setCancel(true);
-      CHECK_FOR_CANCELED(GrainGeneratorFunc, "GrainGenerator Was canceled", reading_structure);
+      // Load up the voxel data
+      H5VoxelReader::Pointer h5Reader = H5VoxelReader::New();
+      h5Reader->setFilename(m_StructureFile);
+      int dims[3];
+      float spacing[3];
+      err = h5Reader->getSizeAndResolution(dims, spacing);
+
+      CHECK_FOR_ERROR(GrainGeneratorFunc, "GrainGenerator Error getting size and resolution from HDF5 Voxel File", err);
+
+      m->xpoints = dims[0];
+      m->ypoints = dims[1];
+      m->zpoints = dims[2];
+      m->totalpoints = dims[0] * dims[1] * dims[2];
+      m->resx = spacing[0];
+      m->resy = spacing[1];
+      m->resz = spacing[2];
+
+      updateProgressAndMessage("Allocating Voxel Memory", 5);
+      //Allocate all of our Voxel Objects
+      m->voxels.reset(new GrainGeneratorVoxel[m->totalpoints]);
+
+      updateProgressAndMessage(("Reading the Voxel Data from the HDF5 File"), 10);
+      err = h5Reader->readVoxelData(m->voxels, m->crystruct, m->totalpoints);
+      CHECK_FOR_ERROR(GrainGeneratorFunc, "GrainGenerator Error reading voxel data from HDF5 Voxel File", err);
+    }
+    else
+    {
+      err = -1;
+      CHECK_FOR_ERROR(GrainGeneratorFunc, "GrainGenerator Error No suitable Voxel Structure Reader found", err);
     }
   }
 
@@ -243,9 +230,6 @@ void GrainGenerator::execute()
 
   MAKE_OUTPUT_FILE_PATH ( eulerFile , AIM::SyntheticBuilder::GrainAnglesFile)
   MAKE_OUTPUT_FILE_PATH ( reconVisFile, AIM::Reconstruction::VisualizationVizFile);
-  MAKE_OUTPUT_FILE_PATH ( reconIPFVisFile, AIM::Reconstruction::IPFVizFile);
-  MAKE_OUTPUT_FILE_PATH ( hdf5GrainFile, AIM::Reconstruction::HDF5GrainFile);
-  MAKE_OUTPUT_FILE_PATH ( phFile, AIM::Reconstruction::PhFile);
 
   updateProgressAndMessage(("Matching Crystallography"), 65);
   m->matchCrystallography();
@@ -269,39 +253,39 @@ void GrainGenerator::execute()
   h5VolWriter->setFilename(hdf5VolumeFile);
   updateProgressAndMessage(("Writing HDF5 Voxel Data File"), 83);
   err = h5VolWriter->writeVoxelData<GrainGeneratorFunc, GrainGeneratorVoxel>(m.get());
-  if (err < 0)
-  {
-    updateProgressAndMessage("The HDF5 Voxel file could not be written to. Does the path exist and do you have write access to the output directory.", 100);
-    m = GrainGeneratorFunc::NullPointer();  // Clean up the memory
-    return;
-  }
+  CHECK_FOR_ERROR(GrainGeneratorFunc, "The HDF5 Voxel file could not be written to. Does the path exist and do you have write access to the output directory.", err);
+
 
   /* ********** This section writes the VTK files for visualization *** */
-  VTKFileWriters::Pointer vtkWriter = VTKFileWriters::New();
-  vtkWriter->setWriteBinaryFiles(m_WriteBinaryFiles);
-
-  updateProgressAndMessage(("Writing VTK Visualization File"), 93);
-  if (m_WriteVisualizationFile) {vtkWriter->writeGrainVisualizationFile(m.get(), reconVisFile);}
+  if (m_WriteVtkFile) {
+    VTKFileWriters::Pointer vtkWriter = VTKFileWriters::New();
+    vtkWriter->setWriteBinaryFiles(m_WriteBinaryVTKFiles);
+    updateProgressAndMessage(("Writing VTK Visualization File"), 93);
+    err = vtkWriter->writeGrainVisualizationFile(m.get(), reconVisFile, m_WriteSurfaceVoxel, m_WritePhaseId, m_WriteIPFColor);
+    CHECK_FOR_ERROR(GrainGeneratorFunc, "The Grain Generator threw an Error writing the VTK file format.", err);
+  }
   CHECK_FOR_CANCELED(GrainGeneratorFunc, "GrainGenerator Was canceled", writeVisualizationFile)
-
-  updateProgressAndMessage(("Writing VTK Inverse Pole Figure File"), 94);
-  if (m_WriteIPFFile) {vtkWriter->writeGrainIPFVizFile(m.get(), reconIPFVisFile);}
-  CHECK_FOR_CANCELED(GrainGeneratorFunc, "GrainGenerator Was canceled", writeIPFVizFile)
-
   /* ******* End VTK Visualization File Writing Section ****** */
 
   /* **********   This CMU's ph format */
   updateProgressAndMessage(("Writing Ph Voxel File"), 95);
   if (m_WritePhFile) {
+    MAKE_OUTPUT_FILE_PATH ( phFile, AIM::Reconstruction::PhFile);
     PhWriter phWriter;
-    err = phWriter.writeGrainPhFile(phFile, m->voxels, m->xpoints, m->ypoints, m->zpoints);}
-  if (err < 0)
-  CHECK_FOR_CANCELED(GrainGeneratorFunc, "GrainGenerator Was canceled", writePhFile)
+    err = phWriter.writeGrainPhFile(phFile, m->voxels, m->xpoints, m->ypoints, m->zpoints);
+    CHECK_FOR_ERROR(GrainGeneratorFunc, "The Grain Generator threw an Error writing the Ph file format.", err);
+  }
+
 
   /* ********** HDF5 Grains File  ********** */
-  updateProgressAndMessage(("Writing Out HDF5 Grain File. This may take a few minutes to complete."), 96);
-  H5GrainWriter::Pointer h5GrainWriter = H5GrainWriter::New();
-  if (m_WriteHDF5GrainFile) { h5GrainWriter->writeHDF5GrainsFile(m.get(), hdf5GrainFile); }
+  if (m_WriteHDF5GrainFile)
+  {
+    updateProgressAndMessage(("Writing Out HDF5 Grain File. This may take a few minutes to complete."), 96);
+    MAKE_OUTPUT_FILE_PATH ( hdf5GrainFile, AIM::Reconstruction::HDF5GrainFile);
+    H5GrainWriter::Pointer h5GrainWriter = H5GrainWriter::New();
+    err = h5GrainWriter->writeHDF5GrainsFile(m.get(), hdf5GrainFile);
+    CHECK_FOR_ERROR(GrainGeneratorFunc, "The Grain Generator threw an Error writing the HDF5 Grain file format.", err);
+  }
   CHECK_FOR_CANCELED(GrainGeneratorFunc, "GrainGenerator Was canceled", writeHDF5GrainsFile)
 
   // Clean up all the memory
