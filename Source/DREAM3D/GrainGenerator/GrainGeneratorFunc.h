@@ -141,7 +141,6 @@ public:
     int resdiff;
     std::vector<float> unbiasedvol;
     std::vector<float> totalsurfacearea;
-    int numgrains;
     int numprimarygrains;
     int shapeclass;
     std::vector<float> phasefraction;
@@ -186,9 +185,9 @@ public:
     int readMisorientationData(H5ReconStatsReader::Pointer h5io);
     int readMicroTextureData(H5ReconStatsReader::Pointer h5io);
 
-    int pack_grains(int numgrains);
+    void pack_grains();
     void generate_grain(int, int);
-    void assign_eulers(int);
+    void assign_eulers();
     void insert_grain(size_t grainNum);
     void insert_precipitate(size_t grainNum);
     void move_grain(size_t grainNum, float xc, float yc, float zc);
@@ -201,11 +200,11 @@ public:
     float check_neighborhooderror(int gadd, int gremove);
     float check_sizedisterror(int gadd, int gremove);
     float check_fillingerror(int gadd, int gremove);
-    int assign_voxels(int numgrains);
-    void fill_gaps(int numgrains);
-    void fillin_precipitates(int numgrains);
-	int adjust_boundaries(int numgrains);
-    int place_precipitates(int numgrains);
+    void assign_voxels();
+    void fill_gaps();
+    void fillin_precipitates();
+	void adjust_boundaries();
+    void place_precipitates();
     void find_neighbors();
     void swapOutOrientation(int & badtrycount, int & numbins, float currentodferror, float currentmdferror);
     void switchOrientations(int & badtrycount, int & numbins, float currentodferror, float currentmdferror);
