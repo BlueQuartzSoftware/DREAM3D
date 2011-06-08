@@ -65,7 +65,7 @@ m_MinSeedConfidence(0.0),
 m_MinSeedImageQuality(0.0),
 m_MisorientationTolerance(0.0),
 m_Orientation(Ang::NoOrientation),
-m_WriteBinaryFiles(true),
+m_WriteBinaryVTKFiles(true),
 m_WriteVtkFile(true),
 m_WriteEuclidean(true),
 m_WritePhaseId(true),
@@ -149,10 +149,6 @@ void Reconstruction::execute()
                 m_MisorientationTolerance, crystalStructures, m_PhaseTypes, precipFractions,
                 m_AlignmentMethod);
   m_OutputDirectory = MXADir::toNativeSeparators(m_OutputDirectory);
-
-
-
-
 
   START_CLOCK()
 
@@ -246,17 +242,13 @@ void Reconstruction::execute()
   h5VolWriter->setFilename(hdf5VolumeFile);
   updateProgressAndMessage(("Writing HDF5 Voxel Data File"), 83);
   err = h5VolWriter->writeVoxelData<ReconstructionFunc, ReconstructionVoxel>(m.get());
-  if (err < 0)
-  {
-    updateProgressAndMessage("The HDF5 Voxel file could not be written to. Does the path exist and do you have write access to the output directory.", 100);
-    m = ReconstructionFunc::NullPointer();  // Clean up the memory
-    return;
-  }
+  CHECK_FOR_ERROR(ReconstructionFunc, "The HDF5 Voxel file could not be written to. Does the path exist and do you have write access to the output directory.", err);
+
 
   /** ********** This section writes the VTK files for visualization *** */
   // Create our File Output Writer Object. This will handle all the File Output duties
   VTKFileWriters::Pointer vtkWriter = VTKFileWriters::New();
-  vtkWriter->setWriteBinaryFiles(m_WriteBinaryFiles);
+  vtkWriter->setWriteBinaryFiles(m_WriteBinaryVTKFiles);
 
   //Optional Files
 
@@ -268,14 +260,17 @@ void Reconstruction::execute()
   if (m_WriteVtkFile)
   {
     MAKE_OUTPUT_FILE_PATH ( reconVisFile, AIM::Reconstruction::VisualizationVizFile);
-    vtkWriter->writeRectilinearGrid(m.get(), reconVisFile, m_WriteEuclidean, m_WritePhaseId, m_WriteImageQuality, m_WriteIPFColor);
+    err = vtkWriter->writeRectilinearGrid(m.get(), reconVisFile, m_WriteEuclidean, m_WritePhaseId, m_WriteImageQuality, m_WriteIPFColor);
+    CHECK_FOR_ERROR(ReconstructionFunc, "The VTK file could not be written to. Does the path exist and do you have write access to the output directory.", err);
   }
 
 
   if (m_WriteDownSampledFile) {
     MAKE_OUTPUT_FILE_PATH ( reconDSVisFile, AIM::Reconstruction::DownSampledVizFile);
     updateProgressAndMessage(("Writing VTK Down Sampled File"), 98);
-    vtkWriter->writeDownSampledVizFile(m.get(), reconDSVisFile);
+    err = vtkWriter->writeDownSampledVizFile(m.get(), reconDSVisFile);
+    CHECK_FOR_ERROR(ReconstructionFunc, "The VTK Downsampled file could not be written to. Does the path exist and do you have write access to the output directory.", err);
+
   }
   /** ******* End VTK Visualization File Writing Section ****** */
 
@@ -287,8 +282,8 @@ void Reconstruction::execute()
     updateProgressAndMessage(("Writing Out HDF5 Grain File. This may take a few minutes to complete."), 99);
     MAKE_OUTPUT_FILE_PATH( hdf5GrainFile, AIM::Reconstruction::HDF5GrainFile);
     H5GrainWriter::Pointer h5GrainWriter = H5GrainWriter::New();
-    h5GrainWriter->writeHDF5GrainsFile(m.get(), hdf5GrainFile);
-    CHECK_FOR_CANCELED(ReconstructionFunc, "Reconstruction was canceled", writeHDF5GrainsFile);
+    err = h5GrainWriter->writeHDF5GrainsFile(m.get(), hdf5GrainFile);
+    CHECK_FOR_ERROR(ReconstructionFunc, "The HDF5 Grain file could not be written to. Does the path exist and do you have write access to the output directory.", err);
   }
 
   updateProgressAndMessage(("Reconstruction Complete"), 100);

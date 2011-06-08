@@ -62,7 +62,7 @@
 /*
  *
  */
-class H5VoxelReader
+class DREAM3DLib_EXPORT H5VoxelReader
 {
   public:
     MXA_SHARED_POINTERS(H5VoxelReader)
@@ -74,6 +74,11 @@ class H5VoxelReader
     MXA_INSTANCE_STRING_PROPERTY(Filename);
 
     int getSizeAndResolution(int volDims[3], float spacing[3]);
+
+    int readHyperSlab(int xdim, int ydim, int zIndex, int* fileVoxelLayer);
+
+
+
 
 	template<typename T>
 	int readVoxelData(boost::shared_array<T> voxels,

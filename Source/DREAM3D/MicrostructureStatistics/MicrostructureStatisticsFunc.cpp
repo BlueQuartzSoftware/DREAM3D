@@ -168,7 +168,7 @@ void MicrostructureStatisticsFunc::initializeArrays()
   mindiameter.resize(size);
   maxdiameter.resize(size);
   totalvol.resize(size);
-
+  totalaxes.resize(size);
 }
 
 
@@ -906,7 +906,7 @@ void MicrostructureStatisticsFunc::find_grain_and_kernel_misorientations()
   }
 
   size_t grainsSize = m_Grains.size();
-  for (size_t i = 0; i < grainsSize; i++)
+  for (size_t i = 1; i < grainsSize; i++)
   {
     m_Grains[i]->averagemisorientation = avgmiso[i][1] / avgmiso[i][0];
   }
