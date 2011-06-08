@@ -36,13 +36,15 @@
 #define WIN32_LEAN_AND_MEAN   // Exclude rarely-used stuff from Windows headers
 #endif
 
+#include <map>
 
 #include <MXA/Common/MXASetGetMacros.h>
 #include <MXA/MXATypes.h>
-#include "DREAM3D/Common/Constants.h"
-#include <DREAM3D/SurfaceMesh/SurfaceMeshFunc.h>
-#include "DREAM3D/Common/AbstractPipeline.h"
 
+#include "DREAM3D/Common/Constants.h"
+#include "DREAM3D/SurfaceMesh/SurfaceMeshFunc.h"
+#include "DREAM3D/Common/AbstractPipeline.h"
+#include "DREAM3D/SurfaceMesh/STLWriter.h"
 
 /**
 * @class SurfaceMesh SurfaceMesh.h AIM/SurfaceMesh/SurfaceMesh.h
@@ -91,6 +93,8 @@ class DREAM3DLib_EXPORT SurfaceMesh : public AbstractPipeline
      * @brief Main method to run the operation
      */
     void execute();
+
+    void writeSTLFiles(int nTriangle, std::map<int, STLWriter::Pointer> &gidToSTLWriter );
 
   protected:
 
