@@ -339,6 +339,9 @@ void SurfaceMesh::execute()
 
   cNodeID = nNodes;
   cTriID = cTriID + nTriangle;
+
+  std::cout << "Total Number of Triangles Created: " << cTriID << std::endl;
+
   if (nTriangle > 0) { delete[] m->cTriangle; }
 
 //------------ All Done with Marching Cubes-------------------
@@ -377,7 +380,7 @@ void SurfaceMesh::execute()
 // -----------------------------------------------------------------------------
 void SurfaceMesh::writeSTLFiles(int nTriangle, std::map<int, STLWriter::Pointer> &gidToSTLWriter )
 {
-// First loop through the All the triangles adding up how many triangles are
+// First loop through All the triangles adding up how many triangles are
 // in each grain and create STL Files for each Grain if needed
   std::map<int, int> grainIdMap;
   int g0, g1;

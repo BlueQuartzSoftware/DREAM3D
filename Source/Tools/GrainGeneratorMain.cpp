@@ -101,6 +101,14 @@ int main(int argc, char **argv)
     cmd.add(yRes);
     TCLAP::ValueArg<double>  zRes( "z", "zRes", "Z resolution of your volume", true, 0.0, "Z resolution of your volume");
     cmd.add(zRes);
+
+    TCLAP::ValueArg<double>  xpoints( "", "xdim", "X Voxels of your volume", true, 0.0, "X Voxels of your volume");
+    cmd.add(xpoints);
+    TCLAP::ValueArg<double>  ypoints( "", "ydim", "Y Voxels of your volume", true, 0.0, "Y Voxels of your volume");
+    cmd.add(ypoints);
+    TCLAP::ValueArg<double>  zpoints( "", "zdim", "Z Voxels of your volume", true, 0.0, "Z Voxels of your volume");
+    cmd.add(zpoints);
+
 //    TCLAP::ValueArg<double>  overlapAllowed( "", "overlapAllowed", "The overlap between grains that is acceptable", true, 0.0, "The overlap between grains that is acceptable");
 //    cmd.add(overlapAllowed);
 //    TCLAP::ValueArg<int>  overlapAssignment( "", "overlapAssignment", "Enter how the overlap between grains is handled (1)Rigid (2)Progressive.", true, 1, "Enter how the overlap between grains is handled (1)Rigid (2)Progressive.");
@@ -121,7 +129,11 @@ int main(int argc, char **argv)
     GrainGenerator::Pointer r = GrainGenerator::New();
     r->setH5StatsFile(h5StatsFile.getValue());
     r->setOutputDirectory(outputDir.getValue());
-    r->setNumGrains(numGrains.getValue());
+
+    r->setXPoints(xpoints.getValue());
+    r->setYPoints(ypoints.getValue());
+    r->setZPoints(zpoints.getValue());
+
     r->setShapeClass(shapeClass.getValue());
     r->setXResolution(xRes.getValue());
     r->setYResolution(yRes.getValue());
