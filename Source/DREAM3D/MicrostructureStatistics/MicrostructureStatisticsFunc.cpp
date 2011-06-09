@@ -176,6 +176,150 @@ void MicrostructureStatisticsFunc::initializeArrays()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void  MicrostructureStatisticsFunc::find_neighbors()
+{
+  int neighbors[6];
+  neighbors[0] = -(xpoints*ypoints);
+  neighbors[1] = -xpoints;
+  neighbors[2] = -1;
+  neighbors[3] = 1;
+  neighbors[4] = xpoints;
+  neighbors[5] = (xpoints*ypoints);
+  float column, row, plane;
+  float x, y, z;
+  float xn, yn, zn;
+  float xdist, ydist, zdist;
+  int grain;
+  size_t nnum;
+  int onsurf = 0;
+  float dist, dist2, diam, diam2;
+  int dist_int, dist2_int;
+  int good = 0;
+  int neighbor = 0;
+  size_t xtalCount = crystruct.size();
+  totalsurfacearea.resize(xtalCount);
+  for(size_t i=1;i<xtalCount;++i)
+  {
+	totalsurfacearea[i] = 0;
+  }
+  int surfacegrain = 1;
+  int nListSize = 100;
+  for(int i=1;i<m_Grains.size();i++)
+  {
+    m_Grains[i]->numneighbors = 0;
+    m_Grains[i]->neighborlist->assign(nListSize, -1);
+    m_Grains[i]->neighborsurfarealist->assign(nListSize, -1.0);
+    for(int j=0;j<3;j++)
+    {
+      m_Grains[i]->neighbordistfunc[j] = 0;
+    }
+  }
+  int *gnames;
+  gnames = new int[totalpoints];
+  for(int i=0;i<totalpoints;i++)
+  {
+	  gnames[i] = voxels[i].grain_index;
+  }
+  for(int j = 0; j < (xpoints*ypoints*zpoints); j++)
+  {
+    onsurf = 0;
+    grain = gnames[j];
+	if(grain > 0)
+	{
+		column = j%xpoints;
+		row = (j/xpoints)%ypoints;
+		plane = j/(xpoints*ypoints);
+		if((column == 0 || column == (xpoints-1) || row == 0 || row == (ypoints-1) || plane == 0 || plane == (zpoints-1)) && zpoints != 1) m_Grains[grain]->surfacegrain = surfacegrain;
+		if((column == 0 || column == (xpoints-1) || row == 0 || row == (ypoints-1)) && zpoints == 1) m_Grains[grain]->surfacegrain = surfacegrain;
+        for(int k=0;k<6;k++)
+        {
+	      good = 1;
+	      neighbor = j+neighbors[k];
+          if(k == 0 && plane == 0) good = 0;
+          if(k == 5 && plane == (zpoints-1)) good = 0;
+          if(k == 1 && row == 0) good = 0;
+          if(k == 4 && row == (ypoints-1)) good = 0;
+          if(k == 2 && column == 0) good = 0;
+          if(k == 3 && column == (xpoints-1)) good = 0;
+	      if(good == 1 && gnames[neighbor] != grain && gnames[neighbor] > 0)
+          {
+	        onsurf++;
+	        nnum = m_Grains[grain]->numneighbors;
+	        IntVectorType nlist = m_Grains[grain]->neighborlist;
+	        if (nnum >= (nlist->size()))
+	        {
+	         nlist->resize(nnum + nListSize);
+	        }
+	        nlist->at(nnum) = gnames[neighbor];
+	        nnum++;
+	        m_Grains[grain]->numneighbors = nnum;
+	      }
+	    }
+	}
+	voxels[j].surfacevoxel = onsurf;
+  }
+ std::vector<int> nlistcopy;
+  for(int i=1;i<m_Grains.size();i++)
+  {
+    int phase = m_Grains[i]->phase;
+    IntVectorType nlist = m_Grains[i]->neighborlist;
+    FloatVectorType nsalist = m_Grains[i]->neighborsurfarealist;
+   std::vector<int>::iterator newend;
+    sort(nlist->begin(), nlist->end());
+    // Make a copy of the contents of the neighborlist vector
+    nlistcopy.assign(nlist->begin(), nlist->end());
+    newend = unique(nlist->begin(), nlist->end());
+    nlist->erase(newend, nlist->end());
+    nlist->erase(std::remove(nlist->begin(), nlist->end(), -1), nlist->end());
+    nlist->erase(std::remove(nlist->begin(), nlist->end(), 0), nlist->end());
+    int numneighs = int(nlist->size());
+	nsalist->resize(numneighs,0);
+    for (int j = 0; j < numneighs; j++)
+    {
+      int neigh = nlist->at(j);
+      int number = std::count(nlistcopy.begin(), nlistcopy.end(), neigh);
+      float area = number * resx * resx;
+      nsalist->at(j) = area;
+      if (m_Grains[i]->surfacegrain == 0 && (neigh > i || m_Grains[neigh]->surfacegrain == 1))
+      {
+        totalsurfacearea[phase] = totalsurfacearea[phase] + area;
+      }
+    }
+    m_Grains[i]->numneighbors = numneighs;
+  }
+  for(int i=1;i<m_Grains.size();i++)
+  {
+	  x = m_Grains[i]->centroidx;
+	  y = m_Grains[i]->centroidy;
+	  z = m_Grains[i]->centroidz;
+	  diam = m_Grains[i]->equivdiameter;
+	  for(int j=i;j<m_Grains.size();j++)
+	  {
+		xn = m_Grains[j]->centroidx;
+		yn = m_Grains[j]->centroidy;
+		zn = m_Grains[j]->centroidz;
+		diam2 = m_Grains[j]->equivdiameter;
+		xdist = fabs(x-xn);
+		ydist = fabs(y-yn);
+		zdist = fabs(z-zn);
+		dist = (xdist*xdist)+(ydist*ydist)+(zdist*zdist);
+		dist = powf(dist,0.5);
+		dist2 = dist;
+		dist_int = int(dist/diam);
+		dist2_int = int(dist2/diam2);
+		if(dist < 3)
+		{
+		  m_Grains[i]->neighbordistfunc[dist_int]++;
+		}
+		if(dist2 < 3)
+		{
+		  m_Grains[j]->neighbordistfunc[dist2_int]++;
+		}
+	  }
+  }
+}
+
+
 void MicrostructureStatisticsFunc::define_neighborhood()
 {
   float x, y, z;

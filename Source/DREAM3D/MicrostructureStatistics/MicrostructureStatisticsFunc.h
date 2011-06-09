@@ -115,6 +115,7 @@ class DREAM3DLib_EXPORT MicrostructureStatisticsFunc
     void initializeGrains();
     void initializeArrays();
 
+    void find_neighbors();
     void define_neighborhood();
     void find_euclidean_map();
     void find_vectors(H5ReconStatsWriter::Pointer h5io);
