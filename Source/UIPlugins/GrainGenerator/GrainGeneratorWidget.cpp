@@ -478,6 +478,175 @@ void GrainGeneratorWidget::on_m_GoBtn_clicked()
   m_GoBtn->setText("Cancel");
 }
 
+void GrainGeneratorWidget::on_m_XPoints_valueChanged(double v)
+{
+  int xpoints, ypoints, zpoints;
+  float xres, yres, zres;
+  float totalvol;
+  int phase;
+  std::vector<int> phases;
+  std::vector<AIM::Reconstruction::CrystalStructure> structures;
+  std::vector<AIM::Reconstruction::PhaseType>        phaseType;
+  std::vector<float> phasefraction;
+  xpoints = m_XPoints->value();
+  ypoints = m_YPoints->value();
+  zpoints = m_ZPoints->value();
+  xres = m_XResolution->value();
+  yres = m_YResolution->value();
+  zres = m_ZResolution->value();
+  totalvol = (xpoints*xres)*(ypoints*yres)*(zpoints*zres);
+  H5ReconStatsReader::Pointer h5Reader = H5ReconStatsReader::New();
+  h5Reader->setFileName(m_H5InputStatisticsFile->text().toStdString());
+  int err = h5Reader->getPhaseAndCrystalStructures(phases, structures);
+  for (int i = 0; i < phases.size(); i++)
+  {
+      phase = phases[i];
+
+	  /* Read the PhaseFraction Value*/
+      std::vector<float> pFraction;
+	  err = h5Reader->readStatsDataset(phase, AIM::HDF5::PhaseFraction, pFraction);
+	  phasefraction[phase] = pFraction.front();
+
+	  std::vector<unsigned int> phasetypes;
+	  err = h5Reader->readStatsDataset(phase, AIM::HDF5::PhaseType, phasetypes);
+	  phaseType[phase] = static_cast<AIM::Reconstruction::PhaseType>(phasetypes[0]);
+  }
+  if (err >= 0)
+  {
+	  int est_ngrains = estimate_numgrains(totalvol, phases, phaseType, phasefraction);
+	  est_numgrains->setText(QString::number(est_ngrains));
+  }
+}
+
+void GrainGeneratorWidget::on_m_YPoints_valueChanged(double v)
+{
+  int xpoints, ypoints, zpoints;
+  float xres, yres, zres;
+  float totalvol;
+  int phase;
+  std::vector<int> phases;
+  std::vector<AIM::Reconstruction::CrystalStructure> structures;
+  std::vector<AIM::Reconstruction::PhaseType>        phaseType;
+  std::vector<float> phasefraction;
+
+  xpoints = m_XPoints->value();
+  ypoints = m_YPoints->value();
+  zpoints = m_ZPoints->value();
+  xres = m_XResolution->value();
+  yres = m_YResolution->value();
+  zres = m_ZResolution->value();
+  totalvol = (xpoints*xres)*(ypoints*yres)*(zpoints*zres);
+  H5ReconStatsReader::Pointer h5Reader = H5ReconStatsReader::New();
+  h5Reader->setFileName(m_H5InputStatisticsFile->text().toStdString());
+  int err = h5Reader->getPhaseAndCrystalStructures(phases, structures);
+  for (int i = 0; i < phases.size(); i++)
+  {
+      phase = phases[i];
+
+	  /* Read the PhaseFraction Value*/
+      std::vector<float> pFraction;
+	  err = h5Reader->readStatsDataset(phase, AIM::HDF5::PhaseFraction, pFraction);
+	  phasefraction[phase] = pFraction.front();
+
+	  std::vector<unsigned int> phasetypes;
+	  err = h5Reader->readStatsDataset(phase, AIM::HDF5::PhaseType, phasetypes);
+	  phaseType[phase] = static_cast<AIM::Reconstruction::PhaseType>(phasetypes[0]);
+  }
+  if (err >= 0)
+  {
+	  int est_ngrains = estimate_numgrains(totalvol, phases, phaseType, phasefraction);
+	  est_numgrains->setText(QString::number(est_ngrains));
+  }
+}
+
+void GrainGeneratorWidget::on_m_ZPoints_valueChanged(double v)
+{
+  int xpoints, ypoints, zpoints;
+  float xres, yres, zres;
+  float totalvol;
+  int phase;
+  std::vector<int> phases;
+  std::vector<AIM::Reconstruction::CrystalStructure> structures;
+  std::vector<AIM::Reconstruction::PhaseType>        phaseType;
+  std::vector<float> phasefraction;
+
+  xpoints = m_XPoints->value();
+  ypoints = m_YPoints->value();
+  zpoints = m_ZPoints->value();
+  xres = m_XResolution->value();
+  yres = m_YResolution->value();
+  zres = m_ZResolution->value();
+  totalvol = (xpoints*xres)*(ypoints*yres)*(zpoints*zres);
+  H5ReconStatsReader::Pointer h5Reader = H5ReconStatsReader::New();
+  h5Reader->setFileName(m_H5InputStatisticsFile->text().toStdString());
+  int err = h5Reader->getPhaseAndCrystalStructures(phases, structures);
+  for (int i = 0; i < phases.size(); i++)
+  {
+      phase = phases[i];
+
+	  /* Read the PhaseFraction Value*/
+      std::vector<float> pFraction;
+	  err = h5Reader->readStatsDataset(phase, AIM::HDF5::PhaseFraction, pFraction);
+	  phasefraction[phase] = pFraction.front();
+
+	  std::vector<unsigned int> phasetypes;
+	  err = h5Reader->readStatsDataset(phase, AIM::HDF5::PhaseType, phasetypes);
+	  phaseType[phase] = static_cast<AIM::Reconstruction::PhaseType>(phasetypes[0]);
+  }
+  if (err >= 0)
+  {
+	  int est_ngrains = estimate_numgrains(totalvol, phases, phaseType, phasefraction);
+	  est_numgrains->setText(QString::number(est_ngrains));
+  }
+}
+
+int GrainGeneratorWidget::estimate_numgrains(float totalvol, std::vector<int> phases, 
+											 std::vector<AIM::Reconstruction::PhaseType> phaseType,
+											 std::vector<float> phasefraction)
+{
+  AIM_RANDOMNG_NEW()
+
+  std::vector<int> primaryphases;
+  std::vector<double> primaryphasefractions;
+  double totalprimaryfractions = 0.0;
+  // find which phases are primary phases
+  for (size_t i = 1; i < phaseType.size();++i)
+  {
+	  if(phaseType[i] == AIM::Reconstruction::PrimaryPhase)
+	  {
+		primaryphases.push_back(i);
+		primaryphasefractions.push_back(phasefraction[i]);
+		totalprimaryfractions = totalprimaryfractions + phasefraction[i];
+	  }
+  }
+  // scale the primary phase fractions to total to 1
+  for (size_t i = 0; i < primaryphasefractions.size(); i++)
+  {
+	  primaryphasefractions[i] = primaryphasefractions[i]/totalprimaryfractions;
+	  if(i > 0) primaryphasefractions[i] = primaryphasefractions[i] + primaryphasefractions[i-1];
+	  if(i == 0) primaryphasefractions[i] = primaryphasefractions[i];
+  }
+  // generate the grains
+  int gid = 1;
+  int phase;
+  float currentvol = 0.0;
+  float volume, random;
+  while (currentvol < totalvol)
+  {
+    random = rg.Random();
+    for (size_t j = 0; j < primaryphases.size();++j)
+    {
+      if (random < primaryphasefractions[j])
+      {
+        phase = primaryphases[j];
+        break;
+      }
+    }
+    currentvol = currentvol + volume;
+	gid++;
+  }	
+  return gid;
+}
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

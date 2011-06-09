@@ -32,6 +32,7 @@
 #ifndef GRAINGENERATORWIDGET_H_
 #define GRAINGENERATORWIDGET_H_
 
+#include <vector>
 #include <QtCore/QString>
 #include <QtCore/QSettings>
 
@@ -88,6 +89,11 @@ class GrainGeneratorWidget : public AIMPluginFrame, private Ui::GrainGeneratorWi
     /* Grain Generator Slots*/
     void on_m_InputH5StatisticsFileBtn_clicked();
     void on_m_OutputDirBtn_clicked();
+	void on_m_XPoints_valueChanged(double v);
+	void on_m_YPoints_valueChanged(double v);
+	void on_m_ZPoints_valueChanged(double v);
+	int estimate_numgrains(float totalvol, std::vector<int> phases, std::vector<AIM::Reconstruction::PhaseType> phaseType,
+		std::vector<float> phasefraction);
     //void on_m_AlreadyFormed_stateChanged(int);
     void on_m_GoBtn_clicked();
     void on_m_SaveSettingsBtn_clicked();
