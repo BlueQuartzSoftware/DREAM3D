@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>601</width>
-    <height>617</height>
+    <width>626</width>
+    <height>552</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -344,6 +344,33 @@
           <property name="verticalSpacing">
            <number>1</number>
           </property>
+          <item row="1" column="1">
+           <widget class="QCheckBox" name="m_VisualizationVizFile">
+            <property name="text">
+             <string>VTK Visualization File</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1">
+           <widget class="QPushButton" name="m_VtkOptionsBtn">
+            <property name="text">
+             <string>VTK Options</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="m_VisualizationVizFileIcon">
+            <property name="text">
+             <string/>
+            </property>
+            <property name="pixmap">
+             <pixmap resource="../../../Resources/icons/images/Icons.qrc">:/Delete-16x16.png</pixmap>
+            </property>
+           </widget>
+          </item>
          </layout>
         </item>
         <item row="0" column="2">

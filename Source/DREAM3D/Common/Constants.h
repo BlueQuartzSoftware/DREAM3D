@@ -194,6 +194,7 @@ namespace AIM
     const std::string DownSampledVizFile("DownSampled_Visualization.vtk");//11
     const std::string HDF5GrainFile("Grains.h5grain");
     const std::string PhFile("Voxels.ph");
+    const std::string DxFile("Voxels.dx");
 
     /**
      * @brief IF YOU CHANGE THE VALUES THERE ARE DEEP RAMIFICATIONS IN THE CODE BUT

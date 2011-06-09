@@ -52,7 +52,7 @@
 
 #include "QtSupport/AIM_QtMacros.h"
 #include "QtSupport/QR3DFileCompleter.h"
-
+#include "QtSupport/QCheckboxDialog.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -103,6 +103,11 @@ void MicrostructureStatisticsWidget::readSettings(QSettings &prefs)
 
   READ_SETTING(prefs, m_, BinStepSize, ok, d, 1.0 , Double);
 
+
+  READ_BOOL_SETTING(prefs, m_, WriteBinaryVTKFile, true);
+
+  READ_CHECKBOX_SETTING(prefs, m_, VisualizationVizFile, true);
+
   prefs.endGroup();
 }
 
@@ -124,6 +129,11 @@ void MicrostructureStatisticsWidget::writeSettings(QSettings &prefs)
   WRITE_CHECKBOX_SETTING(prefs, m_, ComputeODF);
 
   WRITE_SETTING(prefs, m_, BinStepSize);
+
+  WRITE_BOOL_SETTING(prefs, m_, WriteBinaryVTKFile, true);
+
+
+  WRITE_CHECKBOX_SETTING(prefs, m_, VisualizationVizFile)
 
   prefs.endGroup();
 }
@@ -225,9 +235,9 @@ void MicrostructureStatisticsWidget::on_m_SaveSettingsBtn_clicked()
 // -----------------------------------------------------------------------------
 void MicrostructureStatisticsWidget::checkIOFiles()
 {
-		CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::MicroStats, m_, GrainDataFile)
-		CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::MicroStats, m_, H5StatisticsFile)
-
+  CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(AIM::Reconstruction, m_ , VisualizationVizFile)
+  CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::MicroStats, m_, GrainDataFile)
+  CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::MicroStats, m_, H5StatisticsFile)
 }
 
 // -----------------------------------------------------------------------------
@@ -308,6 +318,14 @@ void MicrostructureStatisticsWidget::on_m_GoBtn_clicked()
   m_MicrostructureStatistics->setComputeMDF(m_ComputeMDF->isChecked());
   m_MicrostructureStatistics->setBinStepSize(m_BinStepSize->value());
 
+  m_MicrostructureStatistics->setWriteVtkFile(m_VisualizationVizFile->isChecked());
+  m_MicrostructureStatistics->setWriteSurfaceVoxel(m_WriteSurfaceVoxelScalars);
+  m_MicrostructureStatistics->setWritePhaseId(m_WritePhaseIdScalars);
+  m_MicrostructureStatistics->setWriteKernelMisorientations(m_WriteKernelMisorientationsScalars);
+  m_MicrostructureStatistics->setWriteIPFColor(m_WriteIPFColorScalars);
+  m_MicrostructureStatistics->setWriteBinaryVTKFiles(m_WriteBinaryVTKFile);
+
+
   /* Connect the signal 'started()' from the QThread to the 'run' slot of the
    * Reconstruction object. Since the Reconstruction object has been moved to another
    * thread of execution and the actual QThread lives in *this* thread then the
@@ -384,3 +402,35 @@ void MicrostructureStatisticsWidget::on_m_OutputFilePrefix_textChanged(const QSt
 {
   checkIOFiles();
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void MicrostructureStatisticsWidget::on_m_VtkOptionsBtn_clicked()
+{
+  QVector<QString> options;
+  options.push_back("Write Surface Voxel Scalars");
+  options.push_back("Write Phase Ids Scalars");
+  options.push_back("Write Kernel Misorientation Scalars");
+  options.push_back("Write IPF Color Scalars");
+  options.push_back("Write Binary VTK File");
+  QCheckboxDialog d(options, this);
+
+  d.setValue("Write Surface Voxel Scalars", m_WriteSurfaceVoxelScalars);
+  d.setValue("Write Phase Ids Scalars", m_WritePhaseIdScalars);
+  d.setValue("Write Kernel Misorientation Scalars", m_WriteKernelMisorientationsScalars);
+  d.setValue("Write IPF Color Scalars", m_WriteIPFColorScalars);
+  d.setValue("Write Binary VTK File", m_WriteBinaryVTKFile);
+
+  int ret = d.exec();
+  if (ret == QDialog::Accepted)
+  {
+    m_WriteSurfaceVoxelScalars = d.getValue("Write Surface Voxel Scalars");
+    m_WritePhaseIdScalars = d.getValue("Write Phase Ids Scalars");
+    m_WriteKernelMisorientationsScalars = d.getValue("Write Kernel Misorientation Scalars");
+    m_WriteIPFColorScalars = d.getValue("Write IPF Color Scalars");
+    m_WriteBinaryVTKFile = d.getValue("Write Binary VTK File");
+  }
+
+}
+
