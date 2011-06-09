@@ -91,6 +91,7 @@ class DREAM3DLib_EXPORT Reconstruction : public AbstractPipeline
 
     MXA_INSTANCE_PROPERTY(bool, WriteDownSampledFile)
     MXA_INSTANCE_PROPERTY(bool, WriteHDF5GrainFile)
+    MXA_INSTANCE_PROPERTY(bool, WriteDxFile)
 
     /**
     * @brief Main method to run the operation
