@@ -115,6 +115,8 @@ class DREAM3DLib_EXPORT MicrostructureStatisticsFunc
     void initializeGrains();
     void initializeArrays();
 
+	void find_surfacegrains();
+	void find_surfacegrains2D();
     void find_neighbors();
     void define_neighborhood();
     void find_euclidean_map();

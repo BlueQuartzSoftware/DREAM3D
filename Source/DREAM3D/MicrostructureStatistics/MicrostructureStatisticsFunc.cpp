@@ -375,10 +375,46 @@ void MicrostructureStatisticsFunc::define_neighborhood()
   }
 }
 
+void MicrostructureStatisticsFunc::find_surfacegrains()
+{
+  int onedge = 0;
+  int col, row, plane;
+  for (int j = 0; j < (xpoints * ypoints * zpoints); j++)
+  {
+    onedge = 0;
+    int gnum = voxels[j].grain_index;
+    col = j % xpoints;
+    row = (j / xpoints) % ypoints;
+    plane = j / (xpoints * ypoints);
+    if (col <= 0) onedge = 1;
+    if (col >= xpoints - 1) onedge = 1;
+    if (row <= 0) onedge = 1;
+    if (row >= ypoints - 1) onedge = 1;
+    if (plane <= 0) onedge = 1;
+    if (plane >= zpoints - 1) onedge = 1;
+    m_Grains[gnum]->surfacegrain = onedge;
+  }
+}
+void MicrostructureStatisticsFunc::find_surfacegrains2D()
+{
+  int onedge = 0;
+  int col, row;
+  for (int j = 0; j < (xpoints * ypoints); j++)
+  {
+    onedge = 0;
+    int gnum = voxels[j].grain_index;
+    col = j % xpoints;
+    row = (j / xpoints) % ypoints;
+    if (col <= 0) onedge = 1;
+    if (col >= xpoints - 1) onedge = 1;
+    if (row <= 0) onedge = 1;
+    if (row >= ypoints - 1) onedge = 1;
+    m_Grains[gnum]->surfacegrain = onedge;
+  }
+}
 void MicrostructureStatisticsFunc::find_centroids()
 {
   //  int count = 0;
-  int onedge = 0;
   int insidegraincount = 0;
   for(size_t i=0;i<crystruct.size();i++)
   {
@@ -402,7 +438,6 @@ void MicrostructureStatisticsFunc::find_centroids()
   }
   for (int j = 0; j < (xpoints * ypoints * zpoints); j++)
   {
-    onedge = 0;
     int gnum = voxels[j].grain_index;
     graincenters[gnum][0]++;
     col = j % xpoints;
@@ -411,16 +446,9 @@ void MicrostructureStatisticsFunc::find_centroids()
 	x = float(col)*resx;
 	y = float(row)*resy;
 	z = float(plane)*resz;
-    if (col <= 0) onedge = 1;
-    if (col >= xpoints - 1) onedge = 1;
-    if (row <= 0) onedge = 1;
-    if (row >= ypoints - 1) onedge = 1;
-    if (plane <= 0) onedge = 1;
-    if (plane >= zpoints - 1) onedge = 1;
     graincenters[gnum][1] = graincenters[gnum][1] + x;
     graincenters[gnum][2] = graincenters[gnum][2] + y;
     graincenters[gnum][3] = graincenters[gnum][3] + z;
-    if (onedge == 1) graincenters[gnum][4] = 1;
   }
   float res_scalar = resx * resy * resz;
   float vol_term = (4.0/3.0)*m_pi;
@@ -434,7 +462,6 @@ void MicrostructureStatisticsFunc::find_centroids()
     m_Grains[i]->centroidz = graincenters[i][3];
     m_Grains[i]->numvoxels = graincenters[i][0];
     m_Grains[i]->volume = (graincenters[i][0] * res_scalar);
-    m_Grains[i]->surfacegrain = graincenters[i][4];
     radcubed = m_Grains[i]->volume/vol_term;
     diameter = 2.0*powf(radcubed, 0.3333333333);
     m_Grains[i]->equivdiameter = diameter;
@@ -450,7 +477,6 @@ void MicrostructureStatisticsFunc::find_centroids()
 void MicrostructureStatisticsFunc::find_centroids2D()
 {
   //  int count = 0;
-  int onedge = 0;
   for(size_t i=0;i<crystruct.size();i++)
   {
 	  maxdiameter[i] = 0;
@@ -473,20 +499,14 @@ void MicrostructureStatisticsFunc::find_centroids2D()
   }
   for (int j = 0; j < (xpoints * ypoints * zpoints); j++)
   {
-    onedge = 0;
     int gnum = voxels[j].grain_index;
     graincenters[gnum][0]++;
     col = j % xpoints;
     row = (j / xpoints) % ypoints;
 	x = float(col)*resx;
 	y = float(row)*resy;
-    if (col <= 0) onedge = 1;
-    if (col >= xpoints - 1) onedge = 1;
-    if (row <= 0) onedge = 1;
-    if (row >= ypoints - 1) onedge = 1;
     graincenters[gnum][1] = graincenters[gnum][1] + x;
     graincenters[gnum][2] = graincenters[gnum][2] + y;
-    if (onedge == 1) graincenters[gnum][3] = 1;
   }
   for (size_t i = 1; i < numgrains; i++)
   {
@@ -496,7 +516,6 @@ void MicrostructureStatisticsFunc::find_centroids2D()
     m_Grains[i]->centroidy = graincenters[i][2];
     m_Grains[i]->numvoxels = graincenters[i][0];
     m_Grains[i]->volume = (graincenters[i][0] * resx * resy);
-    m_Grains[i]->surfacegrain = graincenters[i][3];
     radsquared = m_Grains[i]->volume / m_pi;
     diameter = (2 * powf(radsquared, 0.5));
     m_Grains[i]->equivdiameter = diameter;
@@ -2392,21 +2411,22 @@ void MicrostructureStatisticsFunc::write_graindata(const std::string &graindataF
   size_t numgrains = m_Grains.size();
   outFile.open(graindataFile.c_str());
   outFile << numgrains << endl;
-  outFile << "Grain ID	Euler1	Euler2	Euler3";
+  outFile << "Grain ID	Surface Grain";
+  if(computeodf == true || computemdf == true) outFile << "	Euler1	Euler2	Euler3";
   if(computesizes == true) outFile <<  "	Equiv. Diameter";
   if(computeshapes == true) outFile << "	b/a	c/a	Omega3";
   if(computeneighbors == true) outFile << "	No. Neighbors";
-  outFile << "	Surface Grain" << endl;
+  outFile << endl;
   for (size_t i = 1; i < numgrains; i++)
   {
-    outFile << i << "	" << m_Grains[i]->euler1 << "	" << m_Grains[i]->euler2 << "	" << m_Grains[i]->euler3;
+    outFile << i << "	" << m_Grains[i]->surfacegrain;
+	if(computeodf == true || computemdf == true) outFile << "	" << m_Grains[i]->euler1 << "	" << m_Grains[i]->euler2 << "	" << m_Grains[i]->euler3;
 	if(computesizes == true) outFile <<  "	" << m_Grains[i]->equivdiameter;
 	if(computeshapes == true) outFile << "	" << m_Grains[i]->aspectratio1 << "	" << m_Grains[i]->aspectratio2 << "	" << m_Grains[i]->omega3;
 	if(computeneighbors == true) outFile << "	" << m_Grains[i]->neighborlist->size();
-	outFile << "	" << m_Grains[i]->surfacegrain << endl;
+	outFile << endl;
   }
   outFile.close();
-
 }
 
 
