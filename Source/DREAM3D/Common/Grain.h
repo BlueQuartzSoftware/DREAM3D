@@ -95,6 +95,8 @@ class DREAM3DLib_EXPORT Grain
     float centroidx;
     float centroidy;
     float centroidz;
+	float aspectratio1;
+	float aspectratio2;
     float Ixx;
     float Iyy;
     float Izz;
