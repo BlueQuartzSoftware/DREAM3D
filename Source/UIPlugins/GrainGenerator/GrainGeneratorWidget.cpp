@@ -54,6 +54,8 @@
 #include "QtSupport/QR3DFileCompleter.h"
 #include "QtSupport/QCheckboxDialog.h"
 
+const static float m_pi = M_PI;
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -540,6 +542,12 @@ int GrainGeneratorWidget::estimate_numgrains(int xpoints, int ypoints, int zpoin
   std::vector<AIM::Reconstruction::CrystalStructure> structures;
   std::vector<AIM::Reconstruction::PhaseType> phaseType;
   std::vector<float> phasefraction;
+  std::vector<float> double_data;
+  std::vector<float> avgdiam;
+  std::vector<float> sddiam;
+  std::vector<float> grainDiamInfo;
+  std::vector<float> maxdiameter;
+  std::vector<float> mindiameter;
 
   totalvol = (xpoints * xres) * (ypoints * yres) * (zpoints * zres);
   H5ReconStatsReader::Pointer h5Reader = H5ReconStatsReader::New();
@@ -552,11 +560,14 @@ int GrainGeneratorWidget::estimate_numgrains(int xpoints, int ypoints, int zpoin
 
   phasefraction.resize(phases.size());
   phaseType.resize(phases.size());
+  avgdiam.resize(phases.size());
+  sddiam.resize(phases.size());
+  maxdiameter.resize(phases.size());
+  mindiameter.resize(phases.size());
   for (int i = 0; i < phases.size(); i++)
   {
     phase = phases[i];
 
-    /* Read the PhaseFraction Value*/
     std::vector<float> pFraction;
     err = h5Reader->readStatsDataset(phase, AIM::HDF5::PhaseFraction, pFraction);
     phasefraction[phase] = pFraction.front();
@@ -564,6 +575,14 @@ int GrainGeneratorWidget::estimate_numgrains(int xpoints, int ypoints, int zpoin
     std::vector<unsigned int> phasetypes;
     err = h5Reader->readStatsDataset(phase, AIM::HDF5::PhaseType, phasetypes);
     phaseType[phase] = static_cast<AIM::Reconstruction::PhaseType> (phasetypes[0]);
+
+	err = h5Reader->readStatsDataset(phase, AIM::HDF5::Grain_Size_Distribution, double_data);
+	avgdiam[phase] = double_data[0];
+	sddiam[phase] = double_data[1];
+
+	err = h5Reader->readStatsDataset(phase, AIM::HDF5::Grain_Diameter_Info, grainDiamInfo);
+	maxdiameter[phase]  = grainDiamInfo[1];
+	mindiameter[phase] = grainDiamInfo[2];
   }
   AIM_RANDOMNG_NEW()
 
@@ -591,9 +610,12 @@ int GrainGeneratorWidget::estimate_numgrains(int xpoints, int ypoints, int zpoin
   int gid = 1;
 
   float currentvol = 0.0;
-  float volume, random;
+  float vol, random;
+  float u, diam;
+  int volgood = 0;
   while (currentvol < totalvol)
   {
+    volgood = 0;
     random = rg.Random();
     for (size_t j = 0; j < primaryphases.size(); ++j)
     {
@@ -603,7 +625,17 @@ int GrainGeneratorWidget::estimate_numgrains(int xpoints, int ypoints, int zpoin
         break;
       }
     }
-    currentvol = currentvol + volume;
+	while(volgood == 0)
+	{
+	  volgood = 1;
+	  u = rg.Random();
+	  diam = rg.RandNorm(avgdiam[phase],sddiam[phase]);
+	  diam = exp(diam);
+	  if(diam >= maxdiameter[phase]) volgood = 0;
+	  if(diam < mindiameter[phase]) volgood = 0;
+	  vol = (4.0/3.0)*(m_pi)*((diam/2.0)*(diam/2.0)*(diam/2.0));
+	}
+    currentvol = currentvol + vol;
     gid++;
   }
   return gid;
