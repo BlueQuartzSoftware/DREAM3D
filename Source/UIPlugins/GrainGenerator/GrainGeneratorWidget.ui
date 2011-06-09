@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>764</width>
+    <width>792</width>
     <height>574</height>
    </rect>
   </property>
@@ -299,7 +299,21 @@
           </item>
          </widget>
         </item>
-        <item row="1" column="8">
+        <item row="3" column="1">
+         <widget class="QLabel" name="est_numgrains">
+          <property name="text">
+           <string>0</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="0">
+         <widget class="QLabel" name="label_9">
+          <property name="text">
+           <string>Estimated No. Grains</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="8">
          <widget class="QCheckBox" name="m_PeriodicBoundaryConditions">
           <property name="text">
            <string>Periodic Boundary Conditions</string>
@@ -619,6 +633,7 @@
   </customwidget>
  </customwidgets>
  <resources>
+  <include location="../../../Resources/icons/images/Icons.qrc"/>
   <include location="../../../Resources/icons/images/Icons.qrc"/>
   <include location="../../../Resources/icons/images/Icons.qrc"/>
   <include location="../../../Resources/icons/images/Icons.qrc"/>
