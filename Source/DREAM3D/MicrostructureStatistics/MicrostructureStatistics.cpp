@@ -193,18 +193,29 @@ void MicrostructureStatistics::execute()
 
   if(m_ComputeODF == true)
   {
-	  updateProgressAndMessage(("Finding Reference Orientations For Grains"), 15);
-//	  m->find_grain_and_kernel_misorientations();
+	  updateProgressAndMessage(("Finding Average Orientations For Grains"), 55);
+	  m->find_grainorientations();
 	  CHECK_FOR_CANCELED(MicrostructureStatisticsFunc, "MicrostructureStatistics was canceled",  find_grain_and_kernel_misorientations)
 
-	  updateProgressAndMessage(("Finding Euler ODF"), 55);
+	  updateProgressAndMessage(("Finding Euler ODF"), 60);
 	  m->find_eulerodf(h5io);
 	  CHECK_FOR_CANCELED(MicrostructureStatisticsFunc, "MicrostructureStatistics was canceled",  find_eulerodf)
+
+	  updateProgressAndMessage(("Finding Reference Orientations For Grains"), 65);
+//	  m->find_grain_and_kernel_misorientations();
+	  CHECK_FOR_CANCELED(MicrostructureStatisticsFunc, "MicrostructureStatistics was canceled",  find_grain_and_kernel_misorientations)
   }
 
   if(m_ComputeMDF == true)
   {
-	  updateProgressAndMessage(("Measuring Misorientations"), 60);
+	  if(m_ComputeODF == false)
+	  {
+		  updateProgressAndMessage(("Finding Average Orientations For Grains"), 55);
+		  m->find_grainorientations();
+		  CHECK_FOR_CANCELED(MicrostructureStatisticsFunc, "MicrostructureStatistics was canceled",  find_grain_and_kernel_misorientations)
+	  }
+
+	  updateProgressAndMessage(("Measuring Misorientations"), 70);
 	  m->measure_misorientations(h5io);
 	  CHECK_FOR_CANCELED(MicrostructureStatisticsFunc, "MicrostructureStatistics was canceled",  measure_misorientations)
   }
