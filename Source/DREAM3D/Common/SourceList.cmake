@@ -8,6 +8,7 @@ SET (DREAM3D_Common_HDRS
   ${DREAM3DLib_SOURCE_DIR}/Common/AIMRandomNG.h
   ${DREAM3DLib_SOURCE_DIR}/Common/Constants.h
   ${DREAM3DLib_SOURCE_DIR}/Common/CrystalStructure.h
+  ${DREAM3DLib_SOURCE_DIR}/Common/DxGrainIdWriter.h
   ${DREAM3DLib_SOURCE_DIR}/Common/Grain.h
   ${DREAM3DLib_SOURCE_DIR}/Common/OIMColoring.hpp
   ${DREAM3DLib_SOURCE_DIR}/Common/OrientationMath.h
@@ -26,6 +27,7 @@ SET (DREAM3D_Common_HDRS
 SET (DREAM3D_Common_SRCS
   ${DREAM3DLib_SOURCE_DIR}/Common/AbstractPipeline.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/AIMRandomNG.cpp
+  ${DREAM3DLib_SOURCE_DIR}/Common/DxGrainIdWriter.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/Grain.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/OrientationMath.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/PhaseType.cpp

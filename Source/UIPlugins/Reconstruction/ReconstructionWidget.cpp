@@ -129,6 +129,7 @@ void ReconstructionWidget::readSettings(QSettings &prefs)
   READ_CHECKBOX_SETTING(prefs, m_, VisualizationVizFile, true);
   READ_CHECKBOX_SETTING(prefs, m_, DownSampledVizFile, true);
   READ_CHECKBOX_SETTING(prefs, m_, HDF5GrainFile, true);
+  READ_CHECKBOX_SETTING(prefs, m_, DxFile, true);
   prefs.endGroup();
 }
 
@@ -171,6 +172,7 @@ void ReconstructionWidget::writeSettings(QSettings &prefs)
   WRITE_CHECKBOX_SETTING(prefs, m_, VisualizationVizFile)
   WRITE_CHECKBOX_SETTING(prefs, m_, DownSampledVizFile)
   WRITE_CHECKBOX_SETTING(prefs, m_, HDF5GrainFile)
+  WRITE_CHECKBOX_SETTING(prefs, m_, DxFile)
   prefs.endGroup();
 }
 
@@ -232,6 +234,7 @@ void ReconstructionWidget::checkIOFiles()
   CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(AIM::Reconstruction, m_ , VisualizationVizFile)
   CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(AIM::Reconstruction, m_ , DownSampledVizFile)
   CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(AIM::Reconstruction, m_ , HDF5GrainFile)
+  CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(AIM::Reconstruction, m_ , DxFile)
 }
 
 // -----------------------------------------------------------------------------
@@ -541,6 +544,7 @@ void ReconstructionWidget::on_m_GoBtn_clicked()
 
   m_Reconstruction->setWriteDownSampledFile(m_DownSampledVizFile->isChecked());
   m_Reconstruction->setWriteHDF5GrainFile(m_HDF5GrainFile->isChecked());
+  m_Reconstruction->setWriteDxFile(m_DxFile->isChecked());
 
   // m_Reconstruction->printSettings(std::cout);
 
@@ -586,7 +590,7 @@ void ReconstructionWidget::on_m_GoBtn_clicked()
 // -----------------------------------------------------------------------------
 void ReconstructionWidget::threadFinished()
 {
-  std::cout << "ReconstructionWidget::threadFinished()" << std::endl;
+ // std::cout << "ReconstructionWidget::threadFinished()" << std::endl;
   m_GoBtn->setText("Go");
   setWidgetListEnabled(true);
   this->progressBar->setValue(0);

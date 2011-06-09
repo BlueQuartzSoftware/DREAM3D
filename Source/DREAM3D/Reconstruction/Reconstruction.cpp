@@ -46,6 +46,7 @@
 #include "DREAM3D/Common/Constants.h"
 #include "DREAM3D/Common/OIMColoring.hpp"
 #include "DREAM3D/Common/VTKUtils/VTKFileWriters.hpp"
+#include "DREAM3D/Common/DxGrainIdWriter.h"
 #include "DREAM3D/HDF5/H5VoxelWriter.h"
 #include "DREAM3D/HDF5/H5GrainWriter.h"
 
@@ -72,7 +73,8 @@ m_WritePhaseId(true),
 m_WriteImageQuality(true),
 m_WriteIPFColor(true),
 m_WriteDownSampledFile(false),
-m_WriteHDF5GrainFile(false)
+m_WriteHDF5GrainFile(false),
+m_WriteDxFile(false)
 {
 
 }
@@ -284,6 +286,16 @@ void Reconstruction::execute()
     H5GrainWriter::Pointer h5GrainWriter = H5GrainWriter::New();
     err = h5GrainWriter->writeHDF5GrainsFile(m.get(), hdf5GrainFile);
     CHECK_FOR_ERROR(ReconstructionFunc, "The HDF5 Grain file could not be written to. Does the path exist and do you have write access to the output directory.", err);
+  }
+
+
+  if (m_WriteDxFile)
+  {
+    updateProgressAndMessage(("Writing Out Dx Grain File."), 99);
+    MAKE_OUTPUT_FILE_PATH( dxGrainFile, AIM::Reconstruction::DxFile);
+    DxGrainIdWriter::Pointer dxWriter = DxGrainIdWriter::New();
+    err = dxWriter->writeGrainFile(dxGrainFile, m->voxels.get(), m->xpoints, m->ypoints, m->zpoints);
+    CHECK_FOR_ERROR(ReconstructionFunc, "The Dx Grain file could not be written to. Does the path exist and do you have write access to the output directory.", err);
   }
 
   updateProgressAndMessage(("Reconstruction Complete"), 100);
