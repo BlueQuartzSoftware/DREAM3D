@@ -504,9 +504,9 @@ void MicrostructureStatisticsFunc::find_moments()
 }
 void MicrostructureStatisticsFunc::find_axes()
 {
-
-size_t numgrains = m_Grains.size();
-for (size_t i = 1; i < numgrains; i++)
+  float I1, I2, I3;
+  size_t numgrains = m_Grains.size();
+  for (size_t i = 1; i < numgrains; i++)
   {
     float Ixx = m_Grains[i]->Ixx;
     float Iyy = m_Grains[i]->Iyy;
@@ -538,6 +538,22 @@ for (size_t i = 1; i < numgrains; i++)
     m_Grains[i]->radius1 = r1;
     m_Grains[i]->radius2 = r2;
     m_Grains[i]->radius3 = r3;
+    I1 = (15 * r1) / (4 * m_pi);
+    I2 = (15 * r2) / (4 * m_pi);
+    I3 = (15 * r3) / (4 * m_pi);
+    float A = (I1 + I2 - I3) / 2;
+    float B = (I1 + I3 - I2) / 2;
+    float C = (I2 + I3 - I1) / 2;
+    a = (A * A * A * A) / (B * C);
+    a = powf(a, 0.1);
+    b = B / A;
+    b = powf(b, 0.5) * a;
+    c = A / (a * a * a * b);
+    float bovera = b / a;
+    float covera = c / a;
+    float coverb = c / b;
+    m_Grains[i]->aspectratio1 = bovera;
+    m_Grains[i]->aspectratio2 = covera;
   }
 }
 void MicrostructureStatisticsFunc::find_vectors(H5ReconStatsWriter::Pointer h5io)
@@ -1147,11 +1163,10 @@ void MicrostructureStatisticsFunc::find_eulerodf(H5ReconStatsWriter::Pointer h5i
     voxels[i].quat[2] = qr[2];
     voxels[i].quat[3] = qr[3];
     voxels[i].quat[4] = qr[4];
-	m_OrientationOps[xtal]->getNearestQuat(m_Grains[voxels[i].grain_index]->avg_quat, qr);
+	m_OrientationOps[xtal]->getNearestQuat(m_Grains[voxels[i].grain_index]->avg_quat, voxels[i].quat);
     for (int k = 0; k < 5; k++)
     {
-      voxels[i].quat[k] = qr[k];
-	  m_Grains[voxels[i].grain_index]->avg_quat[k] = m_Grains[voxels[i].grain_index]->avg_quat[k] + qr[k];
+	  m_Grains[voxels[i].grain_index]->avg_quat[k] = m_Grains[voxels[i].grain_index]->avg_quat[k] + voxels[i].quat[k];
     }
   }
   float q[5];
@@ -1452,22 +1467,9 @@ int MicrostructureStatisticsFunc::volume_stats(H5ReconStatsWriter::Pointer h5io,
 		  float I1 = m_Grains[i]->radius1;
 		  float I2 = m_Grains[i]->radius2;
 		  float I3 = m_Grains[i]->radius3;
-		  I1 = (15 * I1) / (4 * m_pi);
-		  I2 = (15 * I2) / (4 * m_pi);
-		  I3 = (15 * I3) / (4 * m_pi);
-		  float A = (I1 + I2 - I3) / 2;
-		  float B = (I1 + I3 - I2) / 2;
-		  float C = (I2 + I3 - I1) / 2;
-		  float a = (A * A * A * A) / (B * C);
-		  a = powf(a, 0.1);
-		  float b = B / A;
-		  b = powf(b, 0.5) * a;
-		  float c = A / (a * a * a * b);
-		  float bovera = b / a;
-		  float covera = c / a;
-		  float coverb = c / b;
-		  m_Grains[i]->aspectratio1 = bovera;
-		  m_Grains[i]->aspectratio2 = covera;
+		  float bovera = m_Grains[i]->aspectratio1;
+		  float covera = m_Grains[i]->aspectratio2;
+		  float coverb = covera/bovera;
 		  float schmid = m_Grains[i]->schmidfactor;
 		  float omega3 = m_Grains[i]->omega3;
 		  avglogdiam = avglogdiam + logdiam;
@@ -1521,20 +1523,9 @@ int MicrostructureStatisticsFunc::volume_stats(H5ReconStatsWriter::Pointer h5io,
 		  float I1 = m_Grains[j]->radius1;
 		  float I2 = m_Grains[j]->radius2;
 		  float I3 = m_Grains[j]->radius3;
-		  I1 = (15 * I1) / (4 * m_pi);
-		  I2 = (15 * I2) / (4 * m_pi);
-		  I3 = (15 * I3) / (4 * m_pi);
-		  float A = (I1 + I2 - I3) / 2;
-		  float B = (I1 + I3 - I2) / 2;
-		  float C = (I2 + I3 - I1) / 2;
-		  float a = (A * A * A * A) / (B * C);
-		  a = powf(a, 0.1);
-		  float b = B / A;
-		  b = powf(b, 0.5) * a;
-		  float c = A / (a * a * a * b);
-		  float bovera = b / a;
-		  float covera = c / a;
-		  float coverb = c / b;
+		  float bovera = m_Grains[j]->aspectratio1;
+		  float covera = m_Grains[j]->aspectratio2;
+		  float coverb = covera/bovera;
 		  float schmid = m_Grains[j]->schmidfactor;
 		  float omega3 = m_Grains[j]->omega3;
 		  sdlogdiam = sdlogdiam + ((logdiam - avglogdiam) * (logdiam - avglogdiam));
