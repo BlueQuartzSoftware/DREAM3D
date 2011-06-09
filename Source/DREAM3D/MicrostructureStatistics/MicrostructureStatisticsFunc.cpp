@@ -1383,18 +1383,11 @@ void MicrostructureStatisticsFunc::measure_misorientations(H5ReconStatsWriter::P
       misobin[i][j] = 0.0;
     }
   }
-  float microbin[10];
-  for(size_t e = 0; e < 10; ++e)
-  {
-    microbin[e] = 0.0;
-  }
   size_t nname;
-  float microcount = 0.0;
   float nsa;
 
   for (size_t i = 1; i < numgrains; i++)
   {
-    microcount = 0;
     q1[0] = m_Grains[i]->avg_quat[0] / m_Grains[i]->avg_quat[0];
     q1[1] = m_Grains[i]->avg_quat[1] / m_Grains[i]->avg_quat[0];
     q1[2] = m_Grains[i]->avg_quat[2] / m_Grains[i]->avg_quat[0];
@@ -1430,24 +1423,17 @@ void MicrostructureStatisticsFunc::measure_misorientations(H5ReconStatsWriter::P
                                                                m_Grains[i]->misorientationlist->at(3*j),
                                                                m_Grains[i]->misorientationlist->at(3 * j + 1),
                                                                m_Grains[i]->misorientationlist->at(3 * j + 2));
-      if (w < 0.261799) microcount++;
       if ((nname > i || m_Grains[nname]->surfacegrain == 1) && phase1 == phase2)
       {
         nsa = m_Grains[i]->neighborsurfarealist->at(j);
         misobin[m_Grains[i]->phase][mbin] = misobin[m_Grains[i]->phase][mbin] + (nsa / totalsurfacearea[m_Grains[i]->phase]);
       }
     }
-    if (m_Grains[i]->neighborlist->size() > 0)
-    {
-      int micbin = int((float(microcount) / float(m_Grains[i]->neighborlist->size())) / 0.1);
-      microbin[micbin]++;
-    }
   }
   unsigned long long int dims = static_cast<unsigned long long int>(numbins);
   for(size_t i=1;i<crystruct.size();i++)
   {
 	  h5io->writeMisorientationBinsData(i, &dims, misobin[i]);
-	  h5io->writeMicroTextureData(i, microbin, 10, numgrains);
 	  delete[] misobin[i];
   }
   delete[] misobin;
