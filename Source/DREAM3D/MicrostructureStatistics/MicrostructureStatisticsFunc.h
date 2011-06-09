@@ -135,6 +135,7 @@ class DREAM3DLib_EXPORT MicrostructureStatisticsFunc
     int volume_stats(H5ReconStatsWriter::Pointer h5io, float BinStepSize);
     int volume_stats2D(H5ReconStatsWriter::Pointer h5io, float BinStepSize);
     void find_grain_and_kernel_misorientations();
+    void find_grainorientations();
     float find_xcoord(size_t index);
     float find_ycoord(size_t index);
     float find_zcoord(size_t index);

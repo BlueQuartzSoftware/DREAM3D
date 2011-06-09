@@ -1256,37 +1256,11 @@ void MicrostructureStatisticsFunc::find_vectors2D(H5ReconStatsWriter::Pointer h5
   }
   delete[] axisodf;
 }
-void MicrostructureStatisticsFunc::find_eulerodf(H5ReconStatsWriter::Pointer h5io)
+void MicrostructureStatisticsFunc::find_grainorientations()
 {
-  size_t bin;
   size_t numgrains = m_Grains.size();
   int phase;
   AIM::Reconstruction::CrystalStructure xtal;
-  float **eulerodf;
-
-  eulerodf = new float *[crystruct.size()];
-  unsigned long long dims = 0;
-  for(unsigned long long i=1;i<crystruct.size();i++)
-  {
-	  if (crystruct[i] == AIM::Reconstruction::Hexagonal)
-	  {
-	    dims = 36 * 36 * 12;
-	    eulerodf[i] = new float[dims];
-	    for (unsigned long long j = 0; j < dims; j++)
-	    {
-	      eulerodf[i][j] = 0.0;
-	    }
-	  }
-	  else if (crystruct[i] == AIM::Reconstruction::Cubic)
-	  {
-	    dims = 18 * 18 * 18;
-		  eulerodf[i] = new float[dims];
-		  for (unsigned long long j = 0; j < dims; j++)
-		  {
-			eulerodf[i][j] = 0.0;
-		  }
-	  }
-  }
   for (size_t i = 1; i < numgrains; i++)
   {
 	  m_Grains[i]->avg_quat[0] = 0.0;
@@ -1326,6 +1300,40 @@ void MicrostructureStatisticsFunc::find_eulerodf(H5ReconStatsWriter::Pointer h5i
       m_Grains[i]->euler2 = ea2;
       m_Grains[i]->euler3 = ea3;
   }
+}
+
+void MicrostructureStatisticsFunc::find_eulerodf(H5ReconStatsWriter::Pointer h5io)
+{
+  size_t bin;
+  size_t numgrains = m_Grains.size();
+  int phase;
+  AIM::Reconstruction::CrystalStructure xtal;
+  float **eulerodf;
+
+  eulerodf = new float *[crystruct.size()];
+  unsigned long long dims = 0;
+  for(unsigned long long i=1;i<crystruct.size();i++)
+  {
+	  if (crystruct[i] == AIM::Reconstruction::Hexagonal)
+	  {
+	    dims = 36 * 36 * 12;
+	    eulerodf[i] = new float[dims];
+	    for (unsigned long long j = 0; j < dims; j++)
+	    {
+	      eulerodf[i][j] = 0.0;
+	    }
+	  }
+	  else if (crystruct[i] == AIM::Reconstruction::Cubic)
+	  {
+	    dims = 18 * 18 * 18;
+		  eulerodf[i] = new float[dims];
+		  for (unsigned long long j = 0; j < dims; j++)
+		  {
+			eulerodf[i][j] = 0.0;
+		  }
+	  }
+  }
+  float ea1, ea2, ea3;
   float r1, r2, r3;
   for (size_t i = 1; i < numgrains; i++)
   {
