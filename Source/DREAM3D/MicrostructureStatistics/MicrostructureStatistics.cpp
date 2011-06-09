@@ -145,6 +145,10 @@ void MicrostructureStatistics::execute()
   // Create a new Writer for the Stats Data.
   H5ReconStatsWriter::Pointer h5io = H5ReconStatsWriter::New(hdf5ResultsFile);
 
+  updateProgressAndMessage(("Finding Surface Grains"), 25);
+  if(m->zpoints > 1) m->find_surfacegrains();
+  if(m->zpoints == 1) m->find_surfacegrains2D();
+  CHECK_FOR_CANCELED(MicrostructureStatisticsFunc, "MicrostructureStatistics was canceled",  find_surfacegrains2D)
 
   // Start Computing the statistics
   if(m_ComputeGrainSize == true)
