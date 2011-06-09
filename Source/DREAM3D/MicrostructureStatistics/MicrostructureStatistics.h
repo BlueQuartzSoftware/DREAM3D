@@ -80,6 +80,15 @@ class DREAM3DLib_EXPORT MicrostructureStatistics  : public AbstractPipeline
     // Options
     MXA_INSTANCE_PROPERTY(float, BinStepSize);
 
+    MXA_INSTANCE_PROPERTY(bool, WriteBinaryVTKFiles)
+    MXA_INSTANCE_PROPERTY(bool, WriteVtkFile)
+
+
+    MXA_INSTANCE_PROPERTY(bool, WritePhaseId)
+    MXA_INSTANCE_PROPERTY(bool, WriteIPFColor)
+    MXA_INSTANCE_PROPERTY(bool, WriteKernelMisorientations)
+    MXA_INSTANCE_PROPERTY(bool, WriteSurfaceVoxel)
+
     /**
     * @brief
     * @param ostream

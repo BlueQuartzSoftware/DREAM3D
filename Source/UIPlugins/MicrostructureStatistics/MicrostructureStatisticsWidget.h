@@ -97,6 +97,8 @@ class MicrostructureStatisticsWidget : public AIMPluginFrame, private Ui::Micros
     void on_m_OutputDir_textChanged(const QString &text);
     void on_m_OutputFilePrefix_textChanged(const QString &text);
 
+    void on_m_VtkOptionsBtn_clicked();
+
   private slots:
 
     // slots for our worker thread to communicate
@@ -111,6 +113,12 @@ class MicrostructureStatisticsWidget : public AIMPluginFrame, private Ui::Micros
     QMicrostructureStatistics*  m_MicrostructureStatistics;
     QThread*                    m_WorkerThread;
     QString                     m_OpenDialogLastDirectory;
+
+    bool                        m_WriteSurfaceVoxelScalars;
+    bool                        m_WritePhaseIdScalars;
+    bool                        m_WriteKernelMisorientationsScalars;
+    bool                        m_WriteIPFColorScalars;
+    bool                        m_WriteBinaryVTKFile;
 
     MicrostructureStatisticsWidget(const MicrostructureStatisticsWidget&); // Copy Constructor Not Implemented
     void operator=(const MicrostructureStatisticsWidget&); // Operator '=' Not Implemented
