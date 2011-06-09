@@ -287,38 +287,7 @@ void  MicrostructureStatisticsFunc::find_neighbors()
     }
     m_Grains[i]->numneighbors = numneighs;
   }
-  for(int i=1;i<m_Grains.size();i++)
-  {
-	  x = m_Grains[i]->centroidx;
-	  y = m_Grains[i]->centroidy;
-	  z = m_Grains[i]->centroidz;
-	  diam = m_Grains[i]->equivdiameter;
-	  for(int j=i;j<m_Grains.size();j++)
-	  {
-		xn = m_Grains[j]->centroidx;
-		yn = m_Grains[j]->centroidy;
-		zn = m_Grains[j]->centroidz;
-		diam2 = m_Grains[j]->equivdiameter;
-		xdist = fabs(x-xn);
-		ydist = fabs(y-yn);
-		zdist = fabs(z-zn);
-		dist = (xdist*xdist)+(ydist*ydist)+(zdist*zdist);
-		dist = powf(dist,0.5);
-		dist2 = dist;
-		dist_int = int(dist/diam);
-		dist2_int = int(dist2/diam2);
-		if(dist < 3)
-		{
-		  m_Grains[i]->neighbordistfunc[dist_int]++;
-		}
-		if(dist2 < 3)
-		{
-		  m_Grains[j]->neighbordistfunc[dist2_int]++;
-		}
-	  }
-  }
 }
-
 
 void MicrostructureStatisticsFunc::define_neighborhood()
 {
@@ -392,7 +361,7 @@ void MicrostructureStatisticsFunc::find_surfacegrains()
     if (row >= ypoints - 1) onedge = 1;
     if (plane <= 0) onedge = 1;
     if (plane >= zpoints - 1) onedge = 1;
-    m_Grains[gnum]->surfacegrain = onedge;
+    if(onedge == 1) m_Grains[gnum]->surfacegrain = 1;
   }
 }
 void MicrostructureStatisticsFunc::find_surfacegrains2D()
@@ -409,7 +378,7 @@ void MicrostructureStatisticsFunc::find_surfacegrains2D()
     if (col >= xpoints - 1) onedge = 1;
     if (row <= 0) onedge = 1;
     if (row >= ypoints - 1) onedge = 1;
-    m_Grains[gnum]->surfacegrain = onedge;
+    if(onedge == 1) m_Grains[gnum]->surfacegrain = 1;
   }
 }
 void MicrostructureStatisticsFunc::find_centroids()
