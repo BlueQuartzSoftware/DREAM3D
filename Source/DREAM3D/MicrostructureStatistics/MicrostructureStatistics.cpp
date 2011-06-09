@@ -117,6 +117,12 @@ void MicrostructureStatistics::execute()
   m->sizey = dims[1]*spacing[1];
   m->sizez = dims[2]*spacing[2];
 
+  m->computesizes = m_ComputeGrainSize;
+  m->computeshapes = m_ComputeGrainShapes;
+  m->computeneighbors = m_ComputeNumNeighbors;
+  m->computeodf = m_ComputeODF;
+  m->computemdf = m_ComputeMDF;
+
   updateProgressAndMessage("Allocating Voxel Memory", 5);
   //Allocate all of our Voxel Objects
   m->voxels.reset(new MicrostructureStatisticsVoxel[m->totalpoints]);
@@ -184,7 +190,7 @@ void MicrostructureStatistics::execute()
   if(m_ComputeODF == true)
   {
 	  updateProgressAndMessage(("Finding Reference Orientations For Grains"), 15);
-	  m->find_grain_and_kernel_misorientations();
+//	  m->find_grain_and_kernel_misorientations();
 	  CHECK_FOR_CANCELED(MicrostructureStatisticsFunc, "MicrostructureStatistics was canceled",  find_grain_and_kernel_misorientations)
 
 	  updateProgressAndMessage(("Finding Euler ODF"), 55);
@@ -192,7 +198,7 @@ void MicrostructureStatistics::execute()
 	  CHECK_FOR_CANCELED(MicrostructureStatisticsFunc, "MicrostructureStatistics was canceled",  find_eulerodf)
   }
 
-  if(m_ComputeODF == true)
+  if(m_ComputeMDF == true)
   {
 	  updateProgressAndMessage(("Measuring Misorientations"), 60);
 	  m->measure_misorientations(h5io);
@@ -219,10 +225,10 @@ void MicrostructureStatistics::execute()
   updateProgressAndMessage(("Writing Deformation Statistics"), 80);
   m->deformation_stats(reconDeformStatsFile, reconDeformIPFFile);
   CHECK_FOR_CANCELED(MicrostructureStatisticsFunc, "MicrostructureStatistics was canceled",  volume_stats)
-
-  updateProgressAndMessage(("Writing Grain Data"), 85);
-  m->write_graindata(graindataFile);
 */
+  updateProgressAndMessage(("Writing Grain Data"), 85);
+  m->write_graindata(graindataFile, m_ComputeGrainSize, m_ComputeGrainShapes, m_ComputeNumNeighbors);
+
   // Clean up all the memory by forcibly setting a NULL pointer to the Shared
   // pointer object.
   m = MicrostructureStatisticsFunc::NullPointer();  // Clean up the memory

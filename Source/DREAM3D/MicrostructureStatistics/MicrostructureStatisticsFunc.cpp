@@ -1100,7 +1100,8 @@ void MicrostructureStatisticsFunc::find_eulerodf(H5ReconStatsWriter::Pointer h5i
 {
   size_t bin;
   size_t numgrains = m_Grains.size();
-  AIM::Reconstruction::CrystalStructure phase;
+  int phase;
+  AIM::Reconstruction::CrystalStructure xtal;
   float **eulerodf;
 
   eulerodf = new float *[crystruct.size()];
@@ -1126,8 +1127,47 @@ void MicrostructureStatisticsFunc::find_eulerodf(H5ReconStatsWriter::Pointer h5i
 		  }
 	  }
   }
-  float r1, r2, r3;
+  for (size_t i = 1; i < numgrains; i++)
+  {
+	  m_Grains[i]->avg_quat[0] = 0.0;
+	  m_Grains[i]->avg_quat[1] = 0.0;
+	  m_Grains[i]->avg_quat[2] = 0.0;
+	  m_Grains[i]->avg_quat[3] = 0.0;
+	  m_Grains[i]->avg_quat[4] = 0.0;
+  }
+  float qr[5];
+  for(size_t i = 0; i < (xpoints*ypoints*zpoints); i++)
+  {
+    OrientationMath::eulertoQuat(qr, voxels[i].euler1, voxels[i].euler2, voxels[i].euler3);
+    phase = voxels[i].phase;
+    xtal = crystruct[phase];
+    m_OrientationOps[xtal]->getFZQuat(qr);
+    voxels[i].quat[0] = 1.0;
+    voxels[i].quat[1] = qr[1];
+    voxels[i].quat[2] = qr[2];
+    voxels[i].quat[3] = qr[3];
+    voxels[i].quat[4] = qr[4];
+	m_OrientationOps[xtal]->getNearestQuat(m_Grains[voxels[i].grain_index]->avg_quat, qr);
+    for (int k = 0; k < 5; k++)
+    {
+      voxels[i].quat[k] = qr[k];
+	  m_Grains[voxels[i].grain_index]->avg_quat[k] = m_Grains[voxels[i].grain_index]->avg_quat[k] + qr[k];
+    }
+  }
+  float q[5];
   float ea1, ea2, ea3;
+  for (size_t i = 1; i < numgrains; i++)
+  {
+      q[1] = m_Grains[i]->avg_quat[1]/m_Grains[i]->avg_quat[0];
+      q[2] = m_Grains[i]->avg_quat[2]/m_Grains[i]->avg_quat[0];
+      q[3] = m_Grains[i]->avg_quat[3]/m_Grains[i]->avg_quat[0];
+      q[4] = m_Grains[i]->avg_quat[4]/m_Grains[i]->avg_quat[0];
+	  OrientationMath::QuattoEuler(q, ea1, ea2, ea3);
+	  m_Grains[i]->euler1 = ea1;
+      m_Grains[i]->euler2 = ea2;
+      m_Grains[i]->euler3 = ea3;
+  }
+  float r1, r2, r3;
   for (size_t i = 1; i < numgrains; i++)
   {
     if (m_Grains[i]->surfacegrain == 0 && m_Grains[i]->active == 1)
@@ -1426,6 +1466,8 @@ int MicrostructureStatisticsFunc::volume_stats(H5ReconStatsWriter::Pointer h5io,
 		  float bovera = b / a;
 		  float covera = c / a;
 		  float coverb = c / b;
+		  m_Grains[i]->aspectratio1 = bovera;
+		  m_Grains[i]->aspectratio2 = covera;
 		  float schmid = m_Grains[i]->schmidfactor;
 		  float omega3 = m_Grains[i]->omega3;
 		  avglogdiam = avglogdiam + logdiam;
@@ -2214,25 +2256,25 @@ void MicrostructureStatisticsFunc::deformation_stats(const std::string &filename
 
 
 
-void MicrostructureStatisticsFunc::write_graindata(const std::string &graindataFile)
+void MicrostructureStatisticsFunc::write_graindata(const std::string &graindataFile, bool computesizes, bool computeshapes, bool computeneighbors)
 {
   IntVectorType nlist;
   ofstream outFile;
   size_t numgrains = m_Grains.size();
   outFile.open(graindataFile.c_str());
   outFile << numgrains << endl;
-  outFile << "Grain ID  Euler1  Euler2  Euler3  Equiv. Diameter Grain Avg. Disorientation Surface Grain Schmid Factor No. Neighbors Omega3" << endl;
+  outFile << "Grain ID	Euler1	Euler2	Euler3";
+  if(computesizes == true) outFile <<  "	Equiv. Diameter";
+  if(computeshapes == true) outFile << "	b/a	c/a	Omega3";
+  if(computeneighbors == true) outFile << "	No. Neighbors";
+  outFile << "	Surface Grain" << endl;
   for (size_t i = 1; i < numgrains; i++)
   {
-    float diameter = m_Grains[i]->equivdiameter;
-    int onsurface = m_Grains[i]->surfacegrain;
-    float avgmiso = m_Grains[i]->averagemisorientation;
-    float schmid = m_Grains[i]->schmidfactor;
-    nlist = m_Grains[i]->neighborlist;
-    int nucleus = m_Grains[i]->nucleus;
-	float omega3 = m_Grains[i]->omega3;
-    outFile << i << " " << voxels[nucleus].euler1 << "  " << voxels[nucleus].euler2 << "  " << voxels[nucleus].euler3 << "  " << diameter << "  " << avgmiso << " "
-        << onsurface << " " << schmid << "  " << nlist->size() << " " << omega3 << endl;
+    outFile << i << "	" << m_Grains[i]->euler1 << "	" << m_Grains[i]->euler2 << "	" << m_Grains[i]->euler3;
+	if(computesizes == true) outFile <<  "	" << m_Grains[i]->equivdiameter;
+	if(computeshapes == true) outFile << "	" << m_Grains[i]->aspectratio1 << "	" << m_Grains[i]->aspectratio2 << "	" << m_Grains[i]->omega3;
+	if(computeneighbors == true) outFile << "	" << m_Grains[i]->neighborlist->size();
+	outFile << "	" << m_Grains[i]->surfacegrain << endl;
   }
   outFile.close();
 
