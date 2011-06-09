@@ -182,7 +182,11 @@ void MicrostructureStatistics::execute()
 
   if(m_ComputeNumNeighbors == true)
   {
-	  updateProgressAndMessage(("Defining Neighborhoods"), 45);
+	  updateProgressAndMessage(("Finding Neighbors"), 45);
+	  m->find_neighbors();
+	  CHECK_FOR_CANCELED(MicrostructureStatisticsFunc, "MicrostructureStatistics was canceled",  define_neighborhood)
+
+	  updateProgressAndMessage(("Defining Neighborhoods"), 50);
 	  m->define_neighborhood();
 	  CHECK_FOR_CANCELED(MicrostructureStatisticsFunc, "MicrostructureStatistics was canceled",  define_neighborhood)
   }
