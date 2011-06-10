@@ -65,8 +65,8 @@ void RolledPreset::displayUserInputDialog()
   if (ret == QDialog::Accepted)
   {
     // The user clicked the OK button so transfer the values from the dialog into this class
-    m_AspectRatio1 = d.getAspectRatio1();
-    m_AspectRatio2 = d.getAspectRatio2();
+	m_AspectRatio1 = d.getB()/d.getA();
+    m_AspectRatio2 = d.getC()/d.getA();
   }
   else
   {
