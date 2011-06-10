@@ -30,7 +30,6 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "MicrostructureStatisticsWidget.h"
 
-
 //-- Qt Includes
 #include <QtCore/QFileInfo>
 #include <QtCore/QFile>
@@ -53,18 +52,17 @@
 #include "QtSupport/AIM_QtMacros.h"
 #include "QtSupport/QR3DFileCompleter.h"
 #include "QtSupport/QCheckboxDialog.h"
+#include "DREAM3D/HDF5/H5VoxelReader.h"
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 MicrostructureStatisticsWidget::MicrostructureStatisticsWidget(QWidget *parent) :
-AIMPluginFrame(parent),
-m_MicrostructureStatistics(NULL),
-m_WorkerThread(NULL),
+  AIMPluginFrame(parent), m_MicrostructureStatistics(NULL), m_WorkerThread(NULL),
 #if defined(Q_WS_WIN)
-m_OpenDialogLastDirectory("C:\\")
+      m_OpenDialogLastDirectory("C:\\")
 #else
-m_OpenDialogLastDirectory("~/")
+      m_OpenDialogLastDirectory("~/")
 #endif
 {
   setupUi(this);
@@ -78,7 +76,6 @@ m_OpenDialogLastDirectory("~/")
 MicrostructureStatisticsWidget::~MicrostructureStatisticsWidget()
 {
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -94,21 +91,27 @@ void MicrostructureStatisticsWidget::readSettings(QSettings &prefs)
   READ_STRING_SETTING(prefs, m_, OutputFilePrefix, "MicrostructureStatistics_")
   READ_FILEPATH_SETTING(prefs, m_, InputFile, "");
 
-  READ_CHECKBOX_SETTING(prefs, m_, ComputeGrainSize, true);
-  READ_CHECKBOX_SETTING(prefs, m_, ComputeGrainShapes, true);
-  READ_CHECKBOX_SETTING(prefs, m_, ComputeNumNeighbors, true);
-
-  READ_CHECKBOX_SETTING(prefs, m_, ComputeMDF, true);
-  READ_CHECKBOX_SETTING(prefs, m_, ComputeODF, true);
+  READ_BOOL_SETTING(prefs, m_, ComputeGrainSize, true);
+  READ_BOOL_SETTING(prefs, m_, ComputeGrainShapes, true);
+  READ_BOOL_SETTING(prefs, m_, ComputeNumNeighbors, true);
+  READ_BOOL_SETTING(prefs, m_, ComputeMDF, true);
+  READ_BOOL_SETTING(prefs, m_, ComputeODF, true);
 
   READ_SETTING(prefs, m_, BinStepSize, ok, d, 1.0 , Double);
 
-
-  READ_BOOL_SETTING(prefs, m_, WriteBinaryVTKFile, true);
+  READ_CHECKBOX_SETTING(prefs, m_, H5StatisticsFile, true)
+  READ_CHECKBOX_SETTING(prefs, m_, GrainDataFile, true)
 
   READ_CHECKBOX_SETTING(prefs, m_, VisualizationVizFile, true);
+  READ_BOOL_SETTING(prefs, m_, WriteBinaryVTKFile, true);
+  READ_BOOL_SETTING(prefs, m_, WriteSurfaceVoxelScalars, true)
+  READ_BOOL_SETTING(prefs, m_, WritePhaseIdScalars, true)
+  READ_BOOL_SETTING(prefs, m_, WriteKernelMisorientationsScalars, true)
+  READ_BOOL_SETTING(prefs, m_, WriteIPFColorScalars, true)
+  READ_BOOL_SETTING(prefs, m_, WriteBinaryVTKFile, true)
 
   prefs.endGroup();
+  checkIOFiles();
 }
 
 // -----------------------------------------------------------------------------
@@ -121,19 +124,25 @@ void MicrostructureStatisticsWidget::writeSettings(QSettings &prefs)
   WRITE_STRING_SETTING(prefs, m_, OutputFilePrefix)
   WRITE_STRING_SETTING(prefs, m_, InputFile)
 
-  WRITE_CHECKBOX_SETTING(prefs, m_, ComputeGrainSize);
-  WRITE_CHECKBOX_SETTING(prefs, m_, ComputeGrainShapes);
-  WRITE_CHECKBOX_SETTING(prefs, m_, ComputeNumNeighbors);
-
-  WRITE_CHECKBOX_SETTING(prefs, m_, ComputeMDF);
-  WRITE_CHECKBOX_SETTING(prefs, m_, ComputeODF);
+  WRITE_BOOL_SETTING(prefs, m_, ComputeGrainSize, true);
+  WRITE_BOOL_SETTING(prefs, m_, ComputeGrainShapes, true);
+  WRITE_BOOL_SETTING(prefs, m_, ComputeNumNeighbors, true);
+  WRITE_BOOL_SETTING(prefs, m_, ComputeMDF, true);
+  WRITE_BOOL_SETTING(prefs, m_, ComputeODF, true);
 
   WRITE_SETTING(prefs, m_, BinStepSize);
 
-  WRITE_BOOL_SETTING(prefs, m_, WriteBinaryVTKFile, true);
 
+  WRITE_CHECKBOX_SETTING(prefs, m_, H5StatisticsFile)
+  WRITE_CHECKBOX_SETTING(prefs, m_, GrainDataFile)
 
   WRITE_CHECKBOX_SETTING(prefs, m_, VisualizationVizFile)
+  WRITE_BOOL_SETTING(prefs, m_, WriteBinaryVTKFile, true);
+  WRITE_BOOL_SETTING(prefs, m_, WriteSurfaceVoxelScalars, true)
+  WRITE_BOOL_SETTING(prefs, m_, WritePhaseIdScalars, true)
+  WRITE_BOOL_SETTING(prefs, m_, WriteKernelMisorientationsScalars, true)
+  WRITE_BOOL_SETTING(prefs, m_, WriteIPFColorScalars, true)
+  WRITE_BOOL_SETTING(prefs, m_, WriteBinaryVTKFile, true)
 
   prefs.endGroup();
 }
@@ -143,9 +152,10 @@ void MicrostructureStatisticsWidget::writeSettings(QSettings &prefs)
 // -----------------------------------------------------------------------------
 void MicrostructureStatisticsWidget::setWidgetListEnabled(bool b)
 {
-  foreach (QWidget* w, m_WidgetList) {
-    w->setEnabled(b);
-  }
+  foreach (QWidget* w, m_WidgetList)
+    {
+      w->setEnabled(b);
+    }
 }
 
 // -----------------------------------------------------------------------------
@@ -153,46 +163,33 @@ void MicrostructureStatisticsWidget::setWidgetListEnabled(bool b)
 // -----------------------------------------------------------------------------
 void MicrostructureStatisticsWidget::on_m_InputFileBtn_clicked()
 {
-  QString file = QFileDialog::getOpenFileName(this, tr("Select Structure File"),
-                                                 m_OpenDialogLastDirectory,
-                                                 tr("Any File (*.*)") );
-  if ( true == file.isEmpty() ){return;  }
-  QFileInfo fi (file);
+  QString file = QFileDialog::getOpenFileName(this, tr("Select Structure File"), m_OpenDialogLastDirectory, tr("Any File (*.*)"));
+  if (true == file.isEmpty())
+  {
+    return;
+  }
+  QFileInfo fi(file);
   QString ext = fi.suffix();
   m_InputFile->setText(fi.absoluteFilePath());
 }
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void MicrostructureStatisticsWidget::on_m_InputFile_textChanged(const QString &text)
-{
-  verifyPathExists(text, m_InputFile);
-}
-
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void MicrostructureStatisticsWidget::setupGui()
 {
-  messageLabel->setText("");
-
 
   QR3DFileCompleter* com2 = new QR3DFileCompleter(this, true);
   m_OutputDir->setCompleter(com2);
-  QObject::connect( com2, SIGNAL(activated(const QString &)),
-           this, SLOT(on_m_OutputDir_textChanged(const QString &)));
+  QObject::connect(com2, SIGNAL(activated(const QString &)), this, SLOT(on_m_OutputDir_textChanged(const QString &)));
 
   QR3DFileCompleter* com3 = new QR3DFileCompleter(this, false);
   m_InputFile->setCompleter(com3);
-  QObject::connect( com3, SIGNAL(activated(const QString &)),
-           this, SLOT(on_m_InputFile_textChanged(const QString &)));
+  QObject::connect(com3, SIGNAL(activated(const QString &)), this, SLOT(on_m_InputFile_textChanged(const QString &)));
 
-  QString msg ("All files will be over written that appear in the output directory.");
+  QString msg("All files will be over written that appear in the output directory.");
 
-  QFileInfo fi (m_OutputDir->text() + QDir::separator() +  AIM::SyntheticBuilder::VisualizationVizFile.c_str() );
+  QFileInfo fi(m_OutputDir->text() + QDir::separator() + AIM::SyntheticBuilder::VisualizationVizFile.c_str());
 
   m_WidgetList << m_OutputDir << m_OutputDirBtn;
   m_WidgetList << m_OutputFilePrefix;
@@ -203,13 +200,14 @@ void MicrostructureStatisticsWidget::setupGui()
 // -----------------------------------------------------------------------------
 void MicrostructureStatisticsWidget::on_m_LoadSettingsBtn_clicked()
 {
-  QString file = QFileDialog::getOpenFileName(this, tr("Select Settings File"),
-                                                 m_OpenDialogLastDirectory,
-                                                 tr("Settings File (*.txt)") );
-  if ( true == file.isEmpty() ){return;  }
+  QString file = QFileDialog::getOpenFileName(this, tr("Select Settings File"), m_OpenDialogLastDirectory, tr("Settings File (*.txt)"));
+  if (true == file.isEmpty())
+  {
+    return;
+  }
   QSettings prefs(file, QSettings::IniFormat, this);
   readSettings(prefs);
-  if (verifyPathExists(m_OutputDir->text(), m_OutputDir) )
+  if (verifyPathExists(m_OutputDir->text(), m_OutputDir))
   {
     checkIOFiles();
   }
@@ -220,24 +218,51 @@ void MicrostructureStatisticsWidget::on_m_LoadSettingsBtn_clicked()
 void MicrostructureStatisticsWidget::on_m_SaveSettingsBtn_clicked()
 {
   QString proposedFile = m_OpenDialogLastDirectory + QDir::separator() + "MicrostructureStatisticsSettings.txt";
-  QString file = QFileDialog::getSaveFileName(this, tr("Save Grain Generator Settings"),
-                                              proposedFile,
-                                              tr("*.txt") );
-  if ( true == file.isEmpty() ){ return;  }
+  QString file = QFileDialog::getSaveFileName(this, tr("Save Grain Generator Settings"), proposedFile, tr("*.txt"));
+  if (true == file.isEmpty())
+  {
+    return;
+  }
 
   QSettings prefs(file, QSettings::IniFormat, this);
   writeSettings(prefs);
 }
-
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void MicrostructureStatisticsWidget::checkIOFiles()
 {
+  //CHECK_QLINEEDIT_FILE_EXISTS(m_InputFile)
+  if (verifyPathExists(m_InputFile->text(), m_InputFile) == true)
+  {
+    // Load up the voxel data
+    H5VoxelReader::Pointer h5Reader = H5VoxelReader::New();
+    h5Reader->setFilename(m_InputFile->text().toStdString());
+    int dims[3];
+    float spacing[3];
+    int err = h5Reader->getSizeAndResolution(dims, spacing);
+    if (err >= 0)
+    {
+      xDim->setText(QString::number(dims[0]));
+      yDim->setText(QString::number(dims[1]));
+      zDim->setText(QString::number(dims[2]));
+    }
+  }
+
+  verifyPathExists(m_OutputDir->text(), m_OutputDir);
+
   CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(AIM::Reconstruction, m_ , VisualizationVizFile)
   CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::MicroStats, m_, GrainDataFile)
   CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::MicroStats, m_, H5StatisticsFile)
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void MicrostructureStatisticsWidget::on_m_InputFile_textChanged(const QString &text)
+{
+  checkIOFiles();
 }
 
 // -----------------------------------------------------------------------------
@@ -250,7 +275,7 @@ void MicrostructureStatisticsWidget::on_m_OutputDirBtn_clicked()
   if (!outputFile.isNull())
   {
     this->m_OutputDir->setText(outputFile);
-    if (verifyPathExists(outputFile, m_OutputDir) == true )
+    if (verifyPathExists(outputFile, m_OutputDir) == true)
     {
       checkIOFiles();
     }
@@ -262,7 +287,7 @@ void MicrostructureStatisticsWidget::on_m_OutputDirBtn_clicked()
 // -----------------------------------------------------------------------------
 void MicrostructureStatisticsWidget::on_m_OutputDir_textChanged(const QString &text)
 {
-  if (verifyPathExists(m_OutputDir->text(), m_OutputDir) )
+  if (verifyPathExists(m_OutputDir->text(), m_OutputDir))
   {
     checkIOFiles();
   }
@@ -276,7 +301,7 @@ void MicrostructureStatisticsWidget::on_m_GoBtn_clicked()
 
   if (m_GoBtn->text().compare("Cancel") == 0)
   {
-    if(m_MicrostructureStatistics != NULL)
+    if (m_MicrostructureStatistics != NULL)
     {
       //std::cout << "canceling from GUI...." << std::endl;
       emit cancelProcess();
@@ -284,8 +309,7 @@ void MicrostructureStatisticsWidget::on_m_GoBtn_clicked()
     return;
   }
 
-
-  if (false == sanityCheckOutputDirectory(m_OutputDir, QString("Grain Generator")) )
+  if (false == sanityCheckOutputDirectory(m_OutputDir, QString("Grain Generator")))
   {
     return;
   }
@@ -310,12 +334,13 @@ void MicrostructureStatisticsWidget::on_m_GoBtn_clicked()
   /********************************
    * Gather any other values from the User Interface and send those to the lower level code
    */
-  m_MicrostructureStatistics->setComputeGrainSize(m_ComputeGrainSize->isChecked());
-  m_MicrostructureStatistics->setComputeGrainShapes(m_ComputeGrainShapes->isChecked());
-  m_MicrostructureStatistics->setComputeNumNeighbors(m_ComputeNumNeighbors->isChecked());
+  m_MicrostructureStatistics->setComputeGrainSize(m_ComputeGrainSize);
+  m_MicrostructureStatistics->setComputeGrainShapes(m_ComputeGrainShapes);
+  m_MicrostructureStatistics->setComputeNumNeighbors(m_ComputeNumNeighbors);
 
-  m_MicrostructureStatistics->setComputeODF(m_ComputeODF->isChecked());
-  m_MicrostructureStatistics->setComputeMDF(m_ComputeMDF->isChecked());
+  m_MicrostructureStatistics->setComputeODF(m_ComputeODF);
+  m_MicrostructureStatistics->setComputeMDF(m_ComputeMDF);
+
   m_MicrostructureStatistics->setBinStepSize(m_BinStepSize->value());
 
   m_MicrostructureStatistics->setWriteVtkFile(m_VisualizationVizFile->isChecked());
@@ -325,40 +350,33 @@ void MicrostructureStatisticsWidget::on_m_GoBtn_clicked()
   m_MicrostructureStatistics->setWriteIPFColor(m_WriteIPFColorScalars);
   m_MicrostructureStatistics->setWriteBinaryVTKFiles(m_WriteBinaryVTKFile);
 
-
   /* Connect the signal 'started()' from the QThread to the 'run' slot of the
    * Reconstruction object. Since the Reconstruction object has been moved to another
    * thread of execution and the actual QThread lives in *this* thread then the
    * type of connection will be a Queued connection.
    */
   // When the thread starts its event loop, start the MicrostructureStatistics going
-  connect(m_WorkerThread, SIGNAL(started()),
-          m_MicrostructureStatistics, SLOT(run()));
+  connect(m_WorkerThread, SIGNAL(started()), m_MicrostructureStatistics, SLOT(run()));
 
   // When the Reconstruction ends then tell the QThread to stop its event loop
-  connect(m_MicrostructureStatistics, SIGNAL(finished() ),
-          m_WorkerThread, SLOT(quit()) );
+  connect(m_MicrostructureStatistics, SIGNAL(finished() ), m_WorkerThread, SLOT(quit()));
 
   // When the QThread finishes, tell this object that it has finished.
-  connect(m_WorkerThread, SIGNAL(finished()),
-          this, SLOT( threadFinished() ) );
+  connect(m_WorkerThread, SIGNAL(finished()), this, SLOT( threadFinished() ));
 
   // Send Progress from the Reconstruction to this object for display
-  connect(m_MicrostructureStatistics, SIGNAL (updateProgress(int)),
-    this, SLOT(threadProgressed(int) ) );
+  connect(m_MicrostructureStatistics, SIGNAL (updateProgress(int)), this, SLOT(threadProgressed(int) ));
 
   // Send progress messages from Reconstruction to this object for display
-  connect(m_MicrostructureStatistics, SIGNAL (updateMessage(QString)),
-          this, SLOT(threadHasMessage(QString) ) );
+  connect(m_MicrostructureStatistics, SIGNAL (updateMessage(QString)), this, SLOT(threadHasMessage(QString) ));
 
   // If the use clicks on the "Cancel" button send a message to the Reconstruction object
   // We need a Direct Connection so the
-  connect(this, SIGNAL(cancelProcess() ),
-          m_MicrostructureStatistics, SLOT (on_CancelWorker() ) , Qt::DirectConnection);
-
+  connect(this, SIGNAL(cancelProcess() ), m_MicrostructureStatistics, SLOT (on_CancelWorker() ), Qt::DirectConnection);
 
   setWidgetListEnabled(false);
-  emit processStarted();
+  emit
+  processStarted();
   m_WorkerThread->start();
   m_GoBtn->setText("Cancel");
 }
@@ -368,11 +386,12 @@ void MicrostructureStatisticsWidget::on_m_GoBtn_clicked()
 // -----------------------------------------------------------------------------
 void MicrostructureStatisticsWidget::threadFinished()
 {
- // std::cout << "MicrostructureStatisticsWidget::grainGenerator_Finished()" << std::endl;
+  // std::cout << "MicrostructureStatisticsWidget::grainGenerator_Finished()" << std::endl;
   m_GoBtn->setText("Go");
   setWidgetListEnabled(true);
   this->m_progressBar->setValue(0);
-  emit processEnded();
+  emit
+  processEnded();
   checkIOFiles();
   m_MicrostructureStatistics->deleteLater();
 }
@@ -382,7 +401,7 @@ void MicrostructureStatisticsWidget::threadFinished()
 // -----------------------------------------------------------------------------
 void MicrostructureStatisticsWidget::threadProgressed(int val)
 {
-  this->m_progressBar->setValue( val );
+  this->m_progressBar->setValue(val);
 }
 
 // -----------------------------------------------------------------------------
@@ -390,7 +409,8 @@ void MicrostructureStatisticsWidget::threadProgressed(int val)
 // -----------------------------------------------------------------------------
 void MicrostructureStatisticsWidget::threadHasMessage(QString message)
 {
-  if (NULL != this->statusBar()) {
+  if (NULL != this->statusBar())
+  {
     this->statusBar()->showMessage(message);
   }
 }
@@ -434,3 +454,45 @@ void MicrostructureStatisticsWidget::on_m_VtkOptionsBtn_clicked()
 
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void MicrostructureStatisticsWidget::on_m_GrainFileOptionsBtn_clicked()
+{
+  QVector<QString> options;
+  options.push_back("Grain Size");
+  options.push_back("Grain Shape");
+  options.push_back("Number Neighbors");
+
+  QCheckboxDialog d(options, this);
+
+  d.setValue("Grain Size", m_ComputeGrainSize);
+  d.setValue("Grain Shape", m_ComputeGrainShapes);
+  d.setValue("Number Neighbors", m_ComputeNumNeighbors);
+
+  int ret = d.exec();
+  if (ret == QDialog::Accepted)
+  {
+    m_ComputeGrainSize = d.getValue("Grain Size");
+    m_ComputeGrainShapes = d.getValue("Grain Shape");
+    m_ComputeNumNeighbors = d.getValue("Number Neighbors");
+  }
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void MicrostructureStatisticsWidget::on_m_H5StatisticsFile_stateChanged()
+{
+  if (m_H5StatisticsFile->isChecked() == true)
+  {
+    m_ComputeODF = true;
+    m_ComputeMDF = true;
+  }
+  else
+  {
+    m_ComputeODF = false;
+    m_ComputeMDF = false;
+  }
+}

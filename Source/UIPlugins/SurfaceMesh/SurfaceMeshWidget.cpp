@@ -184,33 +184,6 @@ void SurfaceMeshWidget::checkIOFiles()
           yDim->setText(QString::number(dims[1]));
           zDim->setText(QString::number(dims[2]));
       }
-
-#if 0
-    VTKFileReader::Pointer reader = VTKFileReader::New();
-    reader->setInputFileName(m_InputFile->text().toStdString());
-    int err = reader->readHeader();
-    if (err >= 0)
-    {
-      std::string dataset = reader->getDatasetType();
-      if(dataset.compare("STRUCTURED_POINTS") != 0)
-      {
-        QMessageBox::critical(this, QString("SurfaceMesh"),
-            QString("The VTK File does not have the correct data type. We only support STRUCTURED_POINTS."),
-            QMessageBox::Ok | QMessageBox::Default);
-      }
-      else
-      {
-        int x = 0;
-        int y = 0;
-        int z = 0;
-        reader->getDims(x, y, z);
-        xDim->setText(QString::number(x));
-        yDim->setText(QString::number(y));
-        zDim->setText(QString::number(z));
-      }
-    }
-#endif
-
   }
 
 
