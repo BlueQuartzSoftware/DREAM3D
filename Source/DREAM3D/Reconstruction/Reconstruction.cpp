@@ -252,12 +252,6 @@ void Reconstruction::execute()
   VTKFileWriters::Pointer vtkWriter = VTKFileWriters::New();
   vtkWriter->setWriteBinaryFiles(m_WriteBinaryVTKFiles);
 
-  //Optional Files
-
-//  MAKE_OUTPUT_FILE_PATH ( reconIPFVisFile, AIM::Reconstruction::IPFVizFile);
-//  MAKE_OUTPUT_FILE_PATH ( reconIQVisFile, AIM::Reconstruction::ImageQualityVizFile);
-//
-
   updateProgressAndMessage(("Writing VTK Visualization File"), 93);
   if (m_WriteVtkFile)
   {
