@@ -59,7 +59,7 @@ class DxGrainIdWriter
     {
       int err = 0;
       int totalPoints = (xDim*yDim*zDim);
-      std::cout << "Write Dx Grain File:  x, y, z: " << xDim << " " << yDim << " " << zDim << std::endl;
+      // std::cout << "Write Dx Grain File:  x, y, z: " << xDim << " " << yDim << " " << zDim << std::endl;
 
       std::ofstream out(filename.c_str(), std::ios_base::binary);
       if (out.is_open() == false)
