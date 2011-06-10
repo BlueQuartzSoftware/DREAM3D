@@ -62,27 +62,38 @@ void RolledPresetDialog::setupGui()
   QFormLayout*         formLayout = new QFormLayout();
   formLayout->setObjectName(QString::fromUtf8("eulerLayout"));
 
-  QLabel* aspectRatio1Label = new QLabel(this);
-  aspectRatio1Label->setObjectName(QString::fromUtf8("Aspect Ratio 1 Label"));
-  formLayout->setWidget(0, QFormLayout::LabelRole, aspectRatio1Label);
+  QLabel* ALabel = new QLabel(this);
+  ALabel->setObjectName(QString::fromUtf8("A Label"));
+  formLayout->setWidget(0, QFormLayout::LabelRole, ALabel);
 
-  aspectRatio1 = new QLineEdit(this);
-  aspectRatio1->setText(QString("1.0"));
-  aspectRatio1->setObjectName(QString::fromUtf8("aspectRatio1"));
-  formLayout->setWidget(0, QFormLayout::FieldRole, aspectRatio1);
-  QDoubleValidator* aspectRatio1Validator = new QDoubleValidator(aspectRatio1);
-  aspectRatio1Validator->setDecimals(4);
+  A = new QLineEdit(this);
+  A->setText(QString("1.0"));
+  A->setObjectName(QString::fromUtf8("A"));
+  formLayout->setWidget(0, QFormLayout::FieldRole, A);
+  QDoubleValidator* AValidator = new QDoubleValidator(A);
+  AValidator->setDecimals(4);
 
-  QLabel* aspectRatio2Label = new QLabel(this);
-  aspectRatio2Label->setObjectName(QString::fromUtf8("Aspect Ratio 2 Label"));
-  formLayout->setWidget(1, QFormLayout::LabelRole, aspectRatio2Label);
+  QLabel* BLabel = new QLabel(this);
+  BLabel->setObjectName(QString::fromUtf8("B Label"));
+  formLayout->setWidget(1, QFormLayout::LabelRole, BLabel);
 
-  aspectRatio2 = new QLineEdit(this);
-  aspectRatio2->setText(QString("1.0"));
-  aspectRatio2->setObjectName(QString::fromUtf8("aspectRatio2"));
-  formLayout->setWidget(1, QFormLayout::FieldRole, aspectRatio2);
-  QDoubleValidator* aspectRatio2Validator = new QDoubleValidator(aspectRatio2);
-  aspectRatio2Validator->setDecimals(4);
+  B = new QLineEdit(this);
+  B->setText(QString("1.0"));
+  B->setObjectName(QString::fromUtf8("B"));
+  formLayout->setWidget(1, QFormLayout::FieldRole, B);
+  QDoubleValidator* BValidator = new QDoubleValidator(B);
+  BValidator->setDecimals(4);
+
+  QLabel* CLabel = new QLabel(this);
+  CLabel->setObjectName(QString::fromUtf8("C Label"));
+  formLayout->setWidget(2, QFormLayout::LabelRole, CLabel);
+
+  C = new QLineEdit(this);
+  C->setText(QString("1.0"));
+  C->setObjectName(QString::fromUtf8("B"));
+  formLayout->setWidget(2, QFormLayout::FieldRole, C);
+  QDoubleValidator* CValidator = new QDoubleValidator(C);
+  CValidator->setDecimals(4);
 
   verticalLayout_2->addLayout(formLayout);
 
@@ -92,8 +103,9 @@ void RolledPresetDialog::setupGui()
   buttonBox->setStandardButtons(QDialogButtonBox::Cancel|QDialogButtonBox::Ok);
   verticalLayout_2->addWidget(buttonBox);
 
-  aspectRatio1Label->setText(QApplication::translate("Rolled Preset Dialog", "Aspect Ratio 1 (b/a):", 0, QApplication::UnicodeUTF8));
-  aspectRatio2Label->setText(QApplication::translate("Rolled Preset Dialog", "Aspect Ratio 2 (c/a):", 0, QApplication::UnicodeUTF8));
+  ALabel->setText(QApplication::translate("Rolled Preset Dialog", "A Axis Length:", 0, QApplication::UnicodeUTF8));
+  BLabel->setText(QApplication::translate("Rolled Preset Dialog", "B Axis Length:", 0, QApplication::UnicodeUTF8));
+  CLabel->setText(QApplication::translate("Rolled Preset Dialog", "C Axis Length:", 0, QApplication::UnicodeUTF8));
 
 
   QObject::connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
@@ -115,10 +127,10 @@ void RolledPresetDialog::setupGui()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-float RolledPresetDialog::getAspectRatio1()
+float RolledPresetDialog::getA()
 {
   bool ok = false;
-  double d = aspectRatio1->text().toFloat(&ok);
+  double d = A->text().toFloat(&ok);
   //FIXME: Should check the 'ok' variable here
   return d;
 }
@@ -126,10 +138,21 @@ float RolledPresetDialog::getAspectRatio1()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-float RolledPresetDialog::getAspectRatio2()
+float RolledPresetDialog::getB()
 {
   bool ok = false;
-  double d = aspectRatio2->text().toFloat(&ok);
+  double d = B->text().toFloat(&ok);
+  //FIXME: Should check the 'ok' variable here
+  return d;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+float RolledPresetDialog::getC()
+{
+  bool ok = false;
+  double d = C->text().toFloat(&ok);
   //FIXME: Should check the 'ok' variable here
   return d;
 }
