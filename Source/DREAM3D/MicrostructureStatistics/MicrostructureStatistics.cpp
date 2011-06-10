@@ -89,6 +89,7 @@ void MicrostructureStatistics::execute()
   MAKE_OUTPUT_FILE_PATH ( graindataFile, AIM::MicroStats::GrainDataFile);
   MAKE_OUTPUT_FILE_PATH ( reconDeformStatsFile, AIM::MicroStats::DeformationStatsFile);
   MAKE_OUTPUT_FILE_PATH ( reconDeformIPFFile, AIM::MicroStats::IPFDeformVTKFile);
+  MAKE_OUTPUT_FILE_PATH ( reconVisFile, AIM::Reconstruction::VisualizationVizFile);
   MAKE_OUTPUT_FILE_PATH ( hdf5ResultsFile, AIM::MicroStats::H5StatisticsFile)
 
 
@@ -276,8 +277,18 @@ void MicrostructureStatistics::execute()
   m->deformation_stats(reconDeformStatsFile, reconDeformIPFFile);
   CHECK_FOR_CANCELED(MicrostructureStatisticsFunc, "MicrostructureStatistics was canceled",  volume_stats)
 */
+
   updateProgressAndMessage(("Writing Grain Data"), 95);
   m->write_graindata(graindataFile, m_ComputeGrainSize, m_ComputeGrainShapes, m_ComputeNumNeighbors);
+
+  if (m_WriteVtkFile) {
+    VTKFileWriters::Pointer vtkWriter = VTKFileWriters::New();
+    vtkWriter->setWriteBinaryFiles(m_WriteBinaryVTKFiles);
+    updateProgressAndMessage(("Writing VTK Visualization File"), 93);
+    err = vtkWriter->writeGrainVisualizationFile(m.get(), reconVisFile, m_WriteSurfaceVoxel, m_WritePhaseId, m_WriteIPFColor);
+    CHECK_FOR_ERROR(MicrostructureStatisticsFunc, "The Microstructure Statistics threw an Error writing the VTK file format.", err);
+  }
+  CHECK_FOR_CANCELED(MicrostructureStatisticsFunc, "MicrostructureStatistics Was canceled", writeVisualizationFile)
 
   // Clean up all the memory by forcibly setting a NULL pointer to the Shared
   // pointer object.
