@@ -49,15 +49,17 @@ class RolledPresetDialog : public QDialog
     RolledPresetDialog(QWidget* parent = NULL);
     virtual ~RolledPresetDialog();
 
-    float getAspectRatio1();
-    float getAspectRatio2();
+    float getA();
+    float getB();
+    float getC();
 
   protected:
     void setupGui();
 
   private:
-    QLineEdit* aspectRatio1;
-    QLineEdit* aspectRatio2;
+    QLineEdit* A;
+    QLineEdit* B;
+    QLineEdit* C;
 
 
     RolledPresetDialog(const RolledPresetDialog&); // Copy Constructor Not Implemented
