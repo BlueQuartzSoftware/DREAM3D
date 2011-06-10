@@ -558,12 +558,12 @@ int GrainGeneratorWidget::estimate_numgrains(int xpoints, int ypoints, int zpoin
     return -1;
   }
 
-  phasefraction.resize(phases.size());
-  phaseType.resize(phases.size());
-  avgdiam.resize(phases.size());
-  sddiam.resize(phases.size());
-  maxdiameter.resize(phases.size());
-  mindiameter.resize(phases.size());
+  phasefraction.resize(phases.size()+1);
+  phaseType.resize(phases.size()+1);
+  avgdiam.resize(phases.size()+1);
+  sddiam.resize(phases.size()+1);
+  maxdiameter.resize(phases.size()+1);
+  mindiameter.resize(phases.size()+1);
   for (int i = 0; i < phases.size(); i++)
   {
     phase = phases[i];
