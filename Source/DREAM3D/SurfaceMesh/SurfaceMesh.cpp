@@ -340,7 +340,7 @@ void SurfaceMesh::execute()
   cNodeID = nNodes;
   cTriID = cTriID + nTriangle;
 
-  std::cout << "Total Number of Triangles Created: " << cTriID << std::endl;
+  //std::cout << "Total Number of Triangles Created: " << cTriID << std::endl;
 
   if (nTriangle > 0) { delete[] m->cTriangle; }
 

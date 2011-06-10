@@ -84,7 +84,7 @@ int DXStructureReader::readStructure(GrainGeneratorFunc* m)
   int zdim = 0;
 
   // Read the first line
-  int nFields = fscanf(file, "%s %d %s %s %s %d %d %d\n", object, &objIndex, cls, clsName, counts, &xdim, &ydim, &zdim );
+  int nFields = fscanf(file, "%s %d %s %s %s %d %d %d\n", object, &objIndex, cls, clsName, counts, &zdim, &ydim, &xdim );
   if (nFields != 8)
   {
     std::cout << "DXStructureReader Error: Line 1 not enough fields. Expected 8, got " << nFields << std::endl;
@@ -95,7 +95,7 @@ int DXStructureReader::readStructure(GrainGeneratorFunc* m)
   // Read Lines 2
   char origin[16]; ::memset(origin, 0, 16);
   int x, y, z;
-  nFields = fscanf(file, "%s %d %d %d\n", origin, &x, &y, &z);
+  nFields = fscanf(file, "%s %d %d %d\n", origin, &z, &y, &x);
   if (nFields != 4)
   {
     std::cout << "DXStructureReader Error: Line 2 not enough fields. Expected 8, got " << nFields << std::endl;
@@ -106,7 +106,7 @@ int DXStructureReader::readStructure(GrainGeneratorFunc* m)
   // Read Lines 3,4,5
   char delta[16]; ::memset(delta, 0, 16);
   for (int i = 0; i < 3; ++i) {
-    nFields = fscanf(file, "%s %d %d %d\n", delta, &x, &y, &z);
+    nFields = fscanf(file, "%s %d %d %d\n", delta, &z, &y, &x);
     if (nFields != 4)
     {
       std::cout << "DXStructureReader Error: Line 3 not enough fields. Expected 8, got " << nFields << std::endl;
@@ -119,7 +119,7 @@ int DXStructureReader::readStructure(GrainGeneratorFunc* m)
   fscanf(file, "\n");
 
   // Read line 7
-  nFields = fscanf(file, "%s %d %s %s %s %d %d %d\n", object, &objIndex, cls, clsName, counts, &x, &y, &z );
+  nFields = fscanf(file, "%s %d %s %s %s %d %d %d\n", object, &objIndex, cls, clsName, counts, &z, &y, &x );
   if (nFields != 8)
   {
     std::cout << "DXStructureReader Error: Line 1 not enough fields. Expected 8, got " << nFields << std::endl;

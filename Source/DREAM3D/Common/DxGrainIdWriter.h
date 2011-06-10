@@ -59,7 +59,7 @@ class DxGrainIdWriter
     {
       int err = 0;
       int totalPoints = (xDim*yDim*zDim);
-
+      std::cout << "Write Dx Grain File:  x, y, z: " << xDim << " " << yDim << " " << zDim << std::endl;
 
       std::ofstream out(filename.c_str(), std::ios_base::binary);
       if (out.is_open() == false)
@@ -114,7 +114,7 @@ class DxGrainIdWriter
         // Add a leading surface Row for this plane if needed
         if (m_AddSurfaceLayer)
         {
-          for(int i = 0; i < fileYDim; ++i) {
+          for(int i = 0; i < fileXDim; ++i) {
             out << "-4 ";
           }
           out << std::endl;
@@ -130,7 +130,7 @@ class DxGrainIdWriter
           for (int x = 0; x < xDim; ++x)
           {
             if (voxels[index].grain_index == 0) {
-                out << "-666666" << " ";
+                out << "0" << " ";
             } else {
             out << voxels[index].grain_index << " ";
             }
@@ -146,7 +146,7 @@ class DxGrainIdWriter
         // Add a trailing surface Row for this plane if needed
         if (m_AddSurfaceLayer)
         {
-          for(int i = 0; i < fileYDim; ++i) {
+          for(int i = 0; i < fileXDim; ++i) {
             out << "-7 ";
           }
           out << std::endl;
