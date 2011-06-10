@@ -57,6 +57,9 @@ target_link_libraries(PhWriterTest DREAM3DLib)
 add_executable(DxTest ${AIMTest_SOURCE_DIR}/DxTest.cpp)
 target_link_libraries(DxTest DREAM3DLib)
 
+add_executable(SurfaceMeshTest ${AIMTest_SOURCE_DIR}/SurfaceMeshTest.cpp)
+target_link_libraries(SurfaceMeshTest DREAM3DLib)
+
 
 
 add_executable(StatsGenTest ${AIMTest_SOURCE_DIR}/StatsGenTest.cpp)
