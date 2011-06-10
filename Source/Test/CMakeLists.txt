@@ -54,6 +54,10 @@ target_link_libraries(VTKFileWritersTest DREAM3DLib)
 add_executable(PhWriterTest ${AIMTest_SOURCE_DIR}/PhWriterTest.cpp)
 target_link_libraries(PhWriterTest DREAM3DLib)
 
+add_executable(DxTest ${AIMTest_SOURCE_DIR}/DxTest.cpp)
+target_link_libraries(DxTest DREAM3DLib)
+
+
 
 add_executable(StatsGenTest ${AIMTest_SOURCE_DIR}/StatsGenTest.cpp)
 target_link_libraries(StatsGenTest DREAM3DLib)
