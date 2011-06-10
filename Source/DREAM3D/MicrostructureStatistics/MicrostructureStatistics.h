@@ -44,6 +44,64 @@
 #include "DREAM3D/MicrostructureStatistics/MicrostructureStatisticsFunc.h"
 #include "DREAM3D/Common/AbstractPipeline.h"
 
+#if 0
+class PipelineStatsOptions
+{
+  public:
+    MXA_SHARED_POINTERS(PipelineStatsOptions)
+
+    PipelineStatsOptions() :
+      m_ComputeGrainSize(false),
+      m_ComputeGrainShapes(false),
+      m_ComputeNumNeighbors(false),
+      m_ComputeODF(false),
+      m_ComputeMDF(false)
+    {}
+    virtual ~PipelineStatsOptions(){};
+
+    // Morphological Attributes
+      MXA_INSTANCE_PROPERTY(bool, ComputeGrainSize);
+      MXA_INSTANCE_PROPERTY(bool, ComputeGrainShapes);
+      MXA_INSTANCE_PROPERTY(bool, ComputeNumNeighbors);
+
+      // Crystalographic Attributes
+      MXA_INSTANCE_PROPERTY(bool, ComputeODF);
+      MXA_INSTANCE_PROPERTY(bool, ComputeMDF);
+
+  private:
+    PipelineStatsOptions(const PipelineStatsOptions&); // Copy Constructor Not Implemented
+    void operator=(const PipelineStatsOptions&); // Operator '=' Not Implemented
+};
+
+
+class WriteStatsOptions
+{
+  public:
+    MXA_SHARED_POINTERS(WriteStatsOptions)
+    WriteStatsOptions() :
+    m_WritePhaseId(false),
+    m_WriteIPFColor(false),
+    m_WriteKernelMisorientations(false),
+    m_WriteSurfaceVoxel(false)
+    {}
+    virtual ~WriteStatsOptions() {}
+
+    // Grain Data File Related
+    MXA_INSTANCE_PROPERTY(bool, WriteBinaryVTKFiles)
+    MXA_INSTANCE_PROPERTY(bool, WriteVtkFile)
+
+
+    // VTK File Related
+    MXA_INSTANCE_PROPERTY(bool, WritePhaseId)
+    MXA_INSTANCE_PROPERTY(bool, WriteIPFColor)
+    MXA_INSTANCE_PROPERTY(bool, WriteKernelMisorientations)
+    MXA_INSTANCE_PROPERTY(bool, WriteSurfaceVoxel)
+
+  private:
+    WriteStatsOptions(const WriteStatsOptions&); // Copy Constructor Not Implemented
+    void operator=(const WriteStatsOptions&); // Operator '=' Not Implemented
+};
+#endif
 
 /**
 * @class MicrostructureStatistics MicrostructureStatistics AIM/MicrostructureStatistics.h/MicrostructureStatistics.h
@@ -68,7 +126,10 @@ class DREAM3DLib_EXPORT MicrostructureStatistics  : public AbstractPipeline
     MXA_INSTANCE_STRING_PROPERTY(OutputDirectory)
     MXA_INSTANCE_STRING_PROPERTY(OutputFilePrefix)
 
-	// Morphological Attributes
+    // Options
+    MXA_INSTANCE_PROPERTY(float, BinStepSize);
+
+    // Morphological Attributes
     MXA_INSTANCE_PROPERTY(bool, ComputeGrainSize);
     MXA_INSTANCE_PROPERTY(bool, ComputeGrainShapes);
     MXA_INSTANCE_PROPERTY(bool, ComputeNumNeighbors);
@@ -77,17 +138,19 @@ class DREAM3DLib_EXPORT MicrostructureStatistics  : public AbstractPipeline
     MXA_INSTANCE_PROPERTY(bool, ComputeODF);
     MXA_INSTANCE_PROPERTY(bool, ComputeMDF);
 
-    // Options
-    MXA_INSTANCE_PROPERTY(float, BinStepSize);
 
+    // Grain Data File Related
+
+
+
+    // VTK File Related
     MXA_INSTANCE_PROPERTY(bool, WriteBinaryVTKFiles)
     MXA_INSTANCE_PROPERTY(bool, WriteVtkFile)
-
-
     MXA_INSTANCE_PROPERTY(bool, WritePhaseId)
     MXA_INSTANCE_PROPERTY(bool, WriteIPFColor)
     MXA_INSTANCE_PROPERTY(bool, WriteKernelMisorientations)
     MXA_INSTANCE_PROPERTY(bool, WriteSurfaceVoxel)
+
 
     /**
     * @brief
@@ -107,6 +170,8 @@ class DREAM3DLib_EXPORT MicrostructureStatistics  : public AbstractPipeline
 
   private:
     MicrostructureStatisticsFunc::Pointer m;
+    std::map<std::string, bool> m_CalcStats;
+
 
     MicrostructureStatistics(const MicrostructureStatistics&);    // Copy Constructor Not Implemented
     void operator=(const MicrostructureStatistics&);  // Operator '=' Not Implemented

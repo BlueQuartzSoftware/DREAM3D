@@ -98,6 +98,11 @@ class MicrostructureStatisticsWidget : public AIMPluginFrame, private Ui::Micros
     void on_m_OutputFilePrefix_textChanged(const QString &text);
 
     void on_m_VtkOptionsBtn_clicked();
+    void on_m_GrainFileOptionsBtn_clicked();
+    void on_m_H5StatisticsFile_stateChanged();
+
+
+
 
   private slots:
 
@@ -113,6 +118,14 @@ class MicrostructureStatisticsWidget : public AIMPluginFrame, private Ui::Micros
     QMicrostructureStatistics*  m_MicrostructureStatistics;
     QThread*                    m_WorkerThread;
     QString                     m_OpenDialogLastDirectory;
+
+    bool                        m_ComputeGrainSize;
+    bool                        m_ComputeGrainShapes;
+    bool                        m_ComputeNumNeighbors;
+    bool                        m_ComputeODF;
+    bool                        m_ComputeMDF;
+
+
 
     bool                        m_WriteSurfaceVoxelScalars;
     bool                        m_WritePhaseIdScalars;
