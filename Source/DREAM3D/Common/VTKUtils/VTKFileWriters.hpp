@@ -78,7 +78,7 @@ class VTKFileWriters
           MXA::Endian::FromSystemToBig::convert<T>(d);
           data[idx] = d;
         }
-        size_t totalWritten = fwrite(data, sizeof(T), npoints, f);
+        int totalWritten = fwrite(data, sizeof(T), npoints, f);
         delete[] data;
         if (totalWritten != npoints)
         {
@@ -282,7 +282,7 @@ class VTKFileWriters
       {
         WRITE_VTK_GRAIN_IDS_ASCII(r, AIM::VTK::GrainIdScalarName, voxels)
         if (writeSurfaceVoxel)
-		{ WRITE_VTK_SCALARS_FROM_VOXEL_ASCII(r, AIM::VTK::SurfaceVoxelScalarName, float, voxels, surfacevoxel, "%f ")}
+        { WRITE_VTK_SCALARS_FROM_VOXEL_ASCII(r, AIM::VTK::SurfaceVoxelScalarName, float, voxels, surfacevoxel, "%f ")}
         if (writePhaseId)
         { WRITE_VTK_SCALARS_FROM_VOXEL_ASCII(r, AIM::VTK::PhaseIdScalarName, int, voxels, phase, "%d ")}
 
@@ -810,6 +810,9 @@ class VTKFileWriters
       fclose(f);
       return 0;
     }
+
+    int writeGrainVisualizationFile(GrainGeneratorFunc* r, const std::string &file,
+                                                    bool writeSurfaceVoxel, bool writePhaseId, bool writeIPFColor);
 
 
 
