@@ -242,17 +242,17 @@ void GrainGenerator::execute()
 
   /** ********** This section writes the Voxel Data for the Stats Module *** */
   // Create a new HDF5 Volume file by overwriting any HDF5 file that may be in the way
-  MAKE_OUTPUT_FILE_PATH ( hdf5VolumeFile, AIM::SyntheticBuilder::H5VolumeFile)
-  H5VoxelWriter::Pointer h5VolWriter = H5VoxelWriter::New();
-  if (h5VolWriter.get() == NULL)
+  MAKE_OUTPUT_FILE_PATH ( h5VoxelFile, AIM::SyntheticBuilder::H5VoxelFile)
+  H5VoxelWriter::Pointer h5VoxelWriter = H5VoxelWriter::New();
+  if (h5VoxelWriter.get() == NULL)
   {
     updateProgressAndMessage("The HDF5 Voxel file could not be created. Does the path exist and do you have write access to the output directory.", 100);
     m = GrainGeneratorFunc::NullPointer();  // Clean up the memory
     return;
   }
-  h5VolWriter->setFilename(hdf5VolumeFile);
+  h5VoxelWriter->setFilename(h5VoxelFile);
   updateProgressAndMessage(("Writing HDF5 Voxel Data File"), 83);
-  err = h5VolWriter->writeVoxelData<GrainGeneratorFunc, GrainGeneratorVoxel>(m.get());
+  err = h5VoxelWriter->writeVoxelData<GrainGeneratorFunc, GrainGeneratorVoxel>(m.get());
   CHECK_FOR_ERROR(GrainGeneratorFunc, "The HDF5 Voxel file could not be written to. Does the path exist and do you have write access to the output directory.", err);
 
 
