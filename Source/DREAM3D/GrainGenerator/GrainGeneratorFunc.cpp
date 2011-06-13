@@ -3035,11 +3035,18 @@ void GrainGeneratorFunc::matchCrystallography()
 		}
 	  }
   }
+  float q[5];
   for(size_t i = 0; i < totalpoints; i++)
   {
 	  voxels[i].euler1 = m_Grains[voxels[i].grain_index]->euler1;
 	  voxels[i].euler2 = m_Grains[voxels[i].grain_index]->euler2;
 	  voxels[i].euler3 = m_Grains[voxels[i].grain_index]->euler3;
+	  OrientationMath::eulertoQuat(q, voxels[i].euler1, voxels[i].euler2, voxels[i].euler3);
+	  voxels[i].quat[0] = 1.0;
+	  voxels[i].quat[1] = q[1];
+	  voxels[i].quat[2] = q[2];
+	  voxels[i].quat[3] = q[3];
+	  voxels[i].quat[4] = q[4];
   }
 }
 void  GrainGeneratorFunc::measure_misorientations ()
