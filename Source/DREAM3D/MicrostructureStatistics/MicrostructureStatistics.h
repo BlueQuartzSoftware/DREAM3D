@@ -128,24 +128,26 @@ class DREAM3DLib_EXPORT MicrostructureStatistics  : public AbstractPipeline
 
     // Options
     MXA_INSTANCE_PROPERTY(float, BinStepSize);
+    MXA_INSTANCE_PROPERTY(bool, WriteH5StatsFile)
 
-    // Morphological Attributes
+    // Compute Attributes
     MXA_INSTANCE_PROPERTY(bool, ComputeGrainSize);
     MXA_INSTANCE_PROPERTY(bool, ComputeGrainShapes);
     MXA_INSTANCE_PROPERTY(bool, ComputeNumNeighbors);
-
-    // Crystalographic Attributes
+    MXA_INSTANCE_PROPERTY(bool, ComputeAverageOrientations);
     MXA_INSTANCE_PROPERTY(bool, ComputeODF);
     MXA_INSTANCE_PROPERTY(bool, ComputeMDF);
 
-
     // Grain Data File Related
-
-
+    MXA_INSTANCE_PROPERTY(bool, WriteGrainFile)
+    MXA_INSTANCE_PROPERTY(bool, WriteGrainSize);
+    MXA_INSTANCE_PROPERTY(bool, WriteGrainShapes);
+    MXA_INSTANCE_PROPERTY(bool, WriteNumNeighbors);
+    MXA_INSTANCE_PROPERTY(bool, WriteAverageOrientations);
 
     // VTK File Related
-    MXA_INSTANCE_PROPERTY(bool, WriteBinaryVTKFiles)
     MXA_INSTANCE_PROPERTY(bool, WriteVtkFile)
+    MXA_INSTANCE_PROPERTY(bool, WriteBinaryVTKFiles)
     MXA_INSTANCE_PROPERTY(bool, WritePhaseId)
     MXA_INSTANCE_PROPERTY(bool, WriteIPFColor)
     MXA_INSTANCE_PROPERTY(bool, WriteKernelMisorientations)

@@ -47,7 +47,7 @@ into the user interface
 
 
 @section statsgen StatsGenerator
-@li Rolled Preset Dialog needs to be redone and made "idiot" proof.
+@li <b>DONE</b> (MAG 2011/06/10) - Rolled Preset Dialog needs to be redone and made "idiot" proof.
 @li <b>DONE</b> (MAJ 2011/05/28) - When switching between presets the ODF/MDF tables are NOT cleared as they should be.
 
 @section infrastructure Infrastructure Changes:
