@@ -40,30 +40,31 @@
 #include "DREAM3D/MicrostructureStatistics/MicrostructureStatisticsFunc.h"
 #include "DREAM3D/GrainGenerator/GrainGeneratorFunc.h"
 
+#if 0
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 class ScalarWrapper
 {
   public:
-    ScalarWrapper() {}
-    ~ScalarWrapper(){}
+  ScalarWrapper()
+  {}
+  ~ScalarWrapper()
+  {}
 
+  virtual int writeScalars(FILE* f)
+  {
+    int err = -1;
 
-    virtual int writeScalars(FILE* f)
-    {
-      int err = -1;
-
-      return err;
-    }
+    return err;
+  }
 
   protected:
 
-
   private:
 
-    ScalarWrapper(const ScalarWrapper&); // Copy Constructor Not Implemented
-    void operator=(const ScalarWrapper&); // Operator '=' Not Implemented
+  ScalarWrapper(const ScalarWrapper&); // Copy Constructor Not Implemented
+  void operator=(const ScalarWrapper&); // Operator '=' Not Implemented
 };
 
 // -----------------------------------------------------------------------------
@@ -73,8 +74,10 @@ template<typename T>
 class GrainIdWriter : public ScalarWrapper
 {
   public:
-  GrainIdWriter(T* r) : r(r) {}
-  ~GrainIdWriter(){}
+  GrainIdWriter(T* r) : r(r)
+  {}
+  ~GrainIdWriter()
+  {}
 
   int writeScalars(FILE* f)
   {
@@ -87,9 +90,9 @@ class GrainIdWriter : public ScalarWrapper
   }
 
   private:
-    T* r;
-    GrainIdWriter(const GrainIdWriter&); // Copy Constructor Not Implemented
-    void operator=(const GrainIdWriter&); // Operator '=' Not Implemented
+  T* r;
+  GrainIdWriter(const GrainIdWriter&); // Copy Constructor Not Implemented
+  void operator=(const GrainIdWriter&); // Operator '=' Not Implemented
 };
 
 // -----------------------------------------------------------------------------
@@ -99,8 +102,10 @@ template<typename T>
 class PhaseIdWriter : public ScalarWrapper
 {
   public:
-  PhaseIdWriter(T* f) : r(f) {}
-  ~PhaseIdWriter(){}
+  PhaseIdWriter(T* f) : r(f)
+  {}
+  ~PhaseIdWriter()
+  {}
 
   int writeScalars(FILE* f)
   {
@@ -110,9 +115,9 @@ class PhaseIdWriter : public ScalarWrapper
   }
 
   private:
-    T* r;
-    PhaseIdWriter(const PhaseIdWriter&); // Copy Constructor Not Implemented
-    void operator=(const PhaseIdWriter&); // Operator '=' Not Implemented
+  T* r;
+  PhaseIdWriter(const PhaseIdWriter&); // Copy Constructor Not Implemented
+  void operator=(const PhaseIdWriter&); // Operator '=' Not Implemented
 };
 
 // -----------------------------------------------------------------------------
@@ -121,50 +126,55 @@ class PhaseIdWriter : public ScalarWrapper
 class VTKFileWriter
 {
   public:
-    VTKFileWriter() : m_WriteBinaryFiles(false) {}
-    ~VTKFileWriter() {}
+  VTKFileWriter() : m_WriteBinaryFiles(false)
+  {}
+  ~VTKFileWriter()
+  {}
 
-    template<typename T>
-    int write(const std::string &file, T* r, std::vector<ScalarWrapper*> scalars)
+  template<typename T>
+  int write(const std::string &file, T* r, std::vector<ScalarWrapper*> scalars)
+  {
+    int err = 0;
+    FILE* f = NULL;
+    f = fopen(file.c_str(), "wb");
+    if (NULL == f)
     {
-      int err = 0;
-      FILE* f = NULL;
-      f = fopen(file.c_str(), "wb");
-      if (NULL == f)
-      {
-        return 1;
-      }
-      // Write the correct header
-      if (m_WriteBinaryFiles == true)
-      {
-        WRITE_RECTILINEAR_GRID_HEADER("BINARY", r, r->xpoints + 1, r->ypoints+1, r->zpoints+1)
-      }
-      else
-      {
-        WRITE_RECTILINEAR_GRID_HEADER("ASCII", r, r->xpoints + 1, r->ypoints+1, r->zpoints+1)
-      }
-
-      for (typename std::vector<ScalarWrapper*>::iterator iter = scalars.begin(); iter != scalars.end(); ++iter )
-      {
-        (*iter)->writeScalars(f);
-      }
-
-      fclose(f);
-      return err;
+      return 1;
+    }
+    // Write the correct header
+    if (m_WriteBinaryFiles == true)
+    {
+      WRITE_RECTILINEAR_GRID_HEADER("BINARY", r, r->xpoints + 1, r->ypoints+1, r->zpoints+1)
+    }
+    else
+    {
+      WRITE_RECTILINEAR_GRID_HEADER("ASCII", r, r->xpoints + 1, r->ypoints+1, r->zpoints+1)
     }
 
-    bool m_WriteBinaryFiles;
+    for (typename std::vector<ScalarWrapper*>::iterator iter = scalars.begin(); iter != scalars.end(); ++iter )
+    {
+      (*iter)->writeScalars(f);
+    }
+
+    fclose(f);
+    return err;
+  }
+
+  bool m_WriteBinaryFiles;
 
   private:
-    VTKFileWriter(const VTKFileWriter&); // Copy Constructor Not Implemented
-    void operator=(const VTKFileWriter&); // Operator '=' Not Implemented
+  VTKFileWriter(const VTKFileWriter&); // Copy Constructor Not Implemented
+  void operator=(const VTKFileWriter&); // Operator '=' Not Implemented
 };
+
+#endif
 
 
 
 int main(int argc, char **argv)
 {
-  VTKFileWriters::Pointer vtkWriter = VTKFileWriters::New();
+#if 0
+  VtkMiscFileWriter::Pointer vtkWriter = VtkMiscFileWriter::New();
 
   MicrostructureStatisticsFunc::Pointer m = MicrostructureStatisticsFunc::New();
   vtkWriter->writeDisorientationFile(m.get(), "out");
@@ -183,19 +193,45 @@ int main(int argc, char **argv)
   vtkWriter->writeIPFVizFile(r.get(), "out");
   vtkWriter->writeImageQualityVizFile(r.get(), "out");
   vtkWriter->writeDownSampledVizFile(r.get(), "out");
+#endif
 
-  ScalarWrapper* gidWriter
-      = static_cast<ScalarWrapper*>(new GrainIdWriter<ReconstructionFunc>(r.get()) );
+  ReconstructionFunc::Pointer r = ReconstructionFunc::New();
+  r->xpoints = 5;
+  r->ypoints = 4;
+  r->zpoints = 3;
+  r->resx = 0.35;
+  r->resy = 0.50;
+  r->resz = 0.75;
 
-  ScalarWrapper* pidWriter
-      = static_cast<ScalarWrapper*>(new PhaseIdWriter<ReconstructionFunc>(r.get()) );
+//  ScalarWrapper* gidWriter
+//      = static_cast<ScalarWrapper*>(new GrainIdWriter<ReconstructionFunc>(r.get()) );
+//
+//  ScalarWrapper* pidWriter
+//      = static_cast<ScalarWrapper*>(new PhaseIdWriter<ReconstructionFunc>(r.get()) );
 
-  std::vector<ScalarWrapper*> scalarsToWrite;
-  scalarsToWrite.push_back(gidWriter);
-  scalarsToWrite.push_back(pidWriter);
+  VtkScalarWriter* w0 =
+      static_cast<VtkScalarWriter*>(new VoxelGrainIdScalarWriter<ReconstructionFunc>(r.get()));
+  VtkScalarWriter* w1 =
+      static_cast<VtkScalarWriter*>(new VoxelPhaseIdScalarWriter<ReconstructionFunc>(r.get()));
+  VtkScalarWriter* w2 =
+      static_cast<VtkScalarWriter*>(new VoxelEuclideanScalarWriter<ReconstructionFunc>(r.get()));
+  VtkScalarWriter* w3 =
+      static_cast<VtkScalarWriter*>(new VoxelImageQualityScalarWriter<ReconstructionFunc>(r.get()));
+  VtkScalarWriter* w4 =
+      static_cast<VtkScalarWriter*>(new VoxelSurfaceVoxelScalarWriter<ReconstructionFunc>(r.get()));
+//  VtkScalarWrapper* w5 =
+//      static_cast<VtkScalarWrapper*>(new VoxelKAMScalarWriter<ReconstructionFunc>(r.get()));
 
-  VTKFileWriter writer;
-  writer.write<ReconstructionFunc>("/tmp/out.vtk", r.get(), scalarsToWrite);
+  std::vector<VtkScalarWriter*> scalarsToWrite;
+  scalarsToWrite.push_back(w0);
+  scalarsToWrite.push_back(w1);
+  scalarsToWrite.push_back(w2);
+  scalarsToWrite.push_back(w3);
+  scalarsToWrite.push_back(w4);
+//  scalarsToWrite.push_back(w5);
+
+  VTKRectilinearGridFileWriter writer;
+  writer.write<ReconstructionFunc>("/tmp/vtkfilewriterstest.vtk", r.get(), scalarsToWrite);
 
   return 0;
 }

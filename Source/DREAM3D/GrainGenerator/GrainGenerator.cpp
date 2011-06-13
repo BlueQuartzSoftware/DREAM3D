@@ -229,7 +229,7 @@ void GrainGenerator::execute()
   CHECK_FOR_CANCELED(GrainGeneratorFunc, "GrainGenerator Was canceled", measure_misorientations)
 
   MAKE_OUTPUT_FILE_PATH ( eulerFile , AIM::SyntheticBuilder::GrainAnglesFile)
-  MAKE_OUTPUT_FILE_PATH ( reconVisFile, AIM::Reconstruction::VisualizationVizFile);
+
 
   updateProgressAndMessage(("Matching Crystallography"), 65);
   m->matchCrystallography();
@@ -258,10 +258,51 @@ void GrainGenerator::execute()
 
   /* ********** This section writes the VTK files for visualization *** */
   if (m_WriteVtkFile) {
-    VTKFileWriters::Pointer vtkWriter = VTKFileWriters::New();
-    vtkWriter->setWriteBinaryFiles(m_WriteBinaryVTKFiles);
     updateProgressAndMessage(("Writing VTK Visualization File"), 93);
-	err = vtkWriter->writeGrainGenRectilinearGrid(m.get(), reconVisFile, m_WriteSurfaceVoxel, m_WritePhaseId, m_WriteIPFColor);
+    MAKE_OUTPUT_FILE_PATH ( vtkVizFile, AIM::Reconstruction::VisualizationVizFile);
+
+    // Setup all the classes that will help us write the Scalars to the VTK File
+    std::vector<VtkScalarWriter*> scalarsToWrite;
+    {
+      VtkScalarWriter* w0 =
+          static_cast<VtkScalarWriter*>(new VoxelGrainIdScalarWriter<GrainGeneratorFunc>(m.get()));
+      w0->m_WriteBinaryFiles = m_WriteBinaryVTKFiles;
+      scalarsToWrite.push_back(w0);
+    }
+
+    if (m_WriteSurfaceVoxel == true) {
+      VtkScalarWriter* w0 =
+        static_cast<VtkScalarWriter*>(new VoxelSurfaceVoxelScalarWriter<GrainGeneratorFunc>(m.get()));
+      w0->m_WriteBinaryFiles = m_WriteBinaryVTKFiles;
+      scalarsToWrite.push_back(w0);
+    }
+
+    if (m_WritePhaseId == true){
+      VtkScalarWriter* w0 =
+        static_cast<VtkScalarWriter*>(new VoxelPhaseIdScalarWriter<GrainGeneratorFunc>(m.get()));
+      w0->m_WriteBinaryFiles = m_WriteBinaryVTKFiles;
+      scalarsToWrite.push_back(w0);
+    }
+
+    if (m_WriteIPFColor == true) {
+      VtkScalarWriter* w0 =
+        static_cast<VtkScalarWriter*>(new VoxelIPFColorScalarWriter<GrainGeneratorFunc>(m.get()));
+      w0->m_WriteBinaryFiles = m_WriteBinaryVTKFiles;
+      scalarsToWrite.push_back(w0);
+    }
+
+    // Create our File Output Writer Object. This will handle all the File Output duties
+    VTKRectilinearGridFileWriter vtkWriter;
+    vtkWriter.setWriteBinaryFiles(m_WriteBinaryVTKFiles);
+    err = vtkWriter.write<GrainGeneratorFunc>(vtkVizFile, m.get(), scalarsToWrite);
+
+    // Now Delete all the Scalar Helpers that we just created and used.
+    for (std::vector<VtkScalarWriter*>::iterator iter = scalarsToWrite.begin(); iter != scalarsToWrite.end(); ++iter )
+    {
+      delete (*iter);
+    }
+
+
     CHECK_FOR_ERROR(GrainGeneratorFunc, "The Grain Generator threw an Error writing the VTK file format.", err);
   }
   CHECK_FOR_CANCELED(GrainGeneratorFunc, "GrainGenerator Was canceled", writeVisualizationFile)
