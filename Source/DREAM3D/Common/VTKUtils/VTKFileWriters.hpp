@@ -107,7 +107,7 @@ class VoxelGrainIdScalarWriter : public VtkScalarWriter
  */
 #define VtkSCALARWRITER_CLASS_DEF(name, r, const_name, type, voxels, scalar, format)\
 template<typename T>\
-class name : public VtkScalarWrapper\
+class name : public VtkScalarWriter\
 {\
   public:\
     name(T* r) : r(r) {}\
@@ -406,6 +406,7 @@ class VTKStructuredPointsFileWriter
       return err;
     }
   protected:
+    VTKStructuredPointsFileWriter() {}
 
   private:
     VTKStructuredPointsFileWriter(const VTKStructuredPointsFileWriter&); // Copy Constructor Not Implemented
