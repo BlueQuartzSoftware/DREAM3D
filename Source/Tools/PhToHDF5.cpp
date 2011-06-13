@@ -33,9 +33,17 @@
 #include <vector>
 #include <fstream>
 
-#include "DREAM3D/Common/Constants.h"
-#include "DREAM3D/HDF5/AIM_H5VtkDataWriter.h"
+#include "MXA/HDF5/H5Utilities.h"
+#include "MXA/HDF5/H5Lite.h"
 
+#include "DREAM3D/Common/Constants.h"
+#include "DREAM3D/HDF5/VTKH5Constants.h"
+
+
+#define APPEND_DATA_TRUE 1
+#define APPEND_DATA_FALSE 0
+
+hid_t m_FileId = 0;
 
 /*
   void tokenize(const string& str, std::vector<string>& tokens, const
@@ -103,13 +111,7 @@ int  ReadPHFile(std::string FileName, std::vector<int> &data, int &nx, int &ny, 
     return -1;
   }
 
-  const unsigned int size ( 1024 );
-  char buf [ size ];
-  ::memset(buf, 0, size);
-  InFile.getline( buf, size );
-  line = std::string(buf);
-
-  //getline(InFile, line);
+  getline(InFile, line);
 
   tokenize(line, tokens, delimeters);
 
@@ -168,6 +170,89 @@ int  ReadPHFile(std::string FileName, std::vector<int> &data, int &nx, int &ny, 
   return 0;
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int openHDF5File(const std::string m_FileName, bool appendData)
+{
+  // Try to open a file to append data into
+    if (APPEND_DATA_TRUE == appendData)
+    {
+      m_FileId = H5Utilities::openFile(m_FileName, false);
+    }
+    // No file was found or we are writing new data only to a clean file
+    if (APPEND_DATA_FALSE == appendData || m_FileId < 0)
+    {
+      m_FileId = H5Utilities::createFile (m_FileName);
+    }
+
+    //Something went wrong either opening or creating the file. Error messages have
+    // Alread been written at this point so just return.
+    if (m_FileId < 0)
+    {
+       std::cout << logTime() << "The hdf5 file could not be opened or created.\n The Given filename was:\n\t[" << m_FileName<< "]" << std::endl;
+    }
+    return m_FileId;
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int closeHDF5File()
+{
+  // Close the file when we are finished with it
+  return H5Utilities::closeFile(m_FileId);
+}
+
+/**
+ *
+ */
+template<typename T>
+int writeScalarData(const std::string &hdfPath,
+                    const std::vector<T> &scalar_data,
+                    const char *label,
+                    int numComp, int32_t rank, hsize_t* dims)
+{
+  hid_t gid = H5Gopen(m_FileId, hdfPath.c_str() );
+  if (gid < 0)
+  {
+    std::cout << "Error opening Group " << hdfPath << std::endl;
+    return gid;
+  }
+  herr_t err = H5Utilities::createGroupsFromPath(H5_SCALAR_DATA_GROUP_NAME, gid);
+  if (err < 0)
+  {
+    std::cout << "Error creating HDF Group " << H5_SCALAR_DATA_GROUP_NAME << std::endl;
+    return err;
+  }
+  hid_t cellGroupId = H5Gopen(gid, H5_SCALAR_DATA_GROUP_NAME );
+  if(err < 0)
+  {
+    std::cout << "Error writing string attribute to HDF Group " << H5_SCALAR_DATA_GROUP_NAME << std::endl;
+    return err;
+  }
+
+  T* data = const_cast<T*>(&(scalar_data.front()));
+
+
+  std::string name (label);
+  err = H5Lite::replacePointerDataset(cellGroupId, name, rank, dims, data);
+  if (err < 0)
+  {
+    std::cout << "Error writing array with name: " << std::string (label) << std::endl;
+  }
+  err = H5Lite::writeScalarAttribute(cellGroupId, name, std::string(H5_NUMCOMPONENTS), numComp);
+  if (err < 0)
+  {
+    std::cout << "Error writing dataset " << label << std::endl;
+  }
+  err = H5Gclose(cellGroupId);
+
+  err = H5Gclose(gid);
+  return err;
+}
+
 /**
  *
  * @param h5File
@@ -181,9 +266,8 @@ int writePhDataToHDF5File(const std::string h5File, std::vector<int> &data, int 
 {
   int err = 0;
 
-  AIM_H5VtkDataWriter::Pointer h5writer = AIM_H5VtkDataWriter::New();
-  h5writer->setFileName(h5File);
-  err = h5writer->openFile(false);
+
+  err = openHDF5File(h5File, true);
 
   int totalPoints = nx * ny * nz;
 
@@ -192,7 +276,7 @@ int writePhDataToHDF5File(const std::string h5File, std::vector<int> &data, int 
   { totalPoints };
 
   int numComp = 1;
-  err = h5writer->writeScalarData(AIM::HDF5::VoxelDataName, data, AIM::VTK::GrainIdScalarName.c_str(), numComp, rank, dims);
+  err = writeScalarData(AIM::HDF5::VoxelDataName, data, AIM::VTK::GrainIdScalarName.c_str(), numComp, rank, dims);
   if (err < 0)
   {
     std::cout << "Error Writing Scalars '" << AIM::VTK::GrainIdScalarName.c_str() << "' to " << AIM::HDF5::VoxelDataName << std::endl;
@@ -207,7 +291,7 @@ int writePhDataToHDF5File(const std::string h5File, std::vector<int> &data, int 
 // -----------------------------------------------------------------------------
 int main(int argc, char **argv)
 {
-
+  std::cout << "Starting Ph to HDF5 Merging..." << std::endl;
   /* 2 Arguments are the input ph file and the input HDF5 file where you want to
    * over write the current GrainID data.
    */
@@ -218,6 +302,11 @@ int main(int argc, char **argv)
     return EXIT_FAILURE;
   }
 
+
+  std::cout << "Merging the GrainID data from " << argv[1] << std::endl;
+  std::cout << "  into" << std::endl;
+  std::cout << "file: " << argv[2] << std::endl;
+
   std::string phFile = argv[1];
 
   std::vector<int> data;
@@ -225,20 +314,24 @@ int main(int argc, char **argv)
   int ny = 0;
   int nz = 0;
 
+  std::cout << "Reading the Ph data file...." << std::endl;
   int err = ReadPHFile(phFile, data, nx, ny, nz);
   if (err < 0)
   {
     return EXIT_FAILURE;
   }
+  std::cout << "Ph File has dimensions: " << nx << " x " << ny << " x " << nz << std::endl;
 
+  std::cout << "Now Overwriting the GrainID data set in the HDF5 file...." << std::endl;
   std::string h5File(argv[2]);
   err = writePhDataToHDF5File(h5File, data, nz, ny, nz);
   if (err < 0)
   {
+    std::cout << "There was an error writing the grain id data. Check other errors for possible clues." << std::endl;
     return EXIT_FAILURE;
   }
 
-
+  std::cout << "Successfully completed the merge." << std::endl;
 
   return EXIT_SUCCESS;
 }
