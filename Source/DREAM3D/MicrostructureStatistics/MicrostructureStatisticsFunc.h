@@ -131,7 +131,7 @@ class DREAM3DLib_EXPORT MicrostructureStatisticsFunc
     void find_moments2D();
     void find_axes2D();
     void deformation_stats(const std::string &filename, const std::string &filename2);
-    void write_graindata(const std::string &graindataFile, bool computesizes, bool computeshapes, bool computeneighbors);
+    void write_graindata(const std::string &graindataFile, bool writesizes, bool writeshapes, bool writeneighbors, bool writeavgorientations);
     void find_eulerodf(H5ReconStatsWriter::Pointer h5io);
     void measure_misorientations(H5ReconStatsWriter::Pointer h5io);
     int volume_stats(H5ReconStatsWriter::Pointer h5io, float BinStepSize);

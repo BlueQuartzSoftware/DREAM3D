@@ -189,7 +189,7 @@ void MicrostructureStatistics::execute()
 	  CHECK_FOR_CANCELED(MicrostructureStatisticsFunc, "MicrostructureStatistics was canceled",  define_neighborhood)
   }
 
-  if(m_ComputeODF == true || m_ComputeMDF == true)
+  if(m_ComputeAverageOrientations == true || m_ComputeODF == true || m_ComputeMDF == true)
   {
 	  updateProgressAndMessage(("Finding Average Orientations For Grains"), 60);
 	  m->find_grainorientations();
@@ -210,9 +210,12 @@ void MicrostructureStatistics::execute()
 	  CHECK_FOR_CANCELED(MicrostructureStatisticsFunc, "MicrostructureStatistics was canceled",  measure_misorientations)
   }
 
-  updateProgressAndMessage(("Writing Statistics"), 85);
-  if(m->zpoints > 1) { m->volume_stats(h5io, m_BinStepSize); }
-  if(m->zpoints == 1) { m->volume_stats2D(h5io, m_BinStepSize); }
+  if(m_WriteH5StatsFile == true)
+  {
+	  updateProgressAndMessage(("Writing Statistics"), 85);
+	  if(m->zpoints > 1) { m->volume_stats(h5io, m_BinStepSize); }
+	  if(m->zpoints == 1) { m->volume_stats2D(h5io, m_BinStepSize); }
+  }
 
 
 /*  updateProgressAndMessage(("Finding Grain Schmid Factors"), 20);
@@ -236,18 +239,22 @@ void MicrostructureStatistics::execute()
   CHECK_FOR_CANCELED(MicrostructureStatisticsFunc, "MicrostructureStatistics was canceled",  volume_stats)
 */
 
-  updateProgressAndMessage(("Writing Grain Data"), 95);
-  m->write_graindata(graindataFile, m_ComputeGrainSize, m_ComputeGrainShapes, m_ComputeNumNeighbors);
+  if(m_WriteGrainFile == true)
+  {
+	  updateProgressAndMessage(("Writing Grain Data"), 95);
+	  m->write_graindata(graindataFile, m_WriteGrainSize, m_WriteGrainShapes, m_WriteNumNeighbors, m_WriteAverageOrientations);
+  }
 
-/*  if (m_WriteVtkFile) {
+  if (m_WriteVtkFile == true) 
+  {
     VTKFileWriters::Pointer vtkWriter = VTKFileWriters::New();
     vtkWriter->setWriteBinaryFiles(m_WriteBinaryVTKFiles);
     updateProgressAndMessage(("Writing VTK Visualization File"), 93);
-    err = vtkWriter->writeGrainVisualizationFile(m.get(), reconVisFile, m_WriteSurfaceVoxel, m_WritePhaseId, m_WriteIPFColor);
+	err = vtkWriter->writeMicroStatsRectilinearGrid(m.get(), reconVisFile, m_WriteSurfaceVoxel, m_WritePhaseId, m_WriteIPFColor, m_WriteKernelMisorientations);
     CHECK_FOR_ERROR(MicrostructureStatisticsFunc, "The Microstructure Statistics threw an Error writing the VTK file format.", err);
+    CHECK_FOR_CANCELED(MicrostructureStatisticsFunc, "MicrostructureStatistics Was canceled", writeVisualizationFile)
   }
-  CHECK_FOR_CANCELED(MicrostructureStatisticsFunc, "MicrostructureStatistics Was canceled", writeVisualizationFile)
-*/
+
   // Clean up all the memory by forcibly setting a NULL pointer to the Shared
   // pointer object.
   m = MicrostructureStatisticsFunc::NullPointer();  // Clean up the memory

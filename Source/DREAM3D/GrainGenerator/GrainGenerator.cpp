@@ -261,7 +261,7 @@ void GrainGenerator::execute()
     VTKFileWriters::Pointer vtkWriter = VTKFileWriters::New();
     vtkWriter->setWriteBinaryFiles(m_WriteBinaryVTKFiles);
     updateProgressAndMessage(("Writing VTK Visualization File"), 93);
-    err = vtkWriter->writeGrainVisualizationFile(m.get(), reconVisFile, m_WriteSurfaceVoxel, m_WritePhaseId, m_WriteIPFColor);
+	err = vtkWriter->writeGrainGenRectilinearGrid(m.get(), reconVisFile, m_WriteSurfaceVoxel, m_WritePhaseId, m_WriteIPFColor);
     CHECK_FOR_ERROR(GrainGeneratorFunc, "The Grain Generator threw an Error writing the VTK file format.", err);
   }
   CHECK_FOR_CANCELED(GrainGeneratorFunc, "GrainGenerator Was canceled", writeVisualizationFile)

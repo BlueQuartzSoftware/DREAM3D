@@ -97,7 +97,7 @@ class VTKFileWriters
 
 
     template<typename T>
-    int writeRectilinearGrid(T* r, const std::string &file, bool writeEuclidean, bool writePhaseId, bool writeImageQual, bool writeIPFColor)
+    int writeReconRectilinearGrid(T* r, const std::string &file, bool writeEuclidean, bool writePhaseId, bool writeImageQual, bool writeIPFColor)
     {
       int err = 0;
       FILE* f = NULL;
@@ -162,6 +162,258 @@ class VTKFileWriters
         { WRITE_VTK_SCALARS_FROM_VOXEL_ASCII(r, AIM::VTK::PhaseIdScalarName, int, voxels, phase, "%d ")}
         if (writeImageQual)
         { WRITE_VTK_SCALARS_FROM_VOXEL_ASCII(r, AIM::VTK::ImageQualityScalarName, float, voxels, imagequality, "%f ")}
+
+        if (writeIPFColor)
+        {
+          fprintf(f, "COLOR_SCALARS IPF_Colors 3\n");
+          rgba = new unsigned char[4]; // We just need 4 bytes for ASCII writing
+        }
+      }
+
+      if (writeIPFColor)
+      {
+        // Write the IPF Coloring Cell Data
+        for (size_t i = 0; i < total; i++)
+        {
+          phase = r->voxels[i].phase;
+          if (true == m_WriteBinaryFiles)
+          {
+            index = i * 4;
+          }
+          else
+          {
+            index = 0;
+          }
+          if (r->crystruct[phase] == AIM::Reconstruction::Cubic)
+          {
+            OIMColoring::GenerateIPFColor(r->voxels[i].euler1, r->voxels[i].euler2, r->voxels[i].euler3, RefDirection[0], RefDirection[1], RefDirection[2], &rgba[index], hkl);
+          }
+          else if (r->crystruct[phase] == AIM::Reconstruction::Hexagonal)
+          {
+            OIMColoring::CalculateHexIPFColor(r->voxels[i].quat, RefDirection, &rgba[index]);
+          }
+          if (true == m_WriteBinaryFiles)
+          {
+            rgba[index + 3] = 255;
+          }
+          else
+          {
+            red = static_cast<float>(float(rgba[index]) / 255.0);green = static_cast<float> (float(rgba[index + 1]) / 255.0);
+            blue = static_cast<float> (float(rgba[index + 2]) / 255.0);
+            fprintf(f, "%f %f %f\n", red, green, blue);
+          }
+        }
+
+        if (true == m_WriteBinaryFiles)
+        {
+          size_t totalWritten = fwrite(rgba, sizeof(char), total * 4, f);
+          if (totalWritten != total * 4)
+          {
+            std::cout << "Error Writing Binary Data for IPF Colors to file " << file << std::endl;
+            fclose( f);
+            return -1;
+          }
+        }
+        // Clean up the allocated memory
+        delete[] rgba;
+      }
+
+      fclose(f);
+      return err;
+    }
+
+
+
+
+    template<typename T>
+    int writeGrainGenRectilinearGrid(T* r, const std::string &file, bool writeSurfaceVoxel, bool writePhaseId, bool writeIPFColor)
+    {
+      int err = 0;
+      FILE* f = NULL;
+      f = fopen(file.c_str(), "wb");
+      if (NULL == f)
+      {
+        return 1;
+      }
+      // Write the correct header
+      if (m_WriteBinaryFiles == true)
+      {
+        WRITE_RECTILINEAR_GRID_HEADER("BINARY", r, r->xpoints + 1, r->ypoints+1, r->zpoints+1)
+      }
+      else
+      {
+        WRITE_RECTILINEAR_GRID_HEADER("ASCII", r, r->xpoints + 1, r->ypoints+1, r->zpoints+1)
+      }
+
+      // Write the XCoords
+      writeCoords(f, "X_COORDINATES", "float", r->xpoints + 1, 0.0f - r->resx * 0.5f, (float)(r->xpoints + 1 * r->resx), r->resx);
+      writeCoords(f, "Y_COORDINATES", "float", r->ypoints + 1, 0.0f - r->resy * 0.5f, (float)(r->ypoints + 1 * r->resy), r->resy);
+      writeCoords(f, "Z_COORDINATES", "float", r->zpoints + 1, 0.0f - r->resz * 0.5f, (float)(r->zpoints + 1 * r->resz), r->resz);
+
+      size_t total = r->xpoints * r->ypoints * r->zpoints;
+      unsigned char hkl[3] =
+      { 0, 0, 0 };
+      VTK_IPF_COLOR_REFDIRECTION(RefDirection)
+      int phase;
+      unsigned char* rgba = NULL;
+      float red, green, blue;
+      size_t index = 0;
+      fprintf(f, "CELL_DATA %d\n", (int)total);
+      if (true == m_WriteBinaryFiles)
+      {
+        WRITE_VTK_GRAIN_IDS_BINARY(r, AIM::VTK::GrainIdScalarName, voxels);
+        if (writeSurfaceVoxel)
+        {
+			WRITE_VTK_SCALARS_FROM_VOXEL_BINARY(r, AIM::VTK::SurfaceVoxelScalarName, float, voxels, surfacevoxel)
+        }
+        if (writePhaseId)
+        {
+          WRITE_VTK_SCALARS_FROM_VOXEL_BINARY(r, AIM::VTK::PhaseIdScalarName, int, voxels, phase)
+        }
+
+        // Write the IPF Colors
+        if (writeIPFColor)
+        {
+          fprintf(f, "COLOR_SCALARS IPF_Colors 4\n");
+          rgba = new unsigned char[total * 4]; // We need the whole array because we build it and write it all at the end
+        }
+      }
+      else
+      {
+        WRITE_VTK_GRAIN_IDS_ASCII(r, AIM::VTK::GrainIdScalarName, voxels)
+        if (writeSurfaceVoxel)
+		{ WRITE_VTK_SCALARS_FROM_VOXEL_ASCII(r, AIM::VTK::SurfaceVoxelScalarName, float, voxels, surfacevoxel, "%f ")}
+        if (writePhaseId)
+        { WRITE_VTK_SCALARS_FROM_VOXEL_ASCII(r, AIM::VTK::PhaseIdScalarName, int, voxels, phase, "%d ")}
+
+        if (writeIPFColor)
+        {
+          fprintf(f, "COLOR_SCALARS IPF_Colors 3\n");
+          rgba = new unsigned char[4]; // We just need 4 bytes for ASCII writing
+        }
+      }
+
+      if (writeIPFColor)
+      {
+        // Write the IPF Coloring Cell Data
+        for (size_t i = 0; i < total; i++)
+        {
+          phase = r->voxels[i].phase;
+          if (true == m_WriteBinaryFiles)
+          {
+            index = i * 4;
+          }
+          else
+          {
+            index = 0;
+          }
+          if (r->crystruct[phase] == AIM::Reconstruction::Cubic)
+          {
+            OIMColoring::GenerateIPFColor(r->voxels[i].euler1, r->voxels[i].euler2, r->voxels[i].euler3, RefDirection[0], RefDirection[1], RefDirection[2], &rgba[index], hkl);
+          }
+          else if (r->crystruct[phase] == AIM::Reconstruction::Hexagonal)
+          {
+            OIMColoring::CalculateHexIPFColor(r->voxels[i].quat, RefDirection, &rgba[index]);
+          }
+          if (true == m_WriteBinaryFiles)
+          {
+            rgba[index + 3] = 255;
+          }
+          else
+          {
+            red = static_cast<float>(float(rgba[index]) / 255.0);green = static_cast<float> (float(rgba[index + 1]) / 255.0);
+            blue = static_cast<float> (float(rgba[index + 2]) / 255.0);
+            fprintf(f, "%f %f %f\n", red, green, blue);
+          }
+        }
+
+        if (true == m_WriteBinaryFiles)
+        {
+          size_t totalWritten = fwrite(rgba, sizeof(char), total * 4, f);
+          if (totalWritten != total * 4)
+          {
+            std::cout << "Error Writing Binary Data for IPF Colors to file " << file << std::endl;
+            fclose( f);
+            return -1;
+          }
+        }
+        // Clean up the allocated memory
+        delete[] rgba;
+      }
+
+      fclose(f);
+      return err;
+    }
+
+
+
+
+    template<typename T>
+    int writeMicroStatsRectilinearGrid(T* r, const std::string &file, bool writeSurfaceVoxel, bool writePhaseId, bool writeIPFColor, bool writeKernelMis)
+    {
+      int err = 0;
+      FILE* f = NULL;
+      f = fopen(file.c_str(), "wb");
+      if (NULL == f)
+      {
+        return 1;
+      }
+      // Write the correct header
+      if (m_WriteBinaryFiles == true)
+      {
+        WRITE_RECTILINEAR_GRID_HEADER("BINARY", r, r->xpoints + 1, r->ypoints+1, r->zpoints+1)
+      }
+      else
+      {
+        WRITE_RECTILINEAR_GRID_HEADER("ASCII", r, r->xpoints + 1, r->ypoints+1, r->zpoints+1)
+      }
+
+      // Write the XCoords
+      writeCoords(f, "X_COORDINATES", "float", r->xpoints + 1, 0.0f - r->resx * 0.5f, (float)(r->xpoints + 1 * r->resx), r->resx);
+      writeCoords(f, "Y_COORDINATES", "float", r->ypoints + 1, 0.0f - r->resy * 0.5f, (float)(r->ypoints + 1 * r->resy), r->resy);
+      writeCoords(f, "Z_COORDINATES", "float", r->zpoints + 1, 0.0f - r->resz * 0.5f, (float)(r->zpoints + 1 * r->resz), r->resz);
+
+      size_t total = r->xpoints * r->ypoints * r->zpoints;
+      unsigned char hkl[3] =
+      { 0, 0, 0 };
+      VTK_IPF_COLOR_REFDIRECTION(RefDirection)
+      int phase;
+      unsigned char* rgba = NULL;
+      float red, green, blue;
+      size_t index = 0;
+      fprintf(f, "CELL_DATA %d\n", (int)total);
+      if (true == m_WriteBinaryFiles)
+      {
+        WRITE_VTK_GRAIN_IDS_BINARY(r, AIM::VTK::GrainIdScalarName, voxels);
+        if (writeSurfaceVoxel)
+        {
+			WRITE_VTK_SCALARS_FROM_VOXEL_BINARY(r, AIM::VTK::SurfaceVoxelScalarName, float, voxels, surfacevoxel)
+        }
+        if (writePhaseId)
+        {
+          WRITE_VTK_SCALARS_FROM_VOXEL_BINARY(r, AIM::VTK::PhaseIdScalarName, int, voxels, phase)
+        }
+        if (writeKernelMis)
+        {
+			WRITE_VTK_SCALARS_FROM_VOXEL_BINARY(r, AIM::VTK::KAMScalarName, float, voxels, kernelmisorientation)
+        }
+
+        // Write the IPF Colors
+        if (writeIPFColor)
+        {
+          fprintf(f, "COLOR_SCALARS IPF_Colors 4\n");
+          rgba = new unsigned char[total * 4]; // We need the whole array because we build it and write it all at the end
+        }
+      }
+      else
+      {
+        WRITE_VTK_GRAIN_IDS_ASCII(r, AIM::VTK::GrainIdScalarName, voxels)
+        if (writeSurfaceVoxel)
+		{ WRITE_VTK_SCALARS_FROM_VOXEL_ASCII(r, AIM::VTK::SurfaceVoxelScalarName, float, voxels, surfacevoxel, "%f ")}
+        if (writePhaseId)
+        { WRITE_VTK_SCALARS_FROM_VOXEL_ASCII(r, AIM::VTK::PhaseIdScalarName, int, voxels, phase, "%d ")}
+        if (writeKernelMis)
+		{ WRITE_VTK_SCALARS_FROM_VOXEL_ASCII(r, AIM::VTK::KAMScalarName, float, voxels, kernelmisorientation, "%f ")}
 
         if (writeIPFColor)
         {
@@ -559,13 +811,6 @@ class VTKFileWriters
       return 0;
     }
 
-    /**
-     * @brief Writes a VTK visualization file for the GrainGenerator Class
-     * @param Output file name
-     * @return 0 on Success
-     */
-    int writeGrainVisualizationFile(GrainGeneratorFunc* r, const std::string &file,
-                                    bool writeSurfaceVoxel, bool writePhaseId, bool writeIPFColor);
 
 
   protected:
