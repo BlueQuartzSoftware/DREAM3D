@@ -95,6 +95,9 @@ class GrainGeneratorWidget : public AIMPluginFrame, private Ui::GrainGeneratorWi
 	void on_m_XPoints_valueChanged(int v);
 	void on_m_YPoints_valueChanged(int v);
 	void on_m_ZPoints_valueChanged(int v);
+	void on_m_XResolution_valueChanged(double v);
+	void on_m_YResolution_valueChanged(double v);
+	void on_m_ZResolution_valueChanged(double v);
 
     //void on_m_AlreadyFormed_stateChanged(int);
     void on_m_GoBtn_clicked();
