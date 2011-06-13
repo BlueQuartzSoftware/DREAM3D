@@ -99,6 +99,7 @@ class ReconstructionWidget : public AIMPluginFrame, private Ui::ReconstructionWi
 
     void on_m_VtkOptionsBtn_clicked();
 
+    void on_m_HDF5GrainFile_stateChanged(int state);
 
     /**
      *
