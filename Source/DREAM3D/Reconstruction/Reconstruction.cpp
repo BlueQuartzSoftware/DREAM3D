@@ -256,7 +256,7 @@ void Reconstruction::execute()
   if (m_WriteVtkFile)
   {
     MAKE_OUTPUT_FILE_PATH ( reconVisFile, AIM::Reconstruction::VisualizationVizFile);
-    err = vtkWriter->writeRectilinearGrid(m.get(), reconVisFile, m_WriteEuclidean, m_WritePhaseId, m_WriteImageQuality, m_WriteIPFColor);
+	err = vtkWriter->writeReconRectilinearGrid(m.get(), reconVisFile, m_WriteEuclidean, m_WritePhaseId, m_WriteImageQuality, m_WriteIPFColor);
     CHECK_FOR_ERROR(ReconstructionFunc, "The VTK file could not be written to. Does the path exist and do you have write access to the output directory.", err);
   }
 
