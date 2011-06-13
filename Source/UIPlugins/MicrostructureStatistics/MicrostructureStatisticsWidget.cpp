@@ -101,6 +101,10 @@ void MicrostructureStatisticsWidget::readSettings(QSettings &prefs)
 
   READ_CHECKBOX_SETTING(prefs, m_, H5StatisticsFile, true)
   READ_CHECKBOX_SETTING(prefs, m_, GrainDataFile, true)
+  READ_BOOL_SETTING(prefs, m_, WriteGrainSize, true);
+  READ_BOOL_SETTING(prefs, m_, WriteGrainShapes, true);
+  READ_BOOL_SETTING(prefs, m_, WriteNumNeighbors, true);
+  READ_BOOL_SETTING(prefs, m_, WriteAverageOrientations, true);
 
   READ_CHECKBOX_SETTING(prefs, m_, VisualizationVizFile, true);
   READ_BOOL_SETTING(prefs, m_, WriteBinaryVTKFile, true);
@@ -132,9 +136,12 @@ void MicrostructureStatisticsWidget::writeSettings(QSettings &prefs)
 
   WRITE_SETTING(prefs, m_, BinStepSize);
 
-
   WRITE_CHECKBOX_SETTING(prefs, m_, H5StatisticsFile)
   WRITE_CHECKBOX_SETTING(prefs, m_, GrainDataFile)
+  WRITE_BOOL_SETTING(prefs, m_, WriteGrainSize, true);
+  WRITE_BOOL_SETTING(prefs, m_, WriteGrainShapes, true);
+  WRITE_BOOL_SETTING(prefs, m_, WriteNumNeighbors, true);
+  WRITE_BOOL_SETTING(prefs, m_, WriteAverageOrientations, true);
 
   WRITE_CHECKBOX_SETTING(prefs, m_, VisualizationVizFile)
   WRITE_BOOL_SETTING(prefs, m_, WriteBinaryVTKFile, true);
@@ -337,11 +344,17 @@ void MicrostructureStatisticsWidget::on_m_GoBtn_clicked()
   m_MicrostructureStatistics->setComputeGrainSize(m_ComputeGrainSize);
   m_MicrostructureStatistics->setComputeGrainShapes(m_ComputeGrainShapes);
   m_MicrostructureStatistics->setComputeNumNeighbors(m_ComputeNumNeighbors);
-
   m_MicrostructureStatistics->setComputeODF(m_ComputeODF);
   m_MicrostructureStatistics->setComputeMDF(m_ComputeMDF);
 
   m_MicrostructureStatistics->setBinStepSize(m_BinStepSize->value());
+  m_MicrostructureStatistics->setWriteH5StatsFile(m_H5StatisticsFile->isChecked());
+
+  m_MicrostructureStatistics->setWriteGrainFile(m_GrainDataFile->isChecked());
+  m_MicrostructureStatistics->setWriteGrainSize(m_WriteGrainSize);
+  m_MicrostructureStatistics->setWriteGrainShapes(m_WriteGrainShapes);
+  m_MicrostructureStatistics->setWriteNumNeighbors(m_WriteNumNeighbors);
+  m_MicrostructureStatistics->setWriteAverageOrientations(m_WriteAverageOrientations);
 
   m_MicrostructureStatistics->setWriteVtkFile(m_VisualizationVizFile->isChecked());
   m_MicrostructureStatistics->setWriteSurfaceVoxel(m_WriteSurfaceVoxelScalars);
@@ -463,19 +476,26 @@ void MicrostructureStatisticsWidget::on_m_GrainFileOptionsBtn_clicked()
   options.push_back("Grain Size");
   options.push_back("Grain Shape");
   options.push_back("Number Neighbors");
+  options.push_back("Average Orienation");
 
   QCheckboxDialog d(options, this);
 
-  d.setValue("Grain Size", m_ComputeGrainSize);
-  d.setValue("Grain Shape", m_ComputeGrainShapes);
-  d.setValue("Number Neighbors", m_ComputeNumNeighbors);
+  d.setValue("Grain Size", m_WriteGrainSize);
+  d.setValue("Grain Shape", m_WriteGrainShapes);
+  d.setValue("Number Neighbors", m_WriteNumNeighbors);
+  d.setValue("Average Orientation", m_WriteAverageOrientations);
 
   int ret = d.exec();
   if (ret == QDialog::Accepted)
   {
-    m_ComputeGrainSize = d.getValue("Grain Size");
-    m_ComputeGrainShapes = d.getValue("Grain Shape");
-    m_ComputeNumNeighbors = d.getValue("Number Neighbors");
+    m_WriteGrainSize = d.getValue("Grain Size");
+    m_WriteGrainShapes = d.getValue("Grain Shape");
+    m_WriteNumNeighbors = d.getValue("Number Neighbors");
+    m_WriteAverageOrientations = d.getValue("Average Orientation");
+    if(m_WriteGrainSize == true) m_ComputeGrainSize = true;
+    if(m_WriteGrainShapes == true) m_ComputeGrainShapes = true;
+    if(m_WriteNumNeighbors == true) m_ComputeNumNeighbors = true;
+    if(m_WriteAverageOrientations == true) m_ComputeAverageOrientations = true;
   }
 
 }
@@ -487,11 +507,17 @@ void MicrostructureStatisticsWidget::on_m_H5StatisticsFile_stateChanged()
 {
   if (m_H5StatisticsFile->isChecked() == true)
   {
+    m_ComputeGrainSize = true;
+    m_ComputeGrainShapes = true;
+    m_ComputeNumNeighbors = true;
     m_ComputeODF = true;
     m_ComputeMDF = true;
   }
   else
   {
+    if(m_WriteGrainSize == false) m_ComputeGrainSize = false;
+    if(m_WriteGrainShapes == false) m_ComputeGrainShapes = false;
+    if(m_WriteNumNeighbors == false) m_ComputeNumNeighbors = false;
     m_ComputeODF = false;
     m_ComputeMDF = false;
   }
