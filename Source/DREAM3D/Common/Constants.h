@@ -184,7 +184,7 @@ namespace AIM
   namespace Reconstruction
   {
     /*    Reconstruction related */
-    const std::string H5VolumeFile("VoxelData.h5");
+    const std::string H5VoxelFile("VoxelData.h5");
 
     const std::string VisualizationVizFile("Visualization.vtk");//11
     const std::string IPFVizFile("IPF_Visualization.vtk");//11
@@ -193,8 +193,8 @@ namespace AIM
     const std::string SchmidFactorVizFile("SchmidFactor_Visualization.vtk");//11
     const std::string DownSampledVizFile("DownSampled_Visualization.vtk");//11
     const std::string HDF5GrainFile("Grains.h5grain");
-    const std::string PhFile("Voxels.ph");
-    const std::string DxFile("Voxels.dx");
+    const std::string PhFile("VoxelData.ph");
+    const std::string DxFile("VoxelData.dx");
 
     /**
      * @brief IF YOU CHANGE THE VALUES THERE ARE DEEP RAMIFICATIONS IN THE CODE BUT
@@ -292,7 +292,7 @@ namespace AIM
     const std::string VisualizationVizFile("Visualization.vtk");
     const std::string IPFVizFile("IPF_Visualization.vtk");
     const std::string HDF5GrainFile("Grains.h5grain");
-    const std::string PhFile("Voxels.ph");
+    const std::string PhFile("VoxelData.ph");
 
     enum Overlap {
         UnknownOverlap = 0,    //!<
