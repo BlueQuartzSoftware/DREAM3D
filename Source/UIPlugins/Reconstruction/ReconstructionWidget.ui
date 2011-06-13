@@ -516,7 +516,7 @@
            </widget>
           </item>
           <item row="1" column="1">
-           <widget class="QLabel" name="m_H5VolumeFile">
+           <widget class="QLabel" name="m_H5VoxelFile">
             <property name="text">
              <string>VoxelVolumeData</string>
             </property>
