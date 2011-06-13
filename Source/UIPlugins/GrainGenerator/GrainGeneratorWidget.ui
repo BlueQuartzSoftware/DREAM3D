@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>792</width>
-    <height>574</height>
+    <width>899</width>
+    <height>581</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -89,7 +89,7 @@
       </item>
       <item>
        <layout class="QGridLayout" name="gridLayout_7">
-        <item row="0" column="9" rowspan="4">
+        <item row="0" column="7" rowspan="5" colspan="3">
          <spacer name="horizontalSpacer">
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
@@ -167,6 +167,9 @@
         </item>
         <item row="0" column="3">
          <widget class="QDoubleSpinBox" name="m_XResolution">
+          <property name="decimals">
+           <number>6</number>
+          </property>
           <property name="singleStep">
            <double>0.250000000000000</double>
           </property>
@@ -177,6 +180,9 @@
         </item>
         <item row="1" column="3">
          <widget class="QDoubleSpinBox" name="m_ZResolution">
+          <property name="decimals">
+           <number>6</number>
+          </property>
           <property name="singleStep">
            <double>0.250000000000000</double>
           </property>
@@ -187,18 +193,14 @@
         </item>
         <item row="2" column="3">
          <widget class="QDoubleSpinBox" name="m_YResolution">
+          <property name="decimals">
+           <number>6</number>
+          </property>
           <property name="singleStep">
            <double>0.250000000000000</double>
           </property>
           <property name="value">
            <double>0.250000000000000</double>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="4">
-         <widget class="QLabel" name="label_55">
-          <property name="text">
-           <string>Space Filling Error Weight</string>
           </property>
          </widget>
         </item>
@@ -240,20 +242,6 @@
           </property>
          </widget>
         </item>
-        <item row="1" column="4">
-         <widget class="QLabel" name="label_3">
-          <property name="text">
-           <string>Neighborhood Error Weight</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="4">
-         <widget class="QLabel" name="label_4">
-          <property name="text">
-           <string>Size Distribution Error Weight</string>
-          </property>
-         </widget>
-        </item>
         <item row="0" column="6">
          <widget class="QDoubleSpinBox" name="m_SizeDistErrorWeight">
           <property name="minimumSize">
@@ -273,14 +261,49 @@
           </property>
          </widget>
         </item>
-        <item row="0" column="7">
+        <item row="3" column="1">
+         <widget class="QLabel" name="est_numgrains">
+          <property name="text">
+           <string>0</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="0">
+         <widget class="QLabel" name="label_9">
+          <property name="text">
+           <string>Estimated No. Grains</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="5">
+         <widget class="QLabel" name="label_4">
+          <property name="text">
+           <string>Size Distribution Error Weight</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="5">
+         <widget class="QLabel" name="label_3">
+          <property name="text">
+           <string>Neighborhood Error Weight</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="5">
+         <widget class="QLabel" name="label_55">
+          <property name="text">
+           <string>Space Filling Error Weight</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="5">
          <widget class="QLabel" name="label_20">
           <property name="text">
            <string>Shape Class</string>
           </property>
          </widget>
         </item>
-        <item row="0" column="8">
+        <item row="3" column="6">
          <widget class="QComboBox" name="m_ShapeClass">
           <item>
            <property name="text">
@@ -299,21 +322,7 @@
           </item>
          </widget>
         </item>
-        <item row="3" column="1">
-         <widget class="QLabel" name="est_numgrains">
-          <property name="text">
-           <string>0</string>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="0">
-         <widget class="QLabel" name="label_9">
-          <property name="text">
-           <string>Estimated No. Grains</string>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="8">
+        <item row="4" column="5">
          <widget class="QCheckBox" name="m_PeriodicBoundaryConditions">
           <property name="text">
            <string>Periodic Boundary Conditions</string>
@@ -445,7 +454,7 @@
            </widget>
           </item>
           <item row="1" column="1">
-           <widget class="QLabel" name="m_H5VolumeFile">
+           <widget class="QLabel" name="m_H5VoxelFile">
             <property name="minimumSize">
              <size>
               <width>300</width>
@@ -632,6 +641,34 @@
    <header location="global">QFSDropLineEdit.h</header>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>m_H5InputStatisticsFile</tabstop>
+  <tabstop>m_InputH5StatisticsFileBtn</tabstop>
+  <tabstop>m_AlreadyFormed</tabstop>
+  <tabstop>m_StructureFile</tabstop>
+  <tabstop>m_StructureFileBtn</tabstop>
+  <tabstop>m_XPoints</tabstop>
+  <tabstop>m_YPoints</tabstop>
+  <tabstop>m_ZPoints</tabstop>
+  <tabstop>m_XResolution</tabstop>
+  <tabstop>m_ZResolution</tabstop>
+  <tabstop>m_YResolution</tabstop>
+  <tabstop>m_SizeDistErrorWeight</tabstop>
+  <tabstop>m_NeighborhoodErrorWeight</tabstop>
+  <tabstop>m_FillingErrorWeight</tabstop>
+  <tabstop>m_ShapeClass</tabstop>
+  <tabstop>m_PeriodicBoundaryConditions</tabstop>
+  <tabstop>m_OutputDir</tabstop>
+  <tabstop>m_OutputDirBtn</tabstop>
+  <tabstop>m_OutputFilePrefix</tabstop>
+  <tabstop>m_VisualizationVizFile</tabstop>
+  <tabstop>m_VtkOptionsBtn</tabstop>
+  <tabstop>m_HDF5GrainFile</tabstop>
+  <tabstop>m_PhFile</tabstop>
+  <tabstop>m_LoadSettingsBtn</tabstop>
+  <tabstop>m_SaveSettingsBtn</tabstop>
+  <tabstop>m_GoBtn</tabstop>
+ </tabstops>
  <resources>
   <include location="../../../Resources/icons/images/Icons.qrc"/>
   <include location="../../../Resources/icons/images/Icons.qrc"/>
