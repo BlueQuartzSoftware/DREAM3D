@@ -93,7 +93,7 @@
   for (size_t i = 0; i < total; i++) {\
     if(i%20 == 0 && i > 0) { fprintf(f, "\n");}\
     fprintf(f, FORMAT, ptr->voxelsVar[i].var);\
-  }\
+  }fprintf(f,"\n"); \
 
 #define WRITE_VTK_SCALARS_FROM_VOXEL_BINARY(ptr, name, type, voxelsVar, var)\
   fprintf(f, "SCALARS %s %s 1\n", name.c_str(), #type);\
@@ -121,7 +121,7 @@
   for (size_t i = 0; i < total; i++) {\
     if(i%20 == 0 && i > 0) { fprintf(f, "\n");}\
     fprintf(f, FORMAT, ptr->m_Grains[ptr->voxels[i].grain_index]->var);\
-  }
+  } fprintf(f,"\n");
 
 #define WRITE_VTK_GRAIN_WITH_GRAIN_SCALAR_VALUE_BINARY(ptr, name, type, var)\
   fprintf(f, "SCALARS %s %s 1\n", name.c_str(), #type);\
