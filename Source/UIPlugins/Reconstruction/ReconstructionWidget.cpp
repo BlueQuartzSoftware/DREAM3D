@@ -659,7 +659,7 @@ void ReconstructionWidget::on_m_HDF5GrainFile_stateChanged(int state)
   {
     if (verifyPathExists(m_OutputDir->text(), m_OutputDir) == false) {
       QMessageBox::warning(this, tr("DREAM.3D"),
-      tr("In order to view the H5Grain file you will need a plugin for ParaView which is available separately."),
+      tr("In order to view the H5Grain file you will need a plugin for ParaView which is available separately. The file is a plain HDF5 file."),
       QMessageBox::Ok,
       QMessageBox::Ok);
       return;
