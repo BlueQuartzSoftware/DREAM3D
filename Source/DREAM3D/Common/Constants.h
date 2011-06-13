@@ -287,7 +287,7 @@ namespace AIM
     /*  Grain Generator Related */
 
     const std::string GrainAnglesFile("GrainAngles.txt");
-    const std::string H5VolumeFile("VoxelData.h5");
+    const std::string H5VoxelFile("VoxelData.h5");
 
     const std::string VisualizationVizFile("Visualization.vtk");
     const std::string IPFVizFile("IPF_Visualization.vtk");
