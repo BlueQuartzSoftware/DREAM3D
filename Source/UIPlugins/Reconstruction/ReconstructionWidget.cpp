@@ -229,7 +229,7 @@ void ReconstructionWidget::checkIOFiles()
 {
   this->verifyPathExists(m_OutputDir->text(), this->m_OutputDir);
 
-  CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::Reconstruction,m_, H5VolumeFile)
+  CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::Reconstruction,m_, H5VoxelFile)
 
   CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(AIM::Reconstruction, m_ , VisualizationVizFile)
   CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(AIM::Reconstruction, m_ , DownSampledVizFile)
