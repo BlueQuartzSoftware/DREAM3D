@@ -248,15 +248,60 @@ void Reconstruction::execute()
 
 
   /** ********** This section writes the VTK files for visualization *** */
-  // Create our File Output Writer Object. This will handle all the File Output duties
-  VTKFileWriters::Pointer vtkWriter = VTKFileWriters::New();
-  vtkWriter->setWriteBinaryFiles(m_WriteBinaryVTKFiles);
+
 
   updateProgressAndMessage(("Writing VTK Visualization File"), 93);
   if (m_WriteVtkFile)
   {
     MAKE_OUTPUT_FILE_PATH ( reconVisFile, AIM::Reconstruction::VisualizationVizFile);
-	err = vtkWriter->writeReconRectilinearGrid(m.get(), reconVisFile, m_WriteEuclidean, m_WritePhaseId, m_WriteImageQuality, m_WriteIPFColor);
+
+    // Setup all the classes that will help us write the Scalars to the VTK File
+    std::vector<VtkScalarWriter*> scalarsToWrite;
+    {
+      VtkScalarWriter* w0 =
+          static_cast<VtkScalarWriter*>(new VoxelGrainIdScalarWriter<ReconstructionFunc>(m.get()));
+      w0->m_WriteBinaryFiles = m_WriteBinaryVTKFiles;
+      scalarsToWrite.push_back(w0);
+    }
+    if (m_WriteEuclidean == true) {
+      VtkScalarWriter* w0 =
+        static_cast<VtkScalarWriter*>(new VoxelEuclideanScalarWriter<ReconstructionFunc>(m.get()));
+      w0->m_WriteBinaryFiles = m_WriteBinaryVTKFiles;
+      scalarsToWrite.push_back(w0);
+    }
+
+    if (m_WritePhaseId == true){
+      VtkScalarWriter* w0 =
+        static_cast<VtkScalarWriter*>(new VoxelPhaseIdScalarWriter<ReconstructionFunc>(m.get()));
+      w0->m_WriteBinaryFiles = m_WriteBinaryVTKFiles;
+      scalarsToWrite.push_back(w0);
+    }
+
+    if (m_WriteImageQuality == true) {
+      VtkScalarWriter* w0 =
+        static_cast<VtkScalarWriter*>(new VoxelImageQualityScalarWriter<ReconstructionFunc>(m.get()));
+      w0->m_WriteBinaryFiles = m_WriteBinaryVTKFiles;
+      scalarsToWrite.push_back(w0);
+    }
+
+    if (m_WriteIPFColor == true) {
+      VtkScalarWriter* w0 =
+        static_cast<VtkScalarWriter*>(new VoxelIPFColorScalarWriter<ReconstructionFunc>(m.get()));
+      w0->m_WriteBinaryFiles = m_WriteBinaryVTKFiles;
+      scalarsToWrite.push_back(w0);
+    }
+
+    // Create our File Output Writer Object. This will handle all the File Output duties
+    VTKRectilinearGridFileWriter vtkWriter;
+    vtkWriter.setWriteBinaryFiles(m_WriteBinaryVTKFiles);
+    err = vtkWriter.write<ReconstructionFunc>(reconVisFile, m.get(), scalarsToWrite);
+
+    // Now Delete all the Scalar Helpers that we just created and used.
+    for (std::vector<VtkScalarWriter*>::iterator iter = scalarsToWrite.begin(); iter != scalarsToWrite.end(); ++iter )
+    {
+      delete (*iter);
+    }
+
     CHECK_FOR_ERROR(ReconstructionFunc, "The VTK file could not be written to. Does the path exist and do you have write access to the output directory.", err);
   }
 
@@ -264,10 +309,11 @@ void Reconstruction::execute()
   if (m_WriteDownSampledFile) {
     MAKE_OUTPUT_FILE_PATH ( reconDSVisFile, AIM::Reconstruction::DownSampledVizFile);
     updateProgressAndMessage(("Writing VTK Down Sampled File"), 98);
+    VtkMiscFileWriter::Pointer vtkWriter = VtkMiscFileWriter::New();
     err = vtkWriter->writeDownSampledVizFile(m.get(), reconDSVisFile);
     CHECK_FOR_ERROR(ReconstructionFunc, "The VTK Downsampled file could not be written to. Does the path exist and do you have write access to the output directory.", err);
-
   }
+
   /** ******* End VTK Visualization File Writing Section ****** */
 
   CHECK_FOR_CANCELED(ReconstructionFunc, "Reconstruction was canceled", vtk_viz_files)
