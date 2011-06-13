@@ -404,7 +404,7 @@ void SGODFTableModel::setTableData(QVector<float> e1, QVector<float> e2, QVector
   removeRows(0, rowCount());
   QModelIndex topLeft;
   QModelIndex botRight;
-  if (count > 1) {
+  if (count >= 1) {
     // Now mass insert the data to the table then emit that the data has changed
     beginInsertRows(QModelIndex(), row, row + count - 1);
     m_Euler1s = e1;

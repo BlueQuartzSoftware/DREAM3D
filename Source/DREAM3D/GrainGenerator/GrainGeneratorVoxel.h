@@ -76,7 +76,9 @@ class DREAM3DLib_EXPORT GrainGeneratorVoxel
     int surfacevoxel;
     IntVectorType neighborlist;
 
-    int alreadychecked;
+    float quat[5];
+
+	int alreadychecked;
     int unassigned;
     int numowners;
 
