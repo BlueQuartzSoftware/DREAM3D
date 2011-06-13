@@ -2373,7 +2373,7 @@ void MicrostructureStatisticsFunc::deformation_stats(const std::string &filename
 
 
 
-void MicrostructureStatisticsFunc::write_graindata(const std::string &graindataFile, bool computesizes, bool computeshapes, bool computeneighbors)
+void MicrostructureStatisticsFunc::write_graindata(const std::string &graindataFile, bool writesizes, bool writeshapes, bool writeneighbors, bool writeavgorientations)
 {
   IntVectorType nlist;
   ofstream outFile;
@@ -2381,18 +2381,18 @@ void MicrostructureStatisticsFunc::write_graindata(const std::string &graindataF
   outFile.open(graindataFile.c_str());
   outFile << numgrains << endl;
   outFile << "Grain ID	Surface Grain";
-  if(computeodf == true || computemdf == true) outFile << "	Euler1	Euler2	Euler3";
-  if(computesizes == true) outFile <<  "	Equiv. Diameter";
-  if(computeshapes == true) outFile << "	b/a	c/a	Omega3";
-  if(computeneighbors == true) outFile << "	No. Neighbors";
+  if(writeavgorientations == true) outFile << "	Euler1	Euler2	Euler3";
+  if(writesizes == true) outFile <<  "	Equiv. Diameter";
+  if(writeshapes == true) outFile << "	b/a	c/a	Omega3";
+  if(writeneighbors == true) outFile << "	No. Neighbors";
   outFile << endl;
   for (size_t i = 1; i < numgrains; i++)
   {
     outFile << i << "	" << m_Grains[i]->surfacegrain;
-	if(computeodf == true || computemdf == true) outFile << "	" << m_Grains[i]->euler1 << "	" << m_Grains[i]->euler2 << "	" << m_Grains[i]->euler3;
-	if(computesizes == true) outFile <<  "	" << m_Grains[i]->equivdiameter;
-	if(computeshapes == true) outFile << "	" << m_Grains[i]->aspectratio1 << "	" << m_Grains[i]->aspectratio2 << "	" << m_Grains[i]->omega3;
-	if(computeneighbors == true) outFile << "	" << m_Grains[i]->neighborlist->size();
+	if(writeavgorientations == true) outFile << "	" << m_Grains[i]->euler1 << "	" << m_Grains[i]->euler2 << "	" << m_Grains[i]->euler3;
+	if(writesizes == true) outFile <<  "	" << m_Grains[i]->equivdiameter;
+	if(writeshapes == true) outFile << "	" << m_Grains[i]->aspectratio1 << "	" << m_Grains[i]->aspectratio2 << "	" << m_Grains[i]->omega3;
+	if(writeneighbors == true) outFile << "	" << m_Grains[i]->neighborlist->size();
 	outFile << endl;
   }
   outFile.close();
