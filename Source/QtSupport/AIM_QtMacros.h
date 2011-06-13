@@ -159,7 +159,7 @@
 
 #define SANITY_CHECK_INPUT(prefix, input)\
   if (verifyPathExists(prefix##input->text(), prefix##input) == false) {\
-  QMessageBox::critical(this, tr("AIM Representation"),\
+  QMessageBox::critical(this, tr("DREAM.3D"),\
   tr("The input " #input " does not exist. Please ensure the file or folder exists before starting the operation"),\
   QMessageBox::Ok,\
   QMessageBox::Ok);\
@@ -175,7 +175,7 @@
   QString theMessage = QString("The input ") + QString(ns::input.c_str()) + \
   QString(" does not exist. Please ensure the file or folder exists before starting the operation");\
   if ( fi.exists() == false)  {\
-  QMessageBox::critical(this, tr("AIM Representation"),\
+  QMessageBox::critical(this, tr("DREAM.3D"),\
   theMessage,\
   QMessageBox::Ok,\
   QMessageBox::Ok);\

@@ -649,3 +649,21 @@ void ReconstructionWidget::on_m_VtkOptionsBtn_clicked()
 
 }
 
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ReconstructionWidget::on_m_HDF5GrainFile_stateChanged(int state)
+{
+  if (m_HDF5GrainFile->isChecked())
+  {
+    if (verifyPathExists(m_OutputDir->text(), m_OutputDir) == false) {
+      QMessageBox::warning(this, tr("DREAM.3D"),
+      tr("In order to view the H5Grain file you will need a plugin for ParaView which is available separately."),
+      QMessageBox::Ok,
+      QMessageBox::Ok);
+      return;
+      }
+  }
+}
+
