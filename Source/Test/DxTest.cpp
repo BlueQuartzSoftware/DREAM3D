@@ -28,7 +28,7 @@ int main(int argc, char **argv)
 
   std::cout << "Writing VTK File..." << std::endl;
   VTKFileWriters::Pointer writer = VTKFileWriters::New();
-  err = writer->writeGrainVisualizationFile(m.get(), argv[2], false, false, false);
+  err = writer->writeGrainGenRectilinearGrid(m.get(), argv[2], false, false, false);
   if (err < 0)
   {
     std::cout << "Error Writing VTK Structure." << std::endl;
