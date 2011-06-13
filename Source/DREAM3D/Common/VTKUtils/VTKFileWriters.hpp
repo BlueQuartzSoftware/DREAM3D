@@ -59,7 +59,7 @@ class VTKFileWriters
     MXA_STATIC_NEW_MACRO(VTKFileWriters);
     MXA_TYPE_MACRO(VTKFileWriters);
 
-    virtual ~VTKFileWriters();
+    virtual ~VTKFileWriters(){}
 
     MXA_INSTANCE_PROPERTY(bool, WriteBinaryFiles)
 
@@ -811,13 +811,9 @@ class VTKFileWriters
       return 0;
     }
 
-    int writeGrainVisualizationFile(GrainGeneratorFunc* r, const std::string &file,
-                                                    bool writeSurfaceVoxel, bool writePhaseId, bool writeIPFColor);
-
-
 
   protected:
-    VTKFileWriters();
+    VTKFileWriters(){}
 
   private:
     VTKFileWriters(const VTKFileWriters&); // Copy Constructor Not Implemented
