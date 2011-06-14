@@ -301,7 +301,7 @@ void GrainGeneratorWidget::checkIOFiles()
 //  QString msg ("All files will be over written that appear in the output directory.");
 //  if (m_AlreadyFormed->isChecked() == true && fi.exists() == false)
 //  {
-//    QMessageBox::critical(this, tr("AIM Representation"),
+//    QMessageBox::critical(this, tr("DREAM.3D"),
 //      tr("You have selected the 'Already Formed' check box \nbut the correct output file does not exist.\n"
 //      "The checkbox will revert to an unchecked state.?"),
 //      QMessageBox::Ok,
@@ -581,7 +581,7 @@ int GrainGeneratorWidget::estimate_numgrains(int xpoints, int ypoints, int zpoin
   sddiam.resize(phases.size()+1);
   maxdiameter.resize(phases.size()+1);
   mindiameter.resize(phases.size()+1);
-  for (int i = 0; i < phases.size(); i++)
+  for (size_t i = 0; i < phases.size(); i++)
   {
     phase = phases[i];
 
