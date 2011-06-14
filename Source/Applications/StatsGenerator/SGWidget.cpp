@@ -66,7 +66,7 @@
 
 #define CHECK_ERROR_ON_WRITE(var, msg)\
     if (err < 0) {\
-      QMessageBox::critical(this, tr("AIM Representation"),\
+      QMessageBox::critical(this, tr("StatsGenerator"),\
       tr("There was an error writing the " msg " to the HDF5 file"),\
       QMessageBox::Ok,\
       QMessageBox::Ok);\
