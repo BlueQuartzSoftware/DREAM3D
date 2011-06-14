@@ -83,7 +83,11 @@ class PhWriter
       int grains = 0;
       typedef std::map<int, bool>::iterator iterator;
       for (iterator i = used.begin(); i != used.end(); i++)
-        if ((*i).second == true) grains++;
+        {
+        if ((*i).second == true)
+        {
+          grains++;
+        }}
 
       //std::cout<<grains<< " " << used.size() << std::endl;
 

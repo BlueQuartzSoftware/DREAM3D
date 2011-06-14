@@ -257,6 +257,11 @@ class DREAM3DLib_EXPORT AIM_H5VtkDataWriter
                         int numComp, int32_t rank, hsize_t* dims)
     {
       hid_t gid = H5Gopen(m_FileId, hdfPath.c_str() );
+      if (gid < 0)
+      {
+        std::cout << "Error opening Group " << hdfPath << std::endl;
+        return gid;
+      }
       herr_t err = H5Utilities::createGroupsFromPath(H5_SCALAR_DATA_GROUP_NAME, gid);
       if (err < 0)
       {
