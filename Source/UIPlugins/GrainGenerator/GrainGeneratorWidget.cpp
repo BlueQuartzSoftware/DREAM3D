@@ -282,7 +282,7 @@ void GrainGeneratorWidget::on_m_SaveSettingsBtn_clicked()
 void GrainGeneratorWidget::checkIOFiles()
 {
   CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::SyntheticBuilder, m_, GrainAnglesFile)
-  CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::SyntheticBuilder, m_, H5VolumeFile)
+  CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::SyntheticBuilder, m_, H5VoxelFile)
 
   CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(AIM::SyntheticBuilder, m_ , VisualizationVizFile)
   CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(AIM::SyntheticBuilder, m_ , HDF5GrainFile)
@@ -485,16 +485,7 @@ void GrainGeneratorWidget::on_m_GoBtn_clicked()
 // -----------------------------------------------------------------------------
 void GrainGeneratorWidget::on_m_XPoints_valueChanged(int v)
 {
-  int xpoints, ypoints, zpoints;
-  float xres, yres, zres;
-  xpoints = m_XPoints->value();
-  ypoints = m_YPoints->value();
-  zpoints = m_ZPoints->value();
-  xres = m_XResolution->value();
-  yres = m_YResolution->value();
-  zres = m_ZResolution->value();
-  int est_ngrains = estimate_numgrains(xpoints, ypoints, zpoints, xres, yres, zres);
-  est_numgrains->setText(QString::number(est_ngrains));
+  estimateNumGrainsSetup();
 }
 
 // -----------------------------------------------------------------------------
@@ -502,6 +493,47 @@ void GrainGeneratorWidget::on_m_XPoints_valueChanged(int v)
 // -----------------------------------------------------------------------------
 void GrainGeneratorWidget::on_m_YPoints_valueChanged(int v)
 {
+  estimateNumGrainsSetup();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void GrainGeneratorWidget::on_m_ZPoints_valueChanged(int v)
+{
+  estimateNumGrainsSetup();
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void GrainGeneratorWidget::on_m_ZResolution_valueChanged(double v)
+{
+  estimateNumGrainsSetup();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void GrainGeneratorWidget::on_m_YResolution_valueChanged(double v)
+{
+  estimateNumGrainsSetup();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void GrainGeneratorWidget::on_m_XResolution_valueChanged(double v)
+{
+  estimateNumGrainsSetup();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void GrainGeneratorWidget::estimateNumGrainsSetup()
+{
   int xpoints, ypoints, zpoints;
   float xres, yres, zres;
   xpoints = m_XPoints->value();
@@ -514,25 +546,9 @@ void GrainGeneratorWidget::on_m_YPoints_valueChanged(int v)
   est_numgrains->setText(QString::number(est_ngrains));
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void GrainGeneratorWidget::on_m_ZPoints_valueChanged(int v)
-{
-  int xpoints, ypoints, zpoints;
-  float xres, yres, zres;
-  xpoints = m_XPoints->value();
-  ypoints = m_YPoints->value();
-  zpoints = m_ZPoints->value();
-  xres = m_XResolution->value();
-  yres = m_YResolution->value();
-  zres = m_ZResolution->value();
-  int est_ngrains = estimate_numgrains(xpoints, ypoints, zpoints, xres, yres, zres);
-	est_numgrains->setText(QString::number(est_ngrains));
-}
 
 // -----------------------------------------------------------------------------
-//
+//  We could eventually move this out into its own utility function some where
 // -----------------------------------------------------------------------------
 void GrainGeneratorWidget::on_m_XResolution_valueChanged(double v)
 {
@@ -587,6 +603,8 @@ void GrainGeneratorWidget::on_m_ZResolution_valueChanged(double v)
 // -----------------------------------------------------------------------------
 int GrainGeneratorWidget::estimate_numgrains(int xpoints, int ypoints, int zpoints, float xres, float yres, float zres)
 {
+  //TODO: We should read the file once and cache the results instead of reading every time
+
   float totalvol;
   int phase;
   std::vector<int> phases;
@@ -763,3 +781,19 @@ void GrainGeneratorWidget::on_m_VtkOptionsBtn_clicked()
 
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void GrainGeneratorWidget::on_m_HDF5GrainFile_stateChanged(int state)
+{
+  if (m_HDF5GrainFile->isChecked())
+  {
+    if (verifyPathExists(m_OutputDir->text(), m_OutputDir) == false) {
+      QMessageBox::warning(this, tr("DREAM.3D"),
+      tr("In order to view the H5Grain file you will need a plugin for ParaView which is available separately. The file is a plain HDF5 file."),
+      QMessageBox::Ok,
+      QMessageBox::Ok);
+      return;
+      }
+  }
+}
