@@ -546,58 +546,6 @@ void GrainGeneratorWidget::estimateNumGrainsSetup()
   est_numgrains->setText(QString::number(est_ngrains));
 }
 
-
-// -----------------------------------------------------------------------------
-//  We could eventually move this out into its own utility function some where
-// -----------------------------------------------------------------------------
-void GrainGeneratorWidget::on_m_XResolution_valueChanged(double v)
-{
-  int xpoints, ypoints, zpoints;
-  float xres, yres, zres;
-  xpoints = m_XPoints->value();
-  ypoints = m_YPoints->value();
-  zpoints = m_ZPoints->value();
-  xres = m_XResolution->value();
-  yres = m_YResolution->value();
-  zres = m_ZResolution->value();
-  int est_ngrains = estimate_numgrains(xpoints, ypoints, zpoints, xres, yres, zres);
-  est_numgrains->setText(QString::number(est_ngrains));
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void GrainGeneratorWidget::on_m_YResolution_valueChanged(double v)
-{
-  int xpoints, ypoints, zpoints;
-  float xres, yres, zres;
-  xpoints = m_XPoints->value();
-  ypoints = m_YPoints->value();
-  zpoints = m_ZPoints->value();
-  xres = m_XResolution->value();
-  yres = m_YResolution->value();
-  zres = m_ZResolution->value();
-  int est_ngrains = estimate_numgrains(xpoints, ypoints, zpoints, xres, yres, zres);
-  est_numgrains->setText(QString::number(est_ngrains));
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void GrainGeneratorWidget::on_m_ZResolution_valueChanged(double v)
-{
-  int xpoints, ypoints, zpoints;
-  float xres, yres, zres;
-  xpoints = m_XPoints->value();
-  ypoints = m_YPoints->value();
-  zpoints = m_ZPoints->value();
-  xres = m_XResolution->value();
-  yres = m_YResolution->value();
-  zres = m_ZResolution->value();
-  int est_ngrains = estimate_numgrains(xpoints, ypoints, zpoints, xres, yres, zres);
-	est_numgrains->setText(QString::number(est_ngrains));
-}
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
