@@ -128,7 +128,7 @@ int StatsGenPlotWidget::readDataFromHDF5(H5ReconStatsReader::Pointer reader,
   int err = 0;
   if (m_StatsType == AIM::Reconstruction::UnknownStatisticsGroup)
   {
-    QMessageBox::critical(this, tr("AIM Representation"),
+    QMessageBox::critical(this, tr("StatsGenerator"),
     tr("This Plot has not been assigned a Statistics Group. This should be happening from within the program. Contact the developer."),
     QMessageBox::Ok,
     QMessageBox::Ok);
@@ -139,7 +139,7 @@ int StatsGenPlotWidget::readDataFromHDF5(H5ReconStatsReader::Pointer reader,
   std::string disType = reader->getDistributionType(m_PhaseIndex, hdf5GroupName, dt);
   if (dt == AIM::Reconstruction::UnknownDistributionType)
   {
-    QMessageBox::critical(this, tr("AIM Representation"),
+    QMessageBox::critical(this, tr("StatsGenerator"),
     tr("The 'Distribution Type' attribute was either not found on the HDF5 Group or it was of an unknown type. Please verify your HDF5 file has been written correctly"),
     QMessageBox::Ok,
     QMessageBox::Ok);
@@ -228,7 +228,7 @@ int StatsGenPlotWidget::writeDataToHDF5(H5ReconStatsWriter::Pointer writer,
   int err = 0;
   if (m_StatsType == AIM::Reconstruction::UnknownStatisticsGroup)
   {
-    QMessageBox::critical(this, tr("AIM Representation"),
+    QMessageBox::critical(this, tr("StatsGenerator"),
     tr("This Plot has not been assigned a Statistics Group. This should be happening from within the program. Contact the developer."),
     QMessageBox::Ok,
     QMessageBox::Ok);
@@ -237,7 +237,7 @@ int StatsGenPlotWidget::writeDataToHDF5(H5ReconStatsWriter::Pointer writer,
 
   if (m_DistributionType == AIM::Reconstruction::UnknownDistributionType)
   {
-    QMessageBox::critical(this, tr("AIM Representation"),
+    QMessageBox::critical(this, tr("StatsGenerator"),
     tr("This Plot has not been assigned a known Distribution Type. This should be happening from within the program. Contact the developer."),
     QMessageBox::Ok,
     QMessageBox::Ok);
