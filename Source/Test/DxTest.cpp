@@ -12,14 +12,14 @@
 int main(int argc, char **argv)
 {
 
-  GrainGeneratorFunc::Pointer m = GrainGeneratorFunc::New();
+  GrainGeneratorFunc::Pointer r = GrainGeneratorFunc::New();
 
   DXStructureReader::Pointer reader = DXStructureReader::New();
   reader->setInputFileName(argv[1]);
 
   std::cout << "Reading DX File...." << std::endl;
 
-  int err = reader->readStructure(m.get());
+  int err = reader->readStructure(r.get());
   if (err < 0)
   {
     std::cout << "Error Reading Structure." << std::endl;
@@ -27,13 +27,16 @@ int main(int argc, char **argv)
   }
 
   std::cout << "Writing VTK File..." << std::endl;
-  VtkMiscFileWriter::Pointer writer = VtkMiscFileWriter::New();
-//  err = writer->writeGrainGenRectilinearGrid(m.get(), argv[2], false, false, false);
-//  if (err < 0)
-//  {
-//    std::cout << "Error Writing VTK Structure." << std::endl;
-//    return EXIT_FAILURE;
-//  }
+
+
+  VtkScalarWriter* w0 =
+      static_cast<VtkScalarWriter*>(new VoxelGrainIdScalarWriter<GrainGeneratorFunc>(r.get()));
+  std::vector<VtkScalarWriter*> scalarsToWrite;
+  scalarsToWrite.push_back(w0);
+
+
+  VTKRectilinearGridFileWriter writer;
+  writer.write<GrainGeneratorFunc>("/tmp/vtkfilewriterstest.vtk", r.get(), scalarsToWrite);
 
   std::cout << "Done." << std::endl;
   return EXIT_SUCCESS;
