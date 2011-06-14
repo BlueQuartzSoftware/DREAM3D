@@ -99,7 +99,6 @@ void ReconstructionWidget::readSettings(QSettings &prefs)
   READ_FILEPATH_SETTING(prefs, m_, H5InputFile, "");
   if (verifyPathExists(m_H5InputFile->text(), m_H5InputFile) )
   {
-    m_SetSliceInfo();
     on_m_H5InputFile_textChanged(QString(""));
   }
   READ_FILEPATH_SETTING(prefs, m_, OutputDir, "");
@@ -128,7 +127,9 @@ void ReconstructionWidget::readSettings(QSettings &prefs)
 
   READ_CHECKBOX_SETTING(prefs, m_, VisualizationVizFile, true);
   READ_CHECKBOX_SETTING(prefs, m_, DownSampledVizFile, true);
+  m_HDF5GrainFile->blockSignals(true);
   READ_CHECKBOX_SETTING(prefs, m_, HDF5GrainFile, true);
+  m_HDF5GrainFile->blockSignals(false);
   READ_CHECKBOX_SETTING(prefs, m_, DxFile, true);
   prefs.endGroup();
 }
@@ -229,7 +230,7 @@ void ReconstructionWidget::checkIOFiles()
 {
   this->verifyPathExists(m_OutputDir->text(), this->m_OutputDir);
 
-  CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::Reconstruction,m_, H5VolumeFile)
+  CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::Reconstruction,m_, H5VoxelFile)
 
   CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(AIM::Reconstruction, m_ , VisualizationVizFile)
   CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(AIM::Reconstruction, m_ , DownSampledVizFile)
@@ -323,6 +324,7 @@ void ReconstructionWidget::on_m_OutputDirBtn_clicked()
 // -----------------------------------------------------------------------------
 void ReconstructionWidget::on_m_H5InputFile_textChanged(const QString &text)
 {
+
   if (verifyPathExists(m_H5InputFile->text(), m_H5InputFile) )
   {
     m_SetSliceInfo();
@@ -341,6 +343,7 @@ void ReconstructionWidget::on_m_H5InputFile_textChanged(const QString &text)
     h5io->setZStartIndex(m_ZStartIndex->value());
 
     std::vector<AngPhase::Pointer> phases = h5io->getPhases();
+
     int size = phases.size();
     std::vector<std::string> phaseTypeStrings;
     AIM::PhaseType::getPhaseTypeStrings(phaseTypeStrings);
@@ -366,9 +369,31 @@ void ReconstructionWidget::on_m_H5InputFile_textChanged(const QString &text)
       connect(cb, SIGNAL(currentIndexChanged(int)),
               this, SLOT(phaseTypeEdited(int)));
     }
+
+    int err = 0;
+    int xpoints = 0;
+    int ypoints = 0;
+    int zpoints = 1;
+    float xres = 0.0f;
+    float yres = 0.0f;
+    float zres = 0.0f;
+    int zStart = 0;
+    int zEnd = 0;
+    err = h5io->readZHeader(zStart, zEnd, zres);
+    h5io->setZStartIndex(zStart);
+    h5io->setZEndIndex(zEnd);
+    zpoints = 1; // Just read the first dataset and hope the rest are the same
+    err = h5io->getSizeAndResolution(xpoints, ypoints, zpoints, xres, yres, zres);
+    if (err >= 0)
+    {
+      xDim->setText(QString::number(xpoints));
+      yDim->setText(QString::number(ypoints));
+      zDim->setText(QString::number(zpoints));
+      m_XRes->setText(QString::number(xres));
+      m_YRes->setText(QString::number(yres));
+      m_ZRes->setText(QString::number(zres));
+    }
   }
-
-
 }
 
 // -----------------------------------------------------------------------------
@@ -647,5 +672,23 @@ void ReconstructionWidget::on_m_VtkOptionsBtn_clicked()
     m_WriteBinaryVTKFile = d.getValue("Write Binary VTK File");
   }
 
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ReconstructionWidget::on_m_HDF5GrainFile_stateChanged(int state)
+{
+  if (m_HDF5GrainFile->isChecked())
+  {
+    if (verifyPathExists(m_OutputDir->text(), m_OutputDir) == false) {
+      QMessageBox::warning(this, tr("DREAM.3D"),
+      tr("In order to view the H5Grain file you will need a plugin for ParaView which is available separately. The file is a plain HDF5 file."),
+      QMessageBox::Ok,
+      QMessageBox::Ok);
+      return;
+      }
+  }
 }
 

@@ -110,7 +110,7 @@ int H5AngDataLoader::getSizeAndResolution(int &xpoints, int &ypoints, int &zpoin
   hid_t fileId = H5Utilities::openFile(m_Filename, true);
   if (fileId < 0)
   {
-    std::cout << "Error" << std::endl;
+    std::cout << "Error - Could not open HDF5 based OIM file" << std::endl;
     return -1;
   }
 
