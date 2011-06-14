@@ -42,18 +42,6 @@ class OIMImportFunc
     MXA_STATIC_NEW_MACRO(OIMImportFunc);
 };
 
-#define CHECK_ERROR(name)\
-    if(err < 0) {\
-      setErrorCondition(err);\
-      err = H5Fclose(fileId);\
-      QString msg = #name;\
-      msg += " Returned an error condition. Grain Generator has stopped.";\
-      emit updateMessage(msg);\
-      emit updateProgress(0);\
-      emit finished();\
-      return;   }
-
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -88,10 +76,9 @@ void OIMImport::execute()
   {
     std::string s("H5AngImport Error: The output file was not set correctly or is empty. The current value is '");
     s.append("'. Please set the output file before running the importer. ");
-    setCancel(true);
     updateProgressAndMessage(s.c_str(), 100);
     err = -1;
-    CHECK_FOR_CANCELED(OIMImportFunc, "OIMImport input filename was empty", load_input_filename)
+    CHECK_FOR_ERROR(OIMImportFunc, "OIMImport input filename was empty", err)
     return;
   }
   // Create File
@@ -99,16 +86,20 @@ void OIMImport::execute()
   if (fileId < 0) {
     setCancel(true);
     updateProgressAndMessage("The Output HDF5 file could not be created. Check Permissions, if the File is in use by another program.", 100);
-    CHECK_FOR_CANCELED(OIMImportFunc, "OIMImport Error - Output HDF5 file could not be created", create_output_file)
+    CHECK_FOR_ERROR(OIMImportFunc, "Output HDF5 file could not be created. Check permissions on parent folder??", err)
     return;
   }
 
   // Write Z index start, Z index end and Z Resolution to the HDF5 file
   err = H5Lite::writeScalarDataset(fileId, Ang::ZStartIndex, m_ZStartIndex);
+  CHECK_FOR_ERROR(OIMImportFunc, "Could not write the Z Start Index Scalar", err)
   err = H5Lite::writeScalarDataset(fileId, Ang::ZEndIndex, m_ZEndIndex);
+  CHECK_FOR_ERROR(OIMImportFunc, "Could not write the Z End Index Scalar", err)
   err = H5Lite::writeScalarDataset(fileId, Ang::ZResolution, m_ZResolution);
+  CHECK_FOR_ERROR(OIMImportFunc, "Could not write the Z Resolution Scalar", err)
   // Write the Manufacturer of the OIM file here
   err = H5Lite::writeStringDataset(fileId, Ang::Manufacturer, Ang::TSL );
+  CHECK_FOR_ERROR(OIMImportFunc, "Could not write the Manufacturer Scalar", err)
 
   std::vector<int> indices;
   // Loop on Each Ang File
@@ -150,7 +141,7 @@ void OIMImport::execute()
     err = conv->importAngFile(fileId, z, angFName);
     if (err < 0)
     {
-      setCancel(true);
+      CHECK_FOR_ERROR(OIMImportFunc, "Could not write dataset for slice.", err)
     }
     indices.push_back(z);
     ++z;
