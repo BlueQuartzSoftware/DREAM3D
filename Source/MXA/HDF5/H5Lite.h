@@ -435,6 +435,69 @@ static herr_t writePointerDataset (hid_t loc_id,
   return retErr;
 }
 
+template <typename T>
+static herr_t replacePointerDataset (hid_t loc_id,
+                            const std::string& dsetName,
+                            int32_t   rank,
+                            hsize_t* dims,
+                            T* data)
+{
+
+  herr_t err    = -1;
+  hid_t did     = -1;
+  hid_t sid     = -1;
+  herr_t retErr = 0;
+
+  hid_t dataType = H5Lite::HDFTypeForPrimitive(data[0]);
+  if(dataType == -1)
+  {
+    return -1;
+  }
+  //Create the DataSpace
+  std::vector<uint64_t>::size_type size = static_cast<std::vector<uint64_t>::size_type>(rank);
+
+  std::vector<hsize_t> _dims(size, 0);
+  for (int32_t i = 0; i < rank; ++i)
+  {
+    _dims[i] = static_cast<hsize_t>(dims[i]);
+  }
+//  sid = H5Screate_simple( size, &(_dims.front()), NULL );
+  sid = H5Screate_simple( rank, dims, NULL);
+  if (sid < 0)
+  {
+    return sid;
+  }
+
+  HDF_ERROR_HANDLER_OFF
+  did = H5Dopen(loc_id, dsetName.c_str() );
+  HDF_ERROR_HANDLER_ON
+  if ( did < 0 ) // dataset does not exist so create it
+  {
+    did = H5Dcreate (loc_id, dsetName.c_str(), dataType, sid, H5P_DEFAULT);
+  }
+  if ( did >= 0 )
+  {
+    err = H5Dwrite( did, dataType, H5S_ALL, H5S_ALL, H5P_DEFAULT, data );
+    if (err < 0 ) {
+      std::cout << "Error Writing Data" << std::endl;
+      retErr = err;
+    }
+    err = H5Dclose( did );
+    if (err < 0) {
+      std::cout << "Error Closing Dataset." << std::endl;
+      retErr = err;
+    }
+  } else {
+    retErr = did;
+  }
+  /* Terminate access to the data space. */
+  err= H5Sclose( sid );
+  if (err< 0) {
+    std::cout << "Error Closing Dataspace" << std::endl;
+    retErr = err;
+  }
+  return retErr;
+}
 
 
 /**

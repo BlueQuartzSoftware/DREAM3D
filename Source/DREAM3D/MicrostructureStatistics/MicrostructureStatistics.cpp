@@ -245,14 +245,61 @@ void MicrostructureStatistics::execute()
 	  m->write_graindata(graindataFile, m_WriteGrainSize, m_WriteGrainShapes, m_WriteNumNeighbors, m_WriteAverageOrientations);
   }
 
-  if (m_WriteVtkFile == true) 
-  {
-    VTKFileWriters::Pointer vtkWriter = VTKFileWriters::New();
-    vtkWriter->setWriteBinaryFiles(m_WriteBinaryVTKFiles);
+  /* ********** This section writes the VTK files for visualization *** */
+  if (m_WriteVtkFile) {
     updateProgressAndMessage(("Writing VTK Visualization File"), 93);
-	err = vtkWriter->writeMicroStatsRectilinearGrid(m.get(), reconVisFile, m_WriteSurfaceVoxel, m_WritePhaseId, m_WriteIPFColor, m_WriteKernelMisorientations);
-    CHECK_FOR_ERROR(MicrostructureStatisticsFunc, "The Microstructure Statistics threw an Error writing the VTK file format.", err);
-    CHECK_FOR_CANCELED(MicrostructureStatisticsFunc, "MicrostructureStatistics Was canceled", writeVisualizationFile)
+    MAKE_OUTPUT_FILE_PATH ( vtkVizFile, AIM::Reconstruction::VisualizationVizFile);
+
+    // Setup all the classes that will help us write the Scalars to the VTK File
+    std::vector<VtkScalarWriter*> scalarsToWrite;
+    {
+      VtkScalarWriter* w0 =
+          static_cast<VtkScalarWriter*>(new VoxelGrainIdScalarWriter<MicrostructureStatisticsFunc>(m.get()));
+      w0->m_WriteBinaryFiles = m_WriteBinaryVTKFiles;
+      scalarsToWrite.push_back(w0);
+    }
+
+    if (m_WriteSurfaceVoxel == true) {
+      VtkScalarWriter* w0 =
+        static_cast<VtkScalarWriter*>(new VoxelSurfaceVoxelScalarWriter<MicrostructureStatisticsFunc>(m.get()));
+      w0->m_WriteBinaryFiles = m_WriteBinaryVTKFiles;
+      scalarsToWrite.push_back(w0);
+    }
+
+    if (m_WritePhaseId == true){
+      VtkScalarWriter* w0 =
+        static_cast<VtkScalarWriter*>(new VoxelPhaseIdScalarWriter<MicrostructureStatisticsFunc>(m.get()));
+      w0->m_WriteBinaryFiles = m_WriteBinaryVTKFiles;
+      scalarsToWrite.push_back(w0);
+    }
+
+    if (m_WritePhaseId == true){
+      VtkScalarWriter* w0 =
+        static_cast<VtkScalarWriter*>(new VoxelKAMScalarWriter<MicrostructureStatisticsFunc>(m.get()));
+      w0->m_WriteBinaryFiles = m_WriteBinaryVTKFiles;
+      scalarsToWrite.push_back(w0);
+    }
+
+    if (m_WriteIPFColor == true) {
+      VtkScalarWriter* w0 =
+        static_cast<VtkScalarWriter*>(new VoxelIPFColorScalarWriter<MicrostructureStatisticsFunc>(m.get()));
+      w0->m_WriteBinaryFiles = m_WriteBinaryVTKFiles;
+      scalarsToWrite.push_back(w0);
+    }
+
+    // Create our File Output Writer Object. This will handle all the File Output duties
+    VTKRectilinearGridFileWriter vtkWriter;
+    vtkWriter.setWriteBinaryFiles(m_WriteBinaryVTKFiles);
+    err = vtkWriter.write<MicrostructureStatisticsFunc>(vtkVizFile, m.get(), scalarsToWrite);
+
+    // Now Delete all the Scalar Helpers that we just created and used.
+    for (std::vector<VtkScalarWriter*>::iterator iter = scalarsToWrite.begin(); iter != scalarsToWrite.end(); ++iter )
+    {
+      delete (*iter);
+    }
+
+
+    CHECK_FOR_ERROR(MicrostructureStatisticsFunc, "The MicrostructureStatisticsFunc threw an Error writing the VTK file format.", err);
   }
 
   // Clean up all the memory by forcibly setting a NULL pointer to the Shared
