@@ -114,6 +114,7 @@ class GrainGeneratorWidget : public AIMPluginFrame, private Ui::GrainGeneratorWi
     void on_m_StructureFile_textChanged(const QString &text);
 
     void on_m_VtkOptionsBtn_clicked();
+    void on_m_HDF5GrainFile_stateChanged(int state);
 
   private slots:
 
