@@ -81,7 +81,6 @@ class VoxelGrainIdScalarWriter : public VtkScalarWriter
   int writeScalars(FILE* f)
   {
     int err = 0;
-    std::cout << "VoxelGrainIdScalarWriter..." << std::endl;
     std::string file;
     size_t total = r->xpoints * r->ypoints * r->zpoints;
     if (m_WriteBinaryFiles == true) {
@@ -114,7 +113,6 @@ class name : public VtkScalarWriter\
   ~name(){}\
   int writeScalars(FILE* f)  {\
     int err = 0;\
-    std::cout << #name << "..." << std::endl;\
     std::string file;\
     size_t total = r->xpoints * r->ypoints * r->zpoints;\
     if (m_WriteBinaryFiles == true) {\
@@ -150,7 +148,6 @@ class VoxelIPFColorScalarWriter : public VtkScalarWriter
   int writeScalars(FILE* f)
   {
       int err = 0;
-      std::cout << "VoxelIPFColorScalarWriter..." << std::endl;
       size_t total = r->xpoints * r->ypoints * r->zpoints;
       unsigned char hkl[3] =
       { 0, 0, 0 };
