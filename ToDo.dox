@@ -8,7 +8,7 @@ so it can be integrated with the other documentation pages.
 
 
 @section ang_import Ang Import:
-@li Better Display of errors when importing to help user fix their data
+@li <b>DONE</b> (MAJ 2011/06/13) - Better Display of errors when importing to help user fix their data
 
 @section reconstruction Reconstruction:
 @li <b>DONE</b> (MAG 2011/06/08) - Fix 2 Phase bug - Bad output file is written
