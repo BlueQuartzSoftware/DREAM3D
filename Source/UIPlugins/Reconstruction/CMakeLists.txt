@@ -19,6 +19,7 @@ add_definitions(-DDREAM3D_USE_QT)
 include_directories(${PROJECT_SOURCE_DIR} ${PROJECT_BINARY_DIR} ${PROJECT_SOURCE_DIR}/..)
 include_directories(${PROJECT_CODE_DIR} )
 include_directories(${PROJECT_CODE_DIR}/QtSupport )
+include_directories(${DREAM3D_BINARY_DIR}/QtSupport)
 
 set(CLASS_NAME "Reconstruction")
 SET(ORIGINAL_FILE ${PROJECT_CODE_DIR}/QtSupport/QAbstractPipelineWrapper.h.in)
@@ -71,8 +72,6 @@ target_link_libraries(ReconstructionPlugin
                     ${QT_QTGUI_LIBRARY}
                     QtSupport 
                      )
-PluginProperties(ReconstructionPlugin "_debug" "${DREAM3D_VERSION}" 
-                "${DREAM3D_BINARY_DIR}" "${CMP_PLUGIN_LIST_FILE}")
 
 # Add a Dependency so that the plugins are always build before the main Application
 add_dependencies(ReconstructionPlugin DREAM3D)
