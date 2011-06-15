@@ -73,8 +73,8 @@ target_link_libraries(ReconstructionPlugin
                     QtSupport 
                      )
 
-# Add a Dependency so that the plugins are always build before the main Application
-add_dependencies(ReconstructionPlugin DREAM3D)
+PluginProperties(ReconstructionPlugin "_debug" "${DREAM3D_VERSION}" 
+                "${DREAM3D_BINARY_DIR}" "${CMP_PLUGIN_LIST_FILE}")
 
 if (NOT MSVC)
   SET (CMAKE_LIBRARY_OUTPUT_DIRECTORY  ${DREAM3D_BINARY_DIR}/Bin  )

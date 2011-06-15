@@ -84,6 +84,7 @@ if (NOT MSVC)
   SET (CMAKE_LIBRARY_OUTPUT_DIRECTORY  ${DREAM3D_BINARY_DIR}/Bin  )
 endif()
 
+if(0)
 set(${PROJECT_NAME}_HELP_FILES
     ${PROJECT_SOURCE_DIR}/Help/index.html)
 
@@ -91,5 +92,5 @@ set(${PROJECT_NAME}_HELP_FILES
 install(FILES ${${PROJECT_NAME}_HELP_FILES}
         DESTINATION Help/OIMImport
         COMPONENT Applications )
-        
+endif()   
 
