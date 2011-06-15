@@ -19,6 +19,7 @@ add_definitions(-DDREAM3D_USE_QT)
 include_directories(${PROJECT_SOURCE_DIR} ${PROJECT_BINARY_DIR} ${PROJECT_SOURCE_DIR}/..)
 include_directories(${PROJECT_CODE_DIR} )
 include_directories(${PROJECT_CODE_DIR}/QtSupport )
+include_directories(${DREAM3D_BINARY_DIR}/QtSupport)
 
 set(CLASS_NAME "OIMImport")
 SET(ORIGINAL_FILE ${PROJECT_CODE_DIR}/QtSupport/QAbstractPipelineWrapper.h.in)
@@ -40,7 +41,10 @@ set (OIMImportPlugin_SRCS
     )
 
 # -- Run MOC and UIC on the necessary files   
-QT4_ADD_RESOURCES( OIMImportPlugin_Generated_RC_SRCS ${PROJECT_SOURCE_DIR}/Icons.qrc)    
+QT4_ADD_RESOURCES( OIMImportPlugin_Generated_RC_SRCS 
+            ${PROJECT_SOURCE_DIR}/Icons.qrc
+     #       ${PROJECT_SOURCE_DIR}/Help/Help.qrc
+            )
     
 QT4_WRAP_UI( OIMImportPlugin_Generated_UI_HDRS 
             ${PROJECT_SOURCE_DIR}/OIMImportWidget.ui )
@@ -76,9 +80,16 @@ target_link_libraries(OIMImportPlugin
 PluginProperties(OIMImportPlugin "_debug" "${DREAM3D_VERSION}" 
                 "${DREAM3D_BINARY_DIR}" "${CMP_PLUGIN_LIST_FILE}")
 
-# Add a Dependency so that the plugins are always build before the main Application
-add_dependencies(OIMImportPlugin DREAM3D)
-
 if (NOT MSVC)
   SET (CMAKE_LIBRARY_OUTPUT_DIRECTORY  ${DREAM3D_BINARY_DIR}/Bin  )
 endif()
+
+set(${PROJECT_NAME}_HELP_FILES
+    ${PROJECT_SOURCE_DIR}/Help/index.html)
+
+
+install(FILES ${${PROJECT_NAME}_HELP_FILES}
+        DESTINATION Help/OIMImport
+        COMPONENT Applications )
+        
+
