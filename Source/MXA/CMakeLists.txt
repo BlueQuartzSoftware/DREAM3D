@@ -71,7 +71,7 @@ if (WIN32)
     set(lib_install_dir "")
 endif()
 
-if (BUILD_SHARED_LIBS AND DREAM3D_BUILD_CLI_TOOLS)
+if (BUILD_SHARED_LIBS)
     INSTALL(TARGETS ${PROJECT_NAME} 
         COMPONENT Applications
         RUNTIME DESTINATION ${install_dir}
