@@ -72,6 +72,9 @@ class DREAM3DLib_EXPORT Grain
     FloatVectorType  neighborsurfarealist;
 
     std::vector<int>* voxellist;
+    std::vector<int>* columnlist;
+    std::vector<int>* rowlist;
+    std::vector<int>* planelist;
     std::vector<float>* misorientationlist;
 
     /*
