@@ -70,7 +70,6 @@ namespace HexagonalMath {
   }
 }
 
-
 /**
  * @class HexagonalOps HexagonalOps.h AIM/Common/OrientationOps/HexagonalOps.h
  * @brief
