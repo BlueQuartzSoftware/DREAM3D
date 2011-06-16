@@ -603,6 +603,7 @@ void  GrainGeneratorFunc::generate_grain(int gnum, int phase)
   float diam = 0;
   float vol = 0;
   int volgood = 0;
+  float phi1, PHI, phi2;
   while(volgood == 0)
   {
 	  volgood = 1;
@@ -655,15 +656,7 @@ void  GrainGeneratorFunc::generate_grain(int gnum, int phase)
     if(random > totaldensity) bin = i;
     if(random < totaldensity) {break;}
   }
-  float phi1 = bin%36;
-  float PHI = (bin/36)%36;
-  float phi2 = bin/(36*36);
-  random = rg.Random();
-  phi1 = ((phi1*5)+(random*5))*(m_pi/180.0);
-  random = rg.Random();
-  PHI = ((PHI*5)+(random*5))*(m_pi/180.0);
-  random = rg.Random();
-  phi2 = ((phi2*5)+(random*5))*(m_pi/180.0);
+  m_OrientatioOps[AIM::Reconstruction::OrthoRhombic]->determineEulerAngles(bin, phi1, PHI, phi2);
   float m = omega3[phase][diameter][0];
   float s = omega3[phase][diameter][1];
   float omega3 = rg.RandBeta(m,s);
