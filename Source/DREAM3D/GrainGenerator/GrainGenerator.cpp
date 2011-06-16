@@ -240,7 +240,7 @@ void GrainGenerator::execute()
   m->write_eulerangles(eulerFile);
   CHECK_FOR_CANCELED(GrainGeneratorFunc, "GrainGenerator Was canceled", write_eulerangles)
 
-  /** ********** This section writes the Voxel Data for the Stats Module *** */
+  /** ********** This section writes the Voxel Data for the Stats Module ****/
   // Create a new HDF5 Volume file by overwriting any HDF5 file that may be in the way
   MAKE_OUTPUT_FILE_PATH ( h5VoxelFile, AIM::SyntheticBuilder::H5VoxelFile)
   H5VoxelWriter::Pointer h5VoxelWriter = H5VoxelWriter::New();

@@ -87,6 +87,9 @@ lowanglefraction(0.0)
   neighborsurfarealist = FloatVectorType(new std::vector<float>(0) );
 
   voxellist = NULL; //new std::vector<int>;
+  columnlist = NULL; //new std::vector<int>;
+  rowlist = NULL; //new std::vector<int>;
+  planelist = NULL; //new std::vector<int>;
   misorientationlist = NULL; //new std::vector<float>;
 
 }
@@ -154,6 +157,9 @@ void Grain::deepCopy(Grain::Pointer grain)
   if (NULL != voxellist)
   {
     delete voxellist;
+    delete columnlist;
+    delete rowlist;
+    delete planelist;
   }
   if (NULL != misorientationlist)
   {
@@ -164,6 +170,12 @@ void Grain::deepCopy(Grain::Pointer grain)
   {
     voxellist = new std::vector<int>(0);
     voxellist->assign(grain->voxellist->begin(), grain->voxellist->end());
+    columnlist = new std::vector<int>(0);
+    columnlist->assign(grain->columnlist->begin(), grain->columnlist->end());
+    rowlist = new std::vector<int>(0);
+    rowlist->assign(grain->rowlist->begin(), grain->rowlist->end());
+    planelist = new std::vector<int>(0);
+    planelist->assign(grain->planelist->begin(), grain->planelist->end());
   }
 
   if (NULL != grain->misorientationlist)
@@ -180,19 +192,12 @@ void Grain::deepCopy(Grain::Pointer grain)
 Grain::~Grain()
 {
 
-#if 0
-  if (NULL != neighborlist)
-  {
-    delete neighborlist;
-  }
-  if (NULL != neighborsurfarealist)
-  {
-    delete neighborsurfarealist;
-  }
-#endif
   if (NULL != voxellist)
   {
     delete voxellist;
+    delete columnlist;
+    delete rowlist;
+    delete planelist;
   }
   if (NULL != misorientationlist)
   {
@@ -204,198 +209,6 @@ Grain::~Grain()
 
 
 
-
-#if 0
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-Grain::Grain(const Grain& grain)
-{
-  numvoxels = grain.numvoxels ;
-  active = grain.active ;
-  numneighbors = grain.numneighbors ;
-  newgrainname = grain.newgrainname ;
-  gotcontainedmerged = grain.gotcontainedmerged ;
-  gottwinmerged = grain.gottwinmerged ;
-  gotcolonymerged = grain.gotcolonymerged ;
-  centroidx = grain.centroidx ;
-  centroidy = grain.centroidy ;
-  centroidz = grain.centroidz ;
-  surfacegrain = grain.surfacegrain ;
-  Ixx = grain.Ixx ;
-  Iyy = grain.Iyy ;
-  Izz = grain.Izz ;
-  Ixy = grain.Ixy;
-  Iyz = grain.Iyz ;
-  Ixz = grain.Ixz ;
-  omega3 = grain.omega3 ;
-  averagemisorientation = grain.averagemisorientation ;
-  kernelmisorientation = grain.kernelmisorientation;
-  twinnewnumber = grain.twinnewnumber;
-  colonynewnumber = grain.colonynewnumber;
-  packquality = grain.packquality;
-  red = grain.red ;
-  green = grain.green ;
-  blue = grain.blue ;
-  schmidfactor = grain.schmidfactor ;
-  euler1 = grain.euler1 ;
-  euler2 = grain.euler2 ;
-  euler3 = grain.euler3 ;
-  axiseuler1 = grain.axiseuler1 ;
-  axiseuler2 = grain.axiseuler2 ;
-  axiseuler3 = grain.axiseuler3 ;
-  volume = grain.volume ;
-  equivdiameter = grain.equivdiameter ;
-  neigherror = grain.neigherror ;
-  radius1 = grain.radius1 ;
-  radius2 = grain.radius2 ;
-  radius3 = grain.radius3 ;
-  lowanglefraction = grain.lowanglefraction;
-
-  neighborlist = NULL; //new std::vector<int>;
-  voxellist = NULL; //new std::vector<int>;
-  ellipfunclist = NULL; //new std::vector<float>;
-  misorientationlist = NULL; //new std::vector<float>;
-  neighborsurfarealist = NULL; //new std::vector<float>;
-
-  if (NULL != grain.neighborlist)
-  {
-    neighborlist = new std::vector<int >;
-    neighborlist->assign(grain.neighborlist->begin(), grain.neighborlist->end());
-  }
-
-  if (NULL != grain.voxellist)
-  {
-    voxellist = new std::vector<int >;
-    voxellist->assign(grain.voxellist->begin(), grain.voxellist->end());
-  }
-
-  if (NULL != grain.ellipfunclist)
-  {
-    ellipfunclist = new std::vector<float >;
-    ellipfunclist->assign(grain.ellipfunclist->begin(), grain.ellipfunclist->end());
-  }
-  if (NULL != grain.misorientationlist)
-  {
-    misorientationlist = new std::vector<float >;
-    misorientationlist->assign(grain.misorientationlist->begin(), grain.misorientationlist->end());
-  }
-
-  if (NULL != grain.neighborsurfarealist)
-  {
-    neighborsurfarealist = new std::vector<float >;
-    neighborsurfarealist->assign(grain.neighborsurfarealist->begin(), grain.neighborsurfarealist->end());
-  }
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-Grain& Grain::operator=(const Grain& grain)
-{
-
-  if (this != &grain) // protect against invalid self-assignment
-  {
-  numvoxels = grain.numvoxels ;
-  active = grain.active ;
-  numneighbors = grain.numneighbors ;
-  newgrainname = grain.newgrainname ;
-  gotcontainedmerged = grain.gotcontainedmerged ;
-  gottwinmerged = grain.gottwinmerged ;
-  gotcolonymerged = grain.gotcolonymerged ;
-  centroidx = grain.centroidx ;
-  centroidy = grain.centroidy ;
-  centroidz = grain.centroidz ;
-  surfacegrain = grain.surfacegrain ;
-  Ixx = grain.Ixx ;
-  Iyy = grain.Iyy ;
-  Izz = grain.Izz ;
-  Ixy = grain.Ixy;
-  Iyz = grain.Iyz ;
-  Ixz = grain.Ixz ;
-  omega3 = grain.omega3 ;
-  averagemisorientation = grain.averagemisorientation ;
-  kernelmisorientation = grain.kernelmisorientation;
-  twinnewnumber = grain.twinnewnumber;
-  colonynewnumber = grain.colonynewnumber;
-  packquality = grain.packquality ;
-  red = grain.red ;
-  green = grain.green ;
-  blue = grain.blue ;
-  schmidfactor = grain.schmidfactor ;
-  euler1 = grain.euler1 ;
-  euler2 = grain.euler2 ;
-  euler3 = grain.euler3 ;
-  axiseuler1 = grain.axiseuler1 ;
-  axiseuler2 = grain.axiseuler2 ;
-  axiseuler3 = grain.axiseuler3 ;
-  volume = grain.volume ;
-  equivdiameter = grain.equivdiameter ;
-  neigherror = grain.neigherror ;
-  radius1 = grain.radius1 ;
-  radius2 = grain.radius2 ;
-  radius3 = grain.radius3 ;
-  lowanglefraction = grain.lowanglefraction;
-
-  if (NULL != neighborlist)
-  {
-    delete neighborlist;
-  }
-  if (NULL != voxellist)
-  {
-    delete voxellist;
-  }
-  if (NULL != ellipfunclist)
-  {
-    delete ellipfunclist;
-  }
-  if (NULL != misorientationlist)
-  {
-    delete misorientationlist;
-  }
-  if (NULL != neighborsurfarealist)
-  {
-    delete neighborsurfarealist;
-  }
-
-  neighborlist = NULL; //new std::vector<int>;
-  voxellist = NULL; //new std::vector<int>;
-  ellipfunclist = NULL; //new std::vector<float>;
-  misorientationlist = NULL; //new std::vector<float>;
-  neighborsurfarealist = NULL; //new std::vector<float>;
-
-  if (NULL != grain.neighborlist)
-  {
-    neighborlist = new std::vector<int >;
-    neighborlist->assign(grain.neighborlist->begin(), grain.neighborlist->end());
-  }
-
-  if (NULL != grain.voxellist)
-  {
-    voxellist = new std::vector<int >;
-    voxellist->assign(grain.voxellist->begin(), grain.voxellist->end());
-  }
-
-  if (NULL != grain.ellipfunclist)
-  {
-    ellipfunclist = new std::vector<float >;
-    ellipfunclist->assign(grain.ellipfunclist->begin(), grain.ellipfunclist->end());
-  }
-  if (NULL != grain.misorientationlist)
-  {
-    misorientationlist = new std::vector<float >;
-    misorientationlist->assign(grain.misorientationlist->begin(), grain.misorientationlist->end());
-  }
-
-  if (NULL != grain.neighborsurfarealist)
-  {
-    neighborsurfarealist = new std::vector<float >;
-    neighborsurfarealist->assign(grain.neighborsurfarealist->begin(), grain.neighborsurfarealist->end());
-  }
-  }
-  return *this;
-}
-#endif
 
 
 
