@@ -35,7 +35,7 @@ SET (CMAKE_ARCHIVE_OUTPUT_DIRECTORY
 
 set(DREAM3D_VER_MAJOR "2011")
 set(DREAM3D_VER_MINOR "06")
-set(DREAM3D_VER_PATCH "01")
+set(DREAM3D_VER_PATCH "13")
 set(DREAM3D_VERSION "${DREAM3D_VER_MAJOR}.${DREAM3D_VER_MINOR}.${DREAM3D_VER_PATCH}")
                
 set (CMP_SOURCE_DIR ${DREAM3D_SOURCE_DIR}/Support/cmp)
@@ -226,23 +226,33 @@ if (DREAM3D_BUILD_QT_APPS)
    # will not work.
    add_subdirectory(${DREAM3D_SOURCE_DIR}/Source/QtSupport ${DREAM3D_BINARY_DIR}/QtSupport)
   
+    macro(DREAM3D_COMPILE_PLUGIN plugin)
+        add_subdirectory(${DREAM3D_SOURCE_DIR}/Source/UIPlugins/${plugin} ${DREAM3D_BINARY_DIR}/UIPlugins/${plugin})  
+    endmacro()
+  
+    #-----------------
+    # Add any additional Plugins that you develop here to this list
+    set (DREAM3D_PLUGIN_LIST
+    OIMImport GrainGenerator Reconstruction SurfaceMesh MicrostructureStatistics )
+    
+    foreach(p ${DREAM3D_PLUGIN_LIST})
+        DREAM3D_COMPILE_PLUGIN(${p})
+    endforeach()
+  
+   
    # Build the DREAM3D Application  
    option(DREAM3D_BUILD_GUI "Compile the DREAM3D GUI Application" ON)
    if (DREAM3D_BUILD_GUI)
        ADD_SUBDIRECTORY( ${DREAM3D_SOURCE_DIR}/Source/Applications/DREAM3D ${DREAM3D_BINARY_DIR}/Applications/DREAM3D)
    endif()
-  
-   # Add in each GUI Plugin Projects here which MUST be AFTER the DREAM3DApp is added because we are going to 
-   # set up some dependencies and we need that target already in the Cache
-   add_subdirectory(${DREAM3D_SOURCE_DIR}/Source/UIPlugins/OIMImport ${DREAM3D_BINARY_DIR}/UIPlugins/OIMImport)
-   add_subdirectory(${DREAM3D_SOURCE_DIR}/Source/UIPlugins/GrainGenerator ${DREAM3D_BINARY_DIR}/UIPlugins/GrainGenerator)
-   add_subdirectory(${DREAM3D_SOURCE_DIR}/Source/UIPlugins/Reconstruction ${DREAM3D_BINARY_DIR}/UIPlugins/Reconstruction)
-   add_subdirectory(${DREAM3D_SOURCE_DIR}/Source/UIPlugins/SurfaceMesh ${DREAM3D_BINARY_DIR}/UIPlugins/SurfaceMesh)
-   add_subdirectory(${DREAM3D_SOURCE_DIR}/Source/UIPlugins/MicrostructureStatistics ${DREAM3D_BINARY_DIR}/UIPlugins/MicrostructureStatistics)
-   #-----------------
-   # Add any additional Plugins that you develop here
-   
-        
+ 
+    #- Now set up the dependency between the main application and each of the plugins so that
+    #- things like Visual Studion are forced to rebuild the plugins when launching
+    #- the DREAM3D application 
+    foreach(p ${DREAM3D_PLUGIN_LIST})
+        add_dependencies(${p}Plugin DREAM3D)
+    endforeach()
+
    # Build the StatsGenerator Application
    OPTION (DREAM3D_BUILD_STATS_GENERATOR "Compile the Statistics Generator GUI Application" ON)
    if (DREAM3D_BUILD_STATS_GENERATOR)
