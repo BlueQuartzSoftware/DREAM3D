@@ -77,6 +77,7 @@ ipfColor[j * 3 + 2] = rgb[2];\
 
 #define H5GW_GRAIN_LOOP_1() \
     vector<int >* vlist = r->m_Grains[i]->voxellist;\
+    if (NULL == vlist || vlist->size() == 0) { continue; }\
     int vid = vlist->at(0);\
     ss.str("");\
     ss << "/" << i;\
@@ -215,13 +216,10 @@ int H5GrainWriter::writeHDF5GrainsFile(ReconstructionFunc* r, const std::string 
 int H5GrainWriter::writeHDF5GrainsFile(GrainGeneratorFunc* r, const std::string &hdfFile)
 {
   H5GW_DECLS()
-
   err = 0;
-
   for (int i = 1; i < numgrains; i++)
   {
     H5GW_GRAIN_LOOP_1()
-
     for (std::vector<int >::size_type j = 0; j < vlist->size(); j++)
     {
       H5GW_VLIST_LOOP_1()
