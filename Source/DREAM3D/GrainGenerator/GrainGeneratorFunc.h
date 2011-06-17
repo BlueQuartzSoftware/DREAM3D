@@ -190,7 +190,7 @@ public:
     void assign_eulers();
     void insert_grain(size_t grainNum);
     void insert_precipitate(size_t grainNum);
-    void move_grain(size_t grainNum);
+    void move_grain(size_t grainNum, float xc, float yc, float zc);
     void add_grain(size_t grainNum);
     void remove_grain(size_t grainNum);
     void determine_neighbors(size_t grainNum, int add);
