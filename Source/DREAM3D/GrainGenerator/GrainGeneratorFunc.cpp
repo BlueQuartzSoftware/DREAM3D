@@ -780,24 +780,12 @@ void  GrainGeneratorFunc::insert_grain(size_t gnum)
   ymax = int(centerrow+((radcur1/packingresy)+1));
   zmin = int(centerplane-((radcur1/packingresz)+1));
   zmax = int(centerplane+((radcur1/packingresz)+1));
-  if(periodic_boundaries == true)
-  {
-	  if(xmin < -packingxpoints) xmin = -packingxpoints;
-	  if(xmax > 2*packingxpoints-1) xmax = (2*packingxpoints-1);
-	  if(ymin < -packingypoints) ymin = -packingypoints;
-	  if(ymax > 2*packingypoints-1) ymax = (2*packingypoints-1);
-	  if(zmin < -packingzpoints) zmin = -packingzpoints;
-	  if(zmax > 2*packingzpoints-1) zmax = (2*packingzpoints-1);
-  }
-  if(periodic_boundaries == false)
-  {
-	  if(xmin < 0) xmin = 0;
-	  if(xmax > packingxpoints-1) xmax = packingxpoints-1;
-	  if(ymin < 0) ymin = 0;
-	  if(ymax > packingypoints-1) ymax = packingypoints-1;
-	  if(zmin < 0) zmin = 0;
-	  if(zmax > packingzpoints-1) zmax = packingzpoints-1;
-  }
+  if(xmin < -packingxpoints) xmin = -packingxpoints;
+  if(xmax > 2*packingxpoints-1) xmax = (2*packingxpoints-1);
+  if(ymin < -packingypoints) ymin = -packingypoints;
+  if(ymax > 2*packingypoints-1) ymax = (2*packingypoints-1);
+  if(zmin < -packingzpoints) zmin = -packingzpoints;
+  if(zmax > 2*packingzpoints-1) zmax = (2*packingzpoints-1);
   for(int iter1 = xmin; iter1 < xmax+1; iter1++)
   {
     for(int iter2 = ymin; iter2 < ymax+1; iter2++)
@@ -1172,7 +1160,7 @@ void  GrainGeneratorFunc::remove_grain(size_t gnum)
 	}
 	if(periodic_boundaries == false)
 	{
-		if(m_Grains[gnum]->columnlist->at(i) > 0 && m_Grains[gnum]->columnlist->at(i) <= packingxpoints-1 && m_Grains[gnum]->rowlist->at(i) > 0 && m_Grains[gnum]->rowlist->at(i) <= packingypoints-1 && m_Grains[gnum]->planelist->at(i) > 0 && m_Grains[gnum]->planelist->at(i) <= packingzpoints-1)
+		if(m_Grains[gnum]->columnlist->at(i) >= 0 && m_Grains[gnum]->columnlist->at(i) <= packingxpoints-1 && m_Grains[gnum]->rowlist->at(i) >= 0 && m_Grains[gnum]->rowlist->at(i) <= packingypoints-1 && m_Grains[gnum]->planelist->at(i) >= 0 && m_Grains[gnum]->planelist->at(i) <= packingzpoints-1)
 		{
 			index = (m_Grains[gnum]->planelist->at(i)*packingxpoints*packingypoints)+(m_Grains[gnum]->rowlist->at(i)*packingxpoints)+(m_Grains[gnum]->columnlist->at(i));
 		}
@@ -1201,7 +1189,7 @@ void  GrainGeneratorFunc::add_grain(size_t gnum)
 	}
 	if(periodic_boundaries == false)
 	{
-		if(m_Grains[gnum]->columnlist->at(i) > 0 && m_Grains[gnum]->columnlist->at(i) <= packingxpoints-1 && m_Grains[gnum]->rowlist->at(i) > 0 && m_Grains[gnum]->rowlist->at(i) <= packingypoints-1 && m_Grains[gnum]->planelist->at(i) > 0 && m_Grains[gnum]->planelist->at(i) <= packingzpoints-1)
+		if(m_Grains[gnum]->columnlist->at(i) >= 0 && m_Grains[gnum]->columnlist->at(i) <= packingxpoints-1 && m_Grains[gnum]->rowlist->at(i) >= 0 && m_Grains[gnum]->rowlist->at(i) <= packingypoints-1 && m_Grains[gnum]->planelist->at(i) >= 0 && m_Grains[gnum]->planelist->at(i) <= packingzpoints-1)
 		{
 			index = (m_Grains[gnum]->planelist->at(i)*packingxpoints*packingypoints)+(m_Grains[gnum]->rowlist->at(i)*packingxpoints)+(m_Grains[gnum]->columnlist->at(i));
 		}
@@ -1457,7 +1445,7 @@ float GrainGeneratorFunc::check_fillingerror(int gadd, int gremove)
 		}
 		if(periodic_boundaries == false)
 		{
-			if(m_Grains[gadd]->columnlist->at(i) > 0 && m_Grains[gadd]->columnlist->at(i) <= packingxpoints-1 && m_Grains[gadd]->rowlist->at(i) > 0 && m_Grains[gadd]->rowlist->at(i) <= packingypoints-1 && m_Grains[gadd]->planelist->at(i) > 0 && m_Grains[gadd]->planelist->at(i) <= packingzpoints-1)
+			if(m_Grains[gadd]->columnlist->at(i) >= 0 && m_Grains[gadd]->columnlist->at(i) <= packingxpoints-1 && m_Grains[gadd]->rowlist->at(i) >= 0 && m_Grains[gadd]->rowlist->at(i) <= packingypoints-1 && m_Grains[gadd]->planelist->at(i) >= 0 && m_Grains[gadd]->planelist->at(i) <= packingzpoints-1)
 			{
 				index = (m_Grains[gadd]->planelist->at(i)*packingxpoints*packingypoints)+(m_Grains[gadd]->rowlist->at(i)*packingxpoints)+(m_Grains[gadd]->columnlist->at(i));
 			}
@@ -1482,7 +1470,7 @@ float GrainGeneratorFunc::check_fillingerror(int gadd, int gremove)
 		}
 		if(periodic_boundaries == false)
 		{
-			if(m_Grains[gremove]->columnlist->at(i) > 0 && m_Grains[gremove]->columnlist->at(i) <= packingxpoints-1 && m_Grains[gremove]->rowlist->at(i) > 0 && m_Grains[gremove]->rowlist->at(i) <= packingypoints-1 && m_Grains[gremove]->planelist->at(i) > 0 && m_Grains[gremove]->planelist->at(i) <= packingzpoints-1)
+			if(m_Grains[gremove]->columnlist->at(i) >= 0 && m_Grains[gremove]->columnlist->at(i) <= packingxpoints-1 && m_Grains[gremove]->rowlist->at(i) >= 0 && m_Grains[gremove]->rowlist->at(i) <= packingypoints-1 && m_Grains[gremove]->planelist->at(i) >= 0 && m_Grains[gremove]->planelist->at(i) <= packingzpoints-1)
 			{
 				index = (m_Grains[gremove]->planelist->at(i)*packingxpoints*packingypoints)+(m_Grains[gremove]->rowlist->at(i)*packingxpoints)+(m_Grains[gremove]->columnlist->at(i));
 			}
@@ -1509,7 +1497,7 @@ float GrainGeneratorFunc::check_fillingerror(int gadd, int gremove)
 		}
 		if(periodic_boundaries == false)
 		{
-			if(m_Grains[gadd]->columnlist->at(i) > 0 && m_Grains[gadd]->columnlist->at(i) <= packingxpoints-1 && m_Grains[gadd]->rowlist->at(i) > 0 && m_Grains[gadd]->rowlist->at(i) <= packingypoints-1 && m_Grains[gadd]->planelist->at(i) > 0 && m_Grains[gadd]->planelist->at(i) <= packingzpoints-1)
+			if(m_Grains[gadd]->columnlist->at(i) >= 0 && m_Grains[gadd]->columnlist->at(i) <= packingxpoints-1 && m_Grains[gadd]->rowlist->at(i) >= 0 && m_Grains[gadd]->rowlist->at(i) <= packingypoints-1 && m_Grains[gadd]->planelist->at(i) >= 0 && m_Grains[gadd]->planelist->at(i) <= packingzpoints-1)
 			{
 				index = (m_Grains[gadd]->planelist->at(i)*packingxpoints*packingypoints)+(m_Grains[gadd]->rowlist->at(i)*packingxpoints)+(m_Grains[gadd]->columnlist->at(i));
 			}
@@ -1534,7 +1522,7 @@ float GrainGeneratorFunc::check_fillingerror(int gadd, int gremove)
 		}
 		if(periodic_boundaries == false)
 		{
-			if(m_Grains[gremove]->columnlist->at(i) > 0 && m_Grains[gremove]->columnlist->at(i) <= packingxpoints-1 && m_Grains[gremove]->rowlist->at(i) > 0 && m_Grains[gremove]->rowlist->at(i) <= packingypoints-1 && m_Grains[gremove]->planelist->at(i) > 0 && m_Grains[gremove]->planelist->at(i) <= packingzpoints-1)
+			if(m_Grains[gremove]->columnlist->at(i) >= 0 && m_Grains[gremove]->columnlist->at(i) <= packingxpoints-1 && m_Grains[gremove]->rowlist->at(i) >= 0 && m_Grains[gremove]->rowlist->at(i) <= packingypoints-1 && m_Grains[gremove]->planelist->at(i) >= 0 && m_Grains[gremove]->planelist->at(i) <= packingzpoints-1)
 			{
 				index = (m_Grains[gremove]->planelist->at(i)*packingxpoints*packingypoints)+(m_Grains[gremove]->rowlist->at(i)*packingxpoints)+(m_Grains[gremove]->columnlist->at(i));
 			}
@@ -1647,9 +1635,9 @@ void  GrainGeneratorFunc::pack_grains()
   {
     bestcurrentfillingerror = 100000000000000.0;
     m_Grains[i]->active = 1;
-	xc = rg.Random() * (xpoints * resx);
-	yc = rg.Random() * (ypoints * resy);
-	zc = rg.Random() * (zpoints * resz);
+	xc = sizex/2.0;
+	yc = sizey/2.0;
+	zc = sizez/2.0;
 	m_Grains[i]->centroidx = xc;
 	m_Grains[i]->centroidy = yc;
 	m_Grains[i]->centroidz = zc;
