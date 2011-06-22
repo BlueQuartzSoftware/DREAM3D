@@ -320,6 +320,11 @@
             <string>Cube-Octahedron</string>
            </property>
           </item>
+          <item>
+           <property name="text">
+            <string>Cylinder</string>
+           </property>
+          </item>
          </widget>
         </item>
         <item row="4" column="5">
@@ -670,6 +675,7 @@
   <tabstop>m_GoBtn</tabstop>
  </tabstops>
  <resources>
+  <include location="../../../Resources/icons/images/Icons.qrc"/>
   <include location="../../../Resources/icons/images/Icons.qrc"/>
   <include location="../../../Resources/icons/images/Icons.qrc"/>
   <include location="../../../Resources/icons/images/Icons.qrc"/>

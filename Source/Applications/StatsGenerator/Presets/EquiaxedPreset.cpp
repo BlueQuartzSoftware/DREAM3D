@@ -125,8 +125,8 @@ void EquiaxedPreset::initializeBOverATableModel(StatsGenPlotWidget* plot, QVecto
   qint32 colorOffset = 21;
   for (qint32 i = 0; i < count; ++i)
    {
-		alpha = (0*i) + 10.0 + rg.Random();
-		beta = (0*i) + 1.5 + (0.5*rg.Random());
+		alpha = (0*i) + 15.0 + rg.Random();
+		beta = (0*i) + 1.25 + (0.5*rg.Random());
 		alphas.push_back(alpha);
 		betas.push_back(beta);
 		colors.push_back(colorNames[colorOffset++]);
@@ -166,8 +166,8 @@ void EquiaxedPreset::initializeCOverATableModel(StatsGenPlotWidget* plot, QVecto
   qint32 colorOffset = 21;
   for (qint32 i = 0; i < count; ++i)
    {
-		alpha = (0*i) + 10.0 + rg.Random();
-		beta = (0*i) + 1.5 + (0.5*rg.Random());
+		alpha = (0*i) + 15.0 + rg.Random();
+		beta = (0*i) + 1.25 + (0.5*rg.Random());
 		alphas.push_back(alpha);
 		betas.push_back(beta);
 		colors.push_back(colorNames[colorOffset++]);
@@ -208,8 +208,8 @@ void EquiaxedPreset::initializeCOverBTableModel(StatsGenPlotWidget* plot, QVecto
   qint32 colorOffset = 21;
   for (qint32 i = 0; i < count; ++i)
    {
-		alpha = (0*i) + 10.0 + rg.Random();
-		beta = (0*i) + 1.5 + (0.5*rg.Random());
+		alpha = (0*i) + 15.0 + rg.Random();
+		beta = (0*i) + 1.25 + (0.5*rg.Random());
 		alphas.push_back(alpha);
 		betas.push_back(beta);
 		colors.push_back(colorNames[colorOffset++]);
