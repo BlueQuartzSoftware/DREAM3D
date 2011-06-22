@@ -165,7 +165,17 @@ void ReconstructionFunc::initializeQuats()
     OrientationMath::eulertoQuat(qr, voxels[i].euler1, voxels[i].euler2, voxels[i].euler3);
     phase = voxels[i].phase;
     xtal = crystruct[phase];
-    m_OrientationOps[xtal]->getFZQuat(qr);
+	if(xtal == AIM::Reconstruction::UnknownCrystalStructure)
+	{
+		qr[1] = 0.0;		
+		qr[2] = 0.0;		
+		qr[3] = 0.0;		
+		qr[4] = 1.0;		
+	}
+	else
+	{
+		m_OrientationOps[xtal]->getFZQuat(qr);
+	}
     voxels[i].quat[0] = 1.0;
     voxels[i].quat[1] = qr[1];
     voxels[i].quat[2] = qr[2];
