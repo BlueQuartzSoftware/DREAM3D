@@ -36,7 +36,7 @@
 // -----------------------------------------------------------------------------
 ReconstructionVoxel::ReconstructionVoxel() :
 grain_index(0),
-phase(0),
+phase(1),
 euler1(-1.0),
 euler2(-1.0),
 euler3(-1.0),
