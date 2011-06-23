@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>597</width>
-    <height>688</height>
+    <width>617</width>
+    <height>724</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -669,188 +669,130 @@
        </layout>
       </item>
       <item>
-       <layout class="QGridLayout" name="gridLayout_4">
+       <layout class="QFormLayout" name="formLayout">
+        <property name="fieldGrowthPolicy">
+         <enum>QFormLayout::FieldsStayAtSizeHint</enum>
+        </property>
+        <property name="labelAlignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+        <property name="formAlignment">
+         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+        </property>
         <property name="horizontalSpacing">
-         <number>2</number>
+         <number>12</number>
         </property>
         <property name="verticalSpacing">
-         <number>3</number>
+         <number>8</number>
         </property>
-        <item row="0" column="0">
-         <widget class="QLabel" name="label_12">
+        <item row="5" column="1">
+         <widget class="QCheckBox" name="m_VisualizationVizFile">
           <property name="text">
-           <string>Existing Output Files</string>
+           <string>VTK Visualization File</string>
           </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
+          <property name="checked">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="6" column="1">
+         <widget class="QPushButton" name="m_VtkOptionsBtn">
+          <property name="text">
+           <string>VTK Options</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QLabel" name="m_H5VoxelFile">
+          <property name="text">
+           <string>VoxelVolumeData</string>
           </property>
          </widget>
         </item>
         <item row="1" column="0">
-         <layout class="QFormLayout" name="formLayout_2">
-          <property name="fieldGrowthPolicy">
-           <enum>QFormLayout::FieldsStayAtSizeHint</enum>
-          </property>
-          <property name="labelAlignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-          <property name="horizontalSpacing">
-           <number>12</number>
-          </property>
-          <property name="verticalSpacing">
-           <number>1</number>
-          </property>
-          <item row="1" column="0">
-           <widget class="QLabel" name="m_H5VolumeFileIcon">
-            <property name="text">
-             <string/>
-            </property>
-            <property name="pixmap">
-             <pixmap resource="../../../Resources/icons/images/Icons.qrc">:/Delete-16x16.png</pixmap>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="1">
-           <widget class="QLabel" name="m_H5VoxelFile">
-            <property name="text">
-             <string>VoxelVolumeData</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </item>
-        <item row="1" column="1">
-         <layout class="QFormLayout" name="formLayout">
-          <property name="fieldGrowthPolicy">
-           <enum>QFormLayout::FieldsStayAtSizeHint</enum>
-          </property>
-          <property name="labelAlignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-          <property name="formAlignment">
-           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
-          </property>
-          <property name="horizontalSpacing">
-           <number>12</number>
-          </property>
-          <property name="verticalSpacing">
-           <number>1</number>
-          </property>
-          <item row="1" column="0">
-           <widget class="QLabel" name="m_VisualizationVizFileIcon">
-            <property name="text">
-             <string/>
-            </property>
-            <property name="pixmap">
-             <pixmap resource="../../../Resources/icons/images/Icons.qrc">:/Delete-16x16.png</pixmap>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="1">
-           <widget class="QCheckBox" name="m_VisualizationVizFile">
-            <property name="text">
-             <string>VTK Visualization File</string>
-            </property>
-            <property name="checked">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="0">
-           <widget class="QLabel" name="m_DownSampledVizFileIcon">
-            <property name="text">
-             <string/>
-            </property>
-            <property name="pixmap">
-             <pixmap resource="../../../Resources/icons/images/Icons.qrc">:/Delete-16x16.png</pixmap>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="1">
-           <widget class="QCheckBox" name="m_DownSampledVizFile">
-            <property name="text">
-             <string>Downsampled File</string>
-            </property>
-            <property name="checked">
-             <bool>false</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="4" column="0">
-           <widget class="QLabel" name="m_HDF5GrainFileIcon">
-            <property name="text">
-             <string/>
-            </property>
-            <property name="pixmap">
-             <pixmap resource="../../../Resources/icons/images/Icons.qrc">:/Delete-16x16.png</pixmap>
-            </property>
-           </widget>
-          </item>
-          <item row="4" column="1">
-           <widget class="QCheckBox" name="m_HDF5GrainFile">
-            <property name="text">
-             <string>HDF5 Grain File (.h5grain)</string>
-            </property>
-            <property name="checked">
-             <bool>false</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="1">
-           <widget class="QPushButton" name="m_VtkOptionsBtn">
-            <property name="text">
-             <string>VTK Options</string>
-            </property>
-           </widget>
-          </item>
-          <item row="5" column="1">
-           <widget class="QCheckBox" name="m_DxFile">
-            <property name="text">
-             <string>DX Output file (Grain IDs Only)</string>
-            </property>
-            <property name="checked">
-             <bool>false</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="5" column="0">
-           <widget class="QLabel" name="m_DxFileIcon">
-            <property name="text">
-             <string/>
-            </property>
-            <property name="pixmap">
-             <pixmap resource="../../../Resources/icons/images/Icons.qrc">:/Delete-16x16.png</pixmap>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </item>
-        <item row="2" column="0" colspan="2">
-         <widget class="QLabel" name="messageLabel">
-          <property name="font">
-           <font>
-            <italic>true</italic>
-           </font>
-          </property>
+         <widget class="QLabel" name="label_12">
           <property name="text">
-           <string>Message:</string>
-          </property>
-          <property name="wordWrap">
-           <bool>true</bool>
-          </property>
-          <property name="margin">
-           <number>3</number>
+           <string>Voxel Data File</string>
           </property>
          </widget>
         </item>
-        <item row="0" column="1">
-         <widget class="QLabel" name="label_60">
+        <item row="5" column="0">
+         <widget class="QLabel" name="label_18">
           <property name="text">
-           <string>Optional Output Files</string>
+           <string>VTK Rectilinear Grid</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="0">
+         <widget class="QLabel" name="label_19">
+          <property name="text">
+           <string>HDF5 Polydata</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="1">
+         <widget class="QCheckBox" name="m_HDF5GrainFile">
+          <property name="text">
+           <string>HDF5 Grain File (.h5grain)</string>
+          </property>
+          <property name="checked">
+           <bool>false</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="1">
+         <widget class="QCheckBox" name="m_DownSampledVizFile">
+          <property name="text">
+           <string>Downsampled File</string>
+          </property>
+          <property name="checked">
+           <bool>false</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="1">
+         <widget class="QCheckBox" name="m_DxFile">
+          <property name="text">
+           <string>Output.dx</string>
+          </property>
+          <property name="checked">
+           <bool>false</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="0">
+         <widget class="QLabel" name="label_20">
+          <property name="text">
+           <string>DX Output File (Grain IDs Only)</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="0">
+         <widget class="QLabel" name="label_21">
+          <property name="text">
+           <string>VTK Downsampled Voxels</string>
           </property>
          </widget>
         </item>
        </layout>
+      </item>
+      <item>
+       <widget class="QLabel" name="messageLabel">
+        <property name="font">
+         <font>
+          <italic>true</italic>
+         </font>
+        </property>
+        <property name="text">
+         <string>Message:</string>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+        <property name="margin">
+         <number>3</number>
+        </property>
+       </widget>
       </item>
      </layout>
     </widget>
