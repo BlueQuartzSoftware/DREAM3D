@@ -33,10 +33,14 @@
 
 #include <QtCore/QObject>
 #include <QtCore/QSettings>
+#include <QtCore/QUrl>
 #include "QtSupport/DREAM3DPluginInterface.h"
 
 class GrainGeneratorWidget;
 class AIMPluginFrame;
+
+DREAM3D_PLUGIN_CONSTANTS(GrainGenerator, Grain Generator)
+
 
 class GrainGeneratorPlugin : public QObject, public DREAM3DPluginInterface
 {
@@ -57,6 +61,11 @@ class GrainGeneratorPlugin : public QObject, public DREAM3DPluginInterface
     virtual void readSettings(QSettings &prefs);
 
     virtual QIcon icon();
+    virtual QUrl htmlHelpIndexFile();
+
+  public slots:
+    virtual void displayHelp();
+
 
   protected:
     GrainGeneratorWidget* m_InputWidget;
