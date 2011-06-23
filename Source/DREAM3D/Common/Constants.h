@@ -306,7 +306,8 @@ namespace AIM
         UnknownShapeClass = 0,   //!<
         Ellipsoid = 1,           //!<
         Superellipsoid = 2,      //!<
-        CubeOctahedron = 3       //!<
+        CubeOctahedron = 3,      //!<
+        Cylinder = 4		     //!<
     };
 
 	enum Precipitates {

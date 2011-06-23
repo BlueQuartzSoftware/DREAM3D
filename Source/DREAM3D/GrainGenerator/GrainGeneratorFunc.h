@@ -104,8 +104,8 @@ public:
     std::vector<Grain::Pointer> m_Grains;
 	  std::vector<float> sizetest;
 
-	  std::vector<float> grainowners;
-	  std::vector<float> goalgrainowners;
+	  std::vector<std::vector<std::vector<int> > > grainowners;
+	  std::vector<std::vector<std::vector<int> > > goalgrainowners;
 
 	  std::vector<SharedFloatArray> actualodf;
     std::vector<SharedFloatArray> simodf;
