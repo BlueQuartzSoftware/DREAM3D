@@ -97,7 +97,7 @@ class DREAM3DLib_EXPORT AbstractPipeline
     f = MXADir::toNativeSeparators(f);
 
 
-#define AIM_RECONSTRUCTION_BENCHMARKS 0
+#define AIM_RECONSTRUCTION_BENCHMARKS 1
 
 #if AIM_RECONSTRUCTION_BENCHMARKS
 #define START_CLOCK()\
