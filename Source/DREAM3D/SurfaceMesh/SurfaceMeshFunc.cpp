@@ -19,7 +19,6 @@
 // to expose some of the constants needed below
 #include "DREAM3D/Common/AIMMath.h"
 
-
 // C Includes
 #include <stdio.h>
 #include <stdlib.h>
@@ -35,26 +34,23 @@
 
 using namespace std;
 
-
-const static float m_pi = M_PI;
-const static float m_OnepointThree = 1.33333333333f;
+//const static float m_pi = M_PI;
+//const static float m_OnepointThree = 1.33333333333f;
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 SurfaceMeshFunc::SurfaceMeshFunc() :
-  neigh(NULL),
-  voxels(NULL),
-  cSquare(NULL)
+    neigh(NULL), voxels(NULL), cSquare(NULL)
 {
 
 }
 
 SurfaceMeshFunc::~SurfaceMeshFunc()
 {
-  delete []neigh;
-  delete []voxels;
-  delete []cSquare;
+  delete[] neigh;
+  delete[] voxels;
+  delete[] cSquare;
 }
 
 int SurfaceMeshFunc::initialize_micro(string filename, int zID)
@@ -66,25 +62,25 @@ int SurfaceMeshFunc::initialize_micro(string filename, int zID)
   int xnum, ynum, znum;
   float xres, yres, zres;
   int col, row, plane;
-  const unsigned int size ( 1024 );
-  char buf [ size ];
+  const unsigned int size(1024);
+  char buf[size];
   std::string word;
-  if(zID == -1)
+  if (zID == -1)
   {
     numgrains = 0;
-    in.open(filename.c_str() );
+    in.open(filename.c_str());
     bool headerdone = false;
-    while(headerdone == false)
+    while (headerdone == false)
     {
-      in.getline( buf, size );
+      in.getline(buf, size);
       std::string line = buf;
       in >> word;
-      if(word == "LOOKUP_TABLE")
+      if (word == "LOOKUP_TABLE")
       {
         headerdone = true;
         in >> word;
       }
-      if(word == "DIMENSIONS")
+      if (word == "DIMENSIONS")
       {
         in >> xnum >> ynum >> znum;
         NS = xnum * ynum * znum;
@@ -92,12 +88,11 @@ int SurfaceMeshFunc::initialize_micro(string filename, int zID)
         xDim = xnum;
         yDim = ynum;
         zDim = znum;
-        neigh = new Neighbor[2 * NSP + 1];
-        voxels = new int[2*NSP + 1];
-        cSquare = new Face[3 * 2 * NSP];
-        cVertex = new Node[2*7*NSP];
-      }
-      if(word == "SPACING")
+        neigh = new Neighbor[2 * NSP + 1];voxels
+        = new int[2 * NSP + 1];cSquare
+        = new Face[3 * 2 * NSP];cVertex
+        = new Node[2 * 7 * NSP];}
+      if (word == "SPACING")
       {
         in >> xres >> yres >> zres;
         xRes = xres;
@@ -106,29 +101,29 @@ int SurfaceMeshFunc::initialize_micro(string filename, int zID)
       }
     }
   }
-  if(zID >= 0)
+  if (zID >= 0)
   {
-    int shift = (zID*NSP);
-    int start = NSP+1;
-    if(zID == 0) start = 1;
-    if(zID > 0)
+    int shift = (zID * NSP);
+    int start = NSP + 1;
+    if (zID == 0) start = 1;
+    if (zID > 0)
     {
       for (i = 1; i <= NSP; i++)
       {
         //voxels[i].deepCopy(&(voxels[i+NSP]));
-        voxels[i] = voxels[i+NSP];
+        voxels[i] = voxels[i + NSP];
       }
     }
-    for(i=start;i<=(2*NSP);i++)
+    for (i = start; i <= (2 * NSP); i++)
     {
       in >> tgrainname;
-      if(tgrainname <= 0) tgrainname = -3;
-      if(tgrainname > numgrains) numgrains = tgrainname;
-      col = (i+shift-1)%xDim;
-      row = ((i+shift-1)/xDim)%yDim;
-      plane = (i+shift-1)/(xDim*yDim);
+      if (tgrainname <= 0) tgrainname = -3;
+      if (tgrainname > numgrains) numgrains = tgrainname;
+      col = (i + shift - 1) % xDim;
+      row = ((i + shift - 1) / xDim) % yDim;
+      plane = (i + shift - 1) / (xDim * yDim);
       voxels[i] = tgrainname;
-      if(col == 0 || col == (xDim-1) || row == 0 || row == (yDim-1) || plane == 0 || plane == (zDim-1)) voxels[i] = -3;
+      if (col == 0 || col == (xDim - 1) || row == 0 || row == (yDim - 1) || plane == 0 || plane == (zDim - 1)) voxels[i] = -3;
     }
     voxels[0] = 0; // point 0 is a garbage...
   }
@@ -276,20 +271,20 @@ void SurfaceMeshFunc::initialize_nodes(int zID)
 
 float SurfaceMeshFunc::find_xcoord(int index)
 {
-  index = index-1;
-  float x = xRes*float(index%xDim);
+  index = index - 1;
+  float x = xRes * float(index % xDim);
   return x;
 }
 float SurfaceMeshFunc::find_ycoord(int index)
 {
-  index = index-1;
-  float y = yRes*float((index/xDim)%yDim);
+  index = index - 1;
+  float y = yRes * float((index / xDim) % yDim);
   return y;
 }
 float SurfaceMeshFunc::find_zcoord(int index)
 {
-  index = index-1;
-  float z = zRes*float(index/(xDim*yDim));
+  index = index - 1;
+  float z = zRes * float(index / (xDim * yDim));
   return z;
 }
 void SurfaceMeshFunc::initialize_squares(int zID)
@@ -343,7 +338,7 @@ void SurfaceMeshFunc::initialize_squares(int zID)
 }
 int SurfaceMeshFunc::get_number_Edges(int zID)
 {
-  int  k, m;
+  int k, m;
   int csite, cgrainname, tsite;
   int tNSite[4];
   int tngrainname[4];
@@ -379,9 +374,9 @@ int SurfaceMeshFunc::get_number_Edges(int zID)
       // Let's count the number of edges...
       if (atBulk > 0)
       { // coNSider the square iNSide the bulk only..
-      sqIndex = 0;
-    sqIndex = get_square_index(tngrainname);
-    cSquare[k].effect = 1;
+        sqIndex = 0;
+        sqIndex = get_square_index(tngrainname);
+        cSquare[k].effect = 1;
         if (sqIndex == 15)
         {
           anFlag = treat_anomaly(tNSite, zID);
@@ -417,7 +412,7 @@ int SurfaceMeshFunc::get_number_Edges(int zID)
 
 void SurfaceMeshFunc::get_nodes_Edges(int eT2d[20][8], int NST2d[20][8], int zID, int nedge)
 {
-  int  j, k, m, ii;
+  int j, k, m, ii;
   int csite, cgrainname, tsite;
   int cubeOrigin; // stores the site id of 0th corner of each cube...
   int sqOrder; // stores the 0th, 1st and 2nd square...
@@ -466,7 +461,7 @@ void SurfaceMeshFunc::get_nodes_Edges(int eT2d[20][8], int NST2d[20][8], int zID
       // Let's find the edges...
       if (atBulk > 0)
       { // coNSider the square iNSide the bulk only...
-    sqIndex = get_square_index(tngrainname);
+        sqIndex = get_square_index(tngrainname);
         if (sqIndex == 15)
         {
           anFlag = treat_anomaly(tNSite, zID);
@@ -485,65 +480,65 @@ void SurfaceMeshFunc::get_nodes_Edges(int eT2d[20][8], int NST2d[20][8], int zID
               get_nodes(cubeOrigin, sqOrder, nodeIndex, nodeID);
               tnode1 = nodeID[0];
               tnode2 = nodeID[1];
-        get_grainnames(tngrainname,pixIndex,pixgrainname);
+              get_grainnames(tngrainname, pixIndex, pixgrainname);
 
-        if(pixgrainname[0] > 0 || pixgrainname[1] > 0)
-        {
-          // Categorize the node...if it's triple junction or not...
-          for (ii = 0; ii < 2; ii++)
-          {
-          if (nodeIndex[ii] == 4)
-          {
-            if (sqIndex == 7 || sqIndex == 11 || sqIndex == 13 || sqIndex == 14)
-            {
-            tnode = nodeID[ii];
-            cVertex[tnode].nodeKind = 3;
-            cSquare[k].turnFC = 1;
-            cSquare[k].FCnode = tnode;
-            }
-            else if (sqIndex == 19)
-            {
-            tnode = nodeID[ii];
-            cVertex[tnode].nodeKind = 4;
-            cSquare[k].turnFC = 1;
-            cSquare[k].FCnode = tnode;
-            }
-          }
-          else
-          {
-            tnode = nodeID[ii];
-            cVertex[tnode].nodeKind = 2;
-          }
-          }
-          cEdge[eid].node_id[0] = tnode1; // actual node ids for each edge...
-          cEdge[eid].node_id[1] = tnode2;
-          cEdge[eid].neigh_grainname[0] = pixgrainname[0];
-          cEdge[eid].neigh_grainname[1] = pixgrainname[1];
-          cEdge[eid].edgeKind = 2; // edges of the open loops are always binary...
-          // triple lines only occurs iNSide the marching cubes...
-          // mark where each face edge belong to, upper, middle or bottom of the layer...
-          if (quot == 0)
-          {
-          if (rmd1 == 0)
-          {
-            cEdge[eid].where = 0;
-          }
-          else
-          {
-            cEdge[eid].where = 1;
-          }
-          }
-          else
-          { //when quot==1
-          if (rmd1 == 0)
-          {
-            cEdge[eid].where = 2;
-          }
-          }
-          cSquare[k].edge_id[edgeCount] = eid;
-          edgeCount++;
-          eid++;
-        }
+              if (pixgrainname[0] > 0 || pixgrainname[1] > 0)
+              {
+                // Categorize the node...if it's triple junction or not...
+                for (ii = 0; ii < 2; ii++)
+                {
+                  if (nodeIndex[ii] == 4)
+                  {
+                    if (sqIndex == 7 || sqIndex == 11 || sqIndex == 13 || sqIndex == 14)
+                    {
+                      tnode = nodeID[ii];
+                      cVertex[tnode].nodeKind = 3;
+                      cSquare[k].turnFC = 1;
+                      cSquare[k].FCnode = tnode;
+                    }
+                    else if (sqIndex == 19)
+                    {
+                      tnode = nodeID[ii];
+                      cVertex[tnode].nodeKind = 4;
+                      cSquare[k].turnFC = 1;
+                      cSquare[k].FCnode = tnode;
+                    }
+                  }
+                  else
+                  {
+                    tnode = nodeID[ii];
+                    cVertex[tnode].nodeKind = 2;
+                  }
+                }
+                cEdge[eid].node_id[0] = tnode1; // actual node ids for each edge...
+                cEdge[eid].node_id[1] = tnode2;
+                cEdge[eid].neigh_grainname[0] = pixgrainname[0];
+                cEdge[eid].neigh_grainname[1] = pixgrainname[1];
+                cEdge[eid].edgeKind = 2; // edges of the open loops are always binary...
+                // triple lines only occurs iNSide the marching cubes...
+                // mark where each face edge belong to, upper, middle or bottom of the layer...
+                if (quot == 0)
+                {
+                  if (rmd1 == 0)
+                  {
+                    cEdge[eid].where = 0;
+                  }
+                  else
+                  {
+                    cEdge[eid].where = 1;
+                  }
+                }
+                else
+                { //when quot==1
+                  if (rmd1 == 0)
+                  {
+                    cEdge[eid].where = 2;
+                  }
+                }
+                cSquare[k].edge_id[edgeCount] = eid;
+                edgeCount++;
+                eid++;
+              }
             }
           }
         }
@@ -614,7 +609,7 @@ int SurfaceMeshFunc::get_square_index(int tNS[4])
     subIndex = 2 * aBit[4] + 1 * aBit[5];
     if (subIndex == 0)
     {
-     // tempIndex = tempIndex;
+      // tempIndex = tempIndex;
     }
     else
     {
@@ -647,13 +642,13 @@ int SurfaceMeshFunc::treat_anomaly(int tNSt[4], int zID1)
     cgrainname = voxels[csite];
     for (j = 1; j <= num_neigh; j++)
     {
-    NSite = neigh[cid].neigh_id[j];
-    if(NSite <= 0 || NSite > (2*NSP)) ngrainname = -3;
-    if(NSite > 0 && NSite <= (2*NSP)) ngrainname = voxels[NSite];
-    if (cgrainname == ngrainname)
-    {
-      numNeigh[i] = numNeigh[i] + 1;
-    }
+      NSite = neigh[cid].neigh_id[j];
+      if (NSite <= 0 || NSite > (2 * NSP)) ngrainname = -3;
+      if (NSite > 0 && NSite <= (2 * NSP)) ngrainname = voxels[NSite];
+      if (cgrainname == ngrainname)
+      {
+        numNeigh[i] = numNeigh[i] + 1;
+      }
     }
   }
   for (ii = 0; ii < 4; ii++)
@@ -690,7 +685,7 @@ void SurfaceMeshFunc::get_nodes(int cst, int ord, int nidx[2], int *nid)
     tempIndex = nidx[ii];
     if (ord == 0)
     { // if the square index is 0 for corner site...
-      switch (tempIndex)
+      switch(tempIndex)
       {
         case 0:
           nid[ii] = 7 * (cst - 1);
@@ -711,7 +706,7 @@ void SurfaceMeshFunc::get_nodes(int cst, int ord, int nidx[2], int *nid)
     }
     else if (ord == 1)
     { // if the square index is 1...
-      switch (tempIndex)
+      switch(tempIndex)
       {
         case 0:
           nid[ii] = 7 * (cst - 1);
@@ -732,7 +727,7 @@ void SurfaceMeshFunc::get_nodes(int cst, int ord, int nidx[2], int *nid)
     }
     else
     { // if the square index is 2...
-      switch (tempIndex)
+      switch(tempIndex)
       {
         case 0:
           nid[ii] = 7 * (cst - 1) + 1;
@@ -761,7 +756,7 @@ void SurfaceMeshFunc::get_grainnames(int NSPneigh[4], int pID[2], int *pgrainnam
   for (i = 0; i < 2; i++)
   {
     pixTemp = pID[i];
-    switch (pixTemp)
+    switch(pixTemp)
     {
       case 0:
         tempgrainname = NSPneigh[0];
@@ -883,7 +878,7 @@ int SurfaceMeshFunc::get_number_triangles()
           }
         }
       }
-    cVertex[BCnode].nodeKind = nds + 10;
+      cVertex[BCnode].nodeKind = nds + 10;
     }
     // Checking the number of edges for loops in the cube...
     // if the current marching cube is a collection of 6 effective squares...and
@@ -922,7 +917,7 @@ int SurfaceMeshFunc::get_number_triangles()
       {
         nTriM = nTriM + get_number_caseM_triangles(arrayE, nE, arrayFC, nFC);
       }
-      delete [] arrayE;
+      delete[] arrayE;
     }
   }
   nTri = nTri0 + nTri2 + nTriM;
@@ -965,13 +960,13 @@ int SurfaceMeshFunc::get_number_case0_triangles(int *ae, int nedge)
       nucleus = ce;
       burnt[i] = loopID;
       burnt_list[tail] = ce;
-    coin = 1;
+      coin = 1;
       while (coin)
       {
         chaser = burnt_list[tail];
-    cgrainname1 = cEdge[chaser].neigh_grainname[0];
+        cgrainname1 = cEdge[chaser].neigh_grainname[0];
         cgrainname2 = cEdge[chaser].neigh_grainname[1];
-    cnode1 = cEdge[chaser].node_id[0];
+        cnode1 = cEdge[chaser].node_id[0];
         cnode2 = cEdge[chaser].node_id[1];
         for (j = 0; j < nedge; j++)
         {
@@ -979,8 +974,8 @@ int SurfaceMeshFunc::get_number_case0_triangles(int *ae, int nedge)
           nbflag = burnt[j];
           if (nbflag == 0)
           {
-      ngrainname1 = cEdge[ne].neigh_grainname[0];
-      ngrainname2 = cEdge[ne].neigh_grainname[1];
+            ngrainname1 = cEdge[ne].neigh_grainname[0];
+            ngrainname2 = cEdge[ne].neigh_grainname[1];
             nnode1 = cEdge[ne].node_id[0];
             nnode2 = cEdge[ne].node_id[1];
             // checking if neighbor edge has same neighboring grainnames...
@@ -1015,12 +1010,12 @@ int SurfaceMeshFunc::get_number_case0_triangles(int *ae, int nedge)
               burnt[j] = loopID;
               if (flip == 1)
               {
-        cEdge[ne].node_id[0] = nnode2;
+                cEdge[ne].node_id[0] = nnode2;
                 cEdge[ne].node_id[1] = nnode1;
               }
             }
           }
-         }
+        }
         if (tail == head)
         {
           coin = 0;
@@ -1066,13 +1061,13 @@ int SurfaceMeshFunc::get_number_case0_triangles(int *ae, int nedge)
       numTri = numTri + tnumTri;
     }
   }
-  delete [] burnt;
-  delete [] burnt_list;
-  delete [] count;
+  delete[] burnt;
+  delete[] burnt_list;
+  delete[] count;
   return (numTri);
 }
 
-int SurfaceMeshFunc::get_number_case2_triangles(int *ae,  int nedge, int *afc, int nfctr)
+int SurfaceMeshFunc::get_number_case2_triangles(int *ae, int nedge, int *afc, int nfctr)
 {
   int ii, i, j, k, kk, k1, n, i1, j1;
   int loopID;
@@ -1115,13 +1110,13 @@ int SurfaceMeshFunc::get_number_case2_triangles(int *ae,  int nedge, int *afc, i
       nucleus = ce;
       burnt[i] = loopID;
       burnt_list[tail] = ce;
-    coin = 1;
+      coin = 1;
       while (coin)
       {
         chaser = burnt_list[tail];
-    cgrainname1 = cEdge[chaser].neigh_grainname[0];
+        cgrainname1 = cEdge[chaser].neigh_grainname[0];
         cgrainname2 = cEdge[chaser].neigh_grainname[1];
-    cnode1 = cEdge[chaser].node_id[0];
+        cnode1 = cEdge[chaser].node_id[0];
         cnode2 = cEdge[chaser].node_id[1];
         for (j = 0; j < nedge; j++)
         {
@@ -1129,8 +1124,8 @@ int SurfaceMeshFunc::get_number_case2_triangles(int *ae,  int nedge, int *afc, i
           nbflag = burnt[j];
           if (nbflag == 0)
           {
-      ngrainname1 = cEdge[ne].neigh_grainname[0];
-      ngrainname2 = cEdge[ne].neigh_grainname[1];
+            ngrainname1 = cEdge[ne].neigh_grainname[0];
+            ngrainname2 = cEdge[ne].neigh_grainname[1];
             nnode1 = cEdge[ne].node_id[0];
             nnode2 = cEdge[ne].node_id[1];
             // checking if neighbor edge has same neighboring grainnames...
@@ -1214,11 +1209,11 @@ int SurfaceMeshFunc::get_number_case2_triangles(int *ae,  int nedge, int *afc, i
     numN = count[j1];
     to = to + numN;
     from = to - numN;
-    burnt_loop = new int[numN + 2];
-    for (i1 = from; i1 < to; i1++)
+    burnt_loop = new int[numN + 2];for
+(    i1 = from; i1 < to; i1++)
     {
       ce = burnt_list[i1];
-    cnode1 = cEdge[ce].node_id[0];
+      cnode1 = cEdge[ce].node_id[0];
       cnode2 = cEdge[ce].node_id[1];
       if (start == cnode1)
       {
@@ -1284,7 +1279,7 @@ int SurfaceMeshFunc::get_number_case2_triangles(int *ae,  int nedge, int *afc, i
       {
         numTri = numTri + ((numN + 1) - 2);
       }
-      delete [] burnt_loop;
+      delete[] burnt_loop;
     }
     else
     { // if current loop is a closed one....i.e., openL = 0...
@@ -1329,12 +1324,12 @@ int SurfaceMeshFunc::get_number_case2_triangles(int *ae,  int nedge, int *afc, i
       {
         numTri = numTri + (numN - 2);
       }
-      delete [] burnt_loop;
+      delete[] burnt_loop;
     }
   }
-  delete [] burnt;
-  delete [] burnt_list;
-  delete [] count;
+  delete[] burnt;
+  delete[] burnt_list;
+  delete[] count;
   return (numTri);
 }
 int SurfaceMeshFunc::get_number_caseM_triangles(int *ae, int nedge, int *afc, int nfctr)
@@ -1380,7 +1375,7 @@ int SurfaceMeshFunc::get_number_caseM_triangles(int *ae, int nedge, int *afc, in
       nucleus = ce;
       burnt[i] = loopID;
       burnt_list[tail] = ce;
-    coin = 1;
+      coin = 1;
       while (coin)
       {
         chaser = burnt_list[tail];
@@ -1477,8 +1472,8 @@ int SurfaceMeshFunc::get_number_caseM_triangles(int *ae, int nedge, int *afc, in
     numN = count[j1];
     to = to + numN;
     from = to - numN;
-    burnt_loop = new int[(numN + 2)];
-    for (i1 = from; i1 < to; i1++)
+    burnt_loop = new int[(numN + 2)];for
+(    i1 = from; i1 < to; i1++)
     {
       ce = burnt_list[i1];
       cnode1 = cEdge[ce].node_id[0];
@@ -1551,7 +1546,7 @@ int SurfaceMeshFunc::get_number_caseM_triangles(int *ae, int nedge, int *afc, in
       {
         numTri = numTri + ((numN + 2) - 2);
       }
-      delete [] burnt_loop;
+      delete[] burnt_loop;
     }
     else
     { // if current loop is a closed one....i.e., openL = 0...
@@ -1596,12 +1591,12 @@ int SurfaceMeshFunc::get_number_caseM_triangles(int *ae, int nedge, int *afc, in
       {
         numTri = numTri + (numN - 2);
       }
-      delete [] burnt_loop;
+      delete[] burnt_loop;
     }
   }
-  delete [] burnt;
-  delete [] burnt_list;
-  delete [] count;
+  delete[] burnt;
+  delete[] burnt_list;
+  delete[] count;
   return (numTri);
 }
 
@@ -1703,10 +1698,10 @@ int SurfaceMeshFunc::get_triangles()
         get_caseM_triangles(i, arrayE, nE, arrayFC, nFC, tidIn, &tidOut, bodyCtr);
         tidIn = tidOut;
       }
-      delete [] arrayE;
+      delete[] arrayE;
     }
   }
-  delete [] cEdge;
+  delete[] cEdge;
   return 0;
 }
 
@@ -1751,7 +1746,7 @@ void SurfaceMeshFunc::get_case0_triangles(int site, int *ae, int nedge, int tin,
       nucleus = ce;
       burnt[i] = loopID;
       burnt_list[tail] = ce;
-    coin = 1;
+      coin = 1;
       while (coin)
       {
         chaser = burnt_list[tail];
@@ -1920,12 +1915,12 @@ void SurfaceMeshFunc::get_case0_triangles(int site, int *ae, int nedge, int tin,
         }
       }
     }
-    delete [] loop;
+    delete[] loop;
   }
   *tout = ctid;
-  delete [] burnt;
-  delete [] burnt_list;
-  delete [] count;
+  delete[] burnt;
+  delete[] burnt_list;
+  delete[] count;
 }
 
 void SurfaceMeshFunc::get_case2_triangles(int site, int *ae, int nedge, int *afc, int nfctr, int tin, int *tout)
@@ -1975,7 +1970,7 @@ void SurfaceMeshFunc::get_case2_triangles(int site, int *ae, int nedge, int *afc
       nucleus = ce;
       burnt[i] = loopID;
       burnt_list[tail] = ce;
-    coin = 1;
+      coin = 1;
       while (coin)
       {
         chaser = burnt_list[tail];
@@ -2205,7 +2200,7 @@ void SurfaceMeshFunc::get_case2_triangles(int site, int *ae, int nedge, int *afc
           }
         }
       }
-      delete [] burnt_loop;
+      delete[] burnt_loop;
     }
     else
     { // if current loop is a closed one....i.e., openL = 0...
@@ -2311,13 +2306,13 @@ void SurfaceMeshFunc::get_case2_triangles(int site, int *ae, int nedge, int *afc
         }
 
       }
-      delete [] burnt_loop;
+      delete[] burnt_loop;
     }
   }
   *tout = ctid;
-  delete [] burnt;
-  delete [] burnt_list;
-  delete [] count;
+  delete[] burnt;
+  delete[] burnt_list;
+  delete[] count;
 }
 void SurfaceMeshFunc::get_caseM_triangles(int site, int *ae, int nedge, int *afc, int nfctr, int tin, int *tout, int ccn)
 {
@@ -2367,7 +2362,7 @@ void SurfaceMeshFunc::get_caseM_triangles(int site, int *ae, int nedge, int *afc
       nucleus = ce;
       burnt[i] = loopID;
       burnt_list[tail] = ce;
-    coin = 1;
+      coin = 1;
       while (coin)
       {
         chaser = burnt_list[tail];
@@ -2546,7 +2541,7 @@ void SurfaceMeshFunc::get_caseM_triangles(int site, int *ae, int nedge, int *afc
         cTriangle[ctid].ngrainname[1] = ts1;
         ctid++;
       }
-      delete [] burnt_loop;
+      delete[] burnt_loop;
     }
     else
     { // if current loop is a closed one....i.e., openL = 0...
@@ -2651,13 +2646,13 @@ void SurfaceMeshFunc::get_caseM_triangles(int site, int *ae, int nedge, int *afc
           }
         }
       }
-      delete [] burnt_loop;
+      delete[] burnt_loop;
     }
   }
   *tout = ctid;
-  delete [] burnt;
-  delete [] burnt_list;
-  delete [] count;
+  delete[] burnt;
+  delete[] burnt_list;
+  delete[] count;
 }
 
 void SurfaceMeshFunc::arrange_grainnames(int numT, int zID)
@@ -2776,33 +2771,33 @@ void SurfaceMeshFunc::arrange_grainnames(int numT, int zID)
       }
     }
     int k = 0;
-	int index = 0;
-	int testtsite = 0;
-	int sidechecked = 1;
+    int index = 0;
+    int testtsite = 0;
+    //int sidechecked = 1;
     while (cTriangle[i].ngrainname[0] == -1 && k < 6)
     {
       while (tsite1[k] == -1)
       {
         k++;
       }
-	  if(k == 3) a = -a, b = -b, c = -c;
-	  if(k < 3) index = k;
-	  if(k >= 3) index = k-3;
-	  if(a != 0 && (tsite1[index]%xDim+a) >= 0 && (tsite1[index]%xDim+a) < xDim) testtsite = tsite1[index] + (a*1);
-	  if(b != 0 && ((tsite1[index]/xDim)%yDim+b) >= 0 && ((tsite1[index]/xDim)%yDim+b) < yDim) testtsite = tsite1[index] + (b*xDim);
-	  if(c != 0 && (tsite1[index]/(xDim*yDim)+c) >= 0 && (tsite1[index]/(xDim*yDim)+c) < 2) testtsite = tsite1[index] + (c*NSP);
+      if (k == 3) a = -a, b = -b, c = -c;
+      if (k < 3) index = k;
+      if (k >= 3) index = k - 3;
+      if (a != 0 && (tsite1[index] % xDim + a) >= 0 && (tsite1[index] % xDim + a) < xDim) testtsite = tsite1[index] + (a * 1);
+      if (b != 0 && ((tsite1[index] / xDim) % yDim + b) >= 0 && ((tsite1[index] / xDim) % yDim + b) < yDim) testtsite = tsite1[index] + (b * xDim);
+      if (c != 0 && (tsite1[index] / (xDim * yDim) + c) >= 0 && (tsite1[index] / (xDim * yDim) + c) < 2) testtsite = tsite1[index] + (c * NSP);
       int gname = voxels[testtsite];
       if (gname == tgrainname1[index])
       {
-        if(k < 3) cTriangle[i].ngrainname[0] = tgrainname1[index], cTriangle[i].ngrainname[1] = tgrainname2[index];
-        if(k >= 3) cTriangle[i].ngrainname[0] = tgrainname2[index], cTriangle[i].ngrainname[1] = tgrainname1[index];
+        if (k < 3) cTriangle[i].ngrainname[0] = tgrainname1[index], cTriangle[i].ngrainname[1] = tgrainname2[index];
+        if (k >= 3) cTriangle[i].ngrainname[0] = tgrainname2[index], cTriangle[i].ngrainname[1] = tgrainname1[index];
       }
       if (gname == tgrainname2[index])
       {
-        if(k < 3) cTriangle[i].ngrainname[0] = tgrainname2[index], cTriangle[i].ngrainname[1] = tgrainname1[index];
-        if(k >= 3) cTriangle[i].ngrainname[0] = tgrainname1[index], cTriangle[i].ngrainname[1] = tgrainname2[index];
+        if (k < 3) cTriangle[i].ngrainname[0] = tgrainname2[index], cTriangle[i].ngrainname[1] = tgrainname1[index];
+        if (k >= 3) cTriangle[i].ngrainname[0] = tgrainname1[index], cTriangle[i].ngrainname[1] = tgrainname2[index];
       }
-	  if(gname != tgrainname1[index] && gname != tgrainname2[index]) k++;
+      if (gname != tgrainname1[index] && gname != tgrainname2[index]) k++;
     }
   }
 }
@@ -2885,16 +2880,13 @@ int SurfaceMeshFunc::writeNodesFile(int zID, int cNodeID, const std::string &nod
 // -----------------------------------------------------------------------------
 //  Write a BINARY file which is only TEMP during the surface meshing
 // -----------------------------------------------------------------------------
-int SurfaceMeshFunc::writeTrianglesFile (int zID, int ctid,
-                                          const std::string &trianglesFile,
-                                          int nt)
+int SurfaceMeshFunc::writeTrianglesFile(int zID, int ctid, const std::string &trianglesFile, int nt)
 {
-
 
   //int i;
   int tag;
   int end;
- // int newID;
+  // int newID;
   int n1, n2, n3;
   int data[6];
 
@@ -2940,15 +2932,14 @@ int SurfaceMeshFunc::writeTrianglesFile (int zID, int ctid,
       return -1;
     }
 
-
 //    fprintf(f, "%d %d %d %d %d %d\n", newID, n1, n2, n3, s1, s2);
-    data[0]= data[0] + 1;
+    data[0] = data[0] + 1;
   }
   fclose(f);
   return 0;
 }
 
-void SurfaceMeshFunc::smooth_boundaries (int nNodes, int nTriangles, string NodesFile, string TrianglesFile)
+void SurfaceMeshFunc::smooth_boundaries(int nNodes, int nTriangles, string NodesFile, string TrianglesFile)
 {
   FILE* nodes = NULL;
   FILE* tris = NULL;
@@ -2972,21 +2963,21 @@ void SurfaceMeshFunc::smooth_boundaries (int nNodes, int nTriangles, string Node
 
   vector<vector<vector<int> > > boundarytrianglelist;
   vector<vector<vector<float> > > boundarynormals;
-  boundarytrianglelist.resize(numgrains+1);
-  boundarynormals.resize(numgrains+1);
+  boundarytrianglelist.resize(numgrains + 1);
+  boundarynormals.resize(numgrains + 1);
 
   unsigned char nodeData[32];
- // int* nodenum = (int*)(&nodeData[0]);
+  // int* nodenum = (int*)(&nodeData[0]);
   int* nodetype = (int*)(&nodeData[4]);
 
   float* vec3d = (float*)(&nodeData[8]);
 
-  for(int i=1;i<numgrains+1;i++)
+  for (int i = 1; i < numgrains + 1; i++)
   {
-    boundarytrianglelist[i].resize(numgrains+1);
-    boundarynormals[i].resize(numgrains+1);
+    boundarytrianglelist[i].resize(numgrains + 1);
+    boundarynormals[i].resize(numgrains + 1);
   }
-  for(int i=0;i<nNodes;i++)
+  for (int i = 0; i < nNodes; i++)
   {
     //fscanf(nodes, "%d %d %f %f %f\n", &nodenum, &nodetype, &x, &y, &z);
     fread(nodeData, 32, 1, nodes); // Read one set of positions from the nodes file
@@ -2995,384 +2986,383 @@ void SurfaceMeshFunc::smooth_boundaries (int nNodes, int nTriangles, string Node
     cVertex[i].yc = vec3d[1];
     cVertex[i].zc = vec3d[2];
     cVertex[i].nodeKind = *nodetype;
-    col = vec3d[0]/xRes;
-    row = vec3d[1]/yRes;
-    plane = vec3d[2]/zRes;
-    tsite = (plane*xDim*yDim)+(row*xDim)+col+1;
+    col = vec3d[0] / xRes;
+    row = vec3d[1] / yRes;
+    plane = vec3d[2] / zRes;
+    tsite = (plane * xDim * yDim) + (row * xDim) + col + 1;
     cVertex[i].point = tsite;
   }
   fclose(nodes);
 
   int tData[6];
   nodes = NULL;
-  for(int i=0;i<nTriangles;i++)
+  for (int i = 0; i < nTriangles; i++)
   {
-  //  fscanf(tris, "%d %d %d %d %d %d", &trianglenum, &node1, &node2, &node3, &grain1, &grain2);
+    //  fscanf(tris, "%d %d %d %d %d %d", &trianglenum, &node1, &node2, &node3, &grain1, &grain2);
     fread(tData, sizeof(int), 6, tris);
     cTriangle[i].node_id[0] = tData[1];
     cTriangle[i].node_id[1] = tData[2];
     cTriangle[i].node_id[2] = tData[3];
     cTriangle[i].ngrainname[0] = tData[4];
     cTriangle[i].ngrainname[1] = tData[5];
-    if(tData[4] < tData[5] && (tData[4] >0 && tData[5] > 0)) boundarytrianglelist[tData[4]][tData[5]].push_back(i);
-    if(tData[4] > tData[5] && (tData[4] >0 && tData[5] > 0)) boundarytrianglelist[tData[5]][tData[4]].push_back(i);
+    if (tData[4] < tData[5] && (tData[4] > 0 && tData[5] > 0)) boundarytrianglelist[tData[4]][tData[5]].push_back(i);
+    if (tData[4] > tData[5] && (tData[4] > 0 && tData[5] > 0)) boundarytrianglelist[tData[5]][tData[4]].push_back(i);
   }
   fclose(tris);
   tris = NULL;
-/*  for(int i=1;i<numgrains+1;i++)
-  {
-    for(int j=i+1;j<numgrains+1;j++)
-    {
-      if(boundarytrianglelist[i][j].size() > 0)
-      {
-        Nx = 0;
-        Ny = 0;
-        Nz = 0;
-        BCx = 0;
-        BCy = 0;
-        BCz = 0;
-        for(int k=0;k<boundarytrianglelist[i][j].size();k++)
-        {
-          trianglenum = boundarytrianglelist[i][j][k];
-          x1 = cVertex[cTriangle[trianglenum].node_id[0]].xc;
-          y1 = cVertex[cTriangle[trianglenum].node_id[0]].yc;
-          z1 = cVertex[cTriangle[trianglenum].node_id[0]].zc;
-          x2 = cVertex[cTriangle[trianglenum].node_id[1]].xc;
-          y2 = cVertex[cTriangle[trianglenum].node_id[1]].yc;
-          z2 = cVertex[cTriangle[trianglenum].node_id[1]].zc;
-          x3 = cVertex[cTriangle[trianglenum].node_id[2]].xc;
-          y3 = cVertex[cTriangle[trianglenum].node_id[2]].yc;
-          z3 = cVertex[cTriangle[trianglenum].node_id[2]].zc;
-          tNx = (y2-y1)*(z3-z1)-(z2-z1)*(y3-y1);
-          tNy = (x3-x1)*(z2-z1)-(x2-x1)*(z3-z1);
-          tNz = (x2-x1)*(y3-y1)-(y2-y1)*(x3-x1);
-          cTriangle[trianglenum].normal[0] = tNx/powf((tNx*tNx+tNy*tNy+tNz*tNz),0.5);
-          cTriangle[trianglenum].normal[1] = tNy/powf((tNx*tNx+tNy*tNy+tNz*tNz),0.5);
-          cTriangle[trianglenum].normal[2] = tNz/powf((tNx*tNx+tNy*tNy+tNz*tNz),0.5);
-          Nx = Nx + cTriangle[trianglenum].normal[0];
-          Ny = Ny + cTriangle[trianglenum].normal[1];
-          Nz = Nz + cTriangle[trianglenum].normal[2];
-          BCx = BCx + x1 + x2 + x3;
-          BCy = BCy + y1 + y2 + y3;
-          BCz = BCz + z1 + z2 + z3;
-        }
-        boundarynormals[i][j].resize(3);
-        Nx = Nx/boundarytrianglelist[i][j].size();
-        Ny = Ny/boundarytrianglelist[i][j].size();
-        Nz = Nz/boundarytrianglelist[i][j].size();
-        BCx = BCx/(3*boundarytrianglelist[i][j].size());
-        BCy = BCy/(3*boundarytrianglelist[i][j].size());
-        BCz = BCz/(3*boundarytrianglelist[i][j].size());
-        boundarynormals[i][j][0] = Nx/powf((Nx*Nx+Ny*Ny+Nz*Nz),0.5);
-        boundarynormals[i][j][1] = Ny/powf((Nx*Nx+Ny*Ny+Nz*Nz),0.5);
-        boundarynormals[i][j][2] = Nz/powf((Nx*Nx+Ny*Ny+Nz*Nz),0.5);
-        Nx = boundarynormals[i][j][0];
-        Ny = boundarynormals[i][j][1];
-        Nz = boundarynormals[i][j][2];
-        for(int k=0;k<boundarytrianglelist[i][j].size();k++)
-        {
-          trianglenum = boundarytrianglelist[i][j][k];
-          x1 = cVertex[cTriangle[trianglenum].node_id[0]].xc;
-          y1 = cVertex[cTriangle[trianglenum].node_id[0]].yc;
-          z1 = cVertex[cTriangle[trianglenum].node_id[0]].zc;
-          x2 = cVertex[cTriangle[trianglenum].node_id[1]].xc;
-          y2 = cVertex[cTriangle[trianglenum].node_id[1]].yc;
-          z2 = cVertex[cTriangle[trianglenum].node_id[1]].zc;
-          x3 = cVertex[cTriangle[trianglenum].node_id[2]].xc;
-          y3 = cVertex[cTriangle[trianglenum].node_id[2]].yc;
-          z3 = cVertex[cTriangle[trianglenum].node_id[2]].zc;
-          grain1 = cTriangle[trianglenum].ngrainname[0];
-          grain2 = cTriangle[trianglenum].ngrainname[1];
-          tNx = (y2-y1)*(z3-z1)-(z2-z1)*(y3-y1);
-          tNy = (x3-x1)*(z2-z1)-(x2-x1)*(z3-z1);
-          tNz = (x2-x1)*(y3-y1)-(y2-y1)*(x3-x1);
-          cTriangle[trianglenum].normal[0] = tNx/powf((tNx*tNx+tNy*tNy+tNz*tNz),0.5);
-          cTriangle[trianglenum].normal[1] = tNy/powf((tNx*tNx+tNy*tNy+tNz*tNz),0.5);
-          cTriangle[trianglenum].normal[2] = tNz/powf((tNx*tNx+tNy*tNy+tNz*tNz),0.5);
-          tsite1 = cVertex[cTriangle[trianglenum].node_id[0]].point;
-          tsite2 = cVertex[cTriangle[trianglenum].node_id[1]].point;
-          tsite3 = cVertex[cTriangle[trianglenum].node_id[2]].point;
-          ntype1 = cVertex[cTriangle[trianglenum].node_id[0]].nodeKind;
-          ntype2 = cVertex[cTriangle[trianglenum].node_id[1]].nodeKind;
-          ntype3 = cVertex[cTriangle[trianglenum].node_id[2]].nodeKind;
-          xts1 = find_xcoord(tsite1);
-          yts1 = find_ycoord(tsite1);
-          zts1 = find_zcoord(tsite1);
-          xts2 = find_xcoord(tsite2);
-          yts2 = find_ycoord(tsite2);
-          zts2 = find_zcoord(tsite2);
-          xts3 = find_xcoord(tsite3);
-          yts3 = find_ycoord(tsite3);
-          zts3 = find_zcoord(tsite3);
-          ax = (x1+x2+x3)/3.0;
-          ay = (y1+y2+y3)/3.0;
-          az = (z1+z2+z3)/3.0;
-          x1 = x1-ax;
-          y1 = y1-ay;
-          z1 = z1-az;
-          x2 = x2-ax;
-          y2 = y2-ay;
-          z2 = z2-az;
-          x3 = x3-ax;
-          y3 = y3-ay;
-          z3 = z3-az;
-          tNx = cTriangle[trianglenum].normal[0];
-          tNy = cTriangle[trianglenum].normal[1];
-          tNz = cTriangle[trianglenum].normal[2];
-          Rx = (tNy)*(Nz)-(tNz)*(Ny);
-          Ry = (Nx)*(tNz)-(tNx)*(Nz);
-          Rz = (tNx)*(Ny)-(tNy)*(Nx);
-          theta = acos((tNx*Nx)+(tNy*Ny)+(tNz*Nz))/(powf((tNx*tNx+tNy*tNy+tNz*tNz),0.5)*powf((Nx*Nx+Ny*Ny+Nz*Nz),0.5));
-          costheta = cosf(theta);
-          sintheta = sinf(theta);
-          rotmat[0][0] = costheta + (Rx*Rx)*(1-costheta);
-          rotmat[0][1] = (Rx*Ry)*(1-costheta)-Rz*sintheta;
-          rotmat[0][2] = (Rx*Rz)*(1-costheta)+Ry*sintheta;
-          rotmat[1][0] = (Rx*Ry)*(1-costheta)+Rz*sintheta;
-          rotmat[1][1] = costheta + (Ry*Ry)*(1-costheta);
-          rotmat[1][2] = (Ry*Rz)*(1-costheta)-Rx*sintheta;
-          rotmat[2][0] = (Rx*Rz)*(1-costheta)-Ry*sintheta;
-          rotmat[2][1] = (Ry*Rz)*(1-costheta)+Rx*sintheta;
-          rotmat[2][2] = costheta + (Rz*Rz)*(1-costheta);
-          x1 = (x1*rotmat[0][0])+(y1*rotmat[0][1])+(z1*rotmat[0][2]);
-          y1 = (x1*rotmat[1][0])+(y1*rotmat[1][1])+(z1*rotmat[1][2]);
-          z1 = (x1*rotmat[2][0])+(y1*rotmat[2][1])+(z1*rotmat[2][2]);
-          x2 = (x2*rotmat[0][0])+(y2*rotmat[0][1])+(z2*rotmat[0][2]);
-          y2 = (x2*rotmat[1][0])+(y2*rotmat[1][1])+(z2*rotmat[1][2]);
-          z2 = (x2*rotmat[2][0])+(y2*rotmat[2][1])+(z2*rotmat[2][2]);
-          x3 = (x3*rotmat[0][0])+(y3*rotmat[0][1])+(z3*rotmat[0][2]);
-          y3 = (x3*rotmat[1][0])+(y3*rotmat[1][1])+(z3*rotmat[1][2]);
-          z3 = (x3*rotmat[2][0])+(y3*rotmat[2][1])+(z3*rotmat[2][2]);
-          x1 = x1+ax;
-          y1 = y1+ay;
-          z1 = z1+az;
-          x2 = x2+ax;
-          y2 = y2+ay;
-          z2 = z2+az;
-          x3 = x3+ax;
-          y3 = y3+ay;
-          z3 = z3+az;
-          t1 = ((Nx*(BCx-x1))+(Ny*(BCy-y1))+(Nz*(BCz-z1)))/(Nx*Nx+Ny*Ny+Nz*Nz);
-          t2 = ((Nx*(BCx-x2))+(Ny*(BCy-y2))+(Nz*(BCz-z2)))/(Nx*Nx+Ny*Ny+Nz*Nz);
-          t3 = ((Nx*(BCx-x3))+(Ny*(BCy-y3))+(Nz*(BCz-z3)))/(Nx*Nx+Ny*Ny+Nz*Nz);
-          if((x1+Nx*t1)-xts1 < 0) t1 = (xts1-x1)/Nx;
-          if((x1+Nx*t1)-xts1 > xRes) t1 = (xRes+xts1-x1)/Nx;
-          if((y1+Ny*t1)-yts1 < 0) t1 = (yts1-y1)/Ny;
-          if((y1+Ny*t1)-yts1 > yRes) t1 = (yRes+yts1-y1)/Ny;
-          if((z1+Nz*t1)-zts1 < 0) t1 = (zts1-z1)/Nz;
-          if((z1+Nz*t1)-zts1 > zRes) t1 = (zRes+zts1-z1)/Nz;
-          if((x2+Nx*t2)-xts2 < 0) t2 = (xts2-x2)/Nx;
-          if((x2+Nx*t2)-xts2 > xRes) t2 = (xRes+xts2-x2)/Nx;
-          if((y2+Ny*t2)-yts2 < 0) t2 = (yts2-y2)/Ny;
-          if((y2+Ny*t2)-yts2 > yRes) t2 = (yRes+yts2-y2)/Ny;
-          if((z2+Nz*t2)-zts2 < 0) t2 = (zts2-z2)/Nz;
-          if((z2+Nz*t2)-zts2 > zRes) t2 = (zRes+zts2-z2)/Nz;
-          if((x3+Nx*t3)-xts3 < 0) t3 = (xts3-x3)/Nx;
-          if((x3+Nx*t3)-xts3 > xRes) t3 = (xRes+xts3-x3)/Nx;
-          if((y3+Ny*t3)-yts3 < 0) t3 = (yts3-y3)/Ny;
-          if((y3+Ny*t3)-yts3 > yRes) t3 = (yRes+yts3-y3)/Ny;
-          if((z3+Nz*t3)-zts3 < 0) t3 = (zts3-z3)/Nz;
-          if((z3+Nz*t3)-zts3 > zRes) t3 = (zRes+zts3-z3)/Nz;
-          if(Nx == 0 || Ny == 0 || Nz == 0)
-          {
-            int stop = 0;
-          }
-          x1 = x1 + Nx*t1;
-          y1 = y1 + Ny*t1;
-          z1 = z1 + Nz*t1;
-          x2 = x2 + Nx*t2;
-          y2 = y2 + Ny*t2;
-          z2 = z2 + Nz*t2;
-          x3 = x3 + Nx*t3;
-          y3 = y3 + Ny*t3;
-          z3 = z3 + Nz*t3;
-          if(ntype1 == 0 || ntype1 == 1 || ntype1 == 3)
-          {
-            z1 = cVertex[cTriangle[trianglenum].node_id[0]].zc;
-            if(ntype1 == 0)
-            {
-              y1 = cVertex[cTriangle[trianglenum].node_id[0]].yc;
-              if(x1 <= xts1) x1 = xts1+(xRes/10);
-              if(x1 >= xts1+xRes) x1 = xts1+xRes-(xRes/10);
-            }
-            if(ntype1 == 1)
-            {
-              x1 = cVertex[cTriangle[trianglenum].node_id[0]].xc;
-              if(y1 <= yts1) y1 = yts1+(yRes/10);
-              if(y1 >= yts1+yRes) y1 = yts1+yRes-(yRes/10);
-            }
-            if(ntype1 == 3)
-            {
-              if(x1 <= xts1) x1 = xts1+(xRes/10);
-              if(x1 >= xts1+xRes) x1 = xts1+xRes-(xRes/10);
-              if(y1 <= yts1) y1 = yts1+(yRes/10);
-              if(y1 >= yts1+yRes) y1 = yts1+yRes-(yRes/10);
-            }
-          }
-          if(ntype1 == 2 || ntype1 == 4 || ntype1 == 5 || ntype1 == 6)
-          {
-            if(ntype1 == 2)
-            {
-              x1 = cVertex[cTriangle[trianglenum].node_id[0]].xc;
-              y1 = cVertex[cTriangle[trianglenum].node_id[0]].yc;
-              if(z1 <= zts1) z1 = zts1+(zRes/10);
-              if(z1 >= zts1+zRes) z1 = zts1+zRes-(zRes/10);
-            }
-            if(ntype1 == 4)
-            {
-              y1 = cVertex[cTriangle[trianglenum].node_id[0]].yc;
-              if(x1 <= xts1) x1 = xts1+(xRes/10);
-              if(x1 >= xts1+xRes) x1 = xts1+xRes-(xRes/10);
-              if(z1 <= zts1) z1 = zts1+(zRes/10);
-              if(z1 >= zts1+zRes) z1 = zts1+zRes-(zRes/10);
-            }
-            if(ntype1 == 5)
-            {
-              x1 = cVertex[cTriangle[trianglenum].node_id[0]].xc;
-              if(y1 <= yts1) y1 = yts1+(yRes/10);
-              if(y1 >= yts1+yRes) y1 = yts1+yRes-(yRes/10);
-              if(z1 <= zts1) z1 = zts1+(zRes/10);
-              if(z1 >= zts1+zRes) z1 = zts1+zRes-(zRes/10);
-            }
-            if(ntype1 == 6)
-            {
-              if(x1 <= xts1) x1 = xts1+(xRes/10);
-              if(x1 >= xts1+xRes) x1 = xts1+xRes-(xRes/10);
-              if(y1 <= yts1) y1 = yts1+(yRes/10);
-              if(y1 >= yts1+yRes) y1 = yts1+yRes-(yRes/10);
-              if(z1 <= zts1) z1 = zts1+(zRes/10);
-              if(z1 >= zts1+zRes) z1 = zts1+zRes-(zRes/10);
-            }
-          }
-          if(ntype2 == 0 || ntype2 == 1 || ntype2 == 3)
-          {
-            z2 = cVertex[cTriangle[trianglenum].node_id[1]].zc;
-            if(ntype2 == 0)
-            {
-              y2 = cVertex[cTriangle[trianglenum].node_id[1]].yc;
-              if(x2 <= xts2) x2 = xts2+(xRes/10);
-              if(x2 >= xts2+xRes) x2 = xts2+xRes-(xRes/10);
-            }
-            if(ntype2 == 1)
-            {
-              x2 = cVertex[cTriangle[trianglenum].node_id[1]].xc;
-              if(y2 <= yts2) y2 = yts2+(yRes/10);
-              if(y2 >= yts2+yRes) y2 = yts2+yRes-(yRes/10);
-            }
-            if(ntype2 == 3)
-            {
-              if(x2 <= xts2) x2 = xts2+(xRes/10);
-              if(x2 >= xts2+xRes) x2 = xts2+xRes-(xRes/10);
-              if(y2 <= yts2) y2 = yts2+(yRes/10);
-              if(y2 >= yts2+yRes) y2 = yts2+yRes-(yRes/10);
-            }
-          }
-          if(ntype2 == 2 || ntype2 == 4 || ntype2 == 5 || ntype2 == 6)
-          {
-            if(ntype2 == 2)
-            {
-              x2 = cVertex[cTriangle[trianglenum].node_id[1]].xc;
-              y2 = cVertex[cTriangle[trianglenum].node_id[1]].yc;
-              if(z2 <= zts2) z2 = zts2+(zRes/10);
-              if(z2 >= zts2+zRes) z2 = zts2+zRes-(zRes/10);
-            }
-            if(ntype2 == 4)
-            {
-              y2 = cVertex[cTriangle[trianglenum].node_id[1]].yc;
-              if(x2 <= xts2) x2 = xts2+(xRes/10);
-              if(x2 >= xts2+xRes) x2 = xts2+xRes-(xRes/10);
-              if(z2 <= zts2) z2 = zts2+(zRes/10);
-              if(z2 >= zts2+zRes) z2 = zts2+zRes-(zRes/10);
-            }
-            if(ntype2 == 5)
-            {
-              x2 = cVertex[cTriangle[trianglenum].node_id[1]].xc;
-              if(y2 <= yts2) y2 = yts2+(yRes/10);
-              if(y2 >= yts2+yRes) y2 = yts2+yRes-(yRes/10);
-              if(z2 <= zts2) z2 = zts2+(zRes/10);
-              if(z2 >= zts2+zRes) z2 = zts2+zRes-(zRes/10);
-            }
-            if(ntype2 == 6)
-            {
-              if(x2 <= xts2) x2 = xts2+(xRes/10);
-              if(x2 >= xts2+xRes) x2 = xts2+xRes-(xRes/10);
-              if(y2 <= yts2) y2 = yts2+(yRes/10);
-              if(y2 >= yts2+yRes) y2 = yts2+yRes-(yRes/10);
-              if(z2 <= zts2) z2 = zts2+(zRes/10);
-              if(z2 >= zts2+zRes) z2 = zts2+zRes-(zRes/10);
-            }
-          }
-          if(ntype3 == 0 || ntype3 == 1 || ntype3 == 3)
-          {
-            z3 = cVertex[cTriangle[trianglenum].node_id[2]].zc;
-            if(ntype3 == 0)
-            {
-              y3 = cVertex[cTriangle[trianglenum].node_id[2]].yc;
-              if(x3 <= xts3) x3 = xts3+(xRes/10);
-              if(x3 >= xts3+xRes) x3 = xts3+xRes-(xRes/10);
-            }
-            if(ntype3 == 1)
-            {
-              x3 = cVertex[cTriangle[trianglenum].node_id[2]].xc;
-              if(y3 <= yts3) y3 = yts3+(yRes/10);
-              if(y3 >= yts3+yRes) y3 = yts3+yRes-(yRes/10);
-            }
-            if(ntype3 == 3)
-            {
-              if(x3 <= xts3) x3 = xts3+(xRes/10);
-              if(x3 >= xts3+xRes) x3 = xts3+xRes-(xRes/10);
-              if(y3 <= yts3) y3 = yts3+(yRes/10);
-              if(y3 >= yts3+yRes) y3 = yts3+yRes-(yRes/10);
-            }
-          }
-          if(ntype3 == 2 || ntype3 == 4 || ntype3 == 5 || ntype3 == 6)
-          {
-            if(ntype3 == 2)
-            {
-              x3 = cVertex[cTriangle[trianglenum].node_id[2]].xc;
-              y3 = cVertex[cTriangle[trianglenum].node_id[2]].yc;
-              if(z3 <= zts3) z3 = zts3+(zRes/10);
-              if(z3 >= zts3+zRes) z3 = zts3+zRes-(zRes/10);
-            }
-            if(ntype3 == 4)
-            {
-              y3 = cVertex[cTriangle[trianglenum].node_id[2]].yc;
-              if(x3 <= xts3) x3 = xts3+(xRes/10);
-              if(x3 >= xts3+xRes) x3 = xts3+xRes-(xRes/10);
-              if(z3 <= zts3) z3 = zts3+(zRes/10);
-              if(z3 >= zts3+zRes) z3 = zts3+zRes-(zRes/10);
-            }
-            if(ntype3 == 5)
-            {
-              x3 = cVertex[cTriangle[trianglenum].node_id[2]].xc;
-              if(y3 <= yts3) y3 = yts3+(yRes/10);
-              if(y3 >= yts3+yRes) y3 = yts3+yRes-(yRes/10);
-              if(z3 <= zts3) z3 = zts3+(zRes/10);
-              if(z3 >= zts3+zRes) z3 = zts3+zRes-(zRes/10);
-            }
-            if(ntype3 == 6)
-            {
-              if(x3 <= xts3) x3 = xts3+(xRes/10);
-              if(x3 >= xts3+xRes) x3 = xts3+xRes-(xRes/10);
-              if(y3 <= yts3) y3 = yts3+(yRes/10);
-              if(y3 >= yts3+yRes) y3 = yts3+yRes-(yRes/10);
-              if(z3 <= zts3) z3 = zts3+(zRes/10);
-              if(z3 >= zts3+zRes) z3 = zts3+zRes-(zRes/10);
-            }
-          }
-          cVertex[cTriangle[trianglenum].node_id[0]].xc = x1;
-          cVertex[cTriangle[trianglenum].node_id[0]].yc = y1;
-          cVertex[cTriangle[trianglenum].node_id[0]].zc = z1;
-          cVertex[cTriangle[trianglenum].node_id[1]].xc = x2;
-          cVertex[cTriangle[trianglenum].node_id[1]].yc = y2;
-          cVertex[cTriangle[trianglenum].node_id[1]].zc = z2;
-          cVertex[cTriangle[trianglenum].node_id[2]].xc = x3;
-          cVertex[cTriangle[trianglenum].node_id[2]].yc = y3;
-          cVertex[cTriangle[trianglenum].node_id[2]].zc = z3;
-        }
-      }
-    }
-  }*/
+  /*  for(int i=1;i<numgrains+1;i++)
+   {
+   for(int j=i+1;j<numgrains+1;j++)
+   {
+   if(boundarytrianglelist[i][j].size() > 0)
+   {
+   Nx = 0;
+   Ny = 0;
+   Nz = 0;
+   BCx = 0;
+   BCy = 0;
+   BCz = 0;
+   for(int k=0;k<boundarytrianglelist[i][j].size();k++)
+   {
+   trianglenum = boundarytrianglelist[i][j][k];
+   x1 = cVertex[cTriangle[trianglenum].node_id[0]].xc;
+   y1 = cVertex[cTriangle[trianglenum].node_id[0]].yc;
+   z1 = cVertex[cTriangle[trianglenum].node_id[0]].zc;
+   x2 = cVertex[cTriangle[trianglenum].node_id[1]].xc;
+   y2 = cVertex[cTriangle[trianglenum].node_id[1]].yc;
+   z2 = cVertex[cTriangle[trianglenum].node_id[1]].zc;
+   x3 = cVertex[cTriangle[trianglenum].node_id[2]].xc;
+   y3 = cVertex[cTriangle[trianglenum].node_id[2]].yc;
+   z3 = cVertex[cTriangle[trianglenum].node_id[2]].zc;
+   tNx = (y2-y1)*(z3-z1)-(z2-z1)*(y3-y1);
+   tNy = (x3-x1)*(z2-z1)-(x2-x1)*(z3-z1);
+   tNz = (x2-x1)*(y3-y1)-(y2-y1)*(x3-x1);
+   cTriangle[trianglenum].normal[0] = tNx/powf((tNx*tNx+tNy*tNy+tNz*tNz),0.5);
+   cTriangle[trianglenum].normal[1] = tNy/powf((tNx*tNx+tNy*tNy+tNz*tNz),0.5);
+   cTriangle[trianglenum].normal[2] = tNz/powf((tNx*tNx+tNy*tNy+tNz*tNz),0.5);
+   Nx = Nx + cTriangle[trianglenum].normal[0];
+   Ny = Ny + cTriangle[trianglenum].normal[1];
+   Nz = Nz + cTriangle[trianglenum].normal[2];
+   BCx = BCx + x1 + x2 + x3;
+   BCy = BCy + y1 + y2 + y3;
+   BCz = BCz + z1 + z2 + z3;
+   }
+   boundarynormals[i][j].resize(3);
+   Nx = Nx/boundarytrianglelist[i][j].size();
+   Ny = Ny/boundarytrianglelist[i][j].size();
+   Nz = Nz/boundarytrianglelist[i][j].size();
+   BCx = BCx/(3*boundarytrianglelist[i][j].size());
+   BCy = BCy/(3*boundarytrianglelist[i][j].size());
+   BCz = BCz/(3*boundarytrianglelist[i][j].size());
+   boundarynormals[i][j][0] = Nx/powf((Nx*Nx+Ny*Ny+Nz*Nz),0.5);
+   boundarynormals[i][j][1] = Ny/powf((Nx*Nx+Ny*Ny+Nz*Nz),0.5);
+   boundarynormals[i][j][2] = Nz/powf((Nx*Nx+Ny*Ny+Nz*Nz),0.5);
+   Nx = boundarynormals[i][j][0];
+   Ny = boundarynormals[i][j][1];
+   Nz = boundarynormals[i][j][2];
+   for(int k=0;k<boundarytrianglelist[i][j].size();k++)
+   {
+   trianglenum = boundarytrianglelist[i][j][k];
+   x1 = cVertex[cTriangle[trianglenum].node_id[0]].xc;
+   y1 = cVertex[cTriangle[trianglenum].node_id[0]].yc;
+   z1 = cVertex[cTriangle[trianglenum].node_id[0]].zc;
+   x2 = cVertex[cTriangle[trianglenum].node_id[1]].xc;
+   y2 = cVertex[cTriangle[trianglenum].node_id[1]].yc;
+   z2 = cVertex[cTriangle[trianglenum].node_id[1]].zc;
+   x3 = cVertex[cTriangle[trianglenum].node_id[2]].xc;
+   y3 = cVertex[cTriangle[trianglenum].node_id[2]].yc;
+   z3 = cVertex[cTriangle[trianglenum].node_id[2]].zc;
+   grain1 = cTriangle[trianglenum].ngrainname[0];
+   grain2 = cTriangle[trianglenum].ngrainname[1];
+   tNx = (y2-y1)*(z3-z1)-(z2-z1)*(y3-y1);
+   tNy = (x3-x1)*(z2-z1)-(x2-x1)*(z3-z1);
+   tNz = (x2-x1)*(y3-y1)-(y2-y1)*(x3-x1);
+   cTriangle[trianglenum].normal[0] = tNx/powf((tNx*tNx+tNy*tNy+tNz*tNz),0.5);
+   cTriangle[trianglenum].normal[1] = tNy/powf((tNx*tNx+tNy*tNy+tNz*tNz),0.5);
+   cTriangle[trianglenum].normal[2] = tNz/powf((tNx*tNx+tNy*tNy+tNz*tNz),0.5);
+   tsite1 = cVertex[cTriangle[trianglenum].node_id[0]].point;
+   tsite2 = cVertex[cTriangle[trianglenum].node_id[1]].point;
+   tsite3 = cVertex[cTriangle[trianglenum].node_id[2]].point;
+   ntype1 = cVertex[cTriangle[trianglenum].node_id[0]].nodeKind;
+   ntype2 = cVertex[cTriangle[trianglenum].node_id[1]].nodeKind;
+   ntype3 = cVertex[cTriangle[trianglenum].node_id[2]].nodeKind;
+   xts1 = find_xcoord(tsite1);
+   yts1 = find_ycoord(tsite1);
+   zts1 = find_zcoord(tsite1);
+   xts2 = find_xcoord(tsite2);
+   yts2 = find_ycoord(tsite2);
+   zts2 = find_zcoord(tsite2);
+   xts3 = find_xcoord(tsite3);
+   yts3 = find_ycoord(tsite3);
+   zts3 = find_zcoord(tsite3);
+   ax = (x1+x2+x3)/3.0;
+   ay = (y1+y2+y3)/3.0;
+   az = (z1+z2+z3)/3.0;
+   x1 = x1-ax;
+   y1 = y1-ay;
+   z1 = z1-az;
+   x2 = x2-ax;
+   y2 = y2-ay;
+   z2 = z2-az;
+   x3 = x3-ax;
+   y3 = y3-ay;
+   z3 = z3-az;
+   tNx = cTriangle[trianglenum].normal[0];
+   tNy = cTriangle[trianglenum].normal[1];
+   tNz = cTriangle[trianglenum].normal[2];
+   Rx = (tNy)*(Nz)-(tNz)*(Ny);
+   Ry = (Nx)*(tNz)-(tNx)*(Nz);
+   Rz = (tNx)*(Ny)-(tNy)*(Nx);
+   theta = acos((tNx*Nx)+(tNy*Ny)+(tNz*Nz))/(powf((tNx*tNx+tNy*tNy+tNz*tNz),0.5)*powf((Nx*Nx+Ny*Ny+Nz*Nz),0.5));
+   costheta = cosf(theta);
+   sintheta = sinf(theta);
+   rotmat[0][0] = costheta + (Rx*Rx)*(1-costheta);
+   rotmat[0][1] = (Rx*Ry)*(1-costheta)-Rz*sintheta;
+   rotmat[0][2] = (Rx*Rz)*(1-costheta)+Ry*sintheta;
+   rotmat[1][0] = (Rx*Ry)*(1-costheta)+Rz*sintheta;
+   rotmat[1][1] = costheta + (Ry*Ry)*(1-costheta);
+   rotmat[1][2] = (Ry*Rz)*(1-costheta)-Rx*sintheta;
+   rotmat[2][0] = (Rx*Rz)*(1-costheta)-Ry*sintheta;
+   rotmat[2][1] = (Ry*Rz)*(1-costheta)+Rx*sintheta;
+   rotmat[2][2] = costheta + (Rz*Rz)*(1-costheta);
+   x1 = (x1*rotmat[0][0])+(y1*rotmat[0][1])+(z1*rotmat[0][2]);
+   y1 = (x1*rotmat[1][0])+(y1*rotmat[1][1])+(z1*rotmat[1][2]);
+   z1 = (x1*rotmat[2][0])+(y1*rotmat[2][1])+(z1*rotmat[2][2]);
+   x2 = (x2*rotmat[0][0])+(y2*rotmat[0][1])+(z2*rotmat[0][2]);
+   y2 = (x2*rotmat[1][0])+(y2*rotmat[1][1])+(z2*rotmat[1][2]);
+   z2 = (x2*rotmat[2][0])+(y2*rotmat[2][1])+(z2*rotmat[2][2]);
+   x3 = (x3*rotmat[0][0])+(y3*rotmat[0][1])+(z3*rotmat[0][2]);
+   y3 = (x3*rotmat[1][0])+(y3*rotmat[1][1])+(z3*rotmat[1][2]);
+   z3 = (x3*rotmat[2][0])+(y3*rotmat[2][1])+(z3*rotmat[2][2]);
+   x1 = x1+ax;
+   y1 = y1+ay;
+   z1 = z1+az;
+   x2 = x2+ax;
+   y2 = y2+ay;
+   z2 = z2+az;
+   x3 = x3+ax;
+   y3 = y3+ay;
+   z3 = z3+az;
+   t1 = ((Nx*(BCx-x1))+(Ny*(BCy-y1))+(Nz*(BCz-z1)))/(Nx*Nx+Ny*Ny+Nz*Nz);
+   t2 = ((Nx*(BCx-x2))+(Ny*(BCy-y2))+(Nz*(BCz-z2)))/(Nx*Nx+Ny*Ny+Nz*Nz);
+   t3 = ((Nx*(BCx-x3))+(Ny*(BCy-y3))+(Nz*(BCz-z3)))/(Nx*Nx+Ny*Ny+Nz*Nz);
+   if((x1+Nx*t1)-xts1 < 0) t1 = (xts1-x1)/Nx;
+   if((x1+Nx*t1)-xts1 > xRes) t1 = (xRes+xts1-x1)/Nx;
+   if((y1+Ny*t1)-yts1 < 0) t1 = (yts1-y1)/Ny;
+   if((y1+Ny*t1)-yts1 > yRes) t1 = (yRes+yts1-y1)/Ny;
+   if((z1+Nz*t1)-zts1 < 0) t1 = (zts1-z1)/Nz;
+   if((z1+Nz*t1)-zts1 > zRes) t1 = (zRes+zts1-z1)/Nz;
+   if((x2+Nx*t2)-xts2 < 0) t2 = (xts2-x2)/Nx;
+   if((x2+Nx*t2)-xts2 > xRes) t2 = (xRes+xts2-x2)/Nx;
+   if((y2+Ny*t2)-yts2 < 0) t2 = (yts2-y2)/Ny;
+   if((y2+Ny*t2)-yts2 > yRes) t2 = (yRes+yts2-y2)/Ny;
+   if((z2+Nz*t2)-zts2 < 0) t2 = (zts2-z2)/Nz;
+   if((z2+Nz*t2)-zts2 > zRes) t2 = (zRes+zts2-z2)/Nz;
+   if((x3+Nx*t3)-xts3 < 0) t3 = (xts3-x3)/Nx;
+   if((x3+Nx*t3)-xts3 > xRes) t3 = (xRes+xts3-x3)/Nx;
+   if((y3+Ny*t3)-yts3 < 0) t3 = (yts3-y3)/Ny;
+   if((y3+Ny*t3)-yts3 > yRes) t3 = (yRes+yts3-y3)/Ny;
+   if((z3+Nz*t3)-zts3 < 0) t3 = (zts3-z3)/Nz;
+   if((z3+Nz*t3)-zts3 > zRes) t3 = (zRes+zts3-z3)/Nz;
+   if(Nx == 0 || Ny == 0 || Nz == 0)
+   {
+   int stop = 0;
+   }
+   x1 = x1 + Nx*t1;
+   y1 = y1 + Ny*t1;
+   z1 = z1 + Nz*t1;
+   x2 = x2 + Nx*t2;
+   y2 = y2 + Ny*t2;
+   z2 = z2 + Nz*t2;
+   x3 = x3 + Nx*t3;
+   y3 = y3 + Ny*t3;
+   z3 = z3 + Nz*t3;
+   if(ntype1 == 0 || ntype1 == 1 || ntype1 == 3)
+   {
+   z1 = cVertex[cTriangle[trianglenum].node_id[0]].zc;
+   if(ntype1 == 0)
+   {
+   y1 = cVertex[cTriangle[trianglenum].node_id[0]].yc;
+   if(x1 <= xts1) x1 = xts1+(xRes/10);
+   if(x1 >= xts1+xRes) x1 = xts1+xRes-(xRes/10);
+   }
+   if(ntype1 == 1)
+   {
+   x1 = cVertex[cTriangle[trianglenum].node_id[0]].xc;
+   if(y1 <= yts1) y1 = yts1+(yRes/10);
+   if(y1 >= yts1+yRes) y1 = yts1+yRes-(yRes/10);
+   }
+   if(ntype1 == 3)
+   {
+   if(x1 <= xts1) x1 = xts1+(xRes/10);
+   if(x1 >= xts1+xRes) x1 = xts1+xRes-(xRes/10);
+   if(y1 <= yts1) y1 = yts1+(yRes/10);
+   if(y1 >= yts1+yRes) y1 = yts1+yRes-(yRes/10);
+   }
+   }
+   if(ntype1 == 2 || ntype1 == 4 || ntype1 == 5 || ntype1 == 6)
+   {
+   if(ntype1 == 2)
+   {
+   x1 = cVertex[cTriangle[trianglenum].node_id[0]].xc;
+   y1 = cVertex[cTriangle[trianglenum].node_id[0]].yc;
+   if(z1 <= zts1) z1 = zts1+(zRes/10);
+   if(z1 >= zts1+zRes) z1 = zts1+zRes-(zRes/10);
+   }
+   if(ntype1 == 4)
+   {
+   y1 = cVertex[cTriangle[trianglenum].node_id[0]].yc;
+   if(x1 <= xts1) x1 = xts1+(xRes/10);
+   if(x1 >= xts1+xRes) x1 = xts1+xRes-(xRes/10);
+   if(z1 <= zts1) z1 = zts1+(zRes/10);
+   if(z1 >= zts1+zRes) z1 = zts1+zRes-(zRes/10);
+   }
+   if(ntype1 == 5)
+   {
+   x1 = cVertex[cTriangle[trianglenum].node_id[0]].xc;
+   if(y1 <= yts1) y1 = yts1+(yRes/10);
+   if(y1 >= yts1+yRes) y1 = yts1+yRes-(yRes/10);
+   if(z1 <= zts1) z1 = zts1+(zRes/10);
+   if(z1 >= zts1+zRes) z1 = zts1+zRes-(zRes/10);
+   }
+   if(ntype1 == 6)
+   {
+   if(x1 <= xts1) x1 = xts1+(xRes/10);
+   if(x1 >= xts1+xRes) x1 = xts1+xRes-(xRes/10);
+   if(y1 <= yts1) y1 = yts1+(yRes/10);
+   if(y1 >= yts1+yRes) y1 = yts1+yRes-(yRes/10);
+   if(z1 <= zts1) z1 = zts1+(zRes/10);
+   if(z1 >= zts1+zRes) z1 = zts1+zRes-(zRes/10);
+   }
+   }
+   if(ntype2 == 0 || ntype2 == 1 || ntype2 == 3)
+   {
+   z2 = cVertex[cTriangle[trianglenum].node_id[1]].zc;
+   if(ntype2 == 0)
+   {
+   y2 = cVertex[cTriangle[trianglenum].node_id[1]].yc;
+   if(x2 <= xts2) x2 = xts2+(xRes/10);
+   if(x2 >= xts2+xRes) x2 = xts2+xRes-(xRes/10);
+   }
+   if(ntype2 == 1)
+   {
+   x2 = cVertex[cTriangle[trianglenum].node_id[1]].xc;
+   if(y2 <= yts2) y2 = yts2+(yRes/10);
+   if(y2 >= yts2+yRes) y2 = yts2+yRes-(yRes/10);
+   }
+   if(ntype2 == 3)
+   {
+   if(x2 <= xts2) x2 = xts2+(xRes/10);
+   if(x2 >= xts2+xRes) x2 = xts2+xRes-(xRes/10);
+   if(y2 <= yts2) y2 = yts2+(yRes/10);
+   if(y2 >= yts2+yRes) y2 = yts2+yRes-(yRes/10);
+   }
+   }
+   if(ntype2 == 2 || ntype2 == 4 || ntype2 == 5 || ntype2 == 6)
+   {
+   if(ntype2 == 2)
+   {
+   x2 = cVertex[cTriangle[trianglenum].node_id[1]].xc;
+   y2 = cVertex[cTriangle[trianglenum].node_id[1]].yc;
+   if(z2 <= zts2) z2 = zts2+(zRes/10);
+   if(z2 >= zts2+zRes) z2 = zts2+zRes-(zRes/10);
+   }
+   if(ntype2 == 4)
+   {
+   y2 = cVertex[cTriangle[trianglenum].node_id[1]].yc;
+   if(x2 <= xts2) x2 = xts2+(xRes/10);
+   if(x2 >= xts2+xRes) x2 = xts2+xRes-(xRes/10);
+   if(z2 <= zts2) z2 = zts2+(zRes/10);
+   if(z2 >= zts2+zRes) z2 = zts2+zRes-(zRes/10);
+   }
+   if(ntype2 == 5)
+   {
+   x2 = cVertex[cTriangle[trianglenum].node_id[1]].xc;
+   if(y2 <= yts2) y2 = yts2+(yRes/10);
+   if(y2 >= yts2+yRes) y2 = yts2+yRes-(yRes/10);
+   if(z2 <= zts2) z2 = zts2+(zRes/10);
+   if(z2 >= zts2+zRes) z2 = zts2+zRes-(zRes/10);
+   }
+   if(ntype2 == 6)
+   {
+   if(x2 <= xts2) x2 = xts2+(xRes/10);
+   if(x2 >= xts2+xRes) x2 = xts2+xRes-(xRes/10);
+   if(y2 <= yts2) y2 = yts2+(yRes/10);
+   if(y2 >= yts2+yRes) y2 = yts2+yRes-(yRes/10);
+   if(z2 <= zts2) z2 = zts2+(zRes/10);
+   if(z2 >= zts2+zRes) z2 = zts2+zRes-(zRes/10);
+   }
+   }
+   if(ntype3 == 0 || ntype3 == 1 || ntype3 == 3)
+   {
+   z3 = cVertex[cTriangle[trianglenum].node_id[2]].zc;
+   if(ntype3 == 0)
+   {
+   y3 = cVertex[cTriangle[trianglenum].node_id[2]].yc;
+   if(x3 <= xts3) x3 = xts3+(xRes/10);
+   if(x3 >= xts3+xRes) x3 = xts3+xRes-(xRes/10);
+   }
+   if(ntype3 == 1)
+   {
+   x3 = cVertex[cTriangle[trianglenum].node_id[2]].xc;
+   if(y3 <= yts3) y3 = yts3+(yRes/10);
+   if(y3 >= yts3+yRes) y3 = yts3+yRes-(yRes/10);
+   }
+   if(ntype3 == 3)
+   {
+   if(x3 <= xts3) x3 = xts3+(xRes/10);
+   if(x3 >= xts3+xRes) x3 = xts3+xRes-(xRes/10);
+   if(y3 <= yts3) y3 = yts3+(yRes/10);
+   if(y3 >= yts3+yRes) y3 = yts3+yRes-(yRes/10);
+   }
+   }
+   if(ntype3 == 2 || ntype3 == 4 || ntype3 == 5 || ntype3 == 6)
+   {
+   if(ntype3 == 2)
+   {
+   x3 = cVertex[cTriangle[trianglenum].node_id[2]].xc;
+   y3 = cVertex[cTriangle[trianglenum].node_id[2]].yc;
+   if(z3 <= zts3) z3 = zts3+(zRes/10);
+   if(z3 >= zts3+zRes) z3 = zts3+zRes-(zRes/10);
+   }
+   if(ntype3 == 4)
+   {
+   y3 = cVertex[cTriangle[trianglenum].node_id[2]].yc;
+   if(x3 <= xts3) x3 = xts3+(xRes/10);
+   if(x3 >= xts3+xRes) x3 = xts3+xRes-(xRes/10);
+   if(z3 <= zts3) z3 = zts3+(zRes/10);
+   if(z3 >= zts3+zRes) z3 = zts3+zRes-(zRes/10);
+   }
+   if(ntype3 == 5)
+   {
+   x3 = cVertex[cTriangle[trianglenum].node_id[2]].xc;
+   if(y3 <= yts3) y3 = yts3+(yRes/10);
+   if(y3 >= yts3+yRes) y3 = yts3+yRes-(yRes/10);
+   if(z3 <= zts3) z3 = zts3+(zRes/10);
+   if(z3 >= zts3+zRes) z3 = zts3+zRes-(zRes/10);
+   }
+   if(ntype3 == 6)
+   {
+   if(x3 <= xts3) x3 = xts3+(xRes/10);
+   if(x3 >= xts3+xRes) x3 = xts3+xRes-(xRes/10);
+   if(y3 <= yts3) y3 = yts3+(yRes/10);
+   if(y3 >= yts3+yRes) y3 = yts3+yRes-(yRes/10);
+   if(z3 <= zts3) z3 = zts3+(zRes/10);
+   if(z3 >= zts3+zRes) z3 = zts3+zRes-(zRes/10);
+   }
+   }
+   cVertex[cTriangle[trianglenum].node_id[0]].xc = x1;
+   cVertex[cTriangle[trianglenum].node_id[0]].yc = y1;
+   cVertex[cTriangle[trianglenum].node_id[0]].zc = z1;
+   cVertex[cTriangle[trianglenum].node_id[1]].xc = x2;
+   cVertex[cTriangle[trianglenum].node_id[1]].yc = y2;
+   cVertex[cTriangle[trianglenum].node_id[1]].zc = z2;
+   cVertex[cTriangle[trianglenum].node_id[2]].xc = x3;
+   cVertex[cTriangle[trianglenum].node_id[2]].yc = y3;
+   cVertex[cTriangle[trianglenum].node_id[2]].zc = z3;
+   }
+   }
+   }
+   }*/
 }
-
 
