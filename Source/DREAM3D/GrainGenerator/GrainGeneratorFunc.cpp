@@ -29,6 +29,7 @@
 
 const static float m_onepointthree = 1.33333333333f;
 const static float m_pi = M_PI;
+const static float m_one_over_pi = 1.0/m_pi;
 const static float SinOfHalf = sinf(0.5f);
 const static float CosOfHalf = cosf(0.5f);
 const static float SinOfZero = sinf(0.0f);
@@ -811,7 +812,7 @@ void  GrainGeneratorFunc::insert_grain(size_t gnum)
 		  z = float(plane)*packingresz;
 		  inside = -1;
 		  dist = ((x-xc)*(x-xc))+((y-yc)*(y-yc))+((z-zc)*(z-zc));
-		  dist = powf(dist,0.5);
+		  dist = sqrtf(dist); //dist = powf(dist,0.5);
 		  if(dist < radcur1)
 		  {
 			x = x-xc;
@@ -1840,9 +1841,9 @@ void GrainGeneratorFunc::assign_voxels()
 {
   int index;
   int *gsizes;
-  gsizes = new int[m_Grains.size()];
-  int oldname;
- // int size;
+  gsizes = new int[m_Grains.size()];int
+  oldname;
+  // int size;
   int column, row, plane;
   float inside;
   float Nvalue = 0;
@@ -1864,267 +1865,268 @@ void GrainGeneratorFunc::assign_voxels()
   unassigned = new int[totalpoints];
   int *phases;
   phases = new int[totalpoints];
-  for(int i=0;i<totalpoints;i++)
+  for (int i = 0; i < totalpoints; i++)
   {
-	  gnames[i] = voxels[i].grain_index;
-	  unassigned[i] = voxels[i].unassigned;
-	  phases[i] = voxels[i].phase;
+    gnames[i] = voxels[i].grain_index;
+    unassigned[i] = voxels[i].unassigned;
+    phases[i] = voxels[i].phase;
   }
-  for(size_t i=1;i<m_Grains.size();i++)
+  for (size_t i = 1; i < m_Grains.size(); i++)
   {
-	  gsizes[i] = 0;
+    gsizes[i] = 0;
   }
-  for(size_t i=1;i<m_Grains.size();i++)
+  for (size_t i = 1; i < m_Grains.size(); i++)
   {
     float volcur = m_Grains[i]->volume;
     float bovera = m_Grains[i]->radius2;
     float covera = m_Grains[i]->radius3;
     float omega3 = m_Grains[i]->omega3;
-	phase = m_Grains[i]->phase;
+    phase = m_Grains[i]->phase;
     xc = m_Grains[i]->centroidx;
     yc = m_Grains[i]->centroidy;
     zc = m_Grains[i]->centroidz;
     float radcur1 = 1;
-    if(shapeclass == AIM::SyntheticBuilder::Cylinder)
+    if (shapeclass == AIM::SyntheticBuilder::Cylinder)
     {
-      radcur1 = (volcur*(1.0/m_pi)*(1.0/bovera)*(1.0/covera));
+      radcur1 = (volcur * (1.0 / m_pi) * (1.0 / bovera) * (1.0 / covera));
     }
-    if(shapeclass == AIM::SyntheticBuilder::CubeOctahedron)
+    if (shapeclass == AIM::SyntheticBuilder::CubeOctahedron)
     {
-	  for(int i=0;i<41;i++)
-	  {
-		Gvaluedist = fabsf(omega3-ShapeClass3Omega3[i][0]);
-		if(Gvaluedist < bestGvaluedist)
-		{
-		    bestGvaluedist = Gvaluedist;
-			Gvalue = ShapeClass3Omega3[i][1];
-		}
-	  }
-      if(Gvalue >= 0 && Gvalue <= 1)
+      for (int i = 0; i < 41; i++)
       {
-        radcur1 = (volcur*6.0)/(6-(Gvalue*Gvalue*Gvalue));
+        Gvaluedist = fabsf(omega3 - ShapeClass3Omega3[i][0]);
+        if (Gvaluedist < bestGvaluedist)
+        {
+          bestGvaluedist = Gvaluedist;
+          Gvalue = ShapeClass3Omega3[i][1];
+        }
       }
-      if(Gvalue > 1 && Gvalue <= 2)
+      if (Gvalue >= 0 && Gvalue <= 1)
       {
-        radcur1 = (volcur*6.0)/(3+(9*Gvalue)-(9*Gvalue*Gvalue)+(2*Gvalue*Gvalue*Gvalue));
+        radcur1 = (volcur * 6.0) / (6 - (Gvalue * Gvalue * Gvalue));
+      }
+      if (Gvalue > 1 && Gvalue <= 2)
+      {
+        radcur1 = (volcur * 6.0) / (3 + (9 * Gvalue) - (9 * Gvalue * Gvalue) + (2 * Gvalue * Gvalue * Gvalue));
       }
     }
-    if(shapeclass == AIM::SyntheticBuilder::Superellipsoid)
+    if (shapeclass == AIM::SyntheticBuilder::Superellipsoid)
     {
-	  for(int i=0;i<41;i++)
-	  {
-	    float a = gamma(1.0+1.0/ShapeClass2Omega3[i][1]);
-		float b = gamma(5.0/ShapeClass2Omega3[i][1]);
-	    float c = gamma(3.0/ShapeClass2Omega3[i][1]);
-		float d = gamma(1.0+3.0/ShapeClass2Omega3[i][1]);
-		ShapeClass2Omega3[i][0] = powf(20.0*(powf(a,3)*b)/(c*powf(d,5.0/3.0)),3)/(2000.0*M_PI*M_PI/9.0);
-		Nvaluedist = fabsf(omega3-ShapeClass2Omega3[i][0]);
-		if(Nvaluedist < bestNvaluedist)
-		{
-		    bestNvaluedist = Nvaluedist;
-			Nvalue = ShapeClass2Omega3[i][1];
-		}
-	  }
-      float beta1 = (gamma((1.0/Nvalue))*gamma((1.0/Nvalue)))/gamma((2.0/Nvalue));
-      float beta2 = (gamma((2.0/Nvalue))*gamma((1.0/Nvalue)))/gamma((3.0/Nvalue));
-      radcur1 = (volcur*(3.0/2.0)*(1.0/bovera)*(1.0/covera)*((Nvalue*Nvalue)/4.0)*(1.0/beta1)*(1.0/beta2));
+      for (int i = 0; i < 41; i++)
+      {
+        float a = gamma(1.0 + 1.0 / ShapeClass2Omega3[i][1]);
+        float b = gamma(5.0 / ShapeClass2Omega3[i][1]);
+        float c = gamma(3.0 / ShapeClass2Omega3[i][1]);
+        float d = gamma(1.0 + 3.0 / ShapeClass2Omega3[i][1]);
+        ShapeClass2Omega3[i][0] = powf(20.0 * (powf(a, 3) * b) / (c * powf(d, 5.0 / 3.0)), 3) / (2000.0 * M_PI * M_PI / 9.0);
+        Nvaluedist = fabsf(omega3 - ShapeClass2Omega3[i][0]);
+        if (Nvaluedist < bestNvaluedist)
+        {
+          bestNvaluedist = Nvaluedist;
+          Nvalue = ShapeClass2Omega3[i][1];
+        }
+      }
+      float beta1 = (gamma((1.0 / Nvalue))*gamma((1.0/Nvalue)))/gamma((2.0/Nvalue));
+      float beta2 = (gamma((2.0 / Nvalue))*gamma((1.0/Nvalue)))/gamma((3.0/Nvalue));
+      radcur1 = (volcur * 1.5f * (1.0 / bovera) * (1.0 / covera) * ((Nvalue * Nvalue) / 4.0) * (1.0 / beta1) * (1.0 / beta2));
     }
-    if(shapeclass == AIM::SyntheticBuilder::Ellipsoid)
+    if (shapeclass == AIM::SyntheticBuilder::Ellipsoid)
     {
-      radcur1 = (volcur*(3.0/4.0)*(1.0/m_pi)*(1.0/bovera)*(1.0/covera));
+      radcur1 = (volcur * 0.75f * (m_one_over_pi) * (1.0 / bovera) * (1.0 / covera));
     }
-    radcur1 = powf(radcur1,0.333333333333);
-    if(shapeclass == 3) radcur1 = radcur1/2.0;
-    float radcur2 = (radcur1*bovera);
-    float radcur3 = (radcur1*covera);
+    radcur1 = powf(radcur1, 0.333333333333);
+    if (shapeclass == AIM::SyntheticBuilder::CubeOctahedron) radcur1 = radcur1 * 0.5f;
+    float radcur2 = (radcur1 * bovera);
+    float radcur3 = (radcur1 * covera);
     float phi1 = m_Grains[i]->axiseuler1;
     float PHI = m_Grains[i]->axiseuler2;
     float phi2 = m_Grains[i]->axiseuler3;
     float ga[3][3];
-    ga[0][0] = cosf(phi1)*cosf(phi2)-sinf(phi1)*sinf(phi2)*cosf(PHI);
-    ga[0][1] = sinf(phi1)*cosf(phi2)+cosf(phi1)*sinf(phi2)*cosf(PHI);
-    ga[0][2] = sinf(phi2)*sinf(PHI);
-    ga[1][0] = -cosf(phi1)*sinf(phi2)-sinf(phi1)*cosf(phi2)*cosf(PHI);
-    ga[1][1] = -sinf(phi1)*sinf(phi2)+cosf(phi1)*cosf(phi2)*cosf(PHI);
-    ga[1][2] =  cosf(phi2)*sinf(PHI);
-    ga[2][0] =  sinf(phi1)*sinf(PHI);
-    ga[2][1] = -cosf(phi1)*sinf(PHI);
-    ga[2][2] =  cosf(PHI);
-    column = (xc-(resx/2))/resx;
-    row = (yc-(resy/2))/resy;
-    plane = (zc-(resz/2))/resz;
-    xmin = int(column-((radcur1/resx)+1));
-    xmax = int(column+((radcur1/resx)+1));
-    ymin = int(row-((radcur1/resy)+1));
-    ymax = int(row+((radcur1/resy)+1));
-    zmin = int(plane-((radcur1/resz)+1));
-    zmax = int(plane+((radcur1/resz)+1));
-	if(periodic_boundaries == true)
-	{
-	  if(xmin < -xpoints) xmin = -xpoints;
-	  if(xmax > 2*xpoints-1) xmax = (2*xpoints-1);
-	  if(ymin < -ypoints) ymin = -ypoints;
-	  if(ymax > 2*ypoints-1) ymax = (2*ypoints-1);
-	  if(zmin < -zpoints) zmin = -zpoints;
-	  if(zmax > 2*zpoints-1) zmax = (2*zpoints-1);
-	}
-	if(periodic_boundaries == false)
-	{
-	  if(xmin < 0) xmin = 0;
-	  if(xmax > xpoints-1) xmax = xpoints-1;
-	  if(ymin < 0) ymin = 0;
-	  if(ymax > ypoints-1) ymax = ypoints-1;
-	  if(zmin < 0) zmin = 0;
-	  if(zmax > zpoints-1) zmax = zpoints-1;
-	}
-    for(int iter1 = xmin; iter1 < xmax+1; iter1++)
+    ga[0][0] = cosf(phi1) * cosf(phi2) - sinf(phi1) * sinf(phi2) * cosf(PHI);
+    ga[0][1] = sinf(phi1) * cosf(phi2) + cosf(phi1) * sinf(phi2) * cosf(PHI);
+    ga[0][2] = sinf(phi2) * sinf(PHI);
+    ga[1][0] = -cosf(phi1) * sinf(phi2) - sinf(phi1) * cosf(phi2) * cosf(PHI);
+    ga[1][1] = -sinf(phi1) * sinf(phi2) + cosf(phi1) * cosf(phi2) * cosf(PHI);
+    ga[1][2] = cosf(phi2) * sinf(PHI);
+    ga[2][0] = sinf(phi1) * sinf(PHI);
+    ga[2][1] = -cosf(phi1) * sinf(PHI);
+    ga[2][2] = cosf(PHI);
+    column = (xc - (resx / 2)) / resx;
+    row = (yc - (resy / 2)) / resy;
+    plane = (zc - (resz / 2)) / resz;
+    xmin = int(column - ((radcur1 / resx) + 1));
+    xmax = int(column + ((radcur1 / resx) + 1));
+    ymin = int(row - ((radcur1 / resy) + 1));
+    ymax = int(row + ((radcur1 / resy) + 1));
+    zmin = int(plane - ((radcur1 / resz) + 1));
+    zmax = int(plane + ((radcur1 / resz) + 1));
+    if (periodic_boundaries == true)
     {
-      for(int iter2 = ymin; iter2 < ymax+1; iter2++)
+      if (xmin < -xpoints) xmin = -xpoints;
+      if (xmax > 2 * xpoints - 1) xmax = (2 * xpoints - 1);
+      if (ymin < -ypoints) ymin = -ypoints;
+      if (ymax > 2 * ypoints - 1) ymax = (2 * ypoints - 1);
+      if (zmin < -zpoints) zmin = -zpoints;
+      if (zmax > 2 * zpoints - 1) zmax = (2 * zpoints - 1);
+    }
+    if (periodic_boundaries == false)
+    {
+      if (xmin < 0) xmin = 0;
+      if (xmax > xpoints - 1) xmax = xpoints - 1;
+      if (ymin < 0) ymin = 0;
+      if (ymax > ypoints - 1) ymax = ypoints - 1;
+      if (zmin < 0) zmin = 0;
+      if (zmax > zpoints - 1) zmax = zpoints - 1;
+    }
+    for (int iter1 = xmin; iter1 < xmax + 1; iter1++)
+    {
+      for (int iter2 = ymin; iter2 < ymax + 1; iter2++)
       {
-	      for(int iter3 = zmin; iter3 < zmax+1; iter3++)
-	      {
-	        column = iter1;
-			row = iter2;
-			plane = iter3;
-			if(iter1 < 0) column = iter1+xpoints;
-			if(iter1 > xpoints-1) column = iter1-xpoints;
-			if(iter2 < 0) row = iter2+ypoints;
-			if(iter2 > ypoints-1) row = iter2-ypoints;
-			if(iter3 < 0) plane = iter3+zpoints;
-			if(iter3 > zpoints-1) plane = iter3-zpoints;
-			index = (plane*xpoints*ypoints)+(row*xpoints)+column;
-			inside = -1;
-			x = float(column)*resx;
-			y = float(row)*resy;
-			z = float(plane)*resz;
-			if(iter1 < 0) x = x-sizex;
-			if(iter1 > xpoints-1) x = x+sizex;
-			if(iter2 < 0) y = y-sizey;
-			if(iter2 > ypoints-1) y = y+sizey;
-			if(iter3 < 0) z = z-sizez;
-			if(iter3 > zpoints-1) z = z+sizez;
-			dist = ((x-xc)*(x-xc))+((y-yc)*(y-yc))+((z-zc)*(z-zc));
-			dist = powf(dist,0.5);
-			if(dist < radcur1)
-			{
-			  x = x-xc;
-			  y = y-yc;
-			  z = z-zc;
-			  xp = (x*ga[0][0])+(y*ga[1][0])+(z*ga[2][0]);
-			  yp = (x*ga[0][1])+(y*ga[1][1])+(z*ga[2][1]);
-			  zp = (x*ga[0][2])+(y*ga[1][2])+(z*ga[2][2]);
-			  float axis1comp = xp/radcur1;
-			  float axis2comp = yp/radcur2;
-			  float axis3comp = zp/radcur3;
-			  if(shapeclass == AIM::SyntheticBuilder::Cylinder)
-			  {
-				if(fabs(axis1comp) <= 1)
-				{
-					inside = 1;
-					axis2comp = fabs(axis2comp);
-					axis3comp = fabs(axis3comp);
-					axis2comp = powf(axis2comp,2);
-					axis3comp = powf(axis3comp,2);
-					inside = 1-axis2comp-axis3comp;
-				}
-		 	  }
-			  if(shapeclass == AIM::SyntheticBuilder::CubeOctahedron)
-			  {
-				if(fabs(axis1comp) <= 1 && fabs(axis2comp) <= 1 && fabs(axis3comp) <= 1)
-				{
-				  inside = 1;
-				  axis1comp = axis1comp+1;
-				  axis2comp = axis2comp+1;
-				  axis3comp = axis3comp+1;
-				  if(((-axis1comp)+(-axis2comp)+(axis3comp)-((-0.5*Gvalue)+(-0.5*Gvalue)+2)) > 0) inside = -1;
-				  if(((axis1comp)+(-axis2comp)+(axis3comp)-((2-(0.5*Gvalue))+(-0.5*Gvalue)+2)) > 0) inside = -1;
-				  if(((axis1comp)+(axis2comp)+(axis3comp)-((2-(0.5*Gvalue))+(2-(0.5*Gvalue))+2)) > 0) inside = -1;
-				  if(((-axis1comp)+(axis2comp)+(axis3comp)-((-0.5*Gvalue)+(2-(0.5*Gvalue))+2)) > 0) inside = -1;
-				  if(((-axis1comp)+(-axis2comp)+(-axis3comp)-((-0.5*Gvalue)+(-0.5*Gvalue))) > 0) inside = -1;
-				  if(((axis1comp)+(-axis2comp)+(-axis3comp)-((2-(0.5*Gvalue))+(-0.5*Gvalue))) > 0) inside = -1;
-				  if(((axis1comp)+(axis2comp)+(-axis3comp)-((2-(0.5*Gvalue))+(2-(0.5*Gvalue)))) > 0) inside = -1;
-				  if(((-axis1comp)+(axis2comp)+(-axis3comp)-((-0.5*Gvalue)+(2-(0.5*Gvalue)))) > 0) inside = -1;
-				}
-			  }
-			  if(shapeclass == AIM::SyntheticBuilder::Superellipsoid)
-			  {
-				axis1comp = fabs(axis1comp);
-				axis2comp = fabs(axis2comp);
-				axis3comp = fabs(axis3comp);
-				axis1comp = powf(axis1comp,Nvalue);
-				axis2comp = powf(axis2comp,Nvalue);
-				axis3comp = powf(axis3comp,Nvalue);
-				inside = 1-axis1comp-axis2comp-axis3comp;
-		 	  }
-			  if(shapeclass == AIM::SyntheticBuilder::Ellipsoid)
-			  {
-				axis1comp = fabs(axis1comp);
-				axis2comp = fabs(axis2comp);
-				axis3comp = fabs(axis3comp);
-				axis1comp = powf(axis1comp,2);
-				axis2comp = powf(axis2comp,2);
-				axis3comp = powf(axis3comp,2);
-				inside = 1-axis1comp-axis2comp-axis3comp;
-			  }
-			  if(inside >= 0)
-			  {
-				  int currentpoint = index;
-				  if(gnames[currentpoint] > 0)
-				  {
-					oldname = gnames[currentpoint];
-					gsizes[oldname] = gsizes[oldname]-1;
-					gnames[currentpoint] = -1;
-					unassigned[currentpoint] = 1;
-					phases[currentpoint] = 0;
-				  }
-				  if(gnames[currentpoint] == 0 && unassigned[currentpoint] == 0)
-				  {
-					gnames[currentpoint] = i;
-					phases[currentpoint] = phase;
-					gsizes[i]++;
-				  }
-			  }
-			}
-		  }
-	  }
-	}
+        for (int iter3 = zmin; iter3 < zmax + 1; iter3++)
+        {
+          column = iter1;
+          row = iter2;
+          plane = iter3;
+          if (iter1 < 0) column = iter1 + xpoints;
+          if (iter1 > xpoints - 1) column = iter1 - xpoints;
+          if (iter2 < 0) row = iter2 + ypoints;
+          if (iter2 > ypoints - 1) row = iter2 - ypoints;
+          if (iter3 < 0) plane = iter3 + zpoints;
+          if (iter3 > zpoints - 1) plane = iter3 - zpoints;
+          index = (plane * xpoints * ypoints) + (row * xpoints) + column;
+          inside = -1;
+          x = float(column) * resx;
+          y = float(row) * resy;
+          z = float(plane) * resz;
+          if (iter1 < 0) x = x - sizex;
+          if (iter1 > xpoints - 1) x = x + sizex;
+          if (iter2 < 0) y = y - sizey;
+          if (iter2 > ypoints - 1) y = y + sizey;
+          if (iter3 < 0) z = z - sizez;
+          if (iter3 > zpoints - 1) z = z + sizez;
+          dist = ((x - xc) * (x - xc)) + ((y - yc) * (y - yc)) + ((z - zc) * (z - zc));
+//          dist = powf(dist, 0.5);
+          dist = sqrtf(dist);
+          if (dist < radcur1)
+          {
+            x = x - xc;
+            y = y - yc;
+            z = z - zc;
+            xp = (x * ga[0][0]) + (y * ga[1][0]) + (z * ga[2][0]);
+            yp = (x * ga[0][1]) + (y * ga[1][1]) + (z * ga[2][1]);
+            zp = (x * ga[0][2]) + (y * ga[1][2]) + (z * ga[2][2]);
+            float axis1comp = xp / radcur1;
+            float axis2comp = yp / radcur2;
+            float axis3comp = zp / radcur3;
+            if (shapeclass == AIM::SyntheticBuilder::Cylinder)
+            {
+              if (fabs(axis1comp) <= 1)
+              {
+                inside = 1;
+                axis2comp = fabs(axis2comp);
+                axis3comp = fabs(axis3comp);
+                axis2comp = axis2comp*axis2comp; //powf(axis2comp, 2);
+                axis3comp = axis3comp*axis3comp; //powf(axis3comp, 2);
+                inside = 1 - axis2comp - axis3comp;
+              }
+            }
+            if (shapeclass == AIM::SyntheticBuilder::CubeOctahedron)
+            {
+              if (fabs(axis1comp) <= 1 && fabs(axis2comp) <= 1 && fabs(axis3comp) <= 1)
+              {
+                inside = 1;
+                axis1comp = axis1comp + 1;
+                axis2comp = axis2comp + 1;
+                axis3comp = axis3comp + 1;
+                if (((-axis1comp) + (-axis2comp) + (axis3comp) - ((-0.5 * Gvalue) + (-0.5 * Gvalue) + 2)) > 0) inside = -1;
+                if (((axis1comp) + (-axis2comp) + (axis3comp) - ((2 - (0.5 * Gvalue)) + (-0.5 * Gvalue) + 2)) > 0) inside = -1;
+                if (((axis1comp) + (axis2comp) + (axis3comp) - ((2 - (0.5 * Gvalue)) + (2 - (0.5 * Gvalue)) + 2)) > 0) inside = -1;
+                if (((-axis1comp) + (axis2comp) + (axis3comp) - ((-0.5 * Gvalue) + (2 - (0.5 * Gvalue)) + 2)) > 0) inside = -1;
+                if (((-axis1comp) + (-axis2comp) + (-axis3comp) - ((-0.5 * Gvalue) + (-0.5 * Gvalue))) > 0) inside = -1;
+                if (((axis1comp) + (-axis2comp) + (-axis3comp) - ((2 - (0.5 * Gvalue)) + (-0.5 * Gvalue))) > 0) inside = -1;
+                if (((axis1comp) + (axis2comp) + (-axis3comp) - ((2 - (0.5 * Gvalue)) + (2 - (0.5 * Gvalue)))) > 0) inside = -1;
+                if (((-axis1comp) + (axis2comp) + (-axis3comp) - ((-0.5 * Gvalue) + (2 - (0.5 * Gvalue)))) > 0) inside = -1;
+              }
+            }
+            if (shapeclass == AIM::SyntheticBuilder::Superellipsoid)
+            {
+              axis1comp = fabs(axis1comp);
+              axis2comp = fabs(axis2comp);
+              axis3comp = fabs(axis3comp);
+              axis1comp = powf(axis1comp, Nvalue);
+              axis2comp = powf(axis2comp, Nvalue);
+              axis3comp = powf(axis3comp, Nvalue);
+              inside = 1 - axis1comp - axis2comp - axis3comp;
+            }
+            if (shapeclass == AIM::SyntheticBuilder::Ellipsoid)
+            {
+              axis1comp = fabs(axis1comp);
+              axis2comp = fabs(axis2comp);
+              axis3comp = fabs(axis3comp);
+              axis1comp = axis1comp*axis1comp; //powf(axis1comp, 2);
+              axis2comp = axis2comp*axis2comp; //powf(axis2comp, 2);
+              axis3comp = axis3comp*axis3comp; //powf(axis3comp, 2);
+              inside = 1 - axis1comp - axis2comp - axis3comp;
+            }
+            if (inside >= 0)
+            {
+              int currentpoint = index;
+              if (gnames[currentpoint] > 0)
+              {
+                oldname = gnames[currentpoint];
+                gsizes[oldname] = gsizes[oldname] - 1;
+                gnames[currentpoint] = -1;
+                unassigned[currentpoint] = 1;
+                phases[currentpoint] = 0;
+              }
+              if (gnames[currentpoint] == 0 && unassigned[currentpoint] == 0)
+              {
+                gnames[currentpoint] = i;
+                phases[currentpoint] = phase;
+                gsizes[i]++;
+              }
+            }
+          }
+        }
+      }
+    }
     m_Grains[i]->centroidx = xc;
     m_Grains[i]->centroidy = yc;
     m_Grains[i]->centroidz = zc;
     m_Grains[i]->numvoxels = gsizes[i];
   }
   int *newnames;
-  newnames = new int[m_Grains.size()];
-  int goodcount = 1;
-  for(size_t i=1;i<m_Grains.size();i++)
+  newnames = new int[m_Grains.size()];int
+  goodcount = 1;
+  for (size_t i = 1; i < m_Grains.size(); i++)
   {
     newnames[i] = 0;
-    if(gsizes[i] > 0)
+    if (gsizes[i] > 0)
     {
-	  m_Grains[goodcount] = m_Grains[i];
-	  newnames[i] = goodcount;
+      m_Grains[goodcount] = m_Grains[i];
+      newnames[i] = goodcount;
       goodcount++;
     }
   }
-  for(int i=0;i<totalpoints;i++)
+  for (int i = 0; i < totalpoints; i++)
   {
-	  if(gnames[i] > 0)
-	  {
-		  voxels[i].grain_index = newnames[gnames[i]];
-		  voxels[i].unassigned = unassigned[i];
-		  voxels[i].phase = phases[i];
-	  }
-	  if(gnames[i] <= 0)
-	  {
-		  voxels[i].grain_index = gnames[i];
-		  voxels[i].unassigned = unassigned[i];
-		  voxels[i].phase = phases[i];
-	  }
+    if (gnames[i] > 0)
+    {
+      voxels[i].grain_index = newnames[gnames[i]];
+      voxels[i].unassigned = unassigned[i];
+      voxels[i].phase = phases[i];
+    }
+    if (gnames[i] <= 0)
+    {
+      voxels[i].grain_index = gnames[i];
+      voxels[i].unassigned = unassigned[i];
+      voxels[i].phase = phases[i];
+    }
   }
-  delete [] gnames;
-  delete [] phases;
-  delete [] unassigned;
-  delete [] newnames;
+  delete[] gnames;
+  delete[] phases;
+  delete[] unassigned;
+  delete[] newnames;
   m_Grains.resize(goodcount);
 }
 void  GrainGeneratorFunc::assign_eulers()
@@ -2183,100 +2185,125 @@ void  GrainGeneratorFunc::assign_eulers()
 
 void  GrainGeneratorFunc::fill_gaps()
 {
- std::vector<int> neighs;
- std::vector<int> remove;
- std::vector<int> gsizes;
+  std::vector<int> neighs;
+  std::vector<int> remove;
+  std::vector<int> gsizes;
   int count = 1;
   int good = 1;
   float x, y, z;
-  gsizes.resize(m_Grains.size(),0);
+  size_t numGrains = m_Grains.size();
+  gsizes.resize(numGrains, 0);
   int neighpoint;
   int neighbors[6];
-  std::vector<int> n(m_Grains.size());
-  neighbors[0] = -xpoints*ypoints;
+//  std::vector<int> n(numGrains);
+  // Create a self cleaning array of integers.
+  boost::shared_array<int> nArray(new int[numGrains]);
+  // Get the actual pointer to the array to use that for speed.
+  int* n = nArray.get();
+
+  // This could be too memory intensive
+  // Allocate a self cleaning array for the grain indices
+  boost::shared_array<int> grain_names(new int[totalpoints]);
+  // Copy all the data over to this temp array
+  for(int i = 0; i < totalpoints; ++i)
+  {
+    grain_names[i] = voxels[i].grain_index;
+  }
+  int grainname = 0;
+  int grain = 0;
+
+  neighbors[0] = -xpoints * ypoints;
   neighbors[1] = -xpoints;
   neighbors[2] = -1;
   neighbors[3] = 1;
   neighbors[4] = xpoints;
-  neighbors[5] = xpoints*ypoints;
-  while(count != 0)
+  neighbors[5] = xpoints * ypoints;
+  while (count != 0)
   {
     count = 0;
-    for(int i = 0; i < (xpoints*ypoints*zpoints); i++)
+    for (int i = 0; i < totalpoints; i++)
     {
-      int grainname = voxels[i].grain_index;
-      if(grainname <= 0)
+      grainname = grain_names[i]; //FIXME: Hot Spot - 8.6 seconds on a 30 second profile
+      if (grainname <= 0)
       {
-	    count++;
-        for(size_t c = 1; c < m_Grains.size(); c++)
+        count++;
+        // Reset all values of 'n' to zero. Use memset for this as it is much faster
+        ::memset( &(n[1]), 0, sizeof(int) * (numGrains-1) );
+        x = i % xpoints;
+        y = (i / xpoints) % ypoints;
+        z = i / (xpoints * ypoints);
+        for (int j = 0; j < 6; j++)
         {
-          n[c] = 0;
-        }
-	    x = i%xpoints;
-		y = (i/xpoints)%ypoints;
-		z = i/(xpoints*ypoints);
-	    for(int j=0;j<6;j++)
-	    {
-	      good = 1;
-	      neighpoint = i+neighbors[j];
-          if(j == 0 && z == 0) good = 0;
-          if(j == 5 && z == (zpoints-1)) good = 0;
-          if(j == 1 && y == 0) good = 0;
-          if(j == 4 && y == (ypoints-1)) good = 0;
-          if(j == 2 && x == 0) good = 0;
-          if(j == 3 && x == (xpoints-1)) good = 0;
-		  if(good == 1)
+          good = 1;
+          neighpoint = i + neighbors[j];
+          if (j == 0 && z == 0) good = 0;
+          if (j == 5 && z == (zpoints - 1)) good = 0;
+          if (j == 1 && y == 0) good = 0;
+          if (j == 4 && y == (ypoints - 1)) good = 0;
+          if (j == 2 && x == 0) good = 0;
+          if (j == 3 && x == (xpoints - 1)) good = 0;
+          if (good == 1)
           {
-	        int grain = voxels[neighpoint].grain_index;
-	        if(grain > 0)
-	        {
-	          neighs.push_back(grain);
-	        }
-	      }
+            grain = grain_names[neighpoint];
+            if (grain > 0)
+            {
+              neighs.push_back(grain);
+            }
+          }
         }
         int current = 0;
         int most = 0;
         int curgrain = 0;
         int size = int(neighs.size());
-        for(int k=0;k<size;k++)
+        for (int k = 0; k < size; k++)
         {
           int neighbor = neighs[k];
           n[neighbor]++;
           current = n[neighbor];
-          if(current > most)
+          if (current > most)
           {
             most = current;
             curgrain = neighbor;
           }
         }
-        if(size > 0)
+        if (size > 0)
         {
           voxels[i].neighbor = curgrain;
           neighs.clear();
         }
       }
     }
-    for(int j = 0; j < (xpoints*ypoints*zpoints); j++)
+    int neighbor = 0;
+    for (int j = 0; j < totalpoints; j++)
     {
-      int grainname = voxels[j].grain_index;
-      int neighbor = voxels[j].neighbor;
-      if(grainname <= 0 && neighbor > 0)
+      grainname = grain_names[j]; //FIXME: Hot Spot - 6.3 seconds on 30 sec profile
+      neighbor = voxels[j].neighbor; //FIXME: Hot Spot - 3.4 seconds on a 30 Sec Profile
+      if (grainname <= 0 && neighbor > 0)
       {
-        voxels[j].grain_index = neighbor;
-		voxels[j].phase = m_Grains[neighbor]->phase;
+        grain_names[j] = neighbor;
+        voxels[j].phase = m_Grains[neighbor]->phase;
       }
     }
   }
-  gsizes.resize(m_Grains.size(),0);
-  for (int i = 0; i < (xpoints*ypoints*zpoints); i++)
+  gsizes.resize(numGrains, 0);
+  int name = 0;
+  for (int i = 0; i < totalpoints; i++)
   {
-    int name = voxels[i].grain_index;
+    name = grain_names[i];
     gsizes[name]++;
   }
-  for (size_t i = 1; i < m_Grains.size(); i++)
+
+  // Copy all the data back from the temp array
+  for(int i = 0; i < totalpoints; ++i)
   {
-	  m_Grains[i]->numvoxels = gsizes[i];
-	  m_Grains[i]->equivdiameter = 2.0*powf((gsizes[i]*resx*resy*resz*(3.0/4.0)*(1/m_pi)),(1.0/3.0));
+    voxels[i].grain_index = grain_names[i];
+  }
+
+  float aConstantValue = resx * resy * resz * 0.75f * m_one_over_pi;
+  for (size_t i = 1; i < numGrains; i++)
+  {
+    m_Grains[i]->numvoxels = gsizes[i];
+    m_Grains[i]->equivdiameter = 2.0f * powf((gsizes[i] * aConstantValue), m_onepointthree);
   }
   gsizes.clear();
 }
