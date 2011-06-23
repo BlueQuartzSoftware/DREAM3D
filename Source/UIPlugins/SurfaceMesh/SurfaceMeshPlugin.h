@@ -33,10 +33,13 @@
 
 #include <QtCore/QObject>
 #include <QtCore/QSettings>
+#include <QtCore/QUrl>
 #include "QtSupport/DREAM3DPluginInterface.h"
 
 class SurfaceMeshWidget;
 class AIMPluginFrame;
+
+DREAM3D_PLUGIN_CONSTANTS(SurfaceMesh, Surface Mesh)
 
 
 class SurfaceMeshPlugin : public QObject, public DREAM3DPluginInterface
@@ -57,6 +60,11 @@ class SurfaceMeshPlugin : public QObject, public DREAM3DPluginInterface
     virtual void readSettings(QSettings &prefs);
 
     virtual QIcon icon();
+    virtual QUrl htmlHelpIndexFile();
+
+  public slots:
+    virtual void displayHelp();
+
   protected:
     SurfaceMeshWidget* m_InputWidget;
 

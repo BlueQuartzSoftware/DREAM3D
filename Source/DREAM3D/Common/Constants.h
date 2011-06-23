@@ -77,31 +77,33 @@ namespace DREAM3D
 {
   namespace UIPlugins
   {
-#ifdef NDEBUG
-    const std::string OIMImportFile("OIMImportPlugin");
-    const std::string ReconstructionFile("ReconstructionPlugin");
-    const std::string MicrostructureStatisticsFile("MicrostructureStatisticsPlugin");
-    const std::string GrainGeneratorFile("GrainGeneratorPlugin");
-    const std::string SurfaceMeshFile("SurfaceMeshPlugin");
-
-    const std::string OIMImportName("OIM Import");
-    const std::string ReconstructionName("Reconstruction");
-    const std::string MicrostructureStatisticsName("Microstructure Statistics");
-    const std::string GrainGeneratorName("Grain Generator");
-    const std::string SurfaceMeshName("Surface Mesh");
-#else
-    const std::string OIMImportFile("OIMImportPlugin_debug");
-    const std::string ReconstructionFile("ReconstructionPlugin_debug");
-    const std::string MicrostructureStatisticsFile("MicrostructureStatisticsPlugin_debug");
-    const std::string GrainGeneratorFile("GrainGeneratorPlugin_debug");
-    const std::string SurfaceMeshFile("SurfaceMeshPlugin_debug");
-
-    const std::string OIMImportName("OIM Import Debug");
-    const std::string ReconstructionName("Reconstruction Debug");
-    const std::string MicrostructureStatisticsName("Microstructure Statistics Debug");
-    const std::string GrainGeneratorName("Grain Generator Debug");
-    const std::string SurfaceMeshName("Surface Mesh Debug");
-#endif
+//#ifdef NDEBUG
+//    const std::string OIMImportFile("OIMImportPlugin");
+//    const std::string ReconstructionFile("ReconstructionPlugin");
+//    const std::string MicrostructureStatisticsFile("MicrostructureStatisticsPlugin");
+//    const std::string GrainGeneratorFile("GrainGeneratorPlugin");
+//    const std::string SurfaceMeshFile("SurfaceMeshPlugin");
+//
+//    const std::string OIMImportName("OIM Import");
+//    const std::string ReconstructionName("Reconstruction");
+//    const std::string MicrostructureStatisticsName("Microstructure Statistics");
+//    const std::string GrainGeneratorName("Grain Generator");
+//    const std::string SurfaceMeshName("Surface Mesh");
+//#else
+//    const std::string OIMImportFile("OIMImportPlugin_debug");
+//    const std::string ReconstructionFile("ReconstructionPlugin_debug");
+//    const std::string MicrostructureStatisticsFile("MicrostructureStatisticsPlugin_debug");
+//    const std::string GrainGeneratorFile("GrainGeneratorPlugin_debug");
+//    const std::string SurfaceMeshFile("SurfaceMeshPlugin_debug");
+//
+//    const std::string OIMImportName("OIM Import Debug");
+//    const std::string ReconstructionName("Reconstruction Debug");
+//    const std::string MicrostructureStatisticsName("Microstructure Statistics Debug");
+//    const std::string GrainGeneratorName("Grain Generator Debug");
+//    const std::string SurfaceMeshName("Surface Mesh Debug");
+//
+//    const std::string OIMImportHelpFile("OIMImport/index.html")
+//#endif
 
   }
 }

@@ -5,6 +5,7 @@
 #///////////////////////////////////////////////////////////////////////////////
 project(OIMImportPlugin)
 
+set(PLUGIN_NAME OIMImport)
 
 # ------------------------------------------------------------------------------
 #  Qt 4 Section
@@ -84,13 +85,21 @@ if (NOT MSVC)
   SET (CMAKE_LIBRARY_OUTPUT_DIRECTORY  ${DREAM3D_BINARY_DIR}/Bin  )
 endif()
 
-if(0)
-set(${PROJECT_NAME}_HELP_FILES
-    ${PROJECT_SOURCE_DIR}/Help/index.html)
 
+set(${PLUGIN_NAME}_HELP_FILES
+    ${PROJECT_SOURCE_DIR}/Help/index.html
+    ${PROJECT_SOURCE_DIR}/Help/image1.png
+    )
 
-install(FILES ${${PROJECT_NAME}_HELP_FILES}
+#- This copies all the HTML files into the Build directory so the help
+#- works from the Build Tree
+file(COPY ${${PLUGIN_NAME}_HELP_FILES} DESTINATION ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/Help/${PLUGIN_NAME}/ )
+
+#- This installs all the help files. Note that we assume a flat directory structure
+#- in the "Help" folder, ie, all html files, images, etc are all in the "Help"
+#- folder and NOT in any subfolders beyond that.
+install(FILES ${${PLUGIN_NAME}_HELP_FILES}
         DESTINATION Help/OIMImport
         COMPONENT Applications )
-endif()   
+  
 

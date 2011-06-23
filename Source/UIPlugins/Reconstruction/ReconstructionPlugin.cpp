@@ -31,6 +31,7 @@
 #include "ReconstructionPlugin.h"
 #include "ReconstructionWidget.h"
 #include "QtSupport/AIMPluginFrame.h"
+#include "QtSupport/HelpDialog.h"
 
 Q_EXPORT_PLUGIN2(ReconstructionPlugin, ReconstructionPlugin)
 ;
@@ -57,7 +58,7 @@ ReconstructionPlugin::~ReconstructionPlugin()
 // -----------------------------------------------------------------------------
 QString ReconstructionPlugin::getPluginName()
 {
-  return QString::fromStdString(DREAM3D::UIPlugins::ReconstructionName);
+  return QString::fromStdString(DREAM3D::UIPlugins::ReconstructionDisplayName);
 }
 
 // -----------------------------------------------------------------------------
@@ -102,3 +103,24 @@ QIcon ReconstructionPlugin::icon()
 {
   return QIcon(":/reconstruction.png");
 }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ReconstructionPlugin::displayHelp()
+{
+  QSharedPointer<HelpDialog> hd = HelpDialog::instance();
+  hd->setContentFile(htmlHelpIndexFile());
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QUrl ReconstructionPlugin::htmlHelpIndexFile()
+{
+  QString s = QString::fromStdString(DREAM3D::UIPlugins::ReconstructionBaseName);
+  s.append(QString("/index.html"));
+  return QUrl(s);
+}
+
