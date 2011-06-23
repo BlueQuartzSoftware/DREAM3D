@@ -75,7 +75,7 @@ m_WriteIPFColor(false),
 m_WritePhFile(false),
 m_WriteHDF5GrainFile(false)
 {
-//std::cout << "GrainGenerator Constructor" << std::endl;
+  std::cout << "GrainGenerator Constructor" << std::endl;
 }
 
 // -----------------------------------------------------------------------------
@@ -83,6 +83,7 @@ m_WriteHDF5GrainFile(false)
 // -----------------------------------------------------------------------------
 GrainGenerator::~GrainGenerator()
 {
+  std::cout << "GrainGenerator::~GrainGenerator()" << std::endl;
 }
 
 // -----------------------------------------------------------------------------
