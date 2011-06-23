@@ -132,12 +132,6 @@
   QString absPath = prefix##OutputDir->text() + QDir::separator() + m_OutputFilePrefix->text() + ns::name.c_str();\
   absPath = QDir::toNativeSeparators(absPath);\
   QFileInfo fi ( absPath );\
-  QString iconFile;\
-  if ( fi.exists() )  {\
-    iconFile = QString(":/") + QString("Check") + QString("-16x16.png");\
-  } else {\
-    iconFile = QString(":/") + QString("Delete") + QString("-16x16.png");\
-  }\
   CHECK_QLABEL_OUTPUT_FILE_EXISTS_ICON_BODY1(ns, prefix##name, name)\
 }
 
@@ -147,12 +141,6 @@
   QString absPath = prefix##OutputDir->text() + QDir::separator() + m_OutputFilePrefix->text() + ns::name.c_str();\
   absPath = QDir::toNativeSeparators(absPath);\
   QFileInfo fi ( absPath );\
-  QString iconFile;\
-  if ( fi.exists() )  {\
-    iconFile = QString(":/") + QString("Check") + QString("-16x16.png");\
-  } else {\
-    iconFile = QString(":/") + QString("Delete") + QString("-16x16.png");\
-  }\
   CHECK_QLABEL_OUTPUT_FILE_EXISTS_BODY1(ns, prefix##name, name)\
 }
 
