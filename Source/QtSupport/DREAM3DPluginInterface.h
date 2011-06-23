@@ -40,6 +40,15 @@
 
 #ifdef NDEBUG
 
+#define DREAM3D_PLUGIN_2(name)\
+    #name
+
+#define DREAM3D_PLUGIN_3(name)\
+  #name
+
+#else
+
+
 #define DREAM3D_PLUGIN_1(name)\
   #name
 
@@ -48,18 +57,9 @@
 
 #define DREAM3D_PLUGIN_3(name)\
   DREAM3D_PLUGIN_1(name Debug)
-#else
-
-#define DREAM3D_PLUGIN_2(name)\
-    #name
-
-#define DREAM3D_PLUGIN_3(name)\
-  #name
 
 #endif
 
-#define DREAM3D_PLUGIN_4(name)\
-  #name
 
 
 #define DREAM3D_PLUGIN_CONSTANTS(libName, human)\
