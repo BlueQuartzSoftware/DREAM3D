@@ -81,7 +81,7 @@ void QCheckboxDialog::setupGui()
 
   QMetaObject::connectSlotsByName(this);
 
-  setWindowTitle("VTK File Options");
+  setWindowTitle("Output Options");
   setSizeGripEnabled(false);
 
 //  TextureDialog->resize(690, 406);
