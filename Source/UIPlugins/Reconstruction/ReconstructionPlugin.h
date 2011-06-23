@@ -33,12 +33,21 @@
 
 #include <QtCore/QObject>
 #include <QtCore/QSettings>
+#include <QtCore/QUrl>
 #include "QtSupport/DREAM3DPluginInterface.h"
 
 class ReconstructionWidget;
 class AIMPluginFrame;
 
+DREAM3D_PLUGIN_CONSTANTS(Reconstruction, Reconstruction)
 
+/**
+ * @class ReconstructionPlugin ReconstructionPlugin.h UIPlugins/ReconstructionPlugin.h
+ * @brief
+ * @author Michael A. Jackson for BlueQuartz Software
+ * @date Jun 15, 2011
+ * @version 1.0
+ */
 class ReconstructionPlugin : public QObject, public DREAM3DPluginInterface
 {
     Q_OBJECT;
@@ -57,6 +66,11 @@ class ReconstructionPlugin : public QObject, public DREAM3DPluginInterface
     virtual void readSettings(QSettings &prefs);
 
     virtual QIcon icon();
+    virtual QUrl htmlHelpIndexFile();
+
+  public slots:
+    virtual void displayHelp();
+
   protected:
     ReconstructionWidget* m_InputWidget;
 

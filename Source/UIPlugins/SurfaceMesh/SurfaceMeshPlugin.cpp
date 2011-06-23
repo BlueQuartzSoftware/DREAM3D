@@ -31,7 +31,7 @@
 #include "SurfaceMeshPlugin.h"
 #include "SurfaceMeshWidget.h"
 #include "QtSupport/AIMPluginFrame.h"
-
+#include "QtSupport/HelpDialog.h"
 
 Q_EXPORT_PLUGIN2(SurfaceMeshPlugin, SurfaceMeshPlugin)
 ;
@@ -58,7 +58,7 @@ SurfaceMeshPlugin::~SurfaceMeshPlugin()
 // -----------------------------------------------------------------------------
 QString SurfaceMeshPlugin::getPluginName()
 {
-  return QString::fromStdString(DREAM3D::UIPlugins::SurfaceMeshName);
+  return QString::fromStdString(DREAM3D::UIPlugins::SurfaceMeshDisplayName);
 }
 
 // -----------------------------------------------------------------------------
@@ -103,3 +103,23 @@ QIcon SurfaceMeshPlugin::icon()
 {
   return QIcon(":/surfacemesh.png");
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void SurfaceMeshPlugin::displayHelp()
+{
+  QSharedPointer<HelpDialog> hd = HelpDialog::instance();
+  hd->setContentFile(htmlHelpIndexFile());
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QUrl SurfaceMeshPlugin::htmlHelpIndexFile()
+{
+  QString s = QString::fromStdString(DREAM3D::UIPlugins::SurfaceMeshBaseName);
+  s.append(QString("/index.html"));
+  return QUrl(s);
+}
+
