@@ -230,29 +230,35 @@ if (DREAM3D_BUILD_QT_APPS)
         add_subdirectory(${DREAM3D_SOURCE_DIR}/Source/UIPlugins/${plugin} ${DREAM3D_BINARY_DIR}/UIPlugins/${plugin})  
     endmacro()
   
-    #-----------------
-    # Add any additional Plugins that you develop here to this list
-    set (DREAM3D_PLUGIN_LIST
-    OIMImport GrainGenerator Reconstruction SurfaceMesh MicrostructureStatistics )
-    
-    foreach(p ${DREAM3D_PLUGIN_LIST})
-        DREAM3D_COMPILE_PLUGIN(${p})
-    endforeach()
-  
-   
-   # Build the DREAM3D Application  
+     # Build the DREAM3D Application  
    option(DREAM3D_BUILD_GUI "Compile the DREAM3D GUI Application" ON)
    if (DREAM3D_BUILD_GUI)
-       ADD_SUBDIRECTORY( ${DREAM3D_SOURCE_DIR}/Source/Applications/DREAM3D ${DREAM3D_BINARY_DIR}/Applications/DREAM3D)
-   endif()
- 
-    #- Now set up the dependency between the main application and each of the plugins so that
-    #- things like Visual Studion are forced to rebuild the plugins when launching
-    #- the DREAM3D application 
-    foreach(p ${DREAM3D_PLUGIN_LIST})
-        add_dependencies(${p}Plugin DREAM3D)
-    endforeach()
+   
+        #-----------------
+        # Add any additional Plugins that you develop here to this list
+        set (DREAM3D_PLUGIN_LIST
+            OIMImport 
+            GrainGenerator 
+            Reconstruction 
+            SurfaceMesh 
+            MicrostructureStatistics )
+        
+        foreach(p ${DREAM3D_PLUGIN_LIST})
+            DREAM3D_COMPILE_PLUGIN(${p})
+        endforeach()
+  
+        #- Add in the Main DREAM.3D Application 
+        ADD_SUBDIRECTORY( ${DREAM3D_SOURCE_DIR}/Source/Applications/DREAM3D ${DREAM3D_BINARY_DIR}/Applications/DREAM3D)
 
+ 
+        #- Now set up the dependency between the main application and each of the plugins so that
+        #- things like Visual Studion are forced to rebuild the plugins when launching
+        #- the DREAM3D application 
+        foreach(p ${DREAM3D_PLUGIN_LIST})
+            add_dependencies(${p}Plugin DREAM3D)
+        endforeach()
+   endif()
+   
    # Build the StatsGenerator Application
    OPTION (DREAM3D_BUILD_STATS_GENERATOR "Compile the Statistics Generator GUI Application" ON)
    if (DREAM3D_BUILD_STATS_GENERATOR)

@@ -196,6 +196,7 @@ function(BuildQtAppBundle)
     
     set(app_plugin_list "")
     set(lib_search_dirs "")
+
 #-- It is important as you build up the list to modify the path to the Qt Plugin
 #-- to point to the plugin that will appear in the Application bundle and NOT
 #-- the path to your Qt installation. If you do NOT do this step properly AND you
