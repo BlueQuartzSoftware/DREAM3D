@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>571</width>
-    <height>577</height>
+    <height>605</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -35,9 +35,6 @@
       <string>Inputs</string>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_2">
-      <property name="spacing">
-       <number>6</number>
-      </property>
       <property name="margin">
        <number>4</number>
       </property>
@@ -215,9 +212,6 @@
       <string>Options</string>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_3">
-      <property name="spacing">
-       <number>6</number>
-      </property>
       <property name="margin">
        <number>4</number>
       </property>
@@ -363,9 +357,6 @@
       <string>Output Files</string>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_4">
-      <property name="spacing">
-       <number>6</number>
-      </property>
       <property name="margin">
        <number>4</number>
       </property>
@@ -406,19 +397,6 @@
       </item>
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout_3">
-        <item>
-         <widget class="QLabel" name="m_VisualizationVizFileIcon">
-          <property name="text">
-           <string/>
-          </property>
-          <property name="pixmap">
-           <pixmap resource="../../../Resources/icons/images/Icons.qrc">:/Delete-16x16.png</pixmap>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-          </property>
-         </widget>
-        </item>
         <item>
          <widget class="QLabel" name="m_VisualizationVizFile">
           <property name="text">
