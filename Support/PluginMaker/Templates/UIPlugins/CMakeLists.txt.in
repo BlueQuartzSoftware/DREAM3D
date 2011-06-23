@@ -1,6 +1,8 @@
 
 project(@PluginName@Plugin)
 
+set(PLUGIN_NAME @PluginName@)
+
 # ------------------------------------------------------------------------------
 #  Qt 4 Section
 # ------------------------------------------------------------------------------
@@ -14,6 +16,7 @@ add_definitions(-DDREAM3D_USE_QT)
 include_directories(${PROJECT_SOURCE_DIR} ${PROJECT_BINARY_DIR} ${PROJECT_SOURCE_DIR}/..)
 include_directories(${PROJECT_CODE_DIR} )
 include_directories(${PROJECT_CODE_DIR}/QtSupport )
+include_directories(${DREAM3D_BINARY_DIR}/QtSupport)
 
 set(CLASS_NAME "@PluginName@")
 SET(ORIGINAL_FILE ${PROJECT_CODE_DIR}/QtSupport/QAbstractPipelineWrapper.h.in)
@@ -68,9 +71,24 @@ target_link_libraries(@PluginName@Plugin
 PluginProperties(@PluginName@Plugin "_debug" "${DREAM3D_VERSION}" 
                 "${DREAM3D_BINARY_DIR}" "${CMP_PLUGIN_LIST_FILE}")
 
-# Add a Dependency so that the plugins are always build before the main Application
-add_dependencies(@PluginName@Plugin  DREAM3D)
-
 if (NOT MSVC)
   SET (CMAKE_LIBRARY_OUTPUT_DIRECTORY  ${DREAM3D_BINARY_DIR}/Bin  )
 endif()
+
+
+set(${PLUGIN_NAME}_HELP_FILES
+    ${PROJECT_SOURCE_DIR}/Help/index.html)
+
+#- This copies all the HTML files into the Build directory so the help
+#- works from the Build Tree
+file(COPY ${${PLUGIN_NAME}_HELP_FILES} DESTINATION ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/Help/${PLUGIN_NAME}/ )
+
+#- This installs all the help files. Note that we assume a flat directory structure
+#- in the "Help" folder, ie, all html files, images, etc are all in the "Help"
+#- folder and NOT in any subfolders beyond that.
+install(FILES ${${PLUGIN_NAME}_HELP_FILES}
+        DESTINATION Help/@PluginName@
+        COMPONENT Applications )
+  
+
+

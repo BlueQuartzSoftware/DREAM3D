@@ -80,8 +80,16 @@
     </widget>
     <addaction name="menuToolbar_Prefs"/>
    </widget>
+   <widget class="QMenu" name="menuHelp">
+    <property name="title">
+     <string>Help</string>
+    </property>
+    <addaction name="actionDREAM_3D_Help"/>
+    <addaction name="separator"/>
+   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuPlugins"/>
+   <addaction name="menuHelp"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionOpen">
@@ -134,6 +142,11 @@
    </property>
    <property name="text">
     <string>Show Toolbar</string>
+   </property>
+  </action>
+  <action name="actionDREAM_3D_Help">
+   <property name="text">
+    <string>DREAM.3D Help</string>
    </property>
   </action>
  </widget>

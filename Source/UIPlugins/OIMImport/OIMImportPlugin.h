@@ -39,6 +39,9 @@ class OIMImportWidget;
 class AIMPluginFrame;
 
 
+DREAM3D_PLUGIN_CONSTANTS(OIMImport, OIM Import)
+
+
 class OIMImportPlugin : public QObject, public DREAM3DPluginInterface
 {
     Q_OBJECT;
@@ -57,6 +60,11 @@ class OIMImportPlugin : public QObject, public DREAM3DPluginInterface
     virtual void writeSettings(QSettings &prefs);
     virtual void readSettings(QSettings &prefs);
     virtual QIcon icon();
+    virtual QUrl htmlHelpIndexFile();
+
+  public slots:
+    virtual void displayHelp();
+
 
   protected:
     OIMImportWidget* m_InputWidget;

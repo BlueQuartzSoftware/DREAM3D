@@ -69,13 +69,15 @@ ${PluginMaker_PluginDir}/${DREAM3D_Plugin_Name}Widget.ui @ONLY IMMEDIATE)
 configure_file( Templates/UIPlugins/Icons.qrc.in  
 ${PluginMaker_PluginDir}/Icons.qrc @ONLY IMMEDIATE)
 
+configure_file( Templates/UIPlugins/Help/index.html.in  
+${PluginMaker_PluginDir}/Help/index.html @ONLY IMMEDIATE)
+
 
 
 message(STATUS "The New Skeleton Files have been written to\n    ${PluginMaker_PluginDir}\n    ${PluginMaker_LibDir}")
-message(STATUS "Do NOT forget update the \n    '${DREAM3D_SOURCE_DIR}/CMakeLists.txt' file with the following")
-message(STATUS "#------------------------------------------")
-message(STATUS "add_subdirectory(\${DREAM3D_SOURCE_DIR}/Source/UIPlugins/${PluginName} \${DREAM3D_BINARY_DIR}/UIPlugins/${PluginName})")
-message(STATUS "#------------------------------------------")
+message(STATUS "Do NOT forget update the \n    '${DREAM3D_SOURCE_DIR}/CMakeLists.txt' file to include your plugin")
+message(STATUS " in the list of Plugins to be compiled which is in the CMake variable")
+message(STATUS "DREAM3D_PLUGIN_LIST")
 
 message(STATUS "Do not forget to add the following line to \n    ${DREAM3D_SOURCE_DIR}/Source/DREAM3D/CMakeLists.txt")
 message(STATUS "#------------------------------------------")
