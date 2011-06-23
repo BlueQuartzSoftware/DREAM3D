@@ -655,6 +655,7 @@ void ReconstructionWidget::on_m_VtkOptionsBtn_clicked()
   options.push_back("Write IPF Color Scalars");
   options.push_back("Write Binary VTK File");
   QCheckboxDialog d(options, this);
+  d.setWindowTitle(QString("VTK Output Options"));
 
   d.setValue("Write Euclidean Scalars", m_WriteEuclideanScalars);
   d.setValue("Write Phase Ids Scalars", m_WritePhaseIdScalars);
