@@ -31,6 +31,7 @@
 #include "MicrostructureStatisticsPlugin.h"
 #include "MicrostructureStatisticsWidget.h"
 #include "QtSupport/AIMPluginFrame.h"
+#include "QtSupport/HelpDialog.h"
 
 Q_EXPORT_PLUGIN2(MicrostructureStatisticsPlugin, MicrostructureStatisticsPlugin)
 ;
@@ -57,7 +58,7 @@ MicrostructureStatisticsPlugin::~MicrostructureStatisticsPlugin()
 // -----------------------------------------------------------------------------
 QString MicrostructureStatisticsPlugin::getPluginName()
 {
-  return QString::fromStdString(DREAM3D::UIPlugins::MicrostructureStatisticsName);
+  return QString::fromStdString(DREAM3D::UIPlugins::MicrostructureStatisticsDisplayName);
 }
 
 // -----------------------------------------------------------------------------
@@ -102,3 +103,23 @@ QIcon MicrostructureStatisticsPlugin::icon()
 {
   return QIcon(":/microstructurestatistics.png");
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void MicrostructureStatisticsPlugin::displayHelp()
+{
+  QSharedPointer<HelpDialog> hd = HelpDialog::instance();
+  hd->setContentFile(htmlHelpIndexFile());
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QUrl MicrostructureStatisticsPlugin::htmlHelpIndexFile()
+{
+  QString s = QString::fromStdString(DREAM3D::UIPlugins::MicrostructureStatisticsBaseName);
+  s.append(QString("/index.html"));
+  return QUrl(s);
+}
+

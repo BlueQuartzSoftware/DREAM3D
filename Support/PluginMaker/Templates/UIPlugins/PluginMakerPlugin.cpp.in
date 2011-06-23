@@ -28,11 +28,7 @@ m_InputWidget(NULL)
 // -----------------------------------------------------------------------------
 QString @PluginName@Plugin::getPluginName()
 {
-#ifdef NDEBUG
-  return QString("@PluginName@");
-#else
-  return QString("@PluginName@ Debug");
-#endif
+  return QString::fromStdString(DREAM3D::UIPlugins::@PluginName@DisplayName);
 }
 
 // -----------------------------------------------------------------------------
@@ -75,4 +71,23 @@ void @PluginName@Plugin::readSettings(QSettings &prefs)
 QIcon @PluginName@Plugin::icon()
 {
   return QIcon(":/@PluginName@.png");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void @PluginName@Plugin::displayHelp()
+{
+  QSharedPointer<HelpDialog> hd = HelpDialog::instance();
+  hd->setContentFile(htmlHelpIndexFile());
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QUrl @PluginName@Plugin::htmlHelpIndexFile()
+{
+  QString s = QString::fromStdString(DREAM3D::UIPlugins::@PluginName@BaseName);
+  s.append(QString("/index.html"));
+  return QUrl(s);
 }
