@@ -810,7 +810,7 @@ void  GrainGeneratorFunc::insert_grain(size_t gnum)
 		  z = float(plane)*packingresz;
 		  inside = -1;
 		  dist = ((x-xc)*(x-xc))+((y-yc)*(y-yc))+((z-zc)*(z-zc));
-		  dist = powf(dist,0.5);
+		  dist = sqrt(dist);
 		  if(dist < radcur1)
 		  {
 			x = x-xc;
@@ -1230,7 +1230,7 @@ void GrainGeneratorFunc::determine_neighbors(size_t gnum, int add)
       ydist = fabs(y-yn);
       zdist = fabs(z-zn);
       totdist = (xdist*xdist)+(ydist*ydist)+(zdist*zdist);
-      totdist = powf(totdist,0.5);
+      totdist = sqrt(totdist);
       if(totdist < (3*(dia/2.0)))
       {
         DoverR = int(totdist/(dia/2.0));
@@ -2003,7 +2003,7 @@ void GrainGeneratorFunc::assign_voxels()
 			if(iter3 < 0) z = z-sizez;
 			if(iter3 > zpoints-1) z = z+sizez;
 			dist = ((x-xc)*(x-xc))+((y-yc)*(y-yc))+((z-zc)*(z-zc));
-			dist = powf(dist,0.5);
+			dist = sqrt(dist);
 			if(dist < radcur1)
 			{
 			  x = x-xc;
