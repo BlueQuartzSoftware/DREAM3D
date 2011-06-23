@@ -177,7 +177,7 @@ class FindEuclideanMap
         y2 = resy * double((nearestneighbor / xpoints) % ypoints); // find_ycoord(nearestneighbor);
         z2 = resz * double(nearestneighbor / (xpoints * ypoints)); // find_zcoord(nearestneighbor);
         dist = ((x1 - x2) * (x1 - x2)) + ((y1 - y2) * (y1 - y2)) + ((z1 - z2) * (z1 - z2));
-        dist = pow(dist, 0.5);
+        dist = sqrt(dist);
         voxel_NearestNeighborDistance[j] = dist + (0.5 * resx);
       }
       for (int a = 0; a < (d->totalpoints); ++a)
