@@ -245,8 +245,18 @@ void GrainGeneratorFunc::initialize_packinggrid()
   packingypoints = int(sizey/packingresy);
   packingzpoints = int(sizez/packingresz);
   packingtotalpoints = packingxpoints*packingypoints*packingzpoints;
-  goalgrainowners.resize(packingtotalpoints,1);
-  grainowners.resize(packingtotalpoints,0);
+  goalgrainowners.resize(packingxpoints);
+  grainowners.resize(packingxpoints);
+  for(int i=0;i<packingxpoints;i++)
+  {
+	  goalgrainowners[i].resize(packingypoints);
+	  grainowners[i].resize(packingypoints);
+	  for(int j=0;j<packingypoints;j++)
+	  {
+		  goalgrainowners[i][j].resize(packingzpoints,1);
+		  grainowners[i][j].resize(packingzpoints,0);
+	  }
+  }
 }
 
 #define CHECK_STATS_READ_ERROR(err, group, dataset)\
@@ -422,7 +432,7 @@ int  GrainGeneratorFunc::readAxisOrientationData(H5ReconStatsReader::Pointer h5i
 {
   std::vector<float> density;
   int err = 0;
-  float totaldensity = 0;
+  float totaldensity = 0.0;
   size_t size = 0;
   // Read the Phase and Crystal Structure information from the Stats File
   std::vector<int> phases;
@@ -436,6 +446,7 @@ int  GrainGeneratorFunc::readAxisOrientationData(H5ReconStatsReader::Pointer h5i
   size_t count = phases.size();
   for(size_t i = 0; i< count ;i++)
   {
+	  totaldensity = 0.0;
       phase = phases[i];
 	  err = h5io->readStatsDataset(phase, AIM::HDF5::AxisOrientation, density);
 	  if (err < 0)
@@ -649,12 +660,10 @@ void  GrainGeneratorFunc::generate_grain(int gnum, int phase)
   }
   float random = rg.Random();
   int bin=0;
-  float totaldensity = 0;
   for(int i=0;i<(36*36*36);i++)
   {
-	totaldensity = totaldensity + axisodf[phase][i];
-    if(random > totaldensity) bin = i;
-    if(random < totaldensity) {break;}
+    if(random > axisodf[phase][i]) bin = i;
+    if(random < axisodf[phase][i]) {break;}
   }
   m_OrientatioOps[AIM::Reconstruction::OrthoRhombic]->determineEulerAngles(bin, phi1, PHI, phi2);
   float m = omega3[phase][diameter][0];
@@ -704,7 +713,12 @@ void  GrainGeneratorFunc::insert_grain(size_t gnum)
   m_Grains[gnum]->columnlist = new std::vector<int>(0);
   m_Grains[gnum]->rowlist = new std::vector<int>(0);
   m_Grains[gnum]->planelist = new std::vector<int>(0);
-  if(shapeclass == AIM::SyntheticBuilder::CubeOctahedron)
+
+  if(shapeclass == AIM::SyntheticBuilder::ShapeClass::Cylinder)
+  {
+      radcur1 = (volcur*(1.0/m_pi)*(1.0/bovera)*(1.0/covera));	
+  }
+  if(shapeclass == AIM::SyntheticBuilder::ShapeClass::CubeOctahedron)
   {
 	  for(int i=0;i<41;i++)
 	  {
@@ -777,24 +791,12 @@ void  GrainGeneratorFunc::insert_grain(size_t gnum)
   ymax = int(centerrow+((radcur1/packingresy)+1));
   zmin = int(centerplane-((radcur1/packingresz)+1));
   zmax = int(centerplane+((radcur1/packingresz)+1));
-  if(periodic_boundaries == true)
-  {
-	  if(xmin < -packingxpoints) xmin = -packingxpoints;
-	  if(xmax > 2*packingxpoints-1) xmax = (2*packingxpoints-1);
-	  if(ymin < -packingypoints) ymin = -packingypoints;
-	  if(ymax > 2*packingypoints-1) ymax = (2*packingypoints-1);
-	  if(zmin < -packingzpoints) zmin = -packingzpoints;
-	  if(zmax > 2*packingzpoints-1) zmax = (2*packingzpoints-1);
-  }
-  if(periodic_boundaries == false)
-  {
-	  if(xmin < 0) xmin = 0;
-	  if(xmax > packingxpoints-1) xmax = packingxpoints-1;
-	  if(ymin < 0) ymin = 0;
-	  if(ymax > packingypoints-1) ymax = packingypoints-1;
-	  if(zmin < 0) zmin = 0;
-	  if(zmax > packingzpoints-1) zmax = packingzpoints-1;
-  }
+  if(xmin < -packingxpoints) xmin = -packingxpoints;
+  if(xmax > 2*packingxpoints-1) xmax = (2*packingxpoints-1);
+  if(ymin < -packingypoints) ymin = -packingypoints;
+  if(ymax > 2*packingypoints-1) ymax = (2*packingypoints-1);
+  if(zmin < -packingzpoints) zmin = -packingzpoints;
+  if(zmax > 2*packingzpoints-1) zmax = (2*packingzpoints-1);
   for(int iter1 = xmin; iter1 < xmax+1; iter1++)
   {
     for(int iter2 = ymin; iter2 < ymax+1; iter2++)
@@ -821,7 +823,19 @@ void  GrainGeneratorFunc::insert_grain(size_t gnum)
 			float axis1comp = xp/radcur1;
 			float axis2comp = yp/radcur2;
 			float axis3comp = zp/radcur3;
-			if(shapeclass == AIM::SyntheticBuilder::CubeOctahedron)
+			if(shapeclass == AIM::SyntheticBuilder::ShapeClass::Cylinder)
+			{
+				if(fabs(axis1comp) <= 1)
+				{
+					inside = 1;
+					axis2comp = fabs(axis2comp);
+					axis3comp = fabs(axis3comp);
+					axis2comp = powf(axis2comp,2);
+					axis3comp = powf(axis3comp,2);
+					inside = 1-axis2comp-axis3comp;
+				}
+			}
+			if(shapeclass == AIM::SyntheticBuilder::ShapeClass::CubeOctahedron)
 			{
 				if(fabs(axis1comp) <= 1 && fabs(axis2comp) <= 1 && fabs(axis3comp) <= 1)
 				{
@@ -897,7 +911,11 @@ void  GrainGeneratorFunc::insert_precipitate(size_t gnum)
   float covera = m_Grains[gnum]->radius3;
   float omega3 = m_Grains[gnum]->omega3;
   float radcur1 = 1;
-  if(shapeclass == 3)
+  if(shapeclass == AIM::SyntheticBuilder::ShapeClass::Cylinder)
+  {
+      radcur1 = (volcur*(1.0/m_pi)*(1.0/bovera)*(1.0/covera));	
+  }
+  if(shapeclass == AIM::SyntheticBuilder::ShapeClass::CubeOctahedron)
   {
 	  for(int i=0;i<41;i++)
 	  {
@@ -917,7 +935,7 @@ void  GrainGeneratorFunc::insert_precipitate(size_t gnum)
         radcur1 = (volcur*6.0)/(3+(9*Gvalue)-(9*Gvalue*Gvalue)+(2*Gvalue*Gvalue*Gvalue));
       }
   }
-  if(shapeclass == 2)
+  if(shapeclass == AIM::SyntheticBuilder::ShapeClass::Superellipsoid)
   {
 	  for(int i=0;i<41;i++)
 	  {
@@ -937,12 +955,12 @@ void  GrainGeneratorFunc::insert_precipitate(size_t gnum)
       float beta2 = (gamma((2.0/Nvalue))*gamma((1.0/Nvalue)))/gamma((3.0/Nvalue));
       radcur1 = (volcur*(3.0/2.0)*(1.0/bovera)*(1.0/covera)*((Nvalue*Nvalue)/4.0)*(1.0/beta1)*(1.0/beta2));
   }
-  if(shapeclass == 1)
+  if(shapeclass == AIM::SyntheticBuilder::ShapeClass::Ellipsoid)
   {
       radcur1 = (volcur*(3.0/4.0)*(1.0/m_pi)*(1.0/bovera)*(1.0/covera));
   }
   radcur1 = powf(radcur1,0.333333333333);
-  if(shapeclass == 3) radcur1 = radcur1/2.0;
+  if(shapeclass == AIM::SyntheticBuilder::ShapeClass::CubeOctahedron) radcur1 = radcur1/2.0;
   float radcur2 = (radcur1*bovera);
   float radcur3 = (radcur1*covera);
   float phi1 = m_Grains[gnum]->axiseuler1;
@@ -1027,7 +1045,19 @@ void  GrainGeneratorFunc::insert_precipitate(size_t gnum)
 			float axis1comp = xp/radcur1;
 			float axis2comp = yp/radcur2;
 			float axis3comp = zp/radcur3;
-			if(shapeclass == 3)
+			if(shapeclass == AIM::SyntheticBuilder::ShapeClass::Cylinder)
+			{
+				if(fabs(axis1comp) <= 1)
+				{
+					inside = 1;
+					axis2comp = fabs(axis2comp);
+					axis3comp = fabs(axis3comp);
+					axis2comp = powf(axis2comp,2);
+					axis3comp = powf(axis3comp,2);
+					inside = 1-axis2comp-axis3comp;
+				}
+			}
+			if(shapeclass == AIM::SyntheticBuilder::ShapeClass::CubeOctahedron)
 			{
 				if(fabs(axis1comp) <= 1 && fabs(axis2comp) <= 1 && fabs(axis3comp) <= 1)
 				{
@@ -1045,7 +1075,7 @@ void  GrainGeneratorFunc::insert_precipitate(size_t gnum)
 				  if(((-axis1comp)+(axis2comp)+(-axis3comp)-((-0.5*Gvalue)+(2-(0.5*Gvalue)))) > 0) inside = -1;
 				}
 			}
-			if(shapeclass == 2)
+			if(shapeclass == AIM::SyntheticBuilder::ShapeClass::Superellipsoid)
 			{
 				axis1comp = fabs(axis1comp);
 				axis2comp = fabs(axis2comp);
@@ -1055,7 +1085,7 @@ void  GrainGeneratorFunc::insert_precipitate(size_t gnum)
 				axis3comp = powf(axis3comp,Nvalue);
 				inside = 1-axis1comp-axis2comp-axis3comp;
 			}
-			if(shapeclass == 1)
+			if(shapeclass == AIM::SyntheticBuilder::ShapeClass::Ellipsoid)
 			{
 				axis1comp = fabs(axis1comp);
 				axis2comp = fabs(axis2comp);
@@ -1137,18 +1167,17 @@ void  GrainGeneratorFunc::remove_grain(size_t gnum)
 		if(m_Grains[gnum]->rowlist->at(i) > packingypoints-1) row = m_Grains[gnum]->rowlist->at(i) - packingypoints;
 		if(m_Grains[gnum]->planelist->at(i) < 0) plane = m_Grains[gnum]->planelist->at(i) + packingzpoints;
 		if(m_Grains[gnum]->planelist->at(i) > packingzpoints-1) plane = m_Grains[gnum]->planelist->at(i) - packingzpoints;
-		index = (plane*packingxpoints*packingypoints)+(row*packingxpoints)+(col);
+		grainowners[col][row][plane] = grainowners[col][row][plane] - 1;
 	}
 	if(periodic_boundaries == false)
 	{
-		if(m_Grains[gnum]->columnlist->at(i) > 0 && m_Grains[gnum]->columnlist->at(i) <= packingxpoints-1 && m_Grains[gnum]->rowlist->at(i) > 0 && m_Grains[gnum]->rowlist->at(i) <= packingypoints-1 && m_Grains[gnum]->planelist->at(i) > 0 && m_Grains[gnum]->planelist->at(i) <= packingzpoints-1)
+		if(m_Grains[gnum]->columnlist->at(i) >= 0 && m_Grains[gnum]->columnlist->at(i) <= packingxpoints-1 && m_Grains[gnum]->rowlist->at(i) >= 0 && m_Grains[gnum]->rowlist->at(i) <= packingypoints-1 && m_Grains[gnum]->planelist->at(i) >= 0 && m_Grains[gnum]->planelist->at(i) <= packingzpoints-1)
 		{
-			index = (m_Grains[gnum]->planelist->at(i)*packingxpoints*packingypoints)+(m_Grains[gnum]->rowlist->at(i)*packingxpoints)+(m_Grains[gnum]->columnlist->at(i));
+			grainowners[m_Grains[gnum]->columnlist->at(i)][m_Grains[gnum]->rowlist->at(i)][m_Grains[gnum]->planelist->at(i)] = grainowners[m_Grains[gnum]->columnlist->at(i)][m_Grains[gnum]->rowlist->at(i)][m_Grains[gnum]->planelist->at(i)] - 1;
 		}
 	}
-	if(index >= 0) grainowners[index] = grainowners[index]-1;
   }
-  determine_neighbors(gnum, -1);
+//  determine_neighbors(gnum, -1);
 }
 
 void  GrainGeneratorFunc::add_grain(size_t gnum)
@@ -1166,18 +1195,17 @@ void  GrainGeneratorFunc::add_grain(size_t gnum)
 		if(m_Grains[gnum]->rowlist->at(i) > packingypoints-1) row = m_Grains[gnum]->rowlist->at(i) - packingypoints;
 		if(m_Grains[gnum]->planelist->at(i) < 0) plane = m_Grains[gnum]->planelist->at(i) + packingzpoints;
 		if(m_Grains[gnum]->planelist->at(i) > packingzpoints-1) plane = m_Grains[gnum]->planelist->at(i) - packingzpoints;
-		index = (plane*packingxpoints*packingypoints)+(row*packingxpoints)+(col);
+		grainowners[col][row][plane]++;
 	}
 	if(periodic_boundaries == false)
 	{
-		if(m_Grains[gnum]->columnlist->at(i) > 0 && m_Grains[gnum]->columnlist->at(i) <= packingxpoints-1 && m_Grains[gnum]->rowlist->at(i) > 0 && m_Grains[gnum]->rowlist->at(i) <= packingypoints-1 && m_Grains[gnum]->planelist->at(i) > 0 && m_Grains[gnum]->planelist->at(i) <= packingzpoints-1)
+		if(m_Grains[gnum]->columnlist->at(i) >= 0 && m_Grains[gnum]->columnlist->at(i) <= packingxpoints-1 && m_Grains[gnum]->rowlist->at(i) >= 0 && m_Grains[gnum]->rowlist->at(i) <= packingypoints-1 && m_Grains[gnum]->planelist->at(i) >= 0 && m_Grains[gnum]->planelist->at(i) <= packingzpoints-1)
 		{
-			index = (m_Grains[gnum]->planelist->at(i)*packingxpoints*packingypoints)+(m_Grains[gnum]->rowlist->at(i)*packingxpoints)+(m_Grains[gnum]->columnlist->at(i));
+			grainowners[m_Grains[gnum]->columnlist->at(i)][m_Grains[gnum]->rowlist->at(i)][m_Grains[gnum]->planelist->at(i)]++;
 		}
 	}
-	if(index >= 0) grainowners[index]++;
   }
-  determine_neighbors(gnum, 1);
+//  determine_neighbors(gnum, 1);
 }
 
 void GrainGeneratorFunc::determine_neighbors(size_t gnum, int add)
@@ -1405,112 +1433,62 @@ float GrainGeneratorFunc::check_sizedisterror(int gadd, int gremove)
 
 float GrainGeneratorFunc::check_fillingerror(int gadd, int gremove)
 {
-  float fillingerror = 0.0;
-  float sqrerror;
+  float fillingerror = oldfillingerror*float(packingtotalpoints);
   int index;
   int col, row, plane;
   if(gadd > 0)
   {
 	  for(size_t i=0;i<m_Grains[gadd]->columnlist->size();i++)
 	  {
-	    index = -1;
+		col = m_Grains[gadd]->columnlist->at(i);
+		row = m_Grains[gadd]->rowlist->at(i);
+		plane = m_Grains[gadd]->planelist->at(i);
 		if(periodic_boundaries == true)
 		{
-			if(m_Grains[gadd]->columnlist->at(i) < 0) col = m_Grains[gadd]->columnlist->at(i) + packingxpoints;
-			if(m_Grains[gadd]->columnlist->at(i) > packingxpoints-1) col = m_Grains[gadd]->columnlist->at(i) - packingxpoints;
-			if(m_Grains[gadd]->rowlist->at(i) < 0) row = m_Grains[gadd]->rowlist->at(i) + packingypoints;
-			if(m_Grains[gadd]->rowlist->at(i) > packingypoints-1) row = m_Grains[gadd]->rowlist->at(i) - packingypoints;
-			if(m_Grains[gadd]->planelist->at(i) < 0) plane = m_Grains[gadd]->planelist->at(i) + packingzpoints;
-			if(m_Grains[gadd]->planelist->at(i) > packingzpoints-1) plane = m_Grains[gadd]->planelist->at(i) - packingzpoints;
-			index = (plane*packingxpoints*packingypoints)+(row*packingxpoints)+(col);
+			if(col < 0) col = col + packingxpoints;
+			if(col > packingxpoints-1) col = col - packingxpoints;
+			if(row < 0) row = row + packingypoints;
+			if(row > packingypoints-1) row = row - packingypoints;
+			if(plane < 0) plane = plane + packingzpoints;
+			if(plane > packingzpoints-1) plane = plane - packingzpoints;
+			fillingerror = fillingerror + ((grainowners[col][row][plane]*grainowners[col][row][plane])-((grainowners[col][row][plane]-1)*(grainowners[col][row][plane]-1)));
 		}
 		if(periodic_boundaries == false)
 		{
-			if(m_Grains[gadd]->columnlist->at(i) > 0 && m_Grains[gadd]->columnlist->at(i) <= packingxpoints-1 && m_Grains[gadd]->rowlist->at(i) > 0 && m_Grains[gadd]->rowlist->at(i) <= packingypoints-1 && m_Grains[gadd]->planelist->at(i) > 0 && m_Grains[gadd]->planelist->at(i) <= packingzpoints-1)
+			if(col >= 0 && col <= packingxpoints-1 && row >= 0 && row <= packingypoints-1 && plane >= 0 && plane <= packingzpoints-1)
 			{
-				index = (m_Grains[gadd]->planelist->at(i)*packingxpoints*packingypoints)+(m_Grains[gadd]->rowlist->at(i)*packingxpoints)+(m_Grains[gadd]->columnlist->at(i));
+				fillingerror = fillingerror + ((grainowners[col][row][plane]*grainowners[col][row][plane])-((grainowners[col][row][plane]-1)*(grainowners[col][row][plane]-1)));
 			}
 		}
-		if(index >= 0) grainowners[index]++;
 	  }
   }
   if(gremove > 0)
   {
 	  for(size_t i=0;i<m_Grains[gremove]->columnlist->size();i++)
 	  {
-	    index = -1;
+		col = m_Grains[gremove]->columnlist->at(i);
+		row = m_Grains[gremove]->rowlist->at(i);
+		plane = m_Grains[gremove]->planelist->at(i);
 		if(periodic_boundaries == true)
 		{
-			if(m_Grains[gremove]->columnlist->at(i) < 0) col = m_Grains[gremove]->columnlist->at(i) + packingxpoints;
-			if(m_Grains[gremove]->columnlist->at(i) > packingxpoints-1) col = m_Grains[gremove]->columnlist->at(i) - packingxpoints;
-			if(m_Grains[gremove]->rowlist->at(i) < 0) row = m_Grains[gremove]->rowlist->at(i) + packingypoints;
-			if(m_Grains[gremove]->rowlist->at(i) > packingypoints-1) row = m_Grains[gremove]->rowlist->at(i) - packingypoints;
-			if(m_Grains[gremove]->planelist->at(i) < 0) plane = m_Grains[gremove]->planelist->at(i) + packingzpoints;
-			if(m_Grains[gremove]->planelist->at(i) > packingzpoints-1) plane = m_Grains[gremove]->planelist->at(i) - packingzpoints;
-			index = (plane*packingxpoints*packingypoints)+(row*packingxpoints)+(col);
+			if(col < 0) col = col + packingxpoints;
+			if(col > packingxpoints-1) col = col - packingxpoints;
+			if(row < 0) row = row + packingypoints;
+			if(row > packingypoints-1) row = row - packingypoints;
+			if(plane < 0) plane = plane + packingzpoints;
+			if(plane > packingzpoints-1) plane = plane - packingzpoints;
+			fillingerror = fillingerror + (((grainowners[col][row][plane]-2)*(grainowners[col][row][plane]-2))-((grainowners[col][row][plane]-1)*(grainowners[col][row][plane]-1)));
 		}
 		if(periodic_boundaries == false)
 		{
-			if(m_Grains[gremove]->columnlist->at(i) > 0 && m_Grains[gremove]->columnlist->at(i) <= packingxpoints-1 && m_Grains[gremove]->rowlist->at(i) > 0 && m_Grains[gremove]->rowlist->at(i) <= packingypoints-1 && m_Grains[gremove]->planelist->at(i) > 0 && m_Grains[gremove]->planelist->at(i) <= packingzpoints-1)
+			if(col >= 0 && col <= packingxpoints-1 && row >= 0 && row <= packingypoints-1 && plane >= 0 && plane <= packingzpoints-1)
 			{
-				index = (m_Grains[gremove]->planelist->at(i)*packingxpoints*packingypoints)+(m_Grains[gremove]->rowlist->at(i)*packingxpoints)+(m_Grains[gremove]->columnlist->at(i));
+				fillingerror = fillingerror + (((grainowners[col][row][plane]-2)*(grainowners[col][row][plane]-2))-((grainowners[col][row][plane]-1)*(grainowners[col][row][plane]-1)));
 			}
 		}
-		if(index >= 0) grainowners[index] = grainowners[index]-1;
 	  }
   }
-  compare_1Ddistributions(grainowners, goalgrainowners, sqrerror);
-  fillingerror = sqrerror;
-  if(gadd > 0)
-  {
-	  for(size_t i=0;i<m_Grains[gadd]->columnlist->size();i++)
-	  {
-	    index = -1;
-		if(periodic_boundaries == true)
-		{
-			if(m_Grains[gadd]->columnlist->at(i) < 0) col = m_Grains[gadd]->columnlist->at(i) + packingxpoints;
-			if(m_Grains[gadd]->columnlist->at(i) > packingxpoints-1) col = m_Grains[gadd]->columnlist->at(i) - packingxpoints;
-			if(m_Grains[gadd]->rowlist->at(i) < 0) row = m_Grains[gadd]->rowlist->at(i) + packingypoints;
-			if(m_Grains[gadd]->rowlist->at(i) > packingypoints-1) row = m_Grains[gadd]->rowlist->at(i) - packingypoints;
-			if(m_Grains[gadd]->planelist->at(i) < 0) plane = m_Grains[gadd]->planelist->at(i) + packingzpoints;
-			if(m_Grains[gadd]->planelist->at(i) > packingzpoints-1) plane = m_Grains[gadd]->planelist->at(i) - packingzpoints;
-			index = (plane*packingxpoints*packingypoints)+(row*packingxpoints)+(col);
-		}
-		if(periodic_boundaries == false)
-		{
-			if(m_Grains[gadd]->columnlist->at(i) > 0 && m_Grains[gadd]->columnlist->at(i) <= packingxpoints-1 && m_Grains[gadd]->rowlist->at(i) > 0 && m_Grains[gadd]->rowlist->at(i) <= packingypoints-1 && m_Grains[gadd]->planelist->at(i) > 0 && m_Grains[gadd]->planelist->at(i) <= packingzpoints-1)
-			{
-				index = (m_Grains[gadd]->planelist->at(i)*packingxpoints*packingypoints)+(m_Grains[gadd]->rowlist->at(i)*packingxpoints)+(m_Grains[gadd]->columnlist->at(i));
-			}
-		}
-		if(index >= 0) grainowners[index] = grainowners[index]-1;
-	  }
-  }
-  if(gremove > 0)
-  {
-	  for(size_t i=0;i<m_Grains[gremove]->columnlist->size();i++)
-	  {
-	    index = -1;
-		if(periodic_boundaries == true)
-		{
-			if(m_Grains[gremove]->columnlist->at(i) < 0) col = m_Grains[gremove]->columnlist->at(i) + packingxpoints;
-			if(m_Grains[gremove]->columnlist->at(i) > packingxpoints-1) col = m_Grains[gremove]->columnlist->at(i) - packingxpoints;
-			if(m_Grains[gremove]->rowlist->at(i) < 0) row = m_Grains[gremove]->rowlist->at(i) + packingypoints;
-			if(m_Grains[gremove]->rowlist->at(i) > packingypoints-1) row = m_Grains[gremove]->rowlist->at(i) - packingypoints;
-			if(m_Grains[gremove]->planelist->at(i) < 0) plane = m_Grains[gremove]->planelist->at(i) + packingzpoints;
-			if(m_Grains[gremove]->planelist->at(i) > packingzpoints-1) plane = m_Grains[gremove]->planelist->at(i) - packingzpoints;
-			index = (plane*packingxpoints*packingypoints)+(row*packingxpoints)+(col);
-		}
-		if(periodic_boundaries == false)
-		{
-			if(m_Grains[gremove]->columnlist->at(i) > 0 && m_Grains[gremove]->columnlist->at(i) <= packingxpoints-1 && m_Grains[gremove]->rowlist->at(i) > 0 && m_Grains[gremove]->rowlist->at(i) <= packingypoints-1 && m_Grains[gremove]->planelist->at(i) > 0 && m_Grains[gremove]->planelist->at(i) <= packingzpoints-1)
-			{
-				index = (m_Grains[gremove]->planelist->at(i)*packingxpoints*packingypoints)+(m_Grains[gremove]->rowlist->at(i)*packingxpoints)+(m_Grains[gremove]->columnlist->at(i));
-			}
-		}
-		if(index >= 0) grainowners[index]++;
-	  }
-  }
+  fillingerror = fillingerror/float(packingtotalpoints);
   return fillingerror;
 }
 
@@ -1520,12 +1498,9 @@ void  GrainGeneratorFunc::pack_grains()
 
   totalvol = 0;
   float change1, change2, change3;
- // size_t index;
   int phase;
-//  int good = 0;
   float random;
   int newgrain;
-//  int placecount = 0;
   float xc, yc, zc;
   float bestxc, bestyc, bestzc, bestcurrentfillingerror;
   currentfillingerror = 0, oldfillingerror = 0;
@@ -1612,41 +1587,43 @@ void  GrainGeneratorFunc::pack_grains()
   }
   //  for each grain : select centroid, determine voxels in grain, monitor filling error and decide of the 50 placements which
   // is the most beneficial, then the grain is added and its neighbors are determined
-  for (size_t i = 1; i < m_Grains.size(); i++)
+  oldfillingerror = 1;
+  for (int i = 1; i < m_Grains.size(); i++)
   {
     bestcurrentfillingerror = 100000000000000.0;
     m_Grains[i]->active = 1;
-    xc = rg.Random() * (xpoints * resx);
-    yc = rg.Random() * (ypoints * resy);
-    zc = rg.Random() * (zpoints * resz);
-    m_Grains[i]->centroidx = xc;
-    m_Grains[i]->centroidy = yc;
-    m_Grains[i]->centroidz = zc;
-    insert_grain(i);
-    for (int iter = 0; iter < 20; iter++)
-    {
-      xc = rg.Random() * (xpoints * resx);
-      yc = rg.Random() * (ypoints * resy);
-      zc = rg.Random() * (zpoints * resz);
-      move_grain(i, xc, yc, zc);
-      currentfillingerror = check_fillingerror(i, -1000);
-      if (currentfillingerror < bestcurrentfillingerror)
-      {
-        bestcurrentfillingerror = currentfillingerror;
-        bestxc = xc;
-        bestyc = yc;
-        bestzc = zc;
-      }
-    }
-    move_grain(i, bestxc, bestyc, bestzc);
+	xc = sizex/2.0;
+	yc = sizey/2.0;
+	zc = sizez/2.0;
+	m_Grains[i]->centroidx = xc;
+	m_Grains[i]->centroidy = yc;
+	m_Grains[i]->centroidz = zc;
+	insert_grain(i);
+	for(int iter=0;iter<10;iter++)
+	{
+		xc = rg.Random() * (xpoints * resx);
+		yc = rg.Random() * (ypoints * resy);
+		zc = rg.Random() * (zpoints * resz);
+		move_grain(i, xc, yc, zc);
+	    currentfillingerror = check_fillingerror(i, -1000);
+		if(currentfillingerror < bestcurrentfillingerror)
+		{
+			bestcurrentfillingerror = currentfillingerror;
+			bestxc = xc;
+			bestyc = yc;
+			bestzc = zc;
+		}
+	}
+	move_grain(i, bestxc, bestyc, bestzc);
     add_grain(i);
+	oldfillingerror = bestcurrentfillingerror;
   }
   // determine initial filling, size distribution and neighbor distribution errors
   oldsizedisterror = check_sizedisterror(-1000, -1000);
   oldneighborhooderror = check_neighborhooderror(-1000, -1000);
   oldfillingerror = check_fillingerror(-1000, -1000);
   // begin swaping/moving/adding/removing grains to try to improve packing
-  for (int iteration = 0; iteration < (100000); iteration++)
+  for (int iteration = 0; iteration < (25000); iteration++)
   {
 	change1 = 0;
     change2 = 0;
@@ -1668,6 +1645,7 @@ void  GrainGeneratorFunc::pack_grains()
         }
       }
       generate_grain(newgrain, phase);
+	  GGseed++;
 	  xc = rg.Random() * (xpoints * resx);
 	  yc = rg.Random() * (ypoints * resy);
 	  zc = rg.Random() * (zpoints * resz);
@@ -1740,6 +1718,7 @@ void  GrainGeneratorFunc::pack_grains()
         }
       }
       generate_grain(newgrain, phase);
+	  GGseed++;
 	  xc = rg.Random() * (xpoints * resx);
 	  yc = rg.Random() * (ypoints * resy);
 	  zc = rg.Random() * (zpoints * resz);
@@ -1790,6 +1769,7 @@ void  GrainGeneratorFunc::pack_grains()
         }
       }
       generate_grain(newgrain, phase);
+	  GGseed++;
 	  xc = m_Grains[random1]->centroidx;
 	  yc = m_Grains[random1]->centroidy;
 	  zc = m_Grains[random1]->centroidz;
@@ -1838,14 +1818,20 @@ void  GrainGeneratorFunc::pack_grains()
   outFile << endl;
   outFile << "SCALARS GrainID int  1" << endl;
   outFile << "LOOKUP_TABLE default" << endl;
-  for (int i = 0; i < (packingxpoints*packingypoints*packingzpoints); i++)
+  for (int i = 0; i < (packingzpoints); i++)
   {
-	int name = grainowners[i];
-	if(i%20 == 0 && i > 0) outFile << endl;
-    outFile << "     ";
-	if(name < 100) outFile << " ";
-	if(name < 10) outFile << " ";
-	outFile << name;
+	for (int j = 0; j < (packingypoints); j++)
+	{
+		for (int k = 0; k < (packingxpoints); k++)
+	    {
+			int name = grainowners[k][j][i];
+			if(i%20 == 0 && i > 0) outFile << endl;
+		    outFile << "     ";
+			if(name < 100) outFile << " ";
+			if(name < 10) outFile << " ";
+			outFile << name;
+		}
+	}
   }
   outFile.close();
 }
@@ -1860,7 +1846,11 @@ void GrainGeneratorFunc::assign_voxels()
   int column, row, plane;
   float inside;
   float Nvalue = 0;
+  float Nvaluedist = 0;
+  float bestNvaluedist = 1000000;
   float Gvalue = 0;
+  float Gvaluedist = 0;
+  float bestGvaluedist = 1000000;
   float xc, yc, zc;
   float xp, yp, zp;
   float dist;
@@ -1895,26 +1885,51 @@ void GrainGeneratorFunc::assign_voxels()
     yc = m_Grains[i]->centroidy;
     zc = m_Grains[i]->centroidz;
     float radcur1 = 1;
-    if(shapeclass == 3)
+    if(shapeclass == AIM::SyntheticBuilder::ShapeClass::Cylinder)
     {
-      Gvalue = omega3;
+      radcur1 = (volcur*(1.0/m_pi)*(1.0/bovera)*(1.0/covera));	
+    }
+    if(shapeclass == AIM::SyntheticBuilder::ShapeClass::CubeOctahedron)
+    {
+	  for(int i=0;i<41;i++)
+	  {
+		Gvaluedist = fabsf(omega3-ShapeClass3Omega3[i][0]);
+		if(Gvaluedist < bestGvaluedist)
+		{
+		    bestGvaluedist = Gvaluedist;
+			Gvalue = ShapeClass3Omega3[i][1];
+		}
+	  }
       if(Gvalue >= 0 && Gvalue <= 1)
       {
-	      radcur1 = (volcur*6.0)/(6-(Gvalue*Gvalue*Gvalue));
+        radcur1 = (volcur*6.0)/(6-(Gvalue*Gvalue*Gvalue));
       }
       if(Gvalue > 1 && Gvalue <= 2)
       {
-	      radcur1 = (volcur*6.0)/(3+(9*Gvalue)-(9*Gvalue*Gvalue)+(2*Gvalue*Gvalue*Gvalue));
+        radcur1 = (volcur*6.0)/(3+(9*Gvalue)-(9*Gvalue*Gvalue)+(2*Gvalue*Gvalue*Gvalue));
       }
     }
-    if(shapeclass == 2)
+    if(shapeclass == AIM::SyntheticBuilder::ShapeClass::Superellipsoid)
     {
-      Nvalue = omega3;
+	  for(int i=0;i<41;i++)
+	  {
+	    float a = gamma(1.0+1.0/ShapeClass2Omega3[i][1]);
+		float b = gamma(5.0/ShapeClass2Omega3[i][1]);
+	    float c = gamma(3.0/ShapeClass2Omega3[i][1]);
+		float d = gamma(1.0+3.0/ShapeClass2Omega3[i][1]);
+		ShapeClass2Omega3[i][0] = powf(20.0*(powf(a,3)*b)/(c*powf(d,5.0/3.0)),3)/(2000.0*M_PI*M_PI/9.0);
+		Nvaluedist = fabsf(omega3-ShapeClass2Omega3[i][0]);
+		if(Nvaluedist < bestNvaluedist)
+		{
+		    bestNvaluedist = Nvaluedist;
+			Nvalue = ShapeClass2Omega3[i][1];
+		}
+	  }
       float beta1 = (gamma((1.0/Nvalue))*gamma((1.0/Nvalue)))/gamma((2.0/Nvalue));
       float beta2 = (gamma((2.0/Nvalue))*gamma((1.0/Nvalue)))/gamma((3.0/Nvalue));
       radcur1 = (volcur*(3.0/2.0)*(1.0/bovera)*(1.0/covera)*((Nvalue*Nvalue)/4.0)*(1.0/beta1)*(1.0/beta2));
     }
-    if(shapeclass == 1)
+    if(shapeclass == AIM::SyntheticBuilder::ShapeClass::Ellipsoid)
     {
       radcur1 = (volcur*(3.0/4.0)*(1.0/m_pi)*(1.0/bovera)*(1.0/covera));
     }
@@ -2001,43 +2016,55 @@ void GrainGeneratorFunc::assign_voxels()
 			  float axis1comp = xp/radcur1;
 			  float axis2comp = yp/radcur2;
 			  float axis3comp = zp/radcur3;
-			  if(shapeclass == 3)
+			  if(shapeclass == AIM::SyntheticBuilder::ShapeClass::Cylinder)
 			  {
-				  if(fabs(axis1comp) <= 1 && fabs(axis2comp) <= 1 && fabs(axis3comp) <= 1)
-				  {
+				if(fabs(axis1comp) <= 1)
+				{
 					inside = 1;
-					axis1comp = axis1comp+1;
-					axis2comp = axis2comp+1;
-					axis3comp = axis3comp+1;
-					if(((-axis1comp)+(-axis2comp)+(axis3comp)-((-0.5*Gvalue)+(-0.5*Gvalue)+2)) > 0) inside = -1;
-					if(((axis1comp)+(-axis2comp)+(axis3comp)-((2-(0.5*Gvalue))+(-0.5*Gvalue)+2)) > 0) inside = -1;
-					if(((axis1comp)+(axis2comp)+(axis3comp)-((2-(0.5*Gvalue))+(2-(0.5*Gvalue))+2)) > 0) inside = -1;
-					if(((-axis1comp)+(axis2comp)+(axis3comp)-((-0.5*Gvalue)+(2-(0.5*Gvalue))+2)) > 0) inside = -1;
-					if(((-axis1comp)+(-axis2comp)+(-axis3comp)-((-0.5*Gvalue)+(-0.5*Gvalue))) > 0) inside = -1;
-					if(((axis1comp)+(-axis2comp)+(-axis3comp)-((2-(0.5*Gvalue))+(-0.5*Gvalue))) > 0) inside = -1;
-					if(((axis1comp)+(axis2comp)+(-axis3comp)-((2-(0.5*Gvalue))+(2-(0.5*Gvalue)))) > 0) inside = -1;
-					if(((-axis1comp)+(axis2comp)+(-axis3comp)-((-0.5*Gvalue)+(2-(0.5*Gvalue)))) > 0) inside = -1;
-				  }
-			  }
-			  if(shapeclass == 2)
+					axis2comp = fabs(axis2comp);
+					axis3comp = fabs(axis3comp);
+					axis2comp = powf(axis2comp,2);
+					axis3comp = powf(axis3comp,2);
+					inside = 1-axis2comp-axis3comp;
+				}
+		 	  }
+			  if(shapeclass == AIM::SyntheticBuilder::ShapeClass::CubeOctahedron)
 			  {
-				  axis1comp = fabs(axis1comp);
-				  axis2comp = fabs(axis2comp);
-				  axis3comp = fabs(axis3comp);
-				  axis1comp = powf(axis1comp,Nvalue);
-				  axis2comp = powf(axis2comp,Nvalue);
-				  axis3comp = powf(axis3comp,Nvalue);
-				  inside = 1-axis1comp-axis2comp-axis3comp;
+				if(fabs(axis1comp) <= 1 && fabs(axis2comp) <= 1 && fabs(axis3comp) <= 1)
+				{
+				  inside = 1;
+				  axis1comp = axis1comp+1;
+				  axis2comp = axis2comp+1;
+				  axis3comp = axis3comp+1;
+				  if(((-axis1comp)+(-axis2comp)+(axis3comp)-((-0.5*Gvalue)+(-0.5*Gvalue)+2)) > 0) inside = -1;
+				  if(((axis1comp)+(-axis2comp)+(axis3comp)-((2-(0.5*Gvalue))+(-0.5*Gvalue)+2)) > 0) inside = -1;
+				  if(((axis1comp)+(axis2comp)+(axis3comp)-((2-(0.5*Gvalue))+(2-(0.5*Gvalue))+2)) > 0) inside = -1;
+				  if(((-axis1comp)+(axis2comp)+(axis3comp)-((-0.5*Gvalue)+(2-(0.5*Gvalue))+2)) > 0) inside = -1;
+				  if(((-axis1comp)+(-axis2comp)+(-axis3comp)-((-0.5*Gvalue)+(-0.5*Gvalue))) > 0) inside = -1;
+				  if(((axis1comp)+(-axis2comp)+(-axis3comp)-((2-(0.5*Gvalue))+(-0.5*Gvalue))) > 0) inside = -1;
+				  if(((axis1comp)+(axis2comp)+(-axis3comp)-((2-(0.5*Gvalue))+(2-(0.5*Gvalue)))) > 0) inside = -1;
+				  if(((-axis1comp)+(axis2comp)+(-axis3comp)-((-0.5*Gvalue)+(2-(0.5*Gvalue)))) > 0) inside = -1;
+				}
 			  }
-			  if(shapeclass == 1)
-			  {
-				  axis1comp = fabs(axis1comp);
-				  axis2comp = fabs(axis2comp);
-				  axis3comp = fabs(axis3comp);
-				  axis1comp = powf(axis1comp,2);
-				  axis2comp = powf(axis2comp,2);
-				  axis3comp = powf(axis3comp,2);
-				  inside = 1-axis1comp-axis2comp-axis3comp;
+			  if(shapeclass == AIM::SyntheticBuilder::ShapeClass::Superellipsoid)
+			  { 
+				axis1comp = fabs(axis1comp);
+				axis2comp = fabs(axis2comp);
+				axis3comp = fabs(axis3comp);
+				axis1comp = powf(axis1comp,Nvalue);
+				axis2comp = powf(axis2comp,Nvalue);
+				axis3comp = powf(axis3comp,Nvalue);
+				inside = 1-axis1comp-axis2comp-axis3comp;
+		 	  }
+			  if(shapeclass == AIM::SyntheticBuilder::ShapeClass::Ellipsoid)
+			  { 
+				axis1comp = fabs(axis1comp);
+				axis2comp = fabs(axis2comp);
+				axis3comp = fabs(axis3comp);
+				axis1comp = powf(axis1comp,2);
+				axis2comp = powf(axis2comp,2);
+				axis3comp = powf(axis3comp,2);
+				inside = 1-axis1comp-axis2comp-axis3comp;
 			  }
 			  if(inside >= 0)
 			  {
@@ -2386,6 +2413,7 @@ void  GrainGeneratorFunc::place_precipitates()
   }
   while(totalprecipvol < totalvol*totalprecipitatefractions)
   {
+    GGseed++;
     random = rg.Random();
     for (size_t j = 0; j < precipitatephases.size();++j)
     {
