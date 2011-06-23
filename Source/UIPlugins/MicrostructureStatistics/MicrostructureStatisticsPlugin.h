@@ -33,11 +33,13 @@
 
 #include <QtCore/QObject>
 #include <QtCore/QSettings>
+#include <QtCore/QUrl>
 #include "QtSupport/DREAM3DPluginInterface.h"
 
 class MicrostructureStatisticsWidget;
 class AIMPluginFrame;
 
+DREAM3D_PLUGIN_CONSTANTS(MicrostructureStatistics, Microstructure Statistics)
 
 class MicrostructureStatisticsPlugin : public QObject, public DREAM3DPluginInterface
 {
@@ -58,6 +60,10 @@ class MicrostructureStatisticsPlugin : public QObject, public DREAM3DPluginInter
     virtual void readSettings(QSettings &prefs);
 
     virtual QIcon icon();
+    virtual QUrl htmlHelpIndexFile();
+
+  public slots:
+    virtual void displayHelp();
 
   protected:
     MicrostructureStatisticsWidget* m_InputWidget;

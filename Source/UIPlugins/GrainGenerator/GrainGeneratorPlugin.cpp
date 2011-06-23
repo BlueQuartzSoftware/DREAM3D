@@ -31,6 +31,7 @@
 #include "GrainGeneratorPlugin.h"
 #include "GrainGeneratorWidget.h"
 #include "QtSupport/AIMPluginFrame.h"
+#include "QtSupport/HelpDialog.h"
 
 Q_EXPORT_PLUGIN2(GrainGeneratorPlugin, GrainGeneratorPlugin);
 
@@ -56,7 +57,7 @@ GrainGeneratorPlugin::~GrainGeneratorPlugin()
 // -----------------------------------------------------------------------------
 QString GrainGeneratorPlugin::getPluginName()
 {
-  return QString::fromStdString(DREAM3D::UIPlugins::GrainGeneratorName);
+  return QString::fromStdString(DREAM3D::UIPlugins::GrainGeneratorDisplayName);
 }
 
 // -----------------------------------------------------------------------------
@@ -100,3 +101,23 @@ QIcon GrainGeneratorPlugin::icon()
 {
   return QIcon(":/graingenerator.png");
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void GrainGeneratorPlugin::displayHelp()
+{
+  QSharedPointer<HelpDialog> hd = HelpDialog::instance();
+  hd->setContentFile(htmlHelpIndexFile());
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QUrl GrainGeneratorPlugin::htmlHelpIndexFile()
+{
+  QString s = QString::fromStdString(DREAM3D::UIPlugins::GrainGeneratorBaseName);
+  s.append(QString("/index.html"));
+  return QUrl(s);
+}
+
