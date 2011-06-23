@@ -448,6 +448,7 @@ void MicrostructureStatisticsWidget::on_m_VtkOptionsBtn_clicked()
   options.push_back("Write IPF Color Scalars");
   options.push_back("Write Binary VTK File");
   QCheckboxDialog d(options, this);
+  d.setWindowTitle(QString("VTK Output Options"));
 
   d.setValue("Write Surface Voxel Scalars", m_WriteSurfaceVoxelScalars);
   d.setValue("Write Phase Ids Scalars", m_WritePhaseIdScalars);
@@ -479,6 +480,7 @@ void MicrostructureStatisticsWidget::on_m_GrainFileOptionsBtn_clicked()
   options.push_back("Average Orienation");
 
   QCheckboxDialog d(options, this);
+  d.setWindowTitle(QString("Grain File Output Options"));
 
   d.setValue("Grain Size", m_WriteGrainSize);
   d.setValue("Grain Shape", m_WriteGrainShapes);
