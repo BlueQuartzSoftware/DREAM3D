@@ -407,6 +407,11 @@ void GrainGeneratorWidget::on_m_GoBtn_clicked()
   }
   m_WorkerThread = new QThread(); // Create a new Thread Resource
 
+  if (NULL != m_GrainGenerator)
+  {
+    delete m_GrainGenerator;
+    m_GrainGenerator = NULL;
+  }
   m_GrainGenerator = new QGrainGenerator(NULL);
 
   // Move the GrainGenerator object into the thread that we just created.

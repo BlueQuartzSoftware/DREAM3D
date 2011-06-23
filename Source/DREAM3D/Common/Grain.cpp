@@ -170,10 +170,17 @@ void Grain::deepCopy(Grain::Pointer grain)
   {
     voxellist = new std::vector<int>(0);
     voxellist->assign(grain->voxellist->begin(), grain->voxellist->end());
+  }
+  if (NULL != grain->columnlist) {
     columnlist = new std::vector<int>(0);
     columnlist->assign(grain->columnlist->begin(), grain->columnlist->end());
+  }
+  if (NULL != grain->rowlist)
+  {
     rowlist = new std::vector<int>(0);
     rowlist->assign(grain->rowlist->begin(), grain->rowlist->end());
+  }
+  if (NULL != grain->planelist) {
     planelist = new std::vector<int>(0);
     planelist->assign(grain->planelist->begin(), grain->planelist->end());
   }
@@ -195,8 +202,13 @@ Grain::~Grain()
   if (NULL != voxellist)
   {
     delete voxellist;
+  }
+  if (NULL != columnlist)
     delete columnlist;
+  if(NULL != rowlist)
     delete rowlist;
+
+  if (NULL != planelist) {
     delete planelist;
   }
   if (NULL != misorientationlist)

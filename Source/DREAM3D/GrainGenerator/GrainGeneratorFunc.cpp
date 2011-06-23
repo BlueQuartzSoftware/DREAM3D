@@ -26,6 +26,10 @@
 // AIM Includes
 #include "DREAM3D/Common/AIMMath.h"
 
+#define NEW_SHARED_ARRAY(var, type, size)\
+  boost::shared_array<type> var##Array(new type[size]);\
+  type* var = var##Array.get();
+
 
 const static float m_onepointthree = 1.33333333333f;
 const static float m_pi = M_PI;
@@ -711,9 +715,12 @@ void  GrainGeneratorFunc::insert_grain(size_t gnum)
   float covera = m_Grains[gnum]->radius3;
   float omega3 = m_Grains[gnum]->omega3;
   float radcur1 = 1;
-  m_Grains[gnum]->columnlist = new std::vector<int>(0);
-  m_Grains[gnum]->rowlist = new std::vector<int>(0);
-  m_Grains[gnum]->planelist = new std::vector<int>(0);
+  if (NULL == m_Grains[gnum]->columnlist) {
+  m_Grains[gnum]->columnlist = new std::vector<int>(0);}
+  if (NULL == m_Grains[gnum]->rowlist) {
+  m_Grains[gnum]->rowlist = new std::vector<int>(0);}
+  if (NULL == m_Grains[gnum]->planelist) {
+  m_Grains[gnum]->planelist = new std::vector<int>(0);}
 
   if(shapeclass == AIM::SyntheticBuilder::Cylinder)
   {
@@ -1111,9 +1118,12 @@ void  GrainGeneratorFunc::insert_precipitate(size_t gnum)
     }
   }
   insidelist.resize(insidecount);
-  m_Grains[gnum]->voxellist = new std::vector<int>(insidecount);
-  m_Grains[gnum]->voxellist->swap(insidelist);
-  insidelist.clear();
+  // Initialize a new Voxel List if necessary
+  if (m_Grains[gnum]->voxellist == NULL )
+  {
+    m_Grains[gnum]->voxellist = new std::vector<int>(0);
+  }
+  m_Grains[gnum]->voxellist->assign(insidelist.begin(), insidelist.end());
 }
 
 void GrainGeneratorFunc::move_grain(size_t gnum, float xc, float yc, float zc)
@@ -1840,9 +1850,8 @@ void  GrainGeneratorFunc::pack_grains()
 void GrainGeneratorFunc::assign_voxels()
 {
   int index;
-  int *gsizes;
-  gsizes = new int[m_Grains.size()];int
-  oldname;
+
+  int oldname;
   // int size;
   int column, row, plane;
   float inside;
@@ -1859,12 +1868,11 @@ void GrainGeneratorFunc::assign_voxels()
   int phase;
   int xmin, xmax, ymin, ymax, zmin, zmax;
 
-  int *gnames;
-  gnames = new int[totalpoints];
-  int *unassigned;
-  unassigned = new int[totalpoints];
-  int *phases;
-  phases = new int[totalpoints];
+  NEW_SHARED_ARRAY(gsizes, int, m_Grains.size())
+  NEW_SHARED_ARRAY(gnames, int, totalpoints)
+  NEW_SHARED_ARRAY(unassigned, int, totalpoints)
+  NEW_SHARED_ARRAY(phases, int, totalpoints)
+
   for (int i = 0; i < totalpoints; i++)
   {
     gnames[i] = voxels[i].grain_index;
@@ -2095,9 +2103,8 @@ void GrainGeneratorFunc::assign_voxels()
     m_Grains[i]->centroidz = zc;
     m_Grains[i]->numvoxels = gsizes[i];
   }
-  int *newnames;
-  newnames = new int[m_Grains.size()];int
-  goodcount = 1;
+  NEW_SHARED_ARRAY(newnames, int, m_Grains.size())
+  int goodcount = 1;
   for (size_t i = 1; i < m_Grains.size(); i++)
   {
     newnames[i] = 0;
@@ -2123,10 +2130,6 @@ void GrainGeneratorFunc::assign_voxels()
       voxels[i].phase = phases[i];
     }
   }
-  delete[] gnames;
-  delete[] phases;
-  delete[] unassigned;
-  delete[] newnames;
   m_Grains.resize(goodcount);
 }
 void  GrainGeneratorFunc::assign_eulers()
@@ -2195,19 +2198,15 @@ void  GrainGeneratorFunc::fill_gaps()
   gsizes.resize(numGrains, 0);
   int neighpoint;
   int neighbors[6];
-//  std::vector<int> n(numGrains);
-  // Create a self cleaning array of integers.
-  boost::shared_array<int> nArray(new int[numGrains]);
-  // Get the actual pointer to the array to use that for speed.
-  int* n = nArray.get();
 
-  // This could be too memory intensive
-  // Allocate a self cleaning array for the grain indices
-  boost::shared_array<int> grain_names(new int[totalpoints]);
-  // Copy all the data over to this temp array
+  // Create a self cleaning array of integers.
+  NEW_SHARED_ARRAY(n, int, numGrains)
+
+  NEW_SHARED_ARRAY(grain_indices, int, totalpoints)
+
   for(int i = 0; i < totalpoints; ++i)
   {
-    grain_names[i] = voxels[i].grain_index;
+    grain_indices[i] = voxels[i].grain_index;
   }
   int grainname = 0;
   int grain = 0;
@@ -2223,7 +2222,7 @@ void  GrainGeneratorFunc::fill_gaps()
     count = 0;
     for (int i = 0; i < totalpoints; i++)
     {
-      grainname = grain_names[i]; //FIXME: Hot Spot - 8.6 seconds on a 30 second profile
+      grainname = grain_indices[i]; //FIXME: Hot Spot - 8.6 seconds on a 30 second profile
       if (grainname <= 0)
       {
         count++;
@@ -2244,7 +2243,7 @@ void  GrainGeneratorFunc::fill_gaps()
           if (j == 3 && x == (xpoints - 1)) good = 0;
           if (good == 1)
           {
-            grain = grain_names[neighpoint];
+            grain = grain_indices[neighpoint];
             if (grain > 0)
             {
               neighs.push_back(grain);
@@ -2276,11 +2275,11 @@ void  GrainGeneratorFunc::fill_gaps()
     int neighbor = 0;
     for (int j = 0; j < totalpoints; j++)
     {
-      grainname = grain_names[j]; //FIXME: Hot Spot - 6.3 seconds on 30 sec profile
+      grainname = grain_indices[j]; //FIXME: Hot Spot - 6.3 seconds on 30 sec profile
       neighbor = voxels[j].neighbor; //FIXME: Hot Spot - 3.4 seconds on a 30 Sec Profile
       if (grainname <= 0 && neighbor > 0)
       {
-        grain_names[j] = neighbor;
+        grain_indices[j] = neighbor;
         voxels[j].phase = m_Grains[neighbor]->phase;
       }
     }
@@ -2289,14 +2288,14 @@ void  GrainGeneratorFunc::fill_gaps()
   int name = 0;
   for (int i = 0; i < totalpoints; i++)
   {
-    name = grain_names[i];
+    name = grain_indices[i];
     gsizes[name]++;
   }
 
   // Copy all the data back from the temp array
   for(int i = 0; i < totalpoints; ++i)
   {
-    voxels[i].grain_index = grain_names[i];
+    voxels[i].grain_index = grain_indices[i];
   }
 
   float aConstantValue = resx * resy * resz * 0.75f * m_one_over_pi;
@@ -2511,6 +2510,9 @@ void  GrainGeneratorFunc::place_precipitates()
 	}
   }
 }
+
+
+
 void GrainGeneratorFunc::adjust_boundaries()
 {
   AIM_RANDOMNG_NEW()
@@ -2533,19 +2535,20 @@ void GrainGeneratorFunc::adjust_boundaries()
 	int neighpoint, index;
 	size_t count, affectedcount;
 	int vListSize = 1000;
-	int *gsizes;
+
 	float voxtovol = resx*resy*resz*(3.0/4.0)*(1.0/m_pi);
-	gsizes = new int[m_Grains.size()];
+
+	NEW_SHARED_ARRAY(gsizes, int, m_Grains.size())
+
 	std::vector<int> voxellist(vListSize,-1);
 	std::vector<int> affectedvoxellist(vListSize,-1);
 	for(size_t i=1;i<m_Grains.size();i++)
 	{
 		gsizes[i] = 0;
 	}
-	int *gnames;
-	gnames = new int[totalpoints];
-	int *reassigned;
-	reassigned = new int[totalpoints];
+	NEW_SHARED_ARRAY(gnames, int,  totalpoints)
+	NEW_SHARED_ARRAY(reassigned, int, totalpoints)
+
 	for(int i=0;i<totalpoints;i++)
 	{
 	  gnames[i] = voxels[i].grain_index;
@@ -2671,8 +2674,8 @@ void GrainGeneratorFunc::adjust_boundaries()
 			reassigned[i] = 0;
 		}
 	}
-	int *newnames;
-	newnames = new int[m_Grains.size()];
+	NEW_SHARED_ARRAY(newnames, int, m_Grains.size())
+
 	for (size_t i=1;i<m_Grains.size();i++)
 	{
 		newnames[i] = i;
@@ -2721,8 +2724,8 @@ void  GrainGeneratorFunc::find_neighbors()
       m_Grains[i]->neighbordistfunc[j] = 0;
     }
   }
-  int *gnames;
-  gnames = new int[totalpoints];
+
+  NEW_SHARED_ARRAY(gnames, int, totalpoints)
   for(int i=0;i<totalpoints;i++)
   {
 	  gnames[i] = voxels[i].grain_index;
@@ -3206,7 +3209,11 @@ void  GrainGeneratorFunc::measure_misorientations ()
   {
     nlist = m_Grains[i]->neighborlist;
     neighsurfarealist = m_Grains[i]->neighborsurfarealist;
-	  m_Grains[i]->misorientationlist = new std::vector<float>(nlist->size() * 3, 0.0);
+    if (NULL != m_Grains[i]->misorientationlist) {
+      delete m_Grains[i]->misorientationlist;
+    }
+    m_Grains[i]->misorientationlist = new std::vector<float>(nlist->size() * 3, 0.0);
+
     q1[1] = m_Grains[i]->avg_quat[1];
     q1[2] = m_Grains[i]->avg_quat[2];
     q1[3] = m_Grains[i]->avg_quat[3];
