@@ -31,7 +31,7 @@
 #include "OIMImportPlugin.h"
 #include "OIMImportWidget.h"
 #include "QtSupport/AIMPluginFrame.h"
-
+#include "QtSupport/HelpDialog.h"
 
 Q_EXPORT_PLUGIN2(OIMImportPlugin, OIMImportPlugin)
 ;
@@ -58,7 +58,7 @@ OIMImportPlugin::~OIMImportPlugin()
 // -----------------------------------------------------------------------------
 QString OIMImportPlugin::getPluginName()
 {
-  return QString::fromStdString(DREAM3D::UIPlugins::OIMImportName);
+  return QString::fromStdString(DREAM3D::UIPlugins::OIMImportDisplayName);
 }
 
 // -----------------------------------------------------------------------------
@@ -102,4 +102,23 @@ void OIMImportPlugin::readSettings(QSettings &prefs)
 QIcon OIMImportPlugin::icon()
 {
   return QIcon(":/oimimport.png");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void OIMImportPlugin::displayHelp()
+{
+  QSharedPointer<HelpDialog> hd = HelpDialog::instance();
+  hd->setContentFile(htmlHelpIndexFile());
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QUrl OIMImportPlugin::htmlHelpIndexFile()
+{
+  QString s = QString::fromStdString(DREAM3D::UIPlugins::OIMImportBaseName);
+  s.append(QString("/index.html"));
+  return QUrl(s);
 }

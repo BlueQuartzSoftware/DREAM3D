@@ -96,6 +96,8 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
 
   void setInputUI();
 
+    void displayHelp();
+
   private slots:
     // slots for our worker thread to communicate
     void threadHasMessage(QString message);
@@ -116,6 +118,10 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
     void addToPluginMenu(QObject *plugin, const QString &text,
                          QMenu *menu, const char *member,
                          QActionGroup *actionGroup, QIcon icon);
+
+    void addToHelpMenu(QObject* plugin, const QString &text,
+                         QMenu* menu, const char* member, QIcon icon);
+
 
     /**
      * @brief Implements the CloseEvent to Quit the application and write settings
