@@ -24,6 +24,7 @@ set (QtSupport_SRCS
     ${QtSupport_SOURCE_DIR}/QRecentFileList.cpp
     ${QtSupport_SOURCE_DIR}/QFSDropLineEdit.cpp
     ${QtSupport_SOURCE_DIR}/QCheckboxDialog.cpp
+    ${QtSupport_SOURCE_DIR}/HelpDialog.cpp
 )
 set (QtSupport_HDRS
     ${QtSupport_SOURCE_DIR}/AIMImageGraphicsDelegate.h
@@ -34,6 +35,7 @@ set (QtSupport_HDRS
     ${QtSupport_SOURCE_DIR}/QRecentFileList.h  
     ${QtSupport_SOURCE_DIR}/QFSDropLineEdit.h
     ${QtSupport_SOURCE_DIR}/QCheckboxDialog.h
+    ${QtSupport_SOURCE_DIR}/HelpDialog.h
 )
 cmp_IDE_SOURCE_PROPERTIES("QtSupport" "${QtSupport_HDRS}" "${QtSupport_SRCS}" "0")
 
@@ -42,6 +44,7 @@ cmp_IDE_SOURCE_PROPERTIES("QtSupport" "${QtSupport_HDRS}" "${QtSupport_SRCS}" "0
 # --------------------------------------------------------------------
 SET( DREAM3D_QT_UI_FILES
   ${QtSupport_SOURCE_DIR}/UI_Files/ApplicationAboutBoxDialog.ui
+  ${QtSupport_SOURCE_DIR}/UI_Files/HelpDialog.ui
 )
 cmp_IDE_SOURCE_PROPERTIES( "QtSupport/UI_Files" "${DREAM3D_QT_UI_FILES}" "" "0")
 

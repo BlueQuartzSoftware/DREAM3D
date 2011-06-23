@@ -55,6 +55,11 @@
 #include "QtSupport/AIM_QtMacros.h"
 #include "QtSupport/AIMPluginFrame.h"
 #include "QtSupport/DREAM3DPluginInterface.h"
+#include "UIPlugins/GrainGenerator/GrainGeneratorPlugin.h"
+#include "UIPlugins/MicrostructureStatistics/MicrostructureStatisticsPlugin.h"
+#include "UIPlugins/OIMImport/OIMImportPlugin.h"
+#include "UIPlugins/Reconstruction/ReconstructionPlugin.h"
+#include "UIPlugins/SurfaceMesh/SurfaceMeshPlugin.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -270,6 +275,7 @@ void DREAM3D_UI::setupGui()
   m_PluginPrefsActionGroup->addAction(action_TextOnly);
 
   action_ShowPluginToolbar->setChecked(m_PluginToolBar->isVisible());
+
 
 }
 
@@ -604,22 +610,44 @@ void DREAM3D_UI::loadPlugins()
  void DREAM3D_UI::populateMenus(QObject *plugin)
 {
 #ifdef QT_DEBUG
- // std::cout << "Found Plugin..." << std::endl;
+  std::cout << "Found Plugin..." << std::endl;
 #endif
   DREAM3DPluginInterface* ipPlugin = qobject_cast<DREAM3DPluginInterface * > (plugin);
   if (ipPlugin)
   {
     m_LoadedPlugins.push_back(ipPlugin);
 #ifdef QT_DEBUG
-  //  qWarning(ipPlugin->getPluginName().toAscii(), "%s");
+    qWarning(ipPlugin->getPluginName().toAscii(), "%s");
 #endif
     QIcon newIcon = ipPlugin->icon();
 
     addToPluginMenu(plugin, ipPlugin->getPluginName(),
                     menuPlugins, SLOT(setInputUI()), m_PluginActionGroup, newIcon);
+
+    addToHelpMenu(plugin, ipPlugin->getPluginName(),
+                    menuHelp, SLOT(displayHelp()), newIcon);
   }
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3D_UI::displayHelp()
+{
+  std::cout << "DREAM3D_UI::displayHelp()" << std::endl;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3D_UI::addToHelpMenu(QObject* plugin, const QString &text,
+                               QMenu* menu, const char* member, QIcon icon)
+{
+  QAction *action = new QAction(icon, text, this);
+  connect(action, SIGNAL(triggered()), plugin, member);
+  menu->addAction(action);
+
+}
 
 // -----------------------------------------------------------------------------
 //

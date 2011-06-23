@@ -1,0 +1,13 @@
+<html>
+<!-- This is the help file for the Plugin @PluginName@. You can use basic html
+to format your help document including Bold, Italic, Tables, lists and some 
+other basic HTML. JavaScript and advanced CSS will most likely NOT work correctly -->
+
+<header>
+<title>@PluginName@</title>
+</header>
+
+<body>
+This is the Help document for <b>@PluginName@</b>
+</body>
+</html>

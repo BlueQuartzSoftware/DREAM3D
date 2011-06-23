@@ -38,6 +38,46 @@
 #include <QVector>
 #include <QtGui/QIcon>
 
+#ifdef NDEBUG
+
+#define DREAM3D_PLUGIN_2(name)\
+    #name
+
+#define DREAM3D_PLUGIN_3(name)\
+  #name
+
+#else
+
+
+#define DREAM3D_PLUGIN_1(name)\
+  #name
+
+#define DREAM3D_PLUGIN_2(name)\
+  DREAM3D_PLUGIN_1(name##_debug)
+
+#define DREAM3D_PLUGIN_3(name)\
+  DREAM3D_PLUGIN_1(name Debug)
+
+#endif
+
+
+
+#define DREAM3D_PLUGIN_CONSTANTS(libName, human)\
+namespace DREAM3D\
+{\
+  namespace UIPlugins\
+  {\
+   const std::string libName##File(DREAM3D_PLUGIN_2(libName##Plugin));\
+   const std::string libName##DisplayName(DREAM3D_PLUGIN_3(human));\
+   const std::string libName##BaseName(#libName);\
+  }\
+}
+
+
+
+
+
+
 class AIMPluginFrame;
 
 /**
@@ -140,6 +180,10 @@ class DREAM3DPluginInterface
      * @return
      */
     virtual QIcon icon() = 0;
+
+    virtual void displayHelp() = 0;
+
+    virtual QUrl htmlHelpIndexFile() = 0;
 };
 
 
