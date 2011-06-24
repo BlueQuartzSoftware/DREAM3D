@@ -320,7 +320,7 @@ void MicrostructureStatisticsFunc::define_neighborhood()
           ydist = fabs(y - yn);
           zdist = fabs(z - zn);
           dist = (xdist * xdist) + (ydist * ydist) + (zdist * zdist);
-          dist = powf(dist, 0.5);
+          dist = sqrt(dist);
           dist2 = dist;
           dist_int = int(dist / (diam / 2.0));
           dist2_int = int(dist2 / (diam2 / 2.0));
@@ -654,7 +654,7 @@ void MicrostructureStatisticsFunc::find_axes()
     float g = ((2 * (b / a) * (b / a) * (b / a)) - (9 * b * c / (a * a)) + (27 * (d / a))) / 27;
     float h = (g * g / 4) + (f * f * f / 27);
     float rsquare = (g * g / 4) - h;
-    float r = powf(rsquare, 0.5);
+    float r = sqrt(rsquare);
     float theta = 0;
     if (r == 0)
     {
