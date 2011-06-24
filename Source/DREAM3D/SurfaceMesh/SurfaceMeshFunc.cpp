@@ -3037,9 +3037,9 @@ void SurfaceMeshFunc::smooth_boundaries(int nNodes, int nTriangles, string Nodes
    tNx = (y2-y1)*(z3-z1)-(z2-z1)*(y3-y1);
    tNy = (x3-x1)*(z2-z1)-(x2-x1)*(z3-z1);
    tNz = (x2-x1)*(y3-y1)-(y2-y1)*(x3-x1);
-   cTriangle[trianglenum].normal[0] = tNx/powf((tNx*tNx+tNy*tNy+tNz*tNz),0.5);
-   cTriangle[trianglenum].normal[1] = tNy/powf((tNx*tNx+tNy*tNy+tNz*tNz),0.5);
-   cTriangle[trianglenum].normal[2] = tNz/powf((tNx*tNx+tNy*tNy+tNz*tNz),0.5);
+   cTriangle[trianglenum].normal[0] = tNx/sqrt((tNx*tNx+tNy*tNy+tNz*tNz));
+   cTriangle[trianglenum].normal[1] = tNy/sqrt((tNx*tNx+tNy*tNy+tNz*tNz));
+   cTriangle[trianglenum].normal[2] = tNz/sqrt((tNx*tNx+tNy*tNy+tNz*tNz));
    Nx = Nx + cTriangle[trianglenum].normal[0];
    Ny = Ny + cTriangle[trianglenum].normal[1];
    Nz = Nz + cTriangle[trianglenum].normal[2];
@@ -3054,9 +3054,9 @@ void SurfaceMeshFunc::smooth_boundaries(int nNodes, int nTriangles, string Nodes
    BCx = BCx/(3*boundarytrianglelist[i][j].size());
    BCy = BCy/(3*boundarytrianglelist[i][j].size());
    BCz = BCz/(3*boundarytrianglelist[i][j].size());
-   boundarynormals[i][j][0] = Nx/powf((Nx*Nx+Ny*Ny+Nz*Nz),0.5);
-   boundarynormals[i][j][1] = Ny/powf((Nx*Nx+Ny*Ny+Nz*Nz),0.5);
-   boundarynormals[i][j][2] = Nz/powf((Nx*Nx+Ny*Ny+Nz*Nz),0.5);
+   boundarynormals[i][j][0] = Nx/sqrt((Nx*Nx+Ny*Ny+Nz*Nz));
+   boundarynormals[i][j][1] = Ny/sqrt((Nx*Nx+Ny*Ny+Nz*Nz));
+   boundarynormals[i][j][2] = Nz/sqrt((Nx*Nx+Ny*Ny+Nz*Nz));
    Nx = boundarynormals[i][j][0];
    Ny = boundarynormals[i][j][1];
    Nz = boundarynormals[i][j][2];
@@ -3077,9 +3077,9 @@ void SurfaceMeshFunc::smooth_boundaries(int nNodes, int nTriangles, string Nodes
    tNx = (y2-y1)*(z3-z1)-(z2-z1)*(y3-y1);
    tNy = (x3-x1)*(z2-z1)-(x2-x1)*(z3-z1);
    tNz = (x2-x1)*(y3-y1)-(y2-y1)*(x3-x1);
-   cTriangle[trianglenum].normal[0] = tNx/powf((tNx*tNx+tNy*tNy+tNz*tNz),0.5);
-   cTriangle[trianglenum].normal[1] = tNy/powf((tNx*tNx+tNy*tNy+tNz*tNz),0.5);
-   cTriangle[trianglenum].normal[2] = tNz/powf((tNx*tNx+tNy*tNy+tNz*tNz),0.5);
+   cTriangle[trianglenum].normal[0] = tNx/sqrt((tNx*tNx+tNy*tNy+tNz*tNz));
+   cTriangle[trianglenum].normal[1] = tNy/sqrt((tNx*tNx+tNy*tNy+tNz*tNz));
+   cTriangle[trianglenum].normal[2] = tNz/sqrt((tNx*tNx+tNy*tNy+tNz*tNz));
    tsite1 = cVertex[cTriangle[trianglenum].node_id[0]].point;
    tsite2 = cVertex[cTriangle[trianglenum].node_id[1]].point;
    tsite3 = cVertex[cTriangle[trianglenum].node_id[2]].point;
@@ -3113,7 +3113,7 @@ void SurfaceMeshFunc::smooth_boundaries(int nNodes, int nTriangles, string Nodes
    Rx = (tNy)*(Nz)-(tNz)*(Ny);
    Ry = (Nx)*(tNz)-(tNx)*(Nz);
    Rz = (tNx)*(Ny)-(tNy)*(Nx);
-   theta = acos((tNx*Nx)+(tNy*Ny)+(tNz*Nz))/(powf((tNx*tNx+tNy*tNy+tNz*tNz),0.5)*powf((Nx*Nx+Ny*Ny+Nz*Nz),0.5));
+   theta = acos((tNx*Nx)+(tNy*Ny)+(tNz*Nz))/(sqrt((tNx*tNx+tNy*tNy+tNz*tNz))*sqrt((Nx*Nx+Ny*Ny+Nz*Nz)));
    costheta = cosf(theta);
    sintheta = sinf(theta);
    rotmat[0][0] = costheta + (Rx*Rx)*(1-costheta);
