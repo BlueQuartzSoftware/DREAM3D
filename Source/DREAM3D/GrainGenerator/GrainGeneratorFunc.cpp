@@ -819,7 +819,7 @@ void  GrainGeneratorFunc::insert_grain(size_t gnum)
 		  z = float(plane)*packingresz;
 		  inside = -1;
 		  dist = ((x-xc)*(x-xc))+((y-yc)*(y-yc))+((z-zc)*(z-zc));
-		  dist = sqrtf(dist); //dist = powf(dist,0.5);
+		  dist = sqrt(dist);
 		  if(dist < radcur1)
 		  {
 			x = x-xc;
@@ -1242,7 +1242,7 @@ void GrainGeneratorFunc::determine_neighbors(size_t gnum, int add)
       ydist = fabs(y-yn);
       zdist = fabs(z-zn);
       totdist = (xdist*xdist)+(ydist*ydist)+(zdist*zdist);
-      totdist = powf(totdist,0.5);
+      totdist = sqrt(totdist);
       if(totdist < (3*(dia/2.0)))
       {
         DoverR = int(totdist/(dia/2.0));
@@ -2013,7 +2013,6 @@ void GrainGeneratorFunc::assign_voxels()
           if (iter3 < 0) z = z - sizez;
           if (iter3 > zpoints - 1) z = z + sizez;
           dist = ((x - xc) * (x - xc)) + ((y - yc) * (y - yc)) + ((z - zc) * (z - zc));
-//          dist = powf(dist, 0.5);
           dist = sqrtf(dist);
           if (dist < radcur1)
           {
@@ -2033,8 +2032,8 @@ void GrainGeneratorFunc::assign_voxels()
                 inside = 1;
                 axis2comp = fabs(axis2comp);
                 axis3comp = fabs(axis3comp);
-                axis2comp = axis2comp*axis2comp; //powf(axis2comp, 2);
-                axis3comp = axis3comp*axis3comp; //powf(axis3comp, 2);
+                axis2comp = axis2comp*axis2comp;
+                axis3comp = axis3comp*axis3comp;
                 inside = 1 - axis2comp - axis3comp;
               }
             }
@@ -2071,9 +2070,9 @@ void GrainGeneratorFunc::assign_voxels()
               axis1comp = fabs(axis1comp);
               axis2comp = fabs(axis2comp);
               axis3comp = fabs(axis3comp);
-              axis1comp = axis1comp*axis1comp; //powf(axis1comp, 2);
-              axis2comp = axis2comp*axis2comp; //powf(axis2comp, 2);
-              axis3comp = axis3comp*axis3comp; //powf(axis3comp, 2);
+              axis1comp = axis1comp*axis1comp;
+              axis2comp = axis2comp*axis2comp;
+              axis3comp = axis3comp*axis3comp;
               inside = 1 - axis1comp - axis2comp - axis3comp;
             }
             if (inside >= 0)
