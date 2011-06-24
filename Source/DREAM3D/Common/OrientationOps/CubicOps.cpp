@@ -293,7 +293,7 @@ float CubicOps::_calcMisoQuat(const float quatsym[24][5], int numsym,
    n1 = qco[1] / sin_wmin_over_2;
    n2 = qco[2] / sin_wmin_over_2;
    n3 = qco[3] / sin_wmin_over_2;
-   float denom = powf((n1*n1+n2*n2+n3*n3),0.5);
+   float denom = sqrt((n1*n1+n2*n2+n3*n3));
    n1 = n1/denom;
    n2 = n2/denom;
    n3 = n3/denom;
