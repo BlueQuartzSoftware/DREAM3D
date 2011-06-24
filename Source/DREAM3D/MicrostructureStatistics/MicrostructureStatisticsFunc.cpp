@@ -486,7 +486,7 @@ void MicrostructureStatisticsFunc::find_centroids2D()
     m_Grains[i]->numvoxels = graincenters[i][0];
     m_Grains[i]->volume = (graincenters[i][0] * resx * resy);
     radsquared = m_Grains[i]->volume / m_pi;
-    diameter = (2 * powf(radsquared, 0.5));
+    diameter = (2 * sqrt(radsquared));
     m_Grains[i]->equivdiameter = diameter;
     if (int(diameter) > maxdiameter[m_Grains[i]->phase]) maxdiameter[m_Grains[i]->phase] = int(diameter);
     if (int(diameter) < mindiameter[m_Grains[i]->phase]) mindiameter[m_Grains[i]->phase] = int(diameter);
@@ -679,7 +679,7 @@ void MicrostructureStatisticsFunc::find_axes()
     a = (A * A * A * A) / (B * C);
     a = powf(a, 0.1);
     b = B / A;
-    b = powf(b, 0.5) * a;
+    b = sqrt(b) * a;
     c = A / (a * a * a * b);
     float bovera = b / a;
     float covera = c / a;
@@ -805,9 +805,9 @@ void MicrostructureStatisticsFunc::find_vectors(H5ReconStatsWriter::Pointer h5io
     float n3x = vect[2][0];
     float n3y = vect[2][1];
     float n3z = vect[2][2];
-    float norm1 = powf(((n1x * n1x) + (n1y * n1y) + (n1z * n1z)), 0.5);
-    float norm2 = powf(((n2x * n2x) + (n2y * n2y) + (n2z * n2z)), 0.5);
-    float norm3 = powf(((n3x * n3x) + (n3y * n3y) + (n3z * n3z)), 0.5);
+    float norm1 = sqrt(((n1x * n1x) + (n1y * n1y) + (n1z * n1z)));
+    float norm2 = sqrt(((n2x * n2x) + (n2y * n2y) + (n2z * n2z)));
+    float norm3 = sqrt(((n3x * n3x) + (n3y * n3y) + (n3z * n3z)));
     if (m_Grains[i]->surfacegrain == 0)
     {
       n1x = n1x / norm1;
@@ -1216,8 +1216,8 @@ void MicrostructureStatisticsFunc::find_vectors2D(H5ReconStatsWriter::Pointer h5
     float n1y = 1;
     float n2x = (Ixx - I2) / Ixy;
     float n2y = 1;
-    float norm1 = powf((n1x * n1x + n1y * n1y), 0.5);
-    float norm2 = powf((n2x * n2x + n2y * n2y), 0.5);
+    float norm1 = sqrt((n1x * n1x + n1y * n1y));
+    float norm2 = sqrt((n2x * n2x + n2y * n2y));
     n1x = n1x / norm1;
     n1y = n1y / norm1;
     n2x = n2x / norm2;
@@ -1497,7 +1497,7 @@ void MicrostructureStatisticsFunc::find_schmids()
       loady = (2 * q1[2] * q1[3] - 2 * q1[1] * q1[4]) * 1;
       loadz = (1 - 2 * q1[1] * q1[1] - 2 * q1[2] * q1[2]) * 1;
       float mag = loadx * loadx + loady * loady + loadz * loadz;
-      mag = powf(mag, 0.5);
+      mag = sqrt(mag);
       theta1 = (loadx + loady + loadz) / (mag * 1.732);
       theta1 = fabs(theta1);
       theta2 = (loadx + loady - loadz) / (mag * 1.732);
@@ -1689,18 +1689,18 @@ int MicrostructureStatisticsFunc::volume_stats(H5ReconStatsWriter::Pointer h5io,
 		  svcoverb[temp4][4] = (1 - svcoverb[temp4][1]) * (((svcoverb[temp4][1] * (1 - svcoverb[temp4][1])) / svcoverb[temp4][2]) - 1);
 		  svomega3[temp4][3] = svomega3[temp4][1] * (((svomega3[temp4][1] * (1 - svomega3[temp4][1])) / svomega3[temp4][2]) - 1);
 		  svomega3[temp4][4] = (1 - svomega3[temp4][1]) * (((svomega3[temp4][1] * (1 - svomega3[temp4][1])) / svomega3[temp4][2]) - 1);
-		  neighborhood[temp4][2] = powf(neighborhood[temp4][2], 0.5);
-		  neighborhood[temp4][4] = powf(neighborhood[temp4][4], 0.5);
-		  neighborhood[temp4][6] = powf(neighborhood[temp4][6], 0.5);
-		  svbovera[temp4][2] = powf(svbovera[temp4][2], 0.5);
-		  svcovera[temp4][2] = powf(svcovera[temp4][2], 0.5);
-		  svcoverb[temp4][2] = powf(svcoverb[temp4][2], 0.5);
-		  svschmid[temp4][2] = powf(svschmid[temp4][2], 0.5);
-		  svomega3[temp4][2] = powf(svomega3[temp4][2], 0.5);
+		  neighborhood[temp4][2] = sqrt(neighborhood[temp4][2]);
+		  neighborhood[temp4][4] = sqrt(neighborhood[temp4][4]);
+		  neighborhood[temp4][6] = sqrt(neighborhood[temp4][6]);
+		  svbovera[temp4][2] = sqrt(svbovera[temp4][2]);
+		  svcovera[temp4][2] = sqrt(svcovera[temp4][2]);
+		  svcoverb[temp4][2] = sqrt(svcoverb[temp4][2]);
+		  svschmid[temp4][2] = sqrt(svschmid[temp4][2]);
+		  svomega3[temp4][2] = sqrt(svomega3[temp4][2]);
 		}
 	  }
 	  sdlogdiam = sdlogdiam / actualgrains;
-	  sdlogdiam = powf(sdlogdiam, 0.5);
+	  sdlogdiam = sqrt(sdlogdiam);
 	  retErr = h5io->writeVolumeStats(iter, crystruct[iter], phaseType[iter], phasefraction[iter], pptFractions[iter],
 	                                  maxdiameter[iter], mindiameter[iter], 1.0, avglogdiam, sdlogdiam, svbovera, svcovera, svcoverb, neighborhoodfit, svomega3);
   }
@@ -1819,15 +1819,15 @@ int MicrostructureStatisticsFunc::volume_stats2D(H5ReconStatsWriter::Pointer h5i
         svschmid[temp4][2] = svschmid[temp4][2] / svschmid[temp4][0];
         svbovera[temp4][3] = svbovera[temp4][1] * (((svbovera[temp4][1] * (1 - svbovera[temp4][1])) / svbovera[temp4][2]) - 1);
         svbovera[temp4][4] = (1 - svbovera[temp4][1]) * (((svbovera[temp4][1] * (1 - svbovera[temp4][1])) / svbovera[temp4][2]) - 1);
-        neighborhood[temp4][2] = powf(neighborhood[temp4][2], 0.5);
-        neighborhood[temp4][4] = powf(neighborhood[temp4][4], 0.5);
-        neighborhood[temp4][6] = powf(neighborhood[temp4][6], 0.5);
-        svbovera[temp4][2] = powf(svbovera[temp4][2], 0.5);
-        svschmid[temp4][2] = powf(svschmid[temp4][2], 0.5);
+        neighborhood[temp4][2] = sqrt(neighborhood[temp4][2]);
+        neighborhood[temp4][4] = sqrt(neighborhood[temp4][4]);
+        neighborhood[temp4][6] = sqrt(neighborhood[temp4][6]);
+        svbovera[temp4][2] = sqrt(svbovera[temp4][2]);
+        svschmid[temp4][2] = sqrt(svschmid[temp4][2]);
       }
     }
     sdlogdiam = sdlogdiam / actualgrains;
-    sdlogdiam = powf(sdlogdiam, 0.5);
+    sdlogdiam = sqrt(sdlogdiam);
 
     retErr
         = h5io->writeVolumeStats2D(iter, crystruct[iter], phaseType[iter], phasefraction[iter], pptFractions[iter],
