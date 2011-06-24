@@ -189,7 +189,7 @@ void MicrostructureStatistics::execute()
 	  CHECK_FOR_CANCELED(MicrostructureStatisticsFunc, "MicrostructureStatistics was canceled",  define_neighborhood)
   }
 
-  if(m_ComputeAverageOrientations == true || m_ComputeODF == true || m_ComputeMDF == true)
+  if(m_ComputeAverageOrientations == true || m_ComputeODF == true || m_ComputeMDF == true || m_WriteKernelMisorientations)
   {
 	  updateProgressAndMessage(("Finding Average Orientations For Grains"), 60);
 	  m->find_grainorientations();
@@ -217,22 +217,20 @@ void MicrostructureStatistics::execute()
 	  if(m->zpoints == 1) { m->volume_stats2D(h5io, m_BinStepSize); }
   }
 
+  if(m_WriteKernelMisorientations == true)
+  {
+	  updateProgressAndMessage(("Finding Reference Orientations For Grains"), 70);
+	  m->find_grain_and_kernel_misorientations();
+	  CHECK_FOR_CANCELED(MicrostructureStatisticsFunc, "MicrostructureStatistics was canceled",  find_grain_and_kernel_misorientations)
+  }
 
 /*  updateProgressAndMessage(("Finding Grain Schmid Factors"), 20);
   m->find_schmids();
   CHECK_FOR_CANCELED(MicrostructureStatisticsFunc, "MicrostructureStatistics was canceled",  find_schmids)
 
-  updateProgressAndMessage(("Finding Reference Orientations For Grains"), 70);
-  m->find_grain_and_kernel_misorientations();
-  CHECK_FOR_CANCELED(MicrostructureStatisticsFunc, "MicrostructureStatistics was canceled",  find_grain_and_kernel_misorientations)
-
   updateProgressAndMessage(("Finding Euclidean Distance Maps"), 50);
   m->find_euclidean_map();
   CHECK_FOR_CANCELED(MicrostructureStatisticsFunc, "MicrostructureStatistics was canceled",  find_euclidean_map)
-
-  updateProgressAndMessage(("Finding Grain IPF Colors"), 75);
-  m->find_colors();
-  CHECK_FOR_CANCELED(MicrostructureStatisticsFunc, "MicrostructureStatistics was canceled", find_colors)
 
   updateProgressAndMessage(("Writing Deformation Statistics"), 80);
   m->deformation_stats(reconDeformStatsFile, reconDeformIPFFile);
@@ -254,7 +252,7 @@ void MicrostructureStatistics::execute()
     std::vector<VtkScalarWriter*> scalarsToWrite;
     {
       VtkScalarWriter* w0 =
-          static_cast<VtkScalarWriter*>(new VoxelGrainIdScalarWriter<MicrostructureStatisticsFunc>(m.get()));
+      static_cast<VtkScalarWriter*>(new VoxelGrainIdScalarWriter<MicrostructureStatisticsFunc>(m.get()));
       w0->m_WriteBinaryFiles = m_WriteBinaryVTKFiles;
       scalarsToWrite.push_back(w0);
     }
@@ -273,7 +271,7 @@ void MicrostructureStatistics::execute()
       scalarsToWrite.push_back(w0);
     }
 
-    if (m_WritePhaseId == true){
+    if (m_WriteKernelMisorientations == true){
       VtkScalarWriter* w0 =
         static_cast<VtkScalarWriter*>(new VoxelKAMScalarWriter<MicrostructureStatisticsFunc>(m.get()));
       w0->m_WriteBinaryFiles = m_WriteBinaryVTKFiles;
