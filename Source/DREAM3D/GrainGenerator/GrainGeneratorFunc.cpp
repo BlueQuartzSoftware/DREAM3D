@@ -838,8 +838,8 @@ void  GrainGeneratorFunc::insert_grain(size_t gnum)
 					inside = 1;
 					axis2comp = fabs(axis2comp);
 					axis3comp = fabs(axis3comp);
-					axis2comp = powf(axis2comp,2);
-					axis3comp = powf(axis3comp,2);
+					axis2comp = axis2comp*axis2comp;
+					axis3comp = axis3comp*axis3comp;
 					inside = 1-axis2comp-axis3comp;
 				}
 			}
@@ -876,9 +876,9 @@ void  GrainGeneratorFunc::insert_grain(size_t gnum)
 				axis1comp = fabs(axis1comp);
 				axis2comp = fabs(axis2comp);
 				axis3comp = fabs(axis3comp);
-				axis1comp = powf(axis1comp,2);
-				axis2comp = powf(axis2comp,2);
-				axis3comp = powf(axis3comp,2);
+				axis1comp = axis1comp*axis1comp;
+				axis2comp = axis2comp*axis2comp;
+				axis3comp = axis3comp*axis3comp;
 				inside = 1-axis1comp-axis2comp-axis3comp;
 			}
 			if(inside >= 0)
@@ -1041,7 +1041,7 @@ void  GrainGeneratorFunc::insert_precipitate(size_t gnum)
 		  if(iter3 < 0) z = z-sizez;
 		  if(iter3 > zpoints-1) z = z+sizez;
 		  dist = ((x-xc)*(x-xc))+((y-yc)*(y-yc))+((z-zc)*(z-zc));
-		  dist = powf(dist,0.5);
+		  dist = sqrt(dist);
 		  if(dist < radcur1)
 		  {
 			x = x-xc;
@@ -1060,8 +1060,8 @@ void  GrainGeneratorFunc::insert_precipitate(size_t gnum)
 					inside = 1;
 					axis2comp = fabs(axis2comp);
 					axis3comp = fabs(axis3comp);
-					axis2comp = powf(axis2comp,2);
-					axis3comp = powf(axis3comp,2);
+					axis2comp = axis2comp*axis2comp;
+					axis3comp = axis3comp*axis3comp;
 					inside = 1-axis2comp-axis3comp;
 				}
 			}
@@ -1098,9 +1098,9 @@ void  GrainGeneratorFunc::insert_precipitate(size_t gnum)
 				axis1comp = fabs(axis1comp);
 				axis2comp = fabs(axis2comp);
 				axis3comp = fabs(axis3comp);
-				axis1comp = powf(axis1comp,2);
-				axis2comp = powf(axis2comp,2);
-				axis3comp = powf(axis3comp,2);
+				axis1comp = axis1comp*axis1comp;
+				axis2comp = axis2comp*axis2comp;
+				axis3comp = axis3comp*axis3comp;
 				inside = 1-axis1comp-axis2comp-axis3comp;
 			}
 			if(inside >= 0)
@@ -1571,7 +1571,7 @@ void  GrainGeneratorFunc::pack_grains()
 	  grainsizedist[i].resize(40);
 	  simgrainsizedist[i].resize(40);
 	  grainsizediststep[i] = ((2*maxdiameter[phase])-(mindiameter[phase]/2.0))/grainsizedist[i].size();
-	  float root2pi = powf((2.0 * 3.1415926535897), 0.5);
+	  float root2pi = sqrt((2.0 * 3.1415926535897));
 	  float input = 0;
 	  for (size_t j=0;j<grainsizedist[i].size();j++)
 	  {
@@ -2812,7 +2812,7 @@ void  GrainGeneratorFunc::find_neighbors()
       ydist = fabs(y - yn);
       zdist = fabs(z - zn);
       dist = (xdist * xdist) + (ydist * ydist) + (zdist * zdist);
-      dist = powf(dist, 0.5);
+      dist = sqrt(dist);
       dist2 = dist;
       dist_int = int(dist / diam);
       dist2_int = int(dist2 / diam2);
