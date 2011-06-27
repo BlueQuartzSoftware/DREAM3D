@@ -100,6 +100,6 @@ file(COPY ${${PLUGIN_NAME}_HELP_FILES}
 #- in the "Help" folder, ie, all html files, images, etc are all in the "Help"
 #- folder and NOT in any subfolders beyond that.
 install(FILES ${${PLUGIN_NAME}_HELP_FILES}
-        DESTINATION Help/OIMImport
+        DESTINATION Help/${PLUGIN_NAME}
         COMPONENT Applications )
   

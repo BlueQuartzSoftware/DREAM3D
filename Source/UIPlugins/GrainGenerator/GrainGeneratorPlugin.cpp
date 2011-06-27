@@ -107,8 +107,7 @@ QIcon GrainGeneratorPlugin::icon()
 // -----------------------------------------------------------------------------
 void GrainGeneratorPlugin::displayHelp()
 {
-  QSharedPointer<HelpDialog> hd = HelpDialog::instance();
-  hd->setContentFile(htmlHelpIndexFile());
+  emit showHelp(htmlHelpIndexFile());
 }
 
 // -----------------------------------------------------------------------------

@@ -109,8 +109,7 @@ QIcon OIMImportPlugin::icon()
 // -----------------------------------------------------------------------------
 void OIMImportPlugin::displayHelp()
 {
-  QSharedPointer<HelpDialog> hd = HelpDialog::instance();
-  hd->setContentFile(htmlHelpIndexFile());
+  emit showHelp(htmlHelpIndexFile());
 }
 
 // -----------------------------------------------------------------------------
