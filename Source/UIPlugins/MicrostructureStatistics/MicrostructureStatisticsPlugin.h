@@ -65,6 +65,9 @@ class MicrostructureStatisticsPlugin : public QObject, public DREAM3DPluginInter
   public slots:
     virtual void displayHelp();
 
+  signals:
+    void showHelp(QUrl);
+
   protected:
     MicrostructureStatisticsWidget* m_InputWidget;
 

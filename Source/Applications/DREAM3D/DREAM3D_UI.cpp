@@ -55,6 +55,7 @@
 #include "QtSupport/AIM_QtMacros.h"
 #include "QtSupport/AIMPluginFrame.h"
 #include "QtSupport/DREAM3DPluginInterface.h"
+#include "QtSupport/HelpDialog.h"
 #include "UIPlugins/GrainGenerator/GrainGeneratorPlugin.h"
 #include "UIPlugins/MicrostructureStatistics/MicrostructureStatisticsPlugin.h"
 #include "UIPlugins/OIMImport/OIMImportPlugin.h"
@@ -69,6 +70,7 @@ DREAM3D_UI::DREAM3D_UI(QWidget *parent) :
   m_WorkerThread(NULL),
   m_ActivePlugin(NULL),
   m_PluginToolBar(NULL),
+  m_HelpDialog(NULL),
 #if defined(Q_WS_WIN)
 m_OpenDialogLastDirectory("C:\\")
 #else
@@ -276,7 +278,8 @@ void DREAM3D_UI::setupGui()
 
   action_ShowPluginToolbar->setChecked(m_PluginToolBar->isVisible());
 
-
+  m_HelpDialog = new HelpDialog(this);
+  m_HelpDialog->setWindowModality(Qt::NonModal);
 }
 
 
@@ -624,17 +627,26 @@ void DREAM3D_UI::loadPlugins()
     addToPluginMenu(plugin, ipPlugin->getPluginName(),
                     menuPlugins, SLOT(setInputUI()), m_PluginActionGroup, newIcon);
 
-    addToHelpMenu(plugin, ipPlugin->getPluginName(),
-                    menuHelp, SLOT(displayHelp()), newIcon);
+//    addToHelpMenu(plugin, ipPlugin->getPluginName(),
+//                    menuHelp, SLOT(displayHelp()), newIcon);
+
+    QAction* action = new QAction(newIcon, ipPlugin->getPluginName(), this);
+    connect(action, SIGNAL(triggered()),
+            plugin, SLOT(displayHelp()));
+    connect(plugin, SIGNAL(showHelp(QUrl)),
+            m_HelpDialog, SLOT(setContentFile(QUrl)));
+    menuHelp->addAction(action);
+
+
   }
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DREAM3D_UI::displayHelp()
+void DREAM3D_UI::displayHelp(QString file)
 {
-  std::cout << "DREAM3D_UI::displayHelp()" << std::endl;
+  m_HelpDialog->setContentFile(file);
 }
 
 // -----------------------------------------------------------------------------

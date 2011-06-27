@@ -75,8 +75,7 @@ target_link_libraries(GrainGeneratorPlugin
                     QtSupport 
                      )
 PluginProperties(GrainGeneratorPlugin "_debug" "${DREAM3D_VERSION}" 
-                "${DREAM3D_BINARY_DIR}" "${CMP_PLUGIN_LIST_FILE}")
-                
+                "${DREAM3D_BINARY_DIR}" "${CMP_PLUGIN_LIST_FILE}")              
 
 
 if (NOT MSVC)
@@ -97,7 +96,7 @@ file(COPY ${${PLUGIN_NAME}_HELP_FILES}
 #- in the "Help" folder, ie, all html files, images, etc are all in the "Help"
 #- folder and NOT in any subfolders beyond that.
 install(FILES ${${PLUGIN_NAME}_HELP_FILES}
-        DESTINATION Help/OIMImport
+        DESTINATION Help/${PLUGIN_NAME}
         COMPONENT Applications )
   
 
