@@ -1,0 +1,36 @@
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=macintosh">
+</head>
+<body lang="EN-US">
+
+<!-- ############################################################# -->
+    <h3>  Surface Meshing</h3> 
+ <img width="470" height="508" id="Picture 4" src="image001.png" alt="Description: Surface Meshing.tif">
+
+  <ol>
+    <li><b> <i>  VTK File</i></b> - name and location of the .vtk file that will be used in the surface meshing 
+
+  <ul>
+    <li>a. This can be any of the volumes created in the reconstruction or the synthetic builder.  The <b> <i> XDim</i></b> - , <b> <i> YDim</i> </b> and <b> <i> ZDim</i> </b> are the size of the volume (in voxels), read from the input .vtk file.  
+
+    <li><b> <i>  Scalars</i></b> - name of the block of data to read from the input .vtk file.  If the volume is from either of the Reconstruction or Synthetic Builder, then this should generally be set to GrainID. 
+  </ul>
+	<li><b> <i>  Output Directory</i></b> - this is the location that all of the output files will be written to 
+  <ul>
+    <li>a. The output file is a .vtk file of poly data 
+  </ul>
+
+    <li><b> <i>  Output File Prefix</i></b> - this option allows the user to define a prefix to place on the output data files (which have a fixed ÔbaseÕ name).  The full names of the files will update in real-time on the list of output files. 
+
+    <li> <b> <i> Options</i></b> - 
+  <ul>
+    <li>a. <b> <i>Binary VTK File</i></b> - This option allows the user to choose whether the output visualization file is in binary or ASCII format. 
+    <li>b. <b> <i>Conformal Mesh</i></b> - this option creates a copy of every triangular surface patch if turned on.  This option is useful for visualization because when writing poly data in a .vtk file, only one attribute is assigned to each triangle, which negates that two grains actually ÔshareÕ a triangle.  If this option is on, then each triangle will be written twice and one will be assigned to one grain and the other to the second grain.  If turned off, when the user visualizes one grain at a time by thresholding the data, the grains will appear to having ÔmissingÕ triangular patches. 
+    <li>c. <b> <i>Delete Temporary Files</i></b> - this option will delete the temporary nodes and triangles files between all the individual sections once the full volume has been meshed.  This option should usually be on since the temporary files are binary and generally not of use to the user after-the-fact. 
+  </ul>
+    <li><b> <i>Smooth Surface Mesh</i></b> - this is an option to smooth the surface mesh that is output from the marching cubes portion of the.  Currently this option is not functional and is under development with CMU. 
+</ol>
+
+</body>
+</html>
