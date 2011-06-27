@@ -1,3 +1,4 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <!-- This is the help file for the Plugin @PluginName@. You can use basic html
 to format your help document including Bold, Italic, Tables, lists and some 
@@ -8,6 +9,8 @@ other basic HTML. JavaScript and advanced CSS will most likely NOT work correctl
 </header>
 
 <body>
-This is the Help document for <b>@PluginName@</b>
+  <h3>@PluginName@</h3> 
+<img width="470" height="508" id="@PluginName@" src="image001.png" alt="Description: @PluginName@">
+
 </body>
 </html>

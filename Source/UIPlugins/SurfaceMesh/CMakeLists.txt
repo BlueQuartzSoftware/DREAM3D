@@ -5,6 +5,7 @@
 #///////////////////////////////////////////////////////////////////////////////
 project(SurfaceMeshPlugin)
 
+set(PLUGIN_NAME SurfaceMesh)
 
 # ------------------------------------------------------------------------------
 #  Qt 4 Section
@@ -78,3 +79,21 @@ PluginProperties(SurfaceMeshPlugin "_debug" "${DREAM3D_VERSION}"
 if (NOT MSVC)
   SET (CMAKE_LIBRARY_OUTPUT_DIRECTORY  ${DREAM3D_BINARY_DIR}/Bin  )
 endif()
+
+set(${PLUGIN_NAME}_HELP_FILES
+    ${PROJECT_SOURCE_DIR}/Help/index.html
+    ${PROJECT_SOURCE_DIR}/Help/image001.png
+    )
+
+#- This copies all the HTML files into the Build directory so the help
+#- works from the Build Tree
+file(COPY ${${PLUGIN_NAME}_HELP_FILES} 
+    DESTINATION ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/Help/${PLUGIN_NAME}/ )
+
+#- This installs all the help files. Note that we assume a flat directory structure
+#- in the "Help" folder, ie, all html files, images, etc are all in the "Help"
+#- folder and NOT in any subfolders beyond that.
+install(FILES ${${PLUGIN_NAME}_HELP_FILES}
+        DESTINATION Help/OIMImport
+        COMPONENT Applications )
+  
