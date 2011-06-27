@@ -109,8 +109,7 @@ QIcon SurfaceMeshPlugin::icon()
 // -----------------------------------------------------------------------------
 void SurfaceMeshPlugin::displayHelp()
 {
-  QSharedPointer<HelpDialog> hd = HelpDialog::instance();
-  hd->setContentFile(htmlHelpIndexFile());
+  emit showHelp(htmlHelpIndexFile());
 }
 
 // -----------------------------------------------------------------------------

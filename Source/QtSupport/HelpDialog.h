@@ -43,18 +43,20 @@ class HelpDialog : public QDialog, private Ui::HelpDialog
   Q_OBJECT;
 
   public:
-
+    HelpDialog(QWidget *parent = 0);
     virtual ~HelpDialog();
 
-    static QSharedPointer<HelpDialog> instance();
+  //  static HelpDialog* Instance();
 
+  public slots:
     void setContentFile(QUrl sourceLocation);
 
   protected:
-    HelpDialog(QWidget *parent = 0);
 
 
   private:
+
+
     HelpDialog(const HelpDialog&); // Copy Constructor Not Implemented
     void operator=(const HelpDialog&); // Operator '=' Not Implemented
 };
