@@ -443,7 +443,7 @@ bool ReconstructionWidget::checkPhaseTypes()
   {
     int
         ret =
-            QMessageBox::warning(this, QString("Reconstruction"), "The Phase Types were Edited. We need to save this data to the input file. Do you want to do that now. Canceling will leave all files untouched but NOT execute the grain generation.", QMessageBox::Ok
+            QMessageBox::warning(this, QString("Reconstruction"), "The Phase Types were Edited. We need to save this data to the input file. Do you want to do that now. Canceling will leave all files untouched but NOT execute the Reconstruction", QMessageBox::Ok
                 | QMessageBox::Default, QMessageBox::No);
     if (ret == QMessageBox::No)
     {

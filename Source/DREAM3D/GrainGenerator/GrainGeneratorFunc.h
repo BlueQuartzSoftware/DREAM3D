@@ -69,15 +69,15 @@ public:
     typedef boost::shared_array<float>    SharedFloatArray;
     typedef boost::shared_array<int>      SharedIntArray;
 
-	bool periodic_boundaries;
+    bool periodic_boundaries;
 
-	float sizex;
+    float sizex;
     float sizey;
     float sizez;
 
     unsigned long long int GGseed;
 
-	float resx;
+    float resx;
     float resy;
     float resz;
     float packingresx;
@@ -142,6 +142,7 @@ public:
     std::vector<float> unbiasedvol;
     std::vector<float> totalsurfacearea;
     int numprimarygrains;
+    std::vector<AIM::SyntheticBuilder::ShapeType>        shapeTypes;
     int shapeclass;
     std::vector<float> phasefraction;
     std::vector<float> binstepsize;
