@@ -297,24 +297,24 @@ namespace AIM
     const std::string PhFile("VoxelData.ph");
 
     enum Overlap {
-        UnknownOverlap = 0,    //!<
-        Rigid = 1,             //!<
-        Progressive = 2        //!<
+        Rigid = 0,             //!<
+        Progressive = 1,        //!<
+        UnknownOverlap = 999    //!<
     };
 
-    enum ShapeClass {
-        UnknownShapeClass = 0,   //!<
-        Ellipsoid = 1,           //!<
-        Superellipsoid = 2,      //!<
-        CubeOctahedron = 3,      //!<
-        Cylinder = 4		     //!<
+    enum ShapeType {
+        EllipsoidShape = 0,           //!<
+        SuperEllipsoidShape = 1,      //!<
+        CubeOctahedronShape = 2,      //!<
+        CylinderShape = 3,		     //!<
+        UnknownShapeType = 999    //!<
     };
 
 	enum Precipitates {
-        UnknownPrecipitates = 0,    //!<
-        NoPrecipitates= 1,          //!<
-        BoundaryPrecipitates = 2,   //!<
-        BulkPrecipitates = 3        //!<
+        NoPrecipitates = 0,          //!<
+        BoundaryPrecipitates = 1,   //!<
+        BulkPrecipitates = 2,        //!<
+        UnknownPrecipitates = 999    //!<
     };
 
   }

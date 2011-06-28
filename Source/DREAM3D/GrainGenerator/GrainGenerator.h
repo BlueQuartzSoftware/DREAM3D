@@ -67,7 +67,9 @@ class DREAM3DLib_EXPORT GrainGenerator : public AbstractPipeline
     MXA_INSTANCE_PROPERTY(int, XPoints)
     MXA_INSTANCE_PROPERTY(int, YPoints)
     MXA_INSTANCE_PROPERTY(int, ZPoints)
-    MXA_INSTANCE_PROPERTY(int, ShapeClass)
+
+    MXA_INSTANCE_PROPERTY(std::vector<AIM::SyntheticBuilder::ShapeType>, ShapeTypes)
+
     MXA_INSTANCE_PROPERTY(double, XResolution)
     MXA_INSTANCE_PROPERTY(double, YResolution)
     MXA_INSTANCE_PROPERTY(double, ZResolution)
