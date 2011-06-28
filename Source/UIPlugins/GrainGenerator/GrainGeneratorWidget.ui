@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>818</width>
-    <height>627</height>
+    <width>754</width>
+    <height>686</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -61,7 +61,7 @@
       </property>
       <item>
        <layout class="QGridLayout" name="gridLayout_25">
-        <item row="1" column="2">
+        <item row="0" column="0">
          <widget class="QCheckBox" name="m_AlreadyFormed">
           <property name="enabled">
            <bool>true</bool>
@@ -71,14 +71,14 @@
           </property>
          </widget>
         </item>
-        <item row="1" column="3">
+        <item row="0" column="1">
          <widget class="QFSDropLineEdit" name="m_StructureFile">
           <property name="enabled">
            <bool>false</bool>
           </property>
          </widget>
         </item>
-        <item row="1" column="4">
+        <item row="0" column="2">
          <widget class="QPushButton" name="m_StructureFileBtn">
           <property name="text">
            <string>Select</string>
@@ -89,7 +89,7 @@
       </item>
       <item>
        <layout class="QGridLayout" name="gridLayout_7">
-        <item row="0" column="7" rowspan="5" colspan="3">
+        <item row="0" column="7" rowspan="4" colspan="3">
          <spacer name="horizontalSpacer">
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
@@ -297,40 +297,36 @@
          </widget>
         </item>
         <item row="3" column="5">
-         <widget class="QLabel" name="label_20">
+         <widget class="QCheckBox" name="m_PeriodicBoundaryConditions">
+          <property name="text">
+           <string>Periodic Boundary Conditions</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QGridLayout" name="gridLayout_2">
+        <item row="0" column="0">
+         <widget class="QLabel" name="label_17">
           <property name="text">
            <string>Shape Class</string>
           </property>
          </widget>
         </item>
-        <item row="3" column="6">
-         <widget class="QComboBox" name="m_ShapeClass">
-          <item>
-           <property name="text">
-            <string>Ellipsoid</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Super-Ellipsoid</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Cube-Octahedron</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Cylinder</string>
-           </property>
-          </item>
-         </widget>
-        </item>
-        <item row="4" column="5">
-         <widget class="QCheckBox" name="m_PeriodicBoundaryConditions">
-          <property name="text">
-           <string>Periodic Boundary Conditions</string>
+        <item row="0" column="1">
+         <widget class="QListWidget" name="m_ShapeTypeList">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="editTriggers">
+           <set>QAbstractItemView::AllEditTriggers</set>
+          </property>
+          <property name="alternatingRowColors">
+           <bool>true</bool>
           </property>
          </widget>
         </item>
@@ -621,9 +617,6 @@
  <tabstops>
   <tabstop>m_H5InputStatisticsFile</tabstop>
   <tabstop>m_InputH5StatisticsFileBtn</tabstop>
-  <tabstop>m_AlreadyFormed</tabstop>
-  <tabstop>m_StructureFile</tabstop>
-  <tabstop>m_StructureFileBtn</tabstop>
   <tabstop>m_XPoints</tabstop>
   <tabstop>m_YPoints</tabstop>
   <tabstop>m_ZPoints</tabstop>
@@ -633,8 +626,6 @@
   <tabstop>m_SizeDistErrorWeight</tabstop>
   <tabstop>m_NeighborhoodErrorWeight</tabstop>
   <tabstop>m_FillingErrorWeight</tabstop>
-  <tabstop>m_ShapeClass</tabstop>
-  <tabstop>m_PeriodicBoundaryConditions</tabstop>
   <tabstop>m_OutputDir</tabstop>
   <tabstop>m_OutputDirBtn</tabstop>
   <tabstop>m_OutputFilePrefix</tabstop>
