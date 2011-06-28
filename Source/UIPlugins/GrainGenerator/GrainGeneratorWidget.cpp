@@ -44,8 +44,10 @@
 #include <QtGui/QMessageBox>
 #include <QtGui/QListWidget>
 #include <QtGui/QListWidgetItem>
+#include <QtGui/QComboBox>
 
 #include "DREAM3D/Common/Constants.h"
+#include "DREAM3D/Common/ShapeType.h"
 #include "DREAM3D/GrainGenerator/GrainGenerator.h"
 #include "DREAM3D/HDF5/H5ReconStatsReader.h"
 #include "DREAM3D/HDF5/H5ReconStatsWriter.h"
@@ -126,8 +128,6 @@ void GrainGeneratorWidget::readSettings(QSettings &prefs)
   READ_CHECKBOX_SETTING(prefs, m_, HDF5GrainFile, true);
   READ_CHECKBOX_SETTING(prefs, m_, PhFile, true);
 
-
-  READ_COMBO_BOX(prefs, m_, ShapeClass)
   prefs.endGroup();
 
   on_m_H5InputStatisticsFile_textChanged(QString(""));
@@ -157,8 +157,6 @@ void GrainGeneratorWidget::writeSettings(QSettings &prefs)
   WRITE_BOOL_SETTING(prefs, m_, writegraindata, m_writegraindata->isChecked())
   WRITE_BOOL_SETTING(prefs, m_, AlreadyFormed, m_AlreadyFormed->isChecked())
   WRITE_STRING_SETTING(prefs, m_, StructureFile)
-
-  WRITE_COMBO_BOX(prefs, m_, ShapeClass)
 
   WRITE_BOOL_SETTING(prefs, m_, WriteSurfaceVoxelScalars, true);
   WRITE_BOOL_SETTING(prefs, m_, WritePhaseIdScalars, true);
@@ -242,8 +240,8 @@ void GrainGeneratorWidget::setupGui()
   m_WidgetList << m_H5InputStatisticsFile << m_InputH5StatisticsFileBtn << m_OutputDir << m_OutputDirBtn;
   m_WidgetList << m_XPoints << m_YPoints << m_ZPoints << m_XResolution << m_YResolution << m_ZResolution << m_FillingErrorWeight;
   m_WidgetList << m_NeighborhoodErrorWeight << m_SizeDistErrorWeight;
-  m_WidgetList << m_ShapeClass << m_AlreadyFormed;
-  m_WidgetList << m_PeriodicBoundaryConditions << m_writegraindata << m_OutputFilePrefix;
+  m_WidgetList << m_ShapeTypeList << m_AlreadyFormed;
+  m_WidgetList << m_PeriodicBoundaryConditions  << m_OutputFilePrefix;
 }
 
 // -----------------------------------------------------------------------------
@@ -375,6 +373,53 @@ void GrainGeneratorWidget::on_m_H5InputStatisticsFile_textChanged(const QString 
   {
     QFileInfo fi (m_H5InputStatisticsFile->text());
     m_OutputFilePrefix->setText(fi.baseName() + QString("_") );
+    // Open the HDF5 Stats file
+    H5ReconStatsReader::Pointer h5reader = H5ReconStatsReader::New(m_H5InputStatisticsFile->text().toStdString());
+    if (h5reader.get() == NULL)
+    {
+      QMessageBox::critical(this, "Grain Generator",
+                            "The input HDF5 Based Stats file could not be opened for reading.",
+                            QMessageBox::Ok | QMessageBox::Default);
+      return;
+    }
+    // Read the Phase and Crystal Structure information from the Stats File
+    std::vector<int> phases;
+    std::vector<AIM::Reconstruction::CrystalStructure> structures;
+    int err = h5reader->getPhaseAndCrystalStructures(phases, structures);
+    if (err < 0)
+    {
+      QMessageBox::critical(this, "Grain Generator",
+                            "The Phase information could not be read from the input HDF5 file.",
+                            QMessageBox::Ok | QMessageBox::Default);
+      return;
+    }
+
+    int size = phases.size();
+    std::vector<std::string> shapeTypeStrings;
+    AIM::ShapeType::getShapeTypeStrings(shapeTypeStrings);
+    std::vector<AIM::SyntheticBuilder::ShapeType> shapeTypeEnums;
+    AIM::ShapeType::getShapeTypeEnums(shapeTypeEnums);
+
+    // Remove all the items
+    m_ShapeTypeList->clear();
+
+    for (int i = 0; i < size; i++)
+    {
+
+      m_ShapeTypeList->addItem(AIM::ShapeType::EllipsoidStr().c_str());
+      QListWidgetItem* item = m_ShapeTypeList->item(i);
+
+      QComboBox* cb = new QComboBox(m_ShapeTypeList);
+      for(size_t i = 0; i < shapeTypeStrings.size(); ++i)
+      {
+        cb->addItem(QString::fromStdString( shapeTypeStrings[i]), shapeTypeEnums[i] );
+        cb->setItemData(i, shapeTypeEnums[i], Qt::UserRole);
+      }
+      m_ShapeTypeList->setItemWidget(item, cb);
+      connect(cb, SIGNAL(currentIndexChanged(int)),
+              this, SLOT(phaseTypeEdited(int)));
+    }
+
   }
 }
 
@@ -427,8 +472,25 @@ void GrainGeneratorWidget::on_m_GoBtn_clicked()
   m_GrainGenerator->setYPoints(m_YPoints->value());
   m_GrainGenerator->setZPoints(m_ZPoints->value());
 
-  int shapeclass = m_ShapeClass->currentIndex() + 1;
-  m_GrainGenerator->setShapeClass(shapeclass);
+  std::vector<AIM::SyntheticBuilder::ShapeType> shapeTypes(1, AIM::SyntheticBuilder::UnknownShapeType);
+  int count = m_ShapeTypeList->count();
+  bool ok = false;
+  for (int i = 0; i < count; ++i)
+  {
+    QListWidgetItem* item = m_ShapeTypeList->item(i);
+    QComboBox* cb = qobject_cast<QComboBox*> (m_ShapeTypeList->itemWidget(item));
+    AIM::SyntheticBuilder::ShapeType enPtValue = static_cast<AIM::SyntheticBuilder::ShapeType>(cb->itemData(cb->currentIndex(), Qt::UserRole).toUInt(&ok));
+    if (enPtValue >= AIM::SyntheticBuilder::UnknownShapeType)
+    {
+      QString msg("The Shape Type for shape ");
+//      msg.append(QString::number(i)).append(" is not set correctly. Please set the shape to Primary, Precipitate or Transformation.");
+      msg.append(QString::number(i)).append(" is not set correctly. Please set the shape to Primary or Precipitate.");
+      QMessageBox::critical(this, QString("Grain Generator"), msg, QMessageBox::Ok | QMessageBox::Default);
+      return;
+    }
+    shapeTypes.push_back(enPtValue);
+  }
+  m_GrainGenerator->setShapeTypes(shapeTypes);
 
   m_GrainGenerator->setXResolution(m_XResolution->value());
   m_GrainGenerator->setYResolution(m_YResolution->value());

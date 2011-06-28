@@ -59,7 +59,6 @@ m_OutputFilePrefix("GrainGenerator_"),
 m_XPoints(0),
 m_YPoints(0),
 m_ZPoints(0),
-m_ShapeClass(0),
 m_XResolution(0.0),
 m_YResolution(0.0),
 m_ZResolution(0.0),
@@ -76,7 +75,7 @@ m_WriteIPFColor(false),
 m_WritePhFile(false),
 m_WriteHDF5GrainFile(false)
 {
-  std::cout << "GrainGenerator Constructor" << std::endl;
+//  std::cout << "GrainGenerator Constructor" << std::endl;
 }
 
 // -----------------------------------------------------------------------------
@@ -84,7 +83,7 @@ m_WriteHDF5GrainFile(false)
 // -----------------------------------------------------------------------------
 GrainGenerator::~GrainGenerator()
 {
-  std::cout << "GrainGenerator::~GrainGenerator()" << std::endl;
+//  std::cout << "GrainGenerator::~GrainGenerator()" << std::endl;
 }
 
 // -----------------------------------------------------------------------------
@@ -112,7 +111,7 @@ void GrainGenerator::execute()
     m->xpoints = m_XPoints;
     m->ypoints = m_YPoints;
     m->zpoints = m_ZPoints;
-    m->shapeclass = m_ShapeClass;
+    m->shapeTypes = m_ShapeTypes;
     m->resx = m_XResolution;
     m->resy = m_YResolution;
     m->resz = m_ZResolution;
