@@ -2142,6 +2142,9 @@ void  GrainGeneratorFunc::assign_eulers()
   float q[5];
   float random;
   int choose, phase;
+  string filename = "test1.txt";
+  ofstream outFile;
+  outFile.open(filename.c_str());
 
   size_t xtalCount = crystruct.size();
   unbiasedvol.resize(xtalCount);
@@ -2151,6 +2154,7 @@ void  GrainGeneratorFunc::assign_eulers()
   }
   for(size_t i=1;i<m_Grains.size();i++)
   {
+	  outFile << i < "	";
     random = rg.Random();
     choose = 0;
     totaldensity = 0;
@@ -2163,6 +2167,7 @@ void  GrainGeneratorFunc::assign_eulers()
       totaldensity = totaldensity + density;
       if (random >= totaldensity) choose = j;
     }
+	outFile << choose << "	";
     m_OrientatioOps[crystruct[phase]]->determineEulerAngles(choose, synea1, synea2, synea3);
     m_Grains[i]->euler1 = synea1;
     m_Grains[i]->euler2 = synea2;
@@ -2178,6 +2183,7 @@ void  GrainGeneratorFunc::assign_eulers()
       simodf[phase][choose] = simodf[phase][choose] + (float(m_Grains[i]->numvoxels) * resx * resy * resz);
       unbiasedvol[phase] = unbiasedvol[phase] + (float(m_Grains[i]->numvoxels) * resx * resy * resz);
     }
+	outFile << "done" << endl;
   }
   for(int i=0;i<numbins;i++)
   {
@@ -3201,17 +3207,26 @@ void  GrainGeneratorFunc::measure_misorientations ()
   float q2[5];
   AIM::Reconstruction::CrystalStructure phase1, phase2;
   int mbin;
+  string filename = "test.txt";
+  ofstream outFile;
+  outFile.open(filename.c_str());
 
   IntVectorType nlist ;
   FloatVectorType neighsurfarealist;
+  outFile << m_Grains.size() << endl;
   for (size_t i = 1; i < m_Grains.size(); i++)
   {
+	  outFile << i << "	";
     nlist = m_Grains[i]->neighborlist;
     neighsurfarealist = m_Grains[i]->neighborsurfarealist;
     if (NULL != m_Grains[i]->misorientationlist) {
       delete m_Grains[i]->misorientationlist;
     }
-    m_Grains[i]->misorientationlist = new std::vector<float>(nlist->size() * 3, 0.0);
+    if (NULL != nlist.get())
+    {
+	    m_Grains[i]->misorientationlist = new std::vector<float>(nlist->size() * 3, 0.0);
+		outFile << nlist->size() << "	" << m_Grains[i]->misorientationlist->size() << "	";
+    }
 
     q1[1] = m_Grains[i]->avg_quat[1];
     q1[2] = m_Grains[i]->avg_quat[2];
@@ -3249,11 +3264,13 @@ void  GrainGeneratorFunc::measure_misorientations ()
       }
       if (phase1 == phase2) mbin = m_OrientatioOps[phase1]->getMisoBin(m_Grains[i]->misorientationlist->at(3 * j), m_Grains[i]->misorientationlist->at(3 * j
           + 1), m_Grains[i]->misorientationlist->at(3 * j + 2));
+	  outFile << mbin << "	";
       if (m_Grains[i]->surfacegrain == 0 && (nname > i || m_Grains[nname]->surfacegrain == 1) && phase1 == phase2)
       {
         simmdf[m_Grains[i]->phase][mbin] = simmdf[m_Grains[i]->phase][mbin] + (neighsurfarea / totalsurfacearea[m_Grains[i]->phase]);
       }
     }
+	outFile << "done" << endl;
   }
 }
 
