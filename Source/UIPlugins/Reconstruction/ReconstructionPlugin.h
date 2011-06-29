@@ -71,6 +71,9 @@ class ReconstructionPlugin : public QObject, public DREAM3DPluginInterface
   public slots:
     virtual void displayHelp();
 
+  signals:
+    void showHelp(QUrl);
+
   protected:
     ReconstructionWidget* m_InputWidget;
 
