@@ -60,6 +60,7 @@ class STLWriter
       std::string stlHeader("DREAM.3D Surface Mesh for Grain ID ");
       stlHeader.append(StringUtils::numToString(gid));
       stlWriter->writeHeader(stlHeader);
+      stlWriter->closeFile();
       return stlWriter;
     }
     virtual ~STLWriter();
