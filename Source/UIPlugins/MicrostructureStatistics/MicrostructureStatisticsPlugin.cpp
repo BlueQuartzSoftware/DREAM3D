@@ -109,8 +109,7 @@ QIcon MicrostructureStatisticsPlugin::icon()
 // -----------------------------------------------------------------------------
 void MicrostructureStatisticsPlugin::displayHelp()
 {
-  QSharedPointer<HelpDialog> hd = HelpDialog::instance();
-  hd->setContentFile(htmlHelpIndexFile());
+  emit showHelp(htmlHelpIndexFile());
 }
 
 // -----------------------------------------------------------------------------
