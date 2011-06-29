@@ -120,26 +120,20 @@ public:
   Face* cSquare; // contains square information...
  // Face* pSquare;
   Node* cVertex; // contains edges on square faces for open loops...
-  Segment* cEdge; // contains edges on square faces for open loops...
-  Patch* cTriangle;
+  std::vector<Segment> cEdge; // contains edges on square faces for open loops...
+  std::vector<Patch> cTriangle;
   // Edge edge and neighboring grainname table...
 
 
 
-  int initialize_micro(string, int);
   void get_neighbor_list();
   void initialize_nodes(int zID);
   void initialize_squares(int zID);
-  int get_number_Edges(int zID);
-  void get_nodes_Edges(int et2d[20][8], int NST2d[20][8], int zID, int nFEdge);
+  int get_nodes_Edges(int et2d[20][8], int NST2d[20][8], int zID);
   int get_square_index(int tns[4]);
   int treat_anomaly(int tnst[4], int zID1);
   void get_nodes(int cst, int ord, int nidx[2], int *nid);
-  void get_grainnames(int nSpn[4], int pID[2], int *pgrainname);
-  int get_number_triangles();
-  int get_number_case0_triangles(int *afe, int nfedge);
-  int get_number_case2_triangles(int *afe, int nfedge, int *afc, int nfctr);
-  int get_number_caseM_triangles(int *afe, int nfedge, int *afc, int nfctr);
+  void get_grainnames(int CubeOrigin, int sqOrder, int pID[2], int *pgrainname);
   int get_triangles();
   void get_case0_triangles(int site, int *afe, int nfedge, int tin, int *tout);
   void get_case2_triangles(int site, int *afe, int nfedge, int *afc, int nfctr, int tin, int *tout);
@@ -150,7 +144,6 @@ public:
   float find_xcoord(int);
   float find_ycoord(int);
   float find_zcoord(int);
-  void smooth_boundaries(int nNodes, int nTriangles, string NodesFile, string TrianglesFile);
   int writeNodesFile(int zID, int cNodeID, const std::string &NodesRawFile);
   int writeTrianglesFile(int zID, int ctid,
                          const std::string &trianglesFile,

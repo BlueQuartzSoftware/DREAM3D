@@ -119,7 +119,7 @@ void SurfaceMesh::execute()
   int cNodeID = 0;
   int cTriID = 0;
   int nTriangle = 0; // number of triangles...
-  int nEdge = 0; // number of triangles...
+  int nEdge = 0; // number of edges...
   int nNodes = 0; // number of total nodes used...
   int edgeTable_2d[20][8] =
   {
@@ -258,18 +258,11 @@ void SurfaceMesh::execute()
     m->initialize_squares(i);
 
     // find face edges of each square of marching cubes in each layer...
-    nEdge = m->get_number_Edges(i);
-    m->get_nodes_Edges(edgeTable_2d, nsTable_2d, i, nEdge);
+    nEdge = m->get_nodes_Edges(edgeTable_2d, nsTable_2d, i);
 
     // find triangles and arrange the spins across each triangle...
-    nTriangle = m->get_number_triangles();
-
-    if (nTriangle > 0)
-    {
-	  m->cTriangle = new Patch[nTriangle];
-      m->get_triangles();
-      m->arrange_grainnames(nTriangle, i);
-    }
+    nTriangle = m->get_triangles();
+    m->arrange_grainnames(nTriangle, i);
 
     // assign new, cumulative node id...
     nNodes = m->assign_nodeID(cNodeID);
@@ -289,7 +282,7 @@ void SurfaceMesh::execute()
     }
     cNodeID = nNodes;
     cTriID = cTriID + nTriangle;
-    if (nTriangle > 0) { delete[] m->cTriangle; }
+	if (nTriangle > 0) { m->cTriangle.clear(); }
   }
 // ---------------------------------------------------------------
   // Run one more with the top layer being -3
@@ -306,13 +299,10 @@ void SurfaceMesh::execute()
   m->initialize_nodes(i);
   m->initialize_squares(i);
   // find face edges of each square of marching cubes in each layer...
-  nEdge = m->get_number_Edges(i);
-  m->get_nodes_Edges(edgeTable_2d, nsTable_2d, i, nEdge);
+  m->get_nodes_Edges(edgeTable_2d, nsTable_2d, i);
   // find triangles and arrange the spins across each triangle...
-  nTriangle = m->get_number_triangles();
   if (nTriangle > 0)
   {
-	m->cTriangle = new Patch[nTriangle];
     m->get_triangles();
     m->arrange_grainnames(nTriangle, i);
   }
@@ -342,7 +332,7 @@ void SurfaceMesh::execute()
 
   //std::cout << "Total Number of Triangles Created: " << cTriID << std::endl;
 
-  if (nTriangle > 0) { delete[] m->cTriangle; }
+  if (nTriangle > 0) { m->cTriangle.clear(); }
 
 //------------ All Done with Marching Cubes-------------------
   free(fileVoxelLayer);
@@ -351,7 +341,6 @@ void SurfaceMesh::execute()
   if (m_SmoothMesh)
   {
     updateProgressAndMessage(("Smoothing Boundaries"), 90);
-    m->smooth_boundaries(nNodes, cTriID, NodesFile, TrianglesFile);
   }
 
   std::string msg("Writing Surface Mesh File: ");
