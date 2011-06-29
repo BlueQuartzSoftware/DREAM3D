@@ -65,6 +65,9 @@ class OIMImportPlugin : public QObject, public DREAM3DPluginInterface
   public slots:
     virtual void displayHelp();
 
+  signals:
+    void showHelp(QUrl);
+
 
   protected:
     OIMImportWidget* m_InputWidget;

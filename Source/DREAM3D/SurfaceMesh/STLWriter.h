@@ -41,7 +41,7 @@ class SurfaceMeshFunc;
 class Patch;
 class Node;
 
-class STLWriter
+class  DREAM3DLib_EXPORT STLWriter
 {
   public:
     MXA_SHARED_POINTERS(STLWriter)
@@ -60,6 +60,7 @@ class STLWriter
       std::string stlHeader("DREAM.3D Surface Mesh for Grain ID ");
       stlHeader.append(StringUtils::numToString(gid));
       stlWriter->writeHeader(stlHeader);
+      stlWriter->closeFile();
       return stlWriter;
     }
     virtual ~STLWriter();
