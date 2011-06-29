@@ -66,8 +66,8 @@ public:
 
 private:
 
-    Segment(const Segment&);    // Copy Constructor Not Implemented
-      void operator=(const Segment&);  // Operator '=' Not Implemented
+//    Segment(const Segment&);    // Copy Constructor Not Implemented
+//      void operator=(const Segment&);  // Operator '=' Not Implemented
 };
 
 #endif /* Segment_H_ */
