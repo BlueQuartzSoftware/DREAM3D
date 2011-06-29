@@ -42,7 +42,7 @@
 /*
  *
  */
-class DxGrainIdWriter
+class  DREAM3DLib_EXPORT DxGrainIdWriter
 {
   public:
     MXA_SHARED_POINTERS(DxGrainIdWriter)
