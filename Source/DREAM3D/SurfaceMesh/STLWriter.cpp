@@ -69,11 +69,11 @@ int STLWriter::openFile()
     return -1;
   }
   m_File = fopen(m_Filename.c_str(), "wb");
-  if (NULL != m_File)
+  if (NULL == m_File)
   {
-    return 0;
+    return -2;
   }
-  return -2;
+  return 0;
 }
 
 // -----------------------------------------------------------------------------
@@ -123,6 +123,7 @@ void STLWriter::resetTriangleCount()
 // -----------------------------------------------------------------------------
 int STLWriter::writeTriangleBlock(int numTriangles, Patch* cTriangle, Node* cVertex)
 {
+
  // std::cout << "Writing " << numTriangles << " Triangles to STL file" << std::endl;
   int err = 0;
   int n1, n2, n3;
@@ -140,6 +141,17 @@ int STLWriter::writeTriangleBlock(int numTriangles, Patch* cTriangle, Node* cVer
   float u[3], w[3];
   float length;
 
+  // first Open the file
+  err = openFile();
+  if (err < 0)
+  {
+    std::cout << "STLWriter: Could not open file: '" << m_Filename << "' to write the data into." << std::endl;
+    return -1;
+  }
+
+  // Put the file pointer to the end of the file which makes it ready for more
+  // data to be written to it.
+  fseek(m_File, 0L, SEEK_END);
 
   for (int i = 0; i < numTriangles; i++)
   {
@@ -197,6 +209,8 @@ int STLWriter::writeTriangleBlock(int numTriangles, Patch* cTriangle, Node* cVer
   // Seek back to the last position, which should be the end of the file at this point
   fseek(m_File, curPos, SEEK_SET);
 
+  // Close the file so we do not have too many files open
+  this->closeFile();
   return err;
 }
 

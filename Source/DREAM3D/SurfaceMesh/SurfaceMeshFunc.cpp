@@ -404,11 +404,7 @@ int SurfaceMeshFunc::get_square_index(int tNS[4])
   if (tempIndex == 15)
   {
     subIndex = 2 * aBit[4] + 1 * aBit[5];
-    if (subIndex == 0)
-    {
-       tempIndex = tempIndex;
-    }
-    else
+    if (subIndex != 0)
     {
       tempIndex = tempIndex + subIndex + 1;
     }
@@ -519,31 +515,31 @@ void SurfaceMeshFunc::get_grainnames(int cst, int ord, int pID[2], int *pgrainna
     if(ord==0)
 	{
       switch(pixTemp)
-	  {	
+	  {
 	      case 0:  tempgrainname = voxels[cst];             pgrainname[i] = tempgrainname;  break;
 	      case 1:  tempgrainname = voxels[cst+1];           pgrainname[i] = tempgrainname;  break;
 	      case 2:  tempgrainname = voxels[cst+xDim+1];     pgrainname[i] = tempgrainname;  break;
-	      case 3:  tempgrainname = voxels[cst+xDim];       pgrainname[i] = tempgrainname;  break;	
+	      case 3:  tempgrainname = voxels[cst+xDim];       pgrainname[i] = tempgrainname;  break;
       }
     }
 	else if(ord==1)
 	{
       switch(pixTemp)
-	  {	
+	  {
 	      case 0:  tempgrainname = voxels[cst];             pgrainname[i] = tempgrainname;  break;
 	      case 1:  tempgrainname = voxels[cst+1];           pgrainname[i] = tempgrainname;  break;
 	      case 2:  tempgrainname = voxels[cst+NSP+1];      pgrainname[i] = tempgrainname;  break;
-	      case 3:  tempgrainname = voxels[cst+NSP];        pgrainname[i] = tempgrainname;  break;	
+	      case 3:  tempgrainname = voxels[cst+NSP];        pgrainname[i] = tempgrainname;  break;
       }
     }
 	else if(ord==2)
-	{  
+	{
       switch(pixTemp)
-	  {	
+	  {
 	      case 0:  tempgrainname = voxels[cst+xDim];       pgrainname[i] = tempgrainname;  break;
 	      case 1:  tempgrainname = voxels[cst];             pgrainname[i] = tempgrainname;  break;
 	      case 2:  tempgrainname = voxels[cst+NSP];        pgrainname[i] = tempgrainname;  break;
-	      case 3:  tempgrainname = voxels[cst+NSP+xDim];  pgrainname[i] = tempgrainname;  break;	
+	      case 3:  tempgrainname = voxels[cst+NSP+xDim];  pgrainname[i] = tempgrainname;  break;
       }
 	}
   }
@@ -610,16 +606,16 @@ int SurfaceMeshFunc::get_triangles()
 	nFC = fcid;
     if (eff > 0) cubeFlag = 1;
     if(nFC>=3)
-	{     
+	{
       // If number of face centers turned on is more than 2...
-      // let's update the nodeKind of body center node...            
+      // let's update the nodeKind of body center node...
       tsqid1 = sqID[0];
       tsqid2 = sqID[5];
       nkFlag = 0;
       // get spin numbers for 8 corners for each marching cube...
       for(int j = 0; j < 4; j++)
 	  {
-		tsite1 = cSquare[tsqid1].site_id[j];  
+		tsite1 = cSquare[tsqid1].site_id[j];
 		tsite2 = cSquare[tsqid2].site_id[j];
 		tgrainname1 = voxels[tsite1];
 		tgrainname2 = voxels[tsite2];
@@ -628,7 +624,7 @@ int SurfaceMeshFunc::get_triangles()
 		if(tgrainname1 < 0 || tgrainname2 < 0) nkFlag++;
       }
       nds = 0;     // number of different spins in each marching cube...
-      nburnt = 0;  // so nds = nodeKind of body center position...  
+      nburnt = 0;  // so nds = nodeKind of body center position...
       for(int k = 0; k < 8; k++)
 	  {
 		// arraySpin contains no -1 before any of it is burnt...
@@ -646,7 +642,7 @@ int SurfaceMeshFunc::get_triangles()
 		      arraygrainname[kk] = -1; //burn...
 		      nburnt++;
 		    }
-		  }  
+		  }
 		}
       }
       // update nodeKind of body center node in the current marching cube...

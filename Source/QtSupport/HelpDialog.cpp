@@ -29,13 +29,16 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 #include "HelpDialog.h"
+
 #include <iostream>
+
 #include <QtCore/QFileInfo>
 #include <QtCore/QFile>
 #include <QtCore/QDir>
 #include <QtCore/QTextStream>
 #include <QtCore/QUrl>
 #include <QtGui/QApplication>
+
 
 // -----------------------------------------------------------------------------
 //
@@ -56,16 +59,16 @@ HelpDialog::~HelpDialog()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QSharedPointer<HelpDialog>  HelpDialog::instance()
-{
-  static QSharedPointer<HelpDialog> singleton;
-
-  if (singleton.data() == NULL)
-  {
-    singleton = QSharedPointer<HelpDialog>(new HelpDialog(NULL));
-  }
-  return singleton;
-}
+//HelpDialog*  HelpDialog::Instance()
+//{
+//  static HelpDialog* singleton;
+//
+//  if (singleton == NULL)
+//  {
+//    singleton = new HelpDialog();
+//  }
+//  return singleton;
+//}
 
 // -----------------------------------------------------------------------------
 //
@@ -96,10 +99,10 @@ void HelpDialog::setContentFile(QUrl sourceLocation)
 #endif
   thePath = QString("file://").append(thePath).append("/").append(sourceLocation.toString());
 
-  std::cout << "Help File Path:" << thePath.toStdString() << std::endl;
+//  std::cout << "Help File Path:" << thePath.toStdString() << std::endl;
 
   helpBrowser->setSource(QUrl(thePath));
-  this->setVisible(true);
+  this->show();
 }
 
 

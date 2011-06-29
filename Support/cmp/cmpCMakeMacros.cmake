@@ -172,15 +172,6 @@ function(BuildQtAppBundle)
                 RELEASE_OUTPUT_NAME ${QAB_TARGET}
     )
 
-#-- Create an Install Rule for the main app bundle target
-    INSTALL(TARGETS ${QAB_TARGET}
-        COMPONENT ${QAB_COMPONENT}
-        RUNTIME DESTINATION ${QAB_INSTALL_DEST}
-        LIBRARY DESTINATION ${QAB_INSTALL_DEST} 
-        ARCHIVE DESTINATION ${QAB_INSTALL_DEST}        
-        BUNDLE DESTINATION ${QAB_INSTALL_DEST}
-    )
-
 #-- Create install rules for any Qt Plugins that are needed
     set(pi_dest ${QAB_INSTALL_DEST}/plugins)
     # if we are on OS X then we set the plugin installation location to inside the App bundle
@@ -230,7 +221,16 @@ function(BuildQtAppBundle)
             list(APPEND app_plugin_list "\${CMAKE_INSTALL_PREFIX}/${pi_dest}/${plugin_name}")
         endforeach()
     endif(APPLE)
-        
+    
+    #-- Create an Install Rule for the main app bundle target
+    INSTALL(TARGETS ${QAB_TARGET}
+        COMPONENT ${QAB_COMPONENT}
+        RUNTIME DESTINATION ${QAB_INSTALL_DEST}
+        LIBRARY DESTINATION ${QAB_INSTALL_DEST} 
+        ARCHIVE DESTINATION ${QAB_INSTALL_DEST}        
+        BUNDLE DESTINATION ${QAB_INSTALL_DEST}
+    )
+    
 #-- Create last install rule that will run fixup_bundle() on OS X Machines. Other platforms we
 #-- are going to create the install rules elsewhere
     if(APPLE)
@@ -244,6 +244,8 @@ function(BuildQtAppBundle)
          
         install(SCRIPT "${OSX_MAKE_STANDALONE_BUNDLE_CMAKE_SCRIPT}" COMPONENT ${QAB_COMPONENT})
     endif(APPLE)
+    
+
 endfunction()
 
 # --------------------------------------------------------------------
