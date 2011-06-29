@@ -51,6 +51,7 @@
 #include <ui_DREAM3D_UI.h>
 
 class DREAM3DPluginInterface;
+class HelpDialog;
 
 /**
 * @class RepresentationUI RepresentationUI AIM/RepresentationUI/GUI/RepresentationUI.h
@@ -96,7 +97,7 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
 
   void setInputUI();
 
-    void displayHelp();
+    void displayHelp(QString helpFile);
 
   private slots:
     // slots for our worker thread to communicate
@@ -190,6 +191,7 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
     DREAM3DPluginInterface*     m_ActivePlugin;
     QVector<DREAM3DPluginInterface*> m_LoadedPlugins;
     QToolBar*                   m_PluginToolBar;
+    HelpDialog*                 m_HelpDialog;
     QString                     m_OpenDialogLastDirectory;
 
 
