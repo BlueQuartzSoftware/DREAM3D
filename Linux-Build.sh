@@ -1,30 +1,31 @@
 #!/bin/bash
-# This is a script to checkout all the projects that are needed by DREAM3D and compile
-# them on your system. Somethings like usernames for the source repository will have
-# to be changed for this to work for a specific user.
+
 # You need Qt Version 4.6.x already installed
 # You need CMake version 2.8.3 at the minimum to build everything.
 # You need both GCC and g++ installed
 
+cd ../
+export sourcedir=`pwd`
+
 export sandbox=$HOME/DREAM3D
-export sourcedir=$HOME/Workspace
+#export sourcedir=$HOME/Workspace
 
 mkdir -p $sourcedir
 cd $sourcedir
 
 # Clone and Install Qwt. We assume already that at recent version
 # of Qt is installed. We need at least Qt version 4.6.x
-git clone ssh://git@scm.bluequartz.net/support-libraries/qwt.git qwt
+git clone git://scm.bluequartz.net/support-libraries/qwt.git qwt
 cd qwt
 mkdir Build
 cd Build
-cmake -DBUILD_SHARED_LIBS=ON -DCMAKE_INSTALL_PREFIX=$sandbox/qwt -DCMAKE_BUILD_TYPE=Debug ../
+cmake -DBUILD_SHARED_LIBS=OFF -DCMAKE_INSTALL_PREFIX=$sandbox/qwt -DCMAKE_BUILD_TYPE=Debug ../
 make -j4
 make install
 cd ../
 mkdir zRel
 cd zRel
-cmake -DBUILD_SHARED_LIBS=ON -DCMAKE_INSTALL_PREFIX=$sandbox/qwt -DCMAKE_BUILD_TYPE=Release ../
+cmake -DBUILD_SHARED_LIBS=OFF -DCMAKE_INSTALL_PREFIX=$sandbox/qwt -DCMAKE_BUILD_TYPE=Release ../
 make -j4
 make install
 export QWT_INSTALL=$sandbox/qwt
@@ -35,13 +36,13 @@ git clone git://scm.bluequartz.net/support-libraries/hdf5-v1-6.git hdf5-169
 cd hdf5-169
 mkdir Build
 cd Build
-cmake -DBUILD_SHARED_LIBS=ON -DCMAKE_INSTALL_PREFIX=$sandbox/hdf5 -DCMAKE_BUILD_TYPE=Debug ../
+cmake -DBUILD_SHARED_LIBS=OFF -DCMAKE_INSTALL_PREFIX=$sandbox/hdf5 -DCMAKE_BUILD_TYPE=Debug ../
 make -j4
 make install
 cd ../
 mkdir zRel
 cd zRel
-cmake -DBUILD_SHARED_LIBS=ON -DCMAKE_INSTALL_PREFIX=$sandbox/hdf5 -DCMAKE_BUILD_TYPE=Release ../
+cmake -DBUILD_SHARED_LIBS=OFF -DCMAKE_INSTALL_PREFIX=$sandbox/hdf5 -DCMAKE_BUILD_TYPE=Release ../
 make -j4
 make install
 export HDF5_INSTALL=$sandbox/hdf5
@@ -60,11 +61,11 @@ export BOOST_ROOT=$sandbox/MXABoost
 
 #Now Try and Build the Actual DREAM3D Project
 cd $sourcedir
-git clone ssh://mjackson@scm.bluequartz.net/Library/GIT/Private/AIMRepresentation.git DREAM3D
+#git clone ssh://mjackson@scm.bluequartz.net/Library/GIT/Private/AIMRepresentation.git DREAM3D
 cd DREAM3D
 rm -rf Build
 mkdir Build
 cd Build
-cmake -DBUILD_SHARED_LIBS=ON -DCMAKE_INSTALL_PREFIX=$sandbox/Apps -DCMAKE_BUILD_TYPE=Debug ../
+cmake -DBUILD_SHARED_LIBS=OFF -DCMAKE_INSTALL_PREFIX=$sandbox/Apps -DCMAKE_BUILD_TYPE=Release ../
 make -j4
 make install
