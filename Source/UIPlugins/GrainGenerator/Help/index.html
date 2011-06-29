@@ -1,0 +1,68 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=macintosh">
+</head>
+
+<body>
+
+  <h3>Synthetic Builder</h3>
+  
+  <img width="470" height="508" id="Picture 3" src="image001.png" alt="Description: Synthetic.tif" name="Picture 3">
+
+  <ol>
+    <li><strong><em>HDF5 Stats File</em></strong> - name and location of the input stats file that can be generated from the reconstruction or the stats generator utility package.</li>
+
+    <li>
+      <strong><em>Options</em></strong> -
+
+      <ul>
+        <li>a. <strong><em>Structure Already Formed</em></strong> - If a volume has already been created, this option will read the .vtk file with grain ids. It enters the synthetic builder right before the orientation assignment and matching, so it does not readd any orientation information, just the structural information. This file must be accompanied by a HDF5 stats file that contains the ODF and MDF that will be matched after reading the previously formed structure.</li>
+
+        <li>b. <strong><em>Number of Grains</em></strong> - this is the target desired number of grains. The final number may not be this exact value, but should be close. This defines the size of the volume generated, which is not defined by the user. Generally, the number of grains is of more critical concern than the size of the box and that is the reason it is the input variable. If the size of the box is more important, then the number of grains that will produce the desired box size can be estimated by dividing the desired box volume by the average grain volume.</li>
+
+        <li>c. <strong><em>Shape Class</em></strong> - this is the type of object(s) being placed during grain placement. The user can choose ellipsoids, superellipsoids or truncated octahedra. Ellipsoids do not need the omega3 value, but the other two options require omega3 to be defined.</li>
+
+        <li>d. <strong><em>Periodic Boundaries</em></strong> - this option allows the user to specify whether the grains being packed can 'wrap' from one side of the volume to the opposite size. This option should be turned on if the volume is being imported into a program that requires periodic boundary conditions (i.e. some Finite Element simulations). Turning this option off will make the volume look more like a volume cut out of a 'real' microstructure.</li>
+
+        <li>e. <strong><em>X, Y, Z Spacing</em></strong> - this is the resolution of the voxels in the generated volume. The user should be aware of the size distribution when selecting this value and the number of grains. If attention is not paid to these values in conjunction, crashes due to memory overload are possible. Typically, a resolution that results in ~10 voxels across the diameter of the average grain is a good value to select.</li>
+
+        <li>f. <strong><em>Space Filling Error Weight</em></strong> - this is the weight to be applied to the criterion of maximizing space filling during grain placement. This weight should generally be set to 1.0, because if space is not 'well-filled' during the packing step, the grains will have to change size and shape to fill in the gaps during the filling in step.</li>
+
+        <li>g. <strong><em>Size Distribution Error Weight</em></strong> this is the weight to be applied to matching the size distribution during grain placement. This weight should be left at 1.0, unless the size distribution is not critical to match.</li>
+
+        <li>h. <strong><em>Neighborhood Error Weight</em></strong> - this is the weight to be applied to matching the local neighborhoods during grain placement. This weight is the most likely to be reduced from 1.0, especially if the local neighborhoods are not known well.</li>
+      </ul>
+    </li>
+
+    <li>
+      <strong><em>Output Directory</em></strong> - location where all the output files will be written
+
+      <ul>
+        <li>a.</li>
+
+        <li>The output file is a .vtk file of structured grid type.</li>
+      </ul>
+    </li>
+
+    <li><strong><em>Output File Prefix</em></strong> - this option allows the user to define a prefix to place on the output data files (which have a fixed 'base' name). The full names of the files will update in real-time on the list of output files.</li>
+
+    <li><strong><em>Write Binary VTK Files</em></strong> This option allows the user to choose whether the output visualization files are in binary or ASCII format.</li>
+
+    <li>
+      <strong><em>Optional Output Files</em></strong> these are all visualization files that can be created. The output files are .vtk files of structured grid type.
+
+      <ul>
+        <li>a. <strong><em>GrainGenerator Visualization</em></strong> - this file contains (at each voxel) grain ids, phase ids and the number of neighboring voxels that have grain ids different from the reference voxel.</li>
+
+        <li>b. <strong><em>GrainGenerator IPF Visualization</em></strong> - this file contains (at each voxel) grain ids and Inverse Pole Figure colors</li>
+
+        <li>c. <strong><em>GrainGenerator Grains</em></strong> - this file contains each grain with properly defined voxels and their neighbor connectivities. This file is a binary HDF5 format of vtk poly data. Additionally, all the attributes listed in the other files are all contained in this one file.</li>
+      </ul>
+    </li>
+
+    <li><strong><em>Load/Save Preset</em></strong> - this allows the user to save input setting or load previously saved input settings</li>
+  </ol>
+
+</body>
+</html>

@@ -38,6 +38,8 @@
 #include <QVector>
 #include <QtGui/QIcon>
 
+#include "QtSupport/HelpDialog.h"
+
 #ifdef NDEBUG
 
 #define DREAM3D_PLUGIN_2(name)\
