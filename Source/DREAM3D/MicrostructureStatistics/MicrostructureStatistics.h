@@ -134,7 +134,6 @@ class DREAM3DLib_EXPORT MicrostructureStatistics  : public AbstractPipeline
     MXA_INSTANCE_PROPERTY(bool, ComputeGrainSize);
     MXA_INSTANCE_PROPERTY(bool, ComputeGrainShapes);
     MXA_INSTANCE_PROPERTY(bool, ComputeNumNeighbors);
-    MXA_INSTANCE_PROPERTY(bool, ComputeAverageOrientations);
     MXA_INSTANCE_PROPERTY(bool, ComputeODF);
     MXA_INSTANCE_PROPERTY(bool, ComputeMDF);
 
