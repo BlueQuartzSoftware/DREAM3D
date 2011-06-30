@@ -303,7 +303,7 @@ void SurfaceMesh::execute()
   // find triangles and arrange the spins across each triangle...
   if (nTriangle > 0)
   {
-    m->get_triangles();
+    nTriangle = m->get_triangles();
     m->arrange_grainnames(nTriangle, i);
   }
   // assign new, cumulative node id...
