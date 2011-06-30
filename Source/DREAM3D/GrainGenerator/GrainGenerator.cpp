@@ -139,9 +139,9 @@ void GrainGenerator::execute()
     m->fill_gaps();
     CHECK_FOR_CANCELED(GrainGeneratorFunc, "GrainGenerator Was canceled", fill_gaps)
 
-    updateProgressAndMessage(("Adjusting Boundaries"), 42);
+//    updateProgressAndMessage(("Adjusting Boundaries"), 42);
 //    m->adjust_boundaries();
-    CHECK_FOR_CANCELED(GrainGeneratorFunc, "GrainGenerator Was canceled", adjust_boundaries)
+//    CHECK_FOR_CANCELED(GrainGeneratorFunc, "GrainGenerator Was canceled", adjust_boundaries)
   }
   else if (m_AlreadyFormed == true)
   {
@@ -201,6 +201,7 @@ void GrainGenerator::execute()
   updateProgressAndMessage(("Finding Neighbors"), 44);
   m->find_neighbors();
   CHECK_FOR_CANCELED(GrainGeneratorFunc, "GrainGenerator Was canceled", find_neighbors)
+
 
   if (m_AlreadyFormed == false)
   {
@@ -332,7 +333,10 @@ void GrainGenerator::execute()
 
   // Clean up all the memory
   updateProgressAndMessage(("Cleaning up Memory."), 98);
+
   m = GrainGeneratorFunc::NullPointer();
 
   updateProgressAndMessage(("Generation Completed"), 100);
 }
+
+
