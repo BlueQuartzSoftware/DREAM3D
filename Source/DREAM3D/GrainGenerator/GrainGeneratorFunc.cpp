@@ -3218,14 +3218,11 @@ void  GrainGeneratorFunc::measure_misorientations ()
   ofstream outFile;
   outFile.open(filename.c_str());
 
-<<<<<<< HEAD
+
   std::vector<int>* nlist ;
   std::vector<float>* neighsurfarealist;
-=======
-  IntVectorType nlist ;
-  FloatVectorType neighsurfarealist;
   outFile << m_Grains.size() << endl;
->>>>>>> 36805e568b31ced50b8a36a2edab367e1be2a96d
+
   for (size_t i = 1; i < m_Grains.size(); i++)
   {
 	  outFile << i << "	";
