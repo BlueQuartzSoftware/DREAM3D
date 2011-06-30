@@ -31,6 +31,10 @@
 
 #include "SurfaceMesh.h"
 
+#include <vector>
+#include <map>
+
+
 #include "MXA/Common/LogTime.h"
 #include "MXA/Common/MXAEndian.h"
 #include "MXA/Utilities/MXADir.h"
@@ -50,12 +54,28 @@
       pipelineFinished();\
       return;   }
 
+
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 SurfaceMesh::SurfaceMesh() :
-    m_InputDirectory("."), m_InputFile(""), m_ScalarName(AIM::VTK::GrainIdScalarName), m_OutputDirectory(""), m_OutputFilePrefix("SurfaceMesh_"), m_ConformalMesh(true), m_BinaryVTKFile(false), m_WriteSTLFile(false), m_DeleteTempFiles(true), m_SmoothMesh(false), m_SmoothIterations(0), m_SmoothFileOutputIncrement(0), m_SmoothLockQuadPoints(false)
+    m_InputDirectory("."),
+    m_InputFile(""),
+    m_ScalarName(AIM::VTK::GrainIdScalarName),
+    m_OutputDirectory(""),
+    m_OutputFilePrefix("SurfaceMesh_"),
+    m_ConformalMesh(true),
+    m_BinaryVTKFile(false),
+    m_WriteSTLFile(false),
+    m_DeleteTempFiles(true),
+    m_SmoothMesh(false),
+    m_SmoothIterations(0),
+    m_SmoothFileOutputIncrement(0),
+    m_SmoothLockQuadPoints(false)
 {
+  m_GrainChecker = GrainChecker::New();
 }
 
 // -----------------------------------------------------------------------------
@@ -76,7 +96,8 @@ void SurfaceMesh::execute()
   updateProgressAndMessage(("Running Surface Meshing"), 0);
   int err = 0;
 //  MAKE_OUTPUT_FILE_PATH (  NodesRawFile , AIM::SurfaceMeshing::NodesRawFile)
-  MAKE_OUTPUT_FILE_PATH( NodesFile, AIM::SurfaceMesh::NodesFileBin)MAKE_OUTPUT_FILE_PATH( TrianglesFile, AIM::SurfaceMesh::TrianglesFileBin)
+  MAKE_OUTPUT_FILE_PATH( NodesFile, AIM::SurfaceMesh::NodesFileBin)
+  MAKE_OUTPUT_FILE_PATH( TrianglesFile, AIM::SurfaceMesh::TrianglesFileBin)
 //  MAKE_OUTPUT_FILE_PATH (  EdgesFile , AIM::SurfaceMeshing::EdgesFile)
 //  MAKE_OUTPUT_FILE_PATH (  EdgesFileIndex , AIM::SurfaceMeshing::EdgesFileIndex)
 //  MAKE_OUTPUT_FILE_PATH (  TrianglesFileIndex , AIM::SurfaceMeshing::TrianglesFileIndex)
@@ -171,12 +192,12 @@ void SurfaceMesh::execute()
   m->NS = m->xDim * m->yDim * m->zDim;
   m->NSP = m->xDim * m->yDim;
 
-  m->neigh = new Neighbor[2 * m->NSP + 1];m
-  ->voxels = new int[2 * m->NSP + 1];m
-  ->cSquare = new Face[3 * 2 * m->NSP];m
-  ->cVertex = new Node[2 * 7 * m->NSP];
+  m->neigh = new Neighbor[2 * m->NSP + 1];
+  m->voxels = new int[2 * m->NSP + 1];
+  m->cSquare = new Face[3 * 2 * m->NSP];
+  m->cVertex = new Node[2 * 7 * m->NSP];
 
-m  ->xOrigin = 0.0f;
+  m->xOrigin = 0.0f;
   m->yOrigin = 0.0f;
   m->zOrigin = 0.0f;
 
@@ -418,6 +439,9 @@ void SurfaceMesh::writeSTLFiles(int nTriangle, std::map<int, STLWriter::Pointer>
     int gid = (*iter).first;
     Patch* cTriangle = (*iter).second;
     int nTriangle = grainIdMap[gid];
+
+    m_GrainChecker->addData(gid, nTriangle, cTriangle, m->cVertex);
+
     STLWriter::Pointer writer = gidToSTLWriter[gid];
     if (NULL != writer.get())
     {
