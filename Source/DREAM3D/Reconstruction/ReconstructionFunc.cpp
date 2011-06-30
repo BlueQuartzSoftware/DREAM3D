@@ -1732,7 +1732,7 @@ void ReconstructionFunc::merge_twins()
       {
         tsize = int(twinlist.size());
         int firstgrain = twinlist[m];
-        IntVectorType nlist = m_Grains[firstgrain]->neighborlist;
+        std::vector<int>* nlist = m_Grains[firstgrain]->neighborlist;
         int size = int(nlist->size());
         for (int l = 0; l < size; l++)
         {
@@ -1753,7 +1753,7 @@ void ReconstructionFunc::merge_twins()
             q2[4] = m_Grains[neigh]->avg_quat[4];
             phase2 = crystruct[m_Grains[neigh]->phase];
             if (phase1 == phase2) w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
-			OrientationMath::axisAngletoRod(w, n1, n2, n3, r1, r2, r3);
+			      OrientationMath::axisAngletoRod(w, n1, n2, n3, r1, r2, r3);
             float vecttol = 0.03;
             float rodvectdiff11 = fabs(fabs(r1) - (1.0 / 3.0));
             float rodvectdiff12 = fabs(fabs(r2) - (1.0 / 3.0));
@@ -1826,7 +1826,7 @@ void ReconstructionFunc::merge_colonies()
       {
         csize = int(colonylist.size());
         int firstgrain = colonylist[m];
-        IntVectorType nlist = m_Grains[firstgrain]->neighborlist;
+        std::vector<int>* nlist = m_Grains[firstgrain]->neighborlist;
         int size = int(nlist->size());
         for (int l = 0; l < size; l++)
         {
@@ -1920,12 +1920,12 @@ void ReconstructionFunc::renumber_grains3()
       float ea3good = m_Grains[i]->euler3;
       int size = m_Grains[i]->numvoxels;
       int numneighbors = m_Grains[i]->numneighbors;
-      IntVectorType nlist = m_Grains[i]->neighborlist;
+      std::vector<int>* nlist = m_Grains[i]->neighborlist;
       m_Grains[graincount]->numvoxels = size;
       m_Grains[graincount]->numneighbors = numneighbors;
-      if (m_Grains[graincount]->neighborlist.get() == NULL)
+      if (m_Grains[graincount]->neighborlist == NULL)
       {
-        m_Grains[graincount]->neighborlist = IntVectorType(new std::vector<int>(numneighbors));
+        m_Grains[graincount]->neighborlist = new std::vector<int>(numneighbors);
       }
       if (NULL != nlist)
       {
@@ -1984,7 +1984,7 @@ void ReconstructionFunc::find_neighbors()
   {
     m_Grains[i]->numneighbors = 0;
     m_Grains[i]->neighborlist->assign(nListSize, -1);
-    m_Grains[i]->neighborsurfarealist->assign(nListSize, -1.0);
+    m_Grains[i]->neighborsurfacealist->assign(nListSize, -1.0);
     for(int j=0;j<3;j++)
     {
       m_Grains[i]->neighbordistfunc[j] = 0;
@@ -2018,7 +2018,7 @@ void ReconstructionFunc::find_neighbors()
           if (nnum >= (m_Grains[grain]->neighborlist->size()))
           {
             m_Grains[grain]->neighborlist->resize(nnum + nListSize);
-            m_Grains[grain]->neighborsurfarealist->resize(nnum + nListSize);
+            m_Grains[grain]->neighborsurfacealist->resize(nnum + nListSize);
           }
           m_Grains[grain]->neighborlist->at(nnum) = gnames[neighbor];
           nnum++;
@@ -2062,7 +2062,7 @@ void ReconstructionFunc::find_neighbors()
       size_t neigh = m_Grains[i]->neighborlist->at(j);
       int number = std::count(nlistcopy.begin(), nlistcopy.end(), neigh);
       float area = number * resx * resx;
-      m_Grains[i]->neighborsurfarealist->at(j) = area;
+      m_Grains[i]->neighborsurfacealist->at(j) = area;
     }
     m_Grains[i]->numneighbors = numneighs;
   }
