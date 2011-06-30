@@ -189,7 +189,7 @@ void MicrostructureStatistics::execute()
 	  CHECK_FOR_CANCELED(MicrostructureStatisticsFunc, "MicrostructureStatistics was canceled",  define_neighborhood)
   }
 
-  if(m_ComputeAverageOrientations == true || m_ComputeODF == true || m_ComputeMDF == true || m_WriteKernelMisorientations)
+  if(m_WriteAverageOrientations == true || m_ComputeODF == true || m_ComputeMDF == true || m_WriteKernelMisorientations == true)
   {
 	  updateProgressAndMessage(("Finding Average Orientations For Grains"), 60);
 	  m->find_grainorientations();
