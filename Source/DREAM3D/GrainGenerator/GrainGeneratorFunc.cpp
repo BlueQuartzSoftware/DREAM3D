@@ -2688,12 +2688,12 @@ void GrainGeneratorFunc::adjust_boundaries()
 void  GrainGeneratorFunc::find_neighbors()
 {
   int neighbors[6];
-  neighbors[0] = -(xpoints*ypoints);
+  neighbors[0] = -(xpoints * ypoints);
   neighbors[1] = -xpoints;
   neighbors[2] = -1;
   neighbors[3] = 1;
   neighbors[4] = xpoints;
-  neighbors[5] = (xpoints*ypoints);
+  neighbors[5] = (xpoints * ypoints);
   float column, row, plane;
   float x, y, z;
   float xn, yn, zn;
@@ -2707,73 +2707,118 @@ void  GrainGeneratorFunc::find_neighbors()
   int neighbor = 0;
   size_t xtalCount = crystruct.size();
   totalsurfacearea.resize(xtalCount);
-  for(size_t i=1;i<xtalCount;++i)
+  for (size_t i = 1; i < xtalCount; ++i)
   {
-	totalsurfacearea[i] = 0;
+    totalsurfacearea[i] = 0;
   }
   int surfacegrain = 1;
   int nListSize = 100;
-  for(size_t i=1;i<m_Grains.size();i++)
+  for (size_t i = 1; i < m_Grains.size(); i++)
   {
     m_Grains[i]->numneighbors = 0;
     m_Grains[i]->neighborlist->assign(nListSize, -1);
     m_Grains[i]->neighborsurfarealist->assign(nListSize, -1.0);
-    for(int j=0;j<3;j++)
+    for (int j = 0; j < 3; j++)
     {
       m_Grains[i]->neighbordistfunc[j] = 0;
     }
   }
 
   NEW_SHARED_ARRAY(gnames, int, totalpoints)
-  for(int i=0;i<totalpoints;i++)
+  for (int i = 0; i < totalpoints; i++)
   {
-	  gnames[i] = voxels[i].grain_index;
+    gnames[i] = voxels[i].grain_index;
   }
-  for(int j = 0; j < (xpoints*ypoints*zpoints); j++)
+  for (int j = 0; j < (xpoints * ypoints * zpoints); j++)
   {
     onsurf = 0;
     grain = gnames[j];
-	if(grain > 0)
-	{
-		column = j%xpoints;
-		row = (j/xpoints)%ypoints;
-		plane = j/(xpoints*ypoints);
-		if((column == 0 || column == (xpoints-1) || row == 0 || row == (ypoints-1) || plane == 0 || plane == (zpoints-1)) && zpoints != 1) m_Grains[grain]->surfacegrain = surfacegrain;
-		if((column == 0 || column == (xpoints-1) || row == 0 || row == (ypoints-1)) && zpoints == 1) m_Grains[grain]->surfacegrain = surfacegrain;
-        for(int k=0;k<6;k++)
+    if (grain > 0)
+    {
+      column = j % xpoints;
+      row = (j / xpoints) % ypoints;
+      plane = j / (xpoints * ypoints);
+      if ((column == 0 || column == (xpoints - 1) || row == 0 || row == (ypoints - 1) || plane == 0 || plane == (zpoints - 1)) && zpoints != 1) m_Grains[grain]->surfacegrain =
+          surfacegrain;
+      if ((column == 0 || column == (xpoints - 1) || row == 0 || row == (ypoints - 1)) && zpoints == 1) m_Grains[grain]->surfacegrain = surfacegrain;
+      for (int k = 0; k < 6; k++)
+      {
+        good = 1;
+        neighbor = j + neighbors[k];
+        if (k == 0 && plane == 0) good = 0;
+        if (k == 5 && plane == (zpoints - 1)) good = 0;
+        if (k == 1 && row == 0) good = 0;
+        if (k == 4 && row == (ypoints - 1)) good = 0;
+        if (k == 2 && column == 0) good = 0;
+        if (k == 3 && column == (xpoints - 1)) good = 0;
+        if (good == 1 && gnames[neighbor] != grain && gnames[neighbor] > 0)
         {
-	      good = 1;
-	      neighbor = j+neighbors[k];
-          if(k == 0 && plane == 0) good = 0;
-          if(k == 5 && plane == (zpoints-1)) good = 0;
-          if(k == 1 && row == 0) good = 0;
-          if(k == 4 && row == (ypoints-1)) good = 0;
-          if(k == 2 && column == 0) good = 0;
-          if(k == 3 && column == (xpoints-1)) good = 0;
-	      if(good == 1 && gnames[neighbor] != grain && gnames[neighbor] > 0)
+          onsurf++;
+          nnum = m_Grains[grain]->numneighbors;
+          IntVectorType nlist = m_Grains[grain]->neighborlist;
+          if (nnum >= (nlist->size()))
           {
-	        onsurf++;
-	        nnum = m_Grains[grain]->numneighbors;
-	        IntVectorType nlist = m_Grains[grain]->neighborlist;
-	        if (nnum >= (nlist->size()))
-	        {
-	         nlist->resize(nnum + nListSize);
-	        }
-	        nlist->at(nnum) = gnames[neighbor];
-	        nnum++;
-	        m_Grains[grain]->numneighbors = nnum;
-	      }
-	    }
-	}
-	voxels[j].surfacevoxel = onsurf;
+            nlist->resize(nnum + nListSize);
+          }
+          nlist->at(nnum) = gnames[neighbor];
+          nnum++;
+          m_Grains[grain]->numneighbors = nnum;
+        }
+      }
+    }
+    voxels[j].surfacevoxel = onsurf;
   }
- std::vector<int> nlistcopy;
-  for(size_t i=1;i<m_Grains.size();i++)
+  std::vector<int> nlistcopy;
+  for (size_t i = 1; i < m_Grains.size(); i++)
   {
     int phase = m_Grains[i]->phase;
     IntVectorType nlist = m_Grains[i]->neighborlist;
     FloatVectorType nsalist = m_Grains[i]->neighborsurfarealist;
-   std::vector<int>::iterator newend;
+
+
+    std::map<int, int> neighToCount;
+    int numneighs = int(nlist->size());
+    // This gets the list and assigns a zero count to each of them
+    for (int j = 0; j < numneighs; j++)
+    {
+      neighToCount[nlist->at(j)] = 0;
+    }
+    // this increments the voxel counts for each grain
+    for (int j = 0; j < numneighs; j++)
+    {
+      neighToCount[nlist->at(j)]++;
+    }
+
+    neighToCount.erase(0);
+    neighToCount.erase(-1);
+    //Resize the grains neighbor list to zero
+    m_Grains[i]->neighborlist->resize(0);
+    m_Grains[i]->neighborsurfarealist->resize(0);
+
+    for (std::map<int, int>::iterator iter = neighToCount.begin(); iter != neighToCount.end(); ++iter )
+    {
+      int neigh = iter->first; // get the neighbor grain
+      int number = iter->second; // get the number of voxels
+      float area = number * resx * resy;
+      if (m_Grains[i]->surfacegrain == 0 && (neigh > i || m_Grains[neigh]->surfacegrain == 1))
+      {
+        totalsurfacearea[phase] = totalsurfacearea[phase] + area;
+      }
+
+      // Push the neighbor grain id back onto the list so we stay synced up
+      m_Grains[i]->neighborlist->push_back(neigh);
+      m_Grains[i]->neighborsurfarealist->push_back(area);
+      if (neigh >= m_Grains.size())
+      {
+        std::cout << "neigh value exceeds m_Grains.size():" << std::endl;
+        std::cout << "  m_Grains->size(): " << m_Grains.size() << std::endl;
+        std::cout << "  neigh: " << neigh << std::endl;
+      }
+    }
+
+
+#if 0
+    std::vector<int>::iterator newend;
     sort(nlist->begin(), nlist->end());
     // Make a copy of the contents of the neighborlist vector
     nlistcopy.assign(nlist->begin(), nlist->end());
@@ -2782,7 +2827,7 @@ void  GrainGeneratorFunc::find_neighbors()
     nlist->erase(std::remove(nlist->begin(), nlist->end(), -1), nlist->end());
     nlist->erase(std::remove(nlist->begin(), nlist->end(), 0), nlist->end());
     int numneighs = int(nlist->size());
-	nsalist->resize(numneighs,0);
+    nsalist->resize(numneighs, 0);
     for (int j = 0; j < numneighs; j++)
     {
       int neigh = nlist->at(j);
@@ -2794,16 +2839,18 @@ void  GrainGeneratorFunc::find_neighbors()
         totalsurfacearea[phase] = totalsurfacearea[phase] + area;
       }
     }
+#endif
+
     m_Grains[i]->numneighbors = numneighs;
   }
-  for(size_t i=1;i<m_Grains.size();i++)
+  for (size_t i = 1; i < m_Grains.size(); i++)
   {
-	  x = m_Grains[i]->centroidx;
-	  y = m_Grains[i]->centroidy;
-	  z = m_Grains[i]->centroidz;
-	  diam = m_Grains[i]->equivdiameter;
-	  for(size_t j=i;j<m_Grains.size();j++)
-	  {
+    x = m_Grains[i]->centroidx;
+    y = m_Grains[i]->centroidy;
+    z = m_Grains[i]->centroidz;
+    diam = m_Grains[i]->equivdiameter;
+    for (size_t j = i; j < m_Grains.size(); j++)
+    {
       xn = m_Grains[j]->centroidx;
       yn = m_Grains[j]->centroidy;
       zn = m_Grains[j]->centroidz;
@@ -3223,11 +3270,22 @@ void  GrainGeneratorFunc::measure_misorientations ()
     {
       size = nlist->size();
     }
+    if (nlist->size() != neighsurfarealist->size())
+    {
+      std::cout << "nlist and neighsurfarealist sizes are different for grain " << i << std::endl;
+      std::cout << "nlist->size(): " << nlist->size() << std::endl;
+      std::cout << "neighsurfarealist->size(): " << neighsurfarealist->size() << std::endl;
+    }
     for (size_t j = 0; j < size; j++)
     {
       w = 10000.0;
       int nname = nlist->at(j);
       float neighsurfarea = neighsurfarealist->at(j);
+      if (nname >= m_Grains.size() )
+      {
+        std::cout << "nname is bad for grain " << i << std::endl;
+        std::cout << "nname: " << nname << std::endl;
+      }
       q2[1] = m_Grains[nname]->avg_quat[1];
       q2[2] = m_Grains[nname]->avg_quat[2];
       q2[3] = m_Grains[nname]->avg_quat[3];
