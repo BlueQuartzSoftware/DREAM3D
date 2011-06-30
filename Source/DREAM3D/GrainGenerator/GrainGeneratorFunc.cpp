@@ -162,7 +162,7 @@ GrainGeneratorFunc::GrainGeneratorFunc()
 // -----------------------------------------------------------------------------
 GrainGeneratorFunc::~GrainGeneratorFunc()
 {
-  m_Grains.clear();
+
 }
 
 #define GG_INIT_DOUBLE_ARRAY(array, value, size)\
@@ -1445,7 +1445,6 @@ float GrainGeneratorFunc::check_sizedisterror(int gadd, int gremove)
 float GrainGeneratorFunc::check_fillingerror(int gadd, int gremove)
 {
   float fillingerror = oldfillingerror*float(packingtotalpoints);
-  int index;
   int col, row, plane;
   if(gadd > 0)
   {
@@ -2142,15 +2141,19 @@ void  GrainGeneratorFunc::assign_eulers()
   float q[5];
   float random;
   int choose, phase;
+  string filename = "test1.txt";
+  ofstream outFile;
+  outFile.open(filename.c_str());
 
   size_t xtalCount = crystruct.size();
   unbiasedvol.resize(xtalCount);
   for(size_t i=1;i<xtalCount;++i)
   {
-	unbiasedvol[i] = 0;
+	 unbiasedvol[i] = 0;
   }
   for(size_t i=1;i<m_Grains.size();i++)
   {
+	  outFile << i << "	";
     random = rg.Random();
     choose = 0;
     totaldensity = 0;
@@ -2163,6 +2166,7 @@ void  GrainGeneratorFunc::assign_eulers()
       totaldensity = totaldensity + density;
       if (random >= totaldensity) choose = j;
     }
+	outFile << choose << "	";
     m_OrientatioOps[crystruct[phase]]->determineEulerAngles(choose, synea1, synea2, synea3);
     m_Grains[i]->euler1 = synea1;
     m_Grains[i]->euler2 = synea2;
@@ -2178,6 +2182,7 @@ void  GrainGeneratorFunc::assign_eulers()
       simodf[phase][choose] = simodf[phase][choose] + (float(m_Grains[i]->numvoxels) * resx * resy * resz);
       unbiasedvol[phase] = unbiasedvol[phase] + (float(m_Grains[i]->numvoxels) * resx * resy * resz);
     }
+	outFile << "done" << endl;
   }
   for(int i=0;i<numbins;i++)
   {
@@ -2716,8 +2721,16 @@ void  GrainGeneratorFunc::find_neighbors()
   for (size_t i = 1; i < m_Grains.size(); i++)
   {
     m_Grains[i]->numneighbors = 0;
+    if (m_Grains[i]->neighborlist == NULL)
+    {
+      m_Grains[i]->neighborlist = new std::vector<int>(0);
+    }
     m_Grains[i]->neighborlist->assign(nListSize, -1);
-    m_Grains[i]->neighborsurfarealist->assign(nListSize, -1.0);
+    if (m_Grains[i]->neighborsurfacealist == NULL)
+    {
+      m_Grains[i]->neighborsurfacealist = new std::vector<float>(0);
+    }
+    m_Grains[i]->neighborsurfacealist->assign(nListSize, -1.0);
     for (int j = 0; j < 3; j++)
     {
       m_Grains[i]->neighbordistfunc[j] = 0;
@@ -2755,7 +2768,7 @@ void  GrainGeneratorFunc::find_neighbors()
         {
           onsurf++;
           nnum = m_Grains[grain]->numneighbors;
-          IntVectorType nlist = m_Grains[grain]->neighborlist;
+          std::vector<int>* nlist = m_Grains[grain]->neighborlist;
           if (nnum >= (nlist->size()))
           {
             nlist->resize(nnum + nListSize);
@@ -2768,21 +2781,15 @@ void  GrainGeneratorFunc::find_neighbors()
     }
     voxels[j].surfacevoxel = onsurf;
   }
-  std::vector<int> nlistcopy;
+
   for (size_t i = 1; i < m_Grains.size(); i++)
   {
     int phase = m_Grains[i]->phase;
-    IntVectorType nlist = m_Grains[i]->neighborlist;
-    FloatVectorType nsalist = m_Grains[i]->neighborsurfarealist;
-
+    std::vector<int>* nlist = m_Grains[i]->neighborlist;
 
     std::map<int, int> neighToCount;
     int numneighs = int(nlist->size());
-    // This gets the list and assigns a zero count to each of them
-    for (int j = 0; j < numneighs; j++)
-    {
-      neighToCount[nlist->at(j)] = 0;
-    }
+
     // this increments the voxel counts for each grain
     for (int j = 0; j < numneighs; j++)
     {
@@ -2793,7 +2800,7 @@ void  GrainGeneratorFunc::find_neighbors()
     neighToCount.erase(-1);
     //Resize the grains neighbor list to zero
     m_Grains[i]->neighborlist->resize(0);
-    m_Grains[i]->neighborsurfarealist->resize(0);
+    m_Grains[i]->neighborsurfacealist->resize(0);
 
     for (std::map<int, int>::iterator iter = neighToCount.begin(); iter != neighToCount.end(); ++iter )
     {
@@ -2807,7 +2814,7 @@ void  GrainGeneratorFunc::find_neighbors()
 
       // Push the neighbor grain id back onto the list so we stay synced up
       m_Grains[i]->neighborlist->push_back(neigh);
-      m_Grains[i]->neighborsurfarealist->push_back(area);
+      m_Grains[i]->neighborsurfacealist->push_back(area);
       if (neigh >= m_Grains.size())
       {
         std::cout << "neigh value exceeds m_Grains.size():" << std::endl;
@@ -2863,11 +2870,15 @@ void  GrainGeneratorFunc::find_neighbors()
       dist2 = dist;
       dist_int = int(dist / diam);
       dist2_int = int(dist2 / diam2);
-      if (dist < 3)
+//      if (dist_int > 2 || dist2_int > 2)
+//      {
+//        std::cout << "Grain ID: " << i << " neighbordistfunc will walk off the end or array." << std::endl;
+//      }
+      if (dist_int < 3)
       {
         m_Grains[i]->neighbordistfunc[dist_int]++;
       }
-      if (dist2 < 3)
+      if (dist2_int < 3)
       {
         m_Grains[j]->neighbordistfunc[dist2_int]++;
       }
@@ -2876,7 +2887,7 @@ void  GrainGeneratorFunc::find_neighbors()
 }
 
 
-void GrainGeneratorFunc::MC_LoopBody1(int phase, size_t neighbor, int j,std::vector<float>* misolist,std::vector<float>* neighborsurfarealist, float &mdfchange)
+void GrainGeneratorFunc::MC_LoopBody1(int phase, size_t neighbor, int j,std::vector<float>* misolist,std::vector<float>* neighborsurfacealist, float &mdfchange)
 {
   float w;
   float n1, n2, n3;
@@ -2895,7 +2906,7 @@ void GrainGeneratorFunc::MC_LoopBody1(int phase, size_t neighbor, int j,std::vec
   curmiso1 = misolist->at(3*j);
   curmiso2 = misolist->at(3*j+1);
   curmiso3 = misolist->at(3*j+2);
-  neighsurfarea = neighborsurfarealist->at(j);
+  neighsurfarea = neighborsurfacealist->at(j);
   curmisobin = m_OrientatioOps[crystruct[phase]]->getMisoBin( curmiso1, curmiso2, curmiso3);
   q2[1] = m_Grains[neighbor]->avg_quat[1];
   q2[2] = m_Grains[neighbor]->avg_quat[2];
@@ -2908,7 +2919,7 @@ void GrainGeneratorFunc::MC_LoopBody1(int phase, size_t neighbor, int j,std::vec
   mdfchange = mdfchange + (((actualmdf[phase][newmisobin]-simmdf[phase][newmisobin])*(actualmdf[phase][newmisobin]-simmdf[phase][newmisobin])) - ((actualmdf[phase][newmisobin]-(simmdf[phase][newmisobin]+(neighsurfarea/totalsurfacearea[phase])))*(actualmdf[phase][newmisobin]-(simmdf[phase][newmisobin]+(neighsurfarea/totalsurfacearea[phase])))));
 }
 
-void GrainGeneratorFunc::MC_LoopBody2(int phase, size_t neighbor, int j,std::vector<float>* misolist,std::vector<float>* neighborsurfarealist)
+void GrainGeneratorFunc::MC_LoopBody2(int phase, size_t neighbor, int j,std::vector<float>* misolist,std::vector<float>* neighborsurfacealist)
 {
   float w;
   float n1, n2, n3;
@@ -2930,7 +2941,7 @@ void GrainGeneratorFunc::MC_LoopBody2(int phase, size_t neighbor, int j,std::vec
   curmiso1 = misolist->at(3 * j);
   curmiso2 = misolist->at(3 * j + 1);
   curmiso3 = misolist->at(3 * j + 2);
-  neighsurfarea = neighborsurfarealist->at(j);
+  neighsurfarea = neighborsurfacealist->at(j);
   curmisobin = m_OrientatioOps[crystruct[phase]]->getMisoBin(curmiso1, curmiso2, curmiso3);
   q2[1] = m_Grains[neighbor]->avg_quat[1];
   q2[2] = m_Grains[neighbor]->avg_quat[2];
@@ -2964,9 +2975,9 @@ void GrainGeneratorFunc::swapOutOrientation( int &badtrycount, int &numbins, flo
   float g1ea2 = std::numeric_limits<float >::max();
   float g1ea3 = std::numeric_limits<float >::max();
 
-  IntVectorType nlist;
+  std::vector<int>* nlist;
   std::vector<float>* misolist;
-  FloatVectorType neighborsurfarealist;
+  std::vector<float>* neighborsurfacealist;
 
   float totaldensity = 0;
 
@@ -3009,11 +3020,11 @@ void GrainGeneratorFunc::swapOutOrientation( int &badtrycount, int &numbins, flo
   float mdfchange = 0;
   nlist = m_Grains[selectedgrain1]->neighborlist;
   misolist = m_Grains[selectedgrain1]->misorientationlist;
-  neighborsurfarealist = m_Grains[selectedgrain1]->neighborsurfarealist;
+  neighborsurfacealist = m_Grains[selectedgrain1]->neighborsurfacealist;
   for (size_t j = 0; j < nlist->size(); j++)
   {
     int neighbor = nlist->at(j);
-    MC_LoopBody1(phase, neighbor, j, misolist, neighborsurfarealist.get(), mdfchange);
+    MC_LoopBody1(phase, neighbor, j, misolist, neighborsurfacealist, mdfchange);
   }
 
   deltaerror = (odfchange/currentodferror) + (mdfchange/currentmdferror);
@@ -3032,7 +3043,7 @@ void GrainGeneratorFunc::swapOutOrientation( int &badtrycount, int &numbins, flo
     for (size_t j = 0; j < nlist->size(); j++)
     {
       int neighbor = nlist->at(j);
-      MC_LoopBody2(phase, neighbor, j, misolist, neighborsurfarealist.get());
+      MC_LoopBody2(phase, neighbor, j, misolist, neighborsurfacealist);
     }
   }
 
@@ -3059,9 +3070,9 @@ void GrainGeneratorFunc::switchOrientations( int &badtrycount, int &numbins, flo
   float g2ea2 = std::numeric_limits<float >::max();
   float g2ea3 = std::numeric_limits<float >::max();
 
-  IntVectorType nlist;
+  std::vector<int>* nlist;
  std::vector<float>* misolist;
-  FloatVectorType neighborsurfarealist;
+  std::vector<float>* neighborsurfacealist;
 
   good = 0;
   while (good == 0)
@@ -3109,26 +3120,26 @@ void GrainGeneratorFunc::switchOrientations( int &badtrycount, int &numbins, flo
   OrientationMath::eulertoQuat(q1, g2ea1, g2ea2, g2ea3);
   nlist = m_Grains[selectedgrain1]->neighborlist;
   misolist = m_Grains[selectedgrain1]->misorientationlist;
-  neighborsurfarealist = m_Grains[selectedgrain1]->neighborsurfarealist;
+  neighborsurfacealist = m_Grains[selectedgrain1]->neighborsurfacealist;
   for (size_t j = 0; j < nlist->size(); j++)
   {
     int neighbor = nlist->at(j);
     if (neighbor != selectedgrain2)
     {
-      MC_LoopBody1(phase, neighbor, j, misolist, neighborsurfarealist.get(), mdfchange);
+      MC_LoopBody1(phase, neighbor, j, misolist, neighborsurfacealist, mdfchange);
     }
   }
 
   OrientationMath::eulertoQuat(q1, g1ea1, g1ea2, g1ea3);
   nlist = m_Grains[selectedgrain2]->neighborlist;
   misolist = m_Grains[selectedgrain2]->misorientationlist;
-  neighborsurfarealist = m_Grains[selectedgrain2]->neighborsurfarealist;
+  neighborsurfacealist = m_Grains[selectedgrain2]->neighborsurfacealist;
   for (size_t j = 0; j < nlist->size(); j++)
   {
     int neighbor = nlist->at(j);
     if (neighbor != selectedgrain1)
     {
-      MC_LoopBody1(phase, neighbor, j, misolist, neighborsurfarealist.get(), mdfchange);
+      MC_LoopBody1(phase, neighbor, j, misolist, neighborsurfacealist, mdfchange);
     }
   }
 
@@ -3150,7 +3161,7 @@ void GrainGeneratorFunc::switchOrientations( int &badtrycount, int &numbins, flo
 	OrientationMath::eulertoQuat(q1, g2ea1, g2ea2, g2ea3);
 	nlist = m_Grains[selectedgrain1]->neighborlist;
     misolist = m_Grains[selectedgrain1]->misorientationlist;
-    neighborsurfarealist = m_Grains[selectedgrain1]->neighborsurfarealist;
+    neighborsurfacealist = m_Grains[selectedgrain1]->neighborsurfacealist;
     m_Grains[selectedgrain1]->avg_quat[1] = q1[1];
     m_Grains[selectedgrain1]->avg_quat[2] = q1[2];
     m_Grains[selectedgrain1]->avg_quat[3] = q1[3];
@@ -3160,14 +3171,14 @@ void GrainGeneratorFunc::switchOrientations( int &badtrycount, int &numbins, flo
       size_t neighbor = nlist->at(j);
       if (neighbor != selectedgrain2)
       {
-        MC_LoopBody2(phase, neighbor, j, misolist, neighborsurfarealist.get());
+        MC_LoopBody2(phase, neighbor, j, misolist, neighborsurfacealist);
       }
     }
 
 	OrientationMath::eulertoQuat(q1, g1ea1, g1ea2, g1ea3);
     nlist = m_Grains[selectedgrain2]->neighborlist;
     misolist = m_Grains[selectedgrain2]->misorientationlist;
-    neighborsurfarealist = m_Grains[selectedgrain2]->neighborsurfarealist;
+    neighborsurfacealist = m_Grains[selectedgrain2]->neighborsurfacealist;
     m_Grains[selectedgrain2]->avg_quat[1] = q1[1];
     m_Grains[selectedgrain2]->avg_quat[2] = q1[2];
     m_Grains[selectedgrain2]->avg_quat[3] = q1[3];
@@ -3177,7 +3188,7 @@ void GrainGeneratorFunc::switchOrientations( int &badtrycount, int &numbins, flo
       size_t neighbor = nlist->at(j);
       if (neighbor != selectedgrain1)
       {
-        MC_LoopBody2(phase, neighbor, j, misolist, neighborsurfarealist.get());
+        MC_LoopBody2(phase, neighbor, j, misolist, neighborsurfacealist);
       }
     }
   }
@@ -3248,17 +3259,29 @@ void  GrainGeneratorFunc::measure_misorientations ()
   float q2[5];
   AIM::Reconstruction::CrystalStructure phase1, phase2;
   int mbin;
+  string filename = "test.txt";
+  ofstream outFile;
+  outFile.open(filename.c_str());
 
-  IntVectorType nlist ;
-  FloatVectorType neighsurfarealist;
+  std::vector<int>* nlist;
+  std::vector<float>* neighsurfarealist;
+  outFile << m_Grains.size() << endl;
+
   for (size_t i = 1; i < m_Grains.size(); i++)
   {
+    outFile << i << "	";
     nlist = m_Grains[i]->neighborlist;
-    neighsurfarealist = m_Grains[i]->neighborsurfarealist;
-    if (NULL != m_Grains[i]->misorientationlist) {
+    neighsurfarealist = m_Grains[i]->neighborsurfacealist;
+    if (NULL != m_Grains[i]->misorientationlist)
+    {
       delete m_Grains[i]->misorientationlist;
+      m_Grains[i]->misorientationlist = NULL;
     }
-    m_Grains[i]->misorientationlist = new std::vector<float>(nlist->size() * 3, 0.0);
+    if (NULL != nlist)
+    {
+      m_Grains[i]->misorientationlist = new std::vector<float>(nlist->size() * 3, 0.0);
+      outFile << nlist->size() << "	" << m_Grains[i]->misorientationlist->size() << "	";
+    }
 
     q1[1] = m_Grains[i]->avg_quat[1];
     q1[2] = m_Grains[i]->avg_quat[2];
@@ -3266,26 +3289,24 @@ void  GrainGeneratorFunc::measure_misorientations ()
     q1[4] = m_Grains[i]->avg_quat[4];
     phase1 = crystruct[m_Grains[i]->phase];
     size_t size = 0;
-    if (NULL != nlist.get())
+    if (NULL != nlist && neighsurfarealist != NULL && neighsurfarealist->size() == nlist->size() )
     {
       size = nlist->size();
     }
-    if (nlist->size() != neighsurfarealist->size())
+
+    if (nlist->size() != neighsurfarealist->size() )
     {
-      std::cout << "nlist and neighsurfarealist sizes are different for grain " << i << std::endl;
-      std::cout << "nlist->size(): " << nlist->size() << std::endl;
-      std::cout << "neighsurfarealist->size(): " << neighsurfarealist->size() << std::endl;
+      std::cout << "nlist->size() != neighsurfarealist->size()" << std::endl;
+      std::cout << "  Grain: " << i << std::endl;
+      std::cout << "  nlist->size(): " << nlist->size() << std::endl;
+      std::cout << "  neighsurfarealist->size(): " << neighsurfarealist->size() << std::endl;
     }
+
     for (size_t j = 0; j < size; j++)
     {
       w = 10000.0;
       int nname = nlist->at(j);
       float neighsurfarea = neighsurfarealist->at(j);
-      if (nname >= m_Grains.size() )
-      {
-        std::cout << "nname is bad for grain " << i << std::endl;
-        std::cout << "nname: " << nname << std::endl;
-      }
       q2[1] = m_Grains[nname]->avg_quat[1];
       q2[2] = m_Grains[nname]->avg_quat[2];
       q2[3] = m_Grains[nname]->avg_quat[3];
@@ -3305,13 +3326,21 @@ void  GrainGeneratorFunc::measure_misorientations ()
         m_Grains[i]->misorientationlist->at(3 * j + 1) = -100;
         m_Grains[i]->misorientationlist->at(3 * j + 2) = -100;
       }
-      if (phase1 == phase2) mbin = m_OrientatioOps[phase1]->getMisoBin(m_Grains[i]->misorientationlist->at(3 * j), m_Grains[i]->misorientationlist->at(3 * j
-          + 1), m_Grains[i]->misorientationlist->at(3 * j + 2));
+      if (phase1 == phase2)
+      {
+        mbin =
+            m_OrientatioOps[phase1]->getMisoBin(m_Grains[i]->misorientationlist->at(3 * j),
+                                                m_Grains[i]->misorientationlist->at(3 * j + 1),
+                                                m_Grains[i]->misorientationlist->at(3 * j + 2));
+      }
+
+      outFile << mbin << "	";
       if (m_Grains[i]->surfacegrain == 0 && (nname > i || m_Grains[nname]->surfacegrain == 1) && phase1 == phase2)
       {
         simmdf[m_Grains[i]->phase][mbin] = simmdf[m_Grains[i]->phase][mbin] + (neighsurfarea / totalsurfacearea[m_Grains[i]->phase]);
       }
     }
+    outFile << "done" << endl;
   }
 }
 

@@ -43,7 +43,7 @@
 #include "DREAM3D/DREAM3DConfiguration.h"
 #include "DREAM3D/Common/Constants.h"
 
-
+#define CORRUPT_TEST 0
 
 /**
  * @class Grain Grain.h AIM/Common/Grain.h
@@ -68,14 +68,30 @@ class DREAM3DLib_EXPORT Grain
      */
     void deepCopy(Grain::Pointer grain);
 
-    IntVectorType     neighborlist;
-    FloatVectorType  neighborsurfarealist;
-
+    std::vector<int>* neighborlist;
+#if CORRUPT_TEST
+    unsigned long long int* test0;
+#endif
+    std::vector<float>* neighborsurfacealist;
+#if CORRUPT_TEST
+    unsigned long long int* test1;
+#endif
     std::vector<int>* voxellist;
+#if CORRUPT_TEST
+    unsigned long long int* test2;
+#endif
     std::vector<int>* columnlist;
+#if CORRUPT_TEST
+    unsigned long long int* test3;
+#endif
     std::vector<int>* rowlist;
+#if CORRUPT_TEST
+    unsigned long long int* test4;
+#endif
     std::vector<int>* planelist;
+
     std::vector<float>* misorientationlist;
+
 
     /*
      * IF YOU ADD NEW VARIABLES MAKE SURE TO UPDATE THE "DeepCopy()" METHOD WITH
@@ -98,8 +114,8 @@ class DREAM3DLib_EXPORT Grain
     float centroidx;
     float centroidy;
     float centroidz;
-	float aspectratio1;
-	float aspectratio2;
+    float aspectratio1;
+    float aspectratio2;
     float Ixx;
     float Iyy;
     float Izz;
@@ -129,7 +145,13 @@ class DREAM3DLib_EXPORT Grain
     float radius3;
     float lowanglefraction;
     float avg_quat[5];
+#if CORRUPT_TEST
+    unsigned long long int* test5;
+#endif
     int neighbordistfunc[3];
+#if CORRUPT_TEST
+    unsigned long long int* test6;
+#endif
 
   protected:
     Grain();
