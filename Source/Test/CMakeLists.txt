@@ -43,7 +43,7 @@ add_executable(AngReaderTest ${AIMTest_SOURCE_DIR}/AngReaderTest.cpp ${DREAM3D_S
 target_link_libraries(AngReaderTest DREAM3DLib)
 
 add_executable(VoxelTest ${AIMTest_SOURCE_DIR}/VoxelTest.cpp)
-target_link_libraries(VoxelTest DREAM3DLib)
+#target_link_libraries(VoxelTest DREAM3DLib)
 
 add_executable(TextureTest ${AIMTest_SOURCE_DIR}/TextureTest.cpp)
 target_link_libraries(TextureTest DREAM3DLib)
