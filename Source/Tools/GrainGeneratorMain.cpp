@@ -88,33 +88,29 @@ int main(int argc, char **argv)
     TCLAP::ValueArg<std::string > outputDir("", "outputDir", "Output Directory", true, "", "Output Directory");
     cmd.add(outputDir);
 
-    TCLAP::ValueArg<int>  numGrains( "", "numGrains", "The total number of grains to be created", true, 0, "The total number of grains to be created");
-    cmd.add(numGrains);
-
-
     TCLAP::ValueArg<int>  shapeClass( "", "shapeClass", "The shape class you desire (1)Ellipsoid (2)Superellipsoid (3)Cube-Octahedron:", false, 1, "The shape class you desire (1)Ellipsoid (2)Superellipsoid (3)Cube-Octahedron:");
     cmd.add(shapeClass);
 
-    TCLAP::ValueArg<double>  xRes( "x", "xRes", "X resolution of your volume", true, 0.0, "X resolution of your volume");
+    TCLAP::ValueArg<float>  xRes( "", "xres", "X resolution of your volume", true, 0.0, "X resolution of your volume");
     cmd.add(xRes);
-    TCLAP::ValueArg<double>  yRes( "y", "yRes", "Y resolution of your volume", true, 0.0, "Y resolution of your volume");
+    TCLAP::ValueArg<float>  yRes( "", "yres", "Y resolution of your volume", true, 0.0, "Y resolution of your volume");
     cmd.add(yRes);
-    TCLAP::ValueArg<double>  zRes( "z", "zRes", "Z resolution of your volume", true, 0.0, "Z resolution of your volume");
+    TCLAP::ValueArg<float>  zRes( "", "zres", "Z resolution of your volume", true, 0.0, "Z resolution of your volume");
     cmd.add(zRes);
 
-    TCLAP::ValueArg<double>  xpoints( "", "xdim", "X Voxels of your volume", true, 0.0, "X Voxels of your volume");
-    cmd.add(xpoints);
-    TCLAP::ValueArg<double>  ypoints( "", "ydim", "Y Voxels of your volume", true, 0.0, "Y Voxels of your volume");
-    cmd.add(ypoints);
-    TCLAP::ValueArg<double>  zpoints( "", "zdim", "Z Voxels of your volume", true, 0.0, "Z Voxels of your volume");
-    cmd.add(zpoints);
+    TCLAP::ValueArg<int>  m_XPoints( "x", "xdim", "X Voxels of your volume", true, 0.0, "X Voxels of your volume");
+    cmd.add(m_XPoints);
+    TCLAP::ValueArg<int>  m_YPoints( "y", "ydim", "Y Voxels of your volume", true, 0.0, "Y Voxels of your volume");
+    cmd.add(m_YPoints);
+    TCLAP::ValueArg<int>  m_ZPoints( "z", "zdim", "Z Voxels of your volume", true, 0.0, "Z Voxels of your volume");
+    cmd.add(m_ZPoints);
 
 //    TCLAP::ValueArg<double>  overlapAllowed( "", "overlapAllowed", "The overlap between grains that is acceptable", true, 0.0, "The overlap between grains that is acceptable");
 //    cmd.add(overlapAllowed);
 //    TCLAP::ValueArg<int>  overlapAssignment( "", "overlapAssignment", "Enter how the overlap between grains is handled (1)Rigid (2)Progressive.", true, 1, "Enter how the overlap between grains is handled (1)Rigid (2)Progressive.");
 //    cmd.add(overlapAssignment);
-    TCLAP::ValueArg<int>  crystruct( "", "crystruct", "Do you have a HCP (1) or FCC (2) material", true, 2, "Do you have a HCP (1) or FCC (2) material");
-    cmd.add(crystruct);
+//    TCLAP::ValueArg<int>  crystruct( "", "crystruct", "Do you have a HCP (1) or FCC (2) material", true, 2, "Do you have a HCP (1) or FCC (2) material");
+//    cmd.add(crystruct);
 
 
     // Parse the argv array.
@@ -125,23 +121,41 @@ int main(int argc, char **argv)
       return EXIT_FAILURE;
     }
 
+    MXADir::mkdir(outputDir.getValue(), true);
 
-    GrainGenerator::Pointer r = GrainGenerator::New();
-    r->setH5StatsFile(h5StatsFile.getValue());
-    r->setOutputDirectory(outputDir.getValue());
+    GrainGenerator::Pointer m_GrainGenerator = GrainGenerator::New();
+    m_GrainGenerator->setH5StatsFile(h5StatsFile.getValue());
+    m_GrainGenerator->setOutputDirectory(outputDir.getValue());
 
-    r->setXPoints(xpoints.getValue());
-    r->setYPoints(ypoints.getValue());
-    r->setZPoints(zpoints.getValue());
+    m_GrainGenerator->setXPoints(m_XPoints.getValue());
+    m_GrainGenerator->setYPoints(m_YPoints.getValue());
+    m_GrainGenerator->setZPoints(m_ZPoints.getValue());
 
-    r->setShapeClass(shapeClass.getValue());
-    r->setXResolution(xRes.getValue());
-    r->setYResolution(yRes.getValue());
-    r->setZResolution(zRes.getValue());
+    m_GrainGenerator->setShapeClass(shapeClass.getValue());
+
+    m_GrainGenerator->setXResolution(xRes.getValue());
+    m_GrainGenerator->setYResolution(yRes.getValue());
+    m_GrainGenerator->setZResolution(zRes.getValue());
+    m_GrainGenerator->setFillingErrorWeight(1.0);
+    m_GrainGenerator->setNeighborhoodErrorWeight(1.0);
+    m_GrainGenerator->setSizeDistErrorWeight(1.0);
+
+    m_GrainGenerator->setPeriodicBoundary(false);
+    m_GrainGenerator->setAlreadyFormed(false);
+
+    m_GrainGenerator->setWriteVtkFile(false);
+    m_GrainGenerator->setWriteSurfaceVoxel(false);
+    m_GrainGenerator->setWritePhaseId(false);
+    m_GrainGenerator->setWriteIPFColor(false);
+    m_GrainGenerator->setWriteBinaryVTKFiles(false);
+
+    m_GrainGenerator->setWriteHDF5GrainFile(false);
+    m_GrainGenerator->setWritePhFile(false);
+
+
     //r->setCrystalStructure( static_cast<AIM::Reconstruction::CrystalStructure>(crystruct.getValue()) );
-
-    r->run();
-    err = r->getErrorCondition();
+    m_GrainGenerator->run();
+    err = m_GrainGenerator->getErrorCondition();
   }
 
   catch (TCLAP::ArgException &e) // catch any exceptions

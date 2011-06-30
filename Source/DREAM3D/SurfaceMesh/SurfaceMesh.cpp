@@ -31,7 +31,6 @@
 
 #include "SurfaceMesh.h"
 
-
 #include "MXA/Common/LogTime.h"
 #include "MXA/Common/MXAEndian.h"
 #include "MXA/Utilities/MXADir.h"
@@ -40,7 +39,6 @@
 
 #include "SMVtkFileIO.h"
 #include "DREAM3D/HDF5/H5VoxelReader.h"
-
 
 #define CHECK_ERROR(name, message)\
     if(err < 0) {\
@@ -56,19 +54,7 @@
 //
 // -----------------------------------------------------------------------------
 SurfaceMesh::SurfaceMesh() :
-m_InputDirectory("."),
-m_InputFile(""),
-m_ScalarName(AIM::VTK::GrainIdScalarName),
-m_OutputDirectory(""),
-m_OutputFilePrefix("SurfaceMesh_"),
-m_ConformalMesh(true),
-m_BinaryVTKFile(false),
-m_WriteSTLFile(false),
-m_DeleteTempFiles(true),
-m_SmoothMesh(false),
-m_SmoothIterations(0),
-m_SmoothFileOutputIncrement(0),
-m_SmoothLockQuadPoints(false)
+    m_InputDirectory("."), m_InputFile(""), m_ScalarName(AIM::VTK::GrainIdScalarName), m_OutputDirectory(""), m_OutputFilePrefix("SurfaceMesh_"), m_ConformalMesh(true), m_BinaryVTKFile(false), m_WriteSTLFile(false), m_DeleteTempFiles(true), m_SmoothMesh(false), m_SmoothIterations(0), m_SmoothFileOutputIncrement(0), m_SmoothLockQuadPoints(false)
 {
 }
 
@@ -108,13 +94,11 @@ void SurfaceMesh::execute()
     {
       setCancel(true);
       setErrorCondition(1);
-      CHECK_FOR_CANCELED(SurfaceMeshFunc, "SurfaceMesh could not create the output directory", outputDirCreation )
+      CHECK_FOR_CANCELED(SurfaceMeshFunc, "SurfaceMesh could not create the output directory", outputDirCreation)
       updateProgressAndMessage(("Could not create output directory."), 100);
       return;
     }
   }
-
-
 
   int cNodeID = 0;
   int cTriID = 0;
@@ -167,7 +151,6 @@ void SurfaceMesh::execute()
   { 0, 3, 2, 1, -1, -1, -1, -1 },
   { 0, 3, 2, 1, 1, 0, 3, 2 } };
 
-
 #if 0
   SMVtkFileIO::Pointer vtkreader = SMVtkFileIO::New();
   vtkreader->primeFileToScalarDataLocation(m.get(), m_InputFile, m_ScalarName);
@@ -188,12 +171,12 @@ void SurfaceMesh::execute()
   m->NS = m->xDim * m->yDim * m->zDim;
   m->NSP = m->xDim * m->yDim;
 
-  m->neigh = new Neighbor[2 * m->NSP + 1];
-  m->voxels = new int[2 * m->NSP + 1];
-  m->cSquare = new Face[3 * 2 * m->NSP];
-  m->cVertex = new Node[2 * 7 * m->NSP];
+  m->neigh = new Neighbor[2 * m->NSP + 1];m
+  ->voxels = new int[2 * m->NSP + 1];m
+  ->cSquare = new Face[3 * 2 * m->NSP];m
+  ->cVertex = new Node[2 * 7 * m->NSP];
 
-  m->xOrigin = 0.0f;
+m  ->xOrigin = 0.0f;
   m->yOrigin = 0.0f;
   m->zOrigin = 0.0f;
 
@@ -222,7 +205,7 @@ void SurfaceMesh::execute()
   for (int i = 0; i < zFileDim; i++)
   {
     ss.str("");
-    ss << "Marching Cubes Between Layers " << i << " and " << i + 1;
+    ss << "Marching Cubes Between Layers " << i << " and " << i + 1 << " of " << zFileDim;
     updateProgressAndMessage((ss.str().c_str()), (i * 90 / zFileDim));
 
 #if 0
@@ -282,8 +265,14 @@ void SurfaceMesh::execute()
     }
     cNodeID = nNodes;
     cTriID = cTriID + nTriangle;
-	if (nTriangle > 0) { m->cTriangle.clear(); }
+    if (nTriangle > 0)
+    {
+      m->cTriangle.clear();
+    }
   }
+  ss.str("");
+  ss << "Marching Cubes Between Layers " << zFileDim - 1 << " and " << zFileDim << " of " << zFileDim;
+  updateProgressAndMessage((ss.str().c_str()), (zFileDim * 90 / zFileDim));
 // ---------------------------------------------------------------
   // Run one more with the top layer being -3
   ::memcpy(&(m->voxels[1]), &(m->voxels[1 + m->NSP]), m->NSP * sizeof(int));
@@ -303,7 +292,7 @@ void SurfaceMesh::execute()
   // find triangles and arrange the spins across each triangle...
   if (nTriangle > 0)
   {
-    m->get_triangles();
+    nTriangle = m->get_triangles();
     m->arrange_grainnames(nTriangle, i);
   }
   // assign new, cumulative node id...
@@ -319,20 +308,21 @@ void SurfaceMesh::execute()
     return;
   }
 
-
   // Write the last layers of the STL Files
   if (m_WriteSTLFile == true)
   {
     writeSTLFiles(nTriangle, gidToSTLWriter);
   }
 
-
   cNodeID = nNodes;
   cTriID = cTriID + nTriangle;
 
   //std::cout << "Total Number of Triangles Created: " << cTriID << std::endl;
 
-  if (nTriangle > 0) { m->cTriangle.clear(); }
+  if (nTriangle > 0)
+  {
+    m->cTriangle.clear();
+  }
 
 //------------ All Done with Marching Cubes-------------------
   free(fileVoxelLayer);
@@ -363,11 +353,10 @@ void SurfaceMesh::execute()
 
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SurfaceMesh::writeSTLFiles(int nTriangle, std::map<int, STLWriter::Pointer> &gidToSTLWriter )
+void SurfaceMesh::writeSTLFiles(int nTriangle, std::map<int, STLWriter::Pointer> &gidToSTLWriter)
 {
 // First loop through All the triangles adding up how many triangles are
 // in each grain and create STL Files for each Grain if needed
@@ -434,8 +423,7 @@ void SurfaceMesh::writeSTLFiles(int nTriangle, std::map<int, STLWriter::Pointer>
     {
       writer->writeTriangleBlock(nTriangle, cTriangle, m->cVertex);
     }
-    delete [] cTriangle; // Delete this block of Patch objects as we are done with it
+    delete[] cTriangle; // Delete this block of Patch objects as we are done with it
   }
-
 
 }

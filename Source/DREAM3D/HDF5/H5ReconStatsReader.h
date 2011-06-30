@@ -46,20 +46,7 @@
 
 #include "DREAM3D/DREAM3DConfiguration.h"
 #include "DREAM3D/Common/Constants.h"
-
-
-
-#define OPEN_HDF5_FILE(fileId, filename)\
-  hid_t fileId = H5Utilities::openFile(filename, false);\
-  if (fileId < 0) { return fileId; }
-
-
-#define OPEN_RECONSTRUCTION_GROUP(gid, name, fileId)\
-  hid_t gid = H5Gopen(fileId, name);\
-  if (gid < 0) { \
-    err = H5Utilities::closeFile(fileId);\
-    return -1; }
-
+#include "DREAM3D/HDF5/H5Macros.h"
 
 /**
  * @class H5ReconStatsReader H5ReconStatsReader.h AIM/Common/HDF5/H5ReconStatsReader.h
