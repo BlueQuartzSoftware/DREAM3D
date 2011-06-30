@@ -83,14 +83,43 @@ radius2(0.0),
 radius3(0.0),
 lowanglefraction(0.0)
 {
-  neighborlist = IntVectorType(new std::vector<int>(0) );
-  neighborsurfarealist = FloatVectorType(new std::vector<float>(0) );
-
   voxellist = NULL; //new std::vector<int>;
   columnlist = NULL; //new std::vector<int>;
   rowlist = NULL; //new std::vector<int>;
   planelist = NULL; //new std::vector<int>;
   misorientationlist = NULL; //new std::vector<float>;
+  neighborlist = NULL;
+  neighborsurfacealist = NULL;
+}
+
+#define DELETE_VECTOR_POINTER(vec)\
+  if (NULL != vec) {\
+  vec->clear();\
+  delete vec;\
+  vec = NULL;\
+  }
+
+#define COPY_VECTOR_POINTER(src, dest, type)\
+  if (NULL != src) {\
+  dest = new std::vector<type>(0);\
+  dest->assign(src->begin(), src->end());\
+  }
+
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+Grain::~Grain()
+{
+  DELETE_VECTOR_POINTER(neighborlist)
+    DELETE_VECTOR_POINTER(neighborsurfacealist)
+
+    DELETE_VECTOR_POINTER(voxellist)
+    DELETE_VECTOR_POINTER(columnlist)
+    DELETE_VECTOR_POINTER(rowlist)
+    DELETE_VECTOR_POINTER(planelist)
+    DELETE_VECTOR_POINTER(misorientationlist)
 
 }
 
@@ -149,78 +178,24 @@ void Grain::deepCopy(Grain::Pointer grain)
   COPY_ARRAY_5(avg_quat, grain);
   COPY_ARRAY_3(neighbordistfunc, grain);
 
-  // These are shared pointers
-  DEEP_COPY_SHARED_VECTOR(neighborlist, grain, IntVectorType, int)
-  DEEP_COPY_SHARED_VECTOR(neighborsurfarealist, grain, FloatVectorType, float)
 
   // These are Normal pointers
-  if (NULL != voxellist)
-  {
-    delete voxellist;
-    delete columnlist;
-    delete rowlist;
-    delete planelist;
-  }
-  if (NULL != misorientationlist)
-  {
-    delete misorientationlist;
-  }
+  DELETE_VECTOR_POINTER(voxellist)
+  DELETE_VECTOR_POINTER(columnlist)
+  DELETE_VECTOR_POINTER(rowlist)
+  DELETE_VECTOR_POINTER(planelist)
+  DELETE_VECTOR_POINTER(misorientationlist)
+  DELETE_VECTOR_POINTER(neighborlist)
+  DELETE_VECTOR_POINTER(neighborsurfacealist)
 
-  if (NULL != grain->voxellist)
-  {
-    voxellist = new std::vector<int>(0);
-    voxellist->assign(grain->voxellist->begin(), grain->voxellist->end());
-  }
-  if (NULL != grain->columnlist) {
-    columnlist = new std::vector<int>(0);
-    columnlist->assign(grain->columnlist->begin(), grain->columnlist->end());
-  }
-  if (NULL != grain->rowlist)
-  {
-    rowlist = new std::vector<int>(0);
-    rowlist->assign(grain->rowlist->begin(), grain->rowlist->end());
-  }
-  if (NULL != grain->planelist) {
-    planelist = new std::vector<int>(0);
-    planelist->assign(grain->planelist->begin(), grain->planelist->end());
-  }
-
-  if (NULL != grain->misorientationlist)
-  {
-    misorientationlist = new std::vector<float>(0);
-    misorientationlist->assign(grain->misorientationlist->begin(), grain->misorientationlist->end());
-  }
-}
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-Grain::~Grain()
-{
-
-  if (NULL != voxellist)
-  {
-    delete voxellist;
-  }
-  if (NULL != columnlist)
-    delete columnlist;
-  if(NULL != rowlist)
-    delete rowlist;
-
-  if (NULL != planelist) {
-    delete planelist;
-  }
-  if (NULL != misorientationlist)
-  {
-    delete misorientationlist;
-  }
+  COPY_VECTOR_POINTER(grain->voxellist, voxellist, int)
+  COPY_VECTOR_POINTER(grain->columnlist, columnlist, int)
+  COPY_VECTOR_POINTER(grain->rowlist, rowlist, int)
+  COPY_VECTOR_POINTER(grain->planelist, planelist, int)
+  COPY_VECTOR_POINTER(grain->misorientationlist, misorientationlist, float)
+  COPY_VECTOR_POINTER(grain->neighborlist, neighborlist, int)
+  COPY_VECTOR_POINTER(grain->neighborsurfacealist, neighborsurfacealist, float)
 
 }
-
-
-
-
-
 
 

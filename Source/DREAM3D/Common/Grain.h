@@ -67,10 +67,9 @@ class DREAM3DLib_EXPORT Grain
      * @param grain Another Grain object to copy from.
      */
     void deepCopy(Grain::Pointer grain);
-
-    IntVectorType     neighborlist;
-    FloatVectorType  neighborsurfarealist;
-
+    
+    std::vector<int>* neighborlist;
+    std::vector<float>* neighborsurfacealist;
     std::vector<int>* voxellist;
     std::vector<int>* columnlist;
     std::vector<int>* rowlist;
