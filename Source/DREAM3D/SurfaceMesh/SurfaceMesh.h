@@ -36,7 +36,7 @@
 #define WIN32_LEAN_AND_MEAN   // Exclude rarely-used stuff from Windows headers
 #endif
 
-#include <map>
+
 
 #include <MXA/Common/MXASetGetMacros.h>
 #include <MXA/MXATypes.h>
@@ -45,6 +45,50 @@
 #include "DREAM3D/SurfaceMesh/SurfaceMeshFunc.h"
 #include "DREAM3D/Common/AbstractPipeline.h"
 #include "DREAM3D/SurfaceMesh/STLWriter.h"
+
+class GrainChecker
+{
+  public:
+    MXA_SHARED_POINTERS(GrainChecker);
+    MXA_STATIC_NEW_MACRO(GrainChecker);
+    virtual ~GrainChecker(){}
+    typedef std::map<int, int>  MapType;
+
+    void addData(int gid, int numTriangles, Patch* cTriangle, Node* cVertex)
+    {
+      if (gid >= grainMaps.size())
+      {
+        grainMaps.resize(gid+1);
+        tCounts.resize(gid+1, 0);
+      }
+      // Update the triangle count
+      tCounts[gid] = tCounts[gid] + numTriangles;
+
+      // Get a reference to the map for this grain
+      MapType& m = grainMaps[gid];
+
+      for (int i = 0; i < numTriangles; i++)
+      {
+        m[cTriangle[i].node_id[0]] =  0;
+        m[cTriangle[i].node_id[1]] =  0;
+        m[cTriangle[i].node_id[2]] =  0;
+      }
+    }
+
+  protected:
+    GrainChecker() {}
+
+  private:
+    std::vector<MapType> grainMaps;
+    std::vector<int>     tCounts;
+
+
+    GrainChecker(const GrainChecker&); // Copy Constructor Not Implemented
+    void operator=(const GrainChecker&); // Operator '=' Not Implemented
+};
+
+
+
 
 /**
 * @class SurfaceMesh SurfaceMesh.h AIM/SurfaceMesh/SurfaceMesh.h
@@ -102,6 +146,7 @@ class DREAM3DLib_EXPORT SurfaceMesh : public AbstractPipeline
 
   private:
 	  SurfaceMeshFunc::Pointer m;
+	  GrainChecker::Pointer        m_GrainChecker;
 
     SurfaceMesh(const SurfaceMesh&);    // Copy Constructor Not Implemented
     void operator=(const SurfaceMesh&);  // Operator '=' Not Implemented
