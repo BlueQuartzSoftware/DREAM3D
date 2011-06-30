@@ -3216,16 +3216,17 @@ void  GrainGeneratorFunc::measure_misorientations ()
   outFile << m_Grains.size() << endl;
   for (size_t i = 1; i < m_Grains.size(); i++)
   {
-	  outFile << i << "	";
+	  outFile << i;
     nlist = m_Grains[i]->neighborlist;
     neighsurfarealist = m_Grains[i]->neighborsurfarealist;
     if (NULL != m_Grains[i]->misorientationlist) {
       delete m_Grains[i]->misorientationlist;
     }
+	outFile << " - ";
     if (NULL != nlist.get())
     {
 	    m_Grains[i]->misorientationlist = new std::vector<float>(nlist->size() * 3, 0.0);
-		outFile << nlist->size() << "	" << m_Grains[i]->misorientationlist->size() << "	";
+		outFile << nlist->size() << " - " << m_Grains[i]->misorientationlist->size();
     }
 
     q1[1] = m_Grains[i]->avg_quat[1];
@@ -3233,6 +3234,7 @@ void  GrainGeneratorFunc::measure_misorientations ()
     q1[3] = m_Grains[i]->avg_quat[3];
     q1[4] = m_Grains[i]->avg_quat[4];
     phase1 = crystruct[m_Grains[i]->phase];
+	outFile << " - ";
     size_t size = 0;
     if (NULL != nlist.get())
     {
@@ -3243,6 +3245,7 @@ void  GrainGeneratorFunc::measure_misorientations ()
       w = 10000.0;
       int nname = nlist->at(j);
       float neighsurfarea = neighsurfarealist->at(j);
+	  outFile << nname << " - ";
       q2[1] = m_Grains[nname]->avg_quat[1];
       q2[2] = m_Grains[nname]->avg_quat[2];
       q2[3] = m_Grains[nname]->avg_quat[3];
@@ -3264,7 +3267,7 @@ void  GrainGeneratorFunc::measure_misorientations ()
       }
       if (phase1 == phase2) mbin = m_OrientatioOps[phase1]->getMisoBin(m_Grains[i]->misorientationlist->at(3 * j), m_Grains[i]->misorientationlist->at(3 * j
           + 1), m_Grains[i]->misorientationlist->at(3 * j + 2));
-	  outFile << mbin << "	";
+	  outFile << mbin << " - ";
       if (m_Grains[i]->surfacegrain == 0 && (nname > i || m_Grains[nname]->surfacegrain == 1) && phase1 == phase2)
       {
         simmdf[m_Grains[i]->phase][mbin] = simmdf[m_Grains[i]->phase][mbin] + (neighsurfarea / totalsurfacearea[m_Grains[i]->phase]);
