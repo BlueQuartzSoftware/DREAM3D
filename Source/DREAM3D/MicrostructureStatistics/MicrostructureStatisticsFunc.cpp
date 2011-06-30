@@ -208,7 +208,7 @@ void  MicrostructureStatisticsFunc::find_neighbors()
   {
     m_Grains[i]->numneighbors = 0;
     m_Grains[i]->neighborlist->assign(nListSize, -1);
-    m_Grains[i]->neighborsurfarealist->assign(nListSize, -1.0);
+    m_Grains[i]->neighborsurfacealist->assign(nListSize, -1.0);
     for(int j=0;j<3;j++)
     {
       m_Grains[i]->neighbordistfunc[j] = 0;
@@ -245,7 +245,7 @@ void  MicrostructureStatisticsFunc::find_neighbors()
           {
 	        onsurf++;
 	        nnum = m_Grains[grain]->numneighbors;
-	        IntVectorType nlist = m_Grains[grain]->neighborlist;
+	        std::vector<int>* nlist = m_Grains[grain]->neighborlist;
 	        if (nnum >= (nlist->size()))
 	        {
 	         nlist->resize(nnum + nListSize);
@@ -262,9 +262,9 @@ void  MicrostructureStatisticsFunc::find_neighbors()
   for(int i=1;i<m_Grains.size();i++)
   {
     int phase = m_Grains[i]->phase;
-    IntVectorType nlist = m_Grains[i]->neighborlist;
-    FloatVectorType nsalist = m_Grains[i]->neighborsurfarealist;
-   std::vector<int>::iterator newend;
+    std::vector<int>* nlist = m_Grains[i]->neighborlist;
+    std::vector<float>* nsalist = m_Grains[i]->neighborsurfacealist;
+    std::vector<int>::iterator newend;
     sort(nlist->begin(), nlist->end());
     // Make a copy of the contents of the neighborlist vector
     nlistcopy.assign(nlist->begin(), nlist->end());
@@ -273,7 +273,7 @@ void  MicrostructureStatisticsFunc::find_neighbors()
     nlist->erase(std::remove(nlist->begin(), nlist->end(), -1), nlist->end());
     nlist->erase(std::remove(nlist->begin(), nlist->end(), 0), nlist->end());
     int numneighs = int(nlist->size());
-	nsalist->resize(numneighs,0);
+	  nsalist->resize(numneighs,0);
     for (int j = 0; j < numneighs; j++)
     {
       int neigh = nlist->at(j);
@@ -1421,7 +1421,7 @@ void MicrostructureStatisticsFunc::measure_misorientations(H5ReconStatsWriter::P
                                                                m_Grains[i]->misorientationlist->at(3 * j + 2));
       if ((nname > i || m_Grains[nname]->surfacegrain == 1) && phase1 == phase2)
       {
-        nsa = m_Grains[i]->neighborsurfarealist->at(j);
+        nsa = m_Grains[i]->neighborsurfacealist->at(j);
         misobin[m_Grains[i]->phase][mbin] = misobin[m_Grains[i]->phase][mbin] + (nsa / totalsurfacearea[m_Grains[i]->phase]);
       }
     }

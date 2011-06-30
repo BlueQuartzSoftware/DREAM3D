@@ -27,63 +27,21 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+#ifndef HDF5MACROS_H_
+#define HDF5MACROS_H_
 
-#ifndef STLWRITER_H_
-#define STLWRITER_H_
 
-#include <stdio.h>
+#define OPEN_HDF5_FILE(fileId, filename)\
+  hid_t fileId = H5Utilities::openFile(filename, false);\
+  if (fileId < 0) { return fileId; }
 
-#include "MXA/Common/MXASetGetMacros.h"
-#include "MXA/Utilities/StringUtils.h"
-#include "DREAM3D/DREAM3DConfiguration.h"
 
-class SurfaceMeshFunc;
-class Patch;
-class Node;
+#define OPEN_RECONSTRUCTION_GROUP(gid, name, fileId)\
+  hid_t gid = H5Gopen(fileId, name);\
+  if (gid < 0) { \
+    err = H5Utilities::closeFile(fileId);\
+    return -1; }
 
-class  DREAM3DLib_EXPORT STLWriter
-{
-  public:
-    MXA_SHARED_POINTERS(STLWriter)
-    MXA_STATIC_NEW_MACRO(STLWriter)
-    MXA_TYPE_MACRO(STLWriter)
 
-    static Pointer CreateNewSTLWriter(int gid, const std::string &filename)
-    {
-      Pointer stlWriter = STLWriter::New();
-      stlWriter->setFilename(filename);
-      int err = stlWriter->openFile();
-      if (err < 0)
-      {
-        return NullPointer();
-      }
-      std::string stlHeader("DREAM.3D Surface Mesh for Grain ID ");
-      stlHeader.append(StringUtils::numToString(gid));
-      stlWriter->writeHeader(stlHeader);
-      stlWriter->closeFile();
-      return stlWriter;
-    }
-    virtual ~STLWriter();
 
-    MXA_INSTANCE_STRING_PROPERTY(Filename)
-    MXA_INSTANCE_PROPERTY(int, TriangleCount);
-
-    int openFile();
-    void closeFile();
-    void resetTriangleCount();
-
-    int writeHeader(const std::string &header);
-
-    int writeTriangleBlock(int numTriangles, Patch* cTriangle, Node* cVertex);
-
-  protected:
-    STLWriter();
-
-  private:
-    FILE* m_File;
-
-    STLWriter(const STLWriter&); // Copy Constructor Not Implemented
-    void operator=(const STLWriter&); // Operator '=' Not Implemented
-};
-
-#endif /* STLWRITER_H_ */
+#endif /* HDF5MACROS_H_ */

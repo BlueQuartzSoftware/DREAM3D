@@ -51,7 +51,7 @@ class VtkScalarWriter
 {
   public:
     VtkScalarWriter() : m_WriteBinaryFiles(true){}
-    ~VtkScalarWriter(){}
+    virtual ~VtkScalarWriter(){}
 
     bool m_WriteBinaryFiles;
 
@@ -76,7 +76,7 @@ class VoxelGrainIdScalarWriter : public VtkScalarWriter
 {
   public:
   VoxelGrainIdScalarWriter(T* r) : r(r) {}
-  ~VoxelGrainIdScalarWriter(){}
+  virtual ~VoxelGrainIdScalarWriter(){}
 
   int writeScalars(FILE* f)
   {
@@ -110,7 +110,7 @@ class name : public VtkScalarWriter\
 {\
   public:\
     name(T* r) : r(r) {}\
-  ~name(){}\
+    virtual ~name(){}\
   int writeScalars(FILE* f)  {\
     int err = 0;\
     std::string file;\
@@ -143,7 +143,7 @@ class VoxelIPFColorScalarWriter : public VtkScalarWriter
 {
   public:
   VoxelIPFColorScalarWriter(T* r) : r(r) {}
-  ~VoxelIPFColorScalarWriter(){}
+  virtual ~VoxelIPFColorScalarWriter(){}
 
   int writeScalars(FILE* f)
   {
@@ -243,7 +243,7 @@ class VTKRectilinearGridFileWriter
     MXA_TYPE_MACRO(VTKRectilinearGridFileWriter);
 
     VTKRectilinearGridFileWriter() : m_WriteBinaryFiles(false) {}
-    ~VTKRectilinearGridFileWriter() {}
+    virtual ~VTKRectilinearGridFileWriter() {}
 
     MXA_INSTANCE_PROPERTY(bool, WriteBinaryFiles)
 
