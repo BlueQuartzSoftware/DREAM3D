@@ -62,13 +62,13 @@ STLWriter::~STLWriter()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int STLWriter::openFile()
+int STLWriter::openFile(const char* mode)
 {
   if (m_Filename.empty() == true)
   {
     return -1;
   }
-  m_File = fopen(m_Filename.c_str(), "wb");
+  m_File = fopen(m_Filename.c_str(), mode);
   if (NULL == m_File)
   {
     return -2;
@@ -142,16 +142,14 @@ int STLWriter::writeTriangleBlock(int numTriangles, Patch* cTriangle, Node* cVer
   float length;
 
   // first Open the file
-  err = openFile();
+
+  err = openFile("ab");
   if (err < 0)
   {
     std::cout << "STLWriter: Could not open file: '" << m_Filename << "' to write the data into." << std::endl;
     return -1;
   }
-
-  // Put the file pointer to the end of the file which makes it ready for more
-  // data to be written to it.
-  fseek(m_File, 0L, SEEK_END);
+  size_t curPos = 0;
 
   for (int i = 0; i < numTriangles; i++)
   {
@@ -196,21 +194,39 @@ int STLWriter::writeTriangleBlock(int numTriangles, Patch* cTriangle, Node* cVer
     //    fprintf(f, "%d %d %d %d %d %d\n", newID, n1, n2, n3, s1, s2);
     data[0] = data[0] + 1;
   }
-
-  // Get the current position
-  size_t curPos = ftell(m_File);
-//  std::cout << "-- curPos:" << curPos << std::endl;
-
-  //Seek to the 80th byte so we can update the number of triangles
-  fseek(m_File, 80, SEEK_SET);
- // std::cout << "  Updating TriangleCount in STL File: " << m_TriangleCount << std::endl;
-  fwrite(&m_TriangleCount, 4, 1, m_File);
-
-  // Seek back to the last position, which should be the end of the file at this point
-  fseek(m_File, curPos, SEEK_SET);
-
   // Close the file so we do not have too many files open
   this->closeFile();
+
   return err;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int STLWriter::writeNumTrianglesToFile()
+{
+
+  // We need to update the number of triangles in the file which means we need
+  // to use C++ because with "C" one can only append to a file and NOT write
+  // at any point in the file. Yes this will slow us down even more
+  int err =0;
+
+  std::ofstream out(m_Filename.c_str(), std::ios_base::binary);
+  if (out.is_open() == false)
+  {
+    return -1;
+  }
+  // seek to the 80 byte
+  out.seekp(80);
+
+  const char* data = reinterpret_cast<const char*>(&m_TriangleCount);
+  out.write(data, 4);
+
+  out.flush();
+  out.close();
+
+  return err;
+}
+
+
 
