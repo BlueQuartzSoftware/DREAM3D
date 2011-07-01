@@ -106,6 +106,8 @@ void SurfaceMeshWidget::readSettings(QSettings &prefs)
   READ_STRING_SETTING(prefs, m_, OutputFilePrefix, "SurfaceMesh_")
 
   READ_CHECKBOX_SETTING(prefs, m_, WriteSTLFiles, true);
+  READ_CHECKBOX_SETTING(prefs, m_, ConformalMesh, true);
+  READ_CHECKBOX_SETTING(prefs, m_, BinaryVtkFiles, true);
 
   READ_CHECKBOX_SETTING(prefs, m_, SmoothMesh, false);
   READ_CHECKBOX_SETTING(prefs, m_, LockQuadPoints, false);
@@ -125,6 +127,8 @@ void SurfaceMeshWidget::writeSettings(QSettings &prefs)
   WRITE_STRING_SETTING(prefs, m_, OutputFilePrefix)
 
   WRITE_CHECKBOX_SETTING(prefs, m_, WriteSTLFiles)
+  WRITE_CHECKBOX_SETTING(prefs, m_, ConformalMesh)
+  WRITE_CHECKBOX_SETTING(prefs, m_, BinaryVtkFiles)
 
 
   WRITE_BOOL_SETTING(prefs, m_, SmoothMesh, m_SmoothMesh->isChecked() );
