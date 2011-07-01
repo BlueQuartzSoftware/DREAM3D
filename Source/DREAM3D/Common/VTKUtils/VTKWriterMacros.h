@@ -45,7 +45,7 @@
 
 
 
-#define WRITE_VTK_GRAIN_HEADER(FILE_TYPE, ptr)\
+#define WRITE_STRUCTURED_POINTS_HEADER(FILE_TYPE, ptr)\
   fprintf(f, "# vtk DataFile Version 2.0\n");\
   fprintf(f, "data set from DREAM3D\n");\
   fprintf(f, FILE_TYPE); fprintf(f, "\n");\
