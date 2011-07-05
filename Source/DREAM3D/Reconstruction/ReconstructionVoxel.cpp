@@ -50,7 +50,6 @@ imagequality(0.0)
   nearestneighbor[0] = 0; nearestneighbor[1] = 0; nearestneighbor[2] = 0;
   nearestneighbordistance[0] = 0.0; nearestneighbordistance[1] = 0.0; nearestneighbordistance[2] = 0.0;
   quat[0] = 1.0; quat[1] = 0.0; quat[2] = 0.0; quat[3] = 0.0; quat[4] = 0.0;
-  neighborlist = IntVectorType(new std::vector<int>(0) );
 }
 
 // -----------------------------------------------------------------------------
@@ -88,7 +87,6 @@ void ReconstructionVoxel::deepCopy(ReconstructionVoxel* reconstructionvoxel)
    unassigned = reconstructionvoxel->unassigned;
 
    COPY_ARRAY_5(quat, reconstructionvoxel);
-   DEEP_COPY_SHARED_VECTOR(neighborlist, reconstructionvoxel, IntVectorType, int)
 
 }
 

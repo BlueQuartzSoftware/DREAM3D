@@ -74,7 +74,6 @@ class DREAM3DLib_EXPORT ReconstructionVoxel
     float euler3;
     int neighbor;
     int surfacevoxel;
-    IntVectorType neighborlist;
 
     int alreadychecked;
     int unassigned;

@@ -42,11 +42,9 @@ euler2(-1.0),
 euler3(-1.0),
 neighbor(-1),
 surfacevoxel(0),
-alreadychecked(0),
-unassigned(0),
 numowners(0)
 {
-  neighborlist = IntVectorType(new std::vector<int>(0) );
+
 }
 
 // -----------------------------------------------------------------------------
@@ -54,11 +52,6 @@ numowners(0)
 // -----------------------------------------------------------------------------
 GrainGeneratorVoxel::~GrainGeneratorVoxel()
 {
-#if 0
-  if (NULL != grainlist) { delete grainlist; grainlist = NULL;}
-  if (NULL != ellipfunclist) { delete ellipfunclist; ellipfunclist = NULL;}
-  if (NULL != neighborlist) { delete neighborlist; neighborlist = NULL;}
-#endif
 }
 
 
@@ -70,17 +63,14 @@ void GrainGeneratorVoxel::deepCopy(GrainGeneratorVoxel* graingeneratorvoxel)
   if (graingeneratorvoxel == this) { return; } // The pointers are the same just return
 
    grain_index = graingeneratorvoxel->grain_index;
-   alreadychecked = graingeneratorvoxel->alreadychecked;
 
-//   euler1 = graingeneratorvoxel->euler1;
-//   euler2 = graingeneratorvoxel->euler2;
-//   euler3 = graingeneratorvoxel->euler3;
+   euler1 = graingeneratorvoxel->euler1;
+   euler2 = graingeneratorvoxel->euler2;
+   euler3 = graingeneratorvoxel->euler3;
    neighbor = graingeneratorvoxel->neighbor;
    numowners = graingeneratorvoxel->numowners;
    surfacevoxel = graingeneratorvoxel->surfacevoxel;
-   unassigned = graingeneratorvoxel->unassigned;
 
-//   COPY_ARRAY_5(quat, graingeneratorvoxel);
-   DEEP_COPY_SHARED_VECTOR(neighborlist, graingeneratorvoxel, IntVectorType, int)
+   COPY_ARRAY_5(quat, graingeneratorvoxel);
 
 }
