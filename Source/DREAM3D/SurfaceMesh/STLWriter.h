@@ -52,7 +52,8 @@ class  DREAM3DLib_EXPORT STLWriter
     {
       Pointer stlWriter = STLWriter::New();
       stlWriter->setFilename(filename);
-      int err = stlWriter->openFile();
+      stlWriter->setGrainID(gid);
+      int err = stlWriter->openFile("wb");
       if (err < 0)
       {
         return NullPointer();
@@ -66,15 +67,18 @@ class  DREAM3DLib_EXPORT STLWriter
     virtual ~STLWriter();
 
     MXA_INSTANCE_STRING_PROPERTY(Filename)
-    MXA_INSTANCE_PROPERTY(int, TriangleCount);
+    MXA_INSTANCE_PROPERTY(int, TriangleCount)
+    MXA_INSTANCE_PROPERTY(int, GrainID)
 
-    int openFile();
+    int openFile(const char* mode);
     void closeFile();
     void resetTriangleCount();
 
     int writeHeader(const std::string &header);
 
     int writeTriangleBlock(int numTriangles, Patch* cTriangle, Node* cVertex);
+
+    int writeNumTrianglesToFile();
 
   protected:
     STLWriter();

@@ -381,11 +381,11 @@ class VTKStructuredPointsFileWriter
       // Write the correct header
       if (m_WriteBinaryFiles == true)
       {
-        WRITE_VTK_GRAIN_HEADER("BINARY", r)
+        WRITE_STRUCTURED_POINTS_HEADER("BINARY", r)
       }
       else
       {
-        WRITE_VTK_GRAIN_HEADER("ASCII", r)
+        WRITE_STRUCTURED_POINTS_HEADER("ASCII", r)
       }
 
       size_t total = r->xpoints * r->ypoints * r->zpoints;
@@ -448,11 +448,11 @@ class VtkMiscFileWriter
       // Write the correct header
       if (m_WriteBinaryFiles == true)
       {
-        WRITE_VTK_GRAIN_HEADER("BINARY", r)
+        WRITE_STRUCTURED_POINTS_HEADER("BINARY", r)
       }
       else
       {
-        WRITE_VTK_GRAIN_HEADER("ASCII", r)
+        WRITE_STRUCTURED_POINTS_HEADER("ASCII", r)
       }
       size_t total = r->xpoints * r->ypoints * r->zpoints;
       if (true == m_WriteBinaryFiles)
@@ -491,11 +491,11 @@ class VtkMiscFileWriter
       // Write the correct header
       if (m_WriteBinaryFiles == true)
       {
-        WRITE_VTK_GRAIN_HEADER("BINARY", r)
+        WRITE_STRUCTURED_POINTS_HEADER("BINARY", r)
       }
       else
       {
-        WRITE_VTK_GRAIN_HEADER("ASCII", r)
+        WRITE_STRUCTURED_POINTS_HEADER("ASCII", r)
       }
       size_t total = r->xpoints * r->ypoints * r->zpoints;
       if (true == m_WriteBinaryFiles)
