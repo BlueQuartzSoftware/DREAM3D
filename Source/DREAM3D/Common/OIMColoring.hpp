@@ -224,6 +224,7 @@ class OIMColoring
       green = green * 255.0f;
       blue = blue * 255.0f;
 
+
       rgb[0] = static_cast<unsigned char> (red);
       rgb[1] = static_cast<unsigned char> (green);
       rgb[2] = static_cast<unsigned char> (blue);
