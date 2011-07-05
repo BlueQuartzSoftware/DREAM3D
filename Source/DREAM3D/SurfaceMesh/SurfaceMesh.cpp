@@ -273,15 +273,22 @@ void SurfaceMesh::execute()
     // std::cout << "nNodes: " << nNodes << std::endl;
     // Output nodes and triangles...
     err = m->writeNodesFile(i, cNodeID, NodesFile);
+    if (err < 0)
+    {
+      setErrorCondition(-1);
+      updateProgressAndMessage(("Error Writing Nodes Temp File"), 100);
+      return;
+    }
     err = m->writeTrianglesFile(i, cTriID, TrianglesFile, nTriangle);
     if (err < 0)
     {
-      setCancel(true);
+      setErrorCondition(-1);
       updateProgressAndMessage(("Error Writing Triangles Temp File"), 100);
       return;
     }
     if (m_WriteSTLFile == true)
     {
+      m_GrainChecker->addData(nTriangle, cTriID, &(m->cTriangle.front()), m->cVertex);
       writeSTLFiles(nTriangle, gidToSTLWriter);
     }
     cNodeID = nNodes;
@@ -321,6 +328,12 @@ void SurfaceMesh::execute()
   // std::cout << "nNodes: " << nNodes << std::endl;
   // Output nodes and triangles...
   err = m->writeNodesFile(i, cNodeID, NodesFile);
+  if (err < 0)
+  {
+    setErrorCondition(-1);
+    updateProgressAndMessage(("Error Writing Nodes Temp File"), 100);
+    return;
+  }
   err = m->writeTrianglesFile(i, cTriID, TrianglesFile, nTriangle);
   if (err < 0)
   {
@@ -332,8 +345,11 @@ void SurfaceMesh::execute()
   // Write the last layers of the STL Files
   if (m_WriteSTLFile == true)
   {
+    m_GrainChecker->addData(nTriangle, cTriID, &(m->cTriangle.front()), m->cVertex);
     writeSTLFiles(nTriangle, gidToSTLWriter);
   }
+
+  m_GrainChecker->analyzeGrains();
 
   cNodeID = nNodes;
   cTriID = cTriID + nTriangle;
@@ -373,6 +389,19 @@ void SurfaceMesh::execute()
   }
 
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void SurfaceMesh::updateTriangleCounts( std::map<int, STLWriter::Pointer> &gidToSTLWriter)
+{
+  for (std::map<int, STLWriter::Pointer>::iterator iter = gidToSTLWriter.begin(); iter != gidToSTLWriter.end(); ++iter )
+  {
+    (*iter).second->writeNumTrianglesToFile();
+  }
+}
+
+
 
 // -----------------------------------------------------------------------------
 //
@@ -439,8 +468,6 @@ void SurfaceMesh::writeSTLFiles(int nTriangle, std::map<int, STLWriter::Pointer>
     int gid = (*iter).first;
     Patch* cTriangle = (*iter).second;
     int nTriangle = grainIdMap[gid];
-
-    m_GrainChecker->addData(gid, nTriangle, cTriangle, m->cVertex);
 
     STLWriter::Pointer writer = gidToSTLWriter[gid];
     if (NULL != writer.get())

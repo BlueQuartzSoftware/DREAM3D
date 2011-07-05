@@ -54,25 +54,93 @@ class GrainChecker
     virtual ~GrainChecker(){}
     typedef std::map<int, int>  MapType;
 
-    void addData(int gid, int numTriangles, Patch* cTriangle, Node* cVertex)
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+    void addData(int numTriangles, int ctid, Patch* cTriangle, Node* cVertex)
     {
-      if (gid >= grainMaps.size())
-      {
-        grainMaps.resize(gid+1);
-        tCounts.resize(gid+1, 0);
-      }
-      // Update the triangle count
-      tCounts[gid] = tCounts[gid] + numTriangles;
 
-      // Get a reference to the map for this grain
-      MapType& m = grainMaps[gid];
-
-      for (int i = 0; i < numTriangles; i++)
+      int n1, n2, n3;
+      int gid;
+      int size;
+      for (int i = 0; i < numTriangles; ++i)
       {
-        m[cTriangle[i].node_id[0]] =  0;
-        m[cTriangle[i].node_id[1]] =  0;
-        m[cTriangle[i].node_id[2]] =  0;
+        gid = cTriangle[i].ngrainname[0];
+        size = grainMaps.size();
+        if (gid >= size)
+        {
+          grainMaps.resize(gid + 1);
+          tCounts.resize(gid + 1);
+        }
+        if (gid > 0)
+        {
+          // Get a reference to the map for this grain
+          MapType& vertMap = grainMaps[gid];
+          MapType& triMap = tCounts[gid];
+
+          n1 = cTriangle[i].node_id[0];
+          n2 = cTriangle[i].node_id[1];
+          n3 = cTriangle[i].node_id[2];
+          n1 = cVertex[n1].NodeID;
+          n2 = cVertex[n2].NodeID;
+          n3 = cVertex[n3].NodeID;
+
+          vertMap[n1] = 0;
+          vertMap[n2] = 0;
+          vertMap[n3] = 0;
+          triMap[ctid] = 0;
+        }
+
+        gid = cTriangle[i].ngrainname[1];
+        size = grainMaps.size();
+        if (gid >= size)
+        {
+          grainMaps.resize(gid + 1);
+          tCounts.resize(gid + 1);
+        }
+        if (gid > 0)
+        { // Get a reference to the map for this grain
+          MapType& vertMap = grainMaps[gid];
+          MapType& triMap = tCounts[gid];
+
+          n1 = cTriangle[i].node_id[0];
+          n2 = cTriangle[i].node_id[1];
+          n3 = cTriangle[i].node_id[2];
+          n1 = cVertex[n1].NodeID;
+          n2 = cVertex[n2].NodeID;
+          n3 = cVertex[n3].NodeID;
+
+          vertMap[n1] = 0;
+          vertMap[n2] = 0;
+          vertMap[n3] = 0;
+          triMap[ctid] = 0;
+        }
+        //
+        ++ctid;
       }
+
+    }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+    void analyzeGrains()
+    {
+      size_t size = tCounts.size();
+      int vCount = 0;
+      int tCount = 0;
+      for (size_t i = 1; i < size; ++i)
+      {
+        MapType& t = tCounts[i];
+        tCount = t.size();
+        MapType& m = grainMaps[i];
+        vCount = m.size();
+        if (tCount + 4 != vCount * 2)
+        {
+          std::cout << "Grain ID: " << i << " Does not satisfy equation T=2V-4    " << "  tCount: " << tCount << "   " << "  vCount: " << vCount << std::endl;
+        }
+      }
+
     }
 
   protected:
@@ -80,7 +148,7 @@ class GrainChecker
 
   private:
     std::vector<MapType> grainMaps;
-    std::vector<int>     tCounts;
+    std::vector<MapType> tCounts;
 
 
     GrainChecker(const GrainChecker&); // Copy Constructor Not Implemented
@@ -139,6 +207,8 @@ class DREAM3DLib_EXPORT SurfaceMesh : public AbstractPipeline
     void execute();
 
     void writeSTLFiles(int nTriangle, std::map<int, STLWriter::Pointer> &gidToSTLWriter );
+    void updateTriangleCounts( std::map<int, STLWriter::Pointer> &gidToSTLWriter);
+
 
   protected:
 
