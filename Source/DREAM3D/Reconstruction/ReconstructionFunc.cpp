@@ -1977,7 +1977,6 @@ void ReconstructionFunc::find_neighbors()
   for (int i = 0; i < totalpoints; ++i)
   {
     gnames[i] = voxels[i].grain_index;
-    voxels[i].neighborlist = IntVectorType(new std::vector<int>(6, -1) );
   }
 
   for (size_t i = 0; i < numgrains; i++)
@@ -1999,8 +1998,6 @@ void ReconstructionFunc::find_neighbors()
       column = j % xpoints;
       row = (j / xpoints) % ypoints;
       plane = j / (xpoints * ypoints);
-      if ((column == 0 || column == (xpoints - 1) || row == 0 || row == (ypoints - 1) || plane == 0 || plane == (zpoints - 1)) && zpoints != 1) m_Grains[grain]->surfacegrain = surfacegrain;
-      if ((column == 0 || column == (xpoints - 1) || row == 0 || row == (ypoints - 1)) && zpoints == 1) m_Grains[grain]->surfacegrain = surfacegrain;
       for (int k = 0; k < 6; k++)
       {
         good = 1;
@@ -2013,7 +2010,6 @@ void ReconstructionFunc::find_neighbors()
         if (k == 3 && column == (xpoints - 1)) good = 0;
         if (good == 1 && gnames[neighbor] != grain && gnames[neighbor] > 0)
         {
-          voxels[j].neighborlist->at(onsurf) = gnames[neighbor];
           nnum = m_Grains[grain]->numneighbors;
           if (nnum >= (m_Grains[grain]->neighborlist->size()))
           {
@@ -2027,23 +2023,6 @@ void ReconstructionFunc::find_neighbors()
         }
       }
     }
-    if (onsurf > 0)
-    {
-      vector<int >::iterator newend;
-      sort(voxels[j].neighborlist->begin(), voxels[j].neighborlist->end());
-      newend = unique(voxels[j].neighborlist->begin(), voxels[j].neighborlist->end());
-      voxels[j].neighborlist->erase(newend, voxels[j].neighborlist->end());
-      voxels[j].neighborlist->erase(std::remove(voxels[j].neighborlist->begin(), voxels[j].neighborlist->end(), -1), voxels[j].neighborlist->end());
-      voxels[j].surfacevoxel = onsurf;
-    }
-    if (voxels[j].neighborlist->size() >= 3) voxels[j].nearestneighbordistance[0] = 0, voxels[j].nearestneighbordistance[1] = 0, voxels[j].nearestneighbordistance[2]
-        = 0, voxels[j].nearestneighbor[0] = j, voxels[j].nearestneighbor[1] = j, voxels[j].nearestneighbor[2] = j;
-    if (voxels[j].neighborlist->size() == 2) voxels[j].nearestneighbordistance[0] = 0, voxels[j].nearestneighbordistance[1] = 0, voxels[j].nearestneighbordistance[2]
-        = -1, voxels[j].nearestneighbor[0] = j, voxels[j].nearestneighbor[1] = j, voxels[j].nearestneighbor[2] = -1;
-    if (voxels[j].neighborlist->size() == 1) voxels[j].nearestneighbordistance[0] = 0, voxels[j].nearestneighbordistance[1] = -1, voxels[j].nearestneighbordistance[2]
-        = -1, voxels[j].nearestneighbor[0] = j, voxels[j].nearestneighbor[1] = -1, voxels[j].nearestneighbor[2] = -1;
-    if (onsurf == 0) voxels[j].nearestneighbordistance[0] = -1, voxels[j].nearestneighbordistance[1] = -1, voxels[j].nearestneighbordistance[2] = -1, voxels[j].nearestneighbor[0]
-        = -1, voxels[j].nearestneighbor[1] = -1, voxels[j].nearestneighbor[2] = -1;
   }
   delete[] gnames;
   vector<int> nlistcopy;
