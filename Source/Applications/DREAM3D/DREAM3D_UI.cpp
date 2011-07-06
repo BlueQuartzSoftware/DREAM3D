@@ -627,16 +627,12 @@ void DREAM3D_UI::loadPlugins()
     addToPluginMenu(plugin, ipPlugin->getPluginName(),
                     menuPlugins, SLOT(setInputUI()), m_PluginActionGroup, newIcon);
 
-//    addToHelpMenu(plugin, ipPlugin->getPluginName(),
-//                    menuHelp, SLOT(displayHelp()), newIcon);
-
     QAction* action = new QAction(newIcon, ipPlugin->getPluginName(), this);
     connect(action, SIGNAL(triggered()),
             plugin, SLOT(displayHelp()));
     connect(plugin, SIGNAL(showHelp(QUrl)),
             m_HelpDialog, SLOT(setContentFile(QUrl)));
     menuHelp->addAction(action);
-
 
   }
 }
@@ -649,17 +645,6 @@ void DREAM3D_UI::displayHelp(QString file)
   m_HelpDialog->setContentFile(file);
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void DREAM3D_UI::addToHelpMenu(QObject* plugin, const QString &text,
-                               QMenu* menu, const char* member, QIcon icon)
-{
-  QAction *action = new QAction(icon, text, this);
-  connect(action, SIGNAL(triggered()), plugin, member);
-  menu->addAction(action);
-
-}
 
 // -----------------------------------------------------------------------------
 //
