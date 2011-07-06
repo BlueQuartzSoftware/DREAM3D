@@ -488,12 +488,15 @@ int SMVtkFileIO::writeBinaryCellData(const std::string &TrianglesFile, FILE* vtk
   size_t offset = 1;
   // Open the triangles file for reading
   FILE* triFile = fopen(TrianglesFile.c_str(), "rb");
+
+
   int triangleCount = nTriangles;
   if (false == conformalMesh)
   {
     triangleCount = nTriangles * 2;
     offset = 2;
   }
+  std::vector<int> tri_ids(triangleCount);
   // Write the GrainId Data to the file
   fprintf(vtkFile, "\n");
   fprintf(vtkFile, "CELL_DATA %d\n", triangleCount);
@@ -505,21 +508,37 @@ int SMVtkFileIO::writeBinaryCellData(const std::string &TrianglesFile, FILE* vtk
   for (int i = 0; i < nTriangles; i++)
   {
     fread(tData, sizeof(int), 6, triFile);
+    MXA::Endian::FromSystemToBig::convert<int>(tData[0]);
+    tri_ids[i*offset] = tData[0];
     MXA::Endian::FromSystemToBig::convert<int>(tData[4]);
     cell_data[i*offset] = tData[4];
     if (false == conformalMesh)
     {
       MXA::Endian::FromSystemToBig::convert<int>(tData[5]);
       cell_data[i*offset + 1] = tData[5];
+      tri_ids[i*offset + 1] = tData[0];
     }
   }
 
   int totalWritten = fwrite( &(cell_data.front()), sizeof(int), triangleCount, vtkFile);
-  fclose(triFile);
   if (totalWritten != triangleCount)
   {
     return -1;
   }
+
+  // Now write the original Triangle Ids for Debugging in ParaView
+  fprintf(vtkFile, "\n");
+  fprintf(vtkFile, "SCALARS TriangleID int 1\n");
+  fprintf(vtkFile, "LOOKUP_TABLE default\n");
+
+  totalWritten = fwrite( &(tri_ids.front()), sizeof(int), triangleCount, vtkFile);
+  if (totalWritten != triangleCount)
+  {
+    return -1;
+  }
+
+  fclose(triFile);
+
   return err;
 }
 

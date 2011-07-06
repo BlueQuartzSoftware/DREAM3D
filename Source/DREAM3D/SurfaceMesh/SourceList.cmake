@@ -13,6 +13,7 @@ SET (DREAM3D_SurfaceMesh_HDRS
   ${DREAM3DLib_SOURCE_DIR}/SurfaceMesh/Patch.h
   ${DREAM3DLib_SOURCE_DIR}/SurfaceMesh/Segment.h
   ${DREAM3DLib_SOURCE_DIR}/SurfaceMesh/STLWriter.h
+  ${DREAM3DLib_SOURCE_DIR}/SurfaceMesh/SurfaceWinding.h
 )
 
 SET (DREAM3D_SurfaceMesh_SRCS
@@ -27,6 +28,7 @@ SET (DREAM3D_SurfaceMesh_SRCS
   ${DREAM3DLib_SOURCE_DIR}/SurfaceMesh/Patch.cpp
   ${DREAM3DLib_SOURCE_DIR}/SurfaceMesh/Segment.cpp
   ${DREAM3DLib_SOURCE_DIR}/SurfaceMesh/STLWriter.cpp
+  ${DREAM3DLib_SOURCE_DIR}/SurfaceMesh/SurfaceWinding.cpp
 )
 
 
