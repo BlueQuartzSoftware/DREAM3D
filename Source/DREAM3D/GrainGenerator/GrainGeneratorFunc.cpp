@@ -1152,15 +1152,15 @@ void GrainGeneratorFunc::move_grain(size_t gnum, float xc, float yc, float zc)
   m_Grains[gnum]->centroidz = zc;
   for(size_t i=0;i<m_Grains[gnum]->columnlist->size();i++)
   {
-  column = m_Grains[gnum]->columnlist->at(i);
-  row = m_Grains[gnum]->rowlist->at(i);
-  plane = m_Grains[gnum]->planelist->at(i);
-  column = column+shiftcolumn;
-  row = row+shiftrow;
-  plane = plane+shiftplane;
-  m_Grains[gnum]->columnlist->at(i) = column;
-  m_Grains[gnum]->rowlist->at(i) = row;
-  m_Grains[gnum]->planelist->at(i) = plane;
+    column = m_Grains[gnum]->columnlist->at(i);
+    row = m_Grains[gnum]->rowlist->at(i);
+    plane = m_Grains[gnum]->planelist->at(i);
+    column = column+shiftcolumn;
+    row = row+shiftrow;
+    plane = plane+shiftplane;
+    m_Grains[gnum]->columnlist->at(i) = column;
+    m_Grains[gnum]->rowlist->at(i) = row;
+    m_Grains[gnum]->planelist->at(i) = plane;
   }
 }
 void  GrainGeneratorFunc::remove_grain(size_t gnum)
@@ -1170,23 +1170,26 @@ void  GrainGeneratorFunc::remove_grain(size_t gnum)
   for(size_t i=0;i<m_Grains[gnum]->columnlist->size();i++)
   {
     index = -1;
-  if(periodic_boundaries == true)
-  {
-    if(m_Grains[gnum]->columnlist->at(i) < 0) col = m_Grains[gnum]->columnlist->at(i) + packingxpoints;
-    if(m_Grains[gnum]->columnlist->at(i) > packingxpoints-1) col = m_Grains[gnum]->columnlist->at(i) - packingxpoints;
-    if(m_Grains[gnum]->rowlist->at(i) < 0) row = m_Grains[gnum]->rowlist->at(i) + packingypoints;
-    if(m_Grains[gnum]->rowlist->at(i) > packingypoints-1) row = m_Grains[gnum]->rowlist->at(i) - packingypoints;
-    if(m_Grains[gnum]->planelist->at(i) < 0) plane = m_Grains[gnum]->planelist->at(i) + packingzpoints;
-    if(m_Grains[gnum]->planelist->at(i) > packingzpoints-1) plane = m_Grains[gnum]->planelist->at(i) - packingzpoints;
-    grainowners[col][row][plane] = grainowners[col][row][plane] - 1;
-  }
-  if(periodic_boundaries == false)
-  {
-    if(m_Grains[gnum]->columnlist->at(i) >= 0 && m_Grains[gnum]->columnlist->at(i) <= packingxpoints-1 && m_Grains[gnum]->rowlist->at(i) >= 0 && m_Grains[gnum]->rowlist->at(i) <= packingypoints-1 && m_Grains[gnum]->planelist->at(i) >= 0 && m_Grains[gnum]->planelist->at(i) <= packingzpoints-1)
+    if(periodic_boundaries == true)
     {
-      grainowners[m_Grains[gnum]->columnlist->at(i)][m_Grains[gnum]->rowlist->at(i)][m_Grains[gnum]->planelist->at(i)] = grainowners[m_Grains[gnum]->columnlist->at(i)][m_Grains[gnum]->rowlist->at(i)][m_Grains[gnum]->planelist->at(i)] - 1;
+	  col = m_Grains[gnum]->columnlist->at(i);
+	  row = m_Grains[gnum]->rowlist->at(i);
+	  plane = m_Grains[gnum]->planelist->at(i);
+	  if(col < 0) col = m_Grains[gnum]->columnlist->at(i) + packingxpoints;
+	  if(col > packingxpoints-1) col = m_Grains[gnum]->columnlist->at(i) - packingxpoints;
+	  if(row < 0) row = m_Grains[gnum]->rowlist->at(i) + packingypoints;
+	  if(row > packingypoints-1) row = m_Grains[gnum]->rowlist->at(i) - packingypoints;
+	  if(plane < 0) plane = m_Grains[gnum]->planelist->at(i) + packingzpoints;
+	  if(plane > packingzpoints-1) plane = m_Grains[gnum]->planelist->at(i) - packingzpoints;
+	  grainowners[col][row][plane] = grainowners[col][row][plane] - 1;
+	}
+    if(periodic_boundaries == false)
+    {
+      if(m_Grains[gnum]->columnlist->at(i) >= 0 && m_Grains[gnum]->columnlist->at(i) <= packingxpoints-1 && m_Grains[gnum]->rowlist->at(i) >= 0 && m_Grains[gnum]->rowlist->at(i) <= packingypoints-1 && m_Grains[gnum]->planelist->at(i) >= 0 && m_Grains[gnum]->planelist->at(i) <= packingzpoints-1)
+      {
+        grainowners[m_Grains[gnum]->columnlist->at(i)][m_Grains[gnum]->rowlist->at(i)][m_Grains[gnum]->planelist->at(i)] = grainowners[m_Grains[gnum]->columnlist->at(i)][m_Grains[gnum]->rowlist->at(i)][m_Grains[gnum]->planelist->at(i)] - 1;
+      }
     }
-  }
   }
 //  determine_neighbors(gnum, -1);
 }
@@ -1198,23 +1201,26 @@ void  GrainGeneratorFunc::add_grain(size_t gnum)
   for(size_t i=0;i<m_Grains[gnum]->columnlist->size();i++)
   {
     index = -1;
-  if(periodic_boundaries == true)
-  {
-    if(m_Grains[gnum]->columnlist->at(i) < 0) col = m_Grains[gnum]->columnlist->at(i) + packingxpoints;
-    if(m_Grains[gnum]->columnlist->at(i) > packingxpoints-1) col = m_Grains[gnum]->columnlist->at(i) - packingxpoints;
-    if(m_Grains[gnum]->rowlist->at(i) < 0) row = m_Grains[gnum]->rowlist->at(i) + packingypoints;
-    if(m_Grains[gnum]->rowlist->at(i) > packingypoints-1) row = m_Grains[gnum]->rowlist->at(i) - packingypoints;
-    if(m_Grains[gnum]->planelist->at(i) < 0) plane = m_Grains[gnum]->planelist->at(i) + packingzpoints;
-    if(m_Grains[gnum]->planelist->at(i) > packingzpoints-1) plane = m_Grains[gnum]->planelist->at(i) - packingzpoints;
-    grainowners[col][row][plane]++;
-  }
-  if(periodic_boundaries == false)
-  {
-    if(m_Grains[gnum]->columnlist->at(i) >= 0 && m_Grains[gnum]->columnlist->at(i) <= packingxpoints-1 && m_Grains[gnum]->rowlist->at(i) >= 0 && m_Grains[gnum]->rowlist->at(i) <= packingypoints-1 && m_Grains[gnum]->planelist->at(i) >= 0 && m_Grains[gnum]->planelist->at(i) <= packingzpoints-1)
+    if(periodic_boundaries == true)
     {
-      grainowners[m_Grains[gnum]->columnlist->at(i)][m_Grains[gnum]->rowlist->at(i)][m_Grains[gnum]->planelist->at(i)]++;
+	  col = m_Grains[gnum]->columnlist->at(i);
+	  row = m_Grains[gnum]->rowlist->at(i);
+	  plane = m_Grains[gnum]->planelist->at(i);
+	  if(col < 0) col = m_Grains[gnum]->columnlist->at(i) + packingxpoints;
+	  if(col > packingxpoints-1) col = m_Grains[gnum]->columnlist->at(i) - packingxpoints;
+	  if(row < 0) row = m_Grains[gnum]->rowlist->at(i) + packingypoints;
+	  if(row > packingypoints-1) row = m_Grains[gnum]->rowlist->at(i) - packingypoints;
+	  if(plane < 0) plane = m_Grains[gnum]->planelist->at(i) + packingzpoints;
+	  if(plane > packingzpoints-1) plane = m_Grains[gnum]->planelist->at(i) - packingzpoints;
+      grainowners[col][row][plane]++;
     }
-  }
+    if(periodic_boundaries == false)
+    {
+      if(m_Grains[gnum]->columnlist->at(i) >= 0 && m_Grains[gnum]->columnlist->at(i) <= packingxpoints-1 && m_Grains[gnum]->rowlist->at(i) >= 0 && m_Grains[gnum]->rowlist->at(i) <= packingypoints-1 && m_Grains[gnum]->planelist->at(i) >= 0 && m_Grains[gnum]->planelist->at(i) <= packingzpoints-1)
+      {
+        grainowners[m_Grains[gnum]->columnlist->at(i)][m_Grains[gnum]->rowlist->at(i)][m_Grains[gnum]->planelist->at(i)]++;
+      }
+    }
   }
 //  determine_neighbors(gnum, 1);
 }
@@ -1246,20 +1252,20 @@ void GrainGeneratorFunc::determine_neighbors(size_t gnum, int add)
       if(totdist < (3*(dia/2.0)))
       {
         DoverR = int(totdist/(dia/2.0));
-    for(int iter=DoverR;iter<3;iter++)
-    {
+		for(int iter=DoverR;iter<3;iter++)
+		{
           if(add > 0) m_Grains[n]->neighbordistfunc[iter]++;
           if(add < 0) m_Grains[n]->neighbordistfunc[iter] = m_Grains[n]->neighbordistfunc[iter]-1;
-    }
+		}
       }
       if(totdist < (3*(dia2/2.0)))
       {
         DoverR = int(totdist/(dia2/2.0));
-    for(int iter=DoverR;iter<3;iter++)
-    {
+		for(int iter=DoverR;iter<3;iter++)
+		{
           if(add > 0) m_Grains[gnum]->neighbordistfunc[iter]++;
           if(add < 0) m_Grains[gnum]->neighbordistfunc[iter] = m_Grains[gnum]->neighbordistfunc[iter]-1;
-    }
+		}
       }
   }
 }
@@ -1849,7 +1855,13 @@ void  GrainGeneratorFunc::pack_grains()
 void GrainGeneratorFunc::assign_voxels()
 {
   int index;
-
+  int neighbors[6];
+  neighbors[0] = -(xpoints * ypoints);
+  neighbors[1] = -xpoints;
+  neighbors[2] = -1;
+  neighbors[3] = 1;
+  neighbors[4] = xpoints;
+  neighbors[5] = (xpoints * ypoints);
   int oldname;
   // int size;
   int column, row, plane;
@@ -1870,13 +1882,11 @@ void GrainGeneratorFunc::assign_voxels()
   NEW_SHARED_ARRAY(gsizes, int, m_Grains.size())
   NEW_SHARED_ARRAY(gnames, int, totalpoints)
   NEW_SHARED_ARRAY(unassigned, int, totalpoints)
-  NEW_SHARED_ARRAY(phases, int, totalpoints)
 
   for (int i = 0; i < totalpoints; i++)
   {
     gnames[i] = voxels[i].grain_index;
-    unassigned[i] = voxels[i].unassigned;
-    phases[i] = voxels[i].phase;
+    unassigned[i] = 0;
   }
   for (size_t i = 1; i < m_Grains.size(); i++)
   {
@@ -1888,7 +1898,6 @@ void GrainGeneratorFunc::assign_voxels()
     float bovera = m_Grains[i]->radius2;
     float covera = m_Grains[i]->radius3;
     float omega3 = m_Grains[i]->omega3;
-    phase = m_Grains[i]->phase;
     xc = m_Grains[i]->centroidx;
     yc = m_Grains[i]->centroidy;
     zc = m_Grains[i]->centroidz;
@@ -2083,12 +2092,10 @@ void GrainGeneratorFunc::assign_voxels()
                 gsizes[oldname] = gsizes[oldname] - 1;
                 gnames[currentpoint] = -1;
                 unassigned[currentpoint] = 1;
-                phases[currentpoint] = 0;
               }
               if (gnames[currentpoint] == 0 && unassigned[currentpoint] == 0)
               {
                 gnames[currentpoint] = i;
-                phases[currentpoint] = phase;
                 gsizes[i]++;
               }
             }
@@ -2118,17 +2125,102 @@ void GrainGeneratorFunc::assign_voxels()
     if (gnames[i] > 0)
     {
       voxels[i].grain_index = newnames[gnames[i]];
-      voxels[i].unassigned = unassigned[i];
-      voxels[i].phase = phases[i];
+      unassigned[i] = 0;
+	  gnames[i] = newnames[gnames[i]];
     }
     if (gnames[i] <= 0)
     {
       voxels[i].grain_index = gnames[i];
-      voxels[i].unassigned = unassigned[i];
-      voxels[i].phase = phases[i];
+      unassigned[i] = 0;
+	  gnames[i] = gnames[i];
     }
   }
   m_Grains.resize(goodcount);
+  vector<vector<int> > vlists;
+  vlists.resize(m_Grains.size());
+  vector<int> currentvlist;
+  int count;
+  int good;
+  int neighbor;
+  for (int i = 0; i < totalpoints; i++)
+  {
+	if(unassigned[i] == 0 && gnames[i] > 0)
+	{
+		currentvlist.push_back(i);
+		count = 0;
+		while(count < currentvlist.size())
+		{
+			index = currentvlist[count];
+		    column = index % xpoints;
+		    row = (index / xpoints) % ypoints;
+		    plane = index / (xpoints * ypoints);
+			for (int j = 0; j < 6; j++)
+			{
+				good = 1;
+				neighbor = index + neighbors[j];
+				if (periodic_boundaries == false)
+				{
+			        if (j == 0 && plane == 0) good = 0;
+				    if (j == 5 && plane == (zpoints - 1)) good = 0;
+				    if (j == 1 && row == 0) good = 0;
+				    if (j == 4 && row == (ypoints - 1)) good = 0;
+				    if (j == 2 && column == 0) good = 0;
+				    if (j == 3 && column == (xpoints - 1)) good = 0;
+				    if (good == 1 && gnames[neighbor] == gnames[index] && unassigned[neighbor] == 0)
+				    {
+						currentvlist.push_back(neighbor);
+						unassigned[neighbor] = 1;
+					}
+				}
+			    else if (periodic_boundaries == true)
+			    {
+			        if (j == 0 && plane == 0) neighbor = neighbor + (xpoints*ypoints*zpoints);
+				    if (j == 5 && plane == (zpoints - 1)) neighbor = neighbor - (xpoints*ypoints*zpoints);
+				    if (j == 1 && row == 0) neighbor = neighbor + (xpoints*ypoints);
+				    if (j == 4 && row == (ypoints - 1)) neighbor = neighbor - (xpoints*ypoints);
+				    if (j == 2 && column == 0) neighbor = neighbor + (xpoints);
+				    if (j == 3 && column == (xpoints - 1)) neighbor = neighbor - (xpoints);
+				    if (gnames[neighbor] == gnames[index] && unassigned[neighbor] == 0)
+				    {
+						currentvlist.push_back(neighbor);
+						unassigned[neighbor] = 1;
+					}
+				}
+			}
+			count++;
+		}
+		if(vlists[gnames[currentvlist[0]]].size() > 0)
+		{
+			if(vlists[gnames[currentvlist[0]]].size() < currentvlist.size())
+			{
+				for (int k = 0; k < vlists[gnames[currentvlist[0]]].size(); k++)
+				{
+					gnames[vlists[gnames[currentvlist[0]]][k]] = -1;
+				}
+				vlists[gnames[currentvlist[0]]].resize(currentvlist.size());
+				vlists[gnames[currentvlist[0]]].swap(currentvlist);
+			}
+			else if(vlists[gnames[currentvlist[0]]].size() >= currentvlist.size())
+			{
+				for (int k = 0; k < currentvlist.size(); k++)
+				{
+					gnames[currentvlist[k]] = -1;			
+				}
+			}
+		}
+		else if(vlists[gnames[currentvlist[0]]].size() == 0)
+		{
+			vlists[gnames[currentvlist[0]]].resize(currentvlist.size());
+			vlists[gnames[currentvlist[0]]].swap(currentvlist);
+		}
+		currentvlist.clear();
+	}
+  }
+  for (int i = 0; i < totalpoints; i++)
+  {
+	  voxels[i].grain_index = gnames[i];
+	  if(gnames[i] > 0) voxels[i].phase = m_Grains[gnames[i]]->phase;
+  }
 }
 void  GrainGeneratorFunc::assign_eulers()
 {
@@ -2694,14 +2786,9 @@ void  GrainGeneratorFunc::find_neighbors()
   neighbors[4] = xpoints;
   neighbors[5] = (xpoints * ypoints);
   float column, row, plane;
-  float x, y, z;
-  float xn, yn, zn;
-  float xdist, ydist, zdist;
   int grain;
   size_t nnum;
   int onsurf = 0;
-  float dist, dist2, diam, diam2;
-  int dist_int, dist2_int;
   int good = 0;
   int neighbor = 0;
   size_t xtalCount = crystruct.size();
@@ -2809,74 +2896,8 @@ void  GrainGeneratorFunc::find_neighbors()
       // Push the neighbor grain id back onto the list so we stay synced up
       m_Grains[i]->neighborlist->push_back(neigh);
       m_Grains[i]->neighborsurfacealist->push_back(area);
-      if (neigh >= m_Grains.size())
-      {
-        std::cout << "neigh value exceeds m_Grains.size():" << std::endl;
-        std::cout << "  m_Grains->size(): " << m_Grains.size() << std::endl;
-        std::cout << "  neigh: " << neigh << std::endl;
-      }
     }
-
-
-#if 0
-    std::vector<int>::iterator newend;
-    sort(nlist->begin(), nlist->end());
-    // Make a copy of the contents of the neighborlist vector
-    nlistcopy.assign(nlist->begin(), nlist->end());
-    newend = unique(nlist->begin(), nlist->end());
-    nlist->erase(newend, nlist->end());
-    nlist->erase(std::remove(nlist->begin(), nlist->end(), -1), nlist->end());
-    nlist->erase(std::remove(nlist->begin(), nlist->end(), 0), nlist->end());
-    int numneighs = int(nlist->size());
-    nsalist->resize(numneighs, 0);
-    for (int j = 0; j < numneighs; j++)
-    {
-      int neigh = nlist->at(j);
-      int number = std::count(nlistcopy.begin(), nlistcopy.end(), neigh);
-      float area = number * resx * resx;
-      nsalist->at(j) = area;
-      if (m_Grains[i]->surfacegrain == 0 && (neigh > i || m_Grains[neigh]->surfacegrain == 1))
-      {
-        totalsurfacearea[phase] = totalsurfacearea[phase] + area;
-      }
-    }
-#endif
-
     m_Grains[i]->numneighbors = numneighs;
-  }
-  for (size_t i = 1; i < m_Grains.size(); i++)
-  {
-    x = m_Grains[i]->centroidx;
-    y = m_Grains[i]->centroidy;
-    z = m_Grains[i]->centroidz;
-    diam = m_Grains[i]->equivdiameter;
-    for (size_t j = i; j < m_Grains.size(); j++)
-    {
-      xn = m_Grains[j]->centroidx;
-      yn = m_Grains[j]->centroidy;
-      zn = m_Grains[j]->centroidz;
-      diam2 = m_Grains[j]->equivdiameter;
-      xdist = fabs(x - xn);
-      ydist = fabs(y - yn);
-      zdist = fabs(z - zn);
-      dist = (xdist * xdist) + (ydist * ydist) + (zdist * zdist);
-      dist = sqrt(dist);
-      dist2 = dist;
-      dist_int = int(dist / diam);
-      dist2_int = int(dist2 / diam2);
-//      if (dist_int > 2 || dist2_int > 2)
-//      {
-//        std::cout << "Grain ID: " << i << " neighbordistfunc will walk off the end or array." << std::endl;
-//      }
-      if (dist_int < 3)
-      {
-        m_Grains[i]->neighbordistfunc[dist_int]++;
-      }
-      if (dist2_int < 3)
-      {
-        m_Grains[j]->neighbordistfunc[dist2_int]++;
-      }
-    }
   }
 }
 
@@ -3015,7 +3036,12 @@ void GrainGeneratorFunc::swapOutOrientation( int &badtrycount, int &numbins, flo
   nlist = m_Grains[selectedgrain1]->neighborlist;
   misolist = m_Grains[selectedgrain1]->misorientationlist;
   neighborsurfacealist = m_Grains[selectedgrain1]->neighborsurfacealist;
-  for (size_t j = 0; j < nlist->size(); j++)
+  size_t size = 0;
+  if (NULL != nlist)
+  {
+    size = nlist->size();
+  }
+  for (size_t j = 0; j < size; j++)
   {
     int neighbor = nlist->at(j);
     MC_LoopBody1(phase, neighbor, j, misolist, neighborsurfacealist, mdfchange);
@@ -3034,7 +3060,12 @@ void GrainGeneratorFunc::swapOutOrientation( int &badtrycount, int &numbins, flo
     m_Grains[selectedgrain1]->avg_quat[4] = q1[4];
     simodf[phase][choose] = simodf[phase][choose] + (float(m_Grains[selectedgrain1]->numvoxels) * resx * resy * resz / unbiasedvol[phase]);
     simodf[phase][g1odfbin] = simodf[phase][g1odfbin] - (float(m_Grains[selectedgrain1]->numvoxels) * resx * resy * resz / unbiasedvol[phase]);
-    for (size_t j = 0; j < nlist->size(); j++)
+    size_t size = 0;
+    if (NULL != nlist)
+    {
+      size = nlist->size();
+    }
+	for (size_t j = 0; j < size; j++)
     {
       int neighbor = nlist->at(j);
       MC_LoopBody2(phase, neighbor, j, misolist, neighborsurfacealist);
@@ -3115,7 +3146,12 @@ void GrainGeneratorFunc::switchOrientations( int &badtrycount, int &numbins, flo
   nlist = m_Grains[selectedgrain1]->neighborlist;
   misolist = m_Grains[selectedgrain1]->misorientationlist;
   neighborsurfacealist = m_Grains[selectedgrain1]->neighborsurfacealist;
-  for (size_t j = 0; j < nlist->size(); j++)
+  size_t size = 0;
+  if (NULL != nlist)
+  {
+    size = nlist->size();
+  }
+  for (size_t j = 0; j < size; j++)
   {
     int neighbor = nlist->at(j);
     if (neighbor != selectedgrain2)
@@ -3128,7 +3164,12 @@ void GrainGeneratorFunc::switchOrientations( int &badtrycount, int &numbins, flo
   nlist = m_Grains[selectedgrain2]->neighborlist;
   misolist = m_Grains[selectedgrain2]->misorientationlist;
   neighborsurfacealist = m_Grains[selectedgrain2]->neighborsurfacealist;
-  for (size_t j = 0; j < nlist->size(); j++)
+  size = 0;
+  if (NULL != nlist)
+  {
+    size = nlist->size();
+  }
+  for (size_t j = 0; j < size; j++)
   {
     int neighbor = nlist->at(j);
     if (neighbor != selectedgrain1)
@@ -3160,7 +3201,12 @@ void GrainGeneratorFunc::switchOrientations( int &badtrycount, int &numbins, flo
     m_Grains[selectedgrain1]->avg_quat[2] = q1[2];
     m_Grains[selectedgrain1]->avg_quat[3] = q1[3];
     m_Grains[selectedgrain1]->avg_quat[4] = q1[4];
-    for (size_t j = 0; j < nlist->size(); j++)
+    size = 0;
+    if (NULL != nlist)
+    {
+      size = nlist->size();
+    }
+	for (size_t j = 0; j < size; j++)
     {
       size_t neighbor = nlist->at(j);
       if (neighbor != selectedgrain2)
@@ -3177,7 +3223,12 @@ void GrainGeneratorFunc::switchOrientations( int &badtrycount, int &numbins, flo
     m_Grains[selectedgrain2]->avg_quat[2] = q1[2];
     m_Grains[selectedgrain2]->avg_quat[3] = q1[3];
     m_Grains[selectedgrain2]->avg_quat[4] = q1[4];
-    for (size_t j = 0; j < nlist->size(); j++)
+    size = 0;
+    if (NULL != nlist)
+    {
+      size = nlist->size();
+    }
+	for (size_t j = 0; j < size; j++)
     {
       size_t neighbor = nlist->at(j);
       if (neighbor != selectedgrain1)
@@ -3283,13 +3334,6 @@ void  GrainGeneratorFunc::measure_misorientations ()
       size = nlist->size();
     }
 
-    if (nlist->size() != neighsurfarealist->size() )
-    {
-      std::cout << "nlist->size() != neighsurfarealist->size()" << std::endl;
-      std::cout << "  Grain: " << i << std::endl;
-      std::cout << "  nlist->size(): " << nlist->size() << std::endl;
-      std::cout << "  neighsurfarealist->size(): " << neighsurfarealist->size() << std::endl;
-    }
 
     for (size_t j = 0; j < size; j++)
     {
