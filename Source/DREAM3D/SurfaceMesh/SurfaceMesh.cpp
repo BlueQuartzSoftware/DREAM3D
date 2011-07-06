@@ -387,9 +387,10 @@ void SurfaceMesh::execute()
 
   m = SurfaceMeshFunc::NullPointer(); // Clean up the memory
   updateProgressAndMessage(("Analyzing Winding"), 95);
-
+#if 0
   SurfaceWinding sw;
   sw.analyzeWinding(nNodes, cTriID, TrianglesFile);
+#endif
 
   updateProgressAndMessage(("Surface Meshing Complete"), 100);
   if (m_DeleteTempFiles == true)
