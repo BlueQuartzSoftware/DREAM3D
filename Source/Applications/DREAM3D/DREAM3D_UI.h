@@ -83,19 +83,19 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
     void on_action_TextOnly_toggled(bool state);
 
 
-  /**
-   * @brief Updates the QMenu 'Recent Files' with the latest list of files. This
-   * should be connected to the Signal QRecentFileList->fileListChanged
-   * @param file The newly added file.
-   */
-  void updateRecentFileList(const QString &file);
+    /**
+     * @brief Updates the QMenu 'Recent Files' with the latest list of files. This
+     * should be connected to the Signal QRecentFileList->fileListChanged
+     * @param file The newly added file.
+     */
+    void updateRecentFileList(const QString &file);
 
-  /**
-   * @brief Qt Slot that fires in response to a click on a "Recent File' Menu entry.
-   */
-  void openRecentFile();
+    /**
+     * @brief Qt Slot that fires in response to a click on a "Recent File' Menu entry.
+     */
+    void openRecentFile();
 
-  void setInputUI();
+    void setInputUI();
 
     void displayHelp(QString helpFile);
 
@@ -119,9 +119,6 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
     void addToPluginMenu(QObject *plugin, const QString &text,
                          QMenu *menu, const char *member,
                          QActionGroup *actionGroup, QIcon icon);
-
-    void addToHelpMenu(QObject* plugin, const QString &text,
-                         QMenu* menu, const char* member, QIcon icon);
 
 
     /**
