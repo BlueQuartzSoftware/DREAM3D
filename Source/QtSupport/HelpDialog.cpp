@@ -76,9 +76,14 @@ HelpDialog::~HelpDialog()
 void HelpDialog::setContentFile(QUrl sourceLocation)
 {
   QDir aPluginDir = QDir(qApp->applicationDirPath());
+  QString aPluginDirStr = aPluginDir.absolutePath();
   QString thePath;
 #if defined(Q_OS_WIN)
   if (aPluginDir.cd("Help") )
+  {
+    thePath = aPluginDir.absolutePath();
+  }
+  else if (aPluginDir.cd("../Help") )
   {
     thePath = aPluginDir.absolutePath();
   }
@@ -97,7 +102,7 @@ void HelpDialog::setContentFile(QUrl sourceLocation)
     thePath = aPluginDir.absolutePath();
   }
 #endif
-  thePath = QString("file://").append(thePath).append("/").append(sourceLocation.toString());
+  thePath = QString("file:///").append(thePath).append("/").append(sourceLocation.toString());
 
 //  std::cout << "Help File Path:" << thePath.toStdString() << std::endl;
 
