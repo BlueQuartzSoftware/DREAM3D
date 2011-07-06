@@ -54,6 +54,33 @@ class GrainChecker
     virtual ~GrainChecker(){}
     typedef std::map<int, int>  MapType;
 
+    template<typename T>
+    static void TripletSort(T a, T b, T c, T* sorted)
+    {
+      if ( a > b && a > c)
+      {
+        sorted[2] = a;
+        if (b > c) { sorted[1] = b; sorted[0] = c; }
+        else { sorted[1] = c; sorted[0] = b; }
+      }
+      else if ( b > a && b > c)
+      {
+        sorted[2] = b;
+        if (a > c) { sorted[1] = a; sorted[0] = c; }
+        else { sorted[1] = c; sorted[0] = a; }
+      }
+      else if ( a > b )
+      {
+        sorted[1] = a; sorted[0] = b; sorted[2] = c;
+      }
+      else if (a >= c && b >=c)
+      {
+        sorted[0] = c; sorted[1] = a; sorted[2] = b;
+      }
+      else
+      { sorted[0] = a; sorted[1] = b; sorted[2] = c;}
+    }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -89,6 +116,23 @@ class GrainChecker
           vertMap[n2] = 0;
           vertMap[n3] = 0;
           triMap[ctid] = 0;
+
+//          if (gid == 53)
+//          {
+//            int s[3];
+//            TripletSort<int>(n1, n2, n3, s);
+//            uint64_t edgeId;
+//            int32_t* e0 = (int32_t*)(&edgeId);
+//            int32_t* e1 = e0+1;
+//
+//            *e0 = s[0]; *e1 = s[1];
+//            ++g53map[edgeId];
+//            *e0 = s[1]; *e1 = s[2];
+//            ++g53map[edgeId];
+//            *e0 = s[0]; *e1 = s[2];
+//            ++g53map[edgeId];
+//          }
+
         }
 
         gid = cTriangle[i].ngrainname[1];
@@ -114,6 +158,22 @@ class GrainChecker
           vertMap[n2] = 0;
           vertMap[n3] = 0;
           triMap[ctid] = 0;
+
+//          if (gid == 53)
+//          {
+//            int s[3];
+//            TripletSort<int>(n1, n2, n3, s);
+//            uint64_t edgeId;
+//            int32_t* e0 = (int32_t*)(&edgeId);
+//            int32_t* e1 = e0+1;
+//
+//            *e0 = s[0]; *e1 = s[1];
+//            ++g53map[edgeId];
+//            *e0 = s[1]; *e1 = s[2];
+//            ++g53map[edgeId];
+//            *e0 = s[0]; *e1 = s[2];
+//            ++g53map[edgeId];
+//          }
         }
         //
         ++ctid;
@@ -140,7 +200,6 @@ class GrainChecker
           std::cout << "Grain ID: " << i << " Does not satisfy equation T=2V-4    " << "  tCount: " << tCount << "   " << "  vCount: " << vCount << std::endl;
         }
       }
-
     }
 
   protected:
@@ -149,7 +208,6 @@ class GrainChecker
   private:
     std::vector<MapType> grainMaps;
     std::vector<MapType> tCounts;
-
 
     GrainChecker(const GrainChecker&); // Copy Constructor Not Implemented
     void operator=(const GrainChecker&); // Operator '=' Not Implemented
@@ -207,8 +265,6 @@ class DREAM3DLib_EXPORT SurfaceMesh : public AbstractPipeline
     void execute();
 
     void writeSTLFiles(int nTriangle, std::map<int, STLWriter::Pointer> &gidToSTLWriter );
-    void updateTriangleCounts( std::map<int, STLWriter::Pointer> &gidToSTLWriter);
-
 
   protected:
 

@@ -211,19 +211,10 @@ int STLWriter::writeNumTrianglesToFile()
   // at any point in the file. Yes this will slow us down even more
   int err =0;
 
-  std::ofstream out(m_Filename.c_str(), std::ios_base::binary);
-  if (out.is_open() == false)
-  {
-    return -1;
-  }
-  // seek to the 80 byte
-  out.seekp(80);
-
-  const char* data = reinterpret_cast<const char*>(&m_TriangleCount);
-  out.write(data, 4);
-
-  out.flush();
-  out.close();
+  FILE* out = fopen(m_Filename.c_str(), "r+b");
+  fseek(out, 80L, SEEK_SET);
+  fwrite( (char*)(&m_TriangleCount), 1, 4, out);
+  fclose(out);
 
   return err;
 }
