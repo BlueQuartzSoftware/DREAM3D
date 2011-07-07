@@ -113,7 +113,7 @@ void MicrostructureStatisticsFunc::initializeGrains()
   Grain::Pointer grain;
   for(int i = 0; i < totalpoints; ++i)
   {
-    grainIndex = voxels[i].grain_index;
+    grainIndex = grain_indicies[i];
     curGrainSize = m_Grains.size();
     if (grainIndex > m_Grains.size()-1)
     {
@@ -130,7 +130,7 @@ void MicrostructureStatisticsFunc::initializeGrains()
       grain = m_Grains[grainIndex];
       // Assign a new voxel list pointer to it
       grain->voxellist = new std::vector<int>(0);
-      grain->phase = voxels[i].phase;
+      grain->phase = phases[i];
     }
     grain->voxellist->push_back(i);
     grain->numvoxels = grain->voxellist->size();
@@ -151,6 +151,30 @@ void MicrostructureStatisticsFunc::initializeGrains()
 #define GG_INIT_DOUBLE_ARRAY(array, value, size)\
     for(size_t n = 0; n < size; ++n) { array[n] = (value); }
 
+void MicrostructureStatisticsFunc::initializeAttributes()
+{
+	grain_indicies.resize(totalpoints);
+    phases.resize(totalpoints);
+    euler1s.resize(totalpoints);
+    euler2s.resize(totalpoints);
+    euler3s.resize(totalpoints);
+    neighbors.resize(totalpoints);
+    surfacevoxels.resize(totalpoints);
+    grainmisorientations.resize(totalpoints);
+    misorientationgradients.resize(totalpoints);
+    kernelmisorientations.resize(totalpoints);
+    neighborlists.resize(totalpoints);
+    quats.resize(totalpoints);
+    nearestneighbors.resize(totalpoints);
+    nearestneighbordistances.resize(totalpoints);
+	for(int i=0;i<totalpoints;i++)
+	{
+		neighborlists[i].resize(6);
+		quats[i].resize(5);
+		nearestneighbors[i].resize(3);
+		nearestneighbordistances[i].resize(3);
+	}
+}
 void MicrostructureStatisticsFunc::initializeArrays()
 {
 
@@ -215,15 +239,10 @@ void MicrostructureStatisticsFunc::find_neighbors()
     }
   }
 
-  NEW_SHARED_ARRAY(gnames, int, totalpoints)
-  for (int i = 0; i < totalpoints; i++)
-  {
-    gnames[i] = voxels[i].grain_index;
-  }
   for(int j = 0; j < (xpoints*ypoints*zpoints); j++)
   {
     onsurf = 0;
-    grain = gnames[j];
+    grain = grain_indicies[j];
 	if(grain > 0)
 	{
 		column = j%xpoints;
@@ -239,7 +258,7 @@ void MicrostructureStatisticsFunc::find_neighbors()
           if(k == 4 && row == (ypoints-1)) good = 0;
           if(k == 2 && column == 0) good = 0;
           if(k == 3 && column == (xpoints-1)) good = 0;
-	      if(good == 1 && gnames[neighbor] != grain && gnames[neighbor] > 0)
+	      if(good == 1 && grain_indicies[neighbor] != grain && grain_indicies[neighbor] > 0)
           {
 	        onsurf++;
 	        nnum = m_Grains[grain]->numneighbors;
@@ -248,13 +267,13 @@ void MicrostructureStatisticsFunc::find_neighbors()
 	        {
 	         nlist->resize(nnum + nListSize);
 	        }
-	        nlist->at(nnum) = gnames[neighbor];
+	        nlist->at(nnum) = grain_indicies[neighbor];
 	        nnum++;
 	        m_Grains[grain]->numneighbors = nnum;
 	      }
 	    }
 	}
-	voxels[j].surfacevoxel = onsurf;
+	surfacevoxels[j] = onsurf;
   }
   for (size_t i = 1; i < m_Grains.size(); i++)
   {
@@ -394,7 +413,7 @@ void MicrostructureStatisticsFunc::find_surfacegrains()
   for (int j = 0; j < (xpoints * ypoints * zpoints); j++)
   {
     onedge = 0;
-    int gnum = voxels[j].grain_index;
+    int gnum = grain_indicies[j];
     col = j % xpoints;
     row = (j / xpoints) % ypoints;
     plane = j / (xpoints * ypoints);
@@ -414,7 +433,7 @@ void MicrostructureStatisticsFunc::find_surfacegrains2D()
   for (int j = 0; j < (xpoints * ypoints); j++)
   {
     onedge = 0;
-    int gnum = voxels[j].grain_index;
+    int gnum = grain_indicies[j];
     col = j % xpoints;
     row = (j / xpoints) % ypoints;
     if (col <= 0) onedge = 1;
@@ -450,7 +469,7 @@ void MicrostructureStatisticsFunc::find_centroids()
   }
   for (int j = 0; j < (xpoints * ypoints * zpoints); j++)
   {
-    int gnum = voxels[j].grain_index;
+    int gnum = grain_indicies[j];
     graincenters[gnum][0]++;
     col = j % xpoints;
     row = (j / xpoints) % ypoints;
@@ -511,7 +530,7 @@ void MicrostructureStatisticsFunc::find_centroids2D()
   }
   for (int j = 0; j < (xpoints * ypoints * zpoints); j++)
   {
-    int gnum = voxels[j].grain_index;
+    int gnum = grain_indicies[j];
     graincenters[gnum][0]++;
     col = j % xpoints;
     row = (j / xpoints) % ypoints;
@@ -588,7 +607,7 @@ void MicrostructureStatisticsFunc::find_moments()
     u110 = 0;
     u011 = 0;
     u101 = 0;
-    int gnum = voxels[j].grain_index;
+    int gnum = grain_indicies[j];
     float x = find_xcoord(j);
     float y = find_ycoord(j);
     float z = find_zcoord(j);
@@ -973,7 +992,6 @@ void MicrostructureStatisticsFunc::find_grain_and_kernel_misorientations()
   std::vector<int> gNamesVec(totalpoints);
   std::vector<int> unAssignedVec(totalpoints);
   std::vector<float> gamVec(totalpoints);
-  int* gnames = &(gNamesVec.front());
   int* unassigned = &(unAssignedVec.front());
   float* gam = &(gamVec.front());
 
@@ -992,7 +1010,6 @@ void MicrostructureStatisticsFunc::find_grain_and_kernel_misorientations()
   }
   for (int i = 0; i < totalpoints; ++i)
   {
-    gnames[i] = voxels[i].grain_index;
     gam[i] = 0.0;
   }
 
@@ -1020,15 +1037,15 @@ void MicrostructureStatisticsFunc::find_grain_and_kernel_misorientations()
       for (int plane = 0; plane < zpoints; plane++)
       {
         point = (plane * xpoints * ypoints) + (row * xpoints) + col;
-        if (gnames[point] > 0)
+        if (grain_indicies[point] > 0)
         {
           totalmisorientation = 0.0;
           numVoxel = 0;
-          q1[1] = voxels[point].quat[1];
-          q1[2] = voxels[point].quat[2];
-          q1[3] = voxels[point].quat[3];
-          q1[4] = voxels[point].quat[4];
-          phase1 = crystruct[voxels[point].phase];
+          q1[1] = quats[point][1];
+          q1[2] = quats[point][2];
+          q1[3] = quats[point][3];
+          q1[4] = quats[point][4];
+          phase1 = crystruct[phases[point]];
           for (int j = -steps; j < steps + 1; j++)
           {
             jStride = j * xpoints * ypoints;
@@ -1048,11 +1065,11 @@ void MicrostructureStatisticsFunc::find_grain_and_kernel_misorientations()
                 if (good == 1)
                 {
                   w = 10000.0;
-                  q2[1] = voxels[neighbor].quat[1];
-                  q2[2] = voxels[neighbor].quat[2];
-                  q2[3] = voxels[neighbor].quat[3];
-                  q2[4] = voxels[neighbor].quat[4];
-                  phase2 = crystruct[voxels[neighbor].phase];
+                  q2[1] = quats[neighbor][1];
+                  q2[2] = quats[neighbor][2];
+                  q2[3] = quats[neighbor][3];
+                  q2[4] = quats[neighbor][4];
+                  phase2 = crystruct[phases[neighbor]];
                   if (phase1 == phase2) {
                     //w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
                     switch(phase1)
@@ -1073,23 +1090,23 @@ void MicrostructureStatisticsFunc::find_grain_and_kernel_misorientations()
               }
             }
           }
-          voxels[point].kernelmisorientation = totalmisorientation / (float)numVoxel;
-          if (numVoxel == 0) voxels[point].kernelmisorientation = 0;
+          kernelmisorientations[neighbor] = totalmisorientation / (float)numVoxel;
+          if (numVoxel == 0) kernelmisorientations[neighbor] = 0;
           q2[0] = 1;
-          q2[1] = m_Grains[gnames[point]]->avg_quat[1] / m_Grains[gnames[point]]->avg_quat[0];
-          q2[2] = m_Grains[gnames[point]]->avg_quat[2] / m_Grains[gnames[point]]->avg_quat[0];
-          q2[3] = m_Grains[gnames[point]]->avg_quat[3] / m_Grains[gnames[point]]->avg_quat[0];
-          q2[4] = m_Grains[gnames[point]]->avg_quat[4] / m_Grains[gnames[point]]->avg_quat[0];
+          q2[1] = m_Grains[grain_indicies[point]]->avg_quat[1] / m_Grains[grain_indicies[point]]->avg_quat[0];
+          q2[2] = m_Grains[grain_indicies[point]]->avg_quat[2] / m_Grains[grain_indicies[point]]->avg_quat[0];
+          q2[3] = m_Grains[grain_indicies[point]]->avg_quat[3] / m_Grains[grain_indicies[point]]->avg_quat[0];
+          q2[4] = m_Grains[grain_indicies[point]]->avg_quat[4] / m_Grains[grain_indicies[point]]->avg_quat[0];
           w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
-          voxels[point].grainmisorientation = w;
+          grainmisorientations[neighbor] = w;
           gam[point] = w;
-          avgmiso[gnames[point]][0]++;
-          avgmiso[gnames[point]][1] = avgmiso[gnames[point]][1] + w;
+          avgmiso[grain_indicies[point]][0]++;
+          avgmiso[grain_indicies[point]][1] = avgmiso[grain_indicies[point]][1] + w;
         }
-        if (gnames[point] == 0)
+        if (grain_indicies[point] == 0)
         {
-          voxels[point].kernelmisorientation = 0;
-          voxels[point].grainmisorientation = 0;
+          kernelmisorientations[point] = 0;
+          grainmisorientations[point] = 0;
           gam[point] = 0;
         }
       }
@@ -1110,7 +1127,7 @@ void MicrostructureStatisticsFunc::find_grain_and_kernel_misorientations()
       for (int plane = 0; plane < zpoints; plane++)
       {
         point = (plane * xpoints * ypoints) + (row * xpoints) + col;
-        if (gnames[point] > 0 && unassigned[point] == 0)
+        if (grain_indicies[point] > 0 && unassigned[point] == 0)
         {
           totalmisorientation = 0.0;
           numchecks = 0;
@@ -1130,7 +1147,7 @@ void MicrostructureStatisticsFunc::find_grain_and_kernel_misorientations()
                 if (row + k > ypoints - 1) good = 0;
                 if (col + l < 0) good = 0;
                 if (col + l > xpoints - 1) good = 0;
-                if (good == 1 && gnames[point] == gnames[neighbor] && unassigned[neighbor] != 1)
+                if (good == 1 && grain_indicies[point] == grain_indicies[neighbor] && unassigned[neighbor] != 1)
                 {
                   numchecks++;
                   totalmisorientation = totalmisorientation + fabs(gam[point] - gam[neighbor]);
@@ -1138,11 +1155,11 @@ void MicrostructureStatisticsFunc::find_grain_and_kernel_misorientations()
               }
             }
           }
-          voxels[point].misorientationgradient = totalmisorientation / (float)numchecks;
+          misorientationgradients[point] = totalmisorientation / (float)numchecks;
         }
-        if (gnames[point] == 0 || unassigned[point] != 0)
+        if (grain_indicies[point] == 0 || unassigned[point] != 0)
         {
-          voxels[point].misorientationgradient = 0;
+          misorientationgradients[point] = 0;
         }
       }
     }
@@ -1177,7 +1194,7 @@ void MicrostructureStatisticsFunc::find_moments2D()
     u200 = 0;
     u020 = 0;
     u110 = 0;
-    int gnum = voxels[j].grain_index;
+    int gnum = grain_indicies[j];
     float x = find_xcoord(j);
     float y = find_ycoord(j);
     float x1 = x + (resx / 2);
@@ -1303,19 +1320,19 @@ void MicrostructureStatisticsFunc::find_grainorientations()
   float qr[5];
   for(size_t i = 0; i < (xpoints*ypoints*zpoints); i++)
   {
-    OrientationMath::eulertoQuat(qr, voxels[i].euler1, voxels[i].euler2, voxels[i].euler3);
-    phase = voxels[i].phase;
+    OrientationMath::eulertoQuat(qr, euler1s[i], euler2s[i], euler3s[i]);
+    phase = phases[i];
     xtal = crystruct[phase];
     m_OrientationOps[xtal]->getFZQuat(qr);
-    voxels[i].quat[0] = 1.0;
-    voxels[i].quat[1] = qr[1];
-    voxels[i].quat[2] = qr[2];
-    voxels[i].quat[3] = qr[3];
-    voxels[i].quat[4] = qr[4];
-	m_OrientationOps[xtal]->getNearestQuat(m_Grains[voxels[i].grain_index]->avg_quat, voxels[i].quat);
+    quats[i][0] = 1.0;
+    quats[i][1] = qr[1];
+    quats[i][2] = qr[2];
+    quats[i][3] = qr[3];
+    quats[i][4] = qr[4];
+	m_OrientationOps[xtal]->getNearestQuat(m_Grains[grain_indicies[i]]->avg_quat, quats[i]);
     for (int k = 0; k < 5; k++)
     {
-	  m_Grains[voxels[i].grain_index]->avg_quat[k] = m_Grains[voxels[i].grain_index]->avg_quat[k] + voxels[i].quat[k];
+	  m_Grains[grain_indicies[i]]->avg_quat[k] = m_Grains[grain_indicies[i]]->avg_quat[k] + quats[i][k];
     }
   }
   float q[5];
@@ -1991,15 +2008,15 @@ void MicrostructureStatisticsFunc::deformation_stats(const std::string &filename
 
   for (int i = 0; i < totalpoints; i++)
   {
-      km = voxels[i].kernelmisorientation;
-      gam = voxels[i].grainmisorientation;
-      lmg = voxels[i].misorientationgradient;
-      gbdist = voxels[i].nearestneighbordistance[0];
-      tjdist = voxels[i].nearestneighbordistance[1];
-      qpdist = voxels[i].nearestneighbordistance[2];
-      gname = voxels[i].grain_index;
-      nearestneighbor = voxels[i].nearestneighbor[0];
-      gname2 = voxels[nearestneighbor].neighborlist->at(0);
+      km = kernelmisorientations[i];
+      gam = grainmisorientations[i];
+      lmg = misorientationgradients[i];
+      gbdist = nearestneighbordistances[i][0];
+      tjdist = nearestneighbordistances[i][1];
+      qpdist = nearestneighbordistances[i][2];
+      gname = grain_indicies[i];
+      nearestneighbor = nearestneighbors[i][0];
+      gname2 = neighborlists[nearestneighbor][0];
       sf = m_Grains[gname]->schmidfactor;
       sf2 = m_Grains[gname2]->schmidfactor;
       sfmm = sf / sf2;
@@ -2067,7 +2084,7 @@ void MicrostructureStatisticsFunc::deformation_stats(const std::string &filename
       gamvqp[qpbin][1] = gamvqp[qpbin][1] + gam;
       lmgvqp[qpbin][0]++;
       lmgvqp[qpbin][1] = lmgvqp[qpbin][1] + lmg;
-	  distance = int(voxels[i].nearestneighbordistance[0]);
+	  distance = int(nearestneighbordistances[i][0]);
 	  if(distance > 9) distance = 9;
 	  if(distance <= 5)
 	  {

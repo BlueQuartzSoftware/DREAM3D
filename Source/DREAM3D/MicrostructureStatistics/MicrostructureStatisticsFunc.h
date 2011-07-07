@@ -61,7 +61,6 @@
 #include "DREAM3D/Common/OrientationOps/CubicOps.h"
 #include "DREAM3D/Common/OrientationOps/HexagonalOps.h"
 #include "DREAM3D/Common/OrientationOps/OrthoRhombicOps.h"
-#include "DREAM3D/MicrostructureStatistics/MicrostructureStatisticsVoxel.h"
 #include "DREAM3D/HDF5/H5ReconStatsWriter.h"
 
 class DREAM3DLib_EXPORT MicrostructureStatisticsFunc
@@ -79,7 +78,20 @@ class DREAM3DLib_EXPORT MicrostructureStatisticsFunc
     std::vector<AIM::Reconstruction::PhaseType> phaseType;
     std::vector<float> pptFractions;
 
-    boost::shared_array<MicrostructureStatisticsVoxel> voxels;
+    std::vector<int> grain_indicies;
+    std::vector<int> phases;
+    std::vector<float> euler1s;
+    std::vector<float> euler2s;
+    std::vector<float> euler3s;
+    std::vector<int> neighbors;
+    std::vector<int> surfacevoxels;
+    std::vector<float> grainmisorientations;
+    std::vector<float> misorientationgradients;
+    std::vector<float> kernelmisorientations;
+    std::vector<std::vector<int> > neighborlists;
+    std::vector<std::vector<float> > quats;
+    std::vector<std::vector<int> > nearestneighbors;
+    std::vector<std::vector<float> > nearestneighbordistances;
 
     SharedIntArray graincounts;
     std::vector<Grain::Pointer> m_Grains;
@@ -112,6 +124,7 @@ class DREAM3DLib_EXPORT MicrostructureStatisticsFunc
 	bool computeodf;
 	bool computemdf;
 
+	void initializeAttributes();
     void initializeGrains();
     void initializeArrays();
 

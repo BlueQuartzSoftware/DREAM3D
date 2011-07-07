@@ -147,45 +147,45 @@ void SurfaceMeshFunc::initialize_nodes(int zID)
     z = find_zcoord(locale);
     int grainid = voxels[tsite];
     if (grainid > numgrains) numgrains = grainid;
-    cVertex[id].xc = x + (0.5 * xRes);
+    cVertex[id].xc = x + (0.5f * xRes);
     cVertex[id].yc = y;
     cVertex[id].zc = z;
     cVertex[id].nodeKind = 0;
     cVertex[id].NodeID = -1;
     cVertex[id].point = tsite;
     cVertex[id + 1].xc = x;
-    cVertex[id + 1].yc = y + (0.5 * yRes);
+    cVertex[id + 1].yc = y + (0.5f * yRes);
     cVertex[id + 1].zc = z;
     cVertex[id + 1].nodeKind = 0;
     cVertex[id + 1].NodeID = -1;
     cVertex[id + 1].point = tsite;
     cVertex[id + 2].xc = x;
     cVertex[id + 2].yc = y;
-    cVertex[id + 2].zc = z + (0.5 * zRes);
+    cVertex[id + 2].zc = z + (0.5f * zRes);
     cVertex[id + 2].nodeKind = 0;
     cVertex[id + 2].NodeID = -1;
     cVertex[id + 2].point = tsite;
-    cVertex[id + 3].xc = x + (0.5 * xRes);
-    cVertex[id + 3].yc = y + (0.5 * yRes);
+    cVertex[id + 3].xc = x + (0.5f * xRes);
+    cVertex[id + 3].yc = y + (0.5f * yRes);
     cVertex[id + 3].zc = z;
     cVertex[id + 3].nodeKind = 0;
     cVertex[id + 3].NodeID = -1;
     cVertex[id + 3].point = tsite;
-    cVertex[id + 4].xc = x + (0.5 * xRes);
+    cVertex[id + 4].xc = x + (0.5f * xRes);
     cVertex[id + 4].yc = y;
-    cVertex[id + 4].zc = z + (0.5 * zRes);
+    cVertex[id + 4].zc = z + (0.5f * zRes);
     cVertex[id + 4].nodeKind = 0;
     cVertex[id + 4].NodeID = -1;
     cVertex[id + 4].point = tsite;
     cVertex[id + 5].xc = x;
-    cVertex[id + 5].yc = y + (0.5 * yRes);
-    cVertex[id + 5].zc = z + (0.5 * zRes);
+    cVertex[id + 5].yc = y + (0.5f * yRes);
+    cVertex[id + 5].zc = z + (0.5f * zRes);
     cVertex[id + 5].nodeKind = 0;
     cVertex[id + 5].NodeID = -1;
     cVertex[id + 5].point = tsite;
-    cVertex[id + 6].xc = x + (0.5 * xRes);
-    cVertex[id + 6].yc = y + (0.5 * yRes);
-    cVertex[id + 6].zc = z + (0.5 * zRes);
+    cVertex[id + 6].xc = x + (0.5f * xRes);
+    cVertex[id + 6].yc = y + (0.5f * yRes);
+    cVertex[id + 6].zc = z + (0.5f * zRes);
     cVertex[id + 6].nodeKind = 0;
     cVertex[id + 6].NodeID = -1;
     cVertex[id + 6].point = tsite;
@@ -1879,9 +1879,9 @@ void SurfaceMeshFunc::arrange_grainnames(int numT, int zID)
       }
     }
     // Getting the center of triangle...
-    cx = xSum / 3.0;
-    cy = ySum / 3.0;
-    cz = zSum / 3.0;
+    cx = xSum / 3.0f;
+    cy = ySum / 3.0f;
+    cz = zSum / 3.0f;
     // Getting normal vector of the triangle...(Right-hand Rule!!!)
     // Getting 2 edge vectors of triangle originating from vertex 0...
     u[0] = vcoord[1][0] - vcoord[0][0];
