@@ -61,7 +61,7 @@ SurfaceWinding::~SurfaceWinding()
 }
 
 
-#define DEBUG1  if (tData[0] == 141350 || tData[0] == 141355 || tData[0] == 141351 || tData[0] == 141438)
+//#define DEBUG1  if (tData[0] == 141350 || tData[0] == 141355 || tData[0] == 141351 || tData[0] == 141438)
 
 
 // -----------------------------------------------------------------------------
@@ -112,11 +112,6 @@ void SurfaceWinding::debugPrintConnectivity(int nNodes, int nTriangle, const std
     face->labels[1] = tData[5];
 
     // Create an Entry for the Edge Map
-    DEBUG1
-    {
-      std::cout << "-- Face ID: " << tData[0] << std::endl;
-    }
-
     m3c::Edge::Pointer e0 = m3c::Edge::New(face->verts[0], face->verts[1]);
     m3c::Edge::Pointer e = eMap[e0->getId()];
     if (NULL == e.get())
@@ -169,6 +164,9 @@ void SurfaceWinding::debugPrintConnectivity(int nNodes, int nTriangle, const std
 
   float total = (float)(labelTriangleMap.size());
  // bool firstLabel = true;
+  // Keeps a list of all the triangles that have been visited.
+  std::vector<bool> masterVisited(masterTriangleList.size(), false);
+
   // Start with first triangle in the master list:
   int masterTriangleIndex = 0;
   TriangleType::Pointer t = masterTriangleList[masterTriangleIndex];
@@ -183,6 +181,7 @@ void SurfaceWinding::debugPrintConnectivity(int nNodes, int nTriangle, const std
   for (LabelTriangleMapType::iterator cLabel = labelTriangleMap.begin(); cLabel != labelTriangleMap.end(); ++cLabel )
   {
     int currentLabel = cLabel->first;
+  //  if (currentLabel != 1) { continue; }
     masterTriangleIndex = cLabel->second;
     t = masterTriangleList[masterTriangleIndex];
 
@@ -210,38 +209,37 @@ void SurfaceWinding::debugPrintConnectivity(int nNodes, int nTriangle, const std
       t = masterTriangleList[triangleDeque.front()];
   //    std::cout << "tIndex = " << t->tIndex << std::endl;
       localVisited.insert(t->tIndex);
+#if 0
+      bool debug = ( t->tIndex == 163674 || t->tIndex == 163673 || t->tIndex == 163675 || t->tIndex == 163700);
+      if (debug == true)
+      {
+        std::cout << "Debugging" << std::endl;
+      } debug = false;
+#endif
       TriangleListPtrType adjTris = findAdjacentTriangles(t, currentLabel);
       for ( TriangleListType::iterator adjTri = adjTris->begin(); adjTri != adjTris->end(); ++adjTri )
       {
-
-        if ( (*adjTri)->getWindingDirectionForLabel(currentLabel) == 0) {
-      //    std::cout << "  Checking winding " << (*adjTri)->tIndex << std::endl;
-          bool debug = ( (*adjTri)->tIndex == 163674);
-          t->verifyWinding( *adjTri, currentLabel, debug);
-        }
-        if ( localVisited.find((*adjTri)->tIndex) == localVisited.end()
-             && find(triangleDeque.begin(), triangleDeque.end(), (*adjTri)->tIndex) == triangleDeque.end() )
+        //  std::cout << "  ^ AdjTri index: " << (*adjTri)->tIndex << std::endl;
+        if (masterVisited[(*adjTri)->tIndex] == false)
         {
-       //   std::cout << "  Adding " << (*adjTri)->tIndex << " to Deque" << std::endl;
-          triangleDeque.push_back( (*adjTri)->tIndex );
+          //   std::cout << "   * Checking Winding: " << (*adjTri)->tIndex << std::endl;
+          t->verifyWinding( *adjTri, currentLabel);
         }
 
+
+        if (localVisited.find((*adjTri)->tIndex) == localVisited.end()
+          && find(triangleDeque.begin(), triangleDeque.end(), (*adjTri)->tIndex) == triangleDeque.end())
+        {
+          // std::cout << "   # Adding to Deque: " << (*adjTri)->tIndex << std::endl;
+          triangleDeque.push_back((*adjTri)->tIndex);
+          localVisited.insert((*adjTri)->tIndex);
+          masterVisited[(*adjTri)->tIndex] = true;
+        }
       }
 
       triangleDeque.pop_front();
     }
 
-  }
-
-  for (TriangleListType::iterator iter = masterTriangleList.begin(); iter != masterTriangleList.end(); ++iter )
-  {
-    if ( (*iter)->windingDirection[0] > 1 || (*iter)->windingDirection[1] > 1)
-    {
-      if ( (*iter)->labels[0] == 1 == (*iter)->labels[1] == 0)
-      {
-        std::cout << "tIndex: " << (*iter)->tIndex << std::endl;
-      }
-    }
   }
 
   std::cout << "--------------------------------------------------------------" << std::endl;
@@ -258,13 +256,13 @@ SurfaceWinding::TriangleContainerPointerType SurfaceWinding::findAdjacentTriangl
   TriangleContainerPointerType adjacentTris(new TriangleType::ContainerT);
   typedef m3c::Edge::Pointer EdgeType;
   // Get the 3 edges from the triangle
-  EdgeType edges[3] = triangle->edges;
+
   TriangleType::Pointer t;
   // Iterate over the 3 Edges of the triangle
   for (int i = 0; i < 3; ++i)
   {
     // Get the current edge
-    EdgeType e = edges[i];
+    EdgeType e = triangle->edges[i];
     // Get the list of indices of the triangles that belong to that edge
     std::set<int> tIndices = e->triangles;
     // Iterate over the indices to find triangles that match the label and are NOT the current triangle index
