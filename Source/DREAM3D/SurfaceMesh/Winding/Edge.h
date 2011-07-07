@@ -17,7 +17,7 @@
 
 #include "MXA/Common/MXASetGetMacros.h"
 #include "MXA/MXATypes.h"
-
+#include "DREAM3D/DREAM3DConfiguration.h"
 
 
 namespace m3c {
