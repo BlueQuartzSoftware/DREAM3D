@@ -1843,13 +1843,13 @@ void  GrainGeneratorFunc::pack_grains()
 void GrainGeneratorFunc::assign_voxels()
 {
   int index;
-  int neighbors[6];
-  neighbors[0] = -(xpoints * ypoints);
-  neighbors[1] = -xpoints;
-  neighbors[2] = -1;
-  neighbors[3] = 1;
-  neighbors[4] = xpoints;
-  neighbors[5] = (xpoints * ypoints);
+  int neighpoints[6];
+  neighpoints[0] = -(xpoints * ypoints);
+  neighpoints[1] = -xpoints;
+  neighpoints[2] = -1;
+  neighpoints[3] = 1;
+  neighpoints[4] = xpoints;
+  neighpoints[5] = (xpoints * ypoints);
   int oldname;
   // int size;
   int column, row, plane;
@@ -2141,7 +2141,7 @@ void GrainGeneratorFunc::assign_voxels()
 			for (int j = 0; j < 6; j++)
 			{
 				good = 1;
-				neighbor = index + neighbors[j];
+				neighbor = index + neighpoints[j];
 				if (periodic_boundaries == false)
 				{
 			        if (j == 0 && plane == 0) good = 0;
@@ -2270,7 +2270,7 @@ void  GrainGeneratorFunc::fill_gaps()
   size_t numGrains = m_Grains.size();
   gsizes.resize(numGrains, 0);
   int neighpoint;
-  int neighbors[6];
+  int neighpoints[6];
 
   // Create a self cleaning array of integers.
   NEW_SHARED_ARRAY(n, int, numGrains)
@@ -2278,12 +2278,12 @@ void  GrainGeneratorFunc::fill_gaps()
   int grainname = 0;
   int grain = 0;
 
-  neighbors[0] = -xpoints * ypoints;
-  neighbors[1] = -xpoints;
-  neighbors[2] = -1;
-  neighbors[3] = 1;
-  neighbors[4] = xpoints;
-  neighbors[5] = xpoints * ypoints;
+  neighpoints[0] = -xpoints * ypoints;
+  neighpoints[1] = -xpoints;
+  neighpoints[2] = -1;
+  neighpoints[3] = 1;
+  neighpoints[4] = xpoints;
+  neighpoints[5] = xpoints * ypoints;
   while (count != 0)
   {
     count = 0;
@@ -2301,7 +2301,7 @@ void  GrainGeneratorFunc::fill_gaps()
         for (int j = 0; j < 6; j++)
         {
           good = 1;
-          neighpoint = i + neighbors[j];
+          neighpoint = i + neighpoints[j];
           if (j == 0 && z == 0) good = 0;
           if (j == 5 && z == (zpoints - 1)) good = 0;
           if (j == 1 && y == 0) good = 0;
@@ -2378,14 +2378,14 @@ void  GrainGeneratorFunc::fillin_precipitates()
   float x, y, z;
   gsizes.resize(m_Grains.size(),0);
   int neighpoint;
-  int neighbors[6];
+  int neighpoints[6];
   std::vector<int> n(m_Grains.size());
-  neighbors[0] = -xpoints*ypoints;
-  neighbors[1] = -xpoints;
-  neighbors[2] = -1;
-  neighbors[3] = 1;
-  neighbors[4] = xpoints;
-  neighbors[5] = xpoints*ypoints;
+  neighpoints[0] = -xpoints*ypoints;
+  neighpoints[1] = -xpoints;
+  neighpoints[2] = -1;
+  neighpoints[3] = 1;
+  neighpoints[4] = xpoints;
+  neighpoints[5] = xpoints*ypoints;
   while(count != 0)
   {
     count = 0;
@@ -2405,7 +2405,7 @@ void  GrainGeneratorFunc::fillin_precipitates()
       for(int j=0;j<6;j++)
       {
         good = 1;
-        neighpoint = i+neighbors[j];
+        neighpoint = i+neighpoints[j];
           if(j == 0 && z == 0) good = 0;
           if(j == 5 && z == (zpoints-1)) good = 0;
           if(j == 1 && y == 0) good = 0;
@@ -2577,13 +2577,13 @@ void GrainGeneratorFunc::adjust_boundaries()
 {
   AIM_RANDOMNG_NEW()
 
-  int neighbors[6];
-  neighbors[0] = -xpoints*ypoints;
-  neighbors[1] = -xpoints;
-  neighbors[2] = -1;
-  neighbors[3] = 1;
-  neighbors[4] = xpoints;
-  neighbors[5] = xpoints*ypoints;
+  int neighpoints[6];
+  neighpoints[0] = -xpoints*ypoints;
+  neighpoints[1] = -xpoints;
+  neighpoints[2] = -1;
+  neighpoints[3] = 1;
+  neighpoints[4] = xpoints;
+  neighpoints[5] = xpoints*ypoints;
   int iterations = 0;
   size_t selectedgrain = 0;
   int good = 0;
@@ -2648,7 +2648,7 @@ void GrainGeneratorFunc::adjust_boundaries()
       for(int j=0;j<6;j++)
       {
         good = 1;
-        neighpoint = index+neighbors[j];
+        neighpoint = index+neighpoints[j];
         if(j == 0 && z == 0) good = 0;
         if(j == 5 && z == (zpoints-1)) good = 0;
         if(j == 1 && y == 0) good = 0;
@@ -2746,13 +2746,13 @@ void GrainGeneratorFunc::adjust_boundaries()
 
 void  GrainGeneratorFunc::find_neighbors()
 {
-  int neighbors[6];
-  neighbors[0] = -(xpoints * ypoints);
-  neighbors[1] = -xpoints;
-  neighbors[2] = -1;
-  neighbors[3] = 1;
-  neighbors[4] = xpoints;
-  neighbors[5] = (xpoints * ypoints);
+  int neighpoints[6];
+  neighpoints[0] = -(xpoints * ypoints);
+  neighpoints[1] = -xpoints;
+  neighpoints[2] = -1;
+  neighpoints[3] = 1;
+  neighpoints[4] = xpoints;
+  neighpoints[5] = (xpoints * ypoints);
   float column, row, plane;
   int grain;
   size_t nnum;
@@ -2801,7 +2801,7 @@ void  GrainGeneratorFunc::find_neighbors()
       for (int k = 0; k < 6; k++)
       {
         good = 1;
-        neighbor = j + neighbors[k];
+        neighbor = j + neighpoints[k];
         if (k == 0 && plane == 0) good = 0;
         if (k == 5 && plane == (zpoints - 1)) good = 0;
         if (k == 1 && row == 0) good = 0;

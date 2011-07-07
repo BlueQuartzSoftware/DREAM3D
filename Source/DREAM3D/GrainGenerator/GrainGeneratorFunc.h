@@ -106,6 +106,8 @@ public:
     std::vector<int> neighbors;
     std::vector<int> surfacevoxels;
 	std::vector<std::vector<float> > quats;
+    std::vector<std::vector<int> > nearestneighbors;
+    std::vector<std::vector<float> > nearestneighbordistances;
     
 	std::vector<int> numowners;
 
