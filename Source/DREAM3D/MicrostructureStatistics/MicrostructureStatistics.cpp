@@ -124,12 +124,11 @@ void MicrostructureStatistics::execute()
   m->computeodf = m_ComputeODF;
   m->computemdf = m_ComputeMDF;
 
-  updateProgressAndMessage("Allocating Voxel Memory", 5);
-  //Allocate all of our Voxel Objects
-  m->voxels.reset(new MicrostructureStatisticsVoxel[m->totalpoints]);
+  updateProgressAndMessage("Allocating Memory", 5);
+  m->initializeAttributes();
 
   updateProgressAndMessage(("Reading the Voxel Data from the HDF5 File"), 10);
-  err = h5Reader->readVoxelData(m->voxels, m->crystruct, m->totalpoints);
+  err = h5Reader->readVoxelData(m->grain_indicies, m->phases, m->euler1s, m->euler2s, m->euler3s, m->crystruct, m->totalpoints);
   if (err < 0)
   {
     updateProgressAndMessage("Error Reading the Voxel Data from the File.", 100);

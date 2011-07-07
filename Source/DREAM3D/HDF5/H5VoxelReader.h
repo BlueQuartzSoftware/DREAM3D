@@ -44,7 +44,6 @@
 
 #include "DREAM3D/DREAM3DConfiguration.h"
 #include "DREAM3D/Common/Constants.h"
-#include "DREAM3D/Reconstruction/ReconstructionVoxel.h"
 #include "DREAM3D/HDF5/VTKH5Constants.h"
 #include "DREAM3D/HDF5/H5Macros.h"
 
@@ -75,9 +74,10 @@ class DREAM3DLib_EXPORT H5VoxelReader
 
 
 	template<typename T>
-	int readVoxelData(boost::shared_array<T> voxels,
-                                       std::vector<AIM::Reconstruction::CrystalStructure> &crystruct,
-                                       int totalpoints)
+	int readVoxelData(boost::shared_array<T> grain_indicies, boost::shared_array<T> phases,
+							boost::shared_array<T> euler1s, boost::shared_array<T> euler2s,
+							boost::shared_array<T> euler3s, std::vector<AIM::Reconstruction::CrystalStructure> &crystruct,
+                            int totalpoints)
 {
   int err = 0;
   if (m_Filename.empty() == true)
@@ -105,7 +105,7 @@ class DREAM3DLib_EXPORT H5VoxelReader
   }
   for(int i = 0; i < totalpoints; ++i)
   {
-    voxels[i].grain_index = iData[i];
+    grain_indicies[i] = iData[i];
   }
 
   // Read the Phase ID data
@@ -121,7 +121,7 @@ class DREAM3DLib_EXPORT H5VoxelReader
   }
   for(int i = 0; i < totalpoints; ++i)
   {
-    voxels[i].phase = iData[i];
+    phases[i] = iData[i];
   }
   free(iData);
 
@@ -140,9 +140,9 @@ class DREAM3DLib_EXPORT H5VoxelReader
   }
   for(int i = 0; i < totalpoints; ++i)
   {
-    voxels[i].euler1 = fData[i*3];
-    voxels[i].euler2 = fData[i*3+1];
-    voxels[i].euler3 = fData[i*3+2];
+    euler1s[i] = fData[i*3];
+    euler2s[i] = fData[i*3+1];
+    euler3s[i] = fData[i*3+2];
   }
   free(fData);
   // Close the group as we are done with it.

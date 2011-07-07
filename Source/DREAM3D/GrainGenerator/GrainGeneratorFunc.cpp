@@ -168,6 +168,21 @@ GrainGeneratorFunc::~GrainGeneratorFunc()
 #define GG_INIT_DOUBLE_ARRAY(array, value, size)\
     for(size_t n = 0; n < size; ++n) { array[n] = (value); }
 
+void GrainGeneratorFunc::initializeAttributes()
+{
+	grain_indicies.resize(totalpoints);
+    phases.resize(totalpoints);
+    euler1s.resize(totalpoints);
+    euler2s.resize(totalpoints);
+    euler3s.resize(totalpoints);
+    neighbors.resize(totalpoints);
+    surfacevoxels.resize(totalpoints);
+    quats.resize(totalpoints);
+	for(int i=0;i<totalpoints;i++)
+	{
+		quats[i].resize(5);
+	}
+}
 void GrainGeneratorFunc::initializeArrays(std::vector<AIM::Reconstruction::CrystalStructure> structures)
 {
   //------------------
