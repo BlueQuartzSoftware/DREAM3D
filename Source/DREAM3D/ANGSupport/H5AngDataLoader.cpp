@@ -179,7 +179,7 @@ std::vector<AngPhase::Pointer> H5AngDataLoader::getPhases()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5AngDataLoader::loadData(ReconstructionVoxel voxels[], int xpoints, int ypoints, int zpoints)
+int H5AngDataLoader::loadData(ReconstructionFunc* m)
 {
   int index = 0;
   int err = -1;
@@ -227,12 +227,12 @@ int H5AngDataLoader::loadData(ReconstructionVoxel voxels[], int xpoints, int ypo
       for (int i = 0; i < xpointstemp; i++)
       {
         index = ((zpoints - 1 - slice) * xpoints * ypoints) + ((j + ystartspot) * xpoints) + (i + xstartspot);
-        voxels[index].euler1 = euler1Ptr[readerIndex]; // Phi1
-        voxels[index].euler2 = euler2Ptr[readerIndex]; // Phi
-        voxels[index].euler3 = euler3Ptr[readerIndex]; // Phi2
-        voxels[index].imagequality = imqualPtr[readerIndex]; // Image Quality
-        voxels[index].confidence = confPtr[readerIndex]; // Confidence
-        voxels[index].phase = phasePtr[readerIndex]; // Phase
+        m->euler1s[index] = euler1Ptr[readerIndex]; // Phi1
+        m->euler2s[index] = euler2Ptr[readerIndex]; // Phi
+        m->euler3s[index] = euler3Ptr[readerIndex]; // Phi2
+        m->imagequalities[index] = imqualPtr[readerIndex]; // Image Quality
+        m->confidences[index] = confPtr[readerIndex]; // Confidence
+        m->phases[index] = phasePtr[readerIndex]; // Phase
         /* For TSL OIM Files if there is a single phase then the value of the phase
          * data is zero (0). If there are 2 or more phases then the lowest value
          * of phase is one (1). In the rest of the reconstruction code we follow the
@@ -240,8 +240,8 @@ int H5AngDataLoader::loadData(ReconstructionVoxel voxels[], int xpoints, int ypo
          * phase. The next if statement converts all zeros to ones if there is a single
          * phase in the OIM data.
          */
-        if (voxels[index].phase < 1) {
-          voxels[index].phase = 1;
+        if (m->phases[index] < 1) {
+          phases[index] = 1;
         }
         ++readerIndex;
       }

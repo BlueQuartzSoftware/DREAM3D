@@ -39,7 +39,6 @@
 #include "DREAM3D/Common/AIMArray.hpp"
 #include "DREAM3D/Common/Constants.h"
 #include "DREAM3D/Common/Grain.h"
-#include "DREAM3D/GrainGenerator/GrainGeneratorVoxel.h"
 #include "DREAM3D/Common/AIMRandomNG.h"
 #include "DREAM3D/HDF5/H5ReconStatsWriter.h"
 #include "DREAM3D/HDF5/H5ReconStatsReader.h"
@@ -99,7 +98,6 @@ public:
     std::vector<AIM::Reconstruction::PhaseType>        phaseType;
     std::vector<float>                                 pptFractions;
 
-//    boost::shared_array<GrainGeneratorVoxel> voxels;
 	std::vector<int> grain_indicies;
     std::vector<int> phases;
     std::vector<float> euler1s;
@@ -108,7 +106,8 @@ public:
     std::vector<int> neighbors;
     std::vector<int> surfacevoxels;
 	std::vector<std::vector<float> > quats;
-    std::vector<int> numowners;
+    
+	std::vector<int> numowners;
 
     std::vector<Grain::Pointer> m_Grains;
 	  std::vector<float> sizetest;
@@ -185,6 +184,7 @@ public:
                     std::vector<AIM::Reconstruction::PhaseType> m_PhaseType);
 
 #endif
+	void initializeAttributes();
 	  void initializeArrays(std::vector<AIM::Reconstruction::CrystalStructure> structures);
     void initialize_packinggrid();
 

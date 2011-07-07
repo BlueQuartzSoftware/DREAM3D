@@ -155,7 +155,7 @@ void Reconstruction::execute()
   START_CLOCK()
 
   updateProgressAndMessage(("Loading Slices"), 4);
-  oimDataLoader->loadData(m->voxels.get(), m->xpoints, m->ypoints, m->zpoints);
+  oimDataLoader->loadData(m.get());
   m->initializeQuats();
   CHECK_FOR_CANCELED(ReconstructionFunc, "Reconstruction was canceled", loadData)
 
@@ -243,7 +243,7 @@ void Reconstruction::execute()
   }
   h5VolWriter->setFilename(hdf5VolumeFile);
   updateProgressAndMessage(("Writing HDF5 Voxel Data File"), 83);
-  err = h5VolWriter->writeVoxelData<ReconstructionFunc, ReconstructionVoxel>(m.get());
+  err = h5VolWriter->writeVoxelData<ReconstructionFunc>(m.get());
   CHECK_FOR_ERROR(ReconstructionFunc, "The HDF5 Voxel file could not be written to. Does the path exist and do you have write access to the output directory.", err);
 
 
