@@ -22,7 +22,7 @@
 
 namespace m3c {
 
-class Edge
+class DREAM3DLib_EXPORT Edge
 {
   public:
 
