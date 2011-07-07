@@ -202,6 +202,9 @@ static Pointer New args \
 
 
 
+#define MXA_CONTAINER_TYPE(thisClass, container) \
+    typedef container<thisClass >     ContainerT; \
+    typedef boost::shared_ptr< container<thisClass > > ContainerPType;
 
 
 
