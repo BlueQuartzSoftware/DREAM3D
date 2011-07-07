@@ -99,7 +99,16 @@ public:
     std::vector<AIM::Reconstruction::PhaseType>        phaseType;
     std::vector<float>                                 pptFractions;
 
-    boost::shared_array<GrainGeneratorVoxel> voxels;
+//    boost::shared_array<GrainGeneratorVoxel> voxels;
+	std::vector<int> grain_indicies;
+    std::vector<int> phases;
+    std::vector<float> euler1s;
+    std::vector<float> euler2s;
+    std::vector<float> euler3s;
+    std::vector<int> neighbors;
+    std::vector<int> surfacevoxels;
+	std::vector<std::vector<float> > quats;
+    std::vector<int> numowners;
 
     std::vector<Grain::Pointer> m_Grains;
 	  std::vector<float> sizetest;
@@ -184,7 +193,6 @@ public:
     int readAxisOrientationData(H5ReconStatsReader::Pointer h5io);
     int readODFData(H5ReconStatsReader::Pointer h5io);
     int readMisorientationData(H5ReconStatsReader::Pointer h5io);
-    int readMicroTextureData(H5ReconStatsReader::Pointer h5io);
 
     void pack_grains();
     void generate_grain(int, int);

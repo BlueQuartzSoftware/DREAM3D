@@ -158,7 +158,20 @@ int DXStructureReader::readStructure(GrainGeneratorFunc* m)
   m->sizex = m->xpoints * m->resx;
   m->sizey = m->ypoints * m->resy;
   m->sizez = m->zpoints * m->resz;
-  m->voxels.reset(new GrainGeneratorVoxel[m->totalpoints]);
+//  m->voxels.reset(new GrainGeneratorVoxel[m->totalpoints]);
+  m->grain_indicies.resize(m->totalpoints);
+  m->phases.resize(m->totalpoints);
+  m->euler1s.resize(m->totalpoints);
+  m->euler2s.resize(m->totalpoints);
+  m->euler3s.resize(m->totalpoints);
+  m->neighbors.resize(m->totalpoints);
+  m->surfacevoxels.resize(m->totalpoints);
+  m->numowners.resize(m->totalpoints);
+  m->quats.resize(m->totalpoints);
+  for(int i=0;i<m->totalpoints;i++)
+  {
+	m->quats[i].resize(5);
+  }
 
 
   std::map<int, int> grainIdMap;
@@ -166,8 +179,8 @@ int DXStructureReader::readStructure(GrainGeneratorFunc* m)
   for (int i = 0; i < itemCount; ++i)
   {
     fscanf(file, "%d", &grain_index);
-    m->voxels[i].grain_index = grain_index;
-    m->voxels[i].phase = 1;
+    m->grain_indicies[i] = grain_index;
+    m->phases[i] = 1;
     grainIdMap[grain_index]++;
   }
   // We now have our list of grains so allocate that many grains

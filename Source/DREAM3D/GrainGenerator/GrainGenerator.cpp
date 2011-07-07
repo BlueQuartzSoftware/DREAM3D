@@ -185,10 +185,10 @@ void GrainGenerator::execute()
 
       updateProgressAndMessage("Allocating Voxel Memory", 5);
       //Allocate all of our Voxel Objects
-      m->voxels.reset(new GrainGeneratorVoxel[m->totalpoints]);
+//      m->voxels.reset(new GrainGeneratorVoxel[m->totalpoints]);
 
       updateProgressAndMessage(("Reading the Voxel Data from the HDF5 File"), 10);
-      err = h5Reader->readVoxelData(m->voxels, m->crystruct, m->totalpoints);
+//	  err = h5Reader->readVoxelData(m->grain_indicies, m->phases, m->euler1s, m->crystruct, m->totalpoints);
       CHECK_FOR_ERROR(GrainGeneratorFunc, "GrainGenerator Error reading voxel data from HDF5 Voxel File", err);
     }
     else
@@ -254,7 +254,7 @@ void GrainGenerator::execute()
   }
   h5VoxelWriter->setFilename(h5VoxelFile);
   updateProgressAndMessage(("Writing HDF5 Voxel Data File"), 83);
-  err = h5VoxelWriter->writeVoxelData<GrainGeneratorFunc, GrainGeneratorVoxel>(m.get());
+//  err = h5VoxelWriter->writeVoxelData<GrainGeneratorFunc, GrainGeneratorVoxel>(m.get());
   CHECK_FOR_ERROR(GrainGeneratorFunc, "The HDF5 Voxel file could not be written to. Does the path exist and do you have write access to the output directory.", err);
 
   /************ This writes the grain data if desired*/
@@ -323,7 +323,7 @@ void GrainGenerator::execute()
   if (m_WritePhFile) {
     MAKE_OUTPUT_FILE_PATH ( phFile, AIM::Reconstruction::PhFile);
     PhWriter phWriter;
-    err = phWriter.writeGrainPhFile(phFile, m->voxels, m->xpoints, m->ypoints, m->zpoints);
+//    err = phWriter.writeGrainPhFile(phFile, m->voxels, m->xpoints, m->ypoints, m->zpoints);
     CHECK_FOR_ERROR(GrainGeneratorFunc, "The Grain Generator threw an Error writing the Ph file format.", err);
   }
 
