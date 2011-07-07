@@ -30,6 +30,7 @@
 
 #include "SurfaceWinding.h"
 
+#include <string.h>
 #include <stdio.h>
 
 #include <map>
