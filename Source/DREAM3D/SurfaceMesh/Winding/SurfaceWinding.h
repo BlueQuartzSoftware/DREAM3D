@@ -36,7 +36,9 @@
 
 #include <MXA/MXATypes.h>
 
+#include "MXA/Common/MXASetGetMacros.h"
 
+#include "Facet.hpp"
 
 /*
  *
@@ -47,7 +49,26 @@ class SurfaceWinding
     SurfaceWinding();
     virtual ~SurfaceWinding();
 
+
+    typedef int16_t Label;
+    typedef m3c::Facet<Label>                   TriangleType;
+
+    typedef TriangleType::ContainerT                  TriangleListType;
+    typedef TriangleType::ContainerPType              TriangleListPtrType;
+    typedef std::map<Label, int >                     LabelTriangleMapType;
+    typedef TriangleType::ContainerPType              TriangleContainerPointerType;
+    typedef std::map<uint64_t, m3c::Edge::Pointer>    EdgeMapType;
+    typedef boost::shared_ptr<EdgeMapType>   EdgeMapPointer;
+
+
+    TriangleListType masterTriangleList;
+
+
     void analyzeWinding(int nNodes, int nTriangle, const std::string &triangleFile);
+    void debugPrintConnectivity(int nNodes, int nTriangle, const std::string &triangleFile);
+
+    SurfaceWinding::TriangleContainerPointerType
+          findAdjacentTriangles( TriangleType::Pointer triangle, Label label);
 
     template<typename T>
     static void TripletSort(T a, T b, T c, T* sorted)
