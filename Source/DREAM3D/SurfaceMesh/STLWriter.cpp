@@ -29,6 +29,7 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "STLWriter.h"
 
+#include <string.h>
 
 #include "DREAM3D/SurfaceMesh/SurfaceMeshFunc.h"
 #include "DREAM3D/SurfaceMesh/Patch.h"

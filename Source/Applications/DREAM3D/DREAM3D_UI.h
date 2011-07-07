@@ -44,7 +44,7 @@
 #include <QtGui/QWidget>
 #include <QtGui/QMainWindow>
 #include <QtGui/QResizeEvent>
-#include <QtGui/QToolbar>
+#include <QtGui/QToolBar>
 
 
 //-- UIC generated Header
