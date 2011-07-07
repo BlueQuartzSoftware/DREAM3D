@@ -117,7 +117,7 @@ int AngDataLoader::loadData(ReconstructionFunc* m)
   float q3;
   float q4;
 
-  for (int slice = 0; slice < zpoints; ++slice)
+  for (int slice = 0; slice < m->zpoints; ++slice)
   {
     AngReader reader;
 
@@ -139,18 +139,18 @@ int AngDataLoader::loadData(ReconstructionFunc* m)
     confPtr = reader.getConfidenceIndexPointer();
     imqualPtr = reader.getImageQualityPointer();
     imqual2Ptr = reader.getImageQuality2Pointer();
-    xstartspot = (xpoints - xpointstemp) / 2;
-    ystartspot = (ypoints - ypointstemp) / 2;
+    xstartspot = (m->xpoints - xpointstemp) / 2;
+    ystartspot = (m->ypoints - ypointstemp) / 2;
     for (int j = 0; j < ypointstemp; j++)
     {
       for (int i = 0; i < xpointstemp; i++)
       {
-        index = ((zpoints - 1 - slice) * xpoints * ypoints) + ((j + ystartspot) * xpoints) + (i + xstartspot);
-        voxels[index].euler1 = euler1Ptr[readerIndex]; // Phi1
-        voxels[index].euler2 = euler2Ptr[readerIndex]; // Phi
-        voxels[index].euler3 = euler3Ptr[readerIndex]; // Phi2
-        voxels[index].imagequality = imqualPtr[readerIndex];// Image Quality
-        voxels[index].confidence = confPtr[readerIndex];// Confidence
+        index = ((m->zpoints - 1 - slice) * m->xpoints * m->ypoints) + ((j + ystartspot) * m->xpoints) + (i + xstartspot);
+        m->euler1s[index] = euler1Ptr[readerIndex]; // Phi1
+        m->euler2s[index] = euler2Ptr[readerIndex]; // Phi
+        m->euler3s[index] = euler3Ptr[readerIndex]; // Phi2
+        m->imagequalities[index] = imqualPtr[readerIndex];// Image Quality
+        m->confidences[index] = confPtr[readerIndex];// Confidence
         s = sinf(0.5f * euler2Ptr[readerIndex]);
         c = cosf(0.5f * euler2Ptr[readerIndex]);
         s1 = sinf(0.5f * (euler1Ptr[readerIndex] - euler3Ptr[readerIndex]));
@@ -161,11 +161,11 @@ int AngDataLoader::loadData(ReconstructionFunc* m)
         q2 = s * s1;
         q3 = c * s2;
         q4 = c * c2;
-        voxels[index].quat[0] = 0;
-        voxels[index].quat[1] = q1;
-        voxels[index].quat[2] = q2;
-        voxels[index].quat[3] = q3;
-        voxels[index].quat[4] = q4;
+        m->quats[index][0] = 0;
+        m->quats[index][1] = q1;
+        m->quats[index][2] = q2;
+        m->quats[index][3] = q3;
+        m->quats[index][4] = q4;
         ++readerIndex;
       }
     }
