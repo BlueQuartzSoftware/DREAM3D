@@ -43,10 +43,10 @@ cmp_IDE_SOURCE_PROPERTIES( "DREAM3DLib/SurfaceMesh" "${DREAM3D_SurfaceMesh_HDRS}
 
 
 
-#cmp_IDE_SOURCE_PROPERTIES( "DREAM3DLib/SurfaceMesh/Winding" "${WINDING_HDRS}" "${WINDING_SRCS}" "0")
+cmp_IDE_SOURCE_PROPERTIES( "DREAM3DLib/SurfaceMesh/Winding" "${WINDING_HDRS}" "${WINDING_SRCS}" "0")
 
-#set (DREAM3D_SurfaceMesh_HDRS ${DREAM3D_SurfaceMesh_HDRS} ${WINDING_HDRS})
-#set (DREAM3D_SurfaceMesh_SRCS ${DREAM3D_SurfaceMesh_SRCS} ${WINDING_SRCS})
+set (DREAM3D_SurfaceMesh_HDRS ${DREAM3D_SurfaceMesh_HDRS} ${WINDING_HDRS})
+set (DREAM3D_SurfaceMesh_SRCS ${DREAM3D_SurfaceMesh_SRCS} ${WINDING_SRCS})
 
 if ( ${DREAM3D_INSTALL_FILES} EQUAL 1 )
     INSTALL (FILES ${DREAM3D_SurfaceMesh_HDRS}
