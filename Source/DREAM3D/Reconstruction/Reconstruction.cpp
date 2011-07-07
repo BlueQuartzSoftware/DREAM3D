@@ -334,7 +334,7 @@ void Reconstruction::execute()
     updateProgressAndMessage(("Writing Out Dx Grain File."), 99);
     MAKE_OUTPUT_FILE_PATH( dxGrainFile, AIM::Reconstruction::DxFile);
     DxGrainIdWriter::Pointer dxWriter = DxGrainIdWriter::New();
-    err = dxWriter->writeGrainFile(dxGrainFile, m->voxels.get(), m->xpoints, m->ypoints, m->zpoints);
+//    err = dxWriter->writeGrainFile(dxGrainFile, m->voxels.get(), m->xpoints, m->ypoints, m->zpoints);
     CHECK_FOR_ERROR(ReconstructionFunc, "The Dx Grain file could not be written to. Does the path exist and do you have write access to the output directory.", err);
   }
 

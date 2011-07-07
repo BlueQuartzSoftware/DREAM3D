@@ -148,7 +148,7 @@ GrainGeneratorFunc::GrainGeneratorFunc()
   m_OrthoOps = OrthoRhombicOps::New();
   m_OrientatioOps.push_back(m_OrthoOps.get());
 
-  voxels.reset(NULL);
+//  voxels.reset(NULL);
   GGseed = MXA::getMilliSeconds();
 
 
@@ -241,7 +241,20 @@ void GrainGeneratorFunc::initialize_packinggrid()
   sizez = (zpoints*resz);
   totalvol = sizex*sizey*sizez;
   totalpoints = xpoints * ypoints * zpoints;
-  voxels.reset(new GrainGeneratorVoxel[totalpoints]);
+//  voxels.reset(new GrainGeneratorVoxel[totalpoints]);
+  grain_indicies.resize(totalpoints);
+  phases.resize(totalpoints);
+  euler1s.resize(totalpoints);
+  euler2s.resize(totalpoints);
+  euler3s.resize(totalpoints);
+  neighbors.resize(totalpoints);
+  surfacevoxels.resize(totalpoints);
+  numowners.resize(totalpoints);
+  quats.resize(totalpoints);
+  for(int i=0;i<totalpoints;i++)
+  {
+	quats[i].resize(5);
+  }
 
   packingresx = resx*4.0;
   packingresy = resy*4.0;
@@ -559,48 +572,6 @@ int GrainGeneratorFunc::readMisorientationData(H5ReconStatsReader::Pointer h5io)
     for (size_t k = 0; k < numbins; k++)
     {
     actualmdf[phase][k] = density[k];
-    }
-  }
-  return err;
-}
-
-int GrainGeneratorFunc::readMicroTextureData(H5ReconStatsReader::Pointer h5io)
-{
-  std::vector<float> density;
-  int err = 0;
-  // Read the Phase and Crystal Structure information from the Stats File
-  std::vector<int> phases;
-  std::vector<AIM::Reconstruction::CrystalStructure> structures;
-  err = h5io->getPhaseAndCrystalStructures(phases, structures);
-  if (err < 0)
-  {
-    return err;
-  }
-  int phase = -1;
-  size_t size = phases.size();
-  for(size_t i = 0; i< size ;i++)
-  {
-      phase = phases[i];
-    err = h5io->readStatsDataset(phase, AIM::HDF5::MicroTextureBins, density);
-    if (err < 0)
-    {
-    GGF_CHECK_READ_ERROR(readStatsDataset, AIM::HDF5::MicroTextureBins)
-    //FIXME: This should probably return an ERROR because nothing was read
-    return 10;
-    }
-    size_t numbins = 10;
-
-    if (numbins != density.size() )
-    {
-    std::cout << "GrainGeneratorFunc::readMicroTextureData Error: Mismatch in number of elements in the 'ODF' "
-       << " Arrays. The Array stored in the Reconstruction HDF5 file has " << density.size()
-       << " elements and we need " << numbins << " Elements. "<< std::endl;
-    return -1;
-    }
-
-    for (size_t k = 0; k < numbins; k++)
-    {
-    actualmicrotex[phase][k] = density[k];
     }
   }
   return err;
@@ -1882,12 +1853,10 @@ void GrainGeneratorFunc::assign_voxels()
   int xmin, xmax, ymin, ymax, zmin, zmax;
 
   NEW_SHARED_ARRAY(gsizes, int, m_Grains.size())
-  NEW_SHARED_ARRAY(gnames, int, totalpoints)
   NEW_SHARED_ARRAY(unassigned, int, totalpoints)
 
   for (int i = 0; i < totalpoints; i++)
   {
-    gnames[i] = voxels[i].grain_index;
     unassigned[i] = 0;
   }
   for (size_t i = 1; i < m_Grains.size(); i++)
@@ -2088,16 +2057,16 @@ void GrainGeneratorFunc::assign_voxels()
             if (inside >= 0)
             {
               int currentpoint = index;
-              if (gnames[currentpoint] > 0)
+              if (grain_indicies[currentpoint] > 0)
               {
-                oldname = gnames[currentpoint];
+                oldname = grain_indicies[currentpoint];
                 gsizes[oldname] = gsizes[oldname] - 1;
-                gnames[currentpoint] = -1;
+                grain_indicies[currentpoint] = -1;
                 unassigned[currentpoint] = 1;
               }
-              if (gnames[currentpoint] == 0 && unassigned[currentpoint] == 0)
+              if (grain_indicies[currentpoint] == 0 && unassigned[currentpoint] == 0)
               {
-                gnames[currentpoint] = i;
+                grain_indicies[currentpoint] = i;
                 gsizes[i]++;
               }
             }
@@ -2124,17 +2093,15 @@ void GrainGeneratorFunc::assign_voxels()
   }
   for (int i = 0; i < totalpoints; i++)
   {
-    if (gnames[i] > 0)
+    if (grain_indicies[i] > 0)
     {
-      voxels[i].grain_index = newnames[gnames[i]];
       unassigned[i] = 0;
-	  gnames[i] = newnames[gnames[i]];
+	  grain_indicies[i] = newnames[grain_indicies[i]];
     }
-    if (gnames[i] <= 0)
+    if (grain_indicies[i] <= 0)
     {
-      voxels[i].grain_index = gnames[i];
       unassigned[i] = 0;
-      //gnames[i] = gnames[i];
+	  grain_indicies[i] = grain_indicies[i];
     }
   }
   m_Grains.resize(goodcount);
@@ -2146,7 +2113,7 @@ void GrainGeneratorFunc::assign_voxels()
   int neighbor;
   for (int i = 0; i < totalpoints; i++)
   {
-	if(unassigned[i] == 0 && gnames[i] > 0)
+	if(unassigned[i] == 0 && grain_indicies[i] > 0)
 	{
 		currentvlist.push_back(i);
 		count = 0;
@@ -2168,7 +2135,7 @@ void GrainGeneratorFunc::assign_voxels()
 				    if (j == 4 && row == (ypoints - 1)) good = 0;
 				    if (j == 2 && column == 0) good = 0;
 				    if (j == 3 && column == (xpoints - 1)) good = 0;
-				    if (good == 1 && gnames[neighbor] == gnames[index] && unassigned[neighbor] == 0)
+				    if (good == 1 && grain_indicies[neighbor] == grain_indicies[index] && unassigned[neighbor] == 0)
 				    {
 						currentvlist.push_back(neighbor);
 						unassigned[neighbor] = 1;
@@ -2182,7 +2149,7 @@ void GrainGeneratorFunc::assign_voxels()
 				    if (j == 4 && row == (ypoints - 1)) neighbor = neighbor - (xpoints*ypoints);
 				    if (j == 2 && column == 0) neighbor = neighbor + (xpoints);
 				    if (j == 3 && column == (xpoints - 1)) neighbor = neighbor - (xpoints);
-				    if (gnames[neighbor] == gnames[index] && unassigned[neighbor] == 0)
+				    if (grain_indicies[neighbor] == grain_indicies[index] && unassigned[neighbor] == 0)
 				    {
 						currentvlist.push_back(neighbor);
 						unassigned[neighbor] = 1;
@@ -2191,37 +2158,36 @@ void GrainGeneratorFunc::assign_voxels()
 			}
 			count++;
 		}
-		if(vlists[gnames[currentvlist[0]]].size() > 0)
+		if(vlists[grain_indicies[currentvlist[0]]].size() > 0)
 		{
-			if(vlists[gnames[currentvlist[0]]].size() < currentvlist.size())
+			if(vlists[grain_indicies[currentvlist[0]]].size() < currentvlist.size())
 			{
-				for (int k = 0; k < vlists[gnames[currentvlist[0]]].size(); k++)
+				for (int k = 0; k < vlists[grain_indicies[currentvlist[0]]].size(); k++)
 				{
-					gnames[vlists[gnames[currentvlist[0]]][k]] = -1;
+					grain_indicies[vlists[grain_indicies[currentvlist[0]]][k]] = -1;
 				}
-				vlists[gnames[currentvlist[0]]].resize(currentvlist.size());
-				vlists[gnames[currentvlist[0]]].swap(currentvlist);
+				vlists[grain_indicies[currentvlist[0]]].resize(currentvlist.size());
+				vlists[grain_indicies[currentvlist[0]]].swap(currentvlist);
 			}
-			else if(vlists[gnames[currentvlist[0]]].size() >= currentvlist.size())
+			else if(vlists[grain_indicies[currentvlist[0]]].size() >= currentvlist.size())
 			{
 				for (int k = 0; k < currentvlist.size(); k++)
 				{
-					gnames[currentvlist[k]] = -1;
+					grain_indicies[currentvlist[k]] = -1;
 				}
 			}
 		}
-		else if(vlists[gnames[currentvlist[0]]].size() == 0)
+		else if(vlists[grain_indicies[currentvlist[0]]].size() == 0)
 		{
-			vlists[gnames[currentvlist[0]]].resize(currentvlist.size());
-			vlists[gnames[currentvlist[0]]].swap(currentvlist);
+			vlists[grain_indicies[currentvlist[0]]].resize(currentvlist.size());
+			vlists[grain_indicies[currentvlist[0]]].swap(currentvlist);
 		}
 		currentvlist.clear();
 	}
   }
   for (int i = 0; i < totalpoints; i++)
   {
-	  voxels[i].grain_index = gnames[i];
-	  if(gnames[i] > 0) voxels[i].phase = m_Grains[gnames[i]]->phase;
+	  if(grain_indicies[i] > 0) phases[i] = m_Grains[grain_indicies[i]]->phase;
   }
 }
 void  GrainGeneratorFunc::assign_eulers()
@@ -2274,7 +2240,7 @@ void  GrainGeneratorFunc::assign_eulers()
   }
   for(int i=0;i<numbins;i++)
   {
-  simodf[phase][i] = simodf[phase][i]/unbiasedvol[phase];
+	  simodf[phase][i] = simodf[phase][i]/unbiasedvol[phase];
   }
 }
 
@@ -2294,12 +2260,6 @@ void  GrainGeneratorFunc::fill_gaps()
   // Create a self cleaning array of integers.
   NEW_SHARED_ARRAY(n, int, numGrains)
 
-  NEW_SHARED_ARRAY(grain_indices, int, totalpoints)
-
-  for(int i = 0; i < totalpoints; ++i)
-  {
-    grain_indices[i] = voxels[i].grain_index;
-  }
   int grainname = 0;
   int grain = 0;
 
@@ -2314,7 +2274,7 @@ void  GrainGeneratorFunc::fill_gaps()
     count = 0;
     for (int i = 0; i < totalpoints; i++)
     {
-      grainname = grain_indices[i]; //FIXME: Hot Spot - 8.6 seconds on a 30 second profile
+      grainname = grain_indicies[i]; //FIXME: Hot Spot - 8.6 seconds on a 30 second profile
       if (grainname <= 0)
       {
         count++;
@@ -2335,7 +2295,7 @@ void  GrainGeneratorFunc::fill_gaps()
           if (j == 3 && x == (xpoints - 1)) good = 0;
           if (good == 1)
           {
-            grain = grain_indices[neighpoint];
+            grain = grain_indicies[neighpoint];
             if (grain > 0)
             {
               neighs.push_back(grain);
@@ -2359,7 +2319,7 @@ void  GrainGeneratorFunc::fill_gaps()
         }
         if (size > 0)
         {
-          voxels[i].neighbor = curgrain;
+          neighbors[i] = curgrain;
           neighs.clear();
         }
       }
@@ -2367,12 +2327,12 @@ void  GrainGeneratorFunc::fill_gaps()
     int neighbor = 0;
     for (int j = 0; j < totalpoints; j++)
     {
-      grainname = grain_indices[j]; //FIXME: Hot Spot - 6.3 seconds on 30 sec profile
-      neighbor = voxels[j].neighbor; //FIXME: Hot Spot - 3.4 seconds on a 30 Sec Profile
+      grainname = grain_indicies[j]; //FIXME: Hot Spot - 6.3 seconds on 30 sec profile
+      neighbor = neighbors[j]; //FIXME: Hot Spot - 3.4 seconds on a 30 Sec Profile
       if (grainname <= 0 && neighbor > 0)
       {
-        grain_indices[j] = neighbor;
-        voxels[j].phase = m_Grains[neighbor]->phase;
+        grain_indicies[j] = neighbor;
+        phases[j] = m_Grains[neighbor]->phase;
       }
     }
   }
@@ -2380,16 +2340,12 @@ void  GrainGeneratorFunc::fill_gaps()
   int name = 0;
   for (int i = 0; i < totalpoints; i++)
   {
-    name = grain_indices[i];
+    name = grain_indicies[i];
     gsizes[name]++;
   }
 
   // Copy all the data back from the temp array
-  for(int i = 0; i < totalpoints; ++i)
-  {
-    voxels[i].grain_index = grain_indices[i];
-  }
-
+  float aConstantValue = resx * resy * resz * 0.75f * m_one_over_pi;
   for (size_t i = 1; i < numGrains; i++)
   {
     m_Grains[i]->numvoxels = gsizes[i];
@@ -2420,7 +2376,7 @@ void  GrainGeneratorFunc::fillin_precipitates()
     count = 0;
     for(int i = 0; i < (xpoints*ypoints*zpoints); i++)
     {
-      int grainname = voxels[i].grain_index;
+      int grainname = grain_indicies[i];
       if(grainname <= 0)
       {
       count++;
@@ -2443,7 +2399,7 @@ void  GrainGeneratorFunc::fillin_precipitates()
           if(j == 3 && x == (xpoints-1)) good = 0;
       if(good == 1)
           {
-          int grain = voxels[neighpoint].grain_index;
+          int grain = grain_indicies[neighpoint];
           if(grain > 0 && grain >= numprimarygrains)
           {
             neighs.push_back(grain);
@@ -2467,26 +2423,26 @@ void  GrainGeneratorFunc::fillin_precipitates()
         }
         if(size > 0)
         {
-          voxels[i].neighbor = curgrain;
+          neighbors[i] = curgrain;
           neighs.clear();
         }
       }
     }
     for(int j = 0; j < (xpoints*ypoints*zpoints); j++)
     {
-      int grainname = voxels[j].grain_index;
-      int neighbor = voxels[j].neighbor;
+      int grainname = grain_indicies[j];
+      int neighbor = neighbors[j];
       if(grainname <= 0 && neighbor > 0 && neighbor >= numprimarygrains)
       {
-        voxels[j].grain_index = neighbor;
-    voxels[j].phase = m_Grains[neighbor]->phase;
+        grain_indicies[j] = neighbor;
+		phases[j] = m_Grains[neighbor]->phase;
       }
     }
   }
   gsizes.resize(m_Grains.size(),0);
   for (int i = 0; i < (xpoints*ypoints*zpoints); i++)
   {
-    int name = voxels[i].grain_index;
+    int name = grain_indicies[i];
     gsizes[name]++;
   }
   for (size_t i = 1; i < m_Grains.size(); i++)
@@ -2515,9 +2471,9 @@ void  GrainGeneratorFunc::place_precipitates()
   {
     if(phaseType[i] == AIM::Reconstruction::PrecipitatePhase)
     {
-    precipitatephases.push_back(i);
-    precipitatephasefractions.push_back(phasefraction[i]);
-    totalprecipitatefractions = totalprecipitatefractions + phasefraction[i];
+	    precipitatephases.push_back(i);
+	    precipitatephasefractions.push_back(phasefraction[i]);
+	    totalprecipitatefractions = totalprecipitatefractions + phasefraction[i];
     }
   }
   for (size_t i = 0; i < precipitatephases.size(); i++)
@@ -2546,7 +2502,7 @@ void  GrainGeneratorFunc::place_precipitates()
   if(random <= precipboundaryfraction)
   {
     random2 = int(rg.Random()*double(totalpoints-1));
-    while(voxels[random2].surfacevoxel == 0 || voxels[random2].grain_index > numprimarygrains)
+    while(surfacevoxels[random2] == 0 || grain_indicies[random2] > numprimarygrains)
     {
       random2++;
       if(random2 >= totalpoints) random2 = random2-totalpoints;
@@ -2555,7 +2511,7 @@ void  GrainGeneratorFunc::place_precipitates()
   else if(random > precipboundaryfraction)
   {
     random2 = rg.Random()*(totalpoints-1);
-    while(voxels[random2].surfacevoxel != 0 || voxels[random2].grain_index > numprimarygrains)
+    while(surfacevoxels[random2] != 0 || grain_indicies[random2] > numprimarygrains)
     {
       random2++;
       if(random2 >= totalpoints) random2 = random2-totalpoints;
@@ -2572,7 +2528,7 @@ void  GrainGeneratorFunc::place_precipitates()
   precipvoxelcounter = 0;
   for(size_t j = 0; j < m_Grains[currentnumgrains]->voxellist->size(); j++)
   {
-    if(voxels[m_Grains[currentnumgrains]->voxellist->at(j)].grain_index > 0 && voxels[m_Grains[currentnumgrains]->voxellist->at(j)].grain_index < numprimarygrains)
+    if(grain_indicies[m_Grains[currentnumgrains]->voxellist->at(j)] > 0 && grain_indicies[m_Grains[currentnumgrains]->voxellist->at(j)] < numprimarygrains)
     {
       precipvoxelcounter++;
     }
@@ -2582,15 +2538,15 @@ void  GrainGeneratorFunc::place_precipitates()
     precipvoxelcounter = 0;
     for(size_t j = 0; j < m_Grains[currentnumgrains]->voxellist->size(); j++)
     {
-      if(voxels[m_Grains[currentnumgrains]->voxellist->at(j)].grain_index < 0 || voxels[m_Grains[currentnumgrains]->voxellist->at(j)].grain_index >= numprimarygrains)
+      if(grain_indicies[m_Grains[currentnumgrains]->voxellist->at(j)] < 0 || grain_indicies[m_Grains[currentnumgrains]->voxellist->at(j)] >= numprimarygrains)
       {
-        voxels[m_Grains[currentnumgrains]->voxellist->at(j)].grain_index = -1;
-        voxels[m_Grains[currentnumgrains]->voxellist->at(j)].phase = 0;
+        grain_indicies[m_Grains[currentnumgrains]->voxellist->at(j)] = -1;
+        phases[m_Grains[currentnumgrains]->voxellist->at(j)] = 0;
       }
-      if(voxels[m_Grains[currentnumgrains]->voxellist->at(j)].grain_index > 0 && voxels[m_Grains[currentnumgrains]->voxellist->at(j)].grain_index < numprimarygrains)
+      if(grain_indicies[m_Grains[currentnumgrains]->voxellist->at(j)] > 0 && grain_indicies[m_Grains[currentnumgrains]->voxellist->at(j)] < numprimarygrains)
       {
-        voxels[m_Grains[currentnumgrains]->voxellist->at(j)].grain_index = currentnumgrains;
-        voxels[m_Grains[currentnumgrains]->voxellist->at(j)].phase = m_Grains[currentnumgrains]->phase;
+        grain_indicies[m_Grains[currentnumgrains]->voxellist->at(j)] = currentnumgrains;
+        phases[m_Grains[currentnumgrains]->voxellist->at(j)] = m_Grains[currentnumgrains]->phase;
         precipvoxelcounter++;
       }
     }
@@ -2635,14 +2591,12 @@ void GrainGeneratorFunc::adjust_boundaries()
   {
     gsizes[i] = 0;
   }
-  NEW_SHARED_ARRAY(gnames, int,  totalpoints)
   NEW_SHARED_ARRAY(reassigned, int, totalpoints)
 
   for(int i=0;i<totalpoints;i++)
   {
-    gnames[i] = voxels[i].grain_index;
     reassigned[i] = 0;
-    gsizes[gnames[i]]++;
+    gsizes[grain_indicies[i]]++;
   }
   oldsizedisterror = check_sizedisterror(-1000,-1000);
   while(iterations < 10000)
@@ -2663,7 +2617,7 @@ void GrainGeneratorFunc::adjust_boundaries()
     nucleus = 0;
     count = 0;
     affectedcount = 0;
-    while(gnames[nucleus] != selectedgrain)
+    while(grain_indicies[nucleus] != selectedgrain)
     {
       nucleus++;
       if(nucleus >= totalpoints) selectedgrain++, nucleus = 0;
@@ -2686,31 +2640,31 @@ void GrainGeneratorFunc::adjust_boundaries()
         if(j == 4 && y == (ypoints-1)) good = 0;
         if(j == 2 && x == 0) good = 0;
         if(j == 3 && x == (xpoints-1)) good = 0;
-        if(good == 1 && gnames[neighpoint] == selectedgrain && reassigned[neighpoint] == 0)
+        if(good == 1 && grain_indicies[neighpoint] == selectedgrain && reassigned[neighpoint] == 0)
         {
-        voxellist[count] = neighpoint;
-        reassigned[neighpoint] = -1;
-        count++;
-        if(count >= voxellist.size()) voxellist.resize(voxellist.size()+vListSize,-1);
+	        voxellist[count] = neighpoint;
+	        reassigned[neighpoint] = -1;
+	        count++;
+	        if(count >= voxellist.size()) voxellist.resize(voxellist.size()+vListSize,-1);
         }
-        if(good == 1 && gnames[neighpoint] != selectedgrain && gnames[index] == selectedgrain)
+        if(good == 1 && grain_indicies[neighpoint] != selectedgrain && grain_indicies[index] == selectedgrain)
         {
-        if(growth == 1 && reassigned[neighpoint] <= 0)
-        {
-          reassigned[neighpoint] = gnames[neighpoint];
-          gnames[neighpoint] = gnames[index];
-          affectedvoxellist[affectedcount] = neighpoint;
-          affectedcount++;
-          if(affectedcount >= affectedvoxellist.size()) affectedvoxellist.resize(affectedvoxellist.size()+vListSize,-1);
-        }
-        if(growth == -1 && reassigned[neighpoint] <= 0)
-        {
-          reassigned[index] = gnames[index];
-          gnames[index] = gnames[neighpoint];
-          affectedvoxellist[affectedcount] = index;
-          affectedcount++;
-          if(affectedcount >= affectedvoxellist.size()) affectedvoxellist.resize(affectedvoxellist.size()+vListSize,-1);
-        }
+	        if(growth == 1 && reassigned[neighpoint] <= 0)
+	        {
+	          reassigned[neighpoint] = grain_indicies[neighpoint];
+	          grain_indicies[neighpoint] = grain_indicies[index];
+	          affectedvoxellist[affectedcount] = neighpoint;
+	          affectedcount++;
+	          if(affectedcount >= affectedvoxellist.size()) affectedvoxellist.resize(affectedvoxellist.size()+vListSize,-1);
+	        }
+	        if(growth == -1 && reassigned[neighpoint] <= 0)
+	        {
+	          reassigned[index] = grain_indicies[index];
+	          grain_indicies[index] = grain_indicies[neighpoint];
+	          affectedvoxellist[affectedcount] = index;
+	          affectedcount++;
+	          if(affectedcount >= affectedvoxellist.size()) affectedvoxellist.resize(affectedvoxellist.size()+vListSize,-1);
+	        }
         }
       }
     }
@@ -2719,7 +2673,7 @@ void GrainGeneratorFunc::adjust_boundaries()
       index = affectedvoxellist[i];
       if(reassigned[index] > 0)
       {
-        gsizes[gnames[index]]++;
+        gsizes[grain_indicies[index]]++;
         gsizes[reassigned[index]] = gsizes[reassigned[index]]-1;
       }
     }
@@ -2746,9 +2700,9 @@ void GrainGeneratorFunc::adjust_boundaries()
         index = affectedvoxellist[i];
         if(reassigned[index] > 0)
         {
-          gsizes[gnames[index]] = gsizes[gnames[index]]-1;
-          gnames[index] = reassigned[index];
-          gsizes[gnames[index]]++;
+          gsizes[grain_indicies[index]] = gsizes[grain_indicies[index]]-1;
+          grain_indicies[index] = reassigned[index];
+          gsizes[grain_indicies[index]]++;
         }
       }
       for(size_t i=1;i<m_Grains.size();i++)
@@ -2771,7 +2725,7 @@ void GrainGeneratorFunc::adjust_boundaries()
   }
   for(int i=0;i<totalpoints;i++)
   {
-    voxels[i].grain_index = newnames[gnames[i]];
+    grain_indicies[i] = newnames[grain_indicies[i]];
   }
 }
 
@@ -2817,15 +2771,10 @@ void  GrainGeneratorFunc::find_neighbors()
     }
   }
 
-  NEW_SHARED_ARRAY(gnames, int, totalpoints)
-  for (int i = 0; i < totalpoints; i++)
-  {
-    gnames[i] = voxels[i].grain_index;
-  }
   for (int j = 0; j < (xpoints * ypoints * zpoints); j++)
   {
     onsurf = 0;
-    grain = gnames[j];
+    grain = grain_indicies[j];
     if (grain > 0)
     {
       column = j % xpoints;
@@ -2844,7 +2793,7 @@ void  GrainGeneratorFunc::find_neighbors()
         if (k == 4 && row == (ypoints - 1)) good = 0;
         if (k == 2 && column == 0) good = 0;
         if (k == 3 && column == (xpoints - 1)) good = 0;
-        if (good == 1 && gnames[neighbor] != grain && gnames[neighbor] > 0)
+        if (good == 1 && grain_indicies[neighbor] != grain && grain_indicies[neighbor] > 0)
         {
           onsurf++;
           nnum = m_Grains[grain]->numneighbors;
@@ -2853,13 +2802,13 @@ void  GrainGeneratorFunc::find_neighbors()
           {
             nlist->resize(nnum + nListSize);
           }
-          nlist->at(nnum) = gnames[neighbor];
+          nlist->at(nnum) = grain_indicies[neighbor];
           nnum++;
           m_Grains[grain]->numneighbors = nnum;
         }
       }
     }
-    voxels[j].surfacevoxel = onsurf;
+    surfacevoxels[j] = onsurf;
   }
 
   for (size_t i = 1; i < m_Grains.size(); i++)
@@ -3283,15 +3232,15 @@ void GrainGeneratorFunc::matchCrystallography()
   float q[5];
   for(int i = 0; i < totalpoints; i++)
   {
-    voxels[i].euler1 = m_Grains[voxels[i].grain_index]->euler1;
-    voxels[i].euler2 = m_Grains[voxels[i].grain_index]->euler2;
-    voxels[i].euler3 = m_Grains[voxels[i].grain_index]->euler3;
-    OrientationMath::eulertoQuat(q, voxels[i].euler1, voxels[i].euler2, voxels[i].euler3);
-    voxels[i].quat[0] = 1.0;
-    voxels[i].quat[1] = q[1];
-    voxels[i].quat[2] = q[2];
-    voxels[i].quat[3] = q[3];
-    voxels[i].quat[4] = q[4];
+    euler1s[i] = m_Grains[grain_indicies[i]]->euler1;
+    euler2s[i] = m_Grains[grain_indicies[i]]->euler2;
+    euler3s[i] = m_Grains[grain_indicies[i]]->euler3;
+    OrientationMath::eulertoQuat(q, euler1s[i], euler2s[i], euler3s[i]);
+    quats[i][0] = 1.0;
+    quats[i][1] = q[1];
+    quats[i][2] = q[2];
+    quats[i][3] = q[3];
+    quats[i][4] = q[4];
   }
 }
 void  GrainGeneratorFunc::measure_misorientations ()
