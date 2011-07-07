@@ -43,6 +43,7 @@
 
 #include "DREAM3D/ANGSupport/AbstractAngDataLoader.h"
 #include "DREAM3D/DREAM3DConfiguration.h"
+#include "DREAM3D/Reconstruction/ReconstructionFunc.h"
 
 
 /**

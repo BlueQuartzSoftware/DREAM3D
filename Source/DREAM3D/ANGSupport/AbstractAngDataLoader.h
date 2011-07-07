@@ -35,7 +35,7 @@
 
 #include "MXA/Common/MXASetGetMacros.h"
 #include "DREAM3D/DREAM3DConfiguration.h"
-
+class ReconstructionFunc;
 
 /**
  * @class AbstractAngDataLoader AbstractAngDataLoader.h AIM/ANG/AbstractAngDataLoader.h

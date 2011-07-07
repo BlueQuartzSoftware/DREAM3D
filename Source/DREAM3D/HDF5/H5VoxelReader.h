@@ -73,10 +73,9 @@ class DREAM3DLib_EXPORT H5VoxelReader
 
 
 
-	template<typename T>
-	int readVoxelData(boost::shared_array<T> grain_indicies, boost::shared_array<T> phases,
-							boost::shared_array<T> euler1s, boost::shared_array<T> euler2s,
-							boost::shared_array<T> euler3s, std::vector<AIM::Reconstruction::CrystalStructure> &crystruct,
+	int readVoxelData(std::vector<int> &grain_indicies, std::vector<int> &phases,
+							std::vector<float> &euler1s, std::vector<float> &euler2s,
+							std::vector<float> &euler3s, std::vector<AIM::Reconstruction::CrystalStructure> &crystruct,
                             int totalpoints)
 {
   int err = 0;

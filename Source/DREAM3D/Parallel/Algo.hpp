@@ -71,8 +71,11 @@ class ParallelRenumberGrains
 
 class FindEuclideanMap
 {
-    const MicrostructureStatisticsFunc* d;
-    const int loop;
+	//FIX ME - why are const causing problems
+//    const MicrostructureStatisticsFunc* d;
+//    const int loop;
+    MicrostructureStatisticsFunc* d;
+    int loop;
 
   public:
     virtual ~FindEuclideanMap() {}
