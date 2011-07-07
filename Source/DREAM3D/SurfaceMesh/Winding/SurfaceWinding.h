@@ -43,7 +43,7 @@
 /*
  *
  */
-class SurfaceWinding
+class DREAM3DLib_EXPORT SurfaceWinding
 {
   public:
     SurfaceWinding();

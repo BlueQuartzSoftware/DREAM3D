@@ -13,9 +13,6 @@ SET (DREAM3D_SurfaceMesh_HDRS
   ${DREAM3DLib_SOURCE_DIR}/SurfaceMesh/Patch.h
   ${DREAM3DLib_SOURCE_DIR}/SurfaceMesh/Segment.h
   ${DREAM3DLib_SOURCE_DIR}/SurfaceMesh/STLWriter.h
-  ${DREAM3DLib_SOURCE_DIR}/SurfaceMesh/Winding/SurfaceWinding.h
-  ${DREAM3DLib_SOURCE_DIR}/SurfaceMesh/Winding/Edge.h
-  ${DREAM3DLib_SOURCE_DIR}/SurfaceMesh/Winding/Facet.hpp
   )
 
 SET (DREAM3D_SurfaceMesh_SRCS
@@ -30,12 +27,27 @@ SET (DREAM3D_SurfaceMesh_SRCS
   ${DREAM3DLib_SOURCE_DIR}/SurfaceMesh/Patch.cpp
   ${DREAM3DLib_SOURCE_DIR}/SurfaceMesh/Segment.cpp
   ${DREAM3DLib_SOURCE_DIR}/SurfaceMesh/STLWriter.cpp
+)
+
+SET (WINDING_SRCS
   ${DREAM3DLib_SOURCE_DIR}/SurfaceMesh/Winding/SurfaceWinding.cpp
   ${DREAM3DLib_SOURCE_DIR}/SurfaceMesh/Winding/Edge.cpp
 )
-
+SET (WINDING_HDRS
+  ${DREAM3DLib_SOURCE_DIR}/SurfaceMesh/Winding/SurfaceWinding.h
+  ${DREAM3DLib_SOURCE_DIR}/SurfaceMesh/Winding/Edge.h
+  ${DREAM3DLib_SOURCE_DIR}/SurfaceMesh/Winding/Facet.hpp
+)
 
 cmp_IDE_SOURCE_PROPERTIES( "DREAM3DLib/SurfaceMesh" "${DREAM3D_SurfaceMesh_HDRS}" "${DREAM3D_SurfaceMesh_SRCS}" "0")
+
+
+
+#cmp_IDE_SOURCE_PROPERTIES( "DREAM3DLib/SurfaceMesh/Winding" "${WINDING_HDRS}" "${WINDING_SRCS}" "0")
+
+#set (DREAM3D_SurfaceMesh_HDRS ${DREAM3D_SurfaceMesh_HDRS} ${WINDING_HDRS})
+#set (DREAM3D_SurfaceMesh_SRCS ${DREAM3D_SurfaceMesh_SRCS} ${WINDING_SRCS})
+
 if ( ${DREAM3D_INSTALL_FILES} EQUAL 1 )
     INSTALL (FILES ${DREAM3D_SurfaceMesh_HDRS}
             DESTINATION include/DREAM3D/SurfaceMesh
