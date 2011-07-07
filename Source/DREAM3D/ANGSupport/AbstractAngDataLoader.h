@@ -35,7 +35,6 @@
 
 #include "MXA/Common/MXASetGetMacros.h"
 #include "DREAM3D/DREAM3DConfiguration.h"
-#include "DREAM3D/Reconstruction/ReconstructionVoxel.h"
 
 
 /**
@@ -63,8 +62,7 @@ class DREAM3DLib_EXPORT AbstractAngDataLoader
      * @param ypoints The number of points along the Y Axis
      * @param zpoints The number of points along the Z Axis
      */
-    virtual int loadData(ReconstructionVoxel voxels[],
-                         int xpoints, int ypoints, int zpoints) = 0;
+    virtual int loadData(ReconstructionFunc* m) = 0;
 
     /**
      * @brief This method gathers the number of points in each of the 3 axis directions

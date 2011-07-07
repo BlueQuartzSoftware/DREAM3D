@@ -65,7 +65,6 @@
 #include "DREAM3D/Common/OrientationOps/HexagonalOps.h"
 #include "DREAM3D/Common/OrientationOps/OrthoRhombicOps.h"
 #include "DREAM3D/ANGSupport/AbstractAngDataLoader.h"
-#include "DREAM3D/Reconstruction/ReconstructionVoxel.h"
 #include "DREAM3D/HDF5/H5ReconStatsWriter.h"
 
 using namespace std;

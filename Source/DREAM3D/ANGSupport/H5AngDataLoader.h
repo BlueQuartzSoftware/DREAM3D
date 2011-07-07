@@ -44,7 +44,6 @@
 //-- AIM Common Includes
 #include "DREAM3D/ANGSupport/AbstractAngDataLoader.h"
 #include "DREAM3D/DREAM3DConfiguration.h"
-#include "DREAM3D/Reconstruction/ReconstructionVoxel.h"
 
 
 
@@ -69,7 +68,7 @@ class DREAM3DLib_EXPORT H5AngDataLoader : public AbstractAngDataLoader
     MXA_INSTANCE_PROPERTY(bool, Cancel)
     MXA_INSTANCE_PROPERTY(Ang::Orientation, Orientation)
 
-    int loadData(ReconstructionVoxel voxels[], int xpoints, int ypoints, int zpoints);
+    int loadData(ReconstructionFunc* m);
     int getSizeAndResolution(int &xpoints, int &ypoints, int &zpoints,
                              float &xres, float &yres, float &zres);
 

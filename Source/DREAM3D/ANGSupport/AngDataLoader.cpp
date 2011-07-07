@@ -90,7 +90,7 @@ int AngDataLoader::getSizeAndResolution(int &xpoints, int &ypoints, int &zpoints
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int AngDataLoader::loadData(ReconstructionVoxel voxels[], int xpoints, int ypoints, int zpoints)
+int AngDataLoader::loadData(ReconstructionFunc* m)
 {
   int index = 0;
   int err = -1;
