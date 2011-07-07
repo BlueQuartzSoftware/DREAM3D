@@ -108,7 +108,18 @@ class DREAM3DLib_EXPORT ReconstructionFunc
     vector<AIM::Reconstruction::PhaseType>        phaseType;
     std::vector<float>                            pptFractions;
 
-    boost::shared_array<ReconstructionVoxel> voxels;
+	std::vector<int> grain_indicies;
+    std::vector<int> phases;
+    std::vector<float> euler1s;
+    std::vector<float> euler2s;
+    std::vector<float> euler3s;
+    std::vector<int> neighbors;
+    std::vector<int> surfacevoxels;
+    std::vector<int> alreadychecked;
+    std::vector<int> unassigned;
+    std::vector<float> confidences;
+    std::vector<float> imagequalities;
+    std::vector<std::vector<float> > quats;
 
     SharedIntArray graincounts;
     std::vector<Grain::Pointer> m_Grains;

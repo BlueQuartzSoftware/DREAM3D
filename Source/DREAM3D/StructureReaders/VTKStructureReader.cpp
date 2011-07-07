@@ -64,7 +64,20 @@ int VTKStructureReader::readStructure(GrainGeneratorFunc* m)
   m->sizex = m->xpoints * m->resx;
   m->sizey = m->ypoints * m->resy;
   m->sizez = m->zpoints * m->resz;
-  m->voxels.reset(new GrainGeneratorVoxel[m->totalpoints]);
+//  m->voxels.reset(new GrainGeneratorVoxel[m->totalpoints]);
+  m->grain_indicies.resize(m->totalpoints);
+  m->phases.resize(m->totalpoints);
+  m->euler1s.resize(m->totalpoints);
+  m->euler2s.resize(m->totalpoints);
+  m->euler3s.resize(m->totalpoints);
+  m->neighbors.resize(m->totalpoints);
+  m->surfacevoxels.resize(m->totalpoints);
+  m->numowners.resize(m->totalpoints);
+  m->quats.resize(m->totalpoints);
+  for(int i=0;i<m->totalpoints;i++)
+  {
+	m->quats[i].resize(5);
+  }
 
   std::string filename = getInputFileName();
   std::ifstream instream;
@@ -137,7 +150,7 @@ int VTKStructureReader::readStructure(GrainGeneratorFunc* m)
             for (int x = 0; x < m->xpoints; ++x)
             {
               MXA::Endian::FromBigToSystem::convert<int>(ids[i]);
-              m->voxels[index].grain_index = ids[i];
+              m->grain_indicies[index] = ids[i];
               grainIdMap[ids[i]]++;
               ++i;
               ++index;
@@ -152,7 +165,7 @@ int VTKStructureReader::readStructure(GrainGeneratorFunc* m)
         for (size_t i = 0; i < size; ++i)
         {
           instream >> grain_index;
-          m->voxels[i].grain_index = grain_index;
+          m->grain_indicies[i] = grain_index;
           grainIdMap[grain_index]++;
         }
       }
@@ -185,7 +198,7 @@ int VTKStructureReader::readStructure(GrainGeneratorFunc* m)
             for (int x = 0; x < m->xpoints; ++x)
             {
               MXA::Endian::FromBigToSystem::convert<int>(ids[i]);
-              m->voxels[index].phase = ids[i];
+              m->phases[index] = ids[i];
               ++i;
               ++index;
             }
@@ -199,7 +212,7 @@ int VTKStructureReader::readStructure(GrainGeneratorFunc* m)
         for (size_t i = 0; i < size; ++i)
         {
           instream >> phase;
-          m->voxels[i].phase = phase;
+          m->phases[i] = phase;
         }
       }
       needPhaseIds = false;
