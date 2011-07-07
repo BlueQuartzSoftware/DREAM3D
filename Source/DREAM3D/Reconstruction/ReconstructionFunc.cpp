@@ -209,13 +209,13 @@ void ReconstructionFunc::cleanup_data()
   int neighpoint;
   int good = 0;
   int count = 1;
-  int neighbors[6];
-  neighbors[0] = -(xpoints * ypoints);
-  neighbors[1] = -xpoints;
-  neighbors[2] = -1;
-  neighbors[3] = 1;
-  neighbors[4] = xpoints;
-  neighbors[5] = (xpoints * ypoints);
+  int neighpoints[6];
+  neighpoints[0] = -(xpoints * ypoints);
+  neighpoints[1] = -xpoints;
+  neighpoints[2] = -1;
+  neighpoints[3] = 1;
+  neighpoints[4] = xpoints;
+  neighpoints[5] = (xpoints * ypoints);
   while (count != 0)
   {
     count = 0;
@@ -230,7 +230,7 @@ void ReconstructionFunc::cleanup_data()
         for (int j = 0; j < 6; j++)
         {
           good = 1;
-          neighpoint = i + neighbors[j];
+          neighpoint = i + neighpoints[j];
           if (j == 0 && z == 0) good = 0;
           if (j == 5 && z == (zpoints - 1)) good = 0;
           if (j == 1 && y == 0) good = 0;
@@ -353,13 +353,13 @@ void ReconstructionFunc::cleanup_data()
 }
 void ReconstructionFunc::find_border()
 {
-  int neighbors[6];
-  neighbors[0] = -(xpoints * ypoints);
-  neighbors[1] = -xpoints;
-  neighbors[2] = -1;
-  neighbors[3] = 1;
-  neighbors[4] = xpoints;
-  neighbors[5] = (xpoints * ypoints);
+  int neighpoints[6];
+  neighpoints[0] = -(xpoints * ypoints);
+  neighpoints[1] = -xpoints;
+  neighpoints[2] = -1;
+  neighpoints[3] = 1;
+  neighpoints[4] = xpoints;
+  neighpoints[5] = (xpoints * ypoints);
   float w, n1, n2, n3;
   float q1[5];
   float q2[5];
@@ -400,7 +400,7 @@ void ReconstructionFunc::find_border()
     for (int j = 0; j < 6; j++)
     {
       good = 1;
-      neighbor = index + neighbors[j];
+      neighbor = index + neighpoints[j];
       if (j == 0 && plane == 0) good = 0;
       if (j == 5 && plane == (zpoints - 1)) good = 0;
       if (j == 1 && row == 0) good = 0;
@@ -806,15 +806,15 @@ void ReconstructionFunc::form_grains_sections()
   graincounts.reset(new int[zpoints]);
 
   std::vector<int > voxelslist(initialVoxelsListSize, -1);
-  int neighbors[8];
-  neighbors[0] = -xpoints - 1;
-  neighbors[1] = -xpoints;
-  neighbors[2] = -xpoints + 1;
-  neighbors[3] = -1;
-  neighbors[4] = 1;
-  neighbors[5] = xpoints - 1;
-  neighbors[6] = xpoints;
-  neighbors[7] = xpoints + 1;
+  int neighpoints[8];
+  neighpoints[0] = -xpoints - 1;
+  neighpoints[1] = -xpoints;
+  neighpoints[2] = -xpoints + 1;
+  neighpoints[3] = -1;
+  neighpoints[4] = 1;
+  neighpoints[5] = xpoints - 1;
+  neighpoints[6] = xpoints;
+  neighpoints[7] = xpoints + 1;
   AIM::Reconstruction::CrystalStructure phase1, phase2;
   for (int slice = 0; slice < zpoints; slice++)
   {
@@ -881,7 +881,7 @@ void ReconstructionFunc::form_grains_sections()
           for (int i = 0; i < 8; i++)
           {
             good = 1;
-            neighbor = currentpoint + neighbors[i];
+            neighbor = currentpoint + neighpoints[i];
             if ((i == 0 || i == 1 || i == 2) && row == 0) good = 0;
             if ((i == 5 || i == 6 || i == 7) && row == (ypoints - 1)) good = 0;
             if ((i == 0 || i == 3 || i == 5) && col == 0) good = 0;
@@ -940,13 +940,13 @@ void ReconstructionFunc::form_grains()
   std::vector<int> voxelslist(initialVoxelsListSize, -1);
   std::vector<int>* vlist;
   std::vector<int> mergelist(initialMergeListSize, -1);
-  int neighbors[6];
-  neighbors[0] = -(xpoints * ypoints);
-  neighbors[1] = -xpoints;
-  neighbors[2] = -1;
-  neighbors[3] = 1;
-  neighbors[4] = xpoints;
-  neighbors[5] = (xpoints * ypoints);
+  int neighpoints[6];
+  neighpoints[0] = -(xpoints * ypoints);
+  neighpoints[1] = -xpoints;
+  neighpoints[2] = -1;
+  neighpoints[3] = 1;
+  neighpoints[4] = xpoints;
+  neighpoints[5] = (xpoints * ypoints);
   AIM::Reconstruction::CrystalStructure phase1, phase2;
 
   // Precalculate some constants
@@ -1005,7 +1005,7 @@ void ReconstructionFunc::form_grains()
           q1[3] = grainquats[graincount * 5 + 3] / grainquats[graincount * 5];
           q1[4] = grainquats[graincount * 5 + 4] / grainquats[graincount * 5];
           good = 1;
-          neighbor = currentpoint + neighbors[i];
+          neighbor = currentpoint + neighpoints[i];
           if (i == 0 && plane == 0) good = 0;
           if (i == 5 && plane == (zpoints - 1)) good = 0;
           if (i == 1 && row == 0) good = 0;
@@ -1106,7 +1106,7 @@ void ReconstructionFunc::form_grains()
           for (int l = 0; l < 6; l++)
           {
             good = 1;
-            neighbor = vid + neighbors[l];
+            neighbor = vid + neighpoints[l];
             if (l == 0 && plane == 0) good = 0;
             if (l == 5 && plane == (zpoints - 1)) good = 0;
             if (l == 1 && row == 0) good = 0;
@@ -1208,15 +1208,15 @@ void ReconstructionFunc::assign_badpoints()
   int good = 1;
   float x, y, z;
   int neighpoint;
-  int neighbors[6];
+  int neighpoints[6];
   size_t numgrains = m_Grains.size();
   std::vector<int > n(numgrains + 1);
-  neighbors[0] = -xpoints * ypoints;
-  neighbors[1] = -xpoints;
-  neighbors[2] = -1;
-  neighbors[3] = 1;
-  neighbors[4] = xpoints;
-  neighbors[5] = xpoints * ypoints;
+  neighpoints[0] = -xpoints * ypoints;
+  neighpoints[1] = -xpoints;
+  neighpoints[2] = -1;
+  neighpoints[3] = 1;
+  neighpoints[4] = xpoints;
+  neighpoints[5] = xpoints * ypoints;
 
   while (count != 0)
   {
@@ -1239,7 +1239,7 @@ void ReconstructionFunc::assign_badpoints()
         for (int j = 0; j < 6; j++)
         {
           good = 1;
-          neighpoint = i + neighbors[j];
+          neighpoint = i + neighpoints[j];
           if (j == 0 && z == 0) good = 0;
           if (j == 5 && z == (zpoints - 1)) good = 0;
           if (j == 1 && y == 0) good = 0;
@@ -1311,7 +1311,7 @@ void ReconstructionFunc::reorder_grains()
 {
   size_t initialVoxelsListSize = 1000;
   size_t size = 0;
-  int neighbors[26];
+  int neighpoints[26];
   int good = 0;
   int neighbor = 0;
   int col, row, plane;
@@ -1323,32 +1323,32 @@ void ReconstructionFunc::reorder_grains()
   size_t currentgrain = 1;
   AIM::Reconstruction::CrystalStructure phase;
 
-  neighbors[0] = -(xpoints * ypoints) - xpoints - 1;
-  neighbors[1] = -(xpoints * ypoints) - xpoints;
-  neighbors[2] = -(xpoints * ypoints) - xpoints + 1;
-  neighbors[3] = -(xpoints * ypoints) - 1;
-  neighbors[4] = -(xpoints * ypoints);
-  neighbors[5] = -(xpoints * ypoints) + 1;
-  neighbors[6] = -(xpoints * ypoints) + xpoints - 1;
-  neighbors[7] = -(xpoints * ypoints) + xpoints;
-  neighbors[8] = -(xpoints * ypoints) + xpoints + 1;
-  neighbors[9] = -xpoints - 1;
-  neighbors[10] = -xpoints;
-  neighbors[11] = -xpoints + 1;
-  neighbors[12] = -1;
-  neighbors[13] = 1;
-  neighbors[14] = xpoints - 1;
-  neighbors[15] = xpoints;
-  neighbors[16] = xpoints + 1;
-  neighbors[17] = (xpoints * ypoints) - xpoints - 1;
-  neighbors[18] = (xpoints * ypoints) - xpoints;
-  neighbors[19] = (xpoints * ypoints) - xpoints + 1;
-  neighbors[20] = (xpoints * ypoints) - 1;
-  neighbors[21] = (xpoints * ypoints);
-  neighbors[22] = (xpoints * ypoints) + 1;
-  neighbors[23] = (xpoints * ypoints) + xpoints - 1;
-  neighbors[24] = (xpoints * ypoints) + xpoints;
-  neighbors[25] = (xpoints * ypoints) + xpoints + 1;
+  neighpoints[0] = -(xpoints * ypoints) - xpoints - 1;
+  neighpoints[1] = -(xpoints * ypoints) - xpoints;
+  neighpoints[2] = -(xpoints * ypoints) - xpoints + 1;
+  neighpoints[3] = -(xpoints * ypoints) - 1;
+  neighpoints[4] = -(xpoints * ypoints);
+  neighpoints[5] = -(xpoints * ypoints) + 1;
+  neighpoints[6] = -(xpoints * ypoints) + xpoints - 1;
+  neighpoints[7] = -(xpoints * ypoints) + xpoints;
+  neighpoints[8] = -(xpoints * ypoints) + xpoints + 1;
+  neighpoints[9] = -xpoints - 1;
+  neighpoints[10] = -xpoints;
+  neighpoints[11] = -xpoints + 1;
+  neighpoints[12] = -1;
+  neighpoints[13] = 1;
+  neighpoints[14] = xpoints - 1;
+  neighpoints[15] = xpoints;
+  neighpoints[16] = xpoints + 1;
+  neighpoints[17] = (xpoints * ypoints) - xpoints - 1;
+  neighpoints[18] = (xpoints * ypoints) - xpoints;
+  neighpoints[19] = (xpoints * ypoints) - xpoints + 1;
+  neighpoints[20] = (xpoints * ypoints) - 1;
+  neighpoints[21] = (xpoints * ypoints);
+  neighpoints[22] = (xpoints * ypoints) + 1;
+  neighpoints[23] = (xpoints * ypoints) + xpoints - 1;
+  neighpoints[24] = (xpoints * ypoints) + xpoints;
+  neighpoints[25] = (xpoints * ypoints) + xpoints + 1;
   size_t numgrains = m_Grains.size();
 
   size_t maxGrain = 0;
@@ -1422,7 +1422,7 @@ void ReconstructionFunc::reorder_grains()
         for (int k = 0; k < 26; k++)
         {
           good = 1;
-          neighbor = currentpoint + neighbors[k];
+          neighbor = currentpoint + neighpoints[k];
           if (k < 9 && plane == 0) good = 0;
           if (k > 16 && plane == (zpoints - 1)) good = 0;
           if ((k == 0 || k == 1 || k == 2 || k == 9 || k == 10 || k == 11 || k == 17 || k == 18 || k == 19) && row == 0) good = 0;
@@ -1569,38 +1569,38 @@ int ReconstructionFunc::remove_smallgrains(size_t numgrains)
   std::vector<int > voxelslist;
   voxelslist.resize(initialVoxelsListSize,-1);
   size_t size = 0;
-  int neighbors[26];
+  int neighpoints[26];
   int good = 0;
   int neighbor = 0;
   int col, row, plane;
   int gnum;
   int currentgrain = 1;
-  neighbors[0] = -(xpoints * ypoints) - xpoints - 1;
-  neighbors[1] = -(xpoints * ypoints) - xpoints;
-  neighbors[2] = -(xpoints * ypoints) - xpoints + 1;
-  neighbors[3] = -(xpoints * ypoints) - 1;
-  neighbors[4] = -(xpoints * ypoints);
-  neighbors[5] = -(xpoints * ypoints) + 1;
-  neighbors[6] = -(xpoints * ypoints) + xpoints - 1;
-  neighbors[7] = -(xpoints * ypoints) + xpoints;
-  neighbors[8] = -(xpoints * ypoints) + xpoints + 1;
-  neighbors[9] = -xpoints - 1;
-  neighbors[10] = -xpoints;
-  neighbors[11] = -xpoints + 1;
-  neighbors[12] = -1;
-  neighbors[13] = 1;
-  neighbors[14] = xpoints - 1;
-  neighbors[15] = xpoints;
-  neighbors[16] = xpoints + 1;
-  neighbors[17] = (xpoints * ypoints) - xpoints - 1;
-  neighbors[18] = (xpoints * ypoints) - xpoints;
-  neighbors[19] = (xpoints * ypoints) - xpoints + 1;
-  neighbors[20] = (xpoints * ypoints) - 1;
-  neighbors[21] = (xpoints * ypoints);
-  neighbors[22] = (xpoints * ypoints) + 1;
-  neighbors[23] = (xpoints * ypoints) + xpoints - 1;
-  neighbors[24] = (xpoints * ypoints) + xpoints;
-  neighbors[25] = (xpoints * ypoints) + xpoints + 1;
+  neighpoints[0] = -(xpoints * ypoints) - xpoints - 1;
+  neighpoints[1] = -(xpoints * ypoints) - xpoints;
+  neighpoints[2] = -(xpoints * ypoints) - xpoints + 1;
+  neighpoints[3] = -(xpoints * ypoints) - 1;
+  neighpoints[4] = -(xpoints * ypoints);
+  neighpoints[5] = -(xpoints * ypoints) + 1;
+  neighpoints[6] = -(xpoints * ypoints) + xpoints - 1;
+  neighpoints[7] = -(xpoints * ypoints) + xpoints;
+  neighpoints[8] = -(xpoints * ypoints) + xpoints + 1;
+  neighpoints[9] = -xpoints - 1;
+  neighpoints[10] = -xpoints;
+  neighpoints[11] = -xpoints + 1;
+  neighpoints[12] = -1;
+  neighpoints[13] = 1;
+  neighpoints[14] = xpoints - 1;
+  neighpoints[15] = xpoints;
+  neighpoints[16] = xpoints + 1;
+  neighpoints[17] = (xpoints * ypoints) - xpoints - 1;
+  neighpoints[18] = (xpoints * ypoints) - xpoints;
+  neighpoints[19] = (xpoints * ypoints) - xpoints + 1;
+  neighpoints[20] = (xpoints * ypoints) - 1;
+  neighpoints[21] = (xpoints * ypoints);
+  neighpoints[22] = (xpoints * ypoints) + 1;
+  neighpoints[23] = (xpoints * ypoints) + xpoints - 1;
+  neighpoints[24] = (xpoints * ypoints) + xpoints;
+  neighpoints[25] = (xpoints * ypoints) + xpoints + 1;
   for (int i = 0; i < (xpoints * ypoints * zpoints); i++)
   {
     alreadychecked[i] = 0;
@@ -1624,7 +1624,7 @@ int ReconstructionFunc::remove_smallgrains(size_t numgrains)
         for (size_t k = 0; k < 26; k++)
         {
           good = 1;
-          neighbor = currentpoint + neighbors[k];
+          neighbor = currentpoint + neighpoints[k];
           if (k < 9 && plane == 0) good = 0;
           if (k > 16 && plane == (zpoints - 1)) good = 0;
           if ((k == 0 || k == 1 || k == 2 || k == 9 || k == 10 || k == 11 || k == 17 || k == 18 || k == 19) && row == 0) good = 0;
@@ -1905,13 +1905,14 @@ void ReconstructionFunc::renumber_grains3()
 
 void ReconstructionFunc::find_neighbors()
 {
-  int neighbors[6];
-  neighbors[0] = -(xpoints*ypoints);
-  neighbors[1] = -xpoints;
-  neighbors[2] = -1;
-  neighbors[3] = 1;
-  neighbors[4] = xpoints;
-  neighbors[5] = (xpoints*ypoints);
+
+  int neighpoints[6];
+  neighpoints[0] = -(xpoints * ypoints);
+  neighpoints[1] = -xpoints;
+  neighpoints[2] = -1;
+  neighpoints[3] = 1;
+  neighpoints[4] = xpoints;
+  neighpoints[5] = (xpoints * ypoints);
   float column, row, plane;
   int grain;
   size_t nnum;
@@ -1954,7 +1955,7 @@ void ReconstructionFunc::find_neighbors()
       for (int k = 0; k < 6; k++)
       {
         good = 1;
-        neighbor = j + neighbors[k];
+        neighbor = j + neighpoints[k];
         if (k == 0 && plane == 0) good = 0;
         if (k == 5 && plane == (zpoints - 1)) good = 0;
         if (k == 1 && row == 0) good = 0;

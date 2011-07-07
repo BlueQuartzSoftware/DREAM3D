@@ -197,7 +197,7 @@ int H5AngDataLoader::loadData(ReconstructionFunc* m)
   int xstartspot;
   int ystartspot;
 
-  for (int slice = 0; slice < zpoints; ++slice)
+  for (int slice = 0; slice < m->zpoints; ++slice)
   {
     H5AngReader::Pointer reader = H5AngReader::New();
     reader->setFileName(getFilename());
@@ -220,13 +220,13 @@ int H5AngDataLoader::loadData(ReconstructionFunc* m)
     confPtr = reader->getConfidenceIndexPointer();
     imqualPtr = reader->getImageQualityPointer();
     imqual2Ptr = reader->getImageQuality2Pointer();
-    xstartspot = (xpoints - xpointstemp) / 2;
-    ystartspot = (ypoints - ypointstemp) / 2;
+    xstartspot = (m->xpoints - xpointstemp) / 2;
+    ystartspot = (m->ypoints - ypointstemp) / 2;
     for (int j = 0; j < ypointstemp; j++)
     {
       for (int i = 0; i < xpointstemp; i++)
       {
-        index = ((zpoints - 1 - slice) * xpoints * ypoints) + ((j + ystartspot) * xpoints) + (i + xstartspot);
+        index = ((m->zpoints - 1 - slice) * m->xpoints * m->ypoints) + ((j + ystartspot) * m->xpoints) + (i + xstartspot);
         m->euler1s[index] = euler1Ptr[readerIndex]; // Phi1
         m->euler2s[index] = euler2Ptr[readerIndex]; // Phi
         m->euler3s[index] = euler3Ptr[readerIndex]; // Phi2
@@ -241,7 +241,7 @@ int H5AngDataLoader::loadData(ReconstructionFunc* m)
          * phase in the OIM data.
          */
         if (m->phases[index] < 1) {
-          phases[index] = 1;
+          m->phases[index] = 1;
         }
         ++readerIndex;
       }

@@ -104,6 +104,8 @@ class DREAM3DLib_EXPORT H5VoxelWriter
       // We now need to write the actual voxel data
       int numComp = 1; //
       int totalPoints = m->totalpoints;
+      int32_t rank = 1;
+      hsize_t dims[2] = {totalPoints, numComp};
       std::vector<int> datai1(totalPoints * 1);
       std::vector<int> datai2(totalPoints * 1);
       std::vector<float> dataf(totalPoints * 3);
@@ -115,21 +117,14 @@ class DREAM3DLib_EXPORT H5VoxelWriter
         dataf[i * 3 + 1] = m->euler2s[i];
         dataf[i * 3 + 2] = m->euler3s[i];
       }
-      numComp = 1;
-      int32_t rank = 2;
-      hsize_t dims[2] = {totalPoints, numComp};
       err = h5writer->writeScalarData(AIM::HDF5::VoxelDataName,
                                       datai1, AIM::VTK::GrainIdScalarName.c_str(),
                                       numComp, rank, dims);
-      numComp = 1;
-      int32_t rank = 2;
-      hsize_t dims[2] = {totalPoints, numComp};
       err = h5writer->writeScalarData(AIM::HDF5::VoxelDataName,
                                       datai2, AIM::VTK::PhaseIdScalarName.c_str(),
                                       numComp, rank, dims);
       numComp = 3;
-      int32_t rank = 2;
-      hsize_t dims[2] = {totalPoints, numComp};
+      rank = 2;
       err = h5writer->writeScalarData(AIM::HDF5::VoxelDataName,
                                       dataf, AIM::VTK::EulerAnglesName.c_str(),
                                       numComp, rank, dims);

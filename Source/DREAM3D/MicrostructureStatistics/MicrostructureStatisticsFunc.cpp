@@ -199,13 +199,13 @@ void MicrostructureStatisticsFunc::initializeArrays()
 
 void MicrostructureStatisticsFunc::find_neighbors()
 {
-  int neighbors[6];
-  neighbors[0] = -(xpoints*ypoints);
-  neighbors[1] = -xpoints;
-  neighbors[2] = -1;
-  neighbors[3] = 1;
-  neighbors[4] = xpoints;
-  neighbors[5] = (xpoints*ypoints);
+  int neighpoints[6];
+  neighpoints[0] = -(xpoints*ypoints);
+  neighpoints[1] = -xpoints;
+  neighpoints[2] = -1;
+  neighpoints[3] = 1;
+  neighpoints[4] = xpoints;
+  neighpoints[5] = (xpoints*ypoints);
   float column, row, plane;
   int grain;
   size_t nnum;
@@ -251,7 +251,7 @@ void MicrostructureStatisticsFunc::find_neighbors()
         for(int k=0;k<6;k++)
         {
 	      good = 1;
-	      neighbor = j+neighbors[k];
+	      neighbor = j+neighpoints[k];
           if(k == 0 && plane == 0) good = 0;
           if(k == 5 && plane == (zpoints-1)) good = 0;
           if(k == 1 && row == 0) good = 0;
@@ -1308,6 +1308,7 @@ void MicrostructureStatisticsFunc::find_grainorientations()
 {
   size_t numgrains = m_Grains.size();
   int phase;
+  float voxquat[5];
   AIM::Reconstruction::CrystalStructure xtal;
   for (size_t i = 1; i < numgrains; i++)
   {
@@ -1329,7 +1330,12 @@ void MicrostructureStatisticsFunc::find_grainorientations()
     quats[i][2] = qr[2];
     quats[i][3] = qr[3];
     quats[i][4] = qr[4];
-	m_OrientationOps[xtal]->getNearestQuat(m_Grains[grain_indicies[i]]->avg_quat, quats[i]);
+	voxquat[0] = quats[i][0];
+	voxquat[1] = quats[i][1];
+	voxquat[2] = quats[i][2];
+	voxquat[3] = quats[i][3];
+	voxquat[4] = quats[i][4];
+	m_OrientationOps[xtal]->getNearestQuat(m_Grains[grain_indicies[i]]->avg_quat, voxquat);
     for (int k = 0; k < 5; k++)
     {
 	  m_Grains[grain_indicies[i]]->avg_quat[k] = m_Grains[grain_indicies[i]]->avg_quat[k] + quats[i][k];
