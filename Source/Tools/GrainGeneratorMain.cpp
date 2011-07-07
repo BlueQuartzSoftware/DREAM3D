@@ -131,7 +131,8 @@ int main(int argc, char **argv)
     m_GrainGenerator->setYPoints(m_YPoints.getValue());
     m_GrainGenerator->setZPoints(m_ZPoints.getValue());
 
-    m_GrainGenerator->setShapeClass(shapeClass.getValue());
+    //TODO: Get the Shape Class from the Command line options
+  //  m_GrainGenerator->setShapeClass(shapeClass.getValue());
 
     m_GrainGenerator->setXResolution(xRes.getValue());
     m_GrainGenerator->setYResolution(yRes.getValue());

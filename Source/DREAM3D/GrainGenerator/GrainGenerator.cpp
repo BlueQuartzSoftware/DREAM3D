@@ -323,7 +323,7 @@ void GrainGenerator::execute()
   if (m_WritePhFile) {
     MAKE_OUTPUT_FILE_PATH ( phFile, AIM::Reconstruction::PhFile);
     PhWriter phWriter;
-//    err = phWriter.writeGrainPhFile(phFile, m->voxels, m->xpoints, m->ypoints, m->zpoints);
+    err = phWriter.writeGrainPhFile(phFile, m->grain_indicies, m->xpoints, m->ypoints, m->zpoints);
     CHECK_FOR_ERROR(GrainGeneratorFunc, "The Grain Generator threw an Error writing the Ph file format.", err);
   }
 
