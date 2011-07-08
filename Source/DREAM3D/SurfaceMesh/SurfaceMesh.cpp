@@ -44,8 +44,11 @@
 #include "SMVtkFileIO.h"
 #include "DREAM3D/HDF5/H5VoxelReader.h"
 
-#include "Winding/SurfaceWinding.h"
+#define USE_WINDING 0
 
+#if USE_WINDING
+#include "Winding/SurfaceWinding.h"
+#endif
 
 #define CHECK_ERROR(name, message)\
     if(err < 0) {\
@@ -389,9 +392,10 @@ void SurfaceMesh::execute()
   m = SurfaceMeshFunc::NullPointer(); // Clean up the memory
   updateProgressAndMessage(("Analyzing Winding"), 95);
 
+#if USE_WINDING
   m3c::SurfaceWinding sw;
   sw.debugPrintConnectivity(nNodes, cTriID, TrianglesFile);
-
+#endif
 
   updateProgressAndMessage(("Surface Meshing Complete"), 100);
   if (m_DeleteTempFiles == true)
