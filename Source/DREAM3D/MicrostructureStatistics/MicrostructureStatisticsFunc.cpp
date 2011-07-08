@@ -2385,11 +2385,11 @@ void MicrostructureStatisticsFunc::write_graindata(const std::string &graindataF
   size_t numgrains = m_Grains.size();
   outFile.open(graindataFile.c_str());
   outFile << numgrains << endl;
-  outFile << "Grain ID	Surface Grain";
+  outFile << "Grain_ID	Surface_Grain";
   if(writeavgorientations == true) outFile << "	Euler1	Euler2	Euler3";
-  if(writesizes == true) outFile <<  "	Equiv. Diameter";
+  if(writesizes == true) outFile <<  "	Equiv_Diameter";
   if(writeshapes == true) outFile << "	b/a	c/a	Omega3";
-  if(writeneighbors == true) outFile << "	No. Neighbors";
+  if(writeneighbors == true) outFile << "	No_Neighbors";
   outFile << endl;
   for (size_t i = 1; i < numgrains; i++)
   {
