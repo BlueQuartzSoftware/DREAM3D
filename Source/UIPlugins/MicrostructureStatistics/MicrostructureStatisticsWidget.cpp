@@ -477,7 +477,7 @@ void MicrostructureStatisticsWidget::on_m_GrainFileOptionsBtn_clicked()
   options.push_back("Grain Size");
   options.push_back("Grain Shape");
   options.push_back("Number Neighbors");
-  options.push_back("Average Orienation");
+  options.push_back("Average Orientations");
 
   QCheckboxDialog d(options, this);
   d.setWindowTitle(QString("Grain File Output Options"));
@@ -485,7 +485,7 @@ void MicrostructureStatisticsWidget::on_m_GrainFileOptionsBtn_clicked()
   d.setValue("Grain Size", m_WriteGrainSize);
   d.setValue("Grain Shape", m_WriteGrainShapes);
   d.setValue("Number Neighbors", m_WriteNumNeighbors);
-  d.setValue("Average Orientation", m_WriteAverageOrientations);
+  d.setValue("Average Orientations", m_WriteAverageOrientations);
 
   int ret = d.exec();
   if (ret == QDialog::Accepted)
@@ -493,7 +493,7 @@ void MicrostructureStatisticsWidget::on_m_GrainFileOptionsBtn_clicked()
     m_WriteGrainSize = d.getValue("Grain Size");
     m_WriteGrainShapes = d.getValue("Grain Shape");
     m_WriteNumNeighbors = d.getValue("Number Neighbors");
-    m_WriteAverageOrientations = d.getValue("Average Orientation");
+    m_WriteAverageOrientations = d.getValue("Average Orientations");
     if(m_WriteGrainSize == true) m_ComputeGrainSize = true;
     if(m_WriteGrainShapes == true) m_ComputeGrainShapes = true;
     if(m_WriteNumNeighbors == true) m_ComputeNumNeighbors = true;

@@ -11,7 +11,7 @@
 #endif
 
 
-#include "smooth-grain3d.h"
+#include "Smoothing.h"
 
 #include <cstdlib>
 #include <cstdio>
