@@ -19,50 +19,52 @@
 #include "MXA/MXATypes.h"
 #include "DREAM3D/DREAM3DConfiguration.h"
 
-
-
 namespace m3c {
 
 class DREAM3DLib_EXPORT Edge
-{
-  public:
+  {
+    public:
 
-    MXA_SHARED_POINTERS(Edge);
-    static Pointer New(int u_, int v_)
-    {
-      Pointer sharedPtr (new Edge(u_, v_));
-      return sharedPtr;
-    }
+      MXA_SHARED_POINTERS(Edge)
 
-	//#################### PUBLIC VARIABLES ####################
-	int u, v;
-	std::set<int> triangles;
+      static Pointer New(int u_, int v_)
+      {
+        Pointer sharedPtr(new Edge(u_, v_));
+        return sharedPtr;
+      }
 
-	uint64_t getId() {
-	  uint64_t edgeId;
-	  int32_t* e0 = (int32_t*)(&edgeId);
-	  int32_t* e1 = e0+1;
-	  if (u < v)
-	  {
-	    *e0 = u;
-	    *e1 = v;
-	  }
-	  else
-	  {
-	    *e0 = v;
-	    *e1 = u;
-	  }
-	  return edgeId;
-	}
+      //#################### PUBLIC VARIABLES ####################
+      int u, v;
+      std::set<int> triangles;
 
+      uint64_t getId()
+      {
+        uint64_t edgeId;
+        int32_t* e0 = (int32_t*)(&edgeId);
+        int32_t* e1 = e0 + 1;
+        if (u < v)
+        {
+          *e0 = u;
+          *e1 = v;
+        }
+        else
+        {
+          *e0 = v;
+          *e1 = u;
+        }
+        return edgeId;
+      }
 
-	//#################### CONSTRUCTORS ####################
-	Edge(int u_, int v_) : u(u_), v(v_) {}
+  protected:
+      Edge(int u_, int v_) :
+          u(u_), v(v_)
+      {
+      }
 
-  private:
-//	  Edge(const Edge&); // Copy Constructor Not Implemented
-    void operator=(const Edge&); // Operator '=' Not Implemented
-};
+    private:
+  	  Edge(const Edge&); // Copy Constructor Not Implemented
+      void operator=(const Edge&); // Operator '=' Not Implemented
+  };
 
 //#################### GLOBAL OPERATORS ####################
 bool operator<(const Edge& lhs, const Edge& rhs);
