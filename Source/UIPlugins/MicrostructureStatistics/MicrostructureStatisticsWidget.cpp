@@ -498,13 +498,13 @@ void MicrostructureStatisticsWidget::on_m_GrainFileOptionsBtn_clicked()
     if(m_WriteGrainShapes == true) m_ComputeGrainShapes = true;
     if(m_WriteNumNeighbors == true) m_ComputeNumNeighbors = true;
     if(m_WriteAverageOrientations == true) m_ComputeAverageOrientations = true;
-    if (m_H5StatisticsFile->isChecked() == false)
-	{
+    if(m_H5StatisticsFile->isChecked() == false)
+	  {
 	    if(m_WriteGrainSize == false) m_ComputeGrainSize = false;
 	    if(m_WriteGrainShapes == false) m_ComputeGrainShapes = false;
 	    if(m_WriteNumNeighbors == false) m_ComputeNumNeighbors = false;
-		if(m_WriteAverageOrientations == false) m_ComputeAverageOrientations = false;
-	}
+		  if(m_WriteAverageOrientations == false) m_ComputeAverageOrientations = false;
+	  }
   }
 
 }
