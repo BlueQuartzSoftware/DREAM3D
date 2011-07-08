@@ -28,6 +28,7 @@
 #include <vector>
 #include <map>
 #include <sstream>
+#include <queue>
 
 #include <MXA/Utilities/MXADir.h>
 #include <MXA/Utilities/StringUtils.h>
@@ -244,13 +245,13 @@ void SurfaceMeshFunc::initialize_squares(int zID)
       cSquare[id + 1].edge_id[j] = -1;
       cSquare[id + 2].edge_id[j] = -1;
     }
-	for (int j = 0; j < 3; j++)
-	{
-	    cSquare[id+j].nEdge = 0;
-	    cSquare[id+j].turnFC = 0;
-	    cSquare[id+j].FCnode = -1;
-	    cSquare[id+j].effect = 0;
-	}
+    for (int j = 0; j < 3; j++)
+    {
+      cSquare[id + j].nEdge = 0;
+      cSquare[id + j].turnFC = 0;
+      cSquare[id + j].FCnode = -1;
+      cSquare[id + j].effect = 0;
+    }
   }
 }
 int SurfaceMeshFunc::get_nodes_Edges(int eT2d[20][8], int NST2d[20][8], int zID)
@@ -301,8 +302,8 @@ int SurfaceMeshFunc::get_nodes_Edges(int eT2d[20][8], int NST2d[20][8], int zID)
       edgeCount = 0;
       // Let's find the edges...
       if (atBulk != 4)
-      { // coNSider the square iNSide the bulk only...
-		  cSquare[k].effect = 1;
+      { // coNSider the square inside the bulk only...
+        cSquare[k].effect = 1;
         sqIndex = get_square_index(tngrainname);
         if (sqIndex == 15)
         {
@@ -323,53 +324,53 @@ int SurfaceMeshFunc::get_nodes_Edges(int eT2d[20][8], int NST2d[20][8], int zID)
               get_grainnames(cubeOrigin, sqOrder, pixIndex, pixgrainname);
               if (pixgrainname[0] > 0 || pixgrainname[1] > 0)
               {
-				cEdge.resize(eid+1);
+                cEdge.resize(eid + 1);
                 cEdge[eid].node_id[0] = nodeID[0]; // actual node ids for each edge...
                 cEdge[eid].node_id[1] = nodeID[1];
                 cEdge[eid].neigh_grainname[0] = pixgrainname[0];
                 cEdge[eid].neigh_grainname[1] = pixgrainname[1];
                 cEdge[eid].edgeKind = 2; // edges of the open loops are always binary...
-                // triple lines only occurs iNSide the marching cubes...
+                // triple lines only occurs inside the marching cubes...
                 cSquare[k].edge_id[edgeCount] = eid;
                 edgeCount++;
                 eid++;
-			  }
-			  else
-			  {
-			    tn1 = nodeID[0];
-				tn2 = nodeID[1];
-				cVertex[tn1].nodeKind = -1;       // extra nodes from meshing the surface of the box...
-				cVertex[tn2].nodeKind = -1;       // we don't need them...
-			  }
+              }
+              else
+              {
+                tn1 = nodeID[0];
+                tn2 = nodeID[1];
+                cVertex[tn1].nodeKind = -1; // extra nodes from meshing the surface of the box...
+                cVertex[tn2].nodeKind = -1; // we don't need them...
+              }
               // Categorize the node...if it's triple junction or not...
               for (ii = 0; ii < 2; ii++)
               {
-                  if (nodeIndex[ii] == 4)
-                  {
-                    if (sqIndex == 7 || sqIndex == 11 || sqIndex == 13 || sqIndex == 14)
-                    {
-                      tnode = nodeID[ii];
-                      cVertex[tnode].nodeKind = 3;
-                      cSquare[k].turnFC = 1;
-                      cSquare[k].FCnode = tnode;
-                    }
-                    else if (sqIndex == 19)
-                    {
-                      tnode = nodeID[ii];
-                      cVertex[tnode].nodeKind = 4;
-                      cSquare[k].turnFC = 1;
-                      cSquare[k].FCnode = tnode;
-                    }
-                  }
-                  else
+                if (nodeIndex[ii] == 4)
+                {
+                  if (sqIndex == 7 || sqIndex == 11 || sqIndex == 13 || sqIndex == 14)
                   {
                     tnode = nodeID[ii];
-					tnk = cVertex[tnode].nodeKind;
-					if(tnk != -1)
-					{
-	                    cVertex[tnode].nodeKind = 2;
-					}
+                    cVertex[tnode].nodeKind = 3;
+                    cSquare[k].turnFC = 1;
+                    cSquare[k].FCnode = tnode;
                   }
+                  else if (sqIndex == 19)
+                  {
+                    tnode = nodeID[ii];
+                    cVertex[tnode].nodeKind = 4;
+                    cSquare[k].turnFC = 1;
+                    cSquare[k].FCnode = tnode;
+                  }
+                }
+                else
+                {
+                  tnode = nodeID[ii];
+                  tnk = cVertex[tnode].nodeKind;
+                  if (tnk != -1)
+                  {
+                    cVertex[tnode].nodeKind = 2;
+                  }
+                }
               }
             }
           }
@@ -378,7 +379,7 @@ int SurfaceMeshFunc::get_nodes_Edges(int eT2d[20][8], int NST2d[20][8], int zID)
       cSquare[k].nEdge = edgeCount;
     }
   }
-  return(cEdge.size());
+  return (cEdge.size());
 }
 
 int SurfaceMeshFunc::get_square_index(int tNS[4])
@@ -473,33 +474,63 @@ void SurfaceMeshFunc::get_nodes(int cst, int ord, int nidx[2], int *nid)
     { // if the square index is 0 for corner site...
       switch(tempIndex)
       {
-        case 0:  nid[ii] = 7 * (cst - 1);  break;
-        case 1:  nid[ii] = 7 * cst + 1;  break;
-        case 2:  nid[ii] = 7 * (cst + xDim - 1);  break;
-        case 3:  nid[ii] = 7 * (cst - 1) + 1;  break;
-        case 4:  nid[ii] = 7 * (cst - 1) + 3;  break;
+        case 0:
+          nid[ii] = 7 * (cst - 1);
+          break;
+        case 1:
+          nid[ii] = 7 * cst + 1;
+          break;
+        case 2:
+          nid[ii] = 7 * (cst + xDim - 1);
+          break;
+        case 3:
+          nid[ii] = 7 * (cst - 1) + 1;
+          break;
+        case 4:
+          nid[ii] = 7 * (cst - 1) + 3;
+          break;
       }
     }
     else if (ord == 1)
     { // if the square index is 1...
       switch(tempIndex)
       {
-        case 0:  nid[ii] = 7 * (cst - 1);  break;
-        case 1:  nid[ii] = 7 * cst + 2;  break;
-        case 2:  nid[ii] = 7 * (cst + NSP - 1);  break;
-        case 3:  nid[ii] = 7 * (cst - 1) + 2;  break;
-        case 4:  nid[ii] = 7 * (cst - 1) + 4;  break;
+        case 0:
+          nid[ii] = 7 * (cst - 1);
+          break;
+        case 1:
+          nid[ii] = 7 * cst + 2;
+          break;
+        case 2:
+          nid[ii] = 7 * (cst + NSP - 1);
+          break;
+        case 3:
+          nid[ii] = 7 * (cst - 1) + 2;
+          break;
+        case 4:
+          nid[ii] = 7 * (cst - 1) + 4;
+          break;
       }
     }
     else
     { // if the square index is 2...
       switch(tempIndex)
       {
-        case 0:  nid[ii] = 7 * (cst - 1) + 1;  break;
-        case 1:  nid[ii] = 7 * (cst - 1) + 2;  break;
-        case 2:  nid[ii] = 7 * (cst + NSP - 1) + 1;  break;
-        case 3:  nid[ii] = 7 * (cst + xDim - 1) + 2;  break;
-        case 4:  nid[ii] = 7 * (cst - 1) + 5;  break;
+        case 0:
+          nid[ii] = 7 * (cst - 1) + 1;
+          break;
+        case 1:
+          nid[ii] = 7 * (cst - 1) + 2;
+          break;
+        case 2:
+          nid[ii] = 7 * (cst + NSP - 1) + 1;
+          break;
+        case 3:
+          nid[ii] = 7 * (cst + xDim - 1) + 2;
+          break;
+        case 4:
+          nid[ii] = 7 * (cst - 1) + 5;
+          break;
       }
     }
   }
@@ -509,39 +540,75 @@ void SurfaceMeshFunc::get_grainnames(int cst, int ord, int pID[2], int *pgrainna
 {
   int i;
   int pixTemp, tempgrainname;
-  for(i=0; i<2; i++)
+  for (i = 0; i < 2; i++)
   {
     pixTemp = pID[i];
-    if(ord==0)
-	{
+    if (ord == 0)
+    {
       switch(pixTemp)
-	  {
-	      case 0:  tempgrainname = voxels[cst];             pgrainname[i] = tempgrainname;  break;
-	      case 1:  tempgrainname = voxels[cst+1];           pgrainname[i] = tempgrainname;  break;
-	      case 2:  tempgrainname = voxels[cst+xDim+1];     pgrainname[i] = tempgrainname;  break;
-	      case 3:  tempgrainname = voxels[cst+xDim];       pgrainname[i] = tempgrainname;  break;
+      {
+        case 0:
+          tempgrainname = voxels[cst];
+          pgrainname[i] = tempgrainname;
+          break;
+        case 1:
+          tempgrainname = voxels[cst + 1];
+          pgrainname[i] = tempgrainname;
+          break;
+        case 2:
+          tempgrainname = voxels[cst + xDim + 1];
+          pgrainname[i] = tempgrainname;
+          break;
+        case 3:
+          tempgrainname = voxels[cst + xDim];
+          pgrainname[i] = tempgrainname;
+          break;
       }
     }
-	else if(ord==1)
-	{
+    else if (ord == 1)
+    {
       switch(pixTemp)
-	  {
-	      case 0:  tempgrainname = voxels[cst];             pgrainname[i] = tempgrainname;  break;
-	      case 1:  tempgrainname = voxels[cst+1];           pgrainname[i] = tempgrainname;  break;
-	      case 2:  tempgrainname = voxels[cst+NSP+1];      pgrainname[i] = tempgrainname;  break;
-	      case 3:  tempgrainname = voxels[cst+NSP];        pgrainname[i] = tempgrainname;  break;
+      {
+        case 0:
+          tempgrainname = voxels[cst];
+          pgrainname[i] = tempgrainname;
+          break;
+        case 1:
+          tempgrainname = voxels[cst + 1];
+          pgrainname[i] = tempgrainname;
+          break;
+        case 2:
+          tempgrainname = voxels[cst + NSP + 1];
+          pgrainname[i] = tempgrainname;
+          break;
+        case 3:
+          tempgrainname = voxels[cst + NSP];
+          pgrainname[i] = tempgrainname;
+          break;
       }
     }
-	else if(ord==2)
-	{
+    else if (ord == 2)
+    {
       switch(pixTemp)
-	  {
-	      case 0:  tempgrainname = voxels[cst+xDim];       pgrainname[i] = tempgrainname;  break;
-	      case 1:  tempgrainname = voxels[cst];             pgrainname[i] = tempgrainname;  break;
-	      case 2:  tempgrainname = voxels[cst+NSP];        pgrainname[i] = tempgrainname;  break;
-	      case 3:  tempgrainname = voxels[cst+NSP+xDim];  pgrainname[i] = tempgrainname;  break;
+      {
+        case 0:
+          tempgrainname = voxels[cst + xDim];
+          pgrainname[i] = tempgrainname;
+          break;
+        case 1:
+          tempgrainname = voxels[cst];
+          pgrainname[i] = tempgrainname;
+          break;
+        case 2:
+          tempgrainname = voxels[cst + NSP];
+          pgrainname[i] = tempgrainname;
+          break;
+        case 3:
+          tempgrainname = voxels[cst + NSP + xDim];
+          pgrainname[i] = tempgrainname;
+          break;
       }
-	}
+    }
   }
 }
 
@@ -579,7 +646,7 @@ int SurfaceMeshFunc::get_triangles()
     sqID[3] = 3 * i + 2;
     sqID[4] = 3 * (i + xDim - 1) + 1;
     sqID[5] = 3 * (i + NSP - 1);
-    BCnode = 7*(i-1) + 6;
+    BCnode = 7 * (i - 1) + 6;
     nFC = 0;
     nE = 0;
     eff = 0;
@@ -603,56 +670,56 @@ int SurfaceMeshFunc::get_triangles()
       nE = nE + cSquare[tsq].nEdge;
       eff = eff + cSquare[tsq].effect;
     }
-	nFC = fcid;
+    nFC = fcid;
     if (eff > 0) cubeFlag = 1;
-    if(nFC>=3)
-	{
+    if (nFC >= 3)
+    {
       // If number of face centers turned on is more than 2...
       // let's update the nodeKind of body center node...
       tsqid1 = sqID[0];
       tsqid2 = sqID[5];
       nkFlag = 0;
       // get spin numbers for 8 corners for each marching cube...
-      for(int j = 0; j < 4; j++)
-	  {
-		tsite1 = cSquare[tsqid1].site_id[j];
-		tsite2 = cSquare[tsqid2].site_id[j];
-		tgrainname1 = voxels[tsite1];
-		tgrainname2 = voxels[tsite2];
-		arraygrainname[j] = tgrainname1;
-		arraygrainname[j+4] = tgrainname2;
-		if(tgrainname1 < 0 || tgrainname2 < 0) nkFlag++;
+      for (int j = 0; j < 4; j++)
+      {
+        tsite1 = cSquare[tsqid1].site_id[j];
+        tsite2 = cSquare[tsqid2].site_id[j];
+        tgrainname1 = voxels[tsite1];
+        tgrainname2 = voxels[tsite2];
+        arraygrainname[j] = tgrainname1;
+        arraygrainname[j + 4] = tgrainname2;
+        if (tgrainname1 < 0 || tgrainname2 < 0) nkFlag++;
       }
-      nds = 0;     // number of different spins in each marching cube...
-      nburnt = 0;  // so nds = nodeKind of body center position...
-      for(int k = 0; k < 8; k++)
-	  {
-		// arraySpin contains no -1 before any of it is burnt...
-		cgrainname = arraygrainname[k];
-		if(cgrainname != -1)
-		{
-		  nds++;
-		  arraygrainname[k] = -1; // burn...
-		  nburnt++;
-		  for(int kk = 0; kk < 8; kk++)
-		  {
-		    ngrainname = arraygrainname[kk];
-		    if(cgrainname == ngrainname)
-			{
-		      arraygrainname[kk] = -1; //burn...
-		      nburnt++;
-		    }
-		  }
-		}
+      nds = 0; // number of different spins in each marching cube...
+      nburnt = 0; // so nds = nodeKind of body center position...
+      for (int k = 0; k < 8; k++)
+      {
+        // arraySpin contains no -1 before any of it is burnt...
+        cgrainname = arraygrainname[k];
+        if (cgrainname != -1)
+        {
+          nds++;
+          arraygrainname[k] = -1; // burn...
+          nburnt++;
+          for (int kk = 0; kk < 8; kk++)
+          {
+            ngrainname = arraygrainname[kk];
+            if (cgrainname == ngrainname)
+            {
+              arraygrainname[kk] = -1; //burn...
+              nburnt++;
+            }
+          }
+        }
       }
       // update nodeKind of body center node in the current marching cube...
-      if(nkFlag > 0)
-	  {
-		cVertex[BCnode].nodeKind = nds;
+      if (nkFlag > 0)
+      {
+        cVertex[BCnode].nodeKind = nds;
       }
-	  else
-	  {
-		cVertex[BCnode].nodeKind = nds;
+      else
+      {
+        cVertex[BCnode].nodeKind = nds;
       }
     }
     // Checking the number of edges for loops in the cube...
@@ -660,7 +727,7 @@ int SurfaceMeshFunc::get_triangles()
     // the number of face edges at least 3...
     // when nE==2, it doen't happen
     // when nE==1, the edge will contribute for the neighboring marching cube...
-    // when nE==0, it meaNS the cube is iNSide a grain...
+    // when nE==0, it meaNS the cube is inside a grain...
     if (cubeFlag == 1 && nE > 2)
     {
       // Make edge array for each marching cube...
@@ -702,6 +769,172 @@ int SurfaceMeshFunc::get_triangles()
   return (cTriangle.size());
 }
 
+#define ADD_TRIANGLE(cTriangle, ctid, n0, n1, n2, label0, label1)\
+  cTriangle.resize(ctid + 1);\
+  cTriangle[ctid].node_id[0] = n0;\
+  cTriangle[ctid].node_id[1] = n1;\
+  cTriangle[ctid].node_id[2] = n2;\
+  cTriangle[ctid].ngrainname[0] = label0;\
+  cTriangle[ctid].ngrainname[1] = label1;\
+  cTriangle[ctid].tIndex = ctid;\
+  m3c::Edge::Pointer e0 = m3c::Edge::New(cTriangle[ctid].node_id[0], cTriangle[ctid].node_id[1]);\
+  m3c::Edge::Pointer e = eMap[e0->getId()];\
+  if (NULL == e.get()) { eMap[e0->getId()] = e0; }else{ e0 = e; }\
+  e0->triangles.insert(ctid);\
+  m3c::Edge::Pointer e1 = m3c::Edge::New(cTriangle[ctid].node_id[1], cTriangle[ctid].node_id[2]);\
+  e = eMap[e1->getId()];\
+  if (NULL == e.get()) { eMap[e1->getId()] = e1; }else{ e1 = e;}\
+  e1->triangles.insert(ctid);\
+  m3c::Edge::Pointer e2 = m3c::Edge::New(cTriangle[ctid].node_id[2], cTriangle[ctid].node_id[0]);\
+  e = eMap[e2->getId()]; \
+  if (NULL == e.get()){ eMap[e2->getId()] = e2; }else{ e2 = e; }\
+  e2->triangles.insert(ctid);\
+  cTriangle[ctid].edges[0] = e0;  cTriangle[ctid].edges[1] = e1;  cTriangle[ctid].edges[2] = e2;\
+  labelTriangleMap[label0] = ctid;\
+  labelTriangleMap[label1] = ctid;
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void SurfaceMeshFunc::analyzeWinding()
+{
+  std::cout << "Done Reading Triangles File" << std::endl;
+  std::cout << " Edge Count: " << eMap.size() << std::endl;
+  std::cout << " Triangle Count: " << cTriangle.size() << std::endl;
+  std::cout << "labelTriangleMap.size(): " << labelTriangleMap.size() << std::endl;
+
+  float total = (float)(labelTriangleMap.size());
+ // bool firstLabel = true;
+  // Keeps a list of all the triangles that have been visited.
+  std::vector<bool> masterVisited(cTriangle.size(), false);
+
+  size_t size = cTriangle.size();
+  for(size_t i = 0; i < size; ++i)
+  {
+    if (cTriangle[i].tIndex > size)
+    {
+      std::cout << "HEre" << std::endl;
+    }
+  }
+
+
+
+  // Start with first triangle in the master list:
+  int masterTriangleIndex = 0;
+  Patch& t = cTriangle[masterTriangleIndex];
+//  std::deque<int> labelsToVisit;
+
+  // Get the first 2 labels to visit from the first triangle. We use these 2 labels
+  // because this triangle shares these 2 labels and guarantees these 2 labels are
+  // connected to each other.
+
+  float curPercent = 0.0;
+  int progressIndex = 0;
+  for (LabelTriangleMapType::iterator cLabel = labelTriangleMap.begin(); cLabel != labelTriangleMap.end(); ++cLabel )
+  {
+    int currentLabel = cLabel->first;
+  //  if (currentLabel != 1) { continue; }
+    masterTriangleIndex = cLabel->second;
+    t = cTriangle[masterTriangleIndex];
+
+    if ( (progressIndex/total * 100.0f) > (curPercent) )
+    {
+      std::cout << "Verifying Winding: " << curPercent << "% Complete" << std::endl;
+      curPercent += 5.0f;
+    }
+    ++progressIndex;
+  //  std::cout << "Current Label: " << currentLabel << std::endl;
+  //  int seedTriIndex = masterTriangleIndex;
+
+    if (NULL == &t )
+    {
+      std::cout << "Could not find a triangle with the winding set. This should NOT happen" << std::endl;
+      assert(1 == 0);
+    }
+
+    std::set<int> localVisited; // Keep track of which triangles have been visited
+    std::deque<int> triangleDeque;
+    triangleDeque.push_back(t.tIndex);
+
+    while (triangleDeque.empty() == false)
+    {
+      t = cTriangle[triangleDeque.front()];
+  //    std::cout << "tIndex = " << t->tIndex << std::endl;
+      localVisited.insert(t.tIndex);
+#if 0
+      bool debug = ( t->tIndex == 163674 || t->tIndex == 163673 || t->tIndex == 163675 || t->tIndex == 163700);
+      if (debug == true)
+      {
+        std::cout << "Debugging" << std::endl;
+      } debug = false;
+#endif
+      std::vector<int> adjTris = findAdjacentTriangles(t, currentLabel);
+      for ( std::vector<int>::iterator adjTri = adjTris.begin(); adjTri != adjTris.end(); ++adjTri )
+      {
+        //  std::cout << "  ^ AdjTri index: " << (*adjTri)->tIndex << std::endl;
+        if (masterVisited[*adjTri] == false)
+        {
+          //   std::cout << "   * Checking Winding: " << (*adjTri)->tIndex << std::endl;
+          t.verifyWinding( cTriangle[*adjTri], currentLabel);
+        }
+
+
+        if (localVisited.find(*adjTri) == localVisited.end()
+          && find(triangleDeque.begin(), triangleDeque.end(), *adjTri) == triangleDeque.end())
+        {
+          // std::cout << "   # Adding to Deque: " << (*adjTri)->tIndex << std::endl;
+          triangleDeque.push_back(*adjTri);
+          localVisited.insert(*adjTri);
+          masterVisited[*adjTri] = true;
+        }
+      }
+
+      triangleDeque.pop_front();
+    }
+
+  }
+
+  std::cout << "--------------------------------------------------------------" << std::endl;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+std::vector<int> SurfaceMeshFunc::findAdjacentTriangles(Patch &triangle, int label)
+{
+  std::vector<int> adjacentTris;
+  typedef m3c::Edge::Pointer EdgeType;
+  // Get the 3 edges from the triangle
+
+
+  // Iterate over the 3 Edges of the triangle
+  for (int i = 0; i < 3; ++i)
+  {
+    // Get the current edge
+    EdgeType e = triangle.edges[i];
+    // Get the list of indices of the triangles that belong to that edge
+    std::set<int> tIndices = e->triangles;
+    // Iterate over the indices to find triangles that match the label and are NOT the current triangle index
+    for (std::set<int>::iterator iter = tIndices.begin(); iter != tIndices.end(); ++iter )
+    {
+      Patch& t = cTriangle.at(*iter);
+      if ( (t.ngrainname[0] == label || t.ngrainname[1] == label)
+          && (t.tIndex != triangle.tIndex) )
+      {
+     //   std::cout << "    Found Adjacent Triangle: " << t->tIndex << std::endl;
+        adjacentTris.push_back(t.tIndex);
+      }
+    }
+  }
+
+  return adjacentTris;
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void SurfaceMeshFunc::get_case0_triangles(int site, int *ae, int nedge, int tin, int *tout)
 {
   int ii, i, j, jj, k, kk, k1, mm;
@@ -849,12 +1082,8 @@ void SurfaceMeshFunc::get_case0_triangles(int site, int *ae, int nedge, int tin,
       te0 = loop[0];
       te1 = loop[1];
       te2 = loop[2];
-	  cTriangle.resize(ctid+1);
-      cTriangle[ctid].node_id[0] = cEdge[te0].node_id[0];
-      cTriangle[ctid].node_id[1] = cEdge[te1].node_id[0];
-      cTriangle[ctid].node_id[2] = cEdge[te2].node_id[0];
-      cTriangle[ctid].ngrainname[0] = cEdge[te0].neigh_grainname[0];
-      cTriangle[ctid].ngrainname[1] = cEdge[te0].neigh_grainname[1];
+
+      ADD_TRIANGLE(cTriangle, ctid, cEdge[te0].node_id[0], cEdge[te1].node_id[0], cEdge[te2].node_id[0], cEdge[te0].neigh_grainname[0], cEdge[te0].neigh_grainname[1] )
       ctid++;
     }
     else if (numN > 3)
@@ -868,12 +1097,8 @@ void SurfaceMeshFunc::get_case0_triangles(int site, int *ae, int nedge, int tin,
       tv0 = cEdge[te0].node_id[0];
       tcVertex = cEdge[te0].node_id[1];
       tv2 = cEdge[te1].node_id[0];
-	  cTriangle.resize(ctid+1);
-      cTriangle[ctid].node_id[0] = tv0;
-      cTriangle[ctid].node_id[1] = tcVertex;
-      cTriangle[ctid].node_id[2] = tv2;
-      cTriangle[ctid].ngrainname[0] = cEdge[te0].neigh_grainname[0];
-      cTriangle[ctid].ngrainname[1] = cEdge[te0].neigh_grainname[1];
+      ADD_TRIANGLE(cTriangle, ctid, tv0, tcVertex, tv2, cEdge[te0].neigh_grainname[0], cEdge[te0].neigh_grainname[1] )
+
       new_node0 = tv2;
       new_node1 = tcVertex;
       cnumT++;
@@ -887,12 +1112,8 @@ void SurfaceMeshFunc::get_case0_triangles(int site, int *ae, int nedge, int tin,
           tv0 = cEdge[ce].node_id[0];
           tcVertex = cEdge[ce].node_id[1];
           tv2 = new_node0;
-		  cTriangle.resize(ctid+1);
-          cTriangle[ctid].node_id[0] = tv0;
-          cTriangle[ctid].node_id[1] = tcVertex;
-          cTriangle[ctid].node_id[2] = tv2;
-          cTriangle[ctid].ngrainname[0] = cEdge[ce].neigh_grainname[0];
-          cTriangle[ctid].ngrainname[1] = cEdge[ce].neigh_grainname[1];
+          ADD_TRIANGLE(cTriangle, ctid, tv0, tcVertex, tv2, cEdge[ce].neigh_grainname[0], cEdge[ce].neigh_grainname[1] )
+
           new_node0 = tcVertex;
           cnumT++;
           ctid++;
@@ -904,12 +1125,8 @@ void SurfaceMeshFunc::get_case0_triangles(int site, int *ae, int nedge, int tin,
           tv0 = cEdge[ce].node_id[0];
           tcVertex = cEdge[ce].node_id[1];
           tv2 = new_node0;
-		  cTriangle.resize(ctid+1);
-          cTriangle[ctid].node_id[0] = tv0;
-          cTriangle[ctid].node_id[1] = tcVertex;
-          cTriangle[ctid].node_id[2] = tv2;
-          cTriangle[ctid].ngrainname[0] = cEdge[ce].neigh_grainname[0];
-          cTriangle[ctid].ngrainname[1] = cEdge[ce].neigh_grainname[1];
+          ADD_TRIANGLE(cTriangle, ctid, tv0, tcVertex, tv2, cEdge[ce].neigh_grainname[0], cEdge[ce].neigh_grainname[1] )
+
           new_node0 = tv0;
           cnumT++;
           ctid++;
@@ -1138,12 +1355,8 @@ void SurfaceMeshFunc::get_case2_triangles(int site, int *ae, int nedge, int *afc
       {
         te0 = burnt_loop[0];
         te1 = burnt_loop[1];
-		cTriangle.resize(ctid+1);
-        cTriangle[ctid].node_id[0] = cEdge[te0].node_id[0];
-        cTriangle[ctid].node_id[1] = cEdge[te1].node_id[0];
-        cTriangle[ctid].node_id[2] = cEdge[te1].node_id[1];
-        cTriangle[ctid].ngrainname[0] = cEdge[te0].neigh_grainname[0];
-        cTriangle[ctid].ngrainname[1] = cEdge[te0].neigh_grainname[1];
+        ADD_TRIANGLE(cTriangle, ctid, cEdge[te0].node_id[0], cEdge[te1].node_id[0], cEdge[te1].node_id[1], cEdge[te0].neigh_grainname[0], cEdge[te0].neigh_grainname[1] )
+
         ctid++;
       }
       else if (numN > 2)
@@ -1157,12 +1370,8 @@ void SurfaceMeshFunc::get_case2_triangles(int site, int *ae, int nedge, int *afc
         tv0 = cEdge[te0].node_id[0];
         tcVertex = cEdge[te0].node_id[1];
         tv2 = cEdge[te1].node_id[1];
-		cTriangle.resize(ctid+1);
-        cTriangle[ctid].node_id[0] = tv0;
-        cTriangle[ctid].node_id[1] = tcVertex;
-        cTriangle[ctid].node_id[2] = tv2;
-        cTriangle[ctid].ngrainname[0] = cEdge[te0].neigh_grainname[0];
-        cTriangle[ctid].ngrainname[1] = cEdge[te0].neigh_grainname[1];
+        ADD_TRIANGLE(cTriangle, ctid, tv0, tcVertex, tv2, cEdge[te0].neigh_grainname[0], cEdge[te0].neigh_grainname[1] )
+
         new_node0 = tv2;
         new_node1 = tcVertex;
         cnumT++;
@@ -1176,12 +1385,8 @@ void SurfaceMeshFunc::get_case2_triangles(int site, int *ae, int nedge, int *afc
             tv0 = cEdge[ce].node_id[0];
             tcVertex = cEdge[ce].node_id[1];
             tv2 = new_node0;
-			cTriangle.resize(ctid+1);
-            cTriangle[ctid].node_id[0] = tv0;
-            cTriangle[ctid].node_id[1] = tcVertex;
-            cTriangle[ctid].node_id[2] = tv2;
-            cTriangle[ctid].ngrainname[0] = cEdge[ce].neigh_grainname[0];
-            cTriangle[ctid].ngrainname[1] = cEdge[ce].neigh_grainname[1];
+            ADD_TRIANGLE(cTriangle, ctid, tv0, tcVertex, tv2, cEdge[ce].neigh_grainname[0], cEdge[ce].neigh_grainname[1] )
+
             new_node0 = tcVertex;
             cnumT++;
             ctid++;
@@ -1193,12 +1398,8 @@ void SurfaceMeshFunc::get_case2_triangles(int site, int *ae, int nedge, int *afc
             tv0 = cEdge[ce].node_id[0];
             tcVertex = cEdge[ce].node_id[1];
             tv2 = new_node0;
-			cTriangle.resize(ctid+1);
-            cTriangle[ctid].node_id[0] = tv0;
-            cTriangle[ctid].node_id[1] = tcVertex;
-            cTriangle[ctid].node_id[2] = tv2;
-            cTriangle[ctid].ngrainname[0] = cEdge[ce].neigh_grainname[0];
-            cTriangle[ctid].ngrainname[1] = cEdge[ce].neigh_grainname[1];
+            ADD_TRIANGLE(cTriangle, ctid, tv0, tcVertex, tv2, cEdge[ce].neigh_grainname[0], cEdge[ce].neigh_grainname[1] )
+
             new_node0 = tv0;
             cnumT++;
             ctid++;
@@ -1247,12 +1448,8 @@ void SurfaceMeshFunc::get_case2_triangles(int site, int *ae, int nedge, int *afc
         te0 = burnt_loop[0];
         te1 = burnt_loop[1];
         te2 = burnt_loop[2];
-		cTriangle.resize(ctid+1);
-        cTriangle[ctid].node_id[0] = cEdge[te0].node_id[0];
-        cTriangle[ctid].node_id[1] = cEdge[te1].node_id[0];
-        cTriangle[ctid].node_id[2] = cEdge[te2].node_id[0];
-        cTriangle[ctid].ngrainname[0] = cEdge[te0].neigh_grainname[0];
-        cTriangle[ctid].ngrainname[1] = cEdge[te0].neigh_grainname[1];
+        ADD_TRIANGLE(cTriangle, ctid, cEdge[te0].node_id[0], cEdge[te1].node_id[0], cEdge[te2].node_id[0], cEdge[te0].neigh_grainname[0], cEdge[te0].neigh_grainname[1] )
+
         ctid++;
       }
       else if (numN > 3)
@@ -1266,12 +1463,8 @@ void SurfaceMeshFunc::get_case2_triangles(int site, int *ae, int nedge, int *afc
         tv0 = cEdge[te0].node_id[0];
         tcVertex = cEdge[te0].node_id[1];
         tv2 = cEdge[te1].node_id[0];
-		cTriangle.resize(ctid+1);
-        cTriangle[ctid].node_id[0] = tv0;
-        cTriangle[ctid].node_id[1] = tcVertex;
-        cTriangle[ctid].node_id[2] = tv2;
-        cTriangle[ctid].ngrainname[0] = cEdge[te0].neigh_grainname[0];
-        cTriangle[ctid].ngrainname[1] = cEdge[te0].neigh_grainname[1];
+        ADD_TRIANGLE(cTriangle, ctid, tv0, tcVertex, tv2, cEdge[te0].neigh_grainname[0], cEdge[te0].neigh_grainname[1] )
+
         new_node0 = tv2;
         new_node1 = tcVertex;
         cnumT++;
@@ -1285,12 +1478,8 @@ void SurfaceMeshFunc::get_case2_triangles(int site, int *ae, int nedge, int *afc
             tv0 = cEdge[ce].node_id[0];
             tcVertex = cEdge[ce].node_id[1];
             tv2 = new_node0;
-			cTriangle.resize(ctid+1);
-            cTriangle[ctid].node_id[0] = tv0;
-            cTriangle[ctid].node_id[1] = tcVertex;
-            cTriangle[ctid].node_id[2] = tv2;
-            cTriangle[ctid].ngrainname[0] = cEdge[ce].neigh_grainname[0];
-            cTriangle[ctid].ngrainname[1] = cEdge[ce].neigh_grainname[1];
+            ADD_TRIANGLE(cTriangle, ctid, tv0, tcVertex, tv2, cEdge[ce].neigh_grainname[0], cEdge[ce].neigh_grainname[1] )
+
             new_node0 = tcVertex;
             cnumT++;
             ctid++;
@@ -1302,12 +1491,8 @@ void SurfaceMeshFunc::get_case2_triangles(int site, int *ae, int nedge, int *afc
             tv0 = cEdge[ce].node_id[0];
             tcVertex = cEdge[ce].node_id[1];
             tv2 = new_node0;
-			cTriangle.resize(ctid+1);
-            cTriangle[ctid].node_id[0] = tv0;
-            cTriangle[ctid].node_id[1] = tcVertex;
-            cTriangle[ctid].node_id[2] = tv2;
-            cTriangle[ctid].ngrainname[0] = cEdge[ce].neigh_grainname[0];
-            cTriangle[ctid].ngrainname[1] = cEdge[ce].neigh_grainname[1];
+            ADD_TRIANGLE(cTriangle, ctid, tv0, tcVertex, tv2, cEdge[ce].neigh_grainname[0], cEdge[ce].neigh_grainname[1] )
+
             new_node0 = tv0;
             cnumT++;
             ctid++;
@@ -1543,12 +1728,8 @@ void SurfaceMeshFunc::get_caseM_triangles(int site, int *ae, int nedge, int *afc
         tn1 = cEdge[ce].node_id[1];
         ts0 = cEdge[ce].neigh_grainname[0];
         ts1 = cEdge[ce].neigh_grainname[1];
-		cTriangle.resize(ctid+1);
-        cTriangle[ctid].node_id[0] = ccn;
-        cTriangle[ctid].node_id[1] = tn0;
-        cTriangle[ctid].node_id[2] = tn1;
-        cTriangle[ctid].ngrainname[0] = ts0;
-        cTriangle[ctid].ngrainname[1] = ts1;
+        ADD_TRIANGLE(cTriangle, ctid, ccn, tn0, tn1, ts0, ts1)
+
         ctid++;
       }
       delete[] burnt_loop;
@@ -1593,12 +1774,8 @@ void SurfaceMeshFunc::get_caseM_triangles(int site, int *ae, int nedge, int *afc
         te0 = burnt_loop[0];
         te1 = burnt_loop[1];
         te2 = burnt_loop[2];
-		cTriangle.resize(ctid+1);
-        cTriangle[ctid].node_id[0] = cEdge[te0].node_id[0];
-        cTriangle[ctid].node_id[1] = cEdge[te1].node_id[0];
-        cTriangle[ctid].node_id[2] = cEdge[te2].node_id[0];
-        cTriangle[ctid].ngrainname[0] = cEdge[te0].neigh_grainname[0];
-        cTriangle[ctid].ngrainname[1] = cEdge[te0].neigh_grainname[1];
+        ADD_TRIANGLE(cTriangle, ctid, cEdge[te0].node_id[0], cEdge[te1].node_id[0], cEdge[te2].node_id[0], cEdge[te0].neigh_grainname[0], cEdge[te0].neigh_grainname[1])
+
         ctid++;
       }
       else if (numN > 3)
@@ -1612,12 +1789,8 @@ void SurfaceMeshFunc::get_caseM_triangles(int site, int *ae, int nedge, int *afc
         tv0 = cEdge[te0].node_id[0];
         tcVertex = cEdge[te0].node_id[1];
         tv2 = cEdge[te1].node_id[0];
-		cTriangle.resize(ctid+1);
-        cTriangle[ctid].node_id[0] = tv0;
-        cTriangle[ctid].node_id[1] = tcVertex;
-        cTriangle[ctid].node_id[2] = tv2;
-        cTriangle[ctid].ngrainname[0] = cEdge[te0].neigh_grainname[0];
-        cTriangle[ctid].ngrainname[1] = cEdge[te0].neigh_grainname[1];
+        ADD_TRIANGLE(cTriangle, ctid, tv0, tcVertex, tv2, cEdge[te0].neigh_grainname[0], cEdge[te0].neigh_grainname[1])
+
         new_node0 = tv2;
         new_node1 = tcVertex;
         cnumT++;
@@ -1631,12 +1804,8 @@ void SurfaceMeshFunc::get_caseM_triangles(int site, int *ae, int nedge, int *afc
             tv0 = cEdge[ce].node_id[0];
             tcVertex = cEdge[ce].node_id[1];
             tv2 = new_node0;
-			cTriangle.resize(ctid+1);
-            cTriangle[ctid].node_id[0] = tv0;
-            cTriangle[ctid].node_id[1] = tcVertex;
-            cTriangle[ctid].node_id[2] = tv2;
-            cTriangle[ctid].ngrainname[0] = cEdge[ce].neigh_grainname[0];
-            cTriangle[ctid].ngrainname[1] = cEdge[ce].neigh_grainname[1];
+            ADD_TRIANGLE(cTriangle, ctid, tv0, tcVertex, tv2, cEdge[ce].neigh_grainname[0], cEdge[ce].neigh_grainname[1])
+
             new_node0 = tcVertex;
             cnumT++;
             ctid++;
@@ -1648,7 +1817,9 @@ void SurfaceMeshFunc::get_caseM_triangles(int site, int *ae, int nedge, int *afc
             tv0 = cEdge[ce].node_id[0];
             tcVertex = cEdge[ce].node_id[1];
             tv2 = new_node0;
-			cTriangle.resize(ctid+1);
+            ADD_TRIANGLE(cTriangle, ctid, tv0, tcVertex, tv2, cEdge[ce].neigh_grainname[0], cEdge[ce].neigh_grainname[1])
+
+            cTriangle.resize(ctid + 1);
             cTriangle[ctid].node_id[0] = tv0;
             cTriangle[ctid].node_id[1] = tcVertex;
             cTriangle[ctid].node_id[2] = tv2;
@@ -1696,7 +1867,7 @@ void SurfaceMeshFunc::arrange_grainnames(int numT, int zID)
     cTriangle[i].ngrainname[0] = -1;
     cTriangle[i].ngrainname[1] = -1;
     for (j = 0; j < 3; j++)
-    { // for each node iNSide the triangle...
+    { // for each node inside the triangle...
       tsite1[j] = -1;
       tsite2[j] = -1;
       tgrainname1[j] = -1;

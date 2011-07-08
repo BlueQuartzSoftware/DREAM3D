@@ -49,6 +49,7 @@
 #include <list>
 #include <algorithm>
 #include <numeric>
+#include <map>
 
 #include <MXA/MXATypes.h>
 #include <MXA/Common/MXASetGetMacros.h>
@@ -62,34 +63,10 @@
 #include <DREAM3D/SurfaceMesh/Segment.h>
 #include <DREAM3D/Common/AIMRandomNG.h>
 #include <DREAM3D/ANGSupport/AngDataLoader.h>
-
+#include "DREAM3D/SurfaceMesh/Winding/Edge.h"
 
 using namespace std;
 
-#if 0
-
-// constants for procedure ran3
-#define MBIG 1000000000
-#define MSEED 161803398
-#define MZ 0
-#define FAC (1.0/MBIG)
-
-#define num_neigh 26
-
-
-#define EDGES_RAW_POSTFIX     "_edges_raw.txt"
-#define TRIANGLES_RAW_POSTFIX "_triangles_raw.txt"
-
-// Output Files
-#define EDGES_FILE         "edges.txt"
-#define TRIANGLES_FILE     "triangles.txt"
-#define NODES_FILE         "nodes.txt"
-
-// Input Files
-#define NODES_RAW_FILE     "nodes_raw.txt"
-#define MESH_STAT_FILE     "mesh_stat.txt"
-
-#endif
 
 class DREAM3DLib_EXPORT SurfaceMeshFunc
 {
@@ -122,8 +99,15 @@ public:
   Node* cVertex; // contains edges on square faces for open loops...
   std::vector<Segment> cEdge; // contains edges on square faces for open loops...
   std::vector<Patch> cTriangle;
-  // Edge edge and neighboring grainname table...
 
+  typedef std::map<uint64_t, m3c::Edge::Pointer>    EdgeMapType;
+  EdgeMapType eMap;
+  typedef int Label;
+  typedef std::map<Label, int >                     LabelTriangleMapType;
+  LabelTriangleMapType labelTriangleMap;
+
+  void analyzeWinding();
+  std::vector<int> findAdjacentTriangles(Patch &triangle, int label);
 
 
   void get_neighbor_list();
