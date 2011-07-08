@@ -212,6 +212,7 @@ public:
     void MC_LoopBody2(int phase, size_t neighbor, int j, std::vector<float>* misolist, std::vector<float>* neighborsurfarealist);
     void matchCrystallography();
     void measure_misorientations();
+	void write_graindata(const std::string & filename);
     float gamma(float);
     float erf(float);
     float erfc(float);

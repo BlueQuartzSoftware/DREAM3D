@@ -77,6 +77,7 @@ class DREAM3DLib_EXPORT GrainGenerator : public AbstractPipeline
     MXA_INSTANCE_PROPERTY(double, FractionPrecipitates)
 
     MXA_INSTANCE_PROPERTY(bool, PeriodicBoundary)
+    MXA_INSTANCE_PROPERTY(bool, WriteGrainData)
     MXA_INSTANCE_STRING_PROPERTY(StructureFile)
     MXA_INSTANCE_PROPERTY(bool, AlreadyFormed)
 

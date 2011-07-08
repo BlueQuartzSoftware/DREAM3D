@@ -3377,9 +3377,9 @@ void  GrainGeneratorFunc::measure_misorientations ()
 
 void GrainGeneratorFunc::write_eulerangles(const std::string &filename)
 {
-  //std::cout << "GrainGeneratorFunc::write_volume1: '" << writename10 << "'" << std::endl;
   ofstream outFile;
   outFile.open(filename.c_str());
+  outFile << "GrainID " << "Phi1 " << "PHI " << "Phi2" << endl;
   for (size_t i = 1; i < m_Grains.size(); i++)
   {
     float ea1 = m_Grains[i]->euler1;
@@ -3390,6 +3390,19 @@ void GrainGeneratorFunc::write_eulerangles(const std::string &filename)
   outFile.close();
 }
 
+void GrainGeneratorFunc::write_graindata(const std::string &filename)
+{
+  ofstream outFile;
+  outFile.open(filename.c_str());
+  outFile << "GrainID	" << "Phi1	PHI	Phi2	Equiv. Diameter	b/a	c/a	Omega3" << endl;
+  for (size_t i = 1; i < m_Grains.size(); i++)
+  {
+    outFile << i << "	" << m_Grains[i]->euler1 << "	" << m_Grains[i]->euler2 << "	" << m_Grains[i]->euler3 <<
+		"	" << m_Grains[i]->equivdiameter << "	" << m_Grains[i]->radius2 << "	" << m_Grains[i]->radius3 <<
+		"	" << m_Grains[i]->omega3 << endl;
+  }
+  outFile.close();
+}
 float GrainGeneratorFunc::gamma(float x)
 {
     int i,k,m;

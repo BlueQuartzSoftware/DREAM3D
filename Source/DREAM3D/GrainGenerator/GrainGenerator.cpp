@@ -67,6 +67,7 @@ m_FillingErrorWeight(0.0),
 m_NeighborhoodErrorWeight(0.0),
 m_SizeDistErrorWeight(0.0),
 m_PeriodicBoundary(true),
+m_WriteGrainData(true),
 m_AlreadyFormed(false),
 m_Precipitates(0),
 m_WriteBinaryVTKFiles(true),
@@ -257,6 +258,14 @@ void GrainGenerator::execute()
   err = h5VoxelWriter->writeVoxelData<GrainGeneratorFunc, GrainGeneratorVoxel>(m.get());
   CHECK_FOR_ERROR(GrainGeneratorFunc, "The HDF5 Voxel file could not be written to. Does the path exist and do you have write access to the output directory.", err);
 
+  /************ This writes the grain data if desired*/
+  if(m_WriteGrainData)
+  {
+    updateProgressAndMessage(("Writing Grain Data"), 88);
+	MAKE_OUTPUT_FILE_PATH ( GrainDataFile, AIM::MicroStats::GrainDataFile);
+    m->write_graindata(GrainDataFile);
+    CHECK_FOR_CANCELED(GrainGeneratorFunc, "GrainGenerator Was canceled", write_graindata)
+  }
 
   /* ********** This section writes the VTK files for visualization *** */
   if (m_WriteVtkFile) {
