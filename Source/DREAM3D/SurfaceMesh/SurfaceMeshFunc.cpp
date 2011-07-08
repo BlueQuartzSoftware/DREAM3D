@@ -799,7 +799,8 @@ int SurfaceMeshFunc::get_triangles()
 // -----------------------------------------------------------------------------
 void SurfaceMeshFunc::analyzeWinding()
 {
-  std::cout << "Done Reading Triangles File" << std::endl;
+  if (true) return;
+  std::cout << "+++++++++++++++++++++++++++++++++++++++++++++++++++++++" << std::endl;
   std::cout << " Edge Count: " << eMap.size() << std::endl;
   std::cout << " Triangle Count: " << cTriangle.size() << std::endl;
   std::cout << "labelTriangleMap.size(): " << labelTriangleMap.size() << std::endl;
@@ -840,7 +841,7 @@ void SurfaceMeshFunc::analyzeWinding()
 
     if ( (progressIndex/total * 100.0f) > (curPercent) )
     {
-      std::cout << "Verifying Winding: " << curPercent << "% Complete" << std::endl;
+   //   std::cout << "Verifying Winding: " << curPercent << "% Complete" << std::endl;
       curPercent += 5.0f;
     }
     ++progressIndex;
@@ -895,7 +896,7 @@ void SurfaceMeshFunc::analyzeWinding()
 
   }
 
-  std::cout << "--------------------------------------------------------------" << std::endl;
+  std::cout << "+++++++++++++++++++++++++++++++++++++++++++++++++++++++" << std::endl;
 }
 
 // -----------------------------------------------------------------------------
@@ -1819,12 +1820,6 @@ void SurfaceMeshFunc::get_caseM_triangles(int site, int *ae, int nedge, int *afc
             tv2 = new_node0;
             ADD_TRIANGLE(cTriangle, ctid, tv0, tcVertex, tv2, cEdge[ce].neigh_grainname[0], cEdge[ce].neigh_grainname[1])
 
-            cTriangle.resize(ctid + 1);
-            cTriangle[ctid].node_id[0] = tv0;
-            cTriangle[ctid].node_id[1] = tcVertex;
-            cTriangle[ctid].node_id[2] = tv2;
-            cTriangle[ctid].ngrainname[0] = cEdge[ce].neigh_grainname[0];
-            cTriangle[ctid].ngrainname[1] = cEdge[ce].neigh_grainname[1];
             new_node0 = tv0;
             cnumT++;
             ctid++;
