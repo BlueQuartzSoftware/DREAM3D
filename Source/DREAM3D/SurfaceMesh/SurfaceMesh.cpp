@@ -278,7 +278,8 @@ void SurfaceMesh::execute()
     nNodes = m->assign_nodeID(cNodeID);
 
     m->analyzeWinding();
-
+    m->eMap.clear();
+    m->labelTriangleMap.clear();
 
     // std::cout << "nNodes: " << nNodes << std::endl;
     // Output nodes and triangles...
@@ -335,6 +336,12 @@ void SurfaceMesh::execute()
   }
   // assign new, cumulative node id...
   nNodes = m->assign_nodeID(cNodeID);
+
+  m->analyzeWinding();
+  m->eMap.clear();
+  m->labelTriangleMap.clear();
+
+
   // std::cout << "nNodes: " << nNodes << std::endl;
   // Output nodes and triangles...
   err = m->writeNodesFile(i, cNodeID, NodesFile);
