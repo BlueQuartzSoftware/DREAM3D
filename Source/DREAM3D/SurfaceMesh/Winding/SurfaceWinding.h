@@ -35,11 +35,12 @@
 
 
 #include <MXA/MXATypes.h>
-
 #include "MXA/Common/MXASetGetMacros.h"
 
+#include "DREAM3D/DREAM3DConfiguration.h"
 #include "Facet.hpp"
 
+namespace m3c {
 /*
  *
  */
@@ -99,5 +100,6 @@ class DREAM3DLib_EXPORT SurfaceWinding
 
 };
 
+}
 
 #endif /* SURFACEWINDING_H_ */
