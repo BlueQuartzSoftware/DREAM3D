@@ -429,7 +429,7 @@
         <item row="0" column="0">
          <widget class="QLabel" name="label_8">
           <property name="text">
-           <string>Grain Angles File</string>
+           <string>ASCII Data File</string>
           </property>
          </widget>
         </item>
@@ -483,7 +483,7 @@
           </property>
          </widget>
         </item>
-        <item row="5" column="1">
+        <item row="6" column="1">
          <widget class="QPushButton" name="m_VtkOptionsBtn">
           <property name="text">
            <string>VTK Options</string>
@@ -508,6 +508,20 @@
          <widget class="QLabel" name="label_14">
           <property name="text">
            <string>VTK Rectilinear Grid</string>
+          </property>
+         </widget>
+        </item>
+        <item row="5" column="1">
+         <widget class="QCheckBox" name="m_writegraindata">
+          <property name="text">
+           <string>Grain Data File</string>
+          </property>
+         </widget>
+        </item>
+        <item row="5" column="0">
+         <widget class="QLabel" name="label_17">
+          <property name="text">
+           <string>ASCII Data File</string>
           </property>
          </widget>
         </item>
