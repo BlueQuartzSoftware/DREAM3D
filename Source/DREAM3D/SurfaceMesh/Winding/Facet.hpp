@@ -18,6 +18,7 @@
 #include <map>
 
 #include "MXA/Common/MXASetGetMacros.h"
+#include "DREAM3D/DREAM3DConfiguration.h"
 #include "Edge.h"
 
 
