@@ -36,6 +36,7 @@
 
 #include <MXA/MXATypes.h>
 #include "MXA/Common/MXASetGetMacros.h"
+#include "DREAM3D/DREAM3DConfiguration.h"
 
 #include "DREAM3D/DREAM3DConfiguration.h"
 #include "Facet.hpp"
