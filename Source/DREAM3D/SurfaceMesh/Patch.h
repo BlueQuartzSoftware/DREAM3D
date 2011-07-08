@@ -58,10 +58,10 @@ public:
     int node_id[3]; // stores three new node id for vertices of the triangles...
     int ngrainname[2]; // neighboring two grainnames...
     int edgePlace[3]; // if it's 0, face edges; if 1, inner edges...
-    double normal[3];
-    double area;
+    float normal[3];
+    float area;
     int triID;
-    int e_id[3];
+  //  int e_id[3];
 
   private:
 

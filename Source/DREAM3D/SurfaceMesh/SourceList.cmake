@@ -1,11 +1,9 @@
 
 
 SET (DREAM3D_SurfaceMesh_HDRS
-  ${DREAM3DLib_SOURCE_DIR}/SurfaceMesh/LinearAlgebra.h
   ${DREAM3DLib_SOURCE_DIR}/SurfaceMesh/SMVtkFileIO.h
   ${DREAM3DLib_SOURCE_DIR}/SurfaceMesh/SurfaceMesh.h
   ${DREAM3DLib_SOURCE_DIR}/SurfaceMesh/SurfaceMeshFunc.h
-#  ${DREAM3DLib_SOURCE_DIR}/SurfaceMesh/smooth-grain3d.h
   ${DREAM3DLib_SOURCE_DIR}/SurfaceMesh/Face.h
   ${DREAM3DLib_SOURCE_DIR}/SurfaceMesh/ISegment.h
   ${DREAM3DLib_SOURCE_DIR}/SurfaceMesh/Neighbor.h
@@ -19,7 +17,6 @@ SET (DREAM3D_SurfaceMesh_SRCS
   ${DREAM3DLib_SOURCE_DIR}/SurfaceMesh/SMVtkFileIO.cpp
   ${DREAM3DLib_SOURCE_DIR}/SurfaceMesh/SurfaceMesh.cpp
   ${DREAM3DLib_SOURCE_DIR}/SurfaceMesh/SurfaceMeshFunc.cpp
-#  ${DREAM3DLib_SOURCE_DIR}/SurfaceMesh/smooth-grain3d.cpp
   ${DREAM3DLib_SOURCE_DIR}/SurfaceMesh/Face.cpp
   ${DREAM3DLib_SOURCE_DIR}/SurfaceMesh/ISegment.cpp
   ${DREAM3DLib_SOURCE_DIR}/SurfaceMesh/Neighbor.cpp
@@ -28,6 +25,8 @@ SET (DREAM3D_SurfaceMesh_SRCS
   ${DREAM3DLib_SOURCE_DIR}/SurfaceMesh/Segment.cpp
   ${DREAM3DLib_SOURCE_DIR}/SurfaceMesh/STLWriter.cpp
 )
+cmp_IDE_SOURCE_PROPERTIES( "DREAM3DLib/SurfaceMesh" "${DREAM3D_SurfaceMesh_HDRS}" "${DREAM3D_SurfaceMesh_SRCS}" "0")
+
 
 SET (WINDING_SRCS
   ${DREAM3DLib_SOURCE_DIR}/SurfaceMesh/Winding/SurfaceWinding.cpp
@@ -38,15 +37,20 @@ SET (WINDING_HDRS
   ${DREAM3DLib_SOURCE_DIR}/SurfaceMesh/Winding/Edge.h
   ${DREAM3DLib_SOURCE_DIR}/SurfaceMesh/Winding/Facet.hpp
 )
-
-cmp_IDE_SOURCE_PROPERTIES( "DREAM3DLib/SurfaceMesh" "${DREAM3D_SurfaceMesh_HDRS}" "${DREAM3D_SurfaceMesh_SRCS}" "0")
-
-
-
 cmp_IDE_SOURCE_PROPERTIES( "DREAM3DLib/SurfaceMesh/Winding" "${WINDING_HDRS}" "${WINDING_SRCS}" "0")
 
-set (DREAM3D_SurfaceMesh_HDRS ${DREAM3D_SurfaceMesh_HDRS} ${WINDING_HDRS})
-set (DREAM3D_SurfaceMesh_SRCS ${DREAM3D_SurfaceMesh_SRCS} ${WINDING_SRCS})
+SET (SMOOTHING_SRCS
+    ${DREAM3DLib_SOURCE_DIR}/SurfaceMesh/Smoothing/Smoothing.cpp
+)
+SET (SMOOTHING_HDRS
+    ${DREAM3DLib_SOURCE_DIR}/SurfaceMesh/Smoothing/Smoothing.h
+    ${DREAM3DLib_SOURCE_DIR}/SurfaceMesh/Smoothing/LinearAlgebra.h
+)
+cmp_IDE_SOURCE_PROPERTIES( "DREAM3DLib/SurfaceMesh/Smoothing" "${SMOOTHING_HDRS}" "${SMOOTHING_SRCS}" "0")
+
+set (DREAM3D_SurfaceMesh_HDRS ${DREAM3D_SurfaceMesh_HDRS} ${WINDING_HDRS} ${SMOOTHING_HDRS} )
+set (DREAM3D_SurfaceMesh_SRCS ${DREAM3D_SurfaceMesh_SRCS} ${WINDING_SRCS} ${SMOOTHING_HDRS} )
+
 
 if ( ${DREAM3D_INSTALL_FILES} EQUAL 1 )
     INSTALL (FILES ${DREAM3D_SurfaceMesh_HDRS}
