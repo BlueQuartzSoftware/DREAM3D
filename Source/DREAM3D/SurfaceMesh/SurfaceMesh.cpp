@@ -46,6 +46,7 @@
 
 #include "Winding/SurfaceWinding.h"
 
+
 #define CHECK_ERROR(name, message)\
     if(err < 0) {\
       setErrorCondition(err);\
