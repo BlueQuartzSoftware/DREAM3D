@@ -36,23 +36,22 @@
 #define WIN32_LEAN_AND_MEAN		// Exclude rarely-used stuff from Windows headers
 #endif
 
-
 #include <vector>
 
 #include "DREAM3D/DREAM3DConfiguration.h"
 #include "DREAM3D/SurfaceMesh/Winding/Edge.h"
 
 /**
-* @class Patch Patch.h AIM/Common/Patch.h
-* @brief Support class for the MicroGen3D class
-* @author Michael A. Jackson for BlueQuartz Software,
-* @author Dr. Michael Groeber for USAFRL
-* @date Nov 4, 2009
-* @version 1.0
-*/
+ * @class Patch Patch.h AIM/Common/Patch.h
+ * @brief Support class for the MicroGen3D class
+ * @author Michael A. Jackson for BlueQuartz Software,
+ * @author Dr. Michael Groeber for USAFRL
+ * @date Nov 4, 2009
+ * @version 1.0
+ */
 class DREAM3DLib_EXPORT Patch
 {
-public:
+  public:
     Patch();
     virtual ~Patch();
 
@@ -63,138 +62,50 @@ public:
     float area;
     int tIndex;
     m3c::Edge::Pointer edges[3];
+    bool doFlip;
 
-    // -----------------------------------------------------------------------------
-    //
-    // -----------------------------------------------------------------------------
-    void flipWinding()
-    {
-      int tmp = node_id[0];
-      node_id[0] = node_id[2];
-      node_id[2] = tmp;
-    }
-    // -----------------------------------------------------------------------------
-    //
-    // -----------------------------------------------------------------------------
-    int getintIndex(int label)
-    {
-      if (label == ngrainname[0]) return 0;
-      if (label == ngrainname[1]) return 1;
-      return 2; // Error condition. Valid values are 0 or 1 since there are only 2 elements to the array.
-    }
+    /**
+     * @brief
+     */
+    void flipWinding();
 
-    // -----------------------------------------------------------------------------
-    //
-    // -----------------------------------------------------------------------------
-    std::vector<int> getNodeIndices(int label)
-    {
-      std::vector<int> tNodes(3);
-      int idx = getintIndex(label);
-      if (idx == 1)
-      {
-        tNodes[0] = node_id[2];
-        tNodes[1] = node_id[1];
-        tNodes[2] = node_id[0];
-      }
-      else
-      {
-        tNodes[0] = node_id[0];
-        tNodes[1] = node_id[1];
-        tNodes[2] = node_id[2];
-      }
-      return tNodes;
-    }
+    /**
+     * @brief
+     * @param label
+     */
+    int getintIndex(int label);
 
-    // -----------------------------------------------------------------------------
-    //
-    // -----------------------------------------------------------------------------
-    void getWindingIndices(int ids[3], int label)
-    {
-      int idx = getintIndex(label);
-      if (idx == 1)
-      {
-        ids[0] = node_id[2];
-        ids[1] = node_id[1];
-        ids[2] = node_id[0];
-      }
-      else
-      {
-        ids[0] = node_id[0];
-        ids[1] = node_id[1];
-        ids[2] = node_id[2];
-      }
-    }
+    /**
+     * @brief
+     * @param label
+     * @return
+     */
+    std::vector<int> getNodeIndices(int label);
 
-    // -----------------------------------------------------------------------------
-    //
-    // -----------------------------------------------------------------------------
-    void getWindingIndices4(int ids[4], int label)
-    {
-      int idx = getintIndex(label);
+    /**
+     * @brief
+     * @param ids
+     * @param label
+     */
+    void getWindingIndices(int ids[3], int label);
 
-      if (idx == 1)
-      {
-        ids[0] = node_id[2];
-        ids[1] = node_id[1];
-        ids[2] = node_id[0];
-        ids[3] = node_id[2];
-      }
-      else
-      {
-        ids[0] = node_id[0];
-        ids[1] = node_id[1];
-        ids[2] = node_id[2];
-        ids[3] = node_id[0];
-      }
-    }
-    // -----------------------------------------------------------------------------
-    //
-    // -----------------------------------------------------------------------------
-    void verifyWinding(Patch &tri, int label)
-    {
-      int ids[4];
-      int nids[4];
-      getWindingIndices4(ids, label);
-      tri.getWindingIndices4(nids, label);
-  //    int idx = 0;
-      // There are 2 node_id that are shared between the two triangles
-      // Find them
-      int i0, i1;
-    //  bool flip = false;
-      bool done = false;
-      for (int i = 0; i < 3; ++i)
-      {
-        i0 = ids[i];
-        i1 = ids[i + 1];
-        for (int j = 0; j < 3; ++j)
-        {
-          if (i0 == nids[j + 1] && i1 == nids[j])
-          {
-            //    std::cout << ">>>>>> Winding OK "<< tIndex << " <-> "<< tri.tIndex << std::endl;
-            done = true;
-            break;
-          }
-          else if (i0 == nids[j] && i1 == nids[j + 1])
-          {
-            std::cout << "!!!!!! Winding Bad " << tIndex << " <-> " << tri.tIndex << std::endl;
-            std::cout << "  Grain ID: " << label << std::endl;
-            std::cout << "  Triangle ID: " << tIndex << std::endl;
-            std::cout << "  Neighbor ID: " << tri.tIndex << std::endl;
-            std::cout << "  Vert IDs: " << i0 << " & " << i1 << std::endl;
-            done = true;
-            tri.flipWinding();
+    /**
+     * @brief
+     * @param ids
+     * @param label
+     */
+    void getWindingIndices4(int ids[4], int label);
 
-            break;
-          }
-        }
-        if (done) break;
-      }
-    }
+    /**
+     * @brief
+     * @param tri
+     * @param label
+     */
+    void verifyWinding(Patch &tri, int label);
 
   private:
-
-   // Patch(const Patch&);    // Copy Constructor Not Implemented
-   // void operator=(const Patch&);  // Operator '=' Not Implemented
+    // Patch(const Patch&);    // Copy Constructor Not Implemented
+    // void operator=(const Patch&);  // Operator '=' Not Implemented
 };
 
 #endif /* Patch_H_ */
