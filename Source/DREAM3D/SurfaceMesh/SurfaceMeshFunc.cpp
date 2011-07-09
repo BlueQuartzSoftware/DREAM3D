@@ -799,45 +799,30 @@ int SurfaceMeshFunc::get_triangles()
 // -----------------------------------------------------------------------------
 void SurfaceMeshFunc::analyzeWinding()
 {
-  if (true) return;
-  std::cout << "+++++++++++++++++++++++++++++++++++++++++++++++++++++++" << std::endl;
-  std::cout << " Edge Count: " << eMap.size() << std::endl;
-  std::cout << " Triangle Count: " << cTriangle.size() << std::endl;
-  std::cout << "labelTriangleMap.size(): " << labelTriangleMap.size() << std::endl;
+//  std::cout << "+++++++++++++++++++++++++++++++++++++++++++++++++++++++" << std::endl;
+//  std::cout << " Edge Count: " << eMap.size() << std::endl;
+//  std::cout << " Triangle Count: " << cTriangle.size() << std::endl;
+//  std::cout << "labelTriangleMap.size(): " << labelTriangleMap.size() << std::endl;
 
   float total = (float)(labelTriangleMap.size());
- // bool firstLabel = true;
   // Keeps a list of all the triangles that have been visited.
   std::vector<bool> masterVisited(cTriangle.size(), false);
 
-  size_t size = cTriangle.size();
-  for(size_t i = 0; i < size; ++i)
-  {
-    if (cTriangle[i].tIndex > size)
-    {
-      std::cout << "HEre" << std::endl;
-    }
-  }
-
-
-
   // Start with first triangle in the master list:
   int masterTriangleIndex = 0;
-  Patch& t = cTriangle[masterTriangleIndex];
-//  std::deque<int> labelsToVisit;
 
   // Get the first 2 labels to visit from the first triangle. We use these 2 labels
   // because this triangle shares these 2 labels and guarantees these 2 labels are
   // connected to each other.
-
   float curPercent = 0.0;
   int progressIndex = 0;
   for (LabelTriangleMapType::iterator cLabel = labelTriangleMap.begin(); cLabel != labelTriangleMap.end(); ++cLabel )
   {
+
     int currentLabel = cLabel->first;
   //  if (currentLabel != 1) { continue; }
     masterTriangleIndex = cLabel->second;
-    t = cTriangle[masterTriangleIndex];
+    Patch& t = cTriangle[masterTriangleIndex];
 
     if ( (progressIndex/total * 100.0f) > (curPercent) )
     {
@@ -860,26 +845,19 @@ void SurfaceMeshFunc::analyzeWinding()
 
     while (triangleDeque.empty() == false)
     {
-      t = cTriangle[triangleDeque.front()];
+      Patch& currentTri = cTriangle[triangleDeque.front()];
   //    std::cout << "tIndex = " << t->tIndex << std::endl;
-      localVisited.insert(t.tIndex);
-#if 0
-      bool debug = ( t->tIndex == 163674 || t->tIndex == 163673 || t->tIndex == 163675 || t->tIndex == 163700);
-      if (debug == true)
-      {
-        std::cout << "Debugging" << std::endl;
-      } debug = false;
-#endif
-      std::vector<int> adjTris = findAdjacentTriangles(t, currentLabel);
+      localVisited.insert(currentTri.tIndex);
+      std::vector<int> adjTris = findAdjacentTriangles(currentTri, currentLabel);
       for ( std::vector<int>::iterator adjTri = adjTris.begin(); adjTri != adjTris.end(); ++adjTri )
       {
         //  std::cout << "  ^ AdjTri index: " << (*adjTri)->tIndex << std::endl;
         if (masterVisited[*adjTri] == false)
         {
           //   std::cout << "   * Checking Winding: " << (*adjTri)->tIndex << std::endl;
-          t.verifyWinding( cTriangle[*adjTri], currentLabel);
+          Patch& triToVerify = cTriangle[*adjTri];
+          currentTri.verifyWinding( triToVerify, currentLabel);
         }
-
 
         if (localVisited.find(*adjTri) == localVisited.end()
           && find(triangleDeque.begin(), triangleDeque.end(), *adjTri) == triangleDeque.end())
@@ -896,7 +874,7 @@ void SurfaceMeshFunc::analyzeWinding()
 
   }
 
-  std::cout << "+++++++++++++++++++++++++++++++++++++++++++++++++++++++" << std::endl;
+ // std::cout << "+++++++++++++++++++++++++++++++++++++++++++++++++++++++" << std::endl;
 }
 
 // -----------------------------------------------------------------------------
@@ -2062,8 +2040,6 @@ int SurfaceMeshFunc::writeNodesFile(int zID, int cNodeID, const std::string &nod
 // -----------------------------------------------------------------------------
 int SurfaceMeshFunc::writeTrianglesFile(int zID, int ctid, const std::string &trianglesFile, int nt)
 {
-
-  //int i;
   int tag;
   int end;
   // int newID;

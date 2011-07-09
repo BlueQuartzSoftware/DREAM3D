@@ -404,8 +404,10 @@ void SurfaceMesh::execute()
   updateProgressAndMessage(("Analyzing Winding"), 95);
 
 #if USE_WINDING
+  std::cout << "***************************************************************" << std::endl;
   m3c::SurfaceWinding sw;
   sw.debugPrintConnectivity(nNodes, cTriID, TrianglesFile);
+  std::cout << "***************************************************************" << std::endl;
 #endif
 
   updateProgressAndMessage(("Surface Meshing Complete"), 100);
