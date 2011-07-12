@@ -36,22 +36,22 @@
 #define WIN32_LEAN_AND_MEAN		// Exclude rarely-used stuff from Windows headers
 #endif
 
-
 #include <vector>
 
 #include "DREAM3D/DREAM3DConfiguration.h"
+#include "DREAM3D/SurfaceMesh/Winding/Edge.h"
 
 /**
-* @class Patch Patch.h AIM/Common/Patch.h
-* @brief Support class for the MicroGen3D class
-* @author Michael A. Jackson for BlueQuartz Software,
-* @author Dr. Michael Groeber for USAFRL
-* @date Nov 4, 2009
-* @version 1.0
-*/
+ * @class Patch Patch.h AIM/Common/Patch.h
+ * @brief Support class for the MicroGen3D class
+ * @author Michael A. Jackson for BlueQuartz Software,
+ * @author Dr. Michael Groeber for USAFRL
+ * @date Nov 4, 2009
+ * @version 1.0
+ */
 class DREAM3DLib_EXPORT Patch
 {
-public:
+  public:
     Patch();
     virtual ~Patch();
 
@@ -60,13 +60,52 @@ public:
     int edgePlace[3]; // if it's 0, face edges; if 1, inner edges...
     float normal[3];
     float area;
-    int triID;
-  //  int e_id[3];
+    int tIndex;
+    m3c::Edge::Pointer edges[3];
+    bool doFlip;
+
+    /**
+     * @brief
+     */
+    void flipWinding();
+
+    /**
+     * @brief
+     * @param label
+     */
+    int getintIndex(int label);
+
+    /**
+     * @brief
+     * @param label
+     * @return
+     */
+    std::vector<int> getNodeIndices(int label);
+
+    /**
+     * @brief
+     * @param ids
+     * @param label
+     */
+    void getWindingIndices(int ids[3], int label);
+
+    /**
+     * @brief
+     * @param ids
+     * @param label
+     */
+    void getWindingIndices4(int ids[4], int label);
+
+    /**
+     * @brief
+     * @param tri
+     * @param label
+     */
+    void verifyWinding(Patch &tri, int label);
 
   private:
-
-   // Patch(const Patch&);    // Copy Constructor Not Implemented
-   // void operator=(const Patch&);  // Operator '=' Not Implemented
+    // Patch(const Patch&);    // Copy Constructor Not Implemented
+    // void operator=(const Patch&);  // Operator '=' Not Implemented
 };
 
 #endif /* Patch_H_ */

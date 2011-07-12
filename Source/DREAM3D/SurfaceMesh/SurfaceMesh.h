@@ -116,23 +116,6 @@ class GrainChecker
           vertMap[n2] = 0;
           vertMap[n3] = 0;
           triMap[ctid] = 0;
-
-//          if (gid == 53)
-//          {
-//            int s[3];
-//            TripletSort<int>(n1, n2, n3, s);
-//            uint64_t edgeId;
-//            int32_t* e0 = (int32_t*)(&edgeId);
-//            int32_t* e1 = e0+1;
-//
-//            *e0 = s[0]; *e1 = s[1];
-//            ++g53map[edgeId];
-//            *e0 = s[1]; *e1 = s[2];
-//            ++g53map[edgeId];
-//            *e0 = s[0]; *e1 = s[2];
-//            ++g53map[edgeId];
-//          }
-
         }
 
         gid = cTriangle[i].ngrainname[1];
@@ -158,22 +141,6 @@ class GrainChecker
           vertMap[n2] = 0;
           vertMap[n3] = 0;
           triMap[ctid] = 0;
-
-//          if (gid == 53)
-//          {
-//            int s[3];
-//            TripletSort<int>(n1, n2, n3, s);
-//            uint64_t edgeId;
-//            int32_t* e0 = (int32_t*)(&edgeId);
-//            int32_t* e1 = e0+1;
-//
-//            *e0 = s[0]; *e1 = s[1];
-//            ++g53map[edgeId];
-//            *e0 = s[1]; *e1 = s[2];
-//            ++g53map[edgeId];
-//            *e0 = s[0]; *e1 = s[2];
-//            ++g53map[edgeId];
-//          }
         }
         //
         ++ctid;
