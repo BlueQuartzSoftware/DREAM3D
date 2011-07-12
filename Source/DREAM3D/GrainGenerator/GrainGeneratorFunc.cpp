@@ -2132,7 +2132,7 @@ void GrainGeneratorFunc::assign_voxels()
     {
       voxels[i].grain_index = gnames[i];
       unassigned[i] = 0;
-	  gnames[i] = gnames[i];
+      //gnames[i] = gnames[i];
     }
   }
   m_Grains.resize(goodcount);
@@ -2204,7 +2204,7 @@ void GrainGeneratorFunc::assign_voxels()
 			{
 				for (int k = 0; k < currentvlist.size(); k++)
 				{
-					gnames[currentvlist[k]] = -1;			
+					gnames[currentvlist[k]] = -1;
 				}
 			}
 		}
