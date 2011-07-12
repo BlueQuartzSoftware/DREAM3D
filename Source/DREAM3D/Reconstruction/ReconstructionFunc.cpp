@@ -55,6 +55,9 @@
 #include "DREAM3D/HDF5/AIM_H5VtkDataWriter.h"
 #include "DREAM3D/Parallel/Algo.hpp"
 
+#define NEW_SHARED_ARRAY(var, type, size)\
+  boost::shared_array<type> var##Array(new type[size]);\
+  type* var = var##Array.get();
 
 const static float m_pi = M_PI;
 const static float m_OnePointThree = 1.33333333333;
@@ -1955,97 +1958,99 @@ void ReconstructionFunc::renumber_grains3()
 void ReconstructionFunc::find_neighbors()
 {
   int neighbors[6];
-  neighbors[0] = -(xpoints * ypoints);
+  neighbors[0] = -(xpoints*ypoints);
   neighbors[1] = -xpoints;
   neighbors[2] = -1;
   neighbors[3] = 1;
   neighbors[4] = xpoints;
-  neighbors[5] = (xpoints * ypoints);
+  neighbors[5] = (xpoints*ypoints);
   float column, row, plane;
   int grain;
   size_t nnum;
   int onsurf = 0;
   int good = 0;
   int neighbor = 0;
+  size_t xtalCount = crystruct.size();
   int surfacegrain = 1;
   int nListSize = 100;
-  // Copy all the grain names into a densely packed array
-  int* gnames = new int[totalpoints];
-  size_t numgrains = m_Grains.size();
-  std::set<int> leftOutGrains;
+  for (size_t i = 1; i < m_Grains.size(); i++)
+  {
+    m_Grains[i]->numneighbors = 0;
+    if (m_Grains[i]->neighborlist == NULL)
+    {
+      m_Grains[i]->neighborlist = new std::vector<int>(0);
+    }
+    m_Grains[i]->neighborlist->assign(nListSize, -1);
+  }
 
-  for (int i = 0; i < totalpoints; ++i)
+  NEW_SHARED_ARRAY(gnames, int, totalpoints)
+  for (int i = 0; i < totalpoints; i++)
   {
     gnames[i] = voxels[i].grain_index;
   }
-
-  for (size_t i = 0; i < numgrains; i++)
-  {
-    m_Grains[i]->numneighbors = 0;
-    m_Grains[i]->neighborlist->assign(nListSize, -1);
-    m_Grains[i]->neighborsurfacealist->assign(nListSize, -1.0);
-    for(int j=0;j<3;j++)
-    {
-      m_Grains[i]->neighbordistfunc[j] = 0;
-    }
-  }
-  for (int j = 0; j < (xpoints * ypoints * zpoints); j++)
+  for(int j = 0; j < (xpoints*ypoints*zpoints); j++)
   {
     onsurf = 0;
     grain = gnames[j];
-    if (grain > 0)
-    {
-      column = j % xpoints;
-      row = (j / xpoints) % ypoints;
-      plane = j / (xpoints * ypoints);
-      for (int k = 0; k < 6; k++)
-      {
-        good = 1;
-        neighbor = j + neighbors[k];
-        if (k == 0 && plane == 0) good = 0;
-        if (k == 5 && plane == (zpoints - 1)) good = 0;
-        if (k == 1 && row == 0) good = 0;
-        if (k == 4 && row == (ypoints - 1)) good = 0;
-        if (k == 2 && column == 0) good = 0;
-        if (k == 3 && column == (xpoints - 1)) good = 0;
-        if (good == 1 && gnames[neighbor] != grain && gnames[neighbor] > 0)
+	if(grain > 0)
+	{
+		column = j%xpoints;
+		row = (j/xpoints)%ypoints;
+		plane = j/(xpoints*ypoints);
+        for(int k=0;k<6;k++)
         {
-          nnum = m_Grains[grain]->numneighbors;
-          if (nnum >= (m_Grains[grain]->neighborlist->size()))
+	      good = 1;
+	      neighbor = j+neighbors[k];
+          if(k == 0 && plane == 0) good = 0;
+          if(k == 5 && plane == (zpoints-1)) good = 0;
+          if(k == 1 && row == 0) good = 0;
+          if(k == 4 && row == (ypoints-1)) good = 0;
+          if(k == 2 && column == 0) good = 0;
+          if(k == 3 && column == (xpoints-1)) good = 0;
+	      if(good == 1 && gnames[neighbor] != grain && gnames[neighbor] > 0)
           {
-            m_Grains[grain]->neighborlist->resize(nnum + nListSize);
-            m_Grains[grain]->neighborsurfacealist->resize(nnum + nListSize);
-          }
-          m_Grains[grain]->neighborlist->at(nnum) = gnames[neighbor];
-          nnum++;
-          m_Grains[grain]->numneighbors = nnum;
-          onsurf++;
-        }
-      }
-    }
+	        onsurf++;
+	        nnum = m_Grains[grain]->numneighbors;
+	        std::vector<int>* nlist = m_Grains[grain]->neighborlist;
+	        if (nnum >= (nlist->size()))
+	        {
+	         nlist->resize(nnum + nListSize);
+	        }
+	        nlist->at(nnum) = gnames[neighbor];
+	        nnum++;
+	        m_Grains[grain]->numneighbors = nnum;
+	      }
+	    }
+	}
+	voxels[j].surfacevoxel = onsurf;
   }
-  delete[] gnames;
-  vector<int> nlistcopy;
-  for (size_t i = 1; i < numgrains; i++)
+  for (size_t i = 1; i < m_Grains.size(); i++)
   {
-    vector<int >::iterator newend;
-    sort(m_Grains[i]->neighborlist->begin(), m_Grains[i]->neighborlist->end());
-    nlistcopy.assign(m_Grains[i]->neighborlist->begin(), m_Grains[i]->neighborlist->end() );
-    newend = unique(m_Grains[i]->neighborlist->begin(), m_Grains[i]->neighborlist->end());
-    m_Grains[i]->neighborlist->erase(newend, m_Grains[i]->neighborlist->end());
-    m_Grains[i]->neighborlist->erase(std::remove(m_Grains[i]->neighborlist->begin(), m_Grains[i]->neighborlist->end(), -1), m_Grains[i]->neighborlist->end());
-    //  nlist->erase(std::remove(nlist->begin(),nlist->end(),0),nlist->end());
-    int numneighs = int(m_Grains[i]->neighborlist->size());
+    int phase = m_Grains[i]->phase;
+    std::vector<int>* nlist = m_Grains[i]->neighborlist;
+
+    std::map<int, int> neighToCount;
+    int numneighs = int(nlist->size());
+
+    // this increments the voxel counts for each grain
     for (int j = 0; j < numneighs; j++)
     {
-      size_t neigh = m_Grains[i]->neighborlist->at(j);
-      int number = std::count(nlistcopy.begin(), nlistcopy.end(), neigh);
-      float area = number * resx * resx;
-      m_Grains[i]->neighborsurfacealist->at(j) = area;
+      neighToCount[nlist->at(j)]++;
+    }
+
+    neighToCount.erase(0);
+    neighToCount.erase(-1);
+    //Resize the grains neighbor list to zero
+    m_Grains[i]->neighborlist->resize(0);
+
+    for (std::map<int, int>::iterator iter = neighToCount.begin(); iter != neighToCount.end(); ++iter )
+    {
+      int neigh = iter->first; // get the neighbor grain
+      // Push the neighbor grain id back onto the list so we stay synced up
+      m_Grains[i]->neighborlist->push_back(neigh);
     }
     m_Grains[i]->numneighbors = numneighs;
   }
-
   merge_containedgrains();
 
 }
