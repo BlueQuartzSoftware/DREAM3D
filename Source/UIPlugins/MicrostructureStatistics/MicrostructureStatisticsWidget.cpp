@@ -543,10 +543,10 @@ void MicrostructureStatisticsWidget::on_m_GrainDataFile_stateChanged()
   }
   else
   {
-    m_WriteGrainSize == false;
-    m_WriteGrainShapes == false;
-    m_WriteNumNeighbors == false;
-	m_WriteAverageOrientations == false;
+    m_WriteGrainSize = false;
+    m_WriteGrainShapes = false;
+    m_WriteNumNeighbors = false;
+	m_WriteAverageOrientations = false;
   }
 }
 
@@ -561,10 +561,10 @@ void MicrostructureStatisticsWidget::on_m_VisualizationVizFile_stateChanged()
   }
   else
   {
-    m_WriteSurfaceVoxelScalars == false;
-    m_WritePhaseIdScalars == false;
-    m_WriteKernelMisorientationsScalars == false;
-    m_WriteIPFColorScalars == false;
-    m_WriteBinaryVTKFile == false;
+    m_WriteSurfaceVoxelScalars = false;
+    m_WritePhaseIdScalars = false;
+    m_WriteKernelMisorientationsScalars = false;
+    m_WriteIPFColorScalars = false;
+    m_WriteBinaryVTKFile = false;
   }
 }
