@@ -276,6 +276,11 @@ void SurfaceMesh::execute()
 
     // assign new, cumulative node id...
     nNodes = m->assign_nodeID(cNodeID);
+
+    m->analyzeWinding();
+    m->eMap.clear();
+    m->labelTriangleMap.clear();
+
     // std::cout << "nNodes: " << nNodes << std::endl;
     // Output nodes and triangles...
     err = m->writeNodesFile(i, cNodeID, NodesFile);
@@ -331,6 +336,12 @@ void SurfaceMesh::execute()
   }
   // assign new, cumulative node id...
   nNodes = m->assign_nodeID(cNodeID);
+
+  m->analyzeWinding();
+  m->eMap.clear();
+  m->labelTriangleMap.clear();
+
+
   // std::cout << "nNodes: " << nNodes << std::endl;
   // Output nodes and triangles...
   err = m->writeNodesFile(i, cNodeID, NodesFile);
@@ -393,8 +404,10 @@ void SurfaceMesh::execute()
   updateProgressAndMessage(("Analyzing Winding"), 95);
 
 #if USE_WINDING
+  std::cout << "***************************************************************" << std::endl;
   m3c::SurfaceWinding sw;
   sw.debugPrintConnectivity(nNodes, cTriID, TrianglesFile);
+  std::cout << "***************************************************************" << std::endl;
 #endif
 
   updateProgressAndMessage(("Surface Meshing Complete"), 100);
