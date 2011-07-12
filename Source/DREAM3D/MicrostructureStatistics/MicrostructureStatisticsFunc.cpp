@@ -349,6 +349,44 @@ void MicrostructureStatisticsFunc::define_neighborhood()
   }
 }
 
+void MicrostructureStatisticsFunc::find_boundingboxgrains()
+{
+  int outside = 0;
+  float maxsize = 0;
+  for (int i = 1; i < (m_Grains.size()); i++)
+  {
+	  if((m_Grains[i]->equivdiameter/2.0) > maxsize) maxsize = (m_Grains[i]->equivdiameter/2.0);	
+  }
+  for (int j = 1; j < (m_Grains.size()); j++)
+  {
+    outside = 0;
+	if((m_Grains[j]->centroidx-maxsize) < 0) outside = 1;
+	if((m_Grains[j]->centroidx+maxsize) > sizez) outside = 1;
+	if((m_Grains[j]->centroidy-maxsize) < 0) outside = 1;
+	if((m_Grains[j]->centroidy+maxsize) > sizey) outside = 1;
+	if((m_Grains[j]->centroidz-maxsize) < 0) outside = 1;
+	if((m_Grains[j]->centroidz+maxsize) > sizez) outside = 1;
+    m_Grains[j]->outsideboundbox = outside;
+  }
+}
+void MicrostructureStatisticsFunc::find_boundingboxgrains2D()
+{
+  int outside = 0;
+  float maxsize = 0;
+  for (int i = 1; i < (m_Grains.size()); i++)
+  {
+	  if((m_Grains[i]->equivdiameter/2.0) > maxsize) maxsize = (m_Grains[i]->equivdiameter/2.0);	
+  }
+  for (int j = 1; j < (m_Grains.size()); j++)
+  {
+    outside = 0;
+	if((m_Grains[j]->centroidx-maxsize) < 0) outside = 1;
+	if((m_Grains[j]->centroidx+maxsize) > sizez) outside = 1;
+	if((m_Grains[j]->centroidy-maxsize) < 0) outside = 1;
+	if((m_Grains[j]->centroidy+maxsize) > sizey) outside = 1;
+    m_Grains[j]->outsideboundbox = outside;
+  }
+}
 void MicrostructureStatisticsFunc::find_surfacegrains()
 {
   int onedge = 0;
@@ -2385,7 +2423,8 @@ void MicrostructureStatisticsFunc::write_graindata(const std::string &graindataF
   size_t numgrains = m_Grains.size();
   outFile.open(graindataFile.c_str());
   outFile << numgrains << endl;
-  outFile << "Grain ID	Surface Grain";
+  outFile << "Grain ID	Surface_Grain";
+  if(writesizes == true) outFile << "	Outside_BoundingBox";
   if(writeavgorientations == true) outFile << "	Phi1	PHI	Phi2";
   if(writesizes == true) outFile <<  "	Equiv_Diameter";
   if(writeshapes == true) outFile << "	b/a	c/a	Omega3";
@@ -2394,6 +2433,7 @@ void MicrostructureStatisticsFunc::write_graindata(const std::string &graindataF
   for (size_t i = 1; i < numgrains; i++)
   {
     outFile << i << "	" << m_Grains[i]->surfacegrain;
+	if(writesizes == true) outFile << "	" << m_Grains[i]->outsideboundbox;
 	if(writeavgorientations == true) outFile << "	" << m_Grains[i]->euler1 << "	" << m_Grains[i]->euler2 << "	" << m_Grains[i]->euler3;
 	if(writesizes == true) outFile <<  "	" << m_Grains[i]->equivdiameter;
 	if(writeshapes == true) outFile << "	" << m_Grains[i]->aspectratio1 << "	" << m_Grains[i]->aspectratio2 << "	" << m_Grains[i]->omega3;

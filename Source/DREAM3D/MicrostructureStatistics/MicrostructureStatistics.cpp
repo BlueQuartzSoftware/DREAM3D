@@ -158,6 +158,11 @@ void MicrostructureStatistics::execute()
 	  if(m->zpoints > 1) m->find_centroids();
 	  if(m->zpoints == 1)m->find_centroids2D();
 	  CHECK_FOR_CANCELED(MicrostructureStatisticsFunc, "MicrostructureStatistics was canceled",  find_centroids2D)
+
+	  updateProgressAndMessage(("Determining Bounding Box"), 28);
+	  if(m->zpoints > 1) m->find_boundingboxgrains();
+	  if(m->zpoints == 1)m->find_boundingboxgrains2D();
+	  CHECK_FOR_CANCELED(MicrostructureStatisticsFunc, "MicrostructureStatistics was canceled",  find_centroids2D)
   }
 
   if(m_ComputeGrainShapes == true)
