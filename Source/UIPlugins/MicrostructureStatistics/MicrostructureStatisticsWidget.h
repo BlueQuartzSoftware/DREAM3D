@@ -100,6 +100,8 @@ class MicrostructureStatisticsWidget : public AIMPluginFrame, private Ui::Micros
     void on_m_VtkOptionsBtn_clicked();
     void on_m_GrainFileOptionsBtn_clicked();
     void on_m_H5StatisticsFile_stateChanged();
+    void on_m_GrainDataFile_stateChanged();
+    void on_m_VisualizationVizFile_stateChanged();
 
 
 
