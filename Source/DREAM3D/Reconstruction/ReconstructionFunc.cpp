@@ -1745,15 +1745,15 @@ void ReconstructionFunc::merge_twins()
           if (neigh != i && m_Grains[neigh]->twinnewnumber == -1)
           {
             w = 10000.0;
-            q1[1] = m_Grains[firstgrain]->avg_quat[1];
-            q1[2] = m_Grains[firstgrain]->avg_quat[2];
-            q1[3] = m_Grains[firstgrain]->avg_quat[3];
-            q1[4] = m_Grains[firstgrain]->avg_quat[4];
+            q1[1] = m_Grains[firstgrain]->avg_quat[1]/m_Grains[firstgrain]->avg_quat[0];
+            q1[2] = m_Grains[firstgrain]->avg_quat[2]/m_Grains[firstgrain]->avg_quat[0];
+            q1[3] = m_Grains[firstgrain]->avg_quat[3]/m_Grains[firstgrain]->avg_quat[0];
+            q1[4] = m_Grains[firstgrain]->avg_quat[4]/m_Grains[firstgrain]->avg_quat[0];
             phase1 = crystruct[m_Grains[firstgrain]->phase];
-            q2[1] = m_Grains[neigh]->avg_quat[1];
-            q2[2] = m_Grains[neigh]->avg_quat[2];
-            q2[3] = m_Grains[neigh]->avg_quat[3];
-            q2[4] = m_Grains[neigh]->avg_quat[4];
+            q2[1] = m_Grains[neigh]->avg_quat[1]/m_Grains[neigh]->avg_quat[0];
+            q2[2] = m_Grains[neigh]->avg_quat[2]/m_Grains[neigh]->avg_quat[0];
+            q2[3] = m_Grains[neigh]->avg_quat[3]/m_Grains[neigh]->avg_quat[0];
+            q2[4] = m_Grains[neigh]->avg_quat[4]/m_Grains[neigh]->avg_quat[0];
             phase2 = crystruct[m_Grains[neigh]->phase];
             if (phase1 == phase2) w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
 			      OrientationMath::axisAngletoRod(w, n1, n2, n3, r1, r2, r3);
@@ -1839,16 +1839,16 @@ void ReconstructionFunc::merge_colonies()
           if (neigh != i && m_Grains[neigh]->colonynewnumber != -1)
           {
 		    w = 10000.0;
-            q1[1] = m_Grains[firstgrain]->avg_quat[1];
-            q1[2] = m_Grains[firstgrain]->avg_quat[2];
-            q1[3] = m_Grains[firstgrain]->avg_quat[3];
-            q1[4] = m_Grains[firstgrain]->avg_quat[4];
-			phase1 = crystruct[m_Grains[firstgrain]->phase];
-            q2[1] = m_Grains[neigh]->avg_quat[1];
-            q2[2] = m_Grains[neigh]->avg_quat[2];
-            q2[3] = m_Grains[neigh]->avg_quat[3];
-            q2[4] = m_Grains[neigh]->avg_quat[4];
-			phase2 = crystruct[m_Grains[neigh]->phase];
+            q1[1] = m_Grains[firstgrain]->avg_quat[1]/m_Grains[firstgrain]->avg_quat[0];
+            q1[2] = m_Grains[firstgrain]->avg_quat[2]/m_Grains[firstgrain]->avg_quat[0];
+            q1[3] = m_Grains[firstgrain]->avg_quat[3]/m_Grains[firstgrain]->avg_quat[0];
+            q1[4] = m_Grains[firstgrain]->avg_quat[4]/m_Grains[firstgrain]->avg_quat[0];
+            phase1 = crystruct[m_Grains[firstgrain]->phase];
+            q2[1] = m_Grains[neigh]->avg_quat[1]/m_Grains[neigh]->avg_quat[0];
+            q2[2] = m_Grains[neigh]->avg_quat[2]/m_Grains[neigh]->avg_quat[0];
+            q2[3] = m_Grains[neigh]->avg_quat[3]/m_Grains[neigh]->avg_quat[0];
+            q2[4] = m_Grains[neigh]->avg_quat[4]/m_Grains[neigh]->avg_quat[0];
+            phase2 = crystruct[m_Grains[neigh]->phase];
 			if (phase1 == phase2) w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
 			OrientationMath::axisAngletoRod(w, n1, n2, n3, r1, r2, r3);
 			float vecttol = 0.03;
