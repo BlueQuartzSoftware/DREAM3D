@@ -531,3 +531,40 @@ void MicrostructureStatisticsWidget::on_m_H5StatisticsFile_stateChanged()
     m_ComputeMDF = false;
   }
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void MicrostructureStatisticsWidget::on_m_GrainDataFile_stateChanged()
+{
+  if (m_GrainDataFile->isChecked() == true)
+  {
+
+  }
+  else
+  {
+    m_WriteGrainSize == false;
+    m_WriteGrainShapes == false;
+    m_WriteNumNeighbors == false;
+	m_WriteAverageOrientations == false;
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void MicrostructureStatisticsWidget::on_m_VisualizationVizFile_stateChanged()
+{
+  if (m_VisualizationVizFile->isChecked() == true)
+  {
+
+  }
+  else
+  {
+    m_WriteSurfaceVoxelScalars == false;
+    m_WritePhaseIdScalars == false;
+    m_WriteKernelMisorientationsScalars == false;
+    m_WriteIPFColorScalars == false;
+    m_WriteBinaryVTKFile == false;
+  }
+}
