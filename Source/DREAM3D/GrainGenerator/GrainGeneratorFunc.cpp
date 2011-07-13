@@ -2388,11 +2388,9 @@ void  GrainGeneratorFunc::fill_gaps()
     voxels[i].grain_index = grain_indices[i];
   }
 
-  float aConstantValue = resx * resy * resz * 0.75f * m_one_over_pi;
   for (size_t i = 1; i < numGrains; i++)
   {
     m_Grains[i]->numvoxels = gsizes[i];
-    m_Grains[i]->equivdiameter = 2.0f * powf((gsizes[i] * aConstantValue), m_onepointthree);
   }
   gsizes.clear();
 }
