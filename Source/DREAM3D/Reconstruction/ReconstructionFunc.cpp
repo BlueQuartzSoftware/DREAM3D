@@ -1719,7 +1719,8 @@ void ReconstructionFunc::merge_twins()
   vector<int > twinlist;
   float w;
   float n1, n2, n3;
-  float r1, r2, r3;
+  float angtol = 3.0;
+  float axistol = 5.0*M_PI/180.0;
   float q1[5];
   float q2[5];
   size_t numgrains = m_Grains.size();
@@ -1730,10 +1731,8 @@ void ReconstructionFunc::merge_twins()
     if (m_Grains[i]->twinnewnumber == -1)
     {
       twinlist.push_back(i);
-      int tsize = int(twinlist.size());
-      for (int m = 0; m < tsize; m++)
+      for (int m = 0; m < twinlist.size(); m++)
       {
-        tsize = int(twinlist.size());
         int firstgrain = twinlist[m];
         std::vector<int>* nlist = m_Grains[firstgrain]->neighborlist;
         int size = int(nlist->size());
@@ -1756,32 +1755,10 @@ void ReconstructionFunc::merge_twins()
             q2[4] = m_Grains[neigh]->avg_quat[4]/m_Grains[neigh]->avg_quat[0];
             phase2 = crystruct[m_Grains[neigh]->phase];
             if (phase1 == phase2) w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
-			      OrientationMath::axisAngletoRod(w, n1, n2, n3, r1, r2, r3);
-            float vecttol = 0.03;
-            float rodvectdiff11 = fabs(fabs(r1) - (1.0 / 3.0));
-            float rodvectdiff12 = fabs(fabs(r2) - (1.0 / 3.0));
-            float rodvectdiff13 = fabs(fabs(r3) - (1.0 / 3.0));
-            float rodvectdiff21 = fabs(fabs(r1) - 0.2);
-            float rodvectdiff22 = fabs(fabs(r2) - 0.2);
-            float rodvectdiff23 = fabs(fabs(r3) - 0.2);
-            float rodvectdiff31 = fabs(fabs(r1) - 0.25);
-            float rodvectdiff32 = fabs(fabs(r2) - 0.25);
-            float rodvectdiff33 = fabs(fabs(r3) - 0.25);
-            if (rodvectdiff11 < vecttol && rodvectdiff12 < vecttol && rodvectdiff13 < vecttol) twin = 1;
-            if (rodvectdiff11 < vecttol && fabs(r2) < vecttol && fabs(r3) < vecttol) twin = 1;
-            if (rodvectdiff12 < vecttol && fabs(r1) < vecttol && fabs(r3) < vecttol) twin = 1;
-            if (rodvectdiff13 < vecttol && fabs(r1) < vecttol && fabs(r2) < vecttol) twin = 1;
-            if (rodvectdiff11 < vecttol && rodvectdiff12 < vecttol && fabs(r3) < vecttol) twin = 1;
-            if (rodvectdiff11 < vecttol && rodvectdiff13 < vecttol && fabs(r2) < vecttol) twin = 1;
-            if (rodvectdiff12 < vecttol && rodvectdiff13 < vecttol && fabs(r1) < vecttol) twin = 1;
-            if (rodvectdiff21 < vecttol && rodvectdiff22 < vecttol && rodvectdiff23 < vecttol) twin = 1;
-            if (rodvectdiff31 < vecttol && rodvectdiff32 < vecttol && fabs(r3) < vecttol) twin = 1;
-            if (rodvectdiff31 < vecttol && rodvectdiff33 < vecttol && fabs(r2) < vecttol) twin = 1;
-            if (rodvectdiff32 < vecttol && rodvectdiff33 < vecttol && fabs(r1) < vecttol) twin = 1;
-            if (w < angcur)
-            {
-              angcur = w;
-            }
+//			OrientationMath::axisAngletoRod(w, n1, n2, n3, r1, r2, r3);
+			float axisdiff111 = acosf(fabs(n1)*0.57735+fabs(n2)*0.57735+fabs(n3)*0.57735);
+			float angdiff60 = fabs(w-60);
+            if (axisdiff111 < axistol && angdiff60 < angtol) twin = 1;
             if (twin == 1)
             {
               m_Grains[neigh]->gottwinmerged = twinmerged;
