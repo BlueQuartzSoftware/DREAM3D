@@ -2492,7 +2492,6 @@ void  GrainGeneratorFunc::fillin_precipitates()
   for (size_t i = 1; i < m_Grains.size(); i++)
   {
     m_Grains[i]->numvoxels = gsizes[i];
-    m_Grains[i]->equivdiameter = 2.0*powf((gsizes[i]*resx*resy*resz*(3.0/4.0)*(1/m_pi)),(1.0/3.0));
   }
   gsizes.clear();
 }
