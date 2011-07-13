@@ -1719,8 +1719,8 @@ void ReconstructionFunc::merge_twins()
   vector<int > twinlist;
   float w;
   float n1, n2, n3;
-  float angtol = 3.0;
-  float axistol = 5.0*M_PI/180.0;
+  float angtol = 2.0;
+  float axistol = 2.0*M_PI/180.0;
   float q1[5];
   float q2[5];
   size_t numgrains = m_Grains.size();
