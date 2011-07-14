@@ -28,14 +28,14 @@ configure_file( ${PROJECT_CODE_DIR}/QtSupport/QAbstractPipelineWrapper.h.in
                 ${${CLASS_NAME}Plugin_BINARY_DIR}/Q${CLASS_NAME}.h @ONLY IMMEDIATE)
 
 
-set (MicrostructureStatisticsPlugin_HDRS
+set (MicrostructureStatisticsPlugin_UI_HDRS
     ${${CLASS_NAME}Plugin_BINARY_DIR}/Q${CLASS_NAME}.h
     ${PROJECT_SOURCE_DIR}/UI/MicrostructureStatisticsPlugin.h
     ${PROJECT_SOURCE_DIR}/UI/MicrostructureStatisticsWidget.h
     ${PROJECT_CODE_DIR}/QtSupport/AIMPluginFrame.h
     )
     
-set (MicrostructureStatisticsPlugin_SRCS 
+set (MicrostructureStatisticsPlugin_UI_SRCS 
     ${PROJECT_SOURCE_DIR}/UI/MicrostructureStatisticsPlugin.cpp
     ${PROJECT_SOURCE_DIR}/UI/MicrostructureStatisticsWidget.cpp
     ${PROJECT_CODE_DIR}/QtSupport/AIMPluginFrame.cpp
@@ -47,19 +47,40 @@ QT4_ADD_RESOURCES( MicrostructureStatisticsPlugin_Generated_RC_SRCS ${PROJECT_SO
 QT4_WRAP_UI( MicrostructureStatisticsPlugin_Generated_UI_HDRS 
             ${PROJECT_SOURCE_DIR}/UI/MicrostructureStatisticsWidget.ui )
 
-QT4_WRAP_CPP( MicrostructureStatisticsPlugin_Generated_MOC_SRCS ${MicrostructureStatisticsPlugin_HDRS} )
+QT4_WRAP_CPP( MicrostructureStatisticsPlugin_Generated_MOC_SRCS ${MicrostructureStatisticsPlugin_UI_HDRS} )
+
+cmp_IDE_SOURCE_PROPERTIES("MicrostructureStatistics/UI/" "${MicrostructureStatisticsPlugin_UI_HDRS}" "${MicrostructureStatisticsPlugin_UI_SRCS}" "0")
+cmp_IDE_SOURCE_PROPERTIES("Generated" "${MicrostructureStatisticsPlugin_Generated_UI_HDRS}" "${MicrostructureStatisticsPlugin_Generated_MOC_SRCS}" "0")
+
+SET (MicrostructureStatistics_HDRS
+  ${PROJECT_SOURCE_DIR}/MicrostructureStatistics.h
+  ${PROJECT_SOURCE_DIR}/MicrostructureStatisticsFunc.h
+  ${PROJECT_SOURCE_DIR}/Algo.hpp
+)
+
+SET (MicrostructureStatistics_SRCS
+  ${PROJECT_SOURCE_DIR}/MicrostructureStatistics.cpp
+  ${PROJECT_SOURCE_DIR}/MicrostructureStatisticsFunc.cpp
+)
+cmp_IDE_SOURCE_PROPERTIES( "MicrostructureStatistics" "${MicrostructureStatistics_HDRS}" "${MicrostructureStatistics_SRCS}" "0")
+if ( ${DREAM3D_INSTALL_FILES} EQUAL 1 )
+    INSTALL (FILES ${MicrostructureStatistics_HDRS}
+            DESTINATION include/DREAM3D/MicrostructureStatistics
+            COMPONENT Headers   )
+endif()
+
 
 set (MicrostructureStatisticsPlugin_PROJECT_SRCS
-    ${MicrostructureStatisticsPlugin_SRCS}
-    ${MicrostructureStatisticsPlugin_HDRS}
+    ${MicrostructureStatisticsPlugin_UI_SRCS}
+    ${MicrostructureStatisticsPlugin_UI_HDRS}
     ${MicrostructureStatisticsPlugin_Generated_MOC_SRCS} 
     ${MicrostructureStatisticsPlugin_Generated_UI_HDRS}
     ${MicrostructureStatisticsPlugin_Generated_RC_SRCS}
     ${PROJECT_CODE_DIR}/QtSupport/DREAM3DPluginInterface.h
+    ${MicrostructureStatistics_HDRS}
+    ${MicrostructureStatistics_SRCS}
 )
 
-cmp_IDE_SOURCE_PROPERTIES("Source/UI/" "${MicrostructureStatisticsPlugin_HDRS}" "${MicrostructureStatisticsPlugin_SRCS}" "0")
-cmp_IDE_SOURCE_PROPERTIES("Generated" "${MicrostructureStatisticsPlugin_Generated_UI_HDRS}" "${MicrostructureStatisticsPlugin_Generated_MOC_SRCS}" "0")
 
 # ---------- Setup output Directories -------------------------
 if(NOT MSVC)

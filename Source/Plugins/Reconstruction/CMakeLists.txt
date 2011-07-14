@@ -28,14 +28,14 @@ configure_file( ${PROJECT_CODE_DIR}/QtSupport/QAbstractPipelineWrapper.h.in
                 ${${CLASS_NAME}Plugin_BINARY_DIR}/Q${CLASS_NAME}.h @ONLY IMMEDIATE)
 
 
-set (ReconstructionPlugin_HDRS
+set (ReconstructionPlugin_UI_HDRS
     ${${CLASS_NAME}Plugin_BINARY_DIR}/Q${CLASS_NAME}.h
     ${PROJECT_SOURCE_DIR}/UI/ReconstructionPlugin.h
     ${PROJECT_SOURCE_DIR}/UI/ReconstructionWidget.h
     ${PROJECT_CODE_DIR}/QtSupport/AIMPluginFrame.h
     )
     
-set (ReconstructionPlugin_SRCS 
+set (ReconstructionPlugin_UI_SRCS 
     ${PROJECT_SOURCE_DIR}/UI/ReconstructionPlugin.cpp
     ${PROJECT_SOURCE_DIR}/UI/ReconstructionWidget.cpp
     ${PROJECT_CODE_DIR}/QtSupport/AIMPluginFrame.cpp
@@ -47,19 +47,61 @@ QT4_ADD_RESOURCES( ReconstructionPlugin_Generated_RC_SRCS ${PROJECT_SOURCE_DIR}/
 QT4_WRAP_UI( ReconstructionPlugin_Generated_UI_HDRS 
             ${PROJECT_SOURCE_DIR}/UI/ReconstructionWidget.ui )
 
-QT4_WRAP_CPP( ReconstructionPlugin_Generated_MOC_SRCS ${ReconstructionPlugin_HDRS} )
+QT4_WRAP_CPP( ReconstructionPlugin_Generated_MOC_SRCS ${ReconstructionPlugin_UI_HDRS} )
 
+cmp_IDE_SOURCE_PROPERTIES("Reconstruction/UI/" "${ReconstructionPlugin_UI_HDRS}" "${ReconstructionPlugin_UI_SRCS}" "0")
+cmp_IDE_SOURCE_PROPERTIES("Generated" "${ReconstructionPlugin_Generated_UI_HDRS}" "${ReconstructionPlugin_Generated_MOC_SRCS}" "0")
+
+#-- Non Qt Sources
+SET (Reconstruction_HDRS
+  ${PROJECT_SOURCE_DIR}/Reconstruction.h
+  ${PROJECT_SOURCE_DIR}/ReconstructionFunc.h
+)
+
+SET (Reconstruction_SRCS
+  ${PROJECT_SOURCE_DIR}/Reconstruction.cpp
+  ${PROJECT_SOURCE_DIR}/ReconstructionFunc.cpp
+)
+cmp_IDE_SOURCE_PROPERTIES( "Reconstruction" "${Reconstruction_HDRS}" "${Reconstruction_SRCS}" "0")
+if ( ${DREAM3D_INSTALL_FILES} EQUAL 1 )
+    INSTALL (FILES ${Reconstruction_HDRS}
+            DESTINATION include/DREAM3D/Reconstruction
+            COMPONENT Headers   )
+endif()
+
+#-- AngSupport Files
+SET (ANGSupport_HDRS
+  ${PROJECT_SOURCE_DIR}/ANGSupport/AbstractAngDataLoader.h
+  ${PROJECT_SOURCE_DIR}/ANGSupport/AngDataLoader.h
+  ${PROJECT_SOURCE_DIR}/ANGSupport/H5AngDataLoader.h
+)
+
+SET (ANGSupport_SRCS
+  ${PROJECT_SOURCE_DIR}/ANGSupport/AngDataLoader.cpp
+  ${PROJECT_SOURCE_DIR}/ANGSupport/H5AngDataLoader.cpp
+)
+cmp_IDE_SOURCE_PROPERTIES( "Reconstruction/ANGSupport" "${ANGSupport_HDRS}" "${ANGSupport_SRCS}" "0")
+if ( ${DREAM3D_INSTALL_FILES} EQUAL 1 )
+    INSTALL (FILES ${ANGSupport_HDRS}
+            DESTINATION include/DREAM3D/ANGSupport
+            COMPONENT Headers   )
+endif()
+
+
+#-- Gather all the Project Source files in this variable
 set (ReconstructionPlugin_PROJECT_SRCS
-    ${ReconstructionPlugin_SRCS}
-    ${ReconstructionPlugin_HDRS}
+    ${ReconstructionPlugin_UI_SRCS}
+    ${ReconstructionPlugin_UI_HDRS}
     ${ReconstructionPlugin_Generated_MOC_SRCS} 
     ${ReconstructionPlugin_Generated_UI_HDRS}
     ${ReconstructionPlugin_Generated_RC_SRCS}
     ${PROJECT_CODE_DIR}/QtSupport/DREAM3DPluginInterface.h
+    ${Reconstruction_HDRS}
+    ${Reconstruction_SRCS}
+    ${ANGSupport_HDRS}
+    ${ANGSupport_SRCS}
 )
 
-cmp_IDE_SOURCE_PROPERTIES("Source/UI/" "${ReconstructionPlugin_HDRS}" "${ReconstructionPlugin_SRCS}" "0")
-cmp_IDE_SOURCE_PROPERTIES("Generated" "${ReconstructionPlugin_Generated_UI_HDRS}" "${ReconstructionPlugin_Generated_MOC_SRCS}" "0")
 
 # ---------- Setup output Directories -------------------------
 if(NOT MSVC)
@@ -97,4 +139,30 @@ file(COPY ${${PLUGIN_NAME}_HELP_FILES}
 install(FILES ${${PLUGIN_NAME}_HELP_FILES}
         DESTINATION Help/${PLUGIN_NAME}
         COMPONENT Applications )
+  
+
+  
+# Create a Command line tool for the Reconstruction
+# --------------------------------------------------------------------
+# Setup the install rules for the various platforms
+set(install_dir "tools")
+if (WIN32)
+    set (install_dir ".")
+endif()
+COMPILE_TOOL(
+    TARGET Reconstruction
+    SOURCES ${PROJECT_SOURCE_DIR}/Tools/ReconstructionMain.cpp     ${Reconstruction_HDRS}
+                                                                    ${Reconstruction_SRCS}
+                                                                    ${ANGSupport_HDRS}
+                                                                    ${ANGSupport_SRCS}
+    DEBUG_EXTENSION ${EXE_DEBUG_EXTENSION}
+    VERSION_MAJOR ${DREAM3D_VER_MAJOR}
+    VERSION_MINOR ${DREAM3D_VER_MINOR}
+    VERSION_PATCH ${DREAM3D_VER_PATCH}
+    BINARY_DIR    ${${PROJECT_NAME}_BINARY_DIR}
+    COMPONENT     Applications
+    INSTALL_DEST  "${install_dir}" 
+    LINK_LIBRARIES DREAM3DLib
+)
+  
   
