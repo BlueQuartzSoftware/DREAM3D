@@ -51,21 +51,21 @@
 #include <numeric>
 #include <map>
 
-#include <MXA/MXATypes.h>
-#include <MXA/Common/MXASetGetMacros.h>
+#include "MXA/MXATypes.h"
+#include "MXA/Common/MXASetGetMacros.h"
 
 #include "DREAM3D/DREAM3DConfiguration.h"
-#include <DREAM3D/Common/Grain.h>
-#include <DREAM3D/SurfaceMesh/Patch.h>
-#include <DREAM3D/SurfaceMesh/Face.h>
-#include <DREAM3D/SurfaceMesh/Neighbor.h>
-#include <DREAM3D/SurfaceMesh/Node.h>
-#include <DREAM3D/SurfaceMesh/Segment.h>
-#include <DREAM3D/Common/AIMRandomNG.h>
-#include <DREAM3D/ANGSupport/AngDataLoader.h>
-#include "DREAM3D/SurfaceMesh/Winding/Edge.h"
+#include "DREAM3D/Common/Grain.h"
+#include "DREAM3D/Common/AIMRandomNG.h"
+#include "DREAM3D/ANGSupport/AngDataLoader.h"
+#include "DREAM3D/SurfaceMesh/Meshing/Patch.h"
+#include "DREAM3D/SurfaceMesh/Meshing/Face.h"
+#include "DREAM3D/SurfaceMesh/Meshing/Neighbor.h"
+#include "DREAM3D/SurfaceMesh/Meshing/Node.h"
+#include "DREAM3D/SurfaceMesh/Meshing/Segment.h"
+#include "DREAM3D/SurfaceMesh/Meshing/SharedEdge.h"
 
-using namespace std;
+using namespace meshing;
 
 
 class DREAM3DLib_EXPORT SurfaceMeshFunc
@@ -92,22 +92,27 @@ public:
   float xOrigin;
   float yOrigin;
   float zOrigin;
-  Neighbor* neigh; // contains nearest neighbor information...
-  int* voxels; // contains voxel information...
-  Face* cSquare; // contains square information...
- // Face* pSquare;
-  Node* cVertex; // contains edges on square faces for open loops...
-  std::vector<Segment> cEdge; // contains edges on square faces for open loops...
-  std::vector<Patch> cTriangle;
 
-  typedef std::map<uint64_t, m3c::Edge::Pointer>    EdgeMapType;
-  EdgeMapType eMap;
-  typedef int Label;
+  Neighbor* neigh; // contains nearest neighbor information...
+
+  int* voxels; // contains voxel information...
+
+  Face* cSquare; // contains square information...
+
+  Node* cVertex; // contains edges on square faces for open loops...
+
+  std::vector<Segment::Pointer> cEdge; // contains edges on square faces for open loops...
+  std::vector<Patch::Pointer> cTriangle;
+
+  typedef std::map<uint64_t, meshing::SharedEdge::Pointer>    EdgeMapType;
+  typedef int                                       Label;
   typedef std::map<Label, int >                     LabelTriangleMapType;
+
+  EdgeMapType eMap;
   LabelTriangleMapType labelTriangleMap;
 
   void analyzeWinding();
-  std::vector<int> findAdjacentTriangles(Patch &triangle, int label);
+  std::vector<int> findAdjacentTriangles(Patch::Pointer triangle, int label);
 
 
   void get_neighbor_list();

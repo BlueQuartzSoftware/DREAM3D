@@ -35,9 +35,6 @@
       <string>Inputs</string>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_2">
-      <property name="spacing">
-       <number>6</number>
-      </property>
       <property name="margin">
        <number>4</number>
       </property>
@@ -215,16 +212,13 @@
       <string>Options</string>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_3">
-      <property name="spacing">
-       <number>6</number>
-      </property>
       <property name="margin">
        <number>4</number>
       </property>
       <item>
        <widget class="QCheckBox" name="m_SmoothMesh">
         <property name="enabled">
-         <bool>false</bool>
+         <bool>true</bool>
         </property>
         <property name="text">
          <string>Smooth Surface Mesh</string>
@@ -244,7 +238,7 @@
           <item>
            <widget class="QLabel" name="label_26">
             <property name="enabled">
-             <bool>false</bool>
+             <bool>true</bool>
             </property>
             <property name="text">
              <string>Number of Iterations</string>
@@ -254,7 +248,7 @@
           <item>
            <widget class="QSpinBox" name="m_SmoothIterations">
             <property name="enabled">
-             <bool>false</bool>
+             <bool>true</bool>
             </property>
             <property name="minimum">
              <number>1</number>
@@ -285,7 +279,7 @@
         <item row="0" column="2">
          <widget class="QCheckBox" name="m_LockQuadPoints">
           <property name="enabled">
-           <bool>false</bool>
+           <bool>true</bool>
           </property>
           <property name="text">
            <string>Lock Quad Points</string>
@@ -300,7 +294,7 @@
           <item>
            <widget class="QLabel" name="label_27">
             <property name="enabled">
-             <bool>false</bool>
+             <bool>true</bool>
             </property>
             <property name="text">
              <string>Write output file every </string>
@@ -310,14 +304,14 @@
           <item>
            <widget class="QSpinBox" name="m_WriteOutputFileIncrement">
             <property name="enabled">
-             <bool>false</bool>
+             <bool>true</bool>
             </property>
            </widget>
           </item>
           <item>
            <widget class="QLabel" name="label_28">
             <property name="enabled">
-             <bool>false</bool>
+             <bool>true</bool>
             </property>
             <property name="text">
              <string>Iterations</string>
