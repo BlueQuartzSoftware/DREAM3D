@@ -21,9 +21,16 @@
 #include <sstream>
 #include <iomanip>
 #include <vector>
+#include <limits>
+
+#include "MXA/Utilities/MXADir.h"
+#include "MXA/Utilities/MXAFileInfo.h"
+#include "MXA/Utilities/StringUtils.h"
 
 #include "DREAM3D/Common/Constants.h"
 #include "LinearAlgebra.h"
+#include "Triangle.hpp"
+#include "Node.hpp"
 
 #ifdef _WIN32
 const std::string Separator("\\");
@@ -31,8 +38,29 @@ const std::string Separator("\\");
 const std::string Separator("/");
 #endif
 
-//using namespace::std ;
 
+#define MAKE_UPDATES_FILE_PATH(outpath, filename)\
+    std::string outpath;\
+{ std::stringstream ss;\
+ss.setf(std::ios::fixed);\
+ss.fill('0');\
+  ss << m_OutputDirectory << MXADir::Separator << m_OutputFilePrefix << filename << "_" << std::setw(width) << updates << ".inp";\
+ outpath = ss.str();\
+}
+
+#define MAKE_OUTPUT_FILE_PATH(outpath, filename)\
+    std::string outpath = m_OutputDirectory + MXADir::Separator + m_OutputFilePrefix + filename;
+
+
+
+
+
+/**
+ * @brief
+ * @param str
+ * @param tokens
+ * @param delimiters
+ */
 void tokenize(const std::string& str,
         std::vector<std::string>& tokens,
         const std::string& delimiters = " ")
@@ -56,126 +84,46 @@ void tokenize(const std::string& str,
     }
 }
 
+/**
+ * @brief
+ * @param i
+ * @param j
+ * @return
+ */
 inline int delta(int i, int j) {return (i==j);}
 
-class node{
-  friend int& id(node&);
-public:
-  double& operator[](int i) {return x[i];}
-  double operator[](int i) const {return x[i];}
-  //  int line;
-private:
-  double x[3];
-  int id;
-  int type;
-};
 
-inline int& id(node& n) {return n.id;}
+using namespace smooth;
 
-double distance(const node& n0, const node& n1)
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+Smoothing::Smoothing()
 {
-  double a = n0[0]-n1[0];
-  double b = n0[1]-n1[1];
-  double c = n0[2]-n1[2];
-  return sqrt(a*a+b*b+c*c);
-}
-
-class triangle{
-public:
-  node& operator[](int i) {return *p[i];}
-  const node& operator[](int i) const {return *p[i];}
-  node*& operator()(int i) {return p[i];}
-  node* const & operator()(int i) const {return p[i];}
-  double area() const;
-  double aspect() const;
-  double circularity(double area) const;
-  Vector<double> normal() const;
-  int region1;
-  int region2;
-
-private:
-  node* p[3];
-};
-
-double triangle::area() const
-{
-  double a[3], b[3], c[3];
-  a[0] = (*p[1])[0]-(*p[0])[0];
-  a[1] = (*p[1])[1]-(*p[0])[1];
-  a[2] = (*p[1])[2]-(*p[0])[2];
-  b[0] = (*p[2])[0]-(*p[0])[0];
-  b[1] = (*p[2])[1]-(*p[0])[1];
-  b[2] = (*p[2])[2]-(*p[0])[2];
-  c[0] = a[1]*b[2]-a[2]*b[1];
-  c[1] = a[2]*b[0]-a[0]*b[2];
-  c[2] = a[0]*b[1]-a[1]*b[0];
-  return 0.5*sqrt(c[0]*c[0]+c[1]*c[1]+c[2]*c[2]);
-}
-
-Vector<double> triangle::normal() const
-{
-  Vector<double> n(3);
-  double a[3], b[3];
-  a[0] = (*p[1])[0]-(*p[0])[0];
-  a[1] = (*p[1])[1]-(*p[0])[1];
-  a[2] = (*p[1])[2]-(*p[0])[2];
-  b[0] = (*p[2])[0]-(*p[0])[0];
-  b[1] = (*p[2])[1]-(*p[0])[1];
-  b[2] = (*p[2])[2]-(*p[0])[2];
-  n[0] = a[1]*b[2]-a[2]*b[1];
-  n[1] = a[2]*b[0]-a[0]*b[2];
-  n[2] = a[0]*b[1]-a[1]*b[0];
-  double norm = sqrt(n[0]*n[0]+n[1]*n[1]+n[2]*n[2]);
-  if (norm>0.0) {
-  double rnorm = 1.0/norm;
-  n[0] *= rnorm;
-  n[1] *= rnorm;
-  n[2] *= rnorm;
-  }
-  return n;
-}
-
-double triangle::aspect() const
-{
-  double a = distance(*p[0],*p[1]);
-  double b = distance(*p[1],*p[2]);
-  double c = distance(*p[2],*p[0]);
-  double min = a;
-  double max = a;
-  if (b>max) max = b;
-  else if (b<min) min = b;
-  if (c>max) max = c;
-  else if (c<min) min = c;
-  return max/min;
-}
-
-double triangle::circularity(double area) const
-{
-  double a = distance(*p[0],*p[1]);
-  double b = distance(*p[1],*p[2]);
-  double c = distance(*p[2],*p[0]);
-  double s = 0.5*(a+b+c);
-  double r = area/s;
-  double R = a*b*c/4/area;
-  return R/r;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int SmoothGrain3D(const std::string &nodesFile, const std::string &trianglesFile,
-                  const std::string &outputDir, size_t updatesMax, int interval,
-                  int lockquads)
+Smoothing::~Smoothing()
+{
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int Smoothing::execute()
 {
   int err = 0;
 
   // Data variables
-  int nnod, ntri, junk ;
+  int nnod, ntri;
   std::vector<std::string> data;
 
-  std::cout << "Interval for printout: " << interval << std::endl ;
+  std::cout << "Interval for printout: " << m_OutputInterval << std::endl;
 
-  if (lockquads == 1)
+  if (m_LockQuads == true)
   {
     std::cout << "Will not allow quad points to move " << std::endl;
   }
@@ -184,482 +132,359 @@ int SmoothGrain3D(const std::string &nodesFile, const std::string &trianglesFile
     std::cout << "Quad points are free to move " << std::endl;
   }
 
-    // read in nodes/triangles
-    std::ifstream input1;
-    input1.open( nodesFile.c_str(), std::ios::in );
-    if (input1.is_open() == false)
+  FILE* nodesFile = fopen(m_NodesFile.c_str(), "rb+");
+  if (nodesFile == NULL)
+  {
+    std::cout << "Error opening nodes file '" << m_NodesFile << "'" << std::endl;
+    return -1;
+  }
+  FILE* triangleFile = fopen(m_TrianglesFile.c_str(), "rb+");
+  if (triangleFile == NULL)
+  {
+    std::cout << "Error opening Triangles file '" << m_TrianglesFile << "'" << std::endl;
+    return -1;
+  }
+
+  // read in nodes/triangles
+  // Calculate how many nodes are in the file:
+  fseek(nodesFile, 0, SEEK_END);
+  size_t fLength = ftell(nodesFile);
+  nnod = fLength/20;
+  fseek(nodesFile, 0, SEEK_SET);
+  fLength = ftell(nodesFile);
+  if(0 != fLength)
+  {
+    assert(0 != fLength);
+  }
+  std::cout << "Number of nodes: " << nnod << std::endl;
+  // Allocated the Nodes
+  std::vector<node> nodes(nnod);
+  float max[3] = { std::numeric_limits<float>::min(), std::numeric_limits<float>::min(), std::numeric_limits<float>::min() };
+  float min[3] = { std::numeric_limits<float>::max(), std::numeric_limits<float>::max(), std::numeric_limits<float>::max() };
+
+  //Read the nodes
+  std::cout << "reading nodes " << std::endl;
+  unsigned char nodeData[20];
+  int* nodeId = (int*)(&nodeData[0]);
+  int* nodeKind = (int*)(&nodeData[4]);
+  float* vec3f = (float*)(&nodeData[8]);
+  for (int i = 0; i < nnod; i++)
+  {
+    fread(nodeData, 20, 1, nodesFile); // Read one set of Node Kind from the nodes file
+    node& node = nodes[*nodeId];
+    node.setValues(*nodeId, *nodeKind, vec3f);
+    node.nId = *nodeId;
+    for(int i = 0; i < 3; ++i)
     {
-      std::cout << "Error opening nodes file '" << nodesFile << "'" << std::endl;
-      return 1;
+      if (vec3f[i] > max[i]) { max[i] = vec3f[i]; }
+      if (vec3f[i] < min[i]) { min[i] = vec3f[i]; }
     }
-
-    std::ifstream input2;
-    input2.open( trianglesFile.c_str(), std::ios::in );
-    if (input2.is_open() == false)
-    {
-      std::cout << "Error opening nodes file '" << trianglesFile << "'" << std::endl;
-      return 1;
-    }
-
-    std::ofstream velocities;
-
-    input1>>nnod;
-    input2>>ntri;
-    std::cout<< "Number of nodes: " << nnod << std::endl;
-    std::cout<< "Number of triangles: " << ntri << std::endl;
-    std::cout<<std::endl;
-
-    //Allocate the triangle and node vectors
-    std::vector<node> nodes(nnod);
-    std::vector<triangle> triangles(ntri);
-    std::vector<int> tid(ntri);
-    std::vector<int> nodetype(nnod) ; //  added vi 09 to keep track of node type
-
-    //Read the nodes
-    std::cout << "reading nodes " << std::endl;
-    for (int i = 0 ; i < nnod ; i++ )
-      input1 >> id(nodes[i]) >> nodetype[i] >>nodes[i][0]>>nodes[i][1]>>nodes[i][2];
-    //  added a junk entry, 25 vi 09; changed to nodetype, 26 vi 09
-    std::cout << "end reading nodes"<< std::endl;
-
-    //Read the triangles
-    std::cout << "reading triangles: " << std::endl;
-    for (int i=0; i<ntri; i++) {
-    //char type[3];
-    int nid[3];
-    //int reg1, reg2;
-    input2 >> tid[i] >> nid[0] >> nid[1] >> nid[2]
-          >> junk >> junk >> junk
-           >> triangles[i].region1 >> triangles[i].region2 ;
-
-    triangles[i](0) = &nodes[nid[0]];
-    triangles[i](1) = &nodes[nid[1]];
-    triangles[i](2) = &nodes[nid[2]];
-    //  bool ok[3] = {false,false,false};
-    //  for (int j=0; j<nnod; j++) {
-    // //     if (id[j]==nid[0]) {triangles[i](0) = &nodes[j]; triangles[i].nids[0]= nid[0]; ok[0] = true;}
-    // //     else if (id[j]==nid[1]) {triangles[i](1) = &nodes[j]; triangles[i].nids[1]= nid[1];ok[1] = true;}
-    // //     else if (id[j]==nid[2]) {triangles[i](2) = &nodes[j]; triangles[i].nids[2]= nid[2];ok[2] = true;}
-    //    if (id(nodes[j])==nid[0]) {triangles[i](0) = &nodes[j];  ok[0] = true;}
-    //    else if (id(nodes[j])==nid[1]) {triangles[i](1) = &nodes[j]; ok[1] = true;}
-    //    else if (id(nodes[j])==nid[2]) {triangles[i](2) = &nodes[j]; ok[2] = true;}
-    //    if (ok[0] && ok[1] && ok[2]) break;
-    //  }
-    }
-    std::cout << "end reading triangles" << std::endl;
-
-
-    // Find the minimum and maximum dimension of the data
-    double min[3] = {2.0,2.0,2.0};
-    double max[3] = {0.0,0.0,0.0};
-
-    for (size_t i = 0; i < nodes.size(); i++)
-    {
-      for (size_t j = 0; j < 3; j++)
-      {
-        if (nodes[i][j] < min[j])
-          min[j] = nodes[i][j];
-        if (nodes[i][j] > max[j])
-          max[j] = nodes[i][j];
-      }
-    }
-    std::cout << "Model Dimensions: " << std::endl;
-    for(int i=0; i<3; i++)
+  }
+//  std::cout << "Number Nodes: " << nnod << std::endl;
+  std::cout << "Model Dimensions: " << std::endl;
+  for (int i = 0; i < 3; i++) {
     std::cout << min[i] << " " << max[i] << std::endl;
+  }
+  std::cout << "end reading nodes" << std::endl;
+  fclose(nodesFile);
+  // Read the Triangles File
+  fseek(triangleFile, 0, SEEK_END);
+  fLength = ftell(triangleFile);
+  ntri = fLength/24;
+  fseek(triangleFile, 0, SEEK_SET);
+  fLength = ftell(triangleFile);
+  if(0 != fLength)
+  {
+    assert(0 != fLength);
+  }
+  std::cout << "Number of triangles: " << ntri << std::endl;
 
-    //Allocate vectors and matricies
-    int n_size = 3*nodes.size();
-    Vector<double> x(n_size), F(n_size);
-    SMatrix<double> K(n_size,n_size);
-
-    //Allocate contants for solving linear equations
-    const double epsilon = 1.0; // change this if quality force too
-                  // high, low
-    const double dt = (40.0e-6)*(10/max[1]); // time step, change if
-    // mesh moves too much,
-    // little
-    double bc_dt ;  // for updating
-    const double small = 1.0e-12;
-    const double large = 1.0e+50;
-    const double one12th = 1.0/12.0;
-    const double tolerance = 1.0e-5; // Tolerance for nodes that are
-                     // near the RVE boundary
-
-    double A_scale, Q_scale; // Prefactors for quality and curvature forces
-    //   don't make these two values too far different
-    //  larger values should increase velocities
+  //Allocate the triangle and node vectors
+  std::vector<triangle> triangles(ntri);
+  std::vector<int> tid(ntri);
+  std::vector<int> nodetype(nnod);
 
 
-    //Variables for logging of quality progress
-    double Q_max, Q_sum, Q_ave, Q_max_ave;
-    int hist_count = 10;
+  //Read the triangles
+  std::cout << "reading triangles: " << std::endl;
+  int tData[6];
+  for (int i = 0; i < ntri; i++)
+  {
 
-    std::vector<double> Q_max_hist(hist_count);
+    fread(tData, sizeof(int), 6, triangleFile);
+    tid[i] = tData[0];
+    triangles[i].region1 = tData[4];
+    triangles[i].region2 = tData[5];
+//    triangleFile >> tid[i] >> nid[0] >> nid[1] >> nid[2] >> junk >> junk >> junk >> triangles[i].region1 >> triangles[i].region2;
 
-    Q_ave = 2.9 ;
-    Q_max_ave = 10 ;
+//    triangles[i](0) = &nodes[tData[1]];
+//    triangles[i](1) = &nodes[tData[2]];
+//    triangles[i](2) = &nodes[tData[3]];
+    triangles[i].setNodes(&nodes[tData[1]], &nodes[tData[2]], &nodes[tData[3]]);
+  }
+  std::cout << "end reading triangles" << std::endl;
+  fclose(triangleFile);
 
-    A_scale = 4000.0 ;
-    Q_scale = 500.0 ;
+  //Allocate vectors and matricies
+  int n_size = 3 * nodes.size();
+  Vector<float> x(n_size), F(n_size);
+  SMatrix<float> K(n_size, n_size);
 
+  //Allocate constants for solving linear equations
+  const float epsilon = 1.0; // change this if quality force too
+  // high, low
+  const float dt = (40.0e-6) * (10 / max[1]); // time step, change if
+  // mesh moves too much,
+  // little
+  float bc_dt; // for updating
+  const float small = 1.0e-12;
+  const float large = 1.0e+50;
+  const float one12th = 1.0 / 12.0;
+  const float tolerance = 1.0e-5; // Tolerance for nodes that are
+  // near the RVE boundary
 
-    // update loop
-    size_t count = 1;
-    int width = 0;
-    while (count < updatesMax)
-    {
-      ++width;
-      count *= 10;
+  float A_scale, Q_scale; // Pre-factors for quality and curvature forces
+  //   don't make these two values too far different
+  //  larger values should increase velocities
+
+  //Variables for logging of quality progress
+  float Q_max, Q_sum, Q_ave, Q_max_ave;
+  int hist_count = 10;
+
+  std::vector<float> Q_max_hist(hist_count);
+
+  Q_ave = 2.9;
+  Q_max_ave = 10;
+
+  A_scale = 4000.0;
+  Q_scale = 500.0;
+
+  // update loop
+  size_t count = 1;
+  int width = 0;
+  while (count < m_Iterations)
+  {
+    ++width;
+    count *= 10;
+  }
+
+  for (size_t updates = 1; updates <= m_Iterations; ++updates)
+  {
+    // changed arg index
+    std::cout << "Update loop: " << updates << std::endl;
+
+    // compute triangle contributions to K and F
+    int ntri = triangles.size();
+    Q_max = 0;
+    Q_sum = 0;
+    for (int t = 0; t < ntri; t++)
+    { // Loop through number of triangles
+      triangle& rtri = triangles[t];
+      Vector<float> n(3);
+      n = rtri.normal();
+      float A = rtri.area();
+      float Q = rtri.circularity(A);
+      Q_sum += Q;
+      if (Q > Q_max) Q_max = Q;
+      for (int n0 = 0; n0 < 3; n0++)
+      {
+        int i = rtri.getNode(n0).nId;
+        for (int j = 0; j < 3; j++)
+        {
+          node& aNode = nodes[i];
+          aNode.getPos(j) += small;
+//          nodes[i][j] += small;
+          float Anew = rtri.area();
+          float Qnew = rtri.circularity(Anew);
+          aNode.getPos(j) -= small;
+
+          F[3 * i + j] -= (A_scale * (Anew - A) + Q_scale * (Qnew - Q) * A) / small;
+        }
+        for (int n1 = 0; n1 < 3; n1++)
+        {
+          int h = rtri.getNode(n1).nId;
+          for (int k = 0; k < 3; k++) {
+            for (int j = 0; j < 3; j++) {
+              K[3 * h + k][3 * i + j] += one12th * (1.0 + delta(i, h)) * n[j] * n[k] * A;}}
+        }
+      }
     }
 
-    for (size_t updates = 1; updates <= updatesMax; ++updates)
+    // add epsilon to the diagonal
+    for (size_t r = 0; r < nodes.size(); r++) {
+      for (int s = 0; s < 3; s++) {
+        K[3 * r + s][3 * r + s] += epsilon; }}
+
+    // apply boundary conditions
+    // if node i, component j is constrained, do this...
+    // K[3*i+j][3*i+j] += large;
+    std::cout << "Applying Boundary Conditions...." << std::endl;
+    for (size_t r = 0; r < nodes.size(); r++)
     {
-      // changed arg index
-      std::cout << "Update loop: " << updates << std::endl;
-
-      // compute triangle contributions to K and F
-      int ntri = triangles.size();
-      Q_max = 0;
-      Q_sum = 0;
-      for (int t = 0; t < ntri; t++)
-      { // Loop through number of trianges
-        triangle& rtri = triangles[t];
-        Vector<double> n(3);
-        n = rtri.normal();
-        double A = rtri.area();
-        double Q = rtri.circularity(A);
-        Q_sum += Q;
-        if (Q > Q_max)
-          Q_max = Q;
-        for (int n0 = 0; n0 < 3; n0++)
-        {
-          int i = id(rtri[n0]);
-          for (int j = 0; j < 3; j++)
-          {
-            nodes[i][j] += small;
-            double Anew = rtri.area();
-            double Qnew = rtri.circularity(Anew);
-            nodes[i][j] -= small;
-            // if( (Q_ave < 3.0) && (Q_max_ave < 10) ){
-            //      A_scale = 4000.0;
-            //    Q_scale = 1000.0;
-            // } else {
-            //    A_scale = 1000;
-            //    Q_scale = 500;
-            // }
-            //F[3*i+j] -= ((Anew-A)*6500+(Qnew-Q)*800)/small;
-            //F[3*i+j] -= ((Anew-A)*1000+(Qnew-Q)*2500*A)/small;
-            F[3 * i + j] -= (A_scale * (Anew - A) + Q_scale * (Qnew - Q) * A) / small;
-          }
-          for (int n1 = 0; n1 < 3; n1++)
-          {
-            int h = id(rtri[n1]);
-            for (int k = 0; k < 3; k++)
-              for (int j = 0; j < 3; j++)
-                K[3 * h + k][3 * i + j] += one12th * (1.0 + delta(i, h)) * n[j] * n[k] * A;
-          }
-        }
-      }
-
-      // add epsilon to the diagonal
-      for (size_t r = 0; r < nodes.size(); r++)
-        for (int s = 0; s < 3; s++)
-          K[3 * r + s][3 * r + s] += epsilon;
-
-      // apply boundary conditions
-      // if node i, component j is constrained, do this...
-      // K[3*i+j][3*i+j] += large;
-      for (size_t r = 0; r < nodes.size(); r++)
-        for (int s = 0; s < 3; s++)
-        {
-          if (fabs(nodes[r][s] - max[s]) < tolerance)
-            K[3 * r + s][3 * r + s] += large;
-          if (fabs(nodes[r][s] - min[s]) < tolerance)
-            K[3 * r + s][3 * r + s] += large;
-        }
-
-      // solve for node velocities
-      int iterations = CR(K, x, F, 4000, 1.0e-5);
-      std::cout << iterations << " iterations ... " << std::endl;
-
-      //Update the quality information
-      if (updates - 1 < Q_max_hist.size())
+      node& aNode = nodes[r];
+      for (int s = 0; s < 3; s++)
       {
-        Q_max_hist[updates - 1] = Q_max;
+        if ( fabs(aNode.getPos(s) - max[s]) < tolerance) { K[3 * r + s][3 * r + s] += large; }
+        if ( fabs(aNode.getPos(s) - min[s]) < tolerance) { K[3 * r + s][3 * r + s] += large; }
       }
-      else
+    }
+    std::cout << "Solving for Node Velocities...." << std::endl;
+    // solve for node velocities
+    int iterations = CR(K, x, F, 4000, 1.0e-5f);
+    std::cout << iterations << " iterations ... " << std::endl;
+
+    //Update the quality information
+    if (updates - 1 < Q_max_hist.size())
+    {
+      Q_max_hist[updates - 1] = Q_max;
+    }
+    else
+    {
+
+      //Update the history of Q_max
+      for (size_t i = 0; i < Q_max_hist.size() - 1; i++)
       {
-
-        //Update the history of Q_max
-        for (size_t i = 0; i < Q_max_hist.size() - 1; i++)
-        {
-          // std::cout << i << " "<< Q_max_hist[i] << " " << Q_max_hist[i+1] << std::endl;
-          Q_max_hist[i] = Q_max_hist[i + 1];
-        }
-
-        Q_max_hist[Q_max_hist.size() - 1] = Q_max;
-
-        //Compute the rolling average of the Q_max
-        Q_max_ave = 0;
-        for (size_t i = 0; i < Q_max_hist.size(); i++)
-          Q_max_ave += Q_max_hist[i];
-        Q_max_ave /= Q_max_hist.size();
+        // std::cout << i << " "<< Q_max_hist[i] << " " << Q_max_hist[i+1] << std::endl;
+        Q_max_hist[i] = Q_max_hist[i + 1];
       }
-      Q_ave = Q_sum / ntri;
 
-      //  for(int i=0; i<Q_max_hist.size(); i++)
-      //    std::cout<<"Q_Max history ... "<<Q_max_hist[i]<<std::endl;
+      Q_max_hist[Q_max_hist.size() - 1] = Q_max;
+
+      //Compute the rolling average of the Q_max
+      Q_max_ave = 0;
+      for (size_t i = 0; i < Q_max_hist.size(); i++)
+        Q_max_ave += Q_max_hist[i];
+      Q_max_ave /= Q_max_hist.size();
+    }
+    Q_ave = Q_sum / ntri;
+
+    //  for(int i=0; i<Q_max_hist.size(); i++)
+    //    std::cout<<"Q_Max history ... "<<Q_max_hist[i]<<std::endl;
+
+    std::cout << "Maximum quality ... " << Q_max << std::endl;
+    std::cout << "Ave_Max quality ... " << Q_max_ave << std::endl;
+    std::cout << "Average quality ... " << Q_ave << std::endl;
+    std::cout << std::endl;
+
+    MAKE_UPDATES_FILE_PATH(IterationFile, DREAM3D::SurfaceSmoothing::Smooth3DIterationFile)
 
 
-      std::cout << "Maximum quality ... " << Q_max << std::endl;
-      std::cout << "Ave_Max quality ... " << Q_max_ave << std::endl;
-      std::cout << "Average quality ... " << Q_ave << std::endl;
 
-      std::cout << std::endl;
-
-      //Output velocities for examination
-      std::ostringstream iter_stream;
-      iter_stream.setf(std::ios::fixed);
-      iter_stream.fill('0');
-      // write the iteration to a string
-      iter_stream << outputDir << Separator << AIM::Representation::Smooth3DIterationFile
-            << "_" << std::setw(width) << updates << ".inp";
-
-
-      // update node positions
-      for (size_t r = 0; r < nodes.size(); r++)
+    // update node positions
+    for (size_t r = 0; r < nodes.size(); r++)
+    {
+      node& aNode = nodes[r];
+      for (int s = 0; s < 3; s++)
       {
-        //    velocityfile << r << " ";
-        for (int s = 0; s < 3; s++)
-        {
-          bc_dt = dt;
-          if ((fabs(nodes[r][s] - max[s]) < tolerance) || (fabs(nodes[r][s] - min[s]) < tolerance))
-            bc_dt = 0.0;
+        bc_dt = dt;
+        if ((fabs(aNode.getPos(s) - max[s]) < tolerance) || (fabs(aNode.getPos(s) - min[s]) < tolerance)) bc_dt = 0.0;
 
-          if (fabs(dt * x[3 * r + s]) > 1.0)
-            nodes[r][s] += 0.0;
-          else if (fabs(dt * x[3 * r + s]) < 1.0)
-            nodes[r][s] += bc_dt * x[3 * r + s];
-          // velocityfile  << std::scientific << std::setw(4)
-          // << std::setprecision(4) << F[3*r+s] << "\t"<< x[3*r+s] <<"\t";
-        }
-        //  velocityfile << std::endl;
+        if (fabs(dt * x[3 * r + s]) > 1.0) { aNode.getPos(s) += 0.0; }
+        else if (fabs(dt * x[3 * r + s]) < 1.0) { aNode.getPos(s) += bc_dt * x[3 * r + s]; }
       }
-      //  velocityfile.close();
-
-      //  if(!((updates)%10)){
-      if (!((updates) % interval))
-      {
-        // Open the outputfile
-        std::ofstream inpFileOStream;
-        inpFileOStream.open(iter_stream.str().c_str());
-        if (!inpFileOStream)
-        {
-          std::cout << "Failed to open: " << iter_stream.str() << std::endl;
-          return 1;
-        }
-
-        inpFileOStream << nnod << " " << ntri << " 0 2 0" << std::endl;
-        // the "0 2 0" signals the presence of upID downID output
-        for (int ia = 0; ia < nnod; ia++)
-          inpFileOStream << id(nodes[ia]) << " " << nodes[ia][0] << " " << nodes[ia][1] << " " << nodes[ia][2] << std::endl;
-
-        for (int i = 0; i < ntri; i++)
-        {
-          //    inpfile<<i<<" "<<triangles[i].region1>>triangles[i].region2<<" tri ";
-          inpFileOStream << i << " 0 tri ";
-          inpFileOStream << id(triangles[i][0]) << " ";
-          inpFileOStream << id(triangles[i][1]) << " ";
-          inpFileOStream << id(triangles[i][2]) << std::endl;
-          //inpfile<<triangles[i].region1<<" ";
-          //inpfile<<triangles[i].region2<<std::endl;
-        }
-
-        //    for(int i=0; i<data.size(); i++)
-
-        inpFileOStream << "2 1 1" << std::endl;
-        inpFileOStream << "minID, none" << std::endl;
-        inpFileOStream << "maxID, none" << std::endl;
-        for (int i = 0; i < ntri; i++) // ADR  25 jun 09
-          inpFileOStream << i << " " << triangles[i].region1 << " " << triangles[i].region2 << std::endl;
-
-        //    for (int i=0; i<ntri; i++) {
-        //    int r1 = triangles[i].region1;
-        //    int r2 = triangles[i].region2;
-        //    int min = (r1<r2 ? r1:r2);
-        //    int max = (r1>r2 ? r1:r2);
-        //    inpfile<<i<<" "<<min<<" "<<max<std::endl;
-        //    }
-
-        inpFileOStream.close();
-
-        std::string nodes_smoothed_txt = outputDir + Separator + AIM::Representation::NodesSmoothedFile;
-        inpFileOStream.open(nodes_smoothed_txt.c_str()); // output Sukbin style nodes
-        if (!inpFileOStream)
-        {
-          std::cout << "Failed to open: " << nodes_smoothed_txt << std::endl;
-          return 1;
-        }
-        inpFileOStream << nnod << std::endl;
-        for (int ia = 0; ia < nnod; ia++)
-          inpFileOStream << id(nodes[ia]) << " " << nodetype[ia] << " " << nodes[ia][0] << " " << nodes[ia][1] << " " << nodes[ia][2] << std::endl;
-
-      }
-
     }
 
-    //   // output sukbin nodes file
-    //   std::ofstream output(argv[2]);
-    //   output<<nnod<<std::endl;
-    //   for (int i=0; i<nnod; i++){
-    //  output<<std::setw(6)<<std::fixed<<"\t"
-    //    //<<id[i]<<"\t"
-    //    //<<nodes[i].line<<"\t"
-    //      <<nodes[i][0]<<"\t"<<nodes[i][1]<<"\t"<<nodes[i][2]<<std::endl;
-    //   }
+    if (!((updates) % m_OutputInterval))
+    {
+      // Open the outputfile
+      std::ofstream inpFileOStream;
+      inpFileOStream.open(IterationFile.c_str());
+      if (!inpFileOStream)
+      {
+        std::cout << "Failed to open: " << IterationFile << std::endl;
+        return -1;
+      }
 
+      inpFileOStream << nnod << " " << ntri << " 0 2 0" << std::endl;
+      // the "0 2 0" signals the presence of upID downID output
+      for (int ia = 0; ia < nnod; ia++) {
+        node& n = nodes[ia];
+        inpFileOStream << n.nId << " " << n.getPos(0) << " " << n.getPos(1) << " " << n.getPos(2) << std::endl;
+      }
 
-    //   std::ofstream avs("output.inp");
-    //   avs<<nnod<<" "<<ntri<<" 0 0 0"<<std::endl;
-    //   for (int i=0; i<nnod; i++)
-    //  avs<<id(nodes[i])<<" "<<nodes[i][0]<<" "<<nodes[i][1]<<" "<<nodes[i][2]<<std::endl;
+      for (int i = 0; i < ntri; i++)
+      {
+        //    inpfile<<i<<" "<<triangles[i].region1>>triangles[i].region2<<" tri ";
+        inpFileOStream << i << " 0 tri ";
+        node& n0 = triangles[i].getNode(0);
+        node& n1 = triangles[i].getNode(1);
+        node& n2 = triangles[i].getNode(2);
+        inpFileOStream << n0.nId << " ";
+        inpFileOStream << n1.nId << " ";
+        inpFileOStream << n2.nId << std::endl;
+        //inpfile<<triangles[i].region1<<" ";
+        //inpfile<<triangles[i].region2<<std::endl;
+      }
 
-    //   for (int i=0; i<ntri; i++) {
-    //  avs<<i<<" 0 tri ";
-    //  avs<<id(triangles[i][0])<<" ";
-    //  avs<<id(triangles[i][1])<<" ";
-    //  avs<<id(triangles[i][2])<<std::endl;
-    //   }
+      //    for(int i=0; i<data.size(); i++)
 
-    //   std::ofstream testput("test.txt");
-    //   testput<<ntri<<std::endl;
-    //   for (int i=0; i<ntri; i++){
-    //  testput<<tid[i]<< std::endl;
-    //  for(int j=0; j<3; j++)
-    //    testput << triangles[i].nids[j] << "\t" << std::endl;
-    //  testput << std::endl;
+      inpFileOStream << "2 1 1" << std::endl;
+      inpFileOStream << "minID, none" << std::endl;
+      inpFileOStream << "maxID, none" << std::endl;
+      for (int i = 0; i < ntri; i++) // ADR  25 jun 09
+        inpFileOStream << i << " " << triangles[i].region1 << " " << triangles[i].region2 << std::endl;
 
-    //   }
+      //    for (int i=0; i<ntri; i++) {
+      //    int r1 = triangles[i].region1;
+      //    int r2 = triangles[i].region2;
+      //    int min = (r1<r2 ? r1:r2);
+      //    int max = (r1>r2 ? r1:r2);
+      //    inpfile<<i<<" "<<min<<" "<<max<std::endl;
+      //    }
 
-    //  for (int i=0; i<ntri; i++) {
-    //    output<<tid[i]<<" tri ";
-    //    output<<id[(&triangles[i][0]-&nodes[0])/sizeof(node)]<<" ";
-    //    output<<id[(&triangles[i][1]-&nodes[0])/sizeof(node)]<<" ";
-    //    output<<id[(&triangles[i][2]-&nodes[0])/sizeof(node)]<<std::endl;
-    //  }
+      inpFileOStream.close();
+
+      MAKE_OUTPUT_FILE_PATH(nodes_smoothed_txt, DREAM3D::SurfaceSmoothing::NodesSmoothedFile);
+
+      inpFileOStream.open(nodes_smoothed_txt.c_str()); // output Sukbin style nodes
+      if (!inpFileOStream)
+      {
+        std::cout << "Failed to open: " << nodes_smoothed_txt << std::endl;
+        return 1;
+      }
+      inpFileOStream << nnod << std::endl;
+      for (int ia = 0; ia < nnod; ia++) {
+        node& n0 = nodes[ia];
+        inpFileOStream << n0.nId << " " << nodetype[ia] << " " << n0.getPos(0) << " " << n0.getPos(1)<< " " << n0.getPos(2) << std::endl;
+      }
+      inpFileOStream.close();
+    }
+
+  }
+
+  std::cout << "Writing new Nodes File...." << std::endl;
+  // Over Write the Nodes file with the new positions.
+  static const size_t BYTE_COUNT = 20;
+  size_t totalWritten = 0;
+  FILE* f = NULL;
+
+  // Create a new file, over writing our current file
+  f = fopen(m_NodesFile.c_str(), "wb");
+  if (NULL == f)
+  {
+    return -1;
+  }
+
+  // Write each node to the file
+  for (int k = 0; k < nnod; k++)
+  {
+    *nodeId = nodes[k].nId;
+    *nodeKind = nodes[k].nType;
+    vec3f[0] = nodes[k].getPos(0);
+    vec3f[1] = nodes[k].getPos(1);
+    vec3f[2] = nodes[k].getPos(2);
+    //      fprintf(f, "%d %d %f %f %f\n", tID, nk, x, y, z);
+    totalWritten = fwrite(nodeData, sizeof(unsigned char), BYTE_COUNT, f);
+    if (totalWritten != BYTE_COUNT)
+    {
+      std::cout << "Not enough data written to the Nodes file." << std::endl;
+      fclose(f); // Close the Nodes file.
+      return -1;
+    }
+
+  }
+  fclose(f); // Close the Nodes file.
+
 
   return err;
 }
-
-
-#ifndef SMOOTH_MESH_LIBRARY
-
-#include <DREAM3D/DREAM3DVersion.h>
-
-#include <MXA/Common/LogTime.h>
-#include <MXA/Utilities/MXALogger.h>
-
-
-#include <string>
-#include <iostream>
-
-//-- Boost Program Options
-#include <boost/program_options.hpp>
-
-#include <iostream>
-
-
-#define CHECK_ARG(var, mandatory)\
-    if (vm.count(#var) > 1) { mxa_log << logTime() << "Multiple Occurances for Parameter " << #var << std::endl; }\
-    if (vm.count(#var) == 0 && mandatory == true) { \
-    mxa_log << "Parameter --" << #var << " ==> Required. Program will Terminate." << std::endl; }\
-    if (vm.count(#var) == 0 && mandatory == false) { \
-    mxa_log << "--" << #var << " Using Default: '"  << var << "'" << std::endl; }\
-    if (vm.count(#var) == 1 && mandatory == true) { \
-    mxa_log << "--" << #var << " Value: '"  << var << "'" << std::endl; }
-
-#define CHECK_BOOL_ARG(var)\
-  mxa_log << "--" << #var << " is ";\
-  if (var == true) { mxa_log << "TRUE"; } else { mxa_log << "FALSE"; }\
-  mxa_log << "" << std::endl;
-
-
-
-
-int main(int argc, char* argv[])
-{
-  std::cout << "Starting Mesh Smoothing ... " << std::endl;
-  MXALOGGER_METHOD_VARIABLE_INSTANCE
-
-  std::string nodesFile;
-  std::string trianglesFile;
-  std::string outputDir;
-  int iterations = 0;
-  int writeinterval = 0;
-  bool lockQuadPoints = 0;
-  std::string logFile;
-
-  // Handle program options passed on command line.
-  boost::program_options::options_description desc("Possible Parameters");
-  desc.add_options()
-  ("help", "Produce help message")
-  ("nodesFile", boost::program_options::value<std::string>(&nodesFile), "REQUIRED: Input Nodes File")
-  ("trianglesFile", boost::program_options::value<std::string>(&trianglesFile), "REQUIRED: Input Triangles File")
-  ("outputDir", boost::program_options::value<std::string>(&outputDir), "REQUIRED: Output Directory")
-  ("iterations", boost::program_options::value<int>(&iterations), "How many iterations to use to smooth the mesh")
-  ("writeinterval", boost::program_options::value<int>(&writeinterval), "The inrement in iterations to write an output file")
-  ("lockQuadPoints", boost::program_options::bool_switch(&lockQuadPoints), "Lock The Quad Points during smoothing [Default=FALSE")
-  ;
-
-  int err = 0;
-  try
-     {
-
-       boost::program_options::variables_map vm;
-       boost::program_options::store(boost::program_options::parse_command_line(argc, argv, desc), vm);
-       boost::program_options::notify(vm);
-
-       // Print help message if requested by user and return.
-       if (vm.count("help") || argc < 2)
-       {
-         std::cout << desc << std::endl;
-         return EXIT_SUCCESS;
-       }
-       if (vm.count("logfile") != 0)
-       {
-         logFile = MXAFileSystemPath::toNativeSeparators(logFile);
-       }
-       if (false == logFile.empty())
-       {
-         mxa_log.open(logFile);
-       }
-       mxa_log << logTime() << "Surface Mesh Smoothing " << AIMRepresentation::Version::Complete << " Starting " << std::endl;
-
-       mxa_log << "Parameters being used are: " << std::endl;
-
-       CHECK_ARG( nodesFile, true);
-       CHECK_ARG( trianglesFile, true);
-       CHECK_ARG( outputDir, true);
-       CHECK_ARG( iterations, true);
-       CHECK_ARG( writeinterval, true);
-       CHECK_ARG( lockQuadPoints, true);
-
-       int m_lockquads = 0;
-       if (lockQuadPoints) { m_lockquads = 1; }
-
-       err = SmoothGrain3D(nodesFile, trianglesFile, outputDir, iterations, writeinterval, m_lockquads);
-
-     } catch (...)
-         {
-           std::cout << "Error on Input: Displaying help listing instead. **" << std::endl;
-           std::cout << desc << std::endl;
-           for (int i = 0; i < argc; ++i)
-           {
-             std::cout << argv[i] << std::endl;
-           }
-           return EXIT_FAILURE;
-         }
-         std::cout << "++++++++++++ Surface Mesh Smoothing Complete ++++++++++++" << std::endl;
-         return err;
-}
-#endif

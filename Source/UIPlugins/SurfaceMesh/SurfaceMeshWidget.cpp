@@ -48,7 +48,7 @@
 
 #include "QtSupport/QR3DFileCompleter.h"
 #include "QtSupport/AIM_QtMacros.h"
-#include "DREAM3D/SurfaceMesh/SMVtkFileIO.h"
+#include "DREAM3D/SurfaceMesh/Meshing/SMVtkFileIO.h"
 #include "DREAM3D/HDF5/H5VoxelReader.h"
 
 

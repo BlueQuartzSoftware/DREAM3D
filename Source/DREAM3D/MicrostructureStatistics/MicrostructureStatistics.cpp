@@ -35,8 +35,8 @@
 #include "MXA/Common/LogTime.h"
 #include "MXA/Utilities/MXADir.h"
 
-#include "ANG/AngDirectoryPatterns.h"
-#include "ANG/AngReader.h"
+#include "TSLLib/AngDirectoryPatterns.h"
+#include "TSLLib/AngReader.h"
 
 #include "DREAM3D/ANGSupport/AbstractAngDataLoader.h"
 #include "DREAM3D/ANGSupport/AngDataLoader.h"

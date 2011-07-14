@@ -12,14 +12,14 @@ one is as follows:
 
 @subsection sm1 Nodes File
 
-The nodes file is made up of n number of nodes where each node has the following
+The nodes file is made up of n number of node records where each node has the following
 fields:
 @li Node ID; 4 Byte Unsigned Int
 @li Node Kind: 4 Byte Unsigned Int
-@li X Pos: 8 Byte Floating Point number
-@li Y Pos: 8 Byte Floating Point number
-@li Z Pos: 8 Byte Floating Point number
- The total byte count of each Node Record is 32 bytes
+@li X Pos: 4 Byte Floating Point number
+@li Y Pos: 4 Byte Floating Point number
+@li Z Pos: 4 Byte Floating Point number
+ The total byte count of each Node Record is 20 bytes
 
 
 @subsection sm3 Triangle File
@@ -33,6 +33,7 @@ the following fields:
 @li N3: The third Node's index into the Nodes Array. 4 Byte Unsigned Int
 @li Grain ID 1: The First grain the triangle belongs to. 4 Byte Unsigned Int
 @li Grain ID 2: The Second grain the triangle belongs to. 4 Byte Unsigned Int
+ The total byte count for each Triangle Record is 24 bytes
 
 Each Triangle is shared between 2 grains.
 
