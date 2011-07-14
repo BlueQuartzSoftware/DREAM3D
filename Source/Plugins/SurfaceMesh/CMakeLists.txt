@@ -16,7 +16,7 @@ else()
     message(FATAL_ERROR "Qt 4 is Needed for this project.")
 endif(QT4_FOUND)
 
-add_definitions(-DDREAM3D_USE_QT)
+add_definitions(-DUSE_QT)
 include_directories(${PROJECT_SOURCE_DIR} ${PROJECT_BINARY_DIR} ${PROJECT_SOURCE_DIR}/..)
 include_directories(${PROJECT_CODE_DIR} )
 include_directories(${PROJECT_CODE_DIR}/QtSupport )
@@ -28,14 +28,14 @@ configure_file( ${PROJECT_CODE_DIR}/QtSupport/QAbstractPipelineWrapper.h.in
                 ${${CLASS_NAME}Plugin_BINARY_DIR}/Q${CLASS_NAME}.h @ONLY IMMEDIATE)
 
 
-set (SurfaceMeshPlugin_HDRS
+set (SurfaceMeshPlugin_UI_HDRS
     ${${CLASS_NAME}Plugin_BINARY_DIR}/Q${CLASS_NAME}.h
     ${PROJECT_SOURCE_DIR}/UI/SurfaceMeshPlugin.h
     ${PROJECT_SOURCE_DIR}/UI/SurfaceMeshWidget.h
     ${PROJECT_CODE_DIR}/QtSupport/AIMPluginFrame.h
     )
     
-set (SurfaceMeshPlugin_SRCS 
+set (SurfaceMeshPlugin_UI_SRCS 
     ${PROJECT_SOURCE_DIR}/UI/SurfaceMeshPlugin.cpp
     ${PROJECT_SOURCE_DIR}/UI/SurfaceMeshWidget.cpp
     ${PROJECT_CODE_DIR}/QtSupport/AIMPluginFrame.cpp
@@ -47,19 +47,83 @@ QT4_ADD_RESOURCES( SurfaceMeshPlugin_Generated_RC_SRCS ${PROJECT_SOURCE_DIR}/UI/
 QT4_WRAP_UI( SurfaceMeshPlugin_Generated_UI_HDRS 
             ${PROJECT_SOURCE_DIR}/UI/SurfaceMeshWidget.ui )
 
-QT4_WRAP_CPP( SurfaceMeshPlugin_Generated_MOC_SRCS ${SurfaceMeshPlugin_HDRS} )
+QT4_WRAP_CPP( SurfaceMeshPlugin_Generated_MOC_SRCS ${SurfaceMeshPlugin_UI_HDRS} )
 
+
+cmp_IDE_SOURCE_PROPERTIES("SurfaceMesh/UI/" "${SurfaceMeshPlugin_UI_HDRS}" "${SurfaceMeshPlugin_UI_SRCS}" "0")
+cmp_IDE_SOURCE_PROPERTIES("Generated" "${SurfaceMeshPlugin_Generated_UI_HDRS}" "${SurfaceMeshPlugin_Generated_MOC_SRCS}" "0")
+
+
+
+
+SET (SurfaceMesh_HDRS
+  ${PROJECT_SOURCE_DIR}/SurfaceMesh.h
+  ${PROJECT_SOURCE_DIR}/SurfaceMeshFunc.h
+
+  )
+
+SET (SurfaceMesh_SRCS
+  ${PROJECT_SOURCE_DIR}/SurfaceMesh.cpp
+  ${PROJECT_SOURCE_DIR}/SurfaceMeshFunc.cpp
+
+)
+cmp_IDE_SOURCE_PROPERTIES( "DREAM3DLib/SurfaceMesh" "${SurfaceMesh_HDRS}" "${SurfaceMesh_SRCS}" "0")
+
+
+SET (MESHING_SRCS
+  ${PROJECT_SOURCE_DIR}/Meshing/Face.h
+  ${PROJECT_SOURCE_DIR}/Meshing/Neighbor.h
+  ${PROJECT_SOURCE_DIR}/Meshing/Node.h
+  ${PROJECT_SOURCE_DIR}/Meshing/Patch.h
+  ${PROJECT_SOURCE_DIR}/Meshing/Segment.h
+  ${PROJECT_SOURCE_DIR}/Meshing/STLWriter.h
+  ${PROJECT_SOURCE_DIR}/Meshing/SMVtkFileIO.h
+)
+SET (MESHING_HDRS
+  ${PROJECT_SOURCE_DIR}/Meshing/Face.cpp
+  ${PROJECT_SOURCE_DIR}/Meshing/Neighbor.cpp
+  ${PROJECT_SOURCE_DIR}/Meshing/Node.cpp
+  ${PROJECT_SOURCE_DIR}/Meshing/Patch.cpp
+  ${PROJECT_SOURCE_DIR}/Meshing/Segment.cpp
+  ${PROJECT_SOURCE_DIR}/Meshing/STLWriter.cpp
+  ${PROJECT_SOURCE_DIR}/Meshing/SMVtkFileIO.cpp
+)
+cmp_IDE_SOURCE_PROPERTIES( "SurfaceMesh/Meshing" "${MESHING_HDRS}" "${MESHING_SRCS}" "0")
+
+SET (SMOOTHING_SRCS
+    ${PROJECT_SOURCE_DIR}/Smoothing/Smoothing.cpp
+)
+SET (SMOOTHING_HDRS
+    ${PROJECT_SOURCE_DIR}/Smoothing/Smoothing.h
+    ${PROJECT_SOURCE_DIR}/Smoothing/LinearAlgebra.h
+    ${PROJECT_SOURCE_DIR}/Smoothing/Triangle.hpp
+    ${PROJECT_SOURCE_DIR}/Smoothing/Node.hpp
+)
+cmp_IDE_SOURCE_PROPERTIES( "SurfaceMesh/Smoothing" "${SMOOTHING_HDRS}" "${SMOOTHING_SRCS}" "0")
+
+
+if ( ${DREAM3D_INSTALL_FILES} EQUAL 1 )
+    INSTALL (FILES ${SurfaceMesh_HDRS} ${MESHING_HDRS} ${SMOOTHING_HDRS}
+            DESTINATION include/DREAM3D/SurfaceMesh
+            COMPONENT Headers   )
+endif()
+
+
+#-- Gather all the project source files in this variable
 set (SurfaceMeshPlugin_PROJECT_SRCS
-    ${SurfaceMeshPlugin_SRCS}
-    ${SurfaceMeshPlugin_HDRS}
+    ${SurfaceMeshPlugin_UI_SRCS}
+    ${SurfaceMeshPlugin_UI_HDRS}
     ${SurfaceMeshPlugin_Generated_MOC_SRCS} 
     ${SurfaceMeshPlugin_Generated_UI_HDRS}
     ${SurfaceMeshPlugin_Generated_RC_SRCS}
     ${PROJECT_CODE_DIR}/QtSupport/DREAM3DPluginInterface.h
+    ${SurfaceMesh_HDRS}
+    ${SurfaceMesh_SRCS}
+    ${MESHING_SRCS}
+    ${MESHING_HDRS}
+    ${SMOOTHING_SRCS}
+    ${SMOOTHING_HDRS}
 )
-
-cmp_IDE_SOURCE_PROPERTIES("Source/UI/" "${SurfaceMeshPlugin_HDRS}" "${SurfaceMeshPlugin_SRCS}" "0")
-cmp_IDE_SOURCE_PROPERTIES("Generated" "${SurfaceMeshPlugin_Generated_UI_HDRS}" "${SurfaceMeshPlugin_Generated_MOC_SRCS}" "0")
 
 # ---------- Setup output Directories -------------------------
 if(NOT MSVC)
@@ -73,8 +137,8 @@ target_link_libraries(SurfaceMeshPlugin
                     ${QT_QTGUI_LIBRARY}
                     QtSupport 
                      )
-PluginProperties(SurfaceMeshPlugin "_debug" "${DREAM3D_VERSION}" 
-                "${DREAM3D_BINARY_DIR}" "${CMP_PLUGIN_LIST_FILE}")
+PluginProperties(SurfaceMeshPlugin "_debug" "${VERSION}" 
+                "${BINARY_DIR}" "${CMP_PLUGIN_LIST_FILE}")
 
 if (NOT MSVC)
   SET (CMAKE_LIBRARY_OUTPUT_DIRECTORY  ${DREAM3D_BINARY_DIR}/Bin  )
@@ -97,3 +161,28 @@ install(FILES ${${PLUGIN_NAME}_HELP_FILES}
         DESTINATION Help/${PLUGIN_NAME}
         COMPONENT Applications )
   
+# Create a Command line tool for the SurfaceMesh
+# --------------------------------------------------------------------
+# Setup the install rules for the various platforms
+set(install_dir "tools")
+if (WIN32)
+    set (install_dir ".")
+endif()
+COMPILE_TOOL(
+    TARGET SurfaceMesh
+    SOURCES ${PROJECT_SOURCE_DIR}/Tools/SurfaceMeshMain.cpp     ${SurfaceMesh_HDRS}
+                                                                ${SurfaceMesh_SRCS}
+                                                                ${MESHING_SRCS}
+                                                                ${MESHING_HDRS}
+                                                                ${SMOOTHING_SRCS}
+                                                                ${SMOOTHING_HDRS}
+    DEBUG_EXTENSION ${EXE_DEBUG_EXTENSION}
+    VERSION_MAJOR ${DREAM3D_VER_MAJOR}
+    VERSION_MINOR ${DREAM3D_VER_MINOR}
+    VERSION_PATCH ${DREAM3D_VER_PATCH}
+    BINARY_DIR    ${${PROJECT_NAME}_BINARY_DIR}
+    COMPONENT     Applications
+    INSTALL_DEST  "${install_dir}" 
+    LINK_LIBRARIES DREAM3DLib
+)
+

@@ -1,5 +1,4 @@
 SET (DREAM3D_Parallel_HDRS
-  ${DREAM3DLib_SOURCE_DIR}/Parallel/Algo.hpp
 )
 
 SET (DREAM3D_Parallel_SRCS
