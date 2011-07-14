@@ -48,13 +48,14 @@
 
 #include "DREAM3D/Common/Constants.h"
 #include "DREAM3D/Common/ShapeType.h"
-#include "DREAM3D/GrainGenerator/GrainGenerator.h"
 #include "DREAM3D/HDF5/H5ReconStatsReader.h"
 #include "DREAM3D/HDF5/H5ReconStatsWriter.h"
 
 #include "QtSupport/AIM_QtMacros.h"
 #include "QtSupport/QR3DFileCompleter.h"
 #include "QtSupport/QCheckboxDialog.h"
+
+#include "GrainGenerator/GrainGenerator.h"
 
 const static float m_pi = M_PI;
 

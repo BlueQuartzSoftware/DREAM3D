@@ -28,14 +28,14 @@ configure_file( ${PROJECT_CODE_DIR}/QtSupport/QAbstractPipelineWrapper.h.in
                 ${${CLASS_NAME}Plugin_BINARY_DIR}/Q${CLASS_NAME}.h @ONLY IMMEDIATE)
 
 
-set (OIMImportPlugin_HDRS
+set (OIMImportPlugin_UI_HDRS
     ${${CLASS_NAME}Plugin_BINARY_DIR}/Q${CLASS_NAME}.h
     ${PROJECT_SOURCE_DIR}/UI/OIMImportPlugin.h
     ${PROJECT_SOURCE_DIR}/UI/OIMImportWidget.h
     ${PROJECT_CODE_DIR}/QtSupport/AIMPluginFrame.h
     )
     
-set (OIMImportPlugin_SRCS 
+set (OIMImportPlugin_UI_SRCS 
     ${PROJECT_SOURCE_DIR}/UI/OIMImportPlugin.cpp
     ${PROJECT_SOURCE_DIR}/UI/OIMImportWidget.cpp
     ${PROJECT_CODE_DIR}/QtSupport/AIMPluginFrame.cpp
@@ -49,19 +49,37 @@ QT4_ADD_RESOURCES( OIMImportPlugin_Generated_RC_SRCS
 QT4_WRAP_UI( OIMImportPlugin_Generated_UI_HDRS 
             ${PROJECT_SOURCE_DIR}/UI/OIMImportWidget.ui )
 
-QT4_WRAP_CPP( OIMImportPlugin_Generated_MOC_SRCS ${OIMImportPlugin_HDRS} )
+QT4_WRAP_CPP( OIMImportPlugin_Generated_MOC_SRCS ${OIMImportPlugin_UI_HDRS} )
+
+cmp_IDE_SOURCE_PROPERTIES("OIMImport/UI/" "${OIMImportPlugin_UI_HDRS}" "${OIMImportPlugin_UI_SRCS}" "0")
+cmp_IDE_SOURCE_PROPERTIES("Generated" "${OIMImportPlugin_Generated_UI_HDRS}" "${OIMImportPlugin_Generated_MOC_SRCS}" "0")
+
+#-- Setup NON Qt Source files
+SET (OIMImport_HDRS
+  ${PROJECT_SOURCE_DIR}/OIMImport.h
+)
+
+SET (OIMImport_SRCS
+ ${PROJECT_SOURCE_DIR}/OIMImport.cpp
+)
+cmp_IDE_SOURCE_PROPERTIES( "OIMImport/" "${OIMImport_HDRS}" "${OIMImport_SRCS}" "0")
+if ( ${DREAM3D_INSTALL_FILES} EQUAL 1 )
+    INSTALL (FILES ${OIMImport_HDRS}
+            DESTINATION include/DREAM3D/OIMImport
+            COMPONENT Headers   )
+endif()
 
 set (OIMImportPlugin_PROJECT_SRCS
-    ${OIMImportPlugin_SRCS}
-    ${OIMImportPlugin_HDRS}
+    ${OIMImportPlugin_UI_SRCS}
+    ${OIMImportPlugin_UI_HDRS}
     ${OIMImportPlugin_Generated_MOC_SRCS} 
     ${OIMImportPlugin_Generated_UI_HDRS}
     ${OIMImportPlugin_Generated_RC_SRCS}
     ${PROJECT_CODE_DIR}/QtSupport/DREAM3DPluginInterface.h
+    ${OIMImport_HDRS}
+    ${OIMImport_SRCS}
 )
 
-cmp_IDE_SOURCE_PROPERTIES("Source/UI/" "${OIMImportPlugin_HDRS}" "${OIMImportPlugin_SRCS}" "0")
-cmp_IDE_SOURCE_PROPERTIES("Generated" "${OIMImportPlugin_Generated_UI_HDRS}" "${OIMImportPlugin_Generated_MOC_SRCS}" "0")
 
 # ---------- Setup output Directories -------------------------
 if(NOT MSVC)

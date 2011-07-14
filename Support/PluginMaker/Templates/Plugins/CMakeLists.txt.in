@@ -1,0 +1,115 @@
+message(STATUS "@PluginName@Plugin Being Configured")
+project(@PluginName@Plugin)
+
+set(PLUGIN_NAME @PluginName@)
+
+# ------------------------------------------------------------------------------
+#  Qt 4 Section
+# ------------------------------------------------------------------------------
+if(QT4_FOUND)
+    include( ${QT_USE_FILE} )
+else()
+    message(FATAL_ERROR "Qt 4 is Needed for this project.")
+endif(QT4_FOUND)
+
+add_definitions(-DDREAM3D_USE_QT)
+include_directories(${PROJECT_SOURCE_DIR} ${PROJECT_BINARY_DIR} ${PROJECT_SOURCE_DIR}/..)
+include_directories(${PROJECT_CODE_DIR} )
+include_directories(${PROJECT_CODE_DIR}/QtSupport )
+include_directories(${DREAM3D_BINARY_DIR}/QtSupport)
+
+set(CLASS_NAME "@PluginName@")
+SET(ORIGINAL_FILE ${PROJECT_CODE_DIR}/QtSupport/QAbstractPipelineWrapper.h.in)
+configure_file( ${PROJECT_CODE_DIR}/QtSupport/QAbstractPipelineWrapper.h.in
+                ${${CLASS_NAME}Plugin_BINARY_DIR}/Q${CLASS_NAME}.h @ONLY IMMEDIATE)
+
+set (@PluginName@Plugin_UI_HDRS
+    ${${CLASS_NAME}Plugin_BINARY_DIR}/Q${CLASS_NAME}.h
+    ${PROJECT_SOURCE_DIR}/@PluginName@Plugin.h
+    ${PROJECT_SOURCE_DIR}/@PluginName@Widget.h
+    ${PROJECT_CODE_DIR}/QtSupport/AIMPluginFrame.h
+    )
+    
+set (@PluginName@Plugin_UI_SRCS 
+    ${PROJECT_SOURCE_DIR}/@PluginName@Plugin.cpp
+    ${PROJECT_SOURCE_DIR}/@PluginName@Widget.cpp
+    ${PROJECT_CODE_DIR}/QtSupport/AIMPluginFrame.cpp
+    )
+
+# -- Run MOC and UIC on the necessary files   
+QT4_ADD_RESOURCES( @PluginName@Plugin_Generated_RC_SRCS ${PROJECT_SOURCE_DIR}/UI/Icons.qrc)    
+    
+QT4_WRAP_UI( @PluginName@Plugin_Generated_UI_HDRS 
+            ${PROJECT_SOURCE_DIR}/UI/@PluginName@Widget.ui )
+
+QT4_WRAP_CPP( @PluginName@Plugin_Generated_MOC_SRCS ${@PluginName@Plugin_HDRS} )
+
+cmp_IDE_SOURCE_PROPERTIES("@PluginName@/UI/" "${@PluginName@Plugin_UI_HDRS}" "${@PluginName@Plugin_UI_SRCS}" "0")
+cmp_IDE_SOURCE_PROPERTIES("Generated" "${@PluginName@Plugin_Generated_UI_HDRS}" "${@PluginName@Plugin_Generated_MOC_SRCS}" "0")
+
+
+SET (@PluginName@_HDRS
+  ${PROJECT_SOURCE_DIR}/@PluginName@.h
+  ${PROJECT_SOURCE_DIR}/@PluginName@Func.h
+)
+
+SET (@PluginName@_SRCS
+  ${PROJECT_SOURCE_DIR}/@PluginName@.cpp
+  ${PROJECT_SOURCE_DIR}/@PluginName@Func.cpp
+)
+cmp_IDE_SOURCE_PROPERTIES( "@PluginName@" "${@PluginName@_HDRS}" "${@PluginName@_SRCS}" "0")
+if ( ${DREAM3D_INSTALL_FILES} EQUAL 1 )
+    INSTALL (FILES ${@PluginName@_HDRS}
+            DESTINATION include/DREAM3D/@PluginName@
+            COMPONENT Headers   )
+endif()
+
+
+
+set (@PluginName@Plugin_PROJECT_SRCS
+    ${@PluginName@Plugin_SRCS}
+    ${@PluginName@Plugin_HDRS}
+    ${@PluginName@Plugin_Generated_MOC_SRCS} 
+    ${@PluginName@Plugin_Generated_UI_HDRS}
+    ${@PluginName@Plugin_Generated_RC_SRCS}
+    ${PROJECT_CODE_DIR}/QtSupport/DREAM3DPluginInterface.h
+    ${@PluginName@_HDRS}
+    ${@PluginName@_SRCS}
+)
+
+# ---------- Setup output Directories -------------------------
+if(NOT MSVC)
+  SET (CMAKE_LIBRARY_OUTPUT_DIRECTORY  ${DREAM3D_BINARY_DIR}/Bin/plugins  )
+endif()
+add_library(@PluginName@Plugin MODULE ${@PluginName@Plugin_PROJECT_SRCS})
+target_link_libraries(@PluginName@Plugin 
+                    MXADataModel
+                    DREAM3DLib
+                    ${QT_QTCORE_LIBRARY}   
+                    ${QT_QTGUI_LIBRARY}
+                    QtSupport 
+                     )
+PluginProperties(@PluginName@Plugin "_debug" "${DREAM3D_VERSION}" 
+                "${DREAM3D_BINARY_DIR}" "${CMP_PLUGIN_LIST_FILE}")
+
+if (NOT MSVC)
+  SET (CMAKE_LIBRARY_OUTPUT_DIRECTORY  ${DREAM3D_BINARY_DIR}/Bin  )
+endif()
+
+
+set(${PLUGIN_NAME}_HELP_FILES
+    ${PROJECT_SOURCE_DIR}/UI/Help/index.html)
+
+#- This copies all the HTML files into the Build directory so the help
+#- works from the Build Tree
+file(COPY ${${PLUGIN_NAME}_HELP_FILES} DESTINATION ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/Help/${PLUGIN_NAME}/ )
+
+#- This installs all the help files. Note that we assume a flat directory structure
+#- in the "Help" folder, ie, all html files, images, etc are all in the "Help"
+#- folder and NOT in any subfolders beyond that.
+install(FILES ${${PLUGIN_NAME}_HELP_FILES}
+        DESTINATION Help/@PluginName@
+        COMPONENT Applications )
+  
+
+

@@ -39,7 +39,7 @@
 #include "TSLLib/AngReader.h"
 #include "TSLLib/H5AngReader.h"
 
-#include "DREAM3D/OIMImport/OIMImport.h"
+#include "OIMImport/OIMImport.h"
 
 
 #if _WIN32_

@@ -34,12 +34,14 @@ target_link_libraries(AngDirectoryPattern MXA)
 endif()
 
 include_directories(${DREAM3D_SOURCE_DIR}/Source/Applications)
+include_directories(${DREAM3D_SOURCE_DIR}/Source/Plugins)
 
 add_executable(ODFTest ${AIMTest_SOURCE_DIR}/ODFTest.cpp  ${DREAM3D_SOURCE_DIR}/Source/Applications/StatsGenerator/StatsGen.cpp)
 target_link_libraries(ODFTest DREAM3DLib)
 
 
-add_executable(AngReaderTest ${AIMTest_SOURCE_DIR}/AngReaderTest.cpp ${DREAM3D_SOURCE_DIR}/Source/DREAM3D/OIMImport/OIMImport.cpp)
+add_executable(AngReaderTest ${AIMTest_SOURCE_DIR}/AngReaderTest.cpp 
+                            ${DREAM3D_SOURCE_DIR}/Source/Plugins/OIMImport/OIMImport.cpp)
 target_link_libraries(AngReaderTest DREAM3DLib)
 
 add_executable(VoxelTest ${AIMTest_SOURCE_DIR}/VoxelTest.cpp)
@@ -48,13 +50,19 @@ add_executable(VoxelTest ${AIMTest_SOURCE_DIR}/VoxelTest.cpp)
 add_executable(TextureTest ${AIMTest_SOURCE_DIR}/TextureTest.cpp)
 target_link_libraries(TextureTest DREAM3DLib)
 
-add_executable(VTKFileWritersTest ${AIMTest_SOURCE_DIR}/VTKFileWritersTest.cpp)
+add_executable(VTKFileWritersTest ${AIMTest_SOURCE_DIR}/VTKFileWritersTest.cpp
+                ${DREAM3D_SOURCE_DIR}/Source/Plugins/GrainGenerator/GrainGeneratorFunc.cpp
+                ${DREAM3D_SOURCE_DIR}/Source/Plugins/Reconstruction/ReconstructionFunc.cpp
+                ${DREAM3D_SOURCE_DIR}/Source/Plugins/MicrostructureStatistics/MicrostructureStatisticsFunc.cpp
+)
 target_link_libraries(VTKFileWritersTest DREAM3DLib)
 
 add_executable(PhWriterTest ${AIMTest_SOURCE_DIR}/PhWriterTest.cpp)
 target_link_libraries(PhWriterTest DREAM3DLib)
 
-add_executable(DxTest ${AIMTest_SOURCE_DIR}/DxTest.cpp)
+add_executable(DxTest ${AIMTest_SOURCE_DIR}/DxTest.cpp 
+                        ${DREAM3D_SOURCE_DIR}/Source/Plugins/GrainGenerator/GrainGeneratorFunc.cpp
+                        ${DREAM3D_SOURCE_DIR}/Source/Plugins/GrainGenerator/StructureReaders/DXStructureReader.cpp  )
 target_link_libraries(DxTest DREAM3DLib)
 
 add_executable(SurfaceMeshTest ${AIMTest_SOURCE_DIR}/SurfaceMeshTest.cpp)

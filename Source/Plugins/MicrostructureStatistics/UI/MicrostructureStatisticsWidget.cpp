@@ -45,7 +45,6 @@
 #include <QtGui/QListWidgetItem>
 
 #include "DREAM3D/Common/Constants.h"
-#include "DREAM3D/MicrostructureStatistics/MicrostructureStatistics.h"
 #include "DREAM3D/HDF5/H5ReconStatsReader.h"
 #include "DREAM3D/HDF5/H5ReconStatsWriter.h"
 
@@ -53,6 +52,8 @@
 #include "QtSupport/QR3DFileCompleter.h"
 #include "QtSupport/QCheckboxDialog.h"
 #include "DREAM3D/HDF5/H5VoxelReader.h"
+
+#include "MicrostructureStatistics/MicrostructureStatistics.h"
 
 // -----------------------------------------------------------------------------
 //
