@@ -29,7 +29,7 @@ endMacro()
 
 D3DCompileDir(Common)
 D3DCompileDir(HDF5)
-D3DCompileDir(Parallel)
+
 
 #--------------------------
 # Add any additional Pipeline Groups here
