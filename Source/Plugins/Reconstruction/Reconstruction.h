@@ -55,7 +55,7 @@
 * @date Nov 3, 2009
 * @version 1.0
 */
-class DREAM3DLib_EXPORT Reconstruction : public AbstractPipeline
+class Reconstruction : public AbstractPipeline
 {
   public:
     MXA_SHARED_POINTERS(Reconstruction);

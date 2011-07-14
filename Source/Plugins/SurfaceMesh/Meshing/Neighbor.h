@@ -51,7 +51,7 @@ namespace meshing {
 * @date Nov 4, 2009
 * @version 1.0
 */
-class DREAM3DLib_EXPORT Neighbor
+class  Neighbor
 {
 public:
     Neighbor();

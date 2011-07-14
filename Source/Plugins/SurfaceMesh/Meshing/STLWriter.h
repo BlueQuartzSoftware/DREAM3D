@@ -46,7 +46,7 @@ namespace meshing {
 
 
 
-class  DREAM3DLib_EXPORT STLWriter
+class   STLWriter
 {
   public:
     MXA_SHARED_POINTERS(STLWriter)

@@ -49,7 +49,7 @@ QT4_WRAP_UI( GrainGeneratorPlugin_Generated_UI_HDRS
 QT4_WRAP_CPP( GrainGeneratorPlugin_Generated_MOC_SRCS ${GrainGeneratorPlugin_UI_HDRS} )
 
 cmp_IDE_SOURCE_PROPERTIES("GrainGenerator/UI/" "${GrainGeneratorPlugin_UI_HDRS}" "${GrainGeneratorPlugin_UI_SRCS}" "0")
-cmp_IDE_SOURCE_PROPERTIES("Generated" "${GrainGeneratorPlugin_Generated_UI_HDRS}" "${GrainGeneratorPlugin_Generated_MOC_SRCS}" "0")
+cmp_IDE_SOURCE_PROPERTIES("Generated" "${GrainGeneratorPlugin_Generated_UI_HDRS};${GrainGeneratorPlugin_Generated_RC_SRCS}" "${GrainGeneratorPlugin_Generated_MOC_SRCS}" "0")
 
 
 #-- Now set any other source files that do not need Qt.
