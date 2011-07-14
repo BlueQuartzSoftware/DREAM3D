@@ -253,7 +253,7 @@ if (DREAM3D_BUILD_QT_APPS)
    add_subdirectory(${DREAM3D_SOURCE_DIR}/Source/QtSupport ${DREAM3D_BINARY_DIR}/QtSupport)
   
    macro(DREAM3D_COMPILE_PLUGIN plugin)
-       add_subdirectory(${DREAM3D_SOURCE_DIR}/Source/UIPlugins/${plugin} ${DREAM3D_BINARY_DIR}/UIPlugins/${plugin})  
+       add_subdirectory(${DREAM3D_SOURCE_DIR}/Source/Plugins/${plugin} ${DREAM3D_BINARY_DIR}/Plugins/${plugin})  
    endmacro()
   
      # Build the DREAM3D Application  
