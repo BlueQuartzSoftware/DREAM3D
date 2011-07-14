@@ -91,12 +91,6 @@ void MicrostructureStatisticsWidget::readSettings(QSettings &prefs)
   READ_STRING_SETTING(prefs, m_, OutputFilePrefix, "MicrostructureStatistics_")
   READ_FILEPATH_SETTING(prefs, m_, InputFile, "");
 
-  READ_BOOL_SETTING(prefs, m_, ComputeGrainSize, true);
-  READ_BOOL_SETTING(prefs, m_, ComputeGrainShapes, true);
-  READ_BOOL_SETTING(prefs, m_, ComputeNumNeighbors, true);
-  READ_BOOL_SETTING(prefs, m_, ComputeMDF, true);
-  READ_BOOL_SETTING(prefs, m_, ComputeODF, true);
-
   READ_SETTING(prefs, m_, BinStepSize, ok, d, 1.0 , Double);
 
   READ_CHECKBOX_SETTING(prefs, m_, H5StatisticsFile, true)
@@ -128,28 +122,21 @@ void MicrostructureStatisticsWidget::writeSettings(QSettings &prefs)
   WRITE_STRING_SETTING(prefs, m_, OutputFilePrefix)
   WRITE_STRING_SETTING(prefs, m_, InputFile)
 
-  WRITE_BOOL_SETTING(prefs, m_, ComputeGrainSize, true);
-  WRITE_BOOL_SETTING(prefs, m_, ComputeGrainShapes, true);
-  WRITE_BOOL_SETTING(prefs, m_, ComputeNumNeighbors, true);
-  WRITE_BOOL_SETTING(prefs, m_, ComputeMDF, true);
-  WRITE_BOOL_SETTING(prefs, m_, ComputeODF, true);
-
   WRITE_SETTING(prefs, m_, BinStepSize);
 
   WRITE_CHECKBOX_SETTING(prefs, m_, H5StatisticsFile)
   WRITE_CHECKBOX_SETTING(prefs, m_, GrainDataFile)
-  WRITE_BOOL_SETTING(prefs, m_, WriteGrainSize, true);
-  WRITE_BOOL_SETTING(prefs, m_, WriteGrainShapes, true);
-  WRITE_BOOL_SETTING(prefs, m_, WriteNumNeighbors, true);
-  WRITE_BOOL_SETTING(prefs, m_, WriteAverageOrientations, true);
+  WRITE_BOOL_SETTING(prefs, m_, WriteGrainSize, m_WriteGrainSize);
+  WRITE_BOOL_SETTING(prefs, m_, WriteGrainShapes, m_WriteGrainShapes);
+  WRITE_BOOL_SETTING(prefs, m_, WriteNumNeighbors, m_WriteNumNeighbors);
+  WRITE_BOOL_SETTING(prefs, m_, WriteAverageOrientations, m_WriteAverageOrientations);
 
   WRITE_CHECKBOX_SETTING(prefs, m_, VisualizationVizFile)
-  WRITE_BOOL_SETTING(prefs, m_, WriteBinaryVTKFile, true);
-  WRITE_BOOL_SETTING(prefs, m_, WriteSurfaceVoxelScalars, true)
-  WRITE_BOOL_SETTING(prefs, m_, WritePhaseIdScalars, true)
-  WRITE_BOOL_SETTING(prefs, m_, WriteKernelMisorientationsScalars, true)
-  WRITE_BOOL_SETTING(prefs, m_, WriteIPFColorScalars, true)
-  WRITE_BOOL_SETTING(prefs, m_, WriteBinaryVTKFile, true)
+  WRITE_BOOL_SETTING(prefs, m_, WriteBinaryVTKFile, m_WriteBinaryVTKFile);
+  WRITE_BOOL_SETTING(prefs, m_, WriteSurfaceVoxelScalars, m_WriteSurfaceVoxelScalars)
+  WRITE_BOOL_SETTING(prefs, m_, WritePhaseIdScalars, m_WritePhaseIdScalars)
+  WRITE_BOOL_SETTING(prefs, m_, WriteKernelMisorientationsScalars, m_WriteKernelMisorientationsScalars)
+  WRITE_BOOL_SETTING(prefs, m_, WriteIPFColorScalars, m_WriteIPFColorScalars)
 
   prefs.endGroup();
 }
@@ -305,6 +292,12 @@ void MicrostructureStatisticsWidget::on_m_OutputDir_textChanged(const QString &t
 // -----------------------------------------------------------------------------
 void MicrostructureStatisticsWidget::on_m_GoBtn_clicked()
 {
+
+  if(m_H5StatisticsFile->isChecked() == true || m_WriteGrainSize == true) m_ComputeGrainSize = true;
+  if(m_H5StatisticsFile->isChecked() == true || m_WriteGrainShapes == true) m_ComputeGrainShapes = true;
+  if(m_H5StatisticsFile->isChecked() == true || m_WriteNumNeighbors == true) m_ComputeNumNeighbors = true;
+  if(m_H5StatisticsFile->isChecked() == true) m_ComputeODF = true;
+  if(m_H5StatisticsFile->isChecked() == true) m_ComputeMDF = true;
 
   if (m_GoBtn->text().compare("Cancel") == 0)
   {
@@ -516,19 +509,11 @@ void MicrostructureStatisticsWidget::on_m_H5StatisticsFile_stateChanged()
 {
   if (m_H5StatisticsFile->isChecked() == true)
   {
-    m_ComputeGrainSize = true;
-    m_ComputeGrainShapes = true;
-    m_ComputeNumNeighbors = true;
-    m_ComputeODF = true;
-    m_ComputeMDF = true;
+
   }
   else
   {
-    if(m_WriteGrainSize == false) m_ComputeGrainSize = false;
-    if(m_WriteGrainShapes == false) m_ComputeGrainShapes = false;
-    if(m_WriteNumNeighbors == false) m_ComputeNumNeighbors = false;
-    m_ComputeODF = false;
-    m_ComputeMDF = false;
+
   }
 }
 
@@ -543,10 +528,7 @@ void MicrostructureStatisticsWidget::on_m_GrainDataFile_stateChanged()
   }
   else
   {
-    m_WriteGrainSize = false;
-    m_WriteGrainShapes = false;
-    m_WriteNumNeighbors = false;
-	m_WriteAverageOrientations = false;
+
   }
 }
 
@@ -561,10 +543,6 @@ void MicrostructureStatisticsWidget::on_m_VisualizationVizFile_stateChanged()
   }
   else
   {
-    m_WriteSurfaceVoxelScalars = false;
-    m_WritePhaseIdScalars = false;
-    m_WriteKernelMisorientationsScalars = false;
-    m_WriteIPFColorScalars = false;
-    m_WriteBinaryVTKFile = false;
+
   }
 }
