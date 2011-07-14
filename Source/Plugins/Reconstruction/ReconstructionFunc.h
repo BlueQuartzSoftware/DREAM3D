@@ -78,7 +78,7 @@ using namespace std;
  * @author Michael A. Groeber (US Air Force Research Laboratory)
  * @version 2.0
  */
-class DREAM3DLib_EXPORT ReconstructionFunc
+class ReconstructionFunc
 {
   public:
     MXA_SHARED_POINTERS(ReconstructionFunc)

@@ -61,7 +61,7 @@
  * @version 1.2
  *
  */
-class DREAM3DLib_EXPORT OIMImport : public AbstractPipeline
+class OIMImport : public AbstractPipeline
 {
   public:
     MXA_SHARED_POINTERS(OIMImport)

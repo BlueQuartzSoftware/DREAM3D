@@ -68,7 +68,7 @@
 using namespace meshing;
 
 
-class DREAM3DLib_EXPORT SurfaceMeshFunc
+class SurfaceMeshFunc
 {
 
 public:

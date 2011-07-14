@@ -50,7 +50,7 @@ QT4_WRAP_UI( ReconstructionPlugin_Generated_UI_HDRS
 QT4_WRAP_CPP( ReconstructionPlugin_Generated_MOC_SRCS ${ReconstructionPlugin_UI_HDRS} )
 
 cmp_IDE_SOURCE_PROPERTIES("Reconstruction/UI/" "${ReconstructionPlugin_UI_HDRS}" "${ReconstructionPlugin_UI_SRCS}" "0")
-cmp_IDE_SOURCE_PROPERTIES("Generated" "${ReconstructionPlugin_Generated_UI_HDRS}" "${ReconstructionPlugin_Generated_MOC_SRCS}" "0")
+cmp_IDE_SOURCE_PROPERTIES("Generated" "${ReconstructionPlugin_Generated_UI_HDRS};${ReconstructionPlugin_Generated_RC_SRCS}" "${ReconstructionPlugin_Generated_MOC_SRCS}" "0")
 
 #-- Non Qt Sources
 SET (Reconstruction_HDRS
