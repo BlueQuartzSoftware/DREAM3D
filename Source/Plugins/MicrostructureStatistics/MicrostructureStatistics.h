@@ -53,7 +53,7 @@
 * @date May 30, 2011
 * @version 1.0
 */
-class DREAM3DLib_EXPORT MicrostructureStatistics  : public AbstractPipeline
+class MicrostructureStatistics  : public AbstractPipeline
 {
 
   public:

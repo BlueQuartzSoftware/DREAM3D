@@ -49,7 +49,7 @@ namespace meshing
    * @date Jul 11, 2011
    * @version 1.0
    */
-  class DREAM3DLib_EXPORT SharedEdge
+  class  SharedEdge
   {
     public:
       /**

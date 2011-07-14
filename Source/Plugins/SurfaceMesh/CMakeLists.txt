@@ -51,7 +51,7 @@ QT4_WRAP_CPP( SurfaceMeshPlugin_Generated_MOC_SRCS ${SurfaceMeshPlugin_UI_HDRS} 
 
 
 cmp_IDE_SOURCE_PROPERTIES("SurfaceMesh/UI/" "${SurfaceMeshPlugin_UI_HDRS}" "${SurfaceMeshPlugin_UI_SRCS}" "0")
-cmp_IDE_SOURCE_PROPERTIES("Generated" "${SurfaceMeshPlugin_Generated_UI_HDRS}" "${SurfaceMeshPlugin_Generated_MOC_SRCS}" "0")
+cmp_IDE_SOURCE_PROPERTIES("Generated" "${SurfaceMeshPlugin_Generated_UI_HDRS};${SurfaceMeshPlugin_Generated_RC_SRCS}" "${SurfaceMeshPlugin_Generated_MOC_SRCS}" "0")
 
 
 
@@ -67,7 +67,7 @@ SET (SurfaceMesh_SRCS
   ${PROJECT_SOURCE_DIR}/SurfaceMeshFunc.cpp
 
 )
-cmp_IDE_SOURCE_PROPERTIES( "DREAM3DLib/SurfaceMesh" "${SurfaceMesh_HDRS}" "${SurfaceMesh_SRCS}" "0")
+cmp_IDE_SOURCE_PROPERTIES( "SurfaceMesh" "${SurfaceMesh_HDRS}" "${SurfaceMesh_SRCS}" "0")
 
 
 SET (MESHING_SRCS

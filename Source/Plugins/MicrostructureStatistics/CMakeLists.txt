@@ -50,7 +50,7 @@ QT4_WRAP_UI( MicrostructureStatisticsPlugin_Generated_UI_HDRS
 QT4_WRAP_CPP( MicrostructureStatisticsPlugin_Generated_MOC_SRCS ${MicrostructureStatisticsPlugin_UI_HDRS} )
 
 cmp_IDE_SOURCE_PROPERTIES("MicrostructureStatistics/UI/" "${MicrostructureStatisticsPlugin_UI_HDRS}" "${MicrostructureStatisticsPlugin_UI_SRCS}" "0")
-cmp_IDE_SOURCE_PROPERTIES("Generated" "${MicrostructureStatisticsPlugin_Generated_UI_HDRS}" "${MicrostructureStatisticsPlugin_Generated_MOC_SRCS}" "0")
+cmp_IDE_SOURCE_PROPERTIES("Generated" "${MicrostructureStatisticsPlugin_Generated_UI_HDRS};${MicrostructureStatisticsPlugin_Generated_RC_SRCS}" "${MicrostructureStatisticsPlugin_Generated_MOC_SRCS}" "0")
 
 SET (MicrostructureStatistics_HDRS
   ${PROJECT_SOURCE_DIR}/MicrostructureStatistics.h

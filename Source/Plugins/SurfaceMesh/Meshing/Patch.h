@@ -52,7 +52,7 @@ namespace meshing {
  * @date Nov 4, 2009
  * @version 1.0
  */
-class DREAM3DLib_EXPORT Patch
+class  Patch
 {
   public:
     MXA_SHARED_POINTERS(Patch);

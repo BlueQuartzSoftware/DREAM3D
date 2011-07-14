@@ -195,7 +195,7 @@ class GrainChecker
 * @date Nov 3, 2009
 * @version 1.0
 */
-class DREAM3DLib_EXPORT SurfaceMesh : public AbstractPipeline
+class SurfaceMesh : public AbstractPipeline
 {
   public:
     MXA_SHARED_POINTERS(SurfaceMesh);
