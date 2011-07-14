@@ -34,7 +34,7 @@ SET (CMAKE_ARCHIVE_OUTPUT_DIRECTORY
 
 set(DREAM3D_VER_MAJOR "2011" CACHE STRING "Major Version Number")
 set(DREAM3D_VER_MINOR "07"  CACHE STRING "Minor Version Number" )
-set(DREAM3D_VER_PATCH "xxxx" CACHE STRING "Patch Version Number")
+set(DREAM3D_VER_PATCH "14" CACHE STRING "Patch Version Number")
 set(DREAM3D_VERSION "${DREAM3D_VER_MAJOR}.${DREAM3D_VER_MINOR}.${DREAM3D_VER_PATCH}")
                
 set (CMP_SOURCE_DIR ${DREAM3D_SOURCE_DIR}/Support/cmp)
@@ -179,6 +179,33 @@ endif()
 # Figure out here if we are going to build the command line tools
 option(DREAM3D_BUILD_CLI_TOOLS "Build the command line versions of the applications" OFF)
 
+
+# --- Look for user defined external Plugins that the user has entered into CMake-GUI or through CCMake
+set(DREAM3D_EXTRA_PLUGINS "" CACHE LIST "Semicolon delimited list of Extra External Plugins that you want to build into DREAM.3D")
+
+#-- Attempt to look in our local source directory for the plugin. Anywhere else
+# and the user will have to put the entire path into CMake manually.
+foreach(userPlugin ${DREAM3D_EXTRA_PLUGINS})
+    message(STATUS "Looking for Plugin: ${userPlugin}")
+    set(${userPlugin}_SOURCE_DIR "" CACHE PATH "Path to ${userPlugin} directory")
+
+    if(EXISTS ${DREAM3D_SOURCE_DIR}/Plugins/${userPlugin})
+        set(${userPlugin}_SOURCE_DIR ${DREAM3D_SOURCE_DIR}/Plugins/${userPlugin})
+    endif()
+    if(EXISTS ${DREAM3D_SOURCE_DIR}/Plugins/${userPlugin}/${userPlugin}DREAM3DImport.cmake)
+        set(${userPlugin}_IMPORT_FILE ${DREAM3D_SOURCE_DIR}/Plugins/${userPlugin}/${userPlugin}DREAM3DImport.cmake)
+    endif()
+    if(NOT DEFINED ${userPlugin}_SOURCE_DIR AND NOT DEFINED ${userPlugin}_IMPORT_FILE)
+        message(WARNING "${userPlugin}_SOURCE_DIR was NOT defined and it needs to be in order to compile the ${userPlugin} Plugin")
+    endif()
+
+    if(DEFINED ${userPlugin}_SOURCE_DIR AND DEFINED ${userPlugin}_IMPORT_FILE)
+        include (${${userPlugin}_IMPORT_FILE} )
+    endif()
+endforeach(userPlugin ${DREAM3D_EXTRA_PLUGINS})
+
+
+
 # -----------------------------------------------------------------------
 # -- Add in the Necessary MXA Sources into a static library
 add_subdirectory( ${DREAM3D_SOURCE_DIR}/Source/MXA ${DREAM3D_BINARY_DIR}/MXA)
@@ -222,12 +249,12 @@ if (DREAM3D_BUILD_QT_APPS)
    list(APPEND CMP_LIB_SEARCH_DIRS ${QT_BINARY_DIR} ${QT_LIBRARY_DIR} )
    
    # Build the static QtSupport library - which MUST be a static library or the linking
-   # will not work.
+   # will not work due to signals/slots mechanism.
    add_subdirectory(${DREAM3D_SOURCE_DIR}/Source/QtSupport ${DREAM3D_BINARY_DIR}/QtSupport)
   
-    macro(DREAM3D_COMPILE_PLUGIN plugin)
-        add_subdirectory(${DREAM3D_SOURCE_DIR}/Source/UIPlugins/${plugin} ${DREAM3D_BINARY_DIR}/UIPlugins/${plugin})  
-    endmacro()
+   macro(DREAM3D_COMPILE_PLUGIN plugin)
+       add_subdirectory(${DREAM3D_SOURCE_DIR}/Source/UIPlugins/${plugin} ${DREAM3D_BINARY_DIR}/UIPlugins/${plugin})  
+   endmacro()
   
      # Build the DREAM3D Application  
    option(DREAM3D_BUILD_GUI "Compile the DREAM3D GUI Application" ON)
