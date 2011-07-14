@@ -1,0 +1,44 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>OIM Import</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=macintosh">
+</head>
+<body lang="EN-US">
+
+<!-- ############################################################# -->
+    <h3>  OIM Data Import</h3> 
+<
+    <br> <img width="470" height="508" src="image001.png" alt="Description: Import.tif">
+
+  <ol>
+    <li><b> <i>  Input Directory</i></b> - Directory where the .ang files are located
+  	<ul>
+    	<li>a. <b> <i> Total Ang Files Found</i></b> - Code will determine how many .ang files are present. 
+    	<li>b. Currently only .ang files are supported. 
+  	</ul>
+    <li><b> <i>  Output File</i></b> - Name and location of desired output .h5ang file 
+    <li><b> <i>  Z spacing</i></b> - This is the spacing between sections 
+
+  	<ul>
+    	<li>a. Note that the x and y spacings are automatically read from the .ang files. 
+    	<li>b. If the x and y spacing values change, the ones in the first section are used. 
+  	</ul>  
+    <li><b> <i>  File Prefix, Suffix and File Extension</i></b> - Variables that are combined to generate the list of file names 
+  	<ul>
+    	<li>a. These values should all be automatically determined, but should be checked if there are weird prefixes or suffixes. 
+	</ul>
+    <li><b> <i>  Start Slice, End Slice and Total Digits  </i> </b> More variables that are combined to generate the list of file names 
+  	<ul>
+    	<li>a. <li>Start slice and end slice define the range of data to be included in the .h5ang file (i.e. you donÕt have to import the entire dataset). 
+    	<li>b. <li>Total digits controls the number of leading zeros that are present in the filename. 
+	</ul>    
+	<li><b> <i>  File List</i></b> - This bank lists all the files that will be included in the .h5ang file based on the inputs chosen.   
+   <ul>
+     <li>a. The files in the list will have a green light if they are present in the directory selected and a red light if they are not present. 
+	</ul>
+</ol>
+<br/>  
+
+</body>
+</html>
