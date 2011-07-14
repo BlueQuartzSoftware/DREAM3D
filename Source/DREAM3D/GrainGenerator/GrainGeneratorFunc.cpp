@@ -2116,7 +2116,7 @@ void GrainGeneratorFunc::assign_voxels()
     if (grain_indicies[i] <= 0)
     {
       unassigned[i] = 0;
-	  grain_indicies[i] = grain_indicies[i];
+	//  grain_indicies[i] = grain_indicies[i];
     }
   }
   m_Grains.resize(goodcount);

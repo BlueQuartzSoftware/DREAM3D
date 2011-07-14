@@ -1919,8 +1919,8 @@ void ReconstructionFunc::find_neighbors()
   int onsurf = 0;
   int good = 0;
   int neighbor = 0;
-  size_t xtalCount = crystruct.size();
-  int surfacegrain = 1;
+//  size_t xtalCount = crystruct.size();
+//  int surfacegrain = 1;
   int nListSize = 100;
 
   // Copy all the grain names into a densely packed array
@@ -1937,11 +1937,11 @@ void ReconstructionFunc::find_neighbors()
     m_Grains[i]->neighborlist->assign(nListSize, -1);
   }
 
-  NEW_SHARED_ARRAY(gnames, int, totalpoints)
-  for (int i = 0; i < totalpoints; i++)
-  {
-    gnames[i] = voxels[i].grain_index;
-  }
+//  NEW_SHARED_ARRAY(gnames, int, totalpoints)
+//  for (int i = 0; i < totalpoints; i++)
+//  {
+//    gnames[i] = grain_indicies[i];
+//  }
   for(int j = 0; j < (xpoints*ypoints*zpoints); j++)
   {
     onsurf = 0;
@@ -1972,7 +1972,7 @@ void ReconstructionFunc::find_neighbors()
           if(k == 4 && row == (ypoints-1)) good = 0;
           if(k == 2 && column == 0) good = 0;
           if(k == 3 && column == (xpoints-1)) good = 0;
-	      if(good == 1 && gnames[neighbor] != grain && gnames[neighbor] > 0)
+	      if(good == 1 && grain_indicies[neighbor] != grain && grain_indicies[neighbor] > 0)
           {
             m_Grains[grain]->neighborlist->resize(nnum + nListSize);
             m_Grains[grain]->neighborsurfacealist->resize(nnum + nListSize);
