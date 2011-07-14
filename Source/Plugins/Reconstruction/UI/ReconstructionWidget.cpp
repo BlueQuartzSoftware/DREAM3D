@@ -46,11 +46,12 @@
 
 #include "DREAM3D/Common/Constants.h"
 #include "DREAM3D/Common/PhaseType.h"
-#include "DREAM3D/ANGSupport/H5AngDataLoader.h"
+
 #include "QtSupport/QR3DFileCompleter.h"
 #include "QtSupport/AIM_QtMacros.h"
 #include "QtSupport/QCheckboxDialog.h"
 
+#include "ANGSupport/H5AngDataLoader.h"
 
 // -----------------------------------------------------------------------------
 //
