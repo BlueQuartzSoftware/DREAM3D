@@ -40,7 +40,7 @@
 #include <MXA/Common/MXASetGetMacros.h>
 #include <MXA/MXATypes.h>
 
-#include "ANG/AngConstants.h"
+#include "TSLLib/AngConstants.h"
 
 #include "DREAM3D/Common/Constants.h"
 #include "DREAM3D/Reconstruction/ReconstructionFunc.h"

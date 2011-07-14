@@ -33,21 +33,49 @@
 
 #include <string>
 
+#include <MXA/Common/MXASetGetMacros.h>
 
-  /**
-   *
-   * @param nodesFile
-   * @param trianglesFile
-   * @param inpFile
-   * @param iterations
-   * @param printInterval
-   * @param lockquads
-   * @return
-   */
-  int SmoothGrain3D(const std::string &nodesFile, const std::string &trianglesFile,
-                    const std::string &outputDir, size_t updatesMax, int interval,
-                    int lockquads);
+#include "DREAM3D/DREAM3DConfiguration.h"
 
 
+namespace DREAM3D {
+  namespace SurfaceSmoothing
+  {
+    const std::string Smooth3DIterationFile("Smooth3DIterationFile");
+    const std::string NodesSmoothedFile("NodesSmoothedFile.txt");
+  }
+}
+
+namespace smooth {
+
+class DREAM3DLib_EXPORT Smoothing
+{
+  public:
+    MXA_SHARED_POINTERS(Smoothing);
+    MXA_STATIC_NEW_MACRO(Smoothing);
+
+    virtual ~Smoothing();
+
+    MXA_INSTANCE_STRING_PROPERTY(NodesFile);
+    MXA_INSTANCE_STRING_PROPERTY(TrianglesFile);
+    MXA_INSTANCE_STRING_PROPERTY(OutputDirectory)
+    MXA_INSTANCE_STRING_PROPERTY(OutputFilePrefix)
+    MXA_INSTANCE_PROPERTY(size_t, OutputInterval);
+    MXA_INSTANCE_PROPERTY(size_t, Iterations);
+    MXA_INSTANCE_PROPERTY(bool, LockQuads);
+
+    int execute();
+
+
+
+  protected:
+    Smoothing();
+
+  private:
+    Smoothing(const Smoothing&); // Copy Constructor Not Implemented
+    void operator=(const Smoothing&); // Operator '=' Not Implemented
+};
+
+}
 
 #endif /* SMOOTHGRAIN3D_H_ */

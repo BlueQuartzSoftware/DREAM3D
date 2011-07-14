@@ -41,14 +41,11 @@
 #include "MXA/Utilities/MXAFileInfo.h"
 #include "MXA/Utilities/StringUtils.h"
 
-#include "SMVtkFileIO.h"
+#include "DREAM3D/SurfaceMesh/Meshing/SMVtkFileIO.h"
 #include "DREAM3D/HDF5/H5VoxelReader.h"
+#include "DREAM3D/SurfaceMesh/Smoothing/Smoothing.h"
 
 #define USE_WINDING 0
-
-#if USE_WINDING
-#include "Winding/SurfaceWinding.h"
-#endif
 
 #define CHECK_ERROR(name, message)\
     if(err < 0) {\
@@ -61,7 +58,9 @@
       return;   }
 
 
+#define USE_VTK_FILE_UTILS 1
 
+using namespace meshing;
 
 // -----------------------------------------------------------------------------
 //
@@ -91,7 +90,7 @@ SurfaceMesh::~SurfaceMesh()
 {
 }
 
-#define USE_VTK_FILE_UTILS 1
+
 
 // -----------------------------------------------------------------------------
 //
@@ -101,14 +100,9 @@ void SurfaceMesh::execute()
 
   updateProgressAndMessage(("Running Surface Meshing"), 0);
   int err = 0;
-//  MAKE_OUTPUT_FILE_PATH (  NodesRawFile , AIM::SurfaceMeshing::NodesRawFile)
   MAKE_OUTPUT_FILE_PATH( NodesFile, AIM::SurfaceMesh::NodesFileBin)
   MAKE_OUTPUT_FILE_PATH( TrianglesFile, AIM::SurfaceMesh::TrianglesFileBin)
-//  MAKE_OUTPUT_FILE_PATH (  EdgesFile , AIM::SurfaceMeshing::EdgesFile)
-//  MAKE_OUTPUT_FILE_PATH (  EdgesFileIndex , AIM::SurfaceMeshing::EdgesFileIndex)
-//  MAKE_OUTPUT_FILE_PATH (  TrianglesFileIndex , AIM::SurfaceMeshing::TrianglesFileIndex)
   MAKE_OUTPUT_FILE_PATH( VisualizationFile, AIM::SurfaceMesh::VisualizationVizFile)
-//  MAKE_OUTPUT_FILE_PATH( stlFilename, AIM::SurfaceMesh::STLFile)
 
   m = SurfaceMeshFunc::New();
   // Initialize some benchmark timers
@@ -288,6 +282,7 @@ void SurfaceMesh::execute()
     {
       setErrorCondition(-1);
       updateProgressAndMessage(("Error Writing Nodes Temp File"), 100);
+      free(fileVoxelLayer);
       return;
     }
     err = m->writeTrianglesFile(i, cTriID, TrianglesFile, nTriangle);
@@ -295,11 +290,13 @@ void SurfaceMesh::execute()
     {
       setErrorCondition(-1);
       updateProgressAndMessage(("Error Writing Triangles Temp File"), 100);
+      free(fileVoxelLayer);
       return;
     }
+
     if (m_WriteSTLFile == true)
     {
-      m_GrainChecker->addData(nTriangle, cTriID, &(m->cTriangle.front()), m->cVertex);
+      m_GrainChecker->addData(nTriangle, cTriID, m->cTriangle, m->cVertex);
       writeSTLFiles(nTriangle, gidToSTLWriter);
     }
     cNodeID = nNodes;
@@ -349,20 +346,22 @@ void SurfaceMesh::execute()
   {
     setErrorCondition(-1);
     updateProgressAndMessage(("Error Writing Nodes Temp File"), 100);
+    free(fileVoxelLayer);
     return;
   }
   err = m->writeTrianglesFile(i, cTriID, TrianglesFile, nTriangle);
   if (err < 0)
   {
-    setCancel(true);
+    setErrorCondition(-1);
     updateProgressAndMessage(("Error Writing Triangles Temp File"), 100);
+    free(fileVoxelLayer);
     return;
   }
 
   // Write the last layers of the STL Files
   if (m_WriteSTLFile == true)
   {
-    m_GrainChecker->addData(nTriangle, cTriID, &(m->cTriangle.front()), m->cVertex);
+    m_GrainChecker->addData(nTriangle, cTriID, m->cTriangle, m->cVertex);
     writeSTLFiles(nTriangle, gidToSTLWriter);
     for (std::map<int, STLWriter::Pointer>::iterator iter = gidToSTLWriter.begin(); iter != gidToSTLWriter.end(); ++iter )
     {
@@ -386,29 +385,36 @@ void SurfaceMesh::execute()
   free(fileVoxelLayer);
   fileVoxelLayer = NULL;
 
+
+  m = SurfaceMeshFunc::NullPointer(); // Clean up the memory
+
+
+  // Smooth the mesh and overwrite the existing Triangles and Nodes files.
   if (m_SmoothMesh)
   {
     updateProgressAndMessage(("Smoothing Boundaries"), 90);
+    smooth::Smoothing::Pointer smoothing = smooth::Smoothing::New();
+    smoothing->setOutputDirectory(m_OutputDirectory);
+    smoothing->setOutputFilePrefix(m_OutputFilePrefix);
+    smoothing->setNodesFile(NodesFile);
+    smoothing->setTrianglesFile(TrianglesFile);
+    smoothing->setIterations(m_SmoothIterations);
+    smoothing->setOutputInterval(m_SmoothFileOutputIncrement);
+    smoothing->setLockQuads(m_SmoothLockQuadPoints);
+    err = smoothing->execute();
+    if (err < 0)
+    {
+      setErrorCondition(-1);
+      updateProgressAndMessage("Error Smoothing Surface Mesh", 100);
+    }
   }
 
-  std::string msg("Writing Surface Mesh File: ");
+  std::string msg("Writing VTK Polydata Surface Mesh File: ");
   msg.append(AIM::SurfaceMesh::VisualizationVizFile);
   updateProgressAndMessage(msg.c_str(), 95);
-  SMVtkFileIO::Pointer writer = SMVtkFileIO::New();
+  meshing::SMVtkFileIO::Pointer writer = SMVtkFileIO::New();
   writer->setInputFileName(VisualizationFile);
-  writer->writeVTKFile(m.get(), nNodes, cTriID, VisualizationFile, NodesFile, TrianglesFile, m_BinaryVTKFile, m_ConformalMesh);
-
-
-
-  m = SurfaceMeshFunc::NullPointer(); // Clean up the memory
-  updateProgressAndMessage(("Analyzing Winding"), 95);
-
-#if USE_WINDING
-  std::cout << "***************************************************************" << std::endl;
-  m3c::SurfaceWinding sw;
-  sw.debugPrintConnectivity(nNodes, cTriID, TrianglesFile);
-  std::cout << "***************************************************************" << std::endl;
-#endif
+  writer->writeVTKFile(VisualizationFile, NodesFile, TrianglesFile, m_BinaryVTKFile, m_ConformalMesh);
 
   updateProgressAndMessage(("Surface Meshing Complete"), 100);
   if (m_DeleteTempFiles == true)
@@ -433,8 +439,8 @@ void SurfaceMesh::writeSTLFiles(int nTriangle, std::map<int, STLWriter::Pointer>
   int g0, g1;
   for (int i = 0; i < nTriangle; ++i)
   {
-    g0 = m->cTriangle[i].ngrainname[0];
-    g1 = m->cTriangle[i].ngrainname[1];
+    g0 = m->cTriangle[i]->ngrainname[0];
+    g1 = m->cTriangle[i]->ngrainname[1];
     if (gidToSTLWriter[g0].get() == NULL)
     {
       std::string stlFile = m_OutputDirectory + MXADir::Separator + m_OutputFilePrefix + "STLFiles/";
@@ -449,43 +455,43 @@ void SurfaceMesh::writeSTLFiles(int nTriangle, std::map<int, STLWriter::Pointer>
       stlFile.append(StringUtils::numToString(g1)).append(".stl");
       gidToSTLWriter[g1] = STLWriter::CreateNewSTLWriter(g1, stlFile);
     }
-    grainIdMap[m->cTriangle[i].ngrainname[0]]++;
-    grainIdMap[m->cTriangle[i].ngrainname[1]]++;
+    grainIdMap[m->cTriangle[i]->ngrainname[0]]++;
+    grainIdMap[m->cTriangle[i]->ngrainname[1]]++;
   }
 
 // Allocate all the new Patch Blocks
-  std::map<int, Patch*> gidToPatch;
+  std::map<int, Patch::ContainerType> gidToPatch;
   std::map<int, int> gidToCurIdx;
   for (std::map<int, int>::iterator iter = grainIdMap.begin(); iter != grainIdMap.end(); ++iter)
   {
     int gid = (*iter).first;
     int count = (*iter).second;
-    gidToPatch[gid] = new Patch[count];
+    gidToPatch[gid] = Patch::ContainerType(count);
     gidToCurIdx[gid] = 0;
   }
 
   int idx = 0;
-  Patch* front = NULL;
+
 // Loop over all the triangles and copy the Patch Pointers into our new Pointers
   for (int i = 0; i < nTriangle; ++i)
   {
-    g0 = m->cTriangle[i].ngrainname[0];
-    front = gidToPatch[g0];
+    g0 = m->cTriangle[i]->ngrainname[0];
+    Patch::ContainerType& frontG0 = gidToPatch[g0];
     idx = gidToCurIdx[g0];
-    front[idx] = m->cTriangle[i];
+    frontG0[idx] = m->cTriangle[i];
     gidToCurIdx[g0]++;
 
-    g1 = m->cTriangle[i].ngrainname[1];
-    front = gidToPatch[g1];
+    g1 = m->cTriangle[i]->ngrainname[1];
+    Patch::ContainerType& frontG1 = gidToPatch[g1];
     idx = gidToCurIdx[g1];
-    front[idx] = m->cTriangle[i];
+    frontG1[idx] = m->cTriangle[i];
     gidToCurIdx[g1]++;
   }
 
-  for (std::map<int, Patch*>::iterator iter = gidToPatch.begin(); iter != gidToPatch.end(); ++iter)
+  for (std::map<int, Patch::ContainerType >::iterator iter = gidToPatch.begin(); iter != gidToPatch.end(); ++iter)
   {
     int gid = (*iter).first;
-    Patch* cTriangle = (*iter).second;
+    Patch::ContainerType& cTriangle = (*iter).second;
     int nTriangle = grainIdMap[gid];
 
     STLWriter::Pointer writer = gidToSTLWriter[gid];
@@ -493,7 +499,6 @@ void SurfaceMesh::writeSTLFiles(int nTriangle, std::map<int, STLWriter::Pointer>
     {
       writer->writeTriangleBlock(nTriangle, cTriangle, m->cVertex);
     }
-    delete[] cTriangle; // Delete this block of Patch objects as we are done with it
   }
 
 }

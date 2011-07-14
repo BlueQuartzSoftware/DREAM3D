@@ -44,7 +44,9 @@
 #include "DREAM3D/Common/Constants.h"
 #include "DREAM3D/SurfaceMesh/SurfaceMeshFunc.h"
 #include "DREAM3D/Common/AbstractPipeline.h"
-#include "DREAM3D/SurfaceMesh/STLWriter.h"
+#include "DREAM3D/SurfaceMesh/Meshing/STLWriter.h"
+
+namespace meshing {
 
 class GrainChecker
 {
@@ -84,7 +86,7 @@ class GrainChecker
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-    void addData(int numTriangles, int ctid, Patch* cTriangle, Node* cVertex)
+    void addData(int numTriangles, int ctid, const std::vector<Patch::Pointer>& cTriangle, Node* cVertex)
     {
 
       int n1, n2, n3;
@@ -92,7 +94,7 @@ class GrainChecker
       int size;
       for (int i = 0; i < numTriangles; ++i)
       {
-        gid = cTriangle[i].ngrainname[0];
+        gid = cTriangle[i]->ngrainname[0];
         size = grainMaps.size();
         if (gid >= size)
         {
@@ -105,9 +107,9 @@ class GrainChecker
           MapType& vertMap = grainMaps[gid];
           MapType& triMap = tCounts[gid];
 
-          n1 = cTriangle[i].node_id[0];
-          n2 = cTriangle[i].node_id[1];
-          n3 = cTriangle[i].node_id[2];
+          n1 = cTriangle[i]->node_id[0];
+          n2 = cTriangle[i]->node_id[1];
+          n3 = cTriangle[i]->node_id[2];
           n1 = cVertex[n1].NodeID;
           n2 = cVertex[n2].NodeID;
           n3 = cVertex[n3].NodeID;
@@ -118,7 +120,7 @@ class GrainChecker
           triMap[ctid] = 0;
         }
 
-        gid = cTriangle[i].ngrainname[1];
+        gid = cTriangle[i]->ngrainname[1];
         size = grainMaps.size();
         if (gid >= size)
         {
@@ -130,9 +132,9 @@ class GrainChecker
           MapType& vertMap = grainMaps[gid];
           MapType& triMap = tCounts[gid];
 
-          n1 = cTriangle[i].node_id[0];
-          n2 = cTriangle[i].node_id[1];
-          n3 = cTriangle[i].node_id[2];
+          n1 = cTriangle[i]->node_id[0];
+          n2 = cTriangle[i]->node_id[1];
+          n3 = cTriangle[i]->node_id[2];
           n1 = cVertex[n1].NodeID;
           n2 = cVertex[n2].NodeID;
           n3 = cVertex[n3].NodeID;
@@ -179,6 +181,7 @@ class GrainChecker
     GrainChecker(const GrainChecker&); // Copy Constructor Not Implemented
     void operator=(const GrainChecker&); // Operator '=' Not Implemented
 };
+}
 
 
 

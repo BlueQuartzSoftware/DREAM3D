@@ -32,10 +32,9 @@ SET (CMAKE_ARCHIVE_OUTPUT_DIRECTORY
   "Single Directory for all static libraries."
   )
 
-
-set(DREAM3D_VER_MAJOR "2011")
-set(DREAM3D_VER_MINOR "07")
-set(DREAM3D_VER_PATCH "06")
+set(DREAM3D_VER_MAJOR "2011" CACHE STRING "Major Version Number")
+set(DREAM3D_VER_MINOR "07"  CACHE STRING "Minor Version Number" )
+set(DREAM3D_VER_PATCH "xxxx" CACHE STRING "Patch Version Number")
 set(DREAM3D_VERSION "${DREAM3D_VER_MAJOR}.${DREAM3D_VER_MINOR}.${DREAM3D_VER_PATCH}")
                
 set (CMP_SOURCE_DIR ${DREAM3D_SOURCE_DIR}/Support/cmp)
@@ -187,7 +186,7 @@ include_directories (${DREAM3D_BINARY_DIR})
 
 # -----------------------------------------------------------------------
 # -- Add in the Necessary MXA Sources into a static library
-add_subdirectory( ${DREAM3D_SOURCE_DIR}/Source/ANG ${DREAM3D_BINARY_DIR}/ANG)
+add_subdirectory( ${DREAM3D_SOURCE_DIR}/Source/TSLLib ${DREAM3D_BINARY_DIR}/TSLLib)
 include_directories (${DREAM3D_BINARY_DIR})
 
 # -----------------------------------------------------------------------
