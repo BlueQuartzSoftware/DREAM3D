@@ -63,7 +63,7 @@
 #include "DREAM3D/Common/OrientationOps/OrthoRhombicOps.h"
 #include "DREAM3D/HDF5/H5ReconStatsWriter.h"
 
-class DREAM3DLib_EXPORT MicrostructureStatisticsFunc
+class MicrostructureStatisticsFunc
 {
   public:
     MXA_SHARED_POINTERS(MicrostructureStatisticsFunc)

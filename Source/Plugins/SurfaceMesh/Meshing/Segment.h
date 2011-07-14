@@ -53,7 +53,7 @@ namespace meshing {
 * @date Nov 4, 2009
 * @version 1.0
 */
-class DREAM3DLib_EXPORT Segment
+class  Segment
 {
 public:
     MXA_SHARED_POINTERS(Segment);

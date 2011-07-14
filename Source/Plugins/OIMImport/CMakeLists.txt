@@ -52,7 +52,7 @@ QT4_WRAP_UI( OIMImportPlugin_Generated_UI_HDRS
 QT4_WRAP_CPP( OIMImportPlugin_Generated_MOC_SRCS ${OIMImportPlugin_UI_HDRS} )
 
 cmp_IDE_SOURCE_PROPERTIES("OIMImport/UI/" "${OIMImportPlugin_UI_HDRS}" "${OIMImportPlugin_UI_SRCS}" "0")
-cmp_IDE_SOURCE_PROPERTIES("Generated" "${OIMImportPlugin_Generated_UI_HDRS}" "${OIMImportPlugin_Generated_MOC_SRCS}" "0")
+cmp_IDE_SOURCE_PROPERTIES("Generated" "${OIMImportPlugin_Generated_UI_HDRS};${OIMImportPlugin_Generated_RC_SRCS}" "${OIMImportPlugin_Generated_MOC_SRCS}" "0")
 
 #-- Setup NON Qt Source files
 SET (OIMImport_HDRS

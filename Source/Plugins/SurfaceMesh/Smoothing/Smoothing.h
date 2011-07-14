@@ -48,7 +48,7 @@ namespace DREAM3D {
 
 namespace smooth {
 
-class DREAM3DLib_EXPORT Smoothing
+class Smoothing
 {
   public:
     MXA_SHARED_POINTERS(Smoothing);
