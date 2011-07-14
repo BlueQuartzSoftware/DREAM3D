@@ -57,10 +57,10 @@
 #include "QtSupport/DREAM3DPluginInterface.h"
 #include "QtSupport/HelpDialog.h"
 #include "GrainGenerator/UI/GrainGeneratorPlugin.h"
-#include "MicrostructureStatistics/MicrostructureStatisticsPlugin.h"
-#include "OIMImport/OIMImportPlugin.h"
-#include "Reconstruction/ReconstructionPlugin.h"
-#include "SurfaceMesh/SurfaceMeshPlugin.h"
+#include "MicrostructureStatistics/UI/MicrostructureStatisticsPlugin.h"
+#include "OIMImport/UI/OIMImportPlugin.h"
+#include "Reconstruction/UI/ReconstructionPlugin.h"
+#include "SurfaceMesh/UI/SurfaceMeshPlugin.h"
 
 // -----------------------------------------------------------------------------
 //
