@@ -43,7 +43,7 @@
  
  */
 
-#include "DREAM3D/@CLASS_NAME@/@CLASS_NAME@.h"
+#include "@CLASS_NAME@/@CLASS_NAME@.h"
 
 #include <QtCore/QObject>
 

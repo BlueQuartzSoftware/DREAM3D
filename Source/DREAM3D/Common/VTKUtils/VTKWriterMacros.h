@@ -56,24 +56,24 @@
   fprintf(f, "POINT_DATA %d\n\n", ptr->xpoints * ptr->ypoints * ptr->zpoints );\
 
 
-#define WRITE_VTK_GRAIN_IDS_ASCII(ptr, ScalarName, voxelVar)\
+#define WRITE_VTK_GRAIN_IDS_ASCII(ptr, ScalarName)\
   fprintf(f, "SCALARS %s int 1\n", ScalarName.c_str());\
   fprintf(f, "LOOKUP_TABLE default\n");\
   for (size_t i = 0; i < total; i++) {\
     if(i%20 == 0 && i > 0) { fprintf(f, "\n"); }\
-    fprintf(f, "%d ", ptr->voxelVar[i].grain_index);\
+    fprintf(f, "%d ", ptr->grain_indicies[i]);\
   }\
   fprintf(f, "\n");\
 
 
-#define WRITE_VTK_GRAIN_IDS_BINARY(ptr, ScalarName, voxelVar)  \
+#define WRITE_VTK_GRAIN_IDS_BINARY(ptr, ScalarName)  \
   fprintf(f, "SCALARS %s int 1\n", ScalarName.c_str());\
   fprintf(f, "LOOKUP_TABLE default\n"); \
   { \
   int* gn = new int[total];\
   int t;\
   for (size_t i = 0; i < total; i++) {\
-    t = ptr->voxelVar[i].grain_index;\
+    t = ptr->grain_indicies[i];\
     MXA::Endian::FromSystemToBig::convert<int>(t); \
     gn[i] = t; \
   }\
@@ -87,22 +87,22 @@
   }
 
 
-#define WRITE_VTK_SCALARS_FROM_VOXEL_ASCII(ptr, name, type, voxelsVar, var, FORMAT)\
+#define WRITE_VTK_SCALARS_FROM_VOXEL_ASCII(ptr, name, type, var, FORMAT)\
   fprintf(f, "SCALARS %s %s 1\n", name.c_str(), #type);\
   fprintf(f, "LOOKUP_TABLE default\n");\
   for (size_t i = 0; i < total; i++) {\
     if(i%20 == 0 && i > 0) { fprintf(f, "\n");}\
-    fprintf(f, FORMAT, ptr->voxelsVar[i].var);\
+    fprintf(f, FORMAT, ptr->var[i]);\
   }fprintf(f,"\n"); \
 
-#define WRITE_VTK_SCALARS_FROM_VOXEL_BINARY(ptr, name, type, voxelsVar, var)\
+#define WRITE_VTK_SCALARS_FROM_VOXEL_BINARY(ptr, name, type, var)\
   fprintf(f, "SCALARS %s %s 1\n", name.c_str(), #type);\
   fprintf(f, "LOOKUP_TABLE default\n");\
   { \
   type* gn = new type[total];\
   type t;\
   for (size_t i = 0; i < total; i++) {\
-    t = ptr->voxelsVar[i].var;\
+    t = ptr->var[i];\
     MXA::Endian::FromSystemToBig::convert<type>(t); \
     gn[i] = t; \
   }\
@@ -120,7 +120,7 @@
   fprintf(f, "LOOKUP_TABLE default\n");\
   for (size_t i = 0; i < total; i++) {\
     if(i%20 == 0 && i > 0) { fprintf(f, "\n");}\
-    fprintf(f, FORMAT, ptr->m_Grains[ptr->voxels[i].grain_index]->var);\
+    fprintf(f, FORMAT, ptr->m_Grains[ptr->grain_indicies[i]]->var);\
   } fprintf(f,"\n");
 
 #define WRITE_VTK_GRAIN_WITH_GRAIN_SCALAR_VALUE_BINARY(ptr, name, type, var)\
@@ -130,7 +130,7 @@
   type* gn = new type[total];\
   type t;\
   for (size_t i = 0; i < total; i++) {\
-    t = ptr->m_Grains[ptr->voxels[i].grain_index]->var;\
+    t = ptr->m_Grains[ptr->grain_indicies[i]]->var;\
     MXA::Endian::FromSystemToBig::convert<type>(t); \
     gn[i] = t; \
   }\

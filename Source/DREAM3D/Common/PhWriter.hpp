@@ -54,7 +54,7 @@ class PhWriter
     virtual ~PhWriter() {}
 
     template<typename T>
-    int writeGrainPhFile(const std::string &filename, T &voxels, int xpoints, int ypoints, int zpoints)
+    int writeGrainPhFile(const std::string &filename, T &grain_index, int xpoints, int ypoints, int zpoints)
     {
       std::string OutputName;
       int totalpoints = xpoints * ypoints * zpoints;
@@ -77,7 +77,7 @@ class PhWriter
 
       for (int i = 0; i < totalpoints; ++i)
       {
-        used[voxels[i].grain_index] = true;
+        used[grain_index[i]] = true;
       }
 
       int grains = 0;
@@ -99,7 +99,7 @@ class PhWriter
       int count = 0;
       for (int k = 0; k < totalpoints; k++)
       {
-        outfile << std::setw(6) << voxels[k].grain_index;
+        outfile << std::setw(6) << grain_index[k];
         count++;
         if (count == 20)
         {

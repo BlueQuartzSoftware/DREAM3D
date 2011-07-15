@@ -30,10 +30,6 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 #include "AIM_H5VtkDataWriter.h"
-#include "DREAM3D/Reconstruction/ReconstructionFunc.h"
-
-
-
 
 
 #define APPEND_DATA_TRUE 1
