@@ -28,107 +28,54 @@
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include <iostream>
-
-#include <boost/shared_array.hpp>
-#include "MXA/Common/MXASetGetMacros.h"
-#include "DREAM3D/Common/Constants.h"
+#include <vector>
+#include <string>
 
 
-class Grain
+class Patch
 {
-public:
-  MXA_SHARED_POINTERS(Grain);
-  MXA_STATIC_NEW_MACRO(Grain);
-  MXA_TYPE_MACRO(Grain);
-  virtual ~Grain()
-  {
-    std::cout << "~Grain" << std::endl;
-  }
- IntVectorType     neighborlist;
-protected:
-  Grain()
-  {
-    neighborlist = IntVectorType(new std::vector<int>( 0) );
-    for(int i = 0; i < 6; ++i)
-    {
-      neighborlist->push_back(i);
+  public:
+    int verts[3];
+    virtual ~Patch() {}
+    Patch() {};
+    Patch(const Patch& p) {
+      std::cout << "Patch(const Patch& p)" << std::endl;
+//      verts[0] = p.verts[0];
+//      verts[1] = p.verts[1];
+//      verts[2] = p.verts[2];
     }
-  }
 
-private:
-  Grain(const Grain&); // Copy Constructor Not Implemented
-  void operator=(const Grain&); // Operator '=' Not Implemented
+    void print()
+    {
+      std::cout << "vert[0]: " << verts[0] << "  vert[1]: " << verts[1] << "  vert[2]: " << verts[2] << std::endl;
+    }
+
+  private:
+
+    //void operator=(const Patch&); // Operator '=' Not Implemented
+
+
 };
-
-
-// =======================================================================================
-class GrainGeneratorFunc
-{
-public:
-  MXA_SHARED_POINTERS(GrainGeneratorFunc)
-    MXA_STATIC_NEW_MACRO(GrainGeneratorFunc)
-
-  virtual ~GrainGeneratorFunc() 
-  {  
-    std::cout << "~GrainGeneratorFunc" << std::endl;
-    std::vector<int*> pointers;
-    // Get the pointer to the internal data structure of each vector.
-    for(int i = 0; i < 10; ++i)
-    {
-      pointers.push_back( &(m_Grains[i]->neighborlist->front() ) );
-    }
-
-    std::vector<int>* neighborListVectPointer = m_Grains[0]->neighborlist.get();
-
-    m_Grains.clear();
-  
-    // Now try accessing the pointers
-    for(int i = 0; i < 10; ++i)
-    {
-      int* p = pointers[i];
-      std::cout << "Value: " << p[5] << std::endl;
-    }
-    //try accessing the pointer after it has been deleted
-    std::cout << neighborListVectPointer->at(4) << std::endl;
-  }
-   
-  
-  std::vector<Grain::Pointer> m_Grains;
-
-    void init()
-    {
-      for(int i = 0; i < 10; ++i)
-      {
-        m_Grains.push_back(Grain::New());
-      }
-    }
-protected:
-  GrainGeneratorFunc() {}
-private:
-  GrainGeneratorFunc(const GrainGeneratorFunc& );
-  void operator =(const GrainGeneratorFunc& );
-};
-
 
 int main(int argc, char **argv)
 {
   std::cout << "Starting...." << std::endl;
 
-  std::vector<int> test(100000000);
+  std::vector<Patch> ps(2);
+  ps[0].verts[0] = 111;
+  ps[0].verts[1] = 111;
+  ps[0].verts[2] = 111;
 
-  test.resize(0);
+  Patch& p0 = ps[0];
+  p0.verts[0] = 222;
+  ps[0].print();
+  p0.print();
 
+  p0 = ps[1];
+  p0.verts[0] = 333;
+  ps[1].print();
+  p0.print();
 
-
-
-
-
-  GrainGeneratorFunc::Pointer m = GrainGeneratorFunc::New();
-  m->init();
-
-  m = GrainGeneratorFunc::NullPointer();
-
-  std::cout << "Ending " << std::endl;
 
   return 0;
 

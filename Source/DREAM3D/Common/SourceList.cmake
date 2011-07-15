@@ -13,6 +13,7 @@ SET (DREAM3D_Common_HDRS
   ${DREAM3DLib_SOURCE_DIR}/Common/OIMColoring.hpp
   ${DREAM3DLib_SOURCE_DIR}/Common/OrientationMath.h
   ${DREAM3DLib_SOURCE_DIR}/Common/PhaseType.h
+  ${DREAM3DLib_SOURCE_DIR}/Common/ShapeType.h
   ${DREAM3DLib_SOURCE_DIR}/Common/PhWriter.hpp
   ${DREAM3DLib_SOURCE_DIR}/Common/Texture.h
   ${DREAM3DLib_SOURCE_DIR}/Common/TexturePreset.h
@@ -31,6 +32,7 @@ SET (DREAM3D_Common_SRCS
   ${DREAM3DLib_SOURCE_DIR}/Common/Grain.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/OrientationMath.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/PhaseType.cpp
+  ${DREAM3DLib_SOURCE_DIR}/Common/ShapeType.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/Texture.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/TexturePreset.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/OrientationOps/CubicOps.cpp

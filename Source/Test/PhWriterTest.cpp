@@ -31,19 +31,18 @@
 #include <vector>
 
 #include "DREAM3D/Common/PhWriter.hpp"
-#include "DREAM3D/GrainGenerator/GrainGeneratorVoxel.h"
 
 int main(int argc, char **argv)
 {
 
-  GrainGeneratorVoxel* voxels = new GrainGeneratorVoxel[27];
+  std::vector<int> grain_indices(27);
   int xpoints = 3;
   int ypoints = 3;
   int zpoints = 3;
 
 
   PhWriter writer;
-  int err = writer.writeGrainPhFile("test.ph", voxels, xpoints, ypoints, zpoints);
+  int err = writer.writeGrainPhFile("test.ph", grain_indices, xpoints, ypoints, zpoints);
   if (err < 0)
   {
     return EXIT_FAILURE;
