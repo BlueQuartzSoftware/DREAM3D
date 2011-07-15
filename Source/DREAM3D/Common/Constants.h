@@ -297,24 +297,24 @@ namespace AIM
     const std::string PhFile("VoxelData.ph");
 
     enum Overlap {
-        UnknownOverlap = 0,    //!<
-        Rigid = 1,             //!<
-        Progressive = 2        //!<
+        Rigid = 0,             //!<
+        Progressive = 1,        //!<
+        UnknownOverlap = 999    //!<
     };
 
-    enum ShapeClass {
-        UnknownShapeClass = 0,   //!<
-        Ellipsoid = 1,           //!<
-        Superellipsoid = 2,      //!<
-        CubeOctahedron = 3,      //!<
-        Cylinder = 4		     //!<
+    enum ShapeType {
+        EllipsoidShape = 0,           //!<
+        SuperEllipsoidShape = 1,      //!<
+        CubeOctahedronShape = 2,      //!<
+        CylinderShape = 3,		     //!<
+        UnknownShapeType = 999    //!<
     };
 
 	enum Precipitates {
-        UnknownPrecipitates = 0,    //!<
-        NoPrecipitates= 1,          //!<
-        BoundaryPrecipitates = 2,   //!<
-        BulkPrecipitates = 3        //!<
+        NoPrecipitates = 0,          //!<
+        BoundaryPrecipitates = 1,   //!<
+        BulkPrecipitates = 2,        //!<
+        UnknownPrecipitates = 999    //!<
     };
 
   }
@@ -343,24 +343,32 @@ namespace AIM
      const std::string SurfaceVoxelScalarName("SurfaceVoxel");
   }
 
+  /*   Surface Meshing Related   */
+  namespace SurfaceMesh
+  {
 
-  namespace SurfaceMesh {
 
-    /*   Surface Meshing Related   */
-    const std::string VTKExt("vtk");
-    const std::string NodesRawFile("nodes_raw.txt");
-    const std::string NodesFile("nodes.txt");
     const std::string NodesFileBin("nodes.bin");
     const std::string TrianglesFileBin("triangles.bin");
+    const std::string VisualizationVizFile("Visualization.vtk");
+
+    const std::string VTKExt("vtk");
+
+#if 0
+    const std::string NodesRawFile("nodes_raw.txt");
+    const std::string NodesFile("nodes.txt");
     const std::string TrianglesFileIndex("triangles");
     const std::string TrianglesFile("triangles.txt");
     const std::string EdgesFileIndex("edges");
     const std::string EdgesFile("edges.txt");
-    const std::string VisualizationVizFile("Visualization.vtk");
+
     const std::string Smooth3DIterationFile("Smooth3D");
     const std::string NodesSmoothedFile("nodes_smoothed.txt");
     const std::string STLFile("Mesh.stl");
+#endif
+
   }
+
 
   namespace VolumeMeshing {
     /* Volume Meshing Related */
