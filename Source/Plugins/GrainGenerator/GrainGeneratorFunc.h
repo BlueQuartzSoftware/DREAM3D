@@ -97,6 +97,7 @@ public:
     std::vector<AIM::Reconstruction::CrystalStructure> crystruct;
     std::vector<AIM::Reconstruction::PhaseType>        phaseType;
     std::vector<float>                                 pptFractions;
+    std::vector<AIM::SyntheticBuilder::ShapeType>        shapeTypes;
 
 	std::vector<int> grain_indicies;
     std::vector<int> phases;
@@ -152,8 +153,6 @@ public:
     std::vector<float> unbiasedvol;
     std::vector<float> totalsurfacearea;
     int numprimarygrains;
-    std::vector<AIM::SyntheticBuilder::ShapeType>        shapeTypes;
-    int shapeclass;
     std::vector<float> phasefraction;
     std::vector<float> binstepsize;
     std::vector<float> grainsizediststep;
