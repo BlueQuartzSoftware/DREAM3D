@@ -1826,6 +1826,7 @@ void ReconstructionFunc::merge_colonies()
             q2[3] = m_Grains[neigh]->avg_quat[3]/m_Grains[neigh]->avg_quat[0];
             q2[4] = m_Grains[neigh]->avg_quat[4]/m_Grains[neigh]->avg_quat[0];
             phase2 = crystruct[m_Grains[neigh]->phase];
+
 			if (phase1 == phase2) w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
 			OrientationMath::axisAngletoRod(w, n1, n2, n3, r1, r2, r3);
 			float vecttol = 0.03;
