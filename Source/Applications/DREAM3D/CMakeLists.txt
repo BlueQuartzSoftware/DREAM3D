@@ -50,6 +50,7 @@ add_definitions(-DDREAM3D_USE_QT
                 -DUPDATE_EDGE_TRI_LIBRARY)
 
 include_directories(${PROJECT_CODE_DIR}
+                    ${PROJECT_CODE_DIR}/Plugins
                     ${HDF5_INCLUDE_DIR}
                     ${DREAM3DApp_SOURCE_DIR}
                     ${DREAM3DApp_BINARY_DIR}

@@ -36,10 +36,10 @@
 #include "MXA/HDF5/H5Utilities.h"
 #include "MXA/Utilities/StringUtils.h"
 
-#include "ANG/AngReader.h"
-#include "ANG/H5AngReader.h"
+#include "TSLLib/AngReader.h"
+#include "TSLLib/H5AngReader.h"
 
-#include "DREAM3D/OIMImport/OIMImport.h"
+#include "OIMImport/OIMImport.h"
 
 
 #if _WIN32_
