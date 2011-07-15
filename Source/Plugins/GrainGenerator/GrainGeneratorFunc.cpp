@@ -707,7 +707,7 @@ void  GrainGeneratorFunc::insert_grain(size_t gnum)
   m_Grains[gnum]->rowlist = new std::vector<int>(0);}
   if (NULL == m_Grains[gnum]->planelist) {
   m_Grains[gnum]->planelist = new std::vector<int>(0);}
-
+  AIM::SyntheticBuilder::ShapeType shapeclass = shapeTypes[m_Grains[gnum]->phase];
   if(shapeclass == AIM::SyntheticBuilder::CylinderShape)
   {
       radcur1 = (volcur*(1.0/m_pi)*(1.0/bovera)*(1.0/covera));
@@ -906,6 +906,7 @@ void  GrainGeneratorFunc::insert_precipitate(size_t gnum)
   float covera = m_Grains[gnum]->radius3;
   float omega3 = m_Grains[gnum]->omega3;
   float radcur1 = 1;
+  AIM::SyntheticBuilder::ShapeType shapeclass = shapeTypes[m_Grains[gnum]->phase];
   if(shapeclass == AIM::SyntheticBuilder::CylinderShape)
   {
       radcur1 = (volcur*(1.0/m_pi)*(1.0/bovera)*(1.0/covera));
@@ -1888,6 +1889,7 @@ void GrainGeneratorFunc::assign_voxels()
     yc = m_Grains[i]->centroidy;
     zc = m_Grains[i]->centroidz;
     float radcur1 = 1;
+	AIM::SyntheticBuilder::ShapeType shapeclass = shapeTypes[m_Grains[i]->phase];
     if (shapeclass == AIM::SyntheticBuilder::CylinderShape)
     {
       radcur1 = (volcur * (1.0 / m_pi) * (1.0 / bovera) * (1.0 / covera));
