@@ -25,19 +25,21 @@
 
 // AIM Includes
 #include "DREAM3D/Common/AIMMath.h"
+#include "DREAM3D/Common/Constants.h"
 
 #define NEW_SHARED_ARRAY(var, type, size)\
   boost::shared_array<type> var##Array(new type[size]);\
   type* var = var##Array.get();
 
 
-const static float m_onepointthree = 1.33333333333f;
+//const static float m_onepointthree = 1.33333333333f;
 const static float m_pi = M_PI;
-const static float m_one_over_pi = 1.0/m_pi;
+//const static float m_one_over_pi = 1.0/m_pi;
 const static float SinOfHalf = sinf(0.5f);
 const static float CosOfHalf = cosf(0.5f);
-const static float SinOfZero = sinf(0.0f);
-const static float CosOfZero = cosf(0.0f);
+//const static float SinOfZero = sinf(0.0f);
+//const static float CosOfZero = cosf(0.0f);
+#if 0
 float ShapeClass2Omega3[41][2] = {{0.0f, 0.0f},
                   {0.0f, 0.25f},
                   {0.0f, 0.5f},
@@ -120,6 +122,7 @@ float ShapeClass3Omega3[41][2] = {{0.787873524f, 0.0f},
                   {0.81740437f, 1.9f},
                   {0.811701359f, 1.95f},
                   {0.810569469f, 2.0f}};
+#endif
 
 #define DIMS "DIMENSIONS"
 #define LOOKUP "LOOKUP_TABLE"
@@ -147,6 +150,17 @@ GrainGeneratorFunc::GrainGeneratorFunc()
   m_OrientatioOps.push_back(m_CubicOps.get());
   m_OrthoOps = OrthoRhombicOps::New();
   m_OrientatioOps.push_back(m_OrthoOps.get());
+
+  m_EllipsoidOps = DREAM3D::EllipsoidOps::New();
+  m_ShapeOps[AIM::SyntheticBuilder::EllipsoidShape] = m_EllipsoidOps.get();
+  m_SuprtEllipsoidOps = DREAM3D::SuperEllipsoidOps::New();
+  m_ShapeOps[AIM::SyntheticBuilder::SuperEllipsoidShape] = m_SuprtEllipsoidOps.get();
+  m_CubicOctohedronOps = DREAM3D::CubeOctohedronOps::New();
+  m_ShapeOps[AIM::SyntheticBuilder::CubeOctahedronShape] = m_CubicOctohedronOps.get();
+  m_CylinderOps = DREAM3D::CylinderOps::New();
+  m_ShapeOps[AIM::SyntheticBuilder::CylinderShape] = m_CylinderOps.get();
+  m_UnknownShapeOps = DREAM3D::ShapeOps::New();
+  m_ShapeOps[AIM::SyntheticBuilder::UnknownShapeType] = m_UnknownShapeOps.get();
 
 //  voxels.reset(NULL);
   GGseed = MXA::getMilliSeconds();
@@ -680,12 +694,12 @@ void  GrainGeneratorFunc::insert_grain(size_t gnum)
   AIM_RANDOMNG_NEW()
 
   float dist;
-  float Nvalue = 0;
-  float Nvaluedist = 0;
-  float bestNvaluedist = 1000000;
-  float Gvalue = 0;
-  float Gvaluedist = 0;
-  float bestGvaluedist = 1000000;
+//  float Nvalue = 0;
+//  float Nvaluedist = 0;
+//  float bestNvaluedist = 1000000;
+//  float Gvalue = 0;
+//  float Gvaluedist = 0;
+//  float bestGvaluedist = 1000000;
   float inside = -1;
  // int index;
   int column, row, plane;
@@ -707,57 +721,25 @@ void  GrainGeneratorFunc::insert_grain(size_t gnum)
   m_Grains[gnum]->rowlist = new std::vector<int>(0);}
   if (NULL == m_Grains[gnum]->planelist) {
   m_Grains[gnum]->planelist = new std::vector<int>(0);}
+
+
   AIM::SyntheticBuilder::ShapeType shapeclass = shapeTypes[m_Grains[gnum]->phase];
-  if(shapeclass == AIM::SyntheticBuilder::CylinderShape)
+
+
+  // init any values for each of the Shape Ops
+  for (std::map<AIM::SyntheticBuilder::ShapeType, DREAM3D::ShapeOps*>::iterator ops = m_ShapeOps.begin(); ops != m_ShapeOps.end(); ++ops )
   {
-      radcur1 = (volcur*(1.0/m_pi)*(1.0/bovera)*(1.0/covera));
+    (*ops).second->init();
   }
-  if(shapeclass == AIM::SyntheticBuilder::CubeOctahedronShape)
-  {
-    for(int i=0;i<41;i++)
-    {
-    Gvaluedist = fabsf(omega3-ShapeClass3Omega3[i][0]);
-    if(Gvaluedist < bestGvaluedist)
-    {
-        bestGvaluedist = Gvaluedist;
-      Gvalue = ShapeClass3Omega3[i][1];
-    }
-    }
-      if(Gvalue >= 0 && Gvalue <= 1)
-      {
-        radcur1 = (volcur*6.0)/(6-(Gvalue*Gvalue*Gvalue));
-      }
-      if(Gvalue > 1 && Gvalue <= 2)
-      {
-        radcur1 = (volcur*6.0)/(3+(9*Gvalue)-(9*Gvalue*Gvalue)+(2*Gvalue*Gvalue*Gvalue));
-      }
-  }
-  if(shapeclass == AIM::SyntheticBuilder::SuperEllipsoidShape)
-  {
-    for(int i=0;i<41;i++)
-    {
-      float a = gamma(1.0+1.0/ShapeClass2Omega3[i][1]);
-    float b = gamma(5.0/ShapeClass2Omega3[i][1]);
-      float c = gamma(3.0/ShapeClass2Omega3[i][1]);
-    float d = gamma(1.0+3.0/ShapeClass2Omega3[i][1]);
-    ShapeClass2Omega3[i][0] = powf(20.0*(powf(a,3)*b)/(c*powf(d,5.0/3.0)),3)/(2000.0*M_PI*M_PI/9.0);
-    Nvaluedist = fabsf(omega3-ShapeClass2Omega3[i][0]);
-    if(Nvaluedist < bestNvaluedist)
-    {
-        bestNvaluedist = Nvaluedist;
-      Nvalue = ShapeClass2Omega3[i][1];
-    }
-    }
-      float beta1 = (gamma((1.0/Nvalue))*gamma((1.0/Nvalue)))/gamma((2.0/Nvalue));
-      float beta2 = (gamma((2.0/Nvalue))*gamma((1.0/Nvalue)))/gamma((3.0/Nvalue));
-      radcur1 = (volcur*(3.0/2.0)*(1.0/bovera)*(1.0/covera)*((Nvalue*Nvalue)/4.0)*(1.0/beta1)*(1.0/beta2));
-  }
-  if(shapeclass == AIM::SyntheticBuilder::EllipsoidShape)
-  {
-      radcur1 = (volcur*(3.0/4.0)*(1.0/m_pi)*(1.0/bovera)*(1.0/covera));
-  }
-  radcur1 = powf(radcur1,0.333333333333);
-  if(shapeclass == AIM::SyntheticBuilder::CubeOctahedronShape) radcur1 = radcur1/2.0;
+  // Create our Argument Map
+  std::map<DREAM3D::ShapeOps::ArgName, float> shapeArgMap;
+  shapeArgMap[DREAM3D::ShapeOps::Omega3] = omega3;
+  shapeArgMap[DREAM3D::ShapeOps::VolCur] = volcur;
+  shapeArgMap[DREAM3D::ShapeOps::B_OverA] = bovera;
+  shapeArgMap[DREAM3D::ShapeOps::C_OverA] = covera;
+
+  radcur1 = m_ShapeOps[shapeclass]->radcur1(shapeArgMap);
+
   float radcur2 = (radcur1*bovera);
   float radcur3 = (radcur1*covera);
   float phi1 = m_Grains[gnum]->axiseuler1;
@@ -818,56 +800,8 @@ void  GrainGeneratorFunc::insert_grain(size_t gnum)
 			float axis1comp = xp/radcur1;
 			float axis2comp = yp/radcur2;
 			float axis3comp = zp/radcur3;
-			if(shapeclass == AIM::SyntheticBuilder::CylinderShape)
-			{
-				if(fabs(axis1comp) <= 1)
-				{
-					inside = 1;
-					axis2comp = fabs(axis2comp);
-					axis3comp = fabs(axis3comp);
-					axis2comp = axis2comp*axis2comp;
-					axis3comp = axis3comp*axis3comp;
-					inside = 1-axis2comp-axis3comp;
-				}
-			}
-			if(shapeclass == AIM::SyntheticBuilder::CubeOctahedronShape)
-			{
-				if(fabs(axis1comp) <= 1 && fabs(axis2comp) <= 1 && fabs(axis3comp) <= 1)
-				{
-				  inside = 1;
-				  axis1comp = axis1comp+1;
-				  axis2comp = axis2comp+1;
-				  axis3comp = axis3comp+1;
-				  if(((-axis1comp)+(-axis2comp)+(axis3comp)-((-0.5*Gvalue)+(-0.5*Gvalue)+2)) > 0) inside = -1;
-				  if(((axis1comp)+(-axis2comp)+(axis3comp)-((2-(0.5*Gvalue))+(-0.5*Gvalue)+2)) > 0) inside = -1;
-				  if(((axis1comp)+(axis2comp)+(axis3comp)-((2-(0.5*Gvalue))+(2-(0.5*Gvalue))+2)) > 0) inside = -1;
-				  if(((-axis1comp)+(axis2comp)+(axis3comp)-((-0.5*Gvalue)+(2-(0.5*Gvalue))+2)) > 0) inside = -1;
-				  if(((-axis1comp)+(-axis2comp)+(-axis3comp)-((-0.5*Gvalue)+(-0.5*Gvalue))) > 0) inside = -1;
-				  if(((axis1comp)+(-axis2comp)+(-axis3comp)-((2-(0.5*Gvalue))+(-0.5*Gvalue))) > 0) inside = -1;
-				  if(((axis1comp)+(axis2comp)+(-axis3comp)-((2-(0.5*Gvalue))+(2-(0.5*Gvalue)))) > 0) inside = -1;
-				  if(((-axis1comp)+(axis2comp)+(-axis3comp)-((-0.5*Gvalue)+(2-(0.5*Gvalue)))) > 0) inside = -1;
-				}
-			}
-			if(shapeclass == AIM::SyntheticBuilder::SuperEllipsoidShape)
-			{
-				axis1comp = fabs(axis1comp);
-				axis2comp = fabs(axis2comp);
-				axis3comp = fabs(axis3comp);
-				axis1comp = powf(axis1comp,Nvalue);
-				axis2comp = powf(axis2comp,Nvalue);
-				axis3comp = powf(axis3comp,Nvalue);
-				inside = 1-axis1comp-axis2comp-axis3comp;
-			}
-			if(shapeclass == AIM::SyntheticBuilder::EllipsoidShape)
-			{
-				axis1comp = fabs(axis1comp);
-				axis2comp = fabs(axis2comp);
-				axis3comp = fabs(axis3comp);
-				axis1comp = axis1comp*axis1comp;
-				axis2comp = axis2comp*axis2comp;
-				axis3comp = axis3comp*axis3comp;
-				inside = 1-axis1comp-axis2comp-axis3comp;
-			}
+      inside = m_ShapeOps[shapeclass]->inside(axis1comp, axis2comp, axis3comp);
+
 			if(inside >= 0)
 			{
 				m_Grains[gnum]->columnlist->push_back(column);
@@ -885,12 +819,12 @@ void  GrainGeneratorFunc::insert_precipitate(size_t gnum)
   AIM_RANDOMNG_NEW()
 
   float dist;
-  float Nvalue = 0;
-  float Nvaluedist = 0;
-  float bestNvaluedist = 1000000;
-  float Gvalue = 0;
-  float Gvaluedist = 0;
-  float bestGvaluedist = 1000000;
+//  float Nvalue = 0;
+//  float Nvaluedist = 0;
+//  float bestNvaluedist = 1000000;
+//  float Gvalue = 0;
+//  float Gvaluedist = 0;
+//  float bestGvaluedist = 1000000;
   float inside = -1;
   int index;
   int column, row, plane;
@@ -907,56 +841,21 @@ void  GrainGeneratorFunc::insert_precipitate(size_t gnum)
   float omega3 = m_Grains[gnum]->omega3;
   float radcur1 = 1;
   AIM::SyntheticBuilder::ShapeType shapeclass = shapeTypes[m_Grains[gnum]->phase];
-  if(shapeclass == AIM::SyntheticBuilder::CylinderShape)
+
+  // init any values for each of the Shape Ops
+  for (std::map<AIM::SyntheticBuilder::ShapeType, DREAM3D::ShapeOps*>::iterator ops = m_ShapeOps.begin(); ops != m_ShapeOps.end(); ++ops )
   {
-      radcur1 = (volcur*(1.0/m_pi)*(1.0/bovera)*(1.0/covera));
+    (*ops).second->init();
   }
-  if(shapeclass == AIM::SyntheticBuilder::CubeOctahedronShape)
-  {
-    for(int i=0;i<41;i++)
-    {
-    Gvaluedist = fabsf(omega3-ShapeClass3Omega3[i][0]);
-    if(Gvaluedist < bestGvaluedist)
-    {
-        bestGvaluedist = Gvaluedist;
-      Gvalue = ShapeClass3Omega3[i][1];
-    }
-    }
-      if(Gvalue >= 0 && Gvalue <= 1)
-      {
-        radcur1 = (volcur*6.0)/(6-(Gvalue*Gvalue*Gvalue));
-      }
-      if(Gvalue > 1 && Gvalue <= 2)
-      {
-        radcur1 = (volcur*6.0)/(3+(9*Gvalue)-(9*Gvalue*Gvalue)+(2*Gvalue*Gvalue*Gvalue));
-      }
-  }
-  if(shapeclass == AIM::SyntheticBuilder::SuperEllipsoidShape)
-  {
-    for(int i=0;i<41;i++)
-    {
-      float a = gamma(1.0+1.0/ShapeClass2Omega3[i][1]);
-    float b = gamma(5.0/ShapeClass2Omega3[i][1]);
-      float c = gamma(3.0/ShapeClass2Omega3[i][1]);
-    float d = gamma(1.0+3.0/ShapeClass2Omega3[i][1]);
-    ShapeClass2Omega3[i][0] = powf(20.0*(powf(a,3)*b)/(c*powf(d,5.0/3.0)),3)/(2000.0*M_PI*M_PI/9.0);
-    Nvaluedist = fabsf(omega3-ShapeClass2Omega3[i][0]);
-    if(Nvaluedist < bestNvaluedist)
-    {
-        bestNvaluedist = Nvaluedist;
-      Nvalue = ShapeClass2Omega3[i][1];
-    }
-    }
-      float beta1 = (gamma((1.0/Nvalue))*gamma((1.0/Nvalue)))/gamma((2.0/Nvalue));
-      float beta2 = (gamma((2.0/Nvalue))*gamma((1.0/Nvalue)))/gamma((3.0/Nvalue));
-      radcur1 = (volcur*(3.0/2.0)*(1.0/bovera)*(1.0/covera)*((Nvalue*Nvalue)/4.0)*(1.0/beta1)*(1.0/beta2));
-  }
-  if(shapeclass == AIM::SyntheticBuilder::EllipsoidShape)
-  {
-      radcur1 = (volcur*(3.0/4.0)*(1.0/m_pi)*(1.0/bovera)*(1.0/covera));
-  }
-  radcur1 = powf(radcur1,0.333333333333);
-  if(shapeclass == AIM::SyntheticBuilder::CubeOctahedronShape) radcur1 = radcur1/2.0;
+  // Create our Argument Map
+  std::map<DREAM3D::ShapeOps::ArgName, float> shapeArgMap;
+  shapeArgMap[DREAM3D::ShapeOps::Omega3] = omega3;
+  shapeArgMap[DREAM3D::ShapeOps::VolCur] = volcur;
+  shapeArgMap[DREAM3D::ShapeOps::B_OverA] = bovera;
+  shapeArgMap[DREAM3D::ShapeOps::C_OverA] = covera;
+
+  radcur1 = m_ShapeOps[shapeclass]->radcur1(shapeArgMap);
+
   float radcur2 = (radcur1*bovera);
   float radcur3 = (radcur1*covera);
   float phi1 = m_Grains[gnum]->axiseuler1;
@@ -1042,56 +941,9 @@ void  GrainGeneratorFunc::insert_precipitate(size_t gnum)
 			float axis1comp = xp/radcur1;
 			float axis2comp = yp/radcur2;
 			float axis3comp = zp/radcur3;
-			if(shapeclass == AIM::SyntheticBuilder::CylinderShape)
-			{
-				if(fabs(axis1comp) <= 1)
-				{
-					inside = 1;
-					axis2comp = fabs(axis2comp);
-					axis3comp = fabs(axis3comp);
-					axis2comp = axis2comp*axis2comp;
-					axis3comp = axis3comp*axis3comp;
-					inside = 1-axis2comp-axis3comp;
-				}
-			}
-			if(shapeclass == AIM::SyntheticBuilder::CubeOctahedronShape)
-			{
-				if(fabs(axis1comp) <= 1 && fabs(axis2comp) <= 1 && fabs(axis3comp) <= 1)
-				{
-				  inside = 1;
-				  axis1comp = axis1comp+1;
-				  axis2comp = axis2comp+1;
-				  axis3comp = axis3comp+1;
-				  if(((-axis1comp)+(-axis2comp)+(axis3comp)-((-0.5*Gvalue)+(-0.5*Gvalue)+2)) > 0) inside = -1;
-				  if(((axis1comp)+(-axis2comp)+(axis3comp)-((2-(0.5*Gvalue))+(-0.5*Gvalue)+2)) > 0) inside = -1;
-				  if(((axis1comp)+(axis2comp)+(axis3comp)-((2-(0.5*Gvalue))+(2-(0.5*Gvalue))+2)) > 0) inside = -1;
-				  if(((-axis1comp)+(axis2comp)+(axis3comp)-((-0.5*Gvalue)+(2-(0.5*Gvalue))+2)) > 0) inside = -1;
-				  if(((-axis1comp)+(-axis2comp)+(-axis3comp)-((-0.5*Gvalue)+(-0.5*Gvalue))) > 0) inside = -1;
-				  if(((axis1comp)+(-axis2comp)+(-axis3comp)-((2-(0.5*Gvalue))+(-0.5*Gvalue))) > 0) inside = -1;
-				  if(((axis1comp)+(axis2comp)+(-axis3comp)-((2-(0.5*Gvalue))+(2-(0.5*Gvalue)))) > 0) inside = -1;
-				  if(((-axis1comp)+(axis2comp)+(-axis3comp)-((-0.5*Gvalue)+(2-(0.5*Gvalue)))) > 0) inside = -1;
-				}
-			}
-			if(shapeclass == AIM::SyntheticBuilder::SuperEllipsoidShape)
-			{
-				axis1comp = fabs(axis1comp);
-				axis2comp = fabs(axis2comp);
-				axis3comp = fabs(axis3comp);
-				axis1comp = powf(axis1comp,Nvalue);
-				axis2comp = powf(axis2comp,Nvalue);
-				axis3comp = powf(axis3comp,Nvalue);
-				inside = 1-axis1comp-axis2comp-axis3comp;
-			}
-			if(shapeclass == AIM::SyntheticBuilder::EllipsoidShape)
-			{
-				axis1comp = fabs(axis1comp);
-				axis2comp = fabs(axis2comp);
-				axis3comp = fabs(axis3comp);
-				axis1comp = axis1comp*axis1comp;
-				axis2comp = axis2comp*axis2comp;
-				axis3comp = axis3comp*axis3comp;
-				inside = 1-axis1comp-axis2comp-axis3comp;
-			}
+      inside = m_ShapeOps[shapeclass]->inside(axis1comp, axis2comp, axis3comp);
+
+
 			if(inside >= 0)
 			{
 				int currentpoint = index;
@@ -1855,17 +1707,17 @@ void GrainGeneratorFunc::assign_voxels()
   // int size;
   int column, row, plane;
   float inside;
-  float Nvalue = 0;
-  float Nvaluedist = 0;
-  float bestNvaluedist = 1000000;
-  float Gvalue = 0;
-  float Gvaluedist = 0;
-  float bestGvaluedist = 1000000;
+//  float Nvalue = 0;
+//  float Nvaluedist = 0;
+//  float bestNvaluedist = 1000000;
+//  float Gvalue = 0;
+//  float Gvaluedist = 0;
+//  float bestGvaluedist = 1000000;
   float xc, yc, zc;
   float xp, yp, zp;
   float dist;
   float x, y, z;
-  int phase;
+//  int phase;
   int xmin, xmax, ymin, ymax, zmin, zmax;
 
   NEW_SHARED_ARRAY(gsizes, int, m_Grains.size())
@@ -1888,58 +1740,24 @@ void GrainGeneratorFunc::assign_voxels()
     xc = m_Grains[i]->centroidx;
     yc = m_Grains[i]->centroidy;
     zc = m_Grains[i]->centroidz;
-    float radcur1 = 1;
-	AIM::SyntheticBuilder::ShapeType shapeclass = shapeTypes[m_Grains[i]->phase];
-    if (shapeclass == AIM::SyntheticBuilder::CylinderShape)
+    float radcur1 = 0.0f;
+    //Unbounded Check for the size of shapeTypes. We assume a 1:1 with phase
+    AIM::SyntheticBuilder::ShapeType shapeclass = shapeTypes[m_Grains[i]->phase];
+
+    // init any values for each of the Shape Ops
+    for (std::map<AIM::SyntheticBuilder::ShapeType, DREAM3D::ShapeOps*>::iterator ops = m_ShapeOps.begin(); ops != m_ShapeOps.end(); ++ops )
     {
-      radcur1 = (volcur * (1.0 / m_pi) * (1.0 / bovera) * (1.0 / covera));
+      (*ops).second->init();
     }
-    if (shapeclass == AIM::SyntheticBuilder::CubeOctahedronShape)
-    {
-      for (int i = 0; i < 41; i++)
-      {
-        Gvaluedist = fabsf(omega3 - ShapeClass3Omega3[i][0]);
-        if (Gvaluedist < bestGvaluedist)
-        {
-          bestGvaluedist = Gvaluedist;
-          Gvalue = ShapeClass3Omega3[i][1];
-        }
-      }
-      if (Gvalue >= 0 && Gvalue <= 1)
-      {
-        radcur1 = (volcur * 6.0) / (6 - (Gvalue * Gvalue * Gvalue));
-      }
-      if (Gvalue > 1 && Gvalue <= 2)
-      {
-        radcur1 = (volcur * 6.0) / (3 + (9 * Gvalue) - (9 * Gvalue * Gvalue) + (2 * Gvalue * Gvalue * Gvalue));
-      }
-    }
-    if (shapeclass == AIM::SyntheticBuilder::SuperEllipsoidShape)
-    {
-      for (int i = 0; i < 41; i++)
-      {
-        float a = gamma(1.0 + 1.0 / ShapeClass2Omega3[i][1]);
-        float b = gamma(5.0 / ShapeClass2Omega3[i][1]);
-        float c = gamma(3.0 / ShapeClass2Omega3[i][1]);
-        float d = gamma(1.0 + 3.0 / ShapeClass2Omega3[i][1]);
-        ShapeClass2Omega3[i][0] = powf(20.0 * (powf(a, 3) * b) / (c * powf(d, 5.0 / 3.0)), 3) / (2000.0 * M_PI * M_PI / 9.0);
-        Nvaluedist = fabsf(omega3 - ShapeClass2Omega3[i][0]);
-        if (Nvaluedist < bestNvaluedist)
-        {
-          bestNvaluedist = Nvaluedist;
-          Nvalue = ShapeClass2Omega3[i][1];
-        }
-      }
-      float beta1 = (gamma((1.0 / Nvalue))*gamma((1.0/Nvalue)))/gamma((2.0/Nvalue));
-      float beta2 = (gamma((2.0 / Nvalue))*gamma((1.0/Nvalue)))/gamma((3.0/Nvalue));
-      radcur1 = (volcur * 1.5f * (1.0 / bovera) * (1.0 / covera) * ((Nvalue * Nvalue) / 4.0) * (1.0 / beta1) * (1.0 / beta2));
-    }
-    if (shapeclass == AIM::SyntheticBuilder::EllipsoidShape)
-    {
-      radcur1 = (volcur * 0.75f * (m_one_over_pi) * (1.0 / bovera) * (1.0 / covera));
-    }
-    radcur1 = powf(radcur1, 0.333333333333);
-    if (shapeclass == AIM::SyntheticBuilder::CubeOctahedronShape) radcur1 = radcur1 * 0.5f;
+    // Create our Argument Map
+    std::map<DREAM3D::ShapeOps::ArgName, float> shapeArgMap;
+    shapeArgMap[DREAM3D::ShapeOps::Omega3] = omega3;
+    shapeArgMap[DREAM3D::ShapeOps::VolCur] = volcur;
+    shapeArgMap[DREAM3D::ShapeOps::B_OverA] = bovera;
+    shapeArgMap[DREAM3D::ShapeOps::C_OverA] = covera;
+
+    radcur1 = m_ShapeOps[shapeclass]->radcur1(shapeArgMap);
+
     float radcur2 = (radcur1 * bovera);
     float radcur3 = (radcur1 * covera);
     float phi1 = m_Grains[i]->axiseuler1;
@@ -2021,56 +1839,9 @@ void GrainGeneratorFunc::assign_voxels()
             float axis1comp = xp / radcur1;
             float axis2comp = yp / radcur2;
             float axis3comp = zp / radcur3;
-            if (shapeclass == AIM::SyntheticBuilder::CylinderShape)
-            {
-              if (fabs(axis1comp) <= 1)
-              {
-                inside = 1;
-                axis2comp = fabs(axis2comp);
-                axis3comp = fabs(axis3comp);
-                axis2comp = axis2comp*axis2comp;
-                axis3comp = axis3comp*axis3comp;
-                inside = 1 - axis2comp - axis3comp;
-              }
-            }
-            if (shapeclass == AIM::SyntheticBuilder::CubeOctahedronShape)
-            {
-              if (fabs(axis1comp) <= 1 && fabs(axis2comp) <= 1 && fabs(axis3comp) <= 1)
-              {
-                inside = 1;
-                axis1comp = axis1comp + 1;
-                axis2comp = axis2comp + 1;
-                axis3comp = axis3comp + 1;
-                if (((-axis1comp) + (-axis2comp) + (axis3comp) - ((-0.5 * Gvalue) + (-0.5 * Gvalue) + 2)) > 0) inside = -1;
-                if (((axis1comp) + (-axis2comp) + (axis3comp) - ((2 - (0.5 * Gvalue)) + (-0.5 * Gvalue) + 2)) > 0) inside = -1;
-                if (((axis1comp) + (axis2comp) + (axis3comp) - ((2 - (0.5 * Gvalue)) + (2 - (0.5 * Gvalue)) + 2)) > 0) inside = -1;
-                if (((-axis1comp) + (axis2comp) + (axis3comp) - ((-0.5 * Gvalue) + (2 - (0.5 * Gvalue)) + 2)) > 0) inside = -1;
-                if (((-axis1comp) + (-axis2comp) + (-axis3comp) - ((-0.5 * Gvalue) + (-0.5 * Gvalue))) > 0) inside = -1;
-                if (((axis1comp) + (-axis2comp) + (-axis3comp) - ((2 - (0.5 * Gvalue)) + (-0.5 * Gvalue))) > 0) inside = -1;
-                if (((axis1comp) + (axis2comp) + (-axis3comp) - ((2 - (0.5 * Gvalue)) + (2 - (0.5 * Gvalue)))) > 0) inside = -1;
-                if (((-axis1comp) + (axis2comp) + (-axis3comp) - ((-0.5 * Gvalue) + (2 - (0.5 * Gvalue)))) > 0) inside = -1;
-              }
-            }
-            if (shapeclass == AIM::SyntheticBuilder::SuperEllipsoidShape)
-            {
-              axis1comp = fabs(axis1comp);
-              axis2comp = fabs(axis2comp);
-              axis3comp = fabs(axis3comp);
-              axis1comp = powf(axis1comp, Nvalue);
-              axis2comp = powf(axis2comp, Nvalue);
-              axis3comp = powf(axis3comp, Nvalue);
-              inside = 1 - axis1comp - axis2comp - axis3comp;
-            }
-            if (shapeclass == AIM::SyntheticBuilder::EllipsoidShape)
-            {
-              axis1comp = fabs(axis1comp);
-              axis2comp = fabs(axis2comp);
-              axis3comp = fabs(axis3comp);
-              axis1comp = axis1comp*axis1comp;
-              axis2comp = axis2comp*axis2comp;
-              axis3comp = axis3comp*axis3comp;
-              inside = 1 - axis1comp - axis2comp - axis3comp;
-            }
+            inside = m_ShapeOps[shapeclass]->inside(axis1comp, axis2comp, axis3comp);
+
+
             if (inside >= 0)
             {
               int currentpoint = index;
@@ -2125,7 +1896,7 @@ void GrainGeneratorFunc::assign_voxels()
   vector<vector<int> > vlists;
   vlists.resize(m_Grains.size());
   vector<int> currentvlist;
-  int count;
+  size_t count;
   int good;
   int neighbor;
   for (int i = 0; i < totalpoints; i++)
@@ -2179,7 +1950,7 @@ void GrainGeneratorFunc::assign_voxels()
 		{
 			if(vlists[grain_indicies[currentvlist[0]]].size() < currentvlist.size())
 			{
-				for (int k = 0; k < vlists[grain_indicies[currentvlist[0]]].size(); k++)
+				for (size_t k = 0; k < vlists[grain_indicies[currentvlist[0]]].size(); k++)
 				{
 					grain_indicies[vlists[grain_indicies[currentvlist[0]]][k]] = -1;
 				}
@@ -2188,7 +1959,7 @@ void GrainGeneratorFunc::assign_voxels()
 			}
 			else if(vlists[grain_indicies[currentvlist[0]]].size() >= currentvlist.size())
 			{
-				for (int k = 0; k < currentvlist.size(); k++)
+				for (size_t k = 0; k < currentvlist.size(); k++)
 				{
 					grain_indicies[currentvlist[k]] = -1;
 				}
@@ -2362,7 +2133,7 @@ void  GrainGeneratorFunc::fill_gaps()
   }
 
   // Copy all the data back from the temp array
-  float aConstantValue = resx * resy * resz * 0.75f * m_one_over_pi;
+//  float aConstantValue = resx * resy * resz * 0.75f * m_one_over_pi;
   for (size_t i = 1; i < numGrains; i++)
   {
     m_Grains[i]->numvoxels = gsizes[i];

@@ -23,6 +23,11 @@ SET (DREAM3D_Common_HDRS
   ${DREAM3DLib_SOURCE_DIR}/Common/VTKUtils/VTKFileReader.h
   ${DREAM3DLib_SOURCE_DIR}/Common/VTKUtils/VTKFileWriters.hpp
   ${DREAM3DLib_SOURCE_DIR}/Common/VTKUtils/VTKWriterMacros.h
+  ${DREAM3DLib_SOURCE_DIR}/Common/ShapeOps/ShapeOps.h
+  ${DREAM3DLib_SOURCE_DIR}/Common/ShapeOps/CubeOctohedronOps.h
+  ${DREAM3DLib_SOURCE_DIR}/Common/ShapeOps/CylinderOps.h
+  ${DREAM3DLib_SOURCE_DIR}/Common/ShapeOps/EllipsoidOps.h
+  ${DREAM3DLib_SOURCE_DIR}/Common/ShapeOps/SuperEllipsoidOps.h
 )
 
 SET (DREAM3D_Common_SRCS
@@ -39,7 +44,11 @@ SET (DREAM3D_Common_SRCS
   ${DREAM3DLib_SOURCE_DIR}/Common/OrientationOps/HexagonalOps.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/OrientationOps/OrthoRhombicOps.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/VTKUtils/VTKFileReader.cpp
-
+  ${DREAM3DLib_SOURCE_DIR}/Common/ShapeOps/ShapeOps.cpp
+  ${DREAM3DLib_SOURCE_DIR}/Common/ShapeOps/CubeOctohedronOps.cpp
+  ${DREAM3DLib_SOURCE_DIR}/Common/ShapeOps/CylinderOps.cpp
+  ${DREAM3DLib_SOURCE_DIR}/Common/ShapeOps/EllipsoidOps.cpp
+  ${DREAM3DLib_SOURCE_DIR}/Common/ShapeOps/SuperEllipsoidOps.cpp
 )
 
 

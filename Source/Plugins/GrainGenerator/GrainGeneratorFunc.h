@@ -29,6 +29,7 @@
 #include <list>
 #include <algorithm>
 #include <numeric>
+#include <map>
 
 #include <boost/shared_array.hpp>
 
@@ -40,13 +41,20 @@
 #include "DREAM3D/Common/Constants.h"
 #include "DREAM3D/Common/Grain.h"
 #include "DREAM3D/Common/AIMRandomNG.h"
-#include "DREAM3D/HDF5/H5ReconStatsWriter.h"
-#include "DREAM3D/HDF5/H5ReconStatsReader.h"
+
 #include "DREAM3D/Common/OrientationMath.h"
 #include "DREAM3D/Common/OrientationOps/CubicOps.h"
 #include "DREAM3D/Common/OrientationOps/HexagonalOps.h"
 #include "DREAM3D/Common/OrientationOps/OrthoRhombicOps.h"
 
+#include "DREAM3D/Common/ShapeOps/ShapeOps.h"
+#include "DREAM3D/Common/ShapeOps/CubeOctohedronOps.h"
+#include "DREAM3D/Common/ShapeOps/CylinderOps.h"
+#include "DREAM3D/Common/ShapeOps/EllipsoidOps.h"
+#include "DREAM3D/Common/ShapeOps/SuperEllipsoidOps.h"
+
+#include "DREAM3D/HDF5/H5ReconStatsWriter.h"
+#include "DREAM3D/HDF5/H5ReconStatsReader.h"
 
 
 
@@ -97,7 +105,7 @@ public:
     std::vector<AIM::Reconstruction::CrystalStructure> crystruct;
     std::vector<AIM::Reconstruction::PhaseType>        phaseType;
     std::vector<float>                                 pptFractions;
-    std::vector<AIM::SyntheticBuilder::ShapeType>        shapeTypes;
+    std::vector<AIM::SyntheticBuilder::ShapeType>      shapeTypes;
 
 	std::vector<int> grain_indicies;
     std::vector<int> phases;
@@ -242,9 +250,17 @@ protected:
     GrainGeneratorFunc();
 private:
     std::vector<OrientationMath*>    m_OrientatioOps;
-    OrientationMath::Pointer                m_CubicOps;
-    OrientationMath::Pointer            m_HexOps;
+    OrientationMath::Pointer         m_CubicOps;
+    OrientationMath::Pointer         m_HexOps;
     OrientationMath::Pointer         m_OrthoOps;
+
+    std::map<AIM::SyntheticBuilder::ShapeType, DREAM3D::ShapeOps*>           m_ShapeOps;
+    DREAM3D::ShapeOps::Pointer                m_UnknownShapeOps;
+    DREAM3D::ShapeOps::Pointer                m_CubicOctohedronOps;
+    DREAM3D::ShapeOps::Pointer                m_CylinderOps;
+    DREAM3D::ShapeOps::Pointer                m_EllipsoidOps;
+    DREAM3D::ShapeOps::Pointer                m_SuprtEllipsoidOps;
+
 
     GrainGeneratorFunc(const GrainGeneratorFunc& );
     void operator =(const GrainGeneratorFunc& );

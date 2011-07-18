@@ -60,14 +60,14 @@
   type* var = var##Array.get();
 
 const static float m_pi = M_PI;
-const static float m_OnePointThree = 1.33333333333;
-const static float threesixty_over_pi = 360.0 / m_pi;
-const static float m_pi_over_180 = M_PI / 180.0;
-const static float sqrt_two = powf(2.0, 0.5);
-const static float acos_neg_one = acos(-1.0);
-const static float acos_pos_one = acos(1.0);
-const static float sin_wmin_neg_1_over_2 = sinf(acos_neg_one / 2.0);
-const static float sin_wmin_pos_1_over_2 = sinf(acos_pos_one / 2.0);
+//const static float m_OnePointThree = 1.33333333333;
+//const static float threesixty_over_pi = 360.0 / m_pi;
+//const static float m_pi_over_180 = M_PI / 180.0;
+//const static float sqrt_two = powf(2.0, 0.5);
+//const static float acos_neg_one = acos(-1.0);
+//const static float acos_pos_one = acos(1.0);
+//const static float sin_wmin_neg_1_over_2 = sinf(acos_neg_one / 2.0);
+//const static float sin_wmin_pos_1_over_2 = sinf(acos_pos_one / 2.0);
 
 #define DIMS "DIMENSIONS"
 #define LOOKUP "LOOKUP_TABLE"
@@ -372,11 +372,12 @@ void MicrostructureStatisticsFunc::find_boundingboxgrains()
 {
   int outside = 0;
   float maxsize = 0;
-  for (int i = 1; i < (m_Grains.size()); i++)
+  size_t size = m_Grains.size();
+  for (size_t i = 1; i < size; i++)
   {
 	  if((m_Grains[i]->equivdiameter/2.0) > maxsize) maxsize = (m_Grains[i]->equivdiameter/2.0);
   }
-  for (int j = 1; j < (m_Grains.size()); j++)
+  for (size_t j = 1; j < size; j++)
   {
     outside = 0;
 	if((m_Grains[j]->centroidx-maxsize) < 0) outside = 1;
@@ -392,17 +393,18 @@ void MicrostructureStatisticsFunc::find_boundingboxgrains2D()
 {
   int outside = 0;
   float maxsize = 0;
-  for (int i = 1; i < (m_Grains.size()); i++)
+  size_t size = m_Grains.size();
+  for (size_t i = 1; i < size; i++)
   {
-	  if((m_Grains[i]->equivdiameter/2.0) > maxsize) maxsize = (m_Grains[i]->equivdiameter/2.0);
+	  if((m_Grains[i]->equivdiameter/2.0) > maxsize) { maxsize = (m_Grains[i]->equivdiameter/2.0);}
   }
-  for (int j = 1; j < (m_Grains.size()); j++)
+  for (size_t j = 1; j < size; j++)
   {
     outside = 0;
-	if((m_Grains[j]->centroidx-maxsize) < 0) outside = 1;
-	if((m_Grains[j]->centroidx+maxsize) > sizez) outside = 1;
-	if((m_Grains[j]->centroidy-maxsize) < 0) outside = 1;
-	if((m_Grains[j]->centroidy+maxsize) > sizey) outside = 1;
+    if ((m_Grains[j]->centroidx - maxsize) < 0) outside = 1;
+    if ((m_Grains[j]->centroidx + maxsize) > sizez) outside = 1;
+    if ((m_Grains[j]->centroidy - maxsize) < 0) outside = 1;
+    if ((m_Grains[j]->centroidy + maxsize) > sizey) outside = 1;
     m_Grains[j]->outsideboundbox = outside;
   }
 }
@@ -745,7 +747,7 @@ void MicrostructureStatisticsFunc::find_axes()
     c = A / (a * a * a * b);
     float bovera = b / a;
     float covera = c / a;
-    float coverb = c / b;
+  //  float coverb = c / b;
     m_Grains[i]->aspectratio1 = bovera;
     m_Grains[i]->aspectratio2 = covera;
   }
@@ -1079,6 +1081,7 @@ void MicrostructureStatisticsFunc::find_grain_and_kernel_misorientations()
                       case 2: w = m_OrthoOps->getMisoQuat( q1, q2, n1, n2, n3); break;
                       default:
                         assert(false);
+                        break;
                     }
                   }
                   if (w < 5.0)
@@ -1304,6 +1307,10 @@ void MicrostructureStatisticsFunc::find_vectors2D(H5ReconStatsWriter::Pointer h5
   }
   delete[] axisodf;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void MicrostructureStatisticsFunc::find_grainorientations()
 {
   size_t numgrains = m_Grains.size();
@@ -1319,7 +1326,7 @@ void MicrostructureStatisticsFunc::find_grainorientations()
 	  m_Grains[i]->avg_quat[4] = 0.0;
   }
   float qr[5];
-  for(size_t i = 0; i < (xpoints*ypoints*zpoints); i++)
+  for(int i = 0; i < totalpoints; i++)
   {
     OrientationMath::eulertoQuat(qr, euler1s[i], euler2s[i], euler3s[i]);
     phase = phases[i];
@@ -1361,7 +1368,7 @@ void MicrostructureStatisticsFunc::find_eulerodf(H5ReconStatsWriter::Pointer h5i
   size_t bin;
   size_t numgrains = m_Grains.size();
   int phase;
-  AIM::Reconstruction::CrystalStructure xtal;
+//  AIM::Reconstruction::CrystalStructure xtal;
   float **eulerodf;
 
   eulerodf = new float *[crystruct.size()];
@@ -1656,9 +1663,9 @@ int MicrostructureStatisticsFunc::volume_stats(H5ReconStatsWriter::Pointer h5io,
 		  actualgrains++;
 		  float diam = m_Grains[i]->equivdiameter;
 		  float logdiam = log(diam);
-		  float I1 = m_Grains[i]->radius1;
-		  float I2 = m_Grains[i]->radius2;
-		  float I3 = m_Grains[i]->radius3;
+//		  float I1 = m_Grains[i]->radius1;
+//		  float I2 = m_Grains[i]->radius2;
+//		  float I3 = m_Grains[i]->radius3;
 		  float bovera = m_Grains[i]->aspectratio1;
 		  float covera = m_Grains[i]->aspectratio2;
 		  float coverb = covera/bovera;
@@ -1712,9 +1719,9 @@ int MicrostructureStatisticsFunc::volume_stats(H5ReconStatsWriter::Pointer h5io,
 		{
 		  float diam = m_Grains[j]->equivdiameter;
 		  float logdiam = log(diam);
-		  float I1 = m_Grains[j]->radius1;
-		  float I2 = m_Grains[j]->radius2;
-		  float I3 = m_Grains[j]->radius3;
+//		  float I1 = m_Grains[j]->radius1;
+//		  float I2 = m_Grains[j]->radius2;
+//		  float I3 = m_Grains[j]->radius3;
 		  float bovera = m_Grains[j]->aspectratio1;
 		  float covera = m_Grains[j]->aspectratio2;
 		  float coverb = covera/bovera;
