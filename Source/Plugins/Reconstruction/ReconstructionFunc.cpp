@@ -60,9 +60,9 @@
   type* var = var##Array.get();
 
 const static float m_pi = M_PI;
-const static float m_OnePointThree = 1.33333333333;
-const static float threesixty_over_pi = 360.0 / m_pi;
-const static float m_pi_over_180 = M_PI / 180.0;
+//const static float m_OnePointThree = 1.33333333333;
+//const static float threesixty_over_pi = 360.0 / m_pi;
+//const static float m_pi_over_180 = M_PI / 180.0;
 const static float sqrt_two = powf(2.0, 0.5);
 const static float acos_neg_one = acos(-1.0);
 const static float acos_pos_one = acos(1.0);
