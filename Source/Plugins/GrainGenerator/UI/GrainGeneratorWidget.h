@@ -42,6 +42,7 @@
 #include "QGrainGenerator.h"
 
 class QListWidgetItem;
+class QComboBox;
 
 
 /**
@@ -124,12 +125,13 @@ class GrainGeneratorWidget : public AIMPluginFrame, private Ui::GrainGeneratorWi
     virtual void threadFinished();
     virtual void threadProgressed(int value);
 
-    void shapeTypeEdited(int index);
 
   private:
-    QList<QWidget*> m_WidgetList;
-    QGrainGenerator*    m_GrainGenerator;
+    QList<QWidget*>             m_WidgetList;
+    QGrainGenerator*            m_GrainGenerator;
     QThread*                    m_WorkerThread;
+    QList<QLabel*>              m_ShapeTypeLabels;
+    QList<QComboBox*>           m_ShapeTypeCombos;
 
     bool                        m_WriteSurfaceVoxelScalars;
     bool                        m_WritePhaseIdScalars;

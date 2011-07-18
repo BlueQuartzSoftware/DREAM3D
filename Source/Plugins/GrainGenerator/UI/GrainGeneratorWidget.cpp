@@ -236,13 +236,13 @@ void GrainGeneratorWidget::setupGui()
     m_AlreadyFormed->setChecked(false);
   }
 
-
-
   m_WidgetList << m_H5InputStatisticsFile << m_InputH5StatisticsFileBtn << m_OutputDir << m_OutputDirBtn;
   m_WidgetList << m_XPoints << m_YPoints << m_ZPoints << m_XResolution << m_YResolution << m_ZResolution << m_FillingErrorWeight;
   m_WidgetList << m_NeighborhoodErrorWeight << m_SizeDistErrorWeight;
-  m_WidgetList << m_ShapeTypeList << m_AlreadyFormed;
+  m_WidgetList << m_AlreadyFormed;
   m_WidgetList << m_PeriodicBoundaryConditions  << m_OutputFilePrefix;
+  m_WidgetList << m_ShapeTypeScrollArea;
+
 }
 
 // -----------------------------------------------------------------------------
@@ -401,35 +401,51 @@ void GrainGeneratorWidget::on_m_H5InputStatisticsFile_textChanged(const QString 
     std::vector<AIM::SyntheticBuilder::ShapeType> shapeTypeEnums;
     AIM::ShapeType::getShapeTypeEnums(shapeTypeEnums);
 
-    // Remove all the items
-    m_ShapeTypeList->clear();
+
+    // Remove all the items from the GUI and from the internal tracking Lists
+    QLayoutItem *child;
+    while ( (formLayout_2->count() > 0)  && (child = formLayout_2->takeAt(0)) != 0) {
+        delete child;
+    }
+    m_ShapeTypeLabels.clear();
+    m_ShapeTypeCombos.clear();
+
+    // Create a whole new QWidget to hold everything
+    m_ShapeTypeScrollContents = new QWidget();
+    m_ShapeTypeScrollContents->setObjectName(QString::fromUtf8("m_ShapeTypeScrollContents"));
+    formLayout_2 = new QFormLayout(m_ShapeTypeScrollContents);
+    formLayout_2->setContentsMargins(4, 4, 4, 4);
+    formLayout_2->setObjectName(QString::fromUtf8("formLayout_2"));
+    formLayout_2->setFieldGrowthPolicy(QFormLayout::FieldsStayAtSizeHint);
+    formLayout_2->setHorizontalSpacing(6);
+    formLayout_2->setVerticalSpacing(6);
+    m_ShapeTypeScrollArea->setWidget(m_ShapeTypeScrollContents);
 
     for (int i = 0; i < size; i++)
     {
+      QLabel* shapeTypeLabel = new QLabel(m_ShapeTypeScrollContents);
+      QString str ("Phase ");
+      str.append(QString::number(i, 10));
+      str.append(":");
+      shapeTypeLabel->setText(str);
+      shapeTypeLabel->setObjectName(str);
+      m_ShapeTypeLabels << shapeTypeLabel;
 
-      m_ShapeTypeList->addItem(AIM::ShapeType::EllipsoidStr().c_str());
-      QListWidgetItem* item = m_ShapeTypeList->item(i);
+      formLayout_2->setWidget(i, QFormLayout::LabelRole, shapeTypeLabel);
 
-      QComboBox* cb = new QComboBox(m_ShapeTypeList);
-      for(size_t i = 0; i < shapeTypeStrings.size(); ++i)
+      QComboBox* cb = new QComboBox(m_ShapeTypeScrollContents);
+      str.append(" ComboBox");
+      cb->setObjectName(str);
+      for(size_t s = 0; s < shapeTypeStrings.size(); ++s)
       {
-        cb->addItem(QString::fromStdString( shapeTypeStrings[i]), shapeTypeEnums[i] );
-        cb->setItemData(i, shapeTypeEnums[i], Qt::UserRole);
+        cb->addItem(QString::fromStdString( shapeTypeStrings[s]), shapeTypeEnums[s] );
+        cb->setItemData(s, shapeTypeEnums[s], Qt::UserRole);
       }
-      m_ShapeTypeList->setItemWidget(item, cb);
-      connect(cb, SIGNAL(currentIndexChanged(int)),
-              this, SLOT(shapeTypeEdited(int)));
+      m_ShapeTypeCombos << cb;
+      formLayout_2->setWidget(i, QFormLayout::FieldRole, cb);
     }
 
   }
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void GrainGeneratorWidget::shapeTypeEdited(int index)
-{
- // Insert code here to deal with the user selecting a different phase type
 }
 
 // -----------------------------------------------------------------------------
@@ -481,19 +497,19 @@ void GrainGeneratorWidget::on_m_GoBtn_clicked()
   m_GrainGenerator->setYPoints(m_YPoints->value());
   m_GrainGenerator->setZPoints(m_ZPoints->value());
 
+
   std::vector<AIM::SyntheticBuilder::ShapeType> shapeTypes(1, AIM::SyntheticBuilder::UnknownShapeType);
-  int count = m_ShapeTypeList->count();
+  int count = m_ShapeTypeCombos.count();
   bool ok = false;
   for (int i = 0; i < count; ++i)
   {
-    QListWidgetItem* item = m_ShapeTypeList->item(i);
-    QComboBox* cb = qobject_cast<QComboBox*> (m_ShapeTypeList->itemWidget(item));
+    QComboBox* cb = m_ShapeTypeCombos.at(i);
     AIM::SyntheticBuilder::ShapeType enPtValue = static_cast<AIM::SyntheticBuilder::ShapeType>(cb->itemData(cb->currentIndex(), Qt::UserRole).toUInt(&ok));
     if (enPtValue >= AIM::SyntheticBuilder::UnknownShapeType)
     {
-      QString msg("The Shape Type for shape ");
+      QString msg("The Shape Type for phase ");
 //      msg.append(QString::number(i)).append(" is not set correctly. Please set the shape to Primary, Precipitate or Transformation.");
-      msg.append(QString::number(i)).append(" is not set correctly. Please set the shape to Primary or Precipitate.");
+      msg.append(QString::number(i)).append(" is not set correctly. Please select a shape type from the combo box");
       QMessageBox::critical(this, QString("Grain Generator"), msg, QMessageBox::Ok | QMessageBox::Default);
       return;
     }

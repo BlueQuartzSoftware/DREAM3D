@@ -55,8 +55,8 @@ namespace AIM
       virtual ~ShapeType();
 
       static std::string EllipsoidStr() { return std::string("Ellipsoid"); }
-      static std::string SuperEllipsoid() { return std::string("SuperEllipsoid"); }
-      static std::string CubeOctahedronStr() { return std::string("CubeOctahedron"); }
+      static std::string SuperEllipsoid() { return std::string("Super Ellipsoid"); }
+      static std::string CubeOctahedronStr() { return std::string("Cube Octahedron"); }
       static std::string CylinderStr() { return std::string("Cylinder"); }
       static std::string UnknownShapeTypeStr() { return std::string("Unknown Shape Type"); }
 
