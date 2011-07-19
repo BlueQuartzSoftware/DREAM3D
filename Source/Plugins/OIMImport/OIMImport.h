@@ -76,16 +76,17 @@ class OIMImport : public AbstractPipeline
     MXA_INSTANCE_PROPERTY(float, ZResolution)
     MXA_INSTANCE_PROPERTY(std::vector<std::string>, AngFileList);
 
-      /**
-       * @brief Main method to run the operation
-       */
-      void execute();
+    /**
+     * @brief Main method to run the operation
+     */
+    void execute();
 
   protected:
-      OIMImport();
+    OIMImport();
 
 
   private:
+
     OIMImport(const OIMImport&); // Copy Constructor Not Implemented
     void operator=(const OIMImport&); // Operator '=' Not Implemented
 };
