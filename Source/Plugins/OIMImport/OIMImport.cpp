@@ -40,6 +40,24 @@ class OIMImportFunc
   public:
     MXA_SHARED_POINTERS(OIMImportFunc);
     MXA_STATIC_NEW_MACRO(OIMImportFunc);
+    
+    virtual ~OIMImportFunc() {
+      if (*m_FileId > 0)
+      {
+        std::cout << "OIMImportFunc Closing HDF5 File" << std::endl;
+        H5Utilities::closeFile(*m_FileId);
+      }
+    }
+    
+    hid_t* m_FileId;
+
+protected:
+  OIMImportFunc() :m_FileId(NULL) {}
+
+private:
+  OIMImportFunc(const OIMImportFunc&); // Copy Constructor Not Implemented
+  void operator=(const OIMImportFunc&); // Operator '=' Not Implemented
+
 };
 
 // -----------------------------------------------------------------------------
@@ -67,7 +85,8 @@ void OIMImport::execute()
   herr_t err = 0;
   hid_t fileId = -1;
   // This is just a dummy variable to keep the macros happy
-  OIMImportFunc::Pointer m;
+  OIMImportFunc::Pointer m = OIMImportFunc::New();
+  m->m_FileId = &fileId;
 
   // Start the Benchmark clock
   START_CLOCK()
@@ -155,7 +174,8 @@ void OIMImport::execute()
     std::vector<hsize_t> dims(1, indices.size());
     err = H5Lite::writeVectorDataset(fileId, Ang::Index, dims, indices);
   }
-  err = H5Fclose(fileId);
+  err = H5Utilities::closeFile(fileId);
+  // err = H5Fclose(fileId);
   updateProgressAndMessage("Import Complete", 100);
 }
 
