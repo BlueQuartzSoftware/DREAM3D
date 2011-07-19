@@ -263,7 +263,8 @@ if (DREAM3D_BUILD_QT_APPS)
             GrainGenerator 
             Reconstruction 
             SurfaceMesh 
-            MicrostructureStatistics )
+            MicrostructureStatistics 
+        )
         
         foreach(p ${DREAM3D_PLUGIN_LIST})
             DREAM3D_COMPILE_PLUGIN(${p})
