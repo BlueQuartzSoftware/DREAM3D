@@ -32,9 +32,9 @@ SET (CMAKE_ARCHIVE_OUTPUT_DIRECTORY
   "Single Directory for all static libraries."
   )
 
-set(DREAM3D_VER_MAJOR "2011" CACHE STRING "Major Version Number" FORCE)
-set(DREAM3D_VER_MINOR "07"  CACHE STRING "Minor Version Number" FORCE)
-set(DREAM3D_VER_PATCH "19" CACHE STRING "Patch Version Number" FORCE)
+set(DREAM3D_VER_MAJOR "2" CACHE STRING "Major Version Number" FORCE)
+set(DREAM3D_VER_MINOR "0"  CACHE STRING "Minor Version Number" FORCE)
+set(DREAM3D_VER_PATCH "0" CACHE STRING "Patch Version Number" FORCE)
 set(DREAM3D_VERSION "${DREAM3D_VER_MAJOR}.${DREAM3D_VER_MINOR}.${DREAM3D_VER_PATCH}")
 
                
