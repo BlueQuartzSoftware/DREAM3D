@@ -197,7 +197,7 @@ void OIMImportWidget::on_m_InputDirBtn_clicked()
   if (!outputFile.isNull())
   {
     m_InputDir->blockSignals(true);
-    this->m_InputDir->setText(QDir::toNativeSeparators(outputFile));
+    m_InputDir->setText(QDir::toNativeSeparators(outputFile));
     on_m_InputDir_textChanged(m_InputDir->text());
     m_OpenDialogLastDirectory = outputFile;
     m_InputDir->blockSignals(false);
