@@ -127,6 +127,8 @@ void OIMImportWidget::readSettings(QSettings &prefs)
   READ_SETTING(prefs, m_, ZEndIndex, ok, i, 10 , Int);
   READ_STRING_SETTING(prefs, m_, zSpacing, "0.25");
   READ_STRING_SETTING(prefs, m_, OutputFile, "Untitled.h5ang");
+
+  on_m_InputDir_textChanged(m_InputDir->text());
   prefs.endGroup();
 }
 
@@ -194,10 +196,11 @@ void OIMImportWidget::on_m_InputDirBtn_clicked()
   outputFile = QFileDialog::getExistingDirectory(this, tr("Select Ang Directory"), outputFile);
   if (!outputFile.isNull())
   {
-    this->m_InputDir->setText(outputFile);
-    m_findAngMaxSliceAndPrefix();
-    verifyPathExists(outputFile, m_InputDir);
+    m_InputDir->blockSignals(true);
+    m_InputDir->setText(QDir::toNativeSeparators(outputFile));
+    on_m_InputDir_textChanged(m_InputDir->text());
     m_OpenDialogLastDirectory = outputFile;
+    m_InputDir->blockSignals(false);
   }
 }
 
@@ -211,9 +214,14 @@ void OIMImportWidget::on_m_InputDir_textChanged(const QString & text)
   {
     m_findAngMaxSliceAndPrefix();
     QFileInfo fi(m_InputDir->text());
-    QDir dir = fi.dir();
-    m_OutputFile->setText(dir.path() + QDir::separator() + fi.fileName() + ".h5ang");
-
+    QString outPath = fi.absolutePath() + QDir::separator() + fi.fileName() + "_Output" + QDir::separator() + fi.fileName() + ".h5ang";
+    outPath = QDir::toNativeSeparators(outPath);
+    m_OutputFile->setText(outPath);
+    verifyPathExists(m_OutputFile->text(), m_OutputFile);
+    m_generateExampleOimInputFile();
+    m_InputDir->blockSignals(true);
+    m_InputDir->setText(QDir::toNativeSeparators(m_InputDir->text()));
+    m_InputDir->blockSignals(false);
   }
   else
   {
@@ -237,6 +245,20 @@ void OIMImportWidget::on_m_GoBtn_clicked()
     return;
   }
 
+  // Check the output path for existence.
+  QString outPath = m_OutputFile->text();
+  QFileInfo fi(m_OutputFile->text());
+  m_OutputFile->setText(fi.absolutePath());
+  if (false == sanityCheckOutputDirectory(m_OutputFile, QString("OIM Import")) )
+  {
+    m_OutputFile->setText(outPath);
+    return;
+  }
+  verifyPathExists(m_OutputFile->text(), m_OutputFile);
+  m_OutputFile->setText(outPath);
+  
+
+  // Check the inputs
   SANITY_CHECK_INPUT(m_ , InputDir)
 
   if (m_WorkerThread != NULL)
@@ -291,8 +313,7 @@ void OIMImportWidget::on_m_GoBtn_clicked()
   connect(this, SIGNAL(cancelProcess() ), m_OimImport, SLOT (on_CancelWorker() ), Qt::DirectConnection);
 
   setWidgetListEnabled(false);
-  emit
-  processStarted();
+  emit processStarted();
   m_WorkerThread->start();
   m_GoBtn->setText("Cancel");
 
@@ -370,8 +391,9 @@ void OIMImportWidget::m_generateExampleOimInputFile()
         .arg(QString::number(i), m_TotalDigits->value(), '0')
         .arg(m_FileSuffix->text()).arg(m_FileExt->text());
     QString filePath = m_InputDir->text() + QDir::separator() + filename;
+    filePath = QDir::toNativeSeparators(filePath);
     QFileInfo fi(filePath);
-    QListWidgetItem* item = new QListWidgetItem(filePath, m_FileListView);
+    QListWidgetItem* item = new QListWidgetItem( filePath, m_FileListView);
     if (fi.exists() == true)
     {
       item->setIcon(greenDot);

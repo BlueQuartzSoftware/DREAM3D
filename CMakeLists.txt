@@ -32,7 +32,6 @@ SET (CMAKE_ARCHIVE_OUTPUT_DIRECTORY
   "Single Directory for all static libraries."
   )
 
-
 Find_package(Git)
 
 if (GIT_FOUND)
