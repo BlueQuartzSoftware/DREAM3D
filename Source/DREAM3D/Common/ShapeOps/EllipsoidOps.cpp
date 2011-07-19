@@ -7,13 +7,13 @@
 
 #include "EllipsoidOps.h"
 
-#include <math.h>
+#include "DREAM3D/Common/AIMMath.h"
 
 
 using namespace DREAM3D;
 
 const static float m_pi = M_PI;
-const static float m_one_over_pi = 1.0/m_pi;
+const static float m_one_over_pi = 1.0f/m_pi;
 
 // -----------------------------------------------------------------------------
 //

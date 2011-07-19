@@ -7,7 +7,9 @@
 
 #include "SuperEllipsoidOps.h"
 
-#include <math.h>
+#include "DREAM3D/Common/AIMMath.h"
+
+const static float m_pi = M_PI;
 
 using namespace DREAM3D;
 
