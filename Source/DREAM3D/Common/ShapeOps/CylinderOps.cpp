@@ -7,7 +7,7 @@
 
 #include "CylinderOps.h"
 
-#include <math.h>
+#include "DREAM3D/Common/AIMMath.h"
 
 using namespace DREAM3D;
 
