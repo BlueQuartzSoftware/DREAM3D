@@ -281,43 +281,14 @@ void ReconstructionWidget::on_m_OIMH5Btn_clicked()
   QString file = QFileDialog::getOpenFileName(this, tr("Select Input File"),
                                                  m_OpenDialogLastDirectory,
                                                  tr("HDF5 OIM Files (*.h5 *.hdf5 *.h5ang)") );
-  if ( true == file.isEmpty() ){return;  }
+  if ( true == file.isEmpty() ){ return; }
   QFileInfo fi (file);
- // QString ext = fi.suffix();
-  verifyPathExists(file, m_H5InputFile);
-  m_H5InputFile->setText(fi.absoluteFilePath());
-  m_SetSliceInfo();
-}
+  m_H5InputFile->blockSignals(true);
+  QString p = QDir::toNativeSeparators(fi.absoluteFilePath());
+  m_H5InputFile->setText(p);
+  on_m_H5InputFile_textChanged(m_H5InputFile->text() );
+  m_H5InputFile->blockSignals(false);
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-//void ReconstructionWidget::on_m_AlreadyFormed_stateChanged(int currentState)
-//{
-//  QString absPath = m_OutputDir->text() + QDir::separator() + AIM::Reconstruction::VisualizationVizFile.c_str();
-//  absPath = QDir::toNativeSeparators(absPath);
-//  QFileInfo fi (absPath);
-//  QString msg ("All files will be over written that appear in the output directory.");
-//}
-
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void ReconstructionWidget::on_m_OutputDirBtn_clicked()
-{
-  QString outputFile = this->m_OpenDialogLastDirectory + QDir::separator();
-  outputFile = QFileDialog::getExistingDirectory(this, tr("Select Output Directory"), outputFile);
-  if (!outputFile.isNull())
-  {
-    this->m_OutputDir->setText(outputFile);
-    if (verifyPathExists(outputFile, m_OutputDir) == true )
-    {
-      checkIOFiles();
-      QFileInfo fi (m_OutputDir->text() + QDir::separator() +  AIM::Reconstruction::VisualizationVizFile.c_str() );
-    }
-  }
 }
 
 // -----------------------------------------------------------------------------
@@ -328,6 +299,17 @@ void ReconstructionWidget::on_m_H5InputFile_textChanged(const QString &text)
 
   if (verifyPathExists(m_H5InputFile->text(), m_H5InputFile) )
   {
+    QFileInfo fi(m_H5InputFile->text());
+    QString outPath = fi.absolutePath() + QDir::separator() + fi.baseName() + "_Reconstruction";
+    outPath = QDir::toNativeSeparators(outPath);
+    m_OutputDir->setText(outPath);
+#if 0
+    verifyPathExists(m_OutputFile->text(), m_OutputFile);
+    m_generateExampleOimInputFile();
+    m_InputDir->blockSignals(true);
+    m_InputDir->setText(QDir::toNativeSeparators(m_InputDir->text()));
+    m_InputDir->blockSignals(false);
+#endif
     m_SetSliceInfo();
   }
 
@@ -393,6 +375,37 @@ void ReconstructionWidget::on_m_H5InputFile_textChanged(const QString &text)
       m_XRes->setText(QString::number(xres));
       m_YRes->setText(QString::number(yres));
       m_ZRes->setText(QString::number(zres));
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+//void ReconstructionWidget::on_m_AlreadyFormed_stateChanged(int currentState)
+//{
+//  QString absPath = m_OutputDir->text() + QDir::separator() + AIM::Reconstruction::VisualizationVizFile.c_str();
+//  absPath = QDir::toNativeSeparators(absPath);
+//  QFileInfo fi (absPath);
+//  QString msg ("All files will be over written that appear in the output directory.");
+//}
+
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ReconstructionWidget::on_m_OutputDirBtn_clicked()
+{
+  QString outputFile = this->m_OpenDialogLastDirectory + QDir::separator();
+  outputFile = QFileDialog::getExistingDirectory(this, tr("Select Output Directory"), outputFile);
+  if (!outputFile.isNull())
+  {
+    this->m_OutputDir->setText(outputFile);
+    if (verifyPathExists(outputFile, m_OutputDir) == true )
+    {
+      checkIOFiles();
+      QFileInfo fi (m_OutputDir->text() + QDir::separator() +  AIM::Reconstruction::VisualizationVizFile.c_str() );
     }
   }
 }
