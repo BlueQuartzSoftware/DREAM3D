@@ -37,19 +37,29 @@ Find_package(Git)
 
 if (GIT_FOUND)
     execute_process(COMMAND ${GIT_EXECUTABLE} describe
-    OUTPUT_VARIABLE git_vers
+    OUTPUT_VARIABLE DVERS
     RESULT_VARIABLE did_run
      )
-    message(STATUS "git_vers: ${git_vers}")
+    message(STATUS "DVERS: ${DVERS}")
+  string(REPLACE  "-" ";" DVERS ${DVERS})
+  message(STATUS "DVERS: ${DVERS}")
+#  string(REGEX MATCHALL "[0-9]+" VERSION_LIST ${HDF5_VERSIONSTR})
+  list(GET VERSION_LIST 0 HDF5_VERSION_MAJOR)
+  list(GET VERSION_LIST 1 HDF5_VERSION_MINOR)
+  list(GET VERSION_LIST 2 HDF5_VERSION_SUBMINOR)
+          
+    set(DREAM3D_VER_MAJOR "2011" CACHE STRING "Major Version Number" FORCE)
+    set(DREAM3D_VER_MINOR "07" CACHE STRING "Minor Version Number" FORCE)
+    set(DREAM3D_VER_PATCH "06" CACHE STRING "Patch Version Number" FORCE)
 else()
 
-set(DREAM3D_VER_MAJOR "2011" CACHE STRING "Major Version Number")
-set(DREAM3D_VER_MINOR "07" CACHE STRING "Minor Version Number")
-set(DREAM3D_VER_PATCH "06" CACHE STRING "Patch Version Number")
-set(DREAM3D_VERSION "${DREAM3D_VER_MAJOR}.${DREAM3D_VER_MINOR}.${DREAM3D_VER_PATCH}" CACHE STRING "Full Version Number")
+    set(DREAM3D_VER_MAJOR "2011" CACHE STRING "Major Version Number" FORCE)
+    set(DREAM3D_VER_MINOR "07" CACHE STRING "Minor Version Number" FORCE)
+    set(DREAM3D_VER_PATCH "06" CACHE STRING "Patch Version Number" FORCE)
 
 endif()
-         
+
+set(DREAM3D_VERSION "${DREAM3D_VER_MAJOR}.${DREAM3D_VER_MINOR}.${DREAM3D_VER_PATCH}" CACHE STRING "Full Version Number")
 
 set (CMP_SOURCE_DIR ${DREAM3D_SOURCE_DIR}/Support/cmp)
 
