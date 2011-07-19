@@ -32,11 +32,25 @@ SET (CMAKE_ARCHIVE_OUTPUT_DIRECTORY
   "Single Directory for all static libraries."
   )
 
+
+Find_package(Git)
+
+if (GIT_FOUND)
+    execute_process(COMMAND ${GIT_EXECUTABLE} describe
+    OUTPUT_VARIABLE git_vers
+    RESULT_VARIABLE did_run
+     )
+    message(STATUS "git_vers: ${git_vers}")
+else()
+
 set(DREAM3D_VER_MAJOR "2011" CACHE STRING "Major Version Number")
-set(DREAM3D_VER_MINOR "07"  CACHE STRING "Minor Version Number" )
-set(DREAM3D_VER_PATCH "14" CACHE STRING "Patch Version Number")
-set(DREAM3D_VERSION "${DREAM3D_VER_MAJOR}.${DREAM3D_VER_MINOR}.${DREAM3D_VER_PATCH}")
-               
+set(DREAM3D_VER_MINOR "07" CACHE STRING "Minor Version Number")
+set(DREAM3D_VER_PATCH "06" CACHE STRING "Patch Version Number")
+set(DREAM3D_VERSION "${DREAM3D_VER_MAJOR}.${DREAM3D_VER_MINOR}.${DREAM3D_VER_PATCH}" CACHE STRING "Full Version Number")
+
+endif()
+         
+
 set (CMP_SOURCE_DIR ${DREAM3D_SOURCE_DIR}/Support/cmp)
 
 SET (PROJECT_CODE_DIR ${PROJECT_SOURCE_DIR}/Source)
