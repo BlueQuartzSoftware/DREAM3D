@@ -296,6 +296,7 @@ int H5AngImporter::importAngFile(hid_t fileId, int z, const std::string &angFile
 int H5AngImporter::writePhaseData(AngReader &reader, hid_t phasesGid)
 {
   int err = 0;
+  int retErr = 0;
   int32_t rank = 1;
   hsize_t dims[1] = { 0 };
   std::vector<AngPhase::Pointer> phases = reader.getPhases();
@@ -312,10 +313,19 @@ int H5AngImporter::writePhaseData(AngReader &reader, hid_t phasesGid)
     WRITE_PHASE_HEADER_DATA((*phase), int, NumberFamilies, TSL::OIM::NumberFamilies)
 
     // Create a Group for the HKLFamilies
-    hid_t hklGid = H5Utilities::createGroup(pid, TSL::OIM::HKLFamilies);
-    err = writeHKLFamilies(p, hklGid);
-    err = H5Gclose(hklGid);
-
+    if (p->getNumberFamilies() > 0) {
+      hid_t hklGid = H5Utilities::createGroup(pid, TSL::OIM::HKLFamilies);
+      err = writeHKLFamilies(p, hklGid);
+      if (err < 0) {
+        std::ostringstream ss;
+        ss << "H5AngImporter Error: Could not write Ang HKL Families to the HDF5 file with data set name '" 
+          << TSL::OIM::HKLFamilies << "'" << std::endl;
+        progressMessage(ss.str(), 100);
+        err = H5Gclose(hklGid);
+        return -1; 
+      }
+      err = H5Gclose(hklGid);
+    }
     WRITE_PHASE_DATA_ARRAY( (*phase), int, pid, Categories, TSL::OIM::Categories)
     err = H5Gclose(pid);
   }
@@ -330,7 +340,7 @@ int H5AngImporter::writeHKLFamilies(AngPhase* p, hid_t hklGid)
  // int err = 0;
   hid_t       memtype, space, dset;
   hsize_t     dims[1] = {1};
-  herr_t      status;
+  herr_t      status = -1;
   int index = 0;
   std::vector<HKLFamily::Pointer> families = p->getHKLFamilies();
   HKLFamily_t hkl;
@@ -376,6 +386,5 @@ int H5AngImporter::writeHKLFamilies(AngPhase* p, hid_t hklGid)
 void H5AngImporter::progressMessage(const std::string &message, int progress)
 {
   std::cout << progress << "% " << message << std::endl;
-
 }
 
