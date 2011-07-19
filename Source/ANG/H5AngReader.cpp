@@ -271,10 +271,14 @@ int H5AngReader::readHeader(hid_t parId)
     READ_PHASE_HEADER_ARRAY(pid, std::vector<float>, TSL::OIM::LatticeConstants, LatticeConstants, m_CurrentPhase)
     READ_PHASE_HEADER_DATA(pid, int, TSL::OIM::NumberFamilies, NumberFamilies, m_CurrentPhase)
 
-    hid_t hklGid = H5Gopen(pid, TSL::OIM::HKLFamilies.c_str());
-    err = readHKLFamilies(hklGid, m_CurrentPhase);
-    err = H5Gclose(hklGid);
-
+    if (m_CurrentPhase->getNumberFamilies() > 0) {
+      hid_t hklGid = H5Gopen(pid, TSL::OIM::HKLFamilies.c_str());
+    // Only read the HKL Families if they are there. Trying to open the group will tell us if there
+    // are any families to read
+    
+      err = readHKLFamilies(hklGid, m_CurrentPhase);
+      err = H5Gclose(hklGid);
+    }
     READ_PHASE_HEADER_ARRAY(pid, std::vector<int>, TSL::OIM::Categories, Categories, m_CurrentPhase)
     m_Phases.push_back(m_CurrentPhase);
     err = H5Gclose(pid);
@@ -296,7 +300,7 @@ int H5AngReader::readHKLFamilies(hid_t hklGid, AngPhase::Pointer phase)
 {
 //  herr_t err = 0;
   hid_t dataset, memtype;
-  herr_t status;
+  herr_t status = 1;
   HKLFamily_t data;
   std::vector<HKLFamily::Pointer> families;
   for (int i = 0; i < phase->getNumberFamilies(); ++i)
