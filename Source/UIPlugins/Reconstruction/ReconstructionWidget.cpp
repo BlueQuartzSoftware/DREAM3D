@@ -97,10 +97,8 @@ void ReconstructionWidget::readSettings(QSettings &prefs)
 
   prefs.beginGroup("Reconstruction");
   READ_FILEPATH_SETTING(prefs, m_, H5InputFile, "");
-  if (verifyPathExists(m_H5InputFile->text(), m_H5InputFile) )
-  {
-    on_m_H5InputFile_textChanged(QString(""));
-  }
+  on_m_H5InputFile_textChanged(QString(""));
+
   READ_FILEPATH_SETTING(prefs, m_, OutputDir, "");
   READ_STRING_SETTING(prefs, m_, OutputFilePrefix, "Reconstruction_")
 
@@ -302,13 +300,6 @@ void ReconstructionWidget::on_m_H5InputFile_textChanged(const QString &text)
     QString outPath = fi.absolutePath() + QDir::separator() + fi.baseName() + "_Reconstruction";
     outPath = QDir::toNativeSeparators(outPath);
     m_OutputDir->setText(outPath);
-#if 0
-    verifyPathExists(m_OutputFile->text(), m_OutputFile);
-    m_generateExampleOimInputFile();
-    m_InputDir->blockSignals(true);
-    m_InputDir->setText(QDir::toNativeSeparators(m_InputDir->text()));
-    m_InputDir->blockSignals(false);
-#endif
     m_SetSliceInfo();
   }
 
