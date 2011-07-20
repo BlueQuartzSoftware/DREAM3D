@@ -176,6 +176,7 @@ void OIMImport::execute()
   }
   err = H5Utilities::closeFile(fileId);
   // err = H5Fclose(fileId);
+  m = OIMImportFunc::NullPointer();
   updateProgressAndMessage("Import Complete", 100);
 }
 

@@ -95,6 +95,7 @@ int H5AngReader::readFile()
   if (gid < 0)
   {
     std::cout << "H5AngReader Error: Could not open path '" << m_HDF5Path << "'" << std::endl;
+    err = H5Utilities::closeFile(fileId);
     return -1;
   }
 
