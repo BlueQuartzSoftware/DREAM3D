@@ -99,11 +99,13 @@ int H5AngReader::readFile()
   }
 
   // Read all the header information
+  std::cout << "H5AngReader:: reading Header .. " << std::endl;
   err = readHeader(gid);
 
   // Read and transform data
+  std::cout << "H5AngReader:: Reading Data .. " << std::endl;
   err = readData(gid);
-
+  
   err = H5Gclose(gid);
   err = H5Fclose(fileId);
   return err;
