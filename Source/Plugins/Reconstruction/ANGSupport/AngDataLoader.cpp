@@ -103,7 +103,7 @@ int AngDataLoader::loadData(ReconstructionFunc* m)
   float* euler3Ptr;
   float* confPtr;
   float* imqualPtr;
-  float* imqual2Ptr;
+  float* semSignalPtr;
   int xstartspot;
   int ystartspot;
   float s;
@@ -138,9 +138,11 @@ int AngDataLoader::loadData(ReconstructionFunc* m)
     euler3Ptr = reader.getPhi2Pointer();
     confPtr = reader.getConfidenceIndexPointer();
     imqualPtr = reader.getImageQualityPointer();
-    imqual2Ptr = reader.getImageQuality2Pointer();
+
     xstartspot = (m->xpoints - xpointstemp) / 2;
     ystartspot = (m->ypoints - ypointstemp) / 2;
+    semSignalPtr = reader.getSEMSignalPointer();
+
     for (int j = 0; j < ypointstemp; j++)
     {
       for (int i = 0; i < xpointstemp; i++)
