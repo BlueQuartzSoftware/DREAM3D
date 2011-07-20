@@ -212,11 +212,11 @@ class TSLLib_EXPORT AngReader
     float* getXPosPointer() { return m_X; }
     float* getYPosPointer() { return m_Y; }
     float* getImageQualityPointer() { return m_Iq; }
-    float* getImageQuality2Pointer() { return m_SEMSignal; }
+ //   float* getImageQuality2Pointer() { return m_SEMSignal; }
     float* getConfidenceIndexPointer() { return m_Ci; }
     int* getPhasePointer() { return m_PhaseData; }
     float* getSEMSignalPointer() { return m_SEMSignal; }
-    float* getFitPointer() { return m_SEMSignal; }
+    float* getFitPointer() { return m_Fit; }
 
     SET_POINTER(Phi1, Phi1, float)
     SET_POINTER(Phi, Phi, float)

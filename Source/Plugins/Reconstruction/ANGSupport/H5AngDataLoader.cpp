@@ -187,13 +187,14 @@ int H5AngDataLoader::loadData(ReconstructionFunc* m)
   int readerIndex;
   int xpointstemp;
   int ypointstemp;
-  float* euler1Ptr;
-  float* euler2Ptr;
-  float* euler3Ptr;
-  float* confPtr;
-  int* phasePtr;
-  float* imqualPtr;
-  float* imqual2Ptr;
+
+  float* euler1Ptr = NULL;
+  float* euler2Ptr = NULL;
+  float* euler3Ptr = NULL;
+  float* confPtr = NULL;
+  int* phasePtr = NULL;
+  float* imqualPtr = NULL;
+  float* semSignalPtr = NULL;
   int xstartspot;
   int ystartspot;
 
@@ -219,9 +220,9 @@ int H5AngDataLoader::loadData(ReconstructionFunc* m)
     phasePtr = reader->getPhasePointer();
     confPtr = reader->getConfidenceIndexPointer();
     imqualPtr = reader->getImageQualityPointer();
-    imqual2Ptr = reader->getImageQuality2Pointer();
     xstartspot = (m->xpoints - xpointstemp) / 2;
     ystartspot = (m->ypoints - ypointstemp) / 2;
+    semSignalPtr = reader->getSEMSignalPointer();
     for (int j = 0; j < ypointstemp; j++)
     {
       for (int i = 0; i < xpointstemp; i++)

@@ -95,7 +95,6 @@ Reconstruction::~Reconstruction()
 // -----------------------------------------------------------------------------
 void Reconstruction::execute()
 {
-  //std::cout << "Reconstruction::compute Start" << std::endl;
   int err = -1;
 
   AbstractAngDataLoader::Pointer oimDataLoader = H5AngDataLoader::New();
