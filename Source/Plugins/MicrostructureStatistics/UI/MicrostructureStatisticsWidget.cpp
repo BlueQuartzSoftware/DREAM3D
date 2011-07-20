@@ -84,13 +84,16 @@ MicrostructureStatisticsWidget::~MicrostructureStatisticsWidget()
 void MicrostructureStatisticsWidget::readSettings(QSettings &prefs)
 {
   QString val;
-  prefs.beginGroup("MicrostructureStatistics");
+  
   bool ok = false;
   double d;
 
+  prefs.beginGroup("MicrostructureStatistics");
+  READ_FILEPATH_SETTING(prefs, m_, InputFile, "");
+  on_m_InputFile_textChanged(QString(""));
+
   READ_FILEPATH_SETTING(prefs, m_, OutputDir, "");
   READ_STRING_SETTING(prefs, m_, OutputFilePrefix, "MicrostructureStatistics_")
-  READ_FILEPATH_SETTING(prefs, m_, InputFile, "");
 
   READ_SETTING(prefs, m_, BinStepSize, ok, d, 1.0 , Double);
 
@@ -163,10 +166,60 @@ void MicrostructureStatisticsWidget::on_m_InputFileBtn_clicked()
   {
     return;
   }
-  QFileInfo fi(file);
-  QString ext = fi.suffix();
-  m_InputFile->setText(fi.absoluteFilePath());
+  QFileInfo fi (file);
+  m_InputFile->blockSignals(true);
+  QString p = QDir::toNativeSeparators(fi.absoluteFilePath());
+  m_InputFile->setText(p);
+  on_m_InputFile_textChanged(m_InputFile->text() );
+  m_InputFile->blockSignals(false);
 }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void MicrostructureStatisticsWidget::on_m_InputFile_textChanged(const QString &text)
+{
+  if (verifyPathExists(m_InputFile->text(), m_InputFile) == true)
+  {
+    QFileInfo fi(m_InputFile->text());
+    QString outPath = fi.absolutePath() + QDir::separator() + fi.baseName() + "_MicroStats";
+    outPath = QDir::toNativeSeparators(outPath);
+    m_OutputDir->setText(outPath);
+    checkIOFiles();
+  }
+
+  QFileInfo fi(m_InputFile->text());
+  if (fi.exists() && fi.isFile())
+  {
+    // Load up the voxel data
+    H5VoxelReader::Pointer h5Reader = H5VoxelReader::New();
+    h5Reader->setFilename(m_InputFile->text().toStdString());
+    int dims[3];
+    float spacing[3];
+    int err = h5Reader->getSizeAndResolution(dims, spacing);
+    if (err >= 0)
+    {
+      xDim->setText(QString::number(dims[0]));
+      yDim->setText(QString::number(dims[1]));
+      zDim->setText(QString::number(dims[2]));
+    }
+
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void MicrostructureStatisticsWidget::checkIOFiles()
+{
+  verifyPathExists(m_OutputDir->text(), m_OutputDir);
+
+  CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(AIM::Reconstruction, m_ , VisualizationVizFile)
+  CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::MicroStats, m_, GrainDataFile)
+  CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::MicroStats, m_, H5StatisticsFile)
+}
+
 
 // -----------------------------------------------------------------------------
 //
@@ -223,42 +276,6 @@ void MicrostructureStatisticsWidget::on_m_SaveSettingsBtn_clicked()
   writeSettings(prefs);
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void MicrostructureStatisticsWidget::checkIOFiles()
-{
-  //CHECK_QLINEEDIT_FILE_EXISTS(m_InputFile)
-  if (verifyPathExists(m_InputFile->text(), m_InputFile) == true)
-  {
-    // Load up the voxel data
-    H5VoxelReader::Pointer h5Reader = H5VoxelReader::New();
-    h5Reader->setFilename(m_InputFile->text().toStdString());
-    int dims[3];
-    float spacing[3];
-    int err = h5Reader->getSizeAndResolution(dims, spacing);
-    if (err >= 0)
-    {
-      xDim->setText(QString::number(dims[0]));
-      yDim->setText(QString::number(dims[1]));
-      zDim->setText(QString::number(dims[2]));
-    }
-  }
-
-  verifyPathExists(m_OutputDir->text(), m_OutputDir);
-
-  CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(AIM::Reconstruction, m_ , VisualizationVizFile)
-  CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::MicroStats, m_, GrainDataFile)
-  CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::MicroStats, m_, H5StatisticsFile)
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void MicrostructureStatisticsWidget::on_m_InputFile_textChanged(const QString &text)
-{
-  checkIOFiles();
-}
 
 // -----------------------------------------------------------------------------
 //
@@ -294,11 +311,6 @@ void MicrostructureStatisticsWidget::on_m_OutputDir_textChanged(const QString &t
 void MicrostructureStatisticsWidget::on_m_GoBtn_clicked()
 {
 
-  if(m_H5StatisticsFile->isChecked() == true || m_WriteGrainSize == true) m_ComputeGrainSize = true;
-  if(m_H5StatisticsFile->isChecked() == true || m_WriteGrainShapes == true) m_ComputeGrainShapes = true;
-  if(m_H5StatisticsFile->isChecked() == true || m_WriteNumNeighbors == true) m_ComputeNumNeighbors = true;
-  if(m_H5StatisticsFile->isChecked() == true) m_ComputeODF = true;
-  if(m_H5StatisticsFile->isChecked() == true) m_ComputeMDF = true;
 
   if (m_GoBtn->text().compare("Cancel") == 0)
   {
@@ -310,11 +322,18 @@ void MicrostructureStatisticsWidget::on_m_GoBtn_clicked()
     return;
   }
 
-  if (false == sanityCheckOutputDirectory(m_OutputDir, QString("Grain Generator")))
+  if (false == sanityCheckOutputDirectory(m_OutputDir, QString("MicroStats")))
   {
     return;
   }
   SANITY_CHECK_INPUT(m_, OutputDir)
+
+
+  if(m_H5StatisticsFile->isChecked() == true || m_WriteGrainSize == true) m_ComputeGrainSize = true;
+  if(m_H5StatisticsFile->isChecked() == true || m_WriteGrainShapes == true) m_ComputeGrainShapes = true;
+  if(m_H5StatisticsFile->isChecked() == true || m_WriteNumNeighbors == true) m_ComputeNumNeighbors = true;
+  if(m_H5StatisticsFile->isChecked() == true) m_ComputeODF = true;
+  if(m_H5StatisticsFile->isChecked() == true) m_ComputeMDF = true;
 
   if (m_WorkerThread != NULL)
   {
