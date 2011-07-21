@@ -5,12 +5,14 @@ This is the list of things to do. It is written with the DOxygen style
 so it can be integrated with the other documentation pages.
 
 @section todomisc Misc Bugs
-
+@li  <b>DONE</b> (MAJ 2011/07/13) - Modularize the code so that code only associated with a plugin is with just that plugin and not in the DREAMLib
+@li  <b>DONE</b> (MAJ 2011/07/18) - Allow other developers to include their own plugins that are possibly from a different repository
 
 @section ang_import Ang Import:
 @li <b>DONE</b> (MAJ 2011/06/13) - Better Display of errors when importing to help user fix their data
 
 @section reconstruction Reconstruction:
+@li  output a ph file in the reconstruction tab.
 @li <b>DONE</b> (MAG 2011/06/08) - Fix 2 Phase bug - Bad output file is written
 @li Rework existing user interface for showing output file that will be written and
 indicate which files will be over written during execution.
@@ -34,7 +36,7 @@ into the user interface
 @li <b>DONE</b> (MAJ 2011/06/07) - Change all vtk to rectilinear grid.
 
 @section surfacemeshing Surface Meshing:
-@li Output STL File per grain
+@li <b>DONE</b> (MAJ 2011/07) - Output STL File per grain
 @li <b>DONE</b> (MAG 2011/05/31) - Fix bug in assign_grains();
 
 @section twotothree 2D to 3D Module:
