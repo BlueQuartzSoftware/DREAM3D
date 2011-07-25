@@ -130,6 +130,7 @@ void ReconstructionWidget::readSettings(QSettings &prefs)
   READ_CHECKBOX_SETTING(prefs, m_, HDF5GrainFile, true);
   m_HDF5GrainFile->blockSignals(false);
   READ_CHECKBOX_SETTING(prefs, m_, DxFile, true);
+  READ_CHECKBOX_SETTING(prefs, m_, PhFile, true);
   prefs.endGroup();
 }
 
@@ -173,6 +174,7 @@ void ReconstructionWidget::writeSettings(QSettings &prefs)
   WRITE_CHECKBOX_SETTING(prefs, m_, DownSampledVizFile)
   WRITE_CHECKBOX_SETTING(prefs, m_, HDF5GrainFile)
   WRITE_CHECKBOX_SETTING(prefs, m_, DxFile)
+  WRITE_CHECKBOX_SETTING(prefs, m_, PhFile)
   prefs.endGroup();
 }
 
@@ -216,7 +218,7 @@ void ReconstructionWidget::setupGui()
   m_WidgetList << m_MinAllowedGrainSize << m_MinConfidence << m_DownSampleFactor << m_MisOrientationTolerance;
   m_WidgetList << m_VisualizationVizFile << m_DownSampledVizFile;
   m_WidgetList << m_MinImageQuality;
-  m_WidgetList << m_HDF5GrainFile;
+  m_WidgetList << m_HDF5GrainFile << m_PhFile;
   m_WidgetList << m_LoadSettingsBtn << m_SaveSettingsBtn << phaseTypeList;
 
 }
@@ -235,6 +237,7 @@ void ReconstructionWidget::checkIOFiles()
   CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(AIM::Reconstruction, m_ , DownSampledVizFile)
   CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(AIM::Reconstruction, m_ , HDF5GrainFile)
   CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(AIM::Reconstruction, m_ , DxFile)
+  CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(AIM::SyntheticBuilder, m_ , PhFile)
 }
 
 // -----------------------------------------------------------------------------
@@ -575,6 +578,7 @@ void ReconstructionWidget::on_m_GoBtn_clicked()
   m_Reconstruction->setWriteDownSampledFile(m_DownSampledVizFile->isChecked());
   m_Reconstruction->setWriteHDF5GrainFile(m_HDF5GrainFile->isChecked());
   m_Reconstruction->setWriteDxFile(m_DxFile->isChecked());
+  m_Reconstruction->setWritePhFile(m_PhFile->isChecked());
 
   // m_Reconstruction->printSettings(std::cout);
 
