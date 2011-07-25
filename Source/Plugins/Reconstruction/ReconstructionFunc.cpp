@@ -182,17 +182,17 @@ void ReconstructionFunc::initializeQuats()
     OrientationMath::eulertoQuat(qr, euler1s[i], euler2s[i], euler3s[i]);
     phase = phases[i];
     xtal = crystruct[phase];
-	if(xtal == AIM::Reconstruction::UnknownCrystalStructure)
-	{
-		qr[1] = 0.0;
-		qr[2] = 0.0;
-		qr[3] = 0.0;
-		qr[4] = 1.0;
-	}
-	else
-	{
-		m_OrientationOps[xtal]->getFZQuat(qr);
-	}
+    if (xtal == AIM::Reconstruction::UnknownCrystalStructure)
+    {
+      qr[1] = 0.0;
+      qr[2] = 0.0;
+      qr[3] = 0.0;
+      qr[4] = 1.0;
+    }
+    else
+    {
+      m_OrientationOps[xtal]->getFZQuat(qr);
+    }
     quats[i][0] = 1.0;
     quats[i][1] = qr[1];
     quats[i][2] = qr[2];
@@ -375,8 +375,8 @@ void ReconstructionFunc::find_border()
   std::vector<int> voxelslist(initialVoxelsListSize, -1);
   size_t totalPoints = xpoints * ypoints * zpoints;
 
-  AIMArray<int>::Pointer checkedPtr = AIMArray<int>::New(totalPoints);
-  int *checked = checkedPtr->getPointer(0);
+  AIMArray<int>::Pointer checkedPtr = AIMArray<int>::CreateArray(totalPoints);
+  int *checked = checkedPtr->GetPointer(0);
 
   for (int iter = 0; iter < (xpoints * ypoints * zpoints); iter++)
   {

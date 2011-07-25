@@ -119,9 +119,9 @@ class ReconstructionFunc
     std::vector<int> unassigned;
     std::vector<float> confidences;
     std::vector<float> imagequalities;
-    std::vector<std::vector<float> > quats;
-    std::vector<std::vector<int> > nearestneighbors;
-    std::vector<std::vector<float> > nearestneighbordistances;
+    std::vector<std::vector<float> > quats;  // n x 5 array
+ //   std::vector<std::vector<int> > nearestneighbors;
+ //   std::vector<std::vector<float> > nearestneighbordistances;
 
     SharedIntArray graincounts;
     std::vector<Grain::Pointer> m_Grains;
