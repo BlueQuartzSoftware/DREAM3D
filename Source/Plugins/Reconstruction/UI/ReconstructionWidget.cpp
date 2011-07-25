@@ -569,7 +569,7 @@ void ReconstructionWidget::on_m_GoBtn_clicked()
 
 
   m_Reconstruction->setWriteVtkFile(m_VisualizationVizFile->isChecked());
-  m_Reconstruction->setWriteEuclidean(m_WriteEuclideanScalars);
+//  m_Reconstruction->setWriteEuclidean(m_WriteEuclideanScalars);
   m_Reconstruction->setWritePhaseId(m_WritePhaseIdScalars);
   m_Reconstruction->setWriteImageQuality(m_WriteImageQualityScalars);
   m_Reconstruction->setWriteIPFColor(m_WriteIPFColorScalars);
@@ -658,7 +658,7 @@ void ReconstructionWidget::threadHasMessage(QString message)
 void ReconstructionWidget::on_m_VtkOptionsBtn_clicked()
 {
   QVector<QString> options;
-  options.push_back("Write Euclidean Scalars");
+//  options.push_back("Write Euclidean Scalars");
   options.push_back("Write Phase Ids Scalars");
   options.push_back("Write Image Quality Scalars");
   options.push_back("Write IPF Color Scalars");
@@ -666,7 +666,7 @@ void ReconstructionWidget::on_m_VtkOptionsBtn_clicked()
   QCheckboxDialog d(options, this);
   d.setWindowTitle(QString("VTK Output Options"));
 
-  d.setValue("Write Euclidean Scalars", m_WriteEuclideanScalars);
+ // d.setValue("Write Euclidean Scalars", m_WriteEuclideanScalars);
   d.setValue("Write Phase Ids Scalars", m_WritePhaseIdScalars);
   d.setValue("Write Image Quality Scalars", m_WriteImageQualityScalars);
   d.setValue("Write IPF Color Scalars", m_WriteIPFColorScalars);
@@ -675,7 +675,7 @@ void ReconstructionWidget::on_m_VtkOptionsBtn_clicked()
   int ret = d.exec();
   if (ret == QDialog::Accepted)
   {
-    m_WriteEuclideanScalars = d.getValue("Write Euclidean Scalars");
+//    m_WriteEuclideanScalars = d.getValue("Write Euclidean Scalars");
     m_WritePhaseIdScalars = d.getValue("Write Phase Ids Scalars");
     m_WriteImageQualityScalars = d.getValue("Write Image Quality Scalars");
     m_WriteIPFColorScalars = d.getValue("Write IPF Color Scalars");
