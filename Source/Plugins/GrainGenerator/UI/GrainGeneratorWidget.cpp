@@ -325,12 +325,112 @@ void GrainGeneratorWidget::on_m_InputH5StatisticsFileBtn_clicked()
 {
   QString file = QFileDialog::getOpenFileName(this, tr("Select Input File"),
                                                  m_OpenDialogLastDirectory,
-                                                 tr("HDF5 Stats Files (*.h5 *.hdf5)") );
-  if ( true == file.isEmpty() ){return;  }
-  QFileInfo fi (file);
-  QString ext = fi.suffix();
-  m_H5InputStatisticsFile->setText(fi.absoluteFilePath());
+                                                 tr("HDF5 Stats Files (*.h5stats *.h5 *.hdf5)") );
+  if ( true == file.isEmpty() ){ return; }
+    QFileInfo fi (file);
+    m_H5InputStatisticsFile->blockSignals(true);
+    QString p = QDir::toNativeSeparators(fi.absoluteFilePath());
+    m_H5InputStatisticsFile->setText(p);
+    on_m_H5InputStatisticsFile_textChanged(m_H5InputStatisticsFile->text() );
+    m_H5InputStatisticsFile->blockSignals(false);
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void GrainGeneratorWidget::on_m_H5InputStatisticsFile_textChanged(const QString &text)
+{
+
+  if (verifyPathExists(m_H5InputStatisticsFile->text(), m_H5InputStatisticsFile))
+  {
+    QFileInfo fi(m_H5InputStatisticsFile->text());
+    QString outPath = fi.absolutePath() + QDir::separator() + fi.baseName() + "_Reconstruction";
+    outPath = QDir::toNativeSeparators(outPath);
+    m_OutputDir->setText(outPath);
+  }
+
+  QFileInfo fi(m_H5InputStatisticsFile->text());
+  if (fi.exists() && fi.isFile())
+  {
+    // Set the output file Prefix based on the name of the input file
+    m_OutputFilePrefix->setText(fi.baseName() + QString("_"));
+
+    // Open the HDF5 Stats file
+       H5ReconStatsReader::Pointer h5reader = H5ReconStatsReader::New(m_H5InputStatisticsFile->text().toStdString());
+       if (h5reader.get() == NULL)
+       {
+         QMessageBox::critical(this, "Grain Generator",
+                               "The input HDF5 Based Stats file could not be opened for reading.",
+                               QMessageBox::Ok | QMessageBox::Default);
+         return;
+       }
+       // Read the Phase and Crystal Structure information from the Stats File
+       std::vector<int> phases;
+       std::vector<AIM::Reconstruction::CrystalStructure> structures;
+       int err = h5reader->getPhaseAndCrystalStructures(phases, structures);
+       if (err < 0)
+       {
+         QMessageBox::critical(this, "Grain Generator",
+                               "The Phase information could not be read from the input HDF5 file.",
+                               QMessageBox::Ok | QMessageBox::Default);
+         return;
+       }
+
+       int size = phases.size();
+       std::vector<std::string> shapeTypeStrings;
+       AIM::ShapeType::getShapeTypeStrings(shapeTypeStrings);
+       std::vector<AIM::SyntheticBuilder::ShapeType> shapeTypeEnums;
+       AIM::ShapeType::getShapeTypeEnums(shapeTypeEnums);
+
+
+       // Remove all the items from the GUI and from the internal tracking Lists
+       QLayoutItem *child;
+       while ( (formLayout_2->count() > 0)  && (child = formLayout_2->takeAt(0)) != 0) {
+           delete child;
+       }
+       m_ShapeTypeLabels.clear();
+       m_ShapeTypeCombos.clear();
+
+       // Create a whole new QWidget to hold everything
+       m_ShapeTypeScrollContents = new QWidget();
+       m_ShapeTypeScrollContents->setObjectName(QString::fromUtf8("m_ShapeTypeScrollContents"));
+       formLayout_2 = new QFormLayout(m_ShapeTypeScrollContents);
+       formLayout_2->setContentsMargins(4, 4, 4, 4);
+       formLayout_2->setObjectName(QString::fromUtf8("formLayout_2"));
+       formLayout_2->setFieldGrowthPolicy(QFormLayout::FieldsStayAtSizeHint);
+       formLayout_2->setHorizontalSpacing(6);
+       formLayout_2->setVerticalSpacing(6);
+       m_ShapeTypeScrollArea->setWidget(m_ShapeTypeScrollContents);
+
+       for (int i = 0; i < size; i++)
+       {
+         QLabel* shapeTypeLabel = new QLabel(m_ShapeTypeScrollContents);
+         QString str ("Phase ");
+         str.append(QString::number(i, 10));
+         str.append(":");
+         shapeTypeLabel->setText(str);
+         shapeTypeLabel->setObjectName(str);
+         m_ShapeTypeLabels << shapeTypeLabel;
+
+         formLayout_2->setWidget(i, QFormLayout::LabelRole, shapeTypeLabel);
+
+         QComboBox* cb = new QComboBox(m_ShapeTypeScrollContents);
+         str.append(" ComboBox");
+         cb->setObjectName(str);
+         for(size_t s = 0; s < shapeTypeStrings.size(); ++s)
+         {
+           cb->addItem(QString::fromStdString( shapeTypeStrings[s]), shapeTypeEnums[s] );
+           cb->setItemData(s, shapeTypeEnums[s], Qt::UserRole);
+         }
+         m_ShapeTypeCombos << cb;
+         formLayout_2->setWidget(i, QFormLayout::FieldRole, cb);
+       }
+
+
+  }
+
+}
+
 
 // -----------------------------------------------------------------------------
 //
@@ -365,92 +465,6 @@ void GrainGeneratorWidget::on_m_OutputDir_textChanged(const QString &text)
   }
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void GrainGeneratorWidget::on_m_H5InputStatisticsFile_textChanged(const QString &text)
-{
-  if (verifyPathExists(m_H5InputStatisticsFile->text(), m_H5InputStatisticsFile) )
-  {
-    QFileInfo fi (m_H5InputStatisticsFile->text());
-    m_OutputFilePrefix->setText(fi.baseName() + QString("_") );
-    // Open the HDF5 Stats file
-    H5ReconStatsReader::Pointer h5reader = H5ReconStatsReader::New(m_H5InputStatisticsFile->text().toStdString());
-    if (h5reader.get() == NULL)
-    {
-      QMessageBox::critical(this, "Grain Generator",
-                            "The input HDF5 Based Stats file could not be opened for reading.",
-                            QMessageBox::Ok | QMessageBox::Default);
-      return;
-    }
-    // Read the Phase and Crystal Structure information from the Stats File
-    std::vector<int> phases;
-    std::vector<AIM::Reconstruction::CrystalStructure> structures;
-    int err = h5reader->getPhaseAndCrystalStructures(phases, structures);
-    if (err < 0)
-    {
-      QMessageBox::critical(this, "Grain Generator",
-                            "The Phase information could not be read from the input HDF5 file.",
-                            QMessageBox::Ok | QMessageBox::Default);
-      return;
-    }
-
-    int size = phases.size();
-    std::vector<std::string> shapeTypeStrings;
-    AIM::ShapeType::getShapeTypeStrings(shapeTypeStrings);
-    std::vector<AIM::SyntheticBuilder::ShapeType> shapeTypeEnums;
-    AIM::ShapeType::getShapeTypeEnums(shapeTypeEnums);
-
-
-    // Remove all the items from the GUI and from the internal tracking Lists
-    QLayoutItem *child;
-    while ( (formLayout_2->count() > 0)  && (child = formLayout_2->takeAt(0)) != 0) {
-        delete child;
-    }
-    m_ShapeTypeLabels.clear();
-    m_ShapeTypeCombos.clear();
-
-    // Create a whole new QWidget to hold everything
-    m_ShapeTypeScrollContents = new QWidget();
-    m_ShapeTypeScrollContents->setObjectName(QString::fromUtf8("m_ShapeTypeScrollContents"));
-    formLayout_2 = new QFormLayout(m_ShapeTypeScrollContents);
-    formLayout_2->setContentsMargins(4, 4, 4, 4);
-    formLayout_2->setObjectName(QString::fromUtf8("formLayout_2"));
-    formLayout_2->setFieldGrowthPolicy(QFormLayout::FieldsStayAtSizeHint);
-    formLayout_2->setHorizontalSpacing(6);
-    formLayout_2->setVerticalSpacing(6);
-    m_ShapeTypeScrollArea->setWidget(m_ShapeTypeScrollContents);
-
-    for (int i = 0; i < size; i++)
-    {
-      QLabel* shapeTypeLabel = new QLabel(m_ShapeTypeScrollContents);
-      QString str ("Phase ");
-      str.append(QString::number(i, 10));
-      str.append(":");
-      shapeTypeLabel->setText(str);
-      shapeTypeLabel->setObjectName(str);
-      m_ShapeTypeLabels << shapeTypeLabel;
-
-      formLayout_2->setWidget(i, QFormLayout::LabelRole, shapeTypeLabel);
-
-      QComboBox* cb = new QComboBox(m_ShapeTypeScrollContents);
-      str.append(" ComboBox");
-      cb->setObjectName(str);
-      for(size_t s = 0; s < shapeTypeStrings.size(); ++s)
-      {
-        cb->addItem(QString::fromStdString( shapeTypeStrings[s]), shapeTypeEnums[s] );
-        cb->setItemData(s, shapeTypeEnums[s], Qt::UserRole);
-      }
-      m_ShapeTypeCombos << cb;
-      formLayout_2->setWidget(i, QFormLayout::FieldRole, cb);
-    }
-
-  }
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void GrainGeneratorWidget::on_m_GoBtn_clicked()
 {
 
