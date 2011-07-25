@@ -50,10 +50,10 @@ class AIMArray
      * @param numElements The number of elements in the internal array.
      * @return Boost::Shared_Ptr wrapping an instance of AIMArrayTemplate<T>
      */
-    static Pointer New(size_t numElements = 0)
+    static Pointer CreateArray(size_t numElements = 0)
     {
       AIMArray<T>* d = new AIMArray<T> (numElements, true);
-      if (d->_allocate() < 0)
+      if (d->Allocate() < 0)
       { // Could not allocate enough memory, reset the pointer to null and return
         delete d;
         return AIMArray<T>::NullPointer();
@@ -78,7 +78,7 @@ class AIMArray
      * @brief Gives this array a human readable name
      * @param name The name of this array
      */
-    void setName(const std::string &name)
+    void SetName(const std::string &name)
     {
       m_Name = name;
     }
@@ -87,7 +87,7 @@ class AIMArray
      * @brief Returns the human readable name of this array
      * @return
      */
-    std::string getName()
+    std::string GetName()
     {
       return m_Name;
     }
@@ -111,6 +111,34 @@ class AIMArray
     }
 
     /**
+     * @brief Allocates the memory needed for this class
+     * @return 1 on success, -1 on failure
+     */
+    int32_t Allocate()
+    {
+      if ((NULL != this->_data) && (true == this->_ownsData))
+      {
+        _deallocate();
+      }
+      this->_data = NULL;
+      this->_ownsData = true;
+      size_t newSize = (this->_nElements > 0 ? this->_nElements : 1);
+#if defined ( AIM_USE_SSE ) && defined ( __SSE2__ )
+      _data = static_cast<T*>( _mm_malloc (newSize * sizeof(T), 16) );
+#else
+      this->_data = (T*)malloc(newSize * sizeof(T));
+#endif
+      if (!this->_data)
+      {
+        std::cout << DEBUG_OUT(logTime) << "Unable to allocate " << newSize << " elements of size " << sizeof(T) << " bytes. " << std::endl;
+        return -1;
+      }
+      this->_nElements = newSize;
+      return 1;
+    }
+
+
+    /**
      * @brief Initializes this class to zero bytes freeing any data that it currently owns
      */
     virtual void initialize()
@@ -122,7 +150,7 @@ class AIMArray
       this->_data = 0;
       this->_nElements = 0;
       this->_ownsData = true;
-      this->_dims[0] = _nElements;
+   //   this->_dims[0] = _nElements;
     }
 
     /**
@@ -139,7 +167,7 @@ class AIMArray
      * @param size The new size of the internal array
      * @return 1 on success, 0 on failure
      */
-    virtual int32_t resize(size_t size)
+    virtual int32_t Resize(size_t size)
     {
       if (this->_resizeAndExtend(size) || size <= 0)
       {
@@ -158,9 +186,9 @@ class AIMArray
      * @param i The index to have the returned pointer pointing to.
      * @return Void Pointer. Possibly NULL.
      */
-    virtual void* getVoidPointer(size_t i)
+    virtual void* GetVoidPointer(size_t i)
     {
-      if (i >= this->getNumberOfElements())
+      if (i >= this->GetNumberOfTuples())
       {
         return 0x0;
       }
@@ -172,25 +200,25 @@ class AIMArray
      * @param i The index to return the value at
      * @return The value at index i
      */
-    virtual T getValue(size_t i)
+    virtual T GetValue(size_t i)
     {
       return this->_data[i];
     }
 
-    /**
-     * @brief Overload the operator[] to return a specific element
-     * @param i
-     * @return
-     */
-    T & operator[] (std::ptrdiff_t i) const // never throws
-    {
-      return this->_data[i];
-    }
+//    /**
+//     * @brief Overload the operator[] to return a specific element
+//     * @param i
+//     * @return
+//     */
+//    T & operator[] (std::ptrdiff_t i) const // never throws
+//    {
+//      return this->_data[i];
+//    }
 
     /**
      * @brief Returns the number of elements in the internal array.
      */
-    virtual size_t getNumberOfElements()
+    virtual size_t GetNumberOfTuples()
     {
       return _nElements;
     }
@@ -200,27 +228,33 @@ class AIMArray
      * which return the number of elements in the array.
      * @return The number of elements in the array.
      */
-    virtual size_t size()
-    {
-      return _nElements;
-    }
+//    virtual size_t size()
+//    {
+//      return _nElements;
+//    }
 
     /**
      * @brief This is for convenience and compatibility with other container types
      * which return the number of elements in the array.
      * @return The number of elements in the array.
      */
-    virtual size_t count()
-    {
-      return _nElements;
-    }
+//    virtual size_t count()
+//    {
+//      return _nElements;
+//    }
+
+    // Description:
+    // Set/Get the dimension (n) of the components. Must be >= 1. Make sure that
+    // this is set before allocation.
+    void SetNumberOfComponents(int nc) { if (nc > 0) this->NumberOfComponents = nc; }
+    int GetNumberOfComponents() { return this->NumberOfComponents; }
 
     /**
      * @brief Sets a specific value in the array
      * @param i The index of the value to set
      * @param value The new value to be set at the specified index
      */
-    void setValue(size_t i, T value)
+    void SetValue(size_t i, T value)
     {
       this->_data[i] = value;
     }
@@ -287,7 +321,7 @@ class AIMArray
      * @param i The index to return the pointer to.
      * @return The pointer to the index
      */
-    virtual T* getPointer(size_t i)
+    virtual T* GetPointer(size_t i)
     {
       return (T*)(&(_data[i]));
     }
@@ -302,13 +336,13 @@ class AIMArray
       std::string ind = StringUtils::indent(indent);
       os << ind << "AIMArray<T>" << std::endl;
       ind = StringUtils::indent(indent + 1);
-      os << ind << "Number of Elements: " << this->getNumberOfElements() << std::endl;
-      os << ind << "Number of Dimensions: " << this->getNumberOfDimensions() << std::endl;
+      os << ind << "Number of Elements: " << this->GetNumberOfTuples() << std::endl;
+ //     os << ind << "Number of Dimensions: " << this->getNumberOfDimensions() << std::endl;
       //   os << ind << "DataType: " << this->getDataType() << std::endl;
       os << ind << "Begin Data" << std::endl;
       os << ind << "{";
-      T* data = this->getPointer(0);
-      for (uint64_t i = 0; i < this->getNumberOfElements(); ++i)
+      T* data = this->GetPointer(0);
+      for (uint64_t i = 0; i < this->GetNumberOfTuples(); ++i)
       {
         os << ind << *data << " ";
         if (i % 10 == 0)
@@ -377,6 +411,8 @@ class AIMArray
 
   protected:
 
+    int NumberOfComponents; // the number of components per tuple
+
     /**
      * @brief Protected Constructor
      * @param numElements The number of elements in the internal array.
@@ -385,8 +421,8 @@ class AIMArray
     AIMArray(size_t numElements, bool ownsData = true) :
       _data(NULL), _nElements(numElements), _ownsData(ownsData)
     {
-      _dims.resize(1);
-      _dims[0] = numElements;
+//      _dims.resize(1);
+//      _dims[0] = numElements;
     }
 
     /**
@@ -398,11 +434,11 @@ class AIMArray
     AIMArray(size_t numDims, const size_t* dims, bool ownsData = true) :
       _data(NULL), _ownsData(ownsData)
     {
-      _dims.resize(numDims);
+  //    _dims.resize(numDims);
       _nElements = 1;
       for (size_t i = 0; i < numDims; ++i)
       {
-        _dims[i] = dims[i];
+    //    _dims[i] = dims[i];
         _nElements = _nElements * dims[i];
       }
     }
@@ -410,47 +446,21 @@ class AIMArray
     /**
      * Returns the number of dimensions the data has.
      */
-    virtual int32_t getNumberOfDimensions()
-    {
-      return static_cast<int32_t> (this->_dims.size());
-    }
+//    virtual int32_t getNumberOfDimensions()
+//    {
+//      return static_cast<int32_t> (this->_dims.size());
+//    }
 
     /**
      * @brief Copies the values of the dimensions into the supplied pointer
      * @param dims Pointer to store the dimension values into
      */
-    virtual void getDimensions(size_t* dims)
-    {
-      size_t nBytes = _dims.size() * sizeof(size_t);
-      ::memcpy(dims, &(_dims.front()), nBytes);
-    }
+//    virtual void getDimensions(size_t* dims)
+//    {
+//      size_t nBytes = _dims.size() * sizeof(size_t);
+//      ::memcpy(dims, &(_dims.front()), nBytes);
+//    }
 
-    /**
-     * @brief Allocates the memory needed for this class
-     * @return 1 on success, -1 on failure
-     */
-    int32_t _allocate()
-    {
-      if ((NULL != this->_data) && (true == this->_ownsData))
-      {
-        _deallocate();
-      }
-      this->_data = NULL;
-      this->_ownsData = true;
-      size_t newSize = (this->_nElements > 0 ? this->_nElements : 1);
-#if defined ( AIM_USE_SSE ) && defined ( __SSE2__ )
-      _data = static_cast<T*>( _mm_malloc (newSize * sizeof(T), 16) );
-#else
-      this->_data = (T*)malloc(newSize * sizeof(T));
-#endif
-      if (!this->_data)
-      {
-        std::cout << DEBUG_OUT(logTime) << "Unable to allocate " << newSize << " elements of size " << sizeof(T) << " bytes. " << std::endl;
-        return -1;
-      }
-      this->_nElements = newSize;
-      return 1;
-    }
 
     /**
      * @brief deallocates the memory block
@@ -522,8 +532,8 @@ class AIMArray
 
       // Allocation was successful.  Save it.
       this->_nElements = newSize;
-      this->_dims.resize(1);
-      this->_dims[0] = this->_nElements;
+//      this->_dims.resize(1);
+//      this->_dims[0] = this->_nElements;
       this->_data = newArray;
       // This object has now allocated its memory and owns it.
       this->_ownsData = true;
@@ -537,7 +547,7 @@ class AIMArray
     size_t _nElements;
     bool _ownsData;
 
-    std::vector<size_t> _dims;
+//    std::vector<size_t> _dims;
     std::string m_Name;
 
     AIMArray(const AIMArray&); //Not Implemented
