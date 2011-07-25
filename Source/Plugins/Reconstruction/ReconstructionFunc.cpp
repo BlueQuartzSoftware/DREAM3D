@@ -375,7 +375,7 @@ void ReconstructionFunc::find_border()
   std::vector<int> voxelslist(initialVoxelsListSize, -1);
   size_t totalPoints = xpoints * ypoints * zpoints;
 
-  AIMArray<int>::Pointer checkedPtr = AIMArray<int>::CreateArray(totalPoints);
+  AIMArray<int>::Pointer checkedPtr = AIMArray<int>::New(totalPoints);
   int *checked = checkedPtr->getPointer(0);
 
   for (int iter = 0; iter < (xpoints * ypoints * zpoints); iter++)
@@ -1702,7 +1702,7 @@ void ReconstructionFunc::merge_twins()
     if (m_Grains[i]->twinnewnumber == -1)
     {
       twinlist.push_back(i);
-      for (int m = 0; m < twinlist.size(); m++)
+      for (size_t m = 0; m < twinlist.size(); m++)
       {
         int firstgrain = twinlist[m];
         std::vector<int>* nlist = m_Grains[firstgrain]->neighborlist;
@@ -1989,7 +1989,7 @@ void ReconstructionFunc::find_neighbors()
   vector<int> nlistcopy;
   for (size_t i = 1; i < numgrains; i++)
   {
-    int phase = m_Grains[i]->phase;
+   // int phase = m_Grains[i]->phase;
     std::vector<int>* nlist = m_Grains[i]->neighborlist;
 
     std::map<int, int> neighToCount;

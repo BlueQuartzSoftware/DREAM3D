@@ -50,7 +50,7 @@ class AIMArray
      * @param numElements The number of elements in the internal array.
      * @return Boost::Shared_Ptr wrapping an instance of AIMArrayTemplate<T>
      */
-    static Pointer CreateArray(size_t numElements)
+    static Pointer New(size_t numElements = 0)
     {
       AIMArray<T>* d = new AIMArray<T> (numElements, true);
       if (d->_allocate() < 0)
