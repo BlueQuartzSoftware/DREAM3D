@@ -61,7 +61,7 @@ StatsGeneratorUI::StatsGeneratorUI(QWidget *parent) :
       m_OpenDialogLastDirectory("~/Desktop")
 #endif
 {
-  m_FilePath = m_OpenDialogLastDirectory + QDir::separator() + "Untitled.h5";
+  m_FilePath = m_OpenDialogLastDirectory + QDir::separator() + "Untitled.h5stats";
   setupUi(this);
   setupGui();
 
@@ -437,7 +437,7 @@ void StatsGeneratorUI::on_actionSave_triggered()
     //QString proposedFile = m_OpenDialogLastDirectory + QDir::separator() + m_FileName;
     QString h5file = QFileDialog::getSaveFileName(this, tr("Save HDF5 Statistics File"),
                                                   m_FilePath,
-                                                   tr("HDF5 Files (*.h5)") );
+                                                   tr("HDF5 Files (*.h5stats *.h5)") );
     if ( true == h5file.isEmpty() ){ return;  }
     m_FilePath = h5file;
     QFileInfo fi (m_FilePath);
@@ -498,10 +498,10 @@ void StatsGeneratorUI::on_actionNew_triggered()
 // -----------------------------------------------------------------------------
 void StatsGeneratorUI::on_actionOpen_triggered()
 {
-  QString proposedFile = m_OpenDialogLastDirectory + QDir::separator() + "Untitled.h5";
+  QString proposedFile = m_OpenDialogLastDirectory + QDir::separator() + "Untitled.h5stats";
   QString h5file = QFileDialog::getOpenFileName(this, tr("Open HDF5 Statistics File"),
     proposedFile,
-    tr("HDF5 Files (*.h5)") );
+    tr("HDF5 Files (*.h5stats *.h5 )") );
   if ( true == h5file.isEmpty() ){ return;  }
 
   SGApplication* app = qobject_cast<SGApplication*>(SGApplication::instance());
