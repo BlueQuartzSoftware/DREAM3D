@@ -202,7 +202,7 @@ void SurfaceMeshWidget::on_m_InputFile_textChanged(const QString & text)
   if (verifyPathExists(m_InputFile->text(), m_InputFile) )
   {
     QFileInfo fi(m_InputFile->text());
-    QString outPath = fi.absolutePath() + QDir::separator() + fi.baseName() + "_Reconstruction";
+    QString outPath = fi.absolutePath() + QDir::separator() + fi.baseName() + "_SurfaceMesh";
     outPath = QDir::toNativeSeparators(outPath);
     m_OutputDir->setText(outPath);
   }

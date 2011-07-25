@@ -165,7 +165,7 @@ void GrainGenerator::execute()
       err = reader->readStructure(m.get());
       CHECK_FOR_ERROR(GrainGeneratorFunc, "GrainGenerator Error getting size and resolution from VTK Voxel File", err);
     }
-    else if (ext.compare("h5") == 0)
+    else if (ext.compare("h5") == 0 || ext.compare("h5voxel") == 0)
     {
       // Load up the voxel data
       H5VoxelReader::Pointer h5Reader = H5VoxelReader::New();

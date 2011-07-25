@@ -239,10 +239,10 @@ void GrainGeneratorWidget::setupGui()
   m_WidgetList << m_H5InputStatisticsFile << m_InputH5StatisticsFileBtn << m_OutputDir << m_OutputDirBtn;
   m_WidgetList << m_XPoints << m_YPoints << m_ZPoints << m_XResolution << m_YResolution << m_ZResolution << m_FillingErrorWeight;
   m_WidgetList << m_NeighborhoodErrorWeight << m_SizeDistErrorWeight;
-  m_WidgetList << m_AlreadyFormed;
+
+  m_WidgetList << m_AlreadyFormed << m_PhFile;
   m_WidgetList << m_PeriodicBoundaryConditions  << m_OutputFilePrefix;
   m_WidgetList << m_ShapeTypeScrollArea;
-
 }
 
 // -----------------------------------------------------------------------------
