@@ -171,10 +171,10 @@ void MicrostructureStatisticsFunc::initializeAttributes()
 	{
 		grain_indicies[i] = 0;
 		phases[i] = 0;
-		euler1s[i] = 0;
-		euler2s[i] = 0;
-		euler3s[i] = 0;
-		neighbors[i] = 0;
+		euler1s[i] = -1;
+		euler2s[i] = -1;
+		euler3s[i] = -1;
+		neighbors[i] = -1;
 		surfacevoxels[i] = 0;
 		grainmisorientations[i] = 0;
 		misorientationgradients[i] = 0;
