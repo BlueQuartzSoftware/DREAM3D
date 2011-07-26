@@ -61,7 +61,6 @@ AIMPluginFrame(parent),
 m_Reconstruction(NULL),
 m_WorkerThread(NULL),
 m_phaseTypeEdited(false),
-m_WriteEuclideanScalars(false),
 m_WritePhaseIdScalars(true),
 m_WriteImageQualityScalars(true),
 m_WriteIPFColorScalars(true),
@@ -118,7 +117,6 @@ void ReconstructionWidget::readSettings(QSettings &prefs)
   READ_SETTING(prefs, m_, MinConfidence, ok, d, 0.1 , Double);
   READ_SETTING(prefs, m_, DownSampleFactor, ok, d, 1.0 , Double);
 
-  READ_BOOL_SETTING(prefs, m_, WriteEuclideanScalars, true);
   READ_BOOL_SETTING(prefs, m_, WritePhaseIdScalars, true);
   READ_BOOL_SETTING(prefs, m_, WriteImageQualityScalars, true);
   READ_BOOL_SETTING(prefs, m_, WriteIPFColorScalars, true);
@@ -163,7 +161,6 @@ void ReconstructionWidget::writeSettings(QSettings &prefs)
   WRITE_COMBO_BOX(prefs, m_, Orientation)
 
 
-  WRITE_BOOL_SETTING(prefs, m_, WriteEuclideanScalars, true);
   WRITE_BOOL_SETTING(prefs, m_, WritePhaseIdScalars, true);
   WRITE_BOOL_SETTING(prefs, m_, WriteImageQualityScalars, true);
   WRITE_BOOL_SETTING(prefs, m_, WriteIPFColorScalars, true);
@@ -569,7 +566,6 @@ void ReconstructionWidget::on_m_GoBtn_clicked()
 
 
   m_Reconstruction->setWriteVtkFile(m_VisualizationVizFile->isChecked());
-//  m_Reconstruction->setWriteEuclidean(m_WriteEuclideanScalars);
   m_Reconstruction->setWritePhaseId(m_WritePhaseIdScalars);
   m_Reconstruction->setWriteImageQuality(m_WriteImageQualityScalars);
   m_Reconstruction->setWriteIPFColor(m_WriteIPFColorScalars);
@@ -658,7 +654,6 @@ void ReconstructionWidget::threadHasMessage(QString message)
 void ReconstructionWidget::on_m_VtkOptionsBtn_clicked()
 {
   QVector<QString> options;
-//  options.push_back("Write Euclidean Scalars");
   options.push_back("Write Phase Ids Scalars");
   options.push_back("Write Image Quality Scalars");
   options.push_back("Write IPF Color Scalars");
@@ -666,7 +661,6 @@ void ReconstructionWidget::on_m_VtkOptionsBtn_clicked()
   QCheckboxDialog d(options, this);
   d.setWindowTitle(QString("VTK Output Options"));
 
- // d.setValue("Write Euclidean Scalars", m_WriteEuclideanScalars);
   d.setValue("Write Phase Ids Scalars", m_WritePhaseIdScalars);
   d.setValue("Write Image Quality Scalars", m_WriteImageQualityScalars);
   d.setValue("Write IPF Color Scalars", m_WriteIPFColorScalars);
@@ -675,7 +669,6 @@ void ReconstructionWidget::on_m_VtkOptionsBtn_clicked()
   int ret = d.exec();
   if (ret == QDialog::Accepted)
   {
-//    m_WriteEuclideanScalars = d.getValue("Write Euclidean Scalars");
     m_WritePhaseIdScalars = d.getValue("Write Phase Ids Scalars");
     m_WriteImageQualityScalars = d.getValue("Write Image Quality Scalars");
     m_WriteIPFColorScalars = d.getValue("Write IPF Color Scalars");
