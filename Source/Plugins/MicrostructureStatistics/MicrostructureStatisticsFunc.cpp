@@ -169,6 +169,16 @@ void MicrostructureStatisticsFunc::initializeAttributes()
     nearestneighbordistances.resize(totalpoints);
 	for(int i=0;i<totalpoints;i++)
 	{
+		grain_indicies[i] = 0;
+		phases[i] = 0;
+		euler1s[i] = 0;
+		euler2s[i] = 0;
+		euler3s[i] = 0;
+		neighbors[i] = 0;
+		surfacevoxels[i] = 0;
+		grainmisorientations[i] = 0;
+		misorientationgradients[i] = 0;
+		kernelmisorientations[i] = 0;
 		neighborlists[i].resize(6);
 		quats[i].resize(5);
 		nearestneighbors[i].resize(3);
