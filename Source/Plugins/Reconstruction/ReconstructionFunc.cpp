@@ -93,6 +93,9 @@ ReconstructionFunc::ReconstructionFunc()
   float f = sqrt_two;
   f = sin_wmin_neg_1_over_2;
   f = sin_wmin_pos_1_over_2;
+
+  m_GrainIndicies = AIMArray<int>::CreateArray(0);
+  grain_indicies = NULL;
 }
 
 ReconstructionFunc::~ReconstructionFunc()
@@ -153,7 +156,9 @@ void ReconstructionFunc::initialize(int nX,
   {
     m_Grains[g] = Grain::New();
   }
-  grain_indicies.resize(totalpoints);
+
+  RESIZE_ARRAY(m_GrainIndicies, grain_indicies, totalpoints);
+
   phases.resize(totalpoints);
   euler1s.resize(totalpoints);
   euler2s.resize(totalpoints);

@@ -108,7 +108,8 @@ class ReconstructionFunc
     vector<AIM::Reconstruction::PhaseType>        phaseType;
     std::vector<float>                            pptFractions;
 
-	std::vector<int> grain_indicies;
+    DECLARE_WRAPPED_ARRAY(grain_indicies, m_GrainIndicies, int)
+
     std::vector<int> phases;
     std::vector<float> euler1s;
     std::vector<float> euler2s;
@@ -120,8 +121,6 @@ class ReconstructionFunc
     std::vector<float> confidences;
     std::vector<float> imagequalities;
     std::vector<std::vector<float> > quats;  // n x 5 array
- //   std::vector<std::vector<int> > nearestneighbors;
- //   std::vector<std::vector<float> > nearestneighbordistances;
 
     SharedIntArray graincounts;
     std::vector<Grain::Pointer> m_Grains;
