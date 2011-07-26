@@ -78,7 +78,9 @@ class SurfaceMeshWidget : public AIMPluginFrame, private Ui::SurfaceMeshWidget
      */
     virtual void setupGui();
 
-
+    /**
+     * @brief Concrete Implementation of checkIOFiles
+     */
     virtual void checkIOFiles();
 
 

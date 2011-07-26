@@ -91,6 +91,7 @@ class Reconstruction : public AbstractPipeline
     MXA_INSTANCE_PROPERTY(bool, WriteDownSampledFile)
     MXA_INSTANCE_PROPERTY(bool, WriteHDF5GrainFile)
     MXA_INSTANCE_PROPERTY(bool, WriteDxFile)
+    MXA_INSTANCE_PROPERTY(bool, WritePhFile)
 
     /**
     * @brief Main method to run the operation

@@ -66,7 +66,7 @@ m_OpenDialogLastDirectory("~/")
 {
   setupUi(this);
   setupGui();
-  checkIOFiles();
+
 }
 
 // -----------------------------------------------------------------------------
@@ -162,7 +162,7 @@ void SurfaceMeshWidget::setupGui()
   m_WidgetList << m_InputFile << messageLabel;
   m_WidgetList << m_ScalarsName << xDim << yDim << zDim;
   m_WidgetList << m_InputFileBtn << m_OutputDir << m_OutputDirBtn << m_OutputFilePrefix;
-  m_WidgetList << m_VisualizationVizFile << m_NodesFileBin << m_TrianglesFileBin << m_DeleteTempFiles;
+  m_WidgetList << m_VisualizationVizFile << m_DeleteTempFiles;
   m_WidgetList << m_BinaryVtkFiles << m_ConformalMesh;
 //  m_WidgetList  << m_LockQuadPoints << m_SmoothIterations << m_SmoothMesh << m_WriteOutputFileIncrement;
 }
@@ -172,31 +172,8 @@ void SurfaceMeshWidget::setupGui()
 // -----------------------------------------------------------------------------
 void SurfaceMeshWidget::checkIOFiles()
 {
-  //CHECK_QLINEEDIT_FILE_EXISTS(m_InputFile)
-  if ( verifyPathExists(m_InputFile->text(), m_InputFile) == true )
-  {
-    // Load up the voxel data
-      H5VoxelReader::Pointer h5Reader = H5VoxelReader::New();
-      h5Reader->setFilename(m_InputFile->text().toStdString());
-      int dims[3];
-      float spacing[3];
-      int err = h5Reader->getSizeAndResolution(dims, spacing);
-      if (err >= 0)
-      {
-          xDim->setText(QString::number(dims[0]));
-          yDim->setText(QString::number(dims[1]));
-          zDim->setText(QString::number(dims[2]));
-      }
-  }
 
-
-  verifyPathExists(m_OutputDir->text(), m_OutputDir);
-
-  CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::SurfaceMesh, m_, NodesFileBin)
-  CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::SurfaceMesh, m_, TrianglesFileBin)
-  CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::SurfaceMesh, m_, VisualizationVizFile)
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -205,11 +182,50 @@ void SurfaceMeshWidget::on_m_InputFileBtn_clicked()
 {
   QString file = QFileDialog::getOpenFileName(this, tr("Select HDF5 Voxel File"),
                                                  m_OpenDialogLastDirectory,
-                                                 tr("Voxel Data (*.h5)") );
-  if ( true == file.isEmpty() ){return;  }
+                                                 tr("Voxel Data (*.h5voxel *.h5)") );
+  if ( true == file.isEmpty() ){ return; }
   QFileInfo fi (file);
-  QString ext = fi.suffix();
-  m_InputFile->setText(fi.absoluteFilePath());
+  m_InputFile->blockSignals(true);
+  QString p = QDir::toNativeSeparators(fi.absoluteFilePath());
+  m_InputFile->setText(p);
+  on_m_InputFile_textChanged(m_InputFile->text() );
+  m_InputFile->blockSignals(false);
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void SurfaceMeshWidget::on_m_InputFile_textChanged(const QString & text)
+{
+
+  if (verifyPathExists(m_InputFile->text(), m_InputFile) )
+  {
+    QFileInfo fi(m_InputFile->text());
+    QString outPath = fi.absolutePath() + QDir::separator() + fi.baseName() + "_SurfaceMesh";
+    outPath = QDir::toNativeSeparators(outPath);
+    m_OutputDir->setText(outPath);
+  }
+
+  QFileInfo fi(m_InputFile->text());
+  if (fi.exists() && fi.isFile())
+  {
+    // Set the output file Prefix based on the name of the input file
+    m_OutputFilePrefix->setText(fi.baseName() + QString("_") );
+
+    // Load up the voxel data
+    H5VoxelReader::Pointer h5Reader = H5VoxelReader::New();
+    h5Reader->setFilename(m_InputFile->text().toStdString());
+    int dims[3];
+    float spacing[3];
+    int err = h5Reader->getSizeAndResolution(dims, spacing);
+    if (err >= 0)
+    {
+        xDim->setText(QString::number(dims[0]));
+        yDim->setText(QString::number(dims[1]));
+        zDim->setText(QString::number(dims[2]));
+    }
+  }
 }
 
 
@@ -223,28 +239,17 @@ void SurfaceMeshWidget::on_m_OutputDirBtn_clicked()
   if (!outputFile.isNull())
   {
     this->m_OutputDir->setText(outputFile);
-    if (verifyPathExists(outputFile, m_OutputDir) == true )
-    {
-      checkIOFiles();
-      m_OutputDir->setText(outputFile);
-    }
+    verifyPathExists(m_OutputDir->text(), m_OutputDir);
   }
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void SurfaceMeshWidget::on_m_InputFile_textChanged(const QString & text)
-{
-  checkIOFiles();
-}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void SurfaceMeshWidget::on_m_OutputDir_textChanged(const QString & text)
 {
-  checkIOFiles();
+  verifyPathExists(m_OutputDir->text(), m_OutputDir);
 }
 
 // -----------------------------------------------------------------------------
