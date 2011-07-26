@@ -50,7 +50,7 @@ class AIMArray
      * @param numElements The number of elements in the internal array.
      * @return Boost::Shared_Ptr wrapping an instance of AIMArrayTemplate<T>
      */
-    static Pointer CreateArray(size_t numElements = 0)
+    static AIMArray<T>* CreateArray(size_t numElements = 0)
     {
       AIMArray<T>* d = new AIMArray<T> (numElements, true);
       if (d->Allocate() < 0)
@@ -259,18 +259,18 @@ class AIMArray
       this->_data[i] = value;
     }
 
-#if 0
-    /**
-     * @brief Returns an enumerated type that can be used to find out the type
-     * of primitive stored in the internal array. Currently the HDF5 type is returned
-     * in order to use this class effectively with HDF5
-     */
-    virtual int32_t getDataType()
+    //----------------------------------------------------------------------------
+    // These can be overridden for more efficiency
+    T GetComponent(size_t i, int j)
     {
-      T value = 0x0;
-      return H5Lite::HDFTypeForPrimitive<T>(value);
+      return _data[i*this->NumberOfComponents + j];
     }
-#endif
+
+    //----------------------------------------------------------------------------
+    void SetComponent(size_t i, int j, T c)
+    {
+      _data[i*this->NumberOfComponents + j] = c;
+    }
 
     /**
      * @brief Returns the number of bytes that make up the data type.
@@ -421,46 +421,8 @@ class AIMArray
     AIMArray(size_t numElements, bool ownsData = true) :
       _data(NULL), _nElements(numElements), _ownsData(ownsData)
     {
-//      _dims.resize(1);
-//      _dims[0] = numElements;
+      NumberOfComponents = 1;
     }
-
-    /**
-     * @brief Constructor used to create an AIMArray class that has multiple dimensions.
-     * @param numDims The number of dimensions to the data set.
-     * @param dims The actual values of the dimensions.
-     * @param takeOwnership Will the class clean up the memory. Default=true
-     */
-    AIMArray(size_t numDims, const size_t* dims, bool ownsData = true) :
-      _data(NULL), _ownsData(ownsData)
-    {
-  //    _dims.resize(numDims);
-      _nElements = 1;
-      for (size_t i = 0; i < numDims; ++i)
-      {
-    //    _dims[i] = dims[i];
-        _nElements = _nElements * dims[i];
-      }
-    }
-
-    /**
-     * Returns the number of dimensions the data has.
-     */
-//    virtual int32_t getNumberOfDimensions()
-//    {
-//      return static_cast<int32_t> (this->_dims.size());
-//    }
-
-    /**
-     * @brief Copies the values of the dimensions into the supplied pointer
-     * @param dims Pointer to store the dimension values into
-     */
-//    virtual void getDimensions(size_t* dims)
-//    {
-//      size_t nBytes = _dims.size() * sizeof(size_t);
-//      ::memcpy(dims, &(_dims.front()), nBytes);
-//    }
-
 
     /**
      * @brief deallocates the memory block
@@ -547,7 +509,6 @@ class AIMArray
     size_t _nElements;
     bool _ownsData;
 
-//    std::vector<size_t> _dims;
     std::string m_Name;
 
     AIMArray(const AIMArray&); //Not Implemented
