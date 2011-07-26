@@ -167,6 +167,17 @@ void ReconstructionFunc::initialize(int nX,
   quats.resize(totalpoints);
   for(int i=0;i<totalpoints;i++)
   {
+	grain_indicies[i] = -1;
+	phases[i] = 0;
+	euler1s[i] = 0;
+	euler2s[i] = 0;
+	euler3s[i] = 0;
+	neighbors[i] = 0;
+	surfacevoxels[i] = 0;
+	alreadychecked[i] = 0;
+	unassigned[i] = 0;
+	confidences[i] = 0;
+	imagequalities[i] = 0;
 	quats[i].resize(5);
   }
 
@@ -386,6 +397,7 @@ void ReconstructionFunc::find_border()
   while (imagequalities[index] > minseedimagequality && confidences[index] > minseedconfidence)
   {
     index++;
+	if(index == totalpoints) break;
   }
   voxelslist[count] = index;
   grain_indicies[index] = 0;
@@ -430,6 +442,7 @@ void ReconstructionFunc::find_border()
   while (grain_indicies[index] != -1)
   {
     index++;
+	if(index == totalpoints) break;
   }
   count = 0;
   voxelslist[count] = index;
@@ -1920,8 +1933,6 @@ void ReconstructionFunc::find_neighbors()
   int onsurf = 0;
   int good = 0;
   int neighbor = 0;
-//  size_t xtalCount = crystruct.size();
-//  int surfacegrain = 1;
   int nListSize = 100;
 
   // Copy all the grain names into a densely packed array
@@ -1935,14 +1946,9 @@ void ReconstructionFunc::find_neighbors()
     {
       m_Grains[i]->neighborlist = new std::vector<int>(0);
     }
-    m_Grains[i]->neighborlist->assign(nListSize, -1);
+    m_Grains[i]->neighborlist->resize(nListSize, -1);
   }
 
-//  NEW_SHARED_ARRAY(gnames, int, totalpoints)
-//  for (int i = 0; i < totalpoints; i++)
-//  {
-//    gnames[i] = grain_indicies[i];
-//  }
   for(int j = 0; j < (xpoints*ypoints*zpoints); j++)
   {
     onsurf = 0;
@@ -1965,27 +1971,22 @@ void ReconstructionFunc::find_neighbors()
         if (k == 3 && column == (xpoints - 1)) good = 0;
         if (good == 1 && grain_indicies[neighbor] != grain && grain_indicies[neighbor] > 0)
         {
-	      good = 1;
-	      neighbor = j+neighbors[k];
-          if(k == 0 && plane == 0) good = 0;
-          if(k == 5 && plane == (zpoints-1)) good = 0;
-          if(k == 1 && row == 0) good = 0;
-          if(k == 4 && row == (ypoints-1)) good = 0;
-          if(k == 2 && column == 0) good = 0;
-          if(k == 3 && column == (xpoints-1)) good = 0;
-	      if(good == 1 && grain_indicies[neighbor] != grain && grain_indicies[neighbor] > 0)
+          onsurf++;
+          nnum = m_Grains[grain]->numneighbors;
+          std::vector<int>* nlist = m_Grains[grain]->neighborlist;
+          if (nnum >= (nlist->size()))
           {
-            m_Grains[grain]->neighborlist->resize(nnum + nListSize);
-            m_Grains[grain]->neighborsurfacealist->resize(nnum + nListSize);
+            nlist->resize(nnum + nListSize);
           }
-          m_Grains[grain]->neighborlist->at(nnum) = grain_indicies[neighbor];
+          nlist->at(nnum) = grain_indicies[neighbor];
           nnum++;
           m_Grains[grain]->numneighbors = nnum;
-          onsurf++;
         }
       }
     }
+    surfacevoxels[j] = onsurf;
   }
+
   vector<int> nlistcopy;
   for (size_t i = 1; i < numgrains; i++)
   {

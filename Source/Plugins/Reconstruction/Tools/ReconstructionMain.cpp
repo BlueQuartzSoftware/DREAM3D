@@ -168,7 +168,6 @@ int main(int argc, char **argv)
     m_Reconstruction->setOutputDirectory(OutputDir.getValue());
     m_Reconstruction->setOutputFilePrefix(OutputFilePrefix.getValue());
     m_Reconstruction->setWriteVtkFile(true);
-    m_Reconstruction->setWriteEuclidean(true);
     m_Reconstruction->setWritePhaseId(true);
     m_Reconstruction->setWriteImageQuality(true);
     m_Reconstruction->setWriteIPFColor(true);
