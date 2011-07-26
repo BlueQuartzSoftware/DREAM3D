@@ -30,6 +30,18 @@
   ptr[s] = ptr[d];\
   ptr[d] = t[0];
 
+/** @brief Resizes the AIMArray Shared Array and assigns its internal data pointer
+ *
+ */
+#define RESIZE_ARRAY(sharedArray, pointer, size)\
+  sharedArray->Resize(size); pointer = sharedArray->GetPointer(0);
+
+#define     DECLARE_WRAPPED_ARRAY(pubVar, priVar, type)\
+  private:\
+  AIMArray<type>::Pointer priVar;\
+  public:\
+  type* pubVar;
+
 /**
  * @class AIMArray AIMArray.hpp PathToHeader/AIMArray.hpp
  * @brief Template class for wrapping raw arrays of data.
