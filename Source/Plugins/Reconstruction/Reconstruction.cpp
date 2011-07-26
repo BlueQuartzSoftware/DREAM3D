@@ -69,7 +69,6 @@ m_MisorientationTolerance(0.0),
 m_Orientation(Ang::NoOrientation),
 m_WriteBinaryVTKFiles(true),
 m_WriteVtkFile(true),
-m_WriteEuclidean(true),
 m_WritePhaseId(true),
 m_WriteImageQuality(true),
 m_WriteIPFColor(true),
@@ -263,13 +262,6 @@ void Reconstruction::execute()
       w0->m_WriteBinaryFiles = m_WriteBinaryVTKFiles;
       scalarsToWrite.push_back(w0);
     }
-    if (m_WriteEuclidean == true) {
-      VtkScalarWriter* w0 =
-        static_cast<VtkScalarWriter*>(new VoxelEuclideanScalarWriter<ReconstructionFunc>(m.get()));
-      w0->m_WriteBinaryFiles = m_WriteBinaryVTKFiles;
-      scalarsToWrite.push_back(w0);
-    }
-
     if (m_WritePhaseId == true){
       VtkScalarWriter* w0 =
         static_cast<VtkScalarWriter*>(new VoxelPhaseIdScalarWriter<ReconstructionFunc>(m.get()));
@@ -374,7 +366,6 @@ void Reconstruction::printSettings(std::ostream &ostream)
     PRINT_PROPERTY(ostream, Orientation)
 
     PRINT_PROPERTY(ostream, WriteVtkFile)
-    PRINT_PROPERTY(ostream, WriteEuclidean)
     PRINT_PROPERTY(ostream, WritePhaseId)
     PRINT_PROPERTY(ostream, WriteImageQuality)
     PRINT_PROPERTY(ostream, WriteIPFColor)

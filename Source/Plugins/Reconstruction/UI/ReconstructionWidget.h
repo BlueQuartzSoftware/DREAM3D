@@ -120,7 +120,6 @@ class ReconstructionWidget : public AIMPluginFrame, private Ui::ReconstructionWi
     QReconstruction*            m_Reconstruction;
     QThread*                    m_WorkerThread;
     bool                        m_phaseTypeEdited;
-    bool                        m_WriteEuclideanScalars;
     bool                        m_WritePhaseIdScalars;
     bool                        m_WriteImageQualityScalars;
     bool                        m_WriteIPFColorScalars;

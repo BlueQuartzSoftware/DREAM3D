@@ -194,6 +194,13 @@ void GrainGeneratorFunc::initializeAttributes()
     quats.resize(totalpoints);
 	for(int i=0;i<totalpoints;i++)
 	{
+		grain_indicies[i] = 0;
+		phases[i] = 0;
+		euler1s[i] = 0;
+		euler2s[i] = 0;
+		euler3s[i] = 0;
+		neighbors[i] = 0;
+		surfacevoxels[i] = 0;
 		quats[i].resize(5);
 	}
 }
@@ -265,26 +272,6 @@ void GrainGeneratorFunc::initializeArrays(std::vector<AIM::Reconstruction::Cryst
 
 void GrainGeneratorFunc::initialize_packinggrid()
 {
-  sizex = (xpoints*resx);
-  sizey = (ypoints*resy);
-  sizez = (zpoints*resz);
-  totalvol = sizex*sizey*sizez;
-  totalpoints = xpoints * ypoints * zpoints;
-//  voxels.reset(new GrainGeneratorVoxel[totalpoints]);
-  grain_indicies.resize(totalpoints);
-  phases.resize(totalpoints);
-  euler1s.resize(totalpoints);
-  euler2s.resize(totalpoints);
-  euler3s.resize(totalpoints);
-  neighbors.resize(totalpoints);
-  surfacevoxels.resize(totalpoints);
-  numowners.resize(totalpoints);
-  quats.resize(totalpoints);
-  for(int i=0;i<totalpoints;i++)
-  {
-	quats[i].resize(5);
-  }
-
   packingresx = resx*4.0;
   packingresy = resy*4.0;
   packingresz = resz*4.0;
@@ -1720,6 +1707,7 @@ void GrainGeneratorFunc::assign_voxels()
 //  int phase;
   int xmin, xmax, ymin, ymax, zmin, zmax;
 
+  initializeAttributes();
   NEW_SHARED_ARRAY(gsizes, int, m_Grains.size())
   NEW_SHARED_ARRAY(unassigned, int, totalpoints)
 
