@@ -43,6 +43,7 @@
 #include "DREAM3D/Common/OIMColoring.hpp"
 #include "DREAM3D/Common/VTKUtils/VTKFileWriters.hpp"
 #include "DREAM3D/Common/DxGrainIdWriter.h"
+#include "DREAM3D/Common/PhWriter.hpp"
 #include "DREAM3D/HDF5/H5VoxelWriter.h"
 #include "DREAM3D/HDF5/H5GrainWriter.hpp"
 
@@ -310,7 +311,17 @@ void Reconstruction::execute()
 
   CHECK_FOR_CANCELED(ReconstructionFunc, "Reconstruction was canceled", vtk_viz_files)
 
-  /** Optionally write the .h5grain file */
+  /* **********   This is CMU's ph format */
+  updateProgressAndMessage(("Writing Ph Voxel File"), 95);
+  if (m_WritePhFile) {
+    MAKE_OUTPUT_FILE_PATH ( phFile, AIM::Reconstruction::PhFile);
+    PhWriter phWriter;
+    err = phWriter.writeGrainPhFile(phFile, m->grain_indicies, m->xpoints, m->ypoints, m->zpoints);
+    CHECK_FOR_ERROR(ReconstructionFunc, "The Reconstruction threw an Error writing the Ph file format.", err);
+  }
+
+
+  /* ********** Optionally write the .h5grain file */
   if (m_WriteHDF5GrainFile)
   {
     updateProgressAndMessage(("Writing Out HDF5 Grain File. This may take a few minutes to complete."), 99);
@@ -320,7 +331,7 @@ void Reconstruction::execute()
     CHECK_FOR_ERROR(ReconstructionFunc, "The HDF5 Grain file could not be written to. Does the path exist and do you have write access to the output directory.", err);
   }
 
-
+  /* **********   This is IBM's dx format */
   if (m_WriteDxFile)
   {
     updateProgressAndMessage(("Writing Out Dx Grain File."), 99);

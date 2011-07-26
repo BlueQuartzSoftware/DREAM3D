@@ -1647,6 +1647,7 @@ void  GrainGeneratorFunc::pack_grains()
     }
     }
   }
+#if 0
   ofstream outFile;
   string filename = "test.vtk";
   outFile.open(filename.c_str());
@@ -1678,6 +1679,7 @@ void  GrainGeneratorFunc::pack_grains()
   }
   }
   outFile.close();
+#endif
 }
 
 void GrainGeneratorFunc::assign_voxels()
