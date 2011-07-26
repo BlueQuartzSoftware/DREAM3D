@@ -78,22 +78,25 @@ class MicrostructureStatisticsFunc
     std::vector<AIM::Reconstruction::PhaseType> phaseType;
     std::vector<float> pptFractions;
 
-    std::vector<int> grain_indicies;
-    std::vector<int> phases;
-    std::vector<float> euler1s;
-    std::vector<float> euler2s;
-    std::vector<float> euler3s;
-    std::vector<int> neighbors;
-    std::vector<int> surfacevoxels;
+    DECLARE_WRAPPED_ARRAY(grain_indicies, m_GrainIndicies, int)
+    DECLARE_WRAPPED_ARRAY(phases, m_Phases, int);
+    DECLARE_WRAPPED_ARRAY(euler1s, m_Euler1s, float);
+    DECLARE_WRAPPED_ARRAY(euler2s, m_Euler2s, float);
+    DECLARE_WRAPPED_ARRAY(euler3s, m_Euler3s, float);
+    DECLARE_WRAPPED_ARRAY(neighbors, m_Neighbors, int);
+    DECLARE_WRAPPED_ARRAY(surfacevoxels, m_SurfaceVoxels, float);
+    DECLARE_WRAPPED_ARRAY(quats, m_Quats, float); // n x 5 array
+    DECLARE_WRAPPED_ARRAY(graincounts, m_GrainCounts, int);
+
     std::vector<float> grainmisorientations;
     std::vector<float> misorientationgradients;
     std::vector<float> kernelmisorientations;
     std::vector<std::vector<int> > neighborlists;
-    std::vector<std::vector<float> > quats;
+
     std::vector<std::vector<int> > nearestneighbors;
     std::vector<std::vector<float> > nearestneighbordistances;
 
-    SharedIntArray graincounts;
+
     std::vector<Grain::Pointer> m_Grains;
 
     std::vector<std::vector<float> > graincenters;

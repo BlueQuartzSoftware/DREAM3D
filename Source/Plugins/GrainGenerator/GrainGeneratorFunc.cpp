@@ -169,6 +169,25 @@ GrainGeneratorFunc::GrainGeneratorFunc()
 // Just stuff to quiet the compiler
   float a = SinOfHalf;
   a = CosOfHalf;
+
+  grain_indicies = NULL;
+  phases = NULL;
+  euler1s = NULL;
+  euler2s = NULL;
+  euler3s = NULL;
+  neighbors = NULL;
+  surfacevoxels = NULL;
+  quats = NULL;
+
+  m_GrainIndicies = AIMArray<int>::CreateArray(0);
+  m_Phases = AIMArray<int>::CreateArray(0);
+  m_Euler1s = AIMArray<float>::CreateArray(0);
+  m_Euler2s = AIMArray<float>::CreateArray(0);
+  m_Euler3s = AIMArray<float>::CreateArray(0);
+  m_Neighbors = AIMArray<int>::CreateArray(0);
+  m_SurfaceVoxels = AIMArray<float>::CreateArray(0);
+  m_Quats = AIMArray<float>::CreateArray(0);
+
 }
 
 // -----------------------------------------------------------------------------
@@ -184,14 +203,15 @@ GrainGeneratorFunc::~GrainGeneratorFunc()
 
 void GrainGeneratorFunc::initializeAttributes()
 {
-	grain_indicies.resize(totalpoints);
-    phases.resize(totalpoints);
-    euler1s.resize(totalpoints);
-    euler2s.resize(totalpoints);
-    euler3s.resize(totalpoints);
-    neighbors.resize(totalpoints);
-    surfacevoxels.resize(totalpoints);
-    quats.resize(totalpoints);
+  grain_indicies = m_GrainIndicies->WritePointer(0, totalpoints);
+  phases = m_Phases->WritePointer(0, totalpoints);
+  euler1s = m_Euler1s->WritePointer(0, totalpoints);
+  euler2s = m_Euler2s->WritePointer(0, totalpoints);
+  euler3s = m_Euler3s->WritePointer(0, totalpoints);
+  neighbors = m_Neighbors->WritePointer(0, totalpoints);
+  surfacevoxels = m_SurfaceVoxels->WritePointer(0, totalpoints);
+  quats = m_Quats->WritePointer(0, totalpoints*5);
+  m_Quats->SetNumberOfComponents(5);
 	for(int i=0;i<totalpoints;i++)
 	{
 		grain_indicies[i] = 0;
@@ -201,7 +221,6 @@ void GrainGeneratorFunc::initializeAttributes()
 		euler3s[i] = 0;
 		neighbors[i] = 0;
 		surfacevoxels[i] = 0;
-		quats[i].resize(5);
 	}
 }
 void GrainGeneratorFunc::initializeArrays(std::vector<AIM::Reconstruction::CrystalStructure> structures)
@@ -3014,11 +3033,11 @@ void GrainGeneratorFunc::matchCrystallography()
     euler2s[i] = m_Grains[grain_indicies[i]]->euler2;
     euler3s[i] = m_Grains[grain_indicies[i]]->euler3;
     OrientationMath::eulertoQuat(q, euler1s[i], euler2s[i], euler3s[i]);
-    quats[i][0] = 1.0;
-    quats[i][1] = q[1];
-    quats[i][2] = q[2];
-    quats[i][3] = q[3];
-    quats[i][4] = q[4];
+    quats[i*5 + 0] = 1.0;
+    quats[i*5 + 1] = q[1];
+    quats[i*5 + 2] = q[2];
+    quats[i*5 + 3] = q[3];
+    quats[i*5 + 4] = q[4];
   }
 }
 void  GrainGeneratorFunc::measure_misorientations ()

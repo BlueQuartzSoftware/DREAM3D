@@ -34,12 +34,10 @@
  *
  */
 #define RESIZE_ARRAY(sharedArray, pointer, size)\
-  sharedArray->Resize(size); pointer = sharedArray->GetPointer(0);
+  pointer = sharedArray->WritePointer(0, size);
 
 #define     DECLARE_WRAPPED_ARRAY(pubVar, priVar, type)\
-  private:\
   AIMArray<type>::Pointer priVar;\
-  public:\
   type* pubVar;
 
 /**
@@ -80,7 +78,7 @@ class AIMArray
     virtual ~AIMArray()
     {
       //std::cout << "~AIMArrayTemplate '" << m_Name << "'" << std::endl;
-      if ((NULL != this->_data) && (true == this->_ownsData))
+      if ((NULL != this->Array) && (true == this->_ownsData))
       {
         _deallocate();
       }
@@ -128,39 +126,69 @@ class AIMArray
      */
     int32_t Allocate()
     {
-      if ((NULL != this->_data) && (true == this->_ownsData))
+      if ((NULL != this->Array) && (true == this->_ownsData))
       {
         _deallocate();
       }
-      this->_data = NULL;
+      this->Array = NULL;
       this->_ownsData = true;
-      size_t newSize = (this->_nElements > 0 ? this->_nElements : 1);
+      size_t newSize = (this->Size > 0 ? this->Size : 1);
 #if defined ( AIM_USE_SSE ) && defined ( __SSE2__ )
-      _data = static_cast<T*>( _mm_malloc (newSize * sizeof(T), 16) );
+      Array = static_cast<T*>( _mm_malloc (newSize * sizeof(T), 16) );
 #else
-      this->_data = (T*)malloc(newSize * sizeof(T));
+      this->Array = (T*)malloc(newSize * sizeof(T));
 #endif
-      if (!this->_data)
+      if (!this->Array)
       {
         std::cout << DEBUG_OUT(logTime) << "Unable to allocate " << newSize << " elements of size " << sizeof(T) << " bytes. " << std::endl;
         return -1;
       }
-      this->_nElements = newSize;
+      this->Size = newSize;
       return 1;
     }
 
+   /**
+    * @brief Get the address of a particular data index. Make sure data is allocated
+    * for the number of items requested. Set MaxId according to the number of
+    * data values requested. For example if you want to ensure that you have enough
+    * memory allocated to write to the 1000 element then you would have code such
+    * as:
+    * @code
+    *  int* ptr = array->WritePointer(0, 1000);
+    * @endcode
+    * @param id The Address of the data index
+    * @param number The number of elements to ensure memory allocation
+    * @return
+    */
+    T* WritePointer(size_t id, size_t number)
+    {
+        size_t newSize=id+number;
+      if ( newSize > this->Size )
+        {
+        if (this->ResizeAndExtend(newSize)==0)
+          {
+          return 0;
+          }
+        }
+      if ( (--newSize) > this->MaxId )
+        {
+        this->MaxId = newSize;
+        }
+
+      return this->Array + id;
+    }
 
     /**
      * @brief Initializes this class to zero bytes freeing any data that it currently owns
      */
     virtual void initialize()
     {
-      if (NULL != this->_data && true == this->_ownsData)
+      if (NULL != this->Array && true == this->_ownsData)
       {
         _deallocate();
       }
-      this->_data = 0;
-      this->_nElements = 0;
+      this->Array = 0;
+      this->Size = 0;
       this->_ownsData = true;
    //   this->_dims[0] = _nElements;
     }
@@ -171,7 +199,7 @@ class AIMArray
     virtual void initializeWithZeros()
     {
       size_t typeSize = sizeof(T);
-      ::memset(this->_data, 0, this->_nElements * typeSize);
+      ::memset(this->Array, 0, this->Size * typeSize);
     }
 
     /**
@@ -181,7 +209,7 @@ class AIMArray
      */
     virtual int32_t Resize(size_t size)
     {
-      if (this->_resizeAndExtend(size) || size <= 0)
+      if (this->ResizeAndExtend(size) || size <= 0)
       {
         return 1;
       }
@@ -204,7 +232,7 @@ class AIMArray
       {
         return 0x0;
       }
-      return (void*)(&(_data[i]));
+      return (void*)(&(Array[i]));
     }
 
     /**
@@ -214,7 +242,7 @@ class AIMArray
      */
     virtual T GetValue(size_t i)
     {
-      return this->_data[i];
+      return this->Array[i];
     }
 
 //    /**
@@ -232,7 +260,7 @@ class AIMArray
      */
     virtual size_t GetNumberOfTuples()
     {
-      return _nElements;
+      return Size;
     }
 
     /**
@@ -268,20 +296,20 @@ class AIMArray
      */
     void SetValue(size_t i, T value)
     {
-      this->_data[i] = value;
+      this->Array[i] = value;
     }
 
     //----------------------------------------------------------------------------
     // These can be overridden for more efficiency
     T GetComponent(size_t i, int j)
     {
-      return _data[i*this->NumberOfComponents + j];
+      return Array[i*this->NumberOfComponents + j];
     }
 
     //----------------------------------------------------------------------------
     void SetComponent(size_t i, int j, T c)
     {
-      _data[i*this->NumberOfComponents + j] = c;
+      Array[i*this->NumberOfComponents + j] = c;
     }
 
     /**
@@ -301,10 +329,10 @@ class AIMArray
      */
     virtual void byteSwapElements()
     {
-      char* ptr = (char*)(_data);
+      char* ptr = (char*)(Array);
       char t[8];
       size_t size = getTypeSize();
-      for (uint64_t var = 0; var < _nElements; ++var)
+      for (uint64_t var = 0; var < Size; ++var)
       {
         if (sizeof(T) == 2)
         {
@@ -335,7 +363,7 @@ class AIMArray
      */
     virtual T* GetPointer(size_t i)
     {
-      return (T*)(&(_data[i]));
+      return (T*)(&(Array[i]));
     }
 
     /**
@@ -374,16 +402,16 @@ class AIMArray
     virtual std::string valueToString(char delimiter = ' ')
     {
       std::stringstream sstream;
-      uint64_t limit = _nElements - 1;
-      for (uint64_t i = 0; i < _nElements; ++i)
+      uint64_t limit = Size - 1;
+      for (uint64_t i = 0; i < Size; ++i)
       {
         if (sizeof(T) != 1)
         {
-          sstream << _data[i];
+          sstream << Array[i];
         }
         else
         {
-          sstream << static_cast<int32_t> (_data[i]);
+          sstream << static_cast<int32_t> (Array[i]);
         }
         if (i < limit)
         {
@@ -402,16 +430,16 @@ class AIMArray
     virtual std::string valueToString(const std::string &delimiter = " ")
     {
       std::stringstream sstream;
-      uint64_t limit = _nElements - 1;
-      for (uint64_t i = 0; i < _nElements; ++i)
+      uint64_t limit = Size - 1;
+      for (uint64_t i = 0; i < Size; ++i)
       {
         if (sizeof(T) != 1)
         {
-          sstream << _data[i];
+          sstream << Array[i];
         }
         else
         {
-          sstream << static_cast<int32_t> (_data[i]);
+          sstream << static_cast<int32_t> (Array[i]);
         }
         if (i < limit)
         {
@@ -431,7 +459,7 @@ class AIMArray
      * @param takeOwnership Will the class clean up the memory. Default=true
      */
     AIMArray(size_t numElements, bool ownsData = true) :
-      _data(NULL), _nElements(numElements), _ownsData(ownsData)
+      Array(NULL), Size(numElements), _ownsData(ownsData)
     {
       NumberOfComponents = 1;
     }
@@ -444,7 +472,7 @@ class AIMArray
 #if defined ( AIM_USE_SSE ) && defined ( __SSE2__ )
       _mm_free( this->m_buffer );
 #else
-      free(this->_data);
+      free(this->Array);
 #endif
     }
 
@@ -453,18 +481,18 @@ class AIMArray
      * @param size
      * @return Pointer to the internal array
      */
-    virtual T* _resizeAndExtend(size_t size)
+    virtual T* ResizeAndExtend(size_t size)
     {
       T* newArray;
       size_t newSize;
 
-      if (size > this->_nElements)
+      if (size > this->Size)
       {
         newSize = size;
       }
-      else if (size == this->_nElements) // Requested size is equal to current size.  Do nothing.
+      else if (size == this->Size) // Requested size is equal to current size.  Do nothing.
       {
-        return this->_data;
+        return this->Array;
       }
       else // Requested size is smaller than current size.  Squeeze the memory.
       {
@@ -479,7 +507,7 @@ class AIMArray
       }
 
       // Allocate a new array if we DO NOT own the current array
-      if ((NULL != this->_data) && (false == this->_ownsData))
+      if ((NULL != this->Array) && (false == this->_ownsData))
       {
         // The old array is owned by the user so we cannot try to
         // reallocate it.  Just allocate new memory that we will own.
@@ -491,12 +519,12 @@ class AIMArray
         }
 
         // Copy the data from the old array.
-        memcpy(newArray, this->_data, (newSize < this->_nElements ? newSize : this->_nElements) * sizeof(T));
+        memcpy(newArray, this->Array, (newSize < this->Size ? newSize : this->Size) * sizeof(T));
       }
       else
       {
         // Try to reallocate with minimal memory usage and possibly avoid copying.
-        newArray = (T*)realloc(this->_data, newSize * sizeof(T));
+        newArray = (T*)realloc(this->Array, newSize * sizeof(T));
         if (!newArray)
         {
           std::cout << DEBUG_OUT(logTime) << "Unable to allocate " << newSize << " elements of size " << sizeof(T) << " bytes. " << std::endl;
@@ -505,21 +533,22 @@ class AIMArray
       }
 
       // Allocation was successful.  Save it.
-      this->_nElements = newSize;
+      this->Size = newSize;
 //      this->_dims.resize(1);
 //      this->_dims[0] = this->_nElements;
-      this->_data = newArray;
+      this->Array = newArray;
       // This object has now allocated its memory and owns it.
       this->_ownsData = true;
 
-      return this->_data;
+      return this->Array;
     }
 
   private:
 
-    T* _data;
-    size_t _nElements;
+    T* Array;
+    size_t Size;
     bool _ownsData;
+    size_t MaxId;
 
     std::string m_Name;
 

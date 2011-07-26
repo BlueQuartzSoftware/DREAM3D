@@ -64,20 +64,20 @@ int VTKStructureReader::readStructure(GrainGeneratorFunc* m)
   m->sizex = m->xpoints * m->resx;
   m->sizey = m->ypoints * m->resy;
   m->sizez = m->zpoints * m->resz;
-//  m->voxels.reset(new GrainGeneratorVoxel[m->totalpoints]);
-  m->grain_indicies.resize(m->totalpoints);
-  m->phases.resize(m->totalpoints);
-  m->euler1s.resize(m->totalpoints);
-  m->euler2s.resize(m->totalpoints);
-  m->euler3s.resize(m->totalpoints);
-  m->neighbors.resize(m->totalpoints);
-  m->surfacevoxels.resize(m->totalpoints);
+  m->grain_indicies = m->m_GrainIndicies->WritePointer(0, m->totalpoints);
+  m->phases = m->m_Phases->WritePointer(0, m->totalpoints);
+  m->euler1s = m->m_Euler1s->WritePointer(0, m->totalpoints);
+  m->euler2s = m->m_Euler2s->WritePointer(0, m->totalpoints);
+  m->euler3s = m->m_Euler3s->WritePointer(0, m->totalpoints);
+  m->neighbors = m->m_Neighbors->WritePointer(0, m->totalpoints);
+  m->surfacevoxels = m->m_SurfaceVoxels->WritePointer(0, m->totalpoints);
+  m->quats = m->m_Quats->WritePointer(0, m->totalpoints*5);
+  m->m_Quats->SetNumberOfComponents(5);
   m->numowners.resize(m->totalpoints);
-  m->quats.resize(m->totalpoints);
-  for(int i=0;i<m->totalpoints;i++)
-  {
-	m->quats[i].resize(5);
-  }
+
+ // for(int i=0;i<m->totalpoints;i++)
+ // {
+ // }
 
   std::string filename = getInputFileName();
   std::ifstream instream;

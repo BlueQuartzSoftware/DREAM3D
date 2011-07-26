@@ -186,10 +186,10 @@ void GrainGenerator::execute()
 
       updateProgressAndMessage("Allocating Voxel Memory", 5);
       //Allocate all of our Voxel Objects
-	  m->initializeAttributes();
+      m->initializeAttributes();
 
       updateProgressAndMessage(("Reading the Voxel Data from the HDF5 File"), 10);
-	  err = h5Reader->readVoxelData(m->grain_indicies, m->phases, m->euler1s, m->euler2s, m->euler3s, m->crystruct, m->totalpoints);
+      err = h5Reader->readVoxelData(m->m_GrainIndicies, m->m_Phases, m->m_Euler1s, m->m_Euler2s, m->m_Euler3s, m->crystruct, m->totalpoints);
       CHECK_FOR_ERROR(GrainGeneratorFunc, "GrainGenerator Error reading voxel data from HDF5 Voxel File", err);
     }
     else

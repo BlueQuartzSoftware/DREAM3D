@@ -81,21 +81,47 @@ using namespace std;
 ReconstructionFunc::ReconstructionFunc()
 {
   m_HexOps = HexagonalOps::New();
-  m_OrientationOps.push_back(dynamic_cast<OrientationMath*> (m_HexOps.get()));
+  m_OrientationOps.push_back(dynamic_cast<OrientationMath*>(m_HexOps.get()));
 
-  m_CubicOps = CubicOps::New();
-  m_OrientationOps.push_back(dynamic_cast<OrientationMath*> (m_CubicOps.get()));
+m_CubicOps  = CubicOps::New();
+  m_OrientationOps.push_back(dynamic_cast<OrientationMath*>(m_CubicOps.get()));
 
-  m_OrthoOps = OrthoRhombicOps::New();
-  m_OrientationOps.push_back(dynamic_cast<OrientationMath*> (m_OrthoOps.get()));
+m_OrthoOps  = OrthoRhombicOps::New();
+  m_OrientationOps.push_back(dynamic_cast<OrientationMath*>(m_OrthoOps.get()));
 
   // Just to quiet the compiler
-  float f = sqrt_two;
+float  f = sqrt_two;
   f = sin_wmin_neg_1_over_2;
   f = sin_wmin_pos_1_over_2;
 
-  m_GrainIndicies = AIMArray<int>::CreateArray(0);
   grain_indicies = NULL;
+  phases = NULL;
+  euler1s = NULL;
+  euler2s = NULL;
+  euler3s = NULL;
+  neighbors = NULL;
+  surfacevoxels = NULL;
+  quats = NULL;
+  alreadychecked = NULL;
+  unassigned = NULL;
+  confidences = NULL;
+  imagequalities = NULL;
+  graincounts = NULL;
+
+  m_GrainIndicies = AIMArray<int>::CreateArray(0);
+  m_Phases = AIMArray<int>::CreateArray(0);
+  m_Euler1s = AIMArray<float>::CreateArray(0);
+  m_Euler2s = AIMArray<float>::CreateArray(0);
+  m_Euler3s = AIMArray<float>::CreateArray(0);
+  m_Neighbors = AIMArray<int>::CreateArray(0);
+  m_SurfaceVoxels = AIMArray<float>::CreateArray(0);
+  m_Quats = AIMArray<float>::CreateArray(0);
+
+  m_AlreadyChecked = AIMArray<int>::CreateArray(0);
+  m_Unassigned = AIMArray<int>::CreateArray(0);
+  m_Confidence = AIMArray<float>::CreateArray(0);
+  m_ImageQualities = AIMArray<float>::CreateArray(0);
+  m_GrainCounts = AIMArray<int>::CreateArray(0);
 }
 
 ReconstructionFunc::~ReconstructionFunc()
@@ -157,33 +183,35 @@ void ReconstructionFunc::initialize(int nX,
     m_Grains[g] = Grain::New();
   }
 
-  RESIZE_ARRAY(m_GrainIndicies, grain_indicies, totalpoints);
+  grain_indicies = m_GrainIndicies->WritePointer(0, totalpoints);
+  phases = m_Phases->WritePointer(0, totalpoints);
+  euler1s = m_Euler1s->WritePointer(0, totalpoints);
+  euler2s = m_Euler2s->WritePointer(0, totalpoints);
+  euler3s = m_Euler3s->WritePointer(0, totalpoints);
+  neighbors = m_Neighbors->WritePointer(0, totalpoints);
+  surfacevoxels = m_SurfaceVoxels->WritePointer(0, totalpoints);
+  quats = m_Quats->WritePointer(0, totalpoints*5);
+  m_Quats->SetNumberOfComponents(5);
 
-  phases.resize(totalpoints);
-  euler1s.resize(totalpoints);
-  euler2s.resize(totalpoints);
-  euler3s.resize(totalpoints);
-  neighbors.resize(totalpoints);
-  surfacevoxels.resize(totalpoints);
-  alreadychecked.resize(totalpoints);
-  unassigned.resize(totalpoints);
-  confidences.resize(totalpoints);
-  imagequalities.resize(totalpoints);
-  quats.resize(totalpoints);
+  alreadychecked = m_AlreadyChecked->WritePointer(0, totalpoints);
+  unassigned = m_Unassigned->WritePointer(0, totalpoints);
+  confidences = m_Confidence->WritePointer(0, totalpoints);
+  imagequalities = m_ImageQualities->WritePointer(0, totalpoints);
+
+
   for(int i=0;i<totalpoints;i++)
   {
-	grain_indicies[i] = -1;
-	phases[i] = 1;
-	euler1s[i] = -1;
-	euler2s[i] = -1;
-	euler3s[i] = -1;
-	neighbors[i] = -1;
-	surfacevoxels[i] = 0;
-	alreadychecked[i] = 0;
-	unassigned[i] = 0;
-	confidences[i] = 0.0;
-	imagequalities[i] = 0.0;
-	quats[i].resize(5);
+    grain_indicies[i] = -1;
+    phases[i] = 1;
+    euler1s[i] = -1;
+    euler2s[i] = -1;
+    euler3s[i] = -1;
+    neighbors[i] = -1;
+    surfacevoxels[i] = 0;
+    alreadychecked[i] = 0;
+    unassigned[i] = 0;
+    confidences[i] = 0.0;
+    imagequalities[i] = 0.0;
   }
 
 }
@@ -209,11 +237,13 @@ void ReconstructionFunc::initializeQuats()
     {
       m_OrientationOps[xtal]->getFZQuat(qr);
     }
-    quats[i][0] = 1.0;
-    quats[i][1] = qr[1];
-    quats[i][2] = qr[2];
-    quats[i][3] = qr[3];
-    quats[i][4] = qr[4];
+
+    quats[i*5 + 0] = 1.0f;
+    quats[i*5 + 1] = qr[1];
+    quats[i*5 + 2] = qr[2];
+    quats[i*5 + 3] = qr[3];
+    quats[i*5 + 4] = qr[4];
+
   }
 }
 void ReconstructionFunc::cleanup_data()
@@ -280,11 +310,11 @@ void ReconstructionFunc::cleanup_data()
         euler3s[j] = euler3s[bestneighbor];
         confidences[j] = confidences[bestneighbor];
         imagequalities[j] = imagequalities[bestneighbor];
-        quats[j][0] = quats[bestneighbor][0];
-        quats[j][1] = quats[bestneighbor][1];
-        quats[j][2] = quats[bestneighbor][2];
-        quats[j][3] = quats[bestneighbor][3];
-        quats[j][4] = quats[bestneighbor][4];
+        quats[j*5 + 0] = quats[bestneighbor*5 + 0];
+        quats[j*5 + 1] = quats[bestneighbor*5 + 1];
+        quats[j*5 + 2] = quats[bestneighbor*5 + 2];
+        quats[j*5 + 3] = quats[bestneighbor*5 + 3];
+        quats[j*5 + 4] = quats[bestneighbor*5 + 4];
         neighbors[j] = -1;
       }
     }
@@ -461,10 +491,10 @@ void ReconstructionFunc::find_border()
     row = (currentpoint / xpoints) % ypoints;
     plane = currentpoint / (xpoints * ypoints);
     q1[0] = 0;
-    q1[1] = quats[currentpoint][1];
-    q1[2] = quats[currentpoint][2];
-    q1[3] = quats[currentpoint][3];
-    q1[4] = quats[currentpoint][4];
+    q1[1] = quats[currentpoint*5 + 1];
+    q1[2] = quats[currentpoint*5 + 2];
+    q1[3] = quats[currentpoint*5 + 3];
+    q1[4] = quats[currentpoint*5 + 4];
     phase1 = crystruct[phases[currentpoint]];
     for (int i = 1; i < 6; i++)
     {
@@ -487,10 +517,10 @@ void ReconstructionFunc::find_border()
       {
         w = 10000.0;
         q2[0] = 0;
-        q2[1] = quats[neighbor][1];
-        q2[2] = quats[neighbor][2];
-        q2[3] = quats[neighbor][3];
-        q2[4] = quats[neighbor][4];
+        q2[1] = quats[neighbor*5 + 1];
+        q2[2] = quats[neighbor*5 + 2];
+        q2[3] = quats[neighbor*5 + 3];
+        q2[4] = quats[neighbor*5 + 4];
         phase2 = crystruct[phases[neighbor]];
         if (phase1 == phase2) {
           w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
@@ -653,15 +683,15 @@ void ReconstructionFunc::align_sections()
                     if (refiq > minseedimagequality && curiq > minseedimagequality)
                     {
                       w = 10000.0;
-                      q1[1] = quats[refposition][1];
-                      q1[2] = quats[refposition][2];
-                      q1[3] = quats[refposition][3];
-                      q1[4] = quats[refposition][4];
+                      q1[1] = quats[refposition*5 + 1];
+                      q1[2] = quats[refposition*5 + 2];
+                      q1[3] = quats[refposition*5 + 3];
+                      q1[4] = quats[refposition*5 + 4];
                       phase1 = crystruct[phases[refposition]];
-                      q2[1] = quats[curposition][1];
-                      q2[2] = quats[curposition][2];
-                      q2[3] = quats[curposition][3];
-                      q2[4] = quats[curposition][4];
+                      q2[1] = quats[curposition*5 + 1];
+                      q2[2] = quats[curposition*5 + 2];
+                      q2[3] = quats[curposition*5 + 3];
+                      q2[4] = quats[curposition*5 + 4];
                       phase2 = crystruct[phases[curposition]];
                       if (phase1 == phase2) w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
                       if (w > misorientationtolerance) disorientation++;
@@ -761,11 +791,11 @@ void ReconstructionFunc::align_sections()
           euler1s[position] = euler1s[tempposition];
           euler2s[position] = euler2s[tempposition];
           euler3s[position] = euler3s[tempposition];
-          quats[position][0] = quats[tempposition][0];
-          quats[position][1] = quats[tempposition][1];
-          quats[position][2] = quats[tempposition][2];
-          quats[position][3] = quats[tempposition][3];
-          quats[position][4] = quats[tempposition][4];
+          quats[position*5 + 0] = quats[tempposition*5 + 0];
+          quats[position*5 + 1] = quats[tempposition*5 + 1];
+          quats[position*5 + 2] = quats[tempposition*5 + 2];
+          quats[position*5 + 3] = quats[tempposition*5 + 3];
+          quats[position*5 + 4] = quats[tempposition*5 + 4];
           confidences[position] = confidences[tempposition];
           imagequalities[position] = imagequalities[tempposition];
           grain_indicies[position] = grain_indicies[tempposition];
@@ -776,11 +806,11 @@ void ReconstructionFunc::align_sections()
           euler1s[position] = 0.0;
           euler2s[position] = 0.0;
           euler3s[position] = 0.0;
-          quats[position][0] = 0.0;
-          quats[position][1] = 0.0;
-          quats[position][2] = 0.0;
-          quats[position][3] = 0.0;
-          quats[position][4] = 1.0;
+          quats[position*5 + 0] = 0.0;
+          quats[position*5 + 1] = 0.0;
+          quats[position*5 + 2] = 0.0;
+          quats[position*5 + 3] = 0.0;
+          quats[position*5 + 4] = 1.0;
           confidences[position] = 0.0;
           imagequalities[position] = 0.0;
           grain_indicies[position] = 0;
@@ -821,7 +851,7 @@ void ReconstructionFunc::form_grains_sections()
   size_t size = 0;
   size_t initialVoxelsListSize = 1000;
 
-  graincounts.reset(new int[zpoints]);
+  graincounts = m_GrainCounts->WritePointer(0, zpoints);
 
   std::vector<int > voxelslist(initialVoxelsListSize, -1);
   int neighpoints[8];
@@ -881,20 +911,20 @@ void ReconstructionFunc::form_grains_sections()
         voxelslist[size] = seed;
         size++;
         qs[0] = 0;
-        qs[1] = quats[seed][1];
-        qs[2] = quats[seed][2];
-        qs[3] = quats[seed][3];
-        qs[4] = quats[seed][4];
+        qs[1] = quats[seed*5 + 1];
+        qs[2] = quats[seed*5 + 2];
+        qs[3] = quats[seed*5 + 3];
+        qs[4] = quats[seed*5 + 4];
         for (size_t j = 0; j < size; ++j)
         {
           int currentpoint = voxelslist[j];
           col = currentpoint % xpoints;
           row = (currentpoint / xpoints) % ypoints;
           q1[0] = 0;
-          q1[1] = quats[currentpoint][1];
-          q1[2] = quats[currentpoint][2];
-          q1[3] = quats[currentpoint][3];
-          q1[4] = quats[currentpoint][4];
+          q1[1] = quats[currentpoint*5 + 1];
+          q1[2] = quats[currentpoint*5 + 2];
+          q1[3] = quats[currentpoint*5 + 3];
+          q1[4] = quats[currentpoint*5 + 4];
 		  phase1 = crystruct[phases[currentpoint]];
           for (int i = 0; i < 8; i++)
           {
@@ -908,10 +938,10 @@ void ReconstructionFunc::form_grains_sections()
             {
 			  w = 10000.0;
               q2[0] = 0;
-              q2[1] = quats[neighbor][1];
-              q2[2] = quats[neighbor][2];
-              q2[3] = quats[neighbor][3];
-              q2[4] = quats[neighbor][4];
+              q2[1] = quats[neighbor*5 + 1];
+              q2[2] = quats[neighbor*5 + 2];
+              q2[3] = quats[neighbor*5 + 3];
+              q2[4] = quats[neighbor*5 + 4];
 			  phase2 = crystruct[phases[neighbor]];
 			  if (phase1 == phase2) w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
               if (w < misorientationtolerance)
@@ -1006,7 +1036,7 @@ void ReconstructionFunc::form_grains()
       gphases[graincount] = phases[seed];
       for (int k = 0; k < 5; k++)
       {
-        grainquats[graincount * 5 + k] = grainquats[graincount * 5 + k] + quats[seed][k];
+        grainquats[graincount * 5 + k] = grainquats[graincount * 5 + k] + quats[seed*5 + k];
       }
       for (size_t j = 0; j < size; ++j)
       {
@@ -1034,10 +1064,10 @@ void ReconstructionFunc::form_grains()
           {
             w = 10000.0;
             q2[0] = 1;
-            q2[1] = quats[neighbor][1];
-            q2[2] = quats[neighbor][2];
-            q2[3] = quats[neighbor][3];
-            q2[4] = quats[neighbor][4];
+            q2[1] = quats[neighbor*5 + 1];
+            q2[2] = quats[neighbor*5 + 2];
+            q2[3] = quats[neighbor*5 + 3];
+            q2[4] = quats[neighbor*5 + 4];
             phase2 = crystruct[phases[neighbor]];
             if (phase1 == phase2) w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
             if (w < 5.0)
@@ -1045,14 +1075,14 @@ void ReconstructionFunc::form_grains()
               grain_indicies[neighbor] = graincount;
               for (int k = 0; k < 5; k++)
               {
-                qa[k] = quats[seed][k];
-                qb[k] = quats[neighbor][k];
+                qa[k] = quats[seed*5 + k];
+                qb[k] = quats[neighbor*5 + k];
               }
               if (phase1 == phase2) m_OrientationOps[phase1]->getNearestQuat(qa, qb);
               for (int k = 0; k < 5; k++)
               {
-                quats[neighbor][k] = qb[k];
-                grainquats[graincount * 5 + k] = grainquats[graincount * 5 + k] + quats[neighbor][k];
+                quats[neighbor*5 + k] = qb[k];
+                grainquats[graincount * 5 + k] = grainquats[graincount * 5 + k] + quats[neighbor*5 + k];
               }
               voxelslist[size] = neighbor;
               size++;
@@ -1427,14 +1457,14 @@ void ReconstructionFunc::reorder_grains()
         {
           for (int k = 0; k < 5; k++)
           {
-            q1[k] = quats[nucleus][k];
-            q2[k] = quats[currentpoint][k];
+            q1[k] = quats[nucleus*5 + k];
+            q2[k] = quats[currentpoint*5 + k];
           }
           m_OrientationOps[phase]->getNearestQuat(q1,q2);
           for (int k = 0; k < 5; k++)
           {
-            quats[currentpoint][k] = q2[k];
-            m_Grains[currentgrain]->avg_quat[k] = m_Grains[currentgrain]->avg_quat[k] + quats[currentpoint][k];
+            quats[currentpoint*5 + k] = q2[k];
+            m_Grains[currentgrain]->avg_quat[k] = m_Grains[currentgrain]->avg_quat[k] + quats[currentpoint*5 + k];
           }
         }
         for (int k = 0; k < 26; k++)
