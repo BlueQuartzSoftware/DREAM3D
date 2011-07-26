@@ -168,7 +168,7 @@ class VoxelIPFColorScalarWriter : public VtkScalarWriter
       }
 
       // Write the IPF Coloring Cell Data
-	  float voxquat[5];
+      float voxquat[5];
       for (size_t i = 0; i < total; i++)
       {
         phase = r->phases[i];
@@ -186,11 +186,11 @@ class VoxelIPFColorScalarWriter : public VtkScalarWriter
         }
         else if (r->crystruct[phase] == AIM::Reconstruction::Hexagonal)
         {
-		  voxquat[0] = r->quats[i][0];
-		  voxquat[1] = r->quats[i][1];
-		  voxquat[2] = r->quats[i][2];
-		  voxquat[3] = r->quats[i][3];
-		  voxquat[4] = r->quats[i][4];
+          voxquat[0] = r->quats[i * 5 + 0];
+          voxquat[1] = r->quats[i * 5 + 1];
+          voxquat[2] = r->quats[i * 5 + 2];
+          voxquat[3] = r->quats[i * 5 + 3];
+          voxquat[4] = r->quats[i * 5 + 4];
           OIMColoring::CalculateHexIPFColor(voxquat, RefDirection, &rgba[index]);
         }
         if (true == m_WriteBinaryFiles)

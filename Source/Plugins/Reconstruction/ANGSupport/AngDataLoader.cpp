@@ -163,11 +163,11 @@ int AngDataLoader::loadData(ReconstructionFunc* m)
         q2 = s * s1;
         q3 = c * s2;
         q4 = c * c2;
-        m->quats[index][0] = 0;
-        m->quats[index][1] = q1;
-        m->quats[index][2] = q2;
-        m->quats[index][3] = q3;
-        m->quats[index][4] = q4;
+        m->quats[index*5 + 0] = 0;
+        m->quats[index*5 + 1] = q1;
+        m->quats[index*5 + 2] = q2;
+        m->quats[index*5 + 3] = q3;
+        m->quats[index*5 + 4] = q4;
         ++readerIndex;
       }
     }

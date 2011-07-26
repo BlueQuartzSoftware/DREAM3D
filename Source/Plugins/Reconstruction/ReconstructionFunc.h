@@ -109,20 +109,21 @@ class ReconstructionFunc
     std::vector<float>                            pptFractions;
 
     DECLARE_WRAPPED_ARRAY(grain_indicies, m_GrainIndicies, int)
+    DECLARE_WRAPPED_ARRAY(phases, m_Phases, int);
+    DECLARE_WRAPPED_ARRAY(euler1s, m_Euler1s, float);
+    DECLARE_WRAPPED_ARRAY(euler2s, m_Euler2s, float);
+    DECLARE_WRAPPED_ARRAY(euler3s, m_Euler3s, float);
+    DECLARE_WRAPPED_ARRAY(neighbors, m_Neighbors, int);
+    DECLARE_WRAPPED_ARRAY(surfacevoxels, m_SurfaceVoxels, float);
+    DECLARE_WRAPPED_ARRAY(quats, m_Quats, float); // n x 5 array
+    DECLARE_WRAPPED_ARRAY(graincounts, m_GrainCounts, int);
 
-    std::vector<int> phases;
-    std::vector<float> euler1s;
-    std::vector<float> euler2s;
-    std::vector<float> euler3s;
-    std::vector<int> neighbors;
-    std::vector<int> surfacevoxels;
-    std::vector<int> alreadychecked;
-    std::vector<int> unassigned;
-    std::vector<float> confidences;
-    std::vector<float> imagequalities;
-    std::vector<std::vector<float> > quats;  // n x 5 array
+    DECLARE_WRAPPED_ARRAY(alreadychecked, m_AlreadyChecked, int);
+    DECLARE_WRAPPED_ARRAY(unassigned, m_Unassigned, int);
+    DECLARE_WRAPPED_ARRAY(confidences, m_Confidence, float);
+    DECLARE_WRAPPED_ARRAY(imagequalities, m_ImageQualities, float);
 
-    SharedIntArray graincounts;
+
     std::vector<Grain::Pointer> m_Grains;
 
     float minseedconfidence;
