@@ -213,8 +213,11 @@ void OIMImportWidget::on_m_InputDir_textChanged(const QString & text)
   if (verifyPathExists(m_InputDir->text(), m_InputDir) )
   {
     m_findAngMaxSliceAndPrefix();
-    QFileInfo fi(m_InputDir->text());
-    QString outPath = fi.absolutePath() + QDir::separator() + fi.fileName() + "_Output" + QDir::separator() + fi.fileName() + ".h5ang";
+    QDir dir(m_InputDir->text());
+    QString dirname = dir.dirName();
+    dir.cdUp();
+
+    QString outPath = dir.absolutePath() + QDir::separator() + dirname + "_Output" + QDir::separator() + dirname + ".h5ang";
     outPath = QDir::toNativeSeparators(outPath);
     m_OutputFile->setText(outPath);
     verifyPathExists(m_OutputFile->text(), m_OutputFile);
@@ -256,7 +259,7 @@ void OIMImportWidget::on_m_GoBtn_clicked()
   }
   verifyPathExists(m_OutputFile->text(), m_OutputFile);
   m_OutputFile->setText(outPath);
-  
+
 
   // Check the inputs
   SANITY_CHECK_INPUT(m_ , InputDir)
