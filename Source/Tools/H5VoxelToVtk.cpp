@@ -1,4 +1,40 @@
+/* ============================================================================
+ * Copyright (c) 2011, Michael A. Jackson (BlueQuartz Software)
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without modification,
+ * are permitted provided that the following conditions are met:
+ *
+ * Redistributions of source code must retain the above copyright notice, this
+ * list of conditions and the following disclaimer.
+ *
+ * Redistributions in binary form must reproduce the above copyright notice, this
+ * list of conditions and the following disclaimer in the documentation and/or
+ * other materials provided with the distribution.
+ *
+ * Neither the name of Michael A. Jackson nor the names of its contributors may
+ * be used to endorse or promote products derived from this software without
+ * specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+ * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+/**
+ * @file H5VoxelToVtk.cpp
+ * @brief This program is mainly a debugging program to ensure the .h5voxel file
+ * has the correct data since at the current time there is no way to visualize
+ * the .h5voxel in ParaView or anything else. This will convert the .h5voxel to a
+ * VTK structured points data file with Grain IDs and IPS Colors.
+ */
 
 #include <iostream>
 #include <string>
@@ -30,11 +66,20 @@ typedef struct {
     AIM::Reconstruction::CrystalStructure* crystruct;
 } Test;
 
-
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 int main(int argc, char **argv)
 {
   std::cout << "Starting Conversion of H5Voxel to VTK with Grain ID and IPF Colors" << std::endl;
-  std::string iFile = "/private/tmp/BadRecon_UpperRight_v2/BadReconUpperRightv2_VoxelData.h5voxel";
+  if (argc < 3)
+  {
+    std::cout << "This program takes 2 arguments: Input .h5voxel file and output vtk file." << std::endl;
+    return EXIT_FAILURE;
+  }
+
+
+  std::string iFile = argv[1];
 
   int err = 0;
 
@@ -99,11 +144,9 @@ int main(int argc, char **argv)
 
   std::cout << "Writing VTK file" << std::endl;
 
-  FILE* f = fopen("/tmp/out.vtk", "wb");
+  FILE* f = fopen(argv[2], "wb");
 
   WRITE_STRUCTURED_POINTS_HEADER("ASCII", ptr)
-
-
 
   VoxelIPFColorScalarWriter<Test> ipfWriter(ptr);
   ipfWriter.m_WriteBinaryFiles = false;
@@ -112,6 +155,7 @@ int main(int argc, char **argv)
   WRITE_VTK_GRAIN_IDS_ASCII(ptr, AIM::VTK::GrainIdScalarName)
 
   fclose(f);
+  free(ptr);
 
   std::cout << "Done Converting" << std::endl;
   return EXIT_SUCCESS;

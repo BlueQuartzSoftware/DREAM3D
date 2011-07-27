@@ -37,6 +37,7 @@
 
 #include "TSLLib/AngDirectoryPatterns.h"
 #include "TSLLib/AngReader.h"
+#include "TSLLib/AngPhase.h"
 
 #include "DREAM3D/DREAM3DConfiguration.h"
 #include "DREAM3D/Common/Constants.h"
