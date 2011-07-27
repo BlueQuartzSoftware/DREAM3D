@@ -141,24 +141,24 @@ int main(int argc, char **argv)
     cmd.add(outputPrefix);
 
 
-    TCLAP::SwitchArg   m_VisualizationVizFile( "", "no-vtk", "Enable Periodic Boundary Conditions", true);
+    TCLAP::SwitchArg   m_VisualizationVizFile( "", "no-vtk", "Disable Writing of VTK File", true);
     cmd.add(m_VisualizationVizFile);
-    TCLAP::SwitchArg   m_WriteSurfaceVoxelScalars( "", "no-surfacevoxels", "Enable Periodic Boundary Conditions", true);
+    TCLAP::SwitchArg   m_WriteSurfaceVoxelScalars( "", "no-surfacevoxels", "Disable Writing of Surface Voxel Scalars", true);
     cmd.add(m_WriteSurfaceVoxelScalars);
-    TCLAP::SwitchArg   m_WritePhaseIdScalars( "", "no-phase", "Enable Periodic Boundary Conditions", true);
+    TCLAP::SwitchArg   m_WritePhaseIdScalars( "", "no-phase", "Disable Writing of Phase ID Scalars", true);
     cmd.add(m_WritePhaseIdScalars);
-    TCLAP::SwitchArg   m_WriteIPFColorScalars( "", "no-ipf", "Enable Periodic Boundary Conditions", true);
+    TCLAP::SwitchArg   m_WriteIPFColorScalars( "", "no-ipf", "Disable Writing of IPF Colors Scalars", true);
     cmd.add(m_WriteIPFColorScalars);
-    TCLAP::SwitchArg   m_WriteBinaryVTKFile( "", "vtk_ascii", "Enable Periodic Boundary Conditions", true);
+    TCLAP::SwitchArg   m_WriteBinaryVTKFile( "", "vtk_ascii", "Write ASCII Vtk Files instead of Binary Files", true);
     cmd.add(m_WriteBinaryVTKFile);
 
-    TCLAP::SwitchArg   m_HDF5GrainFile( "", "hdf5-grain", "Enable Periodic Boundary Conditions", false);
+    TCLAP::SwitchArg   m_HDF5GrainFile( "", "hdf5-grain", "Write the HDF5 Grain file (.h5grain).", false);
     cmd.add(m_HDF5GrainFile);
 
-    TCLAP::SwitchArg   m_PhFile( "", "no-phfile", "Enable Periodic Boundary Conditions", true);
+    TCLAP::SwitchArg   m_PhFile( "", "no-phfile", "Disable Writing PH file", true);
     cmd.add(m_PhFile);
 
-    TCLAP::SwitchArg   m_writegraindata( "", "no-graindata", "Enable Periodic Boundary Conditions", true);
+    TCLAP::SwitchArg   m_writegraindata( "", "no-graindata", "Disable the Writing of the Grain Data file", true);
     cmd.add(m_writegraindata);
 
 
