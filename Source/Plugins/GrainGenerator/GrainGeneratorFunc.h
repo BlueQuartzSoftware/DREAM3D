@@ -116,11 +116,6 @@ public:
     DECLARE_WRAPPED_ARRAY(surfacevoxels, m_SurfaceVoxels, float);
     DECLARE_WRAPPED_ARRAY(quats, m_Quats, float); // n x 5 array
 
-    std::vector<std::vector<int> > nearestneighbors;
-    std::vector<std::vector<float> > nearestneighbordistances;
-
-    std::vector<int> numowners;
-
     std::vector<Grain::Pointer> m_Grains;
 	  std::vector<float> sizetest;
 
