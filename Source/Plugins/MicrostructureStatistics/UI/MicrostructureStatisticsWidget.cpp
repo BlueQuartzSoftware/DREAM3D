@@ -84,7 +84,7 @@ MicrostructureStatisticsWidget::~MicrostructureStatisticsWidget()
 void MicrostructureStatisticsWidget::readSettings(QSettings &prefs)
 {
   QString val;
-  
+
   bool ok = false;
   double d;
 
@@ -192,6 +192,9 @@ void MicrostructureStatisticsWidget::on_m_InputFile_textChanged(const QString &t
   QFileInfo fi(m_InputFile->text());
   if (fi.exists() && fi.isFile())
   {
+    // Set the output file Prefix based on the name of the input file
+    m_OutputFilePrefix->setText(fi.baseName() + QString("_"));
+
     // Load up the voxel data
     H5VoxelReader::Pointer h5Reader = H5VoxelReader::New();
     h5Reader->setFilename(m_InputFile->text().toStdString());

@@ -344,7 +344,7 @@ void GrainGeneratorWidget::on_m_H5InputStatisticsFile_textChanged(const QString 
   if (verifyPathExists(m_H5InputStatisticsFile->text(), m_H5InputStatisticsFile))
   {
     QFileInfo fi(m_H5InputStatisticsFile->text());
-    QString outPath = fi.absolutePath() + QDir::separator() + fi.baseName() + "_Reconstruction";
+    QString outPath = fi.absolutePath() + QDir::separator() + fi.baseName() + "_GrainGenerator";
     outPath = QDir::toNativeSeparators(outPath);
     m_OutputDir->setText(outPath);
   }
