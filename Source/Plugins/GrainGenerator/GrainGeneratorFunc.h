@@ -157,7 +157,7 @@ public:
     int numeulers;
     int resdiff;
     std::vector<float> unbiasedvol;
-    std::vector<float> totalsurfacearea;
+    DECLARE_WRAPPED_ARRAY(totalsurfacearea, m_TotalSurfaceArea, float);
     int numprimarygrains;
     std::vector<float> phasefraction;
     std::vector<float> binstepsize;
