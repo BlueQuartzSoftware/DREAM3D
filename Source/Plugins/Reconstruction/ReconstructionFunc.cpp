@@ -78,19 +78,26 @@ const static float sin_wmin_pos_1_over_2 = sinf(acos_pos_one / 2.0);
 
 using namespace std;
 
-ReconstructionFunc::ReconstructionFunc()
+ReconstructionFunc::ReconstructionFunc() :
+resx(1.0f),
+resy(1.0f),
+resz(1.0f),
+xpoints(0),
+ypoints(0),
+zpoints(0)
+
 {
   m_HexOps = HexagonalOps::New();
   m_OrientationOps.push_back(dynamic_cast<OrientationMath*>(m_HexOps.get()));
 
-m_CubicOps  = CubicOps::New();
+  m_CubicOps  = CubicOps::New();
   m_OrientationOps.push_back(dynamic_cast<OrientationMath*>(m_CubicOps.get()));
 
-m_OrthoOps  = OrthoRhombicOps::New();
+  m_OrthoOps  = OrthoRhombicOps::New();
   m_OrientationOps.push_back(dynamic_cast<OrientationMath*>(m_OrthoOps.get()));
 
   // Just to quiet the compiler
-float  f = sqrt_two;
+  float  f = sqrt_two;
   f = sin_wmin_neg_1_over_2;
   f = sin_wmin_pos_1_over_2;
 
