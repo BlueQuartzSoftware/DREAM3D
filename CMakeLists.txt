@@ -260,8 +260,8 @@ if (DREAM3D_BUILD_QT_APPS)
         # Add any additional Plugins that you develop here to this list
         set (DREAM3D_PLUGIN_LIST
             OIMImport 
-            GrainGenerator 
             Reconstruction 
+            GrainGenerator 
             SurfaceMesh 
             MicrostructureStatistics 
         )

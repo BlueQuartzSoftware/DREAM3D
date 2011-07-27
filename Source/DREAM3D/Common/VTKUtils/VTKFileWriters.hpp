@@ -130,7 +130,7 @@ class name : public VtkScalarWriter\
 
 
 VtkSCALARWRITER_CLASS_DEF(VoxelPhaseIdScalarWriter, r, AIM::VTK::PhaseIdScalarName, int, phases, "%d ")
-VtkSCALARWRITER_CLASS_DEF(VoxelEuclideanScalarWriter, r, AIM::VTK::EuclideanScalarName, float, nearestneighbordistances[0], "%f ")
+// VtkSCALARWRITER_CLASS_DEF(VoxelEuclideanScalarWriter, r, AIM::VTK::EuclideanScalarName, float, nearestneighbordistances[0], "%f ")
 VtkSCALARWRITER_CLASS_DEF(VoxelImageQualityScalarWriter, r, AIM::VTK::ImageQualityScalarName, float, imagequalities, "%f ")
 VtkSCALARWRITER_CLASS_DEF(VoxelSurfaceVoxelScalarWriter, r, AIM::VTK::SurfaceVoxelScalarName, int, surfacevoxels, "%d ")
 VtkSCALARWRITER_CLASS_DEF(VoxelKAMScalarWriter, r, AIM::VTK::KAMScalarName, float, kernelmisorientations, "%f ")
@@ -168,7 +168,7 @@ class VoxelIPFColorScalarWriter : public VtkScalarWriter
       }
 
       // Write the IPF Coloring Cell Data
-	  float voxquat[5];
+      float voxquat[5];
       for (size_t i = 0; i < total; i++)
       {
         phase = r->phases[i];
@@ -186,11 +186,11 @@ class VoxelIPFColorScalarWriter : public VtkScalarWriter
         }
         else if (r->crystruct[phase] == AIM::Reconstruction::Hexagonal)
         {
-		  voxquat[0] = r->quats[i][0];
-		  voxquat[1] = r->quats[i][1];
-		  voxquat[2] = r->quats[i][2];
-		  voxquat[3] = r->quats[i][3];
-		  voxquat[4] = r->quats[i][4];
+          voxquat[0] = r->quats[i * 5 + 0];
+          voxquat[1] = r->quats[i * 5 + 1];
+          voxquat[2] = r->quats[i * 5 + 2];
+          voxquat[3] = r->quats[i * 5 + 3];
+          voxquat[4] = r->quats[i * 5 + 4];
           OIMColoring::CalculateHexIPFColor(voxquat, RefDirection, &rgba[index]);
         }
         if (true == m_WriteBinaryFiles)
