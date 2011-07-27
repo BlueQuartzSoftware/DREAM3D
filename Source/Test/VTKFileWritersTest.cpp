@@ -83,8 +83,8 @@ int main(int argc, char **argv)
       static_cast<VtkScalarWriter*>(new VoxelGrainIdScalarWriter<ReconstructionFunc>(r.get()));
   VtkScalarWriter* w1 =
       static_cast<VtkScalarWriter*>(new VoxelPhaseIdScalarWriter<ReconstructionFunc>(r.get()));
-  VtkScalarWriter* w2 =
-      static_cast<VtkScalarWriter*>(new VoxelEuclideanScalarWriter<ReconstructionFunc>(r.get()));
+//  VtkScalarWriter* w2 =
+//      static_cast<VtkScalarWriter*>(new VoxelEuclideanScalarWriter<ReconstructionFunc>(r.get()));
   VtkScalarWriter* w3 =
       static_cast<VtkScalarWriter*>(new VoxelImageQualityScalarWriter<ReconstructionFunc>(r.get()));
   VtkScalarWriter* w4 =
@@ -95,7 +95,7 @@ int main(int argc, char **argv)
   std::vector<VtkScalarWriter*> scalarsToWrite;
   scalarsToWrite.push_back(w0);
   scalarsToWrite.push_back(w1);
-  scalarsToWrite.push_back(w2);
+//  scalarsToWrite.push_back(w2);
   scalarsToWrite.push_back(w3);
   scalarsToWrite.push_back(w4);
 //  scalarsToWrite.push_back(w5);

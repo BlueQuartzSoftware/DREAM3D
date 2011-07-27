@@ -151,10 +151,9 @@ if (WIN32)
 endif()
 COMPILE_TOOL(
     TARGET Reconstruction
-    SOURCES ${PROJECT_SOURCE_DIR}/Tools/ReconstructionMain.cpp     ${Reconstruction_HDRS}
-                                                                    ${Reconstruction_SRCS}
-                                                                    ${ANGSupport_HDRS}
-                                                                    ${ANGSupport_SRCS}
+    SOURCES ${PROJECT_SOURCE_DIR}/Tools/ReconstructionMain.cpp 
+            ${Reconstruction_HDRS} ${Reconstruction_SRCS}
+            ${ANGSupport_HDRS} ${ANGSupport_SRCS}
     DEBUG_EXTENSION ${EXE_DEBUG_EXTENSION}
     VERSION_MAJOR ${DREAM3D_VER_MAJOR}
     VERSION_MINOR ${DREAM3D_VER_MINOR}
@@ -165,4 +164,20 @@ COMPILE_TOOL(
     LINK_LIBRARIES DREAM3DLib
 )
   
-  
+if (0)
+# Create a Command line tool for the H5AngToVtk
+COMPILE_TOOL(
+    TARGET H5AngToVtk
+    SOURCES ${PROJECT_SOURCE_DIR}/Tools/H5AngToVtk.cpp 
+            ${Reconstruction_HDRS} ${Reconstruction_SRCS}
+            ${ANGSupport_HDRS} ${ANGSupport_SRCS}
+    DEBUG_EXTENSION ${EXE_DEBUG_EXTENSION}
+    VERSION_MAJOR ${DREAM3D_VER_MAJOR}
+    VERSION_MINOR ${DREAM3D_VER_MINOR}
+    VERSION_PATCH ${DREAM3D_VER_PATCH}
+    BINARY_DIR    ${${PROJECT_NAME}_BINARY_DIR}
+    COMPONENT     Applications
+    INSTALL_DEST  "${install_dir}" 
+    LINK_LIBRARIES DREAM3DLib
+)
+endif()

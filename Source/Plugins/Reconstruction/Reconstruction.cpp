@@ -37,6 +37,7 @@
 
 #include "TSLLib/AngDirectoryPatterns.h"
 #include "TSLLib/AngReader.h"
+#include "TSLLib/AngPhase.h"
 
 #include "DREAM3D/DREAM3DConfiguration.h"
 #include "DREAM3D/Common/Constants.h"
@@ -248,8 +249,6 @@ void Reconstruction::execute()
 
 
   /** ********** This section writes the VTK files for visualization *** */
-
-
   updateProgressAndMessage(("Writing VTK Visualization File"), 93);
   if (m_WriteVtkFile)
   {
@@ -263,6 +262,7 @@ void Reconstruction::execute()
       w0->m_WriteBinaryFiles = m_WriteBinaryVTKFiles;
       scalarsToWrite.push_back(w0);
     }
+
     if (m_WritePhaseId == true){
       VtkScalarWriter* w0 =
         static_cast<VtkScalarWriter*>(new VoxelPhaseIdScalarWriter<ReconstructionFunc>(m.get()));
