@@ -132,7 +132,7 @@ class name : public VtkScalarWriter\
 VtkSCALARWRITER_CLASS_DEF(VoxelPhaseIdScalarWriter, r, AIM::VTK::PhaseIdScalarName, int, phases, "%d ")
 // VtkSCALARWRITER_CLASS_DEF(VoxelEuclideanScalarWriter, r, AIM::VTK::EuclideanScalarName, float, nearestneighbordistances[0], "%f ")
 VtkSCALARWRITER_CLASS_DEF(VoxelImageQualityScalarWriter, r, AIM::VTK::ImageQualityScalarName, float, imagequalities, "%f ")
-VtkSCALARWRITER_CLASS_DEF(VoxelSurfaceVoxelScalarWriter, r, AIM::VTK::SurfaceVoxelScalarName, int, surfacevoxels, "%d ")
+VtkSCALARWRITER_CLASS_DEF(VoxelSurfaceVoxelScalarWriter, r, AIM::VTK::SurfaceVoxelScalarName, float, surfacevoxels, "%f ")
 VtkSCALARWRITER_CLASS_DEF(VoxelKAMScalarWriter, r, AIM::VTK::KAMScalarName, float, kernelmisorientations, "%f ")
 
 /**
