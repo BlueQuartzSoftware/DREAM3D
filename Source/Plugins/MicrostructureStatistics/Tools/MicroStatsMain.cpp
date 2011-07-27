@@ -44,7 +44,7 @@
 #include "DREAM3D/DREAM3DVersion.h"
 #include "DREAM3D/Common/AIMArray.hpp"
 
-#include "DREAM3D/MicrostructureStatistics/MicrostructureStatistics.h"
+#include "MicrostructureStatistics/MicrostructureStatistics.h"
 
 
 template<typename T>
