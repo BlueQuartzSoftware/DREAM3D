@@ -249,8 +249,6 @@ void Reconstruction::execute()
 
 
   /** ********** This section writes the VTK files for visualization *** */
-
-
   updateProgressAndMessage(("Writing VTK Visualization File"), 93);
   if (m_WriteVtkFile)
   {

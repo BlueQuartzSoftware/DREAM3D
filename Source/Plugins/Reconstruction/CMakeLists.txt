@@ -181,7 +181,3 @@ COMPILE_TOOL(
     LINK_LIBRARIES DREAM3DLib
 )
 endif()
-
-
-  
-endif()
