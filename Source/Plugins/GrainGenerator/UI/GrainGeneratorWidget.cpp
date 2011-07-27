@@ -511,6 +511,14 @@ void GrainGeneratorWidget::on_m_GoBtn_clicked()
   m_GrainGenerator->setYPoints(m_YPoints->value());
   m_GrainGenerator->setZPoints(m_ZPoints->value());
 
+  m_GrainGenerator->setXResolution(m_XResolution->value());
+  m_GrainGenerator->setYResolution(m_YResolution->value());
+  m_GrainGenerator->setZResolution(m_ZResolution->value());
+  m_GrainGenerator->setFillingErrorWeight(m_FillingErrorWeight->value());
+  m_GrainGenerator->setNeighborhoodErrorWeight(m_NeighborhoodErrorWeight->value());
+  m_GrainGenerator->setSizeDistErrorWeight(m_SizeDistErrorWeight->value());
+
+  m_GrainGenerator->setPeriodicBoundary(m_PeriodicBoundaryConditions->isChecked());
 
   std::vector<AIM::SyntheticBuilder::ShapeType> shapeTypes(1, AIM::SyntheticBuilder::UnknownShapeType);
   int count = m_ShapeTypeCombos.count();
@@ -531,15 +539,6 @@ void GrainGeneratorWidget::on_m_GoBtn_clicked()
   }
   m_GrainGenerator->setShapeTypes(shapeTypes);
 
-  m_GrainGenerator->setXResolution(m_XResolution->value());
-  m_GrainGenerator->setYResolution(m_YResolution->value());
-  m_GrainGenerator->setZResolution(m_ZResolution->value());
-  m_GrainGenerator->setFillingErrorWeight(m_FillingErrorWeight->value());
-  m_GrainGenerator->setNeighborhoodErrorWeight(m_NeighborhoodErrorWeight->value());
-  m_GrainGenerator->setSizeDistErrorWeight(m_SizeDistErrorWeight->value());
-
-  m_GrainGenerator->setPeriodicBoundary(m_PeriodicBoundaryConditions->isChecked());
-  m_GrainGenerator->setWriteGrainData(m_writegraindata->isChecked());
   m_GrainGenerator->setAlreadyFormed(m_AlreadyFormed->isChecked() );
   m_GrainGenerator->setStructureFile(m_StructureFile->text().toStdString());
 
@@ -551,6 +550,8 @@ void GrainGeneratorWidget::on_m_GoBtn_clicked()
 
   m_GrainGenerator->setWriteHDF5GrainFile(m_HDF5GrainFile->isChecked());
   m_GrainGenerator->setWritePhFile(m_PhFile->isChecked());
+
+  m_GrainGenerator->setWriteGrainData(m_writegraindata->isChecked());
 
   /* Connect the signal 'started()' from the QThread to the 'run' slot of the
    * Reconstruction object. Since the Reconstruction object has been moved to another

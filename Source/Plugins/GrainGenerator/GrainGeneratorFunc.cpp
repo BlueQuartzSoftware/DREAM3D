@@ -95,6 +95,7 @@ GrainGeneratorFunc::GrainGeneratorFunc()
   neighbors = NULL;
   surfacevoxels = NULL;
   quats = NULL;
+  totalsurfacearea = NULL;
 
   m_GrainIndicies = AIMArray<int>::CreateArray(0);
   m_Phases = AIMArray<int>::CreateArray(0);
@@ -104,7 +105,7 @@ GrainGeneratorFunc::GrainGeneratorFunc()
   m_Neighbors = AIMArray<int>::CreateArray(0);
   m_SurfaceVoxels = AIMArray<float>::CreateArray(0);
   m_Quats = AIMArray<float>::CreateArray(0);
-
+  m_TotalSurfaceArea = AIMArray<float>::CreateArray(0);
 
 }
 
@@ -2460,10 +2461,10 @@ void  GrainGeneratorFunc::find_neighbors()
   int good = 0;
   int neighbor = 0;
   size_t xtalCount = crystruct.size();
-  totalsurfacearea.resize(xtalCount);
+  totalsurfacearea = m_TotalSurfaceArea->WritePointer(0, xtalCount);
   for (size_t i = 1; i < xtalCount; ++i)
   {
-    totalsurfacearea[i] = 0;
+    totalsurfacearea[i] = 0.0f;
   }
   int surfacegrain = 1;
   int nListSize = 100;
@@ -2486,7 +2487,7 @@ void  GrainGeneratorFunc::find_neighbors()
     }
   }
 
-  for (int j = 0; j < (xpoints * ypoints * zpoints); j++)
+  for (int j = 0; j < totalpoints; j++)
   {
     onsurf = 0;
     grain = grain_indicies[j];
@@ -2495,9 +2496,14 @@ void  GrainGeneratorFunc::find_neighbors()
       column = j % xpoints;
       row = (j / xpoints) % ypoints;
       plane = j / (xpoints * ypoints);
-      if ((column == 0 || column == (xpoints - 1) || row == 0 || row == (ypoints - 1) || plane == 0 || plane == (zpoints - 1)) && zpoints != 1) m_Grains[grain]->surfacegrain =
-          surfacegrain;
-      if ((column == 0 || column == (xpoints - 1) || row == 0 || row == (ypoints - 1)) && zpoints == 1) m_Grains[grain]->surfacegrain = surfacegrain;
+      if ((column == 0 || column == (xpoints - 1) || row == 0 || row == (ypoints - 1) || plane == 0 || plane == (zpoints - 1)) && zpoints != 1)
+      {
+        m_Grains[grain]->surfacegrain = surfacegrain;
+      }
+      if ((column == 0 || column == (xpoints - 1) || row == 0 || row == (ypoints - 1)) && zpoints == 1)
+      {
+        m_Grains[grain]->surfacegrain = surfacegrain;
+      }
       for (int k = 0; k < 6; k++)
       {
         good = 1;
