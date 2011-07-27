@@ -97,6 +97,21 @@ MicrostructureStatisticsFunc::MicrostructureStatisticsFunc()
   surfacevoxels = NULL;
   quats = NULL;
   graincounts = NULL;
+  grainmisorientations = NULL;
+  misorientationgradients = NULL;
+  kernelmisorientations = NULL;
+  neighborlists = NULL;
+  nearestneighbors = NULL;
+  nearestneighbordistances = NULL;
+  graincenters = NULL;
+  grainmoments = NULL;
+
+  totalsurfacearea = NULL;
+  phasefraction = NULL;
+  totalvol = NULL;
+  totalaxes = NULL;
+  maxdiameter = NULL;
+  mindiameter = NULL;
 
   m_GrainIndicies = AIMArray<int>::CreateArray(0);
   m_Phases = AIMArray<int>::CreateArray(0);
@@ -107,6 +122,24 @@ MicrostructureStatisticsFunc::MicrostructureStatisticsFunc()
   m_SurfaceVoxels = AIMArray<float>::CreateArray(0);
   m_Quats = AIMArray<float>::CreateArray(0);
   m_GrainCounts = AIMArray<int>::CreateArray(0);
+
+  m_GrainMisorientations = AIMArray<float>::CreateArray(0);
+  m_MisorientationGradients = AIMArray<float>::CreateArray(0);
+  m_KernelMisorientations = AIMArray<float>::CreateArray(0);
+
+  m_NeighborLists = AIMArray<float>::CreateArray(0);
+  m_NearestNeighbors = AIMArray<float>::CreateArray(0);
+  m_NearestNeighborDistances = AIMArray<float>::CreateArray(0);
+
+  m_GrainCenters = AIMArray<float>::CreateArray(0);
+  m_GrainMoments = AIMArray<float>::CreateArray(0);
+
+  m_TotalSurfaceArea = AIMArray<float>::CreateArray(0);
+  m_PhaseFraction = AIMArray<float>::CreateArray(0);
+  m_TotalVol = AIMArray<float>::CreateArray(0);
+  m_TotalAxes = AIMArray<float>::CreateArray(0);
+  m_MaxDiameter = AIMArray<int>::CreateArray(0);
+  m_MinDiameter = AIMArray<int>::CreateArray(0);
 }
 
 // -----------------------------------------------------------------------------
@@ -131,11 +164,11 @@ void MicrostructureStatisticsFunc::initializeGrains()
   size_t curGrainSize = 1;
   int grainIndex = 0;
   Grain::Pointer grain;
-  for(int i = 0; i < totalpoints; ++i)
+  for (int i = 0; i < totalpoints; ++i)
   {
     grainIndex = grain_indicies[i];
     curGrainSize = m_Grains.size();
-    if (grainIndex > m_Grains.size()-1)
+    if (grainIndex > m_Grains.size() - 1)
     {
       // Resize the Grain Vector to be as large as this index. The other Grain
       // objects will be copied to the resized Vector. This probably isn't really
@@ -154,7 +187,7 @@ void MicrostructureStatisticsFunc::initializeGrains()
     }
     grain->voxellist->push_back(i);
     grain->numvoxels = grain->voxellist->size();
-	grain->active = 1;
+    grain->active = 1;
   }
 
 #if 0
@@ -180,51 +213,54 @@ void MicrostructureStatisticsFunc::initializeAttributes()
   euler3s = m_Euler3s->WritePointer(0, totalpoints);
   neighbors = m_Neighbors->WritePointer(0, totalpoints);
   surfacevoxels = m_SurfaceVoxels->WritePointer(0, totalpoints);
-  quats = m_Quats->WritePointer(0, totalpoints*5);
+  quats = m_Quats->WritePointer(0, totalpoints * 5);
   m_Quats->SetNumberOfComponents(5);
 
-    grainmisorientations.resize(totalpoints);
-    misorientationgradients.resize(totalpoints);
-    kernelmisorientations.resize(totalpoints);
-    neighborlists.resize(totalpoints);
+  grainmisorientations = m_GrainMisorientations->WritePointer(0, totalpoints);
+  misorientationgradients = m_MisorientationGradients->WritePointer(0, totalpoints);
+  kernelmisorientations = m_KernelMisorientations->WritePointer(0, totalpoints);
 
-    nearestneighbors.resize(totalpoints);
-    nearestneighbordistances.resize(totalpoints);
-	for(int i=0;i<totalpoints;i++)
-	{
-		grain_indicies[i] = 0;
-		phases[i] = 0;
-		euler1s[i] = 0;
-		euler2s[i] = 0;
-		euler3s[i] = 0;
-		neighbors[i] = 0;
-		surfacevoxels[i] = 0;
-		grainmisorientations[i] = 0;
-		misorientationgradients[i] = 0;
-		kernelmisorientations[i] = 0;
-		neighborlists[i].resize(6);
-		nearestneighbors[i].resize(3);
-		nearestneighbordistances[i].resize(3);
-	}
+  neighborlists = m_NeighborLists->WritePointer(0, totalpoints * 6);
+  m_NeighborLists->SetNumberOfComponents(6);
+  nearestneighbors = m_NearestNeighbors->WritePointer(0, totalpoints * 3);
+  m_NearestNeighbors->SetNumberOfComponents(3);
+  nearestneighbordistances = m_NearestNeighborDistances->WritePointer(0, totalpoints * 3);
+  m_NearestNeighborDistances->SetNumberOfComponents(3);
+
+  for (int i = 0; i < totalpoints; i++)
+  {
+    grain_indicies[i] = 0;
+    phases[i] = 0;
+    euler1s[i] = 0;
+    euler2s[i] = 0;
+    euler3s[i] = 0;
+    neighbors[i] = 0;
+    surfacevoxels[i] = 0;
+    grainmisorientations[i] = 0;
+    misorientationgradients[i] = 0;
+    kernelmisorientations[i] = 0;
+  }
 }
+
+
 void MicrostructureStatisticsFunc::initializeArrays()
 {
-
   size_t size = crystruct.size();
 
   pptFractions.resize(size);
   phaseType.resize(size);
-  phasefraction.resize(size);
+
+  phasefraction = m_PhaseFraction->WritePointer(0, size);
 
   // Initialize the first slot in these arrays since they should never be used
   phasefraction[0] = 0.0;
   phaseType[0] = AIM::Reconstruction::UnknownPhaseType;
   pptFractions[0] = -1.0;
 
-  mindiameter.resize(size);
-  maxdiameter.resize(size);
-  totalvol.resize(size);
-  totalaxes.resize(size);
+  mindiameter = m_MinDiameter->WritePointer(0, size);
+  maxdiameter = m_MaxDiameter->WritePointer(0, size);
+  totalvol = m_TotalVol->WritePointer(0, size);
+  totalaxes = m_TotalAxes->WritePointer(0, size);
 }
 
 
@@ -245,12 +281,13 @@ void MicrostructureStatisticsFunc::find_neighbors()
   int good = 0;
   int neighbor = 0;
   size_t xtalCount = crystruct.size();
-  totalsurfacearea.resize(xtalCount);
+
+  totalsurfacearea = m_TotalSurfaceArea->WritePointer(0, xtalCount);
   for(size_t i=1;i<xtalCount;++i)
   {
-	totalsurfacearea[i] = 0;
+    totalsurfacearea[i] = 0.0f;
   }
-  int surfacegrain = 1;
+ // int surfacegrain = 1;
   int nListSize = 100;
   for (size_t i = 1; i < m_Grains.size(); i++)
   {
@@ -480,7 +517,7 @@ void MicrostructureStatisticsFunc::find_surfacegrains2D()
 void MicrostructureStatisticsFunc::find_centroids()
 {
   //  int count = 0;
-  int insidegraincount = 0;
+  // int insidegraincount = 0;
   for(size_t i=0;i<crystruct.size();i++)
   {
 	  maxdiameter[i] = 0;
@@ -492,41 +529,40 @@ void MicrostructureStatisticsFunc::find_centroids()
   float radcubed;
   float diameter;
   size_t numgrains = m_Grains.size();
-  graincenters.resize(numgrains);
-  for (size_t i = 0; i < numgrains; i++)
+  graincenters = m_GrainCenters->WritePointer(0, numgrains * 5);
+  m_GrainCenters->SetNumberOfComponents(5);
+
+  // Initialize every element to 0.0
+  for (size_t i = 0; i < numgrains * 5; i++)
   {
-    graincenters[i].resize(5);
-    for (int j = 0; j < 5; j++)
-    {
-      graincenters[i][j] = 0;
-    }
+    graincenters[i] = 0.0f;
   }
-  for (int j = 0; j < (xpoints * ypoints * zpoints); j++)
+  for (int j = 0; j < totalpoints; j++)
   {
     int gnum = grain_indicies[j];
-    graincenters[gnum][0]++;
+    graincenters[gnum*5 + 0]++;
     col = j % xpoints;
     row = (j / xpoints) % ypoints;
     plane = j / (xpoints * ypoints);
 	x = float(col)*resx;
 	y = float(row)*resy;
 	z = float(plane)*resz;
-    graincenters[gnum][1] = graincenters[gnum][1] + x;
-    graincenters[gnum][2] = graincenters[gnum][2] + y;
-    graincenters[gnum][3] = graincenters[gnum][3] + z;
+    graincenters[gnum*5 + 1] = graincenters[gnum*5 + 1] + x;
+    graincenters[gnum*5 + 2] = graincenters[gnum*5 + 2] + y;
+    graincenters[gnum*5 + 3] = graincenters[gnum*5 + 3] + z;
   }
   float res_scalar = resx * resy * resz;
   float vol_term = (4.0/3.0)*m_pi;
   for (size_t i = 1; i < numgrains; i++)
   {
-    graincenters[i][1] = graincenters[i][1] / graincenters[i][0];
-    graincenters[i][2] = graincenters[i][2] / graincenters[i][0];
-    graincenters[i][3] = graincenters[i][3] / graincenters[i][0];
-    m_Grains[i]->centroidx = graincenters[i][1];
-    m_Grains[i]->centroidy = graincenters[i][2];
-    m_Grains[i]->centroidz = graincenters[i][3];
-    m_Grains[i]->numvoxels = graincenters[i][0];
-    m_Grains[i]->volume = (graincenters[i][0] * res_scalar);
+    graincenters[i*5 + 1] = graincenters[i*5 + 1] / graincenters[i*5 + 0];
+    graincenters[i*5 + 2] = graincenters[i*5 + 2] / graincenters[i*5 + 0];
+    graincenters[i*5 + 3] = graincenters[i*5 + 3] / graincenters[i*5 + 0];
+    m_Grains[i]->centroidx = graincenters[i*5 + 1];
+    m_Grains[i]->centroidy = graincenters[i*5 + 2];
+    m_Grains[i]->centroidz = graincenters[i*5 + 3];
+    m_Grains[i]->numvoxels = graincenters[i*5 + 0];
+    m_Grains[i]->volume = (graincenters[i*5 + 0] * res_scalar);
     radcubed = m_Grains[i]->volume/vol_term;
     diameter = 2.0*powf(radcubed, 0.3333333333);
     m_Grains[i]->equivdiameter = diameter;
@@ -553,34 +589,32 @@ void MicrostructureStatisticsFunc::find_centroids2D()
   float radsquared;
   float diameter;
   size_t numgrains = m_Grains.size();
-  graincenters.resize(numgrains);
-  for (size_t i = 0; i < numgrains; i++)
+  graincenters = m_GrainCenters->WritePointer(0, numgrains * 5);
+  m_GrainCenters->SetNumberOfComponents(5);
+
+  for (size_t i = 0; i < numgrains*5; i++)
   {
-    graincenters[i].resize(5);
-    for (int j = 0; j < 5; j++)
-    {
-      graincenters[i][j] = 0;
-    }
+      graincenters[i] = 0.0f;
   }
   for (int j = 0; j < (xpoints * ypoints * zpoints); j++)
   {
     int gnum = grain_indicies[j];
-    graincenters[gnum][0]++;
+    graincenters[gnum*5 + 0]++;
     col = j % xpoints;
     row = (j / xpoints) % ypoints;
 	x = float(col)*resx;
 	y = float(row)*resy;
-    graincenters[gnum][1] = graincenters[gnum][1] + x;
-    graincenters[gnum][2] = graincenters[gnum][2] + y;
+    graincenters[gnum*5 + 1] = graincenters[gnum*5 + 1] + x;
+    graincenters[gnum*5 + 2] = graincenters[gnum*5 + 2] + y;
   }
   for (size_t i = 1; i < numgrains; i++)
   {
-    graincenters[i][1] = graincenters[i][1] / graincenters[i][0];
-    graincenters[i][2] = graincenters[i][2] / graincenters[i][0];
-    m_Grains[i]->centroidx = graincenters[i][1];
-    m_Grains[i]->centroidy = graincenters[i][2];
-    m_Grains[i]->numvoxels = graincenters[i][0];
-    m_Grains[i]->volume = (graincenters[i][0] * resx * resy);
+    graincenters[i*5 + 1] = graincenters[i*5 + 1] / graincenters[i*5 + 0];
+    graincenters[i*5 + 2] = graincenters[i*5 + 2] / graincenters[i*5 + 0];
+    m_Grains[i]->centroidx = graincenters[i*5 + 1];
+    m_Grains[i]->centroidy = graincenters[i*5 + 2];
+    m_Grains[i]->numvoxels = graincenters[i*5 + 0];
+    m_Grains[i]->volume = (graincenters[i*5 + 0] * resx * resy);
     radsquared = m_Grains[i]->volume / m_pi;
     diameter = (2 * sqrt(radsquared));
     m_Grains[i]->equivdiameter = diameter;
@@ -623,14 +657,11 @@ void MicrostructureStatisticsFunc::find_moments()
   float u011 = 0;
   float u101 = 0;
   size_t numgrains = m_Grains.size();
-  grainmoments.resize(numgrains);
-  for (size_t i = 0; i < numgrains; i++)
+  grainmoments = m_GrainMoments->WritePointer(0, numgrains * 6);
+
+  for (size_t i = 0; i < numgrains*6; i++)
   {
-    grainmoments[i].resize(6);
-    for (int j = 0; j < 6; j++)
-    {
-      grainmoments[i][j] = 0;
-    }
+      grainmoments[i] = 0.0f;
   }
   size_t totalPoints = xpoints * ypoints * zpoints;
   for (size_t j = 0; j < totalPoints; j++)
@@ -651,30 +682,30 @@ void MicrostructureStatisticsFunc::find_moments()
     float y2 = y - (resy / 4);
     float z1 = z + (resz / 4);
     float z2 = z - (resz / 4);
-    float xdist1 = (x1 - graincenters[gnum][1]);
-    float ydist1 = (y1 - graincenters[gnum][2]);
-    float zdist1 = (z1 - graincenters[gnum][3]);
-    float xdist2 = (x1 - graincenters[gnum][1]);
-    float ydist2 = (y1 - graincenters[gnum][2]);
-    float zdist2 = (z2 - graincenters[gnum][3]);
-    float xdist3 = (x1 - graincenters[gnum][1]);
-    float ydist3 = (y2 - graincenters[gnum][2]);
-    float zdist3 = (z1 - graincenters[gnum][3]);
-    float xdist4 = (x1 - graincenters[gnum][1]);
-    float ydist4 = (y2 - graincenters[gnum][2]);
-    float zdist4 = (z2 - graincenters[gnum][3]);
-    float xdist5 = (x2 - graincenters[gnum][1]);
-    float ydist5 = (y1 - graincenters[gnum][2]);
-    float zdist5 = (z1 - graincenters[gnum][3]);
-    float xdist6 = (x2 - graincenters[gnum][1]);
-    float ydist6 = (y1 - graincenters[gnum][2]);
-    float zdist6 = (z2 - graincenters[gnum][3]);
-    float xdist7 = (x2 - graincenters[gnum][1]);
-    float ydist7 = (y2 - graincenters[gnum][2]);
-    float zdist7 = (z1 - graincenters[gnum][3]);
-    float xdist8 = (x2 - graincenters[gnum][1]);
-    float ydist8 = (y2 - graincenters[gnum][2]);
-    float zdist8 = (z2 - graincenters[gnum][3]);
+    float xdist1 = (x1 - graincenters[gnum*5 + 1]);
+    float ydist1 = (y1 - graincenters[gnum*5 + 2]);
+    float zdist1 = (z1 - graincenters[gnum*5 + 3]);
+    float xdist2 = (x1 - graincenters[gnum*5 + 1]);
+    float ydist2 = (y1 - graincenters[gnum*5 + 2]);
+    float zdist2 = (z2 - graincenters[gnum*5 + 3]);
+    float xdist3 = (x1 - graincenters[gnum*5 + 1]);
+    float ydist3 = (y2 - graincenters[gnum*5 + 2]);
+    float zdist3 = (z1 - graincenters[gnum*5 + 3]);
+    float xdist4 = (x1 - graincenters[gnum*5 + 1]);
+    float ydist4 = (y2 - graincenters[gnum*5 + 2]);
+    float zdist4 = (z2 - graincenters[gnum*5 + 3]);
+    float xdist5 = (x2 - graincenters[gnum*5 + 1]);
+    float ydist5 = (y1 - graincenters[gnum*5 + 2]);
+    float zdist5 = (z1 - graincenters[gnum*5 + 3]);
+    float xdist6 = (x2 - graincenters[gnum*5 + 1]);
+    float ydist6 = (y1 - graincenters[gnum*5 + 2]);
+    float zdist6 = (z2 - graincenters[gnum*5 + 3]);
+    float xdist7 = (x2 - graincenters[gnum*5 + 1]);
+    float ydist7 = (y2 - graincenters[gnum*5 + 2]);
+    float zdist7 = (z1 - graincenters[gnum*5 + 3]);
+    float xdist8 = (x2 - graincenters[gnum*5 + 1]);
+    float ydist8 = (y2 - graincenters[gnum*5 + 2]);
+    float zdist8 = (z2 - graincenters[gnum*5 + 3]);
     u200 = u200 + ((ydist1) * (ydist1)) + ((zdist1) * (zdist1)) + ((ydist2) * (ydist2)) + ((zdist2) * (zdist2)) + ((ydist3) * (ydist3)) + ((zdist3) * (zdist3))
         + ((ydist4) * (ydist4)) + ((zdist4) * (zdist4)) + ((ydist5) * (ydist5)) + ((zdist5) * (zdist5)) + ((ydist6) * (ydist6)) + ((zdist6) * (zdist6))
         + ((ydist7) * (ydist7)) + ((zdist7) * (zdist7)) + ((ydist8) * (ydist8)) + ((zdist8) * (zdist8));
@@ -690,43 +721,43 @@ void MicrostructureStatisticsFunc::find_moments()
         + ((ydist7) * (zdist7)) + ((ydist8) * (zdist8));
     u101 = u101 + ((xdist1) * (zdist1)) + ((xdist2) * (zdist2)) + ((xdist3) * (zdist3)) + ((xdist4) * (zdist4)) + ((xdist5) * (zdist5)) + ((xdist6) * (zdist6))
         + ((xdist7) * (zdist7)) + ((xdist8) * (zdist8));
-    grainmoments[gnum][0] = grainmoments[gnum][0] + u200;
-    grainmoments[gnum][1] = grainmoments[gnum][1] + u020;
-    grainmoments[gnum][2] = grainmoments[gnum][2] + u002;
-    grainmoments[gnum][3] = grainmoments[gnum][3] + u110;
-    grainmoments[gnum][4] = grainmoments[gnum][4] + u011;
-    grainmoments[gnum][5] = grainmoments[gnum][5] + u101;
+    grainmoments[gnum*6 + 0] = grainmoments[gnum*6 + 0] + u200;
+    grainmoments[gnum*6 + 1] = grainmoments[gnum*6 + 1] + u020;
+    grainmoments[gnum*6 + 2] = grainmoments[gnum*6 + 2] + u002;
+    grainmoments[gnum*6 + 3] = grainmoments[gnum*6 + 3] + u110;
+    grainmoments[gnum*6 + 4] = grainmoments[gnum*6 + 4] + u011;
+    grainmoments[gnum*6 + 5] = grainmoments[gnum*6 + 5] + u101;
   }
   float sphere = (2000.0*m_pi*m_pi)/9.0;
   for (size_t i = 1; i < numgrains; i++)
   {
-    grainmoments[i][0] = grainmoments[i][0] * (resx / 2.0) * (resy / 2.0) * (resz / 2.0);
-    grainmoments[i][1] = grainmoments[i][1] * (resx / 2.0) * (resy / 2.0) * (resz / 2.0);
-    grainmoments[i][2] = grainmoments[i][2] * (resx / 2.0) * (resy / 2.0) * (resz / 2.0);
-    grainmoments[i][3] = grainmoments[i][3] * (resx / 2.0) * (resy / 2.0) * (resz / 2.0);
-    grainmoments[i][4] = grainmoments[i][4] * (resx / 2.0) * (resy / 2.0) * (resz / 2.0);
-    grainmoments[i][5] = grainmoments[i][5] * (resx / 2.0) * (resy / 2.0) * (resz / 2.0);
-    u200 = (grainmoments[i][1] + grainmoments[i][2] - grainmoments[i][0]) / 2;
-    u020 = (grainmoments[i][0] + grainmoments[i][2] - grainmoments[i][1]) / 2;
-    u002 = (grainmoments[i][0] + grainmoments[i][1] - grainmoments[i][2]) / 2;
-    u110 = grainmoments[i][3];
-    u011 = grainmoments[i][4];
-    u101 = grainmoments[i][5];
-    //    float o3 = (grainmoments[i][0] * grainmoments[i][1] * grainmoments[i][2]) + (2.0 * grainmoments[i][3] * grainmoments[i][5] * grainmoments[i][4])
-    //        - (grainmoments[i][0] * grainmoments[i][4] * grainmoments[i][4]) - (grainmoments[i][1] * grainmoments[i][5] * grainmoments[i][5]) - (grainmoments[i][2]
-    //        * grainmoments[i][3] * grainmoments[i][3]);
+    grainmoments[i*6 + 0] = grainmoments[i*6 + 0] * (resx / 2.0) * (resy / 2.0) * (resz / 2.0);
+    grainmoments[i*6 + 1] = grainmoments[i*6 + 1] * (resx / 2.0) * (resy / 2.0) * (resz / 2.0);
+    grainmoments[i*6 + 2] = grainmoments[i*6 + 2] * (resx / 2.0) * (resy / 2.0) * (resz / 2.0);
+    grainmoments[i*6 + 3] = grainmoments[i*6 + 3] * (resx / 2.0) * (resy / 2.0) * (resz / 2.0);
+    grainmoments[i*6 + 4] = grainmoments[i*6 + 4] * (resx / 2.0) * (resy / 2.0) * (resz / 2.0);
+    grainmoments[i*6 + 5] = grainmoments[i*6 + 5] * (resx / 2.0) * (resy / 2.0) * (resz / 2.0);
+    u200 = (grainmoments[i*6 + 1] + grainmoments[i*6 + 2] - grainmoments[i*6 + 0]) / 2;
+    u020 = (grainmoments[i*6 + 0] + grainmoments[i*6 + 2] - grainmoments[i*6 + 1]) / 2;
+    u002 = (grainmoments[i*6 + 0] + grainmoments[i*6 + 1] - grainmoments[i*6 + 2]) / 2;
+    u110 = grainmoments[i*6 + 3];
+    u011 = grainmoments[i*6 + 4];
+    u101 = grainmoments[i*6 + 5];
+    //    float o3 = (grainmoments[i*6 + 0] * grainmoments[i*6 + 1] * grainmoments[i*6 + 2]) + (2.0 * grainmoments[i*6 + 3] * grainmoments[i*6 + 5] * grainmoments[i*6 + 4])
+    //        - (grainmoments[i*6 + 0] * grainmoments[i*6 + 4] * grainmoments[i*6 + 4]) - (grainmoments[i*6 + 1] * grainmoments[i*6 + 5] * grainmoments[i*6 + 5]) - (grainmoments[i*6 + 2]
+    //        * grainmoments[i*6 + 3] * grainmoments[i*6 + 3]);
     float o3 = (u200 * u020 * u002) + (2.0 * u110 * u101 * u011) - (u200 * u011 * u011) - (u020 * u101 * u101) - (u002 * u110 * u110);
     float vol5 = m_Grains[i]->volume;
     vol5 = powf(vol5, 5);
     float omega3 = vol5 / o3;
     omega3 = omega3 / sphere;
     if (omega3 > 1) omega3 = 1;
-    m_Grains[i]->Ixx = grainmoments[i][0];
-    m_Grains[i]->Iyy = grainmoments[i][1];
-    m_Grains[i]->Izz = grainmoments[i][2];
-    m_Grains[i]->Ixy = -grainmoments[i][3];
-    m_Grains[i]->Iyz = -grainmoments[i][4];
-    m_Grains[i]->Ixz = -grainmoments[i][5];
+    m_Grains[i]->Ixx = grainmoments[i*6 + 0];
+    m_Grains[i]->Iyy = grainmoments[i*6 + 1];
+    m_Grains[i]->Izz = grainmoments[i*6 + 2];
+    m_Grains[i]->Ixy = -grainmoments[i*6 + 3];
+    m_Grains[i]->Iyz = -grainmoments[i*6 + 4];
+    m_Grains[i]->Ixz = -grainmoments[i*6 + 5];
     m_Grains[i]->omega3 = omega3;
   }
 }
@@ -1215,16 +1246,13 @@ void MicrostructureStatisticsFunc::find_moments2D()
   float u020 = 0;
   float u110 = 0;
   size_t numgrains = m_Grains.size();
-  grainmoments.resize(numgrains);
+  grainmoments = m_GrainMoments->WritePointer(0, numgrains*6);
+  m_GrainMoments->SetNumberOfComponents(6);
   for (size_t i = 0; i < numgrains; i++)
   {
-    grainmoments[i].resize(3);
-    for (int j = 0; j < 3; j++)
-    {
-      grainmoments[i][j] = 0;
-    }
+      grainmoments[i] = 0.0f;
   }
-  for (int j = 0; j < (xpoints * ypoints * zpoints); j++)
+  for (int j = 0; j < totalpoints; j++)
   {
     u200 = 0;
     u020 = 0;
@@ -1236,33 +1264,33 @@ void MicrostructureStatisticsFunc::find_moments2D()
     float x2 = x - (resx / 2);
     float y1 = y + (resy / 2);
     float y2 = y - (resy / 2);
-    float xdist1 = (x1 - graincenters[gnum][1]);
-    float ydist1 = (y1 - graincenters[gnum][2]);
-    float xdist2 = (x1 - graincenters[gnum][1]);
-    float ydist2 = (y2 - graincenters[gnum][2]);
-    float xdist3 = (x2 - graincenters[gnum][1]);
-    float ydist3 = (y1 - graincenters[gnum][2]);
-    float xdist4 = (x2 - graincenters[gnum][1]);
-    float ydist4 = (y2 - graincenters[gnum][2]);
+    float xdist1 = (x1 - graincenters[gnum*5 + 1]);
+    float ydist1 = (y1 - graincenters[gnum*5 + 2]);
+    float xdist2 = (x1 - graincenters[gnum*5 + 1]);
+    float ydist2 = (y2 - graincenters[gnum*5 + 2]);
+    float xdist3 = (x2 - graincenters[gnum*5 + 1]);
+    float ydist3 = (y1 - graincenters[gnum*5 + 2]);
+    float xdist4 = (x2 - graincenters[gnum*5 + 1]);
+    float ydist4 = (y2 - graincenters[gnum*5 + 2]);
     u200 = u200 + ((ydist1) * (ydist1)) + ((ydist2) * (ydist2)) + ((ydist3) * (ydist3)) + ((ydist4) * (ydist4));
     u020 = u020 + ((xdist1) * (xdist1)) + ((xdist2) * (xdist2)) + ((xdist3) * (xdist3)) + ((xdist4) * (xdist4));
     u110 = u110 + ((xdist1) * (ydist1)) + ((xdist2) * (ydist2)) + ((xdist3) * (ydist3)) + ((xdist4) * (ydist4));
-    grainmoments[gnum][0] = grainmoments[gnum][0] + u200;
-    grainmoments[gnum][1] = grainmoments[gnum][1] + u020;
-    grainmoments[gnum][2] = grainmoments[gnum][2] + u110;
+    grainmoments[gnum*6 + 0] = grainmoments[gnum*6 + 0] + u200;
+    grainmoments[gnum*6 + 1] = grainmoments[gnum*6 + 1] + u020;
+    grainmoments[gnum*6 + 2] = grainmoments[gnum*6 + 2] + u110;
   }
   for (size_t i = 1; i < numgrains; i++)
   {
-    grainmoments[i][0] = grainmoments[i][0] * (resx / 2.0) * (resy / 2.0);
-    grainmoments[i][1] = grainmoments[i][1] * (resx / 2.0) * (resy / 2.0);
-    grainmoments[i][2] = grainmoments[i][2] * (resx / 2.0) * (resy / 2.0);
-    //  float o3 = (grainmoments[i][0]*grainmoments[i][1]*grainmoments[i][2])+(2.0*grainmoments[i][3]*grainmoments[i][5]*grainmoments[i][4])-(grainmoments[i][0]*grainmoments[i][4]*grainmoments[i][4])-(grainmoments[i][1]*grainmoments[i][5]*grainmoments[i][5])-(grainmoments[i][2]*grainmoments[i][3]*grainmoments[i][3]);
+    grainmoments[i*6 + 0] = grainmoments[i*6 + 0] * (resx / 2.0) * (resy / 2.0);
+    grainmoments[i*6 + 1] = grainmoments[i*6 + 1] * (resx / 2.0) * (resy / 2.0);
+    grainmoments[i*6 + 2] = grainmoments[i*6 + 2] * (resx / 2.0) * (resy / 2.0);
+    //  float o3 = (grainmoments[i*6 + 0]*grainmoments[i*6 + 1]*grainmoments[i*6 + 2])+(2.0*grainmoments[i*6 + 3]*grainmoments[i*6 + 5]*grainmoments[i*6 + 4])-(grainmoments[i*6 + 0]*grainmoments[i*6 + 4]*grainmoments[i*6 + 4])-(grainmoments[i*6 + 1]*grainmoments[i*6 + 5]*grainmoments[i*6 + 5])-(grainmoments[i*6 + 2]*grainmoments[i*6 + 3]*grainmoments[i*6 + 3]);
     //  float vol5 = m_Grains[i]->volume;
     //  vol5 = powf(vol5,5);
     //  float omega3 = vol5/o3;
-    m_Grains[i]->Ixx = grainmoments[i][0];
-    m_Grains[i]->Iyy = grainmoments[i][1];
-    m_Grains[i]->Ixy = -grainmoments[i][2];
+    m_Grains[i]->Ixx = grainmoments[i*6 + 0];
+    m_Grains[i]->Iyy = grainmoments[i*6 + 1];
+    m_Grains[i]->Ixy = -grainmoments[i*6 + 2];
     //  m_Grains[i]->omega3 = omega3;
   }
 }
@@ -2056,12 +2084,12 @@ void MicrostructureStatisticsFunc::deformation_stats(const std::string &filename
       km = kernelmisorientations[i];
       gam = grainmisorientations[i];
       lmg = misorientationgradients[i];
-      gbdist = nearestneighbordistances[i][0];
-      tjdist = nearestneighbordistances[i][1];
-      qpdist = nearestneighbordistances[i][2];
+      gbdist = nearestneighbordistances[i*3 + 0];
+      tjdist = nearestneighbordistances[i*3 + 1];
+      qpdist = nearestneighbordistances[i*3 + 2];
       gname = grain_indicies[i];
-      nearestneighbor = nearestneighbors[i][0];
-      gname2 = neighborlists[nearestneighbor][0];
+      nearestneighbor = nearestneighbors[i*3 + 0];
+      gname2 = neighborlists[nearestneighbor*6 + 0];
       sf = m_Grains[gname]->schmidfactor;
       sf2 = m_Grains[gname2]->schmidfactor;
       sfmm = sf / sf2;
@@ -2083,11 +2111,11 @@ void MicrostructureStatisticsFunc::deformation_stats(const std::string &filename
       gbbin = int(gbdist);
       tjbin = int(tjdist);
       qpbin = int(qpdist);
-	  sfbin = int((sf-0.25) / 0.025);
-	  if(sfmm >= 1) sfmmbin = int((sfmm-1.0)/0.2)+5;
-	  if(sfmm < 1) sfmmbin = 4-int(((1.0/sfmm)-1.0)/0.2);
-	  ssapbin = int((ssap-0.4) / 0.06);
-	  disbin = int((w) / 10.0);
+      sfbin = int((sf-0.25) / 0.025);
+      if(sfmm >= 1) sfmmbin = int((sfmm-1.0)/0.2)+5;
+      if(sfmm < 1) sfmmbin = 4-int(((1.0/sfmm)-1.0)/0.2);
+      ssapbin = int((ssap-0.4) / 0.06);
+      disbin = int((w) / 10.0);
       if (kmbin < 0) kmbin = 0;
       if (kmbin > 24) kmbin = 24;
       if (gambin < 0) gambin = 0;
@@ -2108,9 +2136,9 @@ void MicrostructureStatisticsFunc::deformation_stats(const std::string &filename
       if (ssapbin > 9) ssapbin = 9;
       if (disbin < 0) disbin = 0;
       if (disbin > 9) disbin = 9;
-	  kmdist[kmbin]++;
-	  gamdist[gambin]++;
-	  lmgdist[lmgbin]++;
+      kmdist[kmbin]++;
+      gamdist[gambin]++;
+      lmgdist[lmgbin]++;
       kmvgb[gbbin][0]++;
       kmvgb[gbbin][1] = kmvgb[gbbin][1] + km;
       gamvgb[gbbin][0]++;
@@ -2129,7 +2157,7 @@ void MicrostructureStatisticsFunc::deformation_stats(const std::string &filename
       gamvqp[qpbin][1] = gamvqp[qpbin][1] + gam;
       lmgvqp[qpbin][0]++;
       lmgvqp[qpbin][1] = lmgvqp[qpbin][1] + lmg;
-	  distance = int(nearestneighbordistances[i][0]);
+	  distance = int(nearestneighbordistances[i*3 + 0]);
 	  if(distance > 9) distance = 9;
 	  if(distance <= 5)
 	  {
