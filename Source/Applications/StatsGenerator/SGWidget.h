@@ -73,23 +73,21 @@ class SGWidget : public QWidget, private Ui::SGWidget
 
     void plotSizeDistribution();
     void updateSizeDistributionPlot();
-    int computeBinsAndCutOffs(float mu,
-                              float sigma,
-                              float cutOff,
-                              float binStepSize,
-                              QwtArray<float> &binsizes,
-                              QwtArray<float> &xCo,
-                              QwtArray<float> &yCo,
-                              float &xMax,
-                              float &yMax,
-                              QwtArray<float> &x,
-                              QwtArray<float> &y);
+    int computeBinsAndCutOffs( float mu, float sigma,
+                               float minCutOff, float maxCutOff,
+                               float binStepSize,
+                               QwtArray<float> &binsizes,
+                               QwtArray<float> &xCo,
+                               QwtArray<float> &yCo,
+                               float &xMax, float &yMax,
+                               QwtArray<float> &x,
+                               QwtArray<float> &y);
 
     QString getComboString();
 
     void calculateNumberOfBins();
-    int calculateNumberOfBins(float mu, float sigma, float cutOff, float stepSize);
-    int gatherSizeDistributionFromGui(float &mu, float &sigma, float &cutOff, float &binStepSize);
+    int calculateNumberOfBins(float mu, float sigma, float minCutOff, float maxCutOff, float stepSize);
+    int gatherSizeDistributionFromGui(float &mu, float &sigma, float &minCutOff, float &maxCutOff, float &stepSize);
 
     int writeDataToHDF5(H5ReconStatsWriter::Pointer writer);
     int readDataFromHDF5(H5ReconStatsReader::Pointer reader, int phase);
@@ -101,7 +99,8 @@ class SGWidget : public QWidget, private Ui::SGWidget
 
     void on_m_Mu_SizeDistribution_textChanged(const QString &text);
     void on_m_Sigma_SizeDistribution_textChanged(const QString &text);
-    void on_m_SigmaCutOff_SizeDistribution_textChanged(const QString &text);
+    void on_m_MinSigmaCutOff_textChanged(const QString &text);
+    void on_m_MaxSigmaCutOff_textChanged(const QString &text);
     void on_m_BinStepSize_valueChanged(double v);
 
     void on_microstructurePresetCombo_currentIndexChanged(int index);
