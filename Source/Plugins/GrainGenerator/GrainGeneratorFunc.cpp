@@ -3049,13 +3049,13 @@ void GrainGeneratorFunc::write_eulerangles(const std::string &filename)
 {
   ofstream outFile;
   outFile.open(filename.c_str());
-  outFile << "GrainID " << "Phi1 " << "PHI " << "Phi2" << endl;
+  outFile << m_Grains.size() << std::endl;
+  char space = AIM::GrainData::Delimiter;
+  outFile << AIM::GrainData::GrainID  << space
+          << AIM::GrainData::Phi1 << space << AIM::GrainData::PHI<< space << AIM::GrainData::Phi2 << std::endl;
   for (size_t i = 1; i < m_Grains.size(); i++)
   {
-    float ea1 = m_Grains[i]->euler1;
-    float ea2 = m_Grains[i]->euler2;
-    float ea3 = m_Grains[i]->euler3;
-    outFile << i << " " << ea1 << " " << ea2 << " " << ea3 << endl;
+    outFile << i << space << m_Grains[i]->euler1 << space << m_Grains[i]->euler2 << space << m_Grains[i]->euler3 << endl;
   }
   outFile.close();
 }
@@ -3065,6 +3065,7 @@ void GrainGeneratorFunc::write_graindata(const std::string &filename)
   ofstream outFile;
   outFile.open(filename.c_str());
   char space = AIM::GrainData::Delimiter;
+  outFile << m_Grains.size() << std::endl;
   outFile << AIM::GrainData::GrainID  << space
       << AIM::GrainData::Phi1 << space << AIM::GrainData::PHI<< space << AIM::GrainData::Phi2 << space
       << AIM::GrainData::EquivDiam << space
@@ -3078,6 +3079,8 @@ void GrainGeneratorFunc::write_graindata(const std::string &filename)
   }
   outFile.close();
 }
+
+
 float GrainGeneratorFunc::gamma(float x)
 {
     int i,k,m;

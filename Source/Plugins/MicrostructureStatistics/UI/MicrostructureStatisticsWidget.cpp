@@ -244,6 +244,8 @@ void MicrostructureStatisticsWidget::setupGui()
 
   m_WidgetList << m_OutputDir << m_OutputDirBtn;
   m_WidgetList << m_OutputFilePrefix;
+  m_WidgetList << m_BinStepSize << m_H5StatisticsFile << m_GrainDataFile << m_GrainFileOptionsBtn;
+  m_WidgetList << m_VisualizationVizFile << m_VtkOptionsBtn;
 }
 
 // -----------------------------------------------------------------------------

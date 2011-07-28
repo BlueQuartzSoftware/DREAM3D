@@ -148,25 +148,6 @@ namespace AIM
     };
   }
 
-  namespace GrainData
-  {
-    const std::string GrainID("Grain_ID");
-    const std::string Phi1("Phi1");
-    const std::string PHI("PHI");
-    const std::string Phi2("Phi2");
-    const std::string EquivDiam("Equiv_Diameter");
-    const std::string B_Over_A("b/a");
-    const std::string C_Over_A("c/a");
-    const std::string Omega3("Omega3");
-    const std::string SurfaceGrain("Surface_Grain");
-    const std::string OutsideBoundingBox("Outside_Bounding_Box");
-    const std::string NumNeighbors("No_Neighbors");
-    const char Delimiter = ' ';
-
-
-  }
-
-
   namespace Reconstruction
   {
     /*    Reconstruction related */
@@ -268,11 +249,27 @@ namespace AIM
 
 
 
+  namespace GrainData
+  {
+    const std::string GrainID("Grain_ID");
+    const std::string Phi1("Phi1");
+    const std::string PHI("PHI");
+    const std::string Phi2("Phi2");
+    const std::string EquivDiam("Equiv_Diameter");
+    const std::string B_Over_A("b/a");
+    const std::string C_Over_A("c/a");
+    const std::string Omega3("Omega3");
+    const std::string SurfaceGrain("Surface_Grain");
+    const std::string OutsideBoundingBox("Outside_Bounding_Box");
+    const std::string NumNeighbors("No_Neighbors");
+    const char Delimiter = ',';
+  }
+
   namespace SyntheticBuilder
   {
     /*  Grain Generator Related */
 
-    const std::string GrainAnglesFile("GrainAngles.txt");
+    const std::string GrainAnglesFile("GrainAngles.csv");
     const std::string H5VoxelFile("VoxelData.h5voxel");
 
     const std::string VisualizationVizFile("Visualization.vtk");
@@ -305,7 +302,7 @@ namespace AIM
 
   namespace MicroStats {
     const std::string H5StatisticsFile("Results.h5stats");
-    const std::string GrainDataFile("GrainData.txt");//14
+    const std::string GrainDataFile("GrainData.csv");//14
     const std::string DeformationStatsFile("Deformation_Stats.txt");
     const std::string IPFDeformVTKFile("IPF_DeformationData.vtk");
 

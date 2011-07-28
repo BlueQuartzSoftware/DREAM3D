@@ -466,7 +466,7 @@ void MicrostructureStatisticsFunc::find_boundingboxgrains2D()
   for (size_t i = 1; i < size; i++)
   {
 	  if((m_Grains[i]->equivdiameter/2.0) > maxsize) { maxsize = (m_Grains[i]->equivdiameter/2.0);}
-  }
+}
   for (size_t j = 1; j < size; j++)
   {
     outside = 0;
@@ -2514,24 +2514,24 @@ void MicrostructureStatisticsFunc::write_graindata(const std::string &graindataF
   outFile.open(graindataFile.c_str());
   outFile << numgrains << endl;
   char space = AIM::GrainData::Delimiter;
-  outFile  << AIM::GrainData::GrainID  << space;
+  outFile  << AIM::GrainData::GrainID;
 
-  if(writeavgorientations == true) outFile << AIM::GrainData::Phi1 << space << AIM::GrainData::PHI<< space << AIM::GrainData::Phi2 << space;
-  if(writesizes == true) outFile << AIM::GrainData::EquivDiam << space;
-  if(writeshapes == true) outFile << AIM::GrainData::B_Over_A << space << AIM::GrainData::C_Over_A << space << AIM::GrainData::Omega3 << space;
-  if(writesizes == true) outFile << AIM::GrainData::OutsideBoundingBox  << space;
-  if(writeneighbors == true) outFile << AIM::GrainData::NumNeighbors << space;
-  outFile <<  AIM::GrainData::SurfaceGrain  << space;
+  if(writeavgorientations == true) outFile   << space << AIM::GrainData::Phi1 << space << AIM::GrainData::PHI<< space << AIM::GrainData::Phi2;
+  if(writesizes == true) outFile << space << AIM::GrainData::EquivDiam;
+  if(writeshapes == true) outFile << space << AIM::GrainData::B_Over_A << space << AIM::GrainData::C_Over_A << space << AIM::GrainData::Omega3;
+  if(writesizes == true) outFile << space << AIM::GrainData::OutsideBoundingBox;
+  if(writeneighbors == true) outFile << space << AIM::GrainData::NumNeighbors;
+  outFile << space << AIM::GrainData::SurfaceGrain;
   outFile << endl;
   for (size_t i = 1; i < numgrains; i++)
   {
-    outFile << i << space;
+    outFile << i;
     if (writeavgorientations == true) outFile << space << m_Grains[i]->euler1 << space << m_Grains[i]->euler2 << space << m_Grains[i]->euler3;
     if (writesizes == true) outFile << space << m_Grains[i]->equivdiameter;
     if (writeshapes == true) outFile << space << m_Grains[i]->aspectratio1 << space << m_Grains[i]->aspectratio2 << space << m_Grains[i]->omega3;
     if (writesizes == true) outFile << space << m_Grains[i]->outsideboundbox;
     if (writeneighbors == true) outFile << space << m_Grains[i]->neighborlist->size();
-    outFile << m_Grains[i]->surfacegrain;
+    outFile << space << m_Grains[i]->surfacegrain;
     outFile << endl;
   }
   outFile.close();

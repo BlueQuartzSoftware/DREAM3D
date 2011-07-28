@@ -685,23 +685,6 @@
         <property name="verticalSpacing">
          <number>8</number>
         </property>
-        <item row="5" column="1">
-         <widget class="QCheckBox" name="m_VisualizationVizFile">
-          <property name="text">
-           <string>VTK Visualization File</string>
-          </property>
-          <property name="checked">
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
-        <item row="8" column="1">
-         <widget class="QPushButton" name="m_VtkOptionsBtn">
-          <property name="text">
-           <string>VTK Options</string>
-          </property>
-         </widget>
-        </item>
         <item row="1" column="1">
          <widget class="QLabel" name="m_H5VoxelFile">
           <property name="text">
@@ -713,13 +696,6 @@
          <widget class="QLabel" name="label_12">
           <property name="text">
            <string>Voxel Data File</string>
-          </property>
-         </widget>
-        </item>
-        <item row="5" column="0">
-         <widget class="QLabel" name="label_18">
-          <property name="text">
-           <string>VTK Rectilinear Grid</string>
           </property>
          </widget>
         </item>
@@ -775,19 +751,43 @@
          </widget>
         </item>
         <item row="6" column="0">
+         <widget class="QLabel" name="label_18">
+          <property name="text">
+           <string>VTK Rectilinear Grid</string>
+          </property>
+         </widget>
+        </item>
+        <item row="5" column="0">
          <widget class="QLabel" name="label_22">
           <property name="text">
            <string>Ph File Format</string>
           </property>
          </widget>
         </item>
-        <item row="6" column="1">
+        <item row="5" column="1">
          <widget class="QCheckBox" name="m_PhFile">
           <property name="text">
            <string>Output.ph</string>
           </property>
           <property name="checked">
            <bool>false</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="6" column="1">
+         <widget class="QCheckBox" name="m_VisualizationVizFile">
+          <property name="text">
+           <string>VTK Visualization File</string>
+          </property>
+          <property name="checked">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="7" column="1">
+         <widget class="QPushButton" name="m_VtkOptionsBtn">
+          <property name="text">
+           <string>VTK Options</string>
           </property>
          </widget>
         </item>
