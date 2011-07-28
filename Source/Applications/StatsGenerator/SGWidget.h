@@ -66,6 +66,7 @@ class SGWidget : public QWidget, private Ui::SGWidget
     MXA_INSTANCE_PROPERTY(float, PhaseFraction);
     MXA_INSTANCE_PROPERTY(float, TotalPhaseFraction);
     MXA_INSTANCE_PROPERTY(float, PptFraction);
+    MXA_INSTANCE_PROPERTY(bool, DataHasBeenGenerated);
 
     void setCrystalStructure(AIM::Reconstruction::CrystalStructure xtal);
     AIM::Reconstruction::CrystalStructure getCrystalStructure();
@@ -92,6 +93,10 @@ class SGWidget : public QWidget, private Ui::SGWidget
 
     int writeDataToHDF5(H5ReconStatsWriter::Pointer writer);
     int readDataFromHDF5(H5ReconStatsReader::Pointer reader, int phase);
+
+  public slots:
+    void on_m_GenerateDefaultData_clicked();
+
   protected slots:
 
     void on_m_Mu_SizeDistribution_textChanged(const QString &text);
@@ -100,7 +105,7 @@ class SGWidget : public QWidget, private Ui::SGWidget
     void on_m_BinStepSize_valueChanged(double v);
 
     void on_microstructurePresetCombo_currentIndexChanged(int index);
-    void on_m_GenerateDefaultData_clicked();
+
 
     void dataWasEdited();
   protected:
@@ -128,7 +133,6 @@ class SGWidget : public QWidget, private Ui::SGWidget
     QwtPlotMarker*       m_CutOffMin;
     QwtPlotMarker*       m_CutOffMax;
     QwtPlotGrid*         m_grid;
-    bool                 m_DataHasBeenGenerated;
     AbstractMicrostructurePreset::Pointer m_MicroPreset;
 
     SGWidget(const SGWidget&); // Copy Constructor Not Implemented
