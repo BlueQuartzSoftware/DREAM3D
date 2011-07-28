@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>866</width>
-    <height>652</height>
+    <width>818</width>
+    <height>651</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -64,7 +64,7 @@
         <item row="0" column="0">
          <widget class="QCheckBox" name="m_AlreadyFormed">
           <property name="enabled">
-           <bool>true</bool>
+           <bool>false</bool>
           </property>
           <property name="text">
            <string>Structure Already Formed</string>
@@ -480,7 +480,7 @@
         <item row="0" column="0">
          <widget class="QLabel" name="label_8">
           <property name="text">
-           <string>ASCII Data File</string>
+           <string>CSV Grain Angles File</string>
           </property>
          </widget>
         </item>
@@ -527,7 +527,7 @@
         <item row="2" column="0">
          <widget class="QLabel" name="label_12">
           <property name="text">
-           <string>HDF5 Polydata</string>
+           <string>HDF5 Polydata File</string>
           </property>
          </widget>
         </item>
@@ -541,12 +541,12 @@
         <item row="4" column="0">
          <widget class="QLabel" name="label_17">
           <property name="text">
-           <string>ASCII Data File</string>
+           <string>CSV Grain Data File</string>
           </property>
          </widget>
         </item>
         <item row="4" column="1">
-         <widget class="QCheckBox" name="m_writegraindata">
+         <widget class="QCheckBox" name="m_GrainDataFile">
           <property name="text">
            <string>Grain Data File</string>
           </property>
