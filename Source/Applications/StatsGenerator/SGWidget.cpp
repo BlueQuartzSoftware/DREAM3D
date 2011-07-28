@@ -91,13 +91,13 @@ m_PhaseType(AIM::Reconstruction::PrimaryPhase),
 m_PhaseFraction(1.0),
 m_TotalPhaseFraction(1.0),
 m_PptFraction(-1.0f),
+m_DataHasBeenGenerated(false),
 m_PhaseIndex(0),
 m_CrystalStructure(AIM::Reconstruction::Cubic),
 m_SizeDistributionCurve(NULL),
 m_CutOffMin(NULL),
 m_CutOffMax(NULL),
-m_grid(NULL),
-m_DataHasBeenGenerated(false)
+m_grid(NULL)
 {
   setupUi(this);
   setupGui();
