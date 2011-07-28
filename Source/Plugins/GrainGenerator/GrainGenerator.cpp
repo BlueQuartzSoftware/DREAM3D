@@ -262,7 +262,7 @@ void GrainGenerator::execute()
   if(m_WriteGrainData)
   {
     updateProgressAndMessage(("Writing Grain Data"), 88);
-	MAKE_OUTPUT_FILE_PATH ( GrainDataFile, AIM::MicroStats::GrainDataFile);
+    MAKE_OUTPUT_FILE_PATH ( GrainDataFile, AIM::MicroStats::GrainDataFile);
     m->write_graindata(GrainDataFile);
     CHECK_FOR_CANCELED(GrainGeneratorFunc, "GrainGenerator Was canceled", write_graindata)
   }

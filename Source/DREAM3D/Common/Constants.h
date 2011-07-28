@@ -148,6 +148,24 @@ namespace AIM
     };
   }
 
+  namespace GrainData
+  {
+    const std::string GrainID("Grain_ID");
+    const std::string Phi1("Phi1");
+    const std::string PHI("PHI");
+    const std::string Phi2("Phi2");
+    const std::string EquivDiam("Equiv_Diameter");
+    const std::string B_Over_A("b/a");
+    const std::string C_Over_A("c/a");
+    const std::string Omega3("Omega3");
+    const std::string SurfaceGrain("Surface_Grain");
+    const std::string OutsideBoundingBox("Outside_Bounding_Box");
+    const std::string NumNeighbors("No_Neighbors");
+    const char Delimiter = ' ';
+
+
+  }
+
 
   namespace Reconstruction
   {
