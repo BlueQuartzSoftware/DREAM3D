@@ -769,6 +769,11 @@ int SGWidget::readDataFromHDF5(H5ReconStatsReader::Pointer reader, int phase)
   CHECK_STATS_READ_ERROR(err, AIM::HDF5::Reconstruction, AIM::HDF5::PhaseType)
   m_PhaseType = static_cast<AIM::Reconstruction::PhaseType>(pt[0]);
 
+  std::vector<float> phaseFraction;
+  err = reader->readStatsDataset(phase, AIM::HDF5::PhaseFraction, phaseFraction);
+  CHECK_STATS_READ_ERROR(err, AIM::HDF5::Reconstruction, AIM::HDF5::PhaseFraction)
+  m_PhaseFraction = phaseFraction[0];
+
   m_PptFraction = -1.0;
   if (AIM::Reconstruction::PrecipitatePhase == m_PhaseType) {
     err = reader->readScalarAttribute<float>(phase, AIM::HDF5::PhaseType, AIM::HDF5::PrecipitateBoundaryFraction, m_PptFraction);
