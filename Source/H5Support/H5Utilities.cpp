@@ -27,7 +27,7 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#include <MXA/HDF5/H5Utilities.h>
+#include <H5Support/H5Utilities.h>
 
 // C Includes
 #include <string.h>
@@ -35,8 +35,9 @@
 // C++ Includes
 #include <iostream>
 
+#include <H5Support/H5Lite.h>
+
 #include <MXA/Common/LogTime.h>
-#include <MXA/HDF5/H5Lite.h>
 #include <MXA/Utilities/StringUtils.h>
 
 #ifdef H5LITE_USE_MXA_CONSTRUCTS
@@ -286,15 +287,15 @@ herr_t H5Utilities::getGroupObjects(hid_t loc_id, int32_t typeFilter, std::list<
     std::vector<char> name(size * sizeof(char), 0);
 
     H5Gget_objname_by_idx(loc_id, i, &(name.front()), size);
-    if (typeFilter == MXA_ANY) {
+    if (typeFilter == H5Support_ANY) {
       std::string objName( &(name.front()) );
       names.push_back(objName);
     } else {
       type = H5Gget_objtype_by_idx(loc_id, i);
-      if ( ((type == H5G_GROUP) && (MXA_GROUP & typeFilter)) ||
-          ((type == H5G_DATASET) && (MXA_DATASET & typeFilter)) ||
-          ((type == H5G_TYPE) && (MXA_TYPE & typeFilter)) ||
-          ((type == H5G_LINK) && (MXA_LINK & typeFilter)) )
+      if ( ((type == H5G_GROUP) && (H5Support_GROUP & typeFilter)) ||
+          ((type == H5G_DATASET) && (H5Support_DATASET & typeFilter)) ||
+          ((type == H5G_TYPE) && (H5Support_TYPE & typeFilter)) ||
+          ((type == H5G_LINK) && (H5Support_LINK & typeFilter)) )
       {
         std::string objName( &(name.front()) );
         names.push_back(objName);

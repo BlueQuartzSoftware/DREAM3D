@@ -32,6 +32,8 @@
 #define ABSTRACTPIPELINE_H_
 
 #include "MXA/Common/MXASetGetMacros.h"
+#include "MXA/Common/LogTime.h"
+
 #include "DREAM3D/DREAM3DConfiguration.h"
 
 /**

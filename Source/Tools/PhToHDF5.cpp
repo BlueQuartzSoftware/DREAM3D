@@ -37,8 +37,10 @@
 #include <tclap/CmdLine.h>
 #include <tclap/ValueArg.h>
 
-#include "MXA/HDF5/H5Utilities.h"
-#include "MXA/HDF5/H5Lite.h"
+#include "H5Support/H5Utilities.h"
+#include "H5Support/H5Lite.h"
+
+#include "MXA/Common/LogTime.h"
 
 #include "DREAM3D/Common/Constants.h"
 #include "DREAM3D/DREAM3DVersion.h"
