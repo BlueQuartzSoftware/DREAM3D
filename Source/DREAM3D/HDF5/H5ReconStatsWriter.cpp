@@ -33,8 +33,8 @@
 
 #include <string>
 
-#include "MXA/HDF5/H5Utilities.h"
-#include "MXA/HDF5/H5Lite.h"
+#include "H5Support/H5Utilities.h"
+#include "H5Support/H5Lite.h"
 #include "MXA/MXATypes.h"
 #include "MXA/Utilities/MXADir.h"
 #include "MXA/Utilities/StringUtils.h"

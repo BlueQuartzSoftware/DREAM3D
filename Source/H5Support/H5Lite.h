@@ -8,10 +8,8 @@
 //                           FA8650-04-C-5229
 //
 ///////////////////////////////////////////////////////////////////////////////
-#ifndef _ANG_HDF5_LITE_H_
-#define _ANG_HDF5_LITE_H_
-
-#include "TSLLib/TSLLibTypes.h"
+#ifndef _HDF5_LITE_H_
+#define _HDF5_LITE_H_
 
 
 //--C++ Headers
@@ -27,13 +25,17 @@
 #include <hdf5.h>
 #include <H5Tpublic.h>
 
-/* H5LITE_USE_MXA_CONSTRUCTS is used to include MXADataModel Specific classes in
- * this class. If this is being compiled as part of MXADataModel this should
+#include "H5Support/H5SupportDLLExport.h"
+#include "H5Support/H5SupportTypes.h"
+
+
+/* H5LITE_USE_H5Support_CONSTRUCTS is used to include H5SupportDataModel Specific classes in
+ * this class. If this is being compiled as part of H5SupportDataModel this should
  * _always_ be defined. If this code is being used as part of another project
  * then this should probably NOT be defined.
  */
-#ifdef H5LITE_USE_MXA_CONSTRUCTS
-class IMXAArray;
+#ifdef H5LITE_USE_H5Support_CONSTRUCTS
+class IH5SupportArray;
 #endif
 
 //TODO: Add tests for the find* methods
@@ -65,14 +67,12 @@ class IMXAArray;
 
 #define UNUSED(x) ((void)(x));
 
-#define H5Lite AngH5Lite
-
 #ifdef __cplusplus
 extern "C" {
 #endif
-  herr_t TSLLib_EXPORT find_attr( hid_t loc_id, const char *name, void *op_data);
+  herr_t H5Support_EXPORT find_attr( hid_t loc_id, const char *name, void *op_data);
 
-  herr_t TSLLib_EXPORT find_dataset( hid_t loc_id, const char *name, void *op_data);
+  herr_t H5Support_EXPORT find_dataset( hid_t loc_id, const char *name, void *op_data);
 
 #ifdef __cplusplus
 }
@@ -95,7 +95,7 @@ public:
    * the HDF_ERROR_HANDLER_OFF and HDF_ERROR_HANDLER_ON macros defined in
    * H5Lite.h
    */
-  static TSLLib_EXPORT void disableErrorHandlers();
+  static H5Support_EXPORT void disableErrorHandlers();
 
 /**
  * @brief Opens an object for HDF5 operations
@@ -104,7 +104,7 @@ public:
  * @param obj_type The HDF5_TYPE of object
  * @return Standard HDF5 Error Conditions
  */
-static TSLLib_EXPORT herr_t openId( hid_t loc_id, const std::string& objName, int32_t obj_type);
+static H5Support_EXPORT herr_t openId( hid_t loc_id, const std::string& objName, int32_t obj_type);
 
 /**
  * @brief Opens an HDF5 Object
@@ -112,7 +112,7 @@ static TSLLib_EXPORT herr_t openId( hid_t loc_id, const std::string& objName, in
  * @param obj_type Basic Object Type
  * @return Standard HDF5 Error Conditions
  */
-static TSLLib_EXPORT herr_t closeId( hid_t obj_id, int32_t obj_type );
+static H5Support_EXPORT herr_t closeId( hid_t obj_id, int32_t obj_type );
 
 /**
  * @brief Given one of the HDF Types as a string, this will return the HDF Type
@@ -266,7 +266,7 @@ static hid_t HDFTypeForPrimitive(T value)
   std::cout  << "Error: HDFTypeForPrimitive - Unknown Type: " << (typeid(value).name()) << std::endl;
   const char* name = typeid(value).name();
   if (NULL != name && name[0] == 'l' ) {
-    std::cout << "You are using 'long int' as a type which is not 32/64 bit safe. Suggest you use one of the MXATypes defined in <Common/MXATypes.h> such as int32_t or uint32_t." << std::endl;
+    std::cout << "You are using 'long int' as a type which is not 32/64 bit safe. Suggest you use one of the H5SupportTypes defined in <Common/H5SupportTypes.h> such as int32_t or uint32_t." << std::endl;
   }
   return -1;
 }
@@ -279,7 +279,7 @@ static hid_t HDFTypeForPrimitive(T value)
  * @param attrName The attribute to search for
  * @return Standard HDF5 Error condition
  */
-static TSLLib_EXPORT herr_t findAttribute( hid_t loc_id, const std::string& attrName );
+static H5Support_EXPORT herr_t findAttribute( hid_t loc_id, const std::string& attrName );
 
 /**
  * @brief Finds a Data set given a data set name
@@ -287,7 +287,7 @@ static TSLLib_EXPORT herr_t findAttribute( hid_t loc_id, const std::string& attr
  * @param name The attribute to search for
  * @return Standard HDF5 Error condition
  */
-static TSLLib_EXPORT herr_t findDataset( hid_t loc_id, const std::string& name );
+static H5Support_EXPORT herr_t findDataset( hid_t loc_id, const std::string& name );
 
 /**
  * @brief Creates a Dataset with the given name at the location defined by loc_id
@@ -436,6 +436,69 @@ static herr_t writePointerDataset (hid_t loc_id,
   return retErr;
 }
 
+template <typename T>
+static herr_t replacePointerDataset (hid_t loc_id,
+                            const std::string& dsetName,
+                            int32_t   rank,
+                            hsize_t* dims,
+                            T* data)
+{
+
+  herr_t err    = -1;
+  hid_t did     = -1;
+  hid_t sid     = -1;
+  herr_t retErr = 0;
+
+  hid_t dataType = H5Lite::HDFTypeForPrimitive(data[0]);
+  if(dataType == -1)
+  {
+    return -1;
+  }
+  //Create the DataSpace
+  std::vector<uint64_t>::size_type size = static_cast<std::vector<uint64_t>::size_type>(rank);
+
+  std::vector<hsize_t> _dims(size, 0);
+  for (int32_t i = 0; i < rank; ++i)
+  {
+    _dims[i] = static_cast<hsize_t>(dims[i]);
+  }
+//  sid = H5Screate_simple( size, &(_dims.front()), NULL );
+  sid = H5Screate_simple( rank, dims, NULL);
+  if (sid < 0)
+  {
+    return sid;
+  }
+
+  HDF_ERROR_HANDLER_OFF
+  did = H5Dopen(loc_id, dsetName.c_str() );
+  HDF_ERROR_HANDLER_ON
+  if ( did < 0 ) // dataset does not exist so create it
+  {
+    did = H5Dcreate (loc_id, dsetName.c_str(), dataType, sid, H5P_DEFAULT);
+  }
+  if ( did >= 0 )
+  {
+    err = H5Dwrite( did, dataType, H5S_ALL, H5S_ALL, H5P_DEFAULT, data );
+    if (err < 0 ) {
+      std::cout << "Error Writing Data" << std::endl;
+      retErr = err;
+    }
+    err = H5Dclose( did );
+    if (err < 0) {
+      std::cout << "Error Closing Dataset." << std::endl;
+      retErr = err;
+    }
+  } else {
+    retErr = did;
+  }
+  /* Terminate access to the data space. */
+  err= H5Sclose( sid );
+  if (err< 0) {
+    std::cout << "Error Closing Dataspace" << std::endl;
+    retErr = err;
+  }
+  return retErr;
+}
 
 
 /**
@@ -575,7 +638,7 @@ static herr_t writeScalarDataset (hid_t loc_id,
  * @param data The actual data to write as a null terminated string
  * @return Standard HDF5 error conditions
  */
-static TSLLib_EXPORT herr_t  writeStringDataset (hid_t loc_id,
+static H5Support_EXPORT herr_t  writeStringDataset (hid_t loc_id,
                                         const std::string& dsetName,
                                         const std::string& data);
 
@@ -587,7 +650,7 @@ static TSLLib_EXPORT herr_t  writeStringDataset (hid_t loc_id,
  * @param size The number of characters in the string
  * @return Standard HDF5 error conditions
  */
-static TSLLib_EXPORT herr_t  writeStringDataset (hid_t loc_id,
+static H5Support_EXPORT herr_t  writeStringDataset (hid_t loc_id,
                                         const std::string& dsetName,
                                         size_t size,
                                         const char* data);
@@ -810,7 +873,7 @@ static herr_t writeVectorAttribute(hid_t loc_id,
  * @param data The string to write as the attribute
  * @return Standard HDF error conditions
  */
-static TSLLib_EXPORT herr_t  writeStringAttribute(hid_t loc_id,
+static H5Support_EXPORT herr_t  writeStringAttribute(hid_t loc_id,
                               const std::string& objName,
                               const std::string& attrName,
                               const std::string& data);
@@ -823,7 +886,7 @@ static TSLLib_EXPORT herr_t  writeStringAttribute(hid_t loc_id,
  * @param data pointer to a const char array
  * @return Standard HDF error conditions
  */
-static TSLLib_EXPORT herr_t  writeStringAttribute(hid_t loc_id,
+static H5Support_EXPORT herr_t  writeStringAttribute(hid_t loc_id,
                               const std::string& objName,
                               const std::string& attrName,
                               hsize_t size,
@@ -839,7 +902,7 @@ static TSLLib_EXPORT herr_t  writeStringAttribute(hid_t loc_id,
  * of the attribute, and the second is the actual value of the attribute.
  * @return Standard HDF error condition
  */
-static TSLLib_EXPORT herr_t writeStringAttributes(hid_t loc_id,
+static H5Support_EXPORT herr_t writeStringAttributes(hid_t loc_id,
                                      const std::string &objName,
                                      const std::map<std::string, std::string> &attributes);
 /**
@@ -1145,7 +1208,7 @@ static herr_t readScalarDataset(hid_t loc_id,
  * @param data The std::string to hold the data
  * @return Standard HDF error condition
  */
-static TSLLib_EXPORT herr_t readStringDataset(hid_t loc_id,
+static H5Support_EXPORT herr_t readStringDataset(hid_t loc_id,
                                      const std::string& dsetName,
                                      std::string &data);
 
@@ -1159,7 +1222,7 @@ static TSLLib_EXPORT herr_t readStringDataset(hid_t loc_id,
  * @param data pointer to the buffer
  * @return Standard HDF error condition
  */
-static TSLLib_EXPORT herr_t readStringDataset(hid_t loc_id,
+static H5Support_EXPORT herr_t readStringDataset(hid_t loc_id,
                                            const std::string &dsetName,
                                            uint8_t* data);
 
@@ -1375,7 +1438,7 @@ static herr_t readPointerAttribute(hid_t loc_id,
  * @param data The memory to store the data
  * @return Standard HDF Error condition
  */
-static TSLLib_EXPORT herr_t readStringAttribute(hid_t loc_id,
+static H5Support_EXPORT herr_t readStringAttribute(hid_t loc_id,
                                              const std::string& objName,
                                              const std::string& attrName,
                                              std::string &data);
@@ -1388,7 +1451,7 @@ static TSLLib_EXPORT herr_t readStringAttribute(hid_t loc_id,
  * @param data The memory to store the data into
  * @return Standard HDF Error condition
  */
-static TSLLib_EXPORT herr_t readStringAttribute(hid_t loc_id,
+static H5Support_EXPORT herr_t readStringAttribute(hid_t loc_id,
                                    const std::string& objName,
                                    const std::string& attrName,
                                    uint8_t* data);
@@ -1399,7 +1462,7 @@ static TSLLib_EXPORT herr_t readStringAttribute(hid_t loc_id,
  * @param attrName The name of the attribute
  * @param rank (out) Number of dimensions is store into this variable
  */
-static TSLLib_EXPORT hid_t getAttributeNDims(hid_t loc_id, const std::string& objName, const std::string& attrName, hid_t &rank);
+static H5Support_EXPORT hid_t getAttributeNDims(hid_t loc_id, const std::string& objName, const std::string& attrName, hid_t &rank);
 
 /**
  * @brief Returns the number of dimensions for a given dataset
@@ -1407,7 +1470,7 @@ static TSLLib_EXPORT hid_t getAttributeNDims(hid_t loc_id, const std::string& ob
  * @param objName The name of the dataset
  * @param rank (out) Number of dimensions is store into this variable
  */
-static TSLLib_EXPORT hid_t getDatasetNDims(hid_t loc_id, const std::string& objName, hid_t &rank);
+static H5Support_EXPORT hid_t getDatasetNDims(hid_t loc_id, const std::string& objName, hid_t &rank);
 
 /**
  * @brief Returns the H5T value for a given dataset.
@@ -1418,7 +1481,7 @@ static TSLLib_EXPORT hid_t getDatasetNDims(hid_t loc_id, const std::string& objN
  * @param dsetName Path to the dataset
  * @return
  */
-static TSLLib_EXPORT hid_t getDatasetType(hid_t loc_id, const std::string &dsetName);
+static H5Support_EXPORT hid_t getDatasetType(hid_t loc_id, const std::string &dsetName);
 
 /**
  * @brief Get the information about a dataset.
@@ -1430,7 +1493,7 @@ static TSLLib_EXPORT hid_t getDatasetType(hid_t loc_id, const std::string &dsetN
  * @param type_size THe HDF5 size of the data
  * @return Negative value is Failure. Zero or Positive is success;
  */
-static TSLLib_EXPORT herr_t getDatasetInfo( hid_t loc_id,
+static H5Support_EXPORT herr_t getDatasetInfo( hid_t loc_id,
                               const std::string& dsetName,
                               std::vector<hsize_t> &dims,
                               H5T_class_t &type_class,
@@ -1450,7 +1513,7 @@ static TSLLib_EXPORT herr_t getDatasetInfo( hid_t loc_id,
  * @param attr_type The Attribute ID - which needs to be closed after you are finished with the data
  * @return
  */
-static TSLLib_EXPORT herr_t getAttributeInfo(hid_t loc_id,
+static H5Support_EXPORT herr_t getAttributeInfo(hid_t loc_id,
                                const std::string& objName,
                                const std::string& attr_name,
                                std::vector<hsize_t> &dims,
@@ -1461,57 +1524,57 @@ static TSLLib_EXPORT herr_t getAttributeInfo(hid_t loc_id,
 
 
 
-#ifdef H5LITE_USE_MXA_CONSTRUCTS
+#ifdef H5LITE_USE_H5Support_CONSTRUCTS
 /**
- * @brief Writes the data contained within an IMXAArray object into an hdf5 file
+ * @brief Writes the data contained within an IH5SupportArray object into an hdf5 file
  * @param loc_id The parent ID of the dataset
  * @param dsetName The name of the dataset, Can be a name or path within the hdf5 file. If
  * it represents a path YOU need to make sure all intermediate groups are already
  * crreated.
- * @param array The IMXAArray class
+ * @param array The IH5SupportArray class
  * @return Standard hdf5 error condition
  */
-static TSLLib_EXPORT herr_t writeMXAArray(hid_t loc_id,
+static H5Support_EXPORT herr_t writeH5SupportArray(hid_t loc_id,
                             const std::string &dsetName,
-                            IMXAArray* array);
+                            IH5SupportArray* array);
 /**
- * @brief Writes the data contained within an IMXAArray object into an hdf5 file
+ * @brief Writes the data contained within an IH5SupportArray object into an hdf5 file
  * @param loc_id The parent ID of the dataset
  * @param dsetName The name of the dataset, Can be a name or path within the hdf5 file. If
  * it represents a path YOU need to make sure all intermediate groups are already
  * crreated.
  * @param attributeKey The name of the attribute
- * @param array The IMXAArray class
+ * @param array The IH5SupportArray class
  * @return Standard hdf5 error condition
  */
-static TSLLib_EXPORT herr_t writeMXAAttribute(hid_t loc_id,
+static H5Support_EXPORT herr_t writeH5SupportAttribute(hid_t loc_id,
                             const std::string &dsetName,
                             const std::string &attributeKey,
-                            IMXAArray* array);
+                            IH5SupportArray* array);
 
 
 /**
- * @brief Reads the data from an HDF5 file into a newly allocated MXAArrayTemplate
+ * @brief Reads the data from an HDF5 file into a newly allocated H5SupportArrayTemplate
  * object - PLEASE NOTE: You MUST call delete on the object or otherwise make
  * arrangements to clean up the pointer otherwise memory leaks will occur.
  * @param loc_id The HDF5 file or group Id into which to store the data
  * @param dsetName The name/path of the data set
- * @return IMXAArray Pointer. NULL value is possible on error
+ * @return IH5SupportArray Pointer. NULL value is possible on error
  */
-static TSLLib_EXPORT IMXAArray* readMXAArray(hid_t loc_id,
+static H5Support_EXPORT IH5SupportArray* readH5SupportArray(hid_t loc_id,
                            const std::string &dsetName );
 
 
 /**
- * @brief Reads the attribute data from an HDF5 file into a newly allocated MXAArrayTemplate
+ * @brief Reads the attribute data from an HDF5 file into a newly allocated H5SupportArrayTemplate
  * object - PLEASE NOTE: You MUST call delete on the object or otherwise make
  * arrangements to clean up the pointer otherwise memory leaks will occur.
  * @param loc_id The HDF5 file or group Id into which to store the data
  * @param dsetName The name/path of the data set
  * @param attributeKey The name of the attribute
- * @return IMXAArray Pointer. NULL value is possible on error
+ * @return IH5SupportArray Pointer. NULL value is possible on error
  */
-static TSLLib_EXPORT IMXAArray* readMXAAttribute(hid_t loc_id,
+static H5Support_EXPORT IH5SupportArray* readH5SupportAttribute(hid_t loc_id,
                                    const std::string &dsetName,
                                    const std::string &attributeKey);
 
@@ -1531,6 +1594,5 @@ private:
      ret =0;
    }
 };
-
 
 #endif

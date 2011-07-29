@@ -206,7 +206,12 @@ endif()
 option(DREAM3D_BUILD_CLI_TOOLS "Build the command line versions of the applications" OFF)
 
 # -----------------------------------------------------------------------
-# -- Add in the Necessary MXA Sources into a static library
+# -- Add in the Necessary MXA Sources into a library
+add_subdirectory( ${DREAM3D_SOURCE_DIR}/Source/H5Support ${DREAM3D_BINARY_DIR}/H5Support)
+include_directories (${DREAM3D_BINARY_DIR})
+
+# -----------------------------------------------------------------------
+# -- Add in the Necessary MXA Sources into a library
 add_subdirectory( ${DREAM3D_SOURCE_DIR}/Source/MXA ${DREAM3D_BINARY_DIR}/MXA)
 include_directories (${DREAM3D_BINARY_DIR})
 

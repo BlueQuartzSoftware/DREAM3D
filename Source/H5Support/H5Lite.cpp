@@ -27,7 +27,7 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#include <MXA/HDF5/H5Lite.h>
+#include <H5Support/H5Lite.h>
 
 #include <string.h>
 
@@ -498,7 +498,7 @@ herr_t H5Lite::readStringDataset(hid_t loc_id,
   if ( tid >= 0 ) {
     err = H5Dread(did, tid, H5S_ALL, H5S_ALL, H5P_DEFAULT, data );
     if (err<0) {
-      std::cout << DEBUG_OUT(logTime) << "Error Reading string dataset." << std::endl;
+      std::cout  << "Error Reading string dataset." << std::endl;
       retErr = err;
     }
     CloseH5T(tid, err, retErr);
@@ -612,7 +612,7 @@ herr_t H5Lite::readStringAttribute(hid_t loc_id,
       {
         err = H5Aread( attr_id, attr_type, data );
         if (err < 0) {
-          std::cout << DEBUG_OUT(logTime) << "Error Reading Attribute." << std::endl;
+          std::cout  << "Error Reading Attribute." << std::endl;
           retErr = err;
         }
         CloseH5T(attr_type, err, retErr);
@@ -625,7 +625,7 @@ herr_t H5Lite::readStringAttribute(hid_t loc_id,
     }
     err = H5Lite::closeId( obj_id, statbuf.type );
     if (err<0) {
-      std::cout << DEBUG_OUT(logTime) << "Error Closing Object ID" << std::endl;
+      std::cout  << "Error Closing Object ID" << std::endl;
       retErr = err;
     }
  }
@@ -999,7 +999,7 @@ herr_t H5Lite::writeMXAAttribute(hid_t loc_id,
    hid_t dataType = array->getDataType();
    if (dataType == -1)
    {
-     std::cout << DEBUG_OUT(logTime) << "dataType was unknown" << std::endl;
+     std::cout  << "dataType was unknown" << std::endl;
      return -1;
    }
    else if (dataType == H5T_STRING)

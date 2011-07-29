@@ -26,7 +26,7 @@ endMacro()
 MXACompileDir(Common)
 MXACompileDir(Utilities)
 set (MXA_HDF5_SUPPORT "1")
-MXACompileDir(HDF5)
+#MXACompileDir(HDF5)
 
 set (Project_SRCS 
     ${Project_SRCS} 
@@ -61,7 +61,7 @@ configure_file(${PROJECT_RESOURCES_DIR}/MXACMake/MXAConfiguration.h.in
 # add_definitions(-DQT_CORE_LIB)
 
 add_library(${PROJECT_NAME} ${LIB_TYPE}  ${Project_SRCS})
-target_link_libraries(${PROJECT_NAME} ${HDF5_LIBRARIES} )
+target_link_libraries(${PROJECT_NAME} ${HDF5_LIBRARIES} H5Support)
 LibraryProperties( ${PROJECT_NAME} ${EXE_DEBUG_EXTENSION})
 
 set(install_dir "tools")

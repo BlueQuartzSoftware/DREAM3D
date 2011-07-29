@@ -33,7 +33,7 @@
 #include <string>
 #include <vector>
 
-#include "MXA/HDF5/H5Utilities.h"
+#include "H5Support/H5Utilities.h"
 #include "MXA/Utilities/StringUtils.h"
 
 #include "TSLLib/AngReader.h"
