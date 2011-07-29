@@ -37,9 +37,9 @@
 #include "MXA/Common/MXASetGetMacros.h"
 
 //-- TSL Ang Reader Includes
-#include "TSLLib/AngConstants.h"
-#include "TSLLib/AngDirectoryPatterns.h"
-#include "TSLLib/AngPhase.h"
+#include "EbsdLib/TSL/AngConstants.h"
+#include "EbsdLib/TSL/AngDirectoryPatterns.h"
+#include "EbsdLib/TSL/AngPhase.h"
 
 //-- AIM Common Includes
 #include "DREAM3D/DREAM3DConfiguration.h"

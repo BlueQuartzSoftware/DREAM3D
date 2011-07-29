@@ -32,11 +32,11 @@
 ///////////////////////////////////////////////////////////////////////////////
 #include "AngDirectoryPatterns.h"
 
-#include "TSLLib/Utilities/MXADir.h"
-#include "TSLLib/Utilities/StringUtils.h"
-
 #include <sstream>
 #include <iomanip>
+
+#include "EbsdLib/Utilities/MXADir.h"
+#include "EbsdLib/Utilities/StringUtils.h"
 
 using namespace Ang;
 

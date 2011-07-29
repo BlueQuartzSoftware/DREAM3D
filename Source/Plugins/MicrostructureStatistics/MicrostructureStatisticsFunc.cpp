@@ -42,7 +42,7 @@
 #include <set>
 
 // TSL Ang Library Includes
-#include "TSLLib/AngReader.h"
+#include "EbsdLib/TSL/AngReader.h"
 
 //-- MXA Includes
 #include "MXA/Common/MXAEndian.h"

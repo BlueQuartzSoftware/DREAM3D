@@ -216,13 +216,8 @@ add_subdirectory( ${DREAM3D_SOURCE_DIR}/Source/MXA ${DREAM3D_BINARY_DIR}/MXA)
 include_directories (${DREAM3D_BINARY_DIR})
 
 # -----------------------------------------------------------------------
-# -- Add in the Necessary TSL Sources into a library
-add_subdirectory( ${DREAM3D_SOURCE_DIR}/Source/TSLLib ${DREAM3D_BINARY_DIR}/TSLLib)
-include_directories (${DREAM3D_BINARY_DIR})
-
-# -----------------------------------------------------------------------
-# -- Add in the Necessary HKL Sources into a library
-add_subdirectory( ${DREAM3D_SOURCE_DIR}/Source/HKLLib ${DREAM3D_BINARY_DIR}/HKLLib)
+# -- Add in the Necessary EBSD Sources into a library
+add_subdirectory( ${DREAM3D_SOURCE_DIR}/Source/EbsdLib ${DREAM3D_BINARY_DIR}/EbsdLib)
 include_directories (${DREAM3D_BINARY_DIR})
 
 # -----------------------------------------------------------------------

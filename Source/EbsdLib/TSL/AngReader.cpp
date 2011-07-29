@@ -72,24 +72,24 @@ m_ManageMemory(true)
 
   m_NumFields = 8;
   // Initialize the map of header key to header value
-  m_Headermap[TSL::OIM::TEMPIXPerUM] = AngHeaderEntry<float>::NewHeaderEntry(TSL::OIM::TEMPIXPerUM);
-  m_Headermap[TSL::OIM::XStar] = AngHeaderEntry<float>::NewHeaderEntry(TSL::OIM::XStar);
-  m_Headermap[TSL::OIM::YStar] = AngHeaderEntry<float>::NewHeaderEntry(TSL::OIM::YStar);
-  m_Headermap[TSL::OIM::ZStar] = AngHeaderEntry<float>::NewHeaderEntry(TSL::OIM::ZStar);
-  m_Headermap[TSL::OIM::WorkingDistance] = AngHeaderEntry<float>::NewHeaderEntry(TSL::OIM::WorkingDistance);
-  m_Headermap[TSL::OIM::Grid] = AngStringHeaderEntry::NewHeaderEntry(TSL::OIM::Grid);
-  m_Headermap[TSL::OIM::XStep] = AngHeaderEntry<float>::NewHeaderEntry(TSL::OIM::XStep);
-  m_Headermap[TSL::OIM::YStep] = AngHeaderEntry<float>::NewHeaderEntry(TSL::OIM::YStep);
-  m_Headermap[TSL::OIM::ZStep] = AngHeaderEntry<float>::NewHeaderEntry(TSL::OIM::ZStep); // NOT actually in the file>::NewHeaderEntry(); , but may be needed
-  m_Headermap[TSL::OIM::ZPos] = AngHeaderEntry<float>::NewHeaderEntry(TSL::OIM::ZPos); // NOT actually in the file>::NewHeaderEntry(); , but may be needed
-  m_Headermap[TSL::OIM::ZMax] = AngHeaderEntry<float>::NewHeaderEntry(TSL::OIM::ZMax); // NOT actually in the file>::NewHeaderEntry(); , but may be needed
-  m_Headermap[TSL::OIM::NColsOdd] = AngHeaderEntry<int>::NewHeaderEntry(TSL::OIM::NColsOdd);
-  m_Headermap[TSL::OIM::NColsEven] = AngHeaderEntry<int>::NewHeaderEntry(TSL::OIM::NColsEven);
-  //  m_Headermap[TSL::OIM::NCols] = AngHeaderEntry<int>::NewHeaderEntry(TSL::OIM::NCols);
-  m_Headermap[TSL::OIM::NRows] = AngHeaderEntry<int>::NewHeaderEntry(TSL::OIM::NRows);
-  m_Headermap[TSL::OIM::Operator] = AngStringHeaderEntry::NewHeaderEntry(TSL::OIM::Operator);
-  m_Headermap[TSL::OIM::SampleId] = AngStringHeaderEntry::NewHeaderEntry(TSL::OIM::SampleId);
-  m_Headermap[TSL::OIM::ScanId] = AngStringHeaderEntry::NewHeaderEntry(TSL::OIM::ScanId);
+  m_Headermap[TSL::OIM::TEMPIXPerUM] = AngHeaderEntry<float>::NewEbsdHeaderEntry(TSL::OIM::TEMPIXPerUM);
+  m_Headermap[TSL::OIM::XStar] = AngHeaderEntry<float>::NewEbsdHeaderEntry(TSL::OIM::XStar);
+  m_Headermap[TSL::OIM::YStar] = AngHeaderEntry<float>::NewEbsdHeaderEntry(TSL::OIM::YStar);
+  m_Headermap[TSL::OIM::ZStar] = AngHeaderEntry<float>::NewEbsdHeaderEntry(TSL::OIM::ZStar);
+  m_Headermap[TSL::OIM::WorkingDistance] = AngHeaderEntry<float>::NewEbsdHeaderEntry(TSL::OIM::WorkingDistance);
+  m_Headermap[TSL::OIM::Grid] = AngStringHeaderEntry::NewEbsdHeaderEntry(TSL::OIM::Grid);
+  m_Headermap[TSL::OIM::XStep] = AngHeaderEntry<float>::NewEbsdHeaderEntry(TSL::OIM::XStep);
+  m_Headermap[TSL::OIM::YStep] = AngHeaderEntry<float>::NewEbsdHeaderEntry(TSL::OIM::YStep);
+  m_Headermap[TSL::OIM::ZStep] = AngHeaderEntry<float>::NewEbsdHeaderEntry(TSL::OIM::ZStep); // NOT actually in the file>::NewEbsdHeaderEntry(); , but may be needed
+  m_Headermap[TSL::OIM::ZPos] = AngHeaderEntry<float>::NewEbsdHeaderEntry(TSL::OIM::ZPos); // NOT actually in the file>::NewEbsdHeaderEntry(); , but may be needed
+  m_Headermap[TSL::OIM::ZMax] = AngHeaderEntry<float>::NewEbsdHeaderEntry(TSL::OIM::ZMax); // NOT actually in the file>::NewEbsdHeaderEntry(); , but may be needed
+  m_Headermap[TSL::OIM::NColsOdd] = AngHeaderEntry<int>::NewEbsdHeaderEntry(TSL::OIM::NColsOdd);
+  m_Headermap[TSL::OIM::NColsEven] = AngHeaderEntry<int>::NewEbsdHeaderEntry(TSL::OIM::NColsEven);
+  //  m_Headermap[TSL::OIM::NCols] = AngHeaderEntry<int>::NewEbsdHeaderEntry(TSL::OIM::NCols);
+  m_Headermap[TSL::OIM::NRows] = AngHeaderEntry<int>::NewEbsdHeaderEntry(TSL::OIM::NRows);
+  m_Headermap[TSL::OIM::Operator] = AngStringHeaderEntry::NewEbsdHeaderEntry(TSL::OIM::Operator);
+  m_Headermap[TSL::OIM::SampleId] = AngStringHeaderEntry::NewEbsdHeaderEntry(TSL::OIM::SampleId);
+  m_Headermap[TSL::OIM::ScanId] = AngStringHeaderEntry::NewEbsdHeaderEntry(TSL::OIM::ScanId);
 
 
   // Give these values some defaults
@@ -363,7 +363,7 @@ void AngReader::parseHeaderLine(char* buf, size_t length)
   }
   else
   {
-    HeaderEntry::Pointer p = m_Headermap[word];
+    EbsdHeaderEntry::Pointer p = m_Headermap[word];
     if (NULL == p.get())
     {
       std::cout << "---------------------------" << std::endl;
@@ -374,7 +374,7 @@ void AngReader::parseHeaderLine(char* buf, size_t length)
       std::cout << "const std::string " << word << "(ANG_" << upper << ");" << std::endl;
 
       std::cout << "angInstanceProperty(AngHeaderEntry<float>. float, " << word << "TSL::OIM::" << word << std::endl;
-      std::cout << "m_Headermap[TSL::OIM::" << word << "] = AngHeaderEntry<float>::NewHeaderEntry(TSL::OIM::" << word << ");" << std::endl;
+      std::cout << "m_Headermap[TSL::OIM::" << word << "] = AngHeaderEntry<float>::NewEbsdHeaderEntry(TSL::OIM::" << word << ");" << std::endl;
       return;
     }
     else

@@ -88,7 +88,6 @@ endif()
 add_library(OIMImportPlugin MODULE ${OIMImportPlugin_PROJECT_SRCS})
 target_link_libraries(OIMImportPlugin 
                     MXADataModel
-                    TSLLib
                     DREAM3DLib
                     ${QT_QTCORE_LIBRARY}   
                     ${QT_QTGUI_LIBRARY}

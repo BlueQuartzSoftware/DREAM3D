@@ -2,12 +2,12 @@
 * again to regenerate this file.
 */
 
-/* Define to 1 if HKLCommon was built as a dynamic library */
-#cmakedefine HKL_BUILT_AS_DYNAMIC_LIB @HKL_BUILT_AS_DYNAMIC_LIB@
+/* Define to 1 if EbsdLibCommon was built as a dynamic library */
+#cmakedefine EbsdLib_BUILT_AS_DYNAMIC_LIB @EbsdLib_BUILT_AS_DYNAMIC_LIB@
 
 
 /* Did we compile with HDF5 support */
-#define HKL_HDF5_SUPPORT @HKL_HDF5_SUPPORT@
+#define EbsdLib_HDF5_SUPPORT @EbsdLib_HDF5_SUPPORT@
 
 
 /* Include the DLL export preprocessor defines */

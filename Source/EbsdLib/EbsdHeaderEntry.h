@@ -27,64 +27,48 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-///////////////////////////////////////////////////////////////////////////////
-// This code was partly written under US Air Force Contract FA8650-07-D-5800
-///////////////////////////////////////////////////////////////////////////////
-
-#ifndef _ANG_FILE_DIRECTORY_PATTERN_H_
-#define _ANG_FILE_DIRECTORY_PATTERN_H_
-
-#if defined (_MSC_VER)
-#define WIN32_LEAN_AND_MEAN		// Exclude rarely-used stuff from Windows headers
-#endif
-
-#include <string>
 
 
-#include "TSLLib/TSLLibTypes.h"
-#include "AngSetGetMacros.h"
+#ifndef _EbsdHeaderEntry_h_
+#define _EbsdHeaderEntry_h_
 
-namespace Ang {
-  namespace DirectoryPatterns {
-    const std::string Dot (".");
-  }
-}
+#include "EbsdLib/EbsdLibConfiguration.h"
+#include "EbsdLib/EbsdSetGetMacros.h"
+/**
+ * @brief Creates a static "New" method that creates an instance of thisClass
+ */
+#define HEADERENTRY_NEW_SUPERCLASS(thisClass, SuperClass)\
+  typedef SuperClass::Pointer SuperClass##Type;\
+  static SuperClass##Type New##SuperClass(const std::string &key) \
+{ \
+  SuperClass##Type sharedPtr (new thisClass(key)); \
+  return sharedPtr; \
+}\
+
 
 
 /**
  *
  */
-class TSLLib_EXPORT AngDirectoryPatterns
+class EbsdLib_EXPORT EbsdHeaderEntry
 {
   public:
-    ANG_SHARED_POINTERS(AngDirectoryPatterns)
-    ANG_TYPE_MACRO(AngDirectoryPatterns)
-    static Pointer New(const std::string &parentDirectory,
-                       const std::string &fileprefix,
-                       int32_t width);
+    EBSD_SHARED_POINTERS(EbsdHeaderEntry);
+    virtual ~EbsdHeaderEntry() {}
+    virtual std::string getKey() = 0;
+    virtual void parseValue(char* value, size_t start, size_t length) = 0;
+    virtual void print(std::ostream &out) = 0;
 
-    virtual ~AngDirectoryPatterns();
+  protected:
+    EbsdHeaderEntry() {}
 
-    ANG_INSTANCE_STRING_PROPERTY(ParentDirectory)
-    ANG_INSTANCE_STRING_PROPERTY(Prefix)
-    ANG_INSTANCE_STRING_PROPERTY(Suffix)
-    ANG_INSTANCE_STRING_PROPERTY(Extension)
-    ANG_INSTANCE_PROPERTY(int32_t, MaxSlice);
-
-    std::string generateFullPathAngFileName(int slice);
-
-    std::string generateAngFileName(int slice);
-
-    void print(std::ostream &ostream);
-
-protected:
-    AngDirectoryPatterns();
 
   private:
+    EbsdHeaderEntry(const EbsdHeaderEntry&); // Copy Constructor Not Implemented
+    void operator=(const EbsdHeaderEntry&); // Operator '=' Not Implemented
 
-
-    AngDirectoryPatterns(const AngDirectoryPatterns&);    // Copy Constructor Not Implemented
-    void operator=(const AngDirectoryPatterns&);  // Operator '=' Not Implemented
 };
 
-#endif /* _ANG_FILE_DIRECTORY_PATTERN_H_ */
+
+
+#endif /* _EbsdHeaderEntry.h_  */

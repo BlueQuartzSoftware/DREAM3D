@@ -36,8 +36,8 @@
 #include "H5Support/H5Utilities.h"
 #include "MXA/Utilities/StringUtils.h"
 
-#include "TSLLib/AngReader.h"
-#include "TSLLib/H5AngReader.h"
+#include "EbsdLib/TSL/AngReader.h"
+#include "EbsdLib/TSL/H5AngReader.h"
 
 #include "OIMImport/OIMImport.h"
 

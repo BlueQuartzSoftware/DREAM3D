@@ -38,8 +38,8 @@
 #include <string>
 #include <vector>
 
-#include "TSLLib/AngSetGetMacros.h"
-#include "TSLLib/TSLLibConfiguration.h"
+#include "EbsdLib/EbsdSetGetMacros.h"
+#include "EbsdLib/EbsdLibConfiguration.h"
 #include "AngConstants.h"
 
 /*!
@@ -64,12 +64,12 @@ typedef struct
  * @date Mar 23, 2011
  * @version 1.0
  */
-class TSLLib_EXPORT HKLFamily
+class EbsdLib_EXPORT HKLFamily
 {
   public:
-    ANG_SHARED_POINTERS(HKLFamily);
-    ANG_STATIC_NEW_MACRO(HKLFamily);
-    ANG_TYPE_MACRO(HKLFamily)
+    EBSD_SHARED_POINTERS(HKLFamily);
+    EBSD_STATIC_NEW_MACRO(HKLFamily);
+    EBSD_TYPE_MACRO(HKLFamily)
 
     virtual ~HKLFamily() {};
 
@@ -137,25 +137,25 @@ class TSLLib_EXPORT HKLFamily
  * @date Mar 23, 2011
  * @version 1.0
  */
-class TSLLib_EXPORT AngPhase
+class EbsdLib_EXPORT AngPhase
 {
   public:
-    ANG_SHARED_POINTERS(AngPhase)
-    ANG_STATIC_NEW_MACRO(AngPhase)
-    ANG_TYPE_MACRO(AngPhase)
+    EBSD_SHARED_POINTERS(AngPhase)
+    EBSD_STATIC_NEW_MACRO(AngPhase)
+    EBSD_TYPE_MACRO(AngPhase)
 
     virtual ~AngPhase();
 
 
-    ANG_INSTANCE_PROPERTY(int, Phase)
-    ANG_INSTANCE_STRING_PROPERTY(MaterialName)
-    ANG_INSTANCE_STRING_PROPERTY(Formula)
-    ANG_INSTANCE_STRING_PROPERTY(Info)
-    ANG_INSTANCE_PROPERTY(TSL::OIM::PhaseSymmetry, Symmetry)
-    ANG_INSTANCE_PROPERTY(std::vector<float>, LatticeConstants)
-    ANG_INSTANCE_PROPERTY(int, NumberFamilies)
-    ANG_INSTANCE_PROPERTY(std::vector<HKLFamily::Pointer>, HKLFamilies)
-    ANG_INSTANCE_PROPERTY(std::vector<int>, Categories)
+    EBSD_INSTANCE_PROPERTY(int, Phase)
+    EBSD_INSTANCE_STRING_PROPERTY(MaterialName)
+    EBSD_INSTANCE_STRING_PROPERTY(Formula)
+    EBSD_INSTANCE_STRING_PROPERTY(Info)
+    EBSD_INSTANCE_PROPERTY(TSL::OIM::PhaseSymmetry, Symmetry)
+    EBSD_INSTANCE_PROPERTY(std::vector<float>, LatticeConstants)
+    EBSD_INSTANCE_PROPERTY(int, NumberFamilies)
+    EBSD_INSTANCE_PROPERTY(std::vector<HKLFamily::Pointer>, HKLFamilies)
+    EBSD_INSTANCE_PROPERTY(std::vector<int>, Categories)
 
 
     void parsePhase(char* value, size_t start, size_t length);

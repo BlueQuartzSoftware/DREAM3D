@@ -36,7 +36,7 @@
 #include "AngConstants.h"
 #include "H5Support/H5Lite.h"
 #include "H5Support/H5Utilities.h"
-#include "TSLLib/Utilities/StringUtils.h"
+#include "EbsdLib/Utilities/StringUtils.h"
 
 #define PI_OVER_2f       1.57079632679489661f
 #define THREE_PI_OVER_2f 4.71238898038468985f
@@ -124,7 +124,7 @@ int H5AngReader::readFile()
     err = H5Gclose(gid);\
     return -1; }\
   else {\
-    HeaderEntry::Pointer p = m_Headermap[key];\
+    EbsdHeaderEntry::Pointer p = m_Headermap[key];\
     class* c = dynamic_cast<class*>(p.get());\
     c->setValue(t);\
   }\
@@ -142,7 +142,7 @@ int H5AngReader::readFile()
     err = H5Gclose(gid);\
     return -1; }\
     else {\
-      HeaderEntry::Pointer p = m_Headermap[key];\
+      EbsdHeaderEntry::Pointer p = m_Headermap[key];\
       class* c = dynamic_cast<class*>(p.get());\
       c->setValue(t);\
     }\

@@ -31,54 +31,22 @@
 // This code was partly written under US Air Force Contract FA8650-07-D-5800
 ///////////////////////////////////////////////////////////////////////////////
 
+#include <string.h>
 #include <iostream>
 
-#include <string.h>
+#include "EbsdLib/EbsdSetGetMacros.h"
+#include "EbsdLib/EbsdLibConfiguration.h"
+#include "EbsdLib/EbsdHeaderEntry.h"
 
-#include "TSLLib/AngSetGetMacros.h"
-#include "TSLLib/TSLLibConfiguration.h"
-
-/**
- * @brief Creates a static "New" method that creates an instance of thisClass
- */
-#define HEADERENTRY_NEW_SUPERCLASS(thisClass, SuperClass)\
-  typedef SuperClass::Pointer SuperClass##Type;\
-  static SuperClass##Type New##SuperClass(const std::string &key) \
-{ \
-  SuperClass##Type sharedPtr (new thisClass(key)); \
-  return sharedPtr; \
-}\
-
-/**
- *
- */
-class TSLLib_EXPORT HeaderEntry
-{
-  public:
-    ANG_SHARED_POINTERS(HeaderEntry);
-    virtual ~HeaderEntry() {}
-    virtual std::string getKey() = 0;
-    virtual void parseValue(char* value, size_t start, size_t length) = 0;
-    virtual void print(std::ostream &out) = 0;
-
-  protected:
-    HeaderEntry() {}
-
-
-  private:
-    HeaderEntry(const HeaderEntry&); // Copy Constructor Not Implemented
-    void operator=(const HeaderEntry&); // Operator '=' Not Implemented
-
-};
 
 
 template<typename T>
-class TSLLib_EXPORT AngHeaderEntry : public HeaderEntry
+class EbsdLib_EXPORT AngHeaderEntry : public EbsdHeaderEntry
 {
 
   public:
-    ANG_SHARED_POINTERS(AngHeaderEntry<T >);
-    HEADERENTRY_NEW_SUPERCLASS(AngHeaderEntry<T>, HeaderEntry);
+    EBSD_SHARED_POINTERS(AngHeaderEntry<T >);
+    HEADERENTRY_NEW_SUPERCLASS(AngHeaderEntry<T>, EbsdHeaderEntry);
 
     virtual ~AngHeaderEntry() {}
 
@@ -115,11 +83,11 @@ class TSLLib_EXPORT AngHeaderEntry : public HeaderEntry
 };
 
 
-class AngStringHeaderEntry : public HeaderEntry
+class AngStringHeaderEntry : public EbsdHeaderEntry
 {
   public:
-    ANG_SHARED_POINTERS(AngStringHeaderEntry);
-    HEADERENTRY_NEW_SUPERCLASS(AngStringHeaderEntry, HeaderEntry);
+    EBSD_SHARED_POINTERS(AngStringHeaderEntry);
+    HEADERENTRY_NEW_SUPERCLASS(AngStringHeaderEntry, EbsdHeaderEntry);
 
     virtual ~AngStringHeaderEntry() {}
 
