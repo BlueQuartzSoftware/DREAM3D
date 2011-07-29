@@ -208,10 +208,10 @@ void MicrostructureStatisticsFunc::initializeAttributes()
 {
   grain_indicies = m_GrainIndicies->WritePointer(0, totalpoints);
   phases = m_Phases->WritePointer(0, totalpoints);
-  euler1s = m_Euler1s->WritePointer(0, totalpoints);
-  euler2s = m_Euler2s->WritePointer(0, totalpoints);
-  euler3s = m_Euler3s->WritePointer(0, totalpoints);
-  neighbors = m_Neighbors->WritePointer(0, totalpoints);
+  euler1s = m_Euler1s->WritePointer(-1, totalpoints);
+  euler2s = m_Euler2s->WritePointer(-1, totalpoints);
+  euler3s = m_Euler3s->WritePointer(-1, totalpoints);
+  neighbors = m_Neighbors->WritePointer(-1, totalpoints);
   surfacevoxels = m_SurfaceVoxels->WritePointer(0, totalpoints);
   quats = m_Quats->WritePointer(0, totalpoints * 5);
   m_Quats->SetNumberOfComponents(5);
@@ -226,20 +226,6 @@ void MicrostructureStatisticsFunc::initializeAttributes()
   m_NearestNeighbors->SetNumberOfComponents(3);
   nearestneighbordistances = m_NearestNeighborDistances->WritePointer(0, totalpoints * 3);
   m_NearestNeighborDistances->SetNumberOfComponents(3);
-
-  for (int i = 0; i < totalpoints; i++)
-  {
-    grain_indicies[i] = 0;
-    phases[i] = 0;
-    euler1s[i] = 0;
-    euler2s[i] = 0;
-    euler3s[i] = 0;
-    neighbors[i] = 0;
-    surfacevoxels[i] = 0;
-    grainmisorientations[i] = 0;
-    misorientationgradients[i] = 0;
-    kernelmisorientations[i] = 0;
-  }
 }
 
 
@@ -296,12 +282,12 @@ void MicrostructureStatisticsFunc::find_neighbors()
     {
       m_Grains[i]->neighborlist = new std::vector<int>(0);
     }
-    m_Grains[i]->neighborlist->assign(nListSize, -1);
+    m_Grains[i]->neighborlist->resize(nListSize, -1);
     if (m_Grains[i]->neighborsurfacealist == NULL)
     {
       m_Grains[i]->neighborsurfacealist = new std::vector<float>(0);
     }
-    m_Grains[i]->neighborsurfacealist->assign(nListSize, -1.0);
+    m_Grains[i]->neighborsurfacealist->resize(nListSize, -1.0);
     for (int j = 0; j < 3; j++)
     {
       m_Grains[i]->neighbordistfunc[j] = 0;
@@ -442,19 +428,31 @@ void MicrostructureStatisticsFunc::find_boundingboxgrains()
   int outside = 0;
   float maxsize = 0;
   size_t size = m_Grains.size();
+  float boundbox[7];
+  boundbox[1] = 0;
+  boundbox[2] = sizex;
+  boundbox[3] = 0;
+  boundbox[4] = sizey;
+  boundbox[5] = 0;
+  boundbox[6] = sizez;
   for (size_t i = 1; i < size; i++)
   {
-	  if((m_Grains[i]->equivdiameter/2.0) > maxsize) maxsize = (m_Grains[i]->equivdiameter/2.0);
+	  if(m_Grains[i]->surfacegrain == 1 && m_Grains[i]->centroidx > boundbox[1]) boundbox[1] = m_Grains[i]->centroidx;
+	  if(m_Grains[i]->surfacegrain == 2 && m_Grains[i]->centroidx < boundbox[2]) boundbox[2] = m_Grains[i]->centroidx;
+	  if(m_Grains[i]->surfacegrain == 3 && m_Grains[i]->centroidy > boundbox[3]) boundbox[3] = m_Grains[i]->centroidy;
+	  if(m_Grains[i]->surfacegrain == 4 && m_Grains[i]->centroidy < boundbox[4]) boundbox[4] = m_Grains[i]->centroidy;
+	  if(m_Grains[i]->surfacegrain == 5 && m_Grains[i]->centroidz > boundbox[5]) boundbox[5] = m_Grains[i]->centroidz;
+	  if(m_Grains[i]->surfacegrain == 6 && m_Grains[i]->centroidz < boundbox[6]) boundbox[6] = m_Grains[i]->centroidz;
   }
   for (size_t j = 1; j < size; j++)
   {
     outside = 0;
-	if((m_Grains[j]->centroidx-maxsize) < 0) outside = 1;
-	if((m_Grains[j]->centroidx+maxsize) > sizez) outside = 1;
-	if((m_Grains[j]->centroidy-maxsize) < 0) outside = 1;
-	if((m_Grains[j]->centroidy+maxsize) > sizey) outside = 1;
-	if((m_Grains[j]->centroidz-maxsize) < 0) outside = 1;
-	if((m_Grains[j]->centroidz+maxsize) > sizez) outside = 1;
+	if(m_Grains[j]->centroidx < boundbox[1]) outside = 1;
+	if(m_Grains[j]->centroidx > boundbox[2]) outside = 1;
+	if(m_Grains[j]->centroidy < boundbox[3]) outside = 1;
+	if(m_Grains[j]->centroidy > boundbox[4]) outside = 1;
+	if(m_Grains[j]->centroidz < boundbox[5]) outside = 1;
+	if(m_Grains[j]->centroidz > boundbox[6]) outside = 1;
     m_Grains[j]->outsideboundbox = outside;
   }
 }
@@ -463,17 +461,25 @@ void MicrostructureStatisticsFunc::find_boundingboxgrains2D()
   int outside = 0;
   float maxsize = 0;
   size_t size = m_Grains.size();
+  float boundbox[5];
+  boundbox[1] = 0;
+  boundbox[2] = sizex;
+  boundbox[3] = 0;
+  boundbox[4] = sizey;
   for (size_t i = 1; i < size; i++)
   {
-	  if((m_Grains[i]->equivdiameter/2.0) > maxsize) { maxsize = (m_Grains[i]->equivdiameter/2.0);}
-}
+	  if(m_Grains[i]->surfacegrain == 1 && m_Grains[i]->centroidx > boundbox[1]) boundbox[1] = m_Grains[i]->centroidx;
+	  if(m_Grains[i]->surfacegrain == 2 && m_Grains[i]->centroidx < boundbox[2]) boundbox[2] = m_Grains[i]->centroidx;
+	  if(m_Grains[i]->surfacegrain == 3 && m_Grains[i]->centroidy > boundbox[3]) boundbox[3] = m_Grains[i]->centroidy;
+	  if(m_Grains[i]->surfacegrain == 4 && m_Grains[i]->centroidy < boundbox[4]) boundbox[4] = m_Grains[i]->centroidy;
+  }
   for (size_t j = 1; j < size; j++)
   {
     outside = 0;
-    if ((m_Grains[j]->centroidx - maxsize) < 0) outside = 1;
-    if ((m_Grains[j]->centroidx + maxsize) > sizez) outside = 1;
-    if ((m_Grains[j]->centroidy - maxsize) < 0) outside = 1;
-    if ((m_Grains[j]->centroidy + maxsize) > sizey) outside = 1;
+	if(m_Grains[j]->centroidx < boundbox[1]) outside = 1;
+	if(m_Grains[j]->centroidx > boundbox[2]) outside = 1;
+	if(m_Grains[j]->centroidy < boundbox[3]) outside = 1;
+	if(m_Grains[j]->centroidy > boundbox[4]) outside = 1;
     m_Grains[j]->outsideboundbox = outside;
   }
 }
@@ -489,12 +495,12 @@ void MicrostructureStatisticsFunc::find_surfacegrains()
     row = (j / xpoints) % ypoints;
     plane = j / (xpoints * ypoints);
     if (col <= 0) onedge = 1;
-    if (col >= xpoints - 1) onedge = 1;
-    if (row <= 0) onedge = 1;
-    if (row >= ypoints - 1) onedge = 1;
-    if (plane <= 0) onedge = 1;
-    if (plane >= zpoints - 1) onedge = 1;
-    if(onedge == 1) m_Grains[gnum]->surfacegrain = 1;
+    if (col >= xpoints - 1) onedge = 2;
+    if (row <= 0) onedge = 3;
+    if (row >= ypoints - 1) onedge = 4;
+    if (plane <= 0) onedge = 5;
+    if (plane >= zpoints - 1) onedge = 6;
+    if(onedge >= 1) m_Grains[gnum]->surfacegrain = onedge;
   }
 }
 void MicrostructureStatisticsFunc::find_surfacegrains2D()
@@ -508,10 +514,10 @@ void MicrostructureStatisticsFunc::find_surfacegrains2D()
     col = j % xpoints;
     row = (j / xpoints) % ypoints;
     if (col <= 0) onedge = 1;
-    if (col >= xpoints - 1) onedge = 1;
-    if (row <= 0) onedge = 1;
-    if (row >= ypoints - 1) onedge = 1;
-    if(onedge == 1) m_Grains[gnum]->surfacegrain = 1;
+    if (col >= xpoints - 1) onedge = 2;
+    if (row <= 0) onedge = 3;
+    if (row >= ypoints - 1) onedge = 4;
+    if(onedge >= 1) m_Grains[gnum]->surfacegrain = onedge;
   }
 }
 void MicrostructureStatisticsFunc::find_centroids()
@@ -1368,9 +1374,6 @@ void MicrostructureStatisticsFunc::find_vectors2D(H5ReconStatsWriter::Pointer h5
   delete[] axisodf;
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void MicrostructureStatisticsFunc::find_grainorientations()
 {
   size_t numgrains = m_Grains.size();
