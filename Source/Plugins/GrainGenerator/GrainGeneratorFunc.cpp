@@ -39,90 +39,7 @@ const static float SinOfHalf = sinf(0.5f);
 const static float CosOfHalf = cosf(0.5f);
 //const static float SinOfZero = sinf(0.0f);
 //const static float CosOfZero = cosf(0.0f);
-#if 0
-float ShapeClass2Omega3[41][2] = {{0.0f, 0.0f},
-                  {0.0f, 0.25f},
-                  {0.0f, 0.5f},
-                  {0.0f, 0.75f},
-                  {0.0f, 1.0f},
-                  {0.0f, 1.25f},
-                  {0.0f, 1.5f},
-                  {0.0f, 1.75f},
-                  {0.0f, 2.0f},
-                  {0.0f, 2.25f},
-                  {0.0f, 2.5f},
-                  {0.0f, 2.75f},
-                  {0.0f, 3.0f},
-                  {0.0f, 3.25f},
-                  {0.0f, 3.5f},
-                  {0.0f, 3.75f},
-                  {0.0f, 4.0f},
-                  {0.0f, 4.25f},
-                  {0.0f, 4.5f},
-                  {0.0f, 4.75f},
-                  {0.0f, 5.0f},
-                  {0.0f, 5.25f},
-                  {0.0f, 5.5f},
-                  {0.0f, 5.75f},
-                  {0.0f, 6.0f},
-                  {0.0f, 6.25f},
-                  {0.0f, 6.5f},
-                  {0.0f, 6.75f},
-                  {0.0f, 7.0f},
-                  {0.0f, 7.25f},
-                  {0.0f, 7.5f},
-                  {0.0f, 7.75f},
-                  {0.0f, 8.0f},
-                  {0.0f, 8.25f},
-                  {0.0f, 8.5f},
-                  {0.0f, 8.75f},
-                  {0.0f, 9.0f},
-                  {0.0f, 9.25f},
-                  {0.0f, 9.5f},
-                  {0.0f, 9.75f},
-                  {0.0f, 10.0f}};
-float ShapeClass3Omega3[41][2] = {{0.787873524f, 0.0f},
-                  {0.78793553f, 0.05f},
-                  {0.788341216f, 0.1f},
-                  {0.789359741f, 0.15f},
-                  {0.791186818f, 0.2f},
-                  {0.793953966f, 0.25f},
-                  {0.797737494f, 0.3f},
-                  {0.802566619f, 0.35f},
-                  {0.808430467f, 0.4f},
-                  {0.815283954f, 0.45f},
-                  {0.823052718f, 0.5f},
-                  {0.831637359f, 0.55f},
-                  {0.840917349f, 0.6f},
-                  {0.850755028f, 0.65f},
-                  {0.86100021f, 0.7f},
-                  {0.871496036f, 0.75f},
-                  {0.882086906f, 0.8f},
-                  {0.892629636f, 0.85f},
-                  {0.903009489f, 0.9f},
-                  {0.913163591f, 0.95f},
-                  {0.92311574f, 1.00f},
-                  {0.932874613f, 1.05f},
-                  {0.941981628f, 1.1f},
-                  {0.949904418f, 1.15f},
-                  {0.956171947f, 1.2f},
-                  {0.96037277f, 1.25f},
-                  {0.962158855f, 1.3f},
-                  {0.961254001f, 1.35f},
-                  {0.957466141f, 1.4f},
-                  {0.950703099f, 1.45f},
-                  {0.940991385f, 1.5f},
-                  {0.92849772f, 1.55f},
-                  {0.913552923f, 1.6f},
-                  {0.89667764f, 1.65f},
-                  {0.878608694f, 1.7f},
-                  {0.860322715f, 1.75f},
-                  {0.843047317f, 1.8f},
-                  {0.828232275f, 1.85f},
-                  {0.81740437f, 1.9f},
-                  {0.811701359f, 1.95f},
-                  {0.810569469f, 2.0f}};
-#endif
+
 
 #define DIMS "DIMENSIONS"
 #define LOOKUP "LOOKUP_TABLE"
@@ -178,6 +95,7 @@ GrainGeneratorFunc::GrainGeneratorFunc()
   neighbors = NULL;
   surfacevoxels = NULL;
   quats = NULL;
+  totalsurfacearea = NULL;
 
   m_GrainIndicies = AIMArray<int>::CreateArray(0);
   m_Phases = AIMArray<int>::CreateArray(0);
@@ -187,6 +105,7 @@ GrainGeneratorFunc::GrainGeneratorFunc()
   m_Neighbors = AIMArray<int>::CreateArray(0);
   m_SurfaceVoxels = AIMArray<float>::CreateArray(0);
   m_Quats = AIMArray<float>::CreateArray(0);
+  m_TotalSurfaceArea = AIMArray<float>::CreateArray(0);
 
 }
 
@@ -978,6 +897,7 @@ void  GrainGeneratorFunc::insert_precipitate(size_t gnum)
   }
   m_Grains[gnum]->voxellist->assign(insidelist.begin(), insidelist.end());
 }
+
 
 void GrainGeneratorFunc::move_grain(size_t gnum, float xc, float yc, float zc)
 {
@@ -2548,10 +2468,10 @@ void  GrainGeneratorFunc::find_neighbors()
   int good = 0;
   int neighbor = 0;
   size_t xtalCount = crystruct.size();
-  totalsurfacearea.resize(xtalCount);
+  totalsurfacearea = m_TotalSurfaceArea->WritePointer(0, xtalCount);
   for (size_t i = 1; i < xtalCount; ++i)
   {
-    totalsurfacearea[i] = 0;
+    totalsurfacearea[i] = 0.0f;
   }
   int surfacegrain = 1;
   int nListSize = 100;
@@ -2574,7 +2494,7 @@ void  GrainGeneratorFunc::find_neighbors()
     }
   }
 
-  for (int j = 0; j < (xpoints * ypoints * zpoints); j++)
+  for (int j = 0; j < totalpoints; j++)
   {
     onsurf = 0;
     grain = grain_indicies[j];
@@ -2583,9 +2503,14 @@ void  GrainGeneratorFunc::find_neighbors()
       column = j % xpoints;
       row = (j / xpoints) % ypoints;
       plane = j / (xpoints * ypoints);
-      if ((column == 0 || column == (xpoints - 1) || row == 0 || row == (ypoints - 1) || plane == 0 || plane == (zpoints - 1)) && zpoints != 1) m_Grains[grain]->surfacegrain =
-          surfacegrain;
-      if ((column == 0 || column == (xpoints - 1) || row == 0 || row == (ypoints - 1)) && zpoints == 1) m_Grains[grain]->surfacegrain = surfacegrain;
+      if ((column == 0 || column == (xpoints - 1) || row == 0 || row == (ypoints - 1) || plane == 0 || plane == (zpoints - 1)) && zpoints != 1)
+      {
+        m_Grains[grain]->surfacegrain = surfacegrain;
+      }
+      if ((column == 0 || column == (xpoints - 1) || row == 0 || row == (ypoints - 1)) && zpoints == 1)
+      {
+        m_Grains[grain]->surfacegrain = surfacegrain;
+      }
       for (int k = 0; k < 6; k++)
       {
         good = 1;
@@ -3130,13 +3055,13 @@ void GrainGeneratorFunc::write_eulerangles(const std::string &filename)
 {
   ofstream outFile;
   outFile.open(filename.c_str());
-  outFile << "GrainID " << "Phi1 " << "PHI " << "Phi2" << endl;
+  outFile << m_Grains.size() << std::endl;
+  char space = AIM::GrainData::Delimiter;
+  outFile << AIM::GrainData::GrainID  << space
+          << AIM::GrainData::Phi1 << space << AIM::GrainData::PHI<< space << AIM::GrainData::Phi2 << std::endl;
   for (size_t i = 1; i < m_Grains.size(); i++)
   {
-    float ea1 = m_Grains[i]->euler1;
-    float ea2 = m_Grains[i]->euler2;
-    float ea3 = m_Grains[i]->euler3;
-    outFile << i << " " << ea1 << " " << ea2 << " " << ea3 << endl;
+    outFile << i << space << m_Grains[i]->euler1 << space << m_Grains[i]->euler2 << space << m_Grains[i]->euler3 << endl;
   }
   outFile.close();
 }
@@ -3145,15 +3070,23 @@ void GrainGeneratorFunc::write_graindata(const std::string &filename)
 {
   ofstream outFile;
   outFile.open(filename.c_str());
-  outFile << "GrainID	" << "Phi1	PHI	Phi2	Equiv. Diameter	b/a	c/a	Omega3" << endl;
+  char space = AIM::GrainData::Delimiter;
+  outFile << m_Grains.size() << std::endl;
+  outFile << AIM::GrainData::GrainID  << space
+      << AIM::GrainData::Phi1 << space << AIM::GrainData::PHI<< space << AIM::GrainData::Phi2 << space
+      << AIM::GrainData::EquivDiam << space
+      << AIM::GrainData::B_Over_A << space << AIM::GrainData::C_Over_A << space << AIM::GrainData::Omega3 << std::endl;
+
   for (size_t i = 1; i < m_Grains.size(); i++)
   {
-    outFile << i << "	" << m_Grains[i]->euler1 << "	" << m_Grains[i]->euler2 << "	" << m_Grains[i]->euler3 <<
-		"	" << m_Grains[i]->equivdiameter << "	" << m_Grains[i]->radius2 << "	" << m_Grains[i]->radius3 <<
-		"	" << m_Grains[i]->omega3 << endl;
+    outFile << i << space << m_Grains[i]->euler1 << space << m_Grains[i]->euler2 << space << m_Grains[i]->euler3 <<
+		space << m_Grains[i]->equivdiameter << space << m_Grains[i]->radius2 << space << m_Grains[i]->radius3 <<
+		space << m_Grains[i]->omega3 << endl;
   }
   outFile.close();
 }
+
+
 float GrainGeneratorFunc::gamma(float x)
 {
     int i,k,m;

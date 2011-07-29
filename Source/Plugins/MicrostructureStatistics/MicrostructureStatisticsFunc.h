@@ -88,26 +88,26 @@ class MicrostructureStatisticsFunc
     DECLARE_WRAPPED_ARRAY(quats, m_Quats, float); // n x 5 array
     DECLARE_WRAPPED_ARRAY(graincounts, m_GrainCounts, int);
 
-    std::vector<float> grainmisorientations;
-    std::vector<float> misorientationgradients;
-    std::vector<float> kernelmisorientations;
-    std::vector<std::vector<int> > neighborlists;
+    DECLARE_WRAPPED_ARRAY(grainmisorientations, m_GrainMisorientations, float);
+    DECLARE_WRAPPED_ARRAY(misorientationgradients, m_MisorientationGradients, float);
+    DECLARE_WRAPPED_ARRAY(kernelmisorientations, m_KernelMisorientations, float);
 
-    std::vector<std::vector<int> > nearestneighbors;
-    std::vector<std::vector<float> > nearestneighbordistances;
+    DECLARE_WRAPPED_ARRAY(neighborlists, m_NeighborLists, float);// N x 6 Array
+    DECLARE_WRAPPED_ARRAY(nearestneighbors, m_NearestNeighbors, float); // N x 3 Array
+    DECLARE_WRAPPED_ARRAY(nearestneighbordistances, m_NearestNeighborDistances, float); // N x 3 Array
+
+    DECLARE_WRAPPED_ARRAY(graincenters, m_GrainCenters, float); // N x 5 Array
+    DECLARE_WRAPPED_ARRAY(grainmoments, m_GrainMoments, float); // N x 6 Array
+
+    DECLARE_WRAPPED_ARRAY(totalsurfacearea, m_TotalSurfaceArea, float);
+    DECLARE_WRAPPED_ARRAY(phasefraction, m_PhaseFraction, float);
+    DECLARE_WRAPPED_ARRAY(totalvol, m_TotalVol, float);
+    DECLARE_WRAPPED_ARRAY(totalaxes, m_TotalAxes, float);
+    DECLARE_WRAPPED_ARRAY(maxdiameter, m_MaxDiameter, int);
+    DECLARE_WRAPPED_ARRAY(mindiameter, m_MinDiameter, int);
 
 
     std::vector<Grain::Pointer> m_Grains;
-
-    std::vector<std::vector<float> > graincenters;
-    std::vector<std::vector<float> > grainmoments;
-
-    std::vector<float> totalsurfacearea;
-    std::vector<float> phasefraction;
-    std::vector<float> totalvol;
-    std::vector<float> totalaxes;
-    std::vector<int> maxdiameter;
-    std::vector<int> mindiameter;
 
     float resx;
     float resy;
@@ -121,20 +121,20 @@ class MicrostructureStatisticsFunc
     int zpoints;
     int totalpoints;
 
-	bool computesizes;
-	bool computeshapes;
-	bool computeneighbors;
-	bool computeodf;
-	bool computemdf;
+    bool computesizes;
+    bool computeshapes;
+    bool computeneighbors;
+    bool computeodf;
+    bool computemdf;
 
-	void initializeAttributes();
+	  void initializeAttributes();
     void initializeGrains();
     void initializeArrays();
 
-	void find_surfacegrains();
-	void find_surfacegrains2D();
-	void find_boundingboxgrains();
-	void find_boundingboxgrains2D();
+    void find_surfacegrains();
+    void find_surfacegrains2D();
+    void find_boundingboxgrains();
+    void find_boundingboxgrains2D();
     void find_neighbors();
     void define_neighborhood();
     void find_euclidean_map();

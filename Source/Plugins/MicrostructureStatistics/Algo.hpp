@@ -112,8 +112,8 @@ class FindEuclideanMap
       nearestneighbordistance = 0;
       for (int a = 0; a < (d->totalpoints); ++a)
       {
-        voxel_NearestNeighbor[a] = d->nearestneighbors[a][loop];
-        voxel_NearestNeighborDistance[a] = d->nearestneighbordistances[a][loop];
+        voxel_NearestNeighbor[a] = d->nearestneighbors[a*3 + loop];
+        voxel_NearestNeighborDistance[a] = d->nearestneighbordistances[a*3 + loop];
       }
       count = 1;
       int i;
@@ -185,8 +185,8 @@ class FindEuclideanMap
       }
       for (int a = 0; a < (d->totalpoints); ++a)
       {
-        d->nearestneighbors[a][loop] = voxel_NearestNeighbor[a];
-        d->nearestneighbordistances[a][loop] = voxel_NearestNeighborDistance[a];
+        d->nearestneighbors[a*3 + loop] = voxel_NearestNeighbor[a];
+        d->nearestneighbordistances[a*3 + loop] = voxel_NearestNeighborDistance[a];
       }
       delete[] voxel_NearestNeighbor;
       delete[] voxel_NearestNeighborDistance;

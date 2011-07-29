@@ -35,8 +35,9 @@
 
 #include <sstream>
 
-#include "TSLLib/HDF5/H5Lite.h"
-#include "TSLLib/HDF5/H5Utilities.h"
+#include "H5Support/H5Lite.h"
+#include "H5Support/H5Utilities.h"
+
 #include "TSLLib/Utilities/MXADir.h"
 #include "TSLLib/Utilities/StringUtils.h"
 
@@ -318,11 +319,11 @@ int H5AngImporter::writePhaseData(AngReader &reader, hid_t phasesGid)
       err = writeHKLFamilies(p, hklGid);
       if (err < 0) {
         std::ostringstream ss;
-        ss << "H5AngImporter Error: Could not write Ang HKL Families to the HDF5 file with data set name '" 
+        ss << "H5AngImporter Error: Could not write Ang HKL Families to the HDF5 file with data set name '"
           << TSL::OIM::HKLFamilies << "'" << std::endl;
         progressMessage(ss.str(), 100);
         err = H5Gclose(hklGid);
-        return -1; 
+        return -1;
       }
       err = H5Gclose(hklGid);
     }

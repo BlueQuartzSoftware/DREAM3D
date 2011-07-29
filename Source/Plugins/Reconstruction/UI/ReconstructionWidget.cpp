@@ -214,7 +214,7 @@ void ReconstructionWidget::setupGui()
   m_WidgetList << m_MergeTwins << m_MergeColonies << m_FillinSample << m_AlignMeth << m_Orientation;
   m_WidgetList << m_MinAllowedGrainSize << m_MinConfidence << m_DownSampleFactor << m_MisOrientationTolerance;
   m_WidgetList << m_VisualizationVizFile << m_DownSampledVizFile;
-  m_WidgetList << m_MinImageQuality;
+  m_WidgetList << m_MinImageQuality << m_H5VoxelFile << m_VtkOptionsBtn;
   m_WidgetList << m_HDF5GrainFile << m_PhFile << m_DxFile;
   m_WidgetList << m_LoadSettingsBtn << m_SaveSettingsBtn << phaseTypeList;
 

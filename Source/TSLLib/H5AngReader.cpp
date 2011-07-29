@@ -32,10 +32,10 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 #include "H5AngReader.h"
-//#include "DREAM3D/Common/Constants.h"
+
 #include "AngConstants.h"
-#include "TSLLib/HDF5/H5Lite.h"
-#include "TSLLib/HDF5/H5Utilities.h"
+#include "H5Support/H5Lite.h"
+#include "H5Support/H5Utilities.h"
 #include "TSLLib/Utilities/StringUtils.h"
 
 #define PI_OVER_2f       1.57079632679489661f
@@ -106,7 +106,7 @@ int H5AngReader::readFile()
   // Read and transform data
  // std::cout << "H5AngReader:: Reading Data .. " << std::endl;
   err = readData(gid);
-  
+
   err = H5Gclose(gid);
   err = H5Fclose(fileId);
   return err;
@@ -253,7 +253,7 @@ int H5AngReader::readHeader(hid_t parId)
   }
 
   std::list<std::string> names;
-  err = H5Utilities::getGroupObjects(phasesGid, H5Utilities::ANG_GROUP, names);
+  err = H5Utilities::getGroupObjects(phasesGid, H5Utilities::H5Support_GROUP, names);
   if (err < 0 || names.size() == 0)
   {
     std::cout << "H5AngReader Error: There were no Phase groups present in the HDF5 file" << std::endl;
@@ -278,7 +278,7 @@ int H5AngReader::readHeader(hid_t parId)
       hid_t hklGid = H5Gopen(pid, TSL::OIM::HKLFamilies.c_str());
     // Only read the HKL Families if they are there. Trying to open the group will tell us if there
     // are any families to read
-    
+
       err = readHKLFamilies(hklGid, m_CurrentPhase);
       err = H5Gclose(hklGid);
     }

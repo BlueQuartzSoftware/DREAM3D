@@ -47,23 +47,50 @@
 #include "GrainGenerator/GrainGenerator.h"
 
 
+template<typename T>
+int parseValues(const std::string &values, const char* format, T* output)
+{
+  std::string::size_type pos = values.find(",", 0);
+  size_t index = 0;
+  int n = sscanf(values.substr(0, pos).c_str(), format, &(output[index]) );
+  if (n != 1)
+  {
+    return -1;
+  }
 
+  ++index;
+  while(pos != std::string::npos && pos != values.size() - 1)
+  {
+    n = sscanf(values.substr(pos+1).c_str(), format, &(output[index]) );
+    pos = values.find(",", pos+1);
+    ++index;
+  }
+  return 0;
+}
 
+template<typename T>
+int parseUnknownArray(const std::string &values, const char* format, std::vector<T> &output)
+{
+  std::string::size_type pos = values.find(",", 0);
+  size_t index = 0;
+  T t;
+  int n = sscanf(values.substr(0, pos).c_str(), format, &t );
+  if (n != 1)
+  {
+    return -1;
+  }
+  output.push_back(t);
 
-#define CHECK_ARG(var, mandatory)\
-    if (vm.count(#var) > 1) { mxa_log << logTime() << "Multiple Occurances for Parameter " << #var << std::endl; }\
-    if (vm.count(#var) == 0 && mandatory == true) { \
-    mxa_log << "Parameter --" << #var << " ==> Required. Program will Terminate." << std::endl; }\
-    if (vm.count(#var) == 0 && mandatory == false) { \
-    mxa_log << "--" << #var << " Using Default: '"  << var << "'" << std::endl; }\
-    if (vm.count(#var) == 1 && mandatory == true) { \
-    mxa_log << "--" << #var << " Value: '"  << var << "'" << std::endl; }
-
-#define CHECK_BOOL_ARG(var)\
-  mxa_log << "--" << #var << " is ";\
-  if (var == true) { mxa_log << "TRUE"; } else { mxa_log << "FALSE"; }\
-  mxa_log << "" << std::endl;
-
+  ++index;
+  while(pos != std::string::npos && pos != values.size() - 1)
+  {
+    n = sscanf(values.substr(pos+1).c_str(), format, &(t) );
+    output.push_back(t);
+    pos = values.find(",", pos+1);
+    ++index;
+  }
+  return 0;
+}
 
 // -----------------------------------------------------------------------------
 //
@@ -85,33 +112,66 @@ int main(int argc, char **argv)
     TCLAP::ValueArg<std::string>   h5StatsFile( "i", "input", "HDF5 Stats File", true, "", "HDF5 Stats File");
     cmd.add(h5StatsFile);
 
-    TCLAP::ValueArg<std::string > outputDir("", "outputDir", "Output Directory", true, "", "Output Directory");
+    TCLAP::ValueArg<std::string>  voxels( "", "voxels", "Comma separated list of integer in microns (x,y,x)", true, "64,64,64", "Size of Volume in Voxels");
+    cmd.add(voxels);
+
+
+    TCLAP::ValueArg<std::string>  resolution( "", "resolution", "Comma separated list of floating point values in microns (x,y,x).", true, "0.25,0.25,0.25", "Micron Resolution");
+    cmd.add(resolution);
+
+    TCLAP::ValueArg<float>  m_SizeDistErrorWeight( "", "sizedisterror", "Size Distribution Error Weight", false, 1.0, "Size Distribution Error Weight");
+    cmd.add(m_SizeDistErrorWeight);
+
+    TCLAP::ValueArg<float>  m_NeighborhoodErrorWeight( "", "neighborhooderror", "Neighborhood Error Weight", false, 1.0, "Neighborhood Error Weight");
+    cmd.add(m_NeighborhoodErrorWeight);
+
+    TCLAP::ValueArg<float>  m_FillingErrorWeight( "", "spacefillerror", "Space Filling Error Weight", false, 1.0, "Space Filling Error Weight");
+    cmd.add(m_FillingErrorWeight);
+
+    TCLAP::SwitchArg   m_PeriodicBoundaryConditions( "", "periodic", "Enable Periodic Boundary Conditions", false);
+    cmd.add(m_PeriodicBoundaryConditions);
+
+    TCLAP::ValueArg<std::string>  shapeTypeStr( "", "shapetypes", "Comma separated list of shape type for each phase: (0)Ellipsoid (1)Superellipsoid (2)Cube-Octahedron (3)Cylinder:", false, "0", "Shape Type");
+    cmd.add(shapeTypeStr);
+
+    TCLAP::ValueArg<std::string > outputDir("", "outputdir", "Output Directory For Files", true, "", "Output Directory");
     cmd.add(outputDir);
 
-    TCLAP::ValueArg<int>  shapeClass( "", "shapeClass", "The shape class you desire (1)Ellipsoid (2)Superellipsoid (3)Cube-Octahedron:", false, 1, "The shape class you desire (1)Ellipsoid (2)Superellipsoid (3)Cube-Octahedron:");
-    cmd.add(shapeClass);
+    TCLAP::ValueArg<std::string > outputPrefix("", "outputprefix", "Prefix for generated files.", true, "", "Output File Prefix");
+    cmd.add(outputPrefix);
 
-    TCLAP::ValueArg<float>  xRes( "", "xres", "X resolution of your volume", true, 0.0, "X resolution of your volume");
-    cmd.add(xRes);
-    TCLAP::ValueArg<float>  yRes( "", "yres", "Y resolution of your volume", true, 0.0, "Y resolution of your volume");
-    cmd.add(yRes);
-    TCLAP::ValueArg<float>  zRes( "", "zres", "Z resolution of your volume", true, 0.0, "Z resolution of your volume");
-    cmd.add(zRes);
 
-    TCLAP::ValueArg<int>  m_XPoints( "x", "xdim", "X Voxels of your volume", true, 0.0, "X Voxels of your volume");
-    cmd.add(m_XPoints);
-    TCLAP::ValueArg<int>  m_YPoints( "y", "ydim", "Y Voxels of your volume", true, 0.0, "Y Voxels of your volume");
-    cmd.add(m_YPoints);
-    TCLAP::ValueArg<int>  m_ZPoints( "z", "zdim", "Z Voxels of your volume", true, 0.0, "Z Voxels of your volume");
-    cmd.add(m_ZPoints);
+    TCLAP::SwitchArg   m_VisualizationVizFile( "", "no-vtk", "Disable Writing of VTK File", true);
+    cmd.add(m_VisualizationVizFile);
+    TCLAP::SwitchArg   m_WriteSurfaceVoxelScalars( "", "no-surfacevoxels", "Disable Writing of Surface Voxel Scalars", true);
+    cmd.add(m_WriteSurfaceVoxelScalars);
+    TCLAP::SwitchArg   m_WritePhaseIdScalars( "", "no-phase", "Disable Writing of Phase ID Scalars", true);
+    cmd.add(m_WritePhaseIdScalars);
+    TCLAP::SwitchArg   m_WriteIPFColorScalars( "", "no-ipf", "Disable Writing of IPF Colors Scalars", true);
+    cmd.add(m_WriteIPFColorScalars);
+    TCLAP::SwitchArg   m_WriteBinaryVTKFile( "", "vtk_ascii", "Write ASCII Vtk Files instead of Binary Files", true);
+    cmd.add(m_WriteBinaryVTKFile);
 
-//    TCLAP::ValueArg<double>  overlapAllowed( "", "overlapAllowed", "The overlap between grains that is acceptable", true, 0.0, "The overlap between grains that is acceptable");
-//    cmd.add(overlapAllowed);
-//    TCLAP::ValueArg<int>  overlapAssignment( "", "overlapAssignment", "Enter how the overlap between grains is handled (1)Rigid (2)Progressive.", true, 1, "Enter how the overlap between grains is handled (1)Rigid (2)Progressive.");
-//    cmd.add(overlapAssignment);
-//    TCLAP::ValueArg<int>  crystruct( "", "crystruct", "Do you have a HCP (1) or FCC (2) material", true, 2, "Do you have a HCP (1) or FCC (2) material");
-//    cmd.add(crystruct);
+    TCLAP::SwitchArg   m_HDF5GrainFile( "", "hdf5-grain", "Write the HDF5 Grain file (.h5grain).", false);
+    cmd.add(m_HDF5GrainFile);
 
+    TCLAP::SwitchArg   m_PhFile( "", "no-phfile", "Disable Writing PH file", true);
+    cmd.add(m_PhFile);
+
+    TCLAP::SwitchArg   m_writegraindata( "", "no-graindata", "Disable the Writing of the Grain Data file", true);
+    cmd.add(m_writegraindata);
+
+
+
+    if (argc < 2)
+    {
+      std::cout << "DREAM.3D Grain Generator Command Line Version " << cmd.getVersion() << std::endl;
+      std::vector<std::string> args;
+      args.push_back(argv[0]);
+      args.push_back("-h");
+      cmd.parse(args);
+      return -1;
+    }
 
     // Parse the argv array.
     cmd.parse(argc, argv);
@@ -126,35 +186,59 @@ int main(int argc, char **argv)
     GrainGenerator::Pointer m_GrainGenerator = GrainGenerator::New();
     m_GrainGenerator->setH5StatsFile(h5StatsFile.getValue());
     m_GrainGenerator->setOutputDirectory(outputDir.getValue());
+    m_GrainGenerator->setOutputFilePrefix(outputPrefix.getValue());
 
-    m_GrainGenerator->setXPoints(m_XPoints.getValue());
-    m_GrainGenerator->setYPoints(m_YPoints.getValue());
-    m_GrainGenerator->setZPoints(m_ZPoints.getValue());
+    int voxels_values[3];
+    if (parseValues(voxels.getValue(), "%d", voxels_values) < 0)
+    {
+      std::cout << "Error Parsing the Voxel Dimensions. They should be entered as --voxels 64,128,256" << std::endl;
+      return EXIT_FAILURE;
+    }
+    m_GrainGenerator->setXPoints(voxels_values[0]);
+    m_GrainGenerator->setYPoints(voxels_values[1]);
+    m_GrainGenerator->setZPoints(voxels_values[2]);
 
     //TODO: Get the Shape Class from the Command line options
-  //  m_GrainGenerator->setShapeClass(shapeClass.getValue());
+  //  m_GrainGenerator->setShapeTypes(shapeClass.getValue());
+    float resolution_values[3];
+    if (parseValues(resolution.getValue(), "%f", resolution_values) < 0)
+    {
+      std::cout << "Error Parsing the Resolution. They should be entered as --resolution 0.25,0.25,0.25" << std::endl;
+      return EXIT_FAILURE;
+    }
+    m_GrainGenerator->setXResolution(resolution_values[0]);
+    m_GrainGenerator->setYResolution(resolution_values[1]);
+    m_GrainGenerator->setZResolution(resolution_values[2]);
 
-    m_GrainGenerator->setXResolution(xRes.getValue());
-    m_GrainGenerator->setYResolution(yRes.getValue());
-    m_GrainGenerator->setZResolution(zRes.getValue());
-    m_GrainGenerator->setFillingErrorWeight(1.0);
-    m_GrainGenerator->setNeighborhoodErrorWeight(1.0);
-    m_GrainGenerator->setSizeDistErrorWeight(1.0);
+    m_GrainGenerator->setFillingErrorWeight(m_FillingErrorWeight.getValue());
+    m_GrainGenerator->setNeighborhoodErrorWeight(m_NeighborhoodErrorWeight.getValue());
+    m_GrainGenerator->setSizeDistErrorWeight(m_SizeDistErrorWeight.getValue());
 
-    m_GrainGenerator->setPeriodicBoundary(false);
+    m_GrainGenerator->setPeriodicBoundary(m_PeriodicBoundaryConditions.getValue());
+
+    std::vector<AIM::SyntheticBuilder::ShapeType> shapeTypes(1, AIM::SyntheticBuilder::EllipsoidShape);
+    if ( parseUnknownArray(shapeTypeStr.getValue(), "%d", shapeTypes) < 0)
+    {
+      std::cout << "Error parsing the Shape Types. The value should be entered as --shapetypes 1,0,1 for 3 phases." << std::endl;
+      return EXIT_FAILURE;
+    }
+    m_GrainGenerator->setShapeTypes(shapeTypes);
+
+
     m_GrainGenerator->setAlreadyFormed(false);
 
-    m_GrainGenerator->setWriteVtkFile(false);
-    m_GrainGenerator->setWriteSurfaceVoxel(false);
-    m_GrainGenerator->setWritePhaseId(false);
-    m_GrainGenerator->setWriteIPFColor(false);
-    m_GrainGenerator->setWriteBinaryVTKFiles(false);
+    m_GrainGenerator->setWriteVtkFile(m_VisualizationVizFile.getValue());
+    m_GrainGenerator->setWriteSurfaceVoxel(m_WriteSurfaceVoxelScalars.getValue());
+    m_GrainGenerator->setWritePhaseId(m_WritePhaseIdScalars.getValue());
+    m_GrainGenerator->setWriteIPFColor(m_WriteIPFColorScalars.getValue());
+    m_GrainGenerator->setWriteBinaryVTKFiles(m_WriteBinaryVTKFile.getValue());
 
-    m_GrainGenerator->setWriteHDF5GrainFile(false);
-    m_GrainGenerator->setWritePhFile(false);
+    m_GrainGenerator->setWriteHDF5GrainFile(m_HDF5GrainFile.getValue());
+    m_GrainGenerator->setWritePhFile(m_PhFile.getValue());
+
+    m_GrainGenerator->setWriteGrainData(m_writegraindata.getValue());
 
 
-    //r->setCrystalStructure( static_cast<AIM::Reconstruction::CrystalStructure>(crystruct.getValue()) );
     m_GrainGenerator->run();
     err = m_GrainGenerator->getErrorCondition();
   }

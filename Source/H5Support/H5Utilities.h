@@ -8,8 +8,8 @@
 //                           FA8650-04-C-5229
 //
 ///////////////////////////////////////////////////////////////////////////////
-#ifndef _ANG_HDF5_UTILITIES_H_
-#define _ANG_HDF5_UTILITIES_H_
+#ifndef _HDF5_UTILITIES_H_
+#define _HDF5_UTILITIES_H_
 
 
 // C++ Includes
@@ -21,21 +21,19 @@
 #include <hdf5.h>
 
 
-#include "TSLLib/TSLLibTypes.h"
-#include "TSLLib/HDF5/H5Lite.h"
+#include <H5Support/H5SupportTypes.h>
+#include <H5Support/H5Lite.h>
 
-/* H5LITE_USE_ANG_CONSTRUCTS is used to include MXADataModel Specific classes in
- * this class. If this is being compiled as part of MXADataModel this should
+
+/* H5LITE_USE_H5Support_CONSTRUCTS is used to include H5SupportDataModel Specific classes in
+ * this class. If this is being compiled as part of H5SupportDataModel this should
  * _always_ be defined. If this code is being used as part of another project
  * then this should probably NOT be defined.
  */
-#ifdef H5LITE_USE_ANG_CONSTRUCTS
-#include <MXA/Base/IDataModel.h>
-#include <MXA/DataWrappers/MXAArrayTemplate.hpp>
+#ifdef H5LITE_USE_H5Support_CONSTRUCTS
+#include <H5Support/Base/IDataModel.h>
+#include <H5Support/DataWrappers/H5SupportArrayTemplate.hpp>
 #endif
-
-#define H5Utilities AngH5Utilities
-
 
 /**
  * @brief General Utilities for working with the HDF5 data files and API
@@ -53,20 +51,20 @@ public:
 
   #if 1
   enum CustomHDFDataTypes {
-   ANG_GROUP = 1,
-   ANG_DATASET = 2,
-   ANG_TYPE = 4,
-   ANG_LINK = 8,
-   ANG_ANY = 15
+   H5Support_GROUP = 1,
+   H5Support_DATASET = 2,
+   H5Support_TYPE = 4,
+   H5Support_LINK = 8,
+   H5Support_ANY = 15
   };
   #endif
 
   // -----------HDF5 File Operations
-  static TSLLib_EXPORT hid_t openFile(const std::string &filename, bool readOnly=false);
+  static H5Support_EXPORT hid_t openFile(const std::string &filename, bool readOnly=false);
 
-  static TSLLib_EXPORT hid_t createFile(const std::string &filename);
+  static H5Support_EXPORT hid_t createFile(const std::string &filename);
 
-  static TSLLib_EXPORT herr_t closeFile(hid_t &fileId);
+  static H5Support_EXPORT herr_t closeFile(hid_t &fileId);
 
   // -------------- HDF Indentifier Methods ----------------------------
   /**
@@ -75,7 +73,7 @@ public:
   * @param trim set to False to trim the path
   * @return  The path to the object relative to the objId
   */
-  static TSLLib_EXPORT std::string getObjectPath(hid_t objId, bool trim=false);
+  static H5Support_EXPORT std::string getObjectPath(hid_t objId, bool trim=false);
 
   /**
   * @brief Returns the hdf object type
@@ -84,7 +82,7 @@ public:
   * @param objType The type of the object
   * @return  Negative value on error
   */
-  static TSLLib_EXPORT herr_t getObjectType(hid_t objId, const std::string &objName, int32_t *objType);
+  static H5Support_EXPORT herr_t getObjectType(hid_t objId, const std::string &objName, int32_t *objType);
 
   /**
   * @brief Retrieves the object name for a given index
@@ -93,7 +91,7 @@ public:
   * @param name The variable to store the name
   * @return Negative value is error
   */
-  static TSLLib_EXPORT herr_t objectNameAtIndex(hid_t fileId, int32_t idx, std::string &name);
+  static H5Support_EXPORT herr_t objectNameAtIndex(hid_t fileId, int32_t idx, std::string &name);
 
   /**
   * @brief Returns if a given hdf5 object is a group
@@ -101,7 +99,7 @@ public:
   * @param objName The name of the object to check
   * @return True if the given hdf5 object id is a group
   */
-  static TSLLib_EXPORT bool isGroup(hid_t objId, const std::string &objName);
+  static H5Support_EXPORT bool isGroup(hid_t objId, const std::string &objName);
 
 
   /**
@@ -110,23 +108,23 @@ public:
   * @param objectPath The path of the object to open
   * @return The hdf5 id of the opened object. Negative value is error.
   */
-  static TSLLib_EXPORT hid_t openHDF5Object(hid_t locId, const std::string &objectPath);
+  static H5Support_EXPORT hid_t openHDF5Object(hid_t locId, const std::string &objectPath);
 
   /**
   * @brief Closes the object id
   * @param locId The object id to close
   * @return Negative value is error.
   */
-  static TSLLib_EXPORT herr_t closeHDF5Object(hid_t locId);
+  static H5Support_EXPORT herr_t closeHDF5Object(hid_t locId);
 
 
-  static TSLLib_EXPORT std::string HDFClassTypeAsStr(hid_t class_type);
+  static H5Support_EXPORT std::string HDFClassTypeAsStr(hid_t class_type);
 
   /**
   * @brief prints the class type of the given class
   * @param classT The Class Type to print
   */
-  static TSLLib_EXPORT void printHDFClassType(H5T_class_t classT);
+  static H5Support_EXPORT void printHDFClassType(H5T_class_t classT);
 
   // -------------- HDF Group Methods ----------------------------
   /**
@@ -136,7 +134,7 @@ public:
   * @param names Variable to store the list
   * @return
   */
-  static TSLLib_EXPORT herr_t getGroupObjects(hid_t loc_id, int32_t typeFilter, std::list<std::string>& names);
+  static H5Support_EXPORT herr_t getGroupObjects(hid_t loc_id, int32_t typeFilter, std::list<std::string>& names);
 
   /**
    * @brief Creates a HDF Group by checking if the group already exists. If the
@@ -146,7 +144,7 @@ public:
    * @param group The name of the group to create. Note that this group name should
    * not be any sort of 'path'. It should be a single group.
    */
-  static TSLLib_EXPORT hid_t createGroup(hid_t loc_id, const std::string &group);
+  static H5Support_EXPORT hid_t createGroup(hid_t loc_id, const std::string &group);
 
   /**
    * @brief Given a path relative to the Parent ID, this method will create all
@@ -155,7 +153,7 @@ public:
    * @param parent The HDF unique id for the parent
    * @return Error Condition: Negative is error. Positive is success.
    */
-  static TSLLib_EXPORT herr_t  createGroupsFromPath(const std::string &pathToCheck, hid_t parent);
+  static H5Support_EXPORT herr_t  createGroupsFromPath(const std::string &pathToCheck, hid_t parent);
 
   /**
    * @brief Given a path relative to the Parent ID, this method will create all
@@ -164,14 +162,14 @@ public:
    * @param parent The HDF unique id for the parent
    * @return Error Condition: Negative is error. Positive is success.
    */
-  static TSLLib_EXPORT herr_t createGroupsForDataset(const std::string &datasetPath, hid_t parent);
+  static H5Support_EXPORT herr_t createGroupsForDataset(const std::string &datasetPath, hid_t parent);
 
   /**
   * @brief Extracts the object name from a given path
   * @param path The path which to extract the object name
   * @return The name of the object
   */
-  static TSLLib_EXPORT std::string extractObjectName(const std::string &path);
+  static H5Support_EXPORT std::string extractObjectName(const std::string &path);
 
   // -------------- HDF Attribute Methods ----------------------------
   /**
@@ -181,7 +179,7 @@ public:
   * @param attr_name The attribute to look for (by name)
   * @return True if the attribute exists.
   */
-  static TSLLib_EXPORT bool probeForAttribute(hid_t loc_id,
+  static H5Support_EXPORT bool probeForAttribute(hid_t loc_id,
                                             const std::string &obj_name,
                                             const std::string &attr_name);
 
@@ -192,7 +190,7 @@ public:
   * @param names Variable to hold the list of attribute names
   * @return Negate value is error
   */
-  static TSLLib_EXPORT herr_t getAllAttributeNames(hid_t objId, std::list<std::string> &names);
+  static H5Support_EXPORT herr_t getAllAttributeNames(hid_t objId, std::list<std::string> &names);
 
   /**
   * @brief Returns a list of all the attribute names
@@ -201,10 +199,10 @@ public:
   * @param names Variable to hold the list of attribute names
   * @return Negative value is error
   */
-  static TSLLib_EXPORT herr_t getAllAttributeNames(hid_t objId, const std::string &obj_name,
+  static H5Support_EXPORT herr_t getAllAttributeNames(hid_t objId, const std::string &obj_name,
                                                   std::list<std::string> &names);
 
-#if H5LITE_USE_ANG_CONSTRUCTS
+#if H5LITE_USE_H5Support_CONSTRUCTS
   /**
    * @brief Returns a vector of IAttributes, one for each attribute of a given hdf5 object
    * @param fileId The parent hdf5 id
@@ -212,31 +210,31 @@ public:
    * @param attributes Variable to store the attributes
    * @return Negative value on error
    */
-  static TSLLib_EXPORT herr_t readAllAttributes(hid_t fileId,
+  static H5Support_EXPORT herr_t readAllAttributes(hid_t fileId,
                                              const std::string &datasetPath,
-                                             MXAAbstractAttributes &attributes);
+                                             H5SupportAbstractAttributes &attributes);
 
 
 /**
-  * @brief Reads data  into an IMXAArray::Pointer
+  * @brief Reads data  into an IH5SupportArray::Pointer
   * @param locId The hdf5 object id of the parent
   * @param datasetPath The path to the data set containing the attributes you want
   * @param dims The dimensions of the attribute
   * @return Boost shared pointer to the data
   */
   template<typename T>
-  static IMXAArray::Pointer readH5Data( hid_t locId,
+  static IH5SupportArray::Pointer readH5Data( hid_t locId,
                                          const std::string &datasetPath,
                                          const std::vector<hsize_t> &dims)
   {
     herr_t err = -1;
-    IMXAArray::Pointer ptr;
+    IH5SupportArray::Pointer ptr;
     size_t* _dims = new size_t[dims.size()];
      for(size_t i = 0; i < dims.size(); ++i)
      {
        _dims[i] = dims[i];
      }
-    ptr = MXAArrayTemplate<T>::CreateMultiDimensionalArray( dims.size(), _dims);
+    ptr = H5SupportArrayTemplate<T>::CreateMultiDimensionalArray( dims.size(), _dims);
     if (ptr.get() == NULL)
     {
       return ptr; // empty attribute
@@ -246,7 +244,7 @@ public:
     if ( err < 0)
     {
       std::cout << "readH5Data read error: " << __FILE__ << "(" << __LINE__ << ")" << std::endl;
-      IMXAArray* nullData = 0x0;
+      IH5SupportArray* nullData = 0x0;
       ptr.reset(nullData); // Swap in a null pointer
     }
     return ptr;
@@ -263,19 +261,19 @@ public:
   * @return Boost shared pointer to the attribute
   */
   template<typename T>
-  static IMXAArray::Pointer readH5Attribute(  hid_t locId,
+  static IH5SupportArray::Pointer readH5Attribute(  hid_t locId,
                                                const std::string &datasetPath,
                                                const std::string &key,
                                                const std::vector<hsize_t> &dims)
   {
     herr_t err = -1;
-    IMXAArray::Pointer ptr;
+    IH5SupportArray::Pointer ptr;
     if (dims.size() == 1 && dims.at(0) == 1) // One Dimensional Array with 1 element
     {
       T data;
       err = H5Lite::readScalarAttribute(locId, datasetPath, key, data);
       if (err >= 0) {
-        IMXAArray::Pointer attr = MXAArrayTemplate<T>::CreateSingleValueArray( data);
+        IH5SupportArray::Pointer attr = H5SupportArrayTemplate<T>::CreateSingleValueArray( data);
         if (attr.get() != NULL)
         {
           ptr = attr;
@@ -290,8 +288,8 @@ public:
       {
         _dims[i] = dims[i];
       }
-      IMXAArray::Pointer attr =
-            MXAArrayTemplate<T>::CreateMultiDimensionalArray( dims.size(), _dims);
+      IH5SupportArray::Pointer attr =
+            H5SupportArrayTemplate<T>::CreateMultiDimensionalArray( dims.size(), _dims);
       delete [] _dims;
       if (attr.get() == NULL)
       {
@@ -319,5 +317,6 @@ private:
 };
 
 
-#endif /* _ANG_HDF5_UTILITIES_H_ */
+
+#endif /* _HDF5_UTILITIES_H_ */
 

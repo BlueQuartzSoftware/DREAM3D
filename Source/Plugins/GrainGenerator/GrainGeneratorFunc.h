@@ -116,9 +116,6 @@ public:
     DECLARE_WRAPPED_ARRAY(surfacevoxels, m_SurfaceVoxels, float);
     DECLARE_WRAPPED_ARRAY(quats, m_Quats, float); // n x 5 array
 
-    std::vector<std::vector<int> > nearestneighbors;
-    std::vector<std::vector<float> > nearestneighbordistances;
-
     std::vector<int> numowners;
 
     std::vector<Grain::Pointer> m_Grains;
@@ -160,7 +157,7 @@ public:
     int numeulers;
     int resdiff;
     std::vector<float> unbiasedvol;
-    std::vector<float> totalsurfacearea;
+    DECLARE_WRAPPED_ARRAY(totalsurfacearea, m_TotalSurfaceArea, float);
     int numprimarygrains;
     std::vector<float> phasefraction;
     std::vector<float> binstepsize;

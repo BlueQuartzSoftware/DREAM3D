@@ -114,7 +114,7 @@ void GrainGeneratorWidget::readSettings(QSettings &prefs)
   READ_SETTING(prefs, m_, ZPoints, ok, i, 100 , Int);
 
   READ_CHECKBOX_SETTING(prefs, m_, PeriodicBoundaryConditions, false);
-  READ_CHECKBOX_SETTING(prefs, m_, writegraindata, false);
+  READ_CHECKBOX_SETTING(prefs, m_, GrainDataFile, false);
   m_AlreadyFormed->blockSignals(true);
   READ_CHECKBOX_SETTING(prefs, m_, AlreadyFormed, false);
   READ_FILEPATH_SETTING(prefs, m_, StructureFile, "");
@@ -155,7 +155,7 @@ void GrainGeneratorWidget::writeSettings(QSettings &prefs)
   WRITE_SETTING(prefs, m_, ZPoints )
 
   WRITE_BOOL_SETTING(prefs, m_, PeriodicBoundaryConditions, m_PeriodicBoundaryConditions->isChecked())
-  WRITE_BOOL_SETTING(prefs, m_, writegraindata, m_writegraindata->isChecked())
+  WRITE_BOOL_SETTING(prefs, m_, GrainDataFile, m_GrainDataFile->isChecked())
   WRITE_BOOL_SETTING(prefs, m_, AlreadyFormed, m_AlreadyFormed->isChecked())
   WRITE_STRING_SETTING(prefs, m_, StructureFile)
 
@@ -240,9 +240,9 @@ void GrainGeneratorWidget::setupGui()
   m_WidgetList << m_XPoints << m_YPoints << m_ZPoints << m_XResolution << m_YResolution << m_ZResolution << m_FillingErrorWeight;
   m_WidgetList << m_NeighborhoodErrorWeight << m_SizeDistErrorWeight;
 
-  m_WidgetList << m_AlreadyFormed << m_PhFile;
-  m_WidgetList << m_PeriodicBoundaryConditions  << m_OutputFilePrefix;
-  m_WidgetList << m_ShapeTypeScrollArea;
+  m_WidgetList << m_PhFile << m_HDF5GrainFile << m_VisualizationVizFile << m_VtkOptionsBtn;
+  m_WidgetList << m_PeriodicBoundaryConditions << m_GrainDataFile << m_OutputFilePrefix;
+  m_WidgetList << m_H5VoxelFile << m_GrainAnglesFile;
 }
 
 // -----------------------------------------------------------------------------
@@ -288,6 +288,7 @@ void GrainGeneratorWidget::checkIOFiles()
   CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(AIM::SyntheticBuilder, m_ , VisualizationVizFile)
   CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(AIM::SyntheticBuilder, m_ , HDF5GrainFile)
   CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(AIM::SyntheticBuilder, m_ , PhFile)
+  CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(AIM::MicroStats, m_ , GrainDataFile)
 }
 
 // -----------------------------------------------------------------------------
@@ -344,7 +345,7 @@ void GrainGeneratorWidget::on_m_H5InputStatisticsFile_textChanged(const QString 
   if (verifyPathExists(m_H5InputStatisticsFile->text(), m_H5InputStatisticsFile))
   {
     QFileInfo fi(m_H5InputStatisticsFile->text());
-    QString outPath = fi.absolutePath() + QDir::separator() + fi.baseName() + "_Reconstruction";
+    QString outPath = fi.absolutePath() + QDir::separator() + fi.baseName() + "_GrainGenerator";
     outPath = QDir::toNativeSeparators(outPath);
     m_OutputDir->setText(outPath);
   }
@@ -511,7 +512,14 @@ void GrainGeneratorWidget::on_m_GoBtn_clicked()
   m_GrainGenerator->setYPoints(m_YPoints->value());
   m_GrainGenerator->setZPoints(m_ZPoints->value());
 
+  m_GrainGenerator->setXResolution(m_XResolution->value());
+  m_GrainGenerator->setYResolution(m_YResolution->value());
+  m_GrainGenerator->setZResolution(m_ZResolution->value());
+  m_GrainGenerator->setFillingErrorWeight(m_FillingErrorWeight->value());
+  m_GrainGenerator->setNeighborhoodErrorWeight(m_NeighborhoodErrorWeight->value());
+  m_GrainGenerator->setSizeDistErrorWeight(m_SizeDistErrorWeight->value());
 
+  m_GrainGenerator->setPeriodicBoundary(m_PeriodicBoundaryConditions->isChecked());
   std::vector<AIM::SyntheticBuilder::ShapeType> shapeTypes(1, AIM::SyntheticBuilder::UnknownShapeType);
   int count = m_ShapeTypeCombos.count();
   bool ok = false;
@@ -531,15 +539,7 @@ void GrainGeneratorWidget::on_m_GoBtn_clicked()
   }
   m_GrainGenerator->setShapeTypes(shapeTypes);
 
-  m_GrainGenerator->setXResolution(m_XResolution->value());
-  m_GrainGenerator->setYResolution(m_YResolution->value());
-  m_GrainGenerator->setZResolution(m_ZResolution->value());
-  m_GrainGenerator->setFillingErrorWeight(m_FillingErrorWeight->value());
-  m_GrainGenerator->setNeighborhoodErrorWeight(m_NeighborhoodErrorWeight->value());
-  m_GrainGenerator->setSizeDistErrorWeight(m_SizeDistErrorWeight->value());
 
-  m_GrainGenerator->setPeriodicBoundary(m_PeriodicBoundaryConditions->isChecked());
-  m_GrainGenerator->setWriteGrainData(m_writegraindata->isChecked());
   m_GrainGenerator->setAlreadyFormed(m_AlreadyFormed->isChecked() );
   m_GrainGenerator->setStructureFile(m_StructureFile->text().toStdString());
 
@@ -551,6 +551,8 @@ void GrainGeneratorWidget::on_m_GoBtn_clicked()
 
   m_GrainGenerator->setWriteHDF5GrainFile(m_HDF5GrainFile->isChecked());
   m_GrainGenerator->setWritePhFile(m_PhFile->isChecked());
+
+  m_GrainGenerator->setWriteGrainData(m_GrainDataFile->isChecked());
 
   /* Connect the signal 'started()' from the QThread to the 'run' slot of the
    * Reconstruction object. Since the Reconstruction object has been moved to another

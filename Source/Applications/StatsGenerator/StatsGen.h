@@ -140,7 +140,8 @@ class StatsGen
      * @param min (out)
      * @return
      */
-    int computeNumberOfBins(float mu, float sigma, float cutoff, float binstep, float &max, float &min);
+    int computeNumberOfBins(float mu, float sigma, float minCutOff, float maxCutOff,
+                            float binstep, float &max, float &min);
 
     /**
      * @brief Generates the CutOff values
@@ -156,10 +157,10 @@ class StatsGen
      * @return
      */
     template<typename J, typename T>
-    int GenCutOff(J mu, J sigma, J cutoff, J binstep, T &x, T &y, J yMax, int &numsizebins, T &binsizes)
+    int GenCutOff(J mu, J sigma, J minCutOff, J maxCutOff, J binstep, T &x, T &y, J yMax, int &numsizebins, T &binsizes)
     {
       J max, min;
-      numsizebins = computeNumberOfBins(mu, sigma, cutoff, binstep, max, min);
+      numsizebins = computeNumberOfBins(mu, sigma, minCutOff, maxCutOff, binstep, max, min);
       int err = 0;
       x.resize(2);
       y.resize(2);
