@@ -46,7 +46,7 @@
 
 namespace Ang
 {
-  const std::string AngHeader("AngHeader");
+  const std::string OriginalHeader("OriginalHeader");
   const std::string ZStartIndex("ZStartIndex");
   const std::string ZEndIndex("ZEndIndex");
   const std::string ZResolution("ZResolution");
@@ -62,7 +62,7 @@ namespace Ang
 
 
 // -----------------------------------------------------------------------------
-//
+//  These defines are needed for the pure "C" parser
 // -----------------------------------------------------------------------------
 #define ANG_TEM_PIXPERUM     "TEM_PIXperUM"
 #define ANG_X_STAR           "x-star"

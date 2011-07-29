@@ -111,8 +111,6 @@ set(PROJECT_SRCS
     ${ANG_HDRS}
     ${TSLLib_Utilities_SRCS}
     ${TSLLib_Utilities_HDRS}
-    ${ANG_HDF5_SRCS}
-    ${ANG_HDF5_HDRS}
 )
 
 add_library(${PROJECT_NAME}  ${LIB_TYPE} ${PROJECT_SRCS})

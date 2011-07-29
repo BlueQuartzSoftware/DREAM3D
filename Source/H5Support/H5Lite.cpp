@@ -64,7 +64,7 @@ herr_t find_dataset( hid_t loc_id, const char *name, void *op_data)
  char *dset_name = (char*)op_data;
 
  /* Shut the compiler up */
- loc_id=loc_id;
+// loc_id=loc_id;
 
  /* Define a positive value for return value if the dataset was found. This will
   * cause the iterator to immediately return that positive value,
@@ -93,7 +93,7 @@ herr_t find_attr( hid_t loc_id, const char *name, void *op_data)
  char *attr_name = (char*)op_data;
 
  /* Shut the compiler up */
- loc_id=loc_id;
+// loc_id=loc_id;
 
  /* Define a positive value for return value if the attribute was found. This will
   * cause the iterator to immediately return that positive value,

@@ -163,26 +163,11 @@ class TSLLib_EXPORT AngReader
     angInstanceProperty(AngHeaderEntry<float>, float, ZStar, TSL::OIM::ZStar)
     angInstanceProperty(AngHeaderEntry<float>, float, WorkingDistance, TSL::OIM::WorkingDistance)
 
-#if 0
-    angInstanceProperty(AngStringHeaderEntry, std::string, Phase, TSL::OIM::Phase)
-    angInstanceProperty(AngStringHeaderEntry, std::string, MaterialName, TSL::OIM::MaterialName)
-    angInstanceProperty(AngStringHeaderEntry, std::string, Formula, TSL::OIM::Formula)
-    angInstanceProperty(AngStringHeaderEntry, std::string, Info, TSL::OIM::Info)
-    angInstanceProperty(AngStringHeaderEntry, std::string, Symmetry, TSL::OIM::Symmetry)
-    angInstanceProperty(AngStringHeaderEntry, std::string, LatticeConstants, TSL::OIM::LatticeConstants)
-    angInstanceProperty(AngStringHeaderEntry, std::string, NumberFamilies, TSL::OIM::NumberFamilies)
-    angInstanceProperty(AngStringHeaderEntry, std::string, HKLFamilies, TSL::OIM::HKLFamilies)
-    angInstanceProperty(AngStringHeaderEntry, std::string, Categories, TSL::OIM::Categories)
-#endif
-
     std::vector<AngPhase::Pointer> getPhases() { return m_Phases; }
 
     angInstanceProperty(AngStringHeaderEntry, std::string, Grid, TSL::OIM::Grid)
     angInstanceProperty(AngHeaderEntry<float>, float, XStep, TSL::OIM::XStep)
     angInstanceProperty(AngHeaderEntry<float>, float, YStep, TSL::OIM::YStep)
-//    angInstanceProperty(AngHeaderEntry<float>, float, ZStep, TSL::OIM::ZStep) // NOT actually in the file, but may be needed
-//    angInstanceProperty(AngHeaderEntry<float>, float, ZPos, TSL::OIM::ZPos) // NOT actually in the file, but may be needed
-//    angInstanceProperty(AngHeaderEntry<float>, float, ZMax, TSL::OIM::ZMax) // NOT actually in the file, but may be needed
     angInstanceProperty(AngHeaderEntry<int>, int, NumOddCols, TSL::OIM::NColsOdd)
     angInstanceProperty(AngHeaderEntry<int>, int, NumEvenCols, TSL::OIM::NColsEven)
     angInstanceProperty(AngHeaderEntry<int>, int, NumRows, TSL::OIM::NRows)
