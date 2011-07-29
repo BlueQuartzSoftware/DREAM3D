@@ -27,63 +27,29 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _HKLConstants_h_
-#define _HKLConstants_h_
 
-#include <string>
+#ifndef CTFPHASE_H_
+#define CTFPHASE_H_
 
-#define DECLARE_STRING_CONST(var)\
-  const std::string var(#var);
+#include "EbsdLib/EbsdSetGetMacros.h"
+#include "EbsdLib/EbsdLibConfiguration.h"
+#include "CtfConstants.h"
 
-namespace Ctf
+/*
+ *
+ */
+class EbsdLib_EXPORT CtfPhase
 {
-  const std::string FileExt("ctf");
+  public:
+    EBSD_SHARED_POINTERS(CtfPhase)
+    EBSD_STATIC_NEW_MACRO(CtfPhase)
+    EBSD_TYPE_MACRO(CtfPhase)
+    virtual ~CtfPhase();
+  protected:
+    CtfPhase();
 
-  const std::string Header("Header");
-  const std::string ZStartIndex("ZStartIndex");
-  const std::string ZEndIndex("ZEndIndex");
-  const std::string ZResolution("ZResolution");
-  const std::string Manufacturer("Manufacturer");
-  const std::string TSL("HKL");
-  const std::string OriginalFile("OriginalFile");
-  const std::string Index("Index");
-  const std::string Data("Data");
-
-
-  DECLARE_STRING_CONST(Channel);
-  DECLARE_STRING_CONST(Prj);
-  DECLARE_STRING_CONST(Author);
-  DECLARE_STRING_CONST(JobMode);
-  DECLARE_STRING_CONST(XCells);
-  DECLARE_STRING_CONST(YCells);
-  DECLARE_STRING_CONST(XStep);
-  DECLARE_STRING_CONST(YStep);
-  DECLARE_STRING_CONST(AcqE1);
-  DECLARE_STRING_CONST(AcqE2);
-  DECLARE_STRING_CONST(AcqE3);
-  DECLARE_STRING_CONST(Euler);
-  DECLARE_STRING_CONST(Mag);
-  DECLARE_STRING_CONST(Coverage);
-  DECLARE_STRING_CONST(Device);
-  DECLARE_STRING_CONST(KV);
-  DECLARE_STRING_CONST(TiltAngle);
-  DECLARE_STRING_CONST(TiltAxis);
-  DECLARE_STRING_CONST(Phases);
-
-  DECLARE_STRING_CONST(Phase);
-  DECLARE_STRING_CONST(X);
-  DECLARE_STRING_CONST(Y);
-  DECLARE_STRING_CONST(BandCount);
-  DECLARE_STRING_CONST(Error);
-  DECLARE_STRING_CONST(Euler1);
-  DECLARE_STRING_CONST(Euler2);
-  DECLARE_STRING_CONST(Euler3);
-  DECLARE_STRING_CONST(MeanAngularDeviation);
-  DECLARE_STRING_CONST(BandContrast); // BC
-  DECLARE_STRING_CONST(BandSlope); // BS
-
-} // End namespace Ctf
-
-
-
-#endif /* _HKLConstants.h_  */
+   private:
+    CtfPhase(const CtfPhase&); // Copy Constructor Not Implemented
+     void operator=(const CtfPhase&); // Operator '=' Not Implemented
+ };
+#endif /* CTFPHASE_H_ */

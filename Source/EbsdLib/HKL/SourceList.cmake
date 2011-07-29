@@ -3,15 +3,15 @@
 set (HKL_SRCS
  #   ${EbsdLib_SOURCE_DIR}/HKL/CtfDirectoryPatterns.cpp
     ${EbsdLib_SOURCE_DIR}/HKL/CtfReader.cpp
- #   ${EbsdLib_SOURCE_DIR}/HKL/CtfPhase.cpp
+    ${EbsdLib_SOURCE_DIR}/HKL/CtfPhase.cpp
  )
  
 set (HKL_HDRS
     ${EbsdLib_SOURCE_DIR}/HKL/CtfConstants.h
  #   ${EbsdLib_SOURCE_DIR}/HKL/CtfDirectoryPatterns.h
- #   ${EbsdLib_SOURCE_DIR}/HKL/CtfHeaderEntry.h
+    ${EbsdLib_SOURCE_DIR}/HKL/CtfHeaderEntry.h
     ${EbsdLib_SOURCE_DIR}/HKL/CtfReader.h
- #   ${EbsdLib_SOURCE_DIR}/HKL/CtfPhase.h
+    ${EbsdLib_SOURCE_DIR}/HKL/CtfPhase.h
 )
 
 if (EbsdLib_ENABLE_HDF5)

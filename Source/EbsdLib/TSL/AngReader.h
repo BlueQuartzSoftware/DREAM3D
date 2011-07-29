@@ -44,92 +44,6 @@
 #include "AngPhase.h"
 
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-/**
- * @brief Creates a "setter" method to set the property.
- */
-#define angSetMacro_old(type, prpty) \
-  void set##prpty(type value) { this->m_##prpty = value; }
-
-#define angGetMacro_old(type, prpty)\
-    type get##prpty() {return m_##prpty; }
-
-
-#define angInstanceProperty_old(type, prpty)\
-  private:\
-      type   m_##prpty;\
-  public:\
-    angSetMacro_old(type, prpty)\
-    angGetMacro_old(type, prpty)
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-#define angSetStringMacro_old(prpty, varname) \
-  void set##prpty(const std::string &value) { this->m_##prpty = value; }
-
-
-/**
- * @brief Creates a "getter" method to retrieve the value of the property.
- */
-#define angGetStringMacro_old( prpty, varname) \
-  std::string get##prpty() { return varname; }
-
-
-/**
- * @brief Creates setters and getters in the form of 'setXXX()' and 'getXXX()' methods
- */
-#define angStringProperty_old(prpty)\
-  private:\
-      std::string   m_##prpty;\
-  public:\
-    angGetStringMacro_old(prpty, m_##prpty)\
-    angSetStringMacro_old(prpty, m_##prpty)
-
-
-#define STATIC_STRING_CONSTANT(str, quoted)\
-  static std::string str##() { return std::string(quoted); }
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-/**
- * @brief Creates a "setter" method to set the property.
- */
-#define angSetMacro( HeaderType, type, prpty, key) \
-  void set##prpty(type value) { \
-    HeaderType* p = dynamic_cast<HeaderType*>(m_Headermap[key].get()); \
-    if (NULL != p) { p->setValue(value); } else {\
-      std::cout << "Value for Key: " << key << " was null." << std::endl;} }
-
-/**
- * @brief Creates a "getter" method to retrieve the value of the property.
- */
-#define angGetMacro(HeaderType, type, prpty, key) \
-  type get##prpty() { \
-    HeaderType* p = dynamic_cast<HeaderType*>(m_Headermap[key].get());\
-    if (NULL != p) { return p->getValue(); } else {\
-      std::cout << "Value for Key: " << key << " was null." << std::endl; return 0;} }
-
-
-#define angInstanceProperty(HeaderType, type, prpty, key)\
-  public:\
-    angSetMacro(HeaderType, type, prpty, key)\
-    angGetMacro(HeaderType, type, prpty, key)
-
-#define SET_POINTER(name, var, type)\
-void set##name##Pointer(type* f)\
-  {\
-    if (m_##var != NULL && m_##var != f)\
-    {\
-      deallocateArrayData(m_##var);\
-      m_##var = NULL;\
-    }\
-    m_##var = f;\
-  }
 
 /**
 * @class AngReader AngReader.h AngReader/AngReader.h
@@ -146,34 +60,48 @@ class EbsdLib_EXPORT AngReader
     virtual ~AngReader();
 
     /** @brief Allow the user to set the origin of the scan */
-    angInstanceProperty_old(Ang::Orientation, UserOrigin)
+    EBSD_INSTANCE_PROPERTY(Ang::Orientation, UserOrigin)
 
     /** @brief Sets the file name of the ang file to be read */
-    angStringProperty_old( FileName )
-    angInstanceProperty_old(size_t, NumberOfElements);
-    angInstanceProperty_old(int, NumFields);
+    EBSD_INSTANCE_STRING_PROPERTY( FileName )
+    EBSD_INSTANCE_PROPERTY(size_t, NumberOfElements);
+    EBSD_INSTANCE_PROPERTY(int, NumFields);
 
     EBSD_INSTANCE_STRING_PROPERTY(CompleteHeader);
 
     /** @brief Header Values from the TSL ang file */
 
-    angInstanceProperty(AngHeaderEntry<float>, float, TEMpixPerum, TSL::OIM::TEMPIXPerUM)
-    angInstanceProperty(AngHeaderEntry<float>, float, XStar, TSL::OIM::XStar)
-    angInstanceProperty(AngHeaderEntry<float>, float, YStar, TSL::OIM::YStar)
-    angInstanceProperty(AngHeaderEntry<float>, float, ZStar, TSL::OIM::ZStar)
-    angInstanceProperty(AngHeaderEntry<float>, float, WorkingDistance, TSL::OIM::WorkingDistance)
+    EbsdHeader_INSTANCE_PROPERTY(AngHeaderEntry<float>, float, TEMpixPerum, TSL::OIM::TEMPIXPerUM)
+    EbsdHeader_INSTANCE_PROPERTY(AngHeaderEntry<float>, float, XStar, TSL::OIM::XStar)
+    EbsdHeader_INSTANCE_PROPERTY(AngHeaderEntry<float>, float, YStar, TSL::OIM::YStar)
+    EbsdHeader_INSTANCE_PROPERTY(AngHeaderEntry<float>, float, ZStar, TSL::OIM::ZStar)
+    EbsdHeader_INSTANCE_PROPERTY(AngHeaderEntry<float>, float, WorkingDistance, TSL::OIM::WorkingDistance)
 
     std::vector<AngPhase::Pointer> getPhases() { return m_Phases; }
 
-    angInstanceProperty(AngStringHeaderEntry, std::string, Grid, TSL::OIM::Grid)
-    angInstanceProperty(AngHeaderEntry<float>, float, XStep, TSL::OIM::XStep)
-    angInstanceProperty(AngHeaderEntry<float>, float, YStep, TSL::OIM::YStep)
-    angInstanceProperty(AngHeaderEntry<int>, int, NumOddCols, TSL::OIM::NColsOdd)
-    angInstanceProperty(AngHeaderEntry<int>, int, NumEvenCols, TSL::OIM::NColsEven)
-    angInstanceProperty(AngHeaderEntry<int>, int, NumRows, TSL::OIM::NRows)
-    angInstanceProperty(AngStringHeaderEntry, std::string, OIMOperator, TSL::OIM::Operator)
-    angInstanceProperty(AngStringHeaderEntry, std::string, SampleID, TSL::OIM::SampleId)
-    angInstanceProperty(AngStringHeaderEntry, std::string, ScanID, TSL::OIM::ScanId)
+    EbsdHeader_INSTANCE_PROPERTY(AngStringHeaderEntry, std::string, Grid, TSL::OIM::Grid)
+    EbsdHeader_INSTANCE_PROPERTY(AngHeaderEntry<float>, float, XStep, TSL::OIM::XStep)
+    EbsdHeader_INSTANCE_PROPERTY(AngHeaderEntry<float>, float, YStep, TSL::OIM::YStep)
+    EbsdHeader_INSTANCE_PROPERTY(AngHeaderEntry<int>, int, NumOddCols, TSL::OIM::NColsOdd)
+    EbsdHeader_INSTANCE_PROPERTY(AngHeaderEntry<int>, int, NumEvenCols, TSL::OIM::NColsEven)
+    EbsdHeader_INSTANCE_PROPERTY(AngHeaderEntry<int>, int, NumRows, TSL::OIM::NRows)
+    EbsdHeader_INSTANCE_PROPERTY(AngStringHeaderEntry, std::string, OIMOperator, TSL::OIM::Operator)
+    EbsdHeader_INSTANCE_PROPERTY(AngStringHeaderEntry, std::string, SampleID, TSL::OIM::SampleId)
+    EbsdHeader_INSTANCE_PROPERTY(AngStringHeaderEntry, std::string, ScanID, TSL::OIM::ScanId)
+
+    /** @brief Get a pointer to the Phi1 data. Note that this array WILL be deleted
+    * when this object is deleted. Most programs should copy the data from the array
+    * into their own array storage. */
+    EBSD_POINTER_PROPERTY(Phi1, Phi1, float)
+    EBSD_POINTER_PROPERTY(Phi, Phi, float)
+    EBSD_POINTER_PROPERTY(Phi2, Phi2, float)
+    EBSD_POINTER_PROPERTY(XPos, X, float)
+    EBSD_POINTER_PROPERTY(YPos, Y, float)
+    EBSD_POINTER_PROPERTY(ImageQuality, Iq, float)
+    EBSD_POINTER_PROPERTY(ConfidenceIndex, Ci, float)
+    EBSD_POINTER_PROPERTY(Phase, PhaseData, int)
+    EBSD_POINTER_PROPERTY(SEMSignal, SEMSignal, float)
+    EBSD_POINTER_PROPERTY(Fit, Fit, float)
 
     /**
     * @brief Reads the complete TSL .ang file.
@@ -187,32 +115,6 @@ class EbsdLib_EXPORT AngReader
     */
     virtual int readHeaderOnly();
 
-
-    /** @brief Get a pointer to the Phi1 data. Note that this array WILL be deleted
-    * when this object is deleted. Most programs should copy the data from the array
-    * into their own array storage. */
-    float* getPhi1Pointer() { return m_Phi1; }
-    float* getPhiPointer() { return m_Phi; }
-    float* getPhi2Pointer() { return m_Phi2; }
-    float* getXPosPointer() { return m_X; }
-    float* getYPosPointer() { return m_Y; }
-    float* getImageQualityPointer() { return m_Iq; }
- //   float* getImageQuality2Pointer() { return m_SEMSignal; }
-    float* getConfidenceIndexPointer() { return m_Ci; }
-    int* getPhasePointer() { return m_PhaseData; }
-    float* getSEMSignalPointer() { return m_SEMSignal; }
-    float* getFitPointer() { return m_Fit; }
-
-    SET_POINTER(Phi1, Phi1, float)
-    SET_POINTER(Phi, Phi, float)
-    SET_POINTER(Phi2, Phi2, float)
-    SET_POINTER(XPos, X, float)
-    SET_POINTER(YPos, Y, float)
-    SET_POINTER(ImageQuality, Iq, float)
-    SET_POINTER(ConfidenceIndex, Ci, float)
-    SET_POINTER(Phase, PhaseData, int)
-    SET_POINTER(SEMSignal, SEMSignal, float)
-    SET_POINTER(Fit, Fit, float)
 
 protected:
     // Needed by subclasses
@@ -266,16 +168,6 @@ protected:
       }
 
 private:
-    float* m_Phi1;
-    float* m_Phi;
-    float* m_Phi2;
-    float* m_Iq;
-    float* m_Ci;
-    int* m_PhaseData;
-    float* m_X;
-    float* m_Y;
-    float* m_SEMSignal;
-    float* m_Fit;
     bool m_ManageMemory;  // We are going to forcibly manage the memory. There is currently NO option otherwise.
     bool m_headerComplete;
 
@@ -290,8 +182,7 @@ private:
     /** @brief Parses the data from a line of data from the TSL .ang file
     * @param line The line of data to parse
     */
-    void readData(const std::string &line,
-      int nCols, int currentCol, int nRows, int currentRow, size_t counter);
+    void readData(const std::string &line, int nCols, int currentCol, int nRows, int currentRow, size_t counter);
 
     AngReader(const AngReader&);    // Copy Constructor Not Implemented
     void operator=(const AngReader&);  // Operator '=' Not Implemented

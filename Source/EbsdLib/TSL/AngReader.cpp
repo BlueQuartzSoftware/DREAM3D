@@ -85,7 +85,6 @@ m_ManageMemory(true)
   m_Headermap[TSL::OIM::ZMax] = AngHeaderEntry<float>::NewEbsdHeaderEntry(TSL::OIM::ZMax); // NOT actually in the file>::NewEbsdHeaderEntry(); , but may be needed
   m_Headermap[TSL::OIM::NColsOdd] = AngHeaderEntry<int>::NewEbsdHeaderEntry(TSL::OIM::NColsOdd);
   m_Headermap[TSL::OIM::NColsEven] = AngHeaderEntry<int>::NewEbsdHeaderEntry(TSL::OIM::NColsEven);
-  //  m_Headermap[TSL::OIM::NCols] = AngHeaderEntry<int>::NewEbsdHeaderEntry(TSL::OIM::NCols);
   m_Headermap[TSL::OIM::NRows] = AngHeaderEntry<int>::NewEbsdHeaderEntry(TSL::OIM::NRows);
   m_Headermap[TSL::OIM::Operator] = AngStringHeaderEntry::NewEbsdHeaderEntry(TSL::OIM::Operator);
   m_Headermap[TSL::OIM::SampleId] = AngStringHeaderEntry::NewEbsdHeaderEntry(TSL::OIM::SampleId);

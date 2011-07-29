@@ -225,6 +225,57 @@ static Pointer New args \
   EBSD_SET_STRING_PROPERTY(prpty,  m_##prpty)\
   EBSD_GET_STRING_PROPERTY(prpty,  m_##prpty)
 
+
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+/**
+ * @brief Creates a "setter" method to set the property.
+ */
+#define EbsdHeader_SET_PROPERTY( HeaderType, type, prpty, key) \
+  void set##prpty(type value) { \
+    HeaderType* p = dynamic_cast<HeaderType*>(m_Headermap[key].get()); \
+    if (NULL != p) { p->setValue(value); } else {\
+      std::cout << "Value for Key: " << key << " was null." << std::endl;} }
+
+/**
+ * @brief Creates a "getter" method to retrieve the value of the property.
+ */
+#define EbsdHeader_GET_PROPERTY(HeaderType, type, prpty, key) \
+  type get##prpty() { \
+    HeaderType* p = dynamic_cast<HeaderType*>(m_Headermap[key].get());\
+    if (NULL != p) { return p->getValue(); } else {\
+      std::cout << "Value for Key: " << key << " was null." << std::endl; return 0;} }
+
+
+#define EbsdHeader_INSTANCE_PROPERTY(HeaderType, type, prpty, key)\
+  public:\
+    EbsdHeader_SET_PROPERTY(HeaderType, type, prpty, key)\
+    EbsdHeader_GET_PROPERTY(HeaderType, type, prpty, key)
+
+
+#define EBSD_POINTER_PROPERTY(name, var, type)\
+private:\
+  type* m_##var;\
+public:\
+type* get##name##Pointer() { return m_##var; }\
+void set##name##Pointer(type* f)\
+  {\
+    if (m_##var != NULL && m_##var != f)\
+    {\
+      deallocateArrayData(m_##var);\
+      m_##var = NULL;\
+    }\
+    m_##var = f;\
+  }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+
 // These are simple over-rides from the boost distribution because we don't want the entire boost distribution just
 // for a few boost headers
 namespace Ang
