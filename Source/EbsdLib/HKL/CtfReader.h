@@ -31,7 +31,18 @@
 #ifndef HKLREADER_H_
 #define HKLREADER_H_
 
-#include "CtfMacros.h"
+#include <string>
+#include <map>
+#include <vector>
+
+#include "EbsdLib/EbsdSetGetMacros.h"
+#include "EbsdLib/EbsdLibConfiguration.h"
+#include "CtfConstants.h"
+#include "CtfHeaderEntry.h"
+#include "CtfPhase.h"
+
+
+
 
 class CtfReader
 {
@@ -39,13 +50,129 @@ class CtfReader
     CtfReader();
     virtual ~CtfReader();
 
-//    hklInstanceProperty(AngHeaderEntry<float>, float, TEMpixPerum, TSL::OIM::TEMPIXPerUM)
-//    hklInstanceProperty(AngHeaderEntry<float>, float, XStar, TSL::OIM::XStar)
-//    hklInstanceProperty(AngHeaderEntry<float>, float, YStar, TSL::OIM::YStar)
-//    hklInstanceProperty(AngHeaderEntry<float>, float, ZStar, TSL::OIM::ZStar)
-//    hklInstanceProperty(AngHeaderEntry<float>, float, WorkingDistance, TSL::OIM::WorkingDistance)
+    /** @brief Sets the file name of the ang file to be read */
+    EBSD_INSTANCE_STRING_PROPERTY( FileName )
+    EBSD_INSTANCE_PROPERTY(size_t, NumberOfElements);
+    EBSD_INSTANCE_PROPERTY(int, NumFields);
+
+    EBSD_INSTANCE_STRING_PROPERTY(CompleteHeader);
+
+    EbsdHeader_INSTANCE_PROPERTY(CtfStringHeaderEntry, std::string, Channel, Ctf::Channel)
+    EbsdHeader_INSTANCE_PROPERTY(CtfStringHeaderEntry, std::string, Prj, Ctf::Prj)
+    EbsdHeader_INSTANCE_PROPERTY(CtfStringHeaderEntry, std::string, Author, Ctf::Author)
+    EbsdHeader_INSTANCE_PROPERTY(CtfStringHeaderEntry, std::string, JobMode, Ctf::JobMode)
+    EbsdHeader_INSTANCE_PROPERTY(CtfHeaderEntry<int>, int, XCells, Ctf::XCells)
+    EbsdHeader_INSTANCE_PROPERTY(CtfHeaderEntry<int>, int, YCells, Ctf::YCells)
+    EbsdHeader_INSTANCE_PROPERTY(CtfHeaderEntry<float>, float, XStep, Ctf::XStep)
+    EbsdHeader_INSTANCE_PROPERTY(CtfHeaderEntry<float>, float, YStep, Ctf::YStep)
+    EbsdHeader_INSTANCE_PROPERTY(CtfHeaderEntry<float>, float, AcqE1, Ctf::AcqE1)
+    EbsdHeader_INSTANCE_PROPERTY(CtfHeaderEntry<float>, float, AcqE2, Ctf::AcqE2)
+    EbsdHeader_INSTANCE_PROPERTY(CtfHeaderEntry<float>, float, AcqE3, Ctf::AcqE3)
+    EbsdHeader_INSTANCE_PROPERTY(CtfStringHeaderEntry, std::string, Euler, Ctf::Euler)
+    EbsdHeader_INSTANCE_PROPERTY(CtfHeaderEntry<int>, int, Mag, Ctf::Mag)
+    EbsdHeader_INSTANCE_PROPERTY(CtfHeaderEntry<int>, int, Coverage, Ctf::Coverage)
+    EbsdHeader_INSTANCE_PROPERTY(CtfHeaderEntry<int>, int, Device, Ctf::Device)
+    EbsdHeader_INSTANCE_PROPERTY(CtfHeaderEntry<int>, int, KV, Ctf::KV)
+    EbsdHeader_INSTANCE_PROPERTY(CtfHeaderEntry<float>, float, TiltAngle, Ctf::TiltAngle)
+    EbsdHeader_INSTANCE_PROPERTY(CtfHeaderEntry<float>, float, TiltAxis, Ctf::TiltAxis)
+    EbsdHeader_INSTANCE_PROPERTY(CtfHeaderEntry<int>, int, Phases, Ctf::Phases)
+
+    EBSD_POINTER_PROPERTY(Phase, Phase, int)
+    EBSD_POINTER_PROPERTY(X, X, float)
+    EBSD_POINTER_PROPERTY(Y, Y, float)
+    EBSD_POINTER_PROPERTY(BandCount, BandCount, int)
+    EBSD_POINTER_PROPERTY(Error, Error, int)
+    EBSD_POINTER_PROPERTY(Euler1, Euler1, float)
+    EBSD_POINTER_PROPERTY(Euler2, Euler2, float)
+    EBSD_POINTER_PROPERTY(Euler3, Euler3, float)
+    EBSD_POINTER_PROPERTY(MeanAngularDeviation, MAD, float)
+    EBSD_POINTER_PROPERTY(BandContrast, BC, int)
+    EBSD_POINTER_PROPERTY(BandSlope, BS, int)
+
+    /**
+    * @brief Reads the complete TSL .ang file.
+    * @return 1 on success
+    */
+    virtual int readFile();
+
+    /**
+    * @brief Reads ONLY the header portion of the TSL .ang file
+    * @return 1 on success
+    */
+    virtual int readHeaderOnly();
+
+
+  protected:
+      // Needed by subclasses
+      std::map<std::string, EbsdHeaderEntry::Pointer> m_Headermap;
+
+      /** @brief Allocates the proper amount of memory (after reading the header portion of the file)
+      * and then splats '0' across all the bytes of the memory allocation
+      */
+      void initPointers(size_t numElements);
+
+      /** @brief 'free's the allocated memory and sets the pointer to NULL
+      */
+      void deletePointers();
+
+      /**
+       * @brief Allocats a contiguous chunk of memory to store values from the .ang file
+       * @param numberOfElements The number of elements in the Array. This method can
+       * also optionally produce SSE aligned memory for use with SSE intrinsics
+       * @return Pointer to allocated memory
+       */
+        template<typename T>
+        T* allocateArray(size_t numberOfElements)
+        {
+    #if defined ( AIM_USE_SSE ) && defined ( __SSE2__ )
+          T* m_buffer = static_cast<T*>( _mm_malloc (numberOfElements * sizeof(T), 16) );
+    #else
+          T*  m_buffer = new T[numberOfElements];
+    #endif
+          m_NumberOfElements = numberOfElements;
+          return m_buffer;
+        }
+
+      /**
+       * @brief Deallocates memory that has been previously allocated. This will set the
+       * value of the pointer passed in as the argument to NULL.
+       * @param ptr The pointer to be freed.
+       */
+        template<typename T>
+        void deallocateArrayData(T* &ptr)
+        {
+          if (ptr != NULL && this->m_ManageMemory == true)
+          {
+    #if defined ( AIM_USE_SSE ) && defined ( __SSE2__ )
+            _mm_free(ptr );
+    #else
+            delete[] ptr;
+    #endif
+            ptr = NULL;
+            m_NumberOfElements = 0;
+          }
+        }
 
   private:
+     bool m_ManageMemory;  // We are going to forcibly manage the memory. There is currently NO option otherwise.
+     bool m_headerComplete;
+
+     CtfPhase::Pointer   m_CurrentPhase;
+     std::vector<CtfPhase::Pointer> m_Phases;
+
+
+     std::vector<std::string> tokenize(char* buf);
+     int getHeaderLines(std::ifstream &reader, std::vector<std::vector<std::string> > &headerLines);
+     /**
+      * Checks that the line is the header of the columns for the data.
+      *
+      * @param columns
+      *            line values
+      * @return <code>true</code> if the line is the columns header line,
+      *         <code>false</code> otherwise
+      */
+     bool isDataHeaderLine(std::vector<std::string> &columns);
+
     CtfReader(const CtfReader&); // Copy Constructor Not Implemented
     void operator=(const CtfReader&); // Operator '=' Not Implemented
 };

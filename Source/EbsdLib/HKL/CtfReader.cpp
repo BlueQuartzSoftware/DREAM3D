@@ -30,22 +30,219 @@
 
 #include "CtfReader.h"
 
-CtfReader::CtfReader()
+#include <iostream>
+#include <fstream>
+#include <sstream>
+#include <algorithm>
+
+#define kBufferSize 1024
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+CtfReader::CtfReader() :
+m_FileName(""),
+m_NumberOfElements(0),
+m_ManageMemory(true)
 {
-  // TODO Auto-generated constructor stub
+
+  m_Phase = NULL;
+  m_X = NULL;
+  m_Y = NULL;
+  m_BandCount = NULL;
+  m_Error = NULL;
+  m_Euler1 = NULL;
+  m_Euler2 = NULL;
+  m_Euler3 = NULL;
+  m_MAD = NULL;
+  m_BC = NULL;
+  m_BS = NULL;
+
+  m_NumFields = 11;
+
+  // Initialize the map of header key to header value
 
 }
 
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 CtfReader::~CtfReader()
 {
-  // TODO Auto-generated destructor stub
+  deletePointers();
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void CtfReader::initPointers(size_t numElements)
+{
+  size_t numBytes = numElements * sizeof(float);
+  m_Phase = allocateArray<int > (numElements);
+  m_X = allocateArray<float > (numElements);
+  m_Y = allocateArray<float > (numElements);
+  m_BandCount = allocateArray<int > (numElements);
+  m_Error = allocateArray<int > (numElements);
+  m_Euler1 = allocateArray<float> (numElements);
+  m_Euler2 = allocateArray<float > (numElements);
+  m_Euler3 = allocateArray<float > (numElements);
+  m_MAD = allocateArray<float > (numElements);
+  m_BC = allocateArray<int > (numElements);
+  m_BS = allocateArray<int > (numElements);
+
+  ::memset(m_Phase, 0, numBytes);
+  ::memset(m_X, 0, numBytes);
+  ::memset(m_Y, 0, numBytes);
+  ::memset(m_BandCount, 0, numBytes);
+  ::memset(m_Error, 0, numBytes);
+  ::memset(m_Euler1, 0, numBytes);
+  ::memset(m_Euler2, 0, numBytes);
+  ::memset(m_Euler3, 0, numBytes);
+  ::memset(m_MAD, 0, numBytes);
+  ::memset(m_BC, 0, numBytes);
+  ::memset(m_BS, 0, numBytes);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void CtfReader::deletePointers()
+{
+  this->deallocateArrayData<int > (m_Phase);
+  this->deallocateArrayData<float > (m_X);
+  this->deallocateArrayData<float > (m_Y);
+  this->deallocateArrayData<int > (m_BandCount);
+  this->deallocateArrayData<int > (m_Error);
+  this->deallocateArrayData<float > (m_Euler1);
+  this->deallocateArrayData<float > (m_Euler2);
+  this->deallocateArrayData<float > (m_Euler3);
+  this->deallocateArrayData<float > (m_MAD);
+  this->deallocateArrayData<int > (m_BC);
+  this->deallocateArrayData<int > (m_BS);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int CtfReader::readFile()
+{
+  int err = 1;
+
+  m_headerComplete = false;
+  std::ifstream in(m_FileName.c_str());
+
+  if (!in.is_open())
+  {
+    std::cout << "Ang file could not be opened: " << m_FileName << std::endl;
+    return -100;
+  }
+
+  m_CompleteHeader.clear();
+  m_Phases.clear();
+
+  std::vector<std::vector<std::string> > headerLines;
+  err = getHeaderLines(in, headerLines);
+
+
+  return err;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+std::vector<std::string> CtfReader::tokenize(char* buf)
+{
+  std::vector<std::string> output;
+  std::string values(buf);
+  std::string::size_type start = 0;
+  std::string::size_type pos = 0;
+//  std::cout << "-----------------------------" << std::endl;
+  while(pos != std::string::npos && pos != values.size() - 1)
+  {
+    pos = values.find('\t', start);
+    output.push_back(values.substr(start, pos-start));
+ //   std::cout << "Adding: " << output.back() << std::endl;
+    if (pos != std::string::npos)
+    {
+      start = pos + 1;
+    }
+  }
+  return output;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int CtfReader::getHeaderLines(std::ifstream &reader, std::vector<std::vector<std::string> > &headerLines)
+{
+  int err = 0;
+  char buf[kBufferSize];
+  while (!reader.eof() && !m_headerComplete)
+  {
+    ::memset(buf, 0, kBufferSize);
+    reader.getline(buf, kBufferSize);
+    // Append the line to the complete header
+    m_CompleteHeader.append(buf);
+
+    // Replace the newline at the end of the line with a NULL character
+    int i = 0;
+    while(buf[i] != 0 ) {++i;}
+    buf[i-1] = 0;
+
+    std::vector<std::string> tokens = tokenize(buf);
+
+    // Remove empty lines
+    if (buf[0] == 0) continue;
+
+    // End when column header line is read
+    if (isDataHeaderLine(tokens)) {
+      m_headerComplete = true;
+      break;
+    }
+
+
+    headerLines.push_back(tokens);
+  }
+
+  reader.close();
+
+  return err;
+}
+
+/**
+ * Checks that the line is the header of the columns for the data.
+ *
+ * @param columns
+ *            line values
+ * @return <code>true</code> if the line is the columns header line,
+ *         <code>false</code> otherwise
+ */
+bool CtfReader::isDataHeaderLine(std::vector<std::string> &columns)
+{
+    if (columns.size() != 11)
+        return false;
+    if (columns[0].compare("Phase") != 0)
+        return false;
+    if (columns[9].compare("BC") != 0)
+        return false;
+
+    return true;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int CtfReader::readHeaderOnly()
+{
+  int err = -1;
+  return err;
+}
 
 // hkl2tsl.cxx
 
 //   g++ -o hkl2tsl hkl2tsl.cxx
-
+#if 0
 #include<iostream>
 #include <iomanip>
 #include<fstream>
@@ -59,7 +256,7 @@ struct phase_struct{
   string MaterialName, Formula, Symmetry;
 };
 
-#if 0
+
 int main(int argc, char* argv[])
 {
   // check argument list
