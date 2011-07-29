@@ -135,10 +135,10 @@ void GrainGeneratorFunc::initializeAttributes()
 	{
 		grain_indicies[i] = 0;
 		phases[i] = 0;
-		euler1s[i] = 0;
-		euler2s[i] = 0;
-		euler3s[i] = 0;
-		neighbors[i] = 0;
+		euler1s[i] = -1;
+		euler2s[i] = -1;
+		euler3s[i] = -1;
+		neighbors[i] = -1;
 		surfacevoxels[i] = 0;
 	}
 }
@@ -210,6 +210,12 @@ void GrainGeneratorFunc::initializeArrays(std::vector<AIM::Reconstruction::Cryst
 
 void GrainGeneratorFunc::initialize_packinggrid()
 {
+  sizex = xpoints*resx;
+  sizey = ypoints*resy;
+  sizez = zpoints*resz;
+  totalvol = sizex*sizey*sizez;
+  totalpoints = xpoints * ypoints * zpoints;
+
   packingresx = resx*4.0;
   packingresy = resy*4.0;
   packingresz = resz*4.0;
@@ -2476,12 +2482,12 @@ void  GrainGeneratorFunc::find_neighbors()
     {
       m_Grains[i]->neighborlist = new std::vector<int>(0);
     }
-    m_Grains[i]->neighborlist->assign(nListSize, -1);
+    m_Grains[i]->neighborlist->resize(nListSize, -1);
     if (m_Grains[i]->neighborsurfacealist == NULL)
     {
       m_Grains[i]->neighborsurfacealist = new std::vector<float>(0);
     }
-    m_Grains[i]->neighborsurfacealist->assign(nListSize, -1.0);
+    m_Grains[i]->neighborsurfacealist->resize(nListSize, -1.0);
     for (int j = 0; j < 3; j++)
     {
       m_Grains[i]->neighbordistfunc[j] = 0;
