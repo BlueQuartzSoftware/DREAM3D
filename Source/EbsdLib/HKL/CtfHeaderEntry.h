@@ -53,7 +53,6 @@ class EbsdLib_EXPORT CtfHeaderEntry : public EbsdHeaderEntry
     std::string getKey() { return m_key; }
     void parseValue(char* value, size_t start, size_t length)
     {
-      if (value[start] == ':') { ++start; } // move past the ":" character
       std::string data( &(value[start]), strlen(value) - start);
       std::stringstream ss(data);
       ss >> m_value;
@@ -94,14 +93,9 @@ class CtfStringHeaderEntry : public EbsdHeaderEntry
     std::string getKey() { return m_key; }
     void parseValue(char* value, size_t start, size_t length)
     {
-      if (value[start] == ':') { ++start; } // move past the ":" character
-      while(value[start] == ' ')
-      {
-        ++start;
-      }
-      std::string data( &(value[start]), strlen(value) - start);
-      m_value = data;
+      m_value = std::string(value);
     }
+
     void print(std::ostream &out) {
       out << m_key << "  " << m_value << std::endl;
     }

@@ -61,6 +61,24 @@ m_ManageMemory(true)
   m_NumFields = 11;
 
   // Initialize the map of header key to header value
+  m_Headermap[Ctf::Channel] = CtfStringHeaderEntry::NewEbsdHeaderEntry(Ctf::Channel);
+  m_Headermap[Ctf::Prj] = CtfStringHeaderEntry::NewEbsdHeaderEntry(Ctf::Prj);
+  m_Headermap[Ctf::Author] = CtfStringHeaderEntry::NewEbsdHeaderEntry(Ctf::Author);
+  m_Headermap[Ctf::JobMode] = CtfStringHeaderEntry::NewEbsdHeaderEntry(Ctf::JobMode);
+  m_Headermap[Ctf::XCells] = CtfHeaderEntry<int>::NewEbsdHeaderEntry(Ctf::XCells);
+  m_Headermap[Ctf::YCells] = CtfHeaderEntry<int>::NewEbsdHeaderEntry(Ctf::YCells);
+  m_Headermap[Ctf::XStep] = CtfHeaderEntry<float>::NewEbsdHeaderEntry(Ctf::XStep);
+  m_Headermap[Ctf::YStep] = CtfHeaderEntry<float>::NewEbsdHeaderEntry(Ctf::YStep);
+  m_Headermap[Ctf::AcqE1] = CtfHeaderEntry<float>::NewEbsdHeaderEntry(Ctf::AcqE1);
+  m_Headermap[Ctf::AcqE2] = CtfHeaderEntry<float>::NewEbsdHeaderEntry(Ctf::AcqE2);
+  m_Headermap[Ctf::AcqE3] = CtfHeaderEntry<float>::NewEbsdHeaderEntry(Ctf::AcqE3);
+  m_Headermap[Ctf::Euler] = CtfStringHeaderEntry::NewEbsdHeaderEntry(Ctf::Euler);
+  m_Headermap[Ctf::Mag] = CtfHeaderEntry<int>::NewEbsdHeaderEntry(Ctf::Mag);
+  m_Headermap[Ctf::Coverage] = CtfHeaderEntry<int>::NewEbsdHeaderEntry(Ctf::Coverage);
+  m_Headermap[Ctf::Device] = CtfHeaderEntry<int>::NewEbsdHeaderEntry(Ctf::Device);
+  m_Headermap[Ctf::KV] = CtfHeaderEntry<int>::NewEbsdHeaderEntry(Ctf::KV);
+  m_Headermap[Ctf::TiltAngle] = CtfHeaderEntry<float>::NewEbsdHeaderEntry(Ctf::TiltAngle);
+  m_Headermap[Ctf::TiltAxis] = CtfHeaderEntry<float>::NewEbsdHeaderEntry(Ctf::TiltAxis);
 
 }
 
@@ -143,8 +161,110 @@ int CtfReader::readFile()
 
   std::vector<std::vector<std::string> > headerLines;
   err = getHeaderLines(in, headerLines);
+  err = parseHeaderLines(headerLines);
 
 
+  return err;
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int CtfReader::parseHeaderLines(std::vector<std::vector<std::string> > &headerLines)
+{
+  int err = 0;
+  size_t size = headerLines.size();
+  for(int i = 0; i < size; ++i) {
+    std::vector<std::string> line = headerLines[i];
+    std::cout << "Parsing Header Line: " << line[0] << std::endl;
+    if (line[0].compare(Ctf::Phases) == 0)
+    {
+      /* Parse the value of this header entry. That gives the number of phases to
+       * create. The we will have to parse the next "n" number of lines to get all
+       * the phase information into the CtfPhase class.
+       */
+//      m_CurrentPhase = CtfPhase::New();
+//      m_CurrentPhase->parsePhase(line[0]);
+//      // Parsing the phase is complete, now add it to the vector of Phases
+//      m_Phases.push_back(m_CurrentPhase);
+    }
+//    else if (word.compare(Ctf::MaterialName) == 0 && m_CurrentPhase.get() != NULL)
+//    {
+//      m_CurrentPhase->parseMaterialName(buf, wordEnd, length);
+//    }
+//    else if (word.compare(Ctf::Formula) == 0 && m_CurrentPhase.get() != NULL)
+//    {
+//      m_CurrentPhase->parseFormula(buf, wordEnd, length);
+//    }
+//    else if (word.compare(Ctf::Info) == 0 && m_CurrentPhase.get() != NULL)
+//    {
+//      m_CurrentPhase->parseInfo(buf, wordEnd, length);
+//    }
+//    else if (word.compare(Ctf::Symmetry) == 0 && m_CurrentPhase.get() != NULL)
+//    {
+//      m_CurrentPhase->parseSymmetry(buf, wordEnd, length);
+//    }
+//    else if (word.compare(Ctf::LatticeConstants) == 0 && m_CurrentPhase.get() != NULL)
+//    {
+//      m_CurrentPhase->parseLatticeConstants(buf, wordEnd, length);
+//    }
+//    else if (word.compare(Ctf::NumberFamilies) == 0 && m_CurrentPhase.get() != NULL)
+//    {
+//      m_CurrentPhase->parseNumberFamilies(buf, wordEnd, length);
+//    }
+//    else if (word.compare(Ctf::HKLFamilies) == 0 && m_CurrentPhase.get() != NULL)
+//    {
+//      m_CurrentPhase->parseHKLFamilies(buf, wordEnd, length);
+//    }
+//    else if (word.compare(Ctf::Categories) == 0 && m_CurrentPhase.get() != NULL)
+//    {
+//      m_CurrentPhase->parseCategories(buf, wordEnd, length);
+//    }
+    else if (line[0].compare("Euler angles refer to Sample Coordinate system (CS0)!") == 0)
+    {
+      // We parse out lots of stuff from this one line
+      //Mag
+      EbsdHeaderEntry::Pointer p0 = m_Headermap[line[1]];
+      p0->parseValue(const_cast<char*>(line[2].c_str()), 0, line[2].length());
+      //Coverage
+      EbsdHeaderEntry::Pointer p1 = m_Headermap[line[3]];
+      p1->parseValue(const_cast<char*>(line[4].c_str()), 0, line[4].length());
+      //Device
+      EbsdHeaderEntry::Pointer p2 = m_Headermap[line[5]];
+      p2->parseValue(const_cast<char*>(line[6].c_str()), 0, line[6].length());
+      //KV
+      EbsdHeaderEntry::Pointer p3 = m_Headermap[line[7]];
+      p3->parseValue(const_cast<char*>(line[8].c_str()), 0, line[8].length());
+      //TiltAngle
+      EbsdHeaderEntry::Pointer p4 = m_Headermap[line[9]];
+      p4->parseValue(const_cast<char*>(line[10].c_str()), 0, line[10].length());
+      //TiltAxis
+      EbsdHeaderEntry::Pointer p5 = m_Headermap[line[11]];
+      p5->parseValue(const_cast<char*>(line[12].c_str()), 0, line[12].length());
+    }
+    else  // This is the generic Catch all
+    {
+      EbsdHeaderEntry::Pointer p = m_Headermap[line[0]];
+      if (NULL == p.get())
+      {
+        std::cout << "---------------------------" << std::endl;
+        std::cout << "Could not find header entry for key'" << line[0] << "'" << std::endl;
+        std::string upper(line[0]);
+        std::transform(upper.begin(), upper.end(), upper.begin(), ::toupper);
+        std::cout << "#define ANG_" << upper << "     \"" << line[0] << "\"" << std::endl;
+        std::cout << "const std::string " << line[0] << "(ANG_" << upper << ");" << std::endl;
+
+        std::cout << "angInstanceProperty(AngHeaderEntry<float>. float, " << line[0] << "Ctf::" << line[0] << std::endl;
+        std::cout << "m_Headermap[Ctf::" << line[0] << "] = AngHeaderEntry<float>::NewEbsdHeaderEntry(Ctf::" << line[0] << ");" << std::endl;
+      }
+      else
+      {
+        p->parseValue(const_cast<char*>(line[1].c_str()), 0, line[1].length());
+      }
+    }
+
+  }
   return err;
 }
 
@@ -200,24 +320,15 @@ int CtfReader::getHeaderLines(std::ifstream &reader, std::vector<std::vector<std
       m_headerComplete = true;
       break;
     }
-
-
     headerLines.push_back(tokens);
   }
-
   reader.close();
-
   return err;
 }
 
-/**
- * Checks that the line is the header of the columns for the data.
- *
- * @param columns
- *            line values
- * @return <code>true</code> if the line is the columns header line,
- *         <code>false</code> otherwise
- */
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 bool CtfReader::isDataHeaderLine(std::vector<std::string> &columns)
 {
     if (columns.size() != 11)

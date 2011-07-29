@@ -75,7 +75,7 @@ class CtfReader
     EbsdHeader_INSTANCE_PROPERTY(CtfHeaderEntry<int>, int, KV, Ctf::KV)
     EbsdHeader_INSTANCE_PROPERTY(CtfHeaderEntry<float>, float, TiltAngle, Ctf::TiltAngle)
     EbsdHeader_INSTANCE_PROPERTY(CtfHeaderEntry<float>, float, TiltAxis, Ctf::TiltAxis)
-    EbsdHeader_INSTANCE_PROPERTY(CtfHeaderEntry<int>, int, Phases, Ctf::Phases)
+ //   EbsdHeader_INSTANCE_PROPERTY(CtfHeaderEntry<int>, int, Phases, Ctf::Phases)
 
     EBSD_POINTER_PROPERTY(Phase, Phase, int)
     EBSD_POINTER_PROPERTY(X, X, float)
@@ -172,6 +172,7 @@ class CtfReader
       *         <code>false</code> otherwise
       */
      bool isDataHeaderLine(std::vector<std::string> &columns);
+     int parseHeaderLines(std::vector<std::vector<std::string> > &headerLines);
 
     CtfReader(const CtfReader&); // Copy Constructor Not Implemented
     void operator=(const CtfReader&); // Operator '=' Not Implemented
