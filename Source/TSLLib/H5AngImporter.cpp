@@ -203,7 +203,7 @@ int H5AngImporter::importAngFile(hid_t fileId, int z, const std::string &angFile
   WRITE_ANG_HEADER_STRING_DATA(reader, std::string, ScanID, TSL::OIM::ScanId)
 
   std::string angCompleteHeader = reader.getCompleteHeader();
-  err = H5Lite::writeStringDataset(gid, Ang::AngHeader, angCompleteHeader);
+  err = H5Lite::writeStringDataset(gid, Ang::OriginalHeader, angCompleteHeader);
   err = H5Lite::writeStringDataset(gid, Ang::OriginalFile, angFile);
 
   // Close the "Header" group

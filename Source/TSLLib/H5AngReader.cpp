@@ -289,7 +289,7 @@ int H5AngReader::readHeader(hid_t parId)
   err = H5Gclose(phasesGid);
 
   std::string completeHeader;
-  err = H5Lite::readStringDataset(gid, Ang::AngHeader, completeHeader);
+  err = H5Lite::readStringDataset(gid, Ang::OriginalHeader, completeHeader);
   setCompleteHeader(completeHeader);
 
   err = H5Gclose(gid);
