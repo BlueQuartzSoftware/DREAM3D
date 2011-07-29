@@ -45,6 +45,10 @@ class EbsdLib_EXPORT CtfPhase
     EBSD_STATIC_NEW_MACRO(CtfPhase)
     EBSD_TYPE_MACRO(CtfPhase)
     virtual ~CtfPhase();
+
+    void parsePhase(const std::string &str);
+
+
   protected:
     CtfPhase();
 
