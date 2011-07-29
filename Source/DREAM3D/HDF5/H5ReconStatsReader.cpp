@@ -133,7 +133,7 @@ int H5ReconStatsReader::getPhaseAndCrystalStructures(std::vector<int> &phases,
 
   // Get a list of all the groups
   std::list<std::string> names;
-  err = H5Utilities::getGroupObjects(reconGid, H5Utilities::MXA_GROUP, names);
+  err = H5Utilities::getGroupObjects(reconGid, H5Utilities::H5Support_GROUP, names);
   if (err < 0)
   {
     retErr = err;

@@ -168,6 +168,25 @@ void StatsGeneratorUI::on_phaseCombo_currentIndexChanged(int index)
 void StatsGeneratorUI::on_addPhase_clicked()
 {
  // std::cout << "on_addPhase_clicked" << std::endl;
+
+  // Ensure the Current SGWidget has generated its data first:
+  if (false == m_SGWidget->getDataHasBeenGenerated())
+  {
+    int r = QMessageBox::warning(this, tr("StatsGenerator"),
+                                 tr("Data for the current phase has NOT been generated.\nDo you want to generate it now?"),
+                                 QMessageBox::Ok | QMessageBox::Cancel);
+    if (r == QMessageBox::Ok)
+    {
+      // The user wants to generate the data. Generate it and move on
+      m_SGWidget->on_m_GenerateDefaultData_clicked();
+    }
+    else if (r == QMessageBox::Cancel)
+    {
+      return;
+    }
+  }
+
+
   double phaseFractionTotal = 0.0;
   for(int p = 0; p < m_SGWidgets.size(); ++p)
   {

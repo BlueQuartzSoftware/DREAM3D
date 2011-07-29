@@ -36,8 +36,8 @@ Find_package(Git)
 
 if (GIT_FOUND)
     execute_process(COMMAND ${GIT_EXECUTABLE} describe
-    OUTPUT_VARIABLE DVERS
-    RESULT_VARIABLE did_run
+        OUTPUT_VARIABLE DVERS
+        RESULT_VARIABLE did_run
      )
     string(STRIP ${DVERS} DVERS)
   #  message(STATUS "DVERS: ${DVERS}")
@@ -104,7 +104,10 @@ configure_file(${CMP_CONFIGURED_FILES_SOURCE_DIR}/cmpVersion.h.in
 
 configure_file(${DREAM3D_SOURCE_DIR}/Source/DREAM3D/DREAM3DConfiguration.h.in
                ${DREAM3D_BINARY_DIR}/DREAM3D/DREAM3DConfiguration.h)
-                          
+#-- Create a JavaScript file that can be uploaded to the web server that will automatically
+# update the download links to the latest version
+configure_file(${PROJECT_RESOURCES_DIR}/downloadcreator.js.in 
+                ${DREAM3D_BINARY_DIR}/downloadcreator.js)                          
 # --------------------------------------------------------------------
 # Generate our ReadMe and License Files
 configure_file(${PROJECT_SOURCE_DIR}/License.txt.in
@@ -203,7 +206,12 @@ endif()
 option(DREAM3D_BUILD_CLI_TOOLS "Build the command line versions of the applications" OFF)
 
 # -----------------------------------------------------------------------
-# -- Add in the Necessary MXA Sources into a static library
+# -- Add in the Necessary MXA Sources into a library
+add_subdirectory( ${DREAM3D_SOURCE_DIR}/Source/H5Support ${DREAM3D_BINARY_DIR}/H5Support)
+include_directories (${DREAM3D_BINARY_DIR})
+
+# -----------------------------------------------------------------------
+# -- Add in the Necessary MXA Sources into a library
 add_subdirectory( ${DREAM3D_SOURCE_DIR}/Source/MXA ${DREAM3D_BINARY_DIR}/MXA)
 include_directories (${DREAM3D_BINARY_DIR})
 

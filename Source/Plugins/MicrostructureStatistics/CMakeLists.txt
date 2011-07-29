@@ -121,3 +121,30 @@ install(FILES ${${PLUGIN_NAME}_HELP_FILES}
         DESTINATION Help/${PLUGIN_NAME}
         COMPONENT Applications )
   
+
+  
+  
+# Create a Command line tool for the MicroStats
+# --------------------------------------------------------------------
+# Setup the install rules for the various platforms
+set(install_dir "tools")
+if (WIN32)
+    set (install_dir ".")
+endif()
+COMPILE_TOOL(
+    TARGET MicroStats
+    SOURCES ${PROJECT_SOURCE_DIR}/Tools/MicroStatsMain.cpp 
+                ${MicrostructureStatistics_HDRS}
+    ${MicrostructureStatistics_SRCS}
+    DEBUG_EXTENSION ${EXE_DEBUG_EXTENSION}
+    VERSION_MAJOR ${DREAM3D_VER_MAJOR}
+    VERSION_MINOR ${DREAM3D_VER_MINOR}
+    VERSION_PATCH ${DREAM3D_VER_PATCH}
+    BINARY_DIR    ${${PROJECT_NAME}_BINARY_DIR}
+    COMPONENT     Applications
+    INSTALL_DEST  "${install_dir}" 
+    LINK_LIBRARIES DREAM3DLib
+)
+
+  
+  

@@ -315,6 +315,30 @@ void MicrostructureStatistics::execute()
 // -----------------------------------------------------------------------------
 void MicrostructureStatistics::printSettings(std::ostream &ostream)
 {
+  ostream << " ###################################### " << std::endl;
   ostream << "MicrostructureStatistics Settings Being Used" << std::endl;
+    PRINT_PROPERTY(ostream, InputFile)
+    PRINT_PROPERTY(ostream, OutputDirectory)
+    PRINT_PROPERTY(ostream, OutputFilePrefix)
+    PRINT_PROPERTY(ostream, BinStepSize)
+    PRINT_PROPERTY(ostream, WriteH5StatsFile)
+    PRINT_PROPERTY(ostream, ComputeGrainSize)
+    PRINT_PROPERTY(ostream, ComputeGrainShapes)
+    PRINT_PROPERTY(ostream, ComputeNumNeighbors)
+    PRINT_PROPERTY(ostream, ComputeMDF)
+    PRINT_PROPERTY(ostream, WriteGrainFile)
+    PRINT_PROPERTY(ostream, WriteGrainSize)
+    PRINT_PROPERTY(ostream, WriteGrainShapes)
+    PRINT_PROPERTY(ostream, WriteNumNeighbors)
+    PRINT_PROPERTY(ostream, WriteAverageOrientations)
+
+
+    PRINT_PROPERTY(ostream, WriteBinaryVTKFiles)
+    PRINT_PROPERTY(ostream, WriteVtkFile)
+    PRINT_PROPERTY(ostream, WriteSurfaceVoxel)
+    PRINT_PROPERTY(ostream, WritePhaseId)
+    PRINT_PROPERTY(ostream, WriteIPFColor)
+
+    ostream << " ###################################### " << std::endl;
 
 }

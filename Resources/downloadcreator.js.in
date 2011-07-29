@@ -1,0 +1,35 @@
+
+var downloadcreator={
+    curVersion: '@DREAM3D_VERSION@',
+
+    dotask:function(target, functionref, tasktype){ //assign a function to execute to an event handler (ie: onunload)                                                   
+    var tasktype=(window.addEventListener)? tasktype : "on"+tasktype
+    if (target.addEventListener)
+    target.addEventListener(tasktype, functionref, false)
+    else if (target.attachEvent)
+    target.attachEvent(tasktype, functionref)
+    },
+
+    makelink:function(os, theTitle){
+        ul = document.getElementById('download_ul');
+        li = document.createElement('li');
+        a = document.createElement('a');
+        a.textContent = theTitle;
+        a.href = '/binaries/' + downloadcreator.curVersion + '-' + os + '.zip';
+        a.setAttribute('title', downloadcreator.curVersion + '-' + os);
+        li.appendChild(a);
+        ul.appendChild(li);
+    },
+
+
+    init:function(){ //Initialize downloadcreator  script                                                                                                                                                                                                                                     
+        downloadcreator.makelink("OSX", "OS X Universal Binary");
+        downloadcreator.makelink("Win64", "Windows XP/Vista/7 64 Bit Zip Archive");
+        downloadcreator.makelink("Win32", "Windows XP/Vista/7 32 Bit Zip Archive");
+
+        i = document.getElementById('Current_Version');
+        i.textContent = downloadcreator.curVersion;
+    } //END init() function                                                                                                                                             
+
+    }
+    downloadcreator.dotask(window, function(){downloadcreator.init()}, "load") //Initialize script on page load

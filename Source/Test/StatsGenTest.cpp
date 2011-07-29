@@ -115,13 +115,14 @@ int main(int argc, char **argv)
   float mu = 1.0;
   float sigma = 1.0;
   float cutoff = 4.0;
+  float maxCutOff = 4.0;
   float binstep = 0.75;
   float max, min;
 
-  err = sg.computeNumberOfBins(mu, sigma, cutoff, binstep, max, min);
+  err = sg.computeNumberOfBins(mu, sigma, cutoff, maxCutOff, binstep, max, min);
 
   std::vector<float> binsizes;
-  err = sg.GenCutOff(mu, sigma, cutoff, binstep, x, y, max, size, binsizes);
+  err = sg.GenCutOff(mu, sigma, cutoff, maxCutOff, binstep, x, y, max, size, binsizes);
 
 
   std::vector<float> odf;

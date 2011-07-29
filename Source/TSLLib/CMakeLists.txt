@@ -64,7 +64,7 @@ set (ANG_HDRS
     ${TSLLib_SOURCE_DIR}/AngSetGetMacros.h
 )
 
-set (TSL_ANG_HDF5_SUPPORT 0)
+set (TSL_ANG_HDF5_SUPPORT 1)
 option(TSLLib_ENABLE_HDF5 "Enable the use of HDF5 functionality" ON)
 mark_as_advanced(TSLLib_ENABLE_HDF5)
 if (TSLLib_ENABLE_HDF5)
@@ -77,7 +77,6 @@ if (TSLLib_ENABLE_HDF5)
         ${TSLLib_SOURCE_DIR}/H5AngImporter.h
         ${TSLLib_SOURCE_DIR}/H5AngReader.h
     )
-    include (${TSLLib_SOURCE_DIR}/HDF5/SourceList.cmake)
     set (TSL_ANG_HDF5_SUPPORT 1)
 endif()
 cmp_IDE_SOURCE_PROPERTIES( "TSLLib" "${ANG_HDRS}" "${ANG_SRCS}" ${PROJECT_INSTALL_HEADERS})
@@ -118,7 +117,7 @@ set(PROJECT_SRCS
 
 add_library(${PROJECT_NAME}  ${LIB_TYPE} ${PROJECT_SRCS})
 if (TSLLib_ENABLE_HDF5)
-    target_link_libraries(TSLLib ${HDF5_LIBRARIES} )
+    target_link_libraries(${PROJECT_NAME} ${HDF5_LIBRARIES} H5Support)
 endif()
 
 LibraryProperties( ${PROJECT_NAME}  ${EXE_DEBUG_EXTENSION} )
