@@ -47,6 +47,11 @@ target_link_libraries(AngReaderTest DREAM3DLib)
 add_executable(VoxelTest ${AIMTest_SOURCE_DIR}/VoxelTest.cpp)
 #target_link_libraries(VoxelTest DREAM3DLib)
 
+
+add_executable(GrainDataReaderTest ${AIMTest_SOURCE_DIR}/GrainDataReaderTest.cpp
+                                ${AIMTest_SOURCE_DIR}/CSVGrainDataReader.cpp )
+
+
 add_executable(TextureTest ${AIMTest_SOURCE_DIR}/TextureTest.cpp)
 target_link_libraries(TextureTest DREAM3DLib)
 
