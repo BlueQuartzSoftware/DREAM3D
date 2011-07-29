@@ -44,8 +44,8 @@
 #include <vector>
 #include <string>
 
-#include "TSLLib/TSLLibTypes.h"
-#include "AngSetGetMacros.h"
+#include "EbsdLib/EbsdLibTypes.h"
+#include "EbsdLib/EbsdSetGetMacros.h"
 #include "AngReader.h"
 
 /**
@@ -56,31 +56,31 @@
  * @version 1.2
  *
  */
-class TSLLib_EXPORT H5AngImporter
+class EbsdLib_EXPORT H5AngImporter
 {
 
   public:
-    ANG_SHARED_POINTERS(H5AngImporter)
-    ANG_TYPE_MACRO(H5AngImporter)
-    ANG_STATIC_NEW_MACRO(H5AngImporter)
+    EBSD_SHARED_POINTERS(H5AngImporter)
+    EBSD_TYPE_MACRO(H5AngImporter)
+    EBSD_STATIC_NEW_MACRO(H5AngImporter)
 
 
     virtual ~H5AngImporter();
 
-    ANG_INSTANCE_STRING_PROPERTY(ErrorMessage);
-    ANG_INSTANCE_PROPERTY(bool, ErrorCondition);
+    EBSD_INSTANCE_STRING_PROPERTY(ErrorMessage);
+    EBSD_INSTANCE_PROPERTY(bool, ErrorCondition);
 #if 0
-    ANG_INSTANCE_STRING_PROPERTY(OutputFile)
-    ANG_INSTANCE_PROPERTY(int, ZStartIndex)
-    ANG_INSTANCE_PROPERTY(int, ZEndIndex)
-    ANG_INSTANCE_PROPERTY(float, ZResolution)
-    ANG_INSTANCE_PROPERTY(std::vector<std::string>, AngFileList);
+    EBSD_INSTANCE_STRING_PROPERTY(OutputFile)
+    EBSD_INSTANCE_PROPERTY(int, ZStartIndex)
+    EBSD_INSTANCE_PROPERTY(int, ZEndIndex)
+    EBSD_INSTANCE_PROPERTY(float, ZResolution)
+    EBSD_INSTANCE_PROPERTY(std::vector<std::string>, AngFileList);
 #endif
 
     /**
      * @brief Cancel the operation
      */
-    ANG_INSTANCE_PROPERTY(bool, Cancel);
+    EBSD_INSTANCE_PROPERTY(bool, Cancel);
 
     /**
      * @brief Either prints a message or sends the message to the User Interface

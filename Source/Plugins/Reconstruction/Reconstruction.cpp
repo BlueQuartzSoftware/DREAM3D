@@ -35,9 +35,9 @@
 #include "MXA/Common/LogTime.h"
 #include "MXA/Utilities/MXADir.h"
 
-#include "TSLLib/AngDirectoryPatterns.h"
-#include "TSLLib/AngReader.h"
-#include "TSLLib/AngPhase.h"
+#include "EbsdLib/TSL/AngDirectoryPatterns.h"
+#include "EbsdLib/TSL/AngReader.h"
+#include "EbsdLib/TSL/AngPhase.h"
 
 #include "DREAM3D/DREAM3DConfiguration.h"
 #include "DREAM3D/Common/Constants.h"

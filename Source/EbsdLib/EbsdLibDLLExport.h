@@ -31,8 +31,8 @@
 // This code was partly written under US Air Force Contract FA8650-07-D-5800
 ///////////////////////////////////////////////////////////////////////////////
 
-#ifndef _TSLLib_COMMON_DLL_EXPORT_H_
-#define _TSLLib_COMMON_DLL_EXPORT_H_
+#ifndef _EbsdLib_COMMON_DLL_EXPORT_H_
+#define _EbsdLib_COMMON_DLL_EXPORT_H_
 
 
 #if defined (_MSC_VER)
@@ -47,53 +47,34 @@
   #pragma warning(disable: 4548)
 #endif
 
-/* Cmake will define TSLLib_EXPORTS on Windows when it
+/* Cmake will define EbsdLib_EXPORTS on Windows when it
 configures to build a shared library. If you are going to use
 another build system on windows or create the visual studio
-projects by hand you need to define TSLLib_EXPORTS when
+projects by hand you need to define EbsdLib_EXPORTS when
 building the MXADatModel DLL on windows.
 */
 
-#if defined (TSLLib_BUILT_AS_DYNAMIC_LIB)
+#if defined (EbsdLib_BUILT_AS_DYNAMIC_LIB)
 
-  #if defined (TSLLib_EXPORTS)  /* Compiling the MXA DLL/Dylib */
+  #if defined (EbsdLib_EXPORTS)  /* Compiling the MXA DLL/Dylib */
     #if defined (_MSC_VER)  /* MSVC Compiler Case */
-      #define  TSLLib_EXPORT __declspec(dllexport)
+      #define  EbsdLib_EXPORT __declspec(dllexport)
     #elif (__GNUC__ >= 4)  /* GCC 4.x has support for visibility options */
-      #define TSLLib_EXPORT __attribute__ ((visibility("default")))
+      #define EbsdLib_EXPORT __attribute__ ((visibility("default")))
     #endif
   #else  /* Importing the DLL into another project */
     #if defined (_MSC_VER)  /* MSVC Compiler Case */
-      #define  TSLLib_EXPORT __declspec(dllimport)
+      #define  EbsdLib_EXPORT __declspec(dllimport)
     #elif (__GNUC__ >= 4)  /* GCC 4.x has support for visibility options */
-      #define TSLLib_EXPORT __attribute__ ((visibility("default")))
+      #define EbsdLib_EXPORT __attribute__ ((visibility("default")))
     #endif
   #endif
 #endif
 
-/* If TSLLib_EXPORT was never defined, define it here */
-#ifndef TSLLib_EXPORT
-  #define TSLLib_EXPORT
+/* If EbsdLib_EXPORT was never defined, define it here */
+#ifndef EbsdLib_EXPORT
+  #define EbsdLib_EXPORT
 #endif
 
-#if 0
-#if defined (_WIN32) || defined __CYGWIN__
 
-  #if defined (MXA_BUILT_AS_DYNAMIC_LIB)
-    #if defined(TSLLib_EXPORTS)
-      #define  TSLLib_EXPORT __declspec(dllexport)
-    #else
-      #define  TSLLib_EXPORT __declspec(dllimport)
-    #endif /* TSLLib_EXPORTS */
-  #else
-    #define TSLLib_EXPORT
-  #endif
-#elif __GNUC__ >= 4
- #define FLOW_DLL __attribute__ ((visibility("default")))
- #define DLL_LOCAL  __attribute__ ((visibility("hidden")
-#else /* defined (_WIN32) && defined (MXA_BUILD_SHARED_LIBS)  */
- #define TSLLib_EXPORT
-#endif
-#endif
-
-#endif /* _TSLLib_COMMON_DLL_EXPORT_H_ */
+#endif /* _EbsdLib_COMMON_DLL_EXPORT_H_ */

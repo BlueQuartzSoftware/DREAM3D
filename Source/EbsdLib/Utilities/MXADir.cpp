@@ -6,14 +6,14 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-#include "TSLLib/Utilities/MXADir.h"
+#include "EbsdLib/Utilities/MXADir.h"
 
 #define MXA_FILESYSTEM_BASE_CLASS AngMXADir
 
-#include "TSLLib/Utilities/MXAFileSystemPath.cpp"
+#include "EbsdLib/Utilities/MXAFileSystemPath.cpp"
 
 #ifdef _WIN32
-#include "TSLLib/Utilities/MXADirent.h"
+#include "EbsdLib/Utilities/MXADirent.h"
 #else
 #define AngDIR DIR
 #define ang_dirent dirent

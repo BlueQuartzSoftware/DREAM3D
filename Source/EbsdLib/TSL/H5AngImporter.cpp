@@ -38,8 +38,8 @@
 #include "H5Support/H5Lite.h"
 #include "H5Support/H5Utilities.h"
 
-#include "TSLLib/Utilities/MXADir.h"
-#include "TSLLib/Utilities/StringUtils.h"
+#include "EbsdLib/Utilities/MXADir.h"
+#include "EbsdLib/Utilities/StringUtils.h"
 
 
 //#include "DREAM3D/Common/Constants.h"
@@ -297,7 +297,7 @@ int H5AngImporter::importAngFile(hid_t fileId, int z, const std::string &angFile
 int H5AngImporter::writePhaseData(AngReader &reader, hid_t phasesGid)
 {
   int err = 0;
-  int retErr = 0;
+ // int retErr = 0;
   int32_t rank = 1;
   hsize_t dims[1] = { 0 };
   std::vector<AngPhase::Pointer> phases = reader.getPhases();

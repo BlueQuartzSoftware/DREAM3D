@@ -33,7 +33,7 @@
 
 #include <cmath>
 
-#include "TSLLib/AngReader.h"
+#include "EbsdLib/TSL/AngReader.h"
 
 
 // -----------------------------------------------------------------------------

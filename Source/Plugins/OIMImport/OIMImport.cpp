@@ -33,14 +33,15 @@
 #include "H5Support/H5Utilities.h"
 #include "MXA/Utilities/StringUtils.h"
 
-#include "TSLLib/H5AngImporter.h"
+#include "EbsdLib/TSL/H5AngImporter.h"
+#include "EbsdLib/HKL/H5CtfImporter.h"
 
 class OIMImportFunc
 {
   public:
     MXA_SHARED_POINTERS(OIMImportFunc);
     MXA_STATIC_NEW_MACRO(OIMImportFunc);
-    
+
     virtual ~OIMImportFunc() {
       if (*m_FileId > 0)
       {
@@ -48,7 +49,7 @@ class OIMImportFunc
         H5Utilities::closeFile(*m_FileId);
       }
     }
-    
+
     hid_t* m_FileId;
 
 protected:

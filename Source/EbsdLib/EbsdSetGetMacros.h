@@ -60,7 +60,7 @@
  * boost::shared_ptr<>
  * @param thisClass The name of the class.
  */
-#define ANG_NULL_SHARED_POINTER(thisClass)\
+#define EBSD_NULL_SHARED_POINTER(thisClass)\
   static Pointer NullPointer(void)\
   { \
     return Pointer(static_cast<thisClass*>(NULL));\
@@ -75,7 +75,7 @@
   typedef thisClass                      Self;\
   typedef QSharedPointer< Self >        Pointer;\
   typedef QSharedPointer<const Self >  ConstPointer;\
-  ANG_NULL_SHARED_POINTER(thisClass)
+  EBSD_NULL_SHARED_POINTER(thisClass)
 
 #endif
 
@@ -83,16 +83,16 @@
  * @brief Creates some basic typedefs that can be used throughout the code to
  * reference the class.
  */
-#define ANG_SHARED_POINTERS(thisClass)\
+#define EBSD_SHARED_POINTERS(thisClass)\
   typedef thisClass                      Self;\
   typedef boost::shared_ptr<Self >        Pointer;\
   typedef boost::shared_ptr<const Self >  ConstPointer;\
   typedef boost::weak_ptr<thisClass > WeakPointer;\
   typedef boost::weak_ptr<thisClass > ConstWeakPointer;\
-  ANG_NULL_SHARED_POINTER(thisClass)
+  EBSD_NULL_SHARED_POINTER(thisClass)
 
 
-#define ANG_STATIC_NEW_SUPERCLASS(superclass, theclass)\
+#define EBSD_STATIC_NEW_SUPERCLASS(superclass, theclass)\
   static superclass::Pointer New()\
   {\
     theclass* ptr = new theclass();\
@@ -104,14 +104,14 @@
 /**
  * @brief Creates a typedef that points to the superclass of this class
  */
-#define ANG_SUPERCLASS_POINTER(SuperClass)\
+#define EBSD_SUPERCLASS_POINTER(SuperClass)\
   typedef SuperClass::Pointer SuperClass;
 
 
 /**
  * @brief Creates a static "New" method that creates an instance of thisClass
  */
-#define ANG_NEW_SUPERCLASS(thisClass, SuperClass)\
+#define EBSD_NEW_SUPERCLASS(thisClass, SuperClass)\
   typedef SuperClass::Pointer SuperClass##Type;\
   static SuperClass##Type New##SuperClass(void) \
 { \
@@ -122,14 +122,14 @@
 /**
  * @brief Implements a Static 'New' Method for a class
  */
-#define ANG_STATIC_NEW_MACRO(thisClass) \
+#define EBSD_STATIC_NEW_MACRO(thisClass) \
 static Pointer New(void) \
 { \
   Pointer sharedPtr (new thisClass); \
   return sharedPtr; \
 }
 
-#define ANG_STATIC_NEW_MACRO_WITH_ARGS(thisClass, args) \
+#define EBSD_STATIC_NEW_MACRO_WITH_ARGS(thisClass, args) \
 static Pointer New args \
 { \
   Pointer sharedPtr (new thisClass); \
@@ -138,7 +138,7 @@ static Pointer New args \
 
 /** Macro used to add standard methods to all classes, mainly type
  * information. */
-#define ANG_TYPE_MACRO(thisClass) \
+#define EBSD_TYPE_MACRO(thisClass) \
     virtual const char* getNameOfClass() const \
         {return #thisClass;}
 
@@ -148,82 +148,82 @@ static Pointer New args \
 * @brief Creates a std::string constant for the Property so that the property
 * can be retrieved by name.
 */
-#define ANG_PROPERTY_CONSTANT(prpty) \
+#define EBSD_PROPERTY_CONSTANT(prpty) \
   const std::string prpty ( #prpty );
 
 /**
 * @brief Creates a "setter" method to set the property.
 */
-#define ANG_SET_PROPERTY(type, prpty) \
+#define EBSD_SET_PROPERTY(type, prpty) \
   void set##prpty(type value) { this->m_##prpty = value; }
 
 /**
 * @brief Creates a "getter" method to retrieve the value of the property.
 */
-#define ANG_GET_PROPERTY(type, prpty) \
+#define EBSD_GET_PROPERTY(type, prpty) \
   type get##prpty() { return m_##prpty; }
 
 
 
-#define ANG_VIRTUAL_INSTANCE_PROPERTY(type, prpty)\
+#define EBSD_VIRTUAL_INSTANCE_PROPERTY(type, prpty)\
   private:\
       type   m_##prpty;\
   public:\
-    virtual ANG_SET_PROPERTY(type, prpty)\
-    virtual ANG_GET_PROPERTY(type, prpty)
+    virtual EBSD_SET_PROPERTY(type, prpty)\
+    virtual EBSD_GET_PROPERTY(type, prpty)
 
 
 
-#define ANG_INSTANCE_PROPERTY(type, prpty)\
+#define EBSD_INSTANCE_PROPERTY(type, prpty)\
   private:\
       type   m_##prpty;\
   public:\
-    ANG_SET_PROPERTY(type, prpty)\
-    ANG_GET_PROPERTY(type, prpty)
+    EBSD_SET_PROPERTY(type, prpty)\
+    EBSD_GET_PROPERTY(type, prpty)
 
 
 
-#define ANG_SET_2DVECTOR_PROPERTY(type, prpty, varname)\
+#define EBSD_SET_2DVECTOR_PROPERTY(type, prpty, varname)\
   void set##prpty(type value[2]) {\
       varname[0] = value[0]; varname[1] = value[1]; }\
   void set##prpty(type value_0, type value_1) {\
       varname[0] = value_0; varname[1] = value_1; }
 
-#define ANG_GET_2DVECTOR_PROPERTY(type, prpty, varname)\
+#define EBSD_GET_2DVECTOR_PROPERTY(type, prpty, varname)\
   void get##prpty(type value[2]) {\
       value[0] = varname[0]; value[1] = varname[1]; }\
   void get##prpty(type &value_0, type &value_1) {\
       value_0 = varname[0]; value_1 = varname[1]; }
 
 
-#define ANG_INSTANCE_2DVECTOR_PROPERTY(type, prpty)\
+#define EBSD_INSTANCE_2DVECTOR_PROPERTY(type, prpty)\
   private:\
     type   m_##prpty[2];\
   public:\
-    ANG_SET_2DVECTOR_PROPERTY(type, prpty, m_##prpty)\
-    ANG_GET_2DVECTOR_PROPERTY(type, prpty, m_##prpty)
+    EBSD_SET_2DVECTOR_PROPERTY(type, prpty, m_##prpty)\
+    EBSD_GET_2DVECTOR_PROPERTY(type, prpty, m_##prpty)
 
 /**
 * @brief Creates a "setter" method to set the property.
 */
-#define ANG_SET_STRING_PROPERTY( prpty, varname) \
+#define EBSD_SET_STRING_PROPERTY( prpty, varname) \
   void set##prpty(const std::string &value) { this->varname = value; }
 
 /**
 * @brief Creates a "getter" method to retrieve the value of the property.
 */
-#define ANG_GET_STRING_PROPERTY( prpty, varname) \
+#define EBSD_GET_STRING_PROPERTY( prpty, varname) \
   std::string get##prpty() { return varname; }
 
 /**
  * @brief Creates setters and getters in the form of 'setXXX()' and 'getXXX()' methods
  */
-#define ANG_INSTANCE_STRING_PROPERTY(prpty)\
+#define EBSD_INSTANCE_STRING_PROPERTY(prpty)\
   private:\
   std::string      m_##prpty;\
   public:\
-  ANG_SET_STRING_PROPERTY(prpty,  m_##prpty)\
-  ANG_GET_STRING_PROPERTY(prpty,  m_##prpty)
+  EBSD_SET_STRING_PROPERTY(prpty,  m_##prpty)\
+  EBSD_GET_STRING_PROPERTY(prpty,  m_##prpty)
 
 // These are simple over-rides from the boost distribution because we don't want the entire boost distribution just
 // for a few boost headers

@@ -38,8 +38,8 @@
 
 #include <vector>
 
-#include "TSLLib/TSLLibTypes.h"
-#include "AngSetGetMacros.h"
+#include "EbsdLib/EbsdLibTypes.h"
+#include "EbsdLib/EbsdSetGetMacros.h"
 #include "AngReader.h"
 #include "AngPhase.h"
 
@@ -93,15 +93,15 @@
  * After reading the HDF5 file one can use the various methods to extract the phases
  * or other header information or all the columnar data.
  */
-class TSLLib_EXPORT H5AngReader : public AngReader
+class EbsdLib_EXPORT H5AngReader : public AngReader
 {
   public:
-    ANG_SHARED_POINTERS(H5AngReader)
-    ANG_STATIC_NEW_MACRO(H5AngReader)
-    ANG_TYPE_MACRO(H5AngReader)
+    EBSD_SHARED_POINTERS(H5AngReader)
+    EBSD_STATIC_NEW_MACRO(H5AngReader)
+    EBSD_TYPE_MACRO(H5AngReader)
     virtual ~H5AngReader();
 
-    ANG_INSTANCE_STRING_PROPERTY(HDF5Path)
+    EBSD_INSTANCE_STRING_PROPERTY(HDF5Path)
 
     virtual int readFile();
 

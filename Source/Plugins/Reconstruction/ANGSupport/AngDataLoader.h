@@ -38,8 +38,8 @@
 
 #include "MXA/Common/MXASetGetMacros.h"
 
-#include "TSLLib/AngConstants.h"
-#include "TSLLib/AngDirectoryPatterns.h"
+#include "EbsdLib/TSL/AngConstants.h"
+#include "EbsdLib/TSL/AngDirectoryPatterns.h"
 
 #include "DREAM3D/DREAM3DConfiguration.h"
 #include "AbstractAngDataLoader.h"

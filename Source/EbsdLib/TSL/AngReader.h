@@ -37,8 +37,8 @@
 #include <map>
 
 
-#include "TSLLib/AngSetGetMacros.h"
-#include "TSLLib/TSLLibConfiguration.h"
+#include "EbsdLib/EbsdSetGetMacros.h"
+#include "EbsdLib/EbsdLibConfiguration.h"
 #include "AngConstants.h"
 #include "AngHeaderEntry.h"
 #include "AngPhase.h"
@@ -139,7 +139,7 @@ void set##name##Pointer(type* f)\
 * @date Mar 1, 2010
 * @version 1.0
 */
-class TSLLib_EXPORT AngReader
+class EbsdLib_EXPORT AngReader
 {
   public:
     AngReader();
@@ -153,7 +153,7 @@ class TSLLib_EXPORT AngReader
     angInstanceProperty_old(size_t, NumberOfElements);
     angInstanceProperty_old(int, NumFields);
 
-    ANG_INSTANCE_STRING_PROPERTY(CompleteHeader);
+    EBSD_INSTANCE_STRING_PROPERTY(CompleteHeader);
 
     /** @brief Header Values from the TSL ang file */
 
@@ -216,7 +216,7 @@ class TSLLib_EXPORT AngReader
 
 protected:
     // Needed by subclasses
-    std::map<std::string, HeaderEntry::Pointer> m_Headermap;
+    std::map<std::string, EbsdHeaderEntry::Pointer> m_Headermap;
 
     /** @brief Allocates the proper amount of memory (after reading the header portion of the file)
     * and then splats '0' across all the bytes of the memory allocation

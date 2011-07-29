@@ -45,7 +45,8 @@
 #include <MXA/Common/MXASetGetMacros.h>
 #include <MXA/MXATypes.h>
 
-#include "TSLLib/H5AngImporter.h"
+#include "EbsdLib/TSL/H5AngImporter.h"
+#include "EbsdLib/HKL/H5CtfImporter.h"
 
 #include "DREAM3D/DREAM3DConfiguration.h"
 #include "DREAM3D/Common/Constants.h"
