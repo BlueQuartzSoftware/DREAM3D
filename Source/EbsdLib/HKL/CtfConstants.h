@@ -88,14 +88,14 @@ namespace Ctf
   DECLARE_STRING_CONST(Comment);
 
   // These are the names of the Data Columns
-  DECLARE_STRING_CONST(Phase);
-  DECLARE_STRING_CONST(X);
-  DECLARE_STRING_CONST(Y);
+  const std::string Phase("PhaseData");
+  const std::string X("X Position");
+  const std::string Y("Y Position");
   DECLARE_STRING_CONST(BandCount);
   DECLARE_STRING_CONST(Error);
-  DECLARE_STRING_CONST(Euler1);
-  DECLARE_STRING_CONST(Euler2);
-  DECLARE_STRING_CONST(Euler3);
+  const std::string Euler1("Phi1");
+  const std::string Euler2("Phi");
+  const std::string Euler3("Phi2");
   DECLARE_STRING_CONST(MeanAngularDeviation);
   DECLARE_STRING_CONST(BandContrast); // BC
   DECLARE_STRING_CONST(BandSlope); // BS
