@@ -35,6 +35,8 @@
 #include <sstream>
 #include <algorithm>
 
+#include "CtfPhase.h"
+
 #define kBufferSize 1024
 
 // -----------------------------------------------------------------------------
@@ -61,25 +63,25 @@ m_ManageMemory(true)
   m_NumFields = 11;
 
   // Initialize the map of header key to header value
-  m_Headermap[Ctf::Channel] = CtfStringHeaderEntry::NewEbsdHeaderEntry(Ctf::Channel);
-  m_Headermap[Ctf::Prj] = CtfStringHeaderEntry::NewEbsdHeaderEntry(Ctf::Prj);
-  m_Headermap[Ctf::Author] = CtfStringHeaderEntry::NewEbsdHeaderEntry(Ctf::Author);
-  m_Headermap[Ctf::JobMode] = CtfStringHeaderEntry::NewEbsdHeaderEntry(Ctf::JobMode);
-  m_Headermap[Ctf::XCells] = CtfHeaderEntry<int>::NewEbsdHeaderEntry(Ctf::XCells);
-  m_Headermap[Ctf::YCells] = CtfHeaderEntry<int>::NewEbsdHeaderEntry(Ctf::YCells);
-  m_Headermap[Ctf::XStep] = CtfHeaderEntry<float>::NewEbsdHeaderEntry(Ctf::XStep);
-  m_Headermap[Ctf::YStep] = CtfHeaderEntry<float>::NewEbsdHeaderEntry(Ctf::YStep);
-  m_Headermap[Ctf::AcqE1] = CtfHeaderEntry<float>::NewEbsdHeaderEntry(Ctf::AcqE1);
-  m_Headermap[Ctf::AcqE2] = CtfHeaderEntry<float>::NewEbsdHeaderEntry(Ctf::AcqE2);
-  m_Headermap[Ctf::AcqE3] = CtfHeaderEntry<float>::NewEbsdHeaderEntry(Ctf::AcqE3);
-  m_Headermap[Ctf::Euler] = CtfStringHeaderEntry::NewEbsdHeaderEntry(Ctf::Euler);
-  m_Headermap[Ctf::Mag] = CtfHeaderEntry<int>::NewEbsdHeaderEntry(Ctf::Mag);
-  m_Headermap[Ctf::Coverage] = CtfHeaderEntry<int>::NewEbsdHeaderEntry(Ctf::Coverage);
-  m_Headermap[Ctf::Device] = CtfHeaderEntry<int>::NewEbsdHeaderEntry(Ctf::Device);
-  m_Headermap[Ctf::KV] = CtfHeaderEntry<int>::NewEbsdHeaderEntry(Ctf::KV);
-  m_Headermap[Ctf::TiltAngle] = CtfHeaderEntry<float>::NewEbsdHeaderEntry(Ctf::TiltAngle);
-  m_Headermap[Ctf::TiltAxis] = CtfHeaderEntry<float>::NewEbsdHeaderEntry(Ctf::TiltAxis);
-
+  m_Headermap[Ebsd::Ctf::ChannelTextFile] = CtfStringHeaderEntry::NewEbsdHeaderEntry(Ebsd::Ctf::ChannelTextFile);
+  m_Headermap[Ebsd::Ctf::Prj] = CtfStringHeaderEntry::NewEbsdHeaderEntry(Ebsd::Ctf::Prj);
+  m_Headermap[Ebsd::Ctf::Author] = CtfStringHeaderEntry::NewEbsdHeaderEntry(Ebsd::Ctf::Author);
+  m_Headermap[Ebsd::Ctf::JobMode] = CtfStringHeaderEntry::NewEbsdHeaderEntry(Ebsd::Ctf::JobMode);
+  m_Headermap[Ebsd::Ctf::XCells] = CtfHeaderEntry<int>::NewEbsdHeaderEntry(Ebsd::Ctf::XCells);
+  m_Headermap[Ebsd::Ctf::YCells] = CtfHeaderEntry<int>::NewEbsdHeaderEntry(Ebsd::Ctf::YCells);
+  m_Headermap[Ebsd::Ctf::XStep] = CtfHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Ctf::XStep);
+  m_Headermap[Ebsd::Ctf::YStep] = CtfHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Ctf::YStep);
+  m_Headermap[Ebsd::Ctf::AcqE1] = CtfHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Ctf::AcqE1);
+  m_Headermap[Ebsd::Ctf::AcqE2] = CtfHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Ctf::AcqE2);
+  m_Headermap[Ebsd::Ctf::AcqE3] = CtfHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Ctf::AcqE3);
+  m_Headermap[Ebsd::Ctf::Euler] = CtfStringHeaderEntry::NewEbsdHeaderEntry(Ebsd::Ctf::Euler);
+  m_Headermap[Ebsd::Ctf::Mag] = CtfHeaderEntry<int>::NewEbsdHeaderEntry(Ebsd::Ctf::Mag);
+  m_Headermap[Ebsd::Ctf::Coverage] = CtfHeaderEntry<int>::NewEbsdHeaderEntry(Ebsd::Ctf::Coverage);
+  m_Headermap[Ebsd::Ctf::Device] = CtfHeaderEntry<int>::NewEbsdHeaderEntry(Ebsd::Ctf::Device);
+  m_Headermap[Ebsd::Ctf::KV] = CtfHeaderEntry<int>::NewEbsdHeaderEntry(Ebsd::Ctf::KV);
+  m_Headermap[Ebsd::Ctf::TiltAngle] = CtfHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Ctf::TiltAngle);
+  m_Headermap[Ebsd::Ctf::TiltAxis] = CtfHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Ctf::TiltAxis);
+  m_Headermap[Ebsd::Ctf::Phases] = CtfHeaderEntry<int>::NewEbsdHeaderEntry(Ebsd::Ctf::Phases);
 }
 
 
@@ -96,6 +98,7 @@ CtfReader::~CtfReader()
 // -----------------------------------------------------------------------------
 void CtfReader::initPointers(size_t numElements)
 {
+  m_NumberOfElements = numElements;
   size_t numBytes = numElements * sizeof(float);
   m_Phase = allocateArray<int > (numElements);
   m_X = allocateArray<float > (numElements);
@@ -143,7 +146,7 @@ void CtfReader::deletePointers()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int CtfReader::readFile()
+int CtfReader::readHeaderOnly()
 {
   int err = 1;
 
@@ -159,10 +162,81 @@ int CtfReader::readFile()
   m_CompleteHeader.clear();
   m_Phases.clear();
 
+  // Parse the header
   std::vector<std::vector<std::string> > headerLines;
   err = getHeaderLines(in, headerLines);
   err = parseHeaderLines(headerLines);
 
+
+  return err;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int CtfReader::readFile()
+{
+  int err = 1;
+
+  m_headerComplete = false;
+  std::ifstream in(m_FileName.c_str());
+
+  if (!in.is_open())
+  {
+    std::cout << "ctf file could not be opened: " << m_FileName << std::endl;
+    return -100;
+  }
+
+  m_CompleteHeader.clear();
+  m_Phases.clear();
+
+  // Parse the header
+  std::vector<std::vector<std::string> > headerLines;
+  err = getHeaderLines(in, headerLines);
+  err = parseHeaderLines(headerLines);
+
+  // Read the data in the file
+
+  // Delete any currently existing pointers
+  deletePointers();
+  // Initialize new pointers
+  m_NumberOfElements = getXCells() * getYCells();
+  if (m_NumberOfElements < 1)
+  {
+    return -200;
+  }
+  // Allocate all the memory needed
+  initPointers(m_NumberOfElements);
+  if (m_Phase == NULL) {return -1;}
+  if (m_X == NULL) {return -1;}
+  if (m_Y == NULL) {return -1;}
+  if (m_BandCount == NULL) {return -1;}
+  if (m_Error == NULL) {return -1;}
+  if (m_Euler1 == NULL) {return -1;}
+  if (m_Euler2 == NULL) {return -1;}
+  if (m_Euler3 == NULL) {return -1;}
+  if (m_MAD == NULL) {return -1;}
+  if (m_BC == NULL) {return -1;}
+  if (m_BS == NULL) {return -1;}
+
+  size_t counter = 0;
+  char buf[kBufferSize];
+  for(int row = 0; row < m_NumberOfElements && in.eof() == false; ++row)
+  {
+    in.getline(buf, kBufferSize);
+    readData(buf, row, counter);
+    ++counter;
+  }
+
+
+  if (counter != m_NumberOfElements && in.eof() == true)
+  {
+    std::cout << "Premature End Of File reached.\n"
+        << m_FileName
+        << "\nNumRows=" << m_NumberOfElements
+        << "\ncounter=" << counter
+        << "\nTotal Data Points Read=" << counter << std::endl;
+  }
 
   return err;
 }
@@ -175,52 +249,25 @@ int CtfReader::parseHeaderLines(std::vector<std::vector<std::string> > &headerLi
 {
   int err = 0;
   size_t size = headerLines.size();
-  for(int i = 0; i < size; ++i) {
+  for(size_t i = 0; i < size; ++i) {
     std::vector<std::string> line = headerLines[i];
-    std::cout << "Parsing Header Line: " << line[0] << std::endl;
-    if (line[0].compare(Ctf::Phases) == 0)
+  //  std::cout << "Parsing Header Line: " << line[0] << std::endl;
+    if (line[0].compare(Ebsd::Ctf::Phases) == 0)
     {
-      /* Parse the value of this header entry. That gives the number of phases to
-       * create. The we will have to parse the next "n" number of lines to get all
-       * the phase information into the CtfPhase class.
-       */
-//      m_CurrentPhase = CtfPhase::New();
-//      m_CurrentPhase->parsePhase(line[0]);
-//      // Parsing the phase is complete, now add it to the vector of Phases
-//      m_Phases.push_back(m_CurrentPhase);
+    //  std::cout << "Parsing Phases" << std::endl;
+      EbsdHeaderEntry::Pointer p = m_Headermap[line[0]];
+      p->parseValue(const_cast<char*>(line[1].c_str()), 0, line[1].length());
+      int nPhases = getPhases();
+      for (int p = 0; p < nPhases; ++p)
+      {
+        ++i; // Increment the outer loop
+        line = headerLines[i];
+        CtfPhase::Pointer phase = CtfPhase::New();
+        phase->parsePhase(line); // All the phase information is on a single line
+
+        m_Phases.push_back(phase);
+      }
     }
-//    else if (word.compare(Ctf::MaterialName) == 0 && m_CurrentPhase.get() != NULL)
-//    {
-//      m_CurrentPhase->parseMaterialName(buf, wordEnd, length);
-//    }
-//    else if (word.compare(Ctf::Formula) == 0 && m_CurrentPhase.get() != NULL)
-//    {
-//      m_CurrentPhase->parseFormula(buf, wordEnd, length);
-//    }
-//    else if (word.compare(Ctf::Info) == 0 && m_CurrentPhase.get() != NULL)
-//    {
-//      m_CurrentPhase->parseInfo(buf, wordEnd, length);
-//    }
-//    else if (word.compare(Ctf::Symmetry) == 0 && m_CurrentPhase.get() != NULL)
-//    {
-//      m_CurrentPhase->parseSymmetry(buf, wordEnd, length);
-//    }
-//    else if (word.compare(Ctf::LatticeConstants) == 0 && m_CurrentPhase.get() != NULL)
-//    {
-//      m_CurrentPhase->parseLatticeConstants(buf, wordEnd, length);
-//    }
-//    else if (word.compare(Ctf::NumberFamilies) == 0 && m_CurrentPhase.get() != NULL)
-//    {
-//      m_CurrentPhase->parseNumberFamilies(buf, wordEnd, length);
-//    }
-//    else if (word.compare(Ctf::HKLFamilies) == 0 && m_CurrentPhase.get() != NULL)
-//    {
-//      m_CurrentPhase->parseHKLFamilies(buf, wordEnd, length);
-//    }
-//    else if (word.compare(Ctf::Categories) == 0 && m_CurrentPhase.get() != NULL)
-//    {
-//      m_CurrentPhase->parseCategories(buf, wordEnd, length);
-//    }
     else if (line[0].compare("Euler angles refer to Sample Coordinate system (CS0)!") == 0)
     {
       // We parse out lots of stuff from this one line
@@ -254,9 +301,8 @@ int CtfReader::parseHeaderLines(std::vector<std::vector<std::string> > &headerLi
         std::transform(upper.begin(), upper.end(), upper.begin(), ::toupper);
         std::cout << "#define ANG_" << upper << "     \"" << line[0] << "\"" << std::endl;
         std::cout << "const std::string " << line[0] << "(ANG_" << upper << ");" << std::endl;
-
-        std::cout << "angInstanceProperty(AngHeaderEntry<float>. float, " << line[0] << "Ctf::" << line[0] << std::endl;
-        std::cout << "m_Headermap[Ctf::" << line[0] << "] = AngHeaderEntry<float>::NewEbsdHeaderEntry(Ctf::" << line[0] << ");" << std::endl;
+        std::cout << "angInstanceProperty(AngHeaderEntry<float>. float, " << line[0] << "Ebsd::Ctf::" << line[0] << std::endl;
+        std::cout << "m_Headermap[Ebsd::Ctf::" << line[0] << "] = AngHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Ctf::" << line[0] << ");" << std::endl;
       }
       else
       {
@@ -269,9 +315,98 @@ int CtfReader::parseHeaderLines(std::vector<std::vector<std::string> > &headerLi
 }
 
 // -----------------------------------------------------------------------------
+//  Read the data part of the ANG file
+// -----------------------------------------------------------------------------
+void CtfReader::readData(const std::string &line, int row, size_t i)
+{
+  /* When reading the data there should be at least 11 cols of data.
+   */
+  float x, y,  euler1, euler2, euler3, mad;
+  int phase, bCount, error, bc, bs;
+  size_t offset = i;
+  int fields = sscanf(line.c_str(), "%d\t%f\t%f\t%d\t%d\t%f\t%f\t%f\t%f\t%d\t%d",
+                       &phase, &x,&y, &bCount, &error, &euler1, &euler2, &euler3, &mad, &bc, &bs);
+  assert(fields == m_NumFields);
+
+#if 0
+  // Do we transform the data
+  if (m_UserOrigin == Ang::UpperRightOrigin)
+  {
+    offset = (row*nCols)+((nCols-1)-col);
+    if (phase - PI_OVER_2f < 0.0)
+    {
+      phase = phase + THREE_PI_OVER_2f;
+    }
+    else
+    {
+      phase = phase - PI_OVER_2f;
+    }
+  }
+  else if (m_UserOrigin == Ang::UpperLeftOrigin)
+  {
+    if (phase + PI_OVER_2f > TWO_PIf)
+    {
+      phase = phase - THREE_PI_OVER_2f;
+    }
+    else
+    {
+      phase = phase + PI_OVER_2f;
+    }
+    if (x + ONE_PIf > TWO_PIf)
+    {
+      x = x - ONE_PIf;
+    }
+    else
+    {
+      x = x + ONE_PIf;
+    }
+  }
+  else if (m_UserOrigin == Ang::LowerLeftOrigin)
+  {
+    offset = (((nRows-1)-row)*nCols)+col;
+    if (phase + PI_OVER_2f > TWO_PIf)
+    {
+      phase = phase - THREE_PI_OVER_2f;
+    }
+    else
+    {
+      phase = phase + PI_OVER_2f;
+    }
+  }
+  else if (m_UserOrigin == Ang::LowerRightOrigin)
+  {
+    offset = (((nRows-1)-row)*nCols)+((nCols-1)-col);
+  }
+
+
+  if (m_UserOrigin == Ang::NoOrientation)
+  {
+    // If the user/programmer sets "NoOrientation" then we simply read the data
+    // from the file and copy the values into the arrays without any regard for
+    // the true X and Y positions in the grid. We are simply trying to keep the
+    // data as close to the original as possible.
+    offset = i;
+  }
+#endif
+  m_Phase[offset] = phase;
+  m_X[offset] = x;
+  m_Y[offset] = y;
+  m_BandCount[offset] = bCount;
+  m_Error[offset] = error;
+  m_Euler1[offset] = euler1;
+  m_Euler2[offset] = euler2;
+  m_Euler3[offset] = euler3;
+  m_MAD[offset] = mad;
+  m_BC[offset] = bc;
+  m_BS[offset] = bs;
+
+}
+
+
+// -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::vector<std::string> CtfReader::tokenize(char* buf)
+std::vector<std::string> CtfReader::tokenize(char* buf, char delimiter)
 {
   std::vector<std::string> output;
   std::string values(buf);
@@ -280,7 +415,7 @@ std::vector<std::string> CtfReader::tokenize(char* buf)
 //  std::cout << "-----------------------------" << std::endl;
   while(pos != std::string::npos && pos != values.size() - 1)
   {
-    pos = values.find('\t', start);
+    pos = values.find(delimiter, start);
     output.push_back(values.substr(start, pos-start));
  //   std::cout << "Adding: " << output.back() << std::endl;
     if (pos != std::string::npos)
@@ -310,7 +445,7 @@ int CtfReader::getHeaderLines(std::ifstream &reader, std::vector<std::vector<std
     while(buf[i] != 0 ) {++i;}
     buf[i-1] = 0;
 
-    std::vector<std::string> tokens = tokenize(buf);
+    std::vector<std::string> tokens = tokenize(buf, '\t');
 
     // Remove empty lines
     if (buf[0] == 0) continue;
@@ -322,7 +457,6 @@ int CtfReader::getHeaderLines(std::ifstream &reader, std::vector<std::vector<std
     }
     headerLines.push_back(tokens);
   }
-  reader.close();
   return err;
 }
 
@@ -341,14 +475,47 @@ bool CtfReader::isDataHeaderLine(std::vector<std::string> &columns)
     return true;
 }
 
+
+#define CTF_PRINT_HEADER_VALUE(var, out)\
+ out << #var << ": " << get##var () << std::endl;
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int CtfReader::readHeaderOnly()
+void CtfReader::printHeader(std::ostream &out)
 {
-  int err = -1;
-  return err;
+  std::cout << "-------------------- CtfReader Header Values --------------------" << std::endl;
+  CTF_PRINT_HEADER_VALUE(Channel, out);
+  CTF_PRINT_HEADER_VALUE(Prj, out);
+  CTF_PRINT_HEADER_VALUE(Author, out);
+  CTF_PRINT_HEADER_VALUE(JobMode, out);
+  CTF_PRINT_HEADER_VALUE(XCells, out);
+  CTF_PRINT_HEADER_VALUE(YCells, out);
+  CTF_PRINT_HEADER_VALUE(XStep, out);
+  CTF_PRINT_HEADER_VALUE(YStep, out);
+  CTF_PRINT_HEADER_VALUE(AcqE1, out);
+  CTF_PRINT_HEADER_VALUE(AcqE2, out);
+  CTF_PRINT_HEADER_VALUE(AcqE3, out);
+  CTF_PRINT_HEADER_VALUE(Euler, out);
+  CTF_PRINT_HEADER_VALUE(Mag, out);
+  CTF_PRINT_HEADER_VALUE(Coverage, out);
+  CTF_PRINT_HEADER_VALUE(Device, out);
+  CTF_PRINT_HEADER_VALUE(KV, out);
+  CTF_PRINT_HEADER_VALUE(TiltAngle, out);
+  CTF_PRINT_HEADER_VALUE(TiltAxis, out);
+  CTF_PRINT_HEADER_VALUE(Phases, out);
+  int nPhases = getPhases();
+  for (int p = 0; p < nPhases; ++p)
+  {
+    out << "### Phase " << p << std::endl;
+    m_Phases[p]->printSelf(out);
+  }
+
+  std::cout << "----------------------------------------" << std::endl;
 }
+
+
+
 
 // hkl2tsl.cxx
 

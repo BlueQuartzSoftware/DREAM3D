@@ -52,30 +52,29 @@ class CtfReader
 
     /** @brief Sets the file name of the ang file to be read */
     EBSD_INSTANCE_STRING_PROPERTY( FileName )
-    EBSD_INSTANCE_PROPERTY(size_t, NumberOfElements);
     EBSD_INSTANCE_PROPERTY(int, NumFields);
 
     EBSD_INSTANCE_STRING_PROPERTY(CompleteHeader);
 
-    EbsdHeader_INSTANCE_PROPERTY(CtfStringHeaderEntry, std::string, Channel, Ctf::Channel)
-    EbsdHeader_INSTANCE_PROPERTY(CtfStringHeaderEntry, std::string, Prj, Ctf::Prj)
-    EbsdHeader_INSTANCE_PROPERTY(CtfStringHeaderEntry, std::string, Author, Ctf::Author)
-    EbsdHeader_INSTANCE_PROPERTY(CtfStringHeaderEntry, std::string, JobMode, Ctf::JobMode)
-    EbsdHeader_INSTANCE_PROPERTY(CtfHeaderEntry<int>, int, XCells, Ctf::XCells)
-    EbsdHeader_INSTANCE_PROPERTY(CtfHeaderEntry<int>, int, YCells, Ctf::YCells)
-    EbsdHeader_INSTANCE_PROPERTY(CtfHeaderEntry<float>, float, XStep, Ctf::XStep)
-    EbsdHeader_INSTANCE_PROPERTY(CtfHeaderEntry<float>, float, YStep, Ctf::YStep)
-    EbsdHeader_INSTANCE_PROPERTY(CtfHeaderEntry<float>, float, AcqE1, Ctf::AcqE1)
-    EbsdHeader_INSTANCE_PROPERTY(CtfHeaderEntry<float>, float, AcqE2, Ctf::AcqE2)
-    EbsdHeader_INSTANCE_PROPERTY(CtfHeaderEntry<float>, float, AcqE3, Ctf::AcqE3)
-    EbsdHeader_INSTANCE_PROPERTY(CtfStringHeaderEntry, std::string, Euler, Ctf::Euler)
-    EbsdHeader_INSTANCE_PROPERTY(CtfHeaderEntry<int>, int, Mag, Ctf::Mag)
-    EbsdHeader_INSTANCE_PROPERTY(CtfHeaderEntry<int>, int, Coverage, Ctf::Coverage)
-    EbsdHeader_INSTANCE_PROPERTY(CtfHeaderEntry<int>, int, Device, Ctf::Device)
-    EbsdHeader_INSTANCE_PROPERTY(CtfHeaderEntry<int>, int, KV, Ctf::KV)
-    EbsdHeader_INSTANCE_PROPERTY(CtfHeaderEntry<float>, float, TiltAngle, Ctf::TiltAngle)
-    EbsdHeader_INSTANCE_PROPERTY(CtfHeaderEntry<float>, float, TiltAxis, Ctf::TiltAxis)
- //   EbsdHeader_INSTANCE_PROPERTY(CtfHeaderEntry<int>, int, Phases, Ctf::Phases)
+    EbsdHeader_INSTANCE_PROPERTY(CtfStringHeaderEntry, std::string, Channel, Ebsd::Ctf::ChannelTextFile)
+    EbsdHeader_INSTANCE_PROPERTY(CtfStringHeaderEntry, std::string, Prj, Ebsd::Ctf::Prj)
+    EbsdHeader_INSTANCE_PROPERTY(CtfStringHeaderEntry, std::string, Author, Ebsd::Ctf::Author)
+    EbsdHeader_INSTANCE_PROPERTY(CtfStringHeaderEntry, std::string, JobMode, Ebsd::Ctf::JobMode)
+    EbsdHeader_INSTANCE_PROPERTY(CtfHeaderEntry<int>, int, XCells, Ebsd::Ctf::XCells)
+    EbsdHeader_INSTANCE_PROPERTY(CtfHeaderEntry<int>, int, YCells, Ebsd::Ctf::YCells)
+    EbsdHeader_INSTANCE_PROPERTY(CtfHeaderEntry<float>, float, XStep, Ebsd::Ctf::XStep)
+    EbsdHeader_INSTANCE_PROPERTY(CtfHeaderEntry<float>, float, YStep, Ebsd::Ctf::YStep)
+    EbsdHeader_INSTANCE_PROPERTY(CtfHeaderEntry<float>, float, AcqE1, Ebsd::Ctf::AcqE1)
+    EbsdHeader_INSTANCE_PROPERTY(CtfHeaderEntry<float>, float, AcqE2, Ebsd::Ctf::AcqE2)
+    EbsdHeader_INSTANCE_PROPERTY(CtfHeaderEntry<float>, float, AcqE3, Ebsd::Ctf::AcqE3)
+    EbsdHeader_INSTANCE_PROPERTY(CtfStringHeaderEntry, std::string, Euler, Ebsd::Ctf::Euler)
+    EbsdHeader_INSTANCE_PROPERTY(CtfHeaderEntry<int>, int, Mag, Ebsd::Ctf::Mag)
+    EbsdHeader_INSTANCE_PROPERTY(CtfHeaderEntry<int>, int, Coverage, Ebsd::Ctf::Coverage)
+    EbsdHeader_INSTANCE_PROPERTY(CtfHeaderEntry<int>, int, Device, Ebsd::Ctf::Device)
+    EbsdHeader_INSTANCE_PROPERTY(CtfHeaderEntry<int>, int, KV, Ebsd::Ctf::KV)
+    EbsdHeader_INSTANCE_PROPERTY(CtfHeaderEntry<float>, float, TiltAngle, Ebsd::Ctf::TiltAngle)
+    EbsdHeader_INSTANCE_PROPERTY(CtfHeaderEntry<float>, float, TiltAxis, Ebsd::Ctf::TiltAxis)
+    EbsdHeader_INSTANCE_PROPERTY(CtfHeaderEntry<int>, int, Phases, Ebsd::Ctf::Phases)
 
     EBSD_POINTER_PROPERTY(Phase, Phase, int)
     EBSD_POINTER_PROPERTY(X, X, float)
@@ -101,6 +100,7 @@ class CtfReader
     */
     virtual int readHeaderOnly();
 
+    virtual void printHeader(std::ostream &out);
 
   protected:
       // Needed by subclasses
@@ -156,12 +156,13 @@ class CtfReader
   private:
      bool m_ManageMemory;  // We are going to forcibly manage the memory. There is currently NO option otherwise.
      bool m_headerComplete;
+     size_t m_NumberOfElements;
 
-     CtfPhase::Pointer   m_CurrentPhase;
      std::vector<CtfPhase::Pointer> m_Phases;
 
 
-     std::vector<std::string> tokenize(char* buf);
+     std::vector<std::string> tokenize(char* buf, char delimiter);
+
      int getHeaderLines(std::ifstream &reader, std::vector<std::vector<std::string> > &headerLines);
      /**
       * Checks that the line is the header of the columns for the data.
@@ -172,7 +173,10 @@ class CtfReader
       *         <code>false</code> otherwise
       */
      bool isDataHeaderLine(std::vector<std::string> &columns);
+
      int parseHeaderLines(std::vector<std::vector<std::string> > &headerLines);
+
+     void readData(const std::string &line, int row, size_t i);
 
     CtfReader(const CtfReader&); // Copy Constructor Not Implemented
     void operator=(const CtfReader&); // Operator '=' Not Implemented

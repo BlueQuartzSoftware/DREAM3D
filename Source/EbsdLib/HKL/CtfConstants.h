@@ -35,6 +35,9 @@
 #define DECLARE_STRING_CONST(var)\
   const std::string var(#var);
 
+
+namespace Ebsd {
+
 namespace Ctf
 {
   const std::string FileExt("ctf");
@@ -44,13 +47,13 @@ namespace Ctf
   const std::string ZEndIndex("ZEndIndex");
   const std::string ZResolution("ZResolution");
   const std::string Manufacturer("Manufacturer");
-  const std::string TSL("HKL");
+  const std::string HKL("HKL");
   const std::string OriginalFile("OriginalFile");
   const std::string Index("Index");
   const std::string Data("Data");
 
-
-  DECLARE_STRING_CONST(Channel);
+// These are Header related
+  const std::string ChannelTextFile("Channel Text File");
   DECLARE_STRING_CONST(Prj);
   DECLARE_STRING_CONST(Author);
   DECLARE_STRING_CONST(JobMode);
@@ -70,6 +73,17 @@ namespace Ctf
   DECLARE_STRING_CONST(TiltAxis);
   DECLARE_STRING_CONST(Phases);
 
+  // These are phase related
+  DECLARE_STRING_CONST(LatticeDimensions);
+  DECLARE_STRING_CONST(LatticeAngles);
+  DECLARE_STRING_CONST(PhaseName);
+  DECLARE_STRING_CONST(LaueGroup);
+  DECLARE_STRING_CONST(Section4);
+  DECLARE_STRING_CONST(Section5);
+  DECLARE_STRING_CONST(Section6);
+  DECLARE_STRING_CONST(Comment);
+
+  // These are the names of the Data Columns
   DECLARE_STRING_CONST(Phase);
   DECLARE_STRING_CONST(X);
   DECLARE_STRING_CONST(Y);
@@ -84,6 +98,6 @@ namespace Ctf
 
 } // End namespace Ctf
 
-
+} // End Namespace Ebsd
 
 #endif /* _HKLConstants.h_  */
