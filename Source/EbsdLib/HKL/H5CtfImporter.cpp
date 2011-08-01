@@ -169,7 +169,6 @@ int H5CtfImporter::importFile(hid_t fileId, int z, const std::string &ctfFile)
     setErrorCondition(-600);
     return -1;
   }
- // WRITE_EBSD_HEADER_STRING_DATA(reader, std::string, Channel, Ebsd::Ctf::ChannelTextFile)
   WRITE_EBSD_HEADER_STRING_DATA(reader, std::string, Prj, Ebsd::Ctf::Prj)
   WRITE_EBSD_HEADER_STRING_DATA(reader, std::string, Author, Ebsd::Ctf::Author)
   WRITE_EBSD_HEADER_STRING_DATA(reader, std::string, JobMode, Ebsd::Ctf::JobMode)
@@ -187,7 +186,6 @@ int H5CtfImporter::importFile(hid_t fileId, int z, const std::string &ctfFile)
   WRITE_EBSD_HEADER_DATA(reader, int, KV, Ebsd::Ctf::KV)
   WRITE_EBSD_HEADER_DATA(reader, float, TiltAngle, Ebsd::Ctf::TiltAngle)
   WRITE_EBSD_HEADER_DATA(reader, float, TiltAxis, Ebsd::Ctf::TiltAxis)
- // WRITE_EBSD_HEADER_DATA(reader, int, Phases, Ebsd::Ctf::Phases)
 
   hid_t phasesGid = H5Utilities::createGroup(gid, Ebsd::Phases);
   if (phasesGid < 0) {
