@@ -57,7 +57,7 @@ int main(int argc, char **argv)
   reader.setFileName(angFile);
   int err = reader.readHeaderOnly();
 
-  std::vector<AngPhase::Pointer> phases = reader.getPhases();
+  std::vector<AngPhase::Pointer> phases = reader.getPhaseVector();
   if (phases.size() != 2)
   {
     std::cout << "Phase Count is Wrong. Should be 2 and is " << phases.size() << std::endl;

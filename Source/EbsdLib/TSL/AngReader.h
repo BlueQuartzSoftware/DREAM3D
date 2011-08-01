@@ -77,7 +77,7 @@ class EbsdLib_EXPORT AngReader
     EbsdHeader_INSTANCE_PROPERTY(AngHeaderEntry<float>, float, ZStar, Ebsd::Ang::ZStar)
     EbsdHeader_INSTANCE_PROPERTY(AngHeaderEntry<float>, float, WorkingDistance, Ebsd::Ang::WorkingDistance)
 
-    std::vector<AngPhase::Pointer> getPhases() { return m_Phases; }
+    EBSD_INSTANCE_PROPERTY(std::vector<AngPhase::Pointer>, PhaseVector)
 
     EbsdHeader_INSTANCE_PROPERTY(AngStringHeaderEntry, std::string, Grid, Ebsd::Ang::Grid)
     EbsdHeader_INSTANCE_PROPERTY(AngHeaderEntry<float>, float, XStep, Ebsd::Ang::XStep)
@@ -172,7 +172,7 @@ private:
     bool m_headerComplete;
 
     AngPhase::Pointer   m_CurrentPhase;
-    std::vector<AngPhase::Pointer> m_Phases;
+
 
     /** @brief Parses the value from a single line of the header section of the TSL .ang file
     * @param line The line to parse

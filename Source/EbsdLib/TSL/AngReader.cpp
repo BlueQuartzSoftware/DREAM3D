@@ -167,7 +167,7 @@ int AngReader::readHeaderOnly()
   }
 
   m_CompleteHeader.clear();
-  m_Phases.clear();
+  m_PhaseVector.clear();
 
   while (!in.eof() && !m_headerComplete)
   {
@@ -196,7 +196,7 @@ int AngReader::readFile()
   }
 
   m_CompleteHeader.clear();
-  m_Phases.clear();
+  m_PhaseVector.clear();
 
   while (!in.eof() && !m_headerComplete)
   {
@@ -326,7 +326,7 @@ void AngReader::parseHeaderLine(char* buf, size_t length)
     m_CurrentPhase = AngPhase::New();
     m_CurrentPhase->parsePhase(buf, wordEnd, length);
     // Parsing the phase is complete, now add it to the vector of Phases
-    m_Phases.push_back(m_CurrentPhase);
+    m_PhaseVector.push_back(m_CurrentPhase);
   }
   else if (word.compare(Ebsd::Ang::MaterialName) == 0 && m_CurrentPhase.get() != NULL)
   {

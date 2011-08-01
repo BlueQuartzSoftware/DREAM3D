@@ -43,9 +43,10 @@
 //
 // -----------------------------------------------------------------------------
 CtfReader::CtfReader() :
+m_UserOrigin(Ebsd::Ctf::NoOrientation),
 m_FileName(""),
-m_NumberOfElements(0),
-m_ManageMemory(true)
+m_ManageMemory(true),
+m_NumberOfElements(0)
 {
 
   m_Phase = NULL;
@@ -81,7 +82,7 @@ m_ManageMemory(true)
   m_Headermap[Ebsd::Ctf::KV] = CtfHeaderEntry<int>::NewEbsdHeaderEntry(Ebsd::Ctf::KV);
   m_Headermap[Ebsd::Ctf::TiltAngle] = CtfHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Ctf::TiltAngle);
   m_Headermap[Ebsd::Ctf::TiltAxis] = CtfHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Ctf::TiltAxis);
-  m_Headermap[Ebsd::Ctf::Phases] = CtfHeaderEntry<int>::NewEbsdHeaderEntry(Ebsd::Ctf::Phases);
+  m_Headermap[Ebsd::Ctf::NumPhases] = CtfHeaderEntry<int>::NewEbsdHeaderEntry(Ebsd::Ctf::NumPhases);
 }
 
 
@@ -160,7 +161,7 @@ int CtfReader::readHeaderOnly()
   }
 
   m_CompleteHeader.clear();
-  m_Phases.clear();
+  m_PhaseVector.clear();
 
   // Parse the header
   std::vector<std::vector<std::string> > headerLines;
@@ -188,7 +189,7 @@ int CtfReader::readFile()
   }
 
   m_CompleteHeader.clear();
-  m_Phases.clear();
+  m_PhaseVector.clear();
 
   // Parse the header
   std::vector<std::vector<std::string> > headerLines;
@@ -252,20 +253,21 @@ int CtfReader::parseHeaderLines(std::vector<std::vector<std::string> > &headerLi
   for(size_t i = 0; i < size; ++i) {
     std::vector<std::string> line = headerLines[i];
   //  std::cout << "Parsing Header Line: " << line[0] << std::endl;
-    if (line[0].compare(Ebsd::Ctf::Phases) == 0)
+    if (line[0].compare(Ebsd::Ctf::NumPhases) == 0)
     {
     //  std::cout << "Parsing Phases" << std::endl;
       EbsdHeaderEntry::Pointer p = m_Headermap[line[0]];
       p->parseValue(const_cast<char*>(line[1].c_str()), 0, line[1].length());
-      int nPhases = getPhases();
+      int nPhases = getNumPhases();
       for (int p = 0; p < nPhases; ++p)
       {
         ++i; // Increment the outer loop
         line = headerLines[i];
         CtfPhase::Pointer phase = CtfPhase::New();
+        phase->setPhaseIndex(p);
         phase->parsePhase(line); // All the phase information is on a single line
 
-        m_Phases.push_back(phase);
+        m_PhaseVector.push_back(phase);
       }
     }
     else if (line[0].compare("Euler angles refer to Sample Coordinate system (CS0)!") == 0)
@@ -503,12 +505,12 @@ void CtfReader::printHeader(std::ostream &out)
   CTF_PRINT_HEADER_VALUE(KV, out);
   CTF_PRINT_HEADER_VALUE(TiltAngle, out);
   CTF_PRINT_HEADER_VALUE(TiltAxis, out);
-  CTF_PRINT_HEADER_VALUE(Phases, out);
-  int nPhases = getPhases();
+  CTF_PRINT_HEADER_VALUE(NumPhases, out);
+  int nPhases = getNumPhases();
   for (int p = 0; p < nPhases; ++p)
   {
     out << "### Phase " << p << std::endl;
-    m_Phases[p]->printSelf(out);
+    m_PhaseVector[p]->printSelf(out);
   }
 
   std::cout << "----------------------------------------" << std::endl;
