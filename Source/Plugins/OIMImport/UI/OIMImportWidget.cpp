@@ -126,7 +126,7 @@ void OIMImportWidget::readSettings(QSettings &prefs)
   READ_SETTING(prefs, m_, ZStartIndex, ok, i, 1 , Int);
   READ_SETTING(prefs, m_, ZEndIndex, ok, i, 10 , Int);
   READ_STRING_SETTING(prefs, m_, zSpacing, "0.25");
-  READ_STRING_SETTING(prefs, m_, OutputFile, "Untitled.h5ang");
+  READ_STRING_SETTING(prefs, m_, OutputFile, "Untitled.h5ebsd");
 
   on_m_InputDir_textChanged(m_InputDir->text());
   prefs.endGroup();
@@ -167,7 +167,7 @@ void OIMImportWidget::checkIOFiles()
 {
   if (true == this->verifyPathExists(m_InputDir->text(), this->m_InputDir))
    {
-     m_findAngMaxSliceAndPrefix();
+     m_findEbsdMaxSliceAndPrefix();
    }
 }
 
@@ -212,12 +212,12 @@ void OIMImportWidget::on_m_InputDir_textChanged(const QString & text)
 {
   if (verifyPathExists(m_InputDir->text(), m_InputDir) )
   {
-    m_findAngMaxSliceAndPrefix();
+    m_findEbsdMaxSliceAndPrefix();
     QDir dir(m_InputDir->text());
     QString dirname = dir.dirName();
     dir.cdUp();
 
-    QString outPath = dir.absolutePath() + QDir::separator() + dirname + "_Output" + QDir::separator() + dirname + ".h5ang";
+    QString outPath = dir.absolutePath() + QDir::separator() + dirname + "_Output" + QDir::separator() + dirname + ".h5ebsd";
     outPath = QDir::toNativeSeparators(outPath);
     m_OutputFile->setText(outPath);
     verifyPathExists(m_OutputFile->text(), m_OutputFile);
@@ -422,15 +422,49 @@ void OIMImportWidget::m_generateExampleOimInputFile()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void OIMImportWidget::m_findAngMaxSliceAndPrefix()
+void OIMImportWidget::m_findEbsdMaxSliceAndPrefix()
 {
   if (m_InputDir->text().length() == 0) { return; }
   QDir dir(m_InputDir->text());
-  QStringList filters;
+  m_FileExt->setText("");
+  {
+    QString ext = ".ang";
+    QStringList filters;
+    filters << "*" + ext;
+    dir.setNameFilters(filters);
+    QFileInfoList angList = dir.entryInfoList();
+    if (angList.size() != 0)
+    {
+      m_FileExt->setText("ang");
+    }
+  }
+  if (m_FileExt->text().isEmpty() == true)
+  {
+    QString ext = ".ctf";
+    QStringList filters;
+    filters << "*" + ext;
+    dir.setNameFilters(filters);
+    QFileInfoList angList = dir.entryInfoList();
+    if (angList.size() != 0)
+    {
+      m_FileExt->setText("ctf");
+    }
+  }
+  // Add in more file formats to look for here
+
+
+  // Final check to make sure we have a valid file extension
+  if (m_FileExt->text().isEmpty() == true)
+   {
+    return;
+   }
+
   QString ext = "." + m_FileExt->text();
-  filters << "*"+ext;
+  QStringList filters;
+  filters << "*" + ext;
   dir.setNameFilters(filters);
   QFileInfoList angList = dir.entryInfoList();
+
   int minSlice = 0;
   int maxSlice = 0;
   int currValue = 0;
