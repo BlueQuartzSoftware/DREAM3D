@@ -38,7 +38,7 @@
 #include "EbsdLib/EbsdSetGetMacros.h"
 
 
-class EbsdImporter
+class EbsdLib_EXPORT EbsdImporter
 {
   public:
     EBSD_SHARED_POINTERS(EbsdImporter)

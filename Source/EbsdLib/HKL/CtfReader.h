@@ -44,7 +44,7 @@
 
 
 
-class CtfReader
+class EbsdLib_EXPORT CtfReader
 {
   public:
     CtfReader();
