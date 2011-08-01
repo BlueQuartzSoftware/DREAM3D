@@ -31,6 +31,10 @@
 #ifndef CTFPHASE_H_
 #define CTFPHASE_H_
 
+#include <sstream>
+#include <vector>
+#include <string>
+
 #include "EbsdLib/EbsdSetGetMacros.h"
 #include "EbsdLib/EbsdLibConfiguration.h"
 #include "CtfConstants.h"
@@ -46,7 +50,59 @@ class EbsdLib_EXPORT CtfPhase
     EBSD_TYPE_MACRO(CtfPhase)
     virtual ~CtfPhase();
 
-    void parsePhase(const std::string &str);
+    EBSD_INSTANCE_PROPERTY(std::vector<float>, LatticeDimensions); // 1x3 array
+    EBSD_INSTANCE_PROPERTY(std::vector<float>, LatticeAngles); // 1x3 array
+    EBSD_INSTANCE_STRING_PROPERTY(PhaseName);
+    EBSD_INSTANCE_PROPERTY(int, LaueGroup);
+
+    EBSD_INSTANCE_STRING_PROPERTY(Section4);
+    EBSD_INSTANCE_STRING_PROPERTY(Section5);
+    EBSD_INSTANCE_STRING_PROPERTY(Section6);
+    EBSD_INSTANCE_STRING_PROPERTY(Comment);
+
+    /**
+     *
+     */
+    void parsePhase(const std::vector<std::string> &tokens);
+
+    /**
+     *
+     */
+    void printSelf(std::ostream &stream);
+
+
+    /**
+     *
+     */
+    template<typename T>
+    bool stringToNum(T &t, const std::string &s)
+    {
+      std::istringstream iss(s);
+      return !(iss >> t).fail();
+    }
+
+    /**
+     *
+     */
+    template<typename T>
+    std::vector<T> tokenize(const std::string &values, char delimiter)
+    {
+      std::vector<T> output;
+      std::string::size_type start = 0;
+      std::string::size_type pos = 0;
+      while(pos != std::string::npos && pos != values.size() - 1)
+      {
+        pos = values.find(delimiter, start);
+        T value = 0;
+        stringToNum(value, values.substr(start, pos-start));
+        output.push_back(value);
+        if (pos != std::string::npos)
+        {
+          start = pos + 1;
+        }
+      }
+      return output;
+    }
 
 
   protected:

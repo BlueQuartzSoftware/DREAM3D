@@ -48,6 +48,9 @@ int main(int argc, char **argv)
     std::cout << "Error reading .ctf file" << std::endl;
     return EXIT_FAILURE;
   }
+
+  reader.printHeader(std::cout);
+
   std::cout << "Success Reading the file" << std::endl;
   return EXIT_SUCCESS;
 }
