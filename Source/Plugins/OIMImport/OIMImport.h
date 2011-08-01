@@ -42,11 +42,8 @@
 #include <vector>
 #include <string>
 
-#include <MXA/Common/MXASetGetMacros.h>
-#include <MXA/MXATypes.h>
-
-#include "EbsdLib/TSL/H5AngImporter.h"
-#include "EbsdLib/HKL/H5CtfImporter.h"
+#include "MXA/Common/MXASetGetMacros.h"
+#include "MXA/MXATypes.h"
 
 #include "DREAM3D/DREAM3DConfiguration.h"
 #include "DREAM3D/Common/Constants.h"
@@ -75,7 +72,7 @@ class OIMImport : public AbstractPipeline
     MXA_INSTANCE_PROPERTY(int, ZStartIndex)
     MXA_INSTANCE_PROPERTY(int, ZEndIndex)
     MXA_INSTANCE_PROPERTY(float, ZResolution)
-    MXA_INSTANCE_PROPERTY(std::vector<std::string>, AngFileList);
+    MXA_INSTANCE_PROPERTY(std::vector<std::string>, EbsdFileList);
 
     /**
      * @brief Main method to run the operation

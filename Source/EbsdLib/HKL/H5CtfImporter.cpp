@@ -52,8 +52,7 @@
 //
 // -----------------------------------------------------------------------------
 H5CtfImporter::H5CtfImporter():
-m_ErrorCondition(0),
-m_Cancel(false)
+EbsdImporter()
 {
 }
 
@@ -111,6 +110,9 @@ H5CtfImporter::~H5CtfImporter()
 int H5CtfImporter::importFile(hid_t fileId, int z, const std::string &ctfFile)
 {
   herr_t err = -1;
+  setCancel(false);
+  setErrorCondition(false);
+  setErrorMessage("");
 
 //  std::cout << "H5CtfImporter: Importing " << ctfFile << std::endl;
   CtfReader reader;
@@ -322,15 +324,5 @@ int H5CtfImporter::writePhaseData(CtfReader &reader, hid_t phasesGid)
     err = H5Gclose(pid);
   }
   return err;
-}
-
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void H5CtfImporter::progressMessage(const std::string &message, int progress)
-{
-  std::cout << progress << "% " << message << std::endl;
 }
 

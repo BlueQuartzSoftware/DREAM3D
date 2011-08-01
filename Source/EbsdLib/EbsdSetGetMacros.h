@@ -173,7 +173,6 @@ static Pointer New args \
     virtual EBSD_GET_PROPERTY(type, prpty)
 
 
-
 #define EBSD_INSTANCE_PROPERTY(type, prpty)\
   private:\
       type   m_##prpty;\
@@ -226,7 +225,12 @@ static Pointer New args \
   EBSD_GET_STRING_PROPERTY(prpty,  m_##prpty)
 
 
-
+#define EBSD_VIRTUAL_INSTANCE_STRING_PROPERTY(prpty)\
+  private:\
+  std::string      m_##prpty;\
+  public:\
+    virtual EBSD_SET_STRING_PROPERTY(prpty,  m_##prpty)\
+    virtual EBSD_GET_STRING_PROPERTY(prpty,  m_##prpty)
 
 // -----------------------------------------------------------------------------
 //

@@ -95,7 +95,7 @@ namespace Ebsd {
  {
 
 
-   const std::string TSL("TSL");
+   const std::string Manufacturer("TSL");
 
    /** @brief Constants defined for the 5 orientation options */
    enum Orientation

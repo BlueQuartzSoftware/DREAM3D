@@ -29,45 +29,65 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#include <string.h>
+#ifndef _EbsdImporter_h_
+#define _EbsdImporter_h_
 
-#include "H5Support/H5Lite.h"
-#include "H5Support/H5Utilities.h"
+#include "hdf5.h"
+
+#include "EbsdLib/EbsdLibTypes.h"
+#include "EbsdLib/EbsdSetGetMacros.h"
 
 
-#include "EbsdLib/HKL/CtfReader.h"
-#include "EbsdLib/HKL/H5CtfImporter.h"
-
-int main(int argc, char **argv)
+class EbsdImporter
 {
+  public:
+    EBSD_SHARED_POINTERS(EbsdImporter)
+    EBSD_TYPE_MACRO(EbsdImporter)
 
-  std::string ctfFile("/Users/Shared/Data/HKL_Data/Project4.ctf");
+    virtual ~EbsdImporter(){};
 
-  CtfReader reader;
-  reader.setFileName(ctfFile);
-
-  int err =  reader.readFile();
-  if (err < 0)
-  {
-    std::cout << "Error reading .ctf file" << std::endl;
-    return EXIT_FAILURE;
-  }
-
-  reader.printHeader(std::cout);
-  std::cout << "Success Reading the .ctf File" << std::endl;
+    EBSD_VIRTUAL_INSTANCE_STRING_PROPERTY(ErrorMessage);
+    EBSD_VIRTUAL_INSTANCE_PROPERTY(bool, ErrorCondition);
 
 
-  std::cout << "-- Testing the H5CtfImporter..." << std::endl;
-  std::string h5File = "/tmp/out.h5ctf";
-  hid_t fileId = H5Utilities::createFile(h5File);
+    /**
+     * @brief Cancel the operation
+     */
+    EBSD_VIRTUAL_INSTANCE_PROPERTY(bool, Cancel);
 
-  // Test out the HDF5 Importer
-  EbsdImporter::Pointer importer = H5CtfImporter::New();
-  importer->importFile(fileId, 0, ctfFile);
+    /**
+     * @brief Either prints a message or sends the message to the User Interface
+     * @param message The message to print
+     * @param progress The progress of the Reconstruction normalized to a value between 0 and 100
+     */
+    virtual void progressMessage(const std::string &message, int progress)
+    {
+      std::cout << progress << "% " << message << std::endl;
+    }
 
 
-  H5Utilities::closeFile(fileId);
+    /**
+     * @brief Imports the EBSD file. This is a pure virtual method to force subclasses
+     * to implement this method.
+     * @param fildId HDF5 fileId of an open HDF5 file that the data will be stored into
+     * @param index The integer index value of this EBSD data file
+     * @param ebsdFile The raw data file from the manufacturere (.ang, .ctf)
+     */
+    virtual int importFile(hid_t fileId, int index, const std::string &ebsd) = 0;
 
-  std::cout << "Done Testing Ctf Reader" << std::endl;
-  return EXIT_SUCCESS;
-}
+  protected:
+    EbsdImporter() :
+      m_ErrorCondition(0),
+      m_Cancel(false)
+    {
+      m_ErrorMessage = "";
+    }
+
+  private:
+    EbsdImporter(const EbsdImporter&); // Copy Constructor Not Implemented
+    void operator=(const EbsdImporter&); // Operator '=' Not Implemented
+};
+
+
+
+#endif /* _EbsdImporter_h_  */

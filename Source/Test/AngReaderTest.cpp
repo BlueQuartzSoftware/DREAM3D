@@ -81,7 +81,7 @@ int main(int argc, char **argv)
   filelist.push_back(angFile);
 
   OIMImport::Pointer h5importer = OIMImport::New();
-  h5importer->setAngFileList(filelist);
+  h5importer->setEbsdFileList(filelist);
   h5importer->setOutputFile(std::string(H5ANG_FILE) );
   h5importer->setZStartIndex(0);
   h5importer->setZEndIndex(1);
