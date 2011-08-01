@@ -86,7 +86,7 @@ class OIMImportWidget : public AIMPluginFrame, private Ui::OIMImportWidget
     /**
      * @brief Method to attempt the extraction of the .ang max slice value and prefix
      */
-    void m_findAngMaxSliceAndPrefix();
+    void m_findEbsdMaxSliceAndPrefix();
     void m_generateExampleOimInputFile();
 
   protected slots:
