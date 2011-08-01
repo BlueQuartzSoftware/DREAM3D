@@ -33,6 +33,7 @@
 #include "H5Support/H5Utilities.h"
 #include "MXA/Utilities/StringUtils.h"
 
+#include "EbsdLib/EbsdConstants.h"
 #include "EbsdLib/TSL/H5AngImporter.h"
 #include "EbsdLib/HKL/H5CtfImporter.h"
 
@@ -111,14 +112,14 @@ void OIMImport::execute()
   }
 
   // Write Z index start, Z index end and Z Resolution to the HDF5 file
-  err = H5Lite::writeScalarDataset(fileId, Ang::ZStartIndex, m_ZStartIndex);
+  err = H5Lite::writeScalarDataset(fileId, Ebsd::ZStartIndex, m_ZStartIndex);
   CHECK_FOR_ERROR(OIMImportFunc, "Could not write the Z Start Index Scalar", err)
-  err = H5Lite::writeScalarDataset(fileId, Ang::ZEndIndex, m_ZEndIndex);
+  err = H5Lite::writeScalarDataset(fileId, Ebsd::ZEndIndex, m_ZEndIndex);
   CHECK_FOR_ERROR(OIMImportFunc, "Could not write the Z End Index Scalar", err)
-  err = H5Lite::writeScalarDataset(fileId, Ang::ZResolution, m_ZResolution);
+  err = H5Lite::writeScalarDataset(fileId, Ebsd::ZResolution, m_ZResolution);
   CHECK_FOR_ERROR(OIMImportFunc, "Could not write the Z Resolution Scalar", err)
   // Write the Manufacturer of the OIM file here
-  err = H5Lite::writeStringDataset(fileId, Ang::Manufacturer, Ang::TSL );
+  err = H5Lite::writeStringDataset(fileId, Ebsd::Manufacturer, Ebsd::Ang::TSL );
   CHECK_FOR_ERROR(OIMImportFunc, "Could not write the Manufacturer Scalar", err)
 
   std::vector<int> indices;
@@ -158,7 +159,7 @@ void OIMImport::execute()
     std::string msg = "Importing: " + angFName;
     updateProgressAndMessage(msg.c_str(), progress );
     H5AngImporter::Pointer conv = H5AngImporter::New();
-    err = conv->importAngFile(fileId, z, angFName);
+    err = conv->importFile(fileId, z, angFName);
     if (err < 0)
     {
       CHECK_FOR_ERROR(OIMImportFunc, "Could not write dataset for slice.", err)
@@ -173,7 +174,7 @@ void OIMImport::execute()
   // Write an Index data set which contains all the z index values which
   // should help speed up the reading side of this file
     std::vector<hsize_t> dims(1, indices.size());
-    err = H5Lite::writeVectorDataset(fileId, Ang::Index, dims, indices);
+    err = H5Lite::writeVectorDataset(fileId, Ebsd::Index, dims, indices);
   }
   err = H5Utilities::closeFile(fileId);
   // err = H5Fclose(fileId);

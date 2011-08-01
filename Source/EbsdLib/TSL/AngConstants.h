@@ -41,23 +41,6 @@
  * file from TSL instrumentation then you MUST use the defines from this file.
  */
 
-#include <string>
-
-
-namespace Ang
-{
-  const std::string OriginalHeader("OriginalHeader");
-  const std::string ZStartIndex("ZStartIndex");
-  const std::string ZEndIndex("ZEndIndex");
-  const std::string ZResolution("ZResolution");
-  const std::string Manufacturer("Manufacturer");
-  const std::string TSL("TSL");
-  const std::string OriginalFile("OriginalFile");
-  const std::string Index("Index");
-  const std::string Header("Header");
-  const std::string Phases("Phases");
-  const std::string Data("Data");
-}
 
 
 
@@ -105,31 +88,30 @@ namespace Ang
 #define ANG_Z_POS "ZPos"
 #define ANG_Z_MAX "ZMax"
 
-namespace Ang {
 
-  /** @brief Constants defined for the 5 orientation options */
-  enum Orientation
-  {
-     UpperRightOrigin = 0,
-     UpperLeftOrigin = 1,
-     LowerLeftOrigin = 2,
-     LowerRightOrigin = 3,
-     NoOrientation = 4,
-  };
-}
+namespace Ebsd {
 
-
-namespace TSL {
-
- namespace OIM
+ namespace Ang
  {
+
+
+   const std::string TSL("TSL");
+
+   /** @brief Constants defined for the 5 orientation options */
+   enum Orientation
+   {
+      UpperRightOrigin = 0,
+      UpperLeftOrigin = 1,
+      LowerLeftOrigin = 2,
+      LowerRightOrigin = 3,
+      NoOrientation = 4,
+   };
 
    enum PhaseSymmetry {
      CubicSymmetry = 43,
      HexagonalSymmetry = 62,
      UnknownSymmetry = 999,
    };
-
 
 
    const std::string FileExt("ang");
@@ -226,10 +208,10 @@ namespace TSL {
 #define ANG_FIT_LOWER "fit"
 
 
-namespace TSL {
+namespace Ebsd {
 
 
-namespace OIM
+namespace Ang
  {
 // These are the Lower Case versions of the constants
    const std::string FileExtLower("ang");

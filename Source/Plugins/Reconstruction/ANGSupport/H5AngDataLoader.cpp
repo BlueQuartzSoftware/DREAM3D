@@ -38,6 +38,7 @@
 #include "H5Support/H5Utilities.h"
 #include "MXA/Utilities/StringUtils.h"
 
+#include "EbsdLib/EbsdConstants.h"
 #include "EbsdLib/TSL/H5AngReader.h"
 
 #include "DREAM3D/Common/Constants.h"
@@ -47,7 +48,7 @@
 //
 // -----------------------------------------------------------------------------
 H5AngDataLoader::H5AngDataLoader() :
-m_Orientation(Ang::NoOrientation)
+m_Orientation(Ebsd::Ang::NoOrientation)
 {
 }
 
@@ -71,19 +72,19 @@ int H5AngDataLoader::readZHeader(int &zStart, int &zEnd, float &zRes)
     std::cout << "Error Opening file '" << m_Filename << "'" << std::endl;
     return -1;
   }
-  err = H5Lite::readScalarDataset(fileId, Ang::ZResolution, zRes);
+  err = H5Lite::readScalarDataset(fileId, Ebsd::ZResolution, zRes);
   if (err < 0)
   {
     std::cout << "H5AngDataLoader::readZHeader Error: Could not load ZResolution data" << std::endl;
     retErr = err;
   }
-  err = H5Lite::readScalarDataset(fileId, Ang::ZStartIndex, zStart);
+  err = H5Lite::readScalarDataset(fileId, Ebsd::ZStartIndex, zStart);
   if (err < 0)
   {
     std::cout << "H5AngDataLoader::readZHeader Error: Could not load ZStartIndex data" << std::endl;
     retErr = err;
   }
-  err = H5Lite::readScalarDataset(fileId, Ang::ZEndIndex, zEnd);
+  err = H5Lite::readScalarDataset(fileId, Ebsd::ZEndIndex, zEnd);
   if (err < 0)
   {
     std::cout << "H5AngDataLoader::readZHeader Error: Could not load ZEndIndex data" << std::endl;
@@ -116,7 +117,7 @@ int H5AngDataLoader::getSizeAndResolution(int &xpoints, int &ypoints, int &zpoin
 
 
   zres = 0.0f;
-  err = H5Lite::readScalarDataset(fileId, Ang::ZResolution, zres);
+  err = H5Lite::readScalarDataset(fileId, Ebsd::ZResolution, zres);
 
   for(int i=0;i<zpoints;i++)
   {

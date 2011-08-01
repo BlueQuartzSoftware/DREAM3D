@@ -155,7 +155,7 @@ int main(int argc, char **argv)
     AIM::Reconstruction::AlignmentMethod alignmeth = static_cast<AIM::Reconstruction::AlignmentMethod>(AlignMeth.getValue() );
 
     m_Reconstruction->setAlignmentMethod(alignmeth);
-    Ang::Orientation orient = static_cast<Ang::Orientation>(Orientation.getValue());
+    Ebsd::Ang::Orientation orient = static_cast<Ebsd::Ang::Orientation>(Orientation.getValue());
     m_Reconstruction->setOrientation(orient);
 
     m_Reconstruction->setMinAllowedGrainSize(MinAllowedGrainSize.getValue());

@@ -69,13 +69,7 @@ class EbsdLib_EXPORT H5AngImporter
 
     EBSD_INSTANCE_STRING_PROPERTY(ErrorMessage);
     EBSD_INSTANCE_PROPERTY(bool, ErrorCondition);
-#if 0
-    EBSD_INSTANCE_STRING_PROPERTY(OutputFile)
-    EBSD_INSTANCE_PROPERTY(int, ZStartIndex)
-    EBSD_INSTANCE_PROPERTY(int, ZEndIndex)
-    EBSD_INSTANCE_PROPERTY(float, ZResolution)
-    EBSD_INSTANCE_PROPERTY(std::vector<std::string>, AngFileList);
-#endif
+
 
     /**
      * @brief Cancel the operation
@@ -90,7 +84,7 @@ class EbsdLib_EXPORT H5AngImporter
     void progressMessage(const std::string &message, int progress);
 
 
-    int importAngFile(hid_t fileId, int index, const std::string &angFile);
+    int importFile(hid_t fileId, int index, const std::string &angFile);
 
     int writePhaseData(AngReader &reader, hid_t gid);
 

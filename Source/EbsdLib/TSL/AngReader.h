@@ -60,7 +60,7 @@ class EbsdLib_EXPORT AngReader
     virtual ~AngReader();
 
     /** @brief Allow the user to set the origin of the scan */
-    EBSD_INSTANCE_PROPERTY(Ang::Orientation, UserOrigin)
+    EBSD_INSTANCE_PROPERTY(Ebsd::Ang::Orientation, UserOrigin)
 
     /** @brief Sets the file name of the ang file to be read */
     EBSD_INSTANCE_STRING_PROPERTY( FileName )
@@ -71,23 +71,23 @@ class EbsdLib_EXPORT AngReader
 
     /** @brief Header Values from the TSL ang file */
 
-    EbsdHeader_INSTANCE_PROPERTY(AngHeaderEntry<float>, float, TEMpixPerum, TSL::OIM::TEMPIXPerUM)
-    EbsdHeader_INSTANCE_PROPERTY(AngHeaderEntry<float>, float, XStar, TSL::OIM::XStar)
-    EbsdHeader_INSTANCE_PROPERTY(AngHeaderEntry<float>, float, YStar, TSL::OIM::YStar)
-    EbsdHeader_INSTANCE_PROPERTY(AngHeaderEntry<float>, float, ZStar, TSL::OIM::ZStar)
-    EbsdHeader_INSTANCE_PROPERTY(AngHeaderEntry<float>, float, WorkingDistance, TSL::OIM::WorkingDistance)
+    EbsdHeader_INSTANCE_PROPERTY(AngHeaderEntry<float>, float, TEMpixPerum, Ebsd::Ang::TEMPIXPerUM)
+    EbsdHeader_INSTANCE_PROPERTY(AngHeaderEntry<float>, float, XStar, Ebsd::Ang::XStar)
+    EbsdHeader_INSTANCE_PROPERTY(AngHeaderEntry<float>, float, YStar, Ebsd::Ang::YStar)
+    EbsdHeader_INSTANCE_PROPERTY(AngHeaderEntry<float>, float, ZStar, Ebsd::Ang::ZStar)
+    EbsdHeader_INSTANCE_PROPERTY(AngHeaderEntry<float>, float, WorkingDistance, Ebsd::Ang::WorkingDistance)
 
     std::vector<AngPhase::Pointer> getPhases() { return m_Phases; }
 
-    EbsdHeader_INSTANCE_PROPERTY(AngStringHeaderEntry, std::string, Grid, TSL::OIM::Grid)
-    EbsdHeader_INSTANCE_PROPERTY(AngHeaderEntry<float>, float, XStep, TSL::OIM::XStep)
-    EbsdHeader_INSTANCE_PROPERTY(AngHeaderEntry<float>, float, YStep, TSL::OIM::YStep)
-    EbsdHeader_INSTANCE_PROPERTY(AngHeaderEntry<int>, int, NumOddCols, TSL::OIM::NColsOdd)
-    EbsdHeader_INSTANCE_PROPERTY(AngHeaderEntry<int>, int, NumEvenCols, TSL::OIM::NColsEven)
-    EbsdHeader_INSTANCE_PROPERTY(AngHeaderEntry<int>, int, NumRows, TSL::OIM::NRows)
-    EbsdHeader_INSTANCE_PROPERTY(AngStringHeaderEntry, std::string, OIMOperator, TSL::OIM::Operator)
-    EbsdHeader_INSTANCE_PROPERTY(AngStringHeaderEntry, std::string, SampleID, TSL::OIM::SampleId)
-    EbsdHeader_INSTANCE_PROPERTY(AngStringHeaderEntry, std::string, ScanID, TSL::OIM::ScanId)
+    EbsdHeader_INSTANCE_PROPERTY(AngStringHeaderEntry, std::string, Grid, Ebsd::Ang::Grid)
+    EbsdHeader_INSTANCE_PROPERTY(AngHeaderEntry<float>, float, XStep, Ebsd::Ang::XStep)
+    EbsdHeader_INSTANCE_PROPERTY(AngHeaderEntry<float>, float, YStep, Ebsd::Ang::YStep)
+    EbsdHeader_INSTANCE_PROPERTY(AngHeaderEntry<int>, int, NumOddCols, Ebsd::Ang::NColsOdd)
+    EbsdHeader_INSTANCE_PROPERTY(AngHeaderEntry<int>, int, NumEvenCols, Ebsd::Ang::NColsEven)
+    EbsdHeader_INSTANCE_PROPERTY(AngHeaderEntry<int>, int, NumRows, Ebsd::Ang::NRows)
+    EbsdHeader_INSTANCE_PROPERTY(AngStringHeaderEntry, std::string, OIMOperator, Ebsd::Ang::Operator)
+    EbsdHeader_INSTANCE_PROPERTY(AngStringHeaderEntry, std::string, SampleID, Ebsd::Ang::SampleId)
+    EbsdHeader_INSTANCE_PROPERTY(AngStringHeaderEntry, std::string, ScanID, Ebsd::Ang::ScanId)
 
     /** @brief Get a pointer to the Phi1 data. Note that this array WILL be deleted
     * when this object is deleted. Most programs should copy the data from the array

@@ -53,7 +53,7 @@
 //
 // -----------------------------------------------------------------------------
 AngReader::AngReader() :
-m_UserOrigin(Ang::NoOrientation),
+m_UserOrigin(Ebsd::Ang::NoOrientation),
 m_FileName(""),
 m_NumberOfElements(0),
 m_ManageMemory(true)
@@ -72,23 +72,23 @@ m_ManageMemory(true)
 
   m_NumFields = 8;
   // Initialize the map of header key to header value
-  m_Headermap[TSL::OIM::TEMPIXPerUM] = AngHeaderEntry<float>::NewEbsdHeaderEntry(TSL::OIM::TEMPIXPerUM);
-  m_Headermap[TSL::OIM::XStar] = AngHeaderEntry<float>::NewEbsdHeaderEntry(TSL::OIM::XStar);
-  m_Headermap[TSL::OIM::YStar] = AngHeaderEntry<float>::NewEbsdHeaderEntry(TSL::OIM::YStar);
-  m_Headermap[TSL::OIM::ZStar] = AngHeaderEntry<float>::NewEbsdHeaderEntry(TSL::OIM::ZStar);
-  m_Headermap[TSL::OIM::WorkingDistance] = AngHeaderEntry<float>::NewEbsdHeaderEntry(TSL::OIM::WorkingDistance);
-  m_Headermap[TSL::OIM::Grid] = AngStringHeaderEntry::NewEbsdHeaderEntry(TSL::OIM::Grid);
-  m_Headermap[TSL::OIM::XStep] = AngHeaderEntry<float>::NewEbsdHeaderEntry(TSL::OIM::XStep);
-  m_Headermap[TSL::OIM::YStep] = AngHeaderEntry<float>::NewEbsdHeaderEntry(TSL::OIM::YStep);
-  m_Headermap[TSL::OIM::ZStep] = AngHeaderEntry<float>::NewEbsdHeaderEntry(TSL::OIM::ZStep); // NOT actually in the file>::NewEbsdHeaderEntry(); , but may be needed
-  m_Headermap[TSL::OIM::ZPos] = AngHeaderEntry<float>::NewEbsdHeaderEntry(TSL::OIM::ZPos); // NOT actually in the file>::NewEbsdHeaderEntry(); , but may be needed
-  m_Headermap[TSL::OIM::ZMax] = AngHeaderEntry<float>::NewEbsdHeaderEntry(TSL::OIM::ZMax); // NOT actually in the file>::NewEbsdHeaderEntry(); , but may be needed
-  m_Headermap[TSL::OIM::NColsOdd] = AngHeaderEntry<int>::NewEbsdHeaderEntry(TSL::OIM::NColsOdd);
-  m_Headermap[TSL::OIM::NColsEven] = AngHeaderEntry<int>::NewEbsdHeaderEntry(TSL::OIM::NColsEven);
-  m_Headermap[TSL::OIM::NRows] = AngHeaderEntry<int>::NewEbsdHeaderEntry(TSL::OIM::NRows);
-  m_Headermap[TSL::OIM::Operator] = AngStringHeaderEntry::NewEbsdHeaderEntry(TSL::OIM::Operator);
-  m_Headermap[TSL::OIM::SampleId] = AngStringHeaderEntry::NewEbsdHeaderEntry(TSL::OIM::SampleId);
-  m_Headermap[TSL::OIM::ScanId] = AngStringHeaderEntry::NewEbsdHeaderEntry(TSL::OIM::ScanId);
+  m_Headermap[Ebsd::Ang::TEMPIXPerUM] = AngHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Ang::TEMPIXPerUM);
+  m_Headermap[Ebsd::Ang::XStar] = AngHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Ang::XStar);
+  m_Headermap[Ebsd::Ang::YStar] = AngHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Ang::YStar);
+  m_Headermap[Ebsd::Ang::ZStar] = AngHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Ang::ZStar);
+  m_Headermap[Ebsd::Ang::WorkingDistance] = AngHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Ang::WorkingDistance);
+  m_Headermap[Ebsd::Ang::Grid] = AngStringHeaderEntry::NewEbsdHeaderEntry(Ebsd::Ang::Grid);
+  m_Headermap[Ebsd::Ang::XStep] = AngHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Ang::XStep);
+  m_Headermap[Ebsd::Ang::YStep] = AngHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Ang::YStep);
+  m_Headermap[Ebsd::Ang::ZStep] = AngHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Ang::ZStep); // NOT actually in the file>::NewEbsdHeaderEntry(); , but may be needed
+  m_Headermap[Ebsd::Ang::ZPos] = AngHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Ang::ZPos); // NOT actually in the file>::NewEbsdHeaderEntry(); , but may be needed
+  m_Headermap[Ebsd::Ang::ZMax] = AngHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Ang::ZMax); // NOT actually in the file>::NewEbsdHeaderEntry(); , but may be needed
+  m_Headermap[Ebsd::Ang::NColsOdd] = AngHeaderEntry<int>::NewEbsdHeaderEntry(Ebsd::Ang::NColsOdd);
+  m_Headermap[Ebsd::Ang::NColsEven] = AngHeaderEntry<int>::NewEbsdHeaderEntry(Ebsd::Ang::NColsEven);
+  m_Headermap[Ebsd::Ang::NRows] = AngHeaderEntry<int>::NewEbsdHeaderEntry(Ebsd::Ang::NRows);
+  m_Headermap[Ebsd::Ang::Operator] = AngStringHeaderEntry::NewEbsdHeaderEntry(Ebsd::Ang::Operator);
+  m_Headermap[Ebsd::Ang::SampleId] = AngStringHeaderEntry::NewEbsdHeaderEntry(Ebsd::Ang::SampleId);
+  m_Headermap[Ebsd::Ang::ScanId] = AngStringHeaderEntry::NewEbsdHeaderEntry(Ebsd::Ang::ScanId);
 
 
   // Give these values some defaults
@@ -223,14 +223,14 @@ int AngReader::readFile()
   {
     return -200;
   }
-  else if (grid.find(TSL::OIM::SquareGrid) == 0)
+  else if (grid.find(Ebsd::Ang::SquareGrid) == 0)
   {
    // if (nCols > 0) { numElements = nRows * nCols; }
     if (nOddCols > 0) { numElements = nRows * nOddCols;/* nCols = nOddCols;*/ }
     else if (nEvenCols > 0) { numElements = nRows * nEvenCols; /* nCols = nEvenCols; */ }
     else { numElements = 0; }
   }
-  else if (grid.find(TSL::OIM::HexGrid) == 0)
+  else if (grid.find(Ebsd::Ang::HexGrid) == 0)
   {
     std::cout << "Ang Files with Hex Grids Are NOT currently supported." << std::endl;
     return -400;
@@ -321,42 +321,42 @@ void AngReader::parseHeaderLine(char* buf, size_t length)
   //  parsing data for the phase then stick the Phase instance into the header
   //  map or stick it into a vector<Phase::Pointer> and stick the vector into
   //  the map under the "Phase" key
-  if (word.compare(TSL::OIM::Phase) == 0)
+  if (word.compare(Ebsd::Ang::Phase) == 0)
   {
     m_CurrentPhase = AngPhase::New();
     m_CurrentPhase->parsePhase(buf, wordEnd, length);
     // Parsing the phase is complete, now add it to the vector of Phases
     m_Phases.push_back(m_CurrentPhase);
   }
-  else if (word.compare(TSL::OIM::MaterialName) == 0 && m_CurrentPhase.get() != NULL)
+  else if (word.compare(Ebsd::Ang::MaterialName) == 0 && m_CurrentPhase.get() != NULL)
   {
     m_CurrentPhase->parseMaterialName(buf, wordEnd, length);
   }
-  else if (word.compare(TSL::OIM::Formula) == 0 && m_CurrentPhase.get() != NULL)
+  else if (word.compare(Ebsd::Ang::Formula) == 0 && m_CurrentPhase.get() != NULL)
   {
     m_CurrentPhase->parseFormula(buf, wordEnd, length);
   }
-  else if (word.compare(TSL::OIM::Info) == 0 && m_CurrentPhase.get() != NULL)
+  else if (word.compare(Ebsd::Ang::Info) == 0 && m_CurrentPhase.get() != NULL)
   {
     m_CurrentPhase->parseInfo(buf, wordEnd, length);
   }
-  else if (word.compare(TSL::OIM::Symmetry) == 0 && m_CurrentPhase.get() != NULL)
+  else if (word.compare(Ebsd::Ang::Symmetry) == 0 && m_CurrentPhase.get() != NULL)
   {
     m_CurrentPhase->parseSymmetry(buf, wordEnd, length);
   }
-  else if (word.compare(TSL::OIM::LatticeConstants) == 0 && m_CurrentPhase.get() != NULL)
+  else if (word.compare(Ebsd::Ang::LatticeConstants) == 0 && m_CurrentPhase.get() != NULL)
   {
     m_CurrentPhase->parseLatticeConstants(buf, wordEnd, length);
   }
-  else if (word.compare(TSL::OIM::NumberFamilies) == 0 && m_CurrentPhase.get() != NULL)
+  else if (word.compare(Ebsd::Ang::NumberFamilies) == 0 && m_CurrentPhase.get() != NULL)
   {
     m_CurrentPhase->parseNumberFamilies(buf, wordEnd, length);
   }
-  else if (word.compare(TSL::OIM::HKLFamilies) == 0 && m_CurrentPhase.get() != NULL)
+  else if (word.compare(Ebsd::Ang::HKLFamilies) == 0 && m_CurrentPhase.get() != NULL)
   {
     m_CurrentPhase->parseHKLFamilies(buf, wordEnd, length);
   }
-  else if (word.compare(TSL::OIM::Categories) == 0 && m_CurrentPhase.get() != NULL)
+  else if (word.compare(Ebsd::Ang::Categories) == 0 && m_CurrentPhase.get() != NULL)
   {
     m_CurrentPhase->parseCategories(buf, wordEnd, length);
   }
@@ -372,8 +372,8 @@ void AngReader::parseHeaderLine(char* buf, size_t length)
       std::cout << "#define ANG_" << upper << "     \"" << word << "\"" << std::endl;
       std::cout << "const std::string " << word << "(ANG_" << upper << ");" << std::endl;
 
-      std::cout << "angInstanceProperty(AngHeaderEntry<float>. float, " << word << "TSL::OIM::" << word << std::endl;
-      std::cout << "m_Headermap[TSL::OIM::" << word << "] = AngHeaderEntry<float>::NewEbsdHeaderEntry(TSL::OIM::" << word << ");" << std::endl;
+      std::cout << "angInstanceProperty(AngHeaderEntry<float>. float, " << word << "Ebsd::Ang::" << word << std::endl;
+      std::cout << "m_Headermap[Ebsd::Ang::" << word << "] = AngHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Ang::" << word << ");" << std::endl;
       return;
     }
     else
@@ -413,7 +413,7 @@ void AngReader::readData(const std::string &line,
 
 
   // Do we transform the data
-  if (m_UserOrigin == Ang::UpperRightOrigin)
+  if (m_UserOrigin == Ebsd::Ang::UpperRightOrigin)
   {
     offset = (row*nCols)+((nCols-1)-col);
     if (p1 - PI_OVER_2f < 0.0)
@@ -425,7 +425,7 @@ void AngReader::readData(const std::string &line,
       p1 = p1 - PI_OVER_2f;
     }
   }
-  else if (m_UserOrigin == Ang::UpperLeftOrigin)
+  else if (m_UserOrigin == Ebsd::Ang::UpperLeftOrigin)
   {
     if (p1 + PI_OVER_2f > TWO_PIf)
     {
@@ -444,7 +444,7 @@ void AngReader::readData(const std::string &line,
       p = p + ONE_PIf;
     }
   }
-  else if (m_UserOrigin == Ang::LowerLeftOrigin)
+  else if (m_UserOrigin == Ebsd::Ang::LowerLeftOrigin)
   {
     offset = (((nRows-1)-row)*nCols)+col;
     if (p1 + PI_OVER_2f > TWO_PIf)
@@ -456,12 +456,12 @@ void AngReader::readData(const std::string &line,
       p1 = p1 + PI_OVER_2f;
     }
   }
-  else if (m_UserOrigin == Ang::LowerRightOrigin)
+  else if (m_UserOrigin == Ebsd::Ang::LowerRightOrigin)
   {
     offset = (((nRows-1)-row)*nCols)+((nCols-1)-col);
   }
 
-  if (m_UserOrigin == Ang::NoOrientation)
+  if (m_UserOrigin == Ebsd::Ang::NoOrientation)
   {
     // If the user/programmer sets "NoOrientation" then we simply read the data
     // from the file and copy the values into the arrays without any regard for
