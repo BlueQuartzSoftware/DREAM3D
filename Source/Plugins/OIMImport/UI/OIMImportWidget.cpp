@@ -176,9 +176,9 @@ void OIMImportWidget::checkIOFiles()
 // -----------------------------------------------------------------------------
 void OIMImportWidget::on_m_OutputFileBtn_clicked()
 {
-  QString file = QFileDialog::getSaveFileName(this, tr("Save OIM HDF5 File"),
+  QString file = QFileDialog::getSaveFileName(this, tr("Save HDF5 EBSD File"),
                                                  m_OpenDialogLastDirectory,
-                                                 tr("HDF5 OIM Files (*.h5ang)") );
+                                                 tr("HDF5 EBSD Files (*.h5ebsd)") );
   if ( true == file.isEmpty() ){ return;  }
   QFileInfo fi (file);
   QString ext = fi.suffix();
@@ -193,7 +193,7 @@ void OIMImportWidget::on_m_InputDirBtn_clicked()
 {
   // std::cout << "on_angDirBtn_clicked" << std::endl;
   QString outputFile = this->m_OpenDialogLastDirectory + QDir::separator();
-  outputFile = QFileDialog::getExistingDirectory(this, tr("Select Ang Directory"), outputFile);
+  outputFile = QFileDialog::getExistingDirectory(this, tr("Select EBSD Directory"), outputFile);
   if (!outputFile.isNull())
   {
     m_InputDir->blockSignals(true);
@@ -252,7 +252,7 @@ void OIMImportWidget::on_m_GoBtn_clicked()
   QString outPath = m_OutputFile->text();
   QFileInfo fi(m_OutputFile->text());
   m_OutputFile->setText(fi.absolutePath());
-  if (false == sanityCheckOutputDirectory(m_OutputFile, QString("OIM Import")) )
+  if (false == sanityCheckOutputDirectory(m_OutputFile, QString("EBSD Import")) )
   {
     m_OutputFile->setText(outPath);
     return;
@@ -289,7 +289,7 @@ void OIMImportWidget::on_m_GoBtn_clicked()
     fileList.push_back(QDir::toNativeSeparators(m_FileListView->item(f)->text()).toStdString());
   }
 
-  m_OimImport->setAngFileList(fileList);
+  m_OimImport->setEbsdFileList(fileList);
 
   /* Connect the signal 'started()' from the QThread to the 'run' slot of the
    * Reconstruction object. Since the Reconstruction object has been moved to another

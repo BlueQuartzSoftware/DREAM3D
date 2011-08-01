@@ -57,8 +57,7 @@ using namespace Ang;
 //
 // -----------------------------------------------------------------------------
 H5AngImporter::H5AngImporter() :
-m_ErrorCondition(0),
-m_Cancel(false)
+EbsdImporter()
 {
 }
 
@@ -117,6 +116,9 @@ H5AngImporter::~H5AngImporter()
 int H5AngImporter::importFile(hid_t fileId, int z, const std::string &angFile)
 {
   herr_t err = -1;
+  setCancel(false);
+  setErrorCondition(false);
+  setErrorMessage("");
 
 //  std::cout << "H5AngImporter: Importing " << angFile << std::endl;
   AngReader reader;
@@ -380,13 +382,5 @@ int H5AngImporter::writeHKLFamilies(AngPhase* p, hid_t hklGid)
     status = H5Dclose (dset);
   }
   return status;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void H5AngImporter::progressMessage(const std::string &message, int progress)
-{
-  std::cout << progress << "% " << message << std::endl;
 }
 

@@ -31,10 +31,14 @@
 #include "OIMImport.h"
 
 #include "H5Support/H5Utilities.h"
+#include "MXA/Utilities/MXAFileInfo.h"
 #include "MXA/Utilities/StringUtils.h"
 
 #include "EbsdLib/EbsdConstants.h"
+#include "EbsdLib/EbsdImporter.h"
+#include "EbsdLib/TSL/AngConstants.h"
 #include "EbsdLib/TSL/H5AngImporter.h"
+#include "EbsdLib/HKL/CtfConstants.h"
 #include "EbsdLib/HKL/H5CtfImporter.h"
 
 class OIMImportFunc
@@ -95,7 +99,7 @@ void OIMImport::execute()
 
   if (m_OutputFile.empty() == true)
   {
-    std::string s("H5AngImport Error: The output file was not set correctly or is empty. The current value is '");
+    std::string s("OIMImport Error: The output file was not set correctly or is empty. The current value is '");
     s.append("'. Please set the output file before running the importer. ");
     updateProgressAndMessage(s.c_str(), 100);
     err = -1;
@@ -118,12 +122,33 @@ void OIMImport::execute()
   CHECK_FOR_ERROR(OIMImportFunc, "Could not write the Z End Index Scalar", err)
   err = H5Lite::writeScalarDataset(fileId, Ebsd::ZResolution, m_ZResolution);
   CHECK_FOR_ERROR(OIMImportFunc, "Could not write the Z Resolution Scalar", err)
+
+  EbsdImporter::Pointer fileImporter;
+
   // Write the Manufacturer of the OIM file here
-  err = H5Lite::writeStringDataset(fileId, Ebsd::Manufacturer, Ebsd::Ang::TSL );
-  CHECK_FOR_ERROR(OIMImportFunc, "Could not write the Manufacturer Scalar", err)
+  // This list will grow to be the number of EBSD file formats we support
+  std::string ext = MXAFileInfo::extension(m_EbsdFileList.front());
+  if (ext.compare(Ebsd::Ang::FileExt) == 0)
+  {
+    err = H5Lite::writeStringDataset(fileId, Ebsd::Manufacturer, Ebsd::Ang::Manufacturer );
+    CHECK_FOR_ERROR(OIMImportFunc, "Could not write the Manufacturer Scalar", err)
+    fileImporter = H5AngImporter::New();
+  }
+  else if (ext.compare(Ebsd::Ctf::FileExt) == 0)
+  {
+    err = H5Lite::writeStringDataset(fileId, Ebsd::Manufacturer, Ebsd::Ctf::Manufacturer );
+    CHECK_FOR_ERROR(OIMImportFunc, "Could not write the Manufacturer Scalar", err)
+    fileImporter = H5CtfImporter::New();
+  }
+  else
+  {
+    updateProgressAndMessage("The File extension was not detected correctly", 100);
+    setErrorCondition(-1);
+    return;
+  }
 
   std::vector<int> indices;
-  // Loop on Each Ang File
+  // Loop on Each EBSD File
   float total = m_ZEndIndex - m_ZStartIndex;
   int progress = 0;
   int z = m_ZStartIndex;
@@ -151,15 +176,15 @@ void OIMImport::execute()
    * which is going to cause problems because the data is going to be placed
    * into the HDF5 file at the wrong index. YOU HAVE BEEN WARNED.
    */
-  for (std::vector<std::string>::iterator filepath = m_AngFileList.begin(); filepath != m_AngFileList.end(); ++filepath )
+  for (std::vector<std::string>::iterator filepath = m_EbsdFileList.begin(); filepath != m_EbsdFileList.end(); ++filepath )
   {
-    std::string angFName = *filepath;
+    std::string ebsdFName = *filepath;
     progress = z - m_ZStartIndex;
     progress = (int)(100.0f * (float)(progress)/total);
-    std::string msg = "Importing: " + angFName;
+    std::string msg = "Importing: " + ebsdFName;
     updateProgressAndMessage(msg.c_str(), progress );
-    H5AngImporter::Pointer conv = H5AngImporter::New();
-    err = conv->importFile(fileId, z, angFName);
+    //H5AngImporter::Pointer conv = H5AngImporter::New();
+    err = fileImporter->importFile(fileId, z, ebsdFName);
     if (err < 0)
     {
       CHECK_FOR_ERROR(OIMImportFunc, "Could not write dataset for slice.", err)

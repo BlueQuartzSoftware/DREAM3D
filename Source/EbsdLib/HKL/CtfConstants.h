@@ -54,7 +54,7 @@ namespace Ctf
 
   const std::string FileExt("ctf");
 
-  const std::string HKL("HKL");
+  const std::string Manufacturer("HKL");
 
 // These are Header related
   const std::string ChannelTextFile("Channel Text File");

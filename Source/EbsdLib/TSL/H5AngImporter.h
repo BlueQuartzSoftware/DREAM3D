@@ -46,7 +46,8 @@
 
 #include "EbsdLib/EbsdLibTypes.h"
 #include "EbsdLib/EbsdSetGetMacros.h"
-#include "AngReader.h"
+#include "EbsdLib/EbsdImporter.h"
+#include "EbsdLib/TSL/AngReader.h"
 
 /**
  * @class H5AngImporter H5AngImporter.h AIM/ANG/H5AngImporter.h
@@ -56,33 +57,16 @@
  * @version 1.2
  *
  */
-class EbsdLib_EXPORT H5AngImporter
+class EbsdLib_EXPORT H5AngImporter : public EbsdImporter
 {
 
   public:
     EBSD_SHARED_POINTERS(H5AngImporter)
     EBSD_TYPE_MACRO(H5AngImporter)
-    EBSD_STATIC_NEW_MACRO(H5AngImporter)
-
+   // EBSD_STATIC_NEW_MACRO(H5AngImporter)
+    EBSD_STATIC_NEW_SUPERCLASS(EbsdImporter, H5AngImporter)
 
     virtual ~H5AngImporter();
-
-    EBSD_INSTANCE_STRING_PROPERTY(ErrorMessage);
-    EBSD_INSTANCE_PROPERTY(bool, ErrorCondition);
-
-
-    /**
-     * @brief Cancel the operation
-     */
-    EBSD_INSTANCE_PROPERTY(bool, Cancel);
-
-    /**
-     * @brief Either prints a message or sends the message to the User Interface
-     * @param message The message to print
-     * @param progress The progress of the Reconstruction normalized to a value between 0 and 100
-     */
-    void progressMessage(const std::string &message, int progress);
-
 
     int importFile(hid_t fileId, int index, const std::string &angFile);
 
