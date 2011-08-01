@@ -50,6 +50,8 @@ class EbsdLib_EXPORT CtfPhase
     EBSD_TYPE_MACRO(CtfPhase)
     virtual ~CtfPhase();
 
+    EBSD_INSTANCE_PROPERTY(int, PhaseIndex)
+
     EBSD_INSTANCE_PROPERTY(std::vector<float>, LatticeDimensions); // 1x3 array
     EBSD_INSTANCE_PROPERTY(std::vector<float>, LatticeAngles); // 1x3 array
     EBSD_INSTANCE_STRING_PROPERTY(PhaseName);

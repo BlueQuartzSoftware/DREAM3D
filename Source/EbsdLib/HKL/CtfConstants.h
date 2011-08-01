@@ -40,6 +40,18 @@ namespace Ebsd {
 
 namespace Ctf
 {
+
+  /** @brief Constants defined for the 5 orientation options */
+  enum Orientation
+  {
+     UpperRightOrigin = 0,
+     UpperLeftOrigin = 1,
+     LowerLeftOrigin = 2,
+     LowerRightOrigin = 3,
+     NoOrientation = 4,
+  };
+
+
   const std::string FileExt("ctf");
 
   const std::string HKL("HKL");
@@ -63,7 +75,7 @@ namespace Ctf
   DECLARE_STRING_CONST(KV);
   DECLARE_STRING_CONST(TiltAngle);
   DECLARE_STRING_CONST(TiltAxis);
-  DECLARE_STRING_CONST(Phases);
+  const std::string NumPhases("Phases");
 
   // These are phase related
   DECLARE_STRING_CONST(LatticeDimensions);

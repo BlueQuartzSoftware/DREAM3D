@@ -50,6 +50,9 @@ class CtfReader
     CtfReader();
     virtual ~CtfReader();
 
+    /** @brief Allow the user to set the origin of the scan */
+    EBSD_INSTANCE_PROPERTY(Ebsd::Ctf::Orientation, UserOrigin)
+
     /** @brief Sets the file name of the ang file to be read */
     EBSD_INSTANCE_STRING_PROPERTY( FileName )
     EBSD_INSTANCE_PROPERTY(int, NumFields);
@@ -74,7 +77,10 @@ class CtfReader
     EbsdHeader_INSTANCE_PROPERTY(CtfHeaderEntry<int>, int, KV, Ebsd::Ctf::KV)
     EbsdHeader_INSTANCE_PROPERTY(CtfHeaderEntry<float>, float, TiltAngle, Ebsd::Ctf::TiltAngle)
     EbsdHeader_INSTANCE_PROPERTY(CtfHeaderEntry<float>, float, TiltAxis, Ebsd::Ctf::TiltAxis)
-    EbsdHeader_INSTANCE_PROPERTY(CtfHeaderEntry<int>, int, Phases, Ebsd::Ctf::Phases)
+    EbsdHeader_INSTANCE_PROPERTY(CtfHeaderEntry<int>, int, NumPhases, Ebsd::Ctf::NumPhases)
+
+    EBSD_INSTANCE_PROPERTY(std::vector<CtfPhase::Pointer>, PhaseVector)
+
 
     EBSD_POINTER_PROPERTY(Phase, Phase, int)
     EBSD_POINTER_PROPERTY(X, X, float)
@@ -157,9 +163,6 @@ class CtfReader
      bool m_ManageMemory;  // We are going to forcibly manage the memory. There is currently NO option otherwise.
      bool m_headerComplete;
      size_t m_NumberOfElements;
-
-     std::vector<CtfPhase::Pointer> m_Phases;
-
 
      std::vector<std::string> tokenize(char* buf, char delimiter);
 

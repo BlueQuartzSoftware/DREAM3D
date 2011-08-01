@@ -31,16 +31,20 @@
 
 #include <string.h>
 
-#include "EbsdLib/HKL/CtfReader.h"
+#include "H5Support/H5Lite.h"
+#include "H5Support/H5Utilities.h"
 
+
+#include "EbsdLib/HKL/CtfReader.h"
+#include "EbsdLib/HKL/H5CtfImporter.h"
 
 int main(int argc, char **argv)
 {
 
-
+  std::string ctfFile("/Users/Shared/Data/HKL_Data/Project4.ctf");
 
   CtfReader reader;
-  reader.setFileName("/Users/Shared/Data/HKL_Data/Project4.ctf");
+  reader.setFileName(ctfFile);
 
   int err =  reader.readFile();
   if (err < 0)
@@ -50,7 +54,20 @@ int main(int argc, char **argv)
   }
 
   reader.printHeader(std::cout);
+  std::cout << "Success Reading the .ctf File" << std::endl;
 
-  std::cout << "Success Reading the file" << std::endl;
+
+  std::cout << "-- Testing the H5CtfImporter..." << std::endl;
+  std::string h5File = "/tmp/out.h5ctf";
+  hid_t fileId = H5Utilities::createFile(h5File);
+
+  // Test out the HDF5 Importer
+  H5CtfImporter::Pointer importer = H5CtfImporter::New();
+  importer->importFile(fileId, 0, ctfFile);
+
+
+  H5Utilities::closeFile(fileId);
+
+  std::cout << "Done Testing Ctf Reader" << std::endl;
   return EXIT_SUCCESS;
 }

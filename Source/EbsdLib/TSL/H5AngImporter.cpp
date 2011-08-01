@@ -301,7 +301,7 @@ int H5AngImporter::writePhaseData(AngReader &reader, hid_t phasesGid)
  // int retErr = 0;
   int32_t rank = 1;
   hsize_t dims[1] = { 0 };
-  std::vector<AngPhase::Pointer> phases = reader.getPhases();
+  std::vector<AngPhase::Pointer> phases = reader.getPhaseVector();
   for (std::vector<AngPhase::Pointer>::iterator phase = phases.begin(); phase != phases.end(); ++phase )
   {
     AngPhase* p = (*phase).get();
