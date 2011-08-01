@@ -86,7 +86,7 @@ class EbsdLib_EXPORT HKLFamily
      */
     void printSelf(std::ostream &stream)
     {
-      stream << TSL::OIM::HKLFamilies;
+      stream << Ebsd::Ang::HKLFamilies;
       std::cout << " " << h << " " << k << " " << l << " " << s1 << " " << diffractionIntensity << " " << s2 << std::endl;
     }
 
@@ -151,7 +151,7 @@ class EbsdLib_EXPORT AngPhase
     EBSD_INSTANCE_STRING_PROPERTY(MaterialName)
     EBSD_INSTANCE_STRING_PROPERTY(Formula)
     EBSD_INSTANCE_STRING_PROPERTY(Info)
-    EBSD_INSTANCE_PROPERTY(TSL::OIM::PhaseSymmetry, Symmetry)
+    EBSD_INSTANCE_PROPERTY(Ebsd::Ang::PhaseSymmetry, Symmetry)
     EBSD_INSTANCE_PROPERTY(std::vector<float>, LatticeConstants)
     EBSD_INSTANCE_PROPERTY(int, NumberFamilies)
     EBSD_INSTANCE_PROPERTY(std::vector<HKLFamily::Pointer>, HKLFamilies)

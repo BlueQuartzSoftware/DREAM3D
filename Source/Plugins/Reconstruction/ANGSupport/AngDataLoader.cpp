@@ -41,7 +41,7 @@
 // -----------------------------------------------------------------------------
 AngDataLoader::AngDataLoader() :
 m_ZResolution(1.0f),
-m_Orientation(Ang::NoOrientation),
+m_Orientation(Ebsd::Ang::NoOrientation),
 m_Cancel(false)
 {
 }

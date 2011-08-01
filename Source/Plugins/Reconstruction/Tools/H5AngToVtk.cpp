@@ -110,10 +110,10 @@ int main(int argc, char **argv)
   for(size_t i=0;i<phases.size();i++)
   {
     int phaseID = phases[i]->getPhase();
-    TSL::OIM::PhaseSymmetry symmetry = phases[i]->getSymmetry();
+    Ebsd::Ang::PhaseSymmetry symmetry = phases[i]->getSymmetry();
     AIM::Reconstruction::CrystalStructure crystal_structure = AIM::Reconstruction::UnknownCrystalStructure;
-    if(symmetry == TSL::OIM::CubicSymmetry) crystal_structure = AIM::Reconstruction::Cubic;
-    else if(symmetry == TSL::OIM::HexagonalSymmetry) crystal_structure = AIM::Reconstruction::Hexagonal;
+    if(symmetry == Ebsd::Ang::CubicSymmetry) crystal_structure = AIM::Reconstruction::Cubic;
+    else if(symmetry == Ebsd::Ang::HexagonalSymmetry) crystal_structure = AIM::Reconstruction::Hexagonal;
     crystalStructures[phaseID] = crystal_structure;
 
     precipFractions[phaseID] = -1.0f;

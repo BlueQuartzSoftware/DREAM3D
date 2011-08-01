@@ -36,6 +36,7 @@
 #include "AngConstants.h"
 #include "H5Support/H5Lite.h"
 #include "H5Support/H5Utilities.h"
+#include "EbsdLib/EbsdConstants.h"
 #include "EbsdLib/Utilities/StringUtils.h"
 
 #define PI_OVER_2f       1.57079632679489661f
@@ -221,7 +222,7 @@ int H5AngReader::readFile()
 int H5AngReader::readHeader(hid_t parId)
 {
   int err = -1;
-  hid_t gid = H5Gopen(parId, Ang::Header.c_str());
+  hid_t gid = H5Gopen(parId, Ebsd::Header.c_str());
   if (gid < 0)
   {
     std::cout << "H5AngReader Error: Could not open 'Header' Group" << std::endl;
@@ -229,22 +230,22 @@ int H5AngReader::readHeader(hid_t parId)
   }
 
 
-  READ_ANG_HEADER_DATA(AngHeaderEntry<float>, float, TEMPIXPerUM, TSL::OIM::TEMPIXPerUM)
-  READ_ANG_HEADER_DATA(AngHeaderEntry<float>, float, XStar, TSL::OIM::XStar)
-  READ_ANG_HEADER_DATA(AngHeaderEntry<float>, float, YStar, TSL::OIM::YStar)
-  READ_ANG_HEADER_DATA(AngHeaderEntry<float>, float, ZStar, TSL::OIM::ZStar)
-  READ_ANG_HEADER_DATA(AngHeaderEntry<float>, float, WorkingDistance, TSL::OIM::WorkingDistance)
-  READ_ANG_HEADER_STRING_DATA(AngStringHeaderEntry, std::string, Grid, TSL::OIM::Grid)
-  READ_ANG_HEADER_DATA(AngHeaderEntry<float>, float, XStep, TSL::OIM::XStep)
-  READ_ANG_HEADER_DATA(AngHeaderEntry<float>, float, YStep, TSL::OIM::YStep)
-  READ_ANG_HEADER_DATA(AngHeaderEntry<int>, int, NumOddCols, TSL::OIM::NColsOdd)
-  READ_ANG_HEADER_DATA(AngHeaderEntry<int>, int, NumEvenCols, TSL::OIM::NColsEven)
-  READ_ANG_HEADER_DATA(AngHeaderEntry<int>, int, NumRows, TSL::OIM::NRows)
-  READ_ANG_HEADER_STRING_DATA(AngStringHeaderEntry, std::string, OIMOperator, TSL::OIM::Operator)
-  READ_ANG_HEADER_STRING_DATA(AngStringHeaderEntry, std::string, SampleID, TSL::OIM::SampleId)
-  READ_ANG_HEADER_STRING_DATA(AngStringHeaderEntry, std::string, ScanID, TSL::OIM::ScanId)
+  READ_ANG_HEADER_DATA(AngHeaderEntry<float>, float, TEMPIXPerUM, Ebsd::Ang::TEMPIXPerUM)
+  READ_ANG_HEADER_DATA(AngHeaderEntry<float>, float, XStar, Ebsd::Ang::XStar)
+  READ_ANG_HEADER_DATA(AngHeaderEntry<float>, float, YStar, Ebsd::Ang::YStar)
+  READ_ANG_HEADER_DATA(AngHeaderEntry<float>, float, ZStar, Ebsd::Ang::ZStar)
+  READ_ANG_HEADER_DATA(AngHeaderEntry<float>, float, WorkingDistance, Ebsd::Ang::WorkingDistance)
+  READ_ANG_HEADER_STRING_DATA(AngStringHeaderEntry, std::string, Grid, Ebsd::Ang::Grid)
+  READ_ANG_HEADER_DATA(AngHeaderEntry<float>, float, XStep, Ebsd::Ang::XStep)
+  READ_ANG_HEADER_DATA(AngHeaderEntry<float>, float, YStep, Ebsd::Ang::YStep)
+  READ_ANG_HEADER_DATA(AngHeaderEntry<int>, int, NumOddCols, Ebsd::Ang::NColsOdd)
+  READ_ANG_HEADER_DATA(AngHeaderEntry<int>, int, NumEvenCols, Ebsd::Ang::NColsEven)
+  READ_ANG_HEADER_DATA(AngHeaderEntry<int>, int, NumRows, Ebsd::Ang::NRows)
+  READ_ANG_HEADER_STRING_DATA(AngStringHeaderEntry, std::string, OIMOperator, Ebsd::Ang::Operator)
+  READ_ANG_HEADER_STRING_DATA(AngStringHeaderEntry, std::string, SampleID, Ebsd::Ang::SampleId)
+  READ_ANG_HEADER_STRING_DATA(AngStringHeaderEntry, std::string, ScanID, Ebsd::Ang::ScanId)
 
-  hid_t phasesGid = H5Gopen(gid, Ang::Phases.c_str());
+  hid_t phasesGid = H5Gopen(gid, Ebsd::Phases.c_str());
   if (phasesGid < 0)
   {
     std::cout << "H5AngReader Error: Could not open Header/Phases HDF Group. Is this an older file?" << std::endl;
@@ -266,30 +267,30 @@ int H5AngReader::readHeader(hid_t parId)
   {
     hid_t pid = H5Gopen(phasesGid, (*phaseGroupName).c_str());
     m_CurrentPhase = AngPhase::New();
-    READ_PHASE_HEADER_DATA(pid, int, TSL::OIM::Phase, Phase, m_CurrentPhase)
-    READ_PHASE_STRING_DATA(pid, TSL::OIM::MaterialName, MaterialName, m_CurrentPhase)
-    READ_PHASE_STRING_DATA(pid, TSL::OIM::Formula, Formula, m_CurrentPhase)
-    READ_PHASE_STRING_DATA(pid, TSL::OIM::Info, Info, m_CurrentPhase)
-    READ_PHASE_HEADER_DATA_CAST(pid, TSL::OIM::PhaseSymmetry, int, TSL::OIM::Symmetry, Symmetry, m_CurrentPhase)
-    READ_PHASE_HEADER_ARRAY(pid, std::vector<float>, TSL::OIM::LatticeConstants, LatticeConstants, m_CurrentPhase)
-    READ_PHASE_HEADER_DATA(pid, int, TSL::OIM::NumberFamilies, NumberFamilies, m_CurrentPhase)
+    READ_PHASE_HEADER_DATA(pid, int, Ebsd::Ang::Phase, Phase, m_CurrentPhase)
+    READ_PHASE_STRING_DATA(pid, Ebsd::Ang::MaterialName, MaterialName, m_CurrentPhase)
+    READ_PHASE_STRING_DATA(pid, Ebsd::Ang::Formula, Formula, m_CurrentPhase)
+    READ_PHASE_STRING_DATA(pid, Ebsd::Ang::Info, Info, m_CurrentPhase)
+    READ_PHASE_HEADER_DATA_CAST(pid, Ebsd::Ang::PhaseSymmetry, int, Ebsd::Ang::Symmetry, Symmetry, m_CurrentPhase)
+    READ_PHASE_HEADER_ARRAY(pid, std::vector<float>, Ebsd::Ang::LatticeConstants, LatticeConstants, m_CurrentPhase)
+    READ_PHASE_HEADER_DATA(pid, int, Ebsd::Ang::NumberFamilies, NumberFamilies, m_CurrentPhase)
 
     if (m_CurrentPhase->getNumberFamilies() > 0) {
-      hid_t hklGid = H5Gopen(pid, TSL::OIM::HKLFamilies.c_str());
+      hid_t hklGid = H5Gopen(pid, Ebsd::Ang::HKLFamilies.c_str());
     // Only read the HKL Families if they are there. Trying to open the group will tell us if there
     // are any families to read
 
       err = readHKLFamilies(hklGid, m_CurrentPhase);
       err = H5Gclose(hklGid);
     }
-    READ_PHASE_HEADER_ARRAY(pid, std::vector<int>, TSL::OIM::Categories, Categories, m_CurrentPhase)
+    READ_PHASE_HEADER_ARRAY(pid, std::vector<int>, Ebsd::Ang::Categories, Categories, m_CurrentPhase)
     m_Phases.push_back(m_CurrentPhase);
     err = H5Gclose(pid);
   }
   err = H5Gclose(phasesGid);
 
   std::string completeHeader;
-  err = H5Lite::readStringDataset(gid, Ang::OriginalHeader, completeHeader);
+  err = H5Lite::readStringDataset(gid, Ebsd::OriginalHeader, completeHeader);
   setCompleteHeader(completeHeader);
 
   err = H5Gclose(gid);
@@ -356,7 +357,7 @@ int H5AngReader::readData(hid_t parId)
   {
     return -200;
   }
-  else if (grid.find(TSL::OIM::SquareGrid) == 0)
+  else if (grid.find(Ebsd::Ang::SquareGrid) == 0)
   {
     // if (nCols > 0) { numElements = nRows * nCols; }
     if (nOddCols > 0)
@@ -372,7 +373,7 @@ int H5AngReader::readData(hid_t parId)
       numElements = 0;
     }
   }
-  else if (grid.find(TSL::OIM::HexGrid) == 0)
+  else if (grid.find(Ebsd::Ang::HexGrid) == 0)
   {
     std::cout << "Ang Files with Hex Grids Are NOT currently supported." << std::endl;
     return -400;
@@ -400,28 +401,28 @@ int H5AngReader::readData(hid_t parId)
   size_t totalDataRows = nRows * nEvenCols;
  // int counter = 0;
 
-  hid_t gid = H5Gopen(parId, Ang::Data.c_str());
+  hid_t gid = H5Gopen(parId, Ebsd::Data.c_str());
   if (gid < 0)
   {
     std::cout << "H5AngReader Error: Could not open 'Data' Group" << std::endl;
     return -1;
   }
 
-  err = H5Lite::readPointerDataset(gid, TSL::OIM::Phi1, getPhi1Pointer());
-  err = H5Lite::readPointerDataset(gid, TSL::OIM::Phi, getPhiPointer());
-  err = H5Lite::readPointerDataset(gid, TSL::OIM::Phi2, getPhi2Pointer());
-  err = H5Lite::readPointerDataset(gid, TSL::OIM::ImageQuality, getImageQualityPointer());
-  err = H5Lite::readPointerDataset(gid, TSL::OIM::ConfidenceIndex, getConfidenceIndexPointer());
-  err = H5Lite::readPointerDataset(gid, TSL::OIM::PhaseData, getPhasePointer());
-  err = H5Lite::readPointerDataset(gid, TSL::OIM::XPosition, getXPosPointer());
-  err = H5Lite::readPointerDataset(gid, TSL::OIM::YPosition, getYPosPointer());
+  err = H5Lite::readPointerDataset(gid, Ebsd::Ang::Phi1, getPhi1Pointer());
+  err = H5Lite::readPointerDataset(gid, Ebsd::Ang::Phi, getPhiPointer());
+  err = H5Lite::readPointerDataset(gid, Ebsd::Ang::Phi2, getPhi2Pointer());
+  err = H5Lite::readPointerDataset(gid, Ebsd::Ang::ImageQuality, getImageQualityPointer());
+  err = H5Lite::readPointerDataset(gid, Ebsd::Ang::ConfidenceIndex, getConfidenceIndexPointer());
+  err = H5Lite::readPointerDataset(gid, Ebsd::Ang::PhaseData, getPhasePointer());
+  err = H5Lite::readPointerDataset(gid, Ebsd::Ang::XPosition, getXPosPointer());
+  err = H5Lite::readPointerDataset(gid, Ebsd::Ang::YPosition, getYPosPointer());
 
-  err = H5Lite::readPointerDataset(gid, TSL::OIM::Fit, getFitPointer());
+  err = H5Lite::readPointerDataset(gid, Ebsd::Ang::Fit, getFitPointer());
   if (err < 0)
   {
     setNumFields(9);
   }
-  err = H5Lite::readPointerDataset(gid, TSL::OIM::SEMSignal, getSEMSignalPointer());
+  err = H5Lite::readPointerDataset(gid, Ebsd::Ang::SEMSignal, getSEMSignalPointer());
   if (err < 0)
   {
     setNumFields(8);
@@ -448,7 +449,7 @@ int H5AngReader::readData(hid_t parId)
 	  for(size_t col = 0; col < nCols; ++col)
 	  {
     // Do we transform the data
-		  if (getUserOrigin() == Ang::UpperRightOrigin)
+		  if (getUserOrigin() == Ebsd::Ang::UpperRightOrigin)
 		  {
 			offset = (row*nCols)+((nCols-1)-col);
 			if (p1[i] - PI_OVER_2f < 0.0)
@@ -460,7 +461,7 @@ int H5AngReader::readData(hid_t parId)
 			  p1[i] = p1[i] - PI_OVER_2f;
 			}
 		  }
-		  else if (getUserOrigin() == Ang::UpperLeftOrigin)
+		  else if (getUserOrigin() == Ebsd::Ang::UpperLeftOrigin)
 		  {
 			if (p1[i] + PI_OVER_2f > TWO_PIf)
 			{
@@ -479,7 +480,7 @@ int H5AngReader::readData(hid_t parId)
 			  p[i] = p[i] + ONE_PIf;
 			}
 		  }
-		  else if (getUserOrigin() == Ang::LowerLeftOrigin)
+		  else if (getUserOrigin() == Ebsd::Ang::LowerLeftOrigin)
 		  {
 			offset = (((nRows-1)-row)*nCols)+col;
 			if (p1[i] + PI_OVER_2f > TWO_PIf)
@@ -491,12 +492,12 @@ int H5AngReader::readData(hid_t parId)
 			  p1[i] = p1[i] + PI_OVER_2f;
 			}
 		  }
-		  else if (getUserOrigin() == Ang::LowerRightOrigin)
+		  else if (getUserOrigin() == Ebsd::Ang::LowerRightOrigin)
 		  {
 			offset = (((nRows-1)-row)*nCols)+((nCols-1)-col);
 		  }
 
-		  if (getUserOrigin() == Ang::NoOrientation)
+		  if (getUserOrigin() == Ebsd::Ang::NoOrientation)
 		  {
 			// If the user/programmer sets "NoOrientation" then we simply read the data
 			// from the file and copy the values into the arrays without any regard for

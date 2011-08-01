@@ -161,7 +161,7 @@ void AngPhase::parseSymmetry(char* value, size_t start, size_t length)
   std::stringstream ss(data);
   unsigned int symm;
   ss >> symm;
-  m_Symmetry = static_cast<TSL::OIM::PhaseSymmetry>(symm);
+  m_Symmetry = static_cast<Ebsd::Ang::PhaseSymmetry>(symm);
 }
 
 // -----------------------------------------------------------------------------
@@ -283,20 +283,20 @@ void AngPhase::parseCategories(char* value, size_t start, size_t length)
 // -----------------------------------------------------------------------------
 void AngPhase::printSelf(std::ostream &stream)
 {
-  stream << TSL::OIM::Phase << ": " << m_Phase << std::endl;
-  stream << TSL::OIM::MaterialName << ": " << m_MaterialName << std::endl;
-  stream << TSL::OIM::Formula << ": " << m_Formula << std::endl;
-  stream << TSL::OIM::Info << ": " << m_Info << std::endl;
-  stream << TSL::OIM::Symmetry << ": " << m_Symmetry << std::endl;
+  stream << Ebsd::Ang::Phase << ": " << m_Phase << std::endl;
+  stream << Ebsd::Ang::MaterialName << ": " << m_MaterialName << std::endl;
+  stream << Ebsd::Ang::Formula << ": " << m_Formula << std::endl;
+  stream << Ebsd::Ang::Info << ": " << m_Info << std::endl;
+  stream << Ebsd::Ang::Symmetry << ": " << m_Symmetry << std::endl;
 
-  stream << TSL::OIM::LatticeConstants;
+  stream << Ebsd::Ang::LatticeConstants;
   for (std::vector<float>::iterator iter = m_LatticeConstants.begin(); iter != m_LatticeConstants.end(); ++iter )
   {
     std::cout << " " << *iter;
   }
   stream << std::endl;
 
-  stream << TSL::OIM::NumberFamilies << ": " << m_NumberFamilies << std::endl;
+  stream << Ebsd::Ang::NumberFamilies << ": " << m_NumberFamilies << std::endl;
 
 
   for (std::vector<HKLFamily::Pointer>::iterator iter = m_HKLFamilies.begin(); iter != m_HKLFamilies.end(); ++iter )
@@ -305,7 +305,7 @@ void AngPhase::printSelf(std::ostream &stream)
   }
 
 
-  stream << TSL::OIM::Categories;
+  stream << Ebsd::Ang::Categories;
   for (std::vector<int>::iterator iter = m_Categories.begin(); iter != m_Categories.end(); ++iter )
   {
     std::cout << " " << *iter;

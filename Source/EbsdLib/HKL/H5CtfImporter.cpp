@@ -1,20 +1,74 @@
-/*
- * H5CtfImporter.cpp
+/* ============================================================================
+ * Copyright (c) 2011, Michael A. Jackson (BlueQuartz Software)
+ * All rights reserved.
  *
- *  Created on: Jul 29, 2011
- *      Author: mjackson
- */
+ * Redistribution and use in source and binary forms, with or without modification,
+ * are permitted provided that the following conditions are met:
+ *
+ * Redistributions of source code must retain the above copyright notice, this
+ * list of conditions and the following disclaimer.
+ *
+ * Redistributions in binary form must reproduce the above copyright notice, this
+ * list of conditions and the following disclaimer in the documentation and/or
+ * other materials provided with the distribution.
+ *
+ * Neither the name of Michael A. Jackson nor the names of its contributors may
+ * be used to endorse or promote products derived from this software without
+ * specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+ * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 #include "H5CtfImporter.h"
 
-H5CtfImporter::H5CtfImporter()
-{
-  // TODO Auto-generated constructor stub
+#include <sstream>
 
+#include "H5Support/H5Lite.h"
+#include "H5Support/H5Utilities.h"
+
+#include "EbsdLib/Utilities/MXADir.h"
+#include "EbsdLib/Utilities/StringUtils.h"
+
+//#include "DREAM3D/Common/Constants.h"
+
+#define AIM_STRING std::string
+
+#define CHECK_FOR_CANCELED(AClass)\
+    if (m_Cancel == true){\
+      break; }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+H5CtfImporter::H5CtfImporter():
+m_ErrorCondition(0),
+m_Cancel(false)
+{
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 H5CtfImporter::~H5CtfImporter()
 {
-  // TODO Auto-generated destructor stub
+}
+
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void H5CtfImporter::progressMessage(const std::string &message, int progress)
+{
+  std::cout << progress << "% " << message << std::endl;
 }
 

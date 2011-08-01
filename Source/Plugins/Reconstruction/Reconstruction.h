@@ -40,7 +40,9 @@
 #include <MXA/Common/MXASetGetMacros.h>
 #include <MXA/MXATypes.h>
 
+#include "EbsdLib/EbsdConstants.h"
 #include "EbsdLib/TSL/AngConstants.h"
+#include "EbsdLib/HKL/CtfConstants.h"
 
 #include "DREAM3D/Common/Constants.h"
 #include "DREAM3D/Common/AbstractPipeline.h"
@@ -80,7 +82,7 @@ class Reconstruction : public AbstractPipeline
     MXA_INSTANCE_PROPERTY(double, MinSeedImageQuality)
     MXA_INSTANCE_PROPERTY(double, MisorientationTolerance)
     MXA_INSTANCE_PROPERTY(AIM::Reconstruction::AlignmentMethod, AlignmentMethod)
-    MXA_INSTANCE_PROPERTY(Ang::Orientation, Orientation)
+    MXA_INSTANCE_PROPERTY(Ebsd::Ang::Orientation, Orientation)
 
     MXA_INSTANCE_PROPERTY(bool, WriteBinaryVTKFiles)
     MXA_INSTANCE_PROPERTY(bool, WriteVtkFile)

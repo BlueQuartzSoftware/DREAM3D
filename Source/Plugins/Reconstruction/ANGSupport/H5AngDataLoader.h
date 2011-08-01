@@ -67,7 +67,7 @@ class DREAM3DLib_EXPORT H5AngDataLoader : public AbstractAngDataLoader
     MXA_INSTANCE_PROPERTY(int, ZStartIndex)
     MXA_INSTANCE_PROPERTY(int, ZEndIndex)
     MXA_INSTANCE_PROPERTY(bool, Cancel)
-    MXA_INSTANCE_PROPERTY(Ang::Orientation, Orientation)
+    MXA_INSTANCE_PROPERTY(Ebsd::Ang::Orientation, Orientation)
 
     int loadData(ReconstructionFunc* m);
     int getSizeAndResolution(int &xpoints, int &ypoints, int &zpoints,

@@ -552,7 +552,7 @@ void ReconstructionWidget::on_m_GoBtn_clicked()
   AIM::Reconstruction::AlignmentMethod alignmeth = static_cast<AIM::Reconstruction::AlignmentMethod>(m_AlignMeth->currentIndex() );
   m_Reconstruction->setAlignmentMethod(alignmeth);
 
-  Ang::Orientation orientation = static_cast<Ang::Orientation>(m_Orientation->currentIndex());
+  Ebsd::Ang::Orientation orientation = static_cast<Ebsd::Ang::Orientation>(m_Orientation->currentIndex());
   m_Reconstruction->setOrientation(orientation);
 
   m_Reconstruction->setMinAllowedGrainSize(m_MinAllowedGrainSize->value());

@@ -27,69 +27,26 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _HKLConstants_h_
-#define _HKLConstants_h_
+
+#ifndef _EbsdConstants_h_
+#define _EbsdConstants_h_
 
 #include <string>
 
-#define DECLARE_STRING_CONST(var)\
-  const std::string var(#var);
-
-
-namespace Ebsd {
-
-namespace Ctf
+namespace Ebsd
 {
-  const std::string FileExt("ctf");
+  const std::string OriginalHeader("OriginalHeader");
+  const std::string ZStartIndex("ZStartIndex");
+  const std::string ZEndIndex("ZEndIndex");
+  const std::string ZResolution("ZResolution");
+  const std::string Manufacturer("Manufacturer");
+  const std::string OriginalFile("OriginalFile");
+  const std::string Index("Index");
+  const std::string Header("Header");
+  const std::string Phases("Phases");
+  const std::string Data("Data");
+}
 
-  const std::string HKL("HKL");
 
-// These are Header related
-  const std::string ChannelTextFile("Channel Text File");
-  DECLARE_STRING_CONST(Prj);
-  DECLARE_STRING_CONST(Author);
-  DECLARE_STRING_CONST(JobMode);
-  DECLARE_STRING_CONST(XCells);
-  DECLARE_STRING_CONST(YCells);
-  DECLARE_STRING_CONST(XStep);
-  DECLARE_STRING_CONST(YStep);
-  DECLARE_STRING_CONST(AcqE1);
-  DECLARE_STRING_CONST(AcqE2);
-  DECLARE_STRING_CONST(AcqE3);
-  DECLARE_STRING_CONST(Euler);
-  DECLARE_STRING_CONST(Mag);
-  DECLARE_STRING_CONST(Coverage);
-  DECLARE_STRING_CONST(Device);
-  DECLARE_STRING_CONST(KV);
-  DECLARE_STRING_CONST(TiltAngle);
-  DECLARE_STRING_CONST(TiltAxis);
-  DECLARE_STRING_CONST(Phases);
 
-  // These are phase related
-  DECLARE_STRING_CONST(LatticeDimensions);
-  DECLARE_STRING_CONST(LatticeAngles);
-  DECLARE_STRING_CONST(PhaseName);
-  DECLARE_STRING_CONST(LaueGroup);
-  DECLARE_STRING_CONST(Section4);
-  DECLARE_STRING_CONST(Section5);
-  DECLARE_STRING_CONST(Section6);
-  DECLARE_STRING_CONST(Comment);
-
-  // These are the names of the Data Columns
-  DECLARE_STRING_CONST(Phase);
-  DECLARE_STRING_CONST(X);
-  DECLARE_STRING_CONST(Y);
-  DECLARE_STRING_CONST(BandCount);
-  DECLARE_STRING_CONST(Error);
-  DECLARE_STRING_CONST(Euler1);
-  DECLARE_STRING_CONST(Euler2);
-  DECLARE_STRING_CONST(Euler3);
-  DECLARE_STRING_CONST(MeanAngularDeviation);
-  DECLARE_STRING_CONST(BandContrast); // BC
-  DECLARE_STRING_CONST(BandSlope); // BS
-
-} // End namespace Ctf
-
-} // End Namespace Ebsd
-
-#endif /* _HKLConstants.h_  */
+#endif /* _EbsdConstants.h_  */
