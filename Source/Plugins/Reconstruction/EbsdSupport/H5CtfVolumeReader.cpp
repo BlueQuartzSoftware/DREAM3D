@@ -107,11 +107,12 @@ int H5CtfVolumeReader::loadData(ReconstructionFunc* m)
 {
   int index = 0;
   int err = -1;
-#ifndef __WIN32__
-#warning This whole method needs to be validated
-  if (true) return err;
+#if !defined (WIN32)
+   #warning This whole method needs to be validated
+#else
+  #pragma NOTE(This whole method needs to be validated)
 #endif
-
+ if (true) return err;
 
   /*
    * This class is considered incomplete and would probably give bad results until
