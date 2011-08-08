@@ -35,16 +35,51 @@
 
 namespace Ebsd
 {
-  const std::string OriginalHeader("OriginalHeader");
-  const std::string ZStartIndex("ZStartIndex");
-  const std::string ZEndIndex("ZEndIndex");
-  const std::string ZResolution("ZResolution");
-  const std::string Manufacturer("Manufacturer");
-  const std::string OriginalFile("OriginalFile");
-  const std::string Index("Index");
-  const std::string Header("Header");
-  const std::string Phases("Phases");
-  const std::string Data("Data");
+  namespace H5 {
+    const std::string OriginalHeader("OriginalHeader");
+    const std::string ZStartIndex("ZStartIndex");
+    const std::string ZEndIndex("ZEndIndex");
+    const std::string ZResolution("Z Resolution");
+
+    const std::string Manufacturer("Manufacturer");
+    const std::string OriginalFile("OriginalFile");
+    const std::string Index("Index");
+    const std::string Header("Header");
+    const std::string Phases("Phases");
+    const std::string Data("Data");
+
+
+    // Each Manufacturer has their own naming scheme for these variables but for
+    // DREAM.3D we are going to settle on using these names for consistency
+    const std::string XResolution("X Resolution");
+    const std::string YResolution("Y Resolution");
+    const std::string XPoints("X Points");
+    const std::string YPoints("Y Points");
+  }
+
+  /** @brief Constants defined for the 5 orientation options */
+  enum Orientation
+  {
+     UpperRightOrigin = 0,
+     UpperLeftOrigin = 1,
+     LowerLeftOrigin = 2,
+     LowerRightOrigin = 3,
+     NoOrientation = 4,
+  };
+
+
+  /**
+   * @brief IF YOU CHANGE THE VALUES THERE ARE DEEP RAMIFICATIONS IN THE CODE BUT
+   * MOSTLY IN THE HDF5 FILES WHICH ARE WRITTEN USING THE ENUMERATIONS.
+   */
+  enum CrystalStructure {
+      Hexagonal = 0,                   //!< Hexagonal
+      Cubic = 1,                       //!< Cubic
+      OrthoRhombic = 2,                //!< OrthoRhombic
+      AxisOrthoRhombic = 3,            //!< AxisOrthoRhombic
+      UnknownCrystalStructure = 999    //!< UnknownCrystalStructure
+  };
+
 }
 
 

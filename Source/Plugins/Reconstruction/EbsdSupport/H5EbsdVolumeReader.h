@@ -28,57 +28,61 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef ANGFILEHELPER_H_
-#define ANGFILEHELPER_H_
 
-#if defined (_MSC_VER)
-#define WIN32_LEAN_AND_MEAN		// Exclude rarely-used stuff from Windows headers
-#endif
+#ifndef _AbstractAngReader_h_
+#define _AbstractAngReader_h_
+
+#include "EbsdLib/EbsdSetGetMacros.h"
+#include "EbsdLib/EbsdLibConfiguration.h"
+#include "EbsdLib/EbsdConstants.h"
+#include "EbsdLib/H5EbsdVolumeInfo.h"
 
 
-#include "MXA/Common/MXASetGetMacros.h"
 
-#include "EbsdLib/TSL/AngConstants.h"
-#include "EbsdLib/TSL/AngDirectoryPatterns.h"
-
-#include "DREAM3D/DREAM3DConfiguration.h"
-#include "AbstractAngDataLoader.h"
-#include "Reconstruction/ReconstructionFunc.h"
-
+class ReconstructionFunc;
 
 /**
- * @class AngDataLoader AngDataLoader.h AIM/ANG/AngDataLoader.h
- * @brief This class loads OIM data from TSL .ang files.
+ * @class AbstractAngDataLoader AbstractAngDataLoader.h AIM/ANG/AbstractAngDataLoader.h
+ * @brief  This class defines the C++ interface that subclasses must implement
+ * in order to be able to load OIM data into the DREAM.3D programs.
  * @author Michael A. Jackson for BlueQuartz Software
  * @date May 23, 2011
  * @version 1.0
  */
-class DREAM3DLib_EXPORT AngDataLoader : public AbstractAngDataLoader
+class H5EbsdVolumeReader : public H5EbsdVolumeInfo
 {
+
   public:
-    MXA_SHARED_POINTERS(AngDataLoader)
-    MXA_STATIC_NEW_SUPERCLASS(AbstractAngDataLoader, AngDataLoader)
+    EBSD_SHARED_POINTERS(H5EbsdVolumeReader)
+    EBSD_TYPE_MACRO(H5EbsdVolumeReader)
+    EBSD_STATIC_NEW_MACRO(H5EbsdVolumeReader)
 
-    virtual ~AngDataLoader();
+    virtual ~H5EbsdVolumeReader();
 
-    MXA_INSTANCE_PROPERTY(AngDirectoryPatterns::Pointer, DirectoryPattern);
-    MXA_INSTANCE_PROPERTY(int, ZStartIndex)
-    MXA_INSTANCE_PROPERTY(int, ZEndIndex)
-    MXA_INSTANCE_PROPERTY(float, ZResolution)
-    MXA_INSTANCE_PROPERTY(Ebsd::Ang::Orientation, Orientation)
-    MXA_INSTANCE_PROPERTY(bool, Cancel);
+    EBSD_INSTANCE_PROPERTY(bool, Cancel)
 
-    int getSizeAndResolution(int &xpoints, int &ypoints, int &zpoints,
-                                       float &xres, float &yres, float &zres);
+    EBSD_INSTANCE_PROPERTY(Ebsd::Orientation, Orientation)
+    EBSD_INSTANCE_PROPERTY(int, SliceStart);
+    EBSD_INSTANCE_PROPERTY(int, SliceEnd);
 
-    int loadData(ReconstructionFunc* m);
+
+    /**
+     * @brief This method does the actual loading of the OIM data from the data
+     * source (files, streams, etc) into the Reconstruction Module data structures.
+     * @param m
+     */
+    virtual int loadData(ReconstructionFunc* m);
+
 
   protected:
-    AngDataLoader();
+    H5EbsdVolumeReader();
+
   private:
-    AngDataLoader(const AngDataLoader&);    // Copy Constructor Not Implemented
-    void operator=(const AngDataLoader&);  // Operator '=' Not Implemented
+    H5EbsdVolumeReader(const H5EbsdVolumeReader&); // Copy Constructor Not Implemented
+    void operator=(const H5EbsdVolumeReader&); // Operator '=' Not Implemented
 
 };
 
-#endif /* ANGFILEHELPER_H_ */
+
+
+#endif /* _AbstractAngReader_h_  */

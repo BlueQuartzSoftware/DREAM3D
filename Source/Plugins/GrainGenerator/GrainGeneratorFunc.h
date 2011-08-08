@@ -102,7 +102,7 @@ public:
 
     float misorientationtolerance;
 
-    std::vector<AIM::Reconstruction::CrystalStructure> crystruct;
+    std::vector<Ebsd::CrystalStructure> crystruct;
     std::vector<AIM::Reconstruction::PhaseType>        phaseType;
     std::vector<float>                                 pptFractions;
     std::vector<AIM::SyntheticBuilder::ShapeType>      shapeTypes;
@@ -187,12 +187,12 @@ public:
                     float m_XResolution, float m_YResolution, float m_ZResolution,
                     float m_fillingerrorweight, float m_neighborhooderrorweight, float m_sizedisterrorweight,
                     int32_t m_Precipitates, float m_FractionPrecipitates,
-                    std::vector<AIM::Reconstruction::CrystalStructure> m_CrystalStructure,
+                    std::vector<Ebsd::CrystalStructure> m_CrystalStructure,
                     std::vector<AIM::Reconstruction::PhaseType> m_PhaseType);
 
 #endif
 	void initializeAttributes();
-	  void initializeArrays(std::vector<AIM::Reconstruction::CrystalStructure> structures);
+	  void initializeArrays(std::vector<Ebsd::CrystalStructure> structures);
     void initialize_packinggrid();
 
     void write_eulerangles(const std::string & filename);

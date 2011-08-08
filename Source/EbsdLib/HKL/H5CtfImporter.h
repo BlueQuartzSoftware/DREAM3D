@@ -64,11 +64,21 @@ class EbsdLib_EXPORT H5CtfImporter : public EbsdImporter
 
     int writePhaseData(CtfReader &reader, hid_t gid);
 
+
+    virtual void getDims(int &x, int &y);
+    virtual void getResolution(float &x, float &y);
+
+
   protected:
     H5CtfImporter();
 
 
   private:
+    int xDim;
+    int yDim;
+    float xRes;
+    float yRes;
+
     H5CtfImporter(const H5CtfImporter&); // Copy Constructor Not Implemented
     void operator=(const H5CtfImporter&); // Operator '=' Not Implemented
 };

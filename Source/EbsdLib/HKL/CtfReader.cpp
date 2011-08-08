@@ -43,7 +43,7 @@
 //
 // -----------------------------------------------------------------------------
 CtfReader::CtfReader() :
-m_UserOrigin(Ebsd::Ctf::NoOrientation),
+m_UserOrigin(Ebsd::NoOrientation),
 m_FileName(""),
 m_ManageMemory(true),
 m_NumberOfElements(0)

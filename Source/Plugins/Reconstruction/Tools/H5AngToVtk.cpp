@@ -48,9 +48,9 @@
 
 #include "Reconstruction/ReconstructionFunc.h"
 
-#include "ANGSupport/AbstractAngDataLoader.h"
-#include "ANGSupport/AngDataLoader.h"
-#include "ANGSupport/H5AngDataLoader.h"
+#include "EbsdSupport/AbstractAngDataLoader.h"
+#include "EbsdSupport/AngDataLoader.h"
+#include "EbsdSupport/H5AngDataLoader.h"
 
 
 
@@ -80,8 +80,8 @@ int main(int argc, char **argv)
 
   ReconstructionFunc::Pointer m = ReconstructionFunc::New();
 
-  AbstractAngDataLoader::Pointer oimDataLoader = H5AngDataLoader::New();
-  H5AngDataLoader* h5io = dynamic_cast<H5AngDataLoader*>(oimDataLoader.get());
+  AbstractEbsdDataLoader::Pointer oimDataLoader = H5AngVolumeReader::New();
+  H5AngVolumeReader* h5io = dynamic_cast<H5AngVolumeReader*>(oimDataLoader.get());
   h5io->setFilename(m_H5AngFile);
 
   // Read the Header
@@ -99,21 +99,21 @@ int main(int argc, char **argv)
   AIM::Reconstruction::AlignmentMethod m_AlignmentMethod = AIM::Reconstruction::UnknownAlignmentMethod;
   std::vector<AIM::Reconstruction::PhaseType> m_PhaseTypes;
   std::vector<float> precipFractions;
-  std::vector<AIM::Reconstruction::CrystalStructure> crystalStructures;
+  std::vector<Ebsd::CrystalStructure> crystalStructures;
   std::vector<AngPhase::Pointer> phases = h5io->getPhases();
   crystalStructures.resize(phases.size()+1);
   m_PhaseTypes.resize(phases.size() + 1);
   precipFractions.resize(phases.size() + 1);
-  crystalStructures[0] = AIM::Reconstruction::UnknownCrystalStructure;
+  crystalStructures[0] = Ebsd::UnknownCrystalStructure;
   m_PhaseTypes[0] = AIM::Reconstruction::UnknownPhaseType;
   precipFractions[0] = -1.0f;
   for(size_t i=0;i<phases.size();i++)
   {
     int phaseID = phases[i]->getPhase();
     Ebsd::Ang::PhaseSymmetry symmetry = phases[i]->getSymmetry();
-    AIM::Reconstruction::CrystalStructure crystal_structure = AIM::Reconstruction::UnknownCrystalStructure;
-    if(symmetry == Ebsd::Ang::CubicSymmetry) crystal_structure = AIM::Reconstruction::Cubic;
-    else if(symmetry == Ebsd::Ang::HexagonalSymmetry) crystal_structure = AIM::Reconstruction::Hexagonal;
+    Ebsd::CrystalStructure crystal_structure = Ebsd::UnknownCrystalStructure;
+    if(symmetry == Ebsd::Ang::CubicSymmetry) crystal_structure = Ebsd::Cubic;
+    else if(symmetry == Ebsd::Ang::HexagonalSymmetry) crystal_structure = Ebsd::Hexagonal;
     crystalStructures[phaseID] = crystal_structure;
 
     precipFractions[phaseID] = -1.0f;

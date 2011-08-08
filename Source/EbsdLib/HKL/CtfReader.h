@@ -37,6 +37,7 @@
 
 #include "EbsdLib/EbsdSetGetMacros.h"
 #include "EbsdLib/EbsdLibConfiguration.h"
+#include "EbsdLib/EbsdConstants.h"
 #include "CtfConstants.h"
 #include "CtfHeaderEntry.h"
 #include "CtfPhase.h"
@@ -51,7 +52,7 @@ class EbsdLib_EXPORT CtfReader
     virtual ~CtfReader();
 
     /** @brief Allow the user to set the origin of the scan */
-    EBSD_INSTANCE_PROPERTY(Ebsd::Ctf::Orientation, UserOrigin)
+    EBSD_INSTANCE_PROPERTY(Ebsd::Orientation, UserOrigin)
 
     /** @brief Sets the file name of the ang file to be read */
     EBSD_INSTANCE_STRING_PROPERTY( FileName )

@@ -367,7 +367,7 @@ void GrainGeneratorWidget::on_m_H5InputStatisticsFile_textChanged(const QString 
        }
        // Read the Phase and Crystal Structure information from the Stats File
        std::vector<int> phases;
-       std::vector<AIM::Reconstruction::CrystalStructure> structures;
+       std::vector<Ebsd::CrystalStructure> structures;
        int err = h5reader->getPhaseAndCrystalStructures(phases, structures);
        if (err < 0)
        {
@@ -667,7 +667,7 @@ int GrainGeneratorWidget::estimate_numgrains(int xpoints, int ypoints, int zpoin
   float totalvol;
   int phase;
   std::vector<int> phases;
-  std::vector<AIM::Reconstruction::CrystalStructure> structures;
+  std::vector<Ebsd::CrystalStructure> structures;
   std::vector<AIM::Reconstruction::PhaseType> phaseType;
   std::vector<float> phasefraction;
   std::vector<float> double_data;

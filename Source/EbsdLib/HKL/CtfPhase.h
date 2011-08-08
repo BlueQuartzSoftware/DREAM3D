@@ -37,6 +37,8 @@
 
 #include "EbsdLib/EbsdSetGetMacros.h"
 #include "EbsdLib/EbsdLibConfiguration.h"
+#include "EbsdLib/EbsdConstants.h"
+
 #include "CtfConstants.h"
 
 /*
@@ -55,12 +57,14 @@ class EbsdLib_EXPORT CtfPhase
     EBSD_INSTANCE_PROPERTY(std::vector<float>, LatticeDimensions); // 1x3 array
     EBSD_INSTANCE_PROPERTY(std::vector<float>, LatticeAngles); // 1x3 array
     EBSD_INSTANCE_STRING_PROPERTY(PhaseName);
-    EBSD_INSTANCE_PROPERTY(int, LaueGroup);
+    EBSD_INSTANCE_PROPERTY(Ebsd::Ctf::PhaseSymmetry, Symmetry); // <== Laue Group
 
     EBSD_INSTANCE_STRING_PROPERTY(Section4);
     EBSD_INSTANCE_STRING_PROPERTY(Section5);
     EBSD_INSTANCE_STRING_PROPERTY(Section6);
     EBSD_INSTANCE_STRING_PROPERTY(Comment);
+
+    Ebsd::CrystalStructure determineCrystalStructure();
 
     /**
      *

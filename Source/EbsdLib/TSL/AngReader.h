@@ -39,6 +39,7 @@
 
 #include "EbsdLib/EbsdSetGetMacros.h"
 #include "EbsdLib/EbsdLibConfiguration.h"
+#include "EbsdLib/EbsdConstants.h"
 #include "AngConstants.h"
 #include "AngHeaderEntry.h"
 #include "AngPhase.h"
@@ -60,7 +61,7 @@ class EbsdLib_EXPORT AngReader
     virtual ~AngReader();
 
     /** @brief Allow the user to set the origin of the scan */
-    EBSD_INSTANCE_PROPERTY(Ebsd::Ang::Orientation, UserOrigin)
+    EBSD_INSTANCE_PROPERTY(Ebsd::Orientation, UserOrigin)
 
     /** @brief Sets the file name of the ang file to be read */
     EBSD_INSTANCE_STRING_PROPERTY( FileName )

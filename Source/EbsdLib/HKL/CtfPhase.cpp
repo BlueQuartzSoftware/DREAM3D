@@ -55,7 +55,9 @@ void CtfPhase::parsePhase(const std::vector<std::string> &tokens)
   m_LatticeDimensions = tokenize<float>(tokens[0], ';');
   m_LatticeAngles = tokenize<float>(tokens[1], ';');
   m_PhaseName = tokens[2];
-  stringToNum<int>(m_LaueGroup, tokens[3]);
+  unsigned int sym = 999;
+  stringToNum<unsigned int>(sym, tokens[3]);
+  m_Symmetry = static_cast<Ebsd::Ctf::PhaseSymmetry>(sym);
   m_Section4 = tokens[4];
   m_Section5 = tokens[5];
   m_Section6 = tokens[6];
@@ -71,9 +73,21 @@ void CtfPhase::printSelf(std::ostream &stream)
   stream << Ebsd::Ctf::LatticeDimensions << " " << m_LatticeDimensions[0] << ", " << m_LatticeDimensions[1] << ", " << m_LatticeDimensions[2] << std::endl;
   stream << Ebsd::Ctf::LatticeAngles << " " << m_LatticeAngles[0] << ", " << m_LatticeAngles[1] << ", " << m_LatticeAngles[2] << std::endl;
   stream << Ebsd::Ctf::PhaseName << " " << m_PhaseName << std::endl;
-  stream << Ebsd::Ctf::LaueGroup << " " << m_LaueGroup << std::endl;
+  stream << Ebsd::Ctf::LaueGroup << " " << m_Symmetry << std::endl;
   stream << Ebsd::Ctf::Section4 << " " << m_Section4 << std::endl;
   stream << Ebsd::Ctf::Section5 << " " << m_Section5 << std::endl;
   stream << Ebsd::Ctf::Section6 << " " << m_Section6 << std::endl;
   stream << Ebsd::Ctf::Comment << " " << m_Comment << std::endl;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+Ebsd::CrystalStructure CtfPhase::determineCrystalStructure()
+{
+  Ebsd::Ctf::PhaseSymmetry symmetry = getSymmetry();
+  Ebsd::CrystalStructure crystal_structure = Ebsd::UnknownCrystalStructure;
+  if (symmetry == Ebsd::Ctf::CubicSymmetry) crystal_structure = Ebsd::Cubic;
+  else if (symmetry == Ebsd::Ctf::HexagonalSymmetry) crystal_structure = Ebsd::Hexagonal;
+  return crystal_structure;
 }

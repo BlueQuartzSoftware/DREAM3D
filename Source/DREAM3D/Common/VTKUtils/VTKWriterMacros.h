@@ -147,13 +147,13 @@
     float var[3] = {0.0f, 0.0f, 1.0f};
 
 #define GGVTKW_IPFCOLOR_BIANRY(var, quat)\
-if (r->crystruct[phase] == AIM::Reconstruction::Cubic) {\
+if (r->crystruct[phase] == Ebsd::Cubic) {\
   OIMColoring::GenerateIPFColor(var->euler1,\
                               var->euler2,\
                               var->euler3,\
                               RefDirection[0], RefDirection[1], RefDirection[2],\
                               &rgba[i * 4], hkl);\
-} else if (r->crystruct[phase] == AIM::Reconstruction::Hexagonal)   { \
+} else if (r->crystruct[phase] == Ebsd::Hexagonal)   { \
   q1[1] = var->quat[1];\
   q1[2] = var->quat[2];\
   q1[3] = var->quat[3];\

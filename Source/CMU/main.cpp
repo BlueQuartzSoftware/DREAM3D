@@ -156,7 +156,7 @@ int main(int argc, char **argv)
    * data how ever you like and store the data in a std::vector<double>. We have
    * some methods ready to go in the AIM/Common/Texture.h class if you want to
    * use those. We have an enumeration for the 2 crystal structures that we currently
-   * use: AIM::Reconstruction::Hexagonal and AIM::Reconstruction::Cubic. You WILL
+   * use: Ebsd::Hexagonal and Ebsd::Cubic. You WILL
    * use these enumerations as it lets us add more without creating bugs in your codes.
    */
 
@@ -167,7 +167,7 @@ int main(int argc, char **argv)
   // Calculate the 'totalWeight' variable.
 
   double* odfPtr = &(odf.front());
-  err = writer->writeODFData(AIM::Reconstruction::Cubic, odfPtr, totalWeight);
+  err = writer->writeODFData(Ebsd::Cubic, odfPtr, totalWeight);
 
 
   // Force the clean up of the writer by assigning a NULL pointer which will
@@ -205,7 +205,7 @@ int main(int argc, char **argv)
   m_GrainGenerator->setFractionPrecipitates(fractionPrecipitates);
   m_GrainGenerator->setAlreadyFormed(false);
 
-  AIM::Reconstruction::CrystalStructure crystruct = AIM::Reconstruction::Cubic;
+  Ebsd::CrystalStructure crystruct = Ebsd::Cubic;
 
   m_GrainGenerator->setCrystalStructure(crystruct);
 

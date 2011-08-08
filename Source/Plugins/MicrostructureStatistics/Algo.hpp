@@ -262,11 +262,11 @@ class ParallelFindKernels
                   q2[2] = d->voxels[neighbor].quat[2];
                   q2[3] = d->voxels[neighbor].quat[3];
                   q2[4] = d->voxels[neighbor].quat[4];
-                  if (d->crystruct == AIM::Reconstruction::Hexagonal)
+                  if (d->crystruct == Ebsd::Hexagonal)
                   {
                     w = MisorientationCalculations::getMisoQuatHexagonal(q1, q2, n1, n2, n3);
                   }
-                  if (d->crystruct == AIM::Reconstruction::Cubic)
+                  if (d->crystruct == Ebsd::Cubic)
                   {
                     w = MisorientationCalculations::getMisoQuatCubic(q1, q2, n1, n2, n3);
                   }

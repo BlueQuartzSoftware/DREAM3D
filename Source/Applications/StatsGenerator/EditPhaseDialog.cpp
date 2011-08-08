@@ -56,7 +56,7 @@ EditPhaseDialog::~EditPhaseDialog()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EditPhaseDialog::setCrystalStructure(AIM::Reconstruction::CrystalStructure xtal)
+void EditPhaseDialog::setCrystalStructure(Ebsd::CrystalStructure xtal)
 {
   xtalCombo->setCurrentIndex(xtal);
 }
@@ -64,10 +64,10 @@ void EditPhaseDialog::setCrystalStructure(AIM::Reconstruction::CrystalStructure 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AIM::Reconstruction::CrystalStructure EditPhaseDialog::getCrystalStructure()
+Ebsd::CrystalStructure EditPhaseDialog::getCrystalStructure()
 {
   int index = xtalCombo->currentIndex();
-  return static_cast<AIM::Reconstruction::CrystalStructure>(index);
+  return static_cast<Ebsd::CrystalStructure>(index);
 }
 
 // -----------------------------------------------------------------------------

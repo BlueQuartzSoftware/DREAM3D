@@ -36,6 +36,10 @@
 #include "MXA/Common/MXASetGetMacros.h"
 #include "MXA/Common/MXAEndian.h"
 
+
+#include "EbsdLib/EbsdConstants.h"
+
+
 #include "DREAM3D/DREAM3DConfiguration.h"
 #include "DREAM3D/Common/Constants.h"
 #include "DREAM3D/Common/OIMColoring.hpp"
@@ -180,11 +184,11 @@ class VoxelIPFColorScalarWriter : public VtkScalarWriter
         {
           index = 0;
         }
-        if (r->crystruct[phase] == AIM::Reconstruction::Cubic)
+        if (r->crystruct[phase] == Ebsd::Cubic)
         {
           OIMColoring::GenerateIPFColor(r->euler1s[i], r->euler2s[i], r->euler3s[i], RefDirection[0], RefDirection[1], RefDirection[2], &rgba[index], hkl);
         }
-        else if (r->crystruct[phase] == AIM::Reconstruction::Hexagonal)
+        else if (r->crystruct[phase] == Ebsd::Hexagonal)
         {
           voxquat[0] = r->quats[i * 5 + 0];
           voxquat[1] = r->quats[i * 5 + 1];

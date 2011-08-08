@@ -74,11 +74,19 @@ class EbsdLib_EXPORT H5AngImporter : public EbsdImporter
 
     int writeHKLFamilies(AngPhase* p, hid_t pid);
 
+    virtual void getDims(int &x, int &y);
+    virtual void getResolution(float &x, float &y);
+
   protected:
     H5AngImporter();
 
 
   private:
+    int xDim;
+    int yDim;
+    float xRes;
+    float yRes;
+
     H5AngImporter(const H5AngImporter&); // Copy Constructor Not Implemented
     void operator=(const H5AngImporter&); // Operator '=' Not Implemented
 };

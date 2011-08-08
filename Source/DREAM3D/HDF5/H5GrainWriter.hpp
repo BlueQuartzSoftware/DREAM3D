@@ -43,9 +43,9 @@
 #include "DREAM3D/HDF5/AIM_H5VtkDataWriter.h"
 
 #define H5GW_IPF_COLOR()\
-if (r->crystruct[phase] == AIM::Reconstruction::Cubic) {\
+if (r->crystruct[phase] == Ebsd::Cubic) {\
   OIMColoring::GenerateIPFColor(r->m_Grains[r->grain_indicies[i]]->euler1, r->m_Grains[r->grain_indicies[i]]->euler2, r->m_Grains[r->grain_indicies[i]]->euler3, RefDirection[0], RefDirection[1], RefDirection[2], rgb, hkl);\
-} else if (r->crystruct[phase] == AIM::Reconstruction::Hexagonal)\
+} else if (r->crystruct[phase] == Ebsd::Hexagonal)\
 {\
   q1[1] = r->m_Grains[r->grain_indicies[i]]->avg_quat[1];\
   q1[2] = r->m_Grains[r->grain_indicies[i]]->avg_quat[2];\
@@ -184,7 +184,7 @@ class  H5GrainWriter
 
           phase = r->phases[vid];
           phaseValues[j] = phase;
-          if (r->crystruct[phase] == AIM::Reconstruction::Cubic)
+          if (r->crystruct[phase] == Ebsd::Cubic)
           {
             OIMColoring::GenerateIPFColor(r->euler1s[vid],
                                           r->euler2s[vid],
@@ -192,7 +192,7 @@ class  H5GrainWriter
                                           RefDirection[0], RefDirection[1], RefDirection[2],
                                           rgb, hkl);
           }
-          if (r->crystruct[phase] == AIM::Reconstruction::Hexagonal)
+          if (r->crystruct[phase] == Ebsd::Hexagonal)
           {
             q1[0] = r->quats[i][1];
             q1[1] = r->quats[i][2];

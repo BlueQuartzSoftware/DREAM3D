@@ -93,7 +93,7 @@ m_TotalPhaseFraction(1.0),
 m_PptFraction(-1.0f),
 m_DataHasBeenGenerated(false),
 m_PhaseIndex(0),
-m_CrystalStructure(AIM::Reconstruction::Cubic),
+m_CrystalStructure(Ebsd::Cubic),
 m_SizeDistributionCurve(NULL),
 m_CutOffMin(NULL),
 m_CutOffMax(NULL),
@@ -306,7 +306,7 @@ int SGWidget::getPhaseIndex()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SGWidget::setCrystalStructure(AIM::Reconstruction::CrystalStructure xtal)
+void SGWidget::setCrystalStructure(Ebsd::CrystalStructure xtal)
 {
   m_CrystalStructure = xtal;
   m_Omega3Plot->setCrystalStructure(xtal);
@@ -323,7 +323,7 @@ void SGWidget::setCrystalStructure(AIM::Reconstruction::CrystalStructure xtal)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AIM::Reconstruction::CrystalStructure SGWidget::getCrystalStructure()
+Ebsd::CrystalStructure SGWidget::getCrystalStructure()
 {
   return m_CrystalStructure;
 }
@@ -336,11 +336,11 @@ QString SGWidget::getComboString()
 {
   QString s = QString::number(m_PhaseIndex);
   s.append(" - ");
-  if (m_CrystalStructure == AIM::Reconstruction::Cubic)
+  if (m_CrystalStructure == Ebsd::Cubic)
   {
     s.append("Cubic");
   }
-  else if (m_CrystalStructure == AIM::Reconstruction::Hexagonal)
+  else if (m_CrystalStructure == Ebsd::Hexagonal)
   {
     s.append("Hexagonal");
   }
@@ -799,7 +799,7 @@ int SGWidget::readDataFromHDF5(H5ReconStatsReader::Pointer reader, int phase)
   std::vector<unsigned int> xtal;
   err = reader->readStatsDataset(phase, AIM::HDF5::CrystalStructure, xtal);
   CHECK_STATS_READ_ERROR(err, AIM::HDF5::Reconstruction, AIM::HDF5::CrystalStructure)
-  m_CrystalStructure = static_cast<AIM::Reconstruction::CrystalStructure>(xtal[0]);
+  m_CrystalStructure = static_cast<Ebsd::CrystalStructure>(xtal[0]);
 
   std::vector<unsigned int> pt;
   err = reader->readStatsDataset(phase, AIM::HDF5::PhaseType, pt);

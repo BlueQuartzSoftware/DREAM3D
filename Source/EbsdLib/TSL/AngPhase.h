@@ -40,6 +40,8 @@
 
 #include "EbsdLib/EbsdSetGetMacros.h"
 #include "EbsdLib/EbsdLibConfiguration.h"
+#include "EbsdLib/EbsdConstants.h"
+
 #include "AngConstants.h"
 
 /*!
@@ -147,7 +149,7 @@ class EbsdLib_EXPORT AngPhase
     virtual ~AngPhase();
 
 
-    EBSD_INSTANCE_PROPERTY(int, Phase)
+    EBSD_INSTANCE_PROPERTY(int, PhaseIndex)
     EBSD_INSTANCE_STRING_PROPERTY(MaterialName)
     EBSD_INSTANCE_STRING_PROPERTY(Formula)
     EBSD_INSTANCE_STRING_PROPERTY(Info)
@@ -169,6 +171,8 @@ class EbsdLib_EXPORT AngPhase
     void parseCategories(char* value, size_t start, size_t length);
 
     void printSelf(std::ostream &stream);
+
+    Ebsd::CrystalStructure determineCrystalStructure();
 
   protected:
     AngPhase();

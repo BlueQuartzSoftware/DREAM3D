@@ -75,6 +75,12 @@ class EbsdLib_EXPORT EbsdImporter
      */
     virtual int importFile(hid_t fileId, int index, const std::string &ebsd) = 0;
 
+
+    virtual void getDims(int &x, int &y) = 0;
+
+    virtual void getResolution(float &x, float &y) = 0;
+
+
   protected:
     EbsdImporter() :
       m_ErrorCondition(0),

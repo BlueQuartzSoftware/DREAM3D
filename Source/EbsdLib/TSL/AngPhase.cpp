@@ -61,7 +61,7 @@ void AngPhase::parsePhase(char* value, size_t start, size_t length)
   } // move past the ":" character
   std::string data(&(value[start]), strlen(value) - start);
   std::stringstream ss(data);
-  ss >> m_Phase;
+  ss >> m_PhaseIndex;
 }
 
 // -----------------------------------------------------------------------------
@@ -283,7 +283,7 @@ void AngPhase::parseCategories(char* value, size_t start, size_t length)
 // -----------------------------------------------------------------------------
 void AngPhase::printSelf(std::ostream &stream)
 {
-  stream << Ebsd::Ang::Phase << ": " << m_Phase << std::endl;
+  stream << Ebsd::Ang::Phase << ": " << m_PhaseIndex << std::endl;
   stream << Ebsd::Ang::MaterialName << ": " << m_MaterialName << std::endl;
   stream << Ebsd::Ang::Formula << ": " << m_Formula << std::endl;
   stream << Ebsd::Ang::Info << ": " << m_Info << std::endl;
@@ -312,4 +312,16 @@ void AngPhase::printSelf(std::ostream &stream)
   }
   stream << std::endl;
 
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+Ebsd::CrystalStructure AngPhase::determineCrystalStructure()
+{
+  Ebsd::Ang::PhaseSymmetry symmetry = getSymmetry();
+  Ebsd::CrystalStructure crystal_structure = Ebsd::UnknownCrystalStructure;
+  if (symmetry == Ebsd::Ang::CubicSymmetry) crystal_structure = Ebsd::Cubic;
+  else if (symmetry == Ebsd::Ang::HexagonalSymmetry) crystal_structure = Ebsd::Hexagonal;
+  return crystal_structure;
 }

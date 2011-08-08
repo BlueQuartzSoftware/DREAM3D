@@ -147,15 +147,15 @@ int main(int argc, char **argv)
     m_Reconstruction->setFillinSample(fillinSample.getValue() );
 
 #if 0
-    AIM::Reconstruction::CrystalStructure crystruct = static_cast<AIM::Reconstruction::CrystalStructure>(CrystalStructure.getValue());
-    std::vector<AIM::Reconstruction::CrystalStructure> xtals(static_cast<AIM::Reconstruction::CrystalStructure>(CrystalStructure.getValue()));
+    Ebsd::CrystalStructure crystruct = static_cast<Ebsd::CrystalStructure>(CrystalStructure.getValue());
+    std::vector<Ebsd::CrystalStructure> xtals(static_cast<Ebsd::CrystalStructure>(CrystalStructure.getValue()));
     m_Reconstruction->setCrystalStructure(crystruct);
 #endif
 
     AIM::Reconstruction::AlignmentMethod alignmeth = static_cast<AIM::Reconstruction::AlignmentMethod>(AlignMeth.getValue() );
 
     m_Reconstruction->setAlignmentMethod(alignmeth);
-    Ebsd::Ang::Orientation orient = static_cast<Ebsd::Ang::Orientation>(Orientation.getValue());
+    Ebsd::Orientation orient = static_cast<Ebsd::Orientation>(Orientation.getValue());
     m_Reconstruction->setOrientation(orient);
 
     m_Reconstruction->setMinAllowedGrainSize(MinAllowedGrainSize.getValue());
@@ -194,7 +194,7 @@ int main(int argc, char **argv)
 #endif
     m_Reconstruction->setZStartIndex(10074);
     m_Reconstruction->setZEndIndex(10376);
-    m_Reconstruction->setCrystalStructure(AIM::Reconstruction::Cubic);
+    m_Reconstruction->setCrystalStructure(Ebsd::Cubic);
     m_Reconstruction->setAlignmentMethod(AIM::Reconstruction::OuterBoundary);
     m_Reconstruction->setMinAllowedGrainSize(24);
     m_Reconstruction->setMisorientationTolerance(5.0);

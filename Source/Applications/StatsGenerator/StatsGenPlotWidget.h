@@ -95,7 +95,7 @@ class StatsGenPlotWidget : public QWidget, private Ui::StatsGenPlotWidget
     MXA_INSTANCE_PROPERTY(float, BinStep);
 
     MXA_INSTANCE_PROPERTY(int, PhaseIndex);
-    MXA_INSTANCE_PROPERTY(AIM::Reconstruction::CrystalStructure, CrystalStructure);
+    MXA_INSTANCE_PROPERTY(Ebsd::CrystalStructure, CrystalStructure);
 
 
     void setSizeDistributionValues(float mu, float sigma,
