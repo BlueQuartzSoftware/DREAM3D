@@ -2,6 +2,10 @@
 
 @page writingplugin Writing a Plugin
 
+
+<b>THIS IS ALL WRONG. THIS NEEDS UPDATING</b>
+
+
 This is an example for writing an imaginary plugin for DREAM3D that creates an
 entirely new pipeline for "CalcStats". To do this there are 2 parts to consider.
 The actual implementation files that run the pipeline functions and the impementation

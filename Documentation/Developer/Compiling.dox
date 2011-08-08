@@ -1,5 +1,5 @@
 /*!
-@page compiling Compiling DREAM.3D
+@page compilingdream3d Compiling DREAM.3D
 
 @section dependencies External Dependencies
 
@@ -36,7 +36,7 @@ thought initially longest, solution is to build Qt from scratch. Or if you need 
 
 @subsection qtwin Building Qt on Windows
   Download the source code from qt.nokia.com and decompress the archive into the final location where
-you want Qt. You <b>CAN NOT</b> move the Qt installation <b>AFTER</b> you finish building 
+you want Qt. You <b>CAN NOT</b> move the Qt installation <b>AFTER</b> you finish building
 it so choose wisely. Once you have your location selected open up a "Visual Studio Command Prompt"
 for either a 32 bit or 64 bit build. Once the Command Prompt is opened, navigate to the source
 direction and issue the following command
@@ -47,7 +47,7 @@ and answer a few of the questions. That will run for a short while after which y
 @code
 nmake
 @endcode
-to build the rest of Qt. <b>Warning</b>Completely compiling Qt can take HOURS even on a very fast 
+to build the rest of Qt. <b>Warning</b>Completely compiling Qt can take HOURS even on a very fast
 computer. Allow enough time to get this step completed. If you have a Multi-Core or Multi-CPU machine
 you can speed up the compilation by using "jom" which is a drop in replacement for nmake and will
 better utilize all of your Cores/CPUs.

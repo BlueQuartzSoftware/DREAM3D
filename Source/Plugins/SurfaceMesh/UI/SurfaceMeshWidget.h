@@ -41,7 +41,7 @@
 #include "QSurfaceMesh.h"
 
 /**
- * @class SurfaceMeshWidget SurfaceMeshWidget.h AIM/GUI/SurfaceMeshWidget.h
+ * @class SurfaceMeshWidget SurfaceMeshWidget.h Plugins/SurfaceMesh/UI/SurfaceMeshWidget.h
  * @brief This class represents the User Interface for the Surface Meshing module
  * of the AIMRepresentation program. The user interface subclasses QFrame which
  * should make it able to be embedded in most Qt applications.

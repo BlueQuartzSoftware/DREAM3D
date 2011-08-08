@@ -1,0 +1,40 @@
+/*!
+
+@page h5ebsdfile "HDF5 EBSD Data File Specification"
+
+
+@section h5ebsd1 Introduction
+  The EBSD Data from multiple vendors are stored in a data file using the HDF5
+file format library. While the general layout of the HDF5 file is the same between
+vendors there are details that are NOT the same between vendors because each
+vendors chooses to save different types of data. The top level datasets that
+deal with the basic volume information is the same for every file.
+
+@section h5ebsd2 HDF5 File Layout
+
+@code
+/-|
+  | Index  HDF Dataset
+  | Manufacturer  HDF Dataset
+  | X Points  HDF Dataset
+  | Y Points  HDF Dataset
+  | X Step  HDF Dataset
+  | Y Step  HDF Dataset
+  | ZEndIndex  HDF Dataset
+  | ZResolution  HDF Dataset
+  | ZStartIndex  HDF Dataset
+  | "EBSD Slice Group" HDF Group
+     |- "Data" HDF Group
+     |- "Header" HDF Group
+         |- "Phases" HDF Group
+
+
+
+@endcode
+
+
+@section h5ebsd3 Detailed Description
+
+
+
+ */

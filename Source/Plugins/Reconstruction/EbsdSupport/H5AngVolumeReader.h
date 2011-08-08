@@ -49,7 +49,7 @@
 
 
 /**
- * @class H5AngDataLoader H5AngDataLoader.h AIM/ANG/H5AngDataLoader.h
+ * @class H5AngVolumeReader H5AngVolumeReader.h Reconstruction/EbsdSupport/H5AngVolumeReader.h
  * @brief This class loads OIM data from an HDF5 based file.
  * @author Michael A. Jackson for BlueQuartz Software
  * @date May 23, 2011

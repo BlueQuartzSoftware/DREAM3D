@@ -43,7 +43,7 @@
 
 
 /**
- * @class ReconstructionWidget ReconstructionWidget.h AIM/GUI/ReconstructionWidget.h
+ * @class ReconstructionWidget ReconstructionWidget.h Plugins/Reconstruction/UI/ReconstructionWidget.h
  * @brief This class represents the User Interface for the Reconstruction module
  * of the AIMRepresentation program. The user interface subclasses QFrame which
  * should make it able to be embedded in most Qt applications.
