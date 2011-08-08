@@ -4,6 +4,13 @@
 This is the list of things to do. It is written with the DOxygen style
 so it can be integrated with the other documentation pages.
 
+@section todohkl HKL Support
+@li During reading of the .ctf file or the .h5ebsd file the Euler angles probably need to be adjusted
+@li During reading of the .ctf file or the .h5ebsd file the orientation needs to be adjusted properly
+@li During Reconstruction what fields are we going to filter on? There is one mapping that puts
+the BandCount <--> ImageQuality and Mean Angular Deviation <--> Confidence Index
+
+
 @section todomisc Misc Bugs
 @li  Add an option for detailed logging for debugging where DREAM3d will write to a log file which can be sent to the developers to try and diagnose the problem
 @li  <b>DONE</b> (MAJ 2011/07/13) - Modularize the code so that code only associated with a plugin is with just that plugin and not in the DREAMLib
