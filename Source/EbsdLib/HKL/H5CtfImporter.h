@@ -77,7 +77,7 @@ class EbsdLib_EXPORT H5CtfImporter : public EbsdImporter
      * @param gid Valid HDF5 Group ID for the phases.
      * @return error condition
      */
-    int writePhaseData(AngReader &reader, hid_t gid);
+    int writePhaseData(CtfReader &reader, hid_t gid);
 
     /**
      * @brief Returns the dimensions for the EBSD Data set
