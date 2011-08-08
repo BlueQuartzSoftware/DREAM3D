@@ -41,9 +41,6 @@
  * file from TSL instrumentation then you MUST use the defines from this file.
  */
 
-
-
-
 // -----------------------------------------------------------------------------
 //  These defines are needed for the pure "C" parser
 // -----------------------------------------------------------------------------

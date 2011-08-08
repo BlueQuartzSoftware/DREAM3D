@@ -27,9 +27,12 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+///////////////////////////////////////////////////////////////////////////////
+// This code was partly written under US Air Force Contract FA8650-07-D-5800
+///////////////////////////////////////////////////////////////////////////////
 
-#ifndef HKLREADER_H_
-#define HKLREADER_H_
+#ifndef _CTFREADER_H_
+#define _CTFREADER_H_
 
 #include <string>
 #include <map>
@@ -44,7 +47,14 @@
 
 
 
-
+/**
+* @class CtfReader CtfReader.h EbsdLib/HKL/CtfReader.h
+* @brief This class is a self contained HKL .ctf file reader and will read a
+* single .ctf file and store all the data in column centric pointers.
+* @author Michael A. Jackson for BlueQuartz Software
+* @date Aug 1, 2011
+* @version 1.0
+*/
 class EbsdLib_EXPORT CtfReader
 {
   public:
@@ -96,13 +106,13 @@ class EbsdLib_EXPORT CtfReader
     EBSD_POINTER_PROPERTY(BandSlope, BS, int)
 
     /**
-    * @brief Reads the complete TSL .ang file.
+    * @brief Reads the complete HKL .ctf file.
     * @return 1 on success
     */
     virtual int readFile();
 
     /**
-    * @brief Reads ONLY the header portion of the TSL .ang file
+    * @brief Reads ONLY the header portion of the HKL .ctf file
     * @return 1 on success
     */
     virtual int readHeaderOnly();
@@ -187,4 +197,4 @@ class EbsdLib_EXPORT CtfReader
 };
 
 
-#endif /* HKLREADER_H_ */
+#endif /* _CTFREADER_H_ */

@@ -159,6 +159,8 @@ void Reconstruction::execute()
     updateProgressAndMessage("ReconstructionFunc Error: Phase and Crystal Structure Information", 100);
      return;
   }
+
+
   m->initialize(m->xpoints, m->ypoints, m->zpoints,
                 m->resx, m->resy, m->resz, m_MergeTwins, m_MergeColonies, m_MinAllowedGrainSize,
                 m_MinSeedConfidence, m_DownSampleFactor, m_MinSeedImageQuality,

@@ -34,6 +34,7 @@
 
 #include "EbsdLib/EbsdLibConfiguration.h"
 #include "EbsdLib/EbsdSetGetMacros.h"
+
 /**
  * @brief Creates a static "New" method that creates an instance of thisClass
  */
@@ -46,17 +47,38 @@
 }\
 
 
-
 /**
- *
+ * @class EbsdHeaderEntry EbsdHeaderEntry.h EbsdLib/EbsdHeaderEntry.h
+ * @brief  This class defines the interface that subclasses need to implement in
+ * order to have a conforming object.
+ * @author Michael A. Jackson for BlueQuartz Software
+ * @date Aug 8, 2011
+ * @version 1.0
  */
 class EbsdLib_EXPORT EbsdHeaderEntry
 {
   public:
     EBSD_SHARED_POINTERS(EbsdHeaderEntry);
+
     virtual ~EbsdHeaderEntry() {}
+
+    /**
+     * @brief Returns the key of the header entry
+     */
     virtual std::string getKey() = 0;
+
+    /**
+     * @brief Parses the value for a given header key
+     * @param value The string as it was parsed from the file
+     * @param start The starting position to look for the value
+     * @param length The ending position to look for the value
+     */
     virtual void parseValue(char* value, size_t start, size_t length) = 0;
+
+    /**
+     * @brief prints out the key and value for this header entry
+     * @param out The output stream to printe the key/value pair
+     */
     virtual void print(std::ostream &out) = 0;
 
   protected:

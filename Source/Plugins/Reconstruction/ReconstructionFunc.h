@@ -121,14 +121,18 @@ class ReconstructionFunc
 
     DECLARE_WRAPPED_ARRAY(alreadychecked, m_AlreadyChecked, int);
     DECLARE_WRAPPED_ARRAY(unassigned, m_Unassigned, int);
+
+    /* These are TSL Specific terms */
     DECLARE_WRAPPED_ARRAY(confidences, m_Confidence, float);
     DECLARE_WRAPPED_ARRAY(imagequalities, m_ImageQualities, float);
 
 
     std::vector<Grain::Pointer> m_Grains;
 
+    /* These are TSL Specific terms */
     float minseedconfidence;
     float minseedimagequality;
+
     float downsamplefactor;
     int minallowedgrainsize;
     int mergetwinsoption;

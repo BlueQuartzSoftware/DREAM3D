@@ -52,37 +52,79 @@ namespace Ang {
 
 
 /**
- *
+ * @class AngDirectoryPatterns AngDirectoryPatterns.h EbsdLib/TSL/AngDirectoryPatterns.h
+ * @brief  This class serves as a way to parse out the list of ebsd data files from
+ * a directory.
+ * @author Michael A. Jackson for BlueQuartz Software
+ * @date Aug 8, 2011
+ * @version 1.0
  */
 class EbsdLib_EXPORT AngDirectoryPatterns
 {
   public:
     EBSD_SHARED_POINTERS(AngDirectoryPatterns)
     EBSD_TYPE_MACRO(AngDirectoryPatterns)
+
+    /**
+     * @brief Creates a new instance returning a boost::Shared_Ptr<> wrapped object
+     * @param  parentDirectory The parent directory path
+     * @param fileprefix The prefix common to all the ebsd files
+     * @param width The maximum number of digits that make up the index value on each
+     * of the data files.
+     */
     static Pointer New(const std::string &parentDirectory,
                        const std::string &fileprefix,
                        int32_t width);
 
     virtual ~AngDirectoryPatterns();
 
+    /**
+     * @brief Sets/Gets the ParentDirectory instance variable.
+     */
     EBSD_INSTANCE_STRING_PROPERTY(ParentDirectory)
+
+    /**
+     * @brief Sets/Gets the Prefix instance variable.
+     */
     EBSD_INSTANCE_STRING_PROPERTY(Prefix)
+
+    /**
+     * @brief Sets/Gets the Suffix instance variable.
+     */
     EBSD_INSTANCE_STRING_PROPERTY(Suffix)
+
+    /**
+     * @brief Sets/Gets the Extension instance variable.
+     */
     EBSD_INSTANCE_STRING_PROPERTY(Extension)
+
+    /**
+     * @brief Sets/Gets the Maximum slice value instance variable.
+     */
     EBSD_INSTANCE_PROPERTY(int32_t, MaxSlice);
 
+    /**
+     * @brief Creates an absolution path to a specific data file indicated by its index
+     * @param slice The index to return a path for
+     */
     std::string generateFullPathAngFileName(int slice);
 
+    /**
+     * @brief Creates a file name based on a slice index
+     * @param slice The slice to generate a file name for.
+     */
     std::string generateAngFileName(int slice);
 
+    /**
+     * @brief Prints out debugging info about this class
+     * @param ostream The std::stream to print to
+     */
     void print(std::ostream &ostream);
 
-protected:
+  protected:
     AngDirectoryPatterns();
 
   private:
-
-
     AngDirectoryPatterns(const AngDirectoryPatterns&);    // Copy Constructor Not Implemented
     void operator=(const AngDirectoryPatterns&);  // Operator '=' Not Implemented
 };

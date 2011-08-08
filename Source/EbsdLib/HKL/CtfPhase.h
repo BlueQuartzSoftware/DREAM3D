@@ -27,6 +27,9 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+///////////////////////////////////////////////////////////////////////////////
+// This code was partly written under US Air Force Contract FA8650-07-D-5800
+///////////////////////////////////////////////////////////////////////////////
 
 #ifndef CTFPHASE_H_
 #define CTFPHASE_H_
@@ -41,8 +44,12 @@
 
 #include "CtfConstants.h"
 
-/*
- *
+/**
+ * @class CtfPhase CtfPhase.h EbsdLib/HKL/CtfPhase.h
+ * @brief This class holds all the values for a "Phase" header block in an HKL .ctf file
+ * @author Michael A. Jackson for BlueQuartz Software
+ * @date Mar 23, 2011
+ * @version 1.0
  */
 class EbsdLib_EXPORT CtfPhase
 {
@@ -64,21 +71,25 @@ class EbsdLib_EXPORT CtfPhase
     EBSD_INSTANCE_STRING_PROPERTY(Section6);
     EBSD_INSTANCE_STRING_PROPERTY(Comment);
 
-    Ebsd::CrystalStructure determineCrystalStructure();
 
     /**
-     *
+     * @brief Parses a header line into a CtfPhase class
      */
     void parsePhase(const std::vector<std::string> &tokens);
 
     /**
-     *
+     * @brief Prints some debugging info about this class
      */
     void printSelf(std::ostream &stream);
 
+    /**
+     * @brief Returns the type of crystal structure for this phase.
+     */
+    Ebsd::CrystalStructure determineCrystalStructure();
+
 
     /**
-     *
+     * @brief Converts a string to a number
      */
     template<typename T>
     bool stringToNum(T &t, const std::string &s)
@@ -88,7 +99,7 @@ class EbsdLib_EXPORT CtfPhase
     }
 
     /**
-     *
+     * @brief Parses a header line into string "tokens"
      */
     template<typename T>
     std::vector<T> tokenize(const std::string &values, char delimiter)

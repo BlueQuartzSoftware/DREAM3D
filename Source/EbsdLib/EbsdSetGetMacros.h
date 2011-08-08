@@ -39,7 +39,11 @@
 #include <sstream>
 #include <stdexcept>
 
-
+/**
+ * @file EbsdSEtGetMacros.h
+ * @brief This file contains preprocessor macros that can be used to quickly
+ * create instance variables, pointer types and other conveniences for a C++ class.
+ */
 
 #if defined(QT_CORE_LIB)
 //-- Qt includes

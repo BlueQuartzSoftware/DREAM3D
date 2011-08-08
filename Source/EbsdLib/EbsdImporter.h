@@ -37,7 +37,14 @@
 #include "EbsdLib/EbsdLibTypes.h"
 #include "EbsdLib/EbsdSetGetMacros.h"
 
-
+/**
+ * @class EbsdImporter EbsdImporter.h EbsdLib/EbsdImporter.h
+ * @brief  This class is a pure virtual class that defines the interface that
+ * subclasses should implement in order to write a conforming EBSD Data Importer
+ * @author Michael A. Jackson for BlueQuartz Software
+ * @date Aug 8, 2011
+ * @version 1.0
+ */
 class EbsdLib_EXPORT EbsdImporter
 {
   public:
@@ -46,9 +53,15 @@ class EbsdLib_EXPORT EbsdImporter
 
     virtual ~EbsdImporter(){};
 
+    /**
+     * @brief Sets an Error Message
+     */
     EBSD_VIRTUAL_INSTANCE_STRING_PROPERTY(ErrorMessage);
-    EBSD_VIRTUAL_INSTANCE_PROPERTY(bool, ErrorCondition);
 
+    /**
+     * @brief Sets an error condition
+     */
+    EBSD_VIRTUAL_INSTANCE_PROPERTY(bool, ErrorCondition);
 
     /**
      * @brief Cancel the operation
@@ -75,9 +88,18 @@ class EbsdLib_EXPORT EbsdImporter
      */
     virtual int importFile(hid_t fileId, int index, const std::string &ebsd) = 0;
 
-
+    /**
+     * @brief Returns the dimensions for the EBSD Data set
+     * @param x Number of X Voxels (out)
+     * @param y Number of Y Voxels (out)
+     */
     virtual void getDims(int &x, int &y) = 0;
 
+    /**
+     * @brief Returns the x and y resolution of the voxels
+     * @param x The x resolution (out)
+     * @param y The y resolution (out)
+     */
     virtual void getResolution(float &x, float &y) = 0;
 
 

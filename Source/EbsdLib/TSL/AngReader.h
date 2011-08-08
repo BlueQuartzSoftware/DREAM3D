@@ -47,9 +47,9 @@
 
 
 /**
-* @class AngReader AngReader.h AngReader/AngReader.h
-* @brief This class is a self contained TSL OIM .ang file reader. It should only be dependent on
-* standard C++ features
+* @class AngReader AngReader.h EbsdLib/TSL/AngReader.h
+* @brief This class is a self contained TSL OIM .ang file reader and will read a
+* single .ang file and store all the data in column centric pointers.
 * @author Michael A. Jackson for BlueQuartz Software
 * @date Mar 1, 2010
 * @version 1.0

@@ -107,7 +107,17 @@ int H5CtfVolumeReader::loadData(ReconstructionFunc* m)
 {
   int index = 0;
   int err = -1;
+#ifndef __WIN32__
+#warning This whole method needs to be validated
+  if (true) return err;
+#endif
 
+
+  /*
+   * This class is considered incomplete and would probably give bad results until
+   * the proper fields from the .ctf file that will be used as criteria to determine
+   * if a voxel is valid or not are determined.
+   */
   int readerIndex;
   int xpointstemp;
   int ypointstemp;
@@ -134,7 +144,7 @@ int H5CtfVolumeReader::loadData(ReconstructionFunc* m)
     err = reader->readFile();
     if (err < 0)
     {
-      std::cout << "H5AngDataLoader Error: There was an issue loading the data from the hdf5 file." << std::endl;
+      std::cout << "H5CtfVolumeReader Error: There was an issue loading the data from the hdf5 file." << std::endl;
       return -1;
     }
     readerIndex = 0;

@@ -39,7 +39,13 @@
 #include "EbsdLib/EbsdHeaderEntry.h"
 
 
-
+/**
+ * @class CtfHeaderEntry CtfHeaderEntry.h EbsdLib/HKL/CtfHeaderEntry.h
+ * @brief Header entry that holds an integer or decimal type value
+ * @author Michael A. Jackson for BlueQuartz Software
+ * @date Aug 8, 2011
+ * @version 1.0
+ */
 template<typename T>
 class EbsdLib_EXPORT CtfHeaderEntry : public EbsdHeaderEntry
 {
@@ -81,7 +87,13 @@ class EbsdLib_EXPORT CtfHeaderEntry : public EbsdHeaderEntry
     void operator=(const CtfHeaderEntry&); // Operator '=' Not Implemented
 };
 
-
+/**
+ * @class CtfStringHeaderEntry CtfHeaderEntry.h EbsdLib/HKL/CtfHeaderEntry.h
+ * @brief Header entry that holds a string type value
+ * @author Michael A. Jackson for BlueQuartz Software
+ * @date Aug 1, 2011
+ * @version 1.0
+ */
 class CtfStringHeaderEntry : public EbsdHeaderEntry
 {
   public:
