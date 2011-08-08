@@ -23,6 +23,9 @@
 #include <cmath>
 #include <limits>
 
+
+#include "EbsdLib/EbsdConstants.h"
+
 // AIM Includes
 #include "DREAM3D/Common/AIMMath.h"
 #include "DREAM3D/Common/Constants.h"
@@ -142,7 +145,7 @@ void GrainGeneratorFunc::initializeAttributes()
 		surfacevoxels[i] = 0;
 	}
 }
-void GrainGeneratorFunc::initializeArrays(std::vector<AIM::Reconstruction::CrystalStructure> structures)
+void GrainGeneratorFunc::initializeArrays(std::vector<Ebsd::CrystalStructure> structures)
 {
   //------------------
   size_t nElements = 0;
@@ -154,7 +157,7 @@ void GrainGeneratorFunc::initializeArrays(std::vector<AIM::Reconstruction::Cryst
   phasefraction.resize(size+1);
 
   // Initialize the first slot in these arrays since they should never be used
-  crystruct[0] = AIM::Reconstruction::UnknownCrystalStructure;
+  crystruct[0] = Ebsd::UnknownCrystalStructure;
   phasefraction[0] = 0.0;
   phaseType[0] = AIM::Reconstruction::UnknownPhaseType;
   pptFractions[0] = -1.0;
@@ -180,8 +183,8 @@ void GrainGeneratorFunc::initializeArrays(std::vector<AIM::Reconstruction::Cryst
   simmicrotex.resize(size+1);
   for(size_t i= 1; i < size+1; ++i)
   {
-    if(crystruct[i] == AIM::Reconstruction::Hexagonal) nElements = 36*36*12;
-    if(crystruct[i] == AIM::Reconstruction::Cubic) nElements = 18*18*18;
+    if(crystruct[i] == Ebsd::Hexagonal) nElements = 36*36*12;
+    if(crystruct[i] == Ebsd::Cubic) nElements = 18*18*18;
 
     float initValue = 1.0/(float)(nElements);
     actualodf[i] = SharedFloatArray(new float [nElements]);
@@ -320,7 +323,7 @@ int GrainGeneratorFunc::readReconStatsData(H5ReconStatsReader::Pointer h5io)
 
   // Read the Phase and Crystal Structure information from the Stats File
   std::vector<int> phases;
-  std::vector<AIM::Reconstruction::CrystalStructure> structures;
+  std::vector<Ebsd::CrystalStructure> structures;
   err = h5io->getPhaseAndCrystalStructures(phases, structures);
   if (err < 0)
   {
@@ -414,7 +417,7 @@ int  GrainGeneratorFunc::readAxisOrientationData(H5ReconStatsReader::Pointer h5i
   size_t size = 0;
   // Read the Phase and Crystal Structure information from the Stats File
   std::vector<int> phases;
-  std::vector<AIM::Reconstruction::CrystalStructure> structures;
+  std::vector<Ebsd::CrystalStructure> structures;
   err = h5io->getPhaseAndCrystalStructures(phases, structures);
   if (err < 0)
   {
@@ -456,7 +459,7 @@ int GrainGeneratorFunc::readODFData(H5ReconStatsReader::Pointer h5io)
   int err = 0;
   // Read the Phase and Crystal Structure information from the Stats File
   std::vector<int> phases;
-  std::vector<AIM::Reconstruction::CrystalStructure> structures;
+  std::vector<Ebsd::CrystalStructure> structures;
   err = h5io->getPhaseAndCrystalStructures(phases, structures);
   if (err < 0)
   {
@@ -475,8 +478,8 @@ int GrainGeneratorFunc::readODFData(H5ReconStatsReader::Pointer h5io)
     return 10;
     }
     size_t numbins = 0;
-    if(crystruct[phase] == AIM::Reconstruction::Hexagonal) numbins = 36*36*12;
-    if(crystruct[phase] == AIM::Reconstruction::Cubic) numbins = 18*18*18;
+    if(crystruct[phase] == Ebsd::Hexagonal) numbins = 36*36*12;
+    if(crystruct[phase] == Ebsd::Cubic) numbins = 18*18*18;
 
     if (numbins != density.size() )
     {
@@ -499,7 +502,7 @@ int GrainGeneratorFunc::readMisorientationData(H5ReconStatsReader::Pointer h5io)
   int err = 0;
   // Read the Phase and Crystal Structure information from the Stats File
   std::vector<int> phases;
-  std::vector<AIM::Reconstruction::CrystalStructure> structures;
+  std::vector<Ebsd::CrystalStructure> structures;
   err = h5io->getPhaseAndCrystalStructures(phases, structures);
   if (err < 0)
   {
@@ -518,8 +521,8 @@ int GrainGeneratorFunc::readMisorientationData(H5ReconStatsReader::Pointer h5io)
     return 10;
     }
     size_t numbins = 0;
-    if(crystruct[phase] == AIM::Reconstruction::Hexagonal) numbins = 36*36*12;
-    if(crystruct[phase] == AIM::Reconstruction::Cubic) numbins = 18*18*18;
+    if(crystruct[phase] == Ebsd::Hexagonal) numbins = 36*36*12;
+    if(crystruct[phase] == Ebsd::Cubic) numbins = 18*18*18;
 
     if (numbins != density.size() )
     {
@@ -601,7 +604,7 @@ void  GrainGeneratorFunc::generate_grain(int gnum, int phase)
     if(random > axisodf[phase][i]) bin = i;
     if(random < axisodf[phase][i]) {break;}
   }
-  m_OrientatioOps[AIM::Reconstruction::OrthoRhombic]->determineEulerAngles(bin, phi1, PHI, phi2);
+  m_OrientatioOps[Ebsd::OrthoRhombic]->determineEulerAngles(bin, phi1, PHI, phi2);
   float m = omega3[phase][diameter][0];
   float s = omega3[phase][diameter][1];
   float omega3 = rg.RandBeta(m,s);
@@ -1937,8 +1940,8 @@ void  GrainGeneratorFunc::assign_eulers()
     choose = 0;
     totaldensity = 0;
     phase = m_Grains[i]->phase;
-  if(crystruct[phase] == AIM::Reconstruction::Cubic) numbins = 5832;
-  if(crystruct[phase] == AIM::Reconstruction::Hexagonal) numbins = 15552;
+  if(crystruct[phase] == Ebsd::Cubic) numbins = 5832;
+  if(crystruct[phase] == Ebsd::Hexagonal) numbins = 15552;
     for (int j = 0; j < numbins; j++)
     {
       float density = actualodf[phase][j];
@@ -2929,8 +2932,8 @@ void GrainGeneratorFunc::matchCrystallography()
   size_t xtalSize = crystruct.size();
   for(size_t iter=1;iter<xtalSize;++iter)
   {
-    if(crystruct[iter] == AIM::Reconstruction::Cubic) numbins = 18*18*18;
-    if(crystruct[iter] == AIM::Reconstruction::Hexagonal) numbins = 36*36*12;
+    if(crystruct[iter] == Ebsd::Cubic) numbins = 18*18*18;
+    if(crystruct[iter] == Ebsd::Hexagonal) numbins = 36*36*12;
     while(badtrycount < 5000 && iterations < 100000)
     {
     currentodferror = 0;
@@ -2978,7 +2981,7 @@ void  GrainGeneratorFunc::measure_misorientations ()
   float r1, r2, r3;
   float q1[5];
   float q2[5];
-  AIM::Reconstruction::CrystalStructure phase1, phase2;
+  Ebsd::CrystalStructure phase1, phase2;
   int mbin;
 
 

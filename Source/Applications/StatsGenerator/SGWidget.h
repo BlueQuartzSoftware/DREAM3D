@@ -68,8 +68,8 @@ class SGWidget : public QWidget, private Ui::SGWidget
     MXA_INSTANCE_PROPERTY(float, PptFraction);
     MXA_INSTANCE_PROPERTY(bool, DataHasBeenGenerated);
 
-    void setCrystalStructure(AIM::Reconstruction::CrystalStructure xtal);
-    AIM::Reconstruction::CrystalStructure getCrystalStructure();
+    void setCrystalStructure(Ebsd::CrystalStructure xtal);
+    Ebsd::CrystalStructure getCrystalStructure();
 
     void plotSizeDistribution();
     void updateSizeDistributionPlot();
@@ -125,7 +125,7 @@ class SGWidget : public QWidget, private Ui::SGWidget
 
   private:
     int                  m_PhaseIndex;
-    AIM::Reconstruction::CrystalStructure  m_CrystalStructure;
+    Ebsd::CrystalStructure  m_CrystalStructure;
 
     QList<QWidget*>      m_WidgetList;
     QwtPlotCurve*        m_SizeDistributionCurve;

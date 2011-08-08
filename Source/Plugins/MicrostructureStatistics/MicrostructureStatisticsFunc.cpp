@@ -41,7 +41,8 @@
 #include <sstream>
 #include <set>
 
-// TSL Ang Library Includes
+// Ebsd Lib Includes
+#include "EbsdLib/EbsdConstants.h"
 #include "EbsdLib/TSL/AngReader.h"
 
 //-- MXA Includes
@@ -1093,8 +1094,8 @@ void MicrostructureStatisticsFunc::find_grain_and_kernel_misorientations()
   int point;
   float w, totalmisorientation;
   float n1, n2, n3;
-  AIM::Reconstruction::CrystalStructure phase1 = AIM::Reconstruction::UnknownCrystalStructure;
-  AIM::Reconstruction::CrystalStructure phase2 = AIM::Reconstruction::UnknownCrystalStructure;
+  Ebsd::CrystalStructure phase1 = Ebsd::UnknownCrystalStructure;
+  Ebsd::CrystalStructure phase2 = Ebsd::UnknownCrystalStructure;
 
   int steps = 1;
   int jStride;
@@ -1379,7 +1380,7 @@ void MicrostructureStatisticsFunc::find_grainorientations()
   size_t numgrains = m_Grains.size();
   int phase;
   float voxquat[5];
-  AIM::Reconstruction::CrystalStructure xtal;
+  Ebsd::CrystalStructure xtal;
   for (size_t i = 1; i < numgrains; i++)
   {
 	  m_Grains[i]->avg_quat[0] = 0.0;
@@ -1431,14 +1432,14 @@ void MicrostructureStatisticsFunc::find_eulerodf(H5ReconStatsWriter::Pointer h5i
   size_t bin;
   size_t numgrains = m_Grains.size();
   int phase;
-//  AIM::Reconstruction::CrystalStructure xtal;
+//  Ebsd::CrystalStructure xtal;
   float **eulerodf;
 
   eulerodf = new float *[crystruct.size()];
   unsigned long long dims = 0;
   for(unsigned long long i=1;i<crystruct.size();i++)
   {
-	  if (crystruct[i] == AIM::Reconstruction::Hexagonal)
+	  if (crystruct[i] == Ebsd::Hexagonal)
 	  {
 	    dims = 36 * 36 * 12;
 	    eulerodf[i] = new float[dims];
@@ -1447,7 +1448,7 @@ void MicrostructureStatisticsFunc::find_eulerodf(H5ReconStatsWriter::Pointer h5i
 	      eulerodf[i][j] = 0.0;
 	    }
 	  }
-	  else if (crystruct[i] == AIM::Reconstruction::Cubic)
+	  else if (crystruct[i] == Ebsd::Cubic)
 	  {
 	    dims = 18 * 18 * 18;
 		  eulerodf[i] = new float[dims];
@@ -1492,19 +1493,19 @@ void MicrostructureStatisticsFunc::measure_misorientations(H5ReconStatsWriter::P
   float q1[5];
   float q2[5];
   size_t numgrains = m_Grains.size();
-  AIM::Reconstruction::CrystalStructure phase1, phase2;
+  Ebsd::CrystalStructure phase1, phase2;
   float **misobin;
   int numbins = 0;
 
   misobin = new float *[crystruct.size()];
   for(size_t i=1;i<crystruct.size();i++)
   {
-    if (crystruct[i] == AIM::Reconstruction::Hexagonal)
+    if (crystruct[i] == Ebsd::Hexagonal)
     {
       numbins = 36 * 36 * 12;
       misobin[i] = new float[numbins];
     }
-    else if (crystruct[i] == AIM::Reconstruction::Cubic)
+    else if (crystruct[i] == Ebsd::Cubic)
     {
       numbins = 18 * 18 * 18;
       misobin[i] = new float[numbins];
@@ -1591,7 +1592,7 @@ void MicrostructureStatisticsFunc::find_colors()
       q1[2] = m_Grains[i]->avg_quat[2] / m_Grains[i]->avg_quat[0];
       q1[3] = m_Grains[i]->avg_quat[3] / m_Grains[i]->avg_quat[0];
       q1[4] = m_Grains[i]->avg_quat[4] / m_Grains[i]->avg_quat[0];
-      if (crystruct[m_Grains[i]->phase] == AIM::Reconstruction::Cubic)
+      if (crystruct[m_Grains[i]->phase] == Ebsd::Cubic)
       {
         OIMColoring::GenerateIPFColor(g1ea1, g1ea2, g1ea3, RefDirection[0], RefDirection[1], RefDirection[2], rgb, hkl);
         m_Grains[i]->red = static_cast<float> (rgb[0] / 255.0);
@@ -1601,7 +1602,7 @@ void MicrostructureStatisticsFunc::find_colors()
         m_Grains[i]->IPF[1] = static_cast<float> (hkl[1] / 100.0);
         m_Grains[i]->IPF[2] = static_cast<float> (hkl[2] / 100.0);
       }
-      if (crystruct[m_Grains[i]->phase] == AIM::Reconstruction::Hexagonal)
+      if (crystruct[m_Grains[i]->phase] == Ebsd::Hexagonal)
       {
         OIMColoring::CalculateHexIPFColor(q1, RefDirection[0], RefDirection[1], RefDirection[2], rgb);
         m_Grains[i]->red = rgb[0] / 255.0;

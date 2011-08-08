@@ -52,6 +52,9 @@
 
 #include <boost/shared_array.hpp>
 
+
+#include "EbsdLib/EbsdConstants.h"
+
 #include "MXA/MXATypes.h"
 #include "MXA/Common/MXASetGetMacros.h"
 
@@ -64,9 +67,7 @@
 #include "DREAM3D/Common/OrientationOps/CubicOps.h"
 #include "DREAM3D/Common/OrientationOps/HexagonalOps.h"
 #include "DREAM3D/Common/OrientationOps/OrthoRhombicOps.h"
-#include "DREAM3D/HDF5/H5ReconStatsWriter.h"
 
-#include "ANGSupport/AbstractAngDataLoader.h"
 
 using namespace std;
 
@@ -104,7 +105,7 @@ class ReconstructionFunc
 
     float misorientationtolerance;
 
-    vector<AIM::Reconstruction::CrystalStructure> crystruct;
+    vector<Ebsd::CrystalStructure> crystruct;
     vector<AIM::Reconstruction::PhaseType>        phaseType;
     std::vector<float>                            pptFractions;
 
@@ -165,7 +166,7 @@ class ReconstructionFunc
                     float dwnSmplFact,
                     float minImgQlty,
                     float misoTol,
-                    vector<AIM::Reconstruction::CrystalStructure> crystalStructures,
+                    vector<Ebsd::CrystalStructure> crystalStructures,
                     vector<AIM::Reconstruction::PhaseType> phaseTypes,
                     std::vector<float> precipFractions,
                     int alignmentMethod);

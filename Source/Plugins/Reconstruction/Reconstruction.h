@@ -82,7 +82,7 @@ class Reconstruction : public AbstractPipeline
     MXA_INSTANCE_PROPERTY(double, MinSeedImageQuality)
     MXA_INSTANCE_PROPERTY(double, MisorientationTolerance)
     MXA_INSTANCE_PROPERTY(AIM::Reconstruction::AlignmentMethod, AlignmentMethod)
-    MXA_INSTANCE_PROPERTY(Ebsd::Ang::Orientation, Orientation)
+    MXA_INSTANCE_PROPERTY(Ebsd::Orientation, Orientation)
 
     MXA_INSTANCE_PROPERTY(bool, WriteBinaryVTKFiles)
     MXA_INSTANCE_PROPERTY(bool, WriteVtkFile)
@@ -111,6 +111,36 @@ class Reconstruction : public AbstractPipeline
 
     Reconstruction(const Reconstruction&);    // Copy Constructor Not Implemented
     void operator=(const Reconstruction&);  // Operator '=' Not Implemented
+
+
+    template<typename EbsdReader, typename EbsdPhase>
+    int loadInfo(EbsdReader* reader,
+                 std::vector<float> &precipFractions,
+                 std::vector<Ebsd::CrystalStructure> &crystalStructures)
+    {
+      reader->setFilename(m_H5AngFile);
+      reader->setSliceStart(m_ZStartIndex);
+      reader->setSliceEnd(m_ZEndIndex);
+      reader->setOrientation(m_Orientation);
+
+      //FIXME: Mike Groeber: Take a look at this setup for the PhaseTypes. I am
+      // putting in UnknownTypes just to have something. You can change to suit
+      // your needs.
+      std::vector<typename EbsdPhase::Pointer> phases = reader->getPhases();
+      crystalStructures.resize(phases.size()+1);
+
+      precipFractions.resize(phases.size() + 1);
+      crystalStructures[0] = Ebsd::UnknownCrystalStructure;
+      m_PhaseTypes[0] = AIM::Reconstruction::UnknownPhaseType;
+      precipFractions[0] = -1.0f;
+      for(size_t i=0;i<phases.size();i++)
+      {
+        int phaseID = phases[i]->getPhaseIndex();
+        crystalStructures[phaseID] = phases[i]->determineCrystalStructure();
+        precipFractions[phaseID] = -1.0f;
+      }
+      return 0;
+    }
 };
 
 #endif /* RECONSTRUCTION_H_ */

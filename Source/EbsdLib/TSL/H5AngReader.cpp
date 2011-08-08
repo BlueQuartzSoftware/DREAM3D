@@ -222,7 +222,7 @@ int H5AngReader::readFile()
 int H5AngReader::readHeader(hid_t parId)
 {
   int err = -1;
-  hid_t gid = H5Gopen(parId, Ebsd::Header.c_str());
+  hid_t gid = H5Gopen(parId, Ebsd::H5::Header.c_str());
   if (gid < 0)
   {
     std::cout << "H5AngReader Error: Could not open 'Header' Group" << std::endl;
@@ -245,7 +245,7 @@ int H5AngReader::readHeader(hid_t parId)
   READ_ANG_HEADER_STRING_DATA(AngStringHeaderEntry, std::string, SampleID, Ebsd::Ang::SampleId)
   READ_ANG_HEADER_STRING_DATA(AngStringHeaderEntry, std::string, ScanID, Ebsd::Ang::ScanId)
 
-  hid_t phasesGid = H5Gopen(gid, Ebsd::Phases.c_str());
+  hid_t phasesGid = H5Gopen(gid, Ebsd::H5::Phases.c_str());
   if (phasesGid < 0)
   {
     std::cout << "H5AngReader Error: Could not open Header/Phases HDF Group. Is this an older file?" << std::endl;
@@ -267,7 +267,7 @@ int H5AngReader::readHeader(hid_t parId)
   {
     hid_t pid = H5Gopen(phasesGid, (*phaseGroupName).c_str());
     m_CurrentPhase = AngPhase::New();
-    READ_PHASE_HEADER_DATA(pid, int, Ebsd::Ang::Phase, Phase, m_CurrentPhase)
+    READ_PHASE_HEADER_DATA(pid, int, Ebsd::Ang::Phase, PhaseIndex, m_CurrentPhase)
     READ_PHASE_STRING_DATA(pid, Ebsd::Ang::MaterialName, MaterialName, m_CurrentPhase)
     READ_PHASE_STRING_DATA(pid, Ebsd::Ang::Formula, Formula, m_CurrentPhase)
     READ_PHASE_STRING_DATA(pid, Ebsd::Ang::Info, Info, m_CurrentPhase)
@@ -290,7 +290,7 @@ int H5AngReader::readHeader(hid_t parId)
   err = H5Gclose(phasesGid);
 
   std::string completeHeader;
-  err = H5Lite::readStringDataset(gid, Ebsd::OriginalHeader, completeHeader);
+  err = H5Lite::readStringDataset(gid, Ebsd::H5::OriginalHeader, completeHeader);
   setCompleteHeader(completeHeader);
 
   err = H5Gclose(gid);
@@ -401,7 +401,7 @@ int H5AngReader::readData(hid_t parId)
   size_t totalDataRows = nRows * nEvenCols;
  // int counter = 0;
 
-  hid_t gid = H5Gopen(parId, Ebsd::Data.c_str());
+  hid_t gid = H5Gopen(parId, Ebsd::H5::Data.c_str());
   if (gid < 0)
   {
     std::cout << "H5AngReader Error: Could not open 'Data' Group" << std::endl;
@@ -449,7 +449,7 @@ int H5AngReader::readData(hid_t parId)
 	  for(size_t col = 0; col < nCols; ++col)
 	  {
     // Do we transform the data
-		  if (getUserOrigin() == Ebsd::Ang::UpperRightOrigin)
+		  if (getUserOrigin() == Ebsd::UpperRightOrigin)
 		  {
 			offset = (row*nCols)+((nCols-1)-col);
 			if (p1[i] - PI_OVER_2f < 0.0)
@@ -461,7 +461,7 @@ int H5AngReader::readData(hid_t parId)
 			  p1[i] = p1[i] - PI_OVER_2f;
 			}
 		  }
-		  else if (getUserOrigin() == Ebsd::Ang::UpperLeftOrigin)
+		  else if (getUserOrigin() == Ebsd::UpperLeftOrigin)
 		  {
 			if (p1[i] + PI_OVER_2f > TWO_PIf)
 			{
@@ -480,7 +480,7 @@ int H5AngReader::readData(hid_t parId)
 			  p[i] = p[i] + ONE_PIf;
 			}
 		  }
-		  else if (getUserOrigin() == Ebsd::Ang::LowerLeftOrigin)
+		  else if (getUserOrigin() == Ebsd::LowerLeftOrigin)
 		  {
 			offset = (((nRows-1)-row)*nCols)+col;
 			if (p1[i] + PI_OVER_2f > TWO_PIf)
@@ -492,12 +492,12 @@ int H5AngReader::readData(hid_t parId)
 			  p1[i] = p1[i] + PI_OVER_2f;
 			}
 		  }
-		  else if (getUserOrigin() == Ebsd::Ang::LowerRightOrigin)
+		  else if (getUserOrigin() == Ebsd::LowerRightOrigin)
 		  {
 			offset = (((nRows-1)-row)*nCols)+((nCols-1)-col);
 		  }
 
-		  if (getUserOrigin() == Ebsd::Ang::NoOrientation)
+		  if (getUserOrigin() == Ebsd::NoOrientation)
 		  {
 			// If the user/programmer sets "NoOrientation" then we simply read the data
 			// from the file and copy the values into the arrays without any regard for

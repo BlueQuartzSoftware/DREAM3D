@@ -45,6 +45,8 @@
 #include "H5Support/H5Utilities.h"
 #include "H5Support/H5Lite.h"
 
+#include "EbsdLib/EbsdConstants.h"
+
 #include "DREAM3D/DREAM3DConfiguration.h"
 #include "DREAM3D/Common/Constants.h"
 #include "DREAM3D/HDF5/H5Macros.h"
@@ -75,7 +77,7 @@ class DREAM3DLib_EXPORT H5ReconStatsReader
      * @param xtals std::vector to store the crystal structure values into
      */
     int getPhaseAndCrystalStructures(std::vector<int> &phases,
-                                     std::vector<AIM::Reconstruction::CrystalStructure> &xtals);
+                                     std::vector<Ebsd::CrystalStructure> &xtals);
 
 
     /**

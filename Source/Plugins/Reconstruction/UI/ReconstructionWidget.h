@@ -82,6 +82,16 @@ class ReconstructionWidget : public AIMPluginFrame, private Ui::ReconstructionWi
 
     virtual void checkIOFiles();
 
+#if 0
+    /**
+     * @brief Returns the EBSD Collection System manufacturer.
+     * @param ebsdFile The path to the HDF5 based File to look for the manufacturer
+     * at the path /Manufacturer
+     */
+    virtual std::string getEbsdManufacturer(const std::string &ebsdFile);
+#endif
+
+
   protected slots:
 
     /* Reconstruction Slots */

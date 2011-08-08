@@ -53,7 +53,7 @@
 //
 // -----------------------------------------------------------------------------
 AngReader::AngReader() :
-m_UserOrigin(Ebsd::Ang::NoOrientation),
+m_UserOrigin(Ebsd::NoOrientation),
 m_FileName(""),
 m_NumberOfElements(0),
 m_ManageMemory(true)
@@ -413,7 +413,7 @@ void AngReader::readData(const std::string &line,
 
 
   // Do we transform the data
-  if (m_UserOrigin == Ebsd::Ang::UpperRightOrigin)
+  if (m_UserOrigin == Ebsd::UpperRightOrigin)
   {
     offset = (row*nCols)+((nCols-1)-col);
     if (p1 - PI_OVER_2f < 0.0)
@@ -425,7 +425,7 @@ void AngReader::readData(const std::string &line,
       p1 = p1 - PI_OVER_2f;
     }
   }
-  else if (m_UserOrigin == Ebsd::Ang::UpperLeftOrigin)
+  else if (m_UserOrigin == Ebsd::UpperLeftOrigin)
   {
     if (p1 + PI_OVER_2f > TWO_PIf)
     {
@@ -444,7 +444,7 @@ void AngReader::readData(const std::string &line,
       p = p + ONE_PIf;
     }
   }
-  else if (m_UserOrigin == Ebsd::Ang::LowerLeftOrigin)
+  else if (m_UserOrigin == Ebsd::LowerLeftOrigin)
   {
     offset = (((nRows-1)-row)*nCols)+col;
     if (p1 + PI_OVER_2f > TWO_PIf)
@@ -456,12 +456,12 @@ void AngReader::readData(const std::string &line,
       p1 = p1 + PI_OVER_2f;
     }
   }
-  else if (m_UserOrigin == Ebsd::Ang::LowerRightOrigin)
+  else if (m_UserOrigin == Ebsd::LowerRightOrigin)
   {
     offset = (((nRows-1)-row)*nCols)+((nCols-1)-col);
   }
 
-  if (m_UserOrigin == Ebsd::Ang::NoOrientation)
+  if (m_UserOrigin == Ebsd::NoOrientation)
   {
     // If the user/programmer sets "NoOrientation" then we simply read the data
     // from the file and copy the values into the arrays without any regard for

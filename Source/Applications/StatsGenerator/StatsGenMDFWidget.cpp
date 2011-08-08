@@ -56,7 +56,7 @@
 StatsGenMDFWidget::StatsGenMDFWidget(QWidget *parent) :
 QWidget(parent),
 m_PhaseIndex(-1),
-m_CrystalStructure(AIM::Reconstruction::Cubic),
+m_CrystalStructure(Ebsd::Cubic),
 m_MDFTableModel(NULL)
 {
   this->setupUi(this);
@@ -141,7 +141,7 @@ void StatsGenMDFWidget::updateMDFPlot(QwtArray<float> odf)
   weights = m_MDFTableModel->getData(SGMDFTableModel::Weight);
   axes = m_MDFTableModel->getData(SGMDFTableModel::Axis);
 
-  if (m_CrystalStructure == AIM::Reconstruction::Cubic)
+  if (m_CrystalStructure == Ebsd::Cubic)
   {
     // Allocate a new vector to hold the mdf data
     QwtArray<float> mdf(5832);
@@ -150,7 +150,7 @@ void StatsGenMDFWidget::updateMDFPlot(QwtArray<float> odf)
     // Now generate the actual XY point data that gets plotted.
     err = sg.GenCubicMDFPlotData(mdf, x, y, size);
   }
-  else if (m_CrystalStructure == AIM::Reconstruction::Hexagonal)
+  else if (m_CrystalStructure == Ebsd::Hexagonal)
   {
     // Allocate a new vector to hold the mdf data
     QwtArray<float> mdf(15552);
@@ -206,11 +206,11 @@ QwtArray<float> StatsGenMDFWidget::generateODFData()
 	e3s[i] = e3s[i]*M_PI/180.0;
   }
 
-  if (m_CrystalStructure == AIM::Reconstruction::Cubic)
+  if (m_CrystalStructure == Ebsd::Cubic)
   {
     Texture::calculateCubicODFData(e1s, e2s, e3s, weights, sigmas, true, odf, totalWeight);
   }
-  else if (m_CrystalStructure == AIM::Reconstruction::Hexagonal)
+  else if (m_CrystalStructure == Ebsd::Hexagonal)
   {
     Texture::calculateHexODFData(e1s, e2s, e3s, weights, sigmas, true, odf, totalWeight);
   }
@@ -305,11 +305,11 @@ int StatsGenMDFWidget::writeDataToHDF5(H5ReconStatsWriter::Pointer writer)
 
   unsigned long long int nElements = 0;
 
-  if (m_CrystalStructure == AIM::Reconstruction::Cubic) {
+  if (m_CrystalStructure == Ebsd::Cubic) {
 	  Texture::calculateMDFData<QwtArray<float>, CubicOps>(angles, axes, weights, odf, mdf);
 	  nElements = 18 * 18 * 18;
   }
-  else if (m_CrystalStructure == AIM::Reconstruction::Hexagonal) {
+  else if (m_CrystalStructure == Ebsd::Hexagonal) {
 	  Texture::calculateMDFData<QwtArray<float>, HexagonalOps>(angles, axes, weights, odf, mdf);
 	  nElements = 36 * 36 * 12;
   }

@@ -83,8 +83,11 @@ include ( ${EbsdLib_SOURCE_DIR}/TSL/SourceList.cmake)
 include ( ${EbsdLib_SOURCE_DIR}/HKL/SourceList.cmake)
 
 
-set(EbsdLib_SRCS )
+set(EbsdLib_SRCS 
+    ${EbsdLib_SOURCE_DIR}/H5EbsdVolumeInfo.cpp
+)
 set(EbsdLib_HDRS
+    ${EbsdLib_SOURCE_DIR}/H5EbsdVolumeInfo.h
     ${EbsdLib_SOURCE_DIR}/EbsdHeaderEntry.h
     ${EbsdLib_SOURCE_DIR}/EbsdLibDLLExport.h
     ${EbsdLib_SOURCE_DIR}/EbsdSetGetMacros.h

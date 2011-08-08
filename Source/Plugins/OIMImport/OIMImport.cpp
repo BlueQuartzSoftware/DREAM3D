@@ -116,11 +116,11 @@ void OIMImport::execute()
   }
 
   // Write Z index start, Z index end and Z Resolution to the HDF5 file
-  err = H5Lite::writeScalarDataset(fileId, Ebsd::ZStartIndex, m_ZStartIndex);
+  err = H5Lite::writeScalarDataset(fileId, Ebsd::H5::ZStartIndex, m_ZStartIndex);
   CHECK_FOR_ERROR(OIMImportFunc, "Could not write the Z Start Index Scalar", err)
-  err = H5Lite::writeScalarDataset(fileId, Ebsd::ZEndIndex, m_ZEndIndex);
+  err = H5Lite::writeScalarDataset(fileId, Ebsd::H5::ZEndIndex, m_ZEndIndex);
   CHECK_FOR_ERROR(OIMImportFunc, "Could not write the Z End Index Scalar", err)
-  err = H5Lite::writeScalarDataset(fileId, Ebsd::ZResolution, m_ZResolution);
+  err = H5Lite::writeScalarDataset(fileId, Ebsd::H5::ZResolution, m_ZResolution);
   CHECK_FOR_ERROR(OIMImportFunc, "Could not write the Z Resolution Scalar", err)
 
   EbsdImporter::Pointer fileImporter;
@@ -130,13 +130,13 @@ void OIMImport::execute()
   std::string ext = MXAFileInfo::extension(m_EbsdFileList.front());
   if (ext.compare(Ebsd::Ang::FileExt) == 0)
   {
-    err = H5Lite::writeStringDataset(fileId, Ebsd::Manufacturer, Ebsd::Ang::Manufacturer );
+    err = H5Lite::writeStringDataset(fileId, Ebsd::H5::Manufacturer, Ebsd::Ang::Manufacturer );
     CHECK_FOR_ERROR(OIMImportFunc, "Could not write the Manufacturer Scalar", err)
     fileImporter = H5AngImporter::New();
   }
   else if (ext.compare(Ebsd::Ctf::FileExt) == 0)
   {
-    err = H5Lite::writeStringDataset(fileId, Ebsd::Manufacturer, Ebsd::Ctf::Manufacturer );
+    err = H5Lite::writeStringDataset(fileId, Ebsd::H5::Manufacturer, Ebsd::Ctf::Manufacturer );
     CHECK_FOR_ERROR(OIMImportFunc, "Could not write the Manufacturer Scalar", err)
     fileImporter = H5CtfImporter::New();
   }
@@ -152,6 +152,8 @@ void OIMImport::execute()
   float total = m_ZEndIndex - m_ZStartIndex;
   int progress = 0;
   int z = m_ZStartIndex;
+  int xDim, yDim;
+  float xRes, yRes;
 
   /* There is a frailness about the z index and the file list. The programmer
    * using this code MUST ensure that the list of files that is sent into this
@@ -185,6 +187,10 @@ void OIMImport::execute()
     updateProgressAndMessage(msg.c_str(), progress );
     //H5AngImporter::Pointer conv = H5AngImporter::New();
     err = fileImporter->importFile(fileId, z, ebsdFName);
+    fileImporter->getDims(xDim, yDim);
+    fileImporter->getResolution(xRes, yRes);
+    //FIXME: Should we check the resolution and dims to make sure they match from slice to slice?
+
     if (err < 0)
     {
       CHECK_FOR_ERROR(OIMImportFunc, "Could not write dataset for slice.", err)
@@ -194,12 +200,21 @@ void OIMImport::execute()
     CHECK_FOR_CANCELED(OIMImportFunc, "OIMImport was Canceled", import_data)
   }
 
+  err = H5Lite::writeScalarDataset(fileId, Ebsd::H5::XPoints, xDim);
+  CHECK_FOR_ERROR(OIMImportFunc, "Could not write the XPoints Scalar", err)
+  err = H5Lite::writeScalarDataset(fileId, Ebsd::H5::YPoints, yDim);
+  CHECK_FOR_ERROR(OIMImportFunc, "Could not write the YPoints Scalar", err)
+  err = H5Lite::writeScalarDataset(fileId, Ebsd::H5::XResolution, xRes);
+  CHECK_FOR_ERROR(OIMImportFunc, "Could not write the XResolution Scalar", err)
+  err = H5Lite::writeScalarDataset(fileId, Ebsd::H5::YResolution, yRes);
+  CHECK_FOR_ERROR(OIMImportFunc, "Could not write the YResolution Scalar", err)
+
   if (false == getCancel())
   {
   // Write an Index data set which contains all the z index values which
   // should help speed up the reading side of this file
     std::vector<hsize_t> dims(1, indices.size());
-    err = H5Lite::writeVectorDataset(fileId, Ebsd::Index, dims, indices);
+    err = H5Lite::writeVectorDataset(fileId, Ebsd::H5::Index, dims, indices);
   }
   err = H5Utilities::closeFile(fileId);
   // err = H5Fclose(fileId);

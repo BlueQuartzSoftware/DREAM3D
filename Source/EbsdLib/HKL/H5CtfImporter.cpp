@@ -52,7 +52,11 @@
 //
 // -----------------------------------------------------------------------------
 H5CtfImporter::H5CtfImporter():
-EbsdImporter()
+EbsdImporter(),
+xDim(0),
+yDim(0),
+xRes(0),
+yRes(0)
 {
 }
 
@@ -104,6 +108,26 @@ H5CtfImporter::~H5CtfImporter()
 }\
 }
 
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void H5CtfImporter::getDims(int &x, int &y)
+{
+  x = xDim;
+  y = yDim;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void H5CtfImporter::getResolution(float &x, float &y)
+{
+  x = xRes;
+  y = yRes;
+}
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -120,7 +144,7 @@ int H5CtfImporter::importFile(hid_t fileId, int z, const std::string &ctfFile)
   // This is set to NoOrientation because we want to leave the data intact as it
   // was received from the instrument. The user can choose to rotate the data as
   // it is read from the resulting HDF5 data file.
-  reader.setUserOrigin(Ebsd::Ctf::NoOrientation);
+  reader.setUserOrigin(Ebsd::NoOrientation);
 
   // Now actually read the file
   err = reader.readFile();
@@ -159,7 +183,7 @@ int H5CtfImporter::importFile(hid_t fileId, int z, const std::string &ctfFile)
     return -1;
   }
 
-  hid_t gid = H5Utilities::createGroup(ctfGroup, Ebsd::Header);
+  hid_t gid = H5Utilities::createGroup(ctfGroup, Ebsd::H5::Header);
   if (gid < 0)
   {
     std::ostringstream ss;
@@ -175,9 +199,14 @@ int H5CtfImporter::importFile(hid_t fileId, int z, const std::string &ctfFile)
   WRITE_EBSD_HEADER_STRING_DATA(reader, std::string, Author, Ebsd::Ctf::Author)
   WRITE_EBSD_HEADER_STRING_DATA(reader, std::string, JobMode, Ebsd::Ctf::JobMode)
   WRITE_EBSD_HEADER_DATA(reader, int, XCells, Ebsd::Ctf::XCells)
+  xDim = reader.getXCells();
   WRITE_EBSD_HEADER_DATA(reader, int, YCells, Ebsd::Ctf::YCells)
+  yDim = reader.getYCells();
   WRITE_EBSD_HEADER_DATA(reader, float, XStep, Ebsd::Ctf::XStep)
+  xRes = reader.getXStep();
   WRITE_EBSD_HEADER_DATA(reader, float, YStep, Ebsd::Ctf::YStep)
+  yRes = reader.getYStep();
+
   WRITE_EBSD_HEADER_DATA(reader, float, AcqE1, Ebsd::Ctf::AcqE1)
   WRITE_EBSD_HEADER_DATA(reader, float, AcqE2, Ebsd::Ctf::AcqE2)
   WRITE_EBSD_HEADER_DATA(reader, float, AcqE3, Ebsd::Ctf::AcqE3)
@@ -189,7 +218,7 @@ int H5CtfImporter::importFile(hid_t fileId, int z, const std::string &ctfFile)
   WRITE_EBSD_HEADER_DATA(reader, float, TiltAngle, Ebsd::Ctf::TiltAngle)
   WRITE_EBSD_HEADER_DATA(reader, float, TiltAxis, Ebsd::Ctf::TiltAxis)
 
-  hid_t phasesGid = H5Utilities::createGroup(gid, Ebsd::Phases);
+  hid_t phasesGid = H5Utilities::createGroup(gid, Ebsd::H5::Phases);
   if (phasesGid < 0) {
     std::ostringstream ss;
     ss << "H5CtfImporter Error: The 'Header' Group for the Phases could not be created."
@@ -207,14 +236,14 @@ int H5CtfImporter::importFile(hid_t fileId, int z, const std::string &ctfFile)
 
 
   std::string ctfCompleteHeader = reader.getCompleteHeader();
-  err = H5Lite::writeStringDataset(gid, Ebsd::OriginalHeader, ctfCompleteHeader);
-  err = H5Lite::writeStringDataset(gid, Ebsd::OriginalFile, ctfFile);
+  err = H5Lite::writeStringDataset(gid, Ebsd::H5::OriginalHeader, ctfCompleteHeader);
+  err = H5Lite::writeStringDataset(gid, Ebsd::H5::OriginalFile, ctfFile);
 
   // Close the "Header" group
   err = H5Gclose(gid);
 
   // Create the "Data" group
-  gid = H5Utilities::createGroup(ctfGroup, Ebsd::Data);
+  gid = H5Utilities::createGroup(ctfGroup, Ebsd::H5::Data);
   if (gid < 0)
   {
     std::ostringstream ss;
@@ -316,7 +345,7 @@ int H5CtfImporter::writePhaseData(CtfReader &reader, hid_t phasesGid)
     WRITE_PHASE_DATA_ARRAY( (*phase), float, pid, LatticeDimensions, Ebsd::Ctf::LatticeDimensions);
     WRITE_PHASE_DATA_ARRAY( (*phase), float, pid, LatticeAngles, Ebsd::Ctf::LatticeAngles);
     WRITE_PHASE_HEADER_STRING_DATA((*phase), std::string, PhaseName, Ebsd::Ctf::PhaseName)
-    WRITE_PHASE_HEADER_DATA((*phase), int, LaueGroup, Ebsd::Ctf::LaueGroup)
+    WRITE_PHASE_HEADER_DATA((*phase), int, Symmetry, Ebsd::Ctf::LaueGroup)
     WRITE_PHASE_HEADER_STRING_DATA((*phase), std::string, Section4, Ebsd::Ctf::Section4)
     WRITE_PHASE_HEADER_STRING_DATA((*phase), std::string, Section5, Ebsd::Ctf::Section5)
     WRITE_PHASE_HEADER_STRING_DATA((*phase), std::string, Section6, Ebsd::Ctf::Section6)

@@ -74,7 +74,7 @@ class MicrostructureStatisticsFunc
     typedef boost::shared_array<float> SharedFloatArray;
     typedef boost::shared_array<int> SharedIntArray;
 
-    std::vector<AIM::Reconstruction::CrystalStructure> crystruct;
+    std::vector<Ebsd::CrystalStructure> crystruct;
     std::vector<AIM::Reconstruction::PhaseType> phaseType;
     std::vector<float> pptFractions;
 

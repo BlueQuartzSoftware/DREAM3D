@@ -31,6 +31,9 @@
 
 #include "ReconstructionWidget.h"
 
+// HDF5 Includes
+#include "hdf5.h"
+
 //-- Qt Includes
 #include <QtCore/QFileInfo>
 #include <QtCore/QFile>
@@ -51,7 +54,14 @@
 #include "QtSupport/AIM_QtMacros.h"
 #include "QtSupport/QCheckboxDialog.h"
 
-#include "ANGSupport/H5AngDataLoader.h"
+#include "H5Support/H5Utilities.h"
+#include "H5Support/H5Lite.h"
+
+#include "EbsdLib/H5EbsdVolumeInfo.h"
+
+#include "Reconstruction/EbsdSupport/H5EbsdVolumeReader.h"
+#include "Reconstruction/EbsdSupport/H5AngVolumeReader.h"
+#include "Reconstruction/EbsdSupport/H5CtfVolumeReader.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -278,7 +288,7 @@ void ReconstructionWidget::on_m_OIMH5Btn_clicked()
 {
   QString file = QFileDialog::getOpenFileName(this, tr("Select Input File"),
                                                  m_OpenDialogLastDirectory,
-                                                 tr("HDF5 OIM Files (*.h5 *.hdf5 *.h5ang)") );
+                                                 tr("HDF5 EBSD Files (*.h5 *.hdf5 *.h5ang *.h5ebsd)") );
   if ( true == file.isEmpty() ){ return; }
   QFileInfo fi (file);
   m_H5InputFile->blockSignals(true);
@@ -288,6 +298,33 @@ void ReconstructionWidget::on_m_OIMH5Btn_clicked()
   m_H5InputFile->blockSignals(false);
 
 }
+
+#if 0
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+std::string ReconstructionWidget::getEbsdManufacturer(const std::string &ebsdFile)
+{
+  std::string data;
+  hid_t fileId = H5Utilities::openFile(ebsdFile, true);
+  if (fileId < 0)
+  {
+    return data;
+  }
+
+  int err = H5Lite::readStringDataset(fileId, Ebsd::H5::Manufacturer, data);
+  if (err < 0)
+  {
+    data = "";
+    err = H5Utilities::closeFile(fileId);
+    return data;
+  }
+
+  err = H5Utilities::closeFile(fileId);
+  return data;
+}
+#endif
+
 
 // -----------------------------------------------------------------------------
 //
@@ -301,24 +338,22 @@ void ReconstructionWidget::on_m_H5InputFile_textChanged(const QString &text)
     QString outPath = fi.absolutePath() + QDir::separator() + fi.baseName() + "_Reconstruction";
     outPath = QDir::toNativeSeparators(outPath);
     m_OutputDir->setText(outPath);
-    m_SetSliceInfo();
-  }
+  } 
 
   QFileInfo fi(m_H5InputFile->text());
   if (fi.exists() && fi.isFile())
   {
+    m_SetSliceInfo();
     // Set the output file Prefix based on the name of the input file
     m_OutputFilePrefix->setText(fi.baseName() + QString("_") );
 
     // Read the Phase information from the .h5ang file
-    AbstractAngDataLoader::Pointer oimDataLoader = H5AngDataLoader::New();
-    H5AngDataLoader* h5io = dynamic_cast<H5AngDataLoader*>(oimDataLoader.get());
-    h5io->setFilename(m_H5InputFile->text().toStdString() );
-    h5io->setZStartIndex(m_ZStartIndex->value());
+    H5EbsdVolumeReader::Pointer h5Reader = H5EbsdVolumeReader::New();
+    h5Reader->setFilename(m_H5InputFile->text().toStdString() );
+    h5Reader->setSliceStart(m_ZStartIndex->value());
 
-    std::vector<AngPhase::Pointer> phases = h5io->getPhases();
+    int size = h5Reader->getNumPhases();
 
-    int size = phases.size();
     std::vector<std::string> phaseTypeStrings;
     AIM::PhaseType::getPhaseTypeStrings(phaseTypeStrings);
     std::vector<AIM::Reconstruction::PhaseType> phaseTypeEnums;
@@ -353,11 +388,15 @@ void ReconstructionWidget::on_m_H5InputFile_textChanged(const QString &text)
     float zres = 0.0f;
     int zStart = 0;
     int zEnd = 0;
-    err = h5io->readZHeader(zStart, zEnd, zres);
-    h5io->setZStartIndex(zStart);
-    h5io->setZEndIndex(zEnd);
+
+    zStart = h5Reader->getZStart();
+    zEnd = h5Reader->getZEnd();
+    err = h5Reader->getResolution(xres, yres, zres);
+
+    h5Reader->setSliceStart(zStart);
+    h5Reader->setSliceEnd(zEnd);
     zpoints = 1; // Just read the first dataset and hope the rest are the same
-    err = h5io->getSizeAndResolution(xpoints, ypoints, zpoints, xres, yres, zres);
+    err = h5Reader->getDimsAndResolution(xpoints, ypoints, zpoints, xres, yres, zres);
     if (err >= 0)
     {
       xDim->setText(QString::number(xpoints));
@@ -406,8 +445,8 @@ void ReconstructionWidget::on_m_OutputDirBtn_clicked()
 // -----------------------------------------------------------------------------
 void ReconstructionWidget::m_SetSliceInfo()
 {
-  AbstractAngDataLoader::Pointer ptr = H5AngDataLoader::New();
-  H5AngDataLoader* reader = dynamic_cast<H5AngDataLoader*>(ptr.get());
+  H5EbsdVolumeInfo::Pointer reader = H5EbsdVolumeInfo::New();
+
   QFileInfo fi(m_H5InputFile->text());
   if (fi.isFile() == false)
   {
@@ -415,17 +454,17 @@ void ReconstructionWidget::m_SetSliceInfo()
   }
 
   reader->setFilename(m_H5InputFile->text().toStdString());
-  int zStart = -1, zEnd = -1;
-  float zRes = 1.0;
-  if (reader->readZHeader(zStart, zEnd, zRes) >= 0)
+  if (reader->readVolumeInfo() >= 0)
   {
-    m_ZStartIndex->setValue(zStart);
-    m_ZStartIndex->setRange(zStart, zEnd);
-    m_ZEndIndex->setValue(zEnd);
-    m_ZEndIndex->setRange(zStart, zEnd);
-    m_ZRes->setText(QString::number(zRes));
-    m_ZMin->setText(QString::number(zStart));
-    m_ZMax->setText(QString::number(zEnd));
+    float x, y, z;
+    reader->getResolution(x, y, z);
+    m_ZStartIndex->setValue(reader->getZStart());
+    m_ZStartIndex->setRange(reader->getZStart(), reader->getZEnd());
+    m_ZEndIndex->setValue(reader->getZEnd());
+    m_ZEndIndex->setRange(reader->getZStart(), reader->getZEnd());
+    m_ZRes->setText(QString::number(z));
+    m_ZMin->setText(QString::number(reader->getZStart()));
+    m_ZMax->setText(QString::number(reader->getZEnd()));
   }
 }
 
@@ -552,7 +591,7 @@ void ReconstructionWidget::on_m_GoBtn_clicked()
   AIM::Reconstruction::AlignmentMethod alignmeth = static_cast<AIM::Reconstruction::AlignmentMethod>(m_AlignMeth->currentIndex() );
   m_Reconstruction->setAlignmentMethod(alignmeth);
 
-  Ebsd::Ang::Orientation orientation = static_cast<Ebsd::Ang::Orientation>(m_Orientation->currentIndex());
+  Ebsd::Orientation orientation = static_cast<Ebsd::Orientation>(m_Orientation->currentIndex());
   m_Reconstruction->setOrientation(orientation);
 
   m_Reconstruction->setMinAllowedGrainSize(m_MinAllowedGrainSize->value());

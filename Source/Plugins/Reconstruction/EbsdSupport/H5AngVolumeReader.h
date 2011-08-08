@@ -29,66 +29,53 @@
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _AbstractAngReader_h_
-#define _AbstractAngReader_h_
+#ifndef _H5ANGDATALOADER_H_
+#define _H5ANGDATALOADER_H_
 
+#include <vector>
 
 #include "MXA/Common/MXASetGetMacros.h"
+
+//-- TSL Ang Reader Includes
+#include "EbsdLib/TSL/AngConstants.h"
+#include "EbsdLib/TSL/AngDirectoryPatterns.h"
+#include "EbsdLib/TSL/AngPhase.h"
+
+//-- AIM Common Includes
 #include "DREAM3D/DREAM3DConfiguration.h"
-class ReconstructionFunc;
+#include "H5EbsdVolumeReader.h"
+#include "Reconstruction/ReconstructionFunc.h"
+
+
 
 /**
- * @class AbstractAngDataLoader AbstractAngDataLoader.h AIM/ANG/AbstractAngDataLoader.h
- * @brief  This class defines the C++ interface that subclasses must implement
- * in order to be able to load OIM data into the DREAM.3D programs.
+ * @class H5AngDataLoader H5AngDataLoader.h AIM/ANG/H5AngDataLoader.h
+ * @brief This class loads OIM data from an HDF5 based file.
  * @author Michael A. Jackson for BlueQuartz Software
  * @date May 23, 2011
  * @version 1.0
  */
-class DREAM3DLib_EXPORT AbstractAngDataLoader
+class DREAM3DLib_EXPORT H5AngVolumeReader : public H5EbsdVolumeReader
 {
-
   public:
-    MXA_SHARED_POINTERS(AbstractAngDataLoader)
-    MXA_TYPE_MACRO(AbstractAngDataLoader)
+    MXA_SHARED_POINTERS(H5AngVolumeReader)
+    MXA_STATIC_NEW_SUPERCLASS(H5EbsdVolumeReader, H5AngVolumeReader)
 
-    virtual ~AbstractAngDataLoader() {}
+    virtual ~H5AngVolumeReader();
 
-    /**
-     * @brief This method does the actual loading of the OIM data from the data
-     * source (files, streams, etc) into the Reconstruction Module data structures.
-     * @param voxels A preallocated array of ReconstructionVoxel
-     * @param xpoints The number of points along the X Axis
-     * @param ypoints The number of points along the Y Axis
-     * @param zpoints The number of points along the Z Axis
-     */
-    virtual int loadData(ReconstructionFunc* m) = 0;
+    int loadData(ReconstructionFunc* m);
 
-    /**
-     * @brief This method gathers the number of points in each of the 3 axis directions
-     * and also the resolution in each of the axis directions where each of the
-     * arguments are "output" parameters, ie, they will be over written with the
-     * values from the data source.
-     * @param xpoints The number of points along the X Axis
-     * @param ypoints The number of points along the Y Axis
-     * @param zpoints The number of points along the Z Axis
-     * @param xres The resolution along the X Axis
-     * @param yres The resolution along the Y Axis
-     * @param zres The resolution along the Z Axis
-     */
-    virtual int getSizeAndResolution(int &xpoints, int &ypoints, int &zpoints,
-                                       float &xres, float &yres, float &zres) = 0;
-
+    std::vector<AngPhase::Pointer> getPhases();
 
   protected:
-    AbstractAngDataLoader() {};
+    H5AngVolumeReader();
 
   private:
-    AbstractAngDataLoader(const AbstractAngDataLoader&); // Copy Constructor Not Implemented
-    void operator=(const AbstractAngDataLoader&); // Operator '=' Not Implemented
+    std::vector<AngPhase::Pointer> m_Phases;
+
+    H5AngVolumeReader(const H5AngVolumeReader&);    // Copy Constructor Not Implemented
+    void operator=(const H5AngVolumeReader&);  // Operator '=' Not Implemented
 
 };
 
-
-
-#endif /* _AbstractAngReader_h_  */
+#endif /* _H5ANGDATALOADER_H_ */

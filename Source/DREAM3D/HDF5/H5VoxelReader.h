@@ -39,8 +39,11 @@
 
 #include "MXA/MXATypes.h"
 #include "MXA/Common/MXASetGetMacros.h"
+
 #include "H5Support/H5Lite.h"
 #include "H5Support/H5Utilities.h"
+
+#include "EbsdLib/EbsdConstants.h"
 
 #include "DREAM3D/DREAM3DConfiguration.h"
 #include "DREAM3D/Common/Constants.h"
@@ -79,7 +82,7 @@ class DREAM3DLib_EXPORT H5VoxelReader
 	                  AIMArray<float>::Pointer euler1s,
 	                  AIMArray<float>::Pointer euler2s,
 	                  AIMArray<float>::Pointer euler3s,
-	                  std::vector<AIM::Reconstruction::CrystalStructure> &crystruct,
+	                  std::vector<Ebsd::CrystalStructure> &crystruct,
                     int totalpoints)
 {
   int err = 0;
@@ -168,7 +171,7 @@ class DREAM3DLib_EXPORT H5VoxelReader
   crystruct.resize(xtals.size());
   for (size_t i =0; i < xtals.size(); ++i)
   {
-    crystruct[i] = static_cast<AIM::Reconstruction::CrystalStructure>(xtals[i]);
+    crystruct[i] = static_cast<Ebsd::CrystalStructure>(xtals[i]);
   }
 
 

@@ -57,7 +57,11 @@ using namespace Ang;
 //
 // -----------------------------------------------------------------------------
 H5AngImporter::H5AngImporter() :
-EbsdImporter()
+EbsdImporter(),
+xDim(0),
+yDim(0),
+xRes(0),
+yRes(0)
 {
 }
 
@@ -113,6 +117,26 @@ H5AngImporter::~H5AngImporter()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void H5AngImporter::getDims(int &x, int &y)
+{
+  x = xDim;
+  y = yDim;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void H5AngImporter::getResolution(float &x, float &y)
+{
+  x = xRes;
+  y = yRes;
+}
+
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 int H5AngImporter::importFile(hid_t fileId, int z, const std::string &angFile)
 {
   herr_t err = -1;
@@ -126,7 +150,7 @@ int H5AngImporter::importFile(hid_t fileId, int z, const std::string &angFile)
   // This is set to NoOrientation because we want to leave the data intact as it
   // was received from the instrument. The user can choose to rotate the data as
   // it is read from the resulting HDF5 data file.
-  reader.setUserOrigin(Ebsd::Ang::NoOrientation);
+  reader.setUserOrigin(Ebsd::NoOrientation);
 
   // Now actually read the file
   err = reader.readFile();
@@ -172,7 +196,7 @@ int H5AngImporter::importFile(hid_t fileId, int z, const std::string &angFile)
     return -1;
   }
 
-  hid_t gid = H5Utilities::createGroup(angGroup, Ebsd::Header);
+  hid_t gid = H5Utilities::createGroup(angGroup, Ebsd::H5::Header);
   if (gid < 0)
   {
     std::ostringstream ss;
@@ -190,30 +214,34 @@ int H5AngImporter::importFile(hid_t fileId, int z, const std::string &angFile)
   WRITE_ANG_HEADER_DATA(reader, float, ZStar, Ebsd::Ang::ZStar)
   WRITE_ANG_HEADER_DATA(reader, float, WorkingDistance, Ebsd::Ang::WorkingDistance)
 
-  hid_t phasesGid = H5Utilities::createGroup(gid, Ebsd::Phases);
+  hid_t phasesGid = H5Utilities::createGroup(gid, Ebsd::H5::Phases);
   err = writePhaseData(reader, phasesGid);
   // Close this group
   err = H5Gclose(phasesGid);
 
   WRITE_ANG_HEADER_STRING_DATA(reader, std::string, Grid, Ebsd::Ang::Grid)
   WRITE_ANG_HEADER_DATA(reader, float, XStep, Ebsd::Ang::XStep)
+  xRes = reader.getXStep();
   WRITE_ANG_HEADER_DATA(reader, float, YStep, Ebsd::Ang::YStep)
+  yRes = reader.getYStep();
   WRITE_ANG_HEADER_DATA(reader, int, NumOddCols, Ebsd::Ang::NColsOdd)
   WRITE_ANG_HEADER_DATA(reader, int, NumEvenCols, Ebsd::Ang::NColsEven)
+  xDim = reader.getNumEvenCols();
   WRITE_ANG_HEADER_DATA(reader, int, NumRows, Ebsd::Ang::NRows)
+  yDim = reader.getNumRows();
   WRITE_ANG_HEADER_STRING_DATA(reader, std::string, OIMOperator, Ebsd::Ang::Operator)
   WRITE_ANG_HEADER_STRING_DATA(reader, std::string, SampleID, Ebsd::Ang::SampleId)
   WRITE_ANG_HEADER_STRING_DATA(reader, std::string, ScanID, Ebsd::Ang::ScanId)
 
   std::string angCompleteHeader = reader.getCompleteHeader();
-  err = H5Lite::writeStringDataset(gid, Ebsd::OriginalHeader, angCompleteHeader);
-  err = H5Lite::writeStringDataset(gid, Ebsd::OriginalFile, angFile);
+  err = H5Lite::writeStringDataset(gid, Ebsd::H5::OriginalHeader, angCompleteHeader);
+  err = H5Lite::writeStringDataset(gid, Ebsd::H5::OriginalFile, angFile);
 
   // Close the "Header" group
   err = H5Gclose(gid);
 
   // Create the "Data" group
-  gid = H5Utilities::createGroup(angGroup, Ebsd::Data);
+  gid = H5Utilities::createGroup(angGroup, Ebsd::H5::Data);
   if (gid < 0)
   {
     std::ostringstream ss;
@@ -307,8 +335,8 @@ int H5AngImporter::writePhaseData(AngReader &reader, hid_t phasesGid)
   for (std::vector<AngPhase::Pointer>::iterator phase = phases.begin(); phase != phases.end(); ++phase )
   {
     AngPhase* p = (*phase).get();
-    hid_t pid = H5Utilities::createGroup(phasesGid, StringUtils::numToString(p->getPhase()));
-    WRITE_PHASE_HEADER_DATA((*phase), int, Phase, Ebsd::Ang::Phase)
+    hid_t pid = H5Utilities::createGroup(phasesGid, StringUtils::numToString(p->getPhaseIndex()));
+    WRITE_PHASE_HEADER_DATA((*phase), int, PhaseIndex, Ebsd::Ang::Phase)
     WRITE_PHASE_HEADER_STRING_DATA((*phase), std::string, MaterialName, Ebsd::Ang::MaterialName)
     WRITE_PHASE_HEADER_STRING_DATA((*phase), std::string, Formula, Ebsd::Ang::Formula)
     WRITE_PHASE_HEADER_STRING_DATA((*phase), std::string, Info, Ebsd::Ang::Info)

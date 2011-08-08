@@ -35,6 +35,9 @@
 #include "MXA/Common/LogTime.h"
 #include "MXA/Utilities/MXADir.h"
 
+
+#include "EbsdLib/H5EbsdVolumeInfo.h"
+
 #include "EbsdLib/TSL/AngDirectoryPatterns.h"
 #include "EbsdLib/TSL/AngReader.h"
 #include "EbsdLib/TSL/AngPhase.h"
@@ -49,9 +52,10 @@
 #include "DREAM3D/HDF5/H5GrainWriter.hpp"
 
 
-#include "ANGSupport/AbstractAngDataLoader.h"
-#include "ANGSupport/AngDataLoader.h"
-#include "ANGSupport/H5AngDataLoader.h"
+#include "Reconstruction/EbsdSupport/H5EbsdVolumeReader.h"
+#include "Reconstruction/EbsdSupport/H5AngVolumeReader.h"
+#include "Reconstruction/EbsdSupport/H5CtfVolumeReader.h"
+
 
 
 // -----------------------------------------------------------------------------
@@ -68,7 +72,7 @@ m_MinAllowedGrainSize(0),
 m_MinSeedConfidence(0.0),
 m_MinSeedImageQuality(0.0),
 m_MisorientationTolerance(0.0),
-m_Orientation(Ebsd::Ang::NoOrientation),
+m_Orientation(Ebsd::NoOrientation),
 m_WriteBinaryVTKFiles(true),
 m_WriteVtkFile(true),
 m_WritePhaseId(true),
@@ -91,6 +95,8 @@ Reconstruction::~Reconstruction()
 #define MAKE_OUTPUT_FILE_PATH(outpath, filename)\
     std::string outpath = m_OutputDirectory + MXADir::Separator + m_OutputFilePrefix + filename;
 
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -98,52 +104,59 @@ void Reconstruction::execute()
 {
   int err = -1;
 
-  AbstractAngDataLoader::Pointer oimDataLoader = H5AngDataLoader::New();
-  H5AngDataLoader* ptr = dynamic_cast<H5AngDataLoader*>(oimDataLoader.get());
-  ptr->setFilename(m_H5AngFile);
-  ptr->setZStartIndex(m_ZStartIndex);
-  ptr->setZEndIndex(m_ZEndIndex);
-  ptr->setOrientation(m_Orientation);
-
   // Create the ReconstructionFunc object
   m = ReconstructionFunc::New();
-  updateProgressAndMessage(("Gathering Size and Resolution Information from OIM Data"), 1);
-  err = oimDataLoader->getSizeAndResolution(m->xpoints, m->ypoints, m->zpoints, m->resx, m->resy, m->resz);
-  H5AngDataLoader* h5AngLoader = dynamic_cast<H5AngDataLoader*>(oimDataLoader.get());
-  if (NULL == h5AngLoader)
+
+ // updateProgressAndMessage(("Gathering Size and Resolution Information from OIM Data"), 1);
+  std::string manufacturer;
+  // Get the Size and Resolution of the Volume
   {
-    updateProgressAndMessage("ReconstructionFunc Error: Problem casting H5AngDataLoader from super class to sub class", 100);
-    return;
+    H5EbsdVolumeInfo::Pointer volumeInfoReader = H5EbsdVolumeInfo::New();
+    volumeInfoReader->setFilename(m_H5AngFile);
+    volumeInfoReader->getDimsAndResolution(m->xpoints, m->ypoints, m->zpoints, m->resx, m->resy, m->resz);
+    err = volumeInfoReader->readVolumeInfo();
+    if (err < 0)
+    {
+      updateProgressAndMessage("Error reading Volume Information from File.", 100);
+      return;
+    }
+    manufacturer = volumeInfoReader->getManufacturer();
+    volumeInfoReader = H5EbsdVolumeInfo::NullPointer();
   }
-
-  //FIXME: Mike Groeber: Take a look at this setup for the PhaseTypes. I am
-  // putting in UnknownTypes just to have something. You can change to suit
-  // your needs.
-
+  H5EbsdVolumeReader::Pointer ebsdReader;
   std::vector<float> precipFractions;
-  std::vector<AIM::Reconstruction::CrystalStructure> crystalStructures;
-  std::vector<AngPhase::Pointer> phases = h5AngLoader->getPhases();
-  crystalStructures.resize(phases.size()+1);
-
-  precipFractions.resize(phases.size() + 1);
-  crystalStructures[0] = AIM::Reconstruction::UnknownCrystalStructure;
-  m_PhaseTypes[0] = AIM::Reconstruction::UnknownPhaseType;
-  precipFractions[0] = -1.0f;
-  for(size_t i=0;i<phases.size();i++)
+  std::vector<Ebsd::CrystalStructure> crystalStructures;
+  if (manufacturer.compare(Ebsd::Ang::Manufacturer) == 0)
   {
-	  int phaseID = phases[i]->getPhase();
-	  Ebsd::Ang::PhaseSymmetry symmetry = phases[i]->getSymmetry();
-	  AIM::Reconstruction::CrystalStructure crystal_structure = AIM::Reconstruction::UnknownCrystalStructure;
-	  if(symmetry == Ebsd::Ang::CubicSymmetry) crystal_structure = AIM::Reconstruction::Cubic;
-	  else if(symmetry == Ebsd::Ang::HexagonalSymmetry) crystal_structure = AIM::Reconstruction::Hexagonal;
-	  crystalStructures[phaseID] = crystal_structure;
-
-	  precipFractions[phaseID] = -1.0f;
+    ebsdReader = H5AngVolumeReader::New();
+    if (NULL == ebsdReader)
+    {
+      updateProgressAndMessage("Error Creating the proper Ebsd Volume Reader.", 100);
+      return;
+    }
+    H5AngVolumeReader* angReader = dynamic_cast<H5AngVolumeReader*>(ebsdReader.get());
+    err = loadInfo<H5AngVolumeReader, AngPhase>(angReader, precipFractions, crystalStructures );
+  }
+  else if (manufacturer.compare(Ebsd::Ctf::Manufacturer) == 0)
+  {
+    ebsdReader = H5CtfVolumeReader::New();
+    if (NULL == ebsdReader)
+    {
+      updateProgressAndMessage("Error Creating the proper Ebsd Volume Reader.", 100);
+      return;
+    }
+    H5CtfVolumeReader* ctfReader = dynamic_cast<H5CtfVolumeReader*>(ebsdReader.get());
+    err = loadInfo<H5CtfVolumeReader, CtfPhase>(ctfReader, precipFractions, crystalStructures );
+  }
+  else
+  {
+    updateProgressAndMessage("ReconstructionFunc Error: No Manufacturer Set for EBSD data", 100);
+    return;
   }
 
   if (err < 0)
   {
-    updateProgressAndMessage("ReconstructionFunc Error: Problem loading data size and resolutions", 100);
+    updateProgressAndMessage("ReconstructionFunc Error: Phase and Crystal Structure Information", 100);
      return;
   }
   m->initialize(m->xpoints, m->ypoints, m->zpoints,
@@ -156,7 +169,9 @@ void Reconstruction::execute()
   START_CLOCK()
 
   updateProgressAndMessage(("Loading Slices"), 4);
-  oimDataLoader->loadData(m.get());
+  err = ebsdReader->loadData(m.get());
+  CHECK_FOR_ERROR(ReconstructionFunc, "Reconstruction was canceled", err)
+
   m->initializeQuats();
   CHECK_FOR_CANCELED(ReconstructionFunc, "Reconstruction was canceled", loadData)
 

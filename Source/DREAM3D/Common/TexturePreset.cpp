@@ -54,20 +54,20 @@ TexturePreset::~TexturePreset()
 std::vector<TexturePreset::Pointer> CubicTexturePresets::getTextures()
 {
   std::vector<TexturePreset::Pointer> textures;
-  ADD_NEW_TEXTURE( "Brass", AIM::Reconstruction::Cubic, 35.0, 45.0, 0.0)
-  ADD_NEW_TEXTURE( "S",  AIM::Reconstruction::Cubic, 59.0, 37.0, 63.0)
-  ADD_NEW_TEXTURE( "Copper", AIM::Reconstruction::Cubic, 90.0, 35.0, 45.0)
-  ADD_NEW_TEXTURE( "S1", AIM::Reconstruction::Cubic, 55.0, 30.0, 65.0)
-  ADD_NEW_TEXTURE( "S2",  AIM::Reconstruction::Cubic, 45.0, 35.0, 65.0)
-  ADD_NEW_TEXTURE( "Goss",  AIM::Reconstruction::Cubic, 0.0, 45.0, 0.0)
-  ADD_NEW_TEXTURE( "Cube",  AIM::Reconstruction::Cubic, 0.0, 0.0, 0.0)
-  ADD_NEW_TEXTURE( "RC(rd1)", AIM::Reconstruction::Cubic, 0.0, 20.0, 0.0)
-  ADD_NEW_TEXTURE( "RC(rd2)", AIM::Reconstruction::Cubic, 0.0, 35.0, 0.0)
-  ADD_NEW_TEXTURE( "RC(nd1)", AIM::Reconstruction::Cubic, 20.0, 0.0, 0.0)
-  ADD_NEW_TEXTURE( "RC(nd2)", AIM::Reconstruction::Cubic, 35.0, 0.0, 0.0)
-  ADD_NEW_TEXTURE( "P", AIM::Reconstruction::Cubic, 70.0, 45.0, 0.0)
-  ADD_NEW_TEXTURE( "Q", AIM::Reconstruction::Cubic, 55.0, 20.0, 0.0)
-  ADD_NEW_TEXTURE( "R", AIM::Reconstruction::Cubic, 55.0, 75.0, 25.0)
+  ADD_NEW_TEXTURE( "Brass", Ebsd::Cubic, 35.0, 45.0, 0.0)
+  ADD_NEW_TEXTURE( "S",  Ebsd::Cubic, 59.0, 37.0, 63.0)
+  ADD_NEW_TEXTURE( "Copper", Ebsd::Cubic, 90.0, 35.0, 45.0)
+  ADD_NEW_TEXTURE( "S1", Ebsd::Cubic, 55.0, 30.0, 65.0)
+  ADD_NEW_TEXTURE( "S2",  Ebsd::Cubic, 45.0, 35.0, 65.0)
+  ADD_NEW_TEXTURE( "Goss",  Ebsd::Cubic, 0.0, 45.0, 0.0)
+  ADD_NEW_TEXTURE( "Cube",  Ebsd::Cubic, 0.0, 0.0, 0.0)
+  ADD_NEW_TEXTURE( "RC(rd1)", Ebsd::Cubic, 0.0, 20.0, 0.0)
+  ADD_NEW_TEXTURE( "RC(rd2)", Ebsd::Cubic, 0.0, 35.0, 0.0)
+  ADD_NEW_TEXTURE( "RC(nd1)", Ebsd::Cubic, 20.0, 0.0, 0.0)
+  ADD_NEW_TEXTURE( "RC(nd2)", Ebsd::Cubic, 35.0, 0.0, 0.0)
+  ADD_NEW_TEXTURE( "P", Ebsd::Cubic, 70.0, 45.0, 0.0)
+  ADD_NEW_TEXTURE( "Q", Ebsd::Cubic, 55.0, 20.0, 0.0)
+  ADD_NEW_TEXTURE( "R", Ebsd::Cubic, 55.0, 75.0, 25.0)
   return textures;
 }
 
@@ -77,7 +77,7 @@ std::vector<TexturePreset::Pointer> CubicTexturePresets::getTextures()
 std::vector<TexturePreset::Pointer> HexTexturePresets::getTextures()
 {
   std::vector<TexturePreset::Pointer> textures;
-//  ADD_NEW_TEXTURE( "Brass", AIM::Reconstruction::Hexagonal, 35.0, 45.0, 0.0)
+//  ADD_NEW_TEXTURE( "Brass", Ebsd::Hexagonal, 35.0, 45.0, 0.0)
 
   return textures;
 }

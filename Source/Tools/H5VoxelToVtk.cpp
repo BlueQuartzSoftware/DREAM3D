@@ -63,7 +63,7 @@ typedef struct {
     float* euler2s;
     float* euler3s;
     float* quats;
-    AIM::Reconstruction::CrystalStructure* crystruct;
+    Ebsd::CrystalStructure* crystruct;
 } Test;
 
 // -----------------------------------------------------------------------------
@@ -96,7 +96,7 @@ int main(int argc, char **argv)
     return EXIT_FAILURE;
   }
 
-  std::vector<AIM::Reconstruction::CrystalStructure> crystruct;
+  std::vector<Ebsd::CrystalStructure> crystruct;
 
   DECLARE_WRAPPED_ARRAY(grain_indicies, m_GrainIndicies, int)
   DECLARE_WRAPPED_ARRAY(phases, m_Phases, int);

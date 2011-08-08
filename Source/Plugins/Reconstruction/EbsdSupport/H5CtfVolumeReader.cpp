@@ -1,6 +1,5 @@
 /* ============================================================================
- * Copyright (c) 2010, Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2010, Dr. Michael A. Grober (US Air Force Research Laboratories
+ * Copyright (c) 2011, Michael A. Jackson (BlueQuartz Software)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -29,130 +28,54 @@
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "H5AngDataLoader.h"
+#include "H5CtfVolumeReader.h"
 
 #include <cmath>
 
 
 #include "H5Support/H5Lite.h"
 #include "H5Support/H5Utilities.h"
+
 #include "MXA/Utilities/StringUtils.h"
 
 #include "EbsdLib/EbsdConstants.h"
-#include "EbsdLib/TSL/H5AngReader.h"
+#include "EbsdLib/HKL/H5CtfReader.h"
 
 #include "DREAM3D/Common/Constants.h"
 #include "DREAM3D/Common/OrientationMath.h"
 
+#include "Reconstruction/ReconstructionFunc.h"
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-H5AngDataLoader::H5AngDataLoader() :
-m_Orientation(Ebsd::Ang::NoOrientation)
+H5CtfVolumeReader::H5CtfVolumeReader() :
+H5EbsdVolumeReader()
 {
+
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-H5AngDataLoader::~H5AngDataLoader()
+H5CtfVolumeReader::~H5CtfVolumeReader()
 {
+
 }
+
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5AngDataLoader::readZHeader(int &zStart, int &zEnd, float &zRes)
-{
-  int err = -1;
-  int retErr = 0;
-  hid_t fileId = H5Utilities::openFile(m_Filename, true);
-  if (fileId < 0)
-  {
-    std::cout << "Error Opening file '" << m_Filename << "'" << std::endl;
-    return -1;
-  }
-  err = H5Lite::readScalarDataset(fileId, Ebsd::ZResolution, zRes);
-  if (err < 0)
-  {
-    std::cout << "H5AngDataLoader::readZHeader Error: Could not load ZResolution data" << std::endl;
-    retErr = err;
-  }
-  err = H5Lite::readScalarDataset(fileId, Ebsd::ZStartIndex, zStart);
-  if (err < 0)
-  {
-    std::cout << "H5AngDataLoader::readZHeader Error: Could not load ZStartIndex data" << std::endl;
-    retErr = err;
-  }
-  err = H5Lite::readScalarDataset(fileId, Ebsd::ZEndIndex, zEnd);
-  if (err < 0)
-  {
-    std::cout << "H5AngDataLoader::readZHeader Error: Could not load ZEndIndex data" << std::endl;
-    retErr = err;
-  }
-
-  err = H5Fclose(fileId);
-  return retErr;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int H5AngDataLoader::getSizeAndResolution(int &xpoints, int &ypoints, int &zpoints,
-                                    float &xres, float &yres, float &zres)
-{
-  int err = -1;
-  zpoints = (getZEndIndex() - getZStartIndex() );
-  int xpointstemp = 0;
-  int ypointstemp = 0;
-  xpoints = 0;
-  ypoints = 0;
-
-  hid_t fileId = H5Utilities::openFile(m_Filename, true);
-  if (fileId < 0)
-  {
-    std::cout << "Error - Could not open HDF5 based OIM file" << std::endl;
-    return -1;
-  }
-
-
-  zres = 0.0f;
-  err = H5Lite::readScalarDataset(fileId, Ebsd::ZResolution, zres);
-
-  for(int i=0;i<zpoints;i++)
-  {
-    std::string index = StringUtils::numToString(i + getZStartIndex());
-    hid_t gid = H5Gopen(fileId, index.c_str());
-    H5AngReader::Pointer reader = H5AngReader::New();
-    reader->setHDF5Path(index);
-    err = reader->readHeader(gid);
-    if (err < 0)
-    {
-      std::cout << "Error reading the .HDF5 Ang Header data" << std::endl;
-      err = H5Gclose(gid);
-      err = H5Fclose(fileId);
-      return -1;
-    }
-    xres = reader->getXStep();
-    yres = reader->getYStep();
-    xpointstemp = reader->getNumEvenCols();
-    ypointstemp = reader->getNumRows();
-    if(xpointstemp > xpoints) xpoints = xpointstemp;
-    if(ypointstemp > ypoints) ypoints = ypointstemp;
-    err = H5Gclose(gid);
-  }
-  err = H5Fclose(fileId);
-
-  return err;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-std::vector<AngPhase::Pointer> H5AngDataLoader::getPhases()
+std::vector<CtfPhase::Pointer> H5CtfVolumeReader::getPhases()
 {
   m_Phases.clear();
-  hid_t fileId = H5Utilities::openFile(m_Filename, true);
+
+  // Get the first valid index of a z slice
+  std::string index = StringUtils::numToString(getZStart());
+
+  // Open the hdf5 file and read the data
+  hid_t fileId = H5Utilities::openFile(getFilename(), true);
   if (fileId < 0)
   {
     std::cout << "Error" << std::endl;
@@ -160,9 +83,9 @@ std::vector<AngPhase::Pointer> H5AngDataLoader::getPhases()
   }
   herr_t err = 0;
 
-  std::string index = StringUtils::numToString(getZStartIndex());
+
   hid_t gid = H5Gopen(fileId, index.c_str());
-  H5AngReader::Pointer reader = H5AngReader::New();
+  H5CtfReader::Pointer reader = H5CtfReader::New();
   reader->setHDF5Path(index);
   err = reader->readHeader(gid);
   m_Phases = reader->getPhases();
@@ -180,7 +103,7 @@ std::vector<AngPhase::Pointer> H5AngDataLoader::getPhases()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5AngDataLoader::loadData(ReconstructionFunc* m)
+int H5CtfVolumeReader::loadData(ReconstructionFunc* m)
 {
   int index = 0;
   int err = -1;
@@ -192,19 +115,21 @@ int H5AngDataLoader::loadData(ReconstructionFunc* m)
   float* euler1Ptr = NULL;
   float* euler2Ptr = NULL;
   float* euler3Ptr = NULL;
-  float* confPtr = NULL;
+ // float* confPtr = NULL;
   int* phasePtr = NULL;
-  float* imqualPtr = NULL;
-  float* semSignalPtr = NULL;
+//  float* imqualPtr = NULL;
+//  float* semSignalPtr = NULL;
   int xstartspot;
   int ystartspot;
 
+  err = readVolumeInfo();
+
   for (int slice = 0; slice < m->zpoints; ++slice)
   {
-    H5AngReader::Pointer reader = H5AngReader::New();
+    H5CtfReader::Pointer reader = H5CtfReader::New();
     reader->setFileName(getFilename());
-    reader->setHDF5Path(StringUtils::numToString(slice + m_ZStartIndex));
-    reader->setUserOrigin(m_Orientation);
+    reader->setHDF5Path(StringUtils::numToString(slice + getZStart() ) );
+  //  reader->setUserOrigin(m_Orientation);
 
     err = reader->readFile();
     if (err < 0)
@@ -213,17 +138,17 @@ int H5AngDataLoader::loadData(ReconstructionFunc* m)
       return -1;
     }
     readerIndex = 0;
-    xpointstemp = reader->getNumEvenCols();
-    ypointstemp = reader->getNumRows();
-    euler1Ptr = reader->getPhi1Pointer();
-    euler2Ptr = reader->getPhiPointer();
-    euler3Ptr = reader->getPhi2Pointer();
+    xpointstemp = reader->getXCells();
+    ypointstemp = reader->getYCells();
+    euler1Ptr = reader->getEuler1Pointer();
+    euler2Ptr = reader->getEuler2Pointer();
+    euler3Ptr = reader->getEuler3Pointer();
     phasePtr = reader->getPhasePointer();
-    confPtr = reader->getConfidenceIndexPointer();
-    imqualPtr = reader->getImageQualityPointer();
+//    confPtr = reader->getConfidenceIndexPointer();
+//    imqualPtr = reader->getImageQualityPointer();
     xstartspot = (m->xpoints - xpointstemp) / 2;
     ystartspot = (m->ypoints - ypointstemp) / 2;
-    semSignalPtr = reader->getSEMSignalPointer();
+//    semSignalPtr = reader->getSEMSignalPointer();
     for (int j = 0; j < ypointstemp; j++)
     {
       for (int i = 0; i < xpointstemp; i++)
@@ -232,8 +157,8 @@ int H5AngDataLoader::loadData(ReconstructionFunc* m)
         m->euler1s[index] = euler1Ptr[readerIndex]; // Phi1
         m->euler2s[index] = euler2Ptr[readerIndex]; // Phi
         m->euler3s[index] = euler3Ptr[readerIndex]; // Phi2
-        m->imagequalities[index] = imqualPtr[readerIndex]; // Image Quality
-        m->confidences[index] = confPtr[readerIndex]; // Confidence
+//        m->imagequalities[index] = imqualPtr[readerIndex]; // Image Quality
+//        m->confidences[index] = confPtr[readerIndex]; // Confidence
         m->phases[index] = phasePtr[readerIndex]; // Phase
         /* For TSL OIM Files if there is a single phase then the value of the phase
          * data is zero (0). If there are 2 or more phases then the lowest value
@@ -242,7 +167,8 @@ int H5AngDataLoader::loadData(ReconstructionFunc* m)
          * phase. The next if statement converts all zeros to ones if there is a single
          * phase in the OIM data.
          */
-        if (m->phases[index] < 1) {
+        if (m->phases[index] < 1)
+        {
           m->phases[index] = 1;
         }
         ++readerIndex;

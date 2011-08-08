@@ -98,7 +98,7 @@ H5ReconStatsWriter::Pointer H5ReconStatsWriter::New(const std::string &filename)
 // -----------------------------------------------------------------------------
 int H5ReconStatsWriter::writePhaseInformation(int phase,
                                               AIM::Reconstruction::PhaseType  phaseType,
-                                              AIM::Reconstruction::CrystalStructure xtal,
+                                              Ebsd::CrystalStructure xtal,
                                               float phasefraction, float pptFraction)
 {
   herr_t err = 0;
@@ -393,7 +393,7 @@ int H5ReconStatsWriter::writeDistributionData(int phase, const std::string &disT
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5ReconStatsWriter::writeVolumeStats(int phase, AIM::Reconstruction::CrystalStructure xtal,
+int H5ReconStatsWriter::writeVolumeStats(int phase, Ebsd::CrystalStructure xtal,
                                          AIM::Reconstruction::PhaseType phaseType,
                                          float phasefraction, float pptFraction,
                                          float maxdiameter, float mindiameter, float diamStepSize,
@@ -511,7 +511,7 @@ int H5ReconStatsWriter::writeVolumeStats(int phase, AIM::Reconstruction::Crystal
 //
 // -----------------------------------------------------------------------------
 int H5ReconStatsWriter::writeVolumeStats2D(int phase,
-                                           AIM::Reconstruction::CrystalStructure xtal,
+                                           Ebsd::CrystalStructure xtal,
                                            AIM::Reconstruction::PhaseType phaseType,
                                            float phasefraction, float pptFraction,
                                            float maxdiameter, float mindiameter, float diamStepSize,

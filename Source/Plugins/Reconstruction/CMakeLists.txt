@@ -70,22 +70,7 @@ if ( ${DREAM3D_INSTALL_FILES} EQUAL 1 )
 endif()
 
 #-- AngSupport Files
-SET (ANGSupport_HDRS
-  ${PROJECT_SOURCE_DIR}/ANGSupport/AbstractAngDataLoader.h
-  ${PROJECT_SOURCE_DIR}/ANGSupport/AngDataLoader.h
-  ${PROJECT_SOURCE_DIR}/ANGSupport/H5AngDataLoader.h
-)
-
-SET (ANGSupport_SRCS
-  ${PROJECT_SOURCE_DIR}/ANGSupport/AngDataLoader.cpp
-  ${PROJECT_SOURCE_DIR}/ANGSupport/H5AngDataLoader.cpp
-)
-cmp_IDE_SOURCE_PROPERTIES( "Reconstruction/ANGSupport" "${ANGSupport_HDRS}" "${ANGSupport_SRCS}" "0")
-if ( ${DREAM3D_INSTALL_FILES} EQUAL 1 )
-    INSTALL (FILES ${ANGSupport_HDRS}
-            DESTINATION include/DREAM3D/ANGSupport
-            COMPONENT Headers   )
-endif()
+include(${PROJECT_SOURCE_DIR}/EbsdSupport/SourceList.cmake)
 
 
 #-- Gather all the Project Source files in this variable
@@ -98,8 +83,8 @@ set (ReconstructionPlugin_PROJECT_SRCS
     ${PROJECT_CODE_DIR}/QtSupport/DREAM3DPluginInterface.h
     ${Reconstruction_HDRS}
     ${Reconstruction_SRCS}
-    ${ANGSupport_HDRS}
-    ${ANGSupport_SRCS}
+    ${EbsdSupport_HDRS}
+    ${EbsdSupport_SRCS}
 )
 
 
@@ -153,7 +138,7 @@ COMPILE_TOOL(
     TARGET Reconstruction
     SOURCES ${PROJECT_SOURCE_DIR}/Tools/ReconstructionMain.cpp 
             ${Reconstruction_HDRS} ${Reconstruction_SRCS}
-            ${ANGSupport_HDRS} ${ANGSupport_SRCS}
+            ${EbsdSupport_HDRS} ${EbsdSupport_SRCS}
     DEBUG_EXTENSION ${EXE_DEBUG_EXTENSION}
     VERSION_MAJOR ${DREAM3D_VER_MAJOR}
     VERSION_MINOR ${DREAM3D_VER_MINOR}
@@ -161,7 +146,7 @@ COMPILE_TOOL(
     BINARY_DIR    ${${PROJECT_NAME}_BINARY_DIR}
     COMPONENT     Applications
     INSTALL_DEST  "${install_dir}" 
-    LINK_LIBRARIES DREAM3DLib
+    LINK_LIBRARIES EbsdLib DREAM3DLib
 )
   
 if (0)
@@ -170,7 +155,7 @@ COMPILE_TOOL(
     TARGET H5AngToVtk
     SOURCES ${PROJECT_SOURCE_DIR}/Tools/H5AngToVtk.cpp 
             ${Reconstruction_HDRS} ${Reconstruction_SRCS}
-            ${ANGSupport_HDRS} ${ANGSupport_SRCS}
+            ${EbsdSupport_HDRS} ${EbsdSupport_SRCS}
     DEBUG_EXTENSION ${EXE_DEBUG_EXTENSION}
     VERSION_MAJOR ${DREAM3D_VER_MAJOR}
     VERSION_MINOR ${DREAM3D_VER_MINOR}

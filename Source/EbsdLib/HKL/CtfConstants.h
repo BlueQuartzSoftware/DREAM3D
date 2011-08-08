@@ -41,16 +41,11 @@ namespace Ebsd {
 namespace Ctf
 {
 
-  /** @brief Constants defined for the 5 orientation options */
-  enum Orientation
-  {
-     UpperRightOrigin = 0,
-     UpperLeftOrigin = 1,
-     LowerLeftOrigin = 2,
-     LowerRightOrigin = 3,
-     NoOrientation = 4,
+  enum PhaseSymmetry {
+    CubicSymmetry = 11,
+    HexagonalSymmetry = 9,
+    UnknownSymmetry = 999,
   };
-
 
   const std::string FileExt("ctf");
 

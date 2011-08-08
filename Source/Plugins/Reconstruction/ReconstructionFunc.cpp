@@ -150,7 +150,7 @@ void ReconstructionFunc::initialize(int nX,
                                     float dwnSmplFact,
                                     float minImgQlty,
                                     float misoTol,
-                                    vector<AIM::Reconstruction::CrystalStructure> crystalStructures,
+                                    vector<Ebsd::CrystalStructure> crystalStructures,
                                     vector<AIM::Reconstruction::PhaseType> phaseTypes,
                                     std::vector<float> precipFractions,
                                     int alignmentMethod)
@@ -226,14 +226,14 @@ void ReconstructionFunc::initialize(int nX,
 void ReconstructionFunc::initializeQuats()
 {
   float qr[5];
-  AIM::Reconstruction::CrystalStructure xtal = AIM::Reconstruction::UnknownCrystalStructure;
+  Ebsd::CrystalStructure xtal = Ebsd::UnknownCrystalStructure;
   int phase = -1;
   for (int i = 0; i < (xpoints * ypoints * zpoints); i++)
   {
     OrientationMath::eulertoQuat(qr, euler1s[i], euler2s[i], euler3s[i]);
     phase = phases[i];
     xtal = crystruct[phase];
-    if (xtal == AIM::Reconstruction::UnknownCrystalStructure)
+    if (xtal == Ebsd::UnknownCrystalStructure)
     {
       qr[1] = 0.0;
       qr[2] = 0.0;
@@ -381,11 +381,11 @@ void ReconstructionFunc::cleanup_data()
               q2[2] = voxels[neighbor].quat[2];
               q2[3] = voxels[neighbor].quat[3];
               q2[4] = voxels[neighbor].quat[4];
-              if (crystruct == AIM::Reconstruction::Hexagonal) w = OrientationMath::getMisoQuatHexagonal(q1, q2, n1, n2, n3);
-              if (crystruct == AIM::Reconstruction::Cubic) w = OrientationMath::getMisoQuatCubic(q1, q2, n1, n2, n3);
+              if (crystruct == Ebsd::Hexagonal) w = OrientationMath::getMisoQuatHexagonal(q1, q2, n1, n2, n3);
+              if (crystruct == Ebsd::Cubic) w = OrientationMath::getMisoQuatCubic(q1, q2, n1, n2, n3);
               if(w < 5)
 			  {
-				  if (crystruct == AIM::Reconstruction::Cubic) OrientationMath::getNearestQuatCubic(q1, q2);
+				  if (crystruct == Ebsd::Cubic) OrientationMath::getNearestQuatCubic(q1, q2);
 				  for(int m=0;m<5;m++)
 				  {
 					  qtot[m] = qtot[m] + q2[m];
@@ -423,7 +423,7 @@ void ReconstructionFunc::find_border()
   int currentpoint = 0;
   int neighbor = 0;
   int col, row, plane;
-  AIM::Reconstruction::CrystalStructure phase1, phase2;
+  Ebsd::CrystalStructure phase1, phase2;
   int initialVoxelsListSize = 10000;
   std::vector<int> voxelslist(initialVoxelsListSize, -1);
   size_t totalPoints = xpoints * ypoints * zpoints;
@@ -575,7 +575,7 @@ void ReconstructionFunc::align_sections()
   int curposition = 0;
   int position;
   int tempposition;
-  AIM::Reconstruction::CrystalStructure phase1, phase2;
+  Ebsd::CrystalStructure phase1, phase2;
 
   int** shifts = new int *[zpoints];
   for (int a = 0; a < zpoints; a++)
@@ -870,7 +870,7 @@ void ReconstructionFunc::form_grains_sections()
   neighpoints[5] = xpoints - 1;
   neighpoints[6] = xpoints;
   neighpoints[7] = xpoints + 1;
-  AIM::Reconstruction::CrystalStructure phase1, phase2;
+  Ebsd::CrystalStructure phase1, phase2;
   for (int slice = 0; slice < zpoints; slice++)
   {
     graincount = 1;
@@ -1002,7 +1002,7 @@ void ReconstructionFunc::form_grains()
   neighpoints[3] = 1;
   neighpoints[4] = xpoints;
   neighpoints[5] = (xpoints * ypoints);
-  AIM::Reconstruction::CrystalStructure phase1, phase2;
+  Ebsd::CrystalStructure phase1, phase2;
 
   // Precalculate some constants
   int totalPMinus1 = totalpoints - 1;
@@ -1376,7 +1376,7 @@ void ReconstructionFunc::reorder_grains()
   float q[5];
   float ea1, ea2, ea3;
   size_t currentgrain = 1;
-  AIM::Reconstruction::CrystalStructure phase;
+  Ebsd::CrystalStructure phase;
 
   neighpoints[0] = -(xpoints * ypoints) - xpoints - 1;
   neighpoints[1] = -(xpoints * ypoints) - xpoints;
@@ -1750,7 +1750,7 @@ void ReconstructionFunc::merge_twins()
   float q1[5];
   float q2[5];
   size_t numgrains = m_Grains.size();
-  AIM::Reconstruction::CrystalStructure phase1, phase2;
+  Ebsd::CrystalStructure phase1, phase2;
 
   for (size_t i = 1; i < numgrains; i++)
   {
@@ -1820,7 +1820,7 @@ void ReconstructionFunc::merge_colonies()
   float q1[5];
   float q2[5];
   size_t numgrains = m_Grains.size();
-  AIM::Reconstruction::CrystalStructure phase1, phase2;
+  Ebsd::CrystalStructure phase1, phase2;
 
   for (size_t i = 1; i < numgrains; i++)
   {

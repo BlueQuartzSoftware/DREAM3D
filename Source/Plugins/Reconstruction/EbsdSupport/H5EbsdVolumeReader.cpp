@@ -28,55 +28,47 @@
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef TEXTUREDIALOG_H_
-#define TEXTUREDIALOG_H_
+#include "H5EbsdVolumeReader.h"
 
-#include <vector>
 
-#include <QtGui/QDialog>
 
-#include "ui_TextureDialog.h"
+#include "hdf5.h"
 
-#include "MXA/Common/MXASetGetMacros.h"
 
-#include "DREAM3D/Common/Constants.h"
-#include "DREAM3D/Common/TexturePreset.h"
+#include "H5Support/H5Utilities.h"
+#include "H5Support/H5Lite.h"
 
-/**
- * @class TextureDialog TextureDialog.h StatsGenerator/TextureDialog.h
- * @brief  This class presents the User a GUI to adjust Texture values.
- * @author Michael A. Jackson for BlueQuartz Software
- * @date Apr 20, 2011
- * @version 1.0
- */
-class TextureDialog : public QDialog , private Ui::TextureDialog
+#include "Reconstruction/ReconstructionFunc.h"
+#include "Reconstruction/EbsdSupport/H5AngVolumeReader.h"
+#include "Reconstruction/EbsdSupport/H5CtfVolumeReader.h"
+
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+H5EbsdVolumeReader::H5EbsdVolumeReader() :
+m_Orientation(Ebsd::NoOrientation)
 {
-  Q_OBJECT;
 
-  public:
-    TextureDialog(Ebsd::CrystalStructure xtal, QWidget *parent = 0);
-    virtual ~TextureDialog();
+}
 
-    MXA_INSTANCE_PROPERTY(Ebsd::CrystalStructure, CrystalStructure);
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+H5EbsdVolumeReader::~H5EbsdVolumeReader()
+{
 
-    void getODFEntry(float &e1, float &e2, float &e3, float &weight, float &sigma);
+}
 
-  protected slots:
-    void on_presetListWidget_itemSelectionChanged ();
-    void on_presetListWidget_itemDoubleClicked ( QListWidgetItem * item );
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int H5EbsdVolumeReader::loadData(ReconstructionFunc* m)
+{
+  int err = -1;
+  // This is meant to be subclassed.
 
+  return err;
+}
 
-  protected:
-
-    void setupGui();
-
-
-
-  private:
-    std::vector<TexturePreset::Pointer> m_Presets;
-
-    TextureDialog(const TextureDialog&); // Copy Constructor Not Implemented
-    void operator=(const TextureDialog&); // Operator '=' Not Implemented
-};
-
-#endif /* TEXTUREDIALOG_H_ */

@@ -163,17 +163,6 @@ namespace AIM
     const std::string PhFile("VoxelData.ph");
     const std::string DxFile("VoxelData.dx");
 
-    /**
-     * @brief IF YOU CHANGE THE VALUES THERE ARE DEEP RAMIFICATIONS IN THE CODE BUT
-     * MOSTLY IN THE HDF5 FILES WHICH ARE WRITTEN USING THE ENUMERATIONS.
-     */
-    enum CrystalStructure {
-        Hexagonal = 0,                   //!< Hexagonal
-        Cubic = 1,                       //!< Cubic
-        OrthoRhombic = 2,                //!< OrthoRhombic
-        AxisOrthoRhombic = 3,            //!< AxisOrthoRhombic
-        UnknownCrystalStructure = 999    //!< UnknownCrystalStructure
-    };
 
     enum PhaseType {
       PrimaryPhase = 0,              //!<

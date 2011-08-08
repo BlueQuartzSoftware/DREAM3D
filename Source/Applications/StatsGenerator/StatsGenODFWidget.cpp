@@ -57,7 +57,7 @@ QWidget(parent),
 m_EnableAxisDecorations(false),
 m_Initializing(true),
 m_PhaseIndex(-1),
-m_CrystalStructure(AIM::Reconstruction::Cubic),
+m_CrystalStructure(Ebsd::Cubic),
 m_ODFTableModel(NULL),
 m_MDFWidget(NULL)
 {
@@ -153,11 +153,11 @@ int StatsGenODFWidget::writeDataToHDF5(H5ReconStatsWriter::Pointer writer)
     e3s[i] = e3s[i] * M_PI / 180.0;
   }
 
-  if (m_CrystalStructure == AIM::Reconstruction::Cubic)
+  if (m_CrystalStructure == Ebsd::Cubic)
   {
     Texture::calculateCubicODFData(e1s, e2s, e3s, weights, sigmas, true, odf, totalWeight);
   }
-  else if (m_CrystalStructure == AIM::Reconstruction::Hexagonal)
+  else if (m_CrystalStructure == Ebsd::Hexagonal)
   {
     Texture::calculateHexODFData(e1s, e2s, e3s, weights, sigmas, true, odf, totalWeight);
   }
@@ -211,17 +211,17 @@ void StatsGenODFWidget::enableMDFTab(bool b)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void StatsGenODFWidget::setCrystalStructure(AIM::Reconstruction::CrystalStructure value)
+void StatsGenODFWidget::setCrystalStructure(Ebsd::CrystalStructure value)
 {
   if (m_CrystalStructure != value)
   {
     this->m_CrystalStructure = value;
     switch(value)
     {
-      case AIM::Reconstruction::Cubic:
+      case Ebsd::Cubic:
         setPlotTabTitles("<001> PF", "<011> PF", "<111> PF");
         break;
-      case AIM::Reconstruction::Hexagonal:
+      case Ebsd::Hexagonal:
         setPlotTabTitles("<0001> PF", "<11-20> PF", "<10-10> PF");
         break;
       default:
@@ -237,7 +237,7 @@ void StatsGenODFWidget::setCrystalStructure(AIM::Reconstruction::CrystalStructur
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AIM::Reconstruction::CrystalStructure StatsGenODFWidget::getCrystalStructure()
+Ebsd::CrystalStructure StatsGenODFWidget::getCrystalStructure()
 {
   return m_CrystalStructure;
 }
@@ -368,7 +368,7 @@ void StatsGenODFWidget::on_m_CalculateODFBtn_clicked()
   StatsGen sg;
   int size = 2500;
 
-  if (m_CrystalStructure == AIM::Reconstruction::Cubic)
+  if (m_CrystalStructure == Ebsd::Cubic)
   {
     static const size_t eighteenCubed = 5832;
     float totalweight = 0;
@@ -376,7 +376,7 @@ void StatsGenODFWidget::on_m_CalculateODFBtn_clicked()
     Texture::calculateCubicODFData(e1s, e2s, e3s, weights, sigmas, true, odf, totalweight);
     err = sg.GenCubicODFPlotData(odf, x001, y001, x011, y011, x111, y111, size);
   }
-  else if (m_CrystalStructure == AIM::Reconstruction::Hexagonal) {
+  else if (m_CrystalStructure == Ebsd::Hexagonal) {
     static const size_t odfsize = 15552;
     float totalweight = 0;
     odf.resize(odfsize);

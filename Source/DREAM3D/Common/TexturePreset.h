@@ -35,8 +35,10 @@
 #include <vector>
 #include <string>
 
+#include "EbsdLib/EbsdConstants.h"
 
-#include <MXA/Common/MXASetGetMacros.h>
+#include "MXA/Common/MXASetGetMacros.h"
+
 #include "DREAM3D/DREAM3DConfiguration.h"
 #include "DREAM3D/Common/Constants.h"
 
@@ -50,7 +52,7 @@ class DREAM3DLib_EXPORT TexturePreset
 
     MXA_STATIC_NEW_MACRO(TexturePreset);
     MXA_TYPE_MACRO(TexturePreset);
-    static Pointer New(AIM::Reconstruction::CrystalStructure xtal,
+    static Pointer New(Ebsd::CrystalStructure xtal,
                        const std::string &name,
                        double e1, double e2, double e3)
     {
@@ -65,7 +67,7 @@ class DREAM3DLib_EXPORT TexturePreset
 
     virtual ~TexturePreset();
 
-    MXA_INSTANCE_PROPERTY(AIM::Reconstruction::CrystalStructure, CrystalStructure);
+    MXA_INSTANCE_PROPERTY(Ebsd::CrystalStructure, CrystalStructure);
     MXA_INSTANCE_STRING_PROPERTY(Name);
     MXA_INSTANCE_PROPERTY(double, Euler1);
     MXA_INSTANCE_PROPERTY(double, Euler2);
