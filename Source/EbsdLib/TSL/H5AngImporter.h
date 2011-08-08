@@ -51,11 +51,11 @@
 
 /**
  * @class H5AngImporter H5AngImporter.h AIM/ANG/H5AngImporter.h
- * @brief
+ * @brief This class will read a series of .ang files and store the values into
+ * an HDF5 file according to the .h5ebsd specification
  * @author Michael A. Jackson for BlueQuartz Software
  * @date March 23, 2011
  * @version 1.2
- *
  */
 class EbsdLib_EXPORT H5AngImporter : public EbsdImporter
 {
@@ -63,18 +63,46 @@ class EbsdLib_EXPORT H5AngImporter : public EbsdImporter
   public:
     EBSD_SHARED_POINTERS(H5AngImporter)
     EBSD_TYPE_MACRO(H5AngImporter)
-   // EBSD_STATIC_NEW_MACRO(H5AngImporter)
     EBSD_STATIC_NEW_SUPERCLASS(EbsdImporter, H5AngImporter)
 
     virtual ~H5AngImporter();
 
+    /**
+     * @brief Imports a specific file into the HDF5 file
+     * @param fileId The valid HDF5 file Id for an already open HDF5 file
+     * @param index The slice index for the file
+     * @param angFile The absolute path to the input .ang file
+     */
     int importFile(hid_t fileId, int index, const std::string &angFile);
 
+    /**
+     * @brief Writes the phase data into the HDF5 file
+     * @param reader Valid AngReader instance
+     * @param gid Valid HDF5 Group ID for the phases.
+     * @return error condition
+     */
     int writePhaseData(AngReader &reader, hid_t gid);
 
+    /**
+     * @brief Writes the HKL Family data into the HDF5 file
+     * @param reader Valid AngReader instance
+     * @param gid Valid HDF5 Group ID for the HKL Family.
+     * @return error condition
+     */
     int writeHKLFamilies(AngPhase* p, hid_t pid);
 
+    /**
+     * @brief Returns the dimensions for the EBSD Data set
+     * @param x Number of X Voxels (out)
+     * @param y Number of Y Voxels (out)
+     */
     virtual void getDims(int &x, int &y);
+
+    /**
+     * @brief Returns the x and y resolution of the voxels
+     * @param x The x resolution (out)
+     * @param y The y resolution (out)
+     */
     virtual void getResolution(float &x, float &y);
 
   protected:

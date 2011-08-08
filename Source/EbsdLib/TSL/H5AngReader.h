@@ -101,17 +101,45 @@ class EbsdLib_EXPORT H5AngReader : public AngReader
     EBSD_TYPE_MACRO(H5AngReader)
     virtual ~H5AngReader();
 
+    /**
+     * @brief The HDF5 path to find the EBSD data
+     */
     EBSD_INSTANCE_STRING_PROPERTY(HDF5Path)
 
+    /**
+     * @brief Reads the file
+     * @return error condition
+     */
     virtual int readFile();
 
+    /**
+     * @brief Reads the header section of the file
+     * @param Valid HDF5 Group ID
+     * @return error condition
+     */
     int readHeader(hid_t parId);
+
+    /**
+     * @brief Reads the data section of the file
+     * @param Valid HDF5 Group ID
+     * @return error condition
+     */
     int readData(hid_t parId);
+
+    /**
+     * @brief Returns a vector of AngPhase objects corresponding to the phases
+     * present in the file
+     */
     std::vector<AngPhase::Pointer> getPhases() { return m_Phases; }
 
   protected:
     H5AngReader();
 
+    /**
+     * @brief Reads the data associated with HKL Families for a given phase.
+     * @param hklGid Valid HDF5 Group ID where the HKL Family data is located.
+     * @param phase The AngPhase to parse the HKL Family data
+     */
     int readHKLFamilies(hid_t hklGid, AngPhase::Pointer phase);
 
   private:

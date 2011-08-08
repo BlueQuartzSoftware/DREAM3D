@@ -61,7 +61,7 @@ typedef struct
 
 /**
  * @class HKLFamily HKLFamily.h AIM/ANG/HKLFamily.h
- * @brief
+ * @brief Class to hold the information associated with a HKL Family value
  * @author Michael A. Jackson for BlueQuartz Software
  * @date Mar 23, 2011
  * @version 1.0
@@ -133,8 +133,8 @@ class EbsdLib_EXPORT HKLFamily
 
 
 /**
- * @class AngPhase AngPhase.h AIM/ANG/AngPhase.h
- * @brief
+ * @class AngPhase AngPhase.h EbsdLib/TSL/AngPhase.h
+ * @brief This class holds all the values for a "Phase" header block in a TSL file
  * @author Michael A. Jackson for BlueQuartz Software
  * @date Mar 23, 2011
  * @version 1.0
@@ -172,6 +172,9 @@ class EbsdLib_EXPORT AngPhase
 
     void printSelf(std::ostream &stream);
 
+    /**
+     * @brief Returns the type of crystal structure for this phase.
+     */
     Ebsd::CrystalStructure determineCrystalStructure();
 
   protected:

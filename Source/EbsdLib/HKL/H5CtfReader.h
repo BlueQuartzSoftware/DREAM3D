@@ -27,6 +27,9 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+///////////////////////////////////////////////////////////////////////////////
+// This code was partly written under US Air Force Contract FA8650-07-D-5800
+///////////////////////////////////////////////////////////////////////////////
 
 #ifndef H5CTFREADER_H_
 #define H5CTFREADER_H_
@@ -75,12 +78,35 @@ class EbsdLib_EXPORT H5CtfReader : public CtfReader
     EBSD_TYPE_MACRO(H5CtfReader)
     virtual ~H5CtfReader();
 
+    /**
+     * @brief The HDF5 path to find the EBSD data
+     */
     EBSD_INSTANCE_STRING_PROPERTY(HDF5Path)
 
+    /**
+     * @brief Reads the file
+     * @return error condition
+     */
     virtual int readFile();
 
+    /**
+     * @brief Reads the header section of the file
+     * @param Valid HDF5 Group ID
+     * @return error condition
+     */
     int readHeader(hid_t parId);
+
+    /**
+     * @brief Reads the data section of the file
+     * @param Valid HDF5 Group ID
+     * @return error condition
+     */
     int readData(hid_t parId);
+
+    /**
+     * @brief Returns a vector of AngPhase objects corresponding to the phases
+     * present in the file
+     */
     std::vector<CtfPhase::Pointer> getPhases() { return m_Phases; }
 
   protected:

@@ -33,6 +33,12 @@
 
 #include <string>
 
+/**
+ * @file EbsdConstants.h
+ * @brief This file contains many constants that are generic to the EBSD library
+ */
+
+
 namespace Ebsd
 {
   namespace H5 {

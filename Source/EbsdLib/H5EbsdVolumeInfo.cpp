@@ -75,7 +75,17 @@ H5EbsdVolumeInfo::~H5EbsdVolumeInfo()
 // -----------------------------------------------------------------------------
 void H5EbsdVolumeInfo::invalidateCache()
 {
-  m_ValuesAreCached = false;
+  m_ValuesAreCached = (false);
+  m_XDim = (0);
+  m_YDim = (0);
+  m_ZDim = (0);
+  m_XRes = (0.0f);
+  m_YRes = (0.0f);
+  m_ZRes = (0.0f);
+  m_ZStart = (0);
+  m_ZEnd = (0);
+  m_NumPhases = (0);
+  m_Manufacturer = "";
 }
 
 
