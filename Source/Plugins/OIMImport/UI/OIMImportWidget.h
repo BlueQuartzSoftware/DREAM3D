@@ -41,11 +41,11 @@
 
 
 /**
- * @class OIMImportWidget OIMImportWidget.h AIM/GUI/OIMImportWidget.h
- * @brief This class represents the User Interface for the TSL OIM .ang file import module
- * of the AIMRepresentation program. The user interface subclasses QFrame which
+ * @class OIMImportWidget OIMImportWidget.h Plugins/OIMImport/UI/OIMImportWidget.h
+ * @brief This class represents the User Interface for the EBSD file import module
+ * of the DREAM3D program. The user interface subclasses QFrame which
  * should make it able to be embedded in most Qt applications. This module controls
- * the import of TSL OIM data files with a .ang file extension into an HDF5 file
+ * the import of EBSD data files into an HDF5 file
  * for better data management and archiving.
  * @author Michael A. Jackson for BlueQuartz Software
  * @date Jan 30, 2011

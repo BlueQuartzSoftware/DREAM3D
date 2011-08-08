@@ -6,7 +6,7 @@
 DOXYFILE_ENCODING = UTF-8
 PROJECT_NAME = DREAM3D
 PROJECT_NUMBER = 
-OUTPUT_DIRECTORY = @DREAM3D_BINARY_DIR@/Documentation
+OUTPUT_DIRECTORY = @DOXY_OUTPUT_DIR@
 CREATE_SUBDIRS = YES
 OUTPUT_LANGUAGE = English
 BRIEF_MEMBER_DESC = YES
@@ -73,11 +73,11 @@ WARN_LOGFILE =
 #---------------------------------------------------------------------------
 # configuration options related to the input files
 #---------------------------------------------------------------------------
-INPUT = @DREAM3D_SOURCE_DIR@ @DREAM3D_SOURCE_DIR@/Source/DREAM3D @DREAM3D_SOURCE_DIR@/Documentation @DREAM3D_SOURCE_DIR@/Source/ANG @DREAM3D_SOURCE_DIR@/Source/QtSupport @DREAM3D_SOURCE_DIR@/Source/StatsGenerator @DREAM3D_SOURCE_DIR@/Source/Applications @DREAM3D_SOURCE_DIR@/Source/UIPlugins
+INPUT = @DREAM3D_SOURCE_DIR@/Documentation @DREAM3D_SOURCE_DIR@/Source/EbsdLib @DREAM3D_SOURCE_DIR@/Source/DREAM3D @DREAM3D_SOURCE_DIR@/Source/H5Support @DREAM3D_SOURCE_DIR@/Source/MXA @DREAM3D_SOURCE_DIR@/Source/Plugins @DREAM3D_SOURCE_DIR@/Source/QtSupport @DREAM3D_SOURCE_DIR@/Source/Tools
 INPUT_ENCODING = UTF-8
 FILE_PATTERNS = *.c *.cc *.cxx *.cpp *.h *.hxx *.hpp *.m *.mm *.dox
 RECURSIVE = YES
-EXCLUDE = 
+EXCLUDE = @DREAM3D_SOURCE_DIR@/Source/CMU @DREAM3D_SOURCE_DIR@/Source/Applications/DREAM3D @DREAM3D_SOURCE_DIR@/Source/tclap @DREAM3D_SOURCE_DIR@/Source/Test
 EXCLUDE_SYMLINKS = NO
 EXCLUDE_PATTERNS = 
 EXCLUDE_SYMBOLS = 
@@ -178,15 +178,45 @@ PERLMOD_MAKEVAR_PREFIX =
 #---------------------------------------------------------------------------
 # Configuration options related to the preprocessor   
 #---------------------------------------------------------------------------
-ENABLE_PREPROCESSING = YES
-MACRO_EXPANSION = YES
-EXPAND_ONLY_PREDEF = NO
-SEARCH_INCLUDES = YES
-INCLUDE_PATH = @MXADATAMODEL_INCLUDE_DIRS@
+INCLUDE_PATH           = 
 INCLUDE_FILE_PATTERNS = 
-PREDEFINED = DOXYGEN_COMMENTS
-EXPAND_AS_DEFINED = 
-SKIP_FUNCTION_MACROS = YES
+ENABLE_PREPROCESSING = YES
+MACRO_EXPANSION      = YES
+SEARCH_INCLUDES      = YES
+INCLUDE_PATH         =
+EXPAND_ONLY_PREDEF   = YES
+PREDEFINED  = "EBSD_INSTANCE_PROPERTY(type, prpty)= \
+                /** Sets the prpty instance variable */ \
+                 void set##prpty (type); \
+                 /** Gets the prpty instance variable */ \
+                 type get##prpty (type);" \
+              "EBSD_INSTANCE_PROPERTY(type, prpty, name)= \
+                /** Sets the prpty instance variable */ \
+                 void set##prpty (type); \
+                 /** Gets the prpty instance variable */ \
+                 type get##prpty (type);" \
+              "EBSD_INSTANCE_STRING_PROPERTY(prpty)=\
+                /** Sets the prpty instance variable */ \
+                 void set##prpty (std::string); \
+                 /** Gets the prpty instance variable */ \
+                 std::string get##prpty (std::string);" \
+              "EBSD_SHARED_POINTERS(class)=\
+                typedef CrossCorrelation             Self;\
+                typedef boost::shared_ptr< Self >       Pointer;\
+                typedef boost::shared_ptr<const Self >  ConstPointer;\
+                static Pointer NullPointer(void)\
+                { \
+                  return Pointer(static_cast<CrossCorrelation*>(0));\
+                }"\
+              "EBSD_STATIC_NEW_MACRO(class)=\
+                static Pointer New(void) \
+                { \
+                  Pointer sharedPtr (new CrossCorrelationData); \
+                  return sharedPtr; \
+                }"\
+              "EBSD_TYPE_MACRO(class)=\
+                virtual const char* getNameOfClass() const \
+                {return "CrossCorrelationData";}"
 #---------------------------------------------------------------------------
 # Configuration::additions related to external references   
 #---------------------------------------------------------------------------

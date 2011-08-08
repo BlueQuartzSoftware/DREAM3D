@@ -44,7 +44,7 @@ class QListWidgetItem;
 
 
 /**
- * @class MicrostructureStatisticsWidget MicrostructureStatisticsWidget.h AIM/GUI/MicrostructureStatisticsWidget.h
+ * @class MicrostructureStatisticsWidget MicrostructureStatisticsWidget.h Plugins/MicrostructureStatistics/UI/MicrostructureStatisticsWidget.h
  * @brief This class represents the User Interface for the Microstructure Statistics module
  * of the DREAM3D program. The user interface subclasses AIMPluginFrame which
  * should make it able to be embedded in most Qt applications.

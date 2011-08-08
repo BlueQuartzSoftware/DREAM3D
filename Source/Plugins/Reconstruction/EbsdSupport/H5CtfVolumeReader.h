@@ -39,11 +39,15 @@
 #include "EbsdLib/EbsdConstants.h"
 #include "EbsdLib/HKL/CtfPhase.h"
 
-//Reconstruction/EbsdSupport Includes
+//-- Reconstruction/EbsdSupport Includes
 #include "H5EbsdVolumeReader.h"
 
-/*
- *
+/**
+ * @class H5CtfVolumeReader H5CtfVolumeReader.h Reconstruction/EbsdSupport/H5CtfVolumeReader.h
+ * @brief This class loads EBSD data from an HDF5 based file.
+ * @author Michael A. Jackson for BlueQuartz Software
+ * @date May 23, 2011
+ * @version 1.0
  */
 class H5CtfVolumeReader : public H5EbsdVolumeReader
 {
@@ -52,8 +56,6 @@ class H5CtfVolumeReader : public H5EbsdVolumeReader
     EBSD_STATIC_NEW_SUPERCLASS(H5EbsdVolumeReader, H5CtfVolumeReader)
 
     virtual ~H5CtfVolumeReader();
-
-//    MXA_INSTANCE_PROPERTY(Ebsd::Ctf::Orientation, Orientation)
 
     int loadData(ReconstructionFunc* m);
 
