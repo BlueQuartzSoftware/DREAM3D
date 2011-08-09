@@ -29,15 +29,38 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 #include "AngFields.h"
+#include "AngConstants.h"
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 AngFields::AngFields()
 {
-  // TODO Auto-generated constructor stub
-
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 AngFields::~AngFields()
 {
-  // TODO Auto-generated destructor stub
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+std::vector<std::string> AngFields::getFieldNames()
+{
+  std::vector<std::string> fields;
+  fields.push_back(Ebsd::Ang::Phi1);
+  fields.push_back(Ebsd::Ang::Phi);
+  fields.push_back(Ebsd::Ang::Phi2);
+  fields.push_back(Ebsd::Ang::ImageQuality);
+  fields.push_back(Ebsd::Ang::ConfidenceIndex);
+  fields.push_back(Ebsd::Ang::PhaseData);
+  fields.push_back(Ebsd::Ang::XPosition);
+  fields.push_back(Ebsd::Ang::YPosition);
+  fields.push_back(Ebsd::Ang::SEMSignal);
+  fields.push_back(Ebsd::Ang::Fit);
+
+  return fields;
+}

@@ -47,6 +47,13 @@ class EbsdLib_EXPORT CtfFields : public AbstractEbsdFields
   public:
     CtfFields();
     virtual ~CtfFields();
+
+
+    virtual std::vector<std::string> getFieldNames();
+
+  private:
+    CtfFields(const CtfFields&); // Copy Constructor Not Implemented
+    void operator=(const CtfFields&); // Operator '=' Not Implemented
 };
 
 #endif /* CTFFIELDS_H_ */

@@ -30,14 +30,41 @@
 
 #include "CtfFields.h"
 
+#include "CtfConstants.h"
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 CtfFields::CtfFields()
 {
-  // TODO Auto-generated constructor stub
 
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 CtfFields::~CtfFields()
 {
-  // TODO Auto-generated destructor stub
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+std::vector<std::string> CtfFields::getFieldNames()
+{
+  std::vector<std::string> fields;
+  fields.push_back(Ebsd::Ctf::Phase);
+  fields.push_back(Ebsd::Ctf::X);
+  fields.push_back(Ebsd::Ctf::Y);
+  fields.push_back(Ebsd::Ctf::BandCount);
+  fields.push_back(Ebsd::Ctf::Error);
+  fields.push_back(Ebsd::Ctf::Euler1);
+  fields.push_back(Ebsd::Ctf::Euler2);
+  fields.push_back(Ebsd::Ctf::Euler3);
+  fields.push_back(Ebsd::Ctf::MeanAngularDeviation);
+  fields.push_back(Ebsd::Ctf::BandContrast);
+  fields.push_back(Ebsd::Ctf::BandSlope);
+
+  return fields;
 }
 
