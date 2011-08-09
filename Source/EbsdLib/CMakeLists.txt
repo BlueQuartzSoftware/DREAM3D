@@ -85,8 +85,10 @@ include ( ${EbsdLib_SOURCE_DIR}/HKL/SourceList.cmake)
 
 set(EbsdLib_SRCS 
     ${EbsdLib_SOURCE_DIR}/H5EbsdVolumeInfo.cpp
+    ${EbsdLib_SOURCE_DIR}/AbstractEbsdFields.cpp
 )
 set(EbsdLib_HDRS
+    ${EbsdLib_SOURCE_DIR}/AbstractEbsdFields.h
     ${EbsdLib_SOURCE_DIR}/H5EbsdVolumeInfo.h
     ${EbsdLib_SOURCE_DIR}/EbsdHeaderEntry.h
     ${EbsdLib_SOURCE_DIR}/EbsdLibDLLExport.h
