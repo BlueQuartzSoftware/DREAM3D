@@ -47,6 +47,12 @@ class EbsdLib_EXPORT AngFields : public AbstractEbsdFields
   public:
     AngFields();
     virtual ~AngFields();
+
+    virtual std::vector<std::string> getFieldNames();
+
+  private:
+    AngFields(const AngFields&); // Copy Constructor Not Implemented
+    void operator=(const AngFields&); // Operator '=' Not Implemented
 };
 
 #endif /* ANGFIELDS_H_ */
