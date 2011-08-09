@@ -17,6 +17,10 @@ else()
 endif(QT4_FOUND)
 
 add_definitions(-DDREAM3D_USE_QT)
+if (MSVC)   # Do not generate manifests for the plugins - caused issues loading plugins
+  set(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} /MANIFEST:NO")
+endif()
+
 include_directories(${PROJECT_SOURCE_DIR} ${PROJECT_BINARY_DIR} ${PROJECT_SOURCE_DIR}/..)
 include_directories(${PROJECT_CODE_DIR} )
 include_directories(${PROJECT_CODE_DIR}/QtSupport )
