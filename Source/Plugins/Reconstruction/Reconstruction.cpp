@@ -113,13 +113,17 @@ void Reconstruction::execute()
   {
     H5EbsdVolumeInfo::Pointer volumeInfoReader = H5EbsdVolumeInfo::New();
     volumeInfoReader->setFilename(m_H5AngFile);
-    volumeInfoReader->getDimsAndResolution(m->xpoints, m->ypoints, m->zpoints, m->resx, m->resy, m->resz);
     err = volumeInfoReader->readVolumeInfo();
     if (err < 0)
     {
       updateProgressAndMessage("Error reading Volume Information from File.", 100);
       return;
     }
+    volumeInfoReader->getDimsAndResolution(m->xpoints, m->ypoints, m->zpoints, m->resx, m->resy, m->resz);
+    //Now Calculate our "subvolume" of slices, ie, those start and end values that the user selected from the GUI
+    // The GUI code has already added 1 to the end index so nothing special needs to be done
+    // for this calculation
+    m->zpoints = getZEndIndex() - getZStartIndex();
     manufacturer = volumeInfoReader->getManufacturer();
     volumeInfoReader = H5EbsdVolumeInfo::NullPointer();
   }
@@ -171,6 +175,8 @@ void Reconstruction::execute()
   START_CLOCK()
 
   updateProgressAndMessage(("Loading Slices"), 4);
+  ebsdReader->setSliceStart(m_ZStartIndex);
+  ebsdReader->setSliceEnd(m_ZEndIndex);
   err = ebsdReader->loadData(m.get());
   CHECK_FOR_ERROR(ReconstructionFunc, "Reconstruction was canceled", err)
 

@@ -209,12 +209,13 @@ int H5AngVolumeReader::loadData(ReconstructionFunc* m)
   int ystartspot;
 
   err = readVolumeInfo();
-
-  for (int slice = 0; slice < m->zpoints; ++slice)
+  int sliceStart = getSliceStart();
+  int sliceEnd = getSliceEnd();
+  for (int slice = sliceStart; slice < sliceEnd; ++slice)
   {
     H5AngReader::Pointer reader = H5AngReader::New();
     reader->setFileName(getFilename());
-    reader->setHDF5Path(StringUtils::numToString(slice + getZStart() ) );
+    reader->setHDF5Path(StringUtils::numToString(slice) );
     reader->setUserOrigin(getOrientation());
 
     err = reader->readFile();
