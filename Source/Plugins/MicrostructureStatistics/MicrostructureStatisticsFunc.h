@@ -115,6 +115,12 @@ class MicrostructureStatisticsFunc
     float sizex;
     float sizey;
     float sizez;
+    float cropminx;
+    float cropminy;
+    float cropminz;
+    float cropmaxx;
+    float cropmaxy;
+    float cropmaxz;
 
     int xpoints;
     int ypoints;
