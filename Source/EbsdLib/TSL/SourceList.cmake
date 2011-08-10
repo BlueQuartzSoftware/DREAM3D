@@ -16,7 +16,8 @@ set (TSL_SRCS
     ${EbsdLib_SOURCE_DIR}/TSL/AngDirectoryPatterns.cpp
     ${EbsdLib_SOURCE_DIR}/TSL/AngReader.cpp
     ${EbsdLib_SOURCE_DIR}/TSL/AngPhase.cpp
- )
+    ${EbsdLib_SOURCE_DIR}/TSL/AngFields.cpp
+    )
  
 set (TSL_HDRS
     ${EbsdLib_SOURCE_DIR}/TSL/AngConstants.h
@@ -24,6 +25,7 @@ set (TSL_HDRS
     ${EbsdLib_SOURCE_DIR}/TSL/AngHeaderEntry.h
     ${EbsdLib_SOURCE_DIR}/TSL/AngReader.h
     ${EbsdLib_SOURCE_DIR}/TSL/AngPhase.h
+    ${EbsdLib_SOURCE_DIR}/TSL/AngFields.h
 )
 
 if (EbsdLib_ENABLE_HDF5)
