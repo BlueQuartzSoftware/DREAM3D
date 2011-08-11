@@ -21,10 +21,15 @@ if (MSVC)   # Do not generate manifests for the plugins - caused issues loading 
   set(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} /MANIFEST:NO")
 endif()
 
-include_directories(${PROJECT_SOURCE_DIR} ${PROJECT_BINARY_DIR} ${PROJECT_SOURCE_DIR}/..)
-include_directories(${PROJECT_CODE_DIR} )
-include_directories(${PROJECT_CODE_DIR}/QtSupport )
-include_directories(${DREAM3D_BINARY_DIR}/QtSupport)
+include_directories(${PROJECT_SOURCE_DIR} 
+                    ${PROJECT_BINARY_DIR}
+                    ${PROJECT_SOURCE_DIR}/..
+                    ${PROJECT_SOURCE_DIR}/UI
+                    ${PROJECT_CODE_DIR}
+                    ${PROJECT_CODE_DIR}/QtSupport
+                    ${DREAM3D_BINARY_DIR}/QtSupport
+)
+
 
 set(CLASS_NAME "Reconstruction")
 SET(ORIGINAL_FILE ${PROJECT_CODE_DIR}/QtSupport/QAbstractPipelineWrapper.h.in)
@@ -37,12 +42,14 @@ set (ReconstructionPlugin_UI_HDRS
     ${PROJECT_SOURCE_DIR}/UI/ReconstructionPlugin.h
     ${PROJECT_SOURCE_DIR}/UI/ReconstructionWidget.h
     ${PROJECT_CODE_DIR}/QtSupport/AIMPluginFrame.h
+    ${PROJECT_SOURCE_DIR}/UI/QQualityMetricWidget.h
     )
     
 set (ReconstructionPlugin_UI_SRCS 
     ${PROJECT_SOURCE_DIR}/UI/ReconstructionPlugin.cpp
     ${PROJECT_SOURCE_DIR}/UI/ReconstructionWidget.cpp
     ${PROJECT_CODE_DIR}/QtSupport/AIMPluginFrame.cpp
+    ${PROJECT_SOURCE_DIR}/UI/QQualityMetricWidget.cpp
     )
 
 # -- Run MOC and UIC on the necessary files   
