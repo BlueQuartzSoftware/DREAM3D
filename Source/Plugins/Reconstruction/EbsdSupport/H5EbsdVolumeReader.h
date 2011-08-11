@@ -61,8 +61,20 @@ class H5EbsdVolumeReader : public H5EbsdVolumeInfo
 
     EBSD_INSTANCE_PROPERTY(bool, Cancel)
 
-    EBSD_INSTANCE_PROPERTY(Ebsd::Orientation, Orientation)
+    EBSD_INSTANCE_PROPERTY(Ebsd::Orientation, Orientation);
+
+    /**
+     * @brief This is the actual starting slice that the user wants to start
+     * from which may be different from the "ZStartIndex" which is saved in the
+     * HDF5 file.
+     */
     EBSD_INSTANCE_PROPERTY(int, SliceStart);
+
+    /**
+     * @brief This is the actual ending slice that the user wants to start
+     * from which may be different from the "ZEndIndex" which is saved in the
+     * HDF5 file.
+     */
     EBSD_INSTANCE_PROPERTY(int, SliceEnd);
 
 
