@@ -182,10 +182,10 @@ hid_t H5Utilities::openHDF5Object(hid_t loc_id, const std::string &objName)
 
   switch (obj_type) {
     case H5G_GROUP:
-      obj_id = H5Gopen(loc_id, objName.c_str());
+      obj_id = H5Gopen(loc_id, objName.c_str(), H5P_DEFAULT);
       break;
     case H5G_DATASET:
-      obj_id = H5Dopen(loc_id, objName.c_str());
+      obj_id = H5Dopen(loc_id, objName.c_str(), H5P_DEFAULT);
       break;
     default:
       std::cout << "Unknonwn HDF Type: " << obj_type << std::endl;
@@ -320,11 +320,11 @@ hid_t H5Utilities::createGroup(hid_t loc_id, const std::string &group)
 //  std::cout << "H5Gget_objinfo = " << err << " for " << group << std::endl;
   if (err == 0)
   {
-    grp_id = H5Gopen(loc_id, group.c_str());
+    grp_id = H5Gopen(loc_id, group.c_str(), H5P_DEFAULT);
   }
   else
   {
-    grp_id = H5Gcreate(loc_id, group.c_str(), 0);
+    grp_id = H5Gcreate(loc_id, group.c_str(), H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
   }
   // Turn the HDF Error handlers back on
   HDF_ERROR_HANDLER_ON

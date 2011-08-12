@@ -92,7 +92,7 @@ int H5AngReader::readFile()
     return -1;
   }
 
-  hid_t gid = H5Gopen(fileId, m_HDF5Path.c_str());
+  hid_t gid = H5Gopen(fileId, m_HDF5Path.c_str(), H5P_DEFAULT);
   if (gid < 0)
   {
     std::cout << "H5AngReader Error: Could not open path '" << m_HDF5Path << "'" << std::endl;
@@ -222,7 +222,7 @@ int H5AngReader::readFile()
 int H5AngReader::readHeader(hid_t parId)
 {
   int err = -1;
-  hid_t gid = H5Gopen(parId, Ebsd::H5::Header.c_str());
+  hid_t gid = H5Gopen(parId, Ebsd::H5::Header.c_str(), H5P_DEFAULT);
   if (gid < 0)
   {
     std::cout << "H5AngReader Error: Could not open 'Header' Group" << std::endl;
@@ -245,7 +245,7 @@ int H5AngReader::readHeader(hid_t parId)
   READ_ANG_HEADER_STRING_DATA(AngStringHeaderEntry, std::string, SampleID, Ebsd::Ang::SampleId)
   READ_ANG_HEADER_STRING_DATA(AngStringHeaderEntry, std::string, ScanID, Ebsd::Ang::ScanId)
 
-  hid_t phasesGid = H5Gopen(gid, Ebsd::H5::Phases.c_str());
+  hid_t phasesGid = H5Gopen(gid, Ebsd::H5::Phases.c_str(), H5P_DEFAULT);
   if (phasesGid < 0)
   {
     std::cout << "H5AngReader Error: Could not open Header/Phases HDF Group. Is this an older file?" << std::endl;
@@ -265,7 +265,7 @@ int H5AngReader::readHeader(hid_t parId)
   m_Phases.clear();
   for (std::list<std::string>::iterator phaseGroupName = names.begin(); phaseGroupName != names.end(); ++phaseGroupName )
   {
-    hid_t pid = H5Gopen(phasesGid, (*phaseGroupName).c_str());
+    hid_t pid = H5Gopen(phasesGid, (*phaseGroupName).c_str(), H5P_DEFAULT);
     m_CurrentPhase = AngPhase::New();
     READ_PHASE_HEADER_DATA(pid, int, Ebsd::Ang::Phase, PhaseIndex, m_CurrentPhase)
     READ_PHASE_STRING_DATA(pid, Ebsd::Ang::MaterialName, MaterialName, m_CurrentPhase)
@@ -276,7 +276,7 @@ int H5AngReader::readHeader(hid_t parId)
     READ_PHASE_HEADER_DATA(pid, int, Ebsd::Ang::NumberFamilies, NumberFamilies, m_CurrentPhase)
 
     if (m_CurrentPhase->getNumberFamilies() > 0) {
-      hid_t hklGid = H5Gopen(pid, Ebsd::Ang::HKLFamilies.c_str());
+      hid_t hklGid = H5Gopen(pid, Ebsd::Ang::HKLFamilies.c_str(), H5P_DEFAULT);
     // Only read the HKL Families if they are there. Trying to open the group will tell us if there
     // are any families to read
 
@@ -311,7 +311,7 @@ int H5AngReader::readHKLFamilies(hid_t hklGid, AngPhase::Pointer phase)
   {
     std::string dsetName = StringUtils::numToString(i);
 
-    dataset = H5Dopen(hklGid, dsetName.c_str());
+    dataset = H5Dopen(hklGid, dsetName.c_str(), H5P_DEFAULT);
 
     memtype = H5Tcreate (H5T_COMPOUND, sizeof (HKLFamily_t));
     status = H5Tinsert(memtype, "H", HOFFSET (HKLFamily_t, h), H5T_NATIVE_INT);
@@ -401,7 +401,7 @@ int H5AngReader::readData(hid_t parId)
   size_t totalDataRows = nRows * nEvenCols;
  // int counter = 0;
 
-  hid_t gid = H5Gopen(parId, Ebsd::H5::Data.c_str());
+  hid_t gid = H5Gopen(parId, Ebsd::H5::Data.c_str(), H5P_DEFAULT);
   if (gid < 0)
   {
     std::cout << "H5AngReader Error: Could not open 'Data' Group" << std::endl;

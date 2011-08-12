@@ -84,7 +84,7 @@ std::vector<CtfPhase::Pointer> H5CtfVolumeReader::getPhases()
   herr_t err = 0;
 
 
-  hid_t gid = H5Gopen(fileId, index.c_str());
+  hid_t gid = H5Gopen(fileId, index.c_str(), H5P_DEFAULT);
   H5CtfReader::Pointer reader = H5CtfReader::New();
   reader->setHDF5Path(index);
   err = reader->readHeader(gid);
