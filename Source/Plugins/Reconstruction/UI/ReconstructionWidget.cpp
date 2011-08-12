@@ -450,13 +450,11 @@ void ReconstructionWidget::on_m_H5InputFile_textChanged(const QString &text)
 // -----------------------------------------------------------------------------
 void ReconstructionWidget::on_addQualityMetric_clicked()
 {
-  std::cout << "on_addQualityMetric_clicked" << std::endl;
+  if (!m_QualityMetricTableModel->insertRow(m_QualityMetricTableModel->rowCount())) return;
 
-    if (!m_QualityMetricTableModel->insertRow(m_QualityMetricTableModel->rowCount())) return;
-
-    QModelIndex index = m_QualityMetricTableModel->index(m_QualityMetricTableModel->rowCount() - 1, 0);
-    m_QualityMetricTableView->setCurrentIndex(index);
-    m_QualityMetricTableView->resizeColumnsToContents();
+  QModelIndex index = m_QualityMetricTableModel->index(m_QualityMetricTableModel->rowCount() - 1, 0);
+  m_QualityMetricTableView->setCurrentIndex(index);
+  m_QualityMetricTableView->resizeColumnsToContents();
 }
 
 // -----------------------------------------------------------------------------
@@ -465,6 +463,15 @@ void ReconstructionWidget::on_addQualityMetric_clicked()
 void ReconstructionWidget::on_removeQualityMetric_clicked()
 {
   std::cout << "on_removeQualityMetric_clicked" << std::endl;
+  QItemSelectionModel *selectionModel = m_QualityMetricTableView->selectionModel();
+  if (!selectionModel->hasSelection()) return;
+  QModelIndex index = selectionModel->currentIndex();
+  if (!index.isValid()) return;
+  m_QualityMetricTableModel->removeRow(index.row(), index.parent());
+  if (m_QualityMetricTableModel->rowCount() > 0)
+  {
+    m_QualityMetricTableView->resizeColumnsToContents();
+  }
 }
 
 

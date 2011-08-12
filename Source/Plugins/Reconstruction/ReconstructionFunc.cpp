@@ -570,7 +570,7 @@ void ReconstructionFunc::align_sections()
   float n1, n2, n3;
   float q1[5];
   float q2[5];
-  //float refci, curci, refiq, curiq;
+  float refci, curci, refiq, curiq;
   float refxcentroid, refycentroid;
   float curxcentroid, curycentroid;
   int refgnum, curgnum;
