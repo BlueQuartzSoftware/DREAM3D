@@ -40,7 +40,8 @@
 #include "EbsdLib/HKL/CtfPhase.h"
 
 //-- Reconstruction/EbsdSupport Includes
-#include "H5EbsdVolumeReader.h"
+#include "Reconstruction/EbsdSupport/H5EbsdVolumeReader.h"
+#include "Reconstruction/QualityMetricFilter.h"
 
 /**
  * @class H5CtfVolumeReader H5CtfVolumeReader.h Reconstruction/EbsdSupport/H5CtfVolumeReader.h
@@ -57,7 +58,7 @@ class H5CtfVolumeReader : public H5EbsdVolumeReader
 
     virtual ~H5CtfVolumeReader();
 
-    int loadData(ReconstructionFunc* m);
+    int loadData(ReconstructionFunc* m, std::vector<QualityMetricFilter::Pointer> filters);
 
     std::vector<CtfPhase::Pointer> getPhases();
 

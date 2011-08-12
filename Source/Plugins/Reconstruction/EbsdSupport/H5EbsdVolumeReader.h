@@ -29,14 +29,18 @@
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _AbstractAngReader_h_
-#define _AbstractAngReader_h_
+#ifndef _H5EBSDVOLUMEREADER_H_
+#define _H5EBSDVOLUMEREADER_H_
+
+#include <vector>
+
 
 #include "EbsdLib/EbsdSetGetMacros.h"
 #include "EbsdLib/EbsdLibConfiguration.h"
 #include "EbsdLib/EbsdConstants.h"
 #include "EbsdLib/H5EbsdVolumeInfo.h"
 
+#include "Reconstruction/QualityMetricFilter.h"
 
 
 class ReconstructionFunc;
@@ -83,8 +87,12 @@ class H5EbsdVolumeReader : public H5EbsdVolumeInfo
      * source (files, streams, etc) into the Reconstruction Module data structures.
      * @param m
      */
-    virtual int loadData(ReconstructionFunc* m);
+    virtual int loadData(ReconstructionFunc* m, std::vector<QualityMetricFilter::Pointer> filters);
 
+    virtual AIMArray<bool>::Pointer determinGoodVoxels( std::vector<QualityMetricFilter::Pointer> filters,
+                                    std::vector<void*> dataPointers,
+                                    size_t nPoints,
+                                    std::vector<Ebsd::NumType> dTypes);
 
   protected:
     H5EbsdVolumeReader();
@@ -97,4 +105,4 @@ class H5EbsdVolumeReader : public H5EbsdVolumeInfo
 
 
 
-#endif /* _AbstractAngReader_h_  */
+#endif /* _H5EBSDVOLUMEREADER_H_  */

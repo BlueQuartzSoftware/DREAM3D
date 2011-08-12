@@ -46,6 +46,8 @@
 #include <QtGui/QCloseEvent>
 #include <QtGui/QMessageBox>
 #include <QtGui/QListWidget>
+#include <QtGui/QMessageBox>
+#include <QtGui/QAbstractItemDelegate>
 
 #include "DREAM3D/Common/Constants.h"
 #include "DREAM3D/Common/PhaseType.h"
@@ -62,6 +64,12 @@
 #include "Reconstruction/EbsdSupport/H5EbsdVolumeReader.h"
 #include "Reconstruction/EbsdSupport/H5AngVolumeReader.h"
 #include "Reconstruction/EbsdSupport/H5CtfVolumeReader.h"
+
+#include "Reconstruction/UI/AngFilterFields.h"
+#include "Reconstruction/UI/CtfFilterFields.h"
+#include "Reconstruction/UI/QualityMetricTableModel.h"
+#include "Reconstruction/QualityMetricFilter.h"
+
 
 // -----------------------------------------------------------------------------
 //
@@ -121,10 +129,8 @@ void ReconstructionWidget::readSettings(QSettings &prefs)
   READ_COMBO_BOX(prefs, m_, AlignMeth)
   READ_COMBO_BOX(prefs, m_, Orientation)
 
-  READ_SETTING(prefs, m_, MinImageQuality, ok, d, 50.0 , Double);
   READ_SETTING(prefs, m_, MisOrientationTolerance, ok, d, 5.0 , Double);
   READ_SETTING(prefs, m_, MinAllowedGrainSize, ok, i, 8 , Int);
-  READ_SETTING(prefs, m_, MinConfidence, ok, d, 0.1 , Double);
   READ_SETTING(prefs, m_, DownSampleFactor, ok, d, 1.0 , Double);
 
   READ_BOOL_SETTING(prefs, m_, WritePhaseIdScalars, true);
@@ -163,9 +169,7 @@ void ReconstructionWidget::writeSettings(QSettings &prefs)
   WRITE_CHECKBOX_SETTING(prefs, m_, FillinSample)
 
   WRITE_SETTING(prefs, m_, MinAllowedGrainSize)
-  WRITE_SETTING(prefs, m_, MinConfidence)
   WRITE_SETTING(prefs, m_, DownSampleFactor)
-  WRITE_SETTING(prefs, m_, MinImageQuality)
   WRITE_SETTING(prefs, m_, MisOrientationTolerance)
   WRITE_COMBO_BOX(prefs, m_, AlignMeth)
   WRITE_COMBO_BOX(prefs, m_, Orientation)
@@ -222,11 +226,13 @@ void ReconstructionWidget::setupGui()
   m_WidgetList << m_H5InputFile << m_OutputDir << m_OutputDirBtn << m_OutputFilePrefix;
   m_WidgetList << m_ZStartIndex << m_ZEndIndex;
   m_WidgetList << m_MergeTwins << m_MergeColonies << m_FillinSample << m_AlignMeth << m_Orientation;
-  m_WidgetList << m_MinAllowedGrainSize << m_MinConfidence << m_DownSampleFactor << m_MisOrientationTolerance;
+  m_WidgetList << m_MinAllowedGrainSize << m_DownSampleFactor << m_MisOrientationTolerance;
   m_WidgetList << m_VisualizationVizFile << m_DownSampledVizFile;
-  m_WidgetList << m_MinImageQuality << m_H5VoxelFile << m_VtkOptionsBtn;
+  m_WidgetList << m_H5VoxelFile << m_VtkOptionsBtn;
   m_WidgetList << m_HDF5GrainFile << m_PhFile << m_DxFile;
   m_WidgetList << m_LoadSettingsBtn << m_SaveSettingsBtn << phaseTypeList;
+
+  m_QualityMetricTableModel = new QualityMetricTableModel;
 
 }
 
@@ -338,7 +344,7 @@ void ReconstructionWidget::on_m_H5InputFile_textChanged(const QString &text)
     QString outPath = fi.absolutePath() + QDir::separator() + fi.baseName() + "_Reconstruction";
     outPath = QDir::toNativeSeparators(outPath);
     m_OutputDir->setText(outPath);
-  } 
+  }
 
   QFileInfo fi(m_H5InputFile->text());
   if (fi.exists() && fi.isFile())
@@ -361,7 +367,7 @@ void ReconstructionWidget::on_m_H5InputFile_textChanged(const QString &text)
 
     // Remove all the items
     phaseTypeList->clear();
-
+    // Now iterate over all the phases creating the proper UI elements
     for (int i = 0; i < size; i++)
     {
 
@@ -389,6 +395,7 @@ void ReconstructionWidget::on_m_H5InputFile_textChanged(const QString &text)
     int zStart = 0;
     int zEnd = 0;
 
+    // Read these values from the h5ebsd file in order to put something in the fields.
     zStart = h5Reader->getZStart();
     zEnd = h5Reader->getZEnd();
     err = h5Reader->getResolution(xres, yres, zres);
@@ -406,20 +413,59 @@ void ReconstructionWidget::on_m_H5InputFile_textChanged(const QString &text)
       m_YRes->setText(QString::number(yres));
       m_ZRes->setText(QString::number(zres));
     }
+
+    // Cache the Manufacturer from the File
+    m_EbsdManufacturer = QString::fromStdString(h5Reader->getManufacturer());
+
+    // Setup the TableModel with the list of Possible Fields
+    QAbstractItemModel* model = m_QualityMetricTableView->model();
+    m_QualityMetricTableView->setModel(m_QualityMetricTableModel);
+    delete model; // Clean up this memory
+
+    // Get the list of Fields based on the Manufacturer
+    if (m_EbsdManufacturer.compare(QString(Ebsd::Ang::Manufacturer.c_str())) == 0)
+    {
+      AngFilterFields fields;
+      m_QualityMetricTableModel->setPossibleFields(fields.getFieldNames());
+
+    }
+    else if (m_EbsdManufacturer.compare(QString(Ebsd::Ctf::Manufacturer.c_str())) == 0)
+    {
+      CtfFilterFields fields;
+      m_QualityMetricTableModel->setPossibleFields(fields.getFieldNames());
+    }
+    // Set the ItemDelegate for the table.
+    QAbstractItemDelegate* aid = m_QualityMetricTableModel->getItemDelegate();
+    m_QualityMetricTableView->setItemDelegate(aid);
+  }
+  // Make sure at least 1 Quality Metric is available.
+  if (m_QualityMetricTableModel->rowCount() < 1)
+  {
+    on_addQualityMetric_clicked();
   }
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-//void ReconstructionWidget::on_m_AlreadyFormed_stateChanged(int currentState)
-//{
-//  QString absPath = m_OutputDir->text() + QDir::separator() + AIM::Reconstruction::VisualizationVizFile.c_str();
-//  absPath = QDir::toNativeSeparators(absPath);
-//  QFileInfo fi (absPath);
-//  QString msg ("All files will be over written that appear in the output directory.");
-//}
+void ReconstructionWidget::on_addQualityMetric_clicked()
+{
+  std::cout << "on_addQualityMetric_clicked" << std::endl;
 
+    if (!m_QualityMetricTableModel->insertRow(m_QualityMetricTableModel->rowCount())) return;
+
+    QModelIndex index = m_QualityMetricTableModel->index(m_QualityMetricTableModel->rowCount() - 1, 0);
+    m_QualityMetricTableView->setCurrentIndex(index);
+    m_QualityMetricTableView->resizeColumnsToContents();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ReconstructionWidget::on_removeQualityMetric_clicked()
+{
+  std::cout << "on_removeQualityMetric_clicked" << std::endl;
+}
 
 
 // -----------------------------------------------------------------------------
@@ -536,8 +582,17 @@ void ReconstructionWidget::on_m_GoBtn_clicked()
     return;
   }
 
+  // Make sure there is at least 1 Quality Metric Filters setup
+  int qualMetricCount = m_QualityMetricTableModel->rowCount();
+  if (qualMetricCount < 1) {
+    QMessageBox::critical(this, tr("DREAM.3D"),
+      tr("You must add at least 1 Quality Metric"),
+      QMessageBox::Ok,
+      QMessageBox::Ok);
+      return;
+  }
 
-
+  // Make sure we have an output directory setup
   if (false == sanityCheckOutputDirectory(m_OutputDir, QString("Reconstruction")) )
   {
     return;
@@ -596,13 +651,10 @@ void ReconstructionWidget::on_m_GoBtn_clicked()
 
   m_Reconstruction->setMinAllowedGrainSize(m_MinAllowedGrainSize->value());
   m_Reconstruction->setMisorientationTolerance(m_MisOrientationTolerance->value());
-  m_Reconstruction->setMinSeedImageQuality(m_MinImageQuality->value());
-  m_Reconstruction->setMinSeedConfidence(m_MinConfidence->value());
   m_Reconstruction->setDownSampleFactor(m_DownSampleFactor->value());
 
   m_Reconstruction->setOutputDirectory(QDir::toNativeSeparators(m_OutputDir->text()).toStdString());
   m_Reconstruction->setOutputFilePrefix(m_OutputFilePrefix->text().toStdString());
-
 
   m_Reconstruction->setWriteVtkFile(m_VisualizationVizFile->isChecked());
   m_Reconstruction->setWritePhaseId(m_WritePhaseIdScalars);
@@ -614,6 +666,10 @@ void ReconstructionWidget::on_m_GoBtn_clicked()
   m_Reconstruction->setWriteHDF5GrainFile(m_HDF5GrainFile->isChecked());
   m_Reconstruction->setWriteDxFile(m_DxFile->isChecked());
   m_Reconstruction->setWritePhFile(m_PhFile->isChecked());
+
+  setupQualityMetricFilters(m_Reconstruction);
+
+
 
   // m_Reconstruction->printSettings(std::cout);
 
@@ -653,6 +709,32 @@ void ReconstructionWidget::on_m_GoBtn_clicked()
   m_WorkerThread->start();
   m_GoBtn->setText("Cancel");
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ReconstructionWidget::setupQualityMetricFilters(QReconstruction* r)
+{
+  int filterCount = m_QualityMetricTableModel->rowCount();
+  std::vector<QualityMetricFilter::Pointer> filters;
+  QVector<QString> fieldNames;
+  QVector<float> fieldValues;
+  QVector<QString> fieldOperators;
+  m_QualityMetricTableModel->setTableData(fieldNames, fieldValues, fieldOperators);
+
+  for(int i = 0; i < filterCount; ++i)
+  {
+    QualityMetricFilter::Pointer filter = QualityMetricFilter::New();
+    filter->setFieldName(fieldNames[i].toStdString());
+    filter->setFieldValue(fieldValues[i]);
+    filter->setFieldOperator(fieldOperators[i].toStdString());
+    filters.push_back(filter);
+  }
+
+  r->setQualityMetricFilters(filters);
+
+}
+
 
 // -----------------------------------------------------------------------------
 //

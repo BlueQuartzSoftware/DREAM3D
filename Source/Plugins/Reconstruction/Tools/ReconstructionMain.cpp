@@ -160,8 +160,8 @@ int main(int argc, char **argv)
 
     m_Reconstruction->setMinAllowedGrainSize(MinAllowedGrainSize.getValue());
     m_Reconstruction->setMisorientationTolerance(MisOrientationTolerance.getValue());
-    m_Reconstruction->setMinSeedImageQuality(MinImageQuality.getValue());
-    m_Reconstruction->setMinSeedConfidence(MinConfidence.getValue());
+//    m_Reconstruction->setMinSeedImageQuality(MinImageQuality.getValue());
+//    m_Reconstruction->setMinSeedConfidence(MinConfidence.getValue());
     m_Reconstruction->setDownSampleFactor(DownSampleFactor.getValue());
     //m_Reconstruction->setSizeBinStepSize(BinStepSize.getValue());
 
