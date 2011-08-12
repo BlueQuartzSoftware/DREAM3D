@@ -42,14 +42,12 @@ set (ReconstructionPlugin_UI_HDRS
     ${PROJECT_SOURCE_DIR}/UI/ReconstructionPlugin.h
     ${PROJECT_SOURCE_DIR}/UI/ReconstructionWidget.h
     ${PROJECT_CODE_DIR}/QtSupport/AIMPluginFrame.h
-    ${PROJECT_SOURCE_DIR}/UI/QQualityMetricWidget.h
     )
     
 set (ReconstructionPlugin_UI_SRCS 
     ${PROJECT_SOURCE_DIR}/UI/ReconstructionPlugin.cpp
     ${PROJECT_SOURCE_DIR}/UI/ReconstructionWidget.cpp
     ${PROJECT_CODE_DIR}/QtSupport/AIMPluginFrame.cpp
-    ${PROJECT_SOURCE_DIR}/UI/QQualityMetricWidget.cpp
     )
 
 # -- Run MOC and UIC on the necessary files   
