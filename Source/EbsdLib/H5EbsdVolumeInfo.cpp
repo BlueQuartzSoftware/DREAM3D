@@ -126,13 +126,13 @@ int H5EbsdVolumeInfo::readVolumeInfo()
   // DO NOT Use the accessor methods below to get variables. Directly access them otherwise you
   // will cause an infinite recursion to occur.
   std::string index = StringUtils::numToString(m_ZStart);
-  hid_t gid = H5Gopen(fileId, index.c_str());
+  hid_t gid = H5Gopen(fileId, index.c_str(), H5P_DEFAULT);
   if (gid > 0)
   {
-    hid_t headerId = H5Gopen(gid, Ebsd::H5::Header.c_str());
+    hid_t headerId = H5Gopen(gid, Ebsd::H5::Header.c_str(), H5P_DEFAULT);
     if (headerId > 0)
     {
-      hid_t phasesGid = H5Gopen(headerId, Ebsd::H5::Phases.c_str());
+      hid_t phasesGid = H5Gopen(headerId, Ebsd::H5::Phases.c_str(), H5P_DEFAULT);
       if (phasesGid > 0)
       {
         std::list<std::string> names;

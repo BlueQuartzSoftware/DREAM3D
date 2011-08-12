@@ -1,6 +1,6 @@
 
 var downloadcreator={
-    curVersion: '@DREAM3D_VERSION@',
+    curVersion: 'DREAM3D-@DREAM3D_VERSION@',
 
     dotask:function(target, functionref, tasktype){ //assign a function to execute to an event handler (ie: onunload)                                                   
     var tasktype=(window.addEventListener)? tasktype : "on"+tasktype
