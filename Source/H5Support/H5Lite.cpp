@@ -133,21 +133,21 @@ void H5Lite::disableErrorHandlers()
 // -----------------------------------------------------------------------------
 //  Opens an ID for HDF5 operations
 // -----------------------------------------------------------------------------
-herr_t H5Lite::openId( hid_t loc_id, const std::string& obj_name, int32_t obj_type)
+herr_t H5Lite::openId( hid_t loc_id, const std::string& obj_name, H5O_type_t obj_type)
 {
 
  hid_t   obj_id = -1;
 
  switch ( obj_type )
  {
-  case H5G_DATASET:
+  case H5O_TYPE_DATASET:
 
     /* Open the dataset. */
     if ( (obj_id = H5Dopen( loc_id, obj_name.c_str(), H5P_DEFAULT )) < 0 )
      return -1;
     break;
 
-   case H5G_GROUP:
+   case H5O_TYPE_GROUP:
 
     /* Open the group. */
     if ( (obj_id = H5Gopen( loc_id, obj_name.c_str(), H5P_DEFAULT )) < 0 )
@@ -170,13 +170,13 @@ herr_t H5Lite::closeId( hid_t obj_id, int32_t obj_type )
 {
  switch ( obj_type )
  {
-  case H5G_DATASET:
+  case H5O_TYPE_DATASET:
    /* Close the dataset. */
    if ( H5Dclose( obj_id ) < 0 )
     return -1;
    break;
 
-  case H5G_GROUP:
+  case H5O_TYPE_GROUP:
   /* Close the group. */
    if ( H5Gclose( obj_id ) < 0 )
     return -1;
@@ -207,15 +207,15 @@ herr_t H5Lite::findAttribute( hid_t loc_id, const std::string& attrName )
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-herr_t H5Lite::findDataset( hid_t loc_id, const std::string& dsetName )
-{
-
- herr_t  ret = 0;
-
- ret = H5Giterate( loc_id, ".", 0, find_dataset, (void*)(dsetName.c_str() ) );
-
- return ret;
-}
+//herr_t H5Lite::findDataset( hid_t loc_id, const std::string& dsetName )
+//{
+//
+// herr_t  ret = 0;
+//
+// ret = H5Giterate( loc_id, ".", 0, find_dataset, (void*)(dsetName.c_str() ) );
+//
+// return ret;
+//}
 
 // -----------------------------------------------------------------------------
 //  We assume a null terminated string
@@ -360,13 +360,13 @@ herr_t  H5Lite::writeStringAttribute(hid_t loc_id,
    hid_t      attr_id;
    hid_t      obj_id;
    int32_t      has_attr;
-   H5G_stat_t statbuf;
+   H5O_info_t statbuf;
    size_t     attr_size;
    herr_t     err = 0;
    herr_t     retErr = 0;
 
    /* Get the type of object */
-   retErr = H5Gget_objinfo( loc_id, objName.c_str(), 1, &statbuf );
+   retErr = H5Oget_info_by_name(loc_id, objName.c_str(),  &statbuf, H5P_DEFAULT);
    if (retErr >= 0) {
      /* Open the object */
      obj_id = H5Lite::openId( loc_id, objName, statbuf.type );
@@ -519,7 +519,7 @@ herr_t H5Lite::readStringAttribute(hid_t loc_id, const std::string& objName, con
 
  /* identifiers */
  hid_t      obj_id;
- H5G_stat_t statbuf;
+ H5O_info_t statbuf;
  hid_t      attr_id;
  hid_t      attr_type;
  std::vector<char> attr_out;
@@ -530,7 +530,7 @@ herr_t H5Lite::readStringAttribute(hid_t loc_id, const std::string& objName, con
  HDF_ERROR_HANDLER_OFF;
 
   /* Get the type of object */
-  err = H5Gget_objinfo(loc_id, objName.c_str(), 1, &statbuf);
+  err = H5Oget_info_by_name(loc_id, objName.c_str(),  &statbuf, H5P_DEFAULT);
   if (err<0) {
     return err;
   }
@@ -539,7 +539,7 @@ herr_t H5Lite::readStringAttribute(hid_t loc_id, const std::string& objName, con
   obj_id = H5Lite::openId( loc_id, objName, statbuf.type );
   if ( obj_id >= 0)
   {
-    attr_id = H5Aopen_name( obj_id, attrName.c_str() );
+    attr_id = H5Aopen_by_name( loc_id, objName.c_str(), attrName.c_str(), H5P_DEFAULT, H5P_DEFAULT );
     if ( attr_id >= 0 )
     {
       size = H5Aget_storage_size(attr_id);
@@ -587,7 +587,7 @@ herr_t H5Lite::readStringAttribute(hid_t loc_id,
 
  /* identifiers */
  hid_t      obj_id;
- H5G_stat_t statbuf;
+ H5O_info_t statbuf;
  hid_t      attr_id;
  hid_t      attr_type;
  herr_t err = 0;
@@ -596,7 +596,7 @@ herr_t H5Lite::readStringAttribute(hid_t loc_id,
  HDF_ERROR_HANDLER_OFF;
 
   /* Get the type of object */
-  err = H5Gget_objinfo(loc_id, objName.c_str(), 1, &statbuf);
+  err = H5Oget_info_by_name(loc_id, objName.c_str(),  &statbuf, H5P_DEFAULT);
   if (err<0) {
     return err;
   }
@@ -605,7 +605,7 @@ herr_t H5Lite::readStringAttribute(hid_t loc_id,
   obj_id = H5Lite::openId( loc_id, objName, statbuf.type );
   if ( obj_id >= 0)
   {
-    attr_id = H5Aopen_name( obj_id, attrName.c_str() );
+    attr_id = H5Aopen_by_name( loc_id, objName.c_str(), attrName.c_str(), H5P_DEFAULT, H5P_DEFAULT );
     if ( attr_id >= 0 )
     {
       attr_type = H5Aget_type( attr_id );
@@ -687,14 +687,14 @@ herr_t H5Lite::getAttributeNDims(hid_t loc_id,
 {
    /* identifiers */
    hid_t      obj_id;
-   H5G_stat_t statbuf;
+   H5O_info_t statbuf;
    hid_t      attr_id;
    herr_t err = 0;
    herr_t retErr = 0;
    hid_t sid;
    rank = -1;
     /* Get the type of object */
-  err = H5Gget_objinfo(loc_id, objName.c_str(), 1, &statbuf);
+  err = H5Oget_info_by_name(loc_id, objName.c_str(),  &statbuf, H5P_DEFAULT);
   if (err<0) {
     return err;
   }
@@ -702,7 +702,7 @@ herr_t H5Lite::getAttributeNDims(hid_t loc_id,
   obj_id = H5Lite::openId( loc_id, objName, statbuf.type );
   if ( obj_id >= 0)
   {
-    attr_id = H5Aopen_name( obj_id, attrName.c_str() );
+    attr_id = H5Aopen_by_name( loc_id, objName.c_str(), attrName.c_str(), H5P_DEFAULT, H5P_DEFAULT );
     if ( attr_id >= 0 )
     {
       sid = H5Aget_space( attr_id );
@@ -840,7 +840,7 @@ herr_t H5Lite::getAttributeInfo(hid_t loc_id,
 {
    /* identifiers */
    hid_t      obj_id;
-   H5G_stat_t statbuf;
+   H5O_info_t statbuf;
    hid_t      attr_id;
  //  hid_t      tid;
    herr_t err = 0;
@@ -848,7 +848,7 @@ herr_t H5Lite::getAttributeInfo(hid_t loc_id,
    hid_t sid;
    hid_t rank = -1;
 
-  err = H5Gget_objinfo(loc_id, objName.c_str(), 1, &statbuf);
+  err = H5Oget_info_by_name(loc_id, objName.c_str(),  &statbuf, H5P_DEFAULT);
   if (err<0) {
     return err;
   }
@@ -857,7 +857,7 @@ herr_t H5Lite::getAttributeInfo(hid_t loc_id,
   obj_id = H5Lite::openId( loc_id, objName, statbuf.type );
   if ( obj_id >= 0)
   {
-    attr_id = H5Aopen_name( obj_id, attrName.c_str() );
+    attr_id = H5Aopen_by_name( loc_id, objName.c_str(), attrName.c_str(), H5P_DEFAULT, H5P_DEFAULT );
     if ( attr_id >= 0 )
     {
       /* Get an identifier for the datatype. */
@@ -988,7 +988,7 @@ herr_t H5Lite::writeMXAAttribute(hid_t loc_id,
 {
   hid_t      obj_id, sid, attr_id;
    int32_t        has_attr;
-   H5G_stat_t statbuf;
+   H5O_info_t statbuf;
    herr_t err = 0;
    herr_t retErr = 0;
 
@@ -1009,7 +1009,7 @@ herr_t H5Lite::writeMXAAttribute(hid_t loc_id,
    }
 
    /* Get the type of object */
-   if (H5Gget_objinfo(loc_id, objName.c_str(), 1, &statbuf) < 0) {
+   if (H5Oget_info_by_name(loc_id, objName.c_str(),  &statbuf, H5P_DEFAULT) < 0) {
      std::cout << "Error getting object info." << std::endl;
      return -1;
    }
@@ -1210,7 +1210,7 @@ IMXAArray* H5Lite::readMXAAttribute(hid_t loc_id,
 
   /* identifiers */
   hid_t      obj_id;
-  H5G_stat_t statbuf;
+  H5O_info_t statbuf;
   herr_t err = 0;
   herr_t retErr = 0;
   hid_t attr_id;

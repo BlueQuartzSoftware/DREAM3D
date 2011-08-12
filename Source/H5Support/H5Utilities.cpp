@@ -151,9 +151,9 @@ std::string H5Utilities::getObjectPath(hid_t loc_id, bool trim)
 herr_t H5Utilities::getObjectType(hid_t objId, const std::string &objName, int32_t *objType)
 {
   herr_t err=1;
-  H5G_stat_t obj_info;
+  H5O_info_t obj_info;
 
-  err = H5Gget_objinfo(objId, objName.c_str(), 1, &obj_info);
+  err = H5Oget_info_by_name(objId, objName.c_str(),  &obj_info, H5P_DEFAULT);
   if (err < 0) {
     return err;
   }
@@ -181,10 +181,10 @@ hid_t H5Utilities::openHDF5Object(hid_t loc_id, const std::string &objName)
   }
 
   switch (obj_type) {
-    case H5G_GROUP:
+    case H5O_TYPE_GROUP:
       obj_id = H5Gopen(loc_id, objName.c_str(), H5P_DEFAULT);
       break;
-    case H5G_DATASET:
+    case H5O_TYPE_DATASET:
       obj_id = H5Dopen(loc_id, objName.c_str(), H5P_DEFAULT);
       break;
     default:
@@ -267,38 +267,47 @@ herr_t H5Utilities::getGroupObjects(hid_t loc_id, int32_t typeFilter, std::list<
 {
   herr_t err=0;
   hsize_t numObjs = 0;
-
-  err = H5Gget_num_objs(loc_id, &numObjs);
+  H5G_info_t group_info;
+  err = H5Gget_info(loc_id, &group_info);
   if (err < 0) {
     std::cout << "Error getting number of objects for group: "
         << loc_id << std::endl;
     return err;
   }
+  numObjs = group_info.nlinks;
 
   if (numObjs <= 0) {
     return 0; // no objects in group
   }
 
   size_t size=0;
-  int32_t type=-1;
+  H5O_type_t type = H5O_TYPE_NTYPES;
 
-  for (hsize_t i=0; i<numObjs; i++) {
-    size = 1 + H5Gget_objname_by_idx(loc_id, i, NULL, 0);
+  for (hsize_t i=0; i<numObjs; i++)
+  {
+    size = 1 + H5Lget_name_by_idx(loc_id, ".", H5_INDEX_NAME, H5_ITER_INC, i, NULL, 0, H5P_DEFAULT);
+
     std::vector<char> name(size * sizeof(char), 0);
 
-    H5Gget_objname_by_idx(loc_id, i, &(name.front()), size);
-    if (typeFilter == H5Support_ANY) {
+    H5Lget_name_by_idx(loc_id, ".", H5_INDEX_NAME, H5_ITER_INC, i, &(name.front()), size, H5P_DEFAULT);
+    if (typeFilter == H5Support_ANY)
+    {
       std::string objName( &(name.front()) );
       names.push_back(objName);
-    } else {
-      type = H5Gget_objtype_by_idx(loc_id, i);
-      if ( ((type == H5G_GROUP) && (H5Support_GROUP & typeFilter)) ||
-          ((type == H5G_DATASET) && (H5Support_DATASET & typeFilter)) ||
-          ((type == H5G_TYPE) && (H5Support_TYPE & typeFilter)) ||
-          ((type == H5G_LINK) && (H5Support_LINK & typeFilter)) )
+    }
+    else
+    {
+      H5O_info_t object_info;
+      err = H5Oget_info( loc_id, &object_info);
+      if (err > 0)
       {
-        std::string objName( &(name.front()) );
-        names.push_back(objName);
+        type = object_info.type;
+        if ( ((type == H5O_TYPE_GROUP) && (H5Support_GROUP & typeFilter)) ||
+            ((type == H5O_TYPE_DATASET) && (H5Support_DATASET & typeFilter)) )
+        {
+          std::string objName( &(name.front()) );
+          names.push_back(objName);
+        }
       }
     }
   }
@@ -313,10 +322,10 @@ hid_t H5Utilities::createGroup(hid_t loc_id, const std::string &group)
 {
   hid_t grp_id = -1;
   herr_t err = -1;
-
+  H5O_info_t obj_info;
   HDF_ERROR_HANDLER_OFF
 
-  err = H5Gget_objinfo(loc_id, group.c_str(), 0, NULL);
+  err = H5Oget_info_by_name(loc_id, group.c_str(),  &obj_info, H5P_DEFAULT);
 //  std::cout << "H5Gget_objinfo = " << err << " for " << group << std::endl;
   if (err == 0)
   {
@@ -486,11 +495,13 @@ herr_t H5Utilities::getAllAttributeNames(hid_t obj_id,
   int32_t num_attrs;
   hid_t attr_id;
   size_t name_size;
-
-  num_attrs = H5Aget_num_attrs(obj_id);
+  H5O_info_t object_info;
+  err = H5Oget_info(obj_id, &object_info);
+  num_attrs = object_info.num_attrs;
 
   for (int i=0; i<num_attrs; i++) {
-    attr_id = H5Aopen_idx(obj_id, i);
+//    attr_id = H5Aopen_idx(obj_id, i);
+    attr_id = H5Aopen_by_idx(obj_id, ".", H5_INDEX_NAME, H5_ITER_INC, (hsize_t)i, H5P_DEFAULT, H5P_DEFAULT);
     name_size = 1 + H5Aget_name(attr_id, 0, NULL);
     std::vector<char> attr_name(name_size * sizeof(char), 0);
     H5Aget_name(attr_id, name_size, &(attr_name.front() ) );
@@ -785,14 +796,14 @@ herr_t H5Utilities::objectNameAtIndex(hid_t fileId, int32_t idx, std::string &na
 {
   herr_t err = -1;
   // call H5Gget_objname_by_idx with name as NULL to get its length
-  ssize_t name_len = H5Gget_objname_by_idx(fileId, idx, NULL, 0);
+  ssize_t name_len = H5Lget_name_by_idx(fileId, ".", H5_INDEX_NAME, H5_ITER_NATIVE, (hsize_t)idx, NULL, 0, H5P_DEFAULT);
   if(name_len < 0) {
     name.clear();
     return -1;
   }
 
   std::vector<char> buf(name_len + 1, 0);
-  err = H5Gget_objname_by_idx ( fileId, idx, &(buf.front()), name_len + 1 );
+  err = H5Lget_name_by_idx ( fileId, ".", H5_INDEX_NAME, H5_ITER_NATIVE, (hsize_t)idx, &(buf.front()), name_len + 1, H5P_DEFAULT );
   if (err < 0) {
     std::cout << "Error Trying to get the dataset name for index " << idx << std::endl;
     name.clear(); //Make an empty string if this fails
@@ -808,21 +819,21 @@ herr_t H5Utilities::objectNameAtIndex(hid_t fileId, int32_t idx, std::string &na
 bool H5Utilities::isGroup(hid_t nodeId, const std::string &objName)   {
   bool isGroup = true;
   herr_t err = -1;
-  H5G_stat_t statbuf;
-  err = H5Gget_objinfo(nodeId, objName.c_str(), false, &statbuf);
+  H5O_info_t statbuf;
+  err = H5Oget_info_by_name(nodeId, objName.c_str(),  &statbuf, H5P_DEFAULT);
   if (err < 0)
   {
     std::cout << DEBUG_OUT(logTime) << "Error in methd H5Gget_objinfo" << std::endl;
     return false;
   }
   switch (statbuf.type) {
-    case H5G_GROUP:
+    case H5O_TYPE_GROUP:
       isGroup = true;
       break;
-    case H5G_DATASET:
+    case H5O_TYPE_DATASET:
       isGroup = false;
       break;
-    case H5G_TYPE:
+    case H5O_TYPE_NAMED_DATATYPE:
       isGroup = false;
       break;
     default:
