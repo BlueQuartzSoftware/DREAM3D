@@ -38,19 +38,24 @@ configure_file( ${PROJECT_CODE_DIR}/QtSupport/QAbstractPipelineWrapper.h.in
 
 
 set (ReconstructionPlugin_UI_HDRS
-    ${${CLASS_NAME}Plugin_BINARY_DIR}/Q${CLASS_NAME}.h
     ${PROJECT_SOURCE_DIR}/UI/ReconstructionPlugin.h
     ${PROJECT_SOURCE_DIR}/UI/ReconstructionWidget.h
     ${PROJECT_CODE_DIR}/QtSupport/AIMPluginFrame.h
-    ${PROJECT_SOURCE_DIR}/UI/QQualityMetricWidget.h
+    ${PROJECT_SOURCE_DIR}/UI/QualityMetricTableModel.h
+    ${PROJECT_SOURCE_DIR}/UI/QualityMetricItemDelegate.h
     )
     
 set (ReconstructionPlugin_UI_SRCS 
     ${PROJECT_SOURCE_DIR}/UI/ReconstructionPlugin.cpp
     ${PROJECT_SOURCE_DIR}/UI/ReconstructionWidget.cpp
     ${PROJECT_CODE_DIR}/QtSupport/AIMPluginFrame.cpp
-    ${PROJECT_SOURCE_DIR}/UI/QQualityMetricWidget.cpp
+    ${PROJECT_SOURCE_DIR}/UI/QualityMetricTableModel.cpp
     )
+    
+set (ReconstructionPlugin_Misc_HDRS
+    ${PROJECT_SOURCE_DIR}/UI/AngFilterFields.h
+    ${PROJECT_SOURCE_DIR}/UI/CtfFilterFields.h
+)
 
 # -- Run MOC and UIC on the necessary files   
 QT4_ADD_RESOURCES( ReconstructionPlugin_Generated_RC_SRCS ${PROJECT_SOURCE_DIR}/UI/Icons.qrc)    
@@ -58,10 +63,10 @@ QT4_ADD_RESOURCES( ReconstructionPlugin_Generated_RC_SRCS ${PROJECT_SOURCE_DIR}/
 QT4_WRAP_UI( ReconstructionPlugin_Generated_UI_HDRS 
             ${PROJECT_SOURCE_DIR}/UI/ReconstructionWidget.ui )
 
-QT4_WRAP_CPP( ReconstructionPlugin_Generated_MOC_SRCS ${ReconstructionPlugin_UI_HDRS} )
+QT4_WRAP_CPP( ReconstructionPlugin_Generated_MOC_SRCS ${ReconstructionPlugin_UI_HDRS} ${${CLASS_NAME}Plugin_BINARY_DIR}/Q${CLASS_NAME}.h )
 
-cmp_IDE_SOURCE_PROPERTIES("Reconstruction/UI/" "${ReconstructionPlugin_UI_HDRS}" "${ReconstructionPlugin_UI_SRCS}" "0")
-cmp_IDE_SOURCE_PROPERTIES("Generated" "${ReconstructionPlugin_Generated_UI_HDRS};${ReconstructionPlugin_Generated_RC_SRCS}" "${ReconstructionPlugin_Generated_MOC_SRCS}" "0")
+cmp_IDE_SOURCE_PROPERTIES("Reconstruction/UI/" "${ReconstructionPlugin_UI_HDRS};${ReconstructionPlugin_Misc_HDRS}" "${ReconstructionPlugin_UI_SRCS}" "0")
+cmp_IDE_SOURCE_PROPERTIES("Generated" "${ReconstructionPlugin_Generated_UI_HDRS};${ReconstructionPlugin_Generated_RC_SRCS}" "${ReconstructionPlugin_Generated_MOC_SRCS};${${CLASS_NAME}Plugin_BINARY_DIR}/Q${CLASS_NAME}.h" "0")
 
 #-- Non Qt Sources
 SET (Reconstruction_HDRS
