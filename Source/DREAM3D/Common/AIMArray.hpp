@@ -12,6 +12,7 @@
 #define _AIMArray_h_
 
 // STL Includes
+#include <vector>
 #include <sstream>
 #include <fstream>
 

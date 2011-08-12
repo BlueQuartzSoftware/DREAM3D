@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>693</width>
-    <height>732</height>
+    <width>765</width>
+    <height>755</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -405,6 +405,27 @@
         <property name="rightMargin">
          <number>10</number>
         </property>
+        <item row="3" column="0">
+         <widget class="QCheckBox" name="m_MergeTwins">
+          <property name="text">
+           <string>Merge Twins</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="1">
+         <widget class="QCheckBox" name="m_FillinSample">
+          <property name="text">
+           <string>Rectangularized Sample</string>
+          </property>
+         </widget>
+        </item>
+        <item row="5" column="0">
+         <widget class="QCheckBox" name="m_MergeColonies">
+          <property name="text">
+           <string>Merge Colonies</string>
+          </property>
+         </widget>
+        </item>
         <item row="6" column="0">
          <widget class="QLabel" name="label_34">
           <property name="text">
@@ -470,78 +491,37 @@
           </item>
          </widget>
         </item>
-        <item row="3" column="1">
-         <widget class="QCheckBox" name="m_FillinSample">
+        <item row="8" column="0">
+         <widget class="QLabel" name="label_8">
           <property name="text">
-           <string>Rectangularized Sample</string>
+           <string>Min. Grain Size</string>
           </property>
          </widget>
         </item>
-        <item row="3" column="0">
-         <widget class="QCheckBox" name="m_MergeTwins">
-          <property name="text">
-           <string>Merge Twins</string>
+        <item row="8" column="1">
+         <widget class="QSpinBox" name="m_MinAllowedGrainSize">
+          <property name="suffix">
+           <string> Voxels</string>
           </property>
-         </widget>
-        </item>
-        <item row="5" column="0">
-         <widget class="QCheckBox" name="m_MergeColonies">
-          <property name="text">
-           <string>Merge Colonies</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </item>
-      <item>
-       <layout class="QFormLayout" name="formLayout_3">
-        <property name="fieldGrowthPolicy">
-         <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
-        </property>
-        <item row="1" column="0">
-         <widget class="QLabel" name="label_31">
-          <property name="text">
-           <string>Min. Image Quality</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="1">
-         <widget class="QDoubleSpinBox" name="m_MinImageQuality">
-          <property name="maximum">
-           <double>50000.000000000000000</double>
-          </property>
-          <property name="singleStep">
-           <double>10.000000000000000</double>
-          </property>
-          <property name="value">
-           <double>50.000000000000000</double>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="1">
-         <widget class="QDoubleSpinBox" name="m_MinConfidence">
-          <property name="decimals">
-           <number>4</number>
+          <property name="minimum">
+           <number>1</number>
           </property>
           <property name="maximum">
-           <double>1.000000000000000</double>
-          </property>
-          <property name="singleStep">
-           <double>0.100000000000000</double>
+           <number>1000</number>
           </property>
           <property name="value">
-           <double>0.100000000000000</double>
+           <number>8</number>
           </property>
          </widget>
         </item>
-        <item row="3" column="0">
+        <item row="9" column="0">
          <widget class="QLabel" name="label_10">
           <property name="text">
            <string>Disorient. Tol.</string>
           </property>
          </widget>
         </item>
-        <item row="3" column="1">
+        <item row="9" column="1">
          <widget class="QDoubleSpinBox" name="m_MisOrientationTolerance">
           <property name="minimumSize">
            <size>
@@ -566,46 +546,102 @@
           </property>
          </widget>
         </item>
-        <item row="2" column="0">
+       </layout>
+      </item>
+      <item>
+       <widget class="Line" name="line">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <layout class="QVBoxLayout" name="verticalLayout_3">
+        <property name="spacing">
+         <number>4</number>
+        </property>
+        <property name="sizeConstraint">
+         <enum>QLayout::SetDefaultConstraint</enum>
+        </property>
+        <property name="leftMargin">
+         <number>5</number>
+        </property>
+        <property name="rightMargin">
+         <number>5</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
+        <item>
          <widget class="QLabel" name="label_9">
           <property name="text">
-           <string>Min. Confidence Index</string>
+           <string>Voxel Quality Metrics</string>
           </property>
          </widget>
         </item>
-        <item row="0" column="1">
-         <widget class="QSpinBox" name="m_MinAllowedGrainSize">
-          <property name="minimum">
-           <number>1</number>
+        <item>
+         <widget class="QTableView" name="m_QualityMetricTableView">
+          <property name="editTriggers">
+           <set>QAbstractItemView::AnyKeyPressed|QAbstractItemView::EditKeyPressed|QAbstractItemView::SelectedClicked</set>
           </property>
-          <property name="maximum">
-           <number>1000</number>
+          <property name="alternatingRowColors">
+           <bool>true</bool>
           </property>
-          <property name="value">
-           <number>8</number>
+          <property name="showGrid">
+           <bool>false</bool>
           </property>
+          <property name="cornerButtonEnabled">
+           <bool>false</bool>
+          </property>
+          <attribute name="horizontalHeaderDefaultSectionSize">
+           <number>120</number>
+          </attribute>
+          <attribute name="verticalHeaderVisible">
+           <bool>false</bool>
+          </attribute>
          </widget>
         </item>
-        <item row="0" column="0">
-         <widget class="QLabel" name="label_8">
-          <property name="text">
-           <string>Min. Grain Size</string>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_2">
+          <property name="topMargin">
+           <number>0</number>
           </property>
-         </widget>
-        </item>
-        <item row="4" column="0">
-         <widget class="QLabel" name="label_46">
-          <property name="text">
-           <string>Down-sample Res.</string>
-          </property>
-         </widget>
-        </item>
-        <item row="4" column="1">
-         <widget class="QDoubleSpinBox" name="m_DownSampleFactor">
-          <property name="value">
-           <double>1.000000000000000</double>
-          </property>
-         </widget>
+          <item>
+           <widget class="QToolButton" name="addQualityMetric">
+            <property name="text">
+             <string>+</string>
+            </property>
+            <property name="icon">
+             <iconset resource="../../../../Resources/icons/images/Icons.qrc">
+              <normaloff>:/plus.png</normaloff>:/plus.png</iconset>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QToolButton" name="removeQualityMetric">
+            <property name="text">
+             <string>-</string>
+            </property>
+            <property name="icon">
+             <iconset resource="../../../../Resources/icons/images/Icons.qrc">
+              <normaloff>:/minus.png</normaloff>:/minus.png</iconset>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="horizontalSpacer_8">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+         </layout>
         </item>
        </layout>
       </item>
@@ -669,23 +705,21 @@
        </layout>
       </item>
       <item>
-       <layout class="QFormLayout" name="formLayout">
-        <property name="fieldGrowthPolicy">
-         <enum>QFormLayout::FieldsStayAtSizeHint</enum>
-        </property>
-        <property name="labelAlignment">
-         <set>Qt::AlignCenter</set>
-        </property>
-        <property name="formAlignment">
-         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
-        </property>
+       <layout class="QGridLayout" name="gridLayout_4">
         <property name="horizontalSpacing">
          <number>12</number>
         </property>
         <property name="verticalSpacing">
          <number>8</number>
         </property>
-        <item row="1" column="1">
+        <item row="0" column="0">
+         <widget class="QLabel" name="label_12">
+          <property name="text">
+           <string>Voxel Data File</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
          <widget class="QLabel" name="m_H5VoxelFile">
           <property name="text">
            <string>VoxelVolumeData</string>
@@ -693,20 +727,13 @@
          </widget>
         </item>
         <item row="1" column="0">
-         <widget class="QLabel" name="label_12">
-          <property name="text">
-           <string>Voxel Data File</string>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="0">
          <widget class="QLabel" name="label_19">
           <property name="text">
            <string>HDF5 Polydata</string>
           </property>
          </widget>
         </item>
-        <item row="2" column="1">
+        <item row="1" column="1">
          <widget class="QCheckBox" name="m_HDF5GrainFile">
           <property name="text">
            <string>HDF5 Grain File (.h5grain)</string>
@@ -716,7 +743,14 @@
           </property>
          </widget>
         </item>
-        <item row="3" column="1">
+        <item row="2" column="0">
+         <widget class="QLabel" name="label_21">
+          <property name="text">
+           <string>VTK Downsampled Voxels</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="1">
          <widget class="QCheckBox" name="m_DownSampledVizFile">
           <property name="text">
            <string>Downsampled File</string>
@@ -726,7 +760,14 @@
           </property>
          </widget>
         </item>
-        <item row="4" column="1">
+        <item row="3" column="0">
+         <widget class="QLabel" name="label_20">
+          <property name="text">
+           <string>DX Output File (Grain IDs Only)</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="1">
          <widget class="QCheckBox" name="m_DxFile">
           <property name="text">
            <string>Output.dx</string>
@@ -737,34 +778,13 @@
          </widget>
         </item>
         <item row="4" column="0">
-         <widget class="QLabel" name="label_20">
-          <property name="text">
-           <string>DX Output File (Grain IDs Only)</string>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="0">
-         <widget class="QLabel" name="label_21">
-          <property name="text">
-           <string>VTK Downsampled Voxels</string>
-          </property>
-         </widget>
-        </item>
-        <item row="6" column="0">
-         <widget class="QLabel" name="label_18">
-          <property name="text">
-           <string>VTK Rectilinear Grid</string>
-          </property>
-         </widget>
-        </item>
-        <item row="5" column="0">
          <widget class="QLabel" name="label_22">
           <property name="text">
            <string>Ph File Format</string>
           </property>
          </widget>
         </item>
-        <item row="5" column="1">
+        <item row="4" column="1">
          <widget class="QCheckBox" name="m_PhFile">
           <property name="text">
            <string>Output.ph</string>
@@ -774,7 +794,14 @@
           </property>
          </widget>
         </item>
-        <item row="6" column="1">
+        <item row="5" column="0">
+         <widget class="QLabel" name="label_18">
+          <property name="text">
+           <string>VTK Rectilinear Grid</string>
+          </property>
+         </widget>
+        </item>
+        <item row="5" column="1">
          <widget class="QCheckBox" name="m_VisualizationVizFile">
           <property name="text">
            <string>VTK Visualization File</string>
@@ -784,10 +811,37 @@
           </property>
          </widget>
         </item>
-        <item row="7" column="1">
+        <item row="5" column="2">
          <widget class="QPushButton" name="m_VtkOptionsBtn">
           <property name="text">
            <string>VTK Options</string>
+          </property>
+         </widget>
+        </item>
+        <item row="5" column="3">
+         <spacer name="horizontalSpacer_7">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item row="2" column="2">
+         <widget class="QLabel" name="label_46">
+          <property name="text">
+           <string>Down-sample Res.</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="3">
+         <widget class="QDoubleSpinBox" name="m_DownSampleFactor">
+          <property name="value">
+           <double>1.000000000000000</double>
           </property>
          </widget>
         </item>
@@ -885,6 +939,7 @@
   </customwidget>
  </customwidgets>
  <resources>
+  <include location="../../../../Resources/icons/images/Icons.qrc"/>
  </resources>
  <connections/>
 </ui>

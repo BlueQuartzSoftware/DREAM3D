@@ -111,9 +111,10 @@ zpoints(0)
   quats = NULL;
   alreadychecked = NULL;
   unassigned = NULL;
-  confidences = NULL;
-  imagequalities = NULL;
   graincounts = NULL;
+
+  goodVoxels = NULL;
+
 
   m_GrainIndicies = AIMArray<int>::CreateArray(0);
   m_Phases = AIMArray<int>::CreateArray(0);
@@ -126,17 +127,21 @@ zpoints(0)
 
   m_AlreadyChecked = AIMArray<int>::CreateArray(0);
   m_Unassigned = AIMArray<int>::CreateArray(0);
-  m_Confidence = AIMArray<float>::CreateArray(0);
-  m_ImageQualities = AIMArray<float>::CreateArray(0);
   m_GrainCounts = AIMArray<int>::CreateArray(0);
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 ReconstructionFunc::~ReconstructionFunc()
 {
   // std::cout << "~ReconstructionFunc" << std::endl;
   m_Grains.clear();
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void ReconstructionFunc::initialize(int nX,
                                     int nY,
                                     int nZ,
@@ -146,9 +151,7 @@ void ReconstructionFunc::initialize(int nX,
                                     bool mrgTwins,
                                     bool mrgColonies,
                                     int minAllowedGrSize,
-                                    float minSeedConfidence,
                                     float dwnSmplFact,
-                                    float minImgQlty,
                                     float misoTol,
                                     vector<Ebsd::CrystalStructure> crystalStructures,
                                     vector<AIM::Reconstruction::PhaseType> phaseTypes,
@@ -159,9 +162,7 @@ void ReconstructionFunc::initialize(int nX,
   mergetwinsoption = (mrgTwins == true) ? 1 : 0;
   mergecoloniesoption = (mrgColonies == true) ? 1 : 0;
   minallowedgrainsize = minAllowedGrSize;
-  minseedconfidence = minSeedConfidence;
   downsamplefactor = dwnSmplFact;
-  minseedimagequality = minImgQlty;
   misorientationtolerance = misoTol;
   crystruct = crystalStructures;
   phaseType = phaseTypes;
@@ -202,9 +203,8 @@ void ReconstructionFunc::initialize(int nX,
 
   alreadychecked = m_AlreadyChecked->WritePointer(0, totalpoints);
   unassigned = m_Unassigned->WritePointer(0, totalpoints);
-  confidences = m_Confidence->WritePointer(0, totalpoints);
-  imagequalities = m_ImageQualities->WritePointer(0, totalpoints);
 
+  goodVoxels = m_GoodVoxels->WritePointer(0, totalpoints);
 
   for(int i=0;i<totalpoints;i++)
   {
@@ -217,8 +217,7 @@ void ReconstructionFunc::initialize(int nX,
     surfacevoxels[i] = 0;
     alreadychecked[i] = 0;
     unassigned[i] = 0;
-    confidences[i] = 0.0;
-    imagequalities[i] = 0.0;
+    goodVoxels[i] = true; // All Voxels are "Good"
   }
 
 }
@@ -274,7 +273,8 @@ void ReconstructionFunc::cleanup_data()
     count = 0;
     for (int i = 0; i < (xpoints * ypoints * zpoints); i++)
     {
-      if (grain_indicies[i] == -1 && confidences[i] < minseedconfidence)
+//      if (grain_indicies[i] == -1 && confidences[i] < minseedconfidence)
+      if (grain_indicies[i] == -1 && goodVoxels[i] == false)
       {
         x = i % xpoints;
         y = (i / xpoints) % ypoints;
@@ -310,13 +310,15 @@ void ReconstructionFunc::cleanup_data()
     for (int j = 0; j < (xpoints * ypoints * zpoints); j++)
     {
       bestneighbor = neighbors[j];
-      if (bestneighbor >= 0 && confidences[j] < minseedconfidence)
+      //if (bestneighbor >= 0 && confidences[j] < minseedconfidence)
+      if (bestneighbor >= 0 && goodVoxels[j] == false)
       {
         euler1s[j] = euler1s[bestneighbor];
         euler2s[j] = euler2s[bestneighbor];
         euler3s[j] = euler3s[bestneighbor];
-        confidences[j] = confidences[bestneighbor];
-        imagequalities[j] = imagequalities[bestneighbor];
+//        confidences[j] = confidences[bestneighbor];
+//        imagequalities[j] = imagequalities[bestneighbor];
+        goodVoxels[j] = goodVoxels[bestneighbor];
         quats[j*5 + 0] = quats[bestneighbor*5 + 0];
         quats[j*5 + 1] = quats[bestneighbor*5 + 1];
         quats[j*5 + 2] = quats[bestneighbor*5 + 2];
@@ -436,10 +438,10 @@ void ReconstructionFunc::find_border()
     checked[iter] = 0;
   }
   index = 0;
-  while (imagequalities[index] > minseedimagequality && confidences[index] > minseedconfidence)
+  while (goodVoxels[index] == true)
   {
     index++;
-	if(index == totalpoints) break;
+    if(index == totalpoints) break;
   }
   voxelslist[count] = index;
   grain_indicies[index] = 0;
@@ -463,7 +465,8 @@ void ReconstructionFunc::find_border()
       if (j == 3 && col == (xpoints - 1)) good = 0;
       if (good == 1 && checked[neighbor] == 0)
       {
-        if (imagequalities[neighbor] < minseedimagequality || confidences[neighbor] < minseedconfidence)
+       // if (imagequalities[neighbor] < minseedimagequality || confidences[neighbor] < minseedconfidence)
+        if (goodVoxels[neighbor] == false)
         {
           grain_indicies[neighbor] = 0;
           checked[neighbor] = 1;
@@ -567,7 +570,7 @@ void ReconstructionFunc::align_sections()
   float n1, n2, n3;
   float q1[5];
   float q2[5];
-  float refci, curci, refiq, curiq;
+  //float refci, curci, refiq, curiq;
   float refxcentroid, refycentroid;
   float curxcentroid, curycentroid;
   int refgnum, curgnum;
@@ -792,8 +795,10 @@ void ReconstructionFunc::align_sections()
         if (shifts[iter][0] < 0) xspot = xpoints - 1 - m;
         position = (slice * xpoints * ypoints) + (yspot * xpoints) + xspot;
         tempposition = (slice * xpoints * ypoints) + ((yspot + shifts[iter][1]) * xpoints) + (xspot + shifts[iter][0]);
-        if ((yspot + shifts[iter][1]) >= 0 && (yspot + shifts[iter][1]) <= ypoints - 1 && (xspot + shifts[iter][0]) >= 0 && (xspot + shifts[iter][0])
-            <= xpoints - 1)
+        if ((yspot + shifts[iter][1]) >= 0
+            && (yspot + shifts[iter][1]) <= ypoints - 1
+            && (xspot + shifts[iter][0]) >= 0
+            && (xspot + shifts[iter][0]) <= xpoints - 1)
         {
           euler1s[position] = euler1s[tempposition];
           euler2s[position] = euler2s[tempposition];
@@ -803,12 +808,15 @@ void ReconstructionFunc::align_sections()
           quats[position*5 + 2] = quats[tempposition*5 + 2];
           quats[position*5 + 3] = quats[tempposition*5 + 3];
           quats[position*5 + 4] = quats[tempposition*5 + 4];
-          confidences[position] = confidences[tempposition];
-          imagequalities[position] = imagequalities[tempposition];
+//          confidences[position] = confidences[tempposition];
+//          imagequalities[position] = imagequalities[tempposition];
+          goodVoxels[position] = goodVoxels[tempposition];
           grain_indicies[position] = grain_indicies[tempposition];
         }
-        if ((yspot + shifts[iter][1]) < 0 || (yspot + shifts[iter][1]) > ypoints - 1 || (xspot + shifts[iter][0]) < 0 || (xspot + shifts[iter][0]) > xpoints
-            - 1)
+        if ((yspot + shifts[iter][1]) < 0
+            || (yspot + shifts[iter][1]) > ypoints - 1
+            || (xspot + shifts[iter][0]) < 0
+            || (xspot + shifts[iter][0]) > xpoints - 1)
         {
           euler1s[position] = 0.0;
           euler2s[position] = 0.0;
@@ -818,8 +826,9 @@ void ReconstructionFunc::align_sections()
           quats[position*5 + 2] = 0.0;
           quats[position*5 + 3] = 0.0;
           quats[position*5 + 4] = 1.0;
-          confidences[position] = 0.0;
-          imagequalities[position] = 0.0;
+//          confidences[position] = 0.0;
+//          imagequalities[position] = 0.0;
+          goodVoxels[position] = false;
           grain_indicies[position] = 0;
         }
       }
@@ -890,10 +899,10 @@ void ReconstructionFunc::form_grains_sections()
           if (x > xpoints - 1) x = x - xpoints;
           if (y > ypoints - 1) y = y - ypoints;
           point = (z * xpoints * ypoints) + (y * xpoints) + x;
-          float confidence = confidences[point];
-          float imagequality = imagequalities[point];
-          //  int grainname = voxels[point].grainname;
-          if (confidence > minseedconfidence && imagequality > minseedimagequality && grain_indicies[point] == -1)
+//          float confidence = confidences[point];
+//          float imagequality = imagequalities[point];
+//          if (confidence > minseedconfidence && imagequality > minseedimagequality && grain_indicies[point] == -1)
+          if (goodVoxels[point] == true && grain_indicies[point] == -1)
           {
             seed = point;
           }
@@ -1026,6 +1035,7 @@ void ReconstructionFunc::form_grains()
     while (seed == -1 && counter < totalpoints)
     {
       if (randpoint > totalPMinus1) randpoint = randpoint - totalpoints;
+
       if (grain_indicies[randpoint] == -1 && imagequalities[randpoint] > minseedimagequality) seed = randpoint;
       randpoint++;
       counter++;
@@ -1604,8 +1614,9 @@ void ReconstructionFunc::fillin_sample()
           euler2s[newvoxelcount] = euler2s[point];
           euler3s[newvoxelcount] = euler3s[point];
           surfacevoxels[newvoxelcount] = surfacevoxels[point];
-          confidences[newvoxelcount] = confidences[point];
-          imagequalities[newvoxelcount] = imagequalities[point];
+//          confidences[newvoxelcount] = confidences[point];
+//          imagequalities[newvoxelcount] = imagequalities[point];
+          goodVoxels[newvoxelcount] = goodVoxels[point];
           alreadychecked[newvoxelcount] = alreadychecked[point];
           newvoxelcount++;
         }

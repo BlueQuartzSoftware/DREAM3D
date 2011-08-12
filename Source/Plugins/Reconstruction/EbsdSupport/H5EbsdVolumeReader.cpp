@@ -30,10 +30,7 @@
 
 #include "H5EbsdVolumeReader.h"
 
-
-
 #include "hdf5.h"
-
 
 #include "H5Support/H5Utilities.h"
 #include "H5Support/H5Lite.h"
@@ -42,13 +39,11 @@
 #include "Reconstruction/EbsdSupport/H5AngVolumeReader.h"
 #include "Reconstruction/EbsdSupport/H5CtfVolumeReader.h"
 
-
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 H5EbsdVolumeReader::H5EbsdVolumeReader() :
-m_Orientation(Ebsd::NoOrientation)
+    m_Orientation(Ebsd::NoOrientation)
 {
 
 }
@@ -64,7 +59,7 @@ H5EbsdVolumeReader::~H5EbsdVolumeReader()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5EbsdVolumeReader::loadData(ReconstructionFunc* m)
+int H5EbsdVolumeReader::loadData(ReconstructionFunc* m, std::vector<QualityMetricFilter::Pointer> filters)
 {
   int err = -1;
   // This is meant to be subclassed.
@@ -72,3 +67,40 @@ int H5EbsdVolumeReader::loadData(ReconstructionFunc* m)
   return err;
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AIMArray<bool>::Pointer H5EbsdVolumeReader::determinGoodVoxels(std::vector<QualityMetricFilter::Pointer> filters,
+                                                               std::vector<void*> dataPointers,
+                                                               size_t nPoints,
+                                                               std::vector<Ebsd::NumType> dTypes)
+{
+  if (filters.size() == 0) { return AIMArray<bool>::NullPointer(); }
+  size_t i = 0;
+  size_t nFilters = filters.size();
+  for (size_t i = 0; i < nFilters; ++i)
+  {
+    filters[i]->setInput(dataPointers[i]);
+    filters[i]->setDataType(dTypes[i]);
+    filters[i]->setNumValues(nPoints);
+    filters[i]->filter();
+  }
+
+  // Get the first bool array to use as a reference
+  AIMArray<bool>::Pointer array = filters[0]->getOutput();
+
+  for (size_t i = 1; i < nFilters; ++i)
+  {
+    AIMArray<bool>::Pointer array2 = filters[i]->getOutput();
+    bool* ref = array->GetPointer(0);
+    bool* ar2 = array2->GetPointer(0);
+    for (size_t p = 0; p < nPoints; ++p)
+    {
+      if (ref[p] == false || ar2[p] == false)
+      {
+        ref[p] == false;
+      }
+    }
+  }
+  return array;
+}

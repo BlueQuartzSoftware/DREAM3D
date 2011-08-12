@@ -103,7 +103,7 @@ std::vector<CtfPhase::Pointer> H5CtfVolumeReader::getPhases()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5CtfVolumeReader::loadData(ReconstructionFunc* m)
+int H5CtfVolumeReader::loadData(ReconstructionFunc* m, std::vector<QualityMetricFilter::Pointer> filters)
 {
   int index = 0;
   int err = -1;
@@ -112,13 +112,7 @@ int H5CtfVolumeReader::loadData(ReconstructionFunc* m)
 #else
   #pragma NOTE(This whole method needs to be validated)
 #endif
- if (true) return err;
 
-  /*
-   * This class is considered incomplete and would probably give bad results until
-   * the proper fields from the .ctf file that will be used as criteria to determine
-   * if a voxel is valid or not are determined.
-   */
   int readerIndex;
   int xpointstemp;
   int ypointstemp;
@@ -126,12 +120,14 @@ int H5CtfVolumeReader::loadData(ReconstructionFunc* m)
   float* euler1Ptr = NULL;
   float* euler2Ptr = NULL;
   float* euler3Ptr = NULL;
- // float* confPtr = NULL;
   int* phasePtr = NULL;
-//  float* imqualPtr = NULL;
-//  float* semSignalPtr = NULL;
   int xstartspot;
   int ystartspot;
+
+  // Create an Array of Void Pointers that will point to the data that is going to
+  // serve as the filter data, such as Confidence Index or Image Quality
+  std::vector<void*> dataPointers(filters.size(), NULL);
+  std::vector<Ebsd::NumType> dataTypes(filters.size(), Ebsd::UnknownNumType);
 
   err = readVolumeInfo();
 
@@ -155,11 +151,21 @@ int H5CtfVolumeReader::loadData(ReconstructionFunc* m)
     euler2Ptr = reader->getEuler2Pointer();
     euler3Ptr = reader->getEuler3Pointer();
     phasePtr = reader->getPhasePointer();
-//    confPtr = reader->getConfidenceIndexPointer();
-//    imqualPtr = reader->getImageQualityPointer();
+    // Gather some information about the filters and types in order to run the QualityMetric Filter
+    for(size_t i = 0; i < filters.size(); ++i)
+    {
+      dataPointers[i] = reader->getPointerByName(filters[i]->getFieldName());
+      dataTypes[i] = reader->getPointerType(filters[i]->getFieldName());
+    }
+
+    // Figure out which are good voxels
+    AIMArray<bool>::Pointer goodVoxels = determinGoodVoxels(filters, dataPointers, xpointstemp * ypointstemp, dataTypes);
+
+
     xstartspot = (m->xpoints - xpointstemp) / 2;
     ystartspot = (m->ypoints - ypointstemp) / 2;
-//    semSignalPtr = reader->getSEMSignalPointer();
+
+    // Copy the data from the current storage into the ReconstructionFunc Storage Location
     for (int j = 0; j < ypointstemp; j++)
     {
       for (int i = 0; i < xpointstemp; i++)
@@ -168,20 +174,11 @@ int H5CtfVolumeReader::loadData(ReconstructionFunc* m)
         m->euler1s[index] = euler1Ptr[readerIndex]; // Phi1
         m->euler2s[index] = euler2Ptr[readerIndex]; // Phi
         m->euler3s[index] = euler3Ptr[readerIndex]; // Phi2
-//        m->imagequalities[index] = imqualPtr[readerIndex]; // Image Quality
-//        m->confidences[index] = confPtr[readerIndex]; // Confidence
-        m->phases[index] = phasePtr[readerIndex]; // Phase
-        /* For TSL OIM Files if there is a single phase then the value of the phase
-         * data is zero (0). If there are 2 or more phases then the lowest value
-         * of phase is one (1). In the rest of the reconstruction code we follow the
-         * convention that the lowest value is One (1) even if there is only a single
-         * phase. The next if statement converts all zeros to ones if there is a single
-         * phase in the OIM data.
-         */
-        if (m->phases[index] < 1)
-        {
-          m->phases[index] = 1;
+        m->phases[index] = phasePtr[readerIndex] + 1; // Phase Add 1 to the phase number because .ctf files are zero based for phases
+        if (NULL != goodVoxels.get()) {
+          m->goodVoxels[index] = goodVoxels->GetValue(readerIndex);
         }
+
         ++readerIndex;
       }
     }

@@ -69,8 +69,6 @@ m_MergeTwins(false),
 m_MergeColonies(false),
 m_FillinSample(false),
 m_MinAllowedGrainSize(0),
-m_MinSeedConfidence(0.0),
-m_MinSeedImageQuality(0.0),
 m_MisorientationTolerance(0.0),
 m_Orientation(Ebsd::NoOrientation),
 m_WriteBinaryVTKFiles(true),
@@ -167,17 +165,20 @@ void Reconstruction::execute()
 
   m->initialize(m->xpoints, m->ypoints, m->zpoints,
                 m->resx, m->resy, m->resz, m_MergeTwins, m_MergeColonies, m_MinAllowedGrainSize,
-                m_MinSeedConfidence, m_DownSampleFactor, m_MinSeedImageQuality,
+                m_DownSampleFactor,
                 m_MisorientationTolerance, crystalStructures, m_PhaseTypes, precipFractions,
                 m_AlignmentMethod);
   m_OutputDirectory = MXADir::toNativeSeparators(m_OutputDirectory);
 
   START_CLOCK()
 
+
+  // During the loading of the EBSD data the Quality Metric Filters will be run
+  // and fill in the ReconstrucionFunc->goodVoxels array.
   updateProgressAndMessage(("Loading Slices"), 4);
   ebsdReader->setSliceStart(m_ZStartIndex);
   ebsdReader->setSliceEnd(m_ZEndIndex);
-  err = ebsdReader->loadData(m.get());
+  err = ebsdReader->loadData(m.get(), m_QualityMetricFilters);
   CHECK_FOR_ERROR(ReconstructionFunc, "Reconstruction was canceled", err)
 
   m->initializeQuats();
@@ -392,9 +393,9 @@ void Reconstruction::printSettings(std::ostream &ostream)
     PRINT_PROPERTY(ostream, MergeColonies)
     PRINT_PROPERTY(ostream, FillinSample)
     PRINT_PROPERTY(ostream, MinAllowedGrainSize)
-    PRINT_PROPERTY(ostream, MinSeedConfidence)
+//    PRINT_PROPERTY(ostream, MinSeedConfidence)
     PRINT_PROPERTY(ostream, DownSampleFactor)
-    PRINT_PROPERTY(ostream, MinSeedImageQuality)
+//    PRINT_PROPERTY(ostream, MinSeedImageQuality)
     PRINT_PROPERTY(ostream, MisorientationTolerance)
     PRINT_PROPERTY(ostream, AlignmentMethod)
     PRINT_PROPERTY(ostream, Orientation)

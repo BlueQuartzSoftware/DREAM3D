@@ -72,11 +72,13 @@ cmp_IDE_SOURCE_PROPERTIES("Generated" "${ReconstructionPlugin_Generated_UI_HDRS}
 SET (Reconstruction_HDRS
   ${PROJECT_SOURCE_DIR}/Reconstruction.h
   ${PROJECT_SOURCE_DIR}/ReconstructionFunc.h
+  ${PROJECT_SOURCE_DIR}/QualityMetricFilter.h
 )
 
 SET (Reconstruction_SRCS
   ${PROJECT_SOURCE_DIR}/Reconstruction.cpp
   ${PROJECT_SOURCE_DIR}/ReconstructionFunc.cpp
+  ${PROJECT_SOURCE_DIR}/QualityMetricFilter.cpp
 )
 cmp_IDE_SOURCE_PROPERTIES( "Reconstruction" "${Reconstruction_HDRS}" "${Reconstruction_SRCS}" "0")
 if ( ${DREAM3D_INSTALL_FILES} EQUAL 1 )
