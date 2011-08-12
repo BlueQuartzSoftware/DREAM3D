@@ -233,7 +233,7 @@ int writeScalarData(const std::string &hdfPath,
                     const char *label,
                     int numComp, int32_t rank, hsize_t* dims)
 {
-  hid_t gid = H5Gopen(m_FileId, hdfPath.c_str() );
+  hid_t gid = H5Gopen(m_FileId, hdfPath.c_str(), H5P_DEFAULT );
   if (gid < 0)
   {
     std::cout << "Error opening Group " << hdfPath << std::endl;
@@ -245,7 +245,7 @@ int writeScalarData(const std::string &hdfPath,
     std::cout << "Error creating HDF Group " << H5_SCALAR_DATA_GROUP_NAME << std::endl;
     return err;
   }
-  hid_t cellGroupId = H5Gopen(gid, H5_SCALAR_DATA_GROUP_NAME );
+  hid_t cellGroupId = H5Gopen(gid, H5_SCALAR_DATA_GROUP_NAME, H5P_DEFAULT );
   if(err < 0)
   {
     std::cout << "Error writing string attribute to HDF Group " << H5_SCALAR_DATA_GROUP_NAME << std::endl;

@@ -532,7 +532,8 @@ void ReconstructionFunc::find_border()
         q2[3] = quats[neighbor*5 + 3];
         q2[4] = quats[neighbor*5 + 4];
         phase2 = crystruct[phases[neighbor]];
-        if (phase1 == phase2) {
+        if (phase1 == phase2) 
+		{
           w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
         }
         if (w < misorientationtolerance)

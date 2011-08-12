@@ -100,7 +100,7 @@ int main(int argc, char **argv)
 
 
   std::string index = StringUtils::numToString(0);
-  hid_t gid = H5Gopen(fileId, index.c_str());
+  hid_t gid = H5Gopen(fileId, index.c_str(), H5P_DEFAULT);
   H5AngReader::Pointer h5reader = H5AngReader::New();
   h5reader->setHDF5Path(index);
   err = h5reader->readHeader(gid);

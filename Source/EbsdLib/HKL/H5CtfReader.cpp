@@ -87,7 +87,7 @@ int H5CtfReader::readFile()
     return -1;
   }
 
-  hid_t gid = H5Gopen(fileId, m_HDF5Path.c_str());
+  hid_t gid = H5Gopen(fileId, m_HDF5Path.c_str(), H5P_DEFAULT);
   if (gid < 0)
   {
     std::cout << "H5CtfReader Error: Could not open path '" << m_HDF5Path << "'" << std::endl;
@@ -217,7 +217,7 @@ int H5CtfReader::readFile()
 int H5CtfReader::readHeader(hid_t parId)
 {
   int err = -1;
-  hid_t gid = H5Gopen(parId, Ebsd::H5::Header.c_str());
+  hid_t gid = H5Gopen(parId, Ebsd::H5::Header.c_str(), H5P_DEFAULT);
   if (gid < 0)
   {
     std::cout << "H5CtfReader Error: Could not open 'Header' Group" << std::endl;
@@ -242,7 +242,7 @@ int H5CtfReader::readHeader(hid_t parId)
   READ_EBSD_HEADER_DATA(CtfHeaderEntry<float>, float, TiltAngle, Ebsd::Ctf::TiltAngle)
   READ_EBSD_HEADER_DATA(CtfHeaderEntry<float>, float, TiltAxis, Ebsd::Ctf::TiltAxis)
 
-  hid_t phasesGid = H5Gopen(gid, Ebsd::H5::Phases.c_str());
+  hid_t phasesGid = H5Gopen(gid, Ebsd::H5::Phases.c_str(), H5P_DEFAULT);
   if (phasesGid < 0)
   {
     std::cout << "H5CtfReader Error: Could not open Header/Phases HDF Group. Is this an older file?" << std::endl;
@@ -262,7 +262,7 @@ int H5CtfReader::readHeader(hid_t parId)
   m_Phases.clear();
   for (std::list<std::string>::iterator phaseGroupName = names.begin(); phaseGroupName != names.end(); ++phaseGroupName )
   {
-    hid_t pid = H5Gopen(phasesGid, (*phaseGroupName).c_str());
+    hid_t pid = H5Gopen(phasesGid, (*phaseGroupName).c_str(), H5P_DEFAULT);
     CtfPhase::Pointer m_CurrentPhase = CtfPhase::New();
 
     READ_PHASE_HEADER_ARRAY( pid, std::vector<float>, Ebsd::Ctf::LatticeDimensions, LatticeDimensions, m_CurrentPhase);
@@ -313,7 +313,7 @@ int H5CtfReader::readData(hid_t parId)
   }
 
 
-  hid_t gid = H5Gopen(parId, Ebsd::H5::Data.c_str());
+  hid_t gid = H5Gopen(parId, Ebsd::H5::Data.c_str(), H5P_DEFAULT);
   if (gid < 0)
   {
     std::cout << "H5CtfReader Error: Could not open 'Data' Group" << std::endl;

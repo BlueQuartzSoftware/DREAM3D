@@ -144,7 +144,7 @@ int H5ReconStatsReader::getPhaseAndCrystalStructures(std::vector<int> &phases,
   {
     StringUtils::stringToNum(i, *pString);
     phases.push_back(i);
-    hid_t gid = H5Gopen(reconGid,(*pString).c_str() );
+    hid_t gid = H5Gopen(reconGid,(*pString).c_str(), H5P_DEFAULT);
     unsigned int xtal = static_cast<unsigned int>(Ebsd::UnknownCrystalStructure);
     err = H5Lite::readScalarDataset(gid, AIM::HDF5::CrystalStructure, xtal);
     if (err < 0)
