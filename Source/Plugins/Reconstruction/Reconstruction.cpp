@@ -123,7 +123,9 @@ void Reconstruction::execute()
     //Now Calculate our "subvolume" of slices, ie, those start and end values that the user selected from the GUI
     // The GUI code has already added 1 to the end index so nothing special needs to be done
     // for this calculation
-    m->zpoints = getZEndIndex() - getZStartIndex();
+	m->resx = m->resx*2;
+	m->resy = m->resy*2;
+    m->zpoints = getZEndIndex() - getZStartIndex() + 1;
     manufacturer = volumeInfoReader->getManufacturer();
     volumeInfoReader = H5EbsdVolumeInfo::NullPointer();
   }
