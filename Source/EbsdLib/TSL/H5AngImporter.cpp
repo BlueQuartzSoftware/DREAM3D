@@ -398,7 +398,7 @@ int H5AngImporter::writeHKLFamilies(AngPhase* p, hid_t hklGid)
      * Create the dataset and write the compound data to it.
      */
 
-    dset = H5Dcreate (hklGid, StringUtils::numToString(index++).c_str(), memtype, space, H5P_DEFAULT);
+    dset = H5Dcreate (hklGid, StringUtils::numToString(index++).c_str(), memtype, space, H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
 
     status = H5Dwrite (dset, memtype, H5S_ALL, H5S_ALL, H5P_DEFAULT, (void*)(&hkl)  );
 

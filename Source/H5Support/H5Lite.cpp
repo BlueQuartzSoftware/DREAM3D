@@ -81,7 +81,7 @@ herr_t find_dataset( hid_t loc_id, const char *name, void *op_data)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-herr_t find_attr( hid_t loc_id, const char *name, void *op_data)
+herr_t find_attr(hid_t loc_id, const char *name, const H5A_info_t* info, void *op_data)
 {
 
  /* Define a default zero value for return. This will cause the iterator to continue if
@@ -142,17 +142,18 @@ herr_t H5Lite::openId( hid_t loc_id, const std::string& obj_name, int32_t obj_ty
  {
   case H5G_DATASET:
 
-   /* Open the dataset. */
-   if ( (obj_id = H5Dopen( loc_id, obj_name.c_str() )) < 0 )
-    return -1;
-   break;
+    /* Open the dataset. */
+    if ( (obj_id = H5Dopen( loc_id, obj_name.c_str(), H5P_DEFAULT )) < 0 )
+     return -1;
+    break;
 
-  case H5G_GROUP:
+   case H5G_GROUP:
 
-   /* Open the group. */
-   if ( (obj_id = H5Gopen( loc_id, obj_name.c_str() )) < 0 )
-    return -1;
-   break;
+    /* Open the group. */
+    if ( (obj_id = H5Gopen( loc_id, obj_name.c_str(), H5P_DEFAULT )) < 0 )
+     return -1;
+    break;
+
 
   default:
    return -1;
@@ -194,11 +195,11 @@ herr_t H5Lite::closeId( hid_t obj_id, int32_t obj_type )
 herr_t H5Lite::findAttribute( hid_t loc_id, const std::string& attrName )
 {
 
- uint32_t attr_num;
+ hsize_t attr_num;
  herr_t ret = 0;
 
  attr_num = 0;
- ret = H5Aiterate( loc_id, &attr_num, find_attr, (void *)(attrName.c_str()) );
+ ret = H5Aiterate( loc_id, H5_INDEX_NAME, H5_ITER_INC, &attr_num, find_attr, (void *)(attrName.c_str()) );
 
  return ret;
 }
@@ -242,7 +243,7 @@ herr_t  H5Lite::writeStringDataset (hid_t loc_id,
         if ( (sid = H5Screate( H5S_SCALAR )) >= 0 )
         {
           /* Create the dataset. */
-          if ( (did = H5Dcreate(loc_id, dsetName.c_str(), tid, sid, H5P_DEFAULT)) >= 0 )
+          if ( (did = H5Dcreate(loc_id, dsetName.c_str(), tid, sid, H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT)) >= 0 )
           {
              if ( NULL != data )
               {
@@ -289,7 +290,7 @@ herr_t H5Lite::writeStringDataset (hid_t loc_id, const std::string& dsetName, co
         if ( (sid = H5Screate( H5S_SCALAR )) >= 0 )
         {
           /* Create the dataset. */
-          if ( (did = H5Dcreate(loc_id, dsetName.c_str(), tid, sid, H5P_DEFAULT)) >= 0 )
+          if ( (did = H5Dcreate(loc_id, dsetName.c_str(), tid, sid, H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT)) >= 0 )
           {
              if ( !data.empty() )
               {
@@ -401,7 +402,7 @@ herr_t  H5Lite::writeStringAttribute(hid_t loc_id,
                }
                if (err >= 0) {
                  /* Create and write the attribute */
-                 attr_id = H5Acreate( obj_id, attrName.c_str(), attr_type, attr_space_id, H5P_DEFAULT );
+                 attr_id = H5Acreate( obj_id, attrName.c_str(), attr_type, attr_space_id, H5P_DEFAULT, H5P_DEFAULT);
                  if ( attr_id >= 0 ) {
                    err = H5Awrite( attr_id, attr_type, data );
                    if ( err < 0 ) {
@@ -454,7 +455,7 @@ herr_t H5Lite::readStringDataset(hid_t loc_id, const std::string& dsetName, std:
   herr_t retErr = 0;
   hsize_t size;
 
-  did = H5Dopen(loc_id, dsetName.c_str() );
+  did = H5Dopen(loc_id, dsetName.c_str(), H5P_DEFAULT );
   if (did < 0) {
     std::cout << "Error Opening Dataset" << std::endl;
     return -1;
@@ -489,7 +490,7 @@ herr_t H5Lite::readStringDataset(hid_t loc_id,
   herr_t err = 0;
   herr_t retErr = 0;
 
-  did = H5Dopen(loc_id, dsetName.c_str() );
+  did = H5Dopen(loc_id, dsetName.c_str(), H5P_DEFAULT );
   if (did < 0) {
     std::cout << "Error Opening Dataset" << std::endl;
     return -1;
@@ -645,7 +646,7 @@ herr_t H5Lite::getDatasetNDims( hid_t loc_id, const std::string& dsetName, hid_t
  rank = 0;
 
  /* Open the dataset. */
- if ( (did = H5Dopen( loc_id, dsetName.c_str() )) < 0 )
+ if ( (did = H5Dopen( loc_id, dsetName.c_str(), H5P_DEFAULT )) < 0 )
   return -1;
 
  /* Get the dataspace handle */
@@ -734,7 +735,7 @@ hid_t H5Lite::getDatasetType(hid_t loc_id, const std::string &dsetName)
   herr_t retErr = 0;
   hid_t did = -1;
   /* Open the dataset. */
-  if ( (did = H5Dopen( loc_id, dsetName.c_str() )) < 0 )
+  if ( (did = H5Dopen( loc_id, dsetName.c_str(), H5P_DEFAULT )) < 0 )
   {
      return -1;
   }
@@ -766,7 +767,7 @@ herr_t H5Lite::getDatasetInfo( hid_t loc_id,
 
 
   /* Open the dataset. */
-  if ( (did = H5Dopen( loc_id, dsetName.c_str() )) < 0 )
+  if ( (did = H5Dopen( loc_id, dsetName.c_str(), H5P_DEFAULT )) < 0 )
   return -1;
 
   /* Get an identifier for the datatype. */
@@ -952,7 +953,7 @@ herr_t H5Lite::writeMXAArray(hid_t loc_id,
     return sid;
   }
   // Create the Dataset
-  did = H5Dcreate (loc_id, dsetName.c_str(), dataType, sid, H5P_DEFAULT);
+  did = H5Dcreate (loc_id, dsetName.c_str(), dataType, sid, H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
   if ( did >= 0 )
   {
     err = H5Dwrite( did, dataType, H5S_ALL, H5S_ALL, H5P_DEFAULT, data );
@@ -1045,7 +1046,7 @@ herr_t H5Lite::writeMXAAttribute(hid_t loc_id,
 
      if ( err >= 0 ) {
        /* Create the attribute. */
-       attr_id = H5Acreate( obj_id, attrName.c_str() , dataType, sid, H5P_DEFAULT );
+       attr_id = H5Acreate( obj_id, attrName.c_str() , dataType, sid, H5P_DEFAULT, H5P_DEFAULT );
        if ( attr_id >= 0 ) {
          /* Write the attribute data. */
          err = H5Awrite( attr_id, dataType, data );
@@ -1095,7 +1096,7 @@ IMXAArray* H5Lite::readMXAArray(hid_t loc_id,
   std::string sData;
 
  /* Open the dataset. */
-  did = H5Dopen( loc_id, dsetName.c_str() );
+  did = H5Dopen( loc_id, dsetName.c_str(), H5P_DEFAULT );
   if ( did < 0 ) {
     std::cout << " Error opening Dataset: " << did << std::endl;
     return NULL;
