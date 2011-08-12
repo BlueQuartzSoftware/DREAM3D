@@ -40,12 +40,15 @@ configure_file( ${PROJECT_CODE_DIR}/QtSupport/QAbstractPipelineWrapper.h.in
 set (ReconstructionPlugin_UI_HDRS
     ${PROJECT_SOURCE_DIR}/UI/ReconstructionPlugin.h
     ${PROJECT_SOURCE_DIR}/UI/ReconstructionWidget.h
+    ${PROJECT_SOURCE_DIR}/UI/QualityMetricTableModel.h
+    ${PROJECT_SOURCE_DIR}/UI/QualityMetricItemDelegate.h
     ${PROJECT_CODE_DIR}/QtSupport/AIMPluginFrame.h
     )
     
 set (ReconstructionPlugin_UI_SRCS 
     ${PROJECT_SOURCE_DIR}/UI/ReconstructionPlugin.cpp
     ${PROJECT_SOURCE_DIR}/UI/ReconstructionWidget.cpp
+    ${PROJECT_SOURCE_DIR}/UI/QualityMetricTableModel.cpp
     ${PROJECT_CODE_DIR}/QtSupport/AIMPluginFrame.cpp
     )
     
