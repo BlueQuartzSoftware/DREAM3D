@@ -698,19 +698,28 @@ int GrainGeneratorWidget::estimate_numgrains(int xpoints, int ypoints, int zpoin
 
     std::vector<float> pFraction;
     err = h5Reader->readStatsDataset(phase, AIM::HDF5::PhaseFraction, pFraction);
+    if (err < 0) {break;}
     phasefraction[phase] = pFraction.front();
 
     std::vector<unsigned int> phasetypes;
     err = h5Reader->readStatsDataset(phase, AIM::HDF5::PhaseType, phasetypes);
+    if (err < 0) {break;}
     phaseType[phase] = static_cast<AIM::Reconstruction::PhaseType> (phasetypes[0]);
 
-	err = h5Reader->readStatsDataset(phase, AIM::HDF5::Grain_Size_Distribution, double_data);
-	avgdiam[phase] = double_data[0];
-	sddiam[phase] = double_data[1];
+	  err = h5Reader->readStatsDataset(phase, AIM::HDF5::Grain_Size_Distribution, double_data);
+    if (err < 0) {break;}
+	  avgdiam[phase] = double_data[0];
+	  sddiam[phase] = double_data[1];
 
-	err = h5Reader->readStatsDataset(phase, AIM::HDF5::Grain_Diameter_Info, grainDiamInfo);
-	maxdiameter[phase]  = grainDiamInfo[1];
-	mindiameter[phase] = grainDiamInfo[2];
+	  err = h5Reader->readStatsDataset(phase, AIM::HDF5::Grain_Diameter_Info, grainDiamInfo);
+    if (err < 0) {break;}
+	  maxdiameter[phase]  = grainDiamInfo[1];
+	  mindiameter[phase] = grainDiamInfo[2];
+  }
+  // If we errored out trying to read the data from teh HDF5 file then bail out now with a Zero Grains found
+  if (err < 0)
+  {
+    return 0;
   }
   AIM_RANDOMNG_NEW()
 
