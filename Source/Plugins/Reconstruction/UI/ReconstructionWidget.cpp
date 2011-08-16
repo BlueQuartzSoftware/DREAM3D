@@ -643,7 +643,7 @@ void ReconstructionWidget::on_m_GoBtn_clicked()
   m_Reconstruction->setH5AngFile( QDir::toNativeSeparators(m_H5InputFile->text()).toStdString());
 
   m_Reconstruction->setZStartIndex(m_ZStartIndex->value());
-  m_Reconstruction->setZEndIndex(m_ZEndIndex->value() + 1);
+  m_Reconstruction->setZEndIndex(m_ZEndIndex->value());
   m_Reconstruction->setPhaseTypes(phaseTypes);
 
   m_Reconstruction->setMergeColonies(m_MergeColonies->isChecked() );

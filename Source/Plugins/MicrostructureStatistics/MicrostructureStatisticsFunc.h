@@ -130,8 +130,7 @@ class MicrostructureStatisticsFunc
     bool computesizes;
     bool computeshapes;
     bool computeneighbors;
-    bool computeodf;
-    bool computemdf;
+
 
 	  void initializeAttributes();
     void initializeGrains();
