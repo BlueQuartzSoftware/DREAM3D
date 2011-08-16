@@ -337,8 +337,7 @@ void MicrostructureStatisticsWidget::on_m_GoBtn_clicked()
   if(m_H5StatisticsFile->isChecked() == true || m_WriteGrainSize == true) m_ComputeGrainSize = true;
   if(m_H5StatisticsFile->isChecked() == true || m_WriteGrainShapes == true) m_ComputeGrainShapes = true;
   if(m_H5StatisticsFile->isChecked() == true || m_WriteNumNeighbors == true) m_ComputeNumNeighbors = true;
-  if(m_H5StatisticsFile->isChecked() == true) m_ComputeODF = true;
-  if(m_H5StatisticsFile->isChecked() == true) m_ComputeMDF = true;
+
 
   if (m_WorkerThread != NULL)
   {
@@ -362,8 +361,7 @@ void MicrostructureStatisticsWidget::on_m_GoBtn_clicked()
   m_MicrostructureStatistics->setComputeGrainSize(m_ComputeGrainSize);
   m_MicrostructureStatistics->setComputeGrainShapes(m_ComputeGrainShapes);
   m_MicrostructureStatistics->setComputeNumNeighbors(m_ComputeNumNeighbors);
-  m_MicrostructureStatistics->setComputeODF(m_ComputeODF);
-  m_MicrostructureStatistics->setComputeMDF(m_ComputeMDF);
+
 
   m_MicrostructureStatistics->setBinStepSize(m_BinStepSize->value());
   m_MicrostructureStatistics->setWriteH5StatsFile(m_H5StatisticsFile->isChecked());

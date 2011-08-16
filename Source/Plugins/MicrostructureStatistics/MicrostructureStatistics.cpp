@@ -53,9 +53,7 @@ m_OutputDirectory("."),
 m_OutputFilePrefix("MicrostructureStatistics_"),
 m_ComputeGrainSize(false),
 m_ComputeGrainShapes(false),
-m_ComputeNumNeighbors(false),
-m_ComputeODF(false),
-m_ComputeMDF(false)
+m_ComputeNumNeighbors(false)
 {
 
 }
@@ -116,8 +114,6 @@ void MicrostructureStatistics::execute()
   m->computesizes = m_ComputeGrainSize;
   m->computeshapes = m_ComputeGrainShapes;
   m->computeneighbors = m_ComputeNumNeighbors;
-  m->computeodf = m_ComputeODF;
-  m->computemdf = m_ComputeMDF;
 
   updateProgressAndMessage("Allocating Memory", 5);
   m->initializeAttributes();
@@ -136,17 +132,13 @@ void MicrostructureStatistics::execute()
   m->initializeGrains();
   m->initializeArrays();
 
-
-  // Create a new Writer for the Stats Data.
-  H5ReconStatsWriter::Pointer h5io = H5ReconStatsWriter::New(hdf5ResultsFile);
-
   updateProgressAndMessage(("Finding Surface Grains"), 20);
   if(m->zpoints > 1) m->find_surfacegrains();
   if(m->zpoints == 1) m->find_surfacegrains2D();
   CHECK_FOR_CANCELED(MicrostructureStatisticsFunc, "MicrostructureStatistics was canceled",  find_surfacegrains2D)
 
   // Start Computing the statistics
-  if(m_ComputeGrainSize == true || m_ComputeGrainShapes == true || m_ComputeODF == true || m_ComputeNumNeighbors == true || m_ComputeMDF == true)
+  if(m_ComputeGrainSize == true || m_ComputeGrainShapes == true || m_ComputeNumNeighbors == true)
   {
 	  updateProgressAndMessage(("Determining Grain Sizes"), 25);
 	  if(m->zpoints > 1) m->find_centroids();
@@ -170,14 +162,9 @@ void MicrostructureStatistics::execute()
 	  if(m->zpoints > 1) m->find_axes();
 	  if(m->zpoints == 1) m->find_axes2D();
 	  CHECK_FOR_CANCELED(MicrostructureStatisticsFunc, "MicrostructureStatistics was canceled",  find_axes2D)
-
-	  updateProgressAndMessage(("Finding Grain Pricipal Axes Vectors"), 40);
-	  if(m->zpoints > 1) m->find_vectors(h5io);
-	  if(m->zpoints == 1) m->find_vectors2D(h5io);
-	  CHECK_FOR_CANCELED(MicrostructureStatisticsFunc, "MicrostructureStatistics was canceled",  find_vectors2D)
   }
 
-  if(m_ComputeNumNeighbors == true || m_ComputeMDF == true)
+  if(m_ComputeNumNeighbors == true)
   {
 	  updateProgressAndMessage(("Finding Neighbors"), 45);
 	  m->find_neighbors();
@@ -188,29 +175,31 @@ void MicrostructureStatistics::execute()
 	  CHECK_FOR_CANCELED(MicrostructureStatisticsFunc, "MicrostructureStatistics was canceled",  define_neighborhood)
   }
 
-  if(m_WriteAverageOrientations == true || m_ComputeODF == true || m_ComputeMDF == true || m_WriteKernelMisorientations == true)
+  if(m_WriteAverageOrientations == true || m_WriteH5StatsFile == true || m_WriteKernelMisorientations == true)
   {
 	  updateProgressAndMessage(("Finding Average Orientations For Grains"), 60);
 	  m->find_grainorientations();
 	  CHECK_FOR_CANCELED(MicrostructureStatisticsFunc, "MicrostructureStatistics was canceled",  find_grain_and_kernel_misorientations)
   }
 
-  if(m_ComputeODF == true)
+  if(m_WriteH5StatsFile == true)
   {
-	  updateProgressAndMessage(("Finding Euler ODF"), 65);
+	  // Create a new Writer for the Stats Data.
+	  H5ReconStatsWriter::Pointer h5io = H5ReconStatsWriter::New(hdf5ResultsFile);
+
+	  updateProgressAndMessage(("Finding Grain Axes ODF"), 65);
+	  if(m->zpoints > 1) m->find_vectors(h5io);
+	  if(m->zpoints == 1) m->find_vectors2D(h5io);
+	  CHECK_FOR_CANCELED(MicrostructureStatisticsFunc, "MicrostructureStatistics was canceled",  find_vectors2D)
+
+	  updateProgressAndMessage(("Finding Euler ODF"), 70);
 	  m->find_eulerodf(h5io);
 	  CHECK_FOR_CANCELED(MicrostructureStatisticsFunc, "MicrostructureStatistics was canceled",  find_eulerodf)
-  }
 
-  if(m_ComputeMDF == true)
-  {
 	  updateProgressAndMessage(("Measuring Misorientations"), 75);
 	  m->measure_misorientations(h5io);
 	  CHECK_FOR_CANCELED(MicrostructureStatisticsFunc, "MicrostructureStatistics was canceled",  measure_misorientations)
-  }
 
-  if(m_WriteH5StatsFile == true)
-  {
 	  updateProgressAndMessage(("Writing Statistics"), 85);
 	  if(m->zpoints > 1) { m->volume_stats(h5io, m_BinStepSize); }
 	  if(m->zpoints == 1) { m->volume_stats2D(h5io, m_BinStepSize); }

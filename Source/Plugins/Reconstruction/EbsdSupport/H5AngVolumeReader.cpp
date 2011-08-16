@@ -213,11 +213,11 @@ int H5AngVolumeReader::loadData(ReconstructionFunc* m, std::vector<QualityMetric
   err = readVolumeInfo();
   int sliceStart = getSliceStart();
   int sliceEnd = getSliceEnd();
-  for (int slice = sliceStart; slice < sliceEnd; ++slice)
+  for (int slice = 0; slice < m->zpoints; ++slice)
   {
     H5AngReader::Pointer reader = H5AngReader::New();
     reader->setFileName(getFilename());
-    reader->setHDF5Path(StringUtils::numToString(slice) );
+    reader->setHDF5Path(StringUtils::numToString(slice + getZStart()) );
     reader->setUserOrigin(getOrientation());
 
     err = reader->readFile();

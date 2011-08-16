@@ -438,7 +438,11 @@ void ReconstructionFunc::find_border()
     checked[iter] = 0;
   }
   index = 0;
+<<<<<<< HEAD
   while (goodVoxels[index] == true)
+=======
+  while (imagequalities[index] > minseedimagequality)
+>>>>>>> master
   {
     index++;
     if(index == totalpoints) break;
@@ -465,8 +469,12 @@ void ReconstructionFunc::find_border()
       if (j == 3 && col == (xpoints - 1)) good = 0;
       if (good == 1 && checked[neighbor] == 0)
       {
+<<<<<<< HEAD
        // if (imagequalities[neighbor] < minseedimagequality || confidences[neighbor] < minseedconfidence)
         if (goodVoxels[neighbor] == false)
+=======
+        if (imagequalities[neighbor] < minseedimagequality)
+>>>>>>> master
         {
           grain_indicies[neighbor] = 0;
           checked[neighbor] = 1;
@@ -479,21 +487,18 @@ void ReconstructionFunc::find_border()
   }
   voxelslist.clear();
   voxelslist.resize(initialVoxelsListSize, -1);
+  count = 0;
   for (int iter = 0; iter < (xpoints * ypoints * zpoints); iter++)
   {
     checked[iter] = 0;
+    if(grain_indicies[iter] == -1)
+	{
+		voxelslist[count] = iter;
+		checked[iter] = 1;
+		count++;
+        if (count >= voxelslist.size()) voxelslist.resize(count + initialVoxelsListSize, -1);
+ 	}
   }
-  index = 0;
-  while (grain_indicies[index] != -1)
-  {
-    index++;
-	if(index == totalpoints) break;
-  }
-  count = 0;
-  voxelslist[count] = index;
-  grain_indicies[index] = 0;
-  checked[index] = 1;
-  count++;
   for (size_t j = 0; j < count; j++)
   {
     currentpoint = voxelslist[j];
@@ -506,7 +511,7 @@ void ReconstructionFunc::find_border()
     q1[3] = quats[currentpoint*5 + 3];
     q1[4] = quats[currentpoint*5 + 4];
     phase1 = crystruct[phases[currentpoint]];
-    for (int i = 1; i < 6; i++)
+    for (int i = 0; i < 6; i++)
     {
       good = 1;
       neighbor = currentpoint + neighbors[i];
@@ -1036,8 +1041,12 @@ void ReconstructionFunc::form_grains()
     while (seed == -1 && counter < totalpoints)
     {
       if (randpoint > totalPMinus1) randpoint = randpoint - totalpoints;
+<<<<<<< HEAD
 
       if (grain_indicies[randpoint] == -1 && imagequalities[randpoint] > minseedimagequality) seed = randpoint;
+=======
+      if (grain_indicies[randpoint] == -1 && confidences[randpoint] > minseedconfidence) seed = randpoint;
+>>>>>>> master
       randpoint++;
       counter++;
     }
