@@ -125,8 +125,7 @@ class MicrostructureStatisticsWidget : public AIMPluginFrame, private Ui::Micros
     bool                        m_ComputeGrainShapes;
     bool                        m_ComputeNumNeighbors;
     bool                        m_ComputeAverageOrientations;
-    bool                        m_ComputeODF;
-    bool                        m_ComputeMDF;
+
 
     bool                        m_WriteGrainSize;
     bool                        m_WriteGrainShapes;
