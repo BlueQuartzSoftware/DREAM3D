@@ -94,7 +94,7 @@ class DREAM3DLib_EXPORT H5ReconStatsReader
       OPEN_HDF5_FILE(fileId, m_FileName)
 
       // The group may NOT be written to the file
-      hid_t pid = H5Gopen(fileId, path.c_str());
+      hid_t pid = H5Gopen(fileId, path.c_str(), H5P_DEFAULT);
       if (pid < 0)
       {
         err = H5Utilities::closeFile(fileId);
@@ -126,7 +126,7 @@ class DREAM3DLib_EXPORT H5ReconStatsReader
       OPEN_RECONSTRUCTION_GROUP(reconGid, AIM::HDF5::Reconstruction.c_str(), fileId)
 
       std::string index = StringUtils::numToString(phase);
-      hid_t pid = H5Gopen(reconGid, index.c_str());
+      hid_t pid = H5Gopen(reconGid, index.c_str(), H5P_DEFAULT);
 
       err = H5Lite::readScalarAttribute(pid, name, attrName, data);
 
@@ -158,7 +158,7 @@ class DREAM3DLib_EXPORT H5ReconStatsReader
       OPEN_RECONSTRUCTION_GROUP(reconGid, AIM::HDF5::Reconstruction.c_str(), fileId)
 
       std::string index = StringUtils::numToString(phase);
-      hid_t pid = H5Gopen(reconGid, index.c_str());
+      hid_t pid = H5Gopen(reconGid, index.c_str(), H5P_DEFAULT);
 
       err = H5Lite::readVectorDataset(pid, name, data);
       if (err < 0)

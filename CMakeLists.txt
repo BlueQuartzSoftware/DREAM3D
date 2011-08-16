@@ -203,7 +203,7 @@ if (MSVC)
 endif()
 
 # Figure out here if we are going to build the command line tools
-option(DREAM3D_BUILD_CLI_TOOLS "Build the command line versions of the applications" OFF)
+option(DREAM3D_BUILD_CLI_TOOLS "Build the command line versions of the applications" ON)
 
 # -----------------------------------------------------------------------
 # -- Add in the Necessary HDF5 Support Sources into a library
