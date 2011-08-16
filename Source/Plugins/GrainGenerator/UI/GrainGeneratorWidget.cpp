@@ -685,7 +685,7 @@ int GrainGeneratorWidget::estimate_numgrains(int xpoints, int ypoints, int zpoin
   H5ReconStatsReader::Pointer h5Reader = H5ReconStatsReader::New();
   h5Reader->setFileName(m_H5InputStatisticsFile->text().toStdString());
   int err = h5Reader->getPhaseAndCrystalStructures(phases, structures);
-  if (err < 0)
+  if (err < 0 || phases.size() == 0)
   {
     return -1;
   }

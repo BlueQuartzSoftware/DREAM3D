@@ -74,7 +74,7 @@ m_Orientation(Ebsd::NoOrientation),
 m_WriteBinaryVTKFiles(true),
 m_WriteVtkFile(true),
 m_WritePhaseId(true),
-m_WriteImageQuality(true),
+//m_WriteImageQuality(true),
 m_WriteIPFColor(true),
 m_WriteDownSampledFile(false),
 m_WriteHDF5GrainFile(false),
@@ -296,12 +296,12 @@ void Reconstruction::execute()
       scalarsToWrite.push_back(w0);
     }
 
-    if (m_WriteImageQuality == true) {
+/*    if (m_WriteImageQuality == true) {
       VtkScalarWriter* w0 =
         static_cast<VtkScalarWriter*>(new VoxelImageQualityScalarWriter<ReconstructionFunc>(m.get()));
       w0->m_WriteBinaryFiles = m_WriteBinaryVTKFiles;
       scalarsToWrite.push_back(w0);
-    }
+    }*/
 
     if (m_WriteIPFColor == true) {
       VtkScalarWriter* w0 =
@@ -404,7 +404,7 @@ void Reconstruction::printSettings(std::ostream &ostream)
 
     PRINT_PROPERTY(ostream, WriteVtkFile)
     PRINT_PROPERTY(ostream, WritePhaseId)
-    PRINT_PROPERTY(ostream, WriteImageQuality)
+//    PRINT_PROPERTY(ostream, WriteImageQuality)
     PRINT_PROPERTY(ostream, WriteIPFColor)
     PRINT_PROPERTY(ostream, WriteDownSampledFile)
     PRINT_PROPERTY(ostream, WriteHDF5GrainFile)
