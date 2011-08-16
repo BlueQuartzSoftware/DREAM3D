@@ -128,6 +128,8 @@ zpoints(0)
   m_AlreadyChecked = AIMArray<int>::CreateArray(0);
   m_Unassigned = AIMArray<int>::CreateArray(0);
   m_GrainCounts = AIMArray<int>::CreateArray(0);
+
+  m_GoodVoxels = AIMArray<bool>::CreateArray(0);
 }
 
 // -----------------------------------------------------------------------------

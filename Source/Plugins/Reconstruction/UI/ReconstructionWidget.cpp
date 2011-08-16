@@ -729,7 +729,7 @@ void ReconstructionWidget::setupQualityMetricFilters(QReconstruction* r)
   QVector<QString> fieldNames;
   QVector<float> fieldValues;
   QVector<QString> fieldOperators;
-  m_QualityMetricTableModel->setTableData(fieldNames, fieldValues, fieldOperators);
+  m_QualityMetricTableModel->getTableData(fieldNames, fieldValues, fieldOperators);
 
   for(int i = 0; i < filterCount; ++i)
   {
