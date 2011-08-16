@@ -122,9 +122,8 @@ class ReconstructionFunc
     DECLARE_WRAPPED_ARRAY(alreadychecked, m_AlreadyChecked, int);
     DECLARE_WRAPPED_ARRAY(unassigned, m_Unassigned, int);
 
-    /* These are TSL Specific terms */
-    DECLARE_WRAPPED_ARRAY(confidences, m_Confidence, float);
-    DECLARE_WRAPPED_ARRAY(imagequalities, m_ImageQualities, float);
+    // Is the voxel considered Good or Bad, did it pass the Quality Metric Filters
+    DECLARE_WRAPPED_ARRAY(goodVoxels, m_GoodVoxels, bool);
 
 
     std::vector<Grain::Pointer> m_Grains;
@@ -166,9 +165,7 @@ class ReconstructionFunc
                     bool mrgTwins,
                     bool mrgColonies,
                     int minAllowedGrSize,
-                    float minSeedConfidence,
                     float dwnSmplFact,
-                    float minImgQlty,
                     float misoTol,
                     vector<Ebsd::CrystalStructure> crystalStructures,
                     vector<AIM::Reconstruction::PhaseType> phaseTypes,

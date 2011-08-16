@@ -27,49 +27,46 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef H5CTFVOLUMEREADER_H_
-#define H5CTFVOLUMEREADER_H_
 
-//-- STL Includes
-#include <vector>
+#ifndef CTFFIELDS_H_
+#define CTFFIELDS_H_
 
-//-- EbsdLib Includes
-#include "EbsdLib/EbsdSetGetMacros.h"
-#include "EbsdLib/EbsdLibConfiguration.h"
-#include "EbsdLib/EbsdConstants.h"
-#include "EbsdLib/HKL/CtfPhase.h"
 
-//-- Reconstruction/EbsdSupport Includes
-#include "Reconstruction/EbsdSupport/H5EbsdVolumeReader.h"
-#include "Reconstruction/QualityMetricFilter.h"
+#include <QtCore/QStringList>
 
-/**
- * @class H5CtfVolumeReader H5CtfVolumeReader.h Reconstruction/EbsdSupport/H5CtfVolumeReader.h
- * @brief This class loads EBSD data from an HDF5 based file.
- * @author Michael A. Jackson for BlueQuartz Software
- * @date May 23, 2011
- * @version 1.0
+
+/*
+ *
  */
-class H5CtfVolumeReader : public H5EbsdVolumeReader
+class CtfFilterFields
 {
   public:
-    EBSD_SHARED_POINTERS(H5CtfVolumeReader)
-    EBSD_STATIC_NEW_SUPERCLASS(H5EbsdVolumeReader, H5CtfVolumeReader)
+    CtfFilterFields(){};
+    virtual ~CtfFilterFields(){};
 
-    virtual ~H5CtfVolumeReader();
 
-    int loadData(ReconstructionFunc* m, std::vector<QualityMetricFilter::Pointer> filters);
+    // -----------------------------------------------------------------------------
+    //
+    // -----------------------------------------------------------------------------
+    QStringList getFieldNames()
+    {
+      QStringList fields;
+      fields.push_back(Ebsd::Ctf::Phase.c_str());
 
-    std::vector<CtfPhase::Pointer> getPhases();
+      fields.push_back(Ebsd::Ctf::BandCount.c_str());
+      fields.push_back(Ebsd::Ctf::Error.c_str());
 
-  protected:
-    H5CtfVolumeReader();
+      fields.push_back(Ebsd::Ctf::MeanAngularDeviation.c_str());
+      fields.push_back(Ebsd::Ctf::BandContrast.c_str());
+      fields.push_back(Ebsd::Ctf::BandSlope.c_str());
+
+      return fields;
+    }
+
 
   private:
-    std::vector<CtfPhase::Pointer> m_Phases;
-
-    H5CtfVolumeReader(const H5CtfVolumeReader&); // Copy Constructor Not Implemented
-    void operator=(const H5CtfVolumeReader&); // Operator '=' Not Implemented
+    CtfFilterFields(const CtfFilterFields&); // Copy Constructor Not Implemented
+    void operator=(const CtfFilterFields&); // Operator '=' Not Implemented
 };
 
-#endif /* H5CTFVOLUMEREADER_H_ */
+#endif /* CTFFIELDS_H_ */

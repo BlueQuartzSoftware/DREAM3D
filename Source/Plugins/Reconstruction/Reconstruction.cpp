@@ -69,14 +69,12 @@ m_MergeTwins(false),
 m_MergeColonies(false),
 m_FillinSample(false),
 m_MinAllowedGrainSize(0),
-m_MinSeedConfidence(0.0),
-m_MinSeedImageQuality(0.0),
 m_MisorientationTolerance(0.0),
 m_Orientation(Ebsd::NoOrientation),
 m_WriteBinaryVTKFiles(true),
 m_WriteVtkFile(true),
 m_WritePhaseId(true),
-m_WriteImageQuality(true),
+//m_WriteImageQuality(true),
 m_WriteIPFColor(true),
 m_WriteDownSampledFile(false),
 m_WriteHDF5GrainFile(false),
@@ -169,17 +167,20 @@ void Reconstruction::execute()
 
   m->initialize(m->xpoints, m->ypoints, m->zpoints,
                 m->resx, m->resy, m->resz, m_MergeTwins, m_MergeColonies, m_MinAllowedGrainSize,
-                m_MinSeedConfidence, m_DownSampleFactor, m_MinSeedImageQuality,
+                m_DownSampleFactor,
                 m_MisorientationTolerance, crystalStructures, m_PhaseTypes, precipFractions,
                 m_AlignmentMethod);
   m_OutputDirectory = MXADir::toNativeSeparators(m_OutputDirectory);
 
   START_CLOCK()
 
+
+  // During the loading of the EBSD data the Quality Metric Filters will be run
+  // and fill in the ReconstrucionFunc->goodVoxels array.
   updateProgressAndMessage(("Loading Slices"), 4);
   ebsdReader->setSliceStart(m_ZStartIndex);
   ebsdReader->setSliceEnd(m_ZEndIndex);
-  err = ebsdReader->loadData(m.get());
+  err = ebsdReader->loadData(m.get(), m_QualityMetricFilters);
   CHECK_FOR_ERROR(ReconstructionFunc, "Reconstruction was canceled", err)
 
   m->initializeQuats();
@@ -295,12 +296,12 @@ void Reconstruction::execute()
       scalarsToWrite.push_back(w0);
     }
 
-    if (m_WriteImageQuality == true) {
+/*    if (m_WriteImageQuality == true) {
       VtkScalarWriter* w0 =
         static_cast<VtkScalarWriter*>(new VoxelImageQualityScalarWriter<ReconstructionFunc>(m.get()));
       w0->m_WriteBinaryFiles = m_WriteBinaryVTKFiles;
       scalarsToWrite.push_back(w0);
-    }
+    }*/
 
     if (m_WriteIPFColor == true) {
       VtkScalarWriter* w0 =
@@ -394,16 +395,16 @@ void Reconstruction::printSettings(std::ostream &ostream)
     PRINT_PROPERTY(ostream, MergeColonies)
     PRINT_PROPERTY(ostream, FillinSample)
     PRINT_PROPERTY(ostream, MinAllowedGrainSize)
-    PRINT_PROPERTY(ostream, MinSeedConfidence)
+//    PRINT_PROPERTY(ostream, MinSeedConfidence)
     PRINT_PROPERTY(ostream, DownSampleFactor)
-    PRINT_PROPERTY(ostream, MinSeedImageQuality)
+//    PRINT_PROPERTY(ostream, MinSeedImageQuality)
     PRINT_PROPERTY(ostream, MisorientationTolerance)
     PRINT_PROPERTY(ostream, AlignmentMethod)
     PRINT_PROPERTY(ostream, Orientation)
 
     PRINT_PROPERTY(ostream, WriteVtkFile)
     PRINT_PROPERTY(ostream, WritePhaseId)
-    PRINT_PROPERTY(ostream, WriteImageQuality)
+//    PRINT_PROPERTY(ostream, WriteImageQuality)
     PRINT_PROPERTY(ostream, WriteIPFColor)
     PRINT_PROPERTY(ostream, WriteDownSampledFile)
     PRINT_PROPERTY(ostream, WriteHDF5GrainFile)

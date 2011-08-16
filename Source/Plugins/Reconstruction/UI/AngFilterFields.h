@@ -27,49 +27,43 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef H5CTFVOLUMEREADER_H_
-#define H5CTFVOLUMEREADER_H_
 
-//-- STL Includes
-#include <vector>
+#ifndef ANGFIELDS_H_
+#define ANGFIELDS_H_
 
-//-- EbsdLib Includes
-#include "EbsdLib/EbsdSetGetMacros.h"
-#include "EbsdLib/EbsdLibConfiguration.h"
-#include "EbsdLib/EbsdConstants.h"
-#include "EbsdLib/HKL/CtfPhase.h"
+#include <QtCore/QStringList>
 
-//-- Reconstruction/EbsdSupport Includes
-#include "Reconstruction/EbsdSupport/H5EbsdVolumeReader.h"
-#include "Reconstruction/QualityMetricFilter.h"
 
-/**
- * @class H5CtfVolumeReader H5CtfVolumeReader.h Reconstruction/EbsdSupport/H5CtfVolumeReader.h
- * @brief This class loads EBSD data from an HDF5 based file.
- * @author Michael A. Jackson for BlueQuartz Software
- * @date May 23, 2011
- * @version 1.0
+
+/*
+ *
  */
-class H5CtfVolumeReader : public H5EbsdVolumeReader
+class AngFilterFields
 {
   public:
-    EBSD_SHARED_POINTERS(H5CtfVolumeReader)
-    EBSD_STATIC_NEW_SUPERCLASS(H5EbsdVolumeReader, H5CtfVolumeReader)
+    AngFilterFields(){};
+    virtual ~AngFilterFields(){};
 
-    virtual ~H5CtfVolumeReader();
+    // -----------------------------------------------------------------------------
+    //
+    // -----------------------------------------------------------------------------
+    QStringList getFieldNames()
+    {
+      QStringList fields;
 
-    int loadData(ReconstructionFunc* m, std::vector<QualityMetricFilter::Pointer> filters);
+      fields.push_back(Ebsd::Ang::ImageQuality.c_str());
+      fields.push_back(Ebsd::Ang::ConfidenceIndex.c_str());
+      fields.push_back(Ebsd::Ang::PhaseData.c_str());
 
-    std::vector<CtfPhase::Pointer> getPhases();
+      fields.push_back(Ebsd::Ang::SEMSignal.c_str());
+      fields.push_back(Ebsd::Ang::Fit.c_str());
 
-  protected:
-    H5CtfVolumeReader();
+      return fields;
+    }
 
   private:
-    std::vector<CtfPhase::Pointer> m_Phases;
-
-    H5CtfVolumeReader(const H5CtfVolumeReader&); // Copy Constructor Not Implemented
-    void operator=(const H5CtfVolumeReader&); // Operator '=' Not Implemented
+    AngFilterFields(const AngFilterFields&); // Copy Constructor Not Implemented
+    void operator=(const AngFilterFields&); // Operator '=' Not Implemented
 };
 
-#endif /* H5CTFVOLUMEREADER_H_ */
+#endif /* ANGFIELDS_H_ */

@@ -150,6 +150,43 @@ void CtfReader::deletePointers()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void* CtfReader::getPointerByName(const std::string &fieldName)
+{
+  if (fieldName.compare(Ebsd::Ctf::Phase) == 0) { return static_cast<void*>(m_Phase);}
+  if (fieldName.compare(Ebsd::Ctf::X) == 0) { return static_cast<void*>(m_X);}
+  if (fieldName.compare(Ebsd::Ctf::Y) == 0) { return static_cast<void*>(m_Y);}
+  if (fieldName.compare(Ebsd::Ctf::BandCount) == 0) { return static_cast<void*>(m_BandCount);}
+  if (fieldName.compare(Ebsd::Ctf::Error) == 0) { return static_cast<void*>(m_Error);}
+  if (fieldName.compare(Ebsd::Ctf::Euler1) == 0) { return static_cast<void*>(m_Euler1);}
+  if (fieldName.compare(Ebsd::Ctf::Euler2) == 0) { return static_cast<void*>(m_Euler2);}
+  if (fieldName.compare(Ebsd::Ctf::Euler3) == 0) { return static_cast<void*>(m_Euler3);}
+  if (fieldName.compare(Ebsd::Ctf::MeanAngularDeviation) == 0) { return static_cast<void*>(m_MAD);}
+  if (fieldName.compare(Ebsd::Ctf::BandContrast) == 0) { return static_cast<void*>(m_BC);}
+  if (fieldName.compare(Ebsd::Ctf::BandSlope) == 0) { return static_cast<void*>(m_BS);}
+  return NULL;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+Ebsd::NumType CtfReader::getPointerType(const std::string &fieldName)
+  {
+  if (fieldName.compare(Ebsd::Ctf::Phase) == 0) { return Ebsd::Int32;}
+  if (fieldName.compare(Ebsd::Ctf::X) == 0) { return Ebsd::Float;}
+  if (fieldName.compare(Ebsd::Ctf::Y) == 0) { return Ebsd::Float;}
+  if (fieldName.compare(Ebsd::Ctf::BandCount) == 0) { return Ebsd::Int32;}
+  if (fieldName.compare(Ebsd::Ctf::Error) == 0) { return Ebsd::Int32;}
+  if (fieldName.compare(Ebsd::Ctf::Euler1) == 0) { return Ebsd::Float;}
+  if (fieldName.compare(Ebsd::Ctf::Euler2) == 0) { return Ebsd::Float;}
+  if (fieldName.compare(Ebsd::Ctf::Euler3) == 0) { return Ebsd::Float;}
+  if (fieldName.compare(Ebsd::Ctf::MeanAngularDeviation) == 0) { return Ebsd::Float;}
+  if (fieldName.compare(Ebsd::Ctf::BandContrast) == 0) { return Ebsd::Int32;}
+  if (fieldName.compare(Ebsd::Ctf::BandSlope) == 0) { return Ebsd::Int32;}
+  return Ebsd::UnknownNumType;
+}
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 int CtfReader::readHeaderOnly()
 {
   int err = 1;

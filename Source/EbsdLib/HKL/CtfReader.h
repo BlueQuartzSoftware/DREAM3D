@@ -106,6 +106,19 @@ class EbsdLib_EXPORT CtfReader
     EBSD_POINTER_PROPERTY(BandSlope, BS, int)
 
     /**
+     * @brief Returns the pointer to the data for a given field
+     * @param fieldName The name of the field to return the pointer to.
+     */
+    void* getPointerByName(const std::string &fieldName);
+
+    /**
+     * @brief Returns an enumeration value that depicts the numerical
+     * primitive type that the data is stored as (Int, Float, etc).
+     * @param fieldName The name of the field.
+     */
+    Ebsd::NumType getPointerType(const std::string &fieldName);
+
+    /**
     * @brief Reads the complete HKL .ctf file.
     * @return 1 on success
     */

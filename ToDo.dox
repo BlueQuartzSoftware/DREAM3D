@@ -5,10 +5,10 @@ This is the list of things to do. It is written with the DOxygen style
 so it can be integrated with the other documentation pages.
 
 @section todohkl HKL Support
-@li During reading of the .ctf file or the .h5ebsd file the Euler angles probably need to be adjusted
+@li During reading of the .ctf file or the .h5ebsd file the Euler angles need to be adjusted properly
 @li During reading of the .ctf file or the .h5ebsd file the orientation needs to be adjusted properly
-@li During Reconstruction what fields are we going to filter on? There is one mapping that puts
-the BandCount <--> ImageQuality and Mean Angular Deviation <--> Confidence Index
+@li Add new QualityMetric Filter type to Reconstruction Pipeline
+@li Fix Preset file reading so that the new Quality Metric Filters now work
 
 
 @section todomisc Misc Bugs
@@ -20,6 +20,7 @@ the BandCount <--> ImageQuality and Mean Angular Deviation <--> Confidence Index
 @li <b>DONE</b> (MAJ 2011/06/13) - Better Display of errors when importing to help user fix their data
 
 @section reconstruction Reconstruction:
+@li Fix Reconstruction Command line application with QualityMetric Filters
 @li <b>DONE</b> (MAJ 2011/07/25) - output a ph file in the reconstruction tab.
 @li <b>DONE</b> (MAG 2011/06/08) - Fix 2 Phase bug - Bad output file is written
 @li Indicate with a set of images what is meant for the "Orientation" of the OIM Data
@@ -42,6 +43,7 @@ into the user interface
 @section surfacemeshing Surface Meshing:
 @li <b>DONE</b> (MAJ 2011/07) - Output STL File per grain
 @li <b>DONE</b> (MAG 2011/05/31) - Fix bug in assign_grains();
+@li Implement Surface Mesh Smoothing
 
 @section twotothree 2D to 3D Module:
 @li Create new tab for this interface which will generate 3D Stats from a set of 2D statistics or input files

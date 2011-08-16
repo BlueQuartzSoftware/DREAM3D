@@ -40,12 +40,15 @@ configure_file( ${PROJECT_CODE_DIR}/QtSupport/QAbstractPipelineWrapper.h.in
 set (ReconstructionPlugin_UI_HDRS
     ${PROJECT_SOURCE_DIR}/UI/ReconstructionPlugin.h
     ${PROJECT_SOURCE_DIR}/UI/ReconstructionWidget.h
+    ${PROJECT_SOURCE_DIR}/UI/QualityMetricTableModel.h
+    ${PROJECT_SOURCE_DIR}/UI/QualityMetricItemDelegate.h
     ${PROJECT_CODE_DIR}/QtSupport/AIMPluginFrame.h
     )
     
 set (ReconstructionPlugin_UI_SRCS 
     ${PROJECT_SOURCE_DIR}/UI/ReconstructionPlugin.cpp
     ${PROJECT_SOURCE_DIR}/UI/ReconstructionWidget.cpp
+    ${PROJECT_SOURCE_DIR}/UI/QualityMetricTableModel.cpp
     ${PROJECT_CODE_DIR}/QtSupport/AIMPluginFrame.cpp
     )
     
@@ -69,11 +72,13 @@ cmp_IDE_SOURCE_PROPERTIES("Generated" "${ReconstructionPlugin_Generated_UI_HDRS}
 SET (Reconstruction_HDRS
   ${PROJECT_SOURCE_DIR}/Reconstruction.h
   ${PROJECT_SOURCE_DIR}/ReconstructionFunc.h
+  ${PROJECT_SOURCE_DIR}/QualityMetricFilter.h
 )
 
 SET (Reconstruction_SRCS
   ${PROJECT_SOURCE_DIR}/Reconstruction.cpp
   ${PROJECT_SOURCE_DIR}/ReconstructionFunc.cpp
+  ${PROJECT_SOURCE_DIR}/QualityMetricFilter.cpp
 )
 cmp_IDE_SOURCE_PROPERTIES( "Reconstruction" "${Reconstruction_HDRS}" "${Reconstruction_SRCS}" "0")
 if ( ${DREAM3D_INSTALL_FILES} EQUAL 1 )
