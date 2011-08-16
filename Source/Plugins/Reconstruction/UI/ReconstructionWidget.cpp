@@ -437,12 +437,14 @@ void ReconstructionWidget::on_m_H5InputFile_textChanged(const QString &text)
     // Set the ItemDelegate for the table.
     QAbstractItemDelegate* aid = m_QualityMetricTableModel->getItemDelegate();
     m_QualityMetricTableView->setItemDelegate(aid);
+
+    // Make sure at least 1 Quality Metric is available.
+    if (m_QualityMetricTableModel->rowCount() < 1)
+    {
+      on_addQualityMetric_clicked();
+    }
   }
-  // Make sure at least 1 Quality Metric is available.
-  if (m_QualityMetricTableModel->rowCount() < 1)
-  {
-    on_addQualityMetric_clicked();
-  }
+ 
 }
 
 // -----------------------------------------------------------------------------
