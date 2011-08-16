@@ -109,8 +109,12 @@ void GrainGeneratorWidget::readSettings(QSettings &prefs)
   READ_SETTING(prefs, m_, FillingErrorWeight, ok, d, 1.0 , Double);
   READ_SETTING(prefs, m_, NeighborhoodErrorWeight, ok, d, 1.0 , Double);
   READ_SETTING(prefs, m_, SizeDistErrorWeight, ok, d, 1.0 , Double);
+  m_XPoints->blockSignals(true);
   READ_SETTING(prefs, m_, XPoints, ok, i, 100 , Int);
+  m_XPoints->blockSignals(false);
+  m_YPoints->blockSignals(true);
   READ_SETTING(prefs, m_, YPoints, ok, i, 100 , Int);
+  m_YPoints->blockSignals(false);
   READ_SETTING(prefs, m_, ZPoints, ok, i, 100 , Int);
 
   READ_CHECKBOX_SETTING(prefs, m_, PeriodicBoundaryConditions, false);
@@ -770,7 +774,7 @@ int GrainGeneratorWidget::estimate_numgrains(int xpoints, int ypoints, int zpoin
 	  diam = exp(diam);
 	  if(diam >= maxdiameter[phase]) volgood = 0;
 	  if(diam < mindiameter[phase]) volgood = 0;
-	  vol = (4.0/3.0)*(m_pi)*((diam/2.0)*(diam/2.0)*(diam/2.0));
+	  vol = (4.0/3.0)*(m_pi)*((diam * 0.5f)*(diam * 0.5f)*(diam * 0.5f));
 	}
     currentvol = currentvol + vol;
     gid++;

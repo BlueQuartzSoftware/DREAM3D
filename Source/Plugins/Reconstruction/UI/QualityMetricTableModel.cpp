@@ -257,6 +257,7 @@ bool QualityMetricTableModel::setData(const QModelIndex & index, const QVariant 
 // -----------------------------------------------------------------------------
 bool QualityMetricTableModel::insertRows(int row, int count, const QModelIndex& index)
 {
+  if (m_PossibleFields.size() < 1) { return false;}
   QString binNum = m_PossibleFields.at(0);
   float alpha = 0.0f;
   QString c = ">";
