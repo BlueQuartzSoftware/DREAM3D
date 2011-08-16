@@ -60,6 +60,10 @@ QualityMetricFilter::~QualityMetricFilter()
 int QualityMetricFilter::filter()
 {
   int err = 0;
+  if (m_Output.get() == NULL)
+  {
+    m_Output = AIMArray<bool>::CreateArray(0);
+  }
   m_Output->Resize(m_NumValues);
   m_Output->initializeWithZeros();
 
