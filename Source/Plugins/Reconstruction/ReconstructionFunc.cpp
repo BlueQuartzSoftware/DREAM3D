@@ -438,11 +438,8 @@ void ReconstructionFunc::find_border()
     checked[iter] = 0;
   }
   index = 0;
-<<<<<<< HEAD
-  while (goodVoxels[index] == true)
-=======
+
   while (imagequalities[index] > minseedimagequality)
->>>>>>> master
   {
     index++;
     if(index == totalpoints) break;
@@ -469,12 +466,9 @@ void ReconstructionFunc::find_border()
       if (j == 3 && col == (xpoints - 1)) good = 0;
       if (good == 1 && checked[neighbor] == 0)
       {
-<<<<<<< HEAD
        // if (imagequalities[neighbor] < minseedimagequality || confidences[neighbor] < minseedconfidence)
-        if (goodVoxels[neighbor] == false)
-=======
         if (imagequalities[neighbor] < minseedimagequality)
->>>>>>> master
+
         {
           grain_indicies[neighbor] = 0;
           checked[neighbor] = 1;
@@ -1041,12 +1035,8 @@ void ReconstructionFunc::form_grains()
     while (seed == -1 && counter < totalpoints)
     {
       if (randpoint > totalPMinus1) randpoint = randpoint - totalpoints;
-<<<<<<< HEAD
-
-      if (grain_indicies[randpoint] == -1 && imagequalities[randpoint] > minseedimagequality) seed = randpoint;
-=======
       if (grain_indicies[randpoint] == -1 && confidences[randpoint] > minseedconfidence) seed = randpoint;
->>>>>>> master
+
       randpoint++;
       counter++;
     }
