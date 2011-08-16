@@ -115,7 +115,7 @@ int AIM_H5VtkDataWriter::writeStructuredPoints(const std::string &hdfPath, int v
 {
   herr_t err = 0;
   err = createVtkObjectGroup(hdfPath, H5_VTK_STRUCTURED_POINTS);
-  hid_t gid = H5Gopen(m_FileId, hdfPath.c_str() );
+  hid_t gid = H5Gopen(m_FileId, hdfPath.c_str(), H5P_DEFAULT );
 
   int32_t rank =1;
   hsize_t dims[1] = {3};
@@ -155,7 +155,7 @@ int AIM_H5VtkDataWriter::writeUnstructuredGrid(const std::string &hdfPath,
 {
   herr_t err = 0;
   err = createVtkObjectGroup(hdfPath, H5_VTK_UNSTRUCTURED_GRID);
-  hid_t gid = H5Gopen(m_FileId, hdfPath.c_str() );
+  hid_t gid = H5Gopen(m_FileId, hdfPath.c_str(), H5P_DEFAULT );
 
   // Write the Points
   err = writePoints(gid, points);
@@ -203,7 +203,7 @@ int AIM_H5VtkDataWriter::writeObjectIndex(std::vector<std::string> &hdfPaths)
     std::cout << "Error creating HDF Group " << H5_VTK_OBJECT_INDEX_PATH << std::endl;
   }
 
-  hid_t gid = H5Gopen(m_FileId, H5_VTK_OBJECT_INDEX_PATH);
+  hid_t gid = H5Gopen(m_FileId, H5_VTK_OBJECT_INDEX_PATH, H5P_DEFAULT);
   if(gid < 0)
   {
     std::cout << "Error writing string attribute to HDF Group " << H5_VTK_OBJECT_INDEX_PATH << std::endl;
