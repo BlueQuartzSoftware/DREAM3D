@@ -299,7 +299,7 @@ herr_t H5Utilities::getGroupObjects(hid_t loc_id, int32_t typeFilter, std::list<
     {
       H5O_info_t object_info;
       err = H5Oget_info( loc_id, &object_info);
-      if (err > 0)
+      if (err >= 0)
       {
         type = object_info.type;
         if ( ((type == H5O_TYPE_GROUP) && (H5Support_GROUP & typeFilter)) ||
