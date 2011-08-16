@@ -123,6 +123,7 @@ zpoints(0)
   m_Euler3s = AIMArray<float>::CreateArray(0);
   m_Neighbors = AIMArray<int>::CreateArray(0);
   m_SurfaceVoxels = AIMArray<float>::CreateArray(0);
+  m_GoodVoxels = AIMArray<bool>::CreateArray(0);
   m_Quats = AIMArray<float>::CreateArray(0);
 
   m_AlreadyChecked = AIMArray<int>::CreateArray(0);
