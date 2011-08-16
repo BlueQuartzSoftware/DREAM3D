@@ -419,15 +419,18 @@ void ReconstructionWidget::on_m_H5InputFile_textChanged(const QString &text)
 
     // Setup the TableModel with the list of Possible Fields
     QAbstractItemModel* model = m_QualityMetricTableView->model();
+    // This first time through the model will be NULL that we get from the table view. This does a
+    // simple swap with our own Table Model object. Multiple times through the model will be the same
+    // so we do NOT need to delete the model
     m_QualityMetricTableView->setModel(m_QualityMetricTableModel);
-    delete model; // Clean up this memory
-
+    if (model != m_QualityMetricTableModel && model == NULL) {
+      delete model; // Clean up this memory
+    }
     // Get the list of Fields based on the Manufacturer
     if (m_EbsdManufacturer.compare(QString(Ebsd::Ang::Manufacturer.c_str())) == 0)
     {
       AngFilterFields fields;
       m_QualityMetricTableModel->setPossibleFields(fields.getFieldNames());
-
     }
     else if (m_EbsdManufacturer.compare(QString(Ebsd::Ctf::Manufacturer.c_str())) == 0)
     {
