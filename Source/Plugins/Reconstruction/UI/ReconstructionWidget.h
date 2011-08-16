@@ -40,6 +40,7 @@
 #include "QtSupport/AIMPluginFrame.h"
 #include "QReconstruction.h"
 
+class QualityMetricTableModel;
 
 
 /**
@@ -111,6 +112,11 @@ class ReconstructionWidget : public AIMPluginFrame, private Ui::ReconstructionWi
 
     void on_m_HDF5GrainFile_stateChanged(int state);
 
+    void on_addQualityMetric_clicked();
+
+    void on_removeQualityMetric_clicked();
+
+
     /**
      *
      */
@@ -129,15 +135,28 @@ class ReconstructionWidget : public AIMPluginFrame, private Ui::ReconstructionWi
     QList<QWidget*>             m_WidgetList;
     QReconstruction*            m_Reconstruction;
     QThread*                    m_WorkerThread;
+    QualityMetricTableModel*    m_QualityMetricTableModel;
     bool                        m_phaseTypeEdited;
     bool                        m_WritePhaseIdScalars;
-    bool                        m_WriteImageQualityScalars;
+ //   bool                        m_WriteImageQualityScalars;
     bool                        m_WriteIPFColorScalars;
     bool                        m_WriteBinaryVTKFile;
 
-    QString m_OpenDialogLastDirectory;
+    QString                     m_OpenDialogLastDirectory;
+    QString                     m_EbsdManufacturer;
 
+    /**
+     * @brief
+     * @return
+     */
     bool checkPhaseTypes();
+
+    /**
+     * @brief
+     * @param r
+     */
+    void setupQualityMetricFilters(QReconstruction* r);
+
 
     ReconstructionWidget(const ReconstructionWidget&); // Copy Constructor Not Implemented
     void operator=(const ReconstructionWidget&); // Operator '=' Not Implemented

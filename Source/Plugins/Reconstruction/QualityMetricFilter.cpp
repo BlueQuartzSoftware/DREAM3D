@@ -27,49 +27,83 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef H5CTFVOLUMEREADER_H_
-#define H5CTFVOLUMEREADER_H_
 
-//-- STL Includes
-#include <vector>
+#include "QualityMetricFilter.h"
+#include "EbsdLib/EbsdLibTypes.h"
 
-//-- EbsdLib Includes
-#include "EbsdLib/EbsdSetGetMacros.h"
-#include "EbsdLib/EbsdLibConfiguration.h"
-#include "EbsdLib/EbsdConstants.h"
-#include "EbsdLib/HKL/CtfPhase.h"
-
-//-- Reconstruction/EbsdSupport Includes
-#include "Reconstruction/EbsdSupport/H5EbsdVolumeReader.h"
-#include "Reconstruction/QualityMetricFilter.h"
-
-/**
- * @class H5CtfVolumeReader H5CtfVolumeReader.h Reconstruction/EbsdSupport/H5CtfVolumeReader.h
- * @brief This class loads EBSD data from an HDF5 based file.
- * @author Michael A. Jackson for BlueQuartz Software
- * @date May 23, 2011
- * @version 1.0
- */
-class H5CtfVolumeReader : public H5EbsdVolumeReader
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QualityMetricFilter::QualityMetricFilter()
 {
-  public:
-    EBSD_SHARED_POINTERS(H5CtfVolumeReader)
-    EBSD_STATIC_NEW_SUPERCLASS(H5EbsdVolumeReader, H5CtfVolumeReader)
+}
 
-    virtual ~H5CtfVolumeReader();
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QualityMetricFilter::~QualityMetricFilter()
+{
+}
 
-    int loadData(ReconstructionFunc* m, std::vector<QualityMetricFilter::Pointer> filters);
 
-    std::vector<CtfPhase::Pointer> getPhases();
 
-  protected:
-    H5CtfVolumeReader();
 
-  private:
-    std::vector<CtfPhase::Pointer> m_Phases;
+#define FILTER_DATA(type) \
+    if (m_FieldOperator.compare("<") == 0) filterDataLessThan<type>();\
+    else if (m_FieldOperator.compare(">") == 0) filterDataGreaterThan<type>();\
+    else if (m_FieldOperator.compare("=") == 0) filterDataEqualTo<type>();
 
-    H5CtfVolumeReader(const H5CtfVolumeReader&); // Copy Constructor Not Implemented
-    void operator=(const H5CtfVolumeReader&); // Operator '=' Not Implemented
-};
 
-#endif /* H5CTFVOLUMEREADER_H_ */
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int QualityMetricFilter::filter()
+{
+  int err = 0;
+  m_Output->Resize(m_NumValues);
+  m_Output->initializeWithZeros();
+
+  if (m_DataType == Ebsd::Int8)
+  {
+    FILTER_DATA(int8_t);
+  }
+  if (m_DataType == Ebsd::UInt8)
+  {
+    FILTER_DATA(uint8_t);
+  }
+  if (m_DataType == Ebsd::Int16)
+  {
+    FILTER_DATA(int16_t);
+  }
+  if (m_DataType == Ebsd::UInt16)
+  {
+    FILTER_DATA(uint16_t);
+  }
+  if (m_DataType == Ebsd::Int32)
+  {
+    FILTER_DATA(int32_t);
+  }
+  if (m_DataType == Ebsd::UInt32)
+  {
+    FILTER_DATA(uint32_t);
+  }
+  if (m_DataType == Ebsd::Int64)
+  {
+    FILTER_DATA(int64_t);
+  }
+  if (m_DataType == Ebsd::UInt64)
+  {
+    FILTER_DATA(uint64_t);
+  }
+  if (m_DataType == Ebsd::Float)
+  {
+    FILTER_DATA(float);
+  }
+  if (m_DataType == Ebsd::Double)
+  {
+    FILTER_DATA(double);
+  }
+
+
+  return err;
+}

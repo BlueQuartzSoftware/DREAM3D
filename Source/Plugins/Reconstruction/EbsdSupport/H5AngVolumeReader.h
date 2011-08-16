@@ -43,9 +43,10 @@
 
 //-- AIM Common Includes
 #include "DREAM3D/DREAM3DConfiguration.h"
-#include "H5EbsdVolumeReader.h"
-#include "Reconstruction/ReconstructionFunc.h"
 
+#include "Reconstruction/EbsdSupport/H5EbsdVolumeReader.h"
+#include "Reconstruction/ReconstructionFunc.h"
+#include "Reconstruction/QualityMetricFilter.h"
 
 
 /**
@@ -55,7 +56,7 @@
  * @date May 23, 2011
  * @version 1.0
  */
-class DREAM3DLib_EXPORT H5AngVolumeReader : public H5EbsdVolumeReader
+class H5AngVolumeReader : public H5EbsdVolumeReader
 {
   public:
     MXA_SHARED_POINTERS(H5AngVolumeReader)
@@ -63,7 +64,7 @@ class DREAM3DLib_EXPORT H5AngVolumeReader : public H5EbsdVolumeReader
 
     virtual ~H5AngVolumeReader();
 
-    int loadData(ReconstructionFunc* m);
+    int loadData(ReconstructionFunc* m, std::vector<QualityMetricFilter::Pointer> filters);
 
     std::vector<AngPhase::Pointer> getPhases();
 

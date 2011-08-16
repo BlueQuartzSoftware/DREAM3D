@@ -168,6 +168,7 @@ Q_OBJECT    ;
     //virtual void setBinNumbers(QVector<float> binNumbers) = 0;
     virtual void setTableData(QVector<float> bins, QVector<QVector<float> > data, QVector<QString> colors) = 0;
 
+
     /**
      *
      * @return

@@ -36,6 +36,7 @@
 #define WIN32_LEAN_AND_MEAN		// Exclude rarely-used stuff from Windows headers
 #endif
 
+#include <vector>
 
 #include <MXA/Common/MXASetGetMacros.h>
 #include <MXA/MXATypes.h>
@@ -47,6 +48,7 @@
 #include "DREAM3D/Common/Constants.h"
 #include "DREAM3D/Common/AbstractPipeline.h"
 #include "ReconstructionFunc.h"
+#include "QualityMetricFilter.h"
 
 /**
 * @class Reconstruction Reconstruction AIM/Reconstruction.h/Reconstruction.h
@@ -77,9 +79,9 @@ class Reconstruction : public AbstractPipeline
     MXA_INSTANCE_PROPERTY(bool, MergeColonies)
     MXA_INSTANCE_PROPERTY(bool, FillinSample)
     MXA_INSTANCE_PROPERTY(int32_t, MinAllowedGrainSize)
-    MXA_INSTANCE_PROPERTY(double, MinSeedConfidence)
+
     MXA_INSTANCE_PROPERTY(double, DownSampleFactor)
-    MXA_INSTANCE_PROPERTY(double, MinSeedImageQuality)
+
     MXA_INSTANCE_PROPERTY(double, MisorientationTolerance)
     MXA_INSTANCE_PROPERTY(AIM::Reconstruction::AlignmentMethod, AlignmentMethod)
     MXA_INSTANCE_PROPERTY(Ebsd::Orientation, Orientation)
@@ -87,13 +89,15 @@ class Reconstruction : public AbstractPipeline
     MXA_INSTANCE_PROPERTY(bool, WriteBinaryVTKFiles)
     MXA_INSTANCE_PROPERTY(bool, WriteVtkFile)
     MXA_INSTANCE_PROPERTY(bool, WritePhaseId)
-    MXA_INSTANCE_PROPERTY(bool, WriteImageQuality)
+//    MXA_INSTANCE_PROPERTY(bool, WriteImageQuality)
     MXA_INSTANCE_PROPERTY(bool, WriteIPFColor)
 
     MXA_INSTANCE_PROPERTY(bool, WriteDownSampledFile)
     MXA_INSTANCE_PROPERTY(bool, WriteHDF5GrainFile)
     MXA_INSTANCE_PROPERTY(bool, WriteDxFile)
     MXA_INSTANCE_PROPERTY(bool, WritePhFile)
+
+    MXA_INSTANCE_PROPERTY(std::vector<QualityMetricFilter::Pointer>, QualityMetricFilters)
 
     /**
     * @brief Main method to run the operation

@@ -73,7 +73,6 @@ namespace Ebsd
      NoOrientation = 4,
   };
 
-
   /**
    * @brief IF YOU CHANGE THE VALUES THERE ARE DEEP RAMIFICATIONS IN THE CODE BUT
    * MOSTLY IN THE HDF5 FILES WHICH ARE WRITTEN USING THE ENUMERATIONS.
@@ -86,6 +85,19 @@ namespace Ebsd
       UnknownCrystalStructure = 999    //!< UnknownCrystalStructure
   };
 
+  enum NumType {
+    Int8 = 0,
+    UInt8,
+    Int16,
+    UInt16,
+    Int32,
+    UInt32,
+    Int64,
+    UInt64,
+    Float,
+    Double,
+    UnknownNumType
+  };
 }
 
 

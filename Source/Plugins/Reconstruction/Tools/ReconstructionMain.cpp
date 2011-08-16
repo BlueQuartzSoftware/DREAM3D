@@ -160,8 +160,8 @@ int main(int argc, char **argv)
 
     m_Reconstruction->setMinAllowedGrainSize(MinAllowedGrainSize.getValue());
     m_Reconstruction->setMisorientationTolerance(MisOrientationTolerance.getValue());
-    m_Reconstruction->setMinSeedImageQuality(MinImageQuality.getValue());
-    m_Reconstruction->setMinSeedConfidence(MinConfidence.getValue());
+//    m_Reconstruction->setMinSeedImageQuality(MinImageQuality.getValue());
+//    m_Reconstruction->setMinSeedConfidence(MinConfidence.getValue());
     m_Reconstruction->setDownSampleFactor(DownSampleFactor.getValue());
     //m_Reconstruction->setSizeBinStepSize(BinStepSize.getValue());
 
@@ -169,7 +169,7 @@ int main(int argc, char **argv)
     m_Reconstruction->setOutputFilePrefix(OutputFilePrefix.getValue());
     m_Reconstruction->setWriteVtkFile(true);
     m_Reconstruction->setWritePhaseId(true);
-    m_Reconstruction->setWriteImageQuality(true);
+//    m_Reconstruction->setWriteImageQuality(true);
     m_Reconstruction->setWriteIPFColor(true);
     m_Reconstruction->setWriteBinaryVTKFiles(true);
 
