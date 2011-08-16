@@ -138,7 +138,7 @@ class ReconstructionWidget : public AIMPluginFrame, private Ui::ReconstructionWi
     QualityMetricTableModel*    m_QualityMetricTableModel;
     bool                        m_phaseTypeEdited;
     bool                        m_WritePhaseIdScalars;
-    bool                        m_WriteImageQualityScalars;
+ //   bool                        m_WriteImageQualityScalars;
     bool                        m_WriteIPFColorScalars;
     bool                        m_WriteBinaryVTKFile;
 

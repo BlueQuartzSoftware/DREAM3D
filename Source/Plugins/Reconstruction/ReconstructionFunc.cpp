@@ -142,21 +142,11 @@ ReconstructionFunc::~ReconstructionFunc()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ReconstructionFunc::initialize(int nX,
-                                    int nY,
-                                    int nZ,
-                                    float xRes,
-                                    float yRes,
-                                    float zRes,
-                                    bool mrgTwins,
-                                    bool mrgColonies,
-                                    int minAllowedGrSize,
-                                    float dwnSmplFact,
-                                    float misoTol,
-                                    vector<Ebsd::CrystalStructure> crystalStructures,
+void ReconstructionFunc::initialize(int nX, int nY, int nZ, float xRes, float yRes, float zRes,
+                                    bool mrgTwins, bool mrgColonies, int minAllowedGrSize,
+                                    float dwnSmplFact, float misoTol, vector<Ebsd::CrystalStructure> crystalStructures,
                                     vector<AIM::Reconstruction::PhaseType> phaseTypes,
-                                    std::vector<float> precipFractions,
-                                    int alignmentMethod)
+                                    std::vector<float> precipFractions, int alignmentMethod)
 {
 
   mergetwinsoption = (mrgTwins == true) ? 1 : 0;
@@ -254,9 +244,7 @@ void ReconstructionFunc::initializeQuats()
 }
 void ReconstructionFunc::cleanup_data()
 {
-  float bestneighborconfidence;
   int bestneighbor;
-  float confidence;
   int x, y, z;
   int neighpoint;
   int good = 0;
@@ -273,13 +261,12 @@ void ReconstructionFunc::cleanup_data()
     count = 0;
     for (int i = 0; i < (xpoints * ypoints * zpoints); i++)
     {
-//      if (grain_indicies[i] == -1 && confidences[i] < minseedconfidence)
       if (grain_indicies[i] == -1 && goodVoxels[i] == false)
       {
+		bestneighbor = -1;
         x = i % xpoints;
         y = (i / xpoints) % ypoints;
         z = i / (xpoints * ypoints);
-        bestneighborconfidence = minseedconfidence;
         for (int j = 0; j < 6; j++)
         {
           good = 1;
@@ -292,16 +279,14 @@ void ReconstructionFunc::cleanup_data()
           if (j == 3 && x == (xpoints - 1)) good = 0;
           if (good == 1)
           {
-            confidence = confidences[i];
-            if (confidence > bestneighborconfidence)
+            if (goodVoxels[neighpoint] == true)
             {
               count++;
-              bestneighborconfidence = confidence;
               bestneighbor = neighpoint;
             }
           }
         }
-        if (bestneighborconfidence > minseedconfidence)
+        if (bestneighbor >= 0)
         {
           neighbors[i] = bestneighbor;
         }
@@ -309,15 +294,11 @@ void ReconstructionFunc::cleanup_data()
     }
     for (int j = 0; j < (xpoints * ypoints * zpoints); j++)
     {
-      bestneighbor = neighbors[j];
-      //if (bestneighbor >= 0 && confidences[j] < minseedconfidence)
-      if (bestneighbor >= 0 && goodVoxels[j] == false)
+      if (neighbors[j] >= 0 && goodVoxels[j] == false)
       {
         euler1s[j] = euler1s[bestneighbor];
         euler2s[j] = euler2s[bestneighbor];
         euler3s[j] = euler3s[bestneighbor];
-//        confidences[j] = confidences[bestneighbor];
-//        imagequalities[j] = imagequalities[bestneighbor];
         goodVoxels[j] = goodVoxels[bestneighbor];
         quats[j*5 + 0] = quats[bestneighbor*5 + 0];
         quats[j*5 + 1] = quats[bestneighbor*5 + 1];
@@ -439,7 +420,7 @@ void ReconstructionFunc::find_border()
   }
   index = 0;
 
-  while (imagequalities[index] > minseedimagequality)
+  while (goodVoxels[index] == true)
   {
     index++;
     if(index == totalpoints) break;
@@ -466,9 +447,7 @@ void ReconstructionFunc::find_border()
       if (j == 3 && col == (xpoints - 1)) good = 0;
       if (good == 1 && checked[neighbor] == 0)
       {
-       // if (imagequalities[neighbor] < minseedimagequality || confidences[neighbor] < minseedconfidence)
-        if (imagequalities[neighbor] < minseedimagequality)
-
+        if (goodVoxels[neighbor] == false)
         {
           grain_indicies[neighbor] = 0;
           checked[neighbor] = 1;
@@ -570,7 +549,6 @@ void ReconstructionFunc::align_sections()
   float n1, n2, n3;
   float q1[5];
   float q2[5];
-  float refci, curci, refiq, curiq;
   float refxcentroid, refycentroid;
   float curxcentroid, curycentroid;
   int refgnum, curgnum;
@@ -673,10 +651,6 @@ void ReconstructionFunc::align_sections()
                 {
                   refposition = ((slice + 1) * xpoints * ypoints) + (l * xpoints) + m;
                   curposition = (slice * xpoints * ypoints) + ((l + (j * step) + tempyshift) * xpoints) + (m + (k * step) + tempxshift);
-                  refci = confidences[refposition];
-                  curci = confidences[curposition];
-                  refiq = imagequalities[refposition];
-                  curiq = imagequalities[curposition];
                   refgnum = grain_indicies[refposition];
                   curgnum = grain_indicies[curposition];
                   if (alignmeth == AIM::Reconstruction::MutualInformation)
@@ -690,7 +664,7 @@ void ReconstructionFunc::align_sections()
                   }
                   if (alignmeth == AIM::Reconstruction::Misorientation)
                   {
-                    if (refiq > minseedimagequality && curiq > minseedimagequality)
+                    if (goodVoxels[refposition] == true && goodVoxels[curposition] == true)
                     {
                       w = 10000.0;
                       q1[1] = quats[refposition*5 + 1];
@@ -706,8 +680,8 @@ void ReconstructionFunc::align_sections()
                       if (phase1 == phase2) w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
                       if (w > misorientationtolerance) disorientation++;
                     }
-                    if (refiq < minseedimagequality && curiq > minseedimagequality) disorientation++;
-                    if (refiq > minseedimagequality && curiq < minseedimagequality) disorientation++;
+                    if (goodVoxels[refposition] == true && goodVoxels[curposition] == false) disorientation++;
+                    if (goodVoxels[refposition] == false && goodVoxels[curposition] == true) disorientation++;
                   }
                 }
                 else
@@ -808,8 +782,6 @@ void ReconstructionFunc::align_sections()
           quats[position*5 + 2] = quats[tempposition*5 + 2];
           quats[position*5 + 3] = quats[tempposition*5 + 3];
           quats[position*5 + 4] = quats[tempposition*5 + 4];
-//          confidences[position] = confidences[tempposition];
-//          imagequalities[position] = imagequalities[tempposition];
           goodVoxels[position] = goodVoxels[tempposition];
           grain_indicies[position] = grain_indicies[tempposition];
         }
@@ -826,8 +798,6 @@ void ReconstructionFunc::align_sections()
           quats[position*5 + 2] = 0.0;
           quats[position*5 + 3] = 0.0;
           quats[position*5 + 4] = 1.0;
-//          confidences[position] = 0.0;
-//          imagequalities[position] = 0.0;
           goodVoxels[position] = false;
           grain_indicies[position] = 0;
         }
@@ -899,9 +869,6 @@ void ReconstructionFunc::form_grains_sections()
           if (x > xpoints - 1) x = x - xpoints;
           if (y > ypoints - 1) y = y - ypoints;
           point = (z * xpoints * ypoints) + (y * xpoints) + x;
-//          float confidence = confidences[point];
-//          float imagequality = imagequalities[point];
-//          if (confidence > minseedconfidence && imagequality > minseedimagequality && grain_indicies[point] == -1)
           if (goodVoxels[point] == true && grain_indicies[point] == -1)
           {
             seed = point;
@@ -1035,7 +1002,7 @@ void ReconstructionFunc::form_grains()
     while (seed == -1 && counter < totalpoints)
     {
       if (randpoint > totalPMinus1) randpoint = randpoint - totalpoints;
-      if (grain_indicies[randpoint] == -1 && confidences[randpoint] > minseedconfidence) seed = randpoint;
+      if (grain_indicies[randpoint] == -1 && goodVoxels[randpoint] == true) seed = randpoint;
 
       randpoint++;
       counter++;

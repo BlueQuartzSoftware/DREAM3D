@@ -80,7 +80,7 @@ m_Reconstruction(NULL),
 m_WorkerThread(NULL),
 m_phaseTypeEdited(false),
 m_WritePhaseIdScalars(true),
-m_WriteImageQualityScalars(true),
+//m_WriteImageQualityScalars(true),
 m_WriteIPFColorScalars(true),
 m_WriteBinaryVTKFile(true),
 #if defined(Q_WS_WIN)
@@ -134,7 +134,7 @@ void ReconstructionWidget::readSettings(QSettings &prefs)
   READ_SETTING(prefs, m_, DownSampleFactor, ok, d, 1.0 , Double);
 
   READ_BOOL_SETTING(prefs, m_, WritePhaseIdScalars, true);
-  READ_BOOL_SETTING(prefs, m_, WriteImageQualityScalars, true);
+//  READ_BOOL_SETTING(prefs, m_, WriteImageQualityScalars, true);
   READ_BOOL_SETTING(prefs, m_, WriteIPFColorScalars, true);
   READ_BOOL_SETTING(prefs, m_, WriteBinaryVTKFile, true);
 
@@ -176,7 +176,7 @@ void ReconstructionWidget::writeSettings(QSettings &prefs)
 
 
   WRITE_BOOL_SETTING(prefs, m_, WritePhaseIdScalars, true);
-  WRITE_BOOL_SETTING(prefs, m_, WriteImageQualityScalars, true);
+//  WRITE_BOOL_SETTING(prefs, m_, WriteImageQualityScalars, true);
   WRITE_BOOL_SETTING(prefs, m_, WriteIPFColorScalars, true);
   WRITE_BOOL_SETTING(prefs, m_, WriteBinaryVTKFile, true);
 
@@ -437,11 +437,11 @@ void ReconstructionWidget::on_m_H5InputFile_textChanged(const QString &text)
     // Set the ItemDelegate for the table.
     QAbstractItemDelegate* aid = m_QualityMetricTableModel->getItemDelegate();
     m_QualityMetricTableView->setItemDelegate(aid);
-  }
-  // Make sure at least 1 Quality Metric is available.
-  if (m_QualityMetricTableModel->rowCount() < 1)
-  {
-    on_addQualityMetric_clicked();
+    // Make sure at least 1 Quality Metric is available.
+    if (m_QualityMetricTableModel->rowCount() < 1)
+    {
+      on_addQualityMetric_clicked();
+    }
   }
 }
 
@@ -665,7 +665,7 @@ void ReconstructionWidget::on_m_GoBtn_clicked()
 
   m_Reconstruction->setWriteVtkFile(m_VisualizationVizFile->isChecked());
   m_Reconstruction->setWritePhaseId(m_WritePhaseIdScalars);
-  m_Reconstruction->setWriteImageQuality(m_WriteImageQualityScalars);
+//  m_Reconstruction->setWriteImageQuality(m_WriteImageQualityScalars);
   m_Reconstruction->setWriteIPFColor(m_WriteIPFColorScalars);
   m_Reconstruction->setWriteBinaryVTKFiles(m_WriteBinaryVTKFile);
 
@@ -783,14 +783,14 @@ void ReconstructionWidget::on_m_VtkOptionsBtn_clicked()
 {
   QVector<QString> options;
   options.push_back("Write Phase Ids Scalars");
-  options.push_back("Write Image Quality Scalars");
+//  options.push_back("Write Image Quality Scalars");
   options.push_back("Write IPF Color Scalars");
   options.push_back("Write Binary VTK File");
   QCheckboxDialog d(options, this);
   d.setWindowTitle(QString("VTK Output Options"));
 
   d.setValue("Write Phase Ids Scalars", m_WritePhaseIdScalars);
-  d.setValue("Write Image Quality Scalars", m_WriteImageQualityScalars);
+//  d.setValue("Write Image Quality Scalars", m_WriteImageQualityScalars);
   d.setValue("Write IPF Color Scalars", m_WriteIPFColorScalars);
   d.setValue("Write Binary VTK File", m_WriteBinaryVTKFile);
 
@@ -798,7 +798,7 @@ void ReconstructionWidget::on_m_VtkOptionsBtn_clicked()
   if (ret == QDialog::Accepted)
   {
     m_WritePhaseIdScalars = d.getValue("Write Phase Ids Scalars");
-    m_WriteImageQualityScalars = d.getValue("Write Image Quality Scalars");
+//    m_WriteImageQualityScalars = d.getValue("Write Image Quality Scalars");
     m_WriteIPFColorScalars = d.getValue("Write IPF Color Scalars");
     m_WriteBinaryVTKFile = d.getValue("Write Binary VTK File");
   }
