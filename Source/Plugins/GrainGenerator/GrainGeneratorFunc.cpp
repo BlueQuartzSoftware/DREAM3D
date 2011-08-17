@@ -1425,7 +1425,7 @@ void  GrainGeneratorFunc::pack_grains()
     change2 = 0;
     change3 = 0;
     int option = iteration % 4;
-	if(iteration%10 == 0) outFile << oldfillingerror << endl;
+	if(iteration%25 == 0) outFile << oldfillingerror << "	" << m_Grains.size() << endl;
   // this option adds a grain
   if (option == 0)
     {
