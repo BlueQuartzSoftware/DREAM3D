@@ -64,7 +64,7 @@ class DREAM3DLib_EXPORT ShapeOps
 
     virtual float gamma(float x);
 
-    virtual int inside(float axis1comp, float axis2comp, float axis3comp);
+    virtual float inside(float axis1comp, float axis2comp, float axis3comp);
 
     virtual void init() {};
 
