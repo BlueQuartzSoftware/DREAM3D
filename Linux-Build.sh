@@ -32,20 +32,21 @@ export QWT_INSTALL=$sandbox/qwt
 
 # Build the HDF5 libraries we need and set our Environment Variable.
 cd $sourcedir
-git clone git://scm.bluequartz.net/support-libraries/hdf5-v1-6.git hdf5-169
-cd hdf5-169
+# We assume we already have downloaded the source for HDF5 Version 1.8.7 and have it in a folder
+# called hdf5-187
+cd hdf5-187
 mkdir Build
 cd Build
-cmake -DBUILD_SHARED_LIBS=OFF -DCMAKE_INSTALL_PREFIX=$sandbox/hdf5 -DCMAKE_BUILD_TYPE=Debug ../
+cmake -DBUILD_SHARED_LIBS=OFF -DCMAKE_INSTALL_PREFIX=$sandbox/hdf5-187 -DCMAKE_BUILD_TYPE=Debug -DHDF5_BUILD_HL_LIB=ON -DHDF5_ENABLE_DEPRECATED_SYMBOLS=OFF ../
 make -j4
 make install
 cd ../
 mkdir zRel
 cd zRel
-cmake -DBUILD_SHARED_LIBS=OFF -DCMAKE_INSTALL_PREFIX=$sandbox/hdf5 -DCMAKE_BUILD_TYPE=Release ../
+cmake -DBUILD_SHARED_LIBS=OFF -DCMAKE_INSTALL_PREFIX=$sandbox/hdf5-187 -DCMAKE_BUILD_TYPE=Release  -DHDF5_BUILD_HL_LIB=ON -DHDF5_ENABLE_DEPRECATED_SYMBOLS=OFF ../
 make -j4
 make install
-export HDF5_INSTALL=$sandbox/hdf5
+export HDF5_INSTALL=$sandbox/hdf5-187
 
 # Build Our Subset of Boost. Note that the user may already have Boost on their machines
 # at which point we can use that installation. Just set the proper environment variable
@@ -61,7 +62,7 @@ export BOOST_ROOT=$sandbox/MXABoost
 
 #Now Try and Build the Actual DREAM3D Project
 cd $sourcedir
-#git clone ssh://mjackson@scm.bluequartz.net/Library/GIT/Private/AIMRepresentation.git DREAM3D
+#git clone ssh://code@scm.bluequartz.net/DREAM3D.git DREAM3D
 cd DREAM3D
 rm -rf Build
 mkdir Build
