@@ -211,8 +211,8 @@ int H5AngVolumeReader::loadData(ReconstructionFunc* m, std::vector<QualityMetric
   std::vector<Ebsd::NumType> dataTypes(filters.size(), Ebsd::UnknownNumType);
 
   err = readVolumeInfo();
-  int sliceStart = getSliceStart();
-  int sliceEnd = getSliceEnd();
+//  int sliceStart = getSliceStart();
+//  int sliceEnd = getSliceEnd();
   for (int slice = 0; slice < m->zpoints; ++slice)
   {
     H5AngReader::Pointer reader = H5AngReader::New();

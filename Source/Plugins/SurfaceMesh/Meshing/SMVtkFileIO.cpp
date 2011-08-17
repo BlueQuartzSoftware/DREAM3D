@@ -333,11 +333,11 @@ int SMVtkFileIO::writeVTKFile(const std::string &VisualizationFile,
 //  int* nodeKind = (int*)(&nodeData[4]);
   float vec3f[3];
   size_t totalWritten = 0;
-
+  size_t nread = 0;
   // Write the POINTS data (Vertex)
   for (int i = 0; i < nNodes; i++)
   {
-    fread(nodeData, 20, 1, nodesFile); // Read one set of positions from the nodes file
+    nread = fread(nodeData, 20, 1, nodesFile); // Read one set of positions from the nodes file
     if (binaryFile == true) {
       vec3f[0] = vec3d[0]; vec3f[1] = vec3d[1]; vec3f[2] = vec3d[2];
       MXA::Endian::FromSystemToBig::convert<float>(vec3f[0]);
@@ -363,7 +363,7 @@ int SMVtkFileIO::writeVTKFile(const std::string &VisualizationFile,
   for (int i = 0; i < nTriangles; i++)
   {
     // Read from the Input Triangles Temp File
-    fread(tData, sizeof(int), 6, triFile);
+    nread = fread(tData, sizeof(int), 6, triFile);
     if (binaryFile == true)
     {
       tData[0] = 3; // Push on the total number of entries for this entry

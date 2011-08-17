@@ -76,7 +76,7 @@ AIMArray<bool>::Pointer H5EbsdVolumeReader::determineGoodVoxels(std::vector<Qual
                                                                std::vector<Ebsd::NumType> dTypes)
 {
   if (filters.size() == 0) { return AIMArray<bool>::NullPointer(); }
-  size_t i = 0;
+
   size_t nFilters = filters.size();
   for (size_t i = 0; i < nFilters; ++i)
   {
