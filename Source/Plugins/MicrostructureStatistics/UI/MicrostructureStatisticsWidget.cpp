@@ -337,7 +337,21 @@ void MicrostructureStatisticsWidget::on_m_GoBtn_clicked()
   if(m_H5StatisticsFile->isChecked() == true || m_WriteGrainSize == true) m_ComputeGrainSize = true;
   if(m_H5StatisticsFile->isChecked() == true || m_WriteGrainShapes == true) m_ComputeGrainShapes = true;
   if(m_H5StatisticsFile->isChecked() == true || m_WriteNumNeighbors == true) m_ComputeNumNeighbors = true;
-
+  if(m_GrainDataFile->isChecked() == false)
+  {
+	m_WriteGrainSize = false;
+	m_WriteGrainShapes = false;
+	m_WriteNumNeighbors = false;
+	m_WriteAverageOrientations = false;
+  }
+  if(m_VisualizationVizFile->isChecked() == false);
+  {
+	m_WriteSurfaceVoxelScalars = false;
+	m_WritePhaseIdScalars = false;
+	m_WriteKernelMisorientationsScalars = false;
+	m_WriteIPFColorScalars = false;
+	m_WriteBinaryVTKFile = false;
+  }
 
   if (m_WorkerThread != NULL)
   {
@@ -525,47 +539,3 @@ void MicrostructureStatisticsWidget::on_m_GrainFileOptionsBtn_clicked()
 
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void MicrostructureStatisticsWidget::on_m_H5StatisticsFile_stateChanged()
-{
-  if (m_H5StatisticsFile->isChecked() == true)
-  {
-
-  }
-  else
-  {
-
-  }
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void MicrostructureStatisticsWidget::on_m_GrainDataFile_stateChanged()
-{
-  if (m_GrainDataFile->isChecked() == true)
-  {
-
-  }
-  else
-  {
-
-  }
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void MicrostructureStatisticsWidget::on_m_VisualizationVizFile_stateChanged()
-{
-  if (m_VisualizationVizFile->isChecked() == true)
-  {
-
-  }
-  else
-  {
-
-  }
-}

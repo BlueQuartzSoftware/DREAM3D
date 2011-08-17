@@ -29,7 +29,7 @@ namespace DREAM3D
       virtual ~CylinderOps();
 
       virtual float radcur1(std::map<ArgName, float> args);
-      virtual int inside(float axis1comp, float axis2comp, float axis3comp);
+      virtual float inside(float axis1comp, float axis2comp, float axis3comp);
       virtual void init() {  }
 
     protected:

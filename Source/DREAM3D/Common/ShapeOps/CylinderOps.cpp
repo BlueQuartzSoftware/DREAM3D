@@ -47,17 +47,17 @@ float CylinderOps::radcur1(std::map<ArgName, float> args)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int CylinderOps::inside(float axis1comp, float axis2comp, float axis3comp)
+float CylinderOps::inside(float axis1comp, float axis2comp, float axis3comp)
 {
-  int inside = 1;
-  if (fabs(axis1comp) <= 1)
+  float inside = -1.0;
+  if (fabs(axis1comp) <= 1.0)
   {
-    inside = 1;
+    inside = 1.0;
     axis2comp = fabs(axis2comp);
     axis3comp = fabs(axis3comp);
     axis2comp = axis2comp*axis2comp;
     axis3comp = axis3comp*axis3comp;
-    inside = 1 - axis2comp - axis3comp;
+    inside = 1.0 - axis2comp - axis3comp;
   }
   return inside;
 }
