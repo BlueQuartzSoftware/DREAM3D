@@ -362,18 +362,18 @@ void QualityMetricTableModel::setColumnData(int col, QVector<float> &data)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QualityMetricTableModel::setTableData( QVector<QString> bins, QVector<float> data, QVector<QString> colors)
+void QualityMetricTableModel::setTableData( QVector<QString> fieldNames, QVector<float> fieldValues, QVector<QString> fieldOperators)
 {
-  qint32 count = bins.count();
+  qint32 count = fieldNames.count();
   qint32 row = 0;
   // Remove all the current rows in the table model
   removeRows(0, rowCount());
 
   // Now mass insert the data to the table then emit that the data has changed
   beginInsertRows(QModelIndex(), row, row + count - 1);
-  m_FieldNames = bins;
-  m_FieldValues = data;
-  m_FieldOperators = colors;
+  m_FieldNames = fieldNames;
+  m_FieldValues = fieldValues;
+  m_FieldOperators = fieldOperators;
   m_RowCount = count;
   endInsertRows();
   QModelIndex topLeft = createIndex(0, 0);

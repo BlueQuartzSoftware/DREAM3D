@@ -145,6 +145,48 @@ void ReconstructionWidget::readSettings(QSettings &prefs)
   m_HDF5GrainFile->blockSignals(false);
   READ_CHECKBOX_SETTING(prefs, m_, DxFile, true);
   READ_CHECKBOX_SETTING(prefs, m_, PhFile, true);
+
+  ok = false;
+  int filterCount = prefs.value("NumQualityFilters").toInt(&ok);
+  if (false == ok) {filterCount = 0;}
+
+  // Setup the TableModel with the list of Possible Fields
+  QAbstractItemModel* model = m_QualityMetricTableView->model();
+  // This first time through the model will be NULL that we get from the table view. This does a
+  // simple swap with our own Table Model object. Multiple times through the model will be the same
+  // so we do NOT need to delete the model
+  m_QualityMetricTableView->setModel(m_QualityMetricTableModel);
+  if (model != m_QualityMetricTableModel && model == NULL) {
+    delete model; // Clean up this memory
+  }
+
+  if (NULL != m_QualityMetricTableModel)
+  {
+    // Remove any filters
+    m_QualityMetricTableView->model()->removeRows(0, m_QualityMetricTableModel->rowCount());
+    QVector<QString> fieldNames;
+    QVector<float> fieldValues;
+    QVector<QString> fieldOperators;
+
+    // Add the proper amount of rows and get the values
+    for (int r = 0; r < filterCount; ++r)
+    {
+      on_addQualityMetric_clicked();
+      QString gName = "QualityFilter-"+QString::number(r);
+      prefs.beginGroup(gName);
+
+      fieldNames.push_back(prefs.value("Field").toString());
+      float fieldValue = prefs.value("Value").toFloat(&ok);
+      if (false == ok) {fieldValue = 0.0f;}
+      fieldValues.push_back(fieldValue);
+      fieldOperators.push_back(prefs.value("Operator").toString());
+      prefs.endGroup();
+    }
+
+    m_QualityMetricTableModel->setTableData(fieldNames, fieldValues, fieldOperators);
+
+  }
+
   prefs.endGroup();
 }
 
@@ -160,32 +202,52 @@ void ReconstructionWidget::writeSettings(QSettings &prefs)
   WRITE_SETTING(prefs, m_, ZStartIndex)
   WRITE_SETTING(prefs, m_, ZEndIndex)
 
-  m_MergeTwins->objectName();
-  prefs.setValue(m_MergeTwins->objectName(), m_MergeTwins->isChecked() );
-
 
   WRITE_CHECKBOX_SETTING(prefs, m_, MergeTwins)
   WRITE_CHECKBOX_SETTING(prefs, m_, MergeColonies)
   WRITE_CHECKBOX_SETTING(prefs, m_, FillinSample)
 
   WRITE_SETTING(prefs, m_, MinAllowedGrainSize)
-  WRITE_SETTING(prefs, m_, DownSampleFactor)
   WRITE_SETTING(prefs, m_, MisOrientationTolerance)
   WRITE_COMBO_BOX(prefs, m_, AlignMeth)
   WRITE_COMBO_BOX(prefs, m_, Orientation)
 
 
+  WRITE_CHECKBOX_SETTING(prefs, m_, VisualizationVizFile)
   WRITE_BOOL_SETTING(prefs, m_, WritePhaseIdScalars, true);
-//  WRITE_BOOL_SETTING(prefs, m_, WriteImageQualityScalars, true);
   WRITE_BOOL_SETTING(prefs, m_, WriteIPFColorScalars, true);
   WRITE_BOOL_SETTING(prefs, m_, WriteBinaryVTKFile, true);
 
-
-  WRITE_CHECKBOX_SETTING(prefs, m_, VisualizationVizFile)
   WRITE_CHECKBOX_SETTING(prefs, m_, DownSampledVizFile)
+  WRITE_SETTING(prefs, m_, DownSampleFactor)
   WRITE_CHECKBOX_SETTING(prefs, m_, HDF5GrainFile)
   WRITE_CHECKBOX_SETTING(prefs, m_, DxFile)
   WRITE_CHECKBOX_SETTING(prefs, m_, PhFile)
+
+  if (NULL != m_QualityMetricTableView->model())
+  {
+    int filterCount = m_QualityMetricTableView->model()->rowCount();
+    prefs.setValue("NumQualityFilters", filterCount);
+    QVector<QString> fieldNames;
+    QVector<float> fieldValues;
+    QVector<QString> fieldOperators;
+    m_QualityMetricTableModel->getTableData(fieldNames, fieldValues, fieldOperators);
+
+    for(int i = 0; i < filterCount; ++i)
+    {
+      QString gName = "QualityFilter-"+QString::number(i);
+      prefs.beginGroup(gName);
+      prefs.setValue("Field", fieldNames[i]);
+      prefs.setValue("Value", fieldValues[i]);
+      prefs.setValue("Operator", fieldOperators[i]);
+      prefs.endGroup();
+    }
+  }
+  else
+  {
+    prefs.setValue("NumQualityFilters", 0);
+  }
+
   prefs.endGroup();
 }
 
