@@ -21,8 +21,8 @@ else()
     # source directory which means anything that has the same name that you have selected
     # WILL BE OVERWRITTEN without warning. You have been warned. This is here for 
     # debugging this build system and should NOT be enabled for general use.
-    set(PluginMaker_PluginDir ${DREAM3D_SOURCE_DIR}/Source/Plugins/UI/${DREAM3D_Plugin_Name})
-    set(PluginMaker_LibDir ${DREAM3D_SOURCE_DIR}/Source/Plugins/${DREAM3D_Plugin_Name})
+    set(PluginMaker_PluginDir ${DREAM3D_SOURCE_DIR}/${DREAM3D_Plugin_Name}/UI)
+    set(PluginMaker_LibDir ${DREAM3D_SOURCE_DIR}/${DREAM3D_Plugin_Name})
 endif()
 
 # Create a directory for the Plugin Files
@@ -69,15 +69,7 @@ configure_file( Templates/Plugins/UI/Help/index.html.in
 ${PluginMaker_PluginDir}/Help/index.html @ONLY IMMEDIATE)
 
 
-
-message(STATUS "The New Skeleton Files have been written to\n  ${PluginMaker_LibDir}")
-message(STATUS "Do NOT forget update the \n    '${DREAM3D_SOURCE_DIR}/CMakeLists.txt' file to include your plugin")
-message(STATUS " in the list of Plugins to be compiled which is in the CMake variable")
-message(STATUS "DREAM3D_PLUGIN_LIST")
-
 message(STATUS "You MUST Move the new Plguin directory into the proper spot in the actual Source directory")
 message(STATUS "located at ${PROJECT_CODE_DIR}/Plugins")
 message(STATUS "You also may want to create your own custom toolbar icon and store")
 message(STATUS "it in the ${DREAM3D_Plugin_Name}.png file")
-
-

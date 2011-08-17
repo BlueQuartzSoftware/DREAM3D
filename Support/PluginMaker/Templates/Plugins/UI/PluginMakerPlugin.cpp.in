@@ -1,8 +1,11 @@
-
+/*
+* INSERT A LICENSE OR COPYRIGHT STATEMENT HERE.
+*/
 
 #include "@PluginName@Plugin.h"
 #include "@PluginName@Widget.h"
 #include "QtSupport/AIMPluginFrame.h"
+#include "QtSupport/HelpDialog.h"
 
 Q_EXPORT_PLUGIN2(@PluginName@Plugin, @PluginName@Plugin);
 
@@ -78,8 +81,7 @@ QIcon @PluginName@Plugin::icon()
 // -----------------------------------------------------------------------------
 void @PluginName@Plugin::displayHelp()
 {
-  QSharedPointer<HelpDialog> hd = HelpDialog::instance();
-  hd->setContentFile(htmlHelpIndexFile());
+  emit showHelp(htmlHelpIndexFile());
 }
 
 // -----------------------------------------------------------------------------

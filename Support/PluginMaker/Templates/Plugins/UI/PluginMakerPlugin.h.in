@@ -42,9 +42,13 @@ class @PluginName@Plugin : public QObject, public DREAM3DPluginInterface
     virtual void readSettings(QSettings &prefs);
 
     virtual QIcon icon();
-
-    virtual void displayHelp();
     virtual QUrl htmlHelpIndexFile();
+
+  public slots:
+    virtual void displayHelp();
+
+    signals:
+      void showHelp(QUrl);
     
   protected:
     @PluginName@Widget* m_InputWidget;
