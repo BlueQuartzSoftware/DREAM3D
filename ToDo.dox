@@ -8,7 +8,7 @@ so it can be integrated with the other documentation pages.
 @li During reading of the .ctf file or the .h5ebsd file the Euler angles need to be adjusted properly
 @li During reading of the .ctf file or the .h5ebsd file the orientation needs to be adjusted properly
 @li Add new QualityMetric Filter type to Reconstruction Pipeline
-@li Fix Preset file reading so that the new Quality Metric Filters now work
+@li <b>DONE</b> (MAJ 2011/08/14) - Fix Preset file reading so that the new Quality Metric Filters now work
 
 
 @section todomisc Misc Bugs
@@ -65,7 +65,7 @@ into the user interface
 @li <b>DONE</b> (MAJ 2011/05/28) - Better Organize Source Code Files
 
 @section pv ParaView Integration:
-@li Create .h5ang plugin for ParaView to allow the direct reading of the imported OIM data
+@li Create .h5ebsd plugin for ParaView to allow the direct reading of the imported OIM data
 
 @section phtohdf5 PhToHDF5
 @li <b>DONE</b> (MAJ 2011/06/25) - Allow use of Euler Angles File in addition to grain id file
