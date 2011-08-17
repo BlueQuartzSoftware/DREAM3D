@@ -296,23 +296,29 @@ if (DREAM3D_BUILD_QT_APPS)
         #-- Attempt to look in our local source directory for the plugin. Anywhere else
         # and the user will have to put the entire path into CMake manually.
         foreach(userPlugin ${DREAM3D_EXTRA_PLUGINS})
-            message(STATUS "Looking for Plugin: ${userPlugin}")
-            set(${userPlugin}_SOURCE_DIR "" CACHE PATH "Path to ${userPlugin} directory")
-        
-            if(EXISTS ${DREAM3D_SOURCE_DIR}/Plugins/${userPlugin})
-                set(${userPlugin}_SOURCE_DIR ${DREAM3D_SOURCE_DIR}/Plugins/${userPlugin})
-            endif()
-            if(EXISTS ${DREAM3D_SOURCE_DIR}/Plugins/${userPlugin}/CMakeLists.txt)
-                set(${userPlugin}_IMPORT_FILE ${DREAM3D_SOURCE_DIR}/Plugins/${userPlugin}/CMakeLists.txt)
-            endif()
-            if(NOT DEFINED ${userPlugin}_SOURCE_DIR AND NOT DEFINED ${userPlugin}_IMPORT_FILE)
-                message(WARNING "${userPlugin}_SOURCE_DIR was NOT defined and it needs to be in order to compile the ${userPlugin} Plugin")
-            endif()
-        
+            
             if(DEFINED ${userPlugin}_SOURCE_DIR AND DEFINED ${userPlugin}_IMPORT_FILE)
-                # include (${${userPlugin}_IMPORT_FILE} )
                 add_subdirectory(${${userPlugin}_SOURCE_DIR} ${DREAM3D_BINARY_DIR}/Plugins/${userPlugin}) 
+            else()            
+                message(STATUS "Looking for Plugin: ${userPlugin}...")
+                if (NOT DEFINED ${userPlugin}_SOURCE_DIR)
+                    message(STATUS "Defining ${userPlugin}_SOURCE_DIR to ${DREAM3D_SOURCE_DIR}/Plugins/${userPlugin}")
+                    set(${userPlugin}_SOURCE_DIR ${DREAM3D_SOURCE_DIR}/Plugins/${userPlugin} CACHE PATH "Path to ${userPlugin} directory")
+                endif()
+               # message(STATUS "${userPlugin}_SOURCE_DIR: ${${userPlugin}_SOURCE_DIR}")
+                if(EXISTS ${${userPlugin}_SOURCE_DIR})
+                    #message(STATUS "EXISTS: ${${userPlugin}_SOURCE_DIR}")
+                    if(EXISTS ${${userPlugin}_SOURCE_DIR}/CMakeLists.txt)
+                        #message(STATUS "EXISTS: ${${userPlugin}_SOURCE_DIR}/CMakeLists.txt")
+                        set(${userPlugin}_IMPORT_FILE ${userPlugin}_SOURCE_DIR/CMakeLists.txt)
+                        add_subdirectory(${${userPlugin}_SOURCE_DIR} ${DREAM3D_BINARY_DIR}/Plugins/${userPlugin}) 
+                        message(STATUS "Plugin: ${userPlugin} Found")
+                    endif()
+                else()
+                    message(WARNING "${userPlugin}_SOURCE_DIR was NOT defined and it needs to be in order to compile the ${userPlugin} Plugin")
+                endif()
             endif()
+
         endforeach(userPlugin ${DREAM3D_EXTRA_PLUGINS})
 
 
@@ -372,7 +378,7 @@ endif()
 option(DREAM3D_CREATE_PLUGIN "Create the Skeleton Code for a new Pipeline and GUI Plugin" OFF)
 if (DREAM3D_CREATE_PLUGIN)
     add_subdirectory(${PROJECT_SOURCE_DIR}/Support/PluginMaker ${PROJECT_BINARY_DIR}/PluginMaker)
- #   set (DREAM3D_CREATE_PLUGIN OFF CACHE "" FORCE)
+    set (DREAM3D_CREATE_PLUGIN OFF CACHE BOOL "" FORCE)
 endif()
 
 # This should be the last line in this file:

@@ -98,11 +98,11 @@ set (GrainGeneratorPlugin_PROJECT_SRCS
     ${GrainGeneratorPlugin_Generated_MOC_SRCS} 
     ${GrainGeneratorPlugin_Generated_UI_HDRS}
     ${GrainGeneratorPlugin_Generated_RC_SRCS}
+    ${PROJECT_CODE_DIR}/QtSupport/DREAM3DPluginInterface.h
     ${GrainGenerator_HDRS}
     ${GrainGenerator_SRCS}
     ${StructureReaders_HDRS}
     ${StructureReaders_SRCS}
-    ${PROJECT_CODE_DIR}/QtSupport/DREAM3DPluginInterface.h
 )
 
 # ---------- Setup output Directories -------------------------
