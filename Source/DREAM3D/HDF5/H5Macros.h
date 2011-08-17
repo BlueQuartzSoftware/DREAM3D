@@ -37,7 +37,7 @@
 
 
 #define OPEN_RECONSTRUCTION_GROUP(gid, name, fileId)\
-  hid_t gid = H5Gopen(fileId, name);\
+  hid_t gid = H5Gopen(fileId, name, H5P_DEFAULT);\
   if (gid < 0) { \
     err = H5Utilities::closeFile(fileId);\
     return -1; }

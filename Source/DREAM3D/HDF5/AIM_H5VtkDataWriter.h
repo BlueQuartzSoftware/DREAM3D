@@ -41,10 +41,12 @@
 
 #include "VTKH5Constants.h"
 
+#include "H5Support/H5Utilities.h"
+#include "H5Support/H5Lite.h"
+
 #include "MXA/MXATypes.h"
 #include "MXA/Common/MXASetGetMacros.h"
-#include "MXA/HDF5/H5Utilities.h"
-#include "MXA/HDF5/H5Lite.h"
+#include "MXA/Common/LogTime.h"
 
 #include "DREAM3D/DREAM3DConfiguration.h"
 
@@ -213,7 +215,7 @@ class DREAM3DLib_EXPORT AIM_H5VtkDataWriter
         std::cout << "Field Data '" << label << "' has a Zero length array. No data is written" << std::endl;
         return -1;
       }
-      hid_t gid = H5Gopen(m_FileId, hdfPath.c_str() );
+      hid_t gid = H5Gopen(m_FileId, hdfPath.c_str(), H5P_DEFAULT );
       int err = H5Utilities::createGroupsFromPath(H5_FIELD_DATA_GROUP_NAME, gid);
       if (err < 0)
       {
@@ -223,7 +225,7 @@ class DREAM3DLib_EXPORT AIM_H5VtkDataWriter
       err = H5Lite::writeStringAttribute(gid, H5_FIELD_DATA_GROUP_NAME, H5_NAME, H5_FIELD_DATA_DEFAULT);
 
 
-      hid_t fieldGroupId = H5Gopen(gid, H5_FIELD_DATA_GROUP_NAME );
+      hid_t fieldGroupId = H5Gopen(gid, H5_FIELD_DATA_GROUP_NAME, H5P_DEFAULT);
       if(err < 0)
       {
         std::cout << "Error writing string attribute to HDF Group " << H5_FIELD_DATA_GROUP_NAME << std::endl;
@@ -256,7 +258,7 @@ class DREAM3DLib_EXPORT AIM_H5VtkDataWriter
                         const char *label,
                         int numComp, int32_t rank, hsize_t* dims)
     {
-      hid_t gid = H5Gopen(m_FileId, hdfPath.c_str() );
+      hid_t gid = H5Gopen(m_FileId, hdfPath.c_str(), H5P_DEFAULT );
       if (gid < 0)
       {
         std::cout << "Error opening Group " << hdfPath << std::endl;
@@ -268,7 +270,7 @@ class DREAM3DLib_EXPORT AIM_H5VtkDataWriter
         std::cout << "Error creating HDF Group " << H5_SCALAR_DATA_GROUP_NAME << std::endl;
         return err;
       }
-      hid_t cellGroupId = H5Gopen(gid, H5_SCALAR_DATA_GROUP_NAME );
+      hid_t cellGroupId = H5Gopen(gid, H5_SCALAR_DATA_GROUP_NAME, H5P_DEFAULT );
       if(err < 0)
       {
         std::cout << "Error writing string attribute to HDF Group " << H5_SCALAR_DATA_GROUP_NAME << std::endl;
@@ -310,14 +312,14 @@ class DREAM3DLib_EXPORT AIM_H5VtkDataWriter
                       const char *label,
                       int numComp)
     {
-      hid_t gid = H5Gopen(m_FileId, hdfPath.c_str() );
+      hid_t gid = H5Gopen(m_FileId, hdfPath.c_str(), H5P_DEFAULT );
       herr_t err = H5Utilities::createGroupsFromPath(H5_CELL_DATA_GROUP_NAME, gid);
       if (err < 0)
       {
         std::cout << "Error creating HDF Group " << H5_CELL_DATA_GROUP_NAME << std::endl;
         return err;
       }
-      hid_t cellGroupId = H5Gopen(gid, H5_CELL_DATA_GROUP_NAME );
+      hid_t cellGroupId = H5Gopen(gid, H5_CELL_DATA_GROUP_NAME, H5P_DEFAULT );
       if(err < 0)
       {
         std::cout << "Error writing string attribute to HDF Group " << H5_CELL_DATA_GROUP_NAME << std::endl;

@@ -90,14 +90,17 @@ class StatsGenPlotWidget : public QWidget, private Ui::StatsGenPlotWidget
 
     MXA_INSTANCE_PROPERTY(float, Mu);
     MXA_INSTANCE_PROPERTY(float, Sigma);
-    MXA_INSTANCE_PROPERTY(float, Cutoff);
+    MXA_INSTANCE_PROPERTY(float, MinCutOff);
+    MXA_INSTANCE_PROPERTY(float, MaxCutOff);
     MXA_INSTANCE_PROPERTY(float, BinStep);
 
     MXA_INSTANCE_PROPERTY(int, PhaseIndex);
-    MXA_INSTANCE_PROPERTY(AIM::Reconstruction::CrystalStructure, CrystalStructure);
+    MXA_INSTANCE_PROPERTY(Ebsd::CrystalStructure, CrystalStructure);
 
 
-    void setSizeDistributionValues(float mu, float sigma, float cutOff, float binStepSize);
+    void setSizeDistributionValues(float mu, float sigma,
+                                   float minCutOff, float maxCutOff,
+                                   float binStepSize);
 
     void loadTableData(H5ReconStatsReader::Pointer reader,
                        QVector<float> bins,

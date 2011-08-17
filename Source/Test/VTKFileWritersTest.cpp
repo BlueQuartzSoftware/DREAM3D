@@ -36,9 +36,9 @@
 
 
 #include "DREAM3D/Common/VTKUtils/VTKFileWriters.hpp"
-#include "DREAM3D/Reconstruction/ReconstructionFunc.h"
-#include "DREAM3D/MicrostructureStatistics/MicrostructureStatisticsFunc.h"
-#include "DREAM3D/GrainGenerator/GrainGeneratorFunc.h"
+#include "Reconstruction/ReconstructionFunc.h"
+#include "MicrostructureStatistics/MicrostructureStatisticsFunc.h"
+#include "GrainGenerator/GrainGeneratorFunc.h"
 
 
 int main(int argc, char **argv)
@@ -83,10 +83,10 @@ int main(int argc, char **argv)
       static_cast<VtkScalarWriter*>(new VoxelGrainIdScalarWriter<ReconstructionFunc>(r.get()));
   VtkScalarWriter* w1 =
       static_cast<VtkScalarWriter*>(new VoxelPhaseIdScalarWriter<ReconstructionFunc>(r.get()));
-  VtkScalarWriter* w2 =
-      static_cast<VtkScalarWriter*>(new VoxelEuclideanScalarWriter<ReconstructionFunc>(r.get()));
-  VtkScalarWriter* w3 =
-      static_cast<VtkScalarWriter*>(new VoxelImageQualityScalarWriter<ReconstructionFunc>(r.get()));
+//  VtkScalarWriter* w2 =
+//      static_cast<VtkScalarWriter*>(new VoxelEuclideanScalarWriter<ReconstructionFunc>(r.get()));
+//  VtkScalarWriter* w3 =
+//      static_cast<VtkScalarWriter*>(new VoxelImageQualityScalarWriter<ReconstructionFunc>(r.get()));
   VtkScalarWriter* w4 =
       static_cast<VtkScalarWriter*>(new VoxelSurfaceVoxelScalarWriter<ReconstructionFunc>(r.get()));
 //  VtkScalarWrapper* w5 =
@@ -95,8 +95,8 @@ int main(int argc, char **argv)
   std::vector<VtkScalarWriter*> scalarsToWrite;
   scalarsToWrite.push_back(w0);
   scalarsToWrite.push_back(w1);
-  scalarsToWrite.push_back(w2);
-  scalarsToWrite.push_back(w3);
+//  scalarsToWrite.push_back(w2);
+//  scalarsToWrite.push_back(w3);
   scalarsToWrite.push_back(w4);
 //  scalarsToWrite.push_back(w5);
 

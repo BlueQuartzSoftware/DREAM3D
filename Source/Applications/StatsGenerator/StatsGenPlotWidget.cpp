@@ -68,7 +68,8 @@ StatsGenPlotWidget::StatsGenPlotWidget(QWidget *parent) :
 QWidget(parent),
 m_Mu(1.0),
 m_Sigma(0.1),
-m_Cutoff(3),
+m_MinCutOff(3),
+m_MaxCutOff(3),
 m_BinStep(1.0),
 m_PhaseIndex(-1),
 m_TableModel(NULL),
@@ -110,11 +111,14 @@ void StatsGenPlotWidget::setPlotTitle(QString title)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void StatsGenPlotWidget::setSizeDistributionValues(float mu, float sigma, float cutOff, float binStepSize)
+void StatsGenPlotWidget::setSizeDistributionValues(float mu, float sigma,
+                                                   float minCutOff, float maxCutOff,
+                                                   float binStepSize)
 {
   m_Mu = mu;
   m_Sigma = sigma;
-  m_Cutoff = cutOff;
+  m_MinCutOff = minCutOff;
+  m_MaxCutOff = maxCutOff;
   m_BinStep = binStepSize;
 }
 

@@ -1,0 +1,37 @@
+/*!
+
+@mainpage DREAM3D Developer Documentation
+
+@subpage todo "ToDo List"
+List of things that need to be done in the code
+
+@subpage compilingdream3d "Compiling DREAM.3D"
+If you would like to make changes to the DREAM.3D applications then you will need
+to be able to compile DREAM.3D your self. This page will attemp to describe the
+prerequisites that are needed to compile DREAM.3D
+
+
+@subpage structurereaders "Structure Readers"
+How to write a "StructureReader" subclass in order to read previously existing
+microstructure representations into the Synthetic Builder module.
+
+
+@subpage microPreset "Microstructure Presets"
+The StatsGenerator has a few predefined sets of statistics for various types of
+microsrtuctures. The programmer can create more Preset classes by extending a
+few C++ classes and compiling the application.
+
+@subpage h5ebsdfile "HDF5 EBSD Data File"
+  This page details the internal organization of the HDF5 file that contains the
+EBSD volume data.
+
+@subpage h5voxelvolume "HDF5 Reconstruction Voxel Volume Data File"
+  This page details the internal organization of the HDF5 file that contains the
+voxel volume data from the reconstruction.
+
+@subpage surfacemeshing "Surface Meshing File Specifications"
+ This page details some of the input/intermediate/output files that are used in the
+Surface Mesh Plugin.
+
+
+*/

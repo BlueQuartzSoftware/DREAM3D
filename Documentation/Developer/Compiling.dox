@@ -1,0 +1,93 @@
+/*!
+@page compilingdream3d Compiling DREAM.3D
+
+@section dependencies External Dependencies
+
+@li A Compiler suite for your Operating System (Visual Studio, Xcode, GCC)
+@li CMake version 2.8.x
+@li Git for checking out source code from the repositories
+@li Qt Version 4.6.2 or greater (Tested with Qt 4.7.2)
+@li Qwt Library (2D Plots)
+@li HDF5 Version 1.6.9 or Version 1.8.x compiled to have the 1.6 API
+@li Boost Version 1.44
+
+
+@section compiledocs Creating the Documentation
+ If you would like to create the API or other documentation you will need to install
+DOxygen and optionally LaTex for your system.
+
+@section compileorder Order of Installation
+
+@subsection CMake
+  Download CMake from http://www.cmake.org/cmake/resources/software.html and install onto your system
+
+@subsection Git
+  Download Git from http://git-scm.com/ and install onto your system
+
+@subsection qt Qt
+  Download Qt from http://qt.nokia.com. One can usually download and install the "Qt SDK"
+which will have everything you need.
+ <b>Windows Visual Studion Users</b> Nokia provides pre-built binaries for Qt for Visual Studion (VS)
+BUT they are ONLY 32 bit and they are ONLY for Visual Studio 2008 and ONLY for a specific version
+of Visual Studio 2008. If your version of Visual Studion does NOT match theirs, down to the exact
+sercurity patches and service packs otherwise you will get errors due to "manifests", C/C++ runtime
+DLL issues and a few other things. If you fall into the category of mismatching versions the easiest,
+thought initially longest, solution is to build Qt from scratch. Or if you need 64 bit support.
+
+@subsection qtwin Building Qt on Windows
+  Download the source code from qt.nokia.com and decompress the archive into the final location where
+you want Qt. You <b>CAN NOT</b> move the Qt installation <b>AFTER</b> you finish building
+it so choose wisely. Once you have your location selected open up a "Visual Studio Command Prompt"
+for either a 32 bit or 64 bit build. Once the Command Prompt is opened, navigate to the source
+direction and issue the following command
+@code
+configure -nomake demos -nomake examples -debug-and-release -shared -fast -exceptions -stl -no-qt3support
+@endcode
+and answer a few of the questions. That will run for a short while after which you can issue the command
+@code
+nmake
+@endcode
+to build the rest of Qt. <b>Warning</b>Completely compiling Qt can take HOURS even on a very fast
+computer. Allow enough time to get this step completed. If you have a Multi-Core or Multi-CPU machine
+you can speed up the compilation by using "jom" which is a drop in replacement for nmake and will
+better utilize all of your Cores/CPUs.
+
+@section qwt Building Qwt
+Use Git to clone the Qwt source code repository:
+@code
+git clone git://scm.bluequartz.net/support-libraries/qwt.git qwt
+cd qwt
+@endcode
+ And use CMake to configure Qwt for your development environment. After CMake has generated the
+project files, open the IDE or type "make install" on the command line to build and install
+Qwt
+
+@section hdf5 Building HDF5
+ Use git to clone the HDF5 repository:
+@code
+git clone git://scm.bluequartz.net/support-libraries/hdf5-v1-6.git hdf5-v1-6
+cd hdf5-v1-6
+@endcode
+Use CMake to configure HDF5 for your development environment. After CMake has generated the
+project files, open the IDE or type "make install" on the command line to build and install
+HDF5 verson 1.6.9
+
+@section boost Building Boost
+ Use git to clone the Boost repository:
+@code
+git clone git://scm.bluequartz.net/support-libraries/mxaboost.git mxaboost
+cd mxaboost
+@endcode
+Use CMake to configure HDF5 for your development environment. After CMake has generated the
+project files, open the IDE or type "make install" on the command line to build and install
+Boost
+
+@section dream3d Building DREAM.3D
+  After you have aquired the source code for DREAM.3D you can use CMake to configure it for your
+development environment and then build it. Several CMake variables will need to be filled out
+correctly in order for CMake to properly find all the libraries that you just build or
+installed onto your computer.
+
+
+
+*/

@@ -1,0 +1,133 @@
+#--////////////////////////////////////////////////////////////////////////////
+#--
+#--  Copyright (c) 2009, 2010, 2011 Michael A. Jackson. BlueQuartz Software
+#--  Copyright (c) 2009, 2010, 2011 Michael Groeber, US Air Force Research Laboratory
+#--  All rights reserved.
+#--  BSD License: http://www.opensource.org/licenses/bsd-license.html
+#--
+#--////////////////////////////////////////////////////////////////////////////
+
+#///////////////////////////////////////////////////////////////////////////////
+#// This code was partly written under US Air Force Contract FA8650-07-D-5800
+#///////////////////////////////////////////////////////////////////////////////
+
+# set project's name
+PROJECT( EbsdLib )
+cmake_minimum_required(VERSION 2.8)
+
+
+SET (EbsdLib_BUILT_AS_DYNAMIC_LIB)
+IF (BUILD_SHARED_LIBS)
+    SET (EbsdLib_BUILT_AS_DYNAMIC_LIB 1)
+    IF (WIN32)
+        ADD_DEFINITIONS("-DEbsdLib_BUILT_AS_DYNAMIC_LIB")
+    ENDIF (WIN32)
+ENDIF (BUILD_SHARED_LIBS)
+
+SET (PROJECT_CODE_DIR ${PROJECT_SOURCE_DIR}/Source)
+if (NOT PROJECT_RESOURCES_DIR)
+SET (PROJECT_RESOURCES_DIR ${EbsdLib_SOURCE_DIR}/Resources)
+endif()
+if (NOT DEFINED CMP_SOURCE_DIR)
+set(CMP_SOURCE_DIR ${EbsdLib_SOURCE_DIR}/Support/cmp)
+endif()
+
+SET (PROJECT_PREFIX "Ebsd" CACHE STRING "The Prefix to be used for Preprocessor definitions")
+set (EbsdLib_INSTALL_FILES 0)
+#-------------------------------------------------------------------------------
+# Include the cmp project to perform all the basic configuration tests for the 
+# project.
+#------------------------------------------------------------------------------- 
+set (CMP_HEADER_DIR ${EbsdLib_BINARY_DIR})
+set (CMP_CONFIGURATION_FILE_NAME "CMPConfiguration.h")
+set (CMP_TYPES_FILE_NAME "EbsdLibTypes.h")
+set (CMP_VERSION_HEADER_FILE_NAME "EbsdLibVersion.h")
+set (CMP_EXTRA_CONFIGURATION_FILE "EbsdLibConfiguration.h")
+set (CMP_PROJECT_NAMESPACE "Ebsd")
+set (CMP_PROJECT_NAME "Ebsd")
+set (CMP_ENABLE_PLUGINS "0")
+set (CMP_LIB_SEARCH_DIRS "")
+INCLUDE (${CMP_SOURCE_DIR}/cmpProject.cmake)
+
+set (EbsdLib_HDF5_SUPPORT 1)
+option(EbsdLib_ENABLE_HDF5 "Enable the use of HDF5 functionality" ON)
+mark_as_advanced(EbsdLib_ENABLE_HDF5)
+
+# --------------------------------------------------------------------
+# Generate a Header file with Compile Version variables
+# --------------------------------------------------------------------
+set (VERSION_GEN_NAME "EbsdLib")
+set (VERSION_GEN_NAMESPACE "EbsdLib")
+set (PROJECT_PREFIX "EbsdLib")
+set (VERSION_GEN_COMPLETE  "1.0.0")
+set (VERSION_GEN_VER_MAJOR "1")
+set (VERSION_GEN_VER_MINOR "0")
+set (VERSION_GEN_VER_PATCH "0")
+
+# Create our header files
+configure_file(${CMP_CONFIGURED_FILES_SOURCE_DIR}/cmpVersion.h.in   
+               ${EbsdLib_BINARY_DIR}/EbsdLibVersion.h  )
+
+configure_file(${EbsdLib_SOURCE_DIR}/EbsdLibConfiguration.h.in
+               ${EbsdLib_BINARY_DIR}/EbsdLibConfiguration.h)   
+
+# Setup the Include Directories
+include_directories(${EbsdLib_SOURCE_DIR}/..)            
+include_directories(${EbsdLib_SOURCE_DIR})
+include_directories(${EbsdLib_BINARY_DIR})
+
+#-- Include all the Source Files
+# -- Include the Utiliy Sources
+include ( ${EbsdLib_SOURCE_DIR}/Utilities/SourceList.cmake)
+include ( ${EbsdLib_SOURCE_DIR}/TSL/SourceList.cmake)
+include ( ${EbsdLib_SOURCE_DIR}/HKL/SourceList.cmake)
+
+
+set(EbsdLib_SRCS 
+    ${EbsdLib_SOURCE_DIR}/H5EbsdVolumeInfo.cpp
+    ${EbsdLib_SOURCE_DIR}/AbstractEbsdFields.cpp
+)
+set(EbsdLib_HDRS
+    ${EbsdLib_SOURCE_DIR}/AbstractEbsdFields.h
+    ${EbsdLib_SOURCE_DIR}/H5EbsdVolumeInfo.h
+    ${EbsdLib_SOURCE_DIR}/EbsdHeaderEntry.h
+    ${EbsdLib_SOURCE_DIR}/EbsdLibDLLExport.h
+    ${EbsdLib_SOURCE_DIR}/EbsdSetGetMacros.h
+)
+cmp_IDE_SOURCE_PROPERTIES( "EbsdLib/" "${EbsdLib_HDRS}" "${EbsdLib_SRCS}" ${PROJECT_INSTALL_HEADERS})
+
+set(PROJECT_SRCS
+    ${EbsdLib_SRCS}
+    ${EbsdLib_HDRS}
+    ${TSL_SRCS} 
+    ${TSL_HDRS}
+    ${HKL_SRCS}
+    ${HKL_HDRS}
+    ${EbsdLib_Utilities_SRCS}
+    ${EbsdLib_Utilities_HDRS}
+)
+
+add_library(${PROJECT_NAME}  ${LIB_TYPE} ${PROJECT_SRCS})
+if (EbsdLib_ENABLE_HDF5)
+    target_link_libraries(${PROJECT_NAME} ${HDF5_LIBRARIES} H5Support)
+endif()
+
+LibraryProperties( ${PROJECT_NAME}  ${EXE_DEBUG_EXTENSION} )
+
+set(install_dir "tools")
+set(lib_install_dir "lib")
+if (WIN32)
+    set (install_dir ".")
+    set(lib_install_dir "")
+endif()
+
+
+if (BUILD_SHARED_LIBS AND NOT APPLE)
+    INSTALL(TARGETS ${PROJECT_NAME}  
+        COMPONENT Applications
+        RUNTIME DESTINATION ${install_dir}
+        LIBRARY DESTINATION ${lib_install_dir}
+        ARCHIVE DESTINATION ${lib_install_dir}       
+        BUNDLE DESTINATION "."
+    ) 
+endif() 

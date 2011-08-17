@@ -35,6 +35,8 @@
 #include <QtGui/QDoubleValidator>
 #include "ui_EditPhaseDialog.h"
 
+#include "EbsdLib/EbsdConstants.h"
+
 #include "DREAM3D/Common/Constants.h"
 
 /**
@@ -52,8 +54,8 @@ class EditPhaseDialog : public QDialog, private Ui::EditPhaseDialog
     EditPhaseDialog(QWidget *parent = 0);
     virtual ~EditPhaseDialog();
 
-    AIM::Reconstruction::CrystalStructure getCrystalStructure();
-    void setCrystalStructure(AIM::Reconstruction::CrystalStructure xtal);
+    Ebsd::CrystalStructure getCrystalStructure();
+    void setCrystalStructure(Ebsd::CrystalStructure xtal);
 
     float getPhaseFraction();
     void setPhaseFraction(float d);

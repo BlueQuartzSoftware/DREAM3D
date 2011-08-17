@@ -31,6 +31,11 @@
 #ifndef CRYSTALSTRUCTURE_H_
 #define CRYSTALSTRUCTURE_H_
 
+
+
+#include "EbsdLib/EbsdConstants.h"
+
+
 #include "DREAM3D/DREAM3DConfiguration.h"
 #include "DREAM3D/Common/Constants.h"
 
@@ -55,15 +60,15 @@ class  CrystalStructure
      * @param xtal
      * @return
      */
-    static std::string getCrystalStructureString(AIM::Reconstruction::CrystalStructure xtal)
+    static std::string getCrystalStructureString(Ebsd::CrystalStructure xtal)
     {
       switch(xtal)
       {
-        case AIM::Reconstruction::Hexagonal:
+        case Ebsd::Hexagonal:
           return std::string("Hexagonal");
-        case AIM::Reconstruction::Cubic:
+        case Ebsd::Cubic:
           return std::string("Cubic");
-        case AIM::Reconstruction::AxisOrthoRhombic:
+        case Ebsd::AxisOrthoRhombic:
           return std::string("OrthoRhombic");
         default:
           break;

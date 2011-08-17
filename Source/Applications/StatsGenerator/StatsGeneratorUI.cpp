@@ -61,7 +61,7 @@ StatsGeneratorUI::StatsGeneratorUI(QWidget *parent) :
       m_OpenDialogLastDirectory("~/Desktop")
 #endif
 {
-  m_FilePath = m_OpenDialogLastDirectory + QDir::separator() + "Untitled.h5";
+  m_FilePath = m_OpenDialogLastDirectory + QDir::separator() + "Untitled.h5stats";
   setupUi(this);
   setupGui();
 
@@ -136,7 +136,7 @@ void StatsGeneratorUI::writeSettings()
 void StatsGeneratorUI::setupGui()
 {
   m_SGWidget->setPhaseIndex(1);
-  m_SGWidget->setCrystalStructure(AIM::Reconstruction::Cubic);
+  m_SGWidget->setCrystalStructure(Ebsd::Cubic);
   m_SGWidget->setPhaseFraction(1.0);
   m_SGWidget->setTotalPhaseFraction(1.0);
   m_SGWidgets.push_back(m_SGWidget);
@@ -168,6 +168,25 @@ void StatsGeneratorUI::on_phaseCombo_currentIndexChanged(int index)
 void StatsGeneratorUI::on_addPhase_clicked()
 {
  // std::cout << "on_addPhase_clicked" << std::endl;
+
+  // Ensure the Current SGWidget has generated its data first:
+  if (false == m_SGWidget->getDataHasBeenGenerated())
+  {
+    int r = QMessageBox::warning(this, tr("StatsGenerator"),
+                                 tr("Data for the current phase has NOT been generated.\nDo you want to generate it now?"),
+                                 QMessageBox::Ok | QMessageBox::Cancel);
+    if (r == QMessageBox::Ok)
+    {
+      // The user wants to generate the data. Generate it and move on
+      m_SGWidget->on_m_GenerateDefaultData_clicked();
+    }
+    else if (r == QMessageBox::Cancel)
+    {
+      return;
+    }
+  }
+
+
   double phaseFractionTotal = 0.0;
   for(int p = 0; p < m_SGWidgets.size(); ++p)
   {
@@ -437,7 +456,7 @@ void StatsGeneratorUI::on_actionSave_triggered()
     //QString proposedFile = m_OpenDialogLastDirectory + QDir::separator() + m_FileName;
     QString h5file = QFileDialog::getSaveFileName(this, tr("Save HDF5 Statistics File"),
                                                   m_FilePath,
-                                                   tr("HDF5 Files (*.h5)") );
+                                                   tr("HDF5 Files (*.h5stats *.h5)") );
     if ( true == h5file.isEmpty() ){ return;  }
     m_FilePath = h5file;
     QFileInfo fi (m_FilePath);
@@ -498,10 +517,10 @@ void StatsGeneratorUI::on_actionNew_triggered()
 // -----------------------------------------------------------------------------
 void StatsGeneratorUI::on_actionOpen_triggered()
 {
-  QString proposedFile = m_OpenDialogLastDirectory + QDir::separator() + "Untitled.h5";
+  QString proposedFile = m_OpenDialogLastDirectory + QDir::separator() + "Untitled.h5stats";
   QString h5file = QFileDialog::getOpenFileName(this, tr("Open HDF5 Statistics File"),
     proposedFile,
-    tr("HDF5 Files (*.h5)") );
+    tr("HDF5 Files (*.h5stats *.h5 )") );
   if ( true == h5file.isEmpty() ){ return;  }
 
   SGApplication* app = qobject_cast<SGApplication*>(SGApplication::instance());
@@ -560,7 +579,7 @@ void StatsGeneratorUI::openFile(QString h5file)
 
   // Get the list of Phases from the HDF5 file
   std::vector<int> phases;
-  std::vector<AIM::Reconstruction::CrystalStructure> xtals;
+  std::vector<Ebsd::CrystalStructure> xtals;
   err = reader->getPhaseAndCrystalStructures(phases, xtals);
   nPhases = phases.size();
 

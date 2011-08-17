@@ -46,8 +46,10 @@
 
 #define READ_FILEPATH_SETTING(prefs, prefix, var, emptyValue)\
   prefix##var->blockSignals(true);\
-  prefix##var->setText( prefs.value(#var).toString() );\
-  verifyPathExists(prefs.value(#var).toString(), prefix##var);\
+  QString var = prefs.value(#var).toString();\
+  var = QDir::toNativeSeparators(var);\
+  prefix##var->setText(var );\
+  verifyPathExists(var, prefix##var);\
   if (prefix##var->text().isEmpty() == true) { prefix##var->setText(emptyValue); }\
   prefix##var->blockSignals(false);
 

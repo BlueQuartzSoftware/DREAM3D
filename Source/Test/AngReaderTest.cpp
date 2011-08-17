@@ -33,13 +33,13 @@
 #include <string>
 #include <vector>
 
-#include "MXA/HDF5/H5Utilities.h"
+#include "H5Support/H5Utilities.h"
 #include "MXA/Utilities/StringUtils.h"
 
-#include "ANG/AngReader.h"
-#include "ANG/H5AngReader.h"
+#include "EbsdLib/TSL/AngReader.h"
+#include "EbsdLib/TSL/H5AngReader.h"
 
-#include "DREAM3D/OIMImport/OIMImport.h"
+#include "OIMImport/OIMImport.h"
 
 
 #if _WIN32_
@@ -57,7 +57,7 @@ int main(int argc, char **argv)
   reader.setFileName(angFile);
   int err = reader.readHeaderOnly();
 
-  std::vector<AngPhase::Pointer> phases = reader.getPhases();
+  std::vector<AngPhase::Pointer> phases = reader.getPhaseVector();
   if (phases.size() != 2)
   {
     std::cout << "Phase Count is Wrong. Should be 2 and is " << phases.size() << std::endl;
@@ -81,7 +81,7 @@ int main(int argc, char **argv)
   filelist.push_back(angFile);
 
   OIMImport::Pointer h5importer = OIMImport::New();
-  h5importer->setAngFileList(filelist);
+  h5importer->setEbsdFileList(filelist);
   h5importer->setOutputFile(std::string(H5ANG_FILE) );
   h5importer->setZStartIndex(0);
   h5importer->setZEndIndex(1);
@@ -100,7 +100,7 @@ int main(int argc, char **argv)
 
 
   std::string index = StringUtils::numToString(0);
-  hid_t gid = H5Gopen(fileId, index.c_str());
+  hid_t gid = H5Gopen(fileId, index.c_str(), H5P_DEFAULT);
   H5AngReader::Pointer h5reader = H5AngReader::New();
   h5reader->setHDF5Path(index);
   err = h5reader->readHeader(gid);

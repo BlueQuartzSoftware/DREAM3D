@@ -42,7 +42,10 @@
 #include <qwt_scale_draw.h>
 #include <qwt_plot_canvas.h>
 
+#include "EbsdLib/EbsdConstants.h"
+
 #include "DREAM3D/Common/Texture.h"
+
 #include "StatsGenerator/TableModels/SGODFTableModel.h"
 #include "StatsGenerator/StatsGenMDFWidget.h"
 #include "StatsGenerator/TextureDialog.h"
@@ -57,7 +60,7 @@ QWidget(parent),
 m_EnableAxisDecorations(false),
 m_Initializing(true),
 m_PhaseIndex(-1),
-m_CrystalStructure(AIM::Reconstruction::AxisOrthoRhombic),
+m_CrystalStructure(Ebsd::AxisOrthoRhombic),
 m_ODFTableModel(NULL),
 m_MDFWidget(NULL)
 {
@@ -175,13 +178,13 @@ int SGAxisODFWidget::writeDataToHDF5(H5ReconStatsWriter::Pointer writer)
       }
     }
   }
-  return retErr;;
+  return retErr;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AIM::Reconstruction::CrystalStructure SGAxisODFWidget::getCrystalStructure()
+Ebsd::CrystalStructure SGAxisODFWidget::getCrystalStructure()
 {
   return m_CrystalStructure;
 }

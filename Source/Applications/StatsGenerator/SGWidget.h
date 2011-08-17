@@ -66,41 +66,45 @@ class SGWidget : public QWidget, private Ui::SGWidget
     MXA_INSTANCE_PROPERTY(float, PhaseFraction);
     MXA_INSTANCE_PROPERTY(float, TotalPhaseFraction);
     MXA_INSTANCE_PROPERTY(float, PptFraction);
+    MXA_INSTANCE_PROPERTY(bool, DataHasBeenGenerated);
 
-    void setCrystalStructure(AIM::Reconstruction::CrystalStructure xtal);
-    AIM::Reconstruction::CrystalStructure getCrystalStructure();
+    void setCrystalStructure(Ebsd::CrystalStructure xtal);
+    Ebsd::CrystalStructure getCrystalStructure();
 
     void plotSizeDistribution();
     void updateSizeDistributionPlot();
-    int computeBinsAndCutOffs(float mu,
-                              float sigma,
-                              float cutOff,
-                              float binStepSize,
-                              QwtArray<float> &binsizes,
-                              QwtArray<float> &xCo,
-                              QwtArray<float> &yCo,
-                              float &xMax,
-                              float &yMax,
-                              QwtArray<float> &x,
-                              QwtArray<float> &y);
+    int computeBinsAndCutOffs( float mu, float sigma,
+                               float minCutOff, float maxCutOff,
+                               float binStepSize,
+                               QwtArray<float> &binsizes,
+                               QwtArray<float> &xCo,
+                               QwtArray<float> &yCo,
+                               float &xMax, float &yMax,
+                               QwtArray<float> &x,
+                               QwtArray<float> &y);
 
     QString getComboString();
 
     void calculateNumberOfBins();
-    int calculateNumberOfBins(float mu, float sigma, float cutOff, float stepSize);
-    int gatherSizeDistributionFromGui(float &mu, float &sigma, float &cutOff, float &binStepSize);
+    int calculateNumberOfBins(float mu, float sigma, float minCutOff, float maxCutOff, float stepSize);
+    int gatherSizeDistributionFromGui(float &mu, float &sigma, float &minCutOff, float &maxCutOff, float &stepSize);
 
     int writeDataToHDF5(H5ReconStatsWriter::Pointer writer);
     int readDataFromHDF5(H5ReconStatsReader::Pointer reader, int phase);
+
+  public slots:
+    void on_m_GenerateDefaultData_clicked();
+
   protected slots:
 
     void on_m_Mu_SizeDistribution_textChanged(const QString &text);
     void on_m_Sigma_SizeDistribution_textChanged(const QString &text);
-    void on_m_SigmaCutOff_SizeDistribution_textChanged(const QString &text);
+    void on_m_MinSigmaCutOff_textChanged(const QString &text);
+    void on_m_MaxSigmaCutOff_textChanged(const QString &text);
     void on_m_BinStepSize_valueChanged(double v);
 
     void on_microstructurePresetCombo_currentIndexChanged(int index);
-    void on_m_GenerateDefaultData_clicked();
+
 
     void dataWasEdited();
   protected:
@@ -121,14 +125,13 @@ class SGWidget : public QWidget, private Ui::SGWidget
 
   private:
     int                  m_PhaseIndex;
-    AIM::Reconstruction::CrystalStructure  m_CrystalStructure;
+    Ebsd::CrystalStructure  m_CrystalStructure;
 
     QList<QWidget*>      m_WidgetList;
     QwtPlotCurve*        m_SizeDistributionCurve;
     QwtPlotMarker*       m_CutOffMin;
     QwtPlotMarker*       m_CutOffMax;
     QwtPlotGrid*         m_grid;
-    bool                 m_DataHasBeenGenerated;
     AbstractMicrostructurePreset::Pointer m_MicroPreset;
 
     SGWidget(const SGWidget&); // Copy Constructor Not Implemented

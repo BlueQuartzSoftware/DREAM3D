@@ -122,7 +122,7 @@ std::string H5ReconStatsReader::getDistributionType(int phase,
 //
 // -----------------------------------------------------------------------------
 int H5ReconStatsReader::getPhaseAndCrystalStructures(std::vector<int> &phases,
-                                  std::vector<AIM::Reconstruction::CrystalStructure> &xtals)
+                                  std::vector<Ebsd::CrystalStructure> &xtals)
 {
   phases.clear();
   xtals.clear();
@@ -133,7 +133,7 @@ int H5ReconStatsReader::getPhaseAndCrystalStructures(std::vector<int> &phases,
 
   // Get a list of all the groups
   std::list<std::string> names;
-  err = H5Utilities::getGroupObjects(reconGid, H5Utilities::MXA_GROUP, names);
+  err = H5Utilities::getGroupObjects(reconGid, H5Utilities::H5Support_GROUP, names);
   if (err < 0)
   {
     retErr = err;
@@ -144,14 +144,14 @@ int H5ReconStatsReader::getPhaseAndCrystalStructures(std::vector<int> &phases,
   {
     StringUtils::stringToNum(i, *pString);
     phases.push_back(i);
-    hid_t gid = H5Gopen(reconGid,(*pString).c_str() );
-    unsigned int xtal = static_cast<unsigned int>(AIM::Reconstruction::UnknownCrystalStructure);
+    hid_t gid = H5Gopen(reconGid,(*pString).c_str(), H5P_DEFAULT);
+    unsigned int xtal = static_cast<unsigned int>(Ebsd::UnknownCrystalStructure);
     err = H5Lite::readScalarDataset(gid, AIM::HDF5::CrystalStructure, xtal);
     if (err < 0)
     {
-      xtal = static_cast<unsigned int>(AIM::Reconstruction::UnknownCrystalStructure);
+      xtal = static_cast<unsigned int>(Ebsd::UnknownCrystalStructure);
     }
-    xtals.push_back(static_cast<AIM::Reconstruction::CrystalStructure>(xtal) );
+    xtals.push_back(static_cast<Ebsd::CrystalStructure>(xtal) );
     err = H5Gclose(gid);
   }
 

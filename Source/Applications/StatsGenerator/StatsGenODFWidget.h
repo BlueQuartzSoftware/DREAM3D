@@ -72,8 +72,8 @@ class StatsGenODFWidget : public QWidget, private Ui::SGAxisODFWidget
     void setPhaseIndex(int value);
     int getPhaseIndex();
 
-    void setCrystalStructure(AIM::Reconstruction::CrystalStructure value);
-    AIM::Reconstruction::CrystalStructure getCrystalStructure();
+    void setCrystalStructure(Ebsd::CrystalStructure value);
+    Ebsd::CrystalStructure getCrystalStructure();
 
     int writeDataToHDF5(H5ReconStatsWriter::Pointer writer);
     int readDataFromHDF5(H5ReconStatsReader::Pointer reader, int phase);
@@ -96,7 +96,7 @@ class StatsGenODFWidget : public QWidget, private Ui::SGAxisODFWidget
 
     private:
       int      m_PhaseIndex;
-      AIM::Reconstruction::CrystalStructure      m_CrystalStructure;
+      Ebsd::CrystalStructure      m_CrystalStructure;
       SGODFTableModel*        m_ODFTableModel;
       StatsGenMDFWidget*      m_MDFWidget;
       QVector<QwtPlotCurve*>  m_PlotCurves;

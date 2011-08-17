@@ -3,8 +3,8 @@
 #include <iostream>
 
 
-#include "DREAM3D/GrainGenerator/GrainGeneratorFunc.h"
-#include "DREAM3D/StructureReaders/DXStructureReader.h"
+#include "GrainGenerator/GrainGeneratorFunc.h"
+#include "GrainGenerator/StructureReaders/DXStructureReader.h"
 #include "DREAM3D/Common/VTKUtils/VTKFileWriters.hpp"
 
 

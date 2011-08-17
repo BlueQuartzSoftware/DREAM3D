@@ -41,6 +41,7 @@
 #include "MXA/MXATypes.h"
 #include "MXA/Common/MXASetGetMacros.h"
 
+#include "EbsdLib/EbsdConstants.h"
 
 #include "DREAM3D/DREAM3DConfiguration.h"
 #include "DREAM3D/Common/Constants.h"
@@ -113,7 +114,7 @@ class DREAM3DLib_EXPORT H5ReconStatsWriter
                               float avglogdiam, float sdlogdiam,
                               size_t &numberOfBins);
 
-    int writeVolumeStats(int phase, AIM::Reconstruction::CrystalStructure xtal,
+    int writeVolumeStats(int phase, Ebsd::CrystalStructure xtal,
                          AIM::Reconstruction::PhaseType phaseType,
                          float phasefraction, float pptFraction,
                          float maxdiameter, float mindiameter, float diamStepSize,
@@ -122,7 +123,7 @@ class DREAM3DLib_EXPORT H5ReconStatsWriter
                          std::vector<std::vector<float> > &neighborhoodfit, std::vector<std::vector<float> > &svomega3);
 
     int writeVolumeStats2D(int phase,
-                           AIM::Reconstruction::CrystalStructure xtal,
+                           Ebsd::CrystalStructure xtal,
                            AIM::Reconstruction::PhaseType phaseType,
                            float phasefraction, float pptFraction,
                            float maxdiameter, float mindiameter, float diamStepSize,
@@ -130,7 +131,7 @@ class DREAM3DLib_EXPORT H5ReconStatsWriter
                            std::vector<std::vector<float> > &neighborhoodfit);
     int writePhaseInformation(int phase,
                               AIM::Reconstruction::PhaseType  pt,
-                              AIM::Reconstruction::CrystalStructure xtal,
+                              Ebsd::CrystalStructure xtal,
                               float phasefraction, float pptFraction);
   protected:
     H5ReconStatsWriter();

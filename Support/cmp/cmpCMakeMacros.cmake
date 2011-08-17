@@ -789,4 +789,33 @@ macro(cmpGenerateVersionString GENERATED_FILE_PATH NAMESPACE cmpProjectName)
     MARK_AS_ADVANCED(${CMP_PROJECT_NAME}_VERSION ${CMP_PROJECT_NAME}_VER_MAJOR ${CMP_PROJECT_NAME}_VER_MINOR ${CMP_PROJECT_NAME}_VER_PATCH)
 endmacro()
 
+#-------------------------------------------------------------------------------
+# Function COMPILE_TOOL to help alleviate lots of extra code below for adding
+# simple command line tools that just need one or two source files
+#
+function(COMPILE_TOOL)
+    set(options)
+    set(oneValueArgs TARGET DEBUG_EXTENSION BINARY_DIR COMPONENT INSTALL_DEST DEFINITION)
+    set(multiValueArgs SOURCES LINK_LIBRARIES)
+    cmake_parse_arguments(D3DTOOL "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN} )
+    
+    if ( ${D3DTOOL_DEFINITION} )
+    add_definitions(-D${DEFINITION})
+    endif()
+    
+    BuildToolBundle(
+        TARGET ${D3DTOOL_TARGET}
+        SOURCES ${D3DTOOL_SOURCES}
+        DEBUG_EXTENSION ${D3DTOOL_DEBUG_EXTENSION}
+        VERSION_MAJOR ${D3DTOOL_DREAM3D_VER_MAJOR}
+        VERSION_MINOR ${D3DTOOL_DREAM3D_VER_MINOR}
+        VERSION_PATCH ${D3DTOOL_DREAM3D_VER_PATCH}
+        BINARY_DIR    ${D3DTOOL_BINARY_DIR}
+        LINK_LIBRARIES ${D3DTOOL_LINK_LIBRARIES}
+        LIB_SEARCH_DIRS ${CMAKE_LIBRARY_OUTPUT_DIRECTORY} ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
+        COMPONENT     Applications
+        INSTALL_DEST  "${D3DTOOL_INSTALL_DEST}"
+    ) 
+
+endfunction()
 

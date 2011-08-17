@@ -56,11 +56,11 @@
 #include "QtSupport/AIMPluginFrame.h"
 #include "QtSupport/DREAM3DPluginInterface.h"
 #include "QtSupport/HelpDialog.h"
-#include "UIPlugins/GrainGenerator/GrainGeneratorPlugin.h"
-#include "UIPlugins/MicrostructureStatistics/MicrostructureStatisticsPlugin.h"
-#include "UIPlugins/OIMImport/OIMImportPlugin.h"
-#include "UIPlugins/Reconstruction/ReconstructionPlugin.h"
-#include "UIPlugins/SurfaceMesh/SurfaceMeshPlugin.h"
+#include "GrainGenerator/UI/GrainGeneratorPlugin.h"
+#include "MicrostructureStatistics/UI/MicrostructureStatisticsPlugin.h"
+#include "OIMImport/UI/OIMImportPlugin.h"
+#include "Reconstruction/UI/ReconstructionPlugin.h"
+#include "SurfaceMesh/UI/SurfaceMeshPlugin.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -526,7 +526,7 @@ void DREAM3D_UI::loadPlugins()
 
   foreach (QString pluginDirString, m_PluginDirs)
   {
-    // std::cout << "Plugin Directory being Searched: " << pluginDirString.toStdString() << std::endl;
+     std::cout << "Plugin Directory being Searched: " << pluginDirString.toStdString() << std::endl;
     aPluginDir = QDir(pluginDirString);
     foreach (QString fileName, aPluginDir.entryList(QDir::Files))
     {
@@ -538,8 +538,8 @@ void DREAM3D_UI::loadPlugins()
 #endif
       {
         pluginFilePaths << aPluginDir.absoluteFilePath(fileName);
-        //qWarning(aPluginDir.absoluteFilePath(fileName).toAscii(), "%s");
-        //std::cout << "Adding " << aPluginDir.absoluteFilePath(fileName).toStdString() << std::endl;
+    //    qWarning(aPluginDir.absoluteFilePath(fileName).toAscii(), "%s");
+        std::cout << "Adding " << aPluginDir.absoluteFilePath(fileName).toStdString() << std::endl;
       }
     }
 

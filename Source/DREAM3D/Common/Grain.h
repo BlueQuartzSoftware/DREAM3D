@@ -106,6 +106,7 @@ class DREAM3DLib_EXPORT Grain
     int gottwinmerged;
     int gotcolonymerged;
     int surfacegrain;
+    int outsideboundbox;
     int twinnewnumber;
     int colonynewnumber;
     int slipsystem;

@@ -19,12 +19,16 @@
 #ifndef AIMRANDOMNG_H_
 #define AIMRANDOMNG_H_
 
+
+
 #if defined (_MSC_VER)
 #define WIN32_LEAN_AND_MEAN		// Exclude rarely-used stuff from Windows headers
 #endif
 
 
-#include <MXA/MXATypes.h>
+#include "MXA/MXATypes.h"
+#include "MXA/Common/LogTime.h"
+
 #include "DREAM3D/DREAM3DConfiguration.h"
 
 /**
