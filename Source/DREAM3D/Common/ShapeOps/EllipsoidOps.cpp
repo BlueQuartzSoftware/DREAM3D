@@ -50,15 +50,15 @@ float EllipsoidOps::radcur1(std::map<ArgName, float> args)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int EllipsoidOps::inside(float axis1comp, float axis2comp, float axis3comp)
+float EllipsoidOps::inside(float axis1comp, float axis2comp, float axis3comp)
 {
-  int inside = 1;
+  float inside = 1;
   axis1comp = fabs(axis1comp);
   axis2comp = fabs(axis2comp);
   axis3comp = fabs(axis3comp);
   axis1comp = axis1comp*axis1comp;
   axis2comp = axis2comp*axis2comp;
   axis3comp = axis3comp*axis3comp;
-  inside = 1 - axis1comp - axis2comp - axis3comp;
+  inside = 1.0 - axis1comp - axis2comp - axis3comp;
   return inside;
 }

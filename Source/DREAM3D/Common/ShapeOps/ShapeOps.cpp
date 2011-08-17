@@ -63,9 +63,9 @@ float ShapeOps::radcur1(std::map<ArgName, float> args)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int ShapeOps::inside(float axis1comp, float axis2comp, float axis3comp)
+float ShapeOps::inside(float axis1comp, float axis2comp, float axis3comp)
 {
-  return -1;
+  return -1.0;
 }
 
 // -----------------------------------------------------------------------------
