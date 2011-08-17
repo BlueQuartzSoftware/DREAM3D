@@ -368,7 +368,8 @@ void QualityMetricTableModel::setTableData( QVector<QString> fieldNames, QVector
   qint32 row = 0;
   // Remove all the current rows in the table model
   removeRows(0, rowCount());
-
+  // Check to make sure we have data to insert.
+  if (count == 0) { return; }
   // Now mass insert the data to the table then emit that the data has changed
   beginInsertRows(QModelIndex(), row, row + count - 1);
   m_FieldNames = fieldNames;
