@@ -159,7 +159,7 @@ int H5CtfVolumeReader::loadData(ReconstructionFunc* m, std::vector<QualityMetric
     }
 
     // Figure out which are good voxels
-    AIMArray<bool>::Pointer goodVoxels = determinGoodVoxels(filters, dataPointers, xpointstemp * ypointstemp, dataTypes);
+    AIMArray<bool>::Pointer goodVoxels = determineGoodVoxels(filters, dataPointers, xpointstemp * ypointstemp, dataTypes);
 
 
     xstartspot = (m->xpoints - xpointstemp) / 2;
