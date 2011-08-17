@@ -29,7 +29,7 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-
+#include <stdlib.h>
 #include <string>
 #include <iostream>
 
@@ -53,7 +53,9 @@ int main(int argc, char **argv)
   // If the 'reader' object goes out of scope then all the pointers are going
   // to be invalid as the CSVGrainDataReader manages the memory for you.
   int* grain_ids = reader.getGrainIdPointer();
+  if (grain_ids > 0) {
 
+  }
   std::cout << "Success Reading the Grain Data File" << std::endl;
 
 

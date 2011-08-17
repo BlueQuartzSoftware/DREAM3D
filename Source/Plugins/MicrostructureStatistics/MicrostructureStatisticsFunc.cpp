@@ -427,7 +427,7 @@ void MicrostructureStatisticsFunc::define_neighborhood()
 void MicrostructureStatisticsFunc::find_boundingboxgrains()
 {
   int outside = 0;
-  float maxsize = 0;
+ // float maxsize = 0;
   size_t size = m_Grains.size();
   float boundbox[7];
   float coords[7];
@@ -489,7 +489,7 @@ void MicrostructureStatisticsFunc::find_boundingboxgrains()
 void MicrostructureStatisticsFunc::find_boundingboxgrains2D()
 {
   int outside = 0;
-  float maxsize = 0;
+ // float maxsize = 0;
   size_t size = m_Grains.size();
   float boundbox[5];
   float areas[5];
