@@ -4,11 +4,11 @@
 @section dependencies External Dependencies
 
 @li A Compiler suite for your Operating System (Visual Studio, Xcode, GCC)
-@li CMake version 2.8.x
+@li CMake version 2.8.5
 @li Git for checking out source code from the repositories
 @li Qt Version 4.6.2 or greater (Tested with Qt 4.7.2)
 @li Qwt Library (2D Plots)
-@li HDF5 Version 1.6.9 or Version 1.8.x compiled to have the 1.6 API
+@li HDF5 Version 1.8.7
 @li Boost Version 1.44
 
 
@@ -63,14 +63,9 @@ project files, open the IDE or type "make install" on the command line to build 
 Qwt
 
 @section hdf5 Building HDF5
- Use git to clone the HDF5 repository:
-@code
-git clone git://scm.bluequartz.net/support-libraries/hdf5-v1-6.git hdf5-v1-6
-cd hdf5-v1-6
-@endcode
-Use CMake to configure HDF5 for your development environment. After CMake has generated the
-project files, open the IDE or type "make install" on the command line to build and install
-HDF5 verson 1.6.9
+ Download the latest HDF5 Version 1.8.x from the HDF Group website at http://www.hdfgroup.org/HDF5/release/obtain5.html
+Compile and Install HDF5 into a location of your choice. Export the "HDF5_INSTALL"
+environment variable to make configuring DREAM3D with CMake easier.
 
 @section boost Building Boost
  Use git to clone the Boost repository:
@@ -78,15 +73,21 @@ HDF5 verson 1.6.9
 git clone git://scm.bluequartz.net/support-libraries/mxaboost.git mxaboost
 cd mxaboost
 @endcode
-Use CMake to configure HDF5 for your development environment. After CMake has generated the
+Use CMake to configure Boost for your development environment. After CMake has generated the
 project files, open the IDE or type "make install" on the command line to build and install
 Boost
 
 @section dream3d Building DREAM.3D
-  After you have aquired the source code for DREAM.3D you can use CMake to configure it for your
+  After you have acquired the source code for DREAM.3D you can use CMake to configure it for your
 development environment and then build it. Several CMake variables will need to be filled out
-correctly in order for CMake to properly find all the libraries that you just build or
+correctly in order for CMake to properly find all the libraries that you just built or
 installed onto your computer.
+@code
+HDF5_INSTALL - The location of the HDF5 installation
+BOOST_ROOT - The location of the Boost installation
+QWT_INSTALL - Location of the Qwt installation
+QT_QMAKE_EXECUTABLE - The location of the QMake executable from the Qt installation
+@endcode
 
 
 

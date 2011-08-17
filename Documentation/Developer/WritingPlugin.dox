@@ -1,271 +1,91 @@
 /*!
 
-@page writingplugin Writing a Plugin
+@page writingplugins Writing a Plugin
 
 
-<b>THIS IS ALL WRONG. THIS NEEDS UPDATING</b>
+@section pluginintro Introduction
+  Creating a plugin for the DREAM.3D Application involves many different types of
+files being created and being placed in the correct positions in the project directory.
+To alleviate the developer of the tedious task of creating all of these files there
+is a shortcut that has been written into the current CMake build system files.@n
+@n
+Launch the CMake-Gui.exe or CMake-GUI.app (or ccmake on Linux) and set the <b>
+DREAM3D_CREATE_PLUGIN</b> cmake variable to <b>ON</b>. Click the "Configure" button
+or type the 'c' key if using ccmake. This will reveal another variable called <b>
+DREAM3D_Plugin_Name</b>. Enter the Name of your Plugin for this variable. You do
+<b>NOT</b> and should NOT end the name with "Plugin". The code will do this step
+for you. Click the "configure" button or type the 'c' key for ccmake and CMake will
+now generate all the necessary files for the new plugin into the current build
+directory. If you look in the build directory for the project you will now see
+a new directory called "PluginMaker". Navigating inside this folder will reveal
+a folder with the name you set in the DREAM3D_Plugin_Name CMake variable. This
+folder contains everything you need to start writing your new plugin. <b>Move</b> this
+folder to another location so that it will not get over written the next time CMake
+is executed.@n
+@n
+  Now that we have the plugin files ready to go we need to tell the DREAM.3D build
+system where to find the new plugin. Go back to CMake-GUI.app/CMake-GUI.exe/ccmake
+and set the <b>DREAM3D_EXTRA_PLUGINS</b> cmake variable to have the name of your
+plugin. If you are building multiple extra plugins then use a semi-colon ";" to
+separate each plugin name. You may have to tell CMake where the source directory
+is for the new plugin at which point you will be prompted to enter that path into
+CMake.
 
-
-This is an example for writing an imaginary plugin for DREAM3D that creates an
-entirely new pipeline for "CalcStats". To do this there are 2 parts to consider.
-The actual implementation files that run the pipeline functions and the impementation
-files that give the DREAM3D Gui the ability to execute that pipeline.
-
-@section libAdditions DREAM3D Library Additions
-
-We need to add some source files in several locations. The first location is in
-the "Source/DREAM3D" diretory. Create a new directory called "CalcStats". Inside
-of the "CalcStats" directory create 4 source files and 1 cmake file:
-
-@li Source/DREAM3D/CalcStats/CalcStats.h
-@li Source/DREAM3D/CalcStats/CalcStats.cpp
-@li Source/DREAM3D/CalcStats/CalcStatsFunc.h
-@li Source/DREAM3D/CalcStats/CalcStatsFunc.cpp
-@li Source/DREAM3D/CalcStats/SourceList.cmake
-
-
-@subsection pipeline The Pipeline Implementation Files
-
-The CaclStats.h class should be declared in the following way:
-@code
-#include <MXA/Common/MXASetGetMacros.h>
-#include <MXA/MXATypes.h>
-
-#include "DREAM3D/DREAM3DConfiguration.h"
-#include "DREAM3D/Common/Constants.h"
-#include "DREAM3D/Common/AbstractPipeline.h"
-#include "DREAM3D/CalcStats/CalcStatsFunc.h"
-
-class DREAM3DLib_EXPORT CalcStats : public AbstractPipeline
-{
-public:
-    MXA_SHARED_POINTERS(CalcStats);
-    MXA_TYPE_MACRO(CalcStats);
-    MXA_STATIC_NEW_MACRO(CalcStats);
-    virtual ~CalcStats();
-    virtual void execute();
-
-  protected:
-    CalcStats();
-
-  private:
-    CalcStatsFunc::Pointer m;
-
-    CalcStats(const CalcStats&);    // Copy Constructor Not Implemented
-    void operator=(const CalcStats&);  // Operator '=' Not Implemented
-};
-@endcode
-
-The code inside the CalcStats.cpp file will simply be the implementation for the
-constructor, destructor and the execute() method. The <tt>AbstractPipeline</tt> class
-has a method named <tt>run()</tt> which sets up some variables, calls the <tt>execute()</tt>
-method and then calls the <tt>pipelineFinished()</tt> method. The <tt>execute</tt>
-method is pure virtual in the <tt>AbstractPipeline</tt> class as the subclass
-is expected to implement that method. At this point the programmer will also need
-to edit the Source/DREAM3D/CMakeLists.txt file to add a call to include the "CalcStats"
-directory of files. An excerpt from the CMakeLists.txt file is shown here:
-
-The <tt>CalcStatsFunc</tt> class can generally have whatever implementation that
-you want it to have. For compatibility the programmer is urged to create a set
-of smart pointers using the macros defined in the <tt>MXA/Common/MXASetGetMacros.h</tt>
-file. This will make your class declaration look like the following:
+@section filedescription File Descriptions
 
 @code
-class DREAM3DLib_EXPORT CalcStatsFunc
-{
-  public:
-    MXA_SHARED_POINTERS(CalcStatsFunc)
-    MXA_STATIC_NEW_MACRO(CalcStatsFunc)
-
-    virtual ~CalcStatsFunc();
-
-  protected:
-    CalcStatsFunc();
-
-  private:
-    // Copy Constructor Not Implemented
-    CalcStatsFunc(const CalcStatsFunc&);
-    // Operator '=' Not Implemented
-    void operator=(const CalcStatsFunc&);
-};
+CMakeLists.txt
+  This file holds all the CMake commands that are needed to compile the plugin when
+compiling the DREAM.3D application
 @endcode
-
-That class declaration is a <b>minimum</b> expectation. The programmer can add
-any additional methods and variables needed to fully implement their pipeline
-functions or memory storage.
-
-@subsection cmakeliststxt Additions to DREAM3DLib CMakeLists.txt File
 
 @code
-......
-D3DCompileDir(SurfaceMesh)
-# Add in our new Pipeline directory. The macro will include
-# the "SourceList.cmake" file from that directory
-D3DCompileDir(CalcStats)
+MyClass.{h|cpp}
+  This file defines the C++ class that holds the input variables. It inherits from
+AbstractPipeline and the user needs to implement the execute() method. In the current
+architecture of DREAM.3D the execute() method handles the high level set of method
+calls to perform your algorithm.
 @endcode
-
-@subsection sourcelisttxt SourceList.txt file
-The Contents of the <tt>SourceList.txt</tt> file is something like the following:
 
 @code
-SET (DREAM3D_CalcStats_HDRS
-  ${DREAM3DLib_SOURCE_DIR}/CalcStats/CalcStats.h
-  ${DREAM3DLib_SOURCE_DIR}/CalcStats/CalcStatsFunc.h
-)
-
-SET (DREAM3D_CalcStats_SRCS
-  ${DREAM3DLib_SOURCE_DIR}/CalcStats/CalcStats.cpp
-  ${DREAM3DLib_SOURCE_DIR}/CalcStats/CalcStatsFunc.cpp
-)
-cmp_IDE_SOURCE_PROPERTIES( "DREAM3DLib/CalcStats"
-                           "${DREAM3D_CalcStats_HDRS}"
-                           "${DREAM3D_CalcStats_SRCS}" "0")
-if ( ${DREAM3D_INSTALL_FILES} EQUAL 1 )
-    INSTALL (FILES ${DREAM3D_CalcStats_HDRS}
-            DESTINATION include/DREAM3D/CalcStats
-            COMPONENT Headers   )
-endif()
+MyClassFunc.{h|cpp}
+  This file contains all the internal data structures that you may need to execute
+your algorithm. This is an optional class and some plugins (EbsdImport) do not
+actually use it.
 @endcode
-
-This is the only code needed to create your new pipeline and compile it into the
-DREAM3D library. At this point the only way to use the new pipeline would be from
-a command line application or from a GUI application without any real feedback.
-This design was done on purpose so that our lower level codes are <b>NOT</b> tied
-to any single GUI toolkit. All the code should be standard C or C++ codes. When
-we write our GUI plugin (for Qt currently) we will add some special classes that
-will wrap the functionality into classes that the GUI can use to set and get progress
-feedback, cancel the pipeline, and gather inputs from the GUI and push those input
-values to the Pipeline class.
-
-
-@section guiplugin Creating the GUI Plugin for Qt
-In order for the main DREAM3D Application to execute the new <tt>CalcStats</tt>
-pipeline we need to build a new plugin for the pipeline that exposes the functionality
-to the GUI. To start off we need to create a new directory:
-
-<tt>Source/UIPlugins/CalcStats</tt> and inside that directory we will be creating
-several classes based off of Qt classes and our own classes plus some support files
-for our plugin such as images and icons.
-
-@li Source/UIPlugins/CalcStats/CalcStatsPlugin.h
-@li Source/UIPlugins/CalcStats/CalcStatsPlugin.cpp
-@li Source/UIPlugins/CalcStats/CalcStatsWidget.h
-@li Source/UIPlugins/CalcStats/CalcStatsWidget.cpp
-@li Source/UIPlugins/CalcStats/CMakeLists.txt
-@li Source/UIPlugins/CalcStats/CalcStats.png
-@li Source/UIPlugins/CalcStats/CalcStatsWidget.ui
-@li Source/UIPlugins/CalcStats/Icons.qrc
-
-@subsection CalcStatsPlugin CalcStatsPlugin.h Implementation
- The declaration for the CalcStatsPlugin should look like the following:'
-@code
-#include <QtCore/QObject>
-#include <QtCore/QSettings>
-#include "QtSupport/DREAM3DPluginInterface.h"
-
-class CalcStatsWidget;
-class AIMPluginFrame;
-
-class CalcStatsPlugin : public QObject,
-                        public DREAM3DPluginInterface
-{
-    Q_OBJECT;
-    Q_INTERFACES(DREAM3DPluginInterface)
-
-  public:
-    CalcStatsPlugin();
-    virtual ~CalcStatsPlugin();
-
-    QString getPluginName();
-    //Returns the QWidget that gets presented to the user
-    virtual QWidget* getInputWidget(QWidget* parent);
-    //Returns the AIMPluginFrame object
-    virtual AIMPluginFrame* getPluginFrame(QWidget* parent);
-    // Tells the plugin to write it's settings to the prefs object
-    virtual void writeSettings(QSettings &prefs);
-    // Tells the plugin to read it's setting from the prefs object
-    virtual void readSettings(QSettings &prefs);
-
-    virtual QIcon icon();
-
-  protected:
-    CalcStatsWidget* m_InputWidget;
-
-  private:
-    CalcStatsPlugin(const CalcStatsPlugin&);
-    void operator=(const CalcStatsPlugin&);
-};
-@endcode
-Note that we inherit from both QObject and from DREAM3DPluginInterface so
-that we can have both the ability to hook up signals and slots and also implement
-a common plugin interface. There is more information available from the Qt documentation
-regarding everything that needs to be implemented for a Qt Plugin.
-
-@subsection CalcStatsPlugincpp CalcStatsPlugin.cpp Implementation
-
-The actual implemenation of the Plugin class can get involved so a minimal set of
-skeleton code is shown here. The programmer is urged to examine other plugin classes
-for details on each method impelementation. There are a few important things that
-<b>MUST</b> be implemented.
 
 @code
-Q_EXPORT_PLUGIN2(CalcStatsPlugin, CalcStatsPlugin);
+UI/MyClassPlugin.{h|cpp}
+  This C++ object inherits from QObject and DREAM3DPluginInterface and contains
+the needed code to allow the plugin to be loaded by DREAM.3D. The file that is generated
+should be sufficient as it stands and should not need anything implemented.
 @endcode
-
-The constructor for the class should instantiate the Widget so that the DREAM3D
-GUI has something to display. The Widget can be designed using QDesigner if the
-programmer wants. The standard techniques for that type of development apply here.
-Throughout the DREAM.3D project the original programmers have selected the
-multiple-inheritance technique.
-@code
-CalcStatsPlugin::CalcStatsPlugin() :
-m_InputWidget(NULL)
-{
-  m_InputWidget = new CalcStatsWidget(NULL);
-}
-@endcode
-
-It is handy to have different names depending on how the plugin was built. This helps
-resolve errors when debugging by knowing explicitly which plugin was loaded.
-@code
-QString GrainGeneratorPlugin::getPluginName()
-{
-#ifdef NDEBUG
-  return QString("GrainGenerator");
-#else
-  return QString("GrainGenerator Debug");
-#endif
-}
-@endcode
-
-The remainder of the code can be created by examining the appropriate classes of
-another plugin. The code is generally the same from plugin to plugin.
-
-
-@subsection pluginCalcStatsWidgeth  CalcStatsWidget_h
-
-
-@subsection pluginCalcStatsWidgetcpp CalcStatsWidget.cpp
-
-
-@subsection pluginCMakeListstxt CMakeLists.txt
-
-@subsection plugincalcstatspng calcstats.png
-
-@subsection pluginCalcStatsWidgetui CalcStatsWidget.ui
-
-@subsection pluginiconsqrc Icons.qrc
-
-
-@subsection toplevelcmakelists Top Level CMakeLists.txt File
-Do not forget to add a line to the top level CMakeLists.txt file that will include
-the new UIPlugin subdirectory. This line should be added after any other existing
-UIPlugin Subdirectories.
 
 @code
-add_subdirectory(${DREAM3D_SOURCE_DIR}/Source/UIPlugins/CalcStats
-                 ${DREAM3D_BINARY_DIR}/UIPlugins/CalcStats)
-
+UI/MyClassWidget.{h|cpp}
+  This file implements the QWidget that will be presented to the user when the plugin
+is invoked by the user through the Graphical User Interface. The programmer is urged
+to use QDesigner to graphically design their user interface.
 @endcode
 
- */
+@code
+UI/MyClassWidget.ui
+  This is a base file that can be used as a starting point for writing the user interface
+for the plugin. The file can be opened with QDesigner and more widgets added to
+interface as the programmer sees fit.
+@endcode
+
+@code
+UI/Icons.qrc
+  This file defines possible image files that would be used as icons in your user interface.
+@endcode
+
+@code
+UI/MyClass.png
+  This file is a default icon for the plugin. The programmer is urged to create a different
+icon in its place.
+@endcode
+
+
+
+*/

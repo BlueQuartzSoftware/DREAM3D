@@ -10,6 +10,7 @@ If you would like to make changes to the DREAM.3D applications then you will nee
 to be able to compile DREAM.3D your self. This page will attemp to describe the
 prerequisites that are needed to compile DREAM.3D
 
+@subpage writingplugins "Writing Plugins"
 
 @subpage structurereaders "Structure Readers"
 How to write a "StructureReader" subclass in order to read previously existing
