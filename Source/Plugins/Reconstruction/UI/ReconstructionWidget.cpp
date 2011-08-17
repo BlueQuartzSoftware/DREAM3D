@@ -414,9 +414,6 @@ void ReconstructionWidget::on_m_H5InputFile_textChanged(const QString &text)
       m_ZRes->setText(QString::number(zres));
     }
 
-    // Cache the Manufacturer from the File
-    m_EbsdManufacturer = QString::fromStdString(h5Reader->getManufacturer());
-
     // Setup the TableModel with the list of Possible Fields
     QAbstractItemModel* model = m_QualityMetricTableView->model();
     // This first time through the model will be NULL that we get from the table view. This does a
@@ -426,7 +423,20 @@ void ReconstructionWidget::on_m_H5InputFile_textChanged(const QString &text)
     if (model != m_QualityMetricTableModel && model == NULL) {
       delete model; // Clean up this memory
     }
-    // Get the list of Fields based on the Manufacturer
+
+    // Compare the Manufactureres of the current file versus the one we have cached
+    // If they are different then we need to remove all the quality filters
+    QString fileManufact = QString::fromStdString(h5Reader->getManufacturer());
+    if (m_EbsdManufacturer.compare(fileManufact) != 0)
+    {
+      m_QualityMetricTableModel->removeRows(0, m_QualityMetricTableModel->rowCount());
+    }
+
+    // Cache the Manufacturer from the File
+    m_EbsdManufacturer = fileManufact;
+
+
+    // Get the list of Possible filter Fields based on the Manufacturer
     if (m_EbsdManufacturer.compare(QString(Ebsd::Ang::Manufacturer.c_str())) == 0)
     {
       AngFilterFields fields;
