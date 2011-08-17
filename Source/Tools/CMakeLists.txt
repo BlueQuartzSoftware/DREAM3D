@@ -51,42 +51,10 @@ endfunction()
 #
 #-------------------------------------------------------------------------------
 
-
-# Create a Command line tool for the GrainGenerator
+# Create a Command line tool for the H5VoxelToVtk
 COMPILE_TOOL(
-    TARGET GrainGenerator
-    SOURCES ${DREAM3DTools_SOURCE_DIR}/GrainGeneratorMain.cpp ${PROJECT_CODE_DIR}/DREAM3D/GrainGenerator/GrainGenerator.cpp
-    DEBUG_EXTENSION ${EXE_DEBUG_EXTENSION}
-    VERSION_MAJOR ${DREAM3D_VER_MAJOR}
-    VERSION_MINOR ${DREAM3D_VER_MINOR}
-    VERSION_PATCH ${DREAM3D_VER_PATCH}
-    BINARY_DIR    ${${PROJECT_NAME}_BINARY_DIR}
-    COMPONENT     Applications
-    INSTALL_DEST  "${install_dir}" 
-    DEFINITION   "SVG_3D_LIBRARY"
-    LINK_LIBRARIES DREAM3DLib MXADataModel
-)
-
-
-# Create a Command line tool for the Reconstruction
-COMPILE_TOOL(
-    TARGET Reconstruction
-    SOURCES ${DREAM3DTools_SOURCE_DIR}/ReconstructionMain.cpp ${PROJECT_CODE_DIR}/DREAM3D/Reconstruction/Reconstruction.cpp
-    DEBUG_EXTENSION ${EXE_DEBUG_EXTENSION}
-    VERSION_MAJOR ${DREAM3D_VER_MAJOR}
-    VERSION_MINOR ${DREAM3D_VER_MINOR}
-    VERSION_PATCH ${DREAM3D_VER_PATCH}
-    BINARY_DIR    ${${PROJECT_NAME}_BINARY_DIR}
-    COMPONENT     Applications
-    INSTALL_DEST  "${install_dir}" 
-    LINK_LIBRARIES DREAM3DLib
-)
-
-
-# Create a Command line tool for the SurfaceMesh
-COMPILE_TOOL(
-    TARGET SurfaceMesh
-    SOURCES ${DREAM3DTools_SOURCE_DIR}/SurfaceMeshMain.cpp ${PROJECT_CODE_DIR}/DREAM3D/SurfaceMesh/SurfaceMesh.cpp
+    TARGET H5VoxelToVtk
+    SOURCES ${DREAM3DTools_SOURCE_DIR}/H5VoxelToVtk.cpp
     DEBUG_EXTENSION ${EXE_DEBUG_EXTENSION}
     VERSION_MAJOR ${DREAM3D_VER_MAJOR}
     VERSION_MINOR ${DREAM3D_VER_MINOR}

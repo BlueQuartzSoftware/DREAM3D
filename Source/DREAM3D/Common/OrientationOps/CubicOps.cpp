@@ -147,6 +147,7 @@ float CubicOps::_calcMisoQuat(const float quatsym[24][5], int numsym,
   float wmin=9999999.0f; //,na,nb,nc;
    float qc[5];
    float qco[5];
+   int type = 1;
    float sin_wmin_over_2 = 0.0;
  //  float _1, _2,  _6;
 
@@ -267,10 +268,12 @@ float CubicOps::_calcMisoQuat(const float quatsym[24][5], int numsym,
    if (((qco[3] + qco[4]) / (sqrt_two)) > wmin)
    {
      wmin = ((qco[3] + qco[4]) / (sqrt_two));
+	 type = 2;
    }
    if (((qco[1] + qco[2] + qco[3] + qco[4]) / 2) > wmin)
    {
      wmin = ((qco[1] + qco[2] + qco[3] + qco[4]) / 2);
+	 type = 3;
    }
    if (wmin < -1.0)
    {
@@ -287,12 +290,27 @@ float CubicOps::_calcMisoQuat(const float quatsym[24][5], int numsym,
    else
    {
      wmin = acos(wmin);
-     sin_wmin_over_2 = sinf(wmin / 2.0f);
+     sin_wmin_over_2 = sinf(wmin);
    }
 
-   n1 = qco[1] / sin_wmin_over_2;
-   n2 = qco[2] / sin_wmin_over_2;
-   n3 = qco[3] / sin_wmin_over_2;
+   if(type == 1)
+   {
+	   n1 = qco[1] / sin_wmin_over_2;
+	   n2 = qco[2] / sin_wmin_over_2;
+	   n3 = qco[3] / sin_wmin_over_2;
+   }
+   if(type == 2)
+   {
+	   n1 = (fabs(-qco[1] + qco[2]) / (sqrt_two)) / sin_wmin_over_2;
+	   n2 = (fabs(qco[1] - qco[2]) / (sqrt_two)) / sin_wmin_over_2;
+	   n3 = (fabs(-qco[3] + qco[4]) / (sqrt_two)) / sin_wmin_over_2;
+   }
+   if(type == 3)
+   {
+	   n1 = (fabs(qco[1] + qco[2] - qco[3] - qco[4]) / (2.0)) / sin_wmin_over_2;
+	   n2 = (fabs(-qco[1] + qco[2] + qco[3] - qco[4]) / (2.0)) / sin_wmin_over_2;
+	   n3 = (fabs(qco[1] - qco[2] + qco[3] - qco[4]) / (2.0)) / sin_wmin_over_2;
+   }
    float denom = sqrt((n1*n1+n2*n2+n3*n3));
    n1 = n1/denom;
    n2 = n2/denom;

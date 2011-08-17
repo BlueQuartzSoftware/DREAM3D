@@ -112,7 +112,7 @@ int H5VoxelReader::readHyperSlab(int xdim, int ydim, int zIndex, int* fileVoxelL
   hsize_t     rankc = 1;
 
 
-  dataset = H5Dopen(scalarGid, AIM::VTK::GrainIdScalarName.c_str());
+  dataset = H5Dopen(scalarGid, AIM::VTK::GrainIdScalarName.c_str(), H5P_DEFAULT);
   filespace = H5Dget_space(dataset);    /* Get filespace handle first. */
   col_dims[0] = xdim * ydim;
   memspace =  H5Screate_simple(rankc, col_dims, NULL);

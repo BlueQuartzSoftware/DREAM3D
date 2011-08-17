@@ -32,12 +32,34 @@ SET (CMAKE_ARCHIVE_OUTPUT_DIRECTORY
   "Single Directory for all static libraries."
   )
 
+Find_package(Git)
 
-set(DREAM3D_VER_MAJOR "2011")
-set(DREAM3D_VER_MINOR "07")
-set(DREAM3D_VER_PATCH "06")
-set(DREAM3D_VERSION "${DREAM3D_VER_MAJOR}.${DREAM3D_VER_MINOR}.${DREAM3D_VER_PATCH}")
-               
+if (GIT_FOUND)
+    execute_process(COMMAND ${GIT_EXECUTABLE} describe
+        OUTPUT_VARIABLE DVERS
+        RESULT_VARIABLE did_run
+     )
+    string(STRIP ${DVERS} DVERS)
+  #  message(STATUS "DVERS: ${DVERS}")
+    string(REPLACE  "-" ";" VERSION_LIST ${DVERS})
+  #  message(STATUS "VERSION_LIST: ${VERSION_LIST}")
+    list(GET VERSION_LIST 0 DREAM3D_VER_MAJOR)
+    list(GET VERSION_LIST 1 DREAM3D_VER_MINOR)
+    list(GET VERSION_LIST 2 DREAM3D_VER_PATCH)
+
+    set(DREAM3D_VER_MAJOR "${DREAM3D_VER_MAJOR}" CACHE STRING "Major Version Number" FORCE)
+    set(DREAM3D_VER_MINOR "${DREAM3D_VER_MINOR}" CACHE STRING "Minor Version Number" FORCE)
+    set(DREAM3D_VER_PATCH "${DREAM3D_VER_PATCH}" CACHE STRING "Patch Version Number" FORCE)
+else()
+    # if we fail to find Git then use some sort of Date Scheme
+    set(DREAM3D_VER_MAJOR "2011" CACHE STRING "Major Version Number" FORCE)
+    set(DREAM3D_VER_MINOR "07" CACHE STRING "Minor Version Number" FORCE)
+    set(DREAM3D_VER_PATCH "06" CACHE STRING "Patch Version Number" FORCE)
+
+endif()
+
+set(DREAM3D_VERSION "${DREAM3D_VER_MAJOR}.${DREAM3D_VER_MINOR}.${DREAM3D_VER_PATCH}" CACHE STRING "Full Version Number" FORCE)
+
 set (CMP_SOURCE_DIR ${DREAM3D_SOURCE_DIR}/Support/cmp)
 
 SET (PROJECT_CODE_DIR ${PROJECT_SOURCE_DIR}/Source)
@@ -82,7 +104,10 @@ configure_file(${CMP_CONFIGURED_FILES_SOURCE_DIR}/cmpVersion.h.in
 
 configure_file(${DREAM3D_SOURCE_DIR}/Source/DREAM3D/DREAM3DConfiguration.h.in
                ${DREAM3D_BINARY_DIR}/DREAM3D/DREAM3DConfiguration.h)
-                          
+#-- Create a JavaScript file that can be uploaded to the web server that will automatically
+# update the download links to the latest version
+configure_file(${PROJECT_RESOURCES_DIR}/downloadcreator.js.in 
+                ${DREAM3D_BINARY_DIR}/downloadcreator.js)                          
 # --------------------------------------------------------------------
 # Generate our ReadMe and License Files
 configure_file(${PROJECT_SOURCE_DIR}/License.txt.in
@@ -178,16 +203,21 @@ if (MSVC)
 endif()
 
 # Figure out here if we are going to build the command line tools
-option(DREAM3D_BUILD_CLI_TOOLS "Build the command line versions of the applications" OFF)
+option(DREAM3D_BUILD_CLI_TOOLS "Build the command line versions of the applications" ON)
 
 # -----------------------------------------------------------------------
-# -- Add in the Necessary MXA Sources into a static library
+# -- Add in the Necessary HDF5 Support Sources into a library
+add_subdirectory( ${DREAM3D_SOURCE_DIR}/Source/H5Support ${DREAM3D_BINARY_DIR}/H5Support)
+include_directories (${DREAM3D_BINARY_DIR})
+
+# -----------------------------------------------------------------------
+# -- Add in the Necessary MXA Sources into a library
 add_subdirectory( ${DREAM3D_SOURCE_DIR}/Source/MXA ${DREAM3D_BINARY_DIR}/MXA)
 include_directories (${DREAM3D_BINARY_DIR})
 
 # -----------------------------------------------------------------------
-# -- Add in the Necessary MXA Sources into a static library
-add_subdirectory( ${DREAM3D_SOURCE_DIR}/Source/ANG ${DREAM3D_BINARY_DIR}/ANG)
+# -- Add in the Necessary EBSD Sources into a library
+add_subdirectory( ${DREAM3D_SOURCE_DIR}/Source/EbsdLib ${DREAM3D_BINARY_DIR}/EbsdLib)
 include_directories (${DREAM3D_BINARY_DIR})
 
 # -----------------------------------------------------------------------
@@ -223,12 +253,12 @@ if (DREAM3D_BUILD_QT_APPS)
    list(APPEND CMP_LIB_SEARCH_DIRS ${QT_BINARY_DIR} ${QT_LIBRARY_DIR} )
    
    # Build the static QtSupport library - which MUST be a static library or the linking
-   # will not work.
+   # will not work due to signals/slots mechanism.
    add_subdirectory(${DREAM3D_SOURCE_DIR}/Source/QtSupport ${DREAM3D_BINARY_DIR}/QtSupport)
   
-    macro(DREAM3D_COMPILE_PLUGIN plugin)
-        add_subdirectory(${DREAM3D_SOURCE_DIR}/Source/UIPlugins/${plugin} ${DREAM3D_BINARY_DIR}/UIPlugins/${plugin})  
-    endmacro()
+   macro(DREAM3D_COMPILE_PLUGIN plugin)
+       add_subdirectory(${DREAM3D_SOURCE_DIR}/Source/Plugins/${plugin} ${DREAM3D_BINARY_DIR}/Plugins/${plugin})  
+   endmacro()
   
      # Build the DREAM3D Application  
    option(DREAM3D_BUILD_GUI "Compile the DREAM3D GUI Application" ON)
@@ -238,10 +268,11 @@ if (DREAM3D_BUILD_QT_APPS)
         # Add any additional Plugins that you develop here to this list
         set (DREAM3D_PLUGIN_LIST
             OIMImport 
-            GrainGenerator 
             Reconstruction 
+            GrainGenerator 
             SurfaceMesh 
-            MicrostructureStatistics )
+            MicrostructureStatistics 
+        )
         
         foreach(p ${DREAM3D_PLUGIN_LIST})
             DREAM3D_COMPILE_PLUGIN(${p})
@@ -257,6 +288,34 @@ if (DREAM3D_BUILD_QT_APPS)
         foreach(p ${DREAM3D_PLUGIN_LIST})
             add_dependencies(${p}Plugin DREAM3D)
         endforeach()
+        
+        
+        # --- Look for user defined external Plugins that the user has entered into CMake-GUI or through CCMake
+        set(DREAM3D_EXTRA_PLUGINS "" CACHE LIST "Semicolon delimited list of Extra External Plugins that you want to build into DREAM.3D")
+        
+        #-- Attempt to look in our local source directory for the plugin. Anywhere else
+        # and the user will have to put the entire path into CMake manually.
+        foreach(userPlugin ${DREAM3D_EXTRA_PLUGINS})
+            message(STATUS "Looking for Plugin: ${userPlugin}")
+            set(${userPlugin}_SOURCE_DIR "" CACHE PATH "Path to ${userPlugin} directory")
+        
+            if(EXISTS ${DREAM3D_SOURCE_DIR}/Plugins/${userPlugin})
+                set(${userPlugin}_SOURCE_DIR ${DREAM3D_SOURCE_DIR}/Plugins/${userPlugin})
+            endif()
+            if(EXISTS ${DREAM3D_SOURCE_DIR}/Plugins/${userPlugin}/CMakeLists.txt)
+                set(${userPlugin}_IMPORT_FILE ${DREAM3D_SOURCE_DIR}/Plugins/${userPlugin}/CMakeLists.txt)
+            endif()
+            if(NOT DEFINED ${userPlugin}_SOURCE_DIR AND NOT DEFINED ${userPlugin}_IMPORT_FILE)
+                message(WARNING "${userPlugin}_SOURCE_DIR was NOT defined and it needs to be in order to compile the ${userPlugin} Plugin")
+            endif()
+        
+            if(DEFINED ${userPlugin}_SOURCE_DIR AND DEFINED ${userPlugin}_IMPORT_FILE)
+                # include (${${userPlugin}_IMPORT_FILE} )
+                add_subdirectory(${${userPlugin}_SOURCE_DIR} ${DREAM3D_BINARY_DIR}/Plugins/${userPlugin}) 
+            endif()
+        endforeach(userPlugin ${DREAM3D_EXTRA_PLUGINS})
+
+
    endif()
    
    # Build the StatsGenerator Application
@@ -296,13 +355,15 @@ if(DREAM3D_BUILD_DOCS)
     message(FATAL_ERROR "Doxygen is needed to build the documentation. Please install it correctly")
   endif()
   # Add a target that builds just the High Level User Manuals/Tutorial type documentation
-  add_subdirectory(${PROJECT_SOURCE_DIR}/Documentation ${PROJECT_BINARY_DIR}/Documentation)
+  # add_subdirectory(${PROJECT_SOURCE_DIR}/Documentation ${PROJECT_BINARY_DIR}/Documentation)
   
+  # Generating the API Docs will also include the other "Developer Documentation"
   option(DREAM3D_BUILD_API_DOCS "Use Doxygen to generate the HTML API documentation" ON)
   if (DREAM3D_BUILD_API_DOCS)
+      set (DOXY_OUTPUT_DIR ${PROJECT_BINARY_DIR}/API-Documentation)
       configure_file(${PROJECT_RESOURCES_DIR}/AIM.doxyfile.in 
-                 ${PROJECT_BINARY_DIR}/Doxyfile  @ONLY IMMEDIATE)
-    add_custom_target(apidocs COMMAND ${DOXYGEN_EXECUTABLE} ${PROJECT_BINARY_DIR}/Doxyfile)
+                     ${PROJECT_BINARY_DIR}/Doxyfile  @ONLY IMMEDIATE)
+      add_custom_target(apidocs COMMAND ${DOXYGEN_EXECUTABLE} ${PROJECT_BINARY_DIR}/Doxyfile)
   endif()
   
 endif()

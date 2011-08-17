@@ -37,6 +37,7 @@ function(ADD_DOXYGEN_TARGETS)
     set (LATEX_STYLE_FILE  ${DOX_PROJECT_BINARY_DIR}/BlueQuartz.sty )
     
     set (DOXYFILE ${DOX_PROJECT_NAME}_Doxyfile)
+    set (DOXY_OUTPUT_DIR ${PROJECT_BINARY_DIR}/Documentation/Developer)
     configure_file(${DOX_TEMPLATE_DIR}/Doxyfile.in 
                      ${DOX_PROJECT_BINARY_DIR}/${DOXYFILE}  @ONLY IMMEDIATE)
     

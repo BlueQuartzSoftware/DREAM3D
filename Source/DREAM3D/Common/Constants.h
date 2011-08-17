@@ -73,40 +73,6 @@ if (NULL != obj->sharedPtr.get())\
   sharedPtr = VType(new std::vector<type>(*(obj->sharedPtr.get())));\
 }
 
-namespace DREAM3D
-{
-  namespace UIPlugins
-  {
-//#ifdef NDEBUG
-//    const std::string OIMImportFile("OIMImportPlugin");
-//    const std::string ReconstructionFile("ReconstructionPlugin");
-//    const std::string MicrostructureStatisticsFile("MicrostructureStatisticsPlugin");
-//    const std::string GrainGeneratorFile("GrainGeneratorPlugin");
-//    const std::string SurfaceMeshFile("SurfaceMeshPlugin");
-//
-//    const std::string OIMImportName("OIM Import");
-//    const std::string ReconstructionName("Reconstruction");
-//    const std::string MicrostructureStatisticsName("Microstructure Statistics");
-//    const std::string GrainGeneratorName("Grain Generator");
-//    const std::string SurfaceMeshName("Surface Mesh");
-//#else
-//    const std::string OIMImportFile("OIMImportPlugin_debug");
-//    const std::string ReconstructionFile("ReconstructionPlugin_debug");
-//    const std::string MicrostructureStatisticsFile("MicrostructureStatisticsPlugin_debug");
-//    const std::string GrainGeneratorFile("GrainGeneratorPlugin_debug");
-//    const std::string SurfaceMeshFile("SurfaceMeshPlugin_debug");
-//
-//    const std::string OIMImportName("OIM Import Debug");
-//    const std::string ReconstructionName("Reconstruction Debug");
-//    const std::string MicrostructureStatisticsName("Microstructure Statistics Debug");
-//    const std::string GrainGeneratorName("Grain Generator Debug");
-//    const std::string SurfaceMeshName("Surface Mesh Debug");
-//
-//    const std::string OIMImportHelpFile("OIMImport/index.html")
-//#endif
-
-  }
-}
 
 // -----------------------------------------------------------------------------
 //
@@ -182,11 +148,10 @@ namespace AIM
     };
   }
 
-
   namespace Reconstruction
   {
     /*    Reconstruction related */
-    const std::string H5VoxelFile("VoxelData.h5");
+    const std::string H5VoxelFile("VoxelData.h5voxel");
 
     const std::string VisualizationVizFile("Visualization.vtk");//11
     const std::string IPFVizFile("IPF_Visualization.vtk");//11
@@ -198,17 +163,6 @@ namespace AIM
     const std::string PhFile("VoxelData.ph");
     const std::string DxFile("VoxelData.dx");
 
-    /**
-     * @brief IF YOU CHANGE THE VALUES THERE ARE DEEP RAMIFICATIONS IN THE CODE BUT
-     * MOSTLY IN THE HDF5 FILES WHICH ARE WRITTEN USING THE ENUMERATIONS.
-     */
-    enum CrystalStructure {
-        Hexagonal = 0,                   //!< Hexagonal
-        Cubic = 1,                       //!< Cubic
-        OrthoRhombic = 2,                //!< OrthoRhombic
-        AxisOrthoRhombic = 3,            //!< AxisOrthoRhombic
-        UnknownCrystalStructure = 999    //!< UnknownCrystalStructure
-    };
 
     enum PhaseType {
       PrimaryPhase = 0,              //!<
@@ -284,12 +238,28 @@ namespace AIM
 
 
 
+  namespace GrainData
+  {
+    const std::string GrainID("Grain_ID");
+    const std::string Phi1("Phi1");
+    const std::string PHI("PHI");
+    const std::string Phi2("Phi2");
+    const std::string EquivDiam("Equiv_Diameter");
+    const std::string B_Over_A("b/a");
+    const std::string C_Over_A("c/a");
+    const std::string Omega3("Omega3");
+    const std::string SurfaceGrain("Surface_Grain");
+    const std::string OutsideBoundingBox("Outside_Bounding_Box");
+    const std::string NumNeighbors("No_Neighbors");
+    const char Delimiter = ',';
+  }
+
   namespace SyntheticBuilder
   {
     /*  Grain Generator Related */
 
-    const std::string GrainAnglesFile("GrainAngles.txt");
-    const std::string H5VoxelFile("VoxelData.h5");
+    const std::string GrainAnglesFile("GrainAngles.csv");
+    const std::string H5VoxelFile("VoxelData.h5voxel");
 
     const std::string VisualizationVizFile("Visualization.vtk");
     const std::string IPFVizFile("IPF_Visualization.vtk");
@@ -297,31 +267,31 @@ namespace AIM
     const std::string PhFile("VoxelData.ph");
 
     enum Overlap {
-        UnknownOverlap = 0,    //!<
-        Rigid = 1,             //!<
-        Progressive = 2        //!<
+        Rigid = 0,             //!<
+        Progressive = 1,        //!<
+        UnknownOverlap = 999    //!<
     };
 
-    enum ShapeClass {
-        UnknownShapeClass = 0,   //!<
-        Ellipsoid = 1,           //!<
-        Superellipsoid = 2,      //!<
-        CubeOctahedron = 3,      //!<
-        Cylinder = 4		     //!<
+    enum ShapeType {
+        EllipsoidShape = 0,           //!<
+        SuperEllipsoidShape = 1,      //!<
+        CubeOctahedronShape = 2,      //!<
+        CylinderShape = 3,		     //!<
+        UnknownShapeType = 999    //!<
     };
 
 	enum Precipitates {
-        UnknownPrecipitates = 0,    //!<
-        NoPrecipitates= 1,          //!<
-        BoundaryPrecipitates = 2,   //!<
-        BulkPrecipitates = 3        //!<
+        NoPrecipitates = 0,          //!<
+        BoundaryPrecipitates = 1,   //!<
+        BulkPrecipitates = 2,        //!<
+        UnknownPrecipitates = 999    //!<
     };
 
   }
 
   namespace MicroStats {
-    const std::string H5StatisticsFile("Results.h5");
-    const std::string GrainDataFile("GrainData.txt");//14
+    const std::string H5StatisticsFile("Results.h5stats");
+    const std::string GrainDataFile("GrainData.csv");//14
     const std::string DeformationStatsFile("Deformation_Stats.txt");
     const std::string IPFDeformVTKFile("IPF_DeformationData.vtk");
 
@@ -343,24 +313,32 @@ namespace AIM
      const std::string SurfaceVoxelScalarName("SurfaceVoxel");
   }
 
+  /*   Surface Meshing Related   */
+  namespace SurfaceMesh
+  {
 
-  namespace SurfaceMesh {
 
-    /*   Surface Meshing Related   */
-    const std::string VTKExt("vtk");
-    const std::string NodesRawFile("nodes_raw.txt");
-    const std::string NodesFile("nodes.txt");
     const std::string NodesFileBin("nodes.bin");
     const std::string TrianglesFileBin("triangles.bin");
+    const std::string VisualizationVizFile("Visualization.vtk");
+
+    const std::string VTKExt("vtk");
+
+#if 0
+    const std::string NodesRawFile("nodes_raw.txt");
+    const std::string NodesFile("nodes.txt");
     const std::string TrianglesFileIndex("triangles");
     const std::string TrianglesFile("triangles.txt");
     const std::string EdgesFileIndex("edges");
     const std::string EdgesFile("edges.txt");
-    const std::string VisualizationVizFile("Visualization.vtk");
+
     const std::string Smooth3DIterationFile("Smooth3D");
     const std::string NodesSmoothedFile("nodes_smoothed.txt");
     const std::string STLFile("Mesh.stl");
+#endif
+
   }
+
 
   namespace VolumeMeshing {
     /* Volume Meshing Related */

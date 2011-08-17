@@ -63,7 +63,7 @@ class StatsGenMDFWidget : public QWidget, private Ui::StatsGenMDFWidget
     void initQwtPlot(QString xAxisName, QString yAxisName, QwtPlot* plot);
 
     MXA_INSTANCE_PROPERTY(int, PhaseIndex);
-    MXA_INSTANCE_PROPERTY(AIM::Reconstruction::CrystalStructure, CrystalStructure);
+    MXA_INSTANCE_PROPERTY(Ebsd::CrystalStructure, CrystalStructure);
     MXA_INSTANCE_PROPERTY(SGODFTableModel*, ODFTableModel);
 
     int writeDataToHDF5(H5ReconStatsWriter::Pointer writer);

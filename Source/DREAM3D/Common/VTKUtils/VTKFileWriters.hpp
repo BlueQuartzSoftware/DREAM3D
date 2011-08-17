@@ -36,6 +36,10 @@
 #include "MXA/Common/MXASetGetMacros.h"
 #include "MXA/Common/MXAEndian.h"
 
+
+#include "EbsdLib/EbsdConstants.h"
+
+
 #include "DREAM3D/DREAM3DConfiguration.h"
 #include "DREAM3D/Common/Constants.h"
 #include "DREAM3D/Common/OIMColoring.hpp"
@@ -84,11 +88,11 @@ class VoxelGrainIdScalarWriter : public VtkScalarWriter
     std::string file;
     size_t total = r->xpoints * r->ypoints * r->zpoints;
     if (m_WriteBinaryFiles == true) {
-      WRITE_VTK_GRAIN_IDS_BINARY(r, AIM::VTK::GrainIdScalarName, voxels);
+      WRITE_VTK_GRAIN_IDS_BINARY(r, AIM::VTK::GrainIdScalarName);
     }
     else
     {
-      WRITE_VTK_GRAIN_IDS_ASCII(r, AIM::VTK::GrainIdScalarName, voxels)
+      WRITE_VTK_GRAIN_IDS_ASCII(r, AIM::VTK::GrainIdScalarName)
     }
     return err;
   }
@@ -104,7 +108,7 @@ class VoxelGrainIdScalarWriter : public VtkScalarWriter
  * to the VTK file. This class is specifically setup for writing voxel based
  * properties to the VTK file
  */
-#define VtkSCALARWRITER_CLASS_DEF(name, r, const_name, type, voxels, scalar, format)\
+#define VtkSCALARWRITER_CLASS_DEF(name, r, const_name, type, scalar, format)\
 template<typename T>\
 class name : public VtkScalarWriter\
 {\
@@ -116,9 +120,9 @@ class name : public VtkScalarWriter\
     std::string file;\
     size_t total = r->xpoints * r->ypoints * r->zpoints;\
     if (m_WriteBinaryFiles == true) {\
-      WRITE_VTK_SCALARS_FROM_VOXEL_BINARY(r, const_name, type, voxels, scalar)\
+      WRITE_VTK_SCALARS_FROM_VOXEL_BINARY(r, const_name, type, scalar)\
     }    else    {\
-      WRITE_VTK_SCALARS_FROM_VOXEL_ASCII(r, const_name, type, voxels, scalar, format)\
+      WRITE_VTK_SCALARS_FROM_VOXEL_ASCII(r, const_name, type, scalar, format)\
     }\
     return err;\
   }\
@@ -129,11 +133,11 @@ class name : public VtkScalarWriter\
 };\
 
 
-VtkSCALARWRITER_CLASS_DEF(VoxelPhaseIdScalarWriter, r, AIM::VTK::PhaseIdScalarName, int, voxels, phase, "%d ")
-VtkSCALARWRITER_CLASS_DEF(VoxelEuclideanScalarWriter, r, AIM::VTK::EuclideanScalarName, float, voxels, nearestneighbordistance[0], "%f ")
-VtkSCALARWRITER_CLASS_DEF(VoxelImageQualityScalarWriter, r, AIM::VTK::ImageQualityScalarName, float, voxels, imagequality, "%f ")
-VtkSCALARWRITER_CLASS_DEF(VoxelSurfaceVoxelScalarWriter, r, AIM::VTK::SurfaceVoxelScalarName, int, voxels, surfacevoxel, "%d ")
-VtkSCALARWRITER_CLASS_DEF(VoxelKAMScalarWriter, r, AIM::VTK::KAMScalarName, float, voxels, kernelmisorientation, "%f ")
+VtkSCALARWRITER_CLASS_DEF(VoxelPhaseIdScalarWriter, r, AIM::VTK::PhaseIdScalarName, int, phases, "%d ")
+// VtkSCALARWRITER_CLASS_DEF(VoxelEuclideanScalarWriter, r, AIM::VTK::EuclideanScalarName, float, nearestneighbordistances[0], "%f ")
+//VtkSCALARWRITER_CLASS_DEF(VoxelImageQualityScalarWriter, r, AIM::VTK::ImageQualityScalarName, float, imagequalities, "%f ")
+VtkSCALARWRITER_CLASS_DEF(VoxelSurfaceVoxelScalarWriter, r, AIM::VTK::SurfaceVoxelScalarName, float, surfacevoxels, "%f ")
+VtkSCALARWRITER_CLASS_DEF(VoxelKAMScalarWriter, r, AIM::VTK::KAMScalarName, float, kernelmisorientations, "%f ")
 
 /**
  * @brief This class will write the IPF colors to a Scalar array in the VTK file
@@ -168,9 +172,10 @@ class VoxelIPFColorScalarWriter : public VtkScalarWriter
       }
 
       // Write the IPF Coloring Cell Data
+      float voxquat[5];
       for (size_t i = 0; i < total; i++)
       {
-        phase = r->voxels[i].phase;
+        phase = r->phases[i];
         if (true == m_WriteBinaryFiles)
         {
           index = i * 4;
@@ -179,13 +184,18 @@ class VoxelIPFColorScalarWriter : public VtkScalarWriter
         {
           index = 0;
         }
-        if (r->crystruct[phase] == AIM::Reconstruction::Cubic)
+        if (r->crystruct[phase] == Ebsd::Cubic)
         {
-          OIMColoring::GenerateIPFColor(r->voxels[i].euler1, r->voxels[i].euler2, r->voxels[i].euler3, RefDirection[0], RefDirection[1], RefDirection[2], &rgba[index], hkl);
+          OIMColoring::GenerateIPFColor(r->euler1s[i], r->euler2s[i], r->euler3s[i], RefDirection[0], RefDirection[1], RefDirection[2], &rgba[index], hkl);
         }
-        else if (r->crystruct[phase] == AIM::Reconstruction::Hexagonal)
+        else if (r->crystruct[phase] == Ebsd::Hexagonal)
         {
-          OIMColoring::CalculateHexIPFColor(r->voxels[i].quat, RefDirection, &rgba[index]);
+          voxquat[0] = r->quats[i * 5 + 0];
+          voxquat[1] = r->quats[i * 5 + 1];
+          voxquat[2] = r->quats[i * 5 + 2];
+          voxquat[3] = r->quats[i * 5 + 3];
+          voxquat[4] = r->quats[i * 5 + 4];
+          OIMColoring::CalculateHexIPFColor(voxquat, RefDirection, &rgba[index]);
         }
         if (true == m_WriteBinaryFiles)
         {
@@ -457,17 +467,17 @@ class VtkMiscFileWriter
       size_t total = r->xpoints * r->ypoints * r->zpoints;
       if (true == m_WriteBinaryFiles)
       {
-        WRITE_VTK_GRAIN_IDS_BINARY(r, AIM::VTK::GrainIdScalarName, voxels);
-        WRITE_VTK_SCALARS_FROM_VOXEL_BINARY(r, AIM::VTK::KAMScalarName, float, voxels, kernelmisorientation)
-        WRITE_VTK_SCALARS_FROM_VOXEL_BINARY(r, AIM::VTK::GAMScalarName, float, voxels, grainmisorientation)
-        WRITE_VTK_SCALARS_FROM_VOXEL_BINARY(r, AIM::VTK::LMGScalarName, float, voxels, misorientationgradient)
+        WRITE_VTK_GRAIN_IDS_BINARY(r, AIM::VTK::GrainIdScalarName);
+        WRITE_VTK_SCALARS_FROM_VOXEL_BINARY(r, AIM::VTK::KAMScalarName, float, kernelmisorientation)
+        WRITE_VTK_SCALARS_FROM_VOXEL_BINARY(r, AIM::VTK::GAMScalarName, float, grainmisorientation)
+        WRITE_VTK_SCALARS_FROM_VOXEL_BINARY(r, AIM::VTK::LMGScalarName, float, misorientationgradient)
       }
       else
       {
-        WRITE_VTK_GRAIN_IDS_ASCII(r, AIM::VTK::GrainIdScalarName, voxels)
-        WRITE_VTK_SCALARS_FROM_VOXEL_ASCII(r, AIM::VTK::KAMScalarName, float, voxels, kernelmisorientation, "%f ")
-        WRITE_VTK_SCALARS_FROM_VOXEL_ASCII(r, AIM::VTK::GAMScalarName, float, voxels, grainmisorientation, "%f ")
-        WRITE_VTK_SCALARS_FROM_VOXEL_ASCII(r, AIM::VTK::LMGScalarName, float, voxels, misorientationgradient, "%f ")
+        WRITE_VTK_GRAIN_IDS_ASCII(r, AIM::VTK::GrainIdScalarName)
+        WRITE_VTK_SCALARS_FROM_VOXEL_ASCII(r, AIM::VTK::KAMScalarName, float, kernelmisorientation, "%f ")
+        WRITE_VTK_SCALARS_FROM_VOXEL_ASCII(r, AIM::VTK::GAMScalarName, float, grainmisorientation, "%f ")
+        WRITE_VTK_SCALARS_FROM_VOXEL_ASCII(r, AIM::VTK::LMGScalarName, float, misorientationgradient, "%f ")
       }
       fclose(f);
       return 0;
@@ -500,12 +510,12 @@ class VtkMiscFileWriter
       size_t total = r->xpoints * r->ypoints * r->zpoints;
       if (true == m_WriteBinaryFiles)
       {
-        WRITE_VTK_GRAIN_IDS_BINARY(r, AIM::VTK::GrainIdScalarName, voxels);
+        WRITE_VTK_GRAIN_IDS_BINARY(r, AIM::VTK::GrainIdScalarName);
         WRITE_VTK_GRAIN_WITH_GRAIN_SCALAR_VALUE_BINARY(r, AIM::VTK::SchmidFactorScalarName, float, schmidfactor)
       }
       else
       {
-        WRITE_VTK_GRAIN_IDS_ASCII(r, AIM::VTK::GrainIdScalarName, voxels)
+        WRITE_VTK_GRAIN_IDS_ASCII(r, AIM::VTK::GrainIdScalarName)
           WRITE_VTK_GRAIN_WITH_GRAIN_SCALAR_VALUE_ASCII(r, AIM::VTK::SchmidFactorScalarName, float, schmidfactor, "%f ")
       }
       fclose(f);
@@ -573,8 +583,8 @@ class VtkMiscFileWriter
             {
               fprintf(f, "\n");
             }
-            fprintf(f, "%d ", r->voxels[index].grain_index);
-            gnames[r->voxels[index].grain_index]++;
+            fprintf(f, "%d ", r->grain_indicies[index]);
+            gnames[r->grain_indicies[index]]++;
             counter++;
           }
         }

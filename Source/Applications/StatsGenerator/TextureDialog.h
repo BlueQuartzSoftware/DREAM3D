@@ -54,10 +54,10 @@ class TextureDialog : public QDialog , private Ui::TextureDialog
   Q_OBJECT;
 
   public:
-    TextureDialog(AIM::Reconstruction::CrystalStructure xtal, QWidget *parent = 0);
+    TextureDialog(Ebsd::CrystalStructure xtal, QWidget *parent = 0);
     virtual ~TextureDialog();
 
-    MXA_INSTANCE_PROPERTY(AIM::Reconstruction::CrystalStructure, CrystalStructure);
+    MXA_INSTANCE_PROPERTY(Ebsd::CrystalStructure, CrystalStructure);
 
     void getODFEntry(float &e1, float &e2, float &e3, float &weight, float &sigma);
 

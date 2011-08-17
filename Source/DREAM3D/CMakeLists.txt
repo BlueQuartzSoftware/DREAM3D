@@ -26,16 +26,11 @@ Macro(D3DCompileDir DirName)
     set (Project_SRCS ${Project_SRCS} ${DREAM3D_${DirName}_SRCS} ${DREAM3D_${DirName}_HDRS})
 endMacro()
 
-D3DCompileDir(ANGSupport)
+
 D3DCompileDir(Common)
-D3DCompileDir(GrainGenerator)
 D3DCompileDir(HDF5)
-D3DCompileDir(MicrostructureStatistics)
-D3DCompileDir(OIMImport)
-D3DCompileDir(Parallel)
-D3DCompileDir(Reconstruction)
-D3DCompileDir(StructureReaders)
-D3DCompileDir(SurfaceMesh)
+
+
 #--------------------------
 # Add any additional Pipeline Groups here
 
@@ -49,7 +44,7 @@ include_directories( ${DREAM3DLib_BINARY_DIR} )
 
 #-- Add a library for the AIMCommon Code
 add_library(${PROJECT_NAME} ${LIB_TYPE} ${Project_SRCS} )
-target_link_libraries(${PROJECT_NAME} MXADataModel TSLAng ${TBB_LIBRARIES} )
+target_link_libraries(${PROJECT_NAME} MXADataModel EbsdLib ${TBB_LIBRARIES} )
 LibraryProperties( ${PROJECT_NAME} ${EXE_DEBUG_EXTENSION} )
 
 set(install_dir "tools")
