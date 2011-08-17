@@ -373,13 +373,14 @@ void ReconstructionWidget::on_m_H5InputFile_textChanged(const QString &text)
 
       phaseTypeList->addItem(AIM::PhaseType::PrimaryStr().c_str());
       QListWidgetItem* item = phaseTypeList->item(i);
-
+      item->setSizeHint(QSize(50, 25));
       QComboBox* cb = new QComboBox(phaseTypeList);
       for(size_t i = 0; i < phaseTypeStrings.size(); ++i)
       {
         cb->addItem(QString::fromStdString( phaseTypeStrings[i]), phaseTypeEnums[i] );
         cb->setItemData(i, phaseTypeEnums[i], Qt::UserRole);
       }
+      cb->setMinimumHeight(25);
       phaseTypeList->setItemWidget(item, cb);
       connect(cb, SIGNAL(currentIndexChanged(int)),
               this, SLOT(phaseTypeEdited(int)));
@@ -427,22 +428,22 @@ void ReconstructionWidget::on_m_H5InputFile_textChanged(const QString &text)
     // Compare the Manufactureres of the current file versus the one we have cached
     // If they are different then we need to remove all the quality filters
     QString fileManufact = QString::fromStdString(h5Reader->getManufacturer());
-    if (m_EbsdManufacturer.compare(fileManufact) != 0)
+    if (m_EbsdManufacturer->text().compare(fileManufact) != 0)
     {
       m_QualityMetricTableModel->removeRows(0, m_QualityMetricTableModel->rowCount());
     }
 
     // Cache the Manufacturer from the File
-    m_EbsdManufacturer = fileManufact;
+    m_EbsdManufacturer->setText(fileManufact);
 
 
     // Get the list of Possible filter Fields based on the Manufacturer
-    if (m_EbsdManufacturer.compare(QString(Ebsd::Ang::Manufacturer.c_str())) == 0)
+    if (m_EbsdManufacturer->text().compare(QString(Ebsd::Ang::Manufacturer.c_str())) == 0)
     {
       AngFilterFields fields;
       m_QualityMetricTableModel->setPossibleFields(fields.getFieldNames());
     }
-    else if (m_EbsdManufacturer.compare(QString(Ebsd::Ctf::Manufacturer.c_str())) == 0)
+    else if (m_EbsdManufacturer->text().compare(QString(Ebsd::Ctf::Manufacturer.c_str())) == 0)
     {
       CtfFilterFields fields;
       m_QualityMetricTableModel->setPossibleFields(fields.getFieldNames());
