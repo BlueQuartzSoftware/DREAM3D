@@ -67,13 +67,13 @@ int main(void){
 
   struct node *vertex;
   struct patch *triangle;
-
+  size_t nread = 0;
   printf("\nEnter the name of node input file:\n");
-  scanf("%s", name1);
+  nread = scanf("%s", name1);
   printf("\nEnter the name of triangle input file:\n");
-  scanf("%s", name2);
+  nread = scanf("%s", name2);
   printf("\nEnter the name of output inp file (xxx.inp):\n");
-  scanf("%s", name3);
+  nread = scanf("%s", name3);
 
   if( (f1=fopen(name1, "r")) == NULL){
     printf("\nThe input file doesn't exist!\n");
@@ -85,8 +85,8 @@ int main(void){
     exit(1);
   }
 
-  fscanf(f1, "%d", &numN);
-  fscanf(f2, "%d", &numT);
+  nread = fscanf(f1, "%d", &numN);
+  nread = fscanf(f2, "%d", &numT);
 
   fclose(f1);
   fclose(f2);
@@ -119,7 +119,7 @@ void read_nodes (struct node *v, int nN, char *fn){
   int i;
 
   FILE *f;
-
+  size_t nread = 0;
   int dummy;
   int nk;
   double x, y, z;
@@ -129,11 +129,11 @@ void read_nodes (struct node *v, int nN, char *fn){
     exit(1);
   }
 
-  fscanf(f, "%d", &dummy);
+  nread = fscanf(f, "%d", &dummy);
 
   for(i=0; i<nN; i++){
 
-    fscanf(f, "%d %d %lf %lf %lf", &dummy, &nk, &x, &y, &z);
+    nread = fscanf(f, "%d %d %lf %lf %lf", &dummy, &nk, &x, &y, &z);
     v[i].coord[0] = x;
     v[i].coord[1] = y;
     v[i].coord[2] = z;
@@ -149,7 +149,7 @@ void read_nodes (struct node *v, int nN, char *fn){
 void read_triangles (struct patch *t, int nT, char *fn){
 
   int i;
-
+  size_t nread = 0;
   FILE *f;
 
   int dummy;
@@ -162,11 +162,11 @@ void read_triangles (struct patch *t, int nT, char *fn){
     exit(1);
   }
 
-  fscanf(f, "%d", &dummy);
+  nread = fscanf(f, "%d", &dummy);
 
   for(i=0; i<nT; i++){
 
-    fscanf(f, "%d %d %d %d %d %d %d %d %d",
+    nread = fscanf(f, "%d %d %d %d %d %d %d %d %d",
      &dummy, &n1, &n2, &n3, &e1, &e2, &e3, &s1, &s2);
 
     t[i].v_id[0] = n1;

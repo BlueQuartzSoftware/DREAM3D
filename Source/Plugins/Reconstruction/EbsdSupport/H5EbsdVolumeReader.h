@@ -89,7 +89,7 @@ class H5EbsdVolumeReader : public H5EbsdVolumeInfo
      */
     virtual int loadData(ReconstructionFunc* m, std::vector<QualityMetricFilter::Pointer> filters);
 
-    virtual AIMArray<bool>::Pointer determinGoodVoxels( std::vector<QualityMetricFilter::Pointer> filters,
+    virtual AIMArray<bool>::Pointer determineGoodVoxels( std::vector<QualityMetricFilter::Pointer> filters,
                                     std::vector<void*> dataPointers,
                                     size_t nPoints,
                                     std::vector<Ebsd::NumType> dTypes);

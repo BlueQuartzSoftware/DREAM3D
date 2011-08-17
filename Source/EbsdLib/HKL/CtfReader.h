@@ -203,7 +203,7 @@ class EbsdLib_EXPORT CtfReader
 
      int parseHeaderLines(std::vector<std::vector<std::string> > &headerLines);
 
-     void readData(const std::string &line, int row, size_t i);
+     void readData(const std::string &line, size_t row, size_t i);
 
     CtfReader(const CtfReader&); // Copy Constructor Not Implemented
     void operator=(const CtfReader&); // Operator '=' Not Implemented

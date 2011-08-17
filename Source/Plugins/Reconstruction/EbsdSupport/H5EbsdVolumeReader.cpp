@@ -70,13 +70,13 @@ int H5EbsdVolumeReader::loadData(ReconstructionFunc* m, std::vector<QualityMetri
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AIMArray<bool>::Pointer H5EbsdVolumeReader::determinGoodVoxels(std::vector<QualityMetricFilter::Pointer> filters,
+AIMArray<bool>::Pointer H5EbsdVolumeReader::determineGoodVoxels(std::vector<QualityMetricFilter::Pointer> filters,
                                                                std::vector<void*> dataPointers,
                                                                size_t nPoints,
                                                                std::vector<Ebsd::NumType> dTypes)
 {
   if (filters.size() == 0) { return AIMArray<bool>::NullPointer(); }
-  size_t i = 0;
+
   size_t nFilters = filters.size();
   for (size_t i = 0; i < nFilters; ++i)
   {

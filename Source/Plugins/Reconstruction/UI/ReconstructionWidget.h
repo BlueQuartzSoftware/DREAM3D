@@ -143,7 +143,7 @@ class ReconstructionWidget : public AIMPluginFrame, private Ui::ReconstructionWi
     bool                        m_WriteBinaryVTKFile;
 
     QString                     m_OpenDialogLastDirectory;
-    QString                     m_EbsdManufacturer;
+  //  QString                     m_EbsdManufacturer;
 
     /**
      * @brief

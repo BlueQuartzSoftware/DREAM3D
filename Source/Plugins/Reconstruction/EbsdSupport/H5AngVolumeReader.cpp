@@ -211,8 +211,8 @@ int H5AngVolumeReader::loadData(ReconstructionFunc* m, std::vector<QualityMetric
   std::vector<Ebsd::NumType> dataTypes(filters.size(), Ebsd::UnknownNumType);
 
   err = readVolumeInfo();
-  int sliceStart = getSliceStart();
-  int sliceEnd = getSliceEnd();
+//  int sliceStart = getSliceStart();
+//  int sliceEnd = getSliceEnd();
   for (int slice = 0; slice < m->zpoints; ++slice)
   {
     H5AngReader::Pointer reader = H5AngReader::New();
@@ -242,7 +242,7 @@ int H5AngVolumeReader::loadData(ReconstructionFunc* m, std::vector<QualityMetric
     }
 
     // Figure out which are good voxels
-    AIMArray<bool>::Pointer goodVoxels = determinGoodVoxels(filters, dataPointers, xpointstemp * ypointstemp, dataTypes);
+    AIMArray<bool>::Pointer goodVoxels = determineGoodVoxels(filters, dataPointers, xpointstemp * ypointstemp, dataTypes);
 
     xstartspot = (m->xpoints - xpointstemp) / 2;
     ystartspot = (m->ypoints - ypointstemp) / 2;
