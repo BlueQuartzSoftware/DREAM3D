@@ -164,13 +164,14 @@ int Smoothing::execute()
 
   //Read the nodes
   std::cout << "reading nodes " << std::endl;
+  size_t nread = 0;
   unsigned char nodeData[20];
   int* nodeId = (int*)(&nodeData[0]);
   int* nodeKind = (int*)(&nodeData[4]);
   float* vec3f = (float*)(&nodeData[8]);
   for (int i = 0; i < nnod; i++)
   {
-    fread(nodeData, 20, 1, nodesFile); // Read one set of Node Kind from the nodes file
+    nread = fread(nodeData, 20, 1, nodesFile); // Read one set of Node Kind from the nodes file
     node& node = nodes[*nodeId];
     node.setValues(*nodeId, *nodeKind, vec3f);
     node.nId = *nodeId;
@@ -211,7 +212,7 @@ int Smoothing::execute()
   for (int i = 0; i < ntri; i++)
   {
 
-    fread(tData, sizeof(int), 6, triangleFile);
+    nread = fread(tData, sizeof(int), 6, triangleFile);
     tid[i] = tData[0];
     triangles[i].region1 = tData[4];
     triangles[i].region2 = tData[5];

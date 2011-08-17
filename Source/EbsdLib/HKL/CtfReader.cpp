@@ -262,7 +262,7 @@ int CtfReader::readFile()
 
   size_t counter = 0;
   char buf[kBufferSize];
-  for(int row = 0; row < m_NumberOfElements && in.eof() == false; ++row)
+  for(size_t row = 0; row < m_NumberOfElements && in.eof() == false; ++row)
   {
     in.getline(buf, kBufferSize);
     readData(buf, row, counter);
@@ -359,7 +359,7 @@ int CtfReader::parseHeaderLines(std::vector<std::vector<std::string> > &headerLi
 // -----------------------------------------------------------------------------
 //  Read the data part of the ANG file
 // -----------------------------------------------------------------------------
-void CtfReader::readData(const std::string &line, int row, size_t i)
+void CtfReader::readData(const std::string &line, size_t row, size_t i)
 {
   /* When reading the data there should be at least 11 cols of data.
    */

@@ -116,7 +116,7 @@ int DXStructureReader::readStructure(GrainGeneratorFunc* m)
   }
 
   // Read the empty line
-  fscanf(file, "\n");
+  nFields = fscanf(file, "\n");
 
   // Read line 7
   nFields = fscanf(file, "%s %d %s %s %s %d %d %d\n", object, &objIndex, cls, clsName, counts, &z, &y, &x );
@@ -128,7 +128,7 @@ int DXStructureReader::readStructure(GrainGeneratorFunc* m)
   }
 
   // Read the empty line at 8
-  fscanf(file, "\n");
+  nFields = fscanf(file, "\n");
 
   // Read line 9
   char objType[16]; ::memset(objType, 0, 16);
@@ -178,7 +178,7 @@ int DXStructureReader::readStructure(GrainGeneratorFunc* m)
   int grain_index = 0;
   for (int i = 0; i < itemCount; ++i)
   {
-    fscanf(file, "%d", &grain_index);
+    nFields = fscanf(file, "%d", &grain_index);
     m->grain_indicies[i] = grain_index;
     m->phases[i] = 1;
     grainIdMap[grain_index]++;

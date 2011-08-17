@@ -272,7 +272,7 @@ int SurfaceMeshFunc::get_nodes_Edges(int eT2d[20][8], int NST2d[20][8], int zID)
   int tnk;
   int pixIndex[2];
   int eid; // edge id...
-  int tnode1, tnode2;
+//  int tnode1, tnode2;
   int edgeCount; // number of edges for each square...
   int nodeID[2];
   int pixgrainname[2];
@@ -835,7 +835,7 @@ void SurfaceMeshFunc::analyzeWinding()
   //  std::cout << "Current Label: " << currentLabel << std::endl;
   //  int seedTriIndex = masterTriangleIndex;
 
-    if (NULL == &t )
+    if (NULL == t.get() )
     {
       std::cout << "Could not find a triangle with the winding set. This should NOT happen" << std::endl;
       assert(1 == 0);

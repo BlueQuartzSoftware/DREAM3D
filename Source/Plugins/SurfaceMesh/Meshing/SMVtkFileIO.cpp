@@ -333,11 +333,11 @@ int SMVtkFileIO::writeVTKFile(const std::string &VisualizationFile,
 //  int* nodeKind = (int*)(&nodeData[4]);
   float vec3f[3];
   size_t totalWritten = 0;
-
+  size_t nread = 0;
   // Write the POINTS data (Vertex)
   for (int i = 0; i < nNodes; i++)
   {
-    fread(nodeData, 20, 1, nodesFile); // Read one set of positions from the nodes file
+    nread = fread(nodeData, 20, 1, nodesFile); // Read one set of positions from the nodes file
     if (binaryFile == true) {
       vec3f[0] = vec3d[0]; vec3f[1] = vec3d[1]; vec3f[2] = vec3d[2];
       MXA::Endian::FromSystemToBig::convert<float>(vec3f[0]);
@@ -363,7 +363,7 @@ int SMVtkFileIO::writeVTKFile(const std::string &VisualizationFile,
   for (int i = 0; i < nTriangles; i++)
   {
     // Read from the Input Triangles Temp File
-    fread(tData, sizeof(int), 6, triFile);
+    nread = fread(tData, sizeof(int), 6, triFile);
     if (binaryFile == true)
     {
       tData[0] = 3; // Push on the total number of entries for this entry
@@ -458,6 +458,7 @@ int SMVtkFileIO::writeBinaryPointData(const std::string &NodesFile, FILE* vtkFil
   unsigned char nodeData[20];
   int* nodeKind = (int*)(&nodeData[4]);
   int swapped;
+  int nread = 0;
   FILE* nodesFile = fopen(NodesFile.c_str(), "rb");
   fprintf(vtkFile, "\n");
   fprintf(vtkFile, "POINT_DATA %d\n", nNodes);
@@ -467,7 +468,7 @@ int SMVtkFileIO::writeBinaryPointData(const std::string &NodesFile, FILE* vtkFil
   std::vector<int> data (nNodes, 0);
   for (int i = 0; i < nNodes; i++)
   {
-    fread(nodeData, 20, 1, nodesFile); // Read one set of Node Kind from the nodes file
+    nread = fread(nodeData, 20, 1, nodesFile); // Read one set of Node Kind from the nodes file
     swapped = *nodeKind;
     MXA::Endian::FromSystemToBig::convert<int>( swapped );
     data[i] = swapped;
@@ -491,6 +492,7 @@ int SMVtkFileIO::writeASCIIPointData(const std::string &NodesFile, FILE* vtkFile
  // double* vec3d = (double*)(&nodeData[8]);
  // int* nodeId = (int*)(&nodeData[0]);
   int* nodeKind = (int*)(&nodeData[4]);
+  int nread = 0;
  // float vec3f[3];
 
   FILE* nodesFile = fopen(NodesFile.c_str(), "rb");
@@ -500,7 +502,7 @@ int SMVtkFileIO::writeASCIIPointData(const std::string &NodesFile, FILE* vtkFile
   fprintf(vtkFile, "LOOKUP_TABLE default\n");
   for (int i = 0; i < nNodes; i++)
   {
-    fread(nodeData, 32, 1, nodesFile); // Read one set of Node Kind from the nodes file
+    nread = fread(nodeData, 20, 1, nodesFile); // Read one set of Node Kind from the nodes file
     fprintf(vtkFile, "%d\n", *nodeKind); // Write the Node Kind to the output file
   }
 
@@ -516,6 +518,7 @@ int SMVtkFileIO::writeBinaryCellData(const std::string &TrianglesFile, FILE* vtk
 {
   int err = 0;
   size_t offset = 1;
+  int nread = 0;
   // Open the triangles file for reading
   FILE* triFile = fopen(TrianglesFile.c_str(), "rb");
 
@@ -537,7 +540,7 @@ int SMVtkFileIO::writeBinaryCellData(const std::string &TrianglesFile, FILE* vtk
   std::vector<int> cell_data(triangleCount);
   for (int i = 0; i < nTriangles; i++)
   {
-    fread(tData, sizeof(int), 6, triFile);
+    nread = fread(tData, sizeof(int), 6, triFile);
     MXA::Endian::FromSystemToBig::convert<int>(tData[0]);
     tri_ids[i*offset] = tData[0];
     MXA::Endian::FromSystemToBig::convert<int>(tData[4]);
@@ -577,6 +580,7 @@ int SMVtkFileIO::writeBinaryCellData(const std::string &TrianglesFile, FILE* vtk
 // -----------------------------------------------------------------------------
 int SMVtkFileIO::writeASCIICellData(const std::string &TrianglesFile, FILE* vtkFile, int nTriangles, bool conformalMesh)
 {
+	int nread = 0;
   // Open the triangles file for reading
   FILE* triFile = fopen(TrianglesFile.c_str(), "rb");
   // Write the GrainId Data to the file
@@ -593,7 +597,7 @@ int SMVtkFileIO::writeASCIICellData(const std::string &TrianglesFile, FILE* vtkF
   int tData[6];
   for (int i = 0; i < nTriangles; i++)
   {
-    fread(tData, sizeof(int), 6, triFile);
+    nread = fread(tData, sizeof(int), 6, triFile);
     fprintf(vtkFile, "%d\n", tData[4]);
     if (false == conformalMesh)
     {

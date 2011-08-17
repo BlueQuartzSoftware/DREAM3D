@@ -151,7 +151,7 @@ int STLWriter::writeTriangleBlock(int numTriangles, const std::vector<Patch::Poi
     std::cout << "STLWriter: Could not open file: '" << m_Filename << "' to write the data into." << std::endl;
     return -1;
   }
-  size_t curPos = 0;
+  //size_t curPos = 0;
 
   for (int i = 0; i < numTriangles; i++)
   {
