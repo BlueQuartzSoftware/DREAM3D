@@ -207,7 +207,7 @@ void MicrostructureStatistics::execute()
 
   if(m_WriteKernelMisorientations == true)
   {
-	  updateProgressAndMessage(("Finding Reference Orientations For Grains"), 70);
+	  updateProgressAndMessage(("Finding Reference Orientations For Grains"), 90);
 	  m->find_grain_and_kernel_misorientations();
 	  CHECK_FOR_CANCELED(MicrostructureStatisticsFunc, "MicrostructureStatistics was canceled",  find_grain_and_kernel_misorientations)
   }
@@ -233,7 +233,7 @@ void MicrostructureStatistics::execute()
 
   /* ********** This section writes the VTK files for visualization *** */
   if (m_WriteVtkFile) {
-    updateProgressAndMessage(("Writing VTK Visualization File"), 93);
+    updateProgressAndMessage(("Writing VTK Visualization File"), 98);
     MAKE_OUTPUT_FILE_PATH ( vtkVizFile, AIM::Reconstruction::VisualizationVizFile);
 
     // Setup all the classes that will help us write the Scalars to the VTK File
