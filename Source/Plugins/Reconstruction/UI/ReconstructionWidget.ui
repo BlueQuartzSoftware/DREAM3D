@@ -563,7 +563,7 @@
      </widget>
      <widget class="QWidget" name="phase_quality_metric_tab">
       <attribute name="title">
-       <string>Phases &amp; Quality Metrics</string>
+       <string>Phases | Quality Metrics</string>
       </attribute>
       <layout class="QGridLayout" name="gridLayout_3">
        <property name="leftMargin">
