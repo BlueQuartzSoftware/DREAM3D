@@ -1381,6 +1381,7 @@ void  GrainGeneratorFunc::pack_grains()
   //  for each grain : select centroid, determine voxels in grain, monitor filling error and decide of the 50 placements which
   // is the most beneficial, then the grain is added and its neighbors are determined
   oldfillingerror = 1;
+  int check = 0;
   for (size_t i = 1; i < m_Grains.size(); i++)
   {
     bestcurrentfillingerror = 100000000000000.0;
@@ -1410,6 +1411,7 @@ void  GrainGeneratorFunc::pack_grains()
   move_grain(i, bestxc, bestyc, bestzc);
     add_grain(i);
   oldfillingerror = bestcurrentfillingerror;
+  check = check + m_Grains[i]->columnlist->size();
   }
   // determine initial filling, size distribution and neighbor distribution errors
   oldsizedisterror = check_sizedisterror(-1000, -1000);
@@ -1418,6 +1420,7 @@ void  GrainGeneratorFunc::pack_grains()
   ofstream outFile;
   string filename = "error.txt";
   outFile.open(filename.c_str());
+  outFile << check << endl;
   // begin swaping/moving/adding/removing grains to try to improve packing
   for (int iteration = 0; iteration < (500000); iteration++)
   {
@@ -1456,9 +1459,6 @@ void  GrainGeneratorFunc::pack_grains()
       if (fillingerrorweight > 0) change1 = (currentfillingerror - oldfillingerror)/oldfillingerror;
       if (sizedisterrorweight > 0) change2 = (currentsizedisterror - oldsizedisterror)/oldsizedisterror;
       if (neighborhooderrorweight > 0) change3 = (currentneighborhooderror - oldneighborhooderror)/oldneighborhooderror;
-    if(currentfillingerror < 0.01) change1 = 0.0;
-    if(currentsizedisterror < 0.01) change2 = 0.0;
-    if(currentneighborhooderror < 0.01) change3 = 0.0;
       if (fillingerrorweight * change1 + sizedisterrorweight * change2 + neighborhooderrorweight * change3 < 0)
       {
         m_Grains[newgrain]->active = 1;
@@ -1484,9 +1484,6 @@ void  GrainGeneratorFunc::pack_grains()
       if (fillingerrorweight > 0) change1 = (currentfillingerror - oldfillingerror)/oldfillingerror;
       if (sizedisterrorweight > 0) change2 = (currentsizedisterror - oldsizedisterror)/oldsizedisterror;
       if (neighborhooderrorweight > 0) change3 = (currentneighborhooderror - oldneighborhooderror)/oldneighborhooderror;
-    if(currentfillingerror < 0.01) change1 = 0.0;
-    if(currentsizedisterror < 0.01) change2 = 0.0;
-    if(currentneighborhooderror < 0.01) change3 = 0.0;
       if (fillingerrorweight * change1 + sizedisterrorweight * change2 + neighborhooderrorweight * change3 < 0)
       {
         remove_grain(random);
@@ -1529,10 +1526,7 @@ void  GrainGeneratorFunc::pack_grains()
       if (fillingerrorweight > 0) change1 = (currentfillingerror - oldfillingerror)/oldfillingerror;
       if (sizedisterrorweight > 0) change2 = (currentsizedisterror - oldsizedisterror)/oldsizedisterror;
       if (neighborhooderrorweight > 0) change3 = (currentneighborhooderror - oldneighborhooderror)/oldneighborhooderror;
-    if(currentfillingerror < 0.01) change1 = 0.0;
-    if(currentsizedisterror < 0.01) change2 = 0.0;
-    if(currentneighborhooderror < 0.01) change3 = 0.0;
-      if (fillingerrorweight * change1 + sizedisterrorweight * change2 + neighborhooderrorweight * change3 < 0)
+     if (fillingerrorweight * change1 + sizedisterrorweight * change2 + neighborhooderrorweight * change3 < 0)
       {
         m_Grains[newgrain]->active = 1;
         add_grain(newgrain);
@@ -1580,9 +1574,6 @@ void  GrainGeneratorFunc::pack_grains()
       if (fillingerrorweight > 0) change1 = (currentfillingerror - oldfillingerror)/oldfillingerror;
       if (sizedisterrorweight > 0) change2 = (currentsizedisterror - oldsizedisterror)/oldsizedisterror;
       if (neighborhooderrorweight > 0) change3 = (currentneighborhooderror - oldneighborhooderror)/oldneighborhooderror;
-    if(currentfillingerror < 0.01) change1 = 0.0;
-    if(currentsizedisterror < 0.01) change2 = 0.0;
-    if(currentneighborhooderror < 0.01) change3 = 0.0;
       if (fillingerrorweight * change1 + sizedisterrorweight * change2 + neighborhooderrorweight * change3 < 0)
       {
         m_Grains[newgrain]->active = 1;
@@ -1600,9 +1591,10 @@ void  GrainGeneratorFunc::pack_grains()
     }
     }
   }
-#if 0
-  ofstream outFile;
-  string filename = "test.vtk";
+  outFile.close();
+
+//  ofstream outFile;
+  filename = "test.vtk";
   outFile.open(filename.c_str());
   outFile << "# vtk DataFile Version 2.0" << endl;
   outFile << "data set from FFT2dx_GB" << endl;
@@ -1632,7 +1624,7 @@ void  GrainGeneratorFunc::pack_grains()
   }
   }
   outFile.close();
-#endif
+
 }
 
 void GrainGeneratorFunc::assign_voxels()
