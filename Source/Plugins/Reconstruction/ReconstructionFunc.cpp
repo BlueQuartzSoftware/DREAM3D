@@ -242,7 +242,6 @@ void ReconstructionFunc::initializeQuats()
     quats[i*5 + 2] = qr[2];
     quats[i*5 + 3] = qr[3];
     quats[i*5 + 4] = qr[4];
-
   }
 }
 void ReconstructionFunc::cleanup_data()
@@ -299,6 +298,7 @@ void ReconstructionFunc::cleanup_data()
     {
       if (neighbors[j] >= 0 && goodVoxels[j] == false)
       {
+	    bestneighbor = neighbors[j];
         euler1s[j] = euler1s[bestneighbor];
         euler2s[j] = euler2s[bestneighbor];
         euler3s[j] = euler3s[bestneighbor];
@@ -632,21 +632,21 @@ void ReconstructionFunc::align_sections()
       curxcentroid = curxcentroid / float(count);
       curycentroid = curycentroid / float(count);
     }
-    if (alignmeth >= 1)
+	if (alignmeth >= AIM::Reconstruction::Misorientation)
     {
       for (int a = 0; a < 2; a++)
       {
-        if (a == 0) step = 3, nsteps = 3;
-        if (a == 1) step = 1, nsteps = 3;
+        if (a == 0) step = 2, nsteps = 5;
+        if (a == 1) step = 1, nsteps = 2;
         for (int j = -nsteps; j < (nsteps + 1); j++)
         {
           for (int k = -nsteps; k < (nsteps + 1); k++)
           {
             disorientation = 0;
             count = 0;
-            for (int l = 0; l < ypoints; l++)
+            for (int l = 0; l < ypoints; l=l+4)
             {
-              for (int m = 0; m < xpoints; m++)
+              for (int m = 0; m < xpoints; m=m+4)
               {
                 count++;
                 if ((l + (j * step) + tempyshift) >= 0 && (l + (j * step) + tempyshift) < ypoints && (m + (k * step) + tempxshift) >= 0 && (m + (k * step)
