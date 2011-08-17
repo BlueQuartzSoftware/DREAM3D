@@ -38,7 +38,14 @@
 
 /**
  * @class AbstractPipeline AbstractPipeline.h DREAM3D/Common/AbstractPipeline.h
- * @brief
+ * @brief All DREAM.3D classes that perform a set of actions that result in some
+ * outputs should inherit from this simple class. It defines some basic methods
+ * and a virtual method that needs to be implemented by the plugin developer. The
+ * plugin developer should implement the "execute()" method with their pipeline.
+ * This implementation simply prints any update messages to the console. Subclasses
+ * can over ride this behavior to send signals to the Qt Gui (or another class)
+ * with the update methods.
+ *
  * @author Michael A. Jackson for BlueQuartz Software
  * @date Jun 1, 2011
  * @version 1.0
@@ -57,10 +64,14 @@ class DREAM3DLib_EXPORT AbstractPipeline
     MXA_INSTANCE_PROPERTY(bool, Cancel);
 
     /**
-     *
+     * @brief This method is called to start the pipeline for a plugin
      */
     virtual void run();
 
+    /**
+     * @brief A pure virtual function that gets called from the "run()" method. Subclasses
+     * are expected to create a concrete implementation of this method.
+     */
     virtual void execute() = 0;
 
     /**
@@ -71,17 +82,23 @@ class DREAM3DLib_EXPORT AbstractPipeline
     virtual void updateProgressAndMessage(const char* message, int progress);
 
     /**
-     *
+     * @brief This method reports progress such that a user interface element such
+     * as a progress bar could be updated. It is assumed the value will fluctuate
+     * between 0 and 100.
+     * @param value
      */
     virtual void pipelineProgress(int value);
 
     /**
-     *
+     * @brief This message reports some human readable message suitable for display
+     * on a GUI or printed to a console or possibly saved to a log file
+     * @param message
      */
     virtual void pipelineMessage(const char* message);
 
     /**
-     *
+     * @brief This method is called from the run() method just before exiting and
+     * signals the end of the pipeline execution
      */
     virtual void pipelineFinished();
 
