@@ -51,7 +51,7 @@
 
 #include "DREAM3D/Common/Constants.h"
 #include "QtSupport/QR3DFileCompleter.h"
-#include "QtSupport/DREAM3DQtMacros.h"
+#include "QtSupport/Dream3DQtMacros.h"
 
 // -----------------------------------------------------------------------------
 //

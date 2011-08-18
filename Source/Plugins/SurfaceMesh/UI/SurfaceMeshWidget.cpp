@@ -52,7 +52,7 @@
 #include "DREAM3D/Common/Constants.h"
 
 #include "QtSupport/QR3DFileCompleter.h"
-#include "QtSupport/DREAM3DQtMacros.h"
+#include "QtSupport/Dream3DQtMacros.h"
 #include "DREAM3D/HDF5/H5VoxelReader.h"
 #include "Meshing/SMVtkFileIO.h"
 
