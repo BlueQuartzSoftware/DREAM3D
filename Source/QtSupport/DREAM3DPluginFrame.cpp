@@ -34,7 +34,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "Dream3DPluginFrame.h"
+#include "DREAM3DPluginFrame.h"
 
 #include <QtCore/QFileInfo>
 #include <QtCore/QDir>
