@@ -57,7 +57,7 @@ class QualityMetricTableModel;
  * @date Jan 30, 2011
  * @version 1.0
  */
-class ReconstructionWidget : public Dream3DPluginFrame, private Ui::ReconstructionWidget
+class ReconstructionWidget : public DREAM3DPluginFrame, private Ui::ReconstructionWidget
 {
   Q_OBJECT
   public:

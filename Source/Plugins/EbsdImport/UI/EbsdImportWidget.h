@@ -56,7 +56,7 @@
  * @date Jan 30, 2011
  * @version 1.0
  */
-class EbsdImportWidget : public Dream3DPluginFrame, private Ui::EbsdImportWidget
+class EbsdImportWidget : public DREAM3DPluginFrame, private Ui::EbsdImportWidget
 {
   Q_OBJECT;
 

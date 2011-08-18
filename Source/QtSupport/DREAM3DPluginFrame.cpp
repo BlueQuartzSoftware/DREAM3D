@@ -45,7 +45,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-Dream3DPluginFrame::Dream3DPluginFrame(QWidget *parent) :
+DREAM3DPluginFrame::DREAM3DPluginFrame(QWidget *parent) :
 QFrame(parent),
 m_StatusBar(NULL)
 {
@@ -54,7 +54,7 @@ m_StatusBar(NULL)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-Dream3DPluginFrame::~Dream3DPluginFrame()
+DREAM3DPluginFrame::~DREAM3DPluginFrame()
 {
 
 }
@@ -62,7 +62,7 @@ Dream3DPluginFrame::~Dream3DPluginFrame()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool Dream3DPluginFrame::verifyOutputPathParentExists(QString outFilePath, QLineEdit* lineEdit)
+bool DREAM3DPluginFrame::verifyOutputPathParentExists(QString outFilePath, QLineEdit* lineEdit)
 {
   QFileInfo fileinfo(outFilePath);
   QDir parent (fileinfo.dir() );
@@ -81,7 +81,7 @@ bool Dream3DPluginFrame::verifyOutputPathParentExists(QString outFilePath, QLine
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool Dream3DPluginFrame::verifyPathExists(QString outFilePath, QLineEdit* lineEdit)
+bool DREAM3DPluginFrame::verifyPathExists(QString outFilePath, QLineEdit* lineEdit)
 {
 //  std::cout << "outFilePath: " << outFilePath.toStdString() << std::endl;
   QFileInfo fileinfo(outFilePath);
@@ -100,7 +100,7 @@ bool Dream3DPluginFrame::verifyPathExists(QString outFilePath, QLineEdit* lineEd
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void Dream3DPluginFrame::setStatusBar(QStatusBar* statusBar)
+void DREAM3DPluginFrame::setStatusBar(QStatusBar* statusBar)
 {
   this->m_StatusBar = statusBar;
 }
@@ -108,7 +108,7 @@ void Dream3DPluginFrame::setStatusBar(QStatusBar* statusBar)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QStatusBar* Dream3DPluginFrame::statusBar()
+QStatusBar* DREAM3DPluginFrame::statusBar()
 {
   return this->m_StatusBar;
 }
@@ -116,7 +116,7 @@ QStatusBar* Dream3DPluginFrame::statusBar()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool Dream3DPluginFrame::sanityCheckOutputDirectory(QLineEdit* le, QString msgTitle)
+bool DREAM3DPluginFrame::sanityCheckOutputDirectory(QLineEdit* le, QString msgTitle)
 {
 
   if (le->text().isEmpty() == true)

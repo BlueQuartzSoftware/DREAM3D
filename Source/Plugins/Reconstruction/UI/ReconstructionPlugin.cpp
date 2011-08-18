@@ -79,9 +79,9 @@ QWidget* ReconstructionPlugin::getInputWidget(QWidget* parent)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-Dream3DPluginFrame* ReconstructionPlugin::getPluginFrame(QWidget* parent)
+DREAM3DPluginFrame* ReconstructionPlugin::getPluginFrame(QWidget* parent)
 {
-  Dream3DPluginFrame* frame = qobject_cast<Dream3DPluginFrame*>(m_InputWidget);
+  DREAM3DPluginFrame* frame = qobject_cast<DREAM3DPluginFrame*>(m_InputWidget);
   return frame;
 }
 

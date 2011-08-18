@@ -43,7 +43,7 @@
 #include "QtSupport/DREAM3DPluginInterface.h"
 
 class GrainGeneratorWidget;
-class Dream3DPluginFrame;
+class DREAM3DPluginFrame;
 
 DREAM3D_PLUGIN_CONSTANTS(GrainGenerator, Grain Generator)
 
@@ -60,7 +60,7 @@ class GrainGeneratorPlugin : public QObject, public DREAM3DPluginInterface
     QString getPluginName();
 
     virtual QWidget* getInputWidget(QWidget* parent);
-    virtual Dream3DPluginFrame* getPluginFrame(QWidget* parent);
+    virtual DREAM3DPluginFrame* getPluginFrame(QWidget* parent);
 
 
     virtual void writeSettings(QSettings &prefs);

@@ -57,7 +57,7 @@
 //
 // -----------------------------------------------------------------------------
 EbsdImportWidget::EbsdImportWidget(QWidget *parent) :
-Dream3DPluginFrame(parent),
+DREAM3DPluginFrame(parent),
 m_EbsdImport(NULL),
 m_WorkerThread(NULL),
 #if defined(Q_WS_WIN)

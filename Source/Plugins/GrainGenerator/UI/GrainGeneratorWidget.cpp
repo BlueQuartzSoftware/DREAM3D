@@ -68,7 +68,7 @@ const static float m_pi = M_PI;
 //
 // -----------------------------------------------------------------------------
 GrainGeneratorWidget::GrainGeneratorWidget(QWidget *parent) :
-Dream3DPluginFrame(parent),
+DREAM3DPluginFrame(parent),
 m_GrainGenerator(NULL),
 m_WorkerThread(NULL),
 m_WriteSurfaceVoxelScalars(true),

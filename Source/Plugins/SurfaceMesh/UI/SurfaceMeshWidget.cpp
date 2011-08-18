@@ -60,7 +60,7 @@
 //
 // -----------------------------------------------------------------------------
 SurfaceMeshWidget::SurfaceMeshWidget(QWidget *parent) :
-Dream3DPluginFrame(parent),
+DREAM3DPluginFrame(parent),
 m_SurfaceMesh(NULL),
 m_WorkerThread(NULL),
 #if defined(Q_WS_WIN)

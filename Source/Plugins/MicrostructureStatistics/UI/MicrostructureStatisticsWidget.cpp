@@ -64,7 +64,7 @@
 //
 // -----------------------------------------------------------------------------
 MicrostructureStatisticsWidget::MicrostructureStatisticsWidget(QWidget *parent) :
-  Dream3DPluginFrame(parent), m_MicrostructureStatistics(NULL), m_WorkerThread(NULL),
+  DREAM3DPluginFrame(parent), m_MicrostructureStatistics(NULL), m_WorkerThread(NULL),
 #if defined(Q_WS_WIN)
       m_OpenDialogLastDirectory("C:\\")
 #else
