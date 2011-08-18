@@ -5,7 +5,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 //
 //  Copyright (c) 2002, Perry L. Miller IV
-//  Small Changes by Mike Jackson for the MXA Project
+//  Small Changes by Michael A. Jackson for the MXA Project
 //  All rights reserved.
 //  BSD License: http://www.opensource.org/licenses/bsd-license.html
 //

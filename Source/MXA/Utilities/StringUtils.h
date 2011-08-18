@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2006, Shawn Nicholson
+//  Copyright (c) 2006, Michael A. Jackson for BlueQuartz Software
 //  All rights reserved.
 //  BSD License: http://www.opensource.org/licenses/bsd-license.html
 //
