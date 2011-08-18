@@ -691,7 +691,7 @@ void DREAM3D_UI::setInputUI()
   QWidget* inputWidget = m_ActivePlugin->getInputWidget(this);
   centerWidget->layout()->addWidget(inputWidget);
 
-  Dream3DPluginFrame* frame = m_ActivePlugin->getPluginFrame(NULL);
+  DREAM3DPluginFrame* frame = m_ActivePlugin->getPluginFrame(NULL);
   if (frame)
   {
     frame->setStatusBar(this->statusBar());

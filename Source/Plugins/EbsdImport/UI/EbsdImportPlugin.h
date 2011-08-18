@@ -42,7 +42,7 @@
 #include "QtSupport/DREAM3DPluginInterface.h"
 
 class EbsdImportWidget;
-class Dream3DPluginFrame;
+class DREAM3DPluginFrame;
 
 
 DREAM3D_PLUGIN_CONSTANTS(EbsdImport, EBSD Import)
@@ -60,7 +60,7 @@ class EbsdImportPlugin : public QObject, public DREAM3DPluginInterface
     QString getPluginName();
 
     virtual QWidget* getInputWidget(QWidget* parent);
-    virtual Dream3DPluginFrame* getPluginFrame(QWidget* parent);
+    virtual DREAM3DPluginFrame* getPluginFrame(QWidget* parent);
 
 
     virtual void writeSettings(QSettings &prefs);

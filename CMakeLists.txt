@@ -11,6 +11,8 @@
 project (DREAM3D)
 cmake_minimum_required(VERSION 2.8.3)
 
+include (CMakeParseArguments)
+
 # ---------- Setup output Directories -------------------------
 SET (CMAKE_LIBRARY_OUTPUT_DIRECTORY
   ${PROJECT_BINARY_DIR}/Bin
@@ -225,6 +227,23 @@ include_directories (${DREAM3D_BINARY_DIR})
 include_directories(${DREAM3D_SOURCE_DIR}/Source)
 add_subdirectory( ${DREAM3D_SOURCE_DIR}/Source/DREAM3D/ ${DREAM3D_BINARY_DIR}/DREAM3D)
 
+function(DREAM3D_COMPILE_PLUGIN)
+    set(options)
+    set(oneValueArgs PLUGIN_NAME PLUGIN_SOURCE_DIR)
+    cmake_parse_arguments(PLUG  "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN} )
+    
+    option(DREAM3D_BUILD_PLUGIN_${PLUG_PLUGIN_NAME} "Build the ${PLUG_PLUGIN_NAME} Plugin" ON)
+    if (DREAM3D_BUILD_PLUGIN_${PLUG_PLUGIN_NAME})
+        message(STATUS "Plugin: ${PLUG_PLUGIN_NAME} Enabled")
+        add_subdirectory(${PLUG_PLUGIN_SOURCE_DIR} ${DREAM3D_BINARY_DIR}/Plugins/${PLUG_PLUGIN_NAME})  
+    else()
+        message(STATUS "Plugin: ${PLUG_PLUGIN_NAME} Disabled")
+    endif()
+
+endfunction()
+
+
+
 option(DREAM3D_BUILD_QT_APPS "Compile the Qt based GUI applications" ON)
 #if we are going to build Qt based applications then we need to find Qt 4 first
 if (DREAM3D_BUILD_QT_APPS)
@@ -256,16 +275,16 @@ if (DREAM3D_BUILD_QT_APPS)
    # will not work due to signals/slots mechanism.
    add_subdirectory(${DREAM3D_SOURCE_DIR}/Source/QtSupport ${DREAM3D_BINARY_DIR}/QtSupport)
   
-   macro(DREAM3D_COMPILE_PLUGIN plugin)
-       add_subdirectory(${DREAM3D_SOURCE_DIR}/Source/Plugins/${plugin} ${DREAM3D_BINARY_DIR}/Plugins/${plugin})  
-   endmacro()
+#   macro(DREAM3D_COMPILE_PLUGIN plugin)
+#       add_subdirectory(${DREAM3D_SOURCE_DIR}/Source/Plugins/${plugin} ${DREAM3D_BINARY_DIR}/Plugins/${plugin})  
+#   endmacro()
   
      # Build the DREAM3D Application  
    option(DREAM3D_BUILD_GUI "Compile the DREAM3D GUI Application" ON)
    if (DREAM3D_BUILD_GUI)
    
         #-----------------
-        # Add any additional Plugins that you develop here to this list
+        # These are the core plugins
         set (DREAM3D_PLUGIN_LIST
             EbsdImport 
             Reconstruction 
@@ -275,7 +294,8 @@ if (DREAM3D_BUILD_QT_APPS)
         )
         
         foreach(p ${DREAM3D_PLUGIN_LIST})
-            DREAM3D_COMPILE_PLUGIN(${p})
+            DREAM3D_COMPILE_PLUGIN(PLUGIN_NAME ${p} 
+                                   PLUGIN_SOURCE_DIR ${DREAM3D_SOURCE_DIR}/Source/Plugins/${p})
         endforeach()
   
         #- Add in the Main DREAM.3D Application 
@@ -283,10 +303,12 @@ if (DREAM3D_BUILD_QT_APPS)
 
  
         #- Now set up the dependency between the main application and each of the plugins so that
-        #- things like Visual Studion are forced to rebuild the plugins when launching
+        #- things like Visual Studio are forced to rebuild the plugins when launching
         #- the DREAM3D application 
         foreach(p ${DREAM3D_PLUGIN_LIST})
-            add_dependencies(${p}Plugin DREAM3D)
+            if (DREAM3D_BUILD_PLUGIN_${p})
+                add_dependencies(${p}Plugin DREAM3D)
+            endif()
         endforeach()
         
         
@@ -298,7 +320,9 @@ if (DREAM3D_BUILD_QT_APPS)
         foreach(userPlugin ${DREAM3D_EXTRA_PLUGINS})
             
             if(DEFINED ${userPlugin}_SOURCE_DIR AND DEFINED ${userPlugin}_IMPORT_FILE)
-                add_subdirectory(${${userPlugin}_SOURCE_DIR} ${DREAM3D_BINARY_DIR}/Plugins/${userPlugin}) 
+              #  add_subdirectory(${${userPlugin}_SOURCE_DIR} ${DREAM3D_BINARY_DIR}/Plugins/${userPlugin}) 
+                DREAM3D_COMPILE_PLUGIN(PLUGIN_NAME ${userPlugin} 
+                       PLUGIN_SOURCE_DIR ${${userPlugin}_SOURCE_DIR})
             else()            
                 message(STATUS "Looking for Plugin: ${userPlugin}...")
                 if (NOT DEFINED ${userPlugin}_SOURCE_DIR)
@@ -311,8 +335,10 @@ if (DREAM3D_BUILD_QT_APPS)
                     if(EXISTS ${${userPlugin}_SOURCE_DIR}/CMakeLists.txt)
                         #message(STATUS "EXISTS: ${${userPlugin}_SOURCE_DIR}/CMakeLists.txt")
                         set(${userPlugin}_IMPORT_FILE ${userPlugin}_SOURCE_DIR/CMakeLists.txt)
-                        add_subdirectory(${${userPlugin}_SOURCE_DIR} ${DREAM3D_BINARY_DIR}/Plugins/${userPlugin}) 
-                        message(STATUS "Plugin: ${userPlugin} Found")
+                        DREAM3D_COMPILE_PLUGIN(PLUGIN_NAME ${userPlugin} 
+                                                PLUGIN_SOURCE_DIR ${${userPlugin}_SOURCE_DIR})
+                        #add_subdirectory(${${userPlugin}_SOURCE_DIR} ${DREAM3D_BINARY_DIR}/Plugins/${userPlugin}) 
+                        #message(STATUS "Plugin: ${userPlugin} Found")
                     endif()
                 else()
                     message(WARNING "${userPlugin}_SOURCE_DIR was NOT defined and it needs to be in order to compile the ${userPlugin} Plugin")

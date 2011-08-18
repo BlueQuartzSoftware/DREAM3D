@@ -80,7 +80,7 @@
 //
 // -----------------------------------------------------------------------------
 ReconstructionWidget::ReconstructionWidget(QWidget *parent) :
-Dream3DPluginFrame(parent),
+DREAM3DPluginFrame(parent),
 m_Reconstruction(NULL),
 m_WorkerThread(NULL),
 m_phaseTypeEdited(false),

@@ -43,7 +43,7 @@
 #include "QtSupport/DREAM3DPluginInterface.h"
 
 class MicrostructureStatisticsWidget;
-class Dream3DPluginFrame;
+class DREAM3DPluginFrame;
 
 DREAM3D_PLUGIN_CONSTANTS(MicrostructureStatistics, Microstructure Statistics)
 
@@ -59,7 +59,7 @@ class MicrostructureStatisticsPlugin : public QObject, public DREAM3DPluginInter
     QString getPluginName();
 
     virtual QWidget* getInputWidget(QWidget* parent);
-    virtual Dream3DPluginFrame* getPluginFrame(QWidget* parent);
+    virtual DREAM3DPluginFrame* getPluginFrame(QWidget* parent);
 
 
     virtual void writeSettings(QSettings &prefs);

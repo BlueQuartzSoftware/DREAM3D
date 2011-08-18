@@ -54,7 +54,7 @@
  * @date Jan 30, 2011
  * @version 1.0
  */
-class SurfaceMeshWidget : public Dream3DPluginFrame, private Ui::SurfaceMeshWidget
+class SurfaceMeshWidget : public DREAM3DPluginFrame, private Ui::SurfaceMeshWidget
 {
   Q_OBJECT
 

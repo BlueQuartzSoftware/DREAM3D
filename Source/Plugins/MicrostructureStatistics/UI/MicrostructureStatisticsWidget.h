@@ -57,7 +57,7 @@ class QListWidgetItem;
  * @date May 30, 2011
  * @version 1.0
  */
-class MicrostructureStatisticsWidget : public Dream3DPluginFrame, private Ui::MicrostructureStatisticsWidget
+class MicrostructureStatisticsWidget : public DREAM3DPluginFrame, private Ui::MicrostructureStatisticsWidget
 {
   Q_OBJECT
 
