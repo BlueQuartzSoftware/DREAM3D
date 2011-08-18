@@ -103,7 +103,7 @@ int main(int argc, char* argv[])
     {
       mxa_log.open(logFile);
     }
-    mxa_log << logTime() << "Surface Mesh Smoothing " << AIMRepresentation::Version::Complete << " Starting " << std::endl;
+    mxa_log << logTime() << "Surface Mesh Smoothing " << DREAM3D::Version::Complete << " Starting " << std::endl;
 
     mxa_log << "Parameters being used are: " << std::endl;
 

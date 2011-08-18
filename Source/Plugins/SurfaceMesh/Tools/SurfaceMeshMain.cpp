@@ -13,8 +13,8 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
- * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
@@ -114,7 +114,7 @@ int main(int argc, char **argv)
     cmd.parse(argc, argv);
     if (argc == 1)
     {
-      std::cout << "AIMRepresentation Surface Mesh program was not provided any arguments. Use the --help argument to show the help listing." << std::endl;
+      std::cout << "DREAM3D Surface Mesh program was not provided any arguments. Use the --help argument to show the help listing." << std::endl;
       return EXIT_FAILURE;
     }
 

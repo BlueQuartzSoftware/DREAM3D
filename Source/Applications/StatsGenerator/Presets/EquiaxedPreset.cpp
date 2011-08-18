@@ -68,7 +68,7 @@ EquiaxedPreset::~EquiaxedPreset()
 void EquiaxedPreset::initializeOmega3TableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers)
 {
   // Make sure the distribution is set correctly
-  plot->setDistributionType(AIM::Reconstruction::Beta, false);
+  plot->setDistributionType(DREAM3D::Reconstruction::Beta, false);
   // This line basically makes sure we have the distribution type we are looking for
   SGBetaTableModel* model = qobject_cast<SGBetaTableModel*>(plot->tableModel());
   if (NULL == model)
@@ -109,7 +109,7 @@ void EquiaxedPreset::initializeOmega3TableModel(StatsGenPlotWidget* plot, QVecto
 void EquiaxedPreset::initializeBOverATableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers)
 {
   // Make sure the distribution is set correctly
-  plot->setDistributionType(AIM::Reconstruction::Beta, false);
+  plot->setDistributionType(DREAM3D::Reconstruction::Beta, false);
   // This line basically makes sure we have the distribution type we are looking for
   SGBetaTableModel* model = qobject_cast<SGBetaTableModel*>(plot->tableModel());
   if (NULL == model)
@@ -150,7 +150,7 @@ void EquiaxedPreset::initializeBOverATableModel(StatsGenPlotWidget* plot, QVecto
 void EquiaxedPreset::initializeCOverATableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers)
 {
   // Make sure the distribution is set correctly
-  plot->setDistributionType(AIM::Reconstruction::Beta, false);
+  plot->setDistributionType(DREAM3D::Reconstruction::Beta, false);
   // This line basically makes sure we have the distribution type we are looking for
   SGBetaTableModel* model = qobject_cast<SGBetaTableModel*>(plot->tableModel());
   if (NULL == model)
@@ -192,7 +192,7 @@ void EquiaxedPreset::initializeCOverATableModel(StatsGenPlotWidget* plot, QVecto
 void EquiaxedPreset::initializeCOverBTableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers)
 {
   // Make sure the distribution is set correctly
-  plot->setDistributionType(AIM::Reconstruction::Beta, false);
+  plot->setDistributionType(DREAM3D::Reconstruction::Beta, false);
   // This line basically makes sure we have the distribution type we are looking for
   SGBetaTableModel* model = qobject_cast<SGBetaTableModel*>(plot->tableModel());
   if (NULL == model)
@@ -234,7 +234,7 @@ void EquiaxedPreset::initializeCOverBTableModel(StatsGenPlotWidget* plot, QVecto
 void EquiaxedPreset::initializeNeighborTableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers)
 {
   // Make sure the distribution is set correctly
-  plot->setDistributionType(AIM::Reconstruction::Power, false);
+  plot->setDistributionType(DREAM3D::Reconstruction::Power, false);
   // This line basically makes sure we have the distribution type we are looking for
   SGPowerLawTableModel* model = qobject_cast<SGPowerLawTableModel*>(plot->tableModel());
   if (NULL == model)

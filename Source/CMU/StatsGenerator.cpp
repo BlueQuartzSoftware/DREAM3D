@@ -35,7 +35,7 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 #include "StatsGenerator.h"
-#include "AIM/StatsGenerator/StatsGen.h"
+#include "StatsGenerator/StatsGen.h"
 
 
 // -----------------------------------------------------------------------------

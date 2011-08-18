@@ -13,8 +13,8 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
- * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
@@ -50,7 +50,7 @@
 /**
  * @class Texture Texture.h AIM/Common/Texture.h
  * @brief This class holds default data for Orientation Distribution Function
- * calculations that the AIMRepresentation package will perform.
+ * calculations that the DREAM3D package will perform.
  * @author Michael A. Jackson for BlueQuartz Software
  * @author Micharl A. Groeber for US Air Force Research Laboratory
  * @date Feb 1, 2011

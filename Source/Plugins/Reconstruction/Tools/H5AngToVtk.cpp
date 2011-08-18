@@ -102,8 +102,8 @@ int main(int argc, char **argv)
   h5io->setZEndIndex(zEnd);
   h5io->setOrientation(Ang::NoOrientation);
 
-  AIM::Reconstruction::AlignmentMethod m_AlignmentMethod = AIM::Reconstruction::UnknownAlignmentMethod;
-  std::vector<AIM::Reconstruction::PhaseType> m_PhaseTypes;
+  DREAM3D::Reconstruction::AlignmentMethod m_AlignmentMethod = DREAM3D::Reconstruction::UnknownAlignmentMethod;
+  std::vector<DREAM3D::Reconstruction::PhaseType> m_PhaseTypes;
   std::vector<float> precipFractions;
   std::vector<Ebsd::CrystalStructure> crystalStructures;
   std::vector<AngPhase::Pointer> phases = h5io->getPhases();
@@ -111,7 +111,7 @@ int main(int argc, char **argv)
   m_PhaseTypes.resize(phases.size() + 1);
   precipFractions.resize(phases.size() + 1);
   crystalStructures[0] = Ebsd::UnknownCrystalStructure;
-  m_PhaseTypes[0] = AIM::Reconstruction::UnknownPhaseType;
+  m_PhaseTypes[0] = DREAM3D::Reconstruction::UnknownPhaseType;
   precipFractions[0] = -1.0f;
   for(size_t i=0;i<phases.size();i++)
   {

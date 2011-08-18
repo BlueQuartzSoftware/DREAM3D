@@ -13,8 +13,8 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
- * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
@@ -45,8 +45,13 @@
 #include "EbsdLib/EbsdLibConfiguration.h"
 #include "EbsdLib/AbstractEbsdFields.h"
 
-/*
- *
+/**
+ * @class AngFields AngFields.h EbsdLib/TSL/AngFields.h
+ * @brief This class simply holds the names of the columns that are present in the
+ * TSL .ang file.
+ * @author Michael A. Jackson for BlueQuartz Software
+ * @date Aug 18, 2011
+ * @version 1.0
  */
 class EbsdLib_EXPORT AngFields : public AbstractEbsdFields
 {

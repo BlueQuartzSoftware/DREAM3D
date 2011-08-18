@@ -93,7 +93,7 @@ int SGAxisODFWidget::readDataFromHDF5(H5ReconStatsReader::Pointer reader, int ph
 {
   int err = -1;
   std::string index = StringUtils::numToString(phase);
-  std::string path = "/" + AIM::HDF5::Reconstruction + "/" + index  + "/" + AIM::HDF5::AxisODFWeights;
+  std::string path = "/" + DREAM3D::HDF5::Reconstruction + "/" + index  + "/" + DREAM3D::HDF5::AxisODFWeights;
 
   //FIXME: Do we load the ODF data array at all or generate a new one?
 
@@ -101,17 +101,17 @@ int SGAxisODFWidget::readDataFromHDF5(H5ReconStatsReader::Pointer reader, int ph
   // Load the ODF Weights and Spreads Table data
   HDF_ERROR_HANDLER_OFF;
   std::vector<float> e1;
-  err = reader->readVectorDataset(path, AIM::HDF5::Euler1, e1);
+  err = reader->readVectorDataset(path, DREAM3D::HDF5::Euler1, e1);
   if (e1.size() > 0)
   {
     std::vector<float> e2;
-    err = reader->readVectorDataset(path, AIM::HDF5::Euler2, e2);
+    err = reader->readVectorDataset(path, DREAM3D::HDF5::Euler2, e2);
     std::vector<float> e3;
-    err = reader->readVectorDataset(path, AIM::HDF5::Euler3, e3);
+    err = reader->readVectorDataset(path, DREAM3D::HDF5::Euler3, e3);
     std::vector<float> weights;
-    err = reader->readVectorDataset(path, AIM::HDF5::Weight, weights);
+    err = reader->readVectorDataset(path, DREAM3D::HDF5::Weight, weights);
     std::vector<float> sigmas;
-    err = reader->readVectorDataset(path, AIM::HDF5::Sigma, sigmas);
+    err = reader->readVectorDataset(path, DREAM3D::HDF5::Sigma, sigmas);
 
     // Load the data into the table model
     m_ODFTableModel->setTableData(QVector<float>::fromStdVector(e1),

@@ -35,8 +35,8 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef AIMREPRESENTATION_H_
-#define AIMREPRESENTATION_H_
+#ifndef _DREAM3D_UI_H_
+#define _DREAM3D_UI_H_
 
 #include <MXA/Common/MXASetGetMacros.h>
 
@@ -60,10 +60,10 @@ class DREAM3DPluginInterface;
 class HelpDialog;
 
 /**
-* @class RepresentationUI RepresentationUI AIM/RepresentationUI/GUI/RepresentationUI.h
+* @class DREAM3D_UI DREAM3D_UI Applications/DREAM3D/DREAM3D_UI.h
 * @brief The class is the actual implementation for the GUI window that appears on screen
 * when the application is launched. It contains all the subwidgets that the user
-* can utilize to perform the various actions of the AIMRepresentation Software Suite.
+* can utilize to perform the various actions of the DREAM.3D Software Suite.
 * @author Michael A. Jackson for BlueQuartz Software
 * @date Oct 19, 2009
 * @version 1.0
@@ -203,4 +203,4 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
 
 };
 
-#endif /* AIMREPRESENTATION_H_ */
+#endif /* _DREAM3D_UI_H_ */

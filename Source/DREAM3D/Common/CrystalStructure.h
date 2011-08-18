@@ -13,8 +13,8 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
- * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
@@ -48,7 +48,7 @@
 /**
  * @class CrystalStructure CrystalStructure.h AIM/Common/CrystalStructure.h
  * @brief  This class has some utility methods relating to CrystalStructure and
- * how they are used in the AIMRepresentation package.
+ * how they are used in the DREAM3D package.
  * @author Michael A. Jackson for BlueQuartz Software
  * @date Apr 21, 2011
  * @version 1.0

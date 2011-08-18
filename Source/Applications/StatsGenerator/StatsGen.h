@@ -50,7 +50,7 @@
 #include "MXA/Common/LogTime.h"
 
 /**
- * @class StatsGen StatsGen.h AIM/StatsGenerator/StatsGen.h
+ * @class StatsGen StatsGen.h StatsGenerator/StatsGen.h
  * @author Michael A. Groeber US Air Force Research Laboratory
  * @date Dec 16, 2010
  * @version 1.0

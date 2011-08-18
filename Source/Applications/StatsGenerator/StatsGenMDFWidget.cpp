@@ -259,7 +259,7 @@ int StatsGenMDFWidget::readDataFromHDF5(H5ReconStatsReader::Pointer reader,int p
 {
   int err = -1;
   std::string index = StringUtils::numToString(phase);
-  std::string path = "/" + AIM::HDF5::Reconstruction + "/" + index  + "/" + AIM::HDF5::MDFWeights;
+  std::string path = "/" + DREAM3D::HDF5::Reconstruction + "/" + index  + "/" + DREAM3D::HDF5::MDFWeights;
 
   //FIXME: Do we load the ODF data array at all or generate a new one?
 
@@ -267,13 +267,13 @@ int StatsGenMDFWidget::readDataFromHDF5(H5ReconStatsReader::Pointer reader,int p
   // Load the ODF Weights and Spreads Table data
   HDF_ERROR_HANDLER_OFF;
   std::vector<float> angle;
-  err = reader->readVectorDataset(path, AIM::HDF5::Angle, angle);
+  err = reader->readVectorDataset(path, DREAM3D::HDF5::Angle, angle);
   if (angle.size() > 0)
   {
     std::vector<float> weights;
-    err = reader->readVectorDataset(path, AIM::HDF5::Weight, weights);
+    err = reader->readVectorDataset(path, DREAM3D::HDF5::Weight, weights);
     std::vector<float> axis;
-    err = reader->readVectorDataset(path, AIM::HDF5::Axis, axis);
+    err = reader->readVectorDataset(path, DREAM3D::HDF5::Axis, axis);
 
     // Load the data into the table model
     m_MDFTableModel->setTableData(QVector<float>::fromStdVector(angle),

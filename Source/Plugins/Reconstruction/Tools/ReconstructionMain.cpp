@@ -157,7 +157,7 @@ int main(int argc, char **argv)
     m_Reconstruction->setCrystalStructure(crystruct);
 #endif
 
-    AIM::Reconstruction::AlignmentMethod alignmeth = static_cast<AIM::Reconstruction::AlignmentMethod>(AlignMeth.getValue() );
+    DREAM3D::Reconstruction::AlignmentMethod alignmeth = static_cast<DREAM3D::Reconstruction::AlignmentMethod>(AlignMeth.getValue() );
 
     m_Reconstruction->setAlignmentMethod(alignmeth);
     Ebsd::Orientation orient = static_cast<Ebsd::Orientation>(Orientation.getValue());
@@ -200,7 +200,7 @@ int main(int argc, char **argv)
     m_Reconstruction->setZStartIndex(10074);
     m_Reconstruction->setZEndIndex(10376);
     m_Reconstruction->setCrystalStructure(Ebsd::Cubic);
-    m_Reconstruction->setAlignmentMethod(AIM::Reconstruction::OuterBoundary);
+    m_Reconstruction->setAlignmentMethod(DREAM3D::Reconstruction::OuterBoundary);
     m_Reconstruction->setMinAllowedGrainSize(24);
     m_Reconstruction->setMisorientationTolerance(5.0);
     m_Reconstruction->setMinSeedImageQuality(600);

@@ -128,9 +128,9 @@ public:
     float misorientationtolerance;
 
     std::vector<Ebsd::CrystalStructure> crystruct;
-    std::vector<AIM::Reconstruction::PhaseType>        phaseType;
+    std::vector<DREAM3D::Reconstruction::PhaseType>        phaseType;
     std::vector<float>                                 pptFractions;
-    std::vector<AIM::SyntheticBuilder::ShapeType>      shapeTypes;
+    std::vector<DREAM3D::SyntheticBuilder::ShapeType>      shapeTypes;
 
     DECLARE_WRAPPED_ARRAY(grain_indicies, m_GrainIndicies, int)
     DECLARE_WRAPPED_ARRAY(phases, m_Phases, int);
@@ -213,7 +213,7 @@ public:
                     float m_fillingerrorweight, float m_neighborhooderrorweight, float m_sizedisterrorweight,
                     int32_t m_Precipitates, float m_FractionPrecipitates,
                     std::vector<Ebsd::CrystalStructure> m_CrystalStructure,
-                    std::vector<AIM::Reconstruction::PhaseType> m_PhaseType);
+                    std::vector<DREAM3D::Reconstruction::PhaseType> m_PhaseType);
 
 #endif
 	void initializeAttributes();
@@ -277,7 +277,7 @@ private:
     OrientationMath::Pointer         m_HexOps;
     OrientationMath::Pointer         m_OrthoOps;
 
-    std::map<AIM::SyntheticBuilder::ShapeType, DREAM3D::ShapeOps*>           m_ShapeOps;
+    std::map<DREAM3D::SyntheticBuilder::ShapeType, DREAM3D::ShapeOps*>           m_ShapeOps;
     DREAM3D::ShapeOps::Pointer                m_UnknownShapeOps;
     DREAM3D::ShapeOps::Pointer                m_CubicOctohedronOps;
     DREAM3D::ShapeOps::Pointer                m_CylinderOps;

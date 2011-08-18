@@ -246,7 +246,7 @@ void MicrostructureStatisticsFunc::initializeArrays()
 
   // Initialize the first slot in these arrays since they should never be used
   phasefraction[0] = 0.0;
-  phaseType[0] = AIM::Reconstruction::UnknownPhaseType;
+  phaseType[0] = DREAM3D::Reconstruction::UnknownPhaseType;
   pptFractions[0] = -1.0;
 
   mindiameter = m_MinDiameter->WritePointer(0, size);
@@ -2644,15 +2644,15 @@ void MicrostructureStatisticsFunc::write_graindata(const std::string &graindataF
   size_t numgrains = m_Grains.size();
   outFile.open(graindataFile.c_str());
   outFile << numgrains-1 << endl;
-  char space = AIM::GrainData::Delimiter;
-  outFile  << AIM::GrainData::GrainID;
+  char space = DREAM3D::GrainData::Delimiter;
+  outFile  << DREAM3D::GrainData::GrainID;
 
-  if(writeavgorientations == true) outFile   << space << AIM::GrainData::Phi1 << space << AIM::GrainData::PHI<< space << AIM::GrainData::Phi2;
-  if(writesizes == true) outFile << space << AIM::GrainData::EquivDiam;
-  if(writeshapes == true) outFile << space << AIM::GrainData::B_Over_A << space << AIM::GrainData::C_Over_A << space << AIM::GrainData::Omega3;
-  if(writesizes == true) outFile << space << AIM::GrainData::OutsideBoundingBox;
-  if(writeneighbors == true) outFile << space << AIM::GrainData::NumNeighbors;
-  outFile << space << AIM::GrainData::SurfaceGrain;
+  if(writeavgorientations == true) outFile   << space << DREAM3D::GrainData::Phi1 << space << DREAM3D::GrainData::PHI<< space << DREAM3D::GrainData::Phi2;
+  if(writesizes == true) outFile << space << DREAM3D::GrainData::EquivDiam;
+  if(writeshapes == true) outFile << space << DREAM3D::GrainData::B_Over_A << space << DREAM3D::GrainData::C_Over_A << space << DREAM3D::GrainData::Omega3;
+  if(writesizes == true) outFile << space << DREAM3D::GrainData::OutsideBoundingBox;
+  if(writeneighbors == true) outFile << space << DREAM3D::GrainData::NumNeighbors;
+  outFile << space << DREAM3D::GrainData::SurfaceGrain;
   outFile << endl;
   for (size_t i = 1; i < numgrains; i++)
   {

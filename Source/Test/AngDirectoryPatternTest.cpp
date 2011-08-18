@@ -35,7 +35,7 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 #include <MXA/Utilities/MXAFileSystemPath.h>
-#include <AIM/ANG/AngDirectoryPatterns.h>
+#include <EbsdLib/TSL/AngDirectoryPatterns.h>
 #include <DREAM3D/Common/Grain.h>
 
 //--C++ Includes

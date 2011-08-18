@@ -33,9 +33,9 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-///////////////////////////////////////////////////////////////////////////////
-// This code was partly written under US Air Force Contract FA8650-07-D-5800
-///////////////////////////////////////////////////////////////////////////////
+
+
+
 
 #ifndef _H5ANGREADER_H_
 #define _H5ANGREADER_H_
@@ -50,7 +50,7 @@
 #include "AngPhase.h"
 
 /**
- * @class H5AngReader H5AngReader.h AIM/ANG/H5AngReader.h
+ * @class H5AngReader H5AngReader.h EbsdLib/TSL/H5AngReader.h
  * @brief
  * @author Michael A. Jackson for BlueQuartz Software
  * @date Mar 24, 2011

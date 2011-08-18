@@ -158,7 +158,7 @@ int main(int argc, char **argv)
   ipfWriter.m_WriteBinaryFiles = false;
   ipfWriter.writeScalars(f);
 
-  WRITE_VTK_GRAIN_IDS_ASCII(ptr, AIM::VTK::GrainIdScalarName)
+  WRITE_VTK_GRAIN_IDS_ASCII(ptr, DREAM3D::VTK::GrainIdScalarName)
 
   fclose(f);
   free(ptr);

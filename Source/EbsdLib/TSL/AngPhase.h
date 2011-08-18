@@ -33,9 +33,9 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-///////////////////////////////////////////////////////////////////////////////
-// This code was partly written under US Air Force Contract FA8650-07-D-5800
-///////////////////////////////////////////////////////////////////////////////
+
+
+
 
 
 #ifndef ANGPHASE_H_
@@ -66,7 +66,7 @@ typedef struct
 
 
 /**
- * @class HKLFamily HKLFamily.h AIM/ANG/HKLFamily.h
+ * @class HKLFamily HKLFamily.h EbsdLib/TSL/HKLFamily.h
  * @brief Class to hold the information associated with a HKL Family value
  * @author Michael A. Jackson for BlueQuartz Software
  * @date Mar 23, 2011

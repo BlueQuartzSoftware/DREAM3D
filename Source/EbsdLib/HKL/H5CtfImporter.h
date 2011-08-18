@@ -13,8 +13,8 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
- * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
@@ -33,9 +33,9 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-///////////////////////////////////////////////////////////////////////////////
-// This code was partly written under US Air Force Contract FA8650-07-D-5800
-///////////////////////////////////////////////////////////////////////////////
+
+
+
 
 #ifndef H5CTFIMPORTER_H_
 #define H5CTFIMPORTER_H_
@@ -51,7 +51,7 @@
 #include "CtfReader.h"
 
 /**
- * @class H5CtfImporter H5CtfImporter.h AIM/ANG/H5CtfImporter.h
+ * @class H5CtfImporter H5CtfImporter.h EbsdLib/HKL/H5CtfImporter.h
  * @brief This class will read a series of .ctf files and store the values into
  * an HDF5 file according to the .h5ebsd specification
  * @author Michael A. Jackson for BlueQuartz Software

@@ -51,7 +51,7 @@
 #include "StatsGenerator/TableModels/SGPowerLawTableModel.h"
 
 /**
- * @class SGPowerLawItemDelegate SGPowerLawItemDelegate.h AIM/StatsGenerator/SGPowerLawItemDelegate.h
+ * @class SGPowerLawItemDelegate SGPowerLawItemDelegate.h StatsGenerator/SGPowerLawItemDelegate.h
  * @brief This class creates the appropriate Editor Widget for the Tables
  * @author Michael A. Jackson for BlueQuartz Software
  * @date Dec 28, 2010

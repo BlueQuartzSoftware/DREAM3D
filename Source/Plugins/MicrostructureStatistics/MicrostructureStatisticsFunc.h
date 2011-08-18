@@ -80,7 +80,7 @@ class MicrostructureStatisticsFunc
     typedef boost::shared_array<int> SharedIntArray;
 
     std::vector<Ebsd::CrystalStructure> crystruct;
-    std::vector<AIM::Reconstruction::PhaseType> phaseType;
+    std::vector<DREAM3D::Reconstruction::PhaseType> phaseType;
     std::vector<float> pptFractions;
 
     DECLARE_WRAPPED_ARRAY(grain_indicies, m_GrainIndicies, int)

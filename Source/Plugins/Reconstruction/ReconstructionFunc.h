@@ -111,7 +111,7 @@ class ReconstructionFunc
     float misorientationtolerance;
 
     vector<Ebsd::CrystalStructure> crystruct;
-    vector<AIM::Reconstruction::PhaseType>        phaseType;
+    vector<DREAM3D::Reconstruction::PhaseType>        phaseType;
     std::vector<float>                            pptFractions;
 
     DECLARE_WRAPPED_ARRAY(grain_indicies, m_GrainIndicies, int)
@@ -173,7 +173,7 @@ class ReconstructionFunc
                     float dwnSmplFact,
                     float misoTol,
                     vector<Ebsd::CrystalStructure> crystalStructures,
-                    vector<AIM::Reconstruction::PhaseType> phaseTypes,
+                    vector<DREAM3D::Reconstruction::PhaseType> phaseTypes,
                     std::vector<float> precipFractions,
                     int alignmentMethod);
 

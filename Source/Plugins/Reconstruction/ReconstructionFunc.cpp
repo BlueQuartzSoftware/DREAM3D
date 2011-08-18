@@ -153,7 +153,7 @@ ReconstructionFunc::~ReconstructionFunc()
 void ReconstructionFunc::initialize(int nX, int nY, int nZ, float xRes, float yRes, float zRes,
                                     bool mrgTwins, bool mrgColonies, int minAllowedGrSize,
                                     float dwnSmplFact, float misoTol, vector<Ebsd::CrystalStructure> crystalStructures,
-                                    vector<AIM::Reconstruction::PhaseType> phaseTypes,
+                                    vector<DREAM3D::Reconstruction::PhaseType> phaseTypes,
                                     std::vector<float> precipFractions, int alignmentMethod)
 {
 
@@ -575,7 +575,7 @@ void ReconstructionFunc::align_sections()
       shifts[a][b] = 0;
     }
   }
-  if (alignmeth == AIM::Reconstruction::OuterBoundary)
+  if (alignmeth == DREAM3D::Reconstruction::OuterBoundary)
   {
     refxcentroid = 0;
     refycentroid = 0;
@@ -598,7 +598,7 @@ void ReconstructionFunc::align_sections()
   {
     mindisorientation = 100000000;
     slice = (zpoints - 1) - iter;
-    if (alignmeth == AIM::Reconstruction::MutualInformation)
+    if (alignmeth == DREAM3D::Reconstruction::MutualInformation)
     {
       graincount1 = graincounts[slice];
       graincount2 = graincounts[slice + 1];
@@ -618,7 +618,7 @@ void ReconstructionFunc::align_sections()
     }
     tempxshift = 0;
     tempyshift = 0;
-    if (alignmeth == AIM::Reconstruction::OuterBoundary)
+    if (alignmeth == DREAM3D::Reconstruction::OuterBoundary)
     {
       curxcentroid = 0;
       curycentroid = 0;
@@ -637,7 +637,7 @@ void ReconstructionFunc::align_sections()
       curxcentroid = curxcentroid / float(count);
       curycentroid = curycentroid / float(count);
     }
-	if (alignmeth >= AIM::Reconstruction::Misorientation)
+	if (alignmeth >= DREAM3D::Reconstruction::Misorientation)
     {
       for (int a = 0; a < 2; a++)
       {
@@ -661,7 +661,7 @@ void ReconstructionFunc::align_sections()
                   curposition = (slice * xpoints * ypoints) + ((l + (j * step) + tempyshift) * xpoints) + (m + (k * step) + tempxshift);
                   refgnum = grain_indicies[refposition];
                   curgnum = grain_indicies[curposition];
-                  if (alignmeth == AIM::Reconstruction::MutualInformation)
+                  if (alignmeth == DREAM3D::Reconstruction::MutualInformation)
                   {
                     if (curgnum >= 0 && refgnum >= 0)
                     {
@@ -670,7 +670,7 @@ void ReconstructionFunc::align_sections()
                       mutualinfo2[refgnum]++;
                     }
                   }
-                  if (alignmeth == AIM::Reconstruction::Misorientation)
+                  if (alignmeth == DREAM3D::Reconstruction::Misorientation)
                   {
                     if (goodVoxels[refposition] == true && goodVoxels[curposition] == true)
                     {
@@ -694,7 +694,7 @@ void ReconstructionFunc::align_sections()
                 }
                 else
                 {
-                  if (alignmeth == AIM::Reconstruction::MutualInformation)
+                  if (alignmeth == DREAM3D::Reconstruction::MutualInformation)
                   {
                     mutualinfo12[0][0]++;
                     mutualinfo1[0]++;
@@ -704,7 +704,7 @@ void ReconstructionFunc::align_sections()
                 }
               }
             }
-            if (alignmeth == AIM::Reconstruction::MutualInformation)
+            if (alignmeth == DREAM3D::Reconstruction::MutualInformation)
             {
               float ha = 0;
               float hb = 0;
@@ -756,7 +756,7 @@ void ReconstructionFunc::align_sections()
       shifts[iter][0] = shifts[iter - 1][0] + xshift;
       shifts[iter][1] = shifts[iter - 1][1] + yshift;
     }
-    if (alignmeth == AIM::Reconstruction::OuterBoundary)
+    if (alignmeth == DREAM3D::Reconstruction::OuterBoundary)
     {
       xshift = int(((curxcentroid - refxcentroid) / resx) + 0.5);
       yshift = int(((curycentroid - refycentroid) / resy) + 0.5);

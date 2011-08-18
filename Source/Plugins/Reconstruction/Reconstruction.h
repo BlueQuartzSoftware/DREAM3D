@@ -77,7 +77,7 @@ class Reconstruction : public AbstractPipeline
     MXA_INSTANCE_STRING_PROPERTY(H5AngFile)
     MXA_INSTANCE_PROPERTY(int, ZStartIndex)
     MXA_INSTANCE_PROPERTY(int, ZEndIndex)
-    MXA_INSTANCE_PROPERTY(std::vector<AIM::Reconstruction::PhaseType>, PhaseTypes)
+    MXA_INSTANCE_PROPERTY(std::vector<DREAM3D::Reconstruction::PhaseType>, PhaseTypes)
     MXA_INSTANCE_STRING_PROPERTY(OutputDirectory)
     MXA_INSTANCE_STRING_PROPERTY(OutputFilePrefix)
     MXA_INSTANCE_PROPERTY(bool, MergeTwins)
@@ -88,7 +88,7 @@ class Reconstruction : public AbstractPipeline
     MXA_INSTANCE_PROPERTY(double, DownSampleFactor)
 
     MXA_INSTANCE_PROPERTY(double, MisorientationTolerance)
-    MXA_INSTANCE_PROPERTY(AIM::Reconstruction::AlignmentMethod, AlignmentMethod)
+    MXA_INSTANCE_PROPERTY(DREAM3D::Reconstruction::AlignmentMethod, AlignmentMethod)
     MXA_INSTANCE_PROPERTY(Ebsd::Orientation, Orientation)
 
     MXA_INSTANCE_PROPERTY(bool, WriteBinaryVTKFiles)
@@ -140,7 +140,7 @@ class Reconstruction : public AbstractPipeline
 
       precipFractions.resize(phases.size() + 1);
       crystalStructures[0] = Ebsd::UnknownCrystalStructure;
-      m_PhaseTypes[0] = AIM::Reconstruction::UnknownPhaseType;
+      m_PhaseTypes[0] = DREAM3D::Reconstruction::UnknownPhaseType;
       precipFractions[0] = -1.0f;
       for(size_t i=0;i<phases.size();i++)
       {

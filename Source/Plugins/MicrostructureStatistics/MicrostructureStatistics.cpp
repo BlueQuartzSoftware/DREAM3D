@@ -84,11 +84,11 @@ void MicrostructureStatistics::execute()
   m = MicrostructureStatisticsFunc::New();
 
 
-  MAKE_OUTPUT_FILE_PATH ( graindataFile, AIM::MicroStats::GrainDataFile);
-  MAKE_OUTPUT_FILE_PATH ( reconDeformStatsFile, AIM::MicroStats::DeformationStatsFile);
-  MAKE_OUTPUT_FILE_PATH ( reconDeformIPFFile, AIM::MicroStats::IPFDeformVTKFile);
-  MAKE_OUTPUT_FILE_PATH ( reconVisFile, AIM::Reconstruction::VisualizationVizFile);
-  MAKE_OUTPUT_FILE_PATH ( hdf5ResultsFile, AIM::MicroStats::H5StatisticsFile)
+  MAKE_OUTPUT_FILE_PATH ( graindataFile, DREAM3D::MicroStats::GrainDataFile);
+  MAKE_OUTPUT_FILE_PATH ( reconDeformStatsFile, DREAM3D::MicroStats::DeformationStatsFile);
+  MAKE_OUTPUT_FILE_PATH ( reconDeformIPFFile, DREAM3D::MicroStats::IPFDeformVTKFile);
+  MAKE_OUTPUT_FILE_PATH ( reconVisFile, DREAM3D::Reconstruction::VisualizationVizFile);
+  MAKE_OUTPUT_FILE_PATH ( hdf5ResultsFile, DREAM3D::MicroStats::H5StatisticsFile)
 
 
   updateProgressAndMessage("Reading the Voxel Dimensions and Resolution", 2);
@@ -239,7 +239,7 @@ void MicrostructureStatistics::execute()
   /* ********** This section writes the VTK files for visualization *** */
   if (m_WriteVtkFile) {
     updateProgressAndMessage(("Writing VTK Visualization File"), 98);
-    MAKE_OUTPUT_FILE_PATH ( vtkVizFile, AIM::Reconstruction::VisualizationVizFile);
+    MAKE_OUTPUT_FILE_PATH ( vtkVizFile, DREAM3D::Reconstruction::VisualizationVizFile);
 
     // Setup all the classes that will help us write the Scalars to the VTK File
     std::vector<VtkScalarWriter*> scalarsToWrite;

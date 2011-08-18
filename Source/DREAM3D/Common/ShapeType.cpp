@@ -36,7 +36,7 @@
 
 #include "ShapeType.h"
 
-namespace AIM
+namespace DREAM3D
 {
 
   ShapeType::ShapeType()

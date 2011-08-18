@@ -46,7 +46,7 @@
 #include "DREAM3D/Common/Constants.h"
 
 /**
- * @class EditPhaseDialog EditPhaseDialog.h AIM/StatsGenerator/EditPhaseDialog.h
+ * @class EditPhaseDialog EditPhaseDialog.h StatsGenerator/EditPhaseDialog.h
  * @brief Simple dialog that is presented to the user when a new phase is added.
  * @author Michael A. Jackson for BlueQuartz Software
  * @date Apr 14, 2011
@@ -66,8 +66,8 @@ class EditPhaseDialog : public QDialog, private Ui::EditPhaseDialog
     float getPhaseFraction();
     void setPhaseFraction(float d);
 
-    void setPhaseType(AIM::Reconstruction::PhaseType pt);
-    AIM::Reconstruction::PhaseType getPhaseType();
+    void setPhaseType(DREAM3D::Reconstruction::PhaseType pt);
+    DREAM3D::Reconstruction::PhaseType getPhaseType();
 
     void setOtherPhaseFractionTotal(float t);
 

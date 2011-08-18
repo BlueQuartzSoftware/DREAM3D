@@ -51,7 +51,7 @@
 #include "StatsGenerator/TableModels/SGBetaTableModel.h"
 
 /**
- * @class SGBetaItemDelegate SGBetaItemDelegate.h AIM/StatsGenerator/SGBetaItemDelegate.h
+ * @class SGBetaItemDelegate SGBetaItemDelegate.h StatsGenerator/SGBetaItemDelegate.h
  * @brief This class creates the appropriate Editor Widget for the Tables
  * @author Michael A. Jackson for BlueQuartz Software
  * @date Dec 28, 2010

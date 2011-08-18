@@ -44,7 +44,7 @@
 #include "DREAM3D/DREAM3DConfiguration.h"
 #include "DREAM3D/Common/Constants.h"
 
-namespace AIM
+namespace DREAM3D
 {
 
   /**
@@ -66,19 +66,19 @@ namespace AIM
       static std::string CylinderStr() { return std::string("Cylinder"); }
       static std::string UnknownShapeTypeStr() { return std::string("Unknown Shape Type"); }
 
-      static std::string getShapeTypeString(AIM::SyntheticBuilder::ShapeType ShapeType)
+      static std::string getShapeTypeString(DREAM3D::SyntheticBuilder::ShapeType ShapeType)
       {
         switch(ShapeType)
         {
-          case AIM::SyntheticBuilder::EllipsoidShape:
+          case DREAM3D::SyntheticBuilder::EllipsoidShape:
             return EllipsoidStr();
-          case AIM::SyntheticBuilder::SuperEllipsoidShape:
+          case DREAM3D::SyntheticBuilder::SuperEllipsoidShape:
             return SuperEllipsoid();
-          case AIM::SyntheticBuilder::CubeOctahedronShape:
+          case DREAM3D::SyntheticBuilder::CubeOctahedronShape:
             return CubeOctahedronStr();
-          case AIM::SyntheticBuilder::CylinderShape:
+          case DREAM3D::SyntheticBuilder::CylinderShape:
             return CylinderStr();
-          case AIM::SyntheticBuilder::UnknownShapeType:
+          case DREAM3D::SyntheticBuilder::UnknownShapeType:
             return UnknownShapeTypeStr();
           default:
             break;
@@ -86,25 +86,25 @@ namespace AIM
         return std::string("Undefined ShapeType (Error)");
       }
 
-      static AIM::SyntheticBuilder::ShapeType getShapeType(const char* str)
+      static DREAM3D::SyntheticBuilder::ShapeType getShapeType(const char* str)
       {
         if (EllipsoidStr().compare(str) == 0)
         {
-          return AIM::SyntheticBuilder::EllipsoidShape;
+          return DREAM3D::SyntheticBuilder::EllipsoidShape;
         }
         else if (SuperEllipsoid().compare(str) == 0)
         {
-          return AIM::SyntheticBuilder::SuperEllipsoidShape;
+          return DREAM3D::SyntheticBuilder::SuperEllipsoidShape;
         }
         else if (CubeOctahedronStr().compare(str) == 0)
         {
-          return AIM::SyntheticBuilder::CubeOctahedronShape;
+          return DREAM3D::SyntheticBuilder::CubeOctahedronShape;
         }
         else if (CylinderStr().compare(str) == 0)
         {
-          return AIM::SyntheticBuilder::CylinderShape;
+          return DREAM3D::SyntheticBuilder::CylinderShape;
         }
-        return AIM::SyntheticBuilder::UnknownShapeType;
+        return DREAM3D::SyntheticBuilder::UnknownShapeType;
       }
 
 
@@ -118,24 +118,24 @@ namespace AIM
         strings.push_back(UnknownShapeTypeStr());
       }
 
-      static void getShapeTypeEnums(std::vector<AIM::SyntheticBuilder::ShapeType> &types)
+      static void getShapeTypeEnums(std::vector<DREAM3D::SyntheticBuilder::ShapeType> &types)
       {
         types.clear();
-        types.push_back(AIM::SyntheticBuilder::EllipsoidShape);
-        types.push_back(AIM::SyntheticBuilder::SuperEllipsoidShape);
-        types.push_back(AIM::SyntheticBuilder::CubeOctahedronShape);
-        types.push_back(AIM::SyntheticBuilder::CylinderShape);
-        types.push_back(AIM::SyntheticBuilder::UnknownShapeType);
+        types.push_back(DREAM3D::SyntheticBuilder::EllipsoidShape);
+        types.push_back(DREAM3D::SyntheticBuilder::SuperEllipsoidShape);
+        types.push_back(DREAM3D::SyntheticBuilder::CubeOctahedronShape);
+        types.push_back(DREAM3D::SyntheticBuilder::CylinderShape);
+        types.push_back(DREAM3D::SyntheticBuilder::UnknownShapeType);
       }
 
       static void getShapeTypeMap(std::map<int, std::string> &map)
       {
         map.clear();
-        map[AIM::SyntheticBuilder::EllipsoidShape] = EllipsoidStr();
-        map[AIM::SyntheticBuilder::SuperEllipsoidShape] = SuperEllipsoid();
-        map[AIM::SyntheticBuilder::CubeOctahedronShape] = CubeOctahedronStr();
-        map[AIM::SyntheticBuilder::CylinderShape] = CylinderStr();
-        map[AIM::SyntheticBuilder::UnknownShapeType] = UnknownShapeTypeStr();
+        map[DREAM3D::SyntheticBuilder::EllipsoidShape] = EllipsoidStr();
+        map[DREAM3D::SyntheticBuilder::SuperEllipsoidShape] = SuperEllipsoid();
+        map[DREAM3D::SyntheticBuilder::CubeOctahedronShape] = CubeOctahedronStr();
+        map[DREAM3D::SyntheticBuilder::CylinderShape] = CylinderStr();
+        map[DREAM3D::SyntheticBuilder::UnknownShapeType] = UnknownShapeTypeStr();
       }
     protected:
       ShapeType();

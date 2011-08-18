@@ -51,7 +51,7 @@
 class ReconstructionFunc;
 
 /**
- * @class AbstractAngDataLoader AbstractAngDataLoader.h AIM/ANG/AbstractAngDataLoader.h
+ * @class AbstractAngDataLoader AbstractAngDataLoader.h EbsdLib/TSL/AbstractAngDataLoader.h
  * @brief  This class defines the C++ interface that subclasses must implement
  * in order to be able to load OIM data into the DREAM.3D programs.
  * @author Michael A. Jackson for BlueQuartz Software

@@ -15,7 +15,7 @@ set(LICENSE_FILES
                    ${DREAM3D_SOURCE_DIR}/License/HDF5.license
            )
 set(QRC_LICENSE_FILES "")
-set(LICENSE_HEADER_FILE  ${PROJECT_BINARY_DIR}/AIM/License/${PROJECT_NAME}LicenseFiles.h)
+set(LICENSE_HEADER_FILE  ${PROJECT_BINARY_DIR}/DREAM3D/License/${PROJECT_NAME}LicenseFiles.h)
 file(WRITE ${LICENSE_HEADER_FILE} "#ifndef _LICENSE_FILES_H_\n")
 file(APPEND ${LICENSE_HEADER_FILE} "#define _LICENSE_FILES_H_\n")
 file(APPEND ${LICENSE_HEADER_FILE} "namespace ${PROJECT_PREFIX} {\n")
@@ -28,14 +28,14 @@ foreach(lf ${LICENSE_FILES})
 #    message(STATUS "lf: ${lf}")
 #    message(STATUS "cmp_text_file_name: ${cmp_text_file_name}")
 #    message(STATUS "lf_fn: ${lf_fn}")
-    configure_file("${lf}" ${PROJECT_BINARY_DIR}/AIM/License/${lf_fn}.license   COPYONLY )
+    configure_file("${lf}" ${PROJECT_BINARY_DIR}/DREAM3D/License/${lf_fn}.license   COPYONLY )
         
     # create the Qt Resource File
     set (CMP_RESOURCE_FILE_NAME ${lf_fn}.license)
     configure_file(${CMP_CONFIGURED_FILES_SOURCE_DIR}/QtResourceFile.qrc.in 
-                   ${PROJECT_BINARY_DIR}/AIM/License/${lf_fn}.qrc)
+                   ${PROJECT_BINARY_DIR}/DREAM3D/License/${lf_fn}.qrc)
                    
-    set(QRC_LICENSE_FILES ${QRC_LICENSE_FILES} ${PROJECT_BINARY_DIR}/AIM/License/${lf_fn}.qrc)
+    set(QRC_LICENSE_FILES ${QRC_LICENSE_FILES} ${PROJECT_BINARY_DIR}/DREAM3D/License/${lf_fn}.qrc)
     file(APPEND ${LICENSE_HEADER_FILE} " << \":/${lf_fn}.license\"")
     
 endforeach(lf ${LICENSE_FILES})

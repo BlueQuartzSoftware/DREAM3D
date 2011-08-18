@@ -44,7 +44,7 @@
 class QAbstractItemDelegate;
 
 /**
- * @class SGAbstractTableModel SGAbstractTableModel.h AIM/StatsGenerator/SGAbstractTableModel.h
+ * @class SGAbstractTableModel SGAbstractTableModel.h StatsGenerator/SGAbstractTableModel.h
  * @author Michael A. Jackson for BlueQuartz Software
  * @date Jan 6, 2011
  * @version 1.0

@@ -45,7 +45,7 @@
 class QAbstractItemDelegate;
 
 /**
- * @class SGPowerLawTableModel SGPowerLawTableModel.h AIM/StatsGenerator/SGPowerLawTableModel.h
+ * @class SGPowerLawTableModel SGPowerLawTableModel.h StatsGenerator/SGPowerLawTableModel.h
  * @brief
  * @author Michael A. Jackson for BlueQuartz Software
  * @date Dec 22, 2010

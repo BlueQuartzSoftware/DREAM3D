@@ -33,9 +33,9 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-///////////////////////////////////////////////////////////////////////////////
-// This code was partly written under US Air Force Contract FA8650-07-D-5800
-///////////////////////////////////////////////////////////////////////////////
+
+
+
 
 #ifndef _H5ANGIMPORTER_H_
 #define _H5ANGIMPORTER_H_
@@ -56,7 +56,7 @@
 #include "EbsdLib/TSL/AngReader.h"
 
 /**
- * @class H5AngImporter H5AngImporter.h AIM/ANG/H5AngImporter.h
+ * @class H5AngImporter H5AngImporter.h EbsdLib/TSL/H5AngImporter.h
  * @brief This class will read a series of .ang files and store the values into
  * an HDF5 file according to the .h5ebsd specification
  * @author Michael A. Jackson for BlueQuartz Software
