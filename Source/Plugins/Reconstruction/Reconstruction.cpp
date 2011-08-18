@@ -195,7 +195,7 @@ void Reconstruction::execute()
   m->find_border();
   CHECK_FOR_CANCELED(ReconstructionFunc, "Reconstruction was canceled", find_border)
 
-  if (m_AlignmentMethod == AIM::Reconstruction::MutualInformation)
+  if (m_AlignmentMethod == DREAM3D::Reconstruction::MutualInformation)
   {
       updateProgressAndMessage(("Aligning Slices"), 10);
       m->form_grains_sections();
@@ -210,7 +210,7 @@ void Reconstruction::execute()
   m->cleanup_data();
   CHECK_FOR_CANCELED(ReconstructionFunc, "Reconstruction was canceled", cleanup_data)
 
-  if (m_AlignmentMethod == AIM::Reconstruction::MutualInformation)
+  if (m_AlignmentMethod == DREAM3D::Reconstruction::MutualInformation)
   {
       updateProgressAndMessage(("Redefining Border"), 18);
       m->find_border();
@@ -265,7 +265,7 @@ void Reconstruction::execute()
 
   /** ********** This section writes the Voxel Data for the Stats Module *** */
   // Create a new HDF5 Volume file by overwriting any HDF5 file that may be in the way
-  MAKE_OUTPUT_FILE_PATH ( hdf5VolumeFile, AIM::Reconstruction::H5VoxelFile)
+  MAKE_OUTPUT_FILE_PATH ( hdf5VolumeFile, DREAM3D::Reconstruction::H5VoxelFile)
   H5VoxelWriter::Pointer h5VolWriter = H5VoxelWriter::New();
   if (h5VolWriter.get() == NULL)
   {
@@ -283,7 +283,7 @@ void Reconstruction::execute()
   updateProgressAndMessage(("Writing VTK Visualization File"), 93);
   if (m_WriteVtkFile)
   {
-    MAKE_OUTPUT_FILE_PATH ( reconVisFile, AIM::Reconstruction::VisualizationVizFile);
+    MAKE_OUTPUT_FILE_PATH ( reconVisFile, DREAM3D::Reconstruction::VisualizationVizFile);
 
     // Setup all the classes that will help us write the Scalars to the VTK File
     std::vector<VtkScalarWriter*> scalarsToWrite;
@@ -331,7 +331,7 @@ void Reconstruction::execute()
 
 
   if (m_WriteDownSampledFile) {
-    MAKE_OUTPUT_FILE_PATH ( reconDSVisFile, AIM::Reconstruction::DownSampledVizFile);
+    MAKE_OUTPUT_FILE_PATH ( reconDSVisFile, DREAM3D::Reconstruction::DownSampledVizFile);
     updateProgressAndMessage(("Writing VTK Down Sampled File"), 98);
     VtkMiscFileWriter::Pointer vtkWriter = VtkMiscFileWriter::New();
     err = vtkWriter->writeDownSampledVizFile(m.get(), reconDSVisFile);
@@ -345,7 +345,7 @@ void Reconstruction::execute()
   /* **********   This is CMU's ph format */
   updateProgressAndMessage(("Writing Ph Voxel File"), 95);
   if (m_WritePhFile) {
-    MAKE_OUTPUT_FILE_PATH ( phFile, AIM::Reconstruction::PhFile);
+    MAKE_OUTPUT_FILE_PATH ( phFile, DREAM3D::Reconstruction::PhFile);
     PhWriter phWriter;
     err = phWriter.writeGrainPhFile(phFile, m->grain_indicies, m->xpoints, m->ypoints, m->zpoints);
     CHECK_FOR_ERROR(ReconstructionFunc, "The Reconstruction threw an Error writing the Ph file format.", err);
@@ -356,7 +356,7 @@ void Reconstruction::execute()
   if (m_WriteHDF5GrainFile)
   {
     updateProgressAndMessage(("Writing Out HDF5 Grain File. This may take a few minutes to complete."), 99);
-    MAKE_OUTPUT_FILE_PATH( hdf5GrainFile, AIM::Reconstruction::HDF5GrainFile);
+    MAKE_OUTPUT_FILE_PATH( hdf5GrainFile, DREAM3D::Reconstruction::HDF5GrainFile);
     H5GrainWriter::Pointer h5GrainWriter = H5GrainWriter::New();
     err = h5GrainWriter->writeHDF5GrainsFile<ReconstructionFunc>(m.get(), hdf5GrainFile);
     CHECK_FOR_ERROR(ReconstructionFunc, "The HDF5 Grain file could not be written to. Does the path exist and do you have write access to the output directory.", err);
@@ -366,7 +366,7 @@ void Reconstruction::execute()
   if (m_WriteDxFile)
   {
     updateProgressAndMessage(("Writing Out Dx Grain File."), 99);
-    MAKE_OUTPUT_FILE_PATH( dxGrainFile, AIM::Reconstruction::DxFile);
+    MAKE_OUTPUT_FILE_PATH( dxGrainFile, DREAM3D::Reconstruction::DxFile);
     DxGrainIdWriter::Pointer dxWriter = DxGrainIdWriter::New();
 //    err = dxWriter->writeGrainFile(dxGrainFile, m->voxels.get(), m->xpoints, m->ypoints, m->zpoints);
     CHECK_FOR_ERROR(ReconstructionFunc, "The Dx Grain file could not be written to. Does the path exist and do you have write access to the output directory.", err);

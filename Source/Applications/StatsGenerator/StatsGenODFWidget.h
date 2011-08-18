@@ -54,7 +54,7 @@ class QwtPlot;
 class QwtPlotCurve;
 
 /**
- * @class StatsGenODFWidget StatsGenODFWidget.h AIM/StatsGenerator/StatsGenODFWidget.h
+ * @class StatsGenODFWidget StatsGenODFWidget.h StatsGenerator/StatsGenODFWidget.h
  * @brief Calculates and displays ODF data
  * @author Michael A. Jackson for BlueQuartz Software
  * @date Jan 27, 2011

@@ -223,9 +223,9 @@ void MicrostructureStatisticsWidget::checkIOFiles()
 {
   verifyPathExists(m_OutputDir->text(), m_OutputDir);
 
-  CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(AIM::Reconstruction, m_ , VisualizationVizFile)
-  CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::MicroStats, m_, GrainDataFile)
-  CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::MicroStats, m_, H5StatisticsFile)
+  CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(DREAM3D::Reconstruction, m_ , VisualizationVizFile)
+  CHECK_QLABEL_OUTPUT_FILE_EXISTS(DREAM3D::MicroStats, m_, GrainDataFile)
+  CHECK_QLABEL_OUTPUT_FILE_EXISTS(DREAM3D::MicroStats, m_, H5StatisticsFile)
 }
 
 
@@ -245,7 +245,7 @@ void MicrostructureStatisticsWidget::setupGui()
 
   QString msg("All files will be over written that appear in the output directory.");
 
-  QFileInfo fi(m_OutputDir->text() + QDir::separator() + AIM::SyntheticBuilder::VisualizationVizFile.c_str());
+  QFileInfo fi(m_OutputDir->text() + QDir::separator() + DREAM3D::SyntheticBuilder::VisualizationVizFile.c_str());
 
   m_WidgetList << m_OutputDir << m_OutputDirBtn;
   m_WidgetList << m_OutputFilePrefix;

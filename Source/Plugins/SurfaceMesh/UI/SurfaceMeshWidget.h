@@ -13,8 +13,8 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
- * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
@@ -48,7 +48,7 @@
 /**
  * @class SurfaceMeshWidget SurfaceMeshWidget.h Plugins/SurfaceMesh/UI/SurfaceMeshWidget.h
  * @brief This class represents the User Interface for the Surface Meshing module
- * of the AIMRepresentation program. The user interface subclasses QFrame which
+ * of the DREAM3D program. The user interface subclasses QFrame which
  * should make it able to be embedded in most Qt applications.
  * @author Michael A. Jackson for BlueQuartz Software
  * @date Jan 30, 2011

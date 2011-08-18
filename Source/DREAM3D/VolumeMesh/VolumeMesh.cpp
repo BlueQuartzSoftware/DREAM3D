@@ -119,10 +119,10 @@ void VolumeMesh::compute()
   progressMessage(AIM_STRING("Running Volume Meshing"), 0 );
 
 
-  MAKE_OUTPUT_FILE_PATH ( meshFile , AIM::VolumeMeshing::MeshFile)
-  MAKE_OUTPUT_FILE_PATH ( meshFile2 , AIM::VolumeMeshing::MeshFile2)
-  MAKE_OUTPUT_FILE_PATH ( qualFile , AIM::VolumeMeshing::ElementQualityFile)
-  MAKE_OUTPUT_FILE_PATH ( voxelsFile , AIM::VolumeMeshing::VoxelsFile)
+  MAKE_OUTPUT_FILE_PATH ( meshFile , DREAM3D::VolumeMeshing::MeshFile)
+  MAKE_OUTPUT_FILE_PATH ( meshFile2 , DREAM3D::VolumeMeshing::MeshFile2)
+  MAKE_OUTPUT_FILE_PATH ( qualFile , DREAM3D::VolumeMeshing::ElementQualityFile)
+  MAKE_OUTPUT_FILE_PATH ( voxelsFile , DREAM3D::VolumeMeshing::VoxelsFile)
 
 
   m_ErrorCondition = MeshGenerator_Main(m_NodesFile,

@@ -94,11 +94,11 @@ class VoxelGrainIdScalarWriter : public VtkScalarWriter
     std::string file;
     size_t total = r->xpoints * r->ypoints * r->zpoints;
     if (m_WriteBinaryFiles == true) {
-      WRITE_VTK_GRAIN_IDS_BINARY(r, AIM::VTK::GrainIdScalarName);
+      WRITE_VTK_GRAIN_IDS_BINARY(r, DREAM3D::VTK::GrainIdScalarName);
     }
     else
     {
-      WRITE_VTK_GRAIN_IDS_ASCII(r, AIM::VTK::GrainIdScalarName)
+      WRITE_VTK_GRAIN_IDS_ASCII(r, DREAM3D::VTK::GrainIdScalarName)
     }
     return err;
   }
@@ -139,11 +139,11 @@ class name : public VtkScalarWriter\
 };\
 
 
-VtkSCALARWRITER_CLASS_DEF(VoxelPhaseIdScalarWriter, r, AIM::VTK::PhaseIdScalarName, int, phases, "%d ")
+VtkSCALARWRITER_CLASS_DEF(VoxelPhaseIdScalarWriter, r, DREAM3D::VTK::PhaseIdScalarName, int, phases, "%d ")
 // VtkSCALARWRITER_CLASS_DEF(VoxelEuclideanScalarWriter, r, AIM::VTK::EuclideanScalarName, float, nearestneighbordistances[0], "%f ")
 //VtkSCALARWRITER_CLASS_DEF(VoxelImageQualityScalarWriter, r, AIM::VTK::ImageQualityScalarName, float, imagequalities, "%f ")
-VtkSCALARWRITER_CLASS_DEF(VoxelSurfaceVoxelScalarWriter, r, AIM::VTK::SurfaceVoxelScalarName, float, surfacevoxels, "%f ")
-VtkSCALARWRITER_CLASS_DEF(VoxelKAMScalarWriter, r, AIM::VTK::KAMScalarName, float, kernelmisorientations, "%f ")
+VtkSCALARWRITER_CLASS_DEF(VoxelSurfaceVoxelScalarWriter, r, DREAM3D::VTK::SurfaceVoxelScalarName, float, surfacevoxels, "%f ")
+VtkSCALARWRITER_CLASS_DEF(VoxelKAMScalarWriter, r, DREAM3D::VTK::KAMScalarName, float, kernelmisorientations, "%f ")
 
 /**
  * @brief This class will write the IPF colors to a Scalar array in the VTK file
@@ -473,17 +473,17 @@ class VtkMiscFileWriter
       size_t total = r->xpoints * r->ypoints * r->zpoints;
       if (true == m_WriteBinaryFiles)
       {
-        WRITE_VTK_GRAIN_IDS_BINARY(r, AIM::VTK::GrainIdScalarName);
-        WRITE_VTK_SCALARS_FROM_VOXEL_BINARY(r, AIM::VTK::KAMScalarName, float, kernelmisorientation)
-        WRITE_VTK_SCALARS_FROM_VOXEL_BINARY(r, AIM::VTK::GAMScalarName, float, grainmisorientation)
-        WRITE_VTK_SCALARS_FROM_VOXEL_BINARY(r, AIM::VTK::LMGScalarName, float, misorientationgradient)
+        WRITE_VTK_GRAIN_IDS_BINARY(r, DREAM3D::VTK::GrainIdScalarName);
+        WRITE_VTK_SCALARS_FROM_VOXEL_BINARY(r, DREAM3D::VTK::KAMScalarName, float, kernelmisorientation)
+        WRITE_VTK_SCALARS_FROM_VOXEL_BINARY(r, DREAM3D::VTK::GAMScalarName, float, grainmisorientation)
+        WRITE_VTK_SCALARS_FROM_VOXEL_BINARY(r, DREAM3D::VTK::LMGScalarName, float, misorientationgradient)
       }
       else
       {
-        WRITE_VTK_GRAIN_IDS_ASCII(r, AIM::VTK::GrainIdScalarName)
-        WRITE_VTK_SCALARS_FROM_VOXEL_ASCII(r, AIM::VTK::KAMScalarName, float, kernelmisorientation, "%f ")
-        WRITE_VTK_SCALARS_FROM_VOXEL_ASCII(r, AIM::VTK::GAMScalarName, float, grainmisorientation, "%f ")
-        WRITE_VTK_SCALARS_FROM_VOXEL_ASCII(r, AIM::VTK::LMGScalarName, float, misorientationgradient, "%f ")
+        WRITE_VTK_GRAIN_IDS_ASCII(r, DREAM3D::VTK::GrainIdScalarName)
+        WRITE_VTK_SCALARS_FROM_VOXEL_ASCII(r, DREAM3D::VTK::KAMScalarName, float, kernelmisorientation, "%f ")
+        WRITE_VTK_SCALARS_FROM_VOXEL_ASCII(r, DREAM3D::VTK::GAMScalarName, float, grainmisorientation, "%f ")
+        WRITE_VTK_SCALARS_FROM_VOXEL_ASCII(r, DREAM3D::VTK::LMGScalarName, float, misorientationgradient, "%f ")
       }
       fclose(f);
       return 0;
@@ -516,13 +516,13 @@ class VtkMiscFileWriter
       size_t total = r->xpoints * r->ypoints * r->zpoints;
       if (true == m_WriteBinaryFiles)
       {
-        WRITE_VTK_GRAIN_IDS_BINARY(r, AIM::VTK::GrainIdScalarName);
-        WRITE_VTK_GRAIN_WITH_GRAIN_SCALAR_VALUE_BINARY(r, AIM::VTK::SchmidFactorScalarName, float, schmidfactor)
+        WRITE_VTK_GRAIN_IDS_BINARY(r, DREAM3D::VTK::GrainIdScalarName);
+        WRITE_VTK_GRAIN_WITH_GRAIN_SCALAR_VALUE_BINARY(r, DREAM3D::VTK::SchmidFactorScalarName, float, schmidfactor)
       }
       else
       {
-        WRITE_VTK_GRAIN_IDS_ASCII(r, AIM::VTK::GrainIdScalarName)
-          WRITE_VTK_GRAIN_WITH_GRAIN_SCALAR_VALUE_ASCII(r, AIM::VTK::SchmidFactorScalarName, float, schmidfactor, "%f ")
+        WRITE_VTK_GRAIN_IDS_ASCII(r, DREAM3D::VTK::GrainIdScalarName)
+          WRITE_VTK_GRAIN_WITH_GRAIN_SCALAR_VALUE_ASCII(r, DREAM3D::VTK::SchmidFactorScalarName, float, schmidfactor, "%f ")
       }
       fclose(f);
       return 0;

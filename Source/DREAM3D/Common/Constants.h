@@ -13,8 +13,8 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
- * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
@@ -82,11 +82,11 @@ if (NULL != obj->sharedPtr.get())\
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-namespace AIM
+namespace DREAM3D
 {
 
-  // These are also used as HDF5 Group/Data/Attribute names so DONT change these.
-  namespace Representation {
+  namespace HDF5
+  {
     const std::string Grain_ID("Grain_ID");
     const std::string SchmidFactor ("SchmidFactor");
     const std::string Neighbor_Grain_ID_List( "Neighbor_Grain_ID_List");
@@ -95,11 +95,7 @@ namespace AIM
     const std::string ImageQuality( "ImageQuality");
     const std::string IPFColor("IPFColor");
     const std::string Phase("Phase");
-  }
 
-
-  namespace HDF5
-  {
     const std::string Reconstruction("Reconstruction");
     const std::string AxisOrientation("AxisOrientation");
     const std::string AxisODFWeights("AxisODF-Weights");

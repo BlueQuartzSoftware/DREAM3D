@@ -239,7 +239,7 @@ void GrainGeneratorWidget::setupGui()
 
   QString msg ("All files will be over written that appear in the output directory.");
 
-  QFileInfo fi (m_OutputDir->text() + QDir::separator() +  AIM::SyntheticBuilder::VisualizationVizFile.c_str() );
+  QFileInfo fi (m_OutputDir->text() + QDir::separator() +  DREAM3D::SyntheticBuilder::VisualizationVizFile.c_str() );
   if (m_AlreadyFormed->isChecked() == true && fi.exists() == false)
   {
     m_AlreadyFormed->setChecked(false);
@@ -291,13 +291,13 @@ void GrainGeneratorWidget::on_m_SaveSettingsBtn_clicked()
 // -----------------------------------------------------------------------------
 void GrainGeneratorWidget::checkIOFiles()
 {
-  CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::SyntheticBuilder, m_, GrainAnglesFile)
-  CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::SyntheticBuilder, m_, H5VoxelFile)
+  CHECK_QLABEL_OUTPUT_FILE_EXISTS(DREAM3D::SyntheticBuilder, m_, GrainAnglesFile)
+  CHECK_QLABEL_OUTPUT_FILE_EXISTS(DREAM3D::SyntheticBuilder, m_, H5VoxelFile)
 
-  CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(AIM::SyntheticBuilder, m_ , VisualizationVizFile)
-  CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(AIM::SyntheticBuilder, m_ , HDF5GrainFile)
-  CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(AIM::SyntheticBuilder, m_ , PhFile)
-  CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(AIM::MicroStats, m_ , GrainDataFile)
+  CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(DREAM3D::SyntheticBuilder, m_ , VisualizationVizFile)
+  CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(DREAM3D::SyntheticBuilder, m_ , HDF5GrainFile)
+  CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(DREAM3D::SyntheticBuilder, m_ , PhFile)
+  CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(DREAM3D::MicroStats, m_ , GrainDataFile)
 }
 
 // -----------------------------------------------------------------------------
@@ -388,9 +388,9 @@ void GrainGeneratorWidget::on_m_H5InputStatisticsFile_textChanged(const QString 
 
        int size = phases.size();
        std::vector<std::string> shapeTypeStrings;
-       AIM::ShapeType::getShapeTypeStrings(shapeTypeStrings);
-       std::vector<AIM::SyntheticBuilder::ShapeType> shapeTypeEnums;
-       AIM::ShapeType::getShapeTypeEnums(shapeTypeEnums);
+       DREAM3D::ShapeType::getShapeTypeStrings(shapeTypeStrings);
+       std::vector<DREAM3D::SyntheticBuilder::ShapeType> shapeTypeEnums;
+       DREAM3D::ShapeType::getShapeTypeEnums(shapeTypeEnums);
 
 
        // Remove all the items from the GUI and from the internal tracking Lists
@@ -455,7 +455,7 @@ void GrainGeneratorWidget::on_m_OutputDirBtn_clicked()
     if (verifyPathExists(outputFile, m_OutputDir) == true )
     {
       checkIOFiles();
-      QFileInfo fi (m_OutputDir->text() + QDir::separator() +  AIM::SyntheticBuilder::VisualizationVizFile.c_str() );
+      QFileInfo fi (m_OutputDir->text() + QDir::separator() +  DREAM3D::SyntheticBuilder::VisualizationVizFile.c_str() );
       if (m_AlreadyFormed->isChecked() == true && fi.exists() == false)
       {
         m_AlreadyFormed->setChecked(false);
@@ -529,14 +529,14 @@ void GrainGeneratorWidget::on_m_GoBtn_clicked()
   m_GrainGenerator->setSizeDistErrorWeight(m_SizeDistErrorWeight->value());
 
   m_GrainGenerator->setPeriodicBoundary(m_PeriodicBoundaryConditions->isChecked());
-  std::vector<AIM::SyntheticBuilder::ShapeType> shapeTypes(1, AIM::SyntheticBuilder::UnknownShapeType);
+  std::vector<DREAM3D::SyntheticBuilder::ShapeType> shapeTypes(1, DREAM3D::SyntheticBuilder::UnknownShapeType);
   int count = m_ShapeTypeCombos.count();
   bool ok = false;
   for (int i = 0; i < count; ++i)
   {
     QComboBox* cb = m_ShapeTypeCombos.at(i);
-    AIM::SyntheticBuilder::ShapeType enPtValue = static_cast<AIM::SyntheticBuilder::ShapeType>(cb->itemData(cb->currentIndex(), Qt::UserRole).toUInt(&ok));
-    if (enPtValue >= AIM::SyntheticBuilder::UnknownShapeType)
+    DREAM3D::SyntheticBuilder::ShapeType enPtValue = static_cast<DREAM3D::SyntheticBuilder::ShapeType>(cb->itemData(cb->currentIndex(), Qt::UserRole).toUInt(&ok));
+    if (enPtValue >= DREAM3D::SyntheticBuilder::UnknownShapeType)
     {
       QString msg("The Shape Type for phase ");
 //      msg.append(QString::number(i)).append(" is not set correctly. Please set the shape to Primary, Precipitate or Transformation.");
@@ -677,7 +677,7 @@ int GrainGeneratorWidget::estimate_numgrains(int xpoints, int ypoints, int zpoin
   int phase;
   std::vector<int> phases;
   std::vector<Ebsd::CrystalStructure> structures;
-  std::vector<AIM::Reconstruction::PhaseType> phaseType;
+  std::vector<DREAM3D::Reconstruction::PhaseType> phaseType;
   std::vector<float> phasefraction;
   std::vector<float> double_data;
   std::vector<float> avgdiam;
@@ -706,21 +706,21 @@ int GrainGeneratorWidget::estimate_numgrains(int xpoints, int ypoints, int zpoin
     phase = phases[i];
 
     std::vector<float> pFraction;
-    err = h5Reader->readStatsDataset(phase, AIM::HDF5::PhaseFraction, pFraction);
+    err = h5Reader->readStatsDataset(phase, DREAM3D::HDF5::PhaseFraction, pFraction);
     if (err < 0) {break;}
     phasefraction[phase] = pFraction.front();
 
     std::vector<unsigned int> phasetypes;
-    err = h5Reader->readStatsDataset(phase, AIM::HDF5::PhaseType, phasetypes);
+    err = h5Reader->readStatsDataset(phase, DREAM3D::HDF5::PhaseType, phasetypes);
     if (err < 0) {break;}
-    phaseType[phase] = static_cast<AIM::Reconstruction::PhaseType> (phasetypes[0]);
+    phaseType[phase] = static_cast<DREAM3D::Reconstruction::PhaseType> (phasetypes[0]);
 
-	  err = h5Reader->readStatsDataset(phase, AIM::HDF5::Grain_Size_Distribution, double_data);
+	  err = h5Reader->readStatsDataset(phase, DREAM3D::HDF5::Grain_Size_Distribution, double_data);
     if (err < 0) {break;}
 	  avgdiam[phase] = double_data[0];
 	  sddiam[phase] = double_data[1];
 
-	  err = h5Reader->readStatsDataset(phase, AIM::HDF5::Grain_Diameter_Info, grainDiamInfo);
+	  err = h5Reader->readStatsDataset(phase, DREAM3D::HDF5::Grain_Diameter_Info, grainDiamInfo);
     if (err < 0) {break;}
 	  maxdiameter[phase]  = grainDiamInfo[1];
 	  mindiameter[phase] = grainDiamInfo[2];
@@ -738,7 +738,7 @@ int GrainGeneratorWidget::estimate_numgrains(int xpoints, int ypoints, int zpoin
   // find which phases are primary phases
   for (size_t i = 1; i < phaseType.size(); ++i)
   {
-    if (phaseType[i] == AIM::Reconstruction::PrimaryPhase)
+    if (phaseType[i] == DREAM3D::Reconstruction::PrimaryPhase)
     {
       primaryphases.push_back(i);
       primaryphasefractions.push_back(phasefraction[i]);

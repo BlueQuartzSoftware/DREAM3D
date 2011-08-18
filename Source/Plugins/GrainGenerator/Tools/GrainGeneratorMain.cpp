@@ -221,7 +221,7 @@ int main(int argc, char **argv)
 
     m_GrainGenerator->setPeriodicBoundary(m_PeriodicBoundaryConditions.getValue());
 
-    std::vector<AIM::SyntheticBuilder::ShapeType> shapeTypes(1, AIM::SyntheticBuilder::EllipsoidShape);
+    std::vector<DREAM3D::SyntheticBuilder::ShapeType> shapeTypes(1, DREAM3D::SyntheticBuilder::EllipsoidShape);
     if ( parseUnknownArray(shapeTypeStr.getValue(), "%d", shapeTypes) < 0)
     {
       std::cout << "Error parsing the Shape Types. The value should be entered as --shapetypes 1,0,1 for 3 phases." << std::endl;

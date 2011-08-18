@@ -13,8 +13,8 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
- * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
@@ -384,7 +384,7 @@ qint32 DREAM3D_UI::checkDirtyDocument()
 
   if (this->isWindowModified() == true)
   {
-    int r = QMessageBox::warning(this, tr("AIMRepresentation"),
+    int r = QMessageBox::warning(this, tr("DREAM.3D"),
                             tr("The Data has been modified.\nDo you want to save your changes?"),
                             QMessageBox::Save | QMessageBox::Default,
                             QMessageBox::Discard,

@@ -1,4 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
+
 //
 //  Copyright (c) 2007, 2010 Michael A. Jackson for BlueQuartz Software
 //  All rights reserved.
@@ -7,7 +7,7 @@
 //  This code was written under United States Air Force Contract number 
 //                           FA8650-04-C-5229
 //
-///////////////////////////////////////////////////////////////////////////////
+
 #ifndef MXAERRORDEFINITIONS_H_
 #define MXAERRORDEFINITIONS_H_
 

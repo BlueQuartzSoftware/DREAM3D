@@ -1,11 +1,11 @@
-///////////////////////////////////////////////////////////////////////////////
+
 //
 //  Copyright (c) 2009, Michael A. Jackson. BlueQuartz Software
 //  All rights reserved.
 //  BSD License: http://www.opensource.org/licenses/bsd-license.html
 //
 //
-///////////////////////////////////////////////////////////////////////////////
+
 /* Note that some of this implementation was inspired by the Qt source code,
  * in particular the QDir and QFileEngine source codes. The idea is to keep the
  * API the same between my implementation and the Qt Implementation so that

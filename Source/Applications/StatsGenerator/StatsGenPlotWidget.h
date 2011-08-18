@@ -75,8 +75,8 @@ class StatsGenPlotWidget : public QWidget, private Ui::StatsGenPlotWidget
                          QVector<float>  &bins,
                          const std::string &hdf5GroupName);
 
-    void setStatisticsType(AIM::Reconstruction::StatisticsType statsType);
-    void setDistributionType(AIM::Reconstruction::DistributionType distributionType, bool updatePlots = true);
+    void setStatisticsType(DREAM3D::Reconstruction::StatisticsType statsType);
+    void setDistributionType(DREAM3D::Reconstruction::DistributionType distributionType, bool updatePlots = true);
     void blockDistributionTypeChanges(bool block);
 
     void setXAxisName(QString name);
@@ -131,8 +131,8 @@ class StatsGenPlotWidget : public QWidget, private Ui::StatsGenPlotWidget
   private:
     SGAbstractTableModel* m_TableModel;
     QwtPlotGrid* m_grid;
-    AIM::Reconstruction::DistributionType m_DistributionType;
-    AIM::Reconstruction::StatisticsType    m_StatsType;
+    DREAM3D::Reconstruction::DistributionType m_DistributionType;
+    DREAM3D::Reconstruction::StatisticsType    m_StatsType;
     bool m_UserUpdatedData;
 
     QVector<QwtPlotCurve* > m_PlotCurves;

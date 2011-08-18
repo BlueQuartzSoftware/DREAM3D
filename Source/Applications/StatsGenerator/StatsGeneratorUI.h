@@ -46,7 +46,7 @@
 
 
 /**
- * @class StatsGeneratorUI StatsGeneratorUI.h AIM/StatsGenerator/StatsGeneratorUI.h
+ * @class StatsGeneratorUI StatsGeneratorUI.h StatsGenerator/StatsGeneratorUI.h
  * @brief
  * @author Michael A. Jackson for BlueQuartz Software
  * @date Jan 4, 2011

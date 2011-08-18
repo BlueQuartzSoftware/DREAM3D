@@ -97,15 +97,15 @@ GrainGeneratorFunc::GrainGeneratorFunc()
   m_OrientatioOps.push_back(m_OrthoOps.get());
 
   m_EllipsoidOps = DREAM3D::EllipsoidOps::New();
-  m_ShapeOps[AIM::SyntheticBuilder::EllipsoidShape] = m_EllipsoidOps.get();
+  m_ShapeOps[DREAM3D::SyntheticBuilder::EllipsoidShape] = m_EllipsoidOps.get();
   m_SuprtEllipsoidOps = DREAM3D::SuperEllipsoidOps::New();
-  m_ShapeOps[AIM::SyntheticBuilder::SuperEllipsoidShape] = m_SuprtEllipsoidOps.get();
+  m_ShapeOps[DREAM3D::SyntheticBuilder::SuperEllipsoidShape] = m_SuprtEllipsoidOps.get();
   m_CubicOctohedronOps = DREAM3D::CubeOctohedronOps::New();
-  m_ShapeOps[AIM::SyntheticBuilder::CubeOctahedronShape] = m_CubicOctohedronOps.get();
+  m_ShapeOps[DREAM3D::SyntheticBuilder::CubeOctahedronShape] = m_CubicOctohedronOps.get();
   m_CylinderOps = DREAM3D::CylinderOps::New();
-  m_ShapeOps[AIM::SyntheticBuilder::CylinderShape] = m_CylinderOps.get();
+  m_ShapeOps[DREAM3D::SyntheticBuilder::CylinderShape] = m_CylinderOps.get();
   m_UnknownShapeOps = DREAM3D::ShapeOps::New();
-  m_ShapeOps[AIM::SyntheticBuilder::UnknownShapeType] = m_UnknownShapeOps.get();
+  m_ShapeOps[DREAM3D::SyntheticBuilder::UnknownShapeType] = m_UnknownShapeOps.get();
 
 //  voxels.reset(NULL);
   GGseed = MXA::getMilliSeconds();
@@ -184,7 +184,7 @@ void GrainGeneratorFunc::initializeArrays(std::vector<Ebsd::CrystalStructure> st
   // Initialize the first slot in these arrays since they should never be used
   crystruct[0] = Ebsd::UnknownCrystalStructure;
   phasefraction[0] = 0.0;
-  phaseType[0] = AIM::Reconstruction::UnknownPhaseType;
+  phaseType[0] = DREAM3D::Reconstruction::UnknownPhaseType;
   pptFractions[0] = -1.0;
 
   mindiameter.resize(size+1);
@@ -368,59 +368,59 @@ int GrainGeneratorFunc::readReconStatsData(H5ReconStatsReader::Pointer h5io)
 
     /* Read the PhaseFraction Value*/
       std::vector<float> pFraction;
-    err = h5io->readStatsDataset(phase, AIM::HDF5::PhaseFraction, pFraction);
+    err = h5io->readStatsDataset(phase, DREAM3D::HDF5::PhaseFraction, pFraction);
     phasefraction[phase] = pFraction.front();
 
     std::vector<unsigned int> phasetypes;
-    err = h5io->readStatsDataset(phase, AIM::HDF5::PhaseType, phasetypes);
-    phaseType[phase] = static_cast<AIM::Reconstruction::PhaseType>(phasetypes[0]);
+    err = h5io->readStatsDataset(phase, DREAM3D::HDF5::PhaseType, phasetypes);
+    phaseType[phase] = static_cast<DREAM3D::Reconstruction::PhaseType>(phasetypes[0]);
 
     // If the Phase Type is Precipitate then we need the pptFraction on Boundary
-    if (phaseType[phase] == AIM::Reconstruction::PrecipitatePhase)
+    if (phaseType[phase] == DREAM3D::Reconstruction::PrecipitatePhase)
     {
       float f = -1.0f;
-      err = h5io->readScalarAttribute(phase, AIM::HDF5::PhaseType, AIM::HDF5::PrecipitateBoundaryFraction, f);
+      err = h5io->readScalarAttribute(phase, DREAM3D::HDF5::PhaseType, DREAM3D::HDF5::PrecipitateBoundaryFraction, f);
       if (err < 0) {
         f = -1.0f;
       }
       pptFractions[phase] = f;
     }
-    if (phaseType[phase] != AIM::Reconstruction::PrecipitatePhase) pptFractions[phase] = -1.0;
+    if (phaseType[phase] != DREAM3D::Reconstruction::PrecipitatePhase) pptFractions[phase] = -1.0;
 
     /* Read the BinNumbers data set */
     std::vector<float> bins;
-    err = h5io->readStatsDataset(phase, AIM::HDF5::BinNumber, bins);
-    CHECK_STATS_READ_ERROR(err, AIM::HDF5::Reconstruction, AIM::HDF5::BinNumber)
+    err = h5io->readStatsDataset(phase, DREAM3D::HDF5::BinNumber, bins);
+    CHECK_STATS_READ_ERROR(err, DREAM3D::HDF5::Reconstruction, DREAM3D::HDF5::BinNumber)
     numdiameterbins[phase] = bins.size();
     size_t nBins = bins.size();
 
     /* Read the Grain_Diameter_Info Data */
-    err = h5io->readStatsDataset(phase, AIM::HDF5::Grain_Diameter_Info, grainDiamInfo);
-    CHECK_STATS_READ_ERROR(err,  AIM::HDF5::Reconstruction, AIM::HDF5::Grain_Diameter_Info)
+    err = h5io->readStatsDataset(phase, DREAM3D::HDF5::Grain_Diameter_Info, grainDiamInfo);
+    CHECK_STATS_READ_ERROR(err,  DREAM3D::HDF5::Reconstruction, DREAM3D::HDF5::Grain_Diameter_Info)
 
     binstepsize[phase] = grainDiamInfo[0];
     maxdiameter[phase]  = grainDiamInfo[1];
     mindiameter[phase] = grainDiamInfo[2];
 
     /* Read the Grain_Size_Distribution Data */
-    err = h5io->readStatsDataset(phase, AIM::HDF5::Grain_Size_Distribution, double_data);
-    CHECK_STATS_READ_ERROR(err,  AIM::HDF5::Reconstruction, AIM::HDF5::Grain_Size_Distribution)
+    err = h5io->readStatsDataset(phase, DREAM3D::HDF5::Grain_Size_Distribution, double_data);
+    CHECK_STATS_READ_ERROR(err,  DREAM3D::HDF5::Reconstruction, DREAM3D::HDF5::Grain_Size_Distribution)
     avgdiam[phase] = double_data[0];
     sddiam[phase] = double_data[1];
 
-    AIM::Reconstruction::DistributionType dt;
+    DREAM3D::Reconstruction::DistributionType dt;
     std::string disType;
 
     /* Read the Shape Data */
-    READ_2_COLUMN_STATS_DATA(err, phase, phase, AIM::HDF5::Grain_SizeVBoverA_Distributions, bovera, AIM::Reconstruction::Beta, AIM::HDF5::Alpha, AIM::HDF5::Beta, AIM::HDF5::BetaColumnCount);
-    READ_2_COLUMN_STATS_DATA(err, phase, phase, AIM::HDF5::Grain_SizeVCoverA_Distributions, covera, AIM::Reconstruction::Beta, AIM::HDF5::Alpha, AIM::HDF5::Beta, AIM::HDF5::BetaColumnCount);
-    READ_2_COLUMN_STATS_DATA(err, phase, phase, AIM::HDF5::Grain_SizeVCoverB_Distributions, coverb, AIM::Reconstruction::Beta, AIM::HDF5::Alpha, AIM::HDF5::Beta, AIM::HDF5::BetaColumnCount);
+    READ_2_COLUMN_STATS_DATA(err, phase, phase, DREAM3D::HDF5::Grain_SizeVBoverA_Distributions, bovera, DREAM3D::Reconstruction::Beta, DREAM3D::HDF5::Alpha, DREAM3D::HDF5::Beta, DREAM3D::HDF5::BetaColumnCount);
+    READ_2_COLUMN_STATS_DATA(err, phase, phase, DREAM3D::HDF5::Grain_SizeVCoverA_Distributions, covera, DREAM3D::Reconstruction::Beta, DREAM3D::HDF5::Alpha, DREAM3D::HDF5::Beta, DREAM3D::HDF5::BetaColumnCount);
+    READ_2_COLUMN_STATS_DATA(err, phase, phase, DREAM3D::HDF5::Grain_SizeVCoverB_Distributions, coverb, DREAM3D::Reconstruction::Beta, DREAM3D::HDF5::Alpha, DREAM3D::HDF5::Beta, DREAM3D::HDF5::BetaColumnCount);
 
     /* Read the Omega3 Data */
-    READ_2_COLUMN_STATS_DATA(err, phase, phase, AIM::HDF5::Grain_SizeVOmega3_Distributions, omega3, AIM::Reconstruction::Beta, AIM::HDF5::Alpha, AIM::HDF5::Beta, AIM::HDF5::BetaColumnCount);
+    READ_2_COLUMN_STATS_DATA(err, phase, phase, DREAM3D::HDF5::Grain_SizeVOmega3_Distributions, omega3, DREAM3D::Reconstruction::Beta, DREAM3D::HDF5::Alpha, DREAM3D::HDF5::Beta, DREAM3D::HDF5::BetaColumnCount);
 
     /* Read the Neighbor Data - This MUST be the last one because of how variables are assigned bvalues and used in the next section */
-    READ_3_COLUMN_STATS_DATA(err, phase, phase, AIM::HDF5::Grain_SizeVNeighbors_Distributions, neighborparams, AIM::Reconstruction::Power, AIM::HDF5::Alpha, AIM::HDF5::Beta, AIM::HDF5::Exp_k, AIM::HDF5::PowerLawColumnCount);
+    READ_3_COLUMN_STATS_DATA(err, phase, phase, DREAM3D::HDF5::Grain_SizeVNeighbors_Distributions, neighborparams, DREAM3D::Reconstruction::Power, DREAM3D::HDF5::Alpha, DREAM3D::HDF5::Beta, DREAM3D::HDF5::Exp_k, DREAM3D::HDF5::PowerLawColumnCount);
   }
   return err;
 }
@@ -454,10 +454,10 @@ int  GrainGeneratorFunc::readAxisOrientationData(H5ReconStatsReader::Pointer h5i
   {
     totaldensity = 0.0;
       phase = phases[i];
-    err = h5io->readStatsDataset(phase, AIM::HDF5::AxisOrientation, density);
+    err = h5io->readStatsDataset(phase, DREAM3D::HDF5::AxisOrientation, density);
     if (err < 0)
     {
-    GGF_CHECK_READ_ERROR(readAxisOrientationData, AIM::HDF5::AxisOrientation)
+    GGF_CHECK_READ_ERROR(readAxisOrientationData, DREAM3D::HDF5::AxisOrientation)
     //FIXME: This should probably return an ERROR because nothing was read
     return 10;
     }
@@ -495,10 +495,10 @@ int GrainGeneratorFunc::readODFData(H5ReconStatsReader::Pointer h5io)
   for(size_t i = 0; i< size ;i++)
   {
       phase = phases[i];
-    err = h5io->readStatsDataset(phase, AIM::HDF5::ODF, density);
+    err = h5io->readStatsDataset(phase, DREAM3D::HDF5::ODF, density);
     if (err < 0)
     {
-    GGF_CHECK_READ_ERROR(readODFData, AIM::HDF5::ODF)
+    GGF_CHECK_READ_ERROR(readODFData, DREAM3D::HDF5::ODF)
     //FIXME: This should probably return an ERROR because nothing was read
     return 10;
     }
@@ -538,10 +538,10 @@ int GrainGeneratorFunc::readMisorientationData(H5ReconStatsReader::Pointer h5io)
   for(size_t i = 0; i< size ;i++)
   {
       phase = phases[i];
-    err = h5io->readStatsDataset(phase, AIM::HDF5::MisorientationBins, density);
+    err = h5io->readStatsDataset(phase, DREAM3D::HDF5::MisorientationBins, density);
     if (err < 0)
     {
-    GGF_CHECK_READ_ERROR(readMisorientationData, AIM::HDF5::MisorientationBins)
+    GGF_CHECK_READ_ERROR(readMisorientationData, DREAM3D::HDF5::MisorientationBins)
      //FIXME: This should probably return an ERROR because nothing was read
     return 10;
     }
@@ -683,11 +683,11 @@ void  GrainGeneratorFunc::insert_grain(size_t gnum)
   m_Grains[gnum]->planelist = new std::vector<int>(0);}
 
 
-  AIM::SyntheticBuilder::ShapeType shapeclass = shapeTypes[m_Grains[gnum]->phase];
+  DREAM3D::SyntheticBuilder::ShapeType shapeclass = shapeTypes[m_Grains[gnum]->phase];
 
 
   // init any values for each of the Shape Ops
-  for (std::map<AIM::SyntheticBuilder::ShapeType, DREAM3D::ShapeOps*>::iterator ops = m_ShapeOps.begin(); ops != m_ShapeOps.end(); ++ops )
+  for (std::map<DREAM3D::SyntheticBuilder::ShapeType, DREAM3D::ShapeOps*>::iterator ops = m_ShapeOps.begin(); ops != m_ShapeOps.end(); ++ops )
   {
     (*ops).second->init();
   }
@@ -800,10 +800,10 @@ void  GrainGeneratorFunc::insert_precipitate(size_t gnum)
   float covera = m_Grains[gnum]->radius3;
   float omega3 = m_Grains[gnum]->omega3;
   float radcur1 = 1;
-  AIM::SyntheticBuilder::ShapeType shapeclass = shapeTypes[m_Grains[gnum]->phase];
+  DREAM3D::SyntheticBuilder::ShapeType shapeclass = shapeTypes[m_Grains[gnum]->phase];
 
   // init any values for each of the Shape Ops
-  for (std::map<AIM::SyntheticBuilder::ShapeType, DREAM3D::ShapeOps*>::iterator ops = m_ShapeOps.begin(); ops != m_ShapeOps.end(); ++ops )
+  for (std::map<DREAM3D::SyntheticBuilder::ShapeType, DREAM3D::ShapeOps*>::iterator ops = m_ShapeOps.begin(); ops != m_ShapeOps.end(); ++ops )
   {
     (*ops).second->init();
   }
@@ -1329,7 +1329,7 @@ void  GrainGeneratorFunc::pack_grains()
   // find which phases are primary phases
   for (size_t i = 1; i < phaseType.size();++i)
   {
-    if(phaseType[i] == AIM::Reconstruction::PrimaryPhase)
+    if(phaseType[i] == DREAM3D::Reconstruction::PrimaryPhase)
     {
     primaryphases.push_back(i);
     primaryphasefractions.push_back(phasefraction[i]);
@@ -1702,10 +1702,10 @@ void GrainGeneratorFunc::assign_voxels()
     zc = m_Grains[i]->centroidz;
     float radcur1 = 0.0f;
     //Unbounded Check for the size of shapeTypes. We assume a 1:1 with phase
-    AIM::SyntheticBuilder::ShapeType shapeclass = shapeTypes[m_Grains[i]->phase];
+    DREAM3D::SyntheticBuilder::ShapeType shapeclass = shapeTypes[m_Grains[i]->phase];
 
     // init any values for each of the Shape Ops
-    for (std::map<AIM::SyntheticBuilder::ShapeType, DREAM3D::ShapeOps*>::iterator ops = m_ShapeOps.begin(); ops != m_ShapeOps.end(); ++ops )
+    for (std::map<DREAM3D::SyntheticBuilder::ShapeType, DREAM3D::ShapeOps*>::iterator ops = m_ShapeOps.begin(); ops != m_ShapeOps.end(); ++ops )
     {
       (*ops).second->init();
     }
@@ -2217,7 +2217,7 @@ void  GrainGeneratorFunc::place_precipitates()
   double totalprecipitatefractions = 0.0;
   for (size_t i = 1; i < phaseType.size();++i)
   {
-    if(phaseType[i] == AIM::Reconstruction::PrecipitatePhase)
+    if(phaseType[i] == DREAM3D::Reconstruction::PrecipitatePhase)
     {
 	    precipitatephases.push_back(i);
 	    precipitatephasefractions.push_back(phasefraction[i]);
@@ -3081,9 +3081,9 @@ void GrainGeneratorFunc::write_eulerangles(const std::string &filename)
   ofstream outFile;
   outFile.open(filename.c_str());
   outFile << m_Grains.size() << std::endl;
-  char space = AIM::GrainData::Delimiter;
-  outFile << AIM::GrainData::GrainID  << space
-          << AIM::GrainData::Phi1 << space << AIM::GrainData::PHI<< space << AIM::GrainData::Phi2 << std::endl;
+  char space = DREAM3D::GrainData::Delimiter;
+  outFile << DREAM3D::GrainData::GrainID  << space
+          << DREAM3D::GrainData::Phi1 << space << DREAM3D::GrainData::PHI<< space << DREAM3D::GrainData::Phi2 << std::endl;
   for (size_t i = 1; i < m_Grains.size(); i++)
   {
     outFile << i << space << m_Grains[i]->euler1 << space << m_Grains[i]->euler2 << space << m_Grains[i]->euler3 << endl;
@@ -3095,12 +3095,12 @@ void GrainGeneratorFunc::write_graindata(const std::string &filename)
 {
   ofstream outFile;
   outFile.open(filename.c_str());
-  char space = AIM::GrainData::Delimiter;
+  char space = DREAM3D::GrainData::Delimiter;
   outFile << m_Grains.size() << std::endl;
-  outFile << AIM::GrainData::GrainID  << space
-      << AIM::GrainData::Phi1 << space << AIM::GrainData::PHI<< space << AIM::GrainData::Phi2 << space
-      << AIM::GrainData::EquivDiam << space
-      << AIM::GrainData::B_Over_A << space << AIM::GrainData::C_Over_A << space << AIM::GrainData::Omega3 << std::endl;
+  outFile << DREAM3D::GrainData::GrainID  << space
+      << DREAM3D::GrainData::Phi1 << space << DREAM3D::GrainData::PHI<< space << DREAM3D::GrainData::Phi2 << space
+      << DREAM3D::GrainData::EquivDiam << space
+      << DREAM3D::GrainData::B_Over_A << space << DREAM3D::GrainData::C_Over_A << space << DREAM3D::GrainData::Omega3 << std::endl;
 
   for (size_t i = 1; i < m_Grains.size(); i++)
   {

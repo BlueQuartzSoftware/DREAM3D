@@ -82,13 +82,13 @@ H5ReconStatsReader::Pointer H5ReconStatsReader::New(const std::string &filename)
 // -----------------------------------------------------------------------------
 std::string H5ReconStatsReader::getDistributionType(int phase,
                                                     const std::string &group,
-                                                    AIM::Reconstruction::DistributionType &dt)
+                                                    DREAM3D::Reconstruction::DistributionType &dt)
 {
   herr_t err = 0;
 
   std::string index = StringUtils::numToString(phase);
 
-  std::string path = AIM::HDF5::Reconstruction + "/" + index + "/" + group;
+  std::string path = DREAM3D::HDF5::Reconstruction + "/" + index + "/" + group;
   hid_t fileId = H5Utilities::openFile(m_FileName, false);\
 
   if (fileId < 0)
@@ -96,7 +96,7 @@ std::string H5ReconStatsReader::getDistributionType(int phase,
     return std::string();
   }
   std::string data;
-  err = H5Lite::readStringAttribute(fileId, path, AIM::HDF5::DistributionType, data);
+  err = H5Lite::readStringAttribute(fileId, path, DREAM3D::HDF5::DistributionType, data);
 
   err = H5Utilities::closeFile(fileId);
   if (err < 0)
@@ -104,21 +104,21 @@ std::string H5ReconStatsReader::getDistributionType(int phase,
     data.clear();
   }
 
-  if (data.compare(AIM::HDF5::BetaDistribution) == 0)
+  if (data.compare(DREAM3D::HDF5::BetaDistribution) == 0)
   {
-    dt = AIM::Reconstruction::Beta;
+    dt = DREAM3D::Reconstruction::Beta;
   }
-  else if (data.compare(AIM::HDF5::LogNormalDistribution) == 0)
+  else if (data.compare(DREAM3D::HDF5::LogNormalDistribution) == 0)
   {
-    dt = AIM::Reconstruction::LogNormal;
+    dt = DREAM3D::Reconstruction::LogNormal;
   }
-  else if (data.compare(AIM::HDF5::PowerLawDistribution) == 0)
+  else if (data.compare(DREAM3D::HDF5::PowerLawDistribution) == 0)
   {
-    dt = AIM::Reconstruction::Power;
+    dt = DREAM3D::Reconstruction::Power;
   }
   else
   {
-    dt = AIM::Reconstruction::UnknownDistributionType;
+    dt = DREAM3D::Reconstruction::UnknownDistributionType;
   }
   return data;
 }
@@ -134,7 +134,7 @@ int H5ReconStatsReader::getPhaseAndCrystalStructures(std::vector<int> &phases,
   herr_t err = 0;
   herr_t retErr = 0;
   OPEN_HDF5_FILE(fileId, m_FileName)
-  OPEN_RECONSTRUCTION_GROUP(reconGid, AIM::HDF5::Reconstruction.c_str(), fileId)
+  OPEN_RECONSTRUCTION_GROUP(reconGid, DREAM3D::HDF5::Reconstruction.c_str(), fileId)
 
   // Get a list of all the groups
   std::list<std::string> names;
@@ -151,7 +151,7 @@ int H5ReconStatsReader::getPhaseAndCrystalStructures(std::vector<int> &phases,
     phases.push_back(i);
     hid_t gid = H5Gopen(reconGid,(*pString).c_str(), H5P_DEFAULT);
     unsigned int xtal = static_cast<unsigned int>(Ebsd::UnknownCrystalStructure);
-    err = H5Lite::readScalarDataset(gid, AIM::HDF5::CrystalStructure, xtal);
+    err = H5Lite::readScalarDataset(gid, DREAM3D::HDF5::CrystalStructure, xtal);
     if (err < 0)
     {
       xtal = static_cast<unsigned int>(Ebsd::UnknownCrystalStructure);

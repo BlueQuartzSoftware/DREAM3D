@@ -45,7 +45,7 @@
 class QAbstractItemDelegate;
 
 /**
- * @class SGBetaTableModel SGBetaTableModel.h AIM/StatsGenerator/SGBetaTableModel.h
+ * @class SGBetaTableModel SGBetaTableModel.h StatsGenerator/SGBetaTableModel.h
  * @brief
  * @author Michael A. Jackson for BlueQuartz Software
  * @date Dec 22, 2010

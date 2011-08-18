@@ -105,7 +105,7 @@ class DREAM3DLib_EXPORT H5VoxelWriter
       float origin[3] =
       { 0.0f, 0.0f, 0.0f };
       // This just creates the group and writes the header information
-      h5writer->writeStructuredPoints(AIM::HDF5::VoxelDataName, volDims, spacing, origin);
+      h5writer->writeStructuredPoints(DREAM3D::HDF5::VoxelDataName, volDims, spacing, origin);
 
       // We now need to write the actual voxel data
       int numComp = 1; //
@@ -123,17 +123,17 @@ class DREAM3DLib_EXPORT H5VoxelWriter
         dataf[i * 3 + 1] = m->euler2s[i];
         dataf[i * 3 + 2] = m->euler3s[i];
       }
-      err = h5writer->writeScalarData(AIM::HDF5::VoxelDataName, datai1, AIM::VTK::GrainIdScalarName.c_str(), numComp, rank, dims);
-      err = h5writer->writeScalarData(AIM::HDF5::VoxelDataName, datai2, AIM::VTK::PhaseIdScalarName.c_str(), numComp, rank, dims);
+      err = h5writer->writeScalarData(DREAM3D::HDF5::VoxelDataName, datai1, DREAM3D::VTK::GrainIdScalarName.c_str(), numComp, rank, dims);
+      err = h5writer->writeScalarData(DREAM3D::HDF5::VoxelDataName, datai2, DREAM3D::VTK::PhaseIdScalarName.c_str(), numComp, rank, dims);
       // Setup the nx3 table of Euler Angles which means setting both the dims and NumComp variables
       numComp = 3;
       rank = 2;
       dims[0] = totalPoints;
       dims[1] = numComp;
-      err = h5writer->writeScalarData(AIM::HDF5::VoxelDataName, dataf, AIM::VTK::EulerAnglesName.c_str(), numComp, rank, dims);
+      err = h5writer->writeScalarData(DREAM3D::HDF5::VoxelDataName, dataf, DREAM3D::VTK::EulerAnglesName.c_str(), numComp, rank, dims);
       if (err < 0)
       {
-        std::cout << "Error Writing Scalars '" << AIM::VTK::EulerAnglesName << "' to " << AIM::HDF5::VoxelDataName << std::endl;
+        std::cout << "Error Writing Scalars '" << DREAM3D::VTK::EulerAnglesName << "' to " << DREAM3D::HDF5::VoxelDataName << std::endl;
       }
 
       std::vector<int> fieldData(m->crystruct.size());
@@ -142,20 +142,20 @@ class DREAM3DLib_EXPORT H5VoxelWriter
         fieldData[i] = m->crystruct[i];
       }
 
-      err = h5writer->writeFieldData<int>(AIM::HDF5::VoxelDataName, fieldData, AIM::VTK::CrystalStructureName.c_str(), 1);
+      err = h5writer->writeFieldData<int>(DREAM3D::HDF5::VoxelDataName, fieldData, DREAM3D::VTK::CrystalStructureName.c_str(), 1);
       if (err < 0)
       {
-        std::cout << "Error Writing Field Data '" << AIM::VTK::CrystalStructureName << "' to " << AIM::HDF5::VoxelDataName << std::endl;
+        std::cout << "Error Writing Field Data '" << DREAM3D::VTK::CrystalStructureName << "' to " << DREAM3D::HDF5::VoxelDataName << std::endl;
       }
 
       for (size_t i = 0; i < m->crystruct.size(); ++i)
       {
         fieldData[i] = m->phaseType[i];
       }
-      err = h5writer->writeFieldData<int>(AIM::HDF5::VoxelDataName, fieldData, AIM::VTK::PhaseTypeName.c_str(), 1);
+      err = h5writer->writeFieldData<int>(DREAM3D::HDF5::VoxelDataName, fieldData, DREAM3D::VTK::PhaseTypeName.c_str(), 1);
       if (err < 0)
       {
-        std::cout << "Error Writing Field Data '" << AIM::VTK::PhaseTypeName << "' to " << AIM::HDF5::VoxelDataName << std::endl;
+        std::cout << "Error Writing Field Data '" << DREAM3D::VTK::PhaseTypeName << "' to " << DREAM3D::HDF5::VoxelDataName << std::endl;
       }
 
       err = h5writer->closeFile();

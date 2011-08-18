@@ -102,14 +102,14 @@ H5ReconStatsWriter::Pointer H5ReconStatsWriter::New(const std::string &filename)
 //
 // -----------------------------------------------------------------------------
 int H5ReconStatsWriter::writePhaseInformation(int phase,
-                                              AIM::Reconstruction::PhaseType  phaseType,
+                                              DREAM3D::Reconstruction::PhaseType  phaseType,
                                               Ebsd::CrystalStructure xtal,
                                               float phasefraction, float pptFraction)
 {
   herr_t err = 0;
   herr_t retErr = 0;
   OPEN_HDF5_FILE(m_FileName)
-  CREATE_RECONSTRUCTION_GROUP(AIM::HDF5::Reconstruction)
+  CREATE_RECONSTRUCTION_GROUP(DREAM3D::HDF5::Reconstruction)
 
   hid_t pid = H5Utilities::createGroup(gid, StringUtils::numToString(phase));
   std::vector<hsize_t> dims(1);
@@ -117,51 +117,51 @@ int H5ReconStatsWriter::writePhaseInformation(int phase,
 
   /* **** Write the CrystalStructure Information ****** */
   unsigned int crystruct = static_cast<unsigned int>(xtal);
-  err = H5Lite::writeScalarDataset(pid, AIM::HDF5::CrystalStructure, crystruct);
+  err = H5Lite::writeScalarDataset(pid, DREAM3D::HDF5::CrystalStructure, crystruct);
   if (err < 0)
   {
-    H5RSW_ERROR_CHECK(AIM::HDF5::CrystalStructure)
+    H5RSW_ERROR_CHECK(DREAM3D::HDF5::CrystalStructure)
     retErr = err;
   }
   std::string xtalName = CrystalStructure::getCrystalStructureString(xtal);
   std::string name("Name");
-  err = H5Lite::writeStringAttribute(pid, AIM::HDF5::CrystalStructure, name, xtalName);
+  err = H5Lite::writeStringAttribute(pid, DREAM3D::HDF5::CrystalStructure, name, xtalName);
   if (err < 0)
   {
-    H5RSW_ERROR_CHECK(AIM::HDF5::CrystalStructure)
+    H5RSW_ERROR_CHECK(DREAM3D::HDF5::CrystalStructure)
     retErr = err;
   }
 
 
 /* **** Write the Phase Type Information ****** */
   unsigned int pt = static_cast<unsigned int>(phaseType);
-  err = H5Lite::writeScalarDataset(pid, AIM::HDF5::PhaseType, pt);
+  err = H5Lite::writeScalarDataset(pid, DREAM3D::HDF5::PhaseType, pt);
   if (err < 0)
   {
-    H5RSW_ERROR_CHECK(AIM::HDF5::PhaseType)
+    H5RSW_ERROR_CHECK(DREAM3D::HDF5::PhaseType)
     retErr = err;
   }
-  std::string ptName = AIM::PhaseType::getPhaseTypeString(phaseType);
+  std::string ptName = DREAM3D::PhaseType::getPhaseTypeString(phaseType);
   name = std::string("Name");
-  err = H5Lite::writeStringAttribute(pid, AIM::HDF5::PhaseType, name, ptName);
+  err = H5Lite::writeStringAttribute(pid, DREAM3D::HDF5::PhaseType, name, ptName);
   if (err < 0)
   {
     H5RSW_ERROR_CHECK(name)
     retErr = err;
   }
   if (pptFraction > 0.0f) {
-    err = H5Lite::writeScalarAttribute(pid, AIM::HDF5::PhaseType, AIM::HDF5::PrecipitateBoundaryFraction, pptFraction);
+    err = H5Lite::writeScalarAttribute(pid, DREAM3D::HDF5::PhaseType, DREAM3D::HDF5::PrecipitateBoundaryFraction, pptFraction);
     if (err < 0)
     {
-      H5RSW_ERROR_CHECK(AIM::HDF5::PrecipitateBoundaryFraction)
+      H5RSW_ERROR_CHECK(DREAM3D::HDF5::PrecipitateBoundaryFraction)
       retErr = err;
     }
   }
   /* **** Write the Phase Fraction Information ****** */
-  err = H5Lite::writeScalarDataset(pid, AIM::HDF5::PhaseFraction, phasefraction);
+  err = H5Lite::writeScalarDataset(pid, DREAM3D::HDF5::PhaseFraction, phasefraction);
   if (err < 0)
   {
-    H5RSW_ERROR_CHECK(AIM::HDF5::PhaseFraction)
+    H5RSW_ERROR_CHECK(DREAM3D::HDF5::PhaseFraction)
     retErr = err;
   }
 
@@ -186,7 +186,7 @@ int H5ReconStatsWriter::writeSizeDistribution(int phase, float maxdiameter, floa
   herr_t err = 0;
   herr_t retErr = 0;
   OPEN_HDF5_FILE(m_FileName)
-  CREATE_RECONSTRUCTION_GROUP(AIM::HDF5::Reconstruction)
+  CREATE_RECONSTRUCTION_GROUP(DREAM3D::HDF5::Reconstruction)
 
   hid_t pid = H5Utilities::createGroup(gid, StringUtils::numToString(phase));
   std::vector<hsize_t> dims(1);
@@ -196,10 +196,10 @@ int H5ReconStatsWriter::writeSizeDistribution(int phase, float maxdiameter, floa
   grainDiameterInfo[0] = binStepSize;
   grainDiameterInfo[1] = maxdiameter;
   grainDiameterInfo[2] = mindiameter;
-  err = H5Lite::writeVectorDataset(pid, AIM::HDF5::Grain_Diameter_Info, dims, grainDiameterInfo);
+  err = H5Lite::writeVectorDataset(pid, DREAM3D::HDF5::Grain_Diameter_Info, dims, grainDiameterInfo);
   if (err < 0)
   {
-    H5RSW_ERROR_CHECK(AIM::HDF5::Grain_Diameter_Info)
+    H5RSW_ERROR_CHECK(DREAM3D::HDF5::Grain_Diameter_Info)
     retErr = err;
   }
 
@@ -208,10 +208,10 @@ int H5ReconStatsWriter::writeSizeDistribution(int phase, float maxdiameter, floa
   grainSizeInfo[0] = avglogdiam;
   grainSizeInfo[1] = sdlogdiam;
   dims[0] = 2;
-  err = H5Lite::writeVectorDataset(pid, AIM::HDF5::Grain_Size_Distribution, dims, grainSizeInfo);
+  err = H5Lite::writeVectorDataset(pid, DREAM3D::HDF5::Grain_Size_Distribution, dims, grainSizeInfo);
   if (err < 0)
   {
-    H5RSW_ERROR_CHECK(AIM::HDF5::Grain_Size_Distribution)
+    H5RSW_ERROR_CHECK(DREAM3D::HDF5::Grain_Size_Distribution)
     retErr = err;
   }
 
@@ -224,10 +224,10 @@ int H5ReconStatsWriter::writeSizeDistribution(int phase, float maxdiameter, floa
   }
   numberOfBins = bins.size();
   dims[0] = numberOfBins;
-  err = H5Lite::writeVectorDataset(pid, AIM::HDF5::BinNumber, dims, bins);
+  err = H5Lite::writeVectorDataset(pid, DREAM3D::HDF5::BinNumber, dims, bins);
   if (err < 0)
   {
-    H5RSW_ERROR_CHECK(AIM::HDF5::BinNumber)
+    H5RSW_ERROR_CHECK(DREAM3D::HDF5::BinNumber)
     retErr = err;
   }
 
@@ -266,14 +266,14 @@ int H5ReconStatsWriter::writeBetaDistribution(int phase, const std::string &hdf5
   herr_t err = 0;
 
   std::vector<std::string> headers;
-  headers.push_back(AIM::HDF5::Alpha);
-  headers.push_back(AIM::HDF5::Beta);
+  headers.push_back(DREAM3D::HDF5::Alpha);
+  headers.push_back(DREAM3D::HDF5::Beta);
 
-  std::vector<std::vector<float> > data(AIM::HDF5::BetaColumnCount);
+  std::vector<std::vector<float> > data(DREAM3D::HDF5::BetaColumnCount);
   size_t i = 0;
   data[i++] = alpha;
   data[i++] = beta;
-  err = writeDistributionData(phase, AIM::HDF5::BetaDistribution, hdf5GroupName, headers, data);
+  err = writeDistributionData(phase, DREAM3D::HDF5::BetaDistribution, hdf5GroupName, headers, data);
 
   return err;
 }
@@ -288,14 +288,14 @@ int H5ReconStatsWriter::writeLogNormalDistribution(int phase, const std::string 
   herr_t err = 0;
 
   std::vector<std::string> headers;
-  headers.push_back(AIM::HDF5::Average);
-  headers.push_back(AIM::HDF5::StandardDeviation);
+  headers.push_back(DREAM3D::HDF5::Average);
+  headers.push_back(DREAM3D::HDF5::StandardDeviation);
 
-  std::vector<std::vector<float> > data(AIM::HDF5::LogNormalColumnCount);
+  std::vector<std::vector<float> > data(DREAM3D::HDF5::LogNormalColumnCount);
   size_t i = 0;
   data[i++] = average;
   data[i++] = stdDev;
-  err = writeDistributionData(phase, AIM::HDF5::LogNormalDistribution, hdf5GroupName, headers, data);
+  err = writeDistributionData(phase, DREAM3D::HDF5::LogNormalDistribution, hdf5GroupName, headers, data);
 
   return err;
 }
@@ -311,16 +311,16 @@ int H5ReconStatsWriter::writePowerDistribution(int phase, const std::string &hdf
   herr_t err = 0;
 
   std::vector<std::string> headers;
-  headers.push_back(AIM::HDF5::Alpha);
-  headers.push_back(AIM::HDF5::Exp_k);
-  headers.push_back(AIM::HDF5::Beta);
+  headers.push_back(DREAM3D::HDF5::Alpha);
+  headers.push_back(DREAM3D::HDF5::Exp_k);
+  headers.push_back(DREAM3D::HDF5::Beta);
 
-  std::vector<std::vector<float> > data(AIM::HDF5::PowerLawColumnCount);
+  std::vector<std::vector<float> > data(DREAM3D::HDF5::PowerLawColumnCount);
   size_t i = 0;
   data[i++] = alpha;
   data[i++] = k;
   data[i++] = beta;
-  err = writeDistributionData(phase, AIM::HDF5::PowerLawDistribution, hdf5GroupName, headers, data);
+  err = writeDistributionData(phase, DREAM3D::HDF5::PowerLawDistribution, hdf5GroupName, headers, data);
 
   return err;
 }
@@ -336,14 +336,14 @@ int H5ReconStatsWriter::writeDistributionData(int phase, const std::string &disT
   herr_t err = 0;
   herr_t retErr = 0;
   OPEN_HDF5_FILE(m_FileName)
-  CREATE_RECONSTRUCTION_GROUP(AIM::HDF5::Reconstruction)
+  CREATE_RECONSTRUCTION_GROUP(DREAM3D::HDF5::Reconstruction)
   std::vector<hsize_t> dims(1);
 
   hid_t pid = H5Utilities::createGroup(gid, StringUtils::numToString(phase));
   hid_t disId = H5Utilities::createGroup(pid, hdf5GroupName);
   if (disId > 0)
   {
-    err = H5Lite::writeStringAttribute(pid, hdf5GroupName, AIM::HDF5::DistributionType, disType);
+    err = H5Lite::writeStringAttribute(pid, hdf5GroupName, DREAM3D::HDF5::DistributionType, disType);
     if (err >= 0)
     {
       dims.resize(1); // Single Dimension
@@ -399,7 +399,7 @@ int H5ReconStatsWriter::writeDistributionData(int phase, const std::string &disT
 //
 // -----------------------------------------------------------------------------
 int H5ReconStatsWriter::writeVolumeStats(int phase, Ebsd::CrystalStructure xtal,
-                                         AIM::Reconstruction::PhaseType phaseType,
+                                         DREAM3D::Reconstruction::PhaseType phaseType,
                                          float phasefraction, float pptFraction,
                                          float maxdiameter, float mindiameter, float diamStepSize,
                                          float avglogdiam, float sdlogdiam, std::vector<std::vector<float> > &svbovera,
@@ -428,10 +428,10 @@ int H5ReconStatsWriter::writeVolumeStats(int phase, Ebsd::CrystalStructure xtal,
       alpha[temp7] = svbovera[temp7][3];
       beta[temp7] = svbovera[temp7][4];
     }
-    err = writeBetaDistribution(phase, AIM::HDF5::Grain_SizeVBoverA_Distributions, alpha, beta);
+    err = writeBetaDistribution(phase, DREAM3D::HDF5::Grain_SizeVBoverA_Distributions, alpha, beta);
     if (err < 0)
     {
-      H5RSW_ERROR_CHECK(AIM::HDF5::Grain_SizeVBoverA_Distributions)
+      H5RSW_ERROR_CHECK(DREAM3D::HDF5::Grain_SizeVBoverA_Distributions)
       retErr = err;
     }
   }
@@ -446,10 +446,10 @@ int H5ReconStatsWriter::writeVolumeStats(int phase, Ebsd::CrystalStructure xtal,
       alpha[temp7] = svcovera[temp7][3];
       beta[temp7] = svcovera[temp7][4];
     }
-    err = writeBetaDistribution(phase, AIM::HDF5::Grain_SizeVCoverA_Distributions, alpha, beta);
+    err = writeBetaDistribution(phase, DREAM3D::HDF5::Grain_SizeVCoverA_Distributions, alpha, beta);
     if (err < 0)
     {
-      H5RSW_ERROR_CHECK(AIM::HDF5::Grain_SizeVCoverA_Distributions)
+      H5RSW_ERROR_CHECK(DREAM3D::HDF5::Grain_SizeVCoverA_Distributions)
       retErr = err;
     }
   }
@@ -464,10 +464,10 @@ int H5ReconStatsWriter::writeVolumeStats(int phase, Ebsd::CrystalStructure xtal,
       alpha[temp7] = svcoverb[temp7][3];
       beta[temp7] = svcoverb[temp7][4];
     }
-    err = writeBetaDistribution(phase, AIM::HDF5::Grain_SizeVCoverB_Distributions, alpha, beta);
+    err = writeBetaDistribution(phase, DREAM3D::HDF5::Grain_SizeVCoverB_Distributions, alpha, beta);
     if (err < 0)
     {
-      H5RSW_ERROR_CHECK(AIM::HDF5::Grain_SizeVCoverB_Distributions)
+      H5RSW_ERROR_CHECK(DREAM3D::HDF5::Grain_SizeVCoverB_Distributions)
       retErr = err;
     }
   }
@@ -484,10 +484,10 @@ int H5ReconStatsWriter::writeVolumeStats(int phase, Ebsd::CrystalStructure xtal,
       beta[temp7] = neighborhoodfit[temp7][2];
       k[temp7] = neighborhoodfit[temp7][3];
     }
-    err = writePowerDistribution(phase, AIM::HDF5::Grain_SizeVNeighbors_Distributions, alpha, k, beta);
+    err = writePowerDistribution(phase, DREAM3D::HDF5::Grain_SizeVNeighbors_Distributions, alpha, k, beta);
     if (err < 0)
     {
-      H5RSW_ERROR_CHECK(AIM::HDF5::Grain_SizeVNeighbors_Distributions)
+      H5RSW_ERROR_CHECK(DREAM3D::HDF5::Grain_SizeVNeighbors_Distributions)
       retErr = err;
     }
   }
@@ -502,10 +502,10 @@ int H5ReconStatsWriter::writeVolumeStats(int phase, Ebsd::CrystalStructure xtal,
       alpha[temp7] = svomega3[temp7][3];
       beta[temp7] = svomega3[temp7][4];
     }
-    err = writeBetaDistribution(phase, AIM::HDF5::Grain_SizeVOmega3_Distributions, alpha, beta);
+    err = writeBetaDistribution(phase, DREAM3D::HDF5::Grain_SizeVOmega3_Distributions, alpha, beta);
     if (err < 0)
     {
-      H5RSW_ERROR_CHECK(AIM::HDF5::Grain_SizeVOmega3_Distributions)
+      H5RSW_ERROR_CHECK(DREAM3D::HDF5::Grain_SizeVOmega3_Distributions)
       retErr = err;
     }
   }
@@ -517,7 +517,7 @@ int H5ReconStatsWriter::writeVolumeStats(int phase, Ebsd::CrystalStructure xtal,
 // -----------------------------------------------------------------------------
 int H5ReconStatsWriter::writeVolumeStats2D(int phase,
                                            Ebsd::CrystalStructure xtal,
-                                           AIM::Reconstruction::PhaseType phaseType,
+                                           DREAM3D::Reconstruction::PhaseType phaseType,
                                            float phasefraction, float pptFraction,
                                            float maxdiameter, float mindiameter, float diamStepSize,
                                          float avglogdiam, float sdlogdiam, std::vector<std::vector<float> > &svbovera,
@@ -544,10 +544,10 @@ int H5ReconStatsWriter::writeVolumeStats2D(int phase,
       alpha[temp7] = svbovera[temp7][3];
       beta[temp7] = svbovera[temp7][4];
     }
-    err = writeBetaDistribution(phase, AIM::HDF5::Grain_SizeVBoverA_Distributions, alpha, beta);
+    err = writeBetaDistribution(phase, DREAM3D::HDF5::Grain_SizeVBoverA_Distributions, alpha, beta);
     if (err < 0)
     {
-      H5RSW_ERROR_CHECK(AIM::HDF5::Grain_SizeVBoverA_Distributions)
+      H5RSW_ERROR_CHECK(DREAM3D::HDF5::Grain_SizeVBoverA_Distributions)
       retErr = err;
     }
   }
@@ -564,10 +564,10 @@ int H5ReconStatsWriter::writeVolumeStats2D(int phase,
       beta[temp7] = neighborhoodfit[temp7][2];
       k[temp7] = neighborhoodfit[temp7][3];
     }
-    err = writePowerDistribution(phase, AIM::HDF5::Grain_SizeVNeighbors_Distributions, alpha, k, beta);
+    err = writePowerDistribution(phase, DREAM3D::HDF5::Grain_SizeVNeighbors_Distributions, alpha, k, beta);
     if (err < 0)
     {
-      H5RSW_ERROR_CHECK(AIM::HDF5::Grain_SizeVNeighbors_Distributions)
+      H5RSW_ERROR_CHECK(DREAM3D::HDF5::Grain_SizeVNeighbors_Distributions)
       retErr = err;
     }
   }
@@ -584,18 +584,18 @@ int H5ReconStatsWriter::writeMisorientationBinsData(int phase, unsigned long lon
   herr_t retErr = 0;
   if ( *nElements == 0)
   {
-    H5RSW_ERROR_CHECK(AIM::HDF5::MisorientationBins)
+    H5RSW_ERROR_CHECK(DREAM3D::HDF5::MisorientationBins)
     return -1;
   }
   OPEN_HDF5_FILE(m_FileName)
-  CREATE_RECONSTRUCTION_GROUP(AIM::HDF5::Reconstruction)
+  CREATE_RECONSTRUCTION_GROUP(DREAM3D::HDF5::Reconstruction)
   hid_t pid = H5Utilities::createGroup(gid, StringUtils::numToString(phase));
   int32_t rank = 1; // Single Dimension
 
-  err = H5Lite::writePointerDataset<float>(pid, AIM::HDF5::MisorientationBins, rank, nElements, misobins);
+  err = H5Lite::writePointerDataset<float>(pid, DREAM3D::HDF5::MisorientationBins, rank, nElements, misobins);
   if (err < 0)
   {
-    H5RSW_ERROR_CHECK(AIM::HDF5::MisorientationBins)
+    H5RSW_ERROR_CHECK(DREAM3D::HDF5::MisorientationBins)
     retErr = err;
   }
   err = H5Gclose(pid);
@@ -614,36 +614,36 @@ int H5ReconStatsWriter::writeMDFWeights(int phase, uint64_t* dims,
   herr_t retErr = 0;
   if ( *dims == 0)
   {
-    H5RSW_ERROR_CHECK(AIM::HDF5::MisorientationBins)
+    H5RSW_ERROR_CHECK(DREAM3D::HDF5::MisorientationBins)
     return -1;
   }
   OPEN_HDF5_FILE(m_FileName)
-  CREATE_RECONSTRUCTION_GROUP(AIM::HDF5::Reconstruction)
+  CREATE_RECONSTRUCTION_GROUP(DREAM3D::HDF5::Reconstruction)
   hid_t pid = H5Utilities::createGroup(gid, StringUtils::numToString(phase));
   int32_t rank = 1; // Single Dimension
 
-  hid_t wid = H5Utilities::createGroup(pid, AIM::HDF5::MDFWeights);
+  hid_t wid = H5Utilities::createGroup(pid, DREAM3D::HDF5::MDFWeights);
 
-  err = H5Lite::writePointerDataset<float>(wid, AIM::HDF5::Angle, rank, dims, angles);
+  err = H5Lite::writePointerDataset<float>(wid, DREAM3D::HDF5::Angle, rank, dims, angles);
   if (err < 0)
   {
-    H5RSW_ERROR_CHECK(AIM::HDF5::Angle);
+    H5RSW_ERROR_CHECK(DREAM3D::HDF5::Angle);
     retErr = err;
   }
-  err = H5Lite::writePointerDataset<float>(wid, AIM::HDF5::Weight, rank, dims, weights);
+  err = H5Lite::writePointerDataset<float>(wid, DREAM3D::HDF5::Weight, rank, dims, weights);
   if (err < 0)
   {
-    H5RSW_ERROR_CHECK(AIM::HDF5::Weight);
+    H5RSW_ERROR_CHECK(DREAM3D::HDF5::Weight);
     retErr = err;
   }
   rank = 2;
   hsize_t adim[2];
   adim[0] = *dims;
   adim[1] = 3;
-  err = H5Lite::writePointerDataset<float>(wid, AIM::HDF5::Axis, rank, adim, axes);
+  err = H5Lite::writePointerDataset<float>(wid, DREAM3D::HDF5::Axis, rank, adim, axes);
   if (err < 0)
   {
-    H5RSW_ERROR_CHECK(AIM::HDF5::Axis);
+    H5RSW_ERROR_CHECK(DREAM3D::HDF5::Axis);
     retErr = err;
   }
 
@@ -665,7 +665,7 @@ int H5ReconStatsWriter::writeMicroTextureData(int phase, float* microbin, size_t
   herr_t err = 0;
   herr_t retErr = 0;
   OPEN_HDF5_FILE(m_FileName)
-  CREATE_RECONSTRUCTION_GROUP(AIM::HDF5::Reconstruction)
+  CREATE_RECONSTRUCTION_GROUP(DREAM3D::HDF5::Reconstruction)
 
   hid_t pid = H5Utilities::createGroup(gid, StringUtils::numToString(phase));
   std::vector<hsize_t> dims(1);
@@ -675,7 +675,7 @@ int H5ReconStatsWriter::writeMicroTextureData(int phase, float* microbin, size_t
   {
     data[i] = microbin[i]/actualgrains;
   }
-  err = H5Lite::writeVectorDataset(pid, AIM::HDF5::MicroTextureBins, dims, data);
+  err = H5Lite::writeVectorDataset(pid, DREAM3D::HDF5::MicroTextureBins, dims, data);
   if (err < 0)
   {
     retErr = err;
@@ -697,7 +697,7 @@ int H5ReconStatsWriter::writeAxisOrientationData(int phase, float* axisodf, floa
 {
   herr_t err = 0;
   herr_t retErr = 0;
-  OPEN_HDF5_FILE(m_FileName)CREATE_RECONSTRUCTION_GROUP(AIM::HDF5::Reconstruction)
+  OPEN_HDF5_FILE(m_FileName)CREATE_RECONSTRUCTION_GROUP(DREAM3D::HDF5::Reconstruction)
 
   hid_t pid = H5Utilities::createGroup(gid, StringUtils::numToString(phase));
   int size = 36 * 36 * 36;
@@ -709,7 +709,7 @@ int H5ReconStatsWriter::writeAxisOrientationData(int phase, float* axisodf, floa
 
   std::vector<hsize_t> dims(1);
   dims[0] = size;
-  err = H5Lite::writeVectorDataset(pid, AIM::HDF5::AxisOrientation, dims, data);
+  err = H5Lite::writeVectorDataset(pid, DREAM3D::HDF5::AxisOrientation, dims, data);
   if (err < 0)
   {
     retErr = err;
@@ -743,38 +743,38 @@ int H5ReconStatsWriter::writeAxisODFWeights(int phase, unsigned long long int *d
   herr_t err = 0;
   herr_t retErr = 0;
   OPEN_HDF5_FILE(m_FileName)
-  CREATE_RECONSTRUCTION_GROUP(AIM::HDF5::Reconstruction)
+  CREATE_RECONSTRUCTION_GROUP(DREAM3D::HDF5::Reconstruction)
 
   hid_t pid = H5Utilities::createGroup(gid, StringUtils::numToString(phase));
   int32_t rank = 1;
 
-  hid_t wid = H5Utilities::createGroup(pid, AIM::HDF5::AxisODFWeights);
+  hid_t wid = H5Utilities::createGroup(pid, DREAM3D::HDF5::AxisODFWeights);
 
 
-  err = H5Lite::writePointerDataset<float>(wid, AIM::HDF5::Euler1, rank, dims, e1);
+  err = H5Lite::writePointerDataset<float>(wid, DREAM3D::HDF5::Euler1, rank, dims, e1);
   if (err < 0)
   {
-    H5RSW_ERROR_CHECK(AIM::HDF5::Euler1); retErr = err;
+    H5RSW_ERROR_CHECK(DREAM3D::HDF5::Euler1); retErr = err;
   }
-  err = H5Lite::writePointerDataset<float>(wid, AIM::HDF5::Euler2, rank, dims, e2);
+  err = H5Lite::writePointerDataset<float>(wid, DREAM3D::HDF5::Euler2, rank, dims, e2);
   if (err < 0)
   {
-    H5RSW_ERROR_CHECK(AIM::HDF5::Euler2); retErr = err;
+    H5RSW_ERROR_CHECK(DREAM3D::HDF5::Euler2); retErr = err;
   }
-  err = H5Lite::writePointerDataset<float>(wid, AIM::HDF5::Euler3, rank, dims, e3);
+  err = H5Lite::writePointerDataset<float>(wid, DREAM3D::HDF5::Euler3, rank, dims, e3);
   if (err < 0)
   {
-    H5RSW_ERROR_CHECK(AIM::HDF5::Euler3); retErr = err;
+    H5RSW_ERROR_CHECK(DREAM3D::HDF5::Euler3); retErr = err;
   }
-  err = H5Lite::writePointerDataset<float>(wid, AIM::HDF5::Weight, rank, dims, weights);
+  err = H5Lite::writePointerDataset<float>(wid, DREAM3D::HDF5::Weight, rank, dims, weights);
   if (err < 0)
   {
-    H5RSW_ERROR_CHECK(AIM::HDF5::Weight); retErr = err;
+    H5RSW_ERROR_CHECK(DREAM3D::HDF5::Weight); retErr = err;
   }
-  err = H5Lite::writePointerDataset<float>(wid, AIM::HDF5::Sigma, rank, dims, sigmas);
+  err = H5Lite::writePointerDataset<float>(wid, DREAM3D::HDF5::Sigma, rank, dims, sigmas);
   if (err < 0)
   {
-    H5RSW_ERROR_CHECK(AIM::HDF5::Sigma); retErr = err;
+    H5RSW_ERROR_CHECK(DREAM3D::HDF5::Sigma); retErr = err;
   }
   /* Clean up the rest of the HDF5 structures and close the file */
   err = H5Gclose(wid);
@@ -801,11 +801,11 @@ int H5ReconStatsWriter::writeODFData(int phase,
   herr_t err = 0;
   herr_t retErr = 0;
   OPEN_HDF5_FILE(m_FileName)
-  CREATE_RECONSTRUCTION_GROUP(AIM::HDF5::Reconstruction)
+  CREATE_RECONSTRUCTION_GROUP(DREAM3D::HDF5::Reconstruction)
 
   hid_t pid = H5Utilities::createGroup(gid, StringUtils::numToString(phase));
   int32_t rank = 1;
-  err = H5Lite::writePointerDataset<float>(pid, AIM::HDF5::ODF, rank, dims, eulerodf);
+  err = H5Lite::writePointerDataset<float>(pid, DREAM3D::HDF5::ODF, rank, dims, eulerodf);
   if (err < 0)
   {
    retErr = err;
@@ -831,38 +831,38 @@ int H5ReconStatsWriter::writeODFWeights(int phase, unsigned long long int *dims,
   herr_t err = 0;
   herr_t retErr = 0;
   OPEN_HDF5_FILE(m_FileName)
-  CREATE_RECONSTRUCTION_GROUP(AIM::HDF5::Reconstruction)
+  CREATE_RECONSTRUCTION_GROUP(DREAM3D::HDF5::Reconstruction)
 
   hid_t pid = H5Utilities::createGroup(gid, StringUtils::numToString(phase));
   int32_t rank = 1;
 
-  hid_t wid = H5Utilities::createGroup(pid, AIM::HDF5::ODFWeights);
+  hid_t wid = H5Utilities::createGroup(pid, DREAM3D::HDF5::ODFWeights);
 
 
-  err = H5Lite::writePointerDataset<float>(wid, AIM::HDF5::Euler1, rank, dims, e1);
+  err = H5Lite::writePointerDataset<float>(wid, DREAM3D::HDF5::Euler1, rank, dims, e1);
   if (err < 0)
   {
-    H5RSW_ERROR_CHECK(AIM::HDF5::Euler1); retErr = err;
+    H5RSW_ERROR_CHECK(DREAM3D::HDF5::Euler1); retErr = err;
   }
-  err = H5Lite::writePointerDataset<float>(wid, AIM::HDF5::Euler2, rank, dims, e2);
+  err = H5Lite::writePointerDataset<float>(wid, DREAM3D::HDF5::Euler2, rank, dims, e2);
   if (err < 0)
   {
-    H5RSW_ERROR_CHECK(AIM::HDF5::Euler2); retErr = err;
+    H5RSW_ERROR_CHECK(DREAM3D::HDF5::Euler2); retErr = err;
   }
-  err = H5Lite::writePointerDataset<float>(wid, AIM::HDF5::Euler3, rank, dims, e3);
+  err = H5Lite::writePointerDataset<float>(wid, DREAM3D::HDF5::Euler3, rank, dims, e3);
   if (err < 0)
   {
-    H5RSW_ERROR_CHECK(AIM::HDF5::Euler3); retErr = err;
+    H5RSW_ERROR_CHECK(DREAM3D::HDF5::Euler3); retErr = err;
   }
-  err = H5Lite::writePointerDataset<float>(wid, AIM::HDF5::Weight, rank, dims, weights);
+  err = H5Lite::writePointerDataset<float>(wid, DREAM3D::HDF5::Weight, rank, dims, weights);
   if (err < 0)
   {
-    H5RSW_ERROR_CHECK(AIM::HDF5::Weight); retErr = err;
+    H5RSW_ERROR_CHECK(DREAM3D::HDF5::Weight); retErr = err;
   }
-  err = H5Lite::writePointerDataset<float>(wid, AIM::HDF5::Sigma, rank, dims, sigmas);
+  err = H5Lite::writePointerDataset<float>(wid, DREAM3D::HDF5::Sigma, rank, dims, sigmas);
   if (err < 0)
   {
-    H5RSW_ERROR_CHECK(AIM::HDF5::Sigma); retErr = err;
+    H5RSW_ERROR_CHECK(DREAM3D::HDF5::Sigma); retErr = err;
   }
   /* Clean up the rest of the HDF5 structures and close the file */
   err = H5Gclose(wid);

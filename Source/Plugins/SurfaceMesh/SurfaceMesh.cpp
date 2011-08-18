@@ -103,7 +103,7 @@ using namespace meshing;
 SurfaceMesh::SurfaceMesh() :
     m_InputDirectory("."),
     m_InputFile(""),
-    m_ScalarName(AIM::VTK::GrainIdScalarName),
+    m_ScalarName(DREAM3D::VTK::GrainIdScalarName),
     m_OutputDirectory(""),
     m_OutputFilePrefix("SurfaceMesh_"),
     m_ConformalMesh(true),
@@ -135,9 +135,9 @@ void SurfaceMesh::execute()
 
   updateProgressAndMessage(("Running Surface Meshing"), 0);
   int err = 0;
-  MAKE_OUTPUT_FILE_PATH( NodesFile, AIM::SurfaceMesh::NodesFileBin)
-  MAKE_OUTPUT_FILE_PATH( TrianglesFile, AIM::SurfaceMesh::TrianglesFileBin)
-  MAKE_OUTPUT_FILE_PATH( VisualizationFile, AIM::SurfaceMesh::VisualizationVizFile)
+  MAKE_OUTPUT_FILE_PATH( NodesFile, DREAM3D::SurfaceMesh::NodesFileBin)
+  MAKE_OUTPUT_FILE_PATH( TrianglesFile, DREAM3D::SurfaceMesh::TrianglesFileBin)
+  MAKE_OUTPUT_FILE_PATH( VisualizationFile, DREAM3D::SurfaceMesh::VisualizationVizFile)
 
   m = SurfaceMeshFunc::New();
   // Initialize some benchmark timers
@@ -445,7 +445,7 @@ void SurfaceMesh::execute()
   }
 
   std::string msg("Writing VTK Polydata Surface Mesh File: ");
-  msg.append(AIM::SurfaceMesh::VisualizationVizFile);
+  msg.append(DREAM3D::SurfaceMesh::VisualizationVizFile);
   updateProgressAndMessage(msg.c_str(), 95);
   meshing::SMVtkFileIO::Pointer writer = SMVtkFileIO::New();
   writer->setInputFileName(VisualizationFile);

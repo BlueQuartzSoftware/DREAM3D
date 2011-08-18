@@ -13,8 +13,8 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
- * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
@@ -41,11 +41,10 @@
 #include <numeric>
 #include <limits>
 
-// AIMRepresentation Includes
-//#include <AIM/StatsGenerator/StatsGen.h>
+// DREAM3D Includes
 #include "DREAM3D/Common/Constants.h"
 #include "DREAM3D/HDF5/H5ReconStatsWriter.h"
-#include "AIM/GrainGenerator/GrainGenerator.h"
+#include "GrainGenerator/GrainGenerator.h"
 
 #include "CMU/StatsGenerator.h"
 
@@ -134,7 +133,7 @@ int main(int argc, char **argv)
     // Now fill the vectors with the correct data
 
     // Now write the data
-    err = writer->writeBetaDistribution(AIM::HDF5::Grain_SizeVOmega3_Distributions, alpha, beta);
+    err = writer->writeBetaDistribution(DREAM3D::HDF5::Grain_SizeVOmega3_Distributions, alpha, beta);
 
   }
   /* To write a Log Normal distribution you need a pair of vectors */
@@ -142,7 +141,7 @@ int main(int argc, char **argv)
     std::vector<double> average;
     std::vector<double> stdDev;
 
-    err = writer->writeLogNormalDistribution(AIM::HDF5::Grain_SizeVBoverA_Distributions, average, stdDev);
+    err = writer->writeLogNormalDistribution(DREAM3D::HDF5::Grain_SizeVBoverA_Distributions, average, stdDev);
   }
 
   {
@@ -152,7 +151,7 @@ int main(int argc, char **argv)
     // Now fill the vectors with the correct data
 
     // Now write the data
-    err = writer->writePowerDistribution(AIM::HDF5::Grain_SizeVBoverA_Distributions, alpha, k, beta);
+    err = writer->writePowerDistribution(DREAM3D::HDF5::Grain_SizeVBoverA_Distributions, alpha, k, beta);
   }
 
 
@@ -186,8 +185,8 @@ int main(int argc, char **argv)
    */
   int gg_NumGrains = 500;
   std::string gg_OutputDir("/tmp/JoesSimulationOutput");
-  AIM::SyntheticBuilder::ShapeClass shapeclass = AIM::SyntheticBuilder::Superellipsoid;
-  AIM::SyntheticBuilder::Precipitates Precipitates = AIM::SyntheticBuilder::NoPrecipitates;
+  DREAM3D::SyntheticBuilder::ShapeClass shapeclass = DREAM3D::SyntheticBuilder::Superellipsoid;
+  DREAM3D::SyntheticBuilder::Precipitates Precipitates = DREAM3D::SyntheticBuilder::NoPrecipitates;
   double xRes = 0.25;
   double yRes = 0.25;
   double zRes = 0.25;

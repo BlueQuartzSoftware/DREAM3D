@@ -118,7 +118,7 @@ void EditPhaseDialog::setPptFraction(float d)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EditPhaseDialog::setPhaseType(AIM::Reconstruction::PhaseType pt)
+void EditPhaseDialog::setPhaseType(DREAM3D::Reconstruction::PhaseType pt)
 {
   phaseTypeCombo->setCurrentIndex(pt);
 }
@@ -126,10 +126,10 @@ void EditPhaseDialog::setPhaseType(AIM::Reconstruction::PhaseType pt)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AIM::Reconstruction::PhaseType EditPhaseDialog::getPhaseType()
+DREAM3D::Reconstruction::PhaseType EditPhaseDialog::getPhaseType()
 {
   int index = phaseTypeCombo->currentIndex();
-  return static_cast<AIM::Reconstruction::PhaseType>(index);
+  return static_cast<DREAM3D::Reconstruction::PhaseType>(index);
 }
 
 
@@ -178,7 +178,7 @@ void EditPhaseDialog::setOtherPhaseFractionTotal(float t)
 void EditPhaseDialog::on_phaseTypeCombo_currentIndexChanged(int index)
 {
   bool b = false;
-  if (phaseTypeCombo->currentIndex() == AIM::Reconstruction::PrecipitatePhase)
+  if (phaseTypeCombo->currentIndex() == DREAM3D::Reconstruction::PrecipitatePhase)
   {
     b = true;
   }

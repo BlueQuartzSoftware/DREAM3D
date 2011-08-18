@@ -45,7 +45,7 @@
 class QAbstractItemDelegate;
 
 /**
- * @class SGLogNormalTableModel SGLogNormalTableModel.h AIM/StatsGenerator/SGLogNormalTableModel.h
+ * @class SGLogNormalTableModel SGLogNormalTableModel.h StatsGenerator/SGLogNormalTableModel.h
  * @brief
  * @author Michael A. Jackson for BlueQuartz Software
  * @date Dec 22, 2010

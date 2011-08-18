@@ -162,7 +162,7 @@ void SurfaceMeshWidget::setupGui()
              this, SLOT(on_m_OutputDir_textChanged(const QString &)));
   }
 
-  m_ScalarsName->setText(QString::fromStdString(AIM::VTK::GrainIdScalarName));
+  m_ScalarsName->setText(QString::fromStdString(DREAM3D::VTK::GrainIdScalarName));
   messageLabel->setText("Any existing output files will be over written with new versions during the operation.");
   m_WidgetList << m_InputFile << messageLabel;
   m_WidgetList << m_ScalarsName << xDim << yDim << zDim;

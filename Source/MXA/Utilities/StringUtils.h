@@ -1,4 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
+
 //
 //  Copyright (c) 2006, Michael A. Jackson for BlueQuartz Software
 //  All rights reserved.
@@ -7,7 +7,7 @@
 //  This code was written under United States Air Force Contract number
 //                           FA8650-04-C-5229
 //
-///////////////////////////////////////////////////////////////////////////////
+
 #ifndef STRINGUTILITIES_H_
 #define STRINGUTILITIES_H_
 

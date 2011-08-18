@@ -72,7 +72,7 @@ class GrainGenerator : public AbstractPipeline
     MXA_INSTANCE_PROPERTY(int, YPoints)
     MXA_INSTANCE_PROPERTY(int, ZPoints)
 
-    MXA_INSTANCE_PROPERTY(std::vector<AIM::SyntheticBuilder::ShapeType>, ShapeTypes)
+    MXA_INSTANCE_PROPERTY(std::vector<DREAM3D::SyntheticBuilder::ShapeType>, ShapeTypes)
 
     MXA_INSTANCE_PROPERTY(double, XResolution)
     MXA_INSTANCE_PROPERTY(double, YResolution)
