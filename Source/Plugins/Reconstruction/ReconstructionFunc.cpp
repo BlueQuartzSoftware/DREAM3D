@@ -822,7 +822,7 @@ void ReconstructionFunc::align_sections()
 }
 void ReconstructionFunc::form_grains_sections()
 {
-  AIM_RANDOMNG_NEW()
+  DREAM3D_RANDOMNG_NEW()
 
   int point = 0;
   int seed = 0;
@@ -865,8 +865,8 @@ void ReconstructionFunc::form_grains_sections()
     while (noseeds == 0)
     {
       seed = -1;
-      randx = int(float(rg.Random()) * float(xpoints));
-      randy = int(float(rg.Random()) * float(ypoints));
+      randx = int(float(rg.genrand_res53()) * float(xpoints));
+      randy = int(float(rg.genrand_res53()) * float(ypoints));
       for (int j = 0; j < ypoints; ++j)
       {
         for (int i = 0; i < xpoints; ++i)
@@ -957,7 +957,7 @@ void ReconstructionFunc::form_grains_sections()
 
 void ReconstructionFunc::form_grains()
 {
-  AIM_RANDOMNG_NEW()
+  DREAM3D_RANDOMNG_NEW()
   int seed = 0;
   int noseeds = 0;
   size_t graincount = 1;
@@ -1006,7 +1006,7 @@ void ReconstructionFunc::form_grains()
   {
     seed = -1;
     int counter = 0;
-    randpoint = int(float(rg.Random()) * float(totalPMinus1));
+    randpoint = int(float(rg.genrand_res53()) * float(totalPMinus1));
     while (seed == -1 && counter < totalpoints)
     {
       if (randpoint > totalPMinus1) randpoint = randpoint - totalpoints;

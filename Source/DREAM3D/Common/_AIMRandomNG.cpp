@@ -34,10 +34,11 @@ AIMRandomNG::~AIMRandomNG()
 {
 }
 
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-double AIMRandomNG::Random()
+double AIMRandomNG::genrand_res53()
 {
   double c;
   c = (double)2111111111.0 * x[3] +
@@ -54,7 +55,7 @@ double AIMRandomNG::Random()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AIMRandomNG::RandomInit (uint32_t s)
+void AIMRandomNG::init_genrand (uint32_t s)
 {
   int i;
   //uint32_t s = seed;
@@ -63,13 +64,13 @@ void AIMRandomNG::RandomInit (uint32_t s)
     s = s * 29943829 - 1;
     x[i] = s * (1./(65536.*65536.));}
   // randomize some more
-  for (i=0; i<19; i++) Random();
+  for (i=0; i<19; i++) genrand_res53();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-double AIMRandomNG::RandBeta(double aa,double bb)
+double AIMRandomNG::genrand_beta(double aa,double bb)
 {
 #define expmax 89.0
 #define infnty 1.0E38
@@ -100,7 +101,7 @@ S20:
     gamma = a+1.0/beta;
 S30:
 S40:
-  u1 = Random();
+  u1 = genrand_res53();
     v = beta*log(u1/(1.0-u1));
     if(!(v > expmax)) goto S50;
     w = infnty;
@@ -140,8 +141,8 @@ S100:
     k2 = 0.25+(0.5+0.25/delta)*b;
 S110:
 S120:
-  u1 = Random();
-  u2 = Random();
+  u1 = genrand_res53();
+  u2 = genrand_res53();
     if(u1 >= 0.5) goto S130;
     y = u1*u2;
     z = u1*y;
@@ -185,7 +186,7 @@ S220:
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-double AIMRandomNG::RandNorm(double m, double s)
+double AIMRandomNG::genrand_norm(double m, double s)
 {
   const double p0 = 0.322232431088;     const double q0 = 0.099348462606;
   const double p1 = 1.0;                const double q1 = 0.588581570495;
@@ -194,7 +195,7 @@ double AIMRandomNG::RandNorm(double m, double s)
   const double p4 = 0.453642210148e-4;  const double q4 = 0.385607006340e-2;
   double u,t, p, q, z;
 
-  u = Random();
+  u = genrand_res53();
   if (u < 0.5)
     t = sqrt(-2.0 * log(u));
   else
@@ -207,3 +208,4 @@ double AIMRandomNG::RandNorm(double m, double s)
     z = t - (p / q);
   return (m + s * z);
 }
+

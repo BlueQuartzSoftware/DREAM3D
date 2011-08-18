@@ -414,7 +414,7 @@ class DREAM3DLib_EXPORT Texture
   //    float radtodeg = 180.0 / M_PI;
 
 
-      AIM_RANDOMNG_NEW()
+      DREAM3D_RANDOMNG_NEW()
       //  int err = 0;
       int mbin;
       float w = 0;
@@ -445,8 +445,8 @@ class DREAM3DLib_EXPORT Texture
 
       for (int i = 0; i < remainingcount; i++)
       {
-        random1 = rg.Random();
-        random2 = rg.Random();
+        random1 = rg.genrand_res53();
+        random2 = rg.genrand_res53();
         choose1 = 0;
         choose2 = 0;
 

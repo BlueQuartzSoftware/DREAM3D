@@ -19,6 +19,7 @@
 #ifndef AIMRANDOMNG_H_
 #define AIMRANDOMNG_H_
 
+#error THIS FILE IS NO LONGER USED. Use DREAM3DRandom.h instead
 
 
 #if defined (_MSC_VER)
@@ -30,6 +31,7 @@
 #include "MXA/Common/LogTime.h"
 
 #include "DREAM3D/DREAM3DConfiguration.h"
+//#include "DREAM3D/Common/AIMRandomNG.h"
 
 /**
 * @class AIMRandomNG AIMRandomNG.h AIM/Common/AIMRandomNG.h
@@ -44,13 +46,20 @@ class DREAM3DLib_EXPORT  AIMRandomNG
     AIMRandomNG();
     virtual ~AIMRandomNG();
 
-    void RandomInit(uint32_t);
-    double Random();
-    double RandBeta(double, double);
-    double RandNorm(double, double);
-    double x [ 5 ];
+    void init_genrand(uint32_t);
+    /**
+     * @brief Returns a random number between 0.0 and 1.0
+     */
+    double genrand_res53();
+
+
+    double genrand_beta(double, double);
+    double genrand_norm(double, double);
+
 
   private:
+    double x [ 5 ];
+
     AIMRandomNG(const AIMRandomNG&); // Copy Constructor Not Implemented
     void operator=(const AIMRandomNG&); // Operator '=' Not Implemented
 };
@@ -71,19 +80,19 @@ class DREAM3DLib_EXPORT  AIMRandomNG
   * second 32 bits.
   */
 
-#define AIM_RANDOMNG_NEW()\
+#define DREAM3D_RANDOMNG_NEW()\
 AIMRandomNG rg;\
 {\
 unsigned long long int seed = MXA::getMilliSeconds();\
 unsigned int* seedPtr = reinterpret_cast<unsigned int*> (&seed);\
-rg.RandomInit(seedPtr[AIMRNG_OFFSET]);\
+rg.init_genrand(seedPtr[AIMRNG_OFFSET]);\
 }
 
-#define AIM_RANDOMNG_NEW_SEEDED(seed)\
+#define DREAM3D_RANDOMNG_NEW_SEEDED(seed)\
 AIMRandomNG rg;\
 {\
 unsigned int* seedPtr = reinterpret_cast<unsigned int*> (&seed);\
-rg.RandomInit(seedPtr[AIMRNG_OFFSET]);\
+rg.init_genrand(seedPtr[AIMRNG_OFFSET]);\
 }
 
 #endif /* AIMRANDOMNG_H_ */

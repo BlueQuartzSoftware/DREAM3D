@@ -36,7 +36,7 @@
 #include "MXA/Common/MXASetGetMacros.h"
 #include "DREAM3D/DREAM3DConfiguration.h"
 #include "DREAM3D/Common/Constants.h"
-#include "DREAM3D/Common/AIMRandomNG.h"
+#include "DREAM3D/Common/DREAM3DRandom.h"
 #include "DREAM3D/Common/AIMMath.h"
 
 #define MULT_QUAT(q1, q2, out)\
