@@ -43,7 +43,7 @@
 #include "QtSupport/DREAM3DPluginInterface.h"
 
 class SurfaceMeshWidget;
-class AIMPluginFrame;
+class Dream3DPluginFrame;
 
 DREAM3D_PLUGIN_CONSTANTS(SurfaceMesh, Surface Mesh)
 
@@ -60,7 +60,7 @@ class SurfaceMeshPlugin : public QObject, public DREAM3DPluginInterface
     QString getPluginName();
 
     virtual QWidget* getInputWidget(QWidget* parent);
-    virtual AIMPluginFrame* getPluginFrame(QWidget* parent);
+    virtual Dream3DPluginFrame* getPluginFrame(QWidget* parent);
 
     virtual void writeSettings(QSettings &prefs);
     virtual void readSettings(QSettings &prefs);

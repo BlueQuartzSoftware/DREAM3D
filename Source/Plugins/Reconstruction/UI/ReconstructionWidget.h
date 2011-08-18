@@ -42,7 +42,7 @@
 
 #include "ui_ReconstructionWidget.h"
 
-#include "QtSupport/AIMPluginFrame.h"
+#include "QtSupport/DREAM3DPluginFrame.h"
 #include "QReconstruction.h"
 
 class QualityMetricTableModel;
@@ -57,7 +57,7 @@ class QualityMetricTableModel;
  * @date Jan 30, 2011
  * @version 1.0
  */
-class ReconstructionWidget : public AIMPluginFrame, private Ui::ReconstructionWidget
+class ReconstructionWidget : public Dream3DPluginFrame, private Ui::ReconstructionWidget
 {
   Q_OBJECT
   public:

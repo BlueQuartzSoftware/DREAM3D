@@ -56,13 +56,13 @@ class QLineEdit;
  * @date Jan 30, 2011
  * @version 1.0
  */
-class AIMPluginFrame : public QFrame
+class Dream3DPluginFrame : public QFrame
 {
     Q_OBJECT;
 
   public:
-    AIMPluginFrame(QWidget *parent = 0);
-    virtual ~AIMPluginFrame();
+    Dream3DPluginFrame(QWidget *parent = 0);
+    virtual ~Dream3DPluginFrame();
 
     /**
       * @brief Reads the Preferences from the users pref file
@@ -171,8 +171,8 @@ class AIMPluginFrame : public QFrame
     private:
       QStatusBar*    m_StatusBar;
 
-      AIMPluginFrame(const AIMPluginFrame&); // Copy Constructor Not Implemented
-      void operator=(const AIMPluginFrame&); // Operator '=' Not Implemented
+      Dream3DPluginFrame(const Dream3DPluginFrame&); // Copy Constructor Not Implemented
+      void operator=(const Dream3DPluginFrame&); // Operator '=' Not Implemented
 };
 
 #endif /* _AIM_PLUGIN_FRAME_H_ */

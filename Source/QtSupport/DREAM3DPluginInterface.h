@@ -86,7 +86,7 @@ namespace DREAM3D\
 
 
 
-class AIMPluginFrame;
+class Dream3DPluginFrame;
 
 /**
  * @class DREAM3DPluginInterface DREAM3DPluginInterface.h IPHelper/plugins/DREAM3DPluginInterface.h
@@ -168,7 +168,7 @@ class DREAM3DPluginInterface
     virtual QWidget* getInputWidget(QWidget* parent) = 0;
 
 
-    virtual AIMPluginFrame* getPluginFrame(QWidget* parent) = 0;
+    virtual Dream3DPluginFrame* getPluginFrame(QWidget* parent) = 0;
 
     /**
      * @brief Writes the settings in the input gui to the Application's preference file

@@ -33,54 +33,65 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-
-#ifndef OIMImportPlugin_H_
-#define OIMImportPlugin_H_
-
-#include <QtCore/QObject>
-#include <QtCore/QSettings>
-#include "QtSupport/DREAM3DPluginInterface.h"
-
-class OIMImportWidget;
-class AIMPluginFrame;
+#ifndef EbsdImport_H_
+#define EbsdImport_H_
 
 
-DREAM3D_PLUGIN_CONSTANTS(OIMImport, OIM Import)
+
+#if defined (_MSC_VER)
+#define WIN32_LEAN_AND_MEAN   // Exclude rarely-used stuff from Windows headers
+#endif
 
 
-class OIMImportPlugin : public QObject, public DREAM3DPluginInterface
+#include <vector>
+#include <string>
+
+#include "MXA/Common/MXASetGetMacros.h"
+#include "MXA/MXATypes.h"
+
+#include "DREAM3D/DREAM3DConfiguration.h"
+#include "DREAM3D/Common/Constants.h"
+#include "DREAM3D/Common/AbstractPipeline.h"
+
+
+/**
+ * @class EbsdImport EbsdImport.h EbsdImport/EbsdImport.h
+ * @brief This class is used to import multiple EBSD files into an HDF5 file.
+ * @author Michael A. Jackson for BlueQuartz Software
+ * @author Dr. Michael Groeber, US Air Force Research Laboratories
+ * @date March 23, 2011
+ * @version 1.2
+ *
+ */
+class EbsdImport : public AbstractPipeline
 {
-    Q_OBJECT;
-    Q_INTERFACES(DREAM3DPluginInterface)
-
   public:
-    OIMImportPlugin();
-    virtual ~OIMImportPlugin();
+    MXA_SHARED_POINTERS(EbsdImport)
+    MXA_TYPE_MACRO(EbsdImport)
+    MXA_STATIC_NEW_MACRO(EbsdImport)
 
-    QString getPluginName();
+    virtual ~EbsdImport();
 
-    virtual QWidget* getInputWidget(QWidget* parent);
-    virtual AIMPluginFrame* getPluginFrame(QWidget* parent);
+    MXA_INSTANCE_STRING_PROPERTY(OutputFile)
+    MXA_INSTANCE_PROPERTY(int, ZStartIndex)
+    MXA_INSTANCE_PROPERTY(int, ZEndIndex)
+    MXA_INSTANCE_PROPERTY(float, ZResolution)
+    MXA_INSTANCE_PROPERTY(std::vector<std::string>, EbsdFileList);
 
-
-    virtual void writeSettings(QSettings &prefs);
-    virtual void readSettings(QSettings &prefs);
-    virtual QIcon icon();
-    virtual QUrl htmlHelpIndexFile();
-
-  public slots:
-    virtual void displayHelp();
-
-  signals:
-    void showHelp(QUrl);
-
+    /**
+     * @brief Main method to run the operation
+     */
+    void execute();
 
   protected:
-    OIMImportWidget* m_InputWidget;
+    EbsdImport();
+
 
   private:
-    OIMImportPlugin(const OIMImportPlugin&); // Copy Constructor Not Implemented
-    void operator=(const OIMImportPlugin&); // Operator '=' Not Implemented
+
+    EbsdImport(const EbsdImport&); // Copy Constructor Not Implemented
+    void operator=(const EbsdImport&); // Operator '=' Not Implemented
 };
 
-#endif /* OIMImportPlugin_H_ */
+
+#endif /* EbsdImport_H_ */

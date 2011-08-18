@@ -56,7 +56,7 @@
 #include "DREAM3D/HDF5/H5ReconStatsReader.h"
 #include "DREAM3D/HDF5/H5ReconStatsWriter.h"
 
-#include "QtSupport/AIM_QtMacros.h"
+#include "QtSupport/DREAM3DQtMacros.h"
 #include "QtSupport/QR3DFileCompleter.h"
 #include "QtSupport/QCheckboxDialog.h"
 
@@ -68,7 +68,7 @@ const static float m_pi = M_PI;
 //
 // -----------------------------------------------------------------------------
 GrainGeneratorWidget::GrainGeneratorWidget(QWidget *parent) :
-AIMPluginFrame(parent),
+Dream3DPluginFrame(parent),
 m_GrainGenerator(NULL),
 m_WorkerThread(NULL),
 m_WriteSurfaceVoxelScalars(true),

@@ -42,7 +42,7 @@ target_link_libraries(ODFTest DREAM3DLib)
 
 # --------
 add_executable(AngReaderTest ${AIMTest_SOURCE_DIR}/AngReaderTest.cpp 
-                            ${DREAM3D_SOURCE_DIR}/Source/Plugins/OIMImport/OIMImport.cpp)
+                            ${DREAM3D_SOURCE_DIR}/Source/Plugins/EbsdImport/EbsdImport.cpp)
 target_link_libraries(AngReaderTest DREAM3DLib)
 
 # --------

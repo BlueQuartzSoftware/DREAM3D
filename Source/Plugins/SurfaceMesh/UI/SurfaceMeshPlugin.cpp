@@ -36,7 +36,7 @@
 
 #include "SurfaceMeshPlugin.h"
 #include "SurfaceMeshWidget.h"
-#include "QtSupport/AIMPluginFrame.h"
+#include "QtSupport/DREAM3DPluginFrame.h"
 #include "QtSupport/HelpDialog.h"
 
 Q_EXPORT_PLUGIN2(SurfaceMeshPlugin, SurfaceMeshPlugin)
@@ -79,9 +79,9 @@ QWidget* SurfaceMeshPlugin::getInputWidget(QWidget* parent)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AIMPluginFrame* SurfaceMeshPlugin::getPluginFrame(QWidget* parent)
+Dream3DPluginFrame* SurfaceMeshPlugin::getPluginFrame(QWidget* parent)
 {
-  AIMPluginFrame* frame = qobject_cast<AIMPluginFrame*>(m_InputWidget);
+  Dream3DPluginFrame* frame = qobject_cast<Dream3DPluginFrame*>(m_InputWidget);
   return frame;
 }
 

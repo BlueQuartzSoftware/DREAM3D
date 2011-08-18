@@ -45,7 +45,7 @@
 #include "EbsdLib/TSL/AngReader.h"
 #include "EbsdLib/TSL/H5AngReader.h"
 
-#include "OIMImport/OIMImport.h"
+#include "EbsdImport/EbsdImport.h"
 
 
 #if _WIN32_
@@ -86,7 +86,7 @@ int main(int argc, char **argv)
   std::vector<std::string> filelist;
   filelist.push_back(angFile);
 
-  OIMImport::Pointer h5importer = OIMImport::New();
+  EbsdImport::Pointer h5importer = EbsdImport::New();
   h5importer->setEbsdFileList(filelist);
   h5importer->setOutputFile(std::string(H5ANG_FILE) );
   h5importer->setZStartIndex(0);

@@ -43,7 +43,7 @@
 
 #include "ui_GrainGeneratorWidget.h"
 
-#include "QtSupport/AIMPluginFrame.h"
+#include "QtSupport/DREAM3DPluginFrame.h"
 #include "QGrainGenerator.h"
 
 class QListWidgetItem;
@@ -59,7 +59,7 @@ class QComboBox;
  * @date Jan 30, 2011
  * @version 1.0
  */
-class GrainGeneratorWidget : public AIMPluginFrame, private Ui::GrainGeneratorWidget
+class GrainGeneratorWidget : public Dream3DPluginFrame, private Ui::GrainGeneratorWidget
 {
   Q_OBJECT
 

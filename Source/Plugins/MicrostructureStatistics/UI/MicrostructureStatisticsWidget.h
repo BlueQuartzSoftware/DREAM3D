@@ -42,7 +42,7 @@
 
 #include "ui_MicrostructureStatisticsWidget.h"
 
-#include "QtSupport/AIMPluginFrame.h"
+#include "QtSupport/DREAM3DPluginFrame.h"
 #include "QMicrostructureStatistics.h"
 
 class QListWidgetItem;
@@ -57,7 +57,7 @@ class QListWidgetItem;
  * @date May 30, 2011
  * @version 1.0
  */
-class MicrostructureStatisticsWidget : public AIMPluginFrame, private Ui::MicrostructureStatisticsWidget
+class MicrostructureStatisticsWidget : public Dream3DPluginFrame, private Ui::MicrostructureStatisticsWidget
 {
   Q_OBJECT
 
