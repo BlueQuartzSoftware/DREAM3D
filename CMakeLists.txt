@@ -34,6 +34,11 @@ SET (CMAKE_ARCHIVE_OUTPUT_DIRECTORY
   "Single Directory for all static libraries."
   )
 
+# We are going to use Git functionality to create a version number for our package
+# The specific functionality we are going to use is the 'git describe' function
+# which should return the latest tag, the number commits since that tag and the
+# SHA1 of that commit. If we fail to find git then we fall back to a manually
+# entered version number.
 Find_package(Git)
 
 if (GIT_FOUND)
@@ -140,7 +145,7 @@ SET (Boost_FIND_REQUIRED TRUE)
 SET (Boost_DEBUG FALSE)
 set (Boost_USE_MULTITHREADED TRUE)
 set (Boost_USE_STATIC_LIBS TRUE)
-SET (Boost_ADDITIONAL_VERSIONS "1.44.0" "1.44" "1.36" "1.36.0" "1.41" "1.41.0" "1.39" "1.39.0")
+SET (Boost_ADDITIONAL_VERSIONS "1.47.0" "1.46.0" "1.44.0" "1.44" "1.41" "1.41.0" "1.39" "1.39.0")
 SET (MXA_BOOST_COMPONENTS "")
 FIND_PACKAGE(Boost COMPONENTS  ${MXA_BOOST_COMPONENTS} )
 INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIRS})
@@ -227,6 +232,14 @@ include_directories (${DREAM3D_BINARY_DIR})
 include_directories(${DREAM3D_SOURCE_DIR}/Source)
 add_subdirectory( ${DREAM3D_SOURCE_DIR}/Source/DREAM3D/ ${DREAM3D_BINARY_DIR}/DREAM3D)
 
+
+# --------------------------------------------------------------------
+# This function optionally compiles a named plugin when compiling DREAM3D
+# This function will add in an Option "DREAM3D_BUILD_PLUGIN_${NAME} which
+# the programmer can use to enable/disable the compiling of specific plugins
+# Arguments:
+# PLUGIN_NAME The name of the Plugin
+# PLUGIN_SOURCE_DIR The source directory for the plugin
 function(DREAM3D_COMPILE_PLUGIN)
     set(options)
     set(oneValueArgs PLUGIN_NAME PLUGIN_SOURCE_DIR)
@@ -241,7 +254,6 @@ function(DREAM3D_COMPILE_PLUGIN)
     endif()
 
 endfunction()
-
 
 
 option(DREAM3D_BUILD_QT_APPS "Compile the Qt based GUI applications" ON)
@@ -275,11 +287,7 @@ if (DREAM3D_BUILD_QT_APPS)
    # will not work due to signals/slots mechanism.
    add_subdirectory(${DREAM3D_SOURCE_DIR}/Source/QtSupport ${DREAM3D_BINARY_DIR}/QtSupport)
   
-#   macro(DREAM3D_COMPILE_PLUGIN plugin)
-#       add_subdirectory(${DREAM3D_SOURCE_DIR}/Source/Plugins/${plugin} ${DREAM3D_BINARY_DIR}/Plugins/${plugin})  
-#   endmacro()
-  
-     # Build the DREAM3D Application  
+   # Build the DREAM3D Application  
    option(DREAM3D_BUILD_GUI "Compile the DREAM3D GUI Application" ON)
    if (DREAM3D_BUILD_GUI)
    
@@ -312,7 +320,8 @@ if (DREAM3D_BUILD_QT_APPS)
         endforeach()
         
         
-        # --- Look for user defined external Plugins that the user has entered into CMake-GUI or through CCMake
+        # --- Look for user defined external Plugins that the user has entered 
+        # into CMake-GUI or through CCMake by the user.
         set(DREAM3D_EXTRA_PLUGINS "" CACHE LIST "Semicolon delimited list of Extra External Plugins that you want to build into DREAM.3D")
         
         #-- Attempt to look in our local source directory for the plugin. Anywhere else
@@ -361,7 +370,7 @@ else()
     set (DREAM3D_BUILD_STATS_GENERATOR "OFF" CACHE BOOL "" FORCE)
 endif()
 
-# add the Reconstruction Command line Tool
+# add the Command line utilities
 IF ( DREAM3D_BUILD_CLI_TOOLS )
     add_subdirectory( ${DREAM3D_SOURCE_DIR}/Source/Tools ${DREAM3D_BINARY_DIR}/Tools)
 endif()
@@ -371,12 +380,6 @@ OPTION(DREAM3D_BUILD_TESTING "Compile the test programs" ON)
 if (DREAM3D_BUILD_TESTING)
     ENABLE_TESTING()
     add_subdirectory(${DREAM3D_SOURCE_DIR}/Source/Test ${DREAM3D_BINARY_DIR}/Test)
-endif()
-
-# Should we build the Example program that was originally for CMU's use
-option(DREAM3D_BUILD_CMU "Compile the CMU Optimization Wrappers" OFF)
-if(DREAM3D_BUILD_CMU)
-    add_subdirectory(${DREAM3D_SOURCE_DIR}/Source/CMU ${DREAM3D_BINARY_DIR}/AIM/CMU)
 endif()
 
 # Should we build the documentation using DOxygen
