@@ -13,8 +13,8 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
- * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
@@ -33,65 +33,54 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef OIMIMPORT_H_
-#define OIMIMPORT_H_
+
+#ifndef EbsdImportPlugin_H_
+#define EbsdImportPlugin_H_
+
+#include <QtCore/QObject>
+#include <QtCore/QSettings>
+#include "QtSupport/DREAM3DPluginInterface.h"
+
+class EbsdImportWidget;
+class Dream3DPluginFrame;
 
 
-
-#if defined (_MSC_VER)
-#define WIN32_LEAN_AND_MEAN   // Exclude rarely-used stuff from Windows headers
-#endif
+DREAM3D_PLUGIN_CONSTANTS(EbsdImport, EBSD Import)
 
 
-#include <vector>
-#include <string>
-
-#include "MXA/Common/MXASetGetMacros.h"
-#include "MXA/MXATypes.h"
-
-#include "DREAM3D/DREAM3DConfiguration.h"
-#include "DREAM3D/Common/Constants.h"
-#include "DREAM3D/Common/AbstractPipeline.h"
-
-
-/**
- * @class OIMImport OIMImport.h OIMImport/OIMImport.h
- * @brief This class is used to import multiple EBSD files into an HDF5 file.
- * @author Michael A. Jackson for BlueQuartz Software
- * @author Dr. Michael Groeber, US Air Force Research Laboratories
- * @date March 23, 2011
- * @version 1.2
- *
- */
-class OIMImport : public AbstractPipeline
+class EbsdImportPlugin : public QObject, public DREAM3DPluginInterface
 {
+    Q_OBJECT;
+    Q_INTERFACES(DREAM3DPluginInterface)
+
   public:
-    MXA_SHARED_POINTERS(OIMImport)
-    MXA_TYPE_MACRO(OIMImport)
-    MXA_STATIC_NEW_MACRO(OIMImport)
+    EbsdImportPlugin();
+    virtual ~EbsdImportPlugin();
 
-    virtual ~OIMImport();
+    QString getPluginName();
 
-    MXA_INSTANCE_STRING_PROPERTY(OutputFile)
-    MXA_INSTANCE_PROPERTY(int, ZStartIndex)
-    MXA_INSTANCE_PROPERTY(int, ZEndIndex)
-    MXA_INSTANCE_PROPERTY(float, ZResolution)
-    MXA_INSTANCE_PROPERTY(std::vector<std::string>, EbsdFileList);
+    virtual QWidget* getInputWidget(QWidget* parent);
+    virtual Dream3DPluginFrame* getPluginFrame(QWidget* parent);
 
-    /**
-     * @brief Main method to run the operation
-     */
-    void execute();
+
+    virtual void writeSettings(QSettings &prefs);
+    virtual void readSettings(QSettings &prefs);
+    virtual QIcon icon();
+    virtual QUrl htmlHelpIndexFile();
+
+  public slots:
+    virtual void displayHelp();
+
+  signals:
+    void showHelp(QUrl);
+
 
   protected:
-    OIMImport();
-
+    EbsdImportWidget* m_InputWidget;
 
   private:
-
-    OIMImport(const OIMImport&); // Copy Constructor Not Implemented
-    void operator=(const OIMImport&); // Operator '=' Not Implemented
+    EbsdImportPlugin(const EbsdImportPlugin&); // Copy Constructor Not Implemented
+    void operator=(const EbsdImportPlugin&); // Operator '=' Not Implemented
 };
 
-
-#endif /* OIMIMPORT_H_ */
+#endif /* EbsdImportPlugin_H_ */

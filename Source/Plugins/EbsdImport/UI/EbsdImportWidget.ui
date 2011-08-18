@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>OIMImportWidget</class>
- <widget class="QWidget" name="OIMImportWidget">
+ <class>EbsdImportWidget</class>
+ <widget class="QWidget" name="EbsdImportWidget">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -43,7 +43,7 @@
      <item>
       <widget class="QLabel" name="label_47">
        <property name="text">
-        <string>Total Ang Files Found:</string>
+        <string>Total Ebsd Files Found:</string>
        </property>
       </widget>
      </item>

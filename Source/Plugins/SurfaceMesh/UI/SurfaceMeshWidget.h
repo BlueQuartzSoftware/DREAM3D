@@ -42,7 +42,7 @@
 
 #include "ui_SurfaceMeshWidget.h"
 
-#include "QtSupport/AIMPluginFrame.h"
+#include "QtSupport/DREAM3DPluginFrame.h"
 #include "QSurfaceMesh.h"
 
 /**
@@ -54,7 +54,7 @@
  * @date Jan 30, 2011
  * @version 1.0
  */
-class SurfaceMeshWidget : public AIMPluginFrame, private Ui::SurfaceMeshWidget
+class SurfaceMeshWidget : public Dream3DPluginFrame, private Ui::SurfaceMeshWidget
 {
   Q_OBJECT
 

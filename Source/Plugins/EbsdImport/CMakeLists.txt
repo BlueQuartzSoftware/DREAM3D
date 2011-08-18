@@ -3,9 +3,9 @@
 #  All rights reserved.
 #  BSD License: http://www.opensource.org/licenses/bsd-license.html
 #///////////////////////////////////////////////////////////////////////////////
-project(OIMImportPlugin)
+project(EbsdImportPlugin)
 
-set(PLUGIN_NAME OIMImport)
+set(PLUGIN_NAME EbsdImport)
 
 # ------------------------------------------------------------------------------
 #  Qt 4 Section
@@ -26,62 +26,62 @@ include_directories(${PROJECT_CODE_DIR} )
 include_directories(${PROJECT_CODE_DIR}/QtSupport )
 include_directories(${DREAM3D_BINARY_DIR}/QtSupport)
 
-set(CLASS_NAME "OIMImport")
+set(CLASS_NAME "EbsdImport")
 SET(ORIGINAL_FILE ${PROJECT_CODE_DIR}/QtSupport/QAbstractPipelineWrapper.h.in)
 configure_file( ${PROJECT_CODE_DIR}/QtSupport/QAbstractPipelineWrapper.h.in
                 ${${CLASS_NAME}Plugin_BINARY_DIR}/Q${CLASS_NAME}.h @ONLY IMMEDIATE)
 
 
-set (OIMImportPlugin_UI_HDRS
+set (EbsdImportPlugin_UI_HDRS
     ${${CLASS_NAME}Plugin_BINARY_DIR}/Q${CLASS_NAME}.h
-    ${PROJECT_SOURCE_DIR}/UI/OIMImportPlugin.h
-    ${PROJECT_SOURCE_DIR}/UI/OIMImportWidget.h
-    ${PROJECT_CODE_DIR}/QtSupport/AIMPluginFrame.h
+    ${PROJECT_SOURCE_DIR}/UI/EbsdImportPlugin.h
+    ${PROJECT_SOURCE_DIR}/UI/EbsdImportWidget.h
+    ${PROJECT_CODE_DIR}/QtSupport/DREAM3DPluginFrame.h
     )
     
-set (OIMImportPlugin_UI_SRCS 
-    ${PROJECT_SOURCE_DIR}/UI/OIMImportPlugin.cpp
-    ${PROJECT_SOURCE_DIR}/UI/OIMImportWidget.cpp
-    ${PROJECT_CODE_DIR}/QtSupport/AIMPluginFrame.cpp
+set (EbsdImportPlugin_UI_SRCS 
+    ${PROJECT_SOURCE_DIR}/UI/EbsdImportPlugin.cpp
+    ${PROJECT_SOURCE_DIR}/UI/EbsdImportWidget.cpp
+    ${PROJECT_CODE_DIR}/QtSupport/DREAM3DPluginFrame.cpp
     )
 
 # -- Run MOC and UIC on the necessary files   
-QT4_ADD_RESOURCES( OIMImportPlugin_Generated_RC_SRCS 
+QT4_ADD_RESOURCES( EbsdImportPlugin_Generated_RC_SRCS 
             ${PROJECT_SOURCE_DIR}/UI/Icons.qrc
 )
     
-QT4_WRAP_UI( OIMImportPlugin_Generated_UI_HDRS 
-            ${PROJECT_SOURCE_DIR}/UI/OIMImportWidget.ui )
+QT4_WRAP_UI( EbsdImportPlugin_Generated_UI_HDRS 
+            ${PROJECT_SOURCE_DIR}/UI/EbsdImportWidget.ui )
 
-QT4_WRAP_CPP( OIMImportPlugin_Generated_MOC_SRCS ${OIMImportPlugin_UI_HDRS} )
+QT4_WRAP_CPP( EbsdImportPlugin_Generated_MOC_SRCS ${EbsdImportPlugin_UI_HDRS} )
 
-cmp_IDE_SOURCE_PROPERTIES("OIMImport/UI/" "${OIMImportPlugin_UI_HDRS}" "${OIMImportPlugin_UI_SRCS}" "0")
-cmp_IDE_SOURCE_PROPERTIES("Generated" "${OIMImportPlugin_Generated_UI_HDRS};${OIMImportPlugin_Generated_RC_SRCS}" "${OIMImportPlugin_Generated_MOC_SRCS}" "0")
+cmp_IDE_SOURCE_PROPERTIES("EbsdImport/UI/" "${EbsdImportPlugin_UI_HDRS}" "${EbsdImportPlugin_UI_SRCS}" "0")
+cmp_IDE_SOURCE_PROPERTIES("Generated" "${EbsdImportPlugin_Generated_UI_HDRS};${EbsdImportPlugin_Generated_RC_SRCS}" "${EbsdImportPlugin_Generated_MOC_SRCS}" "0")
 
 #-- Setup NON Qt Source files
-SET (OIMImport_HDRS
-  ${PROJECT_SOURCE_DIR}/OIMImport.h
+SET (EbsdImport_HDRS
+  ${PROJECT_SOURCE_DIR}/EbsdImport.h
 )
 
-SET (OIMImport_SRCS
- ${PROJECT_SOURCE_DIR}/OIMImport.cpp
+SET (EbsdImport_SRCS
+ ${PROJECT_SOURCE_DIR}/EbsdImport.cpp
 )
-cmp_IDE_SOURCE_PROPERTIES( "OIMImport/" "${OIMImport_HDRS}" "${OIMImport_SRCS}" "0")
+cmp_IDE_SOURCE_PROPERTIES( "EbsdImport/" "${EbsdImport_HDRS}" "${EbsdImport_SRCS}" "0")
 if ( ${DREAM3D_INSTALL_FILES} EQUAL 1 )
-    INSTALL (FILES ${OIMImport_HDRS}
-            DESTINATION include/DREAM3D/OIMImport
+    INSTALL (FILES ${EbsdImport_HDRS}
+            DESTINATION include/DREAM3D/EbsdImport
             COMPONENT Headers   )
 endif()
 
-set (OIMImportPlugin_PROJECT_SRCS
-    ${OIMImportPlugin_UI_SRCS}
-    ${OIMImportPlugin_UI_HDRS}
-    ${OIMImportPlugin_Generated_MOC_SRCS} 
-    ${OIMImportPlugin_Generated_UI_HDRS}
-    ${OIMImportPlugin_Generated_RC_SRCS}
+set (EbsdImportPlugin_PROJECT_SRCS
+    ${EbsdImportPlugin_UI_SRCS}
+    ${EbsdImportPlugin_UI_HDRS}
+    ${EbsdImportPlugin_Generated_MOC_SRCS} 
+    ${EbsdImportPlugin_Generated_UI_HDRS}
+    ${EbsdImportPlugin_Generated_RC_SRCS}
     ${PROJECT_CODE_DIR}/QtSupport/DREAM3DPluginInterface.h
-    ${OIMImport_HDRS}
-    ${OIMImport_SRCS}
+    ${EbsdImport_HDRS}
+    ${EbsdImport_SRCS}
 )
 
 
@@ -89,8 +89,8 @@ set (OIMImportPlugin_PROJECT_SRCS
 if(NOT MSVC)
   SET (CMAKE_LIBRARY_OUTPUT_DIRECTORY  ${DREAM3D_BINARY_DIR}/Bin/plugins  )
 endif()
-add_library(OIMImportPlugin MODULE ${OIMImportPlugin_PROJECT_SRCS})
-target_link_libraries(OIMImportPlugin 
+add_library(EbsdImportPlugin MODULE ${EbsdImportPlugin_PROJECT_SRCS})
+target_link_libraries(EbsdImportPlugin 
                     MXADataModel
                     DREAM3DLib
                     ${QT_QTCORE_LIBRARY}   
@@ -98,7 +98,7 @@ target_link_libraries(OIMImportPlugin
                     QtSupport 
                      )
 
-PluginProperties(OIMImportPlugin "_debug" "${DREAM3D_VERSION}" 
+PluginProperties(EbsdImportPlugin "_debug" "${DREAM3D_VERSION}" 
                 "${DREAM3D_BINARY_DIR}" "${CMP_PLUGIN_LIST_FILE}")
 
 if (NOT MSVC)

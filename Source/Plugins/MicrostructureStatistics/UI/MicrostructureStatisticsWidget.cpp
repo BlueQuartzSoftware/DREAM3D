@@ -53,7 +53,7 @@
 #include "DREAM3D/HDF5/H5ReconStatsReader.h"
 #include "DREAM3D/HDF5/H5ReconStatsWriter.h"
 
-#include "QtSupport/AIM_QtMacros.h"
+#include "QtSupport/DREAM3DQtMacros.h"
 #include "QtSupport/QR3DFileCompleter.h"
 #include "QtSupport/QCheckboxDialog.h"
 #include "DREAM3D/HDF5/H5VoxelReader.h"
@@ -64,7 +64,7 @@
 //
 // -----------------------------------------------------------------------------
 MicrostructureStatisticsWidget::MicrostructureStatisticsWidget(QWidget *parent) :
-  AIMPluginFrame(parent), m_MicrostructureStatistics(NULL), m_WorkerThread(NULL),
+  Dream3DPluginFrame(parent), m_MicrostructureStatistics(NULL), m_WorkerThread(NULL),
 #if defined(Q_WS_WIN)
       m_OpenDialogLastDirectory("C:\\")
 #else

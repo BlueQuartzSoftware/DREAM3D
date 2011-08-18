@@ -36,7 +36,7 @@
 
 #include "ReconstructionPlugin.h"
 #include "ReconstructionWidget.h"
-#include "QtSupport/AIMPluginFrame.h"
+#include "QtSupport/DREAM3DPluginFrame.h"
 #include "QtSupport/HelpDialog.h"
 
 Q_EXPORT_PLUGIN2(ReconstructionPlugin, ReconstructionPlugin)
@@ -79,9 +79,9 @@ QWidget* ReconstructionPlugin::getInputWidget(QWidget* parent)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AIMPluginFrame* ReconstructionPlugin::getPluginFrame(QWidget* parent)
+Dream3DPluginFrame* ReconstructionPlugin::getPluginFrame(QWidget* parent)
 {
-  AIMPluginFrame* frame = qobject_cast<AIMPluginFrame*>(m_InputWidget);
+  Dream3DPluginFrame* frame = qobject_cast<Dream3DPluginFrame*>(m_InputWidget);
   return frame;
 }
 

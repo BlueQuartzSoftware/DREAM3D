@@ -58,7 +58,7 @@
 #include "DREAM3D/Common/PhaseType.h"
 
 #include "QtSupport/QR3DFileCompleter.h"
-#include "QtSupport/AIM_QtMacros.h"
+#include "QtSupport/DREAM3DQtMacros.h"
 #include "QtSupport/QCheckboxDialog.h"
 
 #include "H5Support/H5Utilities.h"
@@ -80,7 +80,7 @@
 //
 // -----------------------------------------------------------------------------
 ReconstructionWidget::ReconstructionWidget(QWidget *parent) :
-AIMPluginFrame(parent),
+Dream3DPluginFrame(parent),
 m_Reconstruction(NULL),
 m_WorkerThread(NULL),
 m_phaseTypeEdited(false),

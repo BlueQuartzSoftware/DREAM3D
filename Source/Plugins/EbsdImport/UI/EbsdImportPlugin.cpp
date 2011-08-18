@@ -34,27 +34,27 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "AIMPluginFrame.h"
+#include "EbsdImportPlugin.h"
+#include "EbsdImportWidget.h"
+#include "QtSupport/DREAM3DPluginFrame.h"
+#include "QtSupport/HelpDialog.h"
 
-#include <QtCore/QFileInfo>
-#include <QtCore/QDir>
-
-#include <QtGui/QLineEdit>
-#include <QtGui/QMessageBox>
+Q_EXPORT_PLUGIN2(EbsdImportPlugin, EbsdImportPlugin)
+;
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AIMPluginFrame::AIMPluginFrame(QWidget *parent) :
-QFrame(parent),
-m_StatusBar(NULL)
+EbsdImportPlugin::EbsdImportPlugin() :
+m_InputWidget(NULL)
 {
+  m_InputWidget = new EbsdImportWidget(NULL);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AIMPluginFrame::~AIMPluginFrame()
+EbsdImportPlugin::~EbsdImportPlugin()
 {
 
 }
@@ -62,104 +62,68 @@ AIMPluginFrame::~AIMPluginFrame()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool AIMPluginFrame::verifyOutputPathParentExists(QString outFilePath, QLineEdit* lineEdit)
+QString EbsdImportPlugin::getPluginName()
 {
-  QFileInfo fileinfo(outFilePath);
-  QDir parent (fileinfo.dir() );
-//  if (false == parent.exists() )
-//  {
-//    lineEdit->setStyleSheet("border: 1px solid red;");
-//  }
-//  else
-//  {
-//    lineEdit->setStyleSheet("");
-//  }
-  return parent.exists();
+  return QString::fromStdString(DREAM3D::UIPlugins::EbsdImportDisplayName);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QWidget* EbsdImportPlugin::getInputWidget(QWidget* parent)
+{
+  m_InputWidget->setParent(parent);
+  return m_InputWidget;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+Dream3DPluginFrame* EbsdImportPlugin::getPluginFrame(QWidget* parent)
+{
+  Dream3DPluginFrame* frame = qobject_cast<Dream3DPluginFrame*>(m_InputWidget);
+  return frame;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void EbsdImportPlugin::writeSettings(QSettings &prefs)
+{
+  m_InputWidget->writeSettings(prefs);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void EbsdImportPlugin::readSettings(QSettings &prefs)
+{
+  m_InputWidget->readSettings(prefs);
 }
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool AIMPluginFrame::verifyPathExists(QString outFilePath, QLineEdit* lineEdit)
+QIcon EbsdImportPlugin::icon()
 {
-//  std::cout << "outFilePath: " << outFilePath.toStdString() << std::endl;
-  QFileInfo fileinfo(outFilePath);
-  if (false == fileinfo.exists() )
-  {
-    lineEdit->setStyleSheet("border: 1px solid red;");
-  }
-  else
-  {
-    lineEdit->setStyleSheet("");
-  }
-  return fileinfo.exists();
-}
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void AIMPluginFrame::setStatusBar(QStatusBar* statusBar)
-{
-  this->m_StatusBar = statusBar;
+  return QIcon(":/EbsdImport.png");
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QStatusBar* AIMPluginFrame::statusBar()
+void EbsdImportPlugin::displayHelp()
 {
-  return this->m_StatusBar;
+  emit showHelp(htmlHelpIndexFile());
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool AIMPluginFrame::sanityCheckOutputDirectory(QLineEdit* le, QString msgTitle)
+QUrl EbsdImportPlugin::htmlHelpIndexFile()
 {
-
-  if (le->text().isEmpty() == true)
-  {
-    QMessageBox::critical(this, msgTitle,
-                          "The output directory has NOT been set. Please set a directory path and try again.",
-                          QMessageBox::Ok | QMessageBox::Default);
-    return false;
-  }
-
-  if (verifyPathExists(le->text(), le) == false)
-  {
-    QString msg("The Output Directory '");
-    msg.append(le->text()).append("'\ndoes not exist. Would you like to create it?");
-    int ret = QMessageBox::warning(this, msgTitle,
-                                   msg,
-                                   QMessageBox::Yes | QMessageBox::Default,
-                                   QMessageBox::No);
-    if (ret == QMessageBox::No)
-    {
-      return false;
-    }
-    else if (ret == QMessageBox::Yes)
-    {
-      QDir outputDir(le->text());
-      if (outputDir.exists() == false)
-      {
-        bool ok = outputDir.mkpath(".");
-        if (ok == false)
-        {
-          QMessageBox::critical(this,
-                                tr("Output Directory Creation"),
-                                tr("The output directory could not be created."),
-                                QMessageBox::Ok);
-          return false;
-        }
-        else
-        {
-          return true;
-        }
-      }
-    }
-  }
-  return true;
-
+  QString s = QString::fromStdString(DREAM3D::UIPlugins::EbsdImportBaseName);
+  s.append(QString("/index.html"));
+  return QUrl(s);
 }

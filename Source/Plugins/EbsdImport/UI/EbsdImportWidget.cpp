@@ -34,7 +34,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "OIMImportWidget.h"
+#include "EbsdImportWidget.h"
 
 //-- Qt Includes
 #include <QtCore/QFileInfo>
@@ -51,14 +51,14 @@
 
 #include "DREAM3D/Common/Constants.h"
 #include "QtSupport/QR3DFileCompleter.h"
-#include "QtSupport/AIM_QtMacros.h"
+#include "QtSupport/DREAM3DQtMacros.h"
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-OIMImportWidget::OIMImportWidget(QWidget *parent) :
-AIMPluginFrame(parent),
-m_OimImport(NULL),
+EbsdImportWidget::EbsdImportWidget(QWidget *parent) :
+Dream3DPluginFrame(parent),
+m_EbsdImport(NULL),
 m_WorkerThread(NULL),
 #if defined(Q_WS_WIN)
 m_OpenDialogLastDirectory("C:\\")
@@ -74,7 +74,7 @@ m_OpenDialogLastDirectory("~/")
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-OIMImportWidget::~OIMImportWidget()
+EbsdImportWidget::~EbsdImportWidget()
 {
 }
 
@@ -82,7 +82,7 @@ OIMImportWidget::~OIMImportWidget()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void OIMImportWidget::setWidgetListEnabled(bool b)
+void EbsdImportWidget::setWidgetListEnabled(bool b)
 {
   foreach (QWidget* w, m_WidgetList) {
     w->setEnabled(b);
@@ -93,7 +93,7 @@ void OIMImportWidget::setWidgetListEnabled(bool b)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void OIMImportWidget::setupGui()
+void EbsdImportWidget::setupGui()
 {
   QR3DFileCompleter* com = new QR3DFileCompleter(this, true);
   m_InputDir->setCompleter(com);
@@ -115,14 +115,14 @@ void OIMImportWidget::setupGui()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void OIMImportWidget::readSettings(QSettings &prefs)
+void EbsdImportWidget::readSettings(QSettings &prefs)
 {
   QString val;
   bool ok;
   qint32 i;
   //double d;
 
-  prefs.beginGroup("OIMImport");
+  prefs.beginGroup("EbsdImport");
   READ_FILEPATH_SETTING(prefs, m_, InputDir, "");
   READ_STRING_SETTING(prefs, m_, FilePrefix, "");
   READ_STRING_SETTING(prefs, m_, FileSuffix, "");
@@ -140,9 +140,9 @@ void OIMImportWidget::readSettings(QSettings &prefs)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void OIMImportWidget::writeSettings(QSettings &prefs)
+void EbsdImportWidget::writeSettings(QSettings &prefs)
 {
-  prefs.beginGroup("OIMImport");
+  prefs.beginGroup("EbsdImport");
   WRITE_STRING_SETTING(prefs, m_, InputDir)
   WRITE_STRING_SETTING(prefs, m_, FilePrefix)
   WRITE_STRING_SETTING(prefs, m_, FileSuffix)
@@ -160,7 +160,7 @@ void OIMImportWidget::writeSettings(QSettings &prefs)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void OIMImportWidget::on_m_OutputFile_textChanged(const QString & text)
+void EbsdImportWidget::on_m_OutputFile_textChanged(const QString & text)
 {
 
 }
@@ -168,7 +168,7 @@ void OIMImportWidget::on_m_OutputFile_textChanged(const QString & text)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void OIMImportWidget::checkIOFiles()
+void EbsdImportWidget::checkIOFiles()
 {
   if (true == this->verifyPathExists(m_InputDir->text(), this->m_InputDir))
    {
@@ -179,7 +179,7 @@ void OIMImportWidget::checkIOFiles()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void OIMImportWidget::on_m_OutputFileBtn_clicked()
+void EbsdImportWidget::on_m_OutputFileBtn_clicked()
 {
   QString file = QFileDialog::getSaveFileName(this, tr("Save HDF5 EBSD File"),
                                                  m_OpenDialogLastDirectory,
@@ -194,7 +194,7 @@ void OIMImportWidget::on_m_OutputFileBtn_clicked()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void OIMImportWidget::on_m_InputDirBtn_clicked()
+void EbsdImportWidget::on_m_InputDirBtn_clicked()
 {
   // std::cout << "on_angDirBtn_clicked" << std::endl;
   QString outputFile = this->m_OpenDialogLastDirectory + QDir::separator();
@@ -213,7 +213,7 @@ void OIMImportWidget::on_m_InputDirBtn_clicked()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void OIMImportWidget::on_m_InputDir_textChanged(const QString & text)
+void EbsdImportWidget::on_m_InputDir_textChanged(const QString & text)
 {
   if (verifyPathExists(m_InputDir->text(), m_InputDir) )
   {
@@ -240,13 +240,13 @@ void OIMImportWidget::on_m_InputDir_textChanged(const QString & text)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void OIMImportWidget::on_m_GoBtn_clicked()
+void EbsdImportWidget::on_m_GoBtn_clicked()
 {
 
   bool ok = false;
   if (m_GoBtn->text().compare("Cancel") == 0)
   {
-    if (m_OimImport != NULL)
+    if (m_EbsdImport != NULL)
     {
       emit cancelProcess();
     }
@@ -277,15 +277,15 @@ void OIMImportWidget::on_m_GoBtn_clicked()
   }
   m_WorkerThread = new QThread(); // Create a new Thread Resource
 
-  m_OimImport = new QOIMImport(NULL);
+  m_EbsdImport = new QEbsdImport(NULL);
 
   // Move the GrainGenerator object into the thread that we just created.
-  m_OimImport->moveToThread(m_WorkerThread);
+  m_EbsdImport->moveToThread(m_WorkerThread);
 
-  m_OimImport->setOutputFile(QDir::toNativeSeparators(m_OutputFile->text()).toStdString());
-  m_OimImport->setZStartIndex(m_ZStartIndex->value());
-  m_OimImport->setZEndIndex(m_ZEndIndex->value());
-  m_OimImport->setZResolution(m_zSpacing->text().toFloat(&ok));
+  m_EbsdImport->setOutputFile(QDir::toNativeSeparators(m_OutputFile->text()).toStdString());
+  m_EbsdImport->setZStartIndex(m_ZStartIndex->value());
+  m_EbsdImport->setZEndIndex(m_ZEndIndex->value());
+  m_EbsdImport->setZResolution(m_zSpacing->text().toFloat(&ok));
 
   int fileCount = m_FileListView->count();
   std::vector<std::string> fileList;
@@ -294,7 +294,7 @@ void OIMImportWidget::on_m_GoBtn_clicked()
     fileList.push_back(QDir::toNativeSeparators(m_FileListView->item(f)->text()).toStdString());
   }
 
-  m_OimImport->setEbsdFileList(fileList);
+  m_EbsdImport->setEbsdFileList(fileList);
 
   /* Connect the signal 'started()' from the QThread to the 'run' slot of the
    * Reconstruction object. Since the Reconstruction object has been moved to another
@@ -302,23 +302,23 @@ void OIMImportWidget::on_m_GoBtn_clicked()
    * type of connection will be a Queued connection.
    */
   // When the thread starts its event loop, start the Reconstruction going
-  connect(m_WorkerThread, SIGNAL(started()), m_OimImport, SLOT(run()));
+  connect(m_WorkerThread, SIGNAL(started()), m_EbsdImport, SLOT(run()));
 
   // When the Reconstruction ends then tell the QThread to stop its event loop
-  connect(m_OimImport, SIGNAL(finished() ), m_WorkerThread, SLOT(quit()));
+  connect(m_EbsdImport, SIGNAL(finished() ), m_WorkerThread, SLOT(quit()));
 
   // When the QThread finishes, tell this object that it has finished.
   connect(m_WorkerThread, SIGNAL(finished()), this, SLOT( threadFinished() ));
 
   // Send Progress from the Reconstruction to this object for display
-  connect(m_OimImport, SIGNAL (updateProgress(int)), this, SLOT(threadProgressed(int) ));
+  connect(m_EbsdImport, SIGNAL (updateProgress(int)), this, SLOT(threadProgressed(int) ));
 
   // Send progress messages from Reconstruction to this object for display
-  connect(m_OimImport, SIGNAL (updateMessage(QString)), this, SLOT(threadHasMessage(QString) ));
+  connect(m_EbsdImport, SIGNAL (updateMessage(QString)), this, SLOT(threadHasMessage(QString) ));
 
   // If the use clicks on the "Cancel" button send a message to the Reconstruction object
   // We need a Direct Connection so the
-  connect(this, SIGNAL(cancelProcess() ), m_OimImport, SLOT (on_CancelWorker() ), Qt::DirectConnection);
+  connect(this, SIGNAL(cancelProcess() ), m_EbsdImport, SLOT (on_CancelWorker() ), Qt::DirectConnection);
 
   setWidgetListEnabled(false);
   emit processStarted();
@@ -330,7 +330,7 @@ void OIMImportWidget::on_m_GoBtn_clicked()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void OIMImportWidget::on_m_ZEndIndex_valueChanged(int value)
+void EbsdImportWidget::on_m_ZEndIndex_valueChanged(int value)
 {
   m_generateExampleOimInputFile();
 }
@@ -338,7 +338,7 @@ void OIMImportWidget::on_m_ZEndIndex_valueChanged(int value)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void OIMImportWidget::on_m_ZStartIndex_valueChanged(int value)
+void EbsdImportWidget::on_m_ZStartIndex_valueChanged(int value)
 {
   m_generateExampleOimInputFile();
 }
@@ -346,7 +346,7 @@ void OIMImportWidget::on_m_ZStartIndex_valueChanged(int value)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void OIMImportWidget::on_m_TotalDigits_valueChanged(int value)
+void EbsdImportWidget::on_m_TotalDigits_valueChanged(int value)
 {
     m_generateExampleOimInputFile();
 }
@@ -354,7 +354,7 @@ void OIMImportWidget::on_m_TotalDigits_valueChanged(int value)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void OIMImportWidget::on_m_FileExt_textChanged(const QString &string)
+void EbsdImportWidget::on_m_FileExt_textChanged(const QString &string)
 {
   m_generateExampleOimInputFile();
 }
@@ -362,7 +362,7 @@ void OIMImportWidget::on_m_FileExt_textChanged(const QString &string)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void OIMImportWidget::on_m_FileSuffix_textChanged(const QString &string)
+void EbsdImportWidget::on_m_FileSuffix_textChanged(const QString &string)
 {
   m_generateExampleOimInputFile();
 }
@@ -370,7 +370,7 @@ void OIMImportWidget::on_m_FileSuffix_textChanged(const QString &string)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void OIMImportWidget::on_m_FilePrefix_textChanged(const QString &string)
+void EbsdImportWidget::on_m_FilePrefix_textChanged(const QString &string)
 {
   m_generateExampleOimInputFile();
 }
@@ -378,7 +378,7 @@ void OIMImportWidget::on_m_FilePrefix_textChanged(const QString &string)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void OIMImportWidget::m_generateExampleOimInputFile()
+void EbsdImportWidget::m_generateExampleOimInputFile()
 {
 
   QString filename = QString("%1%2%3.%4").arg(m_FilePrefix->text())
@@ -427,7 +427,7 @@ void OIMImportWidget::m_generateExampleOimInputFile()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void OIMImportWidget::m_findEbsdMaxSliceAndPrefix()
+void EbsdImportWidget::m_findEbsdMaxSliceAndPrefix()
 {
   if (m_InputDir->text().length() == 0) { return; }
   QDir dir(m_InputDir->text());
@@ -532,20 +532,20 @@ void OIMImportWidget::m_findEbsdMaxSliceAndPrefix()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void OIMImportWidget::threadFinished()
+void EbsdImportWidget::threadFinished()
 {
- // std::cout << "OIMImportWidget::threadFinished()" << std::endl;
+ // std::cout << "EbsdImportWidget::threadFinished()" << std::endl;
   m_GoBtn->setText("Go");
   setWidgetListEnabled(true);
   this->m_progressBar->setValue(0);
   emit processEnded();
-  m_OimImport->deleteLater();
+  m_EbsdImport->deleteLater();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void OIMImportWidget::threadProgressed(int val)
+void EbsdImportWidget::threadProgressed(int val)
 {
   this->m_progressBar->setValue( val );
 }
@@ -553,9 +553,9 @@ void OIMImportWidget::threadProgressed(int val)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void OIMImportWidget::threadHasMessage(QString message)
+void EbsdImportWidget::threadHasMessage(QString message)
 {
- // std::cout << "OIMImportWidget::threadHasMessage()" << std::endl;
+ // std::cout << "EbsdImportWidget::threadHasMessage()" << std::endl;
   if (NULL != this->statusBar()) {
     this->statusBar()->showMessage(message);
   }

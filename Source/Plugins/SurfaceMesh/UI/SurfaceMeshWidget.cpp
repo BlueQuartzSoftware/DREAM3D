@@ -52,7 +52,7 @@
 #include "DREAM3D/Common/Constants.h"
 
 #include "QtSupport/QR3DFileCompleter.h"
-#include "QtSupport/AIM_QtMacros.h"
+#include "QtSupport/DREAM3DQtMacros.h"
 #include "DREAM3D/HDF5/H5VoxelReader.h"
 #include "Meshing/SMVtkFileIO.h"
 
@@ -60,7 +60,7 @@
 //
 // -----------------------------------------------------------------------------
 SurfaceMeshWidget::SurfaceMeshWidget(QWidget *parent) :
-AIMPluginFrame(parent),
+Dream3DPluginFrame(parent),
 m_SurfaceMesh(NULL),
 m_WorkerThread(NULL),
 #if defined(Q_WS_WIN)

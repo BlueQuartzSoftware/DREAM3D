@@ -57,13 +57,13 @@
 #include "QtSupport/ApplicationAboutBoxDialog.h"
 #include "QtSupport/QRecentFileList.h"
 #include "QtSupport/QR3DFileCompleter.h"
-#include "QtSupport/AIM_QtMacros.h"
-#include "QtSupport/AIMPluginFrame.h"
+#include "QtSupport/DREAM3DQtMacros.h"
+#include "QtSupport/DREAM3DPluginFrame.h"
 #include "QtSupport/DREAM3DPluginInterface.h"
 #include "QtSupport/HelpDialog.h"
 #include "GrainGenerator/UI/GrainGeneratorPlugin.h"
 #include "MicrostructureStatistics/UI/MicrostructureStatisticsPlugin.h"
-#include "OIMImport/UI/OIMImportPlugin.h"
+#include "EbsdImport/UI/EbsdImportPlugin.h"
 #include "Reconstruction/UI/ReconstructionPlugin.h"
 #include "SurfaceMesh/UI/SurfaceMeshPlugin.h"
 
@@ -553,7 +553,7 @@ void DREAM3D_UI::loadPlugins()
   // Our list of Plugins that we want control over the order in which they appear
   // in the toolbar and menu
   QStringList pluginNames;
-  pluginNames << QString::fromStdString(DREAM3D::UIPlugins::OIMImportFile)
+  pluginNames << QString::fromStdString(DREAM3D::UIPlugins::EbsdImportFile)
               << QString::fromStdString(DREAM3D::UIPlugins::ReconstructionFile)
               << QString::fromStdString(DREAM3D::UIPlugins::MicrostructureStatisticsFile)
               << QString::fromStdString(DREAM3D::UIPlugins::GrainGeneratorFile)
@@ -691,7 +691,7 @@ void DREAM3D_UI::setInputUI()
   QWidget* inputWidget = m_ActivePlugin->getInputWidget(this);
   centerWidget->layout()->addWidget(inputWidget);
 
-  AIMPluginFrame* frame = m_ActivePlugin->getPluginFrame(NULL);
+  Dream3DPluginFrame* frame = m_ActivePlugin->getPluginFrame(NULL);
   if (frame)
   {
     frame->setStatusBar(this->statusBar());

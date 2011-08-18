@@ -42,14 +42,14 @@ set (ReconstructionPlugin_UI_HDRS
     ${PROJECT_SOURCE_DIR}/UI/ReconstructionWidget.h
     ${PROJECT_SOURCE_DIR}/UI/QualityMetricTableModel.h
     ${PROJECT_SOURCE_DIR}/UI/QualityMetricItemDelegate.h
-    ${PROJECT_CODE_DIR}/QtSupport/AIMPluginFrame.h
+    ${PROJECT_CODE_DIR}/QtSupport/DREAM3DPluginFrame.h
     )
     
 set (ReconstructionPlugin_UI_SRCS 
     ${PROJECT_SOURCE_DIR}/UI/ReconstructionPlugin.cpp
     ${PROJECT_SOURCE_DIR}/UI/ReconstructionWidget.cpp
     ${PROJECT_SOURCE_DIR}/UI/QualityMetricTableModel.cpp
-    ${PROJECT_CODE_DIR}/QtSupport/AIMPluginFrame.cpp
+    ${PROJECT_CODE_DIR}/QtSupport/DREAM3DPluginFrame.cpp
     )
     
 set (ReconstructionPlugin_Misc_HDRS

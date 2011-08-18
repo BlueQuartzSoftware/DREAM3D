@@ -36,7 +36,7 @@
 
 #include "GrainGeneratorPlugin.h"
 #include "GrainGeneratorWidget.h"
-#include "QtSupport/AIMPluginFrame.h"
+#include "QtSupport/DREAM3DPluginFrame.h"
 #include "QtSupport/HelpDialog.h"
 
 Q_EXPORT_PLUGIN2(GrainGeneratorPlugin, GrainGeneratorPlugin);
@@ -78,9 +78,9 @@ QWidget* GrainGeneratorPlugin::getInputWidget(QWidget* parent)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AIMPluginFrame* GrainGeneratorPlugin::getPluginFrame(QWidget* parent)
+Dream3DPluginFrame* GrainGeneratorPlugin::getPluginFrame(QWidget* parent)
 {
-  AIMPluginFrame* frame = qobject_cast<AIMPluginFrame*>(m_InputWidget);
+  Dream3DPluginFrame* frame = qobject_cast<Dream3DPluginFrame*>(m_InputWidget);
   return frame;
 }
 

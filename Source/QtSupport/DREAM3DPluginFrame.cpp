@@ -13,8 +13,8 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
- * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
@@ -34,27 +34,27 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "OIMImportPlugin.h"
-#include "OIMImportWidget.h"
-#include "QtSupport/AIMPluginFrame.h"
-#include "QtSupport/HelpDialog.h"
+#include "Dream3DPluginFrame.h"
 
-Q_EXPORT_PLUGIN2(OIMImportPlugin, OIMImportPlugin)
-;
+#include <QtCore/QFileInfo>
+#include <QtCore/QDir>
+
+#include <QtGui/QLineEdit>
+#include <QtGui/QMessageBox>
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-OIMImportPlugin::OIMImportPlugin() :
-m_InputWidget(NULL)
+Dream3DPluginFrame::Dream3DPluginFrame(QWidget *parent) :
+QFrame(parent),
+m_StatusBar(NULL)
 {
-  m_InputWidget = new OIMImportWidget(NULL);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-OIMImportPlugin::~OIMImportPlugin()
+Dream3DPluginFrame::~Dream3DPluginFrame()
 {
 
 }
@@ -62,68 +62,104 @@ OIMImportPlugin::~OIMImportPlugin()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString OIMImportPlugin::getPluginName()
+bool Dream3DPluginFrame::verifyOutputPathParentExists(QString outFilePath, QLineEdit* lineEdit)
 {
-  return QString::fromStdString(DREAM3D::UIPlugins::OIMImportDisplayName);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-QWidget* OIMImportPlugin::getInputWidget(QWidget* parent)
-{
-  m_InputWidget->setParent(parent);
-  return m_InputWidget;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-AIMPluginFrame* OIMImportPlugin::getPluginFrame(QWidget* parent)
-{
-  AIMPluginFrame* frame = qobject_cast<AIMPluginFrame*>(m_InputWidget);
-  return frame;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void OIMImportPlugin::writeSettings(QSettings &prefs)
-{
-  m_InputWidget->writeSettings(prefs);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void OIMImportPlugin::readSettings(QSettings &prefs)
-{
-  m_InputWidget->readSettings(prefs);
+  QFileInfo fileinfo(outFilePath);
+  QDir parent (fileinfo.dir() );
+//  if (false == parent.exists() )
+//  {
+//    lineEdit->setStyleSheet("border: 1px solid red;");
+//  }
+//  else
+//  {
+//    lineEdit->setStyleSheet("");
+//  }
+  return parent.exists();
 }
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QIcon OIMImportPlugin::icon()
+bool Dream3DPluginFrame::verifyPathExists(QString outFilePath, QLineEdit* lineEdit)
 {
-  return QIcon(":/OIMImport.png");
+//  std::cout << "outFilePath: " << outFilePath.toStdString() << std::endl;
+  QFileInfo fileinfo(outFilePath);
+  if (false == fileinfo.exists() )
+  {
+    lineEdit->setStyleSheet("border: 1px solid red;");
+  }
+  else
+  {
+    lineEdit->setStyleSheet("");
+  }
+  return fileinfo.exists();
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void Dream3DPluginFrame::setStatusBar(QStatusBar* statusBar)
+{
+  this->m_StatusBar = statusBar;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void OIMImportPlugin::displayHelp()
+QStatusBar* Dream3DPluginFrame::statusBar()
 {
-  emit showHelp(htmlHelpIndexFile());
+  return this->m_StatusBar;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QUrl OIMImportPlugin::htmlHelpIndexFile()
+bool Dream3DPluginFrame::sanityCheckOutputDirectory(QLineEdit* le, QString msgTitle)
 {
-  QString s = QString::fromStdString(DREAM3D::UIPlugins::OIMImportBaseName);
-  s.append(QString("/index.html"));
-  return QUrl(s);
+
+  if (le->text().isEmpty() == true)
+  {
+    QMessageBox::critical(this, msgTitle,
+                          "The output directory has NOT been set. Please set a directory path and try again.",
+                          QMessageBox::Ok | QMessageBox::Default);
+    return false;
+  }
+
+  if (verifyPathExists(le->text(), le) == false)
+  {
+    QString msg("The Output Directory '");
+    msg.append(le->text()).append("'\ndoes not exist. Would you like to create it?");
+    int ret = QMessageBox::warning(this, msgTitle,
+                                   msg,
+                                   QMessageBox::Yes | QMessageBox::Default,
+                                   QMessageBox::No);
+    if (ret == QMessageBox::No)
+    {
+      return false;
+    }
+    else if (ret == QMessageBox::Yes)
+    {
+      QDir outputDir(le->text());
+      if (outputDir.exists() == false)
+      {
+        bool ok = outputDir.mkpath(".");
+        if (ok == false)
+        {
+          QMessageBox::critical(this,
+                                tr("Output Directory Creation"),
+                                tr("The output directory could not be created."),
+                                QMessageBox::Ok);
+          return false;
+        }
+        else
+        {
+          return true;
+        }
+      }
+    }
+  }
+  return true;
+
 }

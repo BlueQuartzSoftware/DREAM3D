@@ -36,7 +36,7 @@
 
 #include "MicrostructureStatisticsPlugin.h"
 #include "MicrostructureStatisticsWidget.h"
-#include "QtSupport/AIMPluginFrame.h"
+#include "QtSupport/DREAM3DPluginFrame.h"
 #include "QtSupport/HelpDialog.h"
 
 Q_EXPORT_PLUGIN2(MicrostructureStatisticsPlugin, MicrostructureStatisticsPlugin)
@@ -79,9 +79,9 @@ QWidget* MicrostructureStatisticsPlugin::getInputWidget(QWidget* parent)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AIMPluginFrame* MicrostructureStatisticsPlugin::getPluginFrame(QWidget* parent)
+Dream3DPluginFrame* MicrostructureStatisticsPlugin::getPluginFrame(QWidget* parent)
 {
-  AIMPluginFrame* frame = qobject_cast<AIMPluginFrame*>(m_InputWidget);
+  Dream3DPluginFrame* frame = qobject_cast<Dream3DPluginFrame*>(m_InputWidget);
   return frame;
 }
 

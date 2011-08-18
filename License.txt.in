@@ -16,7 +16,7 @@ Portions of the software were written under U.S. Air Force contrct FA8650-07-D-5
 </pre>
 
 <hr/>
-<h2>AIMRepresentation License Version 1.0</h2>
+<h2>DREAM.3D License Version 1.0</h2>
 
 <pre>
 Copyright (c) 2009-2011 Michael A. Jackson, All rights reserved.
@@ -46,9 +46,10 @@ list of conditions and the following disclaimer.
 this list of conditions and the following disclaimer in the documentation 
 and/or other materials provided with the distribution.
 
-3) Neither the name of Michael A. Jackson nor BlueQuartz Software nor the names 
-of its contributors may be used to endorse or promote products derived from this
-software without specific prior written permission.
+3) Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
+BlueQuartz Software nor the names of its contributors may be used to endorse 
+or promote products derived from this software without specific prior written
+permission.
 
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
@@ -67,7 +68,7 @@ Upon public release the following license information will pertain to this work:
 
 <pre>
   ========================================================================
-
+  Copyright (c) 2009-2011 Michael A. Jackson, All rights reserved.
   Copyright (c) 2009-2011 U.S. Air Force Research Laboratory
 
   This software and ancillary information known as AIMRepresentation (and herein
@@ -88,17 +89,13 @@ Upon public release the following license information will pertain to this work:
   reproduced on all copies.
 
   Neither the U. S. Government, Universal Technology Corporation or BlueQuartz
-  Software makes any warranty, either express or
-  implied, nor assumes any liability or responsibility for the use of
-  this SOFTWARE.
+  Software makes any warranty, either express or implied, nor assumes any 
+  liability or responsibility for the use of this SOFTWARE.
 
   If SOFTWARE is modified to produce derivative works, such modified
   SOFTWARE should be clearly marked, so as not to confuse it with the
   version available from Los Alamos National Laboratory.
 </pre>
-
-
-
 
 
 <hr/>

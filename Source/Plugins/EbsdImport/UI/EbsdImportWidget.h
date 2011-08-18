@@ -34,19 +34,19 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef OIMIMPORTWIDGET_H_
-#define OIMIMPORTWIDGET_H_
+#ifndef EbsdImportWIDGET_H_
+#define EbsdImportWIDGET_H_
 
 #include <QtCore/QString>
 #include <QtCore/QSettings>
 
-#include "ui_OIMImportWidget.h"
-#include "QtSupport/AIMPluginFrame.h"
-#include "QOIMImport.h"
+#include "ui_EbsdImportWidget.h"
+#include "QtSupport/DREAM3DPluginFrame.h"
+#include "QEbsdImport.h"
 
 
 /**
- * @class OIMImportWidget OIMImportWidget.h Plugins/OIMImport/UI/OIMImportWidget.h
+ * @class EbsdImportWidget EbsdImportWidget.h Plugins/EbsdImport/UI/EbsdImportWidget.h
  * @brief This class represents the User Interface for the EBSD file import module
  * of the DREAM3D program. The user interface subclasses QFrame which
  * should make it able to be embedded in most Qt applications. This module controls
@@ -56,13 +56,13 @@
  * @date Jan 30, 2011
  * @version 1.0
  */
-class OIMImportWidget : public AIMPluginFrame, private Ui::OIMImportWidget
+class EbsdImportWidget : public Dream3DPluginFrame, private Ui::EbsdImportWidget
 {
   Q_OBJECT;
 
   public:
-    OIMImportWidget(QWidget *parent = 0);
-    virtual ~OIMImportWidget();
+    EbsdImportWidget(QWidget *parent = 0);
+    virtual ~EbsdImportWidget();
 
     /**
       * @brief Reads the Preferences from the users pref file
@@ -121,12 +121,12 @@ class OIMImportWidget : public AIMPluginFrame, private Ui::OIMImportWidget
 
   private:
     QList<QWidget*>             m_WidgetList;
-    QOIMImport*                 m_OimImport;
+    QEbsdImport*                 m_EbsdImport;
     QThread*                    m_WorkerThread;
 
     QString m_OpenDialogLastDirectory;
-    OIMImportWidget(const OIMImportWidget&); // Copy Constructor Not Implemented
-    void operator=(const OIMImportWidget&); // Operator '=' Not Implemented
+    EbsdImportWidget(const EbsdImportWidget&); // Copy Constructor Not Implemented
+    void operator=(const EbsdImportWidget&); // Operator '=' Not Implemented
 };
 
-#endif /* OIMIMPORTWIDGET_H_ */
+#endif /* EbsdImportWIDGET_H_ */
