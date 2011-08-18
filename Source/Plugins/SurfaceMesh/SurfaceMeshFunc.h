@@ -90,7 +90,7 @@
 
 #include "DREAM3D/DREAM3DConfiguration.h"
 #include "DREAM3D/Common/Grain.h"
-#include "DREAM3D/Common/AIMRandomNG.h"
+#include "DREAM3D/Common/DREAM3DRandom.h"
 
 #include "Meshing/Patch.h"
 #include "Meshing/Face.h"

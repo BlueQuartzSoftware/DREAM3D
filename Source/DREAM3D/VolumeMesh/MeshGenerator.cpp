@@ -103,7 +103,7 @@ float globalvolmeshvol = 0.0f;
 float globalsurfmeshvol = 0.0f;
 float avgarea = 0.0f;
 int32_t seeder = time(0);
-AIMRandomNG rg;
+DREAM3DRandom rg;
 }
 
 
@@ -1456,7 +1456,7 @@ void create_finalnodesandtriangles()
     if (originalnode[i].nodekilled != 1)
     {
       originalnode[i].set_finalnumber(count);
-      float random1 = 2.0f * (rg.Random() - 0.5);
+      float random1 = 2.0f * (rg.genrand_res53() - 0.5);
       float x = originalnode[i].xc;
       float y = originalnode[i].yc;
       float z = originalnode[i].zc;
@@ -2042,9 +2042,9 @@ void make_nodes(int iter)
   int grainnodecount = nodesvector[iter].size();
   while (grainnodecount < 3500)
   {
-    float xp = rg.Random();
-    float yp = rg.Random();
-    float zp = rg.Random();
+    float xp = rg.genrand_res53();
+    float yp = rg.genrand_res53();
+    float zp = rg.genrand_res53();
     int x = xp / resx;
     int y = yp / resy;
     int z = zp / resz;
@@ -2066,7 +2066,7 @@ void make_nodes(int iter)
           dist = (zbuffer[iter][1][x][y] - zp);
         float prob = 2.0 * (0.5 - dist);
         prob = powf(prob, 2);
-        float random = rg.Random();
+        float random = rg.genrand_res53();
         if (random <= prob)
         {
           xp = (xp * (maxx - minx)) + minx;

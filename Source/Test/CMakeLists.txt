@@ -88,3 +88,8 @@ target_link_libraries(CtfReaderTest EbsdLib)
 add_executable(StatsGenTest ${AIMTest_SOURCE_DIR}/StatsGenTest.cpp)
 target_link_libraries(StatsGenTest DREAM3DLib)
 MXA_ADD_TEST(StatsGenTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/StatsGenTest)
+
+# --------
+add_executable(RNGTest ${AIMTest_SOURCE_DIR}/RNGTest.cpp)
+target_link_libraries(RNGTest DREAM3DLib)
+

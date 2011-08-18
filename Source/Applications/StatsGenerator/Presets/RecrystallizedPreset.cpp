@@ -34,7 +34,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "RecrystallizedPreset.h"
-#include "DREAM3D/Common/AIMRandomNG.h"
+#include "DREAM3D/Common/DREAM3DRandom.h"
 
 #include "StatsGenerator/Presets/Dialogs/RecrystallizedPresetDialog.h"
 #include "StatsGenerator/StatsGenPlotWidget.h"
@@ -96,7 +96,7 @@ void RecrystallizedPreset::initializeOmega3TableModel(StatsGenPlotWidget* plot, 
 //  model->removeRows(0, model->rowCount());
 
   float alpha, beta;
-  AIM_RANDOMNG_NEW()
+  DREAM3D_RANDOMNG_NEW()
 
   QVector<float> alphas;
   QVector<float> betas;
@@ -105,8 +105,8 @@ void RecrystallizedPreset::initializeOmega3TableModel(StatsGenPlotWidget* plot, 
   qint32 colorOffset = 21;
   for (qint32 i = 0; i < count; ++i)
    {
-    alpha = (0*i) + 10.0 + rg.Random();
-    beta = (0*i) + 1.5 + (0.5*rg.Random());
+    alpha = (0*i) + 10.0 + rg.genrand_res53();
+    beta = (0*i) + 1.5 + (0.5*rg.genrand_res53());
     alphas.push_back(alpha);
     betas.push_back(beta);
     colors.push_back(colorNames[colorOffset++]);
@@ -137,7 +137,7 @@ void RecrystallizedPreset::initializeBOverATableModel(StatsGenPlotWidget* plot, 
   model->removeRows(0, model->rowCount());
 
   float alpha, beta;
-  AIM_RANDOMNG_NEW()
+  DREAM3D_RANDOMNG_NEW()
 
   QVector<float> alphas;
   QVector<float> betas;
@@ -146,8 +146,8 @@ void RecrystallizedPreset::initializeBOverATableModel(StatsGenPlotWidget* plot, 
   qint32 colorOffset = 21;
   for (qint32 i = 0; i < count; ++i)
    {
-    alpha = (0*i) + 10.0 + rg.Random();
-    beta = (0*i) + 1.5 + (0.5*rg.Random());
+    alpha = (0*i) + 10.0 + rg.genrand_res53();
+    beta = (0*i) + 1.5 + (0.5*rg.genrand_res53());
     alphas.push_back(alpha);
     betas.push_back(beta);
     colors.push_back(colorNames[colorOffset++]);
@@ -178,7 +178,7 @@ void RecrystallizedPreset::initializeCOverATableModel(StatsGenPlotWidget* plot, 
   model->removeRows(0, model->rowCount());
 
   float alpha, beta;
-  AIM_RANDOMNG_NEW()
+  DREAM3D_RANDOMNG_NEW()
 
   QVector<float> alphas;
   QVector<float> betas;
@@ -187,8 +187,8 @@ void RecrystallizedPreset::initializeCOverATableModel(StatsGenPlotWidget* plot, 
   qint32 colorOffset = 21;
   for (qint32 i = 0; i < count; ++i)
    {
-    alpha = (0*i) + 10.0 + rg.Random();
-    beta = (0*i) + 1.5 + (0.5*rg.Random());
+    alpha = (0*i) + 10.0 + rg.genrand_res53();
+    beta = (0*i) + 1.5 + (0.5*rg.genrand_res53());
     alphas.push_back(alpha);
     betas.push_back(beta);
     colors.push_back(colorNames[colorOffset++]);
@@ -220,7 +220,7 @@ void RecrystallizedPreset::initializeCOverBTableModel(StatsGenPlotWidget* plot, 
   model->removeRows(0, model->rowCount());
 
   float alpha, beta;
-  AIM_RANDOMNG_NEW()
+  DREAM3D_RANDOMNG_NEW()
 
   QVector<float> alphas;
   QVector<float> betas;
@@ -229,8 +229,8 @@ void RecrystallizedPreset::initializeCOverBTableModel(StatsGenPlotWidget* plot, 
   qint32 colorOffset = 21;
   for (qint32 i = 0; i < count; ++i)
    {
-    alpha = (0*i) + 10.0 + rg.Random();
-    beta = (0*i) + 1.5 + (0.5*rg.Random());
+    alpha = (0*i) + 10.0 + rg.genrand_res53();
+    beta = (0*i) + 1.5 + (0.5*rg.genrand_res53());
     alphas.push_back(alpha);
     betas.push_back(beta);
     colors.push_back(colorNames[colorOffset++]);
@@ -263,7 +263,7 @@ void RecrystallizedPreset::initializeNeighborTableModel(StatsGenPlotWidget* plot
   model->removeRows(0, model->rowCount());
 
   float alpha, k, beta;
-  AIM_RANDOMNG_NEW()
+  DREAM3D_RANDOMNG_NEW()
 
   QVector<float> alphas;
   QVector<float> ks;
@@ -274,8 +274,8 @@ void RecrystallizedPreset::initializeNeighborTableModel(StatsGenPlotWidget* plot
   int middlebin = count/2;
   for (qint32 i = 0; i < count; ++i)
    {
-    alpha = (4*(binNumbers[i]/binNumbers[middlebin])) + rg.Random();
-    k = 2 + (0.2*(binNumbers[i]/binNumbers[middlebin])) + (0.05*rg.Random());
+    alpha = (4*(binNumbers[i]/binNumbers[middlebin])) + rg.genrand_res53();
+    k = 2 + (0.2*(binNumbers[i]/binNumbers[middlebin])) + (0.05*rg.genrand_res53());
     beta = (0*i) + 1;
     alphas.push_back(alpha);
     ks.push_back(k);

@@ -13,8 +13,8 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
- * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
@@ -369,9 +369,6 @@ void GrainGeneratorWidget::on_m_H5InputStatisticsFile_textChanged(const QString 
        H5ReconStatsReader::Pointer h5reader = H5ReconStatsReader::New(m_H5InputStatisticsFile->text().toStdString());
        if (h5reader.get() == NULL)
        {
-         QMessageBox::critical(this, "Grain Generator",
-                               "The input HDF5 Based Stats file could not be opened for reading.",
-                               QMessageBox::Ok | QMessageBox::Default);
          return;
        }
        // Read the Phase and Crystal Structure information from the Stats File
@@ -380,9 +377,6 @@ void GrainGeneratorWidget::on_m_H5InputStatisticsFile_textChanged(const QString 
        int err = h5reader->getPhaseAndCrystalStructures(phases, structures);
        if (err < 0)
        {
-         QMessageBox::critical(this, "Grain Generator",
-                               "The Phase information could not be read from the input HDF5 file.",
-                               QMessageBox::Ok | QMessageBox::Default);
          return;
        }
 
@@ -730,7 +724,7 @@ int GrainGeneratorWidget::estimate_numgrains(int xpoints, int ypoints, int zpoin
   {
     return 0;
   }
-  AIM_RANDOMNG_NEW()
+  DREAM3D_RANDOMNG_NEW()
 
   std::vector<int> primaryphases;
   std::vector<double> primaryphasefractions;
@@ -762,7 +756,7 @@ int GrainGeneratorWidget::estimate_numgrains(int xpoints, int ypoints, int zpoin
   while (currentvol < totalvol)
   {
     volgood = 0;
-    random = rg.Random();
+    random = rg.genrand_res53();
     for (size_t j = 0; j < primaryphases.size(); ++j)
     {
       if (random < primaryphasefractions[j])
@@ -774,8 +768,8 @@ int GrainGeneratorWidget::estimate_numgrains(int xpoints, int ypoints, int zpoin
 	while(volgood == 0)
 	{
 	  volgood = 1;
-	  u = rg.Random();
-	  diam = rg.RandNorm(avgdiam[phase],sddiam[phase]);
+	  u = rg.genrand_res53();
+	  diam = rg.genrand_norm(avgdiam[phase],sddiam[phase]);
 	  diam = exp(diam);
 	  if(diam >= maxdiameter[phase]) volgood = 0;
 	  if(diam < mindiameter[phase]) volgood = 0;
