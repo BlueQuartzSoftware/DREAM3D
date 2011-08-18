@@ -42,10 +42,12 @@
 
 
 #include "EbsdLib/H5EbsdVolumeInfo.h"
-
+#include "EbsdLib/H5EbsdVolumeReader.h"
 #include "EbsdLib/TSL/AngDirectoryPatterns.h"
 #include "EbsdLib/TSL/AngReader.h"
 #include "EbsdLib/TSL/AngPhase.h"
+#include "EbsdLib/TSL/H5AngVolumeReader.h"
+#include "EbsdLib/HKL/H5CtfVolumeReader.h"
 
 #include "DREAM3D/DREAM3DConfiguration.h"
 #include "DREAM3D/Common/Constants.h"
@@ -57,9 +59,7 @@
 #include "DREAM3D/HDF5/H5GrainWriter.hpp"
 
 
-#include "Reconstruction/EbsdSupport/H5EbsdVolumeReader.h"
-#include "Reconstruction/EbsdSupport/H5AngVolumeReader.h"
-#include "Reconstruction/EbsdSupport/H5CtfVolumeReader.h"
+
 
 
 
@@ -185,7 +185,8 @@ void Reconstruction::execute()
   updateProgressAndMessage(("Loading Slices"), 4);
   ebsdReader->setSliceStart(m_ZStartIndex);
   ebsdReader->setSliceEnd(m_ZEndIndex);
-  err = ebsdReader->loadData(m.get(), m_QualityMetricFilters);
+  err = ebsdReader->loadData(m->euler1s, m->euler2s, m->euler3s, m->phases, m->goodVoxels, m->xpoints, m->ypoints, m->zpoints, m_QualityMetricFilters);
+
   CHECK_FOR_ERROR(ReconstructionFunc, "Reconstruction was canceled", err)
 
   m->initializeQuats();

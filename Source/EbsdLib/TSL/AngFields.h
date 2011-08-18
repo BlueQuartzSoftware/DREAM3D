@@ -40,10 +40,11 @@
 #include <string>
 #include <vector>
 
-
+#include "EbsdLib/EbsdConstants.h"
 #include "EbsdLib/EbsdSetGetMacros.h"
 #include "EbsdLib/EbsdLibConfiguration.h"
 #include "EbsdLib/AbstractEbsdFields.h"
+#include "EbsdLib/TSL/AngConstants.h"
 
 /**
  * @class AngFields AngFields.h EbsdLib/TSL/AngFields.h
@@ -60,6 +61,21 @@ class EbsdLib_EXPORT AngFields : public AbstractEbsdFields
     virtual ~AngFields();
 
     virtual std::vector<std::string> getFieldNames();
+
+    template<typename T>
+    T getFilterFields()
+    {
+      T fields;
+
+      fields.push_back(Ebsd::Ang::ImageQuality.c_str());
+      fields.push_back(Ebsd::Ang::ConfidenceIndex.c_str());
+      fields.push_back(Ebsd::Ang::PhaseData.c_str());
+
+      fields.push_back(Ebsd::Ang::SEMSignal.c_str());
+      fields.push_back(Ebsd::Ang::Fit.c_str());
+
+      return fields;
+    }
 
   private:
     AngFields(const AngFields&); // Copy Constructor Not Implemented

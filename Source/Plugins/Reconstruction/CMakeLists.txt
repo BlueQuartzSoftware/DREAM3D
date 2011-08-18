@@ -51,11 +51,6 @@ set (ReconstructionPlugin_UI_SRCS
     ${PROJECT_SOURCE_DIR}/UI/QualityMetricTableModel.cpp
     ${PROJECT_CODE_DIR}/QtSupport/DREAM3DPluginFrame.cpp
     )
-    
-set (ReconstructionPlugin_Misc_HDRS
-    ${PROJECT_SOURCE_DIR}/UI/AngFilterFields.h
-    ${PROJECT_SOURCE_DIR}/UI/CtfFilterFields.h
-)
 
 # -- Run MOC and UIC on the necessary files   
 QT4_ADD_RESOURCES( ReconstructionPlugin_Generated_RC_SRCS ${PROJECT_SOURCE_DIR}/UI/Icons.qrc)    
@@ -72,13 +67,11 @@ cmp_IDE_SOURCE_PROPERTIES("Generated" "${ReconstructionPlugin_Generated_UI_HDRS}
 SET (Reconstruction_HDRS
   ${PROJECT_SOURCE_DIR}/Reconstruction.h
   ${PROJECT_SOURCE_DIR}/ReconstructionFunc.h
-  ${PROJECT_SOURCE_DIR}/QualityMetricFilter.h
 )
 
 SET (Reconstruction_SRCS
   ${PROJECT_SOURCE_DIR}/Reconstruction.cpp
   ${PROJECT_SOURCE_DIR}/ReconstructionFunc.cpp
-  ${PROJECT_SOURCE_DIR}/QualityMetricFilter.cpp
 )
 cmp_IDE_SOURCE_PROPERTIES( "Reconstruction" "${Reconstruction_HDRS}" "${Reconstruction_SRCS}" "0")
 if ( ${DREAM3D_INSTALL_FILES} EQUAL 1 )
@@ -86,9 +79,6 @@ if ( ${DREAM3D_INSTALL_FILES} EQUAL 1 )
             DESTINATION include/DREAM3D/Reconstruction
             COMPONENT Headers   )
 endif()
-
-#-- AngSupport Files
-include(${PROJECT_SOURCE_DIR}/EbsdSupport/SourceList.cmake)
 
 
 #-- Gather all the Project Source files in this variable
@@ -101,8 +91,6 @@ set (ReconstructionPlugin_PROJECT_SRCS
     ${PROJECT_CODE_DIR}/QtSupport/DREAM3DPluginInterface.h
     ${Reconstruction_HDRS}
     ${Reconstruction_SRCS}
-    ${EbsdSupport_HDRS}
-    ${EbsdSupport_SRCS}
 )
 
 

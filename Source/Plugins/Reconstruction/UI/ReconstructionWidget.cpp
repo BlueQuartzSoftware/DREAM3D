@@ -13,8 +13,8 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
- * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
@@ -65,16 +65,16 @@
 #include "H5Support/H5Lite.h"
 
 #include "EbsdLib/H5EbsdVolumeInfo.h"
+#include "EbsdLib/QualityMetricFilter.h"
+#include "EbsdLib/H5EbsdVolumeReader.h"
+#include "EbsdLib/TSL/H5AngVolumeReader.h"
+#include "EbsdLib/TSL/AngFields.h"
+#include "EbsdLib/HKL/H5CtfVolumeReader.h"
+#include "EbsdLib/HKL/CtfFields.h"
 
-#include "Reconstruction/EbsdSupport/H5EbsdVolumeReader.h"
-#include "Reconstruction/EbsdSupport/H5AngVolumeReader.h"
-#include "Reconstruction/EbsdSupport/H5CtfVolumeReader.h"
 
-#include "Reconstruction/UI/AngFilterFields.h"
-#include "Reconstruction/UI/CtfFilterFields.h"
+
 #include "Reconstruction/UI/QualityMetricTableModel.h"
-#include "Reconstruction/QualityMetricFilter.h"
-
 
 // -----------------------------------------------------------------------------
 //
@@ -507,13 +507,13 @@ void ReconstructionWidget::on_m_H5InputFile_textChanged(const QString &text)
     // Get the list of Possible filter Fields based on the Manufacturer
     if (m_EbsdManufacturer->text().compare(QString(Ebsd::Ang::Manufacturer.c_str())) == 0)
     {
-      AngFilterFields fields;
-      m_QualityMetricTableModel->setPossibleFields(fields.getFieldNames());
+      AngFields fields;
+      m_QualityMetricTableModel->setPossibleFields(fields.getFilterFields<QStringList>());
     }
     else if (m_EbsdManufacturer->text().compare(QString(Ebsd::Ctf::Manufacturer.c_str())) == 0)
     {
-      CtfFilterFields fields;
-      m_QualityMetricTableModel->setPossibleFields(fields.getFieldNames());
+      CtfFields fields;
+      m_QualityMetricTableModel->setPossibleFields(fields.getFilterFields<QStringList>());
     }
     // Set the ItemDelegate for the table.
     QAbstractItemDelegate* aid = m_QualityMetricTableModel->getItemDelegate();

@@ -41,9 +41,8 @@
 #include "H5Support/H5Utilities.h"
 #include "H5Support/H5Lite.h"
 
-#include "Reconstruction/ReconstructionFunc.h"
-#include "Reconstruction/EbsdSupport/H5AngVolumeReader.h"
-#include "Reconstruction/EbsdSupport/H5CtfVolumeReader.h"
+#include "EbsdLib/TSL/H5AngVolumeReader.h"
+#include "EbsdLib/HKL/H5CtfVolumeReader.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -65,12 +64,13 @@ H5EbsdVolumeReader::~H5EbsdVolumeReader()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5EbsdVolumeReader::loadData(ReconstructionFunc* m, std::vector<QualityMetricFilter::Pointer> filters)
+int H5EbsdVolumeReader::loadData(float* euler1s, float* euler2s, float* euler3s,
+                         int* phases, bool* goodVoxels,
+                         int xpoints, int ypoints, int zpoints,
+                         std::vector<QualityMetricFilter::Pointer> filters)
 {
-  int err = -1;
-  // This is meant to be subclassed.
-
-  return err;
+  // This class should be subclassed and this method implemented.
+  return -1;
 }
 
 // -----------------------------------------------------------------------------
@@ -93,20 +93,20 @@ AIMArray<bool>::Pointer H5EbsdVolumeReader::determineGoodVoxels(std::vector<Qual
   }
 
   // Get the first bool array to use as a reference
-  AIMArray<bool>::Pointer array = filters[0]->getOutput();
+  AIMArray<bool>::Pointer baseArray = filters[0]->getOutput();
 
   for (size_t i = 1; i < nFilters; ++i)
   {
-    AIMArray<bool>::Pointer array2 = filters[i]->getOutput();
-    bool* ref = array->GetPointer(0);
-    bool* ar2 = array2->GetPointer(0);
+    AIMArray<bool>::Pointer currentArray = filters[i]->getOutput();
+    bool* baseArrayPtr = baseArray->GetPointer(0);
+    bool* currentArrayPtr = currentArray->GetPointer(0);
     for (size_t p = 0; p < nPoints; ++p)
     {
-      if (ref[p] == false || ar2[p] == false)
+      if (baseArrayPtr[p] == false || currentArrayPtr[p] == false)
       {
-        ref[p] = false;
+        baseArrayPtr[p] = false;
       }
     }
   }
-  return array;
+  return baseArray;
 }

@@ -13,8 +13,8 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
- * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
@@ -47,10 +47,9 @@
 #include "EbsdLib/EbsdConstants.h"
 #include "EbsdLib/HKL/H5CtfReader.h"
 
-#include "DREAM3D/Common/Constants.h"
-#include "DREAM3D/Common/OrientationMath.h"
+//#include "DREAM3D/Common/Constants.h"
+//#include "DREAM3D/Common/OrientationMath.h"
 
-#include "Reconstruction/ReconstructionFunc.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -109,8 +108,12 @@ std::vector<CtfPhase::Pointer> H5CtfVolumeReader::getPhases()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5CtfVolumeReader::loadData(ReconstructionFunc* m, std::vector<QualityMetricFilter::Pointer> filters)
+int H5CtfVolumeReader::loadData(float* euler1s, float* euler2s, float* euler3s,
+                                int* phases, bool* goodVoxels,
+                                int xpoints, int ypoints, int zpoints,
+                                std::vector<QualityMetricFilter::Pointer> filters)
 {
+
   int index = 0;
   int err = -1;
 #if !defined (WIN32)
@@ -137,7 +140,7 @@ int H5CtfVolumeReader::loadData(ReconstructionFunc* m, std::vector<QualityMetric
 
   err = readVolumeInfo();
 
-  for (int slice = 0; slice < m->zpoints; ++slice)
+  for (int slice = 0; slice < zpoints; ++slice)
   {
     H5CtfReader::Pointer reader = H5CtfReader::New();
     reader->setFileName(getFilename());
@@ -165,24 +168,24 @@ int H5CtfVolumeReader::loadData(ReconstructionFunc* m, std::vector<QualityMetric
     }
 
     // Figure out which are good voxels
-    AIMArray<bool>::Pointer goodVoxels = determineGoodVoxels(filters, dataPointers, xpointstemp * ypointstemp, dataTypes);
+    AIMArray<bool>::Pointer good_voxels = determineGoodVoxels(filters, dataPointers, xpointstemp * ypointstemp, dataTypes);
 
 
-    xstartspot = (m->xpoints - xpointstemp) / 2;
-    ystartspot = (m->ypoints - ypointstemp) / 2;
+    xstartspot = (xpoints - xpointstemp) / 2;
+    ystartspot = (ypoints - ypointstemp) / 2;
 
     // Copy the data from the current storage into the ReconstructionFunc Storage Location
     for (int j = 0; j < ypointstemp; j++)
     {
       for (int i = 0; i < xpointstemp; i++)
       {
-        index = ((m->zpoints - 1 - slice) * m->xpoints * m->ypoints) + ((j + ystartspot) * m->xpoints) + (i + xstartspot);
-        m->euler1s[index] = euler1Ptr[readerIndex]; // Phi1
-        m->euler2s[index] = euler2Ptr[readerIndex]; // Phi
-        m->euler3s[index] = euler3Ptr[readerIndex]; // Phi2
-        m->phases[index] = phasePtr[readerIndex] + 1; // Phase Add 1 to the phase number because .ctf files are zero based for phases
-        if (NULL != goodVoxels.get()) {
-          m->goodVoxels[index] = goodVoxels->GetValue(readerIndex);
+        index = ((zpoints - 1 - slice) * xpoints * ypoints) + ((j + ystartspot) * xpoints) + (i + xstartspot);
+        euler1s[index] = euler1Ptr[readerIndex]; // Phi1
+        euler2s[index] = euler2Ptr[readerIndex]; // Phi
+        euler3s[index] = euler3Ptr[readerIndex]; // Phi2
+        phases[index] = phasePtr[readerIndex] + 1; // Phase Add 1 to the phase number because .ctf files are zero based for phases
+        if (NULL != good_voxels.get()) {
+          goodVoxels[index] = good_voxels->GetValue(readerIndex);
         }
 
         ++readerIndex;
@@ -190,6 +193,6 @@ int H5CtfVolumeReader::loadData(ReconstructionFunc* m, std::vector<QualityMetric
     }
   }
   return err;
-}
 
+}
 
