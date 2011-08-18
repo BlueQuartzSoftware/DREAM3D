@@ -13,7 +13,7 @@ project(PluginMaker NONE)
 set(DREAM3D_Plugin_Name "MyClass" CACHE STRING "The Name of the new Pipeline Class" )
 set(PluginName ${DREAM3D_Plugin_Name})
 
-if (1)
+if (0)
     set(PluginMaker_PluginDir ${DREAM3D_BINARY_DIR}/PluginMaker/${PluginName}/UI)
     set(PluginMaker_LibDir ${DREAM3D_BINARY_DIR}/PluginMaker/${PluginName})
 else()
