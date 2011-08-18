@@ -13,8 +13,8 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
- * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
@@ -43,11 +43,11 @@
 #include "EbsdLib/EbsdSetGetMacros.h"
 #include "EbsdLib/EbsdLibConfiguration.h"
 #include "EbsdLib/EbsdConstants.h"
+#include "EbsdLib/H5EbsdVolumeReader.h"
+#include "EbsdLib/QualityMetricFilter.h"
+
 #include "EbsdLib/HKL/CtfPhase.h"
 
-//-- Reconstruction/EbsdSupport Includes
-#include "Reconstruction/EbsdSupport/H5EbsdVolumeReader.h"
-#include "Reconstruction/QualityMetricFilter.h"
 
 /**
  * @class H5CtfVolumeReader H5CtfVolumeReader.h Reconstruction/EbsdSupport/H5CtfVolumeReader.h
@@ -56,7 +56,7 @@
  * @date May 23, 2011
  * @version 1.0
  */
-class H5CtfVolumeReader : public H5EbsdVolumeReader
+class EbsdLib_EXPORT H5CtfVolumeReader : public H5EbsdVolumeReader
 {
   public:
     EBSD_SHARED_POINTERS(H5CtfVolumeReader)
@@ -64,8 +64,29 @@ class H5CtfVolumeReader : public H5EbsdVolumeReader
 
     virtual ~H5CtfVolumeReader();
 
-    int loadData(ReconstructionFunc* m, std::vector<QualityMetricFilter::Pointer> filters);
+    /**
+     * @brief This method does the actual loading of the OIM data from the data
+     * source (files, streams, etc) into the data structures.
+     * @param euler1s
+     * @param euler2s
+     * @param euler3s
+     * @param phases
+     * @param goodVoxels
+     * @param xpoints
+     * @param ypoints
+     * @param zpoints
+     * @param filters
+     * @return
+     */
+    int loadData(float* euler1s, float* euler2s, float* euler3s,
+                 int* phases, bool* goodVoxels,
+                 int xpoints, int ypoints, int zpoints,
+                 std::vector<QualityMetricFilter::Pointer> filters);
 
+    /**
+     * @brief
+     * @return
+     */
     std::vector<CtfPhase::Pointer> getPhases();
 
   protected:

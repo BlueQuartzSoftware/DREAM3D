@@ -44,6 +44,8 @@
 #include "MXA/Common/MXASetGetMacros.h"
 
 #include "EbsdLib/TSL/AngPhase.h"
+#include "EbsdLib/TSL/H5AngVolumeReader.h"
+
 
 #include "DREAM3D/DREAM3DConfiguration.h"
 #include "DREAM3D/Common/AIMArray.hpp"
@@ -54,7 +56,7 @@
 
 #include "Reconstruction/ReconstructionFunc.h"
 
-#include "Reconstruction/EbsdSupport/H5AngVolumeReader.h"
+
 
 
 
@@ -127,9 +129,9 @@ int main(int argc, char **argv)
                 0, 0, crystalStructures,
                 m_PhaseTypes, precipFractions, m_AlignmentMethod);
   std::cout << "Loading EBSD Data...." << std::endl;
-  std::vector<QualityMetricFilter::Pointer> filters;
+  std::vector<QualityMetricFilter::Pointer> m_QualityMetricFilters;
 
-  oimDataLoader->loadData(m.get(), filters);
+  err = h5io->loadData(m->euler1s, m->euler2s, m->euler3s, m->phases, m->goodVoxels, m->xpoints, m->ypoints, m->zpoints, m_QualityMetricFilters);
   m->initializeQuats();
 
   std::cout << "Writing VTK file" << std::endl;

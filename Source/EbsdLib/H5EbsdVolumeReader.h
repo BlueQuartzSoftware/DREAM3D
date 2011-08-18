@@ -13,8 +13,8 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
- * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
@@ -45,10 +45,8 @@
 #include "EbsdLib/EbsdConstants.h"
 #include "EbsdLib/H5EbsdVolumeInfo.h"
 
-#include "Reconstruction/QualityMetricFilter.h"
+#include "EbsdLib/QualityMetricFilter.h"
 
-
-class ReconstructionFunc;
 
 /**
  * @class AbstractAngDataLoader AbstractAngDataLoader.h EbsdLib/TSL/AbstractAngDataLoader.h
@@ -58,7 +56,7 @@ class ReconstructionFunc;
  * @date May 23, 2011
  * @version 1.0
  */
-class H5EbsdVolumeReader : public H5EbsdVolumeInfo
+class EbsdLib_EXPORT H5EbsdVolumeReader : public H5EbsdVolumeInfo
 {
 
   public:
@@ -86,14 +84,34 @@ class H5EbsdVolumeReader : public H5EbsdVolumeInfo
      */
     EBSD_INSTANCE_PROPERTY(int, SliceEnd);
 
-
     /**
      * @brief This method does the actual loading of the OIM data from the data
-     * source (files, streams, etc) into the Reconstruction Module data structures.
-     * @param m
+     * source (files, streams, etc) into the data structures. Subclasses need to
+     * fully implement this. This is a skeleton method that simply returns an error.
+     * @param euler1s The first set of euler angles (phi1)
+     * @param euler2s The second set of euler angles (Phi)
+     * @param euler3s The third set of euler angles (phi2)
+     * @param phases The phase index data
+     * @param goodVoxels The boolean array of good voxels
+     * @param xpoints The number of x voxels
+     * @param ypoints The number of y voxels
+     * @param zpoints The number of z voxels
+     * @param filters The Quality Metric Filters
+     * @return
      */
-    virtual int loadData(ReconstructionFunc* m, std::vector<QualityMetricFilter::Pointer> filters);
+    virtual int loadData(float* euler1s, float* euler2s, float* euler3s,
+                         int* phases, bool* goodVoxels,
+                         int xpoints, int ypoints, int zpoints,
+                         std::vector<QualityMetricFilter::Pointer> filters);
 
+    /**
+     *
+     * @param filters
+     * @param dataPointers
+     * @param nPoints
+     * @param dTypes
+     * @return
+     */
     virtual AIMArray<bool>::Pointer determineGoodVoxels( std::vector<QualityMetricFilter::Pointer> filters,
                                     std::vector<void*> dataPointers,
                                     size_t nPoints,

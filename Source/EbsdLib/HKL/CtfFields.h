@@ -40,10 +40,11 @@
 #include <string>
 #include <vector>
 
-
+#include "EbsdLib/EbsdConstants.h"
 #include "EbsdLib/EbsdSetGetMacros.h"
 #include "EbsdLib/EbsdLibConfiguration.h"
 #include "EbsdLib/AbstractEbsdFields.h"
+#include "EbsdLib/HKL/CtfConstants.h"
 
 /**
  * @class CtfFields CtfFields.h EbsdLib/HKL/CtfFields.h
@@ -61,6 +62,22 @@ class EbsdLib_EXPORT CtfFields : public AbstractEbsdFields
 
 
     virtual std::vector<std::string> getFieldNames();
+
+    template<typename T>
+    T getFilterFields()
+    {
+      T fields;
+      fields.push_back(Ebsd::Ctf::Phase.c_str());
+
+      fields.push_back(Ebsd::Ctf::BandCount.c_str());
+      fields.push_back(Ebsd::Ctf::Error.c_str());
+
+      fields.push_back(Ebsd::Ctf::MeanAngularDeviation.c_str());
+      fields.push_back(Ebsd::Ctf::BandContrast.c_str());
+      fields.push_back(Ebsd::Ctf::BandSlope.c_str());
+
+      return fields;
+    }
 
   private:
     CtfFields(const CtfFields&); // Copy Constructor Not Implemented
