@@ -13,8 +13,8 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
- * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
@@ -51,7 +51,14 @@
 
 #include "GrainGenerator/GrainGenerator.h"
 
-
+/**
+ * @brief Parses numeric values from a delimited string into a preallocated array storage.
+ * The programmer MUST know in advance how many values there will be.
+ * @param values The string to be parsed
+ * @param format The stdio format specifier to use (%f for floats, %d for integers
+ * @param output The output location to store the parsed values
+ * @return Error condition
+ */
 template<typename T>
 int parseValues(const std::string &values, const char* format, T* output)
 {
@@ -73,6 +80,14 @@ int parseValues(const std::string &values, const char* format, T* output)
   return 0;
 }
 
+/**
+ * @brief Parses unknown number of numeric values from a delimited string and places
+ * the values into the output variable.
+ * @param values The string to be parsed
+ * @param format The stdio format specifier to use (%f for floats, %d for integers
+ * @param output The output location to store the parsed values
+ * @return Error condition
+ */
 template<typename T>
 int parseUnknownArray(const std::string &values, const char* format, std::vector<T> &output)
 {

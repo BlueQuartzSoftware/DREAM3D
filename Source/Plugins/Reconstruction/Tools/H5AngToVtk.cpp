@@ -13,8 +13,8 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
- * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
@@ -43,7 +43,7 @@
 #include "MXA/MXATypes.h"
 #include "MXA/Common/MXASetGetMacros.h"
 
-#include "TSLLib/AngPhase.h"
+#include "EbsdLib/TSL/AngPhase.h"
 
 #include "DREAM3D/DREAM3DConfiguration.h"
 #include "DREAM3D/Common/AIMArray.hpp"
@@ -54,9 +54,8 @@
 
 #include "Reconstruction/ReconstructionFunc.h"
 
-#include "EbsdSupport/AbstractAngDataLoader.h"
-#include "EbsdSupport/AngDataLoader.h"
-#include "EbsdSupport/H5AngDataLoader.h"
+#include "Reconstruction/EbsdSupport/H5AngVolumeReader.h"
+
 
 
 
@@ -86,21 +85,19 @@ int main(int argc, char **argv)
 
   ReconstructionFunc::Pointer m = ReconstructionFunc::New();
 
-  AbstractEbsdDataLoader::Pointer oimDataLoader = H5AngVolumeReader::New();
+  H5EbsdVolumeReader::Pointer oimDataLoader = H5AngVolumeReader::New();
   H5AngVolumeReader* h5io = dynamic_cast<H5AngVolumeReader*>(oimDataLoader.get());
   h5io->setFilename(m_H5AngFile);
 
-  // Read the Header
-  err = h5io->readZHeader(zStart, zEnd, m->resz);
-  h5io->setZStartIndex(zStart);
-  h5io->setZEndIndex(zEnd);
+  zStart = h5io->getZStart();
+  zEnd = h5io->getZEnd();
 
   // Get the dimensions
-  err = h5io->getSizeAndResolution(m->xpoints, m->ypoints, m->zpoints, m->resx, m->resy, m->resz);
+  err = h5io->getDimsAndResolution(m->xpoints, m->ypoints, m->zpoints, m->resx, m->resy, m->resz);
 
-  h5io->setZStartIndex(zStart);
-  h5io->setZEndIndex(zEnd);
-  h5io->setOrientation(Ang::NoOrientation);
+  h5io->setSliceStart(zStart);
+  h5io->setSliceEnd(zEnd);
+  h5io->setOrientation(Ebsd::NoOrientation);
 
   DREAM3D::Reconstruction::AlignmentMethod m_AlignmentMethod = DREAM3D::Reconstruction::UnknownAlignmentMethod;
   std::vector<DREAM3D::Reconstruction::PhaseType> m_PhaseTypes;
@@ -115,7 +112,7 @@ int main(int argc, char **argv)
   precipFractions[0] = -1.0f;
   for(size_t i=0;i<phases.size();i++)
   {
-    int phaseID = phases[i]->getPhase();
+    int phaseID = phases[i]->getPhaseIndex();
     Ebsd::Ang::PhaseSymmetry symmetry = phases[i]->getSymmetry();
     Ebsd::CrystalStructure crystal_structure = Ebsd::UnknownCrystalStructure;
     if(symmetry == Ebsd::Ang::CubicSymmetry) crystal_structure = Ebsd::Cubic;
@@ -125,11 +122,14 @@ int main(int argc, char **argv)
     precipFractions[phaseID] = -1.0f;
   }
   m->initialize(m->xpoints, m->ypoints, m->zpoints,
-                m->resx, m->resy, m->resz, 0, 0, 0, 0, 0, 0, 0,
-                crystalStructures, m_PhaseTypes, precipFractions,
-                m_AlignmentMethod);
+                m->resx, m->resy, m->resz,
+                0, 0, 0,
+                0, 0, crystalStructures,
+                m_PhaseTypes, precipFractions, m_AlignmentMethod);
   std::cout << "Loading EBSD Data...." << std::endl;
-  oimDataLoader->loadData(m.get());
+  std::vector<QualityMetricFilter::Pointer> filters;
+
+  oimDataLoader->loadData(m.get(), filters);
   m->initializeQuats();
 
   std::cout << "Writing VTK file" << std::endl;
