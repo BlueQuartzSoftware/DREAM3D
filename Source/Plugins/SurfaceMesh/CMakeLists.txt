@@ -36,13 +36,13 @@ set (SurfaceMeshPlugin_UI_HDRS
     ${${CLASS_NAME}Plugin_BINARY_DIR}/Q${CLASS_NAME}.h
     ${PROJECT_SOURCE_DIR}/UI/SurfaceMeshPlugin.h
     ${PROJECT_SOURCE_DIR}/UI/SurfaceMeshWidget.h
-    ${PROJECT_CODE_DIR}/QtSupport/AIMPluginFrame.h
+    ${PROJECT_CODE_DIR}/QtSupport/DREAM3DPluginFrame.h
     )
     
 set (SurfaceMeshPlugin_UI_SRCS 
     ${PROJECT_SOURCE_DIR}/UI/SurfaceMeshPlugin.cpp
     ${PROJECT_SOURCE_DIR}/UI/SurfaceMeshWidget.cpp
-    ${PROJECT_CODE_DIR}/QtSupport/AIMPluginFrame.cpp
+    ${PROJECT_CODE_DIR}/QtSupport/DREAM3DPluginFrame.cpp
     )
 
 # -- Run MOC and UIC on the necessary files   

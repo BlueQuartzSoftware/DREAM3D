@@ -1,6 +1,6 @@
 /* ============================================================================
  * Copyright (c) 2010, Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2010, Dr. Michael A. Grober (US Air Force Research Laboratories
+ * Copyright (c) 2010, Dr. Michael A. Groeber (US Air Force Research Laboratories)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -13,9 +13,10 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Jackson nor the names of its contributors may
- * be used to endorse or promote products derived from this software without
- * specific prior written permission.
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
+ * or promote products derived from this software without specific prior written
+ * permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -27,6 +28,10 @@
  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ *  This code was written under United States Air Force Contract number
+ *                           FA8650-07-D-5800
+ *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "DREAM3D_UI.h"
 
@@ -52,13 +57,13 @@
 #include "QtSupport/ApplicationAboutBoxDialog.h"
 #include "QtSupport/QRecentFileList.h"
 #include "QtSupport/QR3DFileCompleter.h"
-#include "QtSupport/AIM_QtMacros.h"
-#include "QtSupport/AIMPluginFrame.h"
+#include "QtSupport/Dream3DQtMacros.h"
+#include "QtSupport/DREAM3DPluginFrame.h"
 #include "QtSupport/DREAM3DPluginInterface.h"
 #include "QtSupport/HelpDialog.h"
 #include "GrainGenerator/UI/GrainGeneratorPlugin.h"
 #include "MicrostructureStatistics/UI/MicrostructureStatisticsPlugin.h"
-#include "OIMImport/UI/OIMImportPlugin.h"
+#include "EbsdImport/UI/EbsdImportPlugin.h"
 #include "Reconstruction/UI/ReconstructionPlugin.h"
 #include "SurfaceMesh/UI/SurfaceMeshPlugin.h"
 
@@ -379,7 +384,7 @@ qint32 DREAM3D_UI::checkDirtyDocument()
 
   if (this->isWindowModified() == true)
   {
-    int r = QMessageBox::warning(this, tr("AIMRepresentation"),
+    int r = QMessageBox::warning(this, tr("DREAM.3D"),
                             tr("The Data has been modified.\nDo you want to save your changes?"),
                             QMessageBox::Save | QMessageBox::Default,
                             QMessageBox::Discard,
@@ -548,7 +553,7 @@ void DREAM3D_UI::loadPlugins()
   // Our list of Plugins that we want control over the order in which they appear
   // in the toolbar and menu
   QStringList pluginNames;
-  pluginNames << QString::fromStdString(DREAM3D::UIPlugins::OIMImportFile)
+  pluginNames << QString::fromStdString(DREAM3D::UIPlugins::EbsdImportFile)
               << QString::fromStdString(DREAM3D::UIPlugins::ReconstructionFile)
               << QString::fromStdString(DREAM3D::UIPlugins::MicrostructureStatisticsFile)
               << QString::fromStdString(DREAM3D::UIPlugins::GrainGeneratorFile)
@@ -686,7 +691,7 @@ void DREAM3D_UI::setInputUI()
   QWidget* inputWidget = m_ActivePlugin->getInputWidget(this);
   centerWidget->layout()->addWidget(inputWidget);
 
-  AIMPluginFrame* frame = m_ActivePlugin->getPluginFrame(NULL);
+  DREAM3DPluginFrame* frame = m_ActivePlugin->getPluginFrame(NULL);
   if (frame)
   {
     frame->setStatusBar(this->statusBar());

@@ -1,4 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
+
 //
 //  Copyright (c) 2008, mjackson
 //  All rights reserved.
@@ -7,7 +7,7 @@
 //  This code was written under United States Air Force Contract number
 //                           FA8650-04-C-5229
 //
-///////////////////////////////////////////////////////////////////////////////
+
 #ifndef _AIMArray_h_
 #define _AIMArray_h_
 

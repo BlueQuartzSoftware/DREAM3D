@@ -1,13 +1,38 @@
-///////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2009, 2010 Michael A. Jackson. BlueQuartz Software
-//  Copyright (c) 2009, 2010 Michael Groeber, US Air Force Research Laboratory
-//  All rights reserved.
-//  BSD License: http://www.opensource.org/licenses/bsd-license.html
-//
-// This code was partly written under US Air Force Contract FA8650-07-D-5800
-//
-///////////////////////////////////////////////////////////////////////////////
+/* ============================================================================
+ * Copyright (c) 2010, Michael A. Jackson (BlueQuartz Software)
+ * Copyright (c) 2010, Dr. Michael A. Groeber (US Air Force Research Laboratories)
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without modification,
+ * are permitted provided that the following conditions are met:
+ *
+ * Redistributions of source code must retain the above copyright notice, this
+ * list of conditions and the following disclaimer.
+ *
+ * Redistributions in binary form must reproduce the above copyright notice, this
+ * list of conditions and the following disclaimer in the documentation and/or
+ * other materials provided with the distribution.
+ *
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
+ * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * or promote products derived from this software without specific prior written
+ * permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+ * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ *  This code was written under United States Air Force Contract number
+ *                           FA8650-07-D-5800
+ *
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #ifndef _GrainGeneratorFunc_H
 #define _GrainGeneratorFunc_H
 
@@ -40,7 +65,7 @@
 #include "DREAM3D/Common/AIMArray.hpp"
 #include "DREAM3D/Common/Constants.h"
 #include "DREAM3D/Common/Grain.h"
-#include "DREAM3D/Common/AIMRandomNG.h"
+#include "DREAM3D/Common/DREAM3DRandom.h"
 
 #include "DREAM3D/Common/OrientationMath.h"
 #include "DREAM3D/Common/OrientationOps/CubicOps.h"
@@ -103,9 +128,9 @@ public:
     float misorientationtolerance;
 
     std::vector<Ebsd::CrystalStructure> crystruct;
-    std::vector<AIM::Reconstruction::PhaseType>        phaseType;
+    std::vector<DREAM3D::Reconstruction::PhaseType>        phaseType;
     std::vector<float>                                 pptFractions;
-    std::vector<AIM::SyntheticBuilder::ShapeType>      shapeTypes;
+    std::vector<DREAM3D::SyntheticBuilder::ShapeType>      shapeTypes;
 
     DECLARE_WRAPPED_ARRAY(grain_indicies, m_GrainIndicies, int)
     DECLARE_WRAPPED_ARRAY(phases, m_Phases, int);
@@ -188,7 +213,7 @@ public:
                     float m_fillingerrorweight, float m_neighborhooderrorweight, float m_sizedisterrorweight,
                     int32_t m_Precipitates, float m_FractionPrecipitates,
                     std::vector<Ebsd::CrystalStructure> m_CrystalStructure,
-                    std::vector<AIM::Reconstruction::PhaseType> m_PhaseType);
+                    std::vector<DREAM3D::Reconstruction::PhaseType> m_PhaseType);
 
 #endif
 	void initializeAttributes();
@@ -252,7 +277,7 @@ private:
     OrientationMath::Pointer         m_HexOps;
     OrientationMath::Pointer         m_OrthoOps;
 
-    std::map<AIM::SyntheticBuilder::ShapeType, DREAM3D::ShapeOps*>           m_ShapeOps;
+    std::map<DREAM3D::SyntheticBuilder::ShapeType, DREAM3D::ShapeOps*>           m_ShapeOps;
     DREAM3D::ShapeOps::Pointer                m_UnknownShapeOps;
     DREAM3D::ShapeOps::Pointer                m_CubicOctohedronOps;
     DREAM3D::ShapeOps::Pointer                m_CylinderOps;

@@ -1,5 +1,6 @@
 /* ============================================================================
  * Copyright (c) 2010, Michael A. Jackson (BlueQuartz Software)
+ * Copyright (c) 2010, Dr. Michael A. Groeber (US Air Force Research Laboratories)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -12,9 +13,10 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Jackson nor the names of its contributors may
- * be used to endorse or promote products derived from this software without
- * specific prior written permission.
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
+ * or promote products derived from this software without specific prior written
+ * permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -26,44 +28,59 @@
  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ *  This code was written under United States Air Force Contract number
+ *                           FA8650-07-D-5800
+ *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef STATSGENERATOR_H_
-#define STATSGENERATOR_H_
+#ifndef EbsdImportPlugin_H_
+#define EbsdImportPlugin_H_
 
-#include <iostream>
-#include <vector>
+#include <QtCore/QObject>
+#include <QtCore/QSettings>
+#include "QtSupport/DREAM3DPluginInterface.h"
 
-#include <MXA/Common/MXASetGetMacros.h>
+class EbsdImportWidget;
+class DREAM3DPluginFrame;
 
-class StatsGenerator
+
+DREAM3D_PLUGIN_CONSTANTS(EbsdImport, EBSD Import)
+
+
+class EbsdImportPlugin : public QObject, public DREAM3DPluginInterface
 {
+    Q_OBJECT;
+    Q_INTERFACES(DREAM3DPluginInterface)
+
   public:
-    MXA_SHARED_POINTERS(StatsGenerator)
-    MXA_STATIC_NEW_MACRO(StatsGenerator)
-    MXA_TYPE_MACRO(StatsGenerator)
+    EbsdImportPlugin();
+    virtual ~EbsdImportPlugin();
 
-    virtual ~StatsGenerator();
+    QString getPluginName();
 
-    MXA_INSTANCE_PROPERTY(double, Mu)
-    MXA_INSTANCE_PROPERTY(double, Sigma)
-    MXA_INSTANCE_PROPERTY(double, SigmaCutOff)
-    MXA_INSTANCE_PROPERTY(double, BinStepSize)
+    virtual QWidget* getInputWidget(QWidget* parent);
+    virtual DREAM3DPluginFrame* getPluginFrame(QWidget* parent);
 
 
-    int computeBinsAndCutOffs( std::vector<double> &binsizes,
-                               std::vector<double> &xCo,
-                               std::vector<double> &yCo,
-                               double &xMax, double &yMax,
-                               std::vector<double> &x,
-                               std::vector<double> &y);
+    virtual void writeSettings(QSettings &prefs);
+    virtual void readSettings(QSettings &prefs);
+    virtual QIcon icon();
+    virtual QUrl htmlHelpIndexFile();
+
+  public slots:
+    virtual void displayHelp();
+
+  signals:
+    void showHelp(QUrl);
+
 
   protected:
-    StatsGenerator();
+    EbsdImportWidget* m_InputWidget;
 
   private:
-    StatsGenerator(const StatsGenerator&); // Copy Constructor Not Implemented
-    void operator=(const StatsGenerator&); // Operator '=' Not Implemented
+    EbsdImportPlugin(const EbsdImportPlugin&); // Copy Constructor Not Implemented
+    void operator=(const EbsdImportPlugin&); // Operator '=' Not Implemented
 };
 
-#endif /* STATSGENERATOR_H_ */
+#endif /* EbsdImportPlugin_H_ */

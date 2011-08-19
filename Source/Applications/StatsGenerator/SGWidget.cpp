@@ -1,5 +1,6 @@
 /* ============================================================================
- * Copyright (c) 2011, Michael A. Jackson (BlueQuartz Software)
+ * Copyright (c) 2010, Michael A. Jackson (BlueQuartz Software)
+ * Copyright (c) 2010, Dr. Michael A. Groeber (US Air Force Research Laboratories
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -12,9 +13,10 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Jackson nor the names of its contributors may
- * be used to endorse or promote products derived from this software without
- * specific prior written permission.
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
+ * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * or promote products derived from this software without specific prior written
+ * permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -26,6 +28,10 @@
  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ *  This code was written under United States Air Force Contract number
+ *                           FA8650-07-D-5800
+ *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "SGWidget.h"
 
@@ -87,7 +93,7 @@ if (err < 0) {\
 // -----------------------------------------------------------------------------
 SGWidget::SGWidget(QWidget *parent) :
 QWidget(parent),
-m_PhaseType(AIM::Reconstruction::PrimaryPhase),
+m_PhaseType(DREAM3D::Reconstruction::PrimaryPhase),
 m_PhaseFraction(1.0),
 m_TotalPhaseFraction(1.0),
 m_PptFraction(-1.0f),
@@ -143,10 +149,10 @@ AbstractMicrostructurePresetFactory::Pointer RegisterPresetFactory(QComboBox* mi
 // -----------------------------------------------------------------------------
 void SGWidget::setupGui()
 {
-  distributionTypeCombo->addItem(AIM::HDF5::BetaDistribution.c_str());
-  distributionTypeCombo->addItem(AIM::HDF5::LogNormalDistribution.c_str());
-  distributionTypeCombo->addItem(AIM::HDF5::PowerLawDistribution.c_str());
-  distributionTypeCombo->setCurrentIndex(AIM::Reconstruction::LogNormal);
+  distributionTypeCombo->addItem(DREAM3D::HDF5::BetaDistribution.c_str());
+  distributionTypeCombo->addItem(DREAM3D::HDF5::LogNormalDistribution.c_str());
+  distributionTypeCombo->addItem(DREAM3D::HDF5::PowerLawDistribution.c_str());
+  distributionTypeCombo->setCurrentIndex(DREAM3D::Reconstruction::LogNormal);
   // Turn off all the plot widgets
   setTabsPlotTabsEnabled(false);
 
@@ -180,8 +186,8 @@ void SGWidget::setupGui()
    w->setPlotTitle(QString("Size Vs. Omega 3"));
    w->setXAxisName(QString("Omega 3"));
    w->setYAxisName(QString("Frequency"));
-   w->setDistributionType(AIM::Reconstruction::Beta);
-   w->setStatisticsType(AIM::Reconstruction::Grain_SizeVOmega3);
+   w->setDistributionType(DREAM3D::Reconstruction::Beta);
+   w->setStatisticsType(DREAM3D::Reconstruction::Grain_SizeVOmega3);
    w->blockDistributionTypeChanges(true);
    w->setRowOperationEnabled(false);
    w->setMu(mu);
@@ -197,8 +203,8 @@ void SGWidget::setupGui()
    w->setPlotTitle(QString("B/A Shape Distribution"));
    w->setXAxisName(QString("B/A"));
    w->setYAxisName(QString("Frequency"));
-   w->setDistributionType(AIM::Reconstruction::Beta);
-   w->setStatisticsType(AIM::Reconstruction::Grain_SizeVBoverA);
+   w->setDistributionType(DREAM3D::Reconstruction::Beta);
+   w->setStatisticsType(DREAM3D::Reconstruction::Grain_SizeVBoverA);
    w->blockDistributionTypeChanges(true);
    w->setRowOperationEnabled(false);
    w->setMu(mu);
@@ -213,8 +219,8 @@ void SGWidget::setupGui()
    w->setPlotTitle(QString("C/A Shape Distribution"));
    w->setXAxisName(QString("C/A"));
    w->setYAxisName(QString("Frequency"));
-   w->setDistributionType(AIM::Reconstruction::Beta);
-   w->setStatisticsType(AIM::Reconstruction::Grain_SizeVCoverA);
+   w->setDistributionType(DREAM3D::Reconstruction::Beta);
+   w->setStatisticsType(DREAM3D::Reconstruction::Grain_SizeVCoverA);
    w->blockDistributionTypeChanges(true);
    w->setRowOperationEnabled(false);
    w->setMu(mu);
@@ -229,8 +235,8 @@ void SGWidget::setupGui()
    w->setPlotTitle(QString("C/B Shape Distribution"));
    w->setXAxisName(QString("C/B"));
    w->setYAxisName(QString("Frequency"));
-   w->setDistributionType(AIM::Reconstruction::Beta);
-   w->setStatisticsType(AIM::Reconstruction::Grain_SizeVCoverB);
+   w->setDistributionType(DREAM3D::Reconstruction::Beta);
+   w->setStatisticsType(DREAM3D::Reconstruction::Grain_SizeVCoverB);
    w->blockDistributionTypeChanges(true);
    w->setRowOperationEnabled(false);
    w->setMu(mu);
@@ -245,8 +251,8 @@ void SGWidget::setupGui()
    w->setPlotTitle(QString("Neighbors Distributions"));
    w->setXAxisName(QString("Distance (Multiples of Diameter)"));
    w->setYAxisName(QString("Number of Grains"));
-   w->setDistributionType(AIM::Reconstruction::Power);
-   w->setStatisticsType(AIM::Reconstruction::Grain_SizeVNeighbors);
+   w->setDistributionType(DREAM3D::Reconstruction::Power);
+   w->setStatisticsType(DREAM3D::Reconstruction::Grain_SizeVNeighbors);
    w->blockDistributionTypeChanges(true);
    w->setRowOperationEnabled(false);
    w->setMu(mu);
@@ -762,16 +768,16 @@ int SGWidget::writeDataToHDF5(H5ReconStatsWriter::Pointer writer)
 
   // Now that we have bins and grain sizes, push those to the other plot widgets
   // Setup Each Plot Widget
-  err = m_Omega3Plot->writeDataToHDF5(writer, AIM::HDF5::Grain_SizeVOmega3_Distributions);
-  SGWIGET_WRITE_ERROR_CHECK(AIM::HDF5::Grain_SizeVOmega3_Distributions)
-  err = m_BOverAPlot->writeDataToHDF5(writer, AIM::HDF5::Grain_SizeVBoverA_Distributions);
-  SGWIGET_WRITE_ERROR_CHECK(AIM::HDF5::Grain_SizeVBoverA_Distributions)
-  err = m_COverAPlot->writeDataToHDF5(writer, AIM::HDF5::Grain_SizeVCoverA_Distributions);
-  SGWIGET_WRITE_ERROR_CHECK(AIM::HDF5::Grain_SizeVCoverA_Distributions)
-  err = m_COverBPlot->writeDataToHDF5(writer, AIM::HDF5::Grain_SizeVCoverB_Distributions);
-  SGWIGET_WRITE_ERROR_CHECK(AIM::HDF5::Grain_SizeVCoverB_Distributions)
-  err = m_NeighborPlot->writeDataToHDF5(writer, AIM::HDF5::Grain_SizeVNeighbors_Distributions);
-  SGWIGET_WRITE_ERROR_CHECK(AIM::HDF5::Grain_SizeVNeighbors_Distributions)
+  err = m_Omega3Plot->writeDataToHDF5(writer, DREAM3D::HDF5::Grain_SizeVOmega3_Distributions);
+  SGWIGET_WRITE_ERROR_CHECK(DREAM3D::HDF5::Grain_SizeVOmega3_Distributions)
+  err = m_BOverAPlot->writeDataToHDF5(writer, DREAM3D::HDF5::Grain_SizeVBoverA_Distributions);
+  SGWIGET_WRITE_ERROR_CHECK(DREAM3D::HDF5::Grain_SizeVBoverA_Distributions)
+  err = m_COverAPlot->writeDataToHDF5(writer, DREAM3D::HDF5::Grain_SizeVCoverA_Distributions);
+  SGWIGET_WRITE_ERROR_CHECK(DREAM3D::HDF5::Grain_SizeVCoverA_Distributions)
+  err = m_COverBPlot->writeDataToHDF5(writer, DREAM3D::HDF5::Grain_SizeVCoverB_Distributions);
+  SGWIGET_WRITE_ERROR_CHECK(DREAM3D::HDF5::Grain_SizeVCoverB_Distributions)
+  err = m_NeighborPlot->writeDataToHDF5(writer, DREAM3D::HDF5::Grain_SizeVNeighbors_Distributions);
+  SGWIGET_WRITE_ERROR_CHECK(DREAM3D::HDF5::Grain_SizeVNeighbors_Distributions)
   err = m_ODFWidget->writeDataToHDF5(writer);
   SGWIGET_WRITE_ERROR_CHECK(std::string("ODF Data"));
   err = m_AxisODFWidget->writeDataToHDF5(writer);
@@ -797,24 +803,24 @@ int SGWidget::readDataFromHDF5(H5ReconStatsReader::Pointer reader, int phase)
   setPhaseIndex(phase);
 
   std::vector<unsigned int> xtal;
-  err = reader->readStatsDataset(phase, AIM::HDF5::CrystalStructure, xtal);
-  CHECK_STATS_READ_ERROR(err, AIM::HDF5::Reconstruction, AIM::HDF5::CrystalStructure)
+  err = reader->readStatsDataset(phase, DREAM3D::HDF5::CrystalStructure, xtal);
+  CHECK_STATS_READ_ERROR(err, DREAM3D::HDF5::Reconstruction, DREAM3D::HDF5::CrystalStructure)
   m_CrystalStructure = static_cast<Ebsd::CrystalStructure>(xtal[0]);
 
   std::vector<unsigned int> pt;
-  err = reader->readStatsDataset(phase, AIM::HDF5::PhaseType, pt);
-  CHECK_STATS_READ_ERROR(err, AIM::HDF5::Reconstruction, AIM::HDF5::PhaseType)
-  m_PhaseType = static_cast<AIM::Reconstruction::PhaseType>(pt[0]);
+  err = reader->readStatsDataset(phase, DREAM3D::HDF5::PhaseType, pt);
+  CHECK_STATS_READ_ERROR(err, DREAM3D::HDF5::Reconstruction, DREAM3D::HDF5::PhaseType)
+  m_PhaseType = static_cast<DREAM3D::Reconstruction::PhaseType>(pt[0]);
 
   std::vector<float> phaseFraction;
-  err = reader->readStatsDataset(phase, AIM::HDF5::PhaseFraction, phaseFraction);
-  CHECK_STATS_READ_ERROR(err, AIM::HDF5::Reconstruction, AIM::HDF5::PhaseFraction)
+  err = reader->readStatsDataset(phase, DREAM3D::HDF5::PhaseFraction, phaseFraction);
+  CHECK_STATS_READ_ERROR(err, DREAM3D::HDF5::Reconstruction, DREAM3D::HDF5::PhaseFraction)
   m_PhaseFraction = phaseFraction[0];
 
   m_PptFraction = -1.0;
-  if (AIM::Reconstruction::PrecipitatePhase == m_PhaseType) {
-    err = reader->readScalarAttribute<float>(phase, AIM::HDF5::PhaseType, AIM::HDF5::PrecipitateBoundaryFraction, m_PptFraction);
-    CHECK_STATS_READ_ERROR(err, AIM::HDF5::Reconstruction, AIM::HDF5::PrecipitateBoundaryFraction)
+  if (DREAM3D::Reconstruction::PrecipitatePhase == m_PhaseType) {
+    err = reader->readScalarAttribute<float>(phase, DREAM3D::HDF5::PhaseType, DREAM3D::HDF5::PrecipitateBoundaryFraction, m_PptFraction);
+    CHECK_STATS_READ_ERROR(err, DREAM3D::HDF5::Reconstruction, DREAM3D::HDF5::PrecipitateBoundaryFraction)
   }
 
   m_Omega3Plot->setCrystalStructure(m_CrystalStructure);
@@ -828,12 +834,12 @@ int SGWidget::readDataFromHDF5(H5ReconStatsReader::Pointer reader, int phase)
 
   /* Read the BinNumbers data set */
   std::vector<float> bins;
-  err = reader->readStatsDataset(phase, AIM::HDF5::BinNumber, bins);
-  CHECK_STATS_READ_ERROR(err, AIM::HDF5::Reconstruction, AIM::HDF5::BinNumber)
+  err = reader->readStatsDataset(phase, DREAM3D::HDF5::BinNumber, bins);
+  CHECK_STATS_READ_ERROR(err, DREAM3D::HDF5::Reconstruction, DREAM3D::HDF5::BinNumber)
 
   /* Read the Grain_Diameter_Info Data */
-  err = reader->readStatsDataset(phase, AIM::HDF5::Grain_Diameter_Info, grainDiamInfo);
-  CHECK_STATS_READ_ERROR(err, AIM::HDF5::Reconstruction, AIM::HDF5::Grain_Diameter_Info)
+  err = reader->readStatsDataset(phase, DREAM3D::HDF5::Grain_Diameter_Info, grainDiamInfo);
+  CHECK_STATS_READ_ERROR(err, DREAM3D::HDF5::Reconstruction, DREAM3D::HDF5::Grain_Diameter_Info)
 
   binStepSize = grainDiamInfo[0];
   m_BinStepSize->blockSignals(true);
@@ -841,8 +847,8 @@ int SGWidget::readDataFromHDF5(H5ReconStatsReader::Pointer reader, int phase)
   m_BinStepSize->blockSignals(false);
 
   /* Read the Grain_Size_Distribution Data */
-  err = reader->readStatsDataset(phase, AIM::HDF5::Grain_Size_Distribution, double_data);
-  CHECK_STATS_READ_ERROR(err, AIM::HDF5::Reconstruction, AIM::HDF5::Grain_Size_Distribution)
+  err = reader->readStatsDataset(phase, DREAM3D::HDF5::Grain_Size_Distribution, double_data);
+  CHECK_STATS_READ_ERROR(err, DREAM3D::HDF5::Reconstruction, DREAM3D::HDF5::Grain_Size_Distribution)
 
   mu = double_data[0];
   sigma = double_data[1];
@@ -883,19 +889,19 @@ int SGWidget::readDataFromHDF5(H5ReconStatsReader::Pointer reader, int phase)
 
   // Now have each of the plots read it's own data
   QVector<float> qbins = QVector<float>::fromStdVector(bins);
-  m_Omega3Plot->readDataFromHDF5(reader, qbins, AIM::HDF5::Grain_SizeVOmega3_Distributions);
+  m_Omega3Plot->readDataFromHDF5(reader, qbins, DREAM3D::HDF5::Grain_SizeVOmega3_Distributions);
   m_Omega3Plot->setSizeDistributionValues(mu, sigma, minCutOff - 1.0, maxCutOff -1.0, binStepSize);
 
-  m_BOverAPlot->readDataFromHDF5(reader, qbins, AIM::HDF5::Grain_SizeVBoverA_Distributions);
+  m_BOverAPlot->readDataFromHDF5(reader, qbins, DREAM3D::HDF5::Grain_SizeVBoverA_Distributions);
   m_BOverAPlot->setSizeDistributionValues(mu, sigma, minCutOff - 1.0, maxCutOff -1.0, binStepSize);
 
-  m_COverAPlot->readDataFromHDF5(reader, qbins, AIM::HDF5::Grain_SizeVCoverA_Distributions);
+  m_COverAPlot->readDataFromHDF5(reader, qbins, DREAM3D::HDF5::Grain_SizeVCoverA_Distributions);
   m_COverAPlot->setSizeDistributionValues(mu, sigma, minCutOff - 1.0, maxCutOff -1.0, binStepSize);
 
-  m_COverBPlot->readDataFromHDF5(reader, qbins, AIM::HDF5::Grain_SizeVCoverB_Distributions);
+  m_COverBPlot->readDataFromHDF5(reader, qbins, DREAM3D::HDF5::Grain_SizeVCoverB_Distributions);
   m_COverBPlot->setSizeDistributionValues(mu, sigma, minCutOff - 1.0, maxCutOff -1.0, binStepSize);
 
-  m_NeighborPlot->readDataFromHDF5(reader, qbins, AIM::HDF5::Grain_SizeVNeighbors_Distributions);
+  m_NeighborPlot->readDataFromHDF5(reader, qbins, DREAM3D::HDF5::Grain_SizeVNeighbors_Distributions);
   m_NeighborPlot->setSizeDistributionValues(mu, sigma, minCutOff - 1.0, maxCutOff -1.0, binStepSize);
 
 

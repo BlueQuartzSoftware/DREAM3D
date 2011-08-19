@@ -1,6 +1,6 @@
 /* ============================================================================
  * Copyright (c) 2010, Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2010, Dr. Michael A. Grober (US Air Force Research Laboratories
+ * Copyright (c) 2010, Dr. Michael A. Groeber (US Air Force Research Laboratories
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -13,9 +13,10 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Jackson nor the names of its contributors may
- * be used to endorse or promote products derived from this software without
- * specific prior written permission.
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
+ * or promote products derived from this software without specific prior written
+ * permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -27,10 +28,15 @@
  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ *  This code was written under United States Air Force Contract number
+ *                           FA8650-07-D-5800
+ *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef AIMREPRESENTATION_H_
-#define AIMREPRESENTATION_H_
+
+#ifndef _DREAM3D_UI_H_
+#define _DREAM3D_UI_H_
 
 #include <MXA/Common/MXASetGetMacros.h>
 
@@ -54,10 +60,10 @@ class DREAM3DPluginInterface;
 class HelpDialog;
 
 /**
-* @class RepresentationUI RepresentationUI AIM/RepresentationUI/GUI/RepresentationUI.h
+* @class DREAM3D_UI DREAM3D_UI Applications/DREAM3D/DREAM3D_UI.h
 * @brief The class is the actual implementation for the GUI window that appears on screen
 * when the application is launched. It contains all the subwidgets that the user
-* can utilize to perform the various actions of the AIMRepresentation Software Suite.
+* can utilize to perform the various actions of the DREAM.3D Software Suite.
 * @author Michael A. Jackson for BlueQuartz Software
 * @date Oct 19, 2009
 * @version 1.0
@@ -197,4 +203,4 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
 
 };
 
-#endif /* AIMREPRESENTATION_H_ */
+#endif /* _DREAM3D_UI_H_ */

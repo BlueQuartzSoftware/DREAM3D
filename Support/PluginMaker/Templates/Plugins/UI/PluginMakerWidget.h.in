@@ -8,7 +8,7 @@
 
 #include "ui_@PluginName@Widget.h"
 
-#include "QtSupport/AIMPluginFrame.h"
+#include "QtSupport/DREAM3DPluginFrame.h"
 #include "Q@PluginName@.h"
 
 class QListWidgetItem;
@@ -23,7 +23,7 @@ class QListWidgetItem;
  * @date Jan 30, 2011
  * @version 1.0
  */
-class @PluginName@Widget : public AIMPluginFrame, private Ui::@PluginName@Widget
+class @PluginName@Widget : public DREAM3DPluginFrame, private Ui::@PluginName@Widget
 {
   Q_OBJECT
 

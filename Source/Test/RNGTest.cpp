@@ -28,45 +28,32 @@
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef CTFFIELDS_H_
-#define CTFFIELDS_H_
+#include <stdlib.h>
+#include <iostream>
 
+#include "DREAM3D/Common/DREAM3DRandom.h"
 
-#include <QtCore/QStringList>
+#include "MXA/Common/LogTime.h"
 
-
-/*
- *
- */
-class CtfFilterFields
+int main(int argc, char **argv)
 {
-  public:
-    CtfFilterFields(){};
-    virtual ~CtfFilterFields(){};
-
-
-    // -----------------------------------------------------------------------------
-    //
-    // -----------------------------------------------------------------------------
-    QStringList getFieldNames()
+  std::cout << "RNGTest Start..." << std::endl;
+  DREAM3D_RANDOMNG_NEW()
+    float random;
+  for (int i = 0; i < 1000000; ++i)
+  {
+    random = rg.genrand_res53();
+    if (random > 0.95)
     {
-      QStringList fields;
-      fields.push_back(Ebsd::Ctf::Phase.c_str());
-
-      fields.push_back(Ebsd::Ctf::BandCount.c_str());
-      fields.push_back(Ebsd::Ctf::Error.c_str());
-
-      fields.push_back(Ebsd::Ctf::MeanAngularDeviation.c_str());
-      fields.push_back(Ebsd::Ctf::BandContrast.c_str());
-      fields.push_back(Ebsd::Ctf::BandSlope.c_str());
-
-      return fields;
+      std::cout << "Here" << std::endl;
     }
 
+  }
 
-  private:
-    CtfFilterFields(const CtfFilterFields&); // Copy Constructor Not Implemented
-    void operator=(const CtfFilterFields&); // Operator '=' Not Implemented
-};
+  std::cout << "RNGTest Ending" << std::endl;
+  return EXIT_SUCCESS;
+}
 
-#endif /* CTFFIELDS_H_ */
+
+
+

@@ -1,5 +1,6 @@
 /* ============================================================================
- * Copyright (c) 2011, Michael A. Jackson (BlueQuartz Software)
+ * Copyright (c) 2010, Michael A. Jackson (BlueQuartz Software)
+ * Copyright (c) 2010, Dr. Michael A. Groeber (US Air Force Research Laboratories
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -12,9 +13,10 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Jackson nor the names of its contributors may
- * be used to endorse or promote products derived from this software without
- * specific prior written permission.
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
+ * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * or promote products derived from this software without specific prior written
+ * permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -26,6 +28,10 @@
  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ *  This code was written under United States Air Force Contract number
+ *                           FA8650-07-D-5800
+ *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #ifndef H5RECONVOLUMEREADER_H_
 #define H5RECONVOLUMEREADER_H_
@@ -93,13 +99,13 @@ class DREAM3DLib_EXPORT H5VoxelReader
   }
 
   OPEN_HDF5_FILE(fileId, m_Filename)
-  OPEN_RECONSTRUCTION_GROUP(reconGid, AIM::HDF5::VoxelDataName.c_str(), fileId)
+  OPEN_RECONSTRUCTION_GROUP(reconGid, DREAM3D::HDF5::VoxelDataName.c_str(), fileId)
   OPEN_RECONSTRUCTION_GROUP(scalarGid, H5_SCALAR_DATA_GROUP_NAME, reconGid)
 
   int* iData = (int*)(malloc(totalpoints * sizeof(int)));
 
   // Read in the Grain ID data
-  err = H5Lite::readPointerDataset(scalarGid, AIM::VTK::GrainIdScalarName, iData);
+  err = H5Lite::readPointerDataset(scalarGid, DREAM3D::VTK::GrainIdScalarName, iData);
   if (err < 0)
   {
     std::cout << "H5ReconVolumeReader Error Reading the Grain IDs" << std::endl;
@@ -115,7 +121,7 @@ class DREAM3DLib_EXPORT H5VoxelReader
   }
 
   // Read the Phase ID data
-  err = H5Lite::readPointerDataset(scalarGid, AIM::VTK::PhaseIdScalarName, iData);
+  err = H5Lite::readPointerDataset(scalarGid, DREAM3D::VTK::PhaseIdScalarName, iData);
   if (err < 0)
   {
     std::cout << "H5ReconVolumeReader Error Reading the Phase IDs" << std::endl;
@@ -134,7 +140,7 @@ class DREAM3DLib_EXPORT H5VoxelReader
 
   // Read in the Euler Angles Data
   float* fData = (float*)(malloc(totalpoints * 3 * sizeof(float)));
-  err = H5Lite::readPointerDataset(scalarGid, AIM::VTK::EulerAnglesName, fData);
+  err = H5Lite::readPointerDataset(scalarGid, DREAM3D::VTK::EulerAnglesName, fData);
   if (err < 0)
   {
     std::cout << "H5ReconVolumeReader Error Reading the Euler Angles" << std::endl;
@@ -159,7 +165,7 @@ class DREAM3DLib_EXPORT H5VoxelReader
 
   // Read the CrystalStructure Field Data
   std::vector<unsigned int> xtals;
-  err = H5Lite::readVectorDataset(fieldGid, AIM::VTK::CrystalStructureName, xtals);
+  err = H5Lite::readVectorDataset(fieldGid, DREAM3D::VTK::CrystalStructureName, xtals);
   if (err < 0)
   {
     std::cout << "H5ReconVolumeReader Error Reading the Crystal Structure Field Data" << std::endl;

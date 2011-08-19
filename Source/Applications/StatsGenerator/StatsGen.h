@@ -1,5 +1,6 @@
 /* ============================================================================
  * Copyright (c) 2010, Michael A. Jackson (BlueQuartz Software)
+ * Copyright (c) 2010, Dr. Michael A. Groeber (US Air Force Research Laboratories
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -12,9 +13,10 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Jackson nor the names of its contributors may
- * be used to endorse or promote products derived from this software without
- * specific prior written permission.
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
+ * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * or promote products derived from this software without specific prior written
+ * permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -26,6 +28,10 @@
  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ *  This code was written under United States Air Force Contract number
+ *                           FA8650-07-D-5800
+ *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 #ifndef _STATSGEN_H_
@@ -37,14 +43,14 @@
 
 #include "DREAM3D/Common/AIMMath.h"
 #include "DREAM3D/Common/Constants.h"
-#include "DREAM3D/Common/AIMRandomNG.h"
+#include "DREAM3D/Common/DREAM3DRandom.h"
 #include "DREAM3D/Common/OrientationMath.h"
 
 #include "DREAM3D/Common/Texture.h"
 #include "MXA/Common/LogTime.h"
 
 /**
- * @class StatsGen StatsGen.h AIM/StatsGenerator/StatsGen.h
+ * @class StatsGen StatsGen.h StatsGenerator/StatsGen.h
  * @author Michael A. Groeber US Air Force Research Laboratory
  * @date Dec 16, 2010
  * @version 1.0
@@ -210,7 +216,7 @@ class StatsGen
     {
       static const int odfsize = 5832;
 
-      AIM_RANDOMNG_NEW()
+      DREAM3D_RANDOMNG_NEW()
       int err = 0;
       int choose;
 	  int samplevariant = 0;
@@ -235,7 +241,7 @@ class StatsGen
       float* odfPtr = &(odf.front());
       for (int i = 0; i < npoints; i++)
       {
-        random = rg.Random();
+        random = rg.genrand_res53();
         choose = 0;
         totaldensity = 0;
         for (int j = 0; j < odfsize; j++)
@@ -248,7 +254,7 @@ class StatsGen
         ops.determineEulerAngles(choose, ea1, ea2, ea3);
         OrientationMath::eulertoQuat(q1, ea1, ea2, ea3);
         ops.getFZQuat(q1);
-		random = rg.Random();
+		random = rg.genrand_res53();
 		samplevariant = int(random/0.25);
 		if(samplevariant > 3) samplevariant = 3;
 		if(samplevariant == 0) svx = 1, svy = 1;
@@ -396,7 +402,7 @@ class StatsGen
     int GenHexODFPlotData(T odf, T &x0001, T &y0001, T &x1120, T &y1120, T &x1010, T &y1010, int npoints)
     {
       static const size_t odfsize = 15552;
-      AIM_RANDOMNG_NEW()
+      DREAM3D_RANDOMNG_NEW()
       int err = 0;
       int choose;
       float ea1, ea2, ea3;
@@ -420,7 +426,7 @@ class StatsGen
       float* odfPtr = &(odf.front());
       for (int i = 0; i < npoints; i++)
       {
-        random = rg.Random();
+        random = rg.genrand_res53();
         choose = 0;
         totaldensity = 0;
         for (size_t j = 0; j < odfsize; j++)
@@ -433,7 +439,7 @@ class StatsGen
         ops.determineEulerAngles(choose, ea1, ea2, ea3);
         OrientationMath::eulertoQuat(q1, ea1, ea2, ea3);
         ops.getFZQuat(q1);
-		random = rg.Random();
+		random = rg.genrand_res53();
 		samplevariant = int(random/0.25);
 		if(samplevariant > 3) samplevariant = 3;
 		if(samplevariant == 0) svx = 1, svy = 1;
@@ -536,7 +542,7 @@ class StatsGen
       odf.resize(odfsize);
       Texture::calculateOrthoRhombicODFData(e1s, e2s, e3s, weights, sigmas, true, odf, totalweight);
 #endif
-      AIM_RANDOMNG_NEW()
+      DREAM3D_RANDOMNG_NEW()
       int err = 0;
       int choose;
       float ea1, ea2, ea3;
@@ -560,7 +566,7 @@ class StatsGen
       float* odfPtr = &(odf.front());
       for (int i = 0; i < npoints; i++)
       {
-        random = rg.Random();
+        random = rg.genrand_res53();
         choose = 0;
         totaldensity = 0;
         for (size_t j = 0; j < odfsize; j++)
@@ -577,7 +583,7 @@ class StatsGen
         ops.determineEulerAngles(choose, ea1, ea2, ea3);
         OrientationMath::eulertoQuat(q1, ea1, ea2, ea3);
         ops.getFZQuat(q1);
-		random = rg.Random();
+		random = rg.genrand_res53();
 		samplevariant = int(random/0.25);
 		if(samplevariant > 3) samplevariant = 3;
 		if(samplevariant == 0) svx = 1, svy = 1;
@@ -726,7 +732,7 @@ class StatsGen
     {
       static const size_t odfsize = 46656;
 
-      AIM_RANDOMNG_NEW()
+      DREAM3D_RANDOMNG_NEW()
       int err = 0;
       int choose;
       float ea1, ea2, ea3;
@@ -747,7 +753,7 @@ class StatsGen
       float* odfPtr = &(odf.front());
       for (int i = 0; i < npoints; i++)
       {
-        random = rg.Random();
+        random = rg.genrand_res53();
         choose = 0;
         totaldensity = 0;
         for (size_t j = 0; j < odfsize; j++)
@@ -820,7 +826,7 @@ class StatsGen
     {
       static const size_t mdfsize = 5832;
       float radtodeg = 180.0 / M_PI;
-      AIM_RANDOMNG_NEW()
+      DREAM3D_RANDOMNG_NEW()
       int err = 0;
       float density;
       float totaldensity;
@@ -842,7 +848,7 @@ class StatsGen
       float* mdfPtr = &(mdf.front());
       for (int i = 0; i < npoints; i++)
       {
-        random = rg.Random();
+        random = rg.genrand_res53();
         choose = 0;
         totaldensity = 0;
         for (size_t j = 0; j < mdfsize; j++)
@@ -884,7 +890,7 @@ class StatsGen
     {
       static const size_t mdfsize = 15552;
       float radtodeg = 180.0 / M_PI;
-      AIM_RANDOMNG_NEW()
+      DREAM3D_RANDOMNG_NEW()
       int err = 0;
       int choose = 0;
       float density;
@@ -906,7 +912,7 @@ class StatsGen
       float* mdfPtr = &(mdf.front());
       for (int i = 0; i < npoints; i++)
       {
-        random = rg.Random();
+        random = rg.genrand_res53();
         choose = 0;
         totaldensity = 0;
         for (size_t j = 0; j < mdfsize; j++)

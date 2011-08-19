@@ -1,6 +1,6 @@
 /* ============================================================================
  * Copyright (c) 2010, Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2010, Dr. Michael A. Grober (US Air Force Research Laboratories
+ * Copyright (c) 2010, Dr. Michael A. Groeber (US Air Force Research Laboratories)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -13,9 +13,10 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Jackson nor the names of its contributors may
- * be used to endorse or promote products derived from this software without
- * specific prior written permission.
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
+ * or promote products derived from this software without specific prior written
+ * permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -27,6 +28,10 @@
  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ *  This code was written under United States Air Force Contract number
+ *                           FA8650-07-D-5800
+ *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 #include "H5AngVolumeReader.h"
@@ -188,7 +193,10 @@ std::vector<AngPhase::Pointer> H5AngVolumeReader::getPhases()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5AngVolumeReader::loadData(ReconstructionFunc* m, std::vector<QualityMetricFilter::Pointer> filters)
+int H5AngVolumeReader::loadData(float* euler1s, float* euler2s, float* euler3s,
+                                int* phases, bool* goodVoxels,
+                                int xpoints, int ypoints, int zpoints,
+                                std::vector<QualityMetricFilter::Pointer> filters)
 {
   int index = 0;
   int err = -1;
@@ -213,7 +221,7 @@ int H5AngVolumeReader::loadData(ReconstructionFunc* m, std::vector<QualityMetric
   err = readVolumeInfo();
 //  int sliceStart = getSliceStart();
 //  int sliceEnd = getSliceEnd();
-  for (int slice = 0; slice < m->zpoints; ++slice)
+  for (int slice = 0; slice < zpoints; ++slice)
   {
     H5AngReader::Pointer reader = H5AngReader::New();
     reader->setFileName(getFilename());
@@ -242,23 +250,23 @@ int H5AngVolumeReader::loadData(ReconstructionFunc* m, std::vector<QualityMetric
     }
 
     // Figure out which are good voxels
-    AIMArray<bool>::Pointer goodVoxels = determineGoodVoxels(filters, dataPointers, xpointstemp * ypointstemp, dataTypes);
+    AIMArray<bool>::Pointer good_voxels = determineGoodVoxels(filters, dataPointers, xpointstemp * ypointstemp, dataTypes);
 
-    xstartspot = (m->xpoints - xpointstemp) / 2;
-    ystartspot = (m->ypoints - ypointstemp) / 2;
+    xstartspot = (xpoints - xpointstemp) / 2;
+    ystartspot = (ypoints - ypointstemp) / 2;
 
     // Copy the data from the current storage into the ReconstructionFunc Storage Location
     for (int j = 0; j < ypointstemp; j++)
     {
       for (int i = 0; i < xpointstemp; i++)
       {
-        index = ((m->zpoints - 1 - slice) * m->xpoints * m->ypoints) + ((j + ystartspot) * m->xpoints) + (i + xstartspot);
-        m->euler1s[index] = euler1Ptr[readerIndex]; // Phi1
-        m->euler2s[index] = euler2Ptr[readerIndex]; // Phi
-        m->euler3s[index] = euler3Ptr[readerIndex]; // Phi2
-        m->phases[index] = phasePtr[readerIndex]; // Phase
-        if (NULL != goodVoxels.get()) {
-          m->goodVoxels[index] = goodVoxels->GetValue(readerIndex);
+        index = ((zpoints - 1 - slice) * xpoints * ypoints) + ((j + ystartspot) * xpoints) + (i + xstartspot);
+        euler1s[index] = euler1Ptr[readerIndex]; // Phi1
+        euler2s[index] = euler2Ptr[readerIndex]; // Phi
+        euler3s[index] = euler3Ptr[readerIndex]; // Phi2
+        phases[index] = phasePtr[readerIndex]; // Phase
+        if (NULL != good_voxels.get()) {
+          goodVoxels[index] = good_voxels->GetValue(readerIndex);
         }
         /* For TSL OIM Files if there is a single phase then the value of the phase
          * data is zero (0). If there are 2 or more phases then the lowest value
@@ -267,9 +275,9 @@ int H5AngVolumeReader::loadData(ReconstructionFunc* m, std::vector<QualityMetric
          * phase. The next if statement converts all zeros to ones if there is a single
          * phase in the OIM data.
          */
-        if (m->phases[index] < 1)
+        if (phases[index] < 1)
         {
-          m->phases[index] = 1;
+          phases[index] = 1;
         }
 
         ++readerIndex;

@@ -1,6 +1,6 @@
 /* ============================================================================
  * Copyright (c) 2010, Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2010, Dr. Michael A. Grober (US Air Force Research Laboratories
+ * Copyright (c) 2010, Dr. Michael A. Groeber (US Air Force Research Laboratories)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -13,9 +13,10 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Jackson nor the names of its contributors may
- * be used to endorse or promote products derived from this software without
- * specific prior written permission.
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
+ * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * or promote products derived from this software without specific prior written
+ * permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -27,6 +28,10 @@
  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ *  This code was written under United States Air Force Contract number
+ *                           FA8650-07-D-5800
+ *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "MicrostructureStatisticsWidget.h"
 
@@ -48,7 +53,7 @@
 #include "DREAM3D/HDF5/H5ReconStatsReader.h"
 #include "DREAM3D/HDF5/H5ReconStatsWriter.h"
 
-#include "QtSupport/AIM_QtMacros.h"
+#include "QtSupport/Dream3DQtMacros.h"
 #include "QtSupport/QR3DFileCompleter.h"
 #include "QtSupport/QCheckboxDialog.h"
 #include "DREAM3D/HDF5/H5VoxelReader.h"
@@ -59,7 +64,7 @@
 //
 // -----------------------------------------------------------------------------
 MicrostructureStatisticsWidget::MicrostructureStatisticsWidget(QWidget *parent) :
-  AIMPluginFrame(parent), m_MicrostructureStatistics(NULL), m_WorkerThread(NULL),
+  DREAM3DPluginFrame(parent), m_MicrostructureStatistics(NULL), m_WorkerThread(NULL),
 #if defined(Q_WS_WIN)
       m_OpenDialogLastDirectory("C:\\")
 #else
@@ -218,9 +223,9 @@ void MicrostructureStatisticsWidget::checkIOFiles()
 {
   verifyPathExists(m_OutputDir->text(), m_OutputDir);
 
-  CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(AIM::Reconstruction, m_ , VisualizationVizFile)
-  CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::MicroStats, m_, GrainDataFile)
-  CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::MicroStats, m_, H5StatisticsFile)
+  CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(DREAM3D::Reconstruction, m_ , VisualizationVizFile)
+  CHECK_QLABEL_OUTPUT_FILE_EXISTS(DREAM3D::MicroStats, m_, GrainDataFile)
+  CHECK_QLABEL_OUTPUT_FILE_EXISTS(DREAM3D::MicroStats, m_, H5StatisticsFile)
 }
 
 
@@ -240,7 +245,7 @@ void MicrostructureStatisticsWidget::setupGui()
 
   QString msg("All files will be over written that appear in the output directory.");
 
-  QFileInfo fi(m_OutputDir->text() + QDir::separator() + AIM::SyntheticBuilder::VisualizationVizFile.c_str());
+  QFileInfo fi(m_OutputDir->text() + QDir::separator() + DREAM3D::SyntheticBuilder::VisualizationVizFile.c_str());
 
   m_WidgetList << m_OutputDir << m_OutputDirBtn;
   m_WidgetList << m_OutputFilePrefix;

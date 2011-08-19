@@ -1,6 +1,6 @@
 /* ============================================================================
  * Copyright (c) 2010, Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2010, Dr. Michael A. Grober (US Air Force Research Laboratories
+ * Copyright (c) 2010, Dr. Michael A. Groeber (US Air Force Research Laboratories)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -13,9 +13,10 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Jackson nor the names of its contributors may
- * be used to endorse or promote products derived from this software without
- * specific prior written permission.
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
+ * or promote products derived from this software without specific prior written
+ * permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -27,6 +28,10 @@
  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ *  This code was written under United States Air Force Contract number
+ *                           FA8650-07-D-5800
+ *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 #include "Reconstruction.h"
@@ -37,10 +42,12 @@
 
 
 #include "EbsdLib/H5EbsdVolumeInfo.h"
-
+#include "EbsdLib/H5EbsdVolumeReader.h"
 #include "EbsdLib/TSL/AngDirectoryPatterns.h"
 #include "EbsdLib/TSL/AngReader.h"
 #include "EbsdLib/TSL/AngPhase.h"
+#include "EbsdLib/TSL/H5AngVolumeReader.h"
+#include "EbsdLib/HKL/H5CtfVolumeReader.h"
 
 #include "DREAM3D/DREAM3DConfiguration.h"
 #include "DREAM3D/Common/Constants.h"
@@ -52,9 +59,7 @@
 #include "DREAM3D/HDF5/H5GrainWriter.hpp"
 
 
-#include "Reconstruction/EbsdSupport/H5EbsdVolumeReader.h"
-#include "Reconstruction/EbsdSupport/H5AngVolumeReader.h"
-#include "Reconstruction/EbsdSupport/H5CtfVolumeReader.h"
+
 
 
 
@@ -166,10 +171,10 @@ void Reconstruction::execute()
 
 
   m->initialize(m->xpoints, m->ypoints, m->zpoints,
-                m->resx, m->resy, m->resz, m_MergeTwins, m_MergeColonies, m_MinAllowedGrainSize,
-                m_DownSampleFactor,
-                m_MisorientationTolerance, crystalStructures, m_PhaseTypes, precipFractions,
-                m_AlignmentMethod);
+                m->resx, m->resy, m->resz,
+                m_MergeTwins, m_MergeColonies, m_MinAllowedGrainSize,
+                m_DownSampleFactor, m_MisorientationTolerance, crystalStructures,
+                m_PhaseTypes, precipFractions, m_AlignmentMethod);
   m_OutputDirectory = MXADir::toNativeSeparators(m_OutputDirectory);
 
   START_CLOCK()
@@ -180,7 +185,8 @@ void Reconstruction::execute()
   updateProgressAndMessage(("Loading Slices"), 4);
   ebsdReader->setSliceStart(m_ZStartIndex);
   ebsdReader->setSliceEnd(m_ZEndIndex);
-  err = ebsdReader->loadData(m.get(), m_QualityMetricFilters);
+  err = ebsdReader->loadData(m->euler1s, m->euler2s, m->euler3s, m->phases, m->goodVoxels, m->xpoints, m->ypoints, m->zpoints, m_QualityMetricFilters);
+
   CHECK_FOR_ERROR(ReconstructionFunc, "Reconstruction was canceled", err)
 
   m->initializeQuats();
@@ -190,7 +196,7 @@ void Reconstruction::execute()
   m->find_border();
   CHECK_FOR_CANCELED(ReconstructionFunc, "Reconstruction was canceled", find_border)
 
-  if (m_AlignmentMethod == AIM::Reconstruction::MutualInformation)
+  if (m_AlignmentMethod == DREAM3D::Reconstruction::MutualInformation)
   {
       updateProgressAndMessage(("Aligning Slices"), 10);
       m->form_grains_sections();
@@ -205,7 +211,7 @@ void Reconstruction::execute()
   m->cleanup_data();
   CHECK_FOR_CANCELED(ReconstructionFunc, "Reconstruction was canceled", cleanup_data)
 
-  if (m_AlignmentMethod == AIM::Reconstruction::MutualInformation)
+  if (m_AlignmentMethod == DREAM3D::Reconstruction::MutualInformation)
   {
       updateProgressAndMessage(("Redefining Border"), 18);
       m->find_border();
@@ -260,7 +266,7 @@ void Reconstruction::execute()
 
   /** ********** This section writes the Voxel Data for the Stats Module *** */
   // Create a new HDF5 Volume file by overwriting any HDF5 file that may be in the way
-  MAKE_OUTPUT_FILE_PATH ( hdf5VolumeFile, AIM::Reconstruction::H5VoxelFile)
+  MAKE_OUTPUT_FILE_PATH ( hdf5VolumeFile, DREAM3D::Reconstruction::H5VoxelFile)
   H5VoxelWriter::Pointer h5VolWriter = H5VoxelWriter::New();
   if (h5VolWriter.get() == NULL)
   {
@@ -278,7 +284,7 @@ void Reconstruction::execute()
   updateProgressAndMessage(("Writing VTK Visualization File"), 93);
   if (m_WriteVtkFile)
   {
-    MAKE_OUTPUT_FILE_PATH ( reconVisFile, AIM::Reconstruction::VisualizationVizFile);
+    MAKE_OUTPUT_FILE_PATH ( reconVisFile, DREAM3D::Reconstruction::VisualizationVizFile);
 
     // Setup all the classes that will help us write the Scalars to the VTK File
     std::vector<VtkScalarWriter*> scalarsToWrite;
@@ -326,7 +332,7 @@ void Reconstruction::execute()
 
 
   if (m_WriteDownSampledFile) {
-    MAKE_OUTPUT_FILE_PATH ( reconDSVisFile, AIM::Reconstruction::DownSampledVizFile);
+    MAKE_OUTPUT_FILE_PATH ( reconDSVisFile, DREAM3D::Reconstruction::DownSampledVizFile);
     updateProgressAndMessage(("Writing VTK Down Sampled File"), 98);
     VtkMiscFileWriter::Pointer vtkWriter = VtkMiscFileWriter::New();
     err = vtkWriter->writeDownSampledVizFile(m.get(), reconDSVisFile);
@@ -340,7 +346,7 @@ void Reconstruction::execute()
   /* **********   This is CMU's ph format */
   updateProgressAndMessage(("Writing Ph Voxel File"), 95);
   if (m_WritePhFile) {
-    MAKE_OUTPUT_FILE_PATH ( phFile, AIM::Reconstruction::PhFile);
+    MAKE_OUTPUT_FILE_PATH ( phFile, DREAM3D::Reconstruction::PhFile);
     PhWriter phWriter;
     err = phWriter.writeGrainPhFile(phFile, m->grain_indicies, m->xpoints, m->ypoints, m->zpoints);
     CHECK_FOR_ERROR(ReconstructionFunc, "The Reconstruction threw an Error writing the Ph file format.", err);
@@ -351,7 +357,7 @@ void Reconstruction::execute()
   if (m_WriteHDF5GrainFile)
   {
     updateProgressAndMessage(("Writing Out HDF5 Grain File. This may take a few minutes to complete."), 99);
-    MAKE_OUTPUT_FILE_PATH( hdf5GrainFile, AIM::Reconstruction::HDF5GrainFile);
+    MAKE_OUTPUT_FILE_PATH( hdf5GrainFile, DREAM3D::Reconstruction::HDF5GrainFile);
     H5GrainWriter::Pointer h5GrainWriter = H5GrainWriter::New();
     err = h5GrainWriter->writeHDF5GrainsFile<ReconstructionFunc>(m.get(), hdf5GrainFile);
     CHECK_FOR_ERROR(ReconstructionFunc, "The HDF5 Grain file could not be written to. Does the path exist and do you have write access to the output directory.", err);
@@ -361,7 +367,7 @@ void Reconstruction::execute()
   if (m_WriteDxFile)
   {
     updateProgressAndMessage(("Writing Out Dx Grain File."), 99);
-    MAKE_OUTPUT_FILE_PATH( dxGrainFile, AIM::Reconstruction::DxFile);
+    MAKE_OUTPUT_FILE_PATH( dxGrainFile, DREAM3D::Reconstruction::DxFile);
     DxGrainIdWriter::Pointer dxWriter = DxGrainIdWriter::New();
 //    err = dxWriter->writeGrainFile(dxGrainFile, m->voxels.get(), m->xpoints, m->ypoints, m->zpoints);
     CHECK_FOR_ERROR(ReconstructionFunc, "The Dx Grain file could not be written to. Does the path exist and do you have write access to the output directory.", err);

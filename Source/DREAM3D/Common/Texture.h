@@ -1,6 +1,6 @@
 /* ============================================================================
  * Copyright (c) 2010, Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2010, Dr. Michael A. Grober (US Air Force Research Laboratories
+ * Copyright (c) 2010, Dr. Michael A. Groeber (US Air Force Research Laboratories)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -13,9 +13,10 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Jackson nor the names of its contributors may
- * be used to endorse or promote products derived from this software without
- * specific prior written permission.
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
+ * or promote products derived from this software without specific prior written
+ * permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -27,6 +28,10 @@
  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ *  This code was written under United States Air Force Contract number
+ *                           FA8650-07-D-5800
+ *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 #ifndef TEXTURE_H_
@@ -45,7 +50,7 @@
 /**
  * @class Texture Texture.h AIM/Common/Texture.h
  * @brief This class holds default data for Orientation Distribution Function
- * calculations that the AIMRepresentation package will perform.
+ * calculations that the DREAM3D package will perform.
  * @author Michael A. Jackson for BlueQuartz Software
  * @author Micharl A. Groeber for US Air Force Research Laboratory
  * @date Feb 1, 2011
@@ -409,7 +414,7 @@ class DREAM3DLib_EXPORT Texture
   //    float radtodeg = 180.0 / M_PI;
 
 
-      AIM_RANDOMNG_NEW()
+      DREAM3D_RANDOMNG_NEW()
       //  int err = 0;
       int mbin;
       float w = 0;
@@ -440,8 +445,8 @@ class DREAM3DLib_EXPORT Texture
 
       for (int i = 0; i < remainingcount; i++)
       {
-        random1 = rg.Random();
-        random2 = rg.Random();
+        random1 = rg.genrand_res53();
+        random2 = rg.genrand_res53();
         choose1 = 0;
         choose2 = 0;
 

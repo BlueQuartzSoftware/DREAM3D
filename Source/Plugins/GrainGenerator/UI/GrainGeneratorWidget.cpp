@@ -1,6 +1,6 @@
 /* ============================================================================
  * Copyright (c) 2010, Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2010, Dr. Michael A. Grober (US Air Force Research Laboratories
+ * Copyright (c) 2010, Dr. Michael A. Groeber (US Air Force Research Laboratories)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -13,9 +13,10 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Jackson nor the names of its contributors may
- * be used to endorse or promote products derived from this software without
- * specific prior written permission.
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
+ * or promote products derived from this software without specific prior written
+ * permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -27,6 +28,10 @@
  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ *  This code was written under United States Air Force Contract number
+ *                           FA8650-07-D-5800
+ *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "GrainGeneratorWidget.h"
 
@@ -51,7 +56,7 @@
 #include "DREAM3D/HDF5/H5ReconStatsReader.h"
 #include "DREAM3D/HDF5/H5ReconStatsWriter.h"
 
-#include "QtSupport/AIM_QtMacros.h"
+#include "QtSupport/Dream3DQtMacros.h"
 #include "QtSupport/QR3DFileCompleter.h"
 #include "QtSupport/QCheckboxDialog.h"
 
@@ -63,7 +68,7 @@ const static float m_pi = M_PI;
 //
 // -----------------------------------------------------------------------------
 GrainGeneratorWidget::GrainGeneratorWidget(QWidget *parent) :
-AIMPluginFrame(parent),
+DREAM3DPluginFrame(parent),
 m_GrainGenerator(NULL),
 m_WorkerThread(NULL),
 m_WriteSurfaceVoxelScalars(true),
@@ -234,7 +239,7 @@ void GrainGeneratorWidget::setupGui()
 
   QString msg ("All files will be over written that appear in the output directory.");
 
-  QFileInfo fi (m_OutputDir->text() + QDir::separator() +  AIM::SyntheticBuilder::VisualizationVizFile.c_str() );
+  QFileInfo fi (m_OutputDir->text() + QDir::separator() +  DREAM3D::SyntheticBuilder::VisualizationVizFile.c_str() );
   if (m_AlreadyFormed->isChecked() == true && fi.exists() == false)
   {
     m_AlreadyFormed->setChecked(false);
@@ -286,13 +291,13 @@ void GrainGeneratorWidget::on_m_SaveSettingsBtn_clicked()
 // -----------------------------------------------------------------------------
 void GrainGeneratorWidget::checkIOFiles()
 {
-  CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::SyntheticBuilder, m_, GrainAnglesFile)
-  CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::SyntheticBuilder, m_, H5VoxelFile)
+  CHECK_QLABEL_OUTPUT_FILE_EXISTS(DREAM3D::SyntheticBuilder, m_, GrainAnglesFile)
+  CHECK_QLABEL_OUTPUT_FILE_EXISTS(DREAM3D::SyntheticBuilder, m_, H5VoxelFile)
 
-  CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(AIM::SyntheticBuilder, m_ , VisualizationVizFile)
-  CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(AIM::SyntheticBuilder, m_ , HDF5GrainFile)
-  CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(AIM::SyntheticBuilder, m_ , PhFile)
-  CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(AIM::MicroStats, m_ , GrainDataFile)
+  CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(DREAM3D::SyntheticBuilder, m_ , VisualizationVizFile)
+  CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(DREAM3D::SyntheticBuilder, m_ , HDF5GrainFile)
+  CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(DREAM3D::SyntheticBuilder, m_ , PhFile)
+  CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(DREAM3D::MicroStats, m_ , GrainDataFile)
 }
 
 // -----------------------------------------------------------------------------
@@ -364,9 +369,6 @@ void GrainGeneratorWidget::on_m_H5InputStatisticsFile_textChanged(const QString 
        H5ReconStatsReader::Pointer h5reader = H5ReconStatsReader::New(m_H5InputStatisticsFile->text().toStdString());
        if (h5reader.get() == NULL)
        {
-         QMessageBox::critical(this, "Grain Generator",
-                               "The input HDF5 Based Stats file could not be opened for reading.",
-                               QMessageBox::Ok | QMessageBox::Default);
          return;
        }
        // Read the Phase and Crystal Structure information from the Stats File
@@ -375,17 +377,14 @@ void GrainGeneratorWidget::on_m_H5InputStatisticsFile_textChanged(const QString 
        int err = h5reader->getPhaseAndCrystalStructures(phases, structures);
        if (err < 0)
        {
-         QMessageBox::critical(this, "Grain Generator",
-                               "The Phase information could not be read from the input HDF5 file.",
-                               QMessageBox::Ok | QMessageBox::Default);
          return;
        }
 
        int size = phases.size();
        std::vector<std::string> shapeTypeStrings;
-       AIM::ShapeType::getShapeTypeStrings(shapeTypeStrings);
-       std::vector<AIM::SyntheticBuilder::ShapeType> shapeTypeEnums;
-       AIM::ShapeType::getShapeTypeEnums(shapeTypeEnums);
+       DREAM3D::ShapeType::getShapeTypeStrings(shapeTypeStrings);
+       std::vector<DREAM3D::SyntheticBuilder::ShapeType> shapeTypeEnums;
+       DREAM3D::ShapeType::getShapeTypeEnums(shapeTypeEnums);
 
 
        // Remove all the items from the GUI and from the internal tracking Lists
@@ -450,7 +449,7 @@ void GrainGeneratorWidget::on_m_OutputDirBtn_clicked()
     if (verifyPathExists(outputFile, m_OutputDir) == true )
     {
       checkIOFiles();
-      QFileInfo fi (m_OutputDir->text() + QDir::separator() +  AIM::SyntheticBuilder::VisualizationVizFile.c_str() );
+      QFileInfo fi (m_OutputDir->text() + QDir::separator() +  DREAM3D::SyntheticBuilder::VisualizationVizFile.c_str() );
       if (m_AlreadyFormed->isChecked() == true && fi.exists() == false)
       {
         m_AlreadyFormed->setChecked(false);
@@ -524,14 +523,14 @@ void GrainGeneratorWidget::on_m_GoBtn_clicked()
   m_GrainGenerator->setSizeDistErrorWeight(m_SizeDistErrorWeight->value());
 
   m_GrainGenerator->setPeriodicBoundary(m_PeriodicBoundaryConditions->isChecked());
-  std::vector<AIM::SyntheticBuilder::ShapeType> shapeTypes(1, AIM::SyntheticBuilder::UnknownShapeType);
+  std::vector<DREAM3D::SyntheticBuilder::ShapeType> shapeTypes(1, DREAM3D::SyntheticBuilder::UnknownShapeType);
   int count = m_ShapeTypeCombos.count();
   bool ok = false;
   for (int i = 0; i < count; ++i)
   {
     QComboBox* cb = m_ShapeTypeCombos.at(i);
-    AIM::SyntheticBuilder::ShapeType enPtValue = static_cast<AIM::SyntheticBuilder::ShapeType>(cb->itemData(cb->currentIndex(), Qt::UserRole).toUInt(&ok));
-    if (enPtValue >= AIM::SyntheticBuilder::UnknownShapeType)
+    DREAM3D::SyntheticBuilder::ShapeType enPtValue = static_cast<DREAM3D::SyntheticBuilder::ShapeType>(cb->itemData(cb->currentIndex(), Qt::UserRole).toUInt(&ok));
+    if (enPtValue >= DREAM3D::SyntheticBuilder::UnknownShapeType)
     {
       QString msg("The Shape Type for phase ");
 //      msg.append(QString::number(i)).append(" is not set correctly. Please set the shape to Primary, Precipitate or Transformation.");
@@ -672,7 +671,7 @@ int GrainGeneratorWidget::estimate_numgrains(int xpoints, int ypoints, int zpoin
   int phase;
   std::vector<int> phases;
   std::vector<Ebsd::CrystalStructure> structures;
-  std::vector<AIM::Reconstruction::PhaseType> phaseType;
+  std::vector<DREAM3D::Reconstruction::PhaseType> phaseType;
   std::vector<float> phasefraction;
   std::vector<float> double_data;
   std::vector<float> avgdiam;
@@ -701,21 +700,21 @@ int GrainGeneratorWidget::estimate_numgrains(int xpoints, int ypoints, int zpoin
     phase = phases[i];
 
     std::vector<float> pFraction;
-    err = h5Reader->readStatsDataset(phase, AIM::HDF5::PhaseFraction, pFraction);
+    err = h5Reader->readStatsDataset(phase, DREAM3D::HDF5::PhaseFraction, pFraction);
     if (err < 0) {break;}
     phasefraction[phase] = pFraction.front();
 
     std::vector<unsigned int> phasetypes;
-    err = h5Reader->readStatsDataset(phase, AIM::HDF5::PhaseType, phasetypes);
+    err = h5Reader->readStatsDataset(phase, DREAM3D::HDF5::PhaseType, phasetypes);
     if (err < 0) {break;}
-    phaseType[phase] = static_cast<AIM::Reconstruction::PhaseType> (phasetypes[0]);
+    phaseType[phase] = static_cast<DREAM3D::Reconstruction::PhaseType> (phasetypes[0]);
 
-	  err = h5Reader->readStatsDataset(phase, AIM::HDF5::Grain_Size_Distribution, double_data);
+	  err = h5Reader->readStatsDataset(phase, DREAM3D::HDF5::Grain_Size_Distribution, double_data);
     if (err < 0) {break;}
 	  avgdiam[phase] = double_data[0];
 	  sddiam[phase] = double_data[1];
 
-	  err = h5Reader->readStatsDataset(phase, AIM::HDF5::Grain_Diameter_Info, grainDiamInfo);
+	  err = h5Reader->readStatsDataset(phase, DREAM3D::HDF5::Grain_Diameter_Info, grainDiamInfo);
     if (err < 0) {break;}
 	  maxdiameter[phase]  = grainDiamInfo[1];
 	  mindiameter[phase] = grainDiamInfo[2];
@@ -725,7 +724,7 @@ int GrainGeneratorWidget::estimate_numgrains(int xpoints, int ypoints, int zpoin
   {
     return 0;
   }
-  AIM_RANDOMNG_NEW()
+  DREAM3D_RANDOMNG_NEW()
 
   std::vector<int> primaryphases;
   std::vector<double> primaryphasefractions;
@@ -733,7 +732,7 @@ int GrainGeneratorWidget::estimate_numgrains(int xpoints, int ypoints, int zpoin
   // find which phases are primary phases
   for (size_t i = 1; i < phaseType.size(); ++i)
   {
-    if (phaseType[i] == AIM::Reconstruction::PrimaryPhase)
+    if (phaseType[i] == DREAM3D::Reconstruction::PrimaryPhase)
     {
       primaryphases.push_back(i);
       primaryphasefractions.push_back(phasefraction[i]);
@@ -757,7 +756,7 @@ int GrainGeneratorWidget::estimate_numgrains(int xpoints, int ypoints, int zpoin
   while (currentvol < totalvol)
   {
     volgood = 0;
-    random = rg.Random();
+    random = rg.genrand_res53();
     for (size_t j = 0; j < primaryphases.size(); ++j)
     {
       if (random < primaryphasefractions[j])
@@ -769,8 +768,8 @@ int GrainGeneratorWidget::estimate_numgrains(int xpoints, int ypoints, int zpoin
 	while(volgood == 0)
 	{
 	  volgood = 1;
-	  u = rg.Random();
-	  diam = rg.RandNorm(avgdiam[phase],sddiam[phase]);
+	  u = rg.genrand_res53();
+	  diam = rg.genrand_norm(avgdiam[phase],sddiam[phase]);
 	  diam = exp(diam);
 	  if(diam >= maxdiameter[phase]) volgood = 0;
 	  if(diam < mindiameter[phase]) volgood = 0;

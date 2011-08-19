@@ -35,7 +35,7 @@ class @PluginName@Plugin : public QObject, public DREAM3DPluginInterface
     QString getPluginName();
 
     virtual QWidget* getInputWidget(QWidget* parent);
-    virtual AIMPluginFrame* getPluginFrame(QWidget* parent);
+    virtual DREAM3DPluginFrame* getPluginFrame(QWidget* parent);
 
 
     virtual void writeSettings(QSettings &prefs);

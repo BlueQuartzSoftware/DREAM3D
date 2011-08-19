@@ -1,4 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
+
 //
 //  Copyright (c) Mike Jackson, BlueQuartz Software
 //  All rights reserved.
@@ -7,7 +7,7 @@
 //  This code was written under United States Air Force Contract number
 //                           FA8650-04-C-5229
 //
-///////////////////////////////////////////////////////////////////////////////
+
 
 #ifndef _LOGTIME_H_
 #define _LOGTIME_H_

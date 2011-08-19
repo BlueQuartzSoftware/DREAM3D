@@ -1,6 +1,6 @@
 /* ============================================================================
  * Copyright (c) 2010, Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2010, Dr. Michael A. Grober (US Air Force Research Laboratories
+ * Copyright (c) 2010, Dr. Michael A. Groeber (US Air Force Research Laboratories)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -13,9 +13,10 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Jackson nor the names of its contributors may
- * be used to endorse or promote products derived from this software without
- * specific prior written permission.
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
+ * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * or promote products derived from this software without specific prior written
+ * permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -27,6 +28,10 @@
  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ *  This code was written under United States Air Force Contract number
+ *                           FA8650-07-D-5800
+ *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 #include "ReconstructionFunc.h"
@@ -148,7 +153,7 @@ ReconstructionFunc::~ReconstructionFunc()
 void ReconstructionFunc::initialize(int nX, int nY, int nZ, float xRes, float yRes, float zRes,
                                     bool mrgTwins, bool mrgColonies, int minAllowedGrSize,
                                     float dwnSmplFact, float misoTol, vector<Ebsd::CrystalStructure> crystalStructures,
-                                    vector<AIM::Reconstruction::PhaseType> phaseTypes,
+                                    vector<DREAM3D::Reconstruction::PhaseType> phaseTypes,
                                     std::vector<float> precipFractions, int alignmentMethod)
 {
 
@@ -579,7 +584,7 @@ void ReconstructionFunc::align_sections()
       misorients[a][b] = 0;
     }
   }
-  if (alignmeth == AIM::Reconstruction::OuterBoundary)
+  if (alignmeth == DREAM3D::Reconstruction::OuterBoundary)
   {
     refxcentroid = 0;
     refycentroid = 0;
@@ -602,7 +607,7 @@ void ReconstructionFunc::align_sections()
   {
     mindisorientation = 100000000;
     slice = (zpoints - 1) - iter;
-    if (alignmeth == AIM::Reconstruction::MutualInformation)
+    if (alignmeth == DREAM3D::Reconstruction::MutualInformation)
     {
       graincount1 = graincounts[slice];
       graincount2 = graincounts[slice + 1];
@@ -620,7 +625,7 @@ void ReconstructionFunc::align_sections()
         }
       }
     }
-    if (alignmeth == AIM::Reconstruction::OuterBoundary)
+    if (alignmeth == DREAM3D::Reconstruction::OuterBoundary)
     {
       curxcentroid = 0;
       curycentroid = 0;
@@ -639,7 +644,7 @@ void ReconstructionFunc::align_sections()
       curxcentroid = curxcentroid / float(count);
       curycentroid = curycentroid / float(count);
     }
-	if (alignmeth == AIM::Reconstruction::Misorientation || alignmeth == AIM::Reconstruction::MutualInformation)
+	if (alignmeth >= DREAM3D::Reconstruction::Misorientation  || alignmeth == DREAM3D::Reconstruction::MutualInformation)
     {
       oldxshift = -1;
       oldyshift = -1;
@@ -684,7 +689,7 @@ void ReconstructionFunc::align_sections()
 						  mutualinfo2[refgnum]++;
 						}
 					  }
-					  if (alignmeth == AIM::Reconstruction::Misorientation)
+					  if (alignmeth == DREAM3D::Reconstruction::Misorientation)
 					  {
 						if (goodVoxels[refposition] == true && goodVoxels[curposition] == true)
 						{
@@ -718,7 +723,7 @@ void ReconstructionFunc::align_sections()
 					}
 				  }
 				}
-				if (alignmeth == AIM::Reconstruction::MutualInformation)
+				if (alignmeth == DREAM3D::Reconstruction::MutualInformation)
 				{
 				  float ha = 0;
 				  float hb = 0;
@@ -770,7 +775,7 @@ void ReconstructionFunc::align_sections()
       shifts[iter][0] = shifts[iter - 1][0] + newxshift;
       shifts[iter][1] = shifts[iter - 1][1] + newyshift;
     }
-    if (alignmeth == AIM::Reconstruction::OuterBoundary)
+    if (alignmeth == DREAM3D::Reconstruction::OuterBoundary)
     {
       xshift = int(((curxcentroid - refxcentroid) / resx) + 0.5);
       yshift = int(((curycentroid - refycentroid) / resy) + 0.5);
@@ -836,7 +841,7 @@ void ReconstructionFunc::align_sections()
 }
 void ReconstructionFunc::form_grains_sections()
 {
-  AIM_RANDOMNG_NEW()
+  DREAM3D_RANDOMNG_NEW()
 
   int point = 0;
   int seed = 0;
@@ -879,8 +884,8 @@ void ReconstructionFunc::form_grains_sections()
     while (noseeds == 0)
     {
       seed = -1;
-      randx = int(float(rg.Random()) * float(xpoints));
-      randy = int(float(rg.Random()) * float(ypoints));
+      randx = int(float(rg.genrand_res53()) * float(xpoints));
+      randy = int(float(rg.genrand_res53()) * float(ypoints));
       for (int j = 0; j < ypoints; ++j)
       {
         for (int i = 0; i < xpoints; ++i)
@@ -971,7 +976,7 @@ void ReconstructionFunc::form_grains_sections()
 
 void ReconstructionFunc::form_grains()
 {
-  AIM_RANDOMNG_NEW()
+  DREAM3D_RANDOMNG_NEW()
   int seed = 0;
   int noseeds = 0;
   size_t graincount = 1;
@@ -1020,7 +1025,7 @@ void ReconstructionFunc::form_grains()
   {
     seed = -1;
     int counter = 0;
-    randpoint = int(float(rg.Random()) * float(totalPMinus1));
+    randpoint = int(float(rg.genrand_res53()) * float(totalPMinus1));
     while (seed == -1 && counter < totalpoints)
     {
       if (randpoint > totalPMinus1) randpoint = randpoint - totalpoints;

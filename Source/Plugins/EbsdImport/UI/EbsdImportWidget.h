@@ -1,6 +1,6 @@
 /* ============================================================================
  * Copyright (c) 2010, Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2010, Dr. Michael A. Grober (US Air Force Research Laboratories
+ * Copyright (c) 2010, Dr. Michael A. Groeber (US Air Force Research Laboratories)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -13,9 +13,10 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Jackson nor the names of its contributors may
- * be used to endorse or promote products derived from this software without
- * specific prior written permission.
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
+ * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * or promote products derived from this software without specific prior written
+ * permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -27,21 +28,25 @@
  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ *  This code was written under United States Air Force Contract number
+ *                           FA8650-07-D-5800
+ *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef OIMIMPORTWIDGET_H_
-#define OIMIMPORTWIDGET_H_
+#ifndef EbsdImportWIDGET_H_
+#define EbsdImportWIDGET_H_
 
 #include <QtCore/QString>
 #include <QtCore/QSettings>
 
-#include "ui_OIMImportWidget.h"
-#include "QtSupport/AIMPluginFrame.h"
-#include "QOIMImport.h"
+#include "ui_EbsdImportWidget.h"
+#include "QtSupport/DREAM3DPluginFrame.h"
+#include "QEbsdImport.h"
 
 
 /**
- * @class OIMImportWidget OIMImportWidget.h Plugins/OIMImport/UI/OIMImportWidget.h
+ * @class EbsdImportWidget EbsdImportWidget.h Plugins/EbsdImport/UI/EbsdImportWidget.h
  * @brief This class represents the User Interface for the EBSD file import module
  * of the DREAM3D program. The user interface subclasses QFrame which
  * should make it able to be embedded in most Qt applications. This module controls
@@ -51,13 +56,13 @@
  * @date Jan 30, 2011
  * @version 1.0
  */
-class OIMImportWidget : public AIMPluginFrame, private Ui::OIMImportWidget
+class EbsdImportWidget : public DREAM3DPluginFrame, private Ui::EbsdImportWidget
 {
   Q_OBJECT;
 
   public:
-    OIMImportWidget(QWidget *parent = 0);
-    virtual ~OIMImportWidget();
+    EbsdImportWidget(QWidget *parent = 0);
+    virtual ~EbsdImportWidget();
 
     /**
       * @brief Reads the Preferences from the users pref file
@@ -116,12 +121,12 @@ class OIMImportWidget : public AIMPluginFrame, private Ui::OIMImportWidget
 
   private:
     QList<QWidget*>             m_WidgetList;
-    QOIMImport*                 m_OimImport;
+    QEbsdImport*                 m_EbsdImport;
     QThread*                    m_WorkerThread;
 
     QString m_OpenDialogLastDirectory;
-    OIMImportWidget(const OIMImportWidget&); // Copy Constructor Not Implemented
-    void operator=(const OIMImportWidget&); // Operator '=' Not Implemented
+    EbsdImportWidget(const EbsdImportWidget&); // Copy Constructor Not Implemented
+    void operator=(const EbsdImportWidget&); // Operator '=' Not Implemented
 };
 
-#endif /* OIMIMPORTWIDGET_H_ */
+#endif /* EbsdImportWIDGET_H_ */

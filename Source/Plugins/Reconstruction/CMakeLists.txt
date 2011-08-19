@@ -42,20 +42,15 @@ set (ReconstructionPlugin_UI_HDRS
     ${PROJECT_SOURCE_DIR}/UI/ReconstructionWidget.h
     ${PROJECT_SOURCE_DIR}/UI/QualityMetricTableModel.h
     ${PROJECT_SOURCE_DIR}/UI/QualityMetricItemDelegate.h
-    ${PROJECT_CODE_DIR}/QtSupport/AIMPluginFrame.h
+    ${PROJECT_CODE_DIR}/QtSupport/DREAM3DPluginFrame.h
     )
     
 set (ReconstructionPlugin_UI_SRCS 
     ${PROJECT_SOURCE_DIR}/UI/ReconstructionPlugin.cpp
     ${PROJECT_SOURCE_DIR}/UI/ReconstructionWidget.cpp
     ${PROJECT_SOURCE_DIR}/UI/QualityMetricTableModel.cpp
-    ${PROJECT_CODE_DIR}/QtSupport/AIMPluginFrame.cpp
+    ${PROJECT_CODE_DIR}/QtSupport/DREAM3DPluginFrame.cpp
     )
-    
-set (ReconstructionPlugin_Misc_HDRS
-    ${PROJECT_SOURCE_DIR}/UI/AngFilterFields.h
-    ${PROJECT_SOURCE_DIR}/UI/CtfFilterFields.h
-)
 
 # -- Run MOC and UIC on the necessary files   
 QT4_ADD_RESOURCES( ReconstructionPlugin_Generated_RC_SRCS ${PROJECT_SOURCE_DIR}/UI/Icons.qrc)    
@@ -72,13 +67,11 @@ cmp_IDE_SOURCE_PROPERTIES("Generated" "${ReconstructionPlugin_Generated_UI_HDRS}
 SET (Reconstruction_HDRS
   ${PROJECT_SOURCE_DIR}/Reconstruction.h
   ${PROJECT_SOURCE_DIR}/ReconstructionFunc.h
-  ${PROJECT_SOURCE_DIR}/QualityMetricFilter.h
 )
 
 SET (Reconstruction_SRCS
   ${PROJECT_SOURCE_DIR}/Reconstruction.cpp
   ${PROJECT_SOURCE_DIR}/ReconstructionFunc.cpp
-  ${PROJECT_SOURCE_DIR}/QualityMetricFilter.cpp
 )
 cmp_IDE_SOURCE_PROPERTIES( "Reconstruction" "${Reconstruction_HDRS}" "${Reconstruction_SRCS}" "0")
 if ( ${DREAM3D_INSTALL_FILES} EQUAL 1 )
@@ -86,9 +79,6 @@ if ( ${DREAM3D_INSTALL_FILES} EQUAL 1 )
             DESTINATION include/DREAM3D/Reconstruction
             COMPONENT Headers   )
 endif()
-
-#-- AngSupport Files
-include(${PROJECT_SOURCE_DIR}/EbsdSupport/SourceList.cmake)
 
 
 #-- Gather all the Project Source files in this variable
@@ -101,8 +91,6 @@ set (ReconstructionPlugin_PROJECT_SRCS
     ${PROJECT_CODE_DIR}/QtSupport/DREAM3DPluginInterface.h
     ${Reconstruction_HDRS}
     ${Reconstruction_SRCS}
-    ${EbsdSupport_HDRS}
-    ${EbsdSupport_SRCS}
 )
 
 
@@ -143,44 +131,6 @@ install(FILES ${${PLUGIN_NAME}_HELP_FILES}
         DESTINATION Help/${PLUGIN_NAME}
         COMPONENT Applications )
   
+#-- Include the CMake commands to build the Comand line tools
+include(${PROJECT_SOURCE_DIR}/Tools/Tools.cmake)
 
-  
-# Create a Command line tool for the Reconstruction
-# --------------------------------------------------------------------
-# Setup the install rules for the various platforms
-set(install_dir "tools")
-if (WIN32)
-    set (install_dir ".")
-endif()
-COMPILE_TOOL(
-    TARGET Reconstruction
-    SOURCES ${PROJECT_SOURCE_DIR}/Tools/ReconstructionMain.cpp 
-            ${Reconstruction_HDRS} ${Reconstruction_SRCS}
-            ${EbsdSupport_HDRS} ${EbsdSupport_SRCS}
-    DEBUG_EXTENSION ${EXE_DEBUG_EXTENSION}
-    VERSION_MAJOR ${DREAM3D_VER_MAJOR}
-    VERSION_MINOR ${DREAM3D_VER_MINOR}
-    VERSION_PATCH ${DREAM3D_VER_PATCH}
-    BINARY_DIR    ${${PROJECT_NAME}_BINARY_DIR}
-    COMPONENT     Applications
-    INSTALL_DEST  "${install_dir}" 
-    LINK_LIBRARIES EbsdLib DREAM3DLib
-)
-  
-if (0)
-# Create a Command line tool for the H5AngToVtk
-COMPILE_TOOL(
-    TARGET H5AngToVtk
-    SOURCES ${PROJECT_SOURCE_DIR}/Tools/H5AngToVtk.cpp 
-            ${Reconstruction_HDRS} ${Reconstruction_SRCS}
-            ${EbsdSupport_HDRS} ${EbsdSupport_SRCS}
-    DEBUG_EXTENSION ${EXE_DEBUG_EXTENSION}
-    VERSION_MAJOR ${DREAM3D_VER_MAJOR}
-    VERSION_MINOR ${DREAM3D_VER_MINOR}
-    VERSION_PATCH ${DREAM3D_VER_PATCH}
-    BINARY_DIR    ${${PROJECT_NAME}_BINARY_DIR}
-    COMPONENT     Applications
-    INSTALL_DEST  "${install_dir}" 
-    LINK_LIBRARIES DREAM3DLib
-)
-endif()
