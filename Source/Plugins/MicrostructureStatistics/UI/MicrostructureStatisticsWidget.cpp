@@ -344,7 +344,7 @@ void MicrostructureStatisticsWidget::on_m_GoBtn_clicked()
 	m_WriteNumNeighbors = false;
 	m_WriteAverageOrientations = false;
   }
-  if(m_VisualizationVizFile->isChecked() == false);
+  if(m_VisualizationVizFile->isChecked() == false)
   {
 	m_WriteSurfaceVoxelScalars = false;
 	m_WritePhaseIdScalars = false;
